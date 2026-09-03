@@ -32,3 +32,7 @@ This is the normal, unbound Mario target-data boundary. Original `CameraTargetPl
 A repeated start for the same active static XZ chunk now retains its original controller and pose. It validates the target before mutating active or retained target state, updates the request fields, and waits for the next movement frame to calculate. `CameraManEvent::start`/`checkReset` request a reset only when the current chunk or camera type changes. This does not implement FIFO priorities or interpolation.
 
 The optional real-disc ActorEvent camera case clones its loaded catalog and controls one XZ fixture's round/height parameters. Two actual original controllers run matching height chase and right-pad rounding trajectories; one receives a repeated start. Its immediate pose must remain unchanged and subsequent frames must equal the uninterrupted control. A failed replacement player target must leave both current pose and retained target intact. The retail catalog is not modified.
+
+## Follow-up target ownership
+
+The callback boundary described above was subsequently replaced by a persistent, service-owned actual `CameraTargetPlayer` in the same work session. See `../original-camera-target-player-20260903/` for source correspondence and live lifecycle regression coverage. The original normal/unbound-only limitation above describes the interim callback checkpoint, not the final retained target owner.

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "CameraTargetTestSupport.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
@@ -22,10 +23,12 @@ namespace smgpc::test {
             const smgpc::scene::GatewayDemoScene &scene)
             : LiveActor("Gateway external player sentinel"),
               _runtime(&runtime) {
-            _runtime->player_system().attach_actor(*this, smgpc::runtime::PlayerActorBridge{
-                .read_camera_target = &GatewayPlayerSentinel::read_camera_target});
+            _runtime->player_system().attach_actor(*this);
             try {
                 init(scene.player_start_iter());
+                _runtime->player_system().set_camera_target(
+                    std::make_unique<smgpc::tests::CameraTargetFixture>([this] { return read_camera_target(*this); }));
+                _runtime->player_system().advance_camera_target(0U);
             } catch (...) {
                 _runtime->player_system().detach_actor(this);
                 throw;
@@ -82,6 +85,8 @@ namespace smgpc::test {
                 .up = {matrix[1U], matrix[5U], matrix[9U]},
                 .front = {matrix[2U], matrix[6U], matrix[10U]},
                 .last_move = {actor.mVelocity.x, actor.mVelocity.y, actor.mVelocity.z},
+                .ground_position = smgpc::camera::CameraParamVec3{actor.mPosition.x, actor.mPosition.y, actor.mPosition.z},
+                .gravity = smgpc::camera::CameraParamVec3{actor.mGravity.x, actor.mGravity.y, actor.mGravity.z},
                 .jumping = false,
                 .fast_rise = false,
                 .fast_drop = false,

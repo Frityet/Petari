@@ -13,6 +13,7 @@
 #include <utility>
 
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/Camera/CameraTargetObj.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/System/WPadRumbleData.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
@@ -2720,6 +2721,17 @@ namespace smgpc::runtime {
 
     void CameraSystemService::begin_frame(std::uint64_t frame_index) {
         _frame_index = frame_index;
+        if (!is_camera_director_paused()) {
+            auto *player = _event_cameras.active_key().has_value()
+                               ? _event_cameras.active_player_target()
+                               : (_authored_game_camera.has_value()
+                                      ? _authored_game_camera->player_target : nullptr);
+            if (player != nullptr) {
+                // CameraDirector advances its selected target once before
+                // calculating the camera manager, before Player movement.
+                player->advance_camera_target(frame_index);
+            }
+        }
         update_authored_game_camera();
         _shake_offset_x = 0.0F;
         _shake_offset_y = 0.0F;
@@ -2957,13 +2969,20 @@ namespace smgpc::runtime {
             }
         }
         _authored_game_camera->target = std::move(target);
+        _authored_game_camera->player_target = nullptr;
+    }
+
+    void CameraSystemService::set_game_camera_target_player(
+        std::uint64_t owner_generation, PlayerSystemService &player) {
+        set_game_camera_target(owner_generation, std::nullopt);
+        _authored_game_camera->player_target = &player;
     }
 
     void CameraSystemService::update_game_camera_activation() {
         if (!_authored_game_camera.has_value()) {
             return;
         }
-        const auto overridden = active_event_camera_pose().has_value() ||
+        const auto overridden = active_event_camera_key().has_value() ||
                                 active_programmable_camera_pose().has_value();
         if (_authored_game_camera->overridden && !overridden) {
             // CameraDirector::pop activates the game manager, whose
@@ -2976,22 +2995,27 @@ namespace smgpc::runtime {
     void CameraSystemService::update_authored_game_camera() {
         update_game_camera_activation();
         if (!_authored_game_camera.has_value() ||
-            !_authored_game_camera->target.has_value() ||
             is_camera_director_paused() ||
             _authored_game_camera->overridden) {
+            return;
+        }
+        const auto target = _authored_game_camera->player_target != nullptr
+                                ? _authored_game_camera->player_target->camera_target_state()
+                                : _authored_game_camera->target;
+        if (!target.has_value()) {
             return;
         }
 
         const auto &initial = *_stage_start_camera;
         if (_authored_game_camera->manager_reset_requested) {
             _authored_game_camera->controller->reset_manager(
-                *_authored_game_camera->target);
+                *target);
         } else if (_authored_game_camera->reset_requested) {
             _authored_game_camera->controller->reset(
-                *_authored_game_camera->target);
+                *target);
         }
         auto calculation = _authored_game_camera->controller->calc(
-            *_authored_game_camera->target);
+            *target);
 
         // The stage owns projection geometry. Tracking changes only the
         // authored view and FOV; effective-event/free-camera poses are never
@@ -3280,7 +3304,12 @@ namespace smgpc::runtime {
         return event->pose;
     }
 
+    PlayerSystemService::PlayerSystemService() = default;
+    PlayerSystemService::~PlayerSystemService() = default;
+
     void PlayerSystemService::reset_stage_state() {
+        _camera_target.reset();
+        _camera_target_frame.reset();
         if (_attached_actor != nullptr &&
             _actor_bridge.set_swing_permission != nullptr) {
             _actor_bridge.set_swing_permission(*_attached_actor, false);
@@ -3309,6 +3338,8 @@ namespace smgpc::runtime {
 
     void PlayerSystemService::attach_actor(
         LiveActor &actor, PlayerActorBridge actor_bridge) {
+        _camera_target.reset();
+        _camera_target_frame.reset();
         if (_attached_actor != nullptr && _attached_actor != &actor) {
             detach_actor(_attached_actor);
         } else if (_attached_actor == &actor &&
@@ -3327,6 +3358,8 @@ namespace smgpc::runtime {
 
     void PlayerSystemService::detach_actor(const LiveActor *actor) {
         if (actor == nullptr || _attached_actor == actor) {
+            _camera_target.reset();
+            _camera_target_frame.reset();
             if (_attached_actor != nullptr &&
                 _actor_bridge.set_swing_permission != nullptr) {
                 _actor_bridge.set_swing_permission(*_attached_actor, false);
@@ -3345,6 +3378,22 @@ namespace smgpc::runtime {
         _attached_actor->calcAndSetBaseMtx();
         copy_actor_state();
         _attached_actor->mFlag.mIsHiddenModel = _player_hidden;
+    }
+
+    void PlayerSystemService::set_camera_target(std::unique_ptr<CameraTargetObj> target) {
+        if (target && _attached_actor == nullptr) {
+            throw std::logic_error("A player camera target requires an attached actor owner.");
+        }
+        _camera_target = std::move(target);
+        _camera_target_frame.reset();
+    }
+
+    void PlayerSystemService::advance_camera_target(std::uint64_t frame_index) {
+        if (!_camera_target || _camera_target_frame == frame_index) {
+            return;
+        }
+        _camera_target->movement();
+        _camera_target_frame = frame_index;
     }
 
     void PlayerSystemService::show_player() {
@@ -3477,10 +3526,33 @@ namespace smgpc::runtime {
     }
 
     std::optional<smgpc::camera::StageCameraTargetState> PlayerSystemService::camera_target_state() const {
-        if (_attached_actor == nullptr || _actor_bridge.read_camera_target == nullptr) {
+        if (!_camera_target || !_camera_target_frame.has_value()) {
             return std::nullopt;
         }
-        return _actor_bridge.read_camera_target(*_attached_actor);
+        const auto vec = [](const TVec3f &value) {
+            return smgpc::camera::CameraParamVec3{value.x, value.y, value.z};
+        };
+        return smgpc::camera::StageCameraTargetState{
+            .position = vec(_camera_target->getPosition()),
+            .up = vec(_camera_target->getUpVec()),
+            .front = vec(_camera_target->getFrontVec()),
+            .last_move = vec(_camera_target->getLastMove()),
+            .ground_position = vec(_camera_target->getGroundPos()),
+            .gravity = vec(_camera_target->getGravityVector()),
+            .jumping = _camera_target->isJumping(),
+            .fast_rise = _camera_target->isFastRise(),
+            .fast_drop = _camera_target->isFastDrop(),
+            .side = vec(_camera_target->getSideVec()),
+        };
+    }
+
+    MtxPtr PlayerSystemService::actor_base_matrix() const {
+        return _attached_actor != nullptr && _actor_bridge.read_base_matrix != nullptr
+                   ? _actor_bridge.read_base_matrix(*_attached_actor) : nullptr;
+    }
+
+    CameraTargetObj *PlayerSystemService::camera_target() const {
+        return _camera_target.get();
     }
 
     bool PlayerSystemService::is_swing_permitted() const {

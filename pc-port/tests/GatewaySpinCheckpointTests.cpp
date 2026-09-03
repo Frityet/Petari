@@ -262,7 +262,8 @@ namespace {
                         smgpc::camera::StageStartCameraResolveStatus::Resolved &&
                     camera.camera.has_value(),
                 "checkpoint must resolve exact Gateway StartInfo camera 78");
-        runtime.camera_system().set_game_camera_pose(camera.camera->calculation.pose);
+        const auto camera_owner = runtime.camera_system().set_authored_game_camera(
+            *camera.camera);
         runtime.set_scene_camera_pose(camera.camera->calculation.pose);
         auto created = std::unique_ptr<NameObj>{
             createNameObj<MarioActor>("MarioActor")};
@@ -271,8 +272,11 @@ namespace {
         runtime.player_system().attach_actor(
             *mario, smgpc::runtime::PlayerActorBridge{
                         .set_swing_permission = &set_mario_swing_permission,
-                        .read_camera_target = +[](const LiveActor &actor) {
-                            return smgpc::compat::mario_camera_target(static_cast<const MarioActor &>(actor));
+                        .read_element_mode = +[](const LiveActor &actor) -> s32 {
+                            return static_cast<const MarioActor &>(actor).mPlayerMode;
+                        },
+                        .read_base_matrix = +[](const LiveActor &actor) {
+                            return smgpc::compat::mario_camera_base_matrix(static_cast<const MarioActor &>(actor));
                         },
                     });
 
@@ -286,6 +290,10 @@ namespace {
             const auto renderer_context =
                 smgpc::render::ScopedAuroraRendererContext(renderer);
             mario->init(scene.player_start_iter());
+            runtime.player_system().set_camera_target(
+                smgpc::compat::create_mario_camera_target(*mario));
+            runtime.camera_system().set_game_camera_target_player(
+                camera_owner, runtime.player_system());
             placement_lod_baseline =
                 smgpc::compat::actor_lod_ctrl_runtime_state_count();
             placement_lease = scene.finalize_placements(*mario);
@@ -514,6 +522,7 @@ namespace {
                     smgpc::compat::game_data::holder_story_progress(
                         game_data_session.holder()) == 15U,
                 "placement retirement must leave the caller-owned selected-file holder active at progress 15");
+        runtime.camera_system().clear_stage_start_camera(camera_owner);
         runtime.player_system().detach_actor(mario);
         runtime.unregister_live_actor_model(*mario);
         MR::getMarioHolder()->setMarioActor(nullptr);

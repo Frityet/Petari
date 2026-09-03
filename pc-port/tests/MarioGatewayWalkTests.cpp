@@ -13,6 +13,7 @@
 #include "Game/Util/PlayerUtil.hpp"
 #include "Logger.hpp"
 #include "MarioWalkParameterTests.hpp"
+#include "MarioCameraTargetTests.hpp"
 #include "RendererService.hpp"
 #include "camera/StageStartCamera.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
@@ -83,17 +84,17 @@ namespace {
         actor.mMario->mGroundPos.set(44.0F, 55.0F, 66.0F);
         actor.mUpVec.set(0.0F, 2.0F, 0.0F);
         actor.mMario->mSideVec.set(-1.0F, 0.0F, 0.0F);
-        const auto target = smgpc::compat::mario_camera_target(actor);
+        const auto target = smgpc::compat::create_mario_camera_target(actor);
+        target->movement();
         actor.mMario->mShadowPos = saved_shadow;
         actor.mMario->mGroundPos = saved_ground;
         actor.mUpVec = saved_up;
         actor.mMario->mSideVec = saved_side;
-        require(target.ground_position.has_value() &&
-                    target.ground_position->x == 11.0F &&
-                    target.ground_position->y == 22.0F &&
-                    target.ground_position->z == 33.0F &&
-                    target.up.x == 0.0F && target.up.y == 1.0F && target.up.z == 0.0F &&
-                    target.side.has_value() && target.side->x == -1.0F,
+        require(target->getGroundPos().x == 11.0F &&
+                    target->getGroundPos().y == 22.0F &&
+                    target->getGroundPos().z == 33.0F &&
+                    target->getUpVec().x == 0.0F && target->getUpVec().y == 1.0F && target->getUpVec().z == 0.0F &&
+                    target->getSideVec().x == -1.0F,
                 "the player camera bridge must use shadow position, normalized camera up, and Mario's side getter");
     }
 
@@ -354,6 +355,7 @@ namespace {
         const auto authored_camera = camera;
         const auto camera_owner = runtime.camera_system().set_authored_game_camera(
             *camera_result.camera);
+        runtime.camera_system().set_game_camera_target_player(camera_owner, runtime.player_system());
         runtime.set_freecam_enabled(false);
 
         require(NameObjFactory::getCreator("Mario") == nullptr &&
@@ -369,8 +371,11 @@ namespace {
         const auto entitlement_bridge =
             smgpc::runtime::PlayerActorBridge{
                 .set_swing_permission = &set_mario_swing_permission,
-                .read_camera_target = +[](const LiveActor& value) {
-                    return smgpc::compat::mario_camera_target(
+                .read_element_mode = +[](const LiveActor& value) -> s32 {
+                    return static_cast<const MarioActor&>(value).mPlayerMode;
+                },
+                .read_base_matrix = +[](const LiveActor& value) {
+                    return smgpc::compat::mario_camera_base_matrix(
                         static_cast<const MarioActor&>(value));
                 },
             };
@@ -393,6 +398,9 @@ namespace {
                 placement_lease = scene.finalize_placements(*actor);
                 smgpc::tests::verify_original_mario_walk_parameters(*actor);
                 verify_mario_camera_target_accessors(*actor);
+                smgpc::tests::verify_original_mario_camera_target(*actor, runtime.dvd(), scene.demo_runtime());
+                runtime.player_system().set_camera_target(
+                    smgpc::compat::create_mario_camera_target(*actor));
                 wait_frame_max =
                     smgpc::compat::require_actor_bck(actor, "Wait", nullptr);
                 runtime.game_layout().activate_game_scene_draw_3d();
@@ -487,9 +495,15 @@ namespace {
                 runtime.set_j3d_packet_trace_frame(frame.frame_index);
 #endif
                 proof.position_before = actor->mPosition;
-                runtime.camera_system().set_game_camera_target(
-                    camera_owner, smgpc::compat::mario_camera_target(*actor));
+                const auto prior_movement_timer = actor->_378;
                 runtime.begin_frame(frame);
+                const auto* target = dynamic_cast<const CameraTargetPlayer*>(
+                    runtime.player_system().camera_target());
+                require(target != nullptr && target->mPlayerMovementTimer == prior_movement_timer,
+                        "the original camera target must update before Mario movement");
+                runtime.player_system().advance_camera_target(frame_index);
+                require(target->mPlayerMovementTimer == prior_movement_timer,
+                        "repeated camera-phase requests must not advance the player target twice");
                 proof.position_after = actor->mPosition;
                 proof.last_move = actor->getLastMove();
                 proof.grounded =
@@ -995,8 +1009,9 @@ namespace {
                     released_swing_frame.bck_name == "Wait",
                 "Rush permission must remain edge-triggered after the host key is released");
 
-        runtime.camera_system().set_game_camera_target(camera_owner, std::nullopt);
         runtime.player_system().detach_actor(actor);
+        require(!runtime.player_system().camera_target_state().has_value(),
+                "player detachment must retire its original camera target");
         require(runtime.player_system().attached_actor() == nullptr &&
                     runtime.player_system().is_swing_permitted() && !actor->_EEB,
                 "Gateway owner detach must revoke the outgoing actor bit while retaining same-stage entitlement");
@@ -1036,6 +1051,8 @@ namespace {
                 // scene start. A later same-scene replacement crosses its own
                 // ordinary actor postpass while the placement lease is active.
                 actor->initAfterPlacement();
+                runtime.player_system().set_camera_target(
+                    smgpc::compat::create_mario_camera_target(*actor));
             }
             renderer.end_frame();
         }

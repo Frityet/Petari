@@ -1,11 +1,12 @@
 #pragma once
 
-#include "camera/StageStartCamera.hpp"
+#include "Game/Camera/CameraTargetObj.hpp"
 
-class MarioActor;
+#include <memory>
 
 namespace smgpc::compat {
 
-    [[nodiscard]] camera::StageCameraTargetState mario_camera_target(const MarioActor &actor);
+    [[nodiscard]] std::unique_ptr<CameraTargetObj> create_mario_camera_target(const MarioActor &actor);
+    [[nodiscard]] MtxPtr mario_camera_base_matrix(const MarioActor &actor);
 
 }  // namespace smgpc::compat

@@ -1,3 +1,4 @@
+#include "CameraTargetTestSupport.hpp"
 #include "Game/Camera/CameraTargetMtx.hpp"
 #include "Game/LiveActor/ActorCameraInfo.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
@@ -104,7 +105,7 @@ namespace {
         std::copy_n("CANM", 4U, bytes.begin() + 4U);
         write_be32(bytes, 0x08U, 1U);
         write_be32(bytes, 0x10U, 1U);
-        write_be32(bytes, 0x18U, 1U);
+        write_be32(bytes, 0x18U, 2U);
         write_be32(bytes, 0x1cU, cComponentTableSize);
         for (auto component = std::size_t{}; component < 8U; ++component) {
             const auto offset = cHeaderSize + component * 8U;
@@ -141,19 +142,24 @@ namespace {
 
     class CameraPlayerFixture final : public LiveActor {
     public:
-        explicit CameraPlayerFixture(smgpc::runtime::PlayerSystemService &player)
+        explicit CameraPlayerFixture(smgpc::runtime::PlayerSystemService &player,
+                                     bool initialize_target = true)
             : LiveActor("Camera state fixture"), _player(player) {
-            _player.attach_actor(*this, smgpc::runtime::PlayerActorBridge{
-                .read_camera_target = +[](const LiveActor &actor) {
-                    const auto &fixture = static_cast<const CameraPlayerFixture &>(actor);
-                    ++fixture.read_count;
-                    return fixture.camera_state;
-                }});
+            _player.attach_actor(*this);
+            _player.set_camera_target(std::make_unique<smgpc::tests::CameraTargetFixture>([this] {
+                ++read_count;
+                return camera_state;
+            }));
+            if (initialize_target) {
+                _player.advance_camera_target(0U);
+            }
         }
 
         ~CameraPlayerFixture() override { _player.detach_actor(this); }
 
-        smgpc::camera::StageCameraTargetState camera_state{};
+        smgpc::camera::StageCameraTargetState camera_state{
+            .ground_position = smgpc::camera::CameraParamVec3{},
+            .gravity = smgpc::camera::CameraParamVec3{0.0F, -1.0F, 0.0F}};
         mutable unsigned read_count = 0U;
 
     private:
@@ -261,7 +267,7 @@ namespace {
             smgpc::camera::CameraAnimation::from_bytes(bytes);
         require(animation.format() ==
                         smgpc::camera::CameraAnimationFormat::Canm &&
-                    animation.frame_count() == 1U,
+                    animation.frame_count() == 2U,
                 "synthetic CANM should retain format and frame count");
 
         auto player = smgpc::runtime::PlayerSystemService{};
@@ -273,6 +279,9 @@ namespace {
         camera.start_event_camera(
             5, "逃げチコDemoMeetTico",
             smgpc::camera::EventCameraTarget::target_player(player), 0, 1.0F);
+        require(!camera.active_event_camera_pose().has_value(),
+                "an event request must defer its first pose until camera movement");
+        camera.begin_frame(0U);
         const auto first = camera.active_event_camera_pose();
         require(first.has_value() && finite_pose(*first),
                 "player-target CANM must produce a finite initial pose");
@@ -284,7 +293,7 @@ namespace {
         const auto second = camera.active_event_camera_pose();
         require(second.has_value() &&
                     camera.event_camera_animation_frame(
-                        5, "逃げチコDemoMeetTico") == 1 &&
+                        5, "逃げチコDemoMeetTico") == 2 &&
                     second->eye.x > first->eye.x + 100.0F,
                 "CANM must advance and continue following the player target");
         camera.end_event_camera(5, "逃げチコDemoMeetTico", true, -1);
@@ -306,6 +315,61 @@ namespace {
         }
         require(rejected_destroyed_actor,
                 "event camera must reject a retired actor through registry membership before dereference");
+    }
+
+    void test_uninitialized_player_event_waits_for_camera_phase() {
+        auto player = smgpc::runtime::PlayerSystemService{};
+        auto actor = CameraPlayerFixture(player, false);
+        auto* target = static_cast<smgpc::tests::CameraTargetFixture*>(player.camera_target());
+        auto camera = smgpc::runtime::CameraSystemService{};
+        const auto animation = smgpc::camera::CameraAnimation::from_bytes(make_linear_canm());
+        camera.declare_event_camera_animation(0, "first player event", animation);
+        camera.declare_event_camera_animation(0, "replacement player event", animation);
+        actor.camera_state.position.x = 100.0F;
+        camera.start_event_camera(0, "first player event",
+            smgpc::camera::EventCameraTarget::target_player(player), 0);
+        require(camera.is_event_camera_active(0, "first player event") &&
+                    !camera.active_event_camera_pose().has_value() &&
+                    !player.camera_target_state().has_value() &&
+                    target->movement_count == 0U && actor.read_count == 0U &&
+                    camera.event_camera_animation_frame(0, "first player event") == 0,
+                "an uninitialized player target must bind without movement or pose reads during the request");
+
+        camera.pause_on_camera_director();
+        camera.begin_frame(1U);
+        require(!camera.active_event_camera_pose().has_value() &&
+                    target->movement_count == 0U,
+                "a paused director must leave the first event pending");
+        actor.camera_state.position.x = 200.0F;
+        camera.pause_off_camera_director();
+        camera.begin_frame(2U);
+        const auto first = camera.active_event_camera_pose();
+        require(first.has_value() && target->movement_count == 1U &&
+                    player.camera_target_state().has_value() &&
+                    camera.event_camera_animation_frame(0, "first player event") == 1,
+                "the first camera phase must initialize the target and then advance the sampled animation cursor");
+        require_near(first->eye.x, 200.0F, 0.001F,
+                     "the first pose must sample frame zero using the target state at camera movement");
+
+        actor.camera_state.position.x = 400.0F;
+        const auto reads_before_request = actor.read_count;
+        camera.start_event_camera(0, "replacement player event",
+            smgpc::camera::EventCameraTarget::retain(), 0);
+        require(same_pose(*camera.active_event_camera_pose(), *first) &&
+                    target->movement_count == 1U && actor.read_count == reads_before_request &&
+                    camera.event_camera_animation_frame(0, "replacement player event") == 0,
+                "a replacement request must preserve the visible pose and defer all target sampling");
+        camera.pause_on_camera_director();
+        camera.begin_frame(3U);
+        require(same_pose(*camera.active_event_camera_pose(), *first) &&
+                    target->movement_count == 1U,
+                "a paused replacement event must retain the previous visible pose");
+        camera.pause_off_camera_director();
+        camera.begin_frame(4U);
+        require_near(camera.active_event_camera_pose()->eye.x, 400.0F, 0.001F,
+                     "the replacement event must first sample frame zero after unpausing");
+        require(target->movement_count == 2U,
+                "event replacement must advance the selected target once in its next camera phase");
     }
 
     void test_player_camera_capability_and_live_sampling() {
@@ -347,6 +411,7 @@ namespace {
                     state->last_move.x == 4.0F && state->ground_position->y == 8.0F,
                 "the typed bridge must preserve actual camera flags and geometry state");
         camera.start_event_camera(0, "live player camera", target, 0);
+        camera.begin_frame(0U);
         const auto first = *camera.active_event_camera_pose();
         require_near(first.eye.x, 600.0F, 0.001F,
                      "CANM must use camera translation and front, not rendered player matrix");
@@ -357,7 +422,7 @@ namespace {
         actor.camera_state.position.z = 900.0F;
         camera.begin_frame(1U);
         const auto moved = *camera.active_event_camera_pose();
-        require(actor.read_count > reads, "event frames must sample the attached actor callback anew");
+        require(actor.read_count > reads, "event frames must sample the attached target object anew");
         require_near(moved.eye.z, 890.0F, 0.001F,
                      "live camera state and independent side axis must affect the next CANM sample");
         player.detach_actor(&actor);
@@ -384,6 +449,7 @@ namespace {
         camera.start_event_camera(
             5, "prior",
             smgpc::camera::EventCameraTarget::target_player(player), 0, 1.0F);
+        camera.begin_frame(0U);
         const auto prior_key = camera.active_event_camera_key();
         const auto prior_pose = camera.active_event_camera_pose();
         require(prior_key.has_value() && prior_pose.has_value(),
@@ -410,6 +476,9 @@ namespace {
         camera.start_event_camera(
             5, "retained", smgpc::camera::EventCameraTarget::retain(), 0,
             1.0F);
+        require(same_pose(*camera.active_event_camera_pose(), *prior_pose),
+                "a valid replacement request must preserve the prior visible pose until camera movement");
+        camera.begin_frame(1U);
         const auto retained_key = camera.active_event_camera_key();
         const auto retained_pose = camera.active_event_camera_pose();
         require(retained_key.has_value() && retained_pose.has_value() &&
@@ -519,6 +588,8 @@ namespace {
         uninterrupted.declare_event_camera(0, "土管固有出現054");
         requested.start_event_camera(0, "土管固有出現054", target, 0);
         uninterrupted.start_event_camera(0, "土管固有出現054", target, 0);
+        requested.begin_frame(0U);
+        uninterrupted.begin_frame(0U);
         const auto initial_pose = *requested.active_event_camera_pose();
         actor.camera_state.position.y = 100.0F;
         actor.camera_state.last_move.y = 100.0F;
@@ -683,6 +754,7 @@ namespace {
         camera.start_event_camera(
             5, "逃げウサギ集め固有016",
             smgpc::camera::EventCameraTarget::target_player(player), 0);
+        camera.begin_frame(1U);
         const auto rabbit_pose = camera.active_event_camera_pose();
         require(rabbit_pose.has_value() && finite_pose(*rabbit_pose),
                 "real EYEPOS_FIX collector camera must calculate a pose");
@@ -691,6 +763,7 @@ namespace {
         camera.start_event_camera(
             5, "土管固有出現017",
             smgpc::camera::EventCameraTarget::target_player(player), 0);
+        camera.begin_frame(2U);
         require(camera.active_event_camera_pose().has_value() &&
                     finite_pose(*camera.active_event_camera_pose()),
                 "real XZ_PARA pipe camera must calculate a pose");
@@ -700,6 +773,7 @@ namespace {
         camera.start_event_camera(
             5, "逃げチコDemoMeetTico",
             smgpc::camera::EventCameraTarget::target_player(player), 0, 1.0F);
+        camera.begin_frame(3U);
         require(camera.active_event_camera_key().has_value() &&
                     camera.active_event_camera_key()->zone_id == 5 &&
                     camera.active_event_camera_key()->name ==
@@ -721,6 +795,7 @@ int main() {
         TestCase{"ActorCameraInfo pool and identities",
                  test_actor_camera_info_pool_and_identity},
         TestCase{"linear CANM player target", test_linear_canm_player_target},
+        TestCase{"uninitialized player event camera phase", test_uninitialized_player_event_waits_for_camera_phase},
         TestCase{"player camera capability and live sampling", test_player_camera_capability_and_live_sampling},
         TestCase{"failed start is transactional",
                  test_failed_start_is_transactional},

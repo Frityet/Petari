@@ -102,7 +102,7 @@ namespace {
                 smgpc::runtime::PlayerActorBridge{
                     .set_swing_permission = &GatewayMarioOwner::set_swing_permission,
                     .read_element_mode = &GatewayMarioOwner::read_element_mode,
-                    .read_camera_target = &GatewayMarioOwner::read_camera_target,
+                    .read_base_matrix = &GatewayMarioOwner::read_base_matrix,
                 });
         }
 
@@ -145,8 +145,8 @@ namespace {
             return mario->mPlayerMode;
         }
 
-        static smgpc::camera::StageCameraTargetState read_camera_target(const LiveActor& actor) {
-            return smgpc::compat::mario_camera_target(static_cast<const MarioActor&>(actor));
+        static MtxPtr read_base_matrix(const LiveActor& actor) {
+            return smgpc::compat::mario_camera_base_matrix(static_cast<const MarioActor&>(actor));
         }
 
         smgpc::runtime::PlayerSystemService* _player_system = nullptr;
@@ -716,6 +716,10 @@ namespace {
                     smgpc::render::ScopedAuroraRendererContext(renderer);
                 runtime.begin_frame(setup_frame);
                 mario_owner.actor().init(scene.player_start_iter());
+                runtime.player_system().set_camera_target(
+                    smgpc::compat::create_mario_camera_target(mario_owner.actor()));
+                runtime.camera_system().set_game_camera_target_player(
+                    camera_owner, runtime.player_system());
                 placement_lease =
                     scene.finalize_placements(mario_owner.actor());
                 if (is_spin_route) {
@@ -806,9 +810,6 @@ namespace {
                         runtime.set_j3d_packet_trace_frame(frame_context.frame_index);
                     }
 #endif
-                    runtime.camera_system().set_game_camera_target(
-                        camera_owner,
-                        smgpc::compat::mario_camera_target(mario_owner.actor()));
                     runtime.begin_frame(frame_context);
                     const auto& camera = runtime.scene_camera_pose().value_or(initial_camera);
 

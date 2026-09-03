@@ -28,10 +28,13 @@
 #include "runtime/NandFileSystemService.hpp"
 
 class ActorLightCtrl;
+class CameraTargetObj;
 class LiveActor;
 struct RumblePattern;
 
 namespace smgpc::runtime {
+
+    class PlayerSystemService;
 
     struct DvdFileReadTrace {
         std::string requested_path;
@@ -673,6 +676,8 @@ namespace smgpc::runtime {
         void set_game_camera_target(
             std::uint64_t owner_generation,
             std::optional<smgpc::camera::StageCameraTargetState> target);
+        void set_game_camera_target_player(std::uint64_t owner_generation,
+                                           PlayerSystemService &player);
         void clear_stage_start_camera(
             std::uint64_t owner_generation) noexcept;
         void start_start_position_camera(bool immediate);
@@ -728,6 +733,7 @@ namespace smgpc::runtime {
         struct AuthoredGameCameraState {
             std::unique_ptr<smgpc::camera::OriginalGameCamera> controller;
             std::optional<smgpc::camera::StageCameraTargetState> target;
+            PlayerSystemService *player_target = nullptr;
             bool overridden = false;
             bool reset_requested = false;
             bool manager_reset_requested = false;
@@ -774,25 +780,28 @@ namespace smgpc::runtime {
     struct PlayerActorBridge {
         using SwingPermissionWriter = void (*)(LiveActor &, bool);
         using ElementModeReader = s32 (*)(const LiveActor &);
-        using CameraTargetReader = smgpc::camera::StageCameraTargetState (*)(const LiveActor &);
+        using BaseMatrixReader = MtxPtr (*)(const LiveActor &);
 
         SwingPermissionWriter set_swing_permission = nullptr;
         // Concrete player owners install this capability only when their
         // attached object really exposes the retail MarioActor mode field.
         ElementModeReader read_element_mode = nullptr;
-        // Read the concrete actor camera state when sampled, rather than
-        // deriving it from a potentially different rendered base matrix.
-        CameraTargetReader read_camera_target = nullptr;
+        BaseMatrixReader read_base_matrix = nullptr;
     };
 
     class PlayerSystemService final {
     public:
+        PlayerSystemService();
+        ~PlayerSystemService();
+
         void reset_stage_state();
         void clear_stage_state();
         void attach_actor(LiveActor &actor,
                           PlayerActorBridge actor_bridge = {});
         void detach_actor(const LiveActor *actor = nullptr);
         void synchronize_attached_actor();
+        void set_camera_target(std::unique_ptr<CameraTargetObj> target);
+        void advance_camera_target(std::uint64_t frame_index);
 
         void show_player();
         void hide_player();
@@ -815,6 +824,8 @@ namespace smgpc::runtime {
         [[nodiscard]] std::optional<bool> player_dead_state() const;
         [[nodiscard]] std::optional<s32> player_element_mode() const;
         [[nodiscard]] std::optional<smgpc::camera::StageCameraTargetState> camera_target_state() const;
+        [[nodiscard]] CameraTargetObj *camera_target() const;
+        [[nodiscard]] MtxPtr actor_base_matrix() const;
         [[nodiscard]] bool is_swing_permitted() const;
         [[nodiscard]] bool is_control_enabled() const;
         [[nodiscard]] std::uint64_t base_matrix_revision() const;
@@ -839,6 +850,8 @@ namespace smgpc::runtime {
         std::array<f32, 3U> _velocity{};
         std::array<f32, 3U> _gravity{0.0F, -1.0F, 0.0F};
         PlayerActorBridge _actor_bridge{};
+        std::unique_ptr<CameraTargetObj> _camera_target;
+        std::optional<std::uint64_t> _camera_target_frame;
     };
 
     class GameLayoutService final {

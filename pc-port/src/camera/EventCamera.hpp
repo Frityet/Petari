@@ -67,7 +67,7 @@ namespace smgpc::camera {
 
     struct EventCameraTarget {
         EventCameraTargetKind kind = EventCameraTargetKind::Retain;
-        const smgpc::runtime::PlayerSystemService *player = nullptr;
+        smgpc::runtime::PlayerSystemService *player = nullptr;
         const LiveActor *actor = nullptr;
         const CameraTargetMtx *matrix = nullptr;
         const NameObj *name_obj_identity = nullptr;
@@ -75,7 +75,7 @@ namespace smgpc::camera {
 
         [[nodiscard]] static EventCameraTarget retain() noexcept;
         [[nodiscard]] static EventCameraTarget target_player(
-            const smgpc::runtime::PlayerSystemService &player) noexcept;
+            smgpc::runtime::PlayerSystemService &player) noexcept;
         [[nodiscard]] static EventCameraTarget target_actor(
             const LiveActor &actor) noexcept;
         [[nodiscard]] static EventCameraTarget target_matrix(
@@ -101,6 +101,7 @@ namespace smgpc::camera {
 
         [[nodiscard]] std::optional<CameraPose> active_pose() const;
         [[nodiscard]] std::optional<EventCameraKey> active_key() const;
+        [[nodiscard]] smgpc::runtime::PlayerSystemService *active_player_target() const;
         [[nodiscard]] bool is_active(std::int32_t zone_id,
                                      std::string_view name) const;
         [[nodiscard]] bool is_declared(std::int32_t zone_id,
@@ -118,7 +119,7 @@ namespace smgpc::camera {
             EventCameraKey key{};
             EventCameraTarget target{};
             std::unique_ptr<OriginalGameCamera> controller;
-            CameraPose pose{};
+            std::optional<CameraPose> pose;
             float animation_frame = 0.0F;
             float speed = 1.0F;
             std::int32_t interpolation_frames = 0;

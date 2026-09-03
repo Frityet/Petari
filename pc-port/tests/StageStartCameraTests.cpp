@@ -1,3 +1,4 @@
+#include "CameraTargetTestSupport.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Camera/CameraTargetMtx.hpp"
 #include "Game/Util/JMapInfo.hpp"
@@ -59,14 +60,17 @@ namespace {
     public:
         explicit CameraPlayerFixture(smgpc::runtime::PlayerSystemService &player)
             : LiveActor("Stage camera player fixture"), _player(player) {
-            _player.attach_actor(*this, smgpc::runtime::PlayerActorBridge{
-                .read_camera_target = +[](const LiveActor &actor) {
-                    return static_cast<const CameraPlayerFixture &>(actor).camera_state;
-                }});
+            _player.attach_actor(*this);
+            _player.set_camera_target(std::make_unique<smgpc::tests::CameraTargetFixture>([this] {
+                return camera_state;
+            }));
+            _player.advance_camera_target(0U);
         }
         ~CameraPlayerFixture() override { _player.detach_actor(this); }
 
-        smgpc::camera::StageCameraTargetState camera_state{};
+        smgpc::camera::StageCameraTargetState camera_state{
+            .ground_position = smgpc::camera::CameraParamVec3{},
+            .gravity = smgpc::camera::CameraParamVec3{0.0F, -1.0F, 0.0F}};
 
     private:
         smgpc::runtime::PlayerSystemService &_player;
@@ -635,8 +639,9 @@ namespace {
             0, "DemoMeetTico",
             smgpc::camera::EventCameraTarget::target_player(player), 0, 1.0F);
         const auto guide_pose = camera.effective_camera_pose();
-        require(guide_pose.has_value() && !same_pose(*guide_pose, start_pose),
-                "DemoMeetTico must own the effective pose after the Guide0 start-mode toggle");
+        require(guide_pose.has_value() && same_pose(*guide_pose, start_pose) &&
+                    camera.active_event_camera_key().has_value(),
+                "DemoMeetTico must retain the visible pose until its first camera phase");
 
         MR::startStartPosCamera(false);
         require(camera.start_position_camera_zero_interpolation_frames() == 5U,
@@ -763,6 +768,74 @@ namespace {
                      "turning must preserve accumulated vertical offset state");
         require_near(pose.watch.z - target.position.z, 17.1F, 0.0001F,
                      "turning must decay the old front offset from its retained value");
+        camera.clear_stage_start_camera(owner);
+    }
+
+    void test_player_target_camera_phase_ownership() {
+        auto camera = smgpc::runtime::CameraSystemService{};
+        auto player = smgpc::runtime::PlayerSystemService{};
+        auto actor = CameraPlayerFixture(player);
+        auto event_player = smgpc::runtime::PlayerSystemService{};
+        auto event_actor = CameraPlayerFixture(event_player);
+        auto* target = static_cast<smgpc::tests::CameraTargetFixture*>(player.camera_target());
+        auto* event_target = static_cast<smgpc::tests::CameraTargetFixture*>(event_player.camera_target());
+        const auto owner = camera.set_authored_game_camera(make_tracking_camera());
+        camera.set_game_camera_target_player(owner, player);
+        require(target->movement_count == 1U,
+                "binding the player target must not advance its original movement state");
+        camera.begin_frame(1U);
+        camera.begin_frame(1U);
+        (void)player.camera_target_state();
+        (void)player.camera_target_state();
+        require(target->movement_count == 2U,
+                "repeated frame requests and pose reads must advance the selected target only once");
+        camera.pause_on_camera_director();
+        camera.begin_frame(2U);
+        require(target->movement_count == 2U,
+                "pausing the director must also pause its target movement");
+        camera.pause_off_camera_director();
+        camera.begin_frame(3U);
+        require(target->movement_count == 3U,
+                "unpausing must resume the retained target without replaying skipped frames");
+
+        camera.declare_event_camera_animation(
+            0, "target-phase-event",
+            smgpc::camera::CameraAnimation::from_bytes(make_guide_animation()));
+        camera.start_event_camera(
+            0, "target-phase-event",
+            smgpc::camera::EventCameraTarget::target_player(event_player), 0);
+        require(event_target->movement_count == 1U,
+                "event requests must sample the retained target without moving it");
+        camera.begin_frame(4U);
+        require(target->movement_count == 3U && event_target->movement_count == 2U,
+                "an event must advance its selected target and suspend the game target");
+        camera.start_event_camera(
+            0, "target-phase-event", smgpc::camera::EventCameraTarget::retain(), 0);
+        camera.begin_frame(5U);
+        require(target->movement_count == 3U && event_target->movement_count == 3U,
+                "a no-target event request must retain the selected target and its state");
+        camera.end_event_camera(0, "target-phase-event", true, -1);
+        camera.begin_frame(6U);
+        require(target->movement_count == 4U && event_target->movement_count == 3U,
+                "ending an event must resume the retained game target");
+
+        player.detach_actor(&actor);
+        require(player.camera_target() == nullptr && !player.camera_target_state().has_value(),
+                "actor retirement must withdraw its camera target before another camera phase");
+        const auto last_pose = *camera.game_camera_pose();
+        camera.begin_frame(7U);
+        require(same_pose(*camera.game_camera_pose(), last_pose),
+                "an absent player target must retain the last calculated camera pose");
+        player.attach_actor(actor);
+        player.set_camera_target(std::make_unique<smgpc::tests::CameraTargetFixture>([&actor] {
+            return actor.camera_state;
+        }));
+        require(!player.camera_target_state().has_value(),
+                "a replacement target must not publish uninitialized cached vectors");
+        target = static_cast<smgpc::tests::CameraTargetFixture*>(player.camera_target());
+        camera.begin_frame(8U);
+        require(target->movement_count == 1U && player.camera_target_state().has_value(),
+                "a replacement player target must initialize at its next camera phase");
         camera.clear_stage_start_camera(owner);
     }
 
@@ -1146,6 +1219,7 @@ namespace {
         event_target.mLastMove.set(15.0F, 0.0F, 0.0F);
         camera.start_event_camera(0, "土管固有出現054",
                                  smgpc::camera::EventCameraTarget::target_matrix(event_target), 0);
+        camera.begin_frame(99U);
         const auto event_before_pause = *camera.active_event_camera_pose();
         camera.pause_on_camera_director();
         camera.pause_on_camera_director();
@@ -1202,6 +1276,7 @@ int main() {
         TestCase{"RunawayTico start-camera handoff", test_runaway_tico_start_camera_handoff},
         TestCase{"authored game-camera target tracking", test_authored_game_camera_target_tracking},
         TestCase{"authored game-camera offset accumulation", test_authored_game_camera_offset_accumulation},
+        TestCase{"player target camera phase ownership", test_player_target_camera_phase_ownership},
         TestCase{"authored game-camera priority and restart", test_authored_game_camera_priority_and_restart},
         TestCase{"authored game-camera owner retirement", test_authored_game_camera_owner_retirement},
         TestCase{"start-camera errors and scene generations", test_start_camera_errors_and_scene_generations},

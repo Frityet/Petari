@@ -119,15 +119,56 @@ namespace smgpc::camera {
             return result;
         }
 
-        [[nodiscard]] TargetSnapshot snapshot_target(
-            const EventCameraTarget &target) {
+        void validate_target_reference(const EventCameraTarget &target) {
             switch (target.kind) {
-            case EventCameraTargetKind::Player: {
-                const auto state = target.player != nullptr
-                                       ? target.player->camera_target_state() : std::nullopt;
-                if (!state.has_value()) {
+            case EventCameraTargetKind::Player:
+                if (target.player == nullptr || target.player->camera_target() == nullptr) {
                     throw std::logic_error(
                         "Player-target event camera requires a live player camera-state provider.");
+                }
+                return;
+            case EventCameraTargetKind::LiveActor:
+                if (target.actor == nullptr || target.name_obj_identity == nullptr ||
+                    target.name_obj_generation == 0U ||
+                    smgpc::compat::name_obj_runtime_generation(
+                        target.name_obj_identity) !=
+                        target.name_obj_generation ||
+                    !smgpc::compat::has_actor_runtime_state(target.actor)) {
+                    throw std::logic_error(
+                        "LiveActor-target event camera lost its runtime actor.");
+                }
+                if (target.actor->mFlag.mIsDead) {
+                    throw std::logic_error(
+                        "LiveActor-target event camera lost its runtime actor.");
+                }
+                return;
+            case EventCameraTargetKind::Matrix:
+                if (target.matrix == nullptr ||
+                    target.name_obj_identity == nullptr ||
+                    target.name_obj_generation == 0U ||
+                    smgpc::compat::name_obj_runtime_generation(
+                        target.name_obj_identity) !=
+                        target.name_obj_generation) {
+                    throw std::logic_error(
+                        "Matrix-target event camera lost its runtime target.");
+                }
+                return;
+            case EventCameraTargetKind::Retain:
+                break;
+            }
+            throw std::logic_error(
+                "Event camera has no retained target to calculate from.");
+        }
+
+        [[nodiscard]] TargetSnapshot snapshot_target(
+            const EventCameraTarget &target) {
+            validate_target_reference(target);
+            switch (target.kind) {
+            case EventCameraTargetKind::Player: {
+                const auto state = target.player->camera_target_state();
+                if (!state.has_value()) {
+                    throw std::logic_error(
+                        "Player-target event camera requires its target movement before calculation.");
                 }
                 const auto side = state->side.value_or(cross(state->up, state->front));
                 return {
@@ -144,21 +185,7 @@ namespace smgpc::camera {
                 };
             }
             case EventCameraTargetKind::LiveActor: {
-                if (target.actor == nullptr || target.name_obj_identity == nullptr ||
-                    target.name_obj_generation == 0U ||
-                    smgpc::compat::name_obj_runtime_generation(
-                        target.name_obj_identity) !=
-                        target.name_obj_generation ||
-                    !smgpc::compat::has_actor_runtime_state(target.actor)) {
-                    throw std::logic_error(
-                        "LiveActor-target event camera lost its runtime actor.");
-                }
-                if (target.actor->mFlag.mIsDead) {
-                    throw std::logic_error(
-                        "LiveActor-target event camera lost its runtime actor.");
-                }
-                const auto &base =
-                    smgpc::compat::actor_base_matrix(target.actor).m;
+                const auto &base = smgpc::compat::actor_base_matrix(target.actor).m;
                 auto result = snapshot_from_matrix(
                     std::span<const float, 12U>(base),
                     {target.actor->mVelocity.x, target.actor->mVelocity.y,
@@ -169,15 +196,6 @@ namespace smgpc::camera {
                 return result;
             }
             case EventCameraTargetKind::Matrix: {
-                if (target.matrix == nullptr ||
-                    target.name_obj_identity == nullptr ||
-                    target.name_obj_generation == 0U ||
-                    smgpc::compat::name_obj_runtime_generation(
-                        target.name_obj_identity) !=
-                        target.name_obj_generation) {
-                    throw std::logic_error(
-                        "Matrix-target event camera lost its runtime target.");
-                }
                 const auto &mtx = target.matrix->mMatrix.mMtx;
                 return snapshot_from_matrix(
                     std::span<const float, 12U>(&mtx[0][0], 12U),
@@ -187,8 +205,7 @@ namespace smgpc::camera {
             case EventCameraTargetKind::Retain:
                 break;
             }
-            throw std::logic_error(
-                "Event camera has no retained target to calculate from.");
+            throw std::logic_error("Event camera has no retained target to calculate from.");
         }
 
         void validate_target_snapshot(const TargetSnapshot &target) {
@@ -368,7 +385,7 @@ namespace smgpc::camera {
     }
 
     EventCameraTarget EventCameraTarget::target_player(
-        const smgpc::runtime::PlayerSystemService &player) noexcept {
+        smgpc::runtime::PlayerSystemService &player) noexcept {
         return {.kind = EventCameraTargetKind::Player, .player = &player};
     }
 
@@ -450,6 +467,12 @@ namespace smgpc::camera {
             throw std::logic_error(
                 "Zone-qualified event camera is not present in the active stage catalog.");
         }
+        if (animation == nullptr &&
+            definition->camera_param.camera_type != "CAM_TYPE_XZ_PARA" &&
+            definition->camera_param.camera_type != "CAM_TYPE_EYEPOS_FIX") {
+            throw std::logic_error("Unsupported event-camera type " +
+                                   definition->camera_param.camera_type);
+        }
         const auto has_explicit_target =
             target.kind != EventCameraTargetKind::Retain;
         if (!has_explicit_target) {
@@ -459,12 +482,14 @@ namespace smgpc::camera {
             }
             target = *_last_target;
         }
+        // CameraManEvent::start requests the chunk and sets its target. The
+        // director advances that target before CameraManEvent::calc next frame.
+        validate_target_reference(target);
         if (animation == nullptr && definition->camera_param.camera_type == "CAM_TYPE_XZ_PARA" &&
             _active.has_value() && _active->key == key && !_active->animation && _active->controller) {
             // CameraManEvent::checkReset preserves the controller when its
             // chunk and type are unchanged. Validate before changing either
             // current or retained target; pose advances only on movement.
-            validate_target_snapshot(snapshot_target(target));
             _active->target = target;
             _active->speed = speed;
             _active->interpolation_frames = interpolation_frames;
@@ -476,11 +501,11 @@ namespace smgpc::camera {
         auto candidate = ActiveEvent{
             .key = key,
             .target = target,
+            .pose = active_pose(),
             .speed = speed,
             .interpolation_frames = interpolation_frames,
             .animation = animation != nullptr,
         };
-        candidate.pose = calculate_active_pose(candidate);
         if (has_explicit_target) {
             _last_target = target;
         }
@@ -502,10 +527,11 @@ namespace smgpc::camera {
         if (!_active.has_value() || paused) {
             return;
         }
+        _active->pose = calculate_active_pose(*_active);
+        // CameraAnim::reset starts at zero, and calc samples before advancing.
         if (_active->animation) {
             _active->animation_frame += _active->speed;
         }
-        _active->pose = calculate_active_pose(*_active);
     }
 
     ActorCameraInfo *EventCameraRuntime::create_actor_camera_info(
@@ -522,11 +548,16 @@ namespace smgpc::camera {
     }
 
     std::optional<CameraPose> EventCameraRuntime::active_pose() const {
-        return _active.has_value() ? std::optional{_active->pose} : std::nullopt;
+        return _active.has_value() ? _active->pose : std::nullopt;
     }
 
     std::optional<EventCameraKey> EventCameraRuntime::active_key() const {
         return _active.has_value() ? std::optional{_active->key} : std::nullopt;
+    }
+
+    smgpc::runtime::PlayerSystemService *EventCameraRuntime::active_player_target() const {
+        return _active.has_value() && _active->target.kind == EventCameraTargetKind::Player
+                   ? _active->target.player : nullptr;
     }
 
     bool EventCameraRuntime::is_active(std::int32_t zone_id,

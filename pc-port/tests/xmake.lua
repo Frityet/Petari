@@ -227,6 +227,7 @@ target("smg-pc-mario-gateway-walk-tests")
     add_files {
         "MarioGatewayWalkTests.cpp",
         "MarioWalkParameterTests.cpp",
+        "MarioCameraTargetTests.cpp",
         "../aurora/lib/compat.cpp"
     }
     if is_plat("macosx", "iphoneos") then

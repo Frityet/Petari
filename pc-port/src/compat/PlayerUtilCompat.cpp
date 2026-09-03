@@ -203,6 +203,11 @@ namespace MR {
     MtxPtr getPlayerBaseMtx() {
         static Mtx matrix{};
         const auto* player = smgpc::compat::active_player_system_for_player_util();
+        if (player != nullptr) {
+            if (const auto original = player->actor_base_matrix(); original != nullptr) {
+                return original;
+            }
+        }
         if (player == nullptr || player->attached_actor() == nullptr || !player->has_base_matrix()) {
             return nullptr;
         }

@@ -1,0 +1,496 @@
+{
+  "verification": "Exact source-body equality except the explicitly listed compiler/byte-encoding adaptations; no binary matching claim.",
+  "root_source_sha256": {
+    "src/Game/Camera/CameraTargetObj.cpp": "c72c38a23bbf8946c96b54feffa4c5d38463db68c9d73d0081affb1944f5bf6e",
+    "src/Game/Player/MarioAccess.cpp": "e058d0f81e7258ae69fc14c541fafab79cfd383f9877d7f321dcbfbd8de26b2a",
+    "src/Game/Player/MarioActorGravity.cpp": "04dd3675dd0b949ba2b1e9b597e4cd7a5673fba41bd108f7a1cbdae0528bd77f",
+    "src/Game/Player/MarioCollision.cpp": "2abd625f7f9cd0262e1df297eff0abd200d2cb2cf020a87c3dbf6ca8be5a3349",
+    "src/Game/Player/MarioJump.cpp": "66941b3a5f991ca911cf208b5203ab30633aa54f9fdceab5793c29c8e39b7068",
+    "src/Game/Player/MarioSwim.cpp": "645e4ab071b53ecbc1fd14c80ae40cd42885ebd8b461d7c33697b4caa86b8fc6",
+    "src/Game/Util/PlayerUtil.cpp": "fc4f5685c2ded2cf5304cb8475953a0f2d29f93147e4ad36fe9d6e1f526286be",
+    "src/Game/Player/MarioActor.cpp": "ce9f677b4f8e56db672f67964e295d7bc1ca5cc964d5e303ed65e888f2e5ca30",
+    "libs/MSL_C/source/ctype.c": "eba15e9202b8eb843ffadbb3608f5deee56db792ef988e7b9caa20b70195707d",
+    "src/Game/Animation/XanimePlayer.cpp": "688f39197a8c48ea1f9eea5012b4625a7e5cc4531c52b27f8398903e3239895a",
+    "src/Game/Animation/XanimeResource.cpp": "abf9a3adae35caaedcdbf079eb7ecff8d08cc7bc41a43009369c169ec4f7f10f",
+    "src/Game/System/ResourceInfo.cpp": "babff49bd59738c09e1934e46741c223ed9310dd6ba3feef12d68745e9930606",
+    "src/Game/Util/HashUtil.cpp": "aded413ec3398e4814aa028e1a254d42c3ff3641bac32d47e95458d5e25d15c7",
+    "src/Game/Util/StringUtil.cpp": "373938f24d216124a4aba58fe38c2638767dc2dc62bcf20a848b17e678b0e602"
+  },
+  "methods": [
+    {
+      "destination": "pc-port/src/compat/OriginalCameraTargetPlayer.cpp",
+      "source": "src/Game/Camera/CameraTargetObj.cpp",
+      "source_line": 97,
+      "signature": "CameraTargetPlayer::CameraTargetPlayer(",
+      "body_sha256": "82f324bb2b56d0e3d855e226ad1079d6fae3eb7e1c8bea4c6d589e55f46f0ecc"
+    },
+    {
+      "destination": "pc-port/src/compat/OriginalCameraTargetPlayer.cpp",
+      "source": "src/Game/Camera/CameraTargetObj.cpp",
+      "source_line": 102,
+      "signature": "void CameraTargetPlayer::movement()",
+      "body_sha256": "a1c0702efed7671a78940ce6a8bc85cbf6967df3c7f7b79a6252953728475623"
+    },
+    {
+      "destination": "pc-port/src/compat/OriginalCameraTargetPlayer.cpp",
+      "source": "src/Game/Camera/CameraTargetObj.cpp",
+      "source_line": 151,
+      "signature": "const TVec3f& CameraTargetPlayer::getPosition()",
+      "body_sha256": "77f80844e2051684400e57975273cb0f8fefbb3eeb78a3954c150640add5fbe3"
+    },
+    {
+      "destination": "pc-port/src/compat/OriginalCameraTargetPlayer.cpp",
+      "source": "src/Game/Camera/CameraTargetObj.cpp",
+      "source_line": 155,
+      "signature": "const TVec3f& CameraTargetPlayer::getUpVec()",
+      "body_sha256": "8cee56c9a24b8d189af5222c37cfd5eb73d2e0b4e47892e85a21b670d750db50"
+    },
+    {
+      "destination": "pc-port/src/compat/OriginalCameraTargetPlayer.cpp",
+      "source": "src/Game/Camera/CameraTargetObj.cpp",
+      "source_line": 159,
+      "signature": "const TVec3f& CameraTargetPlayer::getFrontVec()",
+      "body_sha256": "cd197f1dad7bd51fc4ebb0cf3321de2bc6b39dd2731a1bcc505865e8050278f7"
+    },
+    {
+      "destination": "pc-port/src/compat/OriginalCameraTargetPlayer.cpp",
+      "source": "src/Game/Camera/CameraTargetObj.cpp",
+      "source_line": 163,
+      "signature": "const TVec3f& CameraTargetPlayer::getSideVec()",
+      "body_sha256": "514417d70d0a1aeb05a6a3d347bb5422d10e2ef02b1e2114af9d0c3889947f09"
+    },
+    {
+      "destination": "pc-port/src/compat/OriginalCameraTargetPlayer.cpp",
+      "source": "src/Game/Camera/CameraTargetObj.cpp",
+      "source_line": 167,
+      "signature": "const TVec3f& CameraTargetPlayer::getGroundPos()",
+      "body_sha256": "e63025f1285050dc83f587a005094c3e0d882d6fdf1dca8bb5b75038520f44b4"
+    },
+    {
+      "destination": "pc-port/src/compat/OriginalCameraTargetPlayer.cpp",
+      "source": "src/Game/Camera/CameraTargetObj.cpp",
+      "source_line": 171,
+      "signature": "const TVec3f& CameraTargetPlayer::getGravityVector()",
+      "body_sha256": "ced075cb52da20c352260285737433dc710bcb05319ac8d6245c8d6fcd245c47"
+    },
+    {
+      "destination": "pc-port/src/compat/OriginalCameraTargetPlayer.cpp",
+      "source": "src/Game/Camera/CameraTargetObj.cpp",
+      "source_line": 175,
+      "signature": "const TVec3f& CameraTargetPlayer::getLastMove()",
+      "body_sha256": "33b1dc5a77dec88dbe44d8e34d64c5532ea3f603bc25ea0ea82a2284eae3a897"
+    },
+    {
+      "destination": "pc-port/src/compat/OriginalCameraTargetPlayer.cpp",
+      "source": "src/Game/Camera/CameraTargetObj.cpp",
+      "source_line": 183,
+      "signature": "bool CameraTargetPlayer::isTurning()",
+      "body_sha256": "b825e02d946de9ee960c7dadffce103f9ed98492143026c108c33c41a6615c09"
+    },
+    {
+      "destination": "pc-port/src/compat/OriginalCameraTargetPlayer.cpp",
+      "source": "src/Game/Camera/CameraTargetObj.cpp",
+      "source_line": 187,
+      "signature": "bool CameraTargetPlayer::isJumping()",
+      "body_sha256": "ca847fded575920bcaccaa6c34433a5b7fd212b92a93f5e590177c89ac8cf552"
+    },
+    {
+      "destination": "pc-port/src/compat/OriginalCameraTargetPlayer.cpp",
+      "source": "src/Game/Camera/CameraTargetObj.cpp",
+      "source_line": 191,
+      "signature": "bool CameraTargetPlayer::isLongDrop()",
+      "body_sha256": "416fa4e8fed752693f0912b72146da898a8a435bcfb6d2014ccb57ecf69513da"
+    },
+    {
+      "destination": "pc-port/src/compat/OriginalCameraTargetPlayer.cpp",
+      "source": "src/Game/Camera/CameraTargetObj.cpp",
+      "source_line": 195,
+      "signature": "bool CameraTargetPlayer::isFastDrop()",
+      "body_sha256": "0571c97f522dd20e6a8b536b00264931dd29a9b74e937027fc34278cd928939d"
+    },
+    {
+      "destination": "pc-port/src/compat/OriginalCameraTargetPlayer.cpp",
+      "source": "src/Game/Camera/CameraTargetObj.cpp",
+      "source_line": 199,
+      "signature": "bool CameraTargetPlayer::isFastRise()",
+      "body_sha256": "8d7f4d13058ae175135dfe4e8a295fa405968548f9c0e4e160e2760cfb31766c"
+    },
+    {
+      "destination": "pc-port/src/compat/OriginalCameraTargetPlayer.cpp",
+      "source": "src/Game/Camera/CameraTargetObj.cpp",
+      "source_line": 203,
+      "signature": "bool CameraTargetPlayer::isWaterMode()",
+      "body_sha256": "2e2cdfbbc6cbde1e8bd30edd019d4d1e68bf704dd03b783a7ee9ef4d9a95dfa4"
+    },
+    {
+      "destination": "pc-port/src/compat/OriginalCameraTargetPlayer.cpp",
+      "source": "src/Game/Camera/CameraTargetObj.cpp",
+      "source_line": 207,
+      "signature": "bool CameraTargetPlayer::isOnWaterSurface()",
+      "body_sha256": "9d06e6bccaec3795c717b067cf40e6598f449fce170ddfcc1e1763aaa514d9ff"
+    },
+    {
+      "destination": "pc-port/src/compat/OriginalCameraTargetPlayer.cpp",
+      "source": "src/Game/Camera/CameraTargetObj.cpp",
+      "source_line": 211,
+      "signature": "bool CameraTargetPlayer::isFooFighterMode()",
+      "body_sha256": "451bb2943364dcf8f1fba9cb6a83429f676411b6806ad43aa0e8ce0bcb1c0095"
+    },
+    {
+      "destination": "pc-port/src/compat/OriginalCameraTargetPlayer.cpp",
+      "source": "src/Game/Camera/CameraTargetObj.cpp",
+      "source_line": 215,
+      "signature": "u32 CameraTargetPlayer::getSpecialMode()",
+      "body_sha256": "6b93f402807339b11392e6da1971bf85a7e6dec59931082d833b148d6210e235"
+    },
+    {
+      "destination": "pc-port/src/compat/OriginalCameraTargetPlayer.cpp",
+      "source": "src/Game/Camera/CameraTargetObj.cpp",
+      "source_line": 219,
+      "signature": "bool CameraTargetPlayer::isCameraStateOn(",
+      "body_sha256": "07bde64e7d2c73083c092597e71bbc2bd2e433a9120361ca4e9be6231a32ede4"
+    },
+    {
+      "destination": "pc-port/src/compat/OriginalCameraTargetPlayer.cpp",
+      "source": "src/Game/Camera/CameraTargetObj.cpp",
+      "source_line": 223,
+      "signature": "CubeCameraArea* CameraTargetPlayer::getCubeCameraArea()",
+      "body_sha256": "9504d3cbb0cf0a9b58486d8044661b78505f2a2162684b7fe30df17831f1b075"
+    },
+    {
+      "destination": "pc-port/src/compat/OriginalCameraTargetPlayer.cpp",
+      "source": "src/Game/Camera/CameraTargetObj.cpp",
+      "source_line": 227,
+      "signature": "Triangle* CameraTargetPlayer::getGroundTriangle()",
+      "body_sha256": "bc14e8a0d32bad233afdc33dc90ee1df43f34da013bb42e42d349c3cd8f48e95"
+    },
+    {
+      "destination": "pc-port/src/compat/OriginalCameraTargetPlayer.cpp",
+      "source": "src/Game/Camera/CameraTargetObj.cpp",
+      "source_line": 231,
+      "signature": "GravityInfo* CameraTargetPlayer::getGravityInfo()",
+      "body_sha256": "3f510fba99064b63e6ef101039f822fa55d0b405bc7d746b49eeff23051ede8d"
+    },
+    {
+      "destination": "pc-port/src/compat/OriginalCameraTargetPlayer.cpp",
+      "source": "src/Game/Camera/CameraTargetObj.cpp",
+      "source_line": 235,
+      "signature": "bool CameraTargetPlayer::isDebugMode()",
+      "body_sha256": "dcec24c74a19296f4a7e9291397257d7eda928f01554d8433c2cc22d2197d541"
+    },
+    {
+      "destination": "pc-port/src/compat/OriginalCameraTargetPlayer.cpp",
+      "source": "src/Game/Camera/CameraTargetObj.cpp",
+      "source_line": 239,
+      "signature": "TPos3f* CameraTargetPlayer::getMapBaseMtx()",
+      "body_sha256": "13ca7f81a1fdcf01e6fbe2d9ce3726e176315a12c4d9d2b2fa5b93f179b5ae65"
+    },
+    {
+      "destination": "pc-port/src/compat/MarioCameraAccessCompat.cpp",
+      "source": "src/Game/Player/MarioAccess.cpp",
+      "source_line": 49,
+      "signature": "bool isOnGround(u32 a1)",
+      "body_sha256": "14ee6784de2568c93b26e4661ef4e7fc6e37ee796efbbd504a3f3286f49b9ac7"
+    },
+    {
+      "destination": "pc-port/src/compat/MarioCameraAccessCompat.cpp",
+      "source": "src/Game/Player/MarioAccess.cpp",
+      "source_line": 86,
+      "signature": "bool isInRush()",
+      "body_sha256": "de48c66af45fb55cd07f3e042e43538ce40bc528f7eed7025547903ad65d4c9b"
+    },
+    {
+      "destination": "pc-port/src/compat/MarioCameraAccessCompat.cpp",
+      "source": "src/Game/Player/MarioAccess.cpp",
+      "source_line": 106,
+      "signature": "bool isFlying()",
+      "body_sha256": "41e8b0df77c271ef4106bb97bbb9612660b0a9b9cea6a19463d00f9f054618b7"
+    },
+    {
+      "destination": "pc-port/src/compat/MarioCameraAccessCompat.cpp",
+      "source": "src/Game/Player/MarioAccess.cpp",
+      "source_line": 118,
+      "signature": "CubeCameraArea* getCameraCubeCode()",
+      "body_sha256": "ce5002a2986f8cbffd9afa01aeb263a6e5dce599ab1f9b8031f26754e6796200"
+    },
+    {
+      "destination": "pc-port/src/compat/MarioCameraAccessCompat.cpp",
+      "source": "src/Game/Player/MarioAccess.cpp",
+      "source_line": 122,
+      "signature": "bool isSwimming()",
+      "body_sha256": "98b8cf3ed66c12cc8eb9019cdc5c9c7e6490b2f8755af68dbaae663624cd7760"
+    },
+    {
+      "destination": "pc-port/src/compat/MarioCameraAccessCompat.cpp",
+      "source": "src/Game/Player/MarioAccess.cpp",
+      "source_line": 130,
+      "signature": "Triangle* getGroundingPolygon(u32)",
+      "body_sha256": "50ca9bc190ec3a20835edf8f4199f881f3dc347adf70a194d6471d5e1dfa5356"
+    },
+    {
+      "destination": "pc-port/src/compat/MarioCameraAccessCompat.cpp",
+      "source": "src/Game/Player/MarioAccess.cpp",
+      "source_line": 338,
+      "signature": "TVec3f* getLastMove()",
+      "body_sha256": "8c73b5e59fa8a20834e7c93dbc21cec3f904555284bd5ac27a447c48979d5d42"
+    },
+    {
+      "destination": "pc-port/src/compat/MarioCameraAccessCompat.cpp",
+      "source": "src/Game/Player/MarioAccess.cpp",
+      "source_line": 562,
+      "signature": "MtxPtr getBaseMtx()",
+      "body_sha256": "1eb554f383f296a35372797961f7c45d1332886414b91e8c50d4c4eb66cb4c63"
+    },
+    {
+      "destination": "pc-port/src/compat/MarioCameraAccessCompat.cpp",
+      "source": "src/Game/Player/MarioAccess.cpp",
+      "source_line": 618,
+      "signature": "bool isOnWaterSurface()",
+      "body_sha256": "4786d8a969bf39605b43830dd5b643ad736fad82b37d726ab8c826250fa6efda"
+    },
+    {
+      "destination": "pc-port/src/compat/MarioCameraAccessCompat.cpp",
+      "source": "src/Game/Player/MarioAccess.cpp",
+      "source_line": 634,
+      "signature": "MarioActor* getPlayerActor()",
+      "body_sha256": "f7ec0a9a27350b49b851c411f38eca3d6cc2ac2b0723d4df05739edea7be7427"
+    },
+    {
+      "destination": "pc-port/src/compat/MarioCameraAccessCompat.cpp",
+      "source": "src/Game/Player/MarioAccess.cpp",
+      "source_line": 726,
+      "signature": "bool isInWaterMode()",
+      "body_sha256": "0890a40b73941cebf610dea69fe5e08914f370c25b9048c87a269ada1684def7"
+    },
+    {
+      "destination": "pc-port/src/compat/MarioCameraAccessCompat.cpp",
+      "source": "src/Game/Util/PlayerUtil.cpp",
+      "source_line": 27,
+      "signature": "Triangle* getPlayerGroundingPolygon()",
+      "body_sha256": "abc88f68f28ef1601dc788361425733378c3a9a7ce2b00e7a29911d3bce9a4aa"
+    },
+    {
+      "destination": "pc-port/src/compat/MarioCameraAccessCompat.cpp",
+      "source": "src/Game/Util/PlayerUtil.cpp",
+      "source_line": 95,
+      "signature": "TVec3f* getPlayerLastMove()",
+      "body_sha256": "919af4dfded3b7c061388688c82c63cc44e4d2aae99f5a2c1a11d09716a6d954"
+    },
+    {
+      "destination": "pc-port/src/compat/MarioCameraAccessCompat.cpp",
+      "source": "src/Game/Util/PlayerUtil.cpp",
+      "source_line": 406,
+      "signature": "bool isPlayerFlying()",
+      "body_sha256": "57a9574067bce2f7c9d5c64337461e801d2c0e3981b67a8c4c830a1862e7c0bd"
+    },
+    {
+      "destination": "pc-port/src/compat/MarioCameraAccessCompat.cpp",
+      "source": "src/Game/Util/PlayerUtil.cpp",
+      "source_line": 482,
+      "signature": "bool isPlayerInBind()",
+      "body_sha256": "c02adc42e0b0f1360dfcaccc1f4e9b716c8748f57517186cfc2fe5f095de6d2d"
+    },
+    {
+      "destination": "pc-port/src/compat/MarioCameraAccessCompat.cpp",
+      "source": "src/Game/Util/PlayerUtil.cpp",
+      "source_line": 842,
+      "signature": "bool isPlayerInWaterMode()",
+      "body_sha256": "3b587a2e3425cc9556a65c771a2814340997910a2f3064b75f4a036171ecdaca"
+    },
+    {
+      "destination": "pc-port/src/compat/MarioCameraAccessCompat.cpp",
+      "source": "src/Game/Util/PlayerUtil.cpp",
+      "source_line": 846,
+      "signature": "bool isPlayerOnWaterSurface()",
+      "body_sha256": "03c0365dde7272004bfb521e66fc8de261b664f2995c191223c86f65a47d9c6b"
+    },
+    {
+      "destination": "pc-port/src/compat/MarioCameraAccessCompat.cpp",
+      "source": "src/Game/Util/PlayerUtil.cpp",
+      "source_line": 862,
+      "signature": "u16 getPlayerMovementTimer()",
+      "body_sha256": "5012da1a38b43f9e56a196a2523bf7bd1c6daa67720926c5489c639067f8913a"
+    },
+    {
+      "destination": "pc-port/src/compat/MarioCameraAccessCompat.cpp",
+      "source": "src/Game/Util/PlayerUtil.cpp",
+      "source_line": 866,
+      "signature": "CubeCameraArea* getCameraCube()",
+      "body_sha256": "fae7d2d913819e7340ed8756141b6beb53f144ec2d133b079401b6c62cfd643e"
+    },
+    {
+      "destination": "pc-port/src/compat/MarioCameraAccessCompat.cpp",
+      "source": "src/Game/Player/MarioCollision.cpp",
+      "source_line": 1909,
+      "signature": "CubeCameraArea* Mario::getCameraCubeCode()",
+      "body_sha256": "0392a1b07a5e2ebc411ddc41781a7c2b203a75f9e9eda7f8eb166d4bb6a318d0"
+    },
+    {
+      "destination": "pc-port/src/compat/MarioCameraAccessCompat.cpp",
+      "source": "src/Game/Player/MarioSwim.cpp",
+      "source_line": 86,
+      "signature": "bool Mario::isSwimming()",
+      "body_sha256": "75f44cba325ba92038f753e9d4f349c857fda47282b3efa180ccd4e8563f7ee1"
+    },
+    {
+      "destination": "pc-port/src/compat/MarioCameraAccessCompat.cpp",
+      "source": "src/Game/Player/MarioJump.cpp",
+      "source_line": 24,
+      "signature": "bool Mario::isRising()",
+      "body_sha256": "aff012eb8af1059f30953680fc94b9921e7163fcac561aab4b02d6770b7d5d6d"
+    },
+    {
+      "destination": "pc-port/src/compat/MarioCameraAccessCompat.cpp",
+      "source": "src/Game/Player/MarioActorGravity.cpp",
+      "source_line": 29,
+      "signature": "GravityInfo* MarioActor::getGravityInfo()",
+      "body_sha256": "abd8fbaf1141d0db1b7bd08338514e494f6ed618f6bf201158908f2dc7e86555"
+    },
+    {
+      "destination": "pc-port/src/compat/MarioCameraAccessCompat.cpp",
+      "source": "src/Game/Player/MarioActor.cpp",
+      "source_line": 480,
+      "signature": "bool MarioActor::isAnimationRun(const char* pName) const",
+      "body_sha256": "c6aa21dd6a925acc6e60151e93c8d29da0050c0908698c6bc2a9bb3109286eeb"
+    },
+    {
+      "destination": "pc-port/src/compat/XanimeQueryCompat.cpp",
+      "source": "src/Game/Animation/XanimePlayer.cpp",
+      "source_line": 490,
+      "signature": "bool XanimePlayer::isRun(const char* pName) const",
+      "body_sha256": "3894d47a8c2cf848c13e1dd4ec54e3e3db364588468e1df94f01eec1a689b77d"
+    },
+    {
+      "destination": "pc-port/src/compat/XanimeQueryCompat.cpp",
+      "source": "src/Game/Animation/XanimePlayer.cpp",
+      "source_line": 592,
+      "signature": "XanimeGroupInfo* XanimePlayer::getSimpleGroup() const",
+      "body_sha256": "8c743ab97a2de041e8157ed4d8f78caf64ddc9ed87d74ae34079fb9ba7aba921"
+    },
+    {
+      "destination": "pc-port/src/compat/XanimeQueryCompat.cpp",
+      "source": "src/Game/Animation/XanimeResource.cpp",
+      "source_line": 213,
+      "signature": "const XanimeGroupInfo* XanimeResourceTable::getGroupInfo(const char* pArg) const",
+      "body_sha256": "6383a63710b1c168a65f66243310aa7b071e6979f18a147b38bfa06d71687fe4",
+      "source_body_sha256": "d90c8a80f7bbbfbcd3bad86d17c1ba7924d7def91b771f4a528ebda17e1f81c5",
+      "replacements": [
+        {
+          "before": "    case 1:\n",
+          "after": "    case 1: {\n"
+        },
+        {
+          "before": "        return &mGroupInfos[groupIndex];\n",
+          "after": "        return &mGroupInfos[groupIndex];\n    }\n"
+        }
+      ]
+    },
+    {
+      "destination": "pc-port/src/compat/XanimeQueryCompat.cpp",
+      "source": "src/Game/Animation/XanimeResource.cpp",
+      "source_line": 238,
+      "signature": "const XanimeGroupInfo* XanimeResourceTable::getGroupInfo(const char* pPath, XanimeDirectory* pDir) const",
+      "body_sha256": "d316a0ec64985b7a1b421eae5f769dde0e593714104582c8b4c208fd19618ed7"
+    },
+    {
+      "destination": "pc-port/src/compat/XanimeQueryCompat.cpp",
+      "source": "src/Game/Animation/XanimeResource.cpp",
+      "source_line": 305,
+      "signature": "u32 XanimeResourceTable::getIndex(XanimeDirectory* pDir, const char* pTarget) const",
+      "body_sha256": "35a44e66213ae88af4ca7f900cbb6966ca8efaef95a85a7613dc6d1a78b3b7e6"
+    },
+    {
+      "destination": "pc-port/src/compat/XanimeQueryCompat.cpp",
+      "source": "src/Game/Animation/XanimeResource.cpp",
+      "source_line": 333,
+      "signature": "u32 XanimeResourceTable::getGroupIndex(const char* pTarget) const",
+      "body_sha256": "8a69d2397a98936bf56968a6589b79411b5b6dc720763e95b908fdf90811db93"
+    },
+    {
+      "destination": "pc-port/src/compat/XanimeQueryCompat.cpp",
+      "source": "src/Game/Animation/XanimeResource.cpp",
+      "source_line": 375,
+      "signature": "u32 XanimeResourceTable::getSimpleIndex(const char* pTarget) const",
+      "body_sha256": "ffba1696f30339506415aba2c6037ded1a82173c025183a450ef2ed688004fa4"
+    },
+    {
+      "destination": "pc-port/src/compat/XanimeQueryCompat.cpp",
+      "source": "src/Game/Animation/XanimeResource.cpp",
+      "source_line": 395,
+      "signature": "void* XanimeResourceTable::findResMotion(const char* pTarget) const",
+      "body_sha256": "01c9c19f5c3018db4109e575e2f99443cd1184eb681e194af8128e0ed9aa73e9"
+    },
+    {
+      "destination": "pc-port/src/compat/XanimeQueryCompat.cpp",
+      "source": "src/Game/Animation/XanimeResource.cpp",
+      "source_line": 407,
+      "signature": "const char* XanimeResourceTable::swapBckName(const char* pOriginal, XanimeSwapTable* pTable) const",
+      "body_sha256": "19d5f56dc580c81af69ab23f6ba7605710a29c6535fc3fd5ce357c83328c1f3c"
+    },
+    {
+      "destination": "pc-port/src/compat/XanimeQueryCompat.cpp",
+      "source": "src/Game/System/ResourceInfo.cpp",
+      "source_line": 39,
+      "signature": "void* ResTable::getRes(const char* pName) const",
+      "body_sha256": "8d46e1694388efd3fb02bbbf11a735e1c205450947d4bba21d74abc3ae18055b"
+    },
+    {
+      "destination": "pc-port/src/compat/XanimeQueryCompat.cpp",
+      "source": "src/Game/System/ResourceInfo.cpp",
+      "source_line": 56,
+      "signature": "bool ResTable::isExistRes(const char* pRes) const",
+      "body_sha256": "c950d19753dc0fab6402b5e0c1567876cf2557085a46cf8e4e6708b526ebe634"
+    },
+    {
+      "destination": "pc-port/src/compat/XanimeQueryCompat.cpp",
+      "source": "src/Game/System/ResourceInfo.cpp",
+      "source_line": 60,
+      "signature": "void* ResTable::findRes(const char* pName) const",
+      "body_sha256": "f6c1195d9a2007585b6b012467e70f6ee29b5b407711c50575ecac664c57cf6c"
+    },
+    {
+      "destination": "pc-port/src/compat/XanimeQueryCompat.cpp",
+      "source": "src/Game/System/ResourceInfo.cpp",
+      "source_line": 70,
+      "signature": "int ResTable::getResIndex(const char* pName) const",
+      "body_sha256": "5bf9efe70e353df29d5968cfdec1b3313143155083788df30d32072e614cebf9"
+    },
+    {
+      "destination": "pc-port/src/compat/XanimeQueryCompat.cpp",
+      "source": "src/Game/Util/HashUtil.cpp",
+      "source_line": 111,
+      "signature": "bool HashSortTable::search(u32 a1, u32* a2)",
+      "body_sha256": "fafdfb058aab8be5a88c105e8ebacedf758a02bafde8adc41acaf23c5018ef81"
+    },
+    {
+      "destination": "pc-port/src/compat/XanimeQueryCompat.cpp",
+      "source": "src/Game/Util/StringUtil.cpp",
+      "source_line": 188,
+      "signature": "void extractString(char* pDst, const char* pSrc, u32 num, u32)",
+      "body_sha256": "3ac9615d2111579976f7e75e6a442428b929becc2b3d893d52634bc13642b2c1"
+    },
+    {
+      "destination": "pc-port/src/compat/XanimeQueryCompat.cpp",
+      "source": "src/Game/Util/HashUtil.cpp",
+      "source_line": 181,
+      "signature": "u32 getHashCodeLower(const char* pStr)",
+      "body_sha256": "72bed41d3e1aba103d882a9c14600673c0834b913cd842c910e570b309179a68",
+      "source_body_sha256": "9d30452bbe7e30b514d3eaf84bbc20dfb1678d8c939634fc3ddbd8c76c2c6f84",
+      "replacements": [
+        {
+          "before": "tolower(*pStr)",
+          "after": "__lower_mapC[static_cast<u8>(*pStr)]"
+        }
+      ]
+    }
+  ],
+  "data_blocks": [
+    {
+      "destination": "pc-port/src/compat/XanimeQueryCompat.cpp",
+      "source": "libs/MSL_C/source/ctype.c",
+      "start_marker": "const unsigned char __lower_mapC[0x100] = {",
+      "end_marker": "\n};",
+      "body_sha256": "6480d36acdd5f086e5e81df9b906ce22b303aee39f2bd46e37584f9f6c62b6d9"
+    }
+  ]
+}
