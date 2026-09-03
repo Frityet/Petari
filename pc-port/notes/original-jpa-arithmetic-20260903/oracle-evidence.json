@@ -1,0 +1,49 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "conversion_slice": [
+    "0x8044add8",
+    "0x8044ade8"
+  ],
+  "sphere_slice": [
+    "0x80448480",
+    "0x804484fc"
+  ],
+  "division_instruction": "0x804484a0",
+  "conversion_cases": 266257,
+  "division_cases": 100,
+  "sphere_cases": 4099,
+  "pole_examples": [
+    {
+      "angleNum": 0,
+      "angleMax": 1,
+      "x": 0,
+      "div": 9,
+      "sweep": 1,
+      "phi": 16384,
+      "theta": -32768
+    },
+    {
+      "angleNum": 0,
+      "angleMax": 1,
+      "x": 8,
+      "div": 9,
+      "sweep": 1,
+      "phi": -16384,
+      "theta": -32768
+    },
+    {
+      "angleNum": 0,
+      "angleMax": 0,
+      "x": 0,
+      "div": 1,
+      "sweep": 1,
+      "phi": 16384,
+      "theta": -32768
+    }
+  ],
+  "arithmetic_reference": [
+    "pc-port/dolphin/Source/Core/Core/PowerPC/Interpreter/Interpreter_Integer.cpp:500",
+    "pc-port/dolphin/Source/Core/Core/PowerPC/Interpreter/Interpreter_FloatingPoint.cpp:54"
+  ],
+  "case_sha256": "b6976ca565c139b38cac552a6b296a90a576d53d4189a2ca6be7cce9ae69716f"
+}

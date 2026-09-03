@@ -1,0 +1,22 @@
+[
+  {
+    "path": "pc-port/src/Game/System/ScenarioDataParser.cpp",
+    "staged": "build/original-camera-director-owner-20260903/staged/Game/System/ScenarioDataParser.cpp",
+    "sha256": "e82ea2f9f5b515668acc870ea6c8f09970c4a3ebd96fc019abae6b7c739ab897"
+  },
+  {
+    "path": "pc-port/src/runtime/ScenarioCatalogOwnership.hpp",
+    "staged": "build/original-camera-director-owner-20260903/staged/runtime/ScenarioCatalogOwnership.hpp",
+    "sha256": "2e74ac07dc18162d2cb370992389eae4cd039497d883c737bb99f15cadd7b290"
+  },
+  {
+    "path": "pc-port/src/runtime/ScenarioCatalogOwnership.cpp",
+    "staged": "build/original-camera-director-owner-20260903/staged/runtime/ScenarioCatalogOwnership.cpp",
+    "sha256": "00b4cc5eedf4307d3e77ab0d8791ce5ea529fb0f9e6f5a9f878224923919b7e0"
+  },
+  {
+    "path": "pc-port/src/compat/ScenarioDataParserAccess.cpp",
+    "staged": "build/original-camera-director-owner-20260903/staged/compat/ScenarioDataParserAccess.cpp",
+    "sha256": "0e1cb065b127773db93e6ec95e9ad57c7d9b0d7bb6af53157533c464761b5a14"
+  }
+]

@@ -1,0 +1,298 @@
+[0m[38;5;2;1m[  2%]:[0m [38;5;5;1m<smg-pc-showcase>[0m cache compiling.debug src/showcase/Showcase.cpp[0m
+[0m[38;5;2;1m[  2%]:[0m [38;5;5;1m<smg-pc-app>[0m cache compiling.debug src/app/Application.cpp[0m
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-mario-gateway-walk-slice>[0m cache compiling.debug src/Game/Player/Mario.cpp[0m
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-mario-gateway-walk-slice>[0m cache compiling.debug src/Game/Player/MarioActor.cpp[0m
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-mario-gateway-walk-slice>[0m cache compiling.debug src/Game/Player/MarioActorCamera.cpp[0m
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-mario-gateway-walk-slice>[0m cache compiling.debug src/Game/Player/MarioActorDraw.cpp[0m
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-mario-gateway-walk-slice>[0m cache compiling.debug src/Game/Player/MarioActorShadow.cpp[0m
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-mario-gateway-walk-slice>[0m cache compiling.debug src/Game/Player/MarioActorWipe.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Player/MarioActorCamera.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+/Users/frityet/Projects/petari/pc-port/src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+/Users/frityet/Projects/petari/pc-port/src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/Game/Player/MarioActorCamera.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+/Users/frityet/Projects/petari/pc-port/src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+/Users/frityet/Projects/petari/pc-port/src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 84%]:[0m [38;5;5;1m<smg-pc-mario-gateway-walk-slice>[0m cache compiling.debug src/Game/Player/MarioActorHand.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Player/MarioActorWipe.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+/Users/frityet/Projects/petari/pc-port/src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+/Users/frityet/Projects/petari/pc-port/src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/Game/Player/MarioActorWipe.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+/Users/frityet/Projects/petari/pc-port/src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+/Users/frityet/Projects/petari/pc-port/src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 85%]:[0m [38;5;5;1m<smg-pc-mario-gateway-walk-slice>[0m cache compiling.debug src/Game/Player/MarioActorSpecialDraw.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Player/MarioActorShadow.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+/Users/frityet/Projects/petari/pc-port/src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+/Users/frityet/Projects/petari/pc-port/src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/Game/Player/MarioActorShadow.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+/Users/frityet/Projects/petari/pc-port/src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+/Users/frityet/Projects/petari/pc-port/src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 85%]:[0m [38;5;5;1m<smg-pc-mario-gateway-walk-slice>[0m cache compiling.debug src/Game/Player/MarioActorEye.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Player/Mario.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+/Users/frityet/Projects/petari/pc-port/src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+/Users/frityet/Projects/petari/pc-port/src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/Game/Player/Mario.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+/Users/frityet/Projects/petari/pc-port/src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+/Users/frityet/Projects/petari/pc-port/src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 85%]:[0m [38;5;5;1m<smg-pc-mario-gateway-walk-slice>[0m cache compiling.debug src/Game/Player/MarioActorGravity.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Player/MarioActorDraw.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+/Users/frityet/Projects/petari/pc-port/src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+/Users/frityet/Projects/petari/pc-port/src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/Game/Player/MarioActorDraw.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+/Users/frityet/Projects/petari/pc-port/src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+/Users/frityet/Projects/petari/pc-port/src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 85%]:[0m [38;5;5;1m<smg-pc-mario-gateway-walk-slice>[0m cache compiling.debug src/Game/Player/MarioParts.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Player/MarioActor.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+/Users/frityet/Projects/petari/pc-port/src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+/Users/frityet/Projects/petari/pc-port/src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/Game/Player/MarioActor.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+/Users/frityet/Projects/petari/pc-port/src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+/Users/frityet/Projects/petari/pc-port/src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 85%]:[0m [38;5;5;1m<smg-pc-mario-gateway-walk-slice>[0m cache compiling.debug src/Game/Player/MarioEffect.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Player/MarioActorHand.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+/Users/frityet/Projects/petari/pc-port/src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+/Users/frityet/Projects/petari/pc-port/src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/Game/Player/MarioActorHand.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+/Users/frityet/Projects/petari/pc-port/src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+/Users/frityet/Projects/petari/pc-port/src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 85%]:[0m [38;5;5;1m<smg-pc-mario-gateway-walk-slice>[0m cache compiling.debug src/Game/Player/MarioActorParts.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Player/MarioActorSpecialDraw.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+/Users/frityet/Projects/petari/pc-port/src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+/Users/frityet/Projects/petari/pc-port/src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/Game/Player/MarioActorSpecialDraw.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+/Users/frityet/Projects/petari/pc-port/src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+/Users/frityet/Projects/petari/pc-port/src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 85%]:[0m [38;5;5;1m<smg-pc-mario-gateway-walk-slice>[0m cache compiling.debug src/Game/Player/MarioSearchLight.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Player/MarioActorGravity.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+/Users/frityet/Projects/petari/pc-port/src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+/Users/frityet/Projects/petari/pc-port/src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/Game/Player/MarioActorGravity.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+/Users/frityet/Projects/petari/pc-port/src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+/Users/frityet/Projects/petari/pc-port/src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 86%]:[0m [38;5;5;1m<smg-pc-mario-gateway-walk-slice>[0m cache compiling.debug src/Game/Player/MarioNullBck.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Player/MarioParts.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+/Users/frityet/Projects/petari/pc-port/src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+/Users/frityet/Projects/petari/pc-port/src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/Game/Player/MarioParts.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+/Users/frityet/Projects/petari/pc-port/src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+/Users/frityet/Projects/petari/pc-port/src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 86%]:[0m [38;5;5;1m<smg-pc-mario-gateway-walk-slice>[0m cache compiling.debug src/Game/Player/MarioTeresa.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Player/MarioActorEye.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+/Users/frityet/Projects/petari/pc-port/src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+/Users/frityet/Projects/petari/pc-port/src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/Game/Player/MarioActorEye.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+/Users/frityet/Projects/petari/pc-port/src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+/Users/frityet/Projects/petari/pc-port/src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 86%]:[0m [38;5;5;1m<smg-pc-mario-gateway-walk-slice>[0m cache compiling.debug src/Game/Player/FireMarioBall.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Player/MarioActorParts.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+/Users/frityet/Projects/petari/pc-port/src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+/Users/frityet/Projects/petari/pc-port/src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/Game/Player/MarioActorParts.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+/Users/frityet/Projects/petari/pc-port/src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+/Users/frityet/Projects/petari/pc-port/src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 86%]:[0m [38;5;5;1m<smg-pc-mario-gateway-walk-slice>[0m cache compiling.debug src/Game/Player/JetTurtleShadow.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Player/MarioSearchLight.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+/Users/frityet/Projects/petari/pc-port/src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+/Users/frityet/Projects/petari/pc-port/src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/Game/Player/MarioSearchLight.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+/Users/frityet/Projects/petari/pc-port/src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+/Users/frityet/Projects/petari/pc-port/src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 86%]:[0m [38;5;5;1m<smg-pc-mario-gateway-walk-slice>[0m cache compiling.debug src/Game/Player/TornadoMario.cpp[0m
+[0m[38;5;3;1mIn file included from src/showcase/Showcase.cpp:1:
+In file included from src/app/Application.hpp:12:
+In file included from src/runtime/RuntimeContext.hpp:24:
+In file included from src/runtime/RuntimeServices.hpp:22:
+In file included from src/camera/EventCamera.hpp:4:
+In file included from src/Game/Camera/CameraTargetObj.hpp:3:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/showcase/Showcase.cpp:1:
+In file included from src/app/Application.hpp:12:
+In file included from src/runtime/RuntimeContext.hpp:24:
+In file included from src/runtime/RuntimeServices.hpp:22:[0m
+[0m[38;5;2;1m[ 86%]:[0m [38;5;5;1m<smg-pc-mario-gateway-walk-slice>[0m cache compiling.debug src/Game/Player/MarioWait.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Player/MarioNullBck.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+/Users/frityet/Projects/petari/pc-port/src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+/Users/frityet/Projects/petari/pc-port/src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/Game/Player/MarioNullBck.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+/Users/frityet/Projects/petari/pc-port/src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+/Users/frityet/Projects/petari/pc-port/src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 86%]:[0m [38;5;5;1m<smg-pc-mario-gateway-walk-slice>[0m cache compiling.debug src/Game/Player/MarioActorInit.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Player/FireMarioBall.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+/Users/frityet/Projects/petari/pc-port/src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+/Users/frityet/Projects/petari/pc-port/src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/Game/Player/FireMarioBall.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+/Users/frityet/Projects/petari/pc-port/src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+/Users/frityet/Projects/petari/pc-port/src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 86%]:[0m [38;5;5;1m<smg-pc-mario-gateway-walk-slice>[0m cache compiling.debug src/Game/Player/MarioActorPad.cpp[0m
+[0m[1;38;5;1;1merror: [0msrc/Game/Player/MarioEffect.cpp:146:33: error: no member named 'emitEffectWithEmitterCallBack' in namespace 'MR'
+  146 |     MultiEmitter* emitter = MR::emitEffectWithEmitterCallBack(mActor, pEffectName, this);
+      |                                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:222:21: error: no member named 'setEffectHostSRT' in namespace 'MR'
+  222 |                 MR::setEffectHostSRT(this, entry->mEffects[i], nullptr, nullptr, nullptr);
+      |                     ^~~~~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:362:19: error: cannot initialize a variable of type 'MultiEmitter *' with an rvalue of type 'void'
+  362 |     MultiEmitter* emitter = MR::emitEffect(this, effectName);
+      |                   ^         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/Game/Player/MarioEffect.cpp:456:13: warning: 'sprintf' is deprecated: This function is provided for compatibility reasons only.  Due to security concerns inherent in the design of sprintf(3), it is highly recommended that you use snprintf(3) instead. [-Wdeprecated-declarations]
+  456 |             sprintf(name, "%s", entry->mName);
+      |             ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk/usr/include/_stdio.h:278:1: note: 'sprintf' has been explicitly marked deprecated here
+  278 | __deprecated_msg("This function is provided for compatibility reasons only.  Due to security concerns inherent in the design of sprintf(3), it is highly recommended that you use snprintf(3) instead.")
+      | ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk/usr/include/sys/cdefs.h:227:48: note: expanded from macro '__deprecated_msg'
+  227 |         #define __deprecated_msg(_msg) __attribute__((__deprecated__(_msg)))
+  [38;5;3m> in [1msrc/Game/Player/MarioEffect.cpp[0m

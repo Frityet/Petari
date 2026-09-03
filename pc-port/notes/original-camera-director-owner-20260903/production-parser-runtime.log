@@ -1,0 +1,5 @@
+allocFromHead: cannot alloc memory (0x30 byte).
+allocFromHead: cannot alloc memory (0x30 byte).
+PASS actual publication cycle=0 archives=48 gateway zones=7
+PASS actual publication cycle=1 archives=48 gateway zones=7
+PASS strict missing-owner, duplicate-owner, retained scene lease and constructor-failure retirement

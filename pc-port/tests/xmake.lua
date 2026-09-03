@@ -1548,6 +1548,54 @@ target("smg-pc-gravity-math-foundation-tests")
         realtime_output = true
     })
 
+target("smg-pc-original-scenario-catalog-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    if is_plat("macosx", "iphoneos") then
+        add_ldflags("-Wl,-dead_strip", {force = true})
+    else
+        add_ldflags("-Wl,--gc-sections", {force = true})
+    end
+    add_files("OriginalScenarioCatalogTests.cpp", "../aurora/lib/compat.cpp")
+    add_deps {"smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
+              "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"}
+    add_tests("original_scenario_catalog", {
+        group = "aurora", rundir = os.projectdir(), realtime_output = true
+    })
+
+target("smg-pc-scenario-publication-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    if is_plat("macosx", "iphoneos") then
+        add_ldflags("-Wl,-dead_strip", {force = true})
+    else
+        add_ldflags("-Wl,--gc-sections", {force = true})
+    end
+    add_files("ScenarioPublicationTests.cpp", "../aurora/lib/compat.cpp")
+    add_deps {"smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
+              "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"}
+    add_tests("scenario_publication", {
+        group = "aurora", rundir = os.projectdir(), realtime_output = true
+    })
+
+target("smg-pc-original-jpa-manager-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    if is_plat("macosx", "iphoneos") then
+        add_ldflags("-Wl,-dead_strip", {force = true})
+    else
+        add_ldflags("-Wl,--gc-sections", {force = true})
+    end
+    add_files("OriginalJpaManagerTests.cpp", "../aurora/lib/compat.cpp")
+    add_deps {"smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
+              "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"}
+    add_tests("original_jpa_manager", {
+        group = "aurora", rundir = os.projectdir(), realtime_output = true
+    })
+
 target("smg-pc-scene-scheduler-heap-tests")
     set_kind("binary")
     set_default(false)

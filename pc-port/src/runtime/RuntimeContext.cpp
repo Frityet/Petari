@@ -505,7 +505,7 @@ namespace smgpc::runtime {
         resource::GameResourceRuntime &resources,
         std::unique_ptr<JAudioPlaybackService> audio_playback,
         RuntimeContextSceneServiceMode scene_service_mode)
-        : _logger(logger), _window_service(window_service), _disc_files_root(resolve_disc_files_root()), _dvd(_disc_files_root),
+        : _logger(logger), _window_service(window_service), _disc_files_root(resolve_disc_files_root()), _dvd(_disc_files_root), _archive_mounts(_dvd),
           _j_audio_playback(audio_playback != nullptr
                                 ? std::move(audio_playback)
                                 : std::make_unique<JAudioPlaybackService>(_dvd)),
@@ -1106,6 +1106,9 @@ namespace smgpc::runtime {
     std::optional<std::filesystem::path> RuntimeContext::find_object_archive(std::string_view object_name) const {
         return _dvd.find_object_archive(object_name);
     }
+
+    ArchiveMountService &RuntimeContext::archive_mounts() { return _archive_mounts; }
+    const ArchiveMountService &RuntimeContext::archive_mounts() const { return _archive_mounts; }
 
     DvdFileSystemService &RuntimeContext::dvd() {
         return _dvd;

@@ -1,0 +1,17 @@
+{
+  "commit": "ed8e44d4be114fc70258fbfaeb239f3e83b041fe",
+  "files": [
+    {
+      "file": "pc-port/dolphin/Source/Core/Core/PowerPC/Interpreter/Interpreter_Integer.cpp",
+      "line_start": 500,
+      "line_end": 547,
+      "sha256": "c96c2c8653e0262b69442a2ce9b75ec45843b674ad75585388ecd4ae884924b9"
+    },
+    {
+      "file": "pc-port/dolphin/Source/Core/Core/PowerPC/Interpreter/Interpreter_FloatingPoint.cpp",
+      "line_start": 54,
+      "line_end": 120,
+      "sha256": "413687af3756bde737061cec51f3ac24c217346eba58ef4da9b1cdd44972b423"
+    }
+  ]
+}

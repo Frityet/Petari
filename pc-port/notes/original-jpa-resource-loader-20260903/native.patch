@@ -1,0 +1,3714 @@
+--- a/pc-port/src/JSystem/JGeometry/TVec.hpp
++++ b/pc-port/src/JSystem/JGeometry/TVec.hpp
+@@ -350,6 +350,17 @@
+             return normalize();
+         }
+ 
++        f32 setLength(const TVec3& rVec, f32 newlength) {
++            f32 oldlength = rVec.squared();
++            if (oldlength <= JGeometry::TUtil< f32 >::epsilon()) {
++                zero();
++                return 0.0f;
++            }
++            f32 lengthinv = JGeometry::TUtil< f32 >::inv_sqrt(oldlength);
++            scale(lengthinv * newlength, rVec);
++            return lengthinv * oldlength;
++        };
++
+         f32 setLength(f32 newLength) {
+             const f32 oldSquaredLength = squared();
+             if (oldSquaredLength <= TUtil<f32>::epsilon()) {
+--- /dev/null
++++ b/pc-port/src/JSystem/JParticle/JPABaseShape.cpp
+@@ -0,0 +1,862 @@
++#include "JSystem/JParticle/JPABaseShape.hpp"
++#include "JSystem/JKernel/JKRHeap.hpp"
++#include "JSystem/JMath/JMATrigonometric.hpp"
++#include "JSystem/JParticle/JPAEmitter.hpp"
++#include "JSystem/JParticle/JPAParticle.hpp"
++#include "JSystem/JParticle/JPAResourceManager.hpp"
++#include <revolution/gx/GXVert.h>
++#include <revolution/mtx.h>
++
++void JPASetPointSize(JPAEmitterWorkData* work) {
++    GXSetPointSize((u8)(25.0f * work->mGlobalPtclScl.x), GX_TO_ONE);
++}
++
++void JPASetLineWidth(JPAEmitterWorkData* work) {
++    GXSetLineWidth((u8)(25.0f * work->mGlobalPtclScl.x), GX_TO_ONE);
++}
++
++void JPASetPointSize(JPAEmitterWorkData* work, JPABaseParticle* ptcl) {
++    GXSetPointSize((u8)(ptcl->mParticleScaleX * (25.0f * work->mGlobalPtclScl.x)), GX_TO_ONE);
++}
++
++void JPASetLineWidth(JPAEmitterWorkData* work, JPABaseParticle* ptcl) {
++    GXSetLineWidth((u8)(ptcl->mParticleScaleX * (25.0f * work->mGlobalPtclScl.x)), GX_TO_ONE);
++}
++
++void JPARegistPrm(JPAEmitterWorkData* work) {
++    JPABaseEmitter* emtr = work->mpEmtr;
++    GXColor prm = emtr->mPrmClr;
++    prm.r = COLOR_MULTI(prm.r, emtr->mGlobalPrmClr.r);
++    prm.g = COLOR_MULTI(prm.g, emtr->mGlobalPrmClr.g);
++    prm.b = COLOR_MULTI(prm.b, emtr->mGlobalPrmClr.b);
++    prm.a = COLOR_MULTI(prm.a, emtr->mGlobalPrmClr.a);
++    GXSetTevColor(GX_TEVREG0, prm);
++}
++
++void JPARegistEnv(JPAEmitterWorkData* work) {
++    JPABaseEmitter* emtr = work->mpEmtr;
++    GXColor env = emtr->mEnvClr;
++    env.r = COLOR_MULTI(env.r, emtr->mGlobalEnvClr.r);
++    env.g = COLOR_MULTI(env.g, emtr->mGlobalEnvClr.g);
++    env.b = COLOR_MULTI(env.b, emtr->mGlobalEnvClr.b);
++    GXSetTevColor(GX_TEVREG1, env);
++}
++
++void JPARegistPrmEnv(JPAEmitterWorkData* work) {
++    JPABaseEmitter* emtr = work->mpEmtr;
++    GXColor prm = emtr->mPrmClr;
++    GXColor env = emtr->mEnvClr;
++    prm.r = COLOR_MULTI(prm.r, emtr->mGlobalPrmClr.r);
++    prm.g = COLOR_MULTI(prm.g, emtr->mGlobalPrmClr.g);
++    prm.b = COLOR_MULTI(prm.b, emtr->mGlobalPrmClr.b);
++    prm.a = COLOR_MULTI(prm.a, emtr->mGlobalPrmClr.a);
++    env.r = COLOR_MULTI(env.r, emtr->mGlobalEnvClr.r);
++    env.g = COLOR_MULTI(env.g, emtr->mGlobalEnvClr.g);
++    env.b = COLOR_MULTI(env.b, emtr->mGlobalEnvClr.b);
++    GXSetTevColor(GX_TEVREG0, prm);
++    GXSetTevColor(GX_TEVREG1, env);
++}
++
++void JPARegistAlpha(JPAEmitterWorkData* work, JPABaseParticle* ptcl) {
++    JPABaseEmitter* emtr = work->mpEmtr;
++    GXColor prm = emtr->mPrmClr;
++    prm.r = COLOR_MULTI(prm.r, emtr->mGlobalPrmClr.r);
++    prm.g = COLOR_MULTI(prm.g, emtr->mGlobalPrmClr.g);
++    prm.b = COLOR_MULTI(prm.b, emtr->mGlobalPrmClr.b);
++    prm.a = COLOR_MULTI(prm.a, emtr->mGlobalPrmClr.a);
++    prm.a = COLOR_MULTI(prm.a, ptcl->mPrmColorAlphaAnm);
++    GXSetTevColor(GX_TEVREG0, prm);
++}
++
++void JPARegistPrmAlpha(JPAEmitterWorkData* work, JPABaseParticle* ptcl) {
++    JPABaseEmitter* emtr = work->mpEmtr;
++    GXColor prm = ptcl->mPrmClr;
++    prm.r = COLOR_MULTI(prm.r, emtr->mGlobalPrmClr.r);
++    prm.g = COLOR_MULTI(prm.g, emtr->mGlobalPrmClr.g);
++    prm.b = COLOR_MULTI(prm.b, emtr->mGlobalPrmClr.b);
++    prm.a = COLOR_MULTI(prm.a, emtr->mGlobalPrmClr.a);
++    prm.a = COLOR_MULTI(prm.a, ptcl->mPrmColorAlphaAnm);
++    GXSetTevColor(GX_TEVREG0, prm);
++}
++
++void JPARegistPrmAlphaEnv(JPAEmitterWorkData* work, JPABaseParticle* ptcl) {
++    JPABaseEmitter* emtr = work->mpEmtr;
++    GXColor prm = ptcl->mPrmClr;
++    GXColor env = ptcl->mEnvClr;
++    prm.r = COLOR_MULTI(prm.r, emtr->mGlobalPrmClr.r);
++    prm.g = COLOR_MULTI(prm.g, emtr->mGlobalPrmClr.g);
++    prm.b = COLOR_MULTI(prm.b, emtr->mGlobalPrmClr.b);
++    prm.a = COLOR_MULTI(prm.a, emtr->mGlobalPrmClr.a);
++    prm.a = COLOR_MULTI(prm.a, ptcl->mPrmColorAlphaAnm);
++    env.r = COLOR_MULTI(env.r, emtr->mGlobalEnvClr.r);
++    env.g = COLOR_MULTI(env.g, emtr->mGlobalEnvClr.g);
++    env.b = COLOR_MULTI(env.b, emtr->mGlobalEnvClr.b);
++    GXSetTevColor(GX_TEVREG0, prm);
++    GXSetTevColor(GX_TEVREG1, env);
++}
++
++void JPARegistAlphaEnv(JPAEmitterWorkData* work, JPABaseParticle* ptcl) {
++    JPABaseEmitter* emtr = work->mpEmtr;
++    GXColor prm = emtr->mPrmClr;
++    GXColor env = ptcl->mEnvClr;
++    prm.r = COLOR_MULTI(prm.r, emtr->mGlobalPrmClr.r);
++    prm.g = COLOR_MULTI(prm.g, emtr->mGlobalPrmClr.g);
++    prm.b = COLOR_MULTI(prm.b, emtr->mGlobalPrmClr.b);
++    prm.a = COLOR_MULTI(prm.a, emtr->mGlobalPrmClr.a);
++    prm.a = COLOR_MULTI(prm.a, ptcl->mPrmColorAlphaAnm);
++    env.r = COLOR_MULTI(env.r, emtr->mGlobalEnvClr.r);
++    env.g = COLOR_MULTI(env.g, emtr->mGlobalEnvClr.g);
++    env.b = COLOR_MULTI(env.b, emtr->mGlobalEnvClr.b);
++    GXSetTevColor(GX_TEVREG0, prm);
++    GXSetTevColor(GX_TEVREG1, env);
++}
++
++void JPARegistEnv(JPAEmitterWorkData* work, JPABaseParticle* ptcl) {
++    JPABaseEmitter* emtr = work->mpEmtr;
++    GXColor env = ptcl->mEnvClr;
++    env.r = COLOR_MULTI(env.r, emtr->mGlobalEnvClr.r);
++    env.g = COLOR_MULTI(env.g, emtr->mGlobalEnvClr.g);
++    env.b = COLOR_MULTI(env.b, emtr->mGlobalEnvClr.b);
++    GXSetTevColor(GX_TEVREG1, env);
++}
++
++void JPACalcClrIdxNormal(JPAEmitterWorkData* work) {
++    JPABaseShape* bsp = work->mpRes->getBsp();
++    s16 keyFrame;
++    if (work->mpEmtr->mTick < bsp->getClrAnmMaxFrm()) {
++        keyFrame = work->mpEmtr->mTick;
++    } else {
++        keyFrame = bsp->getClrAnmMaxFrm();
++    }
++    work->mClrKeyFrame = keyFrame;
++}
++
++void JPACalcClrIdxNormal(JPAEmitterWorkData* work, JPABaseParticle* param_1) {
++    JPABaseShape* shape = work->mpRes->getBsp();
++    s16 age = param_1->mAge;
++    s16 maxFrm = shape->getClrAnmMaxFrm();
++    s16 keyFrame;
++    if (age < maxFrm) {
++        keyFrame = age;
++    } else {
++        keyFrame = maxFrm;
++    }
++    work->mClrKeyFrame = keyFrame;
++}
++
++void JPACalcClrIdxRepeat(JPAEmitterWorkData* work) {
++    JPABaseShape* shape = work->mpRes->getBsp();
++    work->mClrKeyFrame = work->mpEmtr->mTick % (shape->getClrAnmMaxFrm() + 1);
++}
++
++void JPACalcClrIdxRepeat(JPAEmitterWorkData* work, JPABaseParticle* param_1) {
++    JPABaseShape* shape = work->mpRes->getBsp();
++    s32 tick = shape->getClrLoopOfst(param_1->mAnmRandom);
++    tick = param_1->mAge + tick;
++    work->mClrKeyFrame = tick % (shape->getClrAnmMaxFrm() + 1);
++}
++
++void JPACalcClrIdxReverse(JPAEmitterWorkData* work) {
++    JPABaseShape* shape = work->mpRes->getBsp();
++    int maxFrm = shape->getClrAnmMaxFrm();
++    u32 tick = work->mpEmtr->mTick;
++    u32 uVar1 = tick / maxFrm;
++    tick = tick % maxFrm;
++    uVar1 &= 1;
++    work->mClrKeyFrame = tick + (uVar1) * (maxFrm - tick * 2);
++}
++
++void JPACalcClrIdxReverse(JPAEmitterWorkData* work, JPABaseParticle* param_1) {
++    JPABaseShape* shape = work->mpRes->getBsp();
++    s32 tick = param_1->mAge + shape->getClrLoopOfst(param_1->mAnmRandom);
++    s32 maxFrm = shape->getClrAnmMaxFrm();
++    s32 rem = tick % maxFrm;
++    work->mClrKeyFrame = rem + ((tick / maxFrm) & 1) * (maxFrm - rem * 2);
++}
++
++void JPACalcClrIdxMerge(JPAEmitterWorkData* work) {
++    work->mClrKeyFrame = 0;
++}
++
++void JPACalcClrIdxMerge(JPAEmitterWorkData* work, JPABaseParticle* param_1) {
++    JPABaseShape* shape = work->mpRes->getBsp();
++    s32 maxFrm = shape->getClrAnmMaxFrm() + 1;
++    s32 tick = (s32)(param_1->mTime * maxFrm) + shape->getClrLoopOfst(param_1->mAnmRandom);
++    work->mClrKeyFrame = tick % maxFrm;
++}
++
++void JPACalcClrIdxRandom(JPAEmitterWorkData* work) {
++    work->mClrKeyFrame = 0;
++}
++
++void JPACalcClrIdxRandom(JPAEmitterWorkData* work, JPABaseParticle* param_1) {
++    JPABaseShape* shape = work->mpRes->getBsp();
++    s32 tick = shape->getClrLoopOfst(param_1->mAnmRandom);
++    s32 maxFrm = shape->getClrAnmMaxFrm() + 1;
++    work->mClrKeyFrame = tick % maxFrm;
++}
++
++void JPACalcPrm(JPAEmitterWorkData* work) {
++    work->mpRes->getBsp()->getPrmClr(work->mClrKeyFrame, &work->mpEmtr->mPrmClr);
++}
++
++void JPACalcPrm(JPAEmitterWorkData* work, JPABaseParticle* ptcl) {
++    work->mpRes->getBsp()->getPrmClr(work->mClrKeyFrame, &ptcl->mPrmClr);
++}
++
++void JPACalcEnv(JPAEmitterWorkData* work) {
++    work->mpRes->getBsp()->getEnvClr(work->mClrKeyFrame, &work->mpEmtr->mEnvClr);
++}
++
++void JPACalcEnv(JPAEmitterWorkData* work, JPABaseParticle* ptcl) {
++    work->mpRes->getBsp()->getEnvClr(work->mClrKeyFrame, &ptcl->mEnvClr);
++}
++
++void JPACalcColorCopy(JPAEmitterWorkData* work, JPABaseParticle* ptcl) {
++    JPABaseEmitter* emtr = work->mpEmtr;
++    ptcl->mPrmClr = emtr->mPrmClr;
++    ptcl->mEnvClr = emtr->mEnvClr;
++}
++
++void JPAGenTexCrdMtxIdt(JPAEmitterWorkData* param_0) {
++    GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
++}
++
++void JPAGenTexCrdMtxAnm(JPAEmitterWorkData* param_0) {
++    GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_TEXMTX0, GX_FALSE, GX_PTIDENTITY);
++}
++
++void JPAGenTexCrdMtxPrj(JPAEmitterWorkData* param_0) {
++    GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX3x4, GX_TG_POS, GX_TEXMTX0, GX_FALSE, GX_PTIDENTITY);
++}
++
++void JPAGenCalcTexCrdMtxAnm(JPAEmitterWorkData* work) {
++    JPABaseShape* shape = work->mpRes->getBsp();
++    f32 dVar16 = work->mpEmtr->mTick;
++    f32 dVar15 = 0.5f * (1.0f + shape->getTilingS());
++    f32 dVar14 = 0.5f * (1.0f + shape->getTilingT());
++    f32 dVar11 = (dVar16 * shape->getIncTransX()) + shape->getInitTransX();
++    f32 dVar10 = (dVar16 * shape->getIncTransY()) + shape->getInitTransY();
++    f32 dVar13 = (dVar16 * shape->getIncScaleX()) + shape->getInitScaleX();
++    f32 dVar12 = (dVar16 * shape->getIncScaleY()) + shape->getInitScaleY();
++    s32 local_c0 = (dVar16 * shape->getIncRot()) + shape->getInitRot();
++    f32 dVar8 = JMASSin(local_c0);
++    f32 dVar9 = JMASCos(local_c0);
++    Mtx local_108;
++    local_108[0][0] = dVar13 * dVar9;
++    local_108[0][1] = -dVar13 * dVar8;
++    local_108[0][2] = 0.0f;
++    local_108[0][3] = (dVar15 + (dVar13 * ((dVar8 * (dVar14 + dVar10)) - (dVar9 * (dVar15 + dVar11)))));
++    local_108[1][0] = dVar12 * dVar8;
++    local_108[1][1] = dVar12 * dVar9;
++    local_108[1][2] = 0.0f;
++    local_108[1][3] = (dVar14 + (-dVar12 * ((dVar8 * (dVar15 + dVar11)) + (dVar9 * (dVar14 + dVar10)))));
++    local_108[2][0] = 0.0f;
++    local_108[2][1] = 0.0f;
++    local_108[2][2] = 1.0f;
++    local_108[2][3] = 0.0f;
++    GXLoadTexMtxImm(local_108, 0x1e, GX_MTX2x4);
++    GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, 0x1e, false, 0x7d);
++}
++
++void JPALoadCalcTexCrdMtxAnm(JPAEmitterWorkData* work, JPABaseParticle* param_1) {
++    JPABaseShape* shape = work->mpRes->getBsp();
++    f32 dVar16 = param_1->mAge;
++    f32 dVar15 = 0.5f * (1.0f + shape->getTilingS());
++    f32 dVar14 = 0.5f * (1.0f + shape->getTilingT());
++    f32 dVar11 = (dVar16 * shape->getIncTransX()) + shape->getInitTransX();
++    f32 dVar10 = (dVar16 * shape->getIncTransY()) + shape->getInitTransY();
++    f32 dVar13 = (dVar16 * shape->getIncScaleX()) + shape->getInitScaleX();
++    f32 dVar12 = (dVar16 * shape->getIncScaleY()) + shape->getInitScaleY();
++    s32 local_c0 = (dVar16 * shape->getIncRot()) + shape->getInitRot();
++    f32 dVar8 = JMASSin(local_c0);
++    f32 dVar9 = JMASCos(local_c0);
++    Mtx local_108;
++    local_108[0][0] = dVar13 * dVar9;
++    local_108[0][1] = -dVar13 * dVar8;
++    local_108[0][2] = 0.0f;
++    local_108[0][3] = (dVar15 + (dVar13 * ((dVar8 * (dVar14 + dVar10)) - (dVar9 * (dVar15 + dVar11)))));
++    local_108[1][0] = dVar12 * dVar8;
++    local_108[1][1] = dVar12 * dVar9;
++    local_108[1][2] = 0.0f;
++    local_108[1][3] = (dVar14 + (-dVar12 * ((dVar8 * (dVar15 + dVar11)) + (dVar9 * (dVar14 + dVar10)))));
++    local_108[2][0] = 0.0f;
++    local_108[2][1] = 0.0f;
++    local_108[2][2] = 1.0f;
++    local_108[2][3] = 0.0f;
++    GXLoadTexMtxImm(local_108, 0x1e, GX_MTX2x4);
++}
++
++void JPALoadTex(JPAEmitterWorkData* work) {
++    work->mpResMgr->load(work->mpRes->getTexIdx(work->mpRes->getBsp()->getTexIdx()), GX_TEXMAP0);
++}
++
++void JPALoadTexAnm(JPAEmitterWorkData* work) {
++    work->mpResMgr->load(work->mpRes->getTexIdx(work->mpEmtr->mTexAnmIdx), GX_TEXMAP0);
++}
++
++void JPALoadTexAnm(JPAEmitterWorkData* work, JPABaseParticle* ptcl) {
++    work->mpResMgr->load(work->mpRes->getTexIdx(ptcl->mTexAnmIdx), GX_TEXMAP0);
++}
++
++void JPACalcTexIdxNormal(JPAEmitterWorkData* work) {
++    JPABaseShape* shape = work->mpRes->getBsp();
++    u8 tick = shape->getTexAnmKeyNum() - 1 < work->mpEmtr->mTick ? shape->getTexAnmKeyNum() - 1 : work->mpEmtr->mTick;
++    work->mpEmtr->mTexAnmIdx = shape->getTexIdx(tick);
++}
++
++void JPACalcTexIdxNormal(JPAEmitterWorkData* work, JPABaseParticle* param_1) {
++    JPABaseShape* shape = work->mpRes->getBsp();
++    u8 tick = shape->getTexAnmKeyNum() - 1 < param_1->mAge ? shape->getTexAnmKeyNum() - 1 : param_1->mAge;
++    param_1->mTexAnmIdx = shape->getTexIdx(tick);
++}
++
++void JPACalcTexIdxRepeat(JPAEmitterWorkData* work) {
++    JPABaseShape* shape = work->mpRes->getBsp();
++    work->mpEmtr->mTexAnmIdx = shape->getTexIdx(work->mpEmtr->mTick % shape->getTexAnmKeyNum());
++}
++
++void JPACalcTexIdxRepeat(JPAEmitterWorkData* work, JPABaseParticle* param_1) {
++    JPABaseShape* shape = work->mpRes->getBsp();
++    param_1->mTexAnmIdx = shape->getTexIdx(((int)shape->getTexLoopOfst(param_1->mAnmRandom) + param_1->mAge) % shape->getTexAnmKeyNum());
++}
++
++void JPACalcTexIdxReverse(JPAEmitterWorkData* work) {
++    JPABaseShape* shape = work->mpRes->getBsp();
++    int tick = work->mpEmtr->mTick;
++    int keyNum = (int)shape->getTexAnmKeyNum() - 1;
++    int div = tick / keyNum;
++    int rem = tick % keyNum;
++    work->mpEmtr->mTexAnmIdx = shape->getTexIdx(rem + (div & 1) * (keyNum - rem * 2));
++}
++
++void JPACalcTexIdxReverse(JPAEmitterWorkData* work, JPABaseParticle* param_1) {
++    JPABaseShape* shape = work->mpRes->getBsp();
++    s32 tick = shape->getTexLoopOfst(param_1->mAnmRandom) + param_1->mAge;
++    int keyNum = (int)shape->getTexAnmKeyNum() - 1;
++    int div = tick / keyNum;
++    int rem = tick % keyNum;
++    param_1->mTexAnmIdx = shape->getTexIdx(rem + (div & 1) * (keyNum - rem * 2));
++}
++
++void JPACalcTexIdxMerge(JPAEmitterWorkData* work) {
++    work->mpEmtr->mTexAnmIdx = work->mpRes->getBsp()->getTexIdx();
++}
++
++void JPACalcTexIdxMerge(JPAEmitterWorkData* work, JPABaseParticle* param_1) {
++    JPABaseShape* shape = work->mpRes->getBsp();
++    s32 maxFrm = shape->getTexAnmKeyNum();
++    s32 tick = (s32)(maxFrm * param_1->mTime) + shape->getTexLoopOfst(param_1->mAnmRandom);
++    param_1->mTexAnmIdx = shape->getTexIdx(tick % maxFrm);
++}
++
++void JPACalcTexIdxRandom(JPAEmitterWorkData* work) {
++    work->mpEmtr->mTexAnmIdx = work->mpRes->getBsp()->getTexIdx();
++}
++
++void JPACalcTexIdxRandom(JPAEmitterWorkData* work, JPABaseParticle* param_1) {
++    JPABaseShape* shape = work->mpRes->getBsp();
++    param_1->mTexAnmIdx = shape->getTexIdx(((int)shape->getTexLoopOfst(param_1->mAnmRandom)) % shape->getTexAnmKeyNum());
++}
++
++void JPALoadPosMtxCam(JPAEmitterWorkData* work) {
++    GXLoadPosMtxImm(work->mPosCamMtx, GX_PNMTX0);
++}
++
++static void noLoadPrj(JPAEmitterWorkData const* work, const Mtx srt) {
++    /* empty function */
++}
++
++void loadPrj(JPAEmitterWorkData const* work, const Mtx srt) {
++    Mtx mtx;
++    PSMTXConcat(work->mPrjMtx, srt, mtx);
++    GXLoadTexMtxImm(mtx, GX_TEXMTX0, GX_MTX3x4);
++}
++
++static void loadPrjAnm(JPAEmitterWorkData const* work, const Mtx srt) {
++    JPABaseShape* shape = work->mpRes->getBsp();
++    f32 dVar16 = work->mpEmtr->getAge();
++    f32 dVar15 = 0.5f * (1.0f + shape->getTilingS());
++    f32 dVar14 = 0.5f * (1.0f + shape->getTilingT());
++    f32 dVar11 = (dVar16 * shape->getIncTransX()) + shape->getInitTransX();
++    f32 dVar10 = (dVar16 * shape->getIncTransY()) + shape->getInitTransY();
++    f32 dVar13 = (dVar16 * shape->getIncScaleX()) + shape->getInitScaleX();
++    f32 dVar12 = (dVar16 * shape->getIncScaleY()) + shape->getInitScaleY();
++    s32 local_c0 = (dVar16 * shape->getIncRot()) + shape->getInitRot();
++    f32 dVar8 = JMASSin(local_c0);
++    f32 dVar9 = JMASCos(local_c0);
++    Mtx local_108;
++    local_108[0][0] = dVar13 * dVar9;
++    local_108[0][1] = -dVar13 * dVar8;
++    local_108[0][2] = (dVar15 + (dVar13 * ((dVar8 * (dVar14 + dVar10)) - (dVar9 * (dVar15 + dVar11)))));
++    local_108[0][3] = 0.0f;
++    local_108[1][0] = dVar12 * dVar8;
++    local_108[1][1] = dVar12 * dVar9;
++    local_108[1][2] = (dVar14 + (-dVar12 * ((dVar8 * (dVar15 + dVar11)) + (dVar9 * (dVar14 + dVar10)))));
++    local_108[1][3] = 0.0f;
++    local_108[2][0] = 0.0f;
++    local_108[2][1] = 0.0f;
++    local_108[2][2] = 1.0f;
++    local_108[2][3] = 0.0f;
++    PSMTXConcat(local_108, work->mPrjMtx, local_108);
++    PSMTXConcat(local_108, srt, local_108);
++    GXLoadTexMtxImm(local_108, 0x1e, GX_MTX3x4);
++}
++
++static u8 jpa_dl[32] = {
++    0x80, 0x00, 0x04, 0x00, 0x00, 0x01, 0x01, 0x02, 0x02, 0x03, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00,
++    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++};
++
++static u8 jpa_dl_x[32] = {
++    0x80, 0x00, 0x08, 0x00, 0x00, 0x01, 0x01, 0x02, 0x02, 0x03, 0x03, 0x48, 0x00, 0x49, 0x01, 0x4A,
++    0x02, 0x4B, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++};
++
++typedef void (*projectionFunc)(JPAEmitterWorkData const*, const Mtx);
++
++static projectionFunc p_prj[3] = {
++    noLoadPrj,
++    loadPrj,
++    loadPrjAnm,
++};
++
++void JPADrawBillboard(JPAEmitterWorkData* work, JPABaseParticle* param_1) {
++    if (param_1->checkStatus(8) == 0) {
++        JGeometry::TVec3< f32 > local_48;
++        PSMTXMultVec(work->mPosCamMtx, &param_1->mPosition, &local_48);
++        Mtx local_38;
++        local_38[0][0] = work->mGlobalPtclScl.x * param_1->mParticleScaleX;
++        local_38[0][3] = local_48.x;
++        local_38[1][1] = work->mGlobalPtclScl.y * param_1->mParticleScaleY;
++        local_38[1][3] = local_48.y;
++        local_38[2][2] = 1.0f;
++        local_38[2][3] = local_48.z;
++        local_38[2][1] = 0.0f;
++        local_38[2][0] = 0.0f;
++        local_38[1][2] = 0.0f;
++        local_38[1][0] = 0.0f;
++        local_38[0][2] = 0.0f;
++        local_38[0][1] = 0.0f;
++        GXLoadPosMtxImm(local_38, 0);
++        p_prj[work->mPrjType](work, local_38);
++        GXCallDisplayList(jpa_dl, sizeof(jpa_dl));
++    }
++}
++
++void JPADrawRotBillboard(JPAEmitterWorkData* work, JPABaseParticle* param_1) {
++    if (param_1->checkStatus(8) == 0) {
++        JGeometry::TVec3< f32 > local_48;
++        PSMTXMultVec(work->mPosCamMtx, &param_1->mPosition, &local_48);
++        f32 sinRot = JMASSin(param_1->mRotateAngle);
++        f32 cosRot = JMASCos(param_1->mRotateAngle);
++        f32 particleX = work->mGlobalPtclScl.x * param_1->mParticleScaleX;
++        f32 particleY = work->mGlobalPtclScl.y * param_1->mParticleScaleY;
++
++        Mtx local_38;
++        local_38[0][0] = cosRot * particleX;
++        local_38[0][1] = -sinRot * particleY;
++        local_38[0][3] = local_48.x;
++        local_38[1][0] = sinRot * particleX;
++        local_38[1][1] = cosRot * particleY;
++        local_38[1][3] = local_48.y;
++        local_38[2][2] = 1.0f;
++        local_38[2][3] = local_48.z;
++        local_38[2][1] = 0.0f;
++        local_38[2][0] = 0.0f;
++        local_38[1][2] = 0.0f;
++        local_38[0][2] = 0.0f;
++        GXLoadPosMtxImm(local_38, 0);
++        p_prj[work->mPrjType](work, local_38);
++        GXCallDisplayList(jpa_dl, sizeof(jpa_dl));
++    }
++}
++
++void dirTypeVel(JPAEmitterWorkData const* work, JPABaseParticle const* param_1, JGeometry::TVec3< f32 >* param_2) {
++    param_1->getVelVec(*param_2);
++}
++
++void dirTypePos(JPAEmitterWorkData const* work, JPABaseParticle const* param_1, JGeometry::TVec3< f32 >* param_2) {
++    param_1->getLocalPosition(*param_2);
++}
++
++void dirTypePosInv(JPAEmitterWorkData const* work, JPABaseParticle const* param_1, JGeometry::TVec3< f32 >* param_2) {
++    param_1->getLocalPosition(*param_2);
++    param_2->negate();
++}
++
++void dirTypeEmtrDir(JPAEmitterWorkData const* work, JPABaseParticle const* param_1, JGeometry::TVec3< f32 >* param_2) {
++    param_2->set(work->mGlobalEmtrDir);
++}
++
++void dirTypePrevPtcl(JPAEmitterWorkData const* work, JPABaseParticle const* param_1, JGeometry::TVec3< f32 >* param_2) {
++    JGeometry::TVec3< f32 > aTStack_24;
++    param_1->getGlobalPosition(aTStack_24);
++    JPANode< JPABaseParticle >* end = work->mpAlivePtcl->getEnd();
++    JPANode< JPABaseParticle >* prev = work->mpCurNode->getPrev();
++
++    if (end != prev) {
++        JPABaseParticle* particle = work->mpCurNode->getPrev()->getObject();
++        particle->getGlobalPosition(*param_2);
++    } else {
++        work->mpEmtr->calcEmitterGlobalPosition(param_2);
++    }
++    param_2->sub(aTStack_24);
++}
++
++static void rotTypeY(f32 param_0, f32 param_1, Mtx& param_2) {
++    param_2[0][0] = param_1;
++    param_2[0][1] = 0.0f;
++    param_2[0][2] = -param_0;
++    param_2[0][3] = 0.0f;
++    param_2[1][0] = 0.0f;
++    param_2[1][1] = 1.0f;
++    param_2[1][2] = 0.0f;
++    param_2[1][3] = 0.0f;
++    param_2[2][0] = param_0;
++    param_2[2][1] = 0.0f;
++    param_2[2][2] = param_1;
++    param_2[2][3] = 0.0f;
++}
++
++static void rotTypeX(f32 param_0, f32 param_1, Mtx& param_2) {
++    param_2[0][0] = 1.0f;
++    param_2[0][1] = 0.0f;
++    param_2[0][2] = 0.0f;
++    param_2[0][3] = 0.0f;
++    param_2[1][0] = 0.0f;
++    param_2[1][1] = param_1;
++    param_2[1][2] = -param_0;
++    param_2[1][3] = 0.0f;
++    param_2[2][0] = 0.0f;
++    param_2[2][1] = param_0;
++    param_2[2][2] = param_1;
++    param_2[2][3] = 0.0f;
++}
++
++static void rotTypeZ(f32 param_0, f32 param_1, Mtx& param_2) {
++    param_2[0][0] = param_1;
++    param_2[0][1] = -param_0;
++    param_2[0][2] = 0.0f;
++    param_2[0][3] = 0.0f;
++    param_2[1][0] = param_0;
++    param_2[1][1] = param_1;
++    param_2[1][2] = 0.0f;
++    param_2[1][3] = 0.0f;
++    param_2[2][0] = 0.0f;
++    param_2[2][1] = 0.0f;
++    param_2[2][2] = 1.0f;
++    param_2[2][3] = 0.0f;
++}
++
++static void rotTypeXYZ(f32 param_0, f32 param_1, Mtx& param_2) {
++    f32 f3 = 0.33333298563957214f * (1.0f - param_1);
++    f32 fVar1;
++    f32 f4;
++    f4 = f3 + 0.5773500204086304f * param_0;
++    fVar1 = f3 - 0.5773500204086304f * param_0;
++    f3 += param_1;
++    param_2[0][0] = f3;
++    param_2[0][1] = fVar1;
++    param_2[0][2] = f4;
++    param_2[0][3] = 0.0f;
++    param_2[1][0] = f4;
++    param_2[1][1] = f3;
++    param_2[1][2] = fVar1;
++    param_2[1][3] = 0.0f;
++    param_2[2][0] = fVar1;
++    param_2[2][1] = f4;
++    param_2[2][2] = f3;
++    param_2[2][3] = 0.0f;
++}
++
++static void basePlaneTypeXY(MtxPtr param_0, f32 param_1, f32 param_2) {
++    param_0[0][0] *= param_1;
++    param_0[1][0] *= param_1;
++    param_0[2][0] *= param_1;
++    param_0[0][1] *= param_2;
++    param_0[1][1] *= param_2;
++    param_0[2][1] *= param_2;
++}
++
++static void basePlaneTypeXZ(MtxPtr param_0, f32 param_1, f32 param_2) {
++    param_0[0][0] *= param_1;
++    param_0[1][0] *= param_1;
++    param_0[2][0] *= param_1;
++    param_0[0][2] *= param_2;
++    param_0[1][2] *= param_2;
++    param_0[2][2] *= param_2;
++}
++
++static void basePlaneTypeX(MtxPtr param_0, f32 param_1, f32 param_2) {
++    param_0[0][0] *= param_1;
++    param_0[1][0] *= param_1;
++    param_0[2][0] *= param_1;
++    param_0[0][1] *= param_2;
++    param_0[1][1] *= param_2;
++    param_0[2][1] *= param_2;
++    param_0[0][2] *= param_1;
++    param_0[1][2] *= param_1;
++    param_0[2][2] *= param_1;
++}
++
++typedef void (*dirTypeFunc)(JPAEmitterWorkData const*, JPABaseParticle const*, JGeometry::TVec3< f32 >*);
++static dirTypeFunc p_direction[5] = {
++    dirTypeVel, dirTypePos, dirTypePosInv, dirTypeEmtrDir, dirTypePrevPtcl,
++};
++
++typedef void (*rotTypeFunc)(f32, f32, Mtx&);
++#pragma push
++#pragma force_active on
++static rotTypeFunc p_rot[5] = {
++    rotTypeY, rotTypeX, rotTypeZ, rotTypeXYZ, rotTypeY,
++};
++#pragma pop
++
++typedef void (*planeFunc)(MtxPtr, f32, f32);
++
++static planeFunc p_plane[3] = {
++    basePlaneTypeXY,
++    basePlaneTypeXZ,
++    basePlaneTypeX,
++};
++
++static u8* p_dl[2] = {
++    jpa_dl,
++    jpa_dl_x,
++};
++
++void JPADrawRotation(JPAEmitterWorkData* param_0, JPABaseParticle* param_1) {
++    if (param_1->checkStatus(8) == 0) {
++        f32 sinRot = JMASSin(param_1->mRotateAngle);
++        f32 cosRot = JMASCos(param_1->mRotateAngle);
++        f32 particleX = param_0->mGlobalPtclScl.x * param_1->mParticleScaleX;
++        f32 particleY = param_0->mGlobalPtclScl.y * param_1->mParticleScaleY;
++        Mtx auStack_88;
++        p_rot[param_0->mRotType](sinRot, cosRot, auStack_88);
++        p_plane[param_0->mPlaneType](auStack_88, particleX, particleY);
++        auStack_88[0][3] = param_1->mPosition.x;
++        auStack_88[1][3] = param_1->mPosition.y;
++        auStack_88[2][3] = param_1->mPosition.z;
++        PSMTXConcat(param_0->mPosCamMtx, auStack_88, auStack_88);
++        GXLoadPosMtxImm(auStack_88, 0);
++        p_prj[param_0->mPrjType](param_0, auStack_88);
++        GXCallDisplayList(p_dl[param_0->mDLType], sizeof(jpa_dl));
++    }
++}
++
++void JPADrawPoint(JPAEmitterWorkData* work, JPABaseParticle* ptcl) {
++    if (!!(ptcl->mStatus & JPAPtclStts_Invisible))
++        return;
++
++    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
++    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
++    GXBegin(GX_POINTS, GX_VTXFMT1, 1);
++    GXPosition3f32(ptcl->mPosition.x, ptcl->mPosition.y, ptcl->mPosition.z);
++    GXTexCoord2f32(0.0f, 0.0f);
++    GXEnd();
++    GXSetVtxDesc(GX_VA_POS, GX_INDEX8);
++    GXSetVtxDesc(GX_VA_TEX0, GX_INDEX8);
++}
++
++void JPADrawLine(JPAEmitterWorkData* param_0, JPABaseParticle* param_1) {
++    if (param_1->checkStatus(8) == 0) {
++        JGeometry::TVec3< f32 > local_1c;
++        param_1->mPosition.x = local_1c.x;
++        JGeometry::TVec3< f32 > local_28;
++        param_1->getVelVec(local_28);
++        if (!local_28.isZero()) {
++            local_28.setLength(param_0->mGlobalPtclScl.y * (25.0f * param_1->mParticleScaleY));
++            local_28.sub(local_1c, local_28);
++            GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
++            GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
++            GXBegin(GX_LINES, GX_VTXFMT1, 2);
++            GXPosition3f32(local_1c.x, local_1c.y, local_1c.z);
++            GXTexCoord2f32(0.0f, 0.0f);
++            GXPosition3f32(local_28.x, local_28.y, local_28.z);
++            GXTexCoord2f32(0.0f, 1.0f);
++            GXEnd();
++            GXSetVtxDesc(GX_VA_POS, GX_INDEX8);
++            GXSetVtxDesc(GX_VA_TEX0, GX_INDEX8);
++        }
++    }
++}
++
++void JPADrawEmitterCallBackB(JPAEmitterWorkData* work) {
++    if (work->mpEmtr->mpEmtrCallBack == NULL)
++        return;
++
++    work->mpEmtr->mpEmtrCallBack->draw(work->mpEmtr);
++}
++
++void JPADrawParticleCallBack(JPAEmitterWorkData* work, JPABaseParticle* ptcl) {
++    if (work->mpEmtr->mpPtclCallBack == NULL)
++        return;
++
++    work->mpEmtr->mpPtclCallBack->draw(work->mpEmtr, ptcl);
++}
++
++static void makeColorTable(GXColor** o_color_table, JPAClrAnmKeyData const* i_data, u8 param_2, s16 i_size, JKRHeap* i_heap) {
++    GXColor* color_table = (GXColor*)JKRAllocFromHeap(i_heap, (i_size + 1) * 4, 4);
++    f32 r_step, g_step, b_step, a_step;
++    r_step = g_step = b_step = a_step = 0.0f;
++    f32 r = i_data[0].color.r;
++    f32 g = i_data[0].color.g;
++    f32 b = i_data[0].color.b;
++    f32 a = i_data[0].color.a;
++    int j = 0;
++    for (s16 i = 0; i < i_size + 1; i++) {
++        if (j < param_2 && i == i_data[j].index) {
++            color_table[i] = i_data[j].color;
++            r = i_data[j].color.r;
++            g = i_data[j].color.g;
++            b = i_data[j].color.b;
++            a = i_data[j].color.a;
++            j++;
++            if (j < param_2) {
++                f32 base_step = 1.0f / (i_data[j].index - i_data[j - 1].index);
++                r_step = base_step * ((f32)i_data[j].color.r - r);
++                g_step = base_step * ((f32)i_data[j].color.g - g);
++                b_step = base_step * ((f32)i_data[j].color.b - b);
++                a_step = base_step * ((f32)i_data[j].color.a - a);
++            } else {
++                r_step = g_step = b_step = a_step = 0.0f;
++            }
++        } else {
++            r += r_step;
++            color_table[i].r = r;
++            g += g_step;
++            color_table[i].g = g;
++            b += b_step;
++            color_table[i].b = b;
++            a += a_step;
++            color_table[i].a = a;
++        }
++    }
++    *o_color_table = color_table;
++}
++
++JPABaseShape::JPABaseShape(u8 const* pData, JKRHeap* pHeap) {
++    mpData = (const JPABaseShapeData*)pData;
++
++    if (isTexCrdAnm()) {
++        mpTexCrdMtxAnmTbl = (const void*)(pData + sizeof(JPABaseShapeData));
++    } else {
++        mpTexCrdMtxAnmTbl = NULL;
++    }
++
++    if (isTexAnm()) {
++        u32 offs = sizeof(JPABaseShapeData);
++        if (isTexCrdAnm())
++            offs = sizeof(JPABaseShapeData) + 0x28;
++        mpTexIdxAnimTbl = (const u8*)(pData + offs);
++    } else {
++        mpTexIdxAnimTbl = NULL;
++    }
++
++    if (isPrmAnm()) {
++        makeColorTable(&mpPrmClrAnmTbl, (JPAClrAnmKeyData*)(pData + mpData->mClrPrmAnmOffset), mpData->mClrPrmKeyNum, mpData->mClrAnmFrmMax, pHeap);
++    } else {
++        mpPrmClrAnmTbl = NULL;
++    }
++
++    if (isEnvAnm()) {
++        makeColorTable(&mpEnvClrAnmTbl, (JPAClrAnmKeyData*)(pData + mpData->mClrEnvAnmOffset), mpData->mClrEnvKeyNum, mpData->mClrAnmFrmMax, pHeap);
++    } else {
++        mpEnvClrAnmTbl = NULL;
++    }
++}
++
++GXBlendMode JPABaseShape::st_bm[3] = {
++    GX_BM_NONE,
++    GX_BM_BLEND,
++    GX_BM_LOGIC,
++};
++
++GXBlendFactor JPABaseShape::st_bf[10] = {
++    GX_BL_ZERO,      GX_BL_ONE,      GX_BL_SRCCLR,      GX_BL_INVSRCCLR, GX_BL_DSTCLR,
++    GX_BL_INVDSTCLR, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_BL_DSTALPHA,  GX_BL_INVDSTALPHA,
++};
++
++GXLogicOp JPABaseShape::st_lo[16] = {
++    GX_LO_CLEAR, GX_LO_SET, GX_LO_COPY, GX_LO_INVCOPY, GX_LO_NOOP,   GX_LO_INV,    GX_LO_AND,   GX_LO_NAND,
++    GX_LO_OR,    GX_LO_NOR, GX_LO_XOR,  GX_LO_EQUIV,   GX_LO_REVAND, GX_LO_INVAND, GX_LO_REVOR, GX_LO_INVOR,
++};
++
++GXCompare JPABaseShape::st_c[8] = {
++    GX_NEVER, GX_LESS, GX_LEQUAL, GX_EQUAL, GX_NEQUAL, GX_GEQUAL, GX_GREATER, GX_ALWAYS,
++};
++
++GXAlphaOp JPABaseShape::st_ao[4] = {
++    GX_AOP_AND,
++    GX_AOP_OR,
++    GX_AOP_XOR,
++    GX_AOP_XNOR,
++};
++
++GXTevColorArg JPABaseShape::st_ca[6][4] = {
++    {
++        GX_CC_ZERO,
++        GX_CC_TEXC,
++        GX_CC_ONE,
++        GX_CC_ZERO,
++    },
++    {
++        GX_CC_ZERO,
++        GX_CC_C0,
++        GX_CC_TEXC,
++        GX_CC_ZERO,
++    },
++    {
++        GX_CC_C0,
++        GX_CC_ONE,
++        GX_CC_TEXC,
++        GX_CC_ZERO,
++    },
++    {
++        GX_CC_C1,
++        GX_CC_C0,
++        GX_CC_TEXC,
++        GX_CC_ZERO,
++    },
++    {
++        GX_CC_ZERO,
++        GX_CC_TEXC,
++        GX_CC_C0,
++        GX_CC_C1,
++    },
++    {
++        GX_CC_ZERO,
++        GX_CC_ZERO,
++        GX_CC_ZERO,
++        GX_CC_C0,
++    },
++};
++
++GXTevAlphaArg JPABaseShape::st_aa[2][4] = {
++    {
++        GX_CA_ZERO,
++        GX_CA_TEXA,
++        GX_CA_A0,
++        GX_CA_ZERO,
++    },
++    {
++        GX_CA_ZERO,
++        GX_CA_ZERO,
++        GX_CA_ZERO,
++        GX_CA_A0,
++    },
++};
++
++void JPABaseShape::setGX(JPAEmitterWorkData* work) const {
++    const GXTevColorArg* colorArg = getTevColorArg();
++    const GXTevAlphaArg* alphaArg = getTevAlphaArg();
++    GXSetBlendMode(getBlendMode(), getBlendSrc(), getBlendDst(), getLogicOp());
++    GXSetZMode(getZEnable(), getZCmp(), getZUpd());
++    GXSetAlphaCompare(getAlphaCmp0(), getAlphaRef0(), getAlphaOp(), getAlphaCmp1(), getAlphaRef1());
++    GXSetTevColorIn(GX_TEVSTAGE0, colorArg[0], colorArg[1], colorArg[2], colorArg[3]);
++    GXSetTevAlphaIn(GX_TEVSTAGE0, alphaArg[0], alphaArg[1], alphaArg[2], alphaArg[3]);
++    GXSetTevDirect(GX_TEVSTAGE0);
++    GXSetTevDirect(GX_TEVSTAGE1);
++    GXSetZCompLoc(getZCompLoc());
++}
+--- /dev/null
++++ b/pc-port/src/JSystem/JParticle/JPAChildShape.cpp
+@@ -0,0 +1,35 @@
++#include "JSystem/JParticle/JPAChildShape.hpp"
++#include "JSystem/JParticle/JPAEmitter.hpp"
++#include "JSystem/JParticle/JPAParticle.hpp"
++#include <revolution/os.h>
++
++void JPARegistChildPrmEnv(JPAEmitterWorkData* work) {
++    JPAChildShape* csp = work->mpRes->getCsp();
++    JPABaseEmitter* emtr = work->mpEmtr;
++    GXColor prm, env;
++    csp->getPrmClr(&prm);
++    csp->getEnvClr(&env);
++    prm.r = COLOR_MULTI(prm.r, emtr->mGlobalPrmClr.r);
++    prm.g = COLOR_MULTI(prm.g, emtr->mGlobalPrmClr.g);
++    prm.b = COLOR_MULTI(prm.b, emtr->mGlobalPrmClr.b);
++    prm.a = COLOR_MULTI(prm.a, emtr->mGlobalPrmClr.a);
++    env.r = COLOR_MULTI(env.r, emtr->mGlobalEnvClr.r);
++    env.g = COLOR_MULTI(env.g, emtr->mGlobalEnvClr.g);
++    env.b = COLOR_MULTI(env.b, emtr->mGlobalEnvClr.b);
++    GXSetTevColor(GX_TEVREG0, prm);
++    GXSetTevColor(GX_TEVREG1, env);
++}
++
++void JPACalcChildAlphaOut(JPAEmitterWorkData* work, JPABaseParticle* ptcl) {
++    f32 anm = (1.0f - ptcl->mTime) * 255.0f;
++    OSf32tou8(&anm, &ptcl->mPrmColorAlphaAnm);
++}
++
++void JPACalcChildScaleOut(JPAEmitterWorkData* work, JPABaseParticle* ptcl) {
++    ptcl->mParticleScaleX = ptcl->mScaleOut * (1.0f - ptcl->mTime);
++    ptcl->mParticleScaleY = ptcl->mAlphaWaveRandom * (1.0f - ptcl->mTime);
++}
++
++JPAChildShape::JPAChildShape(u8 const* pData) {
++    mpData = (JPAChildShapeData*)pData;
++}
+--- /dev/null
++++ b/pc-port/src/JSystem/JParticle/JPADynamicsBlock.cpp
+@@ -0,0 +1,197 @@
++#include "JSystem/JParticle/JPADynamicsBlock.hpp"
++#include "JSystem/JMath/JMATrigonometric.hpp"
++#include "JSystem/JParticle/JPAEmitter.hpp"
++
++void JPAVolumePoint(JPAEmitterWorkData* work) {
++    work->mVolumeCalcData.mVolumePos.zero();
++    work->mVolumeCalcData.mVelOmni.set(work->mpEmtr->get_r_zh(), work->mpEmtr->get_r_zh(), work->mpEmtr->get_r_zh());
++    work->mVolumeCalcData.mVelAxis.set(work->mVolumeCalcData.mVelOmni.x, 0.0f, work->mVolumeCalcData.mVelOmni.z);
++}
++
++void JPAVolumeLine(JPAEmitterWorkData* work) {
++    if (work->mpEmtr->checkFlag(JPADynFlag_FixedInterval)) {
++        work->mVolumeCalcData.mVolumePos.set(0.0f, 0.0f, work->mVolumeSize * ((work->mVolumeEmitIdx / (work->mEmitCount - 1.0f) - 0.5f)));
++        work->mVolumeEmitIdx++;
++    } else {
++        work->mVolumeCalcData.mVolumePos.set(0.0f, 0.0f, work->mVolumeSize * work->mpEmtr->get_r_zh());
++    }
++
++    work->mVolumeCalcData.mVelOmni.set(0.0f, 0.0f, work->mVolumeCalcData.mVolumePos.z * work->mGlobalScl.z);
++    work->mVolumeCalcData.mVelAxis.set(0.0f, 0.0f, work->mVolumeCalcData.mVolumePos.z);
++}
++
++void JPAVolumeCircle(JPAEmitterWorkData* work) {
++    s16 theta;
++    f32 distance;
++
++    if (work->mpEmtr->checkFlag(JPADynFlag_FixedInterval)) {
++        theta = (s16)((work->mVolumeEmitIdx << 16) / work->mEmitCount);
++        theta = theta * work->mVolumeSweep;
++        work->mVolumeEmitIdx++;
++    } else {
++        theta = work->mVolumeSweep * work->mpEmtr->get_r_ss();
++    }
++
++    distance = work->mpEmtr->get_r_f();
++    if (work->mpEmtr->checkFlag(JPADynFlag_FixedDensity)) {
++        distance = 1.0f - (distance * distance);
++    }
++
++    distance = work->mVolumeSize * (work->mVolumeMinRad + distance * (1.0f - work->mVolumeMinRad));
++    work->mVolumeCalcData.mVolumePos.set(distance * JMASSin(theta), 0.0f, distance * JMASCos(theta));
++    work->mVolumeCalcData.mVelOmni.mul(work->mVolumeCalcData.mVolumePos, work->mGlobalScl);
++    work->mVolumeCalcData.mVelAxis.set(work->mVolumeCalcData.mVolumePos.x, 0.0f, work->mVolumeCalcData.mVolumePos.z);
++}
++
++void JPAVolumeCube(JPAEmitterWorkData* work) {
++    work->mVolumeCalcData.mVolumePos.set(work->mpEmtr->get_r_zh() * work->mVolumeSize, work->mpEmtr->get_r_zh() * work->mVolumeSize,
++                                         work->mpEmtr->get_r_zh() * work->mVolumeSize);
++    work->mVolumeCalcData.mVelOmni.mul(work->mVolumeCalcData.mVolumePos, work->mGlobalScl);
++    work->mVolumeCalcData.mVelAxis.set(work->mVolumeCalcData.mVolumePos.x, 0.0f, work->mVolumeCalcData.mVolumePos.z);
++}
++
++static void JPAVolumeSphere(JPAEmitterWorkData* work) {
++    s16 phi, theta;
++    if (work->mpEmtr->checkFlag(JPADynFlag_FixedInterval)) {
++        phi = (u16)(work->mVolumeX * 0x8000 / (work->mDivNumber - 1) + 0x4000);
++        f32 tmp = (u16)(work->mVolumeAngleNum * 0x10000 / (work->mVolumeAngleMax - 1));
++        theta = tmp * work->mVolumeSweep + 0x8000;
++        work->mVolumeAngleNum++;
++        if (work->mVolumeAngleNum == work->mVolumeAngleMax) {
++            work->mVolumeAngleNum = 0;
++            work->mVolumeX++;
++            if (work->mVolumeX * 2 < work->mDivNumber) {
++                work->mVolumeAngleMax = work->mVolumeAngleMax != 1 ? work->mVolumeAngleMax + 4 : work->mVolumeAngleMax + 3;
++            } else {
++                work->mVolumeAngleMax = work->mVolumeAngleMax != 4 ? work->mVolumeAngleMax - 4 : 1;
++            }
++        }
++    } else {
++        phi = work->mpEmtr->get_r_ss() >> 1;
++        theta = work->mVolumeSweep * work->mpEmtr->get_r_ss();
++    }
++
++    f32 rnd = work->mpEmtr->get_r_f();
++    if (work->mpEmtr->checkFlag(JPADynFlag_FixedDensity)) {
++        rnd = 1.0f - rnd * rnd * rnd;
++    }
++    f32 rad = work->mVolumeSize * (work->mVolumeMinRad + rnd * (1.0f - work->mVolumeMinRad));
++    work->mVolumeCalcData.mVolumePos.set(rad * JMASCos(phi) * JMASSin(theta), -rad * JMASSin(phi), rad * JMASCos(phi) * JMASCos(theta));
++    work->mVolumeCalcData.mVelOmni.mul(work->mVolumeCalcData.mVolumePos, work->mGlobalScl);
++    work->mVolumeCalcData.mVelAxis.set(work->mVolumeCalcData.mVolumePos.x, 0.0f, work->mVolumeCalcData.mVolumePos.z);
++}
++
++static void JPAVolumeCylinder(JPAEmitterWorkData* work) {
++    s16 theta = work->mVolumeSweep * work->mpEmtr->get_r_ss();
++    f32 rnd = work->mpEmtr->get_r_f();
++    if (work->mpEmtr->checkFlag(JPADynFlag_FixedDensity)) {
++        rnd = 1.0f - rnd * rnd;
++    }
++    f32 rad = work->mVolumeSize * (work->mVolumeMinRad + rnd * (1.0f - work->mVolumeMinRad));
++    work->mVolumeCalcData.mVolumePos.set(rad * JMASSin(theta), work->mVolumeSize * work->mpEmtr->get_r_zp(), rad * JMASCos(theta));
++    work->mVolumeCalcData.mVelOmni.mul(work->mVolumeCalcData.mVolumePos, work->mGlobalScl);
++    work->mVolumeCalcData.mVelAxis.set(work->mVolumeCalcData.mVolumePos.x, 0.0f, work->mVolumeCalcData.mVolumePos.z);
++}
++
++static void JPAVolumeTorus(JPAEmitterWorkData* work) {
++    s16 theta = work->mVolumeSweep * work->mpEmtr->get_r_ss();
++    s16 phi = work->mpEmtr->get_r_ss();
++    f32 rad = work->mVolumeSize * work->mVolumeMinRad;
++    work->mVolumeCalcData.mVelAxis.set(rad * JMASSin(theta) * JMASCos(phi), rad * JMASSin(phi), rad * JMASCos(theta) * JMASCos(phi));
++    work->mVolumeCalcData.mVolumePos.set(work->mVolumeCalcData.mVelAxis.x + work->mVolumeSize * JMASSin(theta), work->mVolumeCalcData.mVelAxis.y,
++                                         work->mVolumeCalcData.mVelAxis.z + work->mVolumeSize * JMASCos(theta));
++    work->mVolumeCalcData.mVelOmni.mul(work->mVolumeCalcData.mVolumePos, work->mGlobalScl);
++}
++
++JPADynamicsBlock::JPADynamicsBlock(u8 const* data) {
++    mpData = (const JPADynamicsBlockData*)data;
++    init();
++}
++
++enum {
++    VOL_Cube = 0x00,
++    VOL_Sphere = 0x01,
++    VOL_Cylinder = 0x02,
++    VOL_Torus = 0x03,
++    VOL_Point = 0x04,
++    VOL_Circle = 0x05,
++    VOL_Line = 0x06,
++};
++
++void JPADynamicsBlock::init() {
++    switch (getVolumeType()) {
++    case VOL_Cube:
++        mpCalcVolumeFunc = &JPAVolumeCube;
++        break;
++    case VOL_Sphere:
++        mpCalcVolumeFunc = &JPAVolumeSphere;
++        break;
++    case VOL_Cylinder:
++        mpCalcVolumeFunc = &JPAVolumeCylinder;
++        break;
++    case VOL_Torus:
++        mpCalcVolumeFunc = &JPAVolumeTorus;
++        break;
++    case VOL_Point:
++        mpCalcVolumeFunc = &JPAVolumePoint;
++        break;
++    case VOL_Circle:
++        mpCalcVolumeFunc = &JPAVolumeCircle;
++        break;
++    case VOL_Line:
++        mpCalcVolumeFunc = &JPAVolumeLine;
++        break;
++    }
++}
++
++void JPADynamicsBlock::create(JPAEmitterWorkData* work) {
++    if (work->mpEmtr->checkStatus(JPAEmtrStts_RateStepEmit)) {
++        s32 emitCount;
++        s32 createCount;
++
++        // Probably an inlined function.
++        if (work->mpEmtr->checkFlag(JPADynFlag_FixedInterval)) {
++            s32 count;
++            if (getVolumeType() == VOL_Sphere) {
++                count = 4 * getDivNumber() * getDivNumber() + 2;
++            } else {
++                count = getDivNumber();
++            }
++            emitCount = count;
++
++            work->mVolumeEmitIdx = 0;
++        } else {
++            f32 newPtclCount = work->mpEmtr->mRate * (getRateRndm() * work->mpEmtr->get_r_zp() + 1.0f);
++            f32 newEmitCount = work->mpEmtr->mEmitCount + newPtclCount;
++            work->mpEmtr->mEmitCount = newEmitCount;
++            emitCount = (s32)newEmitCount;
++            work->mpEmtr->mEmitCount -= emitCount;
++
++            if (work->mpEmtr->checkStatus(JPAEmtrStts_FirstEmit) && 0.0f < newPtclCount && newPtclCount < 1.0f)
++                emitCount = 1;
++        }
++
++        work->mEmitCount = emitCount;
++        if (work->mpEmtr->checkStatus(JPAEmtrStts_StopEmit)) {
++            emitCount = 0;
++        }
++
++        // Probably an inlined function.
++        createCount = emitCount;
++        while (createCount > 0) {
++            JPABaseParticle* ptcl = work->mpEmtr->createParticle();
++            if (ptcl == NULL)
++                break;
++            createCount--;
++        }
++    }
++
++    if (++work->mpEmtr->mRateStepTimer >= (work->mpEmtr->mRateStep + 1)) {
++        work->mpEmtr->mRateStepTimer -= (work->mpEmtr->mRateStep + 1);
++        work->mpEmtr->setStatus(JPAEmtrStts_RateStepEmit);
++    } else {
++        work->mpEmtr->clearStatus(JPAEmtrStts_RateStepEmit);
++    }
++
++    work->mpEmtr->clearStatus(JPAEmtrStts_FirstEmit);
++}
+--- /dev/null
++++ b/pc-port/src/JSystem/JParticle/JPAEmitter.cpp
+@@ -0,0 +1,83 @@
++#include "JSystem/JParticle/JPAEmitter.hpp"
++#include "JSystem/JParticle/JPABaseShape.hpp"
++#include "JSystem/JParticle/JPAEmitterManager.hpp"
++#include "JSystem/JParticle/JPAParticle.hpp"
++#include "JSystem/JParticle/JPAResourceManager.hpp"
++
++JPAEmitterCallBack::~JPAEmitterCallBack() {
++}
++
++JPABaseParticle* JPABaseEmitter::createParticle() {
++    if (mpPtclPool->getNum() != 0) {
++        JPANode< JPABaseParticle >* node = mpPtclPool->pop_front();
++        mAlivePtclBase.push_front(node);
++        mpRes->getDyn()->calc(mpEmtrMgr->pWd);
++        node->mData.init_p(mpEmtrMgr->pWd);
++        return &node->mData;
++    }
++
++    return NULL;
++}
++
++JPABaseParticle* JPABaseEmitter::createChild(JPABaseParticle* parent) {
++    if (mpPtclPool->getNum() != 0) {
++        JPANode< JPABaseParticle >* node = mpPtclPool->pop_front();
++        mAlivePtclChld.push_front(node);
++        node->mData.init_c(mpEmtrMgr->pWd, parent);
++        return &node->mData;
++    }
++
++    return NULL;
++}
++
++void JPABaseEmitter::deleteAllParticle() {
++    while (mAlivePtclBase.getNum())
++        mpPtclPool->push_front(mAlivePtclBase.pop_back());
++    while (mAlivePtclChld.getNum())
++        mpPtclPool->push_front(mAlivePtclChld.pop_back());
++}
++
++bool JPABaseEmitter::processTillStartFrame() {
++    JPADynamicsBlock* dyn = mpRes->getDyn();
++    s16 startFrame = dyn->getStartFrame();
++
++    if (mWaitTime >= startFrame)
++        return true;
++
++    if (!(mStatus & 2))
++        mWaitTime++;
++
++    return false;
++}
++
++bool JPABaseEmitter::processTermination() {
++    if (checkStatus(0x100)) {
++        return true;
++    }
++
++    if (mMaxFrame == 0) {
++        return false;
++    }
++    if (mMaxFrame < 0) {
++        setStatus(8);
++        return getParticleNumber() == 0;
++    }
++    if (mTick >= mMaxFrame) {
++        setStatus(8);
++        if (checkStatus(0x40)) {
++            return 0;
++        }
++        return getParticleNumber() == 0;
++    }
++    return false;
++}
++
++void JPABaseEmitter::calcEmitterGlobalPosition(JGeometry::TVec3< f32 >* dst) const {
++    Mtx mtx;
++    PSMTXScale(mtx, mGlobalScl.x, mGlobalScl.y, mGlobalScl.z);
++    PSMTXConcat(mGlobalRot, mtx, mtx);
++    mtx[0][3] = mGlobalTrs.x;
++    mtx[1][3] = mGlobalTrs.y;
++    mtx[2][3] = mGlobalTrs.z;
++    PSMTXMultVec(mtx, mLocalTrs, *dst);
++}
+--- /dev/null
++++ b/pc-port/src/JSystem/JParticle/JPAEmitterManager.cpp
+@@ -0,0 +1,108 @@
++#include "JSystem/JParticle/JPAEmitterManager.hpp"
++#include "JSystem/JKernel/JKRHeap.hpp"
++#include "JSystem/JParticle/JPAEmitter.hpp"
++#include "JSystem/JParticle/JPAParticle.hpp"
++#include "JSystem/JParticle/JPAResourceManager.hpp"
++
++JPAEmitterManager::JPAEmitterManager(u32 i_ptclNum, u32 i_emtrNum, JKRHeap* pHeap, u8 i_gidMax, u8 i_ridMax) {
++    emtrNum = i_emtrNum;
++    ptclNum = i_ptclNum;
++    gidMax = i_gidMax;
++    ridMax = i_ridMax;
++
++    JPABaseEmitter* p_emtr_link = new (pHeap, 0) JPABaseEmitter[emtrNum];
++
++    for (u32 i = 0; i < emtrNum; i++)
++        mFreeEmtrList.prepend(&p_emtr_link[i].mLink);
++
++    JPANode< JPABaseParticle >* p_ptcl_node = new (pHeap, 0) JPANode< JPABaseParticle >[ptclNum];
++    for (u32 i = 0; i < ptclNum; i++)
++        mPtclPool.push_back(&p_ptcl_node[i]);
++
++    pEmtrUseList = new (pHeap, 0) JSUList< JPABaseEmitter >[gidMax];
++    pResMgrAry = new (pHeap, 0) JPAResourceManager*[ridMax];
++    for (int i = 0; i < ridMax; i++) {
++        pResMgrAry[i] = NULL;
++    }
++
++    pWd = new (pHeap, 0) JPAEmitterWorkData();
++}
++
++JPABaseEmitter* JPAEmitterManager::createSimpleEmitterID(JGeometry::TVec3< f32 > const& pos, u16 resID, u8 group_id, u8 res_mgr_id,
++                                                         JPAEmitterCallBack* emtrCB, JPAParticleCallBack* ptclCB) {
++    JPAResource* pRes = pResMgrAry[res_mgr_id]->getResource(resID);
++
++    if (pRes == NULL) {
++    } else if (mFreeEmtrList.getNumLinks() == 0) {
++    } else {
++        JSULink< JPABaseEmitter >* pLink = mFreeEmtrList.getFirst();
++        mFreeEmtrList.remove(pLink);
++        pEmtrUseList[group_id].append(pLink);
++        JPABaseEmitter* emtr = pLink->getObject();
++        emtr->init(this, pRes);
++        emtr->mpPtclPool = &mPtclPool;
++        emtr->mpEmtrCallBack = emtrCB;
++        emtr->mpPtclCallBack = ptclCB;
++        emtr->mGroupID = group_id;
++        emtr->mResMgrID = res_mgr_id;
++        emtr->mGlobalTrs.set(pos);
++        return emtr;
++    }
++
++    return NULL;
++}
++
++void JPAEmitterManager::calc(u8 group_id) {
++    JSULink< JPABaseEmitter >* pNext = NULL;
++    for (JSULink< JPABaseEmitter >* pLink = pEmtrUseList[group_id].getFirst(); pLink != pEmtrUseList[group_id].getEnd(); pLink = pNext) {
++        pNext = pLink->getNext();
++
++        JPABaseEmitter* emtr = pLink->getObject();
++
++        if (emtr->mpRes->calc(pWd, emtr) && !emtr->checkStatus(0x200))
++            forceDeleteEmitter(emtr);
++    }
++}
++
++void JPAEmitterManager::draw(JPADrawInfo const* drawInfo, u8 group_id) {
++    drawInfo->getCamMtx(pWd->mPosCamMtx);
++    drawInfo->getPrjMtx(pWd->mPrjMtx);
++    calcYBBCam();
++    GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
++    GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
++    GXEnableTexOffsets(GX_TEXCOORD0, GX_TRUE, GX_TRUE);
++    GXEnableTexOffsets(GX_TEXCOORD1, GX_TRUE, GX_TRUE);
++    GXEnableTexOffsets(GX_TEXCOORD2, GX_TRUE, GX_TRUE);
++    GXSetCullMode(GX_CULL_NONE);
++    GXSetCoPlanar(GX_FALSE);
++    GXClearVtxDesc();
++    GXSetVtxDesc(GX_VA_POS, GX_INDEX8);
++    GXSetVtxDesc(GX_VA_TEX0, GX_INDEX8);
++    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_S8, 0);
++    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_TEX_ST, GX_S8, 0);
++    GXSetVtxAttrFmt(GX_VTXFMT1, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
++    GXSetVtxAttrFmt(GX_VTXFMT1, GX_VA_TEX0, GX_TEX_ST, GX_F32, 0);
++    GXSetCurrentMtx(GX_PNMTX0);
++    GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
++    GXSetChanCtrl(GX_COLOR1A1, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
++    GXSetNumChans(0);
++
++    for (JSULink< JPABaseEmitter >* pLink = pEmtrUseList[group_id].getFirst(); pLink != pEmtrUseList[group_id].getEnd(); pLink = pLink->getNext()) {
++        JPABaseEmitter* emtr = pLink->getObject();
++        if (!emtr->checkStatus(0x04)) {
++            pWd->mpResMgr = pResMgrAry[emtr->mResMgrID];
++            emtr->mpRes->draw(pWd, emtr);
++        }
++    }
++}
++
++void JPAEmitterManager::forceDeleteEmitter(JPABaseEmitter* emtr) {
++    emtr->deleteAllParticle();
++    emtr->setStatus(0x300);
++    pEmtrUseList[emtr->getGroupID()].remove(&emtr->mLink);
++    mFreeEmtrList.prepend(&emtr->mLink);
++}
++
++void JPAEmitterManager::entryResourceManager(JPAResourceManager* resMgr, u8 resMgrID) {
++    pResMgrAry[resMgrID] = resMgr;
++}
+--- /dev/null
++++ b/pc-port/src/JSystem/JParticle/JPAExTexShape.cpp
+@@ -0,0 +1,25 @@
++#include "JSystem/JParticle/JPAExTexShape.hpp"
++#include "JSystem/JParticle/JPAEmitter.hpp"
++#include "JSystem/JParticle/JPAResourceManager.hpp"
++
++void JPALoadExTex(JPAEmitterWorkData* work) {
++    JPAExTexShape* ets = work->mpRes->getEts();
++
++    GXTexCoordID secTexCoordID = GX_TEXCOORD1;
++    if (ets->isUseIndirect()) {
++        GXSetTexCoordGen2(GX_TEXCOORD1, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
++        u8 texIdx = ets->getIndTexIdx();
++        work->mpResMgr->load(work->mpRes->getTexIdx(texIdx), GX_TEXMAP2);
++        secTexCoordID = GX_TEXCOORD2;
++    }
++
++    if (ets->isUseSecTex()) {
++        GXSetTexCoordGen2(secTexCoordID, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
++        u8 texIdx = ets->getSecTexIdx();
++        work->mpResMgr->load(work->mpRes->getTexIdx(texIdx), GX_TEXMAP3);
++    }
++}
++
++JPAExTexShape::JPAExTexShape(u8 const* data) {
++    mpData = (const JPAExTexShapeData*)data;
++}
+--- /dev/null
++++ b/pc-port/src/JSystem/JParticle/JPAExtraShape.cpp
+@@ -0,0 +1,113 @@
++#include "JSystem/JParticle/JPAExtraShape.hpp"
++#include "JSystem/JMath/JMATrigonometric.hpp"
++#include "JSystem/JParticle/JPAEmitter.hpp"
++#include "JSystem/JParticle/JPAParticle.hpp"
++#include <revolution/os.h>
++
++void JPACalcScaleX(JPAEmitterWorkData* work, JPABaseParticle* ptcl) {
++    JPAExtraShape* esp = work->mpRes->getEsp();
++    if (work->mScaleAnm < esp->getScaleInTiming()) {
++        ptcl->mParticleScaleX = ptcl->mScaleOut * (esp->getScaleIncRateX() * work->mScaleAnm + esp->getScaleInValueX());
++    } else if (work->mScaleAnm > esp->getScaleOutTiming()) {
++        ptcl->mParticleScaleX = ptcl->mScaleOut * (esp->getScaleDecRateX() * (work->mScaleAnm - esp->getScaleOutTiming()) + 1.0f);
++    } else {
++        ptcl->mParticleScaleX = ptcl->mScaleOut;
++    }
++}
++
++void JPACalcScaleY(JPAEmitterWorkData* work, JPABaseParticle* ptcl) {
++    JPAExtraShape* esp = work->mpRes->getEsp();
++    if (work->mScaleAnm < esp->getScaleInTiming()) {
++        ptcl->mParticleScaleY = ptcl->mScaleOut * (esp->getScaleIncRateY() * work->mScaleAnm + esp->getScaleInValueY());
++    } else if (work->mScaleAnm > esp->getScaleOutTiming()) {
++        ptcl->mParticleScaleY = ptcl->mScaleOut * (esp->getScaleDecRateY() * (work->mScaleAnm - esp->getScaleOutTiming()) + 1.0f);
++    } else {
++        ptcl->mParticleScaleY = ptcl->mScaleOut;
++    }
++}
++
++void JPACalcScaleCopy(JPAEmitterWorkData* work, JPABaseParticle* ptcl) {
++    JPAExtraShape* esp = work->mpRes->getEsp();
++    ptcl->mParticleScaleY = ptcl->mParticleScaleX;
++}
++
++void JPACalcScaleAnmNormal(JPAEmitterWorkData* work, JPABaseParticle* ptcl) {
++    work->mScaleAnm = ptcl->mTime;
++}
++
++void JPACalcScaleAnmRepeatX(JPAEmitterWorkData* work, JPABaseParticle* ptcl) {
++    JPAExtraShape* esp = work->mpRes->getEsp();
++    work->mScaleAnm = (ptcl->mAge % esp->getScaleAnmCycleX()) / (f32)esp->getScaleAnmCycleX();
++}
++
++void JPACalcScaleAnmRepeatY(JPAEmitterWorkData* work, JPABaseParticle* ptcl) {
++    JPAExtraShape* esp = work->mpRes->getEsp();
++    work->mScaleAnm = (ptcl->mAge % esp->getScaleAnmCycleY()) / (f32)esp->getScaleAnmCycleY();
++}
++
++void JPACalcScaleAnmReverseX(JPAEmitterWorkData* work, JPABaseParticle* ptcl) {
++    JPAExtraShape* esp = work->mpRes->getEsp();
++    s32 cycle = ptcl->mAge / esp->getScaleAnmCycleX();
++    f32 base = (ptcl->mAge % esp->getScaleAnmCycleX()) / (f32)esp->getScaleAnmCycleX();
++    work->mScaleAnm = base + ((cycle & 1) * (1.0f - base * 2.0f));
++}
++
++void JPACalcScaleAnmReverseY(JPAEmitterWorkData* work, JPABaseParticle* ptcl) {
++    JPAExtraShape* esp = work->mpRes->getEsp();
++    s32 cycle = ptcl->mAge / esp->getScaleAnmCycleY();
++    f32 base = (ptcl->mAge % esp->getScaleAnmCycleY()) / (f32)esp->getScaleAnmCycleY();
++    work->mScaleAnm = base + ((cycle & 1) * (1.0f - base * 2.0f));
++}
++
++void JPACalcAlphaAnm(JPAEmitterWorkData* work, JPABaseParticle* ptcl) {
++    JPAExtraShape* esp = work->mpRes->getEsp();
++    f32 alpha;
++    if (ptcl->mTime < esp->getAlphaInTiming()) {
++        alpha = 255.0f * (esp->getAlphaInValue() + esp->getAlphaIncRate() * ptcl->mTime);
++    } else if (ptcl->mTime > esp->getAlphaOutTiming()) {
++        alpha = 255.0f * ((ptcl->mTime - esp->getAlphaOutTiming()) * esp->getAlphaDecRate() + esp->getAlphaBaseValue());
++    } else {
++        alpha = 255.0f * esp->getAlphaBaseValue();
++    }
++    OSf32tou8(&alpha, &ptcl->mPrmColorAlphaAnm);
++}
++
++void JPACalcAlphaFlickAnm(JPAEmitterWorkData* work, JPABaseParticle* ptcl) {
++    JPAExtraShape* esp = work->mpRes->getEsp();
++    f32 alpha;
++    if (ptcl->mTime < esp->getAlphaInTiming()) {
++        alpha = (esp->getAlphaInValue() + esp->getAlphaIncRate() * ptcl->mTime);
++    } else if (ptcl->mTime > esp->getAlphaOutTiming()) {
++        alpha = ((ptcl->mTime - esp->getAlphaOutTiming()) * esp->getAlphaDecRate() + esp->getAlphaBaseValue());
++    } else {
++        alpha = esp->getAlphaBaseValue();
++    }
++    s32 theta = ptcl->mAlphaWaveRandom * ptcl->mAge * 16384.0f * (1.0f - esp->getAlphaFreq());
++    f32 wave = JMASSin(theta);
++    alpha *= (1.0f + esp->getAlphaAmp() * (wave - 1.0f) * 0.5f) * 255.0f;
++    OSf32tou8(&alpha, &ptcl->mPrmColorAlphaAnm);
++}
++
++JPAExtraShape::JPAExtraShape(u8 const* data) {
++    mpData = (const JPAExtraShapeData*)data;
++    init();
++}
++
++void JPAExtraShape::init() {
++    mAlphaIncRate = (getAlphaInTiming() != 0.0f) ? (getAlphaBaseValue() - getAlphaInValue()) / getAlphaInTiming() : 1.0f;
++    mAlphaDecRate = (getAlphaOutTiming() != 1.0f) ? (getAlphaOutValue() - getAlphaBaseValue()) / (1.0f - getAlphaOutTiming()) : 1.0f;
++
++    if (getScaleInTiming() != 0.0f) {
++        mScaleIncRateX = (1.0f - getScaleInValueX()) / getScaleInTiming();
++        mScaleIncRateY = (1.0f - getScaleInValueY()) / getScaleInTiming();
++    } else {
++        mScaleIncRateX = mScaleIncRateY = 1.0f;
++    }
++
++    if (getScaleOutTiming() != 1.0f) {
++        mScaleDecRateX = (getScaleOutValueX() - 1.0f) / (1.0f - getScaleOutTiming());
++        mScaleDecRateY = (getScaleOutValueY() - 1.0f) / (1.0f - getScaleOutTiming());
++    } else {
++        mScaleDecRateX = mScaleDecRateY = 1.0f;
++    }
++}
+--- /dev/null
++++ b/pc-port/src/JSystem/JParticle/JPAFieldBlock.cpp
+@@ -0,0 +1,193 @@
++#include "JSystem/JParticle/JPAFieldBlock.hpp"
++#include "JSystem/JKernel/JKRHeap.hpp"
++#include "JSystem/JParticle/JPAEmitter.hpp"
++#include "JSystem/JParticle/JPAParticle.hpp"
++
++void JPAFieldBase::calcAffect(JPAFieldBlock* block, JPABaseParticle* ptcl) {
++    JGeometry::TVec3< f32 > vec = mAccel;
++    if (!ptcl->checkStatus(4) && block->checkStatus(0x78)) {
++        vec.scale(calcFadeAffect(block, ptcl->mTime));
++    }
++
++    switch (block->getAddType()) {
++    case 0:
++        ptcl->mVelType0.add(vec);
++        break;
++    case 1:
++        ptcl->mVelType1.add(vec);
++        break;
++    case 2:
++        ptcl->mVelType2.add(vec);
++        break;
++    }
++}
++
++f32 JPAFieldBase::calcFadeAffect(JPAFieldBlock* block, f32 time) const {
++    f32 fade = 1.0f;
++    if ((block->checkStatus(8) && time < block->getEnTime()) || (block->checkStatus(0x10) && time >= block->getDisTime())) {
++        fade = 0.0f;
++    } else if (block->checkStatus(0x40) && time >= block->getFadeOutTime()) {
++        fade = (block->getDisTime() - time) * block->getFadeOutRate();
++    } else if (block->checkStatus(0x20) && time < block->getFadeInTime()) {
++        fade = (time - block->getEnTime()) * block->getFadeInRate();
++    }
++    return fade;
++}
++
++void JPAFieldGravity::prepare(JPAEmitterWorkData* work, JPAFieldBlock* block) {
++    if (block->checkStatus(2)) {
++        mAccel.scale(block->getMag(), block->getDir());
++    } else {
++        PSMTXMultVecSR(work->mRotationMtx, &block->getDir(), &mAccel);
++        mAccel.scale(block->getMag());
++    }
++}
++
++void JPAFieldGravity::calc(JPAEmitterWorkData* work, JPAFieldBlock* block, JPABaseParticle* ptcl) {
++    calcAffect(block, ptcl);
++}
++
++void JPAFieldAir::calc(JPAEmitterWorkData* work, JPAFieldBlock* block, JPABaseParticle* ptcl) {
++    calcAffect(block, ptcl);
++    if (block->checkStatus(4)) {
++        f32 len = ptcl->mVelType1.length();
++        if (len > block->getMagRndm()) {
++            ptcl->mVelType1.scale(block->getMagRndm() / len);
++        }
++    }
++}
++
++void JPAFieldMagnet::prepare(JPAEmitterWorkData* work, JPAFieldBlock* block) {
++    mDir.sub(block->getPos(), work->mEmitterPos);
++    PSMTXMultVecSR(work->mRotationMtx, &mDir, &mDir);
++}
++
++void JPAFieldMagnet::calc(JPAEmitterWorkData* work, JPAFieldBlock* block, JPABaseParticle* ptcl) {
++    mAccel.sub(mDir, ptcl->mLocalPosition);
++    mAccel.setLength(block->getMag());
++    calcAffect(block, ptcl);
++}
++
++void JPAFieldNewton::prepare(JPAEmitterWorkData* work, JPAFieldBlock* block) {
++    mDir.sub(block->getPos(), work->mEmitterPos);
++    PSMTXMultVecSR(work->mRotationMtx, &mDir, &mDir);
++    mCutoff = block->getVal1() * block->getVal1();
++}
++
++void JPAFieldNewton::calc(JPAEmitterWorkData* work, JPAFieldBlock* block, JPABaseParticle* ptcl) {
++    mAccel.sub(mDir, ptcl->mLocalPosition);
++    f32 len_sq = mAccel.squared();
++    if (len_sq > mCutoff) {
++        mAccel.setLength(mCutoff * (block->getMag() * 10.0f) / len_sq);
++    } else {
++        mAccel.setLength(block->getMag() * 10.0f);
++    }
++    calcAffect(block, ptcl);
++}
++
++void JPAFieldConvection::calc(JPAEmitterWorkData* work, JPAFieldBlock* block, JPABaseParticle* ptcl) {
++    JGeometry::TVec3< f32 > vec1, vec2, vec3;
++    vec1.scale(field_0x10.dot(ptcl->mLocalPosition), field_0x10);
++    vec3.scale(field_0x28.dot(ptcl->mLocalPosition), field_0x28);
++    vec1.add(vec3);
++    vec1.setLength(vec1, block->getVal1());
++    vec2.sub(ptcl->mLocalPosition, vec1);
++    vec3.cross(field_0x1c, vec1);
++    mAccel.cross(vec3, vec2);
++    mAccel.setLength(block->getMag());
++    calcAffect(block, ptcl);
++}
++
++void JPAFieldRandom::calc(JPAEmitterWorkData* work, JPAFieldBlock* block, JPABaseParticle* ptcl) {
++    if (ptcl->mAge == 0 || (block->getCycle() != 0 && ptcl->mAge % block->getCycle() == 0)) {
++        JPABaseEmitter* emtr = work->mpEmtr;
++        mAccel.set(emtr->get_r_zh(), emtr->get_r_zh(), emtr->get_r_zh());
++        mAccel.scale(block->getMag());
++        calcAffect(block, ptcl);
++    }
++}
++
++void JPAFieldDrag::calc(JPAEmitterWorkData* work, JPAFieldBlock* block, JPABaseParticle* ptcl) {
++    if (!ptcl->checkStatus(4)) {
++        f32 fade = calcFadeAffect(block, ptcl->mTime);
++        ptcl->mDrag *= 1.0f - fade * (1.0f - block->getMag());
++    } else {
++        ptcl->mDrag *= block->getMag();
++    }
++}
++
++void JPAFieldSpin::calc(JPAEmitterWorkData* work, JPAFieldBlock* block, JPABaseParticle* ptcl) {
++    Mtx mtx;
++    mtx[0][0] = field_0x10.x;
++    mtx[1][0] = field_0x10.y;
++    mtx[2][0] = field_0x10.z;
++    mtx[0][1] = field_0x1c.x;
++    mtx[1][1] = field_0x1c.y;
++    mtx[2][1] = field_0x1c.z;
++    mtx[0][2] = field_0x28.x;
++    mtx[1][2] = field_0x28.y;
++    mtx[2][2] = field_0x28.z;
++    mtx[0][3] = mtx[1][3] = mtx[2][3] = 0.0f;
++    Vec vec;
++    PSMTXMultVecSR(mtx, &ptcl->mLocalPosition, &vec);
++    mAccel.set(vec.x - ptcl->mLocalPosition.x, vec.y - ptcl->mLocalPosition.y, vec.z - ptcl->mLocalPosition.z);
++    calcAffect(block, ptcl);
++}
++
++JPAFieldBlock::JPAFieldBlock(u8 const* data, JKRHeap* heap) : mpData((const JPAFieldBlockData*)data) {
++    init(heap);
++}
++
++// https://decomp.me/scratch/5AuZW
++void JPAFieldBlock::init(JKRHeap* heap) {
++    mFadeInRate = getFadeInTime() - getEnTime();
++    if (mFadeInRate == 0.0f) {
++        mFadeInRate = 1.0f;
++    } else {
++        mFadeInRate = 1.0f / mFadeInRate;
++    }
++
++    mFadeOutRate = getDisTime() - getFadeOutTime();
++    if (mFadeOutRate == 0.0f) {
++        mFadeOutRate = 1.0f;
++    } else {
++        mFadeOutRate = 1.0f / mFadeOutRate;
++    }
++
++    getPosOrig(&mPos);
++    getDirOrig(&mDir);
++    mMag = getMagOrig();
++
++    switch (getType()) {
++    case FIELD_GRAVITY:
++        mpField = new (heap, 0) JPAFieldGravity();
++        break;
++    case FIELD_AIR:
++        mpField = new (heap, 0) JPAFieldAir();
++        break;
++    case FIELD_MAGNET:
++        mpField = new (heap, 0) JPAFieldMagnet();
++        break;
++    case FIELD_NEWTON:
++        mpField = new (heap, 0) JPAFieldNewton();
++        break;
++    case FIELD_VORTEX:
++        mpField = new (heap, 0) JPAFieldVortex();
++        break;
++    case FIELD_RANDOM:
++        mpField = new (heap, 0) JPAFieldRandom();
++        break;
++    case FIELD_DRAG:
++        mpField = new (heap, 0) JPAFieldDrag();
++        break;
++    case FIELD_CONVECTION:
++        mpField = new (heap, 0) JPAFieldConvection();
++        break;
++    case FIELD_SPIN:
++        mpField = new (heap, 0) JPAFieldSpin();
++        break;
++    default:
++        mpField = NULL;
++        break;
++    }
++}
+--- /dev/null
++++ b/pc-port/src/JSystem/JParticle/JPAKeyBlock.cpp
+@@ -0,0 +1,14 @@
++#include "JSystem/JParticle/JPAKeyBlock.hpp"
++#include "JSystem/JParticle/JPAMath.hpp"
++
++JPAKeyBlock::JPAKeyBlock(const u8* data) : mDataStart(data), field_0x4(reinterpret_cast< const float* >(&data[0xC])) {
++}
++
++f32 JPAKeyBlock::calc(float p1) {
++    if (mDataStart[0xB] != '\0') {
++        int v1 = (int)field_0x4[(mDataStart[9] - 1) * 4] + 1;
++        int v2 = ((int)p1 / v1);
++        p1 = p1 - (v2 * v1);
++    }
++    return JPACalcKeyAnmValue(p1, mDataStart[9], field_0x4);
++}
+--- /dev/null
++++ b/pc-port/src/JSystem/JParticle/JPAMath.cpp
+@@ -0,0 +1,137 @@
++#include "JSystem/JParticle/JPAMath.hpp"
++#include "JSystem/JMath/JMATrigonometric.hpp"
++
++void JPAGetDirMtx(JGeometry::TVec3< f32 > const& param_0, f32 (*param_1)[4]) {
++    JGeometry::TVec3< float > local_78(param_0.y, -param_0.x, 0.0f);
++    f32 len = local_78.length();
++
++    if (len <= JGeometry::TUtil< f32 >::epsilon()) {
++        local_78.zero();
++    } else {
++        local_78.scale(1.0f / len);
++    }
++    f32 xsquared = local_78.x * local_78.x;
++    f32 ysquared = local_78.y * local_78.y;
++    f32 xlen = local_78.x * len;
++    f32 ylen = local_78.y * len;
++    f32 fVar5 = (1.0f - param_0.z) * (local_78.x * local_78.y);
++    param_1[0][0] = xsquared + param_0.z * (1.0f - xsquared);
++    param_1[0][1] = fVar5;
++    param_1[0][2] = -ylen;
++    param_1[0][3] = 0.0f;
++    param_1[1][0] = fVar5;
++    param_1[1][1] = ysquared + param_0.z * (1.0f - ysquared);
++    param_1[1][2] = xlen;
++    param_1[1][3] = 0.0f;
++    param_1[2][0] = ylen;
++    param_1[2][1] = -xlen;
++    param_1[2][2] = param_0.z;
++    param_1[2][3] = 0.0f;
++}
++
++void JPAGetYZRotateMtx(s16 angleY, s16 angleZ, f32 (*param_2)[4]) {
++    f32 cosy = JMASCos(angleY);
++    f32 cosz = JMASCos(angleZ);
++    f32 siny = JMASSin(angleY);
++    f32 sinz = JMASSin(angleZ);
++    param_2[0][0] = (cosy * cosz);
++    param_2[0][1] = -sinz;
++    param_2[0][2] = (siny * cosz);
++    param_2[1][0] = (cosy * sinz);
++    param_2[1][1] = cosz;
++    param_2[1][2] = (siny * sinz);
++    param_2[2][0] = -siny;
++    param_2[2][2] = cosy;
++    param_2[2][3] = 0.0f;
++    param_2[2][1] = 0.0f;
++    param_2[1][3] = 0.0f;
++    param_2[0][3] = 0.0f;
++}
++
++void JPAGetXYZRotateMtx(s16 x, s16 y, s16 z, Mtx mtx) {
++    f32 cosx = JMASCos(x);
++    f32 cosy = JMASCos(y);
++    f32 cosz = JMASCos(z);
++    f32 sinx = JMASSin(x);
++    f32 siny = JMASSin(y);
++    f32 sinz = JMASSin(z);
++    mtx[0][0] = cosy * cosz;
++    mtx[1][0] = cosy * sinz;
++    mtx[2][0] = -siny;
++    mtx[2][1] = sinx * cosy;
++    mtx[2][2] = cosx * cosy;
++    f32 cosxsinz = cosx * sinz;
++    f32 sinxcosz = sinx * cosz;
++    mtx[0][1] = sinxcosz * siny - cosxsinz;
++    mtx[1][2] = cosxsinz * siny - sinxcosz;
++    f32 sinxsinz = sinx * sinz;
++    f32 cosxcosz = cosx * cosz;
++    mtx[0][2] = sinxsinz + cosxcosz * siny;
++    mtx[1][1] = cosxcosz + sinxsinz * siny;
++    mtx[2][3] = 0.0f;
++    mtx[1][3] = 0.0f;
++    mtx[0][3] = 0.0f;
++}
++
++void JPASetRMtxfromMtx(f32 const (*param_0)[4], f32 (*param_1)[4]) {
++    JGeometry::TVec3< f32 > dummy_0;
++    JGeometry::TVec3< f32 > dummy_1;
++    JPASetRMtxSTVecfromMtx(param_0, param_1, &dummy_0, &dummy_1);
++}
++
++/* NEW IN SMG1 */
++void JPASetRMtxTVecfromMtx(f32 const (*param_0)[4], f32 (*param_1)[4], JGeometry::TVec3< f32 >* param_2) {
++    JGeometry::TVec3< f32 > dummy;
++    JPASetRMtxSTVecfromMtx(param_0, param_1, &dummy, param_2);
++}
++
++void JPASetRMtxSTVecfromMtx(f32 const (*param_0)[4], f32 (*param_1)[4], JGeometry::TVec3< f32 >* param_2, JGeometry::TVec3< f32 >* param_3) {
++    JGeometry::TVec3< float > aTStack_54;
++    aTStack_54.set(param_0[0][0], param_0[1][0], param_0[2][0]);
++    param_2->x = aTStack_54.length();
++    aTStack_54.set(param_0[0][1], param_0[1][1], param_0[2][1]);
++    param_2->y = aTStack_54.length();
++    aTStack_54.set(param_0[0][2], param_0[1][2], param_0[2][2]);
++    param_2->z = aTStack_54.length();
++    PSMTXIdentity(param_1);
++    if (param_2->x != 0.0f) {
++        f32 fVar5 = 1.0f / param_2->x;
++        param_1[0][0] = param_0[0][0] * fVar5;
++        param_1[1][0] = param_0[1][0] * fVar5;
++        param_1[2][0] = param_0[2][0] * fVar5;
++    }
++    if (param_2->y != 0.0f) {
++        f32 fVar5 = 1.0f / param_2->y;
++        param_1[0][1] = param_0[0][1] * fVar5;
++        param_1[1][1] = param_0[1][1] * fVar5;
++        param_1[2][1] = param_0[2][1] * fVar5;
++    }
++    if (param_2->z != 0.0f) {
++        f32 fVar5 = 1.0f / param_2->z;
++        param_1[0][2] = param_0[0][2] * fVar5;
++        param_1[1][2] = param_0[1][2] * fVar5;
++        param_1[2][2] = param_0[2][2] * fVar5;
++    }
++    param_3->set(param_0[0][3], param_0[1][3], param_0[2][3]);
++}
++
++f32 JPACalcKeyAnmValue(f32 param_0, u16 param_1, f32 const* param_2) {
++    if (param_0 < param_2[0]) {
++        return param_2[1];
++    }
++    int ind = param_1 - 1;
++    if (param_2[ind * 4] <= param_0) {
++        return param_2[ind * 4 + 1];
++    }
++    int x = param_1;
++    while (x > 1) {
++        u32 uVar3 = x / 2;
++        if (param_0 >= param_2[uVar3 * 4]) {
++            param_2 += uVar3 * 4;
++            x -= uVar3;
++        } else {
++            x = uVar3;
++        }
++    }
++    return JMAHermiteInterpolation(param_0, param_2[0], param_2[1], param_2[3], param_2[4], param_2[5], param_2[6]);
++}
+--- /dev/null
++++ b/pc-port/src/JSystem/JParticle/JPAParticle.cpp
+@@ -0,0 +1,296 @@
++#include "JSystem/JParticle/JPAParticle.hpp"
++#include "JSystem/JParticle/JPABaseShape.hpp"
++#include "JSystem/JParticle/JPAChildShape.hpp"
++#include "JSystem/JParticle/JPAEmitter.hpp"
++#include "JSystem/JParticle/JPAEmitterManager.hpp"
++#include "JSystem/JParticle/JPAExtraShape.hpp"
++
++JPAParticleCallBack::~JPAParticleCallBack() {
++}
++
++void JPABaseParticle::init_p(JPAEmitterWorkData* work) {
++    JPABaseEmitter* emtr = work->mpEmtr;
++    JPAExtraShape* esp = work->mpRes->getEsp();
++    JPABaseShape* bsp = work->mpRes->getBsp();
++    JPADynamicsBlock* dyn = work->mpRes->getDyn();
++
++    mAge = -1;
++    mLifeTime = (1.0f - dyn->getLifetimeRndm() * emtr->get_r_f()) * emtr->mLifeTime;
++    mTime = 0.0f;
++
++    initStatus(0);
++    PSMTXMultVecSR(work->mGlobalSR, &work->mVolumeCalcData.mVolumePos, &mLocalPosition);
++    if (emtr->checkFlag(8)) {
++        setStatus(0x20);
++    }
++
++    mOffsetPosition.set(work->mGlobalPos);
++    mPosition.set(mOffsetPosition.x + mLocalPosition.x * work->mPublicScale.x, mOffsetPosition.y + mLocalPosition.y * work->mPublicScale.y,
++                  mOffsetPosition.z + mLocalPosition.z * work->mPublicScale.z);
++
++    JGeometry::TVec3< f32 > velOmni;
++    if (emtr->mAwayFromCenterSpeed) {
++        velOmni.setLength(work->mVolumeCalcData.mVelOmni, emtr->mAwayFromCenterSpeed);
++    } else {
++        velOmni.zero();
++    }
++
++    JGeometry::TVec3< f32 > velAxis;
++    if (emtr->mAwayFromAxisSpeed) {
++        velAxis.setLength(work->mVolumeCalcData.mVelAxis, emtr->mAwayFromAxisSpeed);
++    } else {
++        velAxis.zero();
++    }
++
++    JGeometry::TVec3< f32 > velDir;
++    if (emtr->mDirSpeed) {
++        Mtx mtx;
++        JPAGetYZRotateMtx(emtr->get_r_zp() * 0x8000 * emtr->mSpread, emtr->get_r_ss(), mtx);
++        PSMTXConcat(work->mDirectionMtx, mtx, mtx);
++        velDir.set(emtr->mDirSpeed * mtx[0][2], emtr->mDirSpeed * mtx[1][2], emtr->mDirSpeed * mtx[2][2]);
++    } else {
++        velDir.zero();
++    }
++
++    JGeometry::TVec3< f32 > velRndm;
++    if (emtr->mRndmDirSpeed) {
++        velRndm.set(emtr->mRndmDirSpeed * emtr->get_r_zh(), emtr->mRndmDirSpeed * emtr->get_r_zh(), emtr->mRndmDirSpeed * emtr->get_r_zh());
++    } else {
++        velRndm.zero();
++    }
++
++    f32 ratio = emtr->get_r_zp() * dyn->getInitVelRatio() + 1.0f;
++    mVelType1.set(ratio * (velOmni.x + velAxis.x + velDir.x + velRndm.x), ratio * (velOmni.y + velAxis.y + velDir.y + velRndm.y),
++                  ratio * (velOmni.z + velAxis.z + velDir.z + velRndm.z));
++
++    if (emtr->checkFlag(4)) {
++        mVelType1.mul(emtr->mLocalScl);
++    }
++    PSMTXMultVecSR(work->mGlobalRot, &mVelType1, &mVelType1);
++
++    mVelType0.zero();
++
++    mMoment = 1.0f - dyn->getMomentRndm() * emtr->get_r_f();
++    mDrag = 1.0f;
++    field_0x78 = 0;
++
++    mBaseAxis.set(work->mGlobalRot[0][1], work->mGlobalRot[1][1], work->mGlobalRot[2][1]);
++
++    mPrmClr = emtr->mPrmClr;
++    mEnvClr = emtr->mEnvClr;
++
++    mAnmRandom = emtr->get_r_f() * bsp->getLoopOfstValue();
++
++    if (esp != NULL && esp->isEnableScaleAnm()) {
++        mParticleScaleX = mParticleScaleY = mScaleOut = emtr->mScaleOut * (emtr->get_r_zp() * esp->getScaleRndm() + 1.0f);
++    } else {
++        mParticleScaleX = mParticleScaleY = mScaleOut = emtr->mScaleOut;
++    }
++
++    mPrmColorAlphaAnm = 0xff;
++
++    if (esp != NULL && esp->isEnableAlphaFlick()) {
++        mAlphaWaveRandom = emtr->get_r_zp() * esp->getAlphaFreqRndm() + 1.0f;
++    } else {
++        mAlphaWaveRandom = 1.0f;
++    }
++
++    if (esp != NULL) {
++        if (esp->isEnableRotateAnm()) {
++            mRotateAngle = esp->getRotateInitAngle() + esp->getRotateRndmAngle() * emtr->get_r_zh();
++            mRotateSpeed = esp->getRotateInitSpeed() * (esp->getRotateRndmSpeed() * emtr->get_r_zp() + 1.0f);
++            mRotateSpeed = emtr->get_r_zp() < esp->getRotateDirection() ? mRotateSpeed : (s16)-mRotateSpeed;
++        } else {
++            mRotateAngle = 0;
++            mRotateSpeed = 0;
++        }
++    } else {
++        mRotateAngle = 0;
++        mRotateSpeed = 0;
++    }
++}
++
++void JPABaseParticle::init_c(JPAEmitterWorkData* work, JPABaseParticle* parent) {
++    JPABaseEmitter* emtr = work->mpEmtr;
++    JPAChildShape* csp = work->mpRes->getCsp();
++
++    mAge = -1;
++    mLifeTime = csp->getLife();
++    mTime = 0.0f;
++    initStatus(4);
++    mLocalPosition.set(parent->mLocalPosition);
++
++    f32 pos_rndm = csp->getPosRndm();
++    if (pos_rndm != 0.0f) {
++        JGeometry::TVec3< f32 > rnd(emtr->get_r_zh(), emtr->get_r_zh(), emtr->get_r_zh());
++        rnd.setLength(pos_rndm * emtr->get_r_f());
++        mLocalPosition.add(rnd);
++    }
++
++    if (emtr->checkFlag(0x10)) {
++        setStatus(0x20);
++    }
++
++    mOffsetPosition.set(parent->mOffsetPosition);
++
++    f32 base_speed = csp->getBaseVel() * (csp->getBaseVelRndm() * emtr->get_r_zp() + 1.0f);
++    JGeometry::TVec3< f32 > base_vel(emtr->get_r_zp(), emtr->get_r_zp(), emtr->get_r_zp());
++    base_vel.setLength(base_speed);
++    mVelType1.scaleAdd(csp->getVelInhRate(), parent->mVelType1, base_vel);
++    mVelType0.scale(csp->getVelInhRate(), parent->mVelType2);
++
++    mMoment = parent->mMoment;
++    if (csp->isFieldAffected()) {
++        mDrag = parent->mDrag;
++    } else {
++        setStatus(0x40);
++        mDrag = 1.0f;
++    }
++    field_0x78 = parent->field_0x78;
++
++    mVelType2.set(mVelType0);
++    f32 ratio = mMoment * mDrag;
++    mVelocity.set(ratio * (mVelType1.x + mVelType2.x), ratio * (mVelType1.y + mVelType2.y), ratio * (mVelType1.z + mVelType2.z));
++
++    mBaseAxis.set(parent->mBaseAxis);
++
++    if (csp->isScaleInherited()) {
++        mParticleScaleX = mScaleOut = parent->mParticleScaleX * csp->getScaleInhRate();
++        mParticleScaleY = mAlphaWaveRandom = parent->mParticleScaleY * csp->getScaleInhRate();
++    } else {
++        mParticleScaleX = mScaleOut = mParticleScaleY = mAlphaWaveRandom = 1.0f;
++    }
++
++    if (csp->isColorInherited()) {
++        mPrmClr.r = parent->mPrmClr.r * csp->getColorInhRate();
++        mPrmClr.g = parent->mPrmClr.g * csp->getColorInhRate();
++        mPrmClr.b = parent->mPrmClr.b * csp->getColorInhRate();
++        mEnvClr.r = parent->mEnvClr.r * csp->getColorInhRate();
++        mEnvClr.g = parent->mEnvClr.g * csp->getColorInhRate();
++        mEnvClr.b = parent->mEnvClr.b * csp->getColorInhRate();
++    } else {
++        csp->getPrmClr(&mPrmClr);
++        csp->getEnvClr(&mEnvClr);
++    }
++
++    mPrmColorAlphaAnm = 0xff;
++    if (csp->isAlphaInherited()) {
++        mPrmClr.a = COLOR_MULTI(parent->mPrmClr.a, parent->mPrmColorAlphaAnm) * csp->getAlphaInhRate();
++    } else {
++        mPrmClr.a = csp->getPrmAlpha();
++    }
++
++    mRotateAngle = parent->mRotateAngle;
++    if (csp->isRotateOn()) {
++        mRotateSpeed = csp->getRotInitSpeed();
++    } else {
++        mRotateSpeed = 0;
++    }
++
++    mTexAnmIdx = 0;
++}
++
++bool JPABaseParticle::calc_p(JPAEmitterWorkData* work) {
++    if (++mAge >= mLifeTime) {
++        return true;
++    }
++    mTime = (f32)mAge / (f32)mLifeTime;
++
++    if (checkStatus(0x20)) {
++        mOffsetPosition.set(work->mGlobalPos);
++    }
++
++    mVelType2.zero();
++    if (!checkStatus(0x40)) {
++        work->mpRes->calcField(work, this);
++    }
++    mVelType2.add(mVelType0);
++    mVelType1.scale(work->mpEmtr->mAirResist);
++    f32 ratio = mMoment * mDrag;
++    mVelocity.set(ratio * (mVelType1.x + mVelType2.x), ratio * (mVelType1.y + mVelType2.y), ratio * (mVelType1.z + mVelType2.z));
++
++    if (work->mpEmtr->mpPtclCallBack != NULL) {
++        work->mpEmtr->mpPtclCallBack->execute(work->mpEmtr, this);
++    }
++
++    if (checkStatus(2)) {
++        return true;
++    }
++
++    work->mpRes->calc_p(work, this);
++    mRotateAngle += mRotateSpeed;
++
++    if (work->mpRes->getCsp() != NULL && canCreateChild(work)) {
++        for (int i = work->mpRes->getCsp()->getRate(); i > 0; i--) {
++            work->mpEmtr->createChild(this);
++        }
++    }
++
++    mLocalPosition.add(mVelocity);
++    mPosition.set(mOffsetPosition.x + mLocalPosition.x * work->mPublicScale.x, mOffsetPosition.y + mLocalPosition.y * work->mPublicScale.y,
++                  mOffsetPosition.z + mLocalPosition.z * work->mPublicScale.z);
++
++    return false;
++}
++
++bool JPABaseParticle::calc_c(JPAEmitterWorkData* work) {
++    if (++mAge >= mLifeTime) {
++        return true;
++    }
++    mTime = (f32)mAge / (f32)mLifeTime;
++
++    if (mAge != 0) {
++        if (checkStatus(0x20)) {
++            mOffsetPosition.set(work->mGlobalPos);
++        }
++
++        mVelType1.y -= work->mpRes->getCsp()->getGravity();
++        mVelType2.zero();
++        if (!checkStatus(0x40)) {
++            work->mpRes->calcField(work, this);
++        }
++        mVelType2.add(mVelType0);
++        mVelType1.scale(work->mpEmtr->mAirResist);
++        f32 ratio = mMoment * mDrag;
++        mVelocity.set(ratio * (mVelType1.x + mVelType2.x), ratio * (mVelType1.y + mVelType2.y), ratio * (mVelType1.z + mVelType2.z));
++    }
++
++    if (work->mpEmtr->mpPtclCallBack != NULL) {
++        work->mpEmtr->mpPtclCallBack->execute(work->mpEmtr, this);
++    }
++
++    if (checkStatus(2)) {
++        return true;
++    }
++
++    work->mpRes->calc_c(work, this);
++    mRotateAngle += mRotateSpeed;
++    mLocalPosition.add(mVelocity);
++    mPosition.set(mOffsetPosition.x + mLocalPosition.x * work->mPublicScale.x, mOffsetPosition.y + mLocalPosition.y * work->mPublicScale.y,
++                  mOffsetPosition.z + mLocalPosition.z * work->mPublicScale.z);
++
++    return false;
++}
++
++bool JPABaseParticle::canCreateChild(JPAEmitterWorkData* work) {
++    JPAChildShape* csp = work->mpRes->getCsp();
++    bool ret = false;
++    int time = mAge - (int)((mLifeTime - 1) * csp->getTiming());
++    if (time >= 0 && time % (csp->getStep() + 1) == 0) {
++        ret = true;
++    }
++    return ret;
++}
++
++/* NEW IN SMG1 */
++f32 JPABaseParticle::getCalcCurrentPositionX(const JPABaseEmitter* pEmitter) const {
++    return (mOffsetPosition.x + (pEmitter->mpEmtrMgr->pWd->mPublicScale.x) * (mLocalPosition.x + mVelocity.x));
++}
++
++f32 JPABaseParticle::getCalcCurrentPositionY(const JPABaseEmitter* pEmitter) const {
++    return (mOffsetPosition.y + (pEmitter->mpEmtrMgr->pWd->mPublicScale.y) * (mLocalPosition.y + mVelocity.y));
++}
++
++f32 JPABaseParticle::getCalcCurrentPositionZ(const JPABaseEmitter* pEmitter) const {
++    return (mOffsetPosition.z + (pEmitter->mpEmtrMgr->pWd->mPublicScale.z) * (mLocalPosition.z + mVelocity.z));
++}
+--- /dev/null
++++ b/pc-port/src/JSystem/JParticle/JPAResource.cpp
+@@ -0,0 +1,1052 @@
++#include "JSystem/JParticle/JPAResource.hpp"
++#include "JSystem/JKernel/JKRHeap.hpp"
++#include "JSystem/JParticle/JPABaseShape.hpp"
++#include "JSystem/JParticle/JPAChildShape.hpp"
++#include "JSystem/JParticle/JPAEmitter.hpp"
++#include "JSystem/JParticle/JPAExTexShape.hpp"
++#include "JSystem/JParticle/JPAExtraShape.hpp"
++#include "JSystem/JParticle/JPAFieldBlock.hpp"
++#include "JSystem/JParticle/JPAKeyBlock.hpp"
++#include "JSystem/JParticle/JPAParticle.hpp"
++#include "JSystem/JParticle/JPAResourceManager.hpp"
++
++JPAResource::JPAResource() {
++    mpDrawEmitterChildFuncList = NULL;
++    mpDrawEmitterFuncList = NULL;
++    mpCalcEmitterFuncList = NULL;
++    mpDrawParticleChildFuncList = NULL;
++    mpCalcParticleChildFuncList = NULL;
++    mpDrawParticleFuncList = NULL;
++    mpCalcParticleFuncList = NULL;
++    mpBaseShape = NULL;
++    mpExtraShape = NULL;
++    mpChildShape = NULL;
++    mpExTexShape = NULL;
++    mpDynamicsBlock = NULL;
++    mpFieldBlocks = NULL;
++    mpKeyBlocks = NULL;
++    mpTDB1 = NULL;
++    mpDrawParticleChildFuncListNum = 0;
++    mpCalcParticleChildFuncListNum = 0;
++    mpDrawParticleFuncListNum = 0;
++    mpCalcParticleFuncListNum = 0;
++    mpDrawEmitterChildFuncListNum = 0;
++    mpDrawEmitterFuncListNum = 0;
++    mpCalcEmitterFuncListNum = 0;
++    mTDB1Num = 0;
++    mKeyBlockNum = 0;
++    mFieldBlockNum = 0;
++    mUsrIdx = 0;
++}
++
++static u8 jpa_pos[324] ATTRIBUTE_ALIGN(32) = {
++    0x00, 0x00, 0x00, 0x32, 0x00, 0x00, 0x32, 0xCE, 0x00, 0x00, 0xCE, 0x00, 0xE7, 0x00, 0x00, 0x19, 0x00, 0x00, 0x19, 0xCE, 0x00, 0xE7, 0xCE, 0x00,
++    0xCE, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xCE, 0x00, 0xCE, 0xCE, 0x00, 0x00, 0x19, 0x00, 0x32, 0x19, 0x00, 0x32, 0xE7, 0x00, 0x00, 0xE7, 0x00,
++    0xE7, 0x19, 0x00, 0x19, 0x19, 0x00, 0x19, 0xE7, 0x00, 0xE7, 0xE7, 0x00, 0xCE, 0x19, 0x00, 0x00, 0x19, 0x00, 0x00, 0xE7, 0x00, 0xCE, 0xE7, 0x00,
++    0x00, 0x32, 0x00, 0x32, 0x32, 0x00, 0x32, 0x00, 0x00, 0x00, 0x00, 0x00, 0xE7, 0x32, 0x00, 0x19, 0x32, 0x00, 0x19, 0x00, 0x00, 0xE7, 0x00, 0x00,
++    0xCE, 0x32, 0x00, 0x00, 0x32, 0x00, 0x00, 0x00, 0x00, 0xCE, 0x00, 0x00, 0x00, 0x00, 0x00, 0x32, 0x00, 0x00, 0x32, 0x00, 0x32, 0x00, 0x00, 0x32,
++    0xE7, 0x00, 0x00, 0x19, 0x00, 0x00, 0x19, 0x00, 0x32, 0xE7, 0x00, 0x32, 0xCE, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x32, 0xCE, 0x00, 0x32,
++    0x00, 0x00, 0xE7, 0x32, 0x00, 0xE7, 0x32, 0x00, 0x19, 0x00, 0x00, 0x19, 0xE7, 0x00, 0xE7, 0x19, 0x00, 0xE7, 0x19, 0x00, 0x19, 0xE7, 0x00, 0x19,
++    0xCE, 0x00, 0xE7, 0x00, 0x00, 0xE7, 0x00, 0x00, 0x19, 0xCE, 0x00, 0x19, 0x00, 0x00, 0xCE, 0x32, 0x00, 0xCE, 0x32, 0x00, 0x00, 0x00, 0x00, 0x00,
++    0xE7, 0x00, 0xCE, 0x19, 0x00, 0xCE, 0x19, 0x00, 0x00, 0xE7, 0x00, 0x00, 0xCE, 0x00, 0xCE, 0x00, 0x00, 0xCE, 0x00, 0x00, 0x00, 0xCE, 0x00, 0x00,
++    0x00, 0x00, 0x00, 0x00, 0x00, 0x32, 0x00, 0xCE, 0x32, 0x00, 0xCE, 0x00, 0x00, 0x00, 0xE7, 0x00, 0x00, 0x19, 0x00, 0xCE, 0x19, 0x00, 0xCE, 0xE7,
++    0x00, 0x00, 0xCE, 0x00, 0x00, 0x00, 0x00, 0xCE, 0x00, 0x00, 0xCE, 0xCE, 0x00, 0x19, 0x00, 0x00, 0x19, 0x32, 0x00, 0xE7, 0x32, 0x00, 0xE7, 0x00,
++    0x00, 0x19, 0xE7, 0x00, 0x19, 0x19, 0x00, 0xE7, 0x19, 0x00, 0xE7, 0xE7, 0x00, 0x19, 0xCE, 0x00, 0x19, 0x00, 0x00, 0xE7, 0x00, 0x00, 0xE7, 0xCE,
++    0x00, 0x32, 0x00, 0x00, 0x32, 0x32, 0x00, 0x00, 0x32, 0x00, 0x00, 0x00, 0x00, 0x32, 0xE7, 0x00, 0x32, 0x19, 0x00, 0x00, 0x19, 0x00, 0x00, 0xE7,
++    0x00, 0x32, 0xCE, 0x00, 0x32, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xCE,
++};
++
++static u8 jpa_crd[32] ATTRIBUTE_ALIGN(32) = {
++    0x00, 0x00, 0x01, 0x00, 0x01, 0x01, 0x00, 0x01, 0x00, 0x00, 0x02, 0x00, 0x02, 0x01, 0x00, 0x01,
++    0x00, 0x00, 0x01, 0x00, 0x01, 0x02, 0x00, 0x02, 0x00, 0x00, 0x02, 0x00, 0x02, 0x02, 0x00, 0x02,
++};
++
++void JPAResource::init(JKRHeap* heap) {
++    BOOL is_glbl_clr_anm = mpBaseShape->isGlblClrAnm();
++    BOOL is_glbl_tex_anm = mpBaseShape->isGlblTexAnm();
++    BOOL is_prm_anm = mpBaseShape->isPrmAnm();
++    BOOL is_env_anm = mpBaseShape->isEnvAnm();
++    BOOL is_tex_anm = mpBaseShape->isTexAnm();
++    BOOL is_tex_crd_anm = mpBaseShape->isTexCrdAnm();
++    BOOL is_prj_tex = mpBaseShape->isPrjTex();
++    BOOL is_enable_scale_anm = mpExtraShape != NULL && mpExtraShape->isEnableScaleAnm();
++    BOOL is_enable_alpha_anm = mpExtraShape != NULL && mpExtraShape->isEnableAlphaAnm();
++    BOOL is_enable_alpha_flick = mpExtraShape != NULL && mpExtraShape->isEnableAlphaAnm() && mpExtraShape->isEnableAlphaFlick();
++    BOOL is_enable_rotate_anm = mpExtraShape != NULL && mpExtraShape->isEnableRotateAnm();
++    BOOL is_rotate_on = is_enable_rotate_anm || (mpChildShape != NULL && mpChildShape->isRotateOn());
++    BOOL base_type_5_6 = mpBaseShape->getType() == 5 || mpBaseShape->getType() == 6;
++    BOOL base_type_0 = mpBaseShape->getType() == 0;
++    BOOL base_type_0_1 = mpBaseShape->getType() == 0 || mpBaseShape->getType() == 1;
++    BOOL child_type_5_6 = mpChildShape != NULL && (mpChildShape->getType() == 5 || mpChildShape->getType() == 6);
++    BOOL child_type_0 = mpChildShape != NULL && mpChildShape->getType() == 0;
++    BOOL child_type_0_1 = mpChildShape != NULL && (mpChildShape->getType() == 0 || mpChildShape->getType() == 1);
++    BOOL is_draw_parent = !mpBaseShape->isNoDrawParent();
++    BOOL is_draw_child = !mpBaseShape->isNoDrawChild();
++
++    if (is_glbl_tex_anm && is_tex_anm) {
++        mpCalcEmitterFuncListNum++;
++    }
++
++    if (is_glbl_clr_anm) {
++        if (is_prm_anm) {
++            mpCalcEmitterFuncListNum++;
++        }
++        if (is_env_anm) {
++            mpCalcEmitterFuncListNum++;
++        }
++        if (is_prm_anm || is_env_anm) {
++            mpCalcEmitterFuncListNum++;
++        }
++    }
++
++    if (mpCalcEmitterFuncListNum != 0) {
++        mpCalcEmitterFuncList = (EmitterFunc*)JKRAllocFromHeap(heap, mpCalcEmitterFuncListNum * sizeof(EmitterFunc), sizeof(EmitterFunc));
++    }
++
++    int func_no = 0;
++
++    if (is_glbl_tex_anm && is_tex_anm) {
++        switch (mpBaseShape->getTexAnmType()) {
++        case 0:
++            mpCalcEmitterFuncList[func_no] = &JPACalcTexIdxNormal;
++            break;
++        case 1:
++            mpCalcEmitterFuncList[func_no] = &JPACalcTexIdxRepeat;
++            break;
++        case 2:
++            mpCalcEmitterFuncList[func_no] = &JPACalcTexIdxReverse;
++            break;
++        case 3:
++            mpCalcEmitterFuncList[func_no] = &JPACalcTexIdxMerge;
++            break;
++        case 4:
++            mpCalcEmitterFuncList[func_no] = &JPACalcTexIdxRandom;
++            break;
++        }
++        func_no++;
++    }
++
++    if (is_glbl_clr_anm) {
++        if (is_prm_anm) {
++            mpCalcEmitterFuncList[func_no] = &JPACalcPrm;
++            func_no++;
++        }
++        if (is_env_anm) {
++            mpCalcEmitterFuncList[func_no] = &JPACalcEnv;
++            func_no++;
++        }
++        if (is_prm_anm || is_env_anm) {
++            switch (mpBaseShape->getClrAnmType()) {
++            case 0:
++                mpCalcEmitterFuncList[func_no] = &JPACalcClrIdxNormal;
++                break;
++            case 1:
++                mpCalcEmitterFuncList[func_no] = &JPACalcClrIdxRepeat;
++                break;
++            case 2:
++                mpCalcEmitterFuncList[func_no] = &JPACalcClrIdxReverse;
++                break;
++            case 3:
++                mpCalcEmitterFuncList[func_no] = &JPACalcClrIdxMerge;
++                break;
++            case 4:
++                mpCalcEmitterFuncList[func_no] = &JPACalcClrIdxRandom;
++                break;
++            }
++        }
++    }
++
++    if (!is_glbl_tex_anm && is_tex_anm) {
++        mpCalcParticleFuncListNum++;
++    }
++
++    if (!base_type_5_6 && (is_enable_alpha_anm || is_enable_alpha_flick)) {
++        mpCalcParticleFuncListNum++;
++    }
++
++    if (!is_glbl_clr_anm) {
++        if (is_prm_anm) {
++            mpCalcParticleFuncListNum++;
++        }
++        if (is_env_anm) {
++            mpCalcParticleFuncListNum++;
++        }
++        if (is_prm_anm || is_env_anm) {
++            mpCalcParticleFuncListNum++;
++        }
++    } else {
++        mpCalcParticleFuncListNum++;
++    }
++
++    if (is_enable_scale_anm) {
++        if (mpBaseShape->getType() != 0) {
++            if (mpExtraShape->isScaleXYDiff()) {
++                if (mpExtraShape->getScaleAnmTypeX() == 0 && mpExtraShape->getScaleAnmTypeY() == 0) {
++                    mpCalcParticleFuncListNum++;
++                } else {
++                    mpCalcParticleFuncListNum++;
++                    mpCalcParticleFuncListNum++;
++                }
++            } else {
++                mpCalcParticleFuncListNum++;
++            }
++        }
++        mpCalcParticleFuncListNum++;
++        mpCalcParticleFuncListNum++;
++    }
++
++    if (mpCalcParticleFuncListNum != 0) {
++        mpCalcParticleFuncList = (ParticleFunc*)JKRAllocFromHeap(heap, mpCalcParticleFuncListNum * sizeof(ParticleFunc), sizeof(ParticleFunc));
++    }
++
++    func_no = 0;
++
++    if (!is_glbl_tex_anm && is_tex_anm) {
++        switch (mpBaseShape->getTexAnmType()) {
++        case 0:
++            mpCalcParticleFuncList[func_no] = &JPACalcTexIdxNormal;
++            break;
++        case 1:
++            mpCalcParticleFuncList[func_no] = &JPACalcTexIdxRepeat;
++            break;
++        case 2:
++            mpCalcParticleFuncList[func_no] = &JPACalcTexIdxReverse;
++            break;
++        case 3:
++            mpCalcParticleFuncList[func_no] = &JPACalcTexIdxMerge;
++            break;
++        case 4:
++            mpCalcParticleFuncList[func_no] = &JPACalcTexIdxRandom;
++            break;
++        }
++        func_no++;
++    }
++
++    if (!base_type_5_6 && (is_enable_alpha_anm || is_enable_alpha_flick)) {
++        if (is_enable_alpha_flick) {
++            mpCalcParticleFuncList[func_no] = &JPACalcAlphaFlickAnm;
++            func_no++;
++        } else {
++            mpCalcParticleFuncList[func_no] = &JPACalcAlphaAnm;
++            func_no++;
++        }
++    }
++
++    if (!is_glbl_clr_anm) {
++        if (is_prm_anm) {
++            mpCalcParticleFuncList[func_no] = &JPACalcPrm;
++            func_no++;
++        }
++        if (is_env_anm) {
++            mpCalcParticleFuncList[func_no] = &JPACalcEnv;
++            func_no++;
++        }
++        if (is_prm_anm || is_env_anm) {
++            switch (mpBaseShape->getClrAnmType()) {
++            case 0:
++                mpCalcParticleFuncList[func_no] = &JPACalcClrIdxNormal;
++                break;
++            case 1:
++                mpCalcParticleFuncList[func_no] = &JPACalcClrIdxRepeat;
++                break;
++            case 2:
++                mpCalcParticleFuncList[func_no] = &JPACalcClrIdxReverse;
++                break;
++            case 3:
++                mpCalcParticleFuncList[func_no] = &JPACalcClrIdxMerge;
++                break;
++            case 4:
++                mpCalcParticleFuncList[func_no] = &JPACalcClrIdxRandom;
++                break;
++            }
++            func_no++;
++        }
++    } else {
++        mpCalcParticleFuncList[func_no] = &JPACalcColorCopy;
++        func_no++;
++    }
++
++    if (is_enable_scale_anm) {
++        if (mpBaseShape->getType() != 0) {
++            if (mpExtraShape->isScaleXYDiff()) {
++                mpCalcParticleFuncList[func_no] = &JPACalcScaleY;
++                func_no++;
++                if (mpExtraShape->getScaleAnmTypeY() != 0 || mpExtraShape->getScaleAnmTypeX() != 0) {
++                    switch (mpExtraShape->getScaleAnmTypeY()) {
++                    case 0:
++                        mpCalcParticleFuncList[func_no] = &JPACalcScaleAnmNormal;
++                        break;
++                    case 1:
++                        mpCalcParticleFuncList[func_no] = &JPACalcScaleAnmRepeatY;
++                        break;
++                    case 2:
++                        mpCalcParticleFuncList[func_no] = &JPACalcScaleAnmReverseY;
++                        break;
++                    }
++                    func_no++;
++                }
++            } else {
++                mpCalcParticleFuncList[func_no] = &JPACalcScaleCopy;
++                func_no++;
++            }
++        }
++        mpCalcParticleFuncList[func_no] = &JPACalcScaleX;
++        func_no++;
++        switch (mpExtraShape->getScaleAnmTypeX()) {
++        case 0:
++            mpCalcParticleFuncList[func_no] = &JPACalcScaleAnmNormal;
++            break;
++        case 1:
++            mpCalcParticleFuncList[func_no] = &JPACalcScaleAnmRepeatX;
++            break;
++        case 2:
++            mpCalcParticleFuncList[func_no] = &JPACalcScaleAnmReverseX;
++            break;
++        }
++    }
++
++    if (mpChildShape != NULL && mpChildShape->isScaleOutOn()) {
++        mpCalcParticleChildFuncListNum++;
++    }
++
++    if (mpChildShape != NULL && mpChildShape->isAlphaOutOn()) {
++        mpCalcParticleChildFuncListNum++;
++    }
++
++    if (mpCalcParticleChildFuncListNum != 0) {
++        mpCalcParticleChildFuncList = (ParticleFunc*)JKRAllocFromHeap(heap, mpCalcParticleChildFuncListNum * sizeof(ParticleFunc), sizeof(ParticleFunc));
++    }
++
++    func_no = 0;
++
++    if (mpChildShape != NULL && mpChildShape->isScaleOutOn()) {
++        mpCalcParticleChildFuncList[func_no] = &JPACalcChildScaleOut;
++        func_no++;
++    }
++
++    if (mpChildShape != NULL && mpChildShape->isAlphaOutOn()) {
++        mpCalcParticleChildFuncList[func_no] = &JPACalcChildAlphaOut;
++    }
++
++    if (is_draw_parent && base_type_5_6) {
++        mpDrawEmitterFuncListNum++;
++    }
++
++    mpDrawEmitterFuncListNum++;
++
++    if (mpExTexShape != NULL) {
++        mpDrawEmitterFuncListNum++;
++    }
++
++    if (is_glbl_tex_anm || !is_tex_anm) {
++        mpDrawEmitterFuncListNum++;
++    }
++
++    mpDrawEmitterFuncListNum++;
++
++    if (base_type_0_1) {
++        mpDrawEmitterFuncListNum++;
++    }
++
++    if (base_type_0_1 && !is_enable_scale_anm) {
++        mpDrawEmitterFuncListNum++;
++    }
++
++    if (is_glbl_clr_anm || (!is_prm_anm && !is_enable_alpha_anm) || !is_env_anm) {
++        mpDrawEmitterFuncListNum++;
++    }
++
++    if (mpDrawEmitterFuncListNum != 0) {
++        mpDrawEmitterFuncList = (EmitterFunc*)JKRAllocFromHeap(heap, mpDrawEmitterFuncListNum * sizeof(EmitterFunc), sizeof(EmitterFunc));
++    }
++
++    func_no = 0;
++
++    if (is_draw_parent && base_type_5_6) {
++        if (mpBaseShape->getType() == 5) {
++            mpDrawEmitterFuncList[func_no] = &JPADrawStripe;
++            func_no++;
++        } else {
++            mpDrawEmitterFuncList[func_no] = &JPADrawStripeX;
++            func_no++;
++        }
++    }
++
++    mpDrawEmitterFuncList[func_no] = &JPADrawEmitterCallBackB;
++    func_no++;
++
++    if (mpExTexShape != NULL) {
++        mpDrawEmitterFuncList[func_no] = &JPALoadExTex;
++        func_no++;
++    }
++
++    if (!is_tex_anm) {
++        mpDrawEmitterFuncList[func_no] = &JPALoadTex;
++        func_no++;
++    } else if (is_glbl_tex_anm) {
++        mpDrawEmitterFuncList[func_no] = &JPALoadTexAnm;
++        func_no++;
++    }
++
++    if (base_type_0_1) {
++        mpDrawEmitterFuncList[func_no] = &JPAGenTexCrdMtxIdt;
++        func_no++;
++    } else if (is_prj_tex) {
++        mpDrawEmitterFuncList[func_no] = &JPAGenTexCrdMtxPrj;
++        func_no++;
++    } else if (is_tex_crd_anm) {
++        if (base_type_5_6) {
++            mpDrawEmitterFuncList[func_no] = &JPAGenCalcTexCrdMtxAnm;
++            func_no++;
++        } else {
++            mpDrawEmitterFuncList[func_no] = &JPAGenTexCrdMtxAnm;
++            func_no++;
++        }
++    } else {
++        mpDrawEmitterFuncList[func_no] = &JPAGenTexCrdMtxIdt;
++        func_no++;
++    }
++
++    if (base_type_0_1) {
++        mpDrawEmitterFuncList[func_no] = &JPALoadPosMtxCam;
++        func_no++;
++    }
++
++    if (base_type_0_1 && !is_enable_scale_anm) {
++        if (base_type_0) {
++            mpDrawEmitterFuncList[func_no] = &JPASetPointSize;
++            func_no++;
++        } else {
++            mpDrawEmitterFuncList[func_no] = &JPASetLineWidth;
++            func_no++;
++        }
++    }
++
++    if (is_glbl_clr_anm) {
++        if (base_type_5_6 || !is_enable_alpha_anm) {
++            mpDrawEmitterFuncList[func_no] = &JPARegistPrmEnv;
++        } else if (is_enable_alpha_anm) {
++            mpDrawEmitterFuncList[func_no] = &JPARegistEnv;
++        }
++    } else if (!is_prm_anm && !is_enable_alpha_anm) {
++        if (!is_env_anm) {
++            mpDrawEmitterFuncList[func_no] = &JPARegistPrmEnv;
++        } else {
++            mpDrawEmitterFuncList[func_no] = &JPARegistPrm;
++        }
++    } else if (!is_env_anm) {
++        mpDrawEmitterFuncList[func_no] = &JPARegistEnv;
++    }
++
++    if (is_draw_child && child_type_5_6) {
++        mpDrawEmitterChildFuncListNum++;
++    }
++
++    mpDrawEmitterChildFuncListNum++;
++
++    if (child_type_0_1) {
++        mpDrawEmitterChildFuncListNum++;
++    }
++
++    if (mpChildShape != NULL && !mpChildShape->isAlphaOutOn() && !mpChildShape->isAlphaInherited() && !mpChildShape->isColorInherited()) {
++        mpDrawEmitterChildFuncListNum++;
++    }
++
++    if (mpDrawEmitterChildFuncListNum != 0) {
++        mpDrawEmitterChildFuncList = (EmitterFunc*)JKRAllocFromHeap(heap, mpDrawEmitterChildFuncListNum * sizeof(EmitterFunc), sizeof(EmitterFunc));
++    }
++
++    func_no = 0;
++
++    if (is_draw_child && child_type_5_6) {
++        if (mpChildShape->getType() == 5) {
++            mpDrawEmitterChildFuncList[func_no] = &JPADrawStripe;
++            func_no++;
++        } else {
++            mpDrawEmitterChildFuncList[func_no] = &JPADrawStripeX;
++            func_no++;
++        }
++    }
++
++    mpDrawEmitterChildFuncList[func_no] = &JPADrawEmitterCallBackB;
++    func_no++;
++
++    if (child_type_0_1) {
++        mpDrawEmitterChildFuncList[func_no] = &JPALoadPosMtxCam;
++        func_no++;
++    }
++
++    if (mpChildShape != NULL && !mpChildShape->isAlphaOutOn() && !mpChildShape->isAlphaInherited() && !mpChildShape->isColorInherited()) {
++        mpDrawEmitterChildFuncList[func_no] = &JPARegistChildPrmEnv;
++    }
++
++    if (is_draw_parent && !base_type_5_6) {
++        mpDrawParticleFuncListNum++;
++    }
++
++    mpDrawParticleFuncListNum++;
++
++    if (!is_glbl_tex_anm && is_tex_anm) {
++        mpDrawParticleFuncListNum++;
++    }
++
++    if ((base_type_0_1 && is_enable_scale_anm) || (is_tex_crd_anm && !is_prj_tex)) {
++        mpDrawParticleFuncListNum++;
++    }
++
++    if ((!is_glbl_clr_anm && (is_prm_anm || is_env_anm || is_enable_alpha_anm)) || (is_glbl_clr_anm && is_enable_alpha_anm && !base_type_5_6)) {
++        mpDrawParticleFuncListNum++;
++    }
++
++    if (mpDrawParticleFuncListNum != 0) {
++        mpDrawParticleFuncList = (ParticleFunc*)JKRAllocFromHeap(heap, mpDrawParticleFuncListNum * sizeof(ParticleFunc), sizeof(ParticleFunc));
++    }
++
++    func_no = 0;
++
++    if (is_draw_parent && !base_type_5_6) {
++        switch (mpBaseShape->getType()) {
++        case 2:
++            if (is_enable_rotate_anm) {
++                mpDrawParticleFuncList[func_no] = &JPADrawRotBillboard;
++            } else {
++                mpDrawParticleFuncList[func_no] = &JPADrawBillboard;
++            }
++            break;
++        case 10:
++            if (is_enable_rotate_anm) {
++                mpDrawParticleFuncList[func_no] = &JPADrawRotYBillboard;
++            } else {
++                mpDrawParticleFuncList[func_no] = &JPADrawYBillboard;
++            }
++            break;
++        case 3:
++        case 4:
++            if (is_enable_rotate_anm) {
++                mpDrawParticleFuncList[func_no] = &JPADrawRotDirection;
++            } else {
++                mpDrawParticleFuncList[func_no] = &JPADrawDirection;
++            }
++            break;
++        case 9:
++            mpDrawParticleFuncList[func_no] = &JPADrawDBillboard;
++            break;
++        case 7:
++        case 8:
++            mpDrawParticleFuncList[func_no] = &JPADrawRotation;
++            break;
++        case 0:
++            mpDrawParticleFuncList[func_no] = &JPADrawPoint;
++            break;
++        case 1:
++            mpDrawParticleFuncList[func_no] = &JPADrawLine;
++            break;
++        }
++        func_no++;
++    }
++
++    mpDrawParticleFuncList[func_no] = &JPADrawParticleCallBack;
++    func_no++;
++
++    if (!is_glbl_tex_anm && is_tex_anm) {
++        mpDrawParticleFuncList[func_no] = &JPALoadTexAnm;
++        func_no++;
++    }
++
++    if (base_type_0_1 && is_enable_scale_anm) {
++        if (base_type_0) {
++            mpDrawParticleFuncList[func_no] = &JPASetPointSize;
++            func_no++;
++        } else {
++            mpDrawParticleFuncList[func_no] = &JPASetLineWidth;
++            func_no++;
++        }
++    } else if (is_tex_crd_anm && !is_prj_tex) {
++        mpDrawParticleFuncList[func_no] = &JPALoadCalcTexCrdMtxAnm;
++        func_no++;
++    }
++
++    if (!is_glbl_clr_anm) {
++        if (is_prm_anm) {
++            if (is_env_anm) {
++                mpDrawParticleFuncList[func_no] = &JPARegistPrmAlphaEnv;
++            } else {
++                mpDrawParticleFuncList[func_no] = &JPARegistPrmAlpha;
++            }
++        } else if (is_enable_alpha_anm) {
++            if (is_env_anm) {
++                mpDrawParticleFuncList[func_no] = &JPARegistAlphaEnv;
++            } else {
++                mpDrawParticleFuncList[func_no] = &JPARegistAlpha;
++            }
++        } else if (is_env_anm) {
++            mpDrawParticleFuncList[func_no] = &JPARegistEnv;
++        }
++    } else if (is_enable_alpha_anm && !base_type_5_6) {
++        mpDrawParticleFuncList[func_no] = &JPARegistAlpha;
++    }
++
++    if (is_draw_child && mpChildShape != NULL && !child_type_5_6) {
++        mpDrawParticleChildFuncListNum++;
++    }
++
++    mpDrawParticleChildFuncListNum++;
++
++    if (child_type_0_1) {
++        mpDrawParticleChildFuncListNum++;
++    }
++
++    if (mpChildShape != NULL && (mpChildShape->isAlphaOutOn() || mpChildShape->isAlphaInherited() || mpChildShape->isColorInherited())) {
++        mpDrawParticleChildFuncListNum++;
++    }
++
++    if (mpDrawParticleChildFuncListNum != 0) {
++        mpDrawParticleChildFuncList = (ParticleFunc*)JKRAllocFromHeap(heap, mpDrawParticleChildFuncListNum * sizeof(ParticleFunc), sizeof(ParticleFunc));
++    }
++
++    func_no = 0;
++
++    if (is_draw_child && mpChildShape != NULL && !child_type_5_6) {
++        switch (mpChildShape->getType()) {
++        case 2:
++            if (is_rotate_on) {
++                mpDrawParticleChildFuncList[func_no] = &JPADrawRotBillboard;
++            } else {
++                mpDrawParticleChildFuncList[func_no] = &JPADrawBillboard;
++            }
++            break;
++        case 10:
++            if (is_rotate_on) {
++                mpDrawParticleChildFuncList[func_no] = &JPADrawRotYBillboard;
++            } else {
++                mpDrawParticleChildFuncList[func_no] = &JPADrawYBillboard;
++            }
++            break;
++        case 3:
++        case 4:
++            if (is_rotate_on) {
++                mpDrawParticleChildFuncList[func_no] = &JPADrawRotDirection;
++            } else {
++                mpDrawParticleChildFuncList[func_no] = &JPADrawDirection;
++            }
++            break;
++        case 9:
++            mpDrawParticleChildFuncList[func_no] = &JPADrawDBillboard;
++            break;
++        case 7:
++        case 8:
++            mpDrawParticleChildFuncList[func_no] = &JPADrawRotation;
++            break;
++        case 0:
++            mpDrawParticleChildFuncList[func_no] = &JPADrawPoint;
++            break;
++        case 1:
++            mpDrawParticleChildFuncList[func_no] = &JPADrawLine;
++            break;
++        }
++        func_no++;
++    }
++
++    mpDrawParticleChildFuncList[func_no] = &JPADrawParticleCallBack;
++    func_no++;
++
++    if (child_type_0_1) {
++        if (child_type_0) {
++            mpDrawParticleChildFuncList[func_no] = &JPASetPointSize;
++            func_no++;
++        } else {
++            mpDrawParticleChildFuncList[func_no] = &JPASetLineWidth;
++            func_no++;
++        }
++    }
++
++    if (mpChildShape != NULL && (mpChildShape->isAlphaOutOn() || mpChildShape->isAlphaInherited() || mpChildShape->isColorInherited())) {
++        mpDrawParticleChildFuncList[func_no] = &JPARegistPrmAlphaEnv;
++    }
++}
++
++bool JPAResource::calc(JPAEmitterWorkData* work, JPABaseEmitter* emtr) {
++    work->mpEmtr = emtr;
++    work->mpRes = this;
++    work->mEmitCount = 0;
++
++    if (!emtr->processTillStartFrame()) {
++        return false;
++    }
++
++    if (emtr->processTermination()) {
++        return true;
++    }
++
++    if (emtr->checkStatus(2)) {
++        if (emtr->mpEmtrCallBack != NULL) {
++            emtr->mpEmtrCallBack->execute(emtr);
++            if (emtr->checkStatus(0x100)) {
++                return true;
++            }
++            emtr->mpEmtrCallBack->executeAfter(emtr);
++            if (emtr->checkStatus(0x100)) {
++                return true;
++            }
++        }
++
++    } else {
++        calcKey(work);
++
++        for (int i = mFieldBlockNum - 1; i >= 0; i--) {
++            mpFieldBlocks[i]->initOpParam();
++        }
++
++        if (emtr->mpEmtrCallBack != NULL) {
++            emtr->mpEmtrCallBack->execute(emtr);
++            if (emtr->checkStatus(0x100)) {
++                return true;
++            }
++        }
++
++        calcWorkData_c(work);
++
++        for (int i = mpCalcEmitterFuncListNum - 1; i >= 0; i--) {
++            (*mpCalcEmitterFuncList[i])(work);
++        }
++
++        for (int i = mFieldBlockNum - 1; i >= 0; i--) {
++            mpFieldBlocks[i]->prepare(work);
++        }
++
++        if (!emtr->checkStatus(8)) {
++            mpDynamicsBlock->create(work);
++        }
++
++        if (emtr->mpEmtrCallBack != NULL) {
++            emtr->mpEmtrCallBack->executeAfter(emtr);
++            if (emtr->checkStatus(0x100)) {
++                return true;
++            }
++        }
++
++        JPANode< JPABaseParticle >* node = emtr->mAlivePtclBase.getFirst();
++        JPANode< JPABaseParticle >* next;
++        while (node != emtr->mAlivePtclBase.getEnd()) {
++            next = node->getNext();
++            if (node->getObject()->calc_p(work)) {
++                emtr->mpPtclPool->push_front(emtr->mAlivePtclBase.erase(node));
++            }
++            node = next;
++        }
++
++        node = emtr->mAlivePtclChld.getFirst();
++        while (node != emtr->mAlivePtclChld.getEnd()) {
++            next = node->getNext();
++            if (node->getObject()->calc_c(work)) {
++                emtr->mpPtclPool->push_front(emtr->mAlivePtclChld.erase(node));
++            }
++            node = next;
++        }
++
++        emtr->mTick++;
++    }
++
++    return false;
++}
++
++void JPAResource::draw(JPAEmitterWorkData* work, JPABaseEmitter* emtr) {
++    work->mpEmtr = emtr;
++    work->mpRes = this;
++    work->mDrawCount = 0;
++    calcWorkData_d(work);
++    mpBaseShape->setGX(work);
++    for (s32 i = 1; i <= emtr->getDrawTimes(); i++) {
++        work->mDrawCount++;
++        if (mpBaseShape->isDrawPrntAhead() && mpChildShape != NULL)
++            drawC(work);
++        drawP(work);
++        if (!mpBaseShape->isDrawPrntAhead() && mpChildShape != NULL)
++            drawC(work);
++    }
++}
++
++void JPAResource::drawP(JPAEmitterWorkData* work) {
++    work->mpEmtr->clearStatus(0x80);
++
++    work->mGlobalPtclScl.x = work->mpEmtr->mGlobalPScl.x * mpBaseShape->getBaseSizeX();
++    work->mGlobalPtclScl.y = work->mpEmtr->mGlobalPScl.y * mpBaseShape->getBaseSizeY();
++
++    if (mpBaseShape->getType() == 0) {
++        work->mGlobalPtclScl.x *= 1.02f;
++    } else if (mpBaseShape->getType() == 1) {
++        work->mGlobalPtclScl.x *= 1.02f;
++        work->mGlobalPtclScl.y *= 0.4f;
++    }
++
++    if (mpExtraShape != NULL && mpExtraShape->isEnableScaleAnm()) {
++        work->mPivot.x = mpExtraShape->getScaleCenterX() - 1.0f;
++        work->mPivot.y = mpExtraShape->getScaleCenterY() - 1.0f;
++    } else {
++        work->mPivot.x = work->mPivot.y = 0.0f;
++    }
++
++    work->mDirType = mpBaseShape->getDirType();
++    work->mRotType = mpBaseShape->getRotType();
++    work->mDLType = mpBaseShape->getType() == 4 || mpBaseShape->getType() == 8;
++    work->mPlaneType = work->mDLType ? 2 : mpBaseShape->getBasePlaneType();
++    work->mPrjType = mpBaseShape->isPrjTex() ? (mpBaseShape->isTexCrdAnm() ? 2 : 1) : 0;
++
++    work->mpAlivePtcl = &work->mpEmtr->mAlivePtclBase;
++    setPTev();
++
++    for (int i = mpDrawEmitterFuncListNum - 1; i >= 0; i--) {
++        (*mpDrawEmitterFuncList[i])(work);
++    }
++
++    if (mpBaseShape->isDrawFwdAhead()) {
++        JPANode< JPABaseParticle >* node = work->mpEmtr->mAlivePtclBase.getLast();
++        for (; node != work->mpEmtr->mAlivePtclBase.getEnd(); node = node->getPrev()) {
++            work->mpCurNode = node;
++            if (mpDrawParticleFuncList != NULL) {
++                for (int i = mpDrawParticleFuncListNum - 1; i >= 0; i--) {
++                    (*mpDrawParticleFuncList[i])(work, node->getObject());
++                }
++            }
++        }
++    } else {
++        JPANode< JPABaseParticle >* node = work->mpEmtr->mAlivePtclBase.getFirst();
++        for (; node != work->mpEmtr->mAlivePtclBase.getEnd(); node = node->getNext()) {
++            work->mpCurNode = node;
++            if (mpDrawParticleFuncList != NULL) {
++                for (int i = mpDrawParticleFuncListNum - 1; i >= 0; i--) {
++                    (*mpDrawParticleFuncList[i])(work, node->getObject());
++                }
++            }
++        }
++    }
++
++    GXSetMisc(GX_MT_XF_FLUSH, 0);
++
++    if (work->mpEmtr->mpEmtrCallBack != NULL) {
++        work->mpEmtr->mpEmtrCallBack->drawAfter(work->mpEmtr);
++    }
++}
++
++void JPAResource::drawC(JPAEmitterWorkData* work) {
++    work->mpEmtr->setStatus(0x80);
++
++    if (mpChildShape->isScaleInherited()) {
++        work->mGlobalPtclScl.x = work->mpEmtr->mGlobalPScl.x * mpBaseShape->getBaseSizeX();
++        work->mGlobalPtclScl.y = work->mpEmtr->mGlobalPScl.y * mpBaseShape->getBaseSizeY();
++    } else {
++        work->mGlobalPtclScl.x = work->mpEmtr->mGlobalPScl.x * mpChildShape->getScaleX();
++        work->mGlobalPtclScl.y = work->mpEmtr->mGlobalPScl.y * mpChildShape->getScaleY();
++    }
++
++    if (mpChildShape->getType() == 0) {
++        work->mGlobalPtclScl.x *= 1.02f;
++    } else if (mpChildShape->getType() == 1) {
++        work->mGlobalPtclScl.x *= 1.02f;
++        work->mGlobalPtclScl.y *= 0.4f;
++    }
++
++    work->mPivot.x = work->mPivot.y = 0.0f;
++
++    work->mDirType = mpChildShape->getDirType();
++    work->mRotType = mpChildShape->getRotType();
++    work->mDLType = mpChildShape->getType() == 4 || mpChildShape->getType() == 8;
++    work->mPlaneType = work->mDLType ? 2 : mpChildShape->getBasePlaneType();
++    work->mPrjType = 0;
++
++    work->mpAlivePtcl = &work->mpEmtr->mAlivePtclChld;
++    setCTev(work);
++
++    for (int i = mpDrawEmitterChildFuncListNum - 1; i >= 0; i--) {
++        (*mpDrawEmitterChildFuncList[i])(work);
++    }
++
++    if (mpBaseShape->isDrawFwdAhead()) {
++        JPANode< JPABaseParticle >* node = work->mpEmtr->mAlivePtclChld.getLast();
++        for (; node != work->mpEmtr->mAlivePtclChld.getEnd(); node = node->getPrev()) {
++            work->mpCurNode = node;
++            if (mpDrawParticleChildFuncList != NULL) {
++                for (int i = mpDrawParticleChildFuncListNum - 1; i >= 0; i--) {
++                    (*mpDrawParticleChildFuncList[i])(work, node->getObject());
++                }
++            }
++        }
++    } else {
++        JPANode< JPABaseParticle >* node = work->mpEmtr->mAlivePtclChld.getFirst();
++        for (; node != work->mpEmtr->mAlivePtclChld.getEnd(); node = node->getNext()) {
++            work->mpCurNode = node;
++            if (mpDrawParticleChildFuncList != NULL) {
++                for (int i = mpDrawParticleChildFuncListNum - 1; i >= 0; i--) {
++                    (*mpDrawParticleChildFuncList[i])(work, node->getObject());
++                }
++            }
++        }
++    }
++
++    GXSetMisc(GX_MT_XF_FLUSH, 0);
++
++    if (work->mpEmtr->mpEmtrCallBack != NULL) {
++        work->mpEmtr->mpEmtrCallBack->drawAfter(work->mpEmtr);
++    }
++}
++
++void JPAResource::setPTev() {
++    GXTexCoordID tex_coord = GX_TEXCOORD1;
++    u8 tev_stages = 1;
++    u8 tex_gens = 1;
++    u8 ind_stages = 0;
++
++    int base_plane_type = (mpBaseShape->getType() == 3 || mpBaseShape->getType() == 7) ? mpBaseShape->getBasePlaneType() : 0;
++    int center_offset;
++    if (mpExtraShape != NULL) {
++        center_offset = (mpExtraShape->getScaleCenterX() + 3 * mpExtraShape->getScaleCenterY()) * 0xC;
++    } else {
++        center_offset = 0x30;
++    }
++    int pos_offset = center_offset + base_plane_type * 0x6C;
++    int crd_offset = (mpBaseShape->getTilingS() + 2 * mpBaseShape->getTilingT()) * 8;
++    GXSetArray(GX_VA_POS, jpa_pos + pos_offset, 3);
++    GXSetArray(GX_VA_TEX0, jpa_crd + crd_offset, 2);
++    GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL);
++
++    if (mpExTexShape != NULL) {
++        if (mpExTexShape->isUseIndirect()) {
++            GXSetIndTexOrder(GX_INDTEXSTAGE0, GX_TEXCOORD1, GX_TEXMAP2);
++            GXSetIndTexCoordScale(GX_INDTEXSTAGE0, GX_ITS_1, GX_ITS_1);
++            GXSetIndTexMtx(GX_ITM_0, (f32(*)[3])mpExTexShape->getIndTexMtx(), mpExTexShape->getExpScale());
++            GXSetTevIndirect(GX_TEVSTAGE0, GX_INDTEXSTAGE0, GX_ITF_8, GX_ITB_STU, GX_ITM_0, GX_ITW_OFF, GX_ITW_OFF, 0, 0, GX_ITBA_OFF);
++            ind_stages++;
++            tex_gens++;
++            tex_coord = GX_TEXCOORD2;
++        }
++        if (mpExTexShape->isUseSecTex()) {
++            GXSetTevOrder(GX_TEVSTAGE1, tex_coord, GX_TEXMAP3, GX_COLOR_NULL);
++            GXSetTevColorIn(GX_TEVSTAGE1, GX_CC_ZERO, GX_CC_TEXC, GX_CC_CPREV, GX_CC_ZERO);
++            GXSetTevAlphaIn(GX_TEVSTAGE1, GX_CA_ZERO, GX_CA_TEXA, GX_CA_APREV, GX_CA_ZERO);
++            GXSetTevColorOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
++            GXSetTevAlphaOp(GX_TEVSTAGE1, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
++            tev_stages++;
++            tex_gens++;
++        }
++    }
++
++    GXSetNumTevStages(tev_stages);
++    GXSetNumIndStages(ind_stages);
++    if (mpBaseShape->isClipOn()) {
++        GXSetMisc(GX_MT_XF_FLUSH, 8);
++        GXSetClipMode(GX_CLIP_ENABLE);
++    } else {
++        GXSetClipMode(GX_CLIP_DISABLE);
++    }
++    GXSetNumTexGens(tex_gens);
++}
++
++void JPAResource::setCTev(JPAEmitterWorkData* work) {
++    int base_plane_type = (mpChildShape->getType() == 3 || mpChildShape->getType() == 7) ? mpChildShape->getBasePlaneType() : 0;
++    int pos_offset = 0x30 + base_plane_type * 0x6C;
++    GXSetArray(GX_VA_POS, jpa_pos + pos_offset, 3);
++    GXSetArray(GX_VA_TEX0, jpa_crd, 2);
++    GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP1, GX_COLOR_NULL);
++    GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, 0x3C, GX_FALSE, 0x7D);
++    GXSetTevDirect(GX_TEVSTAGE0);
++    GXSetNumTevStages(1);
++    GXSetNumIndStages(0);
++    if (mpChildShape->isClipOn()) {
++        GXSetMisc(GX_MT_XF_FLUSH, 8);
++        GXSetClipMode(GX_CLIP_ENABLE);
++    } else {
++        GXSetClipMode(GX_CLIP_DISABLE);
++    }
++    GXSetNumTexGens(1);
++    work->mpResMgr->load(work->mpRes->getTexIdx(mpChildShape->getTexIdx()), GX_TEXMAP1);
++}
++
++void JPAResource::calc_p(JPAEmitterWorkData* work, JPABaseParticle* ptcl) {
++    if (mpCalcParticleFuncList != NULL) {
++        for (int i = mpCalcParticleFuncListNum - 1; i >= 0; i--) {
++            (*mpCalcParticleFuncList[i])(work, ptcl);
++        }
++    }
++}
++
++void JPAResource::calc_c(JPAEmitterWorkData* work, JPABaseParticle* ptcl) {
++    if (mpCalcParticleChildFuncList != NULL) {
++        for (int i = mpCalcParticleChildFuncListNum - 1; i >= 0; i--) {
++            (*mpCalcParticleChildFuncList[i])(work, ptcl);
++        }
++    }
++}
++
++void JPAResource::calcField(JPAEmitterWorkData* work, JPABaseParticle* ptcl) {
++    for (int i = mFieldBlockNum - 1; i >= 0; i--) {
++        mpFieldBlocks[i]->calc(work, ptcl);
++    }
++}
++
++void JPAResource::calcKey(JPAEmitterWorkData* work) {
++    for (int i = mKeyBlockNum - 1; i >= 0; i--) {
++        f32 val = mpKeyBlocks[i]->calc(work->mpEmtr->mTick);
++        switch (mpKeyBlocks[i]->getID()) {
++        case 0:
++            work->mpEmtr->mRate = val;
++            break;
++        case 1:
++            work->mpEmtr->mVolumeSize = val;
++            break;
++        case 3:
++            work->mpEmtr->mVolumeMinRad = val;
++            break;
++        case 4:
++            work->mpEmtr->mLifeTime = val;
++            break;
++        case 6:
++            work->mpEmtr->mAwayFromCenterSpeed = val;
++            break;
++        case 7:
++            work->mpEmtr->mAwayFromAxisSpeed = val;
++            break;
++        case 8:
++            work->mpEmtr->mDirSpeed = val;
++            break;
++        case 9:
++            work->mpEmtr->mSpread = val;
++            break;
++        case 10:
++            work->mpEmtr->mScaleOut = val;
++            break;
++        }
++    }
++}
++
++void JPAResource::calcWorkData_c(JPAEmitterWorkData* work) {
++    work->mVolumeSize = work->mpEmtr->mVolumeSize;
++    work->mVolumeMinRad = work->mpEmtr->mVolumeMinRad;
++    work->mVolumeSweep = work->mpEmtr->mVolumeSweep;
++    work->mVolumeX = 0;
++    work->mVolumeAngleNum = 0;
++    work->mVolumeAngleMax = 1;
++    work->mDivNumber = mpDynamicsBlock->getDivNumber() * 2 + 1;
++    Mtx local_scl_mtx, local_rot_mtx, global_mtx;
++    PSMTXScale(local_scl_mtx, work->mpEmtr->mLocalScl.x, work->mpEmtr->mLocalScl.y, work->mpEmtr->mLocalScl.z);
++    JPAGetXYZRotateMtx(work->mpEmtr->mLocalRot.x * 182, work->mpEmtr->mLocalRot.y * 182, work->mpEmtr->mLocalRot.z * 182, local_rot_mtx);
++    PSMTXScale(global_mtx, work->mpEmtr->mGlobalScl.x, work->mpEmtr->mGlobalScl.y, work->mpEmtr->mGlobalScl.z);
++    PSMTXConcat(work->mpEmtr->mGlobalRot, global_mtx, global_mtx);
++    global_mtx[0][3] = work->mpEmtr->mGlobalTrs.x;
++    global_mtx[1][3] = work->mpEmtr->mGlobalTrs.y;
++    global_mtx[2][3] = work->mpEmtr->mGlobalTrs.z;
++    PSMTXCopy(work->mpEmtr->mGlobalRot, work->mRotationMtx);
++    PSMTXConcat(work->mRotationMtx, local_rot_mtx, work->mGlobalRot);
++    PSMTXConcat(work->mGlobalRot, local_scl_mtx, work->mGlobalSR);
++    work->mEmitterPos.set(work->mpEmtr->mLocalTrs);
++    work->mGlobalScl.mul(work->mpEmtr->mGlobalScl, work->mpEmtr->mLocalScl);
++    JPAGetDirMtx(work->mpEmtr->mLocalDir, work->mDirectionMtx);
++    work->mPublicScale.set(work->mpEmtr->mGlobalScl);
++    PSMTXMultVec(global_mtx, &work->mpEmtr->mLocalTrs, &work->mGlobalPos);
++}
++
++void JPAResource::calcWorkData_d(JPAEmitterWorkData* work) {
++    Mtx mtx;
++    JPAGetXYZRotateMtx(work->mpEmtr->mLocalRot.x * 0xB6, work->mpEmtr->mLocalRot.y * 0xB6, work->mpEmtr->mLocalRot.z * 0xB6, mtx);
++    PSMTXConcat(work->mpEmtr->mGlobalRot, mtx, work->mGlobalRot);
++    PSMTXMultVecSR(work->mGlobalRot, &work->mpEmtr->mLocalDir, &work->mGlobalEmtrDir);
++}
+--- /dev/null
++++ b/pc-port/src/JSystem/JParticle/JPAResourceLoader.cpp
+@@ -0,0 +1,78 @@
++#include "resource/JpcResource.hpp"
++#include <stdexcept>
++#include "JSystem/JParticle/JPAResourceLoader.hpp"
++#include "JSystem/JKernel/JKRHeap.hpp"
++#include "JSystem/JParticle/JPABaseShape.hpp"
++#include "JSystem/JParticle/JPAChildShape.hpp"
++#include "JSystem/JParticle/JPADynamicsBlock.hpp"
++#include "JSystem/JParticle/JPAExTexShape.hpp"
++#include "JSystem/JParticle/JPAExtraShape.hpp"
++#include "JSystem/JParticle/JPAFieldBlock.hpp"
++#include "JSystem/JParticle/JPAKeyBlock.hpp"
++#include "JSystem/JParticle/JPAResource.hpp"
++#include "JSystem/JParticle/JPAResourceManager.hpp"
++
++JPAResourceLoader::JPAResourceLoader(u8 const* data, JPAResourceManager* mgr) {
++    load_jpc(data, mgr);
++}
++
++void JPAResourceLoader::load_jpc(u8 const* data, JPAResourceManager* mgr) {
++    if (mgr->mpResArr || mgr->mpTexArr)
++        throw std::logic_error("JPAResourceLoader requires an empty manager");
++    mgr->mNativeResource = smgpc::resource::resolve_jpc_source(data);
++    const auto& decoded = *mgr->mNativeResource;
++    JKRHeap* heap = mgr->mpHeap;
++    mgr->mResMax = decoded.resources().size();
++    mgr->mTexMax = decoded.textures().size();
++    mgr->mpResArr = new (heap, 0) JPAResource*[mgr->mResMax];
++    mgr->mpTexArr = new (heap, 0) JPATexture*[mgr->mTexMax];
++    for (const auto& header : decoded.resources()) {
++        JPAResource* res = new (heap, 0) JPAResource();
++        res->mFieldBlockNum = header.field_count;
++        res->mpFieldBlocks = res->mFieldBlockNum != 0 ? new (heap, 0) JPAFieldBlock*[res->mFieldBlockNum] : NULL;
++        res->mKeyBlockNum = header.key_count;
++        res->mpKeyBlocks = res->mKeyBlockNum != 0 ? new (heap, 0) JPAKeyBlock*[res->mKeyBlockNum] : NULL;
++        res->mTDB1Num = header.texture_reference_count;
++        res->mpTDB1 = NULL;
++        res->mUsrIdx = header.user_index;
++        u32 field_idx = 0;
++        u32 key_idx = 0;
++        for (const auto& block : header.blocks) {
++            const u32 magic = block.tag;
++            switch (magic) {
++            case 'FLD1':
++                res->mpFieldBlocks[field_idx] = new (heap, 0) JPAFieldBlock(block.bytes.data(), heap);
++                field_idx++;
++                break;
++            case 'KFA1':
++                res->mpKeyBlocks[key_idx] = new (heap, 0) JPAKeyBlock(block.bytes.data());
++                key_idx++;
++                break;
++            case 'BEM1':
++                res->mpDynamicsBlock = new (heap, 0) JPADynamicsBlock(block.bytes.data());
++                break;
++            case 'BSP1':
++                res->mpBaseShape = new (heap, 0) JPABaseShape(block.bytes.data(), heap);
++                break;
++            case 'ESP1':
++                res->mpExtraShape = new (heap, 0) JPAExtraShape(block.bytes.data());
++                break;
++            case 'SSP1':
++                res->mpChildShape = new (heap, 0) JPAChildShape(block.bytes.data());
++                break;
++            case 'ETX1':
++                res->mpExTexShape = new (heap, 0) JPAExTexShape(block.bytes.data());
++                break;
++            case 'TDB1':
++                res->mpTDB1 = (const u16*)(block.bytes.data() + 8);
++                break;
++            }
++        }
++        res->init(heap);
++        mgr->registRes(res);
++    }
++    for (const auto& block : decoded.textures()) {
++        JPATexture* tex = new (heap, 0) JPATexture(block.bytes.data());
++        mgr->registTex(tex);
++    }
++}
+--- /dev/null
++++ b/pc-port/src/JSystem/JParticle/JPAResourceManager.cpp
+@@ -0,0 +1,65 @@
++#include "compat/JkrHeapFinalizer.hpp"
++#include "resource/JpcResource.hpp"
++#include "JSystem/JParticle/JPAResourceManager.hpp"
++#include "JSystem/JParticle/JPADynamicsBlock.hpp"
++#include "JSystem/JParticle/JPAResource.hpp"
++#include <cstring>
++
++struct JPAResourceLoader {
++    JPAResourceLoader(u8 const*, JPAResourceManager*);
++};
++
++JPAResourceManager::JPAResourceManager(void const* pData, JKRHeap* pHeap) {
++    mpResArr = NULL;
++    mpTexArr = NULL;
++    mResMax = 0;
++    mResNum = 0;
++    mTexMax = 0;
++    mTexNum = 0;
++    mpHeap = pHeap;
++    smgpc::compat::register_jkr_heap_finalizer(this, [](void* p) noexcept {
++        static_cast<JPAResourceManager*>(p)->~JPAResourceManager();
++    });
++    try {
++        JPAResourceLoader loader((u8 const*)pData, this);
++    } catch (...) {
++        smgpc::compat::unregister_jkr_heap_finalizer(this);
++        throw;
++    }
++}
++
++JPAResourceManager::~JPAResourceManager() {
++    smgpc::compat::unregister_jkr_heap_finalizer(this);
++}
++
++JPAResource* JPAResourceManager::getResource(u16 usrIdx) const {
++    for (u16 i = 0; i < mResNum; i++)
++        if (mpResArr[i]->getUsrIdx() == usrIdx)
++            return mpResArr[i];
++    return NULL;
++}
++
++const ResTIMG* JPAResourceManager::swapTexture(ResTIMG const* img, char const* swapName) {
++    const ResTIMG* ret = NULL;
++
++    for (s32 i = 0; i < mTexNum; i++) {
++        if (strcmp(swapName, mpTexArr[i]->getName()) == 0) {
++            JUTTexture* tex = mpTexArr[i]->getJUTTexture();
++            ret = tex->getTexInfo();
++            tex->storeTIMG(img, (u8)0);
++            break;
++        }
++    }
++
++    return ret;
++}
++
++void JPAResourceManager::registRes(JPAResource* res) {
++    mpResArr[mResNum] = res;
++    mResNum++;
++}
++
++void JPAResourceManager::registTex(JPATexture* tex) {
++    mpTexArr[mTexNum] = tex;
++    mTexNum++;
++}
+--- /dev/null
++++ b/pc-port/src/JSystem/JParticle/JPAResourceManager.hpp
+@@ -0,0 +1,37 @@
++#pragma once
++
++#include "JSystem/JParticle/JPATexture.hpp"
++#include <revolution.h>
++#include <memory>
++namespace smgpc::resource { class JpcResource; }
++
++class JKRHeap;
++class JPAResource;
++struct ResTIMG;
++
++class JPAResourceManager {
++public:
++    JPAResourceManager(void const*, JKRHeap*);
++    ~JPAResourceManager();
++    JPAResource* getResource(u16) const;
++    bool checkUserIndexDuplication(u16) const;
++    const ResTIMG* swapTexture(ResTIMG const*, char const*);
++    void registRes(JPAResource*);
++    void registTex(JPATexture*);
++    u32 getResUserWork(u16) const;
++
++    void load(u16 idx, GXTexMapID texMapID) NO_INLINE {
++        mpTexArr[idx]->load(texMapID);
++    }
++
++public:
++    /* 0x00 */ JKRHeap* mpHeap;
++    /* 0x04 */ JPAResource** mpResArr;
++    /* 0x08 */ JPATexture** mpTexArr;
++    /* 0x0C */ u16 mResMax;
++    /* 0x0E */ u16 mResNum;
++    /* 0x10 */ u16 mTexMax;
++    /* 0x12 */ u16 mTexNum;
++    // Native backing must outlive all pointers stored in the original blocks.
++    std::shared_ptr<const smgpc::resource::JpcResource> mNativeResource;
++};
+--- /dev/null
++++ b/pc-port/src/JSystem/JParticle/JPATexture.cpp
+@@ -0,0 +1,9 @@
++#include "JSystem/JParticle/JPATexture.hpp"
++
++JPATexture::JPATexture(u8 const* pData) {
++    mpData = (const JPATextureData*)pData;
++    mTexture.storeTIMG(&mpData->mResTIMG, (u8)0);
++}
++
++JPATexture::~JPATexture() {
++}
+--- /dev/null
++++ b/pc-port/src/resource/JpcResource.cpp
+@@ -0,0 +1,281 @@
++#include "resource/JpcResource.hpp"
++#include "compat/JkrAllocationDomain.hpp"
++#include <JSystem/JParticle/JPABaseShape.hpp>
++#include <JSystem/JParticle/JPAChildShape.hpp>
++#include <JSystem/JParticle/JPADynamicsBlock.hpp>
++#include <JSystem/JParticle/JPAExTexShape.hpp>
++#include <JSystem/JParticle/JPAExtraShape.hpp>
++#include <JSystem/JParticle/JPAFieldBlock.hpp>
++#include <JSystem/JParticle/JPATexture.hpp>
++#include <algorithm>
++#include <bit>
++#include <cstring>
++#include <map>
++#include <mutex>
++#include <new>
++#include <set>
++#include <stdexcept>
++#include <string>
++#include <type_traits>
++
++namespace smgpc::resource {
++namespace {
++using Bytes = std::span<const std::uint8_t>;
++void require(bool condition, const char* message) {
++    if (!condition) throw std::runtime_error(std::string("JPC: ") + message);
++}
++void range(Bytes bytes, std::size_t offset, std::size_t size) {
++    require(offset <= bytes.size() && size <= bytes.size() - offset, "range outside block");
++}
++std::uint16_t be16(Bytes bytes, std::size_t offset) {
++    range(bytes, offset, 2);
++    return (std::uint16_t(bytes[offset]) << 8) | bytes[offset + 1];
++}
++std::uint32_t be32(Bytes bytes, std::size_t offset) {
++    range(bytes, offset, 4);
++    return (std::uint32_t(bytes[offset]) << 24) | (std::uint32_t(bytes[offset + 1]) << 16) |
++           (std::uint32_t(bytes[offset + 2]) << 8) | bytes[offset + 3];
++}
++constexpr std::uint32_t tag(char a, char b, char c, char d) {
++    return (std::uint32_t(a) << 24) | (std::uint32_t(b) << 16) | (std::uint32_t(c) << 8) | std::uint32_t(d);
++}
++constexpr auto BEM = tag('B','E','M','1'), BSP = tag('B','S','P','1'), ESP = tag('E','S','P','1');
++constexpr auto SSP = tag('S','S','P','1'), ETX = tag('E','T','X','1'), FLD = tag('F','L','D','1');
++constexpr auto KFA = tag('K','F','A','1'), TDB = tag('T','D','B','1'), TEX = tag('T','E','X','1');
++static_assert(sizeof(JPADynamicsBlockData) == 0x7c && sizeof(JPABaseShapeData) == 0x34);
++static_assert(sizeof(JPAExtraShapeData) == 0x60 && sizeof(JPAChildShapeData) == 0x48);
++static_assert(sizeof(JPAExTexShapeData) == 0x28 && sizeof(JPAFieldBlockData) == 0x44);
++static_assert(sizeof(JPATextureData) == 0x40 && sizeof(ResTIMG) == 0x20);
++struct BlockWriter {
++    Bytes source;
++    std::shared_ptr<void> owner;
++    std::uint8_t* data;
++    explicit BlockWriter(Bytes input) : source(input) {
++        data = static_cast<std::uint8_t*>(::operator new(input.size(), std::align_val_t(16)));
++        owner = std::shared_ptr<void>(data, [](void* p) { ::operator delete(p, std::align_val_t(16)); });
++        std::memcpy(data, input.data(), input.size());
++    }
++    template<class T> void header() {
++        static_assert(std::is_trivially_copyable_v<T> && std::is_trivially_destructible_v<T>);
++        range(source, 0, sizeof(T));
++        std::construct_at(reinterpret_cast<T*>(data));
++        std::memcpy(data, source.data(), sizeof(T));
++    }
++    void u16(std::size_t offset) {
++        auto value = be16(source, offset);
++        std::memcpy(data + offset, &value, sizeof(value));
++    }
++    void u32(std::size_t offset) {
++        auto value = be32(source, offset);
++        std::memcpy(data + offset, &value, sizeof(value));
++    }
++    void words(std::size_t start, std::size_t end) {
++        for (auto offset = start; offset < end; offset += 4) u32(offset);
++    }
++    void halfwords(std::size_t start, std::size_t end) {
++        for (auto offset = start; offset < end; offset += 2) u16(offset);
++    }
++    // Numeric tails are actual arrays accessed by the original constructors.
++    void floats(std::size_t start, std::size_t count) {
++        range(source, start, count * sizeof(float));
++        require(start % alignof(float) == 0, "unaligned float table");
++        for (std::size_t i = 0; i < count; ++i)
++            std::construct_at(reinterpret_cast<float*>(data + start) + i, std::bit_cast<float>(be32(source, start + i * 4)));
++    }
++    void colors(std::size_t start, std::size_t count, std::int16_t max_frame) {
++        range(source, start, count * sizeof(JPAClrAnmKeyData));
++        require(start >= sizeof(JPABaseShapeData) && start <= 0x7fff && start % 2 == 0 && count != 0 && max_frame >= 0 && max_frame < 0x7fff,
++                "invalid color table");
++        std::int16_t previous = -1;
++        for (std::size_t i = 0; i < count; ++i) {
++            const auto offset = start + i * sizeof(JPAClrAnmKeyData);
++            const auto frame = std::bit_cast<std::int16_t>(be16(source, offset));
++            require(frame > previous, "invalid color key frame");
++            auto* key = std::construct_at(reinterpret_cast<JPAClrAnmKeyData*>(data + offset));
++            key->index = frame;
++            std::memcpy(&key->color, source.data() + offset + 2, sizeof(GXColor));
++            previous = frame;
++        }
++
++    }
++};
++JpcBlock decode_block(Bytes source, std::size_t source_offset, std::uint8_t texture_refs) {
++    const auto magic = be32(source, 0);
++    BlockWriter out(source);
++    switch (magic) {
++    case BEM:
++        out.header<JPADynamicsBlockData>(); out.words(4, 0x68); out.halfwords(0x68, 0x78); break;
++    case BSP: {
++        out.header<JPABaseShapeData>();
++        out.words(4, 0xc); out.halfwords(0xc, 0x10); out.words(0x10, 0x18); out.u16(0x18); out.u16(0x24);
++        std::size_t tail = 0x34;
++        if (be32(source, 8) & 0x01000000) { out.floats(tail, 10); tail += 0x28; }
++        if (source[0x1e] & 1) { range(source, tail, source[0x1f]); require(source[0x1f] != 0, "empty texture animation"); }
++        const auto max_frame = std::bit_cast<std::int16_t>(be16(source, 0x24));
++        if (source[0x21] & 2) out.colors(be16(source, 0xc), source[0x22], max_frame);
++        if (source[0x21] & 8) out.colors(be16(source, 0xe), source[0x23], max_frame);
++        break;
++    }
++    case ESP:
++        out.header<JPAExtraShapeData>(); out.words(4, 0x28); out.halfwords(0x28, 0x2c); out.words(0x2c, 0x60); break;
++    case SSP:
++        out.header<JPAChildShapeData>(); out.words(4, 0x34); out.u32(0x3c); out.halfwords(0x40, 0x44); out.u16(0x46); break;
++    case ETX:
++        out.header<JPAExTexShapeData>(); out.words(4, 0x24); break;
++    case FLD:
++        out.header<JPAFieldBlockData>(); out.words(4, 0x40); break;
++    case KFA:
++        range(source, 0, 0xc); out.u32(4); require(source[9] != 0, "empty key table"); out.floats(0xc, std::size_t(source[9]) * 4); break;
++    case TDB:
++        out.u32(4); range(source, 8, std::size_t(texture_refs) * 2);
++        for (std::size_t i = 0; i < texture_refs; ++i)
++            std::construct_at(reinterpret_cast<std::uint16_t*>(out.data + 8) + i, be16(source, 8 + i * 2));
++        break;
++    case TEX: {
++        out.header<JPATextureData>(); out.u32(4); out.u16(0x22); out.u16(0x24); out.u16(0x2a);
++        out.u32(0x2c); out.u16(0x3a); out.u32(0x3c);
++        require(std::find(source.begin() + 0xc, source.begin() + 0x20, 0) != source.begin() + 0x20, "unterminated texture name");
++        require(source[0x30] <= 1 && source[0x31] <= 1 && source[0x32] <= 1, "invalid texture bool");
++        const auto image_offset = be32(source, 0x3c);
++        std::size_t image_start = 0x20 + (image_offset ? image_offset : 0x20);
++        std::size_t width = be16(source, 0x22), height = be16(source, 0x24);
++        require(width && height && source[0x38], "empty texture image");
++        std::size_t tile_width, tile_height, tile_bytes = 32;
++        switch (source[0x20]) {
++        case 0: case 8: case 14: tile_width = 8; tile_height = 8; break;
++        case 1: case 2: case 9: tile_width = 8; tile_height = 4; break;
++        case 3: case 4: case 5: case 10: tile_width = tile_height = 4; break;
++        case 6: tile_width = tile_height = 4; tile_bytes = 64; break;
++        default: throw std::runtime_error("JPC: unsupported GX texture format");
++        }
++        for (std::size_t level = 0; level < source[0x38]; ++level) {
++            const auto size = ((width + tile_width - 1) / tile_width) * ((height + tile_height - 1) / tile_height) * tile_bytes;
++            range(source, image_start, size);
++            image_start += size;
++            width = std::max<std::size_t>(1, width / 2);
++            height = std::max<std::size_t>(1, height / 2);
++        }
++        const auto palette_count = be16(source, 0x2a);
++        if (palette_count) range(source, 0x20 + be32(source, 0x2c), std::size_t(palette_count) * 2);
++        break;
++    }
++    default: out.u32(4); break; // Original loader ignores unknown block kinds.
++    }
++    return {magic, source_offset, {out.data, source.size()}, std::move(out.owner)};
++}
++struct RegisteredSource {
++    std::span<const std::uint8_t> source;
++    std::shared_ptr<const void> source_owner;
++    std::shared_ptr<const JpcResource> decoded;
++};
++struct Registry {
++    std::mutex mutex;
++    std::map<const void*, std::weak_ptr<RegisteredSource>> entries;
++};
++Registry& registry() { static Registry value; return value; }
++} // namespace
++
++JpcResource::JpcResource(std::span<const std::uint8_t> source) {
++    compat::JkrHostAllocationScope host;
++    require(be32(source, 0) == tag('J','P','A','C') && be32(source, 4) == tag('2','-','1','0'), "expected JPAC2-10");
++    range(source, 0, 0x10);
++    _source.assign(source.begin(), source.end());
++    source = _source;
++    const auto resource_count = be16(source, 8), texture_count = be16(source, 0xa);
++    const auto texture_offset = std::size_t(be32(source, 0xc));
++    require(texture_offset >= 0x10 && texture_offset <= source.size(), "invalid texture table offset");
++    std::set<std::uint16_t> ids;
++    std::size_t offset = 0x10;
++    _resources.reserve(resource_count);
++    for (std::size_t i = 0; i < resource_count; ++i) {
++        range(source.first(texture_offset), offset, 8);
++        JpcResourceRecord record{be16(source, offset), source[offset + 4], source[offset + 5], source[offset + 6], {}};
++        require(ids.insert(record.user_index).second, "duplicate resource user index");
++        const auto count = be16(source, offset + 2);
++        offset += 8;
++        std::size_t fields = 0, keys = 0;
++        std::set<std::uint32_t> singletons;
++        for (std::size_t j = 0; j < count; ++j) {
++            const auto size = be32(source.first(texture_offset), offset + 4);
++            require(size >= 8, "block smaller than its header");
++            range(source.first(texture_offset), offset, size);
++            const auto magic = be32(source, offset);
++            if (magic == FLD) ++fields;
++            else if (magic == KFA) ++keys;
++            else if (magic == BEM || magic == BSP || magic == ESP || magic == SSP || magic == ETX || magic == TDB)
++                require(singletons.insert(magic).second, "duplicate singleton block");
++            require(magic != TEX, "texture inside resource record");
++            record.blocks.push_back(decode_block(source.subspan(offset, size), offset, record.texture_reference_count));
++            offset += size;
++        }
++        require(fields == record.field_count && keys == record.key_count, "block counts disagree with resource header");
++        require(singletons.contains(BEM) && singletons.contains(BSP), "resource missing dynamics or base shape");
++        require(record.texture_reference_count == 0 || singletons.contains(TDB), "resource missing texture references");
++        for (const auto& block : record.blocks) if (block.tag == TDB) {
++            for (std::size_t j = 0; j < record.texture_reference_count; ++j)
++                require(be16(source, block.source_offset + 8 + j * 2) < texture_count, "texture reference outside texture table");
++        }
++        _resources.push_back(std::move(record));
++    }
++    offset = texture_offset;
++    _textures.reserve(texture_count);
++    for (std::size_t i = 0; i < texture_count; ++i) {
++        const auto size = be32(source, offset + 4);
++        require(size >= 0x40 && be32(source, offset) == TEX, "invalid texture block");
++        range(source, offset, size);
++        _textures.push_back(decode_block(source.subspan(offset, size), offset, 0));
++        offset += size;
++    }
++}
++
++struct JpcSourceRegistration::State {
++    std::shared_ptr<RegisteredSource> source;
++    ~State() {
++        if (!source) return;
++        compat::JkrHostAllocationScope host;
++        auto& owners = registry();
++        const std::lock_guard lock(owners.mutex);
++        const auto identity = source->source.data();
++        source.reset();
++        auto entry = owners.entries.find(identity);
++        if (entry != owners.entries.end() && entry->second.expired()) owners.entries.erase(entry);
++    }
++};
++JpcSourceRegistration::JpcSourceRegistration(std::unique_ptr<State> state) : _state(std::move(state)) {}
++JpcSourceRegistration::~JpcSourceRegistration() = default;
++JpcSourceRegistration::JpcSourceRegistration(JpcSourceRegistration&&) noexcept = default;
++JpcSourceRegistration& JpcSourceRegistration::operator=(JpcSourceRegistration&&) noexcept = default;
++JpcSourceRegistration register_jpc_source(std::span<const std::uint8_t> bytes, std::shared_ptr<const void> source_owner) {
++    compat::JkrHostAllocationScope host;
++    require(!bytes.empty() && bool(source_owner), "registration requires retained bounded source bytes");
++    auto& owners = registry();
++    const std::lock_guard lock(owners.mutex);
++    const auto found = owners.entries.find(bytes.data());
++    auto source = found == owners.entries.end() ? std::shared_ptr<RegisteredSource>{} : found->second.lock();
++    if (source) {
++        require(source->source.size() == bytes.size() && source->source_owner.get() == source_owner.get() &&
++                !source->source_owner.owner_before(source_owner) && !source_owner.owner_before(source->source_owner),
++                "identity belongs to another owner");
++    } else {
++        source = std::make_shared<RegisteredSource>();
++        source->source = bytes;
++        source->source_owner = std::move(source_owner);
++        source->decoded = std::make_shared<JpcResource>(bytes);
++    }
++    auto state = std::make_unique<JpcSourceRegistration::State>();
++    // No operation after publication can throw; State retires the weak entry.
++    owners.entries.insert_or_assign(bytes.data(), source);
++    state->source = std::move(source);
++    return JpcSourceRegistration(std::move(state));
++}
++std::shared_ptr<const JpcResource> resolve_jpc_source(const void* identity) {
++    compat::JkrHostAllocationScope host;
++    auto& owners = registry();
++    const std::lock_guard lock(owners.mutex);
++    const auto found = owners.entries.find(identity);
++    require(found != owners.entries.end(), "unsized SDK source has no registered byte range");
++    auto source = found->second.lock();
++    require(bool(source), "registered source expired");
++    return source->decoded;
++}
++} // namespace smgpc::resource
+--- /dev/null
++++ b/pc-port/src/resource/JpcResource.hpp
+@@ -0,0 +1,55 @@
++#pragma once
++
++#include <cstddef>
++#include <cstdint>
++#include <memory>
++#include <span>
++#include <vector>
++
++namespace smgpc::resource {
++// Immutable, host-order backing for the original JPA data classes. Each block
++// owns aligned storage containing the original typed header and its inline
++// animation tables. Offsets remain relative to that header, as on Wii.
++struct JpcBlock {
++    std::uint32_t tag;
++    std::size_t source_offset;
++    std::span<const std::uint8_t> bytes;
++    std::shared_ptr<const void> storage;
++};
++struct JpcResourceRecord {
++    std::uint16_t user_index;
++    std::uint8_t field_count;
++    std::uint8_t key_count;
++    std::uint8_t texture_reference_count;
++    std::vector<JpcBlock> blocks;
++};
++class JpcResource final {
++public:
++    explicit JpcResource(std::span<const std::uint8_t>);
++    [[nodiscard]] std::span<const std::uint8_t> source_bytes() const noexcept { return _source; }
++    [[nodiscard]] const std::vector<JpcResourceRecord>& resources() const noexcept { return _resources; }
++    [[nodiscard]] const std::vector<JpcBlock>& textures() const noexcept { return _textures; }
++private:
++    std::vector<std::uint8_t> _source;
++    std::vector<JpcResourceRecord> _resources;
++    std::vector<JpcBlock> _textures;
++};
++// Retains both the original archive identity and decoded backing until the
++// unsized SDK loader takes its own lease. The manager retains that lease for
++// its complete lifetime, including after this registration is released.
++class JpcSourceRegistration final {
++public:
++    ~JpcSourceRegistration();
++    JpcSourceRegistration(JpcSourceRegistration&&) noexcept;
++    JpcSourceRegistration& operator=(JpcSourceRegistration&&) noexcept;
++    JpcSourceRegistration(const JpcSourceRegistration&) = delete;
++    JpcSourceRegistration& operator=(const JpcSourceRegistration&) = delete;
++private:
++    struct State;
++    std::unique_ptr<State> _state;
++    explicit JpcSourceRegistration(std::unique_ptr<State>);
++    friend JpcSourceRegistration register_jpc_source(std::span<const std::uint8_t>, std::shared_ptr<const void>);
++};
++[[nodiscard]] JpcSourceRegistration register_jpc_source(std::span<const std::uint8_t>, std::shared_ptr<const void> source_owner);
++[[nodiscard]] std::shared_ptr<const JpcResource> resolve_jpc_source(const void*);
++} // namespace smgpc::resource

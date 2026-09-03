@@ -1,0 +1,2648 @@
+diff --git a/pc-port/src/Game/System/GalaxyIDBCSV.cpp b/pc-port/src/Game/System/GalaxyIDBCSV.cpp
+new file mode 100644
+--- /dev/null
++++ b/pc-port/src/Game/System/GalaxyIDBCSV.cpp
+@@ -0,0 +1,214 @@
++#include <revolution/types.h>
++
++extern const u8 GalaxyIDBCSV[0xD20] ATTRIBUTE_ALIGN(4) = {
++    0x00, 0x00, 0x00, 0x37, 0x00, 0x00, 0x00, 0x07, 0x00, 0x00, 0x00, 0x64, 0x00, 0x00, 0x00, 0x18,
++    0x00, 0x33, 0x7A, 0x8B, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x02, 0x00, 0x06, 0x79, 0x91, 0xF3, 0x6F,
++    0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x06, 0x00, 0x06, 0x4F, 0x75, 0x30, 0x7F, 0xFF, 0xFF, 0xFF, 0xFF,
++    0x00, 0x0A, 0x00, 0x06, 0x4F, 0x75, 0x30, 0x80, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x0E, 0x00, 0x06,
++    0x4F, 0x75, 0x30, 0x81, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x12, 0x00, 0x06, 0x38, 0x39, 0xD7, 0x2F,
++    0x00, 0x00, 0x00, 0xFF, 0x00, 0x00, 0x00, 0x05, 0x78, 0xEE, 0xB1, 0xFD, 0x00, 0x00, 0x00, 0xFF,
++    0x00, 0x01, 0x00, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0C, 0x00, 0x00,
++    0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++    0x00, 0x13, 0x00, 0x00, 0x00, 0x0C, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00,
++    0x00, 0x12, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1D, 0x00, 0x00, 0x00, 0x0C, 0x00, 0x00,
++    0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++    0x00, 0x29, 0x00, 0x00, 0x00, 0x0C, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00,
++    0x00, 0x12, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x41, 0x00, 0x00, 0x00, 0x0C, 0x00, 0x00,
++    0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++    0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00,
++    0x00, 0x12, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x53, 0x00, 0x00, 0x00, 0x65, 0x00, 0x00,
++    0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++    0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00,
++    0x00, 0x12, 0x00, 0x00, 0x01, 0x01, 0x00, 0x00, 0x00, 0x6E, 0x00, 0x00, 0x00, 0x7C, 0x00, 0x00,
++    0x00, 0x85, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x03, 0x01, 0x00, 0x00,
++    0x00, 0x97, 0x00, 0x00, 0x00, 0xAD, 0x00, 0x00, 0x00, 0x85, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00,
++    0x00, 0x12, 0x00, 0x00, 0x05, 0x01, 0x00, 0x00, 0x00, 0xB6, 0x00, 0x00, 0x00, 0xC7, 0x00, 0x00,
++    0x00, 0x85, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x07, 0x01, 0x00, 0x00,
++    0x00, 0xD0, 0x00, 0x00, 0x00, 0xE2, 0x00, 0x00, 0x00, 0x85, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00,
++    0x00, 0x12, 0x00, 0x00, 0x07, 0x00, 0x00, 0x00, 0x00, 0xEB, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00,
++    0x01, 0x09, 0x00, 0x00, 0x01, 0x24, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x08, 0x01, 0x00, 0x00,
++    0x01, 0x42, 0x00, 0x00, 0x01, 0x52, 0x00, 0x00, 0x00, 0x85, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00,
++    0x00, 0x12, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00,
++    0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x09, 0x02, 0x00, 0x00,
++    0x01, 0x5B, 0x00, 0x00, 0x01, 0x6A, 0x00, 0x00, 0x01, 0x73, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00,
++    0x00, 0x12, 0x00, 0x00, 0x0B, 0x02, 0x00, 0x00, 0x01, 0x85, 0x00, 0x00, 0x01, 0x99, 0x00, 0x00,
++    0x01, 0x73, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x0C, 0x02, 0x00, 0x00,
++    0x01, 0xA2, 0x00, 0x00, 0x01, 0xB3, 0x00, 0x00, 0x01, 0x73, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00,
++    0x00, 0x12, 0x00, 0x00, 0x12, 0x02, 0x00, 0x00, 0x01, 0xBC, 0x00, 0x00, 0x01, 0xD2, 0x00, 0x00,
++    0x01, 0x73, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++    0x01, 0xDB, 0x00, 0x00, 0x01, 0xEA, 0x00, 0x00, 0x01, 0xF3, 0x00, 0x00, 0x02, 0x08, 0x00, 0x00,
++    0x00, 0x12, 0x00, 0x00, 0x0F, 0x02, 0x00, 0x00, 0x02, 0x20, 0x00, 0x00, 0x02, 0x35, 0x00, 0x00,
++    0x01, 0x73, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++    0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00,
++    0x00, 0x12, 0x00, 0x00, 0x10, 0x03, 0x00, 0x00, 0x02, 0x3E, 0x00, 0x00, 0x02, 0x52, 0x00, 0x00,
++    0x02, 0x5B, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x13, 0x03, 0x00, 0x00,
++    0x02, 0x6D, 0x00, 0x00, 0x02, 0x83, 0x00, 0x00, 0x02, 0x5B, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00,
++    0x00, 0x12, 0x00, 0x00, 0x14, 0x03, 0x00, 0x00, 0x02, 0x8C, 0x00, 0x00, 0x02, 0x9A, 0x00, 0x00,
++    0x02, 0x5B, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x1E, 0x03, 0x00, 0x00,
++    0x02, 0xA3, 0x00, 0x00, 0x02, 0xBA, 0x00, 0x00, 0x02, 0x5B, 0x00, 0x00, 0x02, 0xC3, 0x00, 0x00,
++    0x00, 0x12, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xE0, 0x00, 0x00, 0x02, 0xEF, 0x00, 0x00,
++    0x02, 0xF8, 0x00, 0x00, 0x03, 0x0D, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++    0x03, 0x25, 0x00, 0x00, 0x03, 0x39, 0x00, 0x00, 0x03, 0x42, 0x00, 0x00, 0x03, 0x5C, 0x00, 0x00,
++    0x00, 0x12, 0x00, 0x00, 0x17, 0x03, 0x00, 0x00, 0x03, 0x79, 0x00, 0x00, 0x03, 0x8E, 0x00, 0x00,
++    0x02, 0x5B, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++    0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00,
++    0x00, 0x12, 0x00, 0x00, 0x18, 0x04, 0x00, 0x00, 0x03, 0x97, 0x00, 0x00, 0x03, 0xAA, 0x00, 0x00,
++    0x03, 0xB3, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x1A, 0x04, 0x00, 0x00,
++    0x03, 0xC5, 0x00, 0x00, 0x03, 0xD6, 0x00, 0x00, 0x03, 0xB3, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00,
++    0x00, 0x12, 0x00, 0x00, 0x2A, 0x04, 0x00, 0x00, 0x03, 0xDF, 0x00, 0x00, 0x03, 0xF0, 0x00, 0x00,
++    0x03, 0xB3, 0x00, 0x00, 0x03, 0xF9, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x1D, 0x04, 0x00, 0x00,
++    0x04, 0x10, 0x00, 0x00, 0x04, 0x20, 0x00, 0x00, 0x03, 0xB3, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00,
++    0x00, 0x12, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04, 0x29, 0x00, 0x00, 0x04, 0x3B, 0x00, 0x00,
++    0x04, 0x44, 0x00, 0x00, 0x04, 0x5C, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x21, 0x04, 0x00, 0x00,
++    0x04, 0x77, 0x00, 0x00, 0x04, 0x8C, 0x00, 0x00, 0x03, 0xB3, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00,
++    0x00, 0x12, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00,
++    0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x22, 0x05, 0x00, 0x00,
++    0x04, 0x95, 0x00, 0x00, 0x04, 0xAA, 0x00, 0x00, 0x04, 0xB3, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00,
++    0x00, 0x12, 0x00, 0x00, 0x24, 0x05, 0x00, 0x00, 0x04, 0xC5, 0x00, 0x00, 0x04, 0xD5, 0x00, 0x00,
++    0x04, 0xB3, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x37, 0x05, 0x00, 0x00,
++    0x04, 0xDE, 0x00, 0x00, 0x04, 0xEF, 0x00, 0x00, 0x04, 0xB3, 0x00, 0x00, 0x04, 0xF8, 0x00, 0x00,
++    0x00, 0x12, 0x00, 0x00, 0x28, 0x05, 0x00, 0x00, 0x05, 0x0F, 0x00, 0x00, 0x05, 0x1D, 0x00, 0x00,
++    0x04, 0xB3, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++    0x05, 0x26, 0x00, 0x00, 0x05, 0x3D, 0x00, 0x00, 0x05, 0x46, 0x00, 0x00, 0x05, 0x63, 0x00, 0x00,
++    0x00, 0x12, 0x00, 0x00, 0x2D, 0x05, 0x00, 0x00, 0x05, 0x83, 0x00, 0x00, 0x05, 0x98, 0x00, 0x00,
++    0x04, 0xB3, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++    0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00,
++    0x00, 0x12, 0x00, 0x00, 0x2E, 0x06, 0x00, 0x00, 0x05, 0xA1, 0x00, 0x00, 0x05, 0xB8, 0x00, 0x00,
++    0x05, 0xC1, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x30, 0x06, 0x00, 0x00,
++    0x05, 0xD3, 0x00, 0x00, 0x05, 0xE5, 0x00, 0x00, 0x05, 0xC1, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00,
++    0x00, 0x12, 0x00, 0x00, 0x32, 0x06, 0x00, 0x00, 0x05, 0xEE, 0x00, 0x00, 0x05, 0xFD, 0x00, 0x00,
++    0x05, 0xC1, 0x00, 0x00, 0x06, 0x06, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x34, 0x06, 0x00, 0x00,
++    0x06, 0x1B, 0x00, 0x00, 0x06, 0x30, 0x00, 0x00, 0x05, 0xC1, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00,
++    0x00, 0x12, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x06, 0x39, 0x00, 0x00, 0x06, 0x4A, 0x00, 0x00,
++    0x06, 0x53, 0x00, 0x00, 0x06, 0x6A, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x3C, 0x00, 0x00, 0x00,
++    0x06, 0x84, 0x00, 0x00, 0x06, 0x99, 0x00, 0x00, 0x04, 0xB3, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00,
++    0x00, 0x12, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00,
++    0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++    0x06, 0xA2, 0x00, 0x00, 0x06, 0xB6, 0x00, 0x00, 0x06, 0xBF, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00,
++    0x00, 0x12, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x06, 0xD9, 0x00, 0x00, 0x06, 0xEA, 0x00, 0x00,
++    0x06, 0xF3, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++    0x07, 0x0A, 0x00, 0x00, 0x07, 0x20, 0x00, 0x00, 0x07, 0x29, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00,
++    0x00, 0x12, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x07, 0x45, 0x00, 0x00, 0x00, 0x0C, 0x00, 0x00,
++    0x07, 0x5C, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x00, 0x12, 0x00, 0x00, 0x41, 0x73, 0x74, 0x72,
++    0x6F, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x64, 0x75, 0x6D, 0x6D, 0x79, 0x00, 0x00, 0x41,
++    0x73, 0x74, 0x72, 0x6F, 0x44, 0x6F, 0x6D, 0x65, 0x00, 0x4C, 0x69, 0x62, 0x72, 0x61, 0x72, 0x79,
++    0x52, 0x6F, 0x6F, 0x6D, 0x00, 0x50, 0x65, 0x61, 0x63, 0x68, 0x43, 0x61, 0x73, 0x74, 0x6C, 0x65,
++    0x47, 0x61, 0x72, 0x64, 0x65, 0x6E, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x45, 0x70, 0x69,
++    0x6C, 0x6F, 0x67, 0x75, 0x65, 0x44, 0x65, 0x6D, 0x6F, 0x53, 0x74, 0x61, 0x67, 0x65, 0x00, 0x48,
++    0x65, 0x61, 0x76, 0x65, 0x6E, 0x73, 0x44, 0x6F, 0x6F, 0x72, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79,
++    0x00, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x38, 0x61, 0x00, 0x45, 0x67, 0x67, 0x53, 0x74, 0x61,
++    0x72, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x31, 0x61,
++    0x00, 0x53, 0x70, 0x65, 0x63, 0x69, 0x61, 0x6C, 0x53, 0x74, 0x61, 0x72, 0x47, 0x72, 0x61, 0x6E,
++    0x64, 0x31, 0x00, 0x48, 0x6F, 0x6E, 0x65, 0x79, 0x42, 0x65, 0x65, 0x4B, 0x69, 0x6E, 0x67, 0x64,
++    0x6F, 0x6D, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x31,
++    0x62, 0x00, 0x53, 0x75, 0x72, 0x66, 0x69, 0x6E, 0x67, 0x4C, 0x76, 0x31, 0x47, 0x61, 0x6C, 0x61,
++    0x78, 0x79, 0x00, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x31, 0x64, 0x00, 0x46, 0x6C, 0x69, 0x70,
++    0x50, 0x61, 0x6E, 0x65, 0x6C, 0x45, 0x78, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x47, 0x61,
++    0x6C, 0x61, 0x78, 0x79, 0x31, 0x63, 0x00, 0x42, 0x65, 0x6C, 0x74, 0x43, 0x6F, 0x6E, 0x76, 0x65,
++    0x79, 0x65, 0x72, 0x45, 0x78, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x47, 0x61, 0x6C, 0x61,
++    0x78, 0x79, 0x37, 0x61, 0x00, 0x41, 0x70, 0x70, 0x65, 0x61, 0x72, 0x42, 0x65, 0x6C, 0x74, 0x43,
++    0x6F, 0x6E, 0x76, 0x65, 0x79, 0x65, 0x72, 0x45, 0x78, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x00,
++    0x53, 0x74, 0x61, 0x72, 0x50, 0x69, 0x65, 0x63, 0x65, 0x42, 0x65, 0x6C, 0x74, 0x43, 0x6F, 0x6E,
++    0x76, 0x65, 0x79, 0x65, 0x72, 0x45, 0x78, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x54, 0x72,
++    0x69, 0x4C, 0x65, 0x67, 0x4C, 0x76, 0x31, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x47, 0x61,
++    0x6C, 0x61, 0x78, 0x79, 0x31, 0x65, 0x00, 0x53, 0x74, 0x61, 0x72, 0x44, 0x75, 0x73, 0x74, 0x47,
++    0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x32, 0x61, 0x00, 0x53,
++    0x70, 0x65, 0x63, 0x69, 0x61, 0x6C, 0x53, 0x74, 0x61, 0x72, 0x47, 0x72, 0x61, 0x6E, 0x64, 0x32,
++    0x00, 0x54, 0x61, 0x6D, 0x61, 0x6B, 0x6F, 0x72, 0x6F, 0x45, 0x78, 0x4C, 0x76, 0x31, 0x47, 0x61,
++    0x6C, 0x61, 0x78, 0x79, 0x00, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x32, 0x62, 0x00, 0x42, 0x61,
++    0x74, 0x74, 0x6C, 0x65, 0x53, 0x68, 0x69, 0x70, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x47,
++    0x61, 0x6C, 0x61, 0x78, 0x79, 0x32, 0x63, 0x00, 0x42, 0x72, 0x65, 0x61, 0x6B, 0x44, 0x6F, 0x77,
++    0x6E, 0x50, 0x6C, 0x61, 0x6E, 0x65, 0x74, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x47, 0x61,
++    0x6C, 0x61, 0x78, 0x79, 0x32, 0x64, 0x00, 0x43, 0x6F, 0x63, 0x6F, 0x6F, 0x6E, 0x45, 0x78, 0x47,
++    0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x37, 0x62, 0x00, 0x41,
++    0x70, 0x70, 0x65, 0x61, 0x72, 0x43, 0x6F, 0x63, 0x6F, 0x6F, 0x6E, 0x45, 0x78, 0x47, 0x61, 0x6C,
++    0x61, 0x78, 0x79, 0x00, 0x53, 0x74, 0x61, 0x72, 0x50, 0x69, 0x65, 0x63, 0x65, 0x43, 0x6F, 0x63,
++    0x6F, 0x6F, 0x6E, 0x45, 0x78, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x4B, 0x6F, 0x6F, 0x70,
++    0x61, 0x42, 0x61, 0x74, 0x74, 0x6C, 0x65, 0x56, 0x73, 0x31, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79,
++    0x00, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x32, 0x65, 0x00, 0x48, 0x65, 0x61, 0x76, 0x65, 0x6E,
++    0x6C, 0x79, 0x42, 0x65, 0x61, 0x63, 0x68, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x47, 0x61,
++    0x6C, 0x61, 0x78, 0x79, 0x33, 0x61, 0x00, 0x53, 0x70, 0x65, 0x63, 0x69, 0x61, 0x6C, 0x53, 0x74,
++    0x61, 0x72, 0x47, 0x72, 0x61, 0x6E, 0x64, 0x33, 0x00, 0x43, 0x75, 0x62, 0x65, 0x42, 0x75, 0x62,
++    0x62, 0x6C, 0x65, 0x45, 0x78, 0x4C, 0x76, 0x31, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x47,
++    0x61, 0x6C, 0x61, 0x78, 0x79, 0x33, 0x62, 0x00, 0x50, 0x68, 0x61, 0x6E, 0x74, 0x6F, 0x6D, 0x47,
++    0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x33, 0x63, 0x00, 0x4F,
++    0x63, 0x65, 0x61, 0x6E, 0x46, 0x6C, 0x6F, 0x61, 0x74, 0x65, 0x72, 0x4C, 0x61, 0x6E, 0x64, 0x47,
++    0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x33, 0x64, 0x00, 0x41,
++    0x70, 0x70, 0x65, 0x61, 0x72, 0x4F, 0x63, 0x65, 0x61, 0x6E, 0x46, 0x6C, 0x6F, 0x61, 0x74, 0x65,
++    0x72, 0x4C, 0x61, 0x6E, 0x64, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x54, 0x65, 0x61, 0x72,
++    0x44, 0x72, 0x6F, 0x70, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x47, 0x61, 0x6C, 0x61, 0x78,
++    0x79, 0x37, 0x63, 0x00, 0x41, 0x70, 0x70, 0x65, 0x61, 0x72, 0x54, 0x65, 0x61, 0x72, 0x44, 0x72,
++    0x6F, 0x70, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x53, 0x74, 0x61, 0x72, 0x50, 0x69, 0x65,
++    0x63, 0x65, 0x54, 0x65, 0x61, 0x72, 0x44, 0x72, 0x6F, 0x70, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79,
++    0x00, 0x54, 0x65, 0x72, 0x65, 0x73, 0x61, 0x4D, 0x61, 0x72, 0x69, 0x6F, 0x32, 0x44, 0x47, 0x61,
++    0x6C, 0x61, 0x78, 0x79, 0x00, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x37, 0x64, 0x00, 0x41, 0x70,
++    0x70, 0x65, 0x61, 0x72, 0x54, 0x65, 0x72, 0x65, 0x73, 0x61, 0x4D, 0x61, 0x72, 0x69, 0x6F, 0x32,
++    0x44, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x53, 0x74, 0x61, 0x72, 0x50, 0x69, 0x65, 0x63,
++    0x65, 0x54, 0x65, 0x72, 0x65, 0x73, 0x61, 0x4D, 0x61, 0x72, 0x69, 0x6F, 0x32, 0x44, 0x47, 0x61,
++    0x6C, 0x61, 0x78, 0x79, 0x00, 0x4B, 0x6F, 0x6F, 0x70, 0x61, 0x4A, 0x72, 0x53, 0x68, 0x69, 0x70,
++    0x4C, 0x76, 0x31, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79,
++    0x33, 0x65, 0x00, 0x43, 0x6F, 0x73, 0x6D, 0x6F, 0x73, 0x47, 0x61, 0x72, 0x64, 0x65, 0x6E, 0x47,
++    0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x34, 0x61, 0x00, 0x53,
++    0x70, 0x65, 0x63, 0x69, 0x61, 0x6C, 0x53, 0x74, 0x61, 0x72, 0x47, 0x72, 0x61, 0x6E, 0x64, 0x34,
++    0x00, 0x49, 0x63, 0x65, 0x56, 0x6F, 0x6C, 0x63, 0x61, 0x6E, 0x6F, 0x47, 0x61, 0x6C, 0x61, 0x78,
++    0x79, 0x00, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x34, 0x62, 0x00, 0x48, 0x6F, 0x6E, 0x65, 0x79,
++    0x42, 0x65, 0x65, 0x45, 0x78, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x47, 0x61, 0x6C, 0x61,
++    0x78, 0x79, 0x34, 0x63, 0x00, 0x41, 0x70, 0x70, 0x65, 0x61, 0x72, 0x48, 0x6F, 0x6E, 0x65, 0x79,
++    0x42, 0x65, 0x65, 0x45, 0x78, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x53, 0x61, 0x6E, 0x64,
++    0x43, 0x6C, 0x6F, 0x63, 0x6B, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x47, 0x61, 0x6C, 0x61,
++    0x78, 0x79, 0x34, 0x64, 0x00, 0x53, 0x6E, 0x6F, 0x77, 0x43, 0x61, 0x70, 0x73, 0x75, 0x6C, 0x65,
++    0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x37, 0x65, 0x00,
++    0x41, 0x70, 0x70, 0x65, 0x61, 0x72, 0x53, 0x6E, 0x6F, 0x77, 0x43, 0x61, 0x70, 0x73, 0x75, 0x6C,
++    0x65, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x53, 0x74, 0x61, 0x72, 0x50, 0x69, 0x65, 0x63,
++    0x65, 0x53, 0x6E, 0x6F, 0x77, 0x43, 0x61, 0x70, 0x73, 0x75, 0x6C, 0x65, 0x47, 0x61, 0x6C, 0x61,
++    0x78, 0x79, 0x00, 0x4B, 0x6F, 0x6F, 0x70, 0x61, 0x42, 0x61, 0x74, 0x74, 0x6C, 0x65, 0x56, 0x73,
++    0x32, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x34, 0x65,
++    0x00, 0x52, 0x65, 0x76, 0x65, 0x72, 0x73, 0x65, 0x4B, 0x69, 0x6E, 0x67, 0x64, 0x6F, 0x6D, 0x47,
++    0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x35, 0x61, 0x00, 0x53,
++    0x70, 0x65, 0x63, 0x69, 0x61, 0x6C, 0x53, 0x74, 0x61, 0x72, 0x47, 0x72, 0x61, 0x6E, 0x64, 0x35,
++    0x00, 0x4F, 0x63, 0x65, 0x61, 0x6E, 0x52, 0x69, 0x6E, 0x67, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79,
++    0x00, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x35, 0x62, 0x00, 0x53, 0x6B, 0x75, 0x6C, 0x6C, 0x53,
++    0x68, 0x61, 0x72, 0x6B, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x47, 0x61, 0x6C, 0x61, 0x78,
++    0x79, 0x35, 0x63, 0x00, 0x41, 0x70, 0x70, 0x65, 0x61, 0x72, 0x53, 0x6B, 0x75, 0x6C, 0x6C, 0x53,
++    0x68, 0x61, 0x72, 0x6B, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x46, 0x61, 0x63, 0x74, 0x6F,
++    0x72, 0x79, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x35,
++    0x64, 0x00, 0x54, 0x72, 0x61, 0x6E, 0x73, 0x66, 0x6F, 0x72, 0x6D, 0x61, 0x74, 0x69, 0x6F, 0x6E,
++    0x45, 0x78, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x37,
++    0x66, 0x00, 0x41, 0x70, 0x70, 0x65, 0x61, 0x72, 0x54, 0x72, 0x61, 0x6E, 0x73, 0x66, 0x6F, 0x72,
++    0x6D, 0x61, 0x74, 0x69, 0x6F, 0x6E, 0x45, 0x78, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x53,
++    0x74, 0x61, 0x72, 0x50, 0x69, 0x65, 0x63, 0x65, 0x54, 0x72, 0x61, 0x6E, 0x73, 0x66, 0x6F, 0x72,
++    0x6D, 0x61, 0x74, 0x69, 0x6F, 0x6E, 0x45, 0x78, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x46,
++    0x6C, 0x6F, 0x61, 0x74, 0x65, 0x72, 0x4F, 0x74, 0x61, 0x4B, 0x69, 0x6E, 0x67, 0x47, 0x61, 0x6C,
++    0x61, 0x78, 0x79, 0x00, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x35, 0x65, 0x00, 0x4F, 0x63, 0x65,
++    0x61, 0x6E, 0x50, 0x68, 0x61, 0x6E, 0x74, 0x6F, 0x6D, 0x43, 0x61, 0x76, 0x65, 0x47, 0x61, 0x6C,
++    0x61, 0x78, 0x79, 0x00, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x36, 0x61, 0x00, 0x53, 0x70, 0x65,
++    0x63, 0x69, 0x61, 0x6C, 0x53, 0x74, 0x61, 0x72, 0x47, 0x72, 0x61, 0x6E, 0x64, 0x36, 0x00, 0x43,
++    0x61, 0x6E, 0x6E, 0x6F, 0x6E, 0x46, 0x6C, 0x65, 0x65, 0x74, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79,
++    0x00, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x36, 0x62, 0x00, 0x44, 0x61, 0x72, 0x6B, 0x52, 0x6F,
++    0x6F, 0x6D, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x36,
++    0x63, 0x00, 0x41, 0x70, 0x70, 0x65, 0x61, 0x72, 0x44, 0x61, 0x72, 0x6B, 0x52, 0x6F, 0x6F, 0x6D,
++    0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x48, 0x65, 0x6C, 0x6C, 0x50, 0x72, 0x6F, 0x6D, 0x69,
++    0x6E, 0x65, 0x6E, 0x63, 0x65, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x47, 0x61, 0x6C, 0x61,
++    0x78, 0x79, 0x36, 0x64, 0x00, 0x46, 0x69, 0x73, 0x68, 0x54, 0x75, 0x6E, 0x6E, 0x65, 0x6C, 0x47,
++    0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x37, 0x67, 0x00, 0x41,
++    0x70, 0x70, 0x65, 0x61, 0x72, 0x46, 0x69, 0x73, 0x68, 0x54, 0x75, 0x6E, 0x6E, 0x65, 0x6C, 0x47,
++    0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x53, 0x74, 0x61, 0x72, 0x50, 0x69, 0x65, 0x63, 0x65, 0x46,
++    0x69, 0x73, 0x68, 0x54, 0x75, 0x6E, 0x6E, 0x65, 0x6C, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x00,
++    0x4B, 0x6F, 0x6F, 0x70, 0x61, 0x42, 0x61, 0x74, 0x74, 0x6C, 0x65, 0x56, 0x73, 0x33, 0x47, 0x61,
++    0x6C, 0x61, 0x78, 0x79, 0x00, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x41, 0x61, 0x00, 0x54, 0x61,
++    0x6D, 0x61, 0x6B, 0x6F, 0x72, 0x6F, 0x45, 0x78, 0x4C, 0x76, 0x32, 0x47, 0x61, 0x6C, 0x61, 0x78,
++    0x79, 0x00, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x39, 0x61, 0x00, 0x41, 0x70, 0x70, 0x65, 0x61,
++    0x72, 0x54, 0x61, 0x6D, 0x61, 0x6B, 0x6F, 0x72, 0x6F, 0x45, 0x78, 0x4C, 0x76, 0x32, 0x47, 0x61,
++    0x6C, 0x61, 0x78, 0x79, 0x00, 0x53, 0x75, 0x72, 0x66, 0x69, 0x6E, 0x67, 0x4C, 0x76, 0x32, 0x47,
++    0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x39, 0x62, 0x00, 0x41,
++    0x70, 0x70, 0x65, 0x61, 0x72, 0x53, 0x75, 0x72, 0x66, 0x69, 0x6E, 0x67, 0x4C, 0x76, 0x32, 0x47,
++    0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x43, 0x75, 0x62, 0x65, 0x42, 0x75, 0x62, 0x62, 0x6C, 0x65,
++    0x45, 0x78, 0x4C, 0x76, 0x32, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x47, 0x61, 0x6C, 0x61,
++    0x78, 0x79, 0x39, 0x63, 0x00, 0x41, 0x70, 0x70, 0x65, 0x61, 0x72, 0x43, 0x75, 0x62, 0x65, 0x42,
++    0x75, 0x62, 0x62, 0x6C, 0x65, 0x45, 0x78, 0x4C, 0x76, 0x32, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79,
++    0x00, 0x50, 0x65, 0x61, 0x63, 0x68, 0x43, 0x61, 0x73, 0x74, 0x6C, 0x65, 0x46, 0x69, 0x6E, 0x61,
++    0x6C, 0x47, 0x61, 0x6C, 0x61, 0x78, 0x79, 0x00, 0x41, 0x70, 0x70, 0x65, 0x61, 0x72, 0x50, 0x65,
++    0x61, 0x63, 0x68, 0x43, 0x61, 0x73, 0x74, 0x6C, 0x65, 0x46, 0x69, 0x6E, 0x61, 0x6C, 0x47, 0x61,
++    0x6C, 0x61, 0x78, 0x79, 0x00, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40,
++    0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40,
++};
+diff --git a/pc-port/src/Game/System/GalaxyNameSortTable.cpp b/pc-port/src/Game/System/GalaxyNameSortTable.cpp
+new file mode 100644
+--- /dev/null
++++ b/pc-port/src/Game/System/GalaxyNameSortTable.cpp
+@@ -0,0 +1,17 @@
++#include "Game/System/GalaxyNameSortTable.hpp"
++#include "Game/Util/JMapInfo.hpp"
++
++extern const u8 GalaxyIDBCSV[];
++
++s32 GalaxyNameSortTable::getGalaxySortIndex(const char* pName) {
++    JMapInfo info;
++    info.attach(&GalaxyIDBCSV);
++
++    JMapInfoIter iter = info.findElement("name", pName, 0);
++
++    if (iter == info.end()) {
++        return -1;
++    }
++
++    return iter.mIndex;
++}
+diff --git a/pc-port/src/Game/System/GalaxyNameSortTable.hpp b/pc-port/src/Game/System/GalaxyNameSortTable.hpp
+new file mode 100644
+--- /dev/null
++++ b/pc-port/src/Game/System/GalaxyNameSortTable.hpp
+@@ -0,0 +1,7 @@
++#pragma once
++
++#include <revolution.h>
++
++namespace GalaxyNameSortTable {
++    s32 getGalaxySortIndex(const char* pName);
++};  // namespace GalaxyNameSortTable
+diff --git a/pc-port/src/Game/System/GalaxyStatusAccessor.cpp b/pc-port/src/Game/System/GalaxyStatusAccessor.cpp
+new file mode 100644
+--- /dev/null
++++ b/pc-port/src/Game/System/GalaxyStatusAccessor.cpp
+@@ -0,0 +1,252 @@
++#include "Game/System/GalaxyStatusAccessor.hpp"
++#include "Game/System/GameDataConst.hpp"
++#include "Game/System/GameDataFunction.hpp"
++#include "Game/System/ScenarioDataParser.hpp"
++#include "Game/Util/SceneUtil.hpp"
++#include "Game/Util/StringUtil.hpp"
++
++GalaxyStatusAccessor::GalaxyStatusAccessor(const ScenarioData* pScenarioData) : mScenarioData(pScenarioData) {
++}
++
++const char* GalaxyStatusAccessor::getName() const {
++    return mScenarioData->mGalaxyName;
++}
++
++s32 GalaxyStatusAccessor::getScenarioNum() const {
++    return mScenarioData->getScenarioNum();
++}
++
++s32 GalaxyStatusAccessor::getPowerStarNum() const {
++    return mScenarioData->getPowerStarNum();
++}
++
++s32 GalaxyStatusAccessor::getZoneNum() const {
++    return mScenarioData->getZoneNum();
++}
++
++s32 GalaxyStatusAccessor::getZoneId(const char* pZone) const {
++    return mScenarioData->getZoneId(pZone);
++}
++
++const char* GalaxyStatusAccessor::getZoneName(int zoneId) const {
++    return mScenarioData->getZoneName(zoneId);
++}
++
++const char* GalaxyStatusAccessor::getCometName(s32 scenarioNo) const {
++    const char* pCometName = nullptr;
++
++    if (mScenarioData->getValueString("Comet", scenarioNo, &pCometName)) {
++        return pCometName;
++    } else {
++        return nullptr;
++    }
++}
++
++bool GalaxyStatusAccessor::isValidNormalComet(s32 scenarioNo) const {
++    return isExistAnyComet() && scenarioNo == getNormalCometScenarioNo();
++}
++
++bool GalaxyStatusAccessor::isCometStar(s32 scenarioNo) const {
++    return isExistAnyComet() && scenarioNo == getNormalCometScenarioNo() || isValidCoin100(scenarioNo);
++}
++
++bool GalaxyStatusAccessor::isExistGrandStar() const {
++    for (s32 i = 1; i <= mScenarioData->getPowerStarNum(); i++) {
++        if (GameDataConst::isGrandStar(mScenarioData->mGalaxyName, i)) {
++            return true;
++        }
++    }
++
++    return false;
++}
++
++bool GalaxyStatusAccessor::isExistAnyComet() const {
++    const char* pIsComet;
++
++    for (s32 i = 1; i <= mScenarioData->getScenarioNum(); i++) {
++        const char* pComet = nullptr;
++
++        if (mScenarioData->getValueString("Comet", i, &pComet)) {
++            pIsComet = pComet;
++        } else {
++            pIsComet = nullptr;
++        }
++
++        if (pIsComet) {
++            return true;
++        }
++    }
++
++    return false;
++}
++
++s32 GalaxyStatusAccessor::getNormalCometScenarioNo() const {
++    const char* pNormal;
++
++    for (s32 i = 1; i <= mScenarioData->getScenarioNum(); i++) {
++        const char* pIsNormal = nullptr;
++
++        if (mScenarioData->getValueString("Comet", i, &pIsNormal)) {
++            pNormal = pIsNormal;
++        } else {
++            pNormal = nullptr;
++        }
++
++        if (pNormal && !isValidCoin100(i)) {
++            return i;
++        }
++    }
++
++    return -1;
++}
++
++s32 GalaxyStatusAccessor::getCoin100CometScenarioNo() const {
++    const char* pPurpleComet;
++
++    for (s32 i = 1; i <= mScenarioData->getScenarioNum(); i++) {
++        const char* pCometName = nullptr;
++
++        if (mScenarioData->getValueString("Comet", i, &pCometName)) {
++            pPurpleComet = pCometName;
++        } else {
++            pPurpleComet = nullptr;
++        }
++
++        if (pPurpleComet && isValidCoin100(i)) {
++            return i;
++        }
++    }
++
++    return -1;
++}
++
++bool GalaxyStatusAccessor::canOpen() const {
++    if (mScenarioData->getPowerStarNum() == 0) {
++        return true;
++    }
++
++    return GameDataFunction::canOnGameEventFlag(mScenarioData->mGalaxyName);
++}
++
++bool GalaxyStatusAccessor::isOpened() const {
++    if (mScenarioData->getPowerStarNum() == 0) {
++        return true;
++    }
++
++    return GameDataFunction::isOnGameEventFlag(mScenarioData->mGalaxyName);
++}
++
++bool GalaxyStatusAccessor::hasPowerStar(s32 scenarioNo) const {
++    if (mScenarioData->getPowerStarNum() == 0) {
++        return false;
++    }
++
++    return GameDataFunction::hasPowerStar(mScenarioData->mGalaxyName, scenarioNo);
++}
++
++bool GalaxyStatusAccessor::isCompleted() const {
++    if (mScenarioData->getPowerStarNum() == 0) {
++        return false;
++    }
++
++    return getPowerStarNumOwned() == mScenarioData->getPowerStarNum();
++}
++
++s32 GalaxyStatusAccessor::getPowerStarNumOwned() const {
++    if (mScenarioData->getPowerStarNum() == 0) {
++        return 0;
++    }
++
++    return GameDataFunction::getPowerStarNumOwned(mScenarioData->mGalaxyName);
++}
++
++namespace MR {
++    GalaxyStatusAccessor makeGalaxyStatusAccessor(const char* pGalaxyName) {
++        return ScenarioDataFunction::getScenarioDataParser()->makeAccessor(pGalaxyName);
++    }
++
++    GalaxyStatusAccessor makeCurrentGalaxyStatusAccessor() {
++        return ScenarioDataFunction::getScenarioDataParser()->makeAccessor(MR::getCurrentStageName());
++    }
++};  // namespace MR
++
++s32 GalaxyStatusAccessor::getNormalScenarioNum() const {
++    const char* pCometName;
++    s32 scenarioNum = 0;
++
++    for (s32 i = 0; i < mScenarioData->getScenarioNum(); i++) {
++        const char* pScenarioComet = nullptr;
++
++        if (mScenarioData->getValueString("Comet", i + 1, &pScenarioComet)) {
++            pCometName = pScenarioComet;
++        } else {
++            pCometName = nullptr;
++        }
++
++        if (!pCometName) {
++            scenarioNum++;
++        }
++    }
++
++    return scenarioNum;
++}
++
++const char* GalaxyStatusAccessor::getAppearPowerStarObjName(s32 scenarioNo) const {
++    const char* pObjName;
++    bool ret = mScenarioData->getValueString("AppearPowerStarObj", scenarioNo, &pObjName);
++
++    if (isValidCoin100(scenarioNo)) {
++        return "１００枚コイン";
++    }
++
++    if (ret) {
++        return pObjName;
++    }
++
++    return 0;
++}
++
++u32 GalaxyStatusAccessor::getActivePowerStarId(s32 scenarioNo) const {
++    u32 powerStarId;
++
++    if (mScenarioData->getValueU32("PowerStarId", scenarioNo, &powerStarId)) {
++        return powerStarId;
++    } else {
++        return 0;
++    }
++}
++
++// Note: this function's existence is implied by the leftover string in .data,
++// This ultimately gets stripped, leaving no symbol, however the string data remains.
++// Given the structure of the nearby functions, it is likely this function would
++// be structured similarly.
++u32 GalaxyStatusAccessor::getLuigiModeTimer(s32 scenarioNo) const {
++    u32 luigiModeTimer;
++
++    if (mScenarioData->getValueU32("LuigiModeTimer", scenarioNo, &luigiModeTimer)) {
++        return luigiModeTimer;
++    } else {
++        return 0;
++    }
++}
++
++bool GalaxyStatusAccessor::isValidCoin100(s32 scenarioNo) const {
++    const char* pPurpleComet;
++    const char* pCometName = nullptr;
++
++    if (mScenarioData->getValueString("Comet", scenarioNo, &pCometName)) {
++        pPurpleComet = pCometName;
++    } else {
++        pPurpleComet = nullptr;
++    }
++
++    return (pPurpleComet && (MR::isEqualString(pPurpleComet, "Purple") || MR::isEqualString(pPurpleComet, "Black")));
++}
++
++bool GalaxyStatusAccessor::isHiddenStar(s32 scenarioNo) const {
++    bool isHidden = false;
++
++    mScenarioData->getValueBool("IsHidden", scenarioNo, &isHidden);
++
++    return isHidden;
++}
+diff --git a/pc-port/src/Game/System/GalaxyStatusAccessor.hpp b/pc-port/src/Game/System/GalaxyStatusAccessor.hpp
+new file mode 100644
+--- /dev/null
++++ b/pc-port/src/Game/System/GalaxyStatusAccessor.hpp
+@@ -0,0 +1,42 @@
++#pragma once
++
++#include <revolution.h>
++
++class ScenarioData;
++
++class GalaxyStatusAccessor {
++public:
++    GalaxyStatusAccessor(const ScenarioData*);
++
++    const char* getName() const;
++    s32 getScenarioNum() const;
++    s32 getPowerStarNum() const;
++    s32 getZoneNum() const;
++    s32 getZoneId(const char*) const;
++    const char* getZoneName(int) const;
++    const char* getCometName(s32) const;
++    bool isValidNormalComet(s32) const;
++    bool isCometStar(s32) const;
++    bool isExistGrandStar() const;
++    bool isExistAnyComet() const;
++    s32 getNormalCometScenarioNo() const;
++    s32 getCoin100CometScenarioNo() const;
++    bool canOpen() const;
++    bool isOpened() const;
++    bool hasPowerStar(s32) const;
++    bool isCompleted() const;
++    s32 getPowerStarNumOwned() const;
++    s32 getNormalScenarioNum() const;
++    const char* getAppearPowerStarObjName(s32) const;
++    u32 getActivePowerStarId(s32) const;
++    u32 getLuigiModeTimer(s32) const;  // Note: this function's existence is implied by the leftover string in .data, see note in the cpp.
++    bool isValidCoin100(s32) const;
++    bool isHiddenStar(s32) const;
++
++    const ScenarioData* mScenarioData;  // 0x0
++};
++
++namespace MR {
++    GalaxyStatusAccessor makeGalaxyStatusAccessor(const char*);
++    GalaxyStatusAccessor makeCurrentGalaxyStatusAccessor();
++};  // namespace MR
+diff --git a/pc-port/src/Game/System/GameDataConst.hpp b/pc-port/src/Game/System/GameDataConst.hpp
+--- a/pc-port/src/Game/System/GameDataConst.hpp
++++ b/pc-port/src/Game/System/GameDataConst.hpp
+@@ -3,7 +3,7 @@
+ #include "Game/Util/JMapInfo.hpp"
+ #include <revolution.h>
+ 
+-extern const JMapData GalaxyIDBCSV;
++extern const u8 GalaxyIDBCSV[];
+ 
+ namespace GameDataConst {
+     s32 getPowerStarNumToOpenGalaxy(const char*);
+diff --git a/pc-port/src/Game/System/GameEventFlagTable.cpp b/pc-port/src/Game/System/GameEventFlagTable.cpp
+new file mode 100644
+--- /dev/null
++++ b/pc-port/src/Game/System/GameEventFlagTable.cpp
+@@ -0,0 +1,480 @@
++#include "Game/System/GameEventFlagTable.hpp"
++#include "Game/Util/HashUtil.hpp"
++#include "Game/Util/JMapInfo.hpp"
++#include "Game/Util/SingletonHolder.hpp"
++#include "Game/Util/StringUtil.hpp"
++#include <algorithm>
++#include <cstdio>
++
++extern const u8 GalaxyIDBCSV[];
++
++namespace {
++    static const GameEventFlag sGameEventFlagStatic[] = {
++        {"AppearFlipPanelExGalaxy", GameEventFlag::Type_GalaxyOpenStar, 1, 0, 0, 0, "FlipPanelExGalaxy", 0},
++        {"AppearSurfingLv1Galaxy", GameEventFlag::Type_GalaxyOpenStar, 1, 0, 0, 0, "SurfingLv1Galaxy", 0},
++        {"AppearTamakoroExLv1Galaxy", GameEventFlag::Type_GalaxyOpenStar, 1, 0, 0, 0, "TamakoroExLv1Galaxy", 0},
++        {"AppearBreakDownPlanetGalaxy", GameEventFlag::Type_GalaxyOpenStar, 1, 0, 0, 0, "BreakDownPlanetGalaxy", 0},
++        {"AppearCubeBubbleExLv1Galaxy", GameEventFlag::Type_GalaxyOpenStar, 1, 0, 0, 0, "CubeBubbleExLv1Galaxy", 0},
++        {"StarNumOceanFloaterLandGalaxy", GameEventFlag::Type_GalaxyOpenStar, 1, 0, 0, 0, "OceanFloaterLandGalaxy", 0},
++        {"SpecialStarOpenOceanFloaterLandGalaxy", GameEventFlag::Type_SpecialStar, 1, 1, 0, 0, "HeavenlyBeachGalaxy", 0},
++        {"AppearOceanFloaterLandGalaxy", GameEventFlag::Type_4, 1, 0, 0, 0, "StarNumOceanFloaterLandGalaxy", "SpecialStarOpenOceanFloaterLandGalaxy"},
++        {"StarNumHoneyBeeExGalaxy", GameEventFlag::Type_GalaxyOpenStar, 1, 0, 0, 0, "HoneyBeeExGalaxy", 0},
++        {"SpecialStarOpenHoneyBeeExGalaxy", GameEventFlag::Type_SpecialStar, 1, 1, 0, 0, "HoneyBeeKingdomGalaxy", 0},
++        {"AppearHoneyBeeExGalaxy", GameEventFlag::Type_4, 1, 0, 0, 0, "StarNumHoneyBeeExGalaxy", "SpecialStarOpenHoneyBeeExGalaxy"},
++        {"StarNumSkullSharkGalaxy", GameEventFlag::Type_GalaxyOpenStar, 1, 0, 0, 0, "SkullSharkGalaxy", 0},
++        {"SpecialStarOpenSkullSharkGalaxy", GameEventFlag::Type_SpecialStar, 1, 1, 0, 0, "TearDropGalaxy", 0},
++        {"AppearSkullSharkGalaxy", GameEventFlag::Type_4, 1, 0, 0, 0, "StarNumSkullSharkGalaxy", "SpecialStarOpenSkullSharkGalaxy"},
++        {"StarNumDarkRoomGalaxy", GameEventFlag::Type_GalaxyOpenStar, 1, 0, 0, 0, "DarkRoomGalaxy", 0},
++        {"SpecialStarOpenDarkRoomGalaxy", GameEventFlag::Type_SpecialStar, 1, 1, 0, 0, "FactoryGalaxy", 0},
++        {"AppearDarkRoomGalaxy", GameEventFlag::Type_4, 1, 0, 0, 0, "StarNumDarkRoomGalaxy", "SpecialStarOpenDarkRoomGalaxy"},
++        {"ハチマリオ初変身", GameEventFlag::Type_0, 0, 0, 0, 0, 0, 0},
++        {"テレサマリオ初変身", GameEventFlag::Type_0, 0, 0, 0, 0, 0, 0},
++        {"ホッパーマリオ初変身", GameEventFlag::Type_0, 0, 0, 0, 0, 0, 0},
++        {"ファイアマリオ初変身", GameEventFlag::Type_0, 0, 0, 0, 0, 0, 0},
++        {"アイスマリオ初変身", GameEventFlag::Type_0, 0, 0, 0, 0, 0, 0},
++        {"フライングマリオ初変身", GameEventFlag::Type_0, 0, 0, 0, 0, 0, 0},
++        {"無敵マリオ初変身", GameEventFlag::Type_0, 0, 0, 0, 0, 0, 0},
++        {"ライフアップキノコ解説", GameEventFlag::Type_0, 0, 0, 0, 0, 0, 0},
++        {"１ＵＰキノコ解説", GameEventFlag::Type_0, 0, 0, 0, 0, 0, 0},
++        {"サーフィンチュートリアル", GameEventFlag::Type_0, 0, 0, 0, 0, 0, 0},
++        {"タマコロチュートリアル", GameEventFlag::Type_0, 0, 0, 0, 0, 0, 0},
++        {"PeachCastleGardenGalaxy", GameEventFlag::Type_Galaxy, 1, 0, 0, 0, 0, 0},
++        {"EpilogueDemoStage", GameEventFlag::Type_Galaxy, 1, 0, 0, 0, 0, 0},
++        {"HeavensDoorGalaxy", GameEventFlag::Type_Galaxy, 1, 0, 0, 0, 0, 0},
++        {"EggStarGalaxy", GameEventFlag::Type_Galaxy, 0, 0, 0, 0, 0, 0},
++        {"HoneyBeeKingdomGalaxy", GameEventFlag::Type_Galaxy, 0, 0, 0, 0, 0, 0},
++        {"FlipPanelExGalaxy", GameEventFlag::Type_Galaxy, 0, 0, 0, 0, 0, 0},
++        {"SurfingLv1Galaxy", GameEventFlag::Type_Galaxy, 0, 0, 0, 0, 0, 0},
++        {"BeltConveyerExGalaxy", GameEventFlag::Type_Galaxy, 0, 0, 0, 0, 0, 0},
++        {"TriLegLv1Galaxy", GameEventFlag::Type_Galaxy, 0, 0, 0, 0, 0, 0},
++        {"StarDustGalaxy", GameEventFlag::Type_Galaxy, 0, 0, 0, 0, 0, 0},
++        {"TamakoroExLv1Galaxy", GameEventFlag::Type_Galaxy, 0, 0, 0, 0, 0, 0},
++        {"BattleShipGalaxy", GameEventFlag::Type_Galaxy, 0, 0, 0, 0, 0, 0},
++        {"BreakDownPlanetGalaxy", GameEventFlag::Type_Galaxy, 0, 0, 0, 0, 0, 0},
++        {"CocoonExGalaxy", GameEventFlag::Type_Galaxy, 0, 0, 0, 0, 0, 0},
++        {"KoopaBattleVs1Galaxy", GameEventFlag::Type_Galaxy, 0, 0, 0, 0, 0, 0},
++        {"HeavenlyBeachGalaxy", GameEventFlag::Type_Galaxy, 0, 0, 0, 0, 0, 0},
++        {"CubeBubbleExLv1Galaxy", GameEventFlag::Type_Galaxy, 0, 0, 0, 0, 0, 0},
++        {"PhantomGalaxy", GameEventFlag::Type_Galaxy, 0, 0, 0, 0, 0, 0},
++        {"OceanFloaterLandGalaxy", GameEventFlag::Type_Galaxy, 0, 0, 0, 0, 0, 0},
++        {"TearDropGalaxy", GameEventFlag::Type_Galaxy, 0, 0, 0, 0, 0, 0},
++        {"TeresaMario2DGalaxy", GameEventFlag::Type_Galaxy, 0, 0, 0, 0, 0, 0},
++        {"KoopaJrShipLv1Galaxy", GameEventFlag::Type_Galaxy, 0, 0, 0, 0, 0, 0},
++        {"CosmosGardenGalaxy", GameEventFlag::Type_Galaxy, 0, 0, 0, 0, 0, 0},
++        {"IceVolcanoGalaxy", GameEventFlag::Type_Galaxy, 0, 0, 0, 0, 0, 0},
++        {"HoneyBeeExGalaxy", GameEventFlag::Type_Galaxy, 0, 0, 0, 0, 0, 0},
++        {"SandClockGalaxy", GameEventFlag::Type_Galaxy, 0, 0, 0, 0, 0, 0},
++        {"SnowCapsuleGalaxy", GameEventFlag::Type_Galaxy, 0, 0, 0, 0, 0, 0},
++        {"KoopaBattleVs2Galaxy", GameEventFlag::Type_Galaxy, 0, 0, 0, 0, 0, 0},
++        {"ReverseKingdomGalaxy", GameEventFlag::Type_Galaxy, 0, 0, 0, 0, 0, 0},
++        {"OceanRingGalaxy", GameEventFlag::Type_Galaxy, 0, 0, 0, 0, 0, 0},
++        {"SkullSharkGalaxy", GameEventFlag::Type_Galaxy, 0, 0, 0, 0, 0, 0},
++        {"FactoryGalaxy", GameEventFlag::Type_Galaxy, 0, 0, 0, 0, 0, 0},
++        {"TransformationExGalaxy", GameEventFlag::Type_Galaxy, 0, 0, 0, 0, 0, 0},
++        {"FloaterOtaKingGalaxy", GameEventFlag::Type_Galaxy, 0, 0, 0, 0, 0, 0},
++        {"OceanPhantomCaveGalaxy", GameEventFlag::Type_Galaxy, 0, 0, 0, 0, 0, 0},
++        {"CannonFleetGalaxy", GameEventFlag::Type_Galaxy, 0, 0, 0, 0, 0, 0},
++        {"DarkRoomGalaxy", GameEventFlag::Type_Galaxy, 0, 0, 0, 0, 0, 0},
++        {"HellProminenceGalaxy", GameEventFlag::Type_Galaxy, 0, 0, 0, 0, 0, 0},
++        {"FishTunnelGalaxy", GameEventFlag::Type_Galaxy, 0, 0, 0, 0, 0, 0},
++        {"KoopaBattleVs3Galaxy", GameEventFlag::Type_Galaxy, 0, 0, 0, 0, 0, 0},
++        {"TamakoroExLv2Galaxy", GameEventFlag::Type_Galaxy, 0, 0, 0, 0, 0, 0},
++        {"SurfingLv2Galaxy", GameEventFlag::Type_Galaxy, 0, 0, 0, 0, 0, 0},
++        {"CubeBubbleExLv2Galaxy", GameEventFlag::Type_Galaxy, 0, 0, 0, 0, 0, 0},
++        {"PeachCastleFinalGalaxy", GameEventFlag::Type_Galaxy, 0, 0, 0, 0, 0, 0},
++        {"NormalCometEggStarGalaxy", GameEventFlag::Type_Comet, 1, 1, 0, 0, "EggStarGalaxy", "EventCometStarter"},
++        {"NormalCometHoneyBeeKingdomGalaxy", GameEventFlag::Type_Comet, 1, 1, 0, 0, "HoneyBeeKingdomGalaxy", "EventCometStarter"},
++        {"NormalCometStarDustGalaxy", GameEventFlag::Type_Comet, 1, 2, 0, 0, "StarDustGalaxy", "EventCometStarter"},
++        {"NormalCometBattleShipGalaxy", GameEventFlag::Type_Comet, 1, 3, 0, 0, "BattleShipGalaxy", "EventCometStarter"},
++        {"NormalCometHeavenlyBeachGalaxy", GameEventFlag::Type_Comet, 1, 3, 0, 0, "HeavenlyBeachGalaxy", "EventCometStarter"},
++        {"NormalCometPhantomGalaxy", GameEventFlag::Type_Comet, 1, 3, 0, 0, "PhantomGalaxy", "EventCometStarter"},
++        {"NormalCometCosmosGardenGalaxy", GameEventFlag::Type_Comet, 1, 3, 0, 0, "CosmosGardenGalaxy", "EventCometStarter"},
++        {"NormalCometIceVolcanoGalaxy", GameEventFlag::Type_Comet, 1, 1, 0, 0, "IceVolcanoGalaxy", "EventCometStarter"},
++        {"NormalCometSandClockGalaxy", GameEventFlag::Type_Comet, 1, 3, 0, 0, "SandClockGalaxy", "EventCometStarter"},
++        {"NormalCometReverseKingdomGalaxy", GameEventFlag::Type_Comet, 1, 3, 0, 0, "ReverseKingdomGalaxy", "EventCometStarter"},
++        {"NormalCometOceanRingGalaxy", GameEventFlag::Type_Comet, 1, 1, 0, 0, "OceanRingGalaxy", "EventCometStarter"},
++        {"NormalCometFactoryGalaxy", GameEventFlag::Type_Comet, 1, 6, 0, 0, "FactoryGalaxy", "EventCometStarter"},
++        {"NormalCometOceanPhantomCaveGalaxy", GameEventFlag::Type_Comet, 1, 2, 0, 0, "OceanPhantomCaveGalaxy", "EventCometStarter"},
++        {"NormalCometCannonFleetGalaxy", GameEventFlag::Type_Comet, 1, 3, 0, 0, "CannonFleetGalaxy", "EventCometStarter"},
++        {"NormalCometHellProminenceGalaxy", GameEventFlag::Type_Comet, 1, 2, 0, 0, "HellProminenceGalaxy", "EventCometStarter"},
++        {"SpecialStarCoin100CometRelease", GameEventFlag::Type_SpecialStar, 1, 5, 0, 0, "EggStarGalaxy", 0},
++        {"EventCoin100CometStarter", GameEventFlag::Type_4, 1, 0, 0, 0, "EventCometStarter", "SpecialStarCoin100CometRelease"},
++        {"Coin100CometEggStarGalaxy", GameEventFlag::Type_Comet, 1, 1, 0, 0, "EggStarGalaxy", "ViewNormalEnding"},
++        {"Coin100CometHoneyBeeKingdomGalaxy", GameEventFlag::Type_Comet, 1, 1, 0, 0, "HoneyBeeKingdomGalaxy", "EventCoin100CometStarter"},
++        {"Coin100CometStarDustGalaxy", GameEventFlag::Type_Comet, 1, 1, 0, 0, "StarDustGalaxy", "EventCoin100CometStarter"},
++        {"Coin100CometBattleShipGalaxy", GameEventFlag::Type_Comet, 1, 1, 0, 0, "BattleShipGalaxy", "EventCoin100CometStarter"},
++        {"Coin100CometHeavenlyBeachGalaxy", GameEventFlag::Type_Comet, 1, 1, 0, 0, "HeavenlyBeachGalaxy", "EventCoin100CometStarter"},
++        {"Coin100CometPhantomGalaxy", GameEventFlag::Type_Comet, 1, 2, 0, 0, "PhantomGalaxy", "EventCoin100CometStarter"},
++        {"Coin100CometCosmosGardenGalaxy", GameEventFlag::Type_Comet, 1, 1, 0, 0, "CosmosGardenGalaxy", "EventCoin100CometStarter"},
++        {"Coin100CometIceVolcanoGalaxy", GameEventFlag::Type_Comet, 1, 1, 0, 0, "IceVolcanoGalaxy", "EventCoin100CometStarter"},
++        {"Coin100CometSandClockGalaxy", GameEventFlag::Type_Comet, 1, 2, 0, 0, "SandClockGalaxy", "EventCoin100CometStarter"},
++        {"Coin100CometReverseKingdomGalaxy", GameEventFlag::Type_Comet, 1, 3, 0, 0, "ReverseKingdomGalaxy", "EventCoin100CometStarter"},
++        {"Coin100CometOceanRingGalaxy", GameEventFlag::Type_Comet, 1, 3, 0, 0, "OceanRingGalaxy", "EventCoin100CometStarter"},
++        {"Coin100CometFactoryGalaxy", GameEventFlag::Type_Comet, 1, 2, 0, 0, "FactoryGalaxy", "EventCoin100CometStarter"},
++        {"Coin100CometOceanPhantomCaveGalaxy", GameEventFlag::Type_Comet, 1, 1, 0, 0, "OceanPhantomCaveGalaxy", "EventCoin100CometStarter"},
++        {"Coin100CometCannonFleetGalaxy", GameEventFlag::Type_Comet, 1, 2, 0, 0, "CannonFleetGalaxy", "EventCoin100CometStarter"},
++        {"Coin100CometHellProminenceGalaxy", GameEventFlag::Type_Comet, 1, 3, 0, 0, "HellProminenceGalaxy", "EventCoin100CometStarter"},
++        {"SpecialStarGrand1", GameEventFlag::Type_SpecialStar, 1, 1, 0, 0, "HeavensDoorGalaxy", 0},
++        {"SpecialStarGrand2", GameEventFlag::Type_SpecialStar, 1, 1, 0, 0, "TriLegLv1Galaxy", 0},
++        {"SpecialStarGrand3", GameEventFlag::Type_SpecialStar, 1, 1, 0, 0, "KoopaBattleVs1Galaxy", 0},
++        {"SpecialStarGrand4", GameEventFlag::Type_SpecialStar, 1, 1, 0, 0, "KoopaJrShipLv1Galaxy", 0},
++        {"SpecialStarGrand5", GameEventFlag::Type_SpecialStar, 1, 1, 0, 0, "KoopaBattleVs2Galaxy", 0},
++        {"SpecialStarGrand6", GameEventFlag::Type_SpecialStar, 1, 1, 0, 0, "FloaterOtaKingGalaxy", 0},
++        {"SpecialStarGrand7", GameEventFlag::Type_SpecialStar, 1, 1, 0, 0, "KoopaBattleVs3Galaxy", 0},
++        {"SpecialStarGreen1", GameEventFlag::Type_SpecialStar, 1, 7, 0, 0, "BattleShipGalaxy", 0},
++        {"SpecialStarGreen2", GameEventFlag::Type_SpecialStar, 1, 2, 0, 0, "OceanFloaterLandGalaxy", 0},
++        {"SpecialStarGreen3", GameEventFlag::Type_SpecialStar, 1, 7, 0, 0, "SandClockGalaxy", 0},
++        {"SpecialStarGreen1/2", GameEventFlag::Type_4, 1, 0, 0, 0, "SpecialStarGreen1", "SpecialStarGreen2"},
++        {"SpecialStarGreenAll", GameEventFlag::Type_4, 1, 0, 0, 0, "SpecialStarGreen1/2", "SpecialStarGreen3"},
++        {"SpecialStarRed1", GameEventFlag::Type_SpecialStar, 1, 2, 0, 0, "HeavensDoorGalaxy", 0},
++        {"AppearHeavensDoorGalaxy", GameEventFlag::Type_4, 1, 0, 0, 0, "SpecialStarRed1", 0},
++        {"EventCometStarter", GameEventFlag::Type_1, 1, 13, 0, 0, 0, 0},
++        {"EventKinopioExplorerRescued", GameEventFlag::Type_SpecialStar, 1, 1, 0, 0, "HoneyBeeKingdomGalaxy", 0},
++        {"EventKinopioExplorerOrganize", GameEventFlag::Type_1, 1, 7, 0, 0, 0, 0},
++        {"ExOpen1CocoonExGalaxy", GameEventFlag::Type_SpecialStar, 1, 3, 0, 0, "StarDustGalaxy", 0},
++        {"ExOpen1TearDropGalaxy", GameEventFlag::Type_SpecialStar, 1, 1, 0, 0, "HeavenlyBeachGalaxy", 0},
++        {"ExOpen1FishTunnelGalaxy", GameEventFlag::Type_SpecialStar, 1, 1, 0, 0, "SandClockGalaxy", 0},
++        {"ExOpenCommonBase", GameEventFlag::Type_SpecialStar, 1, 1, 0, 0, "PhantomGalaxy", 0},
++        {"ExOpenSubTransformationExGalaxy", GameEventFlag::Type_SpecialStar, 1, 2, 0, 0, "OceanRingGalaxy", 0},
++        {"ExOpenSubTeresaMario2DGalaxy", GameEventFlag::Type_SpecialStar, 1, 2, 0, 0, "HeavensDoorGalaxy", 0},
++        {"ExOpen1TransformationExGalaxy", GameEventFlag::Type_4, 1, 0, 0, 0, "ExOpenCommonBase", "ExOpenSubTransformationExGalaxy"},
++        {"ExOpen1TeresaMario2DGalaxy", GameEventFlag::Type_4, 1, 0, 0, 0, "ExOpenCommonBase", "ExOpenSubTeresaMario2DGalaxy"},
++        {"ExOpen1SnowCapsuleGalaxy", GameEventFlag::Type_SpecialStar, 1, 1, 0, 0, "HellProminenceGalaxy", 0},
++        {"ExOpen1BeltConveyerExGalaxy", GameEventFlag::Type_1, 1, 7, 0, 0, 0, 0},
++        {"AppearBeltConveyerExGalaxy", GameEventFlag::Type_4, 1, 0, 0, 0, "SpecialStarGrand1", "ExOpen1BeltConveyerExGalaxy"},
++        {"AppearCocoonExGalaxy", GameEventFlag::Type_4, 1, 0, 0, 0, "SpecialStarGrand2", "ExOpen1CocoonExGalaxy"},
++        {"AppearTearDropGalaxy", GameEventFlag::Type_4, 1, 0, 0, 0, "SpecialStarGrand3", "ExOpen1TearDropGalaxy"},
++        {"AppearFishTunnelGalaxy", GameEventFlag::Type_4, 1, 0, 0, 0, "SpecialStarGrand4", "ExOpen1FishTunnelGalaxy"},
++        {"AppearTransformationExGalaxy", GameEventFlag::Type_4, 1, 0, 0, 0, "SpecialStarGrand5", "ExOpen1TransformationExGalaxy"},
++        {"AppearTeresaMario2DGalaxy", GameEventFlag::Type_4, 1, 0, 0, 0, "SpecialStarGrand6", "ExOpen1TeresaMario2DGalaxy"},
++        {"AppearSnowCapsuleGalaxy", GameEventFlag::Type_4, 1, 0, 0, 0, "SpecialStarGrand6", "ExOpen1SnowCapsuleGalaxy"},
++        {"StarPieceBeltConveyerExGalaxy", GameEventFlag::Type_StarPiece, 1, 0, 40, 0, "BeltConveyerExGalaxy", 0},
++        {"StarPieceCocoonExGalaxy", GameEventFlag::Type_StarPiece, 1, 1, 40, 0, "CocoonExGalaxy", 0},
++        {"StarPieceTearDropGalaxy", GameEventFlag::Type_StarPiece, 1, 2, 60, 0, "TearDropGalaxy", 0},
++        {"StarPieceFishTunnelGalaxy", GameEventFlag::Type_StarPiece, 1, 6, 80, 0, "FishTunnelGalaxy", 0},
++        {"StarPieceTransformationExGalaxy", GameEventFlag::Type_StarPiece, 1, 5, 100, 0, "TransformationExGalaxy", 0},
++        {"StarPieceTeresaMario2DGalaxy", GameEventFlag::Type_StarPiece, 1, 3, 120, 0, "TeresaMario2DGalaxy", 0},
++        {"StarPieceSnowCapsuleGalaxy", GameEventFlag::Type_StarPiece, 1, 4, 160, 0, "SnowCapsuleGalaxy", 0},
++        {"AppearTamakoroExLv2Galaxy", GameEventFlag::Type_4, 1, 0, 0, 0, "SpecialStarGreenAll", 0},
++        {"AppearSurfingLv2Galaxy", GameEventFlag::Type_4, 1, 0, 0, 0, "SpecialStarGreenAll", 0},
++        {"AppearCubeBubbleExLv2Galaxy", GameEventFlag::Type_4, 1, 0, 0, 0, "SpecialStarGreenAll", 0},
++        {"AppearPeachCastleFinalGalaxy", GameEventFlag::Type_4, 1, 0, 0, 0, "ViewCompleteMarioAndLuigi", 0},
++        {"LibraryOpenRequirement", GameEventFlag::Type_EventValueIsZero, 1, 0, 0, 0, "LibraryOpenNewStarCount", "SpecialStarGrand3"},
++        {"StarNumPictureBookB", GameEventFlag::Type_1, 1, 24, 0, 0, 0, 0},
++        {"StarNumPictureBookC", GameEventFlag::Type_1, 1, 28, 0, 0, 0, 0},
++        {"StarNumPictureBookD", GameEventFlag::Type_1, 1, 32, 0, 0, 0, 0},
++        {"StarNumPictureBookE", GameEventFlag::Type_1, 1, 40, 0, 0, 0, 0},
++        {"StarNumPictureBookF", GameEventFlag::Type_1, 1, 49, 0, 0, 0, 0},
++        {"StarNumPictureBookG", GameEventFlag::Type_1, 1, 58, 0, 0, 0, 0},
++        {"PictureBookA", GameEventFlag::Type_4, 1, 0, 0, 0, "LibraryOpenRequirement", 0},
++        {"PictureBookB", GameEventFlag::Type_4, 1, 0, 0, 0, "StarNumPictureBookB", "LibraryOpenRequirement"},
++        {"PictureBookC", GameEventFlag::Type_4, 1, 0, 0, 0, "StarNumPictureBookC", "LibraryOpenRequirement"},
++        {"PictureBookD", GameEventFlag::Type_4, 1, 0, 0, 0, "StarNumPictureBookD", "LibraryOpenRequirement"},
++        {"PictureBookE", GameEventFlag::Type_4, 1, 0, 0, 0, "StarNumPictureBookE", "LibraryOpenRequirement"},
++        {"PictureBookF", GameEventFlag::Type_4, 1, 0, 0, 0, "StarNumPictureBookF", "LibraryOpenRequirement"},
++        {"PictureBookG", GameEventFlag::Type_4, 1, 0, 0, 0, "StarNumPictureBookG", "LibraryOpenRequirement"},
++        {"PictureBookH", GameEventFlag::Type_SpecialStar, 1, 1, 0, 0, "KoopaBattleVs3Galaxy", 0},
++        {"PictureBookI", GameEventFlag::Type_SpecialStar, 1, 1, 0, 0, "KoopaBattleVs3Galaxy", 0},
++        {"SpecialStarLuigiRescued", GameEventFlag::Type_SpecialStar, 1, 1, 0, 0, "PhantomGalaxy", 0},
++        {"LuigiTalkAfterRescued", GameEventFlag::Type_4, 0, 0, 0, 0, "SpecialStarLuigiRescued", 0},
++        {"SpecialStarFindingLuigi1", GameEventFlag::Type_SpecialStar, 1, 6, 0, 0, "EggStarGalaxy", 0},
++        {"SpecialStarFindingLuigi2", GameEventFlag::Type_SpecialStar, 1, 7, 0, 0, "BattleShipGalaxy", 0},
++        {"SpecialStarFindingLuigi3", GameEventFlag::Type_SpecialStar, 1, 6, 0, 0, "HoneyBeeKingdomGalaxy", 0},
++        {"RosettaTalkAboutTico", GameEventFlag::Type_4, 0, 0, 0, 0, "SpecialStarGrand6", 0},
++        {"RosettaTalkAfterNormalEnding", GameEventFlag::Type_4, 0, 0, 0, 0, "ViewNormalEnding", 0},
++        {"ViewNormalEnding", GameEventFlag::Type_4, 1, 0, 0, 0, "PictureBookH", 0},
++        {"PowerStarComplete", GameEventFlag::Type_1, 1, 120, 0, 0, 0, 0},
++        {"ViewCompleteEnding", GameEventFlag::Type_4, 0, 0, 0, 0, "PowerStarComplete", 0},
++        {"ViewCompleteMarioAndLuigi", GameEventFlag::Type_10, 1, 0, 0, 0, 0, 0},
++        {"SpecialStarFinalChallenge", GameEventFlag::Type_SpecialStar, 1, 1, 0, 0, "PeachCastleFinalGalaxy", 0},
++        {"StarPieceCounterStop", GameEventFlag::Type_0, 0, 0, 0, 0, 0, 0},
++        {"PlayHeavensDoorGalaxy1", GameEventFlag::Type_4, 1, 0, 0, 0, 0, 0},
++        {"PlayHeavensDoorGalaxy2", GameEventFlag::Type_4, 1, 0, 0, 0, "SpecialStarGrand6", 0},
++        {"[同期]ピーチ城浮上後", GameEventFlag::Type_11, 1, 0, 0, 0, "PlayHeavensDoorGalaxy1", "ピーチ城浮上後"},
++        {"PlayEggStarGalaxy1", GameEventFlag::Type_4, 1, 0, 0, 0, "SpecialStarGrand1", 0},
++        {"[同期]バトラー情報Ａ", GameEventFlag::Type_11, 1, 0, 0, 0, "PlayEggStarGalaxy1", "バトラー情報Ａ"},
++        {"SpecialStarEggStarGalaxy1", GameEventFlag::Type_SpecialStar, 1, 1, 0, 0, "EggStarGalaxy", 0},
++        {"PlayEggStarGalaxy2", GameEventFlag::Type_4, 1, 0, 0, 0, "SpecialStarEggStarGalaxy1", 0},
++        {"[同期]スターピースレクチャー", GameEventFlag::Type_11, 1, 0, 0, 0, "PlayEggStarGalaxy2", "スターピースレクチャー"},
++        {"PowerStarNumForButlerKoopaDemo", GameEventFlag::Type_GalaxyOpenStar, 1, 0, 0, 0, "KoopaBattleVs1Galaxy", 0},
++        {"[同期]クッパスタープラント発見", GameEventFlag::Type_11, 1, 0, 0, 0, "PowerStarNumForButlerKoopaDemo", "クッパスタープラント発見"},
++    };
++
++    struct GameEventFlagSortLt {
++        bool operator()(GameEventFlagTableInstance::Key& key1, GameEventFlagTableInstance::Key& key2) {
++            return (key1.mHashCode < key2.mHashCode) ? true : false;
++        }
++    };
++};  // namespace
++
++bool GameEventFlagIter::isEnd() const {
++    if (GameEventFlagIter::isValid() == false) {
++        return true;
++    }
++
++    return GameEventFlagTable::getFlag(mIter) == nullptr;
++}
++
++void GameEventFlagIter::goNext() {
++    if (GameEventFlagIter::isValid()) {
++        mIter++;
++    }
++}
++
++const GameEventFlag* GameEventFlagIter::getFlag() const {
++    return GameEventFlagTable::getFlag(mIter);
++}
++
++bool GameEventFlagIter::isValid() const {
++    if (mIter >= 0) {
++        return true;
++    } else {
++        return false;
++    }
++}
++
++GameEventFlagTableInstance::GameEventFlagTableInstance() : mSortTable(nullptr), mLength(0) {
++    initSortTable();
++}
++
++const GameEventFlag* GameEventFlagTableInstance::findFlag(const char* flagName) {
++    int i;
++    u16 hashCode = MR::getHashCode(flagName);
++    i = mLength;
++    i = (i * 8) / 8;
++    GameEventFlagTableInstance::Key* key = mSortTable;
++
++    while (i > 0) {
++        int mid = i / 2;
++
++        if (key[i / 2].mHashCode < hashCode) {
++            i -= mid + 1;
++            key = &key[mid] + 1;
++        } else {
++            i = mid;
++        }
++    }
++
++    if (key->mHashCode == hashCode && MR::isEqualString(flagName, key->mFlag->mName)) {
++        return key->mFlag;
++    }
++
++    return nullptr;
++}
++
++void GameEventFlagTableInstance::initSortTable() {
++    mSortTable = new GameEventFlagTableInstance::Key[GameEventFlagTable::getTableSize()];
++    mLength = GameEventFlagTable::getTableSize();
++
++    for (int i = 0; i < mLength; i++) {
++        const GameEventFlag* pFlag = GameEventFlagTable::getFlag(i);
++
++        mSortTable[i].mFlag = pFlag;
++        mSortTable[i].mHashCode = MR::getHashCode(pFlag->mName);
++    }
++
++    std::sort(&mSortTable[0], &mSortTable[mLength], GameEventFlagSortLt());
++}
++
++namespace GameEventFlagTable {
++    GameEventFlagIter getBeginIter() {
++        return GameEventFlagIter();
++    }
++
++    GameEventFlagAccessor makeAccessor(const char* pFlagName) {
++        return findFlag(pFlagName);
++    }
++
++    s32 getTableSize() {
++        return ARRAY_SIZE(::sGameEventFlagStatic);
++    }
++
++    const GameEventFlag* getFlag(int index) {
++        if (index < 0 || index >= getTableSize()) {
++            return nullptr;
++        } else {
++            return &::sGameEventFlagStatic[index];
++        }
++    }
++
++    const GameEventFlag* findFlag(const char* pFlagName) {
++        return SingletonHolder< GameEventFlagTableInstance >::get()->findFlag(pFlagName);
++    }
++
++    const char* getEventFlagNameSpecialPowerStar(const char* pGalaxyName, s32 starId) {
++        for (GameEventFlagIter iter = getBeginIter(); !iter.isEnd(); iter.goNext()) {
++            GameEventFlagAccessor accessor = GameEventFlagAccessor(iter.getFlag());
++
++            if (!accessor.isTypeSpecialStar()) {
++                continue;
++            }
++
++            if (accessor.getStarId() != starId) {
++                continue;
++            }
++
++            if (!MR::isEqualString(pGalaxyName, accessor.getGalaxyName())) {
++                continue;
++            }
++
++            return accessor.getName();
++        }
++
++        return nullptr;
++    }
++
++    bool isPowerStarType(const char* pGalaxyName, s32 starId, const char* pStarType) {
++        const char* pFlagName = getEventFlagNameSpecialPowerStar(pGalaxyName, starId);
++
++        if (pFlagName == nullptr) {
++            return false;
++        }
++
++        return MR::isEqualString(pFlagName, pStarType);
++    }
++
++    s32 calcExclamationGalaxyNum() {
++        s32 num = -1;
++
++        for (GameEventFlagIter iter = getBeginIter(); !iter.isEnd(); iter.goNext()) {
++            GameEventFlagAccessor accessor = GameEventFlagAccessor(iter.getFlag());
++
++            if (!accessor.isTypeStarPiece()) {
++                continue;
++            }
++
++            if (num >= accessor.getStarPieceIndex()) {
++                continue;
++            }
++
++            num = accessor.getStarPieceIndex();
++        }
++
++        return num + 1;
++    }
++
++    const char* getExclamationGalaxyNameFromIndex(int index) {
++        for (GameEventFlagIter iter = getBeginIter(); !iter.isEnd(); iter.goNext()) {
++            GameEventFlagAccessor accessor = GameEventFlagAccessor(iter.getFlag());
++
++            if (!accessor.isTypeStarPiece()) {
++                continue;
++            }
++
++            if (accessor.getStarPieceIndex() != index) {
++                continue;
++            }
++
++            return accessor.getGalaxyNameWithStarPiece();
++        }
++
++        return nullptr;
++    }
++
++    bool isExist(const char* pName) {
++        return findFlag(pName) != nullptr;
++    }
++
++    int getIndex(const GameEventFlag* pFlag) {
++        return pFlag - &::sGameEventFlagStatic[0];
++    }
++
++    bool isDependedAnother(const char* pFlagName1, const char* pFlagName2) {
++        const GameEventFlag* pFlag1 = findFlag(pFlagName1);
++
++        if (pFlag1->mType == GameEventFlag::Type_4) {
++            if (pFlag1->mRequirement1 != nullptr && MR::isEqualString(pFlag1->mRequirement1, pFlagName2)) {
++                return true;
++            }
++
++            if (pFlag1->mRequirement2 != nullptr && MR::isEqualString(pFlag1->mRequirement2, pFlagName2)) {
++                return true;
++            }
++        } else if (pFlag1->mType == GameEventFlag::Type_Galaxy) {
++            const char* galaxyDependedFlags[3];
++            s32 length = getGalaxyDependedFlags(galaxyDependedFlags, ARRAY_SIZE(galaxyDependedFlags), pFlagName1);
++
++            for (s32 i = 0; i < length; i++) {
++                if (MR::isEqualString(galaxyDependedFlags[i], pFlagName2)) {
++                    return true;
++                }
++            }
++        }
++
++        return false;
++    }
++
++    int getIndexFromHashCode(u16 hashCode) {
++        for (GameEventFlagIter iter = getBeginIter(); !iter.isEnd(); iter.goNext()) {
++            if ((iter.getFlag()->mSaveFlag & 0x1) != 0) {
++                continue;
++            }
++
++            GameEventFlagAccessor accessor = GameEventFlagAccessor(iter.getFlag());
++
++            if ((MR::getHashCode(accessor.getName()) & 0x7FFF) != hashCode) {
++                continue;
++            }
++
++            return getIndex(getFlag(iter.mIter));
++        }
++
++        return -1;
++    }
++
++    s32 calcSpecialPowerStarNum(const char* pPowerStarType) {
++        s32 num = 0;
++
++        for (GameEventFlagIter iter = getBeginIter(); !iter.isEnd(); iter.goNext()) {
++            GameEventFlagAccessor accessor = GameEventFlagAccessor(iter.getFlag());
++
++            if (!accessor.isTypeSpecialStar()) {
++                continue;
++            }
++
++            if (strstr(accessor.getName(), pPowerStarType) == nullptr) {
++                continue;
++            }
++
++            num++;
++        }
++
++        return num;
++    }
++
++    s32 getStarPieceNumToOpenExclamationGalaxy(const char* pGalaxyName) {
++        char flagName[64];
++        snprintf(flagName, sizeof(flagName), "StarPiece%s", pGalaxyName);
++
++        GameEventFlagAccessor accessor = makeAccessor(flagName);
++
++        return accessor.getNeedStarPieceNum();
++    }
++
++    s32 calcGreenPowerStarNum() {
++        return calcSpecialPowerStarNum("SpecialStarGreen");
++    }
++
++    s32 getGalaxyDependedFlags(const char** pFlags, int a1, const char* pName) {
++        JMapInfo info;
++        info.attach(&GalaxyIDBCSV);
++
++        JMapInfoIter iter = info.findElement("name", pName, 0);
++
++        s32 numFlags = 0;
++        for (s32 idx = 0; idx < 3; idx++) {
++            char key[32];
++            snprintf(key, 32, "OpenCondition%1d", idx);
++            if (info.searchItemInfo(key) < 0) {
++                break;
++            }
++
++            const char* openCondition = "";
++            iter.getValue(key, &openCondition);
++            if (!MR::isEqualString(openCondition, "")) {
++                pFlags[numFlags++] = openCondition;
++            }
++        }
++        return numFlags;
++    }
++};  // namespace GameEventFlagTable
+diff --git a/pc-port/src/Game/System/ScenarioDataParser.cpp b/pc-port/src/Game/System/ScenarioDataParser.cpp
+new file mode 100644
+--- /dev/null
++++ b/pc-port/src/Game/System/ScenarioDataParser.cpp
+@@ -0,0 +1,237 @@
++#include "Game/System/ScenarioDataParser.hpp"
++#include "Game/System/GalaxyNameSortTable.hpp"
++#include "Game/System/GalaxyStatusAccessor.hpp"
++#include "Game/System/GameSystem.hpp"
++#include "Game/System/GameSystemSceneController.hpp"
++#include "Game/Util/FileUtil.hpp"
++#include "Game/Util/SceneUtil.hpp"
++#include "Game/Util/SingletonHolder.hpp"
++#include "Game/Util/StringUtil.hpp"
++#include <JSystem/JKernel/JKRMemArchive.hpp>
++#include <algorithm>
++
++namespace {
++    struct GalaxyNameSortLt {
++        bool operator()(ScenarioData* ppLhs, ScenarioData* ppRhs) {
++            return GalaxyNameSortTable::getGalaxySortIndex(ppLhs->mGalaxyName) < GalaxyNameSortTable::getGalaxySortIndex(ppRhs->mGalaxyName);
++        }
++    };
++
++    const ScenarioData* getCurrentScenarioData() {
++        return ScenarioDataFunction::getScenarioDataParser()->getScenarioData(MR::getCurrentStageName());
++    }
++};  // namespace
++
++ScenarioData::ScenarioData(const char* pFilePath) : mScenarioData(nullptr), mGalaxyName(nullptr), mZoneList(nullptr) {
++    char fileName[64];
++    MR::removeExtensionString(fileName, sizeof(fileName), MR::getBasename(pFilePath));
++
++    char* pGalaxyName = strstr(fileName, "Scenario");
++
++    if (pGalaxyName != nullptr) {
++        pGalaxyName[0] = '\0';
++    }
++
++    int galaxyNameSize = strlen(fileName) + 1;
++
++    mGalaxyName = new char[galaxyNameSize];
++    MR::copyString(mGalaxyName, fileName, galaxyNameSize);
++
++    JKRMemArchive* pArchive = static_cast< JKRMemArchive* >(MR::receiveArchive(pFilePath));
++
++    mScenarioData = new JMapInfo();
++    mScenarioData->attach(pArchive->getResource("/ScenarioData.bcsv"));
++
++    mZoneList = new JMapInfo();
++    mZoneList->attach(pArchive->getResource("/ZoneList.bcsv"));
++}
++
++s32 ScenarioData::getScenarioNum() const {
++    s32 count = 0;
++
++    for (s32 scenarioNo = 1; scenarioNo <= mScenarioData->getNumEntries(); scenarioNo++) {
++        bool isHidden = false;
++        getValueBool("IsHidden", scenarioNo, &isHidden);
++
++        if (!isHidden) {
++            count++;
++        }
++    }
++
++    return count;
++}
++
++s32 ScenarioData::getPowerStarNum() const {
++    s32 count = 0;
++
++    for (s32 scenarioNo = 1; scenarioNo <= mScenarioData->getNumEntries(); scenarioNo++) {
++        u32 powerStarId = 0;
++        getValueU32("PowerStarId", scenarioNo, &powerStarId);
++
++        if (powerStarId != 0) {
++            count++;
++        }
++    }
++
++    return count;
++}
++
++bool ScenarioData::getValueString(const char* pKey, s32 a2, const char** ppOut) const {
++    JMapInfoIter iter = getScenarioDataIter(a2);
++    bool isExist = iter.getValue< const char* >(pKey, ppOut);
++
++    if (isExist) {
++        if (MR::isEqualString(*ppOut, "")) {
++            *ppOut = nullptr;
++        }
++    }
++
++    return isExist;
++}
++
++const char* ScenarioData::getZoneName(s32 zoneId) const {
++    const char* pZoneName = nullptr;
++    mZoneList->getValue< const char* >(zoneId, "ZoneName", &pZoneName);
++
++    return pZoneName;
++}
++
++JMapInfoIter ScenarioData::getScenarioDataIter(s32 scenarioNo) const {
++    JMapInfoIter iter = mScenarioData->findElement("ScenarioNo", scenarioNo, 0);
++    return iter;
++}
++
++bool ScenarioData::getValueU32(const char* pKey, s32 a2, u32* pOut) const {
++    JMapInfoIter iter = getScenarioDataIter(a2);
++    s32 index = iter.mInfo->searchItemInfo(pKey);
++
++    if (index < 0) {
++        return false;
++    }
++
++    return iter.mInfo->getValueFast(iter.mIndex, index, pOut);
++}
++
++bool ScenarioData::getValueBool(const char* pKey, s32 scenarioNo, bool* pOut) const {
++    JMapInfoIter iter = getScenarioDataIter(scenarioNo);
++    s32 index = iter.mInfo->searchItemInfo(pKey);
++
++    if (index < 0) {
++        return false;
++    }
++
++    return iter.mInfo->getValueFast(iter.mIndex, index, pOut);
++}
++
++s32 ScenarioData::getZoneNum() const {
++    if (mZoneList->mData != nullptr) {
++        return mZoneList->mData->mNumEntries;
++    }
++
++    return 0;
++}
++
++s32 ScenarioData::getZoneId(const char* pZoneName) const {
++    for (s32 i = 0; i < getZoneNum(); i++) {
++        const char* pName = nullptr;
++        mZoneList->getValue< const char* >(i, "ZoneName", &pName);
++
++        if (MR::isEqualStringCase(pName, pZoneName)) {
++            return i;
++        }
++    }
++
++    return 0;
++}
++
++ScenarioDataIter::ScenarioDataIter(const ScenarioDataParser* pParser, int param2) : mParser(pParser), mCur(param2) {
++}
++
++bool ScenarioDataIter::isEnd() const {
++    return mParser->mScenarioData.size() <= mCur;
++}
++
++void ScenarioDataIter::goNext() {
++    if (!isEnd()) {
++        mCur++;
++    }
++}
++
++GalaxyStatusAccessor ScenarioDataIter::makeAccessor() const {
++    return GalaxyStatusAccessor(mParser->getScenarioData(mCur));
++}
++
++ScenarioDataParser::ScenarioDataParser(const char* pName) : NameObj(pName), mScenarioData() {
++    DVDDir dir;
++    DVDDirEntry dirent;
++    DVDOpenDir("/StageData", &dir);
++
++    while (DVDReadDir(&dir, &dirent)) {
++        if (!dirent.isDir) {
++            continue;
++        }
++
++        char fileName[256];
++        MR::makeScenarioArchiveFileName(fileName, sizeof(fileName), dirent.name);
++
++        if (!MR::isFileExist(fileName, false)) {
++            continue;
++        }
++
++        ScenarioData* pData = new ScenarioData(fileName);
++
++        mScenarioData.push_back(pData);
++    }
++
++    DVDCloseDir(&dir);
++
++    std::sort(mScenarioData.begin(), mScenarioData.end(), GalaxyNameSortLt());
++}
++
++const ScenarioData* ScenarioDataParser::getScenarioData(const char* pGalaxyName) const {
++    for (s32 i = 0; i < mScenarioData.size(); i++) {
++        const ScenarioData* pScenarioData = mScenarioData[i];
++
++        if (MR::isEqualStringCase(pScenarioData->mGalaxyName, pGalaxyName)) {
++            return pScenarioData;
++        }
++    }
++
++    return nullptr;
++}
++
++const ScenarioData* ScenarioDataParser::getScenarioData(s32 index) const {
++    return mScenarioData[index];
++}
++
++GalaxyStatusAccessor ScenarioDataParser::makeAccessor(const char* pGalaxyName) const {
++    return GalaxyStatusAccessor(getScenarioData(pGalaxyName));
++}
++
++namespace ScenarioDataFunction {
++    ScenarioDataParser* getScenarioDataParser() {
++        return SingletonHolder< GameSystem >::get()->mSceneController->mScenarioParser;
++    }
++
++    u32 getCurrentCommonLayers(const char* pParam1) {
++        ::getCurrentScenarioData();
++
++        return 1;
++    }
++
++    u32 getCurrentScenarioLayers(const char* pParam1, s32 param2) {
++        u32 layerNum;
++
++        if (::getCurrentScenarioData()->getValueU32(pParam1, param2, &layerNum)) {
++            return layerNum * 2;
++        }
++
++        return 0;
++    }
++};  // namespace ScenarioDataFunction
++
++namespace MR {
++    ScenarioDataIter makeBeginScenarioDataIter() {
++        return ScenarioDataIter(ScenarioDataFunction::getScenarioDataParser(), 0);
++    }
++};  // namespace MR
+diff --git a/pc-port/src/Game/System/ScenarioDataParser.hpp b/pc-port/src/Game/System/ScenarioDataParser.hpp
+new file mode 100644
+--- /dev/null
++++ b/pc-port/src/Game/System/ScenarioDataParser.hpp
+@@ -0,0 +1,62 @@
++#pragma once
++
++#include "Game/NameObj/NameObj.hpp"
++#include "Game/Util/Array.hpp"
++#include "Game/Util/JMapInfo.hpp"
++
++class GalaxyStatusAccessor;
++class ScenarioData;
++
++class ScenarioDataParser : public NameObj {
++public:
++    /// @brief Creates a new `ScenarioDataParser`.
++    /// @param pName A pointer to the null-terminated name of the object.
++    ScenarioDataParser(const char* pName);
++
++    const ScenarioData* getScenarioData(const char*) const;
++    const ScenarioData* getScenarioData(s32) const;
++    GalaxyStatusAccessor makeAccessor(const char*) const;
++
++    /* 0x0C */ MR::Vector< MR::FixedArray< ScenarioData*, 64 > > mScenarioData;
++};
++
++class ScenarioDataIter {
++public:
++    ScenarioDataIter(const ScenarioDataParser*, int);
++
++    bool isEnd() const;
++    void goNext();
++    GalaxyStatusAccessor makeAccessor() const;
++
++    /* 0x00 */ const ScenarioDataParser* mParser;
++    /* 0x04 */ int mCur;
++};
++
++class ScenarioData {
++public:
++    ScenarioData(const char*);
++
++    s32 getScenarioNum() const;
++    s32 getPowerStarNum() const;
++    bool getValueString(const char*, s32, const char**) const;
++    const char* getZoneName(s32) const;
++    JMapInfoIter getScenarioDataIter(s32) const;
++    bool getValueU32(const char*, s32, u32*) const;
++    bool getValueBool(const char*, s32, bool*) const;
++    s32 getZoneNum() const;
++    s32 getZoneId(const char*) const;
++
++    /* 0x00 */ JMapInfo* mScenarioData;
++    /* 0x04 */ char* mGalaxyName;
++    /* 0x08 */ JMapInfo* mZoneList;
++};
++
++namespace ScenarioDataFunction {
++    ScenarioDataParser* getScenarioDataParser();
++    u32 getCurrentCommonLayers(const char*);
++    u32 getCurrentScenarioLayers(const char*, s32);
++};  // namespace ScenarioDataFunction
++
++namespace MR {
++    ScenarioDataIter makeBeginScenarioDataIter();
++};  // namespace MR
+diff --git a/pc-port/src/Game/System/StationedArchiveLoader.hpp b/pc-port/src/Game/System/StationedArchiveLoader.hpp
+new file mode 100644
+--- /dev/null
++++ b/pc-port/src/Game/System/StationedArchiveLoader.hpp
+@@ -0,0 +1,22 @@
++#pragma once
++
++class JKRHeap;
++
++namespace MR {
++    struct StationedFileInfo;
++};  // namespace MR
++
++class StationedArchiveLoader {
++public:
++    class Condition {
++    public:
++        virtual ~Condition();
++        virtual bool isExecute(const MR::StationedFileInfo*) const;
++        virtual JKRHeap* getProperHeap(const MR::StationedFileInfo*) const;
++    };
++
++    static JKRHeap* getProperHeap(const MR::StationedFileInfo*);
++    static void loadResourcesFromTable(const StationedArchiveLoader::Condition&);
++    static void createAndAddResourcesFromTable(const StationedArchiveLoader::Condition&);
++    static void loadScenarioData(JKRHeap*);
++};
+diff --git a/pc-port/src/compat/FileUtilCompat.cpp b/pc-port/src/compat/FileUtilCompat.cpp
+new file mode 100644
+--- /dev/null
++++ b/pc-port/src/compat/FileUtilCompat.cpp
+@@ -0,0 +1,281 @@
++#include "Game/Util/FileUtil.hpp"
++
++#include <algorithm>
++#include <cstring>
++#include <exception>
++#include <filesystem>
++#include <map>
++#include <memory>
++#include <string>
++#include <vector>
++
++#include "runtime/RuntimeContext.hpp"
++#include "runtime/ArchiveMountService.hpp"
++#include "compat/JkrAllocationDomain.hpp"
++
++namespace MR {
++    namespace {
++
++        std::map< std::string, std::vector< u8 > > sLoadedFiles;
++
++        [[nodiscard]] smgpc::runtime::RuntimeContext* runtime() {
++            return smgpc::runtime::RuntimeContext::try_instance();
++        }
++
++        [[nodiscard]] std::string normalize_disc_string(const char* path) {
++            if (path == nullptr) {
++                return {};
++            }
++
++            auto text = std::string(path);
++            std::ranges::replace(text, '\\', '/');
++            if (text.empty()) {
++                return {};
++            }
++            if (text.front() != '/') {
++                text.insert(text.begin(), '/');
++            }
++            return text;
++        }
++
++        [[nodiscard]] bool dvd_exists(std::string_view path) {
++            auto* mounts = smgpc::runtime::ArchiveMountService::active();
++            if (mounts == nullptr || path.empty()) {
++                return false;
++            }
++
++            try {
++                return mounts->dvd().exists(path);
++            } catch (const std::exception&) {
++                return false;
++            }
++        }
++
++        [[nodiscard]] std::string language_path_for(std::string_view path) {
++            auto text = std::string(path);
++            std::ranges::replace(text, '\\', '/');
++            while (!text.empty() && text.front() == '/') {
++                text.erase(text.begin());
++            }
++
++            if (text.starts_with("LayoutData/")) {
++                return "/KrKorean/" + text;
++            }
++
++            return "/" + text;
++        }
++
++        [[nodiscard]] std::string path_considering_language(const char* path, bool consider_language) {
++            const auto normalized = normalize_disc_string(path);
++            if (normalized.empty() || !consider_language) {
++                return normalized;
++            }
++
++            const auto localized = language_path_for(normalized);
++            return dvd_exists(localized) ? localized : normalized;
++        }
++
++        void copy_path(char* dst, u32 size, std::string_view path) {
++            if (dst == nullptr || size == 0U) {
++                return;
++            }
++
++            const auto count = std::min< std::size_t >(path.size(), static_cast< std::size_t >(size - 1U));
++            std::memcpy(dst, path.data(), count);
++            dst[count] = '\0';
++        }
++
++        [[nodiscard]] std::string with_arc_extension(const char* prefix) {
++            auto text = std::string(prefix == nullptr ? "" : prefix);
++            if (!text.ends_with(".arc")) {
++                text += ".arc";
++            }
++            return text;
++        }
++
++        [[nodiscard]] bool copy_first_existing(char* dst, u32 size, std::initializer_list< std::string_view > candidates) {
++            for (const auto candidate : candidates) {
++                if (dvd_exists(candidate)) {
++                    copy_path(dst, size, candidate);
++                    return true;
++                }
++            }
++
++            return false;
++        }
++
++    }  // namespace
++
++    bool isFileExist(const char* pFilePath, bool considerLanguage) {
++        return dvd_exists(path_considering_language(pFilePath, considerLanguage));
++    }
++
++    u32 getFileSize(const char* pFilePath, bool considerLanguage) {
++        auto* context = runtime();
++        if (context == nullptr) {
++            return 0U;
++        }
++
++        try {
++            const auto path = context->dvd().resolve(path_considering_language(pFilePath, considerLanguage));
++            std::error_code error{};
++            const auto size = std::filesystem::file_size(path, error);
++            if (error || size > static_cast< std::uintmax_t >(UINT32_MAX)) {
++                return 0U;
++            }
++
++            return static_cast< u32 >(size);
++        } catch (const std::exception&) {
++            return 0U;
++        }
++    }
++
++    s32 convertPathToEntrynumConsideringLanguage(const char* pFilePath) {
++        const auto path = path_considering_language(pFilePath, true);
++        return DVDConvertPathToEntrynum(path.c_str());
++    }
++
++    void* loadToMainRAM(const char* pFilePath, u8* pDst, JKRHeap*, JKRDvdRipper::EAllocDirection) {
++        auto* context = runtime();
++        if (context == nullptr || pFilePath == nullptr) {
++            return nullptr;
++        }
++
++        const auto path = path_considering_language(pFilePath, true);
++        try {
++            auto bytes = context->dvd().read_file(path);
++            if (pDst != nullptr) {
++                std::memcpy(pDst, bytes.data(), bytes.size());
++                return pDst;
++            }
++
++            auto it = sLoadedFiles.insert_or_assign(path, std::move(bytes)).first;
++            return it->second.empty() ? nullptr : it->second.data();
++        } catch (const std::exception&) {
++            return nullptr;
++        }
++    }
++
++    void loadAsyncToMainRAM(const char* pFilePath, u8* pDst, JKRHeap* pHeap, JKRDvdRipper::EAllocDirection allocDir) {
++        (void)loadToMainRAM(pFilePath, pDst, pHeap, allocDir);
++    }
++
++    JKRMemArchive* mountArchive(const char* pFilePath, JKRHeap* pHeap) {
++        smgpc::compat::JkrHostAllocationScope host;
++        auto* mounts = smgpc::runtime::ArchiveMountService::active();
++        if (mounts == nullptr || pFilePath == nullptr) return nullptr;
++        try { return mounts->mount(pFilePath, pHeap); }
++        catch (const std::exception&) { return nullptr; }
++    }
++
++    void mountAsyncArchive(const char* pFilePath, JKRHeap* pHeap) {
++        (void)mountArchive(pFilePath, pHeap);
++    }
++
++    void mountAsyncArchiveByObjectOrLayoutName(const char* pFilePrefix, JKRHeap* pHeap) {
++        char path[256]{};
++        if (makeObjectArchiveFileNameFromPrefix(path, sizeof(path), pFilePrefix, false) ||
++            makeLayoutArchiveFileNameFromPrefix(path, sizeof(path), pFilePrefix, false)) {
++            (void)mountArchive(path, pHeap);
++        }
++    }
++
++    void* receiveFile(const char* pFilePath) {
++        const auto path = path_considering_language(pFilePath, true);
++        if (auto it = sLoadedFiles.find(path); it != sLoadedFiles.end()) {
++            return it->second.empty() ? nullptr : it->second.data();
++        }
++
++        return nullptr;
++    }
++
++    JKRMemArchive* receiveArchive(const char* pFilePath) {
++        auto* mounts = smgpc::runtime::ArchiveMountService::active();
++        if (mounts == nullptr || pFilePath == nullptr) return nullptr;
++        return mounts->receive(pFilePath);
++    }
++
++    void receiveAllRequestedFile() {
++    }
++
++    void createAndAddArchive(void*, JKRHeap*, const char*) {
++    }
++
++    void getMountedArchiveAndHeap(const char* pFilePath, JKRArchive** ppArchive, JKRHeap** ppHeap) {
++        const auto* mounts = smgpc::runtime::ArchiveMountService::active();
++        const auto owner = mounts && pFilePath ? mounts->retain(pFilePath) : nullptr;
++        if (ppArchive) *ppArchive = owner ? &owner->archive() : nullptr;
++        if (ppHeap) *ppHeap = owner ? owner->heap() : nullptr;
++    }
++
++    void removeFileConsideringLanguage(const char* pFilePath) {
++        sLoadedFiles.erase(path_considering_language(pFilePath, true));
++    }
++
++    void removeResourceAndFileHolderIfIsEqualHeap(JKRHeap* heap) {
++        if (auto* mounts = smgpc::runtime::ArchiveMountService::active()) mounts->remove_for_heap(heap);
++    }
++
++    void* decompressFileFromArchive(JKRArchive* pArchive, const char* pFilePath, JKRHeap*, int) {
++        auto* mounts = smgpc::runtime::ArchiveMountService::active();
++        if (pArchive == nullptr || pFilePath == nullptr || mounts == nullptr) return nullptr;
++        return mounts->copy_archive_resource(*pArchive, pFilePath);
++    }
++
++    bool isLoadedFile(const char* pFilePath) {
++        return sLoadedFiles.contains(path_considering_language(pFilePath, true));
++    }
++
++    bool isMountedArchive(const char* pFilePath) {
++        return receiveArchive(pFilePath) != nullptr;
++    }
++
++    bool isLoadedObjectOrLayoutArchive(const char* pFilePrefix) {
++        char path[256]{};
++        return (makeObjectArchiveFileNameFromPrefix(path, sizeof(path), pFilePrefix, false) && isMountedArchive(path)) ||
++               (makeLayoutArchiveFileNameFromPrefix(path, sizeof(path), pFilePrefix, false) && isMountedArchive(path));
++    }
++
++    void makeFileNameConsideringLanguage(char* pDst, u32 size, const char* pFilePath) {
++        copy_path(pDst, size, path_considering_language(pFilePath, true));
++    }
++
++    bool makeObjectArchiveFileName(char* pDst, u32 size, const char* pFileName) {
++        const auto name = std::string(pFileName == nullptr ? "" : pFileName);
++        const auto object = "/ObjectData/" + name;
++        const auto map_parts = "/MapPartsData/" + name;
++        const auto raw = normalize_disc_string(pFileName);
++        return copy_first_existing(pDst, size, {object, map_parts, raw});
++    }
++
++    bool makeObjectArchiveFileNameFromPrefix(char* pDst, u32 size, const char* pFilePrefix, bool) {
++        const auto name = with_arc_extension(pFilePrefix);
++        return makeObjectArchiveFileName(pDst, size, name.c_str());
++    }
++
++    bool makeLayoutArchiveFileName(char* pDst, u32 size, const char* pFileName) {
++        const auto name = std::string(pFileName == nullptr ? "" : pFileName);
++        const auto localized = "/KrKorean/LayoutData/" + name;
++        const auto base = "/LayoutData/" + name;
++        const auto raw = normalize_disc_string(pFileName);
++        return copy_first_existing(pDst, size, {localized, base, raw});
++    }
++
++    bool makeLayoutArchiveFileNameFromPrefix(char* pDst, u32 size, const char* pFilePrefix, bool fallback) {
++        const auto name = with_arc_extension(pFilePrefix);
++        if (makeLayoutArchiveFileName(pDst, size, name.c_str())) {
++            return true;
++        }
++
++        if (fallback) {
++            copy_path(pDst, size, "/LayoutData/" + name);
++        }
++        return false;
++    }
++
++    void makeScenarioArchiveFileName(char* pDst, u32 size, const char* pStageName) {
++        const auto stage = std::string(pStageName == nullptr ? "" : pStageName);
++        copy_path(pDst, size, "/StageData/" + stage + "/" + stage + "Scenario.arc");
++    }
++
++}  // namespace MR
+diff --git a/pc-port/src/compat/OriginalArchiveString.cpp b/pc-port/src/compat/OriginalArchiveString.cpp
+new file mode 100644
+--- /dev/null
++++ b/pc-port/src/compat/OriginalArchiveString.cpp
+@@ -0,0 +1,36 @@
++#include "Game/Util/StringUtil.hpp"
++#include <cstdio>
++#include <cstring>
++#include <stdint.h>
++
++namespace MR {
++char* removeExtensionString(char* pDst, u32 size, const char* pPath) {
++        snprintf(pDst, size, "%s", pPath);
++
++        char* pExtSeparator = strrchr(pDst, '.');
++        char* pDirSeparator = strrchr(pDst, '/');
++
++        if (reinterpret_cast< uintptr_t >(pExtSeparator) < reinterpret_cast< uintptr_t >(pDirSeparator) ||
++            reinterpret_cast< uintptr_t >(pDirSeparator) + 1 == reinterpret_cast< uintptr_t >(pExtSeparator)) {
++            return pDirSeparator;
++        }
++
++        *pExtSeparator = '\0';
++
++        return pDirSeparator;
++    }
++
++void copyString(char* pDst, const char* pSrc, u32 num) {
++        strncpy(pDst, pSrc, num);
++    }
++
++const char* getBasename(const char* pPath) {
++        const char* pBasename = strrchr(pPath, '/');
++
++        if (pBasename == nullptr) {
++            return pPath;
++        }
++
++        return pBasename + 1;
++    }
++}
+diff --git a/pc-port/src/compat/OriginalScenarioPreload.cpp b/pc-port/src/compat/OriginalScenarioPreload.cpp
+new file mode 100644
+--- /dev/null
++++ b/pc-port/src/compat/OriginalScenarioPreload.cpp
+@@ -0,0 +1,24 @@
++#include "Game/System/StationedArchiveLoader.hpp"
++#include "Game/Util/FileUtil.hpp"
++
++void StationedArchiveLoader::loadScenarioData(JKRHeap* pHeap) {
++    DVDDir dir;
++    DVDDirEntry dirEntry;
++
++    DVDOpenDir("/StageData", &dir);
++
++    while (DVDReadDir(&dir, &dirEntry)) {
++        if (!dirEntry.isDir) {
++            continue;
++        }
++
++        char name[256];
++        MR::makeScenarioArchiveFileName(name, sizeof(name), dirEntry.name);
++
++        if (MR::isFileExist(name, false)) {
++            MR::mountArchive(name, pHeap);
++        }
++    }
++
++    DVDCloseDir(&dir);
++}
+diff --git a/pc-port/src/compat/ResourceHolderCompat.cpp b/pc-port/src/compat/ResourceHolderCompat.cpp
+--- a/pc-port/src/compat/ResourceHolderCompat.cpp
++++ b/pc-port/src/compat/ResourceHolderCompat.cpp
+@@ -72,7 +72,6 @@
+         std::filesystem::path path;
+         std::unique_ptr<JKRMemArchive> archive;
+         std::vector<resource::BasResource> bas_resources;
+-        std::vector<resource::JMapResource> maps;
+         std::vector<resource::JMapSourceRegistration> map_aliases;
+         std::vector<resource::J3dAnimationResource> animations;
+         std::vector<resource::J3dAnimationSourceRegistration> animation_aliases;
+@@ -126,8 +125,7 @@
+                 break;
+             case BackingKind::Map:
+                 if (bytes.empty()) break; // Original JMapInfo::attach(nullptr).
+-                state.maps.emplace_back(bytes);
+-                state.map_aliases.push_back(state.maps.back().register_source(bytes));
++                state.map_aliases.push_back(resource::register_jmap_source(bytes, state.source));
+                 break;
+             case BackingKind::Bas:
+                 if (!bytes.empty()) state.bas_resources.emplace_back(bytes, state.source);
+diff --git a/pc-port/src/resource/EmbeddedGameTables.cpp b/pc-port/src/resource/EmbeddedGameTables.cpp
+new file mode 100644
+--- /dev/null
++++ b/pc-port/src/resource/EmbeddedGameTables.cpp
+@@ -0,0 +1,11 @@
++#include "resource/EmbeddedGameTables.hpp"
++#include <revolution/types.h>
++
++extern const u8 GalaxyIDBCSV[0xD20];
++
++namespace smgpc::resource {
++    EmbeddedGameTables::EmbeddedGameTables()
++        : _galaxy_id(std::span{GalaxyIDBCSV}),
++          _galaxy_id_alias(_galaxy_id.register_source(std::span{GalaxyIDBCSV})) {
++    }
++}
+diff --git a/pc-port/src/resource/EmbeddedGameTables.hpp b/pc-port/src/resource/EmbeddedGameTables.hpp
+new file mode 100644
+--- /dev/null
++++ b/pc-port/src/resource/EmbeddedGameTables.hpp
+@@ -0,0 +1,14 @@
++#pragma once
++#include "resource/JMapResource.hpp"
++
++namespace smgpc::resource {
++    // Owns decoded host metadata and publishes the genuine immutable program
++    // resource identity for the original unsized JMapInfo::attach API.
++    class EmbeddedGameTables final {
++    public:
++        EmbeddedGameTables();
++    private:
++        JMapResource _galaxy_id;
++        JMapSourceRegistration _galaxy_id_alias;
++    };
++}
+diff --git a/pc-port/src/resource/GameResourceRuntime.cpp b/pc-port/src/resource/GameResourceRuntime.cpp
+--- a/pc-port/src/resource/GameResourceRuntime.cpp
++++ b/pc-port/src/resource/GameResourceRuntime.cpp
+@@ -1,4 +1,5 @@
+ #include "GameResourceRuntime.hpp"
++#include "resource/EmbeddedGameTables.hpp"
+ #include "compat/JutTextureAllocation.hpp"
+ #include <dolphin/os.h>
+ #include <stdexcept>
+@@ -12,6 +13,7 @@
+         _heaps = compat::JkrHeapRuntime::create(budget.host_heap_bytes);
+         _mem1 = Mem1ResourceHeap::create(budget.mem1_bytes);
+         _textures = std::make_unique<compat::JutTextureAllocationService>(_mem1);
++        _embedded_tables = std::make_unique<EmbeddedGameTables>();
+     }
+     GameResourceRuntime::~GameResourceRuntime() = default;
+     std::shared_ptr<compat::JkrAllocationDomain> GameResourceRuntime::create_cohort() const {
+diff --git a/pc-port/src/resource/GameResourceRuntime.hpp b/pc-port/src/resource/GameResourceRuntime.hpp
+--- a/pc-port/src/resource/GameResourceRuntime.hpp
++++ b/pc-port/src/resource/GameResourceRuntime.hpp
+@@ -9,6 +9,7 @@
+ namespace smgpc::compat { class JutTextureAllocationService; }
+ 
+ namespace smgpc::resource {
++    class EmbeddedGameTables;
+     struct GameResourceBudget {
+         std::size_t host_heap_bytes = 128U * 1024U * 1024U;
+         std::size_t cohort_bytes = 64U * 1024U * 1024U;
+@@ -33,5 +34,6 @@
+         std::shared_ptr<compat::JkrHeapRuntime> _heaps;
+         std::shared_ptr<Mem1ResourceHeap> _mem1;
+         std::unique_ptr<compat::JutTextureAllocationService> _textures;
++        std::unique_ptr<EmbeddedGameTables> _embedded_tables;
+     };
+ }
+diff --git a/pc-port/src/runtime/ArchiveMountService.cpp b/pc-port/src/runtime/ArchiveMountService.cpp
+new file mode 100644
+--- /dev/null
++++ b/pc-port/src/runtime/ArchiveMountService.cpp
+@@ -0,0 +1,103 @@
++#include "runtime/ArchiveMountService.hpp"
++#include "runtime/RuntimeServices.hpp"
++#include "compat/JkrAllocationDomain.hpp"
++#include "resource/JMapResource.hpp"
++#include "resource/RarcArchive.hpp"
++#include "JSystem/JKernel/JKRMemArchive.hpp"
++#include <atomic>
++#include <stdexcept>
++
++namespace smgpc::runtime {
++    namespace { std::atomic<ArchiveMountService*> active_service; }
++
++    struct MountedArchive::Storage {
++        std::shared_ptr<const resource::RarcArchive> source;
++        std::filesystem::path path;
++        JKRHeap* heap;
++        std::vector<resource::JMapSourceRegistration> registrations;
++        std::unique_ptr<JKRMemArchive> archive;
++    };
++
++    MountedArchive::MountedArchive(std::shared_ptr<const resource::RarcArchive> source,
++                                   std::filesystem::path path, JKRHeap* heap) {
++        compat::JkrHostAllocationScope host;
++        _storage = std::make_unique<Storage>();
++        _storage->source = std::move(source);
++        _storage->path = std::move(path);
++        _storage->heap = heap;
++        for (const auto& entry : _storage->source->entries()) {
++            const auto bytes = _storage->source->file_data(entry);
++            if (!bytes.empty())
++                _storage->registrations.push_back(resource::register_jmap_source(bytes, _storage->source));
++        }
++        _storage->archive = std::make_unique<JKRMemArchive>(*_storage->source);
++    }
++    MountedArchive::~MountedArchive() {
++        compat::JkrHostAllocationScope host;
++        _storage.reset();
++    }
++    JKRMemArchive& MountedArchive::archive() const noexcept { return *_storage->archive; }
++    JKRHeap* MountedArchive::heap() const noexcept { return _storage->heap; }
++    const resource::RarcArchive& MountedArchive::source() const noexcept { return *_storage->source; }
++    const std::filesystem::path& MountedArchive::path() const noexcept { return _storage->path; }
++
++    ArchiveMountService::ArchiveMountService(DvdFileSystemService& dvd) : _dvd(&dvd) {
++        ArchiveMountService* expected = nullptr;
++        if (!active_service.compare_exchange_strong(expected, this))
++            throw std::logic_error("An archive mount owner is already installed");
++    }
++    ArchiveMountService::~ArchiveMountService() {
++        compat::JkrHostAllocationScope host;
++        active_service.store(nullptr);
++        _resource_copies.clear();
++        _mounts.clear();
++    }
++    ArchiveMountService* ArchiveMountService::active() noexcept { return active_service.load(); }
++    DvdFileSystemService& ArchiveMountService::dvd() const noexcept { return *_dvd; }
++    std::filesystem::path ArchiveMountService::key(std::string_view path) const {
++        return _dvd->resolve(_dvd->normalize_disc_path_string(path)).lexically_normal();
++    }
++    JKRMemArchive* ArchiveMountService::mount(std::string_view path, JKRHeap* heap) {
++        compat::JkrHostAllocationScope host;
++        const auto resolved = key(path);
++        const std::lock_guard lock(_mutex);
++        if (const auto found = _mounts.find(resolved); found != _mounts.end()) return &found->second->archive();
++        auto mounted = std::shared_ptr<MountedArchive>(new MountedArchive(_dvd->retain_archive_for_path(resolved), resolved, heap));
++        auto* result = &mounted->archive();
++        _mounts.emplace(resolved, std::move(mounted));
++        return result;
++    }
++    std::shared_ptr<const MountedArchive> ArchiveMountService::retain(std::string_view path) const {
++        compat::JkrHostAllocationScope host;
++        const auto resolved = key(path);
++        const std::lock_guard lock(_mutex);
++        const auto found = _mounts.find(resolved);
++        return found == _mounts.end() ? nullptr : found->second;
++    }
++    JKRMemArchive* ArchiveMountService::receive(std::string_view path) const {
++        const auto mounted = retain(path);
++        return mounted ? &mounted->archive() : nullptr;
++    }
++    std::size_t ArchiveMountService::size() const {
++        const std::lock_guard lock(_mutex);
++        return _mounts.size();
++    }
++    void ArchiveMountService::remove_for_heap(JKRHeap* heap) {
++        compat::JkrHostAllocationScope host;
++        const std::lock_guard lock(_mutex);
++        for (auto it = _mounts.begin(); it != _mounts.end();) {
++            if (it->second->heap() == heap) it = _mounts.erase(it);
++            else ++it;
++        }
++    }
++    void* ArchiveMountService::copy_archive_resource(JKRArchive& archive, const char* path) {
++        compat::JkrHostAllocationScope host;
++        const auto* data = static_cast<const u8*>(archive.getResource(path));
++        const auto size = archive.getResSize(data);
++        if (!data || !size) return nullptr;
++        const std::lock_guard lock(_mutex);
++        auto& bytes = _resource_copies[{&archive, path}];
++        bytes.assign(data, data + size);
++        return bytes.data();
++    }
++}
+diff --git a/pc-port/src/runtime/ArchiveMountService.hpp b/pc-port/src/runtime/ArchiveMountService.hpp
+new file mode 100644
+--- /dev/null
++++ b/pc-port/src/runtime/ArchiveMountService.hpp
+@@ -0,0 +1,61 @@
++#pragma once
++
++#include <cstddef>
++#include <filesystem>
++#include <map>
++#include <memory>
++#include <mutex>
++#include <span>
++#include <string>
++#include <string_view>
++#include <vector>
++
++class JKRArchive;
++class JKRMemArchive;
++class JKRHeap;
++
++namespace smgpc::resource { class RarcArchive; }
++
++namespace smgpc::runtime {
++    class DvdFileSystemService;
++
++    class MountedArchive final {
++    public:
++        ~MountedArchive();
++        MountedArchive(const MountedArchive&) = delete;
++        MountedArchive& operator=(const MountedArchive&) = delete;
++        [[nodiscard]] JKRMemArchive& archive() const noexcept;
++        [[nodiscard]] JKRHeap* heap() const noexcept;
++        [[nodiscard]] const resource::RarcArchive& source() const noexcept;
++        [[nodiscard]] const std::filesystem::path& path() const noexcept;
++    private:
++        friend class ArchiveMountService;
++        MountedArchive(std::shared_ptr<const resource::RarcArchive>, std::filesystem::path, JKRHeap*);
++        struct Storage;
++        std::unique_ptr<Storage> _storage;
++    };
++
++    // One explicit VFS lifetime, installed by RuntimeContext. Headless owners
++    // can use the same service with an actual DvdFileSystemService.
++    class ArchiveMountService final {
++    public:
++        explicit ArchiveMountService(DvdFileSystemService&);
++        ~ArchiveMountService();
++        ArchiveMountService(const ArchiveMountService&) = delete;
++        ArchiveMountService& operator=(const ArchiveMountService&) = delete;
++        [[nodiscard]] JKRMemArchive* mount(std::string_view, JKRHeap*);
++        [[nodiscard]] JKRMemArchive* receive(std::string_view) const;
++        [[nodiscard]] std::shared_ptr<const MountedArchive> retain(std::string_view) const;
++        [[nodiscard]] std::size_t size() const;
++        void remove_for_heap(JKRHeap*);
++        [[nodiscard]] void* copy_archive_resource(JKRArchive&, const char*);
++        [[nodiscard]] DvdFileSystemService& dvd() const noexcept;
++        [[nodiscard]] static ArchiveMountService* active() noexcept;
++    private:
++        [[nodiscard]] std::filesystem::path key(std::string_view) const;
++        DvdFileSystemService* _dvd;
++        mutable std::mutex _mutex;
++        std::map<std::filesystem::path, std::shared_ptr<MountedArchive>> _mounts;
++        std::map<std::pair<const JKRArchive*, std::string>, std::vector<unsigned char>> _resource_copies;
++    };
++}
+diff --git a/pc-port/src/runtime/RuntimeContext.cpp b/pc-port/src/runtime/RuntimeContext.cpp
+--- a/pc-port/src/runtime/RuntimeContext.cpp
++++ b/pc-port/src/runtime/RuntimeContext.cpp
+@@ -505,7 +505,7 @@
+         resource::GameResourceRuntime &resources,
+         std::unique_ptr<JAudioPlaybackService> audio_playback,
+         RuntimeContextSceneServiceMode scene_service_mode)
+-        : _logger(logger), _window_service(window_service), _disc_files_root(resolve_disc_files_root()), _dvd(_disc_files_root),
++        : _logger(logger), _window_service(window_service), _disc_files_root(resolve_disc_files_root()), _dvd(_disc_files_root), _archive_mounts(_dvd),
+           _j_audio_playback(audio_playback != nullptr
+                                 ? std::move(audio_playback)
+                                 : std::make_unique<JAudioPlaybackService>(_dvd)),
+@@ -1107,6 +1107,9 @@
+         return _dvd.find_object_archive(object_name);
+     }
+ 
++    ArchiveMountService &RuntimeContext::archive_mounts() { return _archive_mounts; }
++    const ArchiveMountService &RuntimeContext::archive_mounts() const { return _archive_mounts; }
++
+     DvdFileSystemService &RuntimeContext::dvd() {
+         return _dvd;
+     }
+diff --git a/pc-port/src/runtime/RuntimeContext.hpp b/pc-port/src/runtime/RuntimeContext.hpp
+--- a/pc-port/src/runtime/RuntimeContext.hpp
++++ b/pc-port/src/runtime/RuntimeContext.hpp
+@@ -13,6 +13,7 @@
+ #include <revolution.h>
+ 
+ #include "Logger.hpp"
++#include "runtime/ArchiveMountService.hpp"
+ #include "RendererService.hpp"
+ #include "camera/CameraPose.hpp"
+ #include "compat/ResourceHolderCompat.hpp"
+@@ -191,6 +192,8 @@
+         [[nodiscard]] std::string_view current_stage_bgm_name() const;
+         [[nodiscard]] std::optional<std::filesystem::path> find_layout_archive(std::string_view layout_name) const;
+         [[nodiscard]] std::optional<std::filesystem::path> find_object_archive(std::string_view object_name) const;
++        [[nodiscard]] ArchiveMountService &archive_mounts();
++        [[nodiscard]] const ArchiveMountService &archive_mounts() const;
+         [[nodiscard]] DvdFileSystemService &dvd();
+         [[nodiscard]] const DvdFileSystemService &dvd() const;
+         [[nodiscard]] WiiIosService &ios();
+@@ -322,6 +325,7 @@
+         render::AuroraWindow &_window_service;
+         std::filesystem::path _disc_files_root;
+         DvdFileSystemService _dvd;
++        ArchiveMountService _archive_mounts;
+         std::unique_ptr<JAudioPlaybackService> _j_audio_playback;
+         smgpc::compat::ResourceHolderService _resource_holders;
+         std::unique_ptr<aurora::audio::DisabledObjectAudioService> _disabled_object_audio;
+diff --git a/pc-port/src/Game/Util/FileUtil.cpp b/pc-port/src/Game/Util/FileUtil.cpp
+deleted file mode 100644
+--- a/pc-port/src/Game/Util/FileUtil.cpp
++++ /dev/null
+@@ -1,335 +0,0 @@
+-#include "Game/Util/FileUtil.hpp"
+-
+-#include <algorithm>
+-#include <cstring>
+-#include <exception>
+-#include <filesystem>
+-#include <map>
+-#include <memory>
+-#include <string>
+-#include <vector>
+-
+-#include "runtime/RuntimeContext.hpp"
+-
+-namespace MR {
+-    namespace {
+-
+-        std::map< std::string, std::vector< u8 > > sLoadedFiles;
+-        std::map< std::string, std::unique_ptr< JKRMemArchive > > sMountedArchives;
+-        std::map< std::string, std::vector< u8 > > sArchiveResources;
+-        smgpc::runtime::RuntimeContext* sMountedArchiveRuntime = nullptr;
+-
+-        [[nodiscard]] smgpc::runtime::RuntimeContext* runtime() {
+-            return smgpc::runtime::RuntimeContext::try_instance();
+-        }
+-
+-        [[nodiscard]] std::string normalize_disc_string(const char* path) {
+-            if (path == nullptr) {
+-                return {};
+-            }
+-
+-            auto text = std::string(path);
+-            std::ranges::replace(text, '\\', '/');
+-            if (text.empty()) {
+-                return {};
+-            }
+-            if (text.front() != '/') {
+-                text.insert(text.begin(), '/');
+-            }
+-            return text;
+-        }
+-
+-        [[nodiscard]] bool dvd_exists(std::string_view path) {
+-            auto* context = runtime();
+-            if (context == nullptr || path.empty()) {
+-                return false;
+-            }
+-
+-            try {
+-                return context->dvd().exists(path);
+-            } catch (const std::exception&) {
+-                return false;
+-            }
+-        }
+-
+-        [[nodiscard]] std::string language_path_for(std::string_view path) {
+-            auto text = std::string(path);
+-            std::ranges::replace(text, '\\', '/');
+-            while (!text.empty() && text.front() == '/') {
+-                text.erase(text.begin());
+-            }
+-
+-            if (text.starts_with("LayoutData/")) {
+-                return "/KrKorean/" + text;
+-            }
+-
+-            return "/" + text;
+-        }
+-
+-        [[nodiscard]] std::string path_considering_language(const char* path, bool consider_language) {
+-            const auto normalized = normalize_disc_string(path);
+-            if (normalized.empty() || !consider_language) {
+-                return normalized;
+-            }
+-
+-            const auto localized = language_path_for(normalized);
+-            return dvd_exists(localized) ? localized : normalized;
+-        }
+-
+-        void copy_path(char* dst, u32 size, std::string_view path) {
+-            if (dst == nullptr || size == 0U) {
+-                return;
+-            }
+-
+-            const auto count = std::min< std::size_t >(path.size(), static_cast< std::size_t >(size - 1U));
+-            std::memcpy(dst, path.data(), count);
+-            dst[count] = '\0';
+-        }
+-
+-        [[nodiscard]] std::string with_arc_extension(const char* prefix) {
+-            auto text = std::string(prefix == nullptr ? "" : prefix);
+-            if (!text.ends_with(".arc")) {
+-                text += ".arc";
+-            }
+-            return text;
+-        }
+-
+-        [[nodiscard]] std::string mounted_archive_key(const char* path) {
+-            const auto normalized = normalize_disc_string(path);
+-            auto* context = runtime();
+-            if (context == nullptr) {
+-                return normalized;
+-            }
+-
+-            try {
+-                return context->dvd().resolve(normalized).generic_string();
+-            } catch (const std::exception&) {
+-                return normalized;
+-            }
+-        }
+-
+-        void sync_mounted_archive_runtime(smgpc::runtime::RuntimeContext* context) {
+-            if (sMountedArchiveRuntime == context) {
+-                return;
+-            }
+-
+-            sMountedArchives.clear();
+-            sArchiveResources.clear();
+-            sMountedArchiveRuntime = context;
+-        }
+-
+-        [[nodiscard]] bool copy_first_existing(char* dst, u32 size, std::initializer_list< std::string_view > candidates) {
+-            for (const auto candidate : candidates) {
+-                if (dvd_exists(candidate)) {
+-                    copy_path(dst, size, candidate);
+-                    return true;
+-                }
+-            }
+-
+-            return false;
+-        }
+-
+-    }  // namespace
+-
+-    bool isFileExist(const char* pFilePath, bool considerLanguage) {
+-        return dvd_exists(path_considering_language(pFilePath, considerLanguage));
+-    }
+-
+-    u32 getFileSize(const char* pFilePath, bool considerLanguage) {
+-        auto* context = runtime();
+-        if (context == nullptr) {
+-            return 0U;
+-        }
+-
+-        try {
+-            const auto path = context->dvd().resolve(path_considering_language(pFilePath, considerLanguage));
+-            std::error_code error{};
+-            const auto size = std::filesystem::file_size(path, error);
+-            if (error || size > static_cast< std::uintmax_t >(UINT32_MAX)) {
+-                return 0U;
+-            }
+-
+-            return static_cast< u32 >(size);
+-        } catch (const std::exception&) {
+-            return 0U;
+-        }
+-    }
+-
+-    s32 convertPathToEntrynumConsideringLanguage(const char* pFilePath) {
+-        const auto path = path_considering_language(pFilePath, true);
+-        return DVDConvertPathToEntrynum(path.c_str());
+-    }
+-
+-    void* loadToMainRAM(const char* pFilePath, u8* pDst, JKRHeap*, JKRDvdRipper::EAllocDirection) {
+-        auto* context = runtime();
+-        if (context == nullptr || pFilePath == nullptr) {
+-            return nullptr;
+-        }
+-
+-        const auto path = path_considering_language(pFilePath, true);
+-        try {
+-            auto bytes = context->dvd().read_file(path);
+-            if (pDst != nullptr) {
+-                std::memcpy(pDst, bytes.data(), bytes.size());
+-                return pDst;
+-            }
+-
+-            auto it = sLoadedFiles.insert_or_assign(path, std::move(bytes)).first;
+-            return it->second.empty() ? nullptr : it->second.data();
+-        } catch (const std::exception&) {
+-            return nullptr;
+-        }
+-    }
+-
+-    void loadAsyncToMainRAM(const char* pFilePath, u8* pDst, JKRHeap* pHeap, JKRDvdRipper::EAllocDirection allocDir) {
+-        (void)loadToMainRAM(pFilePath, pDst, pHeap, allocDir);
+-    }
+-
+-    JKRMemArchive* mountArchive(const char* pFilePath, JKRHeap*) {
+-        auto* context = runtime();
+-        if (context == nullptr || pFilePath == nullptr) {
+-            return nullptr;
+-        }
+-        sync_mounted_archive_runtime(context);
+-
+-        const auto key = mounted_archive_key(pFilePath);
+-        if (auto it = sMountedArchives.find(key); it != sMountedArchives.end()) {
+-            return it->second.get();
+-        }
+-
+-        try {
+-            auto& archive = context->dvd().archive(pFilePath);
+-            auto mounted = std::make_unique< JKRMemArchive >(archive);
+-            auto* result = mounted.get();
+-            sMountedArchives.emplace(key, std::move(mounted));
+-            return result;
+-        } catch (const std::exception&) {
+-            return nullptr;
+-        }
+-    }
+-
+-    void mountAsyncArchive(const char* pFilePath, JKRHeap* pHeap) {
+-        (void)mountArchive(pFilePath, pHeap);
+-    }
+-
+-    void mountAsyncArchiveByObjectOrLayoutName(const char* pFilePrefix, JKRHeap* pHeap) {
+-        char path[256]{};
+-        if (makeObjectArchiveFileNameFromPrefix(path, sizeof(path), pFilePrefix, false) ||
+-            makeLayoutArchiveFileNameFromPrefix(path, sizeof(path), pFilePrefix, false)) {
+-            (void)mountArchive(path, pHeap);
+-        }
+-    }
+-
+-    void* receiveFile(const char* pFilePath) {
+-        const auto path = path_considering_language(pFilePath, true);
+-        if (auto it = sLoadedFiles.find(path); it != sLoadedFiles.end()) {
+-            return it->second.empty() ? nullptr : it->second.data();
+-        }
+-
+-        return nullptr;
+-    }
+-
+-    JKRMemArchive* receiveArchive(const char* pFilePath) {
+-        sync_mounted_archive_runtime(runtime());
+-        if (auto it = sMountedArchives.find(mounted_archive_key(pFilePath)); it != sMountedArchives.end()) {
+-            return it->second.get();
+-        }
+-
+-        return nullptr;
+-    }
+-
+-    void receiveAllRequestedFile() {
+-    }
+-
+-    void createAndAddArchive(void*, JKRHeap*, const char*) {
+-    }
+-
+-    void getMountedArchiveAndHeap(const char* pFilePath, JKRArchive** ppArchive, JKRHeap** ppHeap) {
+-        if (ppArchive != nullptr) {
+-            *ppArchive = receiveArchive(pFilePath);
+-        }
+-        if (ppHeap != nullptr) {
+-            *ppHeap = nullptr;
+-        }
+-    }
+-
+-    void removeFileConsideringLanguage(const char* pFilePath) {
+-        sLoadedFiles.erase(path_considering_language(pFilePath, true));
+-    }
+-
+-    void removeResourceAndFileHolderIfIsEqualHeap(JKRHeap*) {
+-    }
+-
+-    void* decompressFileFromArchive(JKRArchive* pArchive, const char* pFilePath, JKRHeap*, int) {
+-        if (pArchive == nullptr || pFilePath == nullptr) {
+-            return nullptr;
+-        }
+-
+-        const auto* resource = static_cast< const u8* >(pArchive->getResource(pFilePath));
+-        const auto size = pArchive->getResSize(resource);
+-        if (resource == nullptr || size == 0U) {
+-            return nullptr;
+-        }
+-
+-        auto& bytes = sArchiveResources[std::string(pFilePath)];
+-        bytes.assign(resource, resource + size);
+-        return bytes.data();
+-    }
+-
+-    bool isLoadedFile(const char* pFilePath) {
+-        return sLoadedFiles.contains(path_considering_language(pFilePath, true));
+-    }
+-
+-    bool isMountedArchive(const char* pFilePath) {
+-        return sMountedArchives.contains(mounted_archive_key(pFilePath));
+-    }
+-
+-    bool isLoadedObjectOrLayoutArchive(const char* pFilePrefix) {
+-        char path[256]{};
+-        return (makeObjectArchiveFileNameFromPrefix(path, sizeof(path), pFilePrefix, false) && isMountedArchive(path)) ||
+-               (makeLayoutArchiveFileNameFromPrefix(path, sizeof(path), pFilePrefix, false) && isMountedArchive(path));
+-    }
+-
+-    void makeFileNameConsideringLanguage(char* pDst, u32 size, const char* pFilePath) {
+-        copy_path(pDst, size, path_considering_language(pFilePath, true));
+-    }
+-
+-    bool makeObjectArchiveFileName(char* pDst, u32 size, const char* pFileName) {
+-        const auto name = std::string(pFileName == nullptr ? "" : pFileName);
+-        const auto object = "/ObjectData/" + name;
+-        const auto map_parts = "/MapPartsData/" + name;
+-        const auto raw = normalize_disc_string(pFileName);
+-        return copy_first_existing(pDst, size, {object, map_parts, raw});
+-    }
+-
+-    bool makeObjectArchiveFileNameFromPrefix(char* pDst, u32 size, const char* pFilePrefix, bool) {
+-        const auto name = with_arc_extension(pFilePrefix);
+-        return makeObjectArchiveFileName(pDst, size, name.c_str());
+-    }
+-
+-    bool makeLayoutArchiveFileName(char* pDst, u32 size, const char* pFileName) {
+-        const auto name = std::string(pFileName == nullptr ? "" : pFileName);
+-        const auto localized = "/KrKorean/LayoutData/" + name;
+-        const auto base = "/LayoutData/" + name;
+-        const auto raw = normalize_disc_string(pFileName);
+-        return copy_first_existing(pDst, size, {localized, base, raw});
+-    }
+-
+-    bool makeLayoutArchiveFileNameFromPrefix(char* pDst, u32 size, const char* pFilePrefix, bool fallback) {
+-        const auto name = with_arc_extension(pFilePrefix);
+-        if (makeLayoutArchiveFileName(pDst, size, name.c_str())) {
+-            return true;
+-        }
+-
+-        if (fallback) {
+-            copy_path(pDst, size, "/LayoutData/" + name);
+-        }
+-        return false;
+-    }
+-
+-    void makeScenarioArchiveFileName(char* pDst, u32 size, const char* pStageName) {
+-        const auto stage = std::string(pStageName == nullptr ? "" : pStageName);
+-        copy_path(pDst, size, "/StageData/" + stage + "/" + stage + "Scenario.arc");
+-    }
+-
+-}  // namespace MR
+diff --git a/pc-port/src/compat/GameEventFlagTableSource.cpp b/pc-port/src/compat/GameEventFlagTableSource.cpp
+deleted file mode 100644
+--- a/pc-port/src/compat/GameEventFlagTableSource.cpp
++++ /dev/null
+@@ -1,53 +0,0 @@
+-#include "Game/System/GameEventFlagTable.hpp"
+-#include "Game/Util/HashUtil.hpp"
+-#include "Game/Util/JMapInfo.hpp"
+-#include "Game/Util/SingletonHolder.hpp"
+-#include "Game/Util/StringUtil.hpp"
+-
+-#include <algorithm>
+-#include <cstdio>
+-#include <cstring>
+-#include <stdexcept>
+-
+-// The retail flag table itself is real source data and is useful without the
+-// embedded GalaxyID BCSV.  Fence only the one API which needs that unavailable
+-// database so it cannot silently answer from an empty replacement.
+-struct JMapData final {};
+-
+-namespace smgpc::compat::story_sequence_detail {
+-    [[noreturn]] inline void unavailable_galaxy_id_database() {
+-        throw std::runtime_error("GameEventFlagTable galaxy dependency queries require the real GalaxyID BCSV");
+-    }
+-
+-    class UnavailableGalaxyIdIter final {
+-    public:
+-        template <typename T>
+-        bool getValue(const char*, T*) const {
+-            unavailable_galaxy_id_database();
+-        }
+-    };
+-
+-    class UnavailableGalaxyIdInfo final {
+-    public:
+-        bool attach(const void*) {
+-            unavailable_galaxy_id_database();
+-        }
+-
+-        template <typename T>
+-        UnavailableGalaxyIdIter findElement(const char*, T, int) const {
+-            unavailable_galaxy_id_database();
+-        }
+-
+-        s32 searchItemInfo(const char*) const {
+-            unavailable_galaxy_id_database();
+-        }
+-    };
+-}  // namespace smgpc::compat::story_sequence_detail
+-
+-extern const JMapData GalaxyIDBCSV{};
+-
+-#define JMapInfo smgpc::compat::story_sequence_detail::UnavailableGalaxyIdInfo
+-#define JMapInfoIter smgpc::compat::story_sequence_detail::UnavailableGalaxyIdIter
+-#include "../../../src/Game/System/GameEventFlagTable.cpp"
+-#undef JMapInfoIter
+-#undef JMapInfo
+diff --git a/pc-port/tests/OriginalScenarioCatalogTests.cpp b/pc-port/tests/OriginalScenarioCatalogTests.cpp
+new file mode 100644
+--- /dev/null
++++ b/pc-port/tests/OriginalScenarioCatalogTests.cpp
+@@ -0,0 +1,184 @@
++#include "runtime/ArchiveMountService.hpp"
++#include "runtime/RuntimeServices.hpp"
++#include "resource/GameResourceRuntime.hpp"
++#include "resource/JMapResource.hpp"
++#include "resource/BcsvTable.hpp"
++#include "resource/RarcArchive.hpp"
++#include "compat/ActorRuntimeRegistry.hpp"
++#include "Game/System/ScenarioDataParser.hpp"
++#include "Game/System/StationedArchiveLoader.hpp"
++#include "Game/System/GalaxyNameSortTable.hpp"
++#include "Game/System/GameEventFlagTable.hpp"
++#include "Game/Util/FileUtil.hpp"
++#include "JSystem/JKernel/JKRHeap.hpp"
++#include <aurora/aurora.h>
++#include <aurora/dvd.h>
++#include <cstdlib>
++#include <iostream>
++#include <limits>
++#include <optional>
++#include <cstring>
++#include <stdexcept>
++
++namespace aurora { extern AuroraConfig g_config; }
++namespace {
++    void require(bool condition, const char* message) {
++        if (!condition) throw std::runtime_error(message);
++    }
++    std::vector<std::string> scenario_paths(smgpc::runtime::DvdFileSystemService& dvd) {
++        std::vector<std::string> result;
++        for (const auto& entry : dvd.directory_entries("/StageData")) {
++            if (!entry.is_directory) continue;
++            char path[256];
++            MR::makeScenarioArchiveFileName(path, sizeof(path), entry.name.c_str());
++            if (dvd.exists(path)) result.emplace_back(path);
++        }
++        return result;
++    }
++}
++
++int main() {
++    try {
++        const char* disc = std::getenv("SMGPC_REAL_DISC");
++        require(disc && aurora_dvd_open(disc), "fixture requires the supplied actual disc");
++        struct DiscGuard { ~DiscGuard() { aurora_dvd_close(); } } disc_guard;
++        DVDInit();
++        aurora::g_config.mem1Size = 24U * 1024U * 1024U;
++        smgpc::resource::GameResourceRuntime process;
++        smgpc::runtime::DvdFileSystemService dvd({});
++        const auto paths = scenario_paths(dvd);
++        require(!paths.empty() && paths.size() <= 64, "authored catalog must fit original parser storage");
++        const auto name_count = smgpc::compat::name_obj_runtime_state_count();
++
++        require(GalaxyNameSortTable::getGalaxySortIndex("HeavensDoorGalaxy") == 6,
++                "original GalaxyID row order includes the preceding empty spacer");
++        require(GalaxyNameSortTable::getGalaxySortIndex("EggStarGalaxy") == 8,
++                "original second spacer is retained");
++        require(GalaxyNameSortTable::getGalaxySortIndex("") == 5,
++                "original findElement returns the first empty spacer row");
++        require(GalaxyNameSortTable::getGalaxySortIndex("NoSuchAuthoredGalaxy") == -1,
++                "unknown galaxy retains original sort result");
++        std::cout << "PASS exact embedded table and original sort query\n";
++
++        for (unsigned cycle = 0; cycle < 2; ++cycle) {
++            auto domain = smgpc::compat::JkrAllocationDomain::create(process.host_heaps(), 8U * 1024U * 1024U);
++            std::weak_ptr<JMapInfo::DataCompat> last_map;
++            {
++                smgpc::runtime::ArchiveMountService mounts(dvd);
++                require(MR::receiveArchive(paths.front().c_str()) == nullptr && mounts.size() == 0,
++                        "receive does not silently mount an archive");
++                StationedArchiveLoader::loadScenarioData(&domain->heap());
++                require(mounts.size() == paths.size(), "original preloader mounts every discovered scenario archive");
++                auto first = mounts.retain(paths.front());
++                require(first && &first->archive() == MR::mountArchive(paths.front().c_str(), nullptr),
++                        "repeat mount retains actual archive identity and first heap");
++                JKRArchive* archive = nullptr;
++                JKRHeap* heap = nullptr;
++                MR::getMountedArchiveAndHeap(paths.front().c_str(), &archive, &heap);
++                require(archive == &first->archive() && heap == &domain->heap(), "original requested heap provenance survives remount");
++
++                std::unique_ptr<ScenarioDataParser> parser;
++                {
++                    smgpc::compat::JkrAllocationScope original(domain);
++                    parser = std::make_unique<ScenarioDataParser>("Actual scenario catalog fixture");
++                    parser->initWithoutIter();
++                }
++                require(parser->mScenarioData.size() == static_cast<s32>(paths.size()), "actual parser enumerates complete authored catalog");
++                auto previous_index = std::numeric_limits<s32>::min();
++                std::size_t zones = 0;
++                for (s32 i = 0; i < parser->mScenarioData.size(); ++i) {
++                    const auto* data = parser->getScenarioData(i);
++                    const auto sort_index = GalaxyNameSortTable::getGalaxySortIndex(data->mGalaxyName);
++                    require(previous_index <= sort_index, "actual parser performs original GalaxyID ordering");
++                    previous_index = sort_index;
++                    require(data->getZoneNum() == data->mZoneList->getNumEntries(), "zone count is full retained authored ZoneList");
++                    for (s32 zone = 0; zone < data->getZoneNum(); ++zone)
++                        require(data->getZoneName(zone) != nullptr, "every authored zone has a readable original name");
++                    zones += data->getZoneNum();
++                    last_map = data->mZoneList->mData;
++                }
++                const auto* gateway = parser->getScenarioData("heavensdoorgalaxy");
++                require(gateway == parser->getScenarioData("HeavensDoorGalaxy"),
++                        "case-insensitive original lookup identifies the same authored object");
++                require(gateway != nullptr, "real disc catalog contains the gateway galaxy");
++                char gateway_path[256];
++                MR::makeScenarioArchiveFileName(gateway_path, sizeof(gateway_path), gateway->mGalaxyName);
++                const auto gateway_mount = mounts.retain(gateway_path);
++                const auto raw = smgpc::resource::BcsvTable::from_bytes(
++                    gateway_mount->source().resource_data("/ScenarioData.bcsv"));
++                s32 visible_scenarios = 0;
++                s32 power_stars = 0;
++                for (std::size_t row = 0; row < raw.entry_count(); ++row) {
++                    require(raw.get_s32(row, "ScenarioNo") == static_cast<s32>(row + 1),
++                            "authored scenario numbers cover original count traversal");
++                    visible_scenarios += raw.get_u32(row, "IsHidden").value_or(0) == 0;
++                    power_stars += raw.get_u32(row, "PowerStarId").value_or(0) != 0;
++                }
++                require(gateway->getScenarioNum() == visible_scenarios && gateway->getPowerStarNum() == power_stars,
++                        "original hidden/star counts agree with independently decoded authored rows");
++                std::cout << "AUTHORED gateway rows=" << raw.entry_count()
++                          << " visible=" << visible_scenarios << " stars=" << power_stars
++                          << " zones=" << gateway->getZoneNum() << '\n';
++                const auto gateway_zone_count = gateway->getZoneNum();
++                require(gateway_zone_count > 0, "gateway has an actual zone catalog");
++
++                MR::removeResourceAndFileHolderIfIsEqualHeap(&domain->heap());
++                require(mounts.size() == 0 && MR::receiveArchive(paths.front().c_str()) == nullptr,
++                        "heap retirement removes mount publication");
++                require(gateway->getZoneNum() == gateway_zone_count && gateway->getZoneName(0),
++                        "attached original tables retain metadata after mount retirement");
++                first.reset();
++                parser.reset();
++                require(smgpc::compat::name_obj_runtime_state_count() == name_count, "actual parser unregisters before its heap retires");
++                std::cout << "PASS catalog cycle=" << cycle << " archives=" << paths.size() << " authored zones=" << zones << '\n';
++            }
++            require(smgpc::runtime::ArchiveMountService::active() == nullptr, "mount service publication retires with owner");
++            domain.reset();
++            require(last_map.expired(), "original JKR disposal releases heap-owned JMap metadata");
++        }
++        {
++            auto domain = smgpc::compat::JkrAllocationDomain::create(process.host_heaps(), 4096);
++            std::optional<NameObj> object;
++            std::vector<NameObj*> snapshot;
++            constexpr char changed_name[] = "A retained name update longer than a native string small buffer";
++            {
++                smgpc::compat::JkrAllocationScope original(domain);
++                const auto marker = smgpc::compat::mark_name_obj_runtime_registrations();
++                object.emplace("Stack-owned object created while an original Game heap is current");
++                object->setName(changed_name);
++                snapshot = smgpc::compat::snapshot_name_obj_runtime_objects_since(marker);
++            }
++            domain.reset();
++            require(std::strcmp(object->getName(), changed_name) == 0,
++                    "native name-update storage survives the caller Game heap");
++            require(snapshot.size() == 1 && snapshot.front() == &*object,
++                    "native registration snapshots survive the caller Game heap");
++            object.reset();
++            require(smgpc::compat::name_obj_runtime_state_count() == name_count,
++                    "retained host metadata removes precisely its NameObj identity");
++        }
++        std::cout << "PASS name updates and registration snapshots escape Game heap lifetime\n";
++        {
++            auto domain = smgpc::compat::JkrAllocationDomain::create(process.host_heaps(), 2048);
++            smgpc::runtime::ArchiveMountService mounts(dvd);
++            StationedArchiveLoader::loadScenarioData(&domain->heap());
++            bool allocation_failed = false;
++            try {
++                smgpc::compat::JkrAllocationScope original(domain);
++                auto parser = std::make_unique<ScenarioDataParser>("Constrained actual parser construction");
++            } catch (const std::bad_alloc&) {
++                allocation_failed = true;
++            }
++            require(allocation_failed, "constrained real Game heap exercises partial original parser construction");
++            require(smgpc::compat::name_obj_runtime_state_count() == name_count,
++                    "failed original parser construction unregisters its NameObj base");
++            mounts.remove_for_heap(&domain->heap());
++            domain.reset();
++            require(mounts.size() == 0, "partial constructor allocations retire with the real original heap");
++        }
++        std::cout << "PASS actual parser allocation-failure unwind and heap retirement\n";
++    } catch (const std::exception& error) {
++        std::cerr << "FAIL " << error.what() << '\n';
++        return 1;
++    }
++}

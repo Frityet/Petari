@@ -1,0 +1,169 @@
+--- a/pc-port/src/JSystem/JParticle/JPAParticle.cpp
++++ b/pc-port/src/JSystem/JParticle/JPAParticle.cpp
+@@ -1,3 +1,4 @@
++#include <aurora/ppc_math.hpp>
+ #include "JSystem/JParticle/JPAParticle.hpp"
+ #include "JSystem/JParticle/JPABaseShape.hpp"
+ #include "JSystem/JParticle/JPAChildShape.hpp"
+@@ -97,8 +98,8 @@
+ 
+     if (esp != NULL) {
+         if (esp->isEnableRotateAnm()) {
+-            mRotateAngle = esp->getRotateInitAngle() + esp->getRotateRndmAngle() * emtr->get_r_zh();
+-            mRotateSpeed = esp->getRotateInitSpeed() * (esp->getRotateRndmSpeed() * emtr->get_r_zp() + 1.0f);
++            mRotateAngle = aurora::ppc::truncate_u16(esp->getRotateInitAngle() + esp->getRotateRndmAngle() * emtr->get_r_zh());
++            mRotateSpeed = aurora::ppc::truncate_s16(esp->getRotateInitSpeed() * (esp->getRotateRndmSpeed() * emtr->get_r_zp() + 1.0f));
+             mRotateSpeed = emtr->get_r_zp() < esp->getRotateDirection() ? mRotateSpeed : (s16)-mRotateSpeed;
+         } else {
+             mRotateAngle = 0;
+--- a/pc-port/src/JSystem/JParticle/JPADynamicsBlock.cpp
++++ b/pc-port/src/JSystem/JParticle/JPADynamicsBlock.cpp
+@@ -1,3 +1,4 @@
++#include <aurora/ppc_math.hpp>
+ #include "JSystem/JParticle/JPADynamicsBlock.hpp"
+ #include "JSystem/JMath/JMATrigonometric.hpp"
+ #include "JSystem/JParticle/JPAEmitter.hpp"
+@@ -25,11 +26,11 @@
+     f32 distance;
+ 
+     if (work->mpEmtr->checkFlag(JPADynFlag_FixedInterval)) {
+-        theta = (s16)((work->mVolumeEmitIdx << 16) / work->mEmitCount);
+-        theta = theta * work->mVolumeSweep;
++        theta = aurora::ppc::narrow_s16(aurora::ppc::divide_s32(aurora::ppc::shift_left_s32(work->mVolumeEmitIdx, 16), work->mEmitCount));
++        theta = aurora::ppc::truncate_s16(theta * work->mVolumeSweep);
+         work->mVolumeEmitIdx++;
+     } else {
+-        theta = work->mVolumeSweep * work->mpEmtr->get_r_ss();
++        theta = aurora::ppc::truncate_s16(work->mVolumeSweep * work->mpEmtr->get_r_ss());
+     }
+ 
+     distance = work->mpEmtr->get_r_f();
+@@ -53,9 +54,9 @@
+ static void JPAVolumeSphere(JPAEmitterWorkData* work) {
+     s16 phi, theta;
+     if (work->mpEmtr->checkFlag(JPADynFlag_FixedInterval)) {
+-        phi = (u16)(work->mVolumeX * 0x8000 / (work->mDivNumber - 1) + 0x4000);
+-        f32 tmp = (u16)(work->mVolumeAngleNum * 0x10000 / (work->mVolumeAngleMax - 1));
+-        theta = tmp * work->mVolumeSweep + 0x8000;
++        phi = aurora::ppc::narrow_s16(static_cast<u32>(aurora::ppc::divide_s32(aurora::ppc::shift_left_s32(work->mVolumeX, 15), work->mDivNumber - 1)) + 0x4000U);
++        f32 tmp = static_cast<u16>(aurora::ppc::divide_s32(aurora::ppc::shift_left_s32(work->mVolumeAngleNum, 16), work->mVolumeAngleMax - 1));
++        theta = aurora::ppc::truncate_s16(tmp * work->mVolumeSweep + 0x8000);
+         work->mVolumeAngleNum++;
+         if (work->mVolumeAngleNum == work->mVolumeAngleMax) {
+             work->mVolumeAngleNum = 0;
+@@ -68,7 +69,7 @@
+         }
+     } else {
+         phi = work->mpEmtr->get_r_ss() >> 1;
+-        theta = work->mVolumeSweep * work->mpEmtr->get_r_ss();
++        theta = aurora::ppc::truncate_s16(work->mVolumeSweep * work->mpEmtr->get_r_ss());
+     }
+ 
+     f32 rnd = work->mpEmtr->get_r_f();
+@@ -82,7 +83,7 @@
+ }
+ 
+ static void JPAVolumeCylinder(JPAEmitterWorkData* work) {
+-    s16 theta = work->mVolumeSweep * work->mpEmtr->get_r_ss();
++    s16 theta = aurora::ppc::truncate_s16(work->mVolumeSweep * work->mpEmtr->get_r_ss());
+     f32 rnd = work->mpEmtr->get_r_f();
+     if (work->mpEmtr->checkFlag(JPADynFlag_FixedDensity)) {
+         rnd = 1.0f - rnd * rnd;
+@@ -94,7 +95,7 @@
+ }
+ 
+ static void JPAVolumeTorus(JPAEmitterWorkData* work) {
+-    s16 theta = work->mVolumeSweep * work->mpEmtr->get_r_ss();
++    s16 theta = aurora::ppc::truncate_s16(work->mVolumeSweep * work->mpEmtr->get_r_ss());
+     s16 phi = work->mpEmtr->get_r_ss();
+     f32 rad = work->mVolumeSize * work->mVolumeMinRad;
+     work->mVolumeCalcData.mVelAxis.set(rad * JMASSin(theta) * JMASCos(phi), rad * JMASSin(phi), rad * JMASCos(theta) * JMASCos(phi));
+--- a/pc-port/src/compat/J3DAnimationInterpolation.hpp
++++ b/pc-port/src/compat/J3DAnimationInterpolation.hpp
+@@ -3,9 +3,8 @@
+ #include "JSystem/J3DGraphAnimator/J3DAnimation.hpp"
+ #include "JSystem/JMath/JMath.hpp"
+ 
+-#include <bit>
++#include <aurora/ppc_math.hpp>
+ #include <cmath>
+-#include <limits>
+ 
+ // Shared original interpolation and PPC conversion boundary used by the
+ // transform and material animation samplers.
+@@ -13,25 +12,17 @@
+     // fctiwz truncates, saturates finite overflow, and returns INT_MIN for NaN.
+     // Preserve its integer result without relying on native out-of-range casts.
+     s32 truncatePpcInteger(f32 value) {
+-        if (std::isnan(value) || value < -2147483648.0f) {
+-            return std::numeric_limits<s32>::min();
+-        }
+-        if (value >= 2147483648.0f) {
+-            return std::numeric_limits<s32>::max();
+-        }
+-        return static_cast<s32>(value);
++        return aurora::ppc::truncate_s32(value);
+     }
+ 
+     s16 narrowPpcRotation(u32 value) {
+-        return std::bit_cast<s16>(static_cast<u16>(value));
++        return aurora::ppc::narrow_s16(value);
+     }
+ 
+     // slw tests bit 5 and uses bits 0..4 as the unsigned word shift count;
+     // sth then stores only the low halfword, including for negative rotations.
+     s16 shiftPpcRotation(s32 value, int shift) {
+-        const u32 amount = static_cast<u32>(shift);
+-        const u32 shifted = (amount & 0x20U) != 0 ? 0U : static_cast<u32>(value) << (amount & 0x1FU);
+-        return narrowPpcRotation(shifted);
++        return aurora::ppc::narrow_s16(aurora::ppc::shift_left_s32(value, static_cast<u32>(shift)));
+     }
+ }  // namespace
+ 
+--- /dev/null
++++ b/pc-port/aurora/include/aurora/ppc_math.hpp
+@@ -0,0 +1,44 @@
++#pragma once
++
++#include <bit>
++#include <cmath>
++#include <cstdint>
++#include <limits>
++
++namespace aurora::ppc {
++// Gekko fctiwz's integer word result. Emulated FPSCR/CR state is outside this API.
++inline std::int32_t truncate_s32(double value) {
++  if (std::isnan(value) || value < -2147483648.0) {
++    return std::numeric_limits<std::int32_t>::min();
++  }
++  if (value >= 2147483648.0) {
++    return std::numeric_limits<std::int32_t>::max();
++  }
++  return static_cast<std::int32_t>(value);
++}
++
++// sth preserves only the low halfword; extsh interprets that halfword as signed.
++inline std::int16_t narrow_s16(std::uint32_t value) {
++  return std::bit_cast<std::int16_t>(static_cast<std::uint16_t>(value));
++}
++inline std::uint16_t truncate_u16(double value) {
++  return static_cast<std::uint16_t>(static_cast<std::uint32_t>(truncate_s32(value)));
++}
++inline std::int16_t truncate_s16(double value) {
++  return narrow_s16(static_cast<std::uint32_t>(truncate_s32(value)));
++}
++
++// Gekko divw's result for zero divisors and signed overflow follows the dividend sign.
++inline std::int32_t divide_s32(std::int32_t numerator, std::int32_t denominator) {
++  if (denominator == 0 || (numerator == std::numeric_limits<std::int32_t>::min() && denominator == -1)) {
++    return numerator < 0 ? -1 : 0;
++  }
++  return numerator / denominator;
++}
++
++// slw consumes the low six count bits; bit 5 clears the result.
++inline std::int32_t shift_left_s32(std::int32_t value, std::uint32_t count) {
++  const std::uint32_t shifted = (count & 0x20U) ? 0U : static_cast<std::uint32_t>(value) << (count & 0x1fU);
++  return std::bit_cast<std::int32_t>(shifted);
++}
++} // namespace aurora::ppc

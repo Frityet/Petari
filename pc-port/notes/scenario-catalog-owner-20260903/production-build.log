@@ -1,0 +1,957 @@
+[0m[38;5;2;1m[ 20%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/Game/System/ScenarioDataParser.cpp[0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/layout/LayoutRuntime.cpp[0m
+[0m[38;5;2;1m[ 34%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/layout/LayoutManagerCompat.cpp[0m
+[0m[38;5;2;1m[ 35%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/resource/EmbeddedGameTables.cpp[0m
+[0m[38;5;2;1m[ 35%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/resource/GameResourceRuntime.cpp[0m
+[0m[38;5;2;1m[ 37%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/runtime/ArchiveMountService.cpp[0m
+[0m[38;5;2;1m[ 37%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/runtime/SceneScheduler.cpp[0m
+[0m[38;5;2;1m[ 37%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/runtime/rfl/RVLFaceLib.cpp[0m
+[0m[38;5;3;1mIn file included from src/resource/EmbeddedGameTables.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/resource/EmbeddedGameTables.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 37%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/runtime/RuntimeContext.cpp[0m
+[0m[38;5;3;1mIn file included from src/resource/GameResourceRuntime.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/resource/GameResourceRuntime.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 38%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/runtime/WiiVideoService.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/System/ScenarioDataParser.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/Game/System/ScenarioDataParser.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 38%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/runtime/ParityTrace.cpp[0m
+[0m[38;5;3;1mIn file included from src/runtime/ArchiveMountService.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/runtime/ArchiveMountService.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 38%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/runtime/WiiPlatformService.cpp[0m
+[0m[38;5;3;1mIn file included from src/runtime/rfl/RVLFaceLib.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/runtime/rfl/RVLFaceLib.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 38%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/runtime/jut/JutVideo.cpp[0m
+[0m[38;5;3;1mIn file included from src/runtime/WiiVideoService.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/runtime/WiiVideoService.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 38%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/runtime/ScenarioCatalogOwnership.cpp[0m
+[0m[38;5;3;1mIn file included from src/layout/LayoutManagerCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/layout/LayoutManagerCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 39%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/scene/StageHostScene.cpp[0m
+[0m[38;5;3;1mIn file included from src/runtime/SceneScheduler.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/runtime/SceneScheduler.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 39%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/scene/TitleFileSelectRoute.cpp[0m
+[0m[38;5;3;1mIn file included from src/runtime/WiiPlatformService.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/runtime/WiiPlatformService.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 40%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/scene/SceneExecutionService.cpp[0m
+[0m[38;5;3;1mIn file included from src/runtime/jut/JutVideo.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/runtime/jut/JutVideo.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 40%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/scene/TitleFileSelectVisual.cpp[0m
+[0m[38;5;3;1mIn file included from src/runtime/ScenarioCatalogOwnership.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/runtime/ScenarioCatalogOwnership.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 40%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/scene/NameObjLifecycleService.cpp[0m
+[0m[38;5;3;1mIn file included from src/runtime/RuntimeContext.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/runtime/RuntimeContext.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 40%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/scene/SequenceBootService.cpp[0m
+[0m[38;5;3;1mIn file included from src/layout/LayoutRuntime.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/layout/LayoutRuntime.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 40%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/scene/GameSystemService.cpp[0m
+[0m[38;5;3;1mIn file included from src/scene/TitleFileSelectRoute.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/scene/TitleFileSelectRoute.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 41%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/scene/GameSystemSceneControllerService.cpp[0m
+[0m[38;5;3;1mIn file included from src/scene/StageHostScene.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/scene/StageHostScene.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 41%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/scene/GatewayDemoScene.cpp[0m
+[0m[38;5;3;1mIn file included from src/scene/SceneExecutionService.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/scene/SceneExecutionService.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 42%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/scene/SceneLifecycleService.cpp[0m
+[0m[38;5;3;1mIn file included from src/runtime/ParityTrace.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/runtime/ParityTrace.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 42%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/scene/SceneTransitionRequestService.cpp[0m
+[0m[38;5;3;1mIn file included from src/scene/TitleFileSelectVisual.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/scene/TitleFileSelectVisual.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 42%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/scene/FileSelectFarVisual.cpp[0m
+[0m[38;5;3;1mIn file included from src/scene/NameObjLifecycleService.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/scene/NameObjLifecycleService.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 43%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/ActorRuntimeRegistry.cpp[0m
+[0m[38;5;3;1mIn file included from src/scene/SequenceBootService.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/scene/SequenceBootService.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 45%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/AudioFacadeCompat.cpp[0m
+[0m[38;5;3;1mIn file included from src/scene/GameSystemService.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/scene/GameSystemService.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 46%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/FileUtilCompat.cpp[0m
+[0m[38;5;3;1mIn file included from src/scene/GameSystemSceneControllerService.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/scene/GameSystemSceneControllerService.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 46%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/OriginalScenarioPreload.cpp[0m
+[0m[38;5;3;1mIn file included from src/scene/SceneLifecycleService.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/scene/SceneLifecycleService.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 47%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/OriginalArchiveString.cpp[0m
+[0m[38;5;3;1mIn file included from src/scene/SceneTransitionRequestService.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/scene/SceneTransitionRequestService.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 48%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/DemoCompat.cpp[0m
+[0m[38;5;3;1mIn file included from src/scene/FileSelectFarVisual.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/scene/FileSelectFarVisual.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 48%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/NPCActorRuntimeCompat.cpp[0m
+[0m[38;5;3;1mIn file included from src/scene/GatewayDemoScene.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/scene/GatewayDemoScene.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 48%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/StageScenarioMetadataResolver.cpp[0m
+[0m[38;5;3;1mIn file included from src/compat/OriginalScenarioPreload.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/compat/OriginalScenarioPreload.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 49%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/GameActorSensorCompat.cpp[0m
+[0m[38;5;3;1mIn file included from src/compat/OriginalArchiveString.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/compat/OriginalArchiveString.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 50%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/MessageUtilCompat.cpp[0m
+[0m[38;5;3;1mIn file included from src/compat/AudioFacadeCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/compat/AudioFacadeCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 52%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/CameraUtilCompat.cpp[0m
+[0m[38;5;3;1mIn file included from src/compat/ActorRuntimeRegistry.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/compat/ActorRuntimeRegistry.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 53%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/SequenceUtilCompat.cpp[0m
+[0m[38;5;3;1mIn file included from src/compat/FileUtilCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/compat/FileUtilCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 55%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/FixedPositionCompat.cpp[0m
+[0m[38;5;3;1mIn file included from src/compat/DemoCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/compat/DemoCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 55%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/PlanetMapRuntimeCompat.cpp[0m
+[0m[38;5;3;1mIn file included from src/compat/NPCActorRuntimeCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/compat/NPCActorRuntimeCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 55%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/NameObjExecuteCompat.cpp[0m
+[0m[38;5;3;1mIn file included from src/compat/StageScenarioMetadataResolver.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/compat/StageScenarioMetadataResolver.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 55%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/StorySequenceExecutorSource.cpp[0m
+[0m[38;5;3;1mIn file included from src/compat/MessageUtilCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/compat/MessageUtilCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 55%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/SceneMovementCompat.cpp[0m
+[0m[38;5;3;1mIn file included from src/compat/GameActorSensorCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/compat/GameActorSensorCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 56%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/SoundUtilCompat.cpp[0m
+[0m[38;5;3;1mIn file included from src/compat/FixedPositionCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/compat/FixedPositionCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 56%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/LiveActorUtilCompat.cpp[0m
+[0m[38;5;3;1mIn file included from src/compat/SequenceUtilCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/compat/SequenceUtilCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 56%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/TalkRuntime.cpp[0m
+[0m[38;5;3;1mIn file included from src/compat/CameraUtilCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/compat/CameraUtilCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 59%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/StorySequencePlatformCompat.cpp[0m
+[0m[38;5;3;1mIn file included from src/compat/StorySequenceExecutorSource.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/compat/StorySequenceExecutorSource.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 61%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/ScreenUtilCompat.cpp[0m
+[0m[38;5;3;1mIn file included from src/compat/StorySequencePlatformCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/compat/StorySequencePlatformCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 63%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/ScenarioDataParserAccess.cpp[0m
+[0m[38;5;3;1mIn file included from src/compat/PlanetMapRuntimeCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/compat/PlanetMapRuntimeCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 63%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/DemoSceneRuntime.cpp[0m
+[0m[38;5;3;1mIn file included from src/compat/NameObjExecuteCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/compat/NameObjExecuteCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 64%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/InformationMessageCompat.cpp[0m
+[0m[38;5;3;1mIn file included from src/compat/ScenarioDataParserAccess.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/compat/ScenarioDataParserAccess.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 64%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/SphereSelectorRuntimeCompat.cpp[0m
+[0m[38;5;3;1mIn file included from src/compat/SceneMovementCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/compat/SceneMovementCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 66%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/GameRuntimeCompat.cpp[0m
+[0m[38;5;3;1mIn file included from src/compat/SoundUtilCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/compat/SoundUtilCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 67%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/PlayerUtilCompat.cpp[0m
+[0m[38;5;3;1mIn file included from src/compat/LiveActorUtilCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/compat/LiveActorUtilCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 68%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/ResourceHolderCompat.cpp[0m
+[0m[38;5;3;1mIn file included from src/compat/ScreenUtilCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/compat/ScreenUtilCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 71%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/render/light/LightData.cpp[0m
+[0m[38;5;3;1mIn file included from src/compat/TalkRuntime.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/compat/TalkRuntime.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;3;1mIn file included from src/compat/InformationMessageCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/compat/InformationMessageCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;3;1mIn file included from src/compat/SphereSelectorRuntimeCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/compat/SphereSelectorRuntimeCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;3;1mIn file included from src/compat/GameRuntimeCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/compat/GameRuntimeCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;3;1mIn file included from src/compat/ResourceHolderCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/compat/ResourceHolderCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;3;1mIn file included from src/compat/PlayerUtilCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/compat/PlayerUtilCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;3;1mIn file included from src/compat/DemoSceneRuntime.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/compat/DemoSceneRuntime.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;3;1mIn file included from src/render/light/LightData.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/render/light/LightData.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc-game>[0m [38;5;5;1marchiving.debug libsmg-pc-game.a[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc-original-scenario-catalog-tests>[0m [38;5;5;1mlinking.debug smg-pc-original-scenario-catalog-tests[0m
+[0m[38;5;2;1mcreate ok![0m
+compile_commands.json updated!
+[0m[38;5;2;1m[100%]:[0m [38;5;2;1mbuild ok, spent 8.141s[0m

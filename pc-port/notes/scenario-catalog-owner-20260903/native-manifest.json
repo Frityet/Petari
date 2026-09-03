@@ -1,0 +1,151 @@
+{
+  "base_commit": "50683f07cd42d34deed6258ee516ebe18e79e43f",
+  "files": [
+    {
+      "path": "pc-port/src/Game/System/GalaxyIDBCSV.cpp",
+      "staged": "build/scenario-catalog-owner-20260903/staged/Game/System/GalaxyIDBCSV.cpp",
+      "sha256": "96dd07db53ece0187a7916eb6d3f5e3ed0a8847a5280a66ba28cf67ccd239d1f",
+      "action": "add"
+    },
+    {
+      "path": "pc-port/src/Game/System/GalaxyNameSortTable.cpp",
+      "staged": "build/scenario-catalog-owner-20260903/staged/Game/System/GalaxyNameSortTable.cpp",
+      "sha256": "f966ad91f210bf1531acd55c9faa997d83cc3761c48beb685dd7e8c4031834fa",
+      "action": "add"
+    },
+    {
+      "path": "pc-port/src/Game/System/GalaxyNameSortTable.hpp",
+      "staged": "build/scenario-catalog-owner-20260903/staged/Game/System/GalaxyNameSortTable.hpp",
+      "sha256": "0a646a3414ca42b882fa35e12db16caaeb1233aa24dfe7839aa3c04bf8420a09",
+      "action": "add"
+    },
+    {
+      "path": "pc-port/src/Game/System/GalaxyStatusAccessor.cpp",
+      "staged": "build/scenario-catalog-owner-20260903/staged/Game/System/GalaxyStatusAccessor.cpp",
+      "sha256": "1e12151b74a036f68979c78ce7e6afa36616e7ef32ce544f15bb655c38bab2f1",
+      "action": "add"
+    },
+    {
+      "path": "pc-port/src/Game/System/GalaxyStatusAccessor.hpp",
+      "staged": "build/scenario-catalog-owner-20260903/staged/Game/System/GalaxyStatusAccessor.hpp",
+      "sha256": "d257b3cf17614bcad815c1def9213d91b459e920339e3d6c970c76602d123aa0",
+      "action": "add"
+    },
+    {
+      "path": "pc-port/src/Game/System/GameDataConst.hpp",
+      "staged": "build/scenario-catalog-owner-20260903/staged/Game/System/GameDataConst.hpp",
+      "sha256": "5c55079e7550d1b41997bd73d8f2cb7f287caaaaf23a92139fbda45723c16f43",
+      "action": "modify"
+    },
+    {
+      "path": "pc-port/src/Game/System/GameEventFlagTable.cpp",
+      "staged": "build/scenario-catalog-owner-20260903/staged/Game/System/GameEventFlagTable.cpp",
+      "sha256": "6ea148dfb97d7a9fa7db3523453aa03072bc5bedab0c843ed25a14348056956b",
+      "action": "add"
+    },
+    {
+      "path": "pc-port/src/Game/System/ScenarioDataParser.cpp",
+      "staged": "build/scenario-catalog-owner-20260903/staged/Game/System/ScenarioDataParser.cpp",
+      "sha256": "304f0990f3fd42f84dcb3e27535717d93aa5a7275c43af0122b397c565c54b35",
+      "action": "add"
+    },
+    {
+      "path": "pc-port/src/Game/System/ScenarioDataParser.hpp",
+      "staged": "build/scenario-catalog-owner-20260903/staged/Game/System/ScenarioDataParser.hpp",
+      "sha256": "3d452f6153ee1421df7886638cdf10342ac97357408f3ba1256cfaf44250a8be",
+      "action": "add"
+    },
+    {
+      "path": "pc-port/src/Game/System/StationedArchiveLoader.hpp",
+      "staged": "build/scenario-catalog-owner-20260903/staged/Game/System/StationedArchiveLoader.hpp",
+      "sha256": "e984f6554e262a5d50e26704f18e6c13cb24feb2f3ac4216abec2325ad6cf288",
+      "action": "add"
+    },
+    {
+      "path": "pc-port/src/compat/FileUtilCompat.cpp",
+      "staged": "build/scenario-catalog-owner-20260903/staged/compat/FileUtilCompat.cpp",
+      "sha256": "3cc957e07e8326c2b801de66e7180aca8cfb49afb0d7be18578eee55268f4c7d",
+      "action": "add"
+    },
+    {
+      "path": "pc-port/src/compat/OriginalArchiveString.cpp",
+      "staged": "build/scenario-catalog-owner-20260903/staged/compat/OriginalArchiveString.cpp",
+      "sha256": "f0b023ba831e9d18a1469ff29d814ced00ec96519ece4280c2c66d199a2cc4b5",
+      "action": "add"
+    },
+    {
+      "path": "pc-port/src/compat/OriginalScenarioPreload.cpp",
+      "staged": "build/scenario-catalog-owner-20260903/staged/compat/OriginalScenarioPreload.cpp",
+      "sha256": "4b62d5d15e27f5ff9384ba472822545aaeae199e83f12f67dd7452fc7a5d64c9",
+      "action": "add"
+    },
+    {
+      "path": "pc-port/src/compat/ResourceHolderCompat.cpp",
+      "staged": "build/scenario-catalog-owner-20260903/staged/compat/ResourceHolderCompat.cpp",
+      "sha256": "e564d8be5450d63d09264fad9109d2d3ccece224b4a6a49f38252cd7e8cca3a7",
+      "action": "modify"
+    },
+    {
+      "path": "pc-port/src/resource/EmbeddedGameTables.cpp",
+      "staged": "build/scenario-catalog-owner-20260903/staged/resource/EmbeddedGameTables.cpp",
+      "sha256": "7ebc75afb38ddd669b2173cec0a2f2b5f23392fde59e3c882227bb08c59ecbdf",
+      "action": "add"
+    },
+    {
+      "path": "pc-port/src/resource/EmbeddedGameTables.hpp",
+      "staged": "build/scenario-catalog-owner-20260903/staged/resource/EmbeddedGameTables.hpp",
+      "sha256": "68473b5e8e7cdcf740e24fe05271e79d46f5b5e1e47a0c3c5b7dbd21103f6452",
+      "action": "add"
+    },
+    {
+      "path": "pc-port/src/resource/GameResourceRuntime.cpp",
+      "staged": "build/scenario-catalog-owner-20260903/staged/resource/GameResourceRuntime.cpp",
+      "sha256": "3afcbac3408db9f930de04bd781b439d95424a2acfa7fdd15d95d63f42df1156",
+      "action": "modify"
+    },
+    {
+      "path": "pc-port/src/resource/GameResourceRuntime.hpp",
+      "staged": "build/scenario-catalog-owner-20260903/staged/resource/GameResourceRuntime.hpp",
+      "sha256": "a4ae70ad533dd91b97ee649d09727a44e96ea82434604b47143c8cf56cb6af02",
+      "action": "modify"
+    },
+    {
+      "path": "pc-port/src/runtime/ArchiveMountService.cpp",
+      "staged": "build/scenario-catalog-owner-20260903/staged/runtime/ArchiveMountService.cpp",
+      "sha256": "4a92a329359a6c97afc3f3db1e8745a70a1e2f3129e8c62c5ea867d116ddc527",
+      "action": "add"
+    },
+    {
+      "path": "pc-port/src/runtime/ArchiveMountService.hpp",
+      "staged": "build/scenario-catalog-owner-20260903/staged/runtime/ArchiveMountService.hpp",
+      "sha256": "0ab5c352f1823988243a40c24b7bdc92ee73c68246f88bc1943355057e9ffb95",
+      "action": "add"
+    },
+    {
+      "path": "pc-port/src/runtime/RuntimeContext.cpp",
+      "staged": "build/scenario-catalog-owner-20260903/staged/runtime/RuntimeContext.cpp",
+      "sha256": "64a7214ed0125d32ba69cc017a79ee3658d858fb5eb8c011ba76a7d8a284522a",
+      "action": "modify"
+    },
+    {
+      "path": "pc-port/src/runtime/RuntimeContext.hpp",
+      "staged": "build/scenario-catalog-owner-20260903/staged/runtime/RuntimeContext.hpp",
+      "sha256": "f6b88347d141291bb17c63531e7cbdf5f03df2b1f9a482a3ac056c378a76db51",
+      "action": "modify"
+    },
+    {
+      "path": "pc-port/src/Game/Util/FileUtil.cpp",
+      "action": "delete"
+    },
+    {
+      "path": "pc-port/src/compat/GameEventFlagTableSource.cpp",
+      "action": "delete"
+    },
+    {
+      "path": "pc-port/tests/OriginalScenarioCatalogTests.cpp",
+      "staged": "build/scenario-catalog-owner-20260903/ScenarioCatalogTests.cpp",
+      "sha256": "28fd575daa4992001b089a4f29391a6d88a9cc17418157b3ffb9f1fa56ff369b",
+      "action": "add"
+    }
+  ]
+}

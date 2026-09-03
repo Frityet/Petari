@@ -13,6 +13,7 @@
 #include <revolution.h>
 
 #include "Logger.hpp"
+#include "runtime/ArchiveMountService.hpp"
 #include "RendererService.hpp"
 #include "camera/CameraPose.hpp"
 #include "compat/ResourceHolderCompat.hpp"
@@ -191,6 +192,8 @@ namespace smgpc::runtime {
         [[nodiscard]] std::string_view current_stage_bgm_name() const;
         [[nodiscard]] std::optional<std::filesystem::path> find_layout_archive(std::string_view layout_name) const;
         [[nodiscard]] std::optional<std::filesystem::path> find_object_archive(std::string_view object_name) const;
+        [[nodiscard]] ArchiveMountService &archive_mounts();
+        [[nodiscard]] const ArchiveMountService &archive_mounts() const;
         [[nodiscard]] DvdFileSystemService &dvd();
         [[nodiscard]] const DvdFileSystemService &dvd() const;
         [[nodiscard]] WiiIosService &ios();
@@ -322,6 +325,7 @@ namespace smgpc::runtime {
         render::AuroraWindow &_window_service;
         std::filesystem::path _disc_files_root;
         DvdFileSystemService _dvd;
+        ArchiveMountService _archive_mounts;
         std::unique_ptr<JAudioPlaybackService> _j_audio_playback;
         smgpc::compat::ResourceHolderService _resource_holders;
         std::unique_ptr<aurora::audio::DisabledObjectAudioService> _disabled_object_audio;

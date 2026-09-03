@@ -72,7 +72,6 @@ namespace smgpc::compat {
         std::filesystem::path path;
         std::unique_ptr<JKRMemArchive> archive;
         std::vector<resource::BasResource> bas_resources;
-        std::vector<resource::JMapResource> maps;
         std::vector<resource::JMapSourceRegistration> map_aliases;
         std::vector<resource::J3dAnimationResource> animations;
         std::vector<resource::J3dAnimationSourceRegistration> animation_aliases;
@@ -126,8 +125,7 @@ namespace smgpc::compat {
                 break;
             case BackingKind::Map:
                 if (bytes.empty()) break; // Original JMapInfo::attach(nullptr).
-                state.maps.emplace_back(bytes);
-                state.map_aliases.push_back(state.maps.back().register_source(bytes));
+                state.map_aliases.push_back(resource::register_jmap_source(bytes, state.source));
                 break;
             case BackingKind::Bas:
                 if (!bytes.empty()) state.bas_resources.emplace_back(bytes, state.source);

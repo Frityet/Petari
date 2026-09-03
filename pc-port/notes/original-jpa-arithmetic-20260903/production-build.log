@@ -1,0 +1,394 @@
+[0m[38;5;2;1m[  2%]:[0m [38;5;5;1m<smg-pc-original-jpa-manager-tests>[0m cache compiling.debug tests/OriginalJpaManagerTests.cpp[0m
+[0m[38;5;2;1m[ 33%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/resource/JpcResource.cpp[0m
+[0m[38;5;2;1m[ 44%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/OriginalJPADraw.cpp[0m
+[0m[38;5;2;1m[ 45%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/J3DMaterialAnimationCompat.cpp[0m
+[0m[38;5;2;1m[ 50%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/OriginalJPAEmitterInit.cpp[0m
+[0m[38;5;2;1m[ 54%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/OriginalJPAFields.cpp[0m
+[0m[38;5;2;1m[ 57%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/J3DAdditionalAnimationCompat.cpp[0m
+[0m[38;5;2;1m[ 59%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/compat/J3DTransformAnimationCompat.cpp[0m
+[0m[38;5;3;1mIn file included from src/compat/OriginalJPADraw.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/compat/OriginalJPADraw.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 68%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPAResourceManager.cpp[0m
+[0m[38;5;3;1mIn file included from src/compat/J3DMaterialAnimationCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/compat/J3DMaterialAnimationCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 68%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPATexture.cpp[0m
+[0m[38;5;3;1mIn file included from src/compat/OriginalJPAEmitterInit.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/compat/OriginalJPAEmitterInit.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 68%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPAChildShape.cpp[0m
+[0m[38;5;3;1mIn file included from src/compat/OriginalJPAFields.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/compat/OriginalJPAFields.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 68%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPAFieldBlock.cpp[0m
+[0m[38;5;3;1mIn file included from src/compat/J3DAdditionalAnimationCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/compat/J3DAdditionalAnimationCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 68%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPAMath.cpp[0m
+[0m[38;5;3;1mIn file included from src/compat/J3DTransformAnimationCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/compat/J3DTransformAnimationCompat.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 68%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPADynamicsBlock.cpp[0m
+[0m[38;5;3;1mIn file included from src/resource/JpcResource.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/resource/JpcResource.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 68%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPAEmitterManager.cpp[0m
+[0m[38;5;3;1mIn file included from tests/OriginalJpaManagerTests.cpp:4:
+In file included from src/runtime/RuntimeServices.hpp:22:
+In file included from src/camera/EventCamera.hpp:4:
+In file included from src/Game/Camera/CameraTargetObj.hpp:3:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from tests/OriginalJpaManagerTests.cpp:4:
+In file included from src/runtime/RuntimeServices.hpp:22:
+In file included from src/camera/EventCamera.hpp:4:
+In file included from src/Game/Camera/CameraTargetObj.hpp:3:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();[0m
+[0m[38;5;2;1m[ 69%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPAKeyBlock.cpp[0m
+[0m[38;5;3;1mIn file included from src/JSystem/JParticle/JPATexture.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/JSystem/JParticle/JPATexture.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 69%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPAResourceLoader.cpp[0m
+[0m[38;5;3;1mIn file included from src/JSystem/JParticle/JPAResourceManager.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/JSystem/JParticle/JPAResourceManager.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 69%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPAEmitter.cpp[0m
+[0m[38;5;3;1mIn file included from src/JSystem/JParticle/JPAChildShape.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/JSystem/JParticle/JPAChildShape.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 69%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPAExtraShape.cpp[0m
+[0m[38;5;3;1mIn file included from src/JSystem/JParticle/JPAFieldBlock.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/JSystem/JParticle/JPAFieldBlock.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 69%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPABaseShape.cpp[0m
+[0m[38;5;3;1mIn file included from src/JSystem/JParticle/JPAMath.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/JSystem/JParticle/JPAMath.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 69%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPAExTexShape.cpp[0m
+[0m[38;5;3;1mIn file included from src/JSystem/JParticle/JPADynamicsBlock.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/JSystem/JParticle/JPADynamicsBlock.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 69%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPAResource.cpp[0m
+[0m[38;5;3;1mIn file included from src/JSystem/JParticle/JPAEmitterManager.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/JSystem/JParticle/JPAEmitterManager.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 70%]:[0m [38;5;5;1m<smg-pc-game>[0m cache compiling.debug src/JSystem/JParticle/JPAParticle.cpp[0m
+[0m[38;5;3;1mIn file included from src/JSystem/JParticle/JPAKeyBlock.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/JSystem/JParticle/JPAKeyBlock.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;3;1mIn file included from src/JSystem/JParticle/JPAEmitter.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/JSystem/JParticle/JPAEmitter.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;3;1mIn file included from src/JSystem/JParticle/JPAExtraShape.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/JSystem/JParticle/JPAExtraShape.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;3;1mIn file included from src/JSystem/JParticle/JPAResourceLoader.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/JSystem/JParticle/JPAResourceLoader.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;3;1mIn file included from src/JSystem/JParticle/JPAExTexShape.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/JSystem/JParticle/JPAExTexShape.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;3;1mIn file included from src/JSystem/JParticle/JPABaseShape.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/JSystem/JParticle/JPABaseShape.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;3;1mIn file included from src/JSystem/JParticle/JPAResource.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/JSystem/JParticle/JPAResource.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;3;1mIn file included from src/JSystem/JParticle/JPAParticle.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/JSystem/JParticle/JPAParticle.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc-game>[0m [38;5;5;1marchiving.debug libsmg-pc-game.a[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc-original-jpa-manager-tests>[0m [38;5;5;1mlinking.debug smg-pc-original-jpa-manager-tests[0m
+[0m[38;5;2;1m[100%]:[0m [38;5;2;1mbuild ok, spent 1.703s[0m

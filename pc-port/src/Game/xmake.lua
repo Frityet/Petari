@@ -187,6 +187,10 @@ target("smg-pc-game")
     remove_files("../compat/MslPrintfCompat.cpp")
     -- Original paired-single helpers make fused and rounded operations explicit.
     add_files("../compat/GameMathCompat.cpp", {cxxflags = "-ffp-contract=off"})
+    add_files("../JSystem/JParticle/**.cpp", {cxxflags = "-ffp-contract=off"})
+    add_files("../compat/OriginalJPADraw.cpp", {cxxflags = "-ffp-contract=off"})
+    add_files("../compat/OriginalJPAFields.cpp", {cxxflags = "-ffp-contract=off"})
+    add_files("../compat/OriginalJPAEmitterInit.cpp", {cxxflags = "-ffp-contract=off"})
     add_files {
         "../render/effects/JpcBillboard.cpp",
         "../render/effects/EffectResource.cpp",

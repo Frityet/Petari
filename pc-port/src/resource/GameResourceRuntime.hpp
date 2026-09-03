@@ -9,6 +9,7 @@
 namespace smgpc::compat { class JutTextureAllocationService; }
 
 namespace smgpc::resource {
+    class EmbeddedGameTables;
     struct GameResourceBudget {
         std::size_t host_heap_bytes = 128U * 1024U * 1024U;
         std::size_t cohort_bytes = 64U * 1024U * 1024U;
@@ -33,5 +34,6 @@ namespace smgpc::resource {
         std::shared_ptr<compat::JkrHeapRuntime> _heaps;
         std::shared_ptr<Mem1ResourceHeap> _mem1;
         std::unique_ptr<compat::JutTextureAllocationService> _textures;
+        std::unique_ptr<EmbeddedGameTables> _embedded_tables;
     };
 }

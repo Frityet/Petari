@@ -1,0 +1,15 @@
+{
+  "returncode": 0,
+  "binary_sha256": "fb51c3849f5d1b37be7e57bad81f91e5da96ab2de77bac5d696bb22eb532a7a2",
+  "sources": {
+    "build/original-camera-director-owner-20260903/staged/Game/System/ScenarioDataParser.cpp": "e82ea2f9f5b515668acc870ea6c8f09970c4a3ebd96fc019abae6b7c739ab897",
+    "build/original-camera-director-owner-20260903/staged/runtime/ScenarioCatalogOwnership.cpp": "00b4cc5eedf4307d3e77ab0d8791ce5ea529fb0f9e6f5a9f878224923919b7e0",
+    "build/original-camera-director-owner-20260903/staged/runtime/ScenarioCatalogOwnership.hpp": "2e74ac07dc18162d2cb370992389eae4cd039497d883c737bb99f15cadd7b290",
+    "build/original-camera-director-owner-20260903/staged/compat/ScenarioDataParserAccess.cpp": "0e1cb065b127773db93e6ec95e9ad57c7d9b0d7bb6af53157533c464761b5a14"
+  },
+  "fixture_sha256": "2c24d67ae789e478fc3a304d3c30c9f86b4629fd355dc8e66c70026d7328190e",
+  "regular_native_flags_no_root_fallback": true,
+  "cycles": 2,
+  "archives": 48,
+  "gateway_zones": 7
+}

@@ -1,0 +1,48 @@
+void Interpreter::divwx(Interpreter& interpreter, UGeckoInstruction inst)
+{
+  auto& ppc_state = interpreter.m_ppc_state;
+  const auto a = s32(ppc_state.gpr[inst.RA]);
+  const auto b = s32(ppc_state.gpr[inst.RB]);
+  const bool overflow = b == 0 || (static_cast<u32>(a) == 0x80000000 && b == -1);
+
+  if (overflow)
+  {
+    if (a < 0)
+      ppc_state.gpr[inst.RD] = UINT32_MAX;
+    else
+      ppc_state.gpr[inst.RD] = 0;
+  }
+  else
+  {
+    ppc_state.gpr[inst.RD] = static_cast<u32>(a / b);
+  }
+
+  if (inst.OE)
+    ppc_state.SetXER_OV(overflow);
+
+  if (inst.Rc)
+    Helper_UpdateCR0(ppc_state, ppc_state.gpr[inst.RD]);
+}
+
+void Interpreter::divwux(Interpreter& interpreter, UGeckoInstruction inst)
+{
+  auto& ppc_state = interpreter.m_ppc_state;
+  const u32 a = ppc_state.gpr[inst.RA];
+  const u32 b = ppc_state.gpr[inst.RB];
+  const bool overflow = b == 0;
+
+  if (overflow)
+  {
+    ppc_state.gpr[inst.RD] = 0;
+  }
+  else
+  {
+    ppc_state.gpr[inst.RD] = a / b;
+  }
+
+  if (inst.OE)
+    ppc_state.SetXER_OV(overflow);
+
+  if (inst.Rc)
+    Helper_UpdateCR0(ppc_state, ppc_state.gpr[inst.RD]);
+}

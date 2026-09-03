@@ -1,0 +1,22 @@
+[
+  {
+    "target": "pc-port/src/JSystem/JParticle/JPAParticle.cpp",
+    "source": "build/original-jpa-arithmetic-20260903/staged/JSystem/JParticle/JPAParticle.cpp",
+    "sha256": "7566a72878ccc49a125b9afda4c392ed22e9b2d319ee7db262879aae0c8ccb97"
+  },
+  {
+    "target": "pc-port/src/JSystem/JParticle/JPADynamicsBlock.cpp",
+    "source": "build/original-jpa-arithmetic-20260903/staged/JSystem/JParticle/JPADynamicsBlock.cpp",
+    "sha256": "070a82dcc90745e0f5f36acb0e04747d0d2847678dbc73945b18f8159d165105"
+  },
+  {
+    "target": "pc-port/src/compat/J3DAnimationInterpolation.hpp",
+    "source": "build/original-jpa-arithmetic-20260903/staged/compat/J3DAnimationInterpolation.hpp",
+    "sha256": "cc3db00641202cd04f8315cfa5b9fe6cb984358b607881fb07c83f7bfda1ad80"
+  },
+  {
+    "target": "pc-port/aurora/include/aurora/ppc_math.hpp",
+    "source": "build/original-jpa-arithmetic-20260903/staged/aurora/ppc_math.hpp",
+    "sha256": "f2cb5867c69bf1c94956c5d5bef5bd752e1ce7257040864aba71044329ed4813"
+  }
+]

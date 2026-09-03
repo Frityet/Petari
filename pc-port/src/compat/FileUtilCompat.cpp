@@ -10,14 +10,13 @@
 #include <vector>
 
 #include "runtime/RuntimeContext.hpp"
+#include "runtime/ArchiveMountService.hpp"
+#include "compat/JkrAllocationDomain.hpp"
 
 namespace MR {
     namespace {
 
         std::map< std::string, std::vector< u8 > > sLoadedFiles;
-        std::map< std::string, std::unique_ptr< JKRMemArchive > > sMountedArchives;
-        std::map< std::string, std::vector< u8 > > sArchiveResources;
-        smgpc::runtime::RuntimeContext* sMountedArchiveRuntime = nullptr;
 
         [[nodiscard]] smgpc::runtime::RuntimeContext* runtime() {
             return smgpc::runtime::RuntimeContext::try_instance();
@@ -40,13 +39,13 @@ namespace MR {
         }
 
         [[nodiscard]] bool dvd_exists(std::string_view path) {
-            auto* context = runtime();
-            if (context == nullptr || path.empty()) {
+            auto* mounts = smgpc::runtime::ArchiveMountService::active();
+            if (mounts == nullptr || path.empty()) {
                 return false;
             }
 
             try {
-                return context->dvd().exists(path);
+                return mounts->dvd().exists(path);
             } catch (const std::exception&) {
                 return false;
             }
@@ -92,30 +91,6 @@ namespace MR {
                 text += ".arc";
             }
             return text;
-        }
-
-        [[nodiscard]] std::string mounted_archive_key(const char* path) {
-            const auto normalized = normalize_disc_string(path);
-            auto* context = runtime();
-            if (context == nullptr) {
-                return normalized;
-            }
-
-            try {
-                return context->dvd().resolve(normalized).generic_string();
-            } catch (const std::exception&) {
-                return normalized;
-            }
-        }
-
-        void sync_mounted_archive_runtime(smgpc::runtime::RuntimeContext* context) {
-            if (sMountedArchiveRuntime == context) {
-                return;
-            }
-
-            sMountedArchives.clear();
-            sArchiveResources.clear();
-            sMountedArchiveRuntime = context;
         }
 
         [[nodiscard]] bool copy_first_existing(char* dst, u32 size, std::initializer_list< std::string_view > candidates) {
@@ -185,27 +160,12 @@ namespace MR {
         (void)loadToMainRAM(pFilePath, pDst, pHeap, allocDir);
     }
 
-    JKRMemArchive* mountArchive(const char* pFilePath, JKRHeap*) {
-        auto* context = runtime();
-        if (context == nullptr || pFilePath == nullptr) {
-            return nullptr;
-        }
-        sync_mounted_archive_runtime(context);
-
-        const auto key = mounted_archive_key(pFilePath);
-        if (auto it = sMountedArchives.find(key); it != sMountedArchives.end()) {
-            return it->second.get();
-        }
-
-        try {
-            auto& archive = context->dvd().archive(pFilePath);
-            auto mounted = std::make_unique< JKRMemArchive >(archive);
-            auto* result = mounted.get();
-            sMountedArchives.emplace(key, std::move(mounted));
-            return result;
-        } catch (const std::exception&) {
-            return nullptr;
-        }
+    JKRMemArchive* mountArchive(const char* pFilePath, JKRHeap* pHeap) {
+        smgpc::compat::JkrHostAllocationScope host;
+        auto* mounts = smgpc::runtime::ArchiveMountService::active();
+        if (mounts == nullptr || pFilePath == nullptr) return nullptr;
+        try { return mounts->mount(pFilePath, pHeap); }
+        catch (const std::exception&) { return nullptr; }
     }
 
     void mountAsyncArchive(const char* pFilePath, JKRHeap* pHeap) {
@@ -230,12 +190,9 @@ namespace MR {
     }
 
     JKRMemArchive* receiveArchive(const char* pFilePath) {
-        sync_mounted_archive_runtime(runtime());
-        if (auto it = sMountedArchives.find(mounted_archive_key(pFilePath)); it != sMountedArchives.end()) {
-            return it->second.get();
-        }
-
-        return nullptr;
+        auto* mounts = smgpc::runtime::ArchiveMountService::active();
+        if (mounts == nullptr || pFilePath == nullptr) return nullptr;
+        return mounts->receive(pFilePath);
     }
 
     void receiveAllRequestedFile() {
@@ -245,35 +202,24 @@ namespace MR {
     }
 
     void getMountedArchiveAndHeap(const char* pFilePath, JKRArchive** ppArchive, JKRHeap** ppHeap) {
-        if (ppArchive != nullptr) {
-            *ppArchive = receiveArchive(pFilePath);
-        }
-        if (ppHeap != nullptr) {
-            *ppHeap = nullptr;
-        }
+        const auto* mounts = smgpc::runtime::ArchiveMountService::active();
+        const auto owner = mounts && pFilePath ? mounts->retain(pFilePath) : nullptr;
+        if (ppArchive) *ppArchive = owner ? &owner->archive() : nullptr;
+        if (ppHeap) *ppHeap = owner ? owner->heap() : nullptr;
     }
 
     void removeFileConsideringLanguage(const char* pFilePath) {
         sLoadedFiles.erase(path_considering_language(pFilePath, true));
     }
 
-    void removeResourceAndFileHolderIfIsEqualHeap(JKRHeap*) {
+    void removeResourceAndFileHolderIfIsEqualHeap(JKRHeap* heap) {
+        if (auto* mounts = smgpc::runtime::ArchiveMountService::active()) mounts->remove_for_heap(heap);
     }
 
     void* decompressFileFromArchive(JKRArchive* pArchive, const char* pFilePath, JKRHeap*, int) {
-        if (pArchive == nullptr || pFilePath == nullptr) {
-            return nullptr;
-        }
-
-        const auto* resource = static_cast< const u8* >(pArchive->getResource(pFilePath));
-        const auto size = pArchive->getResSize(resource);
-        if (resource == nullptr || size == 0U) {
-            return nullptr;
-        }
-
-        auto& bytes = sArchiveResources[std::string(pFilePath)];
-        bytes.assign(resource, resource + size);
-        return bytes.data();
+        auto* mounts = smgpc::runtime::ArchiveMountService::active();
+        if (pArchive == nullptr || pFilePath == nullptr || mounts == nullptr) return nullptr;
+        return mounts->copy_archive_resource(*pArchive, pFilePath);
     }
 
     bool isLoadedFile(const char* pFilePath) {
@@ -281,7 +227,7 @@ namespace MR {
     }
 
     bool isMountedArchive(const char* pFilePath) {
-        return sMountedArchives.contains(mounted_archive_key(pFilePath));
+        return receiveArchive(pFilePath) != nullptr;
     }
 
     bool isLoadedObjectOrLayoutArchive(const char* pFilePrefix) {

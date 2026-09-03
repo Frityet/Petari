@@ -1,0 +1,46 @@
+ld: warning: object file (/Users/frityet/.xmake/packages/s/sqlite3/3.53.0+0/e05b3c73c8774ea4aeb176e4762c2503/lib/libsqlite3.a[2](sqlite3.c.o)) was built for newer 'macOS' version (26.5) than being linked (26.0)
+ld: warning: object file (/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/ec8bb23a31f24b589eb3b51925abb200/lib/libimgui.a[2](imgui_widgets.cpp.o)) was built for newer 'macOS' version (26.5) than being linked (26.0)
+ld: warning: object file (/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/ec8bb23a31f24b589eb3b51925abb200/lib/libimgui.a[3](imgui.cpp.o)) was built for newer 'macOS' version (26.5) than being linked (26.0)
+ld: warning: object file (/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/ec8bb23a31f24b589eb3b51925abb200/lib/libimgui.a[4](imgui_tables.cpp.o)) was built for newer 'macOS' version (26.5) than being linked (26.0)
+ld: warning: object file (/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/ec8bb23a31f24b589eb3b51925abb200/lib/libimgui.a[6](imgui_draw.cpp.o)) was built for newer 'macOS' version (26.5) than being linked (26.0)
+ld: warning: object file (/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/ec8bb23a31f24b589eb3b51925abb200/lib/libimgui.a[8](imgui_impl_sdl3.cpp.o)) was built for newer 'macOS' version (26.5) than being linked (26.0)
+ld: warning: object file (/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/ec8bb23a31f24b589eb3b51925abb200/lib/libimgui.a[9](imgui_impl_sdlrenderer3.cpp.o)) was built for newer 'macOS' version (26.5) than being linked (26.0)
+ld: warning: object file (/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/ec8bb23a31f24b589eb3b51925abb200/lib/libimgui.a[10](imgui_impl_wgpu.cpp.o)) was built for newer 'macOS' version (26.5) than being linked (26.0)
+ld: warning: object file (/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/ec8bb23a31f24b589eb3b51925abb200/lib/libimgui.a[11](imgui_freetype.cpp.o)) was built for newer 'macOS' version (26.5) than being linked (26.0)
+ld: warning: object file (/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/ec8bb23a31f24b589eb3b51925abb200/lib/libimgui.a[12](imgui_config.cpp.o)) was built for newer 'macOS' version (26.5) than being linked (26.0)
+Undefined symbols for architecture arm64:
+  "JPADrawStripe(JPAEmitterWorkData*)", referenced from:
+      JPAResource::init(JKRHeap*) in JPAResource.o
+      JPAResource::init(JKRHeap*) in JPAResource.o
+  "JPADrawStripeX(JPAEmitterWorkData*)", referenced from:
+      JPAResource::init(JKRHeap*) in JPAResource.o
+      JPAResource::init(JKRHeap*) in JPAResource.o
+  "JPADrawDirection(JPAEmitterWorkData*, JPABaseParticle*)", referenced from:
+      JPAResource::init(JKRHeap*) in JPAResource.o
+      JPAResource::init(JKRHeap*) in JPAResource.o
+  "JPADrawDBillboard(JPAEmitterWorkData*, JPABaseParticle*)", referenced from:
+      JPAResource::init(JKRHeap*) in JPAResource.o
+      JPAResource::init(JKRHeap*) in JPAResource.o
+  "JPADrawYBillboard(JPAEmitterWorkData*, JPABaseParticle*)", referenced from:
+      JPAResource::init(JKRHeap*) in JPAResource.o
+      JPAResource::init(JKRHeap*) in JPAResource.o
+  "JPADrawRotDirection(JPAEmitterWorkData*, JPABaseParticle*)", referenced from:
+      JPAResource::init(JKRHeap*) in JPAResource.o
+      JPAResource::init(JKRHeap*) in JPAResource.o
+  "JPADrawRotYBillboard(JPAEmitterWorkData*, JPABaseParticle*)", referenced from:
+      JPAResource::init(JKRHeap*) in JPAResource.o
+      JPAResource::init(JKRHeap*) in JPAResource.o
+  "vtable for JPAFieldAir", referenced from:
+      JPAFieldAir::JPAFieldAir() in JPAFieldBlock.o
+   NOTE: a missing vtable usually means the first non-inline virtual member function has no definition.
+  "vtable for JPAFieldSpin", referenced from:
+      JPAFieldSpin::JPAFieldSpin() in JPAFieldBlock.o
+   NOTE: a missing vtable usually means the first non-inline virtual member function has no definition.
+  "vtable for JPAFieldVortex", referenced from:
+      JPAFieldVortex::JPAFieldVortex() in JPAFieldBlock.o
+   NOTE: a missing vtable usually means the first non-inline virtual member function has no definition.
+  "vtable for JPAFieldConvection", referenced from:
+      JPAFieldConvection::JPAFieldConvection() in JPAFieldBlock.o
+   NOTE: a missing vtable usually means the first non-inline virtual member function has no definition.
+ld: symbol(s) not found for architecture arm64
+clang++: error: linker command failed with exit code 1 (use -v to see invocation)

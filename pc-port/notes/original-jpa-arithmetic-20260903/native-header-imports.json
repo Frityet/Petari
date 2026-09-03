@@ -1,0 +1,97 @@
+[
+  {
+    "source": "libs/JSystem/include/JSystem/JParticle/JPAResource.hpp",
+    "native": "pc-port/src/JSystem/JParticle/JPAResource.hpp",
+    "sha256": "58e65a9f3945f424cb6e2ce1bf93b96bf4c6f48acb2c18a78d65aacae17caa98"
+  },
+  {
+    "source": "libs/JSystem/include/JSystem/JParticle/JPAEmitterCallBack.hpp",
+    "native": "pc-port/src/JSystem/JParticle/JPAEmitterCallBack.hpp",
+    "sha256": "339dc9f8cb2c89972982e973822c90e8ae4026747a48f4af3c03315e2f5a1174"
+  },
+  {
+    "source": "libs/JSystem/include/JSystem/JParticle/JPAParticle.hpp",
+    "native": "pc-port/src/JSystem/JParticle/JPAParticle.hpp",
+    "sha256": "013f40c7fec2d6864b603a5de8eefd41ae3b6630dff49559d928fec9fa22cc66"
+  },
+  {
+    "source": "libs/JSystem/include/JSystem/JParticle/JPAList.hpp",
+    "native": "pc-port/src/JSystem/JParticle/JPAList.hpp",
+    "sha256": "c3403f7602b629dfbfdacb294c28bde85e6e439d387ecdc4c47b9ef1f92f1e9d"
+  },
+  {
+    "source": "libs/JSystem/include/JSystem/JParticle/JPAParticleCallBack.hpp",
+    "native": "pc-port/src/JSystem/JParticle/JPAParticleCallBack.hpp",
+    "sha256": "7353f073e414f139702504eda7e4adc1c36afaef753d7af8ce28b3c2aab8839b"
+  },
+  {
+    "source": "libs/JSystem/include/JSystem/JParticle/JPADrawInfo.hpp",
+    "native": "pc-port/src/JSystem/JParticle/JPADrawInfo.hpp",
+    "sha256": "ae2a270fdddf162d44e86abd88f3802292412233349a99295ea2454c808433fc"
+  },
+  {
+    "source": "libs/JSystem/include/JSystem/JParticle/JPABaseShape.hpp",
+    "native": "pc-port/src/JSystem/JParticle/JPABaseShape.hpp",
+    "sha256": "998750bd75de5f4d4066ad78e1bab251e220a301aa40afd0e2c17c37411e5916"
+  },
+  {
+    "source": "libs/JSystem/include/JSystem/JParticle/JPAExTexShape.hpp",
+    "native": "pc-port/src/JSystem/JParticle/JPAExTexShape.hpp",
+    "sha256": "6f310e9547e8f2fe9b7bc4bd32516b2928ffc24fe1ed553e599f17233d036095"
+  },
+  {
+    "source": "libs/JSystem/include/JSystem/JParticle/JPAResourceLoader.hpp",
+    "native": "pc-port/src/JSystem/JParticle/JPAResourceLoader.hpp",
+    "sha256": "42f67c4d42339ed9197d519694351098f988e85ace1c2c66c1e912124fa41330"
+  },
+  {
+    "source": "libs/JSystem/include/JSystem/JParticle/JPAEmitter.hpp",
+    "native": "pc-port/src/JSystem/JParticle/JPAEmitter.hpp",
+    "sha256": "da79751e98996c48d02945e4f0a19139da7211b7e0461897228c80b35281bc68"
+  },
+  {
+    "source": "libs/JSystem/include/JSystem/JParticle/JPAExtraShape.hpp",
+    "native": "pc-port/src/JSystem/JParticle/JPAExtraShape.hpp",
+    "sha256": "05949d052b0da07e7f080d5548b54f1763e0eca94e5b38da9b9f479350b0275d"
+  },
+  {
+    "source": "libs/JSystem/include/JSystem/JParticle/JPATexture.hpp",
+    "native": "pc-port/src/JSystem/JParticle/JPATexture.hpp",
+    "sha256": "05a5e10b018a6b3095b581fb91035fbe0ce4332db5a9da5c6c8a0ad253613b5f"
+  },
+  {
+    "source": "libs/JSystem/include/JSystem/JParticle/JPAChildShape.hpp",
+    "native": "pc-port/src/JSystem/JParticle/JPAChildShape.hpp",
+    "sha256": "44d146e33d087b0a1e773a9c6bcba737b6e4458d3282fbcc766947176e806b54"
+  },
+  {
+    "source": "libs/JSystem/include/JSystem/JParticle/JPAFieldBlock.hpp",
+    "native": "pc-port/src/JSystem/JParticle/JPAFieldBlock.hpp",
+    "sha256": "d3f02f5d1db460d03931e59dcebe3625bd12e7ee82aeb71be90031ecc7498609"
+  },
+  {
+    "source": "libs/JSystem/include/JSystem/JParticle/JPAMath.hpp",
+    "native": "pc-port/src/JSystem/JParticle/JPAMath.hpp",
+    "sha256": "0c2dd54fc8580a33b2c77bbfbd39c3bdc4c86afeacbf7836af23bd9265fc7843"
+  },
+  {
+    "source": "libs/JSystem/include/JSystem/JParticle/JPARandom.hpp",
+    "native": "pc-port/src/JSystem/JParticle/JPARandom.hpp",
+    "sha256": "96e123d70a30d6831c6b8a52dfc527a1a18c90bf913d14a01101c1f97c64d6f6"
+  },
+  {
+    "source": "libs/JSystem/include/JSystem/JParticle/JPADynamicsBlock.hpp",
+    "native": "pc-port/src/JSystem/JParticle/JPADynamicsBlock.hpp",
+    "sha256": "847a1b9fbe08b86959897e3ec26a94f1a3c72f15fc5b0746215a5e4390819fed"
+  },
+  {
+    "source": "libs/JSystem/include/JSystem/JParticle/JPAEmitterManager.hpp",
+    "native": "pc-port/src/JSystem/JParticle/JPAEmitterManager.hpp",
+    "sha256": "d312c54d961c7157f18ffbd9be9031bfa878d20f08f5ba33996c12051c52eac0"
+  },
+  {
+    "source": "libs/JSystem/include/JSystem/JParticle/JPAKeyBlock.hpp",
+    "native": "pc-port/src/JSystem/JParticle/JPAKeyBlock.hpp",
+    "sha256": "a25bc52376d32b70da83b71b49d5770614e8d1726d2b4843d74cc690be452edc"
+  }
+]

@@ -1,0 +1,116 @@
+[
+  {
+    "source": "native/JSystem/JGeometry/TVec.hpp",
+    "destination": "pc-port/src/JSystem/JGeometry/TVec.hpp",
+    "sha256": "36a81d0bfa2c0b6c9e02aa76c3d4c13a632d138ded61253aff6f0d1da4c437c5",
+    "current_destination_sha256": "5f40732c906b4b5bd3d1567586aaf7b479abfa4077aa2ff787602fcc61b737d3"
+  },
+  {
+    "source": "native/JSystem/JParticle/JPABaseShape.cpp",
+    "destination": "pc-port/src/JSystem/JParticle/JPABaseShape.cpp",
+    "sha256": "ab90dd263a34671e7efac4943f66db0c2a6157ca95db4ea394eb78fe76f9c52e",
+    "current_destination_sha256": null
+  },
+  {
+    "source": "native/JSystem/JParticle/JPAChildShape.cpp",
+    "destination": "pc-port/src/JSystem/JParticle/JPAChildShape.cpp",
+    "sha256": "1f4b2e1cb4d3bb96cc646af6c14e40529e448f55fa67319c7f5b4aee2f7a5922",
+    "current_destination_sha256": null
+  },
+  {
+    "source": "native/JSystem/JParticle/JPADynamicsBlock.cpp",
+    "destination": "pc-port/src/JSystem/JParticle/JPADynamicsBlock.cpp",
+    "sha256": "69dae2737f8ea2b00374a1beb9b1fdc6ce22482414b2179453d71ded65fdc7d4",
+    "current_destination_sha256": null
+  },
+  {
+    "source": "native/JSystem/JParticle/JPAEmitter.cpp",
+    "destination": "pc-port/src/JSystem/JParticle/JPAEmitter.cpp",
+    "sha256": "0970abcb9ed5a1a1d61c06587d4a65e9766292a551034c9ff312a9d2ec2c540a",
+    "current_destination_sha256": null
+  },
+  {
+    "source": "native/JSystem/JParticle/JPAEmitterManager.cpp",
+    "destination": "pc-port/src/JSystem/JParticle/JPAEmitterManager.cpp",
+    "sha256": "517c367e59de67daa1d876a5e66c1474d3b10553d7a8c818a1a2d864ec347f60",
+    "current_destination_sha256": null
+  },
+  {
+    "source": "native/JSystem/JParticle/JPAExTexShape.cpp",
+    "destination": "pc-port/src/JSystem/JParticle/JPAExTexShape.cpp",
+    "sha256": "50ec8f2beab17bf1d18e0790d3f4b15c10e4259ae50f3b9c9f48f533884a8c06",
+    "current_destination_sha256": null
+  },
+  {
+    "source": "native/JSystem/JParticle/JPAExtraShape.cpp",
+    "destination": "pc-port/src/JSystem/JParticle/JPAExtraShape.cpp",
+    "sha256": "4e527db9c750aa3d07e49fb640f0d983e0c5627c99c7684ea8eae5c81f1a0e49",
+    "current_destination_sha256": null
+  },
+  {
+    "source": "native/JSystem/JParticle/JPAFieldBlock.cpp",
+    "destination": "pc-port/src/JSystem/JParticle/JPAFieldBlock.cpp",
+    "sha256": "7de36b4dd6b6fa1141fef5431a816882151daae341fe4e4625e0f134e8662ce3",
+    "current_destination_sha256": null
+  },
+  {
+    "source": "native/JSystem/JParticle/JPAKeyBlock.cpp",
+    "destination": "pc-port/src/JSystem/JParticle/JPAKeyBlock.cpp",
+    "sha256": "56c1db514c2f48f3e747a57963422b0c4b5193233a6c1cf07661b6857e3f2392",
+    "current_destination_sha256": null
+  },
+  {
+    "source": "native/JSystem/JParticle/JPAMath.cpp",
+    "destination": "pc-port/src/JSystem/JParticle/JPAMath.cpp",
+    "sha256": "d86b99128a349f8180454f7fdd61f821ecc9528a23a193d222e09ab09f887bd7",
+    "current_destination_sha256": null
+  },
+  {
+    "source": "native/JSystem/JParticle/JPAParticle.cpp",
+    "destination": "pc-port/src/JSystem/JParticle/JPAParticle.cpp",
+    "sha256": "5b43a8c553979f9f38ff3195a632611e16fcabbeea7f3fac2d93f17604ffdd89",
+    "current_destination_sha256": null
+  },
+  {
+    "source": "native/JSystem/JParticle/JPAResource.cpp",
+    "destination": "pc-port/src/JSystem/JParticle/JPAResource.cpp",
+    "sha256": "35a9248fb9be2007a26677390aead4613035ce2688dd2cf0b29aa7ac60149f1f",
+    "current_destination_sha256": null
+  },
+  {
+    "source": "native/JSystem/JParticle/JPAResourceLoader.cpp",
+    "destination": "pc-port/src/JSystem/JParticle/JPAResourceLoader.cpp",
+    "sha256": "5ca77229b0cc0a8814d5fb1cadf4edbe7450f4f2e110ef71e448393c8727d036",
+    "current_destination_sha256": null
+  },
+  {
+    "source": "native/JSystem/JParticle/JPAResourceManager.cpp",
+    "destination": "pc-port/src/JSystem/JParticle/JPAResourceManager.cpp",
+    "sha256": "d5575b3a4069c07a5a1116fdc509900854852657cb5a9cdfe64174373b312ce1",
+    "current_destination_sha256": null
+  },
+  {
+    "source": "native/JSystem/JParticle/JPAResourceManager.hpp",
+    "destination": "pc-port/src/JSystem/JParticle/JPAResourceManager.hpp",
+    "sha256": "d7582025d36b9a49c615670a4f5d4c3648fa11b47fdceb4987ce114d47635cbd",
+    "current_destination_sha256": null
+  },
+  {
+    "source": "native/JSystem/JParticle/JPATexture.cpp",
+    "destination": "pc-port/src/JSystem/JParticle/JPATexture.cpp",
+    "sha256": "79b13863ec70871633dfd5b0fac301996c6ca093b8987c14182516f3c5858039",
+    "current_destination_sha256": null
+  },
+  {
+    "source": "native/resource/JpcResource.cpp",
+    "destination": "pc-port/src/resource/JpcResource.cpp",
+    "sha256": "d3cda4e5a2a1f44f84ba7b69a6e981b15ed7fda585487639a4c82ee42b3b81d7",
+    "current_destination_sha256": null
+  },
+  {
+    "source": "native/resource/JpcResource.hpp",
+    "destination": "pc-port/src/resource/JpcResource.hpp",
+    "sha256": "6f4d4521e0d038640ca31ab726b121ee3b417ad573a8e4ac6865a98720f1067d",
+    "current_destination_sha256": null
+  }
+]
