@@ -1,5 +1,6 @@
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/MaterialCtrl.hpp"
+#include "Game/Scene/SceneFunction.hpp"
 #include "Game/Util/JointUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Logger.hpp"
@@ -11,6 +12,7 @@
 #include "runtime/SceneScheduler.hpp"
 
 #include <aurora/dvd.h>
+#include <aurora/gfx.h>
 #include <dolphin/dvd.h>
 
 #include <array>
@@ -288,6 +290,110 @@ namespace {
                     MR::getJointMtx(&overridden_actor, "Body") == retained_joint &&
                     retained_joint[0][3] != override_joint_x,
                 "stopped animation must not advance but must publish explicit phase and joint changes");
+
+#ifdef NDEBUG
+        throw std::runtime_error("The paused real-model draw proof requires a debug packet-trace build.");
+#else
+        // Reuse the loaded retail model to exercise movement suspension in
+        // the actual 3D and Model3DFor2D packet paths, not only virtual draw.
+        auto scheduler_binding = smgpc::runtime::SceneSchedulerBinding{scheduler};
+        scheduler.register_live_actor_model(overridden_actor, MR::MovementType_NPC,
+                                            MR::CalcAnimType_NPC,
+                                            MR::DrawBufferType_NPC, -1);
+        overridden_actor.mFlag.mIsStoppedAnim = false;
+        overridden_actor.mPosition.zero();
+        MR::startBck(&overridden_actor, "Wait", nullptr);
+        overridden_controller = MR::getBckCtrl(&overridden_actor);
+        MR::setBckFrame(&overridden_actor, 4.0F);
+        overridden_controller->setRate(1.0F);
+        CategoryList::requestMovementOff(MR::MovementType_NPC);
+
+        const auto camera = smgpc::camera::CameraPose{
+            .eye = {0.0F, 40.0F, 500.0F},
+            .watch = {0.0F, 40.0F, 0.0F},
+            .near_clip = 1.0F,
+        };
+        runtime.set_scene_camera_pose(camera);
+        for (auto index = 0; index < 2; ++index) {
+            static_cast<void>(renderer.begin_frame());
+            renderer.end_frame();
+        }
+
+        const auto render_model_frame = [&](s32 draw_buffer, float expected_bck,
+                                             bool expect_packets = true) {
+            const auto frame = renderer.begin_frame();
+            runtime.begin_frame(frame);
+            runtime.set_j3d_packet_trace_frame(frame.frame_index);
+            scheduler.execute_movement();
+            scheduler.execute_calc_anim();
+            scheduler.execute_calc_view_and_entry();
+            scheduler.execute_draw_buffer_opa(camera, draw_buffer);
+            scheduler.execute_draw_buffer_xlu(camera, draw_buffer);
+            auto packets = std::size_t{};
+            auto parsed_animated_packets = std::size_t{};
+            for (const auto &packet : runtime.j3d_packet_trace()) {
+                if (packet.frame_index != frame.frame_index || packet.model_name != "Tico") {
+                    continue;
+                }
+                parsed_animated_packets += packet.state.source_triangle_count != 0U &&
+                                           packet.state.parsed_display_list_bytes != 0U &&
+                                           packet.state.bck_active && packet.state.bck_joint_count != 0U;
+                if (packet.state.bck_active) {
+                    require_near(packet.state.bck_frame, expected_bck,
+                                 "rendered Tico packets must retain the authoritative animation clock");
+                }
+                ++packets;
+            }
+            renderer.end_frame();
+            require((packets != 0U) == expect_packets,
+                    "real Tico packet presence must follow draw connection independently of movement flags");
+            require(!expect_packets || parsed_animated_packets != 0U,
+                    "scheduled paused Tico must submit its real parsed, animated model packets");
+            require_near(overridden_controller->getFrame(), expected_bck,
+                         "only resumed actor movement may advance the BCK clock");
+            require(MR::getJointMtx(&overridden_actor, "Body") == retained_joint,
+                    "movement suspension must preserve the retained joint address");
+            return packets;
+        };
+
+        auto paused_packets = std::size_t{};
+        auto gpu_draw_seen = false;
+        auto paused_joint_x = 0.0F;
+        for (auto index = 0; index < 120 && (index < 2 || !gpu_draw_seen); ++index) {
+            if (index == 1) {
+                overridden_actor.mPosition.x += 25.0F;
+            }
+            paused_packets += render_model_frame(MR::DrawBufferType_NPC, 4.0F);
+            if (index == 0) {
+                paused_joint_x = retained_joint[0][3];
+            } else {
+                require_near(retained_joint[0][3], paused_joint_x + 25.0F,
+                             "paused calcAnim must still publish a changed actor transform into retained joints");
+            }
+            if (const auto *stats = aurora_get_stats(); stats != nullptr) {
+                gpu_draw_seen = gpu_draw_seen ||
+                                (stats->drawCallCount != 0U && stats->lastVertSize != 0U);
+            }
+        }
+        require(gpu_draw_seen, "paused real Tico packets must reach actual Aurora GPU draw submission");
+
+        // The 2D-model buffer has a separate selector and identity view.
+        // It must honor the same movement-versus-draw separation.
+        scheduler.register_live_actor_model(overridden_actor, MR::MovementType_NPC,
+                                            MR::CalcAnimType_NPC,
+                                            MR::DrawBufferType_Model3DFor2D, -1);
+        overridden_actor.mPosition.set(320.0F, 228.0F, 0.0F);
+        const auto paused_2d_packets =
+            render_model_frame(MR::DrawBufferType_Model3DFor2D, 4.0F);
+        scheduler.disconnect_draw(overridden_actor);
+        static_cast<void>(render_model_frame(MR::DrawBufferType_Model3DFor2D, 4.0F, false));
+        scheduler.connect_draw(overridden_actor);
+        CategoryList::requestMovementOn(MR::MovementType_NPC);
+        static_cast<void>(render_model_frame(MR::DrawBufferType_Model3DFor2D, 5.0F));
+        std::cout << "[proof] paused Tico 3D packets=" << paused_packets
+                  << ";2D packets=" << paused_2d_packets
+                  << ";GPU draw=yes;BCK=4->4->5;retained joint refresh=yes\n";
+#endif
         scheduler.unregister_live_actor_model(overridden_actor);
     }
 }

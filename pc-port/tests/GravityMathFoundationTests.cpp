@@ -69,8 +69,11 @@ namespace {
                 "maximum-vector-element lookup must select a NaN z after unordered comparisons");
         require(std::signbit(MR::getMaxElement(TVec3f{0.0F, -0.0F, -1.0F})),
                 "an x/y maximum tie must select y exactly as the retail comparison tree does");
-        require(near(MR::cosDegree(60.0F), 0.5F) && near(MR::sqrt(81.0F), 9.0F) && MR::sqrt(-4.0F) == -4.0F,
-                "degree cosine and host square root must preserve the retail utility contract");
+        // The retail 14-bit table truncates 60 degrees to index 2730.
+        // Comparing with ideal cos(60) would reject the original quantization.
+        const auto quantized_cosine = std::cos(2730.0F * (TWO_PI / 16384.0F));
+        require(near(MR::cosDegree(60.0F), quantized_cosine) && near(MR::sqrt(81.0F), 9.0F) && MR::sqrt(-4.0F) == -4.0F,
+                "degree cosine must retain the retail table grid and square root its signed input contract");
         require(near(MR::getEaseInValue(0.5F, 2.0F, 6.0F, 1.0F), 2.0F + (4.0F * (1.0F - std::cos(PI * 0.25F)))) &&
                     near(MR::getEaseOutValue(0.5F, 2.0F, 6.0F, 1.0F), 2.0F + (4.0F * std::sin(PI * 0.25F))) &&
                     near(MR::getEaseInOutValue(0.5F, 2.0F, 6.0F, 1.0F), 4.0F),

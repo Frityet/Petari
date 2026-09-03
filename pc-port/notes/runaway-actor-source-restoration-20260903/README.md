@@ -91,7 +91,7 @@ the current PC headers first, plus root game/JSystem headers as fallback, the
 restored collector compiles successfully. Its log contains only three existing
 missing-override warnings from `LiveActor.hpp`.
 
-The similarly isolated rabbit compile reaches 12 errors in source-facing
+The similarly isolated rabbit compile reaches 11 errors in source-facing
 headers or host compatibility support, with no remaining member-name errors.
 The exact initial frontier is recorded in `RunawayRabbit-syntax.log`; it is an
 audit snapshot, and parallel compatibility work may make it stale. No Xmake

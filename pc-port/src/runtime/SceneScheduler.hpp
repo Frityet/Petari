@@ -262,6 +262,11 @@ namespace smgpc::runtime {
         void register_live_actor_model(LiveActor &actor, s32 movement_type, s32 calc_anim_type, s32 draw_buffer_type, s32 draw_type);
         void unregister_live_actor_model(LiveActor &actor);
 
+        // NameObjExecuteHolder applies a category request to the registered
+        // objects' movement flags; it does not disconnect animation or draw.
+        void request_movement_on(s32 movement_type);
+        void request_movement_off(s32 movement_type);
+
         void execute_movement();
         void execute_calc_anim();
         void execute_calc_view_and_entry();

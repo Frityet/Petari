@@ -1,0 +1,215 @@
+#include "compat/MetrowerksStdCompat.hpp"
+
+#include "Game/Util/MathUtil.hpp"
+
+#include <cmath>
+#include <iostream>
+#include <stdexcept>
+#include <string>
+#include <string_view>
+
+namespace {
+    void require(bool condition, std::string_view message) {
+        if (!condition) {
+            throw std::runtime_error(std::string(message));
+        }
+    }
+
+    bool near(float actual, float expected, float tolerance = 0.00002F) {
+        return std::fabs(actual - expected) <= tolerance;
+    }
+
+    void require_vector(const TVec3f& actual, const TVec3f& expected, std::string_view message,
+                        float tolerance = 0.00002F) {
+        require(near(actual.x, expected.x, tolerance) && near(actual.y, expected.y, tolerance) &&
+                    near(actual.z, expected.z, tolerance), message);
+    }
+
+    void require_basis(const TQuat4f& quaternion) {
+        auto side = TVec3f{};
+        auto up = TVec3f{};
+        auto front = TVec3f{};
+        quaternion.getXDir(side);
+        quaternion.getYDir(up);
+        quaternion.getZDir(front);
+        require(near(side.length(), 1.0F) && near(up.length(), 1.0F) && near(front.length(), 1.0F) &&
+                    near(side.dot(up), 0.0F) && near(up.dot(front), 0.0F) && near(front.dot(side), 0.0F),
+                "quaternion blends must retain a finite orthonormal actor basis");
+        require_vector(side.cross(up), front, "quaternion blends must retain the handedness of the actor basis");
+    }
+
+    void test_quaternion_world_rotation_and_aliasing() {
+        const auto half_root = std::sqrt(0.5F);
+        const auto pitch = TQuat4f{half_root, 0.0F, 0.0F, half_root};
+        const auto yaw = TQuat4f{0.0F, half_root, 0.0F, half_root};
+        auto result = yaw;
+        result.mult(pitch);
+        auto front = TVec3f{};
+        result.getZDir(front);
+        require_vector(front, TVec3f{1.0F, 0.0F, 0.0F},
+                       "mult(rotation) must apply a world rotation on the left of the current orientation");
+        require(near(result.x, 0.5F) && near(result.y, 0.5F) && near(result.z, 0.5F) && near(result.w, 0.5F),
+                "a quarter pitch after a quarter yaw must retain the ordered Hamilton product");
+
+        auto alias_left = pitch;
+        alias_left.mult(alias_left, yaw);
+        auto alias_right = yaw;
+        alias_right.mult(pitch, alias_right);
+        require(alias_left.x == result.x && alias_left.y == result.y && alias_left.z == result.z &&
+                    alias_left.w == result.w && alias_right.x == result.x && alias_right.y == result.y &&
+                    alias_right.z == result.z && alias_right.w == result.w,
+                "both quaternion multiplication input aliases must preserve every input component");
+        alias_left.set(alias_left);
+        require(alias_left.w == result.w, "quaternion copy must support self assignment");
+    }
+
+    void test_actor_up_then_front_blend() {
+        auto quaternion = TQuat4f{};
+        // DemoRabbit::control uses these exact rates. The geometric result is
+        // a 9-degree pitch followed by an 18-degree turn about the new up axis.
+        MR::blendQuatUpFront(&quaternion, TVec3f{0.0F, 0.0F, 1.0F}, TVec3f{1.0F, 0.0F, 0.0F}, 0.1F, 0.2F);
+        const auto pitch = PI / 20.0F;
+        const auto yaw = PI / 10.0F;
+        auto up = TVec3f{};
+        auto front = TVec3f{};
+        quaternion.getYDir(up);
+        quaternion.getZDir(front);
+        require_vector(up, TVec3f{0.0F, std::cos(pitch), std::sin(pitch)},
+                       "actor up blending must rotate by its fraction of the angle to gravity");
+        require_vector(front, TVec3f{std::sin(yaw), -std::sin(pitch) * std::cos(yaw),
+                                    std::cos(pitch) * std::cos(yaw)},
+                       "front blending must use the up axis produced by the preceding gravity rotation");
+        require_basis(quaternion);
+
+        const auto source = quaternion;
+        auto separate = TQuat4f{};
+        MR::blendQuatUpFront(&separate, source, TVec3f{0.0F, 1.0F, 0.0F}, TVec3f{0.0F, 0.0F, 1.0F}, 0.1F, 0.2F);
+        MR::blendQuatUpFront(&quaternion, TVec3f{0.0F, 1.0F, 0.0F}, TVec3f{0.0F, 0.0F, 1.0F}, 0.1F, 0.2F);
+        require(quaternion.x == separate.x && quaternion.y == separate.y && quaternion.z == separate.z &&
+                    quaternion.w == separate.w,
+                "the separate-source and in-place actor quaternion overloads must have identical semantics");
+
+        quaternion = TQuat4f{};
+        MR::blendQuatUpFront(&quaternion, TVec3f{0.0F, 1.0F, 0.0F}, TVec3f{1.0F, 0.0F, 0.0F}, 0.0F, 1.5F);
+        quaternion.getZDir(front);
+        require_vector(front, TVec3f{std::sqrt(0.5F), 0.0F, -std::sqrt(0.5F)},
+                       "actor rotation rates must retain the retail extrapolation contract");
+
+        const auto before_zero = quaternion;
+        MR::blendQuatUpFront(&quaternion, TVec3f{}, TVec3f{}, 0.1F, 0.2F);
+        require(near(quaternion.x, before_zero.x) && near(quaternion.y, before_zero.y) &&
+                    near(quaternion.z, before_zero.z) && near(quaternion.w, before_zero.w),
+                "zero target directions must preserve the source orientation");
+        require_basis(quaternion);
+
+        quaternion = TQuat4f{};
+        MR::blendQuatUpFront(&quaternion, TVec3f{0.0F, -1.0F, 0.0F}, TVec3f{0.0F, 0.0F, 1.0F}, 0.1F, 0.0F);
+        quaternion.getYDir(up);
+        require(near(up.y, std::cos(PI * 0.1F), 0.0004F),
+                "opposite gravity must use the retail perturbation and begin a fractional half turn");
+        require_basis(quaternion);
+
+        quaternion = TQuat4f{};
+        MR::blendQuatUpFront(&quaternion, TVec3f{0.0F, 1.0F, 0.0F}, TVec3f{0.0F, 0.0F, -1.0F}, 0.0F, 0.2F);
+        quaternion.getZDir(front);
+        require(near(front.z, std::cos(PI * 0.2F), 0.0004F),
+                "opposite facing must use the retail perturbation instead of sticking at the old front");
+        require_basis(quaternion);
+    }
+
+    void test_spherical_vector_blend() {
+        auto result = TVec3f{};
+        require(MR::vecBlendSphere(TVec3f{2.0F, 0.0F, 0.0F}, TVec3f{0.0F, 4.0F, 0.0F}, &result, 0.5F),
+                "orthogonal vectors must have a valid spherical blend");
+        require_vector(result, TVec3f{3.0F / std::sqrt(5.0F), 6.0F / std::sqrt(5.0F), 0.0F},
+                       "spherical interpolation must weight the original magnitudes before restoring blended length");
+        require(near(result.length(), 3.0F), "spherical interpolation must restore interpolated vector length");
+
+        require(MR::vecBlendSphere(TVec3f{}, TVec3f{0.0F, 4.0F, 0.0F}, &result, 0.5F),
+                "one zero input must take the successful normalized-linear branch");
+        require_vector(result, TVec3f{0.0F, 2.0F, 0.0F}, "a zero endpoint must retain interpolated magnitude");
+        require(MR::vecBlendSphere(TVec3f{}, TVec3f{}, &result, 0.5F),
+                "two zero inputs must remain a successful zero blend");
+        require_vector(result, TVec3f{}, "two zero vectors must stay zero");
+
+        const auto small_angle = 0.05F;
+        const auto small_target = TVec3f{4.0F * std::cos(small_angle), 4.0F * std::sin(small_angle), 0.0F};
+        require(MR::vecBlendSphere(TVec3f{2.0F, 0.0F, 0.0F}, small_target, &result, 0.25F),
+                "angles under a tenth radian must use the normalized-linear path");
+        const auto weighted_x = 0.75F + 0.25F * std::cos(small_angle);
+        const auto weighted_y = 0.25F * std::sin(small_angle);
+        const auto scale = 2.5F / std::hypot(weighted_x, weighted_y);
+        require_vector(result, TVec3f{weighted_x * scale, weighted_y * scale, 0.0F},
+                       "the near-parallel branch must blend normalized directions independently of endpoint lengths");
+
+        result.set(3.0F, 4.0F, 5.0F);
+        require(!MR::vecBlendSphere(TVec3f{1.0F, 0.0F, 0.0F}, TVec3f{-1.0F, 0.0F, 0.0F}, &result, 0.5F),
+                "exactly opposite directions must report their ambiguous great-circle path");
+        require_vector(result, TVec3f{3.0F, 4.0F, 5.0F}, "a failed opposite-direction blend must leave output untouched");
+        require(MR::vecBlendSphere(TVec3f{1.0F, 0.0F, 0.0F}, TVec3f{-std::cos(0.01F), std::sin(0.01F), 0.0F},
+                                  &result, 0.5F),
+                "near-opposite directions must not be rejected by a widened cosine threshold");
+        require(result.y > 0.999F && near(result.length(), 1.0F),
+                "near-opposite blending must keep the real turn direction finite");
+
+        auto alias = TVec3f{2.0F, 0.0F, 0.0F};
+        require(MR::vecBlendSphere(alias, TVec3f{0.0F, 4.0F, 0.0F}, &alias, 0.5F),
+                "spherical blending must allow the output to alias the source");
+        require_vector(alias, TVec3f{3.0F / std::sqrt(5.0F), 6.0F / std::sqrt(5.0F), 0.0F},
+                       "in-place spherical blending must preserve original input magnitude");
+    }
+
+    void test_axis_rotation_snap_and_sign() {
+        auto result = TVec3f{};
+        const auto source = TVec3f{2.0F, 0.0F, 0.0F};
+        const auto target = TVec3f{0.0F, 4.0F, 0.0F};
+        const auto axis = TVec3f{0.0F, 0.0F, 1.0F};
+        MR::vecRotAxis(source, target, axis, &result, PI * 0.5F);
+        require_vector(result, target, "a reachable target must copy the target including its magnitude");
+        MR::vecRotAxis(source, target, axis, &result, PI * 0.25F);
+        require_vector(result, TVec3f{std::sqrt(2.0F), std::sqrt(2.0F), 0.0F},
+                       "a bounded rotation must retain source magnitude until reaching the target");
+        MR::vecRotAxis(source, -target, axis, &result, PI * 0.25F);
+        require_vector(result, TVec3f{std::sqrt(2.0F), -std::sqrt(2.0F), 0.0F},
+                       "the cross product must select a negative turn around the supplied axis");
+        MR::vecRotAxis(source, -source, axis, &result, PI * 0.25F);
+        require_vector(result, TVec3f{std::sqrt(2.0F), std::sqrt(2.0F), 0.0F},
+                       "opposite directions must use the positive authored rotation axis");
+        MR::vecRotAxis(TVec3f{}, target, axis, &result, 0.1F);
+        require_vector(result, target, "a zero source must copy the target");
+        MR::vecRotAxis(source, TVec3f{}, axis, &result, 0.1F);
+        require_vector(result, TVec3f{}, "a zero target must zero the output");
+        result = source;
+        MR::vecRotAxis(result, target, axis, &result, PI * 0.25F);
+        require_vector(result, TVec3f{std::sqrt(2.0F), std::sqrt(2.0F), 0.0F},
+                       "the SDK matrix rotation must preserve in-place vector calls");
+    }
+
+    void test_near_parallel_angle_table() {
+        MR::initAcosTable();
+        // 0.999 selects retail table entry 242, whose ratio is 12737/12750.
+        const auto expected = static_cast<float>(std::acos(12737.0 / 12750.0));
+        require(near(MR::acosEx(0.999F), expected, 0.0000001F),
+                "near-parallel acos must use the retail table grid");
+        require(near(MR::acosEx(-0.999F), PI - expected, 0.0000003F),
+                "near-opposite acos must reflect the same retail grid around pi");
+        require(MR::diffAngleAbs(TVec3f{2.0F, 0.0F, 0.0F}, TVec3f{4.0F, 0.0F, 0.0F}) == 0.0F &&
+                    MR::diffAngleAbs(TVec3f{2.0F, 0.0F, 0.0F}, TVec3f{-4.0F, 0.0F, 0.0F}) == PI,
+                "exact parallel and opposite angle clamps must precede table lookup");
+    }
+}  // namespace
+
+int main() {
+    try {
+        test_quaternion_world_rotation_and_aliasing();
+        test_actor_up_then_front_blend();
+        test_spherical_vector_blend();
+        test_axis_rotation_snap_and_sign();
+        test_near_parallel_angle_table();
+        std::cout << "game math rotation tests passed\n";
+        return 0;
+    } catch (const std::exception& exception) {
+        std::cerr << "game math rotation tests failed: " << exception.what() << '\n';
+        return 1;
+    }
+}

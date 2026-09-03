@@ -920,6 +920,10 @@ namespace {
             .zone_id = 7,
             .layer_id = 0,
             .archive_entry_order = 0U,
+            .holder_instance_id = 1U,
+            .parent_holder_instance_id = 0U,
+            .holder_depth = 1U,
+            .holder_traversal_order = 1U,
             .zone_transform = smgpc::scene::StageZoneTransform::from_translation_rotation(
                 {10.0F, 20.0F, 30.0F}, {0.0F, 0.0F, 90.0F}),
         };

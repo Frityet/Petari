@@ -1122,6 +1122,58 @@ target("smg-pc-gravity-math-foundation-tests")
         realtime_output = true
     })
 
+target("smg-pc-game-math-rotation-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    add_files {
+        "GameMathRotationTests.cpp",
+        "../aurora/lib/compat.cpp"
+    }
+    add_deps {
+        "smg-pc-common",
+        "smg-pc-game",
+        "aurora-card",
+        "aurora-dvd",
+        "aurora-gd",
+        "aurora-gx",
+        "aurora-os",
+        "aurora-pad",
+        "aurora-si",
+        "aurora-vi"
+    }
+    add_tests("game_math_rotation", {
+        group = "aurora",
+        rundir = os.projectdir(),
+        realtime_output = true
+    })
+
+target("smg-pc-scene-movement-runtime-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    add_files {
+        "SceneMovementRuntimeTests.cpp",
+        "../aurora/lib/compat.cpp"
+    }
+    add_deps {
+        "smg-pc-common",
+        "smg-pc-game",
+        "aurora-card",
+        "aurora-dvd",
+        "aurora-gd",
+        "aurora-gx",
+        "aurora-os",
+        "aurora-pad",
+        "aurora-si",
+        "aurora-vi"
+    }
+    add_tests("scene_movement_runtime", {
+        group = "aurora",
+        rundir = os.projectdir(),
+        realtime_output = true
+    })
+
 target("smg-pc-feedback-real-or-absent-tests")
     set_kind("binary")
     set_default(false)

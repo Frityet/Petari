@@ -1,0 +1,21 @@
+[pass] definition ingestion and dormant sheets
+[pass] zone scoping, CastId, and duplicate choice
+[pass] duplicate registered name resolution and pause scan
+[pass] multi-membership and row callbacks
+[pass] subgroup forwarding and named behavior
+[pass] timekeeper queries, SubParts, and natural end
+[pass] timekeeper pause, resume, and preserved pause
+[pass] registered start, suspend, and safe rejections
+[pass] one-frame final paused boundary overshoot
+[pass] ZoneList-only zone IDs
+[pass] GeneralPos table order and zone transform
+[pass] Action dispatch order, pause, and callback invariant
+[pass] Wipe row arbitrary names and raw frames
+[pass] no registry and scene teardown
+[pass] simple-cast registration, start, and release
+[pass] programmable demo absence versus real Time sheets
+[pass] scene-owned active demo state
+[pass] no definition skips DemoSheet archive
+[skip] RMGK01 scene-demo definition check
+[pass] optional real scene definitions
+19/19 tests passed

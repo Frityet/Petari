@@ -2,6 +2,7 @@
 #include "JSystem/JMath/JMATrigonometric.hpp"
 
 #include <algorithm>
+#include <array>
 #include <bit>
 #include <cmath>
 #include <cstdint>
@@ -12,28 +13,38 @@
 namespace {
     auto sRandomSeed = std::uint32_t{0U};
 
-    TQuat4f quaternion_from_axes(const TVec3f &side, const TVec3f &up, const TVec3f &front) {
-        const auto trace = side.x + up.y + front.z;
-        auto result = TQuat4f{};
-        if (trace > 0.0F) {
-            const auto scale = std::sqrt(trace + 1.0F) * 2.0F;
-            result.set((up.z - front.y) / scale, (front.x - side.z) / scale, (side.y - up.x) / scale, 0.25F * scale);
-        } else if (side.x > up.y && side.x > front.z) {
-            const auto scale = std::sqrt(1.0F + side.x - up.y - front.z) * 2.0F;
-            result.set(0.25F * scale, (up.x + side.y) / scale, (front.x + side.z) / scale, (up.z - front.y) / scale);
-        } else if (up.y > front.z) {
-            const auto scale = std::sqrt(1.0F + up.y - side.x - front.z) * 2.0F;
-            result.set((up.x + side.y) / scale, 0.25F * scale, (front.y + up.z) / scale, (front.x - side.z) / scale);
-        } else {
-            const auto scale = std::sqrt(1.0F + front.z - side.x - up.y) * 2.0F;
-            result.set((front.x + side.z) / scale, (front.y + up.z) / scale, 0.25F * scale, (side.y - up.x) / scale);
-        }
-        result.normalize();
-        return result;
+    const std::array<f32, 256>& acos_table() {
+        static const auto table = [] {
+            auto values = std::array<f32, 256>{};
+            for (auto index = std::size_t{}; index < values.size(); ++index) {
+                const auto ratio = (static_cast<f64>(index) / 255.0) * (1.0 - 0.98) + 0.98;
+                values[index] = static_cast<f32>(std::acos(std::min(ratio, 1.0)));
+            }
+            return values;
+        }();
+        return table;
     }
 }  // namespace
 
 namespace MR {
+    void initAcosTable() {
+        (void)acos_table();
+    }
+
+    f32 acosEx(f32 value) {
+        if (std::fabs(value) < 0.98F) {
+            return JMAAcosRadian(value);
+        }
+        // Avoid an undefined floating-to-integer conversion at the host
+        // boundary; retail callers supply values in the arccosine domain.
+        if (!std::isfinite(value) || value < -1.0F || value > 1.0F) {
+            return std::numeric_limits<f32>::quiet_NaN();
+        }
+        const auto index = static_cast<u32>((std::fabs(value) - 0.98F) * 50.0F * 255.0F);
+        const auto angle = acos_table()[index];
+        return value < 0.0F ? pi() - angle : angle;
+    }
+
     f32 getConvergeVibrationValue(f32 x, f32 start, f32 end, f32 dampScale, f32 rate) {
         f32 vibWeight = (x * x) * (x * x);
         f32 t1 = 1.0f - x;
@@ -70,71 +81,78 @@ namespace MR {
     f32 diffAngleAbs(const TVec3f& left, const TVec3f& right) {
         const auto left_length = left.length();
         const auto right_length = right.length();
-        if (!(left_length > 1.0e-8F) || !(right_length > 1.0e-8F)) {
+        const auto cosine = left.dot(right) / (left_length * right_length);
+        if (cosine >= 1.0F) {
             return 0.0F;
         }
-        const auto cosine = std::clamp(left.dot(right) / (left_length * right_length), -1.0F, 1.0F);
-        return std::acos(cosine);
+        if (cosine <= -1.0F) {
+            return PI;
+        }
+        return acosEx(cosine);
     }
 
-    bool vecBlendSphere(const TVec3f& left, const TVec3f& right, TVec3f* destination, f32 blend) {
-        if (destination == nullptr) {
+    void vecBlendNormal(const TVec3f& from, const TVec3f& to, TVec3f* destination, f32 rate) {
+        auto left = TVec3f{};
+        if (!isNearZero(from)) {
+            left.set(from);
+            PSVECNormalize(left, left);
+            PSVECScale(left, left, 1.0F - rate);
+        }
+
+        auto right = TVec3f{};
+        if (!isNearZero(to)) {
+            right.set(to);
+            PSVECNormalize(right, right);
+            PSVECScale(right, right, rate);
+        }
+        PSVECAdd(left, right, destination);
+    }
+
+    bool vecBlendSphere(const TVec3f& from, const TVec3f& to, TVec3f* destination, f32 rate) {
+        const auto from_length = from.length();
+        const auto to_length = to.length();
+        const auto angle = from_length == 0.0F || to_length == 0.0F ? 0.0F : diffAngleAbs(from, to);
+        const auto length = from_length * (1.0F - rate) + to_length * rate;
+        if (angle < 0.1F) {
+            vecBlendNormal(from, to, destination, rate);
+            destination->setLength(length);
+            return true;
+        }
+        if (angle == 0.0F) {
+            destination->set(from);
+            destination->setLength(length);
+            return false;
+        }
+        if (angle == pi()) {
             return false;
         }
 
-        const auto left_length = left.length();
-        const auto right_length = right.length();
-        if (!(left_length > 1.0e-8F) || !(right_length > 1.0e-8F)) {
-            destination->set(left * (1.0F - blend) + right * blend);
-            return false;
-        }
-
-        auto left_direction = left * (1.0F / left_length);
-        auto right_direction = right * (1.0F / right_length);
-        const auto cosine = std::clamp(left_direction.dot(right_direction), -1.0F, 1.0F);
-        if (cosine < -0.9999F) {
-            return false;
-        }
-
-        auto direction = TVec3f{};
-        if (cosine > 0.9999F) {
-            direction.set(left_direction * (1.0F - blend) + right_direction * blend);
-            if (normalizeOrZero(&direction)) {
-                return false;
-            }
-        } else {
-            const auto angle = std::acos(cosine);
-            const auto divisor = std::sin(angle);
-            const auto left_weight = std::sin((1.0F - blend) * angle) / divisor;
-            const auto right_weight = std::sin(blend * angle) / divisor;
-            direction.set(left_direction * left_weight + right_direction * right_weight);
-        }
-
-        direction.scale(left_length * (1.0F - blend) + right_length * blend);
-        destination->set(direction);
+        destination->set((from * JMASinRadian(angle * (1.0F - rate)) + to * JMASinRadian(angle * rate)) /
+                         JMASinRadian(angle));
+        destination->setLength(length);
         return true;
     }
 
     void vecRotAxis(const TVec3f& source, const TVec3f& target, const TVec3f& axis,
-                    TVec3f* destination, f32 maximum_angle) {
-        if (destination == nullptr) {
+                    TVec3f* destination, f32 angle) {
+        const auto source_length = source.length();
+        const auto target_length = target.length();
+        const auto difference = source_length == 0.0F || target_length == 0.0F ? 0.0F : diffAngleAbs(source, target);
+        if (difference == 0.0F) {
+            destination->set(target);
             return;
         }
 
-        auto unit_axis = axis;
-        if (normalizeOrZero(&unit_axis)) {
-            destination->set(source);
+        if (difference > angle) {
+            if (difference < pi() && source.cross(target).dot(axis) < 0.0F) {
+                angle = -angle;
+            }
+            auto rotation = TPos3f{};
+            PSMTXRotAxisRad(rotation.toMtxPtr(), axis, angle);
+            PSMTXMultVec(rotation.toMtxPtr(), source, destination);
             return;
         }
-
-        auto angle = std::min(diffAngleAbs(source, target), std::fabs(maximum_angle));
-        if (source.cross(target).dot(unit_axis) < 0.0F) {
-            angle = -angle;
-        }
-        const auto cosine = std::cos(angle);
-        const auto sine = std::sin(angle);
-        destination->set(source * cosine + unit_axis.cross(source) * sine +
-                         unit_axis * (unit_axis.dot(source) * (1.0F - cosine)));
+        destination->set(target);
     }
 
     f32 getRandom() {
@@ -215,6 +233,16 @@ namespace MR {
         const auto y = getRandom(-range, range);
         const auto z = getRandom(-range, range);
         pDst->set(rSrc + TVec3f{x, y, z});
+    }
+
+    void turnRandomVector(TVec3f* destination, const TVec3f& source, f32 range) {
+        const auto length = source.length();
+        addRandomVector(destination, source, range);
+        if (isNearZero(*destination)) {
+            destination->set(source);
+        } else {
+            destination->setLength(length);
+        }
     }
 
     f32 mod(f32 x, f32 y) {
@@ -417,31 +445,36 @@ namespace MR {
     }
 
     void blendQuatUpFront(TQuat4f *pQuat, const TVec3f &rUp, const TVec3f &rFront, f32 upRate, f32 frontRate) {
-        if (pQuat == nullptr) {
-            return;
-        }
-        auto current_up = TVec3f{};
-        auto current_front = TVec3f{};
-        pQuat->normalize();
-        pQuat->getYDir(current_up);
-        pQuat->getZDir(current_front);
+        blendQuatUpFront(pQuat, *pQuat, rUp, rFront, upRate, frontRate);
+    }
 
-        auto up = current_up + ((rUp - current_up) * clamp(upRate, 0.0F, 1.0F));
-        if (normalizeOrZero(&up)) {
-            up.set(0.0F, 1.0F, 0.0F);
+    void blendQuatUpFront(TQuat4f* destination, const TQuat4f& source, const TVec3f& target_up,
+                         const TVec3f& target_front, f32 up_rate, f32 front_rate) {
+        auto quaternion = source;
+        auto up = TVec3f{};
+        quaternion.getYDir(up);
+        if (up.dot(target_up) < 0.0F && isSameDirection(up, target_up)) {
+            turnRandomVector(&up, up, 0.001F);
         }
-        auto front = current_front + ((rFront - current_front) * clamp(frontRate, 0.0F, 1.0F));
-        vecKillElement(front, up, &front);
-        if (normalizeOrZero(&front)) {
-            makeAxisVerticalZX(&front, up);
+
+        auto up_rotation = TQuat4f{};
+        up_rotation.setRotate(up, target_up, up_rate);
+        quaternion.mult(up_rotation);
+
+        quaternion.getYDir(up);
+        auto front = TVec3f{};
+        quaternion.getZDir(front);
+        auto projected_front = target_front.killElement(up);
+        normalizeOrZero(&projected_front);
+        if (front.dot(projected_front) < 0.0F && isSameDirection(front, projected_front)) {
+            turnRandomVector(&front, front, 0.001F);
         }
-        auto side = up.cross(front);
-        if (normalizeOrZero(&side)) {
-            side.set(1.0F, 0.0F, 0.0F);
-        }
-        front = side.cross(up);
-        normalize(&front);
-        *pQuat = quaternion_from_axes(side, up, front);
+
+        auto front_rotation = TQuat4f{};
+        front_rotation.setRotate(front, projected_front, front_rate);
+        quaternion.mult(front_rotation);
+        quaternion.normalize();
+        destination->set(quaternion);
     }
 }  // namespace MR
 

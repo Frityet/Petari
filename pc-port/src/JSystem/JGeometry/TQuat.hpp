@@ -25,6 +25,24 @@ namespace JGeometry {
             w = static_cast<T>(w_);
         }
 
+        void set(const TQuat4& source) {
+            set(source.x, source.y, source.z, source.w);
+        }
+
+        void mult(const TQuat4& rotation) {
+            // The retail single-argument overload applies a world-space
+            // rotation: rotation * this, rather than this * rotation.
+            mult(rotation, *this);
+        }
+
+        void mult(const TQuat4& lhs, const TQuat4& rhs) {
+            const auto result_w = lhs.w * rhs.w - lhs.x * rhs.x - lhs.y * rhs.y - lhs.z * rhs.z;
+            const auto result_x = lhs.w * rhs.x + lhs.x * rhs.w + lhs.y * rhs.z - lhs.z * rhs.y;
+            const auto result_y = lhs.w * rhs.y + lhs.y * rhs.w + lhs.z * rhs.x - lhs.x * rhs.z;
+            const auto result_z = lhs.w * rhs.z + lhs.z * rhs.w + lhs.x * rhs.y - lhs.y * rhs.x;
+            set(result_x, result_y, result_z, result_w);
+        }
+
         void normalize() {
             const auto length_squared = (x * x) + (y * y) + (z * z) + (w * w);
             if (length_squared <= static_cast<T>(1.0e-12)) {

@@ -225,3 +225,17 @@ namespace MR {
     void connectToSceneSky(LiveActor* pActor);
 
 }  // namespace MR
+
+class CategoryList {
+public:
+    static void execute(MR::MovementType);
+    static void execute(MR::CalcAnimType);
+    static void execute(MR::DrawType);
+    static void entryDrawBuffer2D();
+    static void entryDrawBuffer3D();
+    static void entryDrawBufferMirror();
+    static void drawOpa(MR::DrawBufferType);
+    static void drawXlu(MR::DrawBufferType);
+    static void requestMovementOn(MR::MovementType);
+    static void requestMovementOff(MR::MovementType);
+};

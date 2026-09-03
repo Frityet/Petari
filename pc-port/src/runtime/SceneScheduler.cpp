@@ -645,6 +645,24 @@ namespace smgpc::runtime {
         });
     }
 
+    void SceneScheduler::request_movement_on(s32 movement_type) {
+        for (auto &entry : _entries) {
+            // Retail NameObjExecuteInfo stores its category in an s8 and
+            // narrows the requested category before comparing it.
+            if (static_cast<s8>(entry.movement_type) == static_cast<s8>(movement_type)) {
+                NameObjFunction::requestMovementOn(entry.name_obj);
+            }
+        }
+    }
+
+    void SceneScheduler::request_movement_off(s32 movement_type) {
+        for (auto &entry : _entries) {
+            if (static_cast<s8>(entry.movement_type) == static_cast<s8>(movement_type)) {
+                NameObjFunction::requestMovementOff(entry.name_obj);
+            }
+        }
+    }
+
     void SceneScheduler::execute_movement() {
 #ifndef NDEBUG
         _last_execution_trace.clear();
@@ -769,8 +787,10 @@ namespace smgpc::runtime {
     }
 
     void SceneScheduler::execute_calc_anim() {
+        // SceneNameObjListExecutor calls NameObj::calcAnim directly. Only
+        // its movement list uses executeMovement's movement-off flag.
         for (auto *entry : sorted_entries_for_calc_anim()) {
-            if (entry->calc_anim_type < 0 || entry_is_dead(*entry) || entry_is_suspended(*entry)) {
+            if (entry->calc_anim_type < 0 || entry_is_dead(*entry)) {
                 continue;
             }
             if (const auto* actor = entry_live_actor(*entry); actor != nullptr && actor->mFlag.mIsClipped) {
@@ -804,7 +824,7 @@ namespace smgpc::runtime {
 
     void SceneScheduler::execute_calc_view_and_entry() {
         for (auto *entry : sorted_entries_for_calc_view_and_entry()) {
-            if (!participates_in_calc_view_and_entry(*entry) || entry_is_dead(*entry) || entry_is_suspended(*entry)) {
+            if (!participates_in_calc_view_and_entry(*entry) || entry_is_dead(*entry)) {
                 continue;
             }
             if (const auto* actor = entry_live_actor(*entry); actor != nullptr && actor->mFlag.mIsClipped) {
@@ -1054,7 +1074,7 @@ namespace smgpc::runtime {
                 smgpc::compat::update_actor_clipping(*entry.live_actor, camera_pose);
             }
             if (entry.kind == SceneEntryKind::LiveActorModel && entry.draw_buffer_type == draw_buffer_type && !entry_is_dead(entry) &&
-                !entry_is_suspended(entry) && entry.draw_connected && !entry.live_actor->mFlag.mIsClipped) {
+                entry.draw_connected && !entry.live_actor->mFlag.mIsClipped) {
                 actor_entries.push_back(&entry);
             }
         }
@@ -1095,7 +1115,7 @@ namespace smgpc::runtime {
             // the perspective camera's clipping calculation.
             if (entry.kind == SceneEntryKind::LiveActorModel &&
                 entry.draw_buffer_type == draw_buffer_type &&
-                !entry_is_dead(entry) && !entry_is_suspended(entry) &&
+                !entry_is_dead(entry) &&
                 entry.draw_connected && !entry.live_actor->mFlag.mIsClipped) {
                 actor_entries.push_back(&entry);
             }
@@ -1130,7 +1150,7 @@ namespace smgpc::runtime {
     void SceneScheduler::execute_draw_type(s32 draw_type) {
         auto draw_entries = std::vector<Entry *>{};
         for (auto &entry : _entries) {
-            if (entry.draw_type == draw_type && entry.draw_connected && !entry_is_dead(entry) && !entry_is_suspended(entry)) {
+            if (entry.draw_type == draw_type && entry.draw_connected && !entry_is_dead(entry)) {
                 draw_entries.push_back(&entry);
             }
         }
