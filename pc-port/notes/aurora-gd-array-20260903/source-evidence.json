@@ -1,0 +1,48 @@
+{
+  "scope": "CPU display-list emission and real FIFO replay; no GPU/full-game validation",
+  "build_command": [
+    "cmake",
+    "--build",
+    "/Users/frityet/Projects/petari/build/aurora-upstream-merge-tests",
+    "--parallel",
+    "2",
+    "--target",
+    "gx_fifo_tests"
+  ],
+  "test_command": [
+    "/Users/frityet/Projects/petari/build/aurora-upstream-merge-tests/tests/gx_fifo_tests",
+    "--gtest_output=xml:/Users/frityet/Projects/petari/pc-port/notes/aurora-gd-array-20260903/gx-fifo-tests.xml"
+  ],
+  "total_tests": 244,
+  "new_gd_tests": 11,
+  "failures": 0,
+  "test_cases": [
+    "RetailWriterRetainsFullHostPointersForEveryArraySlot",
+    "SizedWriterPreservesResourceEndiannessAndExtent",
+    "RawWriterUsesActualPhysicalAddressMappingIncludingZero",
+    "PointerPatchPreservesSizedMetadataAndFollowingStride",
+    "GXBaseOnlyWritePreservesEveryExistingStrideAndNativePointer",
+    "NativeGDListReplaysIndexedDrawThroughActualDecoder",
+    "RawPhysicalArrayReplaysIndexedDrawFromItsResolvedOffset",
+    "PatchedNativePointerIsUsedByReplayWithoutTruncation",
+    "BaseOnlyReplacementKeepsPaddedStrideForIndexedReplay",
+    "IndexedMatrixArrayUsesNativeValuesAndPreservesStride",
+    "TwelveArrayVcdVatListFits320ByteNativeBound"
+  ],
+  "source_sha256": {
+    "include/dolphin/gd/GDGeometry.h": "6169936995aec9438851d9e1814123e68750f1830ff169a4ba5115c964327e31",
+    "include/dolphin/gx/GXGeometry.h": "70871bb0d6e3b5bb3ab12e942cbf6f6e8b393ffc45594d05f65f1b0263bd096a",
+    "lib/dolphin/gd/GDBase.cpp": "af5d6814e71aa3ccd0abe00028a656a20fd3dd78f18d75df5748529f01189d54",
+    "lib/dolphin/gd/GDGeometry.cpp": "f55d21b45f2fc9097792dca7399a8b8c4e83702f2e5b3f186f40c7c622591ed5",
+    "lib/dolphin/gx/GXGeometry.cpp": "a0c53a6ac51924d46aa93dd9387d211493493774f6c11e88b78045882b0e4330",
+    "tests/CMakeLists.txt": "88d22144b3d9ff41726e10807a3d205b165e5b7e0254c6222902abe2b863777a",
+    "tests/gd_array_test.cpp": "cd937e0c58eaae729305f72599fa5d414565cb5cd2da07cc2aaec9f02a64204e"
+  },
+  "original_contract_sha256": "bfcd8689afd1f978cc3ff2afc05d3a81efd6d7722e2a964ec638b6eabfca0f57",
+  "physical_address_provider_sha256": "bc36e9d398c0aa711533363d1c7a513c909db08b691337770a03cc1d6a7a5f3a",
+  "test_binary_sha256": "25586e132258a2dc329061c66f6b48e1389b52e636febb33a0c84f885f670207",
+  "raw_array_command_bytes": 16,
+  "base_and_stride_command_bytes": 22,
+  "twelve_array_vcd_vat_bytes": 303,
+  "twelve_array_vcd_vat_padded_bytes": 320
+}
