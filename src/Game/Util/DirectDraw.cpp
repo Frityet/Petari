@@ -5,6 +5,7 @@
 #include "Game/Util/ModelUtil.hpp"
 #include "Game/Util/MtxUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
+#include "Game/Util/SystemUtil.hpp"
 #include "JSystem/JUtility/JUTTexture.hpp"
 #include "math_types.hpp"
 #include "revolution/gx/GXEnum.h"
@@ -533,7 +534,48 @@ namespace TDDraw {
         dst[0x01] = color >> 24;
     }
 
-    // TDDraw::invProject
+    void invProject(TVec3f* pOut, const TVec3f& rScreenPos, MtxPtr pViewMtx, const f32* pProjection, const f32* pViewport,
+                    bool isNormalizedDepth) {
+        f32 depth;
+        if (!isNormalizedDepth) {
+            depth = rScreenPos.z / 16777215.0f;
+        } else {
+            depth = rScreenPos.z;
+        }
+
+        f32 depthOffset = depth - pViewport[5];
+        f32 projectedZ = (depthOffset * pProjection[6]) / (depthOffset + pProjection[5] * (pViewport[5] - pViewport[4]));
+        f32 inverseW = pProjection[5] / (pProjection[6] - projectedZ);
+
+        f32 x;
+        if (MR::isScreen16Per9()) {
+            f32 screenWidth = MR::getScreenWidth();
+            f32 frameBufferWidth = MR::getFrameBufferWidth();
+            f32 halfWidth = pViewport[2] * 0.5f;
+            x = ((rScreenPos.x * frameBufferWidth / screenWidth - (pViewport[0] + halfWidth)) / inverseW) / halfWidth;
+        } else {
+            f32 halfWidth = pViewport[2] * 0.5f;
+            x = ((rScreenPos.x - (pViewport[0] + halfWidth)) / inverseW) / halfWidth;
+        }
+
+        f32 halfHeight = pViewport[3] * 0.5f;
+        f32 y = (-(rScreenPos.y - (pViewport[1] + halfHeight)) / inverseW) / halfHeight;
+
+        TVec3f viewPos;
+        if (pProjection[0] == 0.0f) {
+            viewPos.z = (projectedZ - pProjection[6]) / pProjection[5];
+            viewPos.x = (x - viewPos.z * pProjection[2]) / pProjection[1];
+            viewPos.y = (y - viewPos.z * pProjection[4]) / pProjection[3];
+        } else {
+            viewPos.z = (projectedZ - pProjection[6]) / pProjection[5];
+            viewPos.x = (x - pProjection[2]) / pProjection[1];
+            viewPos.y = (y - pProjection[4]) / pProjection[3];
+        }
+
+        Mtx inverseView;
+        PSMTXInverse(pViewMtx, inverseView);
+        PSMTXMultVec(inverseView, &viewPos, pOut);
+    }
     // TDDraw::project2D
     // TDDraw::project2D
     // TDDraw::fix2Dpos

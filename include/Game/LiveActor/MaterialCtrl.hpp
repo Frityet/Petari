@@ -54,6 +54,8 @@ class TexMtxCtrl : public MaterialCtrl {
 public:
     TexMtxCtrl(J3DModelData*, const char*);
 
+    virtual void updateMaterial(J3DMaterial*) override;
+
     void setTexMtx(u32, J3DTexMtx*);
 
     J3DTexMtx* mMatricies[8];  // 0xC

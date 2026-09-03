@@ -1,0 +1,32 @@
+bne 0x2158 | beq 0x1c20
+lfs f1, 0x8(r4) | lfs f3, 0x8(r4)
+- | b 0x1c2c
+- | lfs f1, 0x8(r4)
+lfs f0, @60701@sda21 | lfs f0, @6302@sda21
+b 0x215c | -
+lfs f3, 0x8(r4) | -
+fdivs f30, f2, f0 | fdivs f31, f2, f0
+fsubs f0, f3, f30 | fsubs f0, f3, f31
+fdivs f31, f1, f0 | fdivs f30, f1, f0
+lis r30, lbl_8053F5B8@ha | lis r30, @6102@ha
+lfd f1, lbl_8053F5B8@l(r30) | lfd f1, @6102@l(r30)
+lfd f1, lbl_8053F5B8@l(r30) | lfd f2, @6102@l(r30)
+lfs f3, 0x0(r26) | lfs f1, 0x0(r26)
+lfs f2, 0x8(r29) | lfs f3, @6098@sda21
+fsubs f4, f0, f1 | fsubs f4, f0, f2
+lfs f1, @59870@sda21 | lfs f2, 0x8(r29)
+fmuls f1, f2, f1 | fmuls f2, f3, f2
+fmuls f2, f3, f4 | fmuls f1, f1, f4
+fadds f0, f0, f1 | fadds f0, f0, f2
+fdivs f2, f2, f29 | fdivs f1, f1, f29
+fsubs f0, f2, f0 | fsubs f0, f1, f0
+fdivs f0, f0, f31 | fdivs f0, f0, f30
+fdivs f6, f0, f1 | fdivs f6, f0, f2
+lfs f2, 0x8(r29) | lfs f2, @6098@sda21
+lfs f0, @59870@sda21 | lfs f0, 0x8(r29)
+fdivs f0, f0, f31 | fdivs f0, f0, f30
+lfs f1, 0xc(r29) | lfs f1, @6098@sda21
+lfs f0, @59870@sda21 | lfs f0, 0xc(r29)
+fdivs f0, f0, f31 | fdivs f0, f0, f30
+fsubs f4, f30, f1 | fsubs f4, f31, f1
+fsubs f5, f30, f2 | fsubs f5, f31, f2

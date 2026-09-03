@@ -26,14 +26,13 @@ void MaterialCtrl::update() {
     }
 }
 
-/*
 FogCtrl::FogCtrl(J3DModelData* pModelData, bool a3) : MaterialCtrl(pModelData, nullptr) {
     mNumMaterials = 0;
     mMaterials = nullptr;
 
     J3DMaterial* nextMat = nullptr;
-    for (u16 i = 0; i < pModelData->getMaterialCount(); i++) {
-        J3DMaterial* mat = pModelData->getMaterial(i);
+    for (u16 i = 0; i < pModelData->getMaterialNum(); i++) {
+        J3DMaterial* mat = pModelData->getMaterialNodePointer(i);
         if (a3 || mat->mPEBlock->getFog()->mType) {
             if (nextMat == nullptr) {
                 nextMat = mat;
@@ -44,33 +43,28 @@ FogCtrl::FogCtrl(J3DModelData* pModelData, bool a3) : MaterialCtrl(pModelData, n
     }
 
     if (nextMat == nullptr) {
-        nextMat = *pModelData->mMaterialTable.mMaterials;
+        nextMat = pModelData->getMaterialNodePointer(0);
     }
 
-    mFogInfo = nextMat->mPEBlock->getFog();
+    mFogInfo = *nextMat->mPEBlock->getFog();
 
     if (mNumMaterials > 0) {
         mMaterials = new J3DMaterial*[mNumMaterials];
         s32 curMaterial = 0;
 
-        for (u16 i = 0; i < pModelData->getMaterialCount(); i++) {
-            J3DMaterial* mat = pModelData->getMaterial(i);
+        for (u16 i = 0; i < pModelData->getMaterialNum(); i++) {
+            J3DMaterial* mat = pModelData->getMaterialNodePointer(i);
             if (a3 || mat->mPEBlock->getFog()->mType) {
                 mMaterials[curMaterial++] = mat;
             }
         }
     }
 }
-*/
-
-/*
 void FogCtrl::update() {
     for (s32 i = 0; i < mNumMaterials; i++) {
-        J3DPEBlockFull& block = *(J3DPEBlockFull*)mMaterials[i]->mPEBlock;
-        mMaterials[i]->mPEBlock->getFog() = block.mFog;
+        mMaterials[i]->mPEBlock->getFog()->setFogInfo(mFogInfo);
     }
 }
-    */
 
 MatColorCtrl::MatColorCtrl(J3DModelData* pModelData, const char* pName, u32 color, const J3DGXColor* pColor) : MaterialCtrl(pModelData, pName) {
     mColorChoice = color;
@@ -205,6 +199,24 @@ void MarioShadowProjmapMtxSetter::update() {
     PSMTXConcat(rotation, translation, projection);
     mProjmapEffectMtxSetter->mBaseMtx.set(projection);
     mProjmapEffectMtxSetter->update();
+}
+
+TexMtxCtrl::TexMtxCtrl(J3DModelData* pModelData, const char* pMaterialName) : MaterialCtrl(pModelData, pMaterialName) {
+    for (u32 i = 0; i < 8; i++) {
+        mMatricies[i] = nullptr;
+    }
+}
+
+void TexMtxCtrl::setTexMtx(u32 index, J3DTexMtx* pTexMtx) {
+    mMatricies[index] = pTexMtx;
+}
+
+void TexMtxCtrl::updateMaterial(J3DMaterial* pMaterial) {
+    for (u32 i = 0; i < 8; i++) {
+        if (mMatricies[i] != nullptr) {
+            pMaterial->mTexGenBlock->setTexMtx(i, mMatricies[i]);
+        }
+    }
 }
 
 void MaterialCtrl::updateMaterial(J3DMaterial*) {
