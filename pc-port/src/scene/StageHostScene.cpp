@@ -10,6 +10,7 @@
 #include "compat/DemoSceneRuntime.hpp"
 #include "compat/StageScenarioMetadataResolver.hpp"
 #include "compat/StageSessionState.hpp"
+#include "compat/StageZoneMatrixRegistry.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "scene/AreaObjRuntime.hpp"
 #include "scene/NameObjLifecycleService.hpp"
@@ -217,6 +218,7 @@ namespace smgpc::scene {
         _planet_map_catalog.reset();
         _stage_light_binding.reset();
         _event_camera_binding.reset();
+        _zone_matrix_binding.reset();
         _authored_data.reset();
         if (_stage_audio_started) {
             smgpc::compat::end_stage_audio(_runtime.audio());
@@ -543,6 +545,8 @@ namespace smgpc::scene {
             StageAuthoredData::resolve(
                 _runtime.dvd(), _request.stage_name, _request.scenario_no,
                 _request.start_id, _request.start_zone_id));
+        _zone_matrix_binding = std::make_unique<smgpc::compat::StageZoneMatrixBinding>(
+            _authored_data->holders(), _authored_data->tables());
         _event_camera_binding = std::make_unique<StageEventCameraBinding>(
             _runtime.camera_system(), _runtime.dvd(), _authored_data->tables());
         _stage_light_binding = std::make_unique<StageLightSceneBinding>(

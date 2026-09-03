@@ -26,7 +26,8 @@ namespace smgpc::scene {
                           std::vector<StagePlacementTable> tables,
                           std::vector<StagePlacementObject> placements,
                           std::vector<StageGeneralPos> general_positions,
-                          std::optional<StageStartInfo> start_info);
+                          std::optional<StageStartInfo> start_info,
+                          std::vector<StageHolderOccurrence> holders = {});
 
         [[nodiscard]] static StageAuthoredData resolve(
             smgpc::runtime::DvdFileSystemService &dvd,
@@ -41,6 +42,7 @@ namespace smgpc::scene {
         [[nodiscard]] std::string_view stage_name() const noexcept;
         [[nodiscard]] s32 scenario_no() const noexcept;
         [[nodiscard]] std::span<const StagePlacementTable> tables() const noexcept;
+        [[nodiscard]] std::span<const StageHolderOccurrence> holders() const noexcept;
         [[nodiscard]] std::span<const StagePlacementObject> placements() const noexcept;
         [[nodiscard]] std::span<const StageGeneralPos> general_positions() const noexcept;
         [[nodiscard]] const std::optional<StageStartInfo> &start_info() const noexcept;
@@ -53,6 +55,7 @@ namespace smgpc::scene {
         std::string _stage_name;
         s32 _scenario_no = 1;
         std::vector<StagePlacementTable> _tables;
+        std::vector<StageHolderOccurrence> _holders;
         std::vector<StagePlacementObject> _placements;
         std::vector<StageGeneralPos> _general_positions;
         std::optional<StageStartInfo> _start_info;

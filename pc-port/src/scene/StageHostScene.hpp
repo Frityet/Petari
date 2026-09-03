@@ -26,6 +26,7 @@ namespace smgpc::compat {
     class DemoSceneRuntime;
     class StageSessionBinding;
     class StageSessionState;
+    class StageZoneMatrixBinding;
 }  // namespace smgpc::compat
 
 namespace smgpc::scene {
@@ -103,6 +104,7 @@ namespace smgpc::scene {
         std::unique_ptr<smgpc::scene::nameobj::ObjectNameTable> _object_name_table;
         std::unique_ptr<smgpc::compat::DemoSceneRuntime> _demo_scene_runtime;
         std::unique_ptr<StageAuthoredData> _authored_data;
+        std::unique_ptr<smgpc::compat::StageZoneMatrixBinding> _zone_matrix_binding;
         std::unique_ptr<StageEventCameraBinding> _event_camera_binding;
         std::unique_ptr<AuthoredPlacementInstantiator> _authored_placements;
         std::vector<std::unique_ptr<NameObj>> _roots;

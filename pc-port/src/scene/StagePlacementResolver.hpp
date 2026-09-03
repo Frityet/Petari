@@ -234,7 +234,8 @@ namespace smgpc::scene {
         std::vector<StagePlacementTable> &tables,
         const JMapInfo &zone_list);
     [[nodiscard]] std::vector<StagePlacementTable> resolve_stage_placement_tables(smgpc::runtime::DvdFileSystemService &dvd, std::string_view stage_name,
-                                                                                  s32 scenario_no);
+                                                                                  s32 scenario_no,
+                                                                                  std::vector<StageHolderOccurrence>* holders = nullptr);
     [[nodiscard]] std::vector<StagePlacementObject> resolve_stage_placement_objects(
         smgpc::runtime::DvdFileSystemService &dvd,
         std::span<const StagePlacementTable> tables);

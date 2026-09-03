@@ -12,9 +12,10 @@ namespace smgpc::scene {
         std::vector<StagePlacementTable> tables,
         std::vector<StagePlacementObject> placements,
         std::vector<StageGeneralPos> general_positions,
-        std::optional<StageStartInfo> start_info)
+        std::optional<StageStartInfo> start_info,
+        std::vector<StageHolderOccurrence> holders)
         : _stage_name(std::move(stage_name)), _scenario_no(scenario_no),
-          _tables(std::move(tables)), _placements(std::move(placements)),
+          _tables(std::move(tables)), _holders(std::move(holders)), _placements(std::move(placements)),
           _general_positions(std::move(general_positions)),
           _start_info(std::move(start_info)) {
     }
@@ -23,7 +24,8 @@ namespace smgpc::scene {
         smgpc::runtime::DvdFileSystemService &dvd,
         std::string_view stage_name, s32 scenario_no, s32 start_id,
         s32 start_zone_id) {
-        auto tables = resolve_stage_placement_tables(dvd, stage_name, scenario_no);
+        auto holders = std::vector<StageHolderOccurrence>{};
+        auto tables = resolve_stage_placement_tables(dvd, stage_name, scenario_no, &holders);
         auto placements = resolve_stage_placement_objects(dvd, tables);
         auto general_positions = select_stage_general_positions(tables);
         auto start_info =
@@ -31,7 +33,7 @@ namespace smgpc::scene {
         return StageAuthoredData(
             std::string(stage_name), scenario_no, std::move(tables),
             std::move(placements), std::move(general_positions),
-            std::move(start_info));
+            std::move(start_info), std::move(holders));
     }
 
     std::string_view StageAuthoredData::stage_name() const noexcept {
@@ -45,6 +47,11 @@ namespace smgpc::scene {
     std::span<const StagePlacementTable>
     StageAuthoredData::tables() const noexcept {
         return _tables;
+    }
+
+    std::span<const StageHolderOccurrence>
+    StageAuthoredData::holders() const noexcept {
+        return _holders;
     }
 
     std::span<const StagePlacementObject>

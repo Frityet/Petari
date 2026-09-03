@@ -239,7 +239,7 @@ const StageDataHolder* StageDataHolder::getStageDataHolderFromZoneId(int zoneID)
 }
 
 const StageDataHolder* StageDataHolder::getStageDataHolderFromZoneId(int zoneID) {
-    return getStageDataHolderFromZoneId(zoneID);
+    return static_cast< const StageDataHolder* >(this)->getStageDataHolderFromZoneId(zoneID);
 }
 
 bool StageDataHolder::isPlacedZone(int zoneID) const {

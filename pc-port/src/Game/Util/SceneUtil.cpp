@@ -3,6 +3,7 @@
 #include "Game/Scene/PlacementStateChecker.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Scene/ScenePlayingResult.hpp"
+#include "Game/Scene/StageDataHolder.hpp"
 #include "Game/System/GalaxyStatusAccessor.hpp"
 #include "Game/System/GameDataFunction.hpp"
 #include "Game/System/GameSystem.hpp"
@@ -209,8 +210,16 @@ namespace MR {
 
     // isPlacementLocalStage
     // getPlacedZoneId
-    // getZonePlacementMtx
-    // getZonePlacementMtx
+    TPos3f* getZonePlacementMtx(const JMapInfoIter& rIter) {
+        const StageDataHolder* holder = getStageDataHolder()->findPlacedStageDataHolder(rIter);
+        return (TPos3f*)holder->mPlacementMtx;
+    }
+
+    TPos3f* getZonePlacementMtx(s32 zoneId) {
+        const StageDataHolder* holder = getStageDataHolder()->getStageDataHolderFromZoneId(zoneId);
+        return (TPos3f*)holder->mPlacementMtx;
+    }
+
     // getJapaneseObjectName
 
     void setCurrentPlacementZoneId(s32 zoneId) {

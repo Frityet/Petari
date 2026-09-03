@@ -1029,7 +1029,11 @@ namespace smgpc::scene {
         return positions;
     }
 
-    std::vector<StagePlacementTable> resolve_stage_placement_tables(smgpc::runtime::DvdFileSystemService &dvd, std::string_view stage_name, s32 scenario_no) {
+    std::vector<StagePlacementTable> resolve_stage_placement_tables(smgpc::runtime::DvdFileSystemService &dvd, std::string_view stage_name, s32 scenario_no,
+                                                                  std::vector<StageHolderOccurrence>* retained_holders) {
+        if (retained_holders != nullptr) {
+            retained_holders->clear();
+        }
         auto tables = std::vector<StagePlacementTable>{};
         auto zone_list = load_zone_list(dvd, stage_name);
         if (!zone_list.has_value()) {
@@ -1043,7 +1047,7 @@ namespace smgpc::scene {
             return tables;
         }
 
-        const auto holders = discover_stage_holder_occurrences(
+        auto holders = discover_stage_holder_occurrences(
             stage_name, *root_zone_id, StageZoneTransform{},
             [&](const StageHolderOccurrence &holder,
                 StagePlacementLoadBatch batch) {
@@ -1060,6 +1064,9 @@ namespace smgpc::scene {
         }
         assign_stage_placement_provenance(tables, *zone_list);
         attach_rail_info(tables);
+        if (retained_holders != nullptr) {
+            *retained_holders = std::move(holders);
+        }
         return tables;
     }
 
