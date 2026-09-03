@@ -1,6 +1,9 @@
 #include "Game/Util/JMapInfo.hpp"
 #include "resource/BcsvTable.hpp"
 #include "resource/JMapResource.hpp"
+#include "compat/JkrAllocationDomain.hpp"
+#include "JSystem/JKernel/JKRHeap.hpp"
+#include <optional>
 
 #include <array>
 #include <atomic>
@@ -86,6 +89,74 @@ namespace {
         for (auto& reader : readers) reader.join();
         for (auto* pointer : pointers) require(pointer == pointers[0], "concurrent readers share one stable cache entry");
     }
+    void test_alias_lifetime() {
+        using namespace smgpc::resource;
+        auto raw = fixture();
+        std::optional<JMapSourceRegistration> retained;
+        JMapInfo survivor;
+        const char* borrowed;
+        {
+            JMapResource owner(raw);
+            retained.emplace(owner.register_source(raw));
+            {
+                auto second = owner.register_source(raw);
+                require(survivor.attach(raw.data()), "archive alias resolves actual table");
+                require(survivor.getValue(0, "name", &borrowed), "aliased reader reads original field");
+            }
+            require(find_jmap_resource(raw.data()) != nullptr, "nested registration release preserves retained alias");
+        }
+        require(find_jmap_resource(raw.data()) != nullptr && std::string_view(borrowed) == name,
+                "registration retains decoded table after native owner handle leaves");
+        retained.reset();
+        require(find_jmap_resource(raw.data()) == nullptr, "last alias release removes exact raw identity");
+        const char* again;
+        require(survivor.getValue(0,"name",&again) && again == borrowed,
+                "attached reader retains shared table after raw identity deregistration");
+    }
+    void test_alias_validation_and_reuse() {
+        using namespace smgpc::resource;
+        auto raw = fixture();
+        JMapResource first(raw), second(raw);
+        auto registered = first.register_source(raw);
+        bool failed = false;
+        try { auto wrong = second.register_source(raw); } catch (const std::logic_error&) { failed = true; }
+        require(failed, "an active alias cannot change resource owners");
+        auto altered = raw; altered.back() ^= 1;
+        failed = false;
+        try { auto wrong = first.register_source(altered); } catch (const std::invalid_argument&) { failed = true; }
+        require(failed, "alias validates complete bytes");
+        failed = false;
+        try { auto wrong = first.register_source(std::span(raw).first(raw.size()-1)); } catch (const std::invalid_argument&) { failed = true; }
+        require(failed, "alias validates complete extent");
+        std::optional<JMapSourceRegistration> self;
+        self.emplace(first.register_source(first.bytes()));
+        self.reset();
+        require(find_jmap_resource(first.data()) != nullptr, "owned identity baseline survives optional self alias");
+    }
+    void test_native_heap_boundary() {
+        using namespace smgpc::compat;
+        std::optional<smgpc::resource::JMapResource> resource;
+        auto raw = fixture();
+        auto runtime = JkrHeapRuntime::create(1024*1024);
+        auto domain = JkrAllocationDomain::create(runtime, 256*1024);
+        const char* borrowed;
+        bool native_cache;
+        {
+            JkrAllocationScope original(domain);
+            resource.emplace(raw);
+            borrowed = read(*resource, "name");
+            native_cache = JKRHeap::findFromRoot(const_cast<char*>(borrowed)) == nullptr;
+            require(JKRHeap::findFromRoot(const_cast<void*>(resource->data())) == nullptr,
+                    "JMap resource bytes are host owned inside Game allocation scope");
+        }
+        // Safely dispose the old implementation's bad cache before retiring
+        // its arena, so the negative oracle reports ownership rather than UB.
+        if (!native_cache) resource.reset();
+        domain.reset();runtime.reset();
+        require(native_cache, "lazy shared JMap string cache escaped Game heap routing");
+        require(std::string_view(borrowed)==name && read(*resource,"name")==borrowed,
+                "cached names survive the heap that was selected for the first read");
+    }
 }
 int main() {
     const std::array tests{
@@ -93,6 +164,9 @@ int main() {
         std::pair{"attached reader retains released resource", test_attached_reader_retains_data},
         std::pair{"rebind preserves other owner", test_rebind_keeps_other_owner},
         std::pair{"concurrent shared readers", test_concurrent_readers},
+        std::pair{"archive alias retention", test_alias_lifetime},
+        std::pair{"archive alias validation", test_alias_validation_and_reuse},
+        std::pair{"Game heap cache isolation", test_native_heap_boundary},
     };
     for (const auto& [label, test] : tests) {
         try { test(); std::cout << "PASS " << label << '\n'; }

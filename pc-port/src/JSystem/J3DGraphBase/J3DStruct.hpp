@@ -163,7 +163,7 @@ struct J3DNBTScaleInfo {
 
 struct J3DTevOrderInfo {
     void operator=(const J3DTevOrderInfo& other) {
-        *(u32*)this = *(u32*)&other;
+        __memcpy(this, &other, sizeof(J3DTevOrderInfo));
     }
 
     /* 0x0 */ u8 mTexCoord;

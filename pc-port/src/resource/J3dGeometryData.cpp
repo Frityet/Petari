@@ -83,8 +83,8 @@ namespace smgpc::resource {
             checked(bytes, 0, 0x20);
             const auto type = u32_at(bytes, 4);
             if (u32_at(bytes, 0) != 0x4a334432U ||
-                (type != 0x626d6432U && type != 0x626d6433U && type != 0x62646c34U)) {
-                throw std::runtime_error("J3D geometry requires a J3D2 BMD2/BMD3/BDL4 model");
+                (type != 0x626d6432U && type != 0x626d6433U && type != 0x62646c33U && type != 0x62646c34U)) {
+                throw std::runtime_error("J3D geometry requires a J3D2 BMD2/BMD3/BDL3/BDL4 model");
             }
             const auto size = u32_at(bytes, 8);
             if (size < 0x20) throw std::runtime_error("J3D geometry file header is truncated");

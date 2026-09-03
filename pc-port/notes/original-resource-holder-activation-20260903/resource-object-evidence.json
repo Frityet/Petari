@@ -1,0 +1,252 @@
+{
+  "ResourceInfo": {
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/System/ResourceInfo.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-resource-holder-activation-20260903/ResourceInfo-ppc.o"
+    ],
+    "methods": [
+      {
+        "name": "__ct__11ResFileInfoFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__8ResTableFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "newFileInfoTable__8ResTableFUl",
+        "match_percent": 100.0
+      },
+      {
+        "name": "add__8ResTableFPCcPvb",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getResName__8ResTableCFUl",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getRes__8ResTableCFUl",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getRes__8ResTableCFPCc",
+        "match_percent": 100.0
+      },
+      {
+        "name": "findFileInfo__8ResTableCFPCc",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getFileInfo__8ResTableCFUl",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isExistRes__8ResTableCFPCc",
+        "match_percent": 100.0
+      },
+      {
+        "name": "findRes__8ResTableCFPCc",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getResIndex__8ResTableCFPCc",
+        "match_percent": 100.0
+      },
+      {
+        "name": "findResName__8ResTableCFPCv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getResName__8ResTableCFPCv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setName__11ResFileInfoFPCcb",
+        "match_percent": 100.0
+      }
+    ]
+  },
+  "ResourceHolder": {
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/System/ResourceHolder.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-resource-holder-activation-20260903/ResourceHolder-ppc.o"
+    ],
+    "methods": [
+      {
+        "name": "__ct__14ResourceHolderFR10JKRArchive",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getMotionName__14ResourceHolderCFUl",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isExistMaterialAnm__14ResourceHolderCFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "newMaterialAnmBuffer__14ResourceHolderFP12J3DModelData",
+        "match_percent": 100.0
+      },
+      {
+        "name": "newBckCtrl__14ResourceHolderFv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getInitEffectMtx__14ResourceHolderCFii",
+        "match_percent": 100.0
+      },
+      {
+        "name": "initializeArc__14ResourceHolderFR10JKRArchive",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getFileFinder__14ResourceHolderFP10JKRArchivePCc",
+        "match_percent": 100.0
+      },
+      {
+        "name": "initEachResTable__14ResourceHolderFPP8ResTableP10JKRArchivePCPCc",
+        "match_percent": 100.0
+      },
+      {
+        "name": "count__14ResourceHolderFP10JKRArchivePCcPCc",
+        "match_percent": 100.0
+      },
+      {
+        "name": "mount__14ResourceHolderFP10JKRArchivePc",
+        "match_percent": 100.0
+      },
+      {
+        "name": "createAndRegisterObject__14ResourceHolderFPCcPv",
+        "match_percent": 100.0
+      },
+      {
+        "name": "backupInitMaterialData__14ResourceHolderFPC12J3DModelData",
+        "match_percent": 100.0
+      }
+    ]
+  }
+}

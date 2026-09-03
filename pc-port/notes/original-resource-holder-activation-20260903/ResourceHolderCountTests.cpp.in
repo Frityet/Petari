@@ -1,0 +1,28 @@
+#define main original_archive_test_main
+#include "@ARCHIVE_TEST_SOURCE@"
+#undef main
+#include "Game/System/ResourceHolder.hpp"
+#include "compat/JkrAllocationDomain.hpp"
+int main(int argc,char**argv){
+    try {
+        auto arc = archive();
+        auto runtime = smgpc::compat::JkrHeapRuntime::create(1024*1024);
+        auto domain = smgpc::compat::JkrAllocationDomain::create(runtime,256*1024);
+        {
+            smgpc::compat::JkrAllocationScope original(domain);
+            require(ResourceHolder::count(&arc,nullptr,nullptr)==2,"original recursive count starts with a null path");
+            require(ResourceHolder::count(&arc,".bck",nullptr)==1,"original count finds root animation");
+            require(ResourceHolder::count(&arc,".pa",nullptr)==1,"original count visits nested path using MSL null string");
+            require(ResourceHolder::count(&arc,nullptr,"/empty")==0,"original count ignores dot records in an empty directory");
+        }
+        std::cout<<"PASS actual original recursive count and heap scope\n";
+        if(argc>1){
+            JKRMemArchive real(smgpc::resource::RarcArchive::from_file(argv[1]));
+            smgpc::compat::JkrAllocationScope original(domain);
+            require(ResourceHolder::count(&real,nullptr,nullptr)==574,"authored archive full file count");
+            require(ResourceHolder::count(&real,".bck",nullptr)==456,"authored BCK count");
+            require(ResourceHolder::count(&real,".banmt",nullptr)==1,"authored control table count");
+            std::cout<<"PASS actual MarioAnime 574 files / 456 BCK / 1 BANMT\n";
+        }
+    }catch(const std::exception&error){std::cerr<<"FAIL "<<error.what()<<'\n';return 1;}
+}

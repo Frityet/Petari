@@ -1,0 +1,11 @@
+{
+  "pc-port/src/resource/JMapResource.hpp": "18eb6d895f965dff0f97014d648a4aa4d29bbefdf917aa8e004f1634ad41b3b3",
+  "pc-port/src/resource/JMapResource.cpp": "b365ba1fc9114f29cb780c0610d5c36c5e92a23068d14b2be56f771fff2d4d47",
+  "pc-port/src/Game/Util/JMapInfo.cpp": "131d3e9ab3fc359448a8d5a283cdcab536df6a0cec42dc77f203cbfa97286841",
+  "pc-port/tests/OriginalJMapResourceTests.cpp": "d411506029da109d4ebce7b1b9a404492c26bb9989e39745d690b52eab2012b5",
+  "src/RVL_SDK/mtx/mtx44.c": "dcc84b95108824ef0e7ac83f32264b454cd2101bd93b8c61df840b273022cb17",
+  "pc-port/aurora/include/dolphin/mtx.h": "cd48ef42a01695ab43358bc12c5a6f6b72e2e273cf60379609c346a15141c5bb",
+  "pc-port/aurora/include/dolphin/mtx/mtx44ext.h": "7f48dd02e775d378a7eaee0a0dd5b5ea2b68f351aaf3b37e49e093aa04a4d9fe",
+  "pc-port/aurora/lib/dolphin/mtx/mtx44.c": "d75961c64b0e308abcb61f2e16a65449bdf14dcb555c0faf22d168f317628ad4",
+  "pc-port/aurora/tests/mtx44_test.cpp": "6bd91d52eecd0857dfaef8511c49f735aa8f6fed6028353e1b0d61b42f2713ff"
+}

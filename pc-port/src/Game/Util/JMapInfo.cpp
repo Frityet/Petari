@@ -2,6 +2,7 @@
 
 #include "resource/BcsvTable.hpp"
 #include "resource/JMapResource.hpp"
+#include "compat/JkrAllocationDomain.hpp"
 
 #include <algorithm>
 #include <cctype>
@@ -54,12 +55,14 @@ namespace {
     }
 }  // namespace
 
-JMapInfo::JMapInfo(smgpc::resource::BcsvTable table)
-    : mData(std::make_shared< DataCompat >(static_cast< s32 >(table.entry_count()))),
-      mTable(std::make_shared< smgpc::resource::BcsvTable >(std::move(table))) {
+JMapInfo::JMapInfo(smgpc::resource::BcsvTable table) {
+    smgpc::compat::JkrHostAllocationScope host;
+    mData = std::make_shared< DataCompat >(static_cast< s32 >(table.entry_count()));
+    mTable = std::make_shared< smgpc::resource::BcsvTable >(std::move(table));
 }
 
 JMapInfo JMapInfo::from_bcsv(std::span< const std::uint8_t > data) {
+    smgpc::compat::JkrHostAllocationScope host;
     return JMapInfo(smgpc::resource::BcsvTable::from_bytes(data));
 }
 
@@ -338,6 +341,7 @@ bool JMapInfo::getFloatValueByHash(int entryIndex, std::uint32_t hash, f32* pVal
 }
 
 bool JMapInfo::getStringValueByHash(int entryIndex, std::uint32_t hash, const char** pValueOut) const {
+    smgpc::compat::JkrHostAllocationScope host;
     if (!valid_entry(mTable.get(), entryIndex) || pValueOut == nullptr) {
         return false;
     }

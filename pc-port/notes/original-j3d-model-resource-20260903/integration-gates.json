@@ -1,0 +1,31 @@
+[
+  {
+    "target": "smg-pc-showcase",
+    "build_exit_code": 0
+  },
+  {
+    "target": "smg-pc-original-j3d-material-table-tests",
+    "build_exit_code": 0,
+    "test_exit_code": 0
+  },
+  {
+    "target": "smg-pc-original-jmap-resource-tests",
+    "build_exit_code": 0,
+    "test_exit_code": 0
+  },
+  {
+    "target": "smg-pc-original-bck-ctrl-tests",
+    "build_exit_code": 0,
+    "test_exit_code": 0
+  },
+  {
+    "target": "smg-pc-original-xanime-player-tests",
+    "build_exit_code": 0,
+    "test_exit_code": 0
+  },
+  {
+    "target": "smg-pc-original-camera-runtime-tests",
+    "build_exit_code": 0,
+    "test_exit_code": 0
+  }
+]

@@ -1,0 +1,52 @@
+{
+  "sha256": {
+    "pc-port/src/resource/J3dMaterialTableData.hpp": "4f5c2fa72df197feecb9bf6b44ff41876246ae0f74407278e02d2b2327dfded6",
+    "pc-port/src/resource/J3dMaterialTableData.cpp": "2f4de5725bf405929aa2222b8e502fab6d8b9863667c9081cab0b19da469103e",
+    "pc-port/tests/OriginalJ3DMaterialTableTests.cpp": "b8200708639badc965b9e46b45e1cd07a3553395da7ec4d64c63caaa6469097d",
+    "src/JSystem/J3DGraphLoader/J3DModelLoader.cpp": "2a2635a183bc86c3d431279dbd6ed6d551d7db9396be9bce4b172f45bdca5d7a",
+    "src/JSystem/J3DGraphLoader/J3DMaterialFactory.cpp": "59332aba0213a59f714621da81b74c185ea1b3c91a6c34a7bc5401282b08b7ff",
+    "libs/JSystem/include/JSystem/J3DGraphBase/J3DMaterial.hpp": "b39cb9e5a03b032e808707f57c18f6a8e36bfbb69731a7ac60038d678e561b70",
+    "pc-port/src/compat/J3DMaterialLoaderFactoryCompat.cpp": "59332aba0213a59f714621da81b74c185ea1b3c91a6c34a7bc5401282b08b7ff",
+    "pc-port/src/resource/J3dMaterialBlockData.cpp": "7937de0111f14f3c53624021d801244ede87b45af432cfd6491f6422488c5ab7",
+    "pc-port/src/resource/J3dAllocationIdentity.cpp": "4bcc1054753f2d43920726e98648d0f8dc2510b7049df222fb4d97326af843ae",
+    "libs/JSystem/include/JSystem/J3DGraphBase/J3DStruct.hpp": "d3ccdd73d35fbb0d50025c301827a323d941543d7e1f309ff49d7b1bbe450f7a",
+    "pc-port/src/JSystem/J3DGraphBase/J3DStruct.hpp": "40a90a3064a7a69f6d9142e33cc90f1a8d4104e37c138ece2a343ed3eb2410a7"
+  },
+  "method_map": [
+    {
+      "native": "Storage::read_material",
+      "root": "J3DModelLoader_v26::readMaterial",
+      "retail_address": "0x8043EC04"
+    },
+    {
+      "native": "Storage::read_material_table",
+      "root": "J3DModelLoader_v26::readMaterialTable",
+      "retail_address": "0x8043F2CC"
+    },
+    {
+      "native": "Storage::read_patched_material",
+      "root": "J3DModelLoader::readPatchedMaterial",
+      "retail_address": "0x8043F608"
+    },
+    {
+      "native": "Storage::read_material_dl",
+      "root": "J3DModelLoader::readMaterialDL",
+      "retail_address": "0x8043F744"
+    },
+    {
+      "native": "Storage::modify_material",
+      "root": "J3DModelLoader::modifyMaterial",
+      "retail_address": "0x8043F8F0"
+    }
+  ],
+  "native_adaptations": [
+    "Retained typed MaterialTable value instead of an incompletely constructed loader object.",
+    "Endian/bounds decoded native MAT3/MDL3 structures; retained backing in authored file order.",
+    "Explicit JKR domain and host-allocation escape around native lifetime metadata and validation exceptions.",
+    "Original-width cached-address identity ranges in place of host pointer truncation; original 0x4C unique array stride and shifted/unshifted operations remain.",
+    "Actual factory-created material type destruction; original subsidiary/post-load allocations retained until domain final release.",
+    "Bounds rejection before original unchecked unique-remap/MDL material-index access.",
+    "Read-only final MDL texture-number offset setter metadata for full-owner validation; virtual SDK getter unchanged.",
+    "J3DTevOrderInfo native assignment uses exactly four memcpy bytes, avoiding invalid u32 alignment while retaining the opaque fourth byte; root unchanged."
+  ]
+}

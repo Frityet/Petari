@@ -1,0 +1,264 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "original_command": [
+    "build/tools/wibo",
+    "build/tools/sjiswrap.exe",
+    "build/compilers/GC/3.0a3/mwcceppc.exe",
+    "-nodefaults",
+    "-proc",
+    "gekko",
+    "-align",
+    "powerpc",
+    "-enum",
+    "int",
+    "-fp",
+    "hardware",
+    "-Cpp_exceptions",
+    "off",
+    "-O4,s",
+    "-inline",
+    "auto",
+    "-pragma",
+    "cats off",
+    "-pragma",
+    "warn_notinlined off",
+    "-maxerrors",
+    "1",
+    "-nosyspath",
+    "-RTTI",
+    "off",
+    "-str",
+    "reuse",
+    "-enc",
+    "SJIS",
+    "-sdata",
+    "4",
+    "-sdata2",
+    "4",
+    "-ipa",
+    "file",
+    "-sym",
+    "on",
+    "-i",
+    "include",
+    "-i",
+    "libs/JSystem/include",
+    "-i",
+    "libs/MSL_C++/include",
+    "-i",
+    "libs/MSL_C/include",
+    "-i",
+    "libs/MetroTRK/include",
+    "-i",
+    "libs/RVLFaceLib/include",
+    "-i",
+    "libs/RVL_SDK/include",
+    "-i",
+    "libs/Runtime/include",
+    "-i",
+    "libs/nw4r/include",
+    "-i",
+    "build/RMGK01/include",
+    "-DVERSION=0",
+    "-c",
+    "src/Game/Util/ModelUtil.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/build/original-model-post-load-20260903/ModelUtil.o"
+  ],
+  "native_syntax_command": [
+    "/opt/homebrew/opt/llvm/bin/clang++",
+    "-std=c++23",
+    "-DTARGET_PC",
+    "-DAURORA",
+    "-Wno-inconsistent-missing-override",
+    "-Wno-multichar",
+    "-include",
+    "pc-port/src/compat/MetrowerksStdCompat.hpp",
+    "-Ipc-port/src",
+    "-Ipc-port/aurora/include",
+    "-fsyntax-only",
+    "pc-port/src/compat/ModelPostLoadCompat.cpp"
+  ],
+  "methods": [
+    {
+      "method": "initEnvelopeAndEnvMapOrProjMapModelData",
+      "address": "0x803ea004",
+      "size": 348,
+      "objdiff_match_percent": 100.0,
+      "relocated_bytes_equal": true,
+      "relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_25",
+          "target": "0x805189f8"
+        },
+        {
+          "offset": "0x44",
+          "kind": 10,
+          "symbol": "isUseTexMtxEnvMap__2MRFP11J3DMaterial",
+          "target": "0x803e9ed0"
+        },
+        {
+          "offset": "0x50",
+          "kind": 10,
+          "symbol": "isUseTexMtxProjMap__2MRFP11J3DMaterial",
+          "target": "0x803e9f74"
+        },
+        {
+          "offset": "0x74",
+          "kind": 10,
+          "symbol": "__nwa__FUli",
+          "target": "0x8040b488"
+        },
+        {
+          "offset": "0x84",
+          "kind": 10,
+          "symbol": "copyMemory__2MRFPvPCvUl",
+          "target": "0x803e8b68"
+        },
+        {
+          "offset": "0xe0",
+          "kind": 10,
+          "symbol": "addTexMtxIndexInDL__8J3DShapeF7_GXAttrUl",
+          "target": "0x804267b4"
+        },
+        {
+          "offset": "0xec",
+          "kind": 10,
+          "symbol": "addTexMtxIndexInVcd__8J3DShapeF7_GXAttr",
+          "target": "0x804268ac"
+        },
+        {
+          "offset": "0x108",
+          "kind": 10,
+          "symbol": "addTexMtxIndexInDL__8J3DShapeF7_GXAttrUl",
+          "target": "0x804267b4"
+        },
+        {
+          "offset": "0x114",
+          "kind": 10,
+          "symbol": "addTexMtxIndexInVcd__8J3DShapeF7_GXAttr",
+          "target": "0x804268ac"
+        },
+        {
+          "offset": "0x140",
+          "kind": 10,
+          "symbol": "sortVcdVatCmd__13J3DShapeTableFv",
+          "target": "0x804315a0"
+        },
+        {
+          "offset": "0x148",
+          "kind": 10,
+          "symbol": "_restgpr_25",
+          "target": "0x80518a44"
+        }
+      ]
+    },
+    {
+      "method": "downFracVtx",
+      "address": "0x803ea7a4",
+      "size": 200,
+      "objdiff_match_percent": 100.0,
+      "relocated_bytes_equal": true,
+      "relocations": [
+        {
+          "offset": "0x84",
+          "kind": 10,
+          "symbol": "DCStoreRange",
+          "target": "0x804a5190"
+        },
+        {
+          "offset": "0x9c",
+          "kind": 10,
+          "symbol": "makeVcdVatCmd__8J3DShapeFv",
+          "target": "0x80426dec"
+        }
+      ]
+    },
+    {
+      "method": "isUseFur",
+      "address": "0x803eb180",
+      "size": 116,
+      "objdiff_match_percent": 99.82758,
+      "relocated_bytes_equal": true,
+      "relocations": [
+        {
+          "offset": "0x28",
+          "kind": 10,
+          "symbol": "getName__10JUTNameTabCFUs",
+          "target": "0x804185a8"
+        },
+        {
+          "offset": "0x2c",
+          "kind": 109,
+          "symbol": "@14380",
+          "target": "0x806b2660"
+        },
+        {
+          "offset": "0x30",
+          "kind": 10,
+          "symbol": "strstr",
+          "target": "0x8051ff94"
+        }
+      ]
+    },
+    {
+      "method": "isEnvelope",
+      "address": "0x803e9a20",
+      "size": 12,
+      "objdiff_match_percent": 100.0,
+      "relocated_bytes_equal": true,
+      "relocations": []
+    },
+    {
+      "method": "isUseTexMtx",
+      "address": "0x803e9d38",
+      "size": 260,
+      "objdiff_match_percent": 100.0,
+      "relocated_bytes_equal": true,
+      "relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_29",
+          "target": "0x80518a08"
+        },
+        {
+          "offset": "0xf0",
+          "kind": 10,
+          "symbol": "_restgpr_29",
+          "target": "0x80518a54"
+        }
+      ]
+    },
+    {
+      "method": "isUseTexMtxEnvMap",
+      "address": "0x803e9ed0",
+      "size": 164,
+      "objdiff_match_percent": 100.0,
+      "relocated_bytes_equal": true,
+      "relocations": [
+        {
+          "offset": "0x60",
+          "kind": 10,
+          "symbol": "isUseTexMtx__2MRFP11J3DMaterialUl",
+          "target": "0x803e9d38"
+        }
+      ]
+    },
+    {
+      "method": "isUseTexMtxProjMap",
+      "address": "0x803e9f74",
+      "size": 144,
+      "objdiff_match_percent": 100.0,
+      "relocated_bytes_equal": true,
+      "relocations": []
+    }
+  ],
+  "source_sha256": {
+    "src/Game/Util/ModelUtil.cpp": "b56e61ad020a7c47f93c6c74644ee019787b7fa8968f4f5adf0be0da9a5c06ce",
+    "pc-port/src/compat/ModelPostLoadCompat.cpp": "b45dd348dbe22510207b6d50f76a772ffa20020f35d7541aff48fcbba6ad9b63",
+    "pc-port/src/compat/MaterialTextureModeCompat.cpp": "36c58a274e615caa496da2287340b599ecc67c938b321029671cb76666d53e5d"
+  }
+}

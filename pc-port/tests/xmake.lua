@@ -1215,7 +1215,9 @@ for _, fixture in ipairs {
     {"material-resource", "OriginalJ3DMaterialResourceTests.cpp"},
     {"geometry-resource", "OriginalJ3DGeometryResourceTests.cpp"},
     {"texture-resource", "OriginalJ3DTextureResourceTests.cpp"},
-    {"animation-resource", "OriginalJ3DAnimationResourceTests.cpp"}
+    {"animation-resource", "OriginalJ3DAnimationResourceTests.cpp"},
+    {"material-table", "OriginalJ3DMaterialTableTests.cpp"},
+    {"model-resource", "OriginalJ3DModelResourceTests.cpp"}
 } do
     target("smg-pc-original-j3d-" .. fixture[1] .. "-tests")
         set_kind("binary")

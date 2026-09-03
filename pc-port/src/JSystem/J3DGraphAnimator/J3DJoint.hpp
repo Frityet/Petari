@@ -1,6 +1,7 @@
 #pragma once
 
 #include "JSystem/J3DGraphAnimator/J3DMtxCalc.hpp"
+#include "JSystem/J3DGraphBase/J3DMaterial.hpp"
 #include "JSystem/J3DGraphBase/J3DSys.hpp"
 #include "JSystem/J3DGraphBase/J3DTransform.hpp"
 #include <revolution.h>
@@ -27,7 +28,13 @@ public:
         return mMesh;
     }
 
-    void addMesh(J3DMaterial* pMesh);
+    inline void addMesh(J3DMaterial* pMesh) {
+        if (mMesh != NULL) {
+            pMesh->setNext(mMesh);
+        }
+
+        mMesh = pMesh;
+    }
 
     u16 getJntNo() const {
         return mJntNo;
