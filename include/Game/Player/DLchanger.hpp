@@ -32,7 +32,7 @@ public:
     }
 
     void addDL(J3DModelX*);
-    void swap();
+    DLholder* swap();
 
     /* 0x0 */ DLholder* mBuffers;
     /* 0x4 */ u8 mNumBuffers;

@@ -120,6 +120,8 @@
 extern "C" {
 #endif
 
+void GDSetFog(GXFogType, f32, f32, f32, f32, GXColor);
+void GDSetBlendMode(GXBlendMode, GXBlendFactor, GXBlendFactor, GXLogicOp);
 void GDSetZMode(u8, GXCompare, u8);
 void GDSetBlendModeEtc(GXBlendMode, GXBlendFactor, GXBlendFactor, GXLogicOp, u8, u8, u8);
 void GDSetDstAlpha(u8, u8);

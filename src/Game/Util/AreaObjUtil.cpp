@@ -7,6 +7,7 @@
 #include "Game/Map/WaterAreaHolder.hpp"
 #include "Game/Map/WaterInfo.hpp"
 #include "Game/Util/PlayerUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
 
 namespace MR {
 
@@ -74,6 +75,14 @@ namespace MR {
 
     f32 getCylinderRadius(const AreaObj* pAreaObj) {
         return static_cast< AreaFormCylinder* >(pAreaObj->mForm)->_20;
+    }
+
+    void calcCubeAxisZ(const AreaObj* pAreaObj, TVec3f* pAxis) {
+        TVec3f rotation;
+        static_cast< AreaFormCube* >(pAreaObj->mForm)->calcWorldRotate(&rotation);
+        Mtx matrix;
+        MR::makeMtxRotate(matrix, rotation.x, rotation.y, rotation.z);
+        pAxis->set< f32 >(matrix[0][2], matrix[1][2], matrix[2][2]);
     }
 
     void tryToUpdatePlayerRestartIdInfo(const TVec3f& rPos) {

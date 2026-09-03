@@ -1,21 +1,30 @@
-#include "Game/Player/MarioActor.hpp"
-#include <revolution/os/OSCache.h>
-#include <JSystem/JUtility/JUTTexture.hpp>
-#include "Game/Util/MathUtil.hpp"
 #include "Game/Player/DLchanger.hpp"
+#include "Game/Player/MarioActor.hpp"
+#include "Game/Player/MarioConst.hpp"
+#include "Game/Util/CameraUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/ModelUtil.hpp"
 #include "Game/Util/SchedulerUtil.hpp"
+#include "Game/Util/ScreenUtil.hpp"
+#include <JSystem/JGeometry/TBox.hpp>
+#include <JSystem/JUtility/JUTTexture.hpp>
 #include <revolution/gd/GDBase.h>
+#include <revolution/gd/GDGeometry.h>
+#include <revolution/gd/GDLight.h>
+#include <revolution/gd/GDPixel.h>
 #include <revolution/gd/GDTev.h>
 #include <revolution/gx/GXEnum.h>
 #include <revolution/gx/GXFrameBuf.h>
 #include <revolution/gx/GXPixel.h>
+#include <revolution/os/OSCache.h>
 
 void MarioActor::initScreenBox() {
     //_B44 = new (32) u8[0x80000];
-    _B28 = 0.0f;
-    _B24 = 0.0f;
-    _B30 = 0.0f;
-    _B2C = 0.0f;
+    mScreenBoxMin.y = 0.0f;
+    mScreenBoxMin.x = 0.0f;
+    mScreenBoxMax.y = 0.0f;
+    mScreenBoxMax.x = 0.0f;
     _B38 = 0.0f;
     _B34 = 0.0f;
     _B40 = 0.0f;
@@ -30,7 +39,71 @@ bool MarioActor::isUseScreenBox() const {
     return !(_A08 - 7);
 }
 
-// void MarioActor::calcScreenBoxRange() {}
+void MarioActor::calcScreenBoxRange() {
+    if (!isUseScreenBox()) {
+        return;
+    }
+
+    TVec3f center;
+    center = _B18;
+    TVec2f screenCenter, screenX, screenY, screenZ;
+    MR::calcScreenPosition(&screenCenter, center);
+    TVec3f offsetX(80.0f, 0.0f, 0.0f);
+    TVec3f pointX(center);
+    pointX += offsetX;
+    MR::calcScreenPosition(&screenX, pointX);
+    TVec3f offsetY(0.0f, 80.0f, 0.0f);
+    TVec3f pointY(center);
+    pointY += offsetY;
+    MR::calcScreenPosition(&screenY, pointY);
+    TVec3f offsetZ(0.0f, 0.0f, 80.0f);
+    TVec3f pointZ(center);
+    pointZ += offsetZ;
+    MR::calcScreenPosition(&screenZ, pointZ);
+    TVec3f extent((screenX - screenCenter).length(), (screenY - screenCenter).length(), (screenZ - screenCenter).length());
+    f32 radius = extent.length();
+    TVec2f minimum = screenCenter - TVec2f(radius, radius);
+    TVec2f radius2(radius, radius);
+    TVec2f maximum = screenCenter + radius2;
+    mScreenBoxMin.x = minimum.x < maximum.x ? minimum.x : maximum.x;
+    mScreenBoxMax.x = minimum.x > maximum.x ? minimum.x : maximum.x;
+    mScreenBoxMin.y = minimum.y < maximum.y ? minimum.y : maximum.y;
+    mScreenBoxMax.y = minimum.y > maximum.y ? minimum.y : maximum.y;
+
+    TVec2f bufferMin, bufferMax;
+    MR::convertScreenPosToFrameBufferPos(&bufferMin, mScreenBoxMin);
+    MR::convertScreenPosToFrameBufferPos(&bufferMax, mScreenBoxMax);
+    s16 x = static_cast< s32 >(bufferMin.x) & ~1;
+    s16 y = static_cast< s32 >(bufferMin.y) & ~1;
+    s16 width = static_cast< s32 >(bufferMax.x) - x;
+    s16 height = static_cast< s32 >(bufferMax.y) - y;
+    width = (width + 1) & ~1;
+    height = (height + 1) & ~1;
+    if (width > 256)
+        width = 256;
+    if (height > 256)
+        height = 256;
+    if (width == 0)
+        width = 2;
+    if (height == 0)
+        height = 2;
+    _B34 = x;
+    _B38 = y;
+    _B3C = width;
+    _B40 = height;
+
+    TBox2f box(_B34, _B38, _B34 + _B3C, _B38 + _B40);
+    TBox2f screen(0.0f, 0.0f, MR::getFrameBufferWidth(), MR::getScreenHeight());
+    TBox2f clipped(box);
+    if (!clipped.intersect(screen)) {
+        clipped.i.set(0.0f);
+        clipped.f.set(0.0f);
+    }
+    _B34 = clipped.i.x;
+    _B38 = clipped.i.y;
+    _B3C = clipped.getWidth();
+    _B40 = clipped.getHeight();
+}
 
 void MarioActor::captureScreenBox() const {
     if (!isUseScreenBox()) {
@@ -82,7 +155,31 @@ void MarioActor::calc1stPersonView() {
 
 // void MarioActor::hideBeeFur() {}
 
-// void MarioActor::calcFogLighting() {}
+void MarioActor::calcFogLighting() {
+    Color8 fog(240, 16, 80, 0);
+    if (!mMario->isStatusActive(11) && isNeedDamageFog()) {
+        f32 rate = ((_1A8 + 31) & 63) / 63.0f;
+        if (rate > 0.5f)
+            rate = 1.0f - rate;
+        _1A4 = (2.0f * rate * (mConst->getTable()->mDamageFogHigh - mConst->getTable()->mDamageFogLow) + mConst->getTable()->mDamageFogLow) / 255.0f;
+    } else if (_1AA != 0) {
+        fog.mGXColor = _1B0.mGXColor;
+        if (_1B5) {
+            fog.g = 255.0f * MR::sin(PI * (_1AA / 20.0f));
+        }
+        _1A4 = _1AC * MR::sin(PI * (_1AA / static_cast< f32 >(mConst->getTable()->mStarPieceFogTime)));
+    } else if (mMario->_434 != 0) {
+        fog.set(255, 255, 0, 0);
+        _1A4 = 0.8f * MR::sin(0.5f * (PI * (mMario->_434 / static_cast< f32 >(mConst->getTable()->mItemDashTimer))));
+    } else {
+        resetFog();
+    }
+
+    Color8 ambient;
+    ambient.mGXColor = GXColor(*MR::getLightAmbientColor(this));
+    Color8 material(255, 255, 255, 255);
+    updateLightDL(ambient, material, fog, _1A4);
+}
 
 void MarioActor::resetFog() {
     // FIXME: contructing a color8, but never using it
@@ -92,13 +189,92 @@ void MarioActor::resetFog() {
     _1AA = 0;
 }
 
-// void MarioActor::updateAlphaDL(u8) {}
+void MarioActor::updateAlphaDL(u8 alpha) {
+    MR::ProhibitSchedulerAndInterrupts prohibit(false);
+    u8 displayList[0x100] ATTRIBUTE_ALIGN(32);
+    GDLObj obj;
+    GDInitGDLObj(&obj, displayList, sizeof(displayList));
+    __GDCurrentDL = &obj;
+    static const GXColor zero = {0, 0, 0, 0};
+    GXColor color = zero;
+    color.a = alpha;
+    GDSetTevColor(GX_TEVREG2, color);
+    GDSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
+    GDSetGenMode2(1, 0, 1, 0, GX_CULL_BACK);
+    GDSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, GX_LIGHT_NULL, GX_DF_CLAMP, GX_AF_NONE);
+    GDSetChanCtrl(GX_COLOR1A1, GX_FALSE, GX_SRC_REG, GX_SRC_REG, GX_LIGHT_NULL, GX_DF_CLAMP, GX_AF_NONE);
+    GDSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
+    GDSetTevAlphaCalcAndSwap(GX_TEVSTAGE0, GX_CA_A2, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV,
+                             GX_TEV_SWAP0, GX_TEV_SWAP0);
+    GDSetTevColorCalc(GX_TEVSTAGE0, GX_CC_TEXC, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GDSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL, GX_TEXCOORD1, GX_TEXMAP1, GX_COLOR_NULL);
+    GDPadCurr32();
+    u32 size = (obj.ptr - obj.start + 31) & ~31;
+    DLholder* holder = mDLchanger->swap();
+    holder->mSize = obj.ptr - obj.start;
+    MR::copyMemory(holder->mDL, displayList, size);
+    DCStoreRange(holder->mDL, size);
+}
 
-// void MarioActor::updateSimpleAlphaDL(u8) {}
+void MarioActor::updateSimpleAlphaDL(u8 alpha) {
+    MR::ProhibitSchedulerAndInterrupts prohibit(false);
+    u8 displayList[0x100] ATTRIBUTE_ALIGN(32);
+    GDLObj obj;
+    GDInitGDLObj(&obj, displayList, sizeof(displayList));
+    __GDCurrentDL = &obj;
+    GDSetDstAlpha(GX_TRUE, alpha);
+    GDPadCurr32();
+    u32 size = (obj.ptr - obj.start + 31) & ~31;
+    DLholder* holder = mDLchanger->swap();
+    holder->mSize = obj.ptr - obj.start;
+    MR::copyMemory(holder->mDL, displayList, size);
+    DCStoreRange(holder->mDL, size);
+}
 
-// void MarioActor::updateReflectAlphaDL(u8) {}
+void MarioActor::updateReflectAlphaDL(u8 alpha) {
+    MR::ProhibitSchedulerAndInterrupts prohibit(false);
+    u8 displayList[0x100] ATTRIBUTE_ALIGN(32);
+    GDLObj obj;
+    GDInitGDLObj(&obj, displayList, sizeof(displayList));
+    __GDCurrentDL = &obj;
+    static const GXColor zero = {0, 0, 0, 0};
+    GXColor color = zero;
+    color.a = alpha;
+    GDSetTevColor(GX_TEVREG2, color);
+    GDSetTevAlphaCalcAndSwap(GX_TEVSTAGE0, GX_CA_A2, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV,
+                             GX_TEV_SWAP0, GX_TEV_SWAP0);
+    GDPadCurr32();
+    u32 size = (obj.ptr - obj.start + 31) & ~31;
+    DLholder* holder = mDLchanger->swap();
+    holder->mSize = obj.ptr - obj.start;
+    MR::copyMemory(holder->mDL, displayList, size);
+    DCStoreRange(holder->mDL, size);
+}
 
-// void MarioActor::updateLightDL(const Color8&, const Color8&, const Color8&, f32) {}
+void MarioActor::updateLightDL(const Color8& ambient, const Color8& material, const Color8& fog, f32 rate) {
+    MR::ProhibitSchedulerAndInterrupts prohibit(false);
+    u8 displayList[0x200] ATTRIBUTE_ALIGN(32);
+    GDLObj obj;
+    GDInitGDLObj(&obj, displayList, sizeof(displayList));
+    __GDCurrentDL = &obj;
+    GDSetChanAmbColor(GX_COLOR0A0, static_cast< GXColor >(ambient));
+    GDSetChanMatColor(GX_COLOR0A0, static_cast< GXColor >(material));
+    GDSetChanCtrl(GX_COLOR1, GX_FALSE, GX_SRC_REG, GX_SRC_REG, GX_LIGHT_NULL, GX_DF_CLAMP, GX_AF_NONE);
+    if (!MR::isNearZero(rate, 0.001f)) {
+        f32 nearZ = MR::getNearZ();
+        f32 farZ = MR::getFarZ();
+        GXColor color = fog.mGXColor;
+        f32 start, end;
+        MR::calcFogStartEnd(mPosition, rate, &start, &end);
+        GDSetFog(GX_FOG_PERSP_LIN, start, end, nearZ, farZ, color);
+    }
+    GDPadCurr32();
+    mCurrDL = 1 - mCurrDL;
+    mDLSize = obj.ptr - obj.start;
+    u32 size = (mDLSize + 31) & ~31;
+    MR::copyMemory(mDL[mCurrDL], displayList, size);
+    DCStoreRange(mDL[mCurrDL], size);
+}
 
 void MarioActor::createRainbowDL() {
     MR::ProhibitSchedulerAndInterrupts prohibit(false);
@@ -209,3 +385,8 @@ void MarioActor::drawLifeUp() const {
 // bool MarioActor::drawDarkMask() const {}
 
 // void MarioActor::showBeeFur() {}
+
+DLholder* DLchanger::swap() {
+    mCurrentBuffer = (mCurrentBuffer + 1) % mNumBuffers;
+    return &mBuffers[mCurrentBuffer];
+}

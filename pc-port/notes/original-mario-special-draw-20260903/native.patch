@@ -1,0 +1,435 @@
+--- a/pc-port/src/Game/Player/MarioActorSpecialDraw.cpp
++++ b/pc-port/src/Game/Player/MarioActorSpecialDraw.cpp
+@@ -1,21 +1,30 @@
++#include "Game/Player/DLchanger.hpp"
+ #include "Game/Player/MarioActor.hpp"
+-#include <revolution/os/OSCache.h>
++#include "Game/Player/MarioConst.hpp"
++#include "Game/Util/CameraUtil.hpp"
++#include "Game/Util/LiveActorUtil.hpp"
++#include "Game/Util/MathUtil.hpp"
++#include "Game/Util/ModelUtil.hpp"
++#include "Game/Util/SchedulerUtil.hpp"
++#include "Game/Util/ScreenUtil.hpp"
++#include <JSystem/JGeometry/TBox.hpp>
+ #include <JSystem/JUtility/JUTTexture.hpp>
+-#include "Game/Util/MathUtil.hpp"
+-#include "Game/Player/DLchanger.hpp"
+-#include "Game/Util/SchedulerUtil.hpp"
+ #include <revolution/gd/GDBase.h>
++#include <revolution/gd/GDGeometry.h>
++#include <revolution/gd/GDLight.h>
++#include <revolution/gd/GDPixel.h>
+ #include <revolution/gd/GDTev.h>
+ #include <revolution/gx/GXEnum.h>
+ #include <revolution/gx/GXFrameBuf.h>
+ #include <revolution/gx/GXPixel.h>
++#include <revolution/os/OSCache.h>
+ 
+ void MarioActor::initScreenBox() {
+     //_B44 = new (32) u8[0x80000];
+-    _B28 = 0.0f;
+-    _B24 = 0.0f;
+-    _B30 = 0.0f;
+-    _B2C = 0.0f;
++    mScreenBoxMin.y = 0.0f;
++    mScreenBoxMin.x = 0.0f;
++    mScreenBoxMax.y = 0.0f;
++    mScreenBoxMax.x = 0.0f;
+     _B38 = 0.0f;
+     _B34 = 0.0f;
+     _B40 = 0.0f;
+@@ -30,7 +39,71 @@
+     return !(_A08 - 7);
+ }
+ 
+-// void MarioActor::calcScreenBoxRange() {}
++void MarioActor::calcScreenBoxRange() {
++    if (!isUseScreenBox()) {
++        return;
++    }
++
++    TVec3f center;
++    center = _B18;
++    TVec2f screenCenter, screenX, screenY, screenZ;
++    MR::calcScreenPosition(&screenCenter, center);
++    TVec3f offsetX(80.0f, 0.0f, 0.0f);
++    TVec3f pointX(center);
++    pointX += offsetX;
++    MR::calcScreenPosition(&screenX, pointX);
++    TVec3f offsetY(0.0f, 80.0f, 0.0f);
++    TVec3f pointY(center);
++    pointY += offsetY;
++    MR::calcScreenPosition(&screenY, pointY);
++    TVec3f offsetZ(0.0f, 0.0f, 80.0f);
++    TVec3f pointZ(center);
++    pointZ += offsetZ;
++    MR::calcScreenPosition(&screenZ, pointZ);
++    TVec3f extent((screenX - screenCenter).length(), (screenY - screenCenter).length(), (screenZ - screenCenter).length());
++    f32 radius = extent.length();
++    TVec2f minimum = screenCenter - TVec2f(radius, radius);
++    TVec2f radius2(radius, radius);
++    TVec2f maximum = screenCenter + radius2;
++    mScreenBoxMin.x = minimum.x < maximum.x ? minimum.x : maximum.x;
++    mScreenBoxMax.x = minimum.x > maximum.x ? minimum.x : maximum.x;
++    mScreenBoxMin.y = minimum.y < maximum.y ? minimum.y : maximum.y;
++    mScreenBoxMax.y = minimum.y > maximum.y ? minimum.y : maximum.y;
++
++    TVec2f bufferMin, bufferMax;
++    MR::convertScreenPosToFrameBufferPos(&bufferMin, mScreenBoxMin);
++    MR::convertScreenPosToFrameBufferPos(&bufferMax, mScreenBoxMax);
++    s16 x = static_cast< s32 >(bufferMin.x) & ~1;
++    s16 y = static_cast< s32 >(bufferMin.y) & ~1;
++    s16 width = static_cast< s32 >(bufferMax.x) - x;
++    s16 height = static_cast< s32 >(bufferMax.y) - y;
++    width = (width + 1) & ~1;
++    height = (height + 1) & ~1;
++    if (width > 256)
++        width = 256;
++    if (height > 256)
++        height = 256;
++    if (width == 0)
++        width = 2;
++    if (height == 0)
++        height = 2;
++    _B34 = x;
++    _B38 = y;
++    _B3C = width;
++    _B40 = height;
++
++    TBox2f box(_B34, _B38, _B34 + _B3C, _B38 + _B40);
++    TBox2f screen(0.0f, 0.0f, MR::getFrameBufferWidth(), MR::getScreenHeight());
++    TBox2f clipped(box);
++    if (!clipped.intersect(screen)) {
++        clipped.i.set(0.0f);
++        clipped.f.set(0.0f);
++    }
++    _B34 = clipped.i.x;
++    _B38 = clipped.i.y;
++    _B3C = clipped.getWidth();
++    _B40 = clipped.getHeight();
++}
+ 
+ void MarioActor::captureScreenBox() const {
+     if (!isUseScreenBox()) {
+@@ -82,7 +155,31 @@
+ 
+ // void MarioActor::hideBeeFur() {}
+ 
+-// void MarioActor::calcFogLighting() {}
++void MarioActor::calcFogLighting() {
++    Color8 fog(240, 16, 80, 0);
++    if (!mMario->isStatusActive(11) && isNeedDamageFog()) {
++        f32 rate = ((_1A8 + 31) & 63) / 63.0f;
++        if (rate > 0.5f)
++            rate = 1.0f - rate;
++        _1A4 = (2.0f * rate * (mConst->getTable()->mDamageFogHigh - mConst->getTable()->mDamageFogLow) + mConst->getTable()->mDamageFogLow) / 255.0f;
++    } else if (_1AA != 0) {
++        fog.mGXColor = _1B0.mGXColor;
++        if (_1B5) {
++            fog.g = 255.0f * MR::sin(PI * (_1AA / 20.0f));
++        }
++        _1A4 = _1AC * MR::sin(PI * (_1AA / static_cast< f32 >(mConst->getTable()->mStarPieceFogTime)));
++    } else if (mMario->_434 != 0) {
++        fog.set(255, 255, 0, 0);
++        _1A4 = 0.8f * MR::sin(0.5f * (PI * (mMario->_434 / static_cast< f32 >(mConst->getTable()->mItemDashTimer))));
++    } else {
++        resetFog();
++    }
++
++    Color8 ambient;
++    ambient.mGXColor = GXColor(*MR::getLightAmbientColor(this));
++    Color8 material(255, 255, 255, 255);
++    updateLightDL(ambient, material, fog, _1A4);
++}
+ 
+ void MarioActor::resetFog() {
+     // FIXME: contructing a color8, but never using it
+@@ -92,13 +189,92 @@
+     _1AA = 0;
+ }
+ 
+-// void MarioActor::updateAlphaDL(u8) {}
+-
+-// void MarioActor::updateSimpleAlphaDL(u8) {}
+-
+-// void MarioActor::updateReflectAlphaDL(u8) {}
+-
+-// void MarioActor::updateLightDL(const Color8&, const Color8&, const Color8&, f32) {}
++void MarioActor::updateAlphaDL(u8 alpha) {
++    MR::ProhibitSchedulerAndInterrupts prohibit(false);
++    u8 displayList[0x100] ATTRIBUTE_ALIGN(32);
++    GDLObj obj;
++    GDInitGDLObj(&obj, displayList, sizeof(displayList));
++    __GDCurrentDL = &obj;
++    static const GXColor zero = {0, 0, 0, 0};
++    GXColor color = zero;
++    color.a = alpha;
++    GDSetTevColor(GX_TEVREG2, color);
++    GDSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_NOOP);
++    GDSetGenMode2(1, 0, 1, 0, GX_CULL_BACK);
++    GDSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_REG, GX_LIGHT_NULL, GX_DF_CLAMP, GX_AF_NONE);
++    GDSetChanCtrl(GX_COLOR1A1, GX_FALSE, GX_SRC_REG, GX_SRC_REG, GX_LIGHT_NULL, GX_DF_CLAMP, GX_AF_NONE);
++    GDSetAlphaCompare(GX_ALWAYS, 0, GX_AOP_AND, GX_ALWAYS, 0);
++    GDSetTevAlphaCalcAndSwap(GX_TEVSTAGE0, GX_CA_A2, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV,
++                             GX_TEV_SWAP0, GX_TEV_SWAP0);
++    GDSetTevColorCalc(GX_TEVSTAGE0, GX_CC_TEXC, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
++    GDSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR_NULL, GX_TEXCOORD1, GX_TEXMAP1, GX_COLOR_NULL);
++    GDPadCurr32();
++    u32 size = (obj.ptr - obj.start + 31) & ~31;
++    DLholder* holder = mDLchanger->swap();
++    holder->mSize = obj.ptr - obj.start;
++    MR::copyMemory(holder->mDL, displayList, size);
++    DCStoreRange(holder->mDL, size);
++}
++
++void MarioActor::updateSimpleAlphaDL(u8 alpha) {
++    MR::ProhibitSchedulerAndInterrupts prohibit(false);
++    u8 displayList[0x100] ATTRIBUTE_ALIGN(32);
++    GDLObj obj;
++    GDInitGDLObj(&obj, displayList, sizeof(displayList));
++    __GDCurrentDL = &obj;
++    GDSetDstAlpha(GX_TRUE, alpha);
++    GDPadCurr32();
++    u32 size = (obj.ptr - obj.start + 31) & ~31;
++    DLholder* holder = mDLchanger->swap();
++    holder->mSize = obj.ptr - obj.start;
++    MR::copyMemory(holder->mDL, displayList, size);
++    DCStoreRange(holder->mDL, size);
++}
++
++void MarioActor::updateReflectAlphaDL(u8 alpha) {
++    MR::ProhibitSchedulerAndInterrupts prohibit(false);
++    u8 displayList[0x100] ATTRIBUTE_ALIGN(32);
++    GDLObj obj;
++    GDInitGDLObj(&obj, displayList, sizeof(displayList));
++    __GDCurrentDL = &obj;
++    static const GXColor zero = {0, 0, 0, 0};
++    GXColor color = zero;
++    color.a = alpha;
++    GDSetTevColor(GX_TEVREG2, color);
++    GDSetTevAlphaCalcAndSwap(GX_TEVSTAGE0, GX_CA_A2, GX_CA_ZERO, GX_CA_ZERO, GX_CA_ZERO, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV,
++                             GX_TEV_SWAP0, GX_TEV_SWAP0);
++    GDPadCurr32();
++    u32 size = (obj.ptr - obj.start + 31) & ~31;
++    DLholder* holder = mDLchanger->swap();
++    holder->mSize = obj.ptr - obj.start;
++    MR::copyMemory(holder->mDL, displayList, size);
++    DCStoreRange(holder->mDL, size);
++}
++
++void MarioActor::updateLightDL(const Color8& ambient, const Color8& material, const Color8& fog, f32 rate) {
++    MR::ProhibitSchedulerAndInterrupts prohibit(false);
++    u8 displayList[0x200] ATTRIBUTE_ALIGN(32);
++    GDLObj obj;
++    GDInitGDLObj(&obj, displayList, sizeof(displayList));
++    __GDCurrentDL = &obj;
++    GDSetChanAmbColor(GX_COLOR0A0, static_cast< GXColor >(ambient));
++    GDSetChanMatColor(GX_COLOR0A0, static_cast< GXColor >(material));
++    GDSetChanCtrl(GX_COLOR1, GX_FALSE, GX_SRC_REG, GX_SRC_REG, GX_LIGHT_NULL, GX_DF_CLAMP, GX_AF_NONE);
++    if (!MR::isNearZero(rate, 0.001f)) {
++        f32 nearZ = MR::getNearZ();
++        f32 farZ = MR::getFarZ();
++        GXColor color = fog.mGXColor;
++        f32 start, end;
++        MR::calcFogStartEnd(mPosition, rate, &start, &end);
++        GDSetFog(GX_FOG_PERSP_LIN, start, end, nearZ, farZ, color);
++    }
++    GDPadCurr32();
++    mCurrDL = 1 - mCurrDL;
++    mDLSize = obj.ptr - obj.start;
++    u32 size = (mDLSize + 31) & ~31;
++    MR::copyMemory(mDL[mCurrDL], displayList, size);
++    DCStoreRange(mDL[mCurrDL], size);
++}
+ 
+ void MarioActor::createRainbowDL() {
+     MR::ProhibitSchedulerAndInterrupts prohibit(false);
+@@ -209,3 +385,8 @@
+ // bool MarioActor::drawDarkMask() const {}
+ 
+ // void MarioActor::showBeeFur() {}
++
++DLholder* DLchanger::swap() {
++    mCurrentBuffer = (mCurrentBuffer + 1) % mNumBuffers;
++    return &mBuffers[mCurrentBuffer];
++}
+--- a/pc-port/src/Game/Player/MarioActor.hpp
++++ b/pc-port/src/Game/Player/MarioActor.hpp
+@@ -824,10 +824,8 @@
+     /* 0xB12 */ u16 _B12;
+     /* 0xB14 */ u16 _B14;
+     /* 0xB18 */ TVec3f _B18;
+-    /* 0xB24 */ f32 _B24;
+-    /* 0xB28 */ f32 _B28;
+-    /* 0xB2C */ f32 _B2C;
+-    /* 0xB30 */ f32 _B30;
++    /* 0xB24 */ TVec2f mScreenBoxMin;
++    /* 0xB2C */ TVec2f mScreenBoxMax;
+     /* 0xB34 */ f32 _B34;
+     /* 0xB38 */ f32 _B38;
+     /* 0xB3C */ f32 _B3C;
+--- a/pc-port/src/Game/Player/MarioActorInit.cpp
++++ b/pc-port/src/Game/Player/MarioActorInit.cpp
+@@ -274,10 +274,10 @@
+     _B12 = 0;
+     _B14 = 0;
+     _B18.zero();
+-    _B28 = 0.0f;
+-    _B24 = 0.0f;
+-    _B30 = 0.0f;
+-    _B2C = 0.0f;
++    mScreenBoxMin.y = 0.0f;
++    mScreenBoxMin.x = 0.0f;
++    mScreenBoxMax.y = 0.0f;
++    mScreenBoxMax.x = 0.0f;
+     _B38 = 0.0f;
+     _B34 = 0.0f;
+     _B40 = 0.0f;
+--- a/pc-port/src/Game/Player/DLchanger.hpp
++++ b/pc-port/src/Game/Player/DLchanger.hpp
+@@ -32,7 +32,7 @@
+     }
+ 
+     void addDL(J3DModelX*);
+-    void swap();
++    DLholder* swap();
+ 
+     /* 0x0 */ DLholder* mBuffers;
+     /* 0x4 */ u8 mNumBuffers;
+--- a/pc-port/src/JSystem/JGeometry/TVec.hpp
++++ b/pc-port/src/JSystem/JGeometry/TVec.hpp
+@@ -36,6 +36,24 @@
+         void set(T value) {
+             x = value;
+             y = value;
++        }
++
++        void setMin(const TVec2< f32 >& min) {
++            if (x >= min.x)
++                x = min.x;
++            if (y >= min.y)
++                y = min.y;
++        }
++
++        void setMax(const TVec2< f32 >& max) {
++            if (x <= max.x)
++                x = max.x;
++            if (y <= max.y)
++                y = max.y;
++        }
++
++        inline bool isAbove(const TVec2< T >& other) const {
++            return (x >= other.x) && (y >= other.y) ? true : false;
+         }
+ 
+         void add(const TVec2& value) {
+--- a/pc-port/src/JSystem/JGeometry/TBox.hpp
++++ b/pc-port/src/JSystem/JGeometry/TBox.hpp
+@@ -7,6 +7,37 @@
+     struct TBox {
+         T i{};
+         T f{};
++    };
++
++    template <>
++    struct TBox< TVec2< f32 > > {
++        f32 getWidth() const {
++            return f.x - i.x;
++        }
++        f32 getHeight() const {
++            return f.y - i.y;
++        }
++
++        bool isValid() const {
++            return f.isAbove(i);
++        }
++
++        void addPos(f32 x, f32 y) {
++            addPos(TVec2< f32 >(x, y));
++        }
++
++        void addPos(const TVec2< f32 >& pos) {
++            i.add(pos);
++            f.add(pos);
++        }
++
++        bool intersect(const TBox< TVec2< f32 > >& other) {
++            i.setMax(other.i);
++            f.setMin(other.f);
++            return isValid();
++        }
++
++        TVec2< f32 > i, f;
+     };
+ 
+     template <>
+@@ -69,6 +100,55 @@
+         TVec3f f{};
+     };
+ 
++    template < typename T >
++    struct TBox2 : public TBox< TVec2< T > > {
++    public:
++        TBox2() {
++        }
++
++        TBox2(const TVec2< T >& _i, const TVec2< T >& _f) {
++            TBox< TVec2< T > >::i.set(_i);
++            TBox< TVec2< T > >::f.set(_f);
++        }
++
++        TBox2(T x0, T y0, T x1, T y1) {
++            set(x0, y0, x1, y1);
++        }
++        // void set<T>(const TBox2<T> &a1, const TBox2<T> &a2);
++
++        void operator=(const JGeometry::TBox2< T >&);
++
++        void absolute() {
++            if (!this->isValid()) {
++                TBox2< T > box(*this);
++                this->i.setMin(box.i);
++                this->i.setMin(box.f);
++                this->f.setMax(box.i);
++                this->f.setMax(box.f);
++            }
++        }
++
++        void set(const TBox< TVec2< T > >& other) {
++            set(other.i, other.f);
++        }
++        void set(const TVec2< T >& i, const TVec2< T >& f) {
++            this->i.set(i), this->f.set(f);
++        }
++        void set(T x0, T y0, T x1, T y1) NO_INLINE {
++            this->i.set(x0, y0);
++            this->f.set(x1, y1);
++        }
++
++        void setInline(T x0, T y0, T x1, T y1) {
++            this->i.set(x0, y0);
++            this->f.set(x1, y1);
++        }
++
++        inline bool intersectsPoint(const TVec2< T >& rPos) const {
++            return (rPos.x >= this->i.x && rPos.y >= this->i.y && rPos.x < this->f.x && rPos.y < this->f.y);
++        }
++    };
++
+     template <typename T>
+     struct TBox3 : public TBox<TVec3<T>> {
+     };
+@@ -85,3 +165,6 @@
+ 
+ using TBox3f = JGeometry::TBox3<f32>;
+ using TDirBox3f = JGeometry::TDirBox3<f32>;
++
++using TBox2f = JGeometry::TBox2<f32>;
++using TBox2s = JGeometry::TBox2<s16>;
+--- a/pc-port/src/revolution/gx/GXFrameBuf.h
++++ b/pc-port/src/revolution/gx/GXFrameBuf.h
+@@ -1,2 +1,2 @@
+ #pragma once
+-#include <dolphin/gx/GXFrameBuf.h>
++#include <dolphin/gx/GXFrameBuffer.h>

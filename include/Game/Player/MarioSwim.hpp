@@ -82,7 +82,7 @@ public:
     f32 checkUnderWaterFull(const TVec3f&);
     void hitHead(const HitInfo*);
 
-    f32 calcWaterEdgeDist() const {
+    f32 getWaterEdgeDist() const {
         if (isOnWaterSurface()) {
             return -1.0f;
         }

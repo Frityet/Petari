@@ -1,0 +1,3863 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "functions": [
+    {
+      "name": "calcViewReflectionModel__10MarioActorFv",
+      "address": "0x802bfc5c",
+      "retail_size": 1824,
+      "compiled_size": 1820,
+      "match_percent": 99.49561,
+      "retail_function_sha256": "85e799629e801e77371882b986c5c83a3c18e641b4f424f1e885b1f95c7b2a69",
+      "source_sha256": "2dc5bb3bc674c9aa2a802ae7a22cbac88388c7710e4cdc50c7a2a425da5ef768",
+      "same_direct_call_order": true,
+      "retail_references": [
+        {
+          "offset": "0x30",
+          "kind": 10,
+          "symbol": "_savegpr_29",
+          "addend": 0
+        },
+        {
+          "offset": "0x38",
+          "kind": 10,
+          "symbol": "getJ3DModel__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x44",
+          "kind": 10,
+          "symbol": "getJ3DModel__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x50",
+          "kind": 10,
+          "symbol": "PSMTXCopy",
+          "addend": 0
+        },
+        {
+          "offset": "0x58",
+          "kind": 10,
+          "symbol": "PSMTXIdentity",
+          "addend": 0
+        },
+        {
+          "offset": "0x5e",
+          "kind": 6,
+          "symbol": "lbl_805B8E18",
+          "addend": 0,
+          "value_hex": "835e815b8393835783838393837600"
+        },
+        {
+          "offset": "0x60",
+          "kind": 109,
+          "symbol": "@64296",
+          "addend": 0,
+          "value_hex": "41200000"
+        },
+        {
+          "offset": "0x6a",
+          "kind": 4,
+          "symbol": "lbl_805B8E18",
+          "addend": 0,
+          "value_hex": "835e815b8393835783838393837600"
+        },
+        {
+          "offset": "0x6c",
+          "kind": 10,
+          "symbol": "isAnimationRun__10MarioActorCFPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x78",
+          "kind": 109,
+          "symbol": "@64297",
+          "addend": 0,
+          "value_hex": "41c80000"
+        },
+        {
+          "offset": "0x10c",
+          "kind": 10,
+          "symbol": "getNormal__8TriangleCFi",
+          "addend": 0
+        },
+        {
+          "offset": "0x11c",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x12c",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x138",
+          "kind": 10,
+          "symbol": "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x144",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x14a",
+          "kind": 6,
+          "symbol": "lbl_805B8E27",
+          "addend": 0,
+          "value_hex": "416c6c5f526f6f7400"
+        },
+        {
+          "offset": "0x152",
+          "kind": 4,
+          "symbol": "lbl_805B8E27",
+          "addend": 0,
+          "value_hex": "416c6c5f526f6f7400"
+        },
+        {
+          "offset": "0x158",
+          "kind": 10,
+          "symbol": "getRealPos__10MarioActorCFPCcPQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x164",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x170",
+          "kind": 10,
+          "symbol": "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x184",
+          "kind": 10,
+          "symbol": "PSMTXTrans",
+          "addend": 0
+        },
+        {
+          "offset": "0x190",
+          "kind": 10,
+          "symbol": "updateReflectAlphaDL__10MarioActorFUc",
+          "addend": 0
+        },
+        {
+          "offset": "0x1a8",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>Ffff_v",
+          "addend": 0
+        },
+        {
+          "offset": "0x1bc",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>Ffff_v",
+          "addend": 0
+        },
+        {
+          "offset": "0x1d0",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>Ffff_v",
+          "addend": 0
+        },
+        {
+          "offset": "0x1ec",
+          "kind": 10,
+          "symbol": "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x200",
+          "kind": 10,
+          "symbol": "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x214",
+          "kind": 10,
+          "symbol": "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x228",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x234",
+          "kind": 10,
+          "symbol": "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x244",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x250",
+          "kind": 10,
+          "symbol": "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x260",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x26c",
+          "kind": 10,
+          "symbol": "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x2c4",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x2d8",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x2e4",
+          "kind": 10,
+          "symbol": "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x2f0",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x2f8",
+          "kind": 109,
+          "symbol": "@64300",
+          "addend": 0,
+          "value_hex": "42200000"
+        },
+        {
+          "offset": "0x310",
+          "kind": 109,
+          "symbol": "@62953",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x318",
+          "kind": 109,
+          "symbol": "@64302",
+          "addend": 0,
+          "value_hex": "43480000"
+        },
+        {
+          "offset": "0x328",
+          "kind": 109,
+          "symbol": "@64301",
+          "addend": 0,
+          "value_hex": "43200000"
+        },
+        {
+          "offset": "0x334",
+          "kind": 109,
+          "symbol": "@62952",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x340",
+          "kind": 10,
+          "symbol": "dot__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x34c",
+          "kind": 10,
+          "symbol": "clamp01__2MRFPf",
+          "addend": 0
+        },
+        {
+          "offset": "0x358",
+          "kind": 109,
+          "symbol": "@64303",
+          "addend": 0,
+          "value_hex": "3fb4fdf4"
+        },
+        {
+          "offset": "0x364",
+          "kind": 10,
+          "symbol": "clamp01__2MRFPf",
+          "addend": 0
+        },
+        {
+          "offset": "0x36c",
+          "kind": 109,
+          "symbol": "@64304",
+          "addend": 0,
+          "value_hex": "42800000"
+        },
+        {
+          "offset": "0x3c8",
+          "kind": 10,
+          "symbol": "updateSimpleAlphaDL__10MarioActorFUc",
+          "addend": 0
+        },
+        {
+          "offset": "0x3d4",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x3ec",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>Ffff_v",
+          "addend": 0
+        },
+        {
+          "offset": "0x400",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>Ffff_v",
+          "addend": 0
+        },
+        {
+          "offset": "0x414",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>Ffff_v",
+          "addend": 0
+        },
+        {
+          "offset": "0x428",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x434",
+          "kind": 10,
+          "symbol": "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x43c",
+          "kind": 10,
+          "symbol": "normalize__2MRFPQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x44c",
+          "kind": 10,
+          "symbol": "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x460",
+          "kind": 10,
+          "symbol": "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x474",
+          "kind": 10,
+          "symbol": "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x488",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x494",
+          "kind": 10,
+          "symbol": "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x4a4",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x4b0",
+          "kind": 10,
+          "symbol": "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x4c0",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x4cc",
+          "kind": 10,
+          "symbol": "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x524",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x538",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x544",
+          "kind": 10,
+          "symbol": "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x550",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x55c",
+          "kind": 10,
+          "symbol": "getWaterEdgeDist__9MarioSwimCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x560",
+          "kind": 109,
+          "symbol": "@62953",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x570",
+          "kind": 109,
+          "symbol": "@64223",
+          "addend": 0,
+          "value_hex": "447a0000"
+        },
+        {
+          "offset": "0x580",
+          "kind": 109,
+          "symbol": "@63989",
+          "addend": 0,
+          "value_hex": "3f000000"
+        },
+        {
+          "offset": "0x594",
+          "kind": 10,
+          "symbol": "dot__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x5a0",
+          "kind": 10,
+          "symbol": "clamp01__2MRFPf",
+          "addend": 0
+        },
+        {
+          "offset": "0x5ac",
+          "kind": 109,
+          "symbol": "@64303",
+          "addend": 0,
+          "value_hex": "3fb4fdf4"
+        },
+        {
+          "offset": "0x5b8",
+          "kind": 10,
+          "symbol": "clamp01__2MRFPf",
+          "addend": 0
+        },
+        {
+          "offset": "0x5c0",
+          "kind": 109,
+          "symbol": "@64305",
+          "addend": 0,
+          "value_hex": "42fe0000"
+        },
+        {
+          "offset": "0x61c",
+          "kind": 10,
+          "symbol": "updateSimpleAlphaDL__10MarioActorFUc",
+          "addend": 0
+        },
+        {
+          "offset": "0x628",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x64c",
+          "kind": 10,
+          "symbol": "PSMTXCopy",
+          "addend": 0
+        },
+        {
+          "offset": "0x654",
+          "kind": 10,
+          "symbol": "getCarrySensor__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x664",
+          "kind": 10,
+          "symbol": "getCarrySensor__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x670",
+          "kind": 10,
+          "symbol": "getJointMtx__2MRFPC9LiveActori",
+          "addend": 0
+        },
+        {
+          "offset": "0x680",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "addend": 0
+        },
+        {
+          "offset": "0x690",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "addend": 0
+        },
+        {
+          "offset": "0x69c",
+          "kind": 10,
+          "symbol": "calcType0__15JetTurtleShadowFPA4_f",
+          "addend": 0
+        },
+        {
+          "offset": "0x6ac",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "addend": 0
+        },
+        {
+          "offset": "0x6bc",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "addend": 0
+        },
+        {
+          "offset": "0x6c2",
+          "kind": 6,
+          "symbol": "j3dSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x6ca",
+          "kind": 4,
+          "symbol": "j3dSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x6d0",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "addend": 0
+        },
+        {
+          "offset": "0x6e0",
+          "kind": 10,
+          "symbol": "viewCalc3__9J3DModelXFUlPA4_f",
+          "addend": 0
+        },
+        {
+          "offset": "0x6e4",
+          "kind": 10,
+          "symbol": "loadViewMtx__2MRFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x70c",
+          "kind": 10,
+          "symbol": "_restgpr_29",
+          "addend": 0
+        }
+      ],
+      "compiled_references": [
+        {
+          "offset": "0x30",
+          "kind": 10,
+          "symbol": "_savegpr_29",
+          "addend": 0
+        },
+        {
+          "offset": "0x38",
+          "kind": 10,
+          "symbol": "getJ3DModel__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x44",
+          "kind": 10,
+          "symbol": "getJ3DModel__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x50",
+          "kind": 10,
+          "symbol": "PSMTXCopy",
+          "addend": 0
+        },
+        {
+          "offset": "0x58",
+          "kind": 10,
+          "symbol": "PSMTXIdentity",
+          "addend": 0
+        },
+        {
+          "offset": "0x5e",
+          "kind": 6,
+          "symbol": "@6647",
+          "addend": 0,
+          "value_hex": "835e815b8393835783838393837600"
+        },
+        {
+          "offset": "0x60",
+          "kind": 109,
+          "symbol": "@6645",
+          "addend": 0,
+          "value_hex": "41200000"
+        },
+        {
+          "offset": "0x6a",
+          "kind": 4,
+          "symbol": "@6647",
+          "addend": 0,
+          "value_hex": "835e815b8393835783838393837600"
+        },
+        {
+          "offset": "0x6c",
+          "kind": 10,
+          "symbol": "isAnimationRun__10MarioActorCFPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x78",
+          "kind": 109,
+          "symbol": "@6646",
+          "addend": 0,
+          "value_hex": "41c80000"
+        },
+        {
+          "offset": "0x10c",
+          "kind": 10,
+          "symbol": "getNormal__8TriangleCFi",
+          "addend": 0
+        },
+        {
+          "offset": "0x11c",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x12c",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x138",
+          "kind": 10,
+          "symbol": "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x144",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x14a",
+          "kind": 6,
+          "symbol": "@6648",
+          "addend": 0,
+          "value_hex": "416c6c5f526f6f7400"
+        },
+        {
+          "offset": "0x152",
+          "kind": 4,
+          "symbol": "@6648",
+          "addend": 0,
+          "value_hex": "416c6c5f526f6f7400"
+        },
+        {
+          "offset": "0x158",
+          "kind": 10,
+          "symbol": "getRealPos__10MarioActorCFPCcPQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x164",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x170",
+          "kind": 10,
+          "symbol": "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x184",
+          "kind": 10,
+          "symbol": "PSMTXTrans",
+          "addend": 0
+        },
+        {
+          "offset": "0x190",
+          "kind": 10,
+          "symbol": "updateReflectAlphaDL__10MarioActorFUc",
+          "addend": 0
+        },
+        {
+          "offset": "0x1a8",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>Ffff_v",
+          "addend": 0
+        },
+        {
+          "offset": "0x1bc",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>Ffff_v",
+          "addend": 0
+        },
+        {
+          "offset": "0x1d0",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>Ffff_v",
+          "addend": 0
+        },
+        {
+          "offset": "0x1ec",
+          "kind": 10,
+          "symbol": "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x200",
+          "kind": 10,
+          "symbol": "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x214",
+          "kind": 10,
+          "symbol": "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x228",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x234",
+          "kind": 10,
+          "symbol": "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x244",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x250",
+          "kind": 10,
+          "symbol": "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x260",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x26c",
+          "kind": 10,
+          "symbol": "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x2c4",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x2d8",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x2e4",
+          "kind": 10,
+          "symbol": "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x2f0",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x2f8",
+          "kind": 109,
+          "symbol": "@6649",
+          "addend": 0,
+          "value_hex": "42200000"
+        },
+        {
+          "offset": "0x310",
+          "kind": 109,
+          "symbol": "@6650",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x318",
+          "kind": 109,
+          "symbol": "@6653",
+          "addend": 0,
+          "value_hex": "43480000"
+        },
+        {
+          "offset": "0x328",
+          "kind": 109,
+          "symbol": "@6651",
+          "addend": 0,
+          "value_hex": "43200000"
+        },
+        {
+          "offset": "0x334",
+          "kind": 109,
+          "symbol": "@6652",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x340",
+          "kind": 10,
+          "symbol": "dot__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x34c",
+          "kind": 10,
+          "symbol": "clamp01__2MRFPf",
+          "addend": 0
+        },
+        {
+          "offset": "0x358",
+          "kind": 109,
+          "symbol": "@6654",
+          "addend": 0,
+          "value_hex": "3fb4fdf4"
+        },
+        {
+          "offset": "0x364",
+          "kind": 10,
+          "symbol": "clamp01__2MRFPf",
+          "addend": 0
+        },
+        {
+          "offset": "0x36c",
+          "kind": 109,
+          "symbol": "@6655",
+          "addend": 0,
+          "value_hex": "42800000"
+        },
+        {
+          "offset": "0x3c8",
+          "kind": 10,
+          "symbol": "updateSimpleAlphaDL__10MarioActorFUc",
+          "addend": 0
+        },
+        {
+          "offset": "0x3d4",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x3ec",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>Ffff_v",
+          "addend": 0
+        },
+        {
+          "offset": "0x400",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>Ffff_v",
+          "addend": 0
+        },
+        {
+          "offset": "0x414",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>Ffff_v",
+          "addend": 0
+        },
+        {
+          "offset": "0x428",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x434",
+          "kind": 10,
+          "symbol": "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x43c",
+          "kind": 10,
+          "symbol": "normalize__2MRFPQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x44c",
+          "kind": 10,
+          "symbol": "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x460",
+          "kind": 10,
+          "symbol": "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x474",
+          "kind": 10,
+          "symbol": "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x488",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x494",
+          "kind": 10,
+          "symbol": "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x4a4",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x4b0",
+          "kind": 10,
+          "symbol": "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x4c0",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x4cc",
+          "kind": 10,
+          "symbol": "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x524",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x538",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x544",
+          "kind": 10,
+          "symbol": "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x550",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x55c",
+          "kind": 10,
+          "symbol": "getWaterEdgeDist__9MarioSwimCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x560",
+          "kind": 109,
+          "symbol": "@6650",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x56c",
+          "kind": 109,
+          "symbol": "@6657",
+          "addend": 0,
+          "value_hex": "447a0000"
+        },
+        {
+          "offset": "0x57c",
+          "kind": 109,
+          "symbol": "@6656",
+          "addend": 0,
+          "value_hex": "3f000000"
+        },
+        {
+          "offset": "0x590",
+          "kind": 10,
+          "symbol": "dot__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x59c",
+          "kind": 10,
+          "symbol": "clamp01__2MRFPf",
+          "addend": 0
+        },
+        {
+          "offset": "0x5a8",
+          "kind": 109,
+          "symbol": "@6654",
+          "addend": 0,
+          "value_hex": "3fb4fdf4"
+        },
+        {
+          "offset": "0x5b4",
+          "kind": 10,
+          "symbol": "clamp01__2MRFPf",
+          "addend": 0
+        },
+        {
+          "offset": "0x5bc",
+          "kind": 109,
+          "symbol": "@6658",
+          "addend": 0,
+          "value_hex": "42fe0000"
+        },
+        {
+          "offset": "0x618",
+          "kind": 10,
+          "symbol": "updateSimpleAlphaDL__10MarioActorFUc",
+          "addend": 0
+        },
+        {
+          "offset": "0x624",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x648",
+          "kind": 10,
+          "symbol": "PSMTXCopy",
+          "addend": 0
+        },
+        {
+          "offset": "0x650",
+          "kind": 10,
+          "symbol": "getCarrySensor__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x660",
+          "kind": 10,
+          "symbol": "getCarrySensor__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x66c",
+          "kind": 10,
+          "symbol": "getJointMtx__2MRFPC9LiveActori",
+          "addend": 0
+        },
+        {
+          "offset": "0x67c",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "addend": 0
+        },
+        {
+          "offset": "0x68c",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "addend": 0
+        },
+        {
+          "offset": "0x698",
+          "kind": 10,
+          "symbol": "calcType0__15JetTurtleShadowFPA4_f",
+          "addend": 0
+        },
+        {
+          "offset": "0x6a8",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "addend": 0
+        },
+        {
+          "offset": "0x6b8",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "addend": 0
+        },
+        {
+          "offset": "0x6be",
+          "kind": 6,
+          "symbol": "j3dSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x6c6",
+          "kind": 4,
+          "symbol": "j3dSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x6cc",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "addend": 0
+        },
+        {
+          "offset": "0x6dc",
+          "kind": 10,
+          "symbol": "viewCalc3__9J3DModelXFUlPA4_f",
+          "addend": 0
+        },
+        {
+          "offset": "0x6e0",
+          "kind": 10,
+          "symbol": "loadViewMtx__2MRFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x708",
+          "kind": 10,
+          "symbol": "_restgpr_29",
+          "addend": 0
+        }
+      ]
+    },
+    {
+      "name": "calcViewWallShadowModel__10MarioActorFv",
+      "address": "0x802c037c",
+      "retail_size": 968,
+      "compiled_size": 972,
+      "match_percent": 99.338844,
+      "retail_function_sha256": "4b64a850769060b6b883ec7aa0e60e1baeba79bcd3e040acd9a3c3e6dcbac832",
+      "source_sha256": "2dc5bb3bc674c9aa2a802ae7a22cbac88388c7710e4cdc50c7a2a425da5ef768",
+      "same_direct_call_order": true,
+      "retail_references": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_28",
+          "addend": 0
+        },
+        {
+          "offset": "0x3a",
+          "kind": 6,
+          "symbol": "lbl_805B8E30",
+          "addend": 0,
+          "value_hex": "457874726157616c6c436865636b4172656100"
+        },
+        {
+          "offset": "0x42",
+          "kind": 4,
+          "symbol": "lbl_805B8E30",
+          "addend": 0,
+          "value_hex": "457874726157616c6c436865636b4172656100"
+        },
+        {
+          "offset": "0x48",
+          "kind": 10,
+          "symbol": "getAreaObj__2MRFPCcRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x5c",
+          "kind": 10,
+          "symbol": "calcCubeAxisZ__2MRFPC7AreaObjPQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x68",
+          "kind": 10,
+          "symbol": "getAreaObjArg__2MRFPC7AreaObjl",
+          "addend": 0
+        },
+        {
+          "offset": "0x7e",
+          "kind": 6,
+          "symbol": "lbl_805B8E43",
+          "addend": 0,
+          "value_hex": "457874726157616c6c436865636b43796c696e64657200"
+        },
+        {
+          "offset": "0x86",
+          "kind": 4,
+          "symbol": "lbl_805B8E43",
+          "addend": 0,
+          "value_hex": "457874726157616c6c436865636b43796c696e64657200"
+        },
+        {
+          "offset": "0x88",
+          "kind": 10,
+          "symbol": "getAreaObj__2MRFPCcRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0xa4",
+          "kind": 10,
+          "symbol": "calcCylinderToCenter__10MarioActorFPC7AreaObjPQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0xda",
+          "kind": 6,
+          "symbol": "lbl_80539A78",
+          "addend": 0
+        },
+        {
+          "offset": "0xde",
+          "kind": 4,
+          "symbol": "lbl_80539A78",
+          "addend": 0
+        },
+        {
+          "offset": "0xe4",
+          "kind": 109,
+          "symbol": "@62953",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0xfc",
+          "kind": 109,
+          "symbol": "@64223",
+          "addend": 0,
+          "value_hex": "447a0000"
+        },
+        {
+          "offset": "0x10c",
+          "kind": 109,
+          "symbol": "@64296",
+          "addend": 0,
+          "value_hex": "41200000"
+        },
+        {
+          "offset": "0x14c",
+          "kind": 10,
+          "symbol": "calcCubeAxisZ__2MRFPC7AreaObjPQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x158",
+          "kind": 10,
+          "symbol": "getAreaObjArg__2MRFPC7AreaObjl",
+          "addend": 0
+        },
+        {
+          "offset": "0x170",
+          "kind": 10,
+          "symbol": "calcCylinderToCenter__10MarioActorFPC7AreaObjPQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x188",
+          "kind": 10,
+          "symbol": "__ct__8TriangleFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x19a",
+          "kind": 6,
+          "symbol": "lbl_80539A78",
+          "addend": 0
+        },
+        {
+          "offset": "0x19e",
+          "kind": 4,
+          "symbol": "lbl_80539A78",
+          "addend": 0
+        },
+        {
+          "offset": "0x1b4",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x1c8",
+          "kind": 10,
+          "symbol": "getFirstPolyOnLineToMap__2MRFPQ29JGeometry8TVec3<f>P8TriangleRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x1dc",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x1e8",
+          "kind": 10,
+          "symbol": "getNormal__8TriangleCFi",
+          "addend": 0
+        },
+        {
+          "offset": "0x1f4",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x208",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x214",
+          "kind": 10,
+          "symbol": "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x21c",
+          "kind": 10,
+          "symbol": "PSVECMag",
+          "addend": 0
+        },
+        {
+          "offset": "0x220",
+          "kind": 109,
+          "symbol": "@64441",
+          "addend": 0,
+          "value_hex": "3dcccccd"
+        },
+        {
+          "offset": "0x224",
+          "kind": 109,
+          "symbol": "@64440",
+          "addend": 0,
+          "value_hex": "3f666666"
+        },
+        {
+          "offset": "0x244",
+          "kind": 10,
+          "symbol": "updateRandomTexture__10MarioActorFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x250",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x258",
+          "kind": 10,
+          "symbol": "normalizeOrZero__2MRFPQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x260",
+          "kind": 10,
+          "symbol": "getJ3DModel__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x26c",
+          "kind": 10,
+          "symbol": "getSimpleModel__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x27c",
+          "kind": 10,
+          "symbol": "PSMTXCopy",
+          "addend": 0
+        },
+        {
+          "offset": "0x28c",
+          "kind": 10,
+          "symbol": "getXDir__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>CFRQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x29c",
+          "kind": 10,
+          "symbol": "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x2a8",
+          "kind": 10,
+          "symbol": "getYDir__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>CFRQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x2b8",
+          "kind": 10,
+          "symbol": "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x2c4",
+          "kind": 10,
+          "symbol": "getZDir__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>CFRQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x2d4",
+          "kind": 10,
+          "symbol": "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x2e0",
+          "kind": 10,
+          "symbol": "setXDir__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x2ec",
+          "kind": 10,
+          "symbol": "setYDir__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x2f8",
+          "kind": 10,
+          "symbol": "setZDir__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x304",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x310",
+          "kind": 10,
+          "symbol": "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x318",
+          "kind": 10,
+          "symbol": "getGravityVec__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x328",
+          "kind": 10,
+          "symbol": "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x330",
+          "kind": 10,
+          "symbol": "PSVECMag",
+          "addend": 0
+        },
+        {
+          "offset": "0x334",
+          "kind": 109,
+          "symbol": "@64296",
+          "addend": 0,
+          "value_hex": "41200000"
+        },
+        {
+          "offset": "0x344",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x350",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x384",
+          "kind": 10,
+          "symbol": "setMtxTrans__2MRFPA4_ffff",
+          "addend": 0
+        },
+        {
+          "offset": "0x394",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "addend": 0
+        },
+        {
+          "offset": "0x3a4",
+          "kind": 10,
+          "symbol": "viewCalcRef__9J3DModelXFUlP8J3DModel",
+          "addend": 0
+        },
+        {
+          "offset": "0x3b4",
+          "kind": 10,
+          "symbol": "_restgpr_28",
+          "addend": 0
+        }
+      ],
+      "compiled_references": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_28",
+          "addend": 0
+        },
+        {
+          "offset": "0x3e",
+          "kind": 6,
+          "symbol": "@6741",
+          "addend": 0,
+          "value_hex": "457874726157616c6c436865636b4172656100"
+        },
+        {
+          "offset": "0x46",
+          "kind": 4,
+          "symbol": "@6741",
+          "addend": 0,
+          "value_hex": "457874726157616c6c436865636b4172656100"
+        },
+        {
+          "offset": "0x4c",
+          "kind": 10,
+          "symbol": "getAreaObj__2MRFPCcRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x60",
+          "kind": 10,
+          "symbol": "calcCubeAxisZ__2MRFPC7AreaObjPQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x6c",
+          "kind": 10,
+          "symbol": "getAreaObjArg__2MRFPC7AreaObjl",
+          "addend": 0
+        },
+        {
+          "offset": "0x82",
+          "kind": 6,
+          "symbol": "@6742",
+          "addend": 0,
+          "value_hex": "457874726157616c6c436865636b43796c696e64657200"
+        },
+        {
+          "offset": "0x8a",
+          "kind": 4,
+          "symbol": "@6742",
+          "addend": 0,
+          "value_hex": "457874726157616c6c436865636b43796c696e64657200"
+        },
+        {
+          "offset": "0x8c",
+          "kind": 10,
+          "symbol": "getAreaObj__2MRFPCcRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0xa8",
+          "kind": 10,
+          "symbol": "calcCylinderToCenter__10MarioActorFPC7AreaObjPQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0xde",
+          "kind": 6,
+          "symbol": "@6747",
+          "addend": 0,
+          "value_hex": "4330000080000000"
+        },
+        {
+          "offset": "0xe2",
+          "kind": 4,
+          "symbol": "@6747",
+          "addend": 0,
+          "value_hex": "4330000080000000"
+        },
+        {
+          "offset": "0xe8",
+          "kind": 109,
+          "symbol": "@6650",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x100",
+          "kind": 109,
+          "symbol": "@6657",
+          "addend": 0,
+          "value_hex": "447a0000"
+        },
+        {
+          "offset": "0x110",
+          "kind": 109,
+          "symbol": "@6645",
+          "addend": 0,
+          "value_hex": "41200000"
+        },
+        {
+          "offset": "0x150",
+          "kind": 10,
+          "symbol": "calcCubeAxisZ__2MRFPC7AreaObjPQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x15c",
+          "kind": 10,
+          "symbol": "getAreaObjArg__2MRFPC7AreaObjl",
+          "addend": 0
+        },
+        {
+          "offset": "0x174",
+          "kind": 10,
+          "symbol": "calcCylinderToCenter__10MarioActorFPC7AreaObjPQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x18c",
+          "kind": 10,
+          "symbol": "__ct__8TriangleFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x19e",
+          "kind": 6,
+          "symbol": "@6747",
+          "addend": 0,
+          "value_hex": "4330000080000000"
+        },
+        {
+          "offset": "0x1a2",
+          "kind": 4,
+          "symbol": "@6747",
+          "addend": 0,
+          "value_hex": "4330000080000000"
+        },
+        {
+          "offset": "0x1b8",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x1cc",
+          "kind": 10,
+          "symbol": "getFirstPolyOnLineToMap__2MRFPQ29JGeometry8TVec3<f>P8TriangleRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x1e0",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x1ec",
+          "kind": 10,
+          "symbol": "getNormal__8TriangleCFi",
+          "addend": 0
+        },
+        {
+          "offset": "0x1f8",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x20c",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x218",
+          "kind": 10,
+          "symbol": "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x220",
+          "kind": 10,
+          "symbol": "PSVECMag",
+          "addend": 0
+        },
+        {
+          "offset": "0x224",
+          "kind": 109,
+          "symbol": "@6744",
+          "addend": 0,
+          "value_hex": "3dcccccd"
+        },
+        {
+          "offset": "0x228",
+          "kind": 109,
+          "symbol": "@6743",
+          "addend": 0,
+          "value_hex": "3f666666"
+        },
+        {
+          "offset": "0x248",
+          "kind": 10,
+          "symbol": "updateRandomTexture__10MarioActorFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x254",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x25c",
+          "kind": 10,
+          "symbol": "normalizeOrZero__2MRFPQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x264",
+          "kind": 10,
+          "symbol": "getJ3DModel__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x270",
+          "kind": 10,
+          "symbol": "getSimpleModel__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x280",
+          "kind": 10,
+          "symbol": "PSMTXCopy",
+          "addend": 0
+        },
+        {
+          "offset": "0x290",
+          "kind": 10,
+          "symbol": "getXDir__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>CFRQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x2a0",
+          "kind": 10,
+          "symbol": "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x2ac",
+          "kind": 10,
+          "symbol": "getYDir__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>CFRQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x2bc",
+          "kind": 10,
+          "symbol": "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x2c8",
+          "kind": 10,
+          "symbol": "getZDir__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>CFRQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x2d8",
+          "kind": 10,
+          "symbol": "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x2e4",
+          "kind": 10,
+          "symbol": "setXDir__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x2f0",
+          "kind": 10,
+          "symbol": "setYDir__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x2fc",
+          "kind": 10,
+          "symbol": "setZDir__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x308",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x314",
+          "kind": 10,
+          "symbol": "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x31c",
+          "kind": 10,
+          "symbol": "getGravityVec__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x32c",
+          "kind": 10,
+          "symbol": "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x334",
+          "kind": 10,
+          "symbol": "PSVECMag",
+          "addend": 0
+        },
+        {
+          "offset": "0x338",
+          "kind": 109,
+          "symbol": "@6645",
+          "addend": 0,
+          "value_hex": "41200000"
+        },
+        {
+          "offset": "0x348",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x354",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x388",
+          "kind": 10,
+          "symbol": "setMtxTrans__2MRFPA4_ffff",
+          "addend": 0
+        },
+        {
+          "offset": "0x398",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "addend": 0
+        },
+        {
+          "offset": "0x3a8",
+          "kind": 10,
+          "symbol": "viewCalcRef__9J3DModelXFUlP8J3DModel",
+          "addend": 0
+        },
+        {
+          "offset": "0x3b8",
+          "kind": 10,
+          "symbol": "_restgpr_28",
+          "addend": 0
+        }
+      ]
+    },
+    {
+      "name": "drawShadow__10MarioActorCFv",
+      "address": "0x802c0744",
+      "retail_size": 560,
+      "compiled_size": 564,
+      "match_percent": 99.03571,
+      "retail_function_sha256": "3bf78c9a512509e371b06d11335c9ae7f43d7f6bc9403e1d11a6977739f72798",
+      "source_sha256": "2dc5bb3bc674c9aa2a802ae7a22cbac88388c7710e4cdc50c7a2a425da5ef768",
+      "same_direct_call_order": true,
+      "retail_references": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_29",
+          "addend": 0
+        },
+        {
+          "offset": "0x1a",
+          "kind": 6,
+          "symbol": "lbl_805B8E00",
+          "addend": 0,
+          "value_hex": "4c75696769536861646f7700"
+        },
+        {
+          "offset": "0x2a",
+          "kind": 4,
+          "symbol": "lbl_805B8E00",
+          "addend": 0,
+          "value_hex": "4c75696769536861646f7700"
+        },
+        {
+          "offset": "0x84",
+          "kind": 10,
+          "symbol": "isStatusActive__5MarioCFUl",
+          "addend": 0
+        },
+        {
+          "offset": "0xac",
+          "kind": 10,
+          "symbol": "selectNoShadow__10MarioActorCFPC9HitSensor",
+          "addend": 0
+        },
+        {
+          "offset": "0xd8",
+          "kind": 10,
+          "symbol": "getSimpleModel__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0xf0",
+          "kind": 10,
+          "symbol": "PSMTXScale",
+          "addend": 0
+        },
+        {
+          "offset": "0x100",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "addend": 0
+        },
+        {
+          "offset": "0x108",
+          "kind": 10,
+          "symbol": "getJ3DModel__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x118",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "addend": 0
+        },
+        {
+          "offset": "0x120",
+          "kind": 10,
+          "symbol": "getJ3DModel__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x134",
+          "kind": 10,
+          "symbol": "calcView__15CollisionShadowFP9J3DModelXUlP9J3DModelX",
+          "addend": 0
+        },
+        {
+          "offset": "0x154",
+          "kind": 109,
+          "symbol": "lbl_806B2240",
+          "addend": 0,
+          "value_hex": "48697000"
+        },
+        {
+          "offset": "0x158",
+          "kind": 10,
+          "symbol": "hideJointAndChildren__2MRFP8J3DModelPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x174",
+          "kind": 10,
+          "symbol": "hideJointAndChildren__2MRFP8J3DModelPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x180",
+          "kind": 10,
+          "symbol": "hideJointAndChildren__2MRFP8J3DModelPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x1a8",
+          "kind": 10,
+          "symbol": "hideJoint__2MRFP8J3DModelPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x1b4",
+          "kind": 10,
+          "symbol": "hideJoint__2MRFP8J3DModelPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x1c4",
+          "kind": 10,
+          "symbol": "drawAndCaptureTex__15CollisionShadowFP9J3DModelXRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x1cc",
+          "kind": 10,
+          "symbol": "clearAlphaBuffer__15CollisionShadowFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x214",
+          "kind": 10,
+          "symbol": "showJointAndChildren__2MRFP8J3DModelPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x21c",
+          "kind": 10,
+          "symbol": "_restgpr_29",
+          "addend": 0
+        }
+      ],
+      "compiled_references": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_29",
+          "addend": 0
+        },
+        {
+          "offset": "0x1a",
+          "kind": 6,
+          "symbol": "...data.0",
+          "addend": 0
+        },
+        {
+          "offset": "0x2a",
+          "kind": 4,
+          "symbol": "...data.0",
+          "addend": 0
+        },
+        {
+          "offset": "0x88",
+          "kind": 10,
+          "symbol": "isStatusActive__5MarioCFUl",
+          "addend": 0
+        },
+        {
+          "offset": "0xb0",
+          "kind": 10,
+          "symbol": "selectNoShadow__10MarioActorCFPC9HitSensor",
+          "addend": 0
+        },
+        {
+          "offset": "0xdc",
+          "kind": 10,
+          "symbol": "getSimpleModel__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0xf4",
+          "kind": 10,
+          "symbol": "PSMTXScale",
+          "addend": 0
+        },
+        {
+          "offset": "0x104",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "addend": 0
+        },
+        {
+          "offset": "0x10c",
+          "kind": 10,
+          "symbol": "getJ3DModel__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x11c",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "addend": 0
+        },
+        {
+          "offset": "0x124",
+          "kind": 10,
+          "symbol": "getJ3DModel__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x138",
+          "kind": 10,
+          "symbol": "calcView__15CollisionShadowFP9J3DModelXUlP9J3DModelX",
+          "addend": 0
+        },
+        {
+          "offset": "0x158",
+          "kind": 109,
+          "symbol": "@6802",
+          "addend": 0,
+          "value_hex": "48697000"
+        },
+        {
+          "offset": "0x15c",
+          "kind": 10,
+          "symbol": "hideJointAndChildren__2MRFP8J3DModelPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x178",
+          "kind": 10,
+          "symbol": "hideJointAndChildren__2MRFP8J3DModelPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x184",
+          "kind": 10,
+          "symbol": "hideJointAndChildren__2MRFP8J3DModelPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x1ac",
+          "kind": 10,
+          "symbol": "hideJoint__2MRFP8J3DModelPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x1b8",
+          "kind": 10,
+          "symbol": "hideJoint__2MRFP8J3DModelPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x1c8",
+          "kind": 10,
+          "symbol": "drawAndCaptureTex__15CollisionShadowFP9J3DModelXRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x1d0",
+          "kind": 10,
+          "symbol": "clearAlphaBuffer__15CollisionShadowFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x218",
+          "kind": 10,
+          "symbol": "showJointAndChildren__2MRFP8J3DModelPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x220",
+          "kind": 10,
+          "symbol": "_restgpr_29",
+          "addend": 0
+        }
+      ]
+    },
+    {
+      "name": "decideShadowMode__10MarioActorFv",
+      "address": "0x802c09e0",
+      "retail_size": 576,
+      "compiled_size": 576,
+      "match_percent": 98.888885,
+      "retail_function_sha256": "4227d6ca18ef06f56d95e88cbd0585010d05015d6943ac2c409f9497f04ab43f",
+      "source_sha256": "2dc5bb3bc674c9aa2a802ae7a22cbac88388c7710e4cdc50c7a2a425da5ef768",
+      "same_direct_call_order": true,
+      "retail_references": [
+        {
+          "offset": "0x28",
+          "kind": 10,
+          "symbol": "isNotReflectGlassGround__5MarioCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x3c",
+          "kind": 10,
+          "symbol": "isStatusActive__5MarioCFUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x6c",
+          "kind": 109,
+          "symbol": "@64221",
+          "addend": 0,
+          "value_hex": "43fa0000"
+        },
+        {
+          "offset": "0x74",
+          "kind": 109,
+          "symbol": "@64222",
+          "addend": 0,
+          "value_hex": "3f400000"
+        },
+        {
+          "offset": "0x9a",
+          "kind": 6,
+          "symbol": "lbl_80539A70",
+          "addend": 0
+        },
+        {
+          "offset": "0x9c",
+          "kind": 109,
+          "symbol": "@62952",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0xae",
+          "kind": 4,
+          "symbol": "lbl_80539A70",
+          "addend": 0
+        },
+        {
+          "offset": "0x178",
+          "kind": 10,
+          "symbol": "isSwimming__5MarioCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x188",
+          "kind": 10,
+          "symbol": "isInWater__2MRFRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x1a4",
+          "kind": 10,
+          "symbol": "getGravityVector__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x1c8",
+          "kind": 10,
+          "symbol": "dot__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x1cc",
+          "kind": 109,
+          "symbol": "@62953",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x1f4",
+          "kind": 10,
+          "symbol": "getWaterEdgeDist__9MarioSwimCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x1f8",
+          "kind": 109,
+          "symbol": "@62953",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x20c",
+          "kind": 10,
+          "symbol": "getWaterEdgeDist__9MarioSwimCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x210",
+          "kind": 109,
+          "symbol": "@64223",
+          "addend": 0,
+          "value_hex": "447a0000"
+        },
+        {
+          "offset": "0x228",
+          "kind": 10,
+          "symbol": "setUpdateFlag__15CollisionShadowFv",
+          "addend": 0
+        }
+      ],
+      "compiled_references": [
+        {
+          "offset": "0x28",
+          "kind": 10,
+          "symbol": "isNotReflectGlassGround__5MarioCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x3c",
+          "kind": 10,
+          "symbol": "isStatusActive__5MarioCFUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x6c",
+          "kind": 109,
+          "symbol": "@6844",
+          "addend": 0,
+          "value_hex": "43fa0000"
+        },
+        {
+          "offset": "0x74",
+          "kind": 109,
+          "symbol": "@6845",
+          "addend": 0,
+          "value_hex": "3f400000"
+        },
+        {
+          "offset": "0x9a",
+          "kind": 6,
+          "symbol": "@6848",
+          "addend": 0,
+          "value_hex": "4330000000000000"
+        },
+        {
+          "offset": "0x9c",
+          "kind": 109,
+          "symbol": "@6652",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0xae",
+          "kind": 4,
+          "symbol": "@6848",
+          "addend": 0,
+          "value_hex": "4330000000000000"
+        },
+        {
+          "offset": "0x178",
+          "kind": 10,
+          "symbol": "isSwimming__5MarioCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x188",
+          "kind": 10,
+          "symbol": "isInWater__2MRFRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x1a4",
+          "kind": 10,
+          "symbol": "getGravityVector__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x1c8",
+          "kind": 10,
+          "symbol": "dot__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x1cc",
+          "kind": 109,
+          "symbol": "@6650",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x1f4",
+          "kind": 10,
+          "symbol": "getWaterEdgeDist__9MarioSwimCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x1f8",
+          "kind": 109,
+          "symbol": "@6650",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x20c",
+          "kind": 10,
+          "symbol": "getWaterEdgeDist__9MarioSwimCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x210",
+          "kind": 109,
+          "symbol": "@6657",
+          "addend": 0,
+          "value_hex": "447a0000"
+        },
+        {
+          "offset": "0x228",
+          "kind": 10,
+          "symbol": "setUpdateFlag__15CollisionShadowFv",
+          "addend": 0
+        }
+      ]
+    },
+    {
+      "name": "calcViewSilhouetteModel__10MarioActorFv",
+      "address": "0x802c0c20",
+      "retail_size": 404,
+      "compiled_size": 404,
+      "match_percent": 99.930695,
+      "retail_function_sha256": "92e426b6ffdfafcc61da2cea040626b373b3c99b022234b47e8eec25781dff03",
+      "source_sha256": "2dc5bb3bc674c9aa2a802ae7a22cbac88388c7710e4cdc50c7a2a425da5ef768",
+      "same_direct_call_order": true,
+      "retail_references": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_28",
+          "addend": 0
+        },
+        {
+          "offset": "0x18",
+          "kind": 10,
+          "symbol": "getJ3DModel__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x24",
+          "kind": 10,
+          "symbol": "getSimpleModel__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x34",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x40",
+          "kind": 10,
+          "symbol": "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x48",
+          "kind": 10,
+          "symbol": "normalizeOrZero__2MRFPQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x54",
+          "kind": 10,
+          "symbol": "PSMTXCopy",
+          "addend": 0
+        },
+        {
+          "offset": "0x64",
+          "kind": 10,
+          "symbol": "getXDir__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>CFRQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x74",
+          "kind": 10,
+          "symbol": "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x80",
+          "kind": 10,
+          "symbol": "getYDir__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>CFRQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x90",
+          "kind": 10,
+          "symbol": "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x9c",
+          "kind": 10,
+          "symbol": "getZDir__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>CFRQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0xac",
+          "kind": 10,
+          "symbol": "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0xb8",
+          "kind": 10,
+          "symbol": "setXDir__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0xc4",
+          "kind": 10,
+          "symbol": "setYDir__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0xd0",
+          "kind": 10,
+          "symbol": "setZDir__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0xe2",
+          "kind": 6,
+          "symbol": "lbl_805B8E27",
+          "addend": 0,
+          "value_hex": "416c6c5f526f6f7400"
+        },
+        {
+          "offset": "0xea",
+          "kind": 4,
+          "symbol": "lbl_805B8E27",
+          "addend": 0,
+          "value_hex": "416c6c5f526f6f7400"
+        },
+        {
+          "offset": "0xf0",
+          "kind": 10,
+          "symbol": "getRealPos__10MarioActorCFPCcPQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x110",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x11c",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x128",
+          "kind": 10,
+          "symbol": "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x134",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x144",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x158",
+          "kind": 10,
+          "symbol": "setMtxTrans__2MRFPA4_ffff",
+          "addend": 0
+        },
+        {
+          "offset": "0x168",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "addend": 0
+        },
+        {
+          "offset": "0x178",
+          "kind": 10,
+          "symbol": "viewCalcRef__9J3DModelXFUlP8J3DModel",
+          "addend": 0
+        },
+        {
+          "offset": "0x180",
+          "kind": 10,
+          "symbol": "_restgpr_28",
+          "addend": 0
+        }
+      ],
+      "compiled_references": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_28",
+          "addend": 0
+        },
+        {
+          "offset": "0x18",
+          "kind": 10,
+          "symbol": "getJ3DModel__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x24",
+          "kind": 10,
+          "symbol": "getSimpleModel__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x34",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x40",
+          "kind": 10,
+          "symbol": "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x48",
+          "kind": 10,
+          "symbol": "normalizeOrZero__2MRFPQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x54",
+          "kind": 10,
+          "symbol": "PSMTXCopy",
+          "addend": 0
+        },
+        {
+          "offset": "0x64",
+          "kind": 10,
+          "symbol": "getXDir__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>CFRQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x74",
+          "kind": 10,
+          "symbol": "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x80",
+          "kind": 10,
+          "symbol": "getYDir__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>CFRQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x90",
+          "kind": 10,
+          "symbol": "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x9c",
+          "kind": 10,
+          "symbol": "getZDir__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>CFRQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0xac",
+          "kind": 10,
+          "symbol": "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0xb8",
+          "kind": 10,
+          "symbol": "setXDir__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0xc4",
+          "kind": 10,
+          "symbol": "setYDir__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0xd0",
+          "kind": 10,
+          "symbol": "setZDir__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0xe2",
+          "kind": 6,
+          "symbol": "@6648",
+          "addend": 0,
+          "value_hex": "416c6c5f526f6f7400"
+        },
+        {
+          "offset": "0xea",
+          "kind": 4,
+          "symbol": "@6648",
+          "addend": 0,
+          "value_hex": "416c6c5f526f6f7400"
+        },
+        {
+          "offset": "0xf0",
+          "kind": 10,
+          "symbol": "getRealPos__10MarioActorCFPCcPQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x110",
+          "kind": 10,
+          "symbol": "__ml__Q29JGeometry8TVec3<f>CFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x11c",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x128",
+          "kind": 10,
+          "symbol": "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x134",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x144",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x158",
+          "kind": 10,
+          "symbol": "setMtxTrans__2MRFPA4_ffff",
+          "addend": 0
+        },
+        {
+          "offset": "0x168",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "addend": 0
+        },
+        {
+          "offset": "0x178",
+          "kind": 10,
+          "symbol": "viewCalcRef__9J3DModelXFUlP8J3DModel",
+          "addend": 0
+        },
+        {
+          "offset": "0x180",
+          "kind": 10,
+          "symbol": "_restgpr_28",
+          "addend": 0
+        }
+      ]
+    },
+    {
+      "name": "calcViewBlurModel__10MarioActorFv",
+      "address": "0x802c0ea4",
+      "retail_size": 472,
+      "compiled_size": 476,
+      "match_percent": 96.97458,
+      "retail_function_sha256": "98ffa4d99a8fb0c0fad668d26a400e8b2d9d6802739489724ffe0d1a50fc942c",
+      "source_sha256": "2dc5bb3bc674c9aa2a802ae7a22cbac88388c7710e4cdc50c7a2a425da5ef768",
+      "same_direct_call_order": true,
+      "retail_references": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_25",
+          "addend": 0
+        },
+        {
+          "offset": "0x18",
+          "kind": 10,
+          "symbol": "getJ3DModel__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x48",
+          "kind": 10,
+          "symbol": "isDemoActive__2MRFv",
+          "addend": 0
+        },
+        {
+          "offset": "0xc0",
+          "kind": 10,
+          "symbol": "getDrawMtx__8J3DModelFi",
+          "addend": 0
+        },
+        {
+          "offset": "0xcc",
+          "kind": 10,
+          "symbol": "PSMTXCopy",
+          "addend": 0
+        },
+        {
+          "offset": "0xd8",
+          "kind": 10,
+          "symbol": "getDrawMtx__8J3DModelFi",
+          "addend": 0
+        },
+        {
+          "offset": "0xe4",
+          "kind": 10,
+          "symbol": "PSMTXCopy",
+          "addend": 0
+        },
+        {
+          "offset": "0xf4",
+          "kind": 10,
+          "symbol": "getModelData__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x164",
+          "kind": 10,
+          "symbol": "getDrawMtx__8J3DModelFi",
+          "addend": 0
+        },
+        {
+          "offset": "0x18c",
+          "kind": 10,
+          "symbol": "PSMTXCopy",
+          "addend": 0
+        },
+        {
+          "offset": "0x19c",
+          "kind": 10,
+          "symbol": "getModelData__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x1c4",
+          "kind": 10,
+          "symbol": "_restgpr_25",
+          "addend": 0
+        }
+      ],
+      "compiled_references": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_25",
+          "addend": 0
+        },
+        {
+          "offset": "0x18",
+          "kind": 10,
+          "symbol": "getJ3DModel__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x48",
+          "kind": 10,
+          "symbol": "isDemoActive__2MRFv",
+          "addend": 0
+        },
+        {
+          "offset": "0xc4",
+          "kind": 10,
+          "symbol": "getDrawMtx__8J3DModelFi",
+          "addend": 0
+        },
+        {
+          "offset": "0xd0",
+          "kind": 10,
+          "symbol": "PSMTXCopy",
+          "addend": 0
+        },
+        {
+          "offset": "0xdc",
+          "kind": 10,
+          "symbol": "getDrawMtx__8J3DModelFi",
+          "addend": 0
+        },
+        {
+          "offset": "0xe8",
+          "kind": 10,
+          "symbol": "PSMTXCopy",
+          "addend": 0
+        },
+        {
+          "offset": "0xf8",
+          "kind": 10,
+          "symbol": "getModelData__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x168",
+          "kind": 10,
+          "symbol": "getDrawMtx__8J3DModelFi",
+          "addend": 0
+        },
+        {
+          "offset": "0x190",
+          "kind": 10,
+          "symbol": "PSMTXCopy",
+          "addend": 0
+        },
+        {
+          "offset": "0x1a0",
+          "kind": 10,
+          "symbol": "getModelData__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x1c8",
+          "kind": 10,
+          "symbol": "_restgpr_25",
+          "addend": 0
+        }
+      ]
+    },
+    {
+      "name": "calcViewFootPrint__10MarioActorFv",
+      "address": "0x802c107c",
+      "retail_size": 304,
+      "compiled_size": 296,
+      "match_percent": 96.960526,
+      "retail_function_sha256": "ac0fc9f6936eb7dfdfae5c9199672197f214361dfefc8e2fa614e5d59b89fce2",
+      "source_sha256": "2dc5bb3bc674c9aa2a802ae7a22cbac88388c7710e4cdc50c7a2a425da5ef768",
+      "same_direct_call_order": true,
+      "retail_references": [
+        {
+          "offset": "0x50",
+          "kind": 109,
+          "symbol": "@64441",
+          "addend": 0,
+          "value_hex": "3dcccccd"
+        },
+        {
+          "offset": "0x60",
+          "kind": 10,
+          "symbol": "isPlayerModeHopper__11MarioModuleCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0xa8",
+          "kind": 10,
+          "symbol": "checkCurrentFloorCodeSevere__5MarioCFUl",
+          "addend": 0
+        },
+        {
+          "offset": "0xbc",
+          "kind": 10,
+          "symbol": "checkCurrentFloorCodeSevere__5MarioCFUl",
+          "addend": 0
+        },
+        {
+          "offset": "0xe0",
+          "kind": 10,
+          "symbol": "addPrint__9FootPrintFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>b",
+          "addend": 0
+        },
+        {
+          "offset": "0xec",
+          "kind": 10,
+          "symbol": "isValid__9FootPrintCFUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x100",
+          "kind": 10,
+          "symbol": "getPrintPos__9FootPrintCFUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x104",
+          "kind": 10,
+          "symbol": "isInWater__2MRFRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x118",
+          "kind": 10,
+          "symbol": "invalidate__9FootPrintFUl",
+          "addend": 0
+        }
+      ],
+      "compiled_references": [
+        {
+          "offset": "0x4c",
+          "kind": 109,
+          "symbol": "@6744",
+          "addend": 0,
+          "value_hex": "3dcccccd"
+        },
+        {
+          "offset": "0x58",
+          "kind": 10,
+          "symbol": "isPlayerModeHopper__11MarioModuleCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0xa0",
+          "kind": 10,
+          "symbol": "checkCurrentFloorCodeSevere__5MarioCFUl",
+          "addend": 0
+        },
+        {
+          "offset": "0xb4",
+          "kind": 10,
+          "symbol": "checkCurrentFloorCodeSevere__5MarioCFUl",
+          "addend": 0
+        },
+        {
+          "offset": "0xd8",
+          "kind": 10,
+          "symbol": "addPrint__9FootPrintFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>b",
+          "addend": 0
+        },
+        {
+          "offset": "0xe4",
+          "kind": 10,
+          "symbol": "isValid__9FootPrintCFUl",
+          "addend": 0
+        },
+        {
+          "offset": "0xf8",
+          "kind": 10,
+          "symbol": "getPrintPos__9FootPrintCFUl",
+          "addend": 0
+        },
+        {
+          "offset": "0xfc",
+          "kind": 10,
+          "symbol": "isInWater__2MRFRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x110",
+          "kind": 10,
+          "symbol": "invalidate__9FootPrintFUl",
+          "addend": 0
+        }
+      ]
+    },
+    {
+      "name": "drawSilhouette__10MarioActorCFv",
+      "address": "0x802c11ac",
+      "retail_size": 384,
+      "compiled_size": 396,
+      "match_percent": 96.5625,
+      "retail_function_sha256": "8695644eb47794258044a2d3e7a815ca460532e181999ebc95813e41038a1fcd",
+      "source_sha256": "2dc5bb3bc674c9aa2a802ae7a22cbac88388c7710e4cdc50c7a2a425da5ef768",
+      "same_direct_call_order": true,
+      "retail_references": [
+        {
+          "offset": "0x50",
+          "kind": 10,
+          "symbol": "isStatusActive__5MarioCFUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x64",
+          "kind": 10,
+          "symbol": "isStatusActive__5MarioCFUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x78",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x84",
+          "kind": 10,
+          "symbol": "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x90",
+          "kind": 10,
+          "symbol": "isExistMapCollision__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0xa4",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0xb0",
+          "kind": 10,
+          "symbol": "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0xbc",
+          "kind": 10,
+          "symbol": "isExistMapCollision__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0xe8",
+          "kind": 10,
+          "symbol": "isStatusActive__5MarioCFUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x11c",
+          "kind": 10,
+          "symbol": "getSimpleModel__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x128",
+          "kind": 10,
+          "symbol": "setDrawView__9J3DModelXFUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x140",
+          "kind": 10,
+          "symbol": "directDraw__9J3DModelXFP8J3DModel",
+          "addend": 0
+        },
+        {
+          "offset": "0x154",
+          "kind": 10,
+          "symbol": "GXSetAlphaUpdate",
+          "addend": 0
+        },
+        {
+          "offset": "0x15c",
+          "kind": 10,
+          "symbol": "GXSetColorUpdate",
+          "addend": 0
+        },
+        {
+          "offset": "0x168",
+          "kind": 10,
+          "symbol": "GXSetDstAlpha",
+          "addend": 0
+        }
+      ],
+      "compiled_references": [
+        {
+          "offset": "0x50",
+          "kind": 10,
+          "symbol": "isStatusActive__5MarioCFUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x68",
+          "kind": 10,
+          "symbol": "isStatusActive__5MarioCFUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x7c",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x88",
+          "kind": 10,
+          "symbol": "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x94",
+          "kind": 10,
+          "symbol": "isExistMapCollision__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0xa8",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0xb4",
+          "kind": 10,
+          "symbol": "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0xc0",
+          "kind": 10,
+          "symbol": "isExistMapCollision__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0xf0",
+          "kind": 10,
+          "symbol": "isStatusActive__5MarioCFUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x128",
+          "kind": 10,
+          "symbol": "getSimpleModel__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x134",
+          "kind": 10,
+          "symbol": "setDrawView__9J3DModelXFUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x14c",
+          "kind": 10,
+          "symbol": "directDraw__9J3DModelXFP8J3DModel",
+          "addend": 0
+        },
+        {
+          "offset": "0x160",
+          "kind": 10,
+          "symbol": "GXSetAlphaUpdate",
+          "addend": 0
+        },
+        {
+          "offset": "0x168",
+          "kind": 10,
+          "symbol": "GXSetColorUpdate",
+          "addend": 0
+        },
+        {
+          "offset": "0x174",
+          "kind": 10,
+          "symbol": "GXSetDstAlpha",
+          "addend": 0
+        }
+      ]
+    },
+    {
+      "name": "getWaterEdgeDist__9MarioSwimCFv",
+      "address": "0x802c132c",
+      "retail_size": 56,
+      "compiled_size": 56,
+      "match_percent": 99.64286,
+      "retail_function_sha256": "f6310003ce10d19f61a27dc010628d716734db023aac96fa9d90a67bb4279505",
+      "source_sha256": "2dc5bb3bc674c9aa2a802ae7a22cbac88388c7710e4cdc50c7a2a425da5ef768",
+      "same_direct_call_order": true,
+      "retail_references": [
+        {
+          "offset": "0x28",
+          "kind": 109,
+          "symbol": "@64096",
+          "addend": 0,
+          "value_hex": "bf800000"
+        }
+      ],
+      "compiled_references": [
+        {
+          "offset": "0x28",
+          "kind": 109,
+          "symbol": "@6697",
+          "addend": 0,
+          "value_hex": "bf800000"
+        }
+      ]
+    },
+    {
+      "name": "getDrawMtx__8J3DModelFi",
+      "address": "0x802c1364",
+      "retail_size": 32,
+      "compiled_size": 32,
+      "match_percent": 100.0,
+      "retail_function_sha256": "066288bd1cde769035acf55d73e69fe9e8658d0d94bd26896849a579733dd7a6",
+      "source_sha256": "2dc5bb3bc674c9aa2a802ae7a22cbac88388c7710e4cdc50c7a2a425da5ef768",
+      "same_direct_call_order": true,
+      "retail_references": [],
+      "compiled_references": []
+    },
+    {
+      "name": "calcCubeAxisZ__2MRFPC7AreaObjPQ29JGeometry8TVec3<f>",
+      "address": "0x80400830",
+      "retail_size": 92,
+      "compiled_size": 92,
+      "match_percent": 100.0,
+      "retail_function_sha256": "e38c4d067581b706fffc624468dccecf8dc18c2cc4c0a6c9852a5700730c8ef9",
+      "source_sha256": "e0634f1512854d81034fec338554e40ef79829a0510e7756f8f34ce577688f7c",
+      "same_direct_call_order": true,
+      "retail_references": [
+        {
+          "offset": "0x1c",
+          "kind": 10,
+          "symbol": "calcWorldRotate__12AreaFormCubeCFPQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x30",
+          "kind": 10,
+          "symbol": "makeMtxRotate__2MRFPA4_ffff",
+          "addend": 0
+        },
+        {
+          "offset": "0x44",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>Ffff_v",
+          "addend": 0
+        }
+      ],
+      "compiled_references": [
+        {
+          "offset": "0x1c",
+          "kind": 10,
+          "symbol": "calcWorldRotate__12AreaFormCubeCFPQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x30",
+          "kind": 10,
+          "symbol": "makeMtxRotate__2MRFPA4_ffff",
+          "addend": 0
+        },
+        {
+          "offset": "0x44",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>Ffff_v",
+          "addend": 0
+        }
+      ]
+    },
+    {
+      "name": "initBlur__10MarioActorFv",
+      "address": "0x802b712c",
+      "retail_size": 248,
+      "compiled_size": 252,
+      "match_percent": 91.741936,
+      "retail_function_sha256": "31415c4538dd5576e4f530aa26b3b487e2703c01df578e5dbad0e155514a7cbd",
+      "source_sha256": "1d1468df492965e469c8c8145974cce2feacf42b0df7426ac11d1f809d4cf36d",
+      "same_direct_call_order": false,
+      "retail_references": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_23",
+          "addend": 0
+        },
+        {
+          "offset": "0x7c",
+          "kind": 10,
+          "symbol": "__nwa__FUli",
+          "addend": 0
+        },
+        {
+          "offset": "0x98",
+          "kind": 10,
+          "symbol": "PSMTXIdentity",
+          "addend": 0
+        },
+        {
+          "offset": "0xe4",
+          "kind": 10,
+          "symbol": "_restgpr_23",
+          "addend": 0
+        }
+      ],
+      "compiled_references": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_24",
+          "addend": 0
+        },
+        {
+          "offset": "0x7c",
+          "kind": 10,
+          "symbol": "__nwa__FUli",
+          "addend": 0
+        },
+        {
+          "offset": "0x9c",
+          "kind": 10,
+          "symbol": "PSMTXIdentity",
+          "addend": 0
+        },
+        {
+          "offset": "0xe8",
+          "kind": 10,
+          "symbol": "_restgpr_24",
+          "addend": 0
+        }
+      ]
+    },
+    {
+      "name": "drawModelBlur__10MarioActorCFv",
+      "address": "0x802b77e0",
+      "retail_size": 420,
+      "compiled_size": 432,
+      "match_percent": 91.73333,
+      "retail_function_sha256": "241a06b91f97f6d46f2df369169c32070bbeeefb03f0c1b508b8ebb538706e91",
+      "source_sha256": "1d1468df492965e469c8c8145974cce2feacf42b0df7426ac11d1f809d4cf36d",
+      "same_direct_call_order": false,
+      "retail_references": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_24",
+          "addend": 0
+        },
+        {
+          "offset": "0x18",
+          "kind": 10,
+          "symbol": "isAllHidden__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x74",
+          "kind": 10,
+          "symbol": "PSMTXInverse",
+          "addend": 0
+        },
+        {
+          "offset": "0x78",
+          "kind": 10,
+          "symbol": "getCameraViewMtx__2MRFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x84",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "addend": 0
+        },
+        {
+          "offset": "0xb4",
+          "kind": 10,
+          "symbol": "setDrawViewBuffer__9J3DModelXFPA4_f",
+          "addend": 0
+        },
+        {
+          "offset": "0x100",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "addend": 0
+        },
+        {
+          "offset": "0x110",
+          "kind": 10,
+          "symbol": "getModelData__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x124",
+          "kind": 10,
+          "symbol": "getModelData__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x144",
+          "kind": 10,
+          "symbol": "DCStoreRange",
+          "addend": 0
+        },
+        {
+          "offset": "0x164",
+          "kind": 10,
+          "symbol": "addDL__9DLchangerFP9J3DModelX",
+          "addend": 0
+        },
+        {
+          "offset": "0x170",
+          "kind": 10,
+          "symbol": "directDraw__9J3DModelXFP8J3DModel",
+          "addend": 0
+        },
+        {
+          "offset": "0x190",
+          "kind": 10,
+          "symbol": "_restgpr_24",
+          "addend": 0
+        }
+      ],
+      "compiled_references": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_26",
+          "addend": 0
+        },
+        {
+          "offset": "0x18",
+          "kind": 10,
+          "symbol": "isAllHidden__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x74",
+          "kind": 10,
+          "symbol": "PSMTXInverse",
+          "addend": 0
+        },
+        {
+          "offset": "0x78",
+          "kind": 10,
+          "symbol": "getCameraViewMtx__2MRFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x84",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "addend": 0
+        },
+        {
+          "offset": "0xb4",
+          "kind": 10,
+          "symbol": "setDrawViewBuffer__9J3DModelXFPA4_f",
+          "addend": 0
+        },
+        {
+          "offset": "0x108",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "addend": 0
+        },
+        {
+          "offset": "0x114",
+          "kind": 10,
+          "symbol": "getModelData__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x12c",
+          "kind": 10,
+          "symbol": "getModelData__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x150",
+          "kind": 10,
+          "symbol": "DCStoreRange",
+          "addend": 0
+        },
+        {
+          "offset": "0x170",
+          "kind": 10,
+          "symbol": "addDL__9DLchangerFP9J3DModelX",
+          "addend": 0
+        },
+        {
+          "offset": "0x17c",
+          "kind": 10,
+          "symbol": "directDraw__9J3DModelXFP8J3DModel",
+          "addend": 0
+        },
+        {
+          "offset": "0x19c",
+          "kind": 10,
+          "symbol": "_restgpr_26",
+          "addend": 0
+        }
+      ]
+    }
+  ],
+  "commands": [
+    [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/Game/Player/MarioActorShadow.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/mario-shadow-view-20260903/MarioActorShadow.o"
+    ],
+    [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/Game/Util/AreaObjUtil.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/mario-shadow-view-20260903/AreaObjUtil.o"
+    ],
+    [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/Game/Player/MarioActorDraw.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/mario-shadow-view-20260903/MarioActorDraw.o"
+    ],
+    [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/Game/Player/MarioActorInit.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/mario-shadow-view-20260903/MarioActorInit.o"
+    ]
+  ],
+  "entire_string_pool_matches_retail": true,
+  "integer_conversion_double_constants": [
+    "4330000000000000",
+    "4330000080000000"
+  ],
+  "isolated_initializer_layout_delta_match_percent": 100.0
+}

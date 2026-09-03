@@ -1,0 +1,2160 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "compiler_command": [
+    "build/tools/wibo",
+    "build/tools/sjiswrap.exe",
+    "build/compilers/GC/3.0a3/mwcceppc.exe",
+    "-nodefaults",
+    "-proc",
+    "gekko",
+    "-align",
+    "powerpc",
+    "-enum",
+    "int",
+    "-fp",
+    "hardware",
+    "-Cpp_exceptions",
+    "off",
+    "-O4,s",
+    "-inline",
+    "auto",
+    "-pragma",
+    "cats off",
+    "-pragma",
+    "warn_notinlined off",
+    "-maxerrors",
+    "1",
+    "-nosyspath",
+    "-RTTI",
+    "off",
+    "-str",
+    "reuse",
+    "-enc",
+    "SJIS",
+    "-sdata",
+    "4",
+    "-sdata2",
+    "4",
+    "-ipa",
+    "file",
+    "-sym",
+    "on",
+    "-i",
+    "include",
+    "-i",
+    "libs/JSystem/include",
+    "-i",
+    "libs/MSL_C++/include",
+    "-i",
+    "libs/MSL_C/include",
+    "-i",
+    "libs/MetroTRK/include",
+    "-i",
+    "libs/RVLFaceLib/include",
+    "-i",
+    "libs/RVL_SDK/include",
+    "-i",
+    "libs/Runtime/include",
+    "-i",
+    "libs/nw4r/include",
+    "-i",
+    "build/RMGK01/include",
+    "-DVERSION=0",
+    "-c",
+    "/Users/frityet/Projects/petari/src/Game/Player/MarioActorSpecialDraw.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/build/original-mario-special-draw-20260903/SpecialDraw.o"
+  ],
+  "source_sha256": "1f08dcfda3d88f1a78d99b69be66b38031c90fa95709323c63653b7cbcc8ce0f",
+  "functions": [
+    {
+      "symbol": "calcScreenBoxRange__10MarioActorFv",
+      "address": "0x802c1404",
+      "retail_bytes": 1220,
+      "compiled_bytes": 1256,
+      "objdiff_match_percent": 84.70164,
+      "direct_calls_identical": false,
+      "retail_calls": [
+        "_savegpr_29",
+        "isUseScreenBox__10MarioActorCFv",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "calcScreenPosition__2MRFPQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec3<f>",
+        "__ct<f>__Q29JGeometry8TVec3<f>Ffff_Pv",
+        "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "calcScreenPosition__2MRFPQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec3<f>",
+        "__ct<f>__Q29JGeometry8TVec3<f>Ffff_Pv",
+        "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "calcScreenPosition__2MRFPQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec3<f>",
+        "__ct<f>__Q29JGeometry8TVec3<f>Ffff_Pv",
+        "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "calcScreenPosition__2MRFPQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec3<f>",
+        "__mi__Q29JGeometry8TVec2<f>CFRCQ29JGeometry8TVec2<f>",
+        "__mi__Q29JGeometry8TVec2<f>CFRCQ29JGeometry8TVec2<f>",
+        "__mi__Q29JGeometry8TVec2<f>CFRCQ29JGeometry8TVec2<f>",
+        "length__Q29JGeometry8TVec2<f>CFv",
+        "length__Q29JGeometry8TVec2<f>CFv",
+        "length__Q29JGeometry8TVec2<f>CFv",
+        "__ct<f>__Q29JGeometry8TVec3<f>Ffff_Pv",
+        "PSVECMag",
+        "__mi__Q29JGeometry8TVec2<f>CFRCQ29JGeometry8TVec2<f>",
+        "__pl__Q29JGeometry8TVec2<f>CFRCQ29JGeometry8TVec2<f>",
+        "convertScreenPosToFrameBufferPos__2MRFPQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec2<f>",
+        "convertScreenPosToFrameBufferPos__2MRFPQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec2<f>",
+        "__ct__Q29JGeometry8TBox2<f>Fffff",
+        "getScreenHeight__2MRFv",
+        "getFrameBufferWidth__2MRFv",
+        "__ct__Q29JGeometry8TBox2<f>Fffff",
+        "_restgpr_29"
+      ],
+      "compiled_calls": [
+        "isUseScreenBox__10MarioActorCFv",
+        "calcScreenPosition__2MRFPQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec3<f>",
+        "__ct<f>__Q29JGeometry8TVec3<f>Ffff_Pv",
+        "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "calcScreenPosition__2MRFPQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec3<f>",
+        "__ct<f>__Q29JGeometry8TVec3<f>Ffff_Pv",
+        "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "calcScreenPosition__2MRFPQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec3<f>",
+        "__ct<f>__Q29JGeometry8TVec3<f>Ffff_Pv",
+        "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "calcScreenPosition__2MRFPQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec3<f>",
+        "__mi__Q29JGeometry8TVec2<f>CFRCQ29JGeometry8TVec2<f>",
+        "__mi__Q29JGeometry8TVec2<f>CFRCQ29JGeometry8TVec2<f>",
+        "__mi__Q29JGeometry8TVec2<f>CFRCQ29JGeometry8TVec2<f>",
+        "length__Q29JGeometry8TVec2<f>CFv",
+        "length__Q29JGeometry8TVec2<f>CFv",
+        "length__Q29JGeometry8TVec2<f>CFv",
+        "__ct<f>__Q29JGeometry8TVec3<f>Ffff_Pv",
+        "PSVECMag",
+        "__mi__Q29JGeometry8TVec2<f>CFRCQ29JGeometry8TVec2<f>",
+        "convertScreenPosToFrameBufferPos__2MRFPQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec2<f>",
+        "convertScreenPosToFrameBufferPos__2MRFPQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec2<f>",
+        "set__Q29JGeometry8TBox2<f>Fffff",
+        "getScreenHeight__2MRFv",
+        "getFrameBufferWidth__2MRFv",
+        "set__Q29JGeometry8TBox2<f>Fffff"
+      ],
+      "retail_references": [
+        {
+          "offset": "0x20",
+          "kind": 10,
+          "symbol": "_savegpr_29",
+          "addend": 0
+        },
+        {
+          "offset": "0x34",
+          "kind": 10,
+          "symbol": "isUseScreenBox__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x48",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x54",
+          "kind": 10,
+          "symbol": "calcScreenPosition__2MRFPQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x58",
+          "kind": 109,
+          "symbol": "@62526",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x60",
+          "kind": 109,
+          "symbol": "@63791",
+          "addend": 0,
+          "value_hex": "42a00000"
+        },
+        {
+          "offset": "0x68",
+          "kind": 10,
+          "symbol": "__ct<f>__Q29JGeometry8TVec3<f>Ffff_Pv",
+          "addend": 0
+        },
+        {
+          "offset": "0x74",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x80",
+          "kind": 10,
+          "symbol": "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x8c",
+          "kind": 10,
+          "symbol": "calcScreenPosition__2MRFPQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x90",
+          "kind": 109,
+          "symbol": "@62526",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x98",
+          "kind": 109,
+          "symbol": "@63791",
+          "addend": 0,
+          "value_hex": "42a00000"
+        },
+        {
+          "offset": "0xa0",
+          "kind": 10,
+          "symbol": "__ct<f>__Q29JGeometry8TVec3<f>Ffff_Pv",
+          "addend": 0
+        },
+        {
+          "offset": "0xac",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0xb8",
+          "kind": 10,
+          "symbol": "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0xc4",
+          "kind": 10,
+          "symbol": "calcScreenPosition__2MRFPQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0xc8",
+          "kind": 109,
+          "symbol": "@62526",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0xd0",
+          "kind": 109,
+          "symbol": "@63791",
+          "addend": 0,
+          "value_hex": "42a00000"
+        },
+        {
+          "offset": "0xd8",
+          "kind": 10,
+          "symbol": "__ct<f>__Q29JGeometry8TVec3<f>Ffff_Pv",
+          "addend": 0
+        },
+        {
+          "offset": "0xe4",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0xf0",
+          "kind": 10,
+          "symbol": "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0xfc",
+          "kind": 10,
+          "symbol": "calcScreenPosition__2MRFPQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x108",
+          "kind": 10,
+          "symbol": "__mi__Q29JGeometry8TVec2<f>CFRCQ29JGeometry8TVec2<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x11c",
+          "kind": 10,
+          "symbol": "__mi__Q29JGeometry8TVec2<f>CFRCQ29JGeometry8TVec2<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x130",
+          "kind": 10,
+          "symbol": "__mi__Q29JGeometry8TVec2<f>CFRCQ29JGeometry8TVec2<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x140",
+          "kind": 10,
+          "symbol": "length__Q29JGeometry8TVec2<f>CFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x14c",
+          "kind": 10,
+          "symbol": "length__Q29JGeometry8TVec2<f>CFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x158",
+          "kind": 10,
+          "symbol": "length__Q29JGeometry8TVec2<f>CFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x168",
+          "kind": 10,
+          "symbol": "__ct<f>__Q29JGeometry8TVec3<f>Ffff_Pv",
+          "addend": 0
+        },
+        {
+          "offset": "0x170",
+          "kind": 10,
+          "symbol": "PSVECMag",
+          "addend": 0
+        },
+        {
+          "offset": "0x188",
+          "kind": 10,
+          "symbol": "__mi__Q29JGeometry8TVec2<f>CFRCQ29JGeometry8TVec2<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x1b4",
+          "kind": 10,
+          "symbol": "__pl__Q29JGeometry8TVec2<f>CFRCQ29JGeometry8TVec2<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x244",
+          "kind": 10,
+          "symbol": "convertScreenPosToFrameBufferPos__2MRFPQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec2<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x250",
+          "kind": 10,
+          "symbol": "convertScreenPosToFrameBufferPos__2MRFPQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec2<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x30a",
+          "kind": 6,
+          "symbol": "lbl_80539A80",
+          "addend": 0
+        },
+        {
+          "offset": "0x326",
+          "kind": 4,
+          "symbol": "lbl_80539A80",
+          "addend": 0
+        },
+        {
+          "offset": "0x360",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TBox2<f>Fffff",
+          "addend": 0
+        },
+        {
+          "offset": "0x364",
+          "kind": 10,
+          "symbol": "getScreenHeight__2MRFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x36c",
+          "kind": 10,
+          "symbol": "getFrameBufferWidth__2MRFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x380",
+          "kind": 109,
+          "symbol": "@62526",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x386",
+          "kind": 4,
+          "symbol": "lbl_80539A80",
+          "addend": 0
+        },
+        {
+          "offset": "0x3a0",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TBox2<f>Fffff",
+          "addend": 0
+        },
+        {
+          "offset": "0x458",
+          "kind": 109,
+          "symbol": "@62526",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x4b0",
+          "kind": 10,
+          "symbol": "_restgpr_29",
+          "addend": 0
+        }
+      ],
+      "compiled_references": [
+        {
+          "offset": "0x34",
+          "kind": 10,
+          "symbol": "isUseScreenBox__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x60",
+          "kind": 10,
+          "symbol": "calcScreenPosition__2MRFPQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x64",
+          "kind": 109,
+          "symbol": "@7219",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x6c",
+          "kind": 109,
+          "symbol": "@7301",
+          "addend": 0,
+          "value_hex": "42a00000"
+        },
+        {
+          "offset": "0x74",
+          "kind": 10,
+          "symbol": "__ct<f>__Q29JGeometry8TVec3<f>Ffff_Pv",
+          "addend": 0
+        },
+        {
+          "offset": "0x80",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x8c",
+          "kind": 10,
+          "symbol": "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x98",
+          "kind": 10,
+          "symbol": "calcScreenPosition__2MRFPQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x9c",
+          "kind": 109,
+          "symbol": "@7219",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0xa4",
+          "kind": 109,
+          "symbol": "@7301",
+          "addend": 0,
+          "value_hex": "42a00000"
+        },
+        {
+          "offset": "0xac",
+          "kind": 10,
+          "symbol": "__ct<f>__Q29JGeometry8TVec3<f>Ffff_Pv",
+          "addend": 0
+        },
+        {
+          "offset": "0xb8",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0xc4",
+          "kind": 10,
+          "symbol": "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0xd0",
+          "kind": 10,
+          "symbol": "calcScreenPosition__2MRFPQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0xd4",
+          "kind": 109,
+          "symbol": "@7219",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0xdc",
+          "kind": 109,
+          "symbol": "@7301",
+          "addend": 0,
+          "value_hex": "42a00000"
+        },
+        {
+          "offset": "0xe4",
+          "kind": 10,
+          "symbol": "__ct<f>__Q29JGeometry8TVec3<f>Ffff_Pv",
+          "addend": 0
+        },
+        {
+          "offset": "0xf0",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0xfc",
+          "kind": 10,
+          "symbol": "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x108",
+          "kind": 10,
+          "symbol": "calcScreenPosition__2MRFPQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x114",
+          "kind": 10,
+          "symbol": "__mi__Q29JGeometry8TVec2<f>CFRCQ29JGeometry8TVec2<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x128",
+          "kind": 10,
+          "symbol": "__mi__Q29JGeometry8TVec2<f>CFRCQ29JGeometry8TVec2<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x13c",
+          "kind": 10,
+          "symbol": "__mi__Q29JGeometry8TVec2<f>CFRCQ29JGeometry8TVec2<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x14c",
+          "kind": 10,
+          "symbol": "length__Q29JGeometry8TVec2<f>CFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x158",
+          "kind": 10,
+          "symbol": "length__Q29JGeometry8TVec2<f>CFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x164",
+          "kind": 10,
+          "symbol": "length__Q29JGeometry8TVec2<f>CFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x174",
+          "kind": 10,
+          "symbol": "__ct<f>__Q29JGeometry8TVec3<f>Ffff_Pv",
+          "addend": 0
+        },
+        {
+          "offset": "0x17c",
+          "kind": 10,
+          "symbol": "PSVECMag",
+          "addend": 0
+        },
+        {
+          "offset": "0x194",
+          "kind": 10,
+          "symbol": "__mi__Q29JGeometry8TVec2<f>CFRCQ29JGeometry8TVec2<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x264",
+          "kind": 10,
+          "symbol": "convertScreenPosToFrameBufferPos__2MRFPQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec2<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x270",
+          "kind": 10,
+          "symbol": "convertScreenPosToFrameBufferPos__2MRFPQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec2<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x32a",
+          "kind": 6,
+          "symbol": "@7309",
+          "addend": 0,
+          "value_hex": "4330000080000000"
+        },
+        {
+          "offset": "0x346",
+          "kind": 4,
+          "symbol": "@7309",
+          "addend": 0,
+          "value_hex": "4330000080000000"
+        },
+        {
+          "offset": "0x380",
+          "kind": 10,
+          "symbol": "set__Q29JGeometry8TBox2<f>Fffff",
+          "addend": 0
+        },
+        {
+          "offset": "0x384",
+          "kind": 10,
+          "symbol": "getScreenHeight__2MRFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x38e",
+          "kind": 4,
+          "symbol": "@7309",
+          "addend": 0,
+          "value_hex": "4330000080000000"
+        },
+        {
+          "offset": "0x39c",
+          "kind": 10,
+          "symbol": "getFrameBufferWidth__2MRFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x3a4",
+          "kind": 109,
+          "symbol": "@7219",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x3b2",
+          "kind": 4,
+          "symbol": "@7309",
+          "addend": 0,
+          "value_hex": "4330000080000000"
+        },
+        {
+          "offset": "0x3c4",
+          "kind": 10,
+          "symbol": "set__Q29JGeometry8TBox2<f>Fffff",
+          "addend": 0
+        },
+        {
+          "offset": "0x47c",
+          "kind": 109,
+          "symbol": "@7219",
+          "addend": 0,
+          "value_hex": "00000000"
+        }
+      ],
+      "retail_function_sha256": "75a2ddedbffc23a8242acd74955dd362ab34a2c50eb70e1010f7e85148a1cb10"
+    },
+    {
+      "symbol": "calcFogLighting__10MarioActorFv",
+      "address": "0x802c1d94",
+      "retail_bytes": 736,
+      "compiled_bytes": 728,
+      "objdiff_match_percent": 91.972824,
+      "direct_calls_identical": true,
+      "retail_calls": [
+        "set__6Color8FUcUcUcUc",
+        "isStatusActive__5MarioCFUl",
+        "isNeedDamageFog__10MarioActorCFv",
+        "__as__8_GXColorFRC8_GXColor",
+        "sin__2MRFf",
+        "sin__2MRFf",
+        "set__6Color8FUcUcUcUc",
+        "sin__2MRFf",
+        "resetFog__10MarioActorFv",
+        "getLightAmbientColor__2MRFPC9LiveActor",
+        "__as__8_GXColorFRC8_GXColor",
+        "set__6Color8FUcUcUcUc",
+        "updateLightDL__10MarioActorFRC6Color8RC6Color8RC6Color8f"
+      ],
+      "compiled_calls": [
+        "set__6Color8FUcUcUcUc",
+        "isStatusActive__5MarioCFUl",
+        "isNeedDamageFog__10MarioActorCFv",
+        "__as__8_GXColorFRC8_GXColor",
+        "sin__2MRFf",
+        "sin__2MRFf",
+        "set__6Color8FUcUcUcUc",
+        "sin__2MRFf",
+        "resetFog__10MarioActorFv",
+        "getLightAmbientColor__2MRFPC9LiveActor",
+        "__as__8_GXColorFRC8_GXColor",
+        "set__6Color8FUcUcUcUc",
+        "updateLightDL__10MarioActorFRC6Color8RC6Color8RC6Color8f"
+      ],
+      "retail_references": [
+        {
+          "offset": "0x34",
+          "kind": 10,
+          "symbol": "set__6Color8FUcUcUcUc",
+          "addend": 0
+        },
+        {
+          "offset": "0x40",
+          "kind": 10,
+          "symbol": "isStatusActive__5MarioCFUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x50",
+          "kind": 10,
+          "symbol": "isNeedDamageFog__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x62",
+          "kind": 6,
+          "symbol": "lbl_80539A80",
+          "addend": 0
+        },
+        {
+          "offset": "0x66",
+          "kind": 4,
+          "symbol": "lbl_80539A80",
+          "addend": 0
+        },
+        {
+          "offset": "0x6c",
+          "kind": 109,
+          "symbol": "@63975",
+          "addend": 0,
+          "value_hex": "427c0000"
+        },
+        {
+          "offset": "0x74",
+          "kind": 109,
+          "symbol": "@63562",
+          "addend": 0,
+          "value_hex": "3f000000"
+        },
+        {
+          "offset": "0x94",
+          "kind": 109,
+          "symbol": "@62525",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0xa2",
+          "kind": 6,
+          "symbol": "lbl_80539A88",
+          "addend": 0
+        },
+        {
+          "offset": "0xa6",
+          "kind": 6,
+          "symbol": "lbl_80539A80",
+          "addend": 0
+        },
+        {
+          "offset": "0xa8",
+          "kind": 109,
+          "symbol": "@63697",
+          "addend": 0,
+          "value_hex": "40000000"
+        },
+        {
+          "offset": "0xb6",
+          "kind": 4,
+          "symbol": "lbl_80539A88",
+          "addend": 0
+        },
+        {
+          "offset": "0xbe",
+          "kind": 4,
+          "symbol": "lbl_80539A80",
+          "addend": 0
+        },
+        {
+          "offset": "0xc4",
+          "kind": 109,
+          "symbol": "@63897",
+          "addend": 0,
+          "value_hex": "437f0000"
+        },
+        {
+          "offset": "0x118",
+          "kind": 10,
+          "symbol": "__as__8_GXColorFRC8_GXColor",
+          "addend": 0
+        },
+        {
+          "offset": "0x12e",
+          "kind": 6,
+          "symbol": "lbl_80539A88",
+          "addend": 0
+        },
+        {
+          "offset": "0x132",
+          "kind": 4,
+          "symbol": "lbl_80539A88",
+          "addend": 0
+        },
+        {
+          "offset": "0x138",
+          "kind": 109,
+          "symbol": "@63976",
+          "addend": 0,
+          "value_hex": "41a00000"
+        },
+        {
+          "offset": "0x140",
+          "kind": 109,
+          "symbol": "@63667",
+          "addend": 0,
+          "value_hex": "40490fdb"
+        },
+        {
+          "offset": "0x150",
+          "kind": 10,
+          "symbol": "sin__2MRFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x154",
+          "kind": 109,
+          "symbol": "@63897",
+          "addend": 0,
+          "value_hex": "437f0000"
+        },
+        {
+          "offset": "0x172",
+          "kind": 6,
+          "symbol": "lbl_80539A88",
+          "addend": 0
+        },
+        {
+          "offset": "0x186",
+          "kind": 4,
+          "symbol": "lbl_80539A88",
+          "addend": 0
+        },
+        {
+          "offset": "0x198",
+          "kind": 109,
+          "symbol": "@63667",
+          "addend": 0,
+          "value_hex": "40490fdb"
+        },
+        {
+          "offset": "0x1b0",
+          "kind": 10,
+          "symbol": "sin__2MRFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x1e8",
+          "kind": 10,
+          "symbol": "set__6Color8FUcUcUcUc",
+          "addend": 0
+        },
+        {
+          "offset": "0x1f2",
+          "kind": 6,
+          "symbol": "lbl_80539A88",
+          "addend": 0
+        },
+        {
+          "offset": "0x206",
+          "kind": 4,
+          "symbol": "lbl_80539A88",
+          "addend": 0
+        },
+        {
+          "offset": "0x220",
+          "kind": 109,
+          "symbol": "@63667",
+          "addend": 0,
+          "value_hex": "40490fdb"
+        },
+        {
+          "offset": "0x228",
+          "kind": 109,
+          "symbol": "@63562",
+          "addend": 0,
+          "value_hex": "3f000000"
+        },
+        {
+          "offset": "0x23c",
+          "kind": 10,
+          "symbol": "sin__2MRFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x240",
+          "kind": 109,
+          "symbol": "@63977",
+          "addend": 0,
+          "value_hex": "3f4ccccd"
+        },
+        {
+          "offset": "0x254",
+          "kind": 10,
+          "symbol": "resetFog__10MarioActorFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x25c",
+          "kind": 10,
+          "symbol": "getLightAmbientColor__2MRFPC9LiveActor",
+          "addend": 0
+        },
+        {
+          "offset": "0x298",
+          "kind": 10,
+          "symbol": "__as__8_GXColorFRC8_GXColor",
+          "addend": 0
+        },
+        {
+          "offset": "0x2b0",
+          "kind": 10,
+          "symbol": "set__6Color8FUcUcUcUc",
+          "addend": 0
+        },
+        {
+          "offset": "0x2c8",
+          "kind": 10,
+          "symbol": "updateLightDL__10MarioActorFRC6Color8RC6Color8RC6Color8f",
+          "addend": 0
+        }
+      ],
+      "compiled_references": [
+        {
+          "offset": "0x34",
+          "kind": 10,
+          "symbol": "set__6Color8FUcUcUcUc",
+          "addend": 0
+        },
+        {
+          "offset": "0x40",
+          "kind": 10,
+          "symbol": "isStatusActive__5MarioCFUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x50",
+          "kind": 10,
+          "symbol": "isNeedDamageFog__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x62",
+          "kind": 6,
+          "symbol": "@7309",
+          "addend": 0,
+          "value_hex": "4330000080000000"
+        },
+        {
+          "offset": "0x66",
+          "kind": 4,
+          "symbol": "@7309",
+          "addend": 0,
+          "value_hex": "4330000080000000"
+        },
+        {
+          "offset": "0x6c",
+          "kind": 109,
+          "symbol": "@7411",
+          "addend": 0,
+          "value_hex": "427c0000"
+        },
+        {
+          "offset": "0x74",
+          "kind": 109,
+          "symbol": "@7328",
+          "addend": 0,
+          "value_hex": "3f000000"
+        },
+        {
+          "offset": "0x94",
+          "kind": 109,
+          "symbol": "@7340",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0xa2",
+          "kind": 6,
+          "symbol": "@7309",
+          "addend": 0,
+          "value_hex": "4330000080000000"
+        },
+        {
+          "offset": "0xa6",
+          "kind": 6,
+          "symbol": "@7419",
+          "addend": 0,
+          "value_hex": "4330000000000000"
+        },
+        {
+          "offset": "0xa8",
+          "kind": 109,
+          "symbol": "@7412",
+          "addend": 0,
+          "value_hex": "40000000"
+        },
+        {
+          "offset": "0xb6",
+          "kind": 4,
+          "symbol": "@7309",
+          "addend": 0,
+          "value_hex": "4330000080000000"
+        },
+        {
+          "offset": "0xbe",
+          "kind": 4,
+          "symbol": "@7419",
+          "addend": 0,
+          "value_hex": "4330000000000000"
+        },
+        {
+          "offset": "0xc4",
+          "kind": 109,
+          "symbol": "@7363",
+          "addend": 0,
+          "value_hex": "437f0000"
+        },
+        {
+          "offset": "0x118",
+          "kind": 10,
+          "symbol": "__as__8_GXColorFRC8_GXColor",
+          "addend": 0
+        },
+        {
+          "offset": "0x12e",
+          "kind": 6,
+          "symbol": "@7419",
+          "addend": 0,
+          "value_hex": "4330000000000000"
+        },
+        {
+          "offset": "0x132",
+          "kind": 4,
+          "symbol": "@7419",
+          "addend": 0,
+          "value_hex": "4330000000000000"
+        },
+        {
+          "offset": "0x138",
+          "kind": 109,
+          "symbol": "@7414",
+          "addend": 0,
+          "value_hex": "41a00000"
+        },
+        {
+          "offset": "0x140",
+          "kind": 109,
+          "symbol": "@7413",
+          "addend": 0,
+          "value_hex": "40490fdb"
+        },
+        {
+          "offset": "0x150",
+          "kind": 10,
+          "symbol": "sin__2MRFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x154",
+          "kind": 109,
+          "symbol": "@7363",
+          "addend": 0,
+          "value_hex": "437f0000"
+        },
+        {
+          "offset": "0x172",
+          "kind": 6,
+          "symbol": "@7419",
+          "addend": 0,
+          "value_hex": "4330000000000000"
+        },
+        {
+          "offset": "0x186",
+          "kind": 4,
+          "symbol": "@7419",
+          "addend": 0,
+          "value_hex": "4330000000000000"
+        },
+        {
+          "offset": "0x198",
+          "kind": 109,
+          "symbol": "@7413",
+          "addend": 0,
+          "value_hex": "40490fdb"
+        },
+        {
+          "offset": "0x1b0",
+          "kind": 10,
+          "symbol": "sin__2MRFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x1e8",
+          "kind": 10,
+          "symbol": "set__6Color8FUcUcUcUc",
+          "addend": 0
+        },
+        {
+          "offset": "0x1f2",
+          "kind": 6,
+          "symbol": "@7419",
+          "addend": 0,
+          "value_hex": "4330000000000000"
+        },
+        {
+          "offset": "0x206",
+          "kind": 4,
+          "symbol": "@7419",
+          "addend": 0,
+          "value_hex": "4330000000000000"
+        },
+        {
+          "offset": "0x220",
+          "kind": 109,
+          "symbol": "@7413",
+          "addend": 0,
+          "value_hex": "40490fdb"
+        },
+        {
+          "offset": "0x228",
+          "kind": 109,
+          "symbol": "@7328",
+          "addend": 0,
+          "value_hex": "3f000000"
+        },
+        {
+          "offset": "0x23c",
+          "kind": 10,
+          "symbol": "sin__2MRFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x240",
+          "kind": 109,
+          "symbol": "@7415",
+          "addend": 0,
+          "value_hex": "3f4ccccd"
+        },
+        {
+          "offset": "0x254",
+          "kind": 10,
+          "symbol": "resetFog__10MarioActorFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x264",
+          "kind": 10,
+          "symbol": "getLightAmbientColor__2MRFPC9LiveActor",
+          "addend": 0
+        },
+        {
+          "offset": "0x290",
+          "kind": 10,
+          "symbol": "__as__8_GXColorFRC8_GXColor",
+          "addend": 0
+        },
+        {
+          "offset": "0x2a8",
+          "kind": 10,
+          "symbol": "set__6Color8FUcUcUcUc",
+          "addend": 0
+        },
+        {
+          "offset": "0x2c0",
+          "kind": 10,
+          "symbol": "updateLightDL__10MarioActorFRC6Color8RC6Color8RC6Color8f",
+          "addend": 0
+        }
+      ],
+      "retail_function_sha256": "452b395dcab153bf377eda6a636c96d2fc38f9ad5ab2615cb8fe712c80659782"
+    },
+    {
+      "symbol": "updateAlphaDL__10MarioActorFUc",
+      "address": "0x802c20d0",
+      "retail_bytes": 520,
+      "compiled_bytes": 520,
+      "objdiff_match_percent": 99.88461,
+      "direct_calls_identical": true,
+      "retail_calls": [
+        "_savegpr_29",
+        "__ct__Q22MR30ProhibitSchedulerAndInterruptsFb",
+        "GDInitGDLObj",
+        "GDSetTevColor",
+        "GDSetBlendMode",
+        "GDSetGenMode2",
+        "GDSetChanCtrl",
+        "GDSetChanCtrl",
+        "GDSetAlphaCompare",
+        "GDSetTevAlphaCalcAndSwap",
+        "GDSetTevColorCalc",
+        "GDSetTevOrder",
+        "GDPadCurr32",
+        "swap__9DLchangerFv",
+        "copyMemory__2MRFPvPCvUl",
+        "DCStoreRange",
+        "__dt__Q22MR30ProhibitSchedulerAndInterruptsFv",
+        "_restgpr_29"
+      ],
+      "compiled_calls": [
+        "_savegpr_29",
+        "__ct__Q22MR30ProhibitSchedulerAndInterruptsFb",
+        "GDInitGDLObj",
+        "GDSetTevColor",
+        "GDSetBlendMode",
+        "GDSetGenMode2",
+        "GDSetChanCtrl",
+        "GDSetChanCtrl",
+        "GDSetAlphaCompare",
+        "GDSetTevAlphaCalcAndSwap",
+        "GDSetTevColorCalc",
+        "GDSetTevOrder",
+        "GDPadCurr32",
+        "swap__9DLchangerFv",
+        "copyMemory__2MRFPvPCvUl",
+        "DCStoreRange",
+        "__dt__Q22MR30ProhibitSchedulerAndInterruptsFv",
+        "_restgpr_29"
+      ],
+      "retail_references": [
+        {
+          "offset": "0x1c",
+          "kind": 10,
+          "symbol": "_savegpr_29",
+          "addend": 0
+        },
+        {
+          "offset": "0x30",
+          "kind": 10,
+          "symbol": "__ct__Q22MR30ProhibitSchedulerAndInterruptsFb",
+          "addend": 0
+        },
+        {
+          "offset": "0x40",
+          "kind": 10,
+          "symbol": "GDInitGDLObj",
+          "addend": 0
+        },
+        {
+          "offset": "0x44",
+          "kind": 109,
+          "symbol": "lbl_806BF824",
+          "addend": 0,
+          "value_hex": "00"
+        },
+        {
+          "offset": "0x4c",
+          "kind": 109,
+          "symbol": "lbl_806BF825",
+          "addend": 0,
+          "value_hex": "00"
+        },
+        {
+          "offset": "0x54",
+          "kind": 109,
+          "symbol": "lbl_806BF826",
+          "addend": 0,
+          "value_hex": "00"
+        },
+        {
+          "offset": "0x5c",
+          "kind": 109,
+          "symbol": "__GDCurrentDL",
+          "addend": 0
+        },
+        {
+          "offset": "0x80",
+          "kind": 10,
+          "symbol": "GDSetTevColor",
+          "addend": 0
+        },
+        {
+          "offset": "0x94",
+          "kind": 10,
+          "symbol": "GDSetBlendMode",
+          "addend": 0
+        },
+        {
+          "offset": "0xb4",
+          "kind": 10,
+          "symbol": "GDSetGenMode2",
+          "addend": 0
+        },
+        {
+          "offset": "0xd4",
+          "kind": 10,
+          "symbol": "GDSetChanCtrl",
+          "addend": 0
+        },
+        {
+          "offset": "0xf4",
+          "kind": 10,
+          "symbol": "GDSetChanCtrl",
+          "addend": 0
+        },
+        {
+          "offset": "0x10c",
+          "kind": 10,
+          "symbol": "GDSetAlphaCompare",
+          "addend": 0
+        },
+        {
+          "offset": "0x140",
+          "kind": 10,
+          "symbol": "GDSetTevAlphaCalcAndSwap",
+          "addend": 0
+        },
+        {
+          "offset": "0x16c",
+          "kind": 10,
+          "symbol": "GDSetTevColorCalc",
+          "addend": 0
+        },
+        {
+          "offset": "0x18c",
+          "kind": 10,
+          "symbol": "GDSetTevOrder",
+          "addend": 0
+        },
+        {
+          "offset": "0x190",
+          "kind": 10,
+          "symbol": "GDPadCurr32",
+          "addend": 0
+        },
+        {
+          "offset": "0x1ac",
+          "kind": 10,
+          "symbol": "swap__9DLchangerFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x1d0",
+          "kind": 10,
+          "symbol": "copyMemory__2MRFPvPCvUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x1dc",
+          "kind": 10,
+          "symbol": "DCStoreRange",
+          "addend": 0
+        },
+        {
+          "offset": "0x1e8",
+          "kind": 10,
+          "symbol": "__dt__Q22MR30ProhibitSchedulerAndInterruptsFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x1f4",
+          "kind": 10,
+          "symbol": "_restgpr_29",
+          "addend": 0
+        }
+      ],
+      "compiled_references": [
+        {
+          "offset": "0x1c",
+          "kind": 10,
+          "symbol": "_savegpr_29",
+          "addend": 0
+        },
+        {
+          "offset": "0x30",
+          "kind": 10,
+          "symbol": "__ct__Q22MR30ProhibitSchedulerAndInterruptsFb",
+          "addend": 0
+        },
+        {
+          "offset": "0x40",
+          "kind": 10,
+          "symbol": "GDInitGDLObj",
+          "addend": 0
+        },
+        {
+          "offset": "0x44",
+          "kind": 109,
+          "symbol": "zero$6535",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x4c",
+          "kind": 109,
+          "symbol": "zero$6535",
+          "addend": 1,
+          "value_hex": "000000"
+        },
+        {
+          "offset": "0x54",
+          "kind": 109,
+          "symbol": "zero$6535",
+          "addend": 2,
+          "value_hex": "0000"
+        },
+        {
+          "offset": "0x5c",
+          "kind": 109,
+          "symbol": "__GDCurrentDL",
+          "addend": 0
+        },
+        {
+          "offset": "0x80",
+          "kind": 10,
+          "symbol": "GDSetTevColor",
+          "addend": 0
+        },
+        {
+          "offset": "0x94",
+          "kind": 10,
+          "symbol": "GDSetBlendMode",
+          "addend": 0
+        },
+        {
+          "offset": "0xb4",
+          "kind": 10,
+          "symbol": "GDSetGenMode2",
+          "addend": 0
+        },
+        {
+          "offset": "0xd4",
+          "kind": 10,
+          "symbol": "GDSetChanCtrl",
+          "addend": 0
+        },
+        {
+          "offset": "0xf4",
+          "kind": 10,
+          "symbol": "GDSetChanCtrl",
+          "addend": 0
+        },
+        {
+          "offset": "0x10c",
+          "kind": 10,
+          "symbol": "GDSetAlphaCompare",
+          "addend": 0
+        },
+        {
+          "offset": "0x140",
+          "kind": 10,
+          "symbol": "GDSetTevAlphaCalcAndSwap",
+          "addend": 0
+        },
+        {
+          "offset": "0x16c",
+          "kind": 10,
+          "symbol": "GDSetTevColorCalc",
+          "addend": 0
+        },
+        {
+          "offset": "0x18c",
+          "kind": 10,
+          "symbol": "GDSetTevOrder",
+          "addend": 0
+        },
+        {
+          "offset": "0x190",
+          "kind": 10,
+          "symbol": "GDPadCurr32",
+          "addend": 0
+        },
+        {
+          "offset": "0x1ac",
+          "kind": 10,
+          "symbol": "swap__9DLchangerFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x1d0",
+          "kind": 10,
+          "symbol": "copyMemory__2MRFPvPCvUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x1dc",
+          "kind": 10,
+          "symbol": "DCStoreRange",
+          "addend": 0
+        },
+        {
+          "offset": "0x1e8",
+          "kind": 10,
+          "symbol": "__dt__Q22MR30ProhibitSchedulerAndInterruptsFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x1f4",
+          "kind": 10,
+          "symbol": "_restgpr_29",
+          "addend": 0
+        }
+      ],
+      "retail_function_sha256": "ccfb674fa8137bc46b212cea6a7d1666c848844714a0c7b8803b460a80dee219"
+    },
+    {
+      "symbol": "updateSimpleAlphaDL__10MarioActorFUc",
+      "address": "0x802c22d8",
+      "retail_bytes": 208,
+      "compiled_bytes": 208,
+      "objdiff_match_percent": 100.0,
+      "direct_calls_identical": true,
+      "retail_calls": [
+        "__ct__Q22MR30ProhibitSchedulerAndInterruptsFb",
+        "GDInitGDLObj",
+        "GDSetDstAlpha",
+        "GDPadCurr32",
+        "swap__9DLchangerFv",
+        "copyMemory__2MRFPvPCvUl",
+        "DCStoreRange",
+        "__dt__Q22MR30ProhibitSchedulerAndInterruptsFv"
+      ],
+      "compiled_calls": [
+        "__ct__Q22MR30ProhibitSchedulerAndInterruptsFb",
+        "GDInitGDLObj",
+        "GDSetDstAlpha",
+        "GDPadCurr32",
+        "swap__9DLchangerFv",
+        "copyMemory__2MRFPvPCvUl",
+        "DCStoreRange",
+        "__dt__Q22MR30ProhibitSchedulerAndInterruptsFv"
+      ],
+      "retail_references": [
+        {
+          "offset": "0x30",
+          "kind": 10,
+          "symbol": "__ct__Q22MR30ProhibitSchedulerAndInterruptsFb",
+          "addend": 0
+        },
+        {
+          "offset": "0x40",
+          "kind": 10,
+          "symbol": "GDInitGDLObj",
+          "addend": 0
+        },
+        {
+          "offset": "0x4c",
+          "kind": 109,
+          "symbol": "__GDCurrentDL",
+          "addend": 0
+        },
+        {
+          "offset": "0x54",
+          "kind": 10,
+          "symbol": "GDSetDstAlpha",
+          "addend": 0
+        },
+        {
+          "offset": "0x58",
+          "kind": 10,
+          "symbol": "GDPadCurr32",
+          "addend": 0
+        },
+        {
+          "offset": "0x74",
+          "kind": 10,
+          "symbol": "swap__9DLchangerFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x98",
+          "kind": 10,
+          "symbol": "copyMemory__2MRFPvPCvUl",
+          "addend": 0
+        },
+        {
+          "offset": "0xa4",
+          "kind": 10,
+          "symbol": "DCStoreRange",
+          "addend": 0
+        },
+        {
+          "offset": "0xb0",
+          "kind": 10,
+          "symbol": "__dt__Q22MR30ProhibitSchedulerAndInterruptsFv",
+          "addend": 0
+        }
+      ],
+      "compiled_references": [
+        {
+          "offset": "0x30",
+          "kind": 10,
+          "symbol": "__ct__Q22MR30ProhibitSchedulerAndInterruptsFb",
+          "addend": 0
+        },
+        {
+          "offset": "0x40",
+          "kind": 10,
+          "symbol": "GDInitGDLObj",
+          "addend": 0
+        },
+        {
+          "offset": "0x4c",
+          "kind": 109,
+          "symbol": "__GDCurrentDL",
+          "addend": 0
+        },
+        {
+          "offset": "0x54",
+          "kind": 10,
+          "symbol": "GDSetDstAlpha",
+          "addend": 0
+        },
+        {
+          "offset": "0x58",
+          "kind": 10,
+          "symbol": "GDPadCurr32",
+          "addend": 0
+        },
+        {
+          "offset": "0x74",
+          "kind": 10,
+          "symbol": "swap__9DLchangerFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x98",
+          "kind": 10,
+          "symbol": "copyMemory__2MRFPvPCvUl",
+          "addend": 0
+        },
+        {
+          "offset": "0xa4",
+          "kind": 10,
+          "symbol": "DCStoreRange",
+          "addend": 0
+        },
+        {
+          "offset": "0xb0",
+          "kind": 10,
+          "symbol": "__dt__Q22MR30ProhibitSchedulerAndInterruptsFv",
+          "addend": 0
+        }
+      ],
+      "retail_function_sha256": "612dc47133e3d48d213ad18c631a9fbe56996d6617d8c12dae14631800b34552"
+    },
+    {
+      "symbol": "updateReflectAlphaDL__10MarioActorFUc",
+      "address": "0x802c23a8",
+      "retail_bytes": 312,
+      "compiled_bytes": 312,
+      "objdiff_match_percent": 99.80769,
+      "direct_calls_identical": true,
+      "retail_calls": [
+        "__ct__Q22MR30ProhibitSchedulerAndInterruptsFb",
+        "GDInitGDLObj",
+        "GDSetTevColor",
+        "GDSetTevAlphaCalcAndSwap",
+        "GDPadCurr32",
+        "swap__9DLchangerFv",
+        "copyMemory__2MRFPvPCvUl",
+        "DCStoreRange",
+        "__dt__Q22MR30ProhibitSchedulerAndInterruptsFv"
+      ],
+      "compiled_calls": [
+        "__ct__Q22MR30ProhibitSchedulerAndInterruptsFb",
+        "GDInitGDLObj",
+        "GDSetTevColor",
+        "GDSetTevAlphaCalcAndSwap",
+        "GDPadCurr32",
+        "swap__9DLchangerFv",
+        "copyMemory__2MRFPvPCvUl",
+        "DCStoreRange",
+        "__dt__Q22MR30ProhibitSchedulerAndInterruptsFv"
+      ],
+      "retail_references": [
+        {
+          "offset": "0x30",
+          "kind": 10,
+          "symbol": "__ct__Q22MR30ProhibitSchedulerAndInterruptsFb",
+          "addend": 0
+        },
+        {
+          "offset": "0x40",
+          "kind": 10,
+          "symbol": "GDInitGDLObj",
+          "addend": 0
+        },
+        {
+          "offset": "0x44",
+          "kind": 109,
+          "symbol": "lbl_806BF828",
+          "addend": 0,
+          "value_hex": "00"
+        },
+        {
+          "offset": "0x4c",
+          "kind": 109,
+          "symbol": "lbl_806BF829",
+          "addend": 0,
+          "value_hex": "00"
+        },
+        {
+          "offset": "0x54",
+          "kind": 109,
+          "symbol": "lbl_806BF82A",
+          "addend": 0,
+          "value_hex": "00"
+        },
+        {
+          "offset": "0x5c",
+          "kind": 109,
+          "symbol": "__GDCurrentDL",
+          "addend": 0
+        },
+        {
+          "offset": "0x80",
+          "kind": 10,
+          "symbol": "GDSetTevColor",
+          "addend": 0
+        },
+        {
+          "offset": "0xbc",
+          "kind": 10,
+          "symbol": "GDSetTevAlphaCalcAndSwap",
+          "addend": 0
+        },
+        {
+          "offset": "0xc0",
+          "kind": 10,
+          "symbol": "GDPadCurr32",
+          "addend": 0
+        },
+        {
+          "offset": "0xdc",
+          "kind": 10,
+          "symbol": "swap__9DLchangerFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x100",
+          "kind": 10,
+          "symbol": "copyMemory__2MRFPvPCvUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x10c",
+          "kind": 10,
+          "symbol": "DCStoreRange",
+          "addend": 0
+        },
+        {
+          "offset": "0x118",
+          "kind": 10,
+          "symbol": "__dt__Q22MR30ProhibitSchedulerAndInterruptsFv",
+          "addend": 0
+        }
+      ],
+      "compiled_references": [
+        {
+          "offset": "0x30",
+          "kind": 10,
+          "symbol": "__ct__Q22MR30ProhibitSchedulerAndInterruptsFb",
+          "addend": 0
+        },
+        {
+          "offset": "0x40",
+          "kind": 10,
+          "symbol": "GDInitGDLObj",
+          "addend": 0
+        },
+        {
+          "offset": "0x44",
+          "kind": 109,
+          "symbol": "zero$6570",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x4c",
+          "kind": 109,
+          "symbol": "zero$6570",
+          "addend": 1,
+          "value_hex": "000000"
+        },
+        {
+          "offset": "0x54",
+          "kind": 109,
+          "symbol": "zero$6570",
+          "addend": 2,
+          "value_hex": "0000"
+        },
+        {
+          "offset": "0x5c",
+          "kind": 109,
+          "symbol": "__GDCurrentDL",
+          "addend": 0
+        },
+        {
+          "offset": "0x80",
+          "kind": 10,
+          "symbol": "GDSetTevColor",
+          "addend": 0
+        },
+        {
+          "offset": "0xbc",
+          "kind": 10,
+          "symbol": "GDSetTevAlphaCalcAndSwap",
+          "addend": 0
+        },
+        {
+          "offset": "0xc0",
+          "kind": 10,
+          "symbol": "GDPadCurr32",
+          "addend": 0
+        },
+        {
+          "offset": "0xdc",
+          "kind": 10,
+          "symbol": "swap__9DLchangerFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x100",
+          "kind": 10,
+          "symbol": "copyMemory__2MRFPvPCvUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x10c",
+          "kind": 10,
+          "symbol": "DCStoreRange",
+          "addend": 0
+        },
+        {
+          "offset": "0x118",
+          "kind": 10,
+          "symbol": "__dt__Q22MR30ProhibitSchedulerAndInterruptsFv",
+          "addend": 0
+        }
+      ],
+      "retail_function_sha256": "8b191389429aec8fec4c4f45acc35ee2df64ebb27c784c05758047e4af2bb722"
+    },
+    {
+      "symbol": "updateLightDL__10MarioActorFRC6Color8RC6Color8RC6Color8f",
+      "address": "0x802c24e0",
+      "retail_bytes": 584,
+      "compiled_bytes": 584,
+      "objdiff_match_percent": 92.19178,
+      "direct_calls_identical": true,
+      "retail_calls": [
+        "_savegpr_28",
+        "__ct__Q22MR30ProhibitSchedulerAndInterruptsFb",
+        "GDInitGDLObj",
+        "GDSetChanAmbColor",
+        "GDSetChanMatColor",
+        "GDSetChanCtrl",
+        "isNearZero__2MRFff",
+        "getNearZ__2MRFv",
+        "getFarZ__2MRFv",
+        "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "calcFogStartEnd__2MRFQ29JGeometry8TVec3<f>fPfPf",
+        "GDSetFog",
+        "GDPadCurr32",
+        "copyMemory__2MRFPvPCvUl",
+        "DCStoreRange",
+        "__dt__Q22MR30ProhibitSchedulerAndInterruptsFv",
+        "_restgpr_28"
+      ],
+      "compiled_calls": [
+        "_savegpr_28",
+        "__ct__Q22MR30ProhibitSchedulerAndInterruptsFb",
+        "GDInitGDLObj",
+        "GDSetChanAmbColor",
+        "GDSetChanMatColor",
+        "GDSetChanCtrl",
+        "isNearZero__2MRFff",
+        "getNearZ__2MRFv",
+        "getFarZ__2MRFv",
+        "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "calcFogStartEnd__2MRFQ29JGeometry8TVec3<f>fPfPf",
+        "GDSetFog",
+        "GDPadCurr32",
+        "copyMemory__2MRFPvPCvUl",
+        "DCStoreRange",
+        "__dt__Q22MR30ProhibitSchedulerAndInterruptsFv",
+        "_restgpr_28"
+      ],
+      "retail_references": [
+        {
+          "offset": "0x34",
+          "kind": 10,
+          "symbol": "_savegpr_28",
+          "addend": 0
+        },
+        {
+          "offset": "0x54",
+          "kind": 10,
+          "symbol": "__ct__Q22MR30ProhibitSchedulerAndInterruptsFb",
+          "addend": 0
+        },
+        {
+          "offset": "0x64",
+          "kind": 10,
+          "symbol": "GDInitGDLObj",
+          "addend": 0
+        },
+        {
+          "offset": "0x84",
+          "kind": 109,
+          "symbol": "__GDCurrentDL",
+          "addend": 0
+        },
+        {
+          "offset": "0xa8",
+          "kind": 10,
+          "symbol": "GDSetChanAmbColor",
+          "addend": 0
+        },
+        {
+          "offset": "0xe4",
+          "kind": 10,
+          "symbol": "GDSetChanMatColor",
+          "addend": 0
+        },
+        {
+          "offset": "0x104",
+          "kind": 10,
+          "symbol": "GDSetChanCtrl",
+          "addend": 0
+        },
+        {
+          "offset": "0x10c",
+          "kind": 109,
+          "symbol": "@64035",
+          "addend": 0,
+          "value_hex": "3a83126f"
+        },
+        {
+          "offset": "0x110",
+          "kind": 10,
+          "symbol": "isNearZero__2MRFff",
+          "addend": 0
+        },
+        {
+          "offset": "0x11c",
+          "kind": 10,
+          "symbol": "getNearZ__2MRFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x124",
+          "kind": 10,
+          "symbol": "getFarZ__2MRFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x154",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x164",
+          "kind": 10,
+          "symbol": "calcFogStartEnd__2MRFQ29JGeometry8TVec3<f>fPfPf",
+          "addend": 0
+        },
+        {
+          "offset": "0x1a0",
+          "kind": 10,
+          "symbol": "GDSetFog",
+          "addend": 0
+        },
+        {
+          "offset": "0x1a4",
+          "kind": 10,
+          "symbol": "GDPadCurr32",
+          "addend": 0
+        },
+        {
+          "offset": "0x1e0",
+          "kind": 10,
+          "symbol": "copyMemory__2MRFPvPCvUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x1f8",
+          "kind": 10,
+          "symbol": "DCStoreRange",
+          "addend": 0
+        },
+        {
+          "offset": "0x204",
+          "kind": 10,
+          "symbol": "__dt__Q22MR30ProhibitSchedulerAndInterruptsFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x234",
+          "kind": 10,
+          "symbol": "_restgpr_28",
+          "addend": 0
+        }
+      ],
+      "compiled_references": [
+        {
+          "offset": "0x34",
+          "kind": 10,
+          "symbol": "_savegpr_28",
+          "addend": 0
+        },
+        {
+          "offset": "0x54",
+          "kind": 10,
+          "symbol": "__ct__Q22MR30ProhibitSchedulerAndInterruptsFb",
+          "addend": 0
+        },
+        {
+          "offset": "0x64",
+          "kind": 10,
+          "symbol": "GDInitGDLObj",
+          "addend": 0
+        },
+        {
+          "offset": "0x84",
+          "kind": 109,
+          "symbol": "__GDCurrentDL",
+          "addend": 0
+        },
+        {
+          "offset": "0xa8",
+          "kind": 10,
+          "symbol": "GDSetChanAmbColor",
+          "addend": 0
+        },
+        {
+          "offset": "0xe4",
+          "kind": 10,
+          "symbol": "GDSetChanMatColor",
+          "addend": 0
+        },
+        {
+          "offset": "0x104",
+          "kind": 10,
+          "symbol": "GDSetChanCtrl",
+          "addend": 0
+        },
+        {
+          "offset": "0x10c",
+          "kind": 109,
+          "symbol": "@7458",
+          "addend": 0,
+          "value_hex": "3a83126f"
+        },
+        {
+          "offset": "0x110",
+          "kind": 10,
+          "symbol": "isNearZero__2MRFff",
+          "addend": 0
+        },
+        {
+          "offset": "0x11c",
+          "kind": 10,
+          "symbol": "getNearZ__2MRFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x124",
+          "kind": 10,
+          "symbol": "getFarZ__2MRFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x154",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x164",
+          "kind": 10,
+          "symbol": "calcFogStartEnd__2MRFQ29JGeometry8TVec3<f>fPfPf",
+          "addend": 0
+        },
+        {
+          "offset": "0x1a0",
+          "kind": 10,
+          "symbol": "GDSetFog",
+          "addend": 0
+        },
+        {
+          "offset": "0x1a4",
+          "kind": 10,
+          "symbol": "GDPadCurr32",
+          "addend": 0
+        },
+        {
+          "offset": "0x1e0",
+          "kind": 10,
+          "symbol": "copyMemory__2MRFPvPCvUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x1f8",
+          "kind": 10,
+          "symbol": "DCStoreRange",
+          "addend": 0
+        },
+        {
+          "offset": "0x204",
+          "kind": 10,
+          "symbol": "__dt__Q22MR30ProhibitSchedulerAndInterruptsFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x234",
+          "kind": 10,
+          "symbol": "_restgpr_28",
+          "addend": 0
+        }
+      ],
+      "retail_function_sha256": "41cdfae3e9f59174150c0a8a7160a69b1e0ecdaec9321ab6f9ec2a414dd2fa92"
+    },
+    {
+      "symbol": "swap__9DLchangerFv",
+      "address": "0x802c4384",
+      "retail_bytes": 44,
+      "compiled_bytes": 44,
+      "objdiff_match_percent": 100.0,
+      "direct_calls_identical": true,
+      "retail_calls": [],
+      "compiled_calls": [],
+      "retail_references": [],
+      "compiled_references": [],
+      "retail_function_sha256": "c5aa75046854cc77eda524344f5dba86d54db48c79a36da14580dc6ab6822427"
+    }
+  ],
+  "weighted_objdiff_percent": 91.9282547637969,
+  "reader_note": "NOBITS sections read as zero storage; only actual loaded constants are compared. Screen helper inlining/ctor-to-literal-set differences are explicitly recorded, not counted as exact calls."
+}

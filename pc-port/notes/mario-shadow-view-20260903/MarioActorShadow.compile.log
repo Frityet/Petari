@@ -1,0 +1,11 @@
+### mwcceppc.exe Compiler:
+#      In: include\Game\Player\MarioActor.hpp
+#    From: src\Game\Player\MarioActorShadow.cpp
+# ---------------------------------------------
+#     702:         /* 0x468 */ TVec3f _468Vec; 
+# Warning:                                   ^
+#   unions cannot have nontrivial class members
+### mwcceppc.exe Compiler:
+#     920:         /* 0xF2C */ TVec3f _F2CVec; 
+# Warning:                                   ^
+#   unions cannot have nontrivial class members

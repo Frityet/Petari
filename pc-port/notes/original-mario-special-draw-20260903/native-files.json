@@ -1,0 +1,9 @@
+[
+  "Game/Player/MarioActorSpecialDraw.cpp",
+  "Game/Player/MarioActor.hpp",
+  "Game/Player/MarioActorInit.cpp",
+  "Game/Player/DLchanger.hpp",
+  "JSystem/JGeometry/TVec.hpp",
+  "JSystem/JGeometry/TBox.hpp",
+  "revolution/gx/GXFrameBuf.h"
+]
