@@ -1,4 +1,5 @@
 #include "Game/Util/ScreenUtil.hpp"
+#include "Game/Util/SystemUtil.hpp"
 
 #include "Game/Screen/InformationMessage.hpp"
 #include "compat/InformationMessageCompat.hpp"
@@ -33,23 +34,7 @@ namespace MR {
     }
 
     s32 getScreenWidth() {
-        constexpr auto retail_4x3_aspect = 608.0F / 456.0F;
-        constexpr auto retail_16x9_aspect = 16.0F / 9.0F;
-        constexpr auto aspect_epsilon = 0.00001F;
-
-        const auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
-        const auto* pose = runtime != nullptr && runtime->scene_camera_pose().has_value()
-                               ? &*runtime->scene_camera_pose()
-                               : runtime != nullptr && runtime->last_camera_pose().has_value()
-                                     ? &*runtime->last_camera_pose()
-                                     : nullptr;
-        if (pose == nullptr || std::abs(pose->aspect_ratio - retail_4x3_aspect) <= aspect_epsilon) {
-            return 608;
-        }
-        if (std::abs(pose->aspect_ratio - retail_16x9_aspect) <= aspect_epsilon) {
-            return 832;
-        }
-        throw std::logic_error("Screen coordinates require an exact retail 4:3 or 16:9 camera aspect.");
+        return isScreen16Per9() ? 832 : 608;
     }
 
     s32 getScreenHeight() {

@@ -10,11 +10,9 @@ namespace smgpc::runtime {
     namespace {
         [[nodiscard]] GXRenderModeObj default_render_mode() {
             auto mode = GXRenderModeObj {};
-            // The PC bootstrap currently exposes the same NTSC/interlaced,
-            // 4:3 platform state that selects GXNtscIntDf[0] in
-            // MR::getSuitableRenderMode. Keep this copy byte-for-byte aligned
-            // with that retail mode until the SC provider is in the host
-            // runtime closure.
+            // Initial video-service state before system configuration exists.
+            // RuntimeContext passes the original MR::getSuitableRenderMode
+            // result to JUTVideo after loading the actual SC owner.
             mode.viTVmode = VI_TVMODE_NTSC_INT;
             mode.fbWidth = smgpc::render::core::kWiiLogicalFramebufferWidth;
             mode.efbHeight = smgpc::render::core::kWiiLogicalFramebufferHeight;

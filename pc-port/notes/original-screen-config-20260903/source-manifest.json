@@ -1,0 +1,26 @@
+[
+  {
+    "original": "src/Game/System/RenderMode.cpp",
+    "native": "pc-port/src/Game/System/RenderMode.cpp",
+    "sha256": "a8a66ff9cf299c4d245bd91f7d750db4eeff322ebf0bab849ac7df271a3d1e18",
+    "identical": true
+  },
+  {
+    "original": "include/Game/System/RenderMode.hpp",
+    "native": "pc-port/src/Game/System/RenderMode.hpp",
+    "sha256": "f105f47acd5c44488e81e353d791e14da1c9bc3c14a9896eb82f6759340c7ca8",
+    "identical": true
+  },
+  {
+    "original": "src/Game/Camera/CameraContext.cpp",
+    "native": "pc-port/src/Game/Camera/CameraContext.cpp",
+    "sha256": "ff72f1e9d2986c4eaaa44d3023c61027852a2ebfdf68d2aa6b4653941c40cd67",
+    "identical": true
+  },
+  {
+    "original": "include/Game/Camera/CameraContext.hpp",
+    "native": "pc-port/src/Game/Camera/CameraContext.hpp",
+    "sha256": "717281ecc929ecb6c3cf4b8e1524d897b2f9153b95dd1a2a03dda0bd01eaf138",
+    "identical": true
+  }
+]

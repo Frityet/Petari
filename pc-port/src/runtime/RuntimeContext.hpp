@@ -49,6 +49,7 @@ namespace aurora::audio { class DisabledObjectAudioService; }
 namespace smgpc::runtime {
 
     class ScreenAlphaCaptureService;
+    class SystemConfigService;
 
     enum class RuntimeContextSceneServiceMode {
         RuntimeOwned,
@@ -348,6 +349,7 @@ namespace smgpc::runtime {
         RumbleService _rumble;
         SequenceRequestService _sequence_requests;
         SaveDataService _save_data;
+        std::unique_ptr<SystemConfigService> _system_config;
         MessageService _messages;
         SceneLightService _scene_lights;
         RflService _rfl;

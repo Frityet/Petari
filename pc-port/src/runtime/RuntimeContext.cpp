@@ -5,6 +5,9 @@
 #include "Game/Util/CameraUtil.hpp"
 #include "compat/JutTextureAllocation.hpp"
 #include "runtime/ScreenAlphaCaptureService.hpp"
+#include "runtime/ConsoleNandImport.hpp"
+#include "runtime/SystemConfigService.hpp"
+#include "Game/System/RenderMode.hpp"
 #include "JSystem/JUtility/JUTTexture.hpp"
 
 #include <algorithm>
@@ -520,8 +523,18 @@ namespace smgpc::runtime {
     {
         _registration = std::make_unique<Registration>(*this);
         try {
+            if (const auto save_directory = read_path_environment("SMGPC_SAVE_DIR")) {
+                _save_data.set_host_directory(*save_directory);
+                _logger.info(logging::Category::APP, logging::Message{"Using SMG save files from {}"}, save_directory->string());
+            }
+            if (const auto nand_directory = read_path_environment("SMGPC_NAND_DIR")) {
+                const auto imported = import_console_nand_directory(_save_data.nand(), *nand_directory, NandImportExisting::Preserve);
+                _logger.info(logging::Category::APP, logging::Message{"Loaded {} console NAND files from {} ({} existing files preserved)"},
+                             imported.imported_files, nand_directory->string(), imported.preserved_files);
+            }
+            _system_config = std::make_unique<SystemConfigService>(_save_data.nand());
             _rumble.attach_actuator(smgpc::compat::aurora_rumble_actuator());
-            JUTVideo::createManager(nullptr);
+            JUTVideo::createManager(MR::getSuitableRenderMode());
             aurora::wpad_service().clear();
             if (scene_service_mode == RuntimeContextSceneServiceMode::RuntimeOwned) {
                 _owned_name_obj_lifecycle = std::make_unique<smgpc::scene::NameObjLifecycleService>(*this);
@@ -538,10 +551,6 @@ namespace smgpc::runtime {
             _capture_screen_indirect_actor = std::make_unique<CaptureScreenActor>(MR::DrawType_CaptureScreenIndirect, "Indirect");
             _capture_screen_camera_actor = std::make_unique<CaptureScreenActor>(MR::DrawType_CaptureScreenCamera, "Camera");
             _logger.info(logging::Category::APP, logging::Message{"Using SMG disc image through Aurora DVD"});
-            if (const auto save_directory = read_path_environment("SMGPC_SAVE_DIR")) {
-                _save_data.set_host_directory(*save_directory);
-                _logger.info(logging::Category::APP, logging::Message{"Using SMG save files from {}"}, save_directory->string());
-            }
             if (const auto message_archive = _dvd.find_first({
                     std::filesystem::path("KrKorean") / "MessageData" / "Message.arc",
                     std::filesystem::path("MessageData") / "Message.arc",

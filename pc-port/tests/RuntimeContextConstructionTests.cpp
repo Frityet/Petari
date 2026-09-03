@@ -3,9 +3,15 @@
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "Game/Screen/ScreenAlphaCapture.hpp"
 #include "Game/System/ScenarioDataParser.hpp"
+#include "Game/Camera/CameraContext.hpp"
+#include "Game/Util/ScreenUtil.hpp"
+#include "runtime/SystemConfigService.hpp"
 #include "JSystem/JUtility/JUTVideo.hpp"
 #include <aurora/dvd.h>
+#include <aurora/sysconf.hpp>
+#include <chrono>
 #include <cstdlib>
+#include <fstream>
 #include <iostream>
 #include <stdexcept>
 
@@ -13,6 +19,42 @@ namespace {
     void require(bool condition, const char* message) {
         if (!condition) throw std::runtime_error(message);
     }
+
+    struct Environment {
+        const char* name;
+        std::optional<std::string> previous;
+        explicit Environment(const char* key) : name(key) {
+            if (const char* value = std::getenv(key)) previous = value;
+            unsetenv(name);
+        }
+        ~Environment() {
+            if (previous) setenv(name, previous->c_str(), 1);
+            else unsetenv(name);
+        }
+    };
+    struct ConsoleDirectory {
+        std::filesystem::path path;
+        ConsoleDirectory() {
+            const auto seed = std::chrono::steady_clock::now().time_since_epoch().count();
+            for (unsigned attempt = 0; attempt < 1000; ++attempt) {
+                auto candidate = std::filesystem::temp_directory_path() /
+                    ("smg-runtime-config-" + std::to_string(seed) + "-" + std::to_string(attempt));
+                if (std::filesystem::create_directory(candidate)) { path = std::move(candidate); return; }
+            }
+            throw std::runtime_error("Cannot create temporary console directory");
+        }
+        ~ConsoleDirectory() { std::error_code error; std::filesystem::remove_all(path, error); }
+        void aspect(u8 value) const {
+            aurora::SysConf document;
+            document.replace_integer("IPL.AR", aurora::SysConf::Type::Byte, value);
+            auto bytes = document.encode();
+            auto file = path / "shared2/sys/SYSCONF";
+            std::filesystem::create_directories(file.parent_path());
+            std::ofstream output(file, std::ios::binary);
+            output.write(reinterpret_cast<const char*>(bytes.data()), bytes.size());
+            require(bool(output), "write complete real console configuration fixture");
+        }
+    };
 
     struct InjectedLogFailure {};
     class FixtureLogger final : public smgpc::logging::ILogger {
@@ -33,6 +75,8 @@ namespace {
 }
 
 int main() {
+    Environment save_environment("SMGPC_SAVE_DIR");
+    Environment nand_environment("SMGPC_NAND_DIR");
     smgpc::render::AuroraWindow window({.width = 640, .height = 456, .title = "Runtime construction ownership"});
     smgpc::render::AuroraRenderer renderer(window);
     const auto* disc = std::getenv("SMGPC_REAL_DISC");
@@ -49,6 +93,7 @@ int main() {
         require(JUTVideo::getManager() == nullptr, "failed/destroyed runtime retains its JUTVideo owner");
         require(smgpc::compat::ResourceHolderService::active() == nullptr, "failed/destroyed runtime retains archive service");
         require(smgpc::runtime::ScenarioCatalogOwnership::active() == nullptr, "failed/destroyed runtime retains scenario catalog publication");
+        require(smgpc::runtime::SystemConfigService::active() == nullptr, "failed/destroyed runtime retains console settings owner");
         require(smgpc::compat::name_obj_runtime_state_count() == objects, "failed/destroyed runtime retains NameObj callbacks");
         require(heap->available_bytes() == expected_capacity, "failed/destroyed runtime retains mapped texture storage");
         bool absent = false;
@@ -81,12 +126,25 @@ int main() {
     std::cout << "RuntimeContext: injected logger failure retires both original capture callbacks before global registration\n";
 
     (void)renderer.begin_frame();
+    ConsoleDirectory console;
+    require(setenv("SMGPC_NAND_DIR", console.path.c_str(), 1) == 0, "set test console root");
     for (unsigned cycle = 0; cycle < 2; ++cycle) {
+        console.aspect(cycle);
         {
             smgpc::runtime::RuntimeContext runtime(logger, window, process);
             require(smgpc::runtime::RuntimeContext::try_instance() == &runtime && JUTVideo::getManager(), "reconstructed runtime is not registered");
             require(runtime.scheduler().snapshot().size() == 2, "reconstruction did not install the exact capture callbacks");
             require(MR::getScreenAlphaTexture(0) != nullptr, "reconstruction lost its mapped screen-alpha texture");
+            require(smgpc::runtime::SystemConfigService::active() && SCGetAspectRatio() == cycle,
+                    "actual startup did not publish imported console settings");
+            require(MR::getScreenWidth() == (cycle ? 832 : 608) &&
+                        runtime.wii_video().render_mode().viWidth == (cycle ? 686 : 670),
+                    "original render-mode selection and screen width must use the imported SC setting");
+            {
+                CameraContext camera;
+                require(camera.getAspect() == (cycle ? 16.0f / 9.0f : 4.0f / 3.0f),
+                        "original CameraContext must use the same console setting after startup");
+            }
             require(smgpc::runtime::ScenarioCatalogOwnership::active() == nullptr, "platform construction eagerly created the Game catalog");
             if (disc) {
                 runtime.initialize_scenario_catalog(process);
@@ -97,6 +155,6 @@ int main() {
         }
         require_retired(capacity);
     }
-    std::cout << "RuntimeContext: two complete reconstructions restore full MEM1 capacity and every owner identity\n";
+    std::cout << "RuntimeContext: imported 4:3/16:9 settings drive original render mode and CameraContext; both reconstructions restore all owners\n";
     renderer.end_frame();
 }
