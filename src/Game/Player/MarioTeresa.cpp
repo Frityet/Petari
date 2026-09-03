@@ -183,7 +183,7 @@ bool MarioTeresa::update() {
     if (speedRatio < 0.01f) {
         speedRatio = 0.0f;
     }
-    getPlayer()->_278 = MR::clamp(speedRatio, 0.0f, 1.0f);
+    getPlayer()->mWalkSpeed = MR::clamp(speedRatio, 0.0f, 1.0f);
     setJumpVec(_14);
 
     if (_42 == 0) {

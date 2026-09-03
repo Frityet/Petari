@@ -29,6 +29,11 @@
 // TODO: the symbol order for header funcs is out of order between JointControlDelegator funcs
 //       and Array funcs. This needs to be fixed in order to link.
 
+void dummy () {
+    TVec3f a, b;
+    a.sub(b);
+}
+
 void IceMerameraKing_FORCE_MATCH_SDATA2() {
     (void)1.0f;
     (void)0.0f;
@@ -155,13 +160,13 @@ void IceMerameraKing::init(const JMapInfoIter& rIter) {
 
 void IceMerameraKing::initAfterPlacement() {
     MR::trySetMoveLimitCollision(this);
-    u32 binderFlag = mBinder->_8;
+    CollisionParts* exCollisionParts = mBinder->mExCollisionParts;
 
     for (s32 i = 0; i < _F0; i++) {
         Binder* binder = mModelArray[i]->mBinder;
-        binder->_8 = binderFlag;
+        binder->mExCollisionParts = exCollisionParts;
 
-        if (!binderFlag) {
+        if (exCollisionParts == nullptr) {
             binder->_1EC._2 = false;
         } else {
             binder->_1EC._2 = true;
@@ -564,15 +569,9 @@ void IceMerameraKing::exeAngryDemo() {
 
     if (MR::isDemoPartLastStep("怒りデモ")) {
         if (!(_EC > 2)) {
-            TVec3f v7(mGravity * 200.0f);
-            TVec3f v8(mPosition);
-            v8.sub(v7);
-            MR::appearStarPiece(this, v8, 8, 15.0f, 70.0f, false);
+            MR::appearStarPiece(this, mPosition - mGravity * 200.0f, 8, 15.0f, 70.0f, false);
         } else {
-            TVec3f v5(mGravity * 200.0f);
-            TVec3f v6(mPosition);
-            v6.sub(v5);
-            MR::appearStarPiece(this, v6, 16, 15.0f, 70.0f, false);
+            MR::appearStarPiece(this, mPosition - mGravity * 200.0f, 16, 15.0f, 70.0f, false);
         }
         MR::startSound(this, "SE_OJ_STAR_PIECE_BURST");
         setNerve(&NrvIceMerameraKing::HostTypeNrvSearch::sInstance);

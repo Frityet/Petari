@@ -280,23 +280,23 @@ namespace smgpc::compat {
 
 namespace MR {
     void loadProjectionMtx() {
-        GXSetProjection(getCameraProjectionMtx()->mMtx, GX_PERSPECTIVE);
+        GXSetProjection(getCameraProjectionMtx().mMtx, GX_PERSPECTIVE);
     }
 
     void loadViewMtx() {
-        smgpc::compat::load_j3d_view_matrix(getCameraViewMtx());
+        smgpc::compat::load_j3d_view_matrix(getCameraViewMtx().mMtx);
     }
 
-    TProj3f* getCameraProjectionMtx() {
+    const TProj3f& getCameraProjectionMtx() {
         const auto& pose = require_camera_pose();
         sCameraProjectionMatrix.makePerspective(pose.fovy_degrees, pose.aspect_ratio,
                                                 pose.near_clip, pose.far_clip);
         sCameraProjectionMatrix.mMtx[0][2] -= pose.projection_offset_x;
         sCameraProjectionMatrix.mMtx[1][2] -= pose.projection_offset_y;
-        return &sCameraProjectionMatrix;
+        return sCameraProjectionMatrix;
     }
 
-    const MtxPtr getCameraViewMtx() {
+    const TPos3f& getCameraViewMtx() {
         const auto &pose = require_camera_pose();
         const auto basis = camera_basis(pose);
         const auto back = scale(basis.forward, -1.0F);
@@ -313,7 +313,7 @@ namespace MR {
         sCameraViewMatrix.mMtx[2][1] = back.y;
         sCameraViewMatrix.mMtx[2][2] = back.z;
         sCameraViewMatrix.mMtx[2][3] = -dot(back, pose.eye);
-        return sCameraViewMatrix.mMtx;
+        return sCameraViewMatrix;
     }
 
     const TVec3f getCamPos() {

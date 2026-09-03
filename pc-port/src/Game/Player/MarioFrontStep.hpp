@@ -9,7 +9,7 @@ public:
     MarioFrontStep(MarioActor*);
 
     virtual bool start();
-    virtual bool close();
     virtual bool update();
+    virtual bool close();
     virtual bool postureCtrl(MtxPtr);
 };

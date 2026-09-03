@@ -266,6 +266,12 @@ namespace JGeometry {
             this->mMtx[2][2] = rSrcZ.z;
         }
 
+        void getEulerDegree(TVec3f& rDest) const {
+            TVec3f rot;
+            getEulerXYZ(rot);
+            rDest.set< f32 >(rot.x * (180.0f / PI), rot.y * (180.0f / PI), rot.z * (180.0f / PI));
+        }
+
         void getEuler(TVec3f& rDest) const {
             getEulerXYZ(rDest);
         }
@@ -389,6 +395,7 @@ namespace JGeometry {
             //    SegmentGravity::updateLocalParam
             //    SurfRay::updateRotate
             //    Plant::initLeaf
+            //    WaterRoadModelInfo::initPoints
             // }
             //
             // DOES NOT MATCH {
@@ -406,6 +413,7 @@ namespace JGeometry {
             //    CameraMedianPlanet::rotate33 (regswap)
             //    CameraMedianTower::calc (regswap)
             //    CameraRailWatch::calc (regswap)
+            //    CameraDirector::calcViewMtxFromPoseParam (regswap)
             //
             //    CameraFixedThere::updateNormalUpVec (instruction mismatch!!)
             // }
@@ -444,8 +452,15 @@ namespace JGeometry {
             setQuat(q);
         }
 
+        void setRotateDegree(const TVec3f& rRot) {
+            setRotate(rRot * (PI / 180.0f));
+        }
+
         void setRotate(const TVec3f& rRot) {
-            setRotate(rRot.x, rRot.y, rRot.z);
+            f32 z = rRot.z;
+            f32 y = rRot.y;
+            f32 x = rRot.x;
+            setRotate(x, y, z);
         }
 
         void setRotate(f32 rx, f32 ry, f32 rz) {
@@ -592,7 +607,29 @@ namespace JGeometry {
             TRotation3< T >::setQuat(rSrcQuat);
         }
 
-        void setPositionFromLookAt(const TPosition3< T >& rLookAt);
+        void setPositionFromLookAt(const TPosition3< T >& rLookAt) {
+            // FIXME: load order mixed
+            // https://decomp.me/scratch/YgGhi
+            this->mMtx[0][0] = -rLookAt.get(0, 0);
+            this->mMtx[1][1] = rLookAt.get(1, 1);
+            this->mMtx[2][2] = -rLookAt.get(2, 2);
+
+            this->mMtx[1][0] = -rLookAt.get(0, 1);
+            this->mMtx[0][1] = rLookAt.get(1, 0);
+
+            this->mMtx[2][0] = -rLookAt.get(0, 2);
+            this->mMtx[0][2] = -rLookAt.get(2, 0);
+
+            this->mMtx[1][2] = -rLookAt.get(2, 1);
+            this->mMtx[2][1] = rLookAt.get(1, 2);
+
+            TVec3f pos;
+            rLookAt.getTrans(pos);
+
+            this->mMtx[0][3] = pos.x * get(0, 0) - pos.y * get(0, 1) + pos.z * get(0, 2);
+            this->mMtx[1][3] = pos.x * get(1, 0) - pos.y * get(1, 1) + pos.z * get(1, 2);
+            this->mMtx[2][3] = pos.x * get(2, 0) - pos.y * get(2, 1) + pos.z * get(2, 2);
+        }
 
         void setPositionFromLookAt(const TVec3f& rLookAtPos, const TVec3f& rUp, const TVec3f& rPos) {
             TVec3f aim;
@@ -709,7 +746,11 @@ namespace JGeometry {
     public:
         typedef f32 ArrType[4];
         void set(const ArrType*);
-        void set(const SMatrix44C< T >& rSrc);
+
+        void set(const SMatrix44C< T >& rSrc) {
+            JMath::gekko_ps_copy16(this, rSrc);
+        }
+
         void set(T rxx, T ryx, T rzx, T tx, T rxy, T ryy, T rzy, T ty, T rxz, T ryz, T rzz, T tz, T wx, T wy, T wz, T ww) {
             mMtx[0][0] = rxx;
             mMtx[0][1] = ryx;
@@ -848,7 +889,7 @@ namespace JGeometry {
         }
         void concat(const T& rSrc);
 
-        void invert(const TMatrix44< T >& rDest);
+        void invert(const TMatrix44< T >& rSrc);
 
         inline void mult(const TVec3f& rSrc, TVec3f& rDest) const {
             TVec4f pos(rSrc.x * this->mMtx[0][0] + rSrc.z * this->mMtx[0][2],

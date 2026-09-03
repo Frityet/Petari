@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Game/Player/MarioModule.hpp"
+#include <JSystem/JGeometry/TVec.hpp>
 
 class MarioActor;
 
@@ -9,12 +10,14 @@ public:
     MarioMove(MarioActor*);
     void initAfter();
 
-    /* 0x08 */ TVec3f _8;
-    /* 0x14 */ TVec3f _14;
-    /* 0x20 */ TVec3f _20;
-    /* 0x2C */ TVec3f _2C;
-    /* 0x38 */ TVec3f _38;
-    /* 0x44 */ TVec3f _44;
+    /* 0x08 */ TVec3f mHeadVec;
+    /* 0x14 */ TVec3f mFrontVec;
+    /* 0x20 */ TVec3f mSideVec;
+
+    /* 0x2C */ TVec3f mHeadVec2;
+    /* 0x38 */ TVec3f mFrontVec2;
+    /* 0x44 */ TVec3f mSideVec2;
+
     /* 0x50 */ f32 _50;
     /* 0x54 */ f32 _54;
 };

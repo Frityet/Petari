@@ -104,6 +104,12 @@ target("smg-pc-game")
         "Player/TornadoMario.cpp",
     }
     add_files("Gravity/PlanetGravityManager.cpp", {cxxflags = "-fpermissive"})
+    add_files("AudioLib/AudBgmSetting.cpp", {cxxflags = "-Wno-narrowing"})
+    add_files("AudioLib/AudParams.cpp", {
+        force = {
+            cxxflags = "-include " .. path.join(os.projectdir(), "src/compat/AudParamsSourceCompat.hpp")
+        }
+    })
     add_files("GameAudio/AudStageBgmTable.cpp", {cxxflags = "-Wno-narrowing"})
     add_files("GameAudio/AudStageBgmWrap.cpp", {cxxflags = "-Wno-narrowing"})
     add_files("Map/FileSelectSky.cpp", {

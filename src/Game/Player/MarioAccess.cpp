@@ -1,9 +1,6 @@
 #include "Game/Player/MarioAccess.hpp"
-
-#include "Game/Animation/XanimePlayer.hpp"
 #include "Game/LiveActor/Binder.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
-#include "Game/Map/HitInfo.hpp"
 #include "Game/MapObj/CollectCounter.hpp"
 #include "Game/MapObj/StarPiece.hpp"
 #include "Game/MapObj/StarPieceDirector.hpp"
@@ -14,798 +11,769 @@
 #include "Game/Player/MarioHang.hpp"
 #include "Game/Player/MarioHolder.hpp"
 #include "Game/Player/MarioParts.hpp"
+#include "Game/Player/MarioState.hpp"
 #include "Game/Player/MarioSwim.hpp"
 #include "Game/Player/RushEndInfo.hpp"
-#include "Game/Util/ActorSensorUtil.hpp"
-#include "Game/Util/EffectUtil.hpp"
-#include "Game/Util/EventUtil.hpp"
-#include "Game/Util/FixedPosition.hpp"
-#include "Game/Util/LiveActorUtil.hpp"
-#include "Game/Util/ObjUtil.hpp"
-#include "Game/Util/PlayerUtil.hpp"
-#include "Game/Util/SoundUtil.hpp"
-#include <revolution/mtx.h>
+#include "Game/Util.hpp"
 
-namespace {
-    const char cRecoverOxygenEffect[] = "\x8E\x5F\x91\x66\x89\xF1\x95\x9C";
-    const char cStarPieceBurstSound[] = "SE_OJ_STAR_PIECE_BURST";
-    const char cDownWipeAnim[] = "\x95\x58\x8C\x8B";
-    const char cBodySensor[] = "body";
-    const char cDummySensor[] = "dummy";
-    const char cWaterSurfaceAnim[] = "\x90\x85\x89\x6A\x83\x57\x83\x46\x83\x62\x83\x67";
-    const char cInvalidMorphItemSound[] = "SE_OJ_MORPH_ITEM_INVALID";
-    const char cEyeSensor[] = "eye";
-
-    MarioActor* getMarioActor() {
-        return MR::getMarioHolder()->getMarioActor();
-    }
-
-    Mario* getMario() {
-        return getMarioActor()->mMario;
-    }
-
-}  // namespace
-
-void MarioAccess::getTakePos(TVec3f* pPos) {
-    if (getMarioActor()->_494 != nullptr) {
-        getMarioActor()->_494->calc();
-        FixedPosition* pos = getMarioActor()->_494;
-        pPos->set< f32 >(pos->mMtx.mMtx[0][3], pos->mMtx.mMtx[1][3], pos->mMtx.mMtx[2][3]);
-    }
-}
-
-bool MarioAccess::isOnActor(const LiveActor* pActor) {
-    if (getMario()->_1C._13) {
-        Triangle* triangle = getMario()->mGroundPolygon;
-        if (!triangle->isValid()) {
-            return false;
+namespace MarioAccess {
+    void getTakePos(TVec3f* pOut) {
+        if (getPlayerActor()->_494 != nullptr) {
+            getPlayerActor()->_494->calc();
+            getPlayerActor()->_494->copyTrans(pOut);
         }
-
-        return triangle->mSensor->mHost == pActor;
     }
 
-    if (getMario()->_1C._14 || (getMario()->isSwimming() && getMario()->mMovementStates._2)) {
-        Triangle* triangle = getMario()->_45C;
-        if (!triangle->isValid()) {
-            return false;
-        }
-
-        return triangle->mSensor->mHost == pActor;
-    }
-
-    return false;
-}
-
-bool MarioAccess::isOnGround(u32 mode) {
-    if (mode != 0) {
-        return false;
-    }
-
-    if (getMarioActor()->_934) {
-        return MR::isOnGround(getMarioActor()->_924->mHost);
-    }
-
-    return getMario()->mMovementStates._1;
-}
-
-bool MarioAccess::isHipDropFalling() {
-    if (getMario()->mMovementStates.jumping) {
-        if (getMario()->mMovementStates._B) {
-            if (!getMario()->mMovementStates._1) {
-                if (!getMarioActor()->isJumpRising()) {
-                    return true;
-                }
+    bool isOnActor(const LiveActor* pActor) {
+        if (getPlayerActor()->getMario()->_1C._13) {
+            Triangle* marioGroundPolygon = getPlayerActor()->getMario()->mGroundPolygon;
+            if (marioGroundPolygon->isValid()) {
+                return marioGroundPolygon->mSensor->mHost == pActor;
             }
+
+            return false;
         }
-    }
 
-    return false;
-}
+        if (getPlayerActor()->getMario()->_1C._14 || (getPlayerActor()->IsMarioSwimming() && getPlayerActor()->getMovementStates()._2)) {
+            Triangle* marioTri = getPlayerActor()->getMario()->_45C;
+            if (!marioTri->isValid()) {
+                return false;
+            }
 
-bool MarioAccess::isHipDropLand() {
-    return getMario()->mDrawStates._14;
-}
+            return marioTri->mSensor->mHost == pActor;
+        }
 
-bool MarioAccess::isSwingAction() {
-    if (getMarioActor()->_934) {
         return false;
     }
 
-    if (getMario()->mMovementStates._F) {
-        return true;
-    }
-
-    return getMarioActor()->isPunching();
-}
-
-bool MarioAccess::isInRush() {
-    bool result = true;
-    if (!getMarioActor()->_934) {
-        if (!getMario()->isStatusActive(0x13)) {
-            result = false;
+    bool isOnGround(u32 a1) {
+        if (a1 != 0) {
+            return false;
         }
+
+        if (getPlayerActor()->_934) {
+            return MR::isOnGround(getPlayerActor()->_924->mHost);
+        }
+
+        return getPlayerActor()->getMovementStates()._1;
     }
 
-    return result;
-}
+    bool isHipDropFalling() {
+        if (getPlayerActor()->getMovementStates().jumping && getPlayerActor()->getMovementStates()._B && !getPlayerActor()->getMovementStates()._1 &&
+            !getPlayerActor()->isJumpRising()) {
+            return true;
+        }
 
-bool MarioAccess::isSquat() {
-    return getMario()->mMovementStates._A && getMario()->mMovementStates._1;
-}
-
-bool MarioAccess::isParalyzing() {
-    return getMario()->isStatusActive(0xB);
-}
-
-bool MarioAccess::isTeresaDisappear() {
-    if (getMarioActor()->mPlayerMode != 6) {
         return false;
     }
 
-    return getMario()->_418 != 0;
-}
-
-bool MarioAccess::isFlying() {
-    if (getMario()->isStatusActive(0x18)) {
-        return true;
+    bool isHipDropLand() {
+        return getPlayerActor()->getDrawStates()._14;
     }
 
-    return getMario()->_10._21;
-}
+    bool isSwingAction() {
+        if (getPlayerActor()->_934) {
+            return false;
+        }
 
-bool MarioAccess::isNeedBrakingCamera() {
-    return getMario()->_1C._9;
-}
+        if (getPlayerActor()->getMovementStates()._F) {
+            return true;
+        }
 
-CubeCameraArea* MarioAccess::getCameraCubeCode() {
-    return getMario()->getCameraCubeCode();
-}
+        return getPlayerActor()->isPunching();
+    }
 
-bool MarioAccess::isSwimming() {
-    return getMario()->isSwimming();
-}
+    bool isInRush() {
+        return getPlayerActor()->_934 || getPlayerActor()->getMario()->isStatusActive(MarioStatus_13);
+    }
 
-bool MarioAccess::isSkating() {
-    return getMario()->isStatusActive(0x1F);
-}
+    bool isSquat() {
+        return getPlayerActor()->getMovementStates()._A && getPlayerActor()->getMovementStates()._1;
+    }
 
-Triangle* MarioAccess::getGroundingPolygon(u32 mode) {
-    if (getMario()->isSwimming()) {
-        if (getMario()->mMovementStates._2) {
-            return getMario()->_45C;
+    bool isParalyzing() {
+        return getPlayerActor()->getMario()->isStatusActive(MarioStatus_Paralyze);
+    }
+
+    bool isTeresaDisappear() {
+        if (getPlayerActor()->mPlayerMode != PlayerMode_Teresa) {
+            return false;
+        }
+
+        return getPlayerActor()->getMario()->_418;
+    }
+
+    bool isFlying() {
+        if (getPlayerActor()->getMario()->isStatusActive(MarioStatus_Foo)) {
+            return true;
+        }
+
+        return getPlayerActor()->getMario()->_10._21;
+    }
+
+    bool isNeedBrakingCamera() {
+        return getPlayerActor()->getMario()->_1C._9;
+    }
+
+    CubeCameraArea* getCameraCubeCode() {
+        return getPlayerActor()->getMario()->getCameraCubeCode();
+    }
+
+    bool isSwimming() {
+        return getPlayerActor()->getMario()->isSwimming();
+    }
+
+    bool isSkating() {
+        return getPlayerActor()->getMario()->isStatusActive(MarioStatus_Skate);
+    }
+
+    Triangle* getGroundingPolygon(u32) {
+        if (isSwimming()) {
+            if (getPlayerActor()->getMovementStates()._2) {
+                return getPlayerActor()->getMario()->_45C;
+            }
+
+            return nullptr;
+        }
+
+        if (!isOnGround(0)) {
+            return nullptr;
+        }
+
+        if (getPlayerActor()->_934) {
+            return &getPlayerActor()->_924->mHost->mBinder->mGroundInfo.mParentTriangle;
+        }
+
+        return getPlayerActor()->getMario()->mGroundPolygon;
+    }
+
+    Triangle* getShadowingPolygon() {
+        if (getPlayerActor()->getMovementStates()._2) {
+            return getPlayerActor()->getMario()->_45C;
         }
 
         return nullptr;
     }
 
-    if (!MarioAccess::isOnGround(0)) {
-        return nullptr;
+    f32 getShadowHeight() {
+        return getPlayerActor()->getMario()->mVerticalSpeed;
     }
 
-    if (getMarioActor()->_934) {
-        return &getMarioActor()->_924->mHost->mBinder->mGroundInfo.mParentTriangle;
+    void forceKill(u32 type, u32) {
+        getPlayerActor()->forceKill(type);
     }
 
-    return getMario()->mGroundPolygon;
-}
-
-Triangle* MarioAccess::getShadowingPolygon() {
-    return getMario()->mMovementStates._2 ? getMario()->_45C : nullptr;
-}
-
-f32 MarioAccess::getShadowHeight() {
-    return getMario()->mVerticalSpeed;
-}
-
-void MarioAccess::forceKill(u32 killType, u32) {
-    getMarioActor()->forceKill(killType);
-}
-
-bool MarioAccess::isOnPress() {
-    return getMarioActor()->_390 != 0;
-}
-
-bool MarioAccess::isDisableFpView() {
-    return getMario()->isDisableFpViewMode();
-}
-
-bool MarioAccess::isFpViewChangingFailure() {
-    return getMario()->_898;
-}
-
-void MarioAccess::stopFpView() {
-    if (getMario()->isStatusActive(0x12)) {
-        getMario()->mFpView->forceClose();
-        getMario()->closeStatus(nullptr);
-    }
-}
-
-void MarioAccess::noticeDashChance() {
-    getMario()->_436 = 5;
-}
-
-void MarioAccess::setWalkingResist(f32 resist) {
-    getMario()->_2D0 = resist;
-}
-
-void MarioAccess::forceFly(const TVec3f& rPos, const TVec3f& rFront, s32 type) {
-    getMario()->doPointWarp(rPos, rFront, type);
-}
-
-void MarioAccess::setJumpVec(const TVec3f& rVec) {
-    getMario()->mJumpVec = rVec;
-}
-
-void MarioAccess::forceJump(const TVec3f& rVec, u32) {
-    getMario()->mMovementStates_HIGH_WORD |= 0x40000000;
-    getMario()->tryForceJumpDelay(rVec);
-}
-
-void MarioAccess::freeJump(const TVec3f& rVec, u32) {
-    getMario()->mMovementStates_HIGH_WORD |= 0x40000000;
-    getMario()->tryFreeJumpDelay(rVec);
-}
-
-void MarioAccess::tornadoJump() {
-    MarioConstTable* table = getMarioActor()->mConst->getTable();
-    getMario()->_544 = table->mTornadoTimeAir;
-    getMario()->tryTornadoJump();
-
-    MarioActor* actor = getMarioActor();
-    getMario()->startTornadoCentering(reinterpret_cast< HitSensor* >(actor->_928));
-}
-
-void MarioAccess::tornadoJumpMini() {
-    MarioConstTable* table = getMarioActor()->mConst->getTable();
-    getMario()->_544 = table->mTornadoTimeAir;
-    getMario()->tryTornadoJump();
-
-    const TVec3f* gravity = getMario()->getGravityVec();
-    TVec3f booster = -*gravity;
-    f32 boostPower = getMarioActor()->mConst->getTable()->mTornadoBoostPower;
-    booster.mult(boostPower);
-
-    MarioConstTable* timerTable = getMarioActor()->mConst->getTable();
-    MarioConstTable* attenTable = getMarioActor()->mConst->getTable();
-    TVec3f* boosterPtr = &booster;
-    getMario()->setRocketBooster(*boosterPtr, attenTable->mTornadoBoostAttnMini, timerTable->mTornadoBoostTimerMini);
-
-    MarioActor* actor = getMarioActor();
-    getMario()->startTornadoCentering(reinterpret_cast< HitSensor* >(actor->_928));
-}
-
-void MarioAccess::becomeNormalJumpStatus() {
-    getMario()->_430 = 0;
-}
-
-void MarioAccess::setFrontVecKeepUp(const TVec3f& rVec, u16) {
-    if (!getMario()->isStatusActive(5)) {
-        getMario()->setFrontVecKeepUp(rVec);
-        getMarioActor()->_2DC = getMario()->mFrontVec;
-        getMarioActor()->mUpVec = getMario()->mHeadVec;
-        getMarioActor()->_2E8 = getMario()->mSideVec;
-    }
-}
-
-void MarioAccess::setFrontVecTarget(const TVec3f& rVec, u16 step) {
-    MarioActor* actor = getMarioActor();
-    actor->_3C4 = rVec;
-    actor->_3D0 = step;
-}
-
-void MarioAccess::getThrowVec(TVec3f* pVec) {
-    if (getMario()->isStatusActive(0x18)) {
-        *pVec = getMario()->mHeadVec;
-    }
-    else if (getMario()->isSwimming()) {
-        getMarioActor()->getThrowVec(pVec);
-    }
-    else {
-        pVec->set(getMarioActor()->_F3CVec[getMarioActor()->_F40]);
-    }
-}
-
-void MarioAccess::setTrans(const TVec3f& rPos, u16) {
-    getMarioActor()->mPosition.set(rPos);
-    getMario()->mPosition = rPos;
-
-    if ((getMario()->mMovementStates_HIGH_WORD & 0x00000100) != 0) {
-        getMario()->_688 = rPos;
+    bool isOnPress() {
+        return getPlayerActor()->_390 != 0;
     }
 
-    getMarioActor()->_1C0 = true;
-    getMarioActor()->mCameraTrans = rPos;
-    MR::updateHitSensorsAll(getMarioActor());
-}
-
-void MarioAccess::endRush(const RushEndInfo* pInfo) {
-    getMarioActor()->endRush(pInfo);
-}
-
-void MarioAccess::incLife(u32 amount) {
-    if (getMario()->isSwimming()) {
-        for (u32 i = 0; i < amount; i++) {
-            getMario()->mSwim->incLife();
-        }
-    }
-    else {
-        getMarioActor()->incLife(amount);
+    bool isDisableFpView() {
+        return getPlayerActor()->getMario()->isDisableFpViewMode();
     }
 
-    if (getMarioActor()->mPlayerMode == 4) {
-        for (u32 i = 0; i < (getMarioActor()->mConst->getTable()->mAirWalkTime >> 3); i++) {
-            getMario()->incAirWalkTimer();
-        }
+    bool isFpViewChangingFailure() {
+        return getPlayerActor()->getMario()->_898;
     }
-}
 
-bool MarioAccess::isConfrontDeath() {
-    if (!getMarioActor()->mSuperKinokoCollected) {
-        if (getMarioActor()->mHealth == 0) {
-            return true;
-        }
-
-        if (getMarioActor()->mHealth == 1 && getMario()->isDamaging() && !getMario()->isSwimming()) {
-            return true;
+    void stopFpView() {
+        if (getPlayerActor()->getMario()->isStatusActive(MarioStatus_FpView)) {
+            getPlayerActor()->getMario()->mFpView->forceClose();
+            getPlayerActor()->getMario()->closeStatus(nullptr);
         }
     }
 
-    if (getMario()->_735 && getMario()->isCurrentFloorSink()) {
-        return true;
+    void noticeDashChance() {
+        getPlayerActor()->getMario()->_436 = 5;
     }
 
-    return !getMarioActor()->isEnableNerveChange();
-}
-
-void MarioAccess::addStarPiece() {
-    MarioConstTable* fogTable = getMarioActor()->mConst->getTable();
-    f32 fogLevel = fogTable->mStarPieceFogLevel;
-    MarioConstTable* timeTable = getMarioActor()->mConst->getTable();
-    u8 fogTime = timeTable->mStarPieceFogTime;
-
-    MarioActor* actor = getMarioActor();
-    actor->_1AA = fogTime;
-    actor->_1AC = fogLevel;
-    actor->_1B0.set(0xFF, 0xFF, 0xFF, 0);
-    actor->_1B5 = false;
-}
-
-void MarioAccess::getStarPieceDirect() {
-}
-
-MtxPtr MarioAccess::getJointMtx(const char* pName) {
-    return getMarioActor()->getGlobalJointMtx(pName);
-}
-
-TVec3f* MarioAccess::getVelocity() {
-    if (getMarioActor()->_934) {
-        return const_cast< TVec3f* >(&getMarioActor()->getLastMove());
+    void setWalkingResist(f32 walkingResist) {
+        getPlayerActor()->getMario()->_2D0 = walkingResist;
     }
 
-    return &getMario()->mVelocity;
-}
-
-TVec3f* MarioAccess::getLastMove() {
-    return const_cast< TVec3f* >(&getMarioActor()->getLastMove());
-}
-
-void MarioAccess::hide() {
-    getMarioActor()->_482 = true;
-    MR::forceDeleteEffectAll(getMarioActor());
-    getMarioActor()->updateHand();
-    getMarioActor()->updateFace();
-}
-
-void MarioAccess::show() {
-    getMarioActor()->_482 = false;
-}
-
-HitSensor* MarioAccess::getTakingSensor() {
-    if (getMarioActor()->_428[0] != nullptr) {
-        return getMarioActor()->_428[0];
+    void forceFly(const TVec3f& rVec1, const TVec3f& rVec2, s32 a3) {
+        getPlayerActor()->getMario()->doPointWarp(rVec1, rVec2, a3);
     }
 
-    if (getMarioActor()->_424 != nullptr) {
-        return getMarioActor()->_424;
+    void setJumpVec(const TVec3f& rJumpVec) {
+        getPlayerActor()->getMario()->mJumpVec = rJumpVec;
     }
 
-    return nullptr;
-}
-
-void MarioAccess::dropTakingActor() {
-    getMarioActor()->rushDropThrowMemoSensor();
-}
-
-void MarioAccess::killTakingActor() {
-    getMarioActor()->damageDropThrowMemoSensor();
-}
-
-f32 MarioAccess::getAnimationFrameMax() {
-    return getMarioActor()->mMarioAnim->mXanimePlayer->_20->mEnd;
-}
-
-void MarioAccess::changeAnimationJ(const char* pName) {
-    getMarioActor()->changeAnimationNonStop(pName);
-}
-
-void MarioAccess::changeAnimationE(const char* pName, s32 interpole) {
-    getMarioActor();
-    if (getMarioActor()->_B91) {
-        return;
+    void forceJump(const TVec3f& rVec, u32) {
+        getPlayerActor()->getMario()->mMovementStates._21 = true;
+        getPlayerActor()->getMario()->tryForceJumpDelay(rVec);
     }
 
-    if (getMario()->isPlayerModeTeresa()) {
-        getMarioActor()->changeTeresaAnimation(pName, interpole);
-        return;
+    void freeJump(const TVec3f& rVec, u32) {
+        getPlayerActor()->getMario()->mMovementStates._21 = true;
+        getPlayerActor()->getMario()->tryFreeJumpDelay(rVec);
     }
 
-    if (getMarioActor()->_468 == 0) {
-        getMario()->stopAnimationUpperForce();
+    void tornadoJump() {
+        getPlayerActor()->getMario()->_544 = getPlayerActor()->getConst().getTable()->mTornadoTimeAir;
+        getPlayerActor()->getMario()->tryTornadoJump();
+        getPlayerActor()->mMario->startTornadoCentering(getPlayerActor()->_928);
     }
 
-    MR::startBck(getMarioActor(), pName, nullptr);
-    getMarioActor();
-    if (interpole >= 0) {
-        getMarioActor()->mMarioAnim->mXanimePlayer->changeInterpoleFrame(interpole);
+    void tornadoJumpMini() {
+        getPlayerActor()->getMario()->_544 = getPlayerActor()->getConst().getTable()->mTornadoTimeAir;
+        getPlayerActor()->getMario()->tryTornadoJump();
+        TVec3f up(-*getPlayerActor()->getMario()->getGravityVec() * getPlayerActor()->getConst().getTable()->mTornadoBoostPower);
+        getPlayerActor()->getMario()->setRocketBooster(up, getPlayerActor()->getConst().getTable()->mTornadoBoostAttnMini,
+                                                       getPlayerActor()->getConst().getTable()->mTornadoBoostTimerMini);
+        getPlayerActor()->mMario->startTornadoCentering(getPlayerActor()->_928);
     }
 
-    getMarioActor()->setBlink(pName);
-    getMarioActor()->mMarioAnim->closeCallback();
-    getMarioActor()->mMarioAnim->entryCallback(pName);
-}
-
-void MarioAccess::changeAnimationE(const char* pName, const char* pInterpoleName) {
-    getMarioActor();
-    if (getMarioActor()->_B91) {
-        return;
+    void becomeNormalJumpStatus() {
+        getPlayerActor()->getMario()->_430 = 0;
     }
 
-    if (getMarioActor()->_468 == 0) {
-        getMario()->stopAnimationUpperForce();
-    }
-
-    MR::startBck(getMarioActor(), pName, pInterpoleName);
-    getMarioActor()->setBlink(pName);
-    getMarioActor()->mMarioAnim->closeCallback();
-    getMarioActor()->mMarioAnim->entryCallback(pName);
-}
-
-void MarioAccess::changeAnimationE(const char* pName, const BckCtrlData& rCtrl) {
-    getMarioActor();
-    if (getMarioActor()->_B91) {
-        return;
-    }
-
-    if (getMarioActor()->_468 == 0) {
-        getMario()->stopAnimationUpperForce();
-    }
-
-    MR::startBck(getMarioActor(), pName, nullptr);
-    MR::reflectBckCtrlData(getMarioActor(), rCtrl);
-    getMarioActor()->setBlink(pName);
-    getMarioActor()->mMarioAnim->closeCallback();
-    getMarioActor()->mMarioAnim->entryCallback(pName);
-}
-
-void MarioAccess::keepCurrentAnimation() {
-    XanimeFrameCtrl* frameCtrl = getMarioActor()->mMarioAnim->mXanimePlayer->_20;
-    if (frameCtrl->mAttribute == 0) {
-        getMarioActor()->mMarioAnim->mXanimePlayer->_20->mAttribute = 1;
-    }
-}
-
-void MarioAccess::progressAnimation() {
-    getMarioActor()->mMarioAnim->update();
-    getMarioActor()->calcAnimInMovement();
-
-    XanimePlayer* player = getMarioActor()->mMarioAnim->mXanimePlayer;
-    player->updateBeforeMovement();
-    player->updateAfterMovement();
-}
-
-const char* MarioAccess::getCurrentBckName() {
-    return getMario()->getCurrentBckName();
-}
-
-void MarioAccess::setAnimationBlendWeight(const f32* weights) {
-    getMarioActor()->mMarioAnim->forceSetBlendWeight(weights);
-}
-
-void MarioAccess::setSpot(f32 spot, u32 color) {
-}
-
-void MarioAccess::offControl() {
-    getMarioActor()->_3C0 = true;
-}
-
-bool MarioAccess::isOffControl() {
-    return getMarioActor()->_3C0;
-}
-
-void MarioAccess::onControl(bool requestMovement) {
-    getMarioActor()->_3C0 = false;
-    if (requestMovement) {
-        getMarioActor()->resetCondition();
-    }
-}
-
-void MarioAccess::setStateWait() {
-    getMario()->stopJump();
-    getMario()->stopWalk();
-}
-
-void MarioAccess::startTalk(const LiveActor* pActor) {
-    getMario()->startTalk(pActor);
-    getMarioActor()->stopSpinTicoEffect(false);
-}
-
-void MarioAccess::endTalk() {
-    getMario()->endTalk();
-}
-
-void MarioAccess::readyRemoteDemo() {
-    if (getMarioActor()->_EA4) {
-        return;
-    }
-
-    if (getMario()->isStatusActive(0x13) || getMarioActor()->mPlayerMode == 5) {
-        getMarioActor()->_3C0 = true;
-        getMario()->_10_HIGH_WORD |= 0x80000000;
-        return;
-    }
-
-    getMario()->_10_HIGH_WORD &= 0x7FFFFFFF;
-
-    if (getMarioActor()->_934) {
-        getMarioActor()->_924->receiveMessage(0x93, getMarioActor()->getSensor(cBodySensor));
-        if (getMarioActor()->_934) {
-            RushEndInfo info(nullptr, 4, TVec3f(0.0f, 0.0f, 0.0f), false, 0);
-            getMarioActor()->endRush(&info);
-        }
-    }
-
-    if (getMario()->isStatusActive(0x12)) {
-        getMario()->closeStatus(nullptr);
-    }
-
-    getMarioActor()->flushCoinPull();
-    getMarioActor()->calcAndSetBaseMtx();
-    getMarioActor()->_3C0 = true;
-    getMarioActor()->_EA4 = true;
-    MR::invalidateHitSensors(getMarioActor());
-    PSMTXCopy(getMarioActor()->getBaseMtx(), getMarioActor()->_EA8);
-    getMarioActor()->_B90 = true;
-    getMario()->stopWalk();
-    MR::deleteEffectAll(getMarioActor());
-    getMarioActor()->_1B8->kill();
-    getMarioActor()->_1E4 = 0.0f;
-    getMarioActor()->_ED8 = getMarioActor()->mPosition;
-    getMarioActor()->_EE4 = reinterpret_cast< u32 >(getMarioActor()->mMarioAnim->mXanimePlayer->getCurrentAnimationName());
-    getMarioActor()->_EA6 = false;
-}
-
-void MarioAccess::onFollowDemo() {
-    if (getMarioActor()->mPlayerMode == 6) {
-        MR::requestMovementOn(getMarioActor()->_9A4);
-    }
-}
-
-void MarioAccess::setBaseMtx(MtxPtr mtx) {
-    getMarioActor()->forceSetBaseMtx(mtx);
-}
-
-MtxPtr MarioAccess::getBaseMtx() {
-    if (getMarioActor()->_EA5) {
-        return getMarioActor()->_EA8;
-    }
-
-    return getMarioActor()->getBaseMtx();
-}
-
-bool MarioAccess::calcSpinPullVelocity(TVec3f* pVelocity, const TVec3f& rPos) {
-    getMarioActor()->tryPullTrans(pVelocity, rPos);
-    return true;
-}
-
-void MarioAccess::tryCoinPull() {
-    HitSensor* sensor = getMarioActor()->getSensor(cEyeSensor);
-    bool isValid = false;
-    if (sensor->mValidByHost && sensor->mValidBySystem) {
-        isValid = true;
-    }
-
-    if (!isValid) {
-        getMarioActor()->getSensor(cEyeSensor)->validate();
-    }
-
-    getMarioActor()->_6D0 = 1;
-}
-
-void MarioAccess::addVelocity(const TVec3f& rVelocity) {
-    if (getMario()->isSwimming() && getMario()->mSwim->mJetTimer != 0) {
-        return;
-    }
-
-    if (getMarioActor()->_EA4 || getMarioActor()->_934) {
-        return;
-    }
-
-    getMario()->push(rVelocity);
-    if (getMario()->isStatusActive(5)) {
-        getMario()->mHang->forceDrop();
-    }
-}
-
-void MarioAccess::addVelocityFromArea(const TVec3f& rVelocity) {
-    if (getMario()->isSwimming() && getMario()->mSwim->mJetTimer != 0) {
-        return;
-    }
-
-    if (getMarioActor()->_EA4 || getMarioActor()->_934) {
-        return;
-    }
-
-    getMario()->push(rVelocity);
-}
-
-bool MarioAccess::isOnWaterSurface() {
-    bool result;
-    if (getMario()->isStatusActive(6)) {
-        MarioSwim* swim = getMario()->mSwim;
-        result = false;
-        if (swim->mIsOnSurface || swim->mIsSwimmingAtSurface) {
-            result = true;
-        }
-    }
-    else {
-        result = getMarioActor()->isAnimationRun(cWaterSurfaceAnim);
-    }
-
-    return result;
-}
-
-void MarioAccess::calcWorldPadDir(TVec3f* pDir, f32 x, f32 y) {
-    getMario()->calcWorldPadDir(pDir, x, y, false);
-}
-
-void MarioAccess::preventRush() {
-    getMarioActor()->setNerve(&NrvMarioActor::MarioActorNrvNoRush::sInstance);
-}
-
-MarioActor* MarioAccess::getPlayerActor() {
-    return getMarioActor();
-}
-
-void MarioAccess::validateSensor() {
-    getMarioActor()->getSensor(cEyeSensor)->validate();
-}
-
-void MarioAccess::incOxygen(u32 amount) {
-    if (getMario()->isSwimming()) {
-        for (u32 i = 0; i < amount; i++) {
-            getMario()->mSwim->incOxygen();
-        }
-
-        getMarioActor()->playEffect(cRecoverOxygenEffect);
-    }
-}
-
-void MarioAccess::scatterStarPiece(u32 amount) {
-    if (MR::getStarPieceNum() > 0) {
-        MR::startSound(getMarioActor(), cStarPieceBurstSound, -1, -1);
-    }
-
-    for (u32 i = 0; i < amount; i++) {
-        if (MR::getStarPieceNum() == 0) {
+    void setFrontVecKeepUp(const TVec3f& rVec, u16) {
+        if (getPlayerActor()->getMario()->isStatusActive(MarioStatus_Hang)) {
             return;
         }
 
-        StarPiece* piece = MR::getDeadStarPiece();
-        piece->launch(getMarioActor()->_2A0, 24.0f, 24.0f, false, false);
-        MR::addStarPiece(-1);
+        getPlayerActor()->getMario()->setFrontVecKeepUp(rVec);
+        getPlayerActor()->_2DC = getPlayerActor()->getMario()->mFrontVec;
+        getPlayerActor()->mUpVec = getPlayerActor()->getMario()->mHeadVec;
+        getPlayerActor()->_2E8 = getPlayerActor()->getMario()->mSideVec;
     }
-}
 
-void MarioAccess::startDownWipe() {
-    if (!getMarioActor()->isNerve(&NrvMarioActor::MarioActorNrvGameOverSink::sInstance)
-        && !getMarioActor()->isAnimationRun(cDownWipeAnim)
-        && getMarioActor()->_390 == 0) {
-        getMarioActor()->_A61 = true;
+    void setFrontVecTarget(const TVec3f& rVec, u16 a2) {
+        MarioActor* actor = getPlayerActor();
+        actor->_3C4 = rVec;
+        actor->_3D0 = a2;
     }
-}
 
-void MarioAccess::readyDemo() {
-    if (getMarioActor()->_934) {
-        if (!getMarioActor()->_924->receiveMessage(0x93, getMarioActor()->getSensor(cBodySensor))) {
-            getMarioActor()->_924->receiveMessage(0x94, getMarioActor()->getSensor(cBodySensor));
+    void getThrowVec(TVec3f* pOut) {
+        if (getPlayerActor()->getMario()->isStatusActive(MarioStatus_Foo)) {
+            *pOut = getPlayerActor()->getMario()->mHeadVec;
+            return;
         }
 
-        if (getMarioActor()->_934) {
-            RushEndInfo info(nullptr, 4, TVec3f(0.0f, 0.0f, 0.0f), false, 0);
-            getMarioActor()->endRush(&info);
+        if (getPlayerActor()->getMario()->isSwimming()) {
+            getPlayerActor()->getThrowVec(pOut);
+            return;
+        }
+
+        pOut->set(getPlayerActor()->_F3CVec[getPlayerActor()->_F40]);
+    }
+
+    void setTrans(const TVec3f& rTrans, u16) {
+        getPlayerActor()->mPosition.set(rTrans);
+        getPlayerActor()->getMario()->mPosition = rTrans;
+
+        if (getPlayerActor()->getMovementStates()._37) {
+            getPlayerActor()->getMario()->_688 = rTrans;
+        }
+
+        getPlayerActor()->_1C0 = true;
+
+        getPlayerActor()->mCameraTrans = rTrans;
+        MR::updateHitSensorsAll(getPlayerActor());
+    }
+
+    void endRush(const RushEndInfo* pRushEndInfo) {
+        getPlayerActor()->endRush(pRushEndInfo);
+    }
+
+    void incLife(u32 amt) {
+        if (getPlayerActor()->IsMarioSwimming()) {
+            for (int i = 0; i < amt; i++) {
+                getPlayerActor()->getMario()->mSwim->incLife();
+            }
+        } else {
+            getPlayerActor()->incLife(amt);
+        }
+
+        if (getPlayerActor()->mPlayerMode == PlayerMode_Bee) {
+            for (u32 i = 0; i < getPlayerActor()->getConst().getTable()->mAirWalkTime / 8; i++) {
+                getPlayerActor()->getMario()->incAirWalkTimer();
+            }
         }
     }
 
-    if (getMario()->isStatusActive(0x12)) {
-        getMario()->closeStatus(nullptr);
-    }
-}
+    bool isConfrontDeath() {
+        if (!getPlayerActor()->mSuperKinokoCollected) {
+            if (getPlayerActor()->mHealth == 0) {
+                return true;
+            }
 
-void MarioAccess::endRemoteDemo(const RushEndInfo* pInfo) {
-    if (getMario()->isStatusActive(0x13) || getMario()->isStatusActive(0x22)
-        || (getMario()->_10_HIGH_WORD & 0x80000000) != 0 || !getMarioActor()->_EA4) {
-        getMarioActor()->_3C0 = false;
-        return;
-    }
-
-    getMarioActor()->_B90 = false;
-    MarioAccess::onControl(true);
-    getMarioActor()->_EA4 = false;
-    getMarioActor()->stopAnimation(nullptr);
-
-    if (getMarioActor()->_468 != 0) {
-        HitSensor* sensor = nullptr;
-        if (getMarioActor()->_468 != 0) {
-            sensor = getMarioActor()->_428[0];
+            if (getPlayerActor()->mHealth == 1 && getPlayerActor()->getMario()->isDamaging() && !getPlayerActor()->IsMarioSwimming()) {
+                return true;
+            }
         }
 
-        getMarioActor()->mMarioAnim->updateTakingAnimation(sensor);
+        if (getPlayerActor()->getMario()->mSinkTimer != 0 && getPlayerActor()->getMario()->isCurrentFloorSink()) {
+            return true;
+        }
+
+        return !getPlayerActor()->isEnableNerveChange();
     }
 
-    MR::validateHitSensors(getMarioActor());
-    getMarioActor()->getSensor(cDummySensor)->invalidate();
-    getMarioActor()->_EA6 = false;
-}
+    void addStarPiece() {
+        f32 fogLevel = getPlayerActor()->getConst().getTable()->mStarPieceFogLevel;
+        u8 fogTime = getPlayerActor()->getConst().getTable()->mStarPieceFogTime;
+        MarioActor* actor = getPlayerActor();
+        actor->_1AA = fogTime;
+        actor->_1AC = fogLevel;
+        actor->_1B0.set(0xFF, 0xFF, 0xFF, 0);
+        actor->_1B5 = false;
+    }
 
-bool MarioAccess::isInWaterMode() {
-    if (getMario()->isStatusActive(6)) {
+    void getStarPieceDirect() {
+    }
+
+    MtxPtr getJointMtx(const char* pName) {
+        return getPlayerActor()->getGlobalJointMtx(pName);
+    }
+
+    TVec3f* getVelocity() {
+        if (getPlayerActor()->_934) {
+            return getLastMove();
+        }
+
+        return &getPlayerActor()->getMario()->mVelocity;
+    }
+
+    TVec3f* getLastMove() {
+        return const_cast< TVec3f* >(&getPlayerActor()->getLastMove());
+    }
+
+    void hide() {
+        getPlayerActor()->_482 = true;
+        MR::forceDeleteEffectAll(getPlayerActor());
+        getPlayerActor()->updateHand();
+        getPlayerActor()->updateFace();
+    }
+
+    void show() {
+        getPlayerActor()->_482 = false;
+    }
+
+    HitSensor* getTakingSensor() {
+        if (getPlayerActor()->_428[0] != nullptr) {
+            return getPlayerActor()->_428[0];
+        }
+
+        if (getPlayerActor()->_424 != nullptr) {
+            return getPlayerActor()->_424;
+        }
+
+        return nullptr;
+    }
+
+    void dropTakingActor() {
+        getPlayerActor()->rushDropThrowMemoSensor();
+    }
+
+    void killTakingActor() {
+        getPlayerActor()->damageDropThrowMemoSensor();
+    }
+
+    f32 getAnimationFrameMax() {
+        return getPlayerActor()->mMarioAnim->getXanimePlayer()->_20->mEnd;
+    }
+
+    void changeAnimationJ(const char* pAnimName) {
+        getPlayerActor()->changeAnimationNonStop(pAnimName);
+    }
+
+    void changeAnimationE(const char* pAnimName, s32 a2) {
+        // unused
+        getPlayerActor();
+        if (getPlayerActor()->_B91) {
+            return;
+        }
+
+        if (getPlayerActor()->getMario()->isPlayerModeTeresa()) {
+            getPlayerActor()->changeTeresaAnimation(pAnimName, a2);
+            return;
+        }
+
+        if (getPlayerActor()->_468 == 0) {
+            getPlayerActor()->getMario()->stopAnimationUpperForce();
+        }
+
+        MR::startBck(getPlayerActor(), pAnimName, nullptr);
+
+        // unused
+        getPlayerActor();
+
+        if (a2 >= 0) {
+            getPlayerActor()->mMarioAnim->getXanimePlayer()->changeInterpoleFrame(a2);
+        }
+
+        getPlayerActor()->setBlink(pAnimName);
+        getPlayerActor()->mMarioAnim->closeCallback();
+        getPlayerActor()->mMarioAnim->entryCallback(pAnimName);
+    }
+
+    void changeAnimationE(const char* pAnimName, const char* pChar2) {
+        // unused
+        getPlayerActor();
+        if (getPlayerActor()->_B91) {
+            return;
+        }
+
+        if (getPlayerActor()->_468 == 0) {
+            getPlayerActor()->getMario()->stopAnimationUpperForce();
+        }
+
+        MR::startBck(getPlayerActor(), pAnimName, pChar2);
+
+        getPlayerActor()->setBlink(pAnimName);
+        getPlayerActor()->mMarioAnim->closeCallback();
+        getPlayerActor()->mMarioAnim->entryCallback(pAnimName);
+    }
+
+    void changeAnimationE(const char* pAnimName, const BckCtrlData& rBckCtrlData) {
+        // unused
+        getPlayerActor();
+        if (getPlayerActor()->_B91) {
+            return;
+        }
+
+        if (getPlayerActor()->_468 == 0) {
+            getPlayerActor()->getMario()->stopAnimationUpperForce();
+        }
+
+        MR::startBck(getPlayerActor(), pAnimName, nullptr);
+
+        MR::reflectBckCtrlData(getPlayerActor(), rBckCtrlData);
+
+        getPlayerActor()->setBlink(pAnimName);
+        getPlayerActor()->mMarioAnim->closeCallback();
+        getPlayerActor()->mMarioAnim->entryCallback(pAnimName);
+    }
+
+    void keepCurrentAnimation() {
+        if (getPlayerActor()->mMarioAnim->getXanimePlayer()->_20->getAttribute() == 0) {
+            getPlayerActor()->mMarioAnim->getXanimePlayer()->_20->setAttribute(1);
+        }
+    }
+
+    void progressAnimation() {
+        getPlayerActor()->mMarioAnim->update();
+        getPlayerActor()->calcAnimInMovement();
+
+        XanimePlayer* animePlayer = getPlayerActor()->mMarioAnim->getXanimePlayer();
+        animePlayer->updateBeforeMovement();
+        animePlayer->updateAfterMovement();
+    }
+
+    const char* getCurrentBckName() {
+        return getPlayerActor()->getMario()->getCurrentBckName();
+    }
+
+    void setAnimationBlendWeight(const f32* pWeights) {
+        getPlayerActor()->mMarioAnim->forceSetBlendWeight(pWeights);
+    }
+
+    void setSpot(f32, u32) {
+    }
+
+    void offControl() {
+        getPlayerActor()->_3C0 = true;
+    }
+
+    bool isOffControl() {
+        return getPlayerActor()->_3C0;
+    }
+
+    void onControl(bool resetCondition) {
+        getPlayerActor()->_3C0 = false;
+
+        if (resetCondition) {
+            getPlayerActor()->resetCondition();
+        }
+    }
+
+    void setStateWait() {
+        getPlayerActor()->getMario()->stopJump();
+        getPlayerActor()->getMario()->stopWalk();
+    }
+
+    void startTalk(const LiveActor* pTalkActor) {
+        getPlayerActor()->getMario()->startTalk(pTalkActor);
+        getPlayerActor()->stopSpinTicoEffect(false);
+    }
+
+    void endTalk() {
+        getPlayerActor()->getMario()->endTalk();
+    }
+
+    void readyRemoteDemo() {
+        if (getPlayerActor()->_EA4) {
+            return;
+        }
+
+        if (getPlayerActor()->getMario()->isStatusActive(MarioStatus_13) || getPlayerActor()->mPlayerMode == PlayerMode_Hopper) {
+            offControl();
+            getPlayerActor()->getMario()->_10._20 = true;
+            return;
+        }
+
+        getPlayerActor()->getMario()->_10._20 = false;
+
+        if (getPlayerActor()->_934) {
+            getPlayerActor()->_924->receiveMessage(ACTMES_RUSH_CANCEL, getPlayerActor()->getSensor("body"));
+            if (getPlayerActor()->_934) {
+                RushEndInfo endInfo(nullptr, 4, TVec3f(0.0f, 0.0f, 0.0f), false, 0);
+                endRush(&endInfo);
+            }
+        }
+
+        if (getPlayerActor()->getMario()->isStatusActive(MarioStatus_FpView)) {
+            getPlayerActor()->getMario()->closeStatus(nullptr);
+        }
+
+        getPlayerActor()->flushCoinPull();
+        getPlayerActor()->calcAndSetBaseMtx();
+
+        offControl();
+
+        getPlayerActor()->_EA4 = true;
+        MR::invalidateHitSensors(getPlayerActor());
+
+        PSMTXCopy(getPlayerActor()->getBaseMtx(), getPlayerActor()->_EA8);
+
+        getPlayerActor()->_B90 = true;
+        getPlayerActor()->getMario()->stopWalk();
+
+        MR::deleteEffectAll(getPlayerActor());
+
+        getPlayerActor()->_1B8->kill();
+        getPlayerActor()->_1E4 = 0.0f;
+        getPlayerActor()->_ED8 = getPlayerActor()->mPosition;
+        getPlayerActor()->_EE4 = getPlayerActor()->mMarioAnim->getXanimePlayer()->getCurrentAnimationName();
+        getPlayerActor()->_EA6 = false;
+    }
+
+    void onFollowDemo() {
+        if (getPlayerActor()->mPlayerMode == PlayerMode_Teresa) {
+            MR::requestMovementOn(getPlayerActor()->_9A4);
+        }
+    }
+
+    void setBaseMtx(MtxPtr mtx) {
+        getPlayerActor()->forceSetBaseMtx(mtx);
+    }
+
+    MtxPtr getBaseMtx() {
+        if (getPlayerActor()->_EA5) {
+            return getPlayerActor()->_EA8;
+        }
+
+        return getPlayerActor()->getBaseMtx();
+    }
+
+    bool calcSpinPullVelocity(TVec3f* pOut, const TVec3f& rVec) {
+        getPlayerActor()->tryPullTrans(pOut, rVec);
         return true;
     }
 
-    return getMarioActor()->isAnimationRun(cWaterSurfaceAnim);
-}
+    void tryCoinPull() {
+        if (!getPlayerActor()->getSensor("eye")->isValid()) {
+            validateSensor();
+        }
+        getPlayerActor()->_6D0 = true;
+    }
 
-void MarioAccess::changeItemStatus(s32 status) {
-    switch (status) {
-    case 0:
-    case 8:
-        getMarioActor()->setPlayerMode(0, true);
-        break;
-    case 1:
-        getMarioActor()->setPlayerMode(5, true);
-        break;
-    case 2:
-        getMarioActor()->setPlayerMode(4, true);
-        break;
-    case 3:
-        getMarioActor()->setPlayerMode(6, true);
-        break;
-    case 4:
-        getMarioActor()->setPlayerMode(3, true);
-        break;
-    case 5:
-        getMarioActor()->setPlayerMode(2, true);
-        break;
-    case 6:
-        getMarioActor()->setPlayerMode(7, true);
-        break;
-    case 7:
-        getMarioActor()->setPlayerMode(1, true);
-        break;
-    case 9:
-        getMario()->mMovementStates_LOW_WORD |= 0x00010000;
-        getMario()->_544 = 3;
-        break;
-    case 10:
-        if (getMarioActor()->isEnableNerveChange()) {
-            if (getMarioActor()->mMaxHealth > 3) {
-                MR::startSound(getMarioActor(), cInvalidMorphItemSound, -1, -1);
-                getMarioActor()->changeMaxLife(6);
+    void addVelocity(const TVec3f& rVec) {
+        if (getPlayerActor()->IsMarioSwimming() && getPlayerActor()->getMario()->mSwim->mJetTimer != 0) {
+            return;
+        }
+
+        if (getPlayerActor()->_EA4) {
+            return;
+        }
+
+        if (getPlayerActor()->_934) {
+            return;
+        }
+
+        getPlayerActor()->getMario()->push(rVec);
+
+        if (getPlayerActor()->getMario()->isStatusActive(MarioStatus_Hang)) {
+            getPlayerActor()->getMario()->mHang->forceDrop();
+        }
+    }
+
+    void addVelocityFromArea(const TVec3f& rVec) {
+        if (getPlayerActor()->IsMarioSwimming() && getPlayerActor()->getMario()->mSwim->mJetTimer != 0) {
+            return;
+        }
+
+        if (getPlayerActor()->_EA4) {
+            return;
+        }
+
+        if (getPlayerActor()->_934) {
+            return;
+        }
+
+        getPlayerActor()->getMario()->push(rVec);
+    }
+
+    bool isOnWaterSurface() {
+        if (getPlayerActor()->getMario()->isStatusActive(MarioStatus_Swim)) {
+            return getPlayerActor()->getMario()->mSwim->isOnWaterSurface();
+        }
+
+        return getPlayerActor()->isAnimationRun("水泳ジェット");
+    }
+
+    void calcWorldPadDir(TVec3f* pOut, f32 f1, f32 f2) {
+        getPlayerActor()->getMario()->calcWorldPadDir(pOut, f1, f2, false);
+    }
+
+    void preventRush() {
+        getPlayerActor()->setNerve(&NrvMarioActor::MarioActorNrvNoRush::sInstance);
+    }
+
+    MarioActor* getPlayerActor() {
+        return MR::getMarioHolder()->getMarioActor();
+    }
+
+    void validateSensor() {
+        getPlayerActor()->getSensor("eye")->validate();
+    }
+
+    void incOxygen(u32 amt) {
+        if (!getPlayerActor()->IsMarioSwimming()) {
+            return;
+        }
+
+        for (int i = 0; i < amt; i++) {
+            getPlayerActor()->getMario()->mSwim->incOxygen();
+        }
+
+        getPlayerActor()->playEffect("酸素回復");
+    }
+
+    void scatterStarPiece(u32 amt) {
+        if (MR::getStarPieceNum() > 0) {
+            MR::startSound(getPlayerActor(), "SE_OJ_STAR_PIECE_BURST");
+        }
+
+        for (int i = 0; i < amt; i++) {
+            if (MR::getStarPieceNum() == 0) {
+                return;
             }
-            else {
-                getMarioActor()->mSuperKinokoCollected = true;
+
+            StarPiece* launchPiece = MR::getDeadStarPiece();
+
+            launchPiece->launch(getPlayerActor()->_2A0, 24.0f, 24.0f, false, false);
+            MR::addStarPiece(-1);
+        }
+    }
+
+    void startDownWipe() {
+        if (getPlayerActor()->isNerve(&NrvMarioActor::MarioActorNrvGameOverSink::sInstance)) {
+            return;
+        }
+
+        if (getPlayerActor()->isAnimationRun("氷結")) {
+            return;
+        }
+
+        if (getPlayerActor()->_390 != 0) {
+            return;
+        }
+
+        getPlayerActor()->_A61 = true;
+    }
+
+    void readyDemo() {
+        if (getPlayerActor()->_934) {
+            if (!getPlayerActor()->_924->receiveMessage(ACTMES_RUSH_CANCEL, getPlayerActor()->getSensor("body"))) {
+                getPlayerActor()->_924->receiveMessage(ACTMES_RUSH_FORCE_CANCEL, getPlayerActor()->getSensor("body"));
+            }
+
+            if (getPlayerActor()->_934) {
+                RushEndInfo endInfo(nullptr, 4, TVec3f(0.0f, 0.0f, 0.0f), false, 0);
+                endRush(&endInfo);
             }
         }
-        break;
+
+        if (getPlayerActor()->getMario()->isStatusActive(MarioStatus_FpView)) {
+            getPlayerActor()->getMario()->closeStatus(nullptr);
+        }
     }
-}
+
+    void endRemoteDemo(const RushEndInfo* pEndInfo) {
+        if (getPlayerActor()->getMario()->isStatusActive(MarioStatus_13) || getPlayerActor()->getMario()->isStatusActive(MarioStatus_Talk) ||
+            getPlayerActor()->getMario()->_10._20 || !getPlayerActor()->_EA4) {
+            getPlayerActor()->_3C0 = false;
+            return;
+        }
+
+        getPlayerActor()->_B90 = false;
+        onControl(true);
+        getPlayerActor()->_EA4 = false;
+        getPlayerActor()->stopAnimation(nullptr);
+
+        if (getPlayerActor()->_468 != 0) {
+            MarioActor* actor = getPlayerActor();
+            getPlayerActor()->mMarioAnim->updateTakingAnimation(actor->_468 == 0 ? nullptr : actor->_428[0]);
+        }
+
+        MR::validateHitSensors(getPlayerActor());
+        getPlayerActor()->getSensor("dummy")->invalidate();
+        getPlayerActor()->_EA6 = false;
+    }
+
+    bool isInWaterMode() {
+        if (getPlayerActor()->getMario()->isStatusActive(MarioStatus_Swim)) {
+            return true;
+        }
+
+        return getPlayerActor()->isAnimationRun("水泳ジェット");
+    }
+
+    void changeItemStatus(s32 a1) {
+        switch (a1) {
+        case 0:
+        case 8:
+            getPlayerActor()->setPlayerMode(PlayerMode_Normal, true);
+            break;
+        case 1:
+            getPlayerActor()->setPlayerMode(PlayerMode_Hopper, true);
+            break;
+        case 2:
+            getPlayerActor()->setPlayerMode(PlayerMode_Bee, true);
+            break;
+        case 3:
+            getPlayerActor()->setPlayerMode(PlayerMode_Teresa, true);
+            break;
+        case 4:
+            getPlayerActor()->setPlayerMode(PlayerMode_Ice, true);
+            break;
+        case 5:
+            getPlayerActor()->setPlayerMode(PlayerMode_2, true);
+            break;
+        case 6:
+            getPlayerActor()->setPlayerMode(PlayerMode_Foo, true);
+            break;
+        case 7:
+            getPlayerActor()->setPlayerMode(PlayerMode_Invincible, true);
+            break;
+        case 9:
+            getPlayerActor()->getMario()->mMovementStates._F = true;
+            getPlayerActor()->getMario()->_544 = 3;
+            break;
+        case 10:
+            if (!getPlayerActor()->isEnableNerveChange()) {
+                return;
+            }
+
+            if (getPlayerActor()->mMaxHealth > 3) {
+                MR::startSound(getPlayerActor(), "SE_OJ_MORPH_ITEM_INVALID");
+                getPlayerActor()->changeMaxLife(6);
+                return;
+            }
+
+            getPlayerActor()->mSuperKinokoCollected = true;
+        }
+    }
+};  // namespace MarioAccess

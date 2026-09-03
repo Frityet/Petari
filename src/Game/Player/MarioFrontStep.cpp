@@ -3,6 +3,8 @@
 #include "Game/Map/HitInfo.hpp"
 #include "Game/Player/Mario.hpp"
 #include "Game/Player/MarioActor.hpp"
+#include "Game/Player/MarioModule.hpp"
+#include "Game/Player/MarioState.hpp"
 #include "Game/Util/MapUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/MtxUtil.hpp"
@@ -36,7 +38,7 @@ bool Mario::doFrontStep() {
         return false;
     }
 
-    if (getPlayerMode() == 5) {
+    if (getPlayerMode() == PlayerMode_Hopper) {
         return false;
     }
 
@@ -52,104 +54,34 @@ bool Mario::doFrontStep() {
         return false;
     }
 
-    Triangle triangle;
-    const TVec3f& checkStart = mActor->_2A0;
-    TVec3f checkOffset = mFrontVec * 200.0f;
-    if (!MR::getFirstPolyOnLineToMap(nullptr, &triangle, checkStart, checkOffset)) {
+    Triangle triangle = Triangle();
+    MarioActor* pMario = mActor;
+    TVec3f* vec = &pMario->_2A0;
+    if (!MR::getFirstPolyOnLineToMap(nullptr, &triangle, *vec, mFrontVec * 200.0f)) {
         return false;
     }
 
     setFrontVecKeepUp(-*MR::getNormal(&triangle));
+
     stopWalk();
     forceStopTornado();
+
     changeStatus(mFrontStep);
+
     return true;
 }
 
 bool MarioFrontStep::start() {
-    changeAnimation("前壁ウエイト", static_cast<const char*>(nullptr));
+    changeAnimation("前壁ウエイト", static_cast< const char* >(nullptr));
+
     mActor->setBlendMtxTimer(10);
+
     getPlayer()->lockGroundCheck(this, true);
-    return true;
-}
-
-MarioFrontStep::MarioFrontStep(MarioActor* pActor) : MarioState(pActor, MarioStatus_FrontStep) {
-}
-
-bool MarioFrontStep::update() {
-    getPlayer()->stopWalk();
-
-    if (getPlayer()->_1C._5) {
-        return false;
-    }
-
-    const TVec3f& checkStart = mActor->_2A0;
-    if (!MR::isExistMapCollision(checkStart, getFrontVec() * 200.0f)) {
-        return false;
-    }
-
-    if (getStickP() < 0.1f) {
-    }
-    else {
-        TVec3f padDir(getWorldPadDir());
-        MR::vecKillElement(padDir, getPlayer()->getAirGravityVec(), &padDir);
-        MR::normalizeOrZero(&padDir);
-
-        TVec3f negFront = -getPlayer()->mFrontVec;
-        TVec3f unused;
-        f32 frontDot = MR::vecKillElement(padDir, negFront, &unused);
-        if (frontDot < -0.86602575f) {
-        }
-        else if (frontDot > 0.0f) {
-            return false;
-        }
-    }
-
-    if (checkTrgA()) {
-        Mario* pPlayer = getPlayer();
-        pPlayer->_74C = 0.0f;
-        pPlayer->_750 = 0;
-        pPlayer->_754 = 0;
-        getPlayer()->setFrontVecKeepUp(-getPlayer()->getWallNorm());
-        getPlayer()->tryJump();
-        return false;
-    }
-
-    if (mActor->isRequestRush()) {
-        getPlayer()->tryWallPunch();
-        return false;
-    }
-
-    if (!getPlayer()->mMovementStates._1) {
-        getPlayer()->tryDrop();
-        return false;
-    }
 
     return true;
 }
 
-bool MarioFrontStep::close() {
-    stopAnimation("前壁ウエイト", static_cast<const char*>(nullptr));
-    getPlayer()->lockGroundCheck(this, false);
-    return true;
-}
-
-bool MarioFrontStep::postureCtrl(MtxPtr pMtx) {
-    TVec3f negFront = -getPlayer()->mFrontVec;
-    TVec3f negGravity = -getPlayer()->getAirGravityVec();
-    TVec3f up;
-
-    if (MR::vecBlendSphere(negGravity, negFront, &up, 0.25f)) {
-        MR::normalizeOrZero(&up);
-    }
-    else {
-        up = -getPlayer()->getAirGravityVec();
-    }
-
-    MR::makeMtxUpFront(reinterpret_cast<TPos3f*>(pMtx), up, getPlayer()->mFrontVec);
-    return true;
-}
-
+/*
 namespace NrvMarioActor {
     INIT_NERVE(MarioActorNrvWait);
     INIT_NERVE(MarioActorNrvGameOver);
@@ -161,4 +93,78 @@ namespace NrvMarioActor {
     INIT_NERVE(MarioActorNrvGameOverSink);
     INIT_NERVE(MarioActorNrvTimeWait);
     INIT_NERVE(MarioActorNrvNoRush);
-};  // namespace NrvMarioActor
+}
+*/
+
+MarioFrontStep::MarioFrontStep(MarioActor* pActor) : MarioState(pActor, MarioStatus_FrontStep) {
+}
+
+bool MarioFrontStep::update() {
+    getPlayer()->stopWalk();
+
+    if (getPlayer()->_1C._5) {
+        return false;
+    }
+
+    MarioActor* pMario = mActor;
+    TVec3f* vec = &pMario->_2A0;
+    if (!MR::isExistMapCollision(*vec, getFrontVec() * 200.0f)) {
+        return false;
+    }
+
+    if (!(getStickP() < 0.1f)) {
+        TVec3f worldDir(getWorldPadDir());
+        MR::vecKillElement(worldDir, getPlayer()->getAirGravityVec(), &worldDir);
+
+        MR::normalizeOrZero(&worldDir);
+
+        TVec3f vec;
+        f32 val = MR::vecKillElement(worldDir, -getPlayer()->mFrontVec, &vec);
+        if (!(val < -0.866f) && val > 0.0f) {
+            return false;
+        }
+    }
+
+    if (checkTrgA()) {
+        getPlayer()->resetInline();
+
+        getPlayer()->setFrontVecKeepUp(-getPlayer()->getWallNorm());
+
+        getPlayer()->tryJump();
+
+        return false;
+    }
+
+    if (mActor->isRequestRush()) {
+        getPlayer()->tryWallPunch();
+        return false;
+    }
+
+    if (!getPlayer()->getMovementStates()._1) {
+        getPlayer()->tryDrop();
+        return false;
+    }
+
+    return true;
+}
+
+bool MarioFrontStep::close() {
+    stopAnimation("前壁ウエイト");
+
+    getPlayer()->lockGroundCheck(this, false);
+
+    return true;
+}
+
+bool MarioFrontStep::postureCtrl(MtxPtr pMtx) {
+    TVec3f blendVec;
+    if (MR::vecBlendSphere(-getPlayer()->getAirGravityVec(), -getPlayer()->mFrontVec, &blendVec, 0.25f)) {
+        MR::normalizeOrZero(&blendVec);
+    } else {
+        blendVec = -getPlayer()->getAirGravityVec();
+    }
+
+    MR::makeMtxUpFront(reinterpret_cast< TPos3f* >(pMtx), blendVec, getPlayer()->mFrontVec);
+
+    return true;
+}

@@ -1,35 +1,27 @@
 #pragma once
 
+#include "Game/LiveActor/ActorCameraInfo.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/LiveActorGroup.hpp"
+#include "Game/LiveActor/Nerve.hpp"
+#include "Game/Map/RaceManager.hpp"
+#include "Game/NPC/TalkMessageCtrl.hpp"
+#include "Game/Util/JointController.hpp"
 #include "JSystem/JGeometry/TMatrix.hpp"
 #include <JSystem/JGeometry.hpp>
-#include "Game/Util/JointController.hpp"
-#include "Game/Map/RaceManager.hpp"
-#include "Game/LiveActor/Nerve.hpp"
-#include "Game/LiveActor/ActorCameraInfo.hpp"
-#include "Game/NPC/TalkMessageCtrl.hpp"
-#include "Game/MapObj/PrizeRing.hpp"
 
-class PlayerPoseSetterInWater : public TVec3f {
-public:
-    inline PlayerPoseSetterInWater();
-    void update();
+class PlayerPoseSetterInWater;
 
-    TQuat4f _C;
-    s32 _1C;
-    Vec* _20;
-};
 class Syati : public LiveActor {
 public:
     Syati(const char*);
     virtual ~Syati();
-    
+
     virtual void init(const JMapInfoIter& rIter);
     virtual void control();
     virtual void calcAndSetBaseMtx();
-    virtual void attackSensor(HitSensor *,HitSensor *);
-    virtual bool receiveMsgPlayerAttack(u32 ,HitSensor *,HitSensor *);
+    virtual void attackSensor(HitSensor*, HitSensor*);
+    virtual bool receiveMsgPlayerAttack(u32, HitSensor*, HitSensor*);
     void exeWait();
     void exeFadeoutBeforeTalk();
     void exeWaitBlank();
@@ -43,14 +35,14 @@ public:
     void exeReachToEnd();
     void exeWaitAllRingDisappear();
     void exeTalkRetryMission();
+    void exeForceKill();
     void exeHideOnShore();
     void exeWaitOnShore();
     void exeWaitTalkNormal();
     void exeTalkNormal();
-    inline void exeKill();
-    void initRings(JMapInfoIter const &);
+    void initRings(JMapInfoIter const&);
     void initPose();
-    void initTalking(JMapInfoIter const &);
+    void initTalking(JMapInfoIter const&);
     void updateSwimCommon();
     void updatePoseByRail();
     void updateNumRingPassed();
@@ -61,31 +53,40 @@ public:
     void killAllRings();
     void emitRing();
     void setupBalloonFollowMtx(const TVec3f&);
-    bool calcHeadJoint(TPos3f *,const JointControllerInfo &);
+    bool calcHeadJoint(TPos3f*, const JointControllerInfo&);
 
-    private:
-    TQuat4f _8C;
-    TVec3f _9C;
-    f32 _A8; // some radius
-    TVec3f _AC;
-    TalkMessageCtrl* _B8;
-    ActorCameraInfo* _BC;
-    s32 _C0;
-    PlayerPoseSetterInWater* _C4;
-    s32 _C8;
-    TVec3f _CC;
-    TPos3f _D8;
-    JointControlDelegator<Syati>* _108;
-    TMtx34f _10C;
-    RaceManagerLayout* _13C;
-    LiveActorGroup* _140;
-    s32 _144;
-    s32 _148;
-    s32 _14C; //Obj_arg2
-    s32 _150;
-    s32 _154;
-    s32 _158;
+    /* 0x8C */ TQuat4f _8C;
+    /* 0x9C */ TVec3f _9C;
+    /* 0xA8 */ f32 mClippingRange;
+    /* 0xAC */ TVec3f mClippingVec;
+    /* 0xB8 */ TalkMessageCtrl* mTalkMessageCtrl;
+    /* 0xBC */ ActorCameraInfo* mActorCameraInfo;
+    /* 0xC0 */ s32 mHideOnShoreMode;
+    /* 0xC4 */ PlayerPoseSetterInWater* mPlayerPoseSetterInWater;
+    /* 0xC8 */ s32 mBlinkTimer;
+    /* 0xCC */ TVec3f mMarioMoveLocalOffsetVec;
+    /* 0xD8 */ TPos3f mBalloonFollowMtx;
+    /* 0x108 */ JointControlDelegator< Syati >* mJointControlDelegator;
+    /* 0x10C */ TMtx34f _10C;
+    /* 0x13C */ RaceManagerLayout* mRaceManagerLayout;
+    /* 0x140 */ LiveActorGroup* mPrizeRingGroup;
+    /* 0x144 */ s32 mNumRings; // Obj_arg0
+    /* 0x148 */ s32 mStarSpawnType;
+    /* 0x14C */ s32 mSwimMode;
+    /* 0x150 */ s32 mPrizeRingLife; // Obj_arg3
+    /* 0x154 */ s32 mPrizeRingCount;
+    /* 0x158 */ s32 mCurrentRailPointNo;
+};
 
+class PlayerPoseSetterInWater {
+public:
+    inline PlayerPoseSetterInWater(const TVec3f& rVec, Syati* pSyati);
+    void update();
+
+    TVec3f _0;
+    TQuat4f _C;
+    s32 _1C;
+    Vec* _20;
 };
 
 namespace NrvSyati {
@@ -105,10 +106,10 @@ namespace NrvSyati {
     NERVE_DECL_EXE(SyatiWaitBlankRetryEvent, Syati, WaitBlank);
     NERVE_DECL_EXE(SyatiFadeinRetryEvent, Syati, FadeinBeforeTalk);
     NERVE_DECL_EXE(SyatiTalkRetryMission, Syati, TalkRetryMission);
-    NERVE_DECL_EXE(SyatiForceKill, Syati, Kill);
+    NERVE_DECL_EXE(SyatiForceKill, Syati, ForceKill);
     NERVE_DECL_EXE(SyatiHideOnShore, Syati, HideOnShore);
     NERVE_DECL_EXE(SyatiWaitOnShore, Syati, WaitOnShore);
     NERVE_DECL_EXE(SyatiWaitTalkNormal, Syati, WaitTalkNormal);
     NERVE_DECL_EXE(SyatiTalkNormal, Syati, TalkNormal);
     NERVE_DECL_NULL(SyatiWaitDemoStart);
-};
+};  // namespace NrvSyati

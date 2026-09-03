@@ -38,7 +38,7 @@ void CameraMedianPlanet::reset() {
 
 CameraTargetObj* CameraMedianPlanet::calc() {
     TVec3f pos;
-    reinterpret_cast< TPos3f* >(MR::getCameraInvViewMtx())->getTrans(pos);
+    MR::getCameraInvViewMtx().getTrans(pos);
     constrainDipAngle(&pos);
     constrainLength(&pos);
     TVec3f watchPos;
@@ -60,7 +60,7 @@ CamTranslatorBase* CameraMedianPlanet::createTranslator() {
 }
 
 void CameraMedianPlanet::getPrevFront(TVec3f* pPrevFront) {
-    reinterpret_cast< TPos3f* >(MR::getCameraInvViewMtx())->getZDir(*pPrevFront);
+    MR::getCameraInvViewMtx().getZDir(*pPrevFront);
     pPrevFront->negate();
 }
 
@@ -84,7 +84,7 @@ void CameraMedianPlanet::constrainDipAngle(TVec3f* pPos) {
 }
 
 void CameraMedianPlanet_FORCE_MATCH_SDATA2_2() {
-    (void)(1.0f / 150.0f);
+    (void)(0.1f / 15.0f);
 }
 
 void CameraMedianPlanet::makeTargetMtx(TPos3f* pMtx) {
@@ -157,7 +157,7 @@ void CameraMedianPlanet::getRegisterUpVec(TVec3f* pUp) {
 
 void CameraMedianPlanet::calcWatchPos(TVec3f* pWatchPos) {
     TVec3f watchOffset;
-    CameraLocalUtil::makeWatchPoint(&watchOffset, this, CameraLocalUtil::getTarget(this), 1.0f / 150.0f);
+    CameraLocalUtil::makeWatchPoint(&watchOffset, this, CameraLocalUtil::getTarget(this), 0.1f / 15.0f);
     watchOffset.sub(CameraLocalUtil::getTarget(this)->getPosition());
 
     pWatchPos->set(CameraLocalUtil::getTarget(this)->getPosition() * (1.0f - mPartialRate) + CameraLocalUtil::getVecReg(mString) * mPartialRate +
@@ -165,7 +165,7 @@ void CameraMedianPlanet::calcWatchPos(TVec3f* pWatchPos) {
 }
 
 bool CameraMedianPlanet::calcUpVec(TVec3f* pUp, const TVec3f& watchPos, const TVec3f& pos) {
-    reinterpret_cast< TPos3f* >(MR::getCameraInvViewMtx())->getYDir(*pUp);
+    MR::getCameraInvViewMtx().getYDir(*pUp);
     TVec3f prevFront;
     getPrevFront(&prevFront);
 

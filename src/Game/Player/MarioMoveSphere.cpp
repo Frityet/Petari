@@ -5,12 +5,14 @@ MarioMove::MarioMove(MarioActor* pActor) : MarioModule(pActor) {
 }
 
 void MarioMove::initAfter() {
-    _8 = getPlayer()->mHeadVec;
-    _14 = getPlayer()->mFrontVec;
-    _20 = getPlayer()->mSideVec;
-    _2C = _8;
-    _38 = _14;
-    _44 = _20;
+    mHeadVec = getPlayer()->mHeadVec;
+    mFrontVec = getPlayer()->mFrontVec;
+    mSideVec = getPlayer()->mSideVec;
+
+    mHeadVec2 = mHeadVec;
+    mFrontVec2 = mFrontVec;
+    mSideVec2 = mSideVec;
+
     _50 = 0.0f;
     _54 = 0.0f;
 }

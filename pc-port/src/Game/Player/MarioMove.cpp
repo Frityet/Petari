@@ -47,7 +47,7 @@ void Mario::mainMove() {
 
     const f32 walkSpeed = mActor->mConst->getTable()->mWalkSpeed;
     TVec3f velocity(mFrontVec);
-    velocity.scale(_278 * walkSpeed);
+    velocity.scale(mWalkSpeed * walkSpeed);
     mVelocity += velocity;
     _22C = moveDir;
     _328 = moveDir;
@@ -64,8 +64,8 @@ void Mario::mainMove() {
     }
 
     if (mMovementStates._23) {
-        _71C = 0;
-        _278 = 0.0f;
+        mTargetWalkSpeedIndex = 0;
+        mWalkSpeed = 0.0f;
         inhibitTurn = true;
         playSound("坂滑り", -1);
     }
@@ -133,7 +133,7 @@ void Mario::mainMove() {
 
         if (doJump && checkSquat(false) && mStickPos.z >= 0.5f) {
             _436 = 0;
-            _278 = 5.0f;
+            mWalkSpeed = 5.0f;
             _434 = 180;
             doJump = false;
             playSound("スペシャルダッシュ強", -1);
@@ -141,7 +141,7 @@ void Mario::mainMove() {
             playSound("声物ジャンプ", -1);
         } else if (doJump && mStickPos.z >= 0.5f) {
             _436 = 0;
-            _278 = 2.0f;
+            mWalkSpeed = 2.0f;
             _434 = 60;
             doJump = false;
             playSound("スペシャルダッシュ弱", -1);
@@ -205,8 +205,8 @@ void Mario::mainMove() {
         calcShadowDir(_328, &_22C);
         _40C = 10;
     } else {
-        if ((!_71C || !_71D) && !isAnimationRun("ブレーキ") && !isAnimationRun("ターンブレーキ")
-            && !mMovementStates._10 && !mMovementStates._F && _278 < 0.999f && !mDrawStates._5) {
+        if ((!mTargetWalkSpeedIndex || !_71D) && !isAnimationRun("ブレーキ") && !isAnimationRun("ターンブレーキ")
+            && !mMovementStates._10 && !mMovementStates._F && mWalkSpeed < 0.999f && !mDrawStates._5) {
             bool allowMove = true;
 
             if (_40C != 0) {
@@ -237,7 +237,7 @@ void Mario::mainMove() {
                     mDrawStates._E = true;
 
                     u32 standingTurnTime = mActor->mConst->getTable()->mStandingTurnTime;
-                    if (mActor->mAlphaEnable) {
+                    if (mActor->mBeeWallWalk) {
                         standingTurnTime = 30;
                     }
 
@@ -308,7 +308,7 @@ void Mario::mainMove() {
     }
 
     if (frontDot >= MR::cos(mActor->mConst->getTable()->mTurnSlipAngle) && !mMovementStates._4
-        && _278 > mActor->mConst->getTable()->mSlipSpeed && _38 > mStickPos.z && !mDrawStates._D) {
+        && mWalkSpeed > mActor->mConst->getTable()->mSlipSpeed && _38 > mStickPos.z && !mDrawStates._D) {
         recordTurnSlipAngle();
     } else if (_3D2 != 0) {
         _3D2--;
@@ -324,9 +324,9 @@ void Mario::mainMove() {
             mMovementStates._10 = true;
         }
 
-        if (_278 < 0.1f) {
+        if (mWalkSpeed < 0.1f) {
             _3D2 = 0;
-            _278 = 0.0f;
+            mWalkSpeed = 0.0f;
         }
 
         if (isAnimationRun("ブレーキ")) {
@@ -362,7 +362,7 @@ void Mario::mainMove() {
         } else {
             _3D0 = mActor->mConst->getTable()->mTurnSlipTime;
             mMovementStates_LOW_WORD |= 0x08000000;
-            _278 = 0.0f;
+            mWalkSpeed = 0.0f;
             changeAnimation("ターンブレーキ", static_cast<const char*>(nullptr));
             playEffect("共通ブレーキ");
         }
@@ -382,7 +382,7 @@ void Mario::mainMove() {
         _3D0--;
 
         if (!mMovementStates._35) {
-            _278 = 0.0f;
+            mWalkSpeed = 0.0f;
         }
     }
 
@@ -412,17 +412,17 @@ void Mario::mainMove() {
         stopAnimation("ターンブレーキ滑り床", static_cast<const char*>(nullptr));
         _754 = 0;
         _74C = 0.0f;
-        _278 = 0.0f;
+        mWalkSpeed = 0.0f;
         popTask(reinterpret_cast<Task>(&Mario::taskOnSlipTurn));
     }
 
     const MarioConstTable* table = mActor->mConst->getTable();
     f32 turnAngleSpeed = table->mTurnAngleSpeed;
 
-    if (_278 > table->mFastTurnSpeed) {
+    if (mWalkSpeed > table->mFastTurnSpeed) {
         turnAngleSpeed = table->mTurnAngleSpeed2;
 
-        if (_71C < 5) {
+        if (mTargetWalkSpeedIndex < 5) {
             turnAngleSpeed = table->mTurnAngleSpeedSlowWalk;
         }
 
@@ -517,7 +517,7 @@ void Mario::mainMove() {
             _238 = _22C;
 
             f32 weakRatio = 1.0f;
-            if (_3D4 < mActor->mConst->getTable()->mWeakTurnTime && _71C > 4) {
+            if (_3D4 < mActor->mConst->getTable()->mWeakTurnTime && mTargetWalkSpeedIndex > 4) {
                 weakRatio = static_cast<f32>(_3D4) / static_cast<f32>(mActor->mConst->getTable()->mWeakTurnTime);
             }
 
@@ -579,7 +579,7 @@ void Mario::mainMove() {
                         f32 blend = turnAngleSpeed / frontTurnAngle;
                         MR::clamp01(&blend);
 
-                        if (mActor->mAlphaEnable && blend > 0.1f) {
+                        if (mActor->mBeeWallWalk && blend > 0.1f) {
                             blend = 0.1f;
                         }
 
@@ -599,7 +599,7 @@ void Mario::mainMove() {
 
                             f32 brake = 1.0f - ((PI - frontTurnAngle) / PI);
                             MR::clamp01(&brake);
-                            _278 *= 1.0f - (0.1f * brake);
+                            mWalkSpeed *= 1.0f - (0.1f * brake);
                         }
 
                         if (!MR::vecBlendSphere(mFrontVec, _22C, &nextFront, blend)) {
@@ -648,13 +648,13 @@ void Mario::mainMove() {
         mMovementStates_LOW_WORD &= ~MARIO_MOVE_TURNING_MASK;
     }
 
-    if (_750 != 0 && _71C == 0 && isEnableTurn()) {
+    if (_750 != 0 && mTargetWalkSpeedIndex == 0 && isEnableTurn()) {
         changeAnimation("その場足踏み", static_cast<const char*>(nullptr));
 
         if (!isAnimationRun("カリカリ限界")) {
             changeAnimationUpperWeak("その場足踏み上半身", static_cast<const char*>(nullptr));
         }
-    } else if (_71C != 0) {
+    } else if (mTargetWalkSpeedIndex != 0) {
         stopAnimation("その場足踏み", static_cast<const char*>(nullptr));
     } else if (isAnimationRun("その場足踏み上半身")) {
         stopAnimationUpper(static_cast<const char*>(nullptr), static_cast<const char*>(nullptr));
@@ -672,13 +672,13 @@ void Mario::mainMove() {
 
         MR::normalize(&base);
 
-        f32 blend = (1.1f - _278) * mActor->mConst->getTable()->mInertiaIceTurn;
+        f32 blend = (1.1f - mWalkSpeed) * mActor->mConst->getTable()->mInertiaIceTurn;
         MR::clamp01(&blend);
         MR::vecBlendSphere(base, target, &velocity, blend);
         MR::normalize(&velocity);
-        velocity.scale(_278 * mActor->mConst->getTable()->mWalkSpeed);
+        velocity.scale(mWalkSpeed * mActor->mConst->getTable()->mWalkSpeed);
     } else if (mDrawStates._5) {
-        f32 speedRatio = _278;
+        f32 speedRatio = mWalkSpeed;
         f32 walkSpeed = mActor->mConst->getTable()->mWalkSpeed;
         TVec3f scaled(_22C);
         scaled.scale(walkSpeed);
@@ -687,7 +687,7 @@ void Mario::mainMove() {
         result.scale(speedRatio);
         velocity = result;
     } else {
-        f32 speedRatio = _278;
+        f32 speedRatio = mWalkSpeed;
         f32 walkSpeed = mActor->mConst->getTable()->mWalkSpeed;
         TVec3f scaled(mFrontVec);
         scaled.scale(walkSpeed);
@@ -701,7 +701,7 @@ void Mario::mainMove() {
     _328 = moveDir;
 
     if (mMovementStates._A) {
-        if (_71C != 0) {
+        if (mTargetWalkSpeedIndex != 0) {
             _334 = moveDir;
         }
     } else if (_3D2 == 0) {
@@ -820,7 +820,7 @@ bool Mario::isEnableTurn() {
         return false;
     }
 
-    if (mActor->mAlphaEnable) {
+    if (mActor->mBeeWallWalk) {
         return false;
     }
 
@@ -844,7 +844,7 @@ bool Mario::isEnableTurn() {
 }
 
 void Mario::recordTurnSlipAngle() {
-    if (!mActor->mAlphaEnable) {
+    if (!mActor->mBeeWallWalk) {
         _3E4 = mFrontVec;
         _3D2 = mActor->getConst().getTable()->mTurnReadyTime;
     }
@@ -857,11 +857,11 @@ f32 Mario::decideInertia(f32 stickPower) {
     }
 
     const MarioConstTable* table = mActor->mConst->getTable();
-    if (_278 > 1.0f) {
+    if (mWalkSpeed > 1.0f) {
         return table->mInertiaOverSpeed;
     }
 
-    f32 inertia = ((1.0f - _278) * table->mInertiaStandardStop + _278 * table->mInertiaStandardMax) * (1.0f - _3F4)
+    f32 inertia = ((1.0f - mWalkSpeed) * table->mInertiaStandardStop + mWalkSpeed * table->mInertiaStandardMax) * (1.0f - _3F4)
         + _3F4 * table->mInertiaStartSpin;
     if (stickPower == 0.0f) {
         inertia = table->mInertiaStop;
@@ -875,7 +875,7 @@ f32 Mario::decideInertia(f32 stickPower) {
         return decideInertiaOnIce(stickPower);
     }
 
-    if (_278 > 1.0f) {
+    if (mWalkSpeed > 1.0f) {
         return mActor->mConst->getTable()->mInertiaOverSpeed;
     }
 
@@ -889,7 +889,7 @@ f32 Mario::decideInertia(f32 stickPower) {
 
     MarioConst* consts = mActor->mConst;
     const MarioConstTable* table = consts->getTable();
-    f32 inertia = ((1.0f - _278) * table->mInertiaStandardStop + _278 * table->mInertiaStandardMax) * (1.0f - _3F4)
+    f32 inertia = ((1.0f - mWalkSpeed) * table->mInertiaStandardStop + mWalkSpeed * table->mInertiaStandardMax) * (1.0f - _3F4)
         + _3F4 * table->mInertiaStartSpin;
 
     if (stickPower == 0.0f) {
@@ -913,7 +913,7 @@ f32 Mario::decideInertia(f32 stickPower) {
     }
 
     if (mMovementStates._F) {
-        if (_278 >= stickPower) {
+        if (mWalkSpeed >= stickPower) {
             inertia = mActor->mConst->getTable()->mInertiaTornadoBrake;
         } else {
             inertia = mActor->mConst->getTable()->mInertiaTornadoAccel;
@@ -925,9 +925,9 @@ f32 Mario::decideInertia(f32 stickPower) {
         inertia = mActor->mConst->getTable()->mInertiaReflectSlip;
     }
 
-    if (_278 < 0.08f && _3CE > 10 && stickPower > 0.5f && (mMovementStates._A || mMovementStates._C)) {
+    if (mWalkSpeed < 0.08f && _3CE > 10 && stickPower > 0.5f && (mMovementStates._A || mMovementStates._C)) {
         _3FA = consts->getTable()->mStartSpinTime;
-        _278 = 0.08f;
+        mWalkSpeed = 0.08f;
     }
 
     if (_3FA != 0) {
@@ -943,7 +943,7 @@ f32 Mario::decideInertia(f32 stickPower) {
         _3FC--;
     }
 
-    if (getFloorCode() == 0x20 && _278 > 0.4f) {
+    if (getFloorCode() == 0x20 && mWalkSpeed > 0.4f) {
         inertia *= 0.5f;
     }
 
@@ -969,7 +969,7 @@ f32 Mario::decideInertiaOnIce(f32 stickPower) {
 
 f32 Mario::decideInertiaOnSlip(f32 stickPower) {
     const MarioConstTable* table = mActor->mConst->getTable();
-    f32 standard = (1.0f - _278) * table->mInertiaSlipStandardStop + _278 * table->mInertiaSlipStandardMax;
+    f32 standard = (1.0f - mWalkSpeed) * table->mInertiaSlipStandardStop + mWalkSpeed * table->mInertiaSlipStandardMax;
     f32 inertia = (1.0f - _3F4) * standard + _3F4 * table->mInertiaSlipStartSpin;
 
     if (stickPower == 0.0f) {

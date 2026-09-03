@@ -50,8 +50,6 @@ public:
     void setHipSliderTilt();
     void setHipSlipTilt();
     void setWalkMode();
-    void controlWaitAnimation();
-    void stopWaitAnimation();
     void updateJointRumble();
     void addRumblePower(f32, u32);
     void clearAllJointTransform();
@@ -60,6 +58,8 @@ public:
     void changePickupAnimation(const HitSensor*);
     void updateTakingAnimation(const HitSensor*);
     void changeThrowAnimation(const HitSensor*);
+    void stopWaitAnimation();
+    void controlWaitAnimation();
     void runningCallback();
     void closeCallback();
     void spinEntry();
@@ -80,6 +80,10 @@ public:
 
     inline bool isTeresaClear() const {
         return !isPlayerModeTeresa();
+    }
+
+    inline XanimePlayer* getXanimePlayer() {
+        return mXanimePlayer;
     }
 
     XanimeResourceTable* mResourceTable;  // 0x8

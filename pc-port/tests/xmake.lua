@@ -1753,3 +1753,22 @@ target("smg-pc-point-light-runtime-tests")
         rundir = os.projectdir(),
         realtime_output = true
     })
+
+target("smg-pc-upstream-component-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    set_rundir(os.projectdir())
+    add_files {
+        "UpstreamComponentTests.cpp",
+        "../aurora/lib/compat.cpp"
+    }
+    add_deps {
+        "smg-pc-game",
+        "aurora-si"
+    }
+    add_tests("upstream_components", {
+        group = "aurora",
+        rundir = os.projectdir(),
+        realtime_output = true
+    })

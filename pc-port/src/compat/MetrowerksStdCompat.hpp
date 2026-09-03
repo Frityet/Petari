@@ -3,6 +3,11 @@
 class SaveDataHandleSequence;
 class JKRHeap;
 
+// Retail headers obtain this definition transitively through Revolution.
+// Keep the recovered HitSensor source valid with the host include boundary.
+#include "Game/LiveActor/LiveActor.hpp"
+#include "Game/Util/DirectDraw.hpp"
+
 namespace smgpc::game {
     [[noreturn]] SaveDataHandleSequence &save_data_handle_sequence();
 }

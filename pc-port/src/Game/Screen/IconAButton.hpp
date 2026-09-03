@@ -4,16 +4,20 @@
 
 class IconAButton : public LayoutActor {
 public:
-    IconAButton(bool connectToScene, bool connectToPause);
+    IconAButton(bool, bool);
 
-    void init(const JMapInfoIter& rIter) override;
-    void control() override;
+    virtual void init(const JMapInfoIter&);
+    virtual void control();
 
-    void setFollowActorPane(LayoutActor* pActor, const char* pName);
-    [[nodiscard]] bool isOpen() const;
-    [[nodiscard]] bool isWait() const;
+    void setFollowActorPane(LayoutActor*, const char*);
+    bool isOpen();
+    bool isWait();
+    void open();
     void openWithTalk();
     void openWithRead();
+    void openWithNext();
+    void openWithTerm();
+    void openWithDecide();
     void openWithTurn();
     void openWithoutMessage();
     void term();

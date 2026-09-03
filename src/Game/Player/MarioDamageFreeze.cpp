@@ -1,5 +1,3 @@
-#include "Game/LiveActor/Nerve.hpp"
-#include "Game/Player/Mario.hpp"
 #include "Game/Player/MarioActor.hpp"
 #include "Game/Player/MarioFreeze.hpp"
 
@@ -21,24 +19,26 @@ bool Mario::doFreeze() {
     }
 
     mActor->resetPlayerModeOnDamage();
+
     stopJump();
     stopWalk();
+
     mActor->damageDropThrowMemoSensor();
     cancelSquatMode();
+
     stopAnimationUpper(nullptr, nullptr);
     changeStatus(mFreeze);
     return true;
 }
 
-MarioFreeze::MarioFreeze(MarioActor* pActor)
-    : MarioState(pActor, MarioStatus_Freeze), _11(0), _14(0.0f), _18(0), _1A(0), _1C(0) {
+MarioFreeze::MarioFreeze(MarioActor* pActor) : MarioState(pActor, MarioStatus_Freeze), mIsFrozen(), _14(), _18(), mFreezeTimer(), _1C() {
 }
 
 bool MarioFreeze::close() {
     _1C = 120;
 
-    if (_11) {
-        playSound("氷ダメージ終了", -1);
+    if (mIsFrozen) {
+        playSound("氷ダメージ終了");
         mActor->hideFreezeModel();
     }
 
@@ -48,96 +48,92 @@ bool MarioFreeze::close() {
 bool MarioFreeze::notice() {
     if (mActor->mHealth == 0) {
         if (getNoticedStatus() == MarioStatus_Swim) {
-            mActor->setB90(true);
+            mActor->_B90 = true;
             mActor->forceGameOver();
         }
-
         return true;
     }
-
     return false;
 }
 
 bool MarioFreeze::start() {
     changeAnimationNonStop("氷結");
-    playSound("声氷ダメージ", -1);
-    playSound("氷ダメージ", -1);
-    playSound("ダメージ", -1);
+
+    playSound("声氷ダメージ");
+    playSound("氷ダメージ");
+    playSound("ダメージ");
+
     startPadVib(3);
     mActor->decLife(0);
 
-    _1A = 180;
+    mFreezeTimer = 180;
     _18 = 0;
     _14 = 0.0f;
 
-    Mario* player = getPlayer();
-    player->_74C = 0.0f;
-    player->_750 = 0;
-    player->_754 = 0;
+    getPlayer()->resetInline();
 
     mActor->showFreezeModel();
-    _11 = 1;
+
+    mIsFrozen = true;
+
     return true;
 }
 
 bool MarioFreeze::update() {
-    if (_1A != 0) {
-        _1A--;
+    if (mFreezeTimer != 0) {
+        mFreezeTimer--;
 
         if (_18 != 0) {
-            if (getPlayer()->mMovementStates._1) {
+            if (getPlayer()->getMovementStates()._1) {
                 addVelocity(getFrontVec(), -1.0f);
             }
-        } else if (_1A < 120 && mActor->mHealth != 0 && mActor->isRequestSpin()) {
+        } else if (mFreezeTimer < 120 && mActor->mHealth != 0 && mActor->isRequestSpin()) {
             addVelocity(getFrontVec(), -10.0f);
             changeAnimation("地上ひねり", static_cast< const char* >(nullptr));
-            playSound("声スピン", -1);
-            playSound("スピンジャンプ", -1);
-            playSound("氷ダメージ終了", -1);
+
+            playSound("声スピン");
+            playSound("スピンジャンプ");
+            playSound("氷ダメージ終了");
+
             mActor->hideFreezeModel();
-            _11 = 0;
+            mIsFrozen = false;
             return false;
         }
     }
 
-    if (_1A == 0) {
+    if (mFreezeTimer == 0) {
         if (_18 != 0) {
             if (mActor->mHealth != 0) {
-                playSound("声氷ダメージ終了", -1);
+                playSound("声氷ダメージ終了");
                 return false;
             }
         } else {
             _18 = 1;
-
-            if (!getPlayer()->mMovementStates._1) {
-                _1A = 10;
+            if (!getPlayer()->getMovementStates()._1) {
+                mFreezeTimer = 10;
             } else {
-                _1A = 20;
+                mFreezeTimer = 20;
             }
 
             if (mActor->mHealth == 0) {
-                if (!getPlayer()->mMovementStates._1) {
+                if (!getPlayer()->getMovementStates()._1) {
                     mActor->forceGameOverNonStop();
                 } else {
                     mActor->forceGameOver();
                 }
-            } else if (getPlayer()->mMovementStates._1) {
+            } else if (getPlayer()->getMovementStates()._1) {
                 changeAnimation("氷結解除", static_cast< const char* >(nullptr));
-                playSound("氷ダメージ終了", -1);
+                playSound("氷ダメージ終了");
                 mActor->hideFreezeModel();
-                _11 = 0;
+                mIsFrozen = false;
             }
         }
     }
 
-    if (_1A < 150) {
-        if (!getPlayer()->mMovementStates._1 || _14 < 0.0f) {
-            TVec3f jumpVec = getGravityVec() * _14;
-            getPlayer()->setJumpVec(jumpVec);
-
-            TVec3f velocity = getGravityVec() * _14;
-            addVelocity(velocity);
-
+    if (mFreezeTimer < 150) {
+        if (!getPlayer()->getMovementStates()._1 || _14 < 0.0f) {
+            getPlayer()->setJumpVec(getGravityVec() * _14);
+            addVelocity(getGravityVec() * _14);
             _14 += 1.5f;
             if (_14 < 0.0f) {
                 getPlayer()->mMovementStates._1 = false;
@@ -146,31 +142,12 @@ bool MarioFreeze::update() {
             if (_14 < 8.0f) {
                 _14 = 0.0f;
             } else {
-                _14 = -_14 * 0.4f;
+                _14 = 0.4f * -_14;
                 getPlayer()->mMovementStates._1 = false;
-
-                TVec3f jumpVec = getGravityVec() * _14;
-                getPlayer()->setJumpVec(jumpVec);
+                getPlayer()->setJumpVec(getGravityVec() * _14);
             }
         }
     }
 
     return true;
 }
-
-void Mario::setJumpVec(const TVec3f& rJumpVec) {
-    mJumpVec = rJumpVec;
-}
-
-namespace NrvMarioActor {
-    INIT_NERVE(MarioActorNrvWait);
-    INIT_NERVE(MarioActorNrvGameOver);
-    INIT_NERVE(MarioActorNrvGameOverAbyss);
-    INIT_NERVE(MarioActorNrvGameOverAbyss2);
-    INIT_NERVE(MarioActorNrvGameOverFire);
-    INIT_NERVE(MarioActorNrvGameOverBlackHole);
-    INIT_NERVE(MarioActorNrvGameOverNonStop);
-    INIT_NERVE(MarioActorNrvGameOverSink);
-    INIT_NERVE(MarioActorNrvTimeWait);
-    INIT_NERVE(MarioActorNrvNoRush);
-};  // namespace NrvMarioActor

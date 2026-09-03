@@ -29,10 +29,6 @@
 #include <string>
 
 namespace {
-    [[noreturn]] void throwAnimScaleUnavailable() {
-        throw std::logic_error("NPC AnimScaleController is unavailable without the real J3D joint-controller pipeline.");
-    }
-
     [[noreturn]] void throwNPCBehaviorUnavailable() {
         throw std::logic_error("NPC behavior utilities are unavailable without their real NPCUtil implementation.");
     }
@@ -135,34 +131,6 @@ namespace {
         return goods;
     }
 }  // namespace
-
-AnimScaleParam::AnimScaleParam()
-    : _0(0.2F), _4(0.91F), _8(0.2F), _C(1.8F), _10(12.0F), _14(0.55F), _18(0.12F), _1C(2.0F),
-      _20(0.06F), _24(0.12F), _28(0.91F), _2C(0x14), _30(0.25F) {
-}
-
-AnimScaleController::AnimScaleController(AnimScaleParam* parameter)
-    : NerveExecutor("スケールアニメコントロール"), _8(parameter), _C(1.0F, 1.0F, 1.0F), _18(0.0F) {
-    throwAnimScaleUnavailable();
-}
-
-AnimScaleController::~AnimScaleController() = default;
-void AnimScaleController::update() { throwAnimScaleUnavailable(); }
-void AnimScaleController::updateScale(f32, f32) { throwAnimScaleUnavailable(); }
-void AnimScaleController::startCrush() { throwAnimScaleUnavailable(); }
-void AnimScaleController::startAnim() { throwAnimScaleUnavailable(); }
-void AnimScaleController::startAndAddScaleVelocityY(f32) { throwAnimScaleUnavailable(); }
-void AnimScaleController::setParamTight() { throwAnimScaleUnavailable(); }
-void AnimScaleController::startHitReaction() { throwAnimScaleUnavailable(); }
-void AnimScaleController::startDpdHitVibration() { throwAnimScaleUnavailable(); }
-bool AnimScaleController::isHitReaction(s32) const { throwAnimScaleUnavailable(); }
-void AnimScaleController::stopAndReset() { throwAnimScaleUnavailable(); }
-void AnimScaleController::resetScale() { throwAnimScaleUnavailable(); }
-bool AnimScaleController::tryStop() { throwAnimScaleUnavailable(); }
-void AnimScaleController::exeAnim() { throwAnimScaleUnavailable(); }
-void AnimScaleController::exeDpdVibration() { throwAnimScaleUnavailable(); }
-void AnimScaleController::exeHitReaction() { throwAnimScaleUnavailable(); }
-void AnimScaleController::exeCrush() { throwAnimScaleUnavailable(); }
 
 void JointController::registerCallBack() {
     throw std::logic_error("J3D joint callbacks are unavailable without the real joint-controller pipeline.");

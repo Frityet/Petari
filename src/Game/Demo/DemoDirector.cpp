@@ -4,9 +4,13 @@
 #include "Game/Demo/DemoFunction.hpp"
 #include "Game/Demo/DemoSimpleCastHolder.hpp"
 #include "Game/Demo/DemoStartRequestHolder.hpp"
+#include "Game/Demo/DemoStartRequestUtil.hpp"
 #include "Game/Player/MarioAccess.hpp"
 #include "Game/Scene/SceneNameObjMovementController.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
+#include "Game/System/ResourceHolder.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/JMapIdInfo.hpp"
 #include "Game/Util/JMapUtil.hpp"
@@ -14,30 +18,10 @@
 #include "Game/Util/ScreenUtil.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
 
-namespace DemoStartRequestUtil {
-    void startDemo(DemoStartRequestHolder*);
-    void popStartDemoRequest(DemoStartRequestHolder*);
-    bool isExistStartDemoRequest(const DemoStartRequestHolder*);
-    NameObj* getDemoStarter(const DemoStartInfo&);
-};
-
-namespace MR {
-    bool isCameraInterpolatingNearlyEnd();
-};
-
-DemoDirector::DemoDirector(const char* pName) : NameObj(pName) {
-    mIsActive = false;
-    mExecutor = nullptr;
-    _14 = false;
-    _18 = nullptr;
-    _20 = new DemoSimpleCastHolder(0x200, 0x40, 0x80);
-    mResourceHolder = nullptr;
-    mStartRequestHolder = new DemoStartRequestHolder();
-    _2C = nullptr;
-    _30 = nullptr;
-    _34 = -1;
-    _38 = true;
-    MR::connectToScene(this, MR::MovementType_DemoDirector, -1, -1, -1);
+DemoDirector::DemoDirector(const char* pName)
+    : NameObj(pName), mIsActive(), mExecutor(), _14(), _18(), _20(new DemoSimpleCastHolder(512, 64, 128)), mResourceHolder(),
+      mStartRequestHolder(new DemoStartRequestHolder()), _2C(), _30(), _34(-1), _38(true) {
+    MR::connectToScene(this, 11, -1, -1, -1);
 
     _18 = new DemoCastGroupHolder();
     _18->initWithoutIter();
@@ -53,28 +37,39 @@ void DemoDirector::movement() {
         mExecutor->movement();
     }
 
-    if (!tryStartDemoRequested() && _14 && MR::isCameraInterpolatingNearlyEnd()) {
-        _14 = false;
-        doDemoEndRequest();
+    if (tryStartDemoRequested()) {
+        return;
     }
-}
 
-void DemoDirector::startDemoProgrammable(NameObj* pStarter, const char* pDemoName, bool useCinemaFrame, s32 movementType) {
-    startDemo(pStarter, pDemoName, useCinemaFrame, movementType);
-}
-
-void DemoDirector::startDemoTimeKeep(NameObj* pStarter, const char* pDemoName, s32 movementType, bool useCinemaFrame, const char* pPartName) {
-    startDemo(pStarter, pDemoName, useCinemaFrame, movementType);
-    startDemoExecutor(pStarter, pDemoName, movementType, pPartName);
-}
-
-void DemoDirector::startDemoExecutor(NameObj* pStarter, const char* pDemoName, s32 movementType, const char* pPartName) {
-    mExecutor = DemoFunction::findDemoExecutor(pDemoName);
-    if (pPartName != nullptr) {
-        mExecutor->startPart(pStarter, pDemoName, pPartName, movementType);
+    if (!_14) {
+        return;
     }
-    else {
-        mExecutor->start(pStarter, pDemoName, movementType);
+
+    if (!MR::isCameraInterpolatingNearlyEnd()) {
+        return;
+    }
+
+    _14 = false;
+
+    doDemoEndRequest();
+}
+
+void DemoDirector::startDemoProgrammable(NameObj* pParam1, const char* pParam2, bool param3, s32 param4) {
+    startDemo(pParam1, pParam2, param3, param4);
+}
+
+void DemoDirector::startDemoTimeKeep(NameObj* pParam1, const char* pParam2, s32 param3, bool param4, const char* pParam5) {
+    startDemo(pParam1, pParam2, param4, param3);
+    startDemoExecutor(pParam1, pParam2, param3, pParam5);
+}
+
+void DemoDirector::startDemoExecutor(NameObj* pParam1, const char* pParam2, s32 param3, const char* pParam4) {
+    mExecutor = DemoFunction::findDemoExecutor(pParam2);
+
+    if (pParam4 != nullptr) {
+        mExecutor->startPart(pParam1, pParam2, pParam4, param3);
+    } else {
+        mExecutor->start(pParam1, pParam2, param3);
     }
 }
 
@@ -82,35 +77,42 @@ const char* DemoDirector::getCurrentDemoName() const {
     if (mIsActive) {
         return _30;
     }
+
     return nullptr;
 }
 
-void DemoDirector::endDemo(NameObj* pStarter, const char*, bool waitCamera) {
+void DemoDirector::endDemo(NameObj* pParam1, const char* pParam2, bool param3) {
     if (DemoStartRequestUtil::isExistStartDemoRequest(mStartRequestHolder)) {
-        MR::sendMsgToAllLiveActor(0x70, nullptr);
+        MR::sendMsgToAllLiveActor(ACTMES_END_DEMO, nullptr);
+
         mExecutor = nullptr;
+
         doDemoEndRequest();
         startDemoRequested();
-    }
-    else if (waitCamera && !MR::isCameraInterpolatingNearlyEnd() && _34 != MR::MovementControlType_3) {
+    } else if (param3 && !MR::isCameraInterpolatingNearlyEnd() && _34 != 3) {
         _14 = true;
-        MR::sendMsgToAllLiveActor(0x70, nullptr);
+
+        MR::sendMsgToAllLiveActor(ACTMES_END_DEMO, nullptr);
+
         mExecutor = nullptr;
-        MR::getSceneNameObjMovementController()->requestStopSceneOverwrite(pStarter);
-    }
-    else {
-        MR::sendMsgToAllLiveActor(0x70, nullptr);
+
+        MR::getSceneObj< SceneNameObjMovementController >(SceneObj_SceneNameObjMovementController)->requestStopSceneOverwrite(pParam1);
+    } else {
+        MR::sendMsgToAllLiveActor(ACTMES_END_DEMO, nullptr);
+
         mExecutor = nullptr;
+
         doDemoEndRequest();
     }
 }
 
-bool DemoDirector::isExistTimeKeepDemo(const char* pDemoName) const {
-    for (s32 i = 0; i < _18->mObjectCount; i++) {
-        if (MR::isName(_18->getCastGroup(i), pDemoName)) {
+bool DemoDirector::isExistTimeKeepDemo(const char* pParam1) const {
+    for (int i = 0; i < _18->getObjectCount(); i++) {
+        if (MR::isName(_18->getCastGroup(i), pParam1)) {
             return true;
         }
     }
+
     return false;
 }
 
@@ -119,24 +121,27 @@ bool DemoDirector::registerDemoCast(LiveActor* pActor, const JMapInfoIter& rIter
         return false;
     }
 
-    s32 demoGroupID = -1;
-    if (!MR::getJMapInfoDemoGroupID(rIter, &demoGroupID)) {
+    s32 demoGroupId = -1;
+
+    if (!MR::getJMapInfoDemoGroupID(rIter, &demoGroupId)) {
         return false;
     }
 
-    JMapIdInfo info(MR::getDemoGroupID(rIter), rIter);
-    if (_18->tryRegisterDemoActor(pActor, rIter, info)) {
+    JMapIdInfo idInfo = JMapIdInfo(MR::getDemoGroupID(rIter), rIter);
+
+    if (_18->tryRegisterDemoActor(pActor, rIter, idInfo)) {
         return true;
     }
 
-    return mCastSubGroupHolder->tryRegisterDemoActor(pActor, rIter, info);
+    return mCastSubGroupHolder->tryRegisterDemoActor(pActor, rIter, idInfo);
 }
 
-bool DemoDirector::registerDemoCast(LiveActor* pActor, const char* pName, const JMapInfoIter& rIter) {
-    if (_18->tryRegisterDemoActor(pActor, pName, rIter)) {
+bool DemoDirector::registerDemoCast(LiveActor* pActor, const char* pParam2, const JMapInfoIter& rIter) {
+    if (_18->tryRegisterDemoActor(pActor, pParam2, rIter)) {
         return true;
     }
-    return mCastSubGroupHolder->tryRegisterDemoActor(pActor, pName, rIter);
+
+    return mCastSubGroupHolder->tryRegisterDemoActor(pActor, pParam2, rIter);
 }
 
 void DemoDirector::registerDemoSimpleCast(LiveActor* pActor) {
@@ -161,15 +166,17 @@ bool DemoDirector::tryStartDemoRequested() {
     }
 
     startDemoRequested();
+
     return true;
 }
 
-void DemoDirector::startDemo(NameObj* pStarter, const char* pDemoName, bool useCinemaFrame, s32 movementType) {
-    _2C = pStarter;
+void DemoDirector::startDemo(NameObj* pObj, const char* pParam2, bool param3, s32 param4) {
+    _2C = pObj;
     mIsActive = true;
-    _30 = pDemoName;
-    _34 = movementType;
-    _38 = useCinemaFrame;
+    _30 = pParam2;
+    _34 = param4;
+    _38 = param3;
+
     _20->movementOnAllCasts();
     MR::initStarPieceGetCSSound();
 }
@@ -177,17 +184,17 @@ void DemoDirector::startDemo(NameObj* pStarter, const char* pDemoName, bool useC
 void DemoDirector::startDemoRequested() {
     DemoStartRequestUtil::startDemo(mStartRequestHolder);
 
-    const DemoStartInfo* info = mStartRequestHolder->getCurrentInfo();
-    NameObj* starter = DemoStartRequestUtil::getDemoStarter(*info);
-    startDemo(starter, info->mDemoName, info->_2C == 0, info->_24);
+    const DemoStartInfo& info = *mStartRequestHolder->getCurrentInfo();
 
+    startDemo(DemoStartRequestUtil::getDemoStarter(info), info.mDemoName, info._2C == nullptr, info._24);
     DemoStartRequestUtil::popStartDemoRequest(mStartRequestHolder);
 }
 
 void DemoDirector::doDemoEndRequest() {
-    MR::getSceneNameObjMovementController()->requestPlaySceneFor(static_cast< MR::MovementControlType >(_34), _2C);
+    MR::getSceneNameObjMovementController()->requestPlaySceneFor(MR::MovementControlType(_34), _2C);
     MR::activateDefaultGameLayout();
     MR::endStarPointerMode(_2C);
+
     if (_38) {
         MR::tryFrameToScreenCinemaFrame();
     }
@@ -198,5 +205,3 @@ void DemoDirector::doDemoEndRequest() {
 
     mIsActive = false;
 }
-
-DemoDirector::~DemoDirector() {}

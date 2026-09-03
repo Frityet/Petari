@@ -96,7 +96,7 @@ void MarioAnimator::controlWaitAnimation() {
 }
 
 void MarioAnimator::stopWaitAnimation() {
-    if (getPlayerMode() == 1 && getPlayer()->_278 >= 1.5f) {
+    if (getPlayerMode() == 1 && getPlayer()->mWalkSpeed >= 1.5f) {
         return;
     }
 
@@ -160,7 +160,7 @@ bool MarioWait::checkStart() {
         isInvalid = true;
     }
 
-    if (mActor->mAlphaEnable) {
+    if (mActor->mBeeWallWalk) {
         isInvalid = true;
     }
 
@@ -184,7 +184,7 @@ bool MarioWait::checkStart() {
         isInvalid = true;
     }
 
-    if (MR::isNearZero(getPlayer()->_278, 0.001f)) {
+    if (MR::isNearZero(getPlayer()->mWalkSpeed, 0.001f)) {
         ++_16;
     } else {
         isInvalid = true;

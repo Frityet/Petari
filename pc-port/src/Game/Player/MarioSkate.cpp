@@ -70,7 +70,7 @@ bool MarioSkate::start() {
         _20 = 0.0f;
     } else {
         _20 = 0.0f;
-        if (getPlayer()->_71C < 3) {
+        if (getPlayer()->mTargetWalkSpeedIndex < 3) {
             _1A = true;
             changeAnimationNonStop("アイスひねり静止");
         } else {
@@ -143,9 +143,9 @@ bool MarioSkate::update() {
                 playSound("スピンジャンプ", -1);
                 playSound("声パンチ", -1);
 
-                if (getPlayer()->_278 < 1.25f) {
-                    const f32 acceleratedSpeed = 1.5f * getPlayer()->_278;
-                    getPlayer()->_278 = acceleratedSpeed;
+                if (getPlayer()->mWalkSpeed < 1.25f) {
+                    const f32 acceleratedSpeed = 1.5f * getPlayer()->mWalkSpeed;
+                    getPlayer()->mWalkSpeed = acceleratedSpeed;
                 }
             }
         }
@@ -155,9 +155,9 @@ bool MarioSkate::update() {
         }
     }
 
-    f32 speed = getPlayer()->_278;
+    f32 speed = getPlayer()->mWalkSpeed;
     if (speed < 1.2f * getStickP()) {
-        getPlayer()->_278 = 1.2f * getStickP();
+        getPlayer()->mWalkSpeed = 1.2f * getStickP();
     }
 
     if (speed > 0.0f && !isAnimationRun("基本")) {

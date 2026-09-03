@@ -249,12 +249,12 @@ namespace MR {
         if (controller == nullptr) {
             throw std::logic_error("Talk balloon offset query requires a TalkMessageCtrl.");
         }
-        return controller->_2C;
+        return controller->mMsgBalloonFollowOffs;
     }
 
     void setMessageBalloonFollowOffset(TalkMessageCtrl* controller, const TVec3f& offset) {
         if (controller != nullptr) {
-            controller->_2C = offset;
+            controller->mMsgBalloonFollowOffs = offset;
         }
     }
 
@@ -352,11 +352,13 @@ namespace MR {
         controller->mNodeCtrl->recordTempFlowNode();
     }
 
-    void tryForwardNode(TalkMessageCtrl* controller) {
+    bool tryForwardNode(TalkMessageCtrl* controller) {
         if (controller != nullptr && controller->mNodeCtrl != nullptr &&
             controller->mNodeCtrl->isExistNextNode()) {
             forwardNode(controller);
+            return true;
         }
+        return false;
     }
 
     bool isExistNextNode(const TalkMessageCtrl* controller) {

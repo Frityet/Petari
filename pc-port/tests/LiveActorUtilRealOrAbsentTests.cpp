@@ -5,6 +5,7 @@
 #include "Logger.hpp"
 #include "RendererService.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
+#include "compat/MaterialCtrlCompat.hpp"
 #include "render/J3dMatrix.hpp"
 #include "runtime/RuntimeContext.hpp"
 
@@ -295,30 +296,26 @@ int main() {
     auto* projection = MR::initDLMakerProjmapEffectMtxSetter(&actor);
     require(projection != nullptr,
             "a projection material controller must bind to the actor's real LiveActorModel renderer");
-    auto translation = TVec3f{};
-    projection->getBaseTrans(&translation);
-    require_near(translation.x, 4.0F, "projection material translation must preserve actor X");
-    require_near(translation.y, 8.0F, "projection material translation must preserve actor Y");
-    require_near(translation.z, 10.0F, "projection material translation must preserve actor Z");
     projection->updateMtxUseBaseMtx();
-    require_near(projection->mBaseMtx.mMtx[0][0], 0.5F,
+    const auto& projection_matrix = smgpc::compat::projmap_effect_matrix(projection);
+    require_near(projection_matrix.m[0U], 0.5F,
                  "projection material matrix must invert actor X scale");
-    require_near(projection->mBaseMtx.mMtx[1][1], 0.25F,
+    require_near(projection_matrix.m[5U], 0.25F,
                  "projection material matrix must invert actor Y scale");
-    require_near(projection->mBaseMtx.mMtx[2][2], 0.2F,
+    require_near(projection_matrix.m[10U], 0.2F,
                  "projection material matrix must invert actor Z scale");
-    require_near(projection->mBaseMtx.mMtx[0][3], -2.0F,
+    require_near(projection_matrix.m[3U], -2.0F,
                  "projection material matrix must invert actor X translation");
-    require_near(projection->mBaseMtx.mMtx[1][3], -2.0F,
+    require_near(projection_matrix.m[7U], -2.0F,
                  "projection material matrix must invert actor Y translation");
-    require_near(projection->mBaseMtx.mMtx[2][3], -2.0F,
+    require_near(projection_matrix.m[11U], -2.0F,
                  "projection material matrix must invert actor Z translation");
     projection->updateMtxUseBaseMtxWithLocalOffset(TVec3f{2.0F, 4.0F, 5.0F});
-    require_near(projection->mBaseMtx.mMtx[0][3], -4.0F,
+    require_near(projection_matrix.m[3U], -4.0F,
                  "projection material local offset must compose before inverse X translation");
-    require_near(projection->mBaseMtx.mMtx[1][3], -6.0F,
+    require_near(projection_matrix.m[7U], -6.0F,
                  "projection material local offset must compose before inverse Y translation");
-    require_near(projection->mBaseMtx.mMtx[2][3], -7.0F,
+    require_near(projection_matrix.m[11U], -7.0F,
                  "projection material local offset must compose before inverse Z translation");
     projection->update();
     ++passed;

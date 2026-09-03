@@ -1004,7 +1004,7 @@ inline bool RecursiveHelper::hasNode(const TalkNode* node) const {
 
 TalkMessageCtrl::TalkMessageCtrl(LiveActor* host, const TVec3f& offset, MtxPtr matrix)
     : NameObj("会話制御"), mHostActor(host), mNodeCtrl(nullptr), mZoneID(-1), _18(0U),
-      _1C(0.0F, 0.0F, 0.0F), mMtx(matrix), _2C(offset), mTalkDistance(240.0F), _3C(0U),
+      _1C(0.0F, 0.0F, 0.0F), mMtx(matrix), mMsgBalloonFollowOffs(offset), mTalkDistance(240.0F), _3C(0U),
       mAlreadyDoneFlags(0U), mIsOnRootNodeAuto(false), mIsOnReadNodeAuto(true),
       mIsStartOnlyFront(false), mCameraInfo(nullptr), mBranchFunc(nullptr), mEventFunc(nullptr),
       mAnimeFunc(nullptr), mKillFunc(nullptr),
@@ -1057,29 +1057,29 @@ bool TalkMessageCtrl::requestTalkForce() {
     return TalkFunction::requestTalkSystem(this, true);
 }
 
-void TalkMessageCtrl::startTalk() {
-    TalkFunction::startTalkSystem(this, false, true, true);
+bool TalkMessageCtrl::startTalk() {
+    return TalkFunction::startTalkSystem(this, false, true, true);
 }
 
-void TalkMessageCtrl::startTalkForce() {
-    TalkFunction::startTalkSystem(this, true, true, true);
+bool TalkMessageCtrl::startTalkForce() {
+    return TalkFunction::startTalkSystem(this, true, true, true);
 }
 
-void TalkMessageCtrl::startTalkForcePuppetable() {
-    TalkFunction::startTalkSystem(this, true, true, false);
+bool TalkMessageCtrl::startTalkForcePuppetable() {
+    return TalkFunction::startTalkSystem(this, true, true, false);
 }
 
-void TalkMessageCtrl::startTalkForceWithoutDemo() {
-    TalkFunction::startTalkSystem(this, true, false, true);
+bool TalkMessageCtrl::startTalkForceWithoutDemo() {
+    return TalkFunction::startTalkSystem(this, true, false, true);
 }
 
-void TalkMessageCtrl::startTalkForceWithoutDemoPuppetable() {
-    TalkFunction::startTalkSystem(this, true, false, false);
+bool TalkMessageCtrl::startTalkForceWithoutDemoPuppetable() {
+    return TalkFunction::startTalkSystem(this, true, false, false);
 }
 
-void TalkMessageCtrl::endTalk() {
-    static_cast<void>(smgpc::compat::require_talk_runtime("Talk end query")
-                          ._impl->state(*this).end_latch);
+bool TalkMessageCtrl::endTalk() {
+    return smgpc::compat::require_talk_runtime("Talk end query")
+        ._impl->state(*this).end_latch;
 }
 
 bool TalkMessageCtrl::isNearPlayer(const TalkMessageCtrl* other) {
@@ -1339,19 +1339,17 @@ bool TalkFunction::requestTalkSystem(TalkMessageCtrl* controller, bool force) {
         ._impl->request(*controller, force);
 }
 
-void TalkFunction::startTalkSystem(TalkMessageCtrl* controller, bool force, bool demo,
+bool TalkFunction::startTalkSystem(TalkMessageCtrl* controller, bool force, bool demo,
                                    bool player_not_puppetable) {
     if (controller == nullptr) {
-        return;
+        return false;
     }
-    static_cast<void>(smgpc::compat::require_talk_runtime("Talk start")
-                          ._impl->start(*controller, force, demo, player_not_puppetable));
+    return smgpc::compat::require_talk_runtime("Talk start")
+        ._impl->start(*controller, force, demo, player_not_puppetable);
 }
 
-void TalkFunction::endTalkSystem(TalkMessageCtrl* controller) {
-    if (controller != nullptr) {
-        controller->endTalk();
-    }
+bool TalkFunction::endTalkSystem(TalkMessageCtrl* controller) {
+    return controller != nullptr && controller->endTalk();
 }
 
 bool TalkFunction::isTalkSystemStart(const TalkMessageCtrl* controller) {

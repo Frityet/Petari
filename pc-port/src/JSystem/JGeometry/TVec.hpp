@@ -80,6 +80,15 @@ namespace JGeometry {
             return x * value.x + y * value.y;
         }
 
+        [[nodiscard]] T distance(const TVec2& value) const {
+            return TUtil<T>::sqrt(squareDist(value));
+        }
+
+        void operator+=(const TVec2& value) {
+            x += value.x;
+            y += value.y;
+        }
+
         [[nodiscard]] TVec2 operator+(const TVec2& value) const {
             return TVec2{x + value.x, y + value.y};
         }
@@ -363,6 +372,12 @@ namespace JGeometry {
         [[nodiscard]] TVec3 killElement(const TVec3 &killDirection) const {
             TVec3 result;
             result.killElement(*this, killDirection);
+            return result;
+        }
+
+        [[nodiscard]] TVec3 getOrthogonal(const TVec3 &value) const {
+            TVec3 result;
+            result.killElement(value, *this);
             return result;
         }
 

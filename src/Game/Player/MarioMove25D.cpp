@@ -85,16 +85,18 @@ void Mario::update25Dmode() {
     }
 
     if (!mMovementStates._3B && mStickPos.z > 0.7f) {
-        _6C8.set(mStickPos.x, mStickPos.y);
+        _6C8 = mStickPos.x;
+        _6CC = mStickPos.y;
         _6AC = mode;
         mMovementStates._3B = true;
         return;
     }
 
     TVec2f stick(mStickPos.x, mStickPos.y);
-    if (MR::diffAngleAbs(_6C8, stick) >= 0.7853982f) {
+    if (MR::diffAngleAbs(TVec2f(_6C8, _6CC), stick) >= 0.7853982f) {
         _6AC = mode;
-        _6C8.set(mStickPos.x, mStickPos.y);
+        _6C8 = mStickPos.x;
+        _6CC = mStickPos.y;
     }
 }
 

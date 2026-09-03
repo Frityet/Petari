@@ -11,7 +11,7 @@ namespace {
 }
 
 namespace smgpc::compat {
-    void load_j3d_view_matrix(const MtxPtr view_matrix) {
+    void load_j3d_view_matrix(const f32 (*view_matrix)[4]) {
         PSMTXCopy(view_matrix, sViewMatrix);
     }
 

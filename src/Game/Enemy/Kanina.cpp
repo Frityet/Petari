@@ -161,7 +161,7 @@ void Kanina::init(const JMapInfoIter& rIter) {
         initForType(rIter, KaninaType_Blue);
     }
 
-    MR::initStarPointerTarget(this, ::sSensorRadius, TVec3f::makeZeroVec());
+    MR::initStarPointerTarget(this, ::sSensorRadius);
     initNerve(&NrvKanina::HostTypeAppear::sInstance);
     MR::needStageSwitchReadAppear(this, rIter);
     MR::syncStageSwitchAppear(this);
@@ -473,9 +473,9 @@ void Kanina::control() {
     updateMovement();
 
     if (MR::isInWater(this, TVec3f(0.0f, 0.0f, 0.0f))) {
-        MR::setSeVersion(this, 1);
+        MR::setSeVersion(this, SeVersion_WATER);
     } else {
-        MR::setSeVersion(this, 0);
+        MR::setSeVersion(this, SeVersion_NORMAL);
     }
 
     if (isStateBlink()) {

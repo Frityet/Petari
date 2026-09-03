@@ -681,7 +681,7 @@ namespace {
 
         const auto walk_displacement = actor->mPosition - stand_position;
         const auto walk_distance = walk_displacement.length();
-        const auto walk_speed = actor->mMario->_278;
+        const auto walk_speed = actor->mMario->mWalkSpeed;
         require(std::fabs(actor->mMario->mStickPos.x) < 0.01F &&
                     actor->mMario->mStickPos.y > 0.9F &&
                     actor->mMario->mStickPos.z > 0.9F && walk_speed > 0.0F &&
@@ -734,8 +734,8 @@ namespace {
                 throw std::runtime_error(
                     "Mario lost release ground;frame=" +
                     std::to_string(release_end_frame) + ";speed=" +
-                    std::to_string(actor->mMario->_278) + ";band=" +
-                    std::to_string(actor->mMario->_71C) + ";position=" +
+                    std::to_string(actor->mMario->mWalkSpeed) + ";band=" +
+                    std::to_string(actor->mMario->mTargetWalkSpeedIndex) + ";position=" +
                     std::to_string(actor->mPosition.x) + "," +
                     std::to_string(actor->mPosition.y) + "," +
                     std::to_string(actor->mPosition.z) + ";last_move=" +
@@ -750,8 +750,8 @@ namespace {
                     ";expanded_counts=" + expanded_counts);
             }
 
-            const auto speed = actor->mMario->_278;
-            if (actor->mMario->_71C == 0 && speed >= 0.2F) {
+            const auto speed = actor->mMario->mWalkSpeed;
+            if (actor->mMario->mTargetWalkSpeedIndex == 0 && speed >= 0.2F) {
                 saw_release_inertia = true;
                 require(release_frame.bck_name == "Run",
                         "Mario must keep Run while release inertia still moves him");
@@ -766,7 +766,7 @@ namespace {
             const auto release_tangent_move =
                 release_frame.last_move - release_normal_move;
             last_release_tangent_move = release_tangent_move.length();
-            if (actor->mMario->_71C == 0 && speed == 0.0F &&
+            if (actor->mMario->mTargetWalkSpeedIndex == 0 && speed == 0.0F &&
                 actor->mVelocity.length() < 0.001F &&
                 release_frame.bck_name == "Wait" &&
                 last_release_tangent_move < 0.01F &&
@@ -781,14 +781,14 @@ namespace {
             }
         }
         if (!(saw_release_inertia && reached_wait_at_rest &&
-              actor->mMario->_278 < walk_speed &&
+              actor->mMario->mWalkSpeed < walk_speed &&
               actor->mMario->mStickPos.z < 0.01F)) {
             throw std::runtime_error(
                 "stick release did not reach stable Wait/rest;frame=" +
                 std::to_string(release_end_frame) + ";speed=" +
-                std::to_string(actor->mMario->_278) + ";stick=" +
+                std::to_string(actor->mMario->mWalkSpeed) + ";stick=" +
                 std::to_string(actor->mMario->mStickPos.z) + ";band=" +
-                std::to_string(actor->mMario->_71C) + ";bck=" +
+                std::to_string(actor->mMario->mTargetWalkSpeedIndex) + ";bck=" +
                 release_frame.bck_name + ";last_move=" +
                 std::to_string(release_frame.last_move.length()) +
                 ";tangent_move=" +
@@ -810,8 +810,8 @@ namespace {
             ++release_end_frame;
             release_frame = run_frame(release_end_frame);
             require(!release_frame.debug_button_script_applied &&
-                        release_frame.grounded && actor->mMario->_278 == 0.0F &&
-                        actor->mMario->_71C == 0 &&
+                        release_frame.grounded && actor->mMario->mWalkSpeed == 0.0F &&
+                        actor->mMario->mTargetWalkSpeedIndex == 0 &&
                         actor->mMario->mStickPos.z < 0.01F &&
                         actor->mVelocity.length() < 0.001F &&
                         release_frame.bck_name == "Wait" &&

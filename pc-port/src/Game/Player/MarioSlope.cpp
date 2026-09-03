@@ -176,7 +176,7 @@ bool Mario::checkGroundOnSlope() {
     if (_10._22) {
         _10._22 = false;
         _1C._C = true;
-    } else if ((mMovementStates._23 || _71C != 0) && getPlayerMode() != 6) {
+    } else if ((mMovementStates._23 || mTargetWalkSpeedIndex != 0) && getPlayerMode() != 6) {
         TVec3f toGround = groundPos - mPosition;
         if (__fabsf(toGround.dot(groundUp)) < verticalLimit) {
             TVec3f horizontal = groundPos - mPosition;
@@ -187,12 +187,12 @@ bool Mario::checkGroundOnSlope() {
 
                 TVec3f correction = groundUp * gravityOffset;
                 f32 speed;
-                if (_278 < 0.0f) {
+                if (mWalkSpeed < 0.0f) {
                     speed = 0.0f;
-                } else if (_278 > 1.0f) {
+                } else if (mWalkSpeed > 1.0f) {
                     speed = 1.0f;
                 } else {
-                    speed = _278;
+                    speed = mWalkSpeed;
                 }
                 if (!mMovementStates._23) {
                     correction *= speed;

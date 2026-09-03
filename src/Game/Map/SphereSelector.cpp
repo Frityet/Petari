@@ -32,7 +32,7 @@ namespace NrvSphereSelector {
 };  // namespace NrvSphereSelector
 
 SphereSelector::SphereSelector()
-    : LiveActor("スフィアセレクター"), mSphereGroup(), mHandle(), mSelectedTarget(), _98(), mPointingTarget(), _A4(), _A8(), _AC(),
+    : LiveActor("スフィアセレクター"), mSphereGroup(), mHandle(), mSelectedTarget(), _98(), mPointingTarget(), _A4(), _A8(0.0f, 0.0f),
       mIsPointingInvalid(), _B1() {
 }
 
@@ -78,7 +78,7 @@ void SphereSelector::registerPointingTarget(LiveActor* pActor, HandlePointingPri
         break;
     default:
         TVec3f viewPos;
-        reinterpret_cast< TPos3f* >(MR::getCameraViewMtx())->mult(pActor->mPosition, viewPos);
+        MR::getCameraViewMtx().mult(pActor->mPosition, viewPos);
         if (viewPos.z > 0.0f) {
             return;
         }
@@ -114,10 +114,7 @@ void SphereSelector::sendMsgToAllActor(u32 msg) {
 }
 
 bool SphereSelector::isMoveClickedPos() const {
-    const TVec2f pointerPos(MR::getStarPointerScreenPositionOrEdge(WPAD_CHAN0));
-    f32 x = _A8 - pointerPos.x;
-    f32 y = _AC - pointerPos.y;
-    return 80.0f < JGeometry::TUtil< f32 >::sqrt(x * x + y * y);
+    return 80.0f < JGeometry::TUtil< f32 >::sqrt(_A8.squareDist(MR::getStarPointerScreenPositionOrEdge(0)));
 }
 
 void SphereSelector::playSelectedME() {
@@ -160,48 +157,36 @@ void SphereSelector::playCanceledME() {
 void SphereSelector::exeSelectWait() {
     if (MR::isFirstStep(this)) {
         mPointingTarget = nullptr;
-        _98 = nullptr;
+        _98 = 0;
         _A4 = -1;
         MR::startStarPointerModeSphereSelectorOnReaction(this);
     }
 
     if (_A4 < 0) {
-        if (mPointingTarget != nullptr && MR::testDPDMenuPadDecideTrigger() && !MR::isDemoActive()) {
-            LiveActor* target = mPointingTarget;
-            if (MR::sendSimpleMsgToActor(ACTMES_SPHERE_SELECTOR_TARGET_SELECTED, target)) {
-                mSelectedTarget = target;
-            }
-        } else if (SphereSelectorFunction::isPadButton() && mHandle->isPointing()) {
-            LiveActor* target = mHandle;
-            if (MR::sendSimpleMsgToActor(ACTMES_SPHERE_SELECTOR_TARGET_SELECTED, target)) {
-                mSelectedTarget = target;
+        if (mPointingTarget && isDecideTrigger()) {
+            sendSelectedMsgAndSetTarget(mPointingTarget);
+        } else if (isButtonAPressed()) {
+            if (mHandle->isPointing()) {
+                sendSelectedMsgAndSetTarget(mHandle);
             }
         }
     } else {
         _A4++;
-
         if (isMoveClickedPos() || _A4 > 30) {
-            LiveActor* target = mHandle;
-            if (MR::sendSimpleMsgToActor(ACTMES_SPHERE_SELECTOR_TARGET_SELECTED, target)) {
-                mSelectedTarget = target;
-            }
+            sendSelectedMsgAndSetTarget(mHandle);
             _A4 = -1;
-        } else if (!SphereSelectorFunction::isPadButton()) {
-            LiveActor* target = mPointingTarget;
-            if (MR::sendSimpleMsgToActor(ACTMES_SPHERE_SELECTOR_TARGET_SELECTED, target)) {
-                mSelectedTarget = target;
-            }
+        } else if (!isButtonAPressed()) {
+            sendSelectedMsgAndSetTarget(mPointingTarget);
             _A4 = -1;
         }
     }
 
     if (_A4 < 0) {
-        if (_98 != nullptr && _98 != mPointingTarget && _98 != mHandle) {
-            MR::tryRumblePadWeak(this, WPAD_CHAN0);
+        if (_98 && _98 != mPointingTarget && _98 != mHandle) {
+            MR::tryRumblePadWeak(this, 0);
         }
-
         mPointingTarget = _98;
-        _98 = nullptr;
+        _98 = 0;
     }
 }
 
@@ -436,15 +421,14 @@ TVec3f& SphereSelectorFunction::getSelectedActorTrans() {
     return getSelectedTarget()->mPosition;
 }
 
-void SphereSelectorFunction::calcOffsetPos(TVec3f* pDst, const TVec3f& rPosition, const TVec3f& rOffset, const TVec3f& rFront, const TVec3f& rUp) {
-    TVec3f front(rFront);
-    if (MR::normalizeOrZero(&front) || MR::isSameDirection(rUp, front, 0.01f)) {
-        front.set< f32 >(0.0f, 0.0f, 1.0f);
-    }
-
+void SphereSelectorFunction::calcOffsetPos(TVec3f* pDst, const TVec3f& vec2, const TVec3f& vec3, const TVec3f& vec4, const TVec3f& vec5) {
+    TVec3f vec(vec4);
     TPos3f mtx;
-    MR::makeMtxUpFrontPos(&mtx, rUp, front, rPosition);
-    mtx.mult(rOffset, *pDst);
+    if (MR::normalizeOrZero(&vec) || MR::isSameDirection(vec5, vec)) {
+        vec.set< f32 >(0.0f, 0.0f, 1.0f);
+    }
+    MR::makeMtxUpFrontPos(&mtx, vec5, vec, vec2);
+    mtx.mult(vec3, *pDst);
 }
 
 SphereSelector::~SphereSelector() {

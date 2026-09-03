@@ -6,6 +6,7 @@
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/CameraUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
 #include "compat/DemoSceneRuntime.hpp"
@@ -90,7 +91,7 @@ namespace {
         const auto binding = smgpc::scene::SceneObjHolderBinding(holder);
         auto *created = MR::createSceneObj(SceneObj_SphereSelector);
         auto *selector = dynamic_cast<SphereSelector *>(created);
-        require(selector != nullptr && selector->isDead(),
+        require(selector != nullptr && MR::isDead(selector),
                 "SceneObj 0x6F must synchronously initialize the exact dead SphereSelector");
         require(selector->mSphereGroup != nullptr &&
                     selector->mSphereGroup->mObjectCount == 0 &&
@@ -220,8 +221,8 @@ namespace {
 
         auto *selector =
             MR::getSceneObj<SphereSelector>(SceneObj_SphereSelector);
-        require(handle.isDead() && !handle.mIsFileSelect && selector != nullptr &&
-                    selector->isDead() && selector->mHandle == &handle &&
+        require(MR::isDead(&handle) && !handle.mIsFileSelectMode && selector != nullptr &&
+                    MR::isDead(selector) && selector->mHandle == &handle &&
                     selector->mSphereGroup->mObjectCount == 1 &&
                     selector->mSphereGroup->getActor(0) == &handle,
                 "exact placement init must synchronously bind the real handle into SceneObj 0x6F");

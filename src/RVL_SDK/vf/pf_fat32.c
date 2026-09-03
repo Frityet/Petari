@@ -118,7 +118,7 @@ s32 VFiPFFAT32_ReadFATEntryPage(struct PF_VOLUME* p_vol, u32 cluster, u32* p_val
 
     } else {
         if (sector != (*pp_page)->sector + (((*pp_page)->p_buf - (*pp_page)->buffer) >> p_vol->bpb.log2_bytes_per_sector)) {
-            (*pp_page)->p_buf += p_vol->bpb.bytes_per_sector;
+            (*pp_page)->p_buf = (*pp_page)->buffer + ((sector - (*pp_page)->sector) << p_vol->bpb.log2_bytes_per_sector);
         }
     }
 
@@ -217,7 +217,7 @@ s32 VFiPFFAT32_WriteFATEntryPage(struct PF_VOLUME* p_vol, u32 cluster, u32 value
         } while (err != 0);
     } else {
         if (fat_sector != (*pp_page)->sector + (((*pp_page)->p_buf - (*pp_page)->buffer) >> p_vol->bpb.log2_bytes_per_sector)) {
-            (*pp_page)->p_buf += p_vol->bpb.bytes_per_sector;
+            (*pp_page)->p_buf = (*pp_page)->buffer + ((fat_sector - (*pp_page)->sector) << p_vol->bpb.log2_bytes_per_sector);
         }
     }
 

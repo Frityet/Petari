@@ -20,20 +20,25 @@ namespace {
         return controllers;
     }
 
+    struct ProjectionState {
+        LiveActor* actor;
+        smgpc::render::J3dMatrix3x4 matrix;
+    };
+
     auto& controller_actors() {
-        static auto actors = std::unordered_map<const ProjmapEffectMtxSetter*, LiveActor*>{};
+        static auto actors = std::unordered_map<const ProjmapEffectMtxSetter*, ProjectionState>{};
         return actors;
     }
 
     LiveActor& require_controller_actor(const ProjmapEffectMtxSetter* controller) {
         const auto found = controller_actors().find(controller);
-        if (found == controller_actors().end() || found->second == nullptr) {
+        if (found == controller_actors().end() || found->second.actor == nullptr) {
             throw std::logic_error("Projection material controller is not bound to a real LiveActor model.");
         }
-        if (smgpc::compat::actor_model(found->second) == nullptr) {
+        if (smgpc::compat::actor_model(found->second.actor) == nullptr) {
             throw std::logic_error("Projection material controller has no real LiveActor model renderer.");
         }
-        return *found->second;
+        return *found->second.actor;
     }
 
     const smgpc::render::J3dMatrix3x4& require_invertible_base_transform(const LiveActor& actor) {
@@ -54,26 +59,10 @@ namespace {
         return matrix;
     }
 
-    void set_matrix(TPos3f* destination, const smgpc::render::J3dMatrix3x4& source) {
-        for (auto row = 0U; row < 3U; ++row) {
-            for (auto column = 0U; column < 4U; ++column) {
-                destination->mMtx[row][column] = source.m[row * 4U + column];
-            }
-        }
-    }
-
-    smgpc::render::J3dMatrix3x4 get_matrix(const TPos3f& source) {
-        return smgpc::render::J3dMatrix3x4{{
-            source.mMtx[0][0], source.mMtx[0][1], source.mMtx[0][2], source.mMtx[0][3],
-            source.mMtx[1][0], source.mMtx[1][1], source.mMtx[1][2], source.mMtx[1][3],
-            source.mMtx[2][0], source.mMtx[2][1], source.mMtx[2][2], source.mMtx[2][3],
-        }};
-    }
-
     void apply_projection_matrix(ProjmapEffectMtxSetter* controller,
                                  const smgpc::render::J3dMatrix3x4& matrix) {
         auto& actor = require_controller_actor(controller);
-        set_matrix(&controller->mBaseMtx, matrix);
+        controller_actors().at(controller).matrix = matrix;
         smgpc::compat::set_actor_projmap_effect_matrix(&actor, matrix);
     }
 }
@@ -86,6 +75,11 @@ MaterialCtrl::MaterialCtrl(J3DModelData* modelData, const char* materialName)
 }
 
 void MaterialCtrl::update() {
+    if (const auto* controller = dynamic_cast<const ProjmapEffectMtxSetter*>(this)) {
+        auto& actor = require_controller_actor(controller);
+        smgpc::compat::set_actor_projmap_effect_matrix(&actor, controller_actors().at(controller).matrix);
+        return;
+    }
     throw std::logic_error("Raw J3D material controller update is unavailable without a real host J3D material table.");
 }
 
@@ -94,25 +88,10 @@ void MaterialCtrl::updateMaterial(J3DMaterial*) {
 }
 
 ProjmapEffectMtxSetter::ProjmapEffectMtxSetter(J3DModel* model, const ResourceHolder* resourceHolder)
-    : MaterialCtrl(nullptr, nullptr), mUpdateEffectMtxInfo(nullptr), mNumUpdateEffectMtxInfo(0), mModel(model) {
+    : MaterialCtrl(nullptr, nullptr), temp{} {
     if (model != nullptr || resourceHolder != nullptr) {
         throw std::logic_error("Raw J3D projection material construction is unavailable without real J3D model resources.");
     }
-    mBaseMtx.identity();
-}
-
-void ProjmapEffectMtxSetter::update() {
-    auto& actor = require_controller_actor(this);
-    smgpc::compat::set_actor_projmap_effect_matrix(&actor, get_matrix(mBaseMtx));
-}
-
-void ProjmapEffectMtxSetter::getBaseTrans(TVec3f* destination) const {
-    if (destination == nullptr) {
-        throw std::invalid_argument("Projection material translation requires an output vector.");
-    }
-    const auto& actor = require_controller_actor(this);
-    const auto& matrix = smgpc::compat::actor_base_matrix(&actor);
-    destination->set(matrix.m[3U], matrix.m[7U], matrix.m[11U]);
 }
 
 void ProjmapEffectMtxSetter::updateMtxUseBaseMtx() {
@@ -132,11 +111,12 @@ void ProjmapEffectMtxSetter::updateMtxUseBaseMtxWithLocalOffset(const TVec3f& of
                   smgpc::render::j3d_concat_matrix(require_invertible_base_transform(actor), localOffset)));
 }
 
-ProjmapEffectMtxSetter::UpdateEffectMtxInfo::UpdateEffectMtxInfo()
-    : mTexMtxInfo(nullptr), mEffectMtx() {
-}
-
 namespace smgpc::compat {
+    const smgpc::render::J3dMatrix3x4& projmap_effect_matrix(const ProjmapEffectMtxSetter* controller) {
+        require_controller_actor(controller);
+        return controller_actors().at(controller).matrix;
+    }
+
     ProjmapEffectMtxSetter* create_projmap_effect_mtx_setter(LiveActor* actor) {
         if (actor == nullptr) {
             throw std::invalid_argument("Projection material controller requires a LiveActor.");
@@ -148,7 +128,11 @@ namespace smgpc::compat {
         auto controller = std::make_unique<ProjmapEffectMtxSetter>(nullptr, nullptr);
         auto* result = controller.get();
         actor_controllers()[actor].push_back(std::move(controller));
-        controller_actors().emplace(result, actor);
+        controller_actors().emplace(result, ProjectionState{actor, smgpc::render::J3dMatrix3x4{{
+            1.0F, 0.0F, 0.0F, 0.0F,
+            0.0F, 1.0F, 0.0F, 0.0F,
+            0.0F, 0.0F, 1.0F, 0.0F,
+        }}});
         return result;
     }
 

@@ -17,36 +17,7 @@ void MarioActor::addRushSensor(HitSensor* pSensor, bool myBool) {
     _930++;
 }
 
-bool MarioActor::tryStandardRush() {
-    if (mMario->getMovementStates().debugMode) {
-        return false;
-    }
-
-    bool isAutoRush = true;
-    if (isRequestRush()) {
-        isAutoRush = false;
-    } else {
-        HitSensor* target = getNearestRushTarget(false);
-        if (target != nullptr) {
-            if (_468 != 0 && selectHandyRush(target)) {
-                return false;
-            }
-
-            if (target->receiveMessage(ACTMES_IS_RUSH_REQUEST, getSensor("body"))) {
-                isAutoRush = false;
-            }
-        }
-    }
-
-    if (tryStartRush(isAutoRush)) {
-        resetSensorCount();
-        mVelocity.zero();
-        beginRush();
-        return true;
-    }
-
-    return false;
-}
+// bool MarioActor::tryStandardRush();
 
 void MarioActor::checkPriorRushTarget() {
     s32 maxVal = 0;
@@ -57,7 +28,7 @@ void MarioActor::checkPriorRushTarget() {
         }
 
         u32 v = 0;
-        switch ((s32)_7E4[idx]->mType) {
+        switch (_7E4[idx]->mType) {
         case ACTMES_FORCE_KILL:
             v = 10;
             break;
@@ -82,7 +53,7 @@ HitSensor* MarioActor::getNearestRushTarget(bool myBool) const {
         return nullptr;
     }
 
-    f32 maxRadius = 100000.0f;
+    f32 maxRadius = 10000.0f;
     HitSensor* out = nullptr;
 
     if (!isEnableNerveChange()) {
@@ -154,11 +125,7 @@ HitSensor* MarioActor::getNearestRushTarget(bool myBool) const {
             size1 = size3;
         }
 
-        if (!_8E4[idx] && myBool && _7E4[idx]->mRadius + 20.0f < size1) {
-            continue;
-        }
-
-        if (size1 < maxRadius) {
+        if ((_8E4[idx] || !myBool || !(_7E4[idx]->mRadius + 20.0f < size1)) && size1 < maxRadius) {
             out = _7E4[idx];
             maxRadius = size1;
         }
@@ -167,53 +134,7 @@ HitSensor* MarioActor::getNearestRushTarget(bool myBool) const {
     return out;
 }
 
-HitSensor* MarioActor::getNearestJumpTarget() const {
-    if (_930 == 0) {
-        return nullptr;
-    }
-
-    if (mHealth == 0) {
-        return nullptr;
-    }
-
-    f32 nearestDistance = 100000.0f;
-    HitSensor* nearestSensor = nullptr;
-
-    for (s32 idx = 0; idx < _930; idx++) {
-        if (!isFixJumpRushSensor(_7E4[idx])) {
-            continue;
-        }
-
-        if (_924 == _7E4[idx]) {
-            continue;
-        }
-
-        TVec3f pos(_7E4[idx]->mPosition);
-        f32 distance2;
-        f32 distance = (pos - mPosition).length();
-        distance2 = (pos - _2A0).length();
-        f32 distance3 = (pos - _2AC).length();
-
-        if (distance > distance2) {
-            distance = distance2;
-        }
-
-        if (distance > distance3) {
-            distance = distance3;
-        }
-
-        if (!_8E4[idx] && _7E4[idx]->mRadius < distance) {
-            continue;
-        }
-
-        if (distance < nearestDistance) {
-            nearestSensor = _7E4[idx];
-            nearestDistance = distance;
-        }
-    }
-
-    return nearestSensor;
-}
+// HitSensor* MarioActor::getNearestJumpTarget() const;
 
 HitSensor* MarioActor::getHighPriorityTarget() const {
     if (_930 == 0) {
@@ -267,62 +188,7 @@ HitSensor* MarioActor::getRescueTarget() const {
     return nullptr;
 }
 
-bool MarioActor::tryStartRush(bool isAutoRush) {
-    if (mMario->isStatusActive(MarioStatus_Bury)) {
-        return false;
-    }
-
-    if (mMario->isStatusActive(MarioStatus_Sukekiyo)) {
-        return false;
-    }
-
-    HitSensor* target = getNearestRushTarget(isAutoRush);
-    if (getMovementStates()._F && mMario->isRising() && target == _928) {
-        return false;
-    }
-
-    if (target != nullptr) {
-        while (true) {
-            if (isAutoRush) {
-                u8 autoBind;
-                if (selectAutoBind(target->mHost->mName, &autoBind)) {
-                    if (autoBind == 0) {
-                        return false;
-                    }
-
-                    if (autoBind == 2) {
-                        setPlayerMode(0, true);
-                    }
-                }
-            }
-
-            if (target == _928 && selectRebindTimer(target) && _37C - _92C < 120) {
-                return false;
-            }
-
-            _7E4[0] = target;
-
-            bool received;
-            if (isAutoRush) {
-                received = target->receiveMessage(ACTMES_AUTORUSH_BEGIN, getSensor("body"));
-            } else {
-                received = target->receiveMessage(ACTMES_RUSH_BEGIN, getSensor("body"));
-            }
-
-            if (!received) {
-                HitSensor* highPriorityTarget = getHighPriorityTarget();
-                if (highPriorityTarget != nullptr && highPriorityTarget != target) {
-                    target = highPriorityTarget;
-                    continue;
-                }
-            }
-
-            return received;
-        }
-    }
-
-    return false;
-}
+// bool MarioActor::tryStartRush(bool);
 
 bool MarioActor::tryJumpRush() {
     if (mHealth == 0) {

@@ -66,7 +66,7 @@ namespace JGeometry {
         }
 
         template < typename A >
-        inline TVec2(A _x, A _y) {
+        TVec2(A _x, A _y) {
             x = _x;
             y = _y;
         }
@@ -91,7 +91,10 @@ namespace JGeometry {
 
         /* General operations */
         template < typename A >
-        void set(const JGeometry::TVec2< A >& rSrc);
+        void set(const JGeometry::TVec2< A >& rSrc) NO_INLINE {
+            x = rSrc.x;
+            y = rSrc.y;
+        }
 
         void set(T v) {
             y = x = v;
@@ -153,11 +156,19 @@ namespace JGeometry {
         }
 
         T squared() const {
-            return x * x + y * y;
+            return dot(*this);
         };
+
         T squared(const TVec2< T >& rOther) const;  //{ return (x - rOther.x) * (x - rOther.x) + (y - rOther.y) * (y - rOther.y); };
-        T dot(const TVec2< T >& rOther) const;
-        T distance(const TVec2< T >& rOther) const;
+
+        T dot(const TVec2< T >& rOther) const {
+            return x * rOther.x + y * rOther.y;
+        }
+
+        T distance(const TVec2< T >& rOther) const {
+            return JGeometry::TUtil< T >::sqrt(squareDist(rOther));
+        }
+
         void zero() {
             x = y = 0.0f;
         }
@@ -197,6 +208,11 @@ namespace JGeometry {
             ret.x *= scale;
             ret.y *= scale;
             return ret;
+        }
+
+        inline void operator+=(const TVec2< T >& rOther) {
+            x = x + rOther.x;
+            y = y + rOther.y;
         }
 
         inline void operator-=(const TVec2< T >& rOther) {
@@ -465,9 +481,9 @@ namespace JGeometry {
             return ret;
         }
 
-        TVec3 operator/(f32 div) const NO_INLINE {
+        TVec3 operator/(f32 div) const {
             TVec3 ret(*this);
-            ret *= (1.0f / div);
+            ret /= div;
             return ret;
         }
 
@@ -581,10 +597,8 @@ namespace JGeometry {
             JGeometry::negateInternal(&rVec.x, &this->x);
         }
 
-        static inline TVec3 makeZeroVec() {
-            TVec3 v;
-            v.set(0.0f, 0.0f, 0.0f);
-            return v;
+        void zero() {
+            x = y = z = 0;
         }
 
 #ifdef __MWERKS__
@@ -678,6 +692,12 @@ namespace JGeometry {
             JMAVECScaleAdd(rKillDir, this, this, -rKillDir.dot(*this));
         }
 
+        TVec3 getOrthogonal(const TVec3& rVec) const {
+            TVec3 ret;
+            ret.killElement(rVec, *this);
+            return ret;
+        }
+
         f32 normalize() {
             f32 magnitude = length();
             PSVECNormalize(this, this);
@@ -722,8 +742,9 @@ namespace JGeometry {
             
                 psq_l    v0xy, 0(a), 0, 0
                 psq_l    v1xy, 0(b), 0, 0
-                ps_sub   dxy, v0xy, v1xy
+                
                 ps_mul   dyz, dyz, dyz
+                ps_sub   dxy, v0xy, v1xy
             
                 ps_madd  sqdist, dxy, dxy, dyz
                 ps_sum0  sqdist, sqdist, dyz, dyz
@@ -734,12 +755,6 @@ namespace JGeometry {
 #else
         f32 squared(const TVec3& rB) const;
 #endif
-
-        void zero();
-
-        inline void zeroInline() {
-            x = y = z = 0;
-        }
 
         bool isZero() const {
             return squared() <= JGeometry::TUtil< f32 >::epsilon();
@@ -863,7 +878,7 @@ namespace JGeometry {
             this->w = _w;
         }
 
-        TQuat4(const TQuat4& rOther) {
+        TQuat4(const Quaternion& rOther) {
             this->x = rOther.x;
             this->y = rOther.y;
             this->z = rOther.z;
@@ -904,16 +919,19 @@ namespace JGeometry {
 
         void getEuler(TVec3< T >& rDest) const;
         void setEuler(T _x, T _y, T _z);
+        void setEuler(const TVec3< T >& rpy) {
+            setEuler(rpy.x, rpy.y, rpy.z);
+        }
         void setEulerDegree(T _x, T _y, T _z) {
             setEuler(_x * PI_180, _y * PI_180, _z * PI_180);
         }
         void setEulerZ(T _z) {
-            f32 new_z = sin(_z*0.5f);
-            f32 new_w = cos(_z*0.5f);
-            this->z = new_z;
+            f32 s = sin(_z * 0.5f);
+            f32 c = cos(_z * 0.5f);
             this->x = 0.0f;
             this->y = 0.0f;
-            this->w = new_w;
+            this->z = s;
+            this->w = c;
         };
 
         f32 getRotate(TVec3< T >& rAxis) {
@@ -1038,7 +1056,13 @@ namespace JGeometry {
         }
 
         /* Operators */
-        TQuat4< T >& operator=(const TQuat4< T >& rSrc);
+        TQuat4< T >& operator=(const TQuat4< T >& rSrc) {
+            this->x = rSrc.x;
+            this->y = rSrc.y;
+            this->z = rSrc.z;
+            this->w = rSrc.w;
+            return *this;
+        }
     };
 
 };  // namespace JGeometry

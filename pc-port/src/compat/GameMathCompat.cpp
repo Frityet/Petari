@@ -1,4 +1,5 @@
 #include "Game/Util/MathUtil.hpp"
+#include "JSystem/JMath/JMATrigonometric.hpp"
 
 #include <algorithm>
 #include <bit>
@@ -33,6 +34,31 @@ namespace {
 }  // namespace
 
 namespace MR {
+    f32 getConvergeVibrationValue(f32 x, f32 start, f32 end, f32 dampScale, f32 rate) {
+        f32 vibWeight = (x * x) * (x * x);
+        f32 t1 = 1.0f - x;
+        f32 convergeWeight = (t1 * t1) * (t1 * t1);
+        f32 dampRatio = dampScale * t1;
+
+        f32 vibration = JMASinRadian(PI * (x + rate * vibWeight));
+        return getInterpolateValue((1.0f - convergeWeight) + vibration * dampRatio, start, end);
+    }
+
+    f32 getReduceVibrationValue(f32 x, f32 time, f32 base, f32 amplitude, f32 freq) {
+        // FIXME: float swap
+        f32 vibMax = base + amplitude;
+
+        f32 vib = JMACosRadian(x * (1.0f / freq * PI));
+        f32 vibration = (amplitude * 0.5f) * (vib - 1.0f);
+        if (x >= time) {
+            return vibration + vibMax;
+        } else {
+            f32 t = x - time;
+            f32 reduce = (1.0f - vibMax) * (1.0f / (time * time)) * t * t;
+            return vibration + (vibMax + reduce);
+        }
+    }
+
     f32 normalizeAngleAbs(f32 angle) {
         auto normalized = std::fmod(angle, 2.0F * std::numbers::pi_v<f32>);
         if (normalized < 0.0F) {

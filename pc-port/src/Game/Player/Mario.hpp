@@ -56,6 +56,11 @@ struct SoundList;
 
 class Mario : public MarioModule {
 public:
+    enum SeVersion {
+        SeVersion_NORMAL = 0,
+        SeVersion_DARK = 1,
+    };
+
     typedef bool (Mario::*Task)(u32);
     Mario(MarioActor*);
 
@@ -70,13 +75,21 @@ public:
     void doExtraServices();
     bool isEnableCheckGround() NO_INLINE;
     void setGroundNorm(const TVec3f&);
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
     void checkForceGrounding();
+#else  // SMGPC_RETAIL_SOURCE
+    bool checkForceGrounding();
+#endif  // SMGPC_PC_DIVERGENCE
     void updateGroundInfo();
     void fixHeadFrontVecByGravity();
     bool isNonFixHeadVec() const;
     void createMtxDir(MtxPtr, const TVec3f&, const TVec3f&, const TVec3f&);
     void createDirectionMtx(MtxPtr);
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
     bool createCorrectionMtx(MtxPtr, TVec3f*);
+#else  // SMGPC_RETAIL_SOURCE
+    void createCorrectionMtx(MtxPtr, TVec3f*);
+#endif  // SMGPC_PC_DIVERGENCE
     void createAngleMtx(MtxPtr, bool);
     void slopeTiltHead(TVec3f*);
     void fixFrontVecByGravity();
@@ -96,7 +109,6 @@ public:
     void draw() const;
     void addTrans(const TVec3f&, const char*);
     void setTrans(const TVec3f&, const char*);
-    void setJumpVec(const TVec3f&);
     bool isEnableRush() const;
     bool isForceStopRush() const;
     bool isInvincible() const;
@@ -115,7 +127,7 @@ public:
     void touchWater();
 
     bool isBlendWaitGround() const;
-    void checkSpecialWaitAnimation();
+    bool checkSpecialWaitAnimation();
     void resetSleepTimer();
 
     void connectToClimb();
@@ -154,9 +166,13 @@ public:
     bool checkBaseTransPoint();
     bool checkHeadPoint();
     const TVec3f* calcShadowPos();
-    bool updateBinderInfo();
+    void updateBinderInfo();
     bool isThroughWall(const Triangle*) const;
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
     bool checkGround();
+#else  // SMGPC_RETAIL_SOURCE
+    void checkGround();
+#endif  // SMGPC_PC_DIVERGENCE
     CubeCameraArea* getCameraCubeCode() const;
     void updateCubeCode();
 
@@ -165,22 +181,22 @@ public:
     void decDamageAfterTimer();
     bool checkDamage();
     u16 getDamageAfterTimer() const;
-    bool damageFloorCheck();
-    bool damageWallCheck();
-    bool damagePolygonCheck(const Triangle*);
+    void damageFloorCheck();
+    void damageWallCheck();
+    void damagePolygonCheck(const Triangle*);
     bool flipLarge(const TVec3f&);
     bool isEnableAddDamage() const;
     bool damage(const TVec3f&);
-    bool doAbyssDamage();
+    void doAbyssDamage();
     void connectToFireRun();
-    bool doFireDanceWithInitialDamage(u8);
-    bool doFireObjHitWithInitialDamage();
-    bool doNeedleWithInitialDamage(u8);
-    bool doNeedleWithInitialDamage(const Triangle*);
-    bool doNeedle(const Triangle*);
-    bool doFireDance();
+    void doFireDanceWithInitialDamage(u8);
+    void doFireObjHitWithInitialDamage();
+    void doNeedleWithInitialDamage(u8);
+    void doNeedleWithInitialDamage(const Triangle*);
+    void doNeedle(const Triangle*);
+    void doFireDance();
     void checkKarikariDamage();
-    bool doDarkDamage();
+    void doDarkDamage();
     bool doParalyze();
     bool doFreeze();
     bool requestCrush();
@@ -199,7 +215,7 @@ public:
     void beeMarioOnGround();
     bool beeMarioOnAir();
 
-    bool blown(const TVec3f&);
+    void blown(const TVec3f&);
 
     bool taskOnEffectCheck(u32);
 
@@ -288,10 +304,10 @@ public:
     void endRabbitMode();
 
     bool checkWallJumpCode();
-    bool doSideStep();
+    void doSideStep();
 
     bool isSkatableFloor() const;
-    bool doSkate();
+    void doSkate();
 
     u32 initSoundTable(SoundList* list, u32);
     void initSound();
@@ -304,13 +320,13 @@ public:
     void playSoundTrampleCombo(u8);
     void setSeVersion(u32);
 
-    void checkOnimasu(const HitSensor*);
+    bool checkOnimasu(const HitSensor*);
     bool isDossun(const Triangle*) const;
     bool isStageCameraRotate2D() const;
     bool isNoWalkFallOnDossun() const;
     bool isNotReflectGlassGround() const;
     bool isUseAnotherMovingPolygon() const;
-    bool isUseFooSpecialGravity(const TVec3f&, TVec3f*) const;
+    bool isUseFoolSpecialGravity(const TVec3f&, TVec3f*) const;
     void updateOnimasu();
     bool isHeadPushEnableArea() const;
     bool isOnimasuBinderPressSkip() const;
@@ -322,7 +338,7 @@ public:
     void forceStopTornado();
     void startRotationTask(u32);
     void doSpinWallEffect();
-    bool taskOnRotation(u32);
+    void taskOnRotation(u32);
 
     void sendStateMsg(u32);
     bool updatePosture(MtxPtr);
@@ -340,23 +356,23 @@ public:
 
     bool isWalling() const;
     void checkWallStick();
-    u8 checkStickWallSide();
+    void checkStickWallSide();
     s32 checkStickFrontBack();
-    bool fixWallingPosition(bool);
-    void fixWallingDir(bool);
-    bool fixWallingTop();
-    bool checkWallFloorCode(u16) const;
+    void fixWallingPosition(bool);
+    void fixWallingDir();
+    void fixWallingTop();
+    void checkWallFloorCode(u16) const;
     bool checkWallCode(const char*, bool) const;
-    bool checkWallCodeNorm(u16, TVec3f*, bool) const;
+    void checkWallCodeNorm(u16, TVec3f*, bool) const;
     void setWallCancel();
     void keepDistFrontWall();
     bool isEnableStickWall();
-    bool fixWallingDist();
+    void fixWallingDist();
     bool isInhibitWall() const;
-    void tryWallPunch();
+    bool tryWallPunch();
 
     bool isHanging() const;
-    bool fixHangDir(const TVec3f&, TVec3f*);
+    void fixHangDir(const TVec3f&, TVec3f*);
     bool isEnableBackHang();
     bool isEnableSideHang();
     void checkHang();
@@ -374,7 +390,7 @@ public:
     bool isEnableSlopeMove() const;
     void moveSlopeSlide();
     void slopeMove();
-    void taskOnSlipTurn(u32);
+    bool taskOnSlipTurn(u32);
 
     void lockGroundCheck(void*, bool);
     void unlockGroundCheck(void*);
@@ -396,7 +412,7 @@ public:
     void updateOnPoison();
     void updateOnWater();
 
-    bool doRecovery();
+    void doRecovery();
 
     bool isSliderFloor() const NO_INLINE;
     bool checkSliderMode() const;
@@ -451,7 +467,7 @@ public:
     void startJumpDropSlide(const HitSensor*);
 
     void startTeresaMode();
-    bool getHitWallNorm(TVec3f*);
+    void getHitWallNorm(TVec3f*);
     void resetTeresaMode();
     void doTeresaReflection(const TVec3f&, bool);
     void startTeresaDisappear();
@@ -585,6 +601,24 @@ public:
         return mPrevDrawStates;
     }
 
+    inline void setJumpVec(const TVec3f& rVec) {
+        mJumpVec = rVec;
+    }
+
+    inline void resetInline() {
+        _74C = 0.0f;
+        _750 = 0;
+        _754 = 0;
+    }
+
+    inline void set3BC(u16 val) {
+        _3BC = val;
+    }
+
+    inline void set41E(u16 val) {
+        _41E = val;
+    }
+
     union {
         /* 0x008 */ MovementStates mMovementStates;
         struct {
@@ -609,8 +643,13 @@ public:
         /* 0x01C */ DrawStates _1C;
         /* 0x01C */ u32 _1C_WORD;
     };
-    /* 0x020 */ u32 _20;
-    /* 0x024 */ u32 _24;
+    union {
+        /* 0x020 */ MovementStates _20;
+        struct {
+            /* 0x20 */ u32 _20_LOW_WORD;
+            /* 0x24 */ u32 _20_HIGH_WORD;
+        };
+    };
     /* 0x028 */ u32 _28;
     /* 0x02C */ u32 _2C;
 
@@ -659,8 +698,8 @@ public:
     /* 0x25C */ TVec3f _25C;
     /* 0x268 */ TVec3f _268;
     /* 0x274 */ u8 _274;
-    /* 0x278 */ f32 _278;
-    /* 0x27C */ f32 _27C;
+    /* 0x278 */ f32 mWalkSpeed;
+    /* 0x27C */ f32 mPrevAnimFrame;
     /* 0x280 */ f32 _280;
     /* 0x284 */ TVec3f _284;
     /* 0x290 */ TVec3f _290;
@@ -796,13 +835,13 @@ public:
     // NOT FAKE
 
     /* 0x564 */ s32 _564;
-    /* 0x568 */ AreaObj* _568;
+    /* 0x568 */ u32 _568;
     /* 0x56C */ AreaObj* _56C;
     /* 0x570 */ u8 _570;
-    /* 0x574 */ void* _574;
+    /* 0x574 */ u32 _574;
     /* 0x578 */ u32 _578;
     /* 0x57C */ Triangle* _57C[0x20];
-    /* 0x5FC */ HitSensor* _5FC;
+    /* 0x5FC */ u32 _5FC;
     /* 0x600 */ TVec3f _600;
     /* 0x60C */ u8 _60C;
     /* 0x60D */ u8 _60D;  // bool?
@@ -814,17 +853,16 @@ public:
     /* 0x618 */ f32 _618;
     /* 0x61C */ f32 _61C;
     /* 0x620 */ f32 _620;
-    /* 0x624 */ u8 _624;
+    /* 0x624 */ bool _624;
     /* 0x628 */ TVec3f _628;
     /* 0x634 */ f32 _634;
 
     /* 0x638 */ u8 _638;
-    /* 0x63C */ TVec3f _63C;
-    /* 0x648 */ TVec3f _648;
-    /* 0x654 */ TVec3f _654;
+    /* 0x63C */ TVec3f mSide2D;
+    /* 0x648 */ TVec3f mUp2D;
+    /* 0x654 */ TVec3f mNormal2D;
     /* 0x660 */ TVec3f _660;
-
-    /* 0x66C */ u8 _66C;
+    /* 0x66C */ bool _66C;
     /* 0x670 */ TVec3f _670;
     /* 0x67C */ TVec3f _67C;
 
@@ -835,7 +873,8 @@ public:
     /* 0x6AD */ u8 _6AD;
     /* 0x6B0 */ TVec3f _6B0;
     /* 0x6BC */ TVec3f _6BC;
-    /* 0x6C8 */ TVec2f _6C8;
+    /* 0x6C8 */ f32 _6C8;
+    /* 0x6CC */ f32 _6CC;
     /* 0x6D0 */ TVec3f _6D0;
     /* 0x6DC */ TVec3f _6DC;
     /* 0x6E8 */ TVec3f _6E8;
@@ -843,7 +882,7 @@ public:
     /* 0x700 */ TVec3f _700;
     /* 0x70C */ TVec3f _70C;
     /* 0x718 */ f32 _718;
-    /* 0x71C */ u8 _71C;
+    /* 0x71C */ u8 mTargetWalkSpeedIndex;
     /* 0x71D */ u8 _71D;
     /* 0x71E */ u8 _71E;
     /* 0x71F */ u8 _71F;
@@ -851,12 +890,12 @@ public:
     /* 0x724 */ const char* _724;
     /* 0x728 */ const char* _728;
     /* 0x72C */ f32 _72C;
-    /* 0x730 */ u32 _730;
-    /* 0x734 */ u8 _734;
-    /* 0x735 */ u8 _735;
+    /* 0x730 */ HitSensor* _730;
+    /* 0x734 */ u8 mIceAnimFoot;
+    /* 0x735 */ u8 mSinkTimer;
     /* 0x738 */ f32 _738;
     /* 0x73C */ TVec3f _73C;
-    /* 0x748 */ u8 _748;
+    /* 0x748 */ u8 mPoisonTimer;
     /* 0x74C */ f32 _74C;
     /* 0x750 */ u32 _750;
     /* 0x754 */ u32 _754;
@@ -908,7 +947,7 @@ public:
     /* 0x88C */ MarioStep* mStep;
     /* 0x890 */ MarioBump* mBump;
     /* 0x894 */ MarioMagic* mMagic;
-    /* 0x898 */ u8 _898;
+    /* 0x898 */ bool _898;
     /* 0x89C */ MarioFpView* mFpView;
     /* 0x8A0 */ MarioMove* mMove;
     /* 0x8A4 */ TVec3f _8A4;

@@ -97,5 +97,5 @@ namespace MR {
     void addBrightObj(BrightObjBase* brightObj);
     void removeBrightObj(BrightObjBase* brightObj) noexcept;
     void setLensFlareDrawSyncToken();
-    u16 getLensFlareDrawSyncTokenIndex();
+    u32 getLensFlareDrawSyncTokenIndex();
 }  // namespace MR

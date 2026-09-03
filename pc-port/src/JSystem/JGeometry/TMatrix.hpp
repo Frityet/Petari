@@ -180,6 +180,11 @@ namespace JGeometry {
             getEulerXYZ(destination);
         }
 
+        void getEulerDegree(TVec3f &destination) const {
+            getEulerXYZ(destination);
+            destination.scale(180.0F / 3.1415927F);
+        }
+
         void mult33(const TVec3f &source, TVec3f &destination) const {
             const f32 sourceX = source.x;
             const f32 sourceY = source.y;

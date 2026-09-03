@@ -1,6 +1,4 @@
 #include "Game/Player/MarioClimb.hpp"
-#include "Game/LiveActor/Nerve.hpp"
-#include "Game/Player/Mario.hpp"
 #include "Game/Player/MarioActor.hpp"
 
 void Mario::connectToClimb() {
@@ -8,22 +6,22 @@ void Mario::connectToClimb() {
     changeStatus(mClimb);
 }
 
-MarioClimb::MarioClimb(MarioActor* pActor) : MarioState(pActor, MarioStatus_Climb), _12(0) {
+MarioClimb::MarioClimb(MarioActor* pActor) : MarioState(pActor, MarioStatus_Climb), mTimer() {
 }
 
 bool MarioClimb::update() {
-    if (_12 < 15 && checkTrgA()) {
+    if (mTimer < 15 && checkTrgA()) {
         getPlayer()->tryJump();
         return false;
     }
 
-    if (_12 != 0) {
-        --_12;
+    if (mTimer != 0) {
+        mTimer--;
     }
 
     addVelocity(getFrontVec(), 6.0f);
 
-    if (_12 == 0) {
+    if (mTimer == 0) {
         return false;
     }
 
@@ -34,37 +32,22 @@ bool MarioClimb::start() {
     changeAnimation("匍匐前進", "匍匐前進");
 
     if (mActor->_468 != 0) {
-        changeAnimationUpper("ひろいウエイト", static_cast<const char*>(nullptr));
+        changeAnimationUpper("ひろいウエイト", nullptr);
     }
 
-    _12 = 15;
+    mTimer = 15;
     return true;
 }
 
 bool MarioClimb::close() {
-    getPlayer()->_278 = getStickP();
+    getPlayer()->mWalkSpeed = getStickP();
 
-    if (getPlayer()->mMovementStates._1) {
+    if (getPlayer()->getMovementStates()._1) {
         stopAnimation("匍匐前進", "基本");
-    }
-    else {
+    } else {
         stopAnimation("匍匐前進", "落下");
-        Mario* pPlayer = getPlayer();
-        pPlayer->_3BC = 8;
+        getPlayer()->set3BC(8);
     }
 
     return true;
 }
-
-namespace NrvMarioActor {
-    INIT_NERVE(MarioActorNrvWait);
-    INIT_NERVE(MarioActorNrvGameOver);
-    INIT_NERVE(MarioActorNrvGameOverAbyss);
-    INIT_NERVE(MarioActorNrvGameOverAbyss2);
-    INIT_NERVE(MarioActorNrvGameOverFire);
-    INIT_NERVE(MarioActorNrvGameOverBlackHole);
-    INIT_NERVE(MarioActorNrvGameOverNonStop);
-    INIT_NERVE(MarioActorNrvGameOverSink);
-    INIT_NERVE(MarioActorNrvTimeWait);
-    INIT_NERVE(MarioActorNrvNoRush);
-};  // namespace NrvMarioActor

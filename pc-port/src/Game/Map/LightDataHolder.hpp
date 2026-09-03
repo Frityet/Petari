@@ -52,6 +52,10 @@ public:
 
     void initLightData();
 
+    AreaLightInfo* getLightInfo(s32 index) const {
+        return &mLights[index];
+    }
+
     AreaLightInfo* findAreaLight(const char*) const;
     const char* getDefaultAreaLightName() const;
     s32 getDefaultStepInterpolate() const;

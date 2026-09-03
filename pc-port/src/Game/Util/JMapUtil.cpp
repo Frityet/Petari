@@ -435,15 +435,14 @@ namespace MR {
         return count;
     }
 
-    const char* getChildObjName(const char** pDest, const JMapInfoIter& rIter, int index) {
+    void getChildObjName(const char** pDest, const JMapInfoIter& rIter, int index) {
         if (pDest == nullptr) {
-            return nullptr;
+            return;
         }
 
         *pDest = nullptr;
         const auto iter = child_obj_iter(rIter, index);
         (void)getObjectName(pDest, iter);
-        return *pDest;
     }
 
     void initChildObj(NameObj* pObj, const JMapInfoIter& rIter, int index) {

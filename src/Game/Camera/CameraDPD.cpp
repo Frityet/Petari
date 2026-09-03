@@ -23,13 +23,14 @@ namespace {
 };  // namespace
 
 CameraDPD::CameraDPD(const char* pName)
-    : Camera(pName), mCorePadDistToDisplay(), mRealPointPos(0.0f, 0.0f), mBlendPointPos(0.0f, 0.0f), mResetPointingPos(true), mCameraState(), mDist(),
-      mFovy(40.0f), mAngleXRange(PI / 2.0f), mAngleYRange(PI / 2.0f), mRotate(), mSpeedBlendRate(0.05f), mBlendFriction(0.99f), _B4(), _B8() {
+    : Camera(pName), mCorePadDistToDisplay(), mRealPointPos(0.0f, 0.0f), mBlendPointPos(0.0f, 0.0f), mResetPointingPos(true), mCameraType(), mDist(),
+      mFovy(40.0f), mAngleXRange(PI / 2.0f), mAngleYRange(PI / 2.0f), mAngleX(), mSpeedBlendRate(0.05f), mBlendFriction(0.99f), mIsVertical(),
+      mAngleYMin() {
     mMtx.identity();
 }
 
 void CameraDPD::reset() {
-    if (mCameraState == CameraState_0) {
+    if (mCameraType == CameraType_FixedPos) {
         CameraLocalUtil::setPos(this, CameraLocalUtil::getPos(mCameraMan));
         TVec3f pos = (CameraLocalUtil::getTarget(this)->getPosition() + TVec3f(0.0f, 100.0f, 0.0f));
         TVec3f front = pos - CameraLocalUtil::getPos(this);
@@ -42,7 +43,7 @@ void CameraDPD::reset() {
         mMtx.setXDir(side);
         mMtx.setYDir(up);
         mMtx.setZDir(front);
-    } else if (mCameraState == CameraState_2) {
+    } else if (mCameraType == CameraType_FollowWorldPos) {
         TVec3f worldPos;
         worldPos.set(*MR::getStarPointerWorldPosUsingDepth(WPAD_CHAN0));
         TVec3f basePos = CameraLocalUtil::getTarget(this)->getPosition() + CameraLocalUtil::getTarget(this)->getUpVec() * mDist;
@@ -79,13 +80,13 @@ void CameraDPD::reset() {
 }
 
 CameraTargetObj* CameraDPD::calc() {
-    if (mCameraState == CameraState_1) {
+    if (mCameraType == CameraType_UpdateWithTarget) {
         mMtx.identity();
         mMtx.setXDir(CameraLocalUtil::getTarget(this)->getSideVec());
         mMtx.setYDir(CameraLocalUtil::getTarget(this)->getUpVec());
         mMtx.setZDir(CameraLocalUtil::getTarget(this)->getFrontVec());
         CameraLocalUtil::setPos(this, CameraLocalUtil::getTarget(this)->getPosition() + CameraLocalUtil::getTarget(this)->getUpVec() * mDist);
-    } else if (mCameraState == CameraState_2) {
+    } else if (mCameraType == CameraType_FollowWorldPos) {
         CameraLocalUtil::setPos(this, CameraLocalUtil::getTarget(this)->getPosition() + CameraLocalUtil::getTarget(this)->getUpVec() * mDist);
     }
 
@@ -101,7 +102,7 @@ CameraTargetObj* CameraDPD::calc() {
 
     if (MR::isCorePadPointInScreen(WPAD_CHAN0)) {
         mRealPointPos = mRealPointPos * 0.9f + pointPos * 0.1f;
-        if (mCameraState != CameraState_2) {
+        if (mCameraType != CameraType_FollowWorldPos) {
             if (MR::testSubPadTriggerZ(WPAD_CHAN0)) {
                 mCorePadDistToDisplay = MR::getCorePadDistanceToDisplay(WPAD_CHAN0);
             }
@@ -122,7 +123,7 @@ CameraTargetObj* CameraDPD::calc() {
     t *= mBlendFriction;
     mBlendPointPos = mBlendPointPos * t + pointPos * (1.0f - t);
 
-    if (mCameraState != CameraState_2) {
+    if (mCameraType != CameraType_FollowWorldPos) {
         if (!MR::testSubPadButtonZ(WPAD_CHAN0)) {
             mFovy = CameraLocalUtil::getFovy(this) * ::sFovyBlendRate + 38.0f;
         }
@@ -131,13 +132,13 @@ CameraTargetObj* CameraDPD::calc() {
 
     TPos3f panYMtx;
     panYMtx.identity();
-    if (_B4) {
-        f32 f1 = mBlendPointPos.y * MR::max(mAngleYRange, _B8);
+    if (mIsVertical) {
+        f32 f1 = mBlendPointPos.y * MR::max(mAngleYRange, mAngleYMin);
         f32 f2;
-        if (mAngleYRange < _B8) {
+        if (mAngleYRange < mAngleYMin) {
             f2 = f1 > mAngleYRange ? mAngleYRange : f1;
         } else {
-            f2 = f1 < -_B8 ? -_B8 : f1;
+            f2 = f1 < -mAngleYMin ? -mAngleYMin : f1;
         }
     }
     panYMtx.makeRotate(TVec3f(1.0f, 0.0f, 0.0f), mBlendPointPos.y * mAngleYRange);
@@ -148,7 +149,7 @@ CameraTargetObj* CameraDPD::calc() {
 
     TPos3f mtx3;
     mtx3.identity();
-    mtx3.makeRotate(TVec3f(1.0f, 0.0f, 0.0f), -mRotate);
+    mtx3.makeRotate(TVec3f(1.0f, 0.0f, 0.0f), -mAngleX);
 
     TPos3f rotMtx;
     rotMtx.concat(panXMtx, panYMtx);

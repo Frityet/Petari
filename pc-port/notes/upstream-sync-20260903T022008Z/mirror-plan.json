@@ -1,0 +1,1201 @@
+[
+  {
+    "source": "include/Game/AreaObj/AreaObj.hpp",
+    "port": "pc-port/src/Game/AreaObj/AreaObj.hpp",
+    "action": "exact",
+    "source_sha256": "d2dfa58a58019af745424c966fd34f526b209d1788688aadfe0ba0724a33adf2",
+    "port_sha256": "d2dfa58a58019af745424c966fd34f526b209d1788688aadfe0ba0724a33adf2"
+  },
+  {
+    "source": "include/Game/AreaObj/AreaObjContainer.hpp",
+    "port": "pc-port/src/Game/AreaObj/AreaObjContainer.hpp",
+    "action": "exact",
+    "source_sha256": "480d749a2d8b24f759ae6d05733a4a048083a20db1e5894475d8be2352813532",
+    "port_sha256": "480d749a2d8b24f759ae6d05733a4a048083a20db1e5894475d8be2352813532"
+  },
+  {
+    "source": "include/Game/AreaObj/CubeCamera.hpp",
+    "port": "pc-port/src/Game/AreaObj/CubeCamera.hpp",
+    "action": "exact",
+    "source_sha256": "b8bf7d34ef8c4d27731ad80fd5a1355103447d3d2fa6f3d1c358d32ebeb6d864",
+    "port_sha256": "b8bf7d34ef8c4d27731ad80fd5a1355103447d3d2fa6f3d1c358d32ebeb6d864"
+  },
+  {
+    "source": "include/Game/AudioLib/AudBgmMgr.hpp",
+    "port": "pc-port/src/Game/AudioLib/AudBgmMgr.hpp",
+    "action": "exact",
+    "source_sha256": "b4189149ebbd4a2e7f11e9bb3eec26b53865c8c07c6d1d1621f7fb53678a3140",
+    "port_sha256": "b4189149ebbd4a2e7f11e9bb3eec26b53865c8c07c6d1d1621f7fb53678a3140"
+  },
+  {
+    "source": "include/Game/AudioLib/AudBgmSetting.hpp",
+    "port": "pc-port/src/Game/AudioLib/AudBgmSetting.hpp",
+    "action": "exact",
+    "source_sha256": "92e54d61afd5f6cac786a7c1d6cc77d557894c6a76cef5c155dd270711731ec8",
+    "port_sha256": "92e54d61afd5f6cac786a7c1d6cc77d557894c6a76cef5c155dd270711731ec8"
+  },
+  {
+    "source": "include/Game/AudioLib/AudBgmVolumeController.hpp",
+    "port": "pc-port/src/Game/AudioLib/AudBgmVolumeController.hpp",
+    "action": "exact",
+    "source_sha256": "3240471654d600bb471c280eb59251733905dcba05d7a6dae22eb4ae07dba057",
+    "port_sha256": "3240471654d600bb471c280eb59251733905dcba05d7a6dae22eb4ae07dba057"
+  },
+  {
+    "source": "include/Game/AudioLib/AudFader.hpp",
+    "port": "pc-port/src/Game/AudioLib/AudFader.hpp",
+    "action": "exact",
+    "source_sha256": "31572743acf3eb78fee8f0844ce0e7b1cf6eaf17c7fcfdddce66dcc3a5021e83",
+    "port_sha256": "31572743acf3eb78fee8f0844ce0e7b1cf6eaf17c7fcfdddce66dcc3a5021e83"
+  },
+  {
+    "source": "include/Game/LiveActor/ActorLightCtrl.hpp",
+    "port": "pc-port/src/Game/LiveActor/ActorLightCtrl.hpp",
+    "action": "adapted-host",
+    "source_sha256": "e1b59bf25566a6da9f9c9cdf67f8eba47ef206eca73f905f46a99c0757863f85",
+    "port_sha256": "d200267a8f978f3c250bddf41b288f69dee883813ff8caa6bb7342ac5bd6b3d5",
+    "reason": "Merge upstream changes while retaining host light sampling and renderer integration."
+  },
+  {
+    "source": "include/Game/LiveActor/ActorStateBase.hpp",
+    "port": "pc-port/src/Game/LiveActor/ActorStateBase.hpp",
+    "action": "exact",
+    "source_sha256": "ad0e5afc5278c12f763ca82b0e46baa4da719bb7c5c33f927b06a4797b1fc1fb",
+    "port_sha256": "ad0e5afc5278c12f763ca82b0e46baa4da719bb7c5c33f927b06a4797b1fc1fb"
+  },
+  {
+    "source": "include/Game/LiveActor/Binder.hpp",
+    "port": "pc-port/src/Game/LiveActor/Binder.hpp",
+    "action": "adapted-host",
+    "source_sha256": "3191d07ee6b5cb8f4bba89ecb6631f031cb14f4bece658ab593fbeb748a1a3d5",
+    "port_sha256": "4e273e6e40c11353359e5b2fbeab5217bbb12d197a121ee74871899b6e913fa4",
+    "reason": "Adopt const HitInfo return type; retain host collision storage and lifetime management."
+  },
+  {
+    "source": "include/Game/LiveActor/HitSensor.hpp",
+    "port": "pc-port/src/Game/LiveActor/HitSensor.hpp",
+    "action": "exact",
+    "source_sha256": "410bba2a91e09a56c2efc4d72c5ba347cb8c628b277d54302d2a0f3eb5b89c26",
+    "port_sha256": "410bba2a91e09a56c2efc4d72c5ba347cb8c628b277d54302d2a0f3eb5b89c26"
+  },
+  {
+    "source": "include/Game/LiveActor/LiveActor.hpp",
+    "port": "pc-port/src/Game/LiveActor/LiveActor.hpp",
+    "action": "adapted-host",
+    "source_sha256": "a1d86424ebe5b83b4f9fe82349cdf9e0c36e78909587e9c67fefd7e3f6820799",
+    "port_sha256": "d1a194857afc795813fedf7938f86ad5de2d6f282597bb7a15b48019f43eb1fc",
+    "reason": "Merge upstream field/interface changes while retaining native actor ownership and lifecycle hooks."
+  },
+  {
+    "source": "include/Game/LiveActor/MaterialCtrl.hpp",
+    "port": "pc-port/src/Game/LiveActor/MaterialCtrl.hpp",
+    "action": "exact",
+    "source_sha256": "c34cf3f3327c9893f8a03550604ef33b0fe8d691f5ec82a470a23a05a4caf1a9",
+    "port_sha256": "c34cf3f3327c9893f8a03550604ef33b0fe8d691f5ec82a470a23a05a4caf1a9"
+  },
+  {
+    "source": "include/Game/Map/FileSelectCameraController.hpp",
+    "port": "pc-port/src/Game/Map/FileSelectCameraController.hpp",
+    "action": "exact",
+    "source_sha256": "3ef7bcc9b30772d2c6d9e535bf5c0fad3a8c4d8fa3eea7e28680d2b79bd3bcfe",
+    "port_sha256": "3ef7bcc9b30772d2c6d9e535bf5c0fad3a8c4d8fa3eea7e28680d2b79bd3bcfe"
+  },
+  {
+    "source": "include/Game/Map/HitInfo.hpp",
+    "port": "pc-port/src/Game/Map/HitInfo.hpp",
+    "action": "exact",
+    "source_sha256": "f767ba9097cb11bc27a93202a4080ea195bd82bb71bba54fd45946cda176a47f",
+    "port_sha256": "f767ba9097cb11bc27a93202a4080ea195bd82bb71bba54fd45946cda176a47f"
+  },
+  {
+    "source": "include/Game/Map/LightDataHolder.hpp",
+    "port": "pc-port/src/Game/Map/LightDataHolder.hpp",
+    "action": "adapted-host",
+    "source_sha256": "d2ad1c4ef90a7fbbfe7ee77ef0c2aafca900e379dbfbf7e4b193b3bf7dee8a77",
+    "port_sha256": "03930d10251b828f54d9b84b015dc088f59cf59d3f0867d2175af0dbec8e302c",
+    "reason": "Add upstream getLightInfo; retain native archive-backed light data storage."
+  },
+  {
+    "source": "include/Game/Map/LightDirector.hpp",
+    "port": "pc-port/src/Game/Map/LightDirector.hpp",
+    "action": "adapted-host",
+    "source_sha256": "b5b7688db7e40ed20f23402da46f85719d290fee686287a04ff3e4562ac15f73",
+    "port_sha256": "9ebbb8a0b61c4cfb6ee15266dd4115072cc6b18efc0e9ae4e097f52d3dede635",
+    "reason": "Adopt upstream member names and LightAreaHolder type; retain scene-owned host storage."
+  },
+  {
+    "source": "include/Game/Map/LightFunction.hpp",
+    "port": "pc-port/src/Game/Map/LightFunction.hpp",
+    "action": "retained-host",
+    "source_sha256": "a748ceca35b96d4c5facb93825c135cb9343e28f1f341ff97c0e67e25ef02a3e",
+    "port_sha256": "872b54f4f70bbc555c23f0d62efe958954a079e63fd8a11a166254b9837ced10",
+    "reason": "Retain native light-data loading, scene ownership and rendering; wholesale retail replacement depends on Wii light/GX providers."
+  },
+  {
+    "source": "include/Game/Map/LightPointCtrl.hpp",
+    "port": "pc-port/src/Game/Map/LightPointCtrl.hpp",
+    "action": "retained-host",
+    "source_sha256": "92162c02246e74701f5575638077174a9f4aca3d31232ac6244d1296a4d506a5",
+    "port_sha256": "3aeb8d92e3aedd9656c2781669d861b961d7ed3e7241851ca1afa845a0489e2d",
+    "reason": "Retain native light-data loading, scene ownership and rendering; wholesale retail replacement depends on Wii light/GX providers."
+  },
+  {
+    "source": "include/Game/Map/SphereSelector.hpp",
+    "port": "pc-port/src/Game/Map/SphereSelector.hpp",
+    "action": "exact",
+    "source_sha256": "b1a4874a199e104b146aa618a3e4f244a4819b18f03135d5165fd19b7f0f2d52",
+    "port_sha256": "b1a4874a199e104b146aa618a3e4f244a4819b18f03135d5165fd19b7f0f2d52"
+  },
+  {
+    "source": "include/Game/Map/SphereSelectorHandle.hpp",
+    "port": "pc-port/src/Game/Map/SphereSelectorHandle.hpp",
+    "action": "exact",
+    "source_sha256": "2c233621b55d7911eafc26538238301939782f4a7d92091ed40b4380d15eb334",
+    "port_sha256": "2c233621b55d7911eafc26538238301939782f4a7d92091ed40b4380d15eb334"
+  },
+  {
+    "source": "include/Game/MapObj/BrightObj.hpp",
+    "port": "pc-port/src/Game/MapObj/BrightObj.hpp",
+    "action": "retained-host",
+    "source_sha256": "67f2a30dbbfa9e68b25f7f1d709f41d2f9b3b6e47d5f3f00fb2e6e707b0e5b4b",
+    "port_sha256": "e22a2463c9432418e470125779c1b8e33e8bfc5f8c5bb2828ba139095ddd158c",
+    "reason": "Retain native draw/visibility provider; retail implementation depends on Wii GX/draw-sync services."
+  },
+  {
+    "source": "include/Game/MapObj/InvisiblePolygonObj.hpp",
+    "port": "pc-port/src/Game/MapObj/InvisiblePolygonObj.hpp",
+    "action": "exact",
+    "source_sha256": "80298f317b91d7ae733d815d692537e7f159ecfddd7c68d67a12298bcd137e77",
+    "port_sha256": "80298f317b91d7ae733d815d692537e7f159ecfddd7c68d67a12298bcd137e77"
+  },
+  {
+    "source": "include/Game/NPC/TalkMessageCtrl.hpp",
+    "port": "pc-port/src/Game/NPC/TalkMessageCtrl.hpp",
+    "action": "exact",
+    "source_sha256": "31b86f98e514c65ad1c6cf601a36ee473732aa5ccfa339668fca22511a322da8",
+    "port_sha256": "31b86f98e514c65ad1c6cf601a36ee473732aa5ccfa339668fca22511a322da8"
+  },
+  {
+    "source": "include/Game/NameObj/NameObj.hpp",
+    "port": "pc-port/src/Game/NameObj/NameObj.hpp",
+    "action": "exact",
+    "source_sha256": "a6d2148a0635f7fe6e93cdfb0f7213bd4623221f68ca14267d2f03871554f52d",
+    "port_sha256": "a6d2148a0635f7fe6e93cdfb0f7213bd4623221f68ca14267d2f03871554f52d"
+  },
+  {
+    "source": "include/Game/Player/JetTurtleShadow.hpp",
+    "port": "pc-port/src/Game/Player/JetTurtleShadow.hpp",
+    "action": "exact",
+    "source_sha256": "efe17859eeb5886c49cabd5c9d83870446f422291f6b63737e27e35f9fdd5aac",
+    "port_sha256": "efe17859eeb5886c49cabd5c9d83870446f422291f6b63737e27e35f9fdd5aac"
+  },
+  {
+    "source": "include/Game/Player/Mario.hpp",
+    "port": "pc-port/src/Game/Player/Mario.hpp",
+    "action": "guarded-retail-exact",
+    "source_sha256": "19c63c607f213205828a58fd50d5ea417bd53a541abe42288fffbbf871862379",
+    "port_sha256": "3c0f48848ae461fc149fb842f576c30fec2f2a29f2fa521ed38fe9ef540cf133",
+    "reason": "Retain existing explicit TARGET_PC provider branches and synchronize the selected retail text exactly with the merged root."
+  },
+  {
+    "source": "include/Game/Player/MarioAccess.hpp",
+    "port": "pc-port/src/Game/Player/MarioAccess.hpp",
+    "action": "exact",
+    "source_sha256": "b9b73577222992ae298fb5f968da4d10da6123a16c0dbbe056a612911c8ec2bf",
+    "port_sha256": "b9b73577222992ae298fb5f968da4d10da6123a16c0dbbe056a612911c8ec2bf"
+  },
+  {
+    "source": "include/Game/Player/MarioActor.hpp",
+    "port": "pc-port/src/Game/Player/MarioActor.hpp",
+    "action": "guarded-retail-exact",
+    "source_sha256": "5cdeebb8ace4328af0f813e34aa0240381069c84183dc47642044aa97b0f5d4d",
+    "port_sha256": "c015b6944bd79077574f51cde1b3c6c30944492e1fbdbf26da3c707efb85a988",
+    "reason": "Retain existing explicit TARGET_PC provider branches and synchronize the selected retail text exactly with the merged root."
+  },
+  {
+    "source": "include/Game/Player/MarioAnimator.hpp",
+    "port": "pc-port/src/Game/Player/MarioAnimator.hpp",
+    "action": "exact",
+    "source_sha256": "4184c38ea0672e2d59eabbb0f6803ca0f0f548c0b7c329b80600f5f2a5885df6",
+    "port_sha256": "4184c38ea0672e2d59eabbb0f6803ca0f0f548c0b7c329b80600f5f2a5885df6"
+  },
+  {
+    "source": "include/Game/Player/MarioClimb.hpp",
+    "port": "pc-port/src/Game/Player/MarioClimb.hpp",
+    "action": "exact",
+    "source_sha256": "f09e2d5bd232008f4f30ba4bae61fe52d489350f01fa03e28a38b4d6088acca1",
+    "port_sha256": "f09e2d5bd232008f4f30ba4bae61fe52d489350f01fa03e28a38b4d6088acca1"
+  },
+  {
+    "source": "include/Game/Player/MarioCrush.hpp",
+    "port": "pc-port/src/Game/Player/MarioCrush.hpp",
+    "action": "exact",
+    "source_sha256": "0a87674f2bfc67a648303da9feb2bcecc380f85c81c2479f167ca90853a76da0",
+    "port_sha256": "0a87674f2bfc67a648303da9feb2bcecc380f85c81c2479f167ca90853a76da0"
+  },
+  {
+    "source": "include/Game/Player/MarioFreeze.hpp",
+    "port": "pc-port/src/Game/Player/MarioFreeze.hpp",
+    "action": "exact",
+    "source_sha256": "26539a103b4bdaf8a0a5c2c1ddd96f7525e049c2290b5ab5876636a0d440d033",
+    "port_sha256": "26539a103b4bdaf8a0a5c2c1ddd96f7525e049c2290b5ab5876636a0d440d033"
+  },
+  {
+    "source": "include/Game/Player/MarioFrontStep.hpp",
+    "port": "pc-port/src/Game/Player/MarioFrontStep.hpp",
+    "action": "exact",
+    "source_sha256": "a5bce15596e109a82b16e1d5c8d7c549a7842f01d38fe013ef929c896fc9d634",
+    "port_sha256": "a5bce15596e109a82b16e1d5c8d7c549a7842f01d38fe013ef929c896fc9d634"
+  },
+  {
+    "source": "include/Game/Player/MarioHang.hpp",
+    "port": "pc-port/src/Game/Player/MarioHang.hpp",
+    "action": "exact",
+    "source_sha256": "495a7ca468ba59b1a3a15da97908ce9e0d0af4739d437035b9064fa412db8b13",
+    "port_sha256": "495a7ca468ba59b1a3a15da97908ce9e0d0af4739d437035b9064fa412db8b13"
+  },
+  {
+    "source": "include/Game/Player/MarioMapCode.hpp",
+    "port": "pc-port/src/Game/Player/MarioMapCode.hpp",
+    "action": "exact",
+    "source_sha256": "c0c2ef7d9923b588c0f57b14b86f7f3a7935ec80f66ad4847a1797f77b4fb5a4",
+    "port_sha256": "c0c2ef7d9923b588c0f57b14b86f7f3a7935ec80f66ad4847a1797f77b4fb5a4"
+  },
+  {
+    "source": "include/Game/Player/MarioModule.hpp",
+    "port": "pc-port/src/Game/Player/MarioModule.hpp",
+    "action": "exact",
+    "source_sha256": "3cc5fdb89c584db8c08c4120e9aef6bc69196ac7fd16b3885ec62ef67562b37d",
+    "port_sha256": "3cc5fdb89c584db8c08c4120e9aef6bc69196ac7fd16b3885ec62ef67562b37d"
+  },
+  {
+    "source": "include/Game/Player/MarioMove.hpp",
+    "port": "pc-port/src/Game/Player/MarioMove.hpp",
+    "action": "exact",
+    "source_sha256": "95b35a70f0cbda80ef3e218ff0a6ad252c32a2e51cdaf611fae06629799a0ed9",
+    "port_sha256": "95b35a70f0cbda80ef3e218ff0a6ad252c32a2e51cdaf611fae06629799a0ed9"
+  },
+  {
+    "source": "include/Game/Player/MarioSearchLight.hpp",
+    "port": "pc-port/src/Game/Player/MarioSearchLight.hpp",
+    "action": "exact",
+    "source_sha256": "411268373ee309752fd82111822b748a59a0fb7b848ec5c59f40b93cb28c756b",
+    "port_sha256": "411268373ee309752fd82111822b748a59a0fb7b848ec5c59f40b93cb28c756b"
+  },
+  {
+    "source": "include/Game/Screen/IconAButton.hpp",
+    "port": "pc-port/src/Game/Screen/IconAButton.hpp",
+    "action": "exact",
+    "source_sha256": "918a3b4c04125a4b22397cc4585627075a7dad20d0dc8342beb5c31c4788240a",
+    "port_sha256": "918a3b4c04125a4b22397cc4585627075a7dad20d0dc8342beb5c31c4788240a"
+  },
+  {
+    "source": "include/Game/Screen/LensFlare.hpp",
+    "port": "pc-port/src/Game/Screen/LensFlare.hpp",
+    "action": "adapted-host",
+    "source_sha256": "30240b515d6672ed9cbab3ca366eb1f3c058d049fc1b5eeb913ab78bca87bf77",
+    "port_sha256": "286cb9584ebf242699f1861e20598c6fc7280518b15448847d069e4029e712ab",
+    "reason": "Adopt upstream u32 draw-sync token index; retain host flare component API."
+  },
+  {
+    "source": "include/Game/Util/ActorCameraUtil.hpp",
+    "port": "pc-port/src/Game/Util/ActorCameraUtil.hpp",
+    "action": "exact",
+    "source_sha256": "fd8f28bba7c201dcd8b4da45786e0390289b527b5d51d9db16e06a5355b237c7",
+    "port_sha256": "fd8f28bba7c201dcd8b4da45786e0390289b527b5d51d9db16e06a5355b237c7"
+  },
+  {
+    "source": "include/Game/Util/CameraUtil.hpp",
+    "port": "pc-port/src/Game/Util/CameraUtil.hpp",
+    "action": "exact",
+    "source_sha256": "0a269d5a9e38c5a23f147c7fd56f176390749429bf194eac60bb62d3b782e3a3",
+    "port_sha256": "0a269d5a9e38c5a23f147c7fd56f176390749429bf194eac60bb62d3b782e3a3"
+  },
+  {
+    "source": "include/Game/Util/MathUtil.hpp",
+    "port": "pc-port/src/Game/Util/MathUtil.hpp",
+    "action": "exact",
+    "source_sha256": "7c64b7fd41ec151d838d237d0767c24d5325aff836113003c6426694c6ae988e",
+    "port_sha256": "7c64b7fd41ec151d838d237d0767c24d5325aff836113003c6426694c6ae988e"
+  },
+  {
+    "source": "include/Game/Util/MemoryUtil.hpp",
+    "port": "pc-port/src/Game/Util/MemoryUtil.hpp",
+    "action": "exact",
+    "source_sha256": "2d5dc803bde514515c2b7ab1d99b913aac5e88ef09e4384387720def4f3ddcab",
+    "port_sha256": "2d5dc803bde514515c2b7ab1d99b913aac5e88ef09e4384387720def4f3ddcab"
+  },
+  {
+    "source": "include/Game/Util/ModelUtil.hpp",
+    "port": "pc-port/src/Game/Util/ModelUtil.hpp",
+    "action": "exact",
+    "source_sha256": "2aaa9e9c26be0d5b8439456564446dba33fe5e9bdc560fc34b663f4d8347d32e",
+    "port_sha256": "2aaa9e9c26be0d5b8439456564446dba33fe5e9bdc560fc34b663f4d8347d32e"
+  },
+  {
+    "source": "include/Game/Util/MtxUtil.hpp",
+    "port": "pc-port/src/Game/Util/MtxUtil.hpp",
+    "action": "exact",
+    "source_sha256": "328d512e07d565bedb855f0dca2df633b9b47dc54dbf3d4ef6ce4cf816d5cc2f",
+    "port_sha256": "328d512e07d565bedb855f0dca2df633b9b47dc54dbf3d4ef6ce4cf816d5cc2f"
+  },
+  {
+    "source": "include/Game/Util/NPCUtil.hpp",
+    "port": "pc-port/src/Game/Util/NPCUtil.hpp",
+    "action": "exact",
+    "source_sha256": "4a65f0b64a520dff726f544cc371e9c6a28f5057688ab98d79de04be3281763f",
+    "port_sha256": "4a65f0b64a520dff726f544cc371e9c6a28f5057688ab98d79de04be3281763f"
+  },
+  {
+    "source": "include/Game/Util/SceneUtil.hpp",
+    "port": "pc-port/src/Game/Util/SceneUtil.hpp",
+    "action": "exact",
+    "source_sha256": "baea88f74e5782d6692330f85402ff69c02e82cc17be44e066d1669a8b42bc83",
+    "port_sha256": "baea88f74e5782d6692330f85402ff69c02e82cc17be44e066d1669a8b42bc83"
+  },
+  {
+    "source": "include/Game/Util/ScreenUtil.hpp",
+    "port": "pc-port/src/Game/Util/ScreenUtil.hpp",
+    "action": "exact",
+    "source_sha256": "8223432473e3abaf870c2e670efdfb41bb6747e0e24f102f328e1591a336268d",
+    "port_sha256": "8223432473e3abaf870c2e670efdfb41bb6747e0e24f102f328e1591a336268d"
+  },
+  {
+    "source": "include/Game/Util/StarPointerUtil.hpp",
+    "port": "pc-port/src/Game/Util/StarPointerUtil.hpp",
+    "action": "retained-host",
+    "source_sha256": "2109742a8be4a0cdc49878da223327eaccd2ee1dfb0429c5edcf0119aac297f6",
+    "port_sha256": "28695a6305f69425d5ae4768fcec26848b9b335b899e5c49403558a0852d8e23",
+    "reason": "Retain native keyboard/mouse pointer provider; retail StarPointerDirector dependency is not ported."
+  },
+  {
+    "source": "include/Game/Util/TalkUtil.hpp",
+    "port": "pc-port/src/Game/Util/TalkUtil.hpp",
+    "action": "exact",
+    "source_sha256": "1ed675e3d3603fab331374a2f6c0ea9cd56c24a66ff11920972503e442c2b7b5",
+    "port_sha256": "1ed675e3d3603fab331374a2f6c0ea9cd56c24a66ff11920972503e442c2b7b5"
+  },
+  {
+    "source": "include/Game/Util/TriangleFilter.hpp",
+    "port": "pc-port/src/Game/Util/TriangleFilter.hpp",
+    "action": "exact",
+    "source_sha256": "415276f768efdd2703319d0b8c8557bd380ed11ad8756a0085be73c8a7c0aa56",
+    "port_sha256": "415276f768efdd2703319d0b8c8557bd380ed11ad8756a0085be73c8a7c0aa56"
+  },
+  {
+    "source": "include/math_types.hpp",
+    "port": "pc-port/src/math_types.hpp",
+    "action": "adapted-host",
+    "source_sha256": "48013847d499902b5a0e0e191c5c77f5cd1acfeab1b814869e8b7b5c467039b2",
+    "port_sha256": "83297d1e5e2edd09f15cb3ef75e7c31565f44b8c265fb42eeed6ce6ce73163e2",
+    "reason": "Add upstream HALF_PI_D; retain portable host trigonometric and type helpers."
+  },
+  {
+    "source": "libs/JSystem/include/JSystem/J3DGraphAnimator/J3DAnimation.hpp",
+    "port": "pc-port/src/JSystem/J3DGraphAnimator/J3DAnimation.hpp",
+    "action": "adapted-host",
+    "source_sha256": "2ca92cfb5277f9a1cd48b0ab9616ced1e7cb6075d3e778be281cb742267f16cc",
+    "port_sha256": "bace3819aad3eb6cf6fbdbafa34c8357b96e8c0e044232be0de591e2717df21c",
+    "reason": "Add upstream andState mask accessor; retain host frame controller implementation."
+  },
+  {
+    "source": "libs/JSystem/include/JSystem/JGeometry/TBox.hpp",
+    "port": "pc-port/src/JSystem/JGeometry/TBox.hpp",
+    "action": "adapted-host",
+    "source_sha256": "0e2f693dbd66c5febb5a1c1e91755e9893593dad02d01a0a301a72acb066bd94",
+    "port_sha256": "aa38f7c207066a8dd450dd5401d2107d984b05215e235ff70fee21d997bebcc4",
+    "reason": "Add upstream extend, zero, pad and center operations to portable geometry types."
+  },
+  {
+    "source": "libs/JSystem/include/JSystem/JGeometry/TMatrix.hpp",
+    "port": "pc-port/src/JSystem/JGeometry/TMatrix.hpp",
+    "action": "adapted-host",
+    "source_sha256": "d213b14961833747b3edeed7bacca5e8095c8796703fec0aebdc76229ba3b6ce",
+    "port_sha256": "c5f5de36db5cb2eebecdc9af442883b1c3ea5672cd2acf0703910f806ce25bb8",
+    "reason": "Add upstream Euler-degree accessor to portable matrix implementation."
+  },
+  {
+    "source": "libs/JSystem/include/JSystem/JGeometry/TVec.hpp",
+    "port": "pc-port/src/JSystem/JGeometry/TVec.hpp",
+    "action": "adapted-host",
+    "source_sha256": "48b2d0133e6a71e7cc883cda979ce8a2b3a04de95fedf373bb76c7af6c2fa9d3",
+    "port_sha256": "647c976dc4b6bb6219e60368ef5e0f5793a72fb0f0bc45debd1e16deb25b95ad",
+    "reason": "Add upstream distance, addition and orthogonal projection operations to portable vectors."
+  },
+  {
+    "source": "libs/JSystem/include/JSystem/JKernel/JKRArchive.hpp",
+    "port": "pc-port/src/JSystem/JKernel/JKRArchive.hpp",
+    "action": "retained-host",
+    "source_sha256": "1187068639ad37d1db2c9026ac70497123bf49edec8af43565a05d6d4bf66569",
+    "port_sha256": "d4bb8ae1fe8a64e36ebd5d8a33aabcd41cc419b2534c7298f4c4945bea1c4e3b",
+    "reason": "Retain host archive ownership, resource lookup and mounted-disc storage; upstream uses Wii heap/DVD lifecycle."
+  },
+  {
+    "source": "libs/JSystem/include/JSystem/JKernel/JKRMemArchive.hpp",
+    "port": "pc-port/src/JSystem/JKernel/JKRMemArchive.hpp",
+    "action": "retained-host",
+    "source_sha256": "d55a1e4c3ec48145cce0709d1078ee41635d31d0cc9e6b2b591bd939e046ef8a",
+    "port_sha256": "2db531de9354a30c986b56a6e873e62c05bc5bfb702cb46d30f04e0ef979d786",
+    "reason": "Retain host archive ownership, resource lookup and mounted-disc storage; upstream uses Wii heap/DVD lifecycle."
+  },
+  {
+    "source": "libs/RVL_SDK/include/revolution/gd/GDBase.h",
+    "port": "pc-port/src/revolution/gd/GDBase.h",
+    "action": "adapted-host",
+    "source_sha256": "29ef2a62e200ccc8cfdfef70e8db03cc9359bbdeb972fc18e4b65dce02126349",
+    "port_sha256": "75b2ef51e45aedb68896bd535fa214769930d8370ab176891a0c0a3d74e3fa43",
+    "reason": "Expose upstream GDTexCoord2f32 through Aurora display-list writes."
+  },
+  {
+    "source": "src/Game/AudioLib/AudBgmMgr.cpp",
+    "port": "pc-port/src/Game/AudioLib/AudBgmMgr.cpp",
+    "action": "exact",
+    "source_sha256": "589b8fb388e2f729cd30a3a28af57f515a4dfaaad33df764dc2d9e65d2c9c0c5",
+    "port_sha256": "589b8fb388e2f729cd30a3a28af57f515a4dfaaad33df764dc2d9e65d2c9c0c5"
+  },
+  {
+    "source": "src/Game/AudioLib/AudBgmSetting.cpp",
+    "port": "pc-port/src/Game/AudioLib/AudBgmSetting.cpp",
+    "action": "exact",
+    "source_sha256": "591ca147a41b8c5d619d3f60f9f829c0ea3614ee7aaeeb12ff3d51f57aa5ece5",
+    "port_sha256": "591ca147a41b8c5d619d3f60f9f829c0ea3614ee7aaeeb12ff3d51f57aa5ece5"
+  },
+  {
+    "source": "src/Game/Demo/PrologueDirector.cpp",
+    "port": "pc-port/src/Game/Demo/PrologueDirector.cpp",
+    "action": "exact",
+    "source_sha256": "49e002502ceddfe62fb291c40208ade1a4d3d1d4baba39c299c35ef4364b1d97",
+    "port_sha256": "49e002502ceddfe62fb291c40208ade1a4d3d1d4baba39c299c35ef4364b1d97"
+  },
+  {
+    "source": "src/Game/LiveActor/ActorLightCtrl.cpp",
+    "port": "pc-port/src/Game/LiveActor/ActorLightCtrl.cpp",
+    "action": "retained-host",
+    "source_sha256": "95f499293219fc5116fa559a545407cfa825f6297790f02781c24dc723aa38fb",
+    "port_sha256": "4dd4d037fe9032fad28fe51281372e7ed44594c8f0f6519017330817b115e0aa",
+    "reason": "Retain native light-data loading, scene ownership and rendering; wholesale retail replacement depends on Wii light/GX providers."
+  },
+  {
+    "source": "src/Game/LiveActor/LiveActor.cpp",
+    "port": "pc-port/src/Game/LiveActor/LiveActor.cpp",
+    "action": "retained-host",
+    "source_sha256": "d5c29c64ffa3e1a6014cb0b336bf1197d220dd273dd150569cd1de07395e5a04",
+    "port_sha256": "8a0ebe355d598a58026cd8e71bf4b4f0b378540c9c3209e4f0bff4fcecd57331",
+    "reason": "Retain native actor lifecycle, scene scheduler and runtime-service integration; wholesale retail replacement requires unported providers."
+  },
+  {
+    "source": "src/Game/Map/FileSelectCameraController.cpp",
+    "port": "pc-port/src/Game/Map/FileSelectCameraController.cpp",
+    "action": "exact",
+    "source_sha256": "6e063cd1976aa6774bc03acc94976d0cb30c54fcd2ce60df4ecd157eb727f7cb",
+    "port_sha256": "6e063cd1976aa6774bc03acc94976d0cb30c54fcd2ce60df4ecd157eb727f7cb"
+  },
+  {
+    "source": "src/Game/Map/LightDataHolder.cpp",
+    "port": "pc-port/src/Game/Map/LightDataHolder.cpp",
+    "action": "retained-host",
+    "source_sha256": "8d6bc4bdc050e6256ff293ba005415c3b828130b5f73c1d4ca0421a238be3a57",
+    "port_sha256": "b8ea3424c7ecaa7b1f50badde55a910fc8a5a120dddffb50f6b09cfc491f04af",
+    "reason": "Retain native light-data loading, scene ownership and rendering; wholesale retail replacement depends on Wii light/GX providers."
+  },
+  {
+    "source": "src/Game/Map/LightDirector.cpp",
+    "port": "pc-port/src/Game/Map/LightDirector.cpp",
+    "action": "adapted-host",
+    "source_sha256": "dbe516c0020ff9eadc7ef3a335c182c9cea078388c8ee639fd29156de36f78f5",
+    "port_sha256": "e46366fcca4474e39f8778e40533f77c6c80ed4db595995bace289c1ea56c0b4",
+    "reason": "Adopt upstream member names; retain native light registration and cleanup."
+  },
+  {
+    "source": "src/Game/Map/LightFunction.cpp",
+    "port": "pc-port/src/Game/Map/LightFunction.cpp",
+    "action": "retained-host",
+    "source_sha256": "812a76c64dd0a2704e82cbbceb05921c0debfde6b6be8d6de973611b976e346d",
+    "port_sha256": "01a5fc7dc2e2fb54549ab4a294cbbf1726e0d02a3dbcac9acf595539a1ef0fde",
+    "reason": "Retain native light-data loading, scene ownership and rendering; wholesale retail replacement depends on Wii light/GX providers."
+  },
+  {
+    "source": "src/Game/Map/SphereSelector.cpp",
+    "port": "pc-port/src/Game/Map/SphereSelector.cpp",
+    "action": "exact",
+    "source_sha256": "5b3d2f853348dcd4fe377c320c25a28573fd8887c60d1d77a7451568dba839f9",
+    "port_sha256": "5b3d2f853348dcd4fe377c320c25a28573fd8887c60d1d77a7451568dba839f9"
+  },
+  {
+    "source": "src/Game/Map/SphereSelectorHandle.cpp",
+    "port": "pc-port/src/Game/Map/SphereSelectorHandle.cpp",
+    "action": "exact",
+    "source_sha256": "864a4a6d3d5a71bd331a91e8f24ed39639d812ad845c4dbdbf730c33aca5f77c",
+    "port_sha256": "864a4a6d3d5a71bd331a91e8f24ed39639d812ad845c4dbdbf730c33aca5f77c"
+  },
+  {
+    "source": "src/Game/MapObj/BrightObj.cpp",
+    "port": "pc-port/src/Game/MapObj/BrightObj.cpp",
+    "action": "adapted-host",
+    "source_sha256": "7ca6f6acbe349d9c7dc285b7697023eb61f0d0ce81de7902c35e44d10e549069",
+    "port_sha256": "d7be7dda1f67698be59b29921d8f11463716a08fbd75938f226ed2229f8e353f",
+    "reason": "Adopt camera projection reference API; retain host visibility/renderer implementation."
+  },
+  {
+    "source": "src/Game/MapObj/InvisiblePolygonObj.cpp",
+    "port": "pc-port/src/Game/MapObj/InvisiblePolygonObj.cpp",
+    "action": "exact",
+    "source_sha256": "93434c9c7548accca379b0fac9bff2ac481a4670c66007a9e079666d221d68db",
+    "port_sha256": "93434c9c7548accca379b0fac9bff2ac481a4670c66007a9e079666d221d68db"
+  },
+  {
+    "source": "src/Game/MapObj/InvisiblePolygonObjGCapture.cpp",
+    "port": "pc-port/src/Game/MapObj/InvisiblePolygonObjGCapture.cpp",
+    "action": "exact",
+    "source_sha256": "348c7c549ecf92d9a152031055768433355b7740b6c80e62dc4b220648e08aa5",
+    "port_sha256": "348c7c549ecf92d9a152031055768433355b7740b6c80e62dc4b220648e08aa5"
+  },
+  {
+    "source": "src/Game/MapObj/StarPiece.cpp",
+    "port": "pc-port/src/Game/MapObj/StarPiece.cpp",
+    "action": "exact",
+    "source_sha256": "70ebab383d00a6d6c92c1ab17b8e43878a4a6507452f6484b6af214ae10c65dc",
+    "port_sha256": "70ebab383d00a6d6c92c1ab17b8e43878a4a6507452f6484b6af214ae10c65dc"
+  },
+  {
+    "source": "src/Game/NPC/NPCActor.cpp",
+    "port": "pc-port/src/Game/NPC/NPCActor.cpp",
+    "action": "exact",
+    "source_sha256": "e5e1b46a12e4880e772583b43aba4b542e0447ba6bbc9fd2704e47ab4ed6e33d",
+    "port_sha256": "e5e1b46a12e4880e772583b43aba4b542e0447ba6bbc9fd2704e47ab4ed6e33d"
+  },
+  {
+    "source": "src/Game/NameObj/NameObjFactory.cpp",
+    "port": "pc-port/src/Game/NameObj/NameObjFactory.cpp",
+    "action": "exact",
+    "source_sha256": "12966dfd43638790463f7c4afd70c933124c1d2cce61acd52662169cbcbfb110",
+    "port_sha256": "12966dfd43638790463f7c4afd70c933124c1d2cce61acd52662169cbcbfb110"
+  },
+  {
+    "source": "src/Game/Player/JetTurtleShadow.cpp",
+    "port": "pc-port/src/Game/Player/JetTurtleShadow.cpp",
+    "action": "exact",
+    "source_sha256": "2770c374f58521592f94a06dd193af1798b29663ecf600f92ad5ef05dc904b70",
+    "port_sha256": "2770c374f58521592f94a06dd193af1798b29663ecf600f92ad5ef05dc904b70"
+  },
+  {
+    "source": "src/Game/Player/Mario.cpp",
+    "port": "pc-port/src/Game/Player/Mario.cpp",
+    "action": "guarded-retail-exact",
+    "source_sha256": "004eab4ca89653135b53eb560616f28c58bdd19488947313eab75705ac3f9cd8",
+    "port_sha256": "0b150781fd2d5f015b2bec9f7e226fc0da45d1d8122a77f10055915569249b2c",
+    "reason": "Retain existing explicit TARGET_PC provider branches and synchronize the selected retail text exactly with the merged root."
+  },
+  {
+    "source": "src/Game/Player/Mario2D.cpp",
+    "port": "pc-port/src/Game/Player/Mario2D.cpp",
+    "action": "exact",
+    "source_sha256": "189c9aad289501467f7acd8c7c0094864d149b54e409921c01f7ff2b2d28b3a9",
+    "port_sha256": "189c9aad289501467f7acd8c7c0094864d149b54e409921c01f7ff2b2d28b3a9"
+  },
+  {
+    "source": "src/Game/Player/MarioAccess.cpp",
+    "port": "pc-port/src/Game/Player/MarioAccess.cpp",
+    "action": "exact",
+    "source_sha256": "e058d0f81e7258ae69fc14c541fafab79cfd383f9877d7f321dcbfbd8de26b2a",
+    "port_sha256": "e058d0f81e7258ae69fc14c541fafab79cfd383f9877d7f321dcbfbd8de26b2a"
+  },
+  {
+    "source": "src/Game/Player/MarioActor.cpp",
+    "port": "pc-port/src/Game/Player/MarioActor.cpp",
+    "action": "guarded-retail-exact",
+    "source_sha256": "ce9f677b4f8e56db672f67964e295d7bc1ca5cc964d5e303ed65e888f2e5ca30",
+    "port_sha256": "552809bcac78bd5a65acfe6efb70fcc0d3c764726700b4cd2da973b3477a609a",
+    "reason": "Retain existing explicit TARGET_PC provider branches and synchronize the selected retail text exactly with the merged root."
+  },
+  {
+    "source": "src/Game/Player/MarioActorCamera.cpp",
+    "port": "pc-port/src/Game/Player/MarioActorCamera.cpp",
+    "action": "exact",
+    "source_sha256": "07d975f685d028e51aa3d6e732e938923666432fc855473c976cc975cbf91be6",
+    "port_sha256": "07d975f685d028e51aa3d6e732e938923666432fc855473c976cc975cbf91be6"
+  },
+  {
+    "source": "src/Game/Player/MarioActorDraw.cpp",
+    "port": "pc-port/src/Game/Player/MarioActorDraw.cpp",
+    "action": "guarded-retail-exact",
+    "source_sha256": "87dc2560b221422ad351a67427ab7f8687b5afb50906308b15d1ab63e45eaebc",
+    "port_sha256": "a4888c394ab35437737fc6b779260f9175af1ebfd330725c4a143ab4464c56f2",
+    "reason": "Retain existing explicit TARGET_PC provider branches and synchronize the selected retail text exactly with the merged root."
+  },
+  {
+    "source": "src/Game/Player/MarioActorGameOver.cpp",
+    "port": "pc-port/src/Game/Player/MarioActorGameOver.cpp",
+    "action": "exact",
+    "source_sha256": "5bc907c72fef08fa66e2846c263ceea73e3de09a5dd8902b49c2d21ce2d00fa5",
+    "port_sha256": "5bc907c72fef08fa66e2846c263ceea73e3de09a5dd8902b49c2d21ce2d00fa5"
+  },
+  {
+    "source": "src/Game/Player/MarioActorGravity.cpp",
+    "port": "pc-port/src/Game/Player/MarioActorGravity.cpp",
+    "action": "exact",
+    "source_sha256": "04dd3675dd0b949ba2b1e9b597e4cd7a5673fba41bd108f7a1cbdae0528bd77f",
+    "port_sha256": "04dd3675dd0b949ba2b1e9b597e4cd7a5673fba41bd108f7a1cbdae0528bd77f"
+  },
+  {
+    "source": "src/Game/Player/MarioActorInit.cpp",
+    "port": "pc-port/src/Game/Player/MarioActorInit.cpp",
+    "action": "guarded-retail-exact",
+    "source_sha256": "9590436349fa8cb07d6acce3b41880036b2323db6fe67b3d0a2d40d8406ac0f3",
+    "port_sha256": "281dcc8c70a00488111e1c7b49d5f09d45e047e312356e838a54d1f5347afada",
+    "reason": "Retain existing explicit TARGET_PC provider branches and synchronize the selected retail text exactly with the merged root."
+  },
+  {
+    "source": "src/Game/Player/MarioActorMorph.cpp",
+    "port": "pc-port/src/Game/Player/MarioActorMorph.cpp",
+    "action": "exact",
+    "source_sha256": "53169b45b96a362f42cf34669673fe27b214a129faf813890ed6b519355e6863",
+    "port_sha256": "53169b45b96a362f42cf34669673fe27b214a129faf813890ed6b519355e6863"
+  },
+  {
+    "source": "src/Game/Player/MarioActorOffensiveMsg.cpp",
+    "port": "pc-port/src/Game/Player/MarioActorOffensiveMsg.cpp",
+    "action": "exact",
+    "source_sha256": "30e81e38914fcc9a1891592646b002d5febe50fe9eb9e4d656088596f1a4ad11",
+    "port_sha256": "30e81e38914fcc9a1891592646b002d5febe50fe9eb9e4d656088596f1a4ad11"
+  },
+  {
+    "source": "src/Game/Player/MarioActorParts.cpp",
+    "port": "pc-port/src/Game/Player/MarioActorParts.cpp",
+    "action": "exact",
+    "source_sha256": "bbde80c9d469b8cfa32c6572275e6a141ca7ece76de91efcfef562d6a2cf6d42",
+    "port_sha256": "bbde80c9d469b8cfa32c6572275e6a141ca7ece76de91efcfef562d6a2cf6d42"
+  },
+  {
+    "source": "src/Game/Player/MarioActorPunch.cpp",
+    "port": "pc-port/src/Game/Player/MarioActorPunch.cpp",
+    "action": "exact",
+    "source_sha256": "53fa0a6fb01cf197357f1e0ebbf6ed822b5e734d29308ce8352b83bbc2c240f4",
+    "port_sha256": "53fa0a6fb01cf197357f1e0ebbf6ed822b5e734d29308ce8352b83bbc2c240f4"
+  },
+  {
+    "source": "src/Game/Player/MarioActorRush.cpp",
+    "port": "pc-port/src/Game/Player/MarioActorRush.cpp",
+    "action": "exact",
+    "source_sha256": "5e71f10afbfca0b4b6f74f0d5dd7426a98d944137a9dd455344aa25ac019bd95",
+    "port_sha256": "5e71f10afbfca0b4b6f74f0d5dd7426a98d944137a9dd455344aa25ac019bd95"
+  },
+  {
+    "source": "src/Game/Player/MarioActorRushMsg.cpp",
+    "port": "pc-port/src/Game/Player/MarioActorRushMsg.cpp",
+    "action": "exact",
+    "source_sha256": "fd72573a3028faf0dd1d59901e2c0110dc409ce550df0aed32f82a82c883db61",
+    "port_sha256": "fd72573a3028faf0dd1d59901e2c0110dc409ce550df0aed32f82a82c883db61"
+  },
+  {
+    "source": "src/Game/Player/MarioActorShadow.cpp",
+    "port": "pc-port/src/Game/Player/MarioActorShadow.cpp",
+    "action": "exact",
+    "source_sha256": "85e7f7c00d57b56f74f3042202dfdf28b38c98929eb0ddb523994e9e957d9a47",
+    "port_sha256": "85e7f7c00d57b56f74f3042202dfdf28b38c98929eb0ddb523994e9e957d9a47"
+  },
+  {
+    "source": "src/Game/Player/MarioActorSpecialDraw.cpp",
+    "port": "pc-port/src/Game/Player/MarioActorSpecialDraw.cpp",
+    "action": "exact",
+    "source_sha256": "5ac605d16cf87aeb3b60b8b65c39291de04ab1ac5b79e1b1464da77b919419ac",
+    "port_sha256": "5ac605d16cf87aeb3b60b8b65c39291de04ab1ac5b79e1b1464da77b919419ac"
+  },
+  {
+    "source": "src/Game/Player/MarioActorTakeMsg.cpp",
+    "port": "pc-port/src/Game/Player/MarioActorTakeMsg.cpp",
+    "action": "exact",
+    "source_sha256": "9fc6360589827c1cd1b0c65861c5c88635bdd56bf79e278f04d628ab902fc297",
+    "port_sha256": "9fc6360589827c1cd1b0c65861c5c88635bdd56bf79e278f04d628ab902fc297"
+  },
+  {
+    "source": "src/Game/Player/MarioAnimator.cpp",
+    "port": "pc-port/src/Game/Player/MarioAnimator.cpp",
+    "action": "guarded-retail-exact",
+    "source_sha256": "c7550d059af74f798d19217df501cf7e32b32043feefd50dcd30a768596258a2",
+    "port_sha256": "702047d49a87ac53bab998064f79593262f5ce0b3617af998c22c3866378fc2e",
+    "reason": "Retain existing explicit TARGET_PC provider branches and synchronize the selected retail text exactly with the merged root."
+  },
+  {
+    "source": "src/Game/Player/MarioBump.cpp",
+    "port": "pc-port/src/Game/Player/MarioBump.cpp",
+    "action": "exact",
+    "source_sha256": "d5ca89985d4de2c878608177b1386347b061c4e91e821dc537dc870d500e219d",
+    "port_sha256": "d5ca89985d4de2c878608177b1386347b061c4e91e821dc537dc870d500e219d"
+  },
+  {
+    "source": "src/Game/Player/MarioClimb.cpp",
+    "port": "pc-port/src/Game/Player/MarioClimb.cpp",
+    "action": "exact",
+    "source_sha256": "672484aae255f3997adccc1176c5fd57ec4ef8e4ca7a6ac9c4078425f9fa3b8d",
+    "port_sha256": "672484aae255f3997adccc1176c5fd57ec4ef8e4ca7a6ac9c4078425f9fa3b8d"
+  },
+  {
+    "source": "src/Game/Player/MarioDamageCrush.cpp",
+    "port": "pc-port/src/Game/Player/MarioDamageCrush.cpp",
+    "action": "exact",
+    "source_sha256": "f420fc4955efd42ee62ac3ff4a5051eb297bcc200fb12165533aba2b989412a5",
+    "port_sha256": "f420fc4955efd42ee62ac3ff4a5051eb297bcc200fb12165533aba2b989412a5"
+  },
+  {
+    "source": "src/Game/Player/MarioDamageFreeze.cpp",
+    "port": "pc-port/src/Game/Player/MarioDamageFreeze.cpp",
+    "action": "exact",
+    "source_sha256": "1ce3f7a63956bf56f10a37de8f50c315287246bfc8d4a108bb344dc23ef6d11f",
+    "port_sha256": "1ce3f7a63956bf56f10a37de8f50c315287246bfc8d4a108bb344dc23ef6d11f"
+  },
+  {
+    "source": "src/Game/Player/MarioDamageStun.cpp",
+    "port": "pc-port/src/Game/Player/MarioDamageStun.cpp",
+    "action": "exact",
+    "source_sha256": "529777ceadb1b5af92e8108459a0339d0681c280d0cd954cdee793fac7b4261c",
+    "port_sha256": "529777ceadb1b5af92e8108459a0339d0681c280d0cd954cdee793fac7b4261c"
+  },
+  {
+    "source": "src/Game/Player/MarioEffect.cpp",
+    "port": "pc-port/src/Game/Player/MarioEffect.cpp",
+    "action": "exact",
+    "source_sha256": "89b76eed0a196ca40cac3fefb3dbc494a31ba09eaee60d00540e9d4f180eec68",
+    "port_sha256": "89b76eed0a196ca40cac3fefb3dbc494a31ba09eaee60d00540e9d4f180eec68"
+  },
+  {
+    "source": "src/Game/Player/MarioEnforce.cpp",
+    "port": "pc-port/src/Game/Player/MarioEnforce.cpp",
+    "action": "exact",
+    "source_sha256": "27dc19a1ff298c22c6e937404da1253420ba5fbdfcbf89db81aacf0d32796b2d",
+    "port_sha256": "27dc19a1ff298c22c6e937404da1253420ba5fbdfcbf89db81aacf0d32796b2d"
+  },
+  {
+    "source": "src/Game/Player/MarioFlip.cpp",
+    "port": "pc-port/src/Game/Player/MarioFlip.cpp",
+    "action": "exact",
+    "source_sha256": "b771efb894b0f05af8745b5a2fad9e1410584bc6ffaaa899326b72c261b87295",
+    "port_sha256": "b771efb894b0f05af8745b5a2fad9e1410584bc6ffaaa899326b72c261b87295"
+  },
+  {
+    "source": "src/Game/Player/MarioFlow.cpp",
+    "port": "pc-port/src/Game/Player/MarioFlow.cpp",
+    "action": "exact",
+    "source_sha256": "afaeb3202d4d244c8da20e6beebf583cf74b3556ce982db676c1fda9dacd92a1",
+    "port_sha256": "afaeb3202d4d244c8da20e6beebf583cf74b3556ce982db676c1fda9dacd92a1"
+  },
+  {
+    "source": "src/Game/Player/MarioFpView.cpp",
+    "port": "pc-port/src/Game/Player/MarioFpView.cpp",
+    "action": "exact",
+    "source_sha256": "8143dc82aa06841a807feca7556d3c07ea9a56c494de35c97c9dcc9e5b22ead7",
+    "port_sha256": "8143dc82aa06841a807feca7556d3c07ea9a56c494de35c97c9dcc9e5b22ead7"
+  },
+  {
+    "source": "src/Game/Player/MarioFrontStep.cpp",
+    "port": "pc-port/src/Game/Player/MarioFrontStep.cpp",
+    "action": "exact",
+    "source_sha256": "12aca1d07991479535e8f52a6a12be5e2624ff0ec7bd4b49da5d8259f001760e",
+    "port_sha256": "12aca1d07991479535e8f52a6a12be5e2624ff0ec7bd4b49da5d8259f001760e"
+  },
+  {
+    "source": "src/Game/Player/MarioJump.cpp",
+    "port": "pc-port/src/Game/Player/MarioJump.cpp",
+    "action": "exact",
+    "source_sha256": "66941b3a5f991ca911cf208b5203ab30633aa54f9fdceab5793c29c8e39b7068",
+    "port_sha256": "66941b3a5f991ca911cf208b5203ab30633aa54f9fdceab5793c29c8e39b7068"
+  },
+  {
+    "source": "src/Game/Player/MarioMagic.cpp",
+    "port": "pc-port/src/Game/Player/MarioMagic.cpp",
+    "action": "exact",
+    "source_sha256": "5db3093552c926c86f123870d92e5dac402072eeaa718b6d2557170c952efed6",
+    "port_sha256": "5db3093552c926c86f123870d92e5dac402072eeaa718b6d2557170c952efed6"
+  },
+  {
+    "source": "src/Game/Player/MarioMapCode.cpp",
+    "port": "pc-port/src/Game/Player/MarioMapCode.cpp",
+    "action": "exact",
+    "source_sha256": "83b82b45975f1657e7ba5de9a72690a72b9fd27f2322c1cc6526c8f2a5a2a881",
+    "port_sha256": "83b82b45975f1657e7ba5de9a72690a72b9fd27f2322c1cc6526c8f2a5a2a881"
+  },
+  {
+    "source": "src/Game/Player/MarioModule.cpp",
+    "port": "pc-port/src/Game/Player/MarioModule.cpp",
+    "action": "guarded-retail-exact",
+    "source_sha256": "08c2753d18056f60d9760099f98684f6f9b8701c337202b43e56c63b2178cc9b",
+    "port_sha256": "67c7a162129dc9f03182249ad391926c22123a1739b16a10d223c189fdc8ccc4",
+    "reason": "Retain existing explicit TARGET_PC provider branches and synchronize the selected retail text exactly with the merged root."
+  },
+  {
+    "source": "src/Game/Player/MarioMove2D.cpp",
+    "port": "pc-port/src/Game/Player/MarioMove2D.cpp",
+    "action": "exact",
+    "source_sha256": "4b9a3454c8bef550522d09692e443a2ead85ee9d22168d08d949e783768fa686",
+    "port_sha256": "4b9a3454c8bef550522d09692e443a2ead85ee9d22168d08d949e783768fa686"
+  },
+  {
+    "source": "src/Game/Player/MarioMoveSphere.cpp",
+    "port": "pc-port/src/Game/Player/MarioMoveSphere.cpp",
+    "action": "exact",
+    "source_sha256": "986e57fd023e2a90729a7a501155aa850a76c7f0a36d4b7ef90ef876b36e52cd",
+    "port_sha256": "986e57fd023e2a90729a7a501155aa850a76c7f0a36d4b7ef90ef876b36e52cd"
+  },
+  {
+    "source": "src/Game/Player/MarioSlider.cpp",
+    "port": "pc-port/src/Game/Player/MarioSlider.cpp",
+    "action": "exact",
+    "source_sha256": "7d8e9276f80f8876085f20657e195b1fa7f9f3ab6cdb0751736a9891d99363ca",
+    "port_sha256": "7d8e9276f80f8876085f20657e195b1fa7f9f3ab6cdb0751736a9891d99363ca"
+  },
+  {
+    "source": "src/Game/Player/MarioSlip.cpp",
+    "port": "pc-port/src/Game/Player/MarioSlip.cpp",
+    "action": "exact",
+    "source_sha256": "03007fff7c11d2cb3c6bc46ae44ebaaedab813b1769639f073022c12f4341278",
+    "port_sha256": "03007fff7c11d2cb3c6bc46ae44ebaaedab813b1769639f073022c12f4341278"
+  },
+  {
+    "source": "src/Game/Player/MarioStep.cpp",
+    "port": "pc-port/src/Game/Player/MarioStep.cpp",
+    "action": "exact",
+    "source_sha256": "36195374c2a592ed694f2996eb9075b5da4f45d869cbe346f4bb782925199dfa",
+    "port_sha256": "36195374c2a592ed694f2996eb9075b5da4f45d869cbe346f4bb782925199dfa"
+  },
+  {
+    "source": "src/Game/Player/MarioStick.cpp",
+    "port": "pc-port/src/Game/Player/MarioStick.cpp",
+    "action": "exact",
+    "source_sha256": "f5cdb236af37b653daec7e079f113db22b422ec23d666b097995740cd2655541",
+    "port_sha256": "f5cdb236af37b653daec7e079f113db22b422ec23d666b097995740cd2655541"
+  },
+  {
+    "source": "src/Game/Player/MarioSukekiyo.cpp",
+    "port": "pc-port/src/Game/Player/MarioSukekiyo.cpp",
+    "action": "exact",
+    "source_sha256": "1c3a26c9c009d8bfc5fc8df826ec549cbbff4d0cd50e8cb20b150c7e9cf25d6b",
+    "port_sha256": "1c3a26c9c009d8bfc5fc8df826ec549cbbff4d0cd50e8cb20b150c7e9cf25d6b"
+  },
+  {
+    "source": "src/Game/Player/MarioSwim.cpp",
+    "port": "pc-port/src/Game/Player/MarioSwim.cpp",
+    "action": "exact",
+    "source_sha256": "645e4ab071b53ecbc1fd14c80ae40cd42885ebd8b461d7c33697b4caa86b8fc6",
+    "port_sha256": "645e4ab071b53ecbc1fd14c80ae40cd42885ebd8b461d7c33697b4caa86b8fc6"
+  },
+  {
+    "source": "src/Game/Player/MarioTask.cpp",
+    "port": "pc-port/src/Game/Player/MarioTask.cpp",
+    "action": "exact",
+    "source_sha256": "7ad3f56f05f14d248e77a69e3b6aa689a4b304594c02e95acea80bc48a5332e1",
+    "port_sha256": "7ad3f56f05f14d248e77a69e3b6aa689a4b304594c02e95acea80bc48a5332e1"
+  },
+  {
+    "source": "src/Game/Player/MarioWalk.cpp",
+    "port": "pc-port/src/Game/Player/MarioWalk.cpp",
+    "action": "guarded-retail-exact",
+    "source_sha256": "a6d0632b42790c836f1a883c94c41b85c97cdaa5bc67c8ab274ff210da1ca026",
+    "port_sha256": "7114776e43e5e69e7bbb35b50bdcfe6be94b3d1b7d0c0e065027d4c13427e5e8",
+    "reason": "Retain existing explicit TARGET_PC provider branches and synchronize the selected retail text exactly with the merged root."
+  },
+  {
+    "source": "src/Game/Screen/IconAButton.cpp",
+    "port": "pc-port/src/Game/Screen/IconAButton.cpp",
+    "action": "exact",
+    "source_sha256": "b779ac30acd9928a64d57c1bfe825d444d5832126c2f203cdb0b73dc9707f29b",
+    "port_sha256": "b779ac30acd9928a64d57c1bfe825d444d5832126c2f203cdb0b73dc9707f29b"
+  },
+  {
+    "source": "src/Game/Screen/LensFlare.cpp",
+    "port": "pc-port/src/Game/Screen/LensFlare.cpp",
+    "action": "adapted-host",
+    "source_sha256": "1ede089aadf7bb3f8753821db27988c5e36aa8578a87f7955004b19162ff91d1",
+    "port_sha256": "eea618f325b19b31135e259a7519aacb1ccb865af0868ce5c3c04ee5f3589235",
+    "reason": "Adopt camera projection reference API and draw-sync index type; retain host renderer."
+  },
+  {
+    "source": "src/Game/Util/ActorCameraUtil.cpp",
+    "port": "pc-port/src/Game/Util/ActorCameraUtil.cpp",
+    "action": "retained-host",
+    "source_sha256": "d7236a7f05126eb2abfd53cc06c6b6cd93d3fea18abd67ca015c21ac9bc7cfb6",
+    "port_sha256": "b52c27420527a3c2d4e379d4adc74558b5c0567670c826f03f647bfcfa3a735c",
+    "reason": "Retain native camera ownership and demo-camera runtime integration; retail camera manager dependencies are not ported."
+  },
+  {
+    "source": "src/Game/Util/CameraUtil.cpp",
+    "port": "pc-port/src/Game/Util/CameraUtil.cpp",
+    "action": "exact",
+    "source_sha256": "5fc7e8bc9c6116563b920b2961d4a01eec67eb72995ee9d3152ba845f59f094c",
+    "port_sha256": "5fc7e8bc9c6116563b920b2961d4a01eec67eb72995ee9d3152ba845f59f094c"
+  },
+  {
+    "source": "src/Game/Util/DrawUtil.cpp",
+    "port": "pc-port/src/Game/Util/DrawUtil.cpp",
+    "action": "retained-host",
+    "source_sha256": "da0f135f67477ec5c377f259ab44280a065a237fe052f7b6da5319f705ed3924",
+    "port_sha256": "36185873d7ad6520d8f0888b98dbef57928de8b4a4e265b0251f5784e3784f3b",
+    "reason": "Retain native draw/visibility provider; retail implementation depends on Wii GX/draw-sync services."
+  },
+  {
+    "source": "src/Game/Util/LightUtil.cpp",
+    "port": "pc-port/src/Game/Util/LightUtil.cpp",
+    "action": "retained-host",
+    "source_sha256": "111ee6f921f406b1205d2ac1fe5ab951428bf6be0f50ccbedf7d90f4df90334a",
+    "port_sha256": "f624725f5fba27b77c81d4801ea213c0248011c0cd264a54000f2dcedd5d158a",
+    "reason": "Retain native light-data loading, scene ownership and rendering; wholesale retail replacement depends on Wii light/GX providers."
+  },
+  {
+    "source": "src/Game/Util/LiveActorUtil.cpp",
+    "port": "pc-port/src/Game/Util/LiveActorUtil.cpp",
+    "action": "exact",
+    "source_sha256": "8c4b270c3aa3de4e6bfccec01320f9a8dfe884a3d7503cd690309c016abafa08",
+    "port_sha256": "8c4b270c3aa3de4e6bfccec01320f9a8dfe884a3d7503cd690309c016abafa08"
+  },
+  {
+    "source": "src/Game/Util/MapUtil.cpp",
+    "port": "pc-port/src/Game/Util/MapUtil.cpp",
+    "action": "exact",
+    "source_sha256": "937fbdeab0b6d6a46df7da76ac1054ea7e7b95ad7594cca3239ee3d70e2ec634",
+    "port_sha256": "937fbdeab0b6d6a46df7da76ac1054ea7e7b95ad7594cca3239ee3d70e2ec634"
+  },
+  {
+    "source": "src/Game/Util/MathUtil.cpp",
+    "port": "pc-port/src/Game/Util/MathUtil.cpp",
+    "action": "exact",
+    "source_sha256": "95957bc0f2316736a420d3cefa9db51a24d0e24c77744c89e4d43d5543792b0e",
+    "port_sha256": "95957bc0f2316736a420d3cefa9db51a24d0e24c77744c89e4d43d5543792b0e"
+  },
+  {
+    "source": "src/Game/Util/ObjUtil.cpp",
+    "port": "pc-port/src/Game/Util/ObjUtil.cpp",
+    "action": "retained-host",
+    "source_sha256": "2fbc7f12f3b97a8e10604b6c2d93cb058c24ec048069493947c4e7bee82c84f1",
+    "port_sha256": "33c317e8c07578e67bb70947c28557961396abfc41f109e3d5198e825e760a64",
+    "reason": "Retain native actor lifecycle, scene scheduler and runtime-service integration; wholesale retail replacement requires unported providers."
+  },
+  {
+    "source": "src/Game/Util/PlayerUtil.cpp",
+    "port": "pc-port/src/Game/Util/PlayerUtil.cpp",
+    "action": "exact",
+    "source_sha256": "fc4f5685c2ded2cf5304cb8475953a0f2d29f93147e4ad36fe9d6e1f526286be",
+    "port_sha256": "fc4f5685c2ded2cf5304cb8475953a0f2d29f93147e4ad36fe9d6e1f526286be"
+  },
+  {
+    "source": "src/Game/Util/SoundUtil.cpp",
+    "port": "pc-port/src/Game/Util/SoundUtil.cpp",
+    "action": "exact",
+    "source_sha256": "c4a096ec205e770ff499c66c252018e171ade7da1f8bd2b31ef2c0a76c7ad66c",
+    "port_sha256": "c4a096ec205e770ff499c66c252018e171ade7da1f8bd2b31ef2c0a76c7ad66c"
+  },
+  {
+    "source": "src/Game/Util/StarPointerUtil.cpp",
+    "port": "pc-port/src/Game/Util/StarPointerUtil.cpp",
+    "action": "retained-host",
+    "source_sha256": "877549b6ad76bc7b07bf8c928655c6fad1686b20f2717534b263475b16a6efc2",
+    "port_sha256": "9e94b708ad8a998b75c5002adced4fbf7e02167865869047859e938bebf05be2",
+    "reason": "Retain native keyboard/mouse pointer provider; retail StarPointerDirector dependency is not ported."
+  },
+  {
+    "source": "include/Game/AudioLib/AudParams.hpp",
+    "port": "pc-port/src/Game/AudioLib/AudParams.hpp",
+    "action": "added-exact",
+    "source_sha256": "b8167da906cbd5deeaa11f3cbcc2cb1c040737711f5577dab96944ef4a1b45c8",
+    "port_sha256": "b8167da906cbd5deeaa11f3cbcc2cb1c040737711f5577dab96944ef4a1b45c8"
+  },
+  {
+    "source": "src/Game/AudioLib/AudParams.cpp",
+    "port": "pc-port/src/Game/AudioLib/AudParams.cpp",
+    "action": "added-exact",
+    "source_sha256": "9f42d4595f557315d805f0fcf737662ef91ab16a8d2ce637487e7dbec78b1de2",
+    "port_sha256": "9f42d4595f557315d805f0fcf737662ef91ab16a8d2ce637487e7dbec78b1de2"
+  },
+  {
+    "source": "src/Game/AudioLib/AudBgmVolumeController.cpp",
+    "port": "pc-port/src/Game/AudioLib/AudBgmVolumeController.cpp",
+    "action": "added-exact",
+    "source_sha256": "9689461e7f76e2f23a86ab74e54af5afc91a514915eec73463409aca55a91077",
+    "port_sha256": "9689461e7f76e2f23a86ab74e54af5afc91a514915eec73463409aca55a91077"
+  },
+  {
+    "source": "src/Game/Enemy/AnimScaleController.cpp",
+    "port": "pc-port/src/Game/Enemy/AnimScaleController.cpp",
+    "action": "added-exact",
+    "source_sha256": "baf6b0fd6f965b69ee8f30b7e3e323271b27cace185544ca57cc52e340c402bb",
+    "port_sha256": "baf6b0fd6f965b69ee8f30b7e3e323271b27cace185544ca57cc52e340c402bb"
+  },
+  {
+    "source": "src/Game/System/WPadRumbleData.cpp",
+    "port": "pc-port/src/Game/System/WPadRumbleData.cpp",
+    "action": "added-exact",
+    "source_sha256": "76bc96891dd4dc7b7351205e1ebeece3e71c824aebc0860a2a1dc58edc1d5053",
+    "port_sha256": "76bc96891dd4dc7b7351205e1ebeece3e71c824aebc0860a2a1dc58edc1d5053"
+  },
+  {
+    "source": "src/Game/Util/Color.cpp",
+    "port": "pc-port/src/Game/Util/Color.cpp",
+    "action": "added-exact",
+    "source_sha256": "d49e207c63e286bc9720d5641bd4aac316564acd3adcf13e2d019e7459767496",
+    "port_sha256": "d49e207c63e286bc9720d5641bd4aac316564acd3adcf13e2d019e7459767496"
+  },
+  {
+    "source": "src/Game/Map/CollisionCode.cpp",
+    "port": "pc-port/src/Game/Map/CollisionCode.cpp",
+    "action": "added-exact",
+    "source_sha256": "a3182a3e7599fb153f85047c0b2eeaed9efb90631606fbbff953c1cf8a5790ab",
+    "port_sha256": "a3182a3e7599fb153f85047c0b2eeaed9efb90631606fbbff953c1cf8a5790ab"
+  },
+  {
+    "source": "libs/JSystem/include/JSystem/J3DGraphAnimator/J3DModel.hpp",
+    "port": "pc-port/src/JSystem/J3DGraphAnimator/J3DModel.hpp",
+    "action": "added-exact",
+    "source_sha256": "feb20b16dfd14279568a71afbc3c64f938793feaa228ba6c6bf9db5f4b874a9b",
+    "port_sha256": "feb20b16dfd14279568a71afbc3c64f938793feaa228ba6c6bf9db5f4b874a9b"
+  },
+  {
+    "source": "libs/JSystem/include/JSystem/J3DGraphBase/J3DVertex.hpp",
+    "port": "pc-port/src/JSystem/J3DGraphBase/J3DVertex.hpp",
+    "action": "added-exact",
+    "source_sha256": "6022d7f2938e6bf636c48b90f7df024050af055ca8340ed292c16fcc8b65a451",
+    "port_sha256": "6022d7f2938e6bf636c48b90f7df024050af055ca8340ed292c16fcc8b65a451"
+  },
+  {
+    "source": "libs/JSystem/include/JSystem/J3DGraphBase/J3DPacket.hpp",
+    "port": "pc-port/src/JSystem/J3DGraphBase/J3DPacket.hpp",
+    "action": "added-exact",
+    "source_sha256": "8974553e696b26dea4ae11665a30a87554bc752d0733396300c12e70371acd8f",
+    "port_sha256": "8974553e696b26dea4ae11665a30a87554bc752d0733396300c12e70371acd8f"
+  },
+  {
+    "source": "libs/JSystem/include/JSystem/J3DGraphBase/J3DSys.hpp",
+    "port": "pc-port/src/JSystem/J3DGraphBase/J3DSys.hpp",
+    "action": "added-exact",
+    "source_sha256": "7289ea4222c05e016a9f5507036f9fcd1630e7d5026c05c24edaf6baebbe476c",
+    "port_sha256": "7289ea4222c05e016a9f5507036f9fcd1630e7d5026c05c24edaf6baebbe476c"
+  },
+  {
+    "source": "libs/JSystem/include/JSystem/J3DGraphAnimator/J3DSkinDeform.hpp",
+    "port": "pc-port/src/JSystem/J3DGraphAnimator/J3DSkinDeform.hpp",
+    "action": "added-exact",
+    "source_sha256": "d1d82e6c47bbcb0ae50db406a30287dcfbe22316414850afb32b053243576a12",
+    "port_sha256": "d1d82e6c47bbcb0ae50db406a30287dcfbe22316414850afb32b053243576a12"
+  },
+  {
+    "source": "libs/JSystem/include/JSystem/J3DGraphAnimator/J3DMtxBuffer.hpp",
+    "port": "pc-port/src/JSystem/J3DGraphAnimator/J3DMtxBuffer.hpp",
+    "action": "added-exact",
+    "source_sha256": "2fcbb5a7b40b37f97ff0ce0f15a4c8e9b032c30633ddb8f714aa883c8c1a6821",
+    "port_sha256": "2fcbb5a7b40b37f97ff0ce0f15a4c8e9b032c30633ddb8f714aa883c8c1a6821"
+  },
+  {
+    "source": "libs/JSystem/include/JSystem/J3DGraphBase/J3DTransform.hpp",
+    "port": "pc-port/src/JSystem/J3DGraphBase/J3DTransform.hpp",
+    "action": "added-exact",
+    "source_sha256": "208115faa566b389d36c209d017552cb941b9eb8c55549161aebcfdc439c8a97",
+    "port_sha256": "208115faa566b389d36c209d017552cb941b9eb8c55549161aebcfdc439c8a97"
+  },
+  {
+    "source": "libs/JSystem/include/JSystem/J3DGraphAnimator/J3DCluster.hpp",
+    "port": "pc-port/src/JSystem/J3DGraphAnimator/J3DCluster.hpp",
+    "action": "added-exact",
+    "source_sha256": "29a81c1a0756b2d2f44269b56176ed40ad5bc09e1a46da7e1ed3286fd8d59fed",
+    "port_sha256": "29a81c1a0756b2d2f44269b56176ed40ad5bc09e1a46da7e1ed3286fd8d59fed"
+  },
+  {
+    "source": "src/Game/Player/MarioInit.cpp",
+    "port": "pc-port/src/Game/Player/MarioInit.cpp",
+    "action": "exact",
+    "source_sha256": "ae2a3d32f2fc1ec0d6101f4a6927c6b4c1e6bba120e1f91f8b07b5b5af88f3fb",
+    "port_sha256": "ae2a3d32f2fc1ec0d6101f4a6927c6b4c1e6bba120e1f91f8b07b5b5af88f3fb"
+  },
+  {
+    "source": "src/Game/Player/MarioMove.cpp",
+    "port": "pc-port/src/Game/Player/MarioMove.cpp",
+    "action": "guarded-retail-exact",
+    "source_sha256": "46e9142b3ae8c261c82e2bb93c2d346874ac312670a7a52ad8435c88bae85170",
+    "port_sha256": "20d5b2a00a6ebb4c41eec448b9ee7f4fdc2f662761c8a7c097ee866c77fb8c10",
+    "reason": "Retain existing explicit TARGET_PC provider branches and synchronize the selected retail text exactly with the merged root."
+  },
+  {
+    "source": "src/Game/Util/JMapUtil.cpp",
+    "port": "pc-port/src/Game/Util/JMapUtil.cpp",
+    "action": "adapted-host",
+    "source_sha256": "7870ed8bd2b8efa6070b41f90b4bb65494ababc79a6a01e4cb78fa97c08fc2ac",
+    "port_sha256": "6a4aeb3bb155bceb6a3fd2592d2a5a023b9de51a89a54dbdeb1e9d8073e26f90",
+    "reason": "Match upstream void getChildObjName interface; preserve host placement traversal."
+  },
+  {
+    "source": "include/Game/Util/JMapUtil.hpp",
+    "port": "pc-port/src/Game/Util/JMapUtil.hpp",
+    "action": "adapted-host",
+    "source_sha256": "fa5fabd361983f49afb3a1dbb4707a872785931ab2b4be44b71129fd50dba74c",
+    "port_sha256": "9bcc14a24cb520aab1bd77c99215d16aad3b25bfb466b64b20984ce9617d93d4",
+    "reason": "Match upstream void getChildObjName interface used by SceneUtil."
+  },
+  {
+    "source": "src/Game/Player/MarioCollision.cpp",
+    "port": "pc-port/src/Game/Player/MarioCollision.cpp",
+    "action": "exact",
+    "reason": "Reconcile pre-existing recovered Player code with the new upstream field names/layout, then copy exactly.",
+    "source_sha256": "2abd625f7f9cd0262e1df297eff0abd200d2cb2cf020a87c3dbf6ca8be5a3349",
+    "port_sha256": "2abd625f7f9cd0262e1df297eff0abd200d2cb2cf020a87c3dbf6ca8be5a3349"
+  },
+  {
+    "source": "src/Game/Player/MarioSlope.cpp",
+    "port": "pc-port/src/Game/Player/MarioSlope.cpp",
+    "action": "exact",
+    "reason": "Reconcile pre-existing recovered Player code with the new upstream field names/layout, then copy exactly.",
+    "source_sha256": "19f64c2542b3a5e0b283683ecd9b7598c801fae47329b4aaa873263059cff092",
+    "port_sha256": "19f64c2542b3a5e0b283683ecd9b7598c801fae47329b4aaa873263059cff092"
+  },
+  {
+    "source": "src/Game/Player/MarioHang.cpp",
+    "port": "pc-port/src/Game/Player/MarioHang.cpp",
+    "action": "exact",
+    "reason": "Reconcile pre-existing recovered Player code with the new upstream field names/layout, then copy exactly.",
+    "source_sha256": "58be2327c15deceed6b089903dc3ee0b4137ad08053edfa172a5d348bf2a3d74",
+    "port_sha256": "58be2327c15deceed6b089903dc3ee0b4137ad08053edfa172a5d348bf2a3d74"
+  },
+  {
+    "source": "src/Game/Player/MarioSkate.cpp",
+    "port": "pc-port/src/Game/Player/MarioSkate.cpp",
+    "action": "exact",
+    "reason": "Reconcile pre-existing recovered Player code with the new upstream field names/layout, then copy exactly.",
+    "source_sha256": "822eaca49580a27c543c10fe3defa35824bb1236143896f4ef0d8858ca97613e",
+    "port_sha256": "822eaca49580a27c543c10fe3defa35824bb1236143896f4ef0d8858ca97613e"
+  },
+  {
+    "source": "src/Game/Player/MarioPress.cpp",
+    "port": "pc-port/src/Game/Player/MarioPress.cpp",
+    "action": "exact",
+    "reason": "Reconcile pre-existing recovered Player code with the new upstream field names/layout, then copy exactly.",
+    "source_sha256": "8ceb69fc9b05feed48c109be8ea7abdf55a5e34a8f4ffeef2f2aa1baf6d98610",
+    "port_sha256": "8ceb69fc9b05feed48c109be8ea7abdf55a5e34a8f4ffeef2f2aa1baf6d98610"
+  },
+  {
+    "source": "src/Game/Player/MarioWait.cpp",
+    "port": "pc-port/src/Game/Player/MarioWait.cpp",
+    "action": "exact",
+    "reason": "Reconcile pre-existing recovered Player code with the new upstream field names/layout, then copy exactly.",
+    "source_sha256": "cb286e999e536fd0aee291f9cf04a0b86ace7d432309bf8f41914f70290aab4f",
+    "port_sha256": "cb286e999e536fd0aee291f9cf04a0b86ace7d432309bf8f41914f70290aab4f"
+  },
+  {
+    "source": "src/Game/Player/MarioDamage.cpp",
+    "port": "pc-port/src/Game/Player/MarioDamage.cpp",
+    "action": "exact",
+    "reason": "Reconcile pre-existing recovered Player code with the new upstream field names/layout, then copy exactly.",
+    "source_sha256": "0782b8ed440e87441e9fbd49c32903bb8bf5066edad936e3b13ce0ea53a2656b",
+    "port_sha256": "0782b8ed440e87441e9fbd49c32903bb8bf5066edad936e3b13ce0ea53a2656b"
+  },
+  {
+    "source": "src/Game/Player/MarioTeresa.cpp",
+    "port": "pc-port/src/Game/Player/MarioTeresa.cpp",
+    "action": "exact",
+    "reason": "Reconcile pre-existing recovered Player code with the new upstream field names/layout, then copy exactly.",
+    "source_sha256": "2b4078599be56c85d0f6e81f57b952284a50b885cb509a108623462d8b0f1e8d",
+    "port_sha256": "2b4078599be56c85d0f6e81f57b952284a50b885cb509a108623462d8b0f1e8d"
+  },
+  {
+    "source": "src/Game/Player/MarioMove25D.cpp",
+    "port": "pc-port/src/Game/Player/MarioMove25D.cpp",
+    "action": "exact",
+    "reason": "Reconcile pre-existing recovered Player code with the new upstream field names/layout, then copy exactly.",
+    "source_sha256": "a5d7ae6ec70a1f56913d5ba3982a14552eb7197c220d4fffa0ab73a58a44bdb1",
+    "port_sha256": "a5d7ae6ec70a1f56913d5ba3982a14552eb7197c220d4fffa0ab73a58a44bdb1"
+  }
+]

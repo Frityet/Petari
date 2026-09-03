@@ -1,5 +1,4 @@
 #include "Game/LiveActor/ActorLightCtrl.hpp"
-#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Map/LightFunction.hpp"
 #include "Game/NameObj/NameObjExecuteHolder.hpp"
 #include "Game/System/DrawBuffer.hpp"
@@ -11,7 +10,6 @@ ActorLightCtrl::ActorLightCtrl(const LiveActor* pActor) : mActor(pActor), _4(-1)
     _54 = -1;
 }
 
-// initActorLightInfo call is getting inlined
 void ActorLightCtrl::init(int interpolate, bool /* unused */) {
     if (interpolate >= 0) {
         _4 = interpolate;
@@ -22,37 +20,6 @@ void ActorLightCtrl::init(int interpolate, bool /* unused */) {
     tryFindNewAreaLight(false);
     mAreaLightInf = LightFunction::getAreaLightInfo(mLightID);
     mLightInfo = *getTargetActorLight(mAreaLightInf);
-}
-
-void ActorLightInfo::operator=(const ActorLightInfo& rInfo) {
-    u32* pDst = reinterpret_cast< u32* >(&mInfo0);
-    const u32* pSrc = reinterpret_cast< const u32* >(&rInfo.mInfo0);
-
-    for (s32 i = 0; i < 2; i++) {
-        pDst[0] = pSrc[0];
-        pDst[1] = pSrc[1];
-        pDst += 2;
-        pSrc += 2;
-    }
-
-    pDst[0] = pSrc[0];
-
-    pDst = reinterpret_cast< u32* >(&mInfo1);
-    pSrc = reinterpret_cast< const u32* >(&rInfo.mInfo1);
-
-    for (s32 i = 0; i < 2; i++) {
-        pDst[0] = pSrc[0];
-        pDst[1] = pSrc[1];
-        pDst += 2;
-        pSrc += 2;
-    }
-
-    pDst[0] = pSrc[0];
-    mAlpha2 = rInfo.mAlpha2;
-    mColor.r = rInfo.mColor.r;
-    mColor.g = rInfo.mColor.g;
-    mColor.b = rInfo.mColor.b;
-    mColor.a = rInfo.mColor.a;
 }
 
 void ActorLightCtrl::update(bool direct) {
@@ -77,7 +44,7 @@ void ActorLightCtrl::reset() {
 
     if (LightFunction::tryFindNewAreaLightID(mActor->mPosition, &mLightID)) {
         resetCurrentLightInfo();
-        _1C = 0;
+        _1C = nullptr;
         mLightInfo = *getTargetActorLight(mAreaLightInf);
     }
 
@@ -88,13 +55,13 @@ void ActorLightCtrl::reset() {
     }
 }
 
-void ActorLightCtrl::copy(const ActorLightCtrl* pLight) {
-    mAreaLightInf = pLight->mAreaLightInf;
-    mLightID = pLight->mLightID;
-    _1C = pLight->_1C;
-    mLightInfo = pLight->mLightInfo;
-    mInterpolate = pLight->mInterpolate;
-    _54 = pLight->_54;
+void ActorLightCtrl::copy(const ActorLightCtrl* pCtrl) {
+    mAreaLightInf = pCtrl->mAreaLightInf;
+    mLightID = pCtrl->mLightID;
+    _1C = pCtrl->_1C;
+    mLightInfo = pCtrl->mLightInfo;
+    mInterpolate = pCtrl->mInterpolate;
+    _54 = pCtrl->_54;
 }
 
 bool ActorLightCtrl::isSameLight(const ActorLightCtrl* pLight) const {
@@ -122,18 +89,19 @@ void ActorLightCtrl::initActorLightInfo() {
     return;
 }
 
-void ActorLightCtrl::tryFindNewAreaLight(bool direct) {
+void ActorLightCtrl::tryFindNewAreaLight(bool a2) {
     if (LightFunction::tryFindNewAreaLightID(mActor->mPosition, &mLightID)) {
-        if (mAreaLightInf) {
-            _1C = getTargetActorLight(mAreaLightInf);
-            mLightInfo = *_1C;
+        if (mAreaLightInf != nullptr) {
+            const ActorLightInfo* inf = getTargetActorLight(mAreaLightInf);
+            _1C = inf;
+            mLightInfo = *inf;
         }
 
         resetCurrentLightInfo();
 
-        if (mInterpolate == 0 || direct) {
+        if (!mInterpolate || a2) {
             mInterpolate = 0;
-            _1C = 0;
+            _1C = nullptr;
             mLightInfo = *getTargetActorLight(mAreaLightInf);
         }
 
@@ -149,19 +117,22 @@ void ActorLightCtrl::tryFindNewAreaLight(bool direct) {
 
 void ActorLightCtrl::updateLightBlend() {
     if (_1C) {
+        s32 v = _54;
         _54++;
 
-        if (_54 >= mInterpolate) {
+        if (v + 1 >= mInterpolate) {
             mLightInfo = *getTargetActorLight(mAreaLightInf);
-            _1C = 0;
+            _1C = nullptr;
             _54 = -1;
 
             if (!_C) {
                 _8->resetLightSort(this);
             }
+
         } else {
-            f32 rate = static_cast<f32>(_54) / static_cast<f32>(mInterpolate);
-            LightFunction::blendActorLightInfo(&mLightInfo, *_1C, *getTargetActorLight(mAreaLightInf), rate);
+            f32 v = (f32)_54 / mInterpolate;
+            const ActorLightInfo* info = getTargetActorLight(mAreaLightInf);
+            LightFunction::blendActorLightInfo(&mLightInfo, *_1C, *info, v);
         }
     }
 }

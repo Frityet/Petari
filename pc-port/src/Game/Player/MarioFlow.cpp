@@ -65,7 +65,7 @@ bool MarioFlow::update() {
             changeAnimation("中ダメージ着地", static_cast< const char* >(nullptr));
 
             playEffect("共通ダメージ着地");
-            playSound("吹っ飛び倒れ", -1);
+            playSound("吹っ飛び倒れ");
 
             MR::vecKillElement(_18, mActor->_240, &_18);
 
@@ -110,5 +110,5 @@ bool MarioFlow::close() {
 }
 
 MarioFlow::MarioFlow(MarioActor* pActor) : MarioState(pActor, MarioStatus_Flow), _12(), _14() {
-    _18.zeroInline();
+    _18.zero();
 }

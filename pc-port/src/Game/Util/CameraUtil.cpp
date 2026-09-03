@@ -2,6 +2,7 @@
 #include "Game/Camera/CameraAnim.hpp"
 #include "Game/Camera/CameraCalc.hpp"
 #include "Game/Camera/CameraContext.hpp"
+#include "Game/Camera/CameraDPD.hpp"
 #include "Game/Camera/CameraDirector.hpp"
 #include "Game/Camera/CameraHolder.hpp"
 #include "Game/Camera/CameraParamChunk.hpp"
@@ -12,182 +13,198 @@
 #include "Game/LiveActor/MirrorCamera.hpp"
 #include "Game/Map/WaterAreaHolder.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
-#include "Game/Util/MtxUtil.hpp"
-#include "Game/Util/ObjUtil.hpp"
+#include "Game/Util.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
-#include "JSystem/J3DGraphBase/J3DSys.hpp"
+#include <JSystem/J3DGraphBase/J3DSys.hpp>
 #include <cstdio>
-#include <cstring>
-#include "revolution/gx/GXEnum.h"
-#include "revolution/mtx.h"
 
-namespace MR {
-    bool normalizeOrZero(TVec3f*);
-    f32 tan(f32);
-};
+// TODO: mismatch in .data order likely due to a stripped function containing "CAM_TYPE_DPD"
+
+void CameraUtil_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+    (void)0.0f;
+    (void)0.5f;
+    (void)-1.0f;
+    (void)MR::pi();
+}
+
+void CameraUtil_DUMMY() {
+    TVec4f a(1.0f, 0.0f, 0.0f, 0.0f);
+    TVec3f b;
+    TVec3f c = -b;
+    TVec2f d(1.0f, 0.0f);
+    f32 f1 = MR::tan(1.0f);
+    c = b;
+    TVec3f e = b - c;
+
+    TPos3f m;
+    m.getXDir(b);
+    m.getYDir(b);
+    m.getZDir(b);
+}
 
 namespace {
-    const char* sLauncherCameraName = "大砲";
-    const char* sLauncherFlightCameraName = "大砲飛行";
+    static const char* sLauncherCameraName = "大砲";
+    static const char* sLauncherFlightCameraName = "大砲飛行";
 
-    char* createRegisterName(const NameObj*, u32);
+    CameraContext* getCameraContext() {
+        return MR::getSceneObj< CameraContext >(SceneObj_CameraContext);
+    }
 
-    void calcNormalizedScreenPosToScreenPos(TVec3f* pResult, const TVec3f& rNormalizedScreenPos) {
+    void calcNormalizedScreenPosToScreenPos(TVec3f* pScreenPos, const TVec3f& rNormalizedPos) {
         f32 width = MR::getScreenWidth();
         f32 height = MR::getScreenHeight();
-        pResult->set((0.5f * width) + (0.5f * (rNormalizedScreenPos.x * width)),
-                     (0.5f * height) + (0.5f * (rNormalizedScreenPos.y * height)), rNormalizedScreenPos.z);
+
+        pScreenPos->set< f32 >(width * 0.5f + rNormalizedPos.x * width * 0.5f, height * 0.5f + rNormalizedPos.y * height * 0.5f, rNormalizedPos.z);
     }
+
 };  // namespace
 
 namespace MR {
-    bool calcScreenPosition(TVec2f* pResult, const TVec3f& rViewMtxMult) {
+    bool calcScreenPosition(TVec2f* pScreenPos, const TVec3f& rPos) {
         TVec3f normalizedScreenPos;
         TVec3f screenPos;
-        TVec3f multedViewMtx;
-        getSceneObj< CameraContext >(SceneObj_CameraContext)->getViewMtx()->mult(rViewMtxMult, multedViewMtx);
-        bool ret = calcNormalizedScreenPositionFromView(&normalizedScreenPos, multedViewMtx);
+        bool ret = calcNormalizedScreenPosition(&normalizedScreenPos, rPos);
         ::calcNormalizedScreenPosToScreenPos(&screenPos, normalizedScreenPos);
-        pResult->x = screenPos.x;
-        pResult->y = screenPos.y;
+        pScreenPos->x = screenPos.x;
+        pScreenPos->y = screenPos.y;
         return ret;
     }
 
-    bool calcScreenPosition(TVec3f* pResult, const TVec3f& rViewMtxMult) {
+    bool calcScreenPosition(TVec3f* pScreenPos, const TVec3f& rPos) {
         TVec3f normalizedScreenPos;
-        TVec3f multedViewMtx;
-        getSceneObj< CameraContext >(SceneObj_CameraContext)->getViewMtx()->mult(rViewMtxMult, multedViewMtx);
-        bool ret = calcNormalizedScreenPositionFromView(&normalizedScreenPos, multedViewMtx);
-        ::calcNormalizedScreenPosToScreenPos(pResult, normalizedScreenPos);
+        bool ret = calcNormalizedScreenPosition(&normalizedScreenPos, rPos);
+        ::calcNormalizedScreenPosToScreenPos(pScreenPos, normalizedScreenPos);
         return ret;
     }
 
-    bool calcNormalizedScreenPosition(TVec3f* pResult, const TVec3f& rViewMtxMult) {
-        TVec3f multedViewMtx;
-        getSceneObj< CameraContext >(SceneObj_CameraContext)->getViewMtx()->mult(rViewMtxMult, multedViewMtx);
-        return calcNormalizedScreenPositionFromView(pResult, multedViewMtx);
+    bool calcNormalizedScreenPosition(TVec3f* pScreenPos, const TVec3f& rPos) {
+        TVec3f pos;
+        ::getCameraContext()->getViewMtx().mult(rPos, pos);
+
+        return calcNormalizedScreenPositionFromView(pScreenPos, pos);
     }
 
-    bool calcNormalizedScreenPositionFromView(TVec3f* pResult, const TVec3f& rViewMtxMult) {
-        TProj3f* pProj = &getSceneObj< CameraContext >(SceneObj_CameraContext)->mProjection;
-        TVec4f pos(rViewMtxMult.x * pProj->mMtx[0][0] + rViewMtxMult.z * pProj->mMtx[0][2],
-                   rViewMtxMult.y * pProj->mMtx[1][1] + rViewMtxMult.z * pProj->mMtx[1][2], rViewMtxMult.z * pProj->mMtx[2][2] + pProj->mMtx[2][3],
-                   -rViewMtxMult.z);
-        pResult->scale(1.0f / pos.w, *pos.toTVec3());
-        pResult->y = -pResult->y;
+    bool calcNormalizedScreenPositionFromView(TVec3f* pScreenPos, const TVec3f& rPos) {
+        // FIXME: float regswap in y parameter of TVec4 in mtx.mult
 
-        if (1.0f < __fabs(pResult->x)) {
+        TProj3f proj;
+        proj.set(::getCameraContext()->mProjection);
+        proj.mult(rPos, *pScreenPos);
+        pScreenPos->y = -pScreenPos->y;
+
+        if (1.0f < MR::abs(pScreenPos->x) || 1.0f < MR::abs(pScreenPos->y)) {
             return false;
         }
 
-        if (1.0f < __fabs(pResult->y)) {
-            return false;
-        }
-
-        return pResult->z <= 0.0f;
+        return 0.0f < pScreenPos->z == false;
     }
 
-    bool calcWorldPositionFromScreen(TVec3f* pResult, const TVec2f& rScreenPos, f32 depth) {
+    bool calcWorldPositionFromScreen(TVec3f* pPos, const TVec2f& rScreenPos, f32 distZ) {
+        // FIXME: TVec2f ctor should uninline
+
         f32 width = MR::getScreenWidth();
         f32 height = MR::getScreenHeight();
-        TVec2f centerScreenPos(rScreenPos.x - (0.5f * width), rScreenPos.y - (0.5f * height));
-        return calcWorldPositionFromCenterScreen(pResult, centerScreenPos, depth);
+
+        f32 w = rScreenPos.x - width * 0.5f;
+        f32 h = rScreenPos.y - height * 0.5f;
+
+        return calcWorldPositionFromCenterScreen(pPos, TVec2f(w, h), distZ);
     }
 
-    bool calcWorldPositionFromCenterScreen(TVec3f* pResult, const TVec2f& rCenterScreenPos, f32 depth) {
-        f32 screenHeight = getScreenHeight();
-        f32 defaultDepth = (0.5f * screenHeight) / MR::tan(0.5f * (0.017453292f * getFovy()));
+    bool calcWorldPositionFromCenterScreen(TVec3f* pPos, const TVec2f& rScreenPos, f32 distZ) {
+        f32 height = MR::getScreenHeight();
+        f32 focalLength = height * 0.5f / MR::tan(MR::toRadian(::getCameraContext()->mFovy) * 0.5f);
 
-        if (depth < 0.0f) {
-            depth = defaultDepth;
-        }
+        f32 dist = (distZ >= 0.0f ? distZ : focalLength);
+        f32 ratio = dist / focalLength;
 
-        f32 scale = depth / defaultDepth;
-        TVec3f viewPos(rCenterScreenPos.x * scale, -rCenterScreenPos.y * scale, -depth);
-        TVec3f worldPos;
-        TPos3f invViewMtx = *getSceneObj< CameraContext >(SceneObj_CameraContext)->getInvViewMtx();
-        invViewMtx.mult(viewPos, worldPos);
+        TVec3f viewPos(rScreenPos.x * ratio, -rScreenPos.y * ratio, -dist);
 
-        if (pResult) {
-            *pResult = worldPos;
+        TPos3f inv = getCameraInvViewMtx();
+        TVec3f pos;
+        inv.mult(viewPos, pos);
+
+        if (pPos != nullptr) {
+            *pPos = pos;
         }
 
         return true;
     }
 
-    bool calcWorldRayDirectionFromScreen(TVec3f* pResult, const TVec2f& a2) {
-        bool ret = calcWorldPositionFromScreen(pResult, a2, -1.0f);
-        pResult->sub(getCamPos());
+    bool calcWorldRayDirectionFromScreen(TVec3f* pDir, const TVec2f& rScreenPos) {
+        bool ret = calcWorldPositionFromScreen(pDir, rScreenPos, -1.0f);
+        pDir->sub(getCamPos());
         return ret;
     }
 
     f32 calcCameraDistanceZ(const TVec3f& rPos) {
-        const TPos3f* pViewMtx = getSceneObj< CameraContext >(SceneObj_CameraContext)->getViewMtx();
-        return __fabs((rPos.x * pViewMtx->mMtx[2][0]) + (rPos.y * pViewMtx->mMtx[2][1]) + (rPos.z * pViewMtx->mMtx[2][2]) + pViewMtx->mMtx[2][3]);
+        const TPos3f& viewMtx = getCameraViewMtx();
+        return MR::abs(rPos.x * viewMtx.get(2, 0) + rPos.y * viewMtx.get(2, 1) + rPos.z * viewMtx.get(2, 2) + 1.0f * viewMtx.get(2, 3));
     }
 
     void loadProjectionMtx() {
-        GXSetProjection(getSceneObj< CameraContext >(SceneObj_CameraContext)->mProjection, (GXProjectionType) nullptr);
+        GXSetProjection(::getCameraContext()->mProjection, (GXProjectionType) nullptr);
     }
 
     void loadViewMtx() {
-        PSMTXCopy((MtxPtr)getSceneObj< CameraContext >(SceneObj_CameraContext)->getViewMtx(), j3dSys.mViewMtx);
+        PSMTXCopy(::getCameraContext()->getViewMtx(), j3dSys.mViewMtx);
     }
 
-    const MtxPtr getCameraViewMtx() {
-        return (MtxPtr)getSceneObj< CameraContext >(SceneObj_CameraContext)->getViewMtx();
+    const TPos3f& getCameraViewMtx() {
+        return ::getCameraContext()->getViewMtx();
     }
 
-    TPos3f* getCameraInvViewMtx() {
-        return const_cast< TPos3f* >(getSceneObj< CameraContext >(SceneObj_CameraContext)->getInvViewMtx());
+    const TPos3f& getCameraInvViewMtx() {
+        return ::getCameraContext()->getInvViewMtx();
     }
 
-    TProj3f* getCameraProjectionMtx() {
-        return &getSceneObj< CameraContext >(SceneObj_CameraContext)->mProjection;
+    const TProj3f& getCameraProjectionMtx() {
+        return ::getCameraContext()->mProjection;
     }
 
-    void setCameraViewMtx(const TPos3f& a1, bool a2, bool a3, const TVec3f& a4) {
-        getSceneObj< CameraContext >(SceneObj_CameraContext)->setViewMtx(a1, a2, a3, a4);
+    void setCameraViewMtx(const TPos3f& rMtx, bool a2, bool a3, const TVec3f& a4) {
+        ::getCameraContext()->setViewMtx(rMtx, a2, a3, a4);
     }
 
     f32 getAspect() {
-        return MR::getSceneObj< CameraContext >(SceneObj_CameraContext)->getAspect();
+        return ::getCameraContext()->getAspect();
     }
 
     f32 getNearZ() {
-        return MR::getSceneObj< CameraContext >(SceneObj_CameraContext)->mNearZ;
+        return ::getCameraContext()->mNearZ;
     }
 
     f32 getFarZ() {
-        return MR::getSceneObj< CameraContext >(SceneObj_CameraContext)->mFarZ;
+        return ::getCameraContext()->mFarZ;
     }
 
     f32 getFovy() {
-        return MR::getSceneObj< CameraContext >(SceneObj_CameraContext)->mFovy;
+        return ::getCameraContext()->mFovy;
     }
 
     void setNearZ(f32 nearZ) {
-        MR::getSceneObj< CameraContext >(SceneObj_CameraContext)->setNearZ(nearZ);
+        ::getCameraContext()->setNearZ(nearZ);
     }
 
     void setFovy(f32 fovy) {
-        MR::getSceneObj< CameraContext >(SceneObj_CameraContext)->setFovy(fovy);
+        ::getCameraContext()->setFovy(fovy);
     }
 
-    void setShakeOffset(f32 a1, f32 a2) {
-        MR::getSceneObj< CameraContext >(SceneObj_CameraContext)->setShakeOffset(a1, a2);
+    void setShakeOffset(f32 offsetX, f32 offsetY) {
+        ::getCameraContext()->setShakeOffset(offsetX, offsetY);
     }
 
     const TVec3f getCamPos() {
-        TPos3f viewMtx = *MR::getSceneObj< CameraContext >(SceneObj_CameraContext)->getInvViewMtx();
+        TPos3f viewMtx = ::getCameraContext()->getInvViewMtx();
         TVec3f pos;
-        MR::extractMtxTrans(viewMtx.toMtxPtr(), &pos);
+        MR::extractMtxTrans(viewMtx, &pos);
         return pos;
     }
 
     TVec3f getCamXdir() {
-        TPos3f viewMtx = *MR::getSceneObj< CameraContext >(SceneObj_CameraContext)->getInvViewMtx();
+        TPos3f viewMtx = ::getCameraContext()->getInvViewMtx();
         TVec3f dir;
         viewMtx.getXDir(dir);
         MR::normalizeOrZero(&dir);
@@ -195,7 +212,7 @@ namespace MR {
     }
 
     TVec3f getCamYdir() {
-        TPos3f viewMtx = *MR::getSceneObj< CameraContext >(SceneObj_CameraContext)->getInvViewMtx();
+        TPos3f viewMtx = ::getCameraContext()->getInvViewMtx();
         TVec3f dir;
         viewMtx.getYDir(dir);
         MR::normalizeOrZero(&dir);
@@ -203,7 +220,7 @@ namespace MR {
     }
 
     TVec3f getCamZdir() {
-        TPos3f viewMtx = *MR::getSceneObj< CameraContext >(SceneObj_CameraContext)->getInvViewMtx();
+        TPos3f viewMtx = ::getCameraContext()->getInvViewMtx();
         TVec3f dir;
         viewMtx.getZDir(dir);
         MR::normalizeOrZero(&dir);
@@ -218,12 +235,16 @@ namespace MR {
         return MR::isExistSceneObj(SceneObj_MirrorCamera);
     }
 
-    const MtxPtr getMirrorCameraViewMtx() {
+    const TPos3f& getMirrorCameraViewMtx() {
         return getMirrorCamera()->mViewMtx;
     }
 
-    const MtxPtr getMirrorModelTexMtx() {
+    const TPos3f& getMirrorModelTexMtx() {
         return getMirrorCamera()->mModelTexMtx;
+    }
+
+    CameraHolder* getCameraHolder() {
+        return getCameraDirector()->getHolder();
     }
 
     void completeCameraParameters() {
@@ -234,27 +255,27 @@ namespace MR {
         MR::getCameraDirector()->requestToResetCameraMan();
     }
 
-    void startCameraInterpolation(u32 intr) {
-        MR::getCameraDirector()->setInterpolation(intr);
+    void startCameraInterpolation(u32 time) {
+        MR::getCameraDirector()->setInterpolation(time);
     }
 
     void declareEventCamera(const ActorCameraInfo* pInfo, const char* pEventName) {
         MR::getCameraDirector()->declareEvent(pInfo->mZoneID, pEventName);
     }
 
-    void endEventCamera(const ActorCameraInfo* pInfo, const char* pEventName, bool a3, s32 a4) {
-        MR::getCameraDirector()->endEvent(pInfo->mZoneID, pEventName, a3, a4);
+    void endEventCamera(const ActorCameraInfo* pInfo, const char* pEventName, bool resetView, s32 frame) {
+        MR::getCameraDirector()->endEvent(pInfo->mZoneID, pEventName, resetView, frame);
     }
 
-    void endEventCameraAtLanding(const ActorCameraInfo* pInfo, const char* pName, s32 a3) {
-        getCameraDirector()->endEventAtLanding(pInfo->mZoneID, pName, a3);
+    void endEventCameraAtLanding(const ActorCameraInfo* pInfo, const char* pName, s32 frame) {
+        getCameraDirector()->endEventAtLanding(pInfo->mZoneID, pName, frame);
     }
 
     void declareGlobalEventCameraAbyss(const char* pEventName) {
-        MR::getCameraDirector()->declareEvent(0, pEventName);
+        declareGlobalEventCamera(pEventName);
         CameraParamChunkEvent* chunk = MR::getCameraDirector()->getEventParameter(0, pEventName);
 
-        if (chunk) {
+        if (chunk != nullptr) {
             chunk->setCameraType("CAM_TYPE_EYEPOS_FIX_THERE", MR::getCameraDirector()->mHolder);
             chunk->mGeneralParam->mNum1 = 1;
             chunk->_64 = true;
@@ -269,72 +290,72 @@ namespace MR {
         return getCameraDirector()->isEventCameraActive(pInfo->mZoneID, pEventName);
     }
 
+    bool isGlobalEventCameraActive(const char* pEventName) {
+        return getCameraDirector()->isEventCameraActive(0, pEventName);
+    }
+
     void declareGlobalEventCamera(const char* pEventName) {
         getCameraDirector()->declareEvent(0, pEventName);
     }
 
-    void endGlobalEventCamera(const char* pEventName, s32 a2, bool a3) {
-        getCameraDirector()->endEvent(0, pEventName, a3, a2);
+    void endGlobalEventCamera(const char* pEventName, s32 frame, bool resetView) {
+        getCameraDirector()->endEvent(0, pEventName, resetView, frame);
     }
 
-    void declareGlobalEventCameraFixedThere(const char* pEventName, bool a2, f32 a3) {
-        getCameraDirector()->declareEvent(0, pEventName);
-        CameraParamChunkEvent* pChunk = getCameraDirector()->getEventParameter(0, pEventName);
-        if (pChunk) {
-            pChunk->setCameraType("CAM_TYPE_EYEPOS_FIX_THERE", getCameraDirector()->mHolder);
-            pChunk->mExParam.mLOffsetV = a3;
-            if (a2) {
-                pChunk->mGeneralParam->mNum1 = 1;
+    void declareGlobalEventCameraFixedThere(const char* pEventName, bool mDisableRoll, f32 localOffsetV) {
+        declareGlobalEventCamera(pEventName);
+        CameraParamChunkEvent* chunk = getCameraDirector()->getEventParameter(0, pEventName);
+        if (chunk != nullptr) {
+            chunk->setCameraType("CAM_TYPE_EYEPOS_FIX_THERE", getCameraDirector()->mHolder);
+            chunk->mExParam.mLOffsetV = localOffsetV;
+            if (mDisableRoll) {
+                chunk->mGeneralParam->mNum1 = 1;
             }
-            pChunk->_64 = true;
+            chunk->_64 = true;
         }
     }
 
-    void declareGlobalEventCameraDead(const char* pEventName, f32 dist, s32 num1, s32 num2) {
-        getCameraDirector()->declareEvent(0, pEventName);
-        CameraParamChunkEvent* pChunk = getCameraDirector()->getEventParameter(0, pEventName);
-
-        if (pChunk) {
-            pChunk->setCameraType("CAM_TYPE_DEAD", getCameraDirector()->mHolder);
-            pChunk->mGeneralParam->mDist = dist;
-            pChunk->mGeneralParam->mNum1 = num1;
-            pChunk->mGeneralParam->mNum2 = num2;
-            pChunk->setLOfsErpOff(true);
-            TVec3f offset(0.0f, 0.0f, 0.0f);
-            pChunk->mExParam.mWOffset.set(offset);
-            pChunk->mExParam.mLOffsetV = 100.0f;
-            pChunk->_64 = true;
+    void declareGlobalEventCameraDead(const char* pEventName, f32 dist, s32 time, s32 type) {
+        declareGlobalEventCamera(pEventName);
+        CameraParamChunkEvent* chunk = getCameraDirector()->getEventParameter(0, pEventName);
+        if (chunk != nullptr) {
+            chunk->setCameraType("CAM_TYPE_DEAD", getCameraDirector()->mHolder);
+            chunk->mGeneralParam->mDist = dist;
+            chunk->mGeneralParam->mNum1 = time;
+            chunk->mGeneralParam->mNum2 = type;
+            chunk->setLOfsErpOff(true);
+            chunk->mExParam.setWOffset(TVec3f(0.0f, 0.0f, 0.0f));
+            chunk->mExParam.mLOffsetV = 100.0f;
+            chunk->_64 = true;
         }
     }
 
-    void declareEventCameraAnim(const ActorCameraInfo* pInfo, const char* pName, void* pData) {
-        getCameraDirector()->declareEvent(pInfo->mZoneID, pName);
-        CameraParamChunkEvent* pChunk = getCameraDirector()->getEventParameter(pInfo->mZoneID, pName);
-
-        if (pChunk) {
-            pChunk->setCameraType("CAM_TYPE_ANIM", getCameraDirector()->mHolder);
-            pChunk->mGeneralParam->mNum1 = reinterpret_cast< s32 >(pData);
-            pChunk->mGeneralParam->mDist = 1.0f;
-            pChunk->mGeneralParam->mNum2 = CameraAnim::getAnimFrame(reinterpret_cast< u8* >(pData));
-            pChunk->_64 = true;
+    void declareEventCameraAnim(const ActorCameraInfo* pCamInfo, const char* pAnimName, void* pAnimData) {
+        declareEventCamera(pCamInfo, pAnimName);
+        CameraParamChunkEvent* chunk = getCameraDirector()->getEventParameter(pCamInfo->mZoneID, pAnimName);
+        if (chunk != nullptr) {
+            chunk->setCameraType("CAM_TYPE_ANIM", getCameraDirector()->mHolder);
+            CameraGeneralParam* param = chunk->mGeneralParam;
+            chunk->mGeneralParam->mNum1 = reinterpret_cast< s32 >(pAnimData);
+            chunk->mGeneralParam->mDist = 1.0f;
+            chunk->getGeneralParam()->mNum2 = CameraAnim::getAnimFrame(reinterpret_cast< u8* >(pAnimData));
+            chunk->_64 = true;
         }
     }
 
-    bool isAnimCameraEnd(const ActorCameraInfo* pInfo, const char* pName) {
-        return getCameraDirector()->isAnimCameraEnd(pInfo->mZoneID, pName);
+    bool isAnimCameraEnd(const ActorCameraInfo* pInfo, const char* pAnimName) {
+        return getCameraDirector()->isAnimCameraEnd(pInfo->mZoneID, pAnimName);
     }
 
-    s32 getAnimCameraFrame(const ActorCameraInfo* pInfo, const char* pName) {
-        CameraParamChunkEvent* pChunk = getCameraDirector()->getEventParameter(pInfo->mZoneID, pName);
+    inline bool isCameraType(CameraParamChunkEvent* pChunk, const char* pType) {
+        return pChunk->getCameraTypeIndex() == getCameraHolder()->getIndexOf(pType);
+    }
 
-        if (pChunk) {
-            const char* pCameraType = "CAM_TYPE_ANIM";
-            u8 cameraTypeIndex = pChunk->mCameraTypeIndex;
-            CameraDirector* pDirector = getCameraDirector();
-            s32 animCameraIndex = pDirector->mHolder->getIndexOf(pCameraType);
-
-            if (cameraTypeIndex == animCameraIndex) {
-                return pChunk->mGeneralParam->mNum2;
+    s32 getAnimCameraFrame(const ActorCameraInfo* pCamInfo, const char* pAnimName) {
+        CameraParamChunkEvent* chunk = getCameraDirector()->getEventParameter(pCamInfo->mZoneID, pAnimName);
+        if (chunk != nullptr) {
+            if (isCameraType(chunk, "CAM_TYPE_ANIM")) {
+                return chunk->mGeneralParam->mNum2;
             }
         }
 
@@ -350,176 +371,169 @@ namespace MR {
     }
 
     void declareBlackHoleCamera(const char* pEventName) {
-        getCameraDirector()->declareEvent(0, pEventName);
-        CameraParamChunkEvent* pChunk = getCameraDirector()->getEventParameter(0, pEventName);
-        if (pChunk) {
-            pChunk->setCameraType("CAM_TYPE_BLACK_HOLE", getCameraDirector()->mHolder);
-            pChunk->_64 = true;
-            pChunk->mEnableErpFrame = 1;
-            pChunk->mExParam.mCamInt = 0xf0;
-            pChunk->setCollisionOff(true);
+        declareGlobalEventCamera(pEventName);
+        CameraParamChunkEvent* chunk = getCameraDirector()->getEventParameter(0, pEventName);
+        if (chunk != nullptr) {
+            chunk->setCameraType("CAM_TYPE_BLACK_HOLE", getCameraDirector()->mHolder);
+            chunk->_64 = true;
+            chunk->mEnableErpFrame = true;
+            chunk->mExParam.mCamInt = 240;
+            chunk->setCollisionOff(true);
         }
     }
 
-    void startBlackHoleCamera(const char* pEventName, const TVec3f& a2, const TVec3f& a3) {
-        CameraParamChunkEvent* pChunk = getCameraDirector()->getEventParameter(0, pEventName);
-        if (pChunk) {
-            pChunk->mGeneralParam->mWPoint.set(a2);
-            pChunk->mGeneralParam->mAxis.set(a3);
-            CameraTargetArg stack_8 = CameraTargetArg();
-            getCameraDirector()->startEvent(0, pEventName, stack_8, -1);
+    void startBlackHoleCamera(const char* pEventName, const TVec3f& rWPoint, const TVec3f& rPos) {
+        CameraParamChunkEvent* chunk = getCameraDirector()->getEventParameter(0, pEventName);
+        if (chunk != nullptr) {
+            chunk->mGeneralParam->mWPoint.set(rWPoint);
+            chunk->mGeneralParam->mAxis.set(rPos);
+            startGlobalEventCameraNoTarget(pEventName, -1);
         }
     }
 
     void declareLauncherCamera() {
-        if (getCameraDirector()->getEventParameter(0, sLauncherCameraName)) {
+        if (getCameraDirector()->getEventParameter(0, ::sLauncherCameraName) != nullptr) {
             return;
         }
 
-        getCameraDirector()->declareEvent(0, sLauncherCameraName);
-        CameraParamChunkEvent* pChunk = getCameraDirector()->getEventParameter(0, sLauncherCameraName);
-
-        if (pChunk) {
-            pChunk->setCameraType("CAM_TYPE_DPD", getCameraDirector()->mHolder);
-            pChunk->mGeneralParam->mDist = 120.0f;
-            pChunk->mGeneralParam->mNum1 = 1;
-            pChunk->mGeneralParam->mAngleA = 1.0471976f;
-            pChunk->mGeneralParam->mAngleB = 0.5235988f;
-            pChunk->mGeneralParam->mWPoint.z = 0.0f;
-            pChunk->mGeneralParam->mWPoint.x = 0.05f;
-            pChunk->mGeneralParam->mWPoint.y = 0.99f;
-            pChunk->mGeneralParam->mUp.zero();
-            pChunk->mGeneralParam->mNum2 = 0;
-            pChunk->_64 = true;
+        declareGlobalEventCamera(::sLauncherCameraName);
+        CameraParamChunkEvent* chunk = getCameraDirector()->getEventParameter(0, ::sLauncherCameraName);
+        if (chunk != nullptr) {
+            chunk->setCameraType("CAM_TYPE_DPD", getCameraDirector()->mHolder);
+            chunk->mGeneralParam->mDist = 120.0f;
+            chunk->mGeneralParam->mNum1 = CameraDPD::CameraType_UpdateWithTarget;
+            chunk->mGeneralParam->mAngleA = MR::pi() / 3.0f;
+            chunk->mGeneralParam->mAngleB = MR::pi() / 6.0f;
+            chunk->mGeneralParam->mWPoint.z = 0.0f;
+            chunk->mGeneralParam->mWPoint.x = 0.05f;
+            chunk->mGeneralParam->mWPoint.y = 0.99f;
+            chunk->mGeneralParam->mUp.zero();
+            chunk->mGeneralParam->mNum2 = 0;
+            chunk->_64 = true;
         }
     }
 
     void endLauncherCamera() {
-        getCameraDirector()->endEvent(0, sLauncherCameraName, true, -1);
+        endGlobalEventCamera(::sLauncherCameraName, -1, true);
     }
 
-    void setLauncherCameraAngle(f32 angleB, f32 angleA, f32 wPointZ, f32 upX) {
-        CameraParamChunkEvent* pChunk = getCameraDirector()->getEventParameter(0, sLauncherCameraName);
-
-        if (pChunk) {
-            pChunk->mGeneralParam->mAngleA = angleA;
-            pChunk->mGeneralParam->mAngleB = angleB;
-            pChunk->mGeneralParam->mWPoint.z = wPointZ;
-
-            if (upX < 0.0f) {
-                pChunk->mGeneralParam->mNum2 = 0;
-            }
-            else {
-                pChunk->mGeneralParam->mNum2 = 1;
-                pChunk->mGeneralParam->mUp.x = upX;
+    void setLauncherCameraAngle(f32 angleY, f32 angleX, f32 elevation, f32 f4) {  // TODO: f4
+        CameraParamChunkEvent* chunk = getCameraDirector()->getEventParameter(0, ::sLauncherCameraName);
+        if (chunk != nullptr) {
+            chunk->mGeneralParam->mAngleA = angleX;
+            chunk->mGeneralParam->mAngleB = angleY;
+            chunk->mGeneralParam->mWPoint.z = elevation;
+            if (f4 < 0.0f) {
+                chunk->mGeneralParam->mNum2 = 0;
+            } else {
+                chunk->mGeneralParam->mNum2 = 1;
+                chunk->mGeneralParam->mUp.x = f4;
             }
         }
     }
 
     void declareLauncherFlightCamera() {
-        if (getCameraDirector()->getEventParameter(0, sLauncherFlightCameraName)) {
+        if (getCameraDirector()->getEventParameter(0, ::sLauncherFlightCameraName) != nullptr) {
             return;
         }
 
-        getCameraDirector()->declareEvent(0, sLauncherFlightCameraName);
-        CameraParamChunkEvent* pChunk = getCameraDirector()->getEventParameter(0, sLauncherFlightCameraName);
-
-        if (pChunk) {
-            pChunk->setCameraType("CAM_TYPE_OBJ_PARALLEL", getCameraDirector()->mHolder);
-            TVec3f offset(0.0f, 0.0f, 0.0f);
-            pChunk->mExParam.mWOffset.set(offset);
-            pChunk->mExParam.mLOffset = 0.0f;
-            pChunk->mGeneralParam->mDist = 900.0f;
-            pChunk->mGeneralParam->mAngleA = 1.4f;
-            pChunk->mGeneralParam->mAngleB = 3.1415927f;
-            pChunk->setCollisionOff(true);
-            pChunk->_64 = true;
+        declareGlobalEventCamera(::sLauncherFlightCameraName);
+        CameraParamChunkEvent* chunk = getCameraDirector()->getEventParameter(0, ::sLauncherFlightCameraName);
+        if (chunk != nullptr) {
+            chunk->setCameraType("CAM_TYPE_OBJ_PARALLEL", getCameraDirector()->mHolder);
+            chunk->mExParam.setWOffset(TVec3f(0.0f, 0.0f, 0.0f));
+            chunk->mExParam.mLOffset = 0.0f;
+            chunk->mGeneralParam->mDist = 900.0f;
+            chunk->mGeneralParam->mAngleA = 1.4f;
+            chunk->mGeneralParam->mAngleB = MR::pi();
+            chunk->setCollisionOff(true);
+            chunk->_64 = true;
         }
     }
 
     void endLauncherFlightCamera() {
-        getCameraDirector()->endEvent(0, sLauncherFlightCameraName, true, -1);
+        endGlobalEventCamera(::sLauncherFlightCameraName, -1, true);
     }
 
     bool isActiveLauncherCamera() {
-        return getCameraDirector()->isEventCameraActive(0, sLauncherCameraName);
+        return isGlobalEventCameraActive(::sLauncherCameraName);
     }
 
     bool isActiveLauncherFlightCamera() {
-        return getCameraDirector()->isEventCameraActive(0, sLauncherFlightCameraName);
+        return isGlobalEventCameraActive(::sLauncherFlightCameraName);
     }
 
-    void startSubjectiveCamera(s32 a1) {
-        getCameraDirector()->startSubjectiveCamera(a1);
+    void startSubjectiveCamera(s32 camType) {
+        getCameraDirector()->startSubjectiveCamera(camType);
     }
 
-    void endSubjectiveCamera(s32 a1) {
-        getCameraDirector()->endSubjectiveCamera(a1);
+    void endSubjectiveCamera(s32 camType) {
+        getCameraDirector()->endSubjectiveCamera(camType);
     }
 
     void declareEventCameraProgrammable(const char* pEventName) {
-        getCameraDirector()->declareEvent(0, pEventName);
-        CameraParamChunkEvent* pChunk = getCameraDirector()->getEventParameter(0, pEventName);
-        if (pChunk) {
-            pChunk->setCameraType("CAM_TYPE_POINT_FIX", getCameraDirector()->mHolder);
-            pChunk->_64 = true;
+        declareGlobalEventCamera(pEventName);
+        CameraParamChunkEvent* chunk = getCameraDirector()->getEventParameter(0, pEventName);
+        if (chunk != nullptr) {
+            chunk->setCameraType("CAM_TYPE_POINT_FIX", getCameraDirector()->mHolder);
+            chunk->_64 = true;
         }
     }
 
-    void setProgrammableCameraParam(const char* pEventName, const TVec3f& rWPoint, const TVec3f& a3, const TVec3f& rUpVec, bool doZeroWOffset) {
-        CameraParamChunkEvent* pChunk = getCameraDirector()->getEventParameter(0, pEventName);
-        if (pChunk) {
-            pChunk->mGeneralParam->mWPoint.set(rWPoint);
-            crossToPolar(rWPoint, a3, (f32*)pChunk->mGeneralParam, &pChunk->mGeneralParam->mAxis.x, &pChunk->mGeneralParam->mAxis.y);
-            pChunk->mGeneralParam->mUp.set(rUpVec);
-            pChunk->setLOfsErpOff(doZeroWOffset);
-            if (!doZeroWOffset) {
-                pChunk->mExParam.mWOffset.zero();
+    void setProgrammableCameraParam(const char* pEventName, const TVec3f& rWPoint, const TVec3f& rPos, const TVec3f& rUpVec, bool isLOfsErpOff) {
+        CameraParamChunkEvent* chunk = getCameraDirector()->getEventParameter(0, pEventName);
+        if (chunk != nullptr) {
+            chunk->mGeneralParam->mWPoint.set(rWPoint);
+            MR::crossToPolar(rWPoint, rPos, &chunk->mGeneralParam->mDist, &chunk->mGeneralParam->mAxis.x, &chunk->mGeneralParam->mAxis.y);
+            chunk->mGeneralParam->mUp.set(rUpVec);
+            chunk->setLOfsErpOff(isLOfsErpOff);
+            if (!isLOfsErpOff) {
+                chunk->mExParam.mWOffset.zero();
             }
         }
     }
 
     void setProgrammableCameraParamFovy(const char* pEventName, f32 fovy) {
-        CameraParamChunkEvent* pChunk = getCameraDirector()->getEventParameter(0, pEventName);
-        if (pChunk) {
-            pChunk->mExParam.mFovy = fovy;
-            pChunk->setUseFovy(true);
+        CameraParamChunkEvent* chunk = getCameraDirector()->getEventParameter(0, pEventName);
+        if (chunk != nullptr) {
+            chunk->mExParam.mFovy = fovy;
+            chunk->setUseFovy(true);
         }
     }
 
     u32 getEventCameraFrames(const ActorCameraInfo* pInfo, const char* pEventName) {
-        CameraParamChunkEvent* pChunk = getCameraDirector()->getEventParameter(pInfo->mZoneID, pEventName);
-        if (pChunk) {
-            return pChunk->mEvFrame;
-        } else {
-            return 0;
+        CameraParamChunkEvent* chunk = getCameraDirector()->getEventParameter(pInfo->mZoneID, pEventName);
+        if (chunk != nullptr) {
+            return chunk->mEvFrame;
         }
+
+        return 0;
     }
 };  // namespace MR
 
 namespace {
-    char* createRegisterName(const NameObj* pObj, u32 index) {
-        char buf[0x100];
-        snprintf(buf, sizeof(buf), "%s-%d", pObj->mName, index);
-        char* pName = new char[strlen(buf) + 1];
-        strcpy(pName, buf);
-        return pName;
+    char* createRegisterName(const NameObj* pNameObj, u32 id) {
+        char buff[256];
+        snprintf(buff, 256, "%s-%d", pNameObj->getName(), id);
+
+        char* out = new char[strlen(buff) + 1];
+        strcpy(out, buff);
+        return out;
     }
 };  // namespace
 
 namespace MR {
-    void declareCameraRegisterMtx(const NameObj* pObj, u32 a2, MtxPtr mtx) {
-        char* pName = createRegisterName(pObj, a2);
-        getCameraDirector()->mRegisterHolder->declareMtxReg(pName, mtx);
+
+    void declareCameraRegisterMtx(const NameObj* pObj, u32 id, MtxPtr mtx) {
+        getCameraDirector()->mRegisterHolder->declareMtxReg(::createRegisterName(pObj, id), mtx);
     }
 
-    void declareCameraRegisterVec(const NameObj* pObj, u32 a2, TVec3f* pVec) {
-        char* pName = createRegisterName(pObj, a2);
-        getCameraDirector()->mRegisterHolder->declareVecReg(pName, pVec);
+    void declareCameraRegisterVec(const NameObj* pObj, u32 id, TVec3f* pVec) {
+        getCameraDirector()->mRegisterHolder->declareVecReg(::createRegisterName(pObj, id), pVec);
     }
 
-    void startStartPosCamera(bool a1) {
-        getCameraDirector()->startStartPosCamera(a1);
+    void startStartPosCamera(bool interpolate) {
+        getCameraDirector()->startStartPosCamera(interpolate);
     }
 
     void endStartPosCamera() {
@@ -527,7 +541,7 @@ namespace MR {
     }
 
     bool isStartPosCameraEnd() {
-        return !getCameraDirector()->_170;
+        return !getCameraDirector()->mIsStartCameraActive;
     }
 
     bool hasStartAnimCamera() {
@@ -558,18 +572,15 @@ namespace MR {
         return getCameraDirector()->isSubjectiveCamera();
     }
 
+    bool isFirstPersonCameraOK() {
+        return !MR::isPlayerDisableFpView() && getCameraDirector()->isEnableToControl();
+    }
+
     bool isPossibleToShiftToFirstPersonCamera() {
-        bool canControl = false;
         bool ret = false;
-
-        if (!isPlayerDisableFpView() && getCameraDirector()->isEnableToControl()) {
-            canControl = true;
-        }
-
-        if (canControl && !getCameraDirector()->_170) {
+        if (isFirstPersonCameraOK() && !getCameraDirector()->mIsStartCameraActive) {
             ret = true;
         }
-
         return ret;
     }
 
@@ -583,18 +594,18 @@ namespace MR {
 
     bool isCameraControlNG() {
         bool ret = true;
-        if (getCameraDirector()->_1F2 == false && isFpViewChangingFailure() == false) {
+        if (getCameraDirector()->mIsCameraNG == false && isFpViewChangingFailure() == false) {
             ret = false;
         }
         return ret;
     }
 
-    void startTalkCamera(const TVec3f& rPosition, const TVec3f& rUp, f32 axisX, f32 axisY, s32 a5) {
-        getCameraDirector()->startTalkCamera(rPosition, rUp, axisX, axisY, a5);
+    void startTalkCamera(const TVec3f& rPosition, const TVec3f& rUp, f32 axisX, f32 axisY, s32 frame) {
+        getCameraDirector()->startTalkCamera(rPosition, rUp, axisX, axisY, frame);
     }
 
-    void endTalkCamera(bool a1, s32 a2) {
-        getCameraDirector()->endTalkCamera(a1, a2);
+    void endTalkCamera(bool resetView, s32 frame) {
+        getCameraDirector()->endTalkCamera(resetView, frame);
     }
 
     void pauseOnCameraDirector() {
@@ -605,8 +616,8 @@ namespace MR {
         requestMovementOn(getCameraDirector());
     }
 
-    TVec3f* getCameraWatchPos() {
-        return &getCameraDirector()->mPoseParam1->mWatchPos;
+    const TVec3f& getCameraWatchPos() {
+        return getCameraDirector()->mPoseParam1->mWatchPos;
     }
 
     void zoomInTargetGameCamera() {
@@ -622,22 +633,21 @@ namespace MR {
     }
 
     void resetCameraLocalOffset() {
-        CameraDirector* pDirector = getCameraDirector();
-        pDirector->_1B1 = true;
+        getCameraDirector()->requestLocalOffsetReset();
     }
 
-    void overlayWithPreviousScreen(u32 a1) {
-        getCameraDirector()->cover(a1);
+    void overlayWithPreviousScreen(u32 time) {
+        getCameraDirector()->cover(time);
     }
 
     bool isSubjectiveCameraOnForObjClipping() {
-        return getCameraDirector()->_1B4 > 0;
+        return getCameraDirector()->mSubjectiveFrame > 0;
     }
 
     void setGameCameraTargetToPlayer() {
         CameraTargetArg camTarget = CameraTargetArg();
         setCameraTargetToPlayer(&camTarget);
-        camTarget.setTarget();
+        setGameCameraTarget(camTarget);
     }
 
     void setGameCameraTarget(const CameraTargetArg& rCamTarget) {
@@ -648,53 +658,48 @@ namespace MR {
         rCamTarget.setTarget();
     }
 
-    void startEventCameraNoTarget(const ActorCameraInfo* pInfo, const char* pName, s32 a3) {
-        CameraTargetArg camTarget = CameraTargetArg();
-        getCameraDirector()->startEvent(pInfo->mZoneID, pName, camTarget, a3);
+    void startEventCameraNoTarget(const ActorCameraInfo* pInfo, const char* pName, s32 frame) {
+        startEventCamera(pInfo, pName, CameraTargetArg(), frame);
     }
 
-    void startEventCameraTargetPlayer(const ActorCameraInfo* pInfo, const char* pName, s32 a3) {
-        CameraTargetArg camTarget = CameraTargetArg();
-        setCameraTargetToPlayer(&camTarget);
-        getCameraDirector()->startEvent(pInfo->mZoneID, pName, camTarget, a3);
-    }
-
-    void startEventCamera(const ActorCameraInfo* pInfo, const char* pName, const CameraTargetArg& rCamTarget, s32 a4) {
-        getCameraDirector()->startEvent(pInfo->mZoneID, pName, rCamTarget, a4);
-    }
-
-    void startGlobalEventCameraNoTarget(const char* pName, s32 a2) {
-        CameraTargetArg camTarget = CameraTargetArg();
-        getCameraDirector()->startEvent(0, pName, camTarget, a2);
-    }
-
-    void startGlobalEventCameraTargetPlayer(const char* pName, s32 a2) {
+    void startEventCameraTargetPlayer(const ActorCameraInfo* pInfo, const char* pName, s32 frame) {
         CameraTargetArg camTarget = CameraTargetArg();
         setCameraTargetToPlayer(&camTarget);
-        getCameraDirector()->startEvent(0, pName, camTarget, a2);
+        startEventCamera(pInfo, pName, camTarget, frame);
     }
 
-    void startGlobalEventCamera(const char* pName, const CameraTargetArg& rCamTarget, s32 a3) {
-        getCameraDirector()->startEvent(0, pName, rCamTarget, a3);
+    void startEventCamera(const ActorCameraInfo* pInfo, const char* pName, const CameraTargetArg& rCamTarget, s32 frame) {
+        getCameraDirector()->startEvent(pInfo->mZoneID, pName, rCamTarget, frame);
     }
 
-    void startEventCameraAnim(const ActorCameraInfo* pInfo, const char* pEventName, const CameraTargetArg& rCamTarget, s32 a4, f32 a5) {
+    void startGlobalEventCameraNoTarget(const char* pName, s32 frame) {
+        startGlobalEventCamera(pName, CameraTargetArg(), frame);
+    }
+
+    void startGlobalEventCameraTargetPlayer(const char* pName, s32 frame) {
+        CameraTargetArg camTarget = CameraTargetArg();
+        setCameraTargetToPlayer(&camTarget);
+        startGlobalEventCamera(pName, camTarget, frame);
+    }
+
+    void startGlobalEventCamera(const char* pName, const CameraTargetArg& rCamTarget, s32 frame) {
+        getCameraDirector()->startEvent(0, pName, rCamTarget, frame);
+    }
+
+    void startEventCameraAnim(const ActorCameraInfo* pInfo, const char* pEventName, const CameraTargetArg& rCamTarget, s32 frame, f32 speed) {
         CameraParamChunkEvent* pChunk = getCameraDirector()->getEventParameter(pInfo->mZoneID, pEventName);
         if (pChunk) {
-            pChunk->mGeneralParam->mDist = a5;
+            pChunk->mGeneralParam->mDist = speed;
         }
-        getCameraDirector()->startEvent(pInfo->mZoneID, pEventName, rCamTarget, a4);
+        startEventCamera(pInfo, pEventName, rCamTarget, frame);
     }
 
-    void startLauncherCamera(const CameraTargetArg& rCamTarget) {
-        getCameraDirector()->startEvent(0, sLauncherCameraName, rCamTarget, 0);
+    void startLauncherCamera(const CameraTargetArg& rTargetArg) {
+        startGlobalEventCamera(::sLauncherCameraName, rTargetArg, 0);
     }
 
-    void startLauncherFlightCamera(s32 frame) {
-        const char* pCameraName = sLauncherFlightCameraName;
-        CameraTargetArg camTarget = CameraTargetArg();
-        setCameraTargetToPlayer(&camTarget);
-        getCameraDirector()->startEvent(0, pCameraName, camTarget, frame);
+    void startLauncherFlightCamera(s32 time) {
+        startGlobalEventCameraTargetPlayer(::sLauncherFlightCameraName, time);
     }
 
     void cleanEventCameraTarget_temporally() {

@@ -1,13 +1,21 @@
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
 #include "Game/Player/Mario.hpp"
 #include "Game/Animation/XanimeCore.hpp"
 #include "Game/Enemy/KarikariDirector.hpp"
 #include "Game/LiveActor/Binder.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/Nerve.hpp"
+#else  // SMGPC_RETAIL_SOURCE
+#include "Game/Player/Mario.hpp"
+#include "Game/LiveActor/Binder.hpp"
+#endif  // SMGPC_PC_DIVERGENCE
 #include "Game/Map/HitInfo.hpp"
 #include "Game/Player/MarioAbyssDamage.hpp"
 #include "Game/Player/MarioActor.hpp"
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
 #include "Game/Player/MarioAnimator.hpp"
+#else  // SMGPC_RETAIL_SOURCE
+#endif  // SMGPC_PC_DIVERGENCE
 #include "Game/Player/MarioBlown.hpp"
 #include "Game/Player/MarioBump.hpp"
 #include "Game/Player/MarioClimb.hpp"
@@ -35,7 +43,10 @@
 #include "Game/Player/MarioSideStep.hpp"
 #include "Game/Player/MarioSkate.hpp"
 #include "Game/Player/MarioSlider.hpp"
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
 #include "Game/Player/MarioState.hpp"
+#else  // SMGPC_RETAIL_SOURCE
+#endif  // SMGPC_PC_DIVERGENCE
 #include "Game/Player/MarioStep.hpp"
 #include "Game/Player/MarioStick.hpp"
 #include "Game/Player/MarioStun.hpp"
@@ -48,13 +59,15 @@
 #include "Game/Player/MarioWarp.hpp"
 #if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
 #include "Game/Util/DirectDraw.hpp"
-#else  // SMGPC_RETAIL_SOURCE
-#endif  // SMGPC_PC_DIVERGENCE
 #include "Game/Util.hpp"
 #include "revolution/mtx.h"
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
 #include <stdexcept>
 #else  // SMGPC_RETAIL_SOURCE
+#include "Game/Util.hpp"
+#include "Game/Util/MapUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include "revolution/mtx.h"
+#include "revolution/types.h"
 #endif  // SMGPC_PC_DIVERGENCE
 
 void FORCE_OPERATOR() {
@@ -86,8 +99,8 @@ Mario::Mario(MarioActor* actor) : MarioModule(actor) {
     _944 = mFrontVec;
     _950 = mSideVec;
     _60D = 0;
-    _71C = 0;
-    _278 = 0.0f;
+    mTargetWalkSpeedIndex = 0;
+    mWalkSpeed = 0.0f;
     _2D0 = 0.0f;
     mJumpVec.zero();
     _2E0.zero();
@@ -139,10 +152,10 @@ Mario::Mario(MarioActor* actor) : MarioModule(actor) {
     _3FE = 0;
     _400 = 0;
     _402 = 0;
-    _27C = 0.0f;
-    _734 = 0;
-    _735 = 0;
-    _748 = 0;
+    mPrevAnimFrame = 0.0f;
+    mIceAnimFoot = 0;
+    mSinkTimer = 0;
+    mPoisonTimer = 0;
     _71E = 0;
     _414 = 0;
     mMorphResetTimer = 0;
@@ -158,7 +171,11 @@ Mario::Mario(MarioActor* actor) : MarioModule(actor) {
     _76C = 0;
     _770 = 0.0f;
     _738 = 0.0f;
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
     _73C = TVec3f(0.0f, 0.0f, 0.0f);
+#else  // SMGPC_RETAIL_SOURCE
+    _73C.set(0.0f, 1.0f, 0.0f);
+#endif  // SMGPC_PC_DIVERGENCE
     _368.set(0.0f, 1.0f, 0.0f);
     _374 = -_368;
     _380 = _368;
@@ -191,14 +208,14 @@ Mario::Mario(MarioActor* actor) : MarioModule(actor) {
     _10_HIGH_WORD = 0;
     mDrawStates_WORD = 0;
     _1C_WORD = 0;
-    _20 = 0;
-    _24 = 0;
+    _20_LOW_WORD = 0;
+    _20_HIGH_WORD = 0;
     _28 = 0;
 
 #if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
     _458 = nullptr;
 #else  // SMGPC_RETAIL_SOURCE
-    _458 = TriangleFilterDelegator< Mario >::allocateDelegator(this, &Mario::isIgnoreTriangle);
+    _458 = MR::createTriangleFilterDelegator(this, &Mario::isIgnoreTriangle);
 #endif  // SMGPC_PC_DIVERGENCE
 
     _45C = new Triangle();
@@ -275,7 +292,11 @@ Mario::Mario(MarioActor* actor) : MarioModule(actor) {
 
     _72C = 200.0f;
 
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
     _730 = 0;
+#else  // SMGPC_RETAIL_SOURCE
+    _730 = nullptr;
+#endif  // SMGPC_PC_DIVERGENCE
 
     _8D8 = nullptr;
     _8D4 = nullptr;
@@ -305,10 +326,10 @@ Mario::Mario(MarioActor* actor) : MarioModule(actor) {
     _6B0.zero();
     _6BC.zero();
 
-    _63C.set(1.0f, 0.0f, 0.0f);
-    _648.set(0.0f, 1.0f, 0.0f);
-    _654.set(0.0f, 0.0f, 1.0f);
-    _6A0 = _654;
+    mSide2D.set(1.0f, 0.0f, 0.0f);
+    mUp2D.set(0.0f, 1.0f, 0.0f);
+    mNormal2D.set(0.0f, 0.0f, 1.0f);
+    _6A0 = mNormal2D;
 
 #if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
     _96C = nullptr;
@@ -406,7 +427,11 @@ Mario::Mario(MarioActor* actor) : MarioModule(actor) {
     }
     _96A = 0;
     _574 = 0;
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
     _898 = 0;
+#else  // SMGPC_RETAIL_SOURCE
+    _898 = false;
+#endif  // SMGPC_PC_DIVERGENCE
 }
 
 void Mario::updateAndClearStrideParameter() {
@@ -415,8 +440,8 @@ void Mario::updateAndClearStrideParameter() {
     mPosition = mActor->mPosition;
     mVelocityAfter.zero();
     mVelocity.zero();
-    _20 = mMovementStates_LOW_WORD;
-    _24 = mMovementStates_HIGH_WORD;
+    _20_LOW_WORD = mMovementStates_LOW_WORD;
+    _20_HIGH_WORD = mMovementStates_HIGH_WORD;
     _28 = _10_LOW_WORD;
     _2C = _10_HIGH_WORD;
     mPrevDrawStates = mDrawStates;
@@ -470,12 +495,17 @@ void Mario::updateTimers() {
     if (_434 != 0) {
         _434--;
     }
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
     MarioHang* hang = mHang;
     u16 hangTimer = hang->mHangTimer;
     if (hangTimer == 0) {
         return;
     } else {
         hang->mHangTimer = hangTimer + -1;
+#else  // SMGPC_RETAIL_SOURCE
+    if (mHang->mHangTimer != 0) {
+        mHang->mHangTimer--;
+#endif  // SMGPC_PC_DIVERGENCE
     }
 }
 
@@ -523,14 +553,21 @@ void Mario::updateMorphResetTimer() {
 }
 
 void Mario::doExtraServices() {
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
     TVec3f killed;
     TVec3f horizontal;
     MarioConst* marioConst = mActor->mConst;
     MarioConstTable* table = marioConst->getTable();
 
     if (MR::diffAngleAbs(_43C, mFrontVec) < table->mFrontAngleFixMargin) {
+#else  // SMGPC_RETAIL_SOURCE
+    TVec3f stack_2c;
+    TVec3f stack_20;
+    if (MR::diffAngleAbs(_43C, mFrontVec) < mActor->mConst->getTable()->mFrontAngleFixMargin) {
+#endif  // SMGPC_PC_DIVERGENCE
         setFrontVec(_43C);
     }
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
 
     if (!isPlayerModeBee() && !isPlayerModeTeresa() && mMovementStates.jumping && _3BC > 600 && !MR::isNearZero(*getGravityVec())) {
         f32 vertical = MR::vecKillElement(mJumpVec, *getGravityVec(), &killed);
@@ -546,13 +583,30 @@ void Mario::doExtraServices() {
         MR::isNearZero(mAirGravityVec);
 
         if (MR::vecKillElement(displacement, mAirGravityVec, &horizontal) > 28000.0f) {
+#else  // SMGPC_RETAIL_SOURCE
+    if (!isPlayerModeBee() && !isPlayerModeTeresa() && mMovementStates.jumping && _3BC > 600 && !MR::isNearZero(*getGravityVec())) {
+        TVec3f vec(*getGravityVec() * MR::vecKillElement(mJumpVec, *getGravityVec(), &stack_2c));
+        mJumpVec = vec;
+    }
+    if (!isPlayerModeFoo() && !isPlayerModeTeresa() && mMovementStates.jumping && _3BC > 300) {
+        TVec3f stack_8(mPosition - *getLastSafetyTrans(nullptr));
+
+        if (MR::isNearZero(mAirGravityVec)) {
+        }
+
+        if (MR::vecKillElement(stack_8, mAirGravityVec, &stack_20) > 28000.0f) {
+#endif  // SMGPC_PC_DIVERGENCE
             if (mVerticalSpeed > 2499.0f || mActor->isInZeroGravitySpot()) {
                 mActor->forceKill(0);
             }
         }
     }
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
 
     if (getCurrentStatus() != MarioStatus_None || mActor->_3C0 || mActor->_EA4) {
+#else  // SMGPC_RETAIL_SOURCE
+    if (getCurrentStatus() != 0 || mActor->_3C0 != 0 || mActor->_EA4) {
+#endif  // SMGPC_PC_DIVERGENCE
         _10._C = 0;
     }
 }
@@ -572,6 +626,7 @@ void Mario::setGroundNorm(const TVec3f& rVec) {
         _368 = rVec;
         _374 = -rVec;
     }
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
 }
 
 void Mario::checkForceGrounding() {
@@ -690,7 +745,7 @@ void Mario::fixHeadFrontVecByGravity() {
         rotateSpeed = pTable->mRotateHeadVecSpeedByGravityS;
     }
 
-    if (_60D && _71C) {
+    if (_60D && mTargetWalkSpeedIndex) {
         if ((mMovementStates._1 || !mMovementStates.jumping) && mDrawStates._D) {
             MR::isNearZero(mAirGravityVec);
 
@@ -835,6 +890,8 @@ void Mario::fixHeadFrontVecByGravity() {
     }
 
     _60D = 0;
+#else  // SMGPC_RETAIL_SOURCE
+#endif  // SMGPC_PC_DIVERGENCE
 }
 
 // Nearly matches
@@ -906,6 +963,7 @@ bool Mario::isNonFixHeadVec() const {
     return mActor->_EA4;
 }
 
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
 void Mario::createDirectionMtx(MtxPtr mtx) {
     TVec3f stack_20;
     TVec3f stack_14;
@@ -1004,6 +1062,44 @@ bool Mario::createCorrectionMtx(MtxPtr mtx, TVec3f* pOut) {
 
     return true;
 }
+#else  // SMGPC_RETAIL_SOURCE
+/* void Mario::createDirectionMtx(MtxPtr mtx) {
+    TVec3f stack_20;
+    TVec3f stack_14;
+    TVec3f stack_8;
+    stack_14 = _1FC;
+    stack_20 = mSideVec;
+    stack_8 = mFrontVec;
+    if (mDrawStates._11) {
+        MR::normalize(&stack_14);
+        stack_8.cross(stack_20, stack_14);
+        MR::normalizeOrZero(&stack_8);
+        if (MR::isNearZero(stack_8)) {
+            stack_8 = mFrontVec;
+        }
+        stack_20.cross(stack_14, stack_8);
+        MR::normalizeOrZero(&stack_20);
+        if (MR::isNearZero(stack_20)) {
+            stack_20 = mSideVec;
+        }
+    }
+    else {
+        MR::normalizeOrZero(&stack_14);
+        stack_20.cross(stack_14, mFrontVec);
+        MR::normalizeOrZero(&stack_20);
+        if (MR::isNearZero(stack_20)) {
+            stack_20 = mSideVec;
+        }
+        stack_8.cross(stack_20, stack_14);
+        MR::normalizeOrZero(&stack_8);
+        if (MR::isNearZero(stack_8)) {
+            stack_8 = mFrontVec;
+        }
+    }
+    createMtxDir(mtx, stack_8, stack_14, stack_20);
+    MR::setMtxTrans(mtx, 0.0f, 0.0f, 0.0f);
+} */
+#endif  // SMGPC_PC_DIVERGENCE
 
 void Mario::slopeTiltHead(TVec3f* pVec) {
     if (mMovementStates._1) {
@@ -1101,7 +1197,6 @@ void Mario::setHeadVec(const TVec3f& rHead) {
 void Mario::setFrontVec(const TVec3f& rFront) {
 #if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
     mFrontVec = rFront;
-    MR::normalize(&mFrontVec);
 #else  // SMGPC_RETAIL_SOURCE
     TVec3f plusMinus6A0;
     TVec3f frontWithout6A0;
@@ -1124,8 +1219,8 @@ void Mario::setFrontVec(const TVec3f& rFront) {
     } else {
         mFrontVec = rFront;
     }
-    MR::normalize(&mFrontVec);
 #endif  // SMGPC_PC_DIVERGENCE
+    MR::normalize(&mFrontVec);
 }
 
 void Mario::setFrontVecKeepUp(const TVec3f& rFront, f32 blendFactor) {
@@ -1252,7 +1347,11 @@ void Mario::setHeadAndFrontVecFromRotate(const TVec3f& rRotate) {
 void Mario::forceSetHeadVecKeepSide(const TVec3f& rVec) {
     mHeadVec = rVec;
     _1FC = rVec;
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
     if (MR::isSameDirection(rVec, mSideVec, 0.01f)) {
+#else  // SMGPC_RETAIL_SOURCE
+    if (MR::isSameDirection(rVec, mSideVec)) {
+#endif  // SMGPC_PC_DIVERGENCE
         fixSideVecFromFrontUp();
     }
     fixFrontVecFromUpSide();
@@ -1265,21 +1364,34 @@ void Mario::draw() const {
     if (mDrawStates._1) {
         TDDraw::cameraInit3D();
         TDDraw::setup(0, 1, 0);
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
         TVec3f* p_2A0 = &mActor->_2A0;
         TVec3f diff31C_2A0(mShadowPos);
         diff31C_2A0 -= *p_2A0;
         TDDraw::drawCylinder(mPosition, diff31C_2A0, 32.0f, 0xffff0010, 0xff000004, 8);
         TVec3f diff2A0_31C(mActor->_2A0);
         diff2A0_31C -= mShadowPos;
+#else  // SMGPC_RETAIL_SOURCE
+        TDDraw::drawCylinder(mPosition, mShadowPos - mActor->_2A0, 32.0f, 0xffff0010, 0xff000004, 8);
+        TVec3f diff2A0_31C(mActor->_2A0 - mShadowPos);
+#endif  // SMGPC_PC_DIVERGENCE
         f32 diffMag = diff2A0_31C.length();
         MR::normalize(&diff2A0_31C);
         TVec3f _31CPlusStuff(mShadowPos);
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
         f32 _37CMod10 = mActor->_37C % 0xa;
         _31CPlusStuff += diff2A0_31C * diffMag * 0.125f * _37CMod10 * 0.1f;
+#else  // SMGPC_RETAIL_SOURCE
+        _31CPlusStuff += diff2A0_31C * diffMag * 0.125f * (mActor->_37C % 0xa) * 0.1f;
+#endif  // SMGPC_PC_DIVERGENCE
         f32 one_eighth = 0.125f;
         for (u32 i = 0; i < 8; i++) {
             TDDraw::drawCircle(_31CPlusStuff, diff2A0_31C, 100.0f, 0xffffff70, 0x10);
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
             _31CPlusStuff += diff2A0_31C * one_eighth * diffMag;
+#else  // SMGPC_RETAIL_SOURCE
+            _31CPlusStuff += diff2A0_31C * diffMag * one_eighth;
+#endif  // SMGPC_PC_DIVERGENCE
         }
     }
     if (_97C != nullptr) {
@@ -1287,6 +1399,7 @@ void Mario::draw() const {
     }
     drawTask();
 }
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
 /*
     r3 = mActor
     r0 = 0x4330
@@ -1302,6 +1415,8 @@ void Mario::draw() const {
     r0 = mActor->_37C & 0xa
 
 */
+#else  // SMGPC_RETAIL_SOURCE
+#endif  // SMGPC_PC_DIVERGENCE
 
 void Mario::addTrans(const TVec3f& rShift, const char* a2) {
     mPosition += rShift;
@@ -1340,10 +1455,6 @@ bool Mario::isEnableRush() const {
     // Hanging, damage, Flow, and their state modules are structurally absent
     // from the stand/walk controller. Preserve the retail jumping denial that
     // is represented by the retained movement-state fields.
-    if (mMovementStates._B && mMovementStates.jumping) {
-        return false;
-    }
-    return true;
 #else  // SMGPC_RETAIL_SOURCE
     if (isHanging()) {
         return false;
@@ -1354,11 +1465,11 @@ bool Mario::isEnableRush() const {
     if (isStatusActive(MarioStatus_Flow)) {
         return false;
     }
+#endif  // SMGPC_PC_DIVERGENCE
     if (mMovementStates._B && mMovementStates.jumping) {
         return false;
     }
     return true;
-#endif  // SMGPC_PC_DIVERGENCE
 }
 
 bool Mario::isInvincible() const {
@@ -1372,6 +1483,7 @@ bool Mario::isInvincible() const {
     }
 }
 
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
 void Mario::inputStick() {
     mActor->getStickValue(&mStickPos.x, &mStickPos.y);
 
@@ -1447,22 +1559,9 @@ void Mario::inputStick() {
     _524 = _528;
     _528 = quantizedAngle;
 
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
     if (mMovementStates._37 || _10._15 || mMovementStates._3A) {
         throw std::logic_error("2D and 2.5D stick modes are unavailable in the PC walk slice");
     }
-#else  // SMGPC_RETAIL_SOURCE
-    if (mMovementStates._37) {
-        stick2DadjustGround(mStickPos.x, mStickPos.y);
-    }
-    if (_10._15) {
-        stick2Dadjust(mStickPos.x, mStickPos.y);
-    }
-    if (mMovementStates._3A) {
-        update25Dmode();
-        updateAxisFromMode(_6AC);
-    }
-#endif  // SMGPC_PC_DIVERGENCE
     if (_10._13) {
         mStickPos.y = 0.0f;
     }
@@ -1474,6 +1573,8 @@ void Mario::inputStick() {
     MR::normalizeOrZero(&mWorldPadDir);
 }
 
+#else  // SMGPC_RETAIL_SOURCE
+#endif  // SMGPC_PC_DIVERGENCE
 bool Mario::isCeiling() const {
     if (_4C8->isValid() == false) {
         return false;
@@ -1483,8 +1584,13 @@ bool Mario::isCeiling() const {
 }
 
 void Mario::setGravityVec(const TVec3f& rGravity) {
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
     if (MR::isSameDirection(mAirGravityVec, rGravity, 0.01)) {
         if (MR::isOppositeDirection(mAirGravityVec, rGravity, 0.01)) {
+#else  // SMGPC_RETAIL_SOURCE
+    if (MR::isSameDirection(mAirGravityVec, rGravity)) {
+        if (MR::isOppositeDirection(mAirGravityVec, rGravity)) {
+#endif  // SMGPC_PC_DIVERGENCE
             _10._24 = 1;
             _10._25 = 1;
         }
@@ -1528,19 +1634,13 @@ void Mario::updateSoundCode() {
     MR::setMapSondCodeGravity(mActor, soundCode);
 }
 
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
 // nearly, last conditional doesn't want to cooperate
 bool Mario::isForceStopRush() const {
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
     u16 temp = _960;
-#else  // SMGPC_RETAIL_SOURCE
-#endif  // SMGPC_PC_DIVERGENCE
     if (mVerticalSpeed != 0.0f) {
         goto exit_false;
     }
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
-#else  // SMGPC_RETAIL_SOURCE
-    u16 temp = _960;
-#endif  // SMGPC_PC_DIVERGENCE
     if (temp < (s16)0xf) {
         if (temp == (s16)4) {
             goto exit_true;
@@ -1573,6 +1673,21 @@ bool Mario::isForceStopRush() const {
 exit_true:
     return true;
 exit_false:
+#else  // SMGPC_RETAIL_SOURCE
+bool Mario::isForceStopRush() const {
+    if (mVerticalSpeed == 0.0f) {
+        switch (_960) {
+        case 1:
+        case 4:
+        case 10:
+        case 15:
+        case 16:
+        case 24:
+        case 129:
+            return true;
+        }
+    }
+#endif  // SMGPC_PC_DIVERGENCE
     return false;
 }
 
@@ -1588,6 +1703,7 @@ const TVec3f& Mario::getAirGravityVec() const {
 }
 
 const TVec3f Mario::getAirFrontVec() const {
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
     TVec3f airFront;
     MR::vecKillElement(mFrontVec, mAirGravityVec, &airFront);
 
@@ -1596,6 +1712,15 @@ const TVec3f Mario::getAirFrontVec() const {
     }
 
     return airFront;
+#else  // SMGPC_RETAIL_SOURCE
+    TVec3f stack_8;
+    MR::vecKillElement(mFrontVec, mAirGravityVec, &stack_8);
+    if (MR::normalizeOrZero(&stack_8)) {
+        return mFrontVec;
+    } else {
+        return stack_8;
+    }
+#endif  // SMGPC_PC_DIVERGENCE
 }
 
 void Mario::initAfterConst() {
@@ -1634,6 +1759,11 @@ void Mario::writeBackPhyisicalVector() {
     TVec3f stack_b0;
     TVec3f stack_98;
     TVec3f stack_8c;
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+#else  // SMGPC_RETAIL_SOURCE
+    TVec3f stack_14;
+    TVec3f stack_8;
+#endif  // SMGPC_PC_DIVERGENCE
     if (_1C._10) {
         TVec3f stack_104(mPosition);
         addTrans(mVelocity, nullptr);
@@ -1645,6 +1775,7 @@ void Mario::writeBackPhyisicalVector() {
     }
 
     if (mMovementStates._37 || _10._15) {
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
         TVec3f stack_f8(mPosition);
         stack_f8 -= _688;
         MR::vecKillElement(stack_f8, _6A0, &stack_f8);
@@ -1655,10 +1786,21 @@ void Mario::writeBackPhyisicalVector() {
         TVec3f stack_74(_694);
         stack_74 -= _688;
         f32 f29 = MR::vecKillElement(stack_74, _6A0, &stack_ec);
+#else  // SMGPC_RETAIL_SOURCE
+        TVec3f stack_f8(mPosition - _688);
+        MR::vecKillElement(stack_f8, _6A0, &stack_f8);
+        mPosition = _688 + stack_f8;
+        MR::vecKillElement(mVelocity, _6A0, &mVelocity);
+        f32 f29 = MR::vecKillElement(_694 - _688, _6A0, &stack_ec);
+#endif  // SMGPC_PC_DIVERGENCE
         if (f29 > 1.0f) {
             f29 = 1.0f;
         } else if (f29 < -1.0f) {
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
             f29 = -1.0f;
+#else  // SMGPC_RETAIL_SOURCE
+            f29 = 1.0f;
+#endif  // SMGPC_PC_DIVERGENCE
         }
         stack_ec = _6A0;
         stack_ec.setLength(f29);
@@ -1666,17 +1808,25 @@ void Mario::writeBackPhyisicalVector() {
     }
 
     fixPositionInTower();
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
 
+#else  // SMGPC_RETAIL_SOURCE
+#endif  // SMGPC_PC_DIVERGENCE
     if (mMovementStates.jumping) {
         bool rising = false;
         if (isRising()) {
             rising = true;
         }
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+#else  // SMGPC_RETAIL_SOURCE
+
+#endif  // SMGPC_PC_DIVERGENCE
         if (mActor->_334 != 0) {
             _578 = 0;
         }
 
         if (!mMovementStates._22) {
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
             for (u32 i = 0; i < _578; i++) {
                 if (MR::vecKillElement(mVelocity, *_57C[i]->getNormal(0), &stack_e0) < 0.0f) {
                     mVelocity = stack_e0;
@@ -1697,14 +1847,36 @@ void Mario::writeBackPhyisicalVector() {
                             MR::normalizeOrZero(&stack_c8);
                             mJumpVec += stack_c8;
                             mJumpVec.setLength(jumpMagnitude);
+#else  // SMGPC_RETAIL_SOURCE
+            f32 PI_30 = 0.10471976;
+            f32 zero = 0.0f;
+            f32 SQRT2_2 = 0.707f;
+            for (u32 i = 0; i < _578; i++) {
+                if (MR::vecKillElement(mVelocity, *_57C[i]->getNormal(0), &stack_e0) < zero) {
+                    mVelocity = stack_e0;
+                    f32 f28 = MR::vecKillElement(mJumpVec, *_57C[i]->getNormal(0), &stack_d4);
+                    if (f28 <= 0.0f) {
+                        mJumpVec = stack_d4 + *_57C[i]->getNormal(0) * f28 * 0.5f;
+                    } else if (MR::diffAngleAbs(*getGravityVec(), mJumpVec) < PI_30) {
+                        MR::vecKillElement(*_57C[i]->getNormal(0), *getGravityVec(), &stack_c8);
+                        f32 _2D4Mag = mJumpVec.length();
+                        MR::normalizeOrZero(&stack_c8);
+                        mJumpVec += stack_c8;
+                        mJumpVec.setLength(_2D4Mag);
+                    }
+                    if (rising) {
+                        if (_57C[i]->getNormal(0)->dot(*getGravityVec()) > SQRT2_2) {
+                            mActor->sendMsgUpperPunch(_57C[i]->mSensor);
+#endif  // SMGPC_PC_DIVERGENCE
                         }
                     }
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
 
                     if (rising && _57C[i]->getNormal(0)->dot(*getGravityVec()) > 0.707f) {
                         mActor->sendMsgUpperPunch(_57C[i]->mSensor);
                     }
 
-                    if (isPlayerModeBee() && !mActor->mAlphaEnable) {
+                    if (isPlayerModeBee() && !mActor->mBeeWallWalk) {
                         const char* pWallCode = MR::getWallCodeString(_57C[i]);
                         if (pWallCode != nullptr && strcmp(pWallCode, "Fur") == 0) {
                             Triangle stack_110;
@@ -1716,6 +1888,16 @@ void Mario::writeBackPhyisicalVector() {
                             if (MR::getFirstPolyOnLineToMap(&stack_bc, &stack_110, pActor->_2A0, stack_44)) {
                                 const char* pHitWallCode = MR::getWallCodeString(&stack_110);
                                 if (pHitWallCode != nullptr && strcmp(pHitWallCode, "Fur") == 0) {
+#else  // SMGPC_RETAIL_SOURCE
+                    if (isPlayerModeBee() && mActor->mBeeWallWalk == 0) {
+                        const char* wallCodeString = MR::getWallCodeString(_57C[i]);
+                        if (wallCodeString != nullptr && strcmp(wallCodeString, "Fur") == 0) {
+                            Triangle stack_110 = Triangle();
+                            MarioActor* pActor = mActor;
+                            if (MR::getFirstPolyOnLineToMap(&stack_bc, &stack_110, pActor->_2A0, -(*_57C[i]->getNormal(0)) * 300.0f)) {
+                                wallCodeString = MR::getWallCodeString(&stack_110);
+                                if (wallCodeString != nullptr && strcmp(wallCodeString, "Fur") == 0) {
+#endif  // SMGPC_PC_DIVERGENCE
                                     MarioActor* pActor2 = mActor;
                                     pActor2->entryWallWalkMode(stack_bc, *stack_110.getNormal(0));
                                 }
@@ -1726,24 +1908,42 @@ void Mario::writeBackPhyisicalVector() {
             }
         }
     } else if (isSwimming() && !mMovementStates._22) {
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+#else  // SMGPC_RETAIL_SOURCE
+        f32 SQRT2_2 = 0.707f;
+#endif  // SMGPC_PC_DIVERGENCE
         for (u32 i = 0; i < _578; i++) {
             if (MR::vecKillElement(mVelocity, *_57C[i]->getNormal(0), &stack_b0) < 0.0f) {
                 mVelocity = stack_b0;
                 f32 f28 = MR::vecKillElement(mSwim->mKnockbackVel, *_57C[i]->getNormal(0), &mSwim->mKnockbackVel);
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
                 TVec3f stack_20(*_57C[i]->getNormal(0));
                 stack_20.scale(f28);
                 TVec3f stack_2c(stack_20);
                 stack_2c.scale(0.5f);
                 mSwim->mKnockbackVel += stack_2c;
+#else  // SMGPC_RETAIL_SOURCE
+                mSwim->mKnockbackVel += *_57C[i]->getNormal(0) * f28 * 0.5f;
+#endif  // SMGPC_PC_DIVERGENCE
             }
         }
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
     } else if (!_1C._C && mActor->_288.dot(_368) < 0.707f && !MR::isNearZero(mActor->_288, 1.0f)) {
+#else  // SMGPC_RETAIL_SOURCE
+    } else if (!_1C._C && mActor->_288.dot(_368) < 0.707f && !MR::isNearZero(mActor->_288)) {
+#endif  // SMGPC_PC_DIVERGENCE
         TVec3f stack_a4(mActor->_288);
         MR::normalizeOrZero(&stack_a4);
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
         f32 push = MR::vecKillElement(mVelocity, stack_a4, &stack_98);
         if (push < 0.0f) {
+#else  // SMGPC_RETAIL_SOURCE
+        f32 f2 = MR::vecKillElement(mVelocity, stack_a4, &stack_98);
+        if (f2 < 0.0f) {
+#endif  // SMGPC_PC_DIVERGENCE
             mVelocity = stack_98;
             MR::normalizeOrZero(&stack_a4);
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
             f32 pushScale = 1.0f - MR::clamp((-stack_a4.dot(mFrontVec) - 0.3f) * 1.4285715f, 0.0f, 1.0f);
 
             if (!mMovementStates._8 && pushScale < 0.1f) {
@@ -1757,38 +1957,73 @@ void Mario::writeBackPhyisicalVector() {
                         f32 mostFacingDot = 0.0f;
                         u32 index = 0;
                         for (u32 i = 0; i < planeCount; i++) {
-                            f32 dot = mActor->mBinder->getPlane(i)->getNormal(0)->dot(mFrontVec);
+                            f32 dot = mActor->mBinder->getPlane(i)->mParentTriangle.getNormal(0)->dot(mFrontVec);
                             if (dot < mostFacingDot) {
                                 index = i;
                                 mostFacingDot = dot;
+#else  // SMGPC_RETAIL_SOURCE
+            f32 f1 = 1.0f - MR::clamp((-stack_a4.dot(mFrontVec) - 0.3f) * 1.4285715f, 0.0f, 1.0f);
+            if (!mMovementStates._8 && f1 < 0.1f) {
+                if (mMovementStates._1A) {
+                    mVelocity += getSideWallNorm() * -f2;
+                } else {
+                    int s28 = mActor->mBinder->mPlaneNum;
+                    if (s28 != 0) {
+                        f32 f28 = 0.0f;
+                        u32 index = 0;
+                        for (u32 i = 0; i < s28; i++) {
+                            f32 dot = mActor->mBinder->getPlane(i)->mParentTriangle.getNormal(0)->dot(mFrontVec);
+                            if (dot < f28) {
+                                index = i;
+                                f28 = dot;
+#endif  // SMGPC_PC_DIVERGENCE
                             }
                         }
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
 
                         TVec3f stack_8(mPosition);
                         const HitInfo* pInfo = reinterpret_cast< const HitInfo* >(mActor->mBinder->getPlane(index));
                         stack_8 -= pInfo->mHitPos;
                         MR::vecKillElement(stack_8, *getGravityVec(), &stack_8c);
+#else  // SMGPC_RETAIL_SOURCE
+                        MR::vecKillElement(mPosition - mActor->mBinder->getPlane(index)->mHitPos, *getGravityVec(), &stack_8c);
+#endif  // SMGPC_PC_DIVERGENCE
                         MR::vecKillElement(stack_8c, stack_a4, &stack_8c);
                         if (!MR::isNearZero(stack_8c)) {
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
                             stack_8c.setLength(-push);
+#else  // SMGPC_RETAIL_SOURCE
+                            stack_8c.setLength(-f2);
+#endif  // SMGPC_PC_DIVERGENCE
                             mVelocity += stack_8c;
                         }
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+#else  // SMGPC_RETAIL_SOURCE
+                        mTargetWalkSpeedIndex = 0;
+                        mWalkSpeed *= f1;
+#endif  // SMGPC_PC_DIVERGENCE
                     }
                 }
             }
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
 
-            _71C = 0;
-            _278 *= pushScale;
+            mTargetWalkSpeedIndex = 0;
+            mWalkSpeed *= pushScale;
+#else  // SMGPC_RETAIL_SOURCE
+#endif  // SMGPC_PC_DIVERGENCE
         }
     }
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
 
+#else  // SMGPC_RETAIL_SOURCE
+#endif  // SMGPC_PC_DIVERGENCE
     mActor->mVelocity = mVelocity;
     mActor->mPosition = mPosition;
 }
 
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
 #pragma dont_inline on
 void Mario::update() {
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
     _43C = mFrontVec;
     _16C = mVelocity;
     mPosition = mActor->mPosition;
@@ -1804,12 +2039,12 @@ void Mario::update() {
 
     inputStick();
     const bool hadActiveWalkVelocity =
-        !MR::isNearZero(mStickPos.z, 0.001f) || _278 > 0.0f;
-    if (MR::isNearZero(mStickPos.z, 0.001f) && _278 < 0.001f) {
+        !MR::isNearZero(mStickPos.z, 0.001f) || mWalkSpeed > 0.0f;
+    if (MR::isNearZero(mStickPos.z, 0.001f) && mWalkSpeed < 0.001f) {
         // The retained interpolation otherwise approaches zero forever. End
         // the sub-pixel release before mainMove so the final moving frame can
         // still seat Binder and the following frame is a true idle query.
-        _278 = 0.0f;
+        mWalkSpeed = 0.0f;
     }
     mainMove();
     updateWalkSpeed();
@@ -1828,7 +2063,7 @@ void Mario::update() {
         // corrections into a visible tangent drift on the curved planet; the
         // collision boundary retains the numerically stable idle skin shell.
         const bool needsActiveGrounding =
-            _3CE < 30 || hadActiveWalkVelocity || _278 >= 0.001f;
+            _3CE < 30 || hadActiveWalkVelocity || mWalkSpeed >= 0.001f;
         if (needsActiveGrounding) {
             mVelocity += groundingDirection * (grounding * 0.1f);
         }
@@ -1836,165 +2071,6 @@ void Mario::update() {
         mVelocity += groundingDirection * grounding;
     }
     mActor->mVelocity = mVelocity;
-#else  // SMGPC_RETAIL_SOURCE
-    OSGetTime();
-    updateAndClearStrideParameter();
-    checkKeyLock();
-
-    if (!(mMovementStates.jumping && mMovementStates._B) && _728 != nullptr && isAnimationRun(_728)) {
-        mMovementStates.jumping = 1;
-        mMovementStates._B = 1;
-    }
-
-    updateCubeCode();
-    mMovementStates._7 = updateBinderInfo();
-    checkEnforceMove();
-    _A8C[0] = mVelocity;
-
-    if (!isStatusActive(MarioStatus_Stick) && !isStatusActive(MarioStatus_Hang)) {
-        checkBaseTransPoint();
-        checkHeadPoint();
-    }
-
-    if (mMovementStates._F && _544 > 1) {
-        createAtField(true, 150.0f);
-    } else {
-        createAtField(false, 40.0f);
-    }
-
-    _72C = calcDistToCeil(true);
-    _1C._F = _72C < 160.0f;
-    if (_1C._F && _4C8->isValid()) {
-        damagePolygonCheck(_4C8);
-    }
-
-    if (MR::getKarikariClingNum() != 0) {
-        _1C_WORD |= 0x04000000;
-    }
-
-    OSGetTime();
-    f32 wallDistance = 80.0f;
-    if (isSwimming()) {
-        wallDistance = 90.0f;
-    }
-    checkAllWall(mActor->_2A0, wallDistance);
-
-    OSGetTime();
-    updateGroundInfo();
-    OSGetTime();
-
-    if (mMovementStates._1 && (!mMovementStates.jumping || mMovementStates._B)) {
-        if (damageFloorCheck()) {
-            writeBackPhyisicalVector();
-            return;
-        }
-
-        saveLastSafetyTrans();
-        if (isCurrentShadowFloorDangerAction()) {
-            TVec3f floorDelta(mShadowPos);
-            floorDelta -= mGroundPos;
-            MR::isNearZero(mAirGravityVec);
-
-            TVec3f horizontal;
-            f32 vertical = MR::vecKillElement(floorDelta, mAirGravityVec, &horizontal);
-            if (vertical <= 5.0f && floorDelta.dot(mFrontVec) > 0.0f) {
-                mDrawStates_WORD |= 0x00200000;
-                floorDelta.setLength(5.0f);
-                addVelocity(floorDelta);
-            }
-        }
-    }
-
-    mDrawStates_WORD |= 0x00008000;
-    if (damageWallCheck()) {
-        return;
-    }
-    mDrawStates_WORD &= ~0x00008000;
-
-    OSGetTime();
-    if (checkPressDamage()) {
-        return;
-    }
-
-    OSGetTime();
-    if (checkSliderMode()) {
-        startSlider();
-    }
-
-    checkAndTryForceJump();
-    if (mMovementStates._2E) {
-        return;
-    }
-
-    if (checkStartSwim()) {
-        writeBackPhyisicalVector();
-        return;
-    }
-
-    if (!mMovementStates._22) {
-        check2DMode();
-    }
-
-    _898 = 0;
-    if (!mMovementStates.debugMode && MR::testFpViewStartTrigger()) {
-        if (MR::isPossibleToShiftToFirstPersonCamera()) {
-            tryFpViewMode();
-        } else if (!MR::isDemoActive()) {
-            if (!MR::isEqualStageName("EpilogueDemoStage")) {
-                MR::startSystemSE("SE_SY_CAMERA_NG", -1, -1);
-            }
-            _898 = 1;
-        }
-    }
-
-    inputStick();
-    checkLockOnHoming();
-
-    _A8C[1] = mVelocity;
-    actionMain();
-    _A8C[3] = mVelocity;
-
-    calcFrontFloor();
-
-    if (mMovementStates._23 && mMovementStates._1 && mMovementStates._24 && isSlipPolygon(_460)) {
-        f32 removed = MR::vecKillElement(mVelocity, *_460->getNormal(0), &mVelocity);
-        TVec3f normalDelta(_368);
-        normalDelta -= *_460->getNormal(0);
-        TVec3f halfDelta(normalDelta);
-        halfDelta.scale(0.5f);
-        removed = __fabsf(removed);
-        TVec3f adjustment(halfDelta);
-        adjustment.scale(removed);
-        mVelocity += adjustment;
-    }
-
-    _A8C[4] = mVelocity;
-    tryPushToVelocity();
-    powerAreaMove();
-    powerRailMove();
-    _A8C[5] = mVelocity;
-
-    addVelocity(mVelocityAfter);
-    _A8C[6] = mVelocity;
-
-    checkForceGrounding();
-    _A8C[7] = mVelocity;
-
-    checkStep();
-    checkBump();
-    doCubeWarp();
-
-    if (isSwimming()) {
-        checkBaseTransBall();
-    }
-
-    doSpinPunchAroundPolygons();
-    _A8C[8] = mVelocity;
-
-    writeBackPhyisicalVector();
-    updateTimers();
-    doExtraServices();
-#endif  // SMGPC_PC_DIVERGENCE
 }
 #pragma dont_inline reset
 
@@ -2059,15 +2135,77 @@ void Mario::actionMain() {
 
     if (!mDrawStates._16) {
         retainMoveDir(mStickPos.x, mStickPos.y, nullptr);
+#else  // SMGPC_RETAIL_SOURCE
+void Mario::actionMain() {
+    if (!mMovementStates.debugMode) {
+        if (checkDamage() == false) {
+            if (_97C) {
+                sendStateMsg(MarioStateMsg_Update);
+            } else if (mMovementStates.jumping) {
+                procJump(false);
+                checkTornado();
+                checkHang();
+                checkWallStick();
+            } else {
+                mainMove();
+                updateWalkSpeed();
+            }
+
+            if (mMovementStates._1) {
+                mMovementStates._30 = 1;
+                mMovementStates._31 = 1;
+                doFrontStep();
+            }
+        }
+        if (!mMovementStates._23) {
+            _1A8 = mVelocity;
+            _3C2 = 0;
+            _280 = 0.0f;
+            _284.zero();
+        } else {
+            _3C2++;
+        }
+        if (_3C4 != 0) {
+            _3C4--;
+        }
+        _A8C[2] = mVelocity;
+        if (mMovementStates._1 && !mMovementStates.jumping) {
+            if (isEnableSlopeMove()) {
+                slopeMove();
+            } else {
+                clearSlope();
+            }
+        }
+        if (isStickOn() && isAnimationRun("水泳陸うちあげ")) {
+            stopAnimation(nullptr, (char*)nullptr);
+        }
+        if (!mDrawStates._4) {
+            _3FE = 0;
+        }
+        callExtraTasks(0);
+        beeMarioOnGround();
+        checkSpecialWaitAnimation();
+        if (!mDrawStates._16) {
+            retainMoveDir(mStickPos.x, mStickPos.y, nullptr);
+        }
+#endif  // SMGPC_PC_DIVERGENCE
     }
 }
 
 void Mario::updateGroundInfo() {
     checkMap();
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
 
     if (isEnableCheckGround()) {
         bool wasAirborne = !mMovementStates.jumping && !mMovementStates._1;
         mMovementStates._1 = checkGround();
+#else  // SMGPC_RETAIL_SOURCE
+    if (isEnableCheckGround()) {
+        bool b1 = !mMovementStates.jumping && !mMovementStates._1;
+
+        checkGround();
+        mMovementStates._1 = mMovementStates._1F;
+#endif  // SMGPC_PC_DIVERGENCE
 
         if (mDrawStates._18) {
             _3C6++;
@@ -2075,15 +2213,25 @@ void Mario::updateGroundInfo() {
             _3C6 = 0;
         }
 
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
         if (wasAirborne && mMovementStates._1 && isDefaultAnimationRun("落下")) {
+#else  // SMGPC_RETAIL_SOURCE
+        if (b1 && mMovementStates._1 && isDefaultAnimationRun("落下")) {
+#endif  // SMGPC_PC_DIVERGENCE
             changeAnimation(nullptr, "基本");
         }
 
         if (!isStatusActive(MarioStatus_13)) {
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
             if (!isStatusActive(MarioStatus_13) && !mMovementStates._1 && mMovementStates._3E == 1 &&
                 mJumpVec.dot(*getGravityVec()) > 0.0f && mJumpVec.dot(*_45C->getNormal(0)) < 0.0f &&
                 _1FC.dot(*getGravityVec()) > 0.0f && mVerticalSpeed < 170.0f) {
                 mMovementStates._1 = 1;
+#else  // SMGPC_RETAIL_SOURCE
+            if (!isStatusActive(MarioStatus_13) && !mMovementStates._1 && mMovementStates._3E == 1 && mJumpVec.dot(*getGravityVec()) > 0.0f &&
+                mJumpVec.dot(*_45C->getNormal(0)) < 0.0f && _1FC.dot(*getGravityVec()) > 0.0f && mVerticalSpeed < 170.0f) {
+                mMovementStates._1 = true;
+#endif  // SMGPC_PC_DIVERGENCE
                 setGroundNorm(*_45C->getNormal(0));
                 setTrans(mShadowPos, nullptr);
             }
@@ -2091,6 +2239,10 @@ void Mario::updateGroundInfo() {
     }
 
     updateCameraPolygon();
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+#else  // SMGPC_RETAIL_SOURCE
+
+#endif  // SMGPC_PC_DIVERGENCE
     if (mMovementStates._1) {
         mMovementStates._29 = 0;
         if (_43A == 0 && isSlipPolygon(mGroundPolygon)) {
@@ -2109,93 +2261,11 @@ void Mario::updateGroundInfo() {
     updateOnPoison();
 }
 
-bool Mario::postureCtrl(MtxPtr mtx) {
 #if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+bool Mario::postureCtrl(MtxPtr mtx) {
     PSMTXIdentity(mtx);
     _1FC = mHeadVec;
     return false;
-#else  // SMGPC_RETAIL_SOURCE
-    TVec3f oldHeadUp(_1FC);
-    TVec3f targetHeadUp(mHeadVec);
-
-    MarioConstTable* pTable = mActor->mConst->getTable();
-    f32 blendRatio = pTable->mHeadRotateRatio;
-
-    if (mMovementStates._1 && !isSlipFloorCode(_960)) {
-        if (_71C < 3) {
-            f32 angle = calcAngleD(*mGroundPolygon->getNormal(0));
-            if (angle < 45.0f) {
-                MR::isNearZero(mAirGravityVec);
-                targetHeadUp = -mAirGravityVec;
-            } else {
-                f32 blend = (calcAngleD(*mGroundPolygon->getNormal(0)) - 45.0f) / 60.0f;
-                MR::isNearZero(mAirGravityVec);
-                TVec3f negGravity = -mAirGravityVec;
-                MR::vecBlendSphere(negGravity, targetHeadUp, &targetHeadUp, blend);
-            }
-        } else {
-            MR::isNearZero(mAirGravityVec);
-            TVec3f gravity = -*getGravityVec();
-            gravity -= mAirGravityVec;
-            targetHeadUp = gravity;
-            MR::normalizeOrZero(&targetHeadUp);
-        }
-    }
-
-    if (isAnimationRun("坂すべり上向きうつぶせ", 2)) {
-        targetHeadUp = _368;
-    }
-
-    if (isStatusActive(MarioStatus_Wait)) {
-        if (isAnimationRun("特殊ウエイト1A")) {
-            f32 blend;
-            if (getAnimator()->getFrame() > 290.0f) {
-                blend = 1.0f;
-            } else if (getAnimator()->getFrame() > 260.0f) {
-                blend = 0.5f + 0.5f * ((getAnimator()->getFrame() - 260.0f) / 30.0f);
-            } else {
-                blend = 0.5f * (getAnimator()->getFrame() / 260.0f);
-            }
-
-            TVec3f gravity = -_374;
-            MR::vecBlendSphere(gravity, targetHeadUp, &targetHeadUp, blend);
-        } else if (_1C._13 && _1C._14) {
-            targetHeadUp = -_374;
-        }
-    }
-
-    if (!isSwimming()) {
-        if (isAnimationRun("水泳ジェット") || isAnimationRun("水泳スピン移動") || isAnimationRun("リングダッシュ") ||
-            isAnimationRun("水泳スピンジャンプ")) {
-            MR::vecBlendSphere(mHeadVec, mJumpVec, &targetHeadUp, 0.1f);
-            if (MR::normalizeOrZero(&targetHeadUp)) {
-                targetHeadUp = mHeadVec;
-            }
-            mDrawStates_WORD |= 0x00004000;
-        }
-    }
-
-    calcTornadoTilt();
-    slopeTiltHead(&targetHeadUp);
-
-    isStatusActive(MarioStatus_Climb);
-
-    pTable = mActor->mConst->getTable();
-    f32 angle = MR::diffAngleAbs(oldHeadUp, targetHeadUp);
-    if (angle > pTable->mHeadAngleFixMargin) {
-        if (!MR::vecBlendSphere(oldHeadUp, targetHeadUp, &oldHeadUp, blendRatio)) {
-            TMtx34f rotMtx;
-            PSMTXRotAxisRad(rotMtx.toMtxPtr(), &mSideVec, 0.1f);
-            PSMTXMultVecSR(rotMtx.toMtxPtr(), &oldHeadUp, &oldHeadUp);
-        }
-    }
-
-    if (!MR::normalizeOrZero(&oldHeadUp)) {
-        _1FC = oldHeadUp;
-    }
-
-    return false;
-#endif  // SMGPC_PC_DIVERGENCE
 }
 
 void Mario::createAngleMtx(MtxPtr mtx, bool forceNoFix) {
@@ -2342,13 +2412,33 @@ void Mario::updateLookOfs() {
             TVec3f gravity(*getGravityVec());
             gravity.scale(gravityDistance);
             lookOffset += gravity;
+#else  // SMGPC_RETAIL_SOURCE
+// conditionals won't behave
+const TVec3f* Mario::getGravityVec() const {
+    if (isStatusActive(MarioStatus_Bump) || isStatusActive(MarioStatus_Climb)) {
+        return &_790;
+    }
+    if (mMovementStates._1 && !isSlipFloorCode(_960)) {
+        if (mActor->mBeeWallWalk != 0) {
+            return &mAirGravityVec;
+        }
+        if (isAnimationRun("ハード着地")) {
+            return &mAirGravityVec;
+        }
+        if (_3CE < 0x10 && _3BC > 3 && !mMovementStates._B) {
+            return &mAirGravityVec;
+        }
+        if (MR::isNearZero(_374) == false && _1C._13 && _1C._14) {
+            return &_374;
+#endif  // SMGPC_PC_DIVERGENCE
         }
     }
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
 
     TVec3f headOffset;
     headOffset.zero();
-    if (_735 != 0) {
-        f32 scale = static_cast< f32 >(_735);
+    if (mSinkTimer != 0) {
+        f32 scale = static_cast< f32 >(mSinkTimer);
 
         TVec3f gravity(*getGravityVec());
         gravity.scale(scale);
@@ -2367,7 +2457,7 @@ void Mario::updateLookOfs() {
     if (!isUseSimpleGroundCheck()) {
         if (getAnimator()->isLandingAnimationRun()) {
             blend = 0.01f;
-        } else if (_71C == 0 && _278 < 0.2f && isBlendWaitGround()) {
+        } else if (mTargetWalkSpeedIndex == 0 && mWalkSpeed < 0.2f && isBlendWaitGround()) {
             f32 targetMagnitude = lookOffset.length();
             f32 currentMagnitude = _148.length();
             if (currentMagnitude > targetMagnitude) {
@@ -2391,26 +2481,7 @@ void Mario::updateLookOfs() {
 
 // conditionals won't behave
 const TVec3f* Mario::getGravityVec() const {
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
-    return &mAirGravityVec;
 #else  // SMGPC_RETAIL_SOURCE
-    if (isStatusActive(MarioStatus_Bump) || isStatusActive(MarioStatus_Climb)) {
-        return &_790;
-    }
-    if (mMovementStates._1 && !isSlipFloorCode(_960)) {
-        if (mActor->mAlphaEnable) {
-            return &mAirGravityVec;
-        }
-        if (isAnimationRun("ハード着地")) {
-            return &mAirGravityVec;
-        }
-        if (_3CE < 0x10 && _3BC > 3 && !mMovementStates._B) {
-            return &mAirGravityVec;
-        }
-        if (MR::isNearZero(_374) == false && _1C._13 && _1C._14) {
-            return &_374;
-        }
-    }
     if (isSwimming()) {
         if (mSwim->mWaterDepth >= -150.0f && mDrawStates._F && MR::isNearZero(_38C) == false) {
             return &_38C;
@@ -2430,8 +2501,8 @@ const TVec3f* Mario::getGravityVec() const {
         !mMovementStates._22 && _3BC < 8) {
         return &_374;
     }
-    return &mAirGravityVec;
 #endif  // SMGPC_PC_DIVERGENCE
+    return &mAirGravityVec;
 }
 
 void Mario::touchWater() {
@@ -2439,6 +2510,7 @@ void Mario::touchWater() {
         mMorphResetTimer = 10;
     }
 }
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
 
 namespace NrvMarioActor {
     INIT_NERVE(MarioActorNrvWait);
@@ -2468,3 +2540,5 @@ template <>
 bool TriangleFilterDelegator< Mario >::isInvalidTriangle(const Triangle* pTriangle) const {
     return (mParent->*mFunc)(pTriangle);
 }
+#else  // SMGPC_RETAIL_SOURCE
+#endif  // SMGPC_PC_DIVERGENCE

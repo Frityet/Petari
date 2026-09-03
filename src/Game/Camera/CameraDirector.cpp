@@ -10,6 +10,7 @@
 #include "Game/Camera/CameraManSubjective.hpp"
 #include "Game/Camera/CameraParamChunk.hpp"
 #include "Game/Camera/CameraParamChunkHolder.hpp"
+#include "Game/Camera/CameraParamChunkID.hpp"
 #include "Game/Camera/CameraPoseParam.hpp"
 #include "Game/Camera/CameraRailHolder.hpp"
 #include "Game/Camera/CameraRegisterHolder.hpp"
@@ -34,54 +35,37 @@
 #include "Game/Util/SoundUtil.hpp"
 #include <cstring>
 
+// FIXME: function order mismatch between debug and release, debug order would match .data order
+
+void CameraDirector_FORCE_MATCH_SDATA2() {
+    (void)1.0f;
+    (void)0.0f;
+    (void)0.5f;
+    (void)2.0f;
+    (void)MR::pi();
+}
+
 namespace {
+    // static const s32 sDefaultBlendFrame =
+    static const s32 sSubjectivePosInterpolateFrame = 0;
+    static const s32 sSubjectiveRotInterpolateFrame = 10;
+    static const s32 sSubjectiveInterpolateFrame = 20;
+    // static const s32 sAnimCamBlendFrame =
+    // static const f32 sAnimCamRate =
     static f32 sDefaultFovy = 45.0f;
     static const char* sTalkCameraName = "共通会話カメラ";
     static const char* sStartAnimCameraName = "スタートアニメカメラ";
     static const char* sSubjectiveCameraName = "主観カメラ";
+    // static const s32 sTestAnimCameraName =
+    // static const s32 sConvertSize =
+    // static const s32 sConvertQuality =
     static s32 sUpdateCounter;
+    // static const s32 sAnimCameraName =
+    // static const s32 sAnimCameraZoneID =
 };  // namespace
 
-bool CameraMan::isInterpolationOff() const {
-    return false;
-}
-
-bool CameraMan::isCollisionOff() const {
-    return false;
-}
-
-bool CameraMan::isZeroFrameMoveOff() const {
-    return false;
-}
-
-bool CameraMan::isSubjectiveCameraOff() const {
-    return false;
-}
-
-bool CameraMan::isCorrectingErpPositionOff() const {
-    return false;
-}
-
-bool CameraMan::isEnableToReset() const {
-    return false;
-}
-
-bool CameraMan::isEnableToRoundLeft() const {
-    return false;
-}
-
-bool CameraMan::isEnableToRoundRight() const {
-    return false;
-}
-
-void CameraMan::roundLeft() {
-}
-
-void CameraMan::roundRight() {
-}
-
 CameraDirector::CameraDirector(const char* pName) : NameObj(pName) {
-    mUsedTarget = nullptr;
+    mTargetObj = nullptr;
     mStack = new CameraManStack();
     mOnlyCamera = new OnlyCamera("OnlyCamera");
     mPoseParam1 = new CameraPoseParam();
@@ -101,28 +85,28 @@ CameraDirector::CameraDirector(const char* pName) : NameObj(pName) {
     mCameraManPause = new CameraManPause("ポーズカメラマン");
     mCameraManSubjective = new CameraManSubjective("主観カメラマン");
     _58 = false;
-    mEndEventAtLandingCount = 0;
-    _170 = true;
-    _174 = 0;
+    mEventNum = 0;
+    mIsStartCameraActive = true;
+    mStartTime = 0;
     mStartCameraCreated = false;
-    mTargetMatrix = new CameraTargetMtx("カメラターゲットダミー");
+    mCameraTargetMtx = new CameraTargetMtx("カメラターゲットダミー");
     mRequestCameraManReset = false;
-    _1B1 = false;
+    mRequestCameraLocalOffsetReset = false;
     mIsSubjectiveCamera = false;
-    _1B3 = false;
-    _1B4 = 0;
-    _1BC = -100.0f;
-    _1F0 = false;
+    mIsStartSubjectiveCamera = false;
+    mSubjectiveFrame = 0;
+    mNearZ = -100.0f;
+    mIsSubjectiveCalced = false;
     _1F1 = true;
-    _1F2 = false;
+    mIsCameraNG = false;
 
     MR::connectToSceneCamera(this);
     push(mCameraManGame);
-    _180.identity();
-    mTargetMatrix->mMatrix.setInline(_180);
+    mTargetMtx.identity();
+    mCameraTargetMtx->setMtx(mTargetMtx);
     setInterpolation(0);
     mCameraManSubjective->owned(this);
-    _1C0.identity();
+    mViewMtx.identity();
     MR::createCenterScreenBlur();
 }
 
@@ -137,7 +121,7 @@ void CameraDirector::movement() {
     updateCameraMan();
     calcPose();
     createViewMtx();
-    getCurrentCameraMan()->mMatrix.setInline(MR::getCameraInvViewMtx());
+    getCurrentCameraMan()->mMatrix.set(MR::getCameraInvViewMtx());
     mPoseParam2->copyFrom(*getCurrentCameraMan()->mPoseParam);
     calcSubjective();
     mShaker->movement();
@@ -146,7 +130,7 @@ void CameraDirector::movement() {
     mRotChecker->update();
 
     mRequestCameraManReset = false;
-    _1B1 = false;
+    mRequestCameraLocalOffsetReset = false;
 }
 
 void CameraDirector::setTarget(CameraTargetObj* pTarget) {
@@ -159,8 +143,7 @@ CameraTargetObj* CameraDirector::getTarget() {
 
 void CameraDirector::push(CameraMan* pMan) {
     if (mStack->mCount != 0) {
-        CameraMan* man = getCurrentCameraMan();
-        man->deactivate(this);
+        getCurrentCameraMan()->deactivate(this);
     }
 
     mStack->mElements[mStack->mCount++] = pMan;
@@ -184,13 +167,15 @@ CameraMan* CameraDirector::pop() {
 }
 
 void CameraDirector::backLastMtx() {
-    if (_1F0) {
-        MR::setCameraViewMtx(_1C0, false, false, TVec3f(0.0f, 0.0f, 0.0f));
-        TPos3f* invView = MR::getCameraInvViewMtx();
+    if (mIsSubjectiveCalced) {
+        MR::setCameraViewMtx(mViewMtx, false, false, TVec3f(0.0f, 0.0f, 0.0f));
 
         TVec3f invTrans;
-        invView->getTrans(invTrans);
+        MR::getCameraInvViewMtx().getTrans(invTrans);
     }
+}
+
+void CameraDirector::updateTarget() {
 }
 
 CameraMan* CameraDirector::getCurrentCameraMan() const {
@@ -202,9 +187,9 @@ void CameraDirector::updateCameraMan() {
         resetCameraMan();
     }
 
-    if (_1B1) {
+    if (mRequestCameraLocalOffsetReset) {
         CameraMan* man = getCurrentCameraMan();
-        man->_15 = true;
+        man->mRequestLOfsReset = true;
     }
 
     getCurrentCameraMan()->movement();
@@ -215,15 +200,15 @@ void CameraDirector::calcPose() {
     switchAntiOscillation();
 
     if (getCurrentCameraMan()->isCollisionOff()) {
-        mViewInterpolator->_7C = true;
+        mViewInterpolator->mIsCollisionOff = true;
     }
 
     if (getCurrentCameraMan()->isCorrectingErpPositionOff()) {
-        mViewInterpolator->_8A = false;
+        mViewInterpolator->mIsCorrectErpPositionOn = false;
     }
 
     if (getCurrentCameraMan()->isZeroFrameMoveOff()) {
-        mOnlyCamera->_3C = true;
+        mOnlyCamera->mIsZeroFrameMoveOff = true;
     }
 
     mOnlyCamera->calcPose(getCurrentCameraMan());
@@ -231,96 +216,96 @@ void CameraDirector::calcPose() {
 }
 
 void CameraDirector::calcSubjective() {
-    JMath::gekko_ps_copy12(&_1C0, MR::getCameraViewMtx());
-    _1F0 = true;
+    mViewMtx.set(MR::getCameraViewMtx());
+    mIsSubjectiveCalced = true;
 
     if (MR::isDemoActive()) {
         MR::stopPlayerFpView();
     }
 
     if (mIsSubjectiveCamera) {
-        _1B4++;
-
-        if (_1B4 > 20) {
-            _1B4 = 20;
+        mSubjectiveFrame++;
+        if (mSubjectiveFrame > ::sSubjectiveInterpolateFrame) {
+            mSubjectiveFrame = ::sSubjectiveInterpolateFrame;
         }
     } else {
-        _1B4--;
-
-        if (_1B4 <= 0) {
-            _1B4 = 0;
-
-            if (_1B3) {
-                if (_1BC >= 0.0f) {
-                    MR::setNearZ(_1BC);
+        mSubjectiveFrame--;
+        if (mSubjectiveFrame <= 0) {
+            mSubjectiveFrame = 0;
+            if (mIsStartSubjectiveCamera) {
+                if (mNearZ >= 0.0f) {
+                    MR::setNearZ(mNearZ);
                 }
-
-                _1BC = -100.0f;
+                mNearZ = -100.0f;
                 MR::turnOnDOFInSubjective();
-                _1B3 = false;
+                mIsStartSubjectiveCamera = false;
             }
         }
     }
 
-    if (!_1B3) {
+    if (!mIsStartSubjectiveCamera) {
         return;
     }
 
-    TPos3f curInvView;
-    JMath::gekko_ps_copy12(&curInvView, MR::getCameraInvViewMtx());
+    TPos3f inv;
+    inv.set(MR::getCameraInvViewMtx());
+    mCameraManSubjective->calc();
 
-    mCameraManSubjective->movement();
+    TPos3f viewMtx;
+    calcViewMtxFromPoseParam(&viewMtx, mCameraManSubjective->mPoseParam);
 
-    TPos3f subjectiveMtx;
-    calcViewMtxFromPoseParam(&subjectiveMtx, mCameraManSubjective->mPoseParam);
-
-    s32 blendFrame = _1B4;
-    if (blendFrame > 20) {
-        blendFrame = 20;
+    s32 posFrame = mSubjectiveFrame - ::sSubjectivePosInterpolateFrame;
+    if (posFrame > ::sSubjectiveInterpolateFrame - ::sSubjectivePosInterpolateFrame) {
+        posFrame = ::sSubjectiveInterpolateFrame - ::sSubjectivePosInterpolateFrame;
     }
 
     f32 posRate;
-    if (_1B4 >= 20) {
+    if (mSubjectiveFrame >= ::sSubjectiveInterpolateFrame - ::sSubjectivePosInterpolateFrame) {
         posRate = 1.0f;
     } else {
-        posRate = 0.5f + 0.5f * MR::cos(3.1415927f + (3.1415927f * blendFrame) / 20.0f);
+        posRate = MR::cos(MR::pi() + posFrame * MR::pi() / (::sSubjectiveInterpolateFrame - ::sSubjectivePosInterpolateFrame)) * 0.5f + 0.5f;
     }
 
-    TVec3f curTrans;
-    curInvView.getTrans(curTrans);
-    TVec3f blendedTrans = curTrans * (1.0f - posRate) + mCameraManSubjective->mPoseParam->mPos * posRate;
+    const CameraPoseParam* param = mCameraManSubjective->mPoseParam;
+    TVec3f localPos;
+    inv.getTrans(localPos);
 
-    s32 quatFrame = _1B4 - 10;
-    if (quatFrame < 0) {
-        quatFrame = 0;
+    TVec3f newPos = localPos * (1.0f - posRate) + param->mPos * posRate;
+
+    s32 rotFrame = mSubjectiveFrame - ::sSubjectiveRotInterpolateFrame;
+    if (rotFrame < 0) {
+        rotFrame = 0;
     }
 
-    f32 quatRate = 0.5f + 0.5f * MR::cos(3.1415927f + (3.1415927f * quatFrame) / 10.0f);
+    f32 rotRate = MR::cos(MR::pi() + rotFrame * MR::pi() / (::sSubjectiveInterpolateFrame - ::sSubjectiveRotInterpolateFrame)) * 0.5f + 0.5f;
 
-    TQuat4f curQuat;
-    TQuat4f subjectiveQuat;
-    TQuat4f blendedQuat;
-    curInvView.getQuat(curQuat);
-    subjectiveMtx.getQuat(subjectiveQuat);
-    blendedQuat.slerp(curQuat, subjectiveQuat, quatRate);
+    TQuat4f invRot;
+    inv.getQuat(invRot);
+    TQuat4f viewRot;
+    viewMtx.getQuat(viewRot);
 
-    subjectiveMtx.zeroTrans();
-    subjectiveMtx.setQuat(blendedQuat);
-    subjectiveMtx.setTrans(blendedTrans);
-    subjectiveMtx.invert(subjectiveMtx);
+    TQuat4f newRot;
+    newRot.slerp(invRot, viewRot, rotRate);
 
-    MR::setCameraViewMtx(subjectiveMtx, false, false, TVec3f(0.0f, 0.0f, 0.0f));
+    viewMtx.makeQuat(newRot);
+
+    TVec3f front;
+    viewMtx.getZDir(front);
+    viewMtx.setTrans(newPos);
+    viewMtx.invert(viewMtx);
+
+    MR::setCameraViewMtx(viewMtx, false, false, TVec3f(0.0f, 0.0f, 0.0f));
 }
 
 bool CameraDirector::isInterpolationOff() {
-    return getCurrentCameraMan()->isInterpolationOff() || mViewInterpolator->_9;
+    return getCurrentCameraMan()->isInterpolationOff() || mViewInterpolator->mIsForceCameraChange;
 }
 
 void CameraDirector::switchAntiOscillation() {
     if (isInterpolationOff()) {
-        mViewInterpolator->_8 = false;
+        mViewInterpolator->mIsAntiOscillation = false;
     } else {
-        mViewInterpolator->_8 = true;
+        mViewInterpolator->mIsAntiOscillation = true;
     }
 }
 
@@ -328,65 +313,57 @@ void CameraDirector::createViewMtx() {
     TPos3f view;
     calcViewMtxFromPoseParam(&view, mPoseParam1);
 
-    CameraPoseParam* poseParam = mPoseParam1;
-    CameraTargetObj* target = mUsedTarget;
-    TVec3f& rWatchPos = poseParam->mWatchPos;
-
-    CameraMan* man = getCurrentCameraMan();
-    f32 fovy = CameraLocalUtil::getFovy(man);
-    mViewInterpolator->updateCameraMtx(reinterpret_cast< MtxPtr >(&view), rWatchPos, target, fovy);
+    mViewInterpolator->updateCameraMtx(view, mPoseParam1->getWatchPos(), getTargetObj(), CameraLocalUtil::getFovy(getCurrentCameraMan()));
 }
 
 void CameraDirector::checkStartCondition() {
-    if (_170 && getCurrentCameraMan() == mCameraManGame && _174++ > 30 && mTargetHolder->isMoving()) {
-        _170 = false;
+    if (mIsStartCameraActive && getCurrentCameraMan() == mCameraManGame && mStartTime++ > 30 && mTargetHolder->isMoving()) {
+        mIsStartCameraActive = false;
         mCameraManGame->endStartPosCamera();
     }
 }
 
-void CameraDirector::startEvent(s32 zoneID, const char* pName, const CameraTargetArg& rTargetArg, s32 a4) {
-    mViewInterpolator->_A = false;
+void CameraDirector::startEvent(s32 zoneID, const char* pName, const CameraTargetArg& rTargetArg, s32 frame) {
+    mViewInterpolator->mIsInterpolationOff = false;
     removeEndEventAtLanding(zoneID, pName);
 
     if (getCurrentCameraMan() != mCameraManEvent) {
         if (mStack->mCount != 0) {
-            CameraMan* gameMan = mCameraManGame;
-
-            if (getCurrentCameraMan() == gameMan) {
-                mCameraManEvent->mPoseParam->copyFrom(*gameMan->mPoseParam);
-                mCameraManEvent->mMatrix.setInline(MR::getCameraInvViewMtx());
+            if (getCurrentCameraMan() == mCameraManGame) {
+                mCameraManEvent->mPoseParam->copyFrom(*mCameraManGame->mPoseParam);
+                mCameraManEvent->mMatrix.set(MR::getCameraInvViewMtx());
             }
         }
 
         push(mCameraManEvent);
     }
 
-    mCameraManEvent->start(zoneID, pName, rTargetArg, a4);
+    mCameraManEvent->start(zoneID, pName, rTargetArg, frame);
 }
 
-void CameraDirector::endEvent(s32 zoneID, const char* pName, bool a3, s32 a4) {
+void CameraDirector::endEvent(s32 zoneID, const char* pName, bool resetView, s32 frame) {
     if (getCurrentCameraMan() == mCameraManEvent) {
-        mCameraManEvent->end(zoneID, pName, a4);
+        mCameraManEvent->end(zoneID, pName, frame);
 
         if (!mCameraManEvent->isActive()) {
             pop();
 
-            if (!mViewInterpolator->_9 && a3 && getCurrentCameraMan() == mCameraManGame) {
+            if (!isForceCameraChange() && resetView && getCurrentCameraMan() == mCameraManGame) {
                 mCameraManGame->mPoseParam->copyFrom(*mPoseParam1);
-                mCameraManGame->mMatrix.setInline(MR::getCameraInvViewMtx());
+                mCameraManGame->mMatrix.set(MR::getCameraInvViewMtx());
             }
 
-            mViewInterpolator->_A = true;
+            mViewInterpolator->mIsInterpolationOff = true;
         }
     }
 }
 
-void CameraDirector::endEventAtLanding(s32 zoneID, const char* pName, s32 interpolateFrame) {
+void CameraDirector::endEventAtLanding(s32 zoneID, const char* pName, s32 frame) {
     if (getCurrentCameraMan() == mCameraManEvent) {
-        mEndEventsAtLanding[mEndEventAtLandingCount].mZoneID = zoneID;
-        strcpy(mEndEventsAtLanding[mEndEventAtLandingCount].mName, pName);
-        mEndEventsAtLanding[mEndEventAtLandingCount].mInterpolateFrame = interpolateFrame;
-        mEndEventAtLandingCount++;
+        mEvents[mEventNum].mZoneID = zoneID;
+        strcpy(mEvents[mEventNum].mName, pName);
+        mEvents[mEventNum].mFrame = frame;
+        mEventNum++;
     }
 }
 
@@ -401,17 +378,17 @@ void CameraDirector::requestToResetCameraMan() {
     mRequestCameraManReset = true;
 }
 
-void CameraDirector::setInterpolation(u32 a1) {
-    mViewInterpolator->setInterpolation(a1);
+void CameraDirector::setInterpolation(u32 time) {
+    mViewInterpolator->setInterpolation(time);
 
-    if (a1 == 0 && !_170) {
-        mViewInterpolator->_7C = true;
+    if (time == 0 && !mIsStartCameraActive) {
+        mViewInterpolator->mIsCollisionOff = true;
         mCover->cover(2);
     }
 }
 
-void CameraDirector::cover(u32 a1) {
-    mCover->cover(a1);
+void CameraDirector::cover(u32 time) {
+    mCover->cover(time);
 }
 
 void CameraDirector::closeCreatingCameraChunk() {
@@ -423,7 +400,7 @@ void CameraDirector::closeCreatingCameraChunk() {
     mCameraManGame->closeCreatingCameraChunk();
     mChunkHolder->loadCameraParameters();
     mChunkHolder->sort();
-    _170 = true;
+    mIsStartCameraActive = true;
     mCameraManGame->startStartPosCamera(false);
 }
 
@@ -447,7 +424,7 @@ void CameraDirector::declareEvent(s32 zoneID, const char* pName) {
 }
 
 void CameraDirector::started() {
-    _170 = false;
+    mIsStartCameraActive = false;
     mCameraManGame->endStartPosCamera();
 }
 
@@ -510,9 +487,9 @@ bool CameraDirector::isEventCameraActive() const {
     return getCurrentCameraMan() == mCameraManEvent;
 }
 
-void CameraDirector::startStartPosCamera(bool a1) {
-    _170 = true;
-    mCameraManGame->startStartPosCamera(a1);
+void CameraDirector::startStartPosCamera(bool interpolate) {
+    mIsStartCameraActive = true;
+    mCameraManGame->startStartPosCamera(interpolate);
 }
 
 bool CameraDirector::isInterpolatingNearlyEnd() const {
@@ -524,7 +501,7 @@ bool CameraDirector::isInterpolatingNearlyEnd() const {
 }
 
 bool CameraDirector::isForceCameraChange() const {
-    return mViewInterpolator->_9;
+    return mViewInterpolator->mIsForceCameraChange;
 }
 
 f32 CameraDirector::getDefaultFovy() const {
@@ -534,9 +511,8 @@ f32 CameraDirector::getDefaultFovy() const {
 void CameraDirector::startStartAnimCamera() {
     if (mStartCameraCreated) {
         ActorCameraInfo info = ActorCameraInfo();
-        CameraTargetArg targetArg(mTargetMatrix);
 
-        MR::startEventCamera(&info, ::sStartAnimCameraName, targetArg, 0);
+        MR::startEventCamera(&info, ::sStartAnimCameraName, CameraTargetArg(mCameraTargetMtx), 0);
     }
 }
 
@@ -561,12 +537,8 @@ void CameraDirector::endStartAnimCamera() {
     MR::endEventCamera(&info, ::sStartAnimCameraName, true, 0);
 }
 
-// FIXME: Erroneously-ordered lwz instruction.
-void CameraDirector::startTalkCamera(const TVec3f& rPosition, const TVec3f& rUp, f32 axisX, f32 axisY, s32 a5) {
-    CameraParamChunkID_Tmp chunkID = CameraParamChunkID_Tmp();
-    chunkID.createEventID(0, ::sTalkCameraName);
-
-    CameraParamChunk* chunk = mChunkHolder->getChunk(chunkID);
+void CameraDirector::startTalkCamera(const TVec3f& rPosition, const TVec3f& rUp, f32 axisX, f32 axisY, s32 frame) {
+    CameraParamChunkEvent* chunk = getEventParameter(0, ::sTalkCameraName);
 
     if (chunk != nullptr) {
         chunk->mGeneralParam->mWPoint.set< f32 >(rPosition);
@@ -578,51 +550,49 @@ void CameraDirector::startTalkCamera(const TVec3f& rPosition, const TVec3f& rUp,
         generalParam->mAxis.z = 0.0f;
 
         CameraTargetArg targetArg;
-
         MR::setCameraTargetToPlayer(&targetArg);
-        startEvent(0, ::sTalkCameraName, targetArg, a5);
+        startEvent(0, ::sTalkCameraName, targetArg, frame);
     }
 }
 
-void CameraDirector::endTalkCamera(bool a1, s32 a2) {
-    endEvent(0, ::sTalkCameraName, a1, a2);
+void CameraDirector::endTalkCamera(bool resetView, s32 frame) {
+    endEvent(0, ::sTalkCameraName, resetView, frame);
 }
 
-void CameraDirector::startSubjectiveCamera(s32 a1) {
-    _170 = false;
+void CameraDirector::startSubjectiveCamera(s32 camType) {
+    mIsStartCameraActive = false;
     mCameraManGame->endStartPosCamera();
     mIsSubjectiveCamera = true;
 
-    if (!_1B3) {
-        _1B3 = true;
-        _1B4 = 0;
+    if (!mIsStartSubjectiveCamera) {
+        mIsStartSubjectiveCamera = true;
+        mSubjectiveFrame = 0;
 
         mCameraManSubjective->activate(this);
-        f32 nearZ = MR::getNearZ();
-        _1BC = nearZ;
+        mNearZ = MR::getNearZ();
 
         MR::setNearZ(10.0f);
         MR::turnOffDOFInSubjective();
     }
 
-    if (_1B4 < 20) {
-        MR::startCenterScreenBlur(20, 15.0f, 80, 5, 10);
+    if (mSubjectiveFrame < ::sSubjectiveInterpolateFrame) {
+        MR::startCenterScreenBlur(::sSubjectiveInterpolateFrame, 15.0f, 80, 5, 10);
     }
 }
 
-void CameraDirector::endSubjectiveCamera(s32 a1) {
-    bool bVar1 = a1 == 0 || a1 == 1;
+void CameraDirector::endSubjectiveCamera(s32 camType) {
+    bool forceEnd = camType == 0 || camType == 1;  // type ?? or ForceClose
 
     if (mIsSubjectiveCamera == true) {
         mIsSubjectiveCamera = false;
 
-        if (!bVar1) {
-            MR::startCenterScreenBlur(_1B4, 15.0f, 80, 5, 10);
+        if (!forceEnd) {
+            MR::startCenterScreenBlur(mSubjectiveFrame, 15.0f, 80, 5, 10);
         }
     }
 
-    if (_1B3 && bVar1) {
-        _1B4 = 0;
+    if (mIsStartSubjectiveCamera && forceEnd) {
+        mSubjectiveFrame = 0;
     }
 }
 
@@ -641,6 +611,8 @@ u32 CameraDirector::getAnimCameraFrame(s32 zoneID, const char* pName) const {
 
     return 0;
 }
+
+// getAnimCameraCurrentFrame
 
 void CameraDirector::pauseOnAnimCamera(s32 zoneID, const char* pName) {
     if (getCurrentCameraMan() == mCameraManEvent) {
@@ -663,17 +635,17 @@ void CameraDirector::zoomOutGameCamera() {
 }
 
 void CameraDirector::checkEndOfEventCamera() {
-    if (mEndEventAtLandingCount != 0 && mTargetHolder->isOnGround()) {
-        for (u32 i = 0; i < mEndEventAtLandingCount; i++) {
-            endEvent(mEndEventsAtLanding[i].mZoneID, mEndEventsAtLanding[i].mName, true, mEndEventsAtLanding[i].mInterpolateFrame);
+    if (mEventNum != 0 && mTargetHolder->isOnGround()) {
+        for (u32 i = 0; i < mEventNum; i++) {
+            endEvent(mEvents[i].mZoneID, mEvents[i].mName, true, mEvents[i].mFrame);
         }
 
-        mEndEventAtLandingCount = 0;
+        mEventNum = 0;
     }
 }
 
 void CameraDirector::controlCameraSE() {
-    _1F2 = false;
+    mIsCameraNG = false;
 
     if (MR::isPlayerDead()) {
         return;
@@ -682,114 +654,112 @@ void CameraDirector::controlCameraSE() {
     if (mIsSubjectiveCamera) {
         if (MR::testCorePadTriggerLeft(WPAD_CHAN0) || MR::testCorePadTriggerRight(WPAD_CHAN0) || MR::testFpViewStartTrigger()) {
             if (isPlayableCameraSE(false)) {
-                MR::startSystemSE("SE_SY_CAMERA_NG", -1, -1);
-                _1F2 = true;
+                MR::startSystemSE("SE_SY_CAMERA_NG");
+                mIsCameraNG = true;
             }
         }
-
         return;
     }
 
     if (CameraLocalUtil::testCameraPadTriggerRoundLeft()) {
-        if (getCurrentCameraMan()->isEnableToRoundLeft()) {
+        if (isEnableToRoundLeft()) {
             getCurrentCameraMan()->roundLeft();
-
             if (isPlayableCameraSE(false)) {
-                MR::startSystemSE("SE_SY_CAMERA_MOVE", -1, -1);
+                MR::startSystemSE("SE_SY_CAMERA_MOVE");
             }
-        } else if (isPlayableCameraSE(false)) {
-            MR::startSystemSE("SE_SY_CAMERA_NG", -1, -1);
-            _1F2 = true;
+        } else {
+            if (isPlayableCameraSE(false)) {
+                MR::startSystemSE("SE_SY_CAMERA_NG");
+                mIsCameraNG = true;
+            }
         }
     }
 
     if (CameraLocalUtil::testCameraPadTriggerRoundRight()) {
-        if (getCurrentCameraMan()->isEnableToRoundRight()) {
+        if (isEnableToRoundRight()) {
             getCurrentCameraMan()->roundRight();
-
             if (isPlayableCameraSE(false)) {
-                MR::startSystemSE("SE_SY_CAMERA_MOVE", -1, -1);
+                MR::startSystemSE("SE_SY_CAMERA_MOVE");
             }
-        } else if (isPlayableCameraSE(false)) {
-            MR::startSystemSE("SE_SY_CAMERA_NG", -1, -1);
-            _1F2 = true;
+        } else {
+            if (isPlayableCameraSE(false)) {
+                MR::startSystemSE("SE_SY_CAMERA_NG");
+                mIsCameraNG = true;
+            }
         }
     }
 
     if (CameraLocalUtil::testCameraPadTriggerReset()) {
-        if (getCurrentCameraMan()->isEnableToReset()) {
+        if (isEnableToReset()) {
             if (isPlayableCameraSE(false)) {
-                MR::startSystemSE("SE_SY_CAMERA_RESET", -1, -1);
-                MR::startSystemSE("SE_SY_CAMERA_MOVE", -1, -1);
+                MR::startSystemSE("SE_SY_CAMERA_RESET");
+                MR::startSystemSE("SE_SY_CAMERA_MOVE");
             }
-        } else if (isPlayableCameraSE(false)) {
-            MR::startSystemSE("SE_SY_CAMERA_NG", -1, -1);
-            _1F2 = true;
+        } else {
+            if (isPlayableCameraSE(false)) {
+                MR::startSystemSE("SE_SY_CAMERA_NG");
+                mIsCameraNG = true;
+            }
         }
     }
 
-    if (MR::isPlayerInBind() && MR::testFpViewStartTrigger() && isPlayableCameraSE(false)) {
-        MR::startSystemSE("SE_SY_CAMERA_NG", -1, -1);
-        _1F2 = true;
+    if (MR::isPlayerInBind()) {
+        if (MR::testFpViewStartTrigger()) {
+            if (isPlayableCameraSE(false)) {
+                MR::startSystemSE("SE_SY_CAMERA_NG");
+                mIsCameraNG = true;
+            }
+        }
     }
 
-    if (MR::testCorePadTriggerDown(WPAD_CHAN0) && isPlayableCameraSE(false)) {
-        MR::startSystemSE("SE_SY_CAMERA_NG", -1, -1);
-        _1F2 = true;
+    if (MR::testCorePadTriggerDown(WPAD_CHAN0)) {
+        if (isPlayableCameraSE(false)) {
+            MR::startSystemSE("SE_SY_CAMERA_NG");
+            mIsCameraNG = true;
+        }
     }
 }
 
 void CameraDirector::removeEndEventAtLanding(s32 zoneID, const char* pName) {
-    for (u32 i = 0; i < mEndEventAtLandingCount; i++) {
-        if (mEndEventsAtLanding[i].mZoneID == zoneID && strcmp(mEndEventsAtLanding[i].mName, pName) == 0) {
-            u32 lastIdx = mEndEventAtLandingCount - 1;
+    if (mEventNum == 0) {
+        return;
+    }
 
-            if (lastIdx == i) {
-                mEndEventAtLandingCount = 0;
+    for (s32 idx = 0; idx < mEventNum; idx++) {
+        if (mEvents[idx].mZoneID == zoneID && strcmp(mEvents[idx].mName, pName) == 0) {
+            if (mEventNum - 1 == idx) {
+                mEventNum = 0;
                 return;
             }
 
-            mEndEventsAtLanding[i].mZoneID = mEndEventsAtLanding[lastIdx].mZoneID;
-            strcpy(mEndEventsAtLanding[i].mName, mEndEventsAtLanding[lastIdx].mName);
-            mEndEventsAtLanding[i].mInterpolateFrame = mEndEventsAtLanding[lastIdx].mInterpolateFrame;
-            mEndEventAtLandingCount--;
+            mEvents[idx].mZoneID = mEvents[mEventNum - 1].mZoneID;
+            strcpy(mEvents[idx].mName, mEvents[mEventNum - 1].mName);
+            mEvents[idx].mFrame = mEvents[mEventNum - 1].mFrame;
+            mEventNum--;
             return;
         }
     }
 }
 
-void CameraDirector::calcViewMtxFromPoseParam(TPos3f* pMtx, const CameraPoseParam* pPoseParam) {
-    TVec3f zDir = pPoseParam->mWatchPos - pPoseParam->mPos;
-    MR::normalizeOrZero(&zDir);
+void CameraDirector::calcViewMtxFromPoseParam(TPos3f* pMtx, const CameraPoseParam* pParam) {
+    TVec3f front = pParam->mWatchPos - pParam->mPos;
+    MR::normalizeOrZero(&front);
+    TVec3f side = pParam->mUpVec.cross(front);
+    MR::normalizeOrZero(&side);
+    TVec3f up = front.cross(side);
+    MR::normalizeOrZero(&up);
 
-    TVec3f xDir;
-    PSVECCrossProduct(&pPoseParam->mUpVec, &zDir, &xDir);
-    MR::normalizeOrZero(&xDir);
+    pMtx->setXDir(-side);
+    pMtx->setYDir(up);
+    pMtx->setZDir(-front);
+    pMtx->setTrans(pParam->mPos);
 
-    TVec3f yDir;
-    PSVECCrossProduct(&zDir, &xDir, &yDir);
-    MR::normalizeOrZero(&yDir);
-
-    TVec3f negXDir = -xDir;
-    pMtx->mMtx[0][0] = negXDir.x;
-    pMtx->mMtx[1][0] = negXDir.y;
-    pMtx->mMtx[2][0] = negXDir.z;
-    pMtx->mMtx[0][1] = yDir.x;
-    pMtx->mMtx[1][1] = yDir.y;
-    pMtx->mMtx[2][1] = yDir.z;
-    TVec3f negZDir = -zDir;
-    pMtx->mMtx[0][2] = negZDir.x;
-    pMtx->mMtx[1][2] = negZDir.y;
-    pMtx->mMtx[2][2] = negZDir.z;
-    pMtx->setTrans(pPoseParam->mPos);
-
-    TPos3f rollMtx;
-    rollMtx.zeroTrans();
-    rollMtx.setRotate(TVec3f(0.0f, 0.0f, 1.0f), pPoseParam->mRoll);
-    pMtx->concat(*pMtx, rollMtx);
+    TPos3f rot;
+    rot.makeRotate(TVec3f(0.0f, 0.0f, 1.0f), pParam->mRoll);
+    pMtx->concat(*pMtx, rot);
 }
 
-bool CameraDirector::isPlayableCameraSE(bool a1) {
+bool CameraDirector::isPlayableCameraSE(bool checkSubjective) {
     if (MR::isDemoActive()) {
         return false;
     }
@@ -818,7 +788,7 @@ bool CameraDirector::isPlayableCameraSE(bool a1) {
         return false;
     }
 
-    if (a1 && mIsSubjectiveCamera) {
+    if (checkSubjective && mIsSubjectiveCamera) {
         return false;
     }
 
@@ -847,7 +817,7 @@ void CameraDirector::resetCameraMan() {
     man->deactivate(this);
     man->activate(this);
 
-    mOnlyCamera->_3D = true;
+    mOnlyCamera->mIsResetting = true;
 }
 
 void CameraDirector::createStartAnimCamera() {
@@ -863,45 +833,25 @@ void CameraDirector::createStartAnimCamera() {
 }
 
 void CameraDirector::createTalkCamera() {
-    const char* name = ::sTalkCameraName;
-    CameraParamChunkID_Tmp chunkID = CameraParamChunkID_Tmp();
-    chunkID.createEventID(0, name);
+    declareEvent(0, ::sTalkCameraName);
 
-    mChunkHolder->createChunk(chunkID, nullptr);
-
-    const char* name2 = ::sTalkCameraName;
-    CameraParamChunkID_Tmp chunkID2 = CameraParamChunkID_Tmp();
-    chunkID2.createEventID(0, name2);
-
-    CameraParamChunk* chunk2 = mChunkHolder->getChunk(chunkID2);
-
-    if (chunk2 != nullptr) {
-        chunk2->setCameraType("CAM_TYPE_TALK", mHolder);
-        chunk2->_64 = true;
+    CameraParamChunkEvent* chunk = getEventParameter(0, ::sTalkCameraName);
+    if (chunk != nullptr) {
+        chunk->setCameraType("CAM_TYPE_TALK", mHolder);
+        chunk->_64 = true;
     }
 }
 
 void CameraDirector::createSubjectiveCamera() {
-    const char* name = ::sSubjectiveCameraName;
-    CameraParamChunkID_Tmp chunkID = CameraParamChunkID_Tmp();
-    chunkID.createEventID(0, name);
+    declareEvent(0, ::sSubjectiveCameraName);
 
-    mChunkHolder->createChunk(chunkID, nullptr);
-
-    const char* name2 = ::sSubjectiveCameraName;
-    CameraParamChunkID_Tmp chunkID2 = CameraParamChunkID_Tmp();
-    chunkID2.createEventID(0, name2);
-
-    CameraParamChunk* chunk2 = mChunkHolder->getChunk(chunkID2);
-
-    if (chunk2 != nullptr) {
-        chunk2->setCameraType("CAM_TYPE_SUBJECTIVE", mHolder);
-        chunk2->_64 = true;
+    CameraParamChunkEvent* chunk = getEventParameter(0, ::sSubjectiveCameraName);
+    if (chunk != nullptr) {
+        chunk->setCameraType("CAM_TYPE_SUBJECTIVE", mHolder);
+        chunk->_64 = true;
     }
 }
 
-namespace MR {
-    CameraDirector* getCameraDirector() {
-        return getSceneObj< CameraDirector >(SceneObj_CameraDirector);
-    }
-};  // namespace MR
+CameraDirector* MR::getCameraDirector() {
+    return MR::getSceneObj< CameraDirector >(SceneObj_CameraDirector);
+}

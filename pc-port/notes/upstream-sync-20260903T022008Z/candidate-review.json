@@ -1,0 +1,187 @@
+[
+  {
+    "source": "src/Game/Animation/AnmPlayer.cpp",
+    "disposition": "requires-further-porting",
+    "reason": "src/Game/Animation/AnmPlayer.cpp:2:10: fatal error: 'Game/System/ResourceInfo.hpp' file not found"
+  },
+  {
+    "source": "src/Game/AreaObj/MercatorTransformCube.cpp",
+    "disposition": "requires-further-porting",
+    "reason": "src/Game/AreaObj/MercatorTransformCube.cpp:10:1: error: use of undeclared identifier 'MercatorTransformCube'"
+  },
+  {
+    "source": "src/Game/AudioLib/AudBgmVolumeController.cpp",
+    "disposition": "integrated",
+    "reason": "Added exact merged-root source and any required portable dependencies; built successfully."
+  },
+  {
+    "source": "src/Game/Enemy/AnimScaleController.cpp",
+    "disposition": "integrated",
+    "reason": "Added exact merged-root source and any required portable dependencies; built successfully."
+  },
+  {
+    "source": "src/Game/LiveActor/Binder.cpp",
+    "disposition": "requires-further-porting",
+    "reason": "src/Game/LiveActor/Binder.cpp:25:7: error: member initializer 'mTriangleFilter' does not name a non-static data member or base class"
+  },
+  {
+    "source": "src/Game/LiveActor/ClippingDirector.cpp",
+    "disposition": "requires-further-porting",
+    "reason": "src/Game/LiveActor/ClippingDirector.cpp:2:10: fatal error: 'Game/LiveActor/ClippingActorHolder.hpp' file not found"
+  },
+  {
+    "source": "src/Game/Map/CollisionCode.cpp",
+    "disposition": "integrated",
+    "reason": "Added exact merged-root source and any required portable dependencies; built successfully."
+  },
+  {
+    "source": "src/Game/Map/HitInfo.cpp",
+    "disposition": "requires-further-porting",
+    "reason": "src/Game/Map/HitInfo.cpp:2:10: fatal error: 'Game/Map/CollisionParts.hpp' file not found"
+  },
+  {
+    "source": "src/Game/Map/OceanHomeMapCtrl.cpp",
+    "disposition": "requires-further-porting",
+    "reason": "src/Game/Map/OceanHomeMapCtrl.cpp:5:10: fatal error: 'Game/Map/WaterAreaHolder.hpp' file not found"
+  },
+  {
+    "source": "src/Game/MapObj/PowerStar.cpp",
+    "disposition": "requires-further-porting",
+    "reason": "src/Game/MapObj/PowerStar.cpp:6:10: fatal error: 'Game/MapObj/PowerStarAppearPoint.hpp' file not found"
+  },
+  {
+    "source": "src/Game/MapObj/StarPieceDirector.cpp",
+    "disposition": "requires-further-porting",
+    "reason": "src/Game/MapObj/StarPieceDirector.cpp:6:10: fatal error: 'Game/Screen/StarPointerDirector.hpp' file not found"
+  },
+  {
+    "source": "src/Game/NPC/TalkMessageCtrl.cpp",
+    "disposition": "requires-further-porting",
+    "reason": "src/Game/NPC/TalkMessageCtrl.cpp:5:10: fatal error: 'Game/NPC/TalkDirector.hpp' file not found"
+  },
+  {
+    "source": "src/Game/NPC/TalkMessageInfo.cpp",
+    "disposition": "retain-existing-provider",
+    "reason": "Existing implementation already supplies the same predicates and initializes mBalloonType; wholesale replacement removes that host initialization."
+  },
+  {
+    "source": "src/Game/NPC/TalkNodeCtrl.cpp",
+    "disposition": "requires-further-porting",
+    "reason": "src/Game/NPC/TalkNodeCtrl.cpp:5:10: fatal error: 'Game/Screen/MessageTagSkipTagProcessor.hpp' file not found"
+  },
+  {
+    "source": "src/Game/NameObj/NameObjExecuteHolder.cpp",
+    "disposition": "requires-further-porting",
+    "reason": "src/Game/NameObj/NameObjExecuteHolder.cpp:3:10: fatal error: 'Game/NameObj/NameObjListExecutor.hpp' file not found"
+  },
+  {
+    "source": "src/Game/Player/GroupChecker.cpp",
+    "disposition": "retain-existing-provider",
+    "reason": "Current provider owns native scene memberships and cleanup. Retail HashSortTable path lacks those lifetime hooks and has an incomplete GroupCheckManager implementation."
+  },
+  {
+    "source": "src/Game/Scene/GameSceneFunction.cpp",
+    "disposition": "requires-further-porting",
+    "reason": "src/Game/Scene/GameSceneFunction.cpp:2:10: fatal error: 'Game/Scene/GameScene.hpp' file not found"
+  },
+  {
+    "source": "src/Game/Screen/LayoutActorFlag.cpp",
+    "disposition": "requires-further-porting",
+    "reason": "src/Game/Screen/LayoutActorFlag.cpp:3:18: error: definition of explicitly defaulted default constructor"
+  },
+  {
+    "source": "src/Game/Screen/MoviePlayingSequence.cpp",
+    "disposition": "requires-further-porting",
+    "reason": "src/Game/Screen/MoviePlayingSequence.cpp:2:10: fatal error: 'Game/Demo/DemoPadRumbler.hpp' file not found"
+  },
+  {
+    "source": "src/Game/Screen/ScreenAlphaCapture.cpp",
+    "disposition": "requires-further-porting",
+    "reason": "src/Game/Screen/ScreenAlphaCapture.cpp:5:10: fatal error: 'JSystem/JKernel/JKRSolidHeap.hpp' file not found"
+  },
+  {
+    "source": "src/Game/Screen/StaffRoll.cpp",
+    "disposition": "requires-further-porting",
+    "reason": "src/Game/Screen/StaffRoll.cpp:7:10: fatal error: 'Game/System/Language.hpp' file not found"
+  },
+  {
+    "source": "src/Game/System/GameDataConst.cpp",
+    "disposition": "requires-further-porting",
+    "reason": "src/Game/System/GameDataConst.hpp:6:14: error: unknown type name 'JMapData'"
+  },
+  {
+    "source": "src/Game/System/GameEventFlagTable.cpp",
+    "disposition": "requires-further-porting",
+    "reason": "src/Game/System/GameEventFlagTable.cpp:9:14: error: unknown type name 'JMapData'"
+  },
+  {
+    "source": "src/Game/System/GameSystemFunction.cpp",
+    "disposition": "requires-further-porting",
+    "reason": "src/Game/System/GameSystemFunction.cpp:2:10: fatal error: 'Game/NameObj/NameObjRegister.hpp' file not found"
+  },
+  {
+    "source": "src/Game/System/StageResultSequenceChecker.cpp",
+    "disposition": "requires-further-porting",
+    "reason": "src/Game/System/StageResultSequenceChecker.cpp:2:10: fatal error: 'Game/System/GalaxyStatusAccessor.hpp' file not found"
+  },
+  {
+    "source": "src/Game/System/WPadRumbleData.cpp",
+    "disposition": "integrated",
+    "reason": "Added exact merged-root source and any required portable dependencies; built successfully."
+  },
+  {
+    "source": "src/Game/Util/Color.cpp",
+    "disposition": "integrated",
+    "reason": "Added exact merged-root source and any required portable dependencies; built successfully."
+  },
+  {
+    "source": "src/Game/Util/DirectDraw.cpp",
+    "disposition": "requires-further-porting",
+    "reason": "src/Game/Util/DirectDraw.cpp:12:10: fatal error: 'revolution/gx/GXGeometry.h' file not found"
+  },
+  {
+    "source": "src/Game/Util/EffectUtil.cpp",
+    "disposition": "requires-further-porting",
+    "reason": "src/Game/Util/EffectUtil.cpp:2:10: fatal error: 'Game/Effect/EffectSystemUtil.hpp' file not found"
+  },
+  {
+    "source": "src/Game/Util/HashUtil.cpp",
+    "disposition": "requires-further-porting",
+    "reason": "src/Game/Util/HashUtil.cpp:6:12: error: redefinition of 'tolower'"
+  },
+  {
+    "source": "src/Game/Util/JointUtil.cpp",
+    "disposition": "requires-further-porting",
+    "reason": "src/Game/Util/JointUtil.cpp:3:10: fatal error: 'JSystem/J3DGraphBase/J3DMaterial.hpp' file not found"
+  },
+  {
+    "source": "src/Game/Util/MemoryUtil.cpp",
+    "disposition": "requires-further-porting",
+    "reason": "src/Game/Util/MemoryUtil.cpp:2:10: fatal error: 'Game/System/HeapMemoryWatcher.hpp' file not found"
+  },
+  {
+    "source": "src/Game/Util/ModelUtil.cpp",
+    "disposition": "requires-further-porting",
+    "reason": "src/Game/Util/ModelUtil.cpp:2:10: fatal error: 'Game/Animation/XanimePlayer.hpp' file not found"
+  },
+  {
+    "source": "src/Game/Util/MtxUtil.cpp",
+    "disposition": "requires-further-porting",
+    "reason": "src/Game/Util/MtxUtil.cpp:259:15: error: no member named 'setScale' in 'JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>>'"
+  },
+  {
+    "source": "src/Game/Util/NPCUtil.cpp",
+    "disposition": "requires-further-porting",
+    "reason": "src/Game/Util/NPCUtil.cpp:45:22: error: no member named 'createPowerStarDemoModel' in namespace 'MR'"
+  },
+  {
+    "source": "src/Game/Util/RailUtil.cpp",
+    "disposition": "retain-existing-provider",
+    "reason": "Current rail utility provider uses host rail storage and spline runtime. A second retail TU would duplicate symbols and bypass that storage."
+  },
+  {
+    "source": "src/Game/Util/TalkUtil.cpp",
+    "disposition": "requires-further-porting",
+    "reason": "src/Game/Util/TalkUtil.cpp:5:10: fatal error: 'Game/Screen/GameSceneLayoutHolder.hpp' file not found"
+  }
+]

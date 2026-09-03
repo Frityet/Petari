@@ -94,7 +94,7 @@ namespace MR {
     const char* getDemoName(const JMapInfoIter& rIter);
     const char* getDemoSheetName(const JMapInfoIter& rIter);
     s32 getChildObjNum(const JMapInfoIter& rIter);
-    const char* getChildObjName(const char** pDest, const JMapInfoIter& rIter, int index);
+    void getChildObjName(const char** pDest, const JMapInfoIter& rIter, int index);
     void initChildObj(NameObj* pObj, const JMapInfoIter& rIter, int index);
 
     template < typename T >

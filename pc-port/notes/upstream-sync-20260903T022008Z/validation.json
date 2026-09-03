@@ -1,0 +1,98 @@
+{
+  "platform": "macOS arm64, LLVM 23, debug",
+  "build_targets": [
+    "smg-pc",
+    "smg-pc-showcase"
+  ],
+  "build_exit_code": 0,
+  "test_exit_codes_verified": true,
+  "tests": [
+    {
+      "target": "smg-pc-game-source-mirror-tests",
+      "code": 0,
+      "seconds": 0.04,
+      "evidence": [
+        "79 source pairs passed"
+      ]
+    },
+    {
+      "target": "smg-pc-player-source-mirror-tests",
+      "code": 0,
+      "seconds": 0.89,
+      "evidence": [
+        "Player source mirror passed: 96/96 retail source branches exact, 63/63 headers exact, 1 production TU and 95 explicit exclusions"
+      ]
+    },
+    {
+      "target": "smg-pc-upstream-component-tests",
+      "code": 0,
+      "seconds": 0.42,
+      "evidence": [
+        "Upstream component tests passed"
+      ]
+    },
+    {
+      "target": "smg-pc-npc-actor-real-or-absent-tests",
+      "code": 0,
+      "seconds": 1.32,
+      "evidence": [
+        "NPCActor real-or-absent tests passed: 6/6"
+      ]
+    },
+    {
+      "target": "smg-pc-talk-real-or-absent-tests",
+      "code": 0,
+      "seconds": 1.42,
+      "evidence": [
+        "Talk real-RMGK01 runtime and utility-provider tests passed"
+      ]
+    },
+    {
+      "target": "smg-pc-information-observer-tests",
+      "code": 0,
+      "seconds": 2.02,
+      "evidence": [
+        "InformationObserver tests passed: exact timekeep/prompt/guard/lifecycle"
+      ]
+    },
+    {
+      "target": "smg-pc-live-actor-util-real-or-absent-tests",
+      "code": 0,
+      "seconds": 3.18,
+      "evidence": [
+        "LiveActorUtil real-or-absent tests passed: 6/6"
+      ]
+    },
+    {
+      "target": "smg-pc-mario-gateway-walk-tests",
+      "code": 0,
+      "seconds": 12.64,
+      "evidence": [
+        "[ok] real Gateway Mario stand/walk/release proof"
+      ]
+    },
+    {
+      "target": "smg-pc-sphere-selector-real-or-absent-tests",
+      "code": 0,
+      "seconds": 0.5,
+      "evidence": [
+        "4 SphereSelector real-or-absent test(s) passed"
+      ]
+    }
+  ],
+  "source_manifest_counts": {
+    "exact": 107,
+    "adapted-host": 17,
+    "retained-host": 15,
+    "guarded-retail-exact": 10,
+    "added-exact": 15
+  },
+  "upstream": "c600c594461f9626c1badd9d0ad9850d0333f7dc",
+  "preexisting_work": "Untouched files verified by SHA-256; overlapping edits verified by replaying the original patch; Aurora working status retained.",
+  "limits": [
+    "Tested with the existing local macOS/Aurora work present.",
+    "Retail Wii binary matching and a complete game playthrough were not run.",
+    "Existing Player exclusion boundary retained: mirrored source does not imply every Player state is available in production.",
+    "Imported upstream whitespace is preserved; git diff --check reports upstream trailing whitespace."
+  ]
+}

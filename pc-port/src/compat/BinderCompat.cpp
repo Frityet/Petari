@@ -164,11 +164,11 @@ void Binder::setTriangleFilter(TriangleFilterBase* filter) {
     mTriangleFilter = filter;
 }
 
-const Triangle* Binder::getPlane(int index) const {
+const HitInfo* Binder::getPlane(int index) const {
     if (index < 0 || index >= mPlaneNum || mPlaneInfos == nullptr) {
         return nullptr;
     }
-    return &mPlaneInfos[index].mParentTriangle;
+    return &mPlaneInfos[index];
 }
 
 u32 Binder::copyPlaneArrayAndSortingSensor(HitInfo** infos, u32 capacity) {

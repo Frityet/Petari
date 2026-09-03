@@ -348,7 +348,7 @@ bool Mario::checkSidePress() {
                         }
                     }
 
-                    if (!isStatusActive(27) && _735 == 0 && ceilDistance >= 180.0f) {
+                    if (!isStatusActive(27) && mSinkTimer == 0 && ceilDistance >= 180.0f) {
                         TVec3f firstDirection = firstInfo->mHitPos - probeCenter;
                         TVec3f secondDirection = probeCenter - secondInfo->mHitPos;
                         if (!MR::isNearZero(MR::diffAngleAbs(firstDirection, secondDirection), 0.017453292f)) {
@@ -365,7 +365,7 @@ bool Mario::checkSidePress() {
                         pressAngle = 0.0f;
                     }
 
-                    if (!isStatusActive(27) && _735 == 0 && pressAngle > 0.34906587f) {
+                    if (!isStatusActive(27) && mSinkTimer == 0 && pressAngle > 0.34906587f) {
                         f32 moveDistance = (160.0f - ceilDistance) / MR::sin(pressAngle);
                         if (moveDistance < 0.0f) {
                             continue;

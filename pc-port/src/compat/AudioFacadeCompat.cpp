@@ -623,43 +623,6 @@ AudMultiBgm *AudBgmKeeper::getValidMultiBgm() {
     return nullptr;
 }
 
-AudBgmVolumeController::AudBgmVolumeController()
-    : _0{}, mFaderVolZeroVolume(1.0F), mFaderVolZeroTime(0), mFaderVolZeroRecoverTime(0),
-      mFaderVolDownVolume(1.0F), mFaderVolDownTime(0), mFaderVolDownRecoverTime(0),
-      mFaderInterruptedVolume(1.0F), mFaderInterruptedTime(0), mFaderInterruptedRecoverTime(0),
-      _38(1.0F), _3C(0), _40(0), _44(1.0F), _48(0), _4C(0), mFader(), _8C(0U) {
-}
-
-void AudBgmVolumeController::update() {
-    for (auto &fader : mFader) {
-        fader.update();
-    }
-}
-
-f32 AudBgmVolumeController::getVolume() const {
-    auto volume = 1.0F;
-    for (const auto &fader : mFader) {
-        volume *= fader.mCurrentVolume;
-    }
-    return volume;
-}
-
-void AudBgmVolumeController::volDown(bool) {
-    unavailable("BGM level-volume reduction");
-}
-
-void AudBgmVolumeController::interruptedByOther() {
-    unavailable("BGM interruption volume");
-}
-
-void AudBgmVolumeController::moveAuxVolume(f32, s32) {
-    unavailable("BGM auxiliary volume");
-}
-
-void AudBgmVolumeController::moveNoteFairyVolume(f32, s32) {
-    unavailable("BGM Note Fairy volume");
-}
-
 bool AudBgmRhythmStrategy::set(AudBgm *, s32 bgm_index) {
     static_cast<void>(bgm_index);
     unavailable("BGM rhythm-strategy binding");

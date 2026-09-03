@@ -1,11 +1,9 @@
 #pragma once
 
+#include "JSystem/J3DGraphAnimator/J3DModelData.hpp"
 #include "JSystem/J3DGraphBase/J3DStruct.hpp"
 #include <revolution.h>
 
-class J3DMaterial;
-class J3DModel;
-class J3DModelData;
 class J3DTexMtx;
 class ResourceHolder;
 
@@ -64,21 +62,9 @@ class ProjmapEffectMtxSetter : public MaterialCtrl {
 public:
     ProjmapEffectMtxSetter(J3DModel*, const ResourceHolder*);
 
-    virtual void update() override;
-
-    void getBaseTrans(TVec3f*) const;
     void updateMtxUseBaseMtx();
+
     void updateMtxUseBaseMtxWithLocalOffset(const TVec3f&);
 
-    struct UpdateEffectMtxInfo {
-        UpdateEffectMtxInfo();
-
-        /* 0x00 */ J3DTexMtxInfo* mTexMtxInfo;
-        /* 0x04 */ TPos3f mEffectMtx;
-    };
-
-    /* 0x0C */ UpdateEffectMtxInfo* mUpdateEffectMtxInfo;
-    /* 0x10 */ s32 mNumUpdateEffectMtxInfo;
-    /* 0x14 */ TPos3f mBaseMtx;
-    /* 0x44 */ J3DModel* mModel;
+    u8 temp[0x3C];
 };

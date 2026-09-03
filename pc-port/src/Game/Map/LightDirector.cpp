@@ -15,11 +15,11 @@ LightDirector::~LightDirector() {
         runtime->scene_lights().clear_light(4U);
     }
     delete mPointCtrl;
-    delete mZoneHolder;
-    delete mHolder;
+    delete mZoneDataHolder;
+    delete mDataHolder;
     mPointCtrl = nullptr;
-    mZoneHolder = nullptr;
-    mHolder = nullptr;
+    mZoneDataHolder = nullptr;
+    mDataHolder = nullptr;
     mResourceHolder = nullptr;
 }
 
@@ -31,18 +31,18 @@ void LightDirector::init(const JMapInfoIter&) {
     auto zoneHolder = std::make_unique< LightZoneDataHolder >();
     auto pointCtrl = std::make_unique< LightPointCtrl >();
 
-    mHolder = holder.release();
-    mZoneHolder = zoneHolder.release();
+    mDataHolder = holder.release();
+    mZoneDataHolder = zoneHolder.release();
     mPointCtrl = pointCtrl.release();
 }
 
 void LightDirector::initData() {
     mResourceHolder = LightFunction::loadLightArchive();
-    if (mHolder != nullptr) {
-        mHolder->initLightData();
+    if (mDataHolder != nullptr) {
+        mDataHolder->initLightData();
     }
     LightFunction::initLightData();
-    _18 = LightFunction::getAreaLightInfo(ZoneLightID{});
+    mDefaultAreaLight = LightFunction::getAreaLightInfo(ZoneLightID{});
 }
 
 void LightDirector::loadLightPlayer() const {
@@ -64,8 +64,8 @@ void LightDirector::loadLightPlayer() const {
 }
 
 void LightDirector::loadLightCoin() const {
-    if (mHolder != nullptr) {
-        LightFunction::loadLightInfoCoin(&mHolder->_8);
+    if (mDataHolder != nullptr) {
+        LightFunction::loadLightInfoCoin(&mDataHolder->_8);
     }
 }
 

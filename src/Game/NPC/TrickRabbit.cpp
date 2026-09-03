@@ -9,6 +9,7 @@
 #include "Game/Map/RailGraphIter.hpp"
 #include "Game/NPC/RabbitStateCaught.hpp"
 #include "Game/NPC/RabbitStateWaitStart.hpp"
+#include "Game/NPC/TrickRabbitUtil.hpp"
 #include "Game/Util/ActorMovementUtil.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/ActorShadowUtil.hpp"
@@ -937,7 +938,7 @@ void TrickRabbit::addMovingAccel(const TVec3f& rVec, f32 f) {
     MR::separateScalarAndDirection(&_D0, &stack_14, stack_14);
 
     if (!MR::isNearZero(stack_14))
-        MR::turnVecToVecCos(&_9C, _9C, stack_14, 0.98f, stack_20, 0.02f);
+        MR::turnVecToVecCos(&_9C, _9C, stack_14, 0.98f, stack_20);
 
     TVec3f stack_8(_9C * f);
     mVelocity += stack_8;

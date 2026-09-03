@@ -671,7 +671,7 @@ bool MarioFireRun::move() {
 
     if (getPlayer()->checkTrgA() || mActor->isRequestJump()) {
         Mario* player = getPlayer();
-        player->_278 = 1.0f;
+        player->mWalkSpeed = 1.0f;
         getPlayer()->tryJump();
         return false;
     }

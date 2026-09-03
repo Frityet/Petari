@@ -78,7 +78,7 @@ bool Mario::isEnableBackHang() {
     }
 
     const MarioConstTable* table = mActor->mConst->getTable();
-    if (mStickPos.z > table->mWallBackHangStickPower || _278 > table->mWallBackHangWalkSpeed) {
+    if (mStickPos.z > table->mWallBackHangStickPower || mWalkSpeed > table->mWallBackHangWalkSpeed) {
         return false;
     }
 
@@ -132,7 +132,7 @@ bool Mario::isEnableSideHang() {
     }
 
     const MarioConstTable* table = mActor->mConst->getTable();
-    if (mStickPos.z > table->mWallBackHangStickPower || _278 > table->mWallBackHangWalkSpeed) {
+    if (mStickPos.z > table->mWallBackHangStickPower || mWalkSpeed > table->mWallBackHangWalkSpeed) {
         return false;
     }
 

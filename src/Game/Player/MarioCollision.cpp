@@ -254,7 +254,7 @@ void Mario::checkMap() {
             mVerticalSpeed = (mShadowPos - mPosition).dot(gravity);
         }
 
-        if (!_24) {
+        if (!_20_HIGH_WORD) {
             _148.zero();
         }
     }
@@ -867,7 +867,7 @@ void Mario::updateFloorCode() {
         _962 = shadowCode;
     }
 
-    if (mActor->mAlphaEnable) {
+    if (mActor->mBeeWallWalk) {
         _41C = 15;
         return;
     }
@@ -1179,7 +1179,7 @@ bool Mario::checkHeadPoint() {
     }
 
     if (getPlayerMode() == 4 && (mMovementStates_HIGH_WORD & 0x10000000) == 0 && !mMovementStates._A && !isStatusActive(0x1C) &&
-        !isStatusActive(0x15) && !isStatusActive(0x1B) && !mActor->mAlphaEnable) {
+        !isStatusActive(0x15) && !isStatusActive(0x1B) && !mActor->mBeeWallWalk) {
         if (isStatusActive(0x16)) {
             return false;
         }
@@ -1673,7 +1673,7 @@ bool Mario::checkGround() {
     hitAverage.zero();
 
     u32 probeCount = 3;
-    if (!_71C && mMovementStates._1 && !mMovementStates.jumping && !(_10_HIGH_WORD & 0x10000000)) {
+    if (!mTargetWalkSpeedIndex && mMovementStates._1 && !mMovementStates.jumping && !(_10_HIGH_WORD & 0x10000000)) {
         probeCount = 4;
     }
     if (isAnimationRun("Run", 0)) {

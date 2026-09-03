@@ -282,7 +282,7 @@ void BrightObj::calcBrightInfo(u16 token, const BrightCamInfo& camera) {
 }
 
 void BrightObj::getNowCenter(TVec2f* center) const {
-    const auto* projection = MR::getCameraProjectionMtx();
+    const auto* projection = &MR::getCameraProjectionMtx();
     if (projection == nullptr) {
         center->zero();
         return;
@@ -341,7 +341,7 @@ void BrightSun::calcBrightInfo(u16 token, const BrightCamInfo& camera) {
 }
 
 void BrightSun::getNowCenter(TVec2f* center) const {
-    const auto* projection = MR::getCameraProjectionMtx();
+    const auto* projection = &MR::getCameraProjectionMtx();
     if (projection == nullptr) {
         center->zero();
         return;

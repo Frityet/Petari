@@ -7,6 +7,7 @@
 
 class ActorLightCtrl;
 class ResourceHolder;
+class LightAreaHolder;
 
 class LightDirector : public NameObj {
 public:
@@ -20,10 +21,10 @@ public:
     void loadLightPlayer() const;
     void loadLightCoin() const;
 
-    u32 _C = 0U;
-    LightDataHolder* mHolder = nullptr;
-    LightZoneDataHolder* mZoneHolder = nullptr;
-    AreaLightInfo* _18 = nullptr;
+    LightAreaHolder* _C = nullptr;
+    LightDataHolder* mDataHolder = nullptr;
+    LightZoneDataHolder* mZoneDataHolder = nullptr;
+    AreaLightInfo* mDefaultAreaLight = nullptr;
     const ActorLightCtrl* _1C = nullptr;
     LightPointCtrl* mPointCtrl = nullptr;
     ResourceHolder* mResourceHolder = nullptr;

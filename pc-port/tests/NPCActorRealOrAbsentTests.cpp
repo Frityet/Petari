@@ -260,11 +260,12 @@ int main() {
                        "missing NPC item-table data must be explicitly unavailable");
     requireUnavailable([] { (void)MR::checkPlayerSwingTrigger(); },
                        "missing real MarioActor swing state must be explicitly unavailable");
-    requireUnavailable([] {
+    {
         auto parameter = AnimScaleParam{};
         auto controller = AnimScaleController(&parameter);
-        (void)controller;
-    }, "missing J3D joint-controller support must reject AnimScale construction");
+        controller.update();
+        require(controller._C.y == 1.0F, "upstream scale controller must remain at rest until triggered");
+    }
     ++passed;
 
     testFloatOffsetAndBaseMatrix();

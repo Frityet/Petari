@@ -1,11 +1,16 @@
-#include "Game/LiveActor/Nerve.hpp"
+
 #include "Game/Player/Mario.hpp"
-#include "Game/Player/MarioActor.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/MtxUtil.hpp"
-#include <revolution/mtx.h>
+#include "math_types.hpp"
 
-void Mario::stick2DadjustGround(f32& rStickX, f32& rStickY) {
+void FORCE_ADD() {
+    TVec3f vec;
+    TVec3f vec2;
+    vec + vec2;
+}
+
+void Mario::stick2DadjustGround(f32& rX, f32& rY) {
     if (isStageCameraRotate2D()) {
         return;
     }
@@ -13,94 +18,84 @@ void Mario::stick2DadjustGround(f32& rStickX, f32& rStickY) {
     if (_10.turning && mMovementStates._1 && !mMovementStates.jumping) {
         _10.turning = false;
         clear2DStick();
-        _66C = 0;
+        _66C = false;
     }
 
-    _63C.set(1.0f, 0.0f, 0.0f);
-    _648.set(0.0f, 1.0f, 0.0f);
-    _654.set(0.0f, 0.0f, -1.0f);
-    PSMTXMultVecSR(_F4, &_63C, &_63C);
-    PSMTXMultVecSR(_F4, &_654, &_654);
-    PSMTXMultVecSR(_F4, &_648, &_648);
+    mSide2D.set(1.0f, 0.0f, 0.0f);
+    mUp2D.set(0.0f, 1.0f, 0.0f);
+    mNormal2D.set(0.0f, 0.0f, -1.0f);
 
-    _6A0 = _654;
+    PSMTXMultVecSR(_F4, mSide2D, mSide2D);
+    PSMTXMultVecSR(_F4, mNormal2D, mNormal2D);
+    PSMTXMultVecSR(_F4, mUp2D, mUp2D);
+
+    _6A0 = mNormal2D;
+
     MR::vecKillElement(_368, _6A0, &_660);
+
     if (MR::normalizeOrZero(&_660)) {
         _660 = _368;
     }
 
-    const f32 upDot = _660.dot(_648);
-    if (!MR::isInRange(upDot, -0.707f, 0.707f)) {
-        set2Dmode(upDot >= 0.0f);
+    f32 dot = _660.dot(mUp2D);
+
+    if (!MR::isInRange(dot, -0.707f, 0.707f)) {
+        set2Dmode(dot >= 0.0f);
     }
 
-    TVec3f stick;
-    stick.set(rStickX, rStickY, 0.0f);
-    MR::normalizeOrZero(&stick);
+    TVec3f stickDir2D(rX, rY, 0.0f);
+    MR::normalizeOrZero(&stickDir2D);
 
     if (_66C) {
-        if (MR::isNearZero(mStickPos.z, 0.001f)) {
-            _66C = 0;
+        if (MR::isNearZero(mStickPos.z)) {
+            _66C = false;
             return;
         }
 
-        if (MR::diffAngleAbs(stick, _670) > 0.3f) {
-            _66C = 0;
+        if (MR::diffAngleAbs(stickDir2D, _670) > 0.3f) {
+            _66C = false;
             return;
         }
 
-        const f32 angle = -MR::diffAngleSignedHorizontal(_67C, _660, _6A0);
-        PSMTXMultVecSR(MR::tmpMtxRotZRad(angle), &stick, &stick);
-        rStickX = stick.x;
-        rStickY = stick.y;
+        PSMTXMultVecSR(MR::tmpMtxRotZRad(-MR::diffAngleSignedHorizontal(_67C, _660, _6A0)), stickDir2D, stickDir2D);
+        rX = stickDir2D.x;
+        rY = stickDir2D.y;
         return;
     }
 
-    if (MR::isNearZero(mStickPos.z, 0.001f)) {
+    if (MR::isNearZero(mStickPos.z)) {
         return;
     }
 
-    TVec3f projected;
-    projected.x = _660.dot(getCamDirX());
-    projected.y = _660.dot(getCamDirY());
-    projected.z = 0.0f;
-    const f32 angle = MR::diffAngleAbs(stick, projected);
-    if (angle < 0.5235988f || angle > 2.617994f) {
-        rStickX = 0.0f;
-        rStickY = 0.0f;
+    TVec3f vec2;
+    vec2.x = _660.dot(getCamDirX());
+    vec2.y = _660.dot(getCamDirY());
+    vec2.z = 0.0f;
+
+    f32 diff = MR::diffAngleAbs(stickDir2D, vec2);
+
+    // explicit conversions to radian instead of calling MR::toRadian()
+    if (diff < 30.0f * MR::pi() / 180.0f || diff > 150.0f * MR::pi() / 180.0f) {
+        rX = 0.0f;
+        rY = 0.0f;
         mStickPos.z = 0.0f;
         return;
     }
 
-    _670 = stick;
+    _670 = stickDir2D;
     _67C = _660;
-    _66C = 1;
+    _66C = true;
 }
 
-void Mario::calcDir2D(f32 stickX, f32 stickY, TVec3f* pOut) {
-    TVec3f cameraX;
-    TVec3f cameraY;
-    MR::vecKillElement(getCamDirX(), _6A0, &cameraX);
-    MR::vecKillElement(getCamDirY(), _6A0, &cameraY);
-    MR::normalizeOrZero(&cameraX);
-    MR::normalizeOrZero(&cameraY);
+void Mario::calcDir2D(f32 x, f32 y, TVec3f* pOut) {
+    TVec3f xDir;
+    TVec3f yDir;
+    MR::vecKillElement(getCamDirX(), _6A0, &xDir);
+    MR::vecKillElement(getCamDirY(), _6A0, &yDir);
 
-    TVec3f horizontal(cameraX * stickX);
-    pOut->set(horizontal);
+    MR::normalizeOrZero(&xDir);
+    MR::normalizeOrZero(&yDir);
 
-    TVec3f vertical(cameraY * stickY);
-    pOut->add(vertical);
+    pOut->set(xDir * x);
+    pOut->add(yDir * y);
 }
-
-namespace NrvMarioActor {
-    INIT_NERVE(MarioActorNrvWait);
-    INIT_NERVE(MarioActorNrvGameOver);
-    INIT_NERVE(MarioActorNrvGameOverAbyss);
-    INIT_NERVE(MarioActorNrvGameOverAbyss2);
-    INIT_NERVE(MarioActorNrvGameOverFire);
-    INIT_NERVE(MarioActorNrvGameOverBlackHole);
-    INIT_NERVE(MarioActorNrvGameOverNonStop);
-    INIT_NERVE(MarioActorNrvGameOverSink);
-    INIT_NERVE(MarioActorNrvTimeWait);
-    INIT_NERVE(MarioActorNrvNoRush);
-};  // namespace NrvMarioActor

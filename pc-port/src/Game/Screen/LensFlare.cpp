@@ -240,7 +240,7 @@ void LensFlareDirector::movement() {
     const s32 area = checkArea();
     controlFlare(area, checkBrightObj(area != 0));
 
-    const auto* projection = MR::getCameraProjectionMtx();
+    const auto* projection = &MR::getCameraProjectionMtx();
     if (projection == nullptr || mBrightCamInfo == nullptr) {
         return;
     }
@@ -416,7 +416,7 @@ namespace MR {
         }
     }
 
-    u16 getLensFlareDrawSyncTokenIndex() {
+    u32 getLensFlareDrawSyncTokenIndex() {
         return sLiveLensFlareDirector != nullptr ? sLiveLensFlareDirector->mDrawSyncTokenIndex : 0U;
     }
 

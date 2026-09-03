@@ -44,6 +44,10 @@ public:
     [[nodiscard]] bool checkState(u8 state) const {
         return (mState & state) != 0;
     }
+
+    [[nodiscard]] u8 andState(u8 state) const {
+        return mState & state;
+    }
     [[nodiscard]] s16 getStart() const {
         return mStart;
     }

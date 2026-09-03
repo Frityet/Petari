@@ -36,6 +36,30 @@ namespace JGeometry {
             return position.x >= i.x && position.y >= i.y && position.z >= i.z && position.x < f.x && position.y < f.y && position.z < f.z;
         }
 
+        void extend(const TVec3f &minimum, const TVec3f &maximum) {
+            if (i.x >= minimum.x) i.x = minimum.x;
+            if (i.y >= minimum.y) i.y = minimum.y;
+            if (i.z >= minimum.z) i.z = minimum.z;
+            if (f.x <= maximum.x) f.x = maximum.x;
+            if (f.y <= maximum.y) f.y = maximum.y;
+            if (f.z <= maximum.z) f.z = maximum.z;
+        }
+
+        void zero() {
+            i.zero();
+            f.zero();
+        }
+
+        void pad(f32 padding) {
+            const TVec3f amount(padding);
+            i.sub(amount);
+            f.add(amount);
+        }
+
+        void getCenter(TVec3f *center) {
+            center->lerp(f, i, 0.5F);
+        }
+
         void set(const TVec3f &min, const TVec3f &max) {
             i.set(min);
             f.set(max);

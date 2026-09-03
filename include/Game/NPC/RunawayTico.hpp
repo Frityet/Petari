@@ -6,9 +6,11 @@ class ActorCameraInfo;
 
 class RunawayTico : public Tico {
 public:
-    RunawayTico(const char*);
+    /// @brief Creates a new `RunawayTico`.
+    /// @param pName A pointer to the null-terminated name of the object.
+    RunawayTico(const char* pName);
 
-    virtual void init(const JMapInfoIter&);
+    virtual void init(const JMapInfoIter& rIter);
     virtual void initAfterPlacement();
 
     static void makeArchiveList(NameObjArchiveListCollector*, const JMapInfoIter&);
@@ -22,16 +24,18 @@ public:
     bool isStartRunaway() const;
     void startRunaway();
     void setDemoTrans();
+
     void exeGuide0();
     void exeGuide1();
-    void exeWhiteOut();
     void exeWhiteIn();
+    void exeWhiteOut();
+    void exeWait();
     void exeAppear();
     void exeTalk();
 
-    ActorCameraInfo* mCameraInfo;  // 0x190
-    s32 mMode;                     // 0x194
-    s32 mDemoCastID;               // 0x198
-    bool mIsStartRunaway;          // 0x19C
-    bool _19D;
+    /* 0x190 */ ActorCameraInfo* mCameraInfo;
+    /* 0x194 */ s32 mObjArg1;
+    /* 0x198 */ s32 mDemoCastID;
+    /* 0x19C */ bool mIsStartRunaway;
+    /* 0x19D */ bool mIsAllCaught;
 };
