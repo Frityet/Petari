@@ -1,0 +1,1938 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "scope": "Actual root translation units; individual objdiff percentages are not a bit-exact assertion.",
+  "source_sha256": {
+    "src/JSystem/J3DGraphBase/J3DPacket.cpp": "f9029cd3b81532a20604f50f35e1d83c89569a63e8b37b1cea3037218c376478",
+    "src/JSystem/J3DGraphBase/J3DDrawBuffer.cpp": "afc661f9501d018da49961d35259472191f5f0495f9de696f916bb02ac1aa333",
+    "src/JSystem/J3DGraphBase/J3DShape.cpp": "ef7a58a7ba2a3f5c6e84fa96e08c86f14903b18ce43da241b31ca242c664c3db",
+    "src/JSystem/J3DGraphBase/J3DShapeDraw.cpp": "0aa53ec1a30a61af8233a142574358feb94b01cb5021815e1fa396fd3b77f680",
+    "src/JSystem/J3DGraphBase/J3DShapeMtx.cpp": "d4929c6ed1636c3afa1e071864a8300f029d825c4e2660786cda3f7a58fc8f29",
+    "src/JSystem/J3DGraphBase/J3DGD.cpp": "98d8bbc160174b42279037dfd4ab9a29ef55e00914bd75694b52e5ce5d846196",
+    "src/JSystem/J3DGraphBase/J3DVertex.cpp": "8a64240d5a4ad9f280ce60020fd9cbbf8d10c0897777996b46f0ff6d58435062",
+    "src/JSystem/J3DGraphBase/J3DTevs.cpp": "8f5c1880c8e2e0a5bcd7578d954229e707606d230689bbb471155c3b1890fdff",
+    "src/JSystem/J3DGraphBase/J3DTransform.cpp": "482f604cee806b21e04397cdbfcb9d889910beb8773a790566a2b0374d4ad0d7",
+    "src/JSystem/J3DGraphBase/J3DSys.cpp": "908a17930beafd031cde862385ca606e8fcfae8ecebbb3f2ce2c768edb1a12be",
+    "src/Game/System/Overwrite.cpp": "3c0ae9d9b2924f9bece8750ee5da153fbb2f7d102ce47b3a850da777fd0dc215"
+  },
+  "commands": {
+    "J3DPacket": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-fp_contract",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-use_lmw_stmw",
+      "off",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/JSystem/J3DGraphBase/J3DPacket.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-j3d-packets-20260903/J3DPacket.o"
+    ],
+    "J3DDrawBuffer": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-fp_contract",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-use_lmw_stmw",
+      "off",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/JSystem/J3DGraphBase/J3DDrawBuffer.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-j3d-packets-20260903/J3DDrawBuffer.o"
+    ],
+    "J3DShape": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-fp_contract",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-use_lmw_stmw",
+      "off",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/JSystem/J3DGraphBase/J3DShape.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-j3d-packets-20260903/J3DShape.o"
+    ],
+    "J3DShapeDraw": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-fp_contract",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-use_lmw_stmw",
+      "off",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/JSystem/J3DGraphBase/J3DShapeDraw.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-j3d-packets-20260903/J3DShapeDraw.o"
+    ],
+    "J3DShapeMtx": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-fp_contract",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-use_lmw_stmw",
+      "off",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/JSystem/J3DGraphBase/J3DShapeMtx.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-j3d-packets-20260903/J3DShapeMtx.o"
+    ],
+    "J3DGD": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-fp_contract",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-use_lmw_stmw",
+      "off",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/JSystem/J3DGraphBase/J3DGD.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-j3d-packets-20260903/J3DGD.o"
+    ],
+    "J3DVertex": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-fp_contract",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-use_lmw_stmw",
+      "off",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/JSystem/J3DGraphBase/J3DVertex.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-j3d-packets-20260903/J3DVertex.o"
+    ],
+    "J3DTevs": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-fp_contract",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-use_lmw_stmw",
+      "off",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/JSystem/J3DGraphBase/J3DTevs.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-j3d-packets-20260903/J3DTevs.o"
+    ],
+    "J3DTransform": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-fp_contract",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-use_lmw_stmw",
+      "off",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/JSystem/J3DGraphBase/J3DTransform.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-j3d-packets-20260903/J3DTransform.o"
+    ],
+    "J3DSys": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-fp_contract",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-use_lmw_stmw",
+      "off",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/JSystem/J3DGraphBase/J3DSys.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-j3d-packets-20260903/J3DSys.o"
+    ],
+    "Overwrite": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/Game/System/Overwrite.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-j3d-packets-20260903/Overwrite.o"
+    ],
+    "inline-writers-diagnostic": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-fp_contract",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-use_lmw_stmw",
+      "off",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/build/original-j3d-packets-20260903/inline-writers.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-j3d-packets-20260903/inline-writers.o"
+    ]
+  },
+  "units": {
+    "J3DPacket": [
+      {
+        "name": "newDisplayList__17J3DDisplayListObjFUl",
+        "retail_size": 96,
+        "compiled_size": 96,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "newSingleDisplayList__17J3DDisplayListObjFUl",
+        "retail_size": 84,
+        "compiled_size": 84,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "single_To_Double__17J3DDisplayListObjFv",
+        "retail_size": 100,
+        "compiled_size": 100,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setSingleDisplayList__17J3DDisplayListObjFPvUl",
+        "retail_size": 28,
+        "compiled_size": 28,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "swapBuffer__17J3DDisplayListObjFv",
+        "retail_size": 20,
+        "compiled_size": 20,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "callDL__17J3DDisplayListObjCFv",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "beginDL__17J3DDisplayListObjFv",
+        "retail_size": 88,
+        "compiled_size": 88,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "endDL__17J3DDisplayListObjFv",
+        "retail_size": 92,
+        "compiled_size": 92,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "beginPatch__17J3DDisplayListObjFv",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "endPatch__17J3DDisplayListObjFv",
+        "retail_size": 60,
+        "compiled_size": 60,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "entry__9J3DPacketFP13J3DDrawBuffer",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "addChildPacket__9J3DPacketFP9J3DPacket",
+        "retail_size": 32,
+        "compiled_size": 32,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__ct__13J3DDrawPacketFv",
+        "retail_size": 44,
+        "compiled_size": 76,
+        "objdiff_percent": 7.818182
+      },
+      {
+        "name": "__dt__13J3DDrawPacketFv",
+        "retail_size": 64,
+        "compiled_size": 64,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "newDisplayList__13J3DDrawPacketFUl",
+        "retail_size": 120,
+        "compiled_size": 120,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "newSingleDisplayList__13J3DDrawPacketFUl",
+        "retail_size": 120,
+        "compiled_size": 120,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "draw__13J3DDrawPacketFv",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__ct__12J3DMatPacketFv",
+        "retail_size": 88,
+        "compiled_size": 88,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__dt__12J3DMatPacketFv",
+        "retail_size": 64,
+        "compiled_size": 64,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "addShapePacket__12J3DMatPacketFP14J3DShapePacket",
+        "retail_size": 32,
+        "compiled_size": 32,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "beginDiff__12J3DMatPacketFv",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "endDiff__12J3DMatPacketFv",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "isSame__12J3DMatPacketCFP12J3DMatPacket",
+        "retail_size": 36,
+        "compiled_size": 36,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "draw__12J3DMatPacketFv",
+        "retail_size": 144,
+        "compiled_size": 144,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__ct__14J3DShapePacketFv",
+        "retail_size": 84,
+        "compiled_size": 84,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__dt__14J3DShapePacketFv",
+        "retail_size": 64,
+        "compiled_size": 64,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "calcDifferedBufferSize__14J3DShapePacketFUl",
+        "retail_size": 480,
+        "compiled_size": 480,
+        "objdiff_percent": 99.916664
+      },
+      {
+        "name": "newDifferedDisplayList__14J3DShapePacketFUl",
+        "retail_size": 80,
+        "compiled_size": 72,
+        "objdiff_percent": 86.4
+      },
+      {
+        "name": "prepareDraw__14J3DShapePacketCFv",
+        "retail_size": 284,
+        "compiled_size": 284,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "draw__14J3DShapePacketFv",
+        "retail_size": 160,
+        "compiled_size": 160,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "drawFast__14J3DShapePacketFv",
+        "retail_size": 136,
+        "compiled_size": 136,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__ct__17J3DDisplayListObjFv",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "entry__12J3DMatPacketFP13J3DDrawBuffer",
+        "retail_size": 96,
+        "compiled_size": 96,
+        "objdiff_percent": 100.0
+      }
+    ],
+    "J3DDrawBuffer": [
+      {
+        "name": "initialize__13J3DDrawBufferFv",
+        "retail_size": 48,
+        "compiled_size": 48,
+        "objdiff_percent": 99.166664
+      },
+      {
+        "name": "allocBuffer__13J3DDrawBufferFUl",
+        "retail_size": 92,
+        "compiled_size": 92,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "frameInit__13J3DDrawBufferFv",
+        "retail_size": 52,
+        "compiled_size": 52,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "entryMatSort__13J3DDrawBufferFP12J3DMatPacket",
+        "retail_size": 324,
+        "compiled_size": 324,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "entryMatAnmSort__13J3DDrawBufferFP12J3DMatPacket",
+        "retail_size": 184,
+        "compiled_size": 184,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "entryZSort__13J3DDrawBufferFP12J3DMatPacket",
+        "retail_size": 284,
+        "compiled_size": 284,
+        "objdiff_percent": 99.92958
+      },
+      {
+        "name": "entryModelSort__13J3DDrawBufferFP12J3DMatPacket",
+        "retail_size": 80,
+        "compiled_size": 80,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "entryInvalidSort__13J3DDrawBufferFP12J3DMatPacket",
+        "retail_size": 84,
+        "compiled_size": 84,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "entryNonSort__13J3DDrawBufferFP12J3DMatPacket",
+        "retail_size": 52,
+        "compiled_size": 52,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "draw__13J3DDrawBufferCFv",
+        "retail_size": 84,
+        "compiled_size": 84,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "drawHead__13J3DDrawBufferCFv",
+        "retail_size": 120,
+        "compiled_size": 120,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "drawTail__13J3DDrawBufferCFv",
+        "retail_size": 124,
+        "compiled_size": 124,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "calcZRatio__13J3DDrawBufferFv",
+        "retail_size": 64,
+        "compiled_size": 64,
+        "objdiff_percent": 100.0
+      }
+    ],
+    "J3DShape": [
+      {
+        "name": "initialize__8J3DShapeFv",
+        "retail_size": 112,
+        "compiled_size": 112,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "addTexMtxIndexInDL__8J3DShapeF7_GXAttrUl",
+        "retail_size": 248,
+        "compiled_size": 248,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "addTexMtxIndexInVcd__8J3DShapeF7_GXAttr",
+        "retail_size": 236,
+        "compiled_size": 236,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "calcNBTScale__8J3DShapeFRC3VecPA3_A3_fPA3_A3_f",
+        "retail_size": 128,
+        "compiled_size": 128,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "countBumpMtxNum__8J3DShapeCFv",
+        "retail_size": 116,
+        "compiled_size": 116,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "J3DLoadArrayBasePtr__F7_GXAttrPv",
+        "retail_size": 48,
+        "compiled_size": 48,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "loadVtxArray__8J3DShapeCFv",
+        "retail_size": 112,
+        "compiled_size": 112,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "isSameVcdVatCmd__8J3DShapeFP8J3DShape",
+        "retail_size": 60,
+        "compiled_size": 60,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "makeVtxArrayCmd__8J3DShapeFv",
+        "retail_size": 644,
+        "compiled_size": 644,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "makeVcdVatCmd__8J3DShapeFv",
+        "retail_size": 160,
+        "compiled_size": 160,
+        "objdiff_percent": 99.5
+      },
+      {
+        "name": "loadPreDrawSetting__8J3DShapeCFv",
+        "retail_size": 84,
+        "compiled_size": 84,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setArrayAndBindPipeline__8J3DShapeCFv",
+        "retail_size": 180,
+        "compiled_size": 180,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "drawFast__8J3DShapeCFv",
+        "retail_size": 332,
+        "compiled_size": 332,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "draw__8J3DShapeCFv",
+        "retail_size": 72,
+        "compiled_size": 72,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "simpleDraw__8J3DShapeCFv",
+        "retail_size": 132,
+        "compiled_size": 132,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "simpleDrawCache__8J3DShapeCFv",
+        "retail_size": 176,
+        "compiled_size": 176,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "load__13J3DCurrentMtxCFv",
+        "retail_size": 84,
+        "compiled_size": 84,
+        "objdiff_percent": 100.0
+      }
+    ],
+    "J3DShapeDraw": [
+      {
+        "name": "countVertex__12J3DShapeDrawFUl",
+        "retail_size": 76,
+        "compiled_size": 80,
+        "objdiff_percent": 77.89474
+      },
+      {
+        "name": "addTexMtxIndexInDL__12J3DShapeDrawFUlUlUl",
+        "retail_size": 328,
+        "compiled_size": 328,
+        "objdiff_percent": 99.87805
+      },
+      {
+        "name": "__ct__12J3DShapeDrawFPCUcUl",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "draw__12J3DShapeDrawCFv",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__dt__12J3DShapeDrawFv",
+        "retail_size": 64,
+        "compiled_size": 64,
+        "objdiff_percent": 100.0
+      }
+    ],
+    "J3DShapeMtx": [
+      {
+        "name": "resetMtxLoadCache__11J3DShapeMtxFv",
+        "retail_size": 60,
+        "compiled_size": 60,
+        "objdiff_percent": 96.0
+      },
+      {
+        "name": "loadMtxIndx_PCPU__11J3DShapeMtxCFiUs",
+        "retail_size": 92,
+        "compiled_size": 92,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "loadMtxIndx_NCPU__11J3DShapeMtxCFiUs",
+        "retail_size": 80,
+        "compiled_size": 80,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "loadMtxIndx_PNCPU__11J3DShapeMtxCFiUs",
+        "retail_size": 88,
+        "compiled_size": 88,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "loadExecute__17J3DDifferedTexMtxFPA4_Cf",
+        "retail_size": 1504,
+        "compiled_size": 1488,
+        "objdiff_percent": 98.56383
+      },
+      {
+        "name": "loadMtxConcatView_PNGP__21J3DShapeMtxConcatViewCFiUs",
+        "retail_size": 156,
+        "compiled_size": 156,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "loadMtxConcatView_PCPU__21J3DShapeMtxConcatViewCFiUs",
+        "retail_size": 168,
+        "compiled_size": 168,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "loadMtxConcatView_NCPU__21J3DShapeMtxConcatViewCFiUs",
+        "retail_size": 172,
+        "compiled_size": 172,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "loadMtxConcatView_PNCPU__21J3DShapeMtxConcatViewCFiUs",
+        "retail_size": 176,
+        "compiled_size": 176,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "loadMtxConcatView_PNGP_LOD__21J3DShapeMtxConcatViewCFiUs",
+        "retail_size": 188,
+        "compiled_size": 188,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "load__11J3DShapeMtxCFv",
+        "retail_size": 92,
+        "compiled_size": 92,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "calcNBTScale__11J3DShapeMtxFRC3VecPA3_A3_fPA3_A3_f",
+        "retail_size": 96,
+        "compiled_size": 96,
+        "objdiff_percent": 99.791664
+      },
+      {
+        "name": "load__21J3DShapeMtxConcatViewCFv",
+        "retail_size": 216,
+        "compiled_size": 216,
+        "objdiff_percent": 88.611115
+      },
+      {
+        "name": "loadNrmMtx__21J3DShapeMtxConcatViewCFiUsPA4_f",
+        "retail_size": 256,
+        "compiled_size": 256,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "load__16J3DShapeMtxMultiCFv",
+        "retail_size": 160,
+        "compiled_size": 160,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "calcNBTScale__16J3DShapeMtxMultiFRC3VecPA3_A3_fPA3_A3_f",
+        "retail_size": 148,
+        "compiled_size": 148,
+        "objdiff_percent": 99.86487
+      },
+      {
+        "name": "load__26J3DShapeMtxMultiConcatViewCFv",
+        "retail_size": 520,
+        "compiled_size": 508,
+        "objdiff_percent": 91.8
+      },
+      {
+        "name": "loadNrmMtx__26J3DShapeMtxMultiConcatViewCFiUsPA4_f",
+        "retail_size": 276,
+        "compiled_size": 276,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "load__27J3DShapeMtxBBoardConcatViewCFv",
+        "retail_size": 304,
+        "compiled_size": 272,
+        "objdiff_percent": 81.86842
+      },
+      {
+        "name": "load__28J3DShapeMtxYBBoardConcatViewCFv",
+        "retail_size": 344,
+        "compiled_size": 324,
+        "objdiff_percent": 85.24419
+      },
+      {
+        "name": "J3DPSMtx33CopyFrom34__FPA4_fPA3_f",
+        "retail_size": 52,
+        "compiled_size": 76,
+        "objdiff_percent": 0.0
+      },
+      {
+        "name": "loadNrmMtx__21J3DShapeMtxConcatViewCFiUs",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getType__28J3DShapeMtxYBBoardConcatViewCFv",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__dt__28J3DShapeMtxYBBoardConcatViewFv",
+        "retail_size": 64,
+        "compiled_size": 64,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__dt__21J3DShapeMtxConcatViewFv",
+        "retail_size": 64,
+        "compiled_size": 64,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__dt__11J3DShapeMtxFv",
+        "retail_size": 64,
+        "compiled_size": 64,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getType__27J3DShapeMtxBBoardConcatViewCFv",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__dt__27J3DShapeMtxBBoardConcatViewFv",
+        "retail_size": 64,
+        "compiled_size": 64,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "loadNrmMtx__26J3DShapeMtxMultiConcatViewCFiUs",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getUseMtxIndex__26J3DShapeMtxMultiConcatViewCFUs",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getUseMtxNum__26J3DShapeMtxMultiConcatViewCFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getType__26J3DShapeMtxMultiConcatViewCFv",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__dt__26J3DShapeMtxMultiConcatViewFv",
+        "retail_size": 64,
+        "compiled_size": 64,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getType__21J3DShapeMtxConcatViewCFv",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getUseMtxIndex__16J3DShapeMtxMultiCFUs",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getUseMtxNum__16J3DShapeMtxMultiCFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getType__16J3DShapeMtxMultiCFv",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__dt__16J3DShapeMtxMultiFv",
+        "retail_size": 64,
+        "compiled_size": 64,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getType__11J3DShapeMtxCFv",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      }
+    ],
+    "J3DGD": [
+      {
+        "name": "J3DGDSetGenMode__FUcUcUcUc11_GXCullMode",
+        "retail_size": 156,
+        "compiled_size": 176,
+        "objdiff_percent": 81.410255
+      },
+      {
+        "name": "J3DGDSetGenMode_3Param__FUcUcUc",
+        "retail_size": 140,
+        "compiled_size": 140,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "J3DGDSetLightAttn__F10_GXLightIDffffff",
+        "retail_size": 160,
+        "compiled_size": 164,
+        "objdiff_percent": 94.375
+      },
+      {
+        "name": "J3DGDSetLightColor__F10_GXLightID8_GXColor",
+        "retail_size": 136,
+        "compiled_size": 92,
+        "objdiff_percent": 26.82353
+      },
+      {
+        "name": "J3DGDSetLightPos__F10_GXLightIDfff",
+        "retail_size": 112,
+        "compiled_size": 116,
+        "objdiff_percent": 91.96429
+      },
+      {
+        "name": "J3DGDSetLightDir__F10_GXLightIDfff",
+        "retail_size": 112,
+        "compiled_size": 116,
+        "objdiff_percent": 91.96429
+      },
+      {
+        "name": "J3DGDSetVtxAttrFmtv__F9_GXVtxFmtPC17_GXVtxAttrFmtListb",
+        "retail_size": 960,
+        "compiled_size": 1080,
+        "objdiff_percent": 70.5625
+      },
+      {
+        "name": "J3DGDSetTexCoordGen__F13_GXTexGenType12_GXTexGenSrc",
+        "retail_size": 368,
+        "compiled_size": 368,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "J3DGDSetTexCoordScale2__F13_GXTexCoordIDUsUcUcUsUcUc",
+        "retail_size": 232,
+        "compiled_size": 232,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "J3DGDSetTexLookupMode__F11_GXTexMapID14_GXTexWrapMode14_GXTexWrapMode12_GXTexFilter12_GXTexFilterfffUcUc13_GXAnisotropy",
+        "retail_size": 272,
+        "compiled_size": 316,
+        "objdiff_percent": 45.632355
+      },
+      {
+        "name": "J3DGDSetTexImgAttr__F11_GXTexMapIDUsUs9_GXTexFmt",
+        "retail_size": 48,
+        "compiled_size": 72,
+        "objdiff_percent": 0.0
+      },
+      {
+        "name": "J3DGDSetTexImgPtr__F11_GXTexMapIDPv",
+        "retail_size": 32,
+        "compiled_size": 56,
+        "objdiff_percent": 10.0
+      },
+      {
+        "name": "J3DGDSetTexImgPtrRaw__F11_GXTexMapIDUl",
+        "retail_size": 84,
+        "compiled_size": 108,
+        "objdiff_percent": 67.38095
+      },
+      {
+        "name": "J3DGDSetTexTlut__F11_GXTexMapIDUl10_GXTlutFmt",
+        "retail_size": 40,
+        "compiled_size": 64,
+        "objdiff_percent": 0.0
+      },
+      {
+        "name": "J3DGDLoadTlut__FPvUl11_GXTlutSize",
+        "retail_size": 256,
+        "compiled_size": 256,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "J3DGDSetIndTexMtx__F14_GXIndTexMtxIDPA3_fSc",
+        "retail_size": 384,
+        "compiled_size": 444,
+        "objdiff_percent": 74.520836
+      },
+      {
+        "name": "J3DGDSetIndTexCoordScale__F16_GXIndTexStageID14_GXIndTexScale14_GXIndTexScale14_GXIndTexScale14_GXIndTexScale",
+        "retail_size": 140,
+        "compiled_size": 140,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "J3DGDSetIndTexOrder__FUl13_GXTexCoordID11_GXTexMapID13_GXTexCoordID11_GXTexMapID13_GXTexCoordID11_GXTexMapID13_GXTexCoordID11_GXTexMapID",
+        "retail_size": 324,
+        "compiled_size": 324,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "J3DGDSetTevOrder__F13_GXTevStageID13_GXTexCoordID11_GXTexMapID12_GXChannelID13_GXTexCoordID11_GXTexMapID12_GXChannelID",
+        "retail_size": 264,
+        "compiled_size": 276,
+        "objdiff_percent": 26.727272
+      },
+      {
+        "name": "J3DGDSetTevKColor__F14_GXTevKColorID8_GXColor",
+        "retail_size": 164,
+        "compiled_size": 164,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "J3DGDSetTevColorS10__F11_GXTevRegID11_GXColorS10",
+        "retail_size": 220,
+        "compiled_size": 220,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "J3DGDSetFog__F10_GXFogTypeffff8_GXColor",
+        "retail_size": 436,
+        "compiled_size": 456,
+        "objdiff_percent": 94.16514
+      },
+      {
+        "name": "J3DGDSetFogRangeAdj__FUcUsP14_GXFogAdjTable",
+        "retail_size": 200,
+        "compiled_size": 200,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "J3DFifoLoadPosMtxImm__FPA4_fUl",
+        "retail_size": 128,
+        "compiled_size": 128,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "J3DFifoLoadNrmMtxImm__FPA4_fUl",
+        "retail_size": 108,
+        "compiled_size": 108,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "J3DFifoLoadNrmMtxImm3x3__FPA3_fUl",
+        "retail_size": 108,
+        "compiled_size": 108,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "J3DFifoLoadNrmMtxToTexMtx__FPA4_fUl",
+        "retail_size": 152,
+        "compiled_size": 152,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "J3DFifoLoadNrmMtxToTexMtx3x3__FPA3_fUl",
+        "retail_size": 152,
+        "compiled_size": 152,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "J3DFifoLoadTexCached__F11_GXTexMapIDUl15_GXTexCacheSizeUl15_GXTexCacheSize",
+        "retail_size": 136,
+        "compiled_size": 136,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "GDOverflowCheck",
+        "retail_size": 32,
+        "compiled_size": 32,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "J3DGDWrite_u32__FUl",
+        "retail_size": 96,
+        "compiled_size": 96,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "J3DGDWriteXFCmdHdr__FUsUc",
+        "retail_size": 84,
+        "compiled_size": 84,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "J3DGDWrite_u16__FUs",
+        "retail_size": 48,
+        "compiled_size": 48,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__GDLightID2Offset",
+        "retail_size": 32,
+        "compiled_size": 36,
+        "objdiff_percent": 0.0
+      }
+    ],
+    "J3DVertex": [
+      {
+        "name": "__ct__13J3DVertexDataFv",
+        "retail_size": 128,
+        "compiled_size": 128,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setVertexData__15J3DVertexBufferFP13J3DVertexData",
+        "retail_size": 72,
+        "compiled_size": 72,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "init__15J3DVertexBufferFv",
+        "retail_size": 64,
+        "compiled_size": 64,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__dt__15J3DVertexBufferFv",
+        "retail_size": 64,
+        "compiled_size": 64,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setArray__15J3DVertexBufferCFv",
+        "retail_size": 36,
+        "compiled_size": 36,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__ct__14J3DDrawMtxDataFv",
+        "retail_size": 20,
+        "compiled_size": 20,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__dt__14J3DDrawMtxDataFv",
+        "retail_size": 64,
+        "compiled_size": 64,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "frameInit__15J3DVertexBufferFv",
+        "retail_size": 28,
+        "compiled_size": 28,
+        "objdiff_percent": 100.0
+      }
+    ],
+    "J3DTevs": [
+      {
+        "name": "loadTexCoordGens__FUlP11J3DTexCoord",
+        "retail_size": 244,
+        "compiled_size": 244,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "load__9J3DTexMtxCFUl",
+        "retail_size": 544,
+        "compiled_size": 28,
+        "objdiff_percent": 5.0
+      },
+      {
+        "name": "calc__9J3DTexMtxFPA4_Cf",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "calcTexMtx__9J3DTexMtxFPA4_Cf",
+        "retail_size": 748,
+        "compiled_size": 748,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "calcPostTexMtx__9J3DTexMtxFPA4_Cf",
+        "retail_size": 856,
+        "compiled_size": 856,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "isTexNoReg__FPv",
+        "retail_size": 36,
+        "compiled_size": 36,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTexNoReg__FPv",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "loadTexNo__FUlRCUs",
+        "retail_size": 388,
+        "compiled_size": 380,
+        "objdiff_percent": 85.1134
+      },
+      {
+        "name": "patchTexNo_PtrToIdx__FUlRCUs",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "loadNBTScale__FR11J3DNBTScale",
+        "retail_size": 52,
+        "compiled_size": 52,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "makeTexCoordTable__Fv",
+        "retail_size": 248,
+        "compiled_size": 248,
+        "objdiff_percent": 99.67742
+      },
+      {
+        "name": "makeAlphaCmpTable__Fv",
+        "retail_size": 104,
+        "compiled_size": 104,
+        "objdiff_percent": 99.61539
+      },
+      {
+        "name": "makeZModeTable__Fv",
+        "retail_size": 104,
+        "compiled_size": 104,
+        "objdiff_percent": 99.61539
+      },
+      {
+        "name": "makeTevSwapTable__Fv",
+        "retail_size": 64,
+        "compiled_size": 64,
+        "objdiff_percent": 97.8125
+      },
+      {
+        "name": "GDOverflowCheck",
+        "retail_size": 32,
+        "compiled_size": 32,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "J3DGDWrite_u32__FUl",
+        "retail_size": 96,
+        "compiled_size": 96,
+        "objdiff_percent": 100.0
+      }
+    ],
+    "J3DTransform": [
+      {
+        "name": "J3DCalcBBoardMtx__FPA4_f",
+        "retail_size": 296,
+        "compiled_size": 296,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "J3DCalcYBBoardMtx__FPA4_f",
+        "retail_size": 276,
+        "compiled_size": 276,
+        "objdiff_percent": 99.85507
+      },
+      {
+        "name": "J3DPSCalcInverseTranspose__FPA4_fPA3_f",
+        "retail_size": 200,
+        "compiled_size": 200,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "J3DGetTranslateRotateMtx__FRC16J3DTransformInfoPA4_f",
+        "retail_size": 240,
+        "compiled_size": 272,
+        "objdiff_percent": 38.683334
+      },
+      {
+        "name": "J3DGetTranslateRotateMtx__FsssfffPA4_f",
+        "retail_size": 176,
+        "compiled_size": 216,
+        "objdiff_percent": 9.0
+      },
+      {
+        "name": "J3DGetTextureMtx__FRC17J3DTextureSRTInfoRC3VecPA4_f",
+        "retail_size": 180,
+        "compiled_size": 180,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "J3DGetTextureMtxOld__FRC17J3DTextureSRTInfoRC3VecPA4_f",
+        "retail_size": 180,
+        "compiled_size": 180,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "J3DGetTextureMtxMaya__FRC17J3DTextureSRTInfoPA4_f",
+        "retail_size": 176,
+        "compiled_size": 176,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "J3DGetTextureMtxMayaOld__FRC17J3DTextureSRTInfoPA4_f",
+        "retail_size": 176,
+        "compiled_size": 176,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "J3DScaleNrmMtx__FPA4_fRC3Vec",
+        "retail_size": 100,
+        "compiled_size": 100,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "J3DScaleNrmMtx33__FPA3_fRC3Vec",
+        "retail_size": 84,
+        "compiled_size": 84,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "J3DMtxProjConcat__FPA4_fPA4_fPA4_f",
+        "retail_size": 292,
+        "compiled_size": 292,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "J3DPSMtxArrayConcat__FPA4_fPA4_fPA4_fUl",
+        "retail_size": 220,
+        "compiled_size": 220,
+        "objdiff_percent": 100.0
+      }
+    ],
+    "J3DSys": [
+      {
+        "name": "__ct__6J3DSysFv",
+        "retail_size": 220,
+        "compiled_size": 220,
+        "objdiff_percent": 99.36364
+      },
+      {
+        "name": "loadPosMtxIndx__6J3DSysCFiUs",
+        "retail_size": 36,
+        "compiled_size": 36,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "loadNrmMtxIndx__6J3DSysCFiUs",
+        "retail_size": 40,
+        "compiled_size": 12,
+        "objdiff_percent": 17.4
+      },
+      {
+        "name": "setTexCacheRegion__6J3DSysF15_GXTexCacheSize",
+        "retail_size": 420,
+        "compiled_size": 420,
+        "objdiff_percent": 98.09524
+      },
+      {
+        "name": "drawInit__6J3DSysFv",
+        "retail_size": 1728,
+        "compiled_size": 1728,
+        "objdiff_percent": 99.91898
+      },
+      {
+        "name": "reinitGX__6J3DSysFv",
+        "retail_size": 136,
+        "compiled_size": 136,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "reinitLighting__6J3DSysFv",
+        "retail_size": 268,
+        "compiled_size": 268,
+        "objdiff_percent": 99.10448
+      },
+      {
+        "name": "reinitTransform__6J3DSysFv",
+        "retail_size": 260,
+        "compiled_size": 260,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "reinitTexture__6J3DSysFv",
+        "retail_size": 164,
+        "compiled_size": 164,
+        "objdiff_percent": 99.756096
+      },
+      {
+        "name": "reinitTevStages__6J3DSysFv",
+        "retail_size": 944,
+        "compiled_size": 944,
+        "objdiff_percent": 99.555084
+      },
+      {
+        "name": "reinitIndStages__6J3DSysFv",
+        "retail_size": 240,
+        "compiled_size": 240,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "reinitPixelProc__6J3DSysFv",
+        "retail_size": 172,
+        "compiled_size": 172,
+        "objdiff_percent": 99.65116
+      },
+      {
+        "name": "__sinit_\\J3DSys_cpp",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      }
+    ],
+    "Overwrite": [
+      {
+        "name": "loadMtxIndx_PNGP__11J3DShapeMtxCFiUs",
+        "retail_size": 164,
+        "compiled_size": 164,
+        "objdiff_percent": 100.0
+      }
+    ]
+  },
+  "recovered_functions": [
+    {
+      "unit": "J3DShapeMtx",
+      "name": "calcNBTScale__16J3DShapeMtxMultiFRC3VecPA3_A3_fPA3_A3_f",
+      "retail_size": 148,
+      "compiled_size": 148,
+      "objdiff_percent": 99.86487
+    },
+    {
+      "unit": "J3DGD",
+      "name": "J3DGDWriteXFCmdHdr__FUsUc",
+      "retail_size": 84,
+      "compiled_size": 84,
+      "objdiff_percent": 100.0
+    },
+    {
+      "unit": "J3DVertex",
+      "name": "setArray__15J3DVertexBufferCFv",
+      "retail_size": 36,
+      "compiled_size": 36,
+      "objdiff_percent": 100.0
+    },
+    {
+      "unit": "Overwrite",
+      "name": "loadMtxIndx_PNGP__11J3DShapeMtxCFiUs",
+      "retail_size": 164,
+      "compiled_size": 164,
+      "objdiff_percent": 100.0
+    },
+    {
+      "unit": "inline-writers",
+      "name": "J3DGDWriteBPCmd__FUl",
+      "retail_size": 28,
+      "compiled_size": 28,
+      "objdiff_percent": 100.0
+    },
+    {
+      "unit": "inline-writers",
+      "name": "J3DGDWriteCPCmd__FUcUl",
+      "retail_size": 52,
+      "compiled_size": 52,
+      "objdiff_percent": 100.0
+    },
+    {
+      "unit": "xf-writer",
+      "name": "J3DGDWriteXFCmd__FUsUl",
+      "retail_size": 184,
+      "compiled_size": 204,
+      "objdiff_percent": 73.021736
+    }
+  ]
+}

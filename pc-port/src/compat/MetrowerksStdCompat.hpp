@@ -67,6 +67,13 @@ inline s32 __abs(s32 value) {
 #define ARRAY_SIZE(array) (static_cast<s32>(sizeof(array) / sizeof((array)[0])))
 #endif
 
+#ifndef ALIGN_PREV
+#define ALIGN_PREV(X, N) ((X) & ~((N) - 1))
+#endif
+#ifndef ALIGN_NEXT
+#define ALIGN_NEXT(X, N) ALIGN_PREV(((X) + (N) - 1), N)
+#endif
+
 // The original RVL macros.h provides these with this single-precision pi
 // literal and operation order. Preserve that definition at the host boundary.
 #ifndef DEG_TO_RAD

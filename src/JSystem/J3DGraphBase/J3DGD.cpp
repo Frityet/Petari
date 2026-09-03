@@ -626,3 +626,19 @@ void J3DFifoLoadTexCached(GXTexMapID id, u32 tmem_even, GXTexCacheSize size_even
         J3DFifoLoadBPCmd(BP_TEX_CACHE_ODD(tmem_odd >> 5, size_odd + 3, size_odd + 3, J3DTexImage2Ids[id]));
     }
 }
+
+void J3DGDWriteXFCmdHdr(u16 addr, u8 len) {
+    J3DGDWrite_u8(0x10);
+    J3DGDWrite_u16(len - 1);
+    J3DGDWrite_u16(addr);
+}
+
+void J3DGDWriteXFCmd(u16 addr, u32 value) {
+    J3DGDWrite_u8(0x10);
+    J3DGDWrite_u16(0);
+    J3DGDWrite_u16(addr);
+    J3DGDWrite_u8(value >> 24);
+    J3DGDWrite_u8(value >> 16);
+    J3DGDWrite_u8(value >> 8);
+    J3DGDWrite_u8(value);
+}

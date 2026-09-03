@@ -1,0 +1,14 @@
+Complete original Model.cpp and exact separately defined Model destructor
+src/JSystem/J3DGraphAnimator/J3DCluster.cpp copied literally except the PPCSync declaration include
+src/JSystem/J3DGraphAnimator/J3DSkinDeform.cpp copied literally
+Complete base Material virtuals/nonfactory helpers plus original loadNBTScale
+All six original ModelData methods present without changes
+JSystem/J3DGraphAnimator/J3DModel.hpp header byte identity
+JSystem/J3DGraphAnimator/J3DMaterialAnm.hpp header byte identity
+JSystem/J3DGraphBase/J3DMatBlock.hpp header byte identity
+JSystem/J3DGraphBase/J3DTevs.hpp header byte identity
+JSystem/J3DGraphBase/J3DTexture.hpp header byte identity
+JSystem/JUtility/JUTNameTab.hpp header byte identity
+Full Animation header; only redundant GX tag aliases removed/replaced
+Material header; only native pointer-width rejection boundary adapted
+All owned root/native correspondence and original compiled-source hashes verified.

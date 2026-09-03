@@ -184,6 +184,7 @@ static void GDEnd(void) {
 void GDSetArray(GXAttr attr, const void* base_ptr, u8 stride);
 void GDSetArrayRaw(GXAttr attr, u32 base_ptr_raw, u8 stride);
 void GDSetVtxDescv(const GXVtxDescList* attrPtr);
+void GDSetTexCoordGen(GXTexCoordID, GXTexGenType, GXTexGenSrc, GXBool, u32);
 
 #ifdef __cplusplus
 }

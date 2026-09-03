@@ -7,6 +7,9 @@
 #include <revolution/gd.h>
 #include <stdint.h>
 
+void* J3DShape::sOldVcdVatCmd;
+bool J3DShape::sEnvelopeFlag;
+
 void J3DShape::initialize() {
     mMaterial = NULL;
     mIndex = -1;

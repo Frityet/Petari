@@ -1,4 +1,5 @@
 #include "JSystem/J3DGraphBase/J3DVertex.hpp"
+#include "JSystem/J3DGraphBase/J3DSys.hpp"
 
 // Original RMGK01 lifecycle and attachment bodies, recovered in root first.
 // Correspondence: notes/j3d-vertex-buffer-lifecycle-20260903/README.md.
@@ -32,4 +33,10 @@ void J3DVertexBuffer::init() {
 }
 
 J3DVertexBuffer::~J3DVertexBuffer() {
+}
+
+void J3DVertexBuffer::setArray() const {
+    j3dSys.setVtxPos(mCurrentVtxPos);
+    j3dSys.setVtxNrm(mCurrentVtxNrm);
+    j3dSys.setVtxCol(mCurrentVtxCol);
 }

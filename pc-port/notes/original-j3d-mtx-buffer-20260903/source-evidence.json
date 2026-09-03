@@ -1,0 +1,128 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "root_native_unchanged_bodies": [
+    "initialize",
+    "create",
+    "createAnmMtx",
+    "createWeightEnvelopeMtx",
+    "setNoUseDrawMtx",
+    "createDoubleDrawMtx",
+    "createBumpMtxArray",
+    "calcWeightEnvelopeMtx",
+    "calcDrawMtx",
+    "calcNrmMtx",
+    "calcBBoardMtx",
+    "J3DCalcViewBaseMtx",
+    "J3DCalcBBoardMtx",
+    "J3DCalcYBBoardMtx",
+    "J3DPSCalcInverseTranspose",
+    "J3DScaleNrmMtx",
+    "J3DScaleNrmMtx33",
+    "J3DPSMtxArrayConcat",
+    "J3DPSMtx33CopyFrom34"
+  ],
+  "native_matrix_buffer_header_exact": true,
+  "default_constants_equal_retail": true,
+  "original_compiler": {
+    "initialize__12J3DMtxBufferFv": {
+      "match_percent": 100.0,
+      "retail_size": 68,
+      "compiled_size": 68
+    },
+    "create__12J3DMtxBufferFP12J3DModelDataUl": {
+      "match_percent": 100.0,
+      "retail_size": 264,
+      "compiled_size": 264
+    },
+    "createAnmMtx__12J3DMtxBufferFP12J3DModelData": {
+      "match_percent": 100.0,
+      "retail_size": 100,
+      "compiled_size": 100
+    },
+    "createWeightEnvelopeMtx__12J3DMtxBufferFP12J3DModelData": {
+      "match_percent": 100.0,
+      "retail_size": 96,
+      "compiled_size": 96
+    },
+    "setNoUseDrawMtx__12J3DMtxBufferFv": {
+      "match_percent": 100.0,
+      "retail_size": 44,
+      "compiled_size": 44
+    },
+    "createDoubleDrawMtx__12J3DMtxBufferFP12J3DModelDataUl": {
+      "match_percent": 100.0,
+      "retail_size": 244,
+      "compiled_size": 244
+    },
+    "createBumpMtxArray__12J3DMtxBufferFP12J3DModelDataUl": {
+      "match_percent": 100.0,
+      "retail_size": 552,
+      "compiled_size": 552
+    },
+    "calcWeightEnvelopeMtx__12J3DMtxBufferFv": {
+      "match_percent": 67.85612,
+      "retail_size": 556,
+      "compiled_size": 508
+    },
+    "calcDrawMtx__12J3DMtxBufferFUlRC3VecRA3_A4_Cf": {
+      "match_percent": 100.0,
+      "retail_size": 560,
+      "compiled_size": 560
+    },
+    "calcNrmMtx__12J3DMtxBufferFv": {
+      "match_percent": 100.0,
+      "retail_size": 284,
+      "compiled_size": 284
+    },
+    "calcBBoardMtx__12J3DMtxBufferFv": {
+      "match_percent": 99.87654,
+      "retail_size": 324,
+      "compiled_size": 324
+    },
+    "J3DCalcViewBaseMtx__FPA4_fRC3VecRA3_A4_CfPA4_f": {
+      "match_percent": 100.0,
+      "retail_size": 188,
+      "compiled_size": 188
+    },
+    "J3DCalcBBoardMtx__FPA4_f": {
+      "match_percent": 100.0,
+      "retail_size": 296,
+      "compiled_size": 296
+    },
+    "J3DCalcYBBoardMtx__FPA4_f": {
+      "match_percent": 99.85507,
+      "retail_size": 276,
+      "compiled_size": 276
+    },
+    "J3DPSCalcInverseTranspose__FPA4_fPA3_f": {
+      "match_percent": 100.0,
+      "retail_size": 200,
+      "compiled_size": 200
+    },
+    "J3DScaleNrmMtx__FPA4_fRC3Vec": {
+      "match_percent": 100.0,
+      "retail_size": 100,
+      "compiled_size": 100
+    },
+    "J3DScaleNrmMtx33__FPA3_fRC3Vec": {
+      "match_percent": 100.0,
+      "retail_size": 84,
+      "compiled_size": 84
+    },
+    "J3DPSMtxArrayConcat__FPA4_fPA4_fPA4_fUl": {
+      "match_percent": 100.0,
+      "retail_size": 220,
+      "compiled_size": 220
+    },
+    "j3dDefaultScale": {
+      "match_percent": 100.0,
+      "retail_size": 12,
+      "compiled_size": 12
+    },
+    "j3dDefaultMtx": {
+      "match_percent": 100.0,
+      "retail_size": 48,
+      "compiled_size": 48
+    }
+  }
+}

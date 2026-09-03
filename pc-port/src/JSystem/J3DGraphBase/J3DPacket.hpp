@@ -116,7 +116,7 @@ public:
     }
 
     virtual int entry(J3DDrawBuffer*);
-    virtual void draw();
+    virtual void draw() = 0;
     virtual ~J3DPacket() {
     }
 

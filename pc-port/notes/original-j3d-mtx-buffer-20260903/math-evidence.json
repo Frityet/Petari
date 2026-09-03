@@ -1,0 +1,46 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "raw_instruction_specs": {
+    "proj": [
+      2151825908,
+      292
+    ],
+    "inverse": [
+      2151824396,
+      200
+    ],
+    "concat": [
+      2151826200,
+      220
+    ],
+    "copy": [
+      2151834372,
+      52
+    ],
+    "scale34": [
+      2151825724,
+      100
+    ],
+    "scale33": [
+      2151825824,
+      84
+    ],
+    "sqrt": [
+      2151826420,
+      24
+    ]
+  },
+  "native_calls": {
+    "proj": 4500,
+    "inverse": 4509,
+    "concat": 3000,
+    "copy": 4500,
+    "scale34": 1500,
+    "scale33": 1500,
+    "sqrt": 7048,
+    "envelope": 1000
+  },
+  "exceptional_classification_cases": 26,
+  "comparison": "Every finite output bit including signed zero; exceptional results compare NaN classification and infinity signs. FPSCR and NaN payload/sign are not asserted. Matrix random cases use finite moderate inputs; sqrt spans all float exponent classes.",
+  "all_passed": true
+}

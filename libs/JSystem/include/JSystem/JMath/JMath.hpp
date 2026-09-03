@@ -4,6 +4,7 @@
 
 #ifndef __MWERKS__
 #include <cmath>
+#include <dolphin/ppc_math.h>
 #endif
 
 void JMAMTXApplyScale(const Mtx, Mtx, f32, f32, f32);
@@ -22,6 +23,8 @@ inline f32 JMAFastSqrt(__REGISTER const f32 input) {
     } else {
         return input;
     }
+#else
+    return input > 0.0f ? static_cast< f32 >(frsqrte(static_cast< double >(input)) * input) : input;
 #endif
 }
 

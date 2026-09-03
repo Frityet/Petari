@@ -1,0 +1,545 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "compiler": "GC/3.0a3; actual configured SDK flags (Game flags for ModelX); no overlays",
+  "scope": "Original imported methods and recovered inline calcNrmMtx; percentages are measured, not assertions of full equivalence.",
+  "source_sha256": {
+    "src/JSystem/J3DGraphAnimator/J3DModel.cpp": "b27a7f6e3bc1d64872c3b5ef28eaef0acb6acf5b48106d4f838712cb78b21bc9",
+    "src/Game/Player/J3DModelX.cpp": "b3d281dd636496be949a2ae8a8807d96e28d2e36752f6bcf369794e75a2b16d7",
+    "src/JSystem/J3DGraphAnimator/J3DCluster.cpp": "8fcbd6eca0965c60efb1b0e2741bb1f57e9658cba0c9691cedf26763f9329ab7",
+    "src/JSystem/J3DGraphAnimator/J3DSkinDeform.cpp": "11069827417bb24e5e9d14a32dc415b485797b9f29385f4f396899b708f61827",
+    "src/JSystem/J3DGraphBase/J3DMaterial.cpp": "587668ae2c6ceb7a580fecf458587372a927e7d55075dd244839a4819da0639d",
+    "src/JSystem/J3DGraphAnimator/J3DModelData.cpp": "0a6915dba743f8fafdbe0e9211269ea45e685c6de76e54a00e0acd562f1dda58",
+    "src/JSystem/J3DGraphBase/J3DTevs.cpp": "8f5c1880c8e2e0a5bcd7578d954229e707606d230689bbb471155c3b1890fdff"
+  },
+  "headers_sha256": {
+    "libs/JSystem/include/JSystem/J3DGraphAnimator/J3DModel.hpp": "772bcceafe1a8906da219ed33dff6bdbf7a3d030b3794fcede78415bf838e0c2",
+    "libs/JSystem/include/JSystem/J3DGraphBase/J3DMaterial.hpp": "8e343efed6e99ea312d3a2ec19b9d074efa525ea52c1cb73707d8c642d166e01"
+  },
+  "functions": [
+    {
+      "unit": "J3DModel",
+      "name": "initialize__8J3DModelFv",
+      "address": "0x804329d8",
+      "retail_size": 136,
+      "compiled_size": 136,
+      "objdiff_match_percent": 99.85294,
+      "retail_sha256": "d1f4cada8e712068ee5ce38ee1835cf372140edb0700f45f6b852ac85ab6931a"
+    },
+    {
+      "unit": "J3DModel",
+      "name": "entryModelData__8J3DModelFP12J3DModelDataUlUl",
+      "address": "0x80432a60",
+      "retail_size": 368,
+      "compiled_size": 368,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "aadf9cc334e013f28e573197073ea657a424a658061da6263f34abc48af1f83c"
+    },
+    {
+      "unit": "J3DModel",
+      "name": "createShapePacket__8J3DModelFP12J3DModelData",
+      "address": "0x80432bd0",
+      "retail_size": 180,
+      "compiled_size": 180,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "b4be98ffc1715e3b9531141fc635b3a9fbb2bb4e316bcb212f142b9f6ef55b0d"
+    },
+    {
+      "unit": "J3DModel",
+      "name": "createMatPacket__8J3DModelFP12J3DModelDataUl",
+      "address": "0x80432c84",
+      "retail_size": 480,
+      "compiled_size": 552,
+      "objdiff_match_percent": 84.958336,
+      "retail_sha256": "b491b4350e38ef20a738367b58b19c5908cd665d341bf00eaafbe2f3477aad19"
+    },
+    {
+      "unit": "J3DModel",
+      "name": "lock__8J3DModelFv",
+      "address": "0x80432e64",
+      "retail_size": 56,
+      "compiled_size": 56,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "8019acca987c25ee9eb9472439028215087d97e9b78f785a5e229555fa0456b5"
+    },
+    {
+      "unit": "J3DModel",
+      "name": "unlock__8J3DModelFv",
+      "address": "0x80432e9c",
+      "retail_size": 56,
+      "compiled_size": 56,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "c99d48214db578ff9f11c94a32ace5033658d3a02b19af0b0ed65d2f90f00303"
+    },
+    {
+      "unit": "J3DModel",
+      "name": "makeDL__8J3DModelFv",
+      "address": "0x80432ed4",
+      "retail_size": 152,
+      "compiled_size": 152,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "9a87d21f3c95903fb899f91a0821925cafb9533ca5e3517f56ad582d354a7e2c"
+    },
+    {
+      "unit": "J3DModel",
+      "name": "calcMaterial__8J3DModelFv",
+      "address": "0x80432f6c",
+      "retail_size": 364,
+      "compiled_size": 336,
+      "objdiff_match_percent": 89.83517,
+      "retail_sha256": "28918d1fcf312713e6cd795bc0ce2fc9d7d2015619037b0d3991bd88c9ed8eae"
+    },
+    {
+      "unit": "J3DModel",
+      "name": "calcDiffTexMtx__8J3DModelFv",
+      "address": "0x804330d8",
+      "retail_size": 320,
+      "compiled_size": 320,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "d9c071f7e316800715fe213f638262061db7a4e7a1204ed0b771e575c434ba30"
+    },
+    {
+      "unit": "J3DModel",
+      "name": "calcAnmMtx__8J3DModelFv",
+      "address": "0x80433218",
+      "retail_size": 104,
+      "compiled_size": 104,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "d8533f86969f3d6561b1a2de1b9201f883cc3a46ad557e16a1438c50afb7f571"
+    },
+    {
+      "unit": "J3DModel",
+      "name": "calcWeightEnvelopeMtx__8J3DModelFv",
+      "address": "0x80433280",
+      "retail_size": 52,
+      "compiled_size": 52,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "16f7d2c5ee13686a40df468f60298122c58bb2110b6d78303d922e05ec9b577a"
+    },
+    {
+      "unit": "J3DModel",
+      "name": "update__8J3DModelFv",
+      "address": "0x804332b4",
+      "retail_size": 76,
+      "compiled_size": 76,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "90b4cfd12f7ef07bde7d6f1bb050a9075176df2e5f08ef667dd169e27c85bcf5"
+    },
+    {
+      "unit": "J3DModel",
+      "name": "calc__8J3DModelFv",
+      "address": "0x80433300",
+      "retail_size": 348,
+      "compiled_size": 332,
+      "objdiff_match_percent": 93.954025,
+      "retail_sha256": "99282440d3725ac574ff3e7a07a70caea2b3dcc0c3874409e7dba85fe661f555"
+    },
+    {
+      "unit": "J3DModel",
+      "name": "entry__8J3DModelFv",
+      "address": "0x8043345c",
+      "retail_size": 244,
+      "compiled_size": 244,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "54db3378a2843f51e3c4405556e543247ab2fa3ba13a0afec3d8f2a4545ba518"
+    },
+    {
+      "unit": "J3DModel",
+      "name": "viewCalc__8J3DModelFv",
+      "address": "0x80433550",
+      "retail_size": 548,
+      "compiled_size": 476,
+      "objdiff_match_percent": 74.21898,
+      "retail_sha256": "832ee96d78c0e4a1038acf92d77cf380d5c04ee4186c68788d3d4e2e00ee9a8c"
+    },
+    {
+      "unit": "J3DModel",
+      "name": "calcBumpMtx__8J3DModelFv",
+      "address": "0x80433774",
+      "retail_size": 248,
+      "compiled_size": 248,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "0b7eeb9973840bf4a6a8636ca017df75580ab2825ceb3eab60173f939927d028"
+    },
+    {
+      "unit": "J3DModel",
+      "name": "calcBBoardMtx__8J3DModelFv",
+      "address": "0x8043386c",
+      "retail_size": 28,
+      "compiled_size": 28,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "a8afca79880cb458dca130638415daad35545c4763161fcb4457228f04f8d8fe"
+    },
+    {
+      "unit": "J3DModel",
+      "name": "prepareShapePackets__8J3DModelFv",
+      "address": "0x80433888",
+      "retail_size": 100,
+      "compiled_size": 100,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "cfa0fefd748c49eb500dc5d831f5097c30bd084343a5d487d93a085476d7bead"
+    },
+    {
+      "unit": "J3DModel",
+      "name": "getNrmMtxPtr__8J3DModelFv",
+      "address": "0x804338ec",
+      "retail_size": 24,
+      "compiled_size": 8,
+      "objdiff_match_percent": 23.333334,
+      "retail_sha256": "14da713a49016a3ea57999620567cc320ced81e617ca2ba90243f30afcd8efb1"
+    },
+    {
+      "unit": "J3DModel",
+      "name": "getBumpMtxPtr__8J3DModelFi",
+      "address": "0x80433904",
+      "retail_size": 32,
+      "compiled_size": 8,
+      "objdiff_match_percent": 16.875,
+      "retail_sha256": "7fe131aaae554caa7394552d184b4b83409b2713c8346169f8ff7907e0b439b4"
+    },
+    {
+      "unit": "J3DModelX",
+      "name": "__dt__8J3DModelFv",
+      "address": "0x802a86fc",
+      "retail_size": 92,
+      "compiled_size": 92,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "1939d8eb17c1f43f686f901787bd84862367640299f99b593628e5404213816b"
+    },
+    {
+      "unit": "J3DCluster",
+      "name": "deform__13J3DDeformDataFP8J3DModel",
+      "address": "0x804379ec",
+      "retail_size": 8,
+      "compiled_size": 8,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "d3f9bc700f256d9f2a8e66a6211cd55d21206227a6847e8e1d42fc1a44222521"
+    },
+    {
+      "unit": "J3DCluster",
+      "name": "deform__13J3DDeformDataFP15J3DVertexBuffer",
+      "address": "0x804379f4",
+      "retail_size": 200,
+      "compiled_size": 184,
+      "objdiff_match_percent": 78.4,
+      "retail_sha256": "04ee9079912bb87f0f744a6acc7cba8f62363564c0ed04693932144d2b0420f7"
+    },
+    {
+      "unit": "J3DCluster",
+      "name": "deform__11J3DDeformerFP15J3DVertexBufferUs",
+      "address": "0x80437abc",
+      "retail_size": 228,
+      "compiled_size": 228,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "e48324f8fc03476388317ac50231dd58ef2b677140fedb2ba8d45a81dc5e7628"
+    },
+    {
+      "unit": "J3DCluster",
+      "name": "deform_VtxPosF32__11J3DDeformerFP15J3DVertexBufferP10J3DClusterP13J3DClusterKeyPf",
+      "address": "0x80437ba0",
+      "retail_size": 364,
+      "compiled_size": 364,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "4b91937529be39bfb3636d24f0d991808407fe85c156043e8afb1d9c2ea0a8b2"
+    },
+    {
+      "unit": "J3DCluster",
+      "name": "deform_VtxNrmF32__11J3DDeformerFP15J3DVertexBufferP10J3DClusterP13J3DClusterKeyPf",
+      "address": "0x80437d0c",
+      "retail_size": 1352,
+      "compiled_size": 1076,
+      "objdiff_match_percent": 67.76627,
+      "retail_sha256": "5a74db86e3b77a16f9bcc51890bccc271c5e1d2fd08b0cc2d9dc222be9e4974e"
+    },
+    {
+      "unit": "J3DCluster",
+      "name": "deform__11J3DDeformerFP15J3DVertexBufferUsPf",
+      "address": "0x80438254",
+      "retail_size": 272,
+      "compiled_size": 272,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "b1d7fa45e54ac051b54c92ac6874e9852625642b366afbd8a74313b1232843f7"
+    },
+    {
+      "unit": "J3DCluster",
+      "name": "normalizeWeight__11J3DDeformerFiPf",
+      "address": "0x80438364",
+      "retail_size": 92,
+      "compiled_size": 92,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "cf7b6d7c51ad6a4a8d90804c7d3bf8d31e6974d67aa2811ad2200d52df8f106f"
+    },
+    {
+      "unit": "J3DSkinDeform",
+      "name": "deform__13J3DSkinDeformFP8J3DModel",
+      "address": "0x80437970",
+      "retail_size": 104,
+      "compiled_size": 104,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "7a1d6b064fd1e9cf54ff4c57bb59f220c4f82535d838254f8b8e41e36e0cf2ff"
+    },
+    {
+      "unit": "J3DSkinDeform",
+      "name": "calc__15J3DVtxColorCalcFP8J3DModel",
+      "address": "0x804379d8",
+      "retail_size": 20,
+      "compiled_size": 20,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "5a26efd756d9342e465d0d851e830bad909f6e960d6574a9a381741fb88d9703"
+    },
+    {
+      "unit": "J3DMaterial",
+      "name": "initialize__11J3DMaterialFv",
+      "address": "0x80427a64",
+      "retail_size": 80,
+      "compiled_size": 80,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "d8ea6de10dae93e5406a1197cd5368dac37374b042aeda99a74f01fa488dfa5f"
+    },
+    {
+      "unit": "J3DMaterial",
+      "name": "countDLSize__11J3DMaterialFv",
+      "address": "0x80427ab4",
+      "retail_size": 188,
+      "compiled_size": 188,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "afa13054788b2c9db323de043ac205cec2152d6d594c3ca4b342ffee1658ee25"
+    },
+    {
+      "unit": "J3DMaterial",
+      "name": "makeDisplayList_private__11J3DMaterialFP17J3DDisplayListObj",
+      "address": "0x80427b70",
+      "retail_size": 376,
+      "compiled_size": 364,
+      "objdiff_match_percent": 96.54256,
+      "retail_sha256": "390370586efd249ef34adb8a7f9becafb4b1001bfc80e76091713c6427669589"
+    },
+    {
+      "unit": "J3DMaterial",
+      "name": "makeDisplayList__11J3DMaterialFv",
+      "address": "0x80427ce8",
+      "retail_size": 48,
+      "compiled_size": 48,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "e20da239c455be6b510c9d840c02a274dc815eba4c6c409443fc413552ef1ea5"
+    },
+    {
+      "unit": "J3DMaterial",
+      "name": "makeSharedDisplayList__11J3DMaterialFv",
+      "address": "0x80427d18",
+      "retail_size": 8,
+      "compiled_size": 8,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "eca1ea6a522395c2e2def833710d503903427a98434d1610ae4a7c32aeffaaad"
+    },
+    {
+      "unit": "J3DMaterial",
+      "name": "load__11J3DMaterialFv",
+      "address": "0x80427d20",
+      "retail_size": 80,
+      "compiled_size": 80,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "390c5c187283ee957321be8ccf3474e51d3d4d553b51cbac0d789dae3d2b26c3"
+    },
+    {
+      "unit": "J3DMaterial",
+      "name": "loadSharedDL__11J3DMaterialFv",
+      "address": "0x80427d70",
+      "retail_size": 100,
+      "compiled_size": 100,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "e751d888afd040be996d2fe4dae9827ce8fed1b5c675c5ca5057a6a57d0af3e4"
+    },
+    {
+      "unit": "J3DMaterial",
+      "name": "patch__11J3DMaterialFv",
+      "address": "0x80427dd4",
+      "retail_size": 152,
+      "compiled_size": 152,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "07305fbe0485c1b4dcc9e4a536a6a9ffa298498bc504cfd9c64761abf30e8243"
+    },
+    {
+      "unit": "J3DMaterial",
+      "name": "diff__11J3DMaterialFUl",
+      "address": "0x80427e6c",
+      "retail_size": 344,
+      "compiled_size": 344,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "fb0c72c6ee6e6e228d0588143c68af7cb2a9f8ae18aa78513df5a8f584cd497d"
+    },
+    {
+      "unit": "J3DMaterial",
+      "name": "calc__11J3DMaterialFPA4_Cf",
+      "address": "0x80427fc4",
+      "retail_size": 120,
+      "compiled_size": 120,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "710b8a2dc88f441d7371c335d2015beef7a8bdabdd69d583151e7a4cda4bc951"
+    },
+    {
+      "unit": "J3DMaterial",
+      "name": "calcDiffTexMtx__11J3DMaterialFPA4_Cf",
+      "address": "0x8042803c",
+      "retail_size": 60,
+      "compiled_size": 60,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "db42ea8da5f1e3385569d7888418ce27c76b74f02428d762f5cb2cd45131b2c4"
+    },
+    {
+      "unit": "J3DMaterial",
+      "name": "setCurrentMtx__11J3DMaterialFv",
+      "address": "0x80428078",
+      "retail_size": 24,
+      "compiled_size": 16,
+      "objdiff_match_percent": 35.833332,
+      "retail_sha256": "faf3bcca8256684afc97ab4e15f28e2729f5b6bd6573ceea06cba624b34eefc4"
+    },
+    {
+      "unit": "J3DMaterial",
+      "name": "calcCurrentMtx__11J3DMaterialFv",
+      "address": "0x80428090",
+      "retail_size": 624,
+      "compiled_size": 624,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "a966661b860578590001d82c2aee7338aad06d750ecd60600cc64df216245f50"
+    },
+    {
+      "unit": "J3DMaterial",
+      "name": "copy__11J3DMaterialFP11J3DMaterial",
+      "address": "0x80428300",
+      "retail_size": 172,
+      "compiled_size": 172,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "89fe50a80e9a0fae9a4324241cfc35b2cd291331e2fb38412840afe219f2f0b7"
+    },
+    {
+      "unit": "J3DMaterial",
+      "name": "reset__11J3DMaterialFv",
+      "address": "0x804283ac",
+      "retail_size": 60,
+      "compiled_size": 60,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "0b064a5d5a5e259cdbb63234210ef081f41fb21ad9b02b2abf766eb30505284d"
+    },
+    {
+      "unit": "J3DMaterial",
+      "name": "change__11J3DMaterialFv",
+      "address": "0x804283e8",
+      "retail_size": 32,
+      "compiled_size": 32,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "7ef73ef93f26af165009617d8150aff9751b1e5971753f6f4b2143eaaf74d079"
+    },
+    {
+      "unit": "J3DMaterial",
+      "name": "newSharedDisplayList__11J3DMaterialFUl",
+      "address": "0x80428408",
+      "retail_size": 128,
+      "compiled_size": 128,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "b6d798a6e97d6846382fcb8decebf462cfbb30c89febe192bfbe3c19b3434b5a"
+    },
+    {
+      "unit": "J3DMaterial",
+      "name": "newSingleSharedDisplayList__11J3DMaterialFUl",
+      "address": "0x80428488",
+      "retail_size": 128,
+      "compiled_size": 128,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "dfc93012967039e3db48765a7bde9ba26dfc098a7365635fb0c934de4e39e558"
+    },
+    {
+      "unit": "J3DModelData",
+      "name": "clear__12J3DModelDataFv",
+      "address": "0x804319b0",
+      "retail_size": 24,
+      "compiled_size": 24,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "2c6f9cbc2a3354a0ebb3644dde00a70d80983676e7b008cdcde1dc08296fdb10"
+    },
+    {
+      "unit": "J3DModelData",
+      "name": "__ct__12J3DModelDataFv",
+      "address": "0x804319c8",
+      "retail_size": 116,
+      "compiled_size": 96,
+      "objdiff_match_percent": 78.62069,
+      "retail_sha256": "ca670c7cc08734573e6ee202da7b447d9398730974faf42efd6fc23ea6655251"
+    },
+    {
+      "unit": "J3DModelData",
+      "name": "newSharedDisplayList__12J3DModelDataFUl",
+      "address": "0x80431a3c",
+      "retail_size": 180,
+      "compiled_size": 180,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "fe3bf2935bb04750ce817249a9044f00114b79905c65ca77b98eb9245d2bab78"
+    },
+    {
+      "unit": "J3DModelData",
+      "name": "indexToPtr__12J3DModelDataFv",
+      "address": "0x80431af0",
+      "retail_size": 204,
+      "compiled_size": 204,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "01b4d2f87dbfc0efe155601d1913a5b5c1fc31c99e516a1bb10376d59189dc24"
+    },
+    {
+      "unit": "J3DModelData",
+      "name": "syncJ3DSysFlags__12J3DModelDataCFv",
+      "address": "0x80431bbc",
+      "retail_size": 60,
+      "compiled_size": 60,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "11eb61d54d221517b627a6a05ceb91675c996540dd97a19c9d35057d51a5bb54"
+    },
+    {
+      "unit": "J3DModelData",
+      "name": "__dt__12J3DModelDataFv",
+      "address": "0x80431c38",
+      "retail_size": 104,
+      "compiled_size": 104,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "43a170c3bee3b1b2534755775846cee1da49c7f9175604fce7af59783942456b"
+    },
+    {
+      "unit": "J3DTevs",
+      "name": "loadNBTScale__FR11J3DNBTScale",
+      "address": "0x80430a30",
+      "retail_size": 52,
+      "compiled_size": 52,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "3aad0e981406e9d1d8acac91d00112fac13cb55e9ff2751ce88adfa73dc5b442"
+    }
+  ],
+  "inline_calcNrmMtx": {
+    "retail": [
+      {
+        "offset": 292,
+        "kind": 10,
+        "symbol": "calcNrmMtx__12J3DMtxBufferFv",
+        "addend": 0
+      },
+      {
+        "offset": 452,
+        "kind": 10,
+        "symbol": "calcNrmMtx__12J3DMtxBufferFv",
+        "addend": 0
+      }
+    ],
+    "compiled": [
+      {
+        "offset": 216,
+        "kind": 10,
+        "symbol": "calcNrmMtx__12J3DMtxBufferFv",
+        "addend": 0
+      },
+      {
+        "offset": 376,
+        "kind": 10,
+        "symbol": "calcNrmMtx__12J3DMtxBufferFv",
+        "addend": 0
+      }
+    ]
+  }
+}

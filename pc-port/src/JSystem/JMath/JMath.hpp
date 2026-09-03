@@ -6,6 +6,7 @@
 
 #include <cmath>
 #include <cstring>
+#include <dolphin/ppc_math.h>
 
 void JMAEulerToQuat(s16, s16, s16, Quaternion*);
 void JMAQuatLerp(const Quaternion*, const Quaternion*, f32, Quaternion*);
@@ -13,7 +14,7 @@ void JMAQuatLerp(const Quaternion*, const Quaternion*, f32, Quaternion*);
 void JMAMTXApplyScale(const Mtx, Mtx, f32, f32, f32);
 
 inline f32 JMAFastSqrt(f32 input) {
-    return input > 0.0F ? std::sqrt(input) : input;
+    return input > 0.0f ? static_cast< f32 >(frsqrte(static_cast< double >(input)) * input) : input;
 }
 
 // Scalar form of the original JMA instruction order, including its fused
@@ -40,7 +41,7 @@ namespace JMath {
 
     template <typename T>
     [[nodiscard]] inline T fastSqrt(T value) {
-        return value > static_cast<T>(0) ? static_cast<T>(std::sqrt(value)) : value;
+        return JMAFastSqrt(value);
     }
 
     inline void gekko_ps_copy12(void* destination, const void* source) {

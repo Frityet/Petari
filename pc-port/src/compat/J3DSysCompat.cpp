@@ -1,4 +1,5 @@
 #include "JSystem/J3DGraphBase/J3DSys.hpp"
+#include "JSystem/J3DGraphBase/J3DFifo.hpp"
 
 // Original J3DSys construction and J3DTevs table builders. The remaining
 // J3DSys matrix globals are supplied by J3DJointTreeCompat.cpp.
@@ -107,4 +108,12 @@ J3DSys::J3DSys() {
         sTexCoordScaleTable[i].field_0x04 = 0;
         sTexCoordScaleTable[i].field_0x06 = 0;
     }
+}
+
+void J3DSys::loadPosMtxIndx(int addr, u16 indx) const {
+    J3DFifoLoadIndx(0x20, indx, 0xB000 | ((u16)(addr * 0x0C)));
+}
+
+void J3DSys::loadNrmMtxIndx(int addr, u16 indx) const {
+    J3DFifoLoadNrmMtxIndx3x3(indx, addr * 3);
 }

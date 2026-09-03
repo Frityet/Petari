@@ -1,0 +1,66 @@
+{
+  "scope": "Cooperative emulated SDK API callers; no host priority or interrupt dispatch emulation",
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "retail_instruction_checks": 26,
+  "retail_functions": {
+    "OSDisableInterrupts": {
+      "address": "0x804A9778",
+      "size": 20,
+      "sha256": "91253610f8caa4988f3df8595ccfc6e5eafaf0b6df1b302668555ab7d528b1bc"
+    },
+    "OSEnableInterrupts": {
+      "address": "0x804A978C",
+      "size": 20,
+      "sha256": "fc3bb9e8a3a33462577b4b59ca6d5e07c3a146205838d416cf9b11972894aed6"
+    },
+    "OSRestoreInterrupts": {
+      "address": "0x804A97A0",
+      "size": 36,
+      "sha256": "54db610a580003e2db23e460425f4662f4f4e7a4da3ae6f89a632df9e52b427a"
+    },
+    "OSDisableScheduler": {
+      "address": "0x804AC580",
+      "size": 60,
+      "sha256": "bbe30c58c8bc9e2d17aed2dbb5299cbbf31b27daa911297ac30fbb5a5e704820"
+    },
+    "OSEnableScheduler": {
+      "address": "0x804AC5BC",
+      "size": 60,
+      "sha256": "3e45c68d66aab429a455b77af9c62199600e291d475428b51eb092c47d91ab02"
+    },
+    "OSYieldThread": {
+      "address": "0x804ACAE0",
+      "size": 60,
+      "sha256": "9e6690b9492ce515dfa7d6acc3b375e634c7d47216611f84a8681d409bca8c9a"
+    }
+  },
+  "source_sha256": {
+    "src/RVL_SDK/os/OSInterrupt.c": "18e373c83f7508651fafee5d563c9994fd79c45a11569bc11488ab7b8d1df61c",
+    "src/RVL_SDK/os/OSThread.c": "c06bdd445d0d1cd6576912c82198414f63f608c46eaf2c244f46dbd657dfe736",
+    "pc-port/aurora/lib/dolphin/os/OSExecution.cpp": "6c1d394f232b6b6ef613be0d33fd3b43c92294ab0546c3f5ccef6821fae9fcb5",
+    "pc-port/aurora/include/dolphin/os.h": "0cf2eef5f0b44b02b8cef38d9eaa5a9c5e55b6333ea02fd9dc7c1f0b0f188a07",
+    "pc-port/aurora/include/dolphin/os/OSThread.h": "b109fc3c1afed6e8b0821ec6dbcf48fb58ba211f7500a555035b1c329d9ba13d",
+    "pc-port/aurora/cmake/aurora_os.cmake": "469fbcbd7afda14d793c3145e2866144eb5ad60874049ec19ed411a250f27cda",
+    "pc-port/aurora/xmake.lua": "0b16585ef34c2a3f4be65c7f3958b85332e7fa59074907c0f1834e538889a24b",
+    "pc-port/aurora/tests/CMakeLists.txt": "5b327316bda4b01b06a2f6222968ef0a0b6013a5c7de097935c00bc93fd82504",
+    "pc-port/aurora/tests/os_execution_test.cpp": "c58fb0121c1416bed6884c0bce6e0e20dfb2a05e7a0d4c4d4237664d830fc9e2"
+  },
+  "tests": {
+    "normal": {
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "seconds": "0.185",
+      "binary_sha256": "33c3473a46180e54fe9dc95ca44963e2ad40aa3d02bcc32fe8bf3a2e86a26b19",
+      "log_sha256": "14e298120fd116d10aba863e2856d84ec3bd3c5c529ebb093972e7150d92e0e3"
+    },
+    "thread_sanitizer": {
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "seconds": "0.216",
+      "binary_sha256": "b1040cfec892379da490a1940f414a5c5ed84522926996b4f7f7a0de2d91524f",
+      "log_sha256": "5acd5e3541c97c91e2397988051f94a8ddceaa0d189c82d9cf3528e69721e269"
+    }
+  }
+}

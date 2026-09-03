@@ -4,6 +4,10 @@
 #include "JSystem/J3DGraphLoader/J3DModelLoader.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 
+#ifndef __MWERKS__
+#include <cmath>
+#endif
+
 Mtx J3DMtxBuffer::sNoUseDrawMtx;
 Mtx33 J3DMtxBuffer::sNoUseNrmMtx;
 Mtx* J3DMtxBuffer::sNoUseDrawMtxPtr = &J3DMtxBuffer::sNoUseDrawMtx;
@@ -178,6 +182,7 @@ s32 J3DMtxBuffer::createBumpMtxArray(J3DModelData* i_modelData, u32 mtxNum) {
 static f32 J3DUnit01[] = {0.0f, 1.0f};
 
 void J3DMtxBuffer::calcWeightEnvelopeMtx() {
+#ifdef __MWERKS__
     __REGISTER MtxPtr weightAnmMtx;
     __REGISTER Mtx* worldMtx;
     __REGISTER Mtx* invMtx;
@@ -304,6 +309,44 @@ void J3DMtxBuffer::calcWeightEnvelopeMtx() {
             ps_merge00 var_f31, var_f27, var_f27
         }
     }
+#else
+
+    u16* indices = mJointTree->getWEvlpMixMtxIndex();
+    f32* weights = mJointTree->getWEvlpMixWeight();
+    for (int i = 0; i < mJointTree->getWEvlpMtxNum(); i++) {
+        mpEvlpScaleFlagArr[i] = 1;
+        f32 first[3][2] = {};
+        f32 last[3][2] = {};
+        int j = 0;
+        int mixNum = mJointTree->getWEvlpMixMtxNum(i);
+        do {
+            int idx = *indices++;
+            Mtx world, inverse;
+            PSMTXCopy(mpAnmMtx[idx], world);
+            PSMTXCopy(mJointTree->getInvJointMtx(idx), inverse);
+            f32 weight = *weights++;
+            for (int row = 0; row < 3; row++) {
+                for (int column = 0; column < 4; column++) {
+                    f32 value = inverse[0][column] * world[row][0];
+                    value = std::fma(inverse[1][column], world[row][1], value);
+                    value = std::fma(inverse[2][column], world[row][2], value);
+                    if (column < 2) {
+                        first[row][column] = std::fma(value, weight, first[row][column]);
+                        mpWeightEvlpMtx[i][row][column] = first[row][column];
+                    } else {
+                        value = std::fma(column == 3 ? 1.0f : 0.0f, world[row][3], value);
+                        last[row][column - 2] = std::fma(value, weight, last[row][column - 2]);
+                    }
+                }
+            }
+            mpEvlpScaleFlagArr[i] &= mpScaleFlagArr[idx];
+        } while (++j < mixNum);
+        for (int row = 0; row < 3; row++) {
+            mpWeightEvlpMtx[i][row][2] = last[row][0];
+            mpWeightEvlpMtx[i][row][3] = last[row][1];
+        }
+    }
+#endif
 }
 
 void J3DMtxBuffer::calcDrawMtx(u32 mdlFlag, Vec const& param_1, Mtx const& param_2) {

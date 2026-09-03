@@ -1,0 +1,33 @@
+{
+  "verified_imports": [
+    "J3DPacket",
+    "J3DDrawBuffer",
+    "J3DShape",
+    "J3DShapeDraw",
+    "J3DShapeMtx",
+    "J3DGD",
+    "void J3DJoint::entryIn()",
+    "void J3DVertexBuffer::setArray()",
+    "void J3DSys::loadPosMtxIndx(",
+    "void J3DSys::loadNrmMtxIndx(",
+    "void J3DShapeMtx::loadMtxIndx_PNGP(",
+    "void J3DGetTextureMtx(",
+    "void J3DGetTextureMtxOld(",
+    "void J3DGetTextureMtxMaya(",
+    "void J3DGetTextureMtxMayaOld(",
+    "void J3DTexMtx::load(",
+    "void J3DTexMtx::calc(",
+    "void J3DTexMtx::calcTexMtx(",
+    "void J3DTexMtx::calcPostTexMtx(",
+    "void J3DTexMtx::loadTexMtx(",
+    "void J3DTexMtx::loadPostTexMtx("
+  ],
+  "source_hashes_match_original_compiler_evidence": true,
+  "architecture_boundaries": [
+    "native GX array pointer width",
+    "unaligned big-endian primitive counts",
+    "original paired copy load/store order",
+    "SDK forwarding include paths",
+    "GX enum typedef spelling"
+  ]
+}

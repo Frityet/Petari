@@ -1,0 +1,12 @@
+Byte identity: src/Game/System/ShapePacketUserData.cpp -> pc-port/src/Game/System/ShapePacketUserData.cpp
+Byte identity: include/Game/System/ShapePacketUserData.hpp -> pc-port/src/Game/System/ShapePacketUserData.hpp
+Byte identity: src/Game/Util/SchedulerUtil.cpp -> pc-port/src/Game/Util/SchedulerUtil.cpp
+Byte identity: include/Game/Util/SchedulerUtil.hpp -> pc-port/src/Game/Util/SchedulerUtil.hpp
+Byte identity: src/JSystem/J3DGraphBase/J3DStruct.cpp -> pc-port/src/compat/J3DStructCompat.cpp
+Byte identity: libs/JSystem/include/JSystem/J3DGraphBase/J3DStruct.hpp -> pc-port/src/JSystem/J3DGraphBase/J3DStruct.hpp
+Literal original method: MR::isEnvelope
+Literal original method: MR::isUseTexMtx
+Literal original method: MR::isUseTexMtxEnvMap
+Literal original method: MR::isUseTexMtxProjMap
+Native SRT assignment copies the complete rotation/padding word via a temporary
+All proof source hashes agree with current root source.

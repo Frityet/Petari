@@ -9,6 +9,9 @@
 #include <cstdio>
 #include <mem.h>
 
+GDLObj J3DDisplayListObj::sGDLObj;
+s32 J3DDisplayListObj::sInterruptFlag;
+
 J3DError J3DDisplayListObj::newDisplayList(u32 maxSize) {
     mMaxSize = ALIGN_NEXT(maxSize, 0x20);
     mpDisplayList[0] = new (0x20) char[mMaxSize];

@@ -1,4 +1,5 @@
 #include "JSystem/J3DGraphBase/J3DVertex.hpp"
+#include "JSystem/J3DGraphBase/J3DSys.hpp"
 
 J3DVertexData::J3DVertexData()
     : mVtxNum(0), mNrmNum(0), mColNum(0), mTexCoordNum(0), mPacketNum(0), mVtxAttrFmtList(nullptr), mVtxPosArray(nullptr), mVtxNrmArray(nullptr),
@@ -55,4 +56,10 @@ void J3DVertexBuffer::init() {
 }
 
 J3DVertexBuffer::~J3DVertexBuffer() {
+}
+
+void J3DVertexBuffer::setArray() const {
+    j3dSys.setVtxPos(mCurrentVtxPos);
+    j3dSys.setVtxNrm(mCurrentVtxNrm);
+    j3dSys.setVtxCol(mCurrentVtxCol);
 }

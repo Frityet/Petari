@@ -1,0 +1,50 @@
+[
+  {
+    "name": "title-smoke",
+    "command": [
+      "build/macosx/arm64/debug/smg-pc-showcase",
+      "title",
+      "--disc",
+      "../Super Mario Wii - Galaxy Adventure (Korea).rvz",
+      "--smoke",
+      "--max-frames",
+      "600"
+    ],
+    "returncode": 0,
+    "seconds": 1.525,
+    "binary_sha256": "61b2167a2761f6ae5f5512716cbc65394246d5e2683f29bf510113ebda0c67a7"
+  },
+  {
+    "name": "gateway-smoke",
+    "command": [
+      "build/macosx/arm64/debug/smg-pc-showcase",
+      "gateway",
+      "--disc",
+      "../Super Mario Wii - Galaxy Adventure (Korea).rvz",
+      "--smoke",
+      "--max-frames",
+      "600"
+    ],
+    "returncode": 0,
+    "seconds": 1.278,
+    "binary_sha256": "61b2167a2761f6ae5f5512716cbc65394246d5e2683f29bf510113ebda0c67a7"
+  },
+  {
+    "name": "gateway-spin",
+    "command": [
+      "build/macosx/arm64/debug/smg-pc-gateway-spin-checkpoint-tests"
+    ],
+    "returncode": 0,
+    "seconds": 1.848,
+    "binary_sha256": "cda70287a7068397ebd552770a63efe1b06b42ac457e411d54e2d8c5dced10d1"
+  },
+  {
+    "name": "mario-walk",
+    "command": [
+      "build/macosx/arm64/debug/smg-pc-mario-gateway-walk-tests"
+    ],
+    "returncode": 1,
+    "seconds": 4.537,
+    "binary_sha256": "317c6ad9b454b2683dae8417abf2026ec402d5160e051298c0776629839f19d6"
+  }
+]

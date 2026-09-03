@@ -29,23 +29,6 @@ void J3DMtxCalc::setMtxBuffer(J3DMtxBuffer* mtxBuffer) {
 J3DJointTree::~J3DJointTree() {
 }
 
-void J3DMtxBuffer::initialize() {
-    mJointTree = NULL;
-    mpScaleFlagArr = NULL;
-    mpEvlpScaleFlagArr = NULL;
-    mpAnmMtx = NULL;
-    mpWeightEvlpMtx = NULL;
-    mpDrawMtxArr[0] = NULL;
-    mpDrawMtxArr[1] = NULL;
-    mpNrmMtxArr[0] = NULL;
-    mpNrmMtxArr[1] = NULL;
-    mpBumpMtxArr[0] = NULL;
-    mpBumpMtxArr[1] = NULL;
-    mMtxNum = 1;
-    mCurrentViewNo = 0;
-    mpUserAnmMtx = NULL;
-}
-
 J3DDrawMtxData::J3DDrawMtxData() {
     mEntryNum = 0;
     mDrawMtxFlag = NULL;

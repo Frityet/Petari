@@ -1,0 +1,86 @@
+[
+  {
+    "target": "smg-pc-original-j3d-packet-tests",
+    "exit_code": 0,
+    "seconds": 0.524,
+    "sha256": "e1ea7cf71f5eaabfef4541d500b204051f2fd79da1c0cadb44bb97a060fd0d79"
+  },
+  {
+    "target": "smg-pc-original-j3d-mtx-buffer-tests",
+    "exit_code": 0,
+    "seconds": 0.473,
+    "sha256": "3d1219722c4c100919b172f2436211765807a8fda2ea4bde08df086610a884a2"
+  },
+  {
+    "target": "smg-pc-original-j3d-texture-mtx-tests",
+    "exit_code": 0,
+    "seconds": 0.34,
+    "sha256": "1ee3a5dbf377393f395d8748687385ba16ee179678f17f0de7d8cc6c8c04bb3d"
+  },
+  {
+    "target": "smg-pc-fixed-step-clock-tests",
+    "exit_code": 0,
+    "seconds": 0.01,
+    "sha256": "6c24329ab88595ffc6fcc4b808f2c97d9db171fc108b4a6cc77360cb94106d46"
+  },
+  {
+    "target": "smg-pc-original-j3d-vertex-buffer-tests",
+    "exit_code": 0,
+    "seconds": 0.468,
+    "sha256": "fd90738bb83959b1028eedb30420721740864b3fa1ce76d5784ad1ab1a11b48c"
+  },
+  {
+    "target": "smg-pc-original-xanime-core-tests",
+    "exit_code": 0,
+    "seconds": 0.475,
+    "sha256": "8e88059b7e1a59ac2380be082836ae14006f02fa4cdc03132dc45f24d5c6d56d"
+  },
+  {
+    "target": "smg-pc-binder-kcl-mario-walk-tests",
+    "exit_code": 0,
+    "seconds": 0.481,
+    "sha256": "34c9a5a8683390bbc127ed5e265f8f0e70884ad1a368b7606ae83ae11c06fd5e"
+  },
+  {
+    "target": "smg-pc-aurora-native-tests",
+    "exit_code": 0,
+    "seconds": 0.486,
+    "sha256": "69da8d168eaf64b9c1a75ae6c303523a8b8bdc5118efbafda2215fbb5da987f9"
+  },
+  {
+    "target": "smg-pc-original-camera-runtime-tests",
+    "exit_code": 0,
+    "seconds": 0.549,
+    "sha256": "c3040019ace1c6cfa9d47e20d73b3e9fc9afd229ea6bb227d77da58c127d09a9"
+  },
+  {
+    "target": "smg-pc-only-camera-tests",
+    "exit_code": 0,
+    "seconds": 0.458,
+    "sha256": "ee0c9a4bac3f16300e0f858af78a0d69fd2537d28d7272f40b91d589a07ec21f"
+  },
+  {
+    "target": "smg-pc-camera-view-interpolator-tests",
+    "exit_code": 0,
+    "seconds": 0.471,
+    "sha256": "3c59456422c5815418a687b05bcd4c1ee026e146b7fdc01838bddadb4cfabdee"
+  },
+  {
+    "target": "smg-pc-camera-view-service-tests",
+    "exit_code": 0,
+    "seconds": 0.487,
+    "sha256": "7d3d183b8e0e5fdbaecccceaa40a695d5a5cfef93b99b43a5db3003e87500b62"
+  },
+  {
+    "target": "smg-pc-stage-start-camera-tests",
+    "exit_code": 0,
+    "seconds": 0.485,
+    "sha256": "a4c50af57968083f461481676c1e3b580ea27256d42469568babebc0374261b2"
+  },
+  {
+    "target": "smg-pc-actor-event-camera-tests",
+    "exit_code": 0,
+    "seconds": 0.481,
+    "sha256": "c40bd971514e05da0b3e4f808f96d8d6ac2a79ccf9bc9f153254dbc80074b4af"
+  }
+]

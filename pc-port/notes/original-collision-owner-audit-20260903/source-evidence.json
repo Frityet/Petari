@@ -1,0 +1,87 @@
+{
+  "scope": "Read-only audit; no collision source changes or runtime activation",
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "retail_word_checks": [
+    {
+      "address": "0x801831A8",
+      "word": "0x480001E9",
+      "meaning": "setData calls isBinaryInitialized at 0x80183390"
+    },
+    {
+      "address": "0x801831AC",
+      "word": "0x2C030000",
+      "meaning": "compare initialization result with zero"
+    },
+    {
+      "address": "0x801831B0",
+      "word": "0x40820044",
+      "meaning": "nonzero branches past relocation to 0x801831F4"
+    },
+    {
+      "address": "0x80183390",
+      "word": "0x80030000",
+      "meaning": "predicate loads first 32-bit word"
+    },
+    {
+      "address": "0x80183394",
+      "word": "0x54030FFE",
+      "meaning": "predicate returns bit 31"
+    },
+    {
+      "address": "0x80183398",
+      "word": "0x4E800020",
+      "meaning": "predicate returns immediately"
+    },
+    {
+      "address": "0x80173BDC",
+      "word": "0x38E00020",
+      "meaning": "keeper constructs 32 HitInfo elements"
+    },
+    {
+      "address": "0x80173C54",
+      "word": "0x801D00E0",
+      "meaning": "keeper movement reads parts category at 0xE0"
+    },
+    {
+      "address": "0x80173C5C",
+      "word": "0x4082000C",
+      "meaning": "different category skips parts updateMtx"
+    },
+    {
+      "address": "0x80173C64",
+      "word": "0x48002549",
+      "meaning": "matching category calls updateMtx at 0x801761AC"
+    },
+    {
+      "address": "0x80174B7C",
+      "word": "0x48282D25",
+      "meaning": "getZone calls MR getZoneNum at 0x803F78A0"
+    },
+    {
+      "address": "0x80174BCC",
+      "word": "0x981C00A0",
+      "meaning": "getZone marks complete zone array initialized"
+    },
+    {
+      "address": "0x80174BDC",
+      "word": "0x80630018",
+      "meaning": "getZone returns directly indexed zone pointer"
+    }
+  ],
+  "source_sha256": {
+    "include/Game/Map/KCollision.hpp": "11ec0174e561b0733b1119d003a265ba94c8920e4dbffd5061571a158815cd92",
+    "src/Game/Map/KCollision.cpp": "3021087bd96c629aa5845ffb040af2ea60bd4cfd59598ff5420cc8b714fc01f7",
+    "src/Game/Map/CollisionParts.cpp": "5fa9d9e2c8fc66e79b387dae23edd242e51a1dc884613c4ab4cfcdd282fcb07b",
+    "src/Game/Map/CollisionCategorizedKeeper.cpp": "69eec8cc2b28710b114726a94eabcdcd7eb7faf19a0eadb845cc298d57ed9686",
+    "src/Game/Map/CollisionDirector.cpp": "b5d24ac4e5bb6d52e72dab1987d983cad7314074a7c9ecac38318816a6f4de73",
+    "src/Game/Map/HitInfo.cpp": "9a983d00c2fc365c472bed77d349cf85b6892b23e325edb71919a866911bb810",
+    "src/Game/Camera/GameCameraCreator.cpp": "412f4af9f403ac3313aaf13815537133cb9a6085da4249fe1e46e23858ff6ce6",
+    "pc-port/src/compat/CollisionPartsCompat.cpp": "a41d28418fa75a45895bb4bdd3e02c119435ae15eff5d4c6033f5595a7f086ca",
+    "pc-port/src/compat/HitInfoCompat.cpp": "b0d43f9cf983c0970103d788b01a2f1374077c7bd0444e6349f258e523063bdf",
+    "pc-port/src/compat/GameMapCollisionCompat.cpp": "35e607256f979ca6420fbdb0fe5308e9cadc1f843bb6090378b0d98bf95d4194",
+    "pc-port/src/compat/OriginalCollisionPartsCompat.cpp": "b14fcb8ac04b688cb0614fef9577c04e01cfbdebf67dd543086f5de5bd78db62",
+    "pc-port/src/compat/PlanetMapRuntimeCompat.cpp": "a64058e9219a88f56c753d8262102ceedd3a6cb95758aaf2c65de9592759b29c",
+    "pc-port/src/Game/Util/JMapInfo.cpp": "9f2270b00a3a317958630e3e31216d113fb0d711ab62a532db136ff2c1e8a163",
+    "pc-port/src/scene/StagePlacementResolver.cpp": "eeaaff73b2621c0b75e1ec444a98582566f25028e3f2a16b209136a6bb3f5b2e"
+  }
+}
