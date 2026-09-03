@@ -32,10 +32,12 @@ exactly one root `.rvz` automatically. To select another image, pass
 ./pc-port/script/build_and_run.sh gateway --debug
 ```
 
-At the title prompt, hold **Enter + Backspace** (or keyboard **A + B**).
-Use the arrow keys and a fresh Enter/A press to select a blank file. Gateway's
-controls use the arrow keys for movement, F9 for the development camera, and
-Esc to quit. Movement and animation remain part of the WIP implementation.
+At the title prompt, hold **Enter + Backspace**.
+Use the arrow keys and a fresh Enter press to select a blank file. In game,
+**WASD** drives the Nunchuk stick; the **arrow keys** drive the Wii Remote
+D-pad used by the original camera controls. **C** resets the camera when the
+authored camera permits it. **F9** toggles the development camera and **Esc**
+quits. Movement and animation remain part of the WIP implementation.
 
 `--verify` stops when the existing smoke assertions pass, with a default limit
 of 360 frames; it may finish much earlier. Title and Gateway smoke checks

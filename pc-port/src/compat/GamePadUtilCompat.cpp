@@ -2,8 +2,6 @@
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
 
-#include "runtime/RuntimeContext.hpp"
-
 #include <aurora/wpad.hpp>
 
 #include <cmath>
@@ -16,7 +14,7 @@ namespace {
     static_assert((cCoreButtonMask & (WPAD_BUTTON_C | WPAD_BUTTON_Z | WPAD_BUTTON_HOME)) == 0U);
 
     [[nodiscard]] const aurora::WpadService& wpad_service() {
-        return smgpc::runtime::RuntimeContext::instance().wpad();
+        return aurora::wpad_service();
     }
 
     [[nodiscard]] bool is_held(s32 channel, u32 mask) {

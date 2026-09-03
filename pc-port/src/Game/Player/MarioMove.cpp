@@ -851,26 +851,6 @@ void Mario::recordTurnSlipAngle() {
 }
 
 f32 Mario::decideInertia(f32 stickPower) {
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
-    if (mMovementStates._34 || mMovementStates._35 || mMovementStates._F || mMovementStates._A) {
-        throw std::logic_error("special Mario inertia mode is unavailable in the PC walk slice");
-    }
-
-    const MarioConstTable* table = mActor->mConst->getTable();
-    if (mWalkSpeed > 1.0f) {
-        return table->mInertiaOverSpeed;
-    }
-
-    f32 inertia = ((1.0f - mWalkSpeed) * table->mInertiaStandardStop + mWalkSpeed * table->mInertiaStandardMax) * (1.0f - _3F4)
-        + _3F4 * table->mInertiaStartSpin;
-    if (stickPower == 0.0f) {
-        inertia = table->mInertiaStop;
-        if (_3CE < 30) {
-            inertia = table->mInertiaJumpFinish;
-        }
-    }
-    return inertia;
-#else  // SMGPC_RETAIL_SOURCE
     if (isStatusActive(0x1F)) {
         return decideInertiaOnIce(stickPower);
     }
@@ -948,7 +928,6 @@ f32 Mario::decideInertia(f32 stickPower) {
     }
 
     return inertia;
-#endif  // SMGPC_PC_DIVERGENCE
 }
 
 f32 Mario::decideInertiaOnIce(f32 stickPower) {

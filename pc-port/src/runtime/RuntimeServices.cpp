@@ -2720,12 +2720,7 @@ namespace smgpc::runtime {
 
     void CameraSystemService::begin_frame(std::uint64_t frame_index) {
         _frame_index = frame_index;
-        if (_start_position_camera_active && !is_camera_director_paused() &&
-            !active_event_camera_pose().has_value() &&
-            !active_programmable_camera_pose().has_value() &&
-            _start_position_camera_zero_interpolation_frames > 0U) {
-            --_start_position_camera_zero_interpolation_frames;
-        }
+        update_authored_game_camera();
         _shake_offset_x = 0.0F;
         _shake_offset_y = 0.0F;
         for (auto index = std::size_t{}; index < _vertical_shake_steps.size(); ++index) {
@@ -2759,6 +2754,10 @@ namespace smgpc::runtime {
 
     void CameraSystemService::reset_camera_man() {
         ++_reset_camera_man_count;
+        if (_authored_game_camera.has_value()) {
+            _authored_game_camera->reset_requested = true;
+            _authored_game_camera->manager_reset_requested = true;
+        }
     }
 
     void CameraSystemService::request_very_weak_shake() {
@@ -2790,23 +2789,23 @@ namespace smgpc::runtime {
     }
 
     void CameraSystemService::pause_on_camera_director() {
-        ++_camera_director_pause_count;
+        _camera_director_pause_count = 1U;
     }
 
     void CameraSystemService::pause_off_camera_director() {
-        if (_camera_director_pause_count > 0U) {
-            --_camera_director_pause_count;
-        }
+        _camera_director_pause_count = 0U;
     }
 
     void CameraSystemService::attach_event_camera_catalog(
         const smgpc::camera::EventCameraCatalog &catalog) {
         _event_cameras.attach_catalog(catalog);
+        update_game_camera_activation();
     }
 
     void CameraSystemService::detach_event_camera_catalog(
         const smgpc::camera::EventCameraCatalog &catalog) noexcept {
         _event_cameras.detach_catalog(catalog);
+        update_game_camera_activation();
     }
 
     void CameraSystemService::declare_event_camera(std::int32_t zone_id,
@@ -2825,12 +2824,14 @@ namespace smgpc::runtime {
         smgpc::camera::EventCameraTarget target,
         std::int32_t interpolation_frames, float speed) {
         _event_cameras.start(zone_id, name, target, interpolation_frames, speed);
+        update_game_camera_activation();
     }
 
     void CameraSystemService::end_event_camera(
         std::int32_t zone_id, std::string_view name, bool force,
         std::int32_t interpolation_frames) {
         _event_cameras.end(zone_id, name, force, interpolation_frames);
+        update_game_camera_activation();
     }
 
     ActorCameraInfo *CameraSystemService::create_actor_camera_info(
@@ -2862,6 +2863,7 @@ namespace smgpc::runtime {
         event.active = true;
         _active_programmable_camera_name = std::string(name);
         ++_programmable_camera_start_count;
+        update_game_camera_activation();
     }
 
     void CameraSystemService::end_global_event_camera(std::string_view name) {
@@ -2876,14 +2878,34 @@ namespace smgpc::runtime {
             _active_programmable_camera_name.clear();
         }
         ++_programmable_camera_end_count;
+        update_game_camera_activation();
     }
 
     std::uint64_t CameraSystemService::set_stage_start_camera(
         smgpc::camera::ResolvedStageStartCamera camera) {
+        return set_owned_stage_camera(std::move(camera), true);
+    }
+
+    std::uint64_t CameraSystemService::set_authored_game_camera(
+        smgpc::camera::ResolvedStageStartCamera camera) {
+        return set_owned_stage_camera(std::move(camera), false);
+    }
+
+    std::uint64_t CameraSystemService::set_owned_stage_camera(
+        smgpc::camera::ResolvedStageStartCamera camera,
+        bool start_position_active) {
+        if (camera.camera_param.camera_type != "CAM_TYPE_XZ_PARA") {
+            throw std::logic_error(
+                "Authored game-camera tracking does not support " +
+                camera.camera_param.camera_type + ".");
+        }
         auto candidate = std::optional<smgpc::camera::ResolvedStageStartCamera>{
             std::move(camera)};
         const auto restored_pose = candidate->calculation.pose;
         validate_stage_start_camera_pose(restored_pose);
+        auto controller = std::make_unique<smgpc::camera::OriginalGameCamera>(
+            candidate->start_info.zone_transform, candidate->camera_param,
+            candidate->target, restored_pose.fovy_degrees);
         if (_next_stage_start_camera_owner_generation == 0U) {
             throw std::overflow_error(
                 "Stage-start camera owner generation space is exhausted.");
@@ -2893,12 +2915,103 @@ namespace smgpc::runtime {
 
         _stage_start_camera.swap(candidate);
         _stage_start_camera_owner_generation = owner_generation;
+        _authored_game_camera = AuthoredGameCameraState{
+            .controller = std::move(controller)};
+        update_game_camera_activation();
         _game_camera_pose = restored_pose;
-        _start_position_camera_active = true;
+        _start_position_camera_active = start_position_active;
         // RMGK02 CameraManGame::startStartPosCamera(false) seeds _70 with
         // five camera calculations. The true Guide1 restart is immediate.
-        _start_position_camera_zero_interpolation_frames = 5U;
+        _start_position_camera_zero_interpolation_frames =
+            start_position_active ? 5U : 0U;
         return owner_generation;
+    }
+
+    void CameraSystemService::set_game_camera_target(
+        std::uint64_t owner_generation,
+        std::optional<smgpc::camera::StageCameraTargetState> target) {
+        if (owner_generation == 0U ||
+            owner_generation != _stage_start_camera_owner_generation ||
+            !_authored_game_camera.has_value()) {
+            throw std::logic_error(
+                "Authored game-camera target requires its current stage owner generation.");
+        }
+        if (target.has_value()) {
+            const auto finite_vec = [](const auto &value) {
+                return std::isfinite(value.x) && std::isfinite(value.y) &&
+                       std::isfinite(value.z);
+            };
+            const auto nonzero_vec = [](const auto &value) {
+                return value.x * value.x + value.y * value.y +
+                           value.z * value.z >
+                       0.000000000001F;
+            };
+            if (!finite_vec(target->position) || !finite_vec(target->up) ||
+                !finite_vec(target->front) || !finite_vec(target->last_move) ||
+                !nonzero_vec(target->up) || !nonzero_vec(target->front) ||
+                (target->ground_position.has_value() && !finite_vec(*target->ground_position)) ||
+                (target->gravity.has_value() && !finite_vec(*target->gravity)) ||
+                (target->side.has_value() && !finite_vec(*target->side))) {
+                throw std::invalid_argument(
+                    "Authored game-camera target requires finite vectors and a non-degenerate orientation.");
+            }
+        }
+        _authored_game_camera->target = std::move(target);
+    }
+
+    void CameraSystemService::update_game_camera_activation() {
+        if (!_authored_game_camera.has_value()) {
+            return;
+        }
+        const auto overridden = active_event_camera_pose().has_value() ||
+                                active_programmable_camera_pose().has_value();
+        if (_authored_game_camera->overridden && !overridden) {
+            // CameraDirector::pop activates the game manager, whose
+            // notifyActivate requests a reset before its next calculation.
+            _authored_game_camera->reset_requested = true;
+        }
+        _authored_game_camera->overridden = overridden;
+    }
+
+    void CameraSystemService::update_authored_game_camera() {
+        update_game_camera_activation();
+        if (!_authored_game_camera.has_value() ||
+            !_authored_game_camera->target.has_value() ||
+            is_camera_director_paused() ||
+            _authored_game_camera->overridden) {
+            return;
+        }
+
+        const auto &initial = *_stage_start_camera;
+        if (_authored_game_camera->manager_reset_requested) {
+            _authored_game_camera->controller->reset_manager(
+                *_authored_game_camera->target);
+        } else if (_authored_game_camera->reset_requested) {
+            _authored_game_camera->controller->reset(
+                *_authored_game_camera->target);
+        }
+        auto calculation = _authored_game_camera->controller->calc(
+            *_authored_game_camera->target);
+
+        // The stage owns projection geometry. Tracking changes only the
+        // authored view and FOV; effective-event/free-camera poses are never
+        // fed back into this state.
+        auto &pose = calculation.pose;
+        const auto &initial_pose = initial.calculation.pose;
+        pose.aspect_ratio = initial_pose.aspect_ratio;
+        pose.near_clip = initial_pose.near_clip;
+        pose.far_clip = initial_pose.far_clip;
+        pose.projection_offset_x = initial_pose.projection_offset_x;
+        pose.projection_offset_y = initial_pose.projection_offset_y;
+        validate_stage_start_camera_pose(pose);
+
+        _authored_game_camera->reset_requested = false;
+        _authored_game_camera->manager_reset_requested = false;
+        _game_camera_pose = pose;
+        if (_start_position_camera_active &&
+            _start_position_camera_zero_interpolation_frames > 0U) {
+            --_start_position_camera_zero_interpolation_frames;
+        }
     }
 
     void CameraSystemService::clear_stage_start_camera(
@@ -2908,6 +3021,7 @@ namespace smgpc::runtime {
             return;
         }
         _stage_start_camera.reset();
+        _authored_game_camera.reset();
         _stage_start_camera_owner_generation = 0U;
         _start_position_camera_active = false;
         _start_position_camera_zero_interpolation_frames = 0U;
@@ -2920,11 +3034,8 @@ namespace smgpc::runtime {
                 "Start-position camera restore requires an active stage-start camera owner.");
         }
 
-        auto restored_pose = std::optional<smgpc::camera::CameraPose>{
-            _stage_start_camera->calculation.pose};
-        validate_stage_start_camera_pose(*restored_pose);
-
-        _game_camera_pose.swap(restored_pose);
+        // CameraManGame::startStartPosCamera changes selection state and
+        // interpolation count; it does not replace the manager's pose.
         _start_position_camera_active = true;
         _start_position_camera_zero_interpolation_frames = immediate ? 0U : 5U;
     }
@@ -2937,13 +3048,13 @@ namespace smgpc::runtime {
 
         // RMGK02 CameraDirector::started() clears the director flag, then
         // CameraManGame::endStartPosCamera() clears both start-camera fields.
-        _game_camera_pose.reset();
         _start_position_camera_active = false;
         _start_position_camera_zero_interpolation_frames = 0U;
     }
 
     void CameraSystemService::set_game_camera_pose(const smgpc::camera::CameraPose &pose) {
         _stage_start_camera.reset();
+        _authored_game_camera.reset();
         _stage_start_camera_owner_generation = 0U;
         _start_position_camera_active = false;
         _start_position_camera_zero_interpolation_frames = 0U;
@@ -2952,6 +3063,7 @@ namespace smgpc::runtime {
 
     void CameraSystemService::clear_game_camera_pose() {
         _stage_start_camera.reset();
+        _authored_game_camera.reset();
         _stage_start_camera_owner_generation = 0U;
         _start_position_camera_active = false;
         _start_position_camera_zero_interpolation_frames = 0U;
@@ -2973,6 +3085,7 @@ namespace smgpc::runtime {
         event.pose.up = up;
         event.has_pose = true;
         ++_programmable_camera_param_count;
+        update_game_camera_activation();
 
         return active_programmable_camera_pose_for(name);
     }
@@ -3169,11 +3282,11 @@ namespace smgpc::runtime {
 
     void PlayerSystemService::reset_stage_state() {
         if (_attached_actor != nullptr &&
-            _entitlement_bridge.set_swing_permission != nullptr) {
-            _entitlement_bridge.set_swing_permission(*_attached_actor, false);
+            _actor_bridge.set_swing_permission != nullptr) {
+            _actor_bridge.set_swing_permission(*_attached_actor, false);
         }
         _attached_actor = nullptr;
-        _entitlement_bridge = {};
+        _actor_bridge = {};
         _player_hidden = false;
         _has_base_matrix = false;
         _has_forced_base_matrix = false;
@@ -3195,31 +3308,31 @@ namespace smgpc::runtime {
     }
 
     void PlayerSystemService::attach_actor(
-        LiveActor &actor, PlayerActorEntitlementBridge entitlement_bridge) {
+        LiveActor &actor, PlayerActorBridge actor_bridge) {
         if (_attached_actor != nullptr && _attached_actor != &actor) {
             detach_actor(_attached_actor);
         } else if (_attached_actor == &actor &&
-                   _entitlement_bridge.set_swing_permission != nullptr) {
-            _entitlement_bridge.set_swing_permission(*_attached_actor, false);
+                   _actor_bridge.set_swing_permission != nullptr) {
+            _actor_bridge.set_swing_permission(*_attached_actor, false);
         }
         _attached_actor = &actor;
-        _entitlement_bridge = entitlement_bridge;
+        _actor_bridge = actor_bridge;
         _player_dead_state.reset();
         copy_actor_state();
         actor.mFlag.mIsHiddenModel = _player_hidden;
-        if (_entitlement_bridge.set_swing_permission != nullptr) {
-            _entitlement_bridge.set_swing_permission(actor, _swing_permitted);
+        if (_actor_bridge.set_swing_permission != nullptr) {
+            _actor_bridge.set_swing_permission(actor, _swing_permitted);
         }
     }
 
     void PlayerSystemService::detach_actor(const LiveActor *actor) {
         if (actor == nullptr || _attached_actor == actor) {
             if (_attached_actor != nullptr &&
-                _entitlement_bridge.set_swing_permission != nullptr) {
-                _entitlement_bridge.set_swing_permission(*_attached_actor, false);
+                _actor_bridge.set_swing_permission != nullptr) {
+                _actor_bridge.set_swing_permission(*_attached_actor, false);
             }
             _attached_actor = nullptr;
-            _entitlement_bridge = {};
+            _actor_bridge = {};
             _player_dead_state.reset();
         }
     }
@@ -3274,13 +3387,13 @@ namespace smgpc::runtime {
 
     void PlayerSystemService::set_swing_permission(bool permitted) {
         if (_attached_actor != nullptr &&
-            _entitlement_bridge.set_swing_permission == nullptr) {
+            _actor_bridge.set_swing_permission == nullptr) {
             throw std::logic_error(
                 "The attached player actor does not expose swing entitlement state.");
         }
         _swing_permitted = permitted;
         if (_attached_actor != nullptr) {
-            _entitlement_bridge.set_swing_permission(*_attached_actor, permitted);
+            _actor_bridge.set_swing_permission(*_attached_actor, permitted);
         }
     }
 
@@ -3357,10 +3470,17 @@ namespace smgpc::runtime {
     }
 
     std::optional<s32> PlayerSystemService::player_element_mode() const {
-        if (_attached_actor == nullptr || _entitlement_bridge.read_element_mode == nullptr) {
+        if (_attached_actor == nullptr || _actor_bridge.read_element_mode == nullptr) {
             return std::nullopt;
         }
-        return _entitlement_bridge.read_element_mode(*_attached_actor);
+        return _actor_bridge.read_element_mode(*_attached_actor);
+    }
+
+    std::optional<smgpc::camera::StageCameraTargetState> PlayerSystemService::camera_target_state() const {
+        if (_attached_actor == nullptr || _actor_bridge.read_camera_target == nullptr) {
+            return std::nullopt;
+        }
+        return _actor_bridge.read_camera_target(*_attached_actor);
     }
 
     bool PlayerSystemService::is_swing_permitted() const {

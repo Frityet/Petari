@@ -3,6 +3,7 @@
 #include "Game/LiveActor/ActorCameraInfo.hpp"
 #include "camera/CameraAnimation.hpp"
 #include "camera/CameraPose.hpp"
+#include "camera/OriginalGameCamera.hpp"
 #include "camera/StageStartCamera.hpp"
 #include "scene/StagePlacementResolver.hpp"
 
@@ -116,13 +117,12 @@ namespace smgpc::camera {
         struct ActiveEvent {
             EventCameraKey key{};
             EventCameraTarget target{};
-            StageCameraCalculationState calculation_state{};
+            std::unique_ptr<OriginalGameCamera> controller;
             CameraPose pose{};
             float animation_frame = 0.0F;
             float speed = 1.0F;
             std::int32_t interpolation_frames = 0;
             bool animation = false;
-            bool calculation_initialized = false;
         };
 
         [[nodiscard]] CameraPose calculate_active_pose(ActiveEvent &active);

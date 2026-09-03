@@ -26,6 +26,11 @@ namespace smgpc::camera {
             CameraParamVec3 up{0.0F, 1.0F, 0.0F};
             CameraParamVec3 front{0.0F, 0.0F, 1.0F};
             CameraParamVec3 last_move{};
+            std::optional<CameraParamVec3> ground_position;
+            std::optional<CameraParamVec3> gravity;
+            bool jumping = false;
+            bool fast_rise = false;
+            bool fast_drop = false;
         };
 
         [[nodiscard]] CameraParamVec3 add(const CameraParamVec3 &lhs,
@@ -118,16 +123,25 @@ namespace smgpc::camera {
             const EventCameraTarget &target) {
             switch (target.kind) {
             case EventCameraTargetKind::Player: {
-                if (target.player == nullptr ||
-                    !target.player->has_base_matrix()) {
+                const auto state = target.player != nullptr
+                                       ? target.player->camera_target_state() : std::nullopt;
+                if (!state.has_value()) {
                     throw std::logic_error(
-                        "Player-target event camera requires a live player base matrix.");
+                        "Player-target event camera requires a live player camera-state provider.");
                 }
-                return snapshot_from_matrix(target.player->base_matrix(),
-                                            camera_vec(std::array<float, 3U>{
-                                                target.player->velocity()[0U],
-                                                target.player->velocity()[1U],
-                                                target.player->velocity()[2U]}));
+                const auto side = state->side.value_or(cross(state->up, state->front));
+                return {
+                    .position = state->position,
+                    .side = side,
+                    .up = state->up,
+                    .front = state->front,
+                    .last_move = state->last_move,
+                    .ground_position = state->ground_position,
+                    .gravity = state->gravity,
+                    .jumping = state->jumping,
+                    .fast_rise = state->fast_rise,
+                    .fast_drop = state->fast_drop,
+                };
             }
             case EventCameraTargetKind::LiveActor: {
                 if (target.actor == nullptr || target.name_obj_identity == nullptr ||
@@ -175,6 +189,20 @@ namespace smgpc::camera {
             }
             throw std::logic_error(
                 "Event camera has no retained target to calculate from.");
+        }
+
+        void validate_target_snapshot(const TargetSnapshot &target) {
+            const auto finite = [](const CameraParamVec3 &value) {
+                return std::isfinite(value.x) && std::isfinite(value.y) && std::isfinite(value.z);
+            };
+            if (!finite(target.position) || !finite(target.up) || !finite(target.front) ||
+                !finite(target.side) || !finite(target.last_move) ||
+                dot(target.up, target.up) <= 1.0e-12F ||
+                dot(target.front, target.front) <= 1.0e-12F || dot(target.side, target.side) <= 1.0e-12F ||
+                (target.ground_position.has_value() && !finite(*target.ground_position)) ||
+                (target.gravity.has_value() && !finite(*target.gravity))) {
+                throw std::logic_error("Event camera target requires finite vectors and a non-degenerate basis.");
+            }
         }
 
         [[nodiscard]] CameraParamVec3 desired_local_offset(
@@ -431,6 +459,20 @@ namespace smgpc::camera {
             }
             target = *_last_target;
         }
+        if (animation == nullptr && definition->camera_param.camera_type == "CAM_TYPE_XZ_PARA" &&
+            _active.has_value() && _active->key == key && !_active->animation && _active->controller) {
+            // CameraManEvent::checkReset preserves the controller when its
+            // chunk and type are unchanged. Validate before changing either
+            // current or retained target; pose advances only on movement.
+            validate_target_snapshot(snapshot_target(target));
+            _active->target = target;
+            _active->speed = speed;
+            _active->interpolation_frames = interpolation_frames;
+            if (has_explicit_target) {
+                _last_target = target;
+            }
+            return;
+        }
         auto candidate = ActiveEvent{
             .key = key,
             .target = target,
@@ -457,10 +499,10 @@ namespace smgpc::camera {
     }
 
     void EventCameraRuntime::begin_frame(bool paused) {
-        if (!_active.has_value()) {
+        if (!_active.has_value() || paused) {
             return;
         }
-        if (_active->animation && !paused) {
+        if (_active->animation) {
             _active->animation_frame += _active->speed;
         }
         _active->pose = calculate_active_pose(*_active);
@@ -536,6 +578,7 @@ namespace smgpc::camera {
 
     CameraPose EventCameraRuntime::calculate_active_pose(ActiveEvent &active) {
         const auto target = snapshot_target(active.target);
+        validate_target_snapshot(target);
         if (active.animation) {
             const auto *animation = find_animation(active.key);
             if (animation == nullptr) {
@@ -559,24 +602,26 @@ namespace smgpc::camera {
             return calculate_eye_position_fixed(*definition, target);
         }
         if (definition->camera_param.camera_type == "CAM_TYPE_XZ_PARA") {
-            if (!active.calculation_initialized) {
-                active.calculation_state.local_offset =
-                    desired_local_offset(definition->camera_param, target);
-                active.calculation_initialized = true;
+            const auto published_target = StageCameraTargetState{
+                .position = target.position,
+                .up = target.up,
+                .front = target.front,
+                .last_move = target.last_move,
+                .ground_position = target.ground_position,
+                .gravity = target.gravity,
+                .jumping = target.jumping,
+                .fast_rise = target.fast_rise,
+                .fast_drop = target.fast_drop,
+                .side = target.side};
+            if (!active.controller) {
+                active.controller = std::make_unique<OriginalGameCamera>(
+                    definition->zone_transform, definition->camera_param,
+                    published_target, 45.0F,
+                    StageCameraCalculationState{
+                        .local_offset = desired_local_offset(definition->camera_param, target)});
+                return active.controller->calculation().pose;
             }
-            const auto calculation = calculate_stage_camera_pose(
-                definition->zone_transform, definition->camera_param,
-                StageCameraTargetState{.position = target.position,
-                                       .up = target.up,
-                                       .front = target.front,
-                                       .last_move = target.last_move},
-                active.calculation_state);
-            if (!calculation.has_value()) {
-                throw std::logic_error(
-                    "XZ_PARA event camera has an invalid authored target basis.");
-            }
-            active.calculation_state = calculation->state;
-            return calculation->pose;
+            return active.controller->calc(published_target).pose;
         }
         throw std::logic_error("Unsupported event-camera type " +
                                definition->camera_param.camera_type);

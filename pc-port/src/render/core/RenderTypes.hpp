@@ -131,6 +131,10 @@ namespace smgpc::render::core {
         CORE_PAD_C,
         CORE_PAD_Z,
         CORE_PAD_SWING,
+        SUB_STICK_UP,
+        SUB_STICK_DOWN,
+        SUB_STICK_LEFT,
+        SUB_STICK_RIGHT,
         COUNT,
     };
 

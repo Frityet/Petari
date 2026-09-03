@@ -252,7 +252,7 @@ namespace {
         auto mode_player = ElementModeFixtureActor{};
         runtime.player_system().attach_actor(
             mode_player,
-            smgpc::runtime::PlayerActorEntitlementBridge{
+            smgpc::runtime::PlayerActorBridge{
                 .read_element_mode = &read_fixture_element_mode,
             });
         require(MR::isPlayerElementModeNormal() &&

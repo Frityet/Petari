@@ -623,7 +623,6 @@ namespace smgpc::runtime {
             _camera_system.set_shake_projection_dimensions(shake_screen_width,
                                                            static_cast<float>(_wii_video.render_mode().efbHeight));
         }
-        _camera_system.begin_frame(_frame_index);
         if (const auto camera_pose = _camera_system.effective_camera_pose()) {
             _scene_camera_pose = *camera_pose;
         }
@@ -717,16 +716,16 @@ namespace smgpc::runtime {
             }
         }
 #endif
-        if ((hold_mask & WPAD_BUTTON_LEFT) != 0U) {
+        if (_window_service.is_input_pressed(render::InputButton::SUB_STICK_LEFT)) {
             sub_stick_x -= 1.0F;
         }
-        if ((hold_mask & WPAD_BUTTON_RIGHT) != 0U) {
+        if (_window_service.is_input_pressed(render::InputButton::SUB_STICK_RIGHT)) {
             sub_stick_x += 1.0F;
         }
-        if ((hold_mask & WPAD_BUTTON_UP) != 0U) {
+        if (_window_service.is_input_pressed(render::InputButton::SUB_STICK_UP)) {
             sub_stick_y += 1.0F;
         }
-        if ((hold_mask & WPAD_BUTTON_DOWN) != 0U) {
+        if (_window_service.is_input_pressed(render::InputButton::SUB_STICK_DOWN)) {
             sub_stick_y -= 1.0F;
         }
         if (sub_stick_x != 0.0F && sub_stick_y != 0.0F) {
@@ -821,6 +820,12 @@ namespace smgpc::runtime {
         wpad.set_sub_stick(WPAD_CHAN0, sub_stick_x, sub_stick_y);
         wpad.set_swing(WPAD_CHAN0, core_swing, false);
         wpad.set_distance_to_display(WPAD_CHAN0, pointer.valid ? 1.0F : 0.0F);
+        // Original camera controllers read the current WPAD trigger state.
+        // Publish host input before the camera and player movement phases.
+        _camera_system.begin_frame(_frame_index);
+        if (!_freecam_enabled) {
+            _scene_camera_pose = _camera_system.effective_camera_pose();
+        }
 #ifndef NDEBUG
         if (!_emitted_wpad_buttons_held_event && hold_mask != 0U) {
             _emitted_wpad_buttons_held_event = true;

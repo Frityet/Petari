@@ -1,4 +1,5 @@
 #include "Game/Util/CameraUtil.hpp"
+#include "Game/Camera/CameraTargetMtx.hpp"
 #include "Game/Util/JMapInfo.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Scene/PlacementStateChecker.hpp"
@@ -6,10 +7,14 @@
 #include "camera/CameraAnimation.hpp"
 #include "camera/CameraParam.hpp"
 #include "camera/EventCamera.hpp"
+#include "camera/OriginalGameCamera.hpp"
 #include "camera/StageStartCamera.hpp"
+#include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/CameraUtilCompat.hpp"
+#include "compat/DemoSceneRuntime.hpp"
 #include "resource/BcsvTable.hpp"
 #include "runtime/RuntimeServices.hpp"
+#include "runtime/SceneScheduler.hpp"
 #include "scene/StageHostService.hpp"
 #include "scene/StagePlacementResolver.hpp"
 #include "scene/SceneTransitionRequestService.hpp"
@@ -49,6 +54,23 @@ namespace {
                                      ";expected=" + std::to_string(expected));
         }
     }
+
+    class CameraPlayerFixture final : public LiveActor {
+    public:
+        explicit CameraPlayerFixture(smgpc::runtime::PlayerSystemService &player)
+            : LiveActor("Stage camera player fixture"), _player(player) {
+            _player.attach_actor(*this, smgpc::runtime::PlayerActorBridge{
+                .read_camera_target = +[](const LiveActor &actor) {
+                    return static_cast<const CameraPlayerFixture &>(actor).camera_state;
+                }});
+        }
+        ~CameraPlayerFixture() override { _player.detach_actor(this); }
+
+        smgpc::camera::StageCameraTargetState camera_state{};
+
+    private:
+        smgpc::runtime::PlayerSystemService &_player;
+    };
 
     void write_be32(std::vector<std::uint8_t> &bytes, std::size_t offset, std::uint32_t value) {
         bytes[offset] = static_cast<std::uint8_t>(value >> 24U);
@@ -206,6 +228,32 @@ namespace {
                lhs.far_clip == rhs.far_clip &&
                lhs.projection_offset_x == rhs.projection_offset_x &&
                lhs.projection_offset_y == rhs.projection_offset_y;
+    }
+
+    [[nodiscard]] smgpc::camera::ResolvedStageStartCamera
+    make_tracking_camera() {
+        auto result = make_resolved_start_camera(1.0F);
+        result.camera_param.general.dist = 600.0F;
+        result.camera_param.general.angle_a = 0.4F;
+        result.camera_param.general.angle_b = 0.25F;
+        result.camera_param.extra.w_offset = {};
+        result.camera_param.extra.l_offset = 100.0F;
+        result.camera_param.extra.l_offset_v = 60.0F;
+        result.camera_param.extra.fovy = 63.0F;
+        result.camera_param.extra.flags = 1U << 1U;
+        result.camera_param.extra.v_pan_use = 0;
+        result.target.position = {10.0F, 20.0F, 30.0F};
+        const auto initial = smgpc::camera::calculate_stage_camera_pose(
+            result.start_info.zone_transform, result.camera_param,
+            result.target);
+        require(initial.has_value(), "the authored tracking fixture must resolve");
+        result.calculation = *initial;
+        result.calculation.pose.aspect_ratio = 16.0F / 9.0F;
+        result.calculation.pose.near_clip = 50.0F;
+        result.calculation.pose.far_clip = 200000.0F;
+        result.calculation.pose.projection_offset_x = 0.01F;
+        result.calculation.pose.projection_offset_y = -0.02F;
+        return result;
     }
 
     void test_rigid_zone_matrix_and_start_selection() {
@@ -366,6 +414,146 @@ namespace {
                 "a degenerate target basis must remain unavailable instead of selecting a guessed direction");
     }
 
+    void test_original_controller_height_and_lifetime() {
+        const auto live_objects = smgpc::compat::name_obj_runtime_state_count();
+        auto param = smgpc::camera::CameraParamChunk{};
+        param.camera_type = "CAM_TYPE_XZ_PARA";
+        param.general.dist = 600.0F;
+        param.general.angle_a = 0.0F;
+        param.general.angle_b = 0.0F;
+        param.extra.w_offset = {};
+        param.extra.v_pan_use = 1;
+        param.extra.upper = 1.0F;
+        param.extra.lower = 1.0F;
+        auto target = smgpc::camera::StageCameraTargetState{};
+        {
+            auto controller = smgpc::camera::OriginalGameCamera({}, param, target);
+            require(smgpc::compat::name_obj_runtime_state_count() > live_objects,
+                    "the backend must own actual registered Game camera objects");
+            target.position.y = 100.0F;
+            target.last_move.y = 100.0F;
+            const auto first = controller.calc(target);
+            const auto second = controller.calc(target);
+            require_near(first.pose.watch.y, 5.0F, 0.001F,
+                         "original grounded HeightArrange must chase at its 0.05 rate");
+            require_near(second.pose.watch.y, 9.75F, 0.001F,
+                         "the second calculation must retain original HeightArrange history");
+
+            controller.reset({});
+            target.jumping = true;
+            const auto airborne = controller.calc(target);
+            require_near(airborne.pose.watch.y, 0.0F, 0.001F,
+                         "original jump handling must retain the takeoff watch height");
+            target.jumping = false;
+            const auto landed = controller.calc(target);
+            require_near(landed.pose.watch.y, 5.0F, 0.001F,
+                         "landing must resume the original grounded height chase");
+
+            param.extra.upper = 0.3F;
+            param.extra.lower = 0.1F;
+            auto slow_rise = smgpc::camera::OriginalGameCamera({}, param, {});
+            auto fast_rise = smgpc::camera::OriginalGameCamera({}, param, {});
+            target.position.y = 1000.0F;
+            target.jumping = true;
+            target.fast_rise = false;
+            const auto slow_rise_pose = slow_rise.calc(target).pose;
+            target.fast_rise = true;
+            const auto fast_rise_pose = fast_rise.calc(target).pose;
+            require(fast_rise_pose.watch.y > slow_rise_pose.watch.y + 100.0F,
+                    "published fast-rise state must reach original HeightArrange rise-delay handling");
+
+            auto slow_drop = smgpc::camera::OriginalGameCamera({}, param, {});
+            auto fast_drop = smgpc::camera::OriginalGameCamera({}, param, {});
+            target.position.y = -1000.0F;
+            target.last_move.y = -100.0F;
+            target.fast_rise = false;
+            target.fast_drop = false;
+            const auto slow_drop_pose = slow_drop.calc(target).pose;
+            target.fast_drop = true;
+            const auto fast_drop_pose = fast_drop.calc(target).pose;
+            require(fast_drop_pose.watch.y < slow_drop_pose.watch.y - 100.0F,
+                    "published fast-drop state must reach original HeightArrange drop-delay handling");
+        }
+        require(smgpc::compat::name_obj_runtime_state_count() == live_objects,
+                "retiring original controllers must release their registered camera/height/target owners");
+
+        param.extra.v_pan_use = 0;
+        param.extra.flags = 1U << 2U;
+        param.extra.l_offset = 10.0F;
+        param.extra.l_offset_v = 20.0F;
+        target = {};
+        target.up = {0.0F, 2.0F, 0.0F};
+        target.front = {0.0F, 0.0F, 3.0F};
+        const auto calculation = smgpc::camera::calculate_stage_camera_pose({}, param, target);
+        require(calculation.has_value(), "the original camera should accept the published basis");
+        require_near(calculation->state.local_offset.y, 40.0F, 0.001F,
+                     "the host boundary must not normalize the original target's up offset");
+        require_near(calculation->state.local_offset.z, 30.0F, 0.001F,
+                     "the host boundary must not normalize the original target's front offset");
+        require(smgpc::compat::name_obj_runtime_state_count() == live_objects,
+                "one-shot start calculation must also retire its original objects");
+    }
+
+    void test_original_manager_safe_basis_and_deferred_reset() {
+        auto param = smgpc::camera::CameraParamChunk{};
+        param.camera_type = "CAM_TYPE_XZ_PARA";
+        param.general.dist = 600.0F;
+        param.general.angle_b = 1.5707F;
+        param.extra.w_offset = {};
+        param.extra.v_pan_use = 0;
+        auto target = smgpc::camera::StageCameraTargetState{};
+        auto controller = smgpc::camera::OriginalGameCamera({}, param, target);
+        const auto first = controller.calculation().pose;
+        const auto dot = [](const auto &a, const auto &b) {
+            return a.x * b.x + a.y * b.y + a.z * b.z;
+        };
+        auto forward = smgpc::camera::CameraParamVec3{
+            first.watch.x - first.eye.x, first.watch.y - first.eye.y,
+            first.watch.z - first.eye.z};
+        const auto length = std::sqrt(dot(forward, forward));
+        forward = {forward.x / length, forward.y / length, forward.z / length};
+        require_near(dot(first.up, forward), 0.0F, 0.001F,
+                     "the original manager must repair raw up parallel to the view direction");
+        require_near(dot(first.up, first.up), 1.0F, 0.001F,
+                     "the original safe-pose step must publish a normalized non-degenerate basis");
+        require(std::abs(first.up.z) > 0.99F,
+                "near-vertical initialization must use the original manager's forward-Z baseline");
+        target.front = {1.0F, 0.0F, 0.0F};
+        controller.reset_manager(target);
+        const auto reset_pose = controller.calc(target).pose;
+        require(std::abs(reset_pose.up.x) > 0.99F,
+                "explicit manager reset must use the original target-based pose seed for safe-up recovery");
+
+        auto camera = smgpc::runtime::CameraSystemService{};
+        const auto resolved = make_tracking_camera();
+        const auto owner = camera.set_authored_game_camera(resolved);
+        target = resolved.target;
+        target.last_move = {15.0F, 0.0F, 0.0F};
+        camera.set_game_camera_target(owner, target);
+        camera.begin_frame(1U);
+        const auto before_reset = *camera.game_camera_pose();
+        camera.pause_on_camera_director();
+        camera.pause_on_camera_director();
+        camera.reset_camera_man();
+        camera.reset_camera_man();
+        camera.begin_frame(2U);
+        require(same_pose(*camera.game_camera_pose(), before_reset) &&
+                    camera.camera_director_pause_count() == 1U,
+                "repeated pause-on must be idempotent and a queued reset must not calculate while paused");
+        camera.pause_off_camera_director();
+        require(!camera.is_camera_director_paused(),
+                "one pause-off must resume after repeated pause-on, as the original movement flag does");
+        camera.begin_frame(3U);
+        require_near(camera.game_camera_pose()->watch.z - target.position.z,
+                     27.1F, 0.0001F,
+                     "coalesced reset must retain offset history and run one reset followed by one calc");
+        camera.begin_frame(4U);
+        require_near(camera.game_camera_pose()->watch.z - target.position.z,
+                     34.39F, 0.0001F,
+                     "the deferred reset request must clear after its successful calculation");
+        camera.clear_stage_start_camera(owner);
+    }
+
     void test_base_programmable_camera_priority_and_request_defaults() {
         auto camera = smgpc::runtime::CameraSystemService{};
         auto base = smgpc::camera::CameraPose{};
@@ -394,7 +582,7 @@ namespace {
 
     void test_runaway_tico_start_camera_handoff() {
         auto camera = smgpc::runtime::CameraSystemService{};
-        const auto resolved = make_resolved_start_camera(78.0F);
+        const auto resolved = make_tracking_camera();
         const auto start_pose = resolved.calculation.pose;
         const auto owner_generation = camera.set_stage_start_camera(resolved);
         const auto *retained = camera.stage_start_camera();
@@ -409,6 +597,10 @@ namespace {
                     camera.start_position_camera_zero_interpolation_frames() ==
                         5U,
                 "retail stage-camera creation must start active with the false-call five-calculation window");
+        camera.begin_frame(0U);
+        require(camera.start_position_camera_zero_interpolation_frames() == 5U,
+                "a missing target must not consume a camera-calculation countdown step");
+        camera.set_game_camera_target(owner_generation, resolved.target);
         camera.begin_frame(1U);
         require(camera.start_position_camera_zero_interpolation_frames() == 4U,
                 "the false-call zero-interpolation window must count down once per camera frame");
@@ -417,16 +609,19 @@ namespace {
         MR::endStartPosCamera();
         require(MR::isStartPosCameraEnd() &&
                     camera.stage_start_camera() == retained &&
-                    !camera.game_camera_pose().has_value() &&
+                    camera.game_camera_pose().has_value() &&
+                    same_pose(*camera.game_camera_pose(), start_pose) &&
                     camera.start_position_camera_zero_interpolation_frames() ==
                         0U,
-                "Guide0 end must suspend the pose without releasing the resolved stage camera");
+                "Guide0 end must clear the start flag/count while preserving the current game pose");
         MR::endStartPosCamera();
         require(MR::isStartPosCameraEnd() &&
                     camera.stage_start_camera() == retained,
                 "retail start-camera end must be repeatable while ownership remains live");
 
         auto player = smgpc::runtime::PlayerSystemService{};
+        auto camera_player = CameraPlayerFixture(player);
+        camera_player.camera_state.position = {1000.0F, 0.0F, 0.0F};
         Mtx player_matrix{
             {1.0F, 0.0F, 0.0F, 1000.0F},
             {0.0F, 1.0F, 0.0F, 0.0F},
@@ -441,7 +636,7 @@ namespace {
             smgpc::camera::EventCameraTarget::target_player(player), 0, 1.0F);
         const auto guide_pose = camera.effective_camera_pose();
         require(guide_pose.has_value() && !same_pose(*guide_pose, start_pose),
-                "DemoMeetTico must own the effective pose after the Guide0 suspension");
+                "DemoMeetTico must own the effective pose after the Guide0 start-mode toggle");
 
         MR::startStartPosCamera(false);
         require(camera.start_position_camera_zero_interpolation_frames() == 5U,
@@ -468,10 +663,10 @@ namespace {
                     guide_pose_before_restart.has_value() &&
                     same_pose(*camera.effective_camera_pose(),
                               *guide_pose_before_restart),
-                "Guide1 true restart must restore immediately underneath the still-active event camera");
+                "Guide1 true start must preserve the current game pose underneath the still-active event camera");
         MR::startStartPosCamera(true);
         require(camera.start_position_camera_zero_interpolation_frames() == 0U,
-                "a repeated true restart must remain an immediate retail restart");
+                "a repeated true start must retain the zero interpolation count");
         camera.end_event_camera(0, "DemoMeetTico", true, -1);
         require(camera.effective_camera_pose().has_value() &&
                     same_pose(*camera.effective_camera_pose(), start_pose),
@@ -487,6 +682,246 @@ namespace {
         require(camera.start_position_camera_zero_interpolation_frames() == 5U,
                 "a repeated false restart must reseed the retail countdown");
         camera.clear_stage_start_camera(owner_generation);
+    }
+
+    void test_authored_game_camera_target_tracking() {
+        auto camera = smgpc::runtime::CameraSystemService{};
+        const auto resolved = make_tracking_camera();
+        const auto initial = resolved.calculation.pose;
+        const auto owner = camera.set_authored_game_camera(resolved);
+        const auto *retained = camera.stage_start_camera();
+        require(camera.is_start_position_camera_end() &&
+                    camera.start_position_camera_zero_interpolation_frames() == 0U,
+                "normal authored tracking must not enter start-position mode");
+        camera.begin_frame(1U);
+        require(same_pose(*camera.game_camera_pose(), initial),
+                "an authored owner without a published target must retain its initial pose");
+
+        auto target = resolved.target;
+        target.position.x += 50.0F;
+        target.position.y -= 20.0F;
+        target.position.z += 80.0F;
+        camera.set_game_camera_target(owner, target);
+        require(same_pose(*camera.game_camera_pose(), initial),
+                "target publication must not advance the camera before its frame");
+        camera.begin_frame(2U);
+        const auto tracked = *camera.game_camera_pose();
+        require_near(tracked.eye.x, initial.eye.x + 50.0F, 0.0001F,
+                     "authored eye X must track target translation");
+        require_near(tracked.eye.y, initial.eye.y - 20.0F, 0.0001F,
+                     "authored eye Y must track target translation");
+        require_near(tracked.eye.z, initial.eye.z + 80.0F, 0.0001F,
+                     "authored eye Z must track target translation");
+        require_near(tracked.watch.x, initial.watch.x + 50.0F, 0.0001F,
+                     "authored watch point must follow target translation");
+        require(tracked.aspect_ratio == initial.aspect_ratio &&
+                    tracked.near_clip == initial.near_clip &&
+                    tracked.far_clip == initial.far_clip &&
+                    tracked.projection_offset_x == initial.projection_offset_x &&
+                    tracked.projection_offset_y == initial.projection_offset_y &&
+                    tracked.fovy_degrees == 63.0F &&
+                    camera.stage_start_camera() == retained &&
+                    same_pose(retained->calculation.pose, initial) &&
+                    retained->target.position.x == resolved.target.position.x,
+                "tracking must retain authored projection and immutable start metadata");
+        camera.set_game_camera_target(owner, std::nullopt);
+        camera.begin_frame(3U);
+        require(same_pose(*camera.game_camera_pose(), tracked),
+                "withdrawing a target must freeze the last calculated authored pose");
+        camera.clear_stage_start_camera(owner);
+    }
+
+    void test_authored_game_camera_offset_accumulation() {
+        auto camera = smgpc::runtime::CameraSystemService{};
+        const auto resolved = make_tracking_camera();
+        const auto owner = camera.set_authored_game_camera(resolved);
+        auto target = resolved.target;
+        target.last_move = {15.0F, 0.0F, 0.0F};
+        camera.set_game_camera_target(owner, target);
+        camera.begin_frame(1U);
+        require_near(camera.game_camera_pose()->watch.y - target.position.y,
+                     6.0F, 0.0001F,
+                     "retail offset interpolation must advance by speed * 0.1 / 15");
+        require_near(camera.game_camera_pose()->watch.z - target.position.z,
+                     10.0F, 0.0001F,
+                     "retail front offset must use the same first-frame interpolation");
+        camera.begin_frame(2U);
+        require_near(camera.game_camera_pose()->watch.y - target.position.y,
+                     11.4F, 0.0001F,
+                     "vertical local offset must accumulate from its prior frame");
+        require_near(camera.game_camera_pose()->watch.z - target.position.z,
+                     19.0F, 0.0001F,
+                     "front local offset must accumulate instead of resetting each frame");
+
+        target.front = {1.0F, 0.0F, 0.0F};
+        camera.set_game_camera_target(owner, target);
+        camera.begin_frame(3U);
+        const auto pose = *camera.game_camera_pose();
+        require_near(pose.watch.x - target.position.x, 10.0F, 0.0001F,
+                     "turning must converge toward the new target front");
+        require_near(pose.watch.y - target.position.y, 16.26F, 0.0001F,
+                     "turning must preserve accumulated vertical offset state");
+        require_near(pose.watch.z - target.position.z, 17.1F, 0.0001F,
+                     "turning must decay the old front offset from its retained value");
+        camera.clear_stage_start_camera(owner);
+    }
+
+    void test_authored_game_camera_priority_and_restart() {
+        auto camera = smgpc::runtime::CameraSystemService{};
+        const auto resolved = make_tracking_camera();
+        const auto owner = camera.set_authored_game_camera(resolved);
+        auto target = resolved.target;
+        target.last_move = {15.0F, 0.0F, 0.0F};
+        camera.set_game_camera_target(owner, target);
+        camera.begin_frame(1U);
+        auto prior = *camera.game_camera_pose();
+
+        camera.pause_on_camera_director();
+        target.position.x += 200.0F;
+        camera.set_game_camera_target(owner, target);
+        camera.begin_frame(2U);
+        require(same_pose(*camera.game_camera_pose(), prior),
+                "director pause must freeze target tracking and interpolation");
+        camera.pause_off_camera_director();
+        camera.begin_frame(3U);
+        require_near(camera.game_camera_pose()->watch.x, target.position.x,
+                     0.0001F, "unpausing must consume the newest published target");
+        require_near(camera.game_camera_pose()->watch.z - target.position.z,
+                     19.0F, 0.0001F,
+                     "unpausing must resume interpolation without advancing during pause");
+        prior = *camera.game_camera_pose();
+
+        auto player = smgpc::runtime::PlayerSystemService{};
+        auto camera_player = CameraPlayerFixture(player);
+        camera_player.camera_state.position = {1000.0F, 0.0F, 0.0F};
+        Mtx player_matrix{{1.0F, 0.0F, 0.0F, 1000.0F},
+                          {0.0F, 1.0F, 0.0F, 0.0F},
+                          {0.0F, 0.0F, 1.0F, 0.0F}};
+        player.set_base_matrix(player_matrix);
+        camera.declare_event_camera_animation(
+            0, "tracking-event",
+            smgpc::camera::CameraAnimation::from_bytes(make_guide_animation()));
+        camera.start_event_camera(
+            0, "tracking-event",
+            smgpc::camera::EventCameraTarget::target_player(player), 0);
+        camera.begin_frame(4U);
+        require(same_pose(*camera.game_camera_pose(), prior) &&
+                    !same_pose(*camera.effective_camera_pose(), prior),
+                "an event camera must own the effective pose while game state remains frozen");
+        camera.end_event_camera(0, "tracking-event", true, -1);
+        camera.begin_frame(5U);
+        require_near(camera.game_camera_pose()->watch.z - target.position.z,
+                     34.39F, 0.0001F,
+                     "event reactivation must reset then calculate from the retained manager offset");
+        prior = *camera.game_camera_pose();
+
+        camera.declare_event_camera_programmable("tracking-programmable");
+        camera.start_global_event_camera_no_target("tracking-programmable");
+        (void)camera.set_programmable_camera_param(
+            "tracking-programmable", {0.0F, 0.0F, 0.0F},
+            {500.0F, 100.0F, 200.0F}, {0.0F, 1.0F, 0.0F}, false);
+        camera.begin_frame(6U);
+        require(same_pose(*camera.game_camera_pose(), prior) &&
+                    !same_pose(*camera.effective_camera_pose(), prior),
+                "a programmable camera must not feed its pose into authored game state");
+        camera.end_global_event_camera("tracking-programmable");
+        camera.begin_frame(7U);
+        require_near(camera.game_camera_pose()->watch.z - target.position.z,
+                     46.8559F, 0.0001F,
+                     "programmable reactivation must reset then calculate without clearing manager state");
+
+        camera.end_start_position_camera();
+        camera.begin_frame(8U);
+        require(camera.game_camera_pose().has_value() && camera.is_start_position_camera_end(),
+                "ending start-position mode must preserve normal game-camera calculations");
+        require_near(camera.game_camera_pose()->watch.z - target.position.z,
+                     52.17031F, 0.0001F,
+                     "the end-start flag must not reset or suspend retained local offsets");
+        const auto before_start_toggle = *camera.game_camera_pose();
+        camera.start_start_position_camera(true);
+        require(same_pose(*camera.game_camera_pose(), before_start_toggle),
+                "start toggle must preserve the manager pose without an immediate reset");
+        camera.begin_frame(9U);
+        require_near(camera.game_camera_pose()->watch.z - target.position.z,
+                     56.95328F, 0.0001F,
+                     "the start flag alone must continue local interpolation from the previous frame");
+        camera.clear_stage_start_camera(owner);
+    }
+
+    void test_authored_game_camera_owner_retirement() {
+        const auto throws_logic_error = [](auto &&call) {
+            try {
+                call();
+            } catch (const std::logic_error &) {
+                return true;
+            }
+            return false;
+        };
+        auto camera = smgpc::runtime::CameraSystemService{};
+        const auto resolved = make_tracking_camera();
+        const auto old_owner = camera.set_authored_game_camera(resolved);
+        auto target = resolved.target;
+        target.position.x += 500.0F;
+        camera.set_game_camera_target(old_owner, target);
+        camera.begin_frame(1U);
+        const auto tracked = *camera.game_camera_pose();
+
+        auto unsupported = resolved;
+        unsupported.camera_param.camera_type = "CAM_TYPE_FOLLOW";
+        require(throws_logic_error([&] {
+                    (void)camera.set_authored_game_camera(unsupported);
+                }) && same_pose(*camera.game_camera_pose(), tracked),
+                "an unsupported authored camera must fail before replacing a valid owner");
+        auto invalid_target = target;
+        invalid_target.last_move.x = std::numeric_limits<float>::quiet_NaN();
+        require(throws_logic_error([&] {
+                    camera.set_game_camera_target(old_owner, invalid_target);
+                }),
+                "invalid target publication must fail without poisoning the retained target");
+        camera.begin_frame(2U);
+        require(same_pose(*camera.game_camera_pose(), tracked),
+                "a rejected target must leave the previously valid target usable");
+
+        const auto owner = camera.set_authored_game_camera(resolved);
+        require(throws_logic_error([&] {
+                    camera.set_game_camera_target(old_owner, target);
+                }),
+                "a stale stage may not publish into a newer camera owner");
+        camera.clear_stage_start_camera(old_owner);
+        camera.begin_frame(3U);
+        require(same_pose(*camera.game_camera_pose(), resolved.calculation.pose),
+                "replacement ownership must discard the previous target and ignore stale teardown");
+        camera.set_game_camera_target(owner, target);
+        camera.clear_stage_start_camera(owner);
+        camera.begin_frame(4U);
+        require(!camera.game_camera_pose().has_value() &&
+                    camera.stage_start_camera() == nullptr &&
+                    throws_logic_error([&] {
+                        camera.set_game_camera_target(owner, target);
+                    }),
+                "matching retirement must discard every authored target and calculation");
+
+        const auto manual_owner = camera.set_authored_game_camera(resolved);
+        camera.set_game_camera_target(manual_owner, target);
+        const auto manual_pose = make_resolved_start_camera(999.0F).calculation.pose;
+        camera.set_game_camera_pose(manual_pose);
+        camera.begin_frame(5U);
+        camera.clear_stage_start_camera(manual_owner);
+        require(same_pose(*camera.game_camera_pose(), manual_pose) &&
+                    throws_logic_error([&] {
+                        camera.set_game_camera_target(manual_owner, target);
+                    }),
+                "manual camera publication must discard tracked state and its owner generation");
+
+        const auto cleared_owner = camera.set_authored_game_camera(resolved);
+        camera.set_game_camera_target(cleared_owner, target);
+        camera.clear_game_camera_pose();
+        camera.begin_frame(6U);
+        require(!camera.game_camera_pose().has_value() &&
+                    throws_logic_error([&] {
+                        camera.set_game_camera_target(cleared_owner, target);
+                    }),
+                "explicit game-camera clearing must remove retained target state");
     }
 
     void test_start_camera_errors_and_scene_generations() {
@@ -625,7 +1060,10 @@ namespace {
         } close_guard;
         DVDInit();
 
+        auto scheduler = smgpc::runtime::SceneScheduler{};
+        const auto scheduler_binding = smgpc::runtime::SceneSchedulerBinding(scheduler);
         auto dvd = smgpc::runtime::DvdFileSystemService{"/"};
+        auto demo = smgpc::compat::DemoSceneRuntime(dvd, {});
         const auto root = smgpc::camera::resolve_stage_start_camera(dvd, "HeavensDoorGalaxy", 1, 0, 0);
         require(root.status == smgpc::camera::StageStartCameraResolveStatus::Resolved && root.camera.has_value(),
                 "real scenario 1 should resolve its root StartInfo camera");
@@ -636,6 +1074,30 @@ namespace {
                 "real scenario data should select root LayerA MarioNo 0 and s:004e");
         require_near(root.camera->calculation.pose.eye.x, 13402.355347F, 0.5F,
                      "real-disc XZ_PARA should use transformed StartInfo up while gravity is unavailable");
+        const auto &param = root.camera->camera_param;
+        std::cout << "[authored-camera] zone=" << root.camera->start_info.zone_id
+                  << ";key=" << root.camera->camera_key
+                  << ";type=" << param.camera_type
+                  << ";num1=" << param.general.num1
+                  << ";v_pan_use=" << param.extra.v_pan_use
+                  << ";dist=" << param.general.dist
+                  << ";angle_a=" << param.general.angle_a
+                  << ";angle_b=" << param.general.angle_b
+                  << ";l_offset=" << param.extra.l_offset
+                  << ";l_offset_v=" << param.extra.l_offset_v
+                  << ";w_offset=" << param.extra.w_offset.x << ','
+                  << param.extra.w_offset.y << ',' << param.extra.w_offset.z
+                  << ";roll=" << param.extra.roll
+                  << ";fovy=" << param.extra.fovy
+                  << ";flags=" << param.extra.flags << '\n';
+        require_near(param.general.dist, 1179.19921875F, 0.0001F,
+                     "the retained authored distance must match the real StartInfo camera");
+        require_near(param.general.angle_a, -0.3436119854450226F, 0.0001F,
+                     "the retained authored horizontal angle must match the real StartInfo camera");
+        require_near(param.general.angle_b, -0.3595139980316162F, 0.0001F,
+                     "the retained authored vertical angle must match the real StartInfo camera");
+        require_near(param.extra.l_offset_v, 219.7265625F, 0.0001F,
+                     "the retained authored target-up offset must match the real StartInfo camera");
 
         auto camera = smgpc::runtime::CameraSystemService{};
         const auto real_start_pose = root.camera->calculation.pose;
@@ -647,19 +1109,61 @@ namespace {
             MR::endStartPosCamera();
             require(camera.stage_start_camera() != nullptr &&
                         camera.stage_start_camera()->camera_key == "s:004e" &&
-                        !camera.game_camera_pose().has_value(),
-                    "Guide0 suspension must retain the resolved real HeavensDoor camera");
+                        camera.game_camera_pose().has_value() &&
+                        same_pose(*camera.game_camera_pose(), real_start_pose),
+                    "Guide0 must retain the current real HeavensDoor pose when clearing start mode");
             MR::startStartPosCamera(true);
             require(camera.game_camera_pose().has_value() &&
                         same_pose(*camera.game_camera_pose(), real_start_pose) &&
                         camera.start_position_camera_zero_interpolation_frames() ==
                             0U,
-                    "Guide1 true restart must reproduce the resolved real-stage pose exactly");
+                    "Guide1 true start must preserve the current real-stage pose exactly");
         }
         camera.clear_stage_start_camera(owner_generation);
         require(camera.stage_start_camera() == nullptr &&
                     !camera.game_camera_pose().has_value(),
                 "real-stage teardown must release all retained start-camera state");
+
+        const auto event_tables = std::array{
+            smgpc::scene::StagePlacementTable{
+                .category = "camera",
+                .table_name = "CameraParam.bcam",
+                .archive_path = root.camera->start_info.archive_path,
+                .table_path = "CameraParam.bcam",
+                .zone_id = 0,
+            },
+        };
+        const auto event_catalog = smgpc::camera::EventCameraCatalog::from_stage_tables(dvd, event_tables);
+        const auto *pipe_camera = event_catalog.find(0, "土管固有出現054");
+        require(pipe_camera != nullptr && pipe_camera->camera_param.camera_type == "CAM_TYPE_XZ_PARA",
+                "the real root pipe event must supply an authored XZ_PARA controller");
+        camera.attach_event_camera_catalog(event_catalog);
+        camera.declare_event_camera(0, "土管固有出現054");
+        auto event_target = CameraTargetMtx("PersistentEventPauseTarget");
+        event_target.mMatrix.mMtx[0][3] = 100.0F;
+        event_target.mMatrix.mMtx[1][3] = 200.0F;
+        event_target.mMatrix.mMtx[2][3] = 300.0F;
+        event_target.mLastMove.set(15.0F, 0.0F, 0.0F);
+        camera.start_event_camera(0, "土管固有出現054",
+                                 smgpc::camera::EventCameraTarget::target_matrix(event_target), 0);
+        const auto event_before_pause = *camera.active_event_camera_pose();
+        camera.pause_on_camera_director();
+        camera.pause_on_camera_director();
+        event_target.mMatrix.mMtx[0][3] += 75.0F;
+        event_target.mMatrix.mMtx[1][3] += 50.0F;
+        camera.begin_frame(100U);
+        camera.begin_frame(101U);
+        require(same_pose(*camera.active_event_camera_pose(), event_before_pause),
+                "director pause must freeze persistent original XZ event state while its real target moves");
+        camera.pause_off_camera_director();
+        camera.begin_frame(102U);
+        const auto event_after_pause = *camera.active_event_camera_pose();
+        require_near(event_after_pause.watch.x, event_before_pause.watch.x + 75.0F, 0.001F,
+                     "unpaused original XZ event must consume the newest target translation");
+        require_near(event_after_pause.eye.x, event_before_pause.eye.x + 75.0F, 0.001F,
+                     "persistent original XZ event eye must resume with the same target translation");
+        camera.end_event_camera(0, "土管固有出現054", true, -1);
+        camera.detach_event_camera_catalog(event_catalog);
 
         const auto child = smgpc::scene::resolve_stage_start_info(dvd, "HeavensDoorGalaxy", 1, 0, 5);
         require(child.has_value() && child->zone_name == "HeavensDoorMysteriousZone" && child->camera_id == 999 &&
@@ -692,8 +1196,14 @@ int main() {
     constexpr auto tests = std::array{
         TestCase{"rigid zone matrix and StartInfo selection", test_rigid_zone_matrix_and_start_selection},
         TestCase{"camera migration, key, and XZ_PARA pose", test_camera_version_key_and_xz_parallel_pose},
+        TestCase{"original controller height and lifetime", test_original_controller_height_and_lifetime},
+        TestCase{"original manager safe basis and deferred reset", test_original_manager_safe_basis_and_deferred_reset},
         TestCase{"base and programmable camera priority", test_base_programmable_camera_priority_and_request_defaults},
         TestCase{"RunawayTico start-camera handoff", test_runaway_tico_start_camera_handoff},
+        TestCase{"authored game-camera target tracking", test_authored_game_camera_target_tracking},
+        TestCase{"authored game-camera offset accumulation", test_authored_game_camera_offset_accumulation},
+        TestCase{"authored game-camera priority and restart", test_authored_game_camera_priority_and_restart},
+        TestCase{"authored game-camera owner retirement", test_authored_game_camera_owner_retirement},
         TestCase{"start-camera errors and scene generations", test_start_camera_errors_and_scene_generations},
         TestCase{"retail placement-zone SceneObj", test_retail_placement_zone_scene_object},
         TestCase{"optional real-disc HeavensDoor camera", test_optional_real_disc_heavensdoor_camera},

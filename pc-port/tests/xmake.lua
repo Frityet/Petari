@@ -104,6 +104,34 @@ target("smg-pc-collision-triangle-filter-tests")
         realtime_output = true
     })
 
+target("smg-pc-original-camera-runtime-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    set_rundir(os.projectdir())
+    add_cxxflags("-include " .. path.join(os.projectdir(), "src/compat/MetrowerksStdCompat.hpp"), {force = true})
+    add_files {
+        "CameraLocalUtilRuntimeTests.cpp",
+        "../aurora/lib/compat.cpp"
+    }
+    add_deps {
+        "smg-pc-common",
+        "smg-pc-game",
+        "aurora-card",
+        "aurora-dvd",
+        "aurora-gd",
+        "aurora-gx",
+        "aurora-os",
+        "aurora-pad",
+        "aurora-si",
+        "aurora-vi"
+    }
+    add_tests("original_camera_runtime", {
+        group = "aurora",
+        rundir = os.projectdir(),
+        realtime_output = true
+    })
+
 target("smg-pc-gateway-demo-scene-tests")
     set_kind("binary")
     set_default(false)
@@ -198,6 +226,7 @@ target("smg-pc-mario-gateway-walk-tests")
     set_rundir(os.projectdir())
     add_files {
         "MarioGatewayWalkTests.cpp",
+        "MarioWalkParameterTests.cpp",
         "../aurora/lib/compat.cpp"
     }
     if is_plat("macosx", "iphoneos") then

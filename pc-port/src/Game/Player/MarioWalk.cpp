@@ -149,12 +149,6 @@ void Mario::cancelSquatMode() {
 }
 
 f32 Mario::getTargetWalkSpeed() const {
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
-    if (mMovementStates._A || mSinkTimer != 0 || _2D0 != 0.0f || _434 != 0) {
-        throw std::logic_error("modified Mario target speed is unavailable in the PC walk slice");
-    }
-    return sWalkTargetTable[mTargetWalkSpeedIndex];
-#else  // SMGPC_RETAIL_SOURCE
     if (mMovementStates._A) {
         return 0.0f;
     }
@@ -177,7 +171,6 @@ f32 Mario::getTargetWalkSpeed() const {
         targetWalkSpeed *= mActor->getConst().getTable()->mItemDashRatio;
     }
     return targetWalkSpeed;
-#endif  // SMGPC_PC_DIVERGENCE
 }
 
 void Mario::decideSquatWalkAnimation() {

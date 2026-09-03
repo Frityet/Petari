@@ -6,12 +6,15 @@
 #include "camera/CameraAnimation.hpp"
 #include "camera/EventCamera.hpp"
 #include "compat/CameraUtilCompat.hpp"
+#include "compat/DemoSceneRuntime.hpp"
 #include "resource/BcsvTable.hpp"
 #include "runtime/RuntimeServices.hpp"
+#include "runtime/SceneScheduler.hpp"
 #include "scene/StageAuthoredData.hpp"
 #include "scene/StageEventCameraBinding.hpp"
 
 #include <aurora/dvd.h>
+#include <aurora/wpad.hpp>
 #include <dolphin/dvd.h>
 
 #include <algorithm>
@@ -136,6 +139,27 @@ namespace {
         return bytes;
     }
 
+    class CameraPlayerFixture final : public LiveActor {
+    public:
+        explicit CameraPlayerFixture(smgpc::runtime::PlayerSystemService &player)
+            : LiveActor("Camera state fixture"), _player(player) {
+            _player.attach_actor(*this, smgpc::runtime::PlayerActorBridge{
+                .read_camera_target = +[](const LiveActor &actor) {
+                    const auto &fixture = static_cast<const CameraPlayerFixture &>(actor);
+                    ++fixture.read_count;
+                    return fixture.camera_state;
+                }});
+        }
+
+        ~CameraPlayerFixture() override { _player.detach_actor(this); }
+
+        smgpc::camera::StageCameraTargetState camera_state{};
+        mutable unsigned read_count = 0U;
+
+    private:
+        smgpc::runtime::PlayerSystemService &_player;
+    };
+
     void set_player_matrix(smgpc::runtime::PlayerSystemService &player,
                            float x, float y, float z) {
         Mtx matrix{
@@ -144,6 +168,7 @@ namespace {
             {0.0F, 0.0F, 1.0F, z},
         };
         player.set_base_matrix(matrix);
+        static_cast<CameraPlayerFixture *>(player.attached_actor())->camera_state.position = {x, y, z};
     }
 
     [[nodiscard]] bool finite_pose(const smgpc::camera::CameraPose &pose) {
@@ -240,6 +265,7 @@ namespace {
                 "synthetic CANM should retain format and frame count");
 
         auto player = smgpc::runtime::PlayerSystemService{};
+        auto player_actor = CameraPlayerFixture(player);
         set_player_matrix(player, 100.0F, 0.0F, 0.0F);
         auto camera = smgpc::runtime::CameraSystemService{};
         camera.declare_event_camera_animation(5, "逃げチコDemoMeetTico",
@@ -282,10 +308,74 @@ namespace {
                 "event camera must reject a retired actor through registry membership before dereference");
     }
 
+    void test_player_camera_capability_and_live_sampling() {
+        auto player = smgpc::runtime::PlayerSystemService{};
+        auto camera = smgpc::runtime::CameraSystemService{};
+        camera.declare_event_camera_animation(0, "live player camera",
+            smgpc::camera::CameraAnimation::from_bytes(make_linear_canm()));
+        const auto target = smgpc::camera::EventCameraTarget::target_player(player);
+        auto generic_actor = LiveActor("Player without camera capability");
+        player.attach_actor(generic_actor);
+        require(!player.camera_target_state().has_value(),
+                "an attached generic actor must not fabricate player camera state");
+        auto rejected = false;
+        try {
+            camera.start_event_camera(0, "live player camera", target, 0);
+        } catch (const std::logic_error &) {
+            rejected = true;
+        }
+        require(rejected && !camera.active_event_camera_pose().has_value(),
+                "an available render matrix cannot substitute for player camera capability");
+
+        auto actor = CameraPlayerFixture(player);
+        actor.mPosition.set(-500.0F, -600.0F, -700.0F);
+        actor.mVelocity.set(999.0F, 999.0F, 999.0F);
+        actor.camera_state = {
+            .position = {100.0F, 200.0F, 300.0F},
+            .up = {0.0F, 1.0F, 0.0F},
+            .front = {1.0F, 0.0F, 0.0F},
+            .last_move = {4.0F, 5.0F, 6.0F},
+            .ground_position = smgpc::camera::CameraParamVec3{7.0F, 8.0F, 9.0F},
+            .gravity = smgpc::camera::CameraParamVec3{0.0F, -1.0F, 0.0F},
+            .jumping = true,
+            .fast_rise = true,
+            .fast_drop = true,
+            .side = smgpc::camera::CameraParamVec3{0.0F, 0.0F, -1.0F}};
+        player.synchronize_attached_actor();
+        const auto state = player.camera_target_state();
+        require(state.has_value() && state->jumping && state->fast_rise && state->fast_drop &&
+                    state->last_move.x == 4.0F && state->ground_position->y == 8.0F,
+                "the typed bridge must preserve actual camera flags and geometry state");
+        camera.start_event_camera(0, "live player camera", target, 0);
+        const auto first = *camera.active_event_camera_pose();
+        require_near(first.eye.x, 600.0F, 0.001F,
+                     "CANM must use camera translation and front, not rendered player matrix");
+        require_near(first.eye.y, 300.0F, 0.001F, "CANM must use camera up");
+        require_near(first.eye.z, 300.0F, 0.001F, "CANM must use camera translation");
+
+        const auto reads = actor.read_count;
+        actor.camera_state.position.z = 900.0F;
+        camera.begin_frame(1U);
+        const auto moved = *camera.active_event_camera_pose();
+        require(actor.read_count > reads, "event frames must sample the attached actor callback anew");
+        require_near(moved.eye.z, 890.0F, 0.001F,
+                     "live camera state and independent side axis must affect the next CANM sample");
+        player.detach_actor(&actor);
+        require(!player.camera_target_state().has_value(), "detachment must retire the camera capability");
+        rejected = false;
+        try {
+            camera.begin_frame(2U);
+        } catch (const std::logic_error &) {
+            rejected = true;
+        }
+        require(rejected, "retained player targets must fail once their camera provider is detached");
+    }
+
     void test_failed_start_is_transactional() {
         const auto animation = smgpc::camera::CameraAnimation::from_bytes(
             make_linear_canm());
         auto player = smgpc::runtime::PlayerSystemService{};
+        auto player_actor = CameraPlayerFixture(player);
         set_player_matrix(player, 100.0F, 0.0F, 0.0F);
         auto camera = smgpc::runtime::CameraSystemService{};
         camera.declare_event_camera_animation(5, "prior", animation);
@@ -385,6 +475,91 @@ namespace {
         return result;
     }
 
+    void test_same_xz_request_preserves_original_state(
+        const smgpc::camera::EventCameraCatalog &retail_catalog,
+        smgpc::runtime::DvdFileSystemService &dvd) {
+        // Control the temporal parameters in a private copy of a valid loaded
+        // catalog. The original catalog and its retail resource remain intact.
+        auto catalog = retail_catalog;
+        auto *definition = const_cast<smgpc::camera::StaticEventCameraDefinition *>(
+            catalog.find(0, "土管固有出現054"));
+        require(definition != nullptr, "the controlled XZ fixture needs a catalog entry");
+        definition->zone_transform = {};
+        definition->camera_param = {};
+        auto &param = definition->camera_param;
+        param.camera_type = "CAM_TYPE_XZ_PARA";
+        param.general.num1 = 1;
+        param.general.dist = 600.0F;
+        param.general.angle_b = 0.0F;
+        param.extra.w_offset = {};
+        param.extra.v_pan_use = 1;
+        param.extra.upper = 1.0F;
+        param.extra.lower = 1.0F;
+
+        auto scheduler = smgpc::runtime::SceneScheduler{};
+        const auto scheduler_binding = smgpc::runtime::SceneSchedulerBinding(scheduler);
+        auto demo = smgpc::compat::DemoSceneRuntime(dvd, {});
+        auto &wpad = aurora::wpad_service();
+        wpad.clear();
+        struct WpadClearGuard {
+            ~WpadClearGuard() { aurora::wpad_service().clear(); }
+        } clear_guard;
+        wpad.set_connected(WPAD_CHAN0, true);
+        wpad.begin_frame();
+        wpad.set_button_mask(WPAD_CHAN0, 0U);
+
+        auto player = smgpc::runtime::PlayerSystemService{};
+        auto actor = CameraPlayerFixture(player);
+        const auto target = smgpc::camera::EventCameraTarget::target_player(player);
+        auto requested = smgpc::runtime::CameraSystemService{};
+        auto uninterrupted = smgpc::runtime::CameraSystemService{};
+        requested.attach_event_camera_catalog(catalog);
+        uninterrupted.attach_event_camera_catalog(catalog);
+        requested.declare_event_camera(0, "土管固有出現054");
+        uninterrupted.declare_event_camera(0, "土管固有出現054");
+        requested.start_event_camera(0, "土管固有出現054", target, 0);
+        uninterrupted.start_event_camera(0, "土管固有出現054", target, 0);
+        const auto initial_pose = *requested.active_event_camera_pose();
+        actor.camera_state.position.y = 100.0F;
+        actor.camera_state.last_move.y = 100.0F;
+        for (auto frame = 1U; frame <= 4U; ++frame) {
+            wpad.begin_frame();
+            wpad.set_button_mask(WPAD_CHAN0, WPAD_BUTTON_RIGHT);
+            requested.begin_frame(frame);
+            uninterrupted.begin_frame(frame);
+        }
+        const auto before = *requested.active_event_camera_pose();
+        require(before.watch.y > 0.0F && before.watch.y < 100.0F &&
+                    std::fabs((before.eye.z - before.watch.z) -
+                              (initial_pose.eye.z - initial_pose.watch.z)) > 20.0F,
+                "the fixture must have nontrivial original height chase and round state");
+        requested.start_event_camera(0, "土管固有出現054", target, 30);
+        require(same_pose(before, *requested.active_event_camera_pose()),
+                "same-XZ re-request must preserve the current pose until movement");
+
+        auto unavailable = smgpc::runtime::PlayerSystemService{};
+        auto rejected = false;
+        try {
+            requested.start_event_camera(0, "土管固有出現054",
+                smgpc::camera::EventCameraTarget::target_player(unavailable), 0);
+        } catch (const std::logic_error &) {
+            rejected = true;
+        }
+        require(rejected && same_pose(before, *requested.active_event_camera_pose()),
+                "failed same-XZ request must preserve the controller and prior target");
+        requested.start_event_camera(0, "土管固有出現054",
+            smgpc::camera::EventCameraTarget::retain(), 0);
+        for (auto frame = 5U; frame <= 8U; ++frame) {
+            wpad.begin_frame();
+            wpad.set_button_mask(WPAD_CHAN0, WPAD_BUTTON_RIGHT);
+            requested.begin_frame(frame);
+            uninterrupted.begin_frame(frame);
+            require(same_pose(*requested.active_event_camera_pose(),
+                              *uninterrupted.active_event_camera_pose()),
+                    "re-requested XZ must follow the uninterrupted original round/height trajectory");
+        }
+    }
+
     void test_optional_real_disc_event_camera_resources() {
         const auto *disc_path = std::getenv("SMGPC_REAL_DISC");
         if (disc_path == nullptr || disc_path[0] == '\0') {
@@ -430,6 +605,8 @@ namespace {
         require(catalog.find(0, "逃げウサギ集め固有016") == nullptr &&
                     catalog.find(5, "土管固有出現054") == nullptr,
                 "event-camera lookup must not cross a zone boundary");
+
+        test_same_xz_request_preserves_original_state(catalog, dvd);
 
         const auto collector = std::ranges::find_if(
             authored.placements(), [](const auto &placement) {
@@ -500,6 +677,7 @@ namespace {
         auto binding = smgpc::scene::StageEventCameraBinding(
             camera, dvd, authored.tables());
         auto player = smgpc::runtime::PlayerSystemService{};
+        auto player_actor = CameraPlayerFixture(player);
         set_player_matrix(player, 13000.0F, -10000.0F, 6000.0F);
         camera.declare_event_camera(5, "逃げウサギ集め固有016");
         camera.start_event_camera(
@@ -543,6 +721,7 @@ int main() {
         TestCase{"ActorCameraInfo pool and identities",
                  test_actor_camera_info_pool_and_identity},
         TestCase{"linear CANM player target", test_linear_canm_player_target},
+        TestCase{"player camera capability and live sampling", test_player_camera_capability_and_live_sampling},
         TestCase{"failed start is transactional",
                  test_failed_start_is_transactional},
         TestCase{"matrix target lifetime and ABA",

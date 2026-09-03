@@ -45,7 +45,7 @@ namespace smgpc::scene {
     // The exact InformationObserver, not this controller, owns pausing and
     // resuming the time keeper, displaying the prompt, accepting A, and
     // granting the spin event flag. The caller must pre-attach Mario with its
-    // real PlayerActorEntitlementBridge so that grant reaches MarioActor. This
+    // real PlayerActorBridge so that grant reaches MarioActor. This
     // checkpoint never binds or seeds game data and never moves Mario at
     // construction.
     class GatewaySpinCheckpoint final : public NameObj {

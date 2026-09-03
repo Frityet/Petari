@@ -20,11 +20,16 @@ namespace smgpc::camera {
         CameraParamVec3 up{0.0F, 1.0F, 0.0F};
         CameraParamVec3 front{0.0F, 0.0F, 1.0F};
         CameraParamVec3 last_move{};
+        std::optional<CameraParamVec3> ground_position;
+        std::optional<CameraParamVec3> gravity;
+        bool jumping = false;
+        bool fast_rise = false;
+        bool fast_drop = false;
+        std::optional<CameraParamVec3> side;
     };
 
     struct StageCameraCalculationState {
         CameraParamVec3 local_offset{};
-        float round_angle_radians = 0.0F;
     };
 
     struct StageCameraPoseCalculation {

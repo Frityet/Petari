@@ -1,3 +1,4 @@
+#include "compat/MarioCameraTarget.hpp"
 #include "Game/NameObj/NameObjFactory.hpp"
 #include "Game/NPC/DemoRabbit.hpp"
 #include "Game/Player/MarioActor.hpp"
@@ -268,8 +269,11 @@ namespace {
         auto *mario = dynamic_cast<MarioActor *>(created.get());
         require(mario != nullptr, "typed creator must construct real MarioActor");
         runtime.player_system().attach_actor(
-            *mario, smgpc::runtime::PlayerActorEntitlementBridge{
+            *mario, smgpc::runtime::PlayerActorBridge{
                         .set_swing_permission = &set_mario_swing_permission,
+                        .read_camera_target = +[](const LiveActor &actor) {
+                            return smgpc::compat::mario_camera_target(static_cast<const MarioActor &>(actor));
+                        },
                     });
 
         auto placement_lease =

@@ -15,6 +15,7 @@
 #include "compat/CollisionPartsCompat.hpp"
 #include "compat/GameDataHolderCompat.hpp"
 #include "compat/GameDataSession.hpp"
+#include "compat/MarioCameraTarget.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "scene/GatewayDemoScene.hpp"
 #include "scene/GatewaySpinCheckpoint.hpp"
@@ -98,9 +99,10 @@ namespace {
             }
             _player_system->attach_actor(
                 *_actor,
-                smgpc::runtime::PlayerActorEntitlementBridge{
+                smgpc::runtime::PlayerActorBridge{
                     .set_swing_permission = &GatewayMarioOwner::set_swing_permission,
                     .read_element_mode = &GatewayMarioOwner::read_element_mode,
+                    .read_camera_target = &GatewayMarioOwner::read_camera_target,
                 });
         }
 
@@ -141,6 +143,10 @@ namespace {
                     "Gateway player element-mode bridge requires MarioActor");
             }
             return mario->mPlayerMode;
+        }
+
+        static smgpc::camera::StageCameraTargetState read_camera_target(const LiveActor& actor) {
+            return smgpc::compat::mario_camera_target(static_cast<const MarioActor&>(actor));
         }
 
         smgpc::runtime::PlayerSystemService* _player_system = nullptr;
@@ -281,7 +287,7 @@ namespace {
     [[nodiscard]] smgpc::app::BootstrapConfiguration bootstrap_configuration(
         const ShowcaseOptions& options, const std::vector<std::string>& arguments) {
         auto window_title = std::string{
-            "SMG PC Gateway - arrow keys walk | F9 freecam | + physics sphere"};
+            "SMG PC Gateway - WASD walk | arrows camera | F9 freecam | + physics sphere"};
         if (options.route == ShowcaseRoute::Title) {
             window_title = "Super Mario Galaxy PC - retail title showcase";
         } else if (options.route == ShowcaseRoute::GatewaySpin) {
@@ -333,7 +339,7 @@ namespace {
             logger->info(smgpc::logging::Category::APP,
                          smgpc::logging::Message{"Showing the exact retail title and retained-sky blank File Select route with original disc resources"});
             logger->info(smgpc::logging::Category::APP,
-                         smgpc::logging::Message{"Hold keyboard A+B or Enter+Backspace at the title prompt; use arrows and a fresh A/Enter to select a blank file"});
+                         smgpc::logging::Message{"Hold Enter+Backspace at the title prompt; use arrows and a fresh Enter to select a blank file"});
 
             while (window.poll_events()) {
                 auto frame_context = renderer.begin_frame();
@@ -452,30 +458,6 @@ namespace {
 
     [[nodiscard]] TVec3f camera_vector(const smgpc::camera::CameraParamVec3& value) {
         return TVec3f{value.x, value.y, value.z};
-    }
-
-    [[nodiscard]] smgpc::camera::CameraParamVec3 camera_vector(const TVec3f& value) {
-        return {.x = value.x, .y = value.y, .z = value.z};
-    }
-
-    [[nodiscard]] smgpc::camera::CameraPose gateway_player_camera(
-        const smgpc::camera::CameraPose& base, const MarioActor& mario) {
-        auto pose = base;
-        const auto up = normalized(mario.mMario->mHeadVec);
-        auto front = mario.mMario->mFrontVec - scaled(
-            up, dot(mario.mMario->mFrontVec, up));
-        if (length(front) <= 0.000001F) {
-            const auto base_forward = camera_vector(base.watch) -
-                                      camera_vector(base.eye);
-            front = base_forward - scaled(up, dot(base_forward, up));
-        }
-        front = normalized(front);
-        const auto watch = mario.mPosition + scaled(up, 80.0F);
-        const auto eye = watch - scaled(front, 550.0F) + scaled(up, 180.0F);
-        pose.eye = camera_vector(eye);
-        pose.watch = camera_vector(watch);
-        pose.up = camera_vector(up);
-        return pose;
     }
 
     struct GatewayPhysicsProbe {
@@ -714,7 +696,8 @@ namespace {
                     resolved_camera.detail);
             }
             const auto initial_camera = resolved_camera.camera->calculation.pose;
-            runtime.camera_system().set_game_camera_pose(initial_camera);
+            const auto camera_owner = runtime.camera_system().set_authored_game_camera(
+                *resolved_camera.camera);
             runtime.set_freecam_enabled(false);
 
             if (NameObjFactory::getCreator("Mario") != nullptr ||
@@ -749,9 +732,6 @@ namespace {
                         scene.general_positions(), game_data_session.holder(),
                         runtime.player_system(),
                         runtime.scene_wipe(), mario_owner.actor());
-                    runtime.camera_system().set_game_camera_pose(
-                        gateway_player_camera(initial_camera,
-                                              mario_owner.actor()));
                 }
                 runtime.game_layout().activate_game_scene_draw_3d();
             }
@@ -791,12 +771,12 @@ namespace {
                 logger->info(
                     smgpc::logging::Category::APP,
                     smgpc::logging::Message{
-                        "Gateway spin checkpoint: walk into the exact Rosetta trigger to begin the 90-frame handoff and 1670-frame guide prelude; press A, Enter, Space, or left-click when the spin prompt appears; X tests the unlocked swing request"});
+                        "Gateway spin checkpoint: walk into the exact Rosetta trigger to begin the 90-frame handoff and 1670-frame guide prelude; press Enter, Space, or left-click when the spin prompt appears; X tests the unlocked swing request"});
             } else {
                 logger->info(
                     smgpc::logging::Category::APP,
                     smgpc::logging::Message{
-                        "Gateway Mario: arrow keys walk; F9 toggles development freecam; =/numpad + spawns a physics sphere; Esc quits"});
+                        "Gateway Mario: WASD walks; arrows control the game camera; C resets it when permitted; F9 toggles development freecam; =/numpad + spawns a physics sphere; Esc quits"});
             }
             logger->info(
                 smgpc::logging::Category::APP,
@@ -826,16 +806,11 @@ namespace {
                         runtime.set_j3d_packet_trace_frame(frame_context.frame_index);
                     }
 #endif
-                    if (is_spin_route) {
-                        runtime.camera_system().set_game_camera_pose(
-                            gateway_player_camera(initial_camera,
-                                                  mario_owner.actor()));
-                    }
+                    runtime.camera_system().set_game_camera_target(
+                        camera_owner,
+                        smgpc::compat::mario_camera_target(mario_owner.actor()));
                     runtime.begin_frame(frame_context);
                     const auto& camera = runtime.scene_camera_pose().value_or(initial_camera);
-                    // Retain the latest development camera pose when F9 releases
-                    // and later re-captures the mouse.
-                    runtime.camera_system().set_game_camera_pose(camera);
 
                     const auto spawn_key =
                         window.is_input_pressed(smgpc::render::InputButton::CORE_PAD_PLUS);
@@ -954,6 +929,7 @@ namespace {
                         probes.size(), gravity_active, contacting, settled);
                 }
             }
+            runtime.camera_system().clear_stage_start_camera(camera_owner);
         }
 
         if (options.smoke) {

@@ -18,7 +18,9 @@
 
 #include "RendererService.hpp"
 #include "camera/CameraPose.hpp"
+#include "camera/OriginalGameCamera.hpp"
 #include "camera/EventCamera.hpp"
+#include "camera/StageStartCamera.hpp"
 #include "render/GXState.hpp"
 #include "render/effects/EffectResource.hpp"
 #include "resource/BmgMessageArchive.hpp"
@@ -664,6 +666,13 @@ namespace smgpc::runtime {
         void end_global_event_camera(std::string_view name);
         [[nodiscard]] std::uint64_t set_stage_start_camera(
             smgpc::camera::ResolvedStageStartCamera camera);
+        // Retain an original authored camera controller without
+        // entering the retail start-position camera mode.
+        [[nodiscard]] std::uint64_t set_authored_game_camera(
+            smgpc::camera::ResolvedStageStartCamera camera);
+        void set_game_camera_target(
+            std::uint64_t owner_generation,
+            std::optional<smgpc::camera::StageCameraTargetState> target);
         void clear_stage_start_camera(
             std::uint64_t owner_generation) noexcept;
         void start_start_position_camera(bool immediate);
@@ -716,6 +725,19 @@ namespace smgpc::runtime {
             bool has_pose = false;
         };
 
+        struct AuthoredGameCameraState {
+            std::unique_ptr<smgpc::camera::OriginalGameCamera> controller;
+            std::optional<smgpc::camera::StageCameraTargetState> target;
+            bool overridden = false;
+            bool reset_requested = false;
+            bool manager_reset_requested = false;
+        };
+
+        [[nodiscard]] std::uint64_t set_owned_stage_camera(
+            smgpc::camera::ResolvedStageStartCamera camera,
+            bool start_position_active);
+        void update_authored_game_camera();
+        void update_game_camera_activation();
         [[nodiscard]] ProgrammableCameraEventState *find_programmable_event(std::string_view name);
         [[nodiscard]] const ProgrammableCameraEventState *find_programmable_event(std::string_view name) const;
         [[nodiscard]] std::optional<smgpc::camera::CameraPose> active_programmable_camera_pose_for(std::string_view name) const;
@@ -732,6 +754,7 @@ namespace smgpc::runtime {
         std::uint32_t _camera_director_pause_count = 0U;
         std::optional<smgpc::camera::ResolvedStageStartCamera>
             _stage_start_camera;
+        std::optional<AuthoredGameCameraState> _authored_game_camera;
         std::uint64_t _stage_start_camera_owner_generation = 0U;
         std::uint64_t _next_stage_start_camera_owner_generation = 1U;
         bool _start_position_camera_active = false;
@@ -748,14 +771,18 @@ namespace smgpc::runtime {
         std::vector<ShakeRequestEvent> _shake_request_events;
     };
 
-    struct PlayerActorEntitlementBridge {
+    struct PlayerActorBridge {
         using SwingPermissionWriter = void (*)(LiveActor &, bool);
         using ElementModeReader = s32 (*)(const LiveActor &);
+        using CameraTargetReader = smgpc::camera::StageCameraTargetState (*)(const LiveActor &);
 
         SwingPermissionWriter set_swing_permission = nullptr;
         // Concrete player owners install this capability only when their
         // attached object really exposes the retail MarioActor mode field.
         ElementModeReader read_element_mode = nullptr;
+        // Read the concrete actor camera state when sampled, rather than
+        // deriving it from a potentially different rendered base matrix.
+        CameraTargetReader read_camera_target = nullptr;
     };
 
     class PlayerSystemService final {
@@ -763,7 +790,7 @@ namespace smgpc::runtime {
         void reset_stage_state();
         void clear_stage_state();
         void attach_actor(LiveActor &actor,
-                          PlayerActorEntitlementBridge entitlement_bridge = {});
+                          PlayerActorBridge actor_bridge = {});
         void detach_actor(const LiveActor *actor = nullptr);
         void synchronize_attached_actor();
 
@@ -787,6 +814,7 @@ namespace smgpc::runtime {
         [[nodiscard]] bool is_on_ground() const;
         [[nodiscard]] std::optional<bool> player_dead_state() const;
         [[nodiscard]] std::optional<s32> player_element_mode() const;
+        [[nodiscard]] std::optional<smgpc::camera::StageCameraTargetState> camera_target_state() const;
         [[nodiscard]] bool is_swing_permitted() const;
         [[nodiscard]] bool is_control_enabled() const;
         [[nodiscard]] std::uint64_t base_matrix_revision() const;
@@ -810,7 +838,7 @@ namespace smgpc::runtime {
         std::array<f32, 3U> _position{};
         std::array<f32, 3U> _velocity{};
         std::array<f32, 3U> _gravity{0.0F, -1.0F, 0.0F};
-        PlayerActorEntitlementBridge _entitlement_bridge{};
+        PlayerActorBridge _actor_bridge{};
     };
 
     class GameLayoutService final {

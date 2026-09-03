@@ -12,11 +12,13 @@
 #include "Game/Util/MapUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "Logger.hpp"
+#include "MarioWalkParameterTests.hpp"
 #include "RendererService.hpp"
 #include "camera/StageStartCamera.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/CollisionPartsCompat.hpp"
 #include "compat/GameDataSession.hpp"
+#include "compat/MarioCameraTarget.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "scene/GatewayDemoScene.hpp"
@@ -72,14 +74,41 @@ namespace {
         mario->_EEB = permitted;
     }
 
-    void set_host_swing_key(smgpc::render::AuroraWindow& window, bool held) {
+    void verify_mario_camera_target_accessors(MarioActor& actor) {
+        const auto saved_shadow = actor.mMario->mShadowPos;
+        const auto saved_ground = actor.mMario->mGroundPos;
+        const auto saved_up = actor.mUpVec;
+        const auto saved_side = actor.mMario->mSideVec;
+        actor.mMario->mShadowPos.set(11.0F, 22.0F, 33.0F);
+        actor.mMario->mGroundPos.set(44.0F, 55.0F, 66.0F);
+        actor.mUpVec.set(0.0F, 2.0F, 0.0F);
+        actor.mMario->mSideVec.set(-1.0F, 0.0F, 0.0F);
+        const auto target = smgpc::compat::mario_camera_target(actor);
+        actor.mMario->mShadowPos = saved_shadow;
+        actor.mMario->mGroundPos = saved_ground;
+        actor.mUpVec = saved_up;
+        actor.mMario->mSideVec = saved_side;
+        require(target.ground_position.has_value() &&
+                    target.ground_position->x == 11.0F &&
+                    target.ground_position->y == 22.0F &&
+                    target.ground_position->z == 33.0F &&
+                    target.up.x == 0.0F && target.up.y == 1.0F && target.up.z == 0.0F &&
+                    target.side.has_value() && target.side->x == -1.0F,
+                "the player camera bridge must use shadow position, normalized camera up, and Mario's side getter");
+    }
+
+    void set_host_key(smgpc::render::AuroraWindow& window, SDL_Keycode key, bool held) {
         auto event = SDL_Event{};
         event.type = held ? SDL_EVENT_KEY_DOWN : SDL_EVENT_KEY_UP;
-        event.key.key = SDLK_X;
+        event.key.key = key;
         require(SDL_PushEvent(&event),
-                "the deterministic proof must inject a real SDL swing-key event");
+                "the deterministic proof must inject a real SDL key event");
         require(window.poll_events(),
-                "the Gateway window must remain open while sampling the swing key");
+                "the Gateway window must remain open while sampling host input");
+    }
+
+    void set_host_swing_key(smgpc::render::AuroraWindow& window, bool held) {
+        set_host_key(window, SDLK_X, held);
     }
 
     class ScopedEnvironmentVariable final {
@@ -277,7 +306,7 @@ namespace {
     void test_real_gateway_mario_stand_and_walk() {
         const auto disc_path = require_real_disc();
         const auto scripted_input = ScopedEnvironmentVariable{
-            "SMGPC_DEBUG_WPAD_BUTTON_SCRIPT", "113-157:UP"};
+            "SMGPC_DEBUG_WPAD_BUTTON_SCRIPT", ""};
 
         aurora_dvd_close();
         const auto disc_string = disc_path.string();
@@ -321,8 +350,10 @@ namespace {
                     camera_result.camera->camera_key == "s:004e" &&
                     camera_result.camera->camera_param.camera_type == "CAM_TYPE_XZ_PARA",
                 "the proof must resolve exact Gateway StartInfo camera 78");
-        const auto camera = camera_result.camera->calculation.pose;
-        runtime.camera_system().set_game_camera_pose(camera);
+        auto camera = camera_result.camera->calculation.pose;
+        const auto authored_camera = camera;
+        const auto camera_owner = runtime.camera_system().set_authored_game_camera(
+            *camera_result.camera);
         runtime.set_freecam_enabled(false);
 
         require(NameObjFactory::getCreator("Mario") == nullptr &&
@@ -336,8 +367,12 @@ namespace {
         require(actor != nullptr,
                 "the typed development creator must construct the real MarioActor");
         const auto entitlement_bridge =
-            smgpc::runtime::PlayerActorEntitlementBridge{
+            smgpc::runtime::PlayerActorBridge{
                 .set_swing_permission = &set_mario_swing_permission,
+                .read_camera_target = +[](const LiveActor& value) {
+                    return smgpc::compat::mario_camera_target(
+                        static_cast<const MarioActor&>(value));
+                },
             };
         runtime.player_system().attach_actor(*actor, entitlement_bridge);
         require(runtime.player_system().attached_actor() == actor &&
@@ -356,6 +391,8 @@ namespace {
                 runtime.begin_frame(frame);
                 actor->init(scene.player_start_iter());
                 placement_lease = scene.finalize_placements(*actor);
+                smgpc::tests::verify_original_mario_walk_parameters(*actor);
+                verify_mario_camera_target_accessors(*actor);
                 wait_frame_max =
                     smgpc::compat::require_actor_bck(actor, "Wait", nullptr);
                 runtime.game_layout().activate_game_scene_draw_3d();
@@ -450,6 +487,8 @@ namespace {
                 runtime.set_j3d_packet_trace_frame(frame.frame_index);
 #endif
                 proof.position_before = actor->mPosition;
+                runtime.camera_system().set_game_camera_target(
+                    camera_owner, smgpc::compat::mario_camera_target(*actor));
                 runtime.begin_frame(frame);
                 proof.position_after = actor->mPosition;
                 proof.last_move = actor->getLastMove();
@@ -459,9 +498,10 @@ namespace {
                     std::string(smgpc::compat::actor_current_bck_name(actor));
                 proof.base_matrix = smgpc::compat::actor_base_matrix(actor).m;
 
-                const auto active_camera =
-                    runtime.scene_camera_pose().value_or(camera);
-                runtime.draw_3d_normal(active_camera);
+                require(runtime.scene_camera_pose().has_value(),
+                        "the authored camera must remain active while Mario moves");
+                camera = *runtime.scene_camera_pose();
+                runtime.draw_3d_normal(camera);
 #ifndef NDEBUG
                 proof.draw = collect_mario_draw_proof(runtime, frame.frame_index);
                 proof.effective_hold_mask =
@@ -482,6 +522,14 @@ namespace {
 #endif
             }
             renderer.end_frame();
+            if (frame_index == 157U) {
+                if (const auto* path = std::getenv("SMGPC_TEST_SCREENSHOT_PATH");
+                    path != nullptr && path[0] != '\0') {
+                    renderer.request_screenshot_png(path);
+                    require(std::filesystem::is_regular_file(path),
+                            "the requested walk frame must produce a display-copy screenshot");
+                }
+            }
 
             const auto observed_move = proof.position_after - proof.position_before;
             require(observed_move.epsilonEquals(proof.last_move, 0.0001F),
@@ -495,7 +543,7 @@ namespace {
              ++frame_index) {
             wait_frame = run_frame(frame_index);
             require(!wait_frame.debug_button_script_applied,
-                    "neutral settle frames must precede the scripted input window");
+                    "neutral settle frames must use only real host input");
             if (saw_ground && !wait_frame.grounded) {
                 const auto binder_center = actor->mPosition + actor->_2C4;
                 const auto support = walk_collision.move_sphere(
@@ -660,12 +708,15 @@ namespace {
         auto walked_every_frame_on_ground = true;
         auto animation_frame_advanced = false;
         auto previous_run_frame = std::optional<float>{};
+        set_host_key(window, SDLK_W, true);
         for (auto frame_index = std::uint64_t{113U}; frame_index < 158U;
              ++frame_index) {
             const auto walk_frame = run_frame(frame_index);
-            require(walk_frame.debug_button_script_applied &&
-                        (walk_frame.effective_hold_mask & WPAD_BUTTON_UP) != 0U,
-                    "the walk must come from RuntimeContext's pre-scheduler WPAD path");
+            const auto stick = aurora::wpad_service().sub_stick(WPAD_CHAN0);
+            require(!walk_frame.debug_button_script_applied &&
+                        (walk_frame.effective_hold_mask & WPAD_BUTTON_UP) == 0U &&
+                        stick.x == 0.0F && stick.y == 1.0F,
+                    "W must reach the Nunchuk stick without also pressing the camera D-pad");
             walked_every_frame_on_ground =
                 walked_every_frame_on_ground && walk_frame.grounded;
             saw_run = saw_run || walk_frame.bck_name == "Run";
@@ -678,6 +729,7 @@ namespace {
             }
             run_draw = walk_frame.draw;
         }
+        set_host_key(window, SDLK_W, false);
 
         const auto walk_displacement = actor->mPosition - stand_position;
         const auto walk_distance = walk_displacement.length();
@@ -686,7 +738,7 @@ namespace {
                     actor->mMario->mStickPos.y > 0.9F &&
                     actor->mMario->mStickPos.z > 0.9F && walk_speed > 0.0F &&
                     actor->mMario->mWorldPadDir.length() > 0.9F,
-                "the runtime UP path must retain retail forward-stick orientation, direction, and speed");
+                "the host W path must retain retail forward-stick orientation, direction, and speed");
         require(walked_every_frame_on_ground,
                 "stick-driven Mario must remain grounded across the real planet KCL seam");
         require(saw_run && smgpc::compat::actor_current_bck_name(actor) == "Run" &&
@@ -709,6 +761,27 @@ namespace {
                         walk_distance * 0.35F,
                 "stick input must move Mario materially along the planet tangent");
 
+        const auto camera_displacement = TVec3f{
+            camera.watch.x - authored_camera.watch.x,
+            camera.watch.y - authored_camera.watch.y,
+            camera.watch.z - authored_camera.watch.z};
+        require(camera_displacement.length() > 5.0F,
+                "the authored camera must track the walking player instead of retaining the start pose");
+        require_near(camera.fovy_degrees, authored_camera.fovy_degrees, 0.0001F,
+                     "live tracking must preserve the authored field of view");
+        const auto authored_eye_offset = TVec3f{
+            authored_camera.eye.x - authored_camera.watch.x,
+            authored_camera.eye.y - authored_camera.watch.y,
+            authored_camera.eye.z - authored_camera.watch.z};
+        const auto tracked_eye_offset = TVec3f{
+            camera.eye.x - camera.watch.x,
+            camera.eye.y - camera.watch.y,
+            camera.eye.z - camera.watch.z};
+        require(tracked_eye_offset.epsilonEquals(authored_eye_offset, 0.01F),
+                "parallel camera tracking must preserve its authored orbit and distance");
+        std::cout << "[camera] tracked watch moved " << camera_displacement.length()
+                  << " units; authored orbit and FOV retained\n";
+
         const auto& walk_triangle = actor->mBinder->mGroundInfo.mParentTriangle;
         require(FloorCode{}.getCode(&walk_triangle) == CollisionFloorCode_NoSlip &&
                     MR::getSoundCodeIndex(walk_triangle.getAttributes()) ==
@@ -729,7 +802,7 @@ namespace {
         for (; release_end_frame < 360U; ++release_end_frame) {
             release_frame = run_frame(release_end_frame);
             require(!release_frame.debug_button_script_applied,
-                    "release frames must leave the deterministic input window");
+                    "release frames must use only real host input");
             if (!release_frame.grounded) {
                 const auto binder_center = actor->mPosition + actor->_2C4;
                 const auto support = walk_collision.move_sphere(
@@ -841,6 +914,25 @@ namespace {
         require_grounded_base_matrix(
             release_frame, *actor->mBinder->mGroundInfo.mParentTriangle.getNormal(0));
 
+        set_host_key(window, SDLK_RIGHT, true);
+        for (auto index = 0U; index < 12U; ++index) {
+            const auto camera_frame = run_frame(++release_end_frame);
+            const auto stick = aurora::wpad_service().sub_stick(WPAD_CHAN0);
+            require((camera_frame.effective_hold_mask & WPAD_BUTTON_RIGHT) != 0U &&
+                        stick.x == 0.0F && stick.y == 0.0F &&
+                        actor->mMario->mWalkSpeed == 0.0F &&
+                        camera_frame.bck_name == "Wait",
+                    "the host right arrow must reach the camera D-pad without moving Mario");
+        }
+        set_host_key(window, SDLK_RIGHT, false);
+        (void)run_frame(++release_end_frame);
+        set_host_key(window, SDLK_C, true);
+        (void)run_frame(++release_end_frame);
+        set_host_key(window, SDLK_C, false);
+        for (auto index = 0U; index < 12U; ++index) {
+            (void)run_frame(++release_end_frame);
+        }
+
         const auto entitlement_magic = actor->mMario->mMagic;
         const auto entitlement_action = actor->_1E1;
         const auto entitlement_cooldown = actor->_946;
@@ -903,6 +995,7 @@ namespace {
                     released_swing_frame.bck_name == "Wait",
                 "Rush permission must remain edge-triggered after the host key is released");
 
+        runtime.camera_system().set_game_camera_target(camera_owner, std::nullopt);
         runtime.player_system().detach_actor(actor);
         require(runtime.player_system().attached_actor() == nullptr &&
                     runtime.player_system().is_swing_permitted() && !actor->_EEB,
@@ -956,6 +1049,7 @@ namespace {
         require(recreated_frame.draw.packet_count != 0U,
                 "recreated Mario must update and draw through RuntimeContext");
 
+        runtime.camera_system().clear_stage_start_camera(camera_owner);
         placement_lease.reset();
         require(scene.state() == smgpc::scene::GatewayDemoSceneState::Retired &&
                     walk_collision.empty() &&

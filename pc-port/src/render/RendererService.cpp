@@ -342,7 +342,6 @@ namespace smgpc::render {
 
         [[nodiscard]] std::optional<InputButton> input_button_from_key(SDL_Keycode key) {
             switch (key) {
-            case SDLK_A:
             case SDLK_RETURN:
             case SDLK_SPACE:
                 return InputButton::CORE_PAD_A;
@@ -357,6 +356,14 @@ namespace smgpc::render {
                 return InputButton::CORE_PAD_LEFT;
             case SDLK_RIGHT:
                 return InputButton::CORE_PAD_RIGHT;
+            case SDLK_W:
+                return InputButton::SUB_STICK_UP;
+            case SDLK_S:
+                return InputButton::SUB_STICK_DOWN;
+            case SDLK_A:
+                return InputButton::SUB_STICK_LEFT;
+            case SDLK_D:
+                return InputButton::SUB_STICK_RIGHT;
             case SDLK_EQUALS:
             case SDLK_KP_PLUS:
                 return InputButton::CORE_PAD_PLUS;

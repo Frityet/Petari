@@ -1,4 +1,5 @@
 #include "camera/StageStartCamera.hpp"
+#include "camera/OriginalGameCamera.hpp"
 
 #include "resource/BcsvTable.hpp"
 #include "runtime/RuntimeServices.hpp"
@@ -7,32 +8,13 @@
 #include <cmath>
 #include <cstdio>
 #include <exception>
+#include <stdexcept>
 
 namespace smgpc::camera {
     namespace {
 
-        [[nodiscard]] CameraParamVec3 add(const CameraParamVec3 &lhs, const CameraParamVec3 &rhs) {
-            return {.x = lhs.x + rhs.x, .y = lhs.y + rhs.y, .z = lhs.z + rhs.z};
-        }
-
-        [[nodiscard]] CameraParamVec3 subtract(const CameraParamVec3 &lhs, const CameraParamVec3 &rhs) {
-            return {.x = lhs.x - rhs.x, .y = lhs.y - rhs.y, .z = lhs.z - rhs.z};
-        }
-
-        [[nodiscard]] CameraParamVec3 scale(const CameraParamVec3 &value, float factor) {
-            return {.x = value.x * factor, .y = value.y * factor, .z = value.z * factor};
-        }
-
         [[nodiscard]] float dot(const CameraParamVec3 &lhs, const CameraParamVec3 &rhs) {
             return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z;
-        }
-
-        [[nodiscard]] CameraParamVec3 cross(const CameraParamVec3 &lhs, const CameraParamVec3 &rhs) {
-            return {
-                .x = lhs.y * rhs.z - lhs.z * rhs.y,
-                .y = lhs.z * rhs.x - lhs.x * rhs.z,
-                .z = lhs.x * rhs.y - lhs.y * rhs.x,
-            };
         }
 
         [[nodiscard]] float length(const CameraParamVec3 &value) {
@@ -41,23 +23,14 @@ namespace smgpc::camera {
 
         [[nodiscard]] std::optional<CameraParamVec3> normalized(const CameraParamVec3 &value) {
             const auto magnitude = length(value);
-            if (magnitude <= 0.000001F) {
+            if (!std::isfinite(magnitude) || magnitude <= 0.000001F) {
                 return std::nullopt;
             }
-            return scale(value, 1.0F / magnitude);
+            return CameraParamVec3{value.x / magnitude, value.y / magnitude, value.z / magnitude};
         }
 
         [[nodiscard]] CameraParamVec3 camera_vec(const std::array<f32, 3U> &value) {
             return {.x = value[0], .y = value[1], .z = value[2]};
-        }
-
-        [[nodiscard]] std::array<f32, 3U> stage_vec(const CameraParamVec3 &value) {
-            return {value.x, value.y, value.z};
-        }
-
-        [[nodiscard]] CameraParamVec3 transform_vector(const smgpc::scene::StageZoneTransform &transform,
-                                                        const CameraParamVec3 &value) {
-            return camera_vec(transform.transform_vector(stage_vec(value)));
         }
 
     }  // namespace
@@ -104,59 +77,18 @@ namespace smgpc::camera {
         if (camera_param.camera_type != "CAM_TYPE_XZ_PARA") {
             return std::nullopt;
         }
-
-        const auto target_front = normalized(target.front);
-        const auto target_up = normalized(target.up);
-        if (!target_front.has_value() || !target_up.has_value()) {
+        try {
+            const auto controller = OriginalGameCamera(zone_transform, camera_param, target,
+                                                       default_fovy_degrees, state);
+            const auto result = controller.calculation();
+            const auto up = normalized(result.pose.up);
+            if (!up.has_value()) {
+                return std::nullopt;
+            }
+            return result;
+        } catch (const std::invalid_argument &) {
             return std::nullopt;
         }
-        const auto desired_local_offset = add(scale(*target_front, camera_param.extra.l_offset),
-                                              scale(*target_up, camera_param.extra.l_offset_v));
-        const auto local_offset_factor = camera_param.is_l_offset_erp_off()
-                                             ? 1.0F
-                                             : std::min(1.0F, length(target.last_move) * (0.1F / 15.0F));
-
-        auto result = StageCameraPoseCalculation{.state = state};
-        result.state.local_offset = add(state.local_offset,
-                                        scale(subtract(desired_local_offset, state.local_offset), local_offset_factor));
-
-        const auto distance = std::max(camera_param.general.dist, 300.0F);
-        const auto angle_a = camera_param.general.angle_a + result.state.round_angle_radians;
-        const auto angle_b = camera_param.general.angle_b;
-        const auto cos_b = std::cos(angle_b);
-        const auto local_eye_offset = CameraParamVec3{
-            .x = -distance * cos_b * std::cos(angle_a),
-            .y = distance * std::sin(angle_b),
-            .z = distance * cos_b * std::sin(angle_a),
-        };
-        const auto world_eye_offset = transform_vector(zone_transform, local_eye_offset);
-        const auto global_offset = transform_vector(zone_transform, camera_param.extra.w_offset);
-        const auto watch = add(target.position, add(result.state.local_offset, global_offset));
-        const auto eye = add(watch, world_eye_offset);
-        const auto raw_up = normalized(transform_vector(zone_transform, {0.0F, 1.0F, 0.0F}));
-        const auto forward = normalized(subtract(watch, eye));
-        if (!raw_up.has_value() || !forward.has_value()) {
-            return std::nullopt;
-        }
-        const auto right = normalized(cross(*forward, *raw_up));
-        if (!right.has_value()) {
-            return std::nullopt;
-        }
-        const auto corrected_up = normalized(cross(*right, *forward));
-        if (!corrected_up.has_value()) {
-            return std::nullopt;
-        }
-        const auto rolled_up = normalized(add(scale(*corrected_up, std::cos(camera_param.extra.roll)),
-                                              scale(*right, -std::sin(camera_param.extra.roll))));
-        if (!rolled_up.has_value()) {
-            return std::nullopt;
-        }
-
-        result.pose.eye = eye;
-        result.pose.watch = watch;
-        result.pose.up = *rolled_up;
-        result.pose.fovy_degrees = camera_param.is_on_use_fovy() ? camera_param.extra.fovy : default_fovy_degrees;
-        return result;
     }
 
     StageStartCameraResolveResult resolve_stage_start_camera(smgpc::runtime::DvdFileSystemService &dvd,
