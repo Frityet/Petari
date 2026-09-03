@@ -498,6 +498,47 @@ u32 CollisionParts::checkStrikeLine(HitInfo* pHitInfo, u32 capacity, const TVec3
     return acceptedCount;
 }
 
+u32 CollisionParts::createAreaPolygonList(Triangle* pTriangles, u32 capacity, const TVec3f& rStart, const TVec3f& rEnd) {
+    KC_PrismData* prisms[512];
+    TPos3f rotation;
+    PSMTXCopy(mInvBaseMatrix.toMtxPtr(), rotation.toMtxPtr());
+    rotation.zeroTrans();
+    TVec3f minimum;
+    TVec3f maximum;
+    mInvBaseMatrix.mult(rStart, minimum);
+    mInvBaseMatrix.mult(rEnd, maximum);
+    u32 count = mServer->checkArea3D(reinterpret_cast< Fxyz* >(&minimum), reinterpret_cast< Fxyz* >(&maximum), prisms, capacity);
+    if (count == 0) {
+        return 0;
+    }
+    for (u32 i = 0; i < count; i++) {
+        pTriangles[i].fillData(this, mServer->toIndex(prisms[i]), mHitSensor);
+    }
+    return count;
+}
+
+u32 CollisionParts::createAreaPolygonListArray(Triangle* pTriangles, u32 capacity, TVec3f* pPoints, u32 pointCount) {
+    KC_PrismData* prisms[512];
+    TVec3f localPoints[32];
+    TPos3f rotation;
+    PSMTXCopy(mInvBaseMatrix.toMtxPtr(), rotation.toMtxPtr());
+    rotation.zeroTrans();
+    for (u32 i = 0; i < pointCount; i++) {
+        mInvBaseMatrix.mult(pPoints[i], localPoints[i]);
+    }
+    TVec3f minimum;
+    TVec3f maximum;
+    MR::createBoundingBox(localPoints, pointCount, &minimum, &maximum);
+    u32 count = mServer->checkArea3D(reinterpret_cast< Fxyz* >(&minimum), reinterpret_cast< Fxyz* >(&maximum), prisms, capacity);
+    if (count == 0) {
+        return 0;
+    }
+    for (u32 i = 0; i < count; i++) {
+        pTriangles[i].fillData(this, mServer->toIndex(prisms[i]), mHitSensor);
+    }
+    return count;
+}
+
 void CollisionParts::calcForceMovePower(TVec3f* a1, const TVec3f& a2) const {
     TVec3f tStack88 = a2;
     TMtx34f auStack76;

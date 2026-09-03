@@ -29,7 +29,7 @@ retain encounter order. No extra geometry or null identity is constructed.
 Both fast queries traverse 5,000-unit segments, shrink the final segment, and
 use the original 0.001 residual threshold. BFast skips water, then rejects a
 candidate when a 35-unit normal probe starting 5 units behind it hits map
-collision. Its actual keeper query uses the original mode 1. The original
+collision. Its actual keeper query uses the original one-hit capacity. The original
 normalization, optional outputs and control flow are retained, including the
 unused initial Triangle construction.
 

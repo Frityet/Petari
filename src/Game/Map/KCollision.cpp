@@ -148,6 +148,113 @@ KC_PrismData* KCollisionServer::checkPoint(Fxyz* pPos, f32 scale, f32* pDistance
     return nullptr;
 }
 
+u32 KCollisionServer::checkArea3D(Fxyz* pPointA, Fxyz* pPointB, KC_PrismData** pPrisms, u32 capacity) {
+    u16* pLongestList = nullptr;
+    u16* pPreviousList = nullptr;
+    u32 count = 0;
+    Fxyz points[2];
+    points[0] = *pPointA;
+    points[1] = *pPointB;
+    TVec3f minimum;
+    TVec3f maximum;
+    MR::createBoundingBox(reinterpret_cast< TVec3f* >(points), 2, &minimum, &maximum);
+    if (minimum.x == maximum.x) {
+        minimum.x -= 1.0f;
+        maximum.x += 1.0f;
+    }
+    if (minimum.y == maximum.y) {
+        minimum.y -= 1.0f;
+        maximum.y += 1.0f;
+    }
+    if (minimum.z == maximum.z) {
+        minimum.z -= 1.0f;
+        maximum.z += 1.0f;
+    }
+    V3u localMinimum;
+    V3u localMaximum;
+    if (!outCheck(&minimum, &maximum, &localMinimum, &localMaximum)) {
+        return 0;
+    }
+
+    u32 z = localMinimum.z;
+
+    do {
+        u32 y = localMinimum.y;
+        s32 stepZ = 1000000;
+
+        do {
+            u32 x = localMinimum.x;
+            s32 stepY = 1000000;
+            s32 longestY = 0;
+
+            do {
+                s32 shift;
+                u16* pList = reinterpret_cast< u16* >(searchBlock(&shift, x, y, z));
+                shift = 1 << shift;
+                s32 width = shift;
+                s32 mask = width - 1;
+                s32 remainingZ = width - (z & mask);
+                s32 stepX = width - (x & mask);
+                s32 remainingY = width - (y & mask);
+
+                if (remainingZ < stepZ) {
+                    stepZ = remainingZ;
+                }
+
+                if (remainingY < stepY) {
+                    stepY = remainingY;
+                }
+
+                if (remainingY > longestY && pList[1] != 0) {
+                    longestY = remainingY;
+                    pLongestList = pList;
+                }
+
+                if (pPreviousList == nullptr || pList != pPreviousList) {
+                    while (*++pList != 0) {
+                        KC_PrismData* pPrism = &mFile->mPrisms[*pList];
+
+                        if (pPrism->mHeight <= 0.0f) {
+                            continue;
+                        }
+
+                        KC_PrismData** pEnd = pPrisms + count;
+                        if (std::find(pPrisms, pEnd, static_cast< KC_PrismData* const& >(pPrism)) != pEnd) {
+                            continue;
+                        }
+
+                        TVec3f points[3];
+                        points[0] = getPos(pPrism, 0);
+                        points[1] = getPos(pPrism, 1);
+                        points[2] = getPos(pPrism, 2);
+                        TVec3f prismMinimum;
+                        TVec3f prismMaximum;
+                        MR::createBoundingBox(points, 3, &prismMinimum, &prismMaximum);
+                        if (prismMaximum.x < minimum.x || prismMaximum.y < minimum.y || prismMaximum.z < minimum.z ||
+                            maximum.x < prismMinimum.x || maximum.y < prismMinimum.y || maximum.z < prismMinimum.z) {
+                            continue;
+                        }
+                        *pEnd = pPrism;
+                        count++;
+                        if (count == capacity) {
+                            return capacity;
+                        }
+                    }
+                }
+
+                x += stepX;
+            } while (x <= static_cast< u32 >(localMaximum.x));
+
+            pPreviousList = pLongestList;
+            y += stepY;
+        } while (y <= static_cast< u32 >(localMaximum.y));
+
+        z += stepZ;
+    } while (z <= static_cast< u32 >(localMaximum.z));
+
+    return count;
+}
+
 u32 KCollisionServer::checkSphere(Fxyz* pPos, f32 radius, f32 scale, u32 capacity, KC_PrismData** pPrisms, f32* pDistances, u8* pFeatures) {
     f32 distance = 0.0f;
     u16* pLongestList = nullptr;
