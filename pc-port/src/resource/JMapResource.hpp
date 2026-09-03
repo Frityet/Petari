@@ -19,7 +19,13 @@ namespace smgpc::resource {
         std::unique_ptr<State> _state;
         explicit JMapSourceRegistration(std::unique_ptr<State>);
         friend class JMapResource;
+        friend JMapSourceRegistration register_jmap_source(std::span<const std::uint8_t>, std::shared_ptr<const void>);
     };
+    // Publish the complete bounds of retained immutable archive bytes. Decode
+    // only if original Game code later attaches this identity as a JMapInfo.
+    // Non-table files can share this boundary without being parsed as tables.
+    [[nodiscard]] JMapSourceRegistration register_jmap_source(
+        std::span<const std::uint8_t> bytes, std::shared_ptr<const void> source_owner);
     // Copies share host-owned bytes, the decoded table and cached string lifetime.
     class JMapResource final {
     public:

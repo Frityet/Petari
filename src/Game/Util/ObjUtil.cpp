@@ -584,20 +584,23 @@ namespace MR {
         *pOut = val;
     }
 
-    /*
     void getCsvDataF32(f32* pOut, const JMapInfo* pMapInfo, const char* pKey, s32 idx) {
-        int v7 = pMapInfo->searchItemInfo(pKey);
-
-        if (v7 >= 0) {
-            *pOut = *((f32*)(pMapInfo->mData->mNumEntries + pMapInfo->mData->mDataOffset +
-                             idx * (pMapInfo->mData->mEntrySize + static_cast< const JMapItem* >(&pMapInfo->mData->mItems)[v7].mOffsData)));
-        }
+        pMapInfo->getValue< f32 >(idx, pKey, pOut);
     }
-    */
 
-    // MR::getCsvDataBool
+    void getCsvDataBool(bool* pOut, const JMapInfo* pMapInfo, const char* pKey, s32 idx) {
+        pMapInfo->getValue< bool >(idx, pKey, pOut);
+    }
 
-    void getCsvDataVec(Vec*, const JMapInfo*, const char*, s32);
+    void getCsvDataVec(Vec* pOut, const JMapInfo* pMapInfo, const char* pKey, s32 idx) {
+        char buf[0x100];
+        snprintf(buf, sizeof(buf), "%sX", pKey);
+        getCsvDataF32(&pOut->x, pMapInfo, buf, idx);
+        snprintf(buf, sizeof(buf), "%sY", pKey);
+        getCsvDataF32(&pOut->y, pMapInfo, buf, idx);
+        snprintf(buf, sizeof(buf), "%sZ", pKey);
+        getCsvDataF32(&pOut->z, pMapInfo, buf, idx);
+    }
     void getCsvDataColor(GXColor*, const JMapInfo*, const char*, s32);
 
     bool isStageStateScenarioOpeningCamera() {

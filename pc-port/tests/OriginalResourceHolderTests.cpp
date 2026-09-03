@@ -8,6 +8,7 @@
 #include "Game/Animation/MaterialAnmBuffer.hpp"
 #include "Game/Animation/BpkPlayer.hpp"
 #include "Game/Util/MutexHolder.hpp"
+#include "Game/Util/ObjUtil.hpp"
 #include "JSystem/J3DGraphAnimator/J3DAnimation.hpp"
 #include "JSystem/J3DGraphAnimator/J3DModelData.hpp"
 #include "JSystem/J3DGraphAnimator/J3DMaterialAnm.hpp"
@@ -149,6 +150,76 @@ namespace {
             put32(b, 0x24 + c * 4, b.size()); p = b.size(); b.resize(p + 4); put16(b, p, 10 + c * 20);
         }
         put32(b, 4, b.size()); return file("bpk1", std::move(b));
+    }
+
+    void test_original_csv_reader(GameResourceRuntime& process) {
+        // A raw filename deliberately has no recognized table extension. The
+        // original parser decides its type; the archive service supplies bounds.
+        constexpr std::array fields{"name", "frame", "flag", "value", "vectorX", "vectorY"};
+        constexpr unsigned start = 16 + fields.size() * 12, stride = fields.size() * 4;
+        Bytes bytes(start + 2 * stride);
+        put32(bytes, 0, 2); put32(bytes, 4, fields.size()); put32(bytes, 8, start); put32(bytes, 12, stride);
+        for (unsigned i = 0; i < fields.size(); ++i) {
+            const auto p = 16 + i * 12;
+            put32(bytes, p, jmap_hash(fields[i]));
+            put32(bytes, p + 4, i == 2 ? 0x40 : 0xffffffff);
+            put16(bytes, p + 8, i * 4);
+            bytes[p + 11] = i == 0 ? 6 : (i == 1 || i >= 4) ? 2 : 0;
+        }
+        put32(bytes, start + 4, std::bit_cast<std::uint32_t>(12.5f));
+        put32(bytes, start + 8, 0x40); put32(bytes, start + 12, 0x1fe);
+        put32(bytes, start + 16, std::bit_cast<std::uint32_t>(1.25f));
+        put32(bytes, start + 20, std::bit_cast<std::uint32_t>(-0.5f));
+        put32(bytes, start + stride, std::strlen(long_name) + 1);
+        put32(bytes, start + stride + 4, std::bit_cast<std::uint32_t>(-2.25f));
+        bytes.insert(bytes.end(), long_name, long_name + std::strlen(long_name) + 1);
+        bytes.push_back(0);
+        auto source = archive({{"authored.table", std::move(bytes)}, {"unrelated.raw", {1, 2, 3}}});
+        const std::weak_ptr<const RarcArchive> weak_source = source;
+        auto domain = process.create_cohort();
+        auto owner = std::make_unique<ResourceArchiveOwner>(source, "/retained/Csv.arc", domain, process.mem1_heap());
+        auto& holder = owner->holder();
+        require(MR::isExistFileInArc(&holder, "%s.%s", "authored", "table"), "original variadic filename lookup");
+        require(MR::tryCreateCsvParser(&holder, "%s.table", "missing") == nullptr, "missing optional table remains null");
+        std::unique_ptr<JMapInfo> parser(MR::createCsvParser(&holder, "%s.%s", "authored", "table"));
+        require(parser && MR::getCsvDataElementNum(parser.get()) == 2, "original parser attaches raw archive table");
+        const void* identity = holder.mFileInfoTable->getRes("authored.table");
+        const char* name = nullptr;
+        MR::getCsvDataStr(&name, parser.get(), "name", 0);
+        require(name && std::string_view(name) == long_name, "original string field");
+        const char* empty = "initial";
+        MR::getCsvDataStrOrNULL(&empty, parser.get(), "name", 1);
+        require(empty == nullptr, "original empty string becomes null");
+        float frame = 0;
+        MR::getCsvDataF32(&frame, parser.get(), "frame", 0);
+        require(frame == 12.5f, "authored fractional frame decoded without integer conversion");
+        MR::getCsvDataF32(&frame, parser.get(), "missing", 0);
+        require(frame == 12.5f, "missing float preserves original caller default");
+        MR::getCsvDataF32(&frame, parser.get(), "frame", 1);
+        require(frame == -2.25f, "second row reads negative authored float");
+        Vec vector{7, 8, 9};
+        MR::getCsvDataVec(&vector, parser.get(), "vector", 0);
+        require(vector.x == 1.25f && vector.y == -0.5f && vector.z == 9,
+                "original vector reader formats XYZ keys and preserves missing component defaults");
+        bool flag = false;
+        MR::getCsvDataBool(&flag, parser.get(), "flag", 0);
+        require(flag, "original masked boolean");
+        MR::getCsvDataBool(&flag, parser.get(), "missing", 0);
+        require(flag, "missing boolean preserves original caller default");
+        MR::getCsvDataBool(&flag, parser.get(), "flag", 1);
+        require(!flag, "zero masked boolean");
+        u8 small = 0;
+        MR::getCsvDataU8(&small, parser.get(), "value", 0);
+        require(small == 0xfe, "original byte conversion truncates to eight bits");
+        MR::getCsvDataU8(&small, parser.get(), "missing", 0);
+        require(small == 0, "original missing byte uses zero local");
+        rejects([&] { JMapInfo invalid; invalid.attach(holder.mFileInfoTable->getRes("unrelated.raw")); },
+                "unrelated bytes are parsed only when explicitly attached and then rejected");
+        owner.reset(); source.reset(); domain.reset();
+        require(weak_source.expired() && !find_jmap_resource(identity), "archive retirement removes raw identity and original owner");
+        const char* surviving = nullptr;
+        MR::getCsvDataStr(&surviving, parser.get(), "name", 0);
+        require(surviving == name && std::string_view(surviving) == long_name, "attached parser retains decoded names independently");
     }
 
     void test_original_constructor(GameResourceRuntime& process) {
@@ -326,6 +397,7 @@ int main() {
         aurora::g_config.mem1Size = 24U * 1024U * 1024U;
         GameResourceRuntime process;
         test_original_constructor(process); std::cout << "PASS original holder, typed animation, control table and lifetime\n";
+        test_original_csv_reader(process); std::cout << "PASS original CSV helpers and deferred archive tables\n";
         test_failure_scope(process); std::cout << "PASS original loader exception restoration\n";
         test_service_lifetime(process); std::cout << "PASS service/archive ownership and process reuse\n";
         test_real_model_and_material(process); std::cout << "PASS real model/material holder\n";

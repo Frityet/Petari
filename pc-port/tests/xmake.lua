@@ -1240,6 +1240,7 @@ for _, fixture in ipairs {
     {"jkr-allocation-domain", "JkrAllocationDomainTests.cpp"},
     {"jkr-archive", "OriginalJkrArchiveTests.cpp"},
     {"jmap-resource", "OriginalJMapResourceTests.cpp"},
+    {"jmap-heap-lifetime", "JMapHeapLifetimeTests.cpp"},
     {"bck-ctrl", "OriginalBckCtrlTests.cpp"},
     {"resource-holder", "OriginalResourceHolderTests.cpp"},
     {"camera-vector-math", "OriginalCameraVectorMathTests.cpp"}

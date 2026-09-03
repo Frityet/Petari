@@ -127,7 +127,9 @@ namespace smgpc::compat {
                 state.maps.emplace_back(bytes);
                 state.map_aliases.push_back(state.maps.back().register_source(bytes));
                 break;
-            case BackingKind::Raw: break;
+            case BackingKind::Raw:
+                if (!bytes.empty()) state.map_aliases.push_back(resource::register_jmap_source(bytes, state.source));
+                break;
             }
         }
         JkrAllocationScope original(state.domain);

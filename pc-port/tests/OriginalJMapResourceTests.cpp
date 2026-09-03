@@ -157,6 +157,63 @@ namespace {
         require(std::string_view(borrowed)==name && read(*resource,"name")==borrowed,
                 "cached names survive the heap that was selected for the first read");
     }
+    void test_deferred_archive_lifetime() {
+        using namespace smgpc::resource;
+        auto raw = std::make_shared<const std::vector<u8>>(fixture());
+        std::weak_ptr<const std::vector<u8>> weak = raw;
+        const void* identity = raw->data();
+        std::optional<JMapSourceRegistration> first, second;
+        first.emplace(register_jmap_source(*raw, raw));
+        second.emplace(register_jmap_source(*raw, raw));
+        raw.reset();
+        require(!weak.expired(), "deferred archive registration retains source before the first read");
+        JMapInfo survivor;
+        require(survivor.attach(identity), "original unsized attach decodes retained archive bytes on demand");
+        const char* value = nullptr;
+        require(survivor.getValue(0, "name", &value) && std::string_view(value) == name,
+                "deferred source decodes the original table and string");
+        first.reset();
+        require(find_jmap_resource(identity) != nullptr, "duplicate registration retains the same source");
+        second.reset();
+        require(weak.expired() && find_jmap_resource(identity) == nullptr,
+                "final registration removes the raw identity and source lease");
+        const char* again = nullptr;
+        require(survivor.getValue(0, "name", &again) && again == value,
+                "attached reader retains decoded table after archive source retirement");
+    }
+    void test_deferred_validation() {
+        using namespace smgpc::resource;
+        auto raw = std::make_shared<const std::vector<u8>>(std::initializer_list<u8>{1, 2, 3});
+        auto registration = register_jmap_source(*raw, raw);
+        // FileInfoTable contains arbitrary raw assets. Registration must not
+        // interpret them until a real JMapInfo consumer requests that identity.
+        bool rejected = false;
+        try { JMapInfo info; (void)info.attach(raw->data()); }
+        catch (const std::exception&) { rejected = true; }
+        require(rejected, "requested malformed table is rejected within its retained three-byte extent");
+        rejected = false;
+        try { auto wrong = register_jmap_source(std::span(*raw).first(2), raw); }
+        catch (const std::logic_error&) { rejected = true; }
+        require(rejected, "existing source cannot silently change its extent");
+        rejected = false;
+        try { auto wrong = register_jmap_source(*raw, std::make_shared<int>(1)); }
+        catch (const std::logic_error&) { rejected = true; }
+        require(rejected, "existing source cannot silently change its owner");
+    }
+    void test_concurrent_deferred_readers() {
+        auto raw = std::make_shared<const std::vector<u8>>(fixture());
+        auto registration = smgpc::resource::register_jmap_source(*raw, raw);
+        std::array<const char*, 6> pointers{};
+        std::array<std::thread, 6> readers;
+        for (std::size_t i = 0; i < readers.size(); ++i) readers[i] = std::thread([&, i] {
+            JMapInfo info;
+            require(info.attach(raw->data()), "concurrent lazy attach");
+            require(info.getValue(0, "name", &pointers[i]), "concurrent lazy string read");
+        });
+        for (auto& reader : readers) reader.join();
+        for (auto* pointer : pointers)
+            require(pointer == pointers[0], "concurrent first readers publish one decoded table/cache");
+    }
 }
 int main() {
     const std::array tests{
@@ -167,6 +224,9 @@ int main() {
         std::pair{"archive alias retention", test_alias_lifetime},
         std::pair{"archive alias validation", test_alias_validation_and_reuse},
         std::pair{"Game heap cache isolation", test_native_heap_boundary},
+        std::pair{"deferred archive lifetime", test_deferred_archive_lifetime},
+        std::pair{"deferred archive validation", test_deferred_validation},
+        std::pair{"concurrent deferred archive readers", test_concurrent_deferred_readers},
     };
     for (const auto& [label, test] : tests) {
         try { test(); std::cout << "PASS " << label << '\n'; }

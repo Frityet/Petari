@@ -1,5 +1,7 @@
 #pragma once
 
+#include "compat/NativeJkrDisposer.hpp"
+
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
@@ -39,7 +41,7 @@ inline bool compareValues< const char* >(const char* a, const char* b) {
 
 class JMapInfoIter;
 
-class JMapInfo {
+class JMapInfo : private smgpc::compat::NativeJkrDisposer {
 public:
     struct DataCompat {
         explicit DataCompat(s32 numEntries = 0) : mNumEntries(numEntries) {}
@@ -53,7 +55,12 @@ public:
     std::shared_ptr< DataCompat > mData;
 
     JMapInfo() = default;
-    explicit JMapInfo(smgpc::resource::BcsvTable table);
+    explicit JMapInfo(const smgpc::resource::BcsvTable& table);
+    JMapInfo(const JMapInfo& info);
+    JMapInfo(JMapInfo&& info) noexcept;
+    JMapInfo& operator=(const JMapInfo& info);
+    JMapInfo& operator=(JMapInfo&& info) noexcept;
+    ~JMapInfo() override;
 
     [[nodiscard]] bool operator==(const JMapInfo& rInfo) const {
         return mTable == rInfo.mTable;

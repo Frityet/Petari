@@ -1,0 +1,284 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "root_source_sha256": "a8d2535cfd5903be48aec183e10dcf30bc368aef9fafcc27c3b0a801391c0eb7",
+  "imported_native_slice_sha256": "043ceea181d91d6cff08d4b0189721a0eacd7f30ababda9b50941d34c85c954e",
+  "root_compile_command": [
+    "build/tools/wibo",
+    "build/tools/sjiswrap.exe",
+    "build/compilers/GC/3.0a3/mwcceppc.exe",
+    "-nodefaults",
+    "-proc",
+    "gekko",
+    "-align",
+    "powerpc",
+    "-enum",
+    "int",
+    "-fp",
+    "hardware",
+    "-Cpp_exceptions",
+    "off",
+    "-O4,s",
+    "-inline",
+    "auto",
+    "-pragma",
+    "cats off",
+    "-pragma",
+    "warn_notinlined off",
+    "-maxerrors",
+    "1",
+    "-nosyspath",
+    "-RTTI",
+    "off",
+    "-str",
+    "reuse",
+    "-enc",
+    "SJIS",
+    "-sdata",
+    "4",
+    "-sdata2",
+    "4",
+    "-ipa",
+    "file",
+    "-sym",
+    "on",
+    "-i",
+    "include",
+    "-i",
+    "libs/JSystem/include",
+    "-i",
+    "libs/MSL_C++/include",
+    "-i",
+    "libs/MSL_C/include",
+    "-i",
+    "libs/MetroTRK/include",
+    "-i",
+    "libs/RVLFaceLib/include",
+    "-i",
+    "libs/RVL_SDK/include",
+    "-i",
+    "libs/Runtime/include",
+    "-i",
+    "libs/nw4r/include",
+    "-i",
+    "build/RMGK01/include",
+    "-DVERSION=0",
+    "-c",
+    "src/Game/Util/ObjUtil.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/build/original-csv-reader-20260903/ObjUtil.o"
+  ],
+  "recovered_numeric": [
+    {
+      "symbol": "getCsvDataF32__2MRFPfPC8JMapInfoPCcl",
+      "address": "0x803f1b88",
+      "size": 120,
+      "relocation_normalized_bytes_equal": true,
+      "relocations": [
+        {
+          "offset": 16,
+          "kind": 10,
+          "symbol": "_savegpr_29",
+          "addend": 0
+        },
+        {
+          "offset": 40,
+          "kind": 10,
+          "symbol": "searchItemInfo__8JMapInfoCFPCc",
+          "addend": 0
+        },
+        {
+          "offset": 100,
+          "kind": 10,
+          "symbol": "_restgpr_29",
+          "addend": 0
+        }
+      ],
+      "retail_sha256": "cb95f61b7b2e516fe7a617ae409e31a3e3fc1043b70341a5b5ba97f3cd16a491"
+    },
+    {
+      "symbol": "getCsvDataBool__2MRFPbPC8JMapInfoPCcl",
+      "address": "0x803f1c00",
+      "size": 136,
+      "relocation_normalized_bytes_equal": true,
+      "relocations": [
+        {
+          "offset": 16,
+          "kind": 10,
+          "symbol": "_savegpr_29",
+          "addend": 0
+        },
+        {
+          "offset": 40,
+          "kind": 10,
+          "symbol": "searchItemInfo__8JMapInfoCFPCc",
+          "addend": 0
+        },
+        {
+          "offset": 116,
+          "kind": 10,
+          "symbol": "_restgpr_29",
+          "addend": 0
+        }
+      ],
+      "retail_sha256": "cf6352dcea35c96c403693f8081a224ad37e7256d232c9f9fd773f1182f159f3"
+    },
+    {
+      "symbol": "getCsvDataVec__2MRFP3VecPC8JMapInfoPCcl",
+      "address": "0x803f1c88",
+      "size": 192,
+      "relocation_normalized_bytes_equal": true,
+      "relocations": [
+        {
+          "offset": 16,
+          "kind": 10,
+          "target": "_savegpr_28",
+          "addend": 0
+        },
+        {
+          "offset": 48,
+          "kind": 109,
+          "target": "%sX\u0000",
+          "addend": 0
+        },
+        {
+          "offset": 56,
+          "kind": 10,
+          "target": "snprintf",
+          "addend": 0
+        },
+        {
+          "offset": 76,
+          "kind": 10,
+          "target": "getCsvDataF32__2MRFPfPC8JMapInfoPCcl",
+          "addend": 0
+        },
+        {
+          "offset": 92,
+          "kind": 109,
+          "target": "%sY\u0000",
+          "addend": 0
+        },
+        {
+          "offset": 100,
+          "kind": 10,
+          "target": "snprintf",
+          "addend": 0
+        },
+        {
+          "offset": 120,
+          "kind": 10,
+          "target": "getCsvDataF32__2MRFPfPC8JMapInfoPCcl",
+          "addend": 0
+        },
+        {
+          "offset": 136,
+          "kind": 109,
+          "target": "%sZ\u0000",
+          "addend": 0
+        },
+        {
+          "offset": 144,
+          "kind": 10,
+          "target": "snprintf",
+          "addend": 0
+        },
+        {
+          "offset": 164,
+          "kind": 10,
+          "target": "getCsvDataF32__2MRFPfPC8JMapInfoPCcl",
+          "addend": 0
+        },
+        {
+          "offset": 172,
+          "kind": 10,
+          "target": "_restgpr_28",
+          "addend": 0
+        }
+      ],
+      "string_data_address": "0x806b2680",
+      "string_data_hex": "257358002573590025735a00"
+    }
+  ],
+  "original_helpers": [
+    {
+      "symbol": "isExistFileInArcLocal__21@unnamed@ObjUtil_cpp@FPC14ResourceHolderPCcP16__va_list_struct",
+      "size": "80",
+      "objdiff_percent": 100.0
+    },
+    {
+      "symbol": "isExistFileInArc__2MRFPC14ResourceHolderPCce",
+      "size": "140",
+      "objdiff_percent": 100.0
+    },
+    {
+      "symbol": "tryCreateCsvParserLocal__21@unnamed@ObjUtil_cpp@FPC14ResourceHolderPCcP16__va_list_struct",
+      "size": "152",
+      "objdiff_percent": 100.0
+    },
+    {
+      "symbol": "createCsvParser__2MRFPC14ResourceHolderPCce",
+      "size": "140",
+      "objdiff_percent": 100.0
+    },
+    {
+      "symbol": "createCsvParser__2MRFPCcPCce",
+      "size": "140",
+      "objdiff_percent": 100.0
+    },
+    {
+      "symbol": "tryCreateCsvParser__2MRFPC9LiveActorPCce",
+      "size": "160",
+      "objdiff_percent": 100.0
+    },
+    {
+      "symbol": "tryCreateCsvParser__2MRFPC14ResourceHolderPCce",
+      "size": "140",
+      "objdiff_percent": 100.0
+    },
+    {
+      "symbol": "getCsvDataElementNum__2MRFPC8JMapInfo",
+      "size": "28",
+      "objdiff_percent": 100.0
+    },
+    {
+      "symbol": "getCsvDataStr__2MRFPPCcPC8JMapInfoPCcl",
+      "size": "96",
+      "objdiff_percent": 100.0
+    },
+    {
+      "symbol": "getCsvDataStrOrNULL__2MRFPPCcPC8JMapInfoPCcl",
+      "size": "68",
+      "objdiff_percent": 100.0
+    },
+    {
+      "symbol": "getCsvDataS32__2MRFPlPC8JMapInfoPCcl",
+      "size": "20",
+      "objdiff_percent": 100.0
+    },
+    {
+      "symbol": "getCsvDataU8__2MRFPUcPC8JMapInfoPCcl",
+      "size": "72",
+      "objdiff_percent": 100.0
+    },
+    {
+      "symbol": "getCsvDataF32__2MRFPfPC8JMapInfoPCcl",
+      "size": "120",
+      "objdiff_percent": 100.0
+    },
+    {
+      "symbol": "getCsvDataBool__2MRFPbPC8JMapInfoPCcl",
+      "size": "136",
+      "objdiff_percent": 100.0
+    },
+    {
+      "symbol": "getCsvDataVec__2MRFP3VecPC8JMapInfoPCcl",
+      "size": "192",
+      "objdiff_percent": 99.6875
+    }
+  ],
+  "native_literal_helpers": 14,
+  "actual_actor_resource_methods": 2,
+  "native_actor_resource_sha256": "28614ccaab932d4abdbc5b867b39419cd180ba879dc21eeabb37db1f87ee5278",
+  "root_identical_model_manager_header_sha256": "0743be3cfc6b0206dea6cecbe850731c6d0b1330dea02df1ae5289aaf2af5cb1",
+  "inactive_archive_name_overload": "100% original match; depends on inactive original ResourceHolderManager singleton"
+}

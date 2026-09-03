@@ -1,0 +1,11 @@
+{
+  "original_disposer_provider_byte_identical": true,
+  "source_sha256": {
+    "src/JSystem/JKernel/JKRDisposer.cpp": "8f7e592620e25bec11fccf38dc57149d920ca185cbbfdf716e90a606346ba1e5",
+    "pc-port/src/compat/JKRDisposerCompat.cpp": "8f7e592620e25bec11fccf38dc57149d920ca185cbbfdf716e90a606346ba1e5",
+    "pc-port/src/compat/NativeJkrDisposer.hpp": "d5812afc25e050aee590344a6c4d2b4309ac30ddd663e7c39ed765f7ae2acc0f",
+    "pc-port/src/Game/Util/JMapInfo.hpp": "4662d04637cdd7a6422781a829d0c1e7a766d2c43cd8a25c94e8f69e9f8d5257",
+    "pc-port/src/Game/Util/JMapInfo.cpp": "2f0a77b8e554256a86b847f428ef71da50fd9ee8e662d1e6a7b7a1c4859cdc74",
+    "pc-port/tests/JMapHeapLifetimeTests.cpp": "68134443aa57557ff457293535e830d681661dd6597083609610cba48bbac237"
+  }
+}

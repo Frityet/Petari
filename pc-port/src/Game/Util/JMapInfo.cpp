@@ -55,15 +55,56 @@ namespace {
     }
 }  // namespace
 
-JMapInfo::JMapInfo(smgpc::resource::BcsvTable table) {
+JMapInfo::JMapInfo(const smgpc::resource::BcsvTable& table) {
     smgpc::compat::JkrHostAllocationScope host;
     mData = std::make_shared< DataCompat >(static_cast< s32 >(table.entry_count()));
-    mTable = std::make_shared< smgpc::resource::BcsvTable >(std::move(table));
+    mTable = std::make_shared< smgpc::resource::BcsvTable >(table);
 }
+
+JMapInfo::JMapInfo(const JMapInfo& info) : smgpc::compat::NativeJkrDisposer(info) {
+    *this = info;
+}
+
+JMapInfo::JMapInfo(JMapInfo&& info) noexcept : smgpc::compat::NativeJkrDisposer(std::move(info)) {
+    *this = std::move(info);
+}
+
+JMapInfo& JMapInfo::operator=(const JMapInfo& info) {
+    smgpc::compat::JkrHostAllocationScope host;
+    if (this != &info) {
+        mData = info.mData;
+        mTable = info.mTable;
+        mChildObjInfo = info.mChildObjInfo;
+        mRailInfo = info.mRailInfo;
+        mName = info.mName;
+        mPlacedZoneId = info.mPlacedZoneId;
+        mFloatOverrides = info.mFloatOverrides;
+    }
+    return *this;
+}
+
+JMapInfo& JMapInfo::operator=(JMapInfo&& info) noexcept {
+    smgpc::compat::JkrHostAllocationScope host;
+    if (this != &info) {
+        mData = std::move(info.mData);
+        mTable = std::move(info.mTable);
+        mChildObjInfo = std::move(info.mChildObjInfo);
+        mRailInfo = std::move(info.mRailInfo);
+        mName = std::move(info.mName);
+        mPlacedZoneId = info.mPlacedZoneId;
+        mFloatOverrides = std::move(info.mFloatOverrides);
+    }
+    return *this;
+}
+
+JMapInfo::~JMapInfo() = default;
 
 JMapInfo JMapInfo::from_bcsv(std::span< const std::uint8_t > data) {
     smgpc::compat::JkrHostAllocationScope host;
-    return JMapInfo(smgpc::resource::BcsvTable::from_bytes(data));
+    JMapInfo info;
+    info.mTable = std::make_shared< smgpc::resource::BcsvTable >(smgpc::resource::BcsvTable::from_bytes(data));
+    info.mData = std::make_shared< DataCompat >(static_cast< s32 >(info.mTable->entry_count()));
+    return info;
 }
 
 bool JMapInfo::dataExists() const {
@@ -89,6 +130,7 @@ int JMapInfo::getNumFields() const {
 }
 
 bool JMapInfo::attach(const void* data) {
+    smgpc::compat::JkrHostAllocationScope host;
     if (data == nullptr) {
         return false;
     }
@@ -103,6 +145,7 @@ bool JMapInfo::attach(const void* data) {
 }
 
 void JMapInfo::setName(const char* pName) {
+    smgpc::compat::JkrHostAllocationScope host;
     mName = pName != nullptr ? pName : "";
 }
 
@@ -119,6 +162,7 @@ s32 JMapInfo::getPlacedZoneId() const {
 }
 
 void JMapInfo::setChildObjInfo(JMapInfo info) {
+    smgpc::compat::JkrHostAllocationScope host;
     mChildObjInfo = std::make_shared< JMapInfo >(std::move(info));
 }
 
@@ -127,6 +171,7 @@ const JMapInfo* JMapInfo::getChildObjInfo() const {
 }
 
 void JMapInfo::setRailInfo(int entryIndex, JMapInfo pathInfo, JMapInfo pointInfo, s32 pathInfoIndex) {
+    smgpc::compat::JkrHostAllocationScope host;
     if (entryIndex < 0 || entryIndex >= getNumEntries() || pathInfoIndex < 0) {
         return;
     }
@@ -167,6 +212,7 @@ bool JMapInfo::getRailInfo(int entryIndex, const JMapInfo** pPathInfo, const JMa
 }
 
 void JMapInfo::setValue(int entryIndex, const char* pKey, f32 value) {
+    smgpc::compat::JkrHostAllocationScope host;
     if (pKey == nullptr || entryIndex < 0 || entryIndex >= getNumEntries()) {
         return;
     }
