@@ -1159,6 +1159,21 @@ target("smg-pc-original-xanime-core-tests")
         realtime_output = true
     })
 
+target("smg-pc-original-xanime-player-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    add_files("OriginalXanimePlayerTests.cpp", "../aurora/lib/compat.cpp")
+    add_deps {
+        "smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd", "aurora-gd",
+        "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"
+    }
+    add_tests("original_xanime_player", {
+        group = "aurora",
+        rundir = os.projectdir(),
+        realtime_output = true
+    })
+
 target("smg-pc-original-j3d-vertex-buffer-tests")
     set_kind("binary")
     set_default(false)

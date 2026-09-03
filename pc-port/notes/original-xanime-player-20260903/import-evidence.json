@@ -1,0 +1,234 @@
+{
+  "comparison": "Byte-identical root/native source and header; original-compiler instruction/relocation correspondence, not a full retail matching claim.",
+  "source_sha256": "688f39197a8c48ea1f9eea5012b4625a7e5cc4531c52b27f8398903e3239895a",
+  "function_count": 45,
+  "instruction_count": 1253,
+  "relocation_count": 134,
+  "functions": [
+    {
+      "symbol": "__ct__12XanimePlayerFP8J3DModelP19XanimeResourceTable",
+      "bytes": 324,
+      "relocations": 15
+    },
+    {
+      "symbol": "__ct__15XanimeFrameCtrlFv",
+      "bytes": 92,
+      "relocations": 5
+    },
+    {
+      "symbol": "__dt__15XanimeFrameCtrlFv",
+      "bytes": 64,
+      "relocations": 1
+    },
+    {
+      "symbol": "init__12XanimePlayerFv",
+      "bytes": 172,
+      "relocations": 4
+    },
+    {
+      "symbol": "__ct__12XanimePlayerFP8J3DModelP19XanimeResourceTableP12XanimePlayer",
+      "bytes": 312,
+      "relocations": 15
+    },
+    {
+      "symbol": "setDefaultAnimation__12XanimePlayerFPCc",
+      "bytes": 100,
+      "relocations": 2
+    },
+    {
+      "symbol": "changeAnimation__12XanimePlayerFPC15XanimeGroupInfo",
+      "bytes": 100,
+      "relocations": 2
+    },
+    {
+      "symbol": "changeCurrentAnimation__12XanimePlayerFPC15XanimeGroupInfo",
+      "bytes": 28,
+      "relocations": 1
+    },
+    {
+      "symbol": "updateAfterMovement__12XanimePlayerFv",
+      "bytes": 304,
+      "relocations": 5
+    },
+    {
+      "symbol": "stopAnimation__12XanimePlayerFv",
+      "bytes": 4,
+      "relocations": 1
+    },
+    {
+      "symbol": "runDefaultAnimation__12XanimePlayerFv",
+      "bytes": 128,
+      "relocations": 2
+    },
+    {
+      "symbol": "stopAnimation__12XanimePlayerFPCc",
+      "bytes": 68,
+      "relocations": 2
+    },
+    {
+      "symbol": "changeTrackAnimation__12XanimePlayerFUcPCc",
+      "bytes": 88,
+      "relocations": 2
+    },
+    {
+      "symbol": "changeTrackAnimation__12XanimePlayerFUcUl",
+      "bytes": 116,
+      "relocations": 2
+    },
+    {
+      "symbol": "changeAnimationBck__12XanimePlayerFPCc",
+      "bytes": 4,
+      "relocations": 1
+    },
+    {
+      "symbol": "changeSimpleBck__12XanimePlayerFPCc",
+      "bytes": 116,
+      "relocations": 3
+    },
+    {
+      "symbol": "changeAnimationSimple__12XanimePlayerFP15J3DAnmTransform",
+      "bytes": 312,
+      "relocations": 13
+    },
+    {
+      "symbol": "changeAnimation__12XanimePlayerFPCc",
+      "bytes": 96,
+      "relocations": 3
+    },
+    {
+      "symbol": "changeAnimationByHash__12XanimePlayerFUl",
+      "bytes": 68,
+      "relocations": 2
+    },
+    {
+      "symbol": "swapFrameCtrl__12XanimePlayerFPC15XanimeGroupInfo",
+      "bytes": 296,
+      "relocations": 3
+    },
+    {
+      "symbol": "prepareAnimation__12XanimePlayerFPC15XanimeGroupInfo",
+      "bytes": 96,
+      "relocations": 3
+    },
+    {
+      "symbol": "runNextAnimation__12XanimePlayerFv",
+      "bytes": 296,
+      "relocations": 9
+    },
+    {
+      "symbol": "setModel__12XanimePlayerFP8J3DModel",
+      "bytes": 20,
+      "relocations": 1
+    },
+    {
+      "symbol": "updateBeforeMovement__12XanimePlayerFv",
+      "bytes": 144,
+      "relocations": 2
+    },
+    {
+      "symbol": "calcAnm__12XanimePlayerFUs",
+      "bytes": 272,
+      "relocations": 5
+    },
+    {
+      "symbol": "getSimpleGroup__12XanimePlayerCFv",
+      "bytes": 32,
+      "relocations": 0
+    },
+    {
+      "symbol": "changeSpeed__12XanimePlayerFf",
+      "bytes": 12,
+      "relocations": 0
+    },
+    {
+      "symbol": "changeInterpoleFrame__12XanimePlayerFl",
+      "bytes": 60,
+      "relocations": 3
+    },
+    {
+      "symbol": "updateInterpoleRatio__12XanimePlayerFv",
+      "bytes": 160,
+      "relocations": 6
+    },
+    {
+      "symbol": "changeTrackWeight__12XanimePlayerFUlf",
+      "bytes": 60,
+      "relocations": 0
+    },
+    {
+      "symbol": "overWriteMtxCalc__12XanimePlayerFUs",
+      "bytes": 28,
+      "relocations": 0
+    },
+    {
+      "symbol": "clearMtxCalc__12XanimePlayerFUs",
+      "bytes": 28,
+      "relocations": 0
+    },
+    {
+      "symbol": "clearAnm__12XanimePlayerFUs",
+      "bytes": 40,
+      "relocations": 0
+    },
+    {
+      "symbol": "getMainAnimationTrans__12XanimePlayerCFUlPQ29JGeometry8TVec3<f>",
+      "bytes": 216,
+      "relocations": 2
+    },
+    {
+      "symbol": "isRun__12XanimePlayerCFPCc",
+      "bytes": 156,
+      "relocations": 6
+    },
+    {
+      "symbol": "isTerminate__12XanimePlayerCFPCc",
+      "bytes": 104,
+      "relocations": 1
+    },
+    {
+      "symbol": "isTerminate__12XanimePlayerCFv",
+      "bytes": 40,
+      "relocations": 0
+    },
+    {
+      "symbol": "isAnimationRunSimple__12XanimePlayerCFv",
+      "bytes": 80,
+      "relocations": 1
+    },
+    {
+      "symbol": "getCurrentAnimationName__12XanimePlayerCFv",
+      "bytes": 28,
+      "relocations": 1
+    },
+    {
+      "symbol": "getDefaultAnimationName__12XanimePlayerCFv",
+      "bytes": 28,
+      "relocations": 1
+    },
+    {
+      "symbol": "getCurrentBckName__12XanimePlayerCFv",
+      "bytes": 8,
+      "relocations": 0
+    },
+    {
+      "symbol": "getNameStringPointer__12XanimePlayerCFPCc",
+      "bytes": 56,
+      "relocations": 1
+    },
+    {
+      "symbol": "checkPass__12XanimePlayerCFf",
+      "bytes": 128,
+      "relocations": 2
+    },
+    {
+      "symbol": "duplicateSimpleGroup__12XanimePlayerFv",
+      "bytes": 116,
+      "relocations": 5
+    },
+    {
+      "symbol": "__vt__15XanimeFrameCtrl",
+      "bytes": 12,
+      "relocations": 1
+    }
+  ]
+}

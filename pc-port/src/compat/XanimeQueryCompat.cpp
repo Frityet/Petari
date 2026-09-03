@@ -1,13 +1,10 @@
-#include "Game/Animation/XanimePlayer.hpp"
-#include "Game/Animation/XanimeResource.hpp"
 #include "Game/Util/HashUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
 
 #include <cstring>
 
-// Original Player queries retained until the complete XanimePlayer/Core owner
-// is linked. Resource queries now come from the complete original XanimeResource
-// unit. Callers still require constructed players and loaded resource tables.
+// Original string helpers retained from the initial resource-query extraction.
+// Player and resource methods now come from their complete original units.
 namespace {
 
 const unsigned char __lower_mapC[0x100] = {
@@ -30,27 +27,6 @@ const unsigned char __lower_mapC[0x100] = {
 };
 
 }  // namespace
-
-bool XanimePlayer::isRun(const char* pName) const {
-    if (mCurrentAnimation == nullptr) {
-        return false;
-    }
-
-    XanimeGroupInfo* group = getSimpleGroup();
-    if (mCurrentAnimation == group) {
-        return mResourceTable->findResMotion(pName) == getSimpleGroup()->_20[0];
-    }
-
-    return mCurrentAnimation == mResourceTable->getGroupInfo(pName);
-}
-
-XanimeGroupInfo* XanimePlayer::getSimpleGroup() const {
-    if (mSimpleGroup != nullptr) {
-        return mSimpleGroup;
-    }
-
-    return &mResourceTable->_1C;
-}
 
 namespace MR {
 

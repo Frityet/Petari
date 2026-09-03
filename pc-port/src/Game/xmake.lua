@@ -6,6 +6,7 @@ target("smg-pc-game")
     -- Retail XanimeCore uses unfused scalar arithmetic; its paired SDK calls
     -- preserve their explicit fused instructions in the compatibility layer.
     add_files("Animation/XanimeCore.cpp", {cxxflags = "-ffp-contract=off"})
+    add_files("Animation/XanimePlayer.cpp", {cxxflags = "-ffp-contract=off"})
     add_files("LiveActor/Binder.cpp", {cxxflags = "-ffp-contract=off"})
     add_files("Map/CollisionCategorizedKeeper.cpp", {cxxflags = "-ffp-contract=off"})
     -- The exact Player constructor closure is mirrored under src/Game/Player,

@@ -1,0 +1,14 @@
+[
+  {
+    "target": "smg-pc-original-xanime-player-tests",
+    "passed_groups": 6,
+    "exit_code": 0,
+    "binary_sha256": "dd48c9ffe8ddca2657672bce55aa2839b557bb08401229ac6a389d47cebaf52f"
+  },
+  {
+    "target": "smg-pc-original-xanime-core-tests",
+    "passed_groups": 9,
+    "exit_code": 0,
+    "binary_sha256": "8e88059b7e1a59ac2380be082836ae14006f02fa4cdc03132dc45f24d5c6d56d"
+  }
+]
