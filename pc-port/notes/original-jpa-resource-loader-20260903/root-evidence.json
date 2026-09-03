@@ -1,0 +1,321 @@
+{
+  "commands": [
+    [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/build/original-jpa-resource-loader-20260903/JPAResource-before.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-jpa-resource-loader-20260903/JPAResource-before.o"
+    ],
+    [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/JSystem/JParticle/JPAResource.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-jpa-resource-loader-20260903/JPAResource-after.o"
+    ]
+  ],
+  "methods": [
+    {
+      "name": "__ct__11JPAResourceFv",
+      "size": "112",
+      "match_percent": 100.0
+    },
+    {
+      "name": "init__11JPAResourceFP7JKRHeap",
+      "size": "5424",
+      "match_percent": 100.0
+    },
+    {
+      "name": "calc__11JPAResourceFP18JPAEmitterWorkDataP14JPABaseEmitter",
+      "size": "732",
+      "match_percent": 100.0
+    },
+    {
+      "name": "draw__11JPAResourceFP18JPAEmitterWorkDataP14JPABaseEmitter",
+      "size": "224",
+      "match_percent": 100.0
+    },
+    {
+      "name": "drawP__11JPAResourceFP18JPAEmitterWorkData",
+      "size": "808",
+      "match_percent": 100.0
+    },
+    {
+      "name": "drawC__11JPAResourceFP18JPAEmitterWorkData",
+      "size": "744",
+      "match_percent": 100.0
+    },
+    {
+      "name": "setPTev__11JPAResourceFv",
+      "size": "664",
+      "match_percent": 100.0
+    },
+    {
+      "name": "setCTev__11JPAResourceFP18JPAEmitterWorkData",
+      "size": "348",
+      "match_percent": 100.0
+    },
+    {
+      "name": "calc_p__11JPAResourceFP18JPAEmitterWorkDataP15JPABaseParticle",
+      "size": "124",
+      "match_percent": 100.0
+    },
+    {
+      "name": "calc_c__11JPAResourceFP18JPAEmitterWorkDataP15JPABaseParticle",
+      "size": "124",
+      "match_percent": 100.0
+    },
+    {
+      "name": "calcField__11JPAResourceFP18JPAEmitterWorkDataP15JPABaseParticle",
+      "size": "124",
+      "match_percent": 100.0
+    },
+    {
+      "name": "calcKey__11JPAResourceFP18JPAEmitterWorkData",
+      "size": "324",
+      "match_percent": 100.0
+    },
+    {
+      "name": "calcWorkData_c__11JPAResourceFP18JPAEmitterWorkData",
+      "size": "436",
+      "match_percent": 100.0
+    },
+    {
+      "name": "calcWorkData_d__11JPAResourceFP18JPAEmitterWorkData",
+      "size": "128",
+      "match_percent": 100.0
+    },
+    {
+      "name": "@7081",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "jpa_pos",
+      "size": "324",
+      "match_percent": 100.0
+    },
+    {
+      "name": "jpa_crd",
+      "size": "32",
+      "match_percent": 100.0
+    },
+    {
+      "name": "@6800",
+      "size": "44",
+      "match_percent": 100.0
+    },
+    {
+      "name": "@6799",
+      "size": "44",
+      "match_percent": 100.0
+    },
+    {
+      "name": "@7358",
+      "size": "44",
+      "match_percent": 100.0
+    },
+    {
+      "name": "@7074",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "@7075",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "@7076",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "@7077",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getTexAnmType__12JPABaseShapeCFv",
+      "size": "16",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getClrAnmType__12JPABaseShapeCFv",
+      "size": "16",
+      "match_percent": 100.0
+    },
+    {
+      "name": "execute__18JPAEmitterCallBackFP14JPABaseEmitter",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "executeAfter__18JPAEmitterCallBackFP14JPABaseEmitter",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "drawAfter__18JPAEmitterCallBackFP14JPABaseEmitter",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "set<f>__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>_v",
+      "size": "28",
+      "match_percent": 100.0
+    },
+    {
+      "name": "prepare__12JPAFieldBaseFP18JPAEmitterWorkDataP13JPAFieldBlock",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "erase__26JPAList<15JPABaseParticle>FP26JPANode<15JPABaseParticle>",
+      "size": "172",
+      "match_percent": 100.0
+    },
+    {
+      "name": "push_front__26JPAList<15JPABaseParticle>FP26JPANode<15JPABaseParticle>",
+      "size": "80",
+      "match_percent": 100.0
+    },
+    {
+      "name": "load__18JPAResourceManagerFUs11_GXTexMapID",
+      "size": "24",
+      "match_percent": 100.0
+    },
+    {
+      "name": "[.rodata-0]",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "[.data-0]",
+      "size": "516",
+      "match_percent": 100.0
+    },
+    {
+      "name": "[.sdata2-0]",
+      "size": "16",
+      "match_percent": 100.0
+    }
+  ]
+}
