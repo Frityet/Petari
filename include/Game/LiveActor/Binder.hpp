@@ -19,7 +19,7 @@ public:
     void clear();
     const HitInfo* getPlane(int) const;
     u32 copyPlaneArrayAndSortingSensor(HitInfo**, u32);
-    static bool compSensor(HitInfo*, HitInfo*);
+    static bool compSensor(const HitInfo*, const HitInfo*);
     const TVec3f bind(const TVec3f&);
     void moveAlongHittedPlanes(TVec3f*, TVec3f*, TVec3f*, const TVec3f&, const TVec3f&, HitInfo*, u32, bool*);
     u32 findBindedPos(TVec3f*, TVec3f*, bool*, HitInfo*, u32, bool, bool);

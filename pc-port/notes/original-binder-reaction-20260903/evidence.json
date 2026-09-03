@@ -1,0 +1,994 @@
+{
+  "method": "obtainMomentFixReaction__6BinderFP7HitInfoUlPQ29JGeometry8TVec3<f>Ul",
+  "address": "0x8015e1d4",
+  "retail_size": 476,
+  "compiled_size": 476,
+  "objdiff_match_percent": 99.44538,
+  "source_sha256": "7bd6ede6772644e0bedefbb16cba5833b92472e4a38c10aa5751da50b3355b51",
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "retail_function_sha256": "d78bb6bcdd1f30c181951bd11629af7a504ef98e5eb0015900ac67f2b4658568",
+  "compiler": "GC3.0a3/configure.py cflags_game, no matching-only source pragmas",
+  "relocations": [
+    {
+      "offset": "0x10",
+      "kind": 10,
+      "symbol": "_savegpr_26",
+      "addend": 0,
+      "effective_retail_target": "0x805189fc"
+    },
+    {
+      "offset": "0x34",
+      "kind": 10,
+      "symbol": "__ct<i>__Q29JGeometry8TVec3<f>Fiii_Pv",
+      "addend": 0,
+      "effective_retail_target": "0x8003754c"
+    },
+    {
+      "offset": "0x48",
+      "kind": 10,
+      "symbol": "__ct<i>__Q29JGeometry8TVec3<f>Fiii_Pv",
+      "addend": 0,
+      "effective_retail_target": "0x8003754c"
+    },
+    {
+      "offset": "0x60",
+      "kind": 10,
+      "symbol": "getNormal__8TriangleCFi",
+      "addend": 0,
+      "effective_retail_target": "0x80182b78"
+    },
+    {
+      "offset": "0x6c",
+      "kind": 10,
+      "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "addend": 0,
+      "effective_retail_target": "0x80018ef0"
+    },
+    {
+      "offset": "0x10c",
+      "kind": 109,
+      "symbol": "@4556",
+      "addend": 0,
+      "value_hex": "3a83126f",
+      "effective_retail_target": "0x806bbbf4"
+    },
+    {
+      "offset": "0x114",
+      "kind": 10,
+      "symbol": "isNearZero__2MRFRCQ29JGeometry8TVec3<f>f",
+      "addend": 0,
+      "effective_retail_target": "0x803e6fe8"
+    },
+    {
+      "offset": "0x1b4",
+      "kind": 10,
+      "symbol": "set<f>__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>_v",
+      "addend": 0,
+      "effective_retail_target": "0x8001d2c8"
+    },
+    {
+      "offset": "0x1c0",
+      "kind": 10,
+      "symbol": "add__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "addend": 0,
+      "effective_retail_target": "0x8001d2e4"
+    },
+    {
+      "offset": "0x1c8",
+      "kind": 10,
+      "symbol": "_restgpr_26",
+      "addend": 0,
+      "effective_retail_target": "0x80518a48"
+    }
+  ],
+  "behavior": {
+    "case_count": 276,
+    "fixed_case_count": 20,
+    "seeded_case_count": 256,
+    "every_conditional_branch_taken_and_not_taken": true,
+    "retail_branch_outcomes": [
+      [
+        132,
+        false
+      ],
+      [
+        132,
+        true
+      ],
+      [
+        152,
+        false
+      ],
+      [
+        152,
+        true
+      ],
+      [
+        180,
+        false
+      ],
+      [
+        180,
+        true
+      ],
+      [
+        200,
+        false
+      ],
+      [
+        200,
+        true
+      ],
+      [
+        228,
+        false
+      ],
+      [
+        228,
+        true
+      ],
+      [
+        248,
+        false
+      ],
+      [
+        248,
+        true
+      ],
+      [
+        264,
+        false
+      ],
+      [
+        264,
+        true
+      ],
+      [
+        284,
+        false
+      ],
+      [
+        284,
+        true
+      ],
+      [
+        300,
+        false
+      ],
+      [
+        300,
+        true
+      ],
+      [
+        320,
+        false
+      ],
+      [
+        320,
+        true
+      ],
+      [
+        340,
+        false
+      ],
+      [
+        340,
+        true
+      ],
+      [
+        360,
+        false
+      ],
+      [
+        360,
+        true
+      ],
+      [
+        380,
+        false
+      ],
+      [
+        380,
+        true
+      ],
+      [
+        400,
+        false
+      ],
+      [
+        400,
+        true
+      ],
+      [
+        424,
+        false
+      ],
+      [
+        424,
+        true
+      ]
+    ],
+    "compiled_branch_outcomes": [
+      [
+        132,
+        false
+      ],
+      [
+        132,
+        true
+      ],
+      [
+        152,
+        false
+      ],
+      [
+        152,
+        true
+      ],
+      [
+        180,
+        false
+      ],
+      [
+        180,
+        true
+      ],
+      [
+        200,
+        false
+      ],
+      [
+        200,
+        true
+      ],
+      [
+        228,
+        false
+      ],
+      [
+        228,
+        true
+      ],
+      [
+        248,
+        false
+      ],
+      [
+        248,
+        true
+      ],
+      [
+        264,
+        false
+      ],
+      [
+        264,
+        true
+      ],
+      [
+        284,
+        false
+      ],
+      [
+        284,
+        true
+      ],
+      [
+        300,
+        false
+      ],
+      [
+        300,
+        true
+      ],
+      [
+        320,
+        false
+      ],
+      [
+        320,
+        true
+      ],
+      [
+        340,
+        false
+      ],
+      [
+        340,
+        true
+      ],
+      [
+        360,
+        false
+      ],
+      [
+        360,
+        true
+      ],
+      [
+        380,
+        false
+      ],
+      [
+        380,
+        true
+      ],
+      [
+        400,
+        false
+      ],
+      [
+        400,
+        true
+      ],
+      [
+        424,
+        false
+      ],
+      [
+        424,
+        true
+      ]
+    ],
+    "fixed_cases": [
+      {
+        "case": "empty overwrites output",
+        "contacts": [],
+        "start": 0,
+        "count": 0,
+        "capacity": 32,
+        "flags": 64,
+        "output_aliases_first_movement": false,
+        "output": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "retail_and_original_compiler_bits_equal": true
+      },
+      {
+        "case": "single non-unit normal is used unchanged",
+        "contacts": [
+          [
+            [
+              2,
+              -3,
+              4
+            ],
+            0.5,
+            [
+              0,
+              0,
+              0
+            ]
+          ]
+        ],
+        "start": 0,
+        "count": 1,
+        "capacity": 32,
+        "flags": 64,
+        "output_aliases_first_movement": false,
+        "output": [
+          1.0,
+          -1.5,
+          2.0
+        ],
+        "retail_and_original_compiler_bits_equal": true
+      },
+      {
+        "case": "nonorthogonal planes use component extrema",
+        "contacts": [
+          [
+            [
+              1,
+              0,
+              0
+            ],
+            1,
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          [
+            [
+              0.6,
+              0.8,
+              0
+            ],
+            1,
+            [
+              0,
+              0,
+              0
+            ]
+          ]
+        ],
+        "start": 0,
+        "count": 2,
+        "capacity": 32,
+        "flags": 64,
+        "output_aliases_first_movement": false,
+        "output": [
+          1.0,
+          0.800000011920929,
+          0.0
+        ],
+        "retail_and_original_compiler_bits_equal": true
+      },
+      {
+        "case": "positive and negative extrema both contribute",
+        "contacts": [
+          [
+            [
+              1,
+              3,
+              -1
+            ],
+            2,
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          [
+            [
+              -3,
+              -1,
+              2
+            ],
+            1,
+            [
+              0,
+              0,
+              0
+            ]
+          ]
+        ],
+        "start": 0,
+        "count": 2,
+        "capacity": 32,
+        "flags": 64,
+        "output_aliases_first_movement": false,
+        "output": [
+          -1.0,
+          5.0,
+          0.0
+        ],
+        "retail_and_original_compiler_bits_equal": true
+      },
+      {
+        "case": "opposing corrections cancel",
+        "contacts": [
+          [
+            [
+              1,
+              0,
+              0
+            ],
+            2,
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          [
+            [
+              -1,
+              0,
+              0
+            ],
+            2,
+            [
+              0,
+              0,
+              0
+            ]
+          ]
+        ],
+        "start": 0,
+        "count": 2,
+        "capacity": 32,
+        "flags": 64,
+        "output_aliases_first_movement": false,
+        "output": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "retail_and_original_compiler_bits_equal": true
+      },
+      {
+        "case": "negative depth is not clamped",
+        "contacts": [
+          [
+            [
+              1,
+              -2,
+              3
+            ],
+            -2,
+            [
+              0,
+              0,
+              0
+            ]
+          ]
+        ],
+        "start": 0,
+        "count": 1,
+        "capacity": 32,
+        "flags": 64,
+        "output_aliases_first_movement": false,
+        "output": [
+          -2.0,
+          4.0,
+          -6.0
+        ],
+        "retail_and_original_compiler_bits_equal": true
+      },
+      {
+        "case": "suffix starts at supplied index",
+        "contacts": [
+          [
+            [
+              100,
+              100,
+              100
+            ],
+            1,
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          [
+            [
+              -1,
+              2,
+              3
+            ],
+            2,
+            [
+              0,
+              0,
+              0
+            ]
+          ]
+        ],
+        "start": 1,
+        "count": 2,
+        "capacity": 32,
+        "flags": 64,
+        "output_aliases_first_movement": false,
+        "output": [
+          -2.0,
+          4.0,
+          6.0
+        ],
+        "retail_and_original_compiler_bits_equal": true
+      },
+      {
+        "case": "member count limits array",
+        "contacts": [
+          [
+            [
+              1,
+              2,
+              3
+            ],
+            1,
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          [
+            [
+              100,
+              100,
+              100
+            ],
+            1,
+            [
+              0,
+              0,
+              0
+            ]
+          ]
+        ],
+        "start": 0,
+        "count": 1,
+        "capacity": 32,
+        "flags": 64,
+        "output_aliases_first_movement": false,
+        "output": [
+          1.0,
+          2.0,
+          3.0
+        ],
+        "retail_and_original_compiler_bits_equal": true
+      },
+      {
+        "case": "capacity parameter is unused",
+        "contacts": [
+          [
+            [
+              1,
+              2,
+              3
+            ],
+            1,
+            [
+              0,
+              0,
+              0
+            ]
+          ]
+        ],
+        "start": 0,
+        "count": 1,
+        "capacity": 0,
+        "flags": 64,
+        "output_aliases_first_movement": false,
+        "output": [
+          1.0,
+          2.0,
+          3.0
+        ],
+        "retail_and_original_compiler_bits_equal": true
+      },
+      {
+        "case": "start beyond count returns zero",
+        "contacts": [
+          [
+            [
+              1,
+              2,
+              3
+            ],
+            1,
+            [
+              0,
+              0,
+              0
+            ]
+          ]
+        ],
+        "start": 2,
+        "count": 1,
+        "capacity": 32,
+        "flags": 64,
+        "output_aliases_first_movement": false,
+        "output": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "retail_and_original_compiler_bits_equal": true
+      },
+      {
+        "case": "moving reaction merges independently of depth",
+        "contacts": [
+          [
+            [
+              1,
+              0,
+              0
+            ],
+            2,
+            [
+              4,
+              -3,
+              1
+            ]
+          ]
+        ],
+        "start": 0,
+        "count": 1,
+        "capacity": 32,
+        "flags": 64,
+        "output_aliases_first_movement": false,
+        "output": [
+          4.0,
+          -3.0,
+          1.0
+        ],
+        "retail_and_original_compiler_bits_equal": true
+      },
+      {
+        "case": "moving reaction combines signs with normal correction",
+        "contacts": [
+          [
+            [
+              1,
+              -1,
+              1
+            ],
+            2,
+            [
+              -5,
+              3,
+              -4
+            ]
+          ]
+        ],
+        "start": 0,
+        "count": 1,
+        "capacity": 32,
+        "flags": 64,
+        "output_aliases_first_movement": false,
+        "output": [
+          -3.0,
+          1.0,
+          -2.0
+        ],
+        "retail_and_original_compiler_bits_equal": true
+      },
+      {
+        "case": "moving flag disabled",
+        "contacts": [
+          [
+            [
+              1,
+              0,
+              0
+            ],
+            2,
+            [
+              4,
+              -3,
+              1
+            ]
+          ]
+        ],
+        "start": 0,
+        "count": 1,
+        "capacity": 32,
+        "flags": 0,
+        "output_aliases_first_movement": false,
+        "output": [
+          2.0,
+          0.0,
+          0.0
+        ],
+        "retail_and_original_compiler_bits_equal": true
+      },
+      {
+        "case": "neighbor flags do not enable moving reaction",
+        "contacts": [
+          [
+            [
+              1,
+              0,
+              0
+            ],
+            2,
+            [
+              4,
+              -3,
+              1
+            ]
+          ]
+        ],
+        "start": 0,
+        "count": 1,
+        "capacity": 32,
+        "flags": 191,
+        "output_aliases_first_movement": false,
+        "output": [
+          2.0,
+          0.0,
+          0.0
+        ],
+        "retail_and_original_compiler_bits_equal": true
+      },
+      {
+        "case": "all moving components at epsilon are ignored",
+        "contacts": [
+          [
+            [
+              0,
+              0,
+              0
+            ],
+            0,
+            [
+              0.0010000000474974513,
+              -0.0010000000474974513,
+              0.0010000000474974513
+            ]
+          ]
+        ],
+        "start": 0,
+        "count": 1,
+        "capacity": 32,
+        "flags": 64,
+        "output_aliases_first_movement": false,
+        "output": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "retail_and_original_compiler_bits_equal": true
+      },
+      {
+        "case": "one outside component includes all components",
+        "contacts": [
+          [
+            [
+              0,
+              0,
+              0
+            ],
+            0,
+            [
+              0.0010000001639127731,
+              -0.0010000000474974513,
+              0.0010000000474974513
+            ]
+          ]
+        ],
+        "start": 0,
+        "count": 1,
+        "capacity": 32,
+        "flags": 64,
+        "output_aliases_first_movement": false,
+        "output": [
+          0.0010000001639127731,
+          -0.0010000000474974513,
+          0.0010000000474974513
+        ],
+        "retail_and_original_compiler_bits_equal": true
+      },
+      {
+        "case": "negative outside component enables moving reaction",
+        "contacts": [
+          [
+            [
+              0,
+              0,
+              0
+            ],
+            0,
+            [
+              0.0010000000474974513,
+              -0.0010000001639127731,
+              -0.0010000000474974513
+            ]
+          ]
+        ],
+        "start": 0,
+        "count": 1,
+        "capacity": 32,
+        "flags": 64,
+        "output_aliases_first_movement": false,
+        "output": [
+          0.0010000000474974513,
+          -0.0010000001639127731,
+          -0.0010000000474974513
+        ],
+        "retail_and_original_compiler_bits_equal": true
+      },
+      {
+        "case": "output may alias already-consumed input",
+        "contacts": [
+          [
+            [
+              1,
+              2,
+              3
+            ],
+            2,
+            [
+              4,
+              -3,
+              1
+            ]
+          ]
+        ],
+        "start": 0,
+        "count": 1,
+        "capacity": 32,
+        "flags": 64,
+        "output_aliases_first_movement": true,
+        "output": [
+          4.0,
+          1.0,
+          6.0
+        ],
+        "retail_and_original_compiler_bits_equal": true
+      },
+      {
+        "case": "later smaller extrema do not overwrite",
+        "contacts": [
+          [
+            [
+              3,
+              -4,
+              5
+            ],
+            1,
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          [
+            [
+              1,
+              -2,
+              3
+            ],
+            1,
+            [
+              0,
+              0,
+              0
+            ]
+          ]
+        ],
+        "start": 0,
+        "count": 2,
+        "capacity": 32,
+        "flags": 64,
+        "output_aliases_first_movement": false,
+        "output": [
+          3.0,
+          -4.0,
+          5.0
+        ],
+        "retail_and_original_compiler_bits_equal": true
+      },
+      {
+        "case": "equal extrema do not accumulate",
+        "contacts": [
+          [
+            [
+              1,
+              -2,
+              3
+            ],
+            1,
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          [
+            [
+              1,
+              -2,
+              3
+            ],
+            1,
+            [
+              0,
+              0,
+              0
+            ]
+          ]
+        ],
+        "start": 0,
+        "count": 2,
+        "capacity": 32,
+        "flags": 64,
+        "output_aliases_first_movement": false,
+        "output": [
+          1.0,
+          -2.0,
+          3.0
+        ],
+        "retail_and_original_compiler_bits_equal": true
+      }
+    ]
+  },
+  "limits": "Finite binary32 cases and all method branch outcomes. SDK helpers modeled by their simple existing contracts; no native SDK, KCL query, moving-platform lifecycle, or complete Binder runtime execution."
+}

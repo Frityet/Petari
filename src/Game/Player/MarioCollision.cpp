@@ -1358,7 +1358,7 @@ bool Mario::updateBinderInfo() {
     bool canStoreWall = true;
     bool canPushGround = true;
     for (s32 i = 0; i < planeNum; i++) {
-        const HitInfo& rInfo = pBinder->mPlaneInfos[i];
+        const HitInfo& rInfo = pBinder->mPlane[i];
         const Triangle* pPlane = &rInfo.mParentTriangle;
         const TVec3f& normal = triangleNormal(pPlane);
 

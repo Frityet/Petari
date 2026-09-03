@@ -157,6 +157,27 @@ u32 MarioState::getNoticedStatus() const {
     return getPlayer()->_980->mStatusId;
 }
 
+void MarioState::init() {
+}
+
+bool MarioState::notice() {
+    return false;
+}
+
+bool MarioState::keep() {
+    return true;
+}
+
+void MarioState::hitPoly(u8, const TVec3f&, HitSensor*) {
+}
+
+f32 MarioState::getBlurOffset() const {
+    return 0.0f;
+}
+
+void MarioState::draw3D() const {
+}
+
 namespace NrvMarioActor {
     INIT_NERVE(MarioActorNrvWait);
     INIT_NERVE(MarioActorNrvGameOver);

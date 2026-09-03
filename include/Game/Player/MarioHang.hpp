@@ -10,7 +10,16 @@ class MarioHang : public MarioState {
 public:
     MarioHang(MarioActor*);
 
+    virtual bool start();
+    virtual bool close();
+    virtual bool update();
+    virtual bool notice();
+    virtual bool postureCtrl(MtxPtr);
+
+    void recordWallPolygon(const Triangle*);
+    void recordHangNorm(const TVec3f&);
     void forceDrop();
+    void tryClimb(bool);
 
     u16 _12;
     u16 _14;
