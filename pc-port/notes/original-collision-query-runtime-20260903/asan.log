@@ -1,0 +1,13 @@
+PASS actual constructor, init, and geometry
+PASS retained mutable resource lifetime
+PASS JMap attach identity and null semantics
+PASS original octree search and leaf indices
+PASS single root and overlapping unused prefix
+PASS multiple root blocks
+PASS malformed resource boundaries
+PASS absent and out-of-range attributes
+PASS empty original prism array
+PASS incompatible live node/leaf alias is explicit
+PASS original point leaf order, masks, edge/depth boundaries, scaled thickness and disabled prisms
+PASS original area octree traversal, duplicate suppression, capacity, zero extents and inclusive boxes
+PASS actual heap servers, shared raw resource identity, immutable archive and disposer teardown
