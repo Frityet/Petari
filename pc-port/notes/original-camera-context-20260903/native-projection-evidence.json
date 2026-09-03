@@ -1,0 +1,18 @@
+{
+  "cases": 1540,
+  "components": 24640,
+  "differences": [],
+  "command": [
+    "/opt/homebrew/opt/llvm/bin/clang++",
+    "-std=c++23",
+    "-ffp-contract=off",
+    "-DAURORA",
+    "-DTARGET_PC",
+    "-Ipc-port/src",
+    "-Ipc-port/aurora/include",
+    "/Users/frityet/Projects/petari/pc-port/notes/original-camera-context-20260903/ProjectionProbe.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/build/original-camera-context-20260903/projection-probe"
+  ],
+  "matrix_header_sha256": "396f5457ffe15a538893201cf033fe48ff0c8522f50c2a968f6cdfe39f3f63a4"
+}

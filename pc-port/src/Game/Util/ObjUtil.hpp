@@ -6,6 +6,7 @@
 class LiveActor;
 class LayoutActor;
 class NameObj;
+class NameObjGroup;
 class JMapInfoIter;
 class JMapInfo;
 class ResourceHolder;
@@ -13,6 +14,8 @@ class StageSwitchCtrl;
 struct ResTIMG;
 
 namespace MR {
+    bool isStageStateScenarioOpeningCamera();
+    NameObjGroup* joinToNameObjGroup(NameObj*, const char*);
     void connectToSceneCollisionMapObj(LiveActor* pActor);
     void connectToSceneCollisionMapObjMovementCalcAnim(LiveActor* pActor);
     void connectToSceneCollisionMapObjWeakLight(LiveActor* pActor);

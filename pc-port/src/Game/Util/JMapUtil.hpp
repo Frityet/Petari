@@ -62,6 +62,8 @@ namespace MR {
     bool getJMapInfoArg7NoInit(const JMapInfoIter& rIter, f32* pOut);
     bool getJMapInfoArg7NoInit(const JMapInfoIter& rIter, bool* pOut);
 
+    bool getJMapInfoRailArg0NoInit(const JMapInfoIter& rIter, s32*);
+
     bool getJMapInfoTrans(const JMapInfoIter& rIter, TVec3f* pOut);
     bool getJMapInfoRotate(const JMapInfoIter& rIter, TVec3f* pOut);
     bool getJMapInfoScale(const JMapInfoIter& rIter, TVec3f* pOut);

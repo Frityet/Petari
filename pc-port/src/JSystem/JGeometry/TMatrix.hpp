@@ -157,6 +157,19 @@ namespace JGeometry {
 
     template <typename T>
     struct TRotation3 : public T {
+        void identity33() {
+            this->mMtx[0][0] = 1.0f;
+            this->mMtx[1][0] = 0.0f;
+            this->mMtx[2][0] = 0.0f;
+            this->mMtx[0][1] = 0.0f;
+            this->mMtx[1][1] = 1.0f;
+            this->mMtx[2][1] = 0.0f;
+            this->mMtx[0][2] = 0.0f;
+            this->mMtx[1][2] = 0.0f;
+            this->mMtx[2][2] = 1.0f;
+        }
+
+        void getScale(TVec3f& rDest) const;
         void setXDir(const TVec3f& source) {
             this->mMtx[0][0] = source.x;
             this->mMtx[1][0] = source.y;
@@ -380,6 +393,10 @@ namespace JGeometry {
             this->mMtx[2][3] = rLookAtPos.x * -this->mMtx[2][0] - rLookAtPos.y * this->mMtx[2][1] - rLookAtPos.z * this->mMtx[2][2];
         }
 
+        TPosition3(const TPosition3<T>* source) {
+            this->setInline(*source);
+        }
+
         TPosition3(MtxPtr source) {
             this->set(source);
         }
@@ -435,6 +452,16 @@ namespace JGeometry {
 
     template <typename T>
     struct SMatrix44C {
+        typedef T ArrType[4];
+
+        operator ArrType*() {
+            return mMtx;
+        }
+
+        operator const ArrType*() const {
+            return mMtx;
+        }
+
         void set(const T source[4][4]) {
             for (int row = 0; row < 4; ++row) {
                 for (int column = 0; column < 4; ++column) {
@@ -456,6 +483,53 @@ namespace JGeometry {
 
     template <typename T>
     struct TMatrix44 : public T {
+        void concat(const T& rA, const T& rB) {
+            f32 m00, m01, m02, m03;
+            f32 m10, m11, m12, m13;
+            f32 m20, m21, m22, m23;
+            f32 m30, m31, m32, m33;
+
+            m00 = rA[0][0] * rB[0][0] + rA[0][1] * rB[1][0] + rA[0][2] * rB[2][0] + rA[0][3] * rB[3][0];
+            m01 = rA[0][0] * rB[0][1] + rA[0][1] * rB[1][1] + rA[0][2] * rB[2][1] + rA[0][3] * rB[3][1];
+            m02 = rA[0][0] * rB[0][2] + rA[0][1] * rB[1][2] + rA[0][2] * rB[2][2] + rA[0][3] * rB[3][2];
+            m03 = rA[0][0] * rB[0][3] + rA[0][1] * rB[1][3] + rA[0][2] * rB[2][3] + rA[0][3] * rB[3][3];
+
+            m10 = rA[1][0] * rB[0][0] + rA[1][1] * rB[1][0] + rA[1][2] * rB[2][0] + rA[1][3] * rB[3][0];
+            m11 = rA[1][0] * rB[0][1] + rA[1][1] * rB[1][1] + rA[1][2] * rB[2][1] + rA[1][3] * rB[3][1];
+            m12 = rA[1][0] * rB[0][2] + rA[1][1] * rB[1][2] + rA[1][2] * rB[2][2] + rA[1][3] * rB[3][2];
+            m13 = rA[1][0] * rB[0][3] + rA[1][1] * rB[1][3] + rA[1][2] * rB[2][3] + rA[1][3] * rB[3][3];
+
+            m20 = rA[2][0] * rB[0][0] + rA[2][1] * rB[1][0] + rA[2][2] * rB[2][0] + rA[2][3] * rB[3][0];
+            m21 = rA[2][0] * rB[0][1] + rA[2][1] * rB[1][1] + rA[2][2] * rB[2][1] + rA[2][3] * rB[3][1];
+            m22 = rA[2][0] * rB[0][2] + rA[2][1] * rB[1][2] + rA[2][2] * rB[2][2] + rA[2][3] * rB[3][2];
+            m23 = rA[2][0] * rB[0][3] + rA[2][1] * rB[1][3] + rA[2][2] * rB[2][3] + rA[2][3] * rB[3][3];
+
+            m30 = rA[3][0] * rB[0][0] + rA[3][1] * rB[1][0] + rA[3][2] * rB[2][0] + rA[3][3] * rB[3][0];
+            m31 = rA[3][0] * rB[0][1] + rA[3][1] * rB[1][1] + rA[3][2] * rB[2][1] + rA[3][3] * rB[3][1];
+            m32 = rA[3][0] * rB[0][2] + rA[3][1] * rB[1][2] + rA[3][2] * rB[2][2] + rA[3][3] * rB[3][2];
+            m33 = rA[3][0] * rB[0][3] + rA[3][1] * rB[1][3] + rA[3][2] * rB[2][3] + rA[3][3] * rB[3][3];
+
+            this->mMtx[0][0] = m00;
+            this->mMtx[0][1] = m01;
+            this->mMtx[0][2] = m02;
+            this->mMtx[0][3] = m03;
+
+            this->mMtx[1][0] = m10;
+            this->mMtx[1][1] = m11;
+            this->mMtx[1][2] = m12;
+            this->mMtx[1][3] = m13;
+
+            this->mMtx[2][0] = m20;
+            this->mMtx[2][1] = m21;
+            this->mMtx[2][2] = m22;
+            this->mMtx[2][3] = m23;
+
+            this->mMtx[3][0] = m30;
+            this->mMtx[3][1] = m31;
+            this->mMtx[3][2] = m32;
+            this->mMtx[3][3] = m33;
+        }
+
         void identity() {
             for (int row = 0; row < 4; ++row) {
                 for (int column = 0; column < 4; ++column) {
@@ -468,8 +542,11 @@ namespace JGeometry {
     template <typename T>
     struct TProjection3 : public T {
         void makePerspective(f32 fovy_degrees, f32 aspect, f32 near_clip, f32 far_clip) {
-            const auto half_angle = fovy_degrees * 3.14159265358979323846F / 360.0F;
-            const auto focal_length = 1.0F / std::tan(half_angle);
+            // The original SDK calls double tan after its single-precision
+            // angle arithmetic, then rounds the result before the reciprocal.
+            const f32 half_angle = ((2.0F * TUtil<f32>::PI()) * fovy_degrees) / (360.0F * 2.0F);
+            const f32 power = static_cast<f32>(std::tan(static_cast<double>(half_angle)));
+            const f32 focal_length = 1.0F / power;
             const auto depth_scale = 1.0F / (far_clip - near_clip);
 
             this->mMtx[0][0] = focal_length / aspect;

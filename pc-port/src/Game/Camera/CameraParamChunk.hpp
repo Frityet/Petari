@@ -2,6 +2,7 @@
 
 #include "Game/Camera/CameraParamString.hpp"
 #include <JSystem/JGeometry/TVec.hpp>
+#include <stdint.h>
 
 class CameraHolder;
 class CameraParamChunkID;
@@ -17,11 +18,19 @@ public:
     CameraGeneralParam& operator=(const CameraGeneralParam&);
 
     s16 getNum1Low() const {
+#ifdef TARGET_PC
+        return static_cast< s16 >(static_cast< u32 >(mNum1) >> 16);
+#else
         return reinterpret_cast< const s16* >(&mNum1)[0];
+#endif
     }
 
     s16 getNum1High() const {
+#ifdef TARGET_PC
+        return static_cast< s16 >(static_cast< u32 >(mNum1));
+#else
         return reinterpret_cast< const s16* >(&mNum1)[1];
+#endif
     }
 
     /* 0x00 */ f32 mDist;
@@ -30,7 +39,7 @@ public:
     /* 0x1C */ TVec3f mUp;
     /* 0x28 */ f32 mAngleA;
     /* 0x2C */ f32 mAngleB;
-    /* 0x30 */ s32 mNum1;
+    /* 0x30 */ intptr_t mNum1;
     /* 0x34 */ s32 mNum2;
     /* 0x38 */ CameraParamString mString;
 };

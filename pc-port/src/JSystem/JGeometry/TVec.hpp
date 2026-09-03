@@ -350,6 +350,17 @@ namespace JGeometry {
             return normalize();
         }
 
+        f32 setLength(const TVec3& rVec, f32 newlength) {
+            f32 oldlength = rVec.squared();
+            if (oldlength <= JGeometry::TUtil< f32 >::epsilon()) {
+                zero();
+                return 0.0f;
+            }
+            f32 lengthinv = JGeometry::TUtil< f32 >::inv_sqrt(oldlength);
+            scale(lengthinv * newlength, rVec);
+            return lengthinv * oldlength;
+        };
+
         f32 setLength(f32 newLength) {
             const f32 oldSquaredLength = squared();
             if (oldSquaredLength <= TUtil<f32>::epsilon()) {
