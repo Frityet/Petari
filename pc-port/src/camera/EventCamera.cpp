@@ -32,16 +32,6 @@ namespace smgpc::camera {
             bool fast_drop = false;
         };
 
-        [[nodiscard]] CameraParamVec3 add(const CameraParamVec3 &lhs,
-                                          const CameraParamVec3 &rhs) {
-            return {.x = lhs.x + rhs.x, .y = lhs.y + rhs.y, .z = lhs.z + rhs.z};
-        }
-
-        [[nodiscard]] CameraParamVec3 subtract(const CameraParamVec3 &lhs,
-                                               const CameraParamVec3 &rhs) {
-            return {.x = lhs.x - rhs.x, .y = lhs.y - rhs.y, .z = lhs.z - rhs.z};
-        }
-
         [[nodiscard]] CameraParamVec3 scale(const CameraParamVec3 &value,
                                             float factor) {
             return {.x = value.x * factor, .y = value.y * factor, .z = value.z * factor};
@@ -66,25 +56,6 @@ namespace smgpc::camera {
                 return std::nullopt;
             }
             return scale(value, 1.0F / magnitude);
-        }
-
-        [[nodiscard]] CameraParamVec3 camera_vec(
-            const std::array<float, 3U> &value) {
-            return {.x = value[0], .y = value[1], .z = value[2]};
-        }
-
-        [[nodiscard]] CameraParamVec3 transform_vector(
-            const smgpc::scene::StageZoneTransform &transform,
-            const CameraParamVec3 &value) {
-            return camera_vec(
-                transform.transform_vector({value.x, value.y, value.z}));
-        }
-
-        [[nodiscard]] CameraParamVec3 transform_point(
-            const smgpc::scene::StageZoneTransform &transform,
-            const CameraParamVec3 &value) {
-            return camera_vec(
-                transform.transform_point({value.x, value.y, value.z}));
         }
 
         [[nodiscard]] TargetSnapshot snapshot_from_matrix(
@@ -213,64 +184,6 @@ namespace smgpc::camera {
             }
         }
 
-        [[nodiscard]] CameraParamVec3 desired_local_offset(
-            const CameraParamChunk &camera_param,
-            const TargetSnapshot &target) {
-            return add(scale(target.front, camera_param.extra.l_offset),
-                       scale(target.up, camera_param.extra.l_offset_v));
-        }
-
-        [[nodiscard]] CameraPose calculate_eye_position_fixed(
-            const StaticEventCameraDefinition &definition,
-            const TargetSnapshot &target) {
-            const auto &camera_param = definition.camera_param;
-            const auto eye = transform_point(definition.zone_transform,
-                                             camera_param.general.w_point);
-            const auto watch = add(
-                target.position,
-                add(transform_vector(definition.zone_transform,
-                                     camera_param.extra.w_offset),
-                    desired_local_offset(camera_param, target)));
-
-            auto raw_up = std::optional<CameraParamVec3>{};
-            if (camera_param.general.num1 == 0) {
-                raw_up = normalized(transform_vector(
-                    definition.zone_transform, {0.0F, 1.0F, 0.0F}));
-            } else if (camera_param.general.num1 == 2) {
-                raw_up = normalized(target.up);
-            } else {
-                throw std::logic_error(
-                    "EYEPOS_FIX event camera requires unsupported rotating-up mode 1.");
-            }
-            const auto forward = normalized(subtract(watch, eye));
-            if (!raw_up.has_value() || !forward.has_value()) {
-                throw std::logic_error(
-                    "EYEPOS_FIX event camera has a degenerate authored basis.");
-            }
-            const auto right = normalized(cross(*forward, *raw_up));
-            if (!right.has_value()) {
-                throw std::logic_error(
-                    "EYEPOS_FIX event camera eye and up axes are parallel.");
-            }
-            const auto corrected_up = normalized(cross(*right, *forward));
-            const auto rolled_up = corrected_up.has_value() ? normalized(add(
-                                                                  scale(*corrected_up,
-                                                                        std::cos(camera_param.extra.roll)),
-                                                                  scale(*right,
-                                                                        -std::sin(camera_param.extra.roll)))) :
-                                                              std::nullopt;
-            if (!rolled_up.has_value()) {
-                throw std::logic_error(
-                    "EYEPOS_FIX event camera roll produced a degenerate up vector.");
-            }
-            return CameraPose{
-                .eye = eye,
-                .watch = watch,
-                .up = *rolled_up,
-                .fovy_degrees = camera_param.is_on_use_fovy() ? camera_param.extra.fovy : 45.0F,
-            };
-        }
-
         [[nodiscard]] std::string lower_copy(std::string_view value) {
             auto result = std::string(value);
             std::ranges::transform(result, result.begin(), [](char character) {
@@ -278,6 +191,17 @@ namespace smgpc::camera {
                     static_cast<unsigned char>(character)));
             });
             return result;
+        }
+
+        [[nodiscard]] std::int32_t start_interpolation_frames(
+            const CameraParamChunk &param, std::int32_t requested_frames) {
+            // CameraManEvent::getInterpolateFrame. The authored override
+            // takes precedence, followed by the request and retail default.
+            auto frames = param.event_enable_erp_frame != 0 ? param.extra.cam_int : -1;
+            if (frames < 0 && requested_frames >= 0) {
+                frames = requested_frames;
+            }
+            return frames < 0 ? 60 : frames;
         }
 
     }  // namespace
@@ -449,8 +373,7 @@ namespace smgpc::camera {
         validate_target_reference(target);
         if (_active.has_value() && _active->key == key &&
             ((animation != nullptr && _active->animation) ||
-             (animation == nullptr && definition->camera_param.camera_type == "CAM_TYPE_XZ_PARA" &&
-              !_active->animation && _active->controller))) {
+             (animation == nullptr && !_active->animation && _active->controller))) {
             // CameraManEvent::checkReset preserves the controller when its
             // chunk and type are unchanged. Validate before changing either
             // current or retained target; pose advances only on movement.
@@ -468,22 +391,14 @@ namespace smgpc::camera {
         // CameraDirector::startEvent copies the original game manager pose
         // only on entry; event-to-event requests retain the event manager pose.
         const CameraPoseParam *seed = game_seed;
-        std::optional<CameraPoseParam> native_seed;
         if (_active.has_value()) {
             if (_active->animation_controller) {
                 seed = &_active->animation_controller->pose_param();
             } else if (_active->controller) {
                 seed = &_active->controller->pose_param();
-            } else if (_active->pose.has_value()) {
-                const auto &visible = *_active->pose;
-                native_seed.emplace();
-                native_seed->mPos.set(visible.eye.x, visible.eye.y, visible.eye.z);
-                native_seed->mWatchPos.set(visible.watch.x, visible.watch.y, visible.watch.z);
-                native_seed->mUpVec.set(visible.up.x, visible.up.y, visible.up.z);
-                native_seed->mWatchUpVec.set(native_seed->mUpVec);
-                native_seed->mFovy = visible.fovy_degrees;
-                seed = &*native_seed;
-            } else if (_active->manager_seed) {
+            } else {
+                // A pending request has not updated the manager. Preserve
+                // its full raw pose through further requests in this phase.
                 seed = _active->manager_seed.get();
             }
         }
@@ -627,17 +542,15 @@ namespace smgpc::camera {
             throw std::logic_error(
                 "Active static event camera lost its zone-qualified chunk.");
         }
-        if (definition->camera_param.camera_type == "CAM_TYPE_EYEPOS_FIX") {
-            return calculate_eye_position_fixed(*definition, target);
-        }
-        if (definition->camera_param.camera_type == "CAM_TYPE_XZ_PARA") {
+        if (definition->camera_param.camera_type == "CAM_TYPE_XZ_PARA" ||
+            definition->camera_param.camera_type == "CAM_TYPE_EYEPOS_FIX") {
             if (!active.controller) {
                 active.controller = std::make_unique<OriginalGameCamera>(
                     definition->zone_transform, definition->camera_param,
                     published_target, 45.0F,
-                    StageCameraCalculationState{
-                        .local_offset = desired_local_offset(definition->camera_param, target)});
-                return active.controller->calculation().pose;
+                    StageCameraCalculationState{}, smgpc::compat::OriginalCameraMode::Event,
+                    active.manager_seed.get(),
+                    start_interpolation_frames(definition->camera_param, active.interpolation_frames) == 0);
             }
             return active.controller->calc(published_target).pose;
         }

@@ -278,6 +278,15 @@ namespace {
                         .read_base_matrix = +[](const LiveActor &actor) {
                             return smgpc::compat::mario_camera_base_matrix(static_cast<const MarioActor &>(actor));
                         },
+                        .read_up_vector = +[](const LiveActor &actor, TVec3f *out) {
+                            static_cast<const MarioActor &>(actor).getUpVec(out);
+                        },
+                        .read_front_vector = +[](const LiveActor &actor, TVec3f *out) {
+                            static_cast<const MarioActor &>(actor).getFrontVec(out);
+                        },
+                        .read_side_vector = +[](const LiveActor &actor, TVec3f *out) {
+                            static_cast<const MarioActor &>(actor).getSideVec(out);
+                        },
                     });
 
         auto placement_lease =

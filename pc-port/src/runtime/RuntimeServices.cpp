@@ -3567,6 +3567,30 @@ namespace smgpc::runtime {
                    ? _actor_bridge.read_base_matrix(*_attached_actor) : nullptr;
     }
 
+    bool PlayerSystemService::copy_actor_up_vector(TVec3f *out) const {
+        if (_attached_actor == nullptr || _actor_bridge.read_up_vector == nullptr) {
+            return false;
+        }
+        _actor_bridge.read_up_vector(*_attached_actor, out);
+        return true;
+    }
+
+    bool PlayerSystemService::copy_actor_front_vector(TVec3f *out) const {
+        if (_attached_actor == nullptr || _actor_bridge.read_front_vector == nullptr) {
+            return false;
+        }
+        _actor_bridge.read_front_vector(*_attached_actor, out);
+        return true;
+    }
+
+    bool PlayerSystemService::copy_actor_side_vector(TVec3f *out) const {
+        if (_attached_actor == nullptr || _actor_bridge.read_side_vector == nullptr) {
+            return false;
+        }
+        _actor_bridge.read_side_vector(*_attached_actor, out);
+        return true;
+    }
+
     CameraTargetObj *PlayerSystemService::camera_target() const {
         return _camera_target.get();
     }

@@ -103,6 +103,9 @@ namespace {
                     .set_swing_permission = &GatewayMarioOwner::set_swing_permission,
                     .read_element_mode = &GatewayMarioOwner::read_element_mode,
                     .read_base_matrix = &GatewayMarioOwner::read_base_matrix,
+                    .read_up_vector = &GatewayMarioOwner::read_up_vector,
+                    .read_front_vector = &GatewayMarioOwner::read_front_vector,
+                    .read_side_vector = &GatewayMarioOwner::read_side_vector,
                 });
         }
 
@@ -147,6 +150,18 @@ namespace {
 
         static MtxPtr read_base_matrix(const LiveActor& actor) {
             return smgpc::compat::mario_camera_base_matrix(static_cast<const MarioActor&>(actor));
+        }
+
+        static void read_up_vector(const LiveActor& actor, TVec3f* out) {
+            static_cast<const MarioActor&>(actor).getUpVec(out);
+        }
+
+        static void read_front_vector(const LiveActor& actor, TVec3f* out) {
+            static_cast<const MarioActor&>(actor).getFrontVec(out);
+        }
+
+        static void read_side_vector(const LiveActor& actor, TVec3f* out) {
+            static_cast<const MarioActor&>(actor).getSideVec(out);
         }
 
         smgpc::runtime::PlayerSystemService* _player_system = nullptr;

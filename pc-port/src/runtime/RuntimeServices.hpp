@@ -781,12 +781,16 @@ namespace smgpc::runtime {
         using SwingPermissionWriter = void (*)(LiveActor &, bool);
         using ElementModeReader = s32 (*)(const LiveActor &);
         using BaseMatrixReader = MtxPtr (*)(const LiveActor &);
+        using VectorReader = void (*)(const LiveActor &, TVec3f *);
 
         SwingPermissionWriter set_swing_permission = nullptr;
         // Concrete player owners install this capability only when their
         // attached object really exposes the retail MarioActor mode field.
         ElementModeReader read_element_mode = nullptr;
         BaseMatrixReader read_base_matrix = nullptr;
+        VectorReader read_up_vector = nullptr;
+        VectorReader read_front_vector = nullptr;
+        VectorReader read_side_vector = nullptr;
     };
 
     class PlayerSystemService final {
@@ -826,6 +830,9 @@ namespace smgpc::runtime {
         [[nodiscard]] std::optional<smgpc::camera::StageCameraTargetState> camera_target_state() const;
         [[nodiscard]] CameraTargetObj *camera_target() const;
         [[nodiscard]] MtxPtr actor_base_matrix() const;
+        [[nodiscard]] bool copy_actor_up_vector(TVec3f *out) const;
+        [[nodiscard]] bool copy_actor_front_vector(TVec3f *out) const;
+        [[nodiscard]] bool copy_actor_side_vector(TVec3f *out) const;
         [[nodiscard]] bool is_swing_permitted() const;
         [[nodiscard]] bool is_control_enabled() const;
         [[nodiscard]] std::uint64_t base_matrix_revision() const;

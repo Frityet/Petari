@@ -9,8 +9,11 @@
 #include "camera/CameraAnimation.hpp"
 #include "camera/EventCamera.hpp"
 #include "camera/OriginalAnimationCamera.hpp"
+#include "camera/OriginalGameCamera.hpp"
+#include "compat/CameraLocalUtilRuntime.hpp"
 #include "compat/CameraUtilCompat.hpp"
 #include "compat/DemoSceneRuntime.hpp"
+#include "compat/PlayerUtilCompat.hpp"
 #include "resource/BcsvTable.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"
@@ -271,6 +274,141 @@ namespace {
                lhs.far_clip == rhs.far_clip &&
                lhs.projection_offset_x == rhs.projection_offset_x &&
                lhs.projection_offset_y == rhs.projection_offset_y;
+    }
+
+    [[nodiscard]] smgpc::camera::CameraParamChunk make_fixed_point_param(std::int32_t up_mode) {
+        auto param = smgpc::camera::CameraParamChunk{};
+        param.camera_type = "CAM_TYPE_EYEPOS_FIX";
+        param.general.num1 = up_mode;
+        param.general.w_point = {0.0F, 0.0F, 600.0F};
+        param.extra.w_offset = {};
+        return param;
+    }
+
+    void test_fixed_point_offset_accumulation_and_safe_distance() {
+        constexpr auto mode = smgpc::compat::OriginalCameraMode::Event;
+        auto param = make_fixed_point_param(0);
+        param.extra.l_offset = 100.0F;
+        param.extra.l_offset_v = 60.0F;
+        auto target = smgpc::camera::StageCameraTargetState{};
+        target.last_move = {15.0F, 0.0F, 0.0F};
+        auto camera = smgpc::camera::OriginalGameCamera({}, param, target, 45.0F, {}, mode);
+        // Each original makeWatchPoint advances offset by 0.1. FixedPoint's
+        // reset calls calc, followed by the normal frame's calc: 1 - 0.9^2.
+        const auto first = camera.calc(target);
+        require_near(first.state.local_offset.z, 19.0F, 0.0001F,
+                     "FixedPoint reset and normal calc must accumulate the original offset twice without restoring its old value");
+        require_near(first.pose.watch.y, 11.4F, 0.0001F,
+                     "FixedPoint upper offset must use the same original accumulated interpolation");
+        const auto second = camera.calc(target);
+        require_near(second.pose.watch.z, 27.1F, 0.0001F,
+                     "FixedPoint following frames must retain local offset rather than snap to the desired value");
+        require_near(second.pose.watch.y, 16.26F, 0.0001F,
+                     "FixedPoint vertical local offset must keep its preceding frame's state");
+        camera.reset(target);
+        const auto reset = camera.calc(target);
+        require_near(reset.pose.watch.z, 40.951F, 0.0002F,
+                     "resetting FixedPoint must continue from the retained manager offset through reset and normal calc");
+
+        auto request_reset = smgpc::camera::OriginalGameCamera(
+            {}, param, target, 45.0F, {}, mode, nullptr, true);
+        const auto reset_offset = request_reset.calc(target);
+        require_near(reset_offset.state.local_offset.z, 100.0F, 0.0001F,
+                     "a zero-frame event's manager reset flag must initialize the full local offset");
+        require_near(reset_offset.state.local_offset.y, 60.0F, 0.0001F,
+                     "a manager local-offset reset must also initialize the full vertical offset");
+        auto turned_target = target;
+        turned_target.front = {1.0F, 0.0F, 0.0F};
+        const auto after_request_reset = request_reset.calc(turned_target);
+        require_near(after_request_reset.state.local_offset.x, 10.0F, 0.0001F,
+                     "the manager local-offset reset flag must clear after the initial camera phase");
+        require_near(after_request_reset.state.local_offset.z, 90.0F, 0.0001F,
+                     "subsequent FixedPoint phases must return to the original movement-dependent interpolation");
+
+        param.extra.flags |= 1U << 2U;
+        target.last_move = {};
+        auto instant = smgpc::camera::OriginalGameCamera({}, param, target, 45.0F, {}, mode);
+        const auto instant_pose = instant.calc(target).pose;
+        require_near(instant_pose.watch.z, 100.0F, 0.0001F,
+                     "the authored local-offset interpolation-off flag must apply the full front offset while stationary");
+        require_near(instant_pose.watch.y, 60.0F, 0.0001F,
+                     "the authored interpolation-off flag must apply the full upper offset");
+
+        param = make_fixed_point_param(0);
+        param.general.w_point = {0.0F, 0.0F, 10.0F};
+        auto short_view = smgpc::camera::OriginalGameCamera({}, param, target, 45.0F, {}, mode);
+        const auto safe = short_view.calc(target).pose;
+        require_near(safe.eye.z, 10.0F, 0.0001F,
+                     "the safe-pose stage must preserve the authored FixedPoint eye");
+        require_near(safe.watch.z, -290.0F, 0.0001F,
+                     "the original event safe-pose rule must extend a short nonzero watch vector to 300 units");
+    }
+
+    void test_fixed_point_zone_and_transport_up() {
+        constexpr auto mode = smgpc::compat::OriginalCameraMode::Event;
+        auto zone = smgpc::scene::StageZoneTransform{};
+        zone.matrix = {0.0F, -1.0F, 0.0F, 10.0F,
+                       1.0F, 0.0F, 0.0F, 20.0F,
+                       0.0F, 0.0F, 1.0F, 30.0F};
+        auto param = make_fixed_point_param(0);
+        param.general.w_point = {100.0F, 0.0F, -600.0F};
+        auto target = smgpc::camera::StageCameraTargetState{};
+        target.position = {10.0F, 120.0F, 30.0F};
+        auto zone_up = smgpc::camera::OriginalGameCamera(zone, param, target, 45.0F, {}, mode);
+        const auto zoned = zone_up.calc(target).pose;
+        require_near(zoned.eye.x, 10.0F, 0.0001F, "FixedPoint eye must use zone rotation and translation");
+        require_near(zoned.eye.y, 120.0F, 0.0001F, "FixedPoint eye must retain the rotated authored coordinate");
+        require_near(zoned.eye.z, -570.0F, 0.0001F, "FixedPoint eye must retain the placed zone translation");
+        require_near(zoned.up.x, -1.0F, 0.0001F,
+                     "FixedPoint mode zero must rotate zone-up instead of borrowing target up");
+
+        auto seed = CameraPoseParam{};
+        seed.mWatchPos.set(0.0F, 0.0F, -600.0F);
+        param = make_fixed_point_param(1);
+        param.general.w_point = {};
+        target.position = {0.0F, 0.0F, -600.0F};
+        auto transported = smgpc::camera::OriginalGameCamera({}, param, target, 45.0F, {}, mode, &seed);
+        (void)transported.calc(target);
+        target.position = {0.0F, 600.0F, 0.0F};
+        const auto north = transported.calc(target).pose;
+        require_near(north.up.z, 1.0F, 0.0003F,
+                     "mode one must transport the previous up vector when view direction turns from negative Z to positive Y");
+        target.position = {600.0F, 0.0F, 0.0F};
+        const auto east = transported.calc(target).pose;
+        require_near(east.up.z, 1.0F, 0.0003F,
+                     "mode one must preserve transported up through the following view rotation");
+        target.position = {0.0F, 0.0F, -600.0F};
+        const auto returned = transported.calc(target).pose;
+        require_near(returned.up.x, 1.0F, 0.0003F,
+                     "returning to the initial view direction must retain mode-one path-dependent orientation");
+        require_near(returned.up.y, 0.0F, 0.0003F,
+                     "mode one must not reset the transported orientation to zone-up each frame");
+    }
+
+    void test_fixed_point_mode_two_uses_global_player_up() {
+        auto player = smgpc::runtime::PlayerSystemService{};
+        auto global_actor = LiveActor("Explicit global camera player");
+        player.attach_actor(global_actor, smgpc::runtime::PlayerActorBridge{
+            .read_up_vector = [](const LiveActor&, TVec3f* destination) {
+                destination->set(1.0F, 0.0F, 0.0F);
+            }});
+        struct DetachGuard {
+            smgpc::runtime::PlayerSystemService& player;
+            ~DetachGuard() { player.detach_actor(); }
+        } detach{player};
+        const auto player_binding = smgpc::compat::ScopedPlayerSystemServiceOverride(player);
+        Mtx matrix{{1.0F, 0.0F, 0.0F, 0.0F},
+                   {0.0F, 0.0F, -1.0F, 0.0F},
+                   {0.0F, 1.0F, 0.0F, 0.0F}};
+        player.set_base_matrix(matrix);
+        const auto target = smgpc::camera::StageCameraTargetState{};
+        auto camera = smgpc::camera::OriginalGameCamera({}, make_fixed_point_param(2), target,
+            45.0F, {}, smgpc::compat::OriginalCameraMode::Event);
+        const auto pose = camera.calc(target).pose;
+        require_near(pose.up.x, 1.0F, 0.0001F,
+                     "FixedPoint mode two must use the global player's original up getter independently of its render matrix and event target");
+        require(camera.pose_param().mUpVec.x == 1.0F && camera.pose_param().mWatchUpVec.y == 1.0F,
+                "mode two camera up must come from the player while watch-up remains the event target's up");
     }
 
     void test_actor_camera_info_pool_and_identity() {
@@ -1042,6 +1180,149 @@ namespace {
         }
     }
 
+    void test_fixed_point_event_lifecycle(smgpc::camera::EventCameraCatalog catalog) {
+        constexpr auto first_name = "逃げウサギ集め固有016";
+        constexpr auto next_name = "土管固有出現017";
+        for (const auto* name : {first_name, next_name}) {
+            auto* definition = const_cast<smgpc::camera::StaticEventCameraDefinition*>(catalog.find(5, name));
+            require(definition != nullptr, "the FixedPoint lifecycle fixture needs retained real catalog identities");
+            definition->zone_transform = {};
+            definition->camera_param = make_fixed_point_param(0);
+            definition->camera_param.extra.l_offset = 100.0F;
+            definition->camera_param.extra.l_offset_v = 60.0F;
+        }
+        auto player = smgpc::runtime::PlayerSystemService{};
+        auto actor = CameraPlayerFixture(player, false);
+        actor.camera_state.last_move = {15.0F, 0.0F, 0.0F};
+        auto camera = smgpc::runtime::CameraSystemService{};
+        camera.attach_event_camera_catalog(catalog);
+        camera.declare_event_camera(5, first_name);
+        camera.declare_event_camera(5, next_name);
+        camera.start_event_camera(5, first_name,
+            smgpc::camera::EventCameraTarget::target_player(player), 30);
+        require(!camera.active_event_camera_pose().has_value(),
+                "a FixedPoint event request must remain deferred until the target's camera phase");
+        camera.begin_frame(1U);
+        const auto first = *camera.active_event_camera_pose();
+        require_near(first.watch.z, 19.0F, 0.0001F,
+                     "a FixedPoint event must run original reset and normal calc without pre-filling its local offset");
+        camera.pause_on_camera_director();
+        actor.camera_state.position.x = 100.0F;
+        camera.begin_frame(2U);
+        require(same_pose(*camera.active_event_camera_pose(), first),
+                "director pause must preserve the FixedPoint controller pose and local offset");
+        camera.pause_off_camera_director();
+        camera.begin_frame(3U);
+        const auto resumed = *camera.active_event_camera_pose();
+        require_near(resumed.watch.x, 100.0F, 0.0001F,
+                     "FixedPoint resume must consume the newest target position");
+        require_near(resumed.watch.z, 27.1F, 0.0001F,
+                     "FixedPoint resume must advance its retained local offset once");
+        camera.start_event_camera(5, first_name, smgpc::camera::EventCameraTarget::retain(), 30);
+        require(same_pose(*camera.active_event_camera_pose(), resumed),
+                "same-chunk FixedPoint requests must preserve the visible pose until movement");
+        camera.begin_frame(4U);
+        const auto retained = *camera.active_event_camera_pose();
+        require_near(retained.watch.z, 34.39F, 0.0002F,
+                     "same-chunk FixedPoint requests must reuse the original controller without a reset calculation");
+        camera.start_event_camera(5, next_name, smgpc::camera::EventCameraTarget::retain(), 30);
+        require(same_pose(*camera.active_event_camera_pose(), retained),
+                "a new FixedPoint chunk must preserve the prior manager's visible pose during the request");
+        camera.begin_frame(5U);
+        const auto restarted = *camera.active_event_camera_pose();
+        require_near(restarted.watch.z, 46.8559F, 0.0003F,
+                     "a different FixedPoint chunk must reset and calculate from the preceding original manager offset");
+        require_near(restarted.watch.y, 28.11354F, 0.0003F,
+                     "the new event manager must inherit and continue the prior vertical offset");
+        camera.start_event_camera(5, next_name, smgpc::camera::EventCameraTarget::retain(), 0);
+        require(same_pose(*camera.active_event_camera_pose(), restarted),
+                "a same-chunk zero-frame request must preserve the current visible FixedPoint pose");
+        camera.begin_frame(6U);
+        require_near(camera.active_event_camera_pose()->watch.z, 52.17031F, 0.0003F,
+                     "CameraManEvent checkReset must skip the zero-frame local-offset reset for an unchanged chunk");
+        camera.end_event_camera(5, next_name, true, -1);
+        require(!camera.active_event_camera_key().has_value(),
+                "ending FixedPoint must release the active event camera ownership");
+        camera.detach_event_camera_catalog(catalog);
+
+        for (const auto* name : {first_name, next_name}) {
+            auto* definition = const_cast<smgpc::camera::StaticEventCameraDefinition*>(catalog.find(5, name));
+            definition->camera_param.extra.roll = 0.2F;
+        }
+        auto pending_player = smgpc::runtime::PlayerSystemService{};
+        auto pending_actor = CameraPlayerFixture(pending_player, false);
+        pending_actor.camera_state.last_move = {15.0F, 0.0F, 0.0F};
+        auto pending_camera = smgpc::runtime::CameraSystemService{};
+        pending_camera.attach_event_camera_catalog(catalog);
+        pending_camera.declare_event_camera(5, first_name);
+        pending_camera.declare_event_camera(5, next_name);
+        pending_camera.start_event_camera(5, first_name,
+            smgpc::camera::EventCameraTarget::target_player(pending_player), 30);
+        pending_camera.begin_frame(1U);
+        const auto preceding_pose = *pending_camera.active_event_camera_pose();
+        require_near(preceding_pose.watch.z, 19.0F, 0.0001F,
+                     "the pending-request fixture must begin with an accumulated original manager offset");
+        pending_camera.start_event_camera(5, next_name, smgpc::camera::EventCameraTarget::retain(), 30);
+        pending_camera.start_event_camera(5, next_name, smgpc::camera::EventCameraTarget::retain(), 30);
+        require(same_pose(*pending_camera.active_event_camera_pose(), preceding_pose),
+                "re-requesting a pending FixedPoint event must retain the preceding visible pose without calculation");
+        pending_camera.begin_frame(2U);
+        require_near(pending_camera.active_event_camera_pose()->watch.z, 34.39F, 0.0002F,
+                     "re-requesting a pending event must preserve its raw manager seed and accumulated front offset");
+        require_near(pending_camera.active_event_camera_pose()->watch.y, 20.634F, 0.0002F,
+                     "a pending event must preserve the preceding raw vertical offset through reset and normal calc");
+        pending_camera.end_event_camera(5, next_name, true, -1);
+        pending_camera.detach_event_camera_catalog(catalog);
+    }
+
+    void test_fixed_point_event_interpolation_precedence(smgpc::camera::EventCameraCatalog catalog) {
+        constexpr auto name = "逃げウサギ集め固有016";
+        auto* definition = const_cast<smgpc::camera::StaticEventCameraDefinition*>(catalog.find(5, name));
+        require(definition != nullptr, "the interpolation fixture needs a retained real catalog identity");
+        definition->zone_transform = {};
+        definition->camera_param = make_fixed_point_param(0);
+        definition->camera_param.extra.l_offset = 100.0F;
+
+        struct FrameCase {
+            std::int32_t authored_enabled;
+            std::int32_t authored_frames;
+            std::int32_t requested_frames;
+            float expected_offset;
+            std::string_view failure;
+        };
+        // CameraManEvent::getInterpolateFrame chooses a nonnegative authored
+        // override, then a nonnegative request, then 60. Only zero sets the
+        // manager's local-offset reset flag before the new chunk's reset.
+        constexpr auto cases = std::array{
+            FrameCase{0, 30, 0, 100.0F, "a zero-frame request must reset offsets when the authored override is disabled"},
+            FrameCase{1, 30, 0, 19.0F, "a positive authored interpolation override must win over a zero-frame request"},
+            FrameCase{1, 0, 30, 100.0F, "an authored zero-frame override must win over a positive request"},
+            FrameCase{0, 0, 30, 19.0F, "a disabled authored zero-frame value must not reset local offsets"},
+            FrameCase{1, -1, 0, 100.0F, "a negative authored override must fall through to a zero-frame request"},
+            FrameCase{1, -1, 30, 19.0F, "a negative authored override must fall through to a positive request"},
+            FrameCase{1, -1, -1, 19.0F, "negative authored and requested frames must select the positive retail default"},
+        };
+        for (const auto& frame_case : cases) {
+            definition->camera_param.event_enable_erp_frame = frame_case.authored_enabled;
+            definition->camera_param.extra.cam_int = frame_case.authored_frames;
+            auto player = smgpc::runtime::PlayerSystemService{};
+            auto actor = CameraPlayerFixture(player, false);
+            actor.camera_state.last_move = {15.0F, 0.0F, 0.0F};
+            auto camera = smgpc::runtime::CameraSystemService{};
+            camera.attach_event_camera_catalog(catalog);
+            camera.declare_event_camera(5, name);
+            camera.start_event_camera(5, name,
+                smgpc::camera::EventCameraTarget::target_player(player), frame_case.requested_frames);
+            require(!camera.active_event_camera_pose().has_value(),
+                    "interpolation-frame selection must not calculate a pose during the request");
+            camera.begin_frame(1U);
+            require_near(camera.active_event_camera_pose()->watch.z,
+                         frame_case.expected_offset, 0.0001F, frame_case.failure);
+            camera.end_event_camera(5, name, true, -1);
+            camera.detach_event_camera_catalog(catalog);
+        }
+    }
+
     void test_optional_real_disc_event_camera_resources() {
         const auto *disc_path = std::getenv("SMGPC_REAL_DISC");
         if (disc_path == nullptr || disc_path[0] == '\0') {
@@ -1089,6 +1370,8 @@ namespace {
                 "event-camera lookup must not cross a zone boundary");
 
         test_same_xz_request_preserves_original_state(catalog, dvd);
+        test_fixed_point_event_lifecycle(catalog);
+        test_fixed_point_event_interpolation_precedence(catalog);
 
         const auto collector = std::ranges::find_if(
             authored.placements(), [](const auto &placement) {
@@ -1205,6 +1488,9 @@ int main() {
     constexpr auto tests = std::array{
         TestCase{"ActorCameraInfo pool and identities",
                  test_actor_camera_info_pool_and_identity},
+        TestCase{"FixedPoint offsets and safe distance", test_fixed_point_offset_accumulation_and_safe_distance},
+        TestCase{"FixedPoint zone and transported up", test_fixed_point_zone_and_transport_up},
+        TestCase{"FixedPoint global player up", test_fixed_point_mode_two_uses_global_player_up},
         TestCase{"linear CANM player target", test_linear_canm_player_target},
         TestCase{"uninitialized player event camera phase", test_uninitialized_player_event_waits_for_camera_phase},
         TestCase{"player camera capability and live sampling", test_player_camera_capability_and_live_sampling},

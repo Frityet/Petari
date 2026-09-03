@@ -181,14 +181,35 @@ namespace MR {
     }
 
     void getPlayerUpVec(TVec3f* pOut) {
+        if (pOut == nullptr) {
+            return;
+        }
+        const auto* player = smgpc::compat::active_player_system_for_player_util();
+        if (player != nullptr && player->copy_actor_up_vector(pOut)) {
+            return;
+        }
         copyPlayerAxis(pOut, 1);
     }
 
     void getPlayerFrontVec(TVec3f* pOut) {
+        if (pOut == nullptr) {
+            return;
+        }
+        const auto* player = smgpc::compat::active_player_system_for_player_util();
+        if (player != nullptr && player->copy_actor_front_vector(pOut)) {
+            return;
+        }
         copyPlayerAxis(pOut, 2);
     }
 
     void getPlayerSideVec(TVec3f* pOut) {
+        if (pOut == nullptr) {
+            return;
+        }
+        const auto* player = smgpc::compat::active_player_system_for_player_util();
+        if (player != nullptr && player->copy_actor_side_vector(pOut)) {
+            return;
+        }
         copyPlayerAxis(pOut, 0);
     }
 

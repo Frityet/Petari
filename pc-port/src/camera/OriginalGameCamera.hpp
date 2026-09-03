@@ -1,6 +1,7 @@
 #pragma once
 
 #include "camera/StageStartCamera.hpp"
+#include "compat/CameraLocalUtilRuntime.hpp"
 
 #include <memory>
 
@@ -9,15 +10,18 @@ class CameraPoseParam;
 namespace smgpc::camera {
 
     // Own the original Game camera and its arena-style allocations. This
-    // boundary adapts resources and target data; CameraParallel owns the
-    // camera calculation and CameraHeightArrange owns its temporal state.
+    // boundary adapts resources and target data; the Game controllers own
+    // the camera calculation and their temporal state.
     class OriginalGameCamera final {
     public:
         OriginalGameCamera(const smgpc::scene::StageZoneTransform &zone_transform,
                            const CameraParamChunk &camera_param,
                            const StageCameraTargetState &initial_target,
                            float default_fovy_degrees = 45.0F,
-                           const StageCameraCalculationState &initial_state = {});
+                           const StageCameraCalculationState &initial_state = {},
+                           smgpc::compat::OriginalCameraMode mode = smgpc::compat::OriginalCameraMode::Game,
+                           const CameraPoseParam *manager_seed = nullptr,
+                           bool reset_local_offset = false);
         ~OriginalGameCamera();
 
         OriginalGameCamera(const OriginalGameCamera &) = delete;

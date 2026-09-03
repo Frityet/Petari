@@ -1,0 +1,108 @@
+{
+  "verification": "Four exact Game mirrors, three unchanged actor getter bodies, and six retail accessor disassemblies. No new binary-matching claim.",
+  "root_head_at_import": "2bc1e1af1d61a5b4d4f92fe8c259b64db13660e6",
+  "files": [
+    {
+      "source": "src/Game/Camera/CameraFixedPoint.cpp",
+      "destination": "pc-port/src/Game/Camera/CameraFixedPoint.cpp",
+      "sha256": "876d1a229a572b1cf4ded76a76dd15634837143bfff40fd9d6bcf8f2e62a98b7"
+    },
+    {
+      "source": "include/Game/Camera/CameraFixedPoint.hpp",
+      "destination": "pc-port/src/Game/Camera/CameraFixedPoint.hpp",
+      "sha256": "c3e376c91d69e1a10189b752cfb74e1c49b5cd41e53683373ec28dcfe1ea64ca"
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorFixedPoint.cpp",
+      "destination": "pc-port/src/Game/Camera/CamTranslatorFixedPoint.cpp",
+      "sha256": "c75d08a31dcc004172303a1c23fecc9118feed2027d0f2e2d475eb024e10772b"
+    },
+    {
+      "source": "include/Game/Camera/CamTranslatorFixedPoint.hpp",
+      "destination": "pc-port/src/Game/Camera/CamTranslatorFixedPoint.hpp",
+      "sha256": "076ce15ce7b035697da0fb598f8726faf1a129856d48f94fbb5a1b4d33cdb7f3"
+    }
+  ],
+  "actor_accessors": [
+    {
+      "source": "src/Game/Player/MarioActorCamera.cpp",
+      "destination": "pc-port/src/Game/Player/MarioActorCamera.cpp",
+      "signature": "void MarioActor::getUpVec(TVec3f* pVec) const",
+      "sha256": "f11b569be46e05805cd6ea0f34f9f9bf638f4cd0f2fdd729ecd18bd1986fcb95"
+    },
+    {
+      "source": "src/Game/Player/MarioActorCamera.cpp",
+      "destination": "pc-port/src/Game/Player/MarioActorCamera.cpp",
+      "signature": "void MarioActor::getFrontVec(TVec3f* pVec) const",
+      "sha256": "786719d61d1c249952a8d965a4d107fa4d7765d1e78f4ea8fd45e9f02bde8e62"
+    },
+    {
+      "source": "src/Game/Player/MarioActorCamera.cpp",
+      "destination": "pc-port/src/Game/Player/MarioActorCamera.cpp",
+      "signature": "void MarioActor::getSideVec(TVec3f* pVec) const",
+      "sha256": "5f8f998e00ba5f1e2079670f0948460725d0da7167d6888ed926b277419b2e54"
+    }
+  ],
+  "player_util_contracts": [
+    {
+      "source": "src/Game/Util/PlayerUtil.cpp",
+      "signature": "void getPlayerUpVec(TVec3f* pVec)",
+      "sha256": "bad02696612d88fcb4b805d7586cfd0065c8d35c2d01659f3a718190c497a566",
+      "native_reader": "read_up_vector"
+    },
+    {
+      "source": "src/Game/Util/PlayerUtil.cpp",
+      "signature": "void getPlayerFrontVec(TVec3f* pVec)",
+      "sha256": "f26c70dc66469df4ea0752ed513eade2999ee3f96579ebe67c1e9053fb44c8b1",
+      "native_reader": "read_front_vector"
+    },
+    {
+      "source": "src/Game/Util/PlayerUtil.cpp",
+      "signature": "void getPlayerSideVec(TVec3f* pVec)",
+      "sha256": "0e18a790c24a774102ad9d467f56ffcef7dbb94a4fb24e4485d574b1f515078a",
+      "native_reader": "read_side_vector"
+    }
+  ],
+  "dol": {
+    "path": "build/compat-math-oracle/main.dol",
+    "sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+    "functions": [
+      {
+        "name": "MarioActor_getFrontVec",
+        "address": "0x802b88c8",
+        "size": "0x14",
+        "sha256": "5538f2e6bed64ab7c99f2db85e4aa23f92aa716c77915bb7ecd0ee506313b0e6"
+      },
+      {
+        "name": "MarioActor_getSideVec",
+        "address": "0x802b88dc",
+        "size": "0x14",
+        "sha256": "166aa8a51f5c45552a8dd24b7e50e31b9c7eec49ec5cb50b944f9316a7e767fd"
+      },
+      {
+        "name": "MarioActor_getUpVec",
+        "address": "0x802b88f0",
+        "size": "0x10",
+        "sha256": "57c2b59ce7bbde1b51d2c10ba21515af7063fce869a44dcc2ee7abe65d49dade"
+      },
+      {
+        "name": "MR_getPlayerUpVec",
+        "address": "0x803f3790",
+        "size": "0x34",
+        "sha256": "65e4c592ba623cc9b336733b7e927db7c4eb243b19f72f877883520288b11457"
+      },
+      {
+        "name": "MR_getPlayerFrontVec",
+        "address": "0x803f37c4",
+        "size": "0x40",
+        "sha256": "2c1de05c83691b11369623a80a1430b63378bfba7336b83c16d5d3be59679e91"
+      },
+      {
+        "name": "MR_getPlayerSideVec",
+        "address": "0x803f3804",
+        "size": "0x34",
+        "sha256": "6d199530a958595352e47b3209cb468b1deec25a1ec0b6a8719517a91455c41a"
+      }
+    ]
+  }
+}

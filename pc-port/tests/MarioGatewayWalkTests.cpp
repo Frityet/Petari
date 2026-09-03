@@ -1,6 +1,7 @@
 #include "Game/Gravity/PointGravity.hpp"
 #include "Game/LiveActor/ActorLightCtrl.hpp"
 #include "Game/LiveActor/Binder.hpp"
+#include "Game/LiveActor/HitSensor.hpp"
 #include "Game/Map/CollisionCode.hpp"
 #include "Game/Map/LightFunction.hpp"
 #include "Game/Map/PlanetMap.hpp"
@@ -79,23 +80,82 @@ namespace {
         const auto saved_shadow = actor.mMario->mShadowPos;
         const auto saved_ground = actor.mMario->mGroundPos;
         const auto saved_up = actor.mUpVec;
+        const auto saved_front = actor.mMario->mFrontVec;
         const auto saved_side = actor.mMario->mSideVec;
+        const auto saved_forced_matrix_enabled = actor._EA5;
+        const auto saved_forced_matrix = actor._EA8;
+        const auto saved_bound = actor._934;
+        auto* const saved_bound_sensor = actor._924;
         actor.mMario->mShadowPos.set(11.0F, 22.0F, 33.0F);
         actor.mMario->mGroundPos.set(44.0F, 55.0F, 66.0F);
         actor.mUpVec.set(0.0F, 2.0F, 0.0F);
-        actor.mMario->mSideVec.set(-1.0F, 0.0F, 0.0F);
+        actor.mMario->mFrontVec.set(3.0F, 0.0F, 0.0F);
+        actor.mMario->mSideVec.set(0.0F, 0.0F, -4.0F);
+        actor._934 = false;
         const auto target = smgpc::compat::create_mario_camera_target(actor);
         target->movement();
+
+        TVec3f player_up;
+        TVec3f player_front;
+        TVec3f player_side;
+        MR::getPlayerUpVec(&player_up);
+        MR::getPlayerFrontVec(&player_front);
+        MR::getPlayerSideVec(&player_side);
+
+        // A real rush host and forced base matrix make the bound target's
+        // orientation distinct from the raw MarioActor vector getters.
+        auto bound_host = LiveActor("Player vector accessor bound host");
+        bound_host.initBinder(10.0F, 0.0F, 0U);
+        auto bound_sensor = HitSensor(0U, 0U, 10.0F, &bound_host);
+        actor._924 = &bound_sensor;
+        actor._934 = true;
+        actor._EA5 = true;
+        actor._EA8.identity();
+        actor._EA8[0][0] = 0.0F;
+        actor._EA8[0][2] = 1.0F;
+        actor._EA8[1][0] = 1.0F;
+        actor._EA8[1][1] = 0.0F;
+        actor._EA8[2][1] = 1.0F;
+        actor._EA8[2][2] = 0.0F;
+        const auto bound_target = smgpc::compat::create_mario_camera_target(actor);
+        bound_target->movement();
+        TVec3f bound_player_up;
+        TVec3f bound_player_front;
+        TVec3f bound_player_side;
+        MR::getPlayerUpVec(&bound_player_up);
+        MR::getPlayerFrontVec(&bound_player_front);
+        MR::getPlayerSideVec(&bound_player_side);
+
         actor.mMario->mShadowPos = saved_shadow;
         actor.mMario->mGroundPos = saved_ground;
         actor.mUpVec = saved_up;
+        actor.mMario->mFrontVec = saved_front;
         actor.mMario->mSideVec = saved_side;
+        actor._EA5 = saved_forced_matrix_enabled;
+        actor._EA8 = saved_forced_matrix;
+        actor._934 = saved_bound;
+        actor._924 = saved_bound_sensor;
         require(target->getGroundPos().x == 11.0F &&
                     target->getGroundPos().y == 22.0F &&
                     target->getGroundPos().z == 33.0F &&
                     target->getUpVec().x == 0.0F && target->getUpVec().y == 1.0F && target->getUpVec().z == 0.0F &&
-                    target->getSideVec().x == -1.0F,
+                    target->getSideVec().z == -4.0F,
                 "the player camera bridge must use shadow position, normalized camera up, and Mario's side getter");
+        const auto raw_vectors_match = [](const TVec3f& up, const TVec3f& front, const TVec3f& side) {
+            return up.x == 0.0F && up.y == 2.0F && up.z == 0.0F &&
+                   front.x == 3.0F && front.y == 0.0F && front.z == 0.0F &&
+                   side.x == 0.0F && side.y == 0.0F && side.z == -4.0F;
+        };
+        require(raw_vectors_match(player_up, player_front, player_side) &&
+                    raw_vectors_match(bound_player_up, bound_player_front, bound_player_side),
+                "global player orientation must preserve all three raw MarioActor getters in normal and bound states");
+        require(bound_target->getUpVec().x == 0.0F && bound_target->getUpVec().y == 0.0F &&
+                    bound_target->getUpVec().z == 1.0F &&
+                    bound_target->getFrontVec().x == 1.0F && bound_target->getFrontVec().y == 0.0F &&
+                    bound_target->getFrontVec().z == 0.0F &&
+                    bound_target->getSideVec().x == 0.0F && bound_target->getSideVec().y == 1.0F &&
+                    bound_target->getSideVec().z == 0.0F,
+                "bound camera target axes must still follow the forced base matrix independently of global player vectors");
     }
 
     void set_host_key(smgpc::render::AuroraWindow& window, SDL_Keycode key, bool held) {
@@ -377,6 +437,15 @@ namespace {
                 .read_base_matrix = +[](const LiveActor& value) {
                     return smgpc::compat::mario_camera_base_matrix(
                         static_cast<const MarioActor&>(value));
+                },
+                .read_up_vector = +[](const LiveActor& value, TVec3f* out) {
+                    static_cast<const MarioActor&>(value).getUpVec(out);
+                },
+                .read_front_vector = +[](const LiveActor& value, TVec3f* out) {
+                    static_cast<const MarioActor&>(value).getFrontVec(out);
+                },
+                .read_side_vector = +[](const LiveActor& value, TVec3f* out) {
+                    static_cast<const MarioActor&>(value).getSideVec(out);
                 },
             };
         runtime.player_system().attach_actor(*actor, entitlement_bridge);
