@@ -54,6 +54,14 @@ namespace MR {
         static_cast< AreaFormCylinder* >(pAreaObj->mForm)->calcPos(pPos);
     }
 
+    void calcCylinderUpVec(TVec3f* pUpVec, const AreaObj* pAreaObj) {
+        static_cast< AreaFormCylinder* >(pAreaObj->mForm)->calcUpVec(pUpVec);
+    }
+
+    f32 getCylinderRadius(const AreaObj* pAreaObj) {
+        return static_cast< AreaFormCylinder* >(pAreaObj->mForm)->_20;
+    }
+
     void tryToUpdatePlayerRestartIdInfo(const TVec3f& rPos) {
         RestartCube* cube = static_cast< RestartCube* >(getAreaIn("RestartCube", rPos));
 
