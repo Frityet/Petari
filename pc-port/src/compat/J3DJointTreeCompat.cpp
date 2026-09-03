@@ -42,3 +42,31 @@ J3DDrawMtxData::~J3DDrawMtxData() {
 Mtx J3DSys::mCurrentMtx;
 Vec J3DSys::mCurrentS;
 Vec J3DSys::mParentS;
+
+void J3DJointTree::findImportantMtxIndex() {
+    s32 wEvlpMtxNum = getWEvlpMtxNum();
+    u32 tableIdx = 0;
+    u16 drawFullWgtMtxNum = getDrawFullWgtMtxNum();
+    u16* wEvlpMixIndex = getWEvlpMixMtxIndex();
+    f32* wEvlpMixWeight = getWEvlpMixWeight();
+    u16* wEvlpImportantMtxIdx = getWEvlpImportantMtxIndex();
+
+    for (u16 i = 0; i < drawFullWgtMtxNum; i++) {
+        wEvlpImportantMtxIdx[i] = getDrawMtxIndex(i);
+    }
+
+    for (s32 i = 0; i < wEvlpMtxNum; i++) {
+        s32 mixNum = getWEvlpMixMtxNum(i);
+        u16 bestIdx = 0;
+        f32 bestWeight = -0.1f;
+
+        for (s32 j = 0; j < mixNum; j++, tableIdx++) {
+            if (bestWeight < wEvlpMixWeight[tableIdx]) {
+                bestWeight = wEvlpMixWeight[tableIdx];
+                bestIdx = wEvlpMixIndex[tableIdx];
+            }
+        }
+
+        wEvlpImportantMtxIdx[i + getDrawFullWgtMtxNum()] = bestIdx;
+    }
+}

@@ -525,7 +525,7 @@ void J3DGDSetFog(GXFogType type, f32 startz, f32 endz, f32 nearz, f32 farz, GXCo
 
 #define BP_FOG_RANGE_ADJ(arg0, arg1, arg2) ((u32)(arg2) << 24 | (u32)(arg0) << 0 | (u32)(arg1) << 10)
 
-void J3DGDSetFogRangeAdj(GXBool enable, u16 center, GXFogAdjTable* table) {
+void J3DGDSetFogRangeAdj(u8 enable, u16 center, GXFogAdjTable* table) {
     if (enable) {
         for (int i = 0; i < 10; i += 2) {
             u32 range_adj = BP_FOG_RANGE_ADJ_K0(table->r[i], table->r[i + 1], i / 2 + 0xE9);

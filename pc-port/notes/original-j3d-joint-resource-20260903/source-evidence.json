@@ -1,0 +1,21 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "important_index_body_exact": true,
+  "important_index_body_sha256": "9d8c10d7e1b2cba2fe8baf812a4f5e644cac5f18c497bfaa3beebd25503974e4",
+  "important_index_original_compiler_match_percent": 99.888885,
+  "important_index_retail_size": 180,
+  "retail_metadata_instruction_checks": {
+    "0x8043ea78": "0xa0040008",
+    "0x8043ea88": "0xa0a7002e",
+    "0x8043ea8c": "0x7c050050",
+    "0x8043ea90": "0xb0070044",
+    "0x8043eadc": "0x28000001",
+    "0x80440674": "0x7c05022e",
+    "0x80440678": "0x981f0016",
+    "0x80440690": "0x88040002",
+    "0x80440694": "0x981f0017",
+    "0x80440740": "0x280000ff",
+    "0x80440748": "0x987f0017"
+  },
+  "scope": "Retail metadata stores and an unchanged original helper; native byte decoder is validated by focused resource tests, not an original-compiler matching claim."
+}

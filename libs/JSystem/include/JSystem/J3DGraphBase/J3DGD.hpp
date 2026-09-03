@@ -110,6 +110,8 @@ inline void J3DGDSetBlendMode(GXBlendMode mode, GXBlendFactor srcFactor, GXBlend
                     srcFactor << 8 | (mode == GX_BM_SUBTRACT) << 11 | logicOp << 12 | 0x41 << 24);
 }
 
-inline void J3DGDSetZMode(u8 compareEnable, GXCompare func, u8 writeEnable);
+inline void J3DGDSetZMode(u8 compareEnable, GXCompare func, u8 writeEnable) {
+    J3DGDWriteBPCmd((writeEnable << 4 | compareEnable) | (func << 1 | 0x40000000));
+}
 
 inline void J3DGDSetZCompLoc(u32 compLocEnable);

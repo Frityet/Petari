@@ -1,0 +1,49 @@
+{
+  "tests": {
+    "normal": {
+      "case_count": 10,
+      "cases": [
+        "actual constructor, init, and geometry",
+        "retained mutable resource lifetime",
+        "JMap attach identity and null semantics",
+        "original octree search and leaf indices",
+        "single root and overlapping unused prefix",
+        "multiple root blocks",
+        "malformed resource boundaries",
+        "absent and out-of-range attributes",
+        "empty original prism array",
+        "incompatible live node/leaf alias is explicit"
+      ],
+      "binary_sha256": "b8afc31f569be8a0673333b039a58ec70862ff8419d69b62f7d110e037984508",
+      "returncode": 0,
+      "output_sha256": "531c4804ca8092c26f83a2e12faa18526165ac691657846f72dc7ec97bce1a6c"
+    },
+    "address-undefined": {
+      "case_count": 10,
+      "cases": [
+        "actual constructor, init, and geometry",
+        "retained mutable resource lifetime",
+        "JMap attach identity and null semantics",
+        "original octree search and leaf indices",
+        "single root and overlapping unused prefix",
+        "multiple root blocks",
+        "malformed resource boundaries",
+        "absent and out-of-range attributes",
+        "empty original prism array",
+        "incompatible live node/leaf alias is explicit"
+      ],
+      "binary_sha256": "93a64c6a50c91bbfc11abc2ddaab534cb15c46f3fa5da0ade03ac4001630f7d5",
+      "returncode": 0,
+      "output_sha256": "531c4804ca8092c26f83a2e12faa18526165ac691657846f72dc7ec97bce1a6c"
+    }
+  },
+  "source_sha256": {
+    "pc-port/tests/OriginalKCollisionResourceTests.cpp": "3d70c2b48d8916a72a77197a08de2dcbc8be38bce67ef43a5d6c14cbac182a51",
+    "pc-port/src/resource/KCollisionResource.cpp": "dd56add1b4f7759ebc99ea9cfe1520d5f1f1e30b2c07664dcc0b6e8faaa2474f",
+    "pc-port/src/resource/JMapResource.cpp": "4c088d6d55b099b98126fda5ecc006124aa8c3a5bdf88e73e77d8c2242c49a41",
+    "pc-port/src/compat/OriginalKCollisionCompat.cpp": "500c2e5d45e30b0a25c0d8746472b3dc341940e5bea320a2b1852977e85f7343",
+    "pc-port/src/resource/BcsvTable.cpp": "2b92814a77d6b4d03c0c8a4adebe6be024d909138701c2746bd528f9ff79b4be",
+    "pc-port/src/Game/Util/JMapInfo.cpp": "a74bf6ad916206988f5c0defcb81d69bd5f489a2324e4ba027e28ae968bb1b76"
+  },
+  "scope": "Independent actual KCollisionServer resource lifecycle; no CollisionParts or scene query activation, no shared xmake/GPU build."
+}

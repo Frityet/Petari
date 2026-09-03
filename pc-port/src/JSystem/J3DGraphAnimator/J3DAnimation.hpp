@@ -619,6 +619,7 @@ class J3DAnmColor : public J3DAnmBase {
 public:
     J3DAnmColor();
     void searchUpdateMaterialID(J3DMaterialTable*);
+    void searchUpdateMaterialID(J3DModelData*);
 
     virtual ~J3DAnmColor() {
     }

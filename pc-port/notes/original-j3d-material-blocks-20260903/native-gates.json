@@ -1,0 +1,112 @@
+[
+  {
+    "name": "smg-pc-original-j3d-material-animation-tests",
+    "command": [
+      "build/macosx/arm64/debug/smg-pc-original-j3d-material-animation-tests"
+    ],
+    "real_disc_enabled": true,
+    "returncode": 0,
+    "seconds": 0.525,
+    "binary_sha256": "3c085c137aebf977d86827111a2649658465b6625f09a44e8d0fe88b248461ae",
+    "output": "5/5 original material-animation groups passed\n"
+  },
+  {
+    "name": "smg-pc-original-j3d-material-block-tests",
+    "command": [
+      "build/macosx/arm64/debug/smg-pc-original-j3d-material-block-tests"
+    ],
+    "real_disc_enabled": true,
+    "returncode": 0,
+    "seconds": 0.345,
+    "binary_sha256": "c4742c8ed3f0678774ef1f41389d3120cb5bcf9c8982a7d49df589407f75cdf8",
+    "output": "5/5 original J3D material-block groups passed\n"
+  },
+  {
+    "name": "smg-pc-original-j3d-joint-resource-tests",
+    "command": [
+      "build/macosx/arm64/debug/smg-pc-original-j3d-joint-resource-tests"
+    ],
+    "real_disc_enabled": true,
+    "returncode": 0,
+    "seconds": 0.508,
+    "binary_sha256": "fe0c4210963bd3900d9de389f95b2b06e2c0bd75ef065d7b0e9687ffe689a183",
+    "output": "[resource] mario.bdl: joints=30, envelopes=13, serialized draw=48, native draw=35, full=22\n[pass] 4 original J3D joint-resource groups\n"
+  },
+  {
+    "name": "smg-pc-original-kcollision-resource-tests",
+    "command": [
+      "build/macosx/arm64/debug/smg-pc-original-kcollision-resource-tests"
+    ],
+    "real_disc_enabled": true,
+    "returncode": 0,
+    "seconds": 0.201,
+    "binary_sha256": "e017b30c41ff63406aa9d26eabe740f8dfcf79f06e9c92cc477b516b9b6c3a7f",
+    "output": "PASS actual constructor, init, and geometry\nPASS retained mutable resource lifetime\nPASS JMap attach identity and null semantics\nPASS original octree search and leaf indices\nPASS single root and overlapping unused prefix\nPASS multiple root blocks\nPASS malformed resource boundaries\nPASS absent and out-of-range attributes\nPASS empty original prism array\nPASS incompatible live node/leaf alias is explicit\n"
+  },
+  {
+    "name": "smg-pc-original-j3d-texture-mtx-tests",
+    "command": [
+      "build/macosx/arm64/debug/smg-pc-original-j3d-texture-mtx-tests"
+    ],
+    "real_disc_enabled": true,
+    "returncode": 0,
+    "seconds": 0.327,
+    "binary_sha256": "cf71ce8a51ab65211825c8fae577feaadac1c5f7372bc959d323a5dcd8e4bc52",
+    "output": "4/4 original J3D texture-matrix groups passed\n"
+  },
+  {
+    "name": "smg-pc-original-j3d-packet-tests",
+    "command": [
+      "build/macosx/arm64/debug/smg-pc-original-j3d-packet-tests"
+    ],
+    "real_disc_enabled": true,
+    "returncode": 0,
+    "seconds": 0.474,
+    "binary_sha256": "347755610aec5eead60f4074c023bf73895845591102659a6a778abe2c81d1fe",
+    "output": "4 original J3D packet/display-list groups passed\n"
+  },
+  {
+    "name": "smg-pc-original-j3d-mtx-buffer-tests",
+    "command": [
+      "build/macosx/arm64/debug/smg-pc-original-j3d-mtx-buffer-tests"
+    ],
+    "real_disc_enabled": true,
+    "returncode": 0,
+    "seconds": 0.48,
+    "binary_sha256": "d7855693219aaee21150ba5280d7239329c01f625669863e9740bde8d164523a",
+    "output": "6/6 original J3D matrix-buffer groups passed\n"
+  },
+  {
+    "name": "smg-pc-original-j3d-transform-animation-tests",
+    "command": [
+      "build/macosx/arm64/debug/smg-pc-original-j3d-transform-animation-tests"
+    ],
+    "real_disc_enabled": true,
+    "returncode": 0,
+    "seconds": 0.539,
+    "binary_sha256": "2fc507c6371501384414b0eedf395de7f2baab217928e2a519187bf1820d67f5",
+    "output": "[resource] wait.bck: joints=30, frames=180\n[resource] run.bck: joints=30, frames=60\n[resource] jump.bck: joints=30, frames=24\n[skip] no authored BCA in MarioAnime.arc; full sampling is covered by byte fixtures\n7/7 original J3D transform-animation groups passed, plus available real-disc resources\n"
+  },
+  {
+    "name": "smg-pc-original-xanime-core-tests",
+    "command": [
+      "build/macosx/arm64/debug/smg-pc-original-xanime-core-tests"
+    ],
+    "real_disc_enabled": true,
+    "returncode": 0,
+    "seconds": 0.493,
+    "binary_sha256": "781ce84ef4f7c931f1b785fe2bd87a92c1f7fb72a2e26d064ae9bb2e3272d9bd",
+    "output": "9/9 original XanimeCore system groups passed\n"
+  },
+  {
+    "name": "smg-pc-original-xanime-player-tests",
+    "command": [
+      "build/macosx/arm64/debug/smg-pc-original-xanime-player-tests"
+    ],
+    "real_disc_enabled": true,
+    "returncode": 0,
+    "seconds": 0.476,
+    "binary_sha256": "9bbc1e0775f06f4958f79ee30dd5b539e8502d150a82eaa8081ba4299d70d73d",
+    "output": "6/6 original XanimePlayer lifecycle groups passed\n"
+  }
+]

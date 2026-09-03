@@ -978,6 +978,10 @@ void J3DAnmColor::searchUpdateMaterialID(J3DMaterialTable* pMatTable) {
     }
 }
 
+void J3DAnmColor::searchUpdateMaterialID(J3DModelData* pModelData) {
+    searchUpdateMaterialID(&pModelData->getMaterialTable());
+}
+
 J3DAnmColorFull::J3DAnmColorFull() {
     mColorR = NULL;
     mColorG = NULL;

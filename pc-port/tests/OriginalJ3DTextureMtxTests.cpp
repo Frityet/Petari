@@ -115,6 +115,12 @@ namespace {
 
     void test_actual_calc_and_post_calc_contracts() {
         J3DTexMtx actual;
+        for (int row = 0; row < 4; ++row) {
+            for (int column = 0; column < 4; ++column) {
+                require(actual.getTexMtxInfo().mEffectMtx[row][column] == (row == column ? 1.0F : 0.0F),
+                        "retail default texture info contains the full identity effect matrix");
+            }
+        }
         auto& info = actual.getTexMtxInfo();
         info.mInfo = J3DTexMtxMode_EnvmapBasic;
         info.mCenter = {0, 0, 0};

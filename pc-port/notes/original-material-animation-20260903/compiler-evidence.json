@@ -1,0 +1,636 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "source_sha256": {
+    "src/Game/Animation/MaterialAnmBuffer.cpp": "1408cfc9432ca0f3da3208000c80ce0032dcb134802d2cc79b80f3bae7e634b4",
+    "src/JSystem/J3DGraphAnimator/J3DMaterialAnm.cpp": "e8f13199bc87d894e546b3fe0978ca97e530bcd290113a0a96a25cc18ce50e85",
+    "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp": "7739fc798a102625df68797c5fabd92fc6c61ca9e437e9b381d5798e4c5b1cb8",
+    "src/JSystem/JUtility/JUTNameTab.cpp": "1c79def40146b69aaab99c3b79b45aca77bd7dccd10d9db8397bfeb24dc6de93",
+    "include/Game/Animation/MaterialAnmBuffer.hpp": "0f0b1f0a447e2ffcfb6158a1b7293caffb950ee2eaa9d8c90ca2475765a599eb",
+    "libs/JSystem/include/JSystem/J3DGraphAnimator/J3DAnimation.hpp": "344e3908b11ef4db85d6ee90da7128b4e43fee8b93aac4531e2a12a7de787f8a",
+    "pc-port/src/compat/J3DAnimationInterpolation.hpp": "27bc422ebdd961519eb83577ddbbee61e38a1e66586fbeac104946b0102beef2"
+  },
+  "functions": [
+    {
+      "unit": "MaterialAnmBuffer",
+      "name": "__ct__17MaterialAnmBufferFPC14ResourceHolderP12J3DModelDatab",
+      "address": "0x800183f4",
+      "retail_size": 204,
+      "compiled_size": 204,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "341b8c81e4071e73d133b1f9e38d6cadea7d33df611b8352c02f185033e43401"
+    },
+    {
+      "unit": "MaterialAnmBuffer",
+      "name": "getDiffFlag__17MaterialAnmBufferCFl",
+      "address": "0x800184c0",
+      "retail_size": 16,
+      "compiled_size": 16,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "aad2ad245179ed1fca14403a50b2dd7c387c0e28f3ef1a99869383020ef6c88b"
+    },
+    {
+      "unit": "MaterialAnmBuffer",
+      "name": "getAllocMaterialAnmNum__17MaterialAnmBufferCFP12J3DModelDatab",
+      "address": "0x800184d0",
+      "retail_size": 20,
+      "compiled_size": 20,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "c8e8f5996205cc8bf7dfe460bf95c4a996d3df35113524020b76133193a1a13b"
+    },
+    {
+      "unit": "MaterialAnmBuffer",
+      "name": "searchUpdateMaterialID__17MaterialAnmBufferFPC14ResourceHolderP12J3DModelData",
+      "address": "0x800184e4",
+      "retail_size": 244,
+      "compiled_size": 244,
+      "objdiff_match_percent": 98.03278,
+      "retail_sha256": "f1fecbe797714c40b4ee4e2e292268d697d8575dc0275984b2644f51f0646f92"
+    },
+    {
+      "unit": "MaterialAnmBuffer",
+      "name": "setDiffFlag__17MaterialAnmBufferFPC14ResourceHolder",
+      "address": "0x800185d8",
+      "retail_size": 380,
+      "compiled_size": 380,
+      "objdiff_match_percent": 98.26316,
+      "retail_sha256": "0ee53e7667ef884b00d41035508cbccafb74c9ee60718fb0f7e075d3497f4f61"
+    },
+    {
+      "unit": "MaterialAnmBuffer",
+      "name": "getDifferedMaterialNum__17MaterialAnmBufferCFPC12J3DModelData",
+      "address": "0x80018754",
+      "retail_size": 68,
+      "compiled_size": 68,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "4c730708397c7f768ddc74d8f001df988169384a4a537498ee7a21f68473d096"
+    },
+    {
+      "unit": "MaterialAnmBuffer",
+      "name": "attachMaterialAnmBuffer__17MaterialAnmBufferFP12J3DModelDatab",
+      "address": "0x80018798",
+      "retail_size": 92,
+      "compiled_size": 92,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "8f57464d0998e4d5b0ca4882d1b1a961b9abfeb1a31e6b71035f59e6dfb9005e"
+    },
+    {
+      "unit": "MaterialAnmBuffer",
+      "name": "modifyDiffFlagBrk__FPUlPC15J3DAnmTevRegKeybPCc",
+      "address": "0x800187f4",
+      "retail_size": 188,
+      "compiled_size": 188,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "6de19da2d488808233a77df1bde0ae39a1f2dd77a1414ad96e6517fcaa55ffa8"
+    },
+    {
+      "unit": "MaterialAnmBuffer",
+      "name": "onDiffFlagBpk__2MRFPUlPC14J3DAnmColorKeyPCc",
+      "address": "0x800188b0",
+      "retail_size": 20,
+      "compiled_size": 20,
+      "objdiff_match_percent": 99.0,
+      "retail_sha256": "63f55754e3446bc0f25e22277bcc6a82575ba6202289afa111958125d47f7b47"
+    },
+    {
+      "unit": "MaterialAnmBuffer",
+      "name": "modifyDiffFlag<14J3DAnmColorKey>__FPUlPC14J3DAnmColorKey11J3DDiffFlagbPCcPCc_v",
+      "address": "0x800188c4",
+      "retail_size": 100,
+      "compiled_size": 100,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "316b5008a2dc900e46104695c89bb3a05661ab4265c3c58d1420f6c6f7ab6618"
+    },
+    {
+      "unit": "MaterialAnmBuffer",
+      "name": "offDiffFlagBpk__2MRFPUlPC14J3DAnmColorKeyPCc",
+      "address": "0x80018928",
+      "retail_size": 20,
+      "compiled_size": 20,
+      "objdiff_match_percent": 99.0,
+      "retail_sha256": "a59605d1a3f08828abce30da11e856263c2e7062b8eed68071e7479ee91fc51a"
+    },
+    {
+      "unit": "MaterialAnmBuffer",
+      "name": "onDiffFlagBtp__2MRFPUlPC16J3DAnmTexPatternPCc",
+      "address": "0x8001893c",
+      "retail_size": 20,
+      "compiled_size": 20,
+      "objdiff_match_percent": 99.0,
+      "retail_sha256": "b090a226108ffd9c0ba6cd3bae912f167dcd79c9e5140783178891b82b10a436"
+    },
+    {
+      "unit": "MaterialAnmBuffer",
+      "name": "modifyDiffFlag<16J3DAnmTexPattern>__FPUlPC16J3DAnmTexPattern11J3DDiffFlagbPCcPCc_v",
+      "address": "0x80018950",
+      "retail_size": 100,
+      "compiled_size": 100,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "84ea25562aedc46ffa04c3e881bca9453a2263a22b0e7a202c81d6cb42652587"
+    },
+    {
+      "unit": "MaterialAnmBuffer",
+      "name": "offDiffFlagBtp__2MRFPUlPC16J3DAnmTexPatternPCc",
+      "address": "0x800189b4",
+      "retail_size": 20,
+      "compiled_size": 20,
+      "objdiff_match_percent": 99.0,
+      "retail_sha256": "1b69f97bb3eb4f3ba332d55ca87377011e393201cd30239a9aa7e0bf6ae90ad8"
+    },
+    {
+      "unit": "MaterialAnmBuffer",
+      "name": "onDiffFlagBtk__2MRFPUlPC19J3DAnmTextureSRTKeyPCc",
+      "address": "0x800189c8",
+      "retail_size": 20,
+      "compiled_size": 20,
+      "objdiff_match_percent": 99.0,
+      "retail_sha256": "ca5573c8712cb6e170e6bcd5c48136f73b029cc133c54ffa701e6f663762dfec"
+    },
+    {
+      "unit": "MaterialAnmBuffer",
+      "name": "modifyDiffFlag<19J3DAnmTextureSRTKey>__FPUlPC19J3DAnmTextureSRTKey11J3DDiffFlagbPCcPCc_v",
+      "address": "0x800189dc",
+      "retail_size": 112,
+      "compiled_size": 112,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "b1a9e26d78e16bd1be539fd953a78732e230d5485a37f28d1b6e1a21eb2ffb09"
+    },
+    {
+      "unit": "MaterialAnmBuffer",
+      "name": "offDiffFlagBtk__2MRFPUlPC19J3DAnmTextureSRTKeyPCc",
+      "address": "0x80018a4c",
+      "retail_size": 20,
+      "compiled_size": 20,
+      "objdiff_match_percent": 99.0,
+      "retail_sha256": "d6165814d1142afd2b6a90f6e42c9e0e3ec582b81a6ddb1f8ecbf88c1452c0e0"
+    },
+    {
+      "unit": "MaterialAnmBuffer",
+      "name": "onDiffFlagBrk__2MRFPUlPC15J3DAnmTevRegKeyPCc",
+      "address": "0x80018a60",
+      "retail_size": 12,
+      "compiled_size": 12,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "ee188f71e3bb74603dac9361a6e69790bbf2fee5da1356810c345bcba70aefb8"
+    },
+    {
+      "unit": "MaterialAnmBuffer",
+      "name": "offDiffFlagBrk__2MRFPUlPC15J3DAnmTevRegKeyPCc",
+      "address": "0x80018a6c",
+      "retail_size": 12,
+      "compiled_size": 12,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "893a2713b9a8daaf7c52c3b22ffc92f367af543f10bc5557f8834feea4aa6f8d"
+    },
+    {
+      "unit": "J3DMaterialAnm",
+      "name": "initialize__14J3DMaterialAnmFv",
+      "address": "0x804375ac",
+      "retail_size": 164,
+      "compiled_size": 164,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "5592a3e92540ba6c0114df3677e3c79cb810510fd2679345f814b9929097ce4c"
+    },
+    {
+      "unit": "J3DMaterialAnm",
+      "name": "calc__14J3DMaterialAnmCFP11J3DMaterial",
+      "address": "0x80437650",
+      "retail_size": 480,
+      "compiled_size": 480,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "fd806f0fba0d798cc5eca17676105068212c11f8703b0919e57da948a6c280f9"
+    },
+    {
+      "unit": "J3DMaterialAnm",
+      "name": "setMatColorAnm__14J3DMaterialAnmFiP14J3DMatColorAnm",
+      "address": "0x80437830",
+      "retail_size": 64,
+      "compiled_size": 52,
+      "objdiff_match_percent": 69.375,
+      "retail_sha256": "8763390e4c6db9f888e99fb264c68777a62eda822364f6c18ab5ebbc5023b3a5"
+    },
+    {
+      "unit": "J3DMaterialAnm",
+      "name": "setTexMtxAnm__14J3DMaterialAnmFiP12J3DTexMtxAnm",
+      "address": "0x80437870",
+      "retail_size": 64,
+      "compiled_size": 52,
+      "objdiff_match_percent": 69.375,
+      "retail_sha256": "87ced0237b127d61faea26084f3a71841a83283029ba8660956cd46a204bf3f9"
+    },
+    {
+      "unit": "J3DMaterialAnm",
+      "name": "setTexNoAnm__14J3DMaterialAnmFiP11J3DTexNoAnm",
+      "address": "0x804378b0",
+      "retail_size": 64,
+      "compiled_size": 52,
+      "objdiff_match_percent": 69.375,
+      "retail_sha256": "74c6182322c6be1f62b95fe99deffd6b05ef41fe6508a7c9bd25968aa9e2f144"
+    },
+    {
+      "unit": "J3DMaterialAnm",
+      "name": "setTevColorAnm__14J3DMaterialAnmFiP14J3DTevColorAnm",
+      "address": "0x804378f0",
+      "retail_size": 64,
+      "compiled_size": 52,
+      "objdiff_match_percent": 69.375,
+      "retail_sha256": "66fc24f75221efc80023720989030db493830867faa74bfdd107c8bb4edcf2f3"
+    },
+    {
+      "unit": "J3DMaterialAnm",
+      "name": "setTevKColorAnm__14J3DMaterialAnmFiP15J3DTevKColorAnm",
+      "address": "0x80437930",
+      "retail_size": 64,
+      "compiled_size": 52,
+      "objdiff_match_percent": 69.375,
+      "retail_sha256": "503dd820ce9e4f5ea0cf009e56330fec7568dfe164f0614b3eb53126adc5207f"
+    },
+    {
+      "unit": "J3DAnimation",
+      "name": "__ct__19J3DAnmTextureSRTKeyFv",
+      "address": "0x804356ac",
+      "retail_size": 152,
+      "compiled_size": 152,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "a1052aef4b9431980bf07c663cf811342e772c936dc615018240ac291c66d76d"
+    },
+    {
+      "unit": "J3DAnimation",
+      "name": "calcTransform__19J3DAnmTextureSRTKeyCFfUsP17J3DTextureSRTInfo",
+      "address": "0x80435744",
+      "retail_size": 624,
+      "compiled_size": 624,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "f72e950c301751032956f8a0f28577effe86caad6152a43b340a50e315b5d370"
+    },
+    {
+      "unit": "J3DAnimation",
+      "name": "__ct__11J3DAnmColorFv",
+      "address": "0x80436048",
+      "retail_size": 96,
+      "compiled_size": 96,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "7e65f59ce9c1911e1f36984b259a4b353c8514a158790225ecdece9cb0f53591"
+    },
+    {
+      "unit": "J3DAnimation",
+      "name": "searchUpdateMaterialID__11J3DAnmColorFP16J3DMaterialTable",
+      "address": "0x804360a8",
+      "retail_size": 152,
+      "compiled_size": 152,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "0804e10177d7e3a900e0226aa340b993b5a6d3d10c382f6b29e027a21607661a"
+    },
+    {
+      "unit": "J3DAnimation",
+      "name": "searchUpdateMaterialID__11J3DAnmColorFP12J3DModelData",
+      "address": "0x80436140",
+      "retail_size": 8,
+      "compiled_size": 8,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "aa874635eb095b16134ee61643bdff22d7e112bdc35a6bf367ee9460ed16c847"
+    },
+    {
+      "unit": "J3DAnimation",
+      "name": "__ct__15J3DAnmColorFullFv",
+      "address": "0x80436148",
+      "retail_size": 84,
+      "compiled_size": 84,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "5592d479b3a5d6b9302ea12a68ef5cd7b725a0031fc901380c3fe315a3874d9a"
+    },
+    {
+      "unit": "J3DAnimation",
+      "name": "getColor__15J3DAnmColorFullCFUsP8_GXColor",
+      "address": "0x8043619c",
+      "retail_size": 368,
+      "compiled_size": 368,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "d923c41de1761eaf47c1bae50767fa93d51408cdb277e5a6c07b0983366e7f65"
+    },
+    {
+      "unit": "J3DAnimation",
+      "name": "__ct__14J3DAnmColorKeyFv",
+      "address": "0x8043630c",
+      "retail_size": 84,
+      "compiled_size": 84,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "a3952718b5207098ee185123da3d001339fb7dfd7678635c0ed622272aacd650"
+    },
+    {
+      "unit": "J3DAnimation",
+      "name": "getColor__14J3DAnmColorKeyCFUsP8_GXColor",
+      "address": "0x80436360",
+      "retail_size": 704,
+      "compiled_size": 656,
+      "objdiff_match_percent": 88.295456,
+      "retail_sha256": "452a08dcf847d7ea1a40a35382dd25a0f45ba5fc181ed824a7afbbde7be800d0"
+    },
+    {
+      "unit": "J3DAnimation",
+      "name": "__ct__15J3DAnmTevRegKeyFv",
+      "address": "0x80436620",
+      "retail_size": 160,
+      "compiled_size": 160,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "a4a5b30a8655b2955889d9a80f54f9ecb7f1f9c235f66002f575e4df3ec6d982"
+    },
+    {
+      "unit": "J3DAnimation",
+      "name": "__ct__16J3DAnmTexPatternFv",
+      "address": "0x804366c0",
+      "retail_size": 92,
+      "compiled_size": 92,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "d5debeecd34f0866148850a932ed67c0acaa119ab2b46d59359034e40918663c"
+    },
+    {
+      "unit": "J3DAnimation",
+      "name": "getTexNo__16J3DAnmTexPatternCFUsPUs",
+      "address": "0x8043671c",
+      "retail_size": 184,
+      "compiled_size": 184,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "0f6bdf80c0dd567e34829307b791374f0b9a98614f9d26634e26419d14f2be28"
+    },
+    {
+      "unit": "J3DAnimation",
+      "name": "searchUpdateMaterialID__16J3DAnmTexPatternFP16J3DMaterialTable",
+      "address": "0x80436864",
+      "retail_size": 152,
+      "compiled_size": 152,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "73c392cc6711f2e39fd2a5a298fba634d1ae0b195f0d0ab4fca2e61a86aaf414"
+    },
+    {
+      "unit": "J3DAnimation",
+      "name": "searchUpdateMaterialID__16J3DAnmTexPatternFP12J3DModelData",
+      "address": "0x804368fc",
+      "retail_size": 8,
+      "compiled_size": 8,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "aa874635eb095b16134ee61643bdff22d7e112bdc35a6bf367ee9460ed16c847"
+    },
+    {
+      "unit": "J3DAnimation",
+      "name": "searchUpdateMaterialID__19J3DAnmTextureSRTKeyFP16J3DMaterialTable",
+      "address": "0x80436904",
+      "retail_size": 276,
+      "compiled_size": 276,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "3d94ef714937cbd2c7511bb9e6203e929cae4da386bd4471fc2254809698a9dd"
+    },
+    {
+      "unit": "J3DAnimation",
+      "name": "searchUpdateMaterialID__19J3DAnmTextureSRTKeyFP12J3DModelData",
+      "address": "0x80436a18",
+      "retail_size": 8,
+      "compiled_size": 8,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "65e3452505410bd38d703c51ea76c8613c9041f5ef4d0f45621bb8c8a8566c42"
+    },
+    {
+      "unit": "J3DAnimation",
+      "name": "getTevColorReg__15J3DAnmTevRegKeyCFUsP11_GXColorS10",
+      "address": "0x80436a20",
+      "retail_size": 704,
+      "compiled_size": 656,
+      "objdiff_match_percent": 88.295456,
+      "retail_sha256": "5e6aec136c49ee2562427fd419ac130357ed52572664d3f3f73f0a9189aad43a"
+    },
+    {
+      "unit": "J3DAnimation",
+      "name": "getTevKonstReg__15J3DAnmTevRegKeyCFUsP8_GXColor",
+      "address": "0x80436ce0",
+      "retail_size": 704,
+      "compiled_size": 656,
+      "objdiff_match_percent": 88.295456,
+      "retail_sha256": "84d6368956e5b4a5a806d0801232c257465f6d85835ab302eee47f7e9c43c48b"
+    },
+    {
+      "unit": "J3DAnimation",
+      "name": "searchUpdateMaterialID__15J3DAnmTevRegKeyFP16J3DMaterialTable",
+      "address": "0x80436fa0",
+      "retail_size": 252,
+      "compiled_size": 252,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "c9ba52b33cdd0fed850d9ddc123a45e5821296e72da691393f1b26a51fb3dde3"
+    },
+    {
+      "unit": "J3DAnimation",
+      "name": "searchUpdateMaterialID__15J3DAnmTevRegKeyFP12J3DModelData",
+      "address": "0x8043709c",
+      "retail_size": 8,
+      "compiled_size": 8,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "530ef70c9ee8d326be87fa95f8482c3fc7104eedd58abfcf459d24ed813a01b3"
+    },
+    {
+      "unit": "J3DAnimation",
+      "name": "__dt__11J3DAnmColorFv",
+      "address": "0x80437174",
+      "retail_size": 64,
+      "compiled_size": 64,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "4d684ee1d459136c6c6b327284fe555d9c011b9c14cc8e0f6a735102ac988096"
+    },
+    {
+      "unit": "J3DAnimation",
+      "name": "getKind__16J3DAnmTexPatternCFv",
+      "address": "0x804371b4",
+      "retail_size": 8,
+      "compiled_size": 8,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "8286a529f25a748db551e16c92ccf02567e092085eb2f9c47fed829693da3b13"
+    },
+    {
+      "unit": "J3DAnimation",
+      "name": "__dt__16J3DAnmTexPatternFv",
+      "address": "0x804371bc",
+      "retail_size": 64,
+      "compiled_size": 64,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "44d09391aadf12afda506486daa732dec569f34d88c742f520beee1ea7cc3566"
+    },
+    {
+      "unit": "J3DAnimation",
+      "name": "getKind__15J3DAnmTevRegKeyCFv",
+      "address": "0x804371fc",
+      "retail_size": 8,
+      "compiled_size": 8,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "b5e824029c5a68b80822850f95cf0780462c4ebe92a6dee01aa71a3da27b38e2"
+    },
+    {
+      "unit": "J3DAnimation",
+      "name": "__dt__15J3DAnmTevRegKeyFv",
+      "address": "0x80437204",
+      "retail_size": 64,
+      "compiled_size": 64,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "7d9b5307715b28c37e374cb8b4033372090965fccb192ef0169732e584d0a136"
+    },
+    {
+      "unit": "J3DAnimation",
+      "name": "getKind__14J3DAnmColorKeyCFv",
+      "address": "0x80437244",
+      "retail_size": 8,
+      "compiled_size": 8,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "9b15c270c3a60716a9af043a0a6011feb05d00d49436fda42a7bafac68327a79"
+    },
+    {
+      "unit": "J3DAnimation",
+      "name": "__dt__14J3DAnmColorKeyFv",
+      "address": "0x8043724c",
+      "retail_size": 88,
+      "compiled_size": 88,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "e590a11c8190e26edbbc447b3d8fe515c5d8abfe18113e59a7cde8ec766bacee"
+    },
+    {
+      "unit": "J3DAnimation",
+      "name": "getKind__15J3DAnmColorFullCFv",
+      "address": "0x804372a4",
+      "retail_size": 8,
+      "compiled_size": 8,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "94cfec9d0830752e40f244d3e8a57a3d6db42c440e0e2f79022c38baabd6a607"
+    },
+    {
+      "unit": "J3DAnimation",
+      "name": "__dt__15J3DAnmColorFullFv",
+      "address": "0x804372ac",
+      "retail_size": 88,
+      "compiled_size": 88,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "6fee4b05398b43bf5e365dc014d6ed2221bc046c7c16112a5335c4660fb0b7ba"
+    },
+    {
+      "unit": "J3DAnimation",
+      "name": "getColor__11J3DAnmColorCFUsP8_GXColor",
+      "address": "0x80437304",
+      "retail_size": 4,
+      "compiled_size": 4,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "f332ea5b5437103cbb6f1508679da89eec9288ad775c96c439a17fccabe3de8e"
+    },
+    {
+      "unit": "J3DAnimation",
+      "name": "getKind__11J3DAnmColorCFv",
+      "address": "0x80437308",
+      "retail_size": 8,
+      "compiled_size": 8,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "2bf7a94759a252fd0d2af700ff876c19ab13998fb28ac5b0db3c70cdbc9ef8d6"
+    },
+    {
+      "unit": "J3DAnimation",
+      "name": "getKind__19J3DAnmTextureSRTKeyCFv",
+      "address": "0x8043743c",
+      "retail_size": 8,
+      "compiled_size": 8,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "fe9c110b732955f4deec1dfac58f1e6efe4f68d3a99c9b6c005a30e659c54080"
+    },
+    {
+      "unit": "J3DAnimation",
+      "name": "__dt__19J3DAnmTextureSRTKeyFv",
+      "address": "0x80437444",
+      "retail_size": 64,
+      "compiled_size": 64,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "748fced6412c5502c7619185a6df74bfca50582bc4f826d1601c3c73d36610a2"
+    },
+    {
+      "unit": "JUTNameTab",
+      "name": "__ct__10JUTNameTabFv",
+      "address": "0x80418454",
+      "retail_size": 64,
+      "compiled_size": 64,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "79427675f761637ccaafaab4796f8b5a48419fbf88e69f2247c12475e8c750cd"
+    },
+    {
+      "unit": "JUTNameTab",
+      "name": "__ct__10JUTNameTabFPC7ResNTAB",
+      "address": "0x80418494",
+      "retail_size": 60,
+      "compiled_size": 60,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "7e56ae652e18afbcf360ad8e7c75e395ac4ade2e4e3eb92f56d576085fdb92d6"
+    },
+    {
+      "unit": "JUTNameTab",
+      "name": "setResource__10JUTNameTabFPC7ResNTAB",
+      "address": "0x804184d0",
+      "retail_size": 56,
+      "compiled_size": 56,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "48ce9cb31014a6f0982ffa6e30743fc428b2ebc35d16c015e9ca1f792487cf26"
+    },
+    {
+      "unit": "JUTNameTab",
+      "name": "getIndex__10JUTNameTabCFPCc",
+      "address": "0x80418508",
+      "retail_size": 160,
+      "compiled_size": 160,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "c497e4c07291db254e4c1ae19f85fe55868fb4b52b1c3a40c3243ff1bc83426a"
+    },
+    {
+      "unit": "JUTNameTab",
+      "name": "getName__10JUTNameTabCFUs",
+      "address": "0x804185a8",
+      "retail_size": 44,
+      "compiled_size": 44,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "87bbd69019ac741a9c284245fe5e9454b803bd5672a29e071ada3bebb96acc3e"
+    },
+    {
+      "unit": "JUTNameTab",
+      "name": "calcKeyCode__10JUTNameTabCFPCc",
+      "address": "0x804185d4",
+      "retail_size": 48,
+      "compiled_size": 48,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "6db68b99e43ab107c6ef96ad02331d9b42296202b653984671fea78b7a623bee"
+    },
+    {
+      "unit": "JUTNameTab",
+      "name": "__dt__10JUTNameTabFv",
+      "address": "0x80418604",
+      "retail_size": 64,
+      "compiled_size": 64,
+      "objdiff_match_percent": 100.0,
+      "retail_sha256": "1c20f85ebe24b8381cbafbf8cc583649c20c8ad6d669a69ed7e733f48356f879"
+    }
+  ],
+  "compiler": "GC3.0a3 with actual configured Game/SDK flags, no include overlays",
+  "source_correspondence": [
+    "Byte identity: src/Game/Animation/MaterialAnmBuffer.cpp -> Game/Animation/MaterialAnmBuffer.cpp",
+    "Byte identity: include/Game/Animation/MaterialAnmBuffer.hpp -> Game/Animation/MaterialAnmBuffer.hpp",
+    "Byte identity: src/JSystem/J3DGraphAnimator/J3DMaterialAnm.cpp -> compat/J3DMaterialAnmCompat.cpp",
+    "Byte identity: src/JSystem/JUtility/JUTNameTab.cpp -> compat/JUTNameTabCompat.cpp",
+    "Original method with declared PPC conversion substitutions: J3DAnmTextureSRTKey::J3DAnmTextureSRTKey()",
+    "Original method with declared PPC conversion substitutions: J3DAnmTextureSRTKey::calcTransform(f32 frame, u16 jointNo, J3DTextureSRTInfo* pTexSRTInfo) const",
+    "Original method with declared PPC conversion substitutions: J3DAnmColor::J3DAnmColor() : field_0xc(0), field_0xe(0), field_0x10(0), field_0x12(0), mUpdateMaterialNum(0), mUpdateMaterialID(NULL)",
+    "Original method with declared PPC conversion substitutions: J3DAnmColor::searchUpdateMaterialID(J3DMaterialTable* pMatTable)",
+    "Original method with declared PPC conversion substitutions: J3DAnmColor::searchUpdateMaterialID(J3DModelData* pModelData)",
+    "Original method with declared PPC conversion substitutions: J3DAnmColorFull::J3DAnmColorFull()",
+    "Original method with declared PPC conversion substitutions: J3DAnmColorFull::getColor(u16 index, GXColor* pColor) const",
+    "Original method with declared PPC conversion substitutions: J3DAnmColorKey::J3DAnmColorKey()",
+    "Original method with declared PPC conversion substitutions: J3DAnmColorKey::getColor(u16 index, GXColor* pColor) const",
+    "Original method with declared PPC conversion substitutions: J3DAnmTevRegKey::J3DAnmTevRegKey()",
+    "Original method with declared PPC conversion substitutions: J3DAnmTexPattern::J3DAnmTexPattern() : mTextureIndex(NULL), mAnmTable(NULL), field_0x14(0), mUpdateMaterialNum(0), mUpdateMaterialID(NULL)",
+    "Original method with declared PPC conversion substitutions: J3DAnmTexPattern::getTexNo(u16 index, u16* pTexNo) const",
+    "Original method with declared PPC conversion substitutions: J3DAnmTexPattern::searchUpdateMaterialID(J3DMaterialTable* pMatTable)",
+    "Original method with declared PPC conversion substitutions: J3DAnmTexPattern::searchUpdateMaterialID(J3DModelData* pModelData)",
+    "Original method with declared PPC conversion substitutions: J3DAnmTextureSRTKey::searchUpdateMaterialID(J3DMaterialTable* pMatTable)",
+    "Original method with declared PPC conversion substitutions: J3DAnmTextureSRTKey::searchUpdateMaterialID(J3DModelData* pModelData)",
+    "Original method with declared PPC conversion substitutions: J3DAnmTevRegKey::getTevColorReg(u16 index, GXColorS10* pColor) const",
+    "Original method with declared PPC conversion substitutions: J3DAnmTevRegKey::getTevKonstReg(u16 index, GXColor* pColor) const",
+    "Original method with declared PPC conversion substitutions: J3DAnmTevRegKey::searchUpdateMaterialID(J3DMaterialTable* pMatTable)",
+    "Original method with declared PPC conversion substitutions: J3DAnmTevRegKey::searchUpdateMaterialID(J3DModelData* pModelData)",
+    "Existing transform source and shared signed16 Hermite retail dataflow remain verified"
+  ]
+}

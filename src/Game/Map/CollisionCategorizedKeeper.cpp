@@ -1,6 +1,37 @@
 #include "Game/Map/CollisionCategorizedKeeper.hpp"
 #include "Game/Map/CollisionParts.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/SceneUtil.hpp"
 #include <algorithm>
+
+CollisionCategorizedKeeper::CollisionCategorizedKeeper(s32 category)
+    : NameObj("地形コリジョンカテゴリキーパー"), mHitInfoArray(nullptr), _10(0), mZoneCount(0), mZoneNum(0), _9C(category), _A0(false), _A1(true) {
+    mHitInfoArray = new HitInfo[32];
+}
+
+CollisionCategorizedKeeper::~CollisionCategorizedKeeper() {
+}
+
+void CollisionCategorizedKeeper::movement() {
+    for (CollisionZone** pZone = mZones; pZone != mZones + mZoneNum; pZone++) {
+        s32 count = (*pZone)->mNumParts;
+        for (s32 i = 0; i < count; i++) {
+            CollisionParts* pParts = (*pZone)->mPartsArray[i];
+            if (!pParts->_CC) {
+                continue;
+            }
+            if (_9C == pParts->mKeeperIndex) {
+                pParts->updateMtx();
+            }
+            if (_A1) {
+                (*pZone)->calcMinMaxAndRadius();
+            } else if (pParts->_D4 == 0) {
+                (*pZone)->calcMinMaxAndRadiusIfMoveOuter(pParts);
+            }
+        }
+    }
+    _A1 = false;
+}
 
 TVec3f CollisionParts::getTrans() {
     TVec3f translation;
@@ -27,6 +58,23 @@ void CollisionCategorizedKeeper::addToGlobal(CollisionParts* pParts) {
 void CollisionCategorizedKeeper::removeFromGlobal(CollisionParts* pParts) {
     mZones[0]->eraseParts(pParts);
     mZoneCount--;
+}
+
+HitInfo* CollisionCategorizedKeeper::getStrikeInfo(u32 index) {
+    return &mHitInfoArray[index];
+}
+
+CollisionZone* CollisionCategorizedKeeper::getZone(int zone) {
+    if (!_A0) {
+        s32 count = MR::getZoneNum();
+        for (s32 i = 0; i < count; i++) {
+            CollisionZone* pZone = new CollisionZone(i);
+            s32 index = mZoneNum++;
+            mZones[index] = pZone;
+        }
+        _A0 = true;
+    }
+    return mZones[zone];
 }
 
 CollisionZone::CollisionZone(s32 zoneID) : mZoneID(zoneID), mNumParts(0), _808(0, 0, 0), mRadius(0.0f), _818(0, 0, 0), _824(0, 0, 0) {
@@ -68,6 +116,23 @@ void CollisionZone::calcMinMaxAndRadius() {
         }
     }
     mRadius = radius;
+}
+
+void CollisionZone::calcMinMaxAndRadiusIfMoveOuter(CollisionParts* pParts) {
+    f32 radius = pParts->_D8;
+    TVec3f position = pParts->getTrans();
+    TVec3f minimum = _818;
+    TVec3f maximum = _824;
+    minimum.x += radius;
+    minimum.y += radius;
+    minimum.z += radius;
+    maximum.x -= radius;
+    maximum.y -= radius;
+    maximum.z -= radius;
+    if (!MR::isInRange(position.x, minimum.x, maximum.x) || !MR::isInRange(position.y, minimum.y, maximum.y) ||
+        !MR::isInRange(position.z, minimum.z, maximum.z)) {
+        calcMinMaxAndRadius();
+    }
 }
 
 void CollisionZone::addAndUpdateMinMax(TVec3f minimum, TVec3f maximum) {

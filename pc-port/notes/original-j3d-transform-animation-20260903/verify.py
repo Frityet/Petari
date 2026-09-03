@@ -49,7 +49,8 @@ def normalized(text):
 
 
 def source_correspondence():
-    root, pc = SOURCE.read_text(), PC_SOURCE.read_text()
+    root = SOURCE.read_text()
+    pc = PC_SOURCE.read_text() + (ROOT / 'pc-port/src/compat/J3DAnimationInterpolation.hpp').read_text()
     root_header = (ROOT / 'libs/JSystem/include/JSystem/J3DGraphAnimator/J3DAnimation.hpp').read_text()
     pc_header = (ROOT / 'pc-port/src/JSystem/J3DGraphAnimator/J3DAnimation.hpp').read_text()
     checked = []

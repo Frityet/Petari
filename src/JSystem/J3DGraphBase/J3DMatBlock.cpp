@@ -1894,10 +1894,7 @@ void J3DTexGenBlockPatched::calcPostTexMtxWithoutViewMtx(f32 const (*param_0)[4]
     }
 }
 
-inline void J3DGDWriteBPCmd(u32 regval) {
-    J3DGDWrite_u8(0x61);
-    J3DGDWrite_u32(regval);
-}
+
 
 inline void J3DGDSetZCompLoc(u32 compLocEnable) {
     J3DGDWriteBPCmd(0xFE000040);
@@ -1908,4 +1905,14 @@ inline void J3DGDWriteXFCmdHdr(u16 addr, u8 len) {
     J3DGDWrite_u8(0x10);
     J3DGDWrite_u16(len - 1);
     J3DGDWrite_u16(addr);
+}
+
+J3DGXColorS10& J3DGXColorS10::operator=(const GXColorS10& color) {
+    __memcpy(this, &color, sizeof(GXColorS10));
+    return *this;
+}
+
+J3DTexCoord& J3DTexCoord::operator=(const J3DTexCoord& other) {
+    J3DTexCoordInfo::operator=(other);
+    return *this;
 }

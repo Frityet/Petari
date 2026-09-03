@@ -52,7 +52,7 @@ void KCollisionServer::init(void* pData, const void* pMapData) {
 void KCollisionServer::setData(void* pData) {
     mFile = reinterpret_cast< KCLFile* >(pData);
 
-    if (isBinaryInitialized(pData)) {
+    if (!isBinaryInitialized(pData)) {
         mFile->mPos = reinterpret_cast< TVec3f* >(reinterpret_cast< u8* >(mFile) + mFile->mPosOffset);
         mFile->mNorms = reinterpret_cast< TVec3f* >(reinterpret_cast< u8* >(mFile) + mFile->mNormOffset);
         mFile->mPrisms = reinterpret_cast< KC_PrismData* >(reinterpret_cast< u8* >(mFile) + mFile->mPrismOffset);
@@ -208,11 +208,19 @@ s32* KCollisionServer::searchBlock(s32* a1, const u32& rX, const u32& rY, const 
     u8* octree = reinterpret_cast< u8* >(file->mOctree);
     *a1 = blockWidthShift;
 
+#if defined(TARGET_PC)
+    // The special one-root layout stores -1 shifts. Retail discards that
+    // intermediate offset; avoid evaluating negative C++ shifts on the host.
+    s32 offset = 0;
+    if (file->mBlockXYShift != -1 || file->mBlockXShift != -1) {
+        offset = ((rX >> blockWidthShift) | ((rZ >> blockWidthShift) << file->mBlockXYShift) | ((rY >> blockWidthShift) << file->mBlockXShift)) * 4;
+    }
+#else
     s32 offset = ((rX >> blockWidthShift) | ((rZ >> blockWidthShift) << file->mBlockXYShift) | ((rY >> blockWidthShift) << file->mBlockXShift)) * 4;
-
     if (file->mBlockXYShift == -1 && file->mBlockXShift == -1) {
         offset = 0;
     }
+#endif
 
     while ((offset = *reinterpret_cast< s32* >(octree + offset)) >= 0) {
         octree += offset;

@@ -1,11 +1,13 @@
 #include "Game/Util/JMapInfo.hpp"
 
 #include "resource/BcsvTable.hpp"
+#include "resource/JMapResource.hpp"
 
 #include <algorithm>
 #include <cctype>
 #include <cstring>
 #include <limits>
+#include <stdexcept>
 #include <string_view>
 
 namespace {
@@ -83,8 +85,19 @@ int JMapInfo::getNumFields() const {
     return count > static_cast< std::size_t >(std::numeric_limits< int >::max()) ? std::numeric_limits< int >::max() : static_cast< int >(count);
 }
 
-bool JMapInfo::attach(const void*) {
-    return false;
+bool JMapInfo::attach(const void* data) {
+    if (data == nullptr) {
+        return false;
+    }
+    const auto resource = smgpc::resource::find_jmap_resource(data);
+    if (resource == nullptr) {
+        throw std::invalid_argument("JMapInfo::attach requires a retained, bounded JMap resource.");
+    }
+    mData = resource->mData;
+    mTable = resource->mTable;
+    mFloatOverrides.clear();
+    mStringCache.clear();
+    return true;
 }
 
 void JMapInfo::setName(const char* pName) {

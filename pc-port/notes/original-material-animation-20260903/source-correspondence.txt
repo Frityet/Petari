@@ -1,0 +1,25 @@
+Byte identity: src/Game/Animation/MaterialAnmBuffer.cpp -> Game/Animation/MaterialAnmBuffer.cpp
+Byte identity: include/Game/Animation/MaterialAnmBuffer.hpp -> Game/Animation/MaterialAnmBuffer.hpp
+Byte identity: src/JSystem/J3DGraphAnimator/J3DMaterialAnm.cpp -> compat/J3DMaterialAnmCompat.cpp
+Byte identity: src/JSystem/JUtility/JUTNameTab.cpp -> compat/JUTNameTabCompat.cpp
+Original method with declared PPC conversion substitutions: J3DAnmTextureSRTKey::J3DAnmTextureSRTKey()
+Original method with declared PPC conversion substitutions: J3DAnmTextureSRTKey::calcTransform(f32 frame, u16 jointNo, J3DTextureSRTInfo* pTexSRTInfo) const
+Original method with declared PPC conversion substitutions: J3DAnmColor::J3DAnmColor() : field_0xc(0), field_0xe(0), field_0x10(0), field_0x12(0), mUpdateMaterialNum(0), mUpdateMaterialID(NULL)
+Original method with declared PPC conversion substitutions: J3DAnmColor::searchUpdateMaterialID(J3DMaterialTable* pMatTable)
+Original method with declared PPC conversion substitutions: J3DAnmColor::searchUpdateMaterialID(J3DModelData* pModelData)
+Original method with declared PPC conversion substitutions: J3DAnmColorFull::J3DAnmColorFull()
+Original method with declared PPC conversion substitutions: J3DAnmColorFull::getColor(u16 index, GXColor* pColor) const
+Original method with declared PPC conversion substitutions: J3DAnmColorKey::J3DAnmColorKey()
+Original method with declared PPC conversion substitutions: J3DAnmColorKey::getColor(u16 index, GXColor* pColor) const
+Original method with declared PPC conversion substitutions: J3DAnmTevRegKey::J3DAnmTevRegKey()
+Original method with declared PPC conversion substitutions: J3DAnmTexPattern::J3DAnmTexPattern() : mTextureIndex(NULL), mAnmTable(NULL), field_0x14(0), mUpdateMaterialNum(0), mUpdateMaterialID(NULL)
+Original method with declared PPC conversion substitutions: J3DAnmTexPattern::getTexNo(u16 index, u16* pTexNo) const
+Original method with declared PPC conversion substitutions: J3DAnmTexPattern::searchUpdateMaterialID(J3DMaterialTable* pMatTable)
+Original method with declared PPC conversion substitutions: J3DAnmTexPattern::searchUpdateMaterialID(J3DModelData* pModelData)
+Original method with declared PPC conversion substitutions: J3DAnmTextureSRTKey::searchUpdateMaterialID(J3DMaterialTable* pMatTable)
+Original method with declared PPC conversion substitutions: J3DAnmTextureSRTKey::searchUpdateMaterialID(J3DModelData* pModelData)
+Original method with declared PPC conversion substitutions: J3DAnmTevRegKey::getTevColorReg(u16 index, GXColorS10* pColor) const
+Original method with declared PPC conversion substitutions: J3DAnmTevRegKey::getTevKonstReg(u16 index, GXColor* pColor) const
+Original method with declared PPC conversion substitutions: J3DAnmTevRegKey::searchUpdateMaterialID(J3DMaterialTable* pMatTable)
+Original method with declared PPC conversion substitutions: J3DAnmTevRegKey::searchUpdateMaterialID(J3DModelData* pModelData)
+Existing transform source and shared signed16 Hermite retail dataflow remain verified

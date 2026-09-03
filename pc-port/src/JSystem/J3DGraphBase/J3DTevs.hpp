@@ -1,6 +1,7 @@
 #pragma once
 
 #include "JSystem/J3DGraphBase/J3DGD.hpp"
+#include "compat/BigEndian.hpp"
 #include "JSystem/J3DGraphBase/J3DStruct.hpp"
 #include <revolution/gx.h>
 
@@ -143,8 +144,8 @@ struct J3DTevStage {
     }
 
     void load(u32 param_1) const {
-        J3DGDWriteBPCmd(*(u32*)&field_0x0);
-        J3DGDWriteBPCmd(*(u32*)&field_0x4);
+        J3DGDWriteBPCmd(smgpc::compat::read_be_u32(&field_0x0));
+        J3DGDWriteBPCmd(smgpc::compat::read_be_u32(&field_0x4));
     }
 
     J3DTevStage& operator=(const J3DTevStage& other) {

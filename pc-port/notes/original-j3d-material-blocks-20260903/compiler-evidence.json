@@ -1,0 +1,4280 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "source_sha256": {
+    "src/JSystem/J3DGraphBase/J3DMatBlock.cpp": "21b0c20431e6c867d1c2370ac784977a5ac349b73fe9d11d0c09129005be9360",
+    "src/JSystem/J3DGraphBase/J3DStruct.cpp": "a0dcf5cbb9225a16774ccf0686bc9b14dd00fd03f34c0843568b39776ae44fd3",
+    "src/JSystem/J3DGraphBase/J3DTevs.cpp": "af0fde2313ea1da9e694d64990c522ff4513c3ba87b77f3fbd9a86ec71c43e26",
+    "src/JSystem/J3DGraphBase/J3DMaterial.cpp": "587668ae2c6ceb7a580fecf458587372a927e7d55075dd244839a4819da0639d"
+  },
+  "commands": {
+    "J3DMatBlock": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-fp_contract",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-use_lmw_stmw",
+      "off",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/JSystem/J3DGraphBase/J3DMatBlock.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-j3d-material-blocks-20260903/J3DMatBlock.o"
+    ],
+    "J3DStruct": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-fp_contract",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-use_lmw_stmw",
+      "off",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/JSystem/J3DGraphBase/J3DStruct.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-j3d-material-blocks-20260903/J3DStruct.o"
+    ],
+    "J3DTevs": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-fp_contract",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-use_lmw_stmw",
+      "off",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/JSystem/J3DGraphBase/J3DTevs.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-j3d-material-blocks-20260903/J3DTevs.o"
+    ],
+    "J3DMaterial": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-fp_contract",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-use_lmw_stmw",
+      "off",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/JSystem/J3DGraphBase/J3DMaterial.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-j3d-material-blocks-20260903/J3DMaterial.o"
+    ]
+  },
+  "units": {
+    "J3DMatBlock": [
+      {
+        "name": "initialize__21J3DColorBlockLightOffFv",
+        "retail_size": 152,
+        "compiled_size": 152,
+        "objdiff_percent": 99.60526
+      },
+      {
+        "name": "initialize__22J3DColorBlockAmbientOnFv",
+        "retail_size": 240,
+        "compiled_size": 240,
+        "objdiff_percent": 99.416664
+      },
+      {
+        "name": "initialize__20J3DColorBlockLightOnFv",
+        "retail_size": 272,
+        "compiled_size": 272,
+        "objdiff_percent": 99.48529
+      },
+      {
+        "name": "initialize__21J3DTexGenBlockPatchedFv",
+        "retail_size": 48,
+        "compiled_size": 48,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "initialize__15J3DTexGenBlock4Fv",
+        "retail_size": 48,
+        "compiled_size": 48,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "initialize__19J3DTexGenBlockBasicFv",
+        "retail_size": 48,
+        "compiled_size": 48,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "initialize__15J3DTevBlockNullFv",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "initialize__18J3DTevBlockPatchedFv",
+        "retail_size": 308,
+        "compiled_size": 308,
+        "objdiff_percent": 99.74026
+      },
+      {
+        "name": "initialize__12J3DTevBlock1Fv",
+        "retail_size": 40,
+        "compiled_size": 40,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "initialize__12J3DTevBlock2Fv",
+        "retail_size": 272,
+        "compiled_size": 272,
+        "objdiff_percent": 99.70588
+      },
+      {
+        "name": "initialize__12J3DTevBlock4Fv",
+        "retail_size": 328,
+        "compiled_size": 328,
+        "objdiff_percent": 99.756096
+      },
+      {
+        "name": "initialize__13J3DTevBlock16Fv",
+        "retail_size": 340,
+        "compiled_size": 340,
+        "objdiff_percent": 99.76471
+      },
+      {
+        "name": "initialize__15J3DIndBlockFullFv",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "initialize__16J3DPEBlockFogOffFv",
+        "retail_size": 36,
+        "compiled_size": 36,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "initialize__14J3DPEBlockFullFv",
+        "retail_size": 44,
+        "compiled_size": 44,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "countDLSize__21J3DColorBlockLightOffFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "countDLSize__22J3DColorBlockAmbientOnFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "countDLSize__20J3DColorBlockLightOnFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "countDLSize__21J3DTexGenBlockPatchedFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "countDLSize__15J3DTexGenBlock4Fv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "countDLSize__19J3DTexGenBlockBasicFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "countDLSize__18J3DTevBlockPatchedFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "countDLSize__12J3DTevBlock1Fv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "countDLSize__12J3DTevBlock2Fv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "countDLSize__12J3DTevBlock4Fv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "countDLSize__13J3DTevBlock16Fv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "countDLSize__15J3DIndBlockFullFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "countDLSize__13J3DPEBlockOpaFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "countDLSize__17J3DPEBlockTexEdgeFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "countDLSize__13J3DPEBlockXluFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "countDLSize__16J3DPEBlockFogOffFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "countDLSize__14J3DPEBlockFullFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "load__21J3DColorBlockLightOffFv",
+        "retail_size": 160,
+        "compiled_size": 160,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "load__22J3DColorBlockAmbientOnFv",
+        "retail_size": 188,
+        "compiled_size": 188,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "load__20J3DColorBlockLightOnFv",
+        "retail_size": 244,
+        "compiled_size": 244,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "patch__21J3DColorBlockLightOffFv",
+        "retail_size": 76,
+        "compiled_size": 76,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "patchMatColor__21J3DColorBlockLightOffFv",
+        "retail_size": 120,
+        "compiled_size": 120,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "patchLight__21J3DColorBlockLightOffFv",
+        "retail_size": 136,
+        "compiled_size": 136,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "patch__20J3DColorBlockLightOnFv",
+        "retail_size": 76,
+        "compiled_size": 76,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "patchMatColor__20J3DColorBlockLightOnFv",
+        "retail_size": 120,
+        "compiled_size": 120,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "patchLight__20J3DColorBlockLightOnFv",
+        "retail_size": 184,
+        "compiled_size": 184,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "diff__21J3DColorBlockLightOffFUl",
+        "retail_size": 104,
+        "compiled_size": 104,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "diffMatColor__21J3DColorBlockLightOffFv",
+        "retail_size": 76,
+        "compiled_size": 76,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "diff__20J3DColorBlockLightOnFUl",
+        "retail_size": 112,
+        "compiled_size": 104,
+        "objdiff_percent": 92.46429
+      },
+      {
+        "name": "diffMatColor__20J3DColorBlockLightOnFv",
+        "retail_size": 76,
+        "compiled_size": 76,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "load__15J3DTexGenBlock4Fv",
+        "retail_size": 160,
+        "compiled_size": 160,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "load__19J3DTexGenBlockBasicFv",
+        "retail_size": 160,
+        "compiled_size": 160,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "patch__21J3DTexGenBlockPatchedFv",
+        "retail_size": 132,
+        "compiled_size": 132,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "patch__15J3DTexGenBlock4Fv",
+        "retail_size": 156,
+        "compiled_size": 156,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "patch__19J3DTexGenBlockBasicFv",
+        "retail_size": 156,
+        "compiled_size": 156,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "diff__21J3DTexGenBlockPatchedFUl",
+        "retail_size": 104,
+        "compiled_size": 104,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "diffTexMtx__21J3DTexGenBlockPatchedFv",
+        "retail_size": 96,
+        "compiled_size": 96,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "diffTexGen__21J3DTexGenBlockPatchedFv",
+        "retail_size": 32,
+        "compiled_size": 32,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "load__12J3DTevBlock1Fv",
+        "retail_size": 180,
+        "compiled_size": 252,
+        "objdiff_percent": 54.444443
+      },
+      {
+        "name": "load__12J3DTevBlock2Fv",
+        "retail_size": 576,
+        "compiled_size": 640,
+        "objdiff_percent": 84.50694
+      },
+      {
+        "name": "load__12J3DTevBlock4Fv",
+        "retail_size": 612,
+        "compiled_size": 676,
+        "objdiff_percent": 85.026146
+      },
+      {
+        "name": "load__13J3DTevBlock16Fv",
+        "retail_size": 616,
+        "compiled_size": 680,
+        "objdiff_percent": 85.02597
+      },
+      {
+        "name": "patchTexNo__18J3DTevBlockPatchedFv",
+        "retail_size": 132,
+        "compiled_size": 132,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "patchTevReg__18J3DTevBlockPatchedFv",
+        "retail_size": 236,
+        "compiled_size": 236,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "patchTexNoAndTexCoordScale__18J3DTevBlockPatchedFv",
+        "retail_size": 256,
+        "compiled_size": 256,
+        "objdiff_percent": 99.6875
+      },
+      {
+        "name": "patch__18J3DTevBlockPatchedFv",
+        "retail_size": 76,
+        "compiled_size": 76,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "patchTexNo__12J3DTevBlock1Fv",
+        "retail_size": 108,
+        "compiled_size": 108,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "patchTevReg__12J3DTevBlock1Fv",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "patchTexNoAndTexCoordScale__12J3DTevBlock1Fv",
+        "retail_size": 168,
+        "compiled_size": 168,
+        "objdiff_percent": 99.64286
+      },
+      {
+        "name": "patch__12J3DTevBlock1Fv",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "patchTexNo__12J3DTevBlock2Fv",
+        "retail_size": 132,
+        "compiled_size": 132,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "patchTevReg__12J3DTevBlock2Fv",
+        "retail_size": 236,
+        "compiled_size": 236,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "patchTexNoAndTexCoordScale__12J3DTevBlock2Fv",
+        "retail_size": 216,
+        "compiled_size": 216,
+        "objdiff_percent": 99.62963
+      },
+      {
+        "name": "patch__12J3DTevBlock2Fv",
+        "retail_size": 76,
+        "compiled_size": 76,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "patchTexNo__12J3DTevBlock4Fv",
+        "retail_size": 132,
+        "compiled_size": 132,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "patchTevReg__12J3DTevBlock4Fv",
+        "retail_size": 236,
+        "compiled_size": 236,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "patchTexNoAndTexCoordScale__12J3DTevBlock4Fv",
+        "retail_size": 256,
+        "compiled_size": 256,
+        "objdiff_percent": 99.6875
+      },
+      {
+        "name": "patch__12J3DTevBlock4Fv",
+        "retail_size": 76,
+        "compiled_size": 76,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "patchTexNo__13J3DTevBlock16Fv",
+        "retail_size": 132,
+        "compiled_size": 132,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "patchTevReg__13J3DTevBlock16Fv",
+        "retail_size": 236,
+        "compiled_size": 236,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "patchTexNoAndTexCoordScale__13J3DTevBlock16Fv",
+        "retail_size": 256,
+        "compiled_size": 256,
+        "objdiff_percent": 99.6875
+      },
+      {
+        "name": "patch__13J3DTevBlock16Fv",
+        "retail_size": 76,
+        "compiled_size": 76,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "diff__11J3DTevBlockFUl",
+        "retail_size": 188,
+        "compiled_size": 188,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "diffTexNo__18J3DTevBlockPatchedFv",
+        "retail_size": 96,
+        "compiled_size": 96,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "diffTevStage__18J3DTevBlockPatchedFv",
+        "retail_size": 100,
+        "compiled_size": 144,
+        "objdiff_percent": 50.6
+      },
+      {
+        "name": "diffTevStageIndirect__18J3DTevBlockPatchedFv",
+        "retail_size": 104,
+        "compiled_size": 128,
+        "objdiff_percent": 74.42308
+      },
+      {
+        "name": "diffTevReg__18J3DTevBlockPatchedFv",
+        "retail_size": 200,
+        "compiled_size": 200,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "diffTexCoordScale__18J3DTevBlockPatchedFv",
+        "retail_size": 140,
+        "compiled_size": 140,
+        "objdiff_percent": 99.42857
+      },
+      {
+        "name": "diffTexNo__12J3DTevBlock1Fv",
+        "retail_size": 28,
+        "compiled_size": 28,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "diffTevReg__12J3DTevBlock1Fv",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "diffTevStage__12J3DTevBlock1Fv",
+        "retail_size": 56,
+        "compiled_size": 108,
+        "objdiff_percent": 0.0
+      },
+      {
+        "name": "diffTevStageIndirect__12J3DTevBlock1Fv",
+        "retail_size": 12,
+        "compiled_size": 36,
+        "objdiff_percent": 0.0
+      },
+      {
+        "name": "diffTexCoordScale__12J3DTevBlock1Fv",
+        "retail_size": 28,
+        "compiled_size": 28,
+        "objdiff_percent": 97.85714
+      },
+      {
+        "name": "diffTexNo__12J3DTevBlock2Fv",
+        "retail_size": 96,
+        "compiled_size": 96,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "diffTevReg__12J3DTevBlock2Fv",
+        "retail_size": 200,
+        "compiled_size": 200,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "diffTevStage__12J3DTevBlock2Fv",
+        "retail_size": 100,
+        "compiled_size": 144,
+        "objdiff_percent": 50.6
+      },
+      {
+        "name": "diffTevStageIndirect__12J3DTevBlock2Fv",
+        "retail_size": 104,
+        "compiled_size": 128,
+        "objdiff_percent": 74.42308
+      },
+      {
+        "name": "diffTexCoordScale__12J3DTevBlock2Fv",
+        "retail_size": 100,
+        "compiled_size": 100,
+        "objdiff_percent": 99.2
+      },
+      {
+        "name": "diffTexNo__12J3DTevBlock4Fv",
+        "retail_size": 96,
+        "compiled_size": 96,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "diffTevReg__12J3DTevBlock4Fv",
+        "retail_size": 200,
+        "compiled_size": 200,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "diffTevStage__12J3DTevBlock4Fv",
+        "retail_size": 100,
+        "compiled_size": 144,
+        "objdiff_percent": 50.6
+      },
+      {
+        "name": "diffTevStageIndirect__12J3DTevBlock4Fv",
+        "retail_size": 104,
+        "compiled_size": 128,
+        "objdiff_percent": 74.42308
+      },
+      {
+        "name": "diffTexCoordScale__12J3DTevBlock4Fv",
+        "retail_size": 140,
+        "compiled_size": 140,
+        "objdiff_percent": 99.42857
+      },
+      {
+        "name": "diffTexNo__13J3DTevBlock16Fv",
+        "retail_size": 96,
+        "compiled_size": 96,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "diffTevReg__13J3DTevBlock16Fv",
+        "retail_size": 200,
+        "compiled_size": 200,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "diffTevStage__13J3DTevBlock16Fv",
+        "retail_size": 100,
+        "compiled_size": 144,
+        "objdiff_percent": 50.6
+      },
+      {
+        "name": "diffTevStageIndirect__13J3DTevBlock16Fv",
+        "retail_size": 104,
+        "compiled_size": 128,
+        "objdiff_percent": 74.42308
+      },
+      {
+        "name": "diffTexCoordScale__13J3DTevBlock16Fv",
+        "retail_size": 140,
+        "compiled_size": 140,
+        "objdiff_percent": 99.42857
+      },
+      {
+        "name": "ptrToIndex__13J3DTevBlock16Fv",
+        "retail_size": 200,
+        "compiled_size": 200,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "ptrToIndex__18J3DTevBlockPatchedFv",
+        "retail_size": 200,
+        "compiled_size": 200,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "indexToPtr_private__11J3DTevBlockFUl",
+        "retail_size": 148,
+        "compiled_size": 148,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "load__15J3DIndBlockFullFv",
+        "retail_size": 292,
+        "compiled_size": 292,
+        "objdiff_percent": 99.58904
+      },
+      {
+        "name": "diff__15J3DIndBlockFullFUl",
+        "retail_size": 176,
+        "compiled_size": 176,
+        "objdiff_percent": 99.65909
+      },
+      {
+        "name": "load__13J3DPEBlockOpaFv",
+        "retail_size": 104,
+        "compiled_size": 124,
+        "objdiff_percent": 75.73077
+      },
+      {
+        "name": "load__17J3DPEBlockTexEdgeFv",
+        "retail_size": 104,
+        "compiled_size": 124,
+        "objdiff_percent": 75.73077
+      },
+      {
+        "name": "load__13J3DPEBlockXluFv",
+        "retail_size": 104,
+        "compiled_size": 124,
+        "objdiff_percent": 75.73077
+      },
+      {
+        "name": "load__16J3DPEBlockFogOffFv",
+        "retail_size": 84,
+        "compiled_size": 84,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "diffBlend__16J3DPEBlockFogOffFv",
+        "retail_size": 68,
+        "compiled_size": 68,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "load__14J3DPEBlockFullFv",
+        "retail_size": 112,
+        "compiled_size": 112,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "patch__14J3DPEBlockFullFv",
+        "retail_size": 92,
+        "compiled_size": 92,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "diffFog__14J3DPEBlockFullFv",
+        "retail_size": 56,
+        "compiled_size": 56,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "diffBlend__14J3DPEBlockFullFv",
+        "retail_size": 68,
+        "compiled_size": 68,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "diff__14J3DPEBlockFullFUl",
+        "retail_size": 104,
+        "compiled_size": 104,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "reset__21J3DColorBlockLightOffFP13J3DColorBlock",
+        "retail_size": 200,
+        "compiled_size": 200,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "reset__22J3DColorBlockAmbientOnFP13J3DColorBlock",
+        "retail_size": 296,
+        "compiled_size": 296,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "reset__20J3DColorBlockLightOnFP13J3DColorBlock",
+        "retail_size": 296,
+        "compiled_size": 296,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "reset__21J3DTexGenBlockPatchedFP14J3DTexGenBlock",
+        "retail_size": 264,
+        "compiled_size": 264,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "reset__15J3DTexGenBlock4FP14J3DTexGenBlock",
+        "retail_size": 296,
+        "compiled_size": 296,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "reset__19J3DTexGenBlockBasicFP14J3DTexGenBlock",
+        "retail_size": 296,
+        "compiled_size": 296,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "reset__18J3DTevBlockPatchedFP11J3DTevBlock",
+        "retail_size": 368,
+        "compiled_size": 368,
+        "objdiff_percent": 99.945656
+      },
+      {
+        "name": "reset__12J3DTevBlock1FP11J3DTevBlock",
+        "retail_size": 180,
+        "compiled_size": 180,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "reset__12J3DTevBlock2FP11J3DTevBlock",
+        "retail_size": 624,
+        "compiled_size": 624,
+        "objdiff_percent": 99.96795
+      },
+      {
+        "name": "reset__12J3DTevBlock4FP11J3DTevBlock",
+        "retail_size": 992,
+        "compiled_size": 992,
+        "objdiff_percent": 99.979836
+      },
+      {
+        "name": "reset__13J3DTevBlock16FP11J3DTevBlock",
+        "retail_size": 580,
+        "compiled_size": 576,
+        "objdiff_percent": 96.10345
+      },
+      {
+        "name": "reset__15J3DIndBlockFullFP11J3DIndBlock",
+        "retail_size": 268,
+        "compiled_size": 260,
+        "objdiff_percent": 83.283585
+      },
+      {
+        "name": "reset__16J3DPEBlockFogOffFP10J3DPEBlock",
+        "retail_size": 220,
+        "compiled_size": 220,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "reset__14J3DPEBlockFullFP10J3DPEBlock",
+        "retail_size": 280,
+        "compiled_size": 280,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "calc__21J3DTexGenBlockPatchedFPA4_Cf",
+        "retail_size": 440,
+        "compiled_size": 440,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "calcWithoutViewMtx__21J3DTexGenBlockPatchedFPA4_Cf",
+        "retail_size": 340,
+        "compiled_size": 340,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "calcPostTexMtx__21J3DTexGenBlockPatchedFPA4_Cf",
+        "retail_size": 344,
+        "compiled_size": 344,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "calcPostTexMtxWithoutViewMtx__21J3DTexGenBlockPatchedFPA4_Cf",
+        "retail_size": 284,
+        "compiled_size": 284,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__sinit_\\J3DMatBlock_cpp",
+        "retail_size": 32,
+        "compiled_size": 32,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setStageNo__11J3DTevStageFUl",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "load__12J3DColorChanCFv",
+        "retail_size": 168,
+        "compiled_size": 100,
+        "objdiff_percent": 25.0
+      },
+      {
+        "name": "loadTexCoordScale__F13_GXTexCoordIDRC20J3DTexCoordScaleInfo",
+        "retail_size": 56,
+        "compiled_size": 56,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "load__12J3DAlphaCompCFv",
+        "retail_size": 44,
+        "compiled_size": 44,
+        "objdiff_percent": 97.27273
+      },
+      {
+        "name": "load__8J3DBlendCFUc",
+        "retail_size": 216,
+        "compiled_size": 28,
+        "objdiff_percent": 4.5740743
+      },
+      {
+        "name": "load__8J3DZModeCFv",
+        "retail_size": 36,
+        "compiled_size": 36,
+        "objdiff_percent": 96.666664
+      },
+      {
+        "name": "load__6J3DFogCFv",
+        "retail_size": 116,
+        "compiled_size": 116,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__as__11J3DTexCoordFRC11J3DTexCoord",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__as__11J3DTevStageFR11J3DTevStage",
+        "retail_size": 52,
+        "compiled_size": 52,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__as__12J3DAlphaCompFR12J3DAlphaComp",
+        "retail_size": 28,
+        "compiled_size": 28,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "resetTexMtxReg__11J3DTexCoordFv",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__as__12J3DAlphaCompFRC12J3DAlphaComp",
+        "retail_size": 28,
+        "compiled_size": 28,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__as__11J3DTevStageFRC11J3DTevStage",
+        "retail_size": 52,
+        "compiled_size": 52,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__as__13J3DGXColorS10FRC11_GXColorS10",
+        "retail_size": 20,
+        "compiled_size": 20,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "GDOverflowCheck",
+        "retail_size": 32,
+        "compiled_size": 32,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "GDSetCurrOffset",
+        "retail_size": 20,
+        "compiled_size": 20,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "J3DGDWriteXFCmdHdr__FUsUc",
+        "retail_size": 84,
+        "compiled_size": 84,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "J3DGDWrite_u16__FUs",
+        "retail_size": 48,
+        "compiled_size": 48,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "J3DGDWrite_u32__FUl",
+        "retail_size": 96,
+        "compiled_size": 96,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "J3DGDSetTevKonstantSel_SwapModeTable__F13_GXTevStageID15_GXTevKColorSel15_GXTevKAlphaSel15_GXTevKColorSel15_GXTevKAlphaSel15_GXTevColorChan15_GXTevColorChan",
+        "retail_size": 88,
+        "compiled_size": 88,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "J3DGDSetAlphaCompare__F10_GXCompareUc10_GXAlphaOp10_GXCompareUc",
+        "retail_size": 56,
+        "compiled_size": 56,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "J3DGDSetBlendMode__F12_GXBlendMode14_GXBlendFactor14_GXBlendFactor10_GXLogicOp",
+        "retail_size": 204,
+        "compiled_size": 204,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "J3DGDSetZMode__FUc10_GXCompareUc",
+        "retail_size": 48,
+        "compiled_size": 48,
+        "objdiff_percent": 70.0
+      },
+      {
+        "name": "J3DGDSetZCompLoc__FUl",
+        "retail_size": 116,
+        "compiled_size": 116,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "diffTexNo__11J3DTevBlockFv",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "diffTexCoordScale__11J3DTevBlockFv",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "diffTevStage__11J3DTevBlockFv",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "diffTevStageIndirect__11J3DTevBlockFv",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "diffTevReg__11J3DTevBlockFv",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTevStage__11J3DTevBlockFUl",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getIndTevStage__11J3DTevBlockFUl",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTevKColorSel__11J3DTevBlockFUl",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTevKAlphaSel__11J3DTevBlockFUl",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTevSwapModeTable__11J3DTevBlockFUl",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__dt__14J3DPEBlockFullFv",
+        "retail_size": 64,
+        "compiled_size": 64,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setFogOffset__14J3DPEBlockFullFUl",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getFogOffset__14J3DPEBlockFullCFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getDither__14J3DPEBlockFullCFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setDither__14J3DPEBlockFullFPCUc",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setDither__14J3DPEBlockFullFUc",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getZCompLoc__14J3DPEBlockFullCFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setZCompLoc__14J3DPEBlockFullFPCUc",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setZCompLoc__14J3DPEBlockFullFUc",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getZMode__14J3DPEBlockFullFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setZMode__14J3DPEBlockFullFPC8J3DZMode",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setZMode__14J3DPEBlockFullF8J3DZMode",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getBlend__14J3DPEBlockFullFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setBlend__14J3DPEBlockFullFPC8J3DBlend",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setBlend__14J3DPEBlockFullFRC8J3DBlend",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getAlphaComp__14J3DPEBlockFullFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setAlphaComp__14J3DPEBlockFullFPC12J3DAlphaComp",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setAlphaComp__14J3DPEBlockFullFRC12J3DAlphaComp",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getFog__14J3DPEBlockFullFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setFog__14J3DPEBlockFullF6J3DFog",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setFog__14J3DPEBlockFullFP6J3DFog",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getType__14J3DPEBlockFullFv",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__dt__16J3DPEBlockFogOffFv",
+        "retail_size": 64,
+        "compiled_size": 64,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getDither__16J3DPEBlockFogOffCFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setDither__16J3DPEBlockFogOffFPCUc",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setDither__16J3DPEBlockFogOffFUc",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getZCompLoc__16J3DPEBlockFogOffCFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setZCompLoc__16J3DPEBlockFogOffFPCUc",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setZCompLoc__16J3DPEBlockFogOffFUc",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getZMode__16J3DPEBlockFogOffFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setZMode__16J3DPEBlockFogOffFPC8J3DZMode",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setZMode__16J3DPEBlockFogOffF8J3DZMode",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getBlend__16J3DPEBlockFogOffFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setBlend__16J3DPEBlockFogOffFPC8J3DBlend",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setBlend__16J3DPEBlockFogOffFRC8J3DBlend",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getAlphaComp__16J3DPEBlockFogOffFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setAlphaComp__16J3DPEBlockFogOffFPC12J3DAlphaComp",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setAlphaComp__16J3DPEBlockFogOffFRC12J3DAlphaComp",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getType__16J3DPEBlockFogOffFv",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "diff__16J3DPEBlockFogOffFUl",
+        "retail_size": 28,
+        "compiled_size": 28,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__dt__13J3DPEBlockXluFv",
+        "retail_size": 64,
+        "compiled_size": 64,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getType__13J3DPEBlockXluFv",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__dt__17J3DPEBlockTexEdgeFv",
+        "retail_size": 64,
+        "compiled_size": 64,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getType__17J3DPEBlockTexEdgeFv",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__dt__13J3DPEBlockOpaFv",
+        "retail_size": 64,
+        "compiled_size": 64,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getType__13J3DPEBlockOpaFv",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__dt__15J3DIndBlockFullFv",
+        "retail_size": 128,
+        "compiled_size": 128,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getIndTexCoordScale__15J3DIndBlockFullFUl",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setIndTexCoordScale__15J3DIndBlockFullFUlPC19J3DIndTexCoordScale",
+        "retail_size": 24,
+        "compiled_size": 20,
+        "objdiff_percent": 29.166666
+      },
+      {
+        "name": "setIndTexCoordScale__15J3DIndBlockFullFUl19J3DIndTexCoordScale",
+        "retail_size": 24,
+        "compiled_size": 20,
+        "objdiff_percent": 29.166666
+      },
+      {
+        "name": "getIndTexMtx__15J3DIndBlockFullFUl",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setIndTexMtx__15J3DIndBlockFullFUlPC12J3DIndTexMtx",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setIndTexMtx__15J3DIndBlockFullFUl12J3DIndTexMtx",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getIndTexOrder__15J3DIndBlockFullFUl",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setIndTexOrder__15J3DIndBlockFullFUlPC14J3DIndTexOrder",
+        "retail_size": 24,
+        "compiled_size": 20,
+        "objdiff_percent": 29.166666
+      },
+      {
+        "name": "setIndTexOrder__15J3DIndBlockFullFUl14J3DIndTexOrder",
+        "retail_size": 24,
+        "compiled_size": 20,
+        "objdiff_percent": 29.166666
+      },
+      {
+        "name": "getIndTexStageNum__15J3DIndBlockFullCFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setIndTexStageNum__15J3DIndBlockFullFUc",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getType__15J3DIndBlockFullFv",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTexNoOffset__11J3DTevBlockFUl",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__dt__13J3DTevBlock16Fv",
+        "retail_size": 64,
+        "compiled_size": 64,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevRegOffset__13J3DTevBlock16FUl",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTevRegOffset__13J3DTevBlock16CFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTexNoOffset__13J3DTevBlock16CFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getIndTevStage__13J3DTevBlock16FUl",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setIndTevStage__13J3DTevBlock16FUlPC14J3DIndTevStage",
+        "retail_size": 20,
+        "compiled_size": 20,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setIndTevStage__13J3DTevBlock16FUl14J3DIndTevStage",
+        "retail_size": 20,
+        "compiled_size": 20,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTevSwapModeTable__13J3DTevBlock16FUl",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevSwapModeTable__13J3DTevBlock16FUlPC19J3DTevSwapModeTable",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevSwapModeTable__13J3DTevBlock16FUl19J3DTevSwapModeTable",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevSwapModeInfo__13J3DTevBlock16FUlPC18J3DTevSwapModeInfo",
+        "retail_size": 24,
+        "compiled_size": 84,
+        "objdiff_percent": 0.0
+      },
+      {
+        "name": "setTevSwapModeInfo__13J3DTevBlock16FUl18J3DTevSwapModeInfo",
+        "retail_size": 24,
+        "compiled_size": 84,
+        "objdiff_percent": 0.0
+      },
+      {
+        "name": "getTevStage__13J3DTevBlock16FUl",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevStage__13J3DTevBlock16FUlPC11J3DTevStage",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevStage__13J3DTevBlock16FUl11J3DTevStage",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTevStageNum__13J3DTevBlock16CFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevStageNum__13J3DTevBlock16FPCUc",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevStageNum__13J3DTevBlock16FUc",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTevKAlphaSel__13J3DTevBlock16FUl",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevKAlphaSel__13J3DTevBlock16FUlPCUc",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevKAlphaSel__13J3DTevBlock16FUlUc",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTevKColorSel__13J3DTevBlock16FUl",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevKColorSel__13J3DTevBlock16FUlPCUc",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevKColorSel__13J3DTevBlock16FUlUc",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTevKColor__13J3DTevBlock16FUl",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevKColor__13J3DTevBlock16FUlPC10J3DGXColor",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevKColor__13J3DTevBlock16FUl10J3DGXColor",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTevColor__13J3DTevBlock16FUl",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevColor__13J3DTevBlock16FUlPC13J3DGXColorS10",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_percent": 99.166664
+      },
+      {
+        "name": "setTevColor__13J3DTevBlock16FUl13J3DGXColorS10",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_percent": 99.166664
+      },
+      {
+        "name": "getTevOrder__13J3DTevBlock16FUl",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevOrder__13J3DTevBlock16FUlPC11J3DTevOrder",
+        "retail_size": 24,
+        "compiled_size": 20,
+        "objdiff_percent": 29.166666
+      },
+      {
+        "name": "setTevOrder__13J3DTevBlock16FUl11J3DTevOrder",
+        "retail_size": 24,
+        "compiled_size": 20,
+        "objdiff_percent": 29.166666
+      },
+      {
+        "name": "getTexNo__13J3DTevBlock16CFUl",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTexNo__13J3DTevBlock16FUlPCUs",
+        "retail_size": 20,
+        "compiled_size": 20,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTexNo__13J3DTevBlock16FUlUs",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getType__13J3DTevBlock16Fv",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "indexToPtr__13J3DTevBlock16Fv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__dt__12J3DTevBlock4Fv",
+        "retail_size": 64,
+        "compiled_size": 64,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevRegOffset__12J3DTevBlock4FUl",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTevRegOffset__12J3DTevBlock4CFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTexNoOffset__12J3DTevBlock4CFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getIndTevStage__12J3DTevBlock4FUl",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setIndTevStage__12J3DTevBlock4FUlPC14J3DIndTevStage",
+        "retail_size": 20,
+        "compiled_size": 20,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setIndTevStage__12J3DTevBlock4FUl14J3DIndTevStage",
+        "retail_size": 20,
+        "compiled_size": 20,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTevSwapModeTable__12J3DTevBlock4FUl",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevSwapModeTable__12J3DTevBlock4FUlPC19J3DTevSwapModeTable",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevSwapModeTable__12J3DTevBlock4FUl19J3DTevSwapModeTable",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevSwapModeInfo__12J3DTevBlock4FUlPC18J3DTevSwapModeInfo",
+        "retail_size": 24,
+        "compiled_size": 84,
+        "objdiff_percent": 0.0
+      },
+      {
+        "name": "setTevSwapModeInfo__12J3DTevBlock4FUl18J3DTevSwapModeInfo",
+        "retail_size": 24,
+        "compiled_size": 84,
+        "objdiff_percent": 0.0
+      },
+      {
+        "name": "getTevStage__12J3DTevBlock4FUl",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevStage__12J3DTevBlock4FUlPC11J3DTevStage",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevStage__12J3DTevBlock4FUl11J3DTevStage",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTevStageNum__12J3DTevBlock4CFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevStageNum__12J3DTevBlock4FPCUc",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevStageNum__12J3DTevBlock4FUc",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTevKAlphaSel__12J3DTevBlock4FUl",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevKAlphaSel__12J3DTevBlock4FUlPCUc",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevKAlphaSel__12J3DTevBlock4FUlUc",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTevKColorSel__12J3DTevBlock4FUl",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevKColorSel__12J3DTevBlock4FUlPCUc",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevKColorSel__12J3DTevBlock4FUlUc",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTevKColor__12J3DTevBlock4FUl",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevKColor__12J3DTevBlock4FUlPC10J3DGXColor",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevKColor__12J3DTevBlock4FUl10J3DGXColor",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTevColor__12J3DTevBlock4FUl",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevColor__12J3DTevBlock4FUlPC13J3DGXColorS10",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_percent": 99.166664
+      },
+      {
+        "name": "setTevColor__12J3DTevBlock4FUl13J3DGXColorS10",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_percent": 99.166664
+      },
+      {
+        "name": "getTevOrder__12J3DTevBlock4FUl",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevOrder__12J3DTevBlock4FUlPC11J3DTevOrder",
+        "retail_size": 24,
+        "compiled_size": 20,
+        "objdiff_percent": 29.166666
+      },
+      {
+        "name": "setTevOrder__12J3DTevBlock4FUl11J3DTevOrder",
+        "retail_size": 24,
+        "compiled_size": 20,
+        "objdiff_percent": 29.166666
+      },
+      {
+        "name": "getTexNo__12J3DTevBlock4CFUl",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTexNo__12J3DTevBlock4FUlPCUs",
+        "retail_size": 20,
+        "compiled_size": 20,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTexNo__12J3DTevBlock4FUlUs",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getType__12J3DTevBlock4Fv",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "indexToPtr__12J3DTevBlock4Fv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "ptrToIndex__12J3DTevBlock4Fv",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__dt__12J3DTevBlock2Fv",
+        "retail_size": 64,
+        "compiled_size": 64,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevRegOffset__12J3DTevBlock2FUl",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTevRegOffset__12J3DTevBlock2CFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTexNoOffset__12J3DTevBlock2CFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getIndTevStage__12J3DTevBlock2FUl",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setIndTevStage__12J3DTevBlock2FUlPC14J3DIndTevStage",
+        "retail_size": 20,
+        "compiled_size": 20,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setIndTevStage__12J3DTevBlock2FUl14J3DIndTevStage",
+        "retail_size": 20,
+        "compiled_size": 20,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTevSwapModeTable__12J3DTevBlock2FUl",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevSwapModeTable__12J3DTevBlock2FUlPC19J3DTevSwapModeTable",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevSwapModeTable__12J3DTevBlock2FUl19J3DTevSwapModeTable",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevSwapModeInfo__12J3DTevBlock2FUlPC18J3DTevSwapModeInfo",
+        "retail_size": 24,
+        "compiled_size": 84,
+        "objdiff_percent": 0.0
+      },
+      {
+        "name": "setTevSwapModeInfo__12J3DTevBlock2FUl18J3DTevSwapModeInfo",
+        "retail_size": 24,
+        "compiled_size": 84,
+        "objdiff_percent": 0.0
+      },
+      {
+        "name": "getTevStage__12J3DTevBlock2FUl",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevStage__12J3DTevBlock2FUlPC11J3DTevStage",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevStage__12J3DTevBlock2FUl11J3DTevStage",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTevStageNum__12J3DTevBlock2CFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevStageNum__12J3DTevBlock2FPCUc",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevStageNum__12J3DTevBlock2FUc",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTevKAlphaSel__12J3DTevBlock2FUl",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevKAlphaSel__12J3DTevBlock2FUlPCUc",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevKAlphaSel__12J3DTevBlock2FUlUc",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTevKColorSel__12J3DTevBlock2FUl",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevKColorSel__12J3DTevBlock2FUlPCUc",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevKColorSel__12J3DTevBlock2FUlUc",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTevKColor__12J3DTevBlock2FUl",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevKColor__12J3DTevBlock2FUlPC10J3DGXColor",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevKColor__12J3DTevBlock2FUl10J3DGXColor",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTevColor__12J3DTevBlock2FUl",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevColor__12J3DTevBlock2FUlPC13J3DGXColorS10",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_percent": 99.166664
+      },
+      {
+        "name": "setTevColor__12J3DTevBlock2FUl13J3DGXColorS10",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_percent": 99.166664
+      },
+      {
+        "name": "getTevOrder__12J3DTevBlock2FUl",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevOrder__12J3DTevBlock2FUlPC11J3DTevOrder",
+        "retail_size": 24,
+        "compiled_size": 20,
+        "objdiff_percent": 29.166666
+      },
+      {
+        "name": "setTevOrder__12J3DTevBlock2FUl11J3DTevOrder",
+        "retail_size": 24,
+        "compiled_size": 20,
+        "objdiff_percent": 29.166666
+      },
+      {
+        "name": "getTexNo__12J3DTevBlock2CFUl",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTexNo__12J3DTevBlock2FUlPCUs",
+        "retail_size": 20,
+        "compiled_size": 20,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTexNo__12J3DTevBlock2FUlUs",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getType__12J3DTevBlock2Fv",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "indexToPtr__12J3DTevBlock2Fv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "ptrToIndex__12J3DTevBlock2Fv",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevRegOffset__11J3DTevBlockFUl",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTevRegOffset__11J3DTevBlockCFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevSwapModeTable__11J3DTevBlockFUlPC19J3DTevSwapModeTable",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevSwapModeTable__11J3DTevBlockFUl19J3DTevSwapModeTable",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevSwapModeInfo__11J3DTevBlockFUlPC18J3DTevSwapModeInfo",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevSwapModeInfo__11J3DTevBlockFUl18J3DTevSwapModeInfo",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevKAlphaSel__11J3DTevBlockFUlPCUc",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevKAlphaSel__11J3DTevBlockFUlUc",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevKColorSel__11J3DTevBlockFUlPCUc",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevKColorSel__11J3DTevBlockFUlUc",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevKColor__11J3DTevBlockFUl10J3DGXColor",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevColor__11J3DTevBlockFUl13J3DGXColorS10",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__dt__12J3DTevBlock1Fv",
+        "retail_size": 64,
+        "compiled_size": 64,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTexNoOffset__12J3DTevBlock1CFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getIndTevStage__12J3DTevBlock1FUl",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setIndTevStage__12J3DTevBlock1FUlPC14J3DIndTevStage",
+        "retail_size": 20,
+        "compiled_size": 20,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setIndTevStage__12J3DTevBlock1FUl14J3DIndTevStage",
+        "retail_size": 20,
+        "compiled_size": 20,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTevStage__12J3DTevBlock1FUl",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevStage__12J3DTevBlock1FUlPC11J3DTevStage",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevStage__12J3DTevBlock1FUl11J3DTevStage",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTevStageNum__12J3DTevBlock1CFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevStageNum__12J3DTevBlock1FPCUc",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevStageNum__12J3DTevBlock1FUc",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTevOrder__12J3DTevBlock1FUl",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevOrder__12J3DTevBlock1FUlPC11J3DTevOrder",
+        "retail_size": 24,
+        "compiled_size": 20,
+        "objdiff_percent": 29.166666
+      },
+      {
+        "name": "setTevOrder__12J3DTevBlock1FUl11J3DTevOrder",
+        "retail_size": 24,
+        "compiled_size": 20,
+        "objdiff_percent": 29.166666
+      },
+      {
+        "name": "getTexNo__12J3DTevBlock1CFUl",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTexNo__12J3DTevBlock1FUlPCUs",
+        "retail_size": 20,
+        "compiled_size": 20,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTexNo__12J3DTevBlock1FUlUs",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getType__12J3DTevBlock1Fv",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "indexToPtr__12J3DTevBlock1Fv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "ptrToIndex__12J3DTevBlock1Fv",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__dt__18J3DTevBlockPatchedFv",
+        "retail_size": 64,
+        "compiled_size": 64,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevRegOffset__18J3DTevBlockPatchedFUl",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTevRegOffset__18J3DTevBlockPatchedCFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTexNoOffset__18J3DTevBlockPatchedCFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTevKColorSel__18J3DTevBlockPatchedFUl",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevKColorSel__18J3DTevBlockPatchedFUlPCUc",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevKColorSel__18J3DTevBlockPatchedFUlUc",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTevKColor__18J3DTevBlockPatchedFUl",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevKColor__18J3DTevBlockPatchedFUlPC10J3DGXColor",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevKColor__18J3DTevBlockPatchedFUl10J3DGXColor",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTevColor__18J3DTevBlockPatchedFUl",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevColor__18J3DTevBlockPatchedFUlPC13J3DGXColorS10",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_percent": 99.166664
+      },
+      {
+        "name": "setTevColor__18J3DTevBlockPatchedFUl13J3DGXColorS10",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_percent": 99.166664
+      },
+      {
+        "name": "getIndTevStage__18J3DTevBlockPatchedFUl",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setIndTevStage__18J3DTevBlockPatchedFUlPC14J3DIndTevStage",
+        "retail_size": 20,
+        "compiled_size": 20,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setIndTevStage__18J3DTevBlockPatchedFUl14J3DIndTevStage",
+        "retail_size": 20,
+        "compiled_size": 20,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTevStage__18J3DTevBlockPatchedFUl",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevStage__18J3DTevBlockPatchedFUlPC11J3DTevStage",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevStage__18J3DTevBlockPatchedFUl11J3DTevStage",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTevOrder__18J3DTevBlockPatchedFUl",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevOrder__18J3DTevBlockPatchedFUlPC11J3DTevOrder",
+        "retail_size": 24,
+        "compiled_size": 20,
+        "objdiff_percent": 29.166666
+      },
+      {
+        "name": "setTevOrder__18J3DTevBlockPatchedFUl11J3DTevOrder",
+        "retail_size": 24,
+        "compiled_size": 20,
+        "objdiff_percent": 29.166666
+      },
+      {
+        "name": "getTexNo__18J3DTevBlockPatchedCFUl",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTexNo__18J3DTevBlockPatchedFUlPCUs",
+        "retail_size": 20,
+        "compiled_size": 20,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTexNo__18J3DTevBlockPatchedFUlUs",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTevStageNum__18J3DTevBlockPatchedCFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevStageNum__18J3DTevBlockPatchedFPCUc",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevStageNum__18J3DTevBlockPatchedFUc",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getType__18J3DTevBlockPatchedFv",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "indexToPtr__18J3DTevBlockPatchedFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "load__18J3DTevBlockPatchedFv",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTexNoOffset__11J3DTevBlockCFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setIndTevStage__11J3DTevBlockFUlPC14J3DIndTevStage",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setIndTevStage__11J3DTevBlockFUl14J3DIndTevStage",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevStage__11J3DTevBlockFUlPC11J3DTevStage",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevStage__11J3DTevBlockFUl11J3DTevStage",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevStageNum__11J3DTevBlockFPCUc",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevStageNum__11J3DTevBlockFUc",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevOrder__11J3DTevBlockFUlPC11J3DTevOrder",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTevOrder__11J3DTevBlockFUl11J3DTevOrder",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTexNo__11J3DTevBlockFUlPCUs",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTexNo__11J3DTevBlockFUlUs",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "patchTexNoAndTexCoordScale__11J3DTevBlockFv",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "patchTevReg__11J3DTevBlockFv",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "patchTexNo__11J3DTevBlockFv",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTexMtxOffset__21J3DTexGenBlockPatchedFUl",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTexMtxOffset__21J3DTexGenBlockPatchedCFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTexMtx__21J3DTexGenBlockPatchedFUl",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTexMtx__21J3DTexGenBlockPatchedFUlP9J3DTexMtx",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTexCoord__21J3DTexGenBlockPatchedFUl",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTexCoord__21J3DTexGenBlockPatchedFUlPC11J3DTexCoord",
+        "retail_size": 24,
+        "compiled_size": 20,
+        "objdiff_percent": 27.5
+      },
+      {
+        "name": "getTexGenNum__21J3DTexGenBlockPatchedCFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTexGenNum__21J3DTexGenBlockPatchedFPCUl",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTexGenNum__21J3DTexGenBlockPatchedFUl",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__dt__19J3DTexGenBlockBasicFv",
+        "retail_size": 64,
+        "compiled_size": 64,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getNBTScale__19J3DTexGenBlockBasicFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setNBTScale__19J3DTexGenBlockBasicFPC11J3DNBTScale",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setNBTScale__19J3DTexGenBlockBasicF11J3DNBTScale",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getType__19J3DTexGenBlockBasicFv",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__dt__15J3DTexGenBlock4Fv",
+        "retail_size": 64,
+        "compiled_size": 64,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getNBTScale__15J3DTexGenBlock4Fv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setNBTScale__15J3DTexGenBlock4FPC11J3DNBTScale",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setNBTScale__15J3DTexGenBlock4F11J3DNBTScale",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getType__15J3DTexGenBlock4Fv",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getType__21J3DTexGenBlockPatchedFv",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "load__21J3DTexGenBlockPatchedFv",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__dt__20J3DColorBlockLightOnFv",
+        "retail_size": 64,
+        "compiled_size": 64,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setColorChanOffset__20J3DColorBlockLightOnFUl",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setMatColorOffset__20J3DColorBlockLightOnFUl",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getColorChanOffset__20J3DColorBlockLightOnCFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getMatColorOffset__20J3DColorBlockLightOnCFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getCullMode__20J3DColorBlockLightOnCFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setCullMode__20J3DColorBlockLightOnFPCUc",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setCullMode__20J3DColorBlockLightOnFUc",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getLight__20J3DColorBlockLightOnFUl",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setLight__20J3DColorBlockLightOnFUlP11J3DLightObj",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getColorChan__20J3DColorBlockLightOnFUl",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setColorChan__20J3DColorBlockLightOnFUlRC12J3DColorChan",
+        "retail_size": 20,
+        "compiled_size": 20,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setColorChan__20J3DColorBlockLightOnFUlPC12J3DColorChan",
+        "retail_size": 20,
+        "compiled_size": 20,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getColorChanNum__20J3DColorBlockLightOnCFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setColorChanNum__20J3DColorBlockLightOnFUc",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setColorChanNum__20J3DColorBlockLightOnFPCUc",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getAmbColor__20J3DColorBlockLightOnFUl",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setAmbColor__20J3DColorBlockLightOnFUlPC10J3DGXColor",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setAmbColor__20J3DColorBlockLightOnFUl10J3DGXColor",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getMatColor__20J3DColorBlockLightOnFUl",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setMatColor__20J3DColorBlockLightOnFUlPC10J3DGXColor",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setMatColor__20J3DColorBlockLightOnFUl10J3DGXColor",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getType__20J3DColorBlockLightOnFv",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setColorChanOffset__21J3DColorBlockLightOffFUl",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setMatColorOffset__21J3DColorBlockLightOffFUl",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getColorChanOffset__21J3DColorBlockLightOffCFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getMatColorOffset__21J3DColorBlockLightOffCFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getCullMode__21J3DColorBlockLightOffCFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setCullMode__21J3DColorBlockLightOffFPCUc",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setCullMode__21J3DColorBlockLightOffFUc",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getColorChan__21J3DColorBlockLightOffFUl",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setColorChan__21J3DColorBlockLightOffFUlRC12J3DColorChan",
+        "retail_size": 20,
+        "compiled_size": 20,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setColorChan__21J3DColorBlockLightOffFUlPC12J3DColorChan",
+        "retail_size": 20,
+        "compiled_size": 20,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getColorChanNum__21J3DColorBlockLightOffCFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setColorChanNum__21J3DColorBlockLightOffFUc",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setColorChanNum__21J3DColorBlockLightOffFPCUc",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getMatColor__21J3DColorBlockLightOffFUl",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setMatColor__21J3DColorBlockLightOffFUlPC10J3DGXColor",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setMatColor__21J3DColorBlockLightOffFUl10J3DGXColor",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__dt__22J3DColorBlockAmbientOnFv",
+        "retail_size": 64,
+        "compiled_size": 64,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getAmbColor__22J3DColorBlockAmbientOnFUl",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setAmbColor__22J3DColorBlockAmbientOnFUlPC10J3DGXColor",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setAmbColor__22J3DColorBlockAmbientOnFUl10J3DGXColor",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getType__22J3DColorBlockAmbientOnFv",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getType__21J3DColorBlockLightOffFv",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      }
+    ],
+    "J3DStruct": [
+      {
+        "name": "__as__13J3DTexMtxInfoFRC13J3DTexMtxInfo",
+        "retail_size": 124,
+        "compiled_size": 108,
+        "objdiff_percent": 24.129032
+      },
+      {
+        "name": "setEffectMtx__13J3DTexMtxInfoFPA4_f",
+        "retail_size": 72,
+        "compiled_size": 72,
+        "objdiff_percent": 0.16666667
+      },
+      {
+        "name": "__as__16J3DIndTexMtxInfoFRC16J3DIndTexMtxInfo",
+        "retail_size": 36,
+        "compiled_size": 60,
+        "objdiff_percent": 0.0
+      },
+      {
+        "name": "__as__10J3DFogInfoFRC10J3DFogInfo",
+        "retail_size": 128,
+        "compiled_size": 128,
+        "objdiff_percent": 88.96875
+      },
+      {
+        "name": "__as__15J3DNBTScaleInfoFRC15J3DNBTScaleInfo",
+        "retail_size": 36,
+        "compiled_size": 36,
+        "objdiff_percent": 100.0
+      }
+    ],
+    "J3DTevs": [
+      {
+        "name": "load__11J3DLightObjCFUl",
+        "retail_size": 184,
+        "compiled_size": 184,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "loadTexCoordGens__FUlP11J3DTexCoord",
+        "retail_size": 244,
+        "compiled_size": 244,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "load__9J3DTexMtxCFUl",
+        "retail_size": 544,
+        "compiled_size": 28,
+        "objdiff_percent": 5.0
+      },
+      {
+        "name": "calc__9J3DTexMtxFPA4_Cf",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "calcTexMtx__9J3DTexMtxFPA4_Cf",
+        "retail_size": 748,
+        "compiled_size": 748,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "calcPostTexMtx__9J3DTexMtxFPA4_Cf",
+        "retail_size": 856,
+        "compiled_size": 856,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "isTexNoReg__FPv",
+        "retail_size": 36,
+        "compiled_size": 36,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTexNoReg__FPv",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "loadTexNo__FUlRCUs",
+        "retail_size": 388,
+        "compiled_size": 380,
+        "objdiff_percent": 85.1134
+      },
+      {
+        "name": "patchTexNo_PtrToIdx__FUlRCUs",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "loadNBTScale__FR11J3DNBTScale",
+        "retail_size": 52,
+        "compiled_size": 52,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "makeTexCoordTable__Fv",
+        "retail_size": 248,
+        "compiled_size": 248,
+        "objdiff_percent": 99.67742
+      },
+      {
+        "name": "makeAlphaCmpTable__Fv",
+        "retail_size": 104,
+        "compiled_size": 104,
+        "objdiff_percent": 99.61539
+      },
+      {
+        "name": "makeZModeTable__Fv",
+        "retail_size": 104,
+        "compiled_size": 104,
+        "objdiff_percent": 99.61539
+      },
+      {
+        "name": "makeTevSwapTable__Fv",
+        "retail_size": 64,
+        "compiled_size": 64,
+        "objdiff_percent": 97.8125
+      },
+      {
+        "name": "GDOverflowCheck",
+        "retail_size": 32,
+        "compiled_size": 32,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "J3DGDWrite_u32__FUl",
+        "retail_size": 96,
+        "compiled_size": 96,
+        "objdiff_percent": 100.0
+      }
+    ],
+    "J3DMaterial": [
+      {
+        "name": "createColorBlock__11J3DMaterialFUl",
+        "retail_size": 244,
+        "compiled_size": 164,
+        "objdiff_percent": 59.459015
+      },
+      {
+        "name": "createTexGenBlock__11J3DMaterialFUl",
+        "retail_size": 176,
+        "compiled_size": 100,
+        "objdiff_percent": 56.136364
+      },
+      {
+        "name": "createTevBlock__11J3DMaterialFi",
+        "retail_size": 672,
+        "compiled_size": 176,
+        "objdiff_percent": 24.202381
+      },
+      {
+        "name": "createIndBlock__11J3DMaterialFi",
+        "retail_size": 216,
+        "compiled_size": 80,
+        "objdiff_percent": 35.462963
+      },
+      {
+        "name": "createPEBlock__11J3DMaterialFUlUl",
+        "retail_size": 344,
+        "compiled_size": 216,
+        "objdiff_percent": 52.197674
+      },
+      {
+        "name": "calcSizeColorBlock__11J3DMaterialFUl",
+        "retail_size": 80,
+        "compiled_size": 80,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "calcSizeTexGenBlock__11J3DMaterialFUl",
+        "retail_size": 44,
+        "compiled_size": 44,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "calcSizeTevBlock__11J3DMaterialFi",
+        "retail_size": 72,
+        "compiled_size": 72,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "calcSizeIndBlock__11J3DMaterialFi",
+        "retail_size": 20,
+        "compiled_size": 20,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "calcSizePEBlock__11J3DMaterialFUlUl",
+        "retail_size": 104,
+        "compiled_size": 104,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "initialize__11J3DMaterialFv",
+        "retail_size": 80,
+        "compiled_size": 80,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "countDLSize__11J3DMaterialFv",
+        "retail_size": 188,
+        "compiled_size": 188,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "makeDisplayList_private__11J3DMaterialFP17J3DDisplayListObj",
+        "retail_size": 376,
+        "compiled_size": 364,
+        "objdiff_percent": 96.54256
+      },
+      {
+        "name": "makeDisplayList__11J3DMaterialFv",
+        "retail_size": 48,
+        "compiled_size": 48,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "makeSharedDisplayList__11J3DMaterialFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "load__11J3DMaterialFv",
+        "retail_size": 80,
+        "compiled_size": 80,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "loadSharedDL__11J3DMaterialFv",
+        "retail_size": 100,
+        "compiled_size": 100,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "patch__11J3DMaterialFv",
+        "retail_size": 152,
+        "compiled_size": 152,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "diff__11J3DMaterialFUl",
+        "retail_size": 344,
+        "compiled_size": 344,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "calc__11J3DMaterialFPA4_Cf",
+        "retail_size": 120,
+        "compiled_size": 120,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "calcDiffTexMtx__11J3DMaterialFPA4_Cf",
+        "retail_size": 60,
+        "compiled_size": 60,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setCurrentMtx__11J3DMaterialFv",
+        "retail_size": 24,
+        "compiled_size": 16,
+        "objdiff_percent": 35.833332
+      },
+      {
+        "name": "calcCurrentMtx__11J3DMaterialFv",
+        "retail_size": 624,
+        "compiled_size": 624,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "copy__11J3DMaterialFP11J3DMaterial",
+        "retail_size": 172,
+        "compiled_size": 172,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "reset__11J3DMaterialFv",
+        "retail_size": 60,
+        "compiled_size": 60,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "change__11J3DMaterialFv",
+        "retail_size": 32,
+        "compiled_size": 32,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "newSharedDisplayList__11J3DMaterialFUl",
+        "retail_size": 128,
+        "compiled_size": 128,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "newSingleSharedDisplayList__11J3DMaterialFUl",
+        "retail_size": 128,
+        "compiled_size": 128,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "initialize__18J3DPatchedMaterialFv",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "makeDisplayList__18J3DPatchedMaterialFv",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "makeSharedDisplayList__18J3DPatchedMaterialFv",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "load__18J3DPatchedMaterialFv",
+        "retail_size": 20,
+        "compiled_size": 20,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "loadSharedDL__18J3DPatchedMaterialFv",
+        "retail_size": 40,
+        "compiled_size": 40,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "reset__18J3DPatchedMaterialFv",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "change__18J3DPatchedMaterialFv",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "initialize__17J3DLockedMaterialFv",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "makeDisplayList__17J3DLockedMaterialFv",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "makeSharedDisplayList__17J3DLockedMaterialFv",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "load__17J3DLockedMaterialFv",
+        "retail_size": 20,
+        "compiled_size": 20,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "loadSharedDL__17J3DLockedMaterialFv",
+        "retail_size": 40,
+        "compiled_size": 40,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "patch__17J3DLockedMaterialFv",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "diff__17J3DLockedMaterialFUl",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "calc__17J3DLockedMaterialFPA4_Cf",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "reset__17J3DLockedMaterialFv",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "change__17J3DLockedMaterialFv",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__ct__21J3DColorBlockLightOffFv",
+        "retail_size": 100,
+        "compiled_size": 100,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__dt__21J3DColorBlockLightOffFv",
+        "retail_size": 64,
+        "compiled_size": 64,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__ct__21J3DTexGenBlockPatchedFv",
+        "retail_size": 104,
+        "compiled_size": 100,
+        "objdiff_percent": 42.26923
+      },
+      {
+        "name": "__dt__21J3DTexGenBlockPatchedFv",
+        "retail_size": 64,
+        "compiled_size": 64,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "countDLSize__10J3DPEBlockFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "countDLSize__11J3DIndBlockFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "countDLSize__11J3DTevBlockFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "countDLSize__13J3DColorBlockFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "countDLSize__14J3DTexGenBlockFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "load__11J3DTevBlockFv",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getColorChanNum__13J3DColorBlockCFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getCullMode__13J3DColorBlockCFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "load__13J3DColorBlockFv",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getNBTScale__14J3DTexGenBlockFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "patch__11J3DTevBlockFv",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "patch__13J3DColorBlockFv",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "diff__10J3DPEBlockFUl",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "diff__13J3DColorBlockFUl",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "reset__13J3DColorBlockFP13J3DColorBlock",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "reset__14J3DTexGenBlockFP14J3DTexGenBlock",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "reset__10J3DPEBlockFP10J3DPEBlock",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setFogOffset__10J3DPEBlockFUl",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getFogOffset__10J3DPEBlockCFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getDither__10J3DPEBlockCFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setDither__10J3DPEBlockFPCUc",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setDither__10J3DPEBlockFUc",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getZCompLoc__10J3DPEBlockCFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setZCompLoc__10J3DPEBlockFPCUc",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setZCompLoc__10J3DPEBlockFUc",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getZMode__10J3DPEBlockFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setZMode__10J3DPEBlockF8J3DZMode",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getBlend__10J3DPEBlockFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setBlend__10J3DPEBlockFRC8J3DBlend",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getAlphaComp__10J3DPEBlockFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setAlphaComp__10J3DPEBlockFPC12J3DAlphaComp",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setAlphaComp__10J3DPEBlockFRC12J3DAlphaComp",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setFog__10J3DPEBlockF6J3DFog",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setFog__10J3DPEBlockFP6J3DFog",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "diffBlend__10J3DPEBlockFv",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "diffFog__10J3DPEBlockFv",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "patch__10J3DPEBlockFv",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getIndTexCoordScale__11J3DIndBlockFUl",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setIndTexCoordScale__11J3DIndBlockFUlPC19J3DIndTexCoordScale",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setIndTexCoordScale__11J3DIndBlockFUl19J3DIndTexCoordScale",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getIndTexMtx__11J3DIndBlockFUl",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setIndTexMtx__11J3DIndBlockFUlPC12J3DIndTexMtx",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setIndTexMtx__11J3DIndBlockFUl12J3DIndTexMtx",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setIndTexOrder__11J3DIndBlockFUl14J3DIndTexOrder",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setIndTexOrder__11J3DIndBlockFUlPC14J3DIndTexOrder",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setIndTexStageNum__11J3DIndBlockFUc",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__dt__15J3DIndBlockNullFv",
+        "retail_size": 64,
+        "compiled_size": 64,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getType__15J3DIndBlockNullFv",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "reset__15J3DIndBlockNullFP11J3DIndBlock",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "load__15J3DIndBlockNullFv",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "diff__15J3DIndBlockNullFUl",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTexMtxOffset__14J3DTexGenBlockFUl",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getTexMtxOffset__14J3DTexGenBlockCFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setNBTScale__14J3DTexGenBlockFPC11J3DNBTScale",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setNBTScale__14J3DTexGenBlockF11J3DNBTScale",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTexCoord__14J3DTexGenBlockFUlPC11J3DTexCoord",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTexGenNum__14J3DTexGenBlockFPCUl",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setTexGenNum__14J3DTexGenBlockFUl",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setColorChanOffset__13J3DColorBlockFUl",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setMatColorOffset__13J3DColorBlockFUl",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getColorChanOffset__13J3DColorBlockCFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getMatColorOffset__13J3DColorBlockCFv",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setCullMode__13J3DColorBlockFPCUc",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setCullMode__13J3DColorBlockFUc",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "getLight__13J3DColorBlockFUl",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setLight__13J3DColorBlockFUlP11J3DLightObj",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setColorChan__13J3DColorBlockFUlRC12J3DColorChan",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setColorChan__13J3DColorBlockFUlPC12J3DColorChan",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setColorChanNum__13J3DColorBlockFUc",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setColorChanNum__13J3DColorBlockFPCUc",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setAmbColor__13J3DColorBlockFUlPC10J3DGXColor",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setAmbColor__13J3DColorBlockFUl10J3DGXColor",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "setMatColor__13J3DColorBlockFUl10J3DGXColor",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "diffLight__13J3DColorBlockFv",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "diffMatColor__13J3DColorBlockFv",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "patchLight__13J3DColorBlockFv",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "patchMatColor__13J3DColorBlockFv",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__ct__12J3DColorChanFv",
+        "retail_size": 212,
+        "compiled_size": 56,
+        "objdiff_percent": 3.7547169
+      },
+      {
+        "name": "__ct__11J3DNBTScaleFv",
+        "retail_size": 44,
+        "compiled_size": 44,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__ct__11J3DTevStageFv",
+        "retail_size": 468,
+        "compiled_size": 84,
+        "objdiff_percent": 5.3418803
+      },
+      {
+        "name": "__ct__12J3DIndTexMtxFv",
+        "retail_size": 56,
+        "compiled_size": 56,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__dt__12J3DIndTexMtxFv",
+        "retail_size": 64,
+        "compiled_size": 64,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__ct__19J3DIndTexCoordScaleFv",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_percent": 98.333336
+      },
+      {
+        "name": "__dt__19J3DIndTexCoordScaleFv",
+        "retail_size": 64,
+        "compiled_size": 64,
+        "objdiff_percent": 100.0
+      },
+      {
+        "name": "__ct__12J3DAlphaCompFv",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_percent": 99.166664
+      },
+      {
+        "name": "setCurrentTexMtx__13J3DCurrentMtxFUcUcUcUcUcUcUcUc",
+        "retail_size": 64,
+        "compiled_size": 64,
+        "objdiff_percent": 100.0
+      }
+    ]
+  },
+  "recovered": [
+    {
+      "unit": "J3DMatBlock",
+      "name": "__as__11J3DTexCoordFRC11J3DTexCoord",
+      "retail_size": 12,
+      "compiled_size": 12,
+      "objdiff_percent": 100.0
+    },
+    {
+      "unit": "J3DMatBlock",
+      "name": "__as__13J3DGXColorS10FRC11_GXColorS10",
+      "retail_size": 20,
+      "compiled_size": 20,
+      "objdiff_percent": 100.0
+    },
+    {
+      "unit": "J3DMatBlock",
+      "name": "J3DGDSetZMode__FUc10_GXCompareUc",
+      "retail_size": 48,
+      "compiled_size": 48,
+      "objdiff_percent": 70.0
+    },
+    {
+      "unit": "J3DStruct",
+      "name": "__as__16J3DIndTexMtxInfoFRC16J3DIndTexMtxInfo",
+      "retail_size": 36,
+      "compiled_size": 60,
+      "objdiff_percent": 0.0
+    },
+    {
+      "unit": "J3DStruct",
+      "name": "__as__10J3DFogInfoFRC10J3DFogInfo",
+      "retail_size": 128,
+      "compiled_size": 128,
+      "objdiff_percent": 88.96875
+    },
+    {
+      "unit": "J3DStruct",
+      "name": "__as__15J3DNBTScaleInfoFRC15J3DNBTScaleInfo",
+      "retail_size": 36,
+      "compiled_size": 36,
+      "objdiff_percent": 100.0
+    },
+    {
+      "unit": "J3DTevs",
+      "name": "load__11J3DLightObjCFUl",
+      "retail_size": 184,
+      "compiled_size": 184,
+      "objdiff_percent": 100.0
+    }
+  ],
+  "constants": [
+    {
+      "name": "j3dDefaultTexMtxInfo",
+      "address": "0x8055c250",
+      "size": 100,
+      "bytes": "0100ffff0000000000000000000000003f8000003f8000000000000000000000000000003f800000000000000000000000000000000000003f800000000000000000000000000000000000003f800000000000000000000000000000000000003f800000"
+    },
+    {
+      "name": "j3dDefaultColInfo",
+      "address": "0x806c1af0",
+      "size": 4,
+      "bytes": "ffffffff"
+    },
+    {
+      "name": "j3dDefaultAmbInfo",
+      "address": "0x806c1af4",
+      "size": 4,
+      "bytes": "32323232"
+    },
+    {
+      "name": "j3dDefaultNumChans",
+      "address": "0x806c1af8",
+      "size": 1,
+      "bytes": "01"
+    },
+    {
+      "name": "j3dDefaultTevOrderInfoNull",
+      "address": "0x806c1af9",
+      "size": 4,
+      "bytes": "ffffff00"
+    },
+    {
+      "name": "j3dDefaultIndTexOrderNull",
+      "address": "0x806c1afd",
+      "size": 4,
+      "bytes": "ffff0000"
+    },
+    {
+      "name": "j3dDefaultTevKColor",
+      "address": "0x806c1b01",
+      "size": 4,
+      "bytes": "ffffffff"
+    },
+    {
+      "name": "j3dDefaultTevColor",
+      "address": "0x8055c2d0",
+      "size": 8,
+      "bytes": "00ff00ff00ff00ff"
+    },
+    {
+      "name": "j3dDefaultTevSwapModeTable",
+      "address": "0x806c1b05",
+      "size": 4,
+      "bytes": "00010203"
+    },
+    {
+      "name": "j3dDefaultBlendInfo",
+      "address": "0x806c1b09",
+      "size": 4,
+      "bytes": "01040505"
+    },
+    {
+      "name": "j3dDefaultTevSwapTableID",
+      "address": "0x806c1b0d",
+      "size": 1,
+      "bytes": "1b"
+    },
+    {
+      "name": "j3dDefaultAlphaCmpID",
+      "address": "0x806c1b0e",
+      "size": 2,
+      "bytes": "00e7"
+    },
+    {
+      "name": "j3dDefaultZModeID",
+      "address": "0x806c1b10",
+      "size": 2,
+      "bytes": "0017"
+    },
+    {
+      "name": "j3dDefaultColorChanInfo",
+      "address": "0x8055c334",
+      "size": 8,
+      "bytes": "000000020200ffff"
+    },
+    {
+      "name": "j3dDefaultIndTexCoordScaleInfo",
+      "address": "0x806c2910",
+      "size": 4,
+      "storage": "retail zero-initialized BSS"
+    },
+    {
+      "name": "j3dDefaultTevSwapMode",
+      "address": "0x806c2914",
+      "size": 4,
+      "storage": "retail zero-initialized BSS"
+    }
+  ]
+}

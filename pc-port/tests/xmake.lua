@@ -1203,7 +1203,10 @@ target("smg-pc-original-j3d-vertex-buffer-tests")
 for _, fixture in ipairs {
     {"packet", "OriginalJ3DPacketTests.cpp"},
     {"mtx-buffer", "OriginalJ3DMtxBufferTests.cpp"},
-    {"texture-mtx", "OriginalJ3DTextureMtxTests.cpp"}
+    {"texture-mtx", "OriginalJ3DTextureMtxTests.cpp"},
+    {"material-animation", "OriginalMaterialAnimationTests.cpp"},
+    {"material-block", "OriginalJ3DMaterialBlockTests.cpp"},
+    {"joint-resource", "OriginalJ3DJointResourceTests.cpp"}
 } do
     target("smg-pc-original-j3d-" .. fixture[1] .. "-tests")
         set_kind("binary")
@@ -1220,6 +1223,19 @@ for _, fixture in ipairs {
             realtime_output = true
         })
 end
+
+target("smg-pc-original-kcollision-resource-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    add_files("OriginalKCollisionResourceTests.cpp", "../aurora/lib/compat.cpp")
+    add_deps {
+        "smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
+        "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"
+    }
+    add_tests("original_kcollision_resource", {
+        group = "aurora", rundir = os.projectdir(), realtime_output = true
+    })
 
 target("smg-pc-fixed-step-clock-tests")
     set_kind("binary")

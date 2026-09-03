@@ -36,7 +36,7 @@ public:
     s32 mZoneCount;               // 0x14
     CollisionZone* mZones[0x20];  // 0x18
     s32 mZoneNum;                 // 0x98
-    u32 _9C;
+    s32 _9C;
     u8 _A0;
     u8 _A1;
     u8 _A2;

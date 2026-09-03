@@ -9,6 +9,32 @@
 static void J3DGDLoadTexMtxImm(f32 (*)[4], u32, GXTexMtxType);
 static void J3DGDLoadPostTexMtxImm(f32 (*)[4], u32);
 
+void J3DLightObj::load(u32 index) const {
+    GDOverflowCheck(0x48);
+    GXLightID id = static_cast<GXLightID>(1 << index);
+    J3DGDSetLightPos(id, mInfo.mLightPosition.x, mInfo.mLightPosition.y, mInfo.mLightPosition.z);
+    J3DGDSetLightAttn(id, mInfo.mCosAtten.x, mInfo.mCosAtten.y, mInfo.mCosAtten.z,
+                     mInfo.mDistAtten.x, mInfo.mDistAtten.y, mInfo.mDistAtten.z);
+    J3DGDSetLightColor(id, mInfo.mColor);
+    J3DGDSetLightDir(id, mInfo.mLightDirection.x, mInfo.mLightDirection.y, mInfo.mLightDirection.z);
+}
+
+const GXColor j3dDefaultColInfo = {255, 255, 255, 255};
+const GXColor j3dDefaultAmbInfo = {50, 50, 50, 50};
+const u8 j3dDefaultNumChans = 1;
+const J3DTevOrderInfo j3dDefaultTevOrderInfoNull = {255, 255, 255, 0};
+const J3DIndTexOrderInfo j3dDefaultIndTexOrderNull = {255, 255, 0, 0};
+const GXColor j3dDefaultTevKColor = {255, 255, 255, 255};
+const GXColorS10 j3dDefaultTevColor = {255, 255, 255, 255};
+const J3DTevSwapModeTableInfo j3dDefaultTevSwapModeTable = {0, 1, 2, 3};
+const J3DBlendInfo j3dDefaultBlendInfo = {1, 4, 5, 5};
+const u8 j3dDefaultTevSwapTableID = 0x1B;
+const u16 j3dDefaultAlphaCmpID = 0xE7;
+const u16 j3dDefaultZModeID = 0x17;
+const J3DColorChanInfo j3dDefaultColorChanInfo = {0, 0, 0, 2, 2, 0, {255, 255}};
+const J3DIndTexCoordScaleInfo j3dDefaultIndTexCoordScaleInfo = {};
+const J3DTevSwapModeInfo j3dDefaultTevSwapMode = {};
+
 void loadTexCoordGens(u32 texGenNum, J3DTexCoord* texCoords) {
     u32 var_r28;
     GDOverflowCheck(texGenNum * 4 * 2 + 10);
@@ -301,6 +327,8 @@ J3DTexCoordInfo const j3dDefaultTexCoordInfo[8] = {
 
 J3DTexMtxInfo const j3dDefaultTexMtxInfo = {
     0x01, 0x00, 0xFF, 0xFF, {0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 0, 0.0f, 0.0f},
+    {{1.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f, 0.0f},
+     {0.0f, 0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 1.0f}},
 };
 
 J3DIndTexMtxInfo const j3dDefaultIndTexMtxInfo = {0.5f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f, 1};

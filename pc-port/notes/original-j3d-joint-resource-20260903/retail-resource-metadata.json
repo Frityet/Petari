@@ -1,0 +1,16 @@
+[
+  {
+    "file": "mario.bdl",
+    "joints": 30,
+    "envelopes": 13,
+    "serialized_draw": 48,
+    "actual_draw": 35,
+    "full_weight": 22,
+    "raw_flags": [
+      0,
+      1
+    ],
+    "important_output": 35,
+    "inverse_count": 30
+  }
+]

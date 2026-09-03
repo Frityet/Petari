@@ -9,6 +9,8 @@ static void J3DGDLoadPostTexMtxImm(f32 (*)[4], u32);
 
 J3DTexMtxInfo const j3dDefaultTexMtxInfo = {
     0x01, 0x00, 0xFF, 0xFF, {0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 0, 0.0f, 0.0f},
+    {{1.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f, 0.0f},
+     {0.0f, 0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 1.0f}},
 };
 
 #if defined(__clang__)
