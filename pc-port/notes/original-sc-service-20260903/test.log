@@ -1,0 +1,7 @@
+PASS original defaults and failed outputs
+PASS original encrypted product/region/language accessors
+PASS exact scalar types, byte order and original range rules
+PASS actual SDK Bluetooth arrays and array thresholds
+PASS duplicate ID indexing and delete-before-create semantics
+PASS malformed/short source and original SDK capacity
+PASS runtime owner publication, failure and mapped-memory restoration

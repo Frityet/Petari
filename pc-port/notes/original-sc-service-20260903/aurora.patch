@@ -1,0 +1,47 @@
+diff --git a/include/aurora/sysconf.hpp b/include/aurora/sysconf.hpp
+--- a/include/aurora/sysconf.hpp
++++ b/include/aurora/sysconf.hpp
+@@ -44,6 +44,12 @@
+   void replace_integer(std::string_view name, Type type, std::uint64_t value);
+   bool erase(std::string_view name);
+ 
++  // Indexed operations preserve duplicate-name records and externally owned
++  // SDK indexes. They retain the same checked ownership/capacity contract.
++  void replace_at(std::size_t index, Entry entry);
++  void append(Entry entry);
++  void erase_at(std::size_t index);
++
+ private:
+   std::vector<Entry> m_entries;
+ };
+diff --git a/lib/sysconf.cpp b/lib/sysconf.cpp
+--- a/lib/sysconf.cpp
++++ b/lib/sysconf.cpp
+@@ -203,4 +203,27 @@
+   return true;
+ }
+ 
++void SysConf::replace_at(std::size_t index, Entry entry) {
++  (void)packed_size(entry);
++  auto candidate = m_entries;
++  candidate.at(index) = std::move(entry);
++  (void)document_size(candidate);
++  m_entries.swap(candidate);
++}
++
++void SysConf::append(Entry entry) {
++  (void)packed_size(entry);
++  auto candidate = m_entries;
++  candidate.push_back(std::move(entry));
++  (void)document_size(candidate);
++  m_entries.swap(candidate);
++}
++
++void SysConf::erase_at(std::size_t index) {
++  if (index >= m_entries.size()) {
++    throw std::out_of_range("SYSCONF entry index is outside the document");
++  }
++  m_entries.erase(m_entries.begin() + index);
++}
++
+ } // namespace aurora

@@ -1,0 +1,539 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "commands": [
+    [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,p",
+      "-inline",
+      "auto,level=3",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-ipa",
+      "file",
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "src/RVL_SDK/bte",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-ir",
+      "libs/RVL_SDK/include/revolution/bte",
+      "-DREVOLUTION",
+      "-c",
+      "/Users/frityet/Projects/petari/build/original-sc-service-20260903/staged-root/src/RVL_SDK/sc/scapi.c",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-sc-service-20260903/scapi.proof.o"
+    ],
+    [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,p",
+      "-inline",
+      "auto,level=3",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-ipa",
+      "file",
+      "-sdata",
+      "8",
+      "-sdata2",
+      "8",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "src/RVL_SDK/bte",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-ir",
+      "libs/RVL_SDK/include/revolution/bte",
+      "-DREVOLUTION",
+      "-c",
+      "/Users/frityet/Projects/petari/src/RVL_SDK/sc/scapi_prdinfo.c",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-sc-service-20260903/scapi_prdinfo.proof.o"
+    ]
+  ],
+  "functions_and_tables": [
+    {
+      "name": "SCGetAspectRatio",
+      "address": "0x804d1bd8",
+      "size": 84,
+      "relocated_bytes_exact": true,
+      "references": [
+        {
+          "offset": "0x14",
+          "kind": 10,
+          "symbol": "SCFindU8Item",
+          "addend": 0,
+          "actual_target": "0x804d13d0"
+        }
+      ]
+    },
+    {
+      "name": "SCGetDisplayOffsetH",
+      "address": "0x804d1c2c",
+      "size": 116,
+      "relocated_bytes_exact": true,
+      "references": [
+        {
+          "offset": "0x14",
+          "kind": 10,
+          "symbol": "SCFindS8Item",
+          "addend": 0,
+          "actual_target": "0x804d14a4"
+        }
+      ]
+    },
+    {
+      "name": "SCGetEuRgb60Mode",
+      "address": "0x804d1ca0",
+      "size": 84,
+      "relocated_bytes_exact": true,
+      "references": [
+        {
+          "offset": "0x14",
+          "kind": 10,
+          "symbol": "SCFindU8Item",
+          "addend": 0,
+          "actual_target": "0x804d13d0"
+        }
+      ]
+    },
+    {
+      "name": "SCGetIdleMode",
+      "address": "0x804d1cf4",
+      "size": 12,
+      "relocated_bytes_exact": true,
+      "references": [
+        {
+          "offset": "0x8",
+          "kind": 10,
+          "symbol": "SCFindByteArrayItem",
+          "addend": 0,
+          "actual_target": "0x804d10b4"
+        }
+      ]
+    },
+    {
+      "name": "SCGetLanguage",
+      "address": "0x804d1d00",
+      "size": 108,
+      "relocated_bytes_exact": true,
+      "references": [
+        {
+          "offset": "0x14",
+          "kind": 10,
+          "symbol": "SCFindU8Item",
+          "addend": 0,
+          "actual_target": "0x804d13d0"
+        },
+        {
+          "offset": "0x20",
+          "kind": 10,
+          "symbol": "SCGetProductArea",
+          "addend": 0,
+          "actual_target": "0x804d21c8"
+        }
+      ]
+    },
+    {
+      "name": "SCGetProgressiveMode",
+      "address": "0x804d1d6c",
+      "size": 84,
+      "relocated_bytes_exact": true,
+      "references": [
+        {
+          "offset": "0x14",
+          "kind": 10,
+          "symbol": "SCFindU8Item",
+          "addend": 0,
+          "actual_target": "0x804d13d0"
+        }
+      ]
+    },
+    {
+      "name": "SCGetScreenSaverMode",
+      "address": "0x804d1dc0",
+      "size": 84,
+      "relocated_bytes_exact": true,
+      "references": [
+        {
+          "offset": "0x14",
+          "kind": 10,
+          "symbol": "SCFindU8Item",
+          "addend": 0,
+          "actual_target": "0x804d13d0"
+        }
+      ]
+    },
+    {
+      "name": "SCGetSoundMode",
+      "address": "0x804d1e14",
+      "size": 100,
+      "relocated_bytes_exact": true,
+      "references": [
+        {
+          "offset": "0x14",
+          "kind": 10,
+          "symbol": "SCFindU8Item",
+          "addend": 0,
+          "actual_target": "0x804d13d0"
+        }
+      ]
+    },
+    {
+      "name": "SCGetCounterBias",
+      "address": "0x804d1e78",
+      "size": 64,
+      "relocated_bytes_exact": true,
+      "references": [
+        {
+          "offset": "0x14",
+          "kind": 10,
+          "symbol": "SCFindU32Item",
+          "addend": 0,
+          "actual_target": "0x804d1578"
+        }
+      ]
+    },
+    {
+      "name": "SCGetBtDeviceInfoArray",
+      "address": "0x804d1eb8",
+      "size": 12,
+      "relocated_bytes_exact": true,
+      "references": [
+        {
+          "offset": "0x8",
+          "kind": 10,
+          "symbol": "SCFindByteArrayItem",
+          "addend": 0,
+          "actual_target": "0x804d10b4"
+        }
+      ]
+    },
+    {
+      "name": "SCSetBtDeviceInfoArray",
+      "address": "0x804d1ec4",
+      "size": 12,
+      "relocated_bytes_exact": true,
+      "references": [
+        {
+          "offset": "0x8",
+          "kind": 10,
+          "symbol": "SCReplaceByteArrayItem",
+          "addend": 0,
+          "actual_target": "0x804d1194"
+        }
+      ]
+    },
+    {
+      "name": "SCGetBtCmpDevInfoArray",
+      "address": "0x804d1ed0",
+      "size": 12,
+      "relocated_bytes_exact": true,
+      "references": [
+        {
+          "offset": "0x8",
+          "kind": 10,
+          "symbol": "SCFindByteArrayItem",
+          "addend": 0,
+          "actual_target": "0x804d10b4"
+        }
+      ]
+    },
+    {
+      "name": "SCSetBtCmpDevInfoArray",
+      "address": "0x804d1edc",
+      "size": 12,
+      "relocated_bytes_exact": true,
+      "references": [
+        {
+          "offset": "0x8",
+          "kind": 10,
+          "symbol": "SCReplaceByteArrayItem",
+          "addend": 0,
+          "actual_target": "0x804d1194"
+        }
+      ]
+    },
+    {
+      "name": "SCGetBtDpdSensibility",
+      "address": "0x804d1ee8",
+      "size": 104,
+      "relocated_bytes_exact": true,
+      "references": [
+        {
+          "offset": "0x14",
+          "kind": 10,
+          "symbol": "SCFindU32Item",
+          "addend": 0,
+          "actual_target": "0x804d1578"
+        }
+      ]
+    },
+    {
+      "name": "SCGetWpadMotorMode",
+      "address": "0x804d1f50",
+      "size": 84,
+      "relocated_bytes_exact": true,
+      "references": [
+        {
+          "offset": "0x14",
+          "kind": 10,
+          "symbol": "SCFindU8Item",
+          "addend": 0,
+          "actual_target": "0x804d13d0"
+        }
+      ]
+    },
+    {
+      "name": "SCSetWpadMotorMode",
+      "address": "0x804d1fa4",
+      "size": 8,
+      "relocated_bytes_exact": true,
+      "references": [
+        {
+          "offset": "0x4",
+          "kind": 10,
+          "symbol": "SCReplaceU8Item",
+          "addend": 0,
+          "actual_target": "0x804d164c"
+        }
+      ]
+    },
+    {
+      "name": "SCGetWpadSensorBarPosition",
+      "address": "0x804d1fac",
+      "size": 84,
+      "relocated_bytes_exact": true,
+      "references": [
+        {
+          "offset": "0x14",
+          "kind": 10,
+          "symbol": "SCFindU8Item",
+          "addend": 0,
+          "actual_target": "0x804d13d0"
+        }
+      ]
+    },
+    {
+      "name": "SCGetWpadSpeakerVolume",
+      "address": "0x804d2000",
+      "size": 84,
+      "relocated_bytes_exact": true,
+      "references": [
+        {
+          "offset": "0x14",
+          "kind": 10,
+          "symbol": "SCFindU8Item",
+          "addend": 0,
+          "actual_target": "0x804d13d0"
+        }
+      ]
+    },
+    {
+      "name": "SCSetWpadSpeakerVolume",
+      "address": "0x804d2054",
+      "size": 8,
+      "relocated_bytes_exact": true,
+      "references": [
+        {
+          "offset": "0x4",
+          "kind": 10,
+          "symbol": "SCReplaceU8Item",
+          "addend": 0,
+          "actual_target": "0x804d164c"
+        }
+      ]
+    },
+    {
+      "name": "__SCF1",
+      "address": "0x804d205c",
+      "size": 364,
+      "relocated_bytes_exact": true,
+      "references": []
+    },
+    {
+      "name": "SCGetProductArea",
+      "address": "0x804d21c8",
+      "size": 132,
+      "relocated_bytes_exact": true,
+      "references": [
+        {
+          "offset": "0x8",
+          "kind": 109,
+          "symbol": "@434",
+          "addend": 0,
+          "value_hex": "4152454100",
+          "actual_target": "0x806b2d20"
+        },
+        {
+          "offset": "0x22",
+          "kind": 6,
+          "symbol": "ProductAreaAndStringTbl",
+          "addend": 0,
+          "value_hex": "00",
+          "actual_target": "0x80600a40"
+        },
+        {
+          "offset": "0x26",
+          "kind": 4,
+          "symbol": "ProductAreaAndStringTbl",
+          "addend": 0,
+          "value_hex": "00",
+          "actual_target": "0x80600a40"
+        },
+        {
+          "offset": "0x28",
+          "kind": 10,
+          "symbol": "__SCF1",
+          "addend": 0,
+          "actual_target": "0x804d205c"
+        },
+        {
+          "offset": "0x40",
+          "kind": 10,
+          "symbol": "strcmp",
+          "addend": 0,
+          "actual_target": "0x8051fdc0"
+        }
+      ]
+    },
+    {
+      "name": "SCGetProductGameRegion",
+      "address": "0x804d224c",
+      "size": 132,
+      "relocated_bytes_exact": true,
+      "references": [
+        {
+          "offset": "0x8",
+          "kind": 109,
+          "symbol": "@442",
+          "addend": 0,
+          "value_hex": "47414d4500",
+          "actual_target": "0x806b2d28"
+        },
+        {
+          "offset": "0x22",
+          "kind": 6,
+          "symbol": "ProductGameRegionAndStringTbl",
+          "addend": 0,
+          "value_hex": "00",
+          "actual_target": "0x80600a88"
+        },
+        {
+          "offset": "0x26",
+          "kind": 4,
+          "symbol": "ProductGameRegionAndStringTbl",
+          "addend": 0,
+          "value_hex": "00",
+          "actual_target": "0x80600a88"
+        },
+        {
+          "offset": "0x28",
+          "kind": 10,
+          "symbol": "__SCF1",
+          "addend": 0,
+          "actual_target": "0x804d205c"
+        },
+        {
+          "offset": "0x40",
+          "kind": 10,
+          "symbol": "strcmp",
+          "addend": 0,
+          "actual_target": "0x8051fdc0"
+        }
+      ]
+    },
+    {
+      "table": "ProductAreaAndStringTbl",
+      "address": "0x80600a40",
+      "size": 70,
+      "full_table_bytes_exact": true
+    },
+    {
+      "table": "ProductGameRegionAndStringTbl",
+      "address": "0x80600a88",
+      "size": 24,
+      "full_table_bytes_exact": true
+    }
+  ],
+  "retail_tail_reservation_instruction": {
+    "address": "0x804D0A18",
+    "bytes": "387fffba",
+    "decoded": "addi r3,r31,-70"
+  }
+}
