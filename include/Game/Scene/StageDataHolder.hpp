@@ -2,6 +2,7 @@
 
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/Util/Array.hpp"
+#include <JSystem/JGeometry/TMatrix.hpp>
 
 class JKRArchive;
 class JMapIdInfo;
@@ -77,7 +78,7 @@ public:
     StageDataHolder* mStageDataArray[0x18];           // 0x44
     JKRArchive* mArchive;                             // 0xA4
     const char* _A8;
-    Mtx mPlacementMtx;  // 0xAC
+    TPos3f mPlacementMtx;  // 0xAC
     s32 mZoneID;        // 0xDC
     u8 _E0;
     u8 _E1;

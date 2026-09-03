@@ -270,12 +270,12 @@ namespace MR {
     // getPlacedZoneId
     TPos3f* getZonePlacementMtx(const JMapInfoIter& rIter) {
         const StageDataHolder* holder = getStageDataHolder()->findPlacedStageDataHolder(rIter);
-        return (TPos3f*)holder->mPlacementMtx;
+        return const_cast< TPos3f* >(&holder->mPlacementMtx);
     }
 
     TPos3f* getZonePlacementMtx(s32 zoneId) {
         const StageDataHolder* holder = getStageDataHolder()->getStageDataHolderFromZoneId(zoneId);
-        return (TPos3f*)holder->mPlacementMtx;
+        return const_cast< TPos3f* >(&holder->mPlacementMtx);
     }
 
     // getJapaneseObjectName

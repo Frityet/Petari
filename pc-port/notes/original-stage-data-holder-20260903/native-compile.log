@@ -1,0 +1,106 @@
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |     /* 0x14 */ virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |     /* 0x14 */ virtual void movement();
+      |                             ^
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |     /* 0x1C */ virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here
+   28 |     /* 0x1C */ virtual void calcAnim();
+      |                             ^
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:43:29: warning: 'calcViewAndEntry' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   43 |     /* 0x20 */ virtual void calcViewAndEntry();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:29:29: note: overridden virtual function is here
+   29 |     /* 0x20 */ virtual void calcViewAndEntry();
+      |                             ^
+/Users/frityet/Projects/petari/build/original-stage-data-holder-20260903/staged/Game/Scene/StageDataHolder.cpp:23:59: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   23 |     static bool isPrioPlacementObjInfo(const char* pName) NO_INLINE {
+      |                                                           ^
+src/Inline.hpp:5:34: note: expanded from macro 'NO_INLINE'
+    5 | #define NO_INLINE __attribute__((noinline))
+      |                                  ^
+/Users/frityet/Projects/petari/build/original-stage-data-holder-20260903/staged/Game/Scene/StageDataHolder.cpp:28:103: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   28 |     static void calcPlacementInfoNum(int* a1, int* a2, const MR::AssignableArray< JMapInfo >& rArray) NO_INLINE {
+      |                                                                                                       ^
+src/Inline.hpp:5:34: note: expanded from macro 'NO_INLINE'
+    5 | #define NO_INLINE __attribute__((noinline))
+      |                                  ^
+/Users/frityet/Projects/petari/build/original-stage-data-holder-20260903/staged/Game/Scene/StageDataHolder.cpp:58:100: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+   58 |                                                     const MR::AssignableArray< JMapInfo >& rArray) NO_INLINE {
+      |                                                                                                    ^
+src/Inline.hpp:5:34: note: expanded from macro 'NO_INLINE'
+    5 | #define NO_INLINE __attribute__((noinline))
+      |                                  ^
+/Users/frityet/Projects/petari/build/original-stage-data-holder-20260903/staged/Game/Scene/StageDataHolder.cpp:214:5: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  214 |     startIter.getValue< s32 >("Camera_id", &cameraID);
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/frityet/Projects/petari/build/original-stage-data-holder-20260903/staged/Game/Scene/StageDataHolder.cpp:219:16: error: cannot convert 'const std::shared_ptr<DataCompat>' to 's32' (aka 'int') without a conversion operator
+  219 |     s32 data = (s32)rIter.mInfo->mData + rIter.mInfo->mData->mDataOffset + rIter.mInfo->mData->mEntrySize * rIter.mIndex;
+      |                ^~~~~~~~~~~~~~~~~~~~~~~
+/Users/frityet/Projects/petari/build/original-stage-data-holder-20260903/staged/Game/Scene/StageDataHolder.cpp:219:62: error: no member named 'mDataOffset' in 'JMapInfo::DataCompat'
+  219 |     s32 data = (s32)rIter.mInfo->mData + rIter.mInfo->mData->mDataOffset + rIter.mInfo->mData->mEntrySize * rIter.mIndex;
+      |                                          ~~~~~~~~~~~~~~~~~~~~^
+/Users/frityet/Projects/petari/build/original-stage-data-holder-20260903/staged/Game/Scene/StageDataHolder.cpp:219:96: error: no member named 'mEntrySize' in 'JMapInfo::DataCompat'
+  219 |     s32 data = (s32)rIter.mInfo->mData + rIter.mInfo->mData->mDataOffset + rIter.mInfo->mData->mEntrySize * rIter.mIndex;
+      |                                                                            ~~~~~~~~~~~~~~~~~~~~^
+/Users/frityet/Projects/petari/build/original-stage-data-holder-20260903/staged/Game/Scene/StageDataHolder.cpp:279:5: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  279 |     englishName.getValue< const char* >("jp_name", &japaneseName);
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/frityet/Projects/petari/build/original-stage-data-holder-20260903/staged/Game/Scene/StageDataHolder.cpp:284:37: warning: trigraph ignored [-Wtrigraphs]
+  284 |     return mArchive->getResource('????', pName);
+      |                                     ^
+/Users/frityet/Projects/petari/build/original-stage-data-holder-20260903/staged/Game/Scene/StageDataHolder.cpp:326:13: error: no member named 'checkJMapDataEntries' in namespace 'MR'
+  326 |     if (MR::checkJMapDataEntries(iter)) {
+      |             ^~~~~~~~~~~~~~~~~~~~
+/Users/frityet/Projects/petari/build/original-stage-data-holder-20260903/staged/Game/Scene/StageDataHolder.cpp:422:33: error: no member named 'getIdxResource' in 'JKRArchive'
+  422 |         pInfo->attach(mArchive->getIdxResource(arch->mDirIndex));
+      |                       ~~~~~~~~  ^
+/Users/frityet/Projects/petari/build/original-stage-data-holder-20260903/staged/Game/Scene/StageDataHolder.cpp:431:89: warning: trigraph ignored [-Wtrigraphs]
+  431 |     void* tableFile = MR::receiveArchive("/StageData/ObjNameTable.arc")->getResource('????', "ObjNameTable.tbl");
+      |                                                                                         ^
+/Users/frityet/Projects/petari/build/original-stage-data-holder-20260903/staged/Game/Scene/StageDataHolder.cpp:505:15: error: unknown type name 'JMapData'
+  505 |         const JMapData* curData = pInfo->mData;
+      |               ^
+/Users/frityet/Projects/petari/build/original-stage-data-holder-20260903/staged/Game/Scene/StageDataHolder.cpp:563:5: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  563 |     rIter.getValue< f32 >("pos_x", &pos.x);
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/frityet/Projects/petari/build/original-stage-data-holder-20260903/staged/Game/Scene/StageDataHolder.cpp:564:5: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  564 |     rIter.getValue< f32 >("pos_y", &pos.y);
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/frityet/Projects/petari/build/original-stage-data-holder-20260903/staged/Game/Scene/StageDataHolder.cpp:565:5: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  565 |     rIter.getValue< f32 >("pos_z", &pos.z);
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/frityet/Projects/petari/build/original-stage-data-holder-20260903/staged/Game/Scene/StageDataHolder.cpp:568:5: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  568 |     rIter.getValue< f32 >("dir_x", &rot.x);
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/frityet/Projects/petari/build/original-stage-data-holder-20260903/staged/Game/Scene/StageDataHolder.cpp:569:5: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  569 |     rIter.getValue< f32 >("dir_y", &rot.y);
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/frityet/Projects/petari/build/original-stage-data-holder-20260903/staged/Game/Scene/StageDataHolder.cpp:570:5: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  570 |     rIter.getValue< f32 >("dir_z", &rot.z);
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/frityet/Projects/petari/build/original-stage-data-holder-20260903/staged/Game/Scene/StageDataHolder.cpp:577:13: error: cannot convert 'const std::shared_ptr<DataCompat>' to 'u32' (aka 'unsigned int') without a conversion operator
+  577 |         if ((u32)pInfo->mData < _E4) {
+      |             ^~~~~~~~~~~~~~~~~
+/Users/frityet/Projects/petari/build/original-stage-data-holder-20260903/staged/Game/Scene/StageDataHolder.cpp:578:19: error: cannot convert 'const std::shared_ptr<DataCompat>' to 'u32' (aka 'unsigned int') without a conversion operator
+  578 |             _E4 = (u32)pInfo->mData;
+      |                   ^~~~~~~~~~~~~~~~~
+/Users/frityet/Projects/petari/build/original-stage-data-holder-20260903/staged/Game/Scene/StageDataHolder.cpp:581:35: error: no member named 'mEntrySize' in 'JMapInfo::DataCompat'
+  581 |         u32 addr = (pInfo->mData->mEntrySize * pInfo->mData->mNumEntries) + ((s32)pInfo->mData + pInfo->mData->mDataOffset);
+      |                     ~~~~~~~~~~~~~~^
+/Users/frityet/Projects/petari/build/original-stage-data-holder-20260903/staged/Game/Scene/StageDataHolder.cpp:581:78: error: cannot convert 'const std::shared_ptr<DataCompat>' to 's32' (aka 'int') without a conversion operator
+  581 |         u32 addr = (pInfo->mData->mEntrySize * pInfo->mData->mNumEntries) + ((s32)pInfo->mData + pInfo->mData->mDataOffset);
+      |                                                                              ^~~~~~~~~~~~~~~~~
+/Users/frityet/Projects/petari/build/original-stage-data-holder-20260903/staged/Game/Scene/StageDataHolder.cpp:581:112: error: no member named 'mDataOffset' in 'JMapInfo::DataCompat'
+  581 |         u32 addr = (pInfo->mData->mEntrySize * pInfo->mData->mNumEntries) + ((s32)pInfo->mData + pInfo->mData->mDataOffset);
+      |                                                                                                  ~~~~~~~~~~~~~~^
+16 warnings and 11 errors generated.

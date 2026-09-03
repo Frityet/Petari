@@ -1,0 +1,915 @@
+{
+  "source_sha256": "c89828681b72eba824882d45feb3a359fa996ea9b59e8275642233c63a0a9dd2",
+  "header_sha256": "ad39ceab5d2b105d5b8a0b835f7c2948ba01f2279eee48235fa8c0b4507d6422",
+  "layer_table_all_17_relocated_pointers_and_strings_equal": true,
+  "functions": [
+    {
+      "symbol": "__ct__15StageDataHolderFPCcib",
+      "match_percent": 100.0,
+      "retail_address": "0x80346fc0",
+      "bytes": 236,
+      "all_instructions_identical_after_verified_relocations": true,
+      "verified_relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_27",
+          "addend": 0,
+          "effective_retail_target": "0x80518a00"
+        },
+        {
+          "offset": "0x16",
+          "kind": 6,
+          "symbol": "@4699",
+          "addend": 0,
+          "value_hex": "537461676544617461486f6c64657200",
+          "effective_retail_target": "0x805d2599"
+        },
+        {
+          "offset": "0x2a",
+          "kind": 4,
+          "symbol": "@4699",
+          "addend": 0,
+          "value_hex": "537461676544617461486f6c64657200",
+          "effective_retail_target": "0x805d2599"
+        },
+        {
+          "offset": "0x2c",
+          "kind": 10,
+          "symbol": "__ct__7NameObjFPCc",
+          "addend": 0,
+          "effective_retail_target": "0x802616b4"
+        },
+        {
+          "offset": "0x32",
+          "kind": 6,
+          "symbol": "__vt__15StageDataHolder",
+          "addend": 0,
+          "value_hex": "00",
+          "effective_retail_target": "0x805d2708"
+        },
+        {
+          "offset": "0x3a",
+          "kind": 4,
+          "symbol": "__vt__15StageDataHolder",
+          "addend": 0,
+          "value_hex": "00",
+          "effective_retail_target": "0x805d2708"
+        },
+        {
+          "offset": "0x7c",
+          "kind": 10,
+          "symbol": "getStageArchive__2MRFPCc",
+          "addend": 0,
+          "effective_retail_target": "0x803f75d0"
+        },
+        {
+          "offset": "0xc4",
+          "kind": 10,
+          "symbol": "zeroMemory__2MRFPvUl",
+          "addend": 0,
+          "effective_retail_target": "0x803e8c88"
+        },
+        {
+          "offset": "0xcc",
+          "kind": 10,
+          "symbol": "identity__Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>Fv",
+          "addend": 0,
+          "effective_retail_target": "0x80016914"
+        },
+        {
+          "offset": "0xd8",
+          "kind": 10,
+          "symbol": "_restgpr_27",
+          "addend": 0,
+          "effective_retail_target": "0x80518a4c"
+        }
+      ],
+      "compiler_command": [
+        "build/tools/wibo",
+        "build/tools/sjiswrap.exe",
+        "build/compilers/GC/3.0a3/mwcceppc.exe",
+        "-nodefaults",
+        "-proc",
+        "gekko",
+        "-align",
+        "powerpc",
+        "-enum",
+        "int",
+        "-fp",
+        "hardware",
+        "-Cpp_exceptions",
+        "off",
+        "-O4,s",
+        "-inline",
+        "auto",
+        "-pragma",
+        "cats off",
+        "-pragma",
+        "warn_notinlined off",
+        "-maxerrors",
+        "1",
+        "-nosyspath",
+        "-RTTI",
+        "off",
+        "-str",
+        "reuse",
+        "-enc",
+        "SJIS",
+        "-sdata",
+        "4",
+        "-sdata2",
+        "4",
+        "-ipa",
+        "file",
+        "-sym",
+        "on",
+        "-i",
+        "include",
+        "-i",
+        "libs/JSystem/include",
+        "-i",
+        "libs/MSL_C++/include",
+        "-i",
+        "libs/MSL_C/include",
+        "-i",
+        "libs/MetroTRK/include",
+        "-i",
+        "libs/RVLFaceLib/include",
+        "-i",
+        "libs/RVL_SDK/include",
+        "-i",
+        "libs/Runtime/include",
+        "-i",
+        "libs/nw4r/include",
+        "-i",
+        "build/RMGK01/include",
+        "-DVERSION=0",
+        "-c",
+        "/Users/frityet/Projects/petari/src/Game/Scene/StageDataHolder.cpp",
+        "-o",
+        "/Users/frityet/Projects/petari/build/original-stage-data-holder-20260903/StageDataHolder.o"
+      ]
+    },
+    {
+      "symbol": "initLayerJmpInfo__15StageDataHolderFPQ22MR26AssignableArray<8JMapInfo>PCcPCcUl",
+      "match_percent": 99.75,
+      "retail_address": "0x80348100",
+      "bytes": 480,
+      "all_instructions_identical_after_verified_relocations": true,
+      "verified_relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_21",
+          "addend": 0,
+          "effective_retail_target": "0x805189e8"
+        },
+        {
+          "offset": "0x16",
+          "kind": 6,
+          "symbol": "cLayerDirName__29@unnamed@StageDataHolder_cpp@",
+          "addend": 0,
+          "effective_retail_target": "0x805d2520"
+        },
+        {
+          "offset": "0x2e",
+          "kind": 4,
+          "symbol": "cLayerDirName__29@unnamed@StageDataHolder_cpp@",
+          "addend": 0,
+          "effective_retail_target": "0x805d2520"
+        },
+        {
+          "offset": "0x3e",
+          "kind": 6,
+          "symbol": "@4994",
+          "addend": 0,
+          "value_hex": "25732f257300",
+          "effective_retail_target": "0x805d26a4"
+        },
+        {
+          "offset": "0x5e",
+          "kind": 4,
+          "symbol": "@4994",
+          "addend": 0,
+          "value_hex": "25732f257300",
+          "effective_retail_target": "0x805d26a4"
+        },
+        {
+          "offset": "0x68",
+          "kind": 10,
+          "symbol": "snprintf",
+          "addend": 0,
+          "effective_retail_target": "0x8051e4cc"
+        },
+        {
+          "offset": "0xa2",
+          "kind": 4,
+          "symbol": "@4994",
+          "addend": 0,
+          "value_hex": "25732f257300",
+          "effective_retail_target": "0x805d26a4"
+        },
+        {
+          "offset": "0xb4",
+          "kind": 10,
+          "symbol": "snprintf",
+          "addend": 0,
+          "effective_retail_target": "0x8051e4cc"
+        },
+        {
+          "offset": "0x108",
+          "kind": 10,
+          "symbol": "__nwa__FUl",
+          "addend": 0,
+          "effective_retail_target": "0x8040b47c"
+        },
+        {
+          "offset": "0x10e",
+          "kind": 6,
+          "symbol": "__ct__8JMapInfoFv",
+          "addend": 0,
+          "effective_retail_target": "0x804060d0"
+        },
+        {
+          "offset": "0x112",
+          "kind": 6,
+          "symbol": "__dt__8JMapInfoFv",
+          "addend": 0,
+          "effective_retail_target": "0x804060e8"
+        },
+        {
+          "offset": "0x11e",
+          "kind": 4,
+          "symbol": "__ct__8JMapInfoFv",
+          "addend": 0,
+          "effective_retail_target": "0x804060d0"
+        },
+        {
+          "offset": "0x122",
+          "kind": 4,
+          "symbol": "__dt__8JMapInfoFv",
+          "addend": 0,
+          "effective_retail_target": "0x804060e8"
+        },
+        {
+          "offset": "0x124",
+          "kind": 10,
+          "symbol": "__construct_new_array",
+          "addend": 0,
+          "effective_retail_target": "0x80518494"
+        },
+        {
+          "offset": "0x12a",
+          "kind": 6,
+          "symbol": "cLayerDirName__29@unnamed@StageDataHolder_cpp@",
+          "addend": 0,
+          "effective_retail_target": "0x805d2520"
+        },
+        {
+          "offset": "0x13e",
+          "kind": 4,
+          "symbol": "cLayerDirName__29@unnamed@StageDataHolder_cpp@",
+          "addend": 0,
+          "effective_retail_target": "0x805d2520"
+        },
+        {
+          "offset": "0x146",
+          "kind": 6,
+          "symbol": "@4994",
+          "addend": 0,
+          "value_hex": "25732f257300",
+          "effective_retail_target": "0x805d26a4"
+        },
+        {
+          "offset": "0x166",
+          "kind": 4,
+          "symbol": "@4994",
+          "addend": 0,
+          "value_hex": "25732f257300",
+          "effective_retail_target": "0x805d26a4"
+        },
+        {
+          "offset": "0x170",
+          "kind": 10,
+          "symbol": "snprintf",
+          "addend": 0,
+          "effective_retail_target": "0x8051e4cc"
+        },
+        {
+          "offset": "0x180",
+          "kind": 10,
+          "symbol": "attachJmpInfoToArray__15StageDataHolderFP8JMapInfoPCc",
+          "addend": 0,
+          "effective_retail_target": "0x803482e0"
+        },
+        {
+          "offset": "0x196",
+          "kind": 4,
+          "symbol": "@4994",
+          "addend": 0,
+          "value_hex": "25732f257300",
+          "effective_retail_target": "0x805d26a4"
+        },
+        {
+          "offset": "0x1a0",
+          "kind": 10,
+          "symbol": "snprintf",
+          "addend": 0,
+          "effective_retail_target": "0x8051e4cc"
+        },
+        {
+          "offset": "0x1b0",
+          "kind": 10,
+          "symbol": "attachJmpInfoToArray__15StageDataHolderFP8JMapInfoPCc",
+          "addend": 0,
+          "effective_retail_target": "0x803482e0"
+        },
+        {
+          "offset": "0x1cc",
+          "kind": 10,
+          "symbol": "_restgpr_21",
+          "addend": 0,
+          "effective_retail_target": "0x80518a34"
+        }
+      ],
+      "compiler_command": [
+        "build/tools/wibo",
+        "build/tools/sjiswrap.exe",
+        "build/compilers/GC/3.0a3/mwcceppc.exe",
+        "-nodefaults",
+        "-proc",
+        "gekko",
+        "-align",
+        "powerpc",
+        "-enum",
+        "int",
+        "-fp",
+        "hardware",
+        "-Cpp_exceptions",
+        "off",
+        "-O4,s",
+        "-inline",
+        "auto",
+        "-pragma",
+        "cats off",
+        "-pragma",
+        "warn_notinlined off",
+        "-maxerrors",
+        "1",
+        "-nosyspath",
+        "-RTTI",
+        "off",
+        "-str",
+        "reuse",
+        "-enc",
+        "SJIS",
+        "-sdata",
+        "4",
+        "-sdata2",
+        "4",
+        "-ipa",
+        "file",
+        "-sym",
+        "on",
+        "-i",
+        "include",
+        "-i",
+        "libs/JSystem/include",
+        "-i",
+        "libs/MSL_C++/include",
+        "-i",
+        "libs/MSL_C/include",
+        "-i",
+        "libs/MetroTRK/include",
+        "-i",
+        "libs/RVLFaceLib/include",
+        "-i",
+        "libs/RVL_SDK/include",
+        "-i",
+        "libs/Runtime/include",
+        "-i",
+        "libs/nw4r/include",
+        "-i",
+        "build/RMGK01/include",
+        "-DVERSION=0",
+        "-c",
+        "/Users/frityet/Projects/petari/src/Game/Scene/StageDataHolder.cpp",
+        "-o",
+        "/Users/frityet/Projects/petari/build/original-stage-data-holder-20260903/StageDataHolder.o"
+      ]
+    },
+    {
+      "symbol": "initPlacementInfoOrderedCommon__15StageDataHolderFv",
+      "match_percent": 100.0,
+      "retail_address": "0x80348460",
+      "bytes": 332,
+      "all_instructions_identical_after_verified_relocations": true,
+      "verified_relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_29",
+          "addend": 0,
+          "effective_retail_target": "0x80518a08"
+        },
+        {
+          "offset": "0x24",
+          "kind": 10,
+          "symbol": "calcPlacementInfoNum__29@unnamed@StageDataHolder_cpp@FPiPiRCQ22MR26AssignableArray<8JMapInfo>",
+          "addend": 0,
+          "effective_retail_target": "0x80346e60"
+        },
+        {
+          "offset": "0x48",
+          "kind": 10,
+          "symbol": "calcPlacementInfoNum__29@unnamed@StageDataHolder_cpp@FPiPiRCQ22MR26AssignableArray<8JMapInfo>",
+          "addend": 0,
+          "effective_retail_target": "0x80346e60"
+        },
+        {
+          "offset": "0x84",
+          "kind": 10,
+          "symbol": "__nw__FUl",
+          "addend": 0,
+          "effective_retail_target": "0x8040b458"
+        },
+        {
+          "offset": "0x94",
+          "kind": 10,
+          "symbol": "__ct__20PlacementInfoOrderedFi",
+          "addend": 0,
+          "effective_retail_target": "0x80342694"
+        },
+        {
+          "offset": "0xa0",
+          "kind": 10,
+          "symbol": "__nw__FUl",
+          "addend": 0,
+          "effective_retail_target": "0x8040b458"
+        },
+        {
+          "offset": "0xb0",
+          "kind": 10,
+          "symbol": "__ct__20PlacementInfoOrderedFi",
+          "addend": 0,
+          "effective_retail_target": "0x80342694"
+        },
+        {
+          "offset": "0xbc",
+          "kind": 10,
+          "symbol": "__nw__FUl",
+          "addend": 0,
+          "effective_retail_target": "0x8040b458"
+        },
+        {
+          "offset": "0xcc",
+          "kind": 10,
+          "symbol": "__ct__20PlacementInfoOrderedFi",
+          "addend": 0,
+          "effective_retail_target": "0x80342694"
+        },
+        {
+          "offset": "0xe4",
+          "kind": 10,
+          "symbol": "attachJmpInfoToPlacementInfoOrdered__29@unnamed@StageDataHolder_cpp@FP20PlacementInfoOrderedP20PlacementInfoOrderedP20PlacementInfoOrderedRCQ22MR26AssignableArray<8JMapInfo>",
+          "addend": 0,
+          "effective_retail_target": "0x80346f28"
+        },
+        {
+          "offset": "0x10c",
+          "kind": 10,
+          "symbol": "attachJmpInfoToPlacementInfoOrdered__29@unnamed@StageDataHolder_cpp@FP20PlacementInfoOrderedP20PlacementInfoOrderedP20PlacementInfoOrderedRCQ22MR26AssignableArray<8JMapInfo>",
+          "addend": 0,
+          "effective_retail_target": "0x80346f28"
+        },
+        {
+          "offset": "0x128",
+          "kind": 10,
+          "symbol": "sort__20PlacementInfoOrderedFv",
+          "addend": 0,
+          "effective_retail_target": "0x80342754"
+        },
+        {
+          "offset": "0x130",
+          "kind": 10,
+          "symbol": "sort__20PlacementInfoOrderedFv",
+          "addend": 0,
+          "effective_retail_target": "0x80342754"
+        },
+        {
+          "offset": "0x138",
+          "kind": 10,
+          "symbol": "_restgpr_29",
+          "addend": 0,
+          "effective_retail_target": "0x80518a54"
+        }
+      ],
+      "compiler_command": [
+        "build/tools/wibo",
+        "build/tools/sjiswrap.exe",
+        "build/compilers/GC/3.0a3/mwcceppc.exe",
+        "-nodefaults",
+        "-proc",
+        "gekko",
+        "-align",
+        "powerpc",
+        "-enum",
+        "int",
+        "-fp",
+        "hardware",
+        "-Cpp_exceptions",
+        "off",
+        "-O4,s",
+        "-inline",
+        "auto",
+        "-pragma",
+        "cats off",
+        "-pragma",
+        "warn_notinlined off",
+        "-maxerrors",
+        "1",
+        "-nosyspath",
+        "-RTTI",
+        "off",
+        "-str",
+        "reuse",
+        "-enc",
+        "SJIS",
+        "-sdata",
+        "4",
+        "-sdata2",
+        "4",
+        "-ipa",
+        "file",
+        "-sym",
+        "on",
+        "-i",
+        "include",
+        "-i",
+        "libs/JSystem/include",
+        "-i",
+        "libs/MSL_C++/include",
+        "-i",
+        "libs/MSL_C/include",
+        "-i",
+        "libs/MetroTRK/include",
+        "-i",
+        "libs/RVLFaceLib/include",
+        "-i",
+        "libs/RVL_SDK/include",
+        "-i",
+        "libs/Runtime/include",
+        "-i",
+        "libs/nw4r/include",
+        "-i",
+        "build/RMGK01/include",
+        "-DVERSION=0",
+        "-c",
+        "/Users/frityet/Projects/petari/src/Game/Scene/StageDataHolder.cpp",
+        "-o",
+        "/Users/frityet/Projects/petari/build/original-stage-data-holder-20260903/StageDataHolder.o"
+      ]
+    },
+    {
+      "symbol": "initPlacementInfoOrderedScenario__15StageDataHolderFv",
+      "match_percent": 100.0,
+      "retail_address": "0x803485ac",
+      "bytes": 312,
+      "all_instructions_identical_after_verified_relocations": true,
+      "verified_relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_29",
+          "addend": 0,
+          "effective_retail_target": "0x80518a08"
+        },
+        {
+          "offset": "0x24",
+          "kind": 10,
+          "symbol": "calcPlacementInfoNum__29@unnamed@StageDataHolder_cpp@FPiPiRCQ22MR26AssignableArray<8JMapInfo>",
+          "addend": 0,
+          "effective_retail_target": "0x80346e60"
+        },
+        {
+          "offset": "0x48",
+          "kind": 10,
+          "symbol": "calcPlacementInfoNum__29@unnamed@StageDataHolder_cpp@FPiPiRCQ22MR26AssignableArray<8JMapInfo>",
+          "addend": 0,
+          "effective_retail_target": "0x80346e60"
+        },
+        {
+          "offset": "0x84",
+          "kind": 10,
+          "symbol": "__nw__FUl",
+          "addend": 0,
+          "effective_retail_target": "0x8040b458"
+        },
+        {
+          "offset": "0x94",
+          "kind": 10,
+          "symbol": "__ct__20PlacementInfoOrderedFi",
+          "addend": 0,
+          "effective_retail_target": "0x80342694"
+        },
+        {
+          "offset": "0xa0",
+          "kind": 10,
+          "symbol": "__nw__FUl",
+          "addend": 0,
+          "effective_retail_target": "0x8040b458"
+        },
+        {
+          "offset": "0xb0",
+          "kind": 10,
+          "symbol": "__ct__20PlacementInfoOrderedFi",
+          "addend": 0,
+          "effective_retail_target": "0x80342694"
+        },
+        {
+          "offset": "0xc8",
+          "kind": 10,
+          "symbol": "attachJmpInfoToPlacementInfoOrdered__29@unnamed@StageDataHolder_cpp@FP20PlacementInfoOrderedP20PlacementInfoOrderedP20PlacementInfoOrderedRCQ22MR26AssignableArray<8JMapInfo>",
+          "addend": 0,
+          "effective_retail_target": "0x80346f28"
+        },
+        {
+          "offset": "0xf0",
+          "kind": 10,
+          "symbol": "attachJmpInfoToPlacementInfoOrdered__29@unnamed@StageDataHolder_cpp@FP20PlacementInfoOrderedP20PlacementInfoOrderedP20PlacementInfoOrderedRCQ22MR26AssignableArray<8JMapInfo>",
+          "addend": 0,
+          "effective_retail_target": "0x80346f28"
+        },
+        {
+          "offset": "0x10c",
+          "kind": 10,
+          "symbol": "sort__20PlacementInfoOrderedFv",
+          "addend": 0,
+          "effective_retail_target": "0x80342754"
+        },
+        {
+          "offset": "0x114",
+          "kind": 10,
+          "symbol": "sort__20PlacementInfoOrderedFv",
+          "addend": 0,
+          "effective_retail_target": "0x80342754"
+        },
+        {
+          "offset": "0x11c",
+          "kind": 10,
+          "symbol": "sort__20PlacementInfoOrderedFv",
+          "addend": 0,
+          "effective_retail_target": "0x80342754"
+        },
+        {
+          "offset": "0x124",
+          "kind": 10,
+          "symbol": "_restgpr_29",
+          "addend": 0,
+          "effective_retail_target": "0x80518a54"
+        }
+      ],
+      "compiler_command": [
+        "build/tools/wibo",
+        "build/tools/sjiswrap.exe",
+        "build/compilers/GC/3.0a3/mwcceppc.exe",
+        "-nodefaults",
+        "-proc",
+        "gekko",
+        "-align",
+        "powerpc",
+        "-enum",
+        "int",
+        "-fp",
+        "hardware",
+        "-Cpp_exceptions",
+        "off",
+        "-O4,s",
+        "-inline",
+        "auto",
+        "-pragma",
+        "cats off",
+        "-pragma",
+        "warn_notinlined off",
+        "-maxerrors",
+        "1",
+        "-nosyspath",
+        "-RTTI",
+        "off",
+        "-str",
+        "reuse",
+        "-enc",
+        "SJIS",
+        "-sdata",
+        "4",
+        "-sdata2",
+        "4",
+        "-ipa",
+        "file",
+        "-sym",
+        "on",
+        "-i",
+        "include",
+        "-i",
+        "libs/JSystem/include",
+        "-i",
+        "libs/MSL_C++/include",
+        "-i",
+        "libs/MSL_C/include",
+        "-i",
+        "libs/MetroTRK/include",
+        "-i",
+        "libs/RVLFaceLib/include",
+        "-i",
+        "libs/RVL_SDK/include",
+        "-i",
+        "libs/Runtime/include",
+        "-i",
+        "libs/nw4r/include",
+        "-i",
+        "build/RMGK01/include",
+        "-DVERSION=0",
+        "-c",
+        "/Users/frityet/Projects/petari/src/Game/Scene/StageDataHolder.cpp",
+        "-o",
+        "/Users/frityet/Projects/petari/build/original-stage-data-holder-20260903/StageDataHolder.o"
+      ]
+    },
+    {
+      "symbol": "createLocalStageDataHolder__15StageDataHolderFRCQ22MR26AssignableArray<8JMapInfo>b",
+      "match_percent": 99.875,
+      "retail_address": "0x8034893c",
+      "bytes": 320,
+      "all_instructions_identical_after_verified_relocations": true,
+      "verified_relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_24",
+          "addend": 0,
+          "effective_retail_target": "0x805189f4"
+        },
+        {
+          "offset": "0x24",
+          "kind": 109,
+          "symbol": "@4938",
+          "addend": 0,
+          "value_hex": "00",
+          "effective_retail_target": "0x806b2368"
+        },
+        {
+          "offset": "0x2a",
+          "kind": 6,
+          "symbol": "@5150",
+          "addend": 0,
+          "value_hex": "53746167654f626a496e666f00",
+          "effective_retail_target": "0x805d26d7"
+        },
+        {
+          "offset": "0x34",
+          "kind": 10,
+          "symbol": "getName__8JMapInfoCFv",
+          "addend": 0,
+          "effective_retail_target": "0x8040614c"
+        },
+        {
+          "offset": "0x3a",
+          "kind": 4,
+          "symbol": "@5150",
+          "addend": 0,
+          "value_hex": "53746167654f626a496e666f00",
+          "effective_retail_target": "0x805d26d7"
+        },
+        {
+          "offset": "0x3c",
+          "kind": 10,
+          "symbol": "isEqualStringCase__2MRFPCcPCc",
+          "addend": 0,
+          "effective_retail_target": "0x803feb90"
+        },
+        {
+          "offset": "0x64",
+          "kind": 10,
+          "symbol": "getObjectName__2MRFPPCcRC12JMapInfoIter",
+          "addend": 0,
+          "effective_retail_target": "0x803d5c0c"
+        },
+        {
+          "offset": "0x68",
+          "kind": 10,
+          "symbol": "makeCurrentGalaxyStatusAccessor__2MRFv",
+          "addend": 0,
+          "effective_retail_target": "0x803b0790"
+        },
+        {
+          "offset": "0x78",
+          "kind": 10,
+          "symbol": "getZoneId__20GalaxyStatusAccessorCFPCc",
+          "addend": 0,
+          "effective_retail_target": "0x803b0234"
+        },
+        {
+          "offset": "0x84",
+          "kind": 10,
+          "symbol": "__nw__FUl",
+          "addend": 0,
+          "effective_retail_target": "0x8040b458"
+        },
+        {
+          "offset": "0x9c",
+          "kind": 10,
+          "symbol": "__ct__15StageDataHolderFPCcib",
+          "addend": 0,
+          "effective_retail_target": "0x80346fc0"
+        },
+        {
+          "offset": "0xc0",
+          "kind": 10,
+          "symbol": "initWithoutIter__7NameObjFv",
+          "addend": 0,
+          "effective_retail_target": "0x80261764"
+        },
+        {
+          "offset": "0xd8",
+          "kind": 10,
+          "symbol": "calcPlacementMtx__15StageDataHolderFRC12JMapInfoIter",
+          "addend": 0,
+          "effective_retail_target": "0x80348a7c"
+        },
+        {
+          "offset": "0x12c",
+          "kind": 10,
+          "symbol": "_restgpr_24",
+          "addend": 0,
+          "effective_retail_target": "0x80518a40"
+        }
+      ],
+      "compiler_command": [
+        "build/tools/wibo",
+        "build/tools/sjiswrap.exe",
+        "build/compilers/GC/3.0a3/mwcceppc.exe",
+        "-nodefaults",
+        "-proc",
+        "gekko",
+        "-align",
+        "powerpc",
+        "-enum",
+        "int",
+        "-fp",
+        "hardware",
+        "-Cpp_exceptions",
+        "off",
+        "-O4,s",
+        "-inline",
+        "auto",
+        "-pragma",
+        "cats off",
+        "-pragma",
+        "warn_notinlined off",
+        "-maxerrors",
+        "1",
+        "-nosyspath",
+        "-RTTI",
+        "off",
+        "-str",
+        "reuse",
+        "-enc",
+        "SJIS",
+        "-sdata",
+        "4",
+        "-sdata2",
+        "4",
+        "-ipa",
+        "file",
+        "-sym",
+        "on",
+        "-i",
+        "include",
+        "-i",
+        "libs/JSystem/include",
+        "-i",
+        "libs/MSL_C++/include",
+        "-i",
+        "libs/MSL_C/include",
+        "-i",
+        "libs/MetroTRK/include",
+        "-i",
+        "libs/RVLFaceLib/include",
+        "-i",
+        "libs/RVL_SDK/include",
+        "-i",
+        "libs/Runtime/include",
+        "-i",
+        "libs/nw4r/include",
+        "-i",
+        "build/RMGK01/include",
+        "-DVERSION=0",
+        "-c",
+        "/Users/frityet/Projects/petari/src/Game/Scene/StageDataHolder.cpp",
+        "-o",
+        "/Users/frityet/Projects/petari/build/original-stage-data-holder-20260903/StageDataHolder.o"
+      ]
+    }
+  ]
+}
