@@ -211,6 +211,9 @@ J3DAnmTransform::J3DAnmTransform(s16 frameMax, f32* pScaleData, s16* pRotData, f
     field_0x1e = 0;
 }
 
+J3DAnmTransformFull::~J3DAnmTransformFull() {
+}
+
 void J3DAnmTransformFull::getTransform(u16 jointNo, J3DTransformInfo* pTransform) const {
     u16 idx = jointNo * 3;
     J3DAnmTransformFullTable* entryX = &mAnmTable[idx];
@@ -536,6 +539,29 @@ inline f32 J3DHermiteInterpolation(__REGISTER f32 pp1, __REGISTER s16 const* pp2
     }
     // clang-format on
     return fout;
+#else
+    // Scalar form of the signed-16 PSQ path, preserving its single-precision
+    // operations and explicit fused multiply/add order.
+    f32 ff2 = *pp2;
+    f32 ff0 = *pp5;
+    f32 ff7 = *pp3;
+    f32 ff5 = ff0 - ff2;
+    f32 ff6 = *pp6;
+    f32 ff3 = pp1 - ff2;
+    ff0 = *pp7;
+    f32 ff4 = ff6 - ff7;
+    ff3 = ff3 / ff5;
+    f32 fout = *pp4;
+    ff0 = std::fma(ff0, ff5, ff7);
+    ff2 = ff3 * ff3;
+    ff4 = -std::fma(ff5, fout, -ff4);
+    ff0 = ff0 - ff6;
+    ff0 = ff0 - ff4;
+    ff0 = ff2 * ff0;
+    fout = std::fma(ff5, fout, ff0);
+    fout = std::fma(fout, ff3, ff7);
+    fout = std::fma(ff4, ff2, fout);
+    return fout - ff0;
 #endif
 }
 

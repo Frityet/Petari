@@ -1,0 +1,168 @@
+{
+  "scope": "Original compiler/source and retail numerical dataflow; native runtime tests owned by parent",
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "sources_sha256": {
+    "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp": "e95418557a9ab3cb8024ca14c6a7d55a5d23b33bae803a9bcbd79931ea6a1cc3",
+    "pc-port/src/compat/J3DTransformAnimationCompat.cpp": "e878a14e5cab25e68bf3bee15fbd7b3085038050c8681509ed1d376bd4f9f4b9",
+    "pc-port/src/JSystem/J3DGraphAnimator/J3DAnimation.hpp": "1c145c3ef9c2c677f62c07d85f4629623374e33bec7015fe8f015754760c3cce"
+  },
+  "source_correspondence": [
+    "struct J3DAnmKeyTableBase {",
+    "struct J3DAnmTransformKeyTable {",
+    "struct J3DAnmTransformFullTable {",
+    "class J3DAnmTransformKey :",
+    "class J3DAnmTransformFull :",
+    "class J3DAnmTransformFullWithLerp :",
+    "J3DAnmTransform::J3DAnmTransform(",
+    "J3DAnmTransformFull::~J3DAnmTransformFull()",
+    "void J3DAnmTransformFull::getTransform(",
+    "void J3DAnmTransformFullWithLerp::getTransform(",
+    "void J3DAnmTransformKey::calcTransform(",
+    "f32 J3DGetKeyFrameInterpolation(",
+    "inline f32 J3DHermiteInterpolation(f32 p1,"
+  ],
+  "integer_and_lerp_oracle_words": {
+    "0x8043509c": "7c641aae",
+    "0x804350a0": "7c600030",
+    "0x804350a4": "b01c000c",
+    "0x804350c8": "fc00081e",
+    "0x804350d8": "7c600030",
+    "0x804350dc": "b01c000c",
+    "0x80434454": "ec00082a",
+    "0x80434458": "fc00001e",
+    "0x804347d8": "fc00101e",
+    "0x80434a70": "3b7c0001",
+    "0x80434acc": "ec000828",
+    "0x80434ad0": "ec1f0032",
+    "0x80434ad4": "ec01002a",
+    "0x80434b84": "ec1f0032",
+    "0x80434b88": "ec21002a",
+    "0x80434b90": "b07a000c"
+  },
+  "gqr5_initialization_address": "0x80422f30",
+  "signed16_hermite": {
+    "operations": [
+      "psq_l_s16",
+      "psq_l_s16",
+      "psq_l_s16",
+      "sub",
+      "psq_l_s16",
+      "sub",
+      "psq_l_s16",
+      "sub",
+      "div",
+      "psq_l_s16",
+      "fma",
+      "negated_fmsub",
+      "mul",
+      "sub",
+      "sub",
+      "mul",
+      "fma",
+      "fma",
+      "fma",
+      "sub"
+    ],
+    "portable_and_retail_graph_equal": true,
+    "graph_sha256": "8e4c8e68e5ec806397a06527a37c58dea00262ba2e9e83234583ed93d24578f2"
+  },
+  "float_hermite": {
+    "operations": [
+      "lfs",
+      "lfs",
+      "sub",
+      "lfs",
+      "sub",
+      "lfs",
+      "lfs",
+      "lfs",
+      "div",
+      "mul",
+      "add",
+      "sub",
+      "sub",
+      "fmsub",
+      "fma",
+      "fma",
+      "fma",
+      "fmsub",
+      "negated_fmsub"
+    ],
+    "shared_jma_and_retail_graph_equal": true,
+    "graph_sha256": "593d97fc1f0ee41c68cfe9855105f922cfa688a7d43196e6833edb85144e6d95"
+  },
+  "original_compiler_objdiff": {
+    "getTransform__19J3DAnmTransformFullCFUsP16J3DTransformInfo": {
+      "match_percent": 100.0,
+      "retail_size": 864,
+      "compiled_size": 864
+    },
+    "getTransform__27J3DAnmTransformFullWithLerpCFUsP16J3DTransformInfo": {
+      "match_percent": 100.0,
+      "retail_size": 2084,
+      "compiled_size": 2084
+    },
+    "calcTransform__18J3DAnmTransformKeyCFfUsP16J3DTransformInfo": {
+      "match_percent": 100.0,
+      "retail_size": 1064,
+      "compiled_size": 1064
+    },
+    "__dt__19J3DAnmTransformFullFv": {
+      "match_percent": 100.0,
+      "retail_size": 64,
+      "compiled_size": 64
+    },
+    "J3DHermiteInterpolation__FfPCsPCsPCsPCsPCsPCs": {
+      "match_percent": 89.28571,
+      "retail_size": 84,
+      "compiled_size": 84
+    },
+    "J3DGetKeyFrameInterpolation<s>__FfP18J3DAnmKeyTableBasePs_f": {
+      "match_percent": 99.086205,
+      "retail_size": 464,
+      "compiled_size": 460
+    },
+    "J3DGetKeyFrameInterpolation<f>__FfP18J3DAnmKeyTableBasePf_f": {
+      "match_percent": 86.166664,
+      "retail_size": 288,
+      "compiled_size": 280
+    }
+  },
+  "retail_functions": {
+    "getTransform__19J3DAnmTransformFullCFUsP16J3DTransformInfo": {
+      "address": "0x8043436c",
+      "size": 864,
+      "sha256": "7a9d52cfdea00850cac311db080e739490e36eb64860b1cc2860b1545e110492"
+    },
+    "getTransform__27J3DAnmTransformFullWithLerpCFUsP16J3DTransformInfo": {
+      "address": "0x804346cc",
+      "size": 2084,
+      "sha256": "b1d622118ea34ed7634a77e68e4ab2fd90383181397f6722c613dedbefdc1405"
+    },
+    "calcTransform__18J3DAnmTransformKeyCFfUsP16J3DTransformInfo": {
+      "address": "0x80434ef0",
+      "size": 1064,
+      "sha256": "8009c590e7d2d21f5c7e05455096a49b69ac8ed6f5f88d29d661881126070682"
+    },
+    "__dt__19J3DAnmTransformFullFv": {
+      "address": "0x80437524",
+      "size": 64,
+      "sha256": "b540eb9a9660dcb337c680c1e44992ef917c2d7b425f1b398019bf9706b53324"
+    },
+    "J3DHermiteInterpolation__FfPCsPCsPCsPCsPCsPCs": {
+      "address": "0x804354e8",
+      "size": 84,
+      "sha256": "1cade4c977b7c8e8ecb6f34ef97911e5825868cbbd3bbe9e6d15e2f921b1b925"
+    },
+    "J3DGetKeyFrameInterpolation<s>__FfP18J3DAnmKeyTableBasePs_f": {
+      "address": "0x80435318",
+      "size": 464,
+      "sha256": "6f31d9b2e6129455c0dfa0b2e4d3c56b41e27570805cf2c7dcddc7eb29679987"
+    },
+    "J3DGetKeyFrameInterpolation<f>__FfP18J3DAnmKeyTableBasePf_f": {
+      "address": "0x8043553c",
+      "size": 288,
+      "sha256": "301dbcae0b8311928ba0fb6ee49f8cb127171eec306dda6d0e0b26fa2b7f97ed"
+    }
+  }
+}

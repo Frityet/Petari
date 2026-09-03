@@ -1,12 +1,12 @@
 {
   "resource_info": "Complete original body; only explicit HashUtil include and size_t.h to cstddef compile fixes.",
-  "j3d_transform": "Original base/transform declarations and constructor unchanged; no sampler or loader is supplied yet.",
+  "j3d_transform": "Original base/transform declarations and constructor preserved; sampling and loading verified separately in original-j3d-transform-animation-20260903.",
   "source_sha256": {
     "src/Game/System/ResourceInfo.cpp": "babff49bd59738c09e1934e46741c223ed9310dd6ba3feef12d68745e9930606",
     "pc-port/src/Game/System/ResourceInfo.cpp": "f873ac2ff31302b07055f3b97bd5f4a2f0c0175982881c052b4dad0d5e03237a",
     "libs/JSystem/include/JSystem/J3DGraphAnimator/J3DAnimation.hpp": "2ca92cfb5277f9a1cd48b0ab9616ced1e7cb6075d3e778be281cb742267f16cc",
-    "pc-port/src/JSystem/J3DGraphAnimator/J3DAnimation.hpp": "2d58c15a3cf7bc69efe87cba47ac43a0f75d139fc5eb019c02d6250aeba41fbb",
-    "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp": "3f7106cdd080f0edef9b072b9c35ef0ec84c328f8613344dfce4ed16454ca6c1",
-    "pc-port/src/compat/J3DTransformAnimationCompat.cpp": "832a43c4e201648132f7355cb85503f39d28820e3f8056539ed56d412b92195f"
+    "pc-port/src/JSystem/J3DGraphAnimator/J3DAnimation.hpp": "1c145c3ef9c2c677f62c07d85f4629623374e33bec7015fe8f015754760c3cce",
+    "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp": "e95418557a9ab3cb8024ca14c6a7d55a5d23b33bae803a9bcbd79931ea6a1cc3",
+    "pc-port/src/compat/J3DTransformAnimationCompat.cpp": "e878a14e5cab25e68bf3bee15fbd7b3085038050c8681509ed1d376bd4f9f4b9"
   }
 }

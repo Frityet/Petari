@@ -2,11 +2,14 @@
 
 #include <array>
 #include <cstdint>
+#include <memory>
 #include <optional>
 #include <span>
 #include <string>
 #include <string_view>
 #include <vector>
+
+class J3DAnmTransformKey;
 
 namespace smgpc::render {
 
@@ -40,6 +43,9 @@ namespace smgpc::render {
         std::vector<std::int16_t> rotation_values;
         std::vector<float> translation_values;
         std::vector<std::array<J3dAnimationTransformTrackSummary, 3U>> joints;
+        // Shared immutable resource; each actor supplies its own playback frame
+        // to the original sampler rather than changing the resource's mFrame.
+        std::shared_ptr<const J3DAnmTransformKey> transform_animation;
     };
 
     struct J3dBtkMaterialAnimationSummary {

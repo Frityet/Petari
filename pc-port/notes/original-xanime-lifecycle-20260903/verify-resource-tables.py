@@ -3,6 +3,7 @@
 
 import hashlib
 import json
+import re
 from pathlib import Path
 
 
@@ -28,12 +29,13 @@ def main():
     text = animation.read_text()
     start = text.index("J3DAnmTransform::J3DAnmTransform(")
     constructor = text[start:text.index("\n}", start) + 2]
-    assert native_animation.read_text().endswith(constructor + "\n")
+    normalize = lambda value: re.sub(r"\s+", "", value)
+    assert normalize(constructor) in normalize(native_animation.read_text())
 
     paths = [source, imported, header, native_header, animation, native_animation]
     report = {
         "resource_info": "Complete original body; only explicit HashUtil include and size_t.h to cstddef compile fixes.",
-        "j3d_transform": "Original base/transform declarations and constructor unchanged; no sampler or loader is supplied yet.",
+        "j3d_transform": "Original base/transform declarations and constructor preserved; sampling and loading verified separately in original-j3d-transform-animation-20260903.",
         "source_sha256": {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths},
     }
     Path(__file__).with_name("resource-table-source-evidence.json").write_text(json.dumps(report, indent=2) + "\n")

@@ -2,6 +2,8 @@
 
 #include <revolution/types.h>
 
+#include <cstddef>
+
 class J3DModelData;
 
 class J3DFrameCtrl {
@@ -89,6 +91,27 @@ public:
     /* 0x10 */ f32 mFrame;
 };
 
+struct J3DAnmKeyTableBase {
+    /* 0x00 */ u16 mMaxFrame;
+    /* 0x02 */ u16 mOffset;
+    /* 0x04 */ u16 mType;
+};  // Size = 0x6
+
+struct J3DAnmTransformKeyTable {
+    J3DAnmKeyTableBase mScaleInfo;
+    J3DAnmKeyTableBase mRotationInfo;
+    J3DAnmKeyTableBase mTranslateInfo;
+};  // Size = 0x12
+
+struct J3DAnmTransformFullTable {
+    /* 0x00 */ u16 mScaleMaxFrame;
+    /* 0x02 */ u16 mScaleOffset;
+    /* 0x04 */ u16 mRotationMaxFrame;
+    /* 0x06 */ u16 mRotationOffset;
+    /* 0x08 */ u16 mTranslateMaxFrame;
+    /* 0x0A */ u16 mTranslateOffset;
+};  // Size = 0xC
+
 struct J3DTransformInfo;
 
 class J3DAnmBase {
@@ -149,3 +172,50 @@ public:
     /* 0x1C */ u16 field_0x1c;
     /* 0x1E */ u16 field_0x1e;
 };  // Size: 0x20
+
+class J3DAnmTransformKey : public J3DAnmTransform {
+public:
+    J3DAnmTransformKey() : J3DAnmTransform(0, NULL, NULL, NULL) {
+        mDecShift = 0;
+        mAnmTable = 0;
+    }
+
+    void calcTransform(f32, u16, J3DTransformInfo*) const;
+
+    virtual ~J3DAnmTransformKey() {
+    }
+    virtual s32 getKind() const {
+        return 8;
+    }
+    virtual void getTransform(u16 jointNo, J3DTransformInfo* pTransform) const {
+        calcTransform(mFrame, jointNo, pTransform);
+    }
+
+    /* 0x20 */ int mDecShift;
+    /* 0x24 */ J3DAnmTransformKeyTable* mAnmTable;
+};  // Size: 0x28
+
+class J3DAnmTransformFull : public J3DAnmTransform {
+public:
+    J3DAnmTransformFull() : J3DAnmTransform(0, NULL, NULL, NULL) {
+        mAnmTable = NULL;
+    }
+
+    virtual ~J3DAnmTransformFull();
+    virtual s32 getKind() const {
+        return 9;
+    }
+    virtual void getTransform(u16, J3DTransformInfo*) const;
+
+    /* 0x20 */ J3DAnmTransformFullTable* mAnmTable;
+};  // Size: 0x24
+
+class J3DAnmTransformFullWithLerp : public J3DAnmTransformFull {
+public:
+    virtual ~J3DAnmTransformFullWithLerp() {
+    }
+    virtual s32 getKind() const {
+        return 16;
+    }
+    virtual void getTransform(u16, J3DTransformInfo*) const;
+};  // Size: 0x24

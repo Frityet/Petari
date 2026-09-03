@@ -1,5 +1,12 @@
 # Original Xanime resource and ownership foundation
 
+Follow-up: `../original-j3d-transform-animation-20260903/` supplies owned typed
+BCK/BCA resources and original samplers, now used for live BCK rendering.
+`../xanime-core-lifecycle-restoration-20260903/` recovers the bounded root core
+lifecycle routines below. The complete original player, weighted pose blending
+and joint/model traversal remain unfinished; the original checkpoint record
+below describes the state before these follow-ups.
+
 This tranche imports the complete original `XanimeResourceTable` implementation and its original hash-table dependency. It does not activate Mario's original animator/player/core lifecycle yet. The existing Run/Wait native BCK path is still the active Mario animation path, so this work is preparation for original jump/landing animation state, not evidence that jump animation now works.
 
 ## Changes and verification

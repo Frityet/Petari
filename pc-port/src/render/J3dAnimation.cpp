@@ -1,6 +1,8 @@
 #include "J3dAnimation.hpp"
+#include "resource/J3dTransformAnimation.hpp"
 
 #include <JSystem/J3DGraphAnimator/J3DAnimation.hpp>
+#include <JSystem/J3DGraphBase/J3DTransform.hpp>
 
 #include <algorithm>
 #include <bit>
@@ -489,6 +491,15 @@ namespace smgpc::render {
         summary.file_size = read_be32(animation_data, 0x08U);
         summary.block_count = read_be32(animation_data, 0x0cU);
 
+        // Validate and own the transform resource at the endian boundary. The
+        // summary arrays below remain available for inspection; skeletal poses
+        // are evaluated by the original J3D object.
+        std::shared_ptr<const J3DAnmTransformKey> transform_animation;
+        if (summary.type == "bck1") {
+            auto animation = resource::load_j3d_transform_animation(animation_data);
+            transform_animation.reset(static_cast<J3DAnmTransformKey*>(animation.release()));
+        }
+
         auto section_offset = std::size_t {0x20U};
         for (auto block = 0U; block < summary.block_count; ++block) {
             if (section_offset + 8U > animation_data.size()) {
@@ -509,6 +520,7 @@ namespace smgpc::render {
 
             if (tag == "ANK1") {
                 summary.bck = parse_ank1(animation_data, section_offset);
+                summary.bck->transform_animation = transform_animation;
             } else if (tag == "TTK1") {
                 summary.btk = parse_ttk1(animation_data, section_offset);
             } else if (tag == "TRK1") {
@@ -621,21 +633,18 @@ namespace smgpc::render {
 
     std::optional<J3dJointTransformValue> j3d_evaluate_bck_joint_transform(const J3dBckAnimationSummary &bck, std::uint16_t joint_index,
                                                                            float frame) {
-        if (joint_index >= bck.joints.size()) {
+        if (!bck.transform_animation || joint_index >= bck.transform_animation->field_0x1e) {
             return std::nullopt;
         }
 
         const auto normalized_frame = j3d_animation_frame(bck.attribute, bck.frame_max, frame);
-        const auto &tracks = bck.joints[joint_index];
-        auto transform = J3dJointTransformValue {};
-        for (auto axis = 0U; axis < tracks.size(); ++axis) {
-            transform.scale[axis] = evaluate_key_table(normalized_frame, tracks[axis].scale, bck.scale_values, 1.0F);
-            transform.rotation[axis] = static_cast<std::int16_t>(
-                static_cast<int>(evaluate_key_table(normalized_frame, tracks[axis].rotation, bck.rotation_values, 0.0F)) << bck.rotation_fraction);
-            transform.translation[axis] = evaluate_key_table(normalized_frame, tracks[axis].translation, bck.translation_values, 0.0F);
-        }
-
-        return transform;
+        J3DTransformInfo transform;
+        bck.transform_animation->calcTransform(normalized_frame, joint_index, &transform);
+        return J3dJointTransformValue{
+            .scale = {transform.mScale.x, transform.mScale.y, transform.mScale.z},
+            .rotation = {transform.mRotation.x, transform.mRotation.y, transform.mRotation.z},
+            .translation = {transform.mTranslate.x, transform.mTranslate.y, transform.mTranslate.z},
+        };
     }
 
     std::optional<J3dTextureSrtAnimationValue> j3d_evaluate_btk_texture_srt(const J3dBtkAnimationSummary &btk, std::string_view material_name,
