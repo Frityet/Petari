@@ -5,7 +5,7 @@
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/LiveActor/SpotMarkLight.hpp"
 #include "Game/NPC/RunawayRabbitCollect.hpp"
-#include "Game/NPC/TrickRabbit.hpp"
+#include "Game/NPC/TrickRabbitUtil.hpp"
 #include "Game/Util.hpp"
 
 template < typename T >
@@ -55,14 +55,14 @@ namespace NrvRunawayRabbit {
 
     void RunawayRabbitNrvBlowDamage::execute(Spine* pSpine) const {
         RunawayRabbit* actor = reinterpret_cast< RunawayRabbit* >(pSpine->mExecutor);
-        MR::updateActorStateAndNextNerve(actor, actor->mBlowDamageState, &RunawayRabbitNrvRunaway::sInstance);
+        MR::updateActorStateAndNextNerve(actor, actor->mStateBlowDamage, &RunawayRabbitNrvRunaway::sInstance);
     }
 };  // namespace NrvRunawayRabbit
 
 RunawayRabbit::RunawayRabbit(const char* pName, RunawayRabbitCollect* pCollector)
-    : LiveActor(pName), mRunawayState(nullptr), mBlowDamageState(nullptr), mCollector(pCollector), mFootPrint(nullptr), mSpotLight(nullptr),
-      mMsgCtrl(nullptr), mQuat(0, 0, 0, 1), mFrontVec(0, 0, 1), mBindQuat(0, 0, 0, 1), mBindFrontVec(0, 0, 1), mGroupId(-1), mRunawayLevel(0),
-      mMessageId(-1), _EC(0), _F0(0), mIsCaughtable(true), mHasAppearedTico(false), mRunawayDistance(-1.0f) {}
+    : LiveActor(pName), mStateRunaway(nullptr), mStateBlowDamage(nullptr), mCollect(pCollector), mFootPrint(nullptr), mSpotMarkLight(nullptr),
+      mMsgCtrl(nullptr), _A4(0, 0, 0, 1), _B4(0, 0, 1), _C0(0, 0, 0, 1), _D0(0, 0, 1), mObjArg0(-1), mRunawayLevel(0),
+      mObjArg1(-1), _EC(0), mNotCaughtableTimer(0), _F4(true), _F5(false), mObjArg3(-1.0f) {}
 
 void RunawayRabbit::init(const JMapInfoIter& rIter) {
     MR::initDefaultPos(this, rIter);
@@ -74,19 +74,19 @@ void RunawayRabbit::init(const JMapInfoIter& rIter) {
     initModelManagerWithAnm(modelName, nullptr, false);
     MR::connectToSceneNpc(this);
     MR::initLightCtrl(this);
-    MR::makeQuatAndFrontFromRotate(&mQuat, &mFrontVec, this);
+    MR::makeQuatAndFrontFromRotate(&_A4, &_B4, this);
     MR::onCalcGravity(this);
     MR::addBaseMatrixFollowTarget(this, rIter, nullptr, new BaseMatrixFollowValidateDelegator< RunawayRabbit >(this, &RunawayRabbit::isValidFollow));
 
-    mRunawayState = new WalkerStateRunaway(this, &mFrontVec, &sParam);
-    mBlowDamageState = new WalkerStateBlowDamage(this, &mFrontVec, nullptr);
+    mStateRunaway = new WalkerStateRunaway(this, &_B4, &sParam);
+    mStateBlowDamage = new WalkerStateBlowDamage(this, &_B4, nullptr);
 
-    MR::getJMapInfoArg0WithInit(rIter, &mGroupId);
-    MR::getJMapInfoArg1WithInit(rIter, &mMessageId);
-    MR::getJMapInfoArg3WithInit(rIter, &mRunawayDistance);
+    MR::getJMapInfoArg0WithInit(rIter, &mObjArg0);
+    MR::getJMapInfoArg1WithInit(rIter, &mObjArg1);
+    MR::getJMapInfoArg3WithInit(rIter, &mObjArg3);
 
-    if (mRunawayDistance <= 0.0f) {
-        mRunawayDistance = 600.0f;
+    if (mObjArg3 <= 0.0f) {
+        mObjArg3 = 600.0f;
     }
 
     s32 cameraRegisterId = -1;
@@ -96,8 +96,8 @@ void RunawayRabbit::init(const JMapInfoIter& rIter) {
         MR::declareCameraRegisterVec(this, cameraRegisterId, &mPosition);
     }
 
-    mSpotLight = new SpotMarkLight(this, 100.0f, 1500.0f, nullptr);
-    mSpotLight->initWithoutIter();
+    mSpotMarkLight = new SpotMarkLight(this, 100.0f, 1500.0f, nullptr);
+    mSpotMarkLight->initWithoutIter();
     initSensor();
     initBinder(60.0f, 60.0f, 0);
     MR::onCalcGravity(this);
@@ -139,8 +139,8 @@ void RunawayRabbit::appear() {
 void RunawayRabbit::control() {
     updatePose();
 
-    if (_F0 > 0) {
-        _F0--;
+    if (mNotCaughtableTimer > 0) {
+        mNotCaughtableTimer--;
     }
 
     if (MR::isBindedGroundWater(this)) {
@@ -152,18 +152,18 @@ void RunawayRabbit::control() {
 }
 
 void RunawayRabbit::calcAndSetBaseMtx() {
-    MR::setBaseTRMtx(this, mQuat);
+    MR::setBaseTRMtx(this, _A4);
 }
 
 void RunawayRabbit::updatePose() {
     TVec3f up = -mGravity;
-    MR::blendQuatUpFront(&mQuat, up, mFrontVec, 0.1f, 0.2f);
+    MR::blendQuatUpFront(&_A4, up, _B4, 0.1f, 0.2f);
 }
 
 void RunawayRabbit::updateBindActorMatrix() {
     TPos3f baseMtx;
-    baseMtx.setQuat(mBindQuat);
-    baseMtx.setTrans(mBindFrontVec);
+    baseMtx.setQuat(_C0);
+    baseMtx.setTrans(_D0);
     MR::setPlayerBaseMtx(baseMtx.toMtxPtr());
 }
 
@@ -174,12 +174,12 @@ void RunawayRabbit::activate() {
 }
 
 void RunawayRabbit::startRunnaway() {
-    if (mIsCaughtable) {
+    if (_F4) {
         MR::showModel(this);
         MR::invalidateClipping(this);
         MR::validateHitSensors(this);
         setNerve(&NrvRunawayRabbit::RunawayRabbitNrvAppear::sInstance);
-        mCollector->noticeAppearRabbit(this);
+        mCollect->noticeAppearRabbit(this);
     }
 }
 
@@ -198,7 +198,7 @@ void RunawayRabbit::setMessage() {
 }
 
 void RunawayRabbit::setNotCaughtable() {
-    _F0 = 5;
+    mNotCaughtableTimer = 5;
 }
 
 void RunawayRabbit::startJumpSound() {
@@ -217,7 +217,7 @@ void RunawayRabbit::setMsgCtrl(TalkMessageCtrl* pMsgCtrl) {
 void RunawayRabbit::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
     if (MR::isSensorPlayer(pReceiver)) {
         if (pSender == getSensor("Catch") && isCaughtable()) {
-            mCollector->noticeCaughtRabbit(this);
+            mCollect->noticeCaughtRabbit(this);
             MR::requestStartDemoMarioPuppetable(this, "捕まり", &NrvRunawayRabbit::RunawayRabbitNrvCaught::sInstance,
                                                 &NrvRunawayRabbit::RunawayRabbitNrvTryCaughtDemo::sInstance);
         }
@@ -275,23 +275,23 @@ bool RunawayRabbit::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pRec
 }
 
 void RunawayRabbit::exeHide() {
-    if (!mIsCaughtable) {
+    if (!_F4) {
         return;
     }
 
     f32 distance = MR::calcDistanceToPlayer(this);
 
-    if (distance <= mRunawayDistance) {
+    if (distance <= mObjArg3) {
         s32 volume = 100;
-        s32 pitch = mMessageId == 0 ? 0 : 8;
+        s32 pitch = mObjArg1 == 0 ? 0 : 8;
 
-        if (distance >= mRunawayDistance - 250.0f) {
-            volume = static_cast< s32 >(MR::getLinerValueFromMinMax(distance, mRunawayDistance - 250.0f, mRunawayDistance, 100.0f, 35.0f));
+        if (distance >= mObjArg3 - 250.0f) {
+            volume = static_cast< s32 >(MR::getLinerValueFromMinMax(distance, mObjArg3 - 250.0f, mObjArg3, 100.0f, 35.0f));
         }
 
         MR::startLevelSound(this, "SE_SV_LV_RABBIT_NEAR2", volume, pitch, -1);
 
-        if (mMessageId == 0) {
+        if (mObjArg1 == 0) {
             MR::startLevelSound(this, "SE_SM_LV_RABBIT_RUS_HOLE", volume, pitch, -1);
         }
         else {
@@ -304,8 +304,8 @@ void RunawayRabbit::exeAppear() {
     if (MR::isFirstStep(this)) {
         MR::startAction(this, "Jump");
 
-        if (mMessageId == 0) {
-            MR::setVelocitySeparateHV(this, mFrontVec, 19.0f, 25.0f);
+        if (mObjArg1 == 0) {
+            MR::setVelocitySeparateHV(this, _B4, 19.0f, 25.0f);
         }
         else {
             TVec3f away = mPosition - *MR::getPlayerPos();
@@ -316,7 +316,7 @@ void RunawayRabbit::exeAppear() {
         MR::startSystemSE("SE_SM_RUNAWAY_RABBIT_APP_ME", -1, -1);
     }
 
-    MR::turnDirectionDegree(this, &mFrontVec, mVelocity, 20.0f);
+    MR::turnDirectionDegree(this, &_B4, mVelocity, 20.0f);
     MR::addVelocityToGravity(this, 1.0f);
     MR::attenuateVelocity(this, 0.99f);
 
@@ -327,9 +327,9 @@ void RunawayRabbit::exeAppear() {
 }
 
 void RunawayRabbit::exeRunaway() {
-    MR::updateActorState(this, mRunawayState);
+    MR::updateActorState(this, mStateRunaway);
 
-    if (!mRunawayState->isRunning()) {
+    if (!mStateRunaway->isRunning()) {
         return;
     }
 
@@ -377,7 +377,7 @@ void RunawayRabbit::exeRunaway() {
         bckRate *= 0.3f;
     }
 
-    mRunawayState->mRunawaySpeed = bckRate;
+    mStateRunaway->mRunawaySpeed = bckRate;
     MR::setBckRate(this, MR::clamp(bckRate, 0.9f, 1.4f));
 }
 
@@ -387,14 +387,14 @@ void RunawayRabbit::exeCaught() {
         MR::startBckPlayer("TossStart", static_cast< const char* >(nullptr));
         MR::startSound(this, "SE_SM_RABBIT_CAUGHT", -1, -1);
         MR::startSoundPlayer("SE_PV_CATCH", -1);
-        mSpotLight->kill();
-        MR::makeQuatRotateDegree(&mBindQuat, *MR::getPlayerRotate());
-        mBindFrontVec.set(*MR::getPlayerPos());
+        mSpotMarkLight->kill();
+        MR::makeQuatRotateDegree(&_C0, *MR::getPlayerRotate());
+        _D0.set(*MR::getPlayerPos());
     }
 
     f32 rate = MR::calcNerveRate(this, 5);
-    mBindQuat.slerp(mQuat, rate);
-    MR::vecBlend(mBindFrontVec, mPosition, &mBindFrontVec, rate);
+    _C0.slerp(_A4, rate);
+    MR::vecBlend(_D0, mPosition, &_D0, rate);
 
     if (!MR::isBindedGround(this)) {
         MR::addVelocityToGravity(this, 2.0f);
@@ -418,7 +418,7 @@ void RunawayRabbit::exeCaughtTalk() {
         MR::startBckPlayer("TossWait", static_cast< const char* >(nullptr));
     }
 
-    mBindFrontVec.set(mPosition);
+    _D0.set(mPosition);
     MR::startLevelSound(this, "SE_SM_LV_RABBIT_STRUGGLE", -1, -1, -1);
     MR::zeroVelocity(this);
     updateBindActorMatrix();
@@ -453,7 +453,7 @@ void RunawayRabbit::exeStop() {
         return;
     }
 
-    MR::turnDirectionToPlayerDegree(this, &mFrontVec, 3.0f);
+    MR::turnDirectionToPlayerDegree(this, &_B4, 3.0f);
 
     if (MR::isBindedGround(this)) {
         MR::zeroVelocity(this);
@@ -469,7 +469,7 @@ bool RunawayRabbit::isCaught() const {
 }
 
 bool RunawayRabbit::isCaughtable() const {
-    if (isRunnaway() && _F0 == 0) {
+    if (isRunnaway() && mNotCaughtableTimer == 0) {
         return true;
     }
 

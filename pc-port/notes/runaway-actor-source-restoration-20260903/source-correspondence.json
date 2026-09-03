@@ -1,0 +1,39 @@
+{
+  "historical_revision": "96e5ef0decce22e5bfd7d0ee876fb15ac80a725b",
+  "upstream_baseline_revision": "3f169e7320b20a473451b03d5586a65c992d0965",
+  "collector_members": {
+    "mRabbits": "mRabbit",
+    "mRabbitCount": "mRabbitNum",
+    "mTicos": "mTico",
+    "mTicoCount": "mTicoNum",
+    "mAppearedTicoCount": "_A0",
+    "mCaughtRabbitCount": "_A4",
+    "mHasAppearedTico": "_B0"
+  },
+  "rabbit_members": {
+    "mRunawayState": "mStateRunaway",
+    "mBlowDamageState": "mStateBlowDamage",
+    "mCollector": "mCollect",
+    "mSpotLight": "mSpotMarkLight",
+    "mQuat": "_A4",
+    "mFrontVec": "_B4",
+    "mBindQuat": "_C0",
+    "mBindFrontVec": "_D0",
+    "mGroupId": "mObjArg0",
+    "mMessageId": "mObjArg1",
+    "_F0": "mNotCaughtableTimer",
+    "mIsCaughtable": "_F4",
+    "mHasAppearedTico": "_F5",
+    "mRunawayDistance": "mObjArg3"
+  },
+  "collector_bgm_frames": {
+    "sStartRunAwayBgmChangeFrames": "60",
+    "sFoundRabbitBgmChangeFrames": "30",
+    "sCaughtRabbitBgmChangeFrames": "90",
+    "sEndRunAwayBgmChangeFrames": "120"
+  },
+  "historical_sha256": {
+    "src/Game/NPC/RunawayRabbitCollect.cpp": "525309e25a63ec76a9d24a3a140c56b431fab4d7b05512796180ac29ed31e236",
+    "src/Game/NPC/RunawayRabbit.cpp": "904c4cfbe200236db80ec9e63b357b95f2b7cdf575f72954c7b7a485b37bb868"
+  }
+}

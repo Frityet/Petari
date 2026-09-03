@@ -12,6 +12,7 @@ public:
     /// @param pName A pointer to the null-terminated name of the object.
     RunawayRabbitCollect(const char* pName);
 
+    virtual ~RunawayRabbitCollect();
     virtual void init(const JMapInfoIter& rIter);
     virtual void initAfterPlacement();
     virtual void control();

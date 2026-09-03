@@ -1,0 +1,68 @@
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:8:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |     /* 0x14 */ virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |     /* 0x14 */ virtual void movement();
+      |                             ^
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:8:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |     /* 0x1C */ virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here
+   28 |     /* 0x1C */ virtual void calcAnim();
+      |                             ^
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:8:
+src/Game/LiveActor/LiveActor.hpp:43:29: warning: 'calcViewAndEntry' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   43 |     /* 0x20 */ virtual void calcViewAndEntry();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:29:29: note: overridden virtual function is here
+   29 |     /* 0x20 */ virtual void calcViewAndEntry();
+      |                             ^
+/Users/frityet/Projects/petari/src/Game/NPC/RunawayRabbit.cpp:12:50: error: expected class name
+   12 | class BaseMatrixFollowValidateDelegator : public BaseMatrixFollowValidater {
+      |                                                  ^
+/Users/frityet/Projects/petari/src/Game/NPC/RunawayRabbit.cpp:58:13: error: no member named 'updateActorStateAndNextNerve' in namespace 'MR'
+   58 |         MR::updateActorStateAndNextNerve(actor, actor->mStateBlowDamage, &RunawayRabbitNrvRunaway::sInstance);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/frityet/Projects/petari/src/Game/NPC/RunawayRabbit.cpp:79:9: error: no member named 'addBaseMatrixFollowTarget' in namespace 'MR'
+   79 |     MR::addBaseMatrixFollowTarget(this, rIter, nullptr, new BaseMatrixFollowValidateDelegator< RunawayRabbit >(this, &RunawayRabbit::isValidFollow));
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/frityet/Projects/petari/src/Game/NPC/RunawayRabbit.cpp:131:9: error: no member named 'initStarPointerTargetAtJoint' in namespace 'MR'; did you mean 'initStarPointerTarget'?
+  131 |     MR::initStarPointerTargetAtJoint(this, "Spine", 70.0f, TVec3f(0, 0, 0));
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |         initStarPointerTarget
+src/Game/Util/StarPointerUtil.hpp:12:10: note: 'initStarPointerTarget' declared here
+   12 |     void initStarPointerTarget(LiveActor* pActor, f32 radius, const TVec3f& rOffset);
+      |          ^
+/Users/frityet/Projects/petari/src/Game/NPC/RunawayRabbit.cpp:131:60: error: too many arguments to function call, expected 3, have 4
+  131 |     MR::initStarPointerTargetAtJoint(this, "Spine", 70.0f, TVec3f(0, 0, 0));
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                       ^~~~~~~~~~~~~~~
+src/Game/Util/StarPointerUtil.hpp:12:10: note: 'initStarPointerTarget' declared here
+   12 |     void initStarPointerTarget(LiveActor* pActor, f32 radius, const TVec3f& rOffset);
+      |          ^                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/frityet/Projects/petari/src/Game/NPC/RunawayRabbit.cpp:165:13: error: no member named 'setQuat' in 'JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>>'
+  165 |     baseMtx.setQuat(_C0);
+      |     ~~~~~~~ ^
+/Users/frityet/Projects/petari/src/Game/NPC/RunawayRabbit.cpp:193:9: error: no type named 'forwardNodeCurrentBranchLeft' in namespace 'MR'
+  193 |     MR::forwardNodeCurrentBranchLeft(mMsgCtrl);
+      |     ~~~~^
+/Users/frityet/Projects/petari/src/Game/NPC/RunawayRabbit.cpp:197:9: error: no type named 'forwardNodeCurrentBranchRight' in namespace 'MR'
+  197 |     MR::forwardNodeCurrentBranchRight(mMsgCtrl);
+      |     ~~~~^
+/Users/frityet/Projects/petari/src/Game/NPC/RunawayRabbit.cpp:330:9: error: no member named 'updateActorState' in namespace 'MR'
+  330 |     MR::updateActorState(this, mStateRunaway);
+      |         ^~~~~~~~~~~~~~~~
+/Users/frityet/Projects/petari/src/Game/NPC/RunawayRabbit.cpp:396:24: error: too few arguments to function call, expected 3, have 2
+  396 |     _C0.slerp(_A4, rate);
+      |     ~~~~~~~~~          ^
+src/JSystem/JGeometry/TQuat.hpp:114:14: note: 'slerp' declared here
+  114 |         void slerp(const TQuat4& from, const TQuat4& to, T rate) {
+      |              ^     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/frityet/Projects/petari/src/Game/NPC/RunawayRabbit.cpp:426:36: error: no member named 'tryTalkForceWithoutDemoMarioPuppetableAtEnd' in namespace 'MR'
+  426 |     if (mMsgCtrl == nullptr || MR::tryTalkForceWithoutDemoMarioPuppetableAtEnd(mMsgCtrl)) {
+      |                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+3 warnings and 11 errors generated.

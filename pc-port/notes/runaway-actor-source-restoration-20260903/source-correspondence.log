@@ -1,0 +1,4 @@
+PASS: all collector bodies from init through destructor match the historical source after documented renames/constants
+PASS: complete rabbit source is byte-identical to the historical source after documented member renames and utility include
+PASS: both headers preserve the upstream declarations and layout, adding only destructor declarations
+No target compilation or binary matching was performed by this check.
