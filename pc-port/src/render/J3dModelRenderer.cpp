@@ -1,4 +1,7 @@
 #include "J3dModelRenderer.hpp"
+#include "compat/OriginalJ3dJointTree.hpp"
+#include "JSystem/J3DGraphBase/J3DTransform.hpp"
+#include "JSystem/JMath/JMath.hpp"
 
 #include <algorithm>
 #include <array>
@@ -884,21 +887,14 @@ namespace smgpc::render {
         };
 
         struct MatrixPaletteContext {
-            const J3dMatrix3x4 &actor_matrix;
-            std::span<const J3dJointTransformValue> transforms;
-            std::span<const std::uint16_t> parent_indices;
+            J3dMatrix3x4 fallback_base_matrix;
+            std::span<const J3dMatrix3x4> joint_matrices;
             std::span<const J3dDrawMatrixSummary> draw_matrices;
             const J3dEnvelopeBlockSummary *envelopes = nullptr;
-            const std::optional<J3dBckAnimationSummary> &animation;
             const J3dJointTransformValue *mesh_transform = nullptr;
-            std::span<J3dMatrix3x4> joint_model_cache;
-            std::span<std::uint8_t> joint_model_cache_valid;
             std::span<J3dMatrix3x4> draw_matrix_cache;
             std::span<std::uint8_t> draw_matrix_cache_valid;
-            std::span<J3dMatrix3x4> model_matrix_cache;
-            std::span<std::uint8_t> model_matrix_cache_valid;
             std::uint16_t default_joint_index = 0xffffU;
-            float frame = 0.0F;
         };
 
         [[nodiscard]] J3dJointTransformValue joint_transform_from_summary(const J3dJointSummary &joint) {
@@ -913,49 +909,13 @@ namespace smgpc::render {
             if (transform == nullptr) {
                 return J3dMatrix3x4 {};
             }
-
-            constexpr auto pi = 3.14159265358979323846F;
-            const auto rx = static_cast<float>(transform->rotation[0U]) * pi / 32768.0F;
-            const auto ry = static_cast<float>(transform->rotation[1U]) * pi / 32768.0F;
-            const auto rz = static_cast<float>(transform->rotation[2U]) * pi / 32768.0F;
-            const auto sx = std::sin(rx);
-            const auto cx = std::cos(rx);
-            const auto sy = std::sin(ry);
-            const auto cy = std::cos(ry);
-            const auto sz = std::sin(rz);
-            const auto cz = std::cos(rz);
-
-            const auto m00 = cz * cy;
-            const auto m10 = sz * cy;
-            const auto m20 = -sy;
-            const auto m21 = cy * sx;
-            const auto m22 = cy * cx;
-            const auto cxsz = cx * sz;
-            const auto sxcz = sx * cz;
-            const auto m01 = sxcz * sy - cxsz;
-            const auto m12 = cxsz * sy - sxcz;
-            const auto sxsz = sx * sz;
-            const auto cxcz = cx * cz;
-            const auto m02 = cxcz * sy + sxsz;
-            const auto m11 = sxsz * sy + cxcz;
-
-            return J3dMatrix3x4 {
-                .m =
-                    {
-                        m00 * transform->scale[0U],
-                        m01 * transform->scale[1U],
-                        m02 * transform->scale[2U],
-                        transform->translation[0U],
-                        m10 * transform->scale[0U],
-                        m11 * transform->scale[1U],
-                        m12 * transform->scale[2U],
-                        transform->translation[1U],
-                        m20 * transform->scale[0U],
-                        m21 * transform->scale[1U],
-                        m22 * transform->scale[2U],
-                        transform->translation[2U],
-                    },
-            };
+            const J3DTransformInfo info{{transform->scale[0], transform->scale[1], transform->scale[2]},
+                                      {transform->rotation[0], transform->rotation[1], transform->rotation[2]},
+                                      {transform->translation[0], transform->translation[1], transform->translation[2]}};
+            Mtx matrix;
+            J3DGetTranslateRotateMtx(info, matrix);
+            JMAMTXApplyScale(matrix, matrix, info.mScale.x, info.mScale.y, info.mScale.z);
+            return j3d_matrix_from_mtx(matrix);
         }
 
         [[nodiscard]] J3dMatrix3x4 concat_matrix(const J3dMatrix3x4 &left, const J3dMatrix3x4 &right) {
@@ -977,36 +937,7 @@ namespace smgpc::render {
         }
 
         [[nodiscard]] J3dMatrix3x4 joint_model_matrix_for_context(const MatrixPaletteContext &context, std::uint16_t joint_index) {
-            if (joint_index >= context.transforms.size()) {
-                return J3dMatrix3x4 {};
-            }
-
-            if (joint_index < context.joint_model_cache.size() && joint_index < context.joint_model_cache_valid.size() &&
-                context.joint_model_cache_valid[joint_index] != 0U) {
-                return context.joint_model_cache[joint_index];
-            }
-
-            auto transform = context.transforms[joint_index];
-            if (context.animation.has_value()) {
-                if (const auto animated =
-                        j3d_evaluate_bck_joint_transform(*context.animation, joint_index, context.frame);
-                    animated.has_value()) {
-                    transform = *animated;
-                }
-            }
-
-            auto matrix = matrix_from_joint_transform(&transform);
-            if (joint_index < context.parent_indices.size() && context.parent_indices[joint_index] != 0xffffU &&
-                context.parent_indices[joint_index] < context.transforms.size()) {
-                matrix = concat_matrix(joint_model_matrix_for_context(context, context.parent_indices[joint_index]), matrix);
-            }
-
-            if (joint_index < context.joint_model_cache.size() && joint_index < context.joint_model_cache_valid.size()) {
-                context.joint_model_cache[joint_index] = matrix;
-                context.joint_model_cache_valid[joint_index] = 1U;
-            }
-
-            return matrix;
+            return joint_index < context.joint_matrices.size() ? context.joint_matrices[joint_index] : J3dMatrix3x4{};
         }
 
         [[nodiscard]] J3dMatrix3x4 matrix_from_array(std::array<float, 12U> values) {
@@ -1021,10 +952,9 @@ namespace smgpc::render {
             auto result = J3dMatrix3x4 {};
             result.m.fill(0.0F);
             const auto &envelope = context.envelopes->matrices[envelope_index];
-            auto total_weight = 0.0F;
             for (auto influence = std::size_t {}; influence < envelope.joint_indices.size() && influence < envelope.weights.size(); ++influence) {
                 const auto joint_index = envelope.joint_indices[influence];
-                if (joint_index >= context.transforms.size()) {
+                if (joint_index >= context.joint_matrices.size()) {
                     continue;
                 }
 
@@ -1034,15 +964,8 @@ namespace smgpc::render {
                 }
 
                 const auto weight = envelope.weights[influence];
-                total_weight += weight;
                 for (auto value = 0U; value < result.m.size(); ++value) {
                     result.m[value] += matrix.m[value] * weight;
-                }
-            }
-
-            if (total_weight > 0.0F && std::abs(total_weight - 1.0F) > 0.001F) {
-                for (auto &value : result.m) {
-                    value /= total_weight;
                 }
             }
 
@@ -1060,7 +983,7 @@ namespace smgpc::render {
                 auto matrix = std::optional<J3dMatrix3x4>{};
                 if (draw_matrix.weighted) {
                     matrix = weighted_envelope_matrix(context, draw_matrix.index);
-                } else if (draw_matrix.index < context.transforms.size()) {
+                } else if (draw_matrix.index < context.joint_matrices.size()) {
                     matrix = joint_model_matrix_for_context(context, draw_matrix.index);
                 }
 
@@ -1073,27 +996,15 @@ namespace smgpc::render {
                 }
             }
 
-            if (context.default_joint_index < context.transforms.size()) {
+            if (context.default_joint_index < context.joint_matrices.size()) {
                 return joint_model_matrix_for_context(context, context.default_joint_index);
             }
 
-            return matrix_from_joint_transform(context.mesh_transform);
+            return concat_matrix(context.fallback_base_matrix, matrix_from_joint_transform(context.mesh_transform));
         }
 
         [[nodiscard]] J3dMatrix3x4 model_matrix_for_source_vertex(const J3dMeshVertex &source, const MatrixPaletteContext &context) {
-            if (source.draw_matrix_index != 0xffffU && source.draw_matrix_index < context.model_matrix_cache.size() &&
-                source.draw_matrix_index < context.model_matrix_cache_valid.size()) {
-                if (context.model_matrix_cache_valid[source.draw_matrix_index] != 0U) {
-                    return context.model_matrix_cache[source.draw_matrix_index];
-                }
-
-                auto matrix = concat_matrix(context.actor_matrix, local_matrix_for_draw_matrix(context, source.draw_matrix_index));
-                context.model_matrix_cache[source.draw_matrix_index] = matrix;
-                context.model_matrix_cache_valid[source.draw_matrix_index] = 1U;
-                return matrix;
-            }
-
-            return concat_matrix(context.actor_matrix, local_matrix_for_draw_matrix(context, source.draw_matrix_index));
+            return local_matrix_for_draw_matrix(context, source.draw_matrix_index);
         }
 
         [[nodiscard]] std::array<float, 3U> transform_point(const J3dMatrix3x4 &matrix, std::array<float, 3U> position) {
@@ -1862,24 +1773,18 @@ namespace smgpc::render {
         std::vector<render::TexturedVertex2D> textured_vertices = {};
         std::vector<render::GxMaterialVertex2D> gx_vertices = {};
         std::vector<std::uint16_t> indices = {};
-        std::vector<J3dMatrix3x4> joint_model_cache = {};
-        std::vector<std::uint8_t> joint_model_cache_valid = {};
+        std::vector<J3dMatrix3x4> joint_matrices = {};
         std::vector<J3dMatrix3x4> draw_matrix_cache = {};
         std::vector<std::uint8_t> draw_matrix_cache_valid = {};
-        std::vector<J3dMatrix3x4> model_matrix_cache = {};
-        std::vector<std::uint8_t> model_matrix_cache_valid = {};
 
         void prepare(std::size_t joint_count, std::size_t draw_matrix_count) {
             projected_sources.clear();
             textured_vertices.clear();
             gx_vertices.clear();
             indices.clear();
-            joint_model_cache.resize(joint_count);
-            joint_model_cache_valid.assign(joint_count, 0U);
+            joint_matrices.resize(joint_count);
             draw_matrix_cache.resize(draw_matrix_count);
             draw_matrix_cache_valid.assign(draw_matrix_count, 0U);
-            model_matrix_cache.resize(draw_matrix_count);
-            model_matrix_cache_valid.assign(draw_matrix_count, 0U);
         }
     };
 
@@ -1899,8 +1804,7 @@ namespace smgpc::render {
         _textures.clear();
         _texture_handles.clear();
         _joint_names.clear();
-        _joint_transforms.clear();
-        _joint_parent_indices.clear();
+        _joint_tree.reset();
         _joint_bound_mins.clear();
         _joint_bound_maxs.clear();
         _draw_matrices.clear();
@@ -1914,16 +1818,19 @@ namespace smgpc::render {
         _envelopes = geometry.envelopes;
         if (geometry.joints.has_value()) {
             _joint_names.reserve(geometry.joints->joints.size());
-            _joint_transforms.reserve(geometry.joints->joints.size());
             _joint_bound_mins.reserve(geometry.joints->joints.size());
             _joint_bound_maxs.reserve(geometry.joints->joints.size());
             for (const auto &joint : geometry.joints->joints) {
                 _joint_names.push_back(joint.name);
-                _joint_transforms.push_back(joint_transform_from_summary(joint));
                 _joint_bound_mins.push_back(joint.min);
                 _joint_bound_maxs.push_back(joint.max);
             }
-            _joint_parent_indices = geometry.joints->parent_indices;
+            if (!geometry.joints->joints.empty()) {
+                if (!geometry.info.has_value()) {
+                    throw std::runtime_error("J3D joint traversal requires the model's original INF1 information");
+                }
+                _joint_tree = std::make_unique<smgpc::compat::OriginalJ3dJointTree>(*geometry.info, *geometry.joints);
+            }
         }
         _texture_handles.reserve(geometry.textures.size());
         for (const auto &texture : geometry.textures) {
@@ -2371,7 +2278,10 @@ namespace smgpc::render {
             _draw_scratch.reset(new DrawScratch());
         }
         auto &scratch = *_draw_scratch;
-        scratch.prepare(_joint_transforms.size(), _draw_matrices.size());
+        scratch.prepare(_joint_names.size(), _draw_matrices.size());
+        const auto joint_matrices = calculate_joint_matrices(
+            options.bck_animation_frame.value_or(static_cast<float>(frame)), actor_matrix, options.base_scale);
+        std::copy(joint_matrices.begin(), joint_matrices.end(), scratch.joint_matrices.begin());
         scratch.camera_context = camera_pose != nullptr ?
                                      camera_projection_context(*camera_pose,
                                                                renderer.logical_framebuffer_size()) :
@@ -2397,69 +2307,44 @@ namespace smgpc::render {
     }
 
     std::size_t J3dModelRenderer::joint_count() const {
-        return _loaded ? _joint_transforms.size() : 0U;
+        return _loaded ? _joint_names.size() : 0U;
     }
 
-    std::optional<J3dMatrix3x4> J3dModelRenderer::joint_model_matrix(std::string_view name, float frame) const {
+    std::span<const J3dMatrix3x4> J3dModelRenderer::calculate_joint_matrices(
+        float frame, const J3dMatrix3x4& base_transform, const std::array<float, 3U>& base_scale) const {
+        if (!_joint_tree) {
+            return {};
+        }
+        const auto* animation = _bck_animation.has_value() ? _bck_animation->transform_animation.get() : nullptr;
+        const float sample_frame = _bck_animation.has_value()
+                                       ? j3d_animation_frame(_bck_animation->attribute, _bck_animation->frame_max, frame)
+                                       : 0.0F;
+        return _joint_tree->calculate(animation, sample_frame, base_transform, base_scale);
+    }
+
+    std::optional<J3dMatrix3x4> J3dModelRenderer::joint_matrix(
+        std::string_view name, float frame, const J3dMatrix3x4& base_transform,
+        const std::array<float, 3U>& base_scale) const {
         if (!_loaded || name.empty()) {
             return std::nullopt;
         }
-
         const auto joint = std::ranges::find(_joint_names, name);
         if (joint == _joint_names.end()) {
             return std::nullopt;
         }
-
-        const auto joint_index = static_cast<std::uint16_t>(std::distance(_joint_names.begin(), joint));
-        auto joint_cache = std::vector<J3dMatrix3x4>(_joint_transforms.size());
-        auto joint_cache_valid = std::vector<std::uint8_t>(_joint_transforms.size(), 0U);
-        auto actor_matrix = J3dMatrix3x4{};
-        const auto context = MatrixPaletteContext {
-            .actor_matrix = actor_matrix,
-            .transforms = _joint_transforms,
-            .parent_indices = _joint_parent_indices,
-            .draw_matrices = {},
-            .envelopes = nullptr,
-            .animation = _bck_animation,
-            .mesh_transform = nullptr,
-            .joint_model_cache = joint_cache,
-            .joint_model_cache_valid = joint_cache_valid,
-            .draw_matrix_cache = {},
-            .draw_matrix_cache_valid = {},
-            .model_matrix_cache = {},
-            .model_matrix_cache_valid = {},
-            .default_joint_index = joint_index,
-            .frame = frame,
-        };
-        return joint_model_matrix_for_context(context, joint_index);
+        const auto index = static_cast<std::size_t>(std::distance(_joint_names.begin(), joint));
+        const auto matrices = calculate_joint_matrices(frame, base_transform, base_scale);
+        return index < matrices.size() ? std::optional<J3dMatrix3x4>{matrices[index]} : std::nullopt;
     }
 
     std::optional<float> J3dModelRenderer::model_bounding_radius(float frame) const {
         // Use the model's parsed joint bounds; an absent bound must stay absent.
-        if (!_loaded || _joint_transforms.empty() || _joint_bound_mins.size() != _joint_transforms.size() ||
-            _joint_bound_maxs.size() != _joint_transforms.size()) {
+        if (!_loaded || _joint_names.empty() || _joint_bound_mins.size() != _joint_names.size() ||
+            _joint_bound_maxs.size() != _joint_names.size()) {
             return std::nullopt;
         }
 
-        auto joint_cache = std::vector<J3dMatrix3x4>(_joint_transforms.size());
-        auto joint_cache_valid = std::vector<std::uint8_t>(_joint_transforms.size(), 0U);
-        const auto context = MatrixPaletteContext {
-            .actor_matrix = J3dMatrix3x4{},
-            .transforms = _joint_transforms,
-            .parent_indices = _joint_parent_indices,
-            .draw_matrices = {},
-            .envelopes = nullptr,
-            .animation = _bck_animation,
-            .mesh_transform = nullptr,
-            .joint_model_cache = joint_cache,
-            .joint_model_cache_valid = joint_cache_valid,
-            .draw_matrix_cache = {},
-            .draw_matrix_cache_valid = {},
-            .model_matrix_cache = {},
-            .model_matrix_cache_valid = {},
-            .default_joint_index = 0U,
-            .frame = frame,
-        };
+        const auto joint_matrices = calculate_joint_matrices(frame);
 
         auto minimum = std::array<float, 3U>{
             std::numeric_limits<float>::infinity(),
@@ -2472,8 +2357,8 @@ namespace smgpc::render {
             -std::numeric_limits<float>::infinity(),
         };
 
-        for (auto joint = std::size_t{}; joint < _joint_transforms.size(); ++joint) {
-            const auto matrix = joint_model_matrix_for_context(context, static_cast<std::uint16_t>(joint));
+        for (auto joint = std::size_t{}; joint < _joint_names.size(); ++joint) {
+            const auto& matrix = joint_matrices[joint];
             const auto scale = std::array<float, 3U>{
                 std::sqrt(matrix.m[0U] * matrix.m[0U] + matrix.m[4U] * matrix.m[4U] + matrix.m[8U] * matrix.m[8U]),
                 std::sqrt(matrix.m[1U] * matrix.m[1U] + matrix.m[5U] * matrix.m[5U] + matrix.m[9U] * matrix.m[9U]),
@@ -2958,24 +2843,16 @@ namespace smgpc::render {
             const auto *mesh_transform = mesh.joint_transform.has_value() ? &*mesh.joint_transform : nullptr;
             const auto *envelopes = _envelopes.has_value() ? &*_envelopes : nullptr;
             const auto matrix_context = MatrixPaletteContext {
-                .actor_matrix = actor_matrix,
-                .transforms = _joint_transforms,
-                .parent_indices = _joint_parent_indices,
+                .fallback_base_matrix = j3d_apply_matrix_scale(
+                    actor_matrix, options.base_scale[0], options.base_scale[1], options.base_scale[2]),
+                .joint_matrices = scratch.joint_matrices,
                 .draw_matrices = _draw_matrices,
                 .envelopes = envelopes,
-                .animation = _bck_animation,
                 .mesh_transform = mesh_transform,
-                .joint_model_cache = std::span<J3dMatrix3x4>(scratch.joint_model_cache.data(), scratch.joint_model_cache.size()),
-                .joint_model_cache_valid =
-                    std::span<std::uint8_t>(scratch.joint_model_cache_valid.data(), scratch.joint_model_cache_valid.size()),
                 .draw_matrix_cache = std::span<J3dMatrix3x4>(scratch.draw_matrix_cache.data(), scratch.draw_matrix_cache.size()),
                 .draw_matrix_cache_valid =
                     std::span<std::uint8_t>(scratch.draw_matrix_cache_valid.data(), scratch.draw_matrix_cache_valid.size()),
-                .model_matrix_cache = std::span<J3dMatrix3x4>(scratch.model_matrix_cache.data(), scratch.model_matrix_cache.size()),
-                .model_matrix_cache_valid =
-                    std::span<std::uint8_t>(scratch.model_matrix_cache_valid.data(), scratch.model_matrix_cache_valid.size()),
                 .default_joint_index = mesh.joint_index,
-                .frame = options.bck_animation_frame.value_or(static_cast<float>(frame)),
             };
             if (mesh.packet_mode == J3dRendererPacketMode::ShaderGxTev && mesh.gx_texture_stage_count > 0U) {
                 auto effective_passes = mesh.material_passes;

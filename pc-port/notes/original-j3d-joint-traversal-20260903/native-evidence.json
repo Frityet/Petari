@@ -1,0 +1,167 @@
+{
+  "scope": "Native macOS arm64 validation of original joint traversal and separate model base scale; full Xanime and model flag pipelines remain incomplete.",
+  "build_log": "build-final.log",
+  "build_exit_code": 0,
+  "runs": [
+    {
+      "log": "aurora-native-final.log",
+      "exit_code": 0,
+      "sha256": "223b3e04b7e9f8a544a87a3931ddfefe3dba32cd6d38d3051cc4b46160b2127a",
+      "outcome": [
+        "28 Aurora-native test(s) passed"
+      ],
+      "skips": []
+    },
+    {
+      "log": "original-j3d-joint-traversal-final.log",
+      "exit_code": 0,
+      "sha256": "1f28591ed8882a30a3dbe878e7c1148954d8c9118bc21e96007c452fe62273eb",
+      "outcome": [
+        "9/9 original J3D joint-traversal groups passed"
+      ],
+      "skips": []
+    },
+    {
+      "log": "only-camera-final.log",
+      "exit_code": 0,
+      "sha256": "b46c790ef182ae7789b383050d33590819a0601e1cf2077e474371490a548a04",
+      "outcome": [
+        "9/9 OnlyCamera tests passed"
+      ],
+      "skips": []
+    },
+    {
+      "log": "camera-view-interpolator-final.log",
+      "exit_code": 0,
+      "sha256": "4210296ee90f05d85975fb08bee59162f277f3fba7017b9bdc3731309e461ac5",
+      "outcome": [
+        "7/7 tests passed"
+      ],
+      "skips": []
+    },
+    {
+      "log": "camera-view-service-final.log",
+      "exit_code": 0,
+      "sha256": "6d34ea49f1a1f18d684c473905eb135c29b8ac4233ac1be764cca951f59defce",
+      "outcome": [
+        "6/6 tests passed"
+      ],
+      "skips": []
+    },
+    {
+      "log": "stage-start-camera-final.log",
+      "exit_code": 0,
+      "sha256": "fb79e145ba822981f222d7c27929bc2de707a1ed604477b3f2c80589b3e972b4",
+      "outcome": [
+        "14 stage-start camera test(s) passed"
+      ],
+      "skips": [
+        "[skip] real-disc camera test (set SMGPC_REAL_DISC)"
+      ]
+    },
+    {
+      "log": "actor-event-camera-final.log",
+      "exit_code": 0,
+      "sha256": "c2899dd0e6dcecb44fdc1f80dd12e0a7e054b196d177903a0f7162d04401f1dc",
+      "outcome": [
+        "23 actor event-camera test(s) passed"
+      ],
+      "skips": [
+        "[skip] real-disc actor event-camera test (set SMGPC_REAL_DISC)"
+      ]
+    },
+    {
+      "log": "original-camera-runtime-final.log",
+      "exit_code": 0,
+      "sha256": "ba4ff51fa9959ea5d7eb221b85142526cf89c89e732c6a0feec63033c13cc2a2",
+      "outcome": [
+        "[pass] original camera local target scope and mode gates"
+      ],
+      "skips": []
+    },
+    {
+      "log": "fixed-position-real-or-absent-final.log",
+      "exit_code": 0,
+      "sha256": "a632d66553a5e90da898f57d8e1e3b00b0965410f8c5e52a80c437141714473e",
+      "outcome": [
+        "5 FixedPosition real-or-absent tests passed"
+      ],
+      "skips": []
+    },
+    {
+      "log": "npc-actor-real-or-absent-final.log",
+      "exit_code": 0,
+      "sha256": "c39e8ad2e2e1288d9d008169d5f31f0827d27116c8963f0f1ff3e98885c73ade",
+      "outcome": [
+        "NPCActor real-or-absent tests passed: 6/6"
+      ],
+      "skips": []
+    },
+    {
+      "log": "mario-walk-final.log",
+      "exit_code": 0,
+      "sha256": "46afaee49aabdbb0e5793dc66df82ef5b2e5f8c6ce95eadcadc78d89711037b7",
+      "outcome": [
+        "[proof] disc=../Super Mario Wii - Galaxy Adventure (Korea).rvz;start=(14460,-12791.1,6059.91);kcl_triangles=14521;stand_prism=4642;floor=NoSlip;sound=Lawn;walk_distance=325.684;bck=Wait->Run->Wait;release_frame=297;run_packets=12;recreated=1;lease_retired_before_mario=1;retry=rejected",
+        "[ok] real Gateway Mario stand/walk/release proof"
+      ],
+      "skips": []
+    },
+    {
+      "log": "spin-final.log",
+      "exit_code": 0,
+      "sha256": "3098c5ef270a14cfdcb567e66f73c9c45c200e4de1c6e2931c04dff6837f2f3c",
+      "outcome": [
+        "[proof] disc=../Super Mario Wii - Galaxy Adventure (Korea).rvz;selected_file_progress=5->10->15;checkpoint=borrowed_progress10;trigger_radius=500;fade_handoff=90;demo_start_row=15;pre_prompt_ticks=1670;prompt_row=22;information_guard=30;spin_progress=15;placement_demo_rabbits=3",
+        "[ok] real Gateway spin-unlock checkpoint proof"
+      ],
+      "skips": []
+    },
+    {
+      "log": "actor-scale-final.log",
+      "exit_code": 0,
+      "sha256": "2f9d599d2e39c635a1b0fcaae7b8bbffe4b09ec6f1ca3601c51920882a5f22c0",
+      "outcome": [
+        "[proof] raw TR/shear retained; independent model scale reaches authored joints; pre-base scale snapshot=yes",
+        "[proof] paused Tico 3D packets=8;2D packets=4;GPU draw=yes;BCK=4->4->5;retained joint refresh=yes",
+        "LiveActorUtil real-or-absent tests passed: 6/6"
+      ],
+      "skips": []
+    }
+  ],
+  "screenshot": "mario-walk-final.png",
+  "screenshot_sha256": "2b01646bd0b54f565c6cddf0cdfc32f8f8c347796cac24505119f6fbe43baef8",
+  "screenshot_review": "Final rendered Gateway walking PNG is byte-identical to the visually inspected mario-walk-base-scale.png.",
+  "source_sha256": {
+    "pc-port/src/Game/LiveActor/HitSensorKeeper.hpp": "18619795a1942f54f376d326224dd5af001e5abd52b65355a4e5159f32c583ac",
+    "pc-port/src/Game/LiveActor/LiveActor.cpp": "f21fae825a7ec43d460f41ee51a946997c6735d03a5f61d08ba2f2d0c9eab469",
+    "pc-port/src/Game/Player/MarioActor.cpp": "2f0b9bc9f5ff21186b90884de85646af62c17bf1c852c6e2e8484ad56d571cc4",
+    "pc-port/src/JSystem/J3DGraphAnimator/J3DJoint.hpp": "a2ba569193ca29f1986a0b3b5ae539ddbdbada6bc5885cca4222ac8d08304173",
+    "pc-port/src/JSystem/J3DGraphAnimator/J3DJointTree.hpp": "c47452c1c377a95eb0dc5d910ff4710373b088f0c805d9807b5992cb83cf2a09",
+    "pc-port/src/JSystem/J3DGraphAnimator/J3DMtxCalc.hpp": "3f347a9f73d3c93ad971232823f0eb9052e3714ce5d7215376f187c7ce5c9df9",
+    "pc-port/src/JSystem/JMath/JMath.hpp": "fb59cc9a25d470fcc3f27c8cc8379b43af22cc06fc565faa8ff22d726ab5cd42",
+    "pc-port/src/compat/ActorRuntimeRegistry.cpp": "ead6ba38ebc94f10dcb65ffbe3a4672056a17b9ea40e60c8c544fa0ac8cec709",
+    "pc-port/src/compat/ActorRuntimeRegistry.hpp": "6631444e93cff3d185daa49adf5502a2fa0898517bcda407036444c452f236bc",
+    "pc-port/src/compat/BinderCompat.cpp": "d9d32caa4c882e612fbf9bec39bc05d77dfbb12838e28c6dd753b8721e635555",
+    "pc-port/src/compat/BinderCompat.hpp": "deleted",
+    "pc-port/src/compat/GameActorSensorCompat.cpp": "0b0ef61156f744deb45b28bcf50276d37ea60e1ad499427367fe886e52ae7d70",
+    "pc-port/src/compat/J3DJointCompat.cpp": "88ae71837dba9ba65d9315e3900a25ca9f77dab47a27712ab56b96079c4f9b45",
+    "pc-port/src/compat/J3DJointTreeCompat.cpp": "4a7705219078940e614fc44c384e9f164b167db38fac9d8d18e3fec4a34705cd",
+    "pc-port/src/compat/LiveActorUtilCompat.cpp": "2f3d95b0c5ec24fe040a7189e5e3a4be45f79bdda23ccbfc6ba9b72f895b4479",
+    "pc-port/src/compat/OriginalJ3dJointTree.cpp": "e6d5ecdf15da1128720d49ae006f4c660a5d94486e0a2d1658b782b97b04794d",
+    "pc-port/src/compat/OriginalJ3dJointTree.hpp": "2873d5166b6013408e37b8e42a497c665f7472e455fced783ca09a6390c2955a",
+    "pc-port/src/render/J3dModel.cpp": "795d441185d9c26a7f4f6fdede13ad1e6215507bb25b64b2a36e163cebb6e0b2",
+    "pc-port/src/render/J3dModel.hpp": "a55899c425022bbe1e0e543a8d7a4bccd011edfcacb25a2ce3dececcd7f40c07",
+    "pc-port/src/render/J3dModelRenderer.cpp": "62adcafb8009332615c7137df9114107b6042d4d9b60963aa626d97467405194",
+    "pc-port/src/render/J3dModelRenderer.hpp": "b79d96cad05e12880d6a2bfdfaed491709e2aeaf342899c74a544774017859ce",
+    "pc-port/src/render/live_actor/LiveActorModel.cpp": "c969c012a2abd3b31c6523db13612892757946b5ba6213ea367b9a8872c15b41",
+    "pc-port/src/render/live_actor/LiveActorModel.hpp": "e520ef9562b3b59e26563ca8a610a474b2c5e3dd02fa1908351a37f2289c64b3",
+    "pc-port/tests/AuroraNativeTests.cpp": "32a63bbd882331fe50c48e22e60cab553b5384f67ad3d12567bae081f6863d6b",
+    "pc-port/tests/LiveActorUtilRealOrAbsentTests.cpp": "1bc9626545d0d40b73ebc67c83992fe341f7fc09c1d96c6173c04c6b48221e96",
+    "pc-port/tests/OriginalJ3DJointTraversalTests.cpp": "8c9d232bab302de03f98ad7c4a0f996804990ae4e92fe3e13332504759dfa828",
+    "pc-port/tests/xmake.lua": "6de7030750822531661133e39a0550295e1062b8161d4ea38c6863a3c770ea56",
+    "src/JSystem/J3DGraphAnimator/J3DJoint.cpp": "c77a2f134275b446f7e811c19d10503590f59e74aba6fbbaacf2c7c20179adaf",
+    "src/JSystem/J3DGraphBase/J3DTransform.cpp": "445cb4d93e12fbc271432ee6cffc3a99e815f5f28256110483d1da7a2b06419f",
+    "src/JSystem/JMath/JMath.cpp": "0edb57cc082ee540fface63157f1e58e433b4ad07016985e3f3b440dbc14cafa"
+  }
+}

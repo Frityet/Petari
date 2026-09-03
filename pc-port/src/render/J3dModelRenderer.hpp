@@ -19,6 +19,10 @@ namespace smgpc::runtime {
     class SceneLightService;
 }
 
+namespace smgpc::compat {
+    class OriginalJ3dJointTree;
+}
+
 namespace smgpc::render {
 
     [[nodiscard]] std::array<float, 3U> j3d_host_view_vector_to_gx_view(
@@ -39,6 +43,9 @@ namespace smgpc::render {
     };
 
     struct J3dModelRendererDrawOptions {
+        // J3D keeps base scale separate from its base transform. The authored
+        // matrix mode decides where scale enters each joint calculation.
+        std::array<float, 3U> base_scale{1.0F, 1.0F, 1.0F};
         std::string_view material_filter = {};
         std::optional<bool> translucent_filter = {};
         std::optional<bool> gx_color_update = {};
@@ -208,6 +215,8 @@ namespace smgpc::render {
         void clear_btp_animation();
         void clear_animations();
 
+        // actor_matrix is the original base transform; options.base_scale is
+        // independent. Joint matrices already include both after traversal.
         void draw(render::AuroraRenderer &renderer, const smgpc::camera::CameraPose &camera_pose, const J3dMatrix3x4 &actor_matrix, std::uint64_t frame,
                   const J3dModelRendererDrawOptions &options = {}) const;
         void draw_model_3d_for_2d(
@@ -223,7 +232,9 @@ namespace smgpc::render {
         [[nodiscard]] std::vector<J3dRendererPacketState> render_packets(std::uint64_t frame,
                                                                          std::span<const GXLightState> scene_lights = {},
                                                                          const J3dModelRendererDrawOptions &options = {}) const;
-        [[nodiscard]] std::optional<J3dMatrix3x4> joint_model_matrix(std::string_view name, float frame) const;
+        [[nodiscard]] std::optional<J3dMatrix3x4> joint_matrix(
+            std::string_view name, float frame, const J3dMatrix3x4& base_transform = {},
+            const std::array<float, 3U>& base_scale = {1.0F, 1.0F, 1.0F}) const;
         [[nodiscard]] std::optional<float> model_bounding_radius(float frame = 0.0F) const;
 
     private:
@@ -333,12 +344,15 @@ namespace smgpc::render {
             DrawScratch &scratch, std::span<const GXLightState> scene_lights,
             const J3dModelRendererDrawOptions &options) const;
 
+        [[nodiscard]] std::span<const J3dMatrix3x4> calculate_joint_matrices(
+            float frame, const J3dMatrix3x4& base_transform = {},
+            const std::array<float, 3U>& base_scale = {1.0F, 1.0F, 1.0F}) const;
+
         bool _loaded = false;
         std::vector<J3dTexture> _textures = {};
         std::vector<render::TextureHandle> _texture_handles = {};
         std::vector<std::string> _joint_names = {};
-        std::vector<J3dJointTransformValue> _joint_transforms = {};
-        std::vector<std::uint16_t> _joint_parent_indices = {};
+        std::unique_ptr<smgpc::compat::OriginalJ3dJointTree> _joint_tree;
         std::vector<std::array<float, 3U>> _joint_bound_mins = {};
         std::vector<std::array<float, 3U>> _joint_bound_maxs = {};
         std::vector<J3dDrawMatrixSummary> _draw_matrices = {};

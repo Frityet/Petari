@@ -324,6 +324,7 @@ namespace smgpc::render {
     };
 
     struct J3dModelGeometry {
+        std::optional<J3dInfoSummary> info;
         std::optional<J3dMaterialBlockSummary> materials;
         std::optional<J3dEnvelopeBlockSummary> envelopes;
         std::optional<J3dDrawBlockSummary> draw_matrices;

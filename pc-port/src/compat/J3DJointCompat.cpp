@@ -1,9 +1,21 @@
 #include "JSystem/J3DGraphAnimator/J3DJoint.hpp"
-#include "JSystem/J3DGraphAnimator/J3DMaterialAnm.hpp"
-#include "JSystem/J3DGraphAnimator/J3DModel.hpp"
 #include "JSystem/J3DGraphAnimator/J3DMtxBuffer.hpp"
-#include "JSystem/J3DGraphBase/J3DDrawBuffer.hpp"
 #include "JSystem/J3DGraphBase/J3DSys.hpp"
+#include "JSystem/JMath/JMath.hpp"
+#include "JSystem/JMath/JMATrigonometric.hpp"
+
+#include <bit>
+
+// Match the original JSystem floating-point contraction setting.
+#if defined(__clang__)
+#pragma clang fp contract(off)
+#elif defined(__GNUC__)
+#pragma GCC optimize("fp-contract=off")
+#elif defined(_MSC_VER)
+#pragma fp_contract(off)
+#endif
+
+const J3DTransformInfo j3dDefaultTransformInfo = {{1.0f, 1.0f, 1.0f}, {0, 0, 0}, {0.0f, 0.0f, 0.0f}};
 
 void J3DMtxCalcJ3DSysInitBasic::init(Vec const& scale, Mtx const& mtx) {
     J3DSys::mCurrentS = scale;
@@ -150,37 +162,6 @@ J3DJoint::J3DJoint() {
     mMax = init2;
 }
 
-void J3DJoint::entryIn() {
-    MtxPtr anmMtx = j3dSys.getModel()->getAnmMtx(mJntNo);
-    j3dSys.getDrawBuffer(0)->setZMtx(anmMtx);
-    j3dSys.getDrawBuffer(1)->setZMtx(anmMtx);
-    for (J3DMaterial* mesh = mMesh; mesh != NULL;) {
-        if (mesh->getShape()->checkFlag(J3DShpFlag_Visible)) {
-            mesh = mesh->getNext();
-        } else {
-            J3DMatPacket* matPacket = j3dSys.getModel()->getMatPacket(mesh->getIndex());
-            J3DShapePacket* shapePacket = j3dSys.getModel()->getShapePacket(mesh->getShape()->getIndex());
-            if (!matPacket->isLocked()) {
-                if (mesh->getMaterialAnm()) {
-                    J3DMaterialAnm* piVar8 = mesh->getMaterialAnm();
-                    piVar8->calc(mesh);
-                }
-                mesh->calc(anmMtx);
-            }
-            mesh->setCurrentMtx();
-            matPacket->setMaterialAnmID(mesh->getMaterialAnm());
-            matPacket->setShapePacket(shapePacket);
-            J3DDrawBuffer* drawBuffer = j3dSys.getDrawBuffer(mesh->isDrawModeOpaTexEdge());
-            if ((u8)matPacket->entry(drawBuffer)) {
-                j3dSys.setMatPacket(matPacket);
-                J3DDrawBuffer::entryNum++;
-                mesh->makeDisplayList();
-            }
-            mesh = mesh->getNext();
-        }
-    }
-}
-
 J3DMtxCalc* J3DJoint::mCurrentMtxCalc;
 
 void J3DJoint::recursiveCalc() {
@@ -226,4 +207,120 @@ void J3DJoint::recursiveCalc() {
     if (mYounger != nullptr) {
         mYounger->recursiveCalc();
     }
+}
+
+void JMAMTXApplyScale(const Mtx src, Mtx dst, f32 x, f32 y, f32 z) {
+    Mtx scale;
+    PSMTXScale(scale, x, y, z);
+    PSMTXConcat(src, scale, dst);
+}
+
+void J3DGetTranslateRotateMtx(const J3DTransformInfo& tx, Mtx dst) {
+    f32 cxsz;
+    f32 sxcz;
+
+    f32 sx = JMASSin(tx.mRotation.x), cx = JMASCos(tx.mRotation.x);
+    f32 sy = JMASSin(tx.mRotation.y), cy = JMASCos(tx.mRotation.y);
+    f32 sz = JMASSin(tx.mRotation.z), cz = JMASCos(tx.mRotation.z);
+
+    dst[2][0] = -sy;
+    dst[0][0] = cz * cy;
+    dst[1][0] = sz * cy;
+    dst[2][1] = cy * sx;
+    dst[2][2] = cy * cx;
+
+    cxsz = cx * sz;
+    sxcz = sx * cz;
+    dst[0][1] = sxcz * sy - cxsz;
+    dst[1][2] = cxsz * sy - sxcz;
+
+    cxsz = sx * sz;
+    sxcz = cx * cz;
+    dst[0][2] = sxcz * sy + cxsz;
+    dst[1][1] = cxsz * sy + sxcz;
+
+    dst[0][3] = tx.mTranslate.x;
+    dst[1][3] = tx.mTranslate.y;
+    dst[2][3] = tx.mTranslate.z;
+}
+
+void J3DGetTranslateRotateMtx(s16 rx, s16 ry, s16 rz, f32 tx, f32 ty, f32 tz, Mtx dst) {
+    f32 cxsz;
+    f32 sxcz;
+
+    f32 sx = JMASSin(rx), cx = JMASCos(rx);
+    f32 sy = JMASSin(ry), cy = JMASCos(ry);
+    f32 sz = JMASSin(rz), cz = JMASCos(rz);
+
+    dst[2][0] = -sy;
+    dst[0][0] = cz * cy;
+    dst[1][0] = sz * cy;
+    dst[2][1] = cy * sx;
+    dst[2][2] = cy * cx;
+
+    cxsz = cx * sz;
+    sxcz = sx * cz;
+    dst[0][1] = sxcz * sy - cxsz;
+    dst[1][2] = cxsz * sy - sxcz;
+
+    cxsz = sx * sz;
+    sxcz = cx * cz;
+    dst[0][2] = sxcz * sy + cxsz;
+    dst[1][1] = cxsz * sy + sxcz;
+
+    dst[0][3] = tx;
+    dst[1][3] = ty;
+    dst[2][3] = tz;
+}
+
+namespace {
+    struct ReciprocalEstimateEntry {
+        u32 base;
+        u32 decrement;
+    };
+
+    // Gekko reciprocal-estimate hardware table. These numeric measurements
+    // are also recorded by Dolphin's Common/FloatUtils.cpp fres_expected.
+    constexpr ReciprocalEstimateEntry reciprocalEstimateTable[32] = {
+        {0x7ff800, 0x3e1}, {0x783800, 0x3a7}, {0x70ea00, 0x371}, {0x6a0800, 0x340},
+        {0x638800, 0x313}, {0x5d6200, 0x2ea}, {0x579000, 0x2c4}, {0x520800, 0x2a0},
+        {0x4cc800, 0x27f}, {0x47ca00, 0x261}, {0x430800, 0x245}, {0x3e8000, 0x22a},
+        {0x3a2c00, 0x212}, {0x360800, 0x1fb}, {0x321400, 0x1e5}, {0x2e4a00, 0x1d1},
+        {0x2aa800, 0x1be}, {0x272c00, 0x1ac}, {0x23d600, 0x19b}, {0x209e00, 0x18b},
+        {0x1d8800, 0x17c}, {0x1a9000, 0x16e}, {0x17ae00, 0x15b}, {0x14f800, 0x15b},
+        {0x124400, 0x143}, {0x0fbe00, 0x143}, {0x0d3800, 0x12d}, {0x0ade00, 0x12d},
+        {0x088400, 0x11a}, {0x065000, 0x11a}, {0x041c00, 0x108}, {0x020c00, 0x106},
+    };
+}  // namespace
+
+f32 JMath::fastReciprocal(f32 value) {
+    // Original fastReciprocal is one fres instruction. Work on the actual
+    // float input bits so signed zero and quieted NaN payloads survive.
+    const u32 bits = std::bit_cast<u32>(value);
+    const u32 sign = bits & 0x80000000U;
+    u32 fraction = bits & 0x007FFFFFU;
+    int exponent = static_cast<int>((bits >> 23) & 0xFFU);
+    if (exponent == 255) {
+        return std::bit_cast<f32>(fraction != 0 ? bits | 0x00400000U : sign);
+    }
+    if (exponent == 0) {
+        if (fraction == 0) {
+            return std::bit_cast<f32>(sign | 0x7F800000U);
+        }
+        if (fraction < 0x00200000U) {
+            return std::bit_cast<f32>(sign | 0x7F7FFFFFU);
+        }
+        const u32 shift = fraction < 0x00400000U ? 2U : 1U;
+        fraction = (fraction << shift) & 0x007FFFFFU;
+        exponent = 1 - static_cast<int>(shift);
+    }
+    // fres flushes its small estimates to signed zero starting at 2^126.
+    if (exponent >= 253) {
+        return std::bit_cast<f32>(sign);
+    }
+    const ReciprocalEstimateEntry& entry = reciprocalEstimateTable[fraction >> 18];
+    const u32 step = (fraction >> 8) & 0x3FFU;
+    const u32 estimatedFraction = entry.base - ((entry.decrement * step + 1U) >> 1);
+    const u32 estimatedExponent = static_cast<u32>(253 - exponent) << 23;
+    return std::bit_cast<f32>(sign | estimatedExponent | estimatedFraction);
 }

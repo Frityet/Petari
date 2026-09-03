@@ -1,6 +1,7 @@
 #include "compat/GameActorSensorCompat.hpp"
 
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/HitSensorKeeper.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/MessageSensorHolder.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
@@ -210,6 +211,14 @@ namespace smgpc::compat {
 }  // namespace smgpc::compat
 
 namespace MR {
+
+    HitSensor* getTaken(const LiveActor* pActor) {
+        if (pActor->mSensorKeeper != nullptr) {
+            return pActor->mSensorKeeper->mTaken;
+        }
+
+        return nullptr;
+    }
 
     HitSensor* addHitSensor(LiveActor* actor, const char* name, u32 type, u16 group_size, f32 radius, const TVec3f& offset) {
         return can_register_sensor(actor, name)

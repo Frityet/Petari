@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <cstdint>
 #include <memory>
 #include <optional>
@@ -46,6 +47,7 @@ public:
     void syncJointAnimationFrom(const LiveActorModel &source);
     void syncMaterialAnimationFrom(const LiveActorModel &source);
     void setProjmapEffectMatrix(const smgpc::render::J3dMatrix3x4 &matrix);
+    void setBaseScale(const std::array<float, 3> &scale);
     void requireLoaded();
     [[nodiscard]] std::int16_t requireBck(std::string_view name, std::string_view file_name);
     void draw(const smgpc::camera::CameraPose &camera_pose, const smgpc::render::J3dMatrix3x4 &actor_matrix, std::uint64_t frame,
@@ -115,6 +117,7 @@ private:
     std::string mBtkAnimationName = {};
     std::string mBtpName = {};
     std::unique_ptr<smgpc::render::J3dModelRenderer> mRenderer = {};
+    std::array<float, 3> mBaseScale{1.0F, 1.0F, 1.0F};
     std::optional<smgpc::render::J3dBckAnimationSummary> mBckAnimation = {};
     float mBckFrame = 0.0F;
     float mBckRate = 0.0F;

@@ -7,6 +7,8 @@
 #include <cmath>
 #include <cstring>
 
+void JMAMTXApplyScale(const Mtx, Mtx, f32, f32, f32);
+
 inline f32 JMAFastSqrt(f32 input) {
     return input > 0.0F ? std::sqrt(input) : input;
 }
@@ -31,9 +33,7 @@ inline f32 JMAHermiteInterpolation(f32 p1, f32 p2, f32 p3, f32 p4, f32 p5, f32 p
 }
 
 namespace JMath {
-    [[nodiscard]] inline f32 fastReciprocal(f32 value) {
-        return 1.0F / value;
-    }
+    [[nodiscard]] f32 fastReciprocal(f32 value);
 
     template <typename T>
     [[nodiscard]] inline T fastSqrt(T value) {

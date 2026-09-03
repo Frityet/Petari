@@ -249,10 +249,12 @@ namespace MR {
 
     void setBaseTRMtx(LiveActor* pActor, const smgpc::render::J3dMatrix3x4& matrix) {
         if (pActor != nullptr) {
-            smgpc::compat::set_actor_base_matrix(
-                pActor, smgpc::render::j3d_apply_matrix_scale(matrix, pActor->mScale.x,
-                                                              pActor->mScale.y, pActor->mScale.z));
+            smgpc::compat::set_actor_base_matrix(pActor, matrix);
         }
+    }
+
+    void setBaseScale(LiveActor* pActor, const TVec3f& rScale) {
+        smgpc::compat::set_actor_model_base_scale(pActor, rScale);
     }
 
     PartsModel* createPartsModelMapObj(LiveActor* pHost, const char* pName, const char* pModelName, MtxPtr pMtx) {

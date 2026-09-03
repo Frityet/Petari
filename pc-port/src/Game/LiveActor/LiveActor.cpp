@@ -4,6 +4,7 @@
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/Spine.hpp"
 #include "Game/Map/StageSwitch.hpp"
+#include "Game/Util/ActorMovementUtil.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "compat/ActorMotionCompat.hpp"
@@ -11,50 +12,10 @@
 #include "compat/CollisionPartsCompat.hpp"
 #include "runtime/RuntimeContext.hpp"
 
-#include <cmath>
 #include <stdexcept>
 #include <string_view>
 
 namespace {
-    constexpr f32 cDegToRad = 3.14159265358979323846F / 180.0F;
-
-    smgpc::render::J3dMatrix3x4 make_trs_matrix(const TVec3f& position, const TVec3f& rotation, const TVec3f& scale) {
-        const auto rx = rotation.x * cDegToRad;
-        const auto ry = rotation.y * cDegToRad;
-        const auto rz = rotation.z * cDegToRad;
-        const auto sx = std::sin(rx);
-        const auto cx = std::cos(rx);
-        const auto sy = std::sin(ry);
-        const auto cy = std::cos(ry);
-        const auto sz = std::sin(rz);
-        const auto cz = std::cos(rz);
-
-        const auto r00 = cz * cy;
-        const auto r01 = (cz * sy * sx) - (sz * cx);
-        const auto r02 = (cz * sy * cx) + (sz * sx);
-        const auto r10 = sz * cy;
-        const auto r11 = (sz * sy * sx) + (cz * cx);
-        const auto r12 = (sz * sy * cx) - (cz * sx);
-        const auto r20 = -sy;
-        const auto r21 = cy * sx;
-        const auto r22 = cy * cx;
-
-        return smgpc::render::J3dMatrix3x4{{
-            r00 * scale.x,
-            r01 * scale.y,
-            r02 * scale.z,
-            position.x,
-            r10 * scale.x,
-            r11 * scale.y,
-            r12 * scale.z,
-            position.y,
-            r20 * scale.x,
-            r21 * scale.y,
-            r22 * scale.z,
-            position.z,
-        }};
-    }
-
     void refresh_actor_joint_matrices(LiveActor* actor) {
         auto* model = smgpc::compat::actor_model(actor);
         if (model == nullptr) {
@@ -126,6 +87,7 @@ void LiveActor::calcAnim() {
 
 void LiveActor::calcAnmMtx() {
     if (smgpc::compat::actor_model(this) != nullptr) {
+        MR::setBaseScale(this, mScale);
         calcAndSetBaseMtx();
         refresh_actor_joint_matrices(this);
     }
@@ -219,7 +181,19 @@ void LiveActor::endClipped() {
 }
 
 void LiveActor::calcAndSetBaseMtx() {
-    smgpc::compat::set_actor_base_matrix(this, make_trs_matrix(mPosition, mRotation, mScale));
+    if (MR::getTaken(this)) {
+        MR::setBaseTRMtx(this, MR::getTaken(this)->mHost->getTakingMtx());
+    } else {
+        TPos3f mtx;
+
+        if (mRotation.x == 0.0f && mRotation.z == 0.0f) {
+            MR::makeMtxTransRotateY(mtx, this);
+        } else {
+            MR::makeMtxTR(mtx, this);
+        }
+
+        MR::setBaseTRMtx(this, mtx);
+    }
 }
 
 void LiveActor::initNerve(const Nerve* pNerve) {

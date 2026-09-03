@@ -1657,6 +1657,7 @@ namespace smgpc::render {
     J3dModelGeometry extract_j3d_model_geometry(std::span<const std::uint8_t> model_data) {
         const auto summary = inspect_j3d_model(model_data);
         auto geometry = J3dModelGeometry {};
+        geometry.info = summary.info;
         geometry.materials = summary.materials;
         geometry.envelopes = summary.envelopes;
         geometry.draw_matrices = summary.draw_matrices;

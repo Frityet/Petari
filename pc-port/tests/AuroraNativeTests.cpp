@@ -313,24 +313,44 @@ namespace {
         require(WPADProbe(WPAD_CHAN0, nullptr) == FALSE, "WPADDisconnect should clear Aurora controller state");
     }
 
-    void test_game_pad_compat_requires_runtime_context() {
+    void test_game_pad_compat_uses_aurora_without_runtime_context() {
         require(smgpc::runtime::RuntimeContext::try_instance() == nullptr,
-                "the strict GamePad boundary test must run without an active title runtime");
-        require_logic_error(
-            [] { static_cast<void>(MR::testCorePadButtonA(WPAD_CHAN0)); },
-            "GamePad button queries must not manufacture neutral input without an active runtime context");
-        require_logic_error(
-            [] { static_cast<void>(MR::testSubPadStickTriggerRight(WPAD_CHAN0)); },
-            "GamePad stick-edge queries must not bypass the active runtime context");
-        require_logic_error(
-            [] { static_cast<void>(MR::getPlayerStickX()); },
-            "player stick queries must not manufacture neutral input without an active runtime context");
+                "the Aurora GamePad bridge test runs without an active title runtime");
+        auto& wpad = aurora::wpad_service();
+        struct RestoreInput {
+            aurora::WpadService& service;
+            aurora::WpadService saved;
+            ~RestoreInput() { service = saved; }
+        } restore{wpad, wpad};
+        wpad.clear();
+        wpad.begin_frame();
+        wpad.set_button_mask(WPAD_CHAN0, WPAD_BUTTON_A | WPAD_BUTTON_Z);
+        wpad.set_sub_stick(WPAD_CHAN0, 0.75F, -0.5F);
+        require(MR::testCorePadButtonA(WPAD_CHAN0) && MR::getPlayerTriggerA() &&
+                    MR::getPlayerLevelZ() && MR::getPlayerTriggerZ(),
+                "GamePad button queries expose actual Aurora hold and trigger state without a title runtime");
+        require(MR::getPlayerStickX() == 0.75F && MR::getPlayerStickY() == -0.5F &&
+                    MR::testSubPadStickTriggerRight(WPAD_CHAN0) && MR::testSubPadStickTriggerDown(WPAD_CHAN0),
+                "GamePad stick values and directional edges use the actual Aurora channel");
+        wpad.begin_frame();
+        wpad.set_button_mask(WPAD_CHAN0, WPAD_BUTTON_A | WPAD_BUTTON_Z);
+        wpad.set_sub_stick(WPAD_CHAN0, 0.5F, -0.75F);
+        require(MR::getPlayerLevelA() && !MR::getPlayerTriggerA() && !MR::getPlayerTriggerZ() &&
+                    !MR::testSubPadStickTriggerRight(WPAD_CHAN0) && !MR::testSubPadStickTriggerDown(WPAD_CHAN0),
+                "held Aurora input does not retrigger GamePad button or stick edges on the next frame");
+        wpad.begin_frame();
+        wpad.set_button_mask(WPAD_CHAN0, 0);
+        wpad.set_sub_stick(WPAD_CHAN0, -0.75F, 0.5F);
+        require(!MR::getPlayerLevelA() && !MR::getPlayerLevelZ() && MR::testSubPadReleaseZ(WPAD_CHAN0) &&
+                    MR::testSubPadStickTriggerLeft(WPAD_CHAN0) && MR::testSubPadStickTriggerUp(WPAD_CHAN0) &&
+                    MR::getPlayerStickX() == -0.75F && MR::getPlayerStickY() == 0.5F,
+                "Aurora releases and reversed stick edges propagate through GamePad compatibility");
         require_logic_error(
             [] {
                 auto direction = TVec3f{};
                 MR::calcWorldStickDirectionXZ(&direction, WPAD_CHAN0);
             },
-            "world-stick projection must not manufacture a camera basis without an active runtime context");
+            "world-stick projection still requires an actual camera basis even when Aurora input is available");
     }
 
     void test_aurora_wpad_sub_stick_edges() {
@@ -1033,7 +1053,7 @@ namespace {
         const auto* collapsed_axis_contacts = smgpc::compat::actor_binder_contacts(&collapsed_axis_binder);
         require(collapsed_axis_contacts != nullptr && collapsed_axis_contacts->wall &&
                     collapsed_axis_binder.mPosition.x > 3.0F,
-                "a collapsed host scale should reconstruct Binder's rotated scale-free Y basis");
+                "zero model scale must leave Binder's supplied raw-TR Y basis intact");
         collapsed_axis_collision.deactivate();
         require(smgpc::scene::StageCollisionService::active() == nullptr,
                 "stage teardown should clear the active collision boundary");
@@ -1142,8 +1162,8 @@ namespace {
         fixed.calc();
         auto world = TVec3f{};
         fixed.copyTrans(&world);
-        require(world.epsilonEquals(TVec3f{22.0F, 26.0F, 28.0F}, 0.00001F),
-                "FixedPosition should apply the host TRS matrix to its local translation");
+        require(world.epsilonEquals(TVec3f{13.0F, 22.0F, 29.0F}, 0.00001F),
+                "FixedPosition should apply the original raw host TR matrix without actor model scale");
 
         auto axisX = TVec3f{};
         auto axisY = TVec3f{};
@@ -1153,7 +1173,28 @@ namespace {
         fixed.mMtx.getZDir(axisZ);
         require(std::fabs(axisX.length() - 1.0F) < 0.00001F && std::fabs(axisY.length() - 1.0F) < 0.00001F &&
                     std::fabs(axisZ.length() - 1.0F) < 0.00001F,
-                "FixedPosition should remove inherited host scale by default");
+                "FixedPosition should retain the unit basis of the original host TR matrix");
+
+        Mtx supplied_scaled_matrix{{0, 0, 4, 10}, {0, 3, 0, 20}, {-2, 0, 0, 30}};
+        auto supplied = FixedPosition(supplied_scaled_matrix, TVec3f{1, 2, 3}, TVec3f{0, 0, 0});
+        supplied.calc();
+        supplied.copyTrans(&world);
+        require(world.epsilonEquals(TVec3f{22, 26, 28}, 0.00001F),
+                "an explicitly supplied scaled matrix scales the local offset before basis normalization");
+        supplied.mMtx.getXDir(axisX);
+        supplied.mMtx.getYDir(axisY);
+        supplied.mMtx.getZDir(axisZ);
+        require(std::fabs(axisX.length() - 1) < 0.00001F && std::fabs(axisY.length() - 1) < 0.00001F &&
+                    std::fabs(axisZ.length() - 1) < 0.00001F,
+                "default FixedPosition normalization applies to scale actually present in its input matrix");
+        supplied.mNormalizeScale = false;
+        supplied.calc();
+        supplied.mMtx.getXDir(axisX);
+        supplied.mMtx.getYDir(axisY);
+        supplied.mMtx.getZDir(axisZ);
+        require(std::fabs(axisX.length() - 2) < 0.00001F && std::fabs(axisY.length() - 3) < 0.00001F &&
+                    std::fabs(axisZ.length() - 4) < 0.00001F,
+                "disabling original FixedPosition normalization retains the supplied basis scale");
 
         host.mPosition.set(100.0F, 200.0F, 300.0F);
         host.mRotation.zero();
@@ -1405,7 +1446,7 @@ namespace {
 int main() {
     const auto tests = std::array{
         TestCase{"revolution headers and input defaults", test_revolution_headers_and_input_defaults},
-        TestCase{"GamePad compatibility requires runtime context", test_game_pad_compat_requires_runtime_context},
+        TestCase{"GamePad compatibility uses Aurora without runtime context", test_game_pad_compat_uses_aurora_without_runtime_context},
         TestCase{"Aurora WPAD sub-stick edges", test_aurora_wpad_sub_stick_edges},
         TestCase{"JGeometry host layout and math", test_jgeometry_host_layout_and_math},
         TestCase{"Aurora VI retrace/framebuffer state", test_aurora_vi_retrace_and_framebuffer_state},

@@ -7,6 +7,7 @@
 #include "RendererService.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/MaterialCtrlCompat.hpp"
+#include "compat/OriginalJ3dJointTree.hpp"
 #include "render/J3dMatrix.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "runtime/SceneScheduler.hpp"
@@ -16,6 +17,7 @@
 #include <dolphin/dvd.h>
 
 #include <array>
+#include <algorithm>
 #include <cmath>
 #include <cstdlib>
 #include <filesystem>
@@ -33,6 +35,15 @@ namespace {
         void calcAnim() override {
             calcAndSetBaseMtx();
         }
+
+        void calcAndSetBaseMtx() override {
+            LiveActor::calcAndSetBaseMtx();
+            if (change_scale_during_base_calculation) {
+                mScale.set(7, 11, 13);
+            }
+        }
+
+        bool change_scale_during_base_calculation = false;
     };
 
     void require(bool condition, std::string_view message) {
@@ -83,6 +94,108 @@ namespace {
         }
         throw std::runtime_error(
             "the LiveActor animation proof requires real RMGK01.iso (or SMGPC_REAL_DISC)");
+    }
+
+    void test_real_actor_base_transform_and_scale(smgpc::runtime::RuntimeContext& runtime,
+                                                 CalcAnimOverrideActor& actor) {
+        const auto archive_path = runtime.find_object_archive("Tico");
+        require(archive_path.has_value(), "the scale proof requires the loaded authored Tico archive");
+        const auto& archive = runtime.dvd().archive_for_path(*archive_path);
+        const auto* model_entry = archive.find_by_basename("Tico.bdl");
+        if (model_entry == nullptr) {
+            model_entry = archive.find_by_basename("Tico.bmd");
+        }
+        const auto* animation_entry = archive.find_by_basename("Wait.bck");
+        require(model_entry != nullptr && animation_entry != nullptr, "the scale proof needs real Tico model and Wait resources");
+        const auto parsed = smgpc::render::inspect_j3d_model(archive.file_data(*model_entry));
+        const auto motion = smgpc::render::inspect_j3d_animation(archive.file_data(*animation_entry));
+        require(parsed.info.has_value() && parsed.joints.has_value() && motion.bck.has_value() && motion.bck->transform_animation,
+                "the scale oracle must use the actual original joint hierarchy and typed BCK");
+        smgpc::compat::OriginalJ3dJointTree original(*parsed.info, *parsed.joints);
+        constexpr std::array names{"AllRoot", "Body"};
+        std::array<std::size_t, 2> indices{};
+        std::array<MtxPtr, 2> retained{};
+        for (std::size_t index = 0; index < names.size(); ++index) {
+            const auto joint = std::ranges::find(parsed.joints->joints, names[index], &smgpc::render::J3dJointSummary::name);
+            require(joint != parsed.joints->joints.end(), "the authored joint must exist in the independently parsed model");
+            indices[index] = static_cast<std::size_t>(joint - parsed.joints->joints.begin());
+            retained[index] = MR::getJointMtx(&actor, names[index]);
+            require(retained[index] != nullptr, "the actor must expose its actual retained joint matrix");
+        }
+        auto* controller = MR::getBckCtrl(&actor);
+        const auto old_frame = controller->getFrame();
+        const auto old_position = actor.mPosition;
+        const auto old_rotation = actor.mRotation;
+        const auto old_scale = actor.mScale;
+        controller->setFrame(3.25F);
+        actor.mScale.set(2, 3, 4);
+        actor.calcAnmMtx();
+
+        const auto check_joints = [&](const smgpc::render::J3dMatrix3x4& base,
+                                      const std::array<float, 3>& scale, bool already_refreshed) {
+            const auto frame = smgpc::render::j3d_animation_frame(motion.bck->attribute, motion.bck->frame_max, 3.25F);
+            const auto expected = original.calculate(motion.bck->transform_animation.get(), frame, base, scale);
+            for (std::size_t index = 0; index < names.size(); ++index) {
+                if (!already_refreshed) {
+                    require(MR::getJointMtx(&actor, names[index]) == retained[index], "explicit joint queries retain their stable addresses");
+                }
+                for (std::size_t row = 0; row < 3; ++row) {
+                    for (std::size_t column = 0; column < 4; ++column) {
+                        require_near(retained[index][row][column], expected[indices[index]].m[row * 4 + column],
+                                     "actor joint matrices must equal original traversal with separate base transform and retained scale");
+                    }
+                }
+            }
+        };
+
+        Mtx raw{{2, 0.25F, 0, 10}, {0, 3, 0.5F, 20}, {-0.125F, 0, 4, 30}};
+        const auto raw_matrix = smgpc::render::j3d_matrix_from_mtx(raw);
+        MR::setBaseTRMtx(&actor, raw);
+        require(smgpc::compat::actor_base_matrix(&actor).m == raw_matrix.m &&
+                    smgpc::render::j3d_matrix_from_mtx(actor.getBaseMtx()).m == raw_matrix.m,
+                "base matrix setters/getters preserve an explicitly supplied scaled and sheared basis literally");
+        MR::setBaseScale(&actor, TVec3f{5, 7, 11});
+        require(actor.mScale.epsilonEquals(TVec3f{2, 3, 4}, 0.00001F) &&
+                    smgpc::compat::actor_base_matrix(&actor).m == raw_matrix.m,
+                "setBaseScale changes retained model scale without changing actor scale or the base transform");
+        check_joints(raw_matrix, {5, 7, 11}, false);
+
+        const auto scaled_root = smgpc::render::j3d_matrix_from_mtx(retained[0]);
+        MR::setBaseScale(&actor, TVec3f{1, 1, 1});
+        check_joints(raw_matrix, {1, 1, 1}, false);
+        require(smgpc::render::j3d_matrix_from_mtx(retained[0]).m != scaled_root.m,
+                "the authored root must observably respond to independently retained model scale");
+        MR::setBaseScale(&actor, TVec3f{5, 7, 11});
+        TPos3f replacement;
+        Mtx replacement_raw{{0, -2, 0.5F, 100}, {3, 0.25F, 0, 200}, {0, 0, 4, 300}};
+        replacement.set(replacement_raw);
+        MR::setBaseTRMtx(&actor, replacement);
+        const auto replacement_matrix = smgpc::render::j3d_matrix_from_mtx(replacement_raw);
+        require(smgpc::compat::actor_base_matrix(&actor).m == replacement_matrix.m,
+                "the TPos base-matrix setter copies its basis without applying retained model scale");
+        check_joints(replacement_matrix, {5, 7, 11}, false);
+
+        actor.mPosition.set(17, 23, 31);
+        actor.mRotation.set(0, 90, 0);
+        actor.change_scale_during_base_calculation = true;
+        actor.calcAnmMtx();
+        actor.change_scale_during_base_calculation = false;
+        const auto base = smgpc::compat::actor_base_matrix(&actor);
+        const std::array<float, 12> expected_base{0, 0, 1, 17, 0, 1, 0, 23, -1, 0, 0, 31};
+        for (std::size_t index = 0; index < expected_base.size(); ++index) {
+            require_near(base.m[index], expected_base[index], "generic actor calculation writes original TR independently of actor scale");
+        }
+        require(actor.mScale.epsilonEquals(TVec3f{7, 11, 13}, 0.00001F), "the test override changes scale during virtual base calculation");
+        check_joints(base, {2, 3, 4}, true);
+        actor.calcAnmMtx();
+        check_joints(base, {7, 11, 13}, true);
+
+        actor.mPosition = old_position;
+        actor.mRotation = old_rotation;
+        actor.mScale = old_scale;
+        controller->setFrame(old_frame);
+        actor.calcAnmMtx();
+        std::cout << "[proof] raw TR/shear retained; independent model scale reaches authored joints; pre-base scale snapshot=yes\n";
     }
 
     void test_real_tico_bck_and_joint_refresh() {
@@ -264,6 +377,7 @@ namespace {
         require(overridden_model != nullptr && retained_joint != nullptr &&
                     !overridden_actor.mFlag.mIsDead && !overridden_actor.mFlag.mIsClipped,
                 "the overridden animation proof must retain the real Tico model and joint");
+        test_real_actor_base_transform_and_scale(runtime, overridden_actor);
         auto scheduler = smgpc::runtime::SceneScheduler{};
         scheduler.register_live_actor_model(overridden_actor, -1, 0, -1, -1);
 

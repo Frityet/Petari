@@ -2233,6 +2233,7 @@ void MarioActor::calcAndSetBaseMtx() {
         front.z,
         mPosition.z,
     }});
+    MR::setBaseScale(this, mScale);
     (void)smgpc::compat::require_actor_model(this);
     _1C0 = false;
     _1C1 = false;

@@ -68,3 +68,13 @@ void JMAVECScaleAdd(__REGISTER const Vec* vec1, __REGISTER const Vec* vec2, __RE
 	}
 #endif  // clang-format on
 }
+
+void JMAMTXApplyScale(const Mtx src, Mtx dst, f32 x, f32 y, f32 z) {
+    Mtx scale;
+    PSMTXScale(scale, x, y, z);
+    PSMTXConcat(src, scale, dst);
+}
+
+f32 JMath::fastReciprocal(f32 value) {
+    return __fres(value);
+}

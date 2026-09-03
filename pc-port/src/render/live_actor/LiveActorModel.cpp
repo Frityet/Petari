@@ -255,6 +255,10 @@ std::int16_t LiveActorModel::requireBck(std::string_view name, std::string_view 
     return *frame_max;
 }
 
+void LiveActorModel::setBaseScale(const std::array<float, 3> &scale) {
+    mBaseScale = scale;
+}
+
 void LiveActorModel::draw(const smgpc::camera::CameraPose &camera_pose, const smgpc::render::J3dMatrix3x4 &actor_matrix,
                           std::uint64_t frame, DrawPass pass) {
     drawImpl(&camera_pose, nullptr, actor_matrix, frame, pass);
@@ -284,6 +288,7 @@ void LiveActorModel::drawImpl(
     applyStartedAnimations();
 
     auto options = smgpc::render::J3dModelRendererDrawOptions {};
+    options.base_scale = mBaseScale;
     switch (pass) {
     case DrawPass::All:
         break;
@@ -469,13 +474,12 @@ const smgpc::render::J3dMatrix3x4 *LiveActorModel::joint_world_matrix(
     applyStartedAnimations();
     const auto &source = jointAnimationSource();
     const auto animation_frame = source.mBckStarted && source.mBckAnimation.has_value() ? source.bck_frame(runtime_frame) : 0.0F;
-    const auto joint_matrix = mRenderer->joint_model_matrix(name, animation_frame);
+    const auto joint_matrix = mRenderer->joint_matrix(name, animation_frame, actor_matrix, mBaseScale);
     if (!joint_matrix.has_value()) {
         return nullptr;
     }
 
-    auto [entry, inserted] = mResolvedJointMatrices.insert_or_assign(
-        std::string(name), smgpc::render::j3d_concat_matrix(actor_matrix, *joint_matrix));
+    auto [entry, inserted] = mResolvedJointMatrices.insert_or_assign(std::string(name), *joint_matrix);
     static_cast<void>(inserted);
     return &entry->second;
 }
@@ -496,9 +500,9 @@ void LiveActorModel::refresh_resolved_joint_matrices(const smgpc::render::J3dMat
                                      ? source.mBckFrame
                                      : 0.0F;
     for (auto &[name, matrix] : mResolvedJointMatrices) {
-        const auto joint_matrix = mRenderer->joint_model_matrix(name, animation_frame);
+        const auto joint_matrix = mRenderer->joint_matrix(name, animation_frame, actor_matrix, mBaseScale);
         if (joint_matrix.has_value()) {
-            matrix = smgpc::render::j3d_concat_matrix(actor_matrix, *joint_matrix);
+            matrix = *joint_matrix;
         }
     }
 }

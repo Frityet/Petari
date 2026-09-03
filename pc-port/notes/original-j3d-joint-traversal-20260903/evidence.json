@@ -1,0 +1,119 @@
+{
+  "scope": "Original compiler, source/dataflow verification, and Python reciprocal model; no native build or runtime claim",
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "source_correspondence": [
+    "void J3DMtxCalcJ3DSysInitBasic::init(",
+    "void J3DMtxCalcJ3DSysInitMaya::init(",
+    "inline s32 checkScaleOne(",
+    "void J3DMtxCalcCalcTransformBasic::calcTransform(",
+    "void J3DMtxCalcCalcTransformSoftimage::calcTransform(",
+    "void J3DMtxCalcCalcTransformMaya::calcTransform(",
+    "void J3DJoint::appendChild(",
+    "J3DJoint::J3DJoint()",
+    "void J3DJoint::recursiveCalc()",
+    "void J3DGetTranslateRotateMtx(const J3DTransformInfo&",
+    "void J3DGetTranslateRotateMtx(s16",
+    "void JMAMTXApplyScale("
+  ],
+  "translation_rotation_graphs": {
+    "0x80423cd4": {
+      "all_12_float_outputs_equal": true,
+      "graph_sha256": "82c6b5b128166fa6f51fee27ef824bbb9668db17246a494854a1e818bf09ef77"
+    },
+    "0x80423dc4": {
+      "all_12_float_outputs_equal": true,
+      "graph_sha256": "82c6b5b128166fa6f51fee27ef824bbb9668db17246a494854a1e818bf09ef77"
+    }
+  },
+  "default_transform_address": "0x8055c1b8",
+  "default_transform_sha256": "24b5cf53ed9871d4a472105ad9a45a189a8ab8a2e4a7ee111c1c801eb7333253",
+  "fast_reciprocal": {
+    "root_compiler_matches_retail": true,
+    "retail_address": "0x8001b140",
+    "words": "ec2008304e800020",
+    "source_model_vs_oracle_cases": 1310720,
+    "representative_bits": {
+      "00000000": "7f800000",
+      "80000000": "ff800000",
+      "00000001": "7f7fffff",
+      "001fffff": "7f7fffff",
+      "00200000": "7f7ff800",
+      "003fffff": "7f000083",
+      "00400000": "7efff800",
+      "007fffff": "7e800083",
+      "3f800000": "3f7ff800",
+      "40000000": "3efff800",
+      "40800000": "3e7ff800",
+      "7e800000": "00000000",
+      "7f800000": "00000000",
+      "7f800001": "7fc00001",
+      "ff800001": "ffc00001"
+    }
+  },
+  "original_compiler_objdiff": {
+    "init__25J3DMtxCalcJ3DSysInitBasicFRC3VecRA3_A4_Cf": {
+      "match_percent": 60.657143,
+      "retail_size": 140,
+      "compiled_size": 140
+    },
+    "init__24J3DMtxCalcJ3DSysInitMayaFRC3VecRA3_A4_Cf": {
+      "match_percent": 42.57143,
+      "retail_size": 140,
+      "compiled_size": 144
+    },
+    "calcTransform__28J3DMtxCalcCalcTransformBasicFRC16J3DTransformInfo": {
+      "match_percent": 100.0,
+      "retail_size": 236,
+      "compiled_size": 236
+    },
+    "calcTransform__32J3DMtxCalcCalcTransformSoftimageFRC16J3DTransformInfo": {
+      "match_percent": 100.0,
+      "retail_size": 312,
+      "compiled_size": 312
+    },
+    "calcTransform__27J3DMtxCalcCalcTransformMayaFRC16J3DTransformInfo": {
+      "match_percent": 83.135925,
+      "retail_size": 412,
+      "compiled_size": 428
+    },
+    "appendChild__8J3DJointFP8J3DJoint": {
+      "match_percent": 100.0,
+      "retail_size": 48,
+      "compiled_size": 48
+    },
+    "__ct__8J3DJointFv": {
+      "match_percent": 83.23913,
+      "retail_size": 184,
+      "compiled_size": 204
+    },
+    "recursiveCalc__8J3DJointFv": {
+      "match_percent": 93.45122,
+      "retail_size": 328,
+      "compiled_size": 336
+    },
+    "J3DGetTranslateRotateMtx__FRC16J3DTransformInfoPA4_f": {
+      "match_percent": 38.683334,
+      "retail_size": 240,
+      "compiled_size": 272
+    },
+    "J3DGetTranslateRotateMtx__FsssfffPA4_f": {
+      "match_percent": 9.0,
+      "retail_size": 176,
+      "compiled_size": 216
+    },
+    "JMAMTXApplyScale__FPA4_CfPA4_ffff": {
+      "match_percent": 100.0,
+      "retail_size": 76,
+      "compiled_size": 76
+    }
+  },
+  "source_sha256": {
+    "src/JSystem/J3DGraphAnimator/J3DJoint.cpp": "c77a2f134275b446f7e811c19d10503590f59e74aba6fbbaacf2c7c20179adaf",
+    "src/JSystem/J3DGraphBase/J3DTransform.cpp": "445cb4d93e12fbc271432ee6cffc3a99e815f5f28256110483d1da7a2b06419f",
+    "src/JSystem/JMath/JMath.cpp": "0edb57cc082ee540fface63157f1e58e433b4ad07016985e3f3b440dbc14cafa",
+    "pc-port/src/compat/J3DJointCompat.cpp": "88ae71837dba9ba65d9315e3900a25ca9f77dab47a27712ab56b96079c4f9b45",
+    "pc-port/src/JSystem/J3DGraphAnimator/J3DJoint.hpp": "a2ba569193ca29f1986a0b3b5ae539ddbdbada6bc5885cca4222ac8d08304173",
+    "pc-port/src/JSystem/J3DGraphAnimator/J3DMtxCalc.hpp": "3f347a9f73d3c93ad971232823f0eb9052e3714ce5d7215376f187c7ce5c9df9",
+    "pc-port/src/JSystem/JMath/JMath.hpp": "fb59cc9a25d470fcc3f27c8cc8379b43af22cc06fc565faa8ff22d726ab5cd42"
+  }
+}

@@ -2,7 +2,6 @@
 
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
-#include "compat/BinderCompat.hpp"
 #include "compat/HitInfoCompat.hpp"
 #include "scene/StageCollisionService.hpp"
 
@@ -10,17 +9,10 @@
 #include <cmath>
 #include <cstdint>
 #include <stdexcept>
-#include <unordered_map>
 
 namespace {
     constexpr auto cNoContact = -99999.0F;
     constexpr auto cWallDot = 0.34202015F;
-    constexpr auto cDegreesToRadians = 3.14159265358979323846F / 180.0F;
-
-    [[nodiscard]] auto& binder_owners() {
-        static auto owners = std::unordered_map<const Binder*, const LiveActor*>{};
-        return owners;
-    }
 
     [[nodiscard]] bool normalize(TVec3f& value) {
         const auto square_length = value.dot(value);
@@ -32,53 +24,9 @@ namespace {
         return true;
     }
 
-    [[nodiscard]] TVec3f cross(const TVec3f& lhs, const TVec3f& rhs) {
-        return TVec3f{lhs.y * rhs.z - lhs.z * rhs.y,
-                      lhs.z * rhs.x - lhs.x * rhs.z,
-                      lhs.x * rhs.y - lhs.y * rhs.x};
-    }
-
-    [[nodiscard]] TVec3f rotation_up(const TVec3f& rotation) {
-        const auto rx = rotation.x * cDegreesToRadians;
-        const auto ry = rotation.y * cDegreesToRadians;
-        const auto rz = rotation.z * cDegreesToRadians;
-        const auto sx = std::sin(rx);
-        const auto cx = std::cos(rx);
-        const auto sy = std::sin(ry);
-        const auto cy = std::cos(ry);
-        const auto sz = std::sin(rz);
-        const auto cz = std::cos(rz);
-        return TVec3f{cz * sy * sx - sz * cx,
-                      sz * sy * sx + cz * cx,
-                      cy * sx};
-    }
-
     [[nodiscard]] TVec3f binder_up(const Binder& binder) {
         auto up = TVec3f{binder._C[0][1], binder._C[1][1], binder._C[2][1]};
-        const auto owner = binder_owners().find(&binder);
-        if (owner == binder_owners().end()) {
-            (void)normalize(up);
-            return up;
-        }
-
-        const auto& actor = *owner->second;
-        if (std::abs(actor.mScale.y) > 1.0e-8F) {
-            up.scale(1.0F / actor.mScale.y);
-        } else {
-            auto side = TVec3f{binder._C[0][0], binder._C[1][0], binder._C[2][0]};
-            auto front = TVec3f{binder._C[0][2], binder._C[1][2], binder._C[2][2]};
-            if (std::abs(actor.mScale.x) > 1.0e-8F) {
-                side.scale(1.0F / actor.mScale.x);
-            }
-            if (std::abs(actor.mScale.z) > 1.0e-8F) {
-                front.scale(1.0F / actor.mScale.z);
-            }
-            up = cross(front, side);
-        }
-        if (!normalize(up)) {
-            up = rotation_up(actor.mRotation);
-            (void)normalize(up);
-        }
+        (void)normalize(up);
         return up;
     }
 
@@ -91,19 +39,6 @@ namespace {
         destination._88 = 1U;
     }
 }  // namespace
-
-namespace smgpc::compat {
-    void register_binder_owner(Binder* binder, const LiveActor* actor) {
-        if (binder == nullptr || actor == nullptr) {
-            throw std::invalid_argument("Binder ownership requires a real Binder and LiveActor.");
-        }
-        binder_owners().insert_or_assign(binder, actor);
-    }
-
-    void release_binder_owner(const Binder* binder) noexcept {
-        binder_owners().erase(binder);
-    }
-}  // namespace smgpc::compat
 
 namespace MR {
     void setBinderOffsetVec(LiveActor* actor, const TVec3f* offset, bool local_space) {
@@ -136,7 +71,6 @@ Binder::Binder(MtxPtr matrix, const TVec3f* position, const TVec3f* gravity, f32
 }
 
 Binder::~Binder() {
-    smgpc::compat::release_binder_owner(this);
     delete[] mPlaneInfos;
 }
 

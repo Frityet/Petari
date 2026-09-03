@@ -10,7 +10,6 @@
 #include "Game/Map/StageSwitch.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "compat/CollisionPartsCompat.hpp"
-#include "compat/BinderCompat.hpp"
 #include "compat/GameActorSensorCompat.hpp"
 #include "compat/MaterialCtrlCompat.hpp"
 #include "runtime/RuntimeContext.hpp"
@@ -458,6 +457,7 @@ namespace smgpc::compat {
         auto& state = require_actor_state(actor);
         auto replacement = std::make_unique<smgpc::render::live_actor::LiveActorModel>(
             model_archive != nullptr ? model_archive : "", animation_archive != nullptr ? animation_archive : "");
+        replacement->setBaseScale({actor->mScale.x, actor->mScale.y, actor->mScale.z});
         invalidate_shadow_joint_matrix_bindings(state);
         state.model = std::move(replacement);
     }
@@ -517,6 +517,14 @@ namespace smgpc::compat {
 
     void set_actor_base_matrix(LiveActor* actor, const smgpc::render::J3dMatrix3x4& matrix) {
         require_actor_state(actor).base_matrix = matrix;
+    }
+
+    void set_actor_model_base_scale(LiveActor* actor, const TVec3f& scale) {
+        auto& state = require_actor_state(actor);
+        if (state.model == nullptr) {
+            throw std::logic_error("LiveActor base scale requires a real model binding.");
+        }
+        state.model->setBaseScale({scale.x, scale.y, scale.z});
     }
 
     void set_actor_projmap_effect_matrix(LiveActor* actor, const smgpc::render::J3dMatrix3x4& matrix) {
@@ -888,7 +896,6 @@ namespace smgpc::compat {
             reinterpret_cast<MtxPtr>(state.base_matrix.m.data()), &actor->mPosition, &actor->mGravity,
             radius, offset, plane_capacity);
         actor->mBinder = state.binder_provider.get();
-        register_binder_owner(actor->mBinder, actor);
         state.binder_contacts = {};
     }
 
@@ -901,7 +908,6 @@ namespace smgpc::compat {
                 reinterpret_cast<MtxPtr>(state.base_matrix.m.data()), &mutable_actor->mPosition,
                 &mutable_actor->mGravity, 0.0F, 0.0F, 0U);
             mutable_actor->mBinder = state.binder_provider.get();
-            register_binder_owner(mutable_actor->mBinder, mutable_actor);
             state.binder_contacts = {};
         }
     }

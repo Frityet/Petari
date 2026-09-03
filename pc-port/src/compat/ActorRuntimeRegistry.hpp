@@ -251,8 +251,10 @@ namespace smgpc::compat {
     void require_actor_model(LiveActor* actor);
     [[nodiscard]] std::size_t actor_model_joint_count(const LiveActor* actor);
     void release_actor_model_state(const LiveActor* actor);
+    // Original model base TR; model scale is retained separately.
     [[nodiscard]] const smgpc::render::J3dMatrix3x4& actor_base_matrix(const LiveActor* actor);
     void set_actor_base_matrix(LiveActor* actor, const smgpc::render::J3dMatrix3x4& matrix);
+    void set_actor_model_base_scale(LiveActor* actor, const TVec3f& scale);
     void set_actor_projmap_effect_matrix(LiveActor* actor, const smgpc::render::J3dMatrix3x4& matrix);
     void draw_actor_model(LiveActor* actor, const smgpc::camera::CameraPose& camera_pose,
                           std::uint64_t frame, smgpc::render::live_actor::LiveActorModel::DrawPass pass);

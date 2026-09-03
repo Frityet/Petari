@@ -4,6 +4,8 @@
 #include "JSystem/JMath/JMATrigonometric.hpp"
 #include <revolution/mtx.h>
 
+const J3DTransformInfo j3dDefaultTransformInfo = {{1.0f, 1.0f, 1.0f}, {0, 0, 0}, {0.0f, 0.0f, 0.0f}};
+
 inline f32 J3D_sqrtf(__REGISTER f32 x) {
     __REGISTER f32 recip;
 
