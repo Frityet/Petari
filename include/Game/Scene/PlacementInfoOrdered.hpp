@@ -17,21 +17,22 @@ public:
         /* 0x10 */ JMapInfoIter mInfoIter;
     };
 
-    class SameIdSet {
+    class Identifier {
+    public:
+        Identifier() : mName(nullptr), mShapeId(-1) {
+        }
+
+        /* 0x00 */ const char* mName;
+        /* 0x04 */ s32 mShapeId;
+    };
+
+    class SameIdSet : public Identifier {
     public:
         SameIdSet();
         ~SameIdSet();
 
-        /* 0x00 */ const char* mName;
-        /* 0x04 */ s32 mShapeId;
         /* 0x08 */ s32 mOrder;
         /* 0x0C */ MR::BothDirList< Index > mList;
-    };
-
-    class Identifier {
-    public:
-        /* 0x00 */ const char* mName;
-        /* 0x04 */ s32 mShapeId;
     };
 
     PlacementInfoOrdered(int);

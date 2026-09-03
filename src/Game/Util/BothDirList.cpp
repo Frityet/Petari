@@ -1,4 +1,4 @@
-#include "Game/Util.hpp"
+#include "Game/Util/BothDirList.hpp"
 
 namespace MR {
     BothDirPtrLink::BothDirPtrLink(void* pLink) : mValue(pLink), mList(nullptr), mPrevLink(nullptr), mNextLink(nullptr) {
@@ -7,12 +7,6 @@ namespace MR {
     BothDirPtrLink::~BothDirPtrLink() {
         if (mList) {
             mList->remove(this);
-        }
-    }
-
-    BothDirPtrList::BothDirPtrList(bool doInit) {
-        if (doInit) {
-            initiate();
         }
     }
 

@@ -1,0 +1,416 @@
+--- /dev/null
++++ b/pc-port/src/Game/Scene/PlacementInfoOrdered.cpp
+@@ -0,0 +1,190 @@
++#include "Game/Scene/PlacementInfoOrdered.hpp"
++#include "Game/Util/MemoryUtil.hpp"
++#include "Game/LiveActor/AllLiveActorGroup.hpp"
++#include "Game/Map/PlanetMapCreator.hpp"
++#include "Game/NameObj/ModelChangableObjFactory.hpp"
++#include "Game/NameObj/NameObj.hpp"
++#include "Game/NameObj/NameObjFactory.hpp"
++#include "Game/Util/JMapUtil.hpp"
++#include "Game/Util/SceneUtil.hpp"
++#include "Game/Util/StringUtil.hpp"
++
++namespace {
++    CreationFuncPtr getCreator(const PlacementInfoOrdered::Identifier& rIdentifier) NO_INLINE {
++        if (rIdentifier.mShapeId != -1) {
++            return MR::getModelChangableObjCreator(rIdentifier.mName);
++        }
++        return NameObjFactory::getCreator(rIdentifier.mName);
++    }
++
++    bool isLess(const PlacementInfoOrdered::SameIdSet* pLhs, const PlacementInfoOrdered::SameIdSet* pRhs) {
++        if (pLhs->mOrder == pRhs->mOrder) {
++            return pRhs->mList.mCount < pLhs->mList.mCount;
++        }
++        return pLhs->mOrder < pRhs->mOrder;
++    }
++};  // namespace
++
++PlacementInfoOrdered::PlacementInfoOrdered(int count) {
++    mIndexArray = nullptr;
++    _4 = 0;
++    mSetArray = nullptr;
++    mIdentiferArray = nullptr;
++    mCount = count;
++    mIndexArray = new Index[count];
++    mSetArray = new SameIdSet[count];
++    mIdentiferArray = new SameIdSet*[count];
++    MR::zeroMemory(mIdentiferArray, count * sizeof(SameIdSet*));
++}
++
++void PlacementInfoOrdered::sort() {
++    s32 count = getUsedArrayNum();
++    for (s32 i = 0; i < count; i++) {
++        SameIdSet* set = mIdentiferArray[i];
++        if (NameObjFactory::isPlayerArchiveLoaderObj(set->mName)) {
++            set->mOrder = 0;
++        } else {
++            const JMapInfoIter& iter = static_cast< Index* >(set->mList.mHead->mValue)->mInfoIter;
++            s32 readFromDVD;
++            if (set->mShapeId != -1) {
++                readFromDVD = MR::isReadResourceFromDVDAtModelChangableObj(set->mName, set->mShapeId);
++            } else {
++                readFromDVD = NameObjFactory::isReadResourceFromDVD(set->mName, iter);
++            }
++            set->mOrder = (readFromDVD ? 1 : 0) + 1;
++        }
++    }
++
++    s32 gap = 13;
++    while (gap < count) {
++        gap = gap * 3 + 1;
++    }
++    gap /= 9;
++    while (gap > 0) {
++        for (s32 i = gap; i < count; i++) {
++            SameIdSet* value = mIdentiferArray[i];
++            s32 j = i - gap;
++            while (j >= 0 && ::isLess(value, mIdentiferArray[j])) {
++                mIdentiferArray[j + gap] = mIdentiferArray[j];
++                j -= gap;
++            }
++            mIdentiferArray[j + gap] = value;
++        }
++        gap /= 3;
++    }
++}
++
++void PlacementInfoOrdered::requestFileLoad() {
++    s32 count = getUsedArrayNum();
++    for (s32 i = 0; i < count; i++) {
++        SameIdSet* set = mIdentiferArray[i];
++        if (!::getCreator(*set)) {
++            continue;
++        }
++        if (set->mShapeId != -1) {
++            MR::requestMountModelChangableObjArchives(set->mName, set->mShapeId);
++        } else {
++            for (MR::BothDirPtrLink* link = set->mList.mHead; link != nullptr; link = link->mNextLink) {
++                NameObjFactory::requestMountObjectArchives(set->mName, static_cast< Index* >(link->mValue)->mInfoIter);
++            }
++        }
++    }
++}
++
++void PlacementInfoOrdered::initPlacement() {
++    MR::startInitLiveActorSystemInfo();
++    s32 count = getUsedArrayNum();
++    for (s32 i = 0; i < count; i++) {
++        SameIdSet* set = mIdentiferArray[i];
++        CreationFuncPtr creator = ::getCreator(*set);
++        if (!creator) {
++            continue;
++        }
++        const char* name = MR::getJapaneseObjectName(set->mName);
++        for (MR::BothDirPtrLink* link = set->mList.mHead; link != nullptr; link = link->mNextLink) {
++            const JMapInfoIter& iter = static_cast< Index* >(link->mValue)->mInfoIter;
++            MR::setCurrentPlacementZoneId(MR::getPlacedZoneId(iter));
++            NameObj* object = creator(name);
++            MR::initLiveActorSystemInfo(iter);
++            object->init(iter);
++            MR::initLiveActorSystemInfo(iter);
++            MR::clearCurrentPlacementZoneId();
++        }
++    }
++}
++
++void PlacementInfoOrdered::insert(const Identifier& rIdentifier, const JMapInfoIter& rIter) {
++    SameIdSet* set = find(rIdentifier);
++    if (!set) {
++        set = createSameIdSet(rIdentifier);
++    }
++    set->mList.append(createIndex(rIter));
++}
++
++u32 PlacementInfoOrdered::getUsedArrayNum() const {
++    u32 count = 0;
++    for (s32 i = 0; i < mCount && mIdentiferArray[i] != nullptr; i++) {
++        count++;
++    }
++    return count;
++}
++
++PlacementInfoOrdered::SameIdSet* PlacementInfoOrdered::find(const Identifier& rIdentifier) const {
++    s32 count = getUsedArrayNum();
++    for (s32 i = 0; i < count; i++) {
++        SameIdSet* set = mIdentiferArray[i];
++        if (set != nullptr) {
++            bool same = MR::isEqualString(set->mName, rIdentifier.mName) && set->mShapeId == rIdentifier.mShapeId;
++            if (same) {
++                return set;
++            }
++        }
++    }
++    return nullptr;
++}
++
++PlacementInfoOrdered::SameIdSet* PlacementInfoOrdered::createSameIdSet(const Identifier& rIdentifier) {
++    u32 index = getUsedArrayNum();
++    SameIdSet* set = &mSetArray[index];
++    mIdentiferArray[index] = set;
++    *static_cast< Identifier* >(set) = rIdentifier;
++    return set;
++}
++
++PlacementInfoOrdered::Index* PlacementInfoOrdered::createIndex(const JMapInfoIter& rIter) {
++    Index* index = &mIndexArray[_4];
++    _4++;
++    index->mInfoIter = rIter;
++    return index;
++}
++
++PlacementInfoOrdered::Index::Index() : MR::BothDirPtrLink(this), mInfoIter() {
++}
++
++PlacementInfoOrdered::Index::~Index() {
++}
++
++PlacementInfoOrdered::SameIdSet::SameIdSet() : Identifier(), mList(true) {
++}
++
++PlacementInfoOrdered::SameIdSet::~SameIdSet() {
++}
++
++void PlacementInfoOrdered::attach(const JMapInfo* pInfo, PlacementInfoOrdered* pAfterScenario) {
++    s32 count = pInfo->getNumEntries();
++    for (s32 i = 0; i < count; i++) {
++        JMapInfoIter iter(pInfo, i);
++        const char* name = "";
++        MR::getObjectName(&name, iter);
++        s32 shapeId = -1;
++        MR::getJMapInfoShapeIdWithInit(iter, &shapeId);
++        Identifier identifier;
++        identifier.mName = name;
++        identifier.mShapeId = shapeId;
++        if (pAfterScenario != nullptr && shapeId == -1 && PlanetMapCreatorFunction::isLoadArchiveAfterScenarioSelected(name)) {
++            pAfterScenario->insert(identifier, iter);
++        } else {
++            insert(identifier, iter);
++        }
++    }
++}
+--- /dev/null
++++ b/pc-port/src/Game/Scene/PlacementInfoOrdered.hpp
+@@ -0,0 +1,56 @@
++#pragma once
++
++#include "Game/Util/BothDirList.hpp"
++#include "Game/Util/JMapInfo.hpp"
++
++class NameObj;
++
++typedef NameObj* (*CreationFuncPtr)(const char*);
++
++class PlacementInfoOrdered {
++public:
++    class Index : public MR::BothDirPtrLink {
++    public:
++        Index();
++        ~Index();
++
++        /* 0x10 */ JMapInfoIter mInfoIter;
++    };
++
++    class Identifier {
++    public:
++        Identifier() : mName(nullptr), mShapeId(-1) {
++        }
++
++        /* 0x00 */ const char* mName;
++        /* 0x04 */ s32 mShapeId;
++    };
++
++    class SameIdSet : public Identifier {
++    public:
++        SameIdSet();
++        ~SameIdSet();
++
++        /* 0x08 */ s32 mOrder;
++        /* 0x0C */ MR::BothDirList< Index > mList;
++    };
++
++    PlacementInfoOrdered(int);
++
++    void sort();
++    void requestFileLoad();
++    void initPlacement();
++    void insert(const Identifier&, const JMapInfoIter&);
++    u32 getUsedArrayNum() const;
++    SameIdSet* find(const Identifier&) const;
++    SameIdSet* createSameIdSet(const Identifier&);
++    Index* createIndex(const JMapInfoIter&);
++
++    void attach(const JMapInfo*, PlacementInfoOrdered*);
++
++    Index* mIndexArray;  // 0x0
++    u32 _4;
++    SameIdSet* mSetArray;          // 0x8
++    SameIdSet** mIdentiferArray;   // 0xC
++    int mCount;                    // 0x10
++};
+--- /dev/null
++++ b/pc-port/src/Game/Util/BothDirList.cpp
+@@ -0,0 +1,80 @@
++#include "Game/Util/BothDirList.hpp"
++
++namespace MR {
++    BothDirPtrLink::BothDirPtrLink(void* pLink) : mValue(pLink), mList(nullptr), mPrevLink(nullptr), mNextLink(nullptr) {
++    }
++
++    BothDirPtrLink::~BothDirPtrLink() {
++        if (mList) {
++            mList->remove(this);
++        }
++    }
++
++    BothDirPtrList::~BothDirPtrList() {
++        BothDirPtrLink* pLink = mHead;
++        u32 i = 0;
++        while (i < mCount) {
++            pLink->mList = nullptr;
++            i++;
++            pLink = pLink->mNextLink;
++        }
++    }
++
++    void BothDirPtrList::initiate() {
++        mHead = nullptr;
++        mTail = nullptr;
++        mCount = 0;
++    }
++
++    void BothDirPtrList::setFirst(BothDirPtrLink* pFirst) {
++        pFirst->mList = this;
++        pFirst->mPrevLink = nullptr;
++        pFirst->mNextLink = nullptr;
++        mTail = pFirst;
++        mHead = pFirst;
++        mCount = 1;
++    }
++
++    bool BothDirPtrList::append(BothDirPtrLink* pLink) {
++        bool success = !pLink->mList;
++        if (!success) {
++            success = pLink->mList->remove(pLink);
++        }
++        if (success) {
++            if (mCount == 0) {
++                setFirst(pLink);
++            } else {
++                pLink->mList = this;
++                pLink->mPrevLink = mTail;
++                pLink->mNextLink = nullptr;
++
++                mTail->mNextLink = pLink;
++                mTail = pLink;
++                mCount++;
++            }
++        }
++        return success;
++    }
++
++    bool BothDirPtrList::remove(BothDirPtrLink* pLink) {
++        bool success = pLink->mList == this;
++        if (success) {
++            if (mCount == 1) {
++                mHead = nullptr;
++                mTail = nullptr;
++            } else if (pLink == mHead) {
++                pLink->mNextLink->mPrevLink = nullptr;
++                mHead = pLink->mNextLink;
++            } else if (pLink == mTail) {
++                pLink->mPrevLink->mNextLink = nullptr;
++                mTail = pLink->mPrevLink;
++            } else {
++                pLink->mPrevLink->mNextLink = pLink->mNextLink;
++                pLink->mNextLink->mPrevLink = pLink->mPrevLink;
++            }
++            pLink->mList = nullptr;
++            mCount--;
++        }
++        return success;
++    }
++};  // namespace MR
+--- /dev/null
++++ b/pc-port/src/Game/Util/BothDirList.hpp
+@@ -0,0 +1,58 @@
++#pragma once
++
++#include <revolution.h>
++
++namespace MR {
++
++    class BothDirPtrList;
++
++    class BothDirPtrLink {
++    public:
++        BothDirPtrLink(void*);
++        ~BothDirPtrLink();
++
++        /* 0x0 */ void* mValue;
++        /* 0x4 */ BothDirPtrList* mList;
++        /* 0x8 */ BothDirPtrLink* mPrevLink;
++        /* 0xC */ BothDirPtrLink* mNextLink;
++    };
++
++    class BothDirPtrList {
++    public:
++        BothDirPtrList(bool doInit) {
++            if (doInit) {
++                initiate();
++            }
++        }
++        ~BothDirPtrList();
++
++        void initiate();
++        void setFirst(BothDirPtrLink*);
++        bool append(BothDirPtrLink*);
++        bool remove(BothDirPtrLink*);
++
++        /* 0x0 */ BothDirPtrLink* mHead;
++        /* 0x4 */ BothDirPtrLink* mTail;
++        /* 0x8 */ u32 mCount;
++    };
++
++    template < class T >
++    class BothDirLink : public BothDirPtrLink {
++    public:
++        BothDirLink(T* pValue) : BothDirPtrLink(pValue) {
++        }
++
++        ~BothDirLink() NO_INLINE {
++        }
++    };
++
++    template < class T >
++    class BothDirList : public BothDirPtrList {
++    public:
++        BothDirList(bool param1) : BothDirPtrList(param1) {
++        }
++
++        ~BothDirList() {
++        }
++    };
++};  // namespace MR
+--- a/pc-port/src/Game/Util/JMapUtil.hpp
++++ b/pc-port/src/Game/Util/JMapUtil.hpp
+@@ -104,3 +104,7 @@
+         return rIter.getValue< T >(pName, pOut);
+     }
+ }  // namespace MR
++
++namespace MR {
++    bool getJMapInfoShapeIdWithInit(const JMapInfoIter&, s32*);
++}
+--- /dev/null
++++ b/pc-port/src/compat/OriginalPlacementJMap.cpp
+@@ -0,0 +1,7 @@
++#include "Game/Util/JMapUtil.hpp"
++
++namespace MR {
++    bool getJMapInfoShapeIdWithInit(const JMapInfoIter& rIter, s32* pShapeID) {
++        return rIter.getValue< s32 >("ShapeModelNo", pShapeID);
++    }
++}

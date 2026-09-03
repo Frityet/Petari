@@ -1,0 +1,32 @@
+[
+  {
+    "path": "pc-port/src/Game/Scene/PlacementInfoOrdered.cpp",
+    "staged": "build/original-placement-info-ordered-20260903/staged/Game/Scene/PlacementInfoOrdered.cpp",
+    "sha256": "09bca7c0677fbb13b8f759ea97fa304e7fdc25b0748349745056f87d7916df87"
+  },
+  {
+    "path": "pc-port/src/Game/Scene/PlacementInfoOrdered.hpp",
+    "staged": "build/original-placement-info-ordered-20260903/staged/Game/Scene/PlacementInfoOrdered.hpp",
+    "sha256": "b34ed9e64f6114671294b96817d9be74aeb9dc4e2afd862a2a4a7c295d5e5424"
+  },
+  {
+    "path": "pc-port/src/Game/Util/BothDirList.cpp",
+    "staged": "build/original-placement-info-ordered-20260903/staged/Game/Util/BothDirList.cpp",
+    "sha256": "4caf1aef9aac80b13a03dfd41a2fcf74e8a854ae377192798337e3b462141d5e"
+  },
+  {
+    "path": "pc-port/src/Game/Util/BothDirList.hpp",
+    "staged": "build/original-placement-info-ordered-20260903/staged/Game/Util/BothDirList.hpp",
+    "sha256": "9d888a317b7b0f01356a6251d298e547edb6547c9cbc6f7a6855bf8d039a71a1"
+  },
+  {
+    "path": "pc-port/src/Game/Util/JMapUtil.hpp",
+    "staged": "build/original-placement-info-ordered-20260903/staged/Game/Util/JMapUtil.hpp",
+    "sha256": "32a90ab04de47efd20191144ff1834734ba9ca3b5153e5a484026355aafb7830"
+  },
+  {
+    "path": "pc-port/src/compat/OriginalPlacementJMap.cpp",
+    "staged": "build/original-placement-info-ordered-20260903/staged/compat/OriginalPlacementJMap.cpp",
+    "sha256": "7350db3a162fe82e94f3ad2dc5c8f9c51205e5a98ac35c75f70ece5061db00f8"
+  }
+]

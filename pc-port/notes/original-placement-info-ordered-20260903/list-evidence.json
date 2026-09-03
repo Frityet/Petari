@@ -1,0 +1,41 @@
+{
+  "preimage_commit": "849e6b233",
+  "same_bool_constructor_body_moved_inline": true,
+  "remaining_methods": [
+    {
+      "symbol": "__ct__Q22MR14BothDirPtrLinkFPv",
+      "bytes": 24,
+      "instructions_and_relocations_equal": true
+    },
+    {
+      "symbol": "__dt__Q22MR14BothDirPtrLinkFv",
+      "bytes": 100,
+      "instructions_and_relocations_equal": true
+    },
+    {
+      "symbol": "remove__Q22MR14BothDirPtrListFPQ22MR14BothDirPtrLink",
+      "bytes": 172,
+      "instructions_and_relocations_equal": true
+    },
+    {
+      "symbol": "initiate__Q22MR14BothDirPtrListFv",
+      "bytes": 20,
+      "instructions_and_relocations_equal": true
+    },
+    {
+      "symbol": "__dt__Q22MR14BothDirPtrListFv",
+      "bytes": 108,
+      "instructions_and_relocations_equal": true
+    },
+    {
+      "symbol": "setFirst__Q22MR14BothDirPtrListFPQ22MR14BothDirPtrLink",
+      "bytes": 36,
+      "instructions_and_relocations_equal": true
+    },
+    {
+      "symbol": "append__Q22MR14BothDirPtrListFPQ22MR14BothDirPtrLink",
+      "bytes": 164,
+      "instructions_and_relocations_equal": true
+    }
+  ]
+}
