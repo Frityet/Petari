@@ -1,0 +1,166 @@
+{
+  "command": [
+    "build/tools/wibo",
+    "build/tools/sjiswrap.exe",
+    "build/compilers/GC/3.0a3/mwcceppc.exe",
+    "-nodefaults",
+    "-proc",
+    "gekko",
+    "-align",
+    "powerpc",
+    "-enum",
+    "int",
+    "-fp",
+    "hardware",
+    "-Cpp_exceptions",
+    "off",
+    "-O4,s",
+    "-inline",
+    "auto",
+    "-pragma",
+    "cats off",
+    "-pragma",
+    "warn_notinlined off",
+    "-maxerrors",
+    "1",
+    "-nosyspath",
+    "-RTTI",
+    "off",
+    "-str",
+    "reuse",
+    "-enc",
+    "SJIS",
+    "-sdata",
+    "4",
+    "-sdata2",
+    "4",
+    "-ipa",
+    "file",
+    "-sym",
+    "on",
+    "-i",
+    "include",
+    "-i",
+    "libs/JSystem/include",
+    "-i",
+    "libs/MSL_C++/include",
+    "-i",
+    "libs/MSL_C/include",
+    "-i",
+    "libs/MetroTRK/include",
+    "-i",
+    "libs/RVLFaceLib/include",
+    "-i",
+    "libs/RVL_SDK/include",
+    "-i",
+    "libs/Runtime/include",
+    "-i",
+    "libs/nw4r/include",
+    "-i",
+    "build/RMGK01/include",
+    "-DVERSION=0",
+    "-c",
+    "src/Game/Player/MarioSound.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/build/original-mario-sound-20260903/MarioSound-retail.o"
+  ],
+  "source_sha256": "0ce1c03c546e29f2a424235e937eee8f0892e04cfc9cfac0aede0dc1222558e0",
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "exact": [
+    {
+      "name": "startBas__5MarioFPCcbff",
+      "address": "0x802f2cd8",
+      "bytes": 220,
+      "fully_relocated_bytes_equal": true,
+      "relocations": [
+        {
+          "offset": 24,
+          "kind": 10,
+          "symbol": "_savegpr_27",
+          "addend": 0
+        },
+        {
+          "offset": 68,
+          "kind": 10,
+          "symbol": "getResourceHolder__2MRFPC9LiveActor",
+          "addend": 0
+        },
+        {
+          "offset": 96,
+          "kind": 10,
+          "symbol": "isExistRes__8ResTableCFPCc",
+          "addend": 0
+        },
+        {
+          "offset": 116,
+          "kind": 10,
+          "symbol": "getRes__8ResTableCFPCc",
+          "addend": 0
+        },
+        {
+          "offset": 160,
+          "kind": 10,
+          "symbol": "startAnimation__16JAUSoundAnimatorFPC17JAUSoundAnimationbff",
+          "addend": 0
+        },
+        {
+          "offset": 180,
+          "kind": 10,
+          "symbol": "removeAnimation__16JAUSoundAnimatorFv",
+          "addend": 0
+        },
+        {
+          "offset": 200,
+          "kind": 10,
+          "symbol": "_restgpr_27",
+          "addend": 0
+        }
+      ]
+    },
+    {
+      "name": "isRunningBas__5MarioCFPCc",
+      "address": "0x802f2db4",
+      "bytes": 60,
+      "fully_relocated_bytes_equal": true,
+      "relocations": [
+        {
+          "offset": 32,
+          "kind": 10,
+          "symbol": "strcmp",
+          "addend": 0
+        }
+      ]
+    },
+    {
+      "name": "skipBas__5MarioFf",
+      "address": "0x802f2df0",
+      "bytes": 12,
+      "fully_relocated_bytes_equal": true,
+      "relocations": [
+        {
+          "offset": 8,
+          "kind": 10,
+          "symbol": "skip__17AudAnmSoundObjectFf",
+          "addend": 0
+        }
+      ]
+    }
+  ],
+  "fuzzy_only": [
+    {
+      "name": "initSoundTable__5MarioFP9SoundListUl",
+      "match_percent": 99.0,
+      "bytes": "200"
+    },
+    {
+      "name": "playSoundJ__5MarioFPCcl",
+      "match_percent": 97.77273,
+      "bytes": "440"
+    },
+    {
+      "name": "stopSoundJ__5MarioFPCcUl",
+      "match_percent": 98.01588,
+      "bytes": "252"
+    }
+  ]
+}

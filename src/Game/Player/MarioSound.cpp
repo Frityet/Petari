@@ -1680,15 +1680,12 @@ SoundList soundlist[] = {
 struct SoundSwapList {
     const char* name;
 
-    u32 offset1;
-    u32 offset2;
-    u32 offset3;
+    u32 offsets[3];
 };
 
-SoundSwapList soundswaplist[] = {{"", 0, 0, 0}};
+SoundSwapList soundswaplist[] = {{"", {0, 0, 0}}};
 
 u32 Mario::initSoundTable(SoundList* list, u32 globalTablePosition) {
-    u32* pSwapOffset = reinterpret_cast< u32* >(soundswaplist) + globalTablePosition;
     u32 count = 0;
     s32 i = 0;
     while (true) {
@@ -1709,7 +1706,7 @@ u32 Mario::initSoundTable(SoundList* list, u32 globalTablePosition) {
                 }
 
                 if (strcmp(pEntry->name, pSwapEntry->name) == 0) {
-                    u32 soundID = pSwapOffset[swapIndex * 4];
+                    u32 soundID = soundswaplist[swapIndex].offsets[globalTablePosition - 1];
                     if (soundID != 0) {
                         pEntry->_14 = soundID;
                     }
@@ -1740,7 +1737,7 @@ void Mario::initSound() {
 void Mario::playSoundJ(const char* pSoundName, s32 timing) {
     u32 index;
     if (_96C->search(pSoundName, &index)) {
-        switch (soundlist[index]._8._4[0] & 0x3) {
+        switch ((soundlist[index]._8._0 >> 24) & 0x3) {
         case 0:
             MR::startSound(mActor, soundlist[index]._14, timing);
             break;
@@ -1758,7 +1755,7 @@ void Mario::playSoundJ(const char* pSoundName, s32 timing) {
             break;
         }
 
-        switch (soundlist[index]._8._4[0] & ~0x3) {
+        switch ((soundlist[index]._8._0 >> 24) & ~0x3) {
         case 0x4:
         case 0x8:
             if (mDrawStates.mIsUnderwater || mDrawStates._13) {
@@ -1777,7 +1774,7 @@ void Mario::playSoundJ(const char* pSoundName, s32 timing) {
 void Mario::stopSoundJ(const char* pSoundName, u32 delay) {
     u32 index;
     if (_96C->search(pSoundName, &index)) {
-        switch (soundlist[index]._8._4[0] & 0x3) {
+        switch ((soundlist[index]._8._0 >> 24) & 0x3) {
         case 0:
             MR::stopSound(mActor, soundlist[index]._14, delay);
             break;
