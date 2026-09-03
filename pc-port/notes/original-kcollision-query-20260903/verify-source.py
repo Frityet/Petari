@@ -38,24 +38,25 @@ def canonicalize(sides, objects, name, dol):
     changes = []
     if name.startswith("KCHitArrow__"):
         rows = [[row for row in side["instructions"] if "instruction" in row] for side in sides]
-        expected = ["lfs f2, 0x8(r1)", "addi r3, r1, 0x8", "lfs f1, 0xc(r1)", "addi r4, r1, 0x14",
-                    "lfs f0, 0x10(r1)", "fmuls f2, f2, f31", "fmuls f1, f1, f31", "fmuls f0, f0, f31",
-                    "stfs f2, 0x8(r1)", "stfs f1, 0xc(r1)", "stfs f0, 0x10(r1)"]
-        assert [row["instruction"]["formatted"] for row in rows[1][52:63]] == expected
-        assert [row["instruction"]["formatted"] for row in rows[0][52:57]] == [
-            "fmr f1, f31", "addi r3, r1, 0x8", "bl scale__Q29JGeometry8TVec3<f>Ff", "addi r3, r1, 0x8", "addi r4, r1, 0x14"]
-        # The actual callee loads all XYZ first, multiplies each by f1 with
-        # fmuls, then stores all three. This is the expanded block above with
-        # the caller's f31 scalar and stack-vector address substituted.
-        assert reader.dol_bytes(dol, 0x800200D0, 0x28).hex() == (
-            "c0630000c0430004c0030008ec630072ec420072ec000072d0630000d0430004d00300084e800020")
-        start = int(rows[1][52]["instruction"]["address"])
-        replacement = copy.deepcopy(rows[0][52:57])
-        for index, row in enumerate(replacement):
-            row["instruction"]["address"] = str(start + index * 4)
-        rows[1][52:63] = replacement
-        sides[1]["instructions"] = rows[1]
-        changes.append("One inlined TVec3f::scale: validated every XYZ load/multiply/store against the raw retail callee at 0x800200d0. Caller argument setup and dead scratch FPRs differ.")
+        if len(rows[1]) != len(rows[0]):
+            expected = ["lfs f2, 0x8(r1)", "addi r3, r1, 0x8", "lfs f1, 0xc(r1)", "addi r4, r1, 0x14",
+                        "lfs f0, 0x10(r1)", "fmuls f2, f2, f31", "fmuls f1, f1, f31", "fmuls f0, f0, f31",
+                        "stfs f2, 0x8(r1)", "stfs f1, 0xc(r1)", "stfs f0, 0x10(r1)"]
+            assert [row["instruction"]["formatted"] for row in rows[1][52:63]] == expected
+            assert [row["instruction"]["formatted"] for row in rows[0][52:57]] == [
+                "fmr f1, f31", "addi r3, r1, 0x8", "bl scale__Q29JGeometry8TVec3<f>Ff", "addi r3, r1, 0x8", "addi r4, r1, 0x14"]
+            # The actual callee loads all XYZ first, multiplies each by f1 with
+            # fmuls, then stores all three. This is the expanded block above with
+            # the caller's f31 scalar and stack-vector address substituted.
+            assert reader.dol_bytes(dol, 0x800200D0, 0x28).hex() == (
+                "c0630000c0430004c0030008ec630072ec420072ec000072d0630000d0430004d00300084e800020")
+            start = int(rows[1][52]["instruction"]["address"])
+            replacement = copy.deepcopy(rows[0][52:57])
+            for index, row in enumerate(replacement):
+                row["instruction"]["address"] = str(start + index * 4)
+            rows[1][52:63] = replacement
+            sides[1]["instructions"] = rows[1]
+            changes.append("One inlined TVec3f::scale: validated every XYZ load/multiply/store against the raw retail callee at 0x800200d0. Caller argument setup and dead scratch FPRs differ.")
     canonical = [proof.normalize(side, obj.references(name), "lifecycle", bool(index))
                  for index, (side, obj) in enumerate(zip(sides, objects))]
     if name.startswith("KCHitSphere"):

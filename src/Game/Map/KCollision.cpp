@@ -4,6 +4,7 @@
 #include "Game/Map/CollisionDirector.hpp"
 #include "Game/Util/JMapInfo.hpp"
 #include "Game/Util/MathUtil.hpp"
+#include <algorithm>
 
 void DUMMY_KColloision() {
     TVec3f a, b, c;
@@ -95,6 +96,414 @@ bool KCollisionServer::calcFarthestVertexDistance() {
 
 bool KCollisionServer::isBinaryInitialized(const void* pData) {
     return reinterpret_cast< const s32* >(pData)[0] < 0;
+}
+
+u32 KCollisionServer::checkSphere(Fxyz* pPos, f32 radius, f32 scale, u32 capacity, KC_PrismData** pPrisms, f32* pDistances, u8* pFeatures) {
+    f32 distance = 0.0f;
+    u16* pLongestList = nullptr;
+    u16* pPreviousList = nullptr;
+    u32 count = 0;
+    TVec3f maximum;
+    maximum.x = pPos->x + radius;
+    maximum.y = pPos->y + radius;
+    maximum.z = pPos->z + radius;
+    TVec3f minimum;
+    minimum.x = pPos->x - radius;
+    minimum.y = pPos->y - radius;
+    minimum.z = pPos->z - radius;
+    V3u localMinimum;
+    V3u localMaximum;
+
+    if (!outCheck(&minimum, &maximum, &localMinimum, &localMaximum)) {
+        return 0;
+    }
+
+    u32 z = localMinimum.z;
+
+    do {
+        u32 y = localMinimum.y;
+        s32 stepZ = 1000000;
+
+        do {
+            u32 x = localMinimum.x;
+            s32 stepY = 1000000;
+            s32 longestY = 0;
+
+            do {
+                s32 shift;
+                u16* pList = reinterpret_cast< u16* >(searchBlock(&shift, x, y, z));
+                s32 width = 1 << shift;
+                s32 mask = width - 1;
+                s32 remainingZ = width - (z & mask);
+                s32 stepX = width - (x & mask);
+                s32 remainingY = width - (y & mask);
+
+                if (remainingZ < stepZ) {
+                    stepZ = remainingZ;
+                }
+
+                if (remainingY < stepY) {
+                    stepY = remainingY;
+                }
+
+                if (remainingY > longestY && pList[1] != 0) {
+                    longestY = remainingY;
+                    pLongestList = pList;
+                }
+
+                if (pPreviousList == nullptr || pList != pPreviousList) {
+                    while (*++pList != 0) {
+                        KC_PrismData* pPrism = &mFile->mPrisms[*pList];
+
+                        if (pPrism->mHeight <= 0.0f) {
+                            continue;
+                        }
+
+                        if (std::find(pPrisms, pPrisms + count, static_cast< KC_PrismData* const& >(pPrism)) != pPrisms + count) {
+                            continue;
+                        }
+
+                        u8 feature;
+
+                        if (KCHitSphere(pPrism, pPos, radius, scale, &distance, &feature) && count < capacity &&
+                            std::find(pPrisms, pPrisms + count, static_cast< KC_PrismData* const& >(pPrism)) == pPrisms + count) {
+                            pPrisms[count] = pPrism;
+                            pDistances[count] = distance;
+                            pFeatures[count] = feature;
+                            count++;
+                        }
+                    }
+                }
+
+                x += stepX;
+            } while (x <= static_cast< u32 >(localMaximum.x));
+
+            pPreviousList = pLongestList;
+            y += stepY;
+        } while (y <= static_cast< u32 >(localMaximum.y));
+
+        z += stepZ;
+    } while (z <= static_cast< u32 >(localMaximum.z));
+
+    return count;
+}
+
+u32 KCollisionServer::checkSphereWithThickness(Fxyz* pPos, f32 radius, f32 scale, u32 capacity, KC_PrismData** pPrisms, f32* pDistances,
+                                               u8* pFeatures, f32 thickness) {
+    f32 distance = 0.0f;
+    u16* pLongestList = nullptr;
+    u16* pPreviousList = nullptr;
+    u32 count = 0;
+    TVec3f maximum;
+    maximum.x = pPos->x + radius;
+    maximum.y = pPos->y + radius;
+    maximum.z = pPos->z + radius;
+    TVec3f minimum;
+    minimum.x = pPos->x - radius;
+    minimum.y = pPos->y - radius;
+    minimum.z = pPos->z - radius;
+    V3u localMinimum;
+    V3u localMaximum;
+
+    if (!outCheck(&minimum, &maximum, &localMinimum, &localMaximum)) {
+        return 0;
+    }
+
+    u32 z = localMinimum.z;
+
+    do {
+        u32 y = localMinimum.y;
+        s32 stepZ = 1000000;
+
+        do {
+            u32 x = localMinimum.x;
+            s32 stepY = 1000000;
+            s32 longestY = 0;
+
+            do {
+                s32 shift;
+                u16* pList = reinterpret_cast< u16* >(searchBlock(&shift, x, y, z));
+                s32 width = 1 << shift;
+                s32 mask = width - 1;
+                s32 remainingZ = width - (z & mask);
+                s32 stepX = width - (x & mask);
+                s32 remainingY = width - (y & mask);
+
+                if (remainingZ < stepZ) {
+                    stepZ = remainingZ;
+                }
+
+                if (remainingY < stepY) {
+                    stepY = remainingY;
+                }
+
+                if (remainingY > longestY && pList[1] != 0) {
+                    longestY = remainingY;
+                    pLongestList = pList;
+                }
+
+                if (pPreviousList == nullptr || pList != pPreviousList) {
+                    while (*++pList != 0) {
+                        KC_PrismData* pPrism = &mFile->mPrisms[*pList];
+
+                        if (pPrism->mHeight <= 0.0f) {
+                            continue;
+                        }
+
+                        if (std::find(pPrisms, pPrisms + count, static_cast< KC_PrismData* const& >(pPrism)) != pPrisms + count) {
+                            continue;
+                        }
+
+                        u8 feature;
+
+                        if (KCHitSphereWithThickness(pPrism, pPos, radius, scale, &distance, &feature, thickness) && count < capacity &&
+                            std::find(pPrisms, pPrisms + count, static_cast< KC_PrismData* const& >(pPrism)) == pPrisms + count) {
+                            pPrisms[count] = pPrism;
+                            pDistances[count] = distance;
+                            pFeatures[count] = feature;
+                            count++;
+                        }
+                    }
+                }
+
+                x += stepX;
+            } while (x <= static_cast< u32 >(localMaximum.x));
+
+            pPreviousList = pLongestList;
+            y += stepY;
+        } while (y <= static_cast< u32 >(localMaximum.y));
+
+        z += stepZ;
+    } while (z <= static_cast< u32 >(localMaximum.z));
+
+    return count;
+}
+
+KC_PrismData* KCollisionServer::checkArrow(const TVec3f& rPos, const TVec3f& rOffset, f32* pDistances, u8* pFeatures, u32* pCount,
+                                           KC_PrismData** pPrisms, u32 capacity) const {
+    if (rOffset.x == 0.0f && rOffset.y == 0.0f && rOffset.z == 0.0f) {
+        return nullptr;
+    }
+
+    TVec3f direction(rOffset);
+    f32 travelled = 0.0f;
+    f32 length;
+    MR::separateScalarAndDirection(&length, &direction, direction);
+
+    if (MR::isNearZero(direction)) {
+        return nullptr;
+    }
+
+    TVec3f cursor;
+    V3u cell;
+    TVec3f localStart(rPos);
+    localStart.x -= mFile->mMin.x;
+    localStart.y -= mFile->mMin.y;
+    localStart.z -= mFile->mMin.z;
+    cell.setUsingCast(localStart);
+
+    if (isInsideMinMaxInLocalSpace(cell)) {
+        cursor.set(localStart);
+    } else {
+        TVec3f maximum;
+        maximum.x = static_cast< u32 >(~mFile->mXMask);
+        maximum.y = static_cast< u32 >(~mFile->mYMask);
+        maximum.z = static_cast< u32 >(~mFile->mZMask);
+
+        if (direction.x != 0.0f) {
+            f32 boundary = 0.0f < direction.x ? 0.0f : maximum.x;
+            travelled = (boundary - localStart.x) / direction.x;
+
+            if (0.0f <= travelled && travelled <= length) {
+                TVec3f offset(direction);
+                offset.scale(travelled);
+                cursor.set(offset);
+                cursor += localStart;
+                cell.setUsingCast(cursor);
+
+                if (isInsideMinMaxInLocalSpace(cell)) {
+                    goto beginTraversal;
+                }
+            }
+        }
+
+        if (direction.y != 0.0f) {
+            f32 boundary = 0.0f < direction.y ? 0.0f : maximum.y;
+            travelled = (boundary - localStart.y) / direction.y;
+
+            if (0.0f <= travelled && travelled <= length) {
+                TVec3f offset(direction);
+                offset.scale(travelled);
+                cursor.set(offset);
+                cursor += localStart;
+                cell.setUsingCast(cursor);
+
+                if (isInsideMinMaxInLocalSpace(cell)) {
+                    goto beginTraversal;
+                }
+            }
+        }
+
+        if (direction.z != 0.0f) {
+            f32 boundary = 0.0f < direction.z ? 0.0f : maximum.z;
+            travelled = (boundary - localStart.z) / direction.z;
+
+            if (0.0f <= travelled && travelled <= length) {
+                TVec3f offset(direction);
+                offset.scale(travelled);
+                cursor.set(offset);
+                cursor += localStart;
+                cell.setUsingCast(cursor);
+
+                if (isInsideMinMaxInLocalSpace(cell)) {
+                    goto beginTraversal;
+                }
+            }
+        }
+
+        return nullptr;
+    }
+
+beginTraversal:
+    u32 count = 0;
+    s32 positiveX;
+    s32 positiveY;
+    s32 positiveZ;
+    s32 negativeX;
+    s32 negativeY;
+    s32 negativeZ;
+    s32* pStepX;
+    s32* pStepY;
+    s32* pStepZ;
+    s32 signX;
+    s32 signY;
+    s32 signZ;
+
+    if (direction.x < 0.0f) {
+        pStepX = &negativeX;
+        signX = -1;
+    } else {
+        pStepX = &positiveX;
+        signX = 1;
+    }
+
+    if (direction.y < 0.0f) {
+        pStepY = &negativeY;
+        signY = -1;
+    } else {
+        pStepY = &positiveY;
+        signY = 1;
+    }
+
+    if (direction.z < 0.0f) {
+        pStepZ = &negativeZ;
+        signZ = -1;
+    } else {
+        pStepZ = &positiveZ;
+        signZ = 1;
+    }
+
+    KC_PrismData* pNearest = nullptr;
+
+    do {
+        s32 shift;
+        u16* pList = reinterpret_cast< u16* >(searchBlock(&shift, reinterpret_cast< const u32& >(cell.x), reinterpret_cast< const u32& >(cell.y),
+                                                          reinterpret_cast< const u32& >(cell.z)));
+        s32 width = 1 << shift;
+        s32 mask = width - 1;
+        positiveX = width - (cell.x & mask);
+        positiveY = width - (cell.y & mask);
+        positiveZ = width - (cell.z & mask);
+        negativeX = -(cell.x & mask);
+        negativeY = -(cell.y & mask);
+        negativeZ = -(cell.z & mask);
+
+        if (*pStepX == 0) {
+            *pStepX = signX;
+        }
+
+        if (*pStepY == 0) {
+            *pStepY = signY;
+        }
+
+        if (*pStepZ == 0) {
+            *pStepZ = signZ;
+        }
+
+        f32 nearestDistance = 1.0f;
+        f32 distance = 1.0f;
+
+        while (*++pList != 0) {
+            KC_PrismData* pPrism = &mFile->mPrisms[*pList];
+
+            if (pPrism->mHeight <= 0.0f) {
+                continue;
+            }
+
+            u8 feature = 0;
+
+            if (KCHitArrow(pPrism, rPos, rOffset, &distance, &feature)) {
+                if (pPrisms != nullptr) {
+                    pDistances[count] = distance;
+                    pPrisms[count] = pPrism;
+                    count++;
+
+                    if (distance < nearestDistance) {
+                        nearestDistance = distance;
+                        pNearest = pPrism;
+                    }
+
+                    if (count == capacity) {
+                        if (pCount != nullptr) {
+                            *pCount = count;
+                        }
+
+                        return pNearest;
+                    }
+                } else if (distance < nearestDistance) {
+                    nearestDistance = *pDistances = distance;
+                    pNearest = pPrism;
+                    *pFeatures = feature;
+                }
+            }
+        }
+
+        if (pPrisms == nullptr && pNearest != nullptr) {
+            break;
+        }
+
+        f32 stepX = MR::isNearZero(direction.x) ? 1000000000.0f : *pStepX / direction.x;
+        f32 stepY = MR::isNearZero(direction.y) ? 1000000000.0f : *pStepY / direction.y;
+        f32 stepZ = MR::isNearZero(direction.z) ? 1000000000.0f : *pStepZ / direction.z;
+
+        if (stepY < stepX) {
+            stepX = stepY;
+        }
+
+        if (stepZ < stepX) {
+            stepX = stepZ;
+        }
+
+        if (length - travelled <= stepX) {
+            break;
+        }
+
+        TVec3f offset(direction);
+        offset.scale(stepX);
+        cursor += offset;
+        travelled += stepX;
+        cell.setUsingCast(cursor);
+
+        if (!isInsideMinMaxInLocalSpace(cell)) {
+            break;
+        }
+    } while (travelled < length);
+
+    if (pCount != nullptr) {
+        *pCount = count;
+    }
+
+    return pNearest;
 }
 
 bool KCollisionServer::KCHitSphere(KC_PrismData* pPrism, Fxyz* pPos, f32 radius, f32 scale, f32* pDistance, u8* pFeature) {

@@ -16,7 +16,7 @@
         {
           "offset": "0x174",
           "kind": 109,
-          "symbol": "@3652",
+          "symbol": "@4412",
           "addend": 0,
           "value_hex": "00000000",
           "effective_retail_target": "0x806bc04c"
@@ -24,7 +24,7 @@
         {
           "offset": "0x32c",
           "kind": 109,
-          "symbol": "@3652",
+          "symbol": "@4412",
           "addend": 0,
           "value_hex": "00000000",
           "effective_retail_target": "0x806bc04c"
@@ -32,7 +32,7 @@
         {
           "offset": "0x47c",
           "kind": 109,
-          "symbol": "@3590",
+          "symbol": "@4350",
           "addend": 0,
           "value_hex": "3f800000",
           "effective_retail_target": "0x806bc048"
@@ -40,7 +40,7 @@
         {
           "offset": "0x4f8",
           "kind": 109,
-          "symbol": "@3590",
+          "symbol": "@4350",
           "addend": 0,
           "value_hex": "3f800000",
           "effective_retail_target": "0x806bc048"
@@ -48,7 +48,7 @@
         {
           "offset": "0x574",
           "kind": 109,
-          "symbol": "@3590",
+          "symbol": "@4350",
           "addend": 0,
           "value_hex": "3f800000",
           "effective_retail_target": "0x806bc048"
@@ -70,7 +70,7 @@
         {
           "offset": "0x648",
           "kind": 109,
-          "symbol": "@3652",
+          "symbol": "@4412",
           "addend": 0,
           "value_hex": "00000000",
           "effective_retail_target": "0x806bc04c"
@@ -521,7 +521,7 @@
         {
           "offset": "0x16c",
           "kind": 109,
-          "symbol": "@3652",
+          "symbol": "@4412",
           "addend": 0,
           "value_hex": "00000000",
           "effective_retail_target": "0x806bc04c"
@@ -529,7 +529,7 @@
         {
           "offset": "0x324",
           "kind": 109,
-          "symbol": "@3652",
+          "symbol": "@4412",
           "addend": 0,
           "value_hex": "00000000",
           "effective_retail_target": "0x806bc04c"
@@ -537,7 +537,7 @@
         {
           "offset": "0x438",
           "kind": 109,
-          "symbol": "@3590",
+          "symbol": "@4350",
           "addend": 0,
           "value_hex": "3f800000",
           "effective_retail_target": "0x806bc048"
@@ -545,7 +545,7 @@
         {
           "offset": "0x4b4",
           "kind": 109,
-          "symbol": "@3590",
+          "symbol": "@4350",
           "addend": 0,
           "value_hex": "3f800000",
           "effective_retail_target": "0x806bc048"
@@ -553,7 +553,7 @@
         {
           "offset": "0x530",
           "kind": 109,
-          "symbol": "@3590",
+          "symbol": "@4350",
           "addend": 0,
           "value_hex": "3f800000",
           "effective_retail_target": "0x806bc048"
@@ -575,7 +575,7 @@
         {
           "offset": "0x5f8",
           "kind": 109,
-          "symbol": "@3652",
+          "symbol": "@4412",
           "addend": 0,
           "value_hex": "00000000",
           "effective_retail_target": "0x806bc04c"
@@ -1003,12 +1003,10 @@
       "name": "KCHitArrow__16KCollisionServerCFP12KC_PrismDataRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PfPUc",
       "address": "0x80185448",
       "retail_size": 704,
-      "compiled_size": 728,
-      "objdiff_match_percent": 95.392044,
+      "compiled_size": 704,
+      "objdiff_match_percent": 99.77273,
       "all_canonical_instructions_equal": true,
-      "normalization": [
-        "One inlined TVec3f::scale: validated every XYZ load/multiply/store against the raw retail callee at 0x800200d0. Caller argument setup and dead scratch FPRs differ."
-      ],
+      "normalization": [],
       "relocations": [
         {
           "offset": "0x18",
@@ -1034,7 +1032,7 @@
         {
           "offset": "0x6c",
           "kind": 109,
-          "symbol": "@3652",
+          "symbol": "@4412",
           "addend": 0,
           "value_hex": "00000000",
           "effective_retail_target": "0x806bc04c"
@@ -1049,7 +1047,7 @@
         {
           "offset": "0xa0",
           "kind": 109,
-          "symbol": "@3652",
+          "symbol": "@4412",
           "addend": 0,
           "value_hex": "00000000",
           "effective_retail_target": "0x806bc04c"
@@ -1062,83 +1060,90 @@
           "effective_retail_target": "0x80018ef0"
         },
         {
-          "offset": "0xfc",
+          "offset": "0xd8",
+          "kind": 10,
+          "symbol": "scale__Q29JGeometry8TVec3<f>Ff",
+          "addend": 0,
+          "effective_retail_target": "0x800200d0"
+        },
+        {
+          "offset": "0xe4",
           "kind": 10,
           "symbol": "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
           "addend": 0,
           "effective_retail_target": "0x80018f04"
         },
         {
-          "offset": "0x124",
+          "offset": "0x10c",
           "kind": 10,
           "symbol": "PSVECDotProduct",
           "addend": 0,
           "effective_retail_target": "0x804b911c"
         },
         {
-          "offset": "0x128",
+          "offset": "0x110",
           "kind": 109,
-          "symbol": "@3752",
+          "symbol": "@4689",
           "addend": 0,
           "value_hex": "3c23d70a",
           "effective_retail_target": "0x806bc05c"
         },
         {
-          "offset": "0x144",
+          "offset": "0x12c",
           "kind": 109,
-          "symbol": "@3652",
+          "symbol": "@4412",
           "addend": 0,
           "value_hex": "00000000",
           "effective_retail_target": "0x806bc04c"
         },
         {
-          "offset": "0x17c",
+          "offset": "0x164",
           "kind": 10,
           "symbol": "PSVECDotProduct",
           "addend": 0,
           "effective_retail_target": "0x804b911c"
         },
         {
-          "offset": "0x180",
+          "offset": "0x168",
           "kind": 109,
-          "symbol": "@3752",
+          "symbol": "@4689",
           "addend": 0,
           "value_hex": "3c23d70a",
           "effective_retail_target": "0x806bc05c"
         },
         {
-          "offset": "0x19c",
+          "offset": "0x184",
           "kind": 109,
-          "symbol": "@3652",
+          "symbol": "@4412",
           "addend": 0,
           "value_hex": "00000000",
           "effective_retail_target": "0x806bc04c"
         },
         {
-          "offset": "0x1d4",
+          "offset": "0x1bc",
           "kind": 10,
           "symbol": "PSVECDotProduct",
           "addend": 0,
           "effective_retail_target": "0x804b911c"
         },
         {
-          "offset": "0x1d8",
+          "offset": "0x1c0",
           "kind": 109,
-          "symbol": "@3752",
+          "symbol": "@4689",
           "addend": 0,
           "value_hex": "3c23d70a",
           "effective_retail_target": "0x806bc05c"
         },
         {
-          "offset": "0x1fc",
+          "offset": "0x1e4",
           "kind": 109,
-          "symbol": "@3652",
+          "symbol": "@4412",
           "addend": 0,
           "value_hex": "00000000",
           "effective_retail_target": "0x806bc04c"
         },
         {
-          "offset": "0x2c4",
+          "offset": "0x2ac",
           "kind": 10,
           "symbol": "_restgpr_25",
           "addend": 0,
@@ -1326,7 +1331,7 @@
     }
   ],
   "source_sha256": {
-    "src/Game/Map/KCollision.cpp": "753d8e4e748d3029d30b14b700032df401f5478f069240fff31c7cb4a03b0db1",
+    "src/Game/Map/KCollision.cpp": "78871c96ae82e5b3e33040a135684daf2666d51ac6fb2d0d6e1636e546f70fe0",
     "include/Game/Map/KCollision.hpp": "0df72064d6cdcb9f8feb746ef331e27db7f846c492347a062237390322ef1d3c"
   },
   "scope": "Root prism narrow-phase recovery only. No native owner/query activation or runtime test claim."

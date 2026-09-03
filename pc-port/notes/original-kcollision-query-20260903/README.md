@@ -9,16 +9,20 @@ scene owner, or gameplay code was changed.
 | --- | --- | ---: | ---: |
 | `KCHitSphere` | `0x80184640` | 1,712 | 99.81309% |
 | `KCHitSphereWithThickness` | `0x80184CF0` | 1,660 | 99.80723% |
-| `KCHitArrow` | `0x80185448` | 704 | 95.392044% |
+| `KCHitArrow` | `0x80185448` | 704 | 99.77273% |
 
 The group covers **4,076 retail bytes / 1,019 instructions**. The original
 compiler produces identical instruction graphs for both sphere routines with
 only computational `f30`/`f31` allocation exchanged. Their ABI save/restore
-instructions are unchanged. The line routine differs solely because the
-compiler inlines `TVec3f::scale` into this incomplete TU; its compiled body is
-24 bytes longer. The verifier checks every expanded XYZ load, rounded multiply,
-and store against the actual retail callee at `0x800200D0`, then compares all
-remaining instructions, branch destinations, constants, and call relocations.
+instructions are unchanged. After the subsequent octree traversal recovery,
+the line routine also retains its original out-of-line `TVec3f::scale` call;
+its compiled body is now the original 704 bytes and every canonical
+instruction matches. At the initial narrow-phase checkpoint, the compiler
+instead inlined that call into the incomplete TU (95.392044%, 24 bytes
+longer). The verifier retains an explicit check for that earlier compiler
+form, validating each expanded XYZ load, rounded multiply and store against
+the actual retail callee at `0x800200D0`. Current evidence uses the
+out-of-line form, without that normalization.
 
 Run from the repository root:
 
@@ -84,12 +88,12 @@ feature 1–7.
 
 ## Remaining integration
 
-These are prism-level tests. The root octree traversal methods
-`checkSphere`, `checkSphereWithThickness`, and `checkArrow` still need recovery,
-including their cell stepping, duplicate suppression, output ordering and
-capacity contracts. Original keeper point/sphere/line/area queries also remain
-missing. The five recovered CollisionParts wrappers and their source proof
-are documented in `../original-collision-parts-owner-20260903/README.md`.
+These are prism-level tests. The subsequent root octree traversal recovery is
+documented in `../original-kcollision-traversal-20260903/README.md`, including
+cell stepping, duplicate suppression, output ordering and capacity contracts.
+Original keeper point/sphere/line/area queries remain missing. The five
+recovered CollisionParts wrappers and their source proof are documented in
+`../original-collision-parts-owner-20260903/README.md`.
 
 Native activation still requires actual placed CollisionParts, category
 keepers, full scenario ZoneList ownership, camera-code collection through
