@@ -40,8 +40,6 @@ namespace MR {
             throw std::invalid_argument("Actor light lookup requires a LiveActor.");
         }
         auto &scheduler = require_scheduler(const_cast<LiveActor *>(actor));
-        if (const auto type = scheduler.light_type_for_actor(*actor); type.has_value()) {
-            MR::initActorLightInfoLightType(const_cast<LiveActor *>(actor), *type);
-        }
+        scheduler.find_actor_light_info(*const_cast<LiveActor *>(actor));
     }
 }

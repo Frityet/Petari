@@ -25,6 +25,7 @@ namespace smgpc::resource {
         GameResourceRuntime& operator=(const GameResourceRuntime&) = delete;
         [[nodiscard]] std::shared_ptr<compat::JkrAllocationDomain> create_cohort() const;
         [[nodiscard]] const std::shared_ptr<Mem1ResourceHeap>& mem1_heap() const noexcept;
+        [[nodiscard]] const std::shared_ptr<compat::JkrHeapRuntime>& host_heaps() const noexcept;
         [[nodiscard]] const GameResourceBudget& budget() const noexcept;
 
     private:

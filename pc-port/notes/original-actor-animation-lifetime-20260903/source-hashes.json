@@ -1,0 +1,11 @@
+{
+  "compat/MarioAnimatorLifetime.cpp": "c7b4213db874b3f42da3d1c9fa27c8ae6a23b51c0c716a0049448ace023ea151",
+  "compat/MarioAnimatorLifetime.hpp": "37affae70d13950e570a73f3be91ca03d39966cb8ff77001adfe1b31935922f3",
+  "compat/ModelManagerOwner.cpp": "0ddc5721b020b3e8c1d382de48476c091e1a006c1c552ca4bd0fc02482da295c",
+  "compat/ModelManagerOwner.hpp": "a6cf66cb18a2f3976821f0b3cdf387964150cffae647c5a9521a07417b1352da",
+  "Game/Player/MarioAnimator.cpp": "652dd35cbd62b2cbc25a4b7cf901fe3fa1785b4e106b70002ea5222d8c4dd3ed",
+  "compat/ActorRuntimeRegistry.cpp": "0014133424428e6cdf41d9beb429129a44024e986243d6f757ece5e37b7999c0",
+  "compat/ActorRuntimeRegistry.hpp": "2f718809d4a9b807901de63fe2b3d6112bf09ba2b77d24f8b7c1f9b5a88d3a2f",
+  "Game/LiveActor/LiveActor.cpp": "c60f88cc2a63ddf0b57cb88a566f341e83ea2143e0da19cbe279f6730e8516da",
+  "Game/Player/MarioAnimationEfx.cpp": "ff263633f738104b78c5faea847b37f6ed0f3531125b81a04109a4cc5700bd88"
+}

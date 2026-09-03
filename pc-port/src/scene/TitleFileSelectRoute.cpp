@@ -25,11 +25,15 @@ namespace smgpc::scene {
         // title and far phases. Install that ordinary data context before any
         // visual child resolves stage-authored resources.
         runtime.set_current_stage_name("FileSelect");
-        _title_visual = std::make_unique<TitleFileSelectVisual>(runtime);
+        _title_visual = std::make_unique<TitleFileSelectVisual>(runtime, false);
+        // FileSelector::init constructs its camera/items before title starts;
+        // SceneNameObjListExecutor allocates every draw list only afterward.
+        _far_visual = std::make_unique<FileSelectFarVisual>(runtime);
         _title_sequence =
             _title_sequence_children.capture_construction_children([] {
                 return std::make_unique<TitleSequenceProduct>();
             });
+        runtime.scheduler().allocate_draw_buffers();
         _title_sequence->appear();
     }
 
@@ -98,14 +102,14 @@ namespace smgpc::scene {
     }
 
     FileSelectSky *TitleFileSelectRoute::sky() {
-        if (_far_visual != nullptr) {
+        if (_far_visual != nullptr && _far_visual->sky() != nullptr) {
             return _far_visual->sky();
         }
         return _title_visual != nullptr ? _title_visual->sky() : nullptr;
     }
 
     const FileSelectSky *TitleFileSelectRoute::sky() const {
-        if (_far_visual != nullptr) {
+        if (_far_visual != nullptr && _far_visual->sky() != nullptr) {
             return _far_visual->sky();
         }
         return _title_visual != nullptr ? _title_visual->sky() : nullptr;
@@ -120,14 +124,13 @@ namespace smgpc::scene {
     }
 
     void TitleFileSelectRoute::begin_move_to_far() {
-        if (_title_visual == nullptr || _far_visual != nullptr) {
+        if (_title_visual == nullptr || _far_visual == nullptr || _far_visual->sky() != nullptr) {
             throw std::logic_error(
                 "The Title/File Select sky can only enter the far phase once.");
         }
 
         auto handoff = _title_visual->release_sky_for_file_select();
-        _far_visual = std::make_unique<FileSelectFarVisual>(
-            *_runtime, std::move(handoff));
+        _far_visual->begin_far(std::move(handoff));
         _title_visual.reset();
         _state = TitleFileSelectRouteState::MoveToFar;
     }

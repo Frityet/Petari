@@ -1886,6 +1886,11 @@ target("smg-pc-air-actor-route-tests")
     })
 
 target("smg-pc-title-file-select-visual-tests")
+    if is_plat("macosx", "iphoneos") then
+        add_ldflags("-Wl,-dead_strip", {force = true})
+    else
+        add_ldflags("-Wl,--gc-sections", {force = true})
+    end
     set_kind("binary")
     set_default(false)
     set_group("tests/aurora")
@@ -2074,6 +2079,11 @@ target("smg-pc-brk-real-resource-tests")
     })
 
 target("smg-pc-file-select-far-visual-tests")
+    if is_plat("macosx", "iphoneos") then
+        add_ldflags("-Wl,-dead_strip", {force = true})
+    else
+        add_ldflags("-Wl,--gc-sections", {force = true})
+    end
     set_kind("binary")
     set_default(false)
     set_group("tests/aurora")

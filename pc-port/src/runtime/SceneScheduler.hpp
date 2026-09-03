@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <optional>
+#include <memory>
 #include <span>
 #include <string>
 #include <vector>
@@ -16,6 +17,9 @@
 class LiveActor;
 class LayoutActor;
 class NameObj;
+
+namespace smgpc::scene { class SceneDrawBufferService; }
+namespace smgpc::compat { class JkrAllocationDomain; }
 
 namespace smgpc::layout {
     class LayoutRuntime;
@@ -249,6 +253,12 @@ namespace smgpc::runtime {
 
     class SceneScheduler final {
     public:
+        SceneScheduler();
+        ~SceneScheduler();
+        void begin_draw_buffer_registration(std::shared_ptr<smgpc::compat::JkrAllocationDomain>);
+        void allocate_draw_buffers();
+        void retire_draw_buffers();
+        void find_actor_light_info(LiveActor &actor);
         void connect_name_obj(NameObj &obj, s32 movement_type, s32 calc_anim_type, s32 draw_buffer_type, s32 draw_type);
         void disconnect_name_obj(NameObj &obj);
         void connect_draw(NameObj &obj);
@@ -305,6 +315,7 @@ namespace smgpc::runtime {
             s32 draw_buffer_type = -1;
             s32 draw_type = -1;
             bool draw_connected = true;
+            bool has_draw_buffer_registration = false;
             std::size_t order = 0U;
         };
 
@@ -327,6 +338,8 @@ namespace smgpc::runtime {
         void push_message_trace(SceneSchedulerMessageTraceEntry trace);
 #endif
 
+        void refresh_draw_buffer_activation();
+        std::unique_ptr<smgpc::scene::SceneDrawBufferService> _draw_buffers;
         std::vector<Entry> _entries;
 #ifndef NDEBUG
         std::vector<SceneSchedulerEntryState> _last_execution_trace;

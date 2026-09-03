@@ -1,3 +1,4 @@
+#include "Game/AudioLib/AudAnmSoundObject.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 
 #include "Game/LiveActor/ActorLightCtrl.hpp"
@@ -11,7 +12,13 @@
 #include "Game/NameObj/NameObj.hpp"
 #include "compat/CollisionPartsCompat.hpp"
 #include "compat/GameActorSensorCompat.hpp"
-#include "compat/MaterialCtrlCompat.hpp"
+#include "compat/ModelManagerOwner.hpp"
+#include "compat/ResourceHolderCompat.hpp"
+#include "compat/JkrAllocationDomain.hpp"
+#include "Game/LiveActor/ActorAnimKeeper.hpp"
+#include "Game/LiveActor/ActorPadAndCameraCtrl.hpp"
+#include "Game/LiveActor/ModelManager.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
 #include "runtime/RuntimeContext.hpp"
 
 #include <algorithm>
@@ -36,23 +43,12 @@ namespace {
         std::unique_ptr<HitSensor> sensor{};
     };
 
-    struct ActorAnimationRuntimeState {
-        J3DFrameCtrl bck_ctrl{};
-        J3DFrameCtrl brk_ctrl{};
-        bool bck_available = false;
-        bool bck_active = false;
-        bool brk_available = false;
-        bool brk_active = false;
-        std::string current_bck_name{};
-        std::string current_brk_name{};
-        std::string current_btk_name{};
-        std::string current_btp_name{};
-    };
-
     struct LiveActorRuntimeState {
-        smgpc::render::J3dMatrix3x4 base_matrix{};
-        std::unique_ptr<smgpc::render::live_actor::LiveActorModel> model{};
-        ActorAnimationRuntimeState animation{};
+        std::shared_ptr<smgpc::compat::ModelManagerOwner> model_owner{};
+        std::unique_ptr<ActorAnimKeeper> anim_keeper{};
+        std::unique_ptr<ActorPadAndCameraCtrl> camera_ctrl{};
+        std::shared_ptr<smgpc::compat::JkrAllocationDomain> sound_domain{};
+        std::unique_ptr<AudAnmSoundObject> sound_object{};
         std::vector<ActorHitSensorState> hit_sensors{};
         std::optional<smgpc::compat::ActorBinderRuntimeConfig> binder{};
         std::unique_ptr<Binder> binder_provider{};
@@ -388,7 +384,6 @@ namespace smgpc::compat {
 
         release_actor_collision_parts(actor);
         release_actor_sensor_bindings(actor);
-        release_actor_material_ctrl_state(actor);
         release_talk_runtime_state(actor);
         release_demo_runtime_state(actor);
 
@@ -453,338 +448,58 @@ namespace smgpc::compat {
         });
     }
 
-    void initialize_actor_model(LiveActor* actor, const char* model_archive, const char* animation_archive) {
+    void initialize_actor_model(LiveActor* actor, const char* model_archive,
+                                const char* animation_archive, bool create_display_list) {
         auto& state = require_actor_state(actor);
-        auto replacement = std::make_unique<smgpc::render::live_actor::LiveActorModel>(
-            model_archive != nullptr ? model_archive : "", animation_archive != nullptr ? animation_archive : "");
-        replacement->setBaseScale({actor->mScale.x, actor->mScale.y, actor->mScale.z});
-        invalidate_shadow_joint_matrix_bindings(state);
-        state.model = std::move(replacement);
+        if (state.model_owner) {
+            throw std::logic_error("Actor model replacement requires scene draw retirement first");
+        }
+        auto* service = ResourceHolderService::active();
+        if (!service) {
+            throw std::logic_error("Actor ModelManager requires the active scene resource service");
+        }
+        JkrHostAllocationScope host;
+        auto owner = std::make_shared<ModelManagerOwner>(*service, service->allocation_domain(),
+                                                        model_archive, animation_archive, create_display_list);
+        actor->mModelManager = &owner->manager();
+        state.model_owner = std::move(owner);
     }
 
-    smgpc::render::live_actor::LiveActorModel* actor_model(const LiveActor* actor) {
-        const auto found = actor_states().find(actor);
-        return found != actor_states().end() ? found->second.model.get() : nullptr;
+    std::shared_ptr<JkrAllocationDomain> actor_scene_allocation_domain(const LiveActor* actor) {
+        const auto& state = require_actor_state(actor);
+        auto* service = ResourceHolderService::active();
+        if (!service) throw std::logic_error("Actor sound construction requires the active scene resource cohort");
+        if (state.model_owner && state.model_owner->allocation_domain() != service->allocation_domain())
+            throw std::logic_error("Actor model and sound must retain the same scene resource cohort");
+        return service->allocation_domain();
+    }
+
+    void adopt_actor_sound_object(LiveActor* actor, std::shared_ptr<JkrAllocationDomain> domain) {
+        auto& state = require_actor_state(actor);
+        // Retain the old cohort until its captured old object has been destroyed.
+        auto previous_domain = std::move(state.sound_domain);
+        state.sound_domain = std::move(domain);
+        state.sound_object.reset(actor->mSoundObject);
+    }
+
+    void adopt_actor_animation_helpers(LiveActor* actor) {
+        auto& state = require_actor_state(actor);
+        state.anim_keeper.reset(actor->mAnimKeeper);
+        state.camera_ctrl.reset(actor->mCameraCtrl);
+    }
+
+    std::shared_ptr<ModelManagerOwner> retain_actor_model_owner(const LiveActor* actor) {
+        return require_actor_state(actor).model_owner;
     }
 
     std::optional<std::span<const std::uint8_t>>
-    actor_model_resource_data_if_present(
-        const LiveActor* actor, std::string_view resource_name) {
-        auto* model = actor_model(actor);
-        auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
-        if (model == nullptr || runtime == nullptr || resource_name.empty()) {
-            return std::nullopt;
-        }
-        const auto archive_path =
-            runtime->dvd().find_object_archive(model->model_arc_name());
-        if (!archive_path.has_value()) {
-            return std::nullopt;
-        }
-        const auto& archive = runtime->dvd().archive_for_path(*archive_path);
-        if (!archive.contains_resource(resource_name)) {
-            return std::nullopt;
-        }
+    actor_model_resource_data_if_present(const LiveActor* actor, std::string_view resource_name) {
+        if (!actor || !actor->mModelManager || resource_name.empty()) return std::nullopt;
+        auto* service = ResourceHolderService::active();
+        if (!service) return std::nullopt;
+        const auto& archive = service->backing(*MR::getModelResourceHolder(actor)).archive();
+        if (!archive.contains_resource(resource_name)) return std::nullopt;
         return archive.resource_data(resource_name);
-    }
-
-    void require_actor_model(LiveActor* actor) {
-        auto& state = require_actor_state(actor);
-        if (state.model == nullptr) {
-            throw std::logic_error("LiveActor has no native model binding.");
-        }
-        state.model->requireLoaded();
-    }
-
-    std::size_t actor_model_joint_count(const LiveActor* actor) {
-        auto& state = require_actor_state(actor);
-        if (state.model == nullptr) {
-            throw std::logic_error("LiveActor has no native model binding.");
-        }
-        return state.model->joint_count();
-    }
-
-    void release_actor_model_state(const LiveActor* actor) {
-        const auto found = actor_states().find(actor);
-        if (found != actor_states().end()) {
-            invalidate_shadow_joint_matrix_bindings(found->second);
-            found->second.model.reset();
-        }
-    }
-
-    const smgpc::render::J3dMatrix3x4& actor_base_matrix(const LiveActor* actor) {
-        return require_actor_state(actor).base_matrix;
-    }
-
-    void set_actor_base_matrix(LiveActor* actor, const smgpc::render::J3dMatrix3x4& matrix) {
-        require_actor_state(actor).base_matrix = matrix;
-    }
-
-    void set_actor_model_base_scale(LiveActor* actor, const TVec3f& scale) {
-        auto& state = require_actor_state(actor);
-        if (state.model == nullptr) {
-            throw std::logic_error("LiveActor base scale requires a real model binding.");
-        }
-        state.model->setBaseScale({scale.x, scale.y, scale.z});
-    }
-
-    void set_actor_projmap_effect_matrix(LiveActor* actor, const smgpc::render::J3dMatrix3x4& matrix) {
-        if (auto* model = actor_model(actor); model != nullptr) {
-            model->setProjmapEffectMatrix(matrix);
-        }
-    }
-
-    void draw_actor_model(LiveActor* actor, const smgpc::camera::CameraPose& camera_pose,
-                          std::uint64_t frame, smgpc::render::live_actor::LiveActorModel::DrawPass pass) {
-        auto* model = actor_model(actor);
-        if (actor == nullptr || actor->mFlag.mIsDead || actor->mFlag.mIsClipped ||
-            actor->mFlag.mIsHiddenModel || model == nullptr) {
-            return;
-        }
-        model->draw(camera_pose, actor_base_matrix(actor), frame, pass);
-    }
-
-    void draw_actor_model_3d_for_2d(
-        LiveActor* actor,
-        const smgpc::render::Model3DFor2DProjection& projection,
-        std::uint64_t frame,
-        smgpc::render::live_actor::LiveActorModel::DrawPass pass) {
-        auto* model = actor_model(actor);
-        if (actor == nullptr || actor->mFlag.mIsDead || actor->mFlag.mIsClipped ||
-            actor->mFlag.mIsHiddenModel || model == nullptr) {
-            return;
-        }
-        model->drawModel3DFor2D(projection, actor_base_matrix(actor), frame, pass);
-    }
-
-    void start_actor_bck(LiveActor* actor, const char* name, const char* file_name) {
-        auto& state = require_actor_state(actor);
-        auto& animation = state.animation;
-        animation.current_bck_name = name != nullptr ? name : "";
-        auto frame_max = std::optional<std::int16_t>{};
-        if (state.model != nullptr) {
-            frame_max = state.model->startBck(animation.current_bck_name, file_name != nullptr ? file_name : "");
-        }
-        animation.bck_available = frame_max.has_value();
-        animation.bck_active = animation.bck_available;
-        animation.bck_ctrl.init(frame_max.value_or(0));
-        animation.bck_ctrl.setAttribute(
-            state.model != nullptr
-                ? state.model->bck_attribute().value_or(2U)
-                : 2U);
-        if (!animation.bck_available || animation.bck_ctrl.mEnd <= 0) {
-            animation.bck_ctrl.mRate = 0.0F;
-        }
-    }
-
-    std::int16_t require_actor_bck(LiveActor* actor, const char* name, const char* file_name) {
-        auto& state = require_actor_state(actor);
-        if (state.model == nullptr) {
-            throw std::logic_error("LiveActor has no native model binding.");
-        }
-        const auto animation_name = name != nullptr ? std::string_view(name) : std::string_view{};
-        const auto resource_name = file_name != nullptr ? std::string_view(file_name) : std::string_view{};
-        const auto frame_max = state.model->requireBck(animation_name, resource_name);
-        auto& animation = state.animation;
-        animation.current_bck_name = std::string(animation_name);
-        animation.bck_available = true;
-        animation.bck_active = true;
-        animation.bck_ctrl.init(frame_max);
-        animation.bck_ctrl.setAttribute(
-            state.model->bck_attribute().value_or(2U));
-        if (frame_max <= 0) {
-            animation.bck_ctrl.mRate = 0.0F;
-        }
-        return frame_max;
-    }
-
-    void start_actor_brk(LiveActor* actor, const char* name) {
-        auto& state = require_actor_state(actor);
-        auto& animation = state.animation;
-        animation.current_brk_name = name != nullptr ? name : "";
-        auto frame_max = std::optional<std::int16_t>{};
-        if (state.model != nullptr) {
-            frame_max = state.model->startBrk(animation.current_brk_name);
-        }
-        animation.brk_available = frame_max.has_value();
-        animation.brk_active = animation.brk_available;
-        animation.brk_ctrl.init(frame_max.value_or(0));
-        animation.brk_ctrl.setAttribute(
-            state.model != nullptr
-                ? state.model->brk_attribute().value_or(2U)
-                : 2U);
-        if (!animation.brk_available || animation.brk_ctrl.mEnd <= 0) {
-            animation.brk_ctrl.mRate = 0.0F;
-        }
-    }
-
-    void start_actor_btk(LiveActor* actor, const char* name) {
-        auto& state = require_actor_state(actor);
-        state.animation.current_btk_name = name != nullptr ? name : "";
-        if (state.model != nullptr) {
-            (void)state.model->startBtk(state.animation.current_btk_name);
-        }
-    }
-
-    void start_actor_btp(LiveActor* actor, const char* name) {
-        auto& state = require_actor_state(actor);
-        state.animation.current_btp_name = name != nullptr ? name : "";
-        if (state.model != nullptr) {
-            (void)state.model->startBtp(state.animation.current_btp_name);
-        }
-    }
-
-    bool try_start_actor_bck(LiveActor* actor, const char* name, const char* file_name) {
-        auto& state = require_actor_state(actor);
-        const auto animation_name = name != nullptr ? std::string_view(name) : std::string_view{};
-        const auto resource_name = file_name != nullptr ? std::string_view(file_name) : std::string_view{};
-        if (state.model == nullptr || !state.model->hasBck(animation_name, resource_name)) {
-            return false;
-        }
-        start_actor_bck(actor, name, file_name);
-        return true;
-    }
-
-    bool try_start_actor_brk(LiveActor* actor, const char* name) {
-        auto& state = require_actor_state(actor);
-        const auto animation_name = name != nullptr ? std::string_view(name) : std::string_view{};
-        if (state.model == nullptr || !state.model->hasBrk(animation_name)) {
-            return false;
-        }
-        start_actor_brk(actor, name);
-        return true;
-    }
-
-    bool try_start_actor_btk(LiveActor* actor, const char* name) {
-        auto& state = require_actor_state(actor);
-        const auto animation_name = name != nullptr ? std::string_view(name) : std::string_view{};
-        if (state.model == nullptr || !state.model->hasBtk(animation_name)) {
-            return false;
-        }
-        start_actor_btk(actor, name);
-        return true;
-    }
-
-    bool try_start_actor_btp(LiveActor* actor, const char* name) {
-        auto& state = require_actor_state(actor);
-        const auto animation_name = name != nullptr ? std::string_view(name) : std::string_view{};
-        if (state.model == nullptr || !state.model->hasBtp(animation_name)) {
-            return false;
-        }
-        start_actor_btp(actor, name);
-        return true;
-    }
-
-    void set_actor_brk_frame(LiveActor* actor, float frame) {
-        auto& animation = require_actor_state(actor).animation;
-        if (!animation.brk_available) {
-            throw std::logic_error("BRK animation data is unavailable.");
-        }
-        animation.brk_active = true;
-        animation.brk_ctrl.mFrame = frame;
-        if (auto* model = require_actor_state(actor).model.get(); model != nullptr) {
-            model->setBrkFrame(frame);
-        }
-    }
-
-    void set_actor_brk_rate(LiveActor* actor, float rate) {
-        auto& animation = require_actor_state(actor).animation;
-        if (!animation.brk_available) {
-            throw std::logic_error("BRK animation data is unavailable.");
-        }
-        animation.brk_active = true;
-        animation.brk_ctrl.mRate = rate;
-    }
-
-    void set_actor_brk_frame_and_stop(LiveActor* actor, float frame) {
-        set_actor_brk_frame(actor, frame);
-        require_actor_state(actor).animation.brk_ctrl.mRate = 0.0F;
-    }
-
-    void set_actor_brk_frame_end_and_stop(LiveActor* actor) {
-        auto& animation = require_actor_state(actor).animation;
-        set_actor_brk_frame_and_stop(actor, static_cast<float>(animation.brk_ctrl.mEnd));
-    }
-
-    void set_actor_bck_frame_and_stop(LiveActor* actor, float frame) {
-        auto& state = require_actor_state(actor);
-        auto& animation = state.animation;
-        if (!animation.bck_available || state.model == nullptr) {
-            throw std::logic_error("BCK animation data is unavailable.");
-        }
-        animation.bck_active = true;
-        animation.bck_ctrl.mFrame = frame;
-        animation.bck_ctrl.mRate = 0.0F;
-        state.model->setBckFrameAndStop(frame);
-    }
-
-    J3DFrameCtrl* actor_bck_ctrl(const LiveActor* actor) {
-        auto& animation = require_actor_state(actor).animation;
-        return animation.bck_available ? &animation.bck_ctrl : nullptr;
-    }
-
-    J3DFrameCtrl* actor_brk_ctrl(const LiveActor* actor) {
-        auto& animation = require_actor_state(actor).animation;
-        return animation.brk_available ? &animation.brk_ctrl : nullptr;
-    }
-
-    bool is_actor_brk_one_time_and_stopped(const LiveActor* actor) {
-        const auto& animation = require_actor_state(actor).animation;
-        if (!animation.brk_available) {
-            throw std::logic_error("BRK animation state is unavailable.");
-        }
-        return !animation.brk_active || animation.brk_ctrl.mRate == 0.0F ||
-               animation.brk_ctrl.mFrame >= static_cast<float>(animation.brk_ctrl.mEnd);
-    }
-
-    std::string_view actor_current_bck_name(const LiveActor* actor) {
-        return require_actor_state(actor).animation.current_bck_name;
-    }
-
-    std::string_view actor_current_brk_name(const LiveActor* actor) {
-        return require_actor_state(actor).animation.current_brk_name;
-    }
-
-    std::string_view actor_current_btk_name(const LiveActor* actor) {
-        return require_actor_state(actor).animation.current_btk_name;
-    }
-
-    std::string_view actor_current_btp_name(const LiveActor* actor) {
-        return require_actor_state(actor).animation.current_btp_name;
-    }
-
-    void advance_actor_animation(LiveActor* actor) {
-        auto& state = require_actor_state(actor);
-        auto& animation = state.animation;
-        if (animation.bck_active && !animation.bck_ctrl.checkState(1U)) {
-            const auto rate = animation.bck_ctrl.mRate;
-            animation.bck_ctrl.update();
-            if (animation.bck_ctrl.checkState(1U)) {
-                animation.bck_ctrl.mRate = rate;
-            }
-        }
-        if (animation.brk_active && animation.brk_ctrl.mRate != 0.0F) {
-            animation.brk_ctrl.update();
-        }
-        if (animation.brk_active && animation.brk_available &&
-            state.model != nullptr) {
-            state.model->setBrkFrame(animation.brk_ctrl.mFrame);
-        }
-    }
-
-    void synchronize_actor_model_animation(LiveActor* actor) {
-        if (actor == nullptr || actor->mFlag.mIsDead || actor->mFlag.mIsNoCalcAnim) {
-            return;
-        }
-        auto& state = require_actor_state(actor);
-        if (state.model == nullptr) {
-            return;
-        }
-        const auto& animation = state.animation;
-        if (animation.bck_available) {
-            state.model->syncBckFrameController(
-                animation.bck_ctrl.mFrame, animation.bck_ctrl.mRate, animation.bck_ctrl.mState);
-        }
-        state.model->refresh_resolved_joint_matrices(state.base_matrix);
     }
 
     void initialize_actor_hit_sensors(LiveActor* actor, int sensor_count) {
@@ -893,7 +608,7 @@ namespace smgpc::compat {
         auto& state = require_actor_state(actor);
         state.binder = ActorBinderRuntimeConfig{radius, offset, plane_capacity};
         state.binder_provider = std::make_unique<Binder>(
-            reinterpret_cast<MtxPtr>(state.base_matrix.m.data()), &actor->mPosition, &actor->mGravity,
+            actor->getBaseMtx(), &actor->mPosition, &actor->mGravity,
             radius, offset, plane_capacity);
         actor->mBinder = state.binder_provider.get();
         state.binder_contacts = {};
@@ -905,7 +620,7 @@ namespace smgpc::compat {
             state.binder.emplace();
             auto* mutable_actor = const_cast<LiveActor*>(actor);
             state.binder_provider = std::make_unique<Binder>(
-                reinterpret_cast<MtxPtr>(state.base_matrix.m.data()), &mutable_actor->mPosition,
+                actor->getBaseMtx(), &mutable_actor->mPosition,
                 &mutable_actor->mGravity, 0.0F, 0.0F, 0U);
             mutable_actor->mBinder = state.binder_provider.get();
             state.binder_contacts = {};

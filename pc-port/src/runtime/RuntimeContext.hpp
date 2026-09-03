@@ -42,6 +42,8 @@ namespace smgpc::layout {
     class LayoutRuntime;
 }
 
+namespace aurora::audio { class DisabledObjectAudioService; }
+
 namespace smgpc::runtime {
 
     class ScreenAlphaCaptureService;
@@ -236,6 +238,7 @@ namespace smgpc::runtime {
         [[nodiscard]] const RflService &rfl() const;
         [[nodiscard]] CaptureScreenDirector &capture_screen_director();
         [[nodiscard]] const CaptureScreenDirector &capture_screen_director() const;
+        void begin_scene_draw_buffer_registration();
         [[nodiscard]] SceneScheduler &scheduler();
         [[nodiscard]] const SceneScheduler &scheduler() const;
         [[nodiscard]] std::size_t begin_scene_registration_scope();
@@ -321,6 +324,7 @@ namespace smgpc::runtime {
         DvdFileSystemService _dvd;
         std::unique_ptr<JAudioPlaybackService> _j_audio_playback;
         smgpc::compat::ResourceHolderService _resource_holders;
+        std::unique_ptr<aurora::audio::DisabledObjectAudioService> _disabled_object_audio;
         WiiIosService _ios;
         WiiPlatformService _wii_platform;
         WiiVideoService _wii_video;

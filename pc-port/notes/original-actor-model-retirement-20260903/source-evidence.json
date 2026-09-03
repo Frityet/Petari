@@ -1,0 +1,117 @@
+[
+  {
+    "source": "src/Game/Player/MarioAnimator.cpp",
+    "staged": "Game/Player/MarioAnimator.cpp",
+    "sha256": "4cc38a474ac776053660a6f08911a58dca706bacf90268af12b64a87d567f551",
+    "literal_file": false,
+    "staged_sha256": "0d97dea3fb5cc718dcbfad053ba42ed25d68f6d7e284f424d09cea24d4a0b537"
+  },
+  {
+    "source": "src/Game/Player/MarioActorDraw.cpp",
+    "staged": "Game/Player/MarioActorDraw.cpp",
+    "sha256": "a35f3193a38144f91afb791f0d883ebdb035f4ea3d66cd5c977d7b08f087e62f",
+    "literal_file": true,
+    "staged_sha256": "a35f3193a38144f91afb791f0d883ebdb035f4ea3d66cd5c977d7b08f087e62f"
+  },
+  {
+    "source": "src/Game/LiveActor/ActorAnimKeeper.cpp",
+    "staged": "Game/LiveActor/ActorAnimKeeper.cpp",
+    "sha256": "46e13b9a7171dd3c70a053f571ab5a71ccebfa9c0ce096ff2b95224d4eb5f32e",
+    "literal_file": true,
+    "staged_sha256": "46e13b9a7171dd3c70a053f571ab5a71ccebfa9c0ce096ff2b95224d4eb5f32e"
+  },
+  {
+    "source": "src/Game/LiveActor/ActorPadAndCameraCtrl.cpp",
+    "staged": "Game/LiveActor/ActorPadAndCameraCtrl.cpp",
+    "sha256": "d2cdd7ba8bff81a84ea5d1a772a067f850cbc997299d520da39eb652cd896bb4",
+    "literal_file": true,
+    "staged_sha256": "d2cdd7ba8bff81a84ea5d1a772a067f850cbc997299d520da39eb652cd896bb4"
+  },
+  {
+    "source": "src/Game/Util/FixedPosition.cpp",
+    "staged": "Game/Util/FixedPosition.cpp",
+    "sha256": "8dc3c9de84ee642d02d2b505db4e9bf29decd7b9597d7175e466552f1450b662",
+    "literal_file": true,
+    "staged_sha256": "8dc3c9de84ee642d02d2b505db4e9bf29decd7b9597d7175e466552f1450b662"
+  },
+  {
+    "source": "include/Game/LiveActor/ActorAnimKeeper.hpp",
+    "staged": "Game/LiveActor/ActorAnimKeeper.hpp",
+    "sha256": "928547d988f695f1b58971a34d563a1627b5a784497fafe864de5fb9bbeff3d0",
+    "literal_file": true,
+    "staged_sha256": "928547d988f695f1b58971a34d563a1627b5a784497fafe864de5fb9bbeff3d0"
+  },
+  {
+    "source": "include/Game/LiveActor/ActorPadAndCameraCtrl.hpp",
+    "staged": "Game/LiveActor/ActorPadAndCameraCtrl.hpp",
+    "sha256": "80018815db7b72e2b2c5bbbc019b8401f298251e6b492fb1c750e883c21db7c5",
+    "literal_file": true,
+    "staged_sha256": "80018815db7b72e2b2c5bbbc019b8401f298251e6b492fb1c750e883c21db7c5"
+  },
+  {
+    "source": "src/Game/LiveActor/LiveActor.cpp",
+    "function": "LiveActor::calcAnmMtx",
+    "line": 178,
+    "sha256": "242cbddfa04fd2c68c1e9e4b278659d991f8bba53004723f29f38cac4c0fd7c2"
+  },
+  {
+    "source": "src/Game/LiveActor/LiveActor.cpp",
+    "function": "LiveActor::calcViewAndEntry",
+    "line": 188,
+    "sha256": "5cace34e30320144d152a611a7ab27edfd74a9c7250f0abdfa73e5cbc57ad635"
+  },
+  {
+    "source": "src/Game/LiveActor/LiveActor.cpp",
+    "function": "LiveActor::getBaseMtx",
+    "line": 280,
+    "sha256": "aa07c325f2b9ac37654eac51b6666c705be7827efec45e3f5ce98f885e3eb018"
+  },
+  {
+    "source": "src/Game/LiveActor/LiveActor.cpp",
+    "function": "LiveActor::initModelManagerWithAnm",
+    "line": 329,
+    "sha256": "c7e267b96b0a55baa4e8cca9b07db2a58c0d3e20fd22578009102284080a745a"
+  },
+  {
+    "source": "src/Game/Util/LiveActorUtil.cpp",
+    "function": "setClippingTypeSphereContainsModelBoundingBox",
+    "line": 629,
+    "sha256": "7163333011f9d1daf661a5042867b3a00b9dd19ccf9c1bc3e815d845b5cd0cd8"
+  },
+  {
+    "source": "src/Game/Util/ModelUtil.cpp",
+    "function": "isExistEffectTexMtx",
+    "line": 248,
+    "sha256": "e1d025fe8f70bd386e1d5cf8bbee9b671f3494145265dee62faf767ecb073c9a"
+  },
+  {
+    "source": "src/Game/Util/ModelUtil.cpp",
+    "function": "isExistEffectTexMtx",
+    "line": 258,
+    "sha256": "14d75ed0947962482f5ff829a22f2e5bcf71e7de7a5ee18f82ed3951fe4f927b"
+  },
+  {
+    "source": "src/Game/Util/ModelUtil.cpp",
+    "function": "calcModelBoundingBox",
+    "line": 514,
+    "sha256": "1600629d4b08f9c1749c0806d91ea0a3e17aa7c239ad5c76b1575a49cca887db"
+  },
+  {
+    "source": "src/Game/Util/ModelUtil.cpp",
+    "function": "calcModelBoundingRadius",
+    "line": 553,
+    "sha256": "8db19bea42117d064830be039e03b724d71e08b090178f1b5daab6010efcf509"
+  },
+  {
+    "source": "src/Game/Util/ModelUtil.cpp",
+    "function": "isExistCollisionResource",
+    "line": 566,
+    "sha256": "c96430044daef87d94880f9f81b2e0c49865a9a8b7a68932a523fc9582189568"
+  },
+  {
+    "source": "src/Game/Util/LiveActorUtil.cpp",
+    "function": "isExistIndirectTexture",
+    "line": 222,
+    "sha256": "bee5285477af4573aa8a695670d8040a0cf03489c648f098996f7f0b3fdeab06"
+  }
+]

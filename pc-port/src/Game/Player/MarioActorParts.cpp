@@ -4,6 +4,7 @@
 #include "Game/Player/FireMarioBall.hpp"
 #include "Game/Player/JetTurtleShadow.hpp"
 #include "Game/Player/MarioActor.hpp"
+#include "Game/Player/MarioAnimator.hpp"
 #include "Game/Player/MarioConst.hpp"
 #include "Game/Player/MarioNullBck.hpp"
 #include "Game/Player/MarioParts.hpp"
@@ -126,7 +127,7 @@ void MarioActor::updateTornado() {
 // void MarioActor::updateTakingPosition() {}
 
 const HitSensor* MarioActor::getCarrySensor() const {
-    if (_468 == nullptr) {
+    if (_468 == 0) {
         return nullptr;
     }
 
@@ -150,7 +151,42 @@ void MarioActor::changeSpecialModeAnimation(const char* pAnimName) {
     }
 }
 
-// void MarioActor::updateSpecialModeAnimation() {}
+void MarioActor::updateSpecialModeAnimation() {
+    if (!mMario->mMovementStates._A && mMario->getCurrentStatus() == 0) {
+        if (mMario->mMovementStates._1 && mMario->_960 == 0x20 && mMarioAnim->isAnimationStop()) {
+            mMarioAnim->mXanimePlayer->changeTrackAnimation(0, "泥低速歩行");
+            mMarioAnim->mXanimePlayer->changeTrackAnimation(1, "泥高速歩行");
+            _B96 = 2;
+        }
+    } else {
+        _B96 = 0;
+    }
+
+    switch (mPlayerMode) {
+    case 6:
+        updateTeresaAnimation();
+        break;
+    case 4:
+        if (mBeeWallWalk && !isJumping() && mMarioAnim->isAnimationStop()) {
+            mMarioAnim->mXanimePlayer->changeTrackAnimation(0, "ハチ匍匐前進");
+            mMarioAnim->mXanimePlayer->changeTrackAnimation(1, "ハチ匍匐前進");
+            mMarioAnim->mXanimePlayer->changeTrackAnimation(2, "ハチ匍匐前進");
+            mMarioAnim->mXanimePlayer->changeTrackAnimation(3, "ハチ匍匐ウエイト");
+        }
+        break;
+    default:
+        mMario->_418 = 0;
+        break;
+    }
+
+    if (_B96 != 0) {
+        --_B96;
+        if (_B96 == 0 && mMario->mMovementStates._1 && mMarioAnim->isAnimationStop()) {
+            mMarioAnim->mXanimePlayer->changeTrackAnimation(0, "鈍行");
+            mMarioAnim->mXanimePlayer->changeTrackAnimation(1, "歩行");
+        }
+    }
+}
 
 void MarioActor::initFireBall() {
     for (u32 idx = 0; idx < ARRAY_SIZE(_B54); idx++) {

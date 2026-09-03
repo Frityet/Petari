@@ -555,6 +555,7 @@ void MarioActor::initAfterPlacement() {
     _9F4 = getGravityVector();
     updateCameraInfo();
     calcBaseFrontVec(-_240);
+#endif  // SMGPC_PC_DIVERGENCE
 }
 
 void MarioActor::initAfterOpeningDemo() {
@@ -786,7 +787,6 @@ void MarioActor::updateRotationInfo() {
             _A18.x = 0.0f;
         }
     }
-#endif  // SMGPC_PC_DIVERGENCE
 }
 
 void MarioActor::exeWait() {
@@ -1967,12 +1967,6 @@ void MarioActor::forceSetBaseMtx(MtxPtr mtx) {
     mMario->mMovementStates._23 = 0;
 }
 
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
-void MarioActor::calcAnim() {
-    calcAndSetBaseMtx();
-    smgpc::compat::require_actor_model(this);
-}
-#else  // SMGPC_RETAIL_SOURCE
 void MarioActor::calcAnim() {
     // FIXME: switch stuff
     // https://decomp.me/scratch/Xf6TH
@@ -2195,49 +2189,8 @@ void MarioActor::calcAnim() {
 
     updateRasterScroll();
 }
-#endif  // SMGPC_PC_DIVERGENCE
 
 void MarioActor::calcAndSetBaseMtx() {
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
-    auto up = mMario->mHeadVec;
-    if (mBinder != nullptr && mBinder->isBindedGround() &&
-        mBinder->mGroundInfo.mParentTriangle.isValid()) {
-        up = *mBinder->mGroundInfo.mParentTriangle.getNormal(0);
-    }
-    if (MR::normalizeOrZero(&up)) {
-        throw std::logic_error("MarioActor base matrix requires a finite up direction");
-    }
-
-    auto front = mMario->mFrontVec - up * mMario->mFrontVec.dot(up);
-    if (MR::normalizeOrZero(&front)) {
-        front = mMario->mSideVec.cross(up);
-        if (MR::normalizeOrZero(&front)) {
-            throw std::logic_error("MarioActor base matrix requires a finite tangent direction");
-        }
-    }
-    auto side = up.cross(front);
-    MR::normalize(&side);
-    front = side.cross(up);
-    MR::normalize(&front);
-    smgpc::compat::set_actor_base_matrix(this, smgpc::render::J3dMatrix3x4{{
-        side.x,
-        up.x,
-        front.x,
-        mPosition.x,
-        side.y,
-        up.y,
-        front.y,
-        mPosition.y,
-        side.z,
-        up.z,
-        front.z,
-        mPosition.z,
-    }});
-    MR::setBaseScale(this, mScale);
-    (void)smgpc::compat::require_actor_model(this);
-    _1C0 = false;
-    _1C1 = false;
-#else  // SMGPC_RETAIL_SOURCE
     // FIXME: biiiig mess, barely got started
     // https://decomp.me/scratch/QGstP
     if (_1C0 == false) {
@@ -2609,7 +2562,6 @@ void MarioActor::calcAndSetBaseMtx() {
     getJ3DModel()->mBaseScale = mScale;
 
     _EA5 = true;
-#endif  // SMGPC_PC_DIVERGENCE
 }
 
 void MarioActor::setBlendMtxTimer(u16 a1) {

@@ -34,8 +34,8 @@ namespace smgpc::scene {
     // RFL-dependent FileSelectItem face branch to its eventual exact owner.
     class FileSelectFarVisual final {
     public:
-        FileSelectFarVisual(smgpc::runtime::RuntimeContext &runtime,
-                            TitleFileSelectVisualHandoff &&handoff);
+        explicit FileSelectFarVisual(smgpc::runtime::RuntimeContext &runtime);
+        void begin_far(TitleFileSelectVisualHandoff &&handoff);
         ~FileSelectFarVisual();
 
         FileSelectFarVisual(const FileSelectFarVisual &) = delete;
@@ -63,7 +63,7 @@ namespace smgpc::scene {
         // Impl must retire its scheduler children and StageLight binding before
         // the handoff releases the exact sky and deactivates scene 3D drawing.
         smgpc::runtime::RuntimeContext *_runtime = nullptr;
-        TitleFileSelectVisualHandoff _handoff;
+        std::unique_ptr<TitleFileSelectVisualHandoff> _handoff;
         std::unique_ptr<Impl> _impl{};
     };
 

@@ -32,11 +32,9 @@ namespace MR {
     bool tryRumblePadMiddle(const void*, s32);
 }  // namespace MR
 
-#define getBaseMtx() reinterpret_cast<const f32 (*)[4]>(smgpc::compat::actor_base_matrix(this).m.data())
 #define allocateDelegator(object, method) allocateDelegator(object, &StarPiece::isIgnoreTriOnThrow)
 #define calcGravityVectorOrZero(actor, destination, info, host)                                                                  \
     calcGravityVectorOrZero(actor, destination, info, static_cast<u32>(host))
 #include "Game/MapObj/StarPiece.cpp"
 #undef calcGravityVectorOrZero
 #undef allocateDelegator
-#undef getBaseMtx

@@ -1,0 +1,361 @@
+{
+  "methods": [
+    {
+      "name": "connectToSceneCollisionMapObj",
+      "body_sha256": "8d7bbb39fff4fc298f9af2c75a3afd8d5ea4c44b390508c481298556427df154"
+    },
+    {
+      "name": "connectToSceneCollisionMapObjMovementCalcAnim",
+      "body_sha256": "123b1d5de7261e2a3a94ad09823e9fc7eb6d87da41f30163b4f84e4767318b3b"
+    },
+    {
+      "name": "connectToSceneCollisionMapObjWeakLight",
+      "body_sha256": "068172c2d20ee7cb1674d5b79975595f01391a18bac7206024c61a67e387f532"
+    },
+    {
+      "name": "connectToSceneCollisionMapObjStrongLight",
+      "body_sha256": "debb339ef140218252f1f2f58a734b69ef9c9ef610fe6ff74a23f8f5851274b8"
+    },
+    {
+      "name": "connectToSceneCollisionEnemy",
+      "body_sha256": "0c4ba1e66f519c8a05071cb0e64a4193214b9567d65281feb749787890023b71"
+    },
+    {
+      "name": "connectToSceneCollisionEnemyMovement",
+      "body_sha256": "68b32a536afdb3cbe02281749e4e393a5fb879bce88d4fb6b8d53b976de95027"
+    },
+    {
+      "name": "connectToSceneCollisionEnemyStrongLight",
+      "body_sha256": "ba517fd640ec8aafbbfdb21ce565bd6e3968db2c62d57a997e35e65dda0c577c"
+    },
+    {
+      "name": "connectToSceneCollisionEnemyNoShadowedMapObjStrongLight",
+      "body_sha256": "2342f99029cedf0c7e318a98d89c778a3efbbf8f72a068df31d4b26ec87be549"
+    },
+    {
+      "name": "connectToSceneNpc",
+      "body_sha256": "6c467ed05396680cbd1ceb6a6ff7e452a3dd4f14d9fc1e0cb650bc61e349d311"
+    },
+    {
+      "name": "connectToSceneNpcMovement",
+      "body_sha256": "9963dbcff35611d8f01dd67c28583eee61bd3028a55b0daed5aee1e459463435"
+    },
+    {
+      "name": "connectToSceneRide",
+      "body_sha256": "46806139e08c5ad1aa6ed68165bc8d9c138ed955e3e0305c1791bd534085d575"
+    },
+    {
+      "name": "connectToSceneEnemy",
+      "body_sha256": "0144000ed0dd16f785511bde5a3a0f46cdffffc23f6865ec012bd86f24f9a213"
+    },
+    {
+      "name": "connectToSceneEnemyMovement",
+      "body_sha256": "f1243226379d5cbf750d5a2196b3b245a7b20d2878aa2bb361ead77b80d93fc1"
+    },
+    {
+      "name": "connectToSceneMapObj",
+      "body_sha256": "3aa23f6e458027589549ac535716b8a3ec6f73c01fe838edb8ed674c1145a945"
+    },
+    {
+      "name": "connectToSceneMapObjMovement",
+      "body_sha256": "8a75a5ec1056d94a8eef2cef4ffa16d394a37a1379bd975e6c15495093cb854b"
+    },
+    {
+      "name": "connectToSceneMapObjMovementCalcAnim",
+      "body_sha256": "ff6ba2c41d9096d01d307830be2926f0c856fb849425e77e4a8a2388f25653c3"
+    },
+    {
+      "name": "connectToSceneMapObjNoMovement",
+      "body_sha256": "7fdfc294c2c23a27cc56bdeacf5b7a6d89bb6f1cb55f54fce137e019b38406bf"
+    },
+    {
+      "name": "connectToSceneMapObjNoCalcAnim",
+      "body_sha256": "e0083ceb521c5c347e1d6a1635e9c7dc69b4f0d2f886078d4465e184c7b290f8"
+    },
+    {
+      "name": "connectToSceneMapObjNoCalcAnimStrongLight",
+      "body_sha256": "1d901ca1a9dcbe9adf951a717863e74b86fe2eb1a9f0ca7a8be7d2ec16f89f86"
+    },
+    {
+      "name": "connectToSceneMapObjDecoration",
+      "body_sha256": "3f3c8c89bff2a21148292bf63c0b9c945335058da7aaa4cda3648677a815e907"
+    },
+    {
+      "name": "connectToSceneMapObjDecorationStrongLight",
+      "body_sha256": "645ff9a56dac164a5edb653ce4c5a2157cb7ca0a72444b58af402dd013f469d0"
+    },
+    {
+      "name": "connectToSceneMapObjDecorationMovement",
+      "body_sha256": "bae4d25440f35cfd41e45820cf2126bbfa7102f61fbe930df4d118d5ab65d0d1"
+    },
+    {
+      "name": "connectToSceneMapObjStrongLight",
+      "body_sha256": "992e15cbfee93d7c2058d9b0b77e2c21bc97ce72bdbd5c802cd982d79844c676"
+    },
+    {
+      "name": "connectToSceneMapParts",
+      "body_sha256": "dba61113423dc2c3b5f20af3dc82a468b4ed82f976d631baa70767ec5ec0610b"
+    },
+    {
+      "name": "connectToScenePlanet",
+      "body_sha256": "656d68c65724198a48f5f5b2969a09a4de17466c6a7493aef86dce5a97268133"
+    },
+    {
+      "name": "connectToSceneEnvironment",
+      "body_sha256": "d9357bfc8d37cbf75d7717738e48be1e0cf902b49813f697c614b401c2d74f7e"
+    },
+    {
+      "name": "connectToSceneEnvironmentStrongLight",
+      "body_sha256": "9ef3eb00807f172d8595a24fdcec47207b1dfbc53a308d58a670124021600b3f"
+    },
+    {
+      "name": "connectToClippedMapParts",
+      "body_sha256": "a7668e761efe2d562d09086258f84db5a80f7016ec77910187de613699cbed8d"
+    },
+    {
+      "name": "connectToSceneEnemyDecoration",
+      "body_sha256": "7b4ead647ca8e123b9a193ef62670339cfb4bc639dd600cc079f13ee9b06d622"
+    },
+    {
+      "name": "connectToSceneEnemyDecorationMovement",
+      "body_sha256": "2bc1a924e4d90916ec938e1b279264058922c38a937164e4db8cae7fa635be7b"
+    },
+    {
+      "name": "connectToSceneEnemyDecorationMovementCalcAnim",
+      "body_sha256": "9faf29a3ceb2afc2a792dcf725e204a4fa81e956e53a883a7f6e58a1ebb57980"
+    },
+    {
+      "name": "connectToSceneItem",
+      "body_sha256": "a858ede50b607846e3c3cac246928dc9f31a2d5927ff0744a3cb8120fb458e18"
+    },
+    {
+      "name": "connectToSceneItemStrongLight",
+      "body_sha256": "09d8ac749f659ea9cc0cbf47f1935fc1f3dea41d60d53c78b2ed6bd72790c3ed"
+    },
+    {
+      "name": "connectToSceneIndirectEnemy",
+      "body_sha256": "16078a114152c49cb9774c07e4d76270e4a8ab1b2fb96ab59542910caf91776c"
+    },
+    {
+      "name": "connectToSceneIndirectNpc",
+      "body_sha256": "cd8298fd8c3bdcd6dee4f95a29f55942fa1a934d091a56fd8b2e5b776719e4a7"
+    },
+    {
+      "name": "connectToSceneIndirectMapObj",
+      "body_sha256": "229d9c0ebf50ddf869f516332ad3748919b806da3d844c782f813200d80ecc52"
+    },
+    {
+      "name": "connectToSceneIndirectMapObjStrongLight",
+      "body_sha256": "392bd8bae63acc9afa9547a4fa2728a79880c95d4af7ce19ba053af82bce1509"
+    },
+    {
+      "name": "connectToSceneScreenEffectMovement",
+      "body_sha256": "1237dda5d03ca241f7762f847a6e739e29459ba7b94dc69c87bb27202eba1a79"
+    },
+    {
+      "name": "connectToSceneAreaObj",
+      "body_sha256": "e3b8edfae0600ee0ffa899ec256238983b6ac17ef07d90fba21f86cb631a75c1"
+    },
+    {
+      "name": "connectToScene3DModelFor2D",
+      "body_sha256": "bfcf5f66756db85b56a1054160462e3e098ac2736eab08b70b992ae714fc41e7"
+    },
+    {
+      "name": "connectToSceneLayout",
+      "body_sha256": "dc8e5e12e2e8dec17b9de1a8bbcf52f31c55c1c09935d7e7387a17573ba78730"
+    },
+    {
+      "name": "connectToSceneLayoutMovementCalcAnim",
+      "body_sha256": "b2785fa9dfb8c7d192ede9ec23d7c9b157cfc010b39298a74792d6ad41feccd3"
+    },
+    {
+      "name": "connectToSceneLayoutDecoration",
+      "body_sha256": "7611d2e3dfc596d240e3b255e97a6abd396f1c92b2f8e728699bc8c484de3d48"
+    },
+    {
+      "name": "connectToSceneTalkLayout",
+      "body_sha256": "0826ce34a0a7ac308f7a8ac3087c45744498bd4c8b48135b01108f5000cce0b9"
+    },
+    {
+      "name": "connectToSceneTalkLayoutNoMovement",
+      "body_sha256": "96202e1a9df20319086642b3afa2cd131301d954c97e4ecb04d6be722c92ecb1"
+    },
+    {
+      "name": "connectToSceneWipeLayout",
+      "body_sha256": "08a1a224660d58b760eb71bc06363d96eae409c7a3f8820098a6666fe7a8bdd1"
+    },
+    {
+      "name": "connectToSceneLayoutOnPause",
+      "body_sha256": "f107eb87a8ff1a65ffa3f28f951b998567942330a09c98d5084e5a45fa36754d"
+    },
+    {
+      "name": "connectToSceneLayoutOnPauseNoMovement",
+      "body_sha256": "e5575f7ba99933b399f86d2afb5fc86340c8a9ec1343bef72c618f8d014b9462"
+    },
+    {
+      "name": "connectToSceneLayoutOnPauseMovementCalcAnim",
+      "body_sha256": "5d53eb7276a325daf2186e540decaae9b9fd42c6a16d864611f8072117ff247a"
+    },
+    {
+      "name": "connectToSceneLayoutMovement",
+      "body_sha256": "20d767e3789c05bba3a608f724e3889c1afcfbd93e741242f66ef095a8632b4d"
+    },
+    {
+      "name": "connectToSceneMovie",
+      "body_sha256": "bc266c170905bed702ee1cf98cade95efcb8c4f0c58bd0936227e00aca44905c"
+    },
+    {
+      "name": "connectToSceneMirrorMapObj",
+      "body_sha256": "a1330bb85f2e2c16cd5faedb90076720cedbef8994565c49580e73490bc75b22"
+    },
+    {
+      "name": "connectToSceneMirrorMapObjDecoration",
+      "body_sha256": "5f3eb1676b68f1cc76c4b1a2dc8f3ef04d97da07f54b95bf860a35b4207d4f37"
+    },
+    {
+      "name": "connectToSceneMirrorMapObjNoMovement",
+      "body_sha256": "88bf2f7b2290cd42909a5379b9d308fd25f3d81e2717e0cc198986d454f040db"
+    },
+    {
+      "name": "connectToSceneCamera",
+      "body_sha256": "2bea0d8274d3a06ebfe3584a89bdb6fc05d52412a34af9059de1b5ee33b7d51d"
+    },
+    {
+      "name": "connectToSceneNoShadowedMapObj",
+      "body_sha256": "9b1b80da9f335add9f76c3296aa0adc9a81a89c96d4cd1c6185c9d3f17258bd5"
+    },
+    {
+      "name": "connectToSceneNoShadowedMapObjStrongLight",
+      "body_sha256": "c67f53eb12984a948aebb237fb5387e6965157d91646f5441484ef1eae05fe7c"
+    },
+    {
+      "name": "connectToSceneNoSilhouettedMapObj",
+      "body_sha256": "58657f054fba3b9fc9f8ec1ac5ec9a3d14ec7ac8da67f1a8fce1cd7d5bd4fdc3"
+    },
+    {
+      "name": "connectToSceneNoSilhouettedMapObjStrongLight",
+      "body_sha256": "cca3ab20d93f32d72ee351821fc6d5dea5ed05c8866a1e25a14b7cf40fb85ac4"
+    },
+    {
+      "name": "connectToSceneNoSilhouettedMapObjWeakLightNoMovement",
+      "body_sha256": "25944c4e9e7df732c1c863c523facb8fe6ec002eaa7f0bbec59d62d4fd889813"
+    },
+    {
+      "name": "connectToSceneSky",
+      "body_sha256": "b496f8d01665b13e525cd1e18fe72af6fc01ebeaf1bd2131958ccbab2a7873b5"
+    },
+    {
+      "name": "connectToSceneAir",
+      "body_sha256": "92ec1d341bd88cee563baaaaff0ff6043453ee0e60185cc828385e22878b2223"
+    },
+    {
+      "name": "connectToSceneSun",
+      "body_sha256": "d1a40b8da4c120af293ac4d8ab44b61ddb8dfbfe84daee779fb6b4f394935575"
+    },
+    {
+      "name": "connectToSceneCrystal",
+      "body_sha256": "cd66b4d001ac7b569246778fc273d0799324ca24225c91ae4db36356355a9d5b"
+    },
+    {
+      "name": "connectToSceneNormalMapObj",
+      "body_sha256": "a3629eb9bdc539388c08a2d169aa585bbaeb9802581811f07ce4893900ead9a4"
+    }
+  ],
+  "removed": [
+    {
+      "file": "pc-port/src/Game/Util/ObjUtil.cpp",
+      "method": "connectToScenePlanet",
+      "old": "    void connectToScenePlanet(LiveActor* pActor) {\n        const auto draw_buffer = MR::isExistIndirectTexture(pActor) ?\n                                     MR::DrawBufferType_IndirectPlanet :\n                                     MR::DrawBufferType_Planet;\n        MR::connectToScene(pActor, MR::MovementType_Planet,\n                           MR::CalcAnimType_Planet, draw_buffer, -1);\n    }"
+    },
+    {
+      "file": "pc-port/src/Game/Util/ObjUtil.cpp",
+      "method": "connectToSceneItemStrongLight",
+      "old": "    void connectToSceneItemStrongLight(LiveActor* pActor) {\n        MR::connectToScene(pActor, MR::MovementType_Item, MR::CalcAnimType_Item, MR::DrawBufferType_NoSilhouettedMapObjStrongLight, -1);\n    }"
+    },
+    {
+      "file": "pc-port/src/Game/Util/ObjUtil.cpp",
+      "method": "connectToSceneNoSilhouettedMapObj",
+      "old": "    void connectToSceneNoSilhouettedMapObj(LiveActor* pActor) {\n        MR::connectToScene(pActor, MR::MovementType_MapObj, MR::CalcAnimType_MapObj, MR::DrawBufferType_NoSilhouettedMapObj, -1);\n    }"
+    },
+    {
+      "file": "pc-port/src/Game/Util/ObjUtil.cpp",
+      "method": "connectToScene3DModelFor2D",
+      "old": "    void connectToScene3DModelFor2D(LiveActor* pActor) {\n        MR::connectToScene(pActor, MR::MovementType_Layout, MR::CalcAnimType_Layout,\n                           MR::DrawBufferType_Model3DFor2D, -1);\n    }"
+    },
+    {
+      "file": "pc-port/src/Game/Util/ObjUtil.cpp",
+      "method": "connectToSceneTalkLayout",
+      "old": "    void connectToSceneTalkLayout(LayoutActor* pLayout) {\n        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr && pLayout != nullptr) {\n            runtime->register_layout_actor(*pLayout, MR::MovementType_Layout, MR::CalcAnimType_Layout, MR::DrawType_TalkLayout);\n        }\n    }"
+    },
+    {
+      "file": "pc-port/src/Game/Util/ObjUtil.cpp",
+      "method": "connectToSceneLayoutOnPause",
+      "old": "    void connectToSceneLayoutOnPause(LayoutActor* pLayout) {\n        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr && pLayout != nullptr) {\n            runtime->register_layout_actor(*pLayout, MR::MovementType_LayoutOnPause, MR::CalcAnimType_Layout, MR::DrawType_LayoutOnPause);\n        }\n    }"
+    },
+    {
+      "file": "pc-port/src/Game/Util/ObjUtil.cpp",
+      "method": "connectToSceneLayoutDecoration",
+      "old": "    void connectToSceneLayoutDecoration(LayoutActor* pLayout) {\n        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr && pLayout != nullptr) {\n            runtime->register_layout_actor(*pLayout, MR::MovementType_LayoutDecoration, MR::CalcAnimType_LayoutDecoration,\n                                           MR::DrawType_LayoutDecoration);\n        }\n    }"
+    },
+    {
+      "file": "pc-port/src/Game/Util/ObjUtil.cpp",
+      "method": "connectToSceneLayout",
+      "old": "    void connectToSceneLayout(LayoutActor* pLayout) {\n        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr && pLayout != nullptr) {\n            runtime->register_layout_actor(*pLayout, MR::MovementType_Layout, MR::CalcAnimType_Layout, MR::DrawType_Layout);\n        }\n    }"
+    },
+    {
+      "file": "pc-port/src/Game/Util/ObjUtil.cpp",
+      "method": "connectToSceneSun",
+      "old": "    void connectToSceneSun(LiveActor* pActor) {\n        MR::connectToScene(pActor, MR::MovementType_Sky, MR::CalcAnimType_MapObj, MR::DrawBufferType_Sun, -1);\n    }"
+    },
+    {
+      "file": "pc-port/src/Game/Util/ObjUtil.cpp",
+      "method": "connectToSceneNpcMovement",
+      "old": "    void connectToSceneNpcMovement(NameObj* pObj) {\n        MR::connectToScene(pObj, MR::MovementType_NPC, -1, -1, -1);\n    }"
+    },
+    {
+      "file": "pc-port/src/Game/Util/ObjUtil.cpp",
+      "method": "connectToSceneNpc",
+      "old": "    void connectToSceneNpc(LiveActor* pActor) {\n        MR::connectToScene(pActor, MR::MovementType_NPC, MR::CalcAnimType_NPC, MR::DrawBufferType_NPC, -1);\n    }"
+    },
+    {
+      "file": "pc-port/src/Game/Util/ObjUtil.cpp",
+      "method": "connectToSceneMapObjMovement",
+      "old": "    void connectToSceneMapObjMovement(NameObj* pObj) {\n        MR::connectToScene(pObj, MR::MovementType_MapObj, -1, -1, -1);\n    }"
+    },
+    {
+      "file": "pc-port/src/Game/Util/ObjUtil.cpp",
+      "method": "connectToSceneAreaObj",
+      "old": "    void connectToSceneAreaObj(NameObj* pObj) {\n        MR::connectToScene(pObj, MR::MovementType_AreaObj, -1, -1, -1);\n    }"
+    },
+    {
+      "file": "pc-port/src/Game/Util/ObjUtil.cpp",
+      "method": "connectToSceneAir",
+      "old": "    void connectToSceneAir(LiveActor* pActor) {\n        MR::connectToScene(pActor, MR::MovementType_Sky, MR::CalcAnimType_MapObj, MR::DrawBufferType_Air, -1);\n    }"
+    },
+    {
+      "file": "pc-port/src/Game/Util/ObjUtil.cpp",
+      "method": "connectToSceneLayoutMovement",
+      "old": "    void connectToSceneLayoutMovement(NameObj* pObj) {\n        MR::connectToScene(pObj, MR::MovementType_Layout, -1, -1, -1);\n    }"
+    },
+    {
+      "file": "pc-port/src/Game/Util/ObjUtil.cpp",
+      "method": "connectToSceneMapObj",
+      "old": "    void connectToSceneMapObj(LiveActor* pActor) {\n        MR::connectToScene(pActor, MR::MovementType_MapObj, MR::CalcAnimType_MapObj, MR::DrawBufferType_MapObj, -1);\n    }"
+    },
+    {
+      "file": "pc-port/src/Game/Scene/SceneFunction.cpp",
+      "method": "connectToSceneSky",
+      "old": "    void connectToSceneSky(LiveActor* pActor) {\n        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr && pActor != nullptr) {\n            runtime->register_sky_actor(*pActor);\n        }\n    }"
+    },
+    {
+      "file": "pc-port/src/compat/SphereSelectorRuntimeCompat.cpp",
+      "method": "connectToSceneMapObjDecorationMovement",
+      "old": "    void connectToSceneMapObjDecorationMovement(NameObj *object) {\n        MR::connectToScene(object, MR::MovementType_MapObjDecoration, -1, -1, -1);\n    }"
+    },
+    {
+      "file": "pc-port/src/compat/NPCActorRuntimeCompat.cpp",
+      "method": "connectToSceneIndirectNpc",
+      "old": "    void connectToSceneIndirectNpc(LiveActor* actor) {\n        connectToScene(actor, MovementType_NPC, CalcAnimType_NPC, DrawBufferType_IndirectNpc, -1);\n    }"
+    }
+  ]
+}

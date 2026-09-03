@@ -38,6 +38,24 @@ namespace JGeometry {
             y = value;
         }
 
+        void setMin(const TVec2< f32 >& min) {
+            if (x >= min.x)
+                x = min.x;
+            if (y >= min.y)
+                y = min.y;
+        }
+
+        void setMax(const TVec2< f32 >& max) {
+            if (x <= max.x)
+                x = max.x;
+            if (y <= max.y)
+                y = max.y;
+        }
+
+        inline bool isAbove(const TVec2< T >& other) const {
+            return (x >= other.x) && (y >= other.y) ? true : false;
+        }
+
         void add(const TVec2& value) {
             x += value.x;
             y += value.y;
@@ -252,6 +270,14 @@ namespace JGeometry {
 
         [[nodiscard]] TVec3 multiplyOperatorInline2(f32 value) const {
             return scaleInline(value);
+        }
+
+        void mul(const TVec3& value) {
+            mul(*this, value);
+        }
+
+        void mul(const TVec3& lhs, const TVec3& rhs) {
+            set(lhs.x * rhs.x, lhs.y * rhs.y, lhs.z * rhs.z);
         }
 
         void mult(f32 value) {

@@ -1,3 +1,4 @@
+#include "compat/MarioAnimatorLifetime.hpp"
 #include "Game/Player/MarioAnimator.hpp"
 #include "Game/Animation/XanimeCore.hpp"
 #include "Game/Animation/XanimePlayer.hpp"
@@ -19,54 +20,18 @@
 #include "Game/Util/MtxUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
 #include "JSystem/JMath/JMATrigonometric.hpp"
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
-#include "compat/ActorRuntimeRegistry.hpp"
-#else  // SMGPC_RETAIL_SOURCE
-#endif  // SMGPC_PC_DIVERGENCE
 #include <cstring>
 
-extern const char* jname_chest;
+const char* jname_chest = "Spine1";
 static const char sHip[] = "Hip";
 static const char sRun[8] = "Run";
 
 MarioAnimator::MarioAnimator(MarioActor* actor) : MarioModule(actor) {
+    smgpc::compat::MarioAnimatorConstructionScope lifetime(*this);
     init();
 }
 
 void MarioAnimator::init() {
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
-    mResourceTable = nullptr;
-    mXanimePlayer = nullptr;
-    mXanimePlayerUpper = nullptr;
-    _14 = 0;
-    _15 = 0;
-    _16 = 1;
-    mWalkWeights[0] = 0.0f;
-    mWalkWeights[1] = 0.0f;
-    mWalkWeights[2] = 0.0f;
-    mWalkWeights[3] = 1.0f;
-    PSMTXIdentity(_28.toMtxPtr());
-    PSMTXIdentity(_7C.toMtxPtr());
-    PSMTXIdentity(_AC.toMtxPtr());
-    PSMTXIdentity(_DC.toMtxPtr());
-    _58 = 0.0f;
-    _5C = 0.0f;
-    _60.zero();
-    _6C = false;
-    _70 = 0.0f;
-    _74 = 0;
-    _78 = 0;
-    _10C = false;
-    _10D = false;
-    mUpperDefaultSet = false;
-    _10F = 0;
-    _110 = 0.0f;
-    mCurrBck = "Wait";
-    _118 = 0.0f;
-    _11C = 0;
-    _120 = nullptr;
-    (void)smgpc::compat::require_actor_bck(mActor, mCurrBck, nullptr);
-#else  // SMGPC_RETAIL_SOURCE
     XanimeSwapTable* luigiAnimations = nullptr;
     if (gIsLuigi) {
         luigiAnimations = luigiAnimeSwapTable;
@@ -118,7 +83,6 @@ void MarioAnimator::init() {
     mXanimePlayerUpper->changeAnimation("基本");
     mXanimePlayerUpper->mCore->shareJointTransform(mXanimePlayer->mCore);
     PSMTXCopy(MR::tmpMtxRotYRad(PI), _DC.toMtxPtr());
-#endif  // SMGPC_PC_DIVERGENCE
 }
 
 bool MarioAnimator::isAnimationStop() const {
@@ -440,9 +404,6 @@ void MarioAnimator::clearAllJointTransform() {
 }
 
 void MarioAnimator::calc() {
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
-    smgpc::compat::require_actor_model(mActor);
-#else  // SMGPC_RETAIL_SOURCE
     bool specialMode = false;
     if (mActor->_482 || mActor->_483) {
         specialMode = true;
@@ -466,8 +427,7 @@ void MarioAnimator::calc() {
         s32 spineIdx = MR::getJointIndex(mActor, "Spine1");
         J3DModelData* modelData = mActor->getModelData();
         J3DJoint* joint = modelData->mJointTree.mJointNodePointer[spineIdx];
-        J3DMtxCalc** jointMtxCalc = (J3DMtxCalc**)((u8*)joint + 0x54);
-        *jointMtxCalc = nullptr;
+        joint->mMtxCalc = nullptr;
         mXanimePlayer->calcAnm(0);
     }
     mXanimePlayer->mCore->_6 = 1;
@@ -483,7 +443,6 @@ void MarioAnimator::calc() {
         s32 headIdx = MR::getJointIndex(mActor, "Head");
         mXanimePlayerUpper->clearMtxCalc((u16)headIdx);
     }
-#endif  // SMGPC_PC_DIVERGENCE
 }
 
 void MarioAnimator::resetTilt() {
@@ -1063,10 +1022,7 @@ void MarioAnimator::updateJointRumble() {
         goto setIdentity;
     }
 
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
     {
-#else  // SMGPC_RETAIL_SOURCE
-#endif  // SMGPC_PC_DIVERGENCE
     Mario* playerVec = getPlayer();
     Mario* playerAngle = getPlayer();
     f32 angle = playerAngle->calcAngleD(playerVec->_368);
@@ -1096,10 +1052,7 @@ void MarioAnimator::updateJointRumble() {
 afterSlide:
     PSMTXRotRad(_AC.toMtxPtr(), 'Z', hipRot);
     goto afterRotate;
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
     }
-#else  // SMGPC_RETAIL_SOURCE
-#endif  // SMGPC_PC_DIVERGENCE
 
 setIdentity:
     PSMTXIdentity(_AC.toMtxPtr());
@@ -1115,20 +1068,6 @@ afterRotate:
 }
 
 void MarioAnimator::update() {
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
-    Mario* player = getPlayer();
-    player->_71D = player->mTargetWalkSpeedIndex;
-    player->decideWalkSpeed();
-
-    // Retail decideWalkAnimation keeps the locomotion animation active while
-    // release inertia is still carrying Mario forward.  Selecting Wait from
-    // the current stick band alone visibly slides the model after release.
-    const char* desiredBck = player->mTargetWalkSpeedIndex != 0 || player->mWalkSpeed >= 0.2f ? "Run" : "Wait";
-    if (smgpc::compat::actor_current_bck_name(mActor) != desiredBck) {
-        (void)smgpc::compat::require_actor_bck(mActor, desiredBck, nullptr);
-    }
-    mCurrBck = desiredBck;
-#else  // SMGPC_RETAIL_SOURCE
     if (mXanimePlayer->isAnimationRunSimple()) {
         if (!mActor->_EA4 && !mActor->_3C0) {
             Mario* player = getPlayer();
@@ -1367,7 +1306,6 @@ afterBrake:
     if (isAnimationStop()) {
         mCurrBck = mXanimePlayer->getCurrentBckName();
     }
-#endif  // SMGPC_PC_DIVERGENCE
 }
 
 f32 XanimePlayer::tellAnimationFrame() const {

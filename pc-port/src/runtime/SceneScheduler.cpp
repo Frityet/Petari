@@ -1,4 +1,13 @@
 #include "SceneScheduler.hpp"
+#include "scene/SceneDrawBufferService.hpp"
+#include "Game/System/DrawBufferHolder.hpp"
+#include "Game/LiveActor/ModelManager.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Animation/BtkPlayer.hpp"
+#include "Game/Animation/BrkPlayer.hpp"
+#include "Game/System/ResourceInfo.hpp"
+#include "JSystem/J3DGraphBase/J3DSys.hpp"
+#include "compat/SceneJ3dScope.hpp"
 
 #include <algorithm>
 #include <array>
@@ -470,6 +479,40 @@ namespace smgpc::runtime {
         sActiveSceneScheduler = _previous;
     }
 
+    SceneScheduler::SceneScheduler() = default;
+    SceneScheduler::~SceneScheduler() { clear(); }
+
+    void SceneScheduler::begin_draw_buffer_registration(std::shared_ptr<smgpc::compat::JkrAllocationDomain> domain) {
+        retire_draw_buffers();
+        _draw_buffers = std::make_unique<smgpc::scene::SceneDrawBufferService>(std::move(domain));
+    }
+
+    void SceneScheduler::allocate_draw_buffers() {
+        if (!_draw_buffers) throw std::logic_error("Original draw buffers need an explicit scene construction owner");
+        _draw_buffers->allocate_actor_lists();
+        refresh_draw_buffer_activation();
+    }
+
+    void SceneScheduler::retire_draw_buffers() {
+        if (_draw_buffers && _draw_buffers->registration_count() != 0)
+            throw std::logic_error("Remove every actor registration before retiring original scene draw buffers");
+        _draw_buffers.reset();
+    }
+
+    void SceneScheduler::find_actor_light_info(LiveActor &actor) {
+        const auto* entry = find_entry(SceneEntryKind::LiveActorModel, &actor);
+        if (!entry || !entry->has_draw_buffer_registration) return;
+        _draw_buffers->find_light_info(actor);
+    }
+
+    void SceneScheduler::refresh_draw_buffer_activation() {
+        if (!_draw_buffers || !_draw_buffers->is_allocated()) return;
+        for (auto& entry : _entries)
+            if (entry.has_draw_buffer_registration)
+                _draw_buffers->set_active(*entry.live_actor,
+                    entry.draw_connected && !entry_is_dead(entry) && !entry.live_actor->mFlag.mIsClipped);
+    }
+
     void SceneScheduler::connect_name_obj(NameObj &obj, s32 movement_type, s32 calc_anim_type, s32 draw_buffer_type, s32 draw_type) {
         if (auto *entry = find_entry(SceneEntryKind::NameObj, &obj)) {
             entry->movement_type = movement_type;
@@ -498,6 +541,9 @@ namespace smgpc::runtime {
     }
 
     void SceneScheduler::disconnect_name_obj(NameObj &obj) {
+        for (auto &entry : _entries)
+            if (entry.name_obj == &obj && entry.has_draw_buffer_registration)
+                _draw_buffers->remove_actor(*entry.live_actor);
         smgpc::layout::release_layout_actor_if_registered(&obj);
         std::erase_if(_entries, [&obj](const auto &entry) {
             return entry.name_obj == &obj;
@@ -542,7 +588,8 @@ namespace smgpc::runtime {
         if (entry == nullptr) {
             return std::nullopt;
         }
-        return light_type_for_draw_buffer(entry->draw_buffer_type);
+        if (!entry->has_draw_buffer_registration) return std::nullopt;
+        return _draw_buffers->holder().getDrawBufferGroup(entry->draw_buffer_type)->mLightType;
     }
 
     void SceneScheduler::register_layout(smgpc::layout::LayoutRuntime &layout, s32 movement_type, s32 calc_anim_type, s32 draw_type) {
@@ -610,36 +657,41 @@ namespace smgpc::runtime {
 
     void SceneScheduler::register_live_actor_model(LiveActor &actor, s32 movement_type, s32 calc_anim_type, s32 draw_buffer_type, s32 draw_type) {
         if (auto *entry = find_entry(SceneEntryKind::LiveActorModel, &actor)) {
+            if (entry->draw_buffer_type != draw_buffer_type)
+                throw std::logic_error("An original draw registration cannot change categories before retirement");
             entry->movement_type = movement_type;
             entry->calc_anim_type = calc_anim_type;
-            entry->draw_buffer_type = draw_buffer_type;
             entry->draw_type = draw_type;
             entry->draw_connected = true;
-            MR::initActorLightInfoLightType(&actor, light_type_for_draw_buffer(draw_buffer_type));
-#ifndef NDEBUG
-            emit_connect_to_scene_trace(SceneEntryKind::LiveActorModel, actor.getName(), movement_type, calc_anim_type, draw_buffer_type,
-                                        draw_type);
-#endif
             return;
         }
-
-        _entries.push_back(Entry {
-            .kind = SceneEntryKind::LiveActorModel,
-            .name_obj = &actor,
-            .live_actor = &actor,
-            .movement_type = movement_type,
-            .calc_anim_type = calc_anim_type,
-            .draw_buffer_type = draw_buffer_type,
-            .draw_type = draw_type,
-            .order = _next_order++,
-        });
-        MR::initActorLightInfoLightType(&actor, light_type_for_draw_buffer(draw_buffer_type));
+        if (draw_buffer_type >= 0) {
+            if (!_draw_buffers) throw std::logic_error("Construct a scene draw holder before registering a model");
+            _draw_buffers->register_actor(actor, draw_buffer_type, smgpc::compat::retain_actor_model_owner(&actor));
+        }
+        try {
+            _entries.push_back(Entry {
+                .kind = SceneEntryKind::LiveActorModel,
+                .name_obj = &actor,
+                .live_actor = &actor,
+                .movement_type = movement_type,
+                .calc_anim_type = calc_anim_type,
+                .draw_buffer_type = draw_buffer_type,
+                .draw_type = draw_type,
+                .has_draw_buffer_registration = draw_buffer_type >= 0,
+                .order = _next_order++,
+            });
+        } catch (...) {
+            if (draw_buffer_type >= 0) _draw_buffers->remove_actor(actor);
+            throw;
+        }
 #ifndef NDEBUG
         emit_connect_to_scene_trace(SceneEntryKind::LiveActorModel, actor.getName(), movement_type, calc_anim_type, draw_buffer_type, draw_type);
 #endif
     }
 
     void SceneScheduler::unregister_live_actor_model(LiveActor &actor) {
+        if (_draw_buffers) _draw_buffers->remove_actor(actor);
         std::erase_if(_entries, [&actor](const auto &entry) {
             return entry.kind == SceneEntryKind::LiveActorModel && entry.live_actor == &actor;
         });
@@ -664,6 +716,7 @@ namespace smgpc::runtime {
     }
 
     void SceneScheduler::execute_movement() {
+        smgpc::compat::SceneJ3dScope j3d_scope;
 #ifndef NDEBUG
         _last_execution_trace.clear();
 #endif
@@ -787,6 +840,7 @@ namespace smgpc::runtime {
     }
 
     void SceneScheduler::execute_calc_anim() {
+        smgpc::compat::SceneJ3dScope j3d_scope;
         // SceneNameObjListExecutor calls NameObj::calcAnim directly. Only
         // its movement list uses executeMovement's movement-off flag.
         for (auto *entry : sorted_entries_for_calc_anim()) {
@@ -810,12 +864,6 @@ namespace smgpc::runtime {
                 entry->live_actor->calcAnim();
                 break;
             }
-            // Derived actors may supply their own calcAnim implementation.
-            // Publish the authoritative controller phase after that virtual
-            // calculation so every native model and retained joint follows it.
-            if (auto* actor = entry_live_actor(*entry); actor != nullptr) {
-                smgpc::compat::synchronize_actor_model_animation(actor);
-            }
 #ifndef NDEBUG
             push_trace(*entry, SceneSchedulerPhase::CalcAnim);
 #endif
@@ -823,31 +871,31 @@ namespace smgpc::runtime {
     }
 
     void SceneScheduler::execute_calc_view_and_entry() {
-        for (auto *entry : sorted_entries_for_calc_view_and_entry()) {
-            if (!participates_in_calc_view_and_entry(*entry) || entry_is_dead(*entry)) {
-                continue;
-            }
-            if (const auto* actor = entry_live_actor(*entry); actor != nullptr && actor->mFlag.mIsClipped) {
-                continue;
-            }
-
-            switch (entry->kind) {
-            case SceneEntryKind::NameObj:
-                entry->name_obj->calcViewAndEntry();
-                break;
-            case SceneEntryKind::Layout:
-                break;
-            case SceneEntryKind::LayoutActor:
-                entry->layout_actor->calcViewAndEntry();
-                break;
-            case SceneEntryKind::LiveActorModel:
-                entry->live_actor->calcViewAndEntry();
-                break;
-            }
-#ifndef NDEBUG
-            push_trace(*entry, SceneSchedulerPhase::CalcViewAndEntry);
-#endif
+        if (!_draw_buffers) return;
+        if (!_draw_buffers->is_allocated())
+            throw std::logic_error("Scene construction must allocate draw lists before view entry");
+        if (auto* runtime = RuntimeContext::try_instance(); runtime && runtime->scene_camera_pose()) {
+            for (auto& entry : _entries)
+                if (entry.has_draw_buffer_registration && !entry_is_dead(entry) &&
+                    !draw_buffer_uses_model_3d_for_2d(entry.draw_buffer_type))
+                    smgpc::compat::update_actor_clipping(*entry.live_actor, *runtime->scene_camera_pose());
         }
+        refresh_draw_buffer_activation();
+        smgpc::compat::SceneJ3dScope commands;
+        // SceneFunction::executeCalcViewAndEntryList: the actual holder invokes
+        // each active actor once, in its original camera-category list.
+        TMtx34f mtx;
+        mtx.identity();
+        PSMTXCopy(mtx, j3dSys.mViewMtx);
+        _draw_buffers->entry(1);
+        MR::loadViewMtx();
+        _draw_buffers->entry(0);
+#ifndef NDEBUG
+        for (const auto& entry : _entries)
+            if (entry.has_draw_buffer_registration && entry.draw_connected && !entry_is_dead(entry) &&
+                !entry.live_actor->mFlag.mIsClipped)
+                push_trace(entry, SceneSchedulerPhase::CalcViewAndEntry);
+#endif
     }
 
     void SceneScheduler::execute_draw_buffer_opa(const smgpc::camera::CameraPose &camera_pose, s32 draw_buffer_type) {
@@ -1055,99 +1103,39 @@ namespace smgpc::runtime {
             });
         }
 
+        for (const auto &entry : _entries)
+            if (entry.order >= marker && entry.has_draw_buffer_registration)
+                _draw_buffers->remove_actor(*entry.live_actor);
         std::erase_if(_entries, [marker](const auto &entry) { return entry.order >= marker; });
         return registrations;
     }
 
     void SceneScheduler::execute_draw_buffer(const smgpc::camera::CameraPose &camera_pose, s32 draw_buffer_type, SceneDrawBufferPass pass) {
-        if (draw_buffer_uses_model_3d_for_2d(draw_buffer_type)) {
-            execute_draw_buffer_model_3d_for_2d(
-                model_3d_for_2d_projection(), draw_buffer_type, pass);
-            return;
-        }
-
-        auto actor_entries = std::vector<Entry *>{};
-        for (auto &entry : _entries) {
-            if (entry.kind == SceneEntryKind::LiveActorModel && entry.live_actor != nullptr &&
-                !entry.live_actor->mFlag.mIsDead &&
-                !draw_buffer_uses_model_3d_for_2d(entry.draw_buffer_type)) {
-                smgpc::compat::update_actor_clipping(*entry.live_actor, camera_pose);
-            }
-            if (entry.kind == SceneEntryKind::LiveActorModel && entry.draw_buffer_type == draw_buffer_type && !entry_is_dead(entry) &&
-                entry.draw_connected && !entry.live_actor->mFlag.mIsClipped) {
-                actor_entries.push_back(&entry);
-            }
-        }
-        if (actor_entries.empty()) {
-            return;
-        }
-        std::ranges::stable_sort(actor_entries, draw_category_less);
-        MR::loadLight(light_type_for_draw_buffer(draw_buffer_type));
-        const auto model_frame = RuntimeContext::instance().frame_index();
-
-        const auto model_pass = pass == SceneDrawBufferPass::Translucent ? smgpc::render::live_actor::LiveActorModel::DrawPass::Translucent :
-                                                                           smgpc::render::live_actor::LiveActorModel::DrawPass::Opaque;
+        if (!_draw_buffers) return;
+        if (!_draw_buffers->is_allocated()) throw std::logic_error("Draw lists have not completed scene construction");
+        refresh_draw_buffer_activation();
+        smgpc::compat::SceneJ3dScope commands;
+        if (pass == SceneDrawBufferPass::Translucent) _draw_buffers->draw_translucent(draw_buffer_type);
+        else _draw_buffers->draw_opaque(draw_buffer_type);
 #ifndef NDEBUG
         const auto phase = pass == SceneDrawBufferPass::Translucent ? SceneSchedulerPhase::DrawBufferXlu : SceneSchedulerPhase::DrawBufferOpa;
+        for (const auto& entry : _entries)
+            if (entry.has_draw_buffer_registration && entry.draw_buffer_type == draw_buffer_type &&
+                entry.draw_connected && !entry_is_dead(entry) && !entry.live_actor->mFlag.mIsClipped)
+                push_trace(entry, phase, pass);
 #endif
-        for (auto *entry : actor_entries) {
-            if (entry->live_actor->mActorLightCtrl != nullptr) {
-                entry->live_actor->mActorLightCtrl->loadLight();
-            }
-            smgpc::compat::draw_actor_model(entry->live_actor, camera_pose, model_frame, model_pass);
-#ifndef NDEBUG
-            push_trace(*entry, phase, pass);
-#endif
-        }
     }
 
     void SceneScheduler::execute_draw_buffer_model_3d_for_2d(
         const smgpc::render::Model3DFor2DProjection &projection,
         s32 draw_buffer_type, SceneDrawBufferPass pass) {
-        if (!draw_buffer_uses_model_3d_for_2d(draw_buffer_type)) {
-            throw std::logic_error(
-                "Only retail 0x24/0x25 draw buffers may use Model3DFor2D");
-        }
-
-        auto actor_entries = std::vector<Entry *> {};
-        for (auto &entry : _entries) {
-            // The retail 2D-model pass has an identity view and does not run
-            // the perspective camera's clipping calculation.
-            if (entry.kind == SceneEntryKind::LiveActorModel &&
-                entry.draw_buffer_type == draw_buffer_type &&
-                !entry_is_dead(entry) &&
-                entry.draw_connected && !entry.live_actor->mFlag.mIsClipped) {
-                actor_entries.push_back(&entry);
-            }
-        }
-        if (actor_entries.empty()) {
-            return;
-        }
-
-        std::ranges::stable_sort(actor_entries, draw_category_less);
-        MR::loadLight(MR::LightType_None);
-        const auto *runtime = RuntimeContext::try_instance();
-        const auto model_frame = runtime != nullptr ? runtime->frame_index() : 0U;
-        const auto model_pass =
-            pass == SceneDrawBufferPass::Translucent ?
-                smgpc::render::live_actor::LiveActorModel::DrawPass::Translucent :
-                smgpc::render::live_actor::LiveActorModel::DrawPass::Opaque;
-#ifndef NDEBUG
-        const auto phase =
-            pass == SceneDrawBufferPass::Translucent ?
-                SceneSchedulerPhase::DrawBufferXlu :
-                SceneSchedulerPhase::DrawBufferOpa;
-#endif
-        for (auto *entry : actor_entries) {
-            smgpc::compat::draw_actor_model_3d_for_2d(
-                entry->live_actor, projection, model_frame, model_pass);
-#ifndef NDEBUG
-            push_trace(*entry, phase, pass);
-#endif
-        }
+        if (!draw_buffer_uses_model_3d_for_2d(draw_buffer_type))
+            throw std::logic_error("Only original 2D camera categories use the model 3D-for-2D pass");
+        execute_draw_buffer({}, draw_buffer_type, pass);
     }
 
     void SceneScheduler::execute_draw_type(s32 draw_type) {
+        smgpc::compat::SceneJ3dScope j3d_scope;
         auto draw_entries = std::vector<Entry *>{};
         for (auto &entry : _entries) {
             if (entry.draw_type == draw_type && entry.draw_connected && !entry_is_dead(entry)) {
@@ -1183,6 +1171,8 @@ namespace smgpc::runtime {
     }
 
 #ifndef NDEBUG
+    void fill_actor_model_debug_state(SceneSchedulerEntryState&, const LiveActor*);
+
     std::vector<SceneSchedulerEntryState> SceneScheduler::snapshot() const {
         auto states = std::vector<SceneSchedulerEntryState>{};
         states.reserve(_entries.size());
@@ -1216,10 +1206,7 @@ namespace smgpc::runtime {
                 state.live_actor_position = vec3_state(actor->mPosition);
                 state.live_actor_rotation = vec3_state(actor->mRotation);
                 state.live_actor_scale = vec3_state(actor->mScale);
-                state.live_actor_base_matrix = smgpc::compat::actor_base_matrix(actor).m;
-                state.live_actor_bck_name = std::string(smgpc::compat::actor_current_bck_name(actor));
-                state.live_actor_brk_name = std::string(smgpc::compat::actor_current_brk_name(actor));
-                state.live_actor_btk_name = std::string(smgpc::compat::actor_current_btk_name(actor));
+                fill_actor_model_debug_state(state, actor);
             }
             states.push_back(std::move(state));
         }
@@ -1421,7 +1408,10 @@ namespace smgpc::runtime {
 #endif
 
     void SceneScheduler::clear() {
+        for (const auto& entry : _entries)
+            if (entry.has_draw_buffer_registration) _draw_buffers->remove_actor(*entry.live_actor);
         _entries.clear();
+        retire_draw_buffers();
 #ifndef NDEBUG
         _last_execution_trace.clear();
         _message_trace.clear();
@@ -1518,6 +1508,23 @@ namespace smgpc::runtime {
     }
 
 #ifndef NDEBUG
+        [[nodiscard]] std::string material_animation_name(const AnmPlayerBase* player) {
+            if (!player || !player->mAnmRes || !player->mResTable) return {};
+            const auto* name = player->mResTable->findResName(player->mAnmRes);
+            return name ? name : "";
+        }
+
+        void fill_actor_model_debug_state(SceneSchedulerEntryState& state, const LiveActor* actor) {
+            if (const auto matrix = actor->getBaseMtx())
+                std::copy_n(&matrix[0][0], 12, state.live_actor_base_matrix.begin());
+            if (const auto* manager = actor->mModelManager) {
+                const auto* name = manager->getPlayingBckName();
+                state.live_actor_bck_name = name ? name : "";
+                state.live_actor_brk_name = material_animation_name(manager->mBrkPlayer);
+                state.live_actor_btk_name = material_animation_name(manager->mBtkPlayer);
+            }
+        }
+
     void SceneScheduler::push_trace(const Entry &entry, SceneSchedulerPhase phase, SceneDrawBufferPass pass) {
         auto state = SceneSchedulerEntryState {
             .kind = entry.kind,
@@ -1548,10 +1555,7 @@ namespace smgpc::runtime {
             state.live_actor_position = vec3_state(actor->mPosition);
             state.live_actor_rotation = vec3_state(actor->mRotation);
             state.live_actor_scale = vec3_state(actor->mScale);
-            state.live_actor_base_matrix = smgpc::compat::actor_base_matrix(actor).m;
-            state.live_actor_bck_name = std::string(smgpc::compat::actor_current_bck_name(actor));
-            state.live_actor_brk_name = std::string(smgpc::compat::actor_current_brk_name(actor));
-            state.live_actor_btk_name = std::string(smgpc::compat::actor_current_btk_name(actor));
+            fill_actor_model_debug_state(state, actor);
         }
         _last_execution_trace.push_back(std::move(state));
     }

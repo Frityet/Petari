@@ -2247,7 +2247,7 @@ namespace MR {
         initMultiFur(pActor, 3);
     }
 
-    LiveActor* initFurPlayer(LiveActor* pActor) {
+    FurMulti* initFurPlayer(LiveActor* pActor) {
         return initMultiFur(pActor, 0);
     }
 

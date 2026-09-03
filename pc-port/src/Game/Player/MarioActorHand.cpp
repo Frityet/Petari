@@ -76,7 +76,66 @@ void MarioActor::initHand() {
     updateHandAtMorph();
 }
 
-// void MarioActor::updateHand() {}
+void MarioActor::updateHand() {
+    bool hide = false;
+    switch (mPlayerMode) {
+    case 5:
+        hide = true;
+        break;
+    }
+
+    if (mCurrModel == 1) {
+        hide = true;
+    }
+    if (getMovementStates()._F) {
+        hide = true;
+    }
+    if (mMario->isStatusActive(18)) {
+        hide = true;
+    }
+    if (_1C3) {
+        hide = true;
+    }
+
+    if (MR::isHiddenModel(this) || is481or482On() || hide) {
+        _A58 = true;
+        return;
+    }
+    _A58 = false;
+
+    TVec3f trans;
+    XanimePlayer* player = mMarioAnim->mXanimePlayer;
+    player->getMainAnimationTrans(MR::getJointIndex(this, "PartsControl"), &trans);
+    s32 left = 0.49f + trans.y / 10.0f;
+    s32 right = 0.49f + trans.z / 10.0f;
+    s32 leftIndex = static_cast< u8 >(MR::clamp(left, 0, 7));
+    s32 rightIndex = static_cast< u8 >(MR::clamp(right, 0, 7));
+
+    ModelHolder* leftHand = _A48;
+    ModelHolder* rightHand = _A4C;
+    if (mPlayerMode == 3) {
+        leftHand = _A40;
+        rightHand = _A44;
+    } else if (mPlayerMode == 1) {
+        leftHand = _A50;
+        rightHand = _A54;
+    }
+
+    if (leftIndex != _A59) {
+        if (_A59 != 0xFF) {
+            MR::hideJoint(MR::getJoint(leftHand, _A59 + 1));
+        }
+        MR::showJoint(MR::getJoint(leftHand, leftIndex + 1));
+    }
+    if (rightIndex != _A5A) {
+        if (_A5A != 0xFF) {
+            MR::hideJoint(MR::getJoint(rightHand, _A5A + 1));
+        }
+        MR::showJoint(MR::getJoint(rightHand, rightIndex + 1));
+    }
+    _A59 = leftIndex;
+    _A5A = rightIndex;
+}
 
 void MarioActor::changeHandMaterial() {
 }

@@ -14,7 +14,7 @@
 
 #include "camera/CameraPose.hpp"
 #include "render/J3dMatrix.hpp"
-#include "render/live_actor/LiveActorModel.hpp"
+#include <memory>
 
 class ActorLightCtrl;
 class HitSensor;
@@ -243,50 +243,16 @@ namespace smgpc::compat {
     void adopt_actor_lod_ctrl(LiveActor* actor, LodCtrl* lod_ctrl);
     [[nodiscard]] std::size_t actor_lod_ctrl_runtime_state_count();
 
-    void initialize_actor_model(LiveActor* actor, const char* model_archive, const char* animation_archive);
-    [[nodiscard]] smgpc::render::live_actor::LiveActorModel* actor_model(const LiveActor* actor);
+    class ModelManagerOwner;
+    class JkrAllocationDomain;
+    [[nodiscard]] std::shared_ptr<JkrAllocationDomain> actor_scene_allocation_domain(const LiveActor*);
+    void adopt_actor_sound_object(LiveActor*, std::shared_ptr<JkrAllocationDomain>);
+    void initialize_actor_model(LiveActor* actor, const char* model_archive,
+                                const char* animation_archive, bool create_display_list);
+    void adopt_actor_animation_helpers(LiveActor* actor);
+    [[nodiscard]] std::shared_ptr<ModelManagerOwner> retain_actor_model_owner(const LiveActor* actor);
     [[nodiscard]] std::optional<std::span<const std::uint8_t>>
-    actor_model_resource_data_if_present(const LiveActor* actor,
-                                         std::string_view resource_name);
-    void require_actor_model(LiveActor* actor);
-    [[nodiscard]] std::size_t actor_model_joint_count(const LiveActor* actor);
-    void release_actor_model_state(const LiveActor* actor);
-    // Original model base TR; model scale is retained separately.
-    [[nodiscard]] const smgpc::render::J3dMatrix3x4& actor_base_matrix(const LiveActor* actor);
-    void set_actor_base_matrix(LiveActor* actor, const smgpc::render::J3dMatrix3x4& matrix);
-    void set_actor_model_base_scale(LiveActor* actor, const TVec3f& scale);
-    void set_actor_projmap_effect_matrix(LiveActor* actor, const smgpc::render::J3dMatrix3x4& matrix);
-    void draw_actor_model(LiveActor* actor, const smgpc::camera::CameraPose& camera_pose,
-                          std::uint64_t frame, smgpc::render::live_actor::LiveActorModel::DrawPass pass);
-    void draw_actor_model_3d_for_2d(
-        LiveActor* actor,
-        const smgpc::render::Model3DFor2DProjection& projection,
-        std::uint64_t frame,
-        smgpc::render::live_actor::LiveActorModel::DrawPass pass);
-
-    void start_actor_bck(LiveActor* actor, const char* name, const char* file_name);
-    [[nodiscard]] std::int16_t require_actor_bck(LiveActor* actor, const char* name, const char* file_name);
-    void start_actor_brk(LiveActor* actor, const char* name);
-    void start_actor_btk(LiveActor* actor, const char* name);
-    void start_actor_btp(LiveActor* actor, const char* name);
-    [[nodiscard]] bool try_start_actor_bck(LiveActor* actor, const char* name, const char* file_name);
-    [[nodiscard]] bool try_start_actor_brk(LiveActor* actor, const char* name);
-    [[nodiscard]] bool try_start_actor_btk(LiveActor* actor, const char* name);
-    [[nodiscard]] bool try_start_actor_btp(LiveActor* actor, const char* name);
-    void set_actor_brk_frame(LiveActor* actor, float frame);
-    void set_actor_brk_rate(LiveActor* actor, float rate);
-    void set_actor_brk_frame_and_stop(LiveActor* actor, float frame);
-    void set_actor_brk_frame_end_and_stop(LiveActor* actor);
-    void set_actor_bck_frame_and_stop(LiveActor* actor, float frame);
-    [[nodiscard]] J3DFrameCtrl* actor_bck_ctrl(const LiveActor* actor);
-    [[nodiscard]] J3DFrameCtrl* actor_brk_ctrl(const LiveActor* actor);
-    [[nodiscard]] bool is_actor_brk_one_time_and_stopped(const LiveActor* actor);
-    [[nodiscard]] std::string_view actor_current_bck_name(const LiveActor* actor);
-    [[nodiscard]] std::string_view actor_current_brk_name(const LiveActor* actor);
-    [[nodiscard]] std::string_view actor_current_btk_name(const LiveActor* actor);
-    [[nodiscard]] std::string_view actor_current_btp_name(const LiveActor* actor);
-    void advance_actor_animation(LiveActor* actor);
-    void synchronize_actor_model_animation(LiveActor* actor);
+    actor_model_resource_data_if_present(const LiveActor* actor, std::string_view resource_name);
 
     void initialize_actor_hit_sensors(LiveActor* actor, int sensor_count);
     [[nodiscard]] HitSensor* add_actor_hit_sensor(LiveActor* actor, const char* name, std::uint32_t type,

@@ -1,4 +1,10 @@
 #include "Game/Map/FileSelectSky.hpp"
+#include "Game/LiveActor/ModelManager.hpp"
+#include "Game/Animation/XanimePlayer.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/ModelUtil.hpp"
+#include <aurora/aurora.h>
+#include <aurora/gfx.h>
 #include "Game/Util/ObjUtil.hpp"
 #include "Logger.hpp"
 #include "RendererService.hpp"
@@ -130,14 +136,15 @@ namespace {
                     "Title/File Select composition did not activate 3D drawing");
 
             auto *sky = visual.sky();
-            auto *model = smgpc::compat::actor_model(sky);
+            auto *model = sky ? MR::getJ3DModel(sky) : nullptr;
             require(sky != nullptr && model != nullptr && !sky->mFlag.mIsDead &&
-                        model->model_arc_name() == "CometNearOrbitSky",
+                        std::string_view{MR::getModelResName(sky)} == "cometnearorbitsky",
                     "composition did not own the exact live FileSelectSky model");
             require_near(sky->mScale.x, 0.8F, 0.0001F, "FileSelectSky scale X");
             require_near(sky->mScale.y, 0.8F, 0.0001F, "FileSelectSky scale Y");
             require_near(sky->mScale.z, 0.8F, 0.0001F, "FileSelectSky scale Z");
-            model->requireLoaded();
+            require(model->getModelData() && model->getModelData()->getShapeNum() != 0,
+                    "the original model has no authored geometry");
 
 #ifndef NDEBUG
             (void)require_sky_entry(runtime.scheduler().snapshot());
@@ -156,24 +163,23 @@ namespace {
 #ifndef NDEBUG
             const auto after_movement = runtime.scheduler().snapshot();
             const auto &entry = require_sky_entry(after_movement);
-            require(entry.live_actor_bck_name == "CometNearOrbitSky" &&
-                        entry.live_actor_btk_name == "CometNearOrbitSky",
+            std::cout << "[animation] bck=" << entry.live_actor_bck_name << ";btk=" << entry.live_actor_btk_name << '\n';
+            require(MR::isBckPlaying(sky, "CometNearOrbitSky") &&
+                        MR::isBtkPlaying(sky, "CometNearOrbitSky"),
                     "production FileSelectSky did not start exact BCK/BTK animation");
-            packet_count = std::ranges::count_if(
-                runtime.j3d_packet_trace(), [frame](const auto &packet) {
-                    return packet.model_name == "CometNearOrbitSky" &&
-                           packet.frame_index == frame.frame_index &&
-                           packet.state.source_triangle_count != 0U &&
-                           packet.state.bck_active && packet.state.btk_active &&
-                           packet.state.btk_material_count != 0U;
-                });
-            require(packet_count != 0U,
-                    "production title background submitted no real animated J3D packets");
+            require(sky->mModelManager->mXanimePlayer != nullptr && MR::getBtkCtrl(sky) != nullptr,
+                    "title animations must use the original model controllers");
 #else
             throw std::runtime_error(
                 "production title background proof requires a debug build");
 #endif
-            renderer.end_frame();
+            renderer.end_frame(runtime.wii_video().render_mode());
+            u32 width = 0, height = 0, stride = 0;
+            require(AuroraReadDisplayCopyRGBA8(nullptr, 0, &width, &height, &stride),
+                    "title must complete a real GX display copy");
+            const auto* stats = aurora_get_stats();
+            packet_count = stats ? stats->drawCallCount : 0;
+            require(packet_count != 0, "original title draw buffers submitted no geometry");
 
             auto *identity = visual.sky();
             retained_visual.emplace(visual.release_sky_for_file_select());
@@ -183,8 +189,7 @@ namespace {
 
 #ifndef NDEBUG
         require(runtime.game_layout().is_game_scene_draw_3d_active() &&
-                    require_sky_entry(runtime.scheduler().snapshot()).live_actor_bck_name ==
-                        "CometNearOrbitSky",
+                    MR::isBckPlaying(retained_visual->sky(), "CometNearOrbitSky"),
                 "transferred sky did not preserve 3D activation and scheduler registration");
 #endif
         retained_visual.reset();

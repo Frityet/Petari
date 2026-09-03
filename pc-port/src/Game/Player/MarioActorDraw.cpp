@@ -1,3 +1,5 @@
+#include "Game/LiveActor/DisplayListMaker.hpp"
+#include "JSystem/J3DGraphAnimator/J3DJoint.hpp"
 #include "Game/LiveActor/ModelManager.hpp"
 #include "Game/MapObj/IceStep.hpp"
 #include "Game/Player/DLchanger.hpp"
@@ -26,13 +28,7 @@
 #include "JSystem/J3DGraphAnimator/J3DModelData.hpp"
 #include "JSystem/J3DGraphBase/J3DMaterial.hpp"
 #include "JSystem/J3DGraphBase/J3DTexture.hpp"
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
-#include "compat/ActorRuntimeRegistry.hpp"
-#include "runtime/RuntimeContext.hpp"
-#include <stdexcept>
-#else  // SMGPC_RETAIL_SOURCE
 #include "JSystem/JKernel/JKRSolidHeap.hpp"
-#endif  // SMGPC_PC_DIVERGENCE
 #include "JSystem/JUtility/JUTNameTab.hpp"
 #include "JSystem/JUtility/JUTTexture.hpp"
 #include <cstring>
@@ -48,87 +44,11 @@ extern "C" {
 void GDSetTexImgPtr(GXTexMapID, void*);
 }
 
-struct DLholder {
-    u8* mDL;
-    u16 mSize;
-    u16 _6;
-};
-
 class JetTurtleShadow : public LiveActor {
 public:
     void drawType0() const;
 };
 
-namespace {
-    struct DLBufferInfoForAddDL {
-        u8* mDL;
-        u16 mSize;
-        u16 _6;
-    };
-
-    struct DLchangerForAddDL : public DLchanger {
-        DLBufferInfoForAddDL* mBuffers;
-        u8 _4;
-        u8 mCurrentBuffer;
-    };
-
-    struct DisplayListMakerForModelSwap {
-        u32 _0[5];
-        J3DModel* mModel;
-    };
-
-    struct J3DMaterialForMarioActorDraw {
-        u8 _0[0x14];
-        u16 mIndex;
-        u8 _16[0x32];
-        J3DDisplayListObj* mSharedDLObj;
-        u8 _4C[0xC];
-        J3DMaterialForMarioActorDraw* mpOrigMaterial;
-    };
-
-    struct J3DModelDataForMarioActorDraw {
-        u8 _0[0x28];
-        J3DMaterialForMarioActorDraw** mMaterialNodePointer;
-        u8 _2C[0x34];
-        J3DMaterialForMarioActorDraw** mMaterialRemapTable;
-        u8 _64[0x8];
-        J3DTexture* mTexture;
-        JUTNameTab* mTextureName;
-    };
-};  // namespace
-
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
-void MarioActor::initDrawAndModel() {
-    initModelManagerWithAnm(gIsLuigi ? "Luigi" : "Mario", "MarioAnime", true);
-    smgpc::compat::require_actor_model(this);
-    _218 = nullptr;
-    _21C = nullptr;
-    _220 = nullptr;
-    _228 = nullptr;
-    _22C = nullptr;
-    mDLchanger = nullptr;
-    mDL[0] = nullptr;
-    mDL[1] = nullptr;
-    mDLSize = 0;
-    mCurrDL = 0;
-    _1A4 = 0.0f;
-    _9E4 = nullptr;
-    _9C0 = nullptr;
-    _9C8 = nullptr;
-    _A00 = nullptr;
-    _A04 = nullptr;
-    mTornadoMario = nullptr;
-    for (u32 i = 0; i < ARRAY_SIZE(mModels); ++i) {
-        mModels[i] = nullptr;
-    }
-    mCurrModel = 0;
-    _A0B = 0;
-    _B7C = nullptr;
-    _B80[0] = nullptr;
-    _B80[1] = nullptr;
-    _B88 = 0;
-}
-#else  // SMGPC_RETAIL_SOURCE
 void MarioActor::initDrawAndModel() {
     _218 = new DrawAdaptor(MR::Functor(this, &MarioActor::drawShadow), MR::DrawType_AlphaShadow);
     _21C = new DrawAdaptor(MR::Functor(this, &MarioActor::drawSilhouette), MR::DrawType_0x28);
@@ -185,16 +105,7 @@ void MarioActor::initDrawAndModel() {
     mDL[1] = new (0x20) u8[0x100];
     mCurrDL = 0;
 
-    DLchangerForAddDL* changer = new DLchangerForAddDL;
-    changer->mBuffers = new DLBufferInfoForAddDL[2];
-    changer->_4 = 2;
-    changer->mCurrentBuffer = 0;
-
-    for (u32 i = 0; i < changer->_4; i++) {
-        changer->mBuffers[i].mDL = new (0x20) u8[0x100];
-    }
-
-    mDLchanger = static_cast< DLchanger* >(changer);
+    mDLchanger = new DLchanger(0x100, 2);
     _1A4 = 0.0f;
 
     swapTextureInit();
@@ -204,7 +115,7 @@ void MarioActor::initDrawAndModel() {
         MR::CurrentHeapRestorer restorer(static_cast< JKRHeap* >(MR::getSceneHeapGDDR3()));
         _B7C = new JUTTexture(0x80, 0x40, GX_TF_RGBA8);
 
-        JUTTexture** ppTexture = &_B80;
+        JUTTexture** ppTexture = _B80;
         for (u32 i = 0; i < 2; i++) {
             ppTexture[i] = new JUTTexture(8, 8, GX_TF_IA8);
             ppTexture[i]->mWrapS = 1;
@@ -222,7 +133,6 @@ void MarioActor::initDrawAndModel() {
     initScreenBox();
     MR::startBtp(this, "ElementEnd");
 }
-#endif  // SMGPC_PC_DIVERGENCE
 
 void MarioActor::initBeeMario() {
     const char* modelName = gIsLuigi ? "BeeLuigi" : "BeeMario";
@@ -405,8 +315,8 @@ void MarioActor::initIceMario() {
 }
 
 void MarioActor::swapTextureInit() {
-    J3DModelDataForMarioActorDraw* actorData = reinterpret_cast< J3DModelDataForMarioActorDraw* >(MR::getJ3DModelData(this));
-    _B60 = actorData->mTexture->getNum();
+    J3DModelData* actorData = reinterpret_cast< J3DModelData* >(MR::getJ3DModelData(this));
+    _B60 = actorData->mMaterialTable.mTexture->getNum();
     _B64 = new ResTIMG*[_B60];
     _B6A = 0;
 
@@ -418,8 +328,8 @@ void MarioActor::swapTextureInit() {
 
     u16 texNo = 0;
     for (u16 i = 0; i < _B60; ++i) {
-        J3DModelDataForMarioActorDraw* modelData = reinterpret_cast< J3DModelDataForMarioActorDraw* >(MR::getJ3DModelData(this));
-        const char* texName = modelData->mTextureName->getName(i);
+        J3DModelData* modelData = reinterpret_cast< J3DModelData* >(MR::getJ3DModelData(this));
+        const char* texName = modelData->mMaterialTable.mTextureName->getName(i);
         if (strcmp(texName, "mario_eyeLid.0") == 0) {
             texNo = i;
             break;
@@ -433,13 +343,13 @@ void MarioActor::swapTextureInit() {
     createTextureDL(&_B6C[3], 0, _B70 + 3);
 
     if (_9E4) {
-        J3DModelDataForMarioActorDraw* beeData = reinterpret_cast< J3DModelDataForMarioActorDraw* >(MR::getJ3DModelData(_9E4));
-        const u16 textureNum = beeData->mTexture->getNum();
+        J3DModelData* beeData = reinterpret_cast< J3DModelData* >(MR::getJ3DModelData(_9E4));
+        const u16 textureNum = beeData->mMaterialTable.mTexture->getNum();
         u16 eyeNo = 0;
 
         for (u16 i = 0; i < textureNum; ++i) {
-            J3DModelDataForMarioActorDraw* modelData = reinterpret_cast< J3DModelDataForMarioActorDraw* >(MR::getJ3DModelData(_9E4));
-            const char* texName = modelData->mTextureName->getName(i);
+            J3DModelData* modelData = reinterpret_cast< J3DModelData* >(MR::getJ3DModelData(_9E4));
+            const char* texName = modelData->mMaterialTable.mTextureName->getName(i);
             if (strcmp(texName, "mario_eyeLid.0") == 0) {
                 eyeNo = i;
                 break;
@@ -457,13 +367,13 @@ void MarioActor::swapTextureInit() {
     }
 
     if (_A00) {
-        J3DModelDataForMarioActorDraw* hopperData = reinterpret_cast< J3DModelDataForMarioActorDraw* >(MR::getJ3DModelData(_A00));
-        const u16 textureNum = hopperData->mTexture->getNum();
+        J3DModelData* hopperData = reinterpret_cast< J3DModelData* >(MR::getJ3DModelData(_A00));
+        const u16 textureNum = hopperData->mMaterialTable.mTexture->getNum();
         u16 eyeNo = 0;
 
         for (u16 i = 0; i < textureNum; ++i) {
-            J3DModelDataForMarioActorDraw* modelData = reinterpret_cast< J3DModelDataForMarioActorDraw* >(MR::getJ3DModelData(_A00));
-            const char* texName = modelData->mTextureName->getName(i);
+            J3DModelData* modelData = reinterpret_cast< J3DModelData* >(MR::getJ3DModelData(_A00));
+            const char* texName = modelData->mMaterialTable.mTextureName->getName(i);
             if (strcmp(texName, "mario_eyeLid.0") == 0) {
                 eyeNo = i;
                 break;
@@ -483,11 +393,6 @@ void MarioActor::swapTextureInit() {
     initBlink();
 }
 
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
-void MarioActor::initBlur() {
-    throw std::logic_error("Mario motion-blur matrix buffers require the deferred raw J3DModelX path.");
-}
-#else  // SMGPC_RETAIL_SOURCE
 void MarioActor::initBlur() {
     _B14 = 0;
     for (u32 i = 0; i < 6; i++) {
@@ -514,13 +419,7 @@ void MarioActor::initBlur() {
     _B12 = 0;
     _B10 = 0;
 }
-#endif  // SMGPC_PC_DIVERGENCE
 
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
-void MarioActor::calcViewAndEntry() {
-    smgpc::compat::require_actor_model(this);
-}
-#else  // SMGPC_RETAIL_SOURCE
 void MarioActor::calcViewAndEntry() {
     decideShadowMode();
 
@@ -598,7 +497,6 @@ void MarioActor::calcViewAndEntry() {
     updateDarkMask(0x96);
     updateDarkMask(0x96);
 }
-#endif  // SMGPC_PC_DIVERGENCE
 
 void MarioActor::initFace() {
     _A5B = 8;
@@ -614,10 +512,10 @@ void MarioActor::initFace() {
     MR::initDLMakerFog(_A5C, true);
     MR::newDifferedDLBuffer(_A5C);
 
-    J3DModelDataForMarioActorDraw* actorData = reinterpret_cast< J3DModelDataForMarioActorDraw* >(MR::getJ3DModelData(this));
-    J3DModelDataForMarioActorDraw* faceData = reinterpret_cast< J3DModelDataForMarioActorDraw* >(MR::getJ3DModelData(_A5C));
-    faceData->mTexture = actorData->mTexture;
-    faceData->mTextureName = actorData->mTextureName;
+    J3DModelData* actorData = reinterpret_cast< J3DModelData* >(MR::getJ3DModelData(this));
+    J3DModelData* faceData = reinterpret_cast< J3DModelData* >(MR::getJ3DModelData(_A5C));
+    faceData->mMaterialTable.mTexture = actorData->mMaterialTable.mTexture;
+    faceData->mMaterialTable.mTextureName = actorData->mMaterialTable.mTextureName;
 
     for (s32 i = 0; i < _A5B; i++) {
         s32 faceJoint = MR::getJointIndex(this, "Face0");
@@ -752,9 +650,8 @@ void MarioActor::createTextureDL(DLholder* pHolder, u16 texMapID, u16 texIndex) 
 }
 
 void MarioActor::copyMaterial(J3DModel* pModel, u16 materialNo, s32 packetIndex) {
-    J3DModelDataForMarioActorDraw* modelData = reinterpret_cast< J3DModelDataForMarioActorDraw* >(mModels[mCurrModel]->mModelData);
-    J3DMaterialForMarioActorDraw* material = modelData->mMaterialNodePointer[materialNo];
-    material = material->mpOrigMaterial;
+    J3DModelData* modelData = reinterpret_cast< J3DModelData* >(mModels[mCurrModel]->mModelData);
+    J3DMaterial* material = modelData->mJointTree.mJointNodePointer[materialNo]->mMesh;
     if (material == nullptr) {
         return;
     }
@@ -773,11 +670,11 @@ void MarioActor::copyMaterial(J3DModel* pModel, u16 materialNo, s32 packetIndex)
         J3DMatPacket* matPacket = &pModel->mMatPacket[i];
         J3DShapePacket* shapePacket = &pModel->mShapePacket[i];
 
-        matPacket->mpMaterial = reinterpret_cast< J3DMaterial* >(modelData->mMaterialRemapTable[materialIndex]);
+        matPacket->mpMaterial = reinterpret_cast< J3DMaterial* >(modelData->mMaterialTable.mMaterialNodePointer[materialIndex]);
         matPacket->mpShapePacket = shapePacket;
         matPacket->addShapePacket(shapePacket);
-        matPacket->mpTexture = modelData->mTexture;
-        matPacket->mpDisplayListObj = modelData->mMaterialRemapTable[materialIndex]->mSharedDLObj;
+        matPacket->mpTexture = modelData->mMaterialTable.mTexture;
+        matPacket->mpDisplayListObj = modelData->mMaterialTable.mMaterialNodePointer[materialIndex]->mSharedDLObj;
     }
 }
 
@@ -786,7 +683,7 @@ void MarioActor::changeDisplayMode(u8 mode) {
     mMarioAnim->mXanimePlayer->setModel(mModels[mCurrModel]);
     mMarioAnim->mXanimePlayerUpper->setModel(mModels[mCurrModel]);
 
-    DisplayListMakerForModelSwap* dlMaker = reinterpret_cast< DisplayListMakerForModelSwap* >(mModelManager->mDisplayListMaker);
+    DisplayListMaker* dlMaker = mModelManager->mDisplayListMaker;
     dlMaker->mModel = mModels[mCurrModel];
 
     if (_494) {
@@ -813,25 +710,6 @@ void MarioActor::calcViewMainModel() {
     MR::multMtx(_BC8, invBase, invView);
 }
 
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
-void MarioActor::draw() const {
-    // Player is interleaved through DrawType_Player in the retail normal-draw
-    // sequence; it is intentionally absent from the generic normal draw-buffer
-    // lists. Submit both material passes at that exact callback boundary.
-    auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
-    if (runtime == nullptr || !runtime->last_camera_pose().has_value()) {
-        throw std::logic_error("MarioActor draw requires the active scene camera");
-    }
-    auto* actor = const_cast<MarioActor*>(this);
-    smgpc::compat::require_actor_model(actor);
-    smgpc::compat::draw_actor_model(
-        actor, *runtime->last_camera_pose(), runtime->frame_index(),
-        smgpc::render::live_actor::LiveActorModel::DrawPass::Opaque);
-    smgpc::compat::draw_actor_model(
-        actor, *runtime->last_camera_pose(), runtime->frame_index(),
-        smgpc::render::live_actor::LiveActorModel::DrawPass::Translucent);
-}
-#else  // SMGPC_RETAIL_SOURCE
 void MarioActor::draw() const {
     if (_B48) {
         _B48->draw();
@@ -853,7 +731,6 @@ void MarioActor::draw() const {
     drawMarioModel();
     mMario->draw();
 }
-#endif  // SMGPC_PC_DIVERGENCE
 
 void MarioActor::drawIndirect() const {
     drawModelBlur();
@@ -1011,11 +888,6 @@ void MarioActor::drawReflectModel() const {
     }
 }
 
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
-void MarioActor::drawModelBlur() const {
-    throw std::logic_error("Mario motion blur requires the deferred raw J3DModelX matrix history.");
-}
-#else  // SMGPC_RETAIL_SOURCE
 void MarioActor::drawModelBlur() const {
     if (isAllHidden()) {
         return;
@@ -1060,15 +932,7 @@ void MarioActor::drawModelBlur() const {
 
     model->mFlags._13 = false;
 }
-#endif  // SMGPC_PC_DIVERGENCE
 
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
-void MarioActor::drawMarioModel() const {
-    // The real model is submitted by SceneScheduler's LiveActorModel draw
-    // buffer pass; the retail raw display-list path is intentionally absent.
-    smgpc::compat::require_actor_model(const_cast<MarioActor*>(this));
-}
-#else  // SMGPC_RETAIL_SOURCE
 void MarioActor::drawMarioModel() const {
     if (isAllHidden()) {
         return;
@@ -1153,7 +1017,6 @@ void MarioActor::drawMarioModel() const {
         GXSetDstAlpha(GX_FALSE, 0);
     }
 }
-#endif  // SMGPC_PC_DIVERGENCE
 
 J3DModelX* MarioActor::getJ3DModel() const {
     return mModels[mCurrModel];
@@ -1211,8 +1074,7 @@ void J3DModelX::swapDrawBuffer(u32 drawBuffer) {
 }
 
 void DLchanger::addDL(J3DModelX* pModel) {
-    DLchangerForAddDL* changer = static_cast< DLchangerForAddDL* >(this);
-    DLBufferInfoForAddDL* buffer = &changer->mBuffers[changer->mCurrentBuffer];
+    DLholder* buffer = &mBuffers[mCurrentBuffer];
     pModel->setDynamicDL(buffer->mDL, buffer->mSize);
 }
 

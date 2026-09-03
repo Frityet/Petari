@@ -32,10 +32,6 @@ namespace {
 
 namespace MR {
 
-    void connectToSceneMapObjDecorationMovement(NameObj *object) {
-        MR::connectToScene(object, MR::MovementType_MapObjDecoration, -1, -1, -1);
-    }
-
     void activateDefaultGameLayout() {
         require_runtime("Default-game-layout activation")
             .game_layout()

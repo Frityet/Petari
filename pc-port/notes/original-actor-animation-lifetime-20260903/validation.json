@@ -1,0 +1,9 @@
+{
+  "literal_MarioAnimator_init": true,
+  "MarioAnimator_init_sha256": "146fe21996fb974e4324d2b829252049b4182400c778f3761734433a9646608e",
+  "literal_full_MarioAnimationEfx": true,
+  "MarioAnimationEfx_sha256": "ff263633f738104b78c5faea847b37f6ed0f3531125b81a04109a4cc5700bd88",
+  "compiled_tus": 6,
+  "duplicate_strong_definitions_in_delta": {},
+  "runtime_validation": "not run; parent owns integrated link/runtime gate"
+}

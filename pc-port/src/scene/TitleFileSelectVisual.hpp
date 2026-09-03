@@ -41,7 +41,7 @@ namespace smgpc::scene {
     // LiveActor scheduler registration.
     class TitleFileSelectVisual final {
     public:
-        explicit TitleFileSelectVisual(smgpc::runtime::RuntimeContext &runtime);
+        explicit TitleFileSelectVisual(smgpc::runtime::RuntimeContext &runtime, bool complete_draw_registration = true);
         ~TitleFileSelectVisual();
 
         TitleFileSelectVisual(const TitleFileSelectVisual &) = delete;

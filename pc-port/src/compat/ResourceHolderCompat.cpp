@@ -1,4 +1,5 @@
-#include "ResourceHolderCompat.hpp"
+#include "compat/ResourceHolderCompat.hpp"
+#include "resource/BasResource.hpp"
 
 #include "Game/Animation/MaterialAnmBuffer.hpp"
 #include "Game/System/StationedFileInfo.hpp"
@@ -50,13 +51,13 @@ namespace smgpc::compat {
             s32 _count;
         };
 
-        enum class BackingKind { Raw, Animation, Model, Map };
+        enum class BackingKind { Raw, Animation, Model, Map, Bas };
         BackingKind backing_kind(std::string_view name) {
             // Same ordered, case-sensitive substring predicates as original
             // createAndRegisterObject. This selects storage, never table names.
             for (const auto ext : {".btp", ".bpk", ".btk", ".brk", ".blk", ".bck", ".bca"})
                 if (name.find(ext) != name.npos) return BackingKind::Animation;
-            if (name.find(".bas") != name.npos) return BackingKind::Raw;
+            if (name.find(".bas") != name.npos) return BackingKind::Bas;
             if (name.find(".bmt") != name.npos) return BackingKind::Model;
             if (name.find(".bva") != name.npos) return BackingKind::Animation;
             if (name.find(".banmt") != name.npos) return BackingKind::Map;
@@ -70,6 +71,7 @@ namespace smgpc::compat {
         std::shared_ptr<const resource::RarcArchive> source;
         std::filesystem::path path;
         std::unique_ptr<JKRMemArchive> archive;
+        std::vector<resource::BasResource> bas_resources;
         std::vector<resource::JMapResource> maps;
         std::vector<resource::JMapSourceRegistration> map_aliases;
         std::vector<resource::J3dAnimationResource> animations;
@@ -126,6 +128,9 @@ namespace smgpc::compat {
                 if (bytes.empty()) break; // Original JMapInfo::attach(nullptr).
                 state.maps.emplace_back(bytes);
                 state.map_aliases.push_back(state.maps.back().register_source(bytes));
+                break;
+            case BackingKind::Bas:
+                if (!bytes.empty()) state.bas_resources.emplace_back(bytes, state.source);
                 break;
             case BackingKind::Raw:
                 if (!bytes.empty()) state.map_aliases.push_back(resource::register_jmap_source(bytes, state.source));

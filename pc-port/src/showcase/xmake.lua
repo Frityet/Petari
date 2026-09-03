@@ -3,6 +3,7 @@ target("smg-pc-mario-gateway-walk-slice")
     set_default(false)
     set_group("showcase")
     add_includedirs(path.join(os.projectdir(), "src"), {before = true})
+    add_includedirs(path.join(os.projectdir(), "aurora", "include"), {before = true})
     add_includedirs(path.join(os.projectdir(), "..", "include"))
     add_includedirs(path.join(os.projectdir(), "..", "libs", "JSystem", "include"))
     add_cxxflags("-include " .. path.join(os.projectdir(), "src/compat/MetrowerksStdCompat.hpp"), {force = true})
@@ -13,9 +14,24 @@ target("smg-pc-mario-gateway-walk-slice")
         "../Game/Player/MarioActor.cpp",
         "../Game/Player/MarioActorCamera.cpp",
         "../Game/Player/MarioActorDraw.cpp",
+        "../Game/Player/MarioActorHand.cpp",
+        "../Game/Player/MarioActorSpecialDraw.cpp",
+        "../Game/Player/MarioActorEye.cpp",
+        "../Game/Player/MarioActorGravity.cpp",
+        "../Game/Player/MarioParts.cpp",
+        "../Game/Player/MarioEffect.cpp",
+        "../Game/Player/MarioActorParts.cpp",
+        "../Game/Player/MarioSearchLight.cpp",
+        "../Game/Player/MarioNullBck.cpp",
+        "../Game/Player/MarioTeresa.cpp",
+        "../Game/Player/FireMarioBall.cpp",
+        "../Game/Player/JetTurtleShadow.cpp",
+        "../Game/Player/TornadoMario.cpp",
+        "../Game/Player/MarioWait.cpp",
         "../Game/Player/MarioActorInit.cpp",
         "../Game/Player/MarioActorPad.cpp",
         "../Game/Player/MarioAnimator.cpp",
+        "../Game/Player/MarioAnimationEfx.cpp",
         "../Game/Player/MarioConst.cpp",
         "../Game/Player/MarioInit.cpp",
         "../Game/Player/MarioMapCode.cpp",

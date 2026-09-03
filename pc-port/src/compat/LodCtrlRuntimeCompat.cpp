@@ -1,3 +1,4 @@
+#include "Game/Util/ModelUtil.hpp"
 #include "Game/LiveActor/LodCtrl.hpp"
 
 #include "Game/LiveActor/LiveActor.hpp"
@@ -5,7 +6,7 @@
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
-#include "render/live_actor/LiveActorModel.hpp"
+
 
 #include <cmath>
 #include <cstdio>
@@ -15,20 +16,9 @@
 #include <stdexcept>
 
 namespace {
-    const smgpc::render::live_actor::LiveActorModel& requireModel(const LiveActor* pActor) {
-        if (pActor == nullptr) {
-            throw std::invalid_argument("A model operation requires a LiveActor.");
-        }
-        const auto* model = smgpc::compat::actor_model(pActor);
-        if (model == nullptr || model->model_arc_name().empty()) {
-            throw std::logic_error("The LiveActor has no real model resource.");
-        }
-        return *model;
-    }
 
-    smgpc::render::live_actor::LiveActorModel& requireModel(LiveActor* pActor) {
-        return const_cast< smgpc::render::live_actor::LiveActorModel& >(requireModel(const_cast< const LiveActor* >(pActor)));
-    }
+
+
 
     const char* createSubModelObjName(const LiveActor* pActor, const char* pSubName) {
         if (pActor == nullptr || pSubName == nullptr) {
@@ -68,9 +58,7 @@ namespace MR {
         return createSubModelObjName(pActor, "Middle");
     }
 
-    const char* getModelResName(const LiveActor* pActor) {
-        return requireModel(pActor).model_arc_name().data();
-    }
+
 
     void copyTransRotateScale(const LiveActor* pSource, LiveActor* pDestination) {
         if (pSource == nullptr || pDestination == nullptr) {
@@ -92,15 +80,7 @@ namespace MR {
         return pActor->mPosition.distance(*player_position);
     }
 
-    void calcAnimDirect(LiveActor* pActor) {
-        if (pActor == nullptr) {
-            throw std::invalid_argument("Direct animation calculation requires a LiveActor.");
-        }
-        const auto wasDisabled = pActor->mFlag.mIsNoCalcAnim;
-        pActor->mFlag.mIsNoCalcAnim = false;
-        pActor->calcAnim();
-        pActor->mFlag.mIsNoCalcAnim = wasDisabled;
-    }
+
 
     void hideModelAndOnCalcAnim(LiveActor* pActor) {
         if (pActor == nullptr) {
@@ -112,23 +92,15 @@ namespace MR {
         pActor->mFlag.mIsNoCalcAnim = false;
     }
 
-    void syncJointAnimation(LiveActor* pDestination, const LiveActor* pSource) {
-        requireModel(pDestination).syncJointAnimationFrom(requireModel(pSource));
-    }
 
-    void syncMaterialAnimation(LiveActor* pDestination, const LiveActor* pSource) {
-        requireModel(pDestination).syncMaterialAnimationFrom(requireModel(pSource));
-    }
 
-    void setClippingTypeSphereContainsModelBoundingBox(LiveActor* pActor, f32 margin) {
-        if (!std::isfinite(margin)) {
-            throw std::invalid_argument("A clipping margin must be finite.");
-        }
-        const auto radius = requireModel(pActor).model_bounding_radius();
-        if (!radius.has_value()) {
-            throw std::logic_error("Model clipping bounds are unavailable without a parsed real BDL/BMD model.");
-        }
-        smgpc::compat::configure_actor_clipping_sphere(pActor, *radius + margin, nullptr);
+
+
+    void setClippingTypeSphereContainsModelBoundingBox(LiveActor* pActor, f32 radiusOffset) {
+        f32 modelBoundingRadius = 0.0f;
+        MR::calcModelBoundingRadius(&modelBoundingRadius, pActor);
+
+        setClippingTypeSphere(pActor, modelBoundingRadius + radiusOffset, nullptr);
     }
 
     void offShadowVisibleSyncHostAll(LiveActor* pActor) {

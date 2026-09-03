@@ -1,0 +1,9 @@
+{
+  "draw_util_bodies_whitespace_normalized": [
+    "void drawInit()",
+    "void setDefaultViewportAndScissor()",
+    "inline s32 getScreenHeightInline()"
+  ],
+  "category_table_exact_except_explicit_unsigned_sentinel_conversions": true,
+  "original_init_excludes_last_sentinel": true
+}

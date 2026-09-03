@@ -17,9 +17,8 @@
 #include "Game/Util/TalkUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/ActorShadowCsvCompat.hpp"
-#include "compat/LiveActorMatrixCompat.hpp"
 #include "render/J3dMaterialRuntime.hpp"
-#include "render/live_actor/LiveActorModel.hpp"
+
 #include "runtime/RuntimeContext.hpp"
 
 #include <algorithm>
@@ -95,17 +94,6 @@ namespace {
         return angle <= maximumRadians + 1.0e-6F;
     }
 
-    smgpc::render::live_actor::LiveActorModel& requireModel(const LiveActor* actor) {
-        if (actor == nullptr) {
-            throw std::invalid_argument("NPC model operation requires a LiveActor.");
-        }
-        auto* model = smgpc::compat::actor_model(actor);
-        if (model == nullptr) {
-            throw std::logic_error("NPC model state is unavailable.");
-        }
-        return *model;
-    }
-
     PartsModel* createNPCGoodsImpl(LiveActor* host, const char* modelName, const char* jointName, int drawBufferType) {
         if (host == nullptr) {
             throw std::invalid_argument("NPC goods require a host actor.");
@@ -137,7 +125,7 @@ void JointController::registerCallBack() {
 }
 
 const void* smgpcNPCActorModelPresence(const LiveActor* actor) {
-    return smgpc::compat::actor_model(actor);
+    return actor != nullptr ? actor->mModelManager : nullptr;
 }
 
 const void* smgpcNPCActorStarPointerPresence(const LiveActor* actor) {
@@ -171,25 +159,6 @@ namespace MR {
     void makeQuatRotateDegree(TQuat4f* destination, const TVec3f& rotation) {
         constexpr auto degreesToRadians = std::numbers::pi_v<float> / 180.0F;
         makeQuatRotateRadian(destination, rotation * degreesToRadians);
-    }
-
-    void setBaseTRMtx(LiveActor* actor, const TQuat4f& quaternion) {
-        if (actor == nullptr) {
-            throw std::invalid_argument("Base-matrix assignment requires a LiveActor.");
-        }
-        auto normalizedQuat = quaternion;
-        normalizedQuat.normalize();
-        auto side = TVec3f{};
-        auto up = TVec3f{};
-        auto front = TVec3f{};
-        normalizedQuat.getXDir(side);
-        normalizedQuat.getYDir(up);
-        normalizedQuat.getZDir(front);
-        setBaseTRMtx(actor, smgpc::render::J3dMatrix3x4{{
-                                side.x, up.x, front.x, actor->mPosition.x,
-                                side.y, up.y, front.y, actor->mPosition.y,
-                                side.z, up.z, front.z, actor->mPosition.z,
-                            }});
     }
 
     void extractMtxTrans(MtxPtr matrix, TVec3f* destination) {
@@ -278,29 +247,11 @@ namespace MR {
         }
     }
 
-    bool isExistBck(const LiveActor* actor, const char* name) {
-        if (name == nullptr || *name == '\0') {
-            return false;
-        }
-        return requireModel(actor).bck_frame_max(name).has_value();
-    }
-
-    void startBckNoInterpole(const LiveActor* actor, const char* name) {
-        if (actor == nullptr || name == nullptr || *name == '\0') {
-            throw std::invalid_argument("BCK playback requires an actor and animation name.");
-        }
-        smgpc::compat::start_actor_bck(const_cast<LiveActor*>(actor), name, nullptr);
-    }
-
     void setBckFrameAtRandom(const LiveActor* actor) {
         auto* controller = getBckCtrl(actor);
         const auto randomFrame = static_cast<s32>(
             static_cast<f32>(controller->getEnd()) * getRandom());
         setBckFrame(actor, static_cast<f32>(randomFrame));
-    }
-
-    void connectToSceneIndirectNpc(LiveActor* actor) {
-        connectToScene(actor, MovementType_NPC, CalcAnimType_NPC, DrawBufferType_IndirectNpc, -1);
     }
 
     void initStarPointerTargetAtJoint(LiveActor*, const char*, f32, const TVec3f&) {

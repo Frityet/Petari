@@ -16,6 +16,7 @@ class CollisionParts;
 class CollisionPartsFilterBase;
 class Flag;
 class HitSensor;
+class FurMulti;
 class LiveActor;
 class LiveActorGroup;
 class LodCtrl;
@@ -371,7 +372,7 @@ namespace MR {
 
     void initFur(LiveActor*);
     void initFurPlanet(LiveActor*);
-    LiveActor* initFurPlayer(LiveActor*);
+    FurMulti* initFurPlayer(LiveActor*);
 
     void initCollisionParts(LiveActor*, const char*, HitSensor*, MtxPtr);
     void initCollisionPartsAutoEqualScale(LiveActor*, const char*, HitSensor*, MtxPtr);

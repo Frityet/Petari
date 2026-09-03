@@ -15,9 +15,7 @@ target("smg-pc-game")
     -- Xmake's broad-remove/explicit-re-add order drops the re-added object from
     -- the archive, so keep the provider-incomplete set explicit here.
     remove_files {
-        "Player/DrawAdaptor.cpp",
         "Player/FireMarioBall.cpp",
-        "Player/J3DModelX.cpp",
         "Player/JetTurtleShadow.cpp",
         "Player/MarineSnow.cpp",
         "Player/Mario.cpp",
@@ -107,7 +105,6 @@ target("smg-pc-game")
         "Player/MarioWall.cpp",
         "Player/MarioWarp.cpp",
         "Player/MatrixControl.cpp",
-        "Player/ModelHolder.cpp",
         "Player/RushEndInfo.cpp",
         "Player/TornadoMario.cpp",
     }
@@ -141,7 +138,6 @@ target("smg-pc-game")
     remove_files("Screen/LayoutPaneCtrl.cpp")
     remove_files("Screen/SimpleLayout.cpp")
     remove_files("Screen/FullScreenBlur.cpp")
-    remove_files("LiveActor/MaterialCtrl.cpp")
     remove_files("Map/FileSelectEffect.cpp")
     remove_files("Map/FileSelectFunc.cpp")
     remove_files("Map/FileSelectItem.cpp")
@@ -166,7 +162,6 @@ target("smg-pc-game")
     remove_files("Util/GravityUtil.cpp")
     remove_files("Util/DemoUtil.cpp")
     remove_files("Util/EventUtil.cpp")
-    remove_files("Util/FixedPosition.cpp")
     remove_files("Util/ActorMovementUtil.cpp")
     remove_files("Util/ActorShadowUtil.cpp")
     remove_files("Util/LiveActorUtil.cpp")
@@ -208,7 +203,6 @@ target("smg-pc-game")
         "../JSystem/JGeometry/TMatrix.cpp",
         "../JSystem/JMath/JMATrigonometricTable.cpp",
         "../render/light/LightData.cpp",
-        "../render/live_actor/LiveActorModel.cpp"
     }
     add_headerfiles("**.hpp")
     add_headerfiles("../camera/**.hpp")
@@ -229,7 +223,6 @@ target("smg-pc-game")
         "../render/J3dTexture.hpp",
         "../render/JMathTrig.hpp",
         "../render/light/LightData.hpp",
-        "../render/live_actor/LiveActorModel.hpp"
     }
     add_includedirs("../", { public = true })
     add_deps {

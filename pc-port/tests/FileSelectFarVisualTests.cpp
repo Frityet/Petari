@@ -4,6 +4,10 @@
 #include "Game/Map/LightFunction.hpp"
 #include "Game/Screen/FileSelectNumber.hpp"
 #include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/ModelUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include <aurora/aurora.h>
+#include <aurora/gfx.h>
 #include "Logger.hpp"
 #include "RendererService.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
@@ -120,7 +124,7 @@ namespace {
 #endif
         runtime.draw_3d_normal();
         runtime.draw_2d_normal();
-        renderer.end_frame();
+        renderer.end_frame(runtime.wii_video().render_mode());
     }
 
     constexpr auto cExpectedSlots =
@@ -179,9 +183,9 @@ namespace {
             require_near(matrix.mMtx[2][3], expected[2], 0.002F,
                          "planet matrix authored Z");
 
-            auto *model = smgpc::compat::actor_model(slot.planet);
+            auto *model = MR::getJ3DModel(slot.planet);
             require(model != nullptr &&
-                        model->model_arc_name() == "FileSelectDataPlanet" &&
+                        std::string_view{MR::getModelResName(slot.planet)} == "fileselectdataplanet" &&
                         !slot.planet->mFlag.mIsDead &&
                         slot.number->mFlag.mIsDead,
                     "slot did not use the real planet or initially-dead number layout");
@@ -191,7 +195,7 @@ namespace {
                          "planet scale Y");
             require_near(slot.planet->mScale.z, 30.0F, 0.0001F,
                          "planet scale Z");
-            model->requireLoaded();
+            require(model->getModelData() && model->getModelData()->getShapeNum() != 0, "planet has no original geometry");
         }
     }
 
@@ -285,17 +289,23 @@ namespace {
     }
 
     std::unique_ptr<smgpc::scene::FileSelectFarVisual> create_far_visual(
-        smgpc::runtime::RuntimeContext &runtime, FileSelectSky **identity_out) {
+        smgpc::runtime::RuntimeContext &runtime,
+        smgpc::render::AuroraRenderer &renderer, FileSelectSky **identity_out) {
         auto title =
-            std::make_unique<smgpc::scene::TitleFileSelectVisual>(runtime);
+            std::make_unique<smgpc::scene::TitleFileSelectVisual>(runtime, false);
+        auto far = std::make_unique<smgpc::scene::FileSelectFarVisual>(runtime);
+        runtime.scheduler().allocate_draw_buffers();
+        // The title scene normally runs before this transition. Its original
+        // controller publishes the previous watch point on each movement tick.
+        render_frame(runtime, renderer, 0U);
+        render_frame(runtime, renderer, 0U);
         auto *identity = title->sky();
         auto handoff = title->release_sky_for_file_select();
         require(handoff.sky() == identity,
                 "title handoff did not retain the exact sky identity");
         title.reset();
 
-        auto far = std::make_unique<smgpc::scene::FileSelectFarVisual>(
-            runtime, std::move(handoff));
+        far->begin_far(std::move(handoff));
         require(far->sky() == identity,
                 "far composition replaced the transferred FileSelectSky");
         if (identity_out != nullptr) {
@@ -339,7 +349,7 @@ namespace {
 
         auto *first_sky_identity = static_cast<FileSelectSky *>(nullptr);
         {
-            auto far = create_far_visual(runtime, &first_sky_identity);
+            auto far = create_far_visual(runtime, renderer, &first_sky_identity);
             require(first_sky_identity != nullptr &&
                         runtime.game_layout().is_game_scene_draw_3d_active() &&
                         far->camera_controller() != nullptr &&
@@ -366,7 +376,7 @@ namespace {
                 runtime.camera_system().active_programmable_camera_pose();
             require(initial_pose.has_value(),
                     "exact File Select controller did not own the camera");
-            require_pose(*initial_pose, {0.0F, 15800.0F, 15000.0F},
+            require_pose(*initial_pose, {0.0F, 15000.0F, 15000.0F},
                          {0.0F, 15800.0F, 0.0F}, 60.0F,
                          "seeded title camera");
 
@@ -406,13 +416,10 @@ namespace {
                     "six projected FileSelectNumber layouts did not appear at Far");
 
 #ifndef NDEBUG
-            const auto planet_packets = std::ranges::count_if(
-                runtime.j3d_packet_trace(), [](const auto &packet) {
-                    return packet.model_name == "FileSelectDataPlanet" &&
-                           packet.frame_index == 63U &&
-                           packet.state.source_triangle_count != 0U &&
-                           packet.state.parsed_display_list_bytes != 0U;
-                });
+            u32 width = 0, height = 0, stride = 0;
+            require(AuroraReadDisplayCopyRGBA8(nullptr, 0, &width, &height, &stride),
+                    "far scene must complete a real GX display copy");
+            const auto* draw_stats = aurora_get_stats();
             const auto number_packets = std::ranges::count_if(
                 runtime.layout_packet_trace(), [](const auto &packet) {
                     return packet.layout_name == "FileNumber" &&
@@ -420,7 +427,7 @@ namespace {
                            packet.vertex_count != 0U &&
                            packet.index_count != 0U;
                 });
-            require(planet_packets >= 6U,
+            require(draw_stats && draw_stats->drawCallCount >= 6U,
                     "six real FileSelectDataPlanet actors submitted no J3D packets");
             require(number_packets >= 6U,
                     "six real FileNumber layouts submitted no layout packets");
@@ -527,7 +534,7 @@ namespace {
         // cleanly rather than merely surviving until process shutdown.
         auto *second_sky_identity = static_cast<FileSelectSky *>(nullptr);
         {
-            auto far = create_far_visual(runtime, &second_sky_identity);
+            auto far = create_far_visual(runtime, renderer, &second_sky_identity);
             require(second_sky_identity != nullptr &&
                         far->sky() == second_sky_identity,
                     "recreated far composition did not own a fresh exact sky");

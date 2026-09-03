@@ -29,3 +29,9 @@
 #include "Game/Util/ScreenUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
+
+#include "Game/Util/MemoryUtil.hpp"
+#include "Game/Util/ModelUtil.hpp"
+#include "Game/Util/SchedulerUtil.hpp"
+#include "Game/Util/StringUtil.hpp"
+#include "Game/Util/DrawUtil.hpp"

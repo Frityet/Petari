@@ -274,10 +274,10 @@ void MarioActor::initMember() {
     _B12 = 0;
     _B14 = 0;
     _B18.zero();
-    _B28 = 0.0f;
-    _B24 = 0.0f;
-    _B30 = 0.0f;
-    _B2C = 0.0f;
+    mScreenBoxMin.y = 0.0f;
+    mScreenBoxMin.x = 0.0f;
+    mScreenBoxMax.y = 0.0f;
+    mScreenBoxMax.x = 0.0f;
     _B38 = 0.0f;
     _B34 = 0.0f;
     _B40 = 0.0f;

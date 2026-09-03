@@ -1,3 +1,4 @@
+#include "Game/Util/LiveActorUtil.hpp"
 #include "RuntimeServices.hpp"
 
 #include <algorithm>
@@ -3602,7 +3603,7 @@ namespace smgpc::runtime {
         _position = {_base_matrix[3U], _base_matrix[7U], _base_matrix[11U]};
 
         if (_attached_actor != nullptr) {
-            smgpc::compat::set_actor_base_matrix(_attached_actor, smgpc::render::J3dMatrix3x4{_base_matrix});
+            MR::setBaseTRMtx(_attached_actor, matrix);
             _attached_actor->mPosition.set(_position[0U], _position[1U], _position[2U]);
         }
     }
@@ -3777,8 +3778,10 @@ namespace smgpc::runtime {
             return;
         }
 
-        _has_base_matrix = true;
-        _base_matrix = smgpc::compat::actor_base_matrix(_attached_actor).m;
+        _has_base_matrix = _attached_actor->getBaseMtx() != nullptr;
+        if (_has_base_matrix) {
+            _base_matrix = smgpc::render::j3d_matrix_from_mtx(_attached_actor->getBaseMtx()).m;
+        }
         _position = {_attached_actor->mPosition.x, _attached_actor->mPosition.y, _attached_actor->mPosition.z};
         _velocity = {_attached_actor->mVelocity.x, _attached_actor->mVelocity.y, _attached_actor->mVelocity.z};
         _gravity = {_attached_actor->mGravity.x, _attached_actor->mGravity.y, _attached_actor->mGravity.z};

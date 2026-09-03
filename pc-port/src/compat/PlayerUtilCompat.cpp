@@ -1,3 +1,7 @@
+#include "Game/Player/MarioActor.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Player/MarioAccess.hpp"
+#include "Game/Util/ModelUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 
 #include "Game/LiveActor/LiveActor.hpp"
@@ -244,53 +248,20 @@ namespace MR {
         return matrix;
     }
 
-    void startBckPlayer(const char* pName, const char* pFileName) {
-        auto *player = smgpc::compat::active_player_system_for_player_util();
-        auto *actor = player != nullptr ? player->attached_actor() : nullptr;
-        if (actor == nullptr || pName == nullptr) {
-            throw std::logic_error("Cannot start animation on an unavailable player actor.");
+    void startBckPlayer(const char* pName, const char* pParam2) {
+        if (pParam2 != nullptr) {
+            MarioAccess::changeAnimationE(pName, pParam2);
+        } else {
+            MarioAccess::changeAnimationE(pName, pName);
         }
-        smgpc::compat::start_actor_bck(actor, pName, pFileName);
-#ifndef NDEBUG
-        if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            const auto *model = smgpc::compat::actor_model(actor);
-            const auto frame_max = model != nullptr ? model->bck_frame_max(pName) : std::nullopt;
-            runtime->emit_semantic_trace_event(
-                "player", "player_bck_started",
-                "name=" + std::string(pName != nullptr ? pName : "") +
-                    ";file=" + std::string(pFileName != nullptr ? pFileName : "") +
-                    ";frame_max=" + (frame_max.has_value() ? std::to_string(*frame_max) : std::string("absent")));
-        }
-#endif
     }
 
     s16 getBckFrameMaxPlayer(const char* pName) {
-        const auto *player = smgpc::compat::active_player_system_for_player_util();
-        const auto *actor = player != nullptr ? player->attached_actor() : nullptr;
-        const auto *model = smgpc::compat::actor_model(actor);
-        if (model == nullptr || pName == nullptr) {
-            throw std::logic_error("Player animation data is unavailable.");
-        }
-        const auto frame_max = model->bck_frame_max(pName);
-        if (!frame_max.has_value()) {
-            throw std::logic_error("Requested player animation does not exist.");
-        }
-        return *frame_max;
+        return MR::getBckFrameMax(MarioAccess::getPlayerActor(), pName);
     }
 
     bool isBckStoppedPlayer() {
-        const auto *player = smgpc::compat::active_player_system_for_player_util();
-        const auto *actor = player != nullptr ? player->attached_actor() : nullptr;
-        const auto *model = smgpc::compat::actor_model(actor);
-        const auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
-        if (model == nullptr || runtime == nullptr) {
-            throw std::logic_error("Player animation state is unavailable.");
-        }
-        const auto stopped = model->is_bck_stopped(runtime->frame_index());
-        if (!stopped.has_value()) {
-            throw std::logic_error("Player animation state is unavailable.");
-        }
-        return *stopped;
+        return MR::isBckStopped(MarioAccess::getPlayerActor());
     }
 
     void initPlayerAfterOpeningDemo() {
@@ -301,7 +272,7 @@ namespace MR {
         }
         smgpc::compat::release_puppetable_demo_control(true);
         player->finish_opening_demo();
-        smgpc::compat::start_actor_bck(actor, "Wait", nullptr);
+        MR::startBckPlayer("Wait", nullptr);
 #ifndef NDEBUG
         if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance()) {
             runtime->emit_semantic_trace_event("player", "player_opening_demo_finished",

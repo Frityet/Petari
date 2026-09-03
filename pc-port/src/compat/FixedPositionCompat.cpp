@@ -3,7 +3,7 @@
 #include "Game/LiveActor/LiveActor.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/FixedPositionCompat.hpp"
-#include "render/live_actor/LiveActorModel.hpp"
+
 #include "resource/BcsvTable.hpp"
 #include "resource/RarcArchive.hpp"
 #include "runtime/RuntimeContext.hpp"
@@ -22,56 +22,11 @@ namespace {
     static_assert(sizeof(smgpc::render::J3dMatrix3x4) == sizeof(Mtx));
     static_assert(std::is_standard_layout_v< smgpc::render::J3dMatrix3x4 >);
 
-    [[nodiscard]] MtxPtr actor_base_mtx(const LiveActor* pActor) {
-        if (pActor == nullptr) {
-            return nullptr;
-        }
 
-        const auto& matrix = smgpc::compat::actor_base_matrix(pActor);
-        return reinterpret_cast< MtxPtr >(const_cast< f32* >(matrix.m.data()));
-    }
 
-    void set_local_tr(TPos3f* pMtx, const TVec3f& rTrans, const TVec3f& rRotDegrees) {
-        const auto rx = rRotDegrees.x * cDegToRad;
-        const auto ry = rRotDegrees.y * cDegToRad;
-        const auto rz = rRotDegrees.z * cDegToRad;
-        const auto sinX = std::sin(rx);
-        const auto cosX = std::cos(rx);
-        const auto sinY = std::sin(ry);
-        const auto cosY = std::cos(ry);
-        const auto sinZ = std::sin(rz);
-        const auto cosZ = std::cos(rz);
 
-        pMtx->mMtx[0][0] = cosZ * cosY;
-        pMtx->mMtx[1][0] = sinZ * cosY;
-        pMtx->mMtx[2][0] = -sinY;
 
-        pMtx->mMtx[0][1] = cosZ * sinY * sinX - sinZ * cosX;
-        pMtx->mMtx[1][1] = sinZ * sinY * sinX + cosZ * cosX;
-        pMtx->mMtx[2][1] = cosY * sinX;
 
-        pMtx->mMtx[0][2] = cosZ * sinY * cosX + sinZ * sinX;
-        pMtx->mMtx[1][2] = sinZ * sinY * cosX - cosZ * sinX;
-        pMtx->mMtx[2][2] = cosY * cosX;
-        pMtx->setTrans(rTrans);
-    }
-
-    void normalize_axes(TPos3f* pMtx) {
-        for (auto column = 0; column < 3; ++column) {
-            const auto x = pMtx->mMtx[0][column];
-            const auto y = pMtx->mMtx[1][column];
-            const auto z = pMtx->mMtx[2][column];
-            const auto length = std::sqrt(x * x + y * y + z * z);
-            if (length <= cMinAxisLength) {
-                continue;
-            }
-
-            const auto inverse = 1.0F / length;
-            pMtx->mMtx[0][column] *= inverse;
-            pMtx->mMtx[1][column] *= inverse;
-            pMtx->mMtx[2][column] *= inverse;
-        }
-    }
 
     [[nodiscard]] TVec3f read_vector(const smgpc::resource::BcsvTable& table, std::string_view prefix) {
         auto result = TVec3f{};
@@ -117,86 +72,6 @@ namespace smgpc::compat {
         };
     }
 }  // namespace smgpc::compat
-
-FixedPosition::FixedPosition(const LiveActor* pActor, const char* pJointName, const TVec3f& rLocalTrans, const TVec3f& rRotAxes) {
-    if (pActor == nullptr || pJointName == nullptr || *pJointName == '\0') {
-        throw std::invalid_argument("FixedPosition named-joint construction requires an actor and joint name");
-    }
-
-    throw std::runtime_error("FixedPosition named-joint matrices are not available on the host: " + std::string(pJointName));
-}
-
-FixedPosition::FixedPosition(const LiveActor* pActor, const TVec3f& rLocalTrans, const TVec3f& rRotAxes) {
-    if (pActor == nullptr) {
-        throw std::invalid_argument("FixedPosition actor-relative construction requires an actor");
-    }
-
-    init(actor_base_mtx(pActor), rLocalTrans, rRotAxes);
-}
-
-FixedPosition::FixedPosition(MtxPtr mtx, const TVec3f& rLocalTrans, const TVec3f& rRotAxes) {
-    init(mtx, rLocalTrans, rRotAxes);
-}
-
-FixedPosition::FixedPosition(const LiveActor* pActor, const char* pBcsvName, const LiveActor* pResourceActor) {
-    if (pActor == nullptr || pBcsvName == nullptr || *pBcsvName == '\0') {
-        throw std::invalid_argument("FixedPosition resource construction requires an actor and resource name");
-    }
-
-    const auto* resource_actor = pResourceActor != nullptr ? pResourceActor : pActor;
-    const auto* model = smgpc::compat::actor_model(resource_actor);
-    if (model == nullptr || model->model_arc_name().empty()) {
-        throw std::runtime_error("FixedPosition resource actor has no real model archive");
-    }
-
-    auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
-    if (runtime == nullptr) {
-        throw std::runtime_error("FixedPosition resource lookup requires an active runtime");
-    }
-
-    const auto archive_path = runtime->find_object_archive(model->model_arc_name());
-    if (!archive_path.has_value()) {
-        throw std::runtime_error("FixedPosition model archive does not exist: " + std::string(model->model_arc_name()));
-    }
-
-    const auto& archive = runtime->dvd().archive_for_path(*archive_path);
-    const auto resource = smgpc::compat::load_fixed_position_resource(archive, pBcsvName);
-    if (resource.joint_name.has_value()) {
-        throw std::runtime_error("FixedPosition resource requests an unavailable host joint matrix: " + *resource.joint_name);
-    }
-
-    init(actor_base_mtx(pActor), resource.translation, resource.rotation);
-}
-
-void FixedPosition::init(MtxPtr mtx, const TVec3f& rLocalTrans, const TVec3f& rRotAxes) {
-    setBaseMtx(mtx);
-    mLocalTrans.set(rLocalTrans);
-    mRotDegrees.set(rRotAxes);
-    mMtx.identity();
-    mNormalizeScale = true;
-}
-
-void FixedPosition::calc() {
-    set_local_tr(&mMtx, mLocalTrans, mRotDegrees);
-
-    if (mBaseMtx != nullptr) {
-        TMtx34f baseMtx;
-        baseMtx.set((const MtxPtr)mBaseMtx);
-        mMtx.concat(baseMtx, mMtx);
-    }
-
-    if (mNormalizeScale) {
-        normalize_axes(&mMtx);
-    }
-}
-
-void FixedPosition::setBaseMtx(MtxPtr mtx) {
-    mBaseMtx = (TMtx34f*)mtx;
-}
-
-void FixedPosition::setLocalTrans(const TVec3f& rLocalTrans) {
-    mLocalTrans.set(rLocalTrans);
-}
 
 void FixedPosition::copyRotate(TVec3f* pRotate) const {
     if (pRotate == nullptr) {

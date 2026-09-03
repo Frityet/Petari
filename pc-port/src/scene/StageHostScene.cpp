@@ -208,6 +208,7 @@ namespace smgpc::scene {
         (void)_runtime.end_scene_registration_scope(_registration_scope_id);
         _runtime.player_system().clear_stage_state();
         destroy_roots();
+        _runtime.scheduler().retire_draw_buffers();
         // Placement teardown releases cast memberships while the one
         // pre-placement DemoDirector counterpart is still available.
         _demo_scene_runtime.reset();
@@ -249,6 +250,7 @@ namespace smgpc::scene {
             _stage_session_binding = std::move(stage_session_binding);
         }
 
+        _runtime.begin_scene_draw_buffer_registration();
         initSceneObjHolder();
         _scene_obj_holder_binding = std::make_unique<SceneObjHolderBinding>(*mSceneObjHolder);
         constexpr auto required_scene_objects = std::array{
@@ -329,6 +331,7 @@ namespace smgpc::scene {
 #endif
         init_stage_start_camera();
         SleepControlFunc::initSyncSleepController();
+        _runtime.scheduler().allocate_draw_buffers();
         appear_roots();
         _initialized = true;
     }

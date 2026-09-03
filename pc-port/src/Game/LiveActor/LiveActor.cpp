@@ -1,3 +1,14 @@
+#include "Game/AudioLib/AudAnmSoundObject.hpp"
+#include "Game/Util/MemoryUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
+#include "Game/System/ResourceHolder.hpp"
+#include "Game/LiveActor/ModelManager.hpp"
+#include "Game/LiveActor/ActorAnimKeeper.hpp"
+#include "Game/LiveActor/ActorPadAndCameraCtrl.hpp"
+#include "Game/Util/ModelUtil.hpp"
+#include "compat/JkrAllocationDomain.hpp"
+#include "compat/J3dCommandScope.hpp"
+#include "compat/ModelManagerOwner.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 
 #include "Game/LiveActor/ActorLightCtrl.hpp"
@@ -14,21 +25,6 @@
 
 #include <stdexcept>
 #include <string_view>
-
-namespace {
-    void refresh_actor_joint_matrices(LiveActor* actor) {
-        auto* model = smgpc::compat::actor_model(actor);
-        if (model == nullptr) {
-            return;
-        }
-        if (auto* controller = smgpc::compat::actor_bck_ctrl(actor); controller != nullptr) {
-            model->syncBckFrameController(
-                controller->mFrame, controller->mRate, controller->mState);
-        }
-        model->refresh_resolved_joint_matrices(
-            smgpc::compat::actor_base_matrix(actor));
-    }
-}  // namespace
 
 LiveActor::LiveActor(const char* pName)
     : NameObj(pName), mPosition(0.0F, 0.0F, 0.0F), mRotation(0.0F, 0.0F, 0.0F),
@@ -48,8 +44,12 @@ void LiveActor::init(const JMapInfoIter&) {
 }
 
 void LiveActor::movement() {
-    if (smgpc::compat::actor_model(this) != nullptr && !mFlag.mIsStoppedAnim) {
-        smgpc::compat::advance_actor_animation(this);
+    if (mModelManager != nullptr && !mFlag.mIsStoppedAnim) {
+        mModelManager->update();
+
+        if (mAnimKeeper != nullptr) {
+            mAnimKeeper->update();
+        }
     }
     if (mFlag.mIsDead) {
         return;
@@ -72,9 +72,13 @@ void LiveActor::movement() {
     if (!mFlag.mIsDead) {
         updateBinder();
         smgpc::compat::update_actor_hit_sensors(this);
+        if (mCameraCtrl != nullptr) {
+            mCameraCtrl->update();
+        }
         if (mActorLightCtrl != nullptr) {
             MR::updateLightCtrl(this);
         }
+        MR::actorSoundMovement(this);
     }
 }
 
@@ -86,16 +90,29 @@ void LiveActor::calcAnim() {
 }
 
 void LiveActor::calcAnmMtx() {
-    if (smgpc::compat::actor_model(this) != nullptr) {
-        MR::setBaseScale(this, mScale);
-        calcAndSetBaseMtx();
-        refresh_actor_joint_matrices(this);
+    if (mModelManager == nullptr) {
+        return;
     }
+
+    MR::getJ3DModel(this)->setBaseScale(mScale);
+    calcAndSetBaseMtx();
+    mModelManager->calcAnim();
 }
 
 void LiveActor::calcViewAndEntry() {
-    // Model view calculation and entry are performed by the native renderer.
-    // Retail does not recalculate the base or animation matrices in this pass.
+    if (mFlag.mIsNoCalcView) {
+        return;
+    }
+
+    if (mModelManager == nullptr) {
+        return;
+    }
+
+    if (mFlag.mIsNoCalcView) {
+        return;
+    }
+
+    mModelManager->calcView();
 }
 
 void LiveActor::appear() {
@@ -148,11 +165,11 @@ bool LiveActor::receiveMessage(u32 msg, HitSensor* pSender, HitSensor* pReceiver
 }
 
 MtxPtr LiveActor::getBaseMtx() const {
-    if (smgpc::compat::actor_model(this) == nullptr) {
-        return nullptr;
+    if (MR::getJ3DModel(this) != nullptr) {
+        return MR::getJ3DModel(this)->mBaseTransformMtx;
     }
-    const auto& matrix = smgpc::compat::actor_base_matrix(this);
-    return reinterpret_cast<MtxPtr>(const_cast<f32*>(matrix.m.data()));
+
+    return nullptr;
 }
 
 MtxPtr LiveActor::getTakingMtx() const {
@@ -214,21 +231,37 @@ s32 LiveActor::getNerveStep() const {
     return mSpine != nullptr ? mSpine->mStep : 0;
 }
 
-void LiveActor::initSound(int, bool) {
-    // Audio is intentionally absent from the current native compatibility
-    // boundary. Keep the exact retail slot null.
+void LiveActor::initSound(int param1, bool is2D) {
+    const auto domain = smgpc::compat::actor_scene_allocation_domain(this);
+    smgpc::compat::JkrAllocationScope heap(domain);
+    if (!is2D) {
+        mSoundObject = new AudAnmSoundObject(&mPosition, param1, MR::getCurrentHeap());
+    } else {
+        mSoundObject = new AudAnmSoundObject(nullptr, param1, MR::getCurrentHeap());
+    }
+    smgpc::compat::adopt_actor_sound_object(this, domain);
 }
 
-void LiveActor::initModelManagerWithAnm(const char* pModelArcName, const char* pAnimArcName, bool) {
-    smgpc::compat::initialize_actor_model(this, pModelArcName, pAnimArcName);
-    calcAndSetBaseMtx();
+void LiveActor::initModelManagerWithAnm(const char* pModelName, const char* pAnimName, bool a3) {
+    smgpc::compat::initialize_actor_model(this, pModelName, pAnimName, a3);
+    const auto owner = smgpc::compat::retain_actor_model_owner(this);
+    smgpc::compat::JkrAllocationScope heap(owner->allocation_domain());
+    smgpc::compat::J3dCommandScope commands;
+
+    MR::getJ3DModel(this)->setBaseScale(mScale);
+    LiveActor::calcAndSetBaseMtx();
+    MR::calcJ3DModel(this);
+
+    mAnimKeeper = ActorAnimKeeper::tryCreate(this);
+    mCameraCtrl = ActorPadAndCameraCtrl::tryCreate(mModelManager, &mPosition);
+    smgpc::compat::adopt_actor_animation_helpers(this);
 }
 
 void LiveActor::initEffectKeeper(int effectNum, const char* pEffectName, bool sort) {
     if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-        const auto* model = smgpc::compat::actor_model(this);
+        const auto* model = mModelManager;
         const auto groupName = pEffectName != nullptr ? std::string_view(pEffectName) :
-                                                       (model != nullptr ? model->model_arc_name() : std::string_view{});
+                                                       (model != nullptr ? std::string_view(MR::getModelResourceHolder(this)->getModelName()) : std::string_view{});
         runtime->register_effect_keeper(smgpc::runtime::EffectKeeperHostKind::LiveActor, getName(), effectNum,
                                         groupName, sort, this);
     }
@@ -284,7 +317,7 @@ HitSensor* LiveActor::getSensor(const char* pSensorName) const {
 }
 
 void LiveActor::addToSoundObjHolder() {
-    // Audio is intentionally absent.
+    mSoundObject->addToSoundObjHolder();
 }
 
 void LiveActor::updateBinder() {

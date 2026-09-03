@@ -18,5 +18,6 @@ namespace smgpc::resource {
         return compat::JkrAllocationDomain::create(_heaps, _budget.cohort_bytes);
     }
     const std::shared_ptr<Mem1ResourceHeap>& GameResourceRuntime::mem1_heap() const noexcept { return _mem1; }
+    const std::shared_ptr<compat::JkrHeapRuntime>& GameResourceRuntime::host_heaps() const noexcept { return _heaps; }
     const GameResourceBudget& GameResourceRuntime::budget() const noexcept { return _budget; }
 }

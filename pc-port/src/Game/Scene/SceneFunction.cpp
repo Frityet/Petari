@@ -28,10 +28,4 @@ namespace MR {
         }
     }
 
-    void connectToSceneSky(LiveActor* pActor) {
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr && pActor != nullptr) {
-            runtime->register_sky_actor(*pActor);
-        }
-    }
-
 }  // namespace MR

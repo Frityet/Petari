@@ -135,12 +135,8 @@ namespace smgpc::scene {
             _camera->appear();
             _camera_started = true;
 
-            // FileSelector's controller has already executed Title while the
-            // title sequence is on screen. Two updates reproduce its delayed
-            // watch/FOV handoff exactly before requesting the far transition.
-            _camera->movement();
-            _camera->movement();
-            _camera->goToFarPoint();
+            // FileSelector creates this controller during init. Its actual
+            // Title nerve now advances through the ordinary scene scheduler.
         }
 
         void create_slots() {
@@ -159,6 +155,7 @@ namespace smgpc::scene {
                     host_identity->planet_matrix.toMtxPtr());
                 _children.adopt(planet);
                 planet->mScale.set(cPlanetScale);
+                planet->makeActorDead();
 
                 auto number = std::make_unique<FileSelectNumber>("ファイル番号");
                 auto *number_identity = number.get();
@@ -179,7 +176,15 @@ namespace smgpc::scene {
             }
         }
 
+        void begin_far() {
+            if (_far_started) throw std::logic_error("File Select far transition has already started");
+            _camera->goToFarPoint();
+            for (auto& slot : _slots) slot.view.planet->makeActorAppeared();
+            _far_started = true;
+        }
+
         void update_after_camera() {
+            if (!_far_started) return;
             update_slot_scales();
             update_number_positions();
             if (!_camera->isAtFarPoint()) {
@@ -312,36 +317,34 @@ namespace smgpc::scene {
         std::size_t _far_observation_count = 0U;
         bool _camera_started = false;
         bool _numbers_visible = false;
+        bool _far_started = false;
         std::optional<std::size_t> _highlighted_slot{};
     };
 
-    FileSelectFarVisual::FileSelectFarVisual(
-        smgpc::runtime::RuntimeContext &runtime,
-        TitleFileSelectVisualHandoff &&handoff)
-        : _runtime(&runtime), _handoff(std::move(handoff)) {
-        if (smgpc::runtime::RuntimeContext::try_instance() != &runtime) {
-            throw std::logic_error(
-                "File Select far visuals require their active RuntimeContext.");
-        }
-        if (runtime.current_stage_name() != std::string_view("FileSelect")) {
-            throw std::logic_error(
-                "File Select far visuals require the authored FileSelect stage.");
-        }
-        if (_handoff.sky() == nullptr) {
-            throw std::invalid_argument(
-                "File Select far visuals require the retained title sky.");
-        }
+    FileSelectFarVisual::FileSelectFarVisual(smgpc::runtime::RuntimeContext &runtime)
+        : _runtime(&runtime) {
+        if (smgpc::runtime::RuntimeContext::try_instance() != &runtime)
+            throw std::logic_error("File Select composition requires its active RuntimeContext");
+        if (runtime.current_stage_name() != std::string_view("FileSelect"))
+            throw std::logic_error("File Select composition requires the authored stage");
         _impl = std::make_unique<Impl>(runtime);
+    }
+
+    void FileSelectFarVisual::begin_far(TitleFileSelectVisualHandoff &&handoff) {
+        if (_handoff || handoff.sky() == nullptr)
+            throw std::logic_error("Far transition requires its original title sky exactly once");
+        _handoff = std::make_unique<TitleFileSelectVisualHandoff>(std::move(handoff));
+        _impl->begin_far();
     }
 
     FileSelectFarVisual::~FileSelectFarVisual() = default;
 
     FileSelectSky *FileSelectFarVisual::sky() {
-        return _handoff.sky();
+        return _handoff ? _handoff->sky() : nullptr;
     }
 
     const FileSelectSky *FileSelectFarVisual::sky() const {
-        return _handoff.sky();
+        return _handoff ? _handoff->sky() : nullptr;
     }
 
     FileSelectCameraController *FileSelectFarVisual::camera_controller() {

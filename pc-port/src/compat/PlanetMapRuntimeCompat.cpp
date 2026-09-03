@@ -21,22 +21,8 @@
 
 namespace {
 
-    [[nodiscard]] smgpc::render::live_actor::LiveActorModel &
-    require_planet_model(const LiveActor *actor) {
-        auto *model = smgpc::compat::actor_model(actor);
-        if (actor == nullptr || model == nullptr || model->model_arc_name().empty()) {
-            throw std::logic_error("PlanetMap runtime support requires a real actor model.");
-        }
-        return *model;
-    }
-
     [[nodiscard]] ResourceHolder *require_actor_resource_holder(const LiveActor *actor) {
-        const auto &model = require_planet_model(actor);
-        auto *service = smgpc::compat::ResourceHolderService::active();
-        if (service == nullptr) {
-            throw std::logic_error("PlanetMap runtime support requires a scene-owned ResourceHolder service.");
-        }
-        return service->create_and_add(std::string(model.model_arc_name()) + ".arc");
+        return MR::getModelResourceHolder(actor);
     }
 
     [[nodiscard]] bool has_collision_resource(const LiveActor *actor,
@@ -73,9 +59,7 @@ namespace {
 
 namespace MR {
 
-    bool isExistIndirectTexture(const LiveActor *actor) {
-        return require_planet_model(actor).has_indirect_texture();
-    }
+
 
     void initCollisionParts(LiveActor *actor, const char *resource_name,
                             HitSensor *sensor, MtxPtr matrix) {
@@ -95,35 +79,19 @@ namespace MR {
         return try_register_auxiliary_collision(actor, "WaterSurface", sensor);
     }
 
-    bool isExistAnim(const LiveActor *actor, const char *name) {
-        if (actor == nullptr || name == nullptr) {
-            return false;
-        }
-        auto &model = require_planet_model(actor);
-        if (model.hasBck(name, {}) || model.hasBtk(name) || model.hasBrk(name) ||
-            model.hasBtp(name)) {
-            return true;
-        }
 
-        // LiveActorModel currently evaluates BCK/BTK/BRK/BTP. Preserve the
-        // retail all-animation existence test for BPK/BVA without claiming
-        // playback support for those optional formats.
-        const auto *holder = require_actor_resource_holder(actor);
-        return smgpc::compat::ResourceHolderService::active()->backing(*holder).archive().find_resource(std::string(name) + ".bpk") != nullptr ||
-               smgpc::compat::ResourceHolderService::active()->backing(*holder).archive().find_resource(std::string(name) + ".bva") != nullptr;
-    }
 
     PartsModel *createWaterModel(LiveActor *actor, MtxPtr) {
-        const auto model_name = require_planet_model(actor).model_arc_name();
-        if (!MR::isExistSubModel(model_name.data(), "Water")) {
+        const auto* model_name = MR::getModelResName(actor);
+        if (!MR::isExistSubModel(model_name, "Water")) {
             return nullptr;
         }
         reject_optional_planet_model("Water");
     }
 
     PartsModel *createIndirectPlanetModel(LiveActor *actor, MtxPtr) {
-        const auto model_name = require_planet_model(actor).model_arc_name();
-        if (!MR::isExistSubModel(model_name.data(), "Indirect")) {
+        const auto* model_name = MR::getModelResName(actor);
+        if (!MR::isExistSubModel(model_name, "Indirect")) {
             return nullptr;
         }
         reject_optional_planet_model("Indirect");
@@ -178,31 +146,11 @@ namespace MR {
         return !library->resolve_effect_request(effect_name).empty();
     }
 
-    bool isExistJoint(const LiveActor *actor, const char *joint_name) {
-        if (actor == nullptr || joint_name == nullptr) {
-            return false;
-        }
-        auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
-        auto &model = require_planet_model(actor);
-        return model.joint_world_matrix(
-                   joint_name, smgpc::compat::actor_base_matrix(actor),
-                   runtime != nullptr ? runtime->frame_index() : 0U) != nullptr;
-    }
 
-    void calcModelBoundingRadius(f32 *radius, const LiveActor *actor) {
-        if (radius == nullptr) {
-            throw std::invalid_argument("Model bounding-radius output is null.");
-        }
-        const auto value = require_planet_model(actor).model_bounding_radius();
-        if (!value.has_value()) {
-            throw std::logic_error("PlanetMap model has no parsed bounding radius.");
-        }
-        *radius = *value;
-    }
 
-    bool isExistCollisionResource(const LiveActor *actor, const char *resource_name) {
-        return resource_name != nullptr && has_collision_resource(actor, resource_name);
-    }
+
+
+
 
     bool isExistSubModel(const char *model_name, const char *suffix) {
         if (model_name == nullptr || suffix == nullptr) {
@@ -215,9 +163,7 @@ namespace MR {
         return runtime->find_object_archive(std::string(model_name) + suffix).has_value();
     }
 
-    bool isExistEffectTexMtx(LiveActor *actor) {
-        return require_planet_model(actor).has_effect_texture_matrix();
-    }
+
 
 }  // namespace MR
 

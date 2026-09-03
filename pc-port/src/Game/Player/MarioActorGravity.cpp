@@ -121,7 +121,186 @@ bool MarioActor::isInZeroGravitySpot() const {
     return MR::isNearZero(_24C);
 }
 
-// void MarioActor::updateGravityVec(bool, bool) {}
+void MarioActor::updateGravityVec(bool isReset, bool usePosition) {
+    TVec3f gravity;
+    TVec3f positionGravity;
+    bool resetGroundNorm = false;
+    MR::calcGravityVectorOrZero(this, mPosition, &positionGravity, mGravityInfo, 0);
+    if (!usePosition) {
+        MR::calcGravityVectorOrZero(this, _2A0, &gravity, mGravityInfo, 0);
+    } else {
+        gravity = positionGravity;
+    }
+
+    TVec3f frontGravity;
+    MR::calcGravityVectorOrZero(this, mPosition + mMario->mFrontVec.multiplyOperatorInline(100.0f), &frontGravity, nullptr, 0);
+    if (MR::isNearZero(positionGravity - frontGravity)) {
+        _370 = true;
+    } else {
+        _370 = false;
+    }
+
+    TVec3f specialGravity;
+    if (mMario->isUseFooSpecialGravity(mPosition, &specialGravity)) {
+        gravity = specialGravity;
+        positionGravity = specialGravity;
+        _370 = false;
+    }
+
+    MR::normalizeOrZero(&gravity);
+    MR::normalizeOrZero(&positionGravity);
+    if (gravity.dot(positionGravity) < 0.9f) {
+        f32 gravityDot = mMario->getAirGravityVec().dot(gravity);
+        if (mMario->getAirGravityVec().dot(positionGravity) > gravityDot) {
+            gravity = positionGravity;
+        }
+    }
+
+    f32 gravityAngle = MR::diffAngleAbs(_24C, gravity);
+    if (MR::isNearZero(_24C)) {
+        gravityAngle = 0.0f;
+    } else if (MR::isNearZero(gravity)) {
+        gravityAngle = 0.0f;
+    }
+
+    if (!isReset) {
+        if (mMario->isPlayerModeBee() && gravityAngle >= MR::pi() / 6.0f) {
+            setBlendMtxTimer(8);
+        }
+
+        if (_334 != 0) {
+            gravity = _24C;
+        } else if (gravityAngle >= MR::pi2() / 5.0f) {
+            if (!isJumping()) {
+                mMario->_10._1A = true;
+            } else {
+                if (mMario->_430 == 11) {
+                    mMario->_430 = 0;
+                }
+                changeAnimation("ショートジャンプ", nullptr);
+                resetGroundNorm = true;
+            }
+            if (_F74) {
+                resetGroundNorm = true;
+            }
+
+            _334 = 15;
+            _30C = mMario->mHeadVec;
+            if (!MR::isNearZero(gravity)) {
+                if (gravityAngle >= MR::pi2() / 3.0f || !mMario->mMovementStates._37) {
+                    mMario->cutGravityElementFromJumpVec(false);
+                    mMario->mJumpVec *= 0.5f;
+                } else {
+                    f32 gravitySpeed = MR::vecKillElement(mMario->mJumpVec, *mMario->getGravityVec(), &mMario->mJumpVec);
+                    mMario->mJumpVec *= 0.75f;
+                    mMario->mJumpVec += *mMario->getGravityVec() * gravitySpeed * 0.75f;
+                }
+            }
+
+            mMario->clear2DStick();
+            mMario->_10.turning = true;
+            _3AA = 15;
+            if (!mMario->mMovementStates._37) {
+                mMario->_2E0 = -mMario->_2E0;
+            }
+        }
+
+        if (MR::isNearZero(gravity)) {
+            mMario->_10.turning = true;
+        }
+    } else {
+        _334 = 0;
+    }
+
+    if (!MR::isNearZero(gravity) && !MR::isNearZero(_24C)) {
+        TVec3f axis;
+        f32 cosine;
+        if (MR::makeAxisAndCosignVecToVec(&axis, &cosine, _24C, gravity)) {
+            Mtx rotation;
+            PSMTXRotAxisRad(rotation, &axis, JMAAcosRadian(cosine));
+            PSMTXMultVecSR(rotation, &_258, &_258);
+            TVec3f side;
+            PSVECCrossProduct(&_258, &gravity, &side);
+            if (!MR::normalizeOrZero(&side)) {
+                PSVECCrossProduct(&gravity, &side, &_258);
+            }
+            MR::normalize(&_258);
+        }
+    } else if (!MR::isNearZero(gravity) && MR::isNearZero(_24C)) {
+        calcBaseFrontVec(-gravity);
+    } else if (MR::isNearZero(gravity) && MR::isNearZero(_24C)) {
+        calcBaseFrontVec(mMario->_1FC);
+    }
+
+    _24C = gravity;
+    if (!MR::isNearZero(gravity)) {
+        MR::normalize(&gravity);
+        _3A0 = 0;
+    } else {
+        if (!mMario->mMovementStates._1) {
+            gravity = _240;
+        } else {
+            gravity = -mMario->_368;
+        }
+        _3A0++;
+    }
+
+    if (mPlayerMode == PlayerMode_Bee) {
+        updateBeeModeGravity(gravity);
+    } else {
+        mBeeWallWalk = 0;
+        _9F2 = 0;
+    }
+    mMario->setGravityVec(gravity);
+    _240 = gravity;
+    if (resetGroundNorm) {
+        mMario->setGroundNorm(-gravity);
+    }
+    calcCenterPos();
+
+    TVec3f up;
+    f32 height = 70.0f;
+    if (mMario->mDrawStates._F) {
+        MR::vecBlendSphere(mMario->mHeadVec, mMario->_380, &up, 0.5f * _984);
+    } else {
+        MR::vecBlendSphere(mMario->mHeadVec, mMario->_368, &up, _984);
+    }
+
+    TVec3f previousOffset = _2C4;
+    if (mMario->mMovementStates._A) {
+        height = 50.0f;
+    }
+    if (mMario->mMovementStates._1) {
+        _2C4 = up * height;
+    } else if (mMario->_10._23 || _934) {
+        TVec3f offset = -_240 * 70.0f;
+        if (_334 != 0 || mMario->calcPolygonAngleD(mMario->mGroundPolygon) >= 59.0f) {
+            MR::vecBlend(_2C4, offset, &_2C4, 0.1f);
+        } else {
+            MR::vecBlend(_2C4, offset, &_2C4, 0.5f);
+        }
+    } else {
+        TVec3f offset = -_240 * 70.0f;
+        MR::vecBlend(_2C4, offset, &_2C4, 0.1f);
+    }
+
+    if (_3AA != 0) {
+        _3AA--;
+        f32 rate = static_cast< f32 >(_3AA) / 15.0f;
+        _2C4 = _2C4 * (1.0f - rate) + previousOffset * rate;
+        mMario->_10.turning = true;
+    }
+
+    if (_334 != 0) {
+        if (mMario->mVerticalSpeed > 160.0f) {
+            TVec3f offset = _30C * 80.0f - mMario->mHeadVec * 80.0f;
+            f32 gravityOffset = MR::vecKillElement(offset, _240, &offset);
+            mMario->push2(_240 * gravityOffset);
+            _30C = mMario->mHeadVec;
+        }
+        _334--;
+    }
+}
 
 bool MarioActor::checkBeeCeilStick(TVec3f& rVec) {
     if ((mMario->isCeiling() || getDrawStates()._15) && mBeeWallWalk == 0 && _9F2 == 0) {

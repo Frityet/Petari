@@ -1,4 +1,8 @@
 #include "RuntimeContext.hpp"
+#include "compat/DisabledObjectAudioService.hpp"
+#include "compat/SceneJ3dScope.hpp"
+#include "Game/Util/DrawUtil.hpp"
+#include "Game/Util/CameraUtil.hpp"
 #include "compat/JutTextureAllocation.hpp"
 #include "runtime/ScreenAlphaCaptureService.hpp"
 #include "JSystem/JUtility/JUTTexture.hpp"
@@ -72,7 +76,7 @@ namespace smgpc::runtime {
         }
 
         [[nodiscard]] std::array<float, 12U> live_actor_effect_matrix(const LiveActor &actor) {
-            auto matrix = smgpc::compat::actor_base_matrix(&actor).m;
+            auto matrix = actor.getBaseMtx() != nullptr ? smgpc::render::j3d_matrix_from_mtx(actor.getBaseMtx()).m : effect_identity_matrix();
             matrix[3U] = actor.mPosition.x;
             matrix[7U] = actor.mPosition.y;
             matrix[11U] = actor.mPosition.z;
@@ -505,7 +509,8 @@ namespace smgpc::runtime {
           _j_audio_playback(audio_playback != nullptr
                                 ? std::move(audio_playback)
                                 : std::make_unique<JAudioPlaybackService>(_dvd)),
-          _resource_holders(_dvd, resources.create_cohort(), resources.mem1_heap()), _rfl(_save_data.nand()),
+          _resource_holders(_dvd, resources.create_cohort(), resources.mem1_heap()),
+          _disabled_object_audio(aurora::audio::make_disabled_object_audio_service(resources.host_heaps())), _rfl(_save_data.nand()),
           _current_stage_name(default_stage_name())
 #ifndef NDEBUG
           ,
@@ -603,11 +608,13 @@ namespace smgpc::runtime {
         _scene_execution = nullptr;
         _name_obj_lifecycle = nullptr;
         _j_audio_playback->reset_scene();
+        _scheduler.clear();
         _capture_screen_camera_actor.reset();
         _capture_screen_indirect_actor.reset();
         _capture_screen_director.reset();
         _capture_screen_texture.reset();
         _screen_alpha_capture.reset();
+        _disabled_object_audio.reset();
     }
 
     RuntimeContext &RuntimeContext::instance() {
@@ -910,6 +917,11 @@ namespace smgpc::runtime {
         if (!_game_layout.is_game_scene_draw_3d_active()) {
             return;
         }
+        smgpc::compat::SceneJ3dScope j3d_scope;
+        MR::drawInit();
+        MR::loadViewMtx();
+        MR::loadProjectionMtx();
+        MR::setDefaultViewportAndScissor();
 #ifndef NDEBUG
         if (should_record_j3d_packet_trace()) {
             emit_sequence_state_trace_event("draw_3d_normal", {}, "3d_normal");
@@ -1285,6 +1297,10 @@ namespace smgpc::runtime {
 
     const CaptureScreenDirector &RuntimeContext::capture_screen_director() const {
         return *_capture_screen_director;
+    }
+
+    void RuntimeContext::begin_scene_draw_buffer_registration() {
+        _scheduler.begin_draw_buffer_registration(_resource_holders.allocation_domain());
     }
 
     SceneScheduler &RuntimeContext::scheduler() {

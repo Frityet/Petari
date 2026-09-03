@@ -4,6 +4,9 @@
 #include "Game/NameObj/NameObjFactory.hpp"
 #include "Game/Map/PlanetMap.hpp"
 #include "Game/Player/MarioActor.hpp"
+#include "Game/LiveActor/ModelManager.hpp"
+#include "Game/Animation/XanimePlayer.hpp"
+#include "Game/Util/ModelUtil.hpp"
 #include "Game/Player/MarioHolder.hpp"
 #include "Game/System/GameDataFunction.hpp"
 #include "Game/Util/CameraUtil.hpp"
@@ -788,13 +791,12 @@ namespace {
             (void)scene.prove_start_contact(gravity_requester);
             auto sphere_renderer = DebugSphereRenderer(renderer);
             auto *planet_actor = scene.planet();
-            auto *planet_model = smgpc::compat::actor_model(planet_actor);
+            auto *planet_model = planet_actor ? MR::getJ3DModel(planet_actor) : nullptr;
             if (planet_actor == nullptr || planet_model == nullptr) {
                 throw std::runtime_error(
                     "the authored Gateway row did not create an ordinary PlanetMap model");
             }
-            planet_model->requireLoaded();
-            if (!planet_model->isLoaded()) {
+            if (planet_model->getModelData() == nullptr) {
                 throw std::runtime_error(
                     "the ordinary Gateway PlanetMap did not load its real BDL");
             }
@@ -952,8 +954,9 @@ namespace {
 #ifndef NDEBUG
                 if (log_simulation_timing) {
                     const auto& actor = mario_owner.actor();
-                    const auto* animation = smgpc::compat::actor_bck_ctrl(&actor);
-                    const auto animation_name = smgpc::compat::actor_current_bck_name(&actor);
+                    const auto* player = actor.mModelManager ? actor.mModelManager->mXanimePlayer : nullptr;
+                    const auto* animation = player ? player->_20 : nullptr;
+                    const auto animation_name = std::string_view{player && player->getCurrentAnimationName() ? player->getCurrentAnimationName() : ""};
                     if (animation != nullptr) {
                         std::fprintf(
                             stderr,

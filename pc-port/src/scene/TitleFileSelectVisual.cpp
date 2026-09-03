@@ -40,6 +40,7 @@ namespace smgpc::scene {
         _sky.reset();
         if (_runtime != nullptr &&
             smgpc::runtime::RuntimeContext::try_instance() == _runtime) {
+            _runtime->scheduler().retire_draw_buffers();
             _runtime->game_layout().deactivate_game_scene_draw_3d();
         }
     }
@@ -53,18 +54,20 @@ namespace smgpc::scene {
     }
 
     TitleFileSelectVisual::TitleFileSelectVisual(
-        smgpc::runtime::RuntimeContext &runtime)
+        smgpc::runtime::RuntimeContext &runtime, bool complete_draw_registration)
         : _runtime(&runtime), _title_camera(cTitleCamera) {
         if (smgpc::runtime::RuntimeContext::try_instance() != &runtime) {
             throw std::logic_error(
                 "Title/File Select visuals require their active RuntimeContext.");
         }
 
+        _runtime->begin_scene_draw_buffer_registration();
         auto sky = std::make_unique<FileSelectSky>("ファイルセレクト画面の空");
         sky->initWithoutIter();
         sky->appear();
 
         _sky = std::move(sky);
+        if (complete_draw_registration) _runtime->scheduler().allocate_draw_buffers();
         _runtime->camera_system().set_game_camera_pose(_title_camera);
         _runtime->set_scene_camera_pose(_title_camera);
         _runtime->game_layout().activate_game_scene_draw_3d();
@@ -74,6 +77,7 @@ namespace smgpc::scene {
         _sky.reset();
         if (!_transferred &&
             smgpc::runtime::RuntimeContext::try_instance() == _runtime) {
+            _runtime->scheduler().retire_draw_buffers();
             _runtime->game_layout().deactivate_game_scene_draw_3d();
         }
     }

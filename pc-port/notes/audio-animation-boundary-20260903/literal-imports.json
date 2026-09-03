@@ -1,0 +1,92 @@
+[
+  {
+    "source": "src/JSystem/JAudio2/JAUSoundAnimator.cpp",
+    "signature": "u32 JAUSoundAnimation::getStartSoundIndex(f32 time) const",
+    "sha256": "78061074a3a6b4362be8e1c9771301ee87e468f6e78313ada263bdae813fd75a"
+  },
+  {
+    "source": "src/JSystem/JAudio2/JAUSoundAnimator.cpp",
+    "signature": "u32 JAUSoundAnimation::getEndSoundIndex(f32 time) const",
+    "sha256": "2c56a8acdec3a1e2c3e3ee7a20e1050b2a9b58459be45767fed9bf5bdba3df20"
+  },
+  {
+    "source": "src/JSystem/JAudio2/JAUSoundAnimator.cpp",
+    "signature": "void JAUSoundAnimator::removeAnimation()",
+    "sha256": "63f8d7f0d4b3e1e0ec2a164654bdf2c29e884183658a1a9ab9e76194734551d3"
+  },
+  {
+    "source": "src/JSystem/JAudio2/JAUSoundAnimator.cpp",
+    "signature": "bool JAUSoundAnimator::playsSound(const JAUSoundAnimationSound* pAnimation, const TVec3f& rPos, f32 f1)",
+    "sha256": "30c6edeab5fde859358582d247fe3adbcd6b22de6461f783fbb8441ae1964d2c"
+  },
+  {
+    "source": "src/JSystem/JAudio2/JAUSoundAnimator.cpp",
+    "signature": "void JAUSoundAnimator::modifySoundParams(JASSoundParams* pParams, const JAUSoundAnimationSound* pAnimation, f32 time)",
+    "sha256": "3b2f294b3e746dfe948dfc1915ce4ec3159a86f02ce2b79b070d925fc955d8db"
+  },
+  {
+    "source": "src/JSystem/JAudio2/JAUSoundAnimator.cpp",
+    "signature": "void JAUSoundAnimator::startAnimation(const JAUSoundAnimation* pAnimation, bool reversed, f32 loopStartFrame, f32 loopEndFrame)",
+    "sha256": "d9e79a862d357d59d73edd533f8abe868b05bc43c149105f317e5af6f31c3324"
+  },
+  {
+    "source": "src/Game/AudioLib/AudAnmSoundObject.cpp",
+    "signature": "void AudAnmSoundObject::update(f32 time)",
+    "sha256": "0e7d0bf89a294c0b7177780b8988b996407af81e15ae009fa78ecc64b5520515"
+  },
+  {
+    "source": "src/Game/AudioLib/AudAnmSoundObject.cpp",
+    "signature": "void AudAnmSoundObject::skip(f32 time)",
+    "sha256": "6ac99e7e005a96a9805f0925d872aacf9224e4a4093d99a8b4c0183020edab4c"
+  },
+  {
+    "source": "src/Game/AudioLib/AudAnmSoundObject.cpp",
+    "signature": "void AudAnmSoundObject::setStartPos(f32 time)",
+    "sha256": "dfc564ce5437a7467edacc6c1461454fa48d23a23100fa596f026525608206fc"
+  },
+  {
+    "source": "src/Game/AudioLib/AudAnmSoundObject.cpp",
+    "signature": "void AudAnmSoundObject::modifySoundParams(JASSoundParams* pParams, const JAUSoundAnimationSound* pSound, f32 speed)",
+    "sha256": "c3fb9d8a58753b23a5e901f8750b6c600993fa00d6ae7d2b6e2e20411d608f6f"
+  },
+  {
+    "source": "src/Game/AudioLib/AudSoundObject.cpp",
+    "signature": "void AudSoundObject::setTrans(TVec3f* pTrans)",
+    "sha256": "5df12476c9614fc9eeeaac3968063be86044a9545b4703bbeedc80985dbb1085"
+  },
+  {
+    "source": "src/Game/AudioLib/AudSoundObject.cpp",
+    "signature": "void AudSoundObject::setMapCode(s32 code)",
+    "sha256": "db2e062ecf7663c533f2d6f2f1dcf7927d8a354f03905c7fc9bfc88dad880fa1"
+  },
+  {
+    "source": "src/Game/AudioLib/AudSoundObject.cpp",
+    "signature": "void AudSoundObject::setMapCodeExtra(s32 code)",
+    "sha256": "c1fe060d48a1746c79a94f7bb6b099ca5ea2dafda5098afd2738f81949f2e335"
+  },
+  {
+    "source": "src/Game/AudioLib/AudSoundObject.cpp",
+    "signature": "s32 AudSoundObject::getMapCode() const",
+    "sha256": "e3bb8bbf1478d359c59395607e43dfa54b8b5e46f8ddfa4d8a22544de7f69aee"
+  },
+  {
+    "source": "src/Game/AudioLib/AudSoundObject.cpp",
+    "signature": "void AudSoundObject::clearMapCode()",
+    "sha256": "1ccdd805d2512084d0ac6b79c9855a4e75a4ab3b8b45abbe158ae24ed388cccc"
+  },
+  {
+    "source": "src/Game/Util/SoundUtil.cpp",
+    "signature": "void startBas(const LiveActor* pActor, const char* pName, bool param3, f32 param4, f32 param5)",
+    "sha256": "4ec9fc3321a3ca1e7fa1610a59e924e766461e2ebc9d670d5eafbf7f1c14a89e"
+  },
+  {
+    "source": "src/Game/Util/SoundUtil.cpp",
+    "signature": "void actorSoundMovement(LiveActor* pActor)",
+    "sha256": "8883320a3d5414f259f66621239afeb7d480b65ee56df1e2bd4d23704b5dd149"
+  },
+  {
+    "source": "src/Game/Util/SoundUtil.cpp",
+    "signature": "s32 getMapSoundCodeFoot(const LiveActor* pActor)",
+    "sha256": "308b3522a43e99743d73c64e09c1c96c5adfd9233557a1584a8196912167231c"
+  }
+]

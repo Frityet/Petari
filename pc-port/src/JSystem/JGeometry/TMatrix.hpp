@@ -336,6 +336,35 @@ namespace JGeometry {
     struct TPosition3 : public TRotation3<T> {
         TPosition3() = default;
 
+        void setPositionFromLookAt(const TVec3f& rLookAtPos, const TVec3f& rUp, const TVec3f& rPos) {
+            TVec3f aim;
+            aim.sub(rPos, rLookAtPos);
+
+            TVec3f front, up, side;
+            front.set(aim);
+            front.normalize();
+            front.negate();
+
+            side.cross(rUp, front);
+            up.cross(front, side);
+            side.normalize();
+            up.normalize();
+
+            this->mMtx[0][0] = side.x;
+            this->mMtx[0][1] = side.y;
+            this->mMtx[0][2] = side.z;
+            this->mMtx[1][0] = up.x;
+            this->mMtx[1][1] = up.y;
+            this->mMtx[1][2] = up.z;
+            this->mMtx[2][0] = front.x;
+            this->mMtx[2][1] = front.y;
+            this->mMtx[2][2] = front.z;
+
+            this->mMtx[0][3] = rLookAtPos.x * -this->mMtx[0][0] - rLookAtPos.y * this->mMtx[0][1] - rLookAtPos.z * this->mMtx[0][2];
+            this->mMtx[1][3] = rLookAtPos.x * -this->mMtx[1][0] - rLookAtPos.y * this->mMtx[1][1] - rLookAtPos.z * this->mMtx[1][2];
+            this->mMtx[2][3] = rLookAtPos.x * -this->mMtx[2][0] - rLookAtPos.y * this->mMtx[2][1] - rLookAtPos.z * this->mMtx[2][2];
+        }
+
         TPosition3(MtxPtr source) {
             this->set(source);
         }

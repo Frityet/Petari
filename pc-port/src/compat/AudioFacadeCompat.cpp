@@ -1,3 +1,4 @@
+#include "compat/DisabledObjectAudioService.hpp"
 #include "compat/AudioFacadeCompat.hpp"
 
 #include "Game/AudioLib/AudBgm.hpp"
@@ -853,7 +854,7 @@ namespace AudWrap {
     }
 
     AudSoundObject *getSystemSeObject() {
-        unavailable("system-SE object access");
+        return aurora::audio::disabled_system_sound_object();
     }
 
     AudSoundObject *getAtmosphereSeObject() {

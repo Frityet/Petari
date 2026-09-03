@@ -127,7 +127,7 @@ public:
     void touchWater();
 
     bool isBlendWaitGround() const;
-    bool checkSpecialWaitAnimation();
+    void checkSpecialWaitAnimation();
     void resetSleepTimer();
 
     void connectToClimb();
