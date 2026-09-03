@@ -21,7 +21,7 @@
 #include "JSystem/JMath/JMATrigonometric.hpp"
 #include <cstring>
 
-extern const char* jname_chest;
+const char* jname_chest = "Spine1";
 static const char sHip[] = "Hip";
 static const char sRun[8] = "Run";
 

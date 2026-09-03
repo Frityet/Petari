@@ -1,0 +1,257 @@
+{
+  "scope": "Diagnostic compilation snapshot, not a new full-class binary-equivalence claim. Native adaptations separately preserve the current root instruction sequence.",
+  "methods": [
+    {
+      "name": "__ct__13MarioAnimatorFP10MarioActor",
+      "retail_size": "64",
+      "compiled_size": "64",
+      "objdiff_percent": 100.0
+    },
+    {
+      "name": "init__13MarioAnimatorFv",
+      "retail_size": "572",
+      "compiled_size": "576",
+      "objdiff_percent": 97.02098
+    },
+    {
+      "name": "isAnimationStop__13MarioAnimatorCFv",
+      "retail_size": "28",
+      "compiled_size": "28",
+      "objdiff_percent": 100.0
+    },
+    {
+      "name": "targetWeight__13MarioAnimatorFPfff",
+      "retail_size": "240",
+      "compiled_size": "240",
+      "objdiff_percent": 99.333336
+    },
+    {
+      "name": "setWalkWeight__13MarioAnimatorFPCf",
+      "retail_size": "128",
+      "compiled_size": "128",
+      "objdiff_percent": 99.84375
+    },
+    {
+      "name": "setBlendWeight__13MarioAnimatorFPCff",
+      "retail_size": "192",
+      "compiled_size": "192",
+      "objdiff_percent": 100.0
+    },
+    {
+      "name": "forceSetBlendWeight__13MarioAnimatorFPCf",
+      "retail_size": "104",
+      "compiled_size": "100",
+      "objdiff_percent": 95.76923
+    },
+    {
+      "name": "initWalkWeight__13MarioAnimatorFv",
+      "retail_size": "28",
+      "compiled_size": "28",
+      "objdiff_percent": 99.28571
+    },
+    {
+      "name": "isLandingAnimationRun__13MarioAnimatorCFv",
+      "retail_size": "352",
+      "compiled_size": "352",
+      "objdiff_percent": 93.181816
+    },
+    {
+      "name": "isCancelableAnimationRun__13MarioAnimatorCFv",
+      "retail_size": "204",
+      "compiled_size": "204",
+      "objdiff_percent": 91.76471
+    },
+    {
+      "name": "isWalkOrWaitingMotion__13MarioAnimatorCFv",
+      "retail_size": "216",
+      "compiled_size": "216",
+      "objdiff_percent": 93.333336
+    },
+    {
+      "name": "update__13MarioAnimatorFv",
+      "retail_size": "1804",
+      "compiled_size": "1744",
+      "objdiff_percent": 93.1153
+    },
+    {
+      "name": "updateWalkBas__13MarioAnimatorFPCcf",
+      "retail_size": "376",
+      "compiled_size": "372",
+      "objdiff_percent": 98.723404
+    },
+    {
+      "name": "setHand__13MarioAnimatorFv",
+      "retail_size": "168",
+      "compiled_size": "168",
+      "objdiff_percent": 99.40476
+    },
+    {
+      "name": "setTilt__13MarioAnimatorFv",
+      "retail_size": "556",
+      "compiled_size": "556",
+      "objdiff_percent": 98.92086
+    },
+    {
+      "name": "resetTilt__13MarioAnimatorFv",
+      "retail_size": "68",
+      "compiled_size": "68",
+      "objdiff_percent": 100.0
+    },
+    {
+      "name": "setHoming__13MarioAnimatorFv",
+      "retail_size": "984",
+      "compiled_size": "984",
+      "objdiff_percent": 99.32927
+    },
+    {
+      "name": "setHipSlidingTilt__13MarioAnimatorFff",
+      "retail_size": "404",
+      "compiled_size": "404",
+      "objdiff_percent": 99.514854
+    },
+    {
+      "name": "setHipSliderTilt__13MarioAnimatorFv",
+      "retail_size": "92",
+      "compiled_size": "92",
+      "objdiff_percent": 100.0
+    },
+    {
+      "name": "setHipSlipTilt__13MarioAnimatorFv",
+      "retail_size": "136",
+      "compiled_size": "136",
+      "objdiff_percent": 100.0
+    },
+    {
+      "name": "setSpeed__13MarioAnimatorFf",
+      "retail_size": "8",
+      "compiled_size": "8",
+      "objdiff_percent": 100.0
+    },
+    {
+      "name": "getFrame__13MarioAnimatorCFv",
+      "retail_size": "8",
+      "compiled_size": "8",
+      "objdiff_percent": 100.0
+    },
+    {
+      "name": "getUpperFrame__13MarioAnimatorCFv",
+      "retail_size": "8",
+      "compiled_size": "8",
+      "objdiff_percent": 100.0
+    },
+    {
+      "name": "setWalkMode__13MarioAnimatorFv",
+      "retail_size": "372",
+      "compiled_size": "364",
+      "objdiff_percent": 94.139786
+    },
+    {
+      "name": "calc__13MarioAnimatorFv",
+      "retail_size": "432",
+      "compiled_size": "416",
+      "objdiff_percent": 89.81481
+    },
+    {
+      "name": "change__13MarioAnimatorFPCc",
+      "retail_size": "320",
+      "compiled_size": "320",
+      "objdiff_percent": 99.25
+    },
+    {
+      "name": "changeUpper__13MarioAnimatorFPCc",
+      "retail_size": "56",
+      "compiled_size": "56",
+      "objdiff_percent": 100.0
+    },
+    {
+      "name": "stopUpper__13MarioAnimatorFPCc",
+      "retail_size": "188",
+      "compiled_size": "188",
+      "objdiff_percent": 69.12766
+    },
+    {
+      "name": "changeDefault__13MarioAnimatorFPCc",
+      "retail_size": "88",
+      "compiled_size": "88",
+      "objdiff_percent": 100.0
+    },
+    {
+      "name": "isDefaultAnimationRun__13MarioAnimatorCFPCc",
+      "retail_size": "64",
+      "compiled_size": "64",
+      "objdiff_percent": 100.0
+    },
+    {
+      "name": "changeDefaultUpper__13MarioAnimatorFPCc",
+      "retail_size": "36",
+      "compiled_size": "36",
+      "objdiff_percent": 100.0
+    },
+    {
+      "name": "getUpperJointID__13MarioAnimatorCFv",
+      "retail_size": "16",
+      "compiled_size": "48",
+      "objdiff_percent": 0.0
+    },
+    {
+      "name": "updateJointRumble__13MarioAnimatorFv",
+      "retail_size": "744",
+      "compiled_size": "756",
+      "objdiff_percent": 90.94086
+    },
+    {
+      "name": "addRumblePower__13MarioAnimatorFfUl",
+      "retail_size": "24",
+      "compiled_size": "24",
+      "objdiff_percent": 100.0
+    },
+    {
+      "name": "setUpperRotateY__13MarioAnimatorFf",
+      "retail_size": "104",
+      "compiled_size": "108",
+      "objdiff_percent": 87.88461
+    },
+    {
+      "name": "clearAllJointTransform__13MarioAnimatorFv",
+      "retail_size": "420",
+      "compiled_size": "444",
+      "objdiff_percent": 78.61905
+    },
+    {
+      "name": "isMirrorAnimation__13MarioAnimatorFv",
+      "retail_size": "508",
+      "compiled_size": "504",
+      "objdiff_percent": 95.14173
+    },
+    {
+      "name": "switchMirrorMode__13MarioAnimatorFv",
+      "retail_size": "312",
+      "compiled_size": "312",
+      "objdiff_percent": 99.871796
+    },
+    {
+      "name": "changePickupAnimation__13MarioAnimatorFPC9HitSensor",
+      "retail_size": "412",
+      "compiled_size": "412",
+      "objdiff_percent": 95.776695
+    },
+    {
+      "name": "updateTakingAnimation__13MarioAnimatorFPC9HitSensor",
+      "retail_size": "372",
+      "compiled_size": "376",
+      "objdiff_percent": 93.97849
+    },
+    {
+      "name": "changeThrowAnimation__13MarioAnimatorFPC9HitSensor",
+      "retail_size": "220",
+      "compiled_size": "220",
+      "objdiff_percent": 93.454544
+    },
+    {
+      "name": "waterToGround__13MarioAnimatorFv",
+      "retail_size": "204",
+      "compiled_size": "204",
+      "objdiff_percent": 99.411766
+    }
+  ]
+}

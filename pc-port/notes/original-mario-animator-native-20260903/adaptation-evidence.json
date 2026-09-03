@@ -1,0 +1,745 @@
+{
+  "commands": [
+    [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Player/MarioAnimator.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-mario-animator-native-20260903/root-ppc.o"
+    ],
+    [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "build/original-mario-animator-native-20260903/staged/MarioAnimator.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-mario-animator-native-20260903/typed-ppc.o"
+    ],
+    [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/build/original-mario-animator-native-20260903/layout-ppc.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-mario-animator-native-20260903/layout-ppc.o"
+    ]
+  ],
+  "methods": [
+    {
+      "name": "calc__13MarioAnimatorFv",
+      "size": 416,
+      "root_and_adapted_ppc_instructions_and_relocations_identical": true,
+      "references": [
+        {
+          "offset": "0x48",
+          "kind": 10,
+          "symbol": "getPlayer__11MarioModuleCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x58",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x68",
+          "kind": 10,
+          "symbol": "getJointTransform__10XanimeCoreFUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x74",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x8c",
+          "kind": 10,
+          "symbol": "calcAnm__12XanimePlayerFUs",
+          "addend": 0
+        },
+        {
+          "offset": "0x92",
+          "kind": 6,
+          "symbol": "@14059",
+          "addend": 0,
+          "value_hex": "5370696e653100"
+        },
+        {
+          "offset": "0x9a",
+          "kind": 4,
+          "symbol": "@14059",
+          "addend": 0,
+          "value_hex": "5370696e653100"
+        },
+        {
+          "offset": "0x9c",
+          "kind": 10,
+          "symbol": "getJointIndex__2MRFPC9LiveActorPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0xa8",
+          "kind": 10,
+          "symbol": "calcAnm__12XanimePlayerFUs",
+          "addend": 0
+        },
+        {
+          "offset": "0xae",
+          "kind": 6,
+          "symbol": "@14235",
+          "addend": 0,
+          "value_hex": "4865616400"
+        },
+        {
+          "offset": "0xb6",
+          "kind": 4,
+          "symbol": "@14235",
+          "addend": 0,
+          "value_hex": "4865616400"
+        },
+        {
+          "offset": "0xb8",
+          "kind": 10,
+          "symbol": "getJointIndex__2MRFPC9LiveActorPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0xc4",
+          "kind": 10,
+          "symbol": "overWriteMtxCalc__12XanimePlayerFUs",
+          "addend": 0
+        },
+        {
+          "offset": "0xce",
+          "kind": 6,
+          "symbol": "@14059",
+          "addend": 0,
+          "value_hex": "5370696e653100"
+        },
+        {
+          "offset": "0xd6",
+          "kind": 4,
+          "symbol": "@14059",
+          "addend": 0,
+          "value_hex": "5370696e653100"
+        },
+        {
+          "offset": "0xd8",
+          "kind": 10,
+          "symbol": "getJointIndex__2MRFPC9LiveActorPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0xe4",
+          "kind": 10,
+          "symbol": "getModelData__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x104",
+          "kind": 10,
+          "symbol": "calcAnm__12XanimePlayerFUs",
+          "addend": 0
+        },
+        {
+          "offset": "0x11c",
+          "kind": 10,
+          "symbol": "calcJ3DModel__2MRFP9LiveActor",
+          "addend": 0
+        },
+        {
+          "offset": "0x134",
+          "kind": 10,
+          "symbol": "calcJ3DModel__2MRFP9LiveActor",
+          "addend": 0
+        },
+        {
+          "offset": "0x140",
+          "kind": 10,
+          "symbol": "clearAnm__12XanimePlayerFUs",
+          "addend": 0
+        },
+        {
+          "offset": "0x152",
+          "kind": 6,
+          "symbol": "@14059",
+          "addend": 0,
+          "value_hex": "5370696e653100"
+        },
+        {
+          "offset": "0x15a",
+          "kind": 4,
+          "symbol": "@14059",
+          "addend": 0,
+          "value_hex": "5370696e653100"
+        },
+        {
+          "offset": "0x15c",
+          "kind": 10,
+          "symbol": "getJointIndex__2MRFPC9LiveActorPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x168",
+          "kind": 10,
+          "symbol": "clearAnm__12XanimePlayerFUs",
+          "addend": 0
+        },
+        {
+          "offset": "0x16e",
+          "kind": 6,
+          "symbol": "@14235",
+          "addend": 0,
+          "value_hex": "4865616400"
+        },
+        {
+          "offset": "0x176",
+          "kind": 4,
+          "symbol": "@14235",
+          "addend": 0,
+          "value_hex": "4865616400"
+        },
+        {
+          "offset": "0x178",
+          "kind": 10,
+          "symbol": "getJointIndex__2MRFPC9LiveActorPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x184",
+          "kind": 10,
+          "symbol": "clearMtxCalc__12XanimePlayerFUs",
+          "addend": 0
+        }
+      ]
+    },
+    {
+      "name": "updateJointRumble__13MarioAnimatorFv",
+      "size": 756,
+      "root_and_adapted_ppc_instructions_and_relocations_identical": true,
+      "references": [
+        {
+          "offset": "0x34",
+          "kind": 109,
+          "symbol": "@14027",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x4e",
+          "kind": 6,
+          "symbol": "@14587",
+          "addend": 0,
+          "value_hex": "4330000000000000"
+        },
+        {
+          "offset": "0x52",
+          "kind": 4,
+          "symbol": "@14587",
+          "addend": 0,
+          "value_hex": "4330000000000000"
+        },
+        {
+          "offset": "0x58",
+          "kind": 109,
+          "symbol": "@14576",
+          "addend": 0,
+          "value_hex": "40c90fdb"
+        },
+        {
+          "offset": "0x60",
+          "kind": 109,
+          "symbol": "@14577",
+          "addend": 0,
+          "value_hex": "41f00000"
+        },
+        {
+          "offset": "0x68",
+          "kind": 109,
+          "symbol": "@14027",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x80",
+          "kind": 109,
+          "symbol": "@14578",
+          "addend": 0,
+          "value_hex": "c522f983"
+        },
+        {
+          "offset": "0x86",
+          "kind": 6,
+          "symbol": "sSinCosTable__5JMath",
+          "addend": 0
+        },
+        {
+          "offset": "0x8a",
+          "kind": 4,
+          "symbol": "sSinCosTable__5JMath",
+          "addend": 0
+        },
+        {
+          "offset": "0xac",
+          "kind": 109,
+          "symbol": "@14579",
+          "addend": 0,
+          "value_hex": "4522f983"
+        },
+        {
+          "offset": "0xb2",
+          "kind": 6,
+          "symbol": "sSinCosTable__5JMath",
+          "addend": 0
+        },
+        {
+          "offset": "0xb6",
+          "kind": 4,
+          "symbol": "sSinCosTable__5JMath",
+          "addend": 0
+        },
+        {
+          "offset": "0xea",
+          "kind": 6,
+          "symbol": "@14587",
+          "addend": 0,
+          "value_hex": "4330000000000000"
+        },
+        {
+          "offset": "0xf2",
+          "kind": 4,
+          "symbol": "@14587",
+          "addend": 0,
+          "value_hex": "4330000000000000"
+        },
+        {
+          "offset": "0xf8",
+          "kind": 109,
+          "symbol": "@14577",
+          "addend": 0,
+          "value_hex": "41f00000"
+        },
+        {
+          "offset": "0x112",
+          "kind": 6,
+          "symbol": "@14236",
+          "addend": 0,
+          "value_hex": "41726d4c3100"
+        },
+        {
+          "offset": "0x11a",
+          "kind": 4,
+          "symbol": "@14236",
+          "addend": 0,
+          "value_hex": "41726d4c3100"
+        },
+        {
+          "offset": "0x120",
+          "kind": 10,
+          "symbol": "getJointIndex__2MRFPC9LiveActorPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x130",
+          "kind": 10,
+          "symbol": "getJointTransform__10XanimeCoreFUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x13a",
+          "kind": 6,
+          "symbol": "@14237",
+          "addend": 0,
+          "value_hex": "41726d523200"
+        },
+        {
+          "offset": "0x13e",
+          "kind": 4,
+          "symbol": "@14237",
+          "addend": 0,
+          "value_hex": "41726d523200"
+        },
+        {
+          "offset": "0x148",
+          "kind": 10,
+          "symbol": "getJointIndex__2MRFPC9LiveActorPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x158",
+          "kind": 10,
+          "symbol": "getJointTransform__10XanimeCoreFUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x166",
+          "kind": 6,
+          "symbol": "@14587",
+          "addend": 0,
+          "value_hex": "4330000000000000"
+        },
+        {
+          "offset": "0x16e",
+          "kind": 4,
+          "symbol": "@14587",
+          "addend": 0,
+          "value_hex": "4330000000000000"
+        },
+        {
+          "offset": "0x174",
+          "kind": 109,
+          "symbol": "@14581",
+          "addend": 0,
+          "value_hex": "42700000"
+        },
+        {
+          "offset": "0x180",
+          "kind": 109,
+          "symbol": "@14580",
+          "addend": 0,
+          "value_hex": "3f333333"
+        },
+        {
+          "offset": "0x198",
+          "kind": 10,
+          "symbol": "getPlayer__11MarioModuleCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x1ac",
+          "kind": 10,
+          "symbol": "getPlayer__11MarioModuleCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x1c0",
+          "kind": 10,
+          "symbol": "getPlayer__11MarioModuleCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x1d4",
+          "kind": 10,
+          "symbol": "getPlayer__11MarioModuleCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x1e0",
+          "kind": 10,
+          "symbol": "getPlayer__11MarioModuleCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x1e8",
+          "kind": 10,
+          "symbol": "calcAngleD__11MarioModuleCFRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x1ec",
+          "kind": 109,
+          "symbol": "@14582",
+          "addend": 0,
+          "value_hex": "40a00000"
+        },
+        {
+          "offset": "0x200",
+          "kind": 10,
+          "symbol": "getAirGravityVec__11MarioModuleCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x20c",
+          "kind": 10,
+          "symbol": "getPlayer__11MarioModuleCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x21c",
+          "kind": 10,
+          "symbol": "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x224",
+          "kind": 10,
+          "symbol": "normalizeOrZero__2MRFPQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x22c",
+          "kind": 10,
+          "symbol": "getFrontVec__11MarioModuleCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x234",
+          "kind": 10,
+          "symbol": "dot__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x238",
+          "kind": 109,
+          "symbol": "@14583",
+          "addend": 0,
+          "value_hex": "bf34fdf4"
+        },
+        {
+          "offset": "0x250",
+          "kind": 10,
+          "symbol": "getFrontVec__11MarioModuleCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x258",
+          "kind": 10,
+          "symbol": "dot__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x25c",
+          "kind": 109,
+          "symbol": "@14584",
+          "addend": 0,
+          "value_hex": "3f34fdf4"
+        },
+        {
+          "offset": "0x270",
+          "kind": 109,
+          "symbol": "@14476",
+          "addend": 0,
+          "value_hex": "3f666666"
+        },
+        {
+          "offset": "0x288",
+          "kind": 10,
+          "symbol": "PSMTXRotRad",
+          "addend": 0
+        },
+        {
+          "offset": "0x294",
+          "kind": 10,
+          "symbol": "PSMTXIdentity",
+          "addend": 0
+        },
+        {
+          "offset": "0x29e",
+          "kind": 6,
+          "symbol": "@14190",
+          "addend": 0,
+          "value_hex": "5370696e653200"
+        },
+        {
+          "offset": "0x2a6",
+          "kind": 4,
+          "symbol": "@14190",
+          "addend": 0,
+          "value_hex": "5370696e653200"
+        },
+        {
+          "offset": "0x2b0",
+          "kind": 10,
+          "symbol": "getJointIndex__2MRFPC9LiveActorPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x2c0",
+          "kind": 10,
+          "symbol": "getJointTransform__10XanimeCoreFUl",
+          "addend": 0
+        }
+      ]
+    }
+  ],
+  "root_joint_mMtxCalc_offset": 84,
+  "source_sha256": {
+    "src/Game/Player/MarioAnimator.cpp": "c7550d059af74f798d19217df501cf7e32b32043feefd50dcd30a768596258a2",
+    "include/Game/Player/MarioAnimator.hpp": "4184c38ea0672e2d59eabbb0f6803ca0f0f548c0b7c329b80600f5f2a5885df6",
+    "include/Game/Player/MarioAnimatorData.hpp": "2595e258a398b6e32b49c7af44fca8210c6caef023888d7599e1afa42a23f43a",
+    "libs/JSystem/include/JSystem/J3DGraphAnimator/J3DJoint.hpp": "c898e77abaabd6f2ad3e921db75243ba14e268687c76567f6a5664f9613329af",
+    "build/original-mario-animator-native-20260903/staged/MarioAnimator.cpp": "1e88ee514cc57edfbab274dfaca145395e5ab5c5da61113cd0866e630e0b182f"
+  },
+  "retail_zero_store": {
+    "address": "0x802cc9fc",
+    "instruction": "90a30054",
+    "operation": "stw r5,0x54(r3), with r5 loaded0 at0x802cc9f0; r3 indexed from actual J3DJoint pointer array"
+  },
+  "native_compile_no_errors": true,
+  "native_joint_mMtxCalc_offset": 104
+}
