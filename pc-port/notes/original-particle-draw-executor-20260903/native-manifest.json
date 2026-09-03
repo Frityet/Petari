@@ -1,0 +1,51 @@
+[
+  {
+    "source": "src/Game/Effect/ParticleDrawExecutor.cpp",
+    "staged": "build/original-particle-draw-executor-20260903/staged/Game/Effect/ParticleDrawExecutor.cpp",
+    "owned": true,
+    "source_sha256": "ab930a200255aeed18918b44ddfa79a1c2ca39ca38b05ce897e31f6b51a59fc1",
+    "staged_sha256": "ab930a200255aeed18918b44ddfa79a1c2ca39ca38b05ce897e31f6b51a59fc1"
+  },
+  {
+    "source": "include/Game/Effect/ParticleDrawExecutor.hpp",
+    "staged": "build/original-particle-draw-executor-20260903/staged/Game/Effect/ParticleDrawExecutor.hpp",
+    "owned": true,
+    "source_sha256": "65cb1dcf7bafc023d4a14b9b550bb48b292d3daad9618708c6b3ff96efdb118a",
+    "staged_sha256": "65cb1dcf7bafc023d4a14b9b550bb48b292d3daad9618708c6b3ff96efdb118a"
+  },
+  {
+    "source": "include/Game/Util/Functor.hpp",
+    "staged": "build/original-particle-draw-executor-20260903/staged/Game/Util/Functor.hpp",
+    "owned": true,
+    "source_sha256": "4b82e5f875f162e0188c1a2fa3635d40a8a880201b67df95bad88831068fbaa3",
+    "staged_sha256": "c4577d1b2d112318e07def90d8cba67daae19e650d4a4dc47b241870a858a810"
+  },
+  {
+    "source": "libs/JSystem/include/JSystem/JParticle/JPADrawInfo.hpp",
+    "staged": "build/original-particle-draw-executor-20260903/staged/JSystem/JParticle/JPADrawInfo.hpp",
+    "owned": true,
+    "source_sha256": "dc95d9eb93f7307856aaf8a05121332e1a21d0045781a67aed25afac6d2065f5",
+    "staged_sha256": "dc95d9eb93f7307856aaf8a05121332e1a21d0045781a67aed25afac6d2065f5"
+  },
+  {
+    "source": "include/Game/Effect/EffectSystem.hpp",
+    "staged": "build/original-particle-draw-executor-20260903/staged/Game/Effect/EffectSystem.hpp",
+    "owned": false,
+    "source_sha256": "f863add4b4f9f4991c4536c90fd63334b9d1c64acac449dc0aacc6a9fe542b9c",
+    "staged_sha256": "f863add4b4f9f4991c4536c90fd63334b9d1c64acac449dc0aacc6a9fe542b9c"
+  },
+  {
+    "source": "include/Game/NameObj/NameObjAdaptor.hpp",
+    "staged": "build/original-particle-draw-executor-20260903/staged/Game/NameObj/NameObjAdaptor.hpp",
+    "owned": false,
+    "source_sha256": "870011aad585c4b6a70621396dcd64dab51fa5651e3e6d5c7150f435f0ef0da8",
+    "staged_sha256": "870011aad585c4b6a70621396dcd64dab51fa5651e3e6d5c7150f435f0ef0da8"
+  },
+  {
+    "source": "src/Game/NameObj/NameObjAdaptor.cpp",
+    "staged": "build/original-particle-draw-executor-20260903/staged/Game/NameObj/NameObjAdaptor.cpp",
+    "owned": false,
+    "source_sha256": "21780d330c9f77b4c3fcb1a4c837954a2a0db182d3ac4d52515b488f21fc71ef",
+    "staged_sha256": "21780d330c9f77b4c3fcb1a4c837954a2a0db182d3ac4d52515b488f21fc71ef"
+  }
+]

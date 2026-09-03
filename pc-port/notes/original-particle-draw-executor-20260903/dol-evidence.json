@@ -1,0 +1,221 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "methods": [
+    {
+      "object": "ParticleDrawExecutor",
+      "symbol": "connectToSceneDrawAdaptor__34@unnamed@ParticleDrawExecutor_cpp@FP14NameObjAdaptorRCQ22MR11FunctorBasei",
+      "address": "0x800c9580",
+      "size": 116,
+      "relocation_kinds": [
+        4,
+        6,
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "ParticleDrawExecutor",
+      "symbol": "__ct__20ParticleDrawExecutorFPC12EffectSystemb",
+      "address": "0x800c95f4",
+      "size": 104,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "ParticleDrawExecutor",
+      "symbol": "initDraw__20ParticleDrawExecutorFv",
+      "address": "0x800c965c",
+      "size": 92,
+      "relocation_kinds": [
+        10,
+        109
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "ParticleDrawExecutor",
+      "symbol": "draw3D__20ParticleDrawExecutorCFv",
+      "address": "0x800c96b8",
+      "size": 56,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "ParticleDrawExecutor",
+      "symbol": "draw2D__20ParticleDrawExecutorCFv",
+      "address": "0x800c96f0",
+      "size": 388,
+      "relocation_kinds": [
+        4,
+        6,
+        10,
+        109
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "ParticleDrawExecutor",
+      "symbol": "drawIndirect__20ParticleDrawExecutorCFv",
+      "address": "0x800c9874",
+      "size": 176,
+      "relocation_kinds": [
+        4,
+        6,
+        10,
+        109
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "ParticleDrawExecutor",
+      "symbol": "drawAfterIndirect__20ParticleDrawExecutorCFv",
+      "address": "0x800c9924",
+      "size": 56,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "ParticleDrawExecutor",
+      "symbol": "drawFor2DModel__20ParticleDrawExecutorCFv",
+      "address": "0x800c995c",
+      "size": 104,
+      "relocation_kinds": [
+        4,
+        6,
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "ParticleDrawExecutor",
+      "symbol": "drawForBloomEffect__20ParticleDrawExecutorCFv",
+      "address": "0x800c99c4",
+      "size": 56,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "ParticleDrawExecutor",
+      "symbol": "drawAfterImageEffect__20ParticleDrawExecutorCFv",
+      "address": "0x800c99fc",
+      "size": 56,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "ParticleDrawExecutor",
+      "symbol": "drawWithViewMtx3D__20ParticleDrawExecutorCFRCQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>",
+      "address": "0x800c9a34",
+      "size": 128,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "ParticleDrawExecutor",
+      "symbol": "drawWithViewMtxAfterIndirect__20ParticleDrawExecutorCFRCQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>",
+      "address": "0x800c9ab4",
+      "size": 100,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "ParticleDrawExecutor",
+      "symbol": "drawWithViewMtxForBloomEffect__20ParticleDrawExecutorCFRCQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>",
+      "address": "0x800c9b18",
+      "size": 100,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "ParticleDrawExecutor",
+      "symbol": "drawWithViewMtxAfterImageEffect__20ParticleDrawExecutorCFRCQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>",
+      "address": "0x800c9b7c",
+      "size": 100,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "ParticleDrawExecutor",
+      "symbol": "initDrawAdaptor__20ParticleDrawExecutorFv",
+      "address": "0x800c9be0",
+      "size": 672,
+      "relocation_kinds": [
+        4,
+        6,
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "ParticleDrawExecutor",
+      "symbol": "Functor<20ParticleDrawExecutor>__2MRFPC20ParticleDrawExecutorM20ParticleDrawExecutorFPCvPCv_v_Q22MR69FunctorV0M<PC20ParticleDrawExecutor,M20ParticleDrawExecutorFPCvPCv_v>",
+      "address": "0x800c9e80",
+      "size": 64,
+      "relocation_kinds": [
+        4,
+        6
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "ParticleDrawExecutor",
+      "symbol": "clone__Q22MR10FunctorV0FCFP7JKRHeap",
+      "address": "0x800c9ec0",
+      "size": 80,
+      "relocation_kinds": [
+        4,
+        6,
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "ParticleDrawExecutor",
+      "symbol": "__cl__Q22MR10FunctorV0FCFv",
+      "address": "0x800c9f10",
+      "size": 12,
+      "relocation_kinds": [],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "ParticleDrawExecutor",
+      "symbol": "__cl__Q22MR69FunctorV0M<PC20ParticleDrawExecutor,M20ParticleDrawExecutorFPCvPCv_v>CFv",
+      "address": "0x800c9f1c",
+      "size": 48,
+      "relocation_kinds": [
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "object": "ParticleDrawExecutor",
+      "symbol": "clone__Q22MR69FunctorV0M<PC20ParticleDrawExecutor,M20ParticleDrawExecutorFPCvPCv_v>CFP7JKRHeap",
+      "address": "0x800c9f4c",
+      "size": 104,
+      "relocation_kinds": [
+        4,
+        6,
+        10
+      ],
+      "normalized_retail_dol_equal": true
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+NameObj::initAfterPlacement()
+NameObj::init(JMapInfoIter const&)
+NameObj::NameObj(char const*)
+NameObj::~NameObj()
+typeinfo for NameObj
+vtable for __cxxabiv1::__si_class_type_info
+operator delete(void*, unsigned long)

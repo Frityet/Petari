@@ -1,0 +1,33 @@
+_C_MTXCopy
+_C_MTXIdentity
+_C_MTXLightOrtho
+_C_MTXLightPerspective
+_C_MTXOrtho
+_GXSetClipMode
+_GXSetCullMode
+_GXSetFog
+_GXSetProjection
+_GXSetZMode
+__Unwind_Resume
+NameObjAdaptor::connectToDraw(MR::FunctorBase const&)
+NameObjAdaptor::NameObjAdaptor(char const*)
+JPAEmitterManager::draw(JPADrawInfo const*, unsigned char)
+MR::connectToScene(NameObj*, int, int, int, int)
+MR::getScreenWidth()
+MR::isScreen16Per9()
+MR::getCameraViewMtx()
+MR::registerPreDrawFunction(MR::FunctorBase const&, int)
+MR::getFovy()
+MR::getAspect()
+JUTVideo::getManager()
+JUTVideo::getRenderMode() const
+vtable for __cxxabiv1::__class_type_info
+vtable for __cxxabiv1::__si_class_type_info
+operator delete(void*, unsigned long)
+operator new(unsigned long)
+operator new(unsigned long, JKRHeap*, int)
+___cxa_pure_virtual
+___gxx_personality_v0
+___stack_chk_fail
+___stack_chk_guard
+_j3dSys

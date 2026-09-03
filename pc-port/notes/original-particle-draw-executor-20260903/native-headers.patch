@@ -1,0 +1,53 @@
+--- a/pc-port/src/Game/Util/Functor.hpp
++++ b/pc-port/src/Game/Util/Functor.hpp
+@@ -1,6 +1,6 @@
+ #pragma once
+ 
+-class JKRHeap;
++#include <JSystem/JKernel/JKRHeap.hpp>
+ 
+ namespace MR {
+     class FunctorBase {
+@@ -20,8 +20,8 @@
+             (mCaller->*mCallee)();
+         }
+ 
+-        [[nodiscard]] FunctorBase* clone(JKRHeap*) const override {
+-            return new FunctorV0M(*this);
++        [[nodiscard]] FunctorBase* clone(JKRHeap* pHeap) const override {
++            return new (pHeap, 0) FunctorV0M(*this);
+         }
+ 
+         T mCaller;
+@@ -46,4 +46,20 @@
+     inline static FunctorV0M< T*, void (T::*)() const > Functor_Inline(T* a1, void (T::*a2)() const) {
+         return FunctorV0M< T*, void (T::*)() const >(a1, a2);
+     }
++
++    template < class T >
++    inline static FunctorV0M< const T*, void (T::*)() const > Functor(const T* caller, void (T::*callee)() const) {
++        return FunctorV0M< const T*, void (T::*)() const >(caller, callee);
++    }
++
++    class FunctorV0F : public FunctorBase {
++    public:
++        explicit FunctorV0F(void (*func)()) : mFunc(func) {}
++        void operator()() const override { (*mFunc)(); }
++        FunctorBase* clone(JKRHeap* heap) const override { return new (heap, 0) FunctorV0F(*this); }
++        void (*mFunc)();
++    };
++
++    inline static FunctorV0F Functor(void (*func)()) { return FunctorV0F(func); }
++    inline static FunctorV0F Functor_Inline(void (*func)()) { return FunctorV0F(func); }
+ }  // namespace MR
+--- a/pc-port/src/Game/Util/ObjUtil.hpp
++++ b/pc-port/src/Game/Util/ObjUtil.hpp
+@@ -14,6 +14,8 @@
+ struct ResTIMG;
+ 
+ namespace MR {
++    class FunctorBase;
++    void registerPreDrawFunction(const MR::FunctorBase&, int);
+     bool isStageStateScenarioOpeningCamera();
+     NameObjGroup* joinToNameObjGroup(NameObj*, const char*);
+     void connectToSceneCollisionMapObj(LiveActor* pActor);
