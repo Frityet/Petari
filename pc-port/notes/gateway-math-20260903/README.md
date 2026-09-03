@@ -70,25 +70,52 @@ the existing source/Aurora include paths, and the forced
 warnings from the game headers were emitted.
 
 This restores the recovered algorithms and branch contracts. It is not a
-bit-exact PowerPC floating-point claim: the existing JMath middle-range
-arccosine/atan2 and scalar square-root providers still use host libm, and
-platform floating-point operation rounding can differ. Retail resource or
+bit-exact PowerPC floating-point claim: scalar atan2, square-root, and
+trigonometric table generation still use host libm, and platform
+floating-point operation rounding can differ. Retail resource or
 interactive rabbit gameplay verification belongs to the enclosing runtime
 milestone.
 
-## Next source-facing methods found during the audit
+## Follow-up quaternion and matrix recovery
 
-`TPos3f::setQuat` can be brought over directly from the recovered
-`libs/JSystem/include/JSystem/JGeometry/TMatrix.hpp:340`; it only writes the
-rotation block and must preserve translation. The two-argument `TQuat4::slerp`
-is declared but not defined in the root header. Its RMGK01 symbol is
-`0x80016428`, size `0x1e8`; it needs reconstruction before the current host
-three-argument approximation can be treated as source-equivalent.
+The two-argument `TQuat4<f32>::slerp` was recovered from the verified supplied
+RMGK01 binary at `0x80016428`, size `0x1e8`. The first implementation is
+`src/JSystem/JGeometry/TQuat.cpp` at the root, copied verbatim to the PC
+`src/JSystem/JGeometry/TQuat.cpp`. The accompanying asin table constructor was
+likewise recovered first in root
+`src/JSystem/JMath/JMATrigonometricTable.cpp`, then copied verbatim to the PC
+tree. Detailed address and constant evidence is in `slerp-reconstruction.md`.
 
-## Current macOS validation
+Both slerp overloads now use the recovered behavior: normalize input copies,
+choose the short quaternion hemisphere, use the retail squared-epsilon linear
+threshold, retain rates outside zero-to-one, and preserve the computed result
+without an added final normalization. Quaternion normalization now uses the
+retail `32 * FLT_EPSILON` squared-length cutoff. The shared JMath arccosine
+lookup uses the recovered asin table grid and integer index truncation.
+
+`TQuat4::makeMtx`, `TRotation3::setQuat`, and
+`TPosition3::makeQuat`/`setQT` follow the existing recovered root headers.
+`setQuat` and `makeMtx` preserve translation; `makeQuat` clears it. None silently
+normalizes input quaternion components.
+
+The focused tests now also cover nonunit slerp inputs, positive and negative
+rate extrapolation, opposite quaternion signs, both sides of the small-angle
+linear threshold, retained unnormalized results, source/copy alias ordering,
+normalization epsilon, shared table entries, and matrix translation behavior.
+These general primitives serve both actor movement and camera orientation;
+the follow-up does not activate new NPC or demo behavior.
+
+## Earlier vector-rotation checkpoint validation
 
 Serialized LLVM 23 build and `smg-pc-game-math-rotation-tests`: PASS.
 Adjacent gravity-math checks: PASS after correcting the old ideal-cosine
 expectation to the existing retail 14-bit table cell. NPCActor: PASS 6/6.
 Real-disc Mario stand/walk/release/recreate: PASS, 325.685 units,
 `Wait -> Run -> Wait`. Game/Player source mirror gates also pass.
+
+## Quaternion reconstruction validation
+
+LLVM 23 rebuilt `smg-pc-game-math-rotation-tests` with both new root-mirrored
+source files on macOS arm64. The expanded math test passed, including the
+new slerp, table and matrix cases. New movement/camera integration results
+are tracked separately in `../movement-camera-20260903T043000Z/`.

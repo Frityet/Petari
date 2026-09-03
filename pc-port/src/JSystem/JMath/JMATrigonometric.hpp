@@ -5,6 +5,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <limits>
 
 namespace JMath {
 
@@ -119,20 +120,29 @@ namespace JMath {
     template <s32 Len, typename T>
     class TAsinAcosTable {
     public:
-        TAsinAcosTable() {
-            for (auto index = s32{}; index < Len; ++index) {
-                const auto ratio = static_cast<T>(index) / static_cast<T>(Len - 1);
-                mTable[index] = static_cast<T>(std::asin(ratio));
-            }
-            _1000 = TAngleConstant_<T>::RADIAN_DEG090();
-        }
+        TAsinAcosTable();
 
         [[nodiscard]] T get_(T value, T) const {
             return static_cast<T>(std::asin(std::clamp(value, static_cast<T>(-1), static_cast<T>(1))));
         }
 
         [[nodiscard]] T acos_(T value) const {
-            return static_cast<T>(std::acos(std::clamp(value, static_cast<T>(-1), static_cast<T>(1))));
+            if (value >= static_cast<T>(1)) {
+                return static_cast<T>(0);
+            }
+            if (value <= static_cast<T>(-1)) {
+                return TAngleConstant_<T>::RADIAN_DEG180();
+            }
+            if (std::isnan(value)) {
+                return std::numeric_limits<T>::quiet_NaN();
+            }
+            const auto index_scale = static_cast<T>(Len) - static_cast<T>(0.5);
+            if (value < static_cast<T>(0)) {
+                const auto index = static_cast<u32>(-value * index_scale);
+                return mTable[index] + TAngleConstant_<T>::RADIAN_DEG090();
+            }
+            const auto index = static_cast<u32>(value * index_scale);
+            return TAngleConstant_<T>::RADIAN_DEG090() - mTable[index];
         }
 
         [[nodiscard]] T acosDegree(T value) const {
@@ -142,6 +152,9 @@ namespace JMath {
         T mTable[Len]{};
         T _1000{};
     };
+
+    template <>
+    TAsinAcosTable<1024, f32>::TAsinAcosTable();
 
     extern TSinCosTable<14, f32> sSinCosTable;
     extern TAtanTable<1024, f32> sAtanTable;

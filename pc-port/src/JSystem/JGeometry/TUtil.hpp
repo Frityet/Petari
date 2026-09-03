@@ -1,5 +1,7 @@
 #pragma once
 
+#include "JSystem/JMath/JMATrigonometric.hpp"
+
 #include <cfloat>
 #include <cmath>
 
@@ -23,7 +25,7 @@ namespace JGeometry {
         }
 
         [[nodiscard]] static T acos(T value) {
-            return static_cast<T>(std::acos(clamp(value, static_cast<T>(-1), static_cast<T>(1))));
+            return JMAAcosRadian(value);
         }
 
         [[nodiscard]] static constexpr T PI() {

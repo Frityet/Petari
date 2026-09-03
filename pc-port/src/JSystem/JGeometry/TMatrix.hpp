@@ -158,6 +158,10 @@ namespace JGeometry {
             this->mMtx[2][2] = z_direction.z;
         }
 
+        void setQuat(const TQuat4f& quaternion) {
+            quaternion.makeMtx(this->mMtx);
+        }
+
         void getEulerXYZ(TVec3f &destination) const {
             if (this->mMtx[2][0] - 1.0F >= -TUtil<f32>::epsilon()) {
                 destination.set(std::atan2(-this->mMtx[0][1], this->mMtx[1][1]),
@@ -266,6 +270,16 @@ namespace JGeometry {
         void makeRotate(const TVec3f &axis, f32 angle) {
             zeroTrans();
             this->setRotate(axis, angle);
+        }
+
+        void makeQuat(const TQuat4f& quaternion) {
+            zeroTrans();
+            this->setQuat(quaternion);
+        }
+
+        void setQT(const TQuat4f& quaternion, const TVec3f& translation) {
+            this->setQuat(quaternion);
+            setTrans(translation);
         }
     };
 

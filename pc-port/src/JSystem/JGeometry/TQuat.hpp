@@ -44,17 +44,30 @@ namespace JGeometry {
         }
 
         void normalize() {
-            const auto length_squared = (x * x) + (y * y) + (z * z) + (w * w);
-            if (length_squared <= static_cast<T>(1.0e-12)) {
+            const auto length_squared = squared();
+            if (length_squared <= JGeometry::TUtil<T>::epsilon()) {
                 set(0, 0, 0, 1);
                 return;
             }
 
-            const auto inverse_length = static_cast<T>(1) / std::sqrt(length_squared);
+            const auto inverse_length = JGeometry::TUtil<T>::inv_sqrt(length_squared);
             x *= inverse_length;
             y *= inverse_length;
             z *= inverse_length;
             w *= inverse_length;
+        }
+
+        void normalize(const TQuat4& source) {
+            set(source);
+            normalize();
+        }
+
+        [[nodiscard]] T dot(const TQuat4& other) const {
+            return x * other.x + y * other.y + z * other.z + w * other.w;
+        }
+
+        [[nodiscard]] T squared() const {
+            return dot(*this);
         }
 
         void getXDir(TVec3f& out) const {
@@ -112,32 +125,37 @@ namespace JGeometry {
         }
 
         void slerp(const TQuat4& from, const TQuat4& to, T rate) {
-            auto target = to;
-            auto dot = (from.x * target.x) + (from.y * target.y) + (from.z * target.z) + (from.w * target.w);
-            if (dot < 0) {
-                dot = -dot;
-                target.x = -target.x;
-                target.y = -target.y;
-                target.z = -target.z;
-                target.w = -target.w;
-            }
+            set(from);
+            slerp(to, rate);
+        }
 
-            rate = std::clamp(rate, static_cast<T>(0), static_cast<T>(1));
-            if (dot > static_cast<T>(0.9995)) {
-                set(from.x + ((target.x - from.x) * rate), from.y + ((target.y - from.y) * rate),
-                    from.z + ((target.z - from.z) * rate), from.w + ((target.w - from.w) * rate));
-                normalize();
-                return;
-            }
+        void slerp(const TQuat4& target, T rate);
 
-            const auto angle = std::acos(std::clamp(dot, static_cast<T>(-1), static_cast<T>(1)));
-            const auto denominator = std::sin(angle);
-            const auto from_weight = std::sin((static_cast<T>(1) - rate) * angle) / denominator;
-            const auto to_weight = std::sin(rate * angle) / denominator;
-            set((from.x * from_weight) + (target.x * to_weight), (from.y * from_weight) + (target.y * to_weight),
-                (from.z * from_weight) + (target.z * to_weight), (from.w * from_weight) + (target.w * to_weight));
+        void makeMtx(MtxPtr matrix) const {
+            const auto yy = 2.0F * y * y;
+            const auto zz = 2.0F * z * z;
+            const auto xx = 2.0F * x * x;
+            const auto xy = 2.0F * x * y;
+            const auto xz = 2.0F * x * z;
+            const auto yz = 2.0F * y * z;
+            const auto wx = 2.0F * w * x;
+            const auto wy = 2.0F * w * y;
+            const auto wz = 2.0F * w * z;
+
+            matrix[0][0] = 1.0F - yy - zz;
+            matrix[0][1] = xy - wz;
+            matrix[0][2] = xz + wy;
+            matrix[1][0] = xy + wz;
+            matrix[1][1] = 1.0F - xx - zz;
+            matrix[1][2] = yz - wx;
+            matrix[2][0] = xz - wy;
+            matrix[2][1] = yz + wx;
+            matrix[2][2] = 1.0F - xx - yy;
         }
     };
+
+    template <>
+    void TQuat4<f32>::slerp(const TQuat4<f32>& target, f32 rate);
 }  // namespace JGeometry
 
 using TQuat4f = JGeometry::TQuat4<f32>;

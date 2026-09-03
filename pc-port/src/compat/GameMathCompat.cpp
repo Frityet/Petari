@@ -453,7 +453,7 @@ namespace MR {
         auto quaternion = source;
         auto up = TVec3f{};
         quaternion.getYDir(up);
-        if (up.dot(target_up) < 0.0F && isSameDirection(up, target_up)) {
+        if (!(up.dot(target_up) >= 0.0F) && isSameDirection(up, target_up)) {
             turnRandomVector(&up, up, 0.001F);
         }
 
@@ -466,7 +466,7 @@ namespace MR {
         quaternion.getZDir(front);
         auto projected_front = target_front.killElement(up);
         normalizeOrZero(&projected_front);
-        if (front.dot(projected_front) < 0.0F && isSameDirection(front, projected_front)) {
+        if (!(front.dot(projected_front) >= 0.0F) && isSameDirection(front, projected_front)) {
             turnRandomVector(&front, front, 0.001F);
         }
 

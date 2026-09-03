@@ -63,6 +63,93 @@ namespace {
         require(alias_left.w == result.w, "quaternion copy must support self assignment");
     }
 
+    void test_quaternion_normalization_and_slerp() {
+        auto quaternion = TQuat4f{0.001F, 0.0F, 0.0F, 0.0F};
+        quaternion.normalize();
+        require(quaternion.x == 0.0F && quaternion.y == 0.0F && quaternion.z == 0.0F && quaternion.w == 1.0F,
+                "quaternions below the retail squared epsilon must normalize to identity");
+        quaternion.normalize(TQuat4f{0.0F, 3.0F, 0.0F, 4.0F});
+        require(near(quaternion.y, 0.6F) && near(quaternion.w, 0.8F),
+                "separate-source quaternion normalization must preserve the original component ratios");
+
+        const auto source = TQuat4f{0.0F, 0.0F, 0.0F, 2.0F};
+        const auto target = TQuat4f{0.0F, 3.0F, 0.0F, 0.0F};
+        quaternion = source;
+        quaternion.slerp(target, 0.5F);
+        require(near(quaternion.x, 0.0F) && near(quaternion.y, std::sqrt(0.5F)) &&
+                    near(quaternion.z, 0.0F) && near(quaternion.w, std::sqrt(0.5F)),
+                "slerp must normalize both nonunit endpoints before interpolating a quarter turn");
+        quaternion = source;
+        quaternion.slerp(target, 0.0F);
+        require(quaternion.y == 0.0F && quaternion.w == 1.0F,
+                "slerp at zero must return the normalized source");
+        quaternion = source;
+        quaternion.slerp(target, 1.0F);
+        require(quaternion.y == 1.0F && quaternion.w == 0.0F,
+                "slerp at one must return the normalized target");
+        quaternion = source;
+        quaternion.slerp(target, 1.5F);
+        require(near(quaternion.y, std::sqrt(0.5F)) && near(quaternion.w, -std::sqrt(0.5F)),
+                "slerp must retain authored rates beyond one instead of clamping the turn");
+        quaternion = source;
+        quaternion.slerp(target, -0.5F);
+        require(near(quaternion.y, -std::sqrt(0.5F)) && near(quaternion.w, std::sqrt(0.5F)),
+                "slerp must retain negative authored rates");
+
+        const auto quarter = std::sqrt(0.5F);
+        auto positive = TQuat4f{};
+        positive.slerp(TQuat4f{0.0F, quarter, 0.0F, quarter}, 0.5F);
+        auto negative = TQuat4f{};
+        negative.slerp(TQuat4f{0.0F, -quarter, 0.0F, -quarter}, 0.5F);
+        require(positive.x == negative.x && positive.y == negative.y && positive.z == negative.z &&
+                    positive.w == negative.w && negative.y > 0.0F && negative.w > 0.0F,
+                "a negative quaternion dot must select the same short turn as its positive-hemisphere equivalent");
+
+        quaternion = TQuat4f{};
+        quaternion.slerp(TQuat4f{0.0F, 0.001953125F, 0.0F, 0.9999980926513671875F}, 0.25F);
+        require(quaternion.y == 0.00048828125F && quaternion.w == 0.999999523162841796875F &&
+                    quaternion.squared() < 0.9999995F,
+                "the epsilon branch must preserve its unnormalized linear result");
+        quaternion = TQuat4f{};
+        quaternion.slerp(TQuat4f{0.0F, 0.00390625F, 0.0F, 0.99999237060546875F}, 0.25F);
+        require(quaternion.w > 1.0001F && quaternion.squared() > 1.0003F,
+                "a dot outside the retail epsilon must use table-based spherical weights without final normalization");
+
+        auto alias = TQuat4f{0.0F, 3.0F, 0.0F, 4.0F};
+        alias.slerp(alias, 0.25F);
+        require(near(alias.y, 0.6F) && near(alias.w, 0.8F),
+                "in-place slerp must copy both endpoints before overwriting an aliased target");
+        auto separate = TQuat4f{};
+        separate.slerp(source, target, 0.25F);
+        alias = source;
+        alias.slerp(alias, target, 0.25F);
+        require(alias.x == separate.x && alias.y == separate.y && alias.z == separate.z && alias.w == separate.w,
+                "the three-argument overload must preserve source aliasing while delegating to recovered slerp");
+        alias = target;
+        alias.slerp(source, alias, 0.25F);
+        require(alias.x == 0.0F && alias.y == 0.0F && alias.z == 0.0F && alias.w == 1.0F,
+                "the three-argument overload must retain the retail copy-source-before-target alias ordering");
+    }
+
+    void test_quaternion_matrix_assignment() {
+        auto matrix = TPos3f{};
+        matrix.makeTrans(4.0F, 5.0F, 6.0F);
+        const auto quaternion = TQuat4f{0.0F, 1.0F, 0.0F, 1.0F};
+        matrix.setQuat(quaternion);
+        require(matrix.mMtx[0][0] == -1.0F && matrix.mMtx[0][2] == 2.0F && matrix.mMtx[1][1] == 1.0F &&
+                    matrix.mMtx[2][0] == -2.0F && matrix.mMtx[2][2] == -1.0F,
+                "quaternion-to-matrix assignment must use the original components without implicit normalization");
+        require(matrix.mMtx[0][3] == 4.0F && matrix.mMtx[1][3] == 5.0F && matrix.mMtx[2][3] == 6.0F,
+                "setQuat must preserve the existing affine translation");
+        matrix.makeQuat(quaternion);
+        require(matrix.mMtx[0][3] == 0.0F && matrix.mMtx[1][3] == 0.0F && matrix.mMtx[2][3] == 0.0F,
+                "makeQuat must clear affine translation before writing the rotation");
+        matrix.setQT(TQuat4f{}, TVec3f{7.0F, 8.0F, 9.0F});
+        require(matrix.mMtx[0][0] == 1.0F && matrix.mMtx[1][1] == 1.0F && matrix.mMtx[2][2] == 1.0F &&
+                    matrix.mMtx[0][3] == 7.0F && matrix.mMtx[1][3] == 8.0F && matrix.mMtx[2][3] == 9.0F,
+                "setQT must assign the recovered rotation and translation together");
+    }
+
     void test_actor_up_then_front_blend() {
         auto quaternion = TQuat4f{};
         // DemoRabbit::control uses these exact rates. The geometric result is
@@ -196,12 +283,21 @@ namespace {
         require(MR::diffAngleAbs(TVec3f{2.0F, 0.0F, 0.0F}, TVec3f{4.0F, 0.0F, 0.0F}) == 0.0F &&
                     MR::diffAngleAbs(TVec3f{2.0F, 0.0F, 0.0F}, TVec3f{-4.0F, 0.0F, 0.0F}) == PI,
                 "exact parallel and opposite angle clamps must precede table lookup");
+        require(near(JMath::sAsinAcosTable.mTable[512], static_cast<float>(std::asin(0.5)), 0.0000001F),
+                "the shared asin table must sample index divided by 1024 in double precision");
+        require(near(JMath::sAsinAcosTable.mTable[1023], static_cast<float>(std::asin(1023.0 / 1024.0)), 0.0000001F),
+                "the last regular asin sample must remain below the unit endpoint");
+        const auto acos_half = PI * 0.5F - static_cast<float>(std::asin(511.0 / 1024.0));
+        require(JMath::sAsinAcosTable.acos_(0.5F) == acos_half && JGeometry::TUtil<float>::acos(0.5F) == acos_half,
+                "the shared acos paths must select the original truncated 1023.5-scaled table index");
     }
 }  // namespace
 
 int main() {
     try {
         test_quaternion_world_rotation_and_aliasing();
+        test_quaternion_normalization_and_slerp();
+        test_quaternion_matrix_assignment();
         test_actor_up_then_front_blend();
         test_spherical_vector_blend();
         test_axis_rotation_snap_and_sign();

@@ -193,6 +193,8 @@ target("smg-pc-game")
         "../render/J3dModelRenderer.cpp",
         "../render/J3dTexture.cpp",
         "../render/JMathTrig.cpp",
+        "../JSystem/JGeometry/TQuat.cpp",
+        "../JSystem/JMath/JMATrigonometricTable.cpp",
         "../render/light/LightData.cpp",
         "../render/live_actor/LiveActorModel.cpp"
     }
