@@ -1,5 +1,6 @@
 #include "Game/Map/CollisionCategorizedKeeper.hpp"
 #include "Game/Map/CollisionDirector.hpp"
+#include "Game/LiveActor/HitSensor.hpp"
 #include "Game/Map/CollisionParts.hpp"
 #include "Game/Util/CollisionPartsFilter.hpp"
 #include "Game/Util/MathUtil.hpp"
@@ -60,6 +61,68 @@ void CollisionCategorizedKeeper::addToGlobal(CollisionParts* pParts) {
 void CollisionCategorizedKeeper::removeFromGlobal(CollisionParts* pParts) {
     mZones[0]->eraseParts(pParts);
     mZoneCount--;
+}
+
+s32 CollisionCategorizedKeeper::checkStrikePoint(const TVec3f& rPos, HitInfo* pHitInfo) {
+    MR::getCollisionDirector();
+    _10 = 0;
+
+    for (CollisionZone** pZone = mZones; pZone != mZones + mZoneNum; pZone++) {
+        if (pZone != mZones) {
+            if (!isSphereOverlappingWithBox((*pZone)->_818, (*pZone)->_824, rPos, 0.0f)) {
+                continue;
+            }
+
+            f32 range = (*pZone)->mRadius;
+            TVec3f distance((*pZone)->_808);
+            distance -= rPos;
+
+            if (range * range < distance.squared()) {
+                continue;
+            }
+        }
+
+        s32 partCount = (*pZone)->mNumParts;
+
+        for (s32 i = 0; i < partCount; i++) {
+            CollisionParts* pParts = (*pZone)->mPartsArray[i];
+
+            if (!pParts->_CC) {
+                continue;
+            }
+
+            f32 range = pParts->_D8;
+            TVec3f distance;
+            distance.x = MR::abs(pParts->getTrans().x - rPos.x);
+
+            if (range < distance.x) {
+                continue;
+            }
+
+            distance.y = MR::abs(pParts->getTrans().y - rPos.y);
+
+            if (range < distance.y) {
+                continue;
+            }
+
+            distance.z = MR::abs(pParts->getTrans().z - rPos.z);
+
+            if (range < distance.z) {
+                continue;
+            }
+
+            if (distance.squared() > range * range) {
+                continue;
+            }
+
+            if (pParts->checkStrikePoint(pHitInfo, rPos)) {
+                _10 = 1;
+                return 1;
+            }
+        }
+    }
+
+    return _10;
 }
 
 s32 CollisionCategorizedKeeper::checkStrikeBall(const TVec3f& rPos, f32 radius, bool movingReaction, const CollisionPartsFilterBase* pPartsFilter,
@@ -301,6 +364,20 @@ bool CollisionCategorizedKeeper::isSphereOverlappingWithBox(const TVec3f& rMinim
     }
 
     return true;
+}
+
+bool CollisionCategorizedKeeper::searchSameHostParts(CollisionParts** pResult, CollisionParts* pParts) const {
+    for (CollisionZone* const* pZone = mZones; pZone != mZones + mZoneNum; pZone++) {
+        s32 count = (*pZone)->mNumParts;
+        for (s32 i = 0; i < count; i++) {
+            CollisionParts* pCandidate = (*pZone)->mPartsArray[i];
+            if (pCandidate->mHitSensor->mHost == pParts->mHitSensor->mHost) {
+                *pResult = pCandidate;
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 HitInfo* CollisionCategorizedKeeper::getStrikeInfo(u32 index) {

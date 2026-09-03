@@ -1,0 +1,266 @@
+--- a/pc-port/src/Game/Map/CollisionCategorizedKeeper.cpp
++++ b/pc-port/src/Game/Map/CollisionCategorizedKeeper.cpp
+@@ -1,5 +1,6 @@
+ #include "Game/Map/CollisionCategorizedKeeper.hpp"
+ #include "Game/Map/CollisionDirector.hpp"
++#include "Game/LiveActor/HitSensor.hpp"
+ #include "Game/Map/CollisionParts.hpp"
+ #include "Game/Util/CollisionPartsFilter.hpp"
+ #include "Game/Util/MathUtil.hpp"
+@@ -62,6 +63,68 @@
+     mZoneCount--;
+ }
+ 
++s32 CollisionCategorizedKeeper::checkStrikePoint(const TVec3f& rPos, HitInfo* pHitInfo) {
++    MR::getCollisionDirector();
++    _10 = 0;
++
++    for (CollisionZone** pZone = mZones; pZone != mZones + mZoneNum; pZone++) {
++        if (pZone != mZones) {
++            if (!isSphereOverlappingWithBox((*pZone)->_818, (*pZone)->_824, rPos, 0.0f)) {
++                continue;
++            }
++
++            f32 range = (*pZone)->mRadius;
++            TVec3f distance((*pZone)->_808);
++            distance -= rPos;
++
++            if (range * range < distance.squared()) {
++                continue;
++            }
++        }
++
++        s32 partCount = (*pZone)->mNumParts;
++
++        for (s32 i = 0; i < partCount; i++) {
++            CollisionParts* pParts = (*pZone)->mPartsArray[i];
++
++            if (!pParts->_CC) {
++                continue;
++            }
++
++            f32 range = pParts->_D8;
++            TVec3f distance;
++            distance.x = MR::abs(pParts->getTrans().x - rPos.x);
++
++            if (range < distance.x) {
++                continue;
++            }
++
++            distance.y = MR::abs(pParts->getTrans().y - rPos.y);
++
++            if (range < distance.y) {
++                continue;
++            }
++
++            distance.z = MR::abs(pParts->getTrans().z - rPos.z);
++
++            if (range < distance.z) {
++                continue;
++            }
++
++            if (distance.squared() > range * range) {
++                continue;
++            }
++
++            if (pParts->checkStrikePoint(pHitInfo, rPos)) {
++                _10 = 1;
++                return 1;
++            }
++        }
++    }
++
++    return _10;
++}
++
+ s32 CollisionCategorizedKeeper::checkStrikeBall(const TVec3f& rPos, f32 radius, bool movingReaction, const CollisionPartsFilterBase* pPartsFilter,
+                                                 const TriangleFilterBase* pTriangleFilter) {
+     MR::getCollisionDirector();
+@@ -301,6 +364,20 @@
+     }
+ 
+     return true;
++}
++
++bool CollisionCategorizedKeeper::searchSameHostParts(CollisionParts** pResult, CollisionParts* pParts) const {
++    for (CollisionZone* const* pZone = mZones; pZone != mZones + mZoneNum; pZone++) {
++        s32 count = (*pZone)->mNumParts;
++        for (s32 i = 0; i < count; i++) {
++            CollisionParts* pCandidate = (*pZone)->mPartsArray[i];
++            if (pCandidate->mHitSensor->mHost == pParts->mHitSensor->mHost) {
++                *pResult = pCandidate;
++                return true;
++            }
++        }
++    }
++    return false;
+ }
+ 
+ HitInfo* CollisionCategorizedKeeper::getStrikeInfo(u32 index) {
+--- a/pc-port/src/Game/Map/CollisionParts.cpp
++++ b/pc-port/src/Game/Map/CollisionParts.cpp
+@@ -238,6 +238,50 @@
+ 
+ s32 CollisionParts::getPlacementZoneID() const {
+     return mZone->mZoneID;
++}
++
++bool CollisionParts::checkStrikePoint(HitInfo* pHitInfo, const TVec3f& rPos) {
++    TVec3f localPos;
++    mInvBaseMatrix.mult(rPos, localPos);
++    TVec3f scale;
++    mInvBaseMatrix.getScale(scale);
++    f32 localScale = (scale.x + scale.y + scale.z) / 3.0f;
++    Fxyz position;
++    position.x = localPos.x;
++    position.y = localPos.y;
++    position.z = localPos.z;
++    KC_PrismData* pPrism = nullptr;
++    f32 distance;
++
++    if (1.0f < localScale) {
++        f32 radius = 20.0f * localScale;
++        u8 feature;
++        mServer->checkSphereWithThickness(&position, radius, localScale, 1, &pPrism, &distance, &feature, 2.0f * radius);
++        if (pPrism == nullptr) {
++            return false;
++        }
++        TVec3f offset(localPos);
++        offset.sub(mServer->getPos(pPrism, 0));
++        TVec3f normal(*mServer->getFaceNormal(pPrism));
++        distance = -offset.x * normal.x - offset.y * normal.y - offset.z * normal.z;
++    } else {
++        pPrism = mServer->checkPoint(&position, localScale, &distance);
++        if (pPrism == nullptr) {
++            return false;
++        }
++    }
++
++    if (pHitInfo != nullptr) {
++        pHitInfo->mParentTriangle.fillData(this, mServer->toIndex(pPrism), mHitSensor);
++        f32 worldDistance = distance / localScale;
++        pHitInfo->_60 = worldDistance;
++        TVec3f offset(*pHitInfo->mParentTriangle.getNormal(0));
++        offset.scale(worldDistance);
++        TVec3f hitPos(rPos);
++        hitPos.add(offset);
++        pHitInfo->mHitPos = hitPos;
++    }
++    return true;
+ }
+ 
+ u32 CollisionParts::checkStrikeBall(HitInfo* pHitInfo, u32 capacity, const TVec3f& rPos, f32 radius, bool movingReaction,
+--- a/pc-port/src/Game/Map/KCollision.cpp
++++ b/pc-port/src/Game/Map/KCollision.cpp
+@@ -90,6 +90,56 @@
+ 
+ bool KCollisionServer::isBinaryInitialized(const void* pData) {
+     return smgpc::resource::is_native_kcollision_file(pData);
++}
++
++KC_PrismData* KCollisionServer::checkPoint(Fxyz* pPos, f32 scale, f32* pDistance) {
++    f32 thickness = mFile->mThickness * scale;
++    u32 x = static_cast< s32 >(pPos->x - mFile->mMin.x);
++    if ((x & mFile->mXMask) != 0) {
++        return nullptr;
++    }
++    u32 y = static_cast< s32 >(pPos->y - mFile->mMin.y);
++    if ((y & mFile->mYMask) != 0) {
++        return nullptr;
++    }
++    u32 z = static_cast< s32 >(pPos->z - mFile->mMin.z);
++    if ((z & mFile->mZMask) != 0) {
++        return nullptr;
++    }
++
++    s32 shift;
++    u16* pList = reinterpret_cast< u16* >(searchBlock(&shift, x, y, z));
++    while (*++pList != 0) {
++        KC_PrismData* pPrism = &mFile->mPrisms[*pList];
++        if (pPrism->mHeight <= 0.0f) {
++            continue;
++        }
++        const TVec3f* pOrigin = &mFile->mPos[pPrism->mPositionIndex];
++        Fxyz offset;
++        offset.x = pPos->x - pOrigin->x;
++        offset.y = pPos->y - pOrigin->y;
++        offset.z = pPos->z - pOrigin->z;
++        const TVec3f* pNormal = &mFile->mNorms[pPrism->mEdgeIndices[0]];
++        if (offset.x * pNormal->x + offset.y * pNormal->y + offset.z * pNormal->z > 0.0f) {
++            continue;
++        }
++        pNormal = &mFile->mNorms[pPrism->mEdgeIndices[1]];
++        if (offset.x * pNormal->x + offset.y * pNormal->y + offset.z * pNormal->z > 0.0f) {
++            continue;
++        }
++        pNormal = &mFile->mNorms[pPrism->mEdgeIndices[2]];
++        if (offset.x * pNormal->x + offset.y * pNormal->y + offset.z * pNormal->z > pPrism->mHeight) {
++            continue;
++        }
++        pNormal = &mFile->mNorms[pPrism->mNormalIndex];
++        f32 distance = -offset.x * pNormal->x - offset.y * pNormal->y - offset.z * pNormal->z;
++        if (distance < 0.0f || thickness < distance) {
++            continue;
++        }
++        *pDistance = distance;
++        return pPrism;
++    }
++    return nullptr;
+ }
+ 
+ u32 KCollisionServer::checkSphere(Fxyz* pPos, f32 radius, f32 scale, u32 capacity, KC_PrismData** pPrisms, f32* pDistances, u8* pFeatures) {
+--- /dev/null
++++ b/pc-port/src/Game/Map/KCollisionPlus.cpp
+@@ -0,0 +1,52 @@
++#include "Game/Map/KCollision.hpp"
++
++bool KCollisionServer::isInsideMinMaxInLocalSpace(const V3u& rPos) const {
++    return (rPos.x & mFile->mXMask) == 0 && (rPos.y & mFile->mYMask) == 0 && (rPos.z & mFile->mZMask) == 0;
++}
++
++bool KCollisionServer::outCheck(const TVec3f* pPosA, const TVec3f* pPosB, V3u* pPointA, V3u* pPointB) const {
++    objectSpaceToLocalSpace(pPointA, *pPosA);
++    objectSpaceToLocalSpace(pPointB, *pPosB);
++
++    if (pPointA->x < 0) {
++        pPointA->x = 0;
++    }
++
++    if (pPointA->y < 0) {
++        pPointA->y = 0;
++    }
++
++    if (pPointA->z < 0) {
++        pPointA->z = 0;
++    }
++
++    s32 invertedXMask = ~mFile->mXMask;
++
++    if (invertedXMask < pPointB->x) {
++        pPointB->x = invertedXMask;
++    }
++
++    s32 invertedYMask = ~mFile->mYMask;
++
++    if (invertedYMask < pPointB->y) {
++        pPointB->y = invertedYMask;
++    }
++
++    s32 invertedZMask = ~mFile->mZMask;
++
++    if (invertedZMask < pPointB->z) {
++        pPointB->z = invertedZMask;
++    }
++
++    if (pPointB->x < pPointA->x || pPointB->y < pPointA->y || pPointB->z < pPointA->z) {
++        return false;
++    }
++
++    return true;
++}
++
++void KCollisionServer::objectSpaceToLocalSpace(V3u* pPoint, const TVec3f& rPos) const {
++    pPoint->x = static_cast< s32 >(rPos.x - mFile->mMin.x);
++    pPoint->y = static_cast< s32 >(rPos.y - mFile->mMin.y);
++    pPoint->z = static_cast< s32 >(rPos.z - mFile->mMin.z);
++}

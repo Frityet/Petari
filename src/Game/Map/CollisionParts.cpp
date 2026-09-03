@@ -240,6 +240,50 @@ s32 CollisionParts::getPlacementZoneID() const {
     return mZone->mZoneID;
 }
 
+bool CollisionParts::checkStrikePoint(HitInfo* pHitInfo, const TVec3f& rPos) {
+    TVec3f localPos;
+    mInvBaseMatrix.mult(rPos, localPos);
+    TVec3f scale;
+    mInvBaseMatrix.getScale(scale);
+    f32 localScale = (scale.x + scale.y + scale.z) / 3.0f;
+    Fxyz position;
+    position.x = localPos.x;
+    position.y = localPos.y;
+    position.z = localPos.z;
+    KC_PrismData* pPrism = nullptr;
+    f32 distance;
+
+    if (1.0f < localScale) {
+        f32 radius = 20.0f * localScale;
+        u8 feature;
+        mServer->checkSphereWithThickness(&position, radius, localScale, 1, &pPrism, &distance, &feature, 2.0f * radius);
+        if (pPrism == nullptr) {
+            return false;
+        }
+        TVec3f offset(localPos);
+        offset.sub(mServer->getPos(pPrism, 0));
+        TVec3f normal(*mServer->getFaceNormal(pPrism));
+        distance = -offset.x * normal.x - offset.y * normal.y - offset.z * normal.z;
+    } else {
+        pPrism = mServer->checkPoint(&position, localScale, &distance);
+        if (pPrism == nullptr) {
+            return false;
+        }
+    }
+
+    if (pHitInfo != nullptr) {
+        pHitInfo->mParentTriangle.fillData(this, mServer->toIndex(pPrism), mHitSensor);
+        f32 worldDistance = distance / localScale;
+        pHitInfo->_60 = worldDistance;
+        TVec3f offset(*pHitInfo->mParentTriangle.getNormal(0));
+        offset.scale(worldDistance);
+        TVec3f hitPos(rPos);
+        hitPos.add(offset);
+        pHitInfo->mHitPos = hitPos;
+    }
+    return true;
+}
+
 u32 CollisionParts::checkStrikeBall(HitInfo* pHitInfo, u32 capacity, const TVec3f& rPos, f32 radius, bool movingReaction,
                                    const TriangleFilterBase* pFilter) {
     KC_PrismData* prisms[64];

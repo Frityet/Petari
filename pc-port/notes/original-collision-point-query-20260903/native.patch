@@ -1,0 +1,2186 @@
+--- a/pc-port/src/Game/Map/CollisionCategorizedKeeper.cpp
++++ b/pc-port/src/Game/Map/CollisionCategorizedKeeper.cpp
+@@ -1,6 +1,40 @@
+ #include "Game/Map/CollisionCategorizedKeeper.hpp"
++#include "Game/Map/CollisionDirector.hpp"
++#include "Game/LiveActor/HitSensor.hpp"
+ #include "Game/Map/CollisionParts.hpp"
++#include "Game/Util/CollisionPartsFilter.hpp"
++#include "Game/Util/MathUtil.hpp"
++#include "Game/Util/SceneUtil.hpp"
+ #include <algorithm>
++
++CollisionCategorizedKeeper::CollisionCategorizedKeeper(s32 category)
++    : NameObj("地形コリジョンカテゴリキーパー"), mHitInfoArray(nullptr), _10(0), mZoneCount(0), mZoneNum(0), _9C(category), _A0(false), _A1(true) {
++    mHitInfoArray = new HitInfo[32];
++}
++
++CollisionCategorizedKeeper::~CollisionCategorizedKeeper() {
++}
++
++void CollisionCategorizedKeeper::movement() {
++    for (CollisionZone** pZone = mZones; pZone != mZones + mZoneNum; pZone++) {
++        s32 count = (*pZone)->mNumParts;
++        for (s32 i = 0; i < count; i++) {
++            CollisionParts* pParts = (*pZone)->mPartsArray[i];
++            if (!pParts->_CC) {
++                continue;
++            }
++            if (_9C == pParts->mKeeperIndex) {
++                pParts->updateMtx();
++            }
++            if (_A1) {
++                (*pZone)->calcMinMaxAndRadius();
++            } else if (pParts->_D4 == 0) {
++                (*pZone)->calcMinMaxAndRadiusIfMoveOuter(pParts);
++            }
++        }
++    }
++    _A1 = false;
++}
+ 
+ TVec3f CollisionParts::getTrans() {
+     TVec3f translation;
+@@ -27,6 +61,340 @@
+ void CollisionCategorizedKeeper::removeFromGlobal(CollisionParts* pParts) {
+     mZones[0]->eraseParts(pParts);
+     mZoneCount--;
++}
++
++s32 CollisionCategorizedKeeper::checkStrikePoint(const TVec3f& rPos, HitInfo* pHitInfo) {
++    MR::getCollisionDirector();
++    _10 = 0;
++
++    for (CollisionZone** pZone = mZones; pZone != mZones + mZoneNum; pZone++) {
++        if (pZone != mZones) {
++            if (!isSphereOverlappingWithBox((*pZone)->_818, (*pZone)->_824, rPos, 0.0f)) {
++                continue;
++            }
++
++            f32 range = (*pZone)->mRadius;
++            TVec3f distance((*pZone)->_808);
++            distance -= rPos;
++
++            if (range * range < distance.squared()) {
++                continue;
++            }
++        }
++
++        s32 partCount = (*pZone)->mNumParts;
++
++        for (s32 i = 0; i < partCount; i++) {
++            CollisionParts* pParts = (*pZone)->mPartsArray[i];
++
++            if (!pParts->_CC) {
++                continue;
++            }
++
++            f32 range = pParts->_D8;
++            TVec3f distance;
++            distance.x = MR::abs(pParts->getTrans().x - rPos.x);
++
++            if (range < distance.x) {
++                continue;
++            }
++
++            distance.y = MR::abs(pParts->getTrans().y - rPos.y);
++
++            if (range < distance.y) {
++                continue;
++            }
++
++            distance.z = MR::abs(pParts->getTrans().z - rPos.z);
++
++            if (range < distance.z) {
++                continue;
++            }
++
++            if (distance.squared() > range * range) {
++                continue;
++            }
++
++            if (pParts->checkStrikePoint(pHitInfo, rPos)) {
++                _10 = 1;
++                return 1;
++            }
++        }
++    }
++
++    return _10;
++}
++
++s32 CollisionCategorizedKeeper::checkStrikeBall(const TVec3f& rPos, f32 radius, bool movingReaction, const CollisionPartsFilterBase* pPartsFilter,
++                                                const TriangleFilterBase* pTriangleFilter) {
++    MR::getCollisionDirector();
++    _10 = 0;
++    s32 count = 0;
++
++    for (CollisionZone** pZone = mZones; pZone != mZones + mZoneNum; pZone++) {
++        if (pZone != mZones) {
++            if (!isSphereOverlappingWithBox((*pZone)->_818, (*pZone)->_824, rPos, radius)) {
++                continue;
++            }
++
++            f32 range = radius + (*pZone)->mRadius;
++            TVec3f distance((*pZone)->_808);
++            distance -= rPos;
++
++            if (range * range < distance.squared()) {
++                continue;
++            }
++        }
++
++        s32 partCount = (*pZone)->mNumParts;
++
++        for (s32 i = 0; i < partCount; i++) {
++            CollisionParts* pParts = (*pZone)->mPartsArray[i];
++
++            if (!pParts->_CC) {
++                continue;
++            }
++
++            if (pPartsFilter != nullptr && pPartsFilter->isInvalidParts(pParts)) {
++                continue;
++            }
++
++            f32 range = radius + pParts->_D8;
++            TVec3f distance;
++            distance.x = MR::abs(pParts->getTrans().x - rPos.x);
++
++            if (range < distance.x) {
++                continue;
++            }
++
++            distance.y = MR::abs(pParts->getTrans().y - rPos.y);
++
++            if (range < distance.y) {
++                continue;
++            }
++
++            distance.z = MR::abs(pParts->getTrans().z - rPos.z);
++
++            if (range < distance.z) {
++                continue;
++            }
++
++            if (distance.squared() > range * range) {
++                continue;
++            }
++
++            count += pParts->checkStrikeBall(mHitInfoArray + count, 32 - count, rPos, radius, movingReaction, pTriangleFilter);
++
++            if (count >= 32) {
++                _10 = count;
++                return count;
++            }
++        }
++    }
++
++    _10 = count;
++    return count;
++}
++
++s32 CollisionCategorizedKeeper::checkStrikeBallWithThickness(const TVec3f& rPos, f32 radius, f32 thickness,
++                                                             const CollisionPartsFilterBase* pPartsFilter,
++                                                             const TriangleFilterBase* pTriangleFilter) {
++    MR::getCollisionDirector();
++    _10 = 0;
++    s32 count = 0;
++
++    for (CollisionZone** pZone = mZones; pZone != mZones + mZoneNum; pZone++) {
++        if (pZone != mZones) {
++            if (!isSphereOverlappingWithBox((*pZone)->_818, (*pZone)->_824, rPos, radius)) {
++                continue;
++            }
++
++            f32 range = radius + (*pZone)->mRadius;
++            TVec3f distance((*pZone)->_808);
++            distance -= rPos;
++
++            if (range * range < distance.squared()) {
++                continue;
++            }
++        }
++
++        s32 partCount = (*pZone)->mNumParts;
++
++        for (s32 i = 0; i < partCount; i++) {
++            CollisionParts* pParts = (*pZone)->mPartsArray[i];
++
++            if (!pParts->_CC) {
++                continue;
++            }
++
++            if (pPartsFilter != nullptr && pPartsFilter->isInvalidParts(pParts)) {
++                continue;
++            }
++
++            f32 range = radius + pParts->_D8;
++            TVec3f distance;
++            distance.x = MR::abs(pParts->getTrans().x - rPos.x);
++
++            if (range < distance.x) {
++                continue;
++            }
++
++            distance.y = MR::abs(pParts->getTrans().y - rPos.y);
++
++            if (range < distance.y) {
++                continue;
++            }
++
++            distance.z = MR::abs(pParts->getTrans().z - rPos.z);
++
++            if (range < distance.z) {
++                continue;
++            }
++
++            if (distance.squared() > range * range) {
++                continue;
++            }
++
++            count += pParts->checkStrikeBallWithThickness(mHitInfoArray + count, 32 - count, rPos, radius, thickness, pTriangleFilter);
++
++            if (count >= 32) {
++                _10 = count;
++                return count;
++            }
++        }
++    }
++
++    _10 = count;
++    return count;
++}
++
++s32 CollisionCategorizedKeeper::checkStrikeLine(const TVec3f& rPos, const TVec3f& rOffset, s32 capacity, const CollisionPartsFilterBase* pPartsFilter,
++                                                const TriangleFilterBase* pTriangleFilter) {
++    MR::getCollisionDirector();
++
++    if (capacity == 0) {
++        capacity = 32;
++    }
++
++    _10 = 0;
++    s32 count = 0;
++    TVec3f minimum(rPos);
++    TVec3f maximum(rPos);
++
++    if (rOffset.x < 0.0f) {
++        minimum.x += rOffset.x;
++    } else {
++        maximum.x += rOffset.x;
++    }
++
++    if (rOffset.y < 0.0f) {
++        minimum.y += rOffset.y;
++    } else {
++        maximum.y += rOffset.y;
++    }
++
++    if (rOffset.z < 0.0f) {
++        minimum.z += rOffset.z;
++    } else {
++        maximum.z += rOffset.z;
++    }
++
++    for (CollisionZone** pZone = mZones; pZone != mZones + mZoneNum; pZone++) {
++        if (pZone != mZones) {
++            TVec3f position((*pZone)->_808);
++            f32 radius = (*pZone)->mRadius;
++
++            if (!isSphereOverlappingWithBox(minimum, maximum, position, radius)) {
++                continue;
++            }
++
++            if (!MR::checkHitSegmentSphere(position, rPos, rPos + rOffset, radius, nullptr)) {
++                continue;
++            }
++        }
++
++        s32 partCount = (*pZone)->mNumParts;
++
++        for (s32 i = 0; i < partCount; i++) {
++            CollisionParts* pParts = (*pZone)->mPartsArray[i];
++
++            if (!pParts->_CC) {
++                continue;
++            }
++
++            if (pPartsFilter != nullptr && pPartsFilter->isInvalidParts(pParts)) {
++                continue;
++            }
++
++            TVec3f position(pParts->getTrans());
++            f32 radius = pParts->_D8;
++
++            if (!isSphereOverlappingWithBox(minimum, maximum, position, radius)) {
++                continue;
++            }
++
++            if (!MR::checkHitSegmentSphere(position, rPos, rPos + rOffset, radius, nullptr)) {
++                continue;
++            }
++
++            count += pParts->checkStrikeLine(mHitInfoArray + count, capacity - count, rPos, rOffset, pTriangleFilter);
++
++            if (capacity <= count) {
++                _10 = count;
++                return count;
++            }
++        }
++    }
++
++    _10 = count;
++    return count;
++}
++
++bool CollisionCategorizedKeeper::isSphereOverlappingWithBox(const TVec3f& rMinimum, const TVec3f& rMaximum, const TVec3f& rPos, f32 radius) {
++    if (rPos.x < rMinimum.x - radius || rMaximum.x + radius < rPos.x) {
++        return false;
++    }
++
++    if (rPos.y < rMinimum.y - radius || rMaximum.y + radius < rPos.y) {
++        return false;
++    }
++
++    if (rPos.z < rMinimum.z - radius || rMaximum.z + radius < rPos.z) {
++        return false;
++    }
++
++    return true;
++}
++
++bool CollisionCategorizedKeeper::searchSameHostParts(CollisionParts** pResult, CollisionParts* pParts) const {
++    for (CollisionZone* const* pZone = mZones; pZone != mZones + mZoneNum; pZone++) {
++        s32 count = (*pZone)->mNumParts;
++        for (s32 i = 0; i < count; i++) {
++            CollisionParts* pCandidate = (*pZone)->mPartsArray[i];
++            if (pCandidate->mHitSensor->mHost == pParts->mHitSensor->mHost) {
++                *pResult = pCandidate;
++                return true;
++            }
++        }
++    }
++    return false;
++}
++
++HitInfo* CollisionCategorizedKeeper::getStrikeInfo(u32 index) {
++    return &mHitInfoArray[index];
++}
++
++CollisionZone* CollisionCategorizedKeeper::getZone(int zone) {
++    if (!_A0) {
++        s32 count = MR::getZoneNum();
++        for (s32 i = 0; i < count; i++) {
++            CollisionZone* pZone = new CollisionZone(i);
++            s32 index = mZoneNum++;
++            mZones[index] = pZone;
++        }
++        _A0 = true;
++    }
++    return mZones[zone];
+ }
+ 
+ CollisionZone::CollisionZone(s32 zoneID) : mZoneID(zoneID), mNumParts(0), _808(0, 0, 0), mRadius(0.0f), _818(0, 0, 0), _824(0, 0, 0) {
+@@ -70,6 +438,23 @@
+     mRadius = radius;
+ }
+ 
++void CollisionZone::calcMinMaxAndRadiusIfMoveOuter(CollisionParts* pParts) {
++    f32 radius = pParts->_D8;
++    TVec3f position = pParts->getTrans();
++    TVec3f minimum = _818;
++    TVec3f maximum = _824;
++    minimum.x += radius;
++    minimum.y += radius;
++    minimum.z += radius;
++    maximum.x -= radius;
++    maximum.y -= radius;
++    maximum.z -= radius;
++    if (!MR::isInRange(position.x, minimum.x, maximum.x) || !MR::isInRange(position.y, minimum.y, maximum.y) ||
++        !MR::isInRange(position.z, minimum.z, maximum.z)) {
++        calcMinMaxAndRadius();
++    }
++}
++
+ void CollisionZone::addAndUpdateMinMax(TVec3f minimum, TVec3f maximum) {
+     if (mRadius == 0.0f) {
+         mRadius = 0.1f;
+--- /dev/null
++++ b/pc-port/src/Game/Map/CollisionParts.cpp
+@@ -0,0 +1,511 @@
++#include "Game/Map/CollisionParts.hpp"
++#include "Game/Camera/CameraPolygonCodeUtil.hpp"
++#include "Game/LiveActor/HitSensor.hpp"
++#include "Game/LiveActor/LiveActor.hpp"
++#include "Game/Map/CollisionCategorizedKeeper.hpp"
++#include "Game/Map/CollisionDirector.hpp"
++#include "Game/Map/KCollision.hpp"
++#include "Game/Util/MathUtil.hpp"
++#include "Game/Util/MtxUtil.hpp"
++#include "Game/Util/SceneUtil.hpp"
++#include "Game/Util/TriangleFilter.hpp"
++
++void FORCE_SCALE() {
++    TVec3f vec;
++    vec.scale(1.0f);
++}
++
++CollisionParts::CollisionParts() : _0(), mHitSensor(), _CC(), _CD(true), _CE(), _CF(), _D0(), _D4(), _D8(-1.0f), _DC(1.0f), mKeeperIndex(-1), mZone() {
++    mServer = new KCollisionServer();
++
++    mPrevBaseMatrix.identity();
++    mBaseMatrix.identity();
++    mMatrix.identity();
++    PSMTXInverse(mBaseMatrix.toMtxPtr(), mInvBaseMatrix.toMtxPtr());
++}
++
++void CollisionParts::init(const TPos3f& a1, HitSensor* pHitSensor, const void* pKclData, const void* pMapInfo, s32 keeperIndex, bool a6) {
++    mServer->init(const_cast< void* >(pKclData), pMapInfo);
++    mHitSensor = pHitSensor;
++
++    resetAllMtx(a1);
++
++    TVec3f scale;
++    mBaseMatrix.getScale(scale);
++
++    mZone = MR::getCollisionDirector()->getCategoryKeeper(keeperIndex)->getZone(MR::getCurrentPlacementZoneId());
++
++    MR::initCameraCodeCollection(pHitSensor->mHost->mName, mZone->mZoneID);
++    mServer->calcFarthestVertexDistance();
++    MR::termCameraCodeCollection();
++
++    updateBoundingSphereRange(scale);
++    mKeeperIndex = keeperIndex;
++}
++
++void CollisionParts::addToBelongZone() {
++    s32 zoneID = mZone->mZoneID;
++
++    MR::getCollisionDirector()->getCategoryKeeper(mKeeperIndex)->addToZone(this, zoneID);
++}
++
++void CollisionParts::removeFromBelongZone() {
++    s32 zoneID = mZone->mZoneID;
++
++    MR::getCollisionDirector()->getCategoryKeeper(mKeeperIndex)->removeFromZone(this, zoneID);
++}
++
++void CollisionParts::initWithAutoEqualScale(const TPos3f& a1, HitSensor* pHitSensor, const void* pKclData, const void* pMapInfo, s32 keeperIndex,
++                                            bool a6) {
++    _CF = true;
++    _D0 = false;
++
++    init(a1, pHitSensor, pKclData, pMapInfo, keeperIndex, a6);
++}
++
++void CollisionParts::initWithNotUsingScale(const TPos3f& a1, HitSensor* pHitSensor, const void* pKclData, const void* pMapInfo, s32 keeperIndex,
++                                           bool a6) {
++    _CF = false;
++    _D0 = true;
++
++    init(a1, pHitSensor, pKclData, pMapInfo, keeperIndex, a6);
++}
++
++void CollisionParts::resetAllMtx(const TPos3f& a1) {
++    bool reset = false;
++
++    if (_CD || _CE) {
++        reset = true;
++    }
++
++    if (!reset) {
++        return;
++    }
++
++    resetAllMtxPrivate(a1);
++}
++
++void CollisionParts::resetAllMtx() {
++    bool reset = false;
++
++    if (_CD || _CE) {
++        reset = true;
++    }
++
++    if (reset) {
++        TPos3f matrix(_0);
++        makeEqualScale(reinterpret_cast< MtxPtr >(&matrix));
++
++        resetAllMtxPrivate(matrix);
++    }
++}
++
++void CollisionParts::forceResetAllMtxAndSetUpdateMtxOneTime() {
++    TPos3f matrix(_0);
++    makeEqualScale(reinterpret_cast< MtxPtr >(&matrix));
++    resetAllMtxPrivate(matrix);
++
++    _CE = true;
++}
++
++void CollisionParts::resetAllMtxPrivate(const TPos3f& a1) {
++    mPrevBaseMatrix.setInline(a1);
++    mBaseMatrix.setInline(a1);
++    mMatrix.setInline(a1);
++    PSMTXInverse(reinterpret_cast< MtxPtr >(&mBaseMatrix), reinterpret_cast< MtxPtr >(&mInvBaseMatrix));
++}
++
++void CollisionParts::setMtx(const TPos3f& matrix) {
++    mMatrix.setInline(matrix);
++}
++
++void CollisionParts::setMtx() {
++    mMatrix.setInline(_0);
++}
++
++void CollisionParts::updateMtx() {
++    bool bVar1 = false;
++
++    if (_CD || _CE) {
++        bVar1 = true;
++    }
++
++    if (!bVar1) {
++        if (MR::isSameMtx(reinterpret_cast< MtxPtr >(&mMatrix), reinterpret_cast< MtxPtr >(&mBaseMatrix))) {
++            _D4++;
++        }
++    } else {
++        if (MR::isSameMtx(reinterpret_cast< MtxPtr >(&mMatrix), reinterpret_cast< MtxPtr >(&mBaseMatrix))) {
++            _D4++;
++        } else {
++            if (_CE) {
++                _D4 = 1;
++            } else {
++                _D4 = 0;
++            }
++
++            f32 dVar4 = makeEqualScale(reinterpret_cast< MtxPtr >(&mMatrix));
++            _E8 = dVar4;
++            f32 var = dVar4 - _DC;
++            _EC = dVar4;
++            _F0 = dVar4;
++
++            if (!MR::isNearZero(var)) {
++                updateBoundingSphereRangePrivate(dVar4);
++            }
++        }
++
++        _CE = false;
++
++        if (_D4 < 2) {
++            mPrevBaseMatrix.setInline(mBaseMatrix);
++            mBaseMatrix.setInline(mMatrix);
++            PSMTXInverse(reinterpret_cast< MtxPtr >(&mBaseMatrix), reinterpret_cast< MtxPtr >(&mInvBaseMatrix));
++        }
++    }
++}
++
++f32 CollisionParts::makeEqualScale(MtxPtr matrix) {
++    TPos3f& mtx = *reinterpret_cast< TPos3f* >(matrix);
++
++    TVec3f scale;
++    mtx.getScale(scale);
++
++    TVec3f scaleDiff;
++    scaleDiff.x = scale.x - scale.y;
++    scaleDiff.y = scale.y - scale.z;
++    scaleDiff.z = scale.z - scale.x;
++
++    if (MR::isNearZero(scaleDiff.x) && MR::isNearZero(scaleDiff.y) && MR::isNearZero(scaleDiff.z)) {
++        return scale.x;
++    }
++
++    f32 uniformScale = 1.0f;
++    TVec3f invScale;
++
++    if (_D0) {
++        invScale.set< f32 >(uniformScale / scale.x, uniformScale / scale.y, uniformScale / scale.z);
++        uniformScale = 1.0f;
++    } else if (_CF) {
++        uniformScale = (scale.x + scale.y + scale.z) / 3.0f;
++        invScale.set< f32 >(uniformScale / scale.x, uniformScale / scale.y, uniformScale / scale.z);
++    }
++
++    mtx.mMtx[0][0] *= invScale.x;
++    mtx.mMtx[1][0] *= invScale.x;
++    mtx.mMtx[2][0] *= invScale.x;
++
++    mtx.mMtx[0][1] *= invScale.y;
++    mtx.mMtx[1][1] *= invScale.y;
++    mtx.mMtx[2][1] *= invScale.y;
++
++    mtx.mMtx[0][2] *= invScale.z;
++    mtx.mMtx[1][2] *= invScale.z;
++    mtx.mMtx[2][2] *= invScale.z;
++
++    return uniformScale;
++}
++
++void CollisionParts::updateBoundingSphereRange() {
++    TPos3f matrix(_0);
++    f32 scale = makeEqualScale(reinterpret_cast< MtxPtr >(&matrix));
++    updateBoundingSphereRangePrivate(scale);
++}
++
++void CollisionParts::updateBoundingSphereRange(TVec3f a1) {
++    f32 range = (a1.x + a1.y + a1.z) / 3.0f;
++    updateBoundingSphereRangePrivate(range);
++}
++
++void CollisionParts::updateBoundingSphereRangePrivate(f32 scale) {
++    _DC = scale;
++    _D8 = scale * mServer->mMaxVertexDistance;
++}
++
++const char* CollisionParts::getHostName() const {
++    if (mHitSensor == nullptr) {
++        return nullptr;
++    }
++
++    LiveActor* actor = mHitSensor->mHost;
++
++    if (actor == nullptr) {
++        return nullptr;
++    }
++
++    return actor->mName;
++}
++
++s32 CollisionParts::getPlacementZoneID() const {
++    return mZone->mZoneID;
++}
++
++bool CollisionParts::checkStrikePoint(HitInfo* pHitInfo, const TVec3f& rPos) {
++    TVec3f localPos;
++    mInvBaseMatrix.mult(rPos, localPos);
++    TVec3f scale;
++    mInvBaseMatrix.getScale(scale);
++    f32 localScale = (scale.x + scale.y + scale.z) / 3.0f;
++    Fxyz position;
++    position.x = localPos.x;
++    position.y = localPos.y;
++    position.z = localPos.z;
++    KC_PrismData* pPrism = nullptr;
++    f32 distance;
++
++    if (1.0f < localScale) {
++        f32 radius = 20.0f * localScale;
++        u8 feature;
++        mServer->checkSphereWithThickness(&position, radius, localScale, 1, &pPrism, &distance, &feature, 2.0f * radius);
++        if (pPrism == nullptr) {
++            return false;
++        }
++        TVec3f offset(localPos);
++        offset.sub(mServer->getPos(pPrism, 0));
++        TVec3f normal(*mServer->getFaceNormal(pPrism));
++        distance = -offset.x * normal.x - offset.y * normal.y - offset.z * normal.z;
++    } else {
++        pPrism = mServer->checkPoint(&position, localScale, &distance);
++        if (pPrism == nullptr) {
++            return false;
++        }
++    }
++
++    if (pHitInfo != nullptr) {
++        pHitInfo->mParentTriangle.fillData(this, mServer->toIndex(pPrism), mHitSensor);
++        f32 worldDistance = distance / localScale;
++        pHitInfo->_60 = worldDistance;
++        TVec3f offset(*pHitInfo->mParentTriangle.getNormal(0));
++        offset.scale(worldDistance);
++        TVec3f hitPos(rPos);
++        hitPos.add(offset);
++        pHitInfo->mHitPos = hitPos;
++    }
++    return true;
++}
++
++u32 CollisionParts::checkStrikeBall(HitInfo* pHitInfo, u32 capacity, const TVec3f& rPos, f32 radius, bool movingReaction,
++                                   const TriangleFilterBase* pFilter) {
++    KC_PrismData* prisms[64];
++    f32 distances[64];
++    u8 features[64];
++    TVec3f localPos;
++    mInvBaseMatrix.mult(rPos, localPos);
++
++    TVec3f scale;
++    mInvBaseMatrix.getScale(scale);
++    f32 localScale = (scale.x + scale.y + scale.z) / 3.0f;
++    f32 worldScale = 1.0f / localScale;
++    radius *= localScale;
++    TVec3f movePower(0, 0, 0);
++
++    if (movingReaction && _D4 == 0) {
++        TPos3f inversePrevious;
++        PSMTXInverse(mPrevBaseMatrix.toMtxPtr(), inversePrevious.toMtxPtr());
++        TVec3f previousPos;
++        inversePrevious.mult(rPos, previousPos);
++        TVec3f movement = localPos - previousPos;
++        TVec3f worldMovement(movement);
++        mBaseMatrix.mult33(worldMovement, worldMovement);
++        s32 stepCount = static_cast< s32 >((1.0f / 35.0f) * movement.length()) + 1;
++        TVec3f step(movement);
++
++        if (stepCount > 1) {
++            step.scale(1.0f / stepCount);
++        }
++
++        TVec3f offset(0.0f, 0.0f, 0.0f);
++
++        for (s32 i = 0; i <= stepCount; i++) {
++            movePower.set(-(movement - offset));
++            mBaseMatrix.mult33(movePower, movePower);
++            const TVec3f* pRejectNormal = &worldMovement;
++
++            if (i == stepCount) {
++                pRejectNormal = nullptr;
++            }
++
++            u32 count = checkStrikeBallCore(pHitInfo, capacity, previousPos + offset, movePower, radius, localScale, worldScale, prisms,
++                                           distances, features, pFilter, pRejectNormal);
++
++            if (count != 0) {
++                return count;
++            }
++
++            offset.add(step);
++        }
++
++        return 0;
++    }
++
++    return checkStrikeBallCore(pHitInfo, capacity, localPos, TVec3f(0, 0, 0), radius, localScale, worldScale, prisms, distances, features,
++                               pFilter, nullptr);
++}
++
++u32 CollisionParts::checkStrikeBallCore(HitInfo* pHitInfo, u32 capacity, const TVec3f& rLocalPos, const TVec3f& rMovePower, f32 radius,
++                                       f32 localScale, f32 worldScale, KC_PrismData** pPrisms, f32* pDistances, u8* pFeatures,
++                                       const TriangleFilterBase* pFilter, const TVec3f* pRejectNormal) {
++    u32 count = mServer->checkSphere(reinterpret_cast< Fxyz* >(const_cast< TVec3f* >(&rLocalPos)), radius, localScale, capacity, pPrisms,
++                                     pDistances, pFeatures);
++    u32 acceptedCount = 0;
++
++    for (u32 i = 0; i < count; i++) {
++        HitInfo* pHit = &pHitInfo[acceptedCount];
++        TVec3f position(rLocalPos);
++        calcCollidePosition(&position, *pPrisms[i], pFeatures[i]);
++        mBaseMatrix.mult(position, pHit->mHitPos);
++        pHit->mParentTriangle.fillData(this, mServer->toIndex(pPrisms[i]), mHitSensor);
++
++        if (pFilter != nullptr && pFilter->isInvalidTriangle(&pHit->mParentTriangle)) {
++            continue;
++        }
++
++        if (pRejectNormal != nullptr && 0.0f < pRejectNormal->dot(*pHit->mParentTriangle.getFaceNormal())) {
++            continue;
++        }
++
++        pHit->_60 = worldScale * pDistances[i];
++        pHit->_88 = pFeatures[i];
++        pHit->_7C.set(rMovePower);
++        const TVec3f* pNormal = pHit->mParentTriangle.getFaceNormal();
++        pHit->_7C.scale(pNormal->dot(pHit->_7C), *pNormal);
++        acceptedCount++;
++    }
++
++    return acceptedCount;
++}
++
++u32 CollisionParts::checkStrikeBallWithThickness(HitInfo* pHitInfo, u32 capacity, const TVec3f& rPos, f32 radius, f32 thickness,
++                                                const TriangleFilterBase* pFilter) {
++    KC_PrismData* prisms[64];
++    f32 distances[64];
++    u8 features[64];
++    TVec3f localPos;
++    mInvBaseMatrix.mult(rPos, localPos);
++    TVec3f scale;
++    mInvBaseMatrix.getScale(scale);
++    f32 localScale = (scale.x + scale.y + scale.z) / 3.0f;
++    Fxyz position;
++    position.x = localPos.x;
++    position.y = localPos.y;
++    position.z = localPos.z;
++    u32 count = mServer->checkSphereWithThickness(&position, radius * localScale, localScale, capacity, prisms, distances, features,
++                                                 thickness);
++    f32 worldScale = 1.0f / localScale;
++    u32 acceptedCount = 0;
++
++    for (u32 i = 0; i < count; i++) {
++        HitInfo* pHit = &pHitInfo[acceptedCount];
++        TVec3f hitPos(localPos);
++        calcCollidePosition(&hitPos, *prisms[i], features[i]);
++        mBaseMatrix.mult(hitPos, pHit->mHitPos);
++        pHit->mParentTriangle.fillData(this, mServer->toIndex(prisms[i]), mHitSensor);
++
++        if (pFilter != nullptr && pFilter->isInvalidTriangle(&pHit->mParentTriangle)) {
++            continue;
++        }
++
++        pHit->_60 = worldScale * distances[i];
++        pHit->_88 = features[i];
++        acceptedCount++;
++    }
++
++    return acceptedCount;
++}
++
++void CollisionParts::calcCollidePosition(TVec3f* pPos, const KC_PrismData& rPrism, u8 feature) {
++    TVec3f offset;
++    TVec3f edgeNormal;
++
++    switch (feature) {
++    case 1:
++        projectToPlane(pPos, *pPos, mServer->getPos(&rPrism, 0), *mServer->getNormal(rPrism.mNormalIndex));
++        break;
++    case 2:
++        projectToPlane(pPos, *pPos, mServer->getPos(&rPrism, 0), *mServer->getNormal(rPrism.mNormalIndex));
++        edgeNormal.set(*mServer->getNormal(rPrism.mEdgeIndices[0]));
++        offset.set(*pPos);
++        offset.sub(mServer->getPos(&rPrism, 0));
++        pPos->add(-edgeNormal * offset.dot(edgeNormal));
++        break;
++    case 3:
++        projectToPlane(pPos, *pPos, mServer->getPos(&rPrism, 0), *mServer->getNormal(rPrism.mNormalIndex));
++        edgeNormal.set(*mServer->getNormal(rPrism.mEdgeIndices[1]));
++        offset.set(*pPos);
++        offset.sub(mServer->getPos(&rPrism, 0));
++        pPos->add(-edgeNormal * offset.dot(edgeNormal));
++        break;
++    case 4:
++        projectToPlane(pPos, *pPos, mServer->getPos(&rPrism, 0), *mServer->getNormal(rPrism.mNormalIndex));
++        edgeNormal.set(*mServer->getNormal(rPrism.mEdgeIndices[2]));
++        offset.set(*pPos);
++        offset.sub(mServer->getPos(&rPrism, 1));
++        pPos->add(-edgeNormal * offset.dot(edgeNormal));
++        break;
++    case 5:
++        pPos->set(mServer->getPos(&rPrism, 0));
++        break;
++    case 6:
++        pPos->set(mServer->getPos(&rPrism, 1));
++        break;
++    case 7:
++        pPos->set(mServer->getPos(&rPrism, 2));
++        break;
++    }
++}
++
++// Instruction order
++void CollisionParts::projectToPlane(TVec3f* pProjected, const TVec3f& rPos, const TVec3f& rOrigin, const TVec3f& rNormal) {
++    TVec3f projected = rPos;
++
++    f32 distance = (rPos - rOrigin).dot(rNormal);
++
++    projected.add(-rNormal * distance);
++    pProjected->set(projected);
++}
++
++u32 CollisionParts::checkStrikeLine(HitInfo* pHitInfo, u32 capacity, const TVec3f& rPos, const TVec3f& rOffset,
++                                   const TriangleFilterBase* pFilter) {
++    f32 distances[64];
++    KC_PrismData* prisms[64];
++    u8 features[64];
++    f32 length = rOffset.length();
++    TVec3f localPos;
++    TVec3f localOffset;
++    mInvBaseMatrix.mult(rPos, localPos);
++    mInvBaseMatrix.mult(rPos + rOffset, localOffset);
++    localOffset = localOffset - localPos;
++    u32 count = 0;
++    mServer->checkArrow(localPos, localOffset, distances, features, &count, prisms, capacity);
++    u32 acceptedCount = 0;
++
++    for (u32 i = 0; i < count; i++) {
++        HitInfo* pHit = &pHitInfo[acceptedCount];
++        TVec3f hitPos = localPos + localOffset * distances[i];
++        mBaseMatrix.mult(hitPos, hitPos);
++        pHit->mParentTriangle.fillData(this, mServer->toIndex(prisms[i]), mHitSensor);
++
++        if (pFilter != nullptr && pFilter->isInvalidTriangle(&pHit->mParentTriangle)) {
++            continue;
++        }
++
++        pHit->_60 = length * distances[i];
++        pHit->mHitPos = hitPos;
++        pHit->_88 = features[i];
++        acceptedCount++;
++    }
++
++    return acceptedCount;
++}
++
++void CollisionParts::calcForceMovePower(TVec3f* a1, const TVec3f& a2) const {
++    TVec3f tStack88 = a2;
++    TMtx34f auStack76;
++    PSMTXInverse((MtxPtr)&mPrevBaseMatrix, reinterpret_cast< MtxPtr >(&auStack76));
++
++    auStack76.mult(tStack88, tStack88);
++    mBaseMatrix.mult(tStack88, tStack88);
++
++    tStack88.sub(a2);
++    *a1 = tStack88;
++}
+--- /dev/null
++++ b/pc-port/src/Game/Map/KCollision.cpp
+@@ -0,0 +1,1206 @@
++#include "resource/KCollisionResource.hpp"
++#include "Game/Map/KCollision.hpp"
++#include "Game/Camera/CameraPolygonCodeUtil.hpp"
++#include "Game/Map/CollisionCode.hpp"
++#include "Game/Map/CollisionDirector.hpp"
++#include "Game/Util/JMapInfo.hpp"
++#include "Game/Util/MathUtil.hpp"
++#include <algorithm>
++
++void DUMMY_KColloision() {
++    TVec3f a, b, c;
++
++    if (a == b) {
++        c = a + b;
++    }
++}
++
++void DUMMY_KColloision2() {
++    TVec3f a, b, c;
++
++    if (a == b) {
++        c = a + b;
++    }
++}
++
++Fxyz& Fxyz::operator=(const Fxyz& rOther) {
++    x = rOther.x;
++    y = rOther.y;
++    z = rOther.z;
++
++    return *this;
++}
++
++void KCollisionServer::V3u::setUsingCast(const TVec3f& rPos) {
++    x = static_cast< s32 >(rPos.x);
++    y = static_cast< s32 >(rPos.y);
++    z = static_cast< s32 >(rPos.z);
++}
++
++KCollisionServer::KCollisionServer() {
++    mFile = nullptr;
++    mapInfo = new JMapInfo();
++    mMaxVertexDistance = 1.0f;
++}
++
++void KCollisionServer::init(void* pData, const void* pMapData) {
++    setData(pData);
++
++    if (pMapData != nullptr) {
++        mapInfo->attach(pMapData);
++    }
++}
++
++void KCollisionServer::setData(void* pData) {
++    mFile = smgpc::resource::require_native_kcollision_file(pData);
++}
++
++bool KCollisionServer::calcFarthestVertexDistance() {
++    u32 triCount = getTriangleNum();
++    f32 maxDistance = 0.0f;
++    bool isValid = true;
++
++    for (u32 i = 0; i < triCount; i++) {
++        KC_PrismData* prism = getPrismData(i);
++        JMapInfoIter iter = getAttributes(i);
++
++        if (!iter.isValid()) {
++            isValid = false;
++        } else {
++            MR::registerCameraCode(MR::getCollisionDirector()->mCode->getCameraID(iter));
++        }
++
++        if (isNearParallelNormal(prism)) {
++            prism->mHeight = -MR::abs(prism->mHeight);
++        } else {
++            for (s32 j = 0; j < 3; j++) {
++                TVec3f pos = getPos(prism, j);
++                f32 distance = pos.squared();
++
++                if (maxDistance < distance) {
++                    maxDistance = distance;
++                }
++            }
++        }
++    }
++
++    mMaxVertexDistance = MR::sqrt(maxDistance);
++    return isValid;
++}
++
++bool KCollisionServer::isBinaryInitialized(const void* pData) {
++    return smgpc::resource::is_native_kcollision_file(pData);
++}
++
++KC_PrismData* KCollisionServer::checkPoint(Fxyz* pPos, f32 scale, f32* pDistance) {
++    f32 thickness = mFile->mThickness * scale;
++    u32 x = static_cast< s32 >(pPos->x - mFile->mMin.x);
++    if ((x & mFile->mXMask) != 0) {
++        return nullptr;
++    }
++    u32 y = static_cast< s32 >(pPos->y - mFile->mMin.y);
++    if ((y & mFile->mYMask) != 0) {
++        return nullptr;
++    }
++    u32 z = static_cast< s32 >(pPos->z - mFile->mMin.z);
++    if ((z & mFile->mZMask) != 0) {
++        return nullptr;
++    }
++
++    s32 shift;
++    u16* pList = reinterpret_cast< u16* >(searchBlock(&shift, x, y, z));
++    while (*++pList != 0) {
++        KC_PrismData* pPrism = &mFile->mPrisms[*pList];
++        if (pPrism->mHeight <= 0.0f) {
++            continue;
++        }
++        const TVec3f* pOrigin = &mFile->mPos[pPrism->mPositionIndex];
++        Fxyz offset;
++        offset.x = pPos->x - pOrigin->x;
++        offset.y = pPos->y - pOrigin->y;
++        offset.z = pPos->z - pOrigin->z;
++        const TVec3f* pNormal = &mFile->mNorms[pPrism->mEdgeIndices[0]];
++        if (offset.x * pNormal->x + offset.y * pNormal->y + offset.z * pNormal->z > 0.0f) {
++            continue;
++        }
++        pNormal = &mFile->mNorms[pPrism->mEdgeIndices[1]];
++        if (offset.x * pNormal->x + offset.y * pNormal->y + offset.z * pNormal->z > 0.0f) {
++            continue;
++        }
++        pNormal = &mFile->mNorms[pPrism->mEdgeIndices[2]];
++        if (offset.x * pNormal->x + offset.y * pNormal->y + offset.z * pNormal->z > pPrism->mHeight) {
++            continue;
++        }
++        pNormal = &mFile->mNorms[pPrism->mNormalIndex];
++        f32 distance = -offset.x * pNormal->x - offset.y * pNormal->y - offset.z * pNormal->z;
++        if (distance < 0.0f || thickness < distance) {
++            continue;
++        }
++        *pDistance = distance;
++        return pPrism;
++    }
++    return nullptr;
++}
++
++u32 KCollisionServer::checkSphere(Fxyz* pPos, f32 radius, f32 scale, u32 capacity, KC_PrismData** pPrisms, f32* pDistances, u8* pFeatures) {
++    f32 distance = 0.0f;
++    u16* pLongestList = nullptr;
++    u16* pPreviousList = nullptr;
++    u32 count = 0;
++    TVec3f maximum;
++    maximum.x = pPos->x + radius;
++    maximum.y = pPos->y + radius;
++    maximum.z = pPos->z + radius;
++    TVec3f minimum;
++    minimum.x = pPos->x - radius;
++    minimum.y = pPos->y - radius;
++    minimum.z = pPos->z - radius;
++    V3u localMinimum;
++    V3u localMaximum;
++
++    if (!outCheck(&minimum, &maximum, &localMinimum, &localMaximum)) {
++        return 0;
++    }
++
++    u32 z = localMinimum.z;
++
++    do {
++        u32 y = localMinimum.y;
++        s32 stepZ = 1000000;
++
++        do {
++            u32 x = localMinimum.x;
++            s32 stepY = 1000000;
++            s32 longestY = 0;
++
++            do {
++                s32 shift;
++                u16* pList = reinterpret_cast< u16* >(searchBlock(&shift, x, y, z));
++                s32 width = 1 << shift;
++                s32 mask = width - 1;
++                s32 remainingZ = width - (z & mask);
++                s32 stepX = width - (x & mask);
++                s32 remainingY = width - (y & mask);
++
++                if (remainingZ < stepZ) {
++                    stepZ = remainingZ;
++                }
++
++                if (remainingY < stepY) {
++                    stepY = remainingY;
++                }
++
++                if (remainingY > longestY && pList[1] != 0) {
++                    longestY = remainingY;
++                    pLongestList = pList;
++                }
++
++                if (pPreviousList == nullptr || pList != pPreviousList) {
++                    while (*++pList != 0) {
++                        KC_PrismData* pPrism = &mFile->mPrisms[*pList];
++
++                        if (pPrism->mHeight <= 0.0f) {
++                            continue;
++                        }
++
++                        if (std::find(pPrisms, pPrisms + count, static_cast< KC_PrismData* const& >(pPrism)) != pPrisms + count) {
++                            continue;
++                        }
++
++                        u8 feature;
++
++                        if (KCHitSphere(pPrism, pPos, radius, scale, &distance, &feature) && count < capacity &&
++                            std::find(pPrisms, pPrisms + count, static_cast< KC_PrismData* const& >(pPrism)) == pPrisms + count) {
++                            pPrisms[count] = pPrism;
++                            pDistances[count] = distance;
++                            pFeatures[count] = feature;
++                            count++;
++                        }
++                    }
++                }
++
++                x += stepX;
++            } while (x <= static_cast< u32 >(localMaximum.x));
++
++            pPreviousList = pLongestList;
++            y += stepY;
++        } while (y <= static_cast< u32 >(localMaximum.y));
++
++        z += stepZ;
++    } while (z <= static_cast< u32 >(localMaximum.z));
++
++    return count;
++}
++
++u32 KCollisionServer::checkSphereWithThickness(Fxyz* pPos, f32 radius, f32 scale, u32 capacity, KC_PrismData** pPrisms, f32* pDistances,
++                                               u8* pFeatures, f32 thickness) {
++    f32 distance = 0.0f;
++    u16* pLongestList = nullptr;
++    u16* pPreviousList = nullptr;
++    u32 count = 0;
++    TVec3f maximum;
++    maximum.x = pPos->x + radius;
++    maximum.y = pPos->y + radius;
++    maximum.z = pPos->z + radius;
++    TVec3f minimum;
++    minimum.x = pPos->x - radius;
++    minimum.y = pPos->y - radius;
++    minimum.z = pPos->z - radius;
++    V3u localMinimum;
++    V3u localMaximum;
++
++    if (!outCheck(&minimum, &maximum, &localMinimum, &localMaximum)) {
++        return 0;
++    }
++
++    u32 z = localMinimum.z;
++
++    do {
++        u32 y = localMinimum.y;
++        s32 stepZ = 1000000;
++
++        do {
++            u32 x = localMinimum.x;
++            s32 stepY = 1000000;
++            s32 longestY = 0;
++
++            do {
++                s32 shift;
++                u16* pList = reinterpret_cast< u16* >(searchBlock(&shift, x, y, z));
++                s32 width = 1 << shift;
++                s32 mask = width - 1;
++                s32 remainingZ = width - (z & mask);
++                s32 stepX = width - (x & mask);
++                s32 remainingY = width - (y & mask);
++
++                if (remainingZ < stepZ) {
++                    stepZ = remainingZ;
++                }
++
++                if (remainingY < stepY) {
++                    stepY = remainingY;
++                }
++
++                if (remainingY > longestY && pList[1] != 0) {
++                    longestY = remainingY;
++                    pLongestList = pList;
++                }
++
++                if (pPreviousList == nullptr || pList != pPreviousList) {
++                    while (*++pList != 0) {
++                        KC_PrismData* pPrism = &mFile->mPrisms[*pList];
++
++                        if (pPrism->mHeight <= 0.0f) {
++                            continue;
++                        }
++
++                        if (std::find(pPrisms, pPrisms + count, static_cast< KC_PrismData* const& >(pPrism)) != pPrisms + count) {
++                            continue;
++                        }
++
++                        u8 feature;
++
++                        if (KCHitSphereWithThickness(pPrism, pPos, radius, scale, &distance, &feature, thickness) && count < capacity &&
++                            std::find(pPrisms, pPrisms + count, static_cast< KC_PrismData* const& >(pPrism)) == pPrisms + count) {
++                            pPrisms[count] = pPrism;
++                            pDistances[count] = distance;
++                            pFeatures[count] = feature;
++                            count++;
++                        }
++                    }
++                }
++
++                x += stepX;
++            } while (x <= static_cast< u32 >(localMaximum.x));
++
++            pPreviousList = pLongestList;
++            y += stepY;
++        } while (y <= static_cast< u32 >(localMaximum.y));
++
++        z += stepZ;
++    } while (z <= static_cast< u32 >(localMaximum.z));
++
++    return count;
++}
++
++KC_PrismData* KCollisionServer::checkArrow(const TVec3f& rPos, const TVec3f& rOffset, f32* pDistances, u8* pFeatures, u32* pCount,
++                                           KC_PrismData** pPrisms, u32 capacity) const {
++    if (rOffset.x == 0.0f && rOffset.y == 0.0f && rOffset.z == 0.0f) {
++        return nullptr;
++    }
++
++    TVec3f direction(rOffset);
++    f32 travelled = 0.0f;
++    f32 length;
++    MR::separateScalarAndDirection(&length, &direction, direction);
++
++    if (MR::isNearZero(direction)) {
++        return nullptr;
++    }
++
++    TVec3f cursor;
++    V3u cell;
++    TVec3f localStart(rPos);
++    localStart.x -= mFile->mMin.x;
++    localStart.y -= mFile->mMin.y;
++    localStart.z -= mFile->mMin.z;
++    cell.setUsingCast(localStart);
++
++    if (isInsideMinMaxInLocalSpace(cell)) {
++        cursor.set(localStart);
++    } else {
++        TVec3f maximum;
++        maximum.x = static_cast< u32 >(~mFile->mXMask);
++        maximum.y = static_cast< u32 >(~mFile->mYMask);
++        maximum.z = static_cast< u32 >(~mFile->mZMask);
++
++        if (direction.x != 0.0f) {
++            f32 boundary = 0.0f < direction.x ? 0.0f : maximum.x;
++            travelled = (boundary - localStart.x) / direction.x;
++
++            if (0.0f <= travelled && travelled <= length) {
++                TVec3f offset(direction);
++                offset.scale(travelled);
++                cursor.set(offset);
++                cursor += localStart;
++                cell.setUsingCast(cursor);
++
++                if (isInsideMinMaxInLocalSpace(cell)) {
++                    goto beginTraversal;
++                }
++            }
++        }
++
++        if (direction.y != 0.0f) {
++            f32 boundary = 0.0f < direction.y ? 0.0f : maximum.y;
++            travelled = (boundary - localStart.y) / direction.y;
++
++            if (0.0f <= travelled && travelled <= length) {
++                TVec3f offset(direction);
++                offset.scale(travelled);
++                cursor.set(offset);
++                cursor += localStart;
++                cell.setUsingCast(cursor);
++
++                if (isInsideMinMaxInLocalSpace(cell)) {
++                    goto beginTraversal;
++                }
++            }
++        }
++
++        if (direction.z != 0.0f) {
++            f32 boundary = 0.0f < direction.z ? 0.0f : maximum.z;
++            travelled = (boundary - localStart.z) / direction.z;
++
++            if (0.0f <= travelled && travelled <= length) {
++                TVec3f offset(direction);
++                offset.scale(travelled);
++                cursor.set(offset);
++                cursor += localStart;
++                cell.setUsingCast(cursor);
++
++                if (isInsideMinMaxInLocalSpace(cell)) {
++                    goto beginTraversal;
++                }
++            }
++        }
++
++        return nullptr;
++    }
++
++beginTraversal:
++    u32 count = 0;
++    s32 positiveX;
++    s32 positiveY;
++    s32 positiveZ;
++    s32 negativeX;
++    s32 negativeY;
++    s32 negativeZ;
++    s32* pStepX;
++    s32* pStepY;
++    s32* pStepZ;
++    s32 signX;
++    s32 signY;
++    s32 signZ;
++
++    if (direction.x < 0.0f) {
++        pStepX = &negativeX;
++        signX = -1;
++    } else {
++        pStepX = &positiveX;
++        signX = 1;
++    }
++
++    if (direction.y < 0.0f) {
++        pStepY = &negativeY;
++        signY = -1;
++    } else {
++        pStepY = &positiveY;
++        signY = 1;
++    }
++
++    if (direction.z < 0.0f) {
++        pStepZ = &negativeZ;
++        signZ = -1;
++    } else {
++        pStepZ = &positiveZ;
++        signZ = 1;
++    }
++
++    KC_PrismData* pNearest = nullptr;
++
++    do {
++        s32 shift;
++        u16* pList = reinterpret_cast< u16* >(searchBlock(&shift, reinterpret_cast< const u32& >(cell.x), reinterpret_cast< const u32& >(cell.y),
++                                                          reinterpret_cast< const u32& >(cell.z)));
++        s32 width = 1 << shift;
++        s32 mask = width - 1;
++        positiveX = width - (cell.x & mask);
++        positiveY = width - (cell.y & mask);
++        positiveZ = width - (cell.z & mask);
++        negativeX = -(cell.x & mask);
++        negativeY = -(cell.y & mask);
++        negativeZ = -(cell.z & mask);
++
++        if (*pStepX == 0) {
++            *pStepX = signX;
++        }
++
++        if (*pStepY == 0) {
++            *pStepY = signY;
++        }
++
++        if (*pStepZ == 0) {
++            *pStepZ = signZ;
++        }
++
++        f32 nearestDistance = 1.0f;
++        f32 distance = 1.0f;
++
++        while (*++pList != 0) {
++            KC_PrismData* pPrism = &mFile->mPrisms[*pList];
++
++            if (pPrism->mHeight <= 0.0f) {
++                continue;
++            }
++
++            u8 feature = 0;
++
++            if (KCHitArrow(pPrism, rPos, rOffset, &distance, &feature)) {
++                if (pPrisms != nullptr) {
++                    pDistances[count] = distance;
++                    pPrisms[count] = pPrism;
++                    count++;
++
++                    if (distance < nearestDistance) {
++                        nearestDistance = distance;
++                        pNearest = pPrism;
++                    }
++
++                    if (count == capacity) {
++                        if (pCount != nullptr) {
++                            *pCount = count;
++                        }
++
++                        return pNearest;
++                    }
++                } else if (distance < nearestDistance) {
++                    nearestDistance = *pDistances = distance;
++                    pNearest = pPrism;
++                    *pFeatures = feature;
++                }
++            }
++        }
++
++        if (pPrisms == nullptr && pNearest != nullptr) {
++            break;
++        }
++
++        f32 stepX = MR::isNearZero(direction.x) ? 1000000000.0f : *pStepX / direction.x;
++        f32 stepY = MR::isNearZero(direction.y) ? 1000000000.0f : *pStepY / direction.y;
++        f32 stepZ = MR::isNearZero(direction.z) ? 1000000000.0f : *pStepZ / direction.z;
++
++        if (stepY < stepX) {
++            stepX = stepY;
++        }
++
++        if (stepZ < stepX) {
++            stepX = stepZ;
++        }
++
++        if (length - travelled <= stepX) {
++            break;
++        }
++
++        TVec3f offset(direction);
++        offset.scale(stepX);
++        cursor += offset;
++        travelled += stepX;
++        cell.setUsingCast(cursor);
++
++        if (!isInsideMinMaxInLocalSpace(cell)) {
++            break;
++        }
++    } while (travelled < length);
++
++    if (pCount != nullptr) {
++        *pCount = count;
++    }
++
++    return pNearest;
++}
++
++bool KCollisionServer::KCHitSphere(KC_PrismData* pPrism, Fxyz* pPos, f32 radius, f32 scale, f32* pDistance, u8* pFeature) {
++    f32 thickness = mFile->mThickness * scale;
++    f32 radiusSquared = radius * radius;
++    *pFeature = 0;
++    Fxyz relative;
++    f32 distances[4];
++    f32 dot01;
++    f32 dot12;
++    f32 dot20;
++    TVec3f* pOrigin = &mFile->mPos[pPrism->mPositionIndex];
++    relative.x = pPos->x - pOrigin->x;
++    relative.y = pPos->y - pOrigin->y;
++    relative.z = pPos->z - pOrigin->z;
++    TVec3f* pEdge0 = &mFile->mNorms[pPrism->mEdgeIndices[0]];
++    distances[1] = relative.x * pEdge0->x + relative.y * pEdge0->y + relative.z * pEdge0->z;
++
++    if (distances[1] >= radius) {
++        return false;
++    }
++
++    TVec3f* pEdge1 = &mFile->mNorms[pPrism->mEdgeIndices[1]];
++    distances[2] = relative.x * pEdge1->x + relative.y * pEdge1->y + relative.z * pEdge1->z;
++
++    if (distances[2] >= radius) {
++        return false;
++    }
++
++    TVec3f* pEdge2 = &mFile->mNorms[pPrism->mEdgeIndices[2]];
++    distances[3] = relative.x * pEdge2->x + relative.y * pEdge2->y + relative.z * pEdge2->z - pPrism->mHeight;
++
++    if (distances[3] >= radius) {
++        return false;
++    }
++
++    TVec3f* pNormal = &mFile->mNorms[pPrism->mNormalIndex];
++    distances[0] = relative.x * pNormal->x + relative.y * pNormal->y + relative.z * pNormal->z;
++    *pDistance = radius - distances[0];
++
++    if (*pDistance < 0.0f) {
++        return false;
++    }
++
++    if (distances[1] > distances[2]) {
++        if (!(distances[1] > distances[3])) {
++            goto edge2Region;
++        }
++    } else {
++        if (!(distances[2] > distances[3])) {
++            goto edge2Region;
++        }
++
++        goto edge1Region;
++    }
++
++edge0Region:
++    if (distances[1] <= 0.0f) {
++        if (thickness < *pDistance) {
++            return false;
++        }
++
++        *pFeature = 1;
++        goto accepted;
++    }
++
++    if (distances[2] > distances[3]) {
++        dot01 = pEdge0->x * pEdge1->x + pEdge0->y * pEdge1->y + pEdge0->z * pEdge1->z;
++
++        if (!(dot01 * distances[1] > distances[2])) {
++            goto vertex0;
++        }
++
++        goto edge0;
++    } else {
++        dot20 = pEdge0->x * pEdge2->x + pEdge0->y * pEdge2->y + pEdge0->z * pEdge2->z;
++
++        if (!(dot20 * distances[1] > distances[3])) {
++            goto vertex2;
++        }
++
++        goto edge0;
++    }
++
++edge1Region:
++    if (distances[2] <= 0.0f) {
++        if (thickness < *pDistance) {
++            return false;
++        }
++
++        *pFeature = 1;
++        goto accepted;
++    }
++
++    if (distances[3] > distances[1]) {
++        dot12 = pEdge1->x * pEdge2->x + pEdge1->y * pEdge2->y + pEdge1->z * pEdge2->z;
++
++        if (!(dot12 * distances[2] > distances[3])) {
++            goto vertex1;
++        }
++
++        goto edge1;
++    } else {
++        dot01 = pEdge1->x * pEdge0->x + pEdge1->y * pEdge0->y + pEdge1->z * pEdge0->z;
++
++        if (!(dot01 * distances[2] > distances[1])) {
++            goto vertex0;
++        }
++
++        goto edge1;
++    }
++
++edge2Region:
++    if (distances[3] <= 0.0f) {
++        if (thickness < *pDistance) {
++            return false;
++        }
++
++        *pFeature = 1;
++        goto accepted;
++    }
++
++    if (distances[1] > distances[2]) {
++        dot20 = pEdge2->x * pEdge0->x + pEdge2->y * pEdge0->y + pEdge2->z * pEdge0->z;
++
++        if (!(dot20 * distances[3] > distances[1])) {
++            goto vertex2;
++        }
++
++        goto edge2;
++    } else {
++        dot12 = pEdge2->x * pEdge1->x + pEdge2->y * pEdge1->y + pEdge2->z * pEdge1->z;
++
++        if (!(dot12 * distances[3] > distances[2])) {
++            goto vertex1;
++        }
++
++        goto edge2;
++    }
++
++edge0:
++    if (distances[1] > distances[0]) {
++        return false;
++    }
++
++    *pDistance = radiusSquared - distances[1] * distances[1];
++    *pFeature = 2;
++    goto calcDistance;
++
++edge1:
++    if (distances[2] > distances[0]) {
++        return false;
++    }
++
++    *pDistance = radiusSquared - distances[2] * distances[2];
++    *pFeature = 3;
++    goto calcDistance;
++
++edge2:
++    if (distances[3] > distances[0]) {
++        return false;
++    }
++
++    *pDistance = radiusSquared - distances[3] * distances[3];
++    *pFeature = 4;
++    goto calcDistance;
++
++vertex0: {
++    f32 weight0 = (dot01 * distances[2] - distances[1]) / (dot01 * dot01 - 1.0f);
++    f32 weight1 = distances[2] - weight0 * dot01;
++    relative.x = weight0 * pEdge0->x + weight1 * pEdge1->x;
++    relative.y = weight0 * pEdge0->y + weight1 * pEdge1->y;
++    relative.z = weight0 * pEdge0->z + weight1 * pEdge1->z;
++    *pFeature = 5;
++    goto checkVertex;
++}
++
++vertex1: {
++    f32 weight1 = (dot12 * distances[3] - distances[2]) / (dot12 * dot12 - 1.0f);
++    f32 weight2 = distances[3] - weight1 * dot12;
++    relative.x = weight1 * pEdge1->x + weight2 * pEdge2->x;
++    relative.y = weight1 * pEdge1->y + weight2 * pEdge2->y;
++    relative.z = weight1 * pEdge1->z + weight2 * pEdge2->z;
++    *pFeature = 6;
++    goto checkVertex;
++}
++
++vertex2: {
++    f32 weight2 = (dot20 * distances[1] - distances[3]) / (dot20 * dot20 - 1.0f);
++    f32 weight0 = distances[1] - weight2 * dot20;
++    relative.x = weight2 * pEdge2->x + weight0 * pEdge0->x;
++    relative.y = weight2 * pEdge2->y + weight0 * pEdge0->y;
++    relative.z = weight2 * pEdge2->z + weight0 * pEdge0->z;
++    *pFeature = 7;
++}
++
++checkVertex: {
++    f32 squaredDistance = relative.x * relative.x + relative.y * relative.y + relative.z * relative.z;
++    f32 distance = MR::sqrt(squaredDistance);
++
++    if (distance > distances[0] || distance >= radius) {
++        *pFeature = 0;
++        return false;
++    }
++
++    *pDistance = radiusSquared - squaredDistance;
++}
++
++calcDistance:
++    *pDistance = MR::sqrt(*pDistance) - distances[0];
++
++    if (*pDistance < 0.0f || thickness < *pDistance) {
++        *pFeature = 0;
++        return false;
++    }
++
++accepted:
++    return true;
++}
++
++bool KCollisionServer::KCHitSphereWithThickness(KC_PrismData* pPrism, Fxyz* pPos, f32 radius, f32 scale, f32* pDistance, u8* pFeature,
++                                                  f32 requestedThickness) {
++    f32 thickness = requestedThickness * scale;
++    f32 radiusSquared = radius * radius;
++    *pFeature = 0;
++    Fxyz relative;
++    f32 distances[4];
++    f32 dot01;
++    f32 dot12;
++    f32 dot20;
++    TVec3f* pOrigin = &mFile->mPos[pPrism->mPositionIndex];
++    relative.x = pPos->x - pOrigin->x;
++    relative.y = pPos->y - pOrigin->y;
++    relative.z = pPos->z - pOrigin->z;
++    TVec3f* pEdge0 = &mFile->mNorms[pPrism->mEdgeIndices[0]];
++    distances[1] = relative.x * pEdge0->x + relative.y * pEdge0->y + relative.z * pEdge0->z;
++
++    if (distances[1] >= radius) {
++        return false;
++    }
++
++    TVec3f* pEdge1 = &mFile->mNorms[pPrism->mEdgeIndices[1]];
++    distances[2] = relative.x * pEdge1->x + relative.y * pEdge1->y + relative.z * pEdge1->z;
++
++    if (distances[2] >= radius) {
++        return false;
++    }
++
++    TVec3f* pEdge2 = &mFile->mNorms[pPrism->mEdgeIndices[2]];
++    distances[3] = relative.x * pEdge2->x + relative.y * pEdge2->y + relative.z * pEdge2->z - pPrism->mHeight;
++
++    if (distances[3] >= radius) {
++        return false;
++    }
++
++    TVec3f* pNormal = &mFile->mNorms[pPrism->mNormalIndex];
++    distances[0] = relative.x * pNormal->x + relative.y * pNormal->y + relative.z * pNormal->z;
++    *pDistance = radius - distances[0];
++
++    if (*pDistance < 0.0f) {
++        return false;
++    }
++
++    if (distances[1] > distances[2]) {
++        if (!(distances[1] > distances[3])) {
++            goto edge2Region;
++        }
++    } else {
++        if (!(distances[2] > distances[3])) {
++            goto edge2Region;
++        }
++
++        goto edge1Region;
++    }
++
++edge0Region:
++    if (distances[1] <= 0.0f) {
++        if (thickness < *pDistance) {
++            return false;
++        }
++
++        *pFeature = 1;
++        goto accepted;
++    }
++
++    if (distances[2] > distances[3]) {
++        dot01 = pEdge0->x * pEdge1->x + pEdge0->y * pEdge1->y + pEdge0->z * pEdge1->z;
++
++        if (!(dot01 * distances[1] > distances[2])) {
++            goto vertex0;
++        }
++
++        goto edge0;
++    } else {
++        dot20 = pEdge0->x * pEdge2->x + pEdge0->y * pEdge2->y + pEdge0->z * pEdge2->z;
++
++        if (!(dot20 * distances[1] > distances[3])) {
++            goto vertex2;
++        }
++
++        goto edge0;
++    }
++
++edge1Region:
++    if (distances[2] <= 0.0f) {
++        if (thickness < *pDistance) {
++            return false;
++        }
++
++        *pFeature = 1;
++        goto accepted;
++    }
++
++    if (distances[3] > distances[1]) {
++        dot12 = pEdge1->x * pEdge2->x + pEdge1->y * pEdge2->y + pEdge1->z * pEdge2->z;
++
++        if (!(dot12 * distances[2] > distances[3])) {
++            goto vertex1;
++        }
++
++        goto edge1;
++    } else {
++        dot01 = pEdge1->x * pEdge0->x + pEdge1->y * pEdge0->y + pEdge1->z * pEdge0->z;
++
++        if (!(dot01 * distances[2] > distances[1])) {
++            goto vertex0;
++        }
++
++        goto edge1;
++    }
++
++edge2Region:
++    if (distances[3] <= 0.0f) {
++        if (thickness < *pDistance) {
++            return false;
++        }
++
++        *pFeature = 1;
++        goto accepted;
++    }
++
++    if (distances[1] > distances[2]) {
++        dot20 = pEdge2->x * pEdge0->x + pEdge2->y * pEdge0->y + pEdge2->z * pEdge0->z;
++
++        if (!(dot20 * distances[3] > distances[1])) {
++            goto vertex2;
++        }
++
++        goto edge2;
++    } else {
++        dot12 = pEdge2->x * pEdge1->x + pEdge2->y * pEdge1->y + pEdge2->z * pEdge1->z;
++
++        if (!(dot12 * distances[3] > distances[2])) {
++            goto vertex1;
++        }
++
++        goto edge2;
++    }
++
++edge0:
++    *pDistance = radiusSquared - distances[1] * distances[1];
++    *pFeature = 2;
++    goto calcDistance;
++
++edge1:
++    *pDistance = radiusSquared - distances[2] * distances[2];
++    *pFeature = 3;
++    goto calcDistance;
++
++edge2:
++    *pDistance = radiusSquared - distances[3] * distances[3];
++    *pFeature = 4;
++    goto calcDistance;
++
++vertex0: {
++    f32 weight0 = (dot01 * distances[2] - distances[1]) / (dot01 * dot01 - 1.0f);
++    f32 weight1 = distances[2] - weight0 * dot01;
++    relative.x = weight0 * pEdge0->x + weight1 * pEdge1->x;
++    relative.y = weight0 * pEdge0->y + weight1 * pEdge1->y;
++    relative.z = weight0 * pEdge0->z + weight1 * pEdge1->z;
++    *pFeature = 5;
++    goto checkVertex;
++}
++
++vertex1: {
++    f32 weight1 = (dot12 * distances[3] - distances[2]) / (dot12 * dot12 - 1.0f);
++    f32 weight2 = distances[3] - weight1 * dot12;
++    relative.x = weight1 * pEdge1->x + weight2 * pEdge2->x;
++    relative.y = weight1 * pEdge1->y + weight2 * pEdge2->y;
++    relative.z = weight1 * pEdge1->z + weight2 * pEdge2->z;
++    *pFeature = 6;
++    goto checkVertex;
++}
++
++vertex2: {
++    f32 weight2 = (dot20 * distances[1] - distances[3]) / (dot20 * dot20 - 1.0f);
++    f32 weight0 = distances[1] - weight2 * dot20;
++    relative.x = weight2 * pEdge2->x + weight0 * pEdge0->x;
++    relative.y = weight2 * pEdge2->y + weight0 * pEdge0->y;
++    relative.z = weight2 * pEdge2->z + weight0 * pEdge0->z;
++    *pFeature = 7;
++}
++
++checkVertex: {
++    f32 squaredDistance = relative.x * relative.x + relative.y * relative.y + relative.z * relative.z;
++    f32 distance = MR::sqrt(squaredDistance);
++
++    if (distance >= radius) {
++        *pFeature = 0;
++        return false;
++    }
++
++    *pDistance = radiusSquared - squaredDistance;
++}
++
++calcDistance: {
++    f32 distance = MR::sqrt(*pDistance);
++
++    if (distances[0] + distance < 0.0f) {
++        *pFeature = 0;
++        return false;
++    }
++
++    *pDistance = distance - distances[0];
++
++    if (*pDistance < 0.0f || thickness < *pDistance) {
++        *pFeature = 0;
++        return false;
++    }
++}
++
++accepted:
++    return true;
++}
++
++bool KCollisionServer::isNearParallelNormal(const KC_PrismData* pPrism) const {
++    TVec3f edge0 = mFile->mNorms[pPrism->mEdgeIndices[0]];
++    TVec3f edge1 = mFile->mNorms[pPrism->mEdgeIndices[1]];
++    TVec3f edge2 = mFile->mNorms[pPrism->mEdgeIndices[2]];
++
++    bool isNear = false;
++
++    if (MR::isSameDirection(edge0, edge1) || MR::isSameDirection(edge0, edge2) || MR::isSameDirection(edge1, edge2)) {
++        isNear = true;
++    }
++
++    return isNear;
++}
++
++bool KCollisionServer::KCHitArrow(KC_PrismData* pPrism, const TVec3f& rPos, const TVec3f& rOffset, f32* pDistance, u8* pFeature) const {
++    TVec3f* pOrigin = &mFile->mPos[pPrism->mPositionIndex];
++    TVec3f* pNormal = &mFile->mNorms[pPrism->mNormalIndex];
++    TVec3f relative;
++    PSVECSubtract(&rPos, pOrigin, &relative);
++    f32 faceDistance = PSVECDotProduct(&relative, pNormal);
++
++    if (faceDistance <= 0.0f) {
++        *pFeature = 0;
++        return false;
++    }
++
++    f32 faceMovement = PSVECDotProduct(pNormal, &rOffset);
++
++    if (0.0f < faceDistance + faceMovement) {
++        *pFeature = 0;
++        return false;
++    }
++
++    f32 fraction = faceDistance / -faceMovement;
++    TVec3f position = rOffset * fraction;
++    position += relative;
++    bool edge0 = false;
++    bool edge1 = false;
++    bool edge2 = false;
++    f32 distance = PSVECDotProduct(&position, &mFile->mNorms[pPrism->mEdgeIndices[0]]);
++
++    if (0.01f < distance) {
++        *pFeature = 0;
++        return false;
++    }
++
++    if (0.0f <= distance && distance <= 0.01f) {
++        edge0 = true;
++    }
++
++    distance = PSVECDotProduct(&position, &mFile->mNorms[pPrism->mEdgeIndices[1]]);
++
++    if (0.01f < distance) {
++        *pFeature = 0;
++        return false;
++    }
++
++    if (0.0f <= distance && distance <= 0.01f) {
++        edge1 = true;
++    }
++
++    distance = PSVECDotProduct(&position, &mFile->mNorms[pPrism->mEdgeIndices[2]]);
++
++    if (0.01f + pPrism->mHeight < distance) {
++        *pFeature = 0;
++        return false;
++    }
++
++    if (0.0f <= distance && distance <= 0.01f) {
++        edge2 = true;
++    }
++
++    *pDistance = fraction;
++
++    if (edge0) {
++        if (edge1) {
++            if (edge2) {
++                *pFeature = 1;
++            } else {
++                *pFeature = 5;
++            }
++        } else if (edge2) {
++            *pFeature = 7;
++        } else {
++            *pFeature = 2;
++        }
++    } else if (edge1) {
++        if (edge2) {
++            *pFeature = 6;
++        } else {
++            *pFeature = 3;
++        }
++    } else if (edge2) {
++        *pFeature = 4;
++    } else {
++        *pFeature = 1;
++    }
++
++    return true;
++}
++
++s32 KCollisionServer::toIndex(const KC_PrismData* pPrism) const {
++    return pPrism - (mFile->mPrisms + 1);
++}
++
++TVec3f* KCollisionServer::getFaceNormal(const KC_PrismData* pPrism) const {
++    return &mFile->mNorms[pPrism->mNormalIndex];
++}
++
++TVec3f* KCollisionServer::getEdgeNormal1(const KC_PrismData* pPrism) const {
++    return &mFile->mNorms[pPrism->mEdgeIndices[0]];
++}
++
++TVec3f* KCollisionServer::getEdgeNormal2(const KC_PrismData* pPrism) const {
++    return &mFile->mNorms[pPrism->mEdgeIndices[1]];
++}
++
++TVec3f* KCollisionServer::getEdgeNormal3(const KC_PrismData* pPrism) const {
++    return &mFile->mNorms[pPrism->mEdgeIndices[2]];
++}
++
++TVec3f* KCollisionServer::getNormal(u32 index) const {
++    return &mFile->mNorms[index];
++}
++
++void KCollisionServer::calXvec(const Fxyz* pVecA, const Fxyz* pVecB, Fxyz* pDst) const {
++    pDst->x = pVecA->z * pVecB->y - pVecA->y * pVecB->z;
++    pDst->y = pVecA->x * pVecB->z - pVecA->z * pVecB->x;
++    pDst->z = pVecA->y * pVecB->x - pVecA->x * pVecB->y;
++}
++
++TVec3f KCollisionServer::getPos(const KC_PrismData* pPrism, int vertexIndex) const {
++    switch (vertexIndex) {
++    case 0: {
++        TVec3f* pos = &mFile->mPos[pPrism->mPositionIndex];
++
++        return TVec3f(pos->x, pos->y, pos->z);
++    }
++    case 1: {
++        Fxyz* pos = reinterpret_cast< Fxyz* >(&mFile->mPos[pPrism->mPositionIndex]);
++        Fxyz* edge2 = reinterpret_cast< Fxyz* >(&mFile->mNorms[pPrism->mEdgeIndices[2]]);
++
++        Fxyz finalPos;
++
++        calXvec(reinterpret_cast< Fxyz* >(&mFile->mNorms[pPrism->mEdgeIndices[1]]), reinterpret_cast< Fxyz* >(&mFile->mNorms[pPrism->mNormalIndex]),
++                &finalPos);
++
++        f32 sideLength = pPrism->mHeight / (finalPos.x * edge2->x + finalPos.y * edge2->y + finalPos.z * edge2->z);
++
++        finalPos.x = pos->x + sideLength * finalPos.x;
++        finalPos.y = pos->y + sideLength * finalPos.y;
++        finalPos.z = pos->z + sideLength * finalPos.z;
++
++        return TVec3f(finalPos.x, finalPos.y, finalPos.z);
++    }
++    case 2: {
++        Fxyz* pos = reinterpret_cast< Fxyz* >(&mFile->mPos[pPrism->mPositionIndex]);
++        Fxyz* edge2 = reinterpret_cast< Fxyz* >(&mFile->mNorms[pPrism->mEdgeIndices[2]]);
++
++        Fxyz finalPos;
++
++        calXvec(reinterpret_cast< Fxyz* >(&mFile->mNorms[pPrism->mNormalIndex]), reinterpret_cast< Fxyz* >(&mFile->mNorms[pPrism->mEdgeIndices[0]]),
++                &finalPos);
++
++        f32 sideLength = pPrism->mHeight / (finalPos.x * edge2->x + finalPos.y * edge2->y + finalPos.z * edge2->z);
++
++        finalPos.x = pos->x + sideLength * finalPos.x;
++        finalPos.y = pos->y + sideLength * finalPos.y;
++        finalPos.z = pos->z + sideLength * finalPos.z;
++
++        return TVec3f(finalPos.x, finalPos.y, finalPos.z);
++    }
++    default:
++        return TVec3f(0.0f, 0.0f, 0.0f);
++    }
++}
++
++KC_PrismData* KCollisionServer::getPrismData(u32 index) const {
++    return &mFile->mPrisms[1 + index];
++}
++
++s32 KCollisionServer::getTriangleNum() const {
++    return (reinterpret_cast< u8* >(mFile->mOctree) - reinterpret_cast< u8* >(mFile->mPrisms + 1)) / sizeof(KC_PrismData);
++}
++
++JMapInfoIter KCollisionServer::getAttributes(u32 index) const {
++    KC_PrismData* prism = &mFile->mPrisms[1 + index];
++
++    return JMapInfoIter(mapInfo, prism->mAttribute);
++}
++
++// Register mismatch
++s32* KCollisionServer::searchBlock(s32* a1, const u32& rX, const u32& rY, const u32& rZ) const {
++    KCLFile* file = mFile;
++    s32 blockWidthShift = file->mBlockWidthShift;
++    u8* octree = reinterpret_cast< u8* >(file->mOctree);
++    *a1 = blockWidthShift;
++
++#if defined(TARGET_PC)
++    // The special one-root layout stores -1 shifts. Retail discards that
++    // intermediate offset; avoid evaluating negative C++ shifts on the host.
++    s32 offset = 0;
++    if (file->mBlockXYShift != -1 || file->mBlockXShift != -1) {
++        offset = ((rX >> blockWidthShift) | ((rZ >> blockWidthShift) << file->mBlockXYShift) | ((rY >> blockWidthShift) << file->mBlockXShift)) * 4;
++    }
++#else
++    s32 offset = ((rX >> blockWidthShift) | ((rZ >> blockWidthShift) << file->mBlockXYShift) | ((rY >> blockWidthShift) << file->mBlockXShift)) * 4;
++    if (file->mBlockXYShift == -1 && file->mBlockXShift == -1) {
++        offset = 0;
++    }
++#endif
++
++    while ((offset = *reinterpret_cast< s32* >(octree + offset)) >= 0) {
++        octree += offset;
++        s32 uVar7 = --(*a1);
++
++        offset = ((((rZ >> uVar7) & 1) << 2) | (((rY >> uVar7) & 1) << 1) | ((rX >> uVar7) & 1)) * 4;
++    }
++
++    return reinterpret_cast< s32* >(octree + (offset & 0x7FFFFFFF));
++}
+--- /dev/null
++++ b/pc-port/src/Game/Map/KCollisionPlus.cpp
+@@ -0,0 +1,52 @@
++#include "Game/Map/KCollision.hpp"
++
++bool KCollisionServer::isInsideMinMaxInLocalSpace(const V3u& rPos) const {
++    return (rPos.x & mFile->mXMask) == 0 && (rPos.y & mFile->mYMask) == 0 && (rPos.z & mFile->mZMask) == 0;
++}
++
++bool KCollisionServer::outCheck(const TVec3f* pPosA, const TVec3f* pPosB, V3u* pPointA, V3u* pPointB) const {
++    objectSpaceToLocalSpace(pPointA, *pPosA);
++    objectSpaceToLocalSpace(pPointB, *pPosB);
++
++    if (pPointA->x < 0) {
++        pPointA->x = 0;
++    }
++
++    if (pPointA->y < 0) {
++        pPointA->y = 0;
++    }
++
++    if (pPointA->z < 0) {
++        pPointA->z = 0;
++    }
++
++    s32 invertedXMask = ~mFile->mXMask;
++
++    if (invertedXMask < pPointB->x) {
++        pPointB->x = invertedXMask;
++    }
++
++    s32 invertedYMask = ~mFile->mYMask;
++
++    if (invertedYMask < pPointB->y) {
++        pPointB->y = invertedYMask;
++    }
++
++    s32 invertedZMask = ~mFile->mZMask;
++
++    if (invertedZMask < pPointB->z) {
++        pPointB->z = invertedZMask;
++    }
++
++    if (pPointB->x < pPointA->x || pPointB->y < pPointA->y || pPointB->z < pPointA->z) {
++        return false;
++    }
++
++    return true;
++}
++
++void KCollisionServer::objectSpaceToLocalSpace(V3u* pPoint, const TVec3f& rPos) const {
++    pPoint->x = static_cast< s32 >(rPos.x - mFile->mMin.x);
++    pPoint->y = static_cast< s32 >(rPos.y - mFile->mMin.y);
++    pPoint->z = static_cast< s32 >(rPos.z - mFile->mMin.z);
++}

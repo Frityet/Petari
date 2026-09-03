@@ -98,6 +98,56 @@ bool KCollisionServer::isBinaryInitialized(const void* pData) {
     return reinterpret_cast< const s32* >(pData)[0] < 0;
 }
 
+KC_PrismData* KCollisionServer::checkPoint(Fxyz* pPos, f32 scale, f32* pDistance) {
+    f32 thickness = mFile->mThickness * scale;
+    u32 x = static_cast< s32 >(pPos->x - mFile->mMin.x);
+    if ((x & mFile->mXMask) != 0) {
+        return nullptr;
+    }
+    u32 y = static_cast< s32 >(pPos->y - mFile->mMin.y);
+    if ((y & mFile->mYMask) != 0) {
+        return nullptr;
+    }
+    u32 z = static_cast< s32 >(pPos->z - mFile->mMin.z);
+    if ((z & mFile->mZMask) != 0) {
+        return nullptr;
+    }
+
+    s32 shift;
+    u16* pList = reinterpret_cast< u16* >(searchBlock(&shift, x, y, z));
+    while (*++pList != 0) {
+        KC_PrismData* pPrism = &mFile->mPrisms[*pList];
+        if (pPrism->mHeight <= 0.0f) {
+            continue;
+        }
+        const TVec3f* pOrigin = &mFile->mPos[pPrism->mPositionIndex];
+        Fxyz offset;
+        offset.x = pPos->x - pOrigin->x;
+        offset.y = pPos->y - pOrigin->y;
+        offset.z = pPos->z - pOrigin->z;
+        const TVec3f* pNormal = &mFile->mNorms[pPrism->mEdgeIndices[0]];
+        if (offset.x * pNormal->x + offset.y * pNormal->y + offset.z * pNormal->z > 0.0f) {
+            continue;
+        }
+        pNormal = &mFile->mNorms[pPrism->mEdgeIndices[1]];
+        if (offset.x * pNormal->x + offset.y * pNormal->y + offset.z * pNormal->z > 0.0f) {
+            continue;
+        }
+        pNormal = &mFile->mNorms[pPrism->mEdgeIndices[2]];
+        if (offset.x * pNormal->x + offset.y * pNormal->y + offset.z * pNormal->z > pPrism->mHeight) {
+            continue;
+        }
+        pNormal = &mFile->mNorms[pPrism->mNormalIndex];
+        f32 distance = -offset.x * pNormal->x - offset.y * pNormal->y - offset.z * pNormal->z;
+        if (distance < 0.0f || thickness < distance) {
+            continue;
+        }
+        *pDistance = distance;
+        return pPrism;
+    }
+    return nullptr;
+}
+
 u32 KCollisionServer::checkSphere(Fxyz* pPos, f32 radius, f32 scale, u32 capacity, KC_PrismData** pPrisms, f32* pDistances, u8* pFeatures) {
     f32 distance = 0.0f;
     u16* pLongestList = nullptr;
