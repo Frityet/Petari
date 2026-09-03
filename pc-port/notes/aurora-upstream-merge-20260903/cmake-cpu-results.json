@@ -1,0 +1,38 @@
+[
+  {
+    "test": "gx_fifo_tests",
+    "returncode": 1
+  },
+  {
+    "test": "gfx_recording_tests",
+    "returncode": 0
+  },
+  {
+    "test": "time_tests",
+    "returncode": 0
+  },
+  {
+    "test": "os_time_tests",
+    "returncode": 0
+  },
+  {
+    "test": "io_tests",
+    "returncode": 0
+  },
+  {
+    "test": "render_worker_tests",
+    "returncode": 0
+  },
+  {
+    "test": "gx_destruction_state_tests",
+    "returncode": 0
+  },
+  {
+    "test": "gx_texture_cache_tests",
+    "returncode": 0
+  },
+  {
+    "test": "texture_replacement_streaming_tests",
+    "returncode": 0
+  }
+]

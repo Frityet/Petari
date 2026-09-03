@@ -1,0 +1,46 @@
+{
+  "source": "https://github.com/encounter/dawn/releases/tag/v20260807.225922",
+  "tag": "v20260807.225922",
+  "assets": [
+    {
+      "platform": "android-aarch64",
+      "sha256": "76427f76b30071bdaea0a9a2c25a78650c33bebedf7e1a0e873084b0a61616c1",
+      "url": "https://github.com/encounter/dawn/releases/download/v20260807.225922/dawn-android-aarch64.tar.gz"
+    },
+    {
+      "platform": "darwin-arm64",
+      "sha256": "c36e2ef9c7b9d395462973dbb62076c246b9e550ec7bcfc224171e8d42b02b83",
+      "url": "https://github.com/encounter/dawn/releases/download/v20260807.225922/dawn-darwin-arm64.tar.gz"
+    },
+    {
+      "platform": "darwin-x86_64",
+      "sha256": "50372516823ae5d701249bd0c21f0b1a0f18c1d568b21c068fdc202deea00dc4",
+      "url": "https://github.com/encounter/dawn/releases/download/v20260807.225922/dawn-darwin-x86_64.tar.gz"
+    },
+    {
+      "platform": "ios-arm64",
+      "sha256": "64e70875040099e24db3a40095461d43be0c553f0c347d63628f6d469c7d184b",
+      "url": "https://github.com/encounter/dawn/releases/download/v20260807.225922/dawn-ios-arm64.tar.gz"
+    },
+    {
+      "platform": "linux-aarch64",
+      "sha256": "581794bf00ae8dcd437ca092df126b1663617b546899cb4945ca7efdbf7a6e1e",
+      "url": "https://github.com/encounter/dawn/releases/download/v20260807.225922/dawn-linux-aarch64.tar.gz"
+    },
+    {
+      "platform": "linux-x86_64",
+      "sha256": "2a4523426ab9b3a8970b4e151c3b005304ad37c2c01bcff80c78fffe486fc768",
+      "url": "https://github.com/encounter/dawn/releases/download/v20260807.225922/dawn-linux-x86_64.tar.gz"
+    },
+    {
+      "platform": "windows-amd64",
+      "sha256": "42a7a295c87b2e8a36312e2f84a5823aac63325e8e1d271bc7ced6f83bfb075f",
+      "url": "https://github.com/encounter/dawn/releases/download/v20260807.225922/dawn-windows-amd64.tar.gz"
+    },
+    {
+      "platform": "windows-arm64",
+      "sha256": "764e7d9a12e3c8743211087dd184cb76342cbba4946fb81e89d8136560df5d89",
+      "url": "https://github.com/encounter/dawn/releases/download/v20260807.225922/dawn-windows-arm64.tar.gz"
+    }
+  ]
+}

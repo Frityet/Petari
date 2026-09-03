@@ -1,0 +1,14 @@
+[
+  {
+    "test": "gx_z_scale_offset_render_test",
+    "returncode": 0
+  },
+  {
+    "test": "gx_depth_snapshot_render_test",
+    "returncode": 0
+  },
+  {
+    "test": "gx_copy_filter_render_test",
+    "returncode": 0
+  }
+]

@@ -1,0 +1,13 @@
+{
+  "notes/original-binder-native-20260903/showcase.png": {
+    "bytes": 11061548,
+    "sha256": "3e243886255537eddc1cac3be8b1844f4f5f223390f7f40896e1d810ac209bc9"
+  },
+  "notes/aurora-upstream-merge-20260903/showcase.png": {
+    "bytes": 11061548,
+    "sha256": "cacc98726a0c39d8ba374a761527f0d192b574d92207c5a03d2e953563953a86"
+  },
+  "identical_png_bytes": false,
+  "initial_merge_capture_sha256": "cacc98726a0c39d8ba374a761527f0d192b574d92207c5a03d2e953563953a86",
+  "final_capture_binary_sha256": "0d5eb1c14024fe52b5c212e0332aead8a1b806e54c8f2e2d4e0886bec52891fc"
+}

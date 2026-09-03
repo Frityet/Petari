@@ -1,0 +1,198 @@
+[
+  {
+    "target": "smg-pc-binder-kcl-mario-walk-tests",
+    "command": [
+      "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/smg-pc-binder-kcl-mario-walk-tests"
+    ],
+    "exit_code": 0,
+    "seconds": 0.51,
+    "real_disc": "../Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "tested_binary_sha256": "0507d861379e30eea02b275c1cc760ef9acf16b204e5aafca3e7a15667bdf193",
+    "log": "notes/aurora-upstream-merge-20260903/smg-pc-binder-kcl-mario-walk-tests-1.log"
+  },
+  {
+    "target": "smg-pc-aurora-native-tests",
+    "command": [
+      "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/smg-pc-aurora-native-tests"
+    ],
+    "exit_code": 0,
+    "seconds": 0.51,
+    "real_disc": "../Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "tested_binary_sha256": "9bdadce8c05aa7afac35fe99bb42606a852038ad1dce78fe6675f469a481cd3f",
+    "log": "notes/aurora-upstream-merge-20260903/smg-pc-aurora-native-tests-1.log"
+  },
+  {
+    "target": "smg-pc-original-camera-runtime-tests",
+    "command": [
+      "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/smg-pc-original-camera-runtime-tests"
+    ],
+    "exit_code": 0,
+    "seconds": 0.56,
+    "real_disc": "../Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "tested_binary_sha256": "042aba1713960872f8f84364612d6cf5130fa922cc9d18e740afc86128ec705d",
+    "log": "notes/aurora-upstream-merge-20260903/smg-pc-original-camera-runtime-tests-1.log"
+  },
+  {
+    "target": "smg-pc-only-camera-tests",
+    "command": [
+      "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/smg-pc-only-camera-tests"
+    ],
+    "exit_code": 0,
+    "seconds": 0.56,
+    "real_disc": "../Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "tested_binary_sha256": "15ca9f228dab248791c36d7ace8cdfdee229555d6d61c417f08699deeab00186",
+    "log": "notes/aurora-upstream-merge-20260903/smg-pc-only-camera-tests-1.log"
+  },
+  {
+    "target": "smg-pc-camera-view-interpolator-tests",
+    "command": [
+      "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/smg-pc-camera-view-interpolator-tests"
+    ],
+    "exit_code": 0,
+    "seconds": 0.51,
+    "real_disc": "../Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "tested_binary_sha256": "8c9577208c1cb8cd8b03f7924f82cee444d7c66d818791a2a38e8edb68d1b20c",
+    "log": "notes/aurora-upstream-merge-20260903/smg-pc-camera-view-interpolator-tests-1.log"
+  },
+  {
+    "target": "smg-pc-camera-view-service-tests",
+    "command": [
+      "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/smg-pc-camera-view-service-tests"
+    ],
+    "exit_code": 0,
+    "seconds": 0.51,
+    "real_disc": "../Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "tested_binary_sha256": "40d0f1e582875203e7d976e0c8067393369b4075817446cc5f44c1dd98cf0bcd",
+    "log": "notes/aurora-upstream-merge-20260903/smg-pc-camera-view-service-tests-1.log"
+  },
+  {
+    "target": "smg-pc-stage-start-camera-tests",
+    "command": [
+      "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/smg-pc-stage-start-camera-tests"
+    ],
+    "exit_code": 0,
+    "seconds": 0.55,
+    "real_disc": "../Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "tested_binary_sha256": "fed2eb0e7fbb7feca53505112d86e60cf5aafac6b115163921adc027b4daaf2d",
+    "log": "notes/aurora-upstream-merge-20260903/smg-pc-stage-start-camera-tests-1.log"
+  },
+  {
+    "target": "smg-pc-actor-event-camera-tests",
+    "command": [
+      "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/smg-pc-actor-event-camera-tests"
+    ],
+    "exit_code": 0,
+    "seconds": 0.66,
+    "real_disc": "../Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "tested_binary_sha256": "52186af1e69f1afd0f532b0bb209f1c55d2030216377f87d4dc64688655bd4c6",
+    "log": "notes/aurora-upstream-merge-20260903/smg-pc-actor-event-camera-tests-1.log"
+  },
+  {
+    "target": "smg-pc-stage-collision-registration-tests",
+    "command": [
+      "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/smg-pc-stage-collision-registration-tests"
+    ],
+    "exit_code": 0,
+    "seconds": 0.56,
+    "real_disc": "../Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "tested_binary_sha256": "f3cb33f2312dd460536d9ebda02d52ffc6aa30b6aff112f032eb71283d82b2bd",
+    "log": "notes/aurora-upstream-merge-20260903/smg-pc-stage-collision-registration-tests-1.log"
+  },
+  {
+    "target": "smg-pc-collision-triangle-filter-tests",
+    "command": [
+      "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/smg-pc-collision-triangle-filter-tests"
+    ],
+    "exit_code": 0,
+    "seconds": 0.55,
+    "real_disc": "../Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "tested_binary_sha256": "58adb796962236336a74e7dda2c1127e398004aea9eeec7b8106fb3d0f8ead47",
+    "log": "notes/aurora-upstream-merge-20260903/smg-pc-collision-triangle-filter-tests-1.log"
+  },
+  {
+    "target": "smg-pc-original-xanime-core-tests",
+    "command": [
+      "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/smg-pc-original-xanime-core-tests"
+    ],
+    "exit_code": 0,
+    "seconds": 0.51,
+    "real_disc": "../Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "tested_binary_sha256": "d80a41ecb070ae910cca2cde4f4f9128d3940680b98429aedb57657c59d03647",
+    "log": "notes/aurora-upstream-merge-20260903/smg-pc-original-xanime-core-tests-1.log"
+  },
+  {
+    "target": "smg-pc-original-j3d-joint-traversal-tests",
+    "command": [
+      "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/smg-pc-original-j3d-joint-traversal-tests"
+    ],
+    "exit_code": 0,
+    "seconds": 0.51,
+    "real_disc": "../Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "tested_binary_sha256": "538d538b98aaf7a7ee60733bdaa86a12f01fe46204434ea328833e00bb00afe2",
+    "log": "notes/aurora-upstream-merge-20260903/smg-pc-original-j3d-joint-traversal-tests-1.log"
+  },
+  {
+    "target": "smg-pc-gateway-spin-checkpoint-tests",
+    "command": [
+      "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/smg-pc-gateway-spin-checkpoint-tests"
+    ],
+    "exit_code": 0,
+    "seconds": 2.06,
+    "real_disc": "../Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "tested_binary_sha256": "6b58eec91f557dbaf28e49ab19d0abc793c3985033f437ae662587fe9faaf6ff",
+    "log": "notes/aurora-upstream-merge-20260903/smg-pc-gateway-spin-checkpoint-tests-1.log"
+  },
+  {
+    "target": "smg-pc-mario-gateway-walk-tests",
+    "command": [
+      "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/smg-pc-mario-gateway-walk-tests"
+    ],
+    "exit_code": 1,
+    "seconds": 6.2,
+    "real_disc": "../Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "tested_binary_sha256": "b5d745e708c1da9bfdb158d51af635377abe9731e07f0817a210b4320312dbb6",
+    "log": "notes/aurora-upstream-merge-20260903/smg-pc-mario-gateway-walk-tests-1.log"
+  },
+  {
+    "target": "smg-pc-showcase",
+    "command": [
+      "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/smg-pc-showcase",
+      "gateway",
+      "--disc",
+      "../Super Mario Wii - Galaxy Adventure (Korea).rvz",
+      "--smoke",
+      "--max-frames",
+      "360",
+      "--screenshot",
+      "/Users/frityet/Projects/petari/pc-port/notes/aurora-upstream-merge-20260903/showcase.png",
+      "--screenshot-frame",
+      "20"
+    ],
+    "exit_code": 0,
+    "seconds": 3.39,
+    "real_disc": "../Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "tested_binary_sha256": "4e7fd006b195b321495a60110c9cec803898116cefbb3f78614be1d72dc84877",
+    "log": "notes/aurora-upstream-merge-20260903/smg-pc-showcase-1.log"
+  },
+  {
+    "target": "smg-pc-showcase",
+    "command": [
+      "/Users/frityet/Projects/petari/pc-port/build/macosx/arm64/debug/smg-pc-showcase",
+      "gateway",
+      "--disc",
+      "../Super Mario Wii - Galaxy Adventure (Korea).rvz",
+      "--smoke",
+      "--max-frames",
+      "360",
+      "--screenshot",
+      "/Users/frityet/Projects/petari/pc-port/notes/aurora-upstream-merge-20260903/showcase.png",
+      "--screenshot-frame",
+      "20"
+    ],
+    "exit_code": 0,
+    "seconds": 3.32,
+    "real_disc": "../Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "tested_binary_sha256": "0d5eb1c14024fe52b5c212e0332aead8a1b806e54c8f2e2d4e0886bec52891fc",
+    "log": "notes/aurora-upstream-merge-20260903/smg-pc-showcase-2.log"
+  }
+]

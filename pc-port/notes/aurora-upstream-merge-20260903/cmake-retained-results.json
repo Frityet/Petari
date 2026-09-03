@@ -1,0 +1,30 @@
+[
+  {
+    "test": "gx_fifo_tests",
+    "returncode": 0
+  },
+  {
+    "test": "functional_test",
+    "returncode": 0
+  },
+  {
+    "test": "brlan_tests",
+    "returncode": 0
+  },
+  {
+    "test": "audio_tests",
+    "returncode": 1
+  },
+  {
+    "test": "wpad_tests",
+    "returncode": 0
+  },
+  {
+    "test": "rfl_character_resource_tests",
+    "returncode": 0
+  },
+  {
+    "test": "os_alloc_tests",
+    "returncode": 0
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "baseline": "deab54e62d85df6188667c6935244f0186e77be1",
+  "upstream": "f1189541e5d8b97fdf61946377853488d504d9df",
+  "common_ancestor": "1d10fa1bc502910a6336fdac32f31cd0ac39710d",
+  "incoming_commits": 21,
+  "preserved_sha256": {
+    "lib/dolphin/mtx/mtx.c": "c3dc3a05df7b37d4d0223517b60d1d832dcecdb5e9c98081568e85fe71286a5b",
+    "include/dolphin/mtx.h": "c37556357ae9044c2fb882dd3604658f6fc69252ab932ae834aee316a6d76814",
+    "include/dolphin/ppc_math.h": "f4406c470a4d77dfcdae26163cba1c5fedb51a2a5186571b26a66afd4164d082",
+    "include/functional.hpp": "9453bd81f37f11551aeedb4f63af2c6138e7e5bcd2a2e56abb4615a8a257442e"
+  },
+  "upstream_vec_c_sha256": "ca1dc9da58228ae6d58ed0f8933069c4cf1940f98a6d754a16c776be9de3d70c",
+  "source_invariants": "passed",
+  "scope": "Source retention and merge structure only; native build and runtime recorded separately."
+}

@@ -1,0 +1,12 @@
+{
+  "head": "db4197599eb5f6441c39761f8ad6c987998102b7",
+  "parents": [
+    "deab54e62d85df6188667c6935244f0186e77be1",
+    "f1189541e5d8b97fdf61946377853488d504d9df"
+  ],
+  "origin_branch": "codex/macos-compat",
+  "verified_origin_head": "db4197599eb5f6441c39761f8ad6c987998102b7",
+  "upstream_head": "f1189541e5d8b97fdf61946377853488d504d9df",
+  "upstream_is_ancestor": true,
+  "working_tree_clean": true
+}

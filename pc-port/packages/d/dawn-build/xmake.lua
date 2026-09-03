@@ -6,6 +6,16 @@ package("dawn-build")
     add_configs("shared", {description = "Use a shared Dawn library when one is provided", default = false, type = "boolean"})
 
     local hashes = {
+        ["v20260807.225922"] = {
+            ["android-aarch64"] = "76427f76b30071bdaea0a9a2c25a78650c33bebedf7e1a0e873084b0a61616c1",
+            ["darwin-arm64"] = "c36e2ef9c7b9d395462973dbb62076c246b9e550ec7bcfc224171e8d42b02b83",
+            ["darwin-x86_64"] = "50372516823ae5d701249bd0c21f0b1a0f18c1d568b21c068fdc202deea00dc4",
+            ["ios-arm64"] = "64e70875040099e24db3a40095461d43be0c553f0c347d63628f6d469c7d184b",
+            ["linux-aarch64"] = "581794bf00ae8dcd437ca092df126b1663617b546899cb4945ca7efdbf7a6e1e",
+            ["linux-x86_64"] = "2a4523426ab9b3a8970b4e151c3b005304ad37c2c01bcff80c78fffe486fc768",
+            ["windows-amd64"] = "42a7a295c87b2e8a36312e2f84a5823aac63325e8e1d271bc7ced6f83bfb075f",
+            ["windows-arm64"] = "764e7d9a12e3c8743211087dd184cb76342cbba4946fb81e89d8136560df5d89",
+        },
         ["v20260618.032059"] = {
             ["android-aarch64"] = "ee54be2311b714a7c079629654317b06737909aa30829c44c694907dec361060",
             ["darwin-arm64"] = "a9cc9903761e60cf70d7d771bd0c482be1943e273717782d71c33313afeb6080",

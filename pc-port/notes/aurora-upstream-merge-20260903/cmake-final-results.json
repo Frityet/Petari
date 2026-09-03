@@ -1,0 +1,74 @@
+[
+  {
+    "test": "gx_fifo_tests",
+    "returncode": 0
+  },
+  {
+    "test": "gfx_recording_tests",
+    "returncode": 0
+  },
+  {
+    "test": "time_tests",
+    "returncode": 0
+  },
+  {
+    "test": "os_time_tests",
+    "returncode": 0
+  },
+  {
+    "test": "io_tests",
+    "returncode": 0
+  },
+  {
+    "test": "render_worker_tests",
+    "returncode": 0
+  },
+  {
+    "test": "gx_destruction_state_tests",
+    "returncode": 0
+  },
+  {
+    "test": "gx_texture_cache_tests",
+    "returncode": 0
+  },
+  {
+    "test": "texture_replacement_streaming_tests",
+    "returncode": 0
+  },
+  {
+    "test": "functional_test",
+    "returncode": 0
+  },
+  {
+    "test": "brlan_tests",
+    "returncode": 0
+  },
+  {
+    "test": "audio_tests",
+    "returncode": 1
+  },
+  {
+    "test": "wpad_tests",
+    "returncode": 0
+  },
+  {
+    "test": "rfl_character_resource_tests",
+    "returncode": 0
+  },
+  {
+    "test": "os_alloc_tests",
+    "returncode": 0
+  },
+  {
+    "test": "gx_z_scale_offset_render_test",
+    "returncode": 0
+  },
+  {
+    "test": "gx_depth_snapshot_render_test",
+    "returncode": 0
+  },
+  {
+    "test": "gx_copy_filter_render_test",
+    "returncode": 0
+  }
+]

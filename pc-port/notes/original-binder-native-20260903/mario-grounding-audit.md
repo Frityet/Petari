@@ -116,11 +116,15 @@ again on the next frame.
    Activating the full update also requires original action and writeback,
    rather than retaining the PC `mainMove` and post-movement assignments.
 
-The generic geometry prerequisites are largely present: both original line
-query signatures, `getFirstPolyOnLineBFast`, `getCameraPolyFast`, actual
-triangle geometry/part matrices, and filter support in
-`compat/GameMapCollisionCompat.cpp`. These are useful dependencies, but they
-do not make the missing Mario/Xanime ownership optional.
+Available generic geometry prerequisites include both original line-query
+signatures, `getFirstPolyOnLineBFast`, `getCameraPolyFast`, triangle geometry,
+and filter support in `compat/GameMapCollisionCompat.cpp`. Collision-part
+matrix ownership is still missing: native registered KCL has no actual
+`CollisionParts` with current/previous matrices, and `Triangle::getBaseMtx`,
+`getBaseInvMtx`, and `getPrevBaseMtx` have declarations but no native bodies.
+The parent's new original force-movement delegation does not supply that
+matrix lifecycle. These gaps and missing Mario/Xanime ownership remain
+required dependencies.
 
 ## Next bounded task
 
@@ -135,7 +139,8 @@ An independently preparable source boundary is the original shadow-query
 pair `Mario::calcShadowPos` / `Mario::isIgnoreTriangle`, with the typed
 delegator lifecycle and a fixture explicitly calling the actual methods on
 the existing live Mario. It can test zero-velocity rays, slope/tangent
-filtering, transformed collision parts, and retained shadow metadata. Such a
-provider would be genuine preparation, not sufficient justification to
+filtering and retained shadow metadata. Transformed-part fixtures additionally
+require the real collision-part/matrix provider first. Such a provider would
+be genuine preparation, not sufficient justification to
 splice a new grounding rule into the PC update. No code for that follow-up
 was added during this audit.
