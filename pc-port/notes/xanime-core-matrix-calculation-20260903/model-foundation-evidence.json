@@ -1,0 +1,49 @@
+{
+  "scope": "Original compiler and exact source imports; native construction/runtime tested separately by parent",
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "imported_bodies": 7,
+  "model_and_material_headers": "byte-identical",
+  "shape_header_change": "unnecessary Shape include replaced by three forward declarations",
+  "vertex_ctor": {
+    "address": "0x804237f4",
+    "retail_size": 128,
+    "exact_bytes": true
+  },
+  "original_compiler_objdiff": {
+    "clear__12J3DModelDataFv": {
+      "match_percent": 100.0,
+      "retail_size": 24,
+      "compiled_size": 24
+    },
+    "__ct__12J3DModelDataFv": {
+      "match_percent": 78.62069,
+      "retail_size": 116,
+      "compiled_size": 96
+    },
+    "__dt__12J3DModelDataFv": {
+      "match_percent": 100.0,
+      "retail_size": 104,
+      "compiled_size": 104
+    },
+    "clear__16J3DMaterialTableFv": {
+      "match_percent": 100.0,
+      "retail_size": 40,
+      "compiled_size": 40
+    },
+    "__ct__16J3DMaterialTableFv": {
+      "match_percent": 100.0,
+      "retail_size": 52,
+      "compiled_size": 52
+    },
+    "__dt__16J3DMaterialTableFv": {
+      "match_percent": 100.0,
+      "retail_size": 64,
+      "compiled_size": 64
+    },
+    "__ct__13J3DVertexDataFv": {
+      "match_percent": 100.0,
+      "retail_size": 128,
+      "compiled_size": 128
+    }
+  }
+}

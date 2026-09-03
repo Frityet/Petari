@@ -95,6 +95,40 @@ namespace MR {
         return acosEx(cosine);
     }
 
+    void PSvecBlend(const register TVec3f* a1, const register TVec3f* a2, register TVec3f* a3, register f32 a4, register f32 a5) {
+#ifdef __MWERKS__
+        __asm {
+            psq_l     f0, 0(a1), 0, 0
+            psq_l     f3, 8(a1), 1, 0
+            ps_muls0  f4, f0, a4
+            psq_l     f0, 0(a2), 0, 0
+            ps_muls0  f3, f3, a4
+            psq_l     f1, 8(a2), 1, 0
+            ps_madds0 f4, f0, f2, f4
+            ps_madds0 f3, f1, f2, f3
+            psq_st    f4, 0(a3), 0, 0
+            psq_st    f3, 8(a3), 1, 0
+        }
+#else
+        const f32 fromX = a1->x;
+        const f32 fromY = a1->y;
+        const f32 fromZ = a1->z;
+        const f32 toX = a2->x;
+        const f32 toY = a2->y;
+        const f32 toZ = a2->z;
+        const f32 scaledX = fromX * a4;
+        const f32 scaledY = fromY * a4;
+        const f32 scaledZ = fromZ * a4;
+        a3->x = std::fma(toX, a5, scaledX);
+        a3->y = std::fma(toY, a5, scaledY);
+        a3->z = std::fma(toZ, a5, scaledZ);
+#endif
+    }
+
+    void vecBlend(const TVec3f& rFrom, const TVec3f& rTo, TVec3f* pDst, f32 rate) {
+        PSvecBlend(&rFrom, &rTo, pDst, 1.0f - rate, rate);
+    }
+
     void vecBlendNormal(const TVec3f& from, const TVec3f& to, TVec3f* destination, f32 rate) {
         auto left = TVec3f{};
         if (!isNearZero(from)) {

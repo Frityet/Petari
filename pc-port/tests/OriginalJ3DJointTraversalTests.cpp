@@ -1,3 +1,4 @@
+#include "Game/Animation/XanimeCore.hpp"
 #include "JSystem/J3DGraphAnimator/J3DAnimation.hpp"
 #include "JSystem/J3DGraphAnimator/J3DJoint.hpp"
 #include "JSystem/J3DGraphAnimator/J3DJointTree.hpp"
@@ -78,6 +79,7 @@ namespace {
         J3DJoint* joint = J3DMtxCalc::getJoint();
         J3DMtxBuffer* buffer = J3DMtxCalc::getMtxBuffer();
         J3DMtxCalc* calculator = J3DJoint::mCurrentMtxCalc;
+        J3DMtxCalc* system_calculator = j3dSys.mCurrentMtxCalc;
 
         ~Globals() {
             assign(J3DSys::mCurrentMtx, matrix);
@@ -86,6 +88,7 @@ namespace {
             J3DMtxCalc::setJoint(joint);
             J3DMtxCalc::setMtxBuffer(buffer);
             J3DJoint::mCurrentMtxCalc = calculator;
+            j3dSys.mCurrentMtxCalc = system_calculator;
         }
     };
 
@@ -490,7 +493,8 @@ namespace {
 
     void check_globals(const Globals& expected) {
         require(J3DMtxCalc::getMtxBuffer() == expected.buffer && J3DMtxCalc::getJoint() == expected.joint &&
-                    J3DJoint::mCurrentMtxCalc == expected.calculator,
+                    J3DJoint::mCurrentMtxCalc == expected.calculator &&
+                    j3dSys.mCurrentMtxCalc == expected.system_calculator,
                 "the owner restores every outer J3D traversal pointer");
         require(snapshot(J3DSys::mCurrentMtx) == expected.matrix,
                 "the owner restores every outer current-matrix bit");
@@ -506,7 +510,21 @@ namespace {
             J3DMtxCalc::setMtxBuffer(nullptr);
             J3DMtxCalc::setJoint(nullptr);
             J3DJoint::mCurrentMtxCalc = nullptr;
+            j3dSys.mCurrentMtxCalc = nullptr;
             throw std::runtime_error("deliberate joint callback exception");
+        }
+        return 0;
+    }
+
+    int observe_original_core(J3DJoint* joint, int phase) {
+        if (phase == 0) {
+            auto* core = dynamic_cast<XanimeCore*>(J3DJoint::mCurrentMtxCalc);
+            require(core != nullptr && j3dSys.mCurrentMtxCalc == core,
+                    "renderer traversal invokes the actual game animation core and publishes its original system pointer");
+            require(core->mTrackCount == 1 && core->_6 == 0 && core->mTrackList[0]._0 != nullptr,
+                    "the real core consumes a bound original transform animation in its default calculation mode");
+            near(core->mTrackList[0]._0->getFrame(), *static_cast<float*>(joint->mCallBackUserData),
+                 "the core samples the frame owned by this calculation");
         }
         return 0;
     }
@@ -522,6 +540,7 @@ namespace {
         J3DMtxCalc::setJoint(&outer_joint);
         J3DMtxCalc::setMtxBuffer(&outer_buffer);
         J3DJoint::mCurrentMtxCalc = &outer_calculator;
+        j3dSys.mCurrentMtxCalc = &outer_calculator;
         const Globals expected;
         auto input = owner_input();
         smgpc::compat::OriginalJ3dJointTree owner(input.info, input.joints);
@@ -540,7 +559,11 @@ namespace {
             animation.mAttribute = 2;
             animation.mFrameMax = 4;
             for (const auto [frame, x] : std::array<std::array<float, 2>, 3>{{{-1, 20}, {1, 25}, {4, 40}}}) {
+                auto expected_frame = frame;
+                owner.joint_tree().getRootNode()->mCallBackUserData = &expected_frame;
+                owner.joint_tree().getRootNode()->setCallBack(observe_original_core);
                 const auto matrices = owner.calculate(&animation, frame);
+                owner.joint_tree().getRootNode()->mCallBackUserData = nullptr;
                 for (const auto& matrix : matrices) {
                     near(matrix.m[3], x, "owner sampling consumes raw frames without adding renderer loop policy");
                 }
@@ -627,8 +650,9 @@ namespace {
                 smgpc::compat::OriginalJ3dJointTree owner(input.info, input.joints);
 
                 // The same authored local transforms can come from JNT1 or an
-                // original Key sampler. Both must receive the caller's base
-                // matrix/scale through the real calculator initialization.
+                // original Key sampler. Animated traversal uses XanimeCore's
+                // own initialization and scale rules, including its distinct
+                // Softimage behavior; bind traversal uses original J3D NoAnm.
                 J3DAnmTransformKey animation;
                 std::array<J3DAnmTransformKeyTable, 12> tables{};
                 std::array<float, 6> scales{root_scale[0], root_scale[1], root_scale[2], 3, 5, 7};
@@ -657,12 +681,20 @@ namespace {
                     } else {
                         root = {0, 0, 0.5F, 92, 1, 0, 0, 202, 0, 2, 0, 324};
                     }
+                    if (motion != nullptr && mode == 1) {
+                        // Core uses Maya initialization for all three modes.
+                        // Its SI path scales the local matrix and translation
+                        // before concatenation, then scales the stored output.
+                        root = cancel_scale ? Matrix{0, 0, 0.5F, 68, 1, 0, 0, 204, 0, 2, 0, 492}
+                                            : Matrix{0, 0, 1568, 68, 36, 0, 0, 204, 0, 800, 0, 492};
+                    }
                     matrix_near(matrices[0].m, root,
                                 "caller base translation, rotation and separate nonuniform scale reach the original selected mode");
                     require(owner.matrix_buffer().getScaleFlag(0) == (cancel_scale && mode != 2 ? 1 : 0),
                             "the actual base scale participates in original accumulated/local scale predicates");
                     if (cancel_scale) {
-                        const Matrix child = mode == 0 ? Matrix{-12, 0, 0, 116, 0, 0, 14, 210, 0, 40, 0, 364}
+                        const Matrix child = motion != nullptr && mode == 1 ? Matrix{-4.5F, 0, 0, 71, 0, 0, 49, 208, 0, 50, 0, 502}
+                                             : mode == 0 ? Matrix{-12, 0, 0, 116, 0, 0, 14, 210, 0, 40, 0, 364}
                                              : mode == 1 ? Matrix{-3, 0, 0, 98, 0, 0, 7, 206, 0, 5, 0, 329}
                                                          : Matrix{-1.5F, 0, 0, 95, 0, 0, 7, 206, 0, 10, 0, 334};
                         matrix_near(matrices[1].m, child,

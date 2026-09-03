@@ -3,6 +3,9 @@ target("smg-pc-game")
     add_cxxflags("-Wno-register")
     add_cxxflags("-include " .. path.join(os.projectdir(), "src/compat/MetrowerksStdCompat.hpp"), { force = true })
     add_files("**.cpp")
+    -- Retail XanimeCore uses unfused scalar arithmetic; its paired SDK calls
+    -- preserve their explicit fused instructions in the compatibility layer.
+    add_files("Animation/XanimeCore.cpp", {cxxflags = "-ffp-contract=off"})
     -- The exact Player constructor closure is mirrored under src/Game/Player,
     -- but only MarioHolder has its native provider closure in production.
     -- Xmake's broad-remove/explicit-re-add order drops the re-added object from

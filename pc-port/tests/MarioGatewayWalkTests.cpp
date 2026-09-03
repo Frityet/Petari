@@ -1033,6 +1033,17 @@ namespace {
 
         set_host_swing_key(window, true);
         const auto locked_swing_frame = run_frame(++release_end_frame);
+        if (!(aurora::wpad_service().is_core_swing(WPAD_CHAN0) &&
+              aurora::wpad_service().is_core_swing_triggered(WPAD_CHAN0) &&
+              actor->_F00 && !actor->_EEB && !actor->isRequestRush() &&
+              locked_swing_frame.bck_name == "Wait")) {
+            std::cerr << "[swing diagnostic] held=" << aurora::wpad_service().is_core_swing(WPAD_CHAN0)
+                      << " triggered=" << aurora::wpad_service().is_core_swing_triggered(WPAD_CHAN0)
+                      << " actor_edge=" << static_cast<int>(actor->_F00)
+                      << " permitted=" << static_cast<int>(actor->_EEB)
+                      << " rush=" << actor->isRequestRush()
+                      << " bck=" << locked_swing_frame.bck_name << '\n';
+        }
         require(aurora::wpad_service().is_core_swing(WPAD_CHAN0) &&
                     aurora::wpad_service().is_core_swing_triggered(WPAD_CHAN0) &&
                     actor->_F00 && !actor->_EEB && !actor->isRequestRush() &&

@@ -1,0 +1,119 @@
+{
+  "scope": "Original-compiler instructions and source/retail arithmetic graph; no native runtime claim",
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "matching_original_and_native_bodies": 4,
+  "psblend_operations": [
+    "load_xy",
+    "load_z",
+    "multiply_scalar_lane0",
+    "load_xy",
+    "multiply_scalar_lane0",
+    "load_z",
+    "fused_multiply_add_scalar_lane0",
+    "fused_multiply_add_scalar_lane0",
+    "store_xy",
+    "store_z",
+    "return"
+  ],
+  "psblend_output_graph": {
+    "x": [
+      "fma32",
+      [
+        "to",
+        "x"
+      ],
+      "weightTo",
+      [
+        "mul32",
+        [
+          "from",
+          "x"
+        ],
+        "weightFrom"
+      ]
+    ],
+    "y": [
+      "fma32",
+      [
+        "to",
+        "y"
+      ],
+      "weightTo",
+      [
+        "mul32",
+        [
+          "from",
+          "y"
+        ],
+        "weightFrom"
+      ]
+    ],
+    "z": [
+      "fma32",
+      [
+        "to",
+        "z"
+      ],
+      "weightTo",
+      [
+        "mul32",
+        [
+          "from",
+          "z"
+        ],
+        "weightFrom"
+      ]
+    ]
+  },
+  "psblend_alias_cases": [
+    "distinct",
+    "destination=from",
+    "destination=to",
+    "from=to=destination"
+  ],
+  "compiler": {
+    "psblend": {
+      "address": "0x803e75c8",
+      "size": 44,
+      "all_instructions_equal_modulo_relocations": true
+    },
+    "blend": {
+      "address": "0x803e75f4",
+      "size": 16,
+      "all_instructions_equal_modulo_relocations": true
+    },
+    "set-scalar": {
+      "address": "0x803ecfb0",
+      "size": 16,
+      "all_instructions_equal_modulo_relocations": true
+    },
+    "set-vector": {
+      "address": "0x801b5bf0",
+      "size": 16,
+      "all_instructions_equal_modulo_relocations": true
+    }
+  },
+  "numerical_witness": {
+    "rounded_first_product": {
+      "inputs_float_bits": [
+        "3f800001",
+        "bf800000",
+        "3f800001",
+        "3f800002"
+      ],
+      "rounded_first_product_bits": "3f800002",
+      "result_bits": "00000000",
+      "first_product_must_round": true
+    },
+    "fused_second_product": {
+      "inputs_float_bits": [
+        "3f800000",
+        "3f800001",
+        "bf800000",
+        "3f7ffffe"
+      ],
+      "result_bits": "a8800000",
+      "second_product_must_fuse": true
+    }
+  }
+}

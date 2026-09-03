@@ -7,6 +7,9 @@
 #include <cmath>
 #include <cstring>
 
+void JMAEulerToQuat(s16, s16, s16, Quaternion*);
+void JMAQuatLerp(const Quaternion*, const Quaternion*, f32, Quaternion*);
+
 void JMAMTXApplyScale(const Mtx, Mtx, f32, f32, f32);
 
 inline f32 JMAFastSqrt(f32 input) {

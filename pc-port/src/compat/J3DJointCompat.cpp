@@ -4,7 +4,7 @@
 #include "JSystem/JMath/JMath.hpp"
 #include "JSystem/JMath/JMATrigonometric.hpp"
 
-#include <bit>
+#include <dolphin/ppc_math.h>
 
 // Match the original JSystem floating-point contraction setting.
 #if defined(__clang__)
@@ -273,54 +273,6 @@ void J3DGetTranslateRotateMtx(s16 rx, s16 ry, s16 rz, f32 tx, f32 ty, f32 tz, Mt
     dst[2][3] = tz;
 }
 
-namespace {
-    struct ReciprocalEstimateEntry {
-        u32 base;
-        u32 decrement;
-    };
-
-    // Gekko reciprocal-estimate hardware table. These numeric measurements
-    // are also recorded by Dolphin's Common/FloatUtils.cpp fres_expected.
-    constexpr ReciprocalEstimateEntry reciprocalEstimateTable[32] = {
-        {0x7ff800, 0x3e1}, {0x783800, 0x3a7}, {0x70ea00, 0x371}, {0x6a0800, 0x340},
-        {0x638800, 0x313}, {0x5d6200, 0x2ea}, {0x579000, 0x2c4}, {0x520800, 0x2a0},
-        {0x4cc800, 0x27f}, {0x47ca00, 0x261}, {0x430800, 0x245}, {0x3e8000, 0x22a},
-        {0x3a2c00, 0x212}, {0x360800, 0x1fb}, {0x321400, 0x1e5}, {0x2e4a00, 0x1d1},
-        {0x2aa800, 0x1be}, {0x272c00, 0x1ac}, {0x23d600, 0x19b}, {0x209e00, 0x18b},
-        {0x1d8800, 0x17c}, {0x1a9000, 0x16e}, {0x17ae00, 0x15b}, {0x14f800, 0x15b},
-        {0x124400, 0x143}, {0x0fbe00, 0x143}, {0x0d3800, 0x12d}, {0x0ade00, 0x12d},
-        {0x088400, 0x11a}, {0x065000, 0x11a}, {0x041c00, 0x108}, {0x020c00, 0x106},
-    };
-}  // namespace
-
 f32 JMath::fastReciprocal(f32 value) {
-    // Original fastReciprocal is one fres instruction. Work on the actual
-    // float input bits so signed zero and quieted NaN payloads survive.
-    const u32 bits = std::bit_cast<u32>(value);
-    const u32 sign = bits & 0x80000000U;
-    u32 fraction = bits & 0x007FFFFFU;
-    int exponent = static_cast<int>((bits >> 23) & 0xFFU);
-    if (exponent == 255) {
-        return std::bit_cast<f32>(fraction != 0 ? bits | 0x00400000U : sign);
-    }
-    if (exponent == 0) {
-        if (fraction == 0) {
-            return std::bit_cast<f32>(sign | 0x7F800000U);
-        }
-        if (fraction < 0x00200000U) {
-            return std::bit_cast<f32>(sign | 0x7F7FFFFFU);
-        }
-        const u32 shift = fraction < 0x00400000U ? 2U : 1U;
-        fraction = (fraction << shift) & 0x007FFFFFU;
-        exponent = 1 - static_cast<int>(shift);
-    }
-    // fres flushes its small estimates to signed zero starting at 2^126.
-    if (exponent >= 253) {
-        return std::bit_cast<f32>(sign);
-    }
-    const ReciprocalEstimateEntry& entry = reciprocalEstimateTable[fraction >> 18];
-    const u32 step = (fraction >> 8) & 0x3FFU;
-    const u32 estimatedFraction = entry.base - ((entry.decrement * step + 1U) >> 1);
-    const u32 estimatedExponent = static_cast<u32>(253 - exponent) << 23;
-    return std::bit_cast<f32>(sign | estimatedExponent | estimatedFraction);
+    return ppc_fres(value);
 }

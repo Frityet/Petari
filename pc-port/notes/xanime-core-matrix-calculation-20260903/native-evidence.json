@@ -1,0 +1,168 @@
+{
+  "scope": "Original XanimeCore native integration, real-disc movement and original camera regressions; full XanimePlayer and J3DModel not active",
+  "runs": [
+    {
+      "name": "original-j3d-joint-traversal",
+      "exit_code": 0,
+      "log": "original-j3d-joint-traversal.log",
+      "sha256": "1f28591ed8882a30a3dbe878e7c1148954d8c9118bc21e96007c452fe62273eb",
+      "outcome": [
+        "9/9 original J3D joint-traversal groups passed"
+      ]
+    },
+    {
+      "name": "aurora-native",
+      "exit_code": 0,
+      "log": "aurora-native.log",
+      "sha256": "223b3e04b7e9f8a544a87a3931ddfefe3dba32cd6d38d3051cc4b46160b2127a",
+      "outcome": [
+        "28 Aurora-native test(s) passed"
+      ]
+    },
+    {
+      "name": "only-camera",
+      "exit_code": 0,
+      "log": "only-camera.log",
+      "sha256": "b46c790ef182ae7789b383050d33590819a0601e1cf2077e474371490a548a04",
+      "outcome": [
+        "9/9 OnlyCamera tests passed"
+      ]
+    },
+    {
+      "name": "camera-view-interpolator",
+      "exit_code": 0,
+      "log": "camera-view-interpolator.log",
+      "sha256": "4210296ee90f05d85975fb08bee59162f277f3fba7017b9bdc3731309e461ac5",
+      "outcome": [
+        "7/7 tests passed"
+      ]
+    },
+    {
+      "name": "camera-view-service",
+      "exit_code": 0,
+      "log": "camera-view-service.log",
+      "sha256": "6d34ea49f1a1f18d684c473905eb135c29b8ac4233ac1be764cca951f59defce",
+      "outcome": [
+        "6/6 tests passed"
+      ]
+    },
+    {
+      "name": "stage-start-camera",
+      "exit_code": 0,
+      "log": "stage-start-camera.log",
+      "sha256": "713acf10d0e010a13716c26550246867f867a40957a1075f451e7695cee8283a",
+      "outcome": [
+        "14 stage-start camera test(s) passed"
+      ]
+    },
+    {
+      "name": "actor-event-camera",
+      "exit_code": 0,
+      "log": "actor-event-camera.log",
+      "sha256": "4fd9c61ea0211edfa089320582b0e5cb12569e5d4b3110dbf394ff4ff4f6105b",
+      "outcome": [
+        "23 actor event-camera test(s) passed"
+      ]
+    },
+    {
+      "name": "original-camera-runtime",
+      "exit_code": 0,
+      "log": "original-camera-runtime.log",
+      "sha256": "ba4ff51fa9959ea5d7eb221b85142526cf89c89e732c6a0feec63033c13cc2a2",
+      "outcome": []
+    },
+    {
+      "name": "fixed-position-real-or-absent",
+      "exit_code": 0,
+      "log": "fixed-position-real-or-absent.log",
+      "sha256": "a632d66553a5e90da898f57d8e1e3b00b0965410f8c5e52a80c437141714473e",
+      "outcome": [
+        "5 FixedPosition real-or-absent tests passed"
+      ]
+    },
+    {
+      "name": "npc-actor-real-or-absent",
+      "exit_code": 0,
+      "log": "npc-actor-real-or-absent.log",
+      "sha256": "c39e8ad2e2e1288d9d008169d5f31f0827d27116c8963f0f1ff3e98885c73ade",
+      "outcome": [
+        "NPCActor real-or-absent tests passed: 6/6"
+      ]
+    },
+    {
+      "name": "live-actor-util-real-or-absent",
+      "exit_code": 0,
+      "log": "live-actor-util-real-or-absent.log",
+      "sha256": "2f9d599d2e39c635a1b0fcaae7b8bbffe4b09ec6f1ca3601c51920882a5f22c0",
+      "outcome": [
+        "LiveActorUtil real-or-absent tests passed: 6/6"
+      ]
+    },
+    {
+      "name": "mario-gateway-walk",
+      "exit_code": 1,
+      "log": "mario-gateway-walk.log",
+      "sha256": "f4d46fb288ae282c289f74b744e47838174b88c134b2aa3e4cf8587750cf4ed5",
+      "outcome": [
+        "[fail] real Gateway Mario stand/walk proof: a real host swing edge must be sampled but denied before entitlement"
+      ]
+    },
+    {
+      "name": "gateway-spin-checkpoint",
+      "exit_code": 0,
+      "log": "gateway-spin-checkpoint.log",
+      "sha256": "4405c5bce53812deaeb029a09cd8d41caff47eb5c7d5b81a4014ac7944824793",
+      "outcome": []
+    },
+    {
+      "name": "mario-gateway-walk-diagnostic-rerun",
+      "exit_code": 0,
+      "log": "walk-diagnostic.log",
+      "sha256": "46afaee49aabdbb0e5793dc66df82ef5b2e5f8c6ce95eadcadc78d89711037b7",
+      "production_changes_since_failure": false,
+      "outcome": [
+        "[camera] tracked watch moved 115.644 units; raw authored orbit and FOV retained; rendered view offset=217.777",
+        "[proof] disc=../Super Mario Wii - Galaxy Adventure (Korea).rvz;start=(14460,-12791.1,6059.91);kcl_triangles=14521;stand_prism=4642;floor=NoSlip;sound=Lawn;walk_distance=325.684;bck=Wait->Run->Wait;release_frame=297;run_packets=12;recreated=1;lease_retired_before_mario=1;retry=rejected",
+        "[ok] real Gateway Mario stand/walk/release proof"
+      ]
+    },
+    {
+      "name": "original-xanime-core",
+      "exit_code": 0,
+      "log": "core-tests.log",
+      "sha256": "ac67d6d02d3667c4198c9f3a011ce156a82590c68dd8b63a3acb0b7920306855",
+      "outcome": [
+        "9/9 original XanimeCore system groups passed"
+      ]
+    }
+  ],
+  "initial_failure": "First run failed a compound SDL swing assertion after passing movement/camera/release checks. Test-only failure diagnostics were added; rerun passed with unchanged production code. Exact failed component was not recorded in initial run.",
+  "visual_review": "walk-diagnostic.png inspected: visible animated Mario on authored Gateway terrain with original camera view; full scene fidelity not established.",
+  "screenshot_sha256": "45f4f700f6c5f553b7a633f1d004532e90b2876917a17ca570d8785b35335d7e",
+  "builds": [
+    {
+      "log": "build-native.log",
+      "exit_code": 0,
+      "sha256": "c148e06a6bf54903e694c58188b338ba172a5c1bd17c1ee080b52aedf9a56787"
+    },
+    {
+      "log": "build-walk-diagnostic.log",
+      "exit_code": 0,
+      "sha256": "d7e27e5b6d86107fc104dcf9eb6cc41869dd942f0cda8c5865ad5773d4e2d6d8"
+    },
+    {
+      "log": "build-core-tests.log",
+      "exit_code": 0,
+      "sha256": "61d0a96b0736df41948d7d9231ab2d9161c804202bd5660d07f145504c91ac8b"
+    },
+    {
+      "log": "build-final.log",
+      "exit_code": 0,
+      "sha256": "85d1651a1d55eac723cfcb9deedaea78db3f20e8fcfa5013733c5f9a9d26ef58",
+      "scope": "Refresh final runnable macOS walk slice and Core tests after trailing-whitespace cleanup in the copied JMath helper; no semantic changes."
+    }
+  ],
+  "source_recovery_commit": "734a1bdd7",
+  "aurora_commit": "deab54e",
+  "final_coverage": "All 14 distinct runtime targets have passing runs; initial walk SDL assertion failure retained above. 9 XanimeCore groups, 9 J3D traversal groups, 28 shared native tests, 59 camera cases, original camera runtime, 5 FixedPosition, 6 NPC, 6 live actor, real-disc walk and spin checkpoints."
+}
