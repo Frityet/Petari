@@ -858,6 +858,12 @@ namespace smgpc::runtime {
         _scene_camera_pose = _camera_system.apply_shake(camera_pose);
     }
 
+    void RuntimeContext::refresh_scene_camera_pose() {
+        if (!_freecam_enabled) {
+            _scene_camera_pose = _camera_system.effective_camera_pose();
+        }
+    }
+
     void RuntimeContext::record_copy_event(render::CopyEvent event) {
         event.index = _copy_events.size();
         if (event.event_index == 0U) {

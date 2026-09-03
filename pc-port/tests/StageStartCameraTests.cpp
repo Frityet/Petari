@@ -34,6 +34,7 @@
 #include <exception>
 #include <iostream>
 #include <limits>
+#include <memory>
 #include <span>
 #include <stdexcept>
 #include <string>
@@ -674,8 +675,9 @@ namespace {
                 "a repeated true start must retain the zero interpolation count");
         camera.end_event_camera(0, "DemoMeetTico", true, -1);
         require(camera.effective_camera_pose().has_value() &&
-                    same_pose(*camera.effective_camera_pose(), start_pose),
-                "ending DemoMeetTico after the Guide1 restart must reveal the exact retained start pose");
+                    same_pose(*camera.effective_camera_pose(), *guide_pose_before_restart) &&
+                    same_pose(*camera.game_camera_pose(), start_pose),
+                "ending DemoMeetTico must retain the last rendered view until the original finish interpolation advances");
 
         MR::startStartPosCamera(false);
         require(camera.start_position_camera_zero_interpolation_frames() == 5U,
@@ -1137,6 +1139,11 @@ namespace {
         const auto scheduler_binding = smgpc::runtime::SceneSchedulerBinding(scheduler);
         auto dvd = smgpc::runtime::DvdFileSystemService{"/"};
         auto demo = smgpc::compat::DemoSceneRuntime(dvd, {});
+        auto event_scene_holder = SceneObjHolder{};
+        auto event_scene_binding = smgpc::scene::SceneObjHolderBinding(event_scene_holder);
+        require(event_scene_holder.create(SceneObj_AreaObjContainer) != nullptr &&
+                    event_scene_holder.create(SceneObj_PlanetGravityManager) != nullptr,
+                "the original stage view and matrix target require real area and gravity scene registries");
         const auto root = smgpc::camera::resolve_stage_start_camera(dvd, "HeavensDoorGalaxy", 1, 0, 0);
         require(root.status == smgpc::camera::StageStartCameraResolveStatus::Resolved && root.camera.has_value(),
                 "real scenario 1 should resolve its root StartInfo camera");
@@ -1210,11 +1217,6 @@ namespace {
         const auto *pipe_camera = event_catalog.find(0, "土管固有出現054");
         require(pipe_camera != nullptr && pipe_camera->camera_param.camera_type == "CAM_TYPE_XZ_PARA",
                 "the real root pipe event must supply an authored XZ_PARA controller");
-        auto event_scene_holder = SceneObjHolder{};
-        auto event_scene_binding = smgpc::scene::SceneObjHolderBinding(event_scene_holder);
-        require(event_scene_holder.create(SceneObj_AreaObjContainer) != nullptr &&
-                    event_scene_holder.create(SceneObj_PlanetGravityManager) != nullptr,
-                "the original matrix event target requires real area and gravity scene registries");
         camera.attach_event_camera_catalog(event_catalog);
         camera.declare_event_camera(0, "土管固有出現054");
         auto event_target = CameraTargetMtx("PersistentEventPauseTarget");
@@ -1266,6 +1268,7 @@ namespace {
     struct TestCase {
         std::string_view name;
         void (*run)();
+        bool owns_scene = false;
     };
 
 }  // namespace
@@ -1284,13 +1287,21 @@ int main() {
         TestCase{"authored game-camera priority and restart", test_authored_game_camera_priority_and_restart},
         TestCase{"authored game-camera owner retirement", test_authored_game_camera_owner_retirement},
         TestCase{"start-camera errors and scene generations", test_start_camera_errors_and_scene_generations},
-        TestCase{"retail placement-zone SceneObj", test_retail_placement_zone_scene_object},
-        TestCase{"optional real-disc HeavensDoor camera", test_optional_real_disc_heavensdoor_camera},
+        TestCase{"retail placement-zone SceneObj", test_retail_placement_zone_scene_object, true},
+        TestCase{"optional real-disc HeavensDoor camera", test_optional_real_disc_heavensdoor_camera, true},
     };
 
     auto failures = 0;
     for (const auto &test : tests) {
         try {
+            auto holder = std::unique_ptr<SceneObjHolder>{};
+            auto binding = std::unique_ptr<smgpc::scene::SceneObjHolderBinding>{};
+            if (!test.owns_scene) {
+                holder = std::make_unique<SceneObjHolder>();
+                binding = std::make_unique<smgpc::scene::SceneObjHolderBinding>(*holder);
+                require(holder->create(SceneObj_AreaObjContainer) != nullptr,
+                        "original stage camera views require the real AreaObj registry");
+            }
             test.run();
             std::cout << "[ok] " << test.name << '\n';
         } catch (const std::exception &error) {

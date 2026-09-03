@@ -15,6 +15,7 @@
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Camera/CameraTargetObj.hpp"
 #include "Game/Camera/CameraPoseParam.hpp"
+#include "Game/Camera/CameraViewInterpolator.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/System/WPadRumbleData.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
@@ -2748,6 +2749,57 @@ namespace smgpc::runtime {
             _shake_offset_y += camera_singly_vertical_offset(CAMERA_SHAKE_AMPLITUDES[index], *step);
         }
         _event_cameras.begin_frame(frame_index, is_camera_director_paused());
+        update_camera_view();
+    }
+
+    void CameraSystemService::update_camera_view() {
+        if (is_camera_director_paused() || _last_view_frame == _frame_index) {
+            return;
+        }
+        const CameraPoseParam *pose = _event_cameras.view_pose_param();
+        const CameraTargetObj *target = nullptr;
+        auto flags = smgpc::camera::OriginalCameraViewFlags{};
+        auto projection = smgpc::camera::CameraPose{};
+        auto native_pose = std::optional<CameraPoseParam>{};
+        if (pose != nullptr) {
+            target = _event_cameras.view_target();
+            flags = _event_cameras.view_flags();
+            projection = *_event_cameras.active_pose();
+        } else if (!_event_cameras.active_key() && !active_programmable_camera_pose() &&
+                   _authored_game_camera && _game_camera_pose) {
+            pose = &_authored_game_camera->controller->pose_param();
+            target = _authored_game_camera->controller->target_object();
+            flags = _authored_game_camera->controller->view_flags();
+            projection = *_game_camera_pose;
+        } else if (!_event_cameras.active_key() && !active_programmable_camera_pose() &&
+                   _camera_view && _game_camera_pose) {
+            // An event can return to a manually supplied scene camera too.
+            // Adapt its pose into the same original finish interpolation.
+            projection = *_game_camera_pose;
+            native_pose.emplace();
+            native_pose->mPos.set(projection.eye.x, projection.eye.y, projection.eye.z);
+            native_pose->mWatchPos.set(projection.watch.x, projection.watch.y, projection.watch.z);
+            native_pose->mUpVec.set(projection.up.x, projection.up.y, projection.up.z);
+            native_pose->mWatchUpVec.set(native_pose->mUpVec);
+            native_pose->mFovy = projection.fovy_degrees;
+            pose = &*native_pose;
+        } else {
+            return;
+        }
+        if (!_camera_view) {
+            _camera_view = std::make_unique<smgpc::camera::OriginalCameraView>();
+        }
+        if (const auto frames = _event_cameras.take_interpolation_request()) {
+            _camera_view->set_interpolation(*frames, _start_position_camera_active);
+        }
+        _view_camera_pose = _camera_view->update(*pose, target, projection, flags);
+        _last_view_frame = _frame_index;
+    }
+
+    void CameraSystemService::clear_camera_view() {
+        _camera_view.reset();
+        _view_camera_pose.reset();
+        _last_view_frame.reset();
     }
 
     void CameraSystemService::set_shake_projection_dimensions(float screen_width, float efb_height) {
@@ -2815,7 +2867,11 @@ namespace smgpc::runtime {
 
     void CameraSystemService::detach_event_camera_catalog(
         const smgpc::camera::EventCameraCatalog &catalog) noexcept {
+        const auto had_event = _event_cameras.active_key().has_value();
         _event_cameras.detach_catalog(catalog);
+        if (had_event && !_event_cameras.active_key()) {
+            clear_camera_view();
+        }
         update_game_camera_activation();
     }
 
@@ -2836,6 +2892,7 @@ namespace smgpc::runtime {
         std::int32_t interpolation_frames, float speed) {
         const CameraPoseParam *seed = nullptr;
         std::optional<CameraPoseParam> native_seed;
+        std::optional<smgpc::camera::CameraPose> native_projection;
         if (_authored_game_camera.has_value() && !active_programmable_camera_pose().has_value()) {
             seed = &_authored_game_camera->controller->pose_param();
         } else if (const auto visible = effective_camera_pose(); visible.has_value()) {
@@ -2847,9 +2904,23 @@ namespace smgpc::runtime {
             native_seed->mUpVec.set(visible->up.x, visible->up.y, visible->up.z);
             native_seed->mWatchUpVec.set(native_seed->mUpVec);
             native_seed->mFovy = visible->fovy_degrees;
+            // Keep projection shake in the final presentation phase.
+            native_projection = active_programmable_camera_pose().value_or(
+                _view_camera_pose.value_or(_game_camera_pose.value_or(*visible)));
             seed = &*native_seed;
         }
         _event_cameras.start(zone_id, name, target, interpolation_frames, speed, seed);
+        if (!_camera_view && native_seed) {
+            // A native/manual camera still supplies the scene's previous
+            // view when the original event manager takes ownership.
+            _camera_view = std::make_unique<smgpc::camera::OriginalCameraView>();
+            _camera_view->set_interpolation(0U);
+            _view_camera_pose = _camera_view->update(*native_seed, nullptr, *native_projection);
+        }
+        if (_camera_view) {
+            // CameraDirector::startEvent permits the next chunk's request.
+            _camera_view->original().mIsInterpolationOff = false;
+        }
         update_game_camera_activation();
     }
 
@@ -2857,6 +2928,16 @@ namespace smgpc::runtime {
         std::int32_t zone_id, std::string_view name, bool force,
         std::int32_t interpolation_frames) {
         _event_cameras.end(zone_id, name, force, interpolation_frames);
+        if (_camera_view) {
+            if (const auto frames = _event_cameras.take_interpolation_request()) {
+                _camera_view->set_interpolation(*frames, _start_position_camera_active);
+            }
+            if (!_event_cameras.active_key()) {
+                // CameraDirector::endEvent protects the finish interpolation
+                // from the game manager's first chunk request after pop().
+                _camera_view->original().mIsInterpolationOff = true;
+            }
+        }
         update_game_camera_activation();
     }
 
@@ -2950,6 +3031,18 @@ namespace smgpc::runtime {
         // five camera calculations. The true Guide1 restart is immediate.
         _start_position_camera_zero_interpolation_frames =
             start_position_active ? 5U : 0U;
+        _camera_view = std::make_unique<smgpc::camera::OriginalCameraView>();
+        // Publish the initial scene view before requesting any transition.
+        // This supplies the previous CameraContext matrix that a live
+        // CameraDirector already has when its manager changes chunks.
+        _camera_view->set_interpolation(0U, start_position_active);
+        _view_camera_pose = _camera_view->update(
+            _authored_game_camera->controller->pose_param(),
+            _authored_game_camera->controller->target_object(), restored_pose,
+            _authored_game_camera->controller->view_flags());
+        _last_view_frame.reset();
+        _camera_view->set_interpolation(static_cast<std::uint32_t>(_stage_start_camera->camera_param.extra.cam_int),
+                                         start_position_active);
         return owner_generation;
     }
 
@@ -3028,8 +3121,9 @@ namespace smgpc::runtime {
             _authored_game_camera->controller->reset(
                 *target);
         }
-        auto calculation = _authored_game_camera->controller->calc(
-            *target);
+        auto calculation = _authored_game_camera->player_target != nullptr
+                               ? _authored_game_camera->controller->calc(*_authored_game_camera->player_target->camera_target())
+                               : _authored_game_camera->controller->calc(*target);
 
         // The stage owns projection geometry. Tracking changes only the
         // authored view and FOV; effective-event/free-camera poses are never
@@ -3048,6 +3142,9 @@ namespace smgpc::runtime {
         _game_camera_pose = pose;
         if (_start_position_camera_active &&
             _start_position_camera_zero_interpolation_frames > 0U) {
+            if (_camera_view) {
+                _camera_view->set_interpolation(0U, true);
+            }
             --_start_position_camera_zero_interpolation_frames;
         }
     }
@@ -3064,6 +3161,7 @@ namespace smgpc::runtime {
         _start_position_camera_active = false;
         _start_position_camera_zero_interpolation_frames = 0U;
         _game_camera_pose.reset();
+        clear_camera_view();
     }
 
     void CameraSystemService::start_start_position_camera(bool immediate) {
@@ -3097,6 +3195,7 @@ namespace smgpc::runtime {
         _start_position_camera_active = false;
         _start_position_camera_zero_interpolation_frames = 0U;
         _game_camera_pose = pose;
+        clear_camera_view();
     }
 
     void CameraSystemService::clear_game_camera_pose() {
@@ -3106,6 +3205,7 @@ namespace smgpc::runtime {
         _start_position_camera_active = false;
         _start_position_camera_zero_interpolation_frames = 0U;
         _game_camera_pose.reset();
+        clear_camera_view();
     }
 
     std::optional<smgpc::camera::CameraPose> CameraSystemService::set_programmable_camera_param(std::string_view name, const smgpc::camera::CameraParamVec3 &watch,
@@ -3221,6 +3321,10 @@ namespace smgpc::runtime {
     }
 
     std::optional<smgpc::camera::CameraPose> CameraSystemService::effective_camera_pose() const {
+        if (_view_camera_pose && (active_event_camera_key() ||
+                                  (_game_camera_pose && !active_programmable_camera_pose()))) {
+            return apply_shake(*_view_camera_pose);
+        }
         if (const auto event = active_event_camera_pose()) {
             return apply_shake(*event);
         }

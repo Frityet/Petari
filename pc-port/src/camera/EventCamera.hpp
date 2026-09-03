@@ -118,6 +118,10 @@ namespace smgpc::camera {
         [[nodiscard]] std::int32_t event_frames(std::int32_t zone_id,
                                                 std::string_view name) const;
         [[nodiscard]] std::size_t actor_camera_info_count() const noexcept;
+        [[nodiscard]] const CameraPoseParam *view_pose_param() const;
+        [[nodiscard]] const CameraTargetObj *view_target() const;
+        [[nodiscard]] OriginalCameraViewFlags view_flags() const;
+        [[nodiscard]] std::optional<std::uint32_t> take_interpolation_request();
 
     private:
         struct ActiveEvent {
@@ -149,6 +153,7 @@ namespace smgpc::camera {
         std::optional<EventCameraTarget> _last_target{};
         std::unique_ptr<CameraTargetActor> _actor_target;
         std::optional<std::uint64_t> _last_frame;
+        std::optional<std::uint32_t> _interpolation_request;
     };
 
 }  // namespace smgpc::camera

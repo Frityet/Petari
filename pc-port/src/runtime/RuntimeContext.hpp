@@ -142,6 +142,7 @@ namespace smgpc::runtime {
 
         void begin_frame(const render::FrameContext &frame_context);
         void set_scene_camera_pose(const smgpc::camera::CameraPose &camera_pose);
+        void refresh_scene_camera_pose();
         void record_copy_event(render::CopyEvent event);
         void draw_3d_normal(const smgpc::camera::CameraPose &camera_pose);
         void draw_3d_normal();

@@ -1,0 +1,107 @@
+{
+  "verification": "Two unchanged Game files; recovered root/PC getQuat mirror; two unchanged inline matrix helpers and one explicitly adapted original quaternion helper. No new object match.",
+  "files": [
+    {
+      "source": "src/Game/Camera/CameraViewInterpolator.cpp",
+      "destination": "pc-port/src/Game/Camera/CameraViewInterpolator.cpp",
+      "sha256": "ad02e5500579508532fbf37bd668365497d17f21ad06d03df4492356f3993d25"
+    },
+    {
+      "source": "include/Game/Camera/CameraViewInterpolator.hpp",
+      "destination": "pc-port/src/Game/Camera/CameraViewInterpolator.hpp",
+      "sha256": "ab8d511bea09bfb5cc28c2cb3df1a08f241310d7471eb0dacf89a035ccad4b68"
+    },
+    {
+      "source": "src/JSystem/JGeometry/TMatrix.cpp",
+      "destination": "pc-port/src/JSystem/JGeometry/TMatrix.cpp",
+      "sha256": "c9adae35391a500ebdba1d34003e3b1bc92dedb5d7a9065e970ca7a1ab4c2da2"
+    }
+  ],
+  "functions": [
+    {
+      "source": "libs/JSystem/include/JSystem/JGeometry/TMatrix.hpp",
+      "destination": "pc-port/src/JSystem/JGeometry/TMatrix.hpp",
+      "signature": "f32 getRotate(TVec3f& rAxis) const",
+      "sha256": "65aaecbe0818a9d22dfd05cd6c15ad87b944ed5b8d5a410b73ae6225266d8ab1"
+    },
+    {
+      "source": "libs/JSystem/include/JSystem/JGeometry/TMatrix.hpp",
+      "destination": "pc-port/src/JSystem/JGeometry/TMatrix.hpp",
+      "signature": "void setRotate(const TVec3f& v1, const TVec3f& v2)",
+      "sha256": "199705771e861d3a5261c6050a62c5ee33ee89899b4838228f79507e8ad9f28f"
+    },
+    {
+      "source": "libs/JSystem/include/JSystem/JGeometry/TVec.hpp",
+      "destination": "pc-port/src/JSystem/JGeometry/TQuat.hpp",
+      "signature": "f32 getRotate(TVec3< T >& rAxis)",
+      "sha256": "81f05f10e7193359543a3137cd36db729ace03109040f8924528add0913f48b2",
+      "replacements": [
+        [
+          "f32 length = toTvec()->squared();",
+          "const TVec3< T > vector(this->x, this->y, this->z);\n            f32 length = vector.squared();"
+        ],
+        [
+          "rAxis.scale(lengthinv, *toTvec());",
+          "rAxis.scale(lengthinv, vector);"
+        ]
+      ],
+      "reason": "Use a typed xyz value instead of aliasing the host quaternion object as a TVec3; preserve scalar operations."
+    }
+  ],
+  "dol": {
+    "path": "build/compat-math-oracle/main.dol",
+    "sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+    "functions": [
+      {
+        "name": "getQuat",
+        "address": "0x800173a0",
+        "size": "0x22c",
+        "sha256": "5066798a4272044a488ec505db8db909f23592054ac43ecf3f23d39f6a2f4fc7"
+      },
+      {
+        "name": "lookAtCenter",
+        "address": "0x800b3f54",
+        "size": "0xc4",
+        "sha256": "ed0667f252f556166fdc629dcd285fdacdc1c0f2445de7b7866b5ebb5d0bfab0"
+      },
+      {
+        "name": "setRotate_from_to",
+        "address": "0x80330b38",
+        "size": "0xcc",
+        "sha256": "f715ab730ae9d406cbee71d3e12af4df42a843e43c7c12f0c5f5d6b73ba643dc"
+      }
+    ],
+    "constants": [
+      {
+        "address": "0x806b7d30",
+        "bytes": "3f800000",
+        "value": 1.0
+      },
+      {
+        "address": "0x806b7d34",
+        "bytes": "00000000",
+        "value": 0.0
+      },
+      {
+        "address": "0x806b7d40",
+        "bytes": "3f000000",
+        "value": 0.5
+      }
+    ]
+  },
+  "existing_numeric_boundary": "PC TUtil<f32> sqrt and inv_sqrt use native std::sqrt rather than the retail reciprocal-square-root estimate/refinement. Unchanged in this import.",
+  "compiler_verification": {
+    "toolchain": "GC/3.0a3",
+    "flags": "configure.py cflags_game; RMGK01; VERSION=0",
+    "status": "Root TMatrix.cpp compiled without diagnostics.",
+    "verifier": "verify-getquat-object.py",
+    "evidence": "getQuat-compiler-evidence.json",
+    "comparison": "140 emitted instructions versus 139 retail; all 13 symbolic control paths and 4 output formulas match after 13 verified relocations; not byte-identical."
+  },
+  "include_resolution": {
+    "source_include": "JSystem/JGeometry/TMatrix.hpp",
+    "resolved_header": "libs/JSystem/include/JSystem/JGeometry/TMatrix.hpp",
+    "evidence": "include-resolution-evidence.json",
+    "result": "Original compiler succeeds using tracked library headers with no generated include path; emitted function bytes are unchanged."
+  }
+}

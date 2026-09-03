@@ -2,6 +2,7 @@
 
 #include "Game/AreaObj/AreaForm.hpp"
 #include "Game/AreaObj/AreaObj.hpp"
+#include "Game/AreaObj/CameraRepulsiveArea.hpp"
 #include "Game/AreaObj/CubeCamera.hpp"
 #include "Game/AreaObj/LightArea.hpp"
 #include "Game/AreaObj/LightAreaHolder.hpp"
@@ -23,6 +24,11 @@ namespace smgpc::scene {
         template <typename T, AreaForm::Type FormType>
         [[nodiscard]] NameObj *create_area_obj(const char *name) {
             return new T(FormType, name);
+        }
+
+        template <typename T>
+        [[nodiscard]] NameObj *create_named_area_obj(const char *name) {
+            return new T(name);
         }
 
         [[nodiscard]] AreaObjMgr *create_area_obj_manager(s32 capacity, const char *name) {
@@ -133,6 +139,22 @@ namespace smgpc::scene {
                     .manager_name = "LensFlareArea",
                     .retail_manager_order = 33,
                     .manager_capacity = 0x40,
+                    .manager_creator = create_area_obj_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "CameraRepulsiveSphere",
+                    .object_creator = create_named_area_obj<CameraRepulsiveSphere>,
+                    .manager_name = "CameraRepulsiveArea",
+                    .retail_manager_order = 34,
+                    .manager_capacity = 0x80,
+                    .manager_creator = create_area_obj_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "CameraRepulsiveCylinder",
+                    .object_creator = create_named_area_obj<CameraRepulsiveCylinder>,
+                    .manager_name = "CameraRepulsiveArea",
+                    .retail_manager_order = 34,
+                    .manager_capacity = 0x80,
                     .manager_creator = create_area_obj_manager,
                 },
                 AreaObjPlacementDescriptor{

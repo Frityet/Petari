@@ -5,10 +5,13 @@
 #include "Game/LiveActor/ActorCameraInfo.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Util/GamePadUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "camera/CameraPose.hpp"
 #include "camera/EventCamera.hpp"
 #include "compat/CameraUtilCompat.hpp"
+#include "compat/CameraViewRuntime.hpp"
 #include "compat/J3dSystemCompat.hpp"
 #include "core/RenderTypes.hpp"
 #include "runtime/RuntimeContext.hpp"
@@ -25,6 +28,7 @@
 namespace {
     constexpr auto cPi = 3.14159265358979323846F;
     TPos3f sCameraViewMatrix;
+    TPos3f sCameraInverseViewMatrix;
     TProj3f sCameraProjectionMatrix;
 
     struct CameraBasis {
@@ -126,9 +130,7 @@ namespace {
     }
 
     void sync_active_event_camera_pose(smgpc::runtime::RuntimeContext& runtime) {
-        if (const auto pose = runtime.camera_system().active_event_camera_pose()) {
-            runtime.set_scene_camera_pose(*pose);
-        }
+        runtime.refresh_scene_camera_pose();
     }
 
     [[nodiscard]] smgpc::camera::EventCameraTarget event_target(
@@ -296,6 +298,9 @@ namespace MR {
     }
 
     const TPos3f& getCameraViewMtx() {
+        if (const auto *output = smgpc::compat::bound_camera_view_output()) {
+            return output->view;
+        }
         const auto &pose = require_camera_pose();
         const auto basis = camera_basis(pose);
         const auto back = scale(basis.forward, -1.0F);
@@ -315,20 +320,66 @@ namespace MR {
         return sCameraViewMatrix;
     }
 
+    const TPos3f& getCameraInvViewMtx() {
+        if (const auto *output = smgpc::compat::bound_camera_view_output()) {
+            return output->inverse_view;
+        }
+        sCameraInverseViewMatrix.invert(getCameraViewMtx());
+        return sCameraInverseViewMatrix;
+    }
+
+    void setCameraViewMtx(const TPos3f& matrix, bool, bool, const TVec3f&) {
+        if (auto *output = smgpc::compat::bound_camera_view_output()) {
+            // Original CameraContext::setViewMtx; the extra arguments are
+            // unused by the retail context as well.
+            output->view.set(matrix);
+            output->inverse_view.invert(matrix);
+            return;
+        }
+        auto pose = require_camera_pose();
+        auto inverse = TPos3f{};
+        inverse.invert(matrix);
+        auto eye = TVec3f{};
+        auto up = TVec3f{};
+        auto back = TVec3f{};
+        inverse.getTrans(eye);
+        inverse.getYDir(up);
+        inverse.getZDir(back);
+        pose.eye = camera_vec3(eye);
+        pose.watch = camera_vec3(eye - back);
+        pose.up = camera_vec3(up);
+        smgpc::runtime::RuntimeContext::instance().set_scene_camera_pose(pose);
+    }
+
     const TVec3f getCamPos() {
-        return tv_vec3(require_camera_pose().eye);
+        TPos3f viewMtx = getCameraInvViewMtx();
+        TVec3f pos;
+        MR::extractMtxTrans(viewMtx, &pos);
+        return pos;
     }
 
     TVec3f getCamXdir() {
-        return tv_vec3(camera_basis(require_camera_pose()).right);
+        TPos3f viewMtx = getCameraInvViewMtx();
+        TVec3f dir;
+        viewMtx.getXDir(dir);
+        MR::normalizeOrZero(&dir);
+        return dir;
     }
 
     TVec3f getCamYdir() {
-        return tv_vec3(camera_basis(require_camera_pose()).up);
+        TPos3f viewMtx = getCameraInvViewMtx();
+        TVec3f dir;
+        viewMtx.getYDir(dir);
+        MR::normalizeOrZero(&dir);
+        return dir;
     }
 
     TVec3f getCamZdir() {
-        return tv_vec3(camera_basis(require_camera_pose()).forward);
+        TPos3f viewMtx = getCameraInvViewMtx();
+        TVec3f dir;
+        viewMtx.getZDir(dir);
+        MR::normalizeOrZero(&dir);
+        return -dir;
     }
 
     f32 getAspect() {
@@ -344,7 +395,20 @@ namespace MR {
     }
 
     f32 getFovy() {
+        if (const auto *output = smgpc::compat::bound_camera_view_output()) {
+            return output->fovy;
+        }
         return require_camera_pose().fovy_degrees;
+    }
+
+    void setFovy(f32 fovy) {
+        if (auto *output = smgpc::compat::bound_camera_view_output()) {
+            output->fovy = fovy;
+            return;
+        }
+        auto pose = require_camera_pose();
+        pose.fovy_degrees = fovy;
+        smgpc::runtime::RuntimeContext::instance().set_scene_camera_pose(pose);
     }
 
     void startStartPosCamera(bool immediate) {
@@ -475,14 +539,7 @@ namespace MR {
         if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
             runtime->camera_system().end_event_camera(
                 pInfo->mZoneID, event_name(pEventName), endForce, frames);
-            const auto pose = runtime->camera_system().active_event_camera_pose()
-                                  ? runtime->camera_system().active_event_camera_pose()
-                              : runtime->camera_system().active_programmable_camera_pose()
-                                  ? runtime->camera_system().active_programmable_camera_pose()
-                                  : runtime->camera_system().game_camera_pose();
-            if (pose.has_value()) {
-                runtime->set_scene_camera_pose(*pose);
-            }
+            runtime->refresh_scene_camera_pose();
         }
     }
 

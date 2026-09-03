@@ -98,6 +98,18 @@ namespace smgpc::camera {
             return frames < 0 ? 60 : frames;
         }
 
+        [[nodiscard]] std::uint32_t finish_interpolation_frames(
+            const CameraParamChunk &param, std::int32_t requested_frames) {
+            // CameraManEvent::sendFinishInterpolateFrame.
+            auto frames = param.event_enable_end_erp_frame != 0
+                              ? static_cast<std::int32_t>(param.event_cam_end_int)
+                              : (param.event_enable_erp_frame != 0 ? param.extra.cam_int : -1);
+            if (frames < 0 && requested_frames >= 0) {
+                frames = requested_frames;
+            }
+            return static_cast<std::uint32_t>(frames < 0 ? 60 : frames);
+        }
+
     }  // namespace
 
     EventCameraCatalog EventCameraCatalog::from_stage_tables(
@@ -212,6 +224,7 @@ namespace smgpc::camera {
         _last_target.reset();
         _actor_target.reset();
         _last_frame.reset();
+        _interpolation_request.reset();
         _animations.clear();
         _actor_camera_infos.clear();
         _declared_static.clear();
@@ -339,17 +352,23 @@ namespace smgpc::camera {
                                  bool force,
                                  std::int32_t interpolation_frames) {
         (void)force;
-        (void)interpolation_frames;
+        const auto request_finish = [&] {
+            const auto *definition = _catalog != nullptr ? _catalog->find(zone_id, name) : nullptr;
+            _interpolation_request = finish_interpolation_frames(
+                definition != nullptr ? definition->camera_param : CameraParamChunk{}, interpolation_frames);
+        };
         if (_pending.has_value() && _pending->key.zone_id == zone_id &&
             _pending->key.name == name) {
             // cleanChunkFIFO clears both entries when the pending entry
             // matches in the supported event priority slot.
+            request_finish();
             _pending.reset();
             _active.reset();
             return;
         }
         if (_active.has_value() && _active->key.zone_id == zone_id &&
             _active->key.name == name) {
+            request_finish();
             _active.reset();
         }
     }
@@ -397,6 +416,11 @@ namespace smgpc::camera {
             target.movement();
         }
         if (_pending) {
+            const auto *definition = _catalog != nullptr
+                                         ? _catalog->find(_pending->key.zone_id, _pending->key.name) : nullptr;
+            _interpolation_request = static_cast<std::uint32_t>(start_interpolation_frames(
+                definition != nullptr ? definition->camera_param : CameraParamChunk{},
+                _pending->interpolation_frames));
             if (_pending->rebind_matrix_on_first_calc) {
                 // checkReset re-applies the new chunk's target argument after
                 // movement, leaving this invalidation for the following phase.
@@ -484,6 +508,31 @@ namespace smgpc::camera {
 
     std::size_t EventCameraRuntime::actor_camera_info_count() const noexcept {
         return _actor_camera_infos.size();
+    }
+
+    const CameraPoseParam *EventCameraRuntime::view_pose_param() const {
+        if (!_active) {
+            return nullptr;
+        }
+        if (_active->animation_controller) {
+            return &_active->animation_controller->pose_param();
+        }
+        return _active->controller ? &_active->controller->pose_param() : nullptr;
+    }
+
+    const CameraTargetObj *EventCameraRuntime::view_target() const {
+        return view_pose_param() != nullptr ? &selected_target() : nullptr;
+    }
+
+    OriginalCameraViewFlags EventCameraRuntime::view_flags() const {
+        if (_active && _active->animation_controller) {
+            return _active->animation_controller->view_flags();
+        }
+        return _active && _active->controller ? _active->controller->view_flags() : OriginalCameraViewFlags{};
+    }
+
+    std::optional<std::uint32_t> EventCameraRuntime::take_interpolation_request() {
+        return std::exchange(_interpolation_request, std::nullopt);
     }
 
     CameraPose EventCameraRuntime::calculate_active_pose(ActiveEvent &active, CameraTargetObj &target) {

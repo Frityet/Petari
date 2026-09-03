@@ -94,6 +94,19 @@ namespace JGeometry {
             out.set(std::atan2(sin_x, cos_x), std::asin(sin_y), std::atan2(sin_z, cos_z));
         }
 
+        f32 getRotate(TVec3< T >& rAxis) {
+            const TVec3< T > vector(this->x, this->y, this->z);
+            f32 length = vector.squared();
+            if (length <= JGeometry::TUtil< f32 >::epsilon()) {
+                rAxis.zero();
+                return 0.0f;
+            }
+
+            f32 lengthinv = JGeometry::TUtil< f32 >::inv_sqrt(length);
+            rAxis.scale(lengthinv, vector);
+            return JGeometry::TUtil< f32 >::acos(this->w) * 2.0f;
+        }
+
         void setRotate(const TVec3f& from, const TVec3f& to, T rate) {
             const auto axis = from.cross(to);
             const auto cross_length = axis.length();

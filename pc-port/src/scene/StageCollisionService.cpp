@@ -28,6 +28,19 @@ namespace smgpc::scene {
 
         StageCollisionService* sActiveService = nullptr;
         std::atomic<std::uint64_t> sNextTriangleIndex{};
+        std::atomic<std::uint64_t> sNextServiceGeneration{1U};
+
+        [[nodiscard]] std::uint64_t next_service_generation() {
+            auto generation = sNextServiceGeneration.load(std::memory_order_relaxed);
+            while (generation != 0U) {
+                const auto next = generation == std::numeric_limits<std::uint64_t>::max() ? 0U : generation + 1U;
+                if (sNextServiceGeneration.compare_exchange_weak(
+                        generation, next, std::memory_order_relaxed)) {
+                    return generation;
+                }
+            }
+            throw std::overflow_error("Stage collision service generations are exhausted.");
+        }
 
         [[nodiscard]] std::uint16_t read_be16(std::span<const std::uint8_t> bytes, std::size_t offset) {
             if (offset + 2U > bytes.size()) {
@@ -417,6 +430,9 @@ namespace smgpc::scene {
 
     bool StageCollisionRegistrationState::enabled() const noexcept {
         return !_released && _enabled && (_inactive_flag == nullptr || !*_inactive_flag);
+    }
+
+    StageCollisionService::StageCollisionService() : _generation(next_service_generation()) {
     }
 
     StageCollisionService::~StageCollisionService() {
@@ -964,6 +980,10 @@ namespace smgpc::scene {
             .vertices = {triangle.vertices[0], triangle.vertices[1], triangle.vertices[2]},
             .normals = triangle.source_normals,
         };
+    }
+
+    std::uint64_t StageCollisionService::generation() const noexcept {
+        return _generation;
     }
 
     std::uint64_t StageCollisionService::revision() const noexcept {

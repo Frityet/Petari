@@ -1850,6 +1850,7 @@ namespace {
     struct TestCase {
         std::string_view name;
         void (*run)();
+        bool owns_scene = false;
     };
 
 }  // namespace
@@ -1875,10 +1876,10 @@ int main() {
         TestCase{"same animation request preserves cursor", test_same_animation_request_preserves_cursor},
         TestCase{"failed start is transactional",
                  test_failed_start_is_transactional},
-        TestCase{"original matrix target movement and gravity", test_original_matrix_target_movement_and_gravity},
-        TestCase{"matrix and object target camera phases", test_matrix_and_object_target_camera_phases},
-        TestCase{"original actor target axes and state", test_original_actor_target_axes_and_state},
-        TestCase{"actor target phases and retained orientation", test_actor_target_camera_phases_and_retained_orientation},
+        TestCase{"original matrix target movement and gravity", test_original_matrix_target_movement_and_gravity, true},
+        TestCase{"matrix and object target camera phases", test_matrix_and_object_target_camera_phases, true},
+        TestCase{"original actor target axes and state", test_original_actor_target_axes_and_state, true},
+        TestCase{"actor target phases and retained orientation", test_actor_target_camera_phases_and_retained_orientation, true},
         TestCase{"matrix target lifetime and ABA",
                  test_matrix_target_lifetime_and_aba},
         TestCase{"optional real-disc event camera resources",
@@ -1888,6 +1889,10 @@ int main() {
     auto failures = 0;
     for (const auto &test : tests) {
         try {
+            // Original CameraViewInterpolator always queries its real scene
+            // AreaObj registry. The target-specific tests own their own scene.
+            auto scene = test.owns_scene ? std::unique_ptr<CameraTargetScene>{}
+                                        : std::make_unique<CameraTargetScene>();
             test.run();
             std::cout << "[ok] " << test.name << '\n';
         } catch (const std::exception &error) {

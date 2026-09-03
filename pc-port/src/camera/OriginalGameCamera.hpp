@@ -1,6 +1,7 @@
 #pragma once
 
 #include "camera/StageStartCamera.hpp"
+#include "camera/OriginalCameraView.hpp"
 #include "compat/CameraLocalUtilRuntime.hpp"
 
 #include <memory>
@@ -38,6 +39,8 @@ namespace smgpc::camera {
         [[nodiscard]] StageCameraPoseCalculation calc(CameraTargetObj &target);
         [[nodiscard]] StageCameraPoseCalculation calculation() const;
         [[nodiscard]] const CameraPoseParam &pose_param() const;
+        [[nodiscard]] const CameraTargetObj *target_object() const;
+        [[nodiscard]] OriginalCameraViewFlags view_flags() const;
 
     private:
         struct Impl;

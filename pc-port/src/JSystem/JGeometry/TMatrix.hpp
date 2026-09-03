@@ -176,8 +176,16 @@ namespace JGeometry {
             this->mMtx[2][2] = z_direction.z;
         }
 
+        void getQuat(TQuat4f& rDest) const;
+
         void setQuat(const TQuat4f& quaternion) {
             quaternion.makeMtx(this->mMtx);
+        }
+
+        f32 getRotate(TVec3f& rAxis) const {
+            TQuat4f rot;
+            getQuat(rot);
+            return (f64)rot.getRotate(rAxis);
         }
 
         void getEulerXYZ(TVec3f &destination) const {
@@ -241,6 +249,12 @@ namespace JGeometry {
             this->mMtx[2][0] = (one_minus_cosine * x * z) - (sine * y);
             this->mMtx[2][1] = (one_minus_cosine * y * z) + (sine * x);
             this->mMtx[2][2] = cosine + (one_minus_cosine * z * z);
+        }
+
+        void setRotate(const TVec3f& v1, const TVec3f& v2) {
+            TQuat4f q;
+            q.setRotate(v1, v2);
+            setQuat(q);
         }
     };
 

@@ -2,6 +2,7 @@
 
 #include "camera/CameraAnimation.hpp"
 #include "camera/StageStartCamera.hpp"
+#include "camera/OriginalCameraView.hpp"
 
 #include <memory>
 
@@ -28,6 +29,7 @@ namespace smgpc::camera {
         [[nodiscard]] CameraPose calc(CameraTargetObj &target);
         [[nodiscard]] CameraPose pose() const;
         [[nodiscard]] const CameraPoseParam &pose_param() const;
+        [[nodiscard]] OriginalCameraViewFlags view_flags() const;
         [[nodiscard]] float current_frame() const;
         [[nodiscard]] bool is_end() const;
         void set_speed(float speed);

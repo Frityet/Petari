@@ -108,6 +108,14 @@ namespace smgpc::camera {
 
     CameraPose OriginalAnimationCamera::pose() const { return _impl->pose(); }
     const CameraPoseParam &OriginalAnimationCamera::pose_param() const { return *_impl->man_pose; }
+
+    OriginalCameraViewFlags OriginalAnimationCamera::view_flags() const {
+        return {
+            .interpolation_off = _impl->camera.isInterpolationOff(),
+            .collision_off = _impl->camera.isCollisionOff(),
+            .correcting_position_off = _impl->camera.isCorrectingErpPositionOff(),
+        };
+    }
     float OriginalAnimationCamera::current_frame() const { return _impl->camera.mCurrentFrame; }
     bool OriginalAnimationCamera::is_end() const { return _impl->camera.isAnimEnd(); }
 

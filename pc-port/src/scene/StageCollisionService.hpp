@@ -94,7 +94,7 @@ namespace smgpc::scene {
     // close actors continue to call their normal MR map-query boundary.
     class StageCollisionService final {
     public:
-        StageCollisionService() = default;
+        StageCollisionService();
         ~StageCollisionService();
 
         StageCollisionService(const StageCollisionService&) = delete;
@@ -131,6 +131,9 @@ namespace smgpc::scene {
                                                            bool skip_initial_check = false,
                                                            const StageCollisionTriangleFilter& filter = {}) const;
         [[nodiscard]] std::optional<StageCollisionSurface> surface(std::uint32_t triangle_index) const;
+        // A new lifetime receives a distinct identity even when the allocator
+        // reuses an address and the resource revision starts over.
+        [[nodiscard]] std::uint64_t generation() const noexcept;
         [[nodiscard]] std::uint64_t revision() const noexcept;
 
         [[nodiscard]] const StageCollisionStats& stats() const;
@@ -188,6 +191,7 @@ namespace smgpc::scene {
         std::vector<BvhNode> _nodes{};
         std::vector<Source> _sources{};
         StageCollisionStats _stats{};
+        const std::uint64_t _generation;
         std::uint64_t _revision = 0U;
         bool _built = false;
     };

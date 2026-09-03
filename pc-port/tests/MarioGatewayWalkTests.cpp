@@ -856,14 +856,20 @@ namespace {
             authored_camera.eye.x - authored_camera.watch.x,
             authored_camera.eye.y - authored_camera.watch.y,
             authored_camera.eye.z - authored_camera.watch.z};
+        const auto raw_camera = *runtime.camera_system().game_camera_pose();
         const auto tracked_eye_offset = TVec3f{
-            camera.eye.x - camera.watch.x,
-            camera.eye.y - camera.watch.y,
-            camera.eye.z - camera.watch.z};
+            raw_camera.eye.x - raw_camera.watch.x,
+            raw_camera.eye.y - raw_camera.watch.y,
+            raw_camera.eye.z - raw_camera.watch.z};
         require(tracked_eye_offset.epsilonEquals(authored_eye_offset, 0.01F),
-                "parallel camera tracking must preserve its authored orbit and distance");
+                "the original Parallel manager must preserve its authored orbit and distance before view interpolation");
+        const auto rendered_eye = TVec3f{camera.eye.x, camera.eye.y, camera.eye.z};
+        const auto raw_eye = TVec3f{raw_camera.eye.x, raw_camera.eye.y, raw_camera.eye.z};
+        require((rendered_eye - raw_eye).length() > 0.01F,
+                "walking must render the original interpolator's persistent view rather than the raw camera manager pose");
         std::cout << "[camera] tracked watch moved " << camera_displacement.length()
-                  << " units; authored orbit and FOV retained\n";
+                  << " units; raw authored orbit and FOV retained; rendered view offset="
+                  << (rendered_eye - raw_eye).length() << "\n";
 
         const auto& walk_triangle = actor->mBinder->mGroundInfo.mParentTriangle;
         require(FloorCode{}.getCode(&walk_triangle) == CollisionFloorCode_NoSlip &&

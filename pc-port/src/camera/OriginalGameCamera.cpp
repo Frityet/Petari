@@ -64,6 +64,7 @@ namespace smgpc::camera {
                 original_target = &target;
             }
             const auto binding = smgpc::compat::ScopedCameraTargetBinding(*camera, *original_target, mode);
+            selected_target = original_target;
             camera->reset();
             if (mode == smgpc::compat::OriginalCameraMode::Event) {
                 // CameraManEvent resets and calculates in the same phase,
@@ -153,6 +154,7 @@ namespace smgpc::camera {
         float default_fovy_degrees;
         smgpc::compat::OriginalCameraMode mode;
         PublishedCameraTarget target;
+        CameraTargetObj *selected_target = nullptr;
         CameraMan man;
         std::unique_ptr<Camera> camera;
         // These Game objects use stage-arena allocation and do not release
@@ -229,6 +231,7 @@ namespace smgpc::camera {
     }
 
     StageCameraPoseCalculation OriginalGameCamera::calc(CameraTargetObj &target) {
+        _impl->selected_target = &target;
         if (!_impl->parameter_applied_for_reset) {
             _impl->apply_parameter();
         }
@@ -249,6 +252,20 @@ namespace smgpc::camera {
 
     const CameraPoseParam &OriginalGameCamera::pose_param() const {
         return *_impl->man_pose;
+    }
+
+    const CameraTargetObj *OriginalGameCamera::target_object() const {
+        return _impl->selected_target;
+    }
+
+    OriginalCameraViewFlags OriginalGameCamera::view_flags() const {
+        // The shared CameraManGame / CameraManEvent flag queries combine
+        // the original controller's virtual result with its authored chunk.
+        return {
+            .interpolation_off = _impl->camera->isInterpolationOff() || _impl->camera_param.is_anti_blur_off(),
+            .collision_off = _impl->camera->isCollisionOff() || _impl->camera_param.is_collision_off(),
+            .correcting_position_off = _impl->camera->isCorrectingErpPositionOff(),
+        };
     }
 
 }  // namespace smgpc::camera

@@ -743,6 +743,8 @@ namespace smgpc::runtime {
             smgpc::camera::ResolvedStageStartCamera camera,
             bool start_position_active);
         void update_authored_game_camera();
+        void update_camera_view();
+        void clear_camera_view();
         void update_game_camera_activation();
         [[nodiscard]] ProgrammableCameraEventState *find_programmable_event(std::string_view name);
         [[nodiscard]] const ProgrammableCameraEventState *find_programmable_event(std::string_view name) const;
@@ -766,6 +768,9 @@ namespace smgpc::runtime {
         bool _start_position_camera_active = false;
         std::uint32_t _start_position_camera_zero_interpolation_frames = 0U;
         std::optional<smgpc::camera::CameraPose> _game_camera_pose;
+        std::unique_ptr<smgpc::camera::OriginalCameraView> _camera_view;
+        std::optional<smgpc::camera::CameraPose> _view_camera_pose;
+        std::optional<std::uint64_t> _last_view_frame;
         smgpc::camera::EventCameraRuntime _event_cameras;
         std::map<std::string, ProgrammableCameraEventState> _programmable_camera_events;
         std::string _active_programmable_camera_name;

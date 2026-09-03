@@ -12,6 +12,7 @@
 namespace {
     struct AttributeCache {
         const smgpc::scene::StageCollisionService* service = nullptr;
+        std::uint64_t generation = 0U;
         std::uint64_t revision = 0U;
         std::map<std::uint32_t, JMapInfo> sources{};
     };
@@ -134,8 +135,10 @@ JMapInfoIter Triangle::getAttributes() const {
 
     auto* collision = smgpc::scene::StageCollisionService::active();
     auto& cache = attribute_cache();
-    if (cache.service != collision || cache.revision != collision->revision()) {
+    if (cache.service != collision || cache.generation != collision->generation() ||
+        cache.revision != collision->revision()) {
         cache.service = collision;
+        cache.generation = collision->generation();
         cache.revision = collision->revision();
         cache.sources.clear();
     }
