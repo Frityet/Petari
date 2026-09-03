@@ -75,7 +75,7 @@ public:
     void doExtraServices();
     bool isEnableCheckGround() NO_INLINE;
     void setGroundNorm(const TVec3f&);
-    bool checkForceGrounding();
+    void checkForceGrounding();
     void updateGroundInfo();
     void fixHeadFrontVecByGravity();
     bool isNonFixHeadVec() const;
@@ -158,9 +158,9 @@ public:
     bool checkBaseTransPoint();
     bool checkHeadPoint();
     const TVec3f* calcShadowPos();
-    void updateBinderInfo();
+    bool updateBinderInfo();
     bool isThroughWall(const Triangle*) const;
-    void checkGround();
+    bool checkGround();
     CubeCameraArea* getCameraCubeCode() const;
     void updateCubeCode();
 
@@ -169,8 +169,8 @@ public:
     void decDamageAfterTimer();
     bool checkDamage();
     u16 getDamageAfterTimer() const;
-    void damageFloorCheck();
-    void damageWallCheck();
+    bool damageFloorCheck();
+    bool damageWallCheck();
     void damagePolygonCheck(const Triangle*);
     bool flipLarge(const TVec3f&);
     bool isEnableAddDamage() const;
@@ -314,7 +314,7 @@ public:
     bool isNoWalkFallOnDossun() const;
     bool isNotReflectGlassGround() const;
     bool isUseAnotherMovingPolygon() const;
-    bool isUseFoolSpecialGravity(const TVec3f&, TVec3f*) const;
+    bool isUseFooSpecialGravity(const TVec3f&, TVec3f*) const;
     void updateOnimasu();
     bool isHeadPushEnableArea() const;
     bool isOnimasuBinderPressSkip() const;

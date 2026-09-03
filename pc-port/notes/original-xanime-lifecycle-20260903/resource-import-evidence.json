@@ -1,0 +1,106 @@
+{
+  "comparison": "Root vs native import compiled with original Wii toolchain; this is not a whole-TU retail match claim.",
+  "sources": {
+    "src/Game/Animation/XanimeResource.cpp": "abf9a3adae35caaedcdbf079eb7ecff8d08cc7bc41a43009369c169ec4f7f10f",
+    "pc-port/src/Game/Animation/XanimeResource.cpp": "751f1b82b9d53fc002d4fe06e5104d4f8e57d3eec6dcb0b27304efefec2d7d31"
+  },
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "exact_source_helpers": {
+    "HashSortTable methods": "09b01bb47526e0634a2abdb0a684484d997358da53013a4d890ae69f6f52a053",
+    "MR::sortSmall(s32,u32*,s32*)": "9e893a66dc62b1818c34d1e41558e6114ad3d94fbeaab66e2fd97b4bcf06d4a8"
+  },
+  "functions": [
+    {
+      "symbol": "__ct__19XanimeResourceTableFP14ResourceHolder",
+      "bytes": 156,
+      "relocations": 6
+    },
+    {
+      "symbol": "init__19XanimeResourceTableFv",
+      "bytes": 52,
+      "relocations": 0
+    },
+    {
+      "symbol": "init__15XanimeGroupInfoFv",
+      "bytes": 100,
+      "relocations": 3
+    },
+    {
+      "symbol": "__ct__19XanimeResourceTableFP14ResourceHolderP15XanimeGroupInfoP13XanimeAuxInfoP13XanimeOfsInfoP14XanimeBckTableP15XanimeBckTable2P15XanimeBckTable3P15XanimeBckTable4P15XanimeSwapTable",
+      "bytes": 332,
+      "relocations": 12
+    },
+    {
+      "symbol": "initGroupInfo__19XanimeResourceTableFP14ResourceHolderP15XanimeGroupInfoP13XanimeAuxInfoP13XanimeOfsInfoP14XanimeBckTableP15XanimeBckTable2P15XanimeBckTable3P15XanimeBckTable4P15XanimeSwapTable",
+      "bytes": 1056,
+      "relocations": 24
+    },
+    {
+      "symbol": "createSortTable__19XanimeResourceTableFv",
+      "bytes": 140,
+      "relocations": 6
+    },
+    {
+      "symbol": "search__19XanimeResourceTableCFPP14XanimeBckTablePCcUl",
+      "bytes": 160,
+      "relocations": 3
+    },
+    {
+      "symbol": "findResMotion__19XanimeResourceTableCFPCc",
+      "bytes": 108,
+      "relocations": 3
+    },
+    {
+      "symbol": "getGroupInfo__19XanimeResourceTableCFPCc",
+      "bytes": 188,
+      "relocations": 3
+    },
+    {
+      "symbol": "getGroupIndex__19XanimeResourceTableCFPCc",
+      "bytes": 124,
+      "relocations": 2
+    },
+    {
+      "symbol": "getSimpleIndex__19XanimeResourceTableCFPCc",
+      "bytes": 116,
+      "relocations": 1
+    },
+    {
+      "symbol": "getGroupInfo__19XanimeResourceTableCFPCcP15XanimeDirectory",
+      "bytes": 432,
+      "relocations": 8
+    },
+    {
+      "symbol": "getIndex__19XanimeResourceTableCFP15XanimeDirectoryPCc",
+      "bytes": 124,
+      "relocations": 3
+    },
+    {
+      "symbol": "getIndexFromHash__19XanimeResourceTableCFUl",
+      "bytes": 68,
+      "relocations": 1
+    },
+    {
+      "symbol": "getGroupInfoFromHash__19XanimeResourceTableCFUl",
+      "bytes": 72,
+      "relocations": 1
+    },
+    {
+      "symbol": "getSingleIndex__19XanimeResourceTableCFPCc",
+      "bytes": 136,
+      "relocations": 1
+    },
+    {
+      "symbol": "swapBckName__19XanimeResourceTableCFPCcP15XanimeSwapTable",
+      "bytes": 132,
+      "relocations": 3
+    },
+    {
+      "symbol": "findStringMotion__19XanimeResourceTableCFPCc",
+      "bytes": 44,
+      "relocations": 1
+    }
+  ],
+  "instruction_count": 885,
+  "relocation_count": 81
+}

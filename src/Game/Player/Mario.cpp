@@ -1,4 +1,5 @@
 #include "Game/Player/Mario.hpp"
+#include "Game/Enemy/KarikariDirector.hpp"
 #include "Game/LiveActor/Binder.hpp"
 #include "Game/Map/HitInfo.hpp"
 #include "Game/Player/MarioAbyssDamage.hpp"
@@ -43,6 +44,7 @@
 #include "Game/Util.hpp"
 #include "Game/Util/MapUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
+#include "JSystem/JMath/JMATrigonometric.hpp"
 #include "revolution/mtx.h"
 #include "revolution/types.h"
 
@@ -500,6 +502,81 @@ void Mario::setGroundNorm(const TVec3f& rVec) {
         _368 = rVec;
         _374 = -rVec;
     }
+}
+
+void Mario::checkForceGrounding() {
+    if ((mMovementStates._37 || _10._15) && mMovementStates._1) {
+        if (MR::diffAngleAbs(_368, *_45C->getNormal(0)) < 0.7853982f) {
+            mDrawStates._0 = 1;
+        }
+    }
+
+    if (mMovementStates._8 || mMovementStates._19 || mMovementStates._1A || mMovementStates._15 || mMovementStates._23 ||
+        mMovementStates.debugMode || !mMovementStates._1) {
+        return;
+    }
+
+    if (!mDrawStates._0) {
+        TVec3f negGround = -_368;
+        f32 gravityDot = getGravityVec()->dot(negGround);
+
+        TVec3f killAxis;
+        if (gravityDot > 0.99f) {
+            killAxis = *getGravityVec();
+        } else {
+            killAxis = -_368;
+        }
+
+        f32 vertical = MR::vecKillElement(mVelocity, killAxis, &mVelocity);
+        TVec3f shadowDelta(mShadowPos);
+        shadowDelta -= mPosition;
+        gravityDot *= shadowDelta.dot(killAxis);
+
+        if (MR::isNearZero(gravityDot)) {
+            return;
+        }
+        if (!(__fabsf(gravityDot) < 30.0f)) {
+            return;
+        }
+
+        if (mMovementStates._8) {
+            vertical = gravityDot;
+        }
+        if (vertical > gravityDot) {
+            vertical = gravityDot;
+        }
+
+        TVec3f adjustment(killAxis);
+        adjustment.scale(vertical);
+        mVelocity += adjustment;
+        return;
+    }
+
+    TVec3f horizontalVelocity;
+    f32 verticalVelocity = MR::vecKillElement(mVelocity, *getGravityVec(), &horizontalVelocity);
+    f32 horizontalSpeed = horizontalVelocity.length();
+
+    if (mVerticalSpeed != 0.0f && verticalVelocity > mVerticalSpeed) {
+        verticalVelocity = mVerticalSpeed;
+    }
+
+    if (!mDrawStates._4) {
+        if (__fabsf(verticalVelocity) > horizontalSpeed) {
+            horizontalSpeed = 0.0f;
+        } else {
+            horizontalSpeed = MR::sqrt< f32 >((horizontalSpeed * horizontalSpeed) - (verticalVelocity * verticalVelocity));
+        }
+    }
+
+    MR::normalizeOrZero(&horizontalVelocity);
+
+    TVec3f gravityComponent(*getGravityVec());
+    gravityComponent.scale(verticalVelocity);
+    TVec3f horizontalComponent(horizontalVelocity);
+    horizontalComponent.scale(horizontalSpeed);
+    TVec3f newVelocity(horizontalComponent);
+    newVelocity += gravityComponent;
+    mVelocity = newVelocity;
 }
 
 // Nearly matches
@@ -964,6 +1041,102 @@ void Mario::setGravityVec(const TVec3f& rGravity) {
     mAirGravityVec = rGravity;
 }
 
+void Mario::inputStick() {
+    mActor->getStickValue(&mStickPos.x, &mStickPos.y);
+
+    if (_10._28) {
+        _10._28 = 0;
+        mStickPos.x = 0.0f;
+        mStickPos.y = 0.0f;
+    }
+
+    mStickPos.x *= 1.5f;
+    mStickPos.y *= 1.5f;
+    mStickPos.x = MR::clamp(mStickPos.x, -1.0f, 1.0f);
+    mStickPos.y = MR::clamp(mStickPos.y, -1.0f, 1.0f);
+
+    _38 = mStickPos.z;
+    const f32 stickX = mStickPos.x;
+    const f32 stickY = mStickPos.y;
+    mStickPos.z = MR::sqrt< f32 >((stickX * stickX) + (stickY * stickY));
+    mStickPos.z = MR::clamp(mStickPos.z, 0.0f, 1.0f);
+
+    if (MR::isNearZero(mStickPos.z, 0.01f)) {
+        mStickPos.z = 0.0f;
+    }
+
+    f32 angle = JMath::sAtanTable.atan2_(mStickPos.y, mStickPos.x);
+    angle = MR::normalizeAngleAbs(angle);
+
+    MarioConstTable* table = mActor->mConst->getTable();
+    const f32 halfPi = 1.5707964f;
+    const f32 margin = table->mStickAngleMargin;
+
+    u32 quarter = 0;
+    while (angle > halfPi) {
+        angle -= halfPi;
+        quarter++;
+    }
+
+    if (angle >= halfPi - margin) {
+        angle = halfPi;
+    } else if (angle <= margin) {
+        angle = 0.0f;
+    } else {
+        angle = (angle - margin) * (halfPi / (halfPi - (2.0f * margin)));
+    }
+
+    const f32 quantizedAngle = angle + (halfPi * static_cast< f32 >(quarter));
+
+    if (!getPlayer()->_10._11) {
+        f32 absAngle = quantizedAngle;
+        if (absAngle < 0.0f) {
+            absAngle = -absAngle;
+        }
+
+        f32 cosScaled = absAngle * 2607.5945f;
+        u16 cosIndex = static_cast< u16 >(cosScaled);
+        f32 cosValue = JMath::sSinCosTable.table[cosIndex & (JMath::TSinCosTable< 14, f32 >::LEN - 1)].b1;
+        mStickPos.x = mStickPos.z * cosValue;
+
+        f32 sinValue;
+        if (quantizedAngle < 0.0f) {
+            f32 sinScaled = quantizedAngle * -2607.5945f;
+            u16 sinIndex = static_cast< u16 >(sinScaled);
+            sinValue = -JMath::sSinCosTable.table[sinIndex & (JMath::TSinCosTable< 14, f32 >::LEN - 1)].a1;
+        } else {
+            f32 sinScaled = quantizedAngle * 2607.5945f;
+            u16 sinIndex = static_cast< u16 >(sinScaled);
+            sinValue = JMath::sSinCosTable.table[sinIndex & (JMath::TSinCosTable< 14, f32 >::LEN - 1)].a1;
+        }
+
+        mStickPos.y = mStickPos.z * sinValue;
+    }
+
+    _524 = _528;
+    _528 = quantizedAngle;
+
+    if (mMovementStates._37) {
+        stick2DadjustGround(mStickPos.x, mStickPos.y);
+    }
+    if (_10._15) {
+        stick2Dadjust(mStickPos.x, mStickPos.y);
+    }
+    if (mMovementStates._3A) {
+        update25Dmode();
+        updateAxisFromMode(_6AC);
+    }
+    if (_10._13) {
+        mStickPos.y = 0.0f;
+    }
+    if (mStickPos.z <= 0.01f) {
+        mMovementStates._1D = 0;
+    }
+
+    calcWorldPadDir(&mWorldPadDir, mStickPos.x, mStickPos.y, false);
+    MR::normalizeOrZero(&mWorldPadDir);
+}
+
 void Mario::updateSoundCode() {
     s32 soundCode = -1;
     Mario* pPlayer = getPlayer();
@@ -1177,6 +1350,167 @@ void Mario::writeBackPhyisicalVector() {
     mActor->mPosition = mPosition;
 }
 
+void Mario::update() {
+    OSGetTime();
+    updateAndClearStrideParameter();
+    checkKeyLock();
+
+    if (!(mMovementStates.jumping && mMovementStates._B) && _728 != nullptr && isAnimationRun(_728)) {
+        mMovementStates.jumping = 1;
+        mMovementStates._B = 1;
+    }
+
+    updateCubeCode();
+    mMovementStates._7 = updateBinderInfo();
+    checkEnforceMove();
+    _A8C[0] = mVelocity;
+
+    if (!isStatusActive(MarioStatus_Stick) && !isStatusActive(MarioStatus_Hang)) {
+        checkBaseTransPoint();
+        checkHeadPoint();
+    }
+
+    if (mMovementStates._F && _544 > 1) {
+        createAtField(true, 150.0f);
+    } else {
+        createAtField(false, 40.0f);
+    }
+
+    _72C = calcDistToCeil(true);
+    _1C._F = _72C < 160.0f;
+    if (_1C._F && _4C8->isValid()) {
+        damagePolygonCheck(_4C8);
+    }
+
+    if (MR::getKarikariClingNum() != 0) {
+        _1C_WORD |= 0x04000000;
+    }
+
+    OSGetTime();
+    f32 wallDistance = 80.0f;
+    if (isSwimming()) {
+        wallDistance = 90.0f;
+    }
+    checkAllWall(mActor->_2A0, wallDistance);
+
+    OSGetTime();
+    updateGroundInfo();
+    OSGetTime();
+
+    if (mMovementStates._1 && (!mMovementStates.jumping || mMovementStates._B)) {
+        if (damageFloorCheck()) {
+            writeBackPhyisicalVector();
+            return;
+        }
+
+        saveLastSafetyTrans();
+        if (isCurrentShadowFloorDangerAction()) {
+            TVec3f floorDelta(mShadowPos);
+            floorDelta -= mGroundPos;
+            MR::isNearZero(mAirGravityVec);
+
+            TVec3f horizontal;
+            f32 vertical = MR::vecKillElement(floorDelta, mAirGravityVec, &horizontal);
+            if (vertical >= 5.0f && floorDelta.dot(mFrontVec) > 0.0f) {
+                mDrawStates_WORD |= 0x00200000;
+                floorDelta.setLength(5.0f);
+                addVelocity(floorDelta);
+            }
+        }
+    }
+
+    mDrawStates_WORD |= 0x00008000;
+    if (damageWallCheck()) {
+        return;
+    }
+    mDrawStates_WORD &= ~0x00008000;
+
+    OSGetTime();
+    if (checkPressDamage()) {
+        return;
+    }
+
+    OSGetTime();
+    if (checkSliderMode()) {
+        startSlider();
+    }
+
+    checkAndTryForceJump();
+    if (mMovementStates._2E) {
+        return;
+    }
+
+    if (checkStartSwim()) {
+        writeBackPhyisicalVector();
+        return;
+    }
+
+    if (!mMovementStates._22) {
+        check2DMode();
+    }
+
+    _898 = 0;
+    if (!mMovementStates.debugMode && MR::testFpViewStartTrigger()) {
+        if (MR::isPossibleToShiftToFirstPersonCamera()) {
+            tryFpViewMode();
+        } else if (!MR::isDemoActive()) {
+            if (!MR::isEqualStageName("EpilogueDemoStage")) {
+                MR::startSystemSE("SE_SY_CAMERA_NG", -1, -1);
+            }
+            _898 = 1;
+        }
+    }
+
+    inputStick();
+    checkLockOnHoming();
+
+    _A8C[1] = mVelocity;
+    actionMain();
+    _A8C[3] = mVelocity;
+
+    calcFrontFloor();
+
+    if (mMovementStates._23 && mMovementStates._1 && mMovementStates._24 && isSlipPolygon(_460)) {
+        f32 removed = MR::vecKillElement(mVelocity, *_460->getNormal(0), &mVelocity);
+        const TVec3f& normal = *_460->getNormal(0);
+        TVec3f normalDelta(_368);
+        normalDelta -= normal;
+        TVec3f halfDelta(normalDelta);
+        halfDelta.scale(0.5f);
+        removed = __fabsf(removed);
+        TVec3f adjustment(halfDelta);
+        adjustment.scale(removed);
+        mVelocity += adjustment;
+    }
+
+    _A8C[4] = mVelocity;
+    tryPushToVelocity();
+    powerAreaMove();
+    powerRailMove();
+    _A8C[5] = mVelocity;
+
+    addVelocity(mVelocityAfter);
+    _A8C[6] = mVelocity;
+
+    checkForceGrounding();
+    _A8C[7] = mVelocity;
+
+    checkStep();
+    checkBump();
+    doCubeWarp();
+
+    if (isSwimming()) {
+        checkBaseTransBall();
+    }
+
+    doSpinPunchAroundPolygons();
+    _A8C[8] = mVelocity;
+
+    writeBackPhyisicalVector();
+    updateTimers();
+    doExtraServices();
+}
+
 void Mario::actionMain() {
     if (!mMovementStates.debugMode) {
         if (checkDamage() == false) {
@@ -1237,8 +1571,7 @@ void Mario::updateGroundInfo() {
     if (isEnableCheckGround()) {
         bool b1 = !mMovementStates.jumping && !mMovementStates._1;
 
-        checkGround();
-        mMovementStates._1 = mMovementStates._1F;
+        mMovementStates._1 = checkGround();
 
         if (mDrawStates._18) {
             _3C6++;

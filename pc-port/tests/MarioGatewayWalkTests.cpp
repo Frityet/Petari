@@ -525,6 +525,8 @@ namespace {
 
         require(MR::getMarioHolder()->getMarioActor() == actor,
                 "MarioActor init must register the real actor with MarioHolder");
+        require(actor->mGravityRatio == 1.0F,
+                "MarioActor init2 must establish the retail airborne gravity multiplier");
         require(actor->mActorLightCtrl != nullptr &&
                     actor->mActorLightCtrl->_4 == MR::LightType_Player &&
                     runtime.scene_lights().player_light_ctrl() ==

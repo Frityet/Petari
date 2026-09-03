@@ -1,0 +1,129 @@
+{
+  "scope": "Root-only nonmatching functional recovery; compiler, control-flow, constants and source review, not native gameplay execution",
+  "symbol": "updateGravityVec__10MarioActorFbb",
+  "retail_address": "0x802b9a9c",
+  "retail_size": "0x930",
+  "compiled_size": "0x960",
+  "source_sha256": "53fdc4061d2daf27b96726a247976832ab0e7aa54ee88e1c15974ac623c374cf",
+  "header_sha256": {
+    "include/Game/Player/MarioActor.hpp": "5cdeebb8ace4328af0f813e34aa0240381069c84183dc47642044aa97b0f5d4d",
+    "include/Game/Player/Mario.hpp": "95ff0bc1cd87377ae1f1c1ee3b0a70f169bd48b0cca90a006e71007e2c9e2f21"
+  },
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "compiler": "GC/3.0a3, configure.py cflags_game, RMGK01 / VERSION=0",
+  "tools_sha256": {
+    "build/compilers/GC/3.0a3/mwcceppc.exe": "66553cf100ee7e1793f368a39be6218292cd19a7c8636f2f1493b572ad5eaec2",
+    "build/tools/sjiswrap.exe": "01d50fa1148cfc3c3b16658c6c9b1c0d9f5324cde79ed6c09ef8353af9d63adf",
+    "build/tools/dtk": "a33363725a323c5226d2efe183a2430b0247ea55298d6a19a347a8692b3ae870",
+    "build/tools/objdiff-cli": "4ef0896ba8986f1adea6202d6e52a471deb1d126b071d23e88e8c00c250da7fd"
+  },
+  "compiler_input_encoding": "Configured sjiswrap v1.2.2, compiling the real root source and include hierarchy",
+  "object_sha256": "0734d676a19d72799b94480b0b54e65c55a0093b0a154f9f62f854f78c8db55b",
+  "retail_function_sha256": "a613e243d4b3c8158f2a6dc9143870c2fb6fac57e628869c8ab85b3b433e12aa",
+  "objdiff": {
+    "match_percent": 87.32313,
+    "retail_size": "2352",
+    "compiled_size": "2400",
+    "retail_object_sha256": "8583c5f1b7e0ee7c8003d1fffceba50487be2007707a1d99ddd4373c4d74c303",
+    "retail_constant_string_values": [
+      "00000000",
+      "3a83126f",
+      "3dcccccd",
+      "3f000000",
+      "3f060a92",
+      "3f400000",
+      "3f666666",
+      "3f800000",
+      "3fa0d97c",
+      "40060a92",
+      "41700000",
+      "42480000",
+      "426c0000",
+      "428c0000",
+      "42a00000",
+      "42c80000",
+      "43200000",
+      "4330000000000000",
+      "83568387815b8367835783838393837600"
+    ],
+    "additional_inline_acos_constants": [
+      "3fc90fdb",
+      "40490fdb",
+      "447fe000",
+      "bf800000"
+    ]
+  },
+  "critical_control_graph": {
+    "equal": true,
+    "event_count": 160,
+    "event_types": {
+      "call": 56,
+      "integer_compare": 28,
+      "conditional_branch": 42,
+      "branch": 16,
+      "float_compare": 7,
+      "condition_or": 4,
+      "bit_mask_test": 7
+    },
+    "graph_sha256": "6ddb36d7ae67b07cfbeba7a556f2f7836f5b1f6ef204d66be146b9cc822aedf7",
+    "retail_acos_boundary": {
+      "begin": "0x802b9f28",
+      "end": "0x802b9f38"
+    },
+    "compiled_inline_acos_boundary": {
+      "begin": "0x802b9ed4",
+      "end": "0x802b9f6c"
+    }
+  },
+  "animation_argument": {
+    "lis_address": "0x802b9d24",
+    "lis_word": "0x3c80805c",
+    "addi_address": "0x802b9d2c",
+    "addi_word": "0x388486d8",
+    "effective_address": "0x805b86d8",
+    "shift_jis_hex": "83568387815b8367835783838393837600",
+    "text": "ショートジャンプ",
+    "argument_register": "r4"
+  },
+  "gravity_ratio_writers": {
+    "getter_address": "0x802b9670",
+    "getter_words": "c0230374 4e800020",
+    "writers": [
+      {
+        "load_address": "0x802af4e0",
+        "load_word": "0xc002f908",
+        "store_address": "0x802af4f0",
+        "store_word": "0xd01d0374",
+        "actor_register": "r29",
+        "field_offset": "0x374",
+        "constant_address": "0x806bf528",
+        "constant_bits": "0x3f800000",
+        "constant_value": 1.0
+      },
+      {
+        "load_address": "0x802bb1e4",
+        "load_word": "0xc002fadc",
+        "store_address": "0x802bb1f4",
+        "store_word": "0xd01f0374",
+        "actor_register": "r31",
+        "field_offset": "0x374",
+        "constant_address": "0x806bf6fc",
+        "constant_bits": "0x0",
+        "constant_value": 0.0
+      }
+    ],
+    "mario_named_direct_stfs_inventory": [
+      {
+        "address": "0x802af4f0",
+        "word": "0xd01d0374",
+        "containing_symbol": "init2__10MarioActorFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>l"
+      },
+      {
+        "address": "0x802bb1f4",
+        "word": "0xd01f0374",
+        "containing_symbol": "initMember__10MarioActorFv"
+      }
+    ]
+  },
+  "relocation_count": 164
+}

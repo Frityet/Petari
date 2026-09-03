@@ -323,7 +323,7 @@ void MarioActor::init2(const TVec3f& a, const TVec3f& b, s32 initialAnimation) {
     mConst = new MarioConst();
     mMario->initAfterConst();
     mGravityInfo = new GravityInfo();
-    mGravityRatio = 0.0f;
+    mGravityRatio = 1.0f;
     initNerve(&NrvMarioActor::MarioActorNrvWait::sInstance);
 
     initBinder(60.0f, 0.0f, 8);
@@ -386,7 +386,7 @@ void MarioActor::init2(const TVec3f& a, const TVec3f& b, s32 initialAnimation) {
     }
     mMario->initAfterConst();
     mGravityInfo = new GravityInfo();
-    mGravityRatio = 0.0f;
+    mGravityRatio = 1.0f;
     initNerve(&NrvMarioActor::MarioActorNrvWait::sInstance);
     _FB4 = 0;
     _FB8 = 0;

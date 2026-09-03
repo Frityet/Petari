@@ -3,6 +3,9 @@
 #include "Game/AreaObj/AreaObjContainer.hpp"
 #include "Game/AreaObj/AreaForm.hpp"
 #include "Game/AreaObj/RestartCube.hpp"
+#include "Game/AreaObj/WaterArea.hpp"
+#include "Game/Map/WaterAreaHolder.hpp"
+#include "Game/Map/WaterInfo.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 
 namespace MR {
@@ -21,6 +24,17 @@ namespace MR {
 
     bool isInAreaObj(const char* pAreaName, const TVec3f& rVec) {
         return MR::getAreaObjContainer()->getAreaObj(pAreaName, rVec);
+    }
+
+    bool getWaterAreaObj(WaterInfo* pWaterInfo, const TVec3f& rPos) {
+        pWaterInfo->clear();
+        WaterArea* area = static_cast< WaterArea* >(getAreaIn("Water", rPos));
+        if (area != nullptr) {
+            pWaterInfo->mWaterArea = area;
+            return true;
+        }
+
+        return WaterAreaFunction::tryInOceanArea(rPos, pWaterInfo);
     }
 
     s32 getAreaObjArg(const AreaObj* pObj, s32 which) {

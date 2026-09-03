@@ -1,0 +1,108 @@
+{
+  "scope": "Root-only restoration and live RMGK01 verification; no PC production mirror or runtime claim.",
+  "historical_commit": "96e5ef0decce22e5bfd7d0ee876fb15ac80a725b",
+  "baseline_commit": "5942655dbea3909861069bd4214203f44dd5eda9",
+  "historical_source_sha256": "bd3fd8040019266aeeb31020b765c3127c290e9c72610efb6f7c8081110e66a2",
+  "source_files": [
+    {
+      "path": "src/Game/Player/Mario.cpp",
+      "sha256": "e998495fae85cec210a050000cce1a6f70a4b8f9a2e7be860efdda69706097ae",
+      "baseline_sha256": "004eab4ca89653135b53eb560616f28c58bdd19488947313eab75705ac3f9cd8"
+    },
+    {
+      "path": "include/Game/Player/Mario.hpp",
+      "sha256": "95ff0bc1cd87377ae1f1c1ee3b0a70f169bd48b0cca90a006e71007e2c9e2f21",
+      "baseline_sha256": "19c63c607f213205828a58fd50d5ea417bd53a541abe42288fffbbf871862379"
+    }
+  ],
+  "functions": [
+    {
+      "method": "Mario::doExtraServices()",
+      "source": "src/Game/Player/Mario.cpp",
+      "source_line": 463,
+      "source_body_sha256": "017242ef9a9b5161d4116e09d6601e9d9403477b40f0a89b36820d7bfea26725",
+      "historical_body_sha256": "c156fdc8392bd48b2cc6ff70301332b197ab27e318fd82885f7ae8c036473876",
+      "baseline_body_sha256": "017242ef9a9b5161d4116e09d6601e9d9403477b40f0a89b36820d7bfea26725",
+      "retail_address": "0x802aa048",
+      "retail_size": 524,
+      "retail_function_sha256": "e7452082d60fbed8e25d20c3a2be4f4cbdb9e4319a430b07d75c675ff54fa977",
+      "objdiff_match_percent": 92.061066
+    },
+    {
+      "method": "Mario::checkForceGrounding()",
+      "source": "src/Game/Player/Mario.cpp",
+      "source_line": 507,
+      "source_body_sha256": "f007df95e42d872d70afbf4ee61282548ec53e5274a67cd6e07f145138fd4383",
+      "historical_body_sha256": "b13f68b9a12efa9535f9117bb45331ac7ec89927039b6f26fd31c188e4a0f329",
+      "baseline_body_sha256": null,
+      "retail_address": "0x802aa308",
+      "retail_size": 712,
+      "retail_function_sha256": "78bc5e8543fbf6904106ef11d87aac695e10a1749f7d5da31f5c61a5ad5cb7a8",
+      "objdiff_match_percent": 97.764046
+    },
+    {
+      "method": "Mario::inputStick()",
+      "source": "src/Game/Player/Mario.cpp",
+      "source_line": 1044,
+      "source_body_sha256": "6a6c2428f5325d554f24750acccfd065c9dc30b0face028a0a86419cce72f2d2",
+      "historical_body_sha256": "6a6c2428f5325d554f24750acccfd065c9dc30b0face028a0a86419cce72f2d2",
+      "baseline_body_sha256": null,
+      "retail_address": "0x802ac404",
+      "retail_size": 792,
+      "retail_function_sha256": "b16cd037e18926548e017ca78b9a171f07dba171956d72b963b1de20986b71ab",
+      "objdiff_match_percent": 97.06061
+    },
+    {
+      "method": "Mario::update()",
+      "source": "src/Game/Player/Mario.cpp",
+      "source_line": 1353,
+      "source_body_sha256": "f7da3d47f4c953b2143adc2247cfad3720948c0c44fbba283ddd1b7c98a3cab2",
+      "historical_body_sha256": "d6b425a295e7cfefd01ffd11be9217da8b3967a29cecfcf6705e547298739fe7",
+      "baseline_body_sha256": null,
+      "retail_address": "0x802ad398",
+      "retail_size": 1412,
+      "retail_function_sha256": "e1dfec32d31b921a251f531208db48d702378a4ca02dac3affe0d09a975a8ef9",
+      "objdiff_match_percent": 99.52408
+    },
+    {
+      "method": "Mario::actionMain()",
+      "source": "src/Game/Player/Mario.cpp",
+      "source_line": 1514,
+      "source_body_sha256": "cec12ded6ebad4537fc5c4dba9b98a44119854321e37203b77917eac3edfdaa2",
+      "historical_body_sha256": "d946585acbf38f2b571908c059e13ada4f07ce5081fdf8703b79b8662c9f7078",
+      "baseline_body_sha256": "cec12ded6ebad4537fc5c4dba9b98a44119854321e37203b77917eac3edfdaa2",
+      "retail_address": "0x802ad91c",
+      "retail_size": 480,
+      "retail_function_sha256": "c9b81677edb299557d4bceae31f5171f6d2d86b9753a8da95a5cc52bde23a626",
+      "objdiff_match_percent": 100.0
+    },
+    {
+      "method": "Mario::updateGroundInfo()",
+      "source": "src/Game/Player/Mario.cpp",
+      "source_line": 1569,
+      "source_body_sha256": "d7c8b0b7311e470cfe05af90eedc9d7a98f0d5a024161aa9ace282ede2cdebc6",
+      "historical_body_sha256": "faf5043216793968c765904f07b942a9d32887dccda750271813db8e3219a6ce",
+      "baseline_body_sha256": "5417a740e4e13c5d28ec50aa5ebc7752186a3731bab3f497dcf6d025c851596b",
+      "retail_address": "0x802adafc",
+      "retail_size": 588,
+      "retail_function_sha256": "f0e0234bff8a37d2ff01c616ff7fce09bff87cd2c13b0c14194db05c20a44d49",
+      "objdiff_match_percent": 99.96599
+    }
+  ],
+  "declaration_changes": {
+    "checkForceGrounding": "bool -> void; no return contract in source or retail epilogue",
+    "updateBinderInfo": "void -> bool; matches MarioCollision.cpp definition and r3 result consumed by update",
+    "checkGround": "void -> bool; matches MarioCollision.cpp definition and r3 result consumed by updateGroundInfo",
+    "damageFloorCheck": "void -> bool; matches MarioDamage.cpp definition and r3-tested early return",
+    "damageWallCheck": "void -> bool; matches MarioDamage.cpp definition and r3-tested early return",
+    "isUseFoolSpecialGravity": "isUseFooSpecialGravity; existing MarioSpecial.cpp method and retail symbol, coordinated gravity closure"
+  },
+  "adaptations": [
+    "Restored update, inputStick, checkForceGrounding from historical source with existing current member names.",
+    "Added KarikariDirector.hpp and JMATrigonometric.hpp includes required by original declarations.",
+    "updateGroundInfo writes checkGround() return to movement bit1; current baseline incorrectly copied bit31.",
+    "update shadow-floor vertical guard uses >= 5.0f, correcting historical <=.",
+    "checkForceGrounding exits unless abs(gravityDot) < 30.0f, retaining retail unordered handling.",
+    "update obtains slip-polygon normal reference before copying _368, preserving retail getNormal/vector-constructor call order."
+  ]
+}

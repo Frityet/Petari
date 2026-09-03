@@ -1106,6 +1106,58 @@ target("smg-pc-j3d-frame-ctrl-tests")
         realtime_output = true
     })
 
+target("smg-pc-resource-table-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    add_files {
+        "ResourceTableTests.cpp",
+        "../aurora/lib/compat.cpp"
+    }
+    add_deps {
+        "smg-pc-common",
+        "smg-pc-game",
+        "aurora-card",
+        "aurora-dvd",
+        "aurora-gd",
+        "aurora-gx",
+        "aurora-os",
+        "aurora-pad",
+        "aurora-si",
+        "aurora-vi"
+    }
+    add_tests("resource_table", {
+        group = "aurora",
+        rundir = os.projectdir(),
+        realtime_output = true
+    })
+
+target("smg-pc-hash-sort-table-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    add_files {
+        "HashSortTableTests.cpp",
+        "../aurora/lib/compat.cpp"
+    }
+    add_deps {
+        "smg-pc-common",
+        "smg-pc-game",
+        "aurora-card",
+        "aurora-dvd",
+        "aurora-gd",
+        "aurora-gx",
+        "aurora-os",
+        "aurora-pad",
+        "aurora-si",
+        "aurora-vi"
+    }
+    add_tests("hash_sort_table", {
+        group = "aurora",
+        rundir = os.projectdir(),
+        realtime_output = true
+    })
+
 target("smg-pc-area-obj-real-or-absent-tests")
     set_kind("binary")
     set_default(false)

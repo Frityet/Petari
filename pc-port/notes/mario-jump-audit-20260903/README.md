@@ -2,6 +2,26 @@
 
 Read-only audit following the original OnlyCamera import. No player source, compatibility provider, build configuration, or test was changed, and no build/runtime experiment was run for this audit. The intended next task is to execute the original update/mainMove/jump/landing system through general providers and remove the grounded PC replacement. Adding another native A-button action handler would preserve the central accuracy problem.
 
+## Subsequent restoration checkpoints
+
+The findings below describe the pre-restoration snapshot. The missing root
+update/input/grounding methods and actor gravity routine have since been
+recovered; see `../mario-update-restoration-20260903/` and
+`../mario-gravity-restoration-20260903/` for current compiler evidence.
+`MR::getWaterAreaObj` is also recovered root-first in
+`../water-area-restoration-20260903/`. The PC original update/jump lifecycle is
+still awaiting the dependencies listed here.
+
+The ratio investigation corrected one earlier inference: `updateGravityVec`
+does not write `mGravityRatio`. Retail `initMember` sets it to zero and `init2`
+sets it to **1.0**. The recovered root init2 had a wrong zero constant; root and
+both PC init2 branches now use the verified 1.0 value, and live initialization
+is checked by the walking fixture. This does not by itself enable jumping.
+
+The original resource/hash tables now build on PC; details and the remaining
+typed ResourceHolder/J3D/Xanime ownership boundary are recorded in
+`../original-xanime-lifecycle-20260903/`.
+
 ## Current input and execution path
 
 The host input route already exists:
