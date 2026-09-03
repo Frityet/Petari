@@ -1,0 +1,16 @@
+[
+  {
+    "symbol": "init2__10MarioActorFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>l",
+    "instruction_bytes": 1688,
+    "pre_post_raw_instructions_and_relocations_identical": true,
+    "before_sha256": "335867ea7df4fab42d60088aed4faced9678879aba242989cf491836ae65cad6",
+    "after_sha256": "11ee320a74ff5f2af76f99e7a46a710bcd4e3203e4a9439969c83bb2a7600f66"
+  },
+  {
+    "symbol": "initMember__10MarioActorFv",
+    "instruction_bytes": 2156,
+    "pre_post_raw_instructions_and_relocations_identical": true,
+    "before_sha256": "c3e8cb9b8f0af56bde3e4c300f8177a024e52152eb3ba42b0ddbd8c2a307dd02",
+    "after_sha256": "1aaa3133d25db612d4ca8f1d452ce96303e5dc2553502d676fa74947105de056"
+  }
+]

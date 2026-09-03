@@ -1,0 +1,1019 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "compiler_commands": [
+    [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/Game/Player/MarioActorSpecialDraw.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-mario-raster-effects-20260903/MarioActorSpecialDraw.o"
+    ]
+  ],
+  "source_sha256": {
+    "Game/Player/MarioActorSpecialDraw": "078d9e20f2a4b20483d3dd6201b3d4ea6b0c8edce3d40b08a00fe31b66d7d0a0"
+  },
+  "functions": [
+    {
+      "symbol": "drawColdWaterDamage__10MarioActorCFv",
+      "address": "0x802c30d8",
+      "retail_bytes": 848,
+      "compiled_bytes": 848,
+      "objdiff_match_percent": 99.363205,
+      "all_normalized_instructions_identical": false,
+      "all_reference_targets_identical": true,
+      "references": [
+        {
+          "offset": "0x58",
+          "kind": 10,
+          "target": "_savegpr_25",
+          "addend": 0
+        },
+        {
+          "offset": "0x6c",
+          "kind": 10,
+          "target": "GXDrawDone",
+          "addend": 0
+        },
+        {
+          "offset": "0x70",
+          "kind": 10,
+          "target": "GXTexModeSync",
+          "addend": 0
+        },
+        {
+          "offset": "0x74",
+          "kind": 10,
+          "target": "GXPixModeSync",
+          "addend": 0
+        },
+        {
+          "offset": "0x78",
+          "kind": 10,
+          "target": "getFrameBufferWidth__2MRFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x8c",
+          "kind": 10,
+          "target": "setup__6TDDrawFUlUlUc",
+          "addend": 0
+        },
+        {
+          "offset": "0xb4",
+          "kind": 10,
+          "target": "GXInitTexObj",
+          "addend": 0
+        },
+        {
+          "offset": "0xd8",
+          "kind": 10,
+          "target": "GXInitTexObj",
+          "addend": 0
+        },
+        {
+          "offset": "0xe4",
+          "kind": 10,
+          "target": "GXSetLineWidth",
+          "addend": 0
+        },
+        {
+          "offset": "0xf8",
+          "kind": 10,
+          "target": "GXSetTexCopyDst",
+          "addend": 0
+        },
+        {
+          "offset": "0x10c",
+          "kind": 10,
+          "target": "GXSetTexCopySrc",
+          "addend": 0
+        },
+        {
+          "offset": "0x118",
+          "kind": 10,
+          "target": "GXCopyTex",
+          "addend": 0
+        },
+        {
+          "offset": "0x12a",
+          "kind": 6,
+          "target": "4330000000000000",
+          "addend": 0
+        },
+        {
+          "offset": "0x132",
+          "kind": 4,
+          "target": "4330000000000000",
+          "addend": 0
+        },
+        {
+          "offset": "0x144",
+          "kind": 109,
+          "target": "3f800000",
+          "addend": 0
+        },
+        {
+          "offset": "0x14c",
+          "kind": 109,
+          "target": "40c90fdb",
+          "addend": 0
+        },
+        {
+          "offset": "0x154",
+          "kind": 109,
+          "target": "42f00000",
+          "addend": 0
+        },
+        {
+          "offset": "0x164",
+          "kind": 10,
+          "target": "sin__2MRFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x168",
+          "kind": 109,
+          "target": "42b20000",
+          "addend": 0
+        },
+        {
+          "offset": "0x16c",
+          "kind": 109,
+          "target": "00000000",
+          "addend": 0
+        },
+        {
+          "offset": "0x182",
+          "kind": 6,
+          "target": "4330000080000000",
+          "addend": 0
+        },
+        {
+          "offset": "0x186",
+          "kind": 6,
+          "target": "4330000000000000",
+          "addend": 0
+        },
+        {
+          "offset": "0x18a",
+          "kind": 4,
+          "target": "4330000080000000",
+          "addend": 0
+        },
+        {
+          "offset": "0x192",
+          "kind": 4,
+          "target": "4330000000000000",
+          "addend": 0
+        },
+        {
+          "offset": "0x198",
+          "kind": 109,
+          "target": "40490fdb",
+          "addend": 0
+        },
+        {
+          "offset": "0x19c",
+          "kind": 109,
+          "target": "40000000",
+          "addend": 0
+        },
+        {
+          "offset": "0x1a0",
+          "kind": 109,
+          "target": "40a00000",
+          "addend": 0
+        },
+        {
+          "offset": "0x1a8",
+          "kind": 10,
+          "target": "GXTexModeSync",
+          "addend": 0
+        },
+        {
+          "offset": "0x1ac",
+          "kind": 10,
+          "target": "GXPixModeSync",
+          "addend": 0
+        },
+        {
+          "offset": "0x1c4",
+          "kind": 10,
+          "target": "GXSetTexCopySrc",
+          "addend": 0
+        },
+        {
+          "offset": "0x1dc",
+          "kind": 10,
+          "target": "GXCopyTex",
+          "addend": 0
+        },
+        {
+          "offset": "0x1f0",
+          "kind": 10,
+          "target": "GXLoadTexObj",
+          "addend": 0
+        },
+        {
+          "offset": "0x1f4",
+          "kind": 109,
+          "target": "00000000",
+          "addend": 0
+        },
+        {
+          "offset": "0x204",
+          "kind": 10,
+          "target": "getScreenHeight__2MRFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x248",
+          "kind": 10,
+          "target": "sin__2MRFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x25c",
+          "kind": 10,
+          "target": "GXBegin",
+          "addend": 0
+        },
+        {
+          "offset": "0x274",
+          "kind": 109,
+          "target": "00000000",
+          "addend": 0
+        },
+        {
+          "offset": "0x27c",
+          "kind": 109,
+          "target": "00000000",
+          "addend": 0
+        },
+        {
+          "offset": "0x288",
+          "kind": 10,
+          "target": "getScreenWidth__2MRFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x2b8",
+          "kind": 109,
+          "target": "00000000",
+          "addend": 0
+        },
+        {
+          "offset": "0x2c0",
+          "kind": 109,
+          "target": "3f800000",
+          "addend": 0
+        },
+        {
+          "offset": "0x2e0",
+          "kind": 10,
+          "target": "getScreenHeight__2MRFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x2ec",
+          "kind": 10,
+          "target": "GXDrawDone",
+          "addend": 0
+        },
+        {
+          "offset": "0x33c",
+          "kind": 10,
+          "target": "_restgpr_25",
+          "addend": 0
+        }
+      ],
+      "non_relocation_differences": {
+        "left": [
+          {
+            "index": 99,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "li r26, 0x0"
+          },
+          {
+            "index": 108,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "addi r0, r26, 0x4"
+          },
+          {
+            "index": 114,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "subfic r27, r29, 0x1"
+          },
+          {
+            "index": 116,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "slwi r0, r27, 2"
+          },
+          {
+            "index": 126,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "mr r25, r26"
+          },
+          {
+            "index": 127,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "addi r29, r26, 0x4"
+          },
+          {
+            "index": 144,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "fmuls f0, f0, f31"
+          },
+          {
+            "index": 182,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "clrlwi r29, r27, 16"
+          },
+          {
+            "index": 183,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "addi r26, r26, 0x4"
+          },
+          {
+            "index": 185,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "cmplw r26, r3"
+          }
+        ],
+        "right": [
+          {
+            "index": 99,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "li r27, 0x0"
+          },
+          {
+            "index": 108,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "addi r0, r27, 0x4"
+          },
+          {
+            "index": 114,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "subfic r26, r29, 0x1"
+          },
+          {
+            "index": 116,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "slwi r0, r26, 2"
+          },
+          {
+            "index": 126,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "mr r25, r27"
+          },
+          {
+            "index": 127,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "addi r29, r27, 0x4"
+          },
+          {
+            "index": 144,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "fmuls f0, f31, f0"
+          },
+          {
+            "index": 182,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "clrlwi r29, r26, 16"
+          },
+          {
+            "index": 183,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "addi r27, r27, 0x4"
+          },
+          {
+            "index": 185,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "cmplw r27, r3"
+          }
+        ]
+      },
+      "dol_function_sha256": "aea935ccb02cf636a9c6d22c5d21f4cbe34c48045b1fd0e403ccf76e487430e1"
+    },
+    {
+      "symbol": "drawRasterScroll__10MarioActorCFfsf",
+      "address": "0x802c34f4",
+      "retail_bytes": 804,
+      "compiled_bytes": 804,
+      "objdiff_match_percent": 98.63184,
+      "all_normalized_instructions_identical": false,
+      "all_reference_targets_identical": true,
+      "references": [
+        {
+          "offset": "0x58",
+          "kind": 10,
+          "target": "_savegpr_25",
+          "addend": 0
+        },
+        {
+          "offset": "0x5c",
+          "kind": 109,
+          "target": "00000000",
+          "addend": 0
+        },
+        {
+          "offset": "0x8c",
+          "kind": 10,
+          "target": "GXDrawDone",
+          "addend": 0
+        },
+        {
+          "offset": "0x90",
+          "kind": 10,
+          "target": "GXTexModeSync",
+          "addend": 0
+        },
+        {
+          "offset": "0x94",
+          "kind": 10,
+          "target": "GXPixModeSync",
+          "addend": 0
+        },
+        {
+          "offset": "0x98",
+          "kind": 10,
+          "target": "getFrameBufferWidth__2MRFv",
+          "addend": 0
+        },
+        {
+          "offset": "0xac",
+          "kind": 10,
+          "target": "setup__6TDDrawFUlUlUc",
+          "addend": 0
+        },
+        {
+          "offset": "0xd4",
+          "kind": 10,
+          "target": "GXInitTexObj",
+          "addend": 0
+        },
+        {
+          "offset": "0xf8",
+          "kind": 10,
+          "target": "GXInitTexObj",
+          "addend": 0
+        },
+        {
+          "offset": "0x104",
+          "kind": 10,
+          "target": "GXSetLineWidth",
+          "addend": 0
+        },
+        {
+          "offset": "0x118",
+          "kind": 10,
+          "target": "GXSetTexCopyDst",
+          "addend": 0
+        },
+        {
+          "offset": "0x12c",
+          "kind": 10,
+          "target": "GXSetTexCopySrc",
+          "addend": 0
+        },
+        {
+          "offset": "0x138",
+          "kind": 10,
+          "target": "GXCopyTex",
+          "addend": 0
+        },
+        {
+          "offset": "0x14a",
+          "kind": 6,
+          "target": "4330000000000000",
+          "addend": 0
+        },
+        {
+          "offset": "0x14e",
+          "kind": 6,
+          "target": "4330000080000000",
+          "addend": 0
+        },
+        {
+          "offset": "0x150",
+          "kind": 109,
+          "target": "40c90fdb",
+          "addend": 0
+        },
+        {
+          "offset": "0x166",
+          "kind": 4,
+          "target": "4330000000000000",
+          "addend": 0
+        },
+        {
+          "offset": "0x17e",
+          "kind": 4,
+          "target": "4330000080000000",
+          "addend": 0
+        },
+        {
+          "offset": "0x188",
+          "kind": 109,
+          "target": "3f800000",
+          "addend": 0
+        },
+        {
+          "offset": "0x194",
+          "kind": 109,
+          "target": "40490fdb",
+          "addend": 0
+        },
+        {
+          "offset": "0x1a4",
+          "kind": 10,
+          "target": "GXTexModeSync",
+          "addend": 0
+        },
+        {
+          "offset": "0x1a8",
+          "kind": 10,
+          "target": "GXPixModeSync",
+          "addend": 0
+        },
+        {
+          "offset": "0x1c0",
+          "kind": 10,
+          "target": "GXSetTexCopySrc",
+          "addend": 0
+        },
+        {
+          "offset": "0x1d8",
+          "kind": 10,
+          "target": "GXCopyTex",
+          "addend": 0
+        },
+        {
+          "offset": "0x1ec",
+          "kind": 10,
+          "target": "GXLoadTexObj",
+          "addend": 0
+        },
+        {
+          "offset": "0x1f0",
+          "kind": 109,
+          "target": "00000000",
+          "addend": 0
+        },
+        {
+          "offset": "0x210",
+          "kind": 10,
+          "target": "sin__2MRFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x21c",
+          "kind": 10,
+          "target": "sin__2MRFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x230",
+          "kind": 10,
+          "target": "GXBegin",
+          "addend": 0
+        },
+        {
+          "offset": "0x248",
+          "kind": 109,
+          "target": "00000000",
+          "addend": 0
+        },
+        {
+          "offset": "0x250",
+          "kind": 109,
+          "target": "00000000",
+          "addend": 0
+        },
+        {
+          "offset": "0x25c",
+          "kind": 10,
+          "target": "getScreenWidth__2MRFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x28c",
+          "kind": 109,
+          "target": "00000000",
+          "addend": 0
+        },
+        {
+          "offset": "0x294",
+          "kind": 109,
+          "target": "3f800000",
+          "addend": 0
+        },
+        {
+          "offset": "0x2b4",
+          "kind": 10,
+          "target": "getScreenHeight__2MRFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x2c0",
+          "kind": 10,
+          "target": "GXDrawDone",
+          "addend": 0
+        },
+        {
+          "offset": "0x310",
+          "kind": 10,
+          "target": "_restgpr_25",
+          "addend": 0
+        }
+      ],
+      "non_relocation_differences": {
+        "left": [
+          {
+            "index": 25,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "fmr f25, f1"
+          },
+          {
+            "index": 39,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "clrlwi r27, r3, 16"
+          },
+          {
+            "index": 45,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "mr r5, r27"
+          },
+          {
+            "index": 55,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "mr r5, r27"
+          },
+          {
+            "index": 66,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "mr r3, r27"
+          },
+          {
+            "index": 71,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "mr r5, r27"
+          },
+          {
+            "index": 88,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "fdivs f27, f1, f23"
+          },
+          {
+            "index": 90,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "li r26, 0x0"
+          },
+          {
+            "index": 94,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "fsubs f2, f0, f30"
+          },
+          {
+            "index": 97,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "fsubs f4, f3, f30"
+          },
+          {
+            "index": 100,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "fsubs f0, f0, f31"
+          },
+          {
+            "index": 102,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "fdivs f29, f3, f4"
+          },
+          {
+            "index": 103,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "fdivs f28, f1, f0"
+          },
+          {
+            "index": 107,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "addi r0, r26, 0x4"
+          },
+          {
+            "index": 108,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "mr r5, r27"
+          },
+          {
+            "index": 113,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "subfic r28, r30, 0x1"
+          },
+          {
+            "index": 115,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "slwi r0, r28, 2"
+          },
+          {
+            "index": 125,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "mr r25, r26"
+          },
+          {
+            "index": 126,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "addi r30, r26, 0x4"
+          },
+          {
+            "index": 130,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "fsubs f0, f0, f30"
+          },
+          {
+            "index": 133,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "fmuls f0, f1, f24"
+          },
+          {
+            "index": 134,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "fadds f1, f0, f28"
+          },
+          {
+            "index": 136,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "fmuls f23, f25, f1"
+          },
+          {
+            "index": 144,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "fsubs f0, f0, f30"
+          },
+          {
+            "index": 150,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "stfs f26, -0x8000(r29)"
+          },
+          {
+            "index": 158,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "fsubs f0, f0, f30"
+          },
+          {
+            "index": 159,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "fsubs f1, f1, f31"
+          },
+          {
+            "index": 167,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "stfs f26, -0x8000(r29)"
+          },
+          {
+            "index": 168,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "fadds f26, f26, f29"
+          },
+          {
+            "index": 171,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "clrlwi r30, r28, 16"
+          },
+          {
+            "index": 172,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "addi r26, r26, 0x4"
+          },
+          {
+            "index": 174,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "cmplw r26, r3"
+          }
+        ],
+        "right": [
+          {
+            "index": 25,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "fmr f24, f1"
+          },
+          {
+            "index": 39,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "clrlwi r28, r3, 16"
+          },
+          {
+            "index": 45,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "mr r5, r28"
+          },
+          {
+            "index": 55,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "mr r5, r28"
+          },
+          {
+            "index": 66,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "mr r3, r28"
+          },
+          {
+            "index": 71,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "mr r5, r28"
+          },
+          {
+            "index": 88,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "fdivs f27, f2, f23"
+          },
+          {
+            "index": 90,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "li r27, 0x0"
+          },
+          {
+            "index": 94,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "fsubs f1, f0, f29"
+          },
+          {
+            "index": 97,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "fsubs f4, f3, f29"
+          },
+          {
+            "index": 100,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "fsubs f0, f0, f30"
+          },
+          {
+            "index": 102,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "fdivs f28, f3, f4"
+          },
+          {
+            "index": 103,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "fdivs f26, f1, f0"
+          },
+          {
+            "index": 107,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "addi r0, r27, 0x4"
+          },
+          {
+            "index": 108,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "mr r5, r28"
+          },
+          {
+            "index": 113,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "subfic r26, r30, 0x1"
+          },
+          {
+            "index": 115,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "slwi r0, r26, 2"
+          },
+          {
+            "index": 125,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "mr r25, r27"
+          },
+          {
+            "index": 126,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "addi r30, r27, 0x4"
+          },
+          {
+            "index": 130,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "fsubs f0, f0, f29"
+          },
+          {
+            "index": 133,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "fmuls f0, f31, f1"
+          },
+          {
+            "index": 134,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "fadds f1, f26, f0"
+          },
+          {
+            "index": 136,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "fmuls f23, f24, f1"
+          },
+          {
+            "index": 144,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "fsubs f0, f0, f29"
+          },
+          {
+            "index": 150,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "stfs f25, -0x8000(r29)"
+          },
+          {
+            "index": 158,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "fsubs f0, f0, f29"
+          },
+          {
+            "index": 159,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "fsubs f1, f1, f30"
+          },
+          {
+            "index": 167,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "stfs f25, -0x8000(r29)"
+          },
+          {
+            "index": 168,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "fadds f25, f25, f28"
+          },
+          {
+            "index": 171,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "clrlwi r30, r26, 16"
+          },
+          {
+            "index": 172,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "addi r27, r27, 0x4"
+          },
+          {
+            "index": 174,
+            "kind": "DIFF_ARG_MISMATCH",
+            "instruction": "cmplw r27, r3"
+          }
+        ]
+      },
+      "dol_function_sha256": "ad136311b5fbe97781c4dde308b2f07151973651e8c914eef9c2513fb7532f9f"
+    }
+  ],
+  "instruction_bytes_verified": 1652,
+  "normalization": "Only relocation fields cleared; identical offsets, kinds, addends and resolved constant/string bytes or external symbol identities required. NOBITS reads as zeros."
+}

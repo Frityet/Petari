@@ -1,0 +1,6 @@
+[
+  "Game/Player/MarioActorSpecialDraw.cpp",
+  "Game/Player/MarioActor.hpp",
+  "Game/Player/MarioActorInit.cpp",
+  "Game/Player/MarioActor.cpp"
+]

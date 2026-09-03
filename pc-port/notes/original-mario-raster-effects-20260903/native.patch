@@ -1,0 +1,154 @@
+--- a/pc-port/src/Game/Player/MarioActorSpecialDraw.cpp
++++ b/pc-port/src/Game/Player/MarioActorSpecialDraw.cpp
+@@ -3,6 +3,7 @@
+ #include "Game/Player/MarioActor.hpp"
+ #include "Game/Player/MarioConst.hpp"
+ #include "Game/Player/MarioState.hpp"
++#include "Game/Player/MarioSwim.hpp"
+ #include "Game/Screen/FullScreenBlur.hpp"
+ #include "Game/Player/MarioParts.hpp"
+ #include "Game/LiveActor/HitSensor.hpp"
+@@ -491,7 +492,49 @@
+ void MarioActor::drawSpinInhibit() const {
+ }
+ 
+-// void MarioActor::drawColdWaterDamage() const {}
++void MarioActor::drawColdWaterDamage() const {
++    GXDrawDone();
++    GXTexModeSync();
++    GXPixModeSync();
++    u16 width = MR::getFrameBufferWidth();
++    TDDraw::setup(1, 0, 2);
++    GXTexObj textures[2];
++    u16 current = 0;
++    u32 stripHeight = 4;
++    GXInitTexObj(&textures[0], mRasterBuffers[0], width, stripHeight, GX_TF_RGB565, GX_CLAMP, GX_CLAMP, GX_FALSE);
++    GXInitTexObj(&textures[1], mRasterBuffers[1], width, stripHeight, GX_TF_RGB565, GX_CLAMP, GX_CLAMP, GX_FALSE);
++    GXSetLineWidth(6, GX_TO_ZERO);
++    GXSetTexCopyDst(width, stripHeight, GX_TF_RGB565, GX_FALSE);
++    GXSetTexCopySrc(0, 0, width, stripHeight);
++    GXCopyTex(mRasterBuffers[0], GX_FALSE);
++    f32 increment = 1.0f / stripHeight;
++    f32 phase = 89.0f * MR::sin((6.2831855f * mMario->mSwim->mColdWaterDamageInterval) / 120.0f);
++    if (phase > 0.0f) {
++        phase = 0.0f;
++    }
++    for (u32 y = 0; y < MR::getScreenHeight(); y += stripHeight) {
++        GXTexModeSync();
++        GXPixModeSync();
++        GXSetTexCopySrc(0, y + stripHeight, width, stripHeight);
++        u32 next = 1 - current;
++        GXCopyTex(mRasterBuffers[next], GX_FALSE);
++        GXLoadTexObj(&textures[current], GX_TEXMAP0);
++        f32 texY = 0.0f;
++        for (u32 line = y; line < y + stripHeight; line++) {
++            f32 offset = 5.0f * MR::sin(2.0f * (((_37C + line * phase) / MR::getScreenHeight()) * 3.1415927f));
++            GXBegin(GX_LINES, GX_VTXFMT0, 2);
++            GXPosition3f32(offset, line, 0.0f);
++            GXTexCoord2f32(0.0f, texY);
++            GXPosition3f32(offset + MR::getScreenWidth(), line, 0.0f);
++            GXTexCoord2f32(1.0f, texY);
++            GXEnd();
++            texY += increment;
++        }
++        current = next;
++    }
++    GXDrawDone();
++}
++
+ 
+ void MarioActor::setRasterScroll(s32 i1, s32 i2, s32 i3) {
+     // FIXME: regswap
+@@ -519,7 +562,53 @@
+     }
+ }
+ 
+-// void MarioActor::drawRasterScroll(f32, s16, f32) const {}
++void MarioActor::drawRasterScroll(f32 amplitude, s16 period, f32 wavelength) const {
++    if (wavelength == 0.0f) {
++        return;
++    }
++    if (period == 0) {
++        return;
++    }
++    GXDrawDone();
++    GXTexModeSync();
++    GXPixModeSync();
++    u16 width = MR::getFrameBufferWidth();
++    TDDraw::setup(1, 0, 2);
++    GXTexObj textures[2];
++    u16 current = 0;
++    u32 stripHeight = 4;
++    GXInitTexObj(&textures[0], mRasterBuffers[0], width, stripHeight, GX_TF_RGB565, GX_CLAMP, GX_CLAMP, GX_FALSE);
++    GXInitTexObj(&textures[1], mRasterBuffers[1], width, stripHeight, GX_TF_RGB565, GX_CLAMP, GX_CLAMP, GX_FALSE);
++    GXSetLineWidth(6, GX_TO_ZERO);
++    GXSetTexCopyDst(width, stripHeight, GX_TF_RGB565, GX_FALSE);
++    GXSetTexCopySrc(0, 0, width, stripHeight);
++    GXCopyTex(mRasterBuffers[0], GX_FALSE);
++    f32 increment = 1.0f / stripHeight;
++    f32 frequency = 6.2831855f / wavelength;
++    f32 phase = (_37C * 6.2831855f) / period;
++    for (u32 y = 0; y < MR::getScreenHeight(); y += stripHeight) {
++        GXTexModeSync();
++        GXPixModeSync();
++        GXSetTexCopySrc(0, y + stripHeight, width, stripHeight);
++        u32 next = 1 - current;
++        GXCopyTex(mRasterBuffers[next], GX_FALSE);
++        GXLoadTexObj(&textures[current], GX_TEXMAP0);
++        f32 texY = 0.0f;
++        for (u32 line = y; line < y + stripHeight; line++) {
++            f32 offset = amplitude * MR::sin(MR::sin(frequency * line) * 3.1415927f + phase);
++            GXBegin(GX_LINES, GX_VTXFMT0, 2);
++            GXPosition3f32(offset, line, 0.0f);
++            GXTexCoord2f32(0.0f, texY);
++            GXPosition3f32(offset + MR::getScreenWidth(), line, 0.0f);
++            GXTexCoord2f32(1.0f, texY);
++            GXEnd();
++            texY += increment;
++        }
++        current = next;
++    }
++    GXDrawDone();
++}
++
+ 
+ void MarioActor::drawMosaic() const {
+ }
+--- a/pc-port/src/Game/Player/MarioActor.hpp
++++ b/pc-port/src/Game/Player/MarioActor.hpp
+@@ -595,8 +595,7 @@
+     /* 0x1D0 */ u8 _1D0;
+     /* 0x1D1 */ u8 _1D1;
+     /* 0x1D4 */ f32 _1D4;
+-    /* 0x1D8 */ FBO* _1D8;
+-    /* 0x1DC */ FBO* _1DC;
++    /* 0x1D8 */ FBO* mRasterBuffers[2];
+     /* 0x1E0 */ bool _1E0;
+     /* 0x1E1 */ bool _1E1;
+     /* 0x1E2 */ u8 _1E2;
+--- a/pc-port/src/Game/Player/MarioActorInit.cpp
++++ b/pc-port/src/Game/Player/MarioActorInit.cpp
+@@ -31,8 +31,8 @@
+     _1D0 = 0;
+     _1D1 = 0;
+     _1D4 = 0.0f;
+-    _1D8 = nullptr;
+-    _1DC = nullptr;
++    mRasterBuffers[0] = nullptr;
++    mRasterBuffers[1] = nullptr;
+     _1E0 = 0;
+     _1E1 = 0;
+     _1E2 = 0;
+--- a/pc-port/src/Game/Player/MarioActor.cpp
++++ b/pc-port/src/Game/Player/MarioActor.cpp
+@@ -475,8 +475,8 @@
+     _1D1 = 0;
+     _A24 = 0;
+     _A25 = 0;
+-    _1D8 = new (0x20) FBO[MR::getFrameBufferWidth()];
+-    _1DC = new (0x20) FBO[MR::getFrameBufferWidth()];
++    mRasterBuffers[0] = new (0x20) FBO[MR::getFrameBufferWidth()];
++    mRasterBuffers[1] = new (0x20) FBO[MR::getFrameBufferWidth()];
+     _1E4 = 0.0f;
+     _1E8 = 0;
+     _1EC = 0.0f;

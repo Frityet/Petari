@@ -31,8 +31,8 @@ void MarioActor::initMember() {
     _1D0 = 0;
     _1D1 = 0;
     _1D4 = 0.0f;
-    _1D8 = nullptr;
-    _1DC = nullptr;
+    mRasterBuffers[0] = nullptr;
+    mRasterBuffers[1] = nullptr;
     _1E0 = 0;
     _1E1 = 0;
     _1E2 = 0;

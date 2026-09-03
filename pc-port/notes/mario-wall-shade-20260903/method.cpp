@@ -1,0 +1,43 @@
+void MarioActor::drawWallShade(const TVec3f& position, const TVec3f& normal, f32) const {
+    f32 radius = 100.0f;
+    TDDraw::setup(1, 1, 0);
+    GXSetZMode(GX_TRUE, GX_GREATER, GX_FALSE);
+    GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR0A0);
+    GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO, GX_CC_ZERO);
+    GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_TEXA, GX_CA_RASA, GX_CA_ZERO);
+    GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    _B80[_B88]->load(GX_TEXMAP0);
+    GXClearVtxDesc();
+    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
+    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_CLR0, GX_CLR_RGBA, GX_RGBA8, 0);
+    GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_TEX_ST, GX_F32, 0);
+    GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
+    GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
+    TVec3f tangent(0.0f, normal.z, -normal.y);
+    if (MR::isNearZero(tangent, 0.001f)) {
+        tangent.set<f32>(normal.z, 0.0f, normal.x);
+    }
+    MR::normalizeOrZero(&tangent);
+    Mtx rotation;
+    PSMTXRotAxisRad(rotation, &normal, 0.3926991f);
+    GXBegin(GX_TRIANGLEFAN, GX_VTXFMT0, 18);
+    GXPosition3f32(position.x - 5.0f * normal.x, position.y - 5.0f * normal.y, position.z - 5.0f * normal.z);
+    GXColor1u32(0x80);
+    GXTexCoord2f32(0.0f, 0.0f);
+    for (u32 i = 0; i <= 16; i++) {
+        f32 angle = 2.0f * (i * 0.0625f * PI);
+        TVec3f radial(tangent);
+        radial.scale(radius);
+        TVec3f offset(normal);
+        offset.scale(5.0f);
+        TVec3f center(position - offset);
+        TVec3f vertex(center);
+        vertex += radial;
+        GXPosition3f32(vertex.x, vertex.y, vertex.z);
+        GXColor1u32(1);
+        GXTexCoord2f32(10.0f * MR::cos(angle), 10.0f * MR::sin(angle));
+        PSMTXMultVecSR(rotation, &tangent, &tangent);
+    }
+}

@@ -592,8 +592,7 @@ public:
     /* 0x1D0 */ u8 _1D0;
     /* 0x1D1 */ u8 _1D1;
     /* 0x1D4 */ f32 _1D4;
-    /* 0x1D8 */ FBO* _1D8;
-    /* 0x1DC */ FBO* _1DC;
+    /* 0x1D8 */ FBO* mRasterBuffers[2];
     /* 0x1E0 */ bool _1E0;
     /* 0x1E1 */ bool _1E1;
     /* 0x1E2 */ u8 _1E2;

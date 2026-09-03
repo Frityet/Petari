@@ -1,0 +1,7 @@
+# Original wall-shade draw
+
+The isolated recovered `MarioActor::drawWallShade` is **99.400826%** against RMGK01 `0x802C2D0C`, 968 bytes, using GC 3.0a3 and the configured original Game flags. Direct call order is identical. `verify-original.py` inserts `method.cpp` into an ignored copy of the current shared SpecialDraw TU, compiles and compares it, and emits `compiler-evidence.json` plus a narrow `root.patch`. It never edits the shared root TU. After application it accepts the identical current root method. The parent owns root/native application and native validation.
+
+The original f32 argument is unused. The source preserves the actual radius 100, center offset `position - normal*5`, texture `_B80[_B88]`, greater-than depth test without depth writes, and TEV alpha inputs zero/texture/raster/zero. Its tangent starts `(0,n.z,-n.y)` with `(n.z,0,n.x)` near-zero fallback, is normalized with the original helper, and rotates by pi/8 after each rim vertex. The triangle fan has one center plus seventeen rim vertices, with center color0x80, rim color1, and texture coordinates10 times cosine/sine. The exact stored rotation constant is `0x3EC90FDB`.
+
+Remaining instruction differences are register/stack scheduling and commuted scalar multiplies in angle construction; the complete external call sequence matches. The radius, offset, GX constants and selection fields are directly checked against the disassembly. No camera or collision owner is synthesized, and no gameplay branches or names are introduced.
