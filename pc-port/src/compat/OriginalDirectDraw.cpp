@@ -14,9 +14,7 @@
 
 namespace {
     static Mtx mViewMtx;
-
-
-};  // namespace
+}
 
 namespace TDDraw {
     void setViewMtx(MtxPtr mtx) {
@@ -157,47 +155,6 @@ namespace TDDraw {
         GXPosition3f32(rVec.x, rVec.y, rVec.z);
     }
 
-    void drawLine(const TVec3f& a1, const TVec3f& a2, u32 a3) {
-        GXBegin(GX_LINES, GX_VTXFMT0, 2);
-        {
-            sendPoint(a1, a3);
-            sendPoint(a2, a3);
-        }
-        GXEnd();
-    }
-
-    void drawCircle(const TVec3f& a1, const TVec3f& a2, f32 a3, u32 a4, u32 a5) {
-        TVec3f v11;
-
-        if (a2.x != 0.0f) {
-            v11.set< f32 >(a2.y, -a2.x, 0.0f);
-        } else {
-            v11.set< f32 >(0.0f, -a2.z, a2.y);
-        }
-
-        MR::normalizeOrZero(&v11);
-        drawCircle(a1, a2, v11, a3, a4, a5);
-    }
-
-    // tvec inlines
-    void drawCircle(const TVec3f& a1, const TVec3f& a2, const TVec3f& a3, f32 a4, u32 a5, u32 a6) {
-        TVec3f v14(a3);
-        Mtx v15;
-        PSMTXRotAxisRad(v15, a2, 6.2831855f / a6);
-
-        GXBegin(GX_LINESTRIP, GX_VTXFMT0, a6 + 1);
-        for (u32 i = 0; i <= a6; i++) {
-            TVec3f v12(v14);
-            v12 *= a4;
-            TVec3f v13(a1);
-            v13 += v12;
-            GXPosition3f32(v13.x, v13.y, v13.z);
-            GXCmd1u32(a5);
-            PSMTXMultVec(v15, v14, v14);
-        }
-        GXEnd();
-    }
-
     void drawFillCircle(const TVec3f& a1, f32 a2, u32 a3, u32 a4, u32 a5) {
         TVec3f position;
         position.z = a1.z;
@@ -213,7 +170,6 @@ namespace TDDraw {
         GXEnd();
     }
 
-    // tvec inlines
     void drawFillCircle(const TVec3f& a1, const TVec3f& a2, f32 a3, u32 a4, u32 a5) {
         TVec3f v14;
         if (a2.x != 0.0f) {
@@ -240,157 +196,6 @@ namespace TDDraw {
                 GXPosition3f32(v13.x, v13.y, v13.z);
                 GXCmd1u32(a4);
             }
-        }
-        GXEnd();
-    }
-
-    void drawFillFan(const TVec3f& a1, const TVec3f& a2, const TVec3f& a3, u32 a4, f32 a5, f32 a6, u32 a7) {
-        Mtx v18;
-        PSMTXRotAxisRad(v18, a2, a5);
-        Mtx v17;
-        PSMTXRotAxisRad(v17, a2, (a6 - a5) / (a7));
-        TVec3f v16;
-        PSMTXMultVec(v18, a3, v16);
-
-        GXBegin(GX_TRIANGLEFAN, GX_VTXFMT0, a7 + 2);
-        {
-            GXPosition3f32(a1.x, a1.y, a1.z);
-            GXCmd1u32(a4);
-
-            for (u32 i = 0; i <= a7; i++) {
-                TVec3f v15(v16);
-                v15 += a1;
-                GXPosition3f32(v15.x, v15.y, v15.z);
-                GXCmd1u32(a4);
-                PSMTXMultVec(v17, v16, v16);
-            }
-        }
-        GXEnd();
-    }
-
-    void drawCylinder(const TVec3f& a1, const TVec3f& a2, f32 a3, u32 a4, u32 a5, u32 a6) {
-        TVec3f v19;
-
-        if (a2.x != 0.0f) {
-            v19.set< f32 >(a2.y, -a2.x, 0.0f);
-        } else {
-            v19.set< f32 >(0.0f, -a2.z, a2.y);
-        }
-
-        if (MR::isNearZero(v19)) {
-            return;
-        }
-
-        MR::normalizeOrZero(&v19);
-        TVec3f v18(a1);
-        v18 += a2;
-        Mtx v20;
-        PSMTXRotAxisRad(v20, a2, (TWO_PI / a6));
-
-        GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, 2 * (a6 + 1));
-        for (u32 i = 0; i <= a6; i++) {
-            TVec3f v15(v19);
-            v15 *= a3;
-            TVec3f v17(a1);
-            v17 += v15;
-            TVec3f v14(v19);
-            v14 *= a3;
-            TVec3f v16(v18);
-            v16 += v14;
-            GXPosition3f32(v17.x, v17.y, v17.z);
-            GXCmd1u32(a4);
-            GXPosition3f32(v16.x, v16.y, v16.z);
-            GXCmd1u32(a5);
-            PSMTXMultVec(v20, v19, v19);
-        }
-        GXEnd();
-    }
-
-    void drawSpherePart(const TPos3f& a1, f32 a2, f32 a3, f32 a4, f32 a5, f32 a6, u32 a7, u32 a8, u32 a9) {
-        TVec3f v47;
-        v47.set< f32 >(a1(0, 0), a1(1, 0), a1(2, 0));
-        TVec3f v46;
-        v46.set< f32 >(a1(0, 1), a1(1, 1), a1(2, 1));
-        TVec3f v45;
-        v45.set< f32 >(a1(0, 2), a1(1, 2), a1(2, 2));
-        TVec3f v44;
-        a1.getTrans(v44);
-        f32 v21 = MR::sin(a3);
-        f32 v22 = MR::cos(a3);
-        TVec3f v36(v46);
-        v36 *= v21;
-        TVec3f v37(v47);
-        v37 *= v22;
-        TVec3f v38(v37);
-        v38 += v36;
-        TVec3f v43(v38);
-        v43 *= a2;
-        f32 v23 = a6 - a5;
-
-        for (u32 i = 1; i <= a8; i++) {
-            f32 v25 = (a3 + (i / a8)) * (a4 - a3);
-            f32 v26 = MR::sin(v25);
-            f32 v27 = MR::cos(v25);
-            TVec3f v33(v46);
-            v33 *= v26;
-            TVec3f v34(v47);
-            v34 *= v27;
-            TVec3f v35(v34);
-            v34 += v33;
-            TVec3f v42(v35);
-            v42 *= a2;
-
-            GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, 2 * (a9 + 1));
-            for (s32 j = 0; j <= a9; j++) {
-                f32 v29 = (a5 + (j / a9) * v23);
-                f32 v30 = MR::sin(v29);
-                f32 v31 = MR::cos(v29);
-                TVec3f v32(v45);
-                v32 *= (v31 * a2);
-                TVec3f v41(v44);
-                v41 += v32;
-                TVec3f v40(v43);
-                v40 *= v30;
-                TVec3f v39(v42);
-                v39 *= v30;
-                v40 += v41;
-                v39 += v41;
-                GXPosition3f32(v40.x, v40.y, v40.z);
-                GXCmd1u32(a7);
-                GXPosition3f32(v39.x, v39.y, v39.z);
-                GXCmd1u32(a7);
-            }
-            GXEnd();
-
-            v43 = v42;
-        }
-    }
-
-    void drawSphere(const TVec3f& a1, f32 a2, u32 a3, u32 a4) {
-        TVec3f v9 = MR::getCamZdir();
-        drawFillCircle(a1, v9, a2, a3, a4);
-    }
-
-    void drawSphere3D(TVec3f a1, f32 a2, u32 a3, u32 a4) {
-        TPos3f v8;
-        v8.identity();
-        v8.setTrans(a1);
-        drawSpherePart(v8, a2, a3, a3, a4, 0.0f, TWO_PI, 0.0f, PI);
-    }
-
-    void drawTexture(const TVec2f& a1, JUTTexture* a2, const TVec2f& a3) {
-        a2->load(GX_TEXMAP0);
-
-        GXBegin(GX_QUADS, GX_VTXFMT0, 4);
-        {
-            GXPosition3f32(a1.x, a1.y, 0.0f);
-            GXTexCoord2f32(0.0f, 0.0f);
-            GXPosition3f32(a1.x + a3.x, a1.y, 0.0f);
-            GXTexCoord2f32(1.0f, 0.0f);
-            GXPosition3f32(a1.x + a3.x, a1.y + a3.y, 0.0f);
-            GXTexCoord2f32(1.0f, 1.0f);
-            GXPosition3f32(a1.x, a1.y + a3.y, 0.0f);
-            GXTexCoord2f32(0.0f, 1.0f);
         }
         GXEnd();
     }
@@ -437,36 +242,6 @@ namespace TDDraw {
             GXTexCoord2f32(texRight, texBottom);
             sendPoint(bottomLeft);
             GXTexCoord2f32(texLeft, texBottom);
-        }
-        GXEnd();
-    }
-
-    void drawFillBox(const TVec3f& a1, const TVec3f& a2, u32 a3) {
-        GXBegin(GX_QUADS, GX_VTXFMT0, 4);
-        {
-            GXPosition3f32(a1.x, a1.y, a1.z);
-            GXCmd1u32(a3);
-            GXPosition3f32(a2.x, a1.y, a1.z);
-            GXCmd1u32(a3);
-            GXPosition3f32(a2.x, a2.y, a2.z);
-            GXCmd1u32(a3);
-            GXPosition3f32(a1.x, a2.y, a2.z);
-            GXCmd1u32(a3);
-        }
-        GXEnd();
-    }
-
-    void drawFillBox(const TVec2f& a1, const TVec2f& a2, u32 a3) {
-        GXBegin(GX_QUADS, GX_VTXFMT0, 4);
-        {
-            GXPosition3f32(a1.x, a1.y, 0.0f);
-            GXCmd1u32(a3);
-            GXPosition3f32(a2.x, a1.y, 0.0f);
-            GXCmd1u32(a3);
-            GXPosition3f32(a2.x, a2.y, 0.0f);
-            GXCmd1u32(a3);
-            GXPosition3f32(a1.x, a2.y, 0.0f);
-            GXCmd1u32(a3);
         }
         GXEnd();
     }
@@ -524,7 +299,6 @@ namespace TDDraw {
         MR::loadProjectionMtx();
     }
 
-    // https://decomp.me/scratch/33EPL
     void cameraInit2D() {
         static TVec3f camLoc(MR::getScreenWidth() / 2.0f, MR::getScreenHeight() / 2.0f, -30.0f);
         static TVec3f objPt(MR::getScreenWidth() / 2.0f, MR::getScreenHeight() / 2.0f, 0.0f);
@@ -541,77 +315,6 @@ namespace TDDraw {
         MR::setDefaultViewportAndScissor();
     }
 
-    void mixFogColor(TVec3f a1, f32 a2, u32 a3) {
-        f32 nearZ = MR::getNearZ();
-        f32 farZ = MR::getFarZ();
-        GXColor color;
-        setGXColor(a3, &color);
-        f32 v11;
-        f32 v10;
-        MR::calcFogStartEnd(a1, a2, &v11, &v10);
-        GXSetFog(GX_FOG_PERSP_LIN, v11, v10, nearZ, farZ, color);
-    }
-
-    // TDDraw::tileConversion8
-    // TDDraw::tileConversion16
-    // TDDraw::getTexel32
-    // TDDraw::getTexel32
-    // TDDraw::setTexel32
-
-    // https://decomp.me/scratch/WFf2R
-    void setTexel32(u8* tex, u32 width, u32 x, u32 y, u32 color) {
-        u32 offset = ((width << 4) & ~0x3F) * (y >> 2) + ((x << 4) & ~0x3F) + ((x & 3) << 1) + ((y & 3) << 3);
-        u8* dst = tex + offset;
-        dst[0x00] = color;
-        dst[0x20] = color >> 8;
-        dst[0x21] = color >> 16;
-        dst[0x01] = color >> 24;
-    }
-
-    void invProject(TVec3f* pOut, const TVec3f& rScreenPos, MtxPtr pViewMtx, const f32* pProjection, const f32* pViewport,
-                    bool isNormalizedDepth) {
-        f32 depth;
-        if (!isNormalizedDepth) {
-            depth = rScreenPos.z / 16777215.0f;
-        } else {
-            depth = rScreenPos.z;
-        }
-
-        f32 depthOffset = depth - pViewport[5];
-        f32 projectedZ = (depthOffset * pProjection[6]) / (depthOffset + pProjection[5] * (pViewport[5] - pViewport[4]));
-        f32 inverseW = pProjection[5] / (pProjection[6] - projectedZ);
-
-        f32 x;
-        if (MR::isScreen16Per9()) {
-            f32 screenWidth = MR::getScreenWidth();
-            f32 frameBufferWidth = MR::getFrameBufferWidth();
-            f32 halfWidth = pViewport[2] * 0.5f;
-            x = ((rScreenPos.x * frameBufferWidth / screenWidth - (pViewport[0] + halfWidth)) / inverseW) / halfWidth;
-        } else {
-            f32 halfWidth = pViewport[2] * 0.5f;
-            x = ((rScreenPos.x - (pViewport[0] + halfWidth)) / inverseW) / halfWidth;
-        }
-
-        f32 halfHeight = pViewport[3] * 0.5f;
-        f32 y = (-(rScreenPos.y - (pViewport[1] + halfHeight)) / inverseW) / halfHeight;
-
-        TVec3f viewPos;
-        if (pProjection[0] == 0.0f) {
-            viewPos.z = (projectedZ - pProjection[6]) / pProjection[5];
-            viewPos.x = (x - viewPos.z * pProjection[2]) / pProjection[1];
-            viewPos.y = (y - viewPos.z * pProjection[4]) / pProjection[3];
-        } else {
-            viewPos.z = (projectedZ - pProjection[6]) / pProjection[5];
-            viewPos.x = (x - pProjection[2]) / pProjection[1];
-            viewPos.y = (y - pProjection[4]) / pProjection[3];
-        }
-
-        Mtx inverseView;
-        PSMTXInverse(pViewMtx, inverseView);
-        PSMTXMultVec(inverseView, &viewPos, pOut);
-    }
-    // TDDraw::project2D
-    // TDDraw::project2D
     void fix2Dpos(TVec3f* position) {
         if (MR::isScreen16Per9()) {
             f32 frameBufferWidth = MR::getFrameBufferWidth();
@@ -619,12 +322,4 @@ namespace TDDraw {
             position->x *= screenWidth / frameBufferWidth;
         }
     }
-
-    void setGXColor(u32 a1, GXColor* pColor) {
-        pColor->r = (a1 >> 24) & 0xFF;
-        pColor->g = (a1 >> 16) & 0xFF;
-        pColor->b = (a1 >> 8) & 0xFF;
-        pColor->a = a1 & 0xFF;
-    }
-
-};  // namespace TDDraw
+}

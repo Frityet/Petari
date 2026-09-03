@@ -1,0 +1,66 @@
+{
+  "source": "src/Game/Util/DirectDraw.cpp",
+  "native": "pc-port/src/compat/OriginalDirectDraw.cpp",
+  "unchanged_bodies": [
+    {
+      "name": "setViewMtx",
+      "body_sha256": "02702e214be5d4df4199b4c76d0859f93f14d506caa77b0d43ea59f753ae7163"
+    },
+    {
+      "name": "loadViewMtx",
+      "body_sha256": "a45c77237dc5ad30b544947b98b512181c8764bf0b811b96c71832382c707fbc"
+    },
+    {
+      "name": "setModelMtx",
+      "body_sha256": "b3d14255e26bb7d85b0df45fadda7d82b89c1c01a82d83f6b5a9f0f0b34694ec"
+    },
+    {
+      "name": "resetViewMtx",
+      "body_sha256": "9d3000f9e91f9c2bef27669e4b93906a5a276e302b1fddcfa495e1ed9feb62aa"
+    },
+    {
+      "name": "close",
+      "body_sha256": "e712cbebc58a1adf64e87d23b41b1e6bc37a856dea1972e1a6f70907f942c002"
+    },
+    {
+      "name": "setup",
+      "body_sha256": "558dccbaf04bb3abd4a48e43b61372185bd0718206c2ce86d73dfac28a94c4dc"
+    },
+    {
+      "name": "sendPoint",
+      "body_sha256": "9cb06496c35a2ee1143f3a5c56f15f1bfd9554f20cf440e6371be8db6ce6d44f"
+    },
+    {
+      "name": "sendPoint",
+      "body_sha256": "ac0b8a55a695b88fefa969194425f4bed65f89e92245a4356da1ce71635235e8"
+    },
+    {
+      "name": "drawFillCircle",
+      "body_sha256": "88cd9b423aa9cd93137fb2695fa90d0991ae74cdc913c697f8e010bf9920bd65"
+    },
+    {
+      "name": "drawFillCircle",
+      "body_sha256": "2d568ec52759c1006c6b1ebb32b275039147619d5e7fd76dfa2d0f78f4425e93"
+    },
+    {
+      "name": "drawTexture3D",
+      "body_sha256": "0a08f6716818ef87817efd5d9e260f0706e048fa0691a6d3307f02659ded917f"
+    },
+    {
+      "name": "drawFillBox3D",
+      "body_sha256": "900426e415d50cca11a61834449dc47c53723a1b68a79083ba2b5b66c43cfef3"
+    },
+    {
+      "name": "cameraInit3D",
+      "body_sha256": "3797443145d5f64eb2eaef6fb640e022edcc73b133a6a0ca0a1b2090e64498e3"
+    },
+    {
+      "name": "cameraInit2D",
+      "body_sha256": "72dfa82234b05d8022d38833f387a341ca229f5cb9bc0e5ed00590458ad35810"
+    },
+    {
+      "name": "fix2Dpos",
+      "body_sha256": "8fb5fc397bbce3f55ad819b3f03a932088df54e491cafd8d6d4c61782d44b647"
+    }
+  ]
+}

@@ -136,6 +136,14 @@ public:
     JMapInfoIter(const JMapInfo* pInfo, s32 index) : mInfo(pInfo), mIndex(index) {
     }
 
+    bool operator==(const JMapInfoIter& rIter) const {
+        return mIndex == rIter.mIndex && mInfo != nullptr && rIter.mInfo != nullptr && *mInfo == *rIter.mInfo;
+    }
+
+    bool operator!=(const JMapInfoIter& rIter) const {
+        return !(*this == rIter);
+    }
+
     [[nodiscard]] bool isValid() const {
         return mInfo != nullptr && mIndex >= 0 && mIndex < mInfo->getNumEntries();
     }

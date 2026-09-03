@@ -214,6 +214,21 @@ namespace JGeometry {
             this->mMtx[2][2] = z_direction.z;
         }
 
+        void setEulerZ(f32 angle) {
+            f32 s = sin(angle);
+            f32 c = cos(angle);
+
+            this->mMtx[1][0] = s;
+            this->mMtx[0][0] = c;
+            this->mMtx[0][1] = -s;
+            this->mMtx[1][1] = c;
+            this->mMtx[2][2] = 1.0f;
+            this->mMtx[2][1] = 0.0f;
+            this->mMtx[1][2] = 0.0f;
+            this->mMtx[2][0] = 0.0f;
+            this->mMtx[0][2] = 0.0f;
+        }
+
         void getQuat(TQuat4f& rDest) const;
 
         void setQuat(const TQuat4f& quaternion) {
