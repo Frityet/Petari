@@ -700,6 +700,10 @@ namespace MR {
         mtx[2][3] = z;
     }
 
+    void setMtxTrans(MtxPtr mtx, const TVec3f& rVec) {
+        MR::setMtxTrans(mtx, rVec.x, rVec.y, rVec.z);
+    }
+
     void addTransMtx(MtxPtr mtx, const TVec3f& rVec) {
         mtx[0][3] += rVec.x;
         mtx[1][3] += rVec.y;

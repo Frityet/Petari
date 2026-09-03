@@ -1,5 +1,6 @@
 #include "Game/Animation/XanimeCore.hpp"
 #include "Game/Util/MathUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
 #include "JSystem/J3DGraphAnimator/J3DAnimation.hpp"
 #include "JSystem/J3DGraphAnimator/J3DModel.hpp"
 #include "JSystem/J3DGraphAnimator/J3DModelData.hpp"
@@ -191,6 +192,229 @@ void XanimeCore::freezeCopy(J3DModelData* pModelData, XanimeCore* pOther, u32 jo
         rate = 1.0f / interp;
     }
     pOther->mJointList[jointIndex]._60 = rate;
+}
+
+void XanimeCore::calcScaleBlendMaya(const TVec3f& scale, const TVec3f& translation) {
+    J3DJoint* joint = getJoint();
+    u16 jointIndex = joint->getJntNo();
+    J3DMtxBuffer* mtxBuffer = getMtxBuffer();
+    MtxPtr matrix = mtxBuffer->getAnmMtx(jointIndex);
+
+    if (mTransformList != nullptr) {
+        if (mTransformList[jointIndex]._64 != nullptr) {
+            PSMTXConcat(matrix, mTransformList[jointIndex]._64, matrix);
+        }
+        if (mTransformList[jointIndex]._68 != nullptr) {
+            PSMTXConcat(matrix, mTransformList[jointIndex]._68, matrix);
+        }
+    }
+
+    if (mTransformList != nullptr && mTransformList[jointIndex]._4 != 0xFFFF) {
+        MtxPtr parentMatrix = mTransformList[mTransformList[jointIndex]._4]._68;
+        if (parentMatrix != nullptr) {
+            Mtx inverse;
+            PSMTXInverse(parentMatrix, inverse);
+            PSMTXConcat(inverse, matrix, matrix);
+        }
+    }
+
+    matrix[0][3] = translation.x;
+    matrix[1][3] = translation.y;
+    matrix[2][3] = translation.z;
+    if (mTransformList != nullptr) {
+        matrix[0][3] += mTransformList[jointIndex]._2C.x;
+        matrix[1][3] += mTransformList[jointIndex]._2C.y;
+        matrix[2][3] += mTransformList[jointIndex]._2C.z;
+    }
+
+    TVec3f localScale(scale);
+    if (mTransformList != nullptr) {
+        localScale.x *= mTransformList[jointIndex].mScale.x * mTransformList[jointIndex]._14.x;
+        localScale.y *= mTransformList[jointIndex].mScale.y * mTransformList[jointIndex]._14.y;
+        localScale.z *= mTransformList[jointIndex].mScale.z * mTransformList[jointIndex]._14.z;
+    }
+    if (localScale.x == 1.0f && localScale.y == 1.0f && localScale.z == 1.0f) {
+        mtxBuffer->setScaleFlag(jointIndex, 1);
+    } else {
+        mtxBuffer->setScaleFlag(jointIndex, 0);
+        JMAMTXApplyScale(matrix, matrix, localScale.x, localScale.y, localScale.z);
+    }
+
+    if (mTransformList != nullptr && mTransformList[jointIndex]._4 != 0xFFFF) {
+        if (mTransformList[mTransformList[jointIndex]._4].mScale.x != 1.0f) {
+            f32 inverse = JMath::fastReciprocal(mTransformList[mTransformList[jointIndex]._4].mScale.x);
+            matrix[0][0] *= inverse;
+            matrix[0][1] *= inverse;
+            matrix[0][2] *= inverse;
+        }
+        if (mTransformList[mTransformList[jointIndex]._4].mScale.y != 1.0f) {
+            f32 inverse = JMath::fastReciprocal(mTransformList[mTransformList[jointIndex]._4].mScale.y);
+            matrix[1][0] *= inverse;
+            matrix[1][1] *= inverse;
+            matrix[1][2] *= inverse;
+        }
+        if (mTransformList[mTransformList[jointIndex]._4].mScale.z != 1.0f) {
+            f32 inverse = JMath::fastReciprocal(mTransformList[mTransformList[jointIndex]._4].mScale.z);
+            matrix[2][0] *= inverse;
+            matrix[2][1] *= inverse;
+            matrix[2][2] *= inverse;
+        }
+    }
+    if (joint->getScaleCompensate() == 1) {
+        if (J3DSys::mParentS.x != 1.0f) {
+            f32 inverse = JMath::fastReciprocal(J3DSys::mParentS.x);
+            matrix[0][0] *= inverse;
+            matrix[0][1] *= inverse;
+            matrix[0][2] *= inverse;
+        }
+        if (J3DSys::mParentS.y != 1.0f) {
+            f32 inverse = JMath::fastReciprocal(J3DSys::mParentS.y);
+            matrix[1][0] *= inverse;
+            matrix[1][1] *= inverse;
+            matrix[1][2] *= inverse;
+        }
+        if (J3DSys::mParentS.z != 1.0f) {
+            f32 inverse = JMath::fastReciprocal(J3DSys::mParentS.z);
+            matrix[2][0] *= inverse;
+            matrix[2][1] *= inverse;
+            matrix[2][2] *= inverse;
+        }
+    }
+
+    PSMTXConcat(J3DSys::mCurrentMtx, matrix, J3DSys::mCurrentMtx);
+    if (mTransformList != nullptr && mTransformList[jointIndex]._6C != nullptr) {
+        TVec3f currentTranslation;
+        MR::extractMtxTrans(J3DSys::mCurrentMtx, &currentTranslation);
+        MR::setMtxTrans(J3DSys::mCurrentMtx, 0.0f, 0.0f, 0.0f);
+        PSMTXConcat(mTransformList[jointIndex]._6C, J3DSys::mCurrentMtx, J3DSys::mCurrentMtx);
+        MR::setMtxTrans(J3DSys::mCurrentMtx, currentTranslation.x, currentTranslation.y, currentTranslation.z);
+    }
+    if (mTransformList != nullptr) {
+        J3DSys::mCurrentMtx[0][3] += mTransformList[jointIndex]._38.x;
+        J3DSys::mCurrentMtx[1][3] += mTransformList[jointIndex]._38.y;
+        J3DSys::mCurrentMtx[2][3] += mTransformList[jointIndex]._38.z;
+    }
+    PSMTXCopy(J3DSys::mCurrentMtx, matrix);
+    if (mTransformList != nullptr) {
+        matrix[0][3] += mTransformList[jointIndex]._20;
+        matrix[1][3] += mTransformList[jointIndex]._24;
+        matrix[2][3] += mTransformList[jointIndex]._28;
+    }
+
+    J3DSys::mParentS.x = scale.x;
+    J3DSys::mParentS.y = scale.y;
+    J3DSys::mParentS.z = scale.z;
+}
+
+void XanimeCore::calcScaleBlendSI(const TVec3f& scale, const TVec3f& translation) {
+    J3DJoint* joint = getJoint();
+    u16 jointIndex = joint->getJntNo();
+    J3DMtxBuffer* mtxBuffer = getMtxBuffer();
+    MtxPtr matrix = mtxBuffer->getAnmMtx(jointIndex);
+    Vec& currentScale = J3DSys::mCurrentS;
+
+    if (mTransformList != nullptr) {
+        if (mTransformList[jointIndex]._64 != nullptr) {
+            PSMTXConcat(matrix, mTransformList[jointIndex]._64, matrix);
+        }
+        if (mTransformList[jointIndex]._68 != nullptr) {
+            PSMTXConcat(matrix, mTransformList[jointIndex]._68, matrix);
+        }
+    }
+
+    TVec3f localScale(scale);
+    if (mTransformList != nullptr) {
+        localScale.x *= mTransformList[jointIndex].mScale.x * mTransformList[jointIndex]._14.x;
+        localScale.y *= mTransformList[jointIndex].mScale.y * mTransformList[jointIndex]._14.y;
+        localScale.z *= mTransformList[jointIndex].mScale.z * mTransformList[jointIndex]._14.z;
+    }
+    if (localScale.x == 1.0f && localScale.y == 1.0f && localScale.z == 1.0f) {
+        mtxBuffer->setScaleFlag(jointIndex, 1);
+    } else {
+        mtxBuffer->setScaleFlag(jointIndex, 0);
+        JMAMTXApplyScale(matrix, matrix, localScale.x, localScale.y, localScale.z);
+    }
+
+    if (mTransformList != nullptr && mTransformList[jointIndex]._4 != 0xFFFF) {
+        if (mTransformList[mTransformList[jointIndex]._4].mScale.x != 1.0f) {
+            f32 inverse = JMath::fastReciprocal(mTransformList[mTransformList[jointIndex]._4].mScale.x);
+            matrix[0][0] *= inverse;
+            matrix[0][1] *= inverse;
+            matrix[0][2] *= inverse;
+        }
+        if (mTransformList[mTransformList[jointIndex]._4].mScale.y != 1.0f) {
+            f32 inverse = JMath::fastReciprocal(mTransformList[mTransformList[jointIndex]._4].mScale.y);
+            matrix[1][0] *= inverse;
+            matrix[1][1] *= inverse;
+            matrix[1][2] *= inverse;
+        }
+        if (mTransformList[mTransformList[jointIndex]._4].mScale.z != 1.0f) {
+            f32 inverse = JMath::fastReciprocal(mTransformList[mTransformList[jointIndex]._4].mScale.z);
+            matrix[2][0] *= inverse;
+            matrix[2][1] *= inverse;
+            matrix[2][2] *= inverse;
+        }
+    }
+    if (joint->getScaleCompensate() == 1) {
+        if (J3DSys::mParentS.x != 1.0f) {
+            f32 inverse = JMath::fastReciprocal(J3DSys::mParentS.x);
+            matrix[0][0] *= inverse;
+            matrix[0][1] *= inverse;
+            matrix[0][2] *= inverse;
+        }
+        if (J3DSys::mParentS.y != 1.0f) {
+            f32 inverse = JMath::fastReciprocal(J3DSys::mParentS.y);
+            matrix[1][0] *= inverse;
+            matrix[1][1] *= inverse;
+            matrix[1][2] *= inverse;
+        }
+        if (J3DSys::mParentS.z != 1.0f) {
+            f32 inverse = JMath::fastReciprocal(J3DSys::mParentS.z);
+            matrix[2][0] *= inverse;
+            matrix[2][1] *= inverse;
+            matrix[2][2] *= inverse;
+        }
+    }
+
+    matrix[0][3] = translation.x * currentScale.x;
+    matrix[1][3] = translation.y * currentScale.y;
+    matrix[2][3] = translation.z * currentScale.z;
+    if (mTransformList != nullptr) {
+        matrix[0][3] += mTransformList[jointIndex]._2C.x;
+        matrix[1][3] += mTransformList[jointIndex]._2C.y;
+        matrix[2][3] += mTransformList[jointIndex]._2C.z;
+    }
+
+    PSMTXConcat(J3DSys::mCurrentMtx, matrix, J3DSys::mCurrentMtx);
+    currentScale.x *= scale.x;
+    currentScale.y *= scale.y;
+    currentScale.z *= scale.z;
+    if (currentScale.x == 1.0f && currentScale.y == 1.0f && currentScale.z == 1.0f) {
+        mtxBuffer->setScaleFlag(jointIndex, 1);
+        PSMTXCopy(J3DSys::mCurrentMtx, matrix);
+    } else {
+        mtxBuffer->setScaleFlag(jointIndex, 0);
+        JMAMTXApplyScale(J3DSys::mCurrentMtx, matrix, currentScale.x, currentScale.y, currentScale.z);
+        matrix[0][3] = J3DSys::mCurrentMtx[0][3];
+        matrix[1][3] = J3DSys::mCurrentMtx[1][3];
+        matrix[2][3] = J3DSys::mCurrentMtx[2][3];
+    }
+    if (mTransformList != nullptr) {
+        matrix[0][3] += mTransformList[jointIndex]._20;
+        matrix[1][3] += mTransformList[jointIndex]._24;
+        matrix[2][3] += mTransformList[jointIndex]._28;
+    }
+}
+
+void XanimeCore::calcScaleBlendSpecial() {
+    u16 jointIndex = getJoint()->getJntNo();
+    MtxPtr matrix = getMtxBuffer()->getAnmMtx(jointIndex);
+    TVec3f scale;
+    TVec3f translation;
+    scale = mJointList[jointIndex]._28._0;
+    translation = mJointList[jointIndex]._28._C;
+    PSMTXQuat(matrix, &mJointList[jointIndex]._28.mRotation);
+    calcScaleBlendMaya(scale, translation);
 }
 
 void XanimeCore::calcBlend(TVec3f* pScale, TVec3f* pTranslation) {
@@ -399,4 +623,123 @@ XtransformInfo::XtransformInfo() {
     _1C = 0.0f;
     _18 = 0.0f;
     _24 = 1.0f;
+}
+
+void XanimeCore::calcScaleBlendBasic(const TVec3f& scale, const TVec3f& translation) {
+    J3DMtxBuffer* mtxBuffer = getMtxBuffer();
+    u16 jointIndex = getJoint()->getJntNo();
+    MtxPtr matrix = mtxBuffer->getAnmMtx(jointIndex);
+    matrix[0][3] = translation.x;
+    matrix[1][3] = translation.y;
+    matrix[2][3] = translation.z;
+
+    J3DSys::mCurrentS.x *= scale.x;
+    J3DSys::mCurrentS.y *= scale.y;
+    J3DSys::mCurrentS.z *= scale.z;
+
+    if (J3DSys::mCurrentS.x == 1.0f && J3DSys::mCurrentS.y == 1.0f && J3DSys::mCurrentS.z == 1.0f) {
+        mtxBuffer->setScaleFlag(jointIndex, 1);
+    } else {
+        mtxBuffer->setScaleFlag(jointIndex, 0);
+        JMAMTXApplyScale(matrix, matrix, scale.x, scale.y, scale.z);
+    }
+
+    PSMTXConcat(J3DSys::mCurrentMtx, matrix, J3DSys::mCurrentMtx);
+    PSMTXCopy(J3DSys::mCurrentMtx, matrix);
+}
+
+void XanimeCore::calcScaleBlendMayaNoTransform(const TVec3f& scale, const TVec3f& translation) {
+    J3DJoint* joint = getJoint();
+    J3DMtxBuffer* mtxBuffer = getMtxBuffer();
+    u16 jointIndex = joint->getJntNo();
+    MtxPtr matrix = mtxBuffer->getAnmMtx(jointIndex);
+    matrix[0][3] = translation.x;
+    matrix[1][3] = translation.y;
+    matrix[2][3] = translation.z;
+
+    TVec3f localScale(scale);
+    if (localScale.x == 1.0f && localScale.y == 1.0f && localScale.z == 1.0f) {
+        mtxBuffer->setScaleFlag(jointIndex, 1);
+    } else {
+        mtxBuffer->setScaleFlag(jointIndex, 0);
+        JMAMTXApplyScale(matrix, matrix, localScale.x, localScale.y, localScale.z);
+    }
+
+    if (joint->getScaleCompensate() == 1) {
+        if (J3DSys::mParentS.x != 1.0f) {
+            f32 inverse = JMath::fastReciprocal(J3DSys::mParentS.x);
+            matrix[0][0] *= inverse;
+            matrix[0][1] *= inverse;
+            matrix[0][2] *= inverse;
+        }
+        if (J3DSys::mParentS.y != 1.0f) {
+            f32 inverse = JMath::fastReciprocal(J3DSys::mParentS.y);
+            matrix[1][0] *= inverse;
+            matrix[1][1] *= inverse;
+            matrix[1][2] *= inverse;
+        }
+        if (J3DSys::mParentS.z != 1.0f) {
+            f32 inverse = JMath::fastReciprocal(J3DSys::mParentS.z);
+            matrix[2][0] *= inverse;
+            matrix[2][1] *= inverse;
+            matrix[2][2] *= inverse;
+        }
+    }
+
+    PSMTXConcat(J3DSys::mCurrentMtx, matrix, J3DSys::mCurrentMtx);
+    PSMTXCopy(J3DSys::mCurrentMtx, matrix);
+    J3DSys::mParentS.x = scale.x;
+    J3DSys::mParentS.y = scale.y;
+    J3DSys::mParentS.z = scale.z;
+}
+
+void XanimeCore::calc() {
+    j3dSys.mCurrentMtxCalc = this;
+    if (_6 == 1) {
+        calcBlendSpecial();
+        return;
+    }
+    if (_6 == 2) {
+        calcScaleBlendSpecial();
+        return;
+    }
+
+    TVec3f scale;
+    TVec3f translation;
+    if (mTrackCount == 1) {
+        calcSingle(&scale, &translation);
+    } else {
+        calcBlend(&scale, &translation);
+    }
+    if (_6 == 3) {
+        fixT(&translation);
+    }
+
+    switch (_4) {
+    case 1:
+        calcScaleBlendSI(scale, translation);
+        break;
+    case 0:
+        if (mTransformList == nullptr) {
+            calcScaleBlendBasic(scale, translation);
+            break;
+        }
+    case 2:
+        if (mTransformList != nullptr) {
+            calcScaleBlendMaya(scale, translation);
+        } else {
+            calcScaleBlendMayaNoTransform(scale, translation);
+        }
+        break;
+    }
+}
+
+void XanimeCore::init(const Vec& scale, const Mtx& matrix) {
+    switch (_4) {
+    case 0:
+    case 1:
+    case 2:
+        J3DMtxCalcJ3DSysInitMaya::init(scale, matrix);
+        break;
+    }
 }

@@ -8,6 +8,10 @@
 #include <JSystem/JMath/JMATrigonometric.hpp>
 #include <JSystem/JMath/JMath.hpp>
 
+#ifndef __MWERKS__
+#include <cmath>
+#endif
+
 extern "C" int __fpclassifyf(f32);
 
 void MathUtil_FORCE_MATCH_SDATA2() {
@@ -1206,6 +1210,19 @@ namespace MR {
             psq_st    f4, 0(a3), 0, 0
             psq_st    f3, 8(a3), 1, 0
         }
+#else
+        const f32 fromX = a1->x;
+        const f32 fromY = a1->y;
+        const f32 fromZ = a1->z;
+        const f32 toX = a2->x;
+        const f32 toY = a2->y;
+        const f32 toZ = a2->z;
+        const f32 scaledX = fromX * a4;
+        const f32 scaledY = fromY * a4;
+        const f32 scaledZ = fromZ * a4;
+        a3->x = std::fma(toX, a5, scaledX);
+        a3->y = std::fma(toY, a5, scaledY);
+        a3->z = std::fma(toZ, a5, scaledZ);
 #endif
     }
 

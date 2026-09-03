@@ -58,7 +58,7 @@ public:
         };
     };
     /* 0x64 */ MtxPtr _64;
-    /* 0x68 */ u32 _68;
+    /* 0x68 */ MtxPtr _68;
     /* 0x6C */ MtxPtr _6C;
 };
 
@@ -107,6 +107,11 @@ public:
     void calcBlend(TVec3f*, TVec3f*);
     void calcSingle(TVec3f*, TVec3f*);
     void calcBlendSpecial();
+    void calcScaleBlendMaya(const TVec3f&, const TVec3f&);
+    void calcScaleBlendMayaNoTransform(const TVec3f&, const TVec3f&);
+    void calcScaleBlendSI(const TVec3f&, const TVec3f&);
+    void calcScaleBlendBasic(const TVec3f&, const TVec3f&);
+    void calcScaleBlendSpecial();
 
     void enableJointTransform(J3DModelData*);
 

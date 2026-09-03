@@ -1,0 +1,3076 @@
+{
+  "scope": "Three root XanimeCore scale methods; original compiler, actual retail relocation verification, and bounded retail instruction interpreter. No PC activation/native build.",
+  "source_sha256_at_compile": "c4b571278a901e4a065d1ee0ffdedb48c979674521597118894b1fbff77f5e21",
+  "header_sha256_at_compile": "89ecbea4b67e41a22b487e69479014405f4a8c3c3e1ecd5dc7c58d0b9014ad61",
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "compiler": "GC/3.0a3 with configure.py cflags_game, RMGK01 VERSION=0",
+  "tool_versions": {
+    "dtk": "v1.8.3",
+    "objdiff-cli": "v3.6.1",
+    "sjiswrap": "v1.2.2"
+  },
+  "tool_hashes": {
+    "build/compilers/GC/3.0a3/mwcceppc.exe": "66553cf100ee7e1793f368a39be6218292cd19a7c8636f2f1493b572ad5eaec2",
+    "build/tools/sjiswrap.exe": "01d50fa1148cfc3c3b16658c6c9b1c0d9f5324cde79ed6c09ef8353af9d63adf",
+    "build/tools/dtk": "a33363725a323c5226d2efe183a2430b0247ea55298d6a19a347a8692b3ae870",
+    "build/tools/objdiff-cli": "4ef0896ba8986f1adea6202d6e52a471deb1d126b071d23e88e8c00c250da7fd"
+  },
+  "target_object_sha256": "049002b352c9ab19fb00f510edb78c6872323b0ba4d490e591310473cc8e836e",
+  "compiled_object_sha256": "67b98a19f919b41b2351076f41f1d27151a62d5fcc3a6379f7cb0bceb7c4ff3d",
+  "normalization": "Control events retain branch destinations, arithmetic opcodes and call order; erase register names. Full instruction check for calc/init/MayaNoTransform only normalizes relocation constant names and relative branch addresses, preserving operands/registers.",
+  "functions": [
+    {
+      "method": "calcScaleBlendMaya",
+      "symbol": "calcScaleBlendMaya__10XanimeCoreFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+      "address": "0x80019f74",
+      "retail_size": 1352,
+      "compiled_size": 1352,
+      "objdiff_match_percent": 99.88166,
+      "source_body_sha256": "ef27995a4d9dbc01225ad9cb31dcb48f23cb8123fe9dab495ee906367c1e0462",
+      "retail_function_sha256": "1ca187a3f866a139b1bce9258f91e785b4fc201b5ac31e76c0d13ab702d21a56",
+      "direct_calls": [
+        "_savegpr_24",
+        "PSMTXConcat",
+        "PSMTXConcat",
+        "PSMTXInverse",
+        "PSMTXConcat",
+        "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "JMAMTXApplyScale__FPA4_CfPA4_ffff",
+        "fastReciprocal__5JMathFf",
+        "fastReciprocal__5JMathFf",
+        "fastReciprocal__5JMathFf",
+        "fastReciprocal__5JMathFf",
+        "fastReciprocal__5JMathFf",
+        "fastReciprocal__5JMathFf",
+        "PSMTXConcat",
+        "extractMtxTrans__2MRFPA4_fPQ29JGeometry8TVec3<f>",
+        "setMtxTrans__2MRFPA4_ffff",
+        "PSMTXConcat",
+        "setMtxTrans__2MRFPA4_ffff",
+        "PSMTXCopy",
+        "_restgpr_24"
+      ],
+      "retail_references": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_24",
+          "addend": 0
+        },
+        {
+          "offset": "0x14",
+          "kind": 109,
+          "symbol": "mJoint__10J3DMtxCalc",
+          "addend": 0
+        },
+        {
+          "offset": "0x2c",
+          "kind": 109,
+          "symbol": "mMtxBuffer__10J3DMtxCalc",
+          "addend": 0
+        },
+        {
+          "offset": "0x60",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "addend": 0
+        },
+        {
+          "offset": "0x80",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "addend": 0
+        },
+        {
+          "offset": "0xbc",
+          "kind": 10,
+          "symbol": "PSMTXInverse",
+          "addend": 0
+        },
+        {
+          "offset": "0xcc",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "addend": 0
+        },
+        {
+          "offset": "0x144",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x1b4",
+          "kind": 109,
+          "symbol": "@56471",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x20c",
+          "kind": 10,
+          "symbol": "JMAMTXApplyScale__FPA4_CfPA4_ffff",
+          "addend": 0
+        },
+        {
+          "offset": "0x234",
+          "kind": 109,
+          "symbol": "@56471",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x248",
+          "kind": 10,
+          "symbol": "fastReciprocal__5JMathFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x274",
+          "kind": 109,
+          "symbol": "@56471",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x294",
+          "kind": 10,
+          "symbol": "fastReciprocal__5JMathFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x2c0",
+          "kind": 109,
+          "symbol": "@56471",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x2e0",
+          "kind": 10,
+          "symbol": "fastReciprocal__5JMathFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x316",
+          "kind": 6,
+          "symbol": "mParentS__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x318",
+          "kind": 109,
+          "symbol": "@56471",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x31e",
+          "kind": 4,
+          "symbol": "mParentS__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x328",
+          "kind": 10,
+          "symbol": "fastReciprocal__5JMathFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x352",
+          "kind": 6,
+          "symbol": "mParentS__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x354",
+          "kind": 109,
+          "symbol": "@56471",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x35a",
+          "kind": 4,
+          "symbol": "mParentS__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x368",
+          "kind": 10,
+          "symbol": "fastReciprocal__5JMathFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x392",
+          "kind": 6,
+          "symbol": "mParentS__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x394",
+          "kind": 109,
+          "symbol": "@56471",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x39a",
+          "kind": 4,
+          "symbol": "mParentS__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x3a8",
+          "kind": 10,
+          "symbol": "fastReciprocal__5JMathFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x3d2",
+          "kind": 6,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x3da",
+          "kind": 4,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x3e0",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "addend": 0
+        },
+        {
+          "offset": "0x406",
+          "kind": 4,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x40c",
+          "kind": 10,
+          "symbol": "extractMtxTrans__2MRFPA4_fPQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x410",
+          "kind": 109,
+          "symbol": "@56472",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x416",
+          "kind": 4,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x420",
+          "kind": 10,
+          "symbol": "setMtxTrans__2MRFPA4_ffff",
+          "addend": 0
+        },
+        {
+          "offset": "0x42a",
+          "kind": 4,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x438",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "addend": 0
+        },
+        {
+          "offset": "0x442",
+          "kind": 4,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x44c",
+          "kind": 10,
+          "symbol": "setMtxTrans__2MRFPA4_ffff",
+          "addend": 0
+        },
+        {
+          "offset": "0x462",
+          "kind": 6,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x466",
+          "kind": 4,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x4ae",
+          "kind": 6,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x4b6",
+          "kind": 4,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x4b8",
+          "kind": 10,
+          "symbol": "PSMTXCopy",
+          "addend": 0
+        },
+        {
+          "offset": "0x512",
+          "kind": 6,
+          "symbol": "mParentS__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x51e",
+          "kind": 4,
+          "symbol": "mParentS__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x52a",
+          "kind": 4,
+          "symbol": "mParentS__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x534",
+          "kind": 10,
+          "symbol": "_restgpr_24",
+          "addend": 0
+        }
+      ],
+      "compiled_references": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_24",
+          "addend": 0
+        },
+        {
+          "offset": "0x14",
+          "kind": 109,
+          "symbol": "mJoint__10J3DMtxCalc",
+          "addend": 0
+        },
+        {
+          "offset": "0x2c",
+          "kind": 109,
+          "symbol": "mMtxBuffer__10J3DMtxCalc",
+          "addend": 0
+        },
+        {
+          "offset": "0x60",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "addend": 0
+        },
+        {
+          "offset": "0x80",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "addend": 0
+        },
+        {
+          "offset": "0xbc",
+          "kind": 10,
+          "symbol": "PSMTXInverse",
+          "addend": 0
+        },
+        {
+          "offset": "0xcc",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "addend": 0
+        },
+        {
+          "offset": "0x144",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x1b4",
+          "kind": 109,
+          "symbol": "@11004",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x20c",
+          "kind": 10,
+          "symbol": "JMAMTXApplyScale__FPA4_CfPA4_ffff",
+          "addend": 0
+        },
+        {
+          "offset": "0x234",
+          "kind": 109,
+          "symbol": "@11004",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x248",
+          "kind": 10,
+          "symbol": "fastReciprocal__5JMathFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x274",
+          "kind": 109,
+          "symbol": "@11004",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x294",
+          "kind": 10,
+          "symbol": "fastReciprocal__5JMathFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x2c0",
+          "kind": 109,
+          "symbol": "@11004",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x2e0",
+          "kind": 10,
+          "symbol": "fastReciprocal__5JMathFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x316",
+          "kind": 6,
+          "symbol": "mParentS__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x318",
+          "kind": 109,
+          "symbol": "@11004",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x31e",
+          "kind": 4,
+          "symbol": "mParentS__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x328",
+          "kind": 10,
+          "symbol": "fastReciprocal__5JMathFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x352",
+          "kind": 6,
+          "symbol": "mParentS__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x354",
+          "kind": 109,
+          "symbol": "@11004",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x35a",
+          "kind": 4,
+          "symbol": "mParentS__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x368",
+          "kind": 10,
+          "symbol": "fastReciprocal__5JMathFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x392",
+          "kind": 6,
+          "symbol": "mParentS__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x394",
+          "kind": 109,
+          "symbol": "@11004",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x39a",
+          "kind": 4,
+          "symbol": "mParentS__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x3a8",
+          "kind": 10,
+          "symbol": "fastReciprocal__5JMathFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x3d2",
+          "kind": 6,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x3da",
+          "kind": 4,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x3e0",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "addend": 0
+        },
+        {
+          "offset": "0x406",
+          "kind": 4,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x40c",
+          "kind": 10,
+          "symbol": "extractMtxTrans__2MRFPA4_fPQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x410",
+          "kind": 109,
+          "symbol": "@10998",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x416",
+          "kind": 4,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x420",
+          "kind": 10,
+          "symbol": "setMtxTrans__2MRFPA4_ffff",
+          "addend": 0
+        },
+        {
+          "offset": "0x42a",
+          "kind": 4,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x438",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "addend": 0
+        },
+        {
+          "offset": "0x442",
+          "kind": 4,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x44c",
+          "kind": 10,
+          "symbol": "setMtxTrans__2MRFPA4_ffff",
+          "addend": 0
+        },
+        {
+          "offset": "0x462",
+          "kind": 6,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x466",
+          "kind": 4,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x4ae",
+          "kind": 6,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x4b6",
+          "kind": 4,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x4b8",
+          "kind": 10,
+          "symbol": "PSMTXCopy",
+          "addend": 0
+        },
+        {
+          "offset": "0x512",
+          "kind": 6,
+          "symbol": "mParentS__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x51e",
+          "kind": 4,
+          "symbol": "mParentS__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x52a",
+          "kind": 4,
+          "symbol": "mParentS__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x534",
+          "kind": 10,
+          "symbol": "_restgpr_24",
+          "addend": 0
+        }
+      ],
+      "identical_normalized_event_count": 102,
+      "identical_normalized_events": [
+        "call _savegpr_24",
+        "cmpwi _, 0x0",
+        "beq event9",
+        "cmpwi _, 0x0",
+        "beq event6",
+        "call PSMTXConcat",
+        "cmpwi _, 0x0",
+        "beq event9",
+        "call PSMTXConcat",
+        "cmpwi _, 0x0",
+        "beq event17",
+        "cmplwi _, 0xffff",
+        "beq event17",
+        "cmpwi _, 0x0",
+        "beq event17",
+        "call PSMTXInverse",
+        "call PSMTXConcat",
+        "cmpwi _, 0x0",
+        "beq event22",
+        "fadds _, _, _",
+        "fadds _, _, _",
+        "fadds _, _, _",
+        "call __ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "cmpwi _, 0x0",
+        "beq event31",
+        "fmuls _, _, _",
+        "fmuls _, _, _",
+        "fmuls _, _, _",
+        "fmuls _, _, _",
+        "fmuls _, _, _",
+        "fmuls _, _, _",
+        "fcmpu cr0, _, _",
+        "bne event38",
+        "fcmpu cr0, _, _",
+        "bne event38",
+        "fcmpu cr0, _, _",
+        "bne event38",
+        "b event39",
+        "call JMAMTXApplyScale__FPA4_CfPA4_ffff",
+        "cmpwi _, 0x0",
+        "beq event61",
+        "cmplwi _, 0xffff",
+        "beq event61",
+        "fcmpu cr0, _, _",
+        "beq event49",
+        "call fastReciprocal__5JMathFf",
+        "fmuls _, _, _",
+        "fmuls _, _, _",
+        "fmuls _, _, _",
+        "fcmpu cr0, _, _",
+        "beq event55",
+        "call fastReciprocal__5JMathFf",
+        "fmuls _, _, _",
+        "fmuls _, _, _",
+        "fmuls _, _, _",
+        "fcmpu cr0, _, _",
+        "beq event61",
+        "call fastReciprocal__5JMathFf",
+        "fmuls _, _, _",
+        "fmuls _, _, _",
+        "fmuls _, _, _",
+        "cmplwi _, 0x1",
+        "bne event81",
+        "fcmpu cr0, _, _",
+        "beq event69",
+        "call fastReciprocal__5JMathFf",
+        "fmuls _, _, _",
+        "fmuls _, _, _",
+        "fmuls _, _, _",
+        "fcmpu cr0, _, _",
+        "beq event75",
+        "call fastReciprocal__5JMathFf",
+        "fmuls _, _, _",
+        "fmuls _, _, _",
+        "fmuls _, _, _",
+        "fcmpu cr0, _, _",
+        "beq event81",
+        "call fastReciprocal__5JMathFf",
+        "fmuls _, _, _",
+        "fmuls _, _, _",
+        "fmuls _, _, _",
+        "call PSMTXConcat",
+        "cmpwi _, 0x0",
+        "beq event90",
+        "cmpwi _, 0x0",
+        "beq event90",
+        "call extractMtxTrans__2MRFPA4_fPQ29JGeometry8TVec3<f>",
+        "call setMtxTrans__2MRFPA4_ffff",
+        "call PSMTXConcat",
+        "call setMtxTrans__2MRFPA4_ffff",
+        "cmpwi _, 0x0",
+        "beq event95",
+        "fadds _, _, _",
+        "fadds _, _, _",
+        "fadds _, _, _",
+        "call PSMTXCopy",
+        "cmpwi _, 0x0",
+        "beq event101",
+        "fadds _, _, _",
+        "fadds _, _, _",
+        "fadds _, _, _",
+        "call _restgpr_24"
+      ],
+      "full_relocation_normalized_instruction_match": true
+    },
+    {
+      "method": "calcScaleBlendSI",
+      "symbol": "calcScaleBlendSI__10XanimeCoreFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+      "address": "0x8001a688",
+      "retail_size": 1232,
+      "compiled_size": 1232,
+      "objdiff_match_percent": 99.87013,
+      "source_body_sha256": "de7d3017df4a5a4666b14ebf9fefa46ef4cfa94d24c11e14c5486ce37d6aac55",
+      "retail_function_sha256": "b17c3f61029b5109f3dafb0d9b5c1a0cf7a2b91a6da97e794d804a5d2922f853",
+      "direct_calls": [
+        "_savegpr_23",
+        "PSMTXConcat",
+        "PSMTXConcat",
+        "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "JMAMTXApplyScale__FPA4_CfPA4_ffff",
+        "fastReciprocal__5JMathFf",
+        "fastReciprocal__5JMathFf",
+        "fastReciprocal__5JMathFf",
+        "fastReciprocal__5JMathFf",
+        "fastReciprocal__5JMathFf",
+        "fastReciprocal__5JMathFf",
+        "PSMTXConcat",
+        "PSMTXCopy",
+        "JMAMTXApplyScale__FPA4_CfPA4_ffff",
+        "_restgpr_23"
+      ],
+      "retail_references": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_23",
+          "addend": 0
+        },
+        {
+          "offset": "0x14",
+          "kind": 109,
+          "symbol": "mJoint__10J3DMtxCalc",
+          "addend": 0
+        },
+        {
+          "offset": "0x22",
+          "kind": 6,
+          "symbol": "mCurrentS__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x2c",
+          "kind": 109,
+          "symbol": "mMtxBuffer__10J3DMtxCalc",
+          "addend": 0
+        },
+        {
+          "offset": "0x42",
+          "kind": 4,
+          "symbol": "mCurrentS__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x68",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "addend": 0
+        },
+        {
+          "offset": "0x88",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "addend": 0
+        },
+        {
+          "offset": "0x94",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x104",
+          "kind": 109,
+          "symbol": "@56471",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x15c",
+          "kind": 10,
+          "symbol": "JMAMTXApplyScale__FPA4_CfPA4_ffff",
+          "addend": 0
+        },
+        {
+          "offset": "0x184",
+          "kind": 109,
+          "symbol": "@56471",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x198",
+          "kind": 10,
+          "symbol": "fastReciprocal__5JMathFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x1c4",
+          "kind": 109,
+          "symbol": "@56471",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x1e4",
+          "kind": 10,
+          "symbol": "fastReciprocal__5JMathFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x210",
+          "kind": 109,
+          "symbol": "@56471",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x230",
+          "kind": 10,
+          "symbol": "fastReciprocal__5JMathFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x266",
+          "kind": 6,
+          "symbol": "mParentS__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x268",
+          "kind": 109,
+          "symbol": "@56471",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x26e",
+          "kind": 4,
+          "symbol": "mParentS__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x278",
+          "kind": 10,
+          "symbol": "fastReciprocal__5JMathFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x2a2",
+          "kind": 6,
+          "symbol": "mParentS__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x2a4",
+          "kind": 109,
+          "symbol": "@56471",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x2aa",
+          "kind": 4,
+          "symbol": "mParentS__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x2b8",
+          "kind": 10,
+          "symbol": "fastReciprocal__5JMathFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x2e2",
+          "kind": 6,
+          "symbol": "mParentS__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x2e4",
+          "kind": 109,
+          "symbol": "@56471",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x2ea",
+          "kind": 4,
+          "symbol": "mParentS__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x2f8",
+          "kind": 10,
+          "symbol": "fastReciprocal__5JMathFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x3a6",
+          "kind": 6,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x3ae",
+          "kind": 4,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x3b4",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "addend": 0
+        },
+        {
+          "offset": "0x3cc",
+          "kind": 109,
+          "symbol": "@56471",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x412",
+          "kind": 4,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x418",
+          "kind": 10,
+          "symbol": "PSMTXCopy",
+          "addend": 0
+        },
+        {
+          "offset": "0x42a",
+          "kind": 6,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x436",
+          "kind": 4,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x444",
+          "kind": 10,
+          "symbol": "JMAMTXApplyScale__FPA4_CfPA4_ffff",
+          "addend": 0
+        },
+        {
+          "offset": "0x44a",
+          "kind": 4,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x4bc",
+          "kind": 10,
+          "symbol": "_restgpr_23",
+          "addend": 0
+        }
+      ],
+      "compiled_references": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_23",
+          "addend": 0
+        },
+        {
+          "offset": "0x14",
+          "kind": 109,
+          "symbol": "mJoint__10J3DMtxCalc",
+          "addend": 0
+        },
+        {
+          "offset": "0x22",
+          "kind": 6,
+          "symbol": "mCurrentS__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x2c",
+          "kind": 109,
+          "symbol": "mMtxBuffer__10J3DMtxCalc",
+          "addend": 0
+        },
+        {
+          "offset": "0x42",
+          "kind": 4,
+          "symbol": "mCurrentS__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x68",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "addend": 0
+        },
+        {
+          "offset": "0x88",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "addend": 0
+        },
+        {
+          "offset": "0x94",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x104",
+          "kind": 109,
+          "symbol": "@11004",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x15c",
+          "kind": 10,
+          "symbol": "JMAMTXApplyScale__FPA4_CfPA4_ffff",
+          "addend": 0
+        },
+        {
+          "offset": "0x184",
+          "kind": 109,
+          "symbol": "@11004",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x198",
+          "kind": 10,
+          "symbol": "fastReciprocal__5JMathFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x1c4",
+          "kind": 109,
+          "symbol": "@11004",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x1e4",
+          "kind": 10,
+          "symbol": "fastReciprocal__5JMathFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x210",
+          "kind": 109,
+          "symbol": "@11004",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x230",
+          "kind": 10,
+          "symbol": "fastReciprocal__5JMathFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x266",
+          "kind": 6,
+          "symbol": "mParentS__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x268",
+          "kind": 109,
+          "symbol": "@11004",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x26e",
+          "kind": 4,
+          "symbol": "mParentS__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x278",
+          "kind": 10,
+          "symbol": "fastReciprocal__5JMathFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x2a2",
+          "kind": 6,
+          "symbol": "mParentS__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x2a4",
+          "kind": 109,
+          "symbol": "@11004",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x2aa",
+          "kind": 4,
+          "symbol": "mParentS__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x2b8",
+          "kind": 10,
+          "symbol": "fastReciprocal__5JMathFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x2e2",
+          "kind": 6,
+          "symbol": "mParentS__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x2e4",
+          "kind": 109,
+          "symbol": "@11004",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x2ea",
+          "kind": 4,
+          "symbol": "mParentS__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x2f8",
+          "kind": 10,
+          "symbol": "fastReciprocal__5JMathFf",
+          "addend": 0
+        },
+        {
+          "offset": "0x3a6",
+          "kind": 6,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x3ae",
+          "kind": 4,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x3b4",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "addend": 0
+        },
+        {
+          "offset": "0x3cc",
+          "kind": 109,
+          "symbol": "@11004",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x412",
+          "kind": 4,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x418",
+          "kind": 10,
+          "symbol": "PSMTXCopy",
+          "addend": 0
+        },
+        {
+          "offset": "0x42a",
+          "kind": 6,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x436",
+          "kind": 4,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x444",
+          "kind": 10,
+          "symbol": "JMAMTXApplyScale__FPA4_CfPA4_ffff",
+          "addend": 0
+        },
+        {
+          "offset": "0x44a",
+          "kind": 4,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "addend": 0
+        },
+        {
+          "offset": "0x4bc",
+          "kind": 10,
+          "symbol": "_restgpr_23",
+          "addend": 0
+        }
+      ],
+      "identical_normalized_event_count": 95,
+      "identical_normalized_events": [
+        "call _savegpr_23",
+        "cmpwi _, 0x0",
+        "beq event9",
+        "cmpwi _, 0x0",
+        "beq event6",
+        "call PSMTXConcat",
+        "cmpwi _, 0x0",
+        "beq event9",
+        "call PSMTXConcat",
+        "call __ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "cmpwi _, 0x0",
+        "beq event18",
+        "fmuls _, _, _",
+        "fmuls _, _, _",
+        "fmuls _, _, _",
+        "fmuls _, _, _",
+        "fmuls _, _, _",
+        "fmuls _, _, _",
+        "fcmpu cr0, _, _",
+        "bne event25",
+        "fcmpu cr0, _, _",
+        "bne event25",
+        "fcmpu cr0, _, _",
+        "bne event25",
+        "b event26",
+        "call JMAMTXApplyScale__FPA4_CfPA4_ffff",
+        "cmpwi _, 0x0",
+        "beq event48",
+        "cmplwi _, 0xffff",
+        "beq event48",
+        "fcmpu cr0, _, _",
+        "beq event36",
+        "call fastReciprocal__5JMathFf",
+        "fmuls _, _, _",
+        "fmuls _, _, _",
+        "fmuls _, _, _",
+        "fcmpu cr0, _, _",
+        "beq event42",
+        "call fastReciprocal__5JMathFf",
+        "fmuls _, _, _",
+        "fmuls _, _, _",
+        "fmuls _, _, _",
+        "fcmpu cr0, _, _",
+        "beq event48",
+        "call fastReciprocal__5JMathFf",
+        "fmuls _, _, _",
+        "fmuls _, _, _",
+        "fmuls _, _, _",
+        "cmplwi _, 0x1",
+        "bne event68",
+        "fcmpu cr0, _, _",
+        "beq event56",
+        "call fastReciprocal__5JMathFf",
+        "fmuls _, _, _",
+        "fmuls _, _, _",
+        "fmuls _, _, _",
+        "fcmpu cr0, _, _",
+        "beq event62",
+        "call fastReciprocal__5JMathFf",
+        "fmuls _, _, _",
+        "fmuls _, _, _",
+        "fmuls _, _, _",
+        "fcmpu cr0, _, _",
+        "beq event68",
+        "call fastReciprocal__5JMathFf",
+        "fmuls _, _, _",
+        "fmuls _, _, _",
+        "fmuls _, _, _",
+        "fmuls _, _, _",
+        "fmuls _, _, _",
+        "fmuls _, _, _",
+        "cmpwi _, 0x0",
+        "beq event76",
+        "fadds _, _, _",
+        "fadds _, _, _",
+        "fadds _, _, _",
+        "call PSMTXConcat",
+        "fmuls _, _, _",
+        "fmuls _, _, _",
+        "fcmpu cr0, _, _",
+        "fmuls _, _, _",
+        "bne event88",
+        "fcmpu cr0, _, _",
+        "bne event88",
+        "fcmpu cr0, _, _",
+        "bne event88",
+        "call PSMTXCopy",
+        "b event89",
+        "call JMAMTXApplyScale__FPA4_CfPA4_ffff",
+        "cmpwi _, 0x0",
+        "beq event94",
+        "fadds _, _, _",
+        "fadds _, _, _",
+        "fadds _, _, _",
+        "call _restgpr_23"
+      ],
+      "full_relocation_normalized_instruction_match": true
+    },
+    {
+      "method": "calcScaleBlendSpecial",
+      "symbol": "calcScaleBlendSpecial__10XanimeCoreFv",
+      "address": "0x8001ac5c",
+      "retail_size": 152,
+      "compiled_size": 152,
+      "objdiff_match_percent": 100.0,
+      "source_body_sha256": "3711e2063ca67c6e479eb1d68601d7043e0e84955018bb6b8e578e6df3419123",
+      "retail_function_sha256": "87a72ff5a3d690664a484567df9ab6306581e2e59a819eedccaafc40191249f8",
+      "direct_calls": [
+        "_savegpr_29",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "PSMTXQuat",
+        "calcScaleBlendMaya__10XanimeCoreFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+        "_restgpr_29"
+      ],
+      "retail_references": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_29",
+          "addend": 0
+        },
+        {
+          "offset": "0x14",
+          "kind": 109,
+          "symbol": "mJoint__10J3DMtxCalc",
+          "addend": 0
+        },
+        {
+          "offset": "0x1c",
+          "kind": 109,
+          "symbol": "mMtxBuffer__10J3DMtxCalc",
+          "addend": 0
+        },
+        {
+          "offset": "0x44",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x58",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x6c",
+          "kind": 10,
+          "symbol": "PSMTXQuat",
+          "addend": 0
+        },
+        {
+          "offset": "0x7c",
+          "kind": 10,
+          "symbol": "calcScaleBlendMaya__10XanimeCoreFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x84",
+          "kind": 10,
+          "symbol": "_restgpr_29",
+          "addend": 0
+        }
+      ],
+      "compiled_references": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_29",
+          "addend": 0
+        },
+        {
+          "offset": "0x14",
+          "kind": 109,
+          "symbol": "mJoint__10J3DMtxCalc",
+          "addend": 0
+        },
+        {
+          "offset": "0x1c",
+          "kind": 109,
+          "symbol": "mMtxBuffer__10J3DMtxCalc",
+          "addend": 0
+        },
+        {
+          "offset": "0x44",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x58",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x6c",
+          "kind": 10,
+          "symbol": "PSMTXQuat",
+          "addend": 0
+        },
+        {
+          "offset": "0x7c",
+          "kind": 10,
+          "symbol": "calcScaleBlendMaya__10XanimeCoreFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x84",
+          "kind": 10,
+          "symbol": "_restgpr_29",
+          "addend": 0
+        }
+      ],
+      "identical_normalized_event_count": 6,
+      "identical_normalized_events": [
+        "call _savegpr_29",
+        "call __as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "call __as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "call PSMTXQuat",
+        "call calcScaleBlendMaya__10XanimeCoreFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+        "call _restgpr_29"
+      ],
+      "full_relocation_normalized_instruction_match": true
+    }
+  ],
+  "verified_relocations": [
+    {
+      "method": "calcScaleBlendMaya",
+      "instruction_count": 338,
+      "relocations_checked": 49,
+      "every_relocated_instruction_equal_to_retail": true,
+      "resolved_references": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_24",
+          "effective_retail_target": "0x805189f4"
+        },
+        {
+          "offset": "0x14",
+          "kind": 109,
+          "symbol": "mJoint__10J3DMtxCalc",
+          "effective_retail_target": "0x806b72ac"
+        },
+        {
+          "offset": "0x2c",
+          "kind": 109,
+          "symbol": "mMtxBuffer__10J3DMtxCalc",
+          "effective_retail_target": "0x806b72a8"
+        },
+        {
+          "offset": "0x60",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "effective_retail_target": "0x804b83c0"
+        },
+        {
+          "offset": "0x80",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "effective_retail_target": "0x804b83c0"
+        },
+        {
+          "offset": "0xbc",
+          "kind": 10,
+          "symbol": "PSMTXInverse",
+          "effective_retail_target": "0x804b848c"
+        },
+        {
+          "offset": "0xcc",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "effective_retail_target": "0x804b83c0"
+        },
+        {
+          "offset": "0x144",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "effective_retail_target": "0x80018ef0"
+        },
+        {
+          "offset": "0x1b4",
+          "kind": 109,
+          "symbol": "@11004",
+          "effective_retail_target": "0x806b7d70",
+          "constant_bits": "3f800000"
+        },
+        {
+          "offset": "0x20c",
+          "kind": 10,
+          "symbol": "JMAMTXApplyScale__FPA4_CfPA4_ffff",
+          "effective_retail_target": "0x804428a8"
+        },
+        {
+          "offset": "0x234",
+          "kind": 109,
+          "symbol": "@11004",
+          "effective_retail_target": "0x806b7d70",
+          "constant_bits": "3f800000"
+        },
+        {
+          "offset": "0x248",
+          "kind": 10,
+          "symbol": "fastReciprocal__5JMathFf",
+          "effective_retail_target": "0x8001b140"
+        },
+        {
+          "offset": "0x274",
+          "kind": 109,
+          "symbol": "@11004",
+          "effective_retail_target": "0x806b7d70",
+          "constant_bits": "3f800000"
+        },
+        {
+          "offset": "0x294",
+          "kind": 10,
+          "symbol": "fastReciprocal__5JMathFf",
+          "effective_retail_target": "0x8001b140"
+        },
+        {
+          "offset": "0x2c0",
+          "kind": 109,
+          "symbol": "@11004",
+          "effective_retail_target": "0x806b7d70",
+          "constant_bits": "3f800000"
+        },
+        {
+          "offset": "0x2e0",
+          "kind": 10,
+          "symbol": "fastReciprocal__5JMathFf",
+          "effective_retail_target": "0x8001b140"
+        },
+        {
+          "offset": "0x316",
+          "kind": 6,
+          "symbol": "mParentS__6J3DSys",
+          "effective_retail_target": "0x8060d658"
+        },
+        {
+          "offset": "0x318",
+          "kind": 109,
+          "symbol": "@11004",
+          "effective_retail_target": "0x806b7d70",
+          "constant_bits": "3f800000"
+        },
+        {
+          "offset": "0x31e",
+          "kind": 4,
+          "symbol": "mParentS__6J3DSys",
+          "effective_retail_target": "0x8060d658"
+        },
+        {
+          "offset": "0x328",
+          "kind": 10,
+          "symbol": "fastReciprocal__5JMathFf",
+          "effective_retail_target": "0x8001b140"
+        },
+        {
+          "offset": "0x352",
+          "kind": 6,
+          "symbol": "mParentS__6J3DSys",
+          "effective_retail_target": "0x8060d658"
+        },
+        {
+          "offset": "0x354",
+          "kind": 109,
+          "symbol": "@11004",
+          "effective_retail_target": "0x806b7d70",
+          "constant_bits": "3f800000"
+        },
+        {
+          "offset": "0x35a",
+          "kind": 4,
+          "symbol": "mParentS__6J3DSys",
+          "effective_retail_target": "0x8060d658"
+        },
+        {
+          "offset": "0x368",
+          "kind": 10,
+          "symbol": "fastReciprocal__5JMathFf",
+          "effective_retail_target": "0x8001b140"
+        },
+        {
+          "offset": "0x392",
+          "kind": 6,
+          "symbol": "mParentS__6J3DSys",
+          "effective_retail_target": "0x8060d658"
+        },
+        {
+          "offset": "0x394",
+          "kind": 109,
+          "symbol": "@11004",
+          "effective_retail_target": "0x806b7d70",
+          "constant_bits": "3f800000"
+        },
+        {
+          "offset": "0x39a",
+          "kind": 4,
+          "symbol": "mParentS__6J3DSys",
+          "effective_retail_target": "0x8060d658"
+        },
+        {
+          "offset": "0x3a8",
+          "kind": 10,
+          "symbol": "fastReciprocal__5JMathFf",
+          "effective_retail_target": "0x8001b140"
+        },
+        {
+          "offset": "0x3d2",
+          "kind": 6,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "effective_retail_target": "0x8060d61c"
+        },
+        {
+          "offset": "0x3da",
+          "kind": 4,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "effective_retail_target": "0x8060d61c"
+        },
+        {
+          "offset": "0x3e0",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "effective_retail_target": "0x804b83c0"
+        },
+        {
+          "offset": "0x406",
+          "kind": 4,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "effective_retail_target": "0x8060d61c"
+        },
+        {
+          "offset": "0x40c",
+          "kind": 10,
+          "symbol": "extractMtxTrans__2MRFPA4_fPQ29JGeometry8TVec3<f>",
+          "effective_retail_target": "0x803ed1b0"
+        },
+        {
+          "offset": "0x410",
+          "kind": 109,
+          "symbol": "@10998",
+          "effective_retail_target": "0x806b7d74",
+          "constant_bits": "00000000"
+        },
+        {
+          "offset": "0x416",
+          "kind": 4,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "effective_retail_target": "0x8060d61c"
+        },
+        {
+          "offset": "0x420",
+          "kind": 10,
+          "symbol": "setMtxTrans__2MRFPA4_ffff",
+          "effective_retail_target": "0x803ecfb0"
+        },
+        {
+          "offset": "0x42a",
+          "kind": 4,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "effective_retail_target": "0x8060d61c"
+        },
+        {
+          "offset": "0x438",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "effective_retail_target": "0x804b83c0"
+        },
+        {
+          "offset": "0x442",
+          "kind": 4,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "effective_retail_target": "0x8060d61c"
+        },
+        {
+          "offset": "0x44c",
+          "kind": 10,
+          "symbol": "setMtxTrans__2MRFPA4_ffff",
+          "effective_retail_target": "0x803ecfb0"
+        },
+        {
+          "offset": "0x462",
+          "kind": 6,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "effective_retail_target": "0x8060d61c"
+        },
+        {
+          "offset": "0x466",
+          "kind": 4,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "effective_retail_target": "0x8060d61c"
+        },
+        {
+          "offset": "0x4ae",
+          "kind": 6,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "effective_retail_target": "0x8060d61c"
+        },
+        {
+          "offset": "0x4b6",
+          "kind": 4,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "effective_retail_target": "0x8060d61c"
+        },
+        {
+          "offset": "0x4b8",
+          "kind": 10,
+          "symbol": "PSMTXCopy",
+          "effective_retail_target": "0x804b838c"
+        },
+        {
+          "offset": "0x512",
+          "kind": 6,
+          "symbol": "mParentS__6J3DSys",
+          "effective_retail_target": "0x8060d658"
+        },
+        {
+          "offset": "0x51e",
+          "kind": 4,
+          "symbol": "mParentS__6J3DSys",
+          "effective_retail_target": "0x8060d658"
+        },
+        {
+          "offset": "0x52a",
+          "kind": 4,
+          "symbol": "mParentS__6J3DSys",
+          "effective_retail_target": "0x8060d658"
+        },
+        {
+          "offset": "0x534",
+          "kind": 10,
+          "symbol": "_restgpr_24",
+          "effective_retail_target": "0x80518a40"
+        }
+      ]
+    },
+    {
+      "method": "calcScaleBlendSI",
+      "instruction_count": 308,
+      "relocations_checked": 39,
+      "every_relocated_instruction_equal_to_retail": true,
+      "resolved_references": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_23",
+          "effective_retail_target": "0x805189f0"
+        },
+        {
+          "offset": "0x14",
+          "kind": 109,
+          "symbol": "mJoint__10J3DMtxCalc",
+          "effective_retail_target": "0x806b72ac"
+        },
+        {
+          "offset": "0x22",
+          "kind": 6,
+          "symbol": "mCurrentS__6J3DSys",
+          "effective_retail_target": "0x8060d64c"
+        },
+        {
+          "offset": "0x2c",
+          "kind": 109,
+          "symbol": "mMtxBuffer__10J3DMtxCalc",
+          "effective_retail_target": "0x806b72a8"
+        },
+        {
+          "offset": "0x42",
+          "kind": 4,
+          "symbol": "mCurrentS__6J3DSys",
+          "effective_retail_target": "0x8060d64c"
+        },
+        {
+          "offset": "0x68",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "effective_retail_target": "0x804b83c0"
+        },
+        {
+          "offset": "0x88",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "effective_retail_target": "0x804b83c0"
+        },
+        {
+          "offset": "0x94",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "effective_retail_target": "0x80018ef0"
+        },
+        {
+          "offset": "0x104",
+          "kind": 109,
+          "symbol": "@11004",
+          "effective_retail_target": "0x806b7d70",
+          "constant_bits": "3f800000"
+        },
+        {
+          "offset": "0x15c",
+          "kind": 10,
+          "symbol": "JMAMTXApplyScale__FPA4_CfPA4_ffff",
+          "effective_retail_target": "0x804428a8"
+        },
+        {
+          "offset": "0x184",
+          "kind": 109,
+          "symbol": "@11004",
+          "effective_retail_target": "0x806b7d70",
+          "constant_bits": "3f800000"
+        },
+        {
+          "offset": "0x198",
+          "kind": 10,
+          "symbol": "fastReciprocal__5JMathFf",
+          "effective_retail_target": "0x8001b140"
+        },
+        {
+          "offset": "0x1c4",
+          "kind": 109,
+          "symbol": "@11004",
+          "effective_retail_target": "0x806b7d70",
+          "constant_bits": "3f800000"
+        },
+        {
+          "offset": "0x1e4",
+          "kind": 10,
+          "symbol": "fastReciprocal__5JMathFf",
+          "effective_retail_target": "0x8001b140"
+        },
+        {
+          "offset": "0x210",
+          "kind": 109,
+          "symbol": "@11004",
+          "effective_retail_target": "0x806b7d70",
+          "constant_bits": "3f800000"
+        },
+        {
+          "offset": "0x230",
+          "kind": 10,
+          "symbol": "fastReciprocal__5JMathFf",
+          "effective_retail_target": "0x8001b140"
+        },
+        {
+          "offset": "0x266",
+          "kind": 6,
+          "symbol": "mParentS__6J3DSys",
+          "effective_retail_target": "0x8060d658"
+        },
+        {
+          "offset": "0x268",
+          "kind": 109,
+          "symbol": "@11004",
+          "effective_retail_target": "0x806b7d70",
+          "constant_bits": "3f800000"
+        },
+        {
+          "offset": "0x26e",
+          "kind": 4,
+          "symbol": "mParentS__6J3DSys",
+          "effective_retail_target": "0x8060d658"
+        },
+        {
+          "offset": "0x278",
+          "kind": 10,
+          "symbol": "fastReciprocal__5JMathFf",
+          "effective_retail_target": "0x8001b140"
+        },
+        {
+          "offset": "0x2a2",
+          "kind": 6,
+          "symbol": "mParentS__6J3DSys",
+          "effective_retail_target": "0x8060d658"
+        },
+        {
+          "offset": "0x2a4",
+          "kind": 109,
+          "symbol": "@11004",
+          "effective_retail_target": "0x806b7d70",
+          "constant_bits": "3f800000"
+        },
+        {
+          "offset": "0x2aa",
+          "kind": 4,
+          "symbol": "mParentS__6J3DSys",
+          "effective_retail_target": "0x8060d658"
+        },
+        {
+          "offset": "0x2b8",
+          "kind": 10,
+          "symbol": "fastReciprocal__5JMathFf",
+          "effective_retail_target": "0x8001b140"
+        },
+        {
+          "offset": "0x2e2",
+          "kind": 6,
+          "symbol": "mParentS__6J3DSys",
+          "effective_retail_target": "0x8060d658"
+        },
+        {
+          "offset": "0x2e4",
+          "kind": 109,
+          "symbol": "@11004",
+          "effective_retail_target": "0x806b7d70",
+          "constant_bits": "3f800000"
+        },
+        {
+          "offset": "0x2ea",
+          "kind": 4,
+          "symbol": "mParentS__6J3DSys",
+          "effective_retail_target": "0x8060d658"
+        },
+        {
+          "offset": "0x2f8",
+          "kind": 10,
+          "symbol": "fastReciprocal__5JMathFf",
+          "effective_retail_target": "0x8001b140"
+        },
+        {
+          "offset": "0x3a6",
+          "kind": 6,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "effective_retail_target": "0x8060d61c"
+        },
+        {
+          "offset": "0x3ae",
+          "kind": 4,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "effective_retail_target": "0x8060d61c"
+        },
+        {
+          "offset": "0x3b4",
+          "kind": 10,
+          "symbol": "PSMTXConcat",
+          "effective_retail_target": "0x804b83c0"
+        },
+        {
+          "offset": "0x3cc",
+          "kind": 109,
+          "symbol": "@11004",
+          "effective_retail_target": "0x806b7d70",
+          "constant_bits": "3f800000"
+        },
+        {
+          "offset": "0x412",
+          "kind": 4,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "effective_retail_target": "0x8060d61c"
+        },
+        {
+          "offset": "0x418",
+          "kind": 10,
+          "symbol": "PSMTXCopy",
+          "effective_retail_target": "0x804b838c"
+        },
+        {
+          "offset": "0x42a",
+          "kind": 6,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "effective_retail_target": "0x8060d61c"
+        },
+        {
+          "offset": "0x436",
+          "kind": 4,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "effective_retail_target": "0x8060d61c"
+        },
+        {
+          "offset": "0x444",
+          "kind": 10,
+          "symbol": "JMAMTXApplyScale__FPA4_CfPA4_ffff",
+          "effective_retail_target": "0x804428a8"
+        },
+        {
+          "offset": "0x44a",
+          "kind": 4,
+          "symbol": "mCurrentMtx__6J3DSys",
+          "effective_retail_target": "0x8060d61c"
+        },
+        {
+          "offset": "0x4bc",
+          "kind": 10,
+          "symbol": "_restgpr_23",
+          "effective_retail_target": "0x80518a3c"
+        }
+      ]
+    },
+    {
+      "method": "calcScaleBlendSpecial",
+      "instruction_count": 38,
+      "relocations_checked": 8,
+      "every_relocated_instruction_equal_to_retail": true,
+      "resolved_references": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_29",
+          "effective_retail_target": "0x80518a08"
+        },
+        {
+          "offset": "0x14",
+          "kind": 109,
+          "symbol": "mJoint__10J3DMtxCalc",
+          "effective_retail_target": "0x806b72ac"
+        },
+        {
+          "offset": "0x1c",
+          "kind": 109,
+          "symbol": "mMtxBuffer__10J3DMtxCalc",
+          "effective_retail_target": "0x806b72a8"
+        },
+        {
+          "offset": "0x44",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "effective_retail_target": "0x80018e78"
+        },
+        {
+          "offset": "0x58",
+          "kind": 10,
+          "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "effective_retail_target": "0x80018e78"
+        },
+        {
+          "offset": "0x6c",
+          "kind": 10,
+          "symbol": "PSMTXQuat",
+          "effective_retail_target": "0x804b8928"
+        },
+        {
+          "offset": "0x7c",
+          "kind": 10,
+          "symbol": "calcScaleBlendMaya__10XanimeCoreFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+          "effective_retail_target": "0x80019f74"
+        },
+        {
+          "offset": "0x84",
+          "kind": 10,
+          "symbol": "_restgpr_29",
+          "effective_retail_target": "0x80518a54"
+        }
+      ]
+    }
+  ],
+  "behavior_cases": [
+    {
+      "case": "Maya unextended scale and translated parent",
+      "matrix": [
+        2.0,
+        0.0,
+        0.0,
+        105.0,
+        0.0,
+        3.0,
+        0.0,
+        207.0,
+        0.0,
+        0.0,
+        4.0,
+        311.0
+      ],
+      "current_matrix": [
+        2.0,
+        0.0,
+        0.0,
+        105.0,
+        0.0,
+        3.0,
+        0.0,
+        207.0,
+        0.0,
+        0.0,
+        4.0,
+        311.0
+      ],
+      "current_scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "parent_scale": [
+        2.0,
+        3.0,
+        4.0
+      ],
+      "scale_flag": 0,
+      "helper_calls": [
+        "0x805189f4",
+        "0x80018ef0",
+        "0x804428a8",
+        "0x804b83c0",
+        "0x804b838c",
+        "0x80518a40"
+      ],
+      "branch_outcomes": [
+        [
+          "0x80019fb4",
+          true
+        ],
+        [
+          "0x8001a000",
+          true
+        ],
+        [
+          "0x8001a064",
+          true
+        ],
+        [
+          "0x8001a0c4",
+          true
+        ],
+        [
+          "0x8001a134",
+          true
+        ],
+        [
+          "0x8001a18c",
+          true
+        ],
+        [
+          "0x8001a284",
+          true
+        ],
+        [
+          "0x8001a360",
+          true
+        ],
+        [
+          "0x8001a3cc",
+          true
+        ],
+        [
+          "0x8001a438",
+          true
+        ]
+      ]
+    },
+    {
+      "case": "Maya both compensation sources and three translation stages",
+      "matrix": [
+        1.24969482421875,
+        0.0,
+        0.0,
+        116.0,
+        0.0,
+        8.9989013671875,
+        0.0,
+        229.0,
+        0.0,
+        0.0,
+        3.49957275390625,
+        344.0
+      ],
+      "current_matrix": [
+        1.24969482421875,
+        0.0,
+        0.0,
+        16.0,
+        0.0,
+        8.9989013671875,
+        0.0,
+        29.0,
+        0.0,
+        0.0,
+        3.49957275390625,
+        44.0
+      ],
+      "current_scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "parent_scale": [
+        2.0,
+        3.0,
+        4.0
+      ],
+      "scale_flag": 0,
+      "helper_calls": [
+        "0x805189f4",
+        "0x80018ef0",
+        "0x804428a8",
+        "0x8001b140",
+        "0x8001b140",
+        "0x8001b140",
+        "0x8001b140",
+        "0x804b83c0",
+        "0x804b838c",
+        "0x80518a40"
+      ],
+      "branch_outcomes": [
+        [
+          "0x80019fb4",
+          false
+        ],
+        [
+          "0x80019fc8",
+          true
+        ],
+        [
+          "0x80019fe8",
+          true
+        ],
+        [
+          "0x8001a000",
+          false
+        ],
+        [
+          "0x8001a014",
+          false
+        ],
+        [
+          "0x8001a028",
+          true
+        ],
+        [
+          "0x8001a064",
+          false
+        ],
+        [
+          "0x8001a0c4",
+          false
+        ],
+        [
+          "0x8001a134",
+          true
+        ],
+        [
+          "0x8001a18c",
+          false
+        ],
+        [
+          "0x8001a1a0",
+          false
+        ],
+        [
+          "0x8001a1b8",
+          false
+        ],
+        [
+          "0x8001a204",
+          true
+        ],
+        [
+          "0x8001a250",
+          false
+        ],
+        [
+          "0x8001a284",
+          false
+        ],
+        [
+          "0x8001a298",
+          false
+        ],
+        [
+          "0x8001a2d8",
+          false
+        ],
+        [
+          "0x8001a318",
+          true
+        ],
+        [
+          "0x8001a360",
+          false
+        ],
+        [
+          "0x8001a374",
+          true
+        ],
+        [
+          "0x8001a3cc",
+          false
+        ],
+        [
+          "0x8001a438",
+          false
+        ]
+      ]
+    },
+    {
+      "case": "Maya noncommuting local, parent-inverse and global orientation matrices",
+      "matrix": [
+        0.0,
+        1.0,
+        0.0,
+        2.0,
+        1.0,
+        0.0,
+        0.0,
+        3.0,
+        0.0,
+        0.0,
+        -1.0,
+        5.0
+      ],
+      "current_matrix": [
+        0.0,
+        1.0,
+        0.0,
+        2.0,
+        1.0,
+        0.0,
+        0.0,
+        3.0,
+        0.0,
+        0.0,
+        -1.0,
+        5.0
+      ],
+      "current_scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "parent_scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "scale_flag": 1,
+      "helper_calls": [
+        "0x805189f4",
+        "0x804b83c0",
+        "0x804b83c0",
+        "0x804b848c",
+        "0x804b83c0",
+        "0x80018ef0",
+        "0x804b83c0",
+        "0x803ed1b0",
+        "0x803ecfb0",
+        "0x804b83c0",
+        "0x803ecfb0",
+        "0x804b838c",
+        "0x80518a40"
+      ],
+      "branch_outcomes": [
+        [
+          "0x80019fb4",
+          false
+        ],
+        [
+          "0x80019fc8",
+          false
+        ],
+        [
+          "0x80019fe8",
+          false
+        ],
+        [
+          "0x8001a000",
+          false
+        ],
+        [
+          "0x8001a014",
+          false
+        ],
+        [
+          "0x8001a028",
+          false
+        ],
+        [
+          "0x8001a064",
+          false
+        ],
+        [
+          "0x8001a0c4",
+          false
+        ],
+        [
+          "0x8001a134",
+          false
+        ],
+        [
+          "0x8001a140",
+          false
+        ],
+        [
+          "0x8001a14c",
+          false
+        ],
+        [
+          "0x8001a18c",
+          false
+        ],
+        [
+          "0x8001a1a0",
+          false
+        ],
+        [
+          "0x8001a1b8",
+          true
+        ],
+        [
+          "0x8001a204",
+          true
+        ],
+        [
+          "0x8001a250",
+          true
+        ],
+        [
+          "0x8001a284",
+          true
+        ],
+        [
+          "0x8001a360",
+          false
+        ],
+        [
+          "0x8001a374",
+          false
+        ],
+        [
+          "0x8001a3cc",
+          false
+        ],
+        [
+          "0x8001a438",
+          false
+        ]
+      ]
+    },
+    {
+      "case": "Maya compensate byte two is disabled; unit scale bypasses reciprocal",
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      "current_matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      "current_scale": [
+        7.0,
+        11.0,
+        13.0
+      ],
+      "parent_scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "scale_flag": 1,
+      "helper_calls": [
+        "0x805189f4",
+        "0x80018ef0",
+        "0x804b83c0",
+        "0x804b838c",
+        "0x80518a40"
+      ],
+      "branch_outcomes": [
+        [
+          "0x80019fb4",
+          false
+        ],
+        [
+          "0x80019fc8",
+          true
+        ],
+        [
+          "0x80019fe8",
+          true
+        ],
+        [
+          "0x8001a000",
+          false
+        ],
+        [
+          "0x8001a014",
+          true
+        ],
+        [
+          "0x8001a064",
+          false
+        ],
+        [
+          "0x8001a0c4",
+          false
+        ],
+        [
+          "0x8001a134",
+          false
+        ],
+        [
+          "0x8001a140",
+          false
+        ],
+        [
+          "0x8001a14c",
+          false
+        ],
+        [
+          "0x8001a18c",
+          false
+        ],
+        [
+          "0x8001a1a0",
+          true
+        ],
+        [
+          "0x8001a284",
+          true
+        ],
+        [
+          "0x8001a360",
+          false
+        ],
+        [
+          "0x8001a374",
+          true
+        ],
+        [
+          "0x8001a3cc",
+          false
+        ],
+        [
+          "0x8001a438",
+          false
+        ]
+      ]
+    },
+    {
+      "case": "SI scales translation with prior current scale then scales output with updated scale",
+      "matrix": [
+        8.0,
+        0.0,
+        0.0,
+        10.0,
+        0.0,
+        36.0,
+        0.0,
+        28.0,
+        0.0,
+        0.0,
+        128.0,
+        88.0
+      ],
+      "current_matrix": [
+        2.0,
+        0.0,
+        0.0,
+        10.0,
+        0.0,
+        3.0,
+        0.0,
+        28.0,
+        0.0,
+        0.0,
+        4.0,
+        88.0
+      ],
+      "current_scale": [
+        4.0,
+        12.0,
+        32.0
+      ],
+      "parent_scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "scale_flag": 0,
+      "helper_calls": [
+        "0x805189f0",
+        "0x80018ef0",
+        "0x804428a8",
+        "0x804b83c0",
+        "0x804428a8",
+        "0x80518a3c"
+      ],
+      "branch_outcomes": [
+        [
+          "0x8001a6d0",
+          true
+        ],
+        [
+          "0x8001a728",
+          true
+        ],
+        [
+          "0x8001a798",
+          true
+        ],
+        [
+          "0x8001a7f0",
+          true
+        ],
+        [
+          "0x8001a8e8",
+          true
+        ],
+        [
+          "0x8001a9e0",
+          true
+        ],
+        [
+          "0x8001aa78",
+          true
+        ],
+        [
+          "0x8001aaf4",
+          true
+        ]
+      ]
+    },
+    {
+      "case": "SI final unit cumulative scale overrides preliminary nonunit flag; _38 ignored",
+      "matrix": [
+        12.0,
+        0.0,
+        0.0,
+        106.0,
+        0.0,
+        16.0,
+        0.0,
+        212.0,
+        0.0,
+        0.0,
+        20.0,
+        318.0
+      ],
+      "current_matrix": [
+        12.0,
+        0.0,
+        0.0,
+        6.0,
+        0.0,
+        16.0,
+        0.0,
+        12.0,
+        0.0,
+        0.0,
+        20.0,
+        18.0
+      ],
+      "current_scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "parent_scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "scale_flag": 1,
+      "helper_calls": [
+        "0x805189f0",
+        "0x80018ef0",
+        "0x804428a8",
+        "0x804b83c0",
+        "0x804b838c",
+        "0x80518a3c"
+      ],
+      "branch_outcomes": [
+        [
+          "0x8001a6d0",
+          false
+        ],
+        [
+          "0x8001a6e4",
+          true
+        ],
+        [
+          "0x8001a704",
+          true
+        ],
+        [
+          "0x8001a728",
+          false
+        ],
+        [
+          "0x8001a798",
+          true
+        ],
+        [
+          "0x8001a7f0",
+          false
+        ],
+        [
+          "0x8001a804",
+          true
+        ],
+        [
+          "0x8001a8e8",
+          true
+        ],
+        [
+          "0x8001a9e0",
+          false
+        ],
+        [
+          "0x8001aa78",
+          false
+        ],
+        [
+          "0x8001aa80",
+          false
+        ],
+        [
+          "0x8001aa88",
+          false
+        ],
+        [
+          "0x8001aaf4",
+          false
+        ]
+      ]
+    },
+    {
+      "case": "SI signed parent and animation scale compensation preserve untouched parent scale",
+      "matrix": [
+        -0.24993896484375,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0624847412109375,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -0.015621185302734375,
+        0.0
+      ],
+      "current_matrix": [
+        -0.24993896484375,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0624847412109375,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -0.015621185302734375,
+        0.0
+      ],
+      "current_scale": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "parent_scale": [
+        2.0,
+        4.0,
+        -8.0
+      ],
+      "scale_flag": 1,
+      "helper_calls": [
+        "0x805189f0",
+        "0x80018ef0",
+        "0x8001b140",
+        "0x8001b140",
+        "0x8001b140",
+        "0x8001b140",
+        "0x8001b140",
+        "0x8001b140",
+        "0x804b83c0",
+        "0x804b838c",
+        "0x80518a3c"
+      ],
+      "branch_outcomes": [
+        [
+          "0x8001a6d0",
+          false
+        ],
+        [
+          "0x8001a6e4",
+          true
+        ],
+        [
+          "0x8001a704",
+          true
+        ],
+        [
+          "0x8001a728",
+          false
+        ],
+        [
+          "0x8001a798",
+          false
+        ],
+        [
+          "0x8001a7a4",
+          false
+        ],
+        [
+          "0x8001a7b0",
+          false
+        ],
+        [
+          "0x8001a7f0",
+          false
+        ],
+        [
+          "0x8001a804",
+          false
+        ],
+        [
+          "0x8001a81c",
+          false
+        ],
+        [
+          "0x8001a868",
+          false
+        ],
+        [
+          "0x8001a8b4",
+          false
+        ],
+        [
+          "0x8001a8e8",
+          false
+        ],
+        [
+          "0x8001a8fc",
+          false
+        ],
+        [
+          "0x8001a93c",
+          false
+        ],
+        [
+          "0x8001a97c",
+          false
+        ],
+        [
+          "0x8001a9e0",
+          false
+        ],
+        [
+          "0x8001aa78",
+          false
+        ],
+        [
+          "0x8001aa80",
+          false
+        ],
+        [
+          "0x8001aa88",
+          false
+        ],
+        [
+          "0x8001aaf4",
+          false
+        ]
+      ]
+    },
+    {
+      "case": "Special reads current cached pose, quaternion and Maya scale path",
+      "matrix": [
+        -2.0,
+        0.0,
+        0.0,
+        5.0,
+        0.0,
+        -3.0,
+        0.0,
+        7.0,
+        0.0,
+        0.0,
+        4.0,
+        11.0
+      ],
+      "current_matrix": [
+        -2.0,
+        0.0,
+        0.0,
+        5.0,
+        0.0,
+        -3.0,
+        0.0,
+        7.0,
+        0.0,
+        0.0,
+        4.0,
+        11.0
+      ],
+      "current_scale": [
+        9.0,
+        8.0,
+        7.0
+      ],
+      "parent_scale": [
+        2.0,
+        3.0,
+        4.0
+      ],
+      "scale_flag": 0,
+      "helper_calls": [
+        "0x80518a08",
+        "0x80018e78",
+        "0x80018e78",
+        "0x804b8928",
+        "0x80019f74",
+        "0x805189f4",
+        "0x80018ef0",
+        "0x804428a8",
+        "0x804b83c0",
+        "0x804b838c",
+        "0x80518a40",
+        "0x80518a54"
+      ],
+      "branch_outcomes": [
+        [
+          "0x80019fb4",
+          false
+        ],
+        [
+          "0x80019fc8",
+          true
+        ],
+        [
+          "0x80019fe8",
+          true
+        ],
+        [
+          "0x8001a000",
+          false
+        ],
+        [
+          "0x8001a014",
+          true
+        ],
+        [
+          "0x8001a064",
+          false
+        ],
+        [
+          "0x8001a0c4",
+          false
+        ],
+        [
+          "0x8001a134",
+          true
+        ],
+        [
+          "0x8001a18c",
+          false
+        ],
+        [
+          "0x8001a1a0",
+          true
+        ],
+        [
+          "0x8001a284",
+          true
+        ],
+        [
+          "0x8001a360",
+          false
+        ],
+        [
+          "0x8001a374",
+          true
+        ],
+        [
+          "0x8001a3cc",
+          false
+        ],
+        [
+          "0x8001a438",
+          false
+        ]
+      ]
+    }
+  ]
+}

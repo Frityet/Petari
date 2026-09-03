@@ -1,6 +1,10 @@
 #include "JSystem/JMath/JMath.hpp"
 #include "JSystem/JMath/JMATrigonometric.hpp"
 
+#if !defined(__MWERKS__)
+#include <cmath>
+#endif
+
 void JMAEulerToQuat(s16 x, s16 y, s16 z, Quaternion* quat) {
     f32 cosX = JMASCos(x / 2);
     f32 cosY = JMASCos(y / 2);
@@ -34,6 +38,12 @@ void JMAQuatLerp(__REGISTER const Quaternion* p, __REGISTER const Quaternion* q,
         
         ps_sum0     dp, dp, dp, dp
     }
+#else
+    f32 xy0 = p->x * q->x;
+    f32 xy1 = p->y * q->y;
+    f32 zw0 = std::fma(p->z, q->z, xy0);
+    f32 zw1 = std::fma(p->w, q->w, xy1);
+    dp = zw0 + zw1;
 #endif  // clang-format on
     f32 local_78 = dp;
     if (local_78 < 0.0) {
