@@ -25,8 +25,7 @@ bool DotCamReaderInBin::hasMoreChunk() const {
     bool hasMore = false;
 
     if (mMapIter.isValid()) {
-        const JMapData* mapData = mMapInfo.mData;
-        s32 iVar2 = mapData != nullptr ? mapData->mNumEntries : 0;
+        s32 iVar2 = mMapInfo.getNumEntries();
 
         bool bVar1 = false;
 

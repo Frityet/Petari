@@ -4,8 +4,8 @@
 void CamTranslatorSpiral::setParam(const CameraParamChunk* pChunk) {
     CameraGeneralParam* general = pChunk->mGeneralParam;
 
-    s32 startTime = reinterpret_cast< s16* >(&general->mNum1)[0];
-    s32 endTime = reinterpret_cast< s16* >(&general->mNum1)[1];
+    s32 startTime = general->getNum1Low();
+    s32 endTime = general->getNum1High();
 
     mCamera->setParam(general->mNum2, startTime, endTime, general->mWPoint.y, general->mAxis.y, general->mWPoint.z, general->mAxis.z,
                       general->mWPoint.x, general->mAxis.x);

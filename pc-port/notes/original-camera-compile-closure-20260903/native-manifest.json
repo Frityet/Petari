@@ -1,0 +1,68 @@
+{
+  "baseline_commit": "2523c214c0ad6f72ae3dcb16148ed7a49f2919d0",
+  "files": [
+    {
+      "path": "pc-port/src/Game/Camera/CamTranslatorSpiral.cpp",
+      "kind": "sources",
+      "new": true,
+      "native_baseline_sha256": null,
+      "staged_sha256": "17d0b8abddc3329b4d0e753dbd144111bc325293b4d3ec8e740f5cf6a3f02911"
+    },
+    {
+      "path": "pc-port/src/Game/Camera/CameraManGame.cpp",
+      "kind": "sources",
+      "new": true,
+      "native_baseline_sha256": null,
+      "staged_sha256": "505c11b775250c7129c88d2f6b7c92a8365e7eebdcaf27da5845a4d98330f514"
+    },
+    {
+      "path": "pc-port/src/Game/Camera/CameraParamChunk.cpp",
+      "kind": "sources",
+      "new": true,
+      "native_baseline_sha256": null,
+      "staged_sha256": "f81f27f1ade04a7523aabdbf7b3f230f4e7855b9885996e4b2fb04f74455edde"
+    },
+    {
+      "path": "pc-port/src/Game/Camera/CameraParamChunk.hpp",
+      "kind": "headers",
+      "new": false,
+      "native_baseline_sha256": "ff6006d487ed553a11a4ceca04b4380cf767ab9a7d262f9b7f62b67977621735",
+      "staged_sha256": "525826c2605b913cd82b8191122b4258788d50ae114ca37086aad4dd9e8c8290"
+    },
+    {
+      "path": "pc-port/src/Game/Camera/DotCamParams.cpp",
+      "kind": "sources",
+      "new": true,
+      "native_baseline_sha256": null,
+      "staged_sha256": "23da9264761a41e5c4230e57eef293503801da5b94b089fbbea72662bee376c5"
+    },
+    {
+      "path": "pc-port/src/Game/Util/JMapUtil.hpp",
+      "kind": "headers",
+      "new": false,
+      "native_baseline_sha256": "9bcc14a24cb520aab1bd77c99215d16aad3b25bfb466b64b20984ce9617d93d4",
+      "staged_sha256": "74ebc8b7dce56400308877f117327e350f8b5cb20df6c077d126c8c2ca5be7f8"
+    },
+    {
+      "path": "pc-port/src/Game/Util/ObjUtil.hpp",
+      "kind": "headers",
+      "new": false,
+      "native_baseline_sha256": "9cafa1e95af3de62b3d4eacbfb91767ea72c2b4b11024d791afed3c242d34eae",
+      "staged_sha256": "e15e7b0177924d62057d2cacda082fcfee13adcbaa472c7320e0f4acdf4f2885"
+    },
+    {
+      "path": "pc-port/src/JSystem/JGeometry/TMatrix.hpp",
+      "kind": "headers",
+      "new": false,
+      "native_baseline_sha256": "3c6d611dd2e09221972ccd3bd4a84fee20ff4a3284e86625fcda0715cc47b984",
+      "staged_sha256": "583d8fbac7bfdcd116b36c9ed84afc19bed9c0ed4c70d8de15892112bf033bb0"
+    },
+    {
+      "path": "pc-port/src/mem.h",
+      "kind": "headers",
+      "new": true,
+      "native_baseline_sha256": null,
+      "staged_sha256": "6eb3c06871a85f9510824ecf33b78a6de8cb1bdcdf59feadf422d208e5c9f5cd"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "baseline_commit": "2523c214c0ad6f72ae3dcb16148ed7a49f2919d0",
+  "original_layout_unchanged": true,
+  "functions": [
+    {
+      "symbol": "hasMoreChunk__17DotCamReaderInBinCFv",
+      "unchanged_bytes": 164,
+      "sha256": "c53d0dc9d84d4acc76145914307f2235223e638686e3283cfd95ecd5efe9230c",
+      "unchanged_relocations": 1
+    },
+    {
+      "symbol": "createStartAnimCamera__13CameraManGameFv",
+      "unchanged_bytes": 164,
+      "sha256": "c5ca8b1d01499c85d9417342e5efbc5e827a62a76c64563214af7aa2f7d58911",
+      "unchanged_relocations": 11
+    },
+    {
+      "symbol": "__as__18CameraGeneralParamFRC18CameraGeneralParam",
+      "unchanged_bytes": 144,
+      "sha256": "31aa820af6a55598cf6196c19273ae13fdc8b5d25bb7ca51985a56ab42a3389f",
+      "unchanged_relocations": 4
+    },
+    {
+      "symbol": "load__16CameraParamChunkFP12DotCamReaderP12CameraHolder",
+      "unchanged_bytes": 1072,
+      "sha256": "921c352c0a4344a6ce037981b44bec7c43a25688a8783e0f1cc0dc02f0b099b3",
+      "unchanged_relocations": 12
+    },
+    {
+      "symbol": "setParam__17CamTranslatorAnimFPC16CameraParamChunk",
+      "unchanged_bytes": 20,
+      "sha256": "f812db3c544bc58d535f2c2052fdf35f0680b5df25265616609126f66016b713",
+      "unchanged_relocations": 1
+    },
+    {
+      "symbol": "getAnimFrame__17CamTranslatorAnimCFPC16CameraParamChunk",
+      "unchanged_bytes": 12,
+      "sha256": "dd261ca27fb98fae1884bdbf36a6afd138759414445a1e734bce14521d910552",
+      "unchanged_relocations": 1
+    },
+    {
+      "symbol": "setParam__19CamTranslatorSpiralFPC16CameraParamChunk",
+      "unchanged_bytes": 84,
+      "sha256": "5b046976db42fe5bcb71285052c25b4ac3849a214bfcd0195308609324cca0fe",
+      "unchanged_relocations": 0
+    }
+  ]
+}
