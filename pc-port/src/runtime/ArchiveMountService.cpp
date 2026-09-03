@@ -2,9 +2,11 @@
 #include "runtime/RuntimeServices.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "resource/JMapResource.hpp"
+#include "resource/JpcResource.hpp"
 #include "resource/RarcArchive.hpp"
 #include "JSystem/JKernel/JKRMemArchive.hpp"
 #include <atomic>
+#include <cstring>
 #include <stdexcept>
 
 namespace smgpc::runtime {
@@ -15,6 +17,7 @@ namespace smgpc::runtime {
         std::filesystem::path path;
         JKRHeap* heap;
         std::vector<resource::JMapSourceRegistration> registrations;
+        std::vector<resource::JpcSourceRegistration> particle_registrations;
         std::unique_ptr<JKRMemArchive> archive;
     };
 
@@ -29,6 +32,8 @@ namespace smgpc::runtime {
             const auto bytes = _storage->source->file_data(entry);
             if (!bytes.empty())
                 _storage->registrations.push_back(resource::register_jmap_source(bytes, _storage->source));
+            if (bytes.size() >= 4 && std::memcmp(bytes.data(), "JPAC", 4) == 0)
+                _storage->particle_registrations.push_back(resource::register_jpc_source(bytes, _storage->source));
         }
         _storage->archive = std::make_unique<JKRMemArchive>(*_storage->source);
     }

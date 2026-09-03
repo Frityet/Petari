@@ -2,6 +2,8 @@
 #include "resource/RarcArchive.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "runtime/RuntimeServices.hpp"
+#include "runtime/ArchiveMountService.hpp"
+#include "Game/Effect/ParticleResourceHolder.hpp"
 #include <aurora/aurora.h>
 #include <aurora/dvd.h>
 #include <JSystem/JKernel/JKRHeap.hpp>
@@ -28,16 +30,26 @@ int main(int argc, char** argv) {
     DVDInit();
     aurora::g_config.mem1Size = 24U * 1024U * 1024U;
     smgpc::runtime::DvdFileSystemService dvd({});
-    auto archive = dvd.retain_archive_for_path("/ParticleData/Effect.arc");
+    smgpc::runtime::ArchiveMountService mounts(dvd);
     auto runtime = smgpc::compat::JkrHeapRuntime::create(32 * 1024 * 1024);
     auto domain = smgpc::compat::JkrAllocationDomain::create(runtime, 16 * 1024 * 1024);
     JPAResourceManager* manager;
     {
-        auto registration = smgpc::resource::register_jpc_source(archive->file_data("particles.jpc"), archive);
         smgpc::compat::JkrAllocationScope scope(domain);
-        manager = new (&domain->heap(), 0) JPAResourceManager(archive->file_data("particles.jpc").data(), &domain->heap());
+        auto* holder = new ParticleResourceHolder("/ParticleData/Effect.arc");
+        manager = holder->mResourceMgr;
+        assert(holder->mParticleNames->getNumEntries() == 3327);
+        assert(holder->mNumParticles > 0 && holder->mNumParticles <= 1024);
+        for (int i = 0; i < holder->mParticleNames->getNumEntries(); ++i) {
+            const char* name = nullptr;
+            assert(holder->mParticleNames->getValue(i, "name", &name));
+            assert(holder->getUserIndex(name) == i);
+        }
+        // Original ParticleResourceHolder requests this mount with a null heap.
+        // Its actual managers/tables must retain storage after unpublication.
+        mounts.remove_for_heap(nullptr);
+        assert(mounts.size() == 0);
     }
-    archive.reset();
     std::weak_ptr<const smgpc::resource::JpcResource> backing = manager->mNativeResource;
     assert(manager->mResNum == 3327 && manager->mTexNum == 225);
     size_t functions = 0, frames = 0, particleObservations = 0;
