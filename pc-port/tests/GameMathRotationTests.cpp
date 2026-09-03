@@ -2,7 +2,9 @@
 
 #include "Game/Util/MathUtil.hpp"
 
+#include <bit>
 #include <cmath>
+#include <cstdint>
 #include <iostream>
 #include <stdexcept>
 #include <string>
@@ -148,6 +150,71 @@ namespace {
         require(matrix.mMtx[0][0] == 1.0F && matrix.mMtx[1][1] == 1.0F && matrix.mMtx[2][2] == 1.0F &&
                     matrix.mMtx[0][3] == 7.0F && matrix.mMtx[1][3] == 8.0F && matrix.mMtx[2][3] == 9.0F,
                 "setQT must assign the recovered rotation and translation together");
+    }
+
+    void test_camera_direction_rotation_and_transform() {
+        auto rotation = TQuat4f{};
+        rotation.setRotate(TVec3f{0.0F, 0.0F, 4.0F}, TVec3f{3.0F, 0.0F, 0.0F});
+        auto output = TVec3f{};
+        const auto input = TVec3f{0.0F, 0.0F, 2.0F};
+        rotation.transform(input, output);
+        require_vector(output, TVec3f{2.0F, 0.0F, 0.0F},
+                       "camera direction rotation must accept nonunit directions and preserve vector magnitude");
+        auto alias = input;
+        rotation.transform(alias, alias);
+        require_vector(alias, output, "quaternion transform must support a separate destination aliased to its source");
+        alias = input;
+        rotation.transform(alias);
+        require_vector(alias, output, "the one-vector transform must share the original Hamilton-product semantics");
+        rotation.setRotate(TVec3f{1.0F, 0.0F, 0.0F}, TVec3f{-1.0F, 0.0F, 0.0F});
+        require(rotation.x == 0.0F && rotation.y == 0.0F && rotation.z == 0.0F && rotation.w == 1.0F,
+                "the recovered two-direction rotation must retain the original antiparallel identity branch");
+        rotation.setRotate(TVec3f{}, TVec3f{1.0F, 0.0F, 0.0F});
+        require(rotation.w == 1.0F, "a zero direction must use the original small-cross-product identity branch");
+
+        rotation.set(0.0F, 0.0F, 0.0F, 2.0F);
+        rotation.transform(TVec3f{1.0F, 2.0F, 3.0F}, output);
+        require_vector(output, TVec3f{4.0F, 8.0F, 12.0F},
+                       "quaternion transform must preserve raw nonunit quaternion scaling");
+        require(!MR::isNan(TVec3f{INFINITY, 0.0F, -INFINITY}) && MR::isNan(TVec3f{0.0F, NAN, 0.0F}),
+                "camera pose validation must identify NaN components without reclassifying infinity as NaN");
+    }
+
+    void test_camera_trigonometric_tables() {
+        const auto sample = static_cast<float>(std::atan(341.0 / 1024.0));
+        const auto half_pi = PI * 0.5F;
+        require(JMAATan2(1.0F, 3.0F) == sample && JMAATan2(3.0F, 1.0F) == half_pi - sample &&
+                    JMAATan2(3.0F, -1.0F) == half_pi + sample && JMAATan2(1.0F, -3.0F) == PI - sample &&
+                    JMAATan2(-1.0F, -3.0F) == -PI + sample && JMAATan2(-3.0F, -1.0F) == -half_pi - sample &&
+                    JMAATan2(-3.0F, 1.0F) == -half_pi + sample && JMAATan2(-1.0F, 3.0F) == -sample,
+                "camera polar angles must preserve the original quantized atan table in all eight octants");
+        require(JMAATan2(0.0F, 0.0F) == 0.0F && !std::signbit(JMAATan2(-0.0F, 1.0F)) &&
+                    JMAATan2(-0.0F, -1.0F) == PI && JMAATan2(1.0F, 0.0F) == half_pi &&
+                    JMAATan2(-1.0F, 0.0F) == -half_pi,
+                "atan quadrants must retain the retail axis and signed-zero decisions");
+        require(JMAATan2(1.0F, 1.0F) == PI * 0.25F && JMAATan2(-1.0F, 1.0F) == -PI * 0.25F,
+                "equal direction components must use the separate atan endpoint cell");
+        const auto cell_boundary = 171.5F / 1024.0F;
+        require(JMath::sAtanTable.get_(std::nextafter(cell_boundary, 0.0F), 1.0F) ==
+                    static_cast<float>(std::atan(171.0 / 1024.0)) &&
+                    JMath::sAtanTable.get_(cell_boundary, 1.0F) == static_cast<float>(std::atan(172.0 / 1024.0)),
+                "atan ratio lookup must round half a table cell upward");
+        require(std::fabs(JMAATan2(1.0F, 3.0F) - std::atan2(1.0F, 3.0F)) > 0.0002F,
+                "the retail table angle must remain distinguishable from a host libm replacement");
+
+        require(std::bit_cast<std::uint32_t>(JMath::sSinCosTable.table[6000].a1) == 0x3F3EBC1BU &&
+                    std::bit_cast<std::uint32_t>(JMath::sSinCosTable.table[6000].b1) == 0xBF2AC083U &&
+                    std::bit_cast<std::uint32_t>(JMath::sSinCosTable.table[12287].b1) == 0xB9C8FE41U,
+                "sin/cos samples must retain double angle evaluation with the original float-rounded two-pi constant");
+        const auto degree_boundary = std::bit_cast<float>(std::uint32_t{0x3DE0FFFFU});
+        require(JMASinDegree(degree_boundary) == JMath::sSinCosTable.table[5].a1 &&
+                    JMACosDegree(degree_boundary) == JMath::sSinCosTable.table[5].b1 &&
+                    JMASinDegree(-degree_boundary) == -JMath::sSinCosTable.table[5].a1,
+                "degree lookup must multiply by the original index scale directly at cell boundaries");
+        require(JMASinLap(0.25F) == JMath::sSinCosTable.table[4096].a1 &&
+                    JMASinLap(-0.25F) == -JMath::sSinCosTable.table[4096].a1 &&
+                    JMACosLap(1.25F) == JMath::sSinCosTable.table[4096].b1,
+                "lap lookup must preserve direct table indexing, sign, and full-turn wrapping");
     }
 
     void test_actor_up_then_front_blend() {
@@ -298,6 +365,8 @@ int main() {
         test_quaternion_world_rotation_and_aliasing();
         test_quaternion_normalization_and_slerp();
         test_quaternion_matrix_assignment();
+        test_camera_direction_rotation_and_transform();
+        test_camera_trigonometric_tables();
         test_actor_up_then_front_blend();
         test_spherical_vector_blend();
         test_axis_rotation_snap_and_sign();

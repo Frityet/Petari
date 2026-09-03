@@ -40,6 +40,7 @@ namespace JMath {
     class TSinCosTable {
     public:
         static const u32 LEN = 1 << Bits;
+        TSinCosTable();
         std::pair< T, T > table[LEN];
 
         T sinShort(s16 v) const {
@@ -154,6 +155,15 @@ namespace JMath {
         T mTable[Len];
         T _1000;
     };
+
+    template <>
+    TSinCosTable< 14, f32 >::TSinCosTable();
+    template <>
+    TAtanTable< 1024, f32 >::TAtanTable();
+    template <>
+    f32 TAtanTable< 1024, f32 >::atan2_(f32, f32) const;
+    template <>
+    f32 TAtanTable< 1024, f32 >::get_(f32, f32) const;
 
     extern TSinCosTable< 14, f32 > sSinCosTable;
     extern TAtanTable< 1024, f32 > sAtanTable;

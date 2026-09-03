@@ -2,6 +2,23 @@
 
 namespace JGeometry {
     template <>
+    void TQuat4< f32 >::setRotate(const TVec3< f32 >& rFrom, const TVec3< f32 >& rTo) {
+        TVec3< f32 > axis = rFrom.cross(rTo);
+        f32 crossLength = axis.length();
+        if (crossLength <= TUtil< f32 >::epsilon()) {
+            set< f32 >(0.0f, 0.0f, 0.0f, 1.0f);
+            return;
+        }
+
+        f32 halfAngle = 0.5f * JMAATan2(crossLength, rFrom.dot(rTo));
+        f32 scale = static_cast< f32 >(sin(static_cast< f64 >(halfAngle))) / crossLength;
+        x = axis.x * scale;
+        y = axis.y * scale;
+        z = axis.z * scale;
+        w = cos(static_cast< f64 >(halfAngle));
+    }
+
+    template <>
     void TQuat4< f32 >::slerp(const TQuat4< f32 >& rTarget, f32 rate) {
         TQuat4< f32 > from;
         from.normalize(*this);

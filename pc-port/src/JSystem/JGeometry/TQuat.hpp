@@ -102,10 +102,12 @@ namespace JGeometry {
                 return;
             }
 
-            const auto half_angle = rate * (std::atan2(cross_length, from.dot(to)) * static_cast<T>(0.5));
-            const auto axis_scale = std::sin(half_angle) / cross_length;
-            set(axis.x * axis_scale, axis.y * axis_scale, axis.z * axis_scale, std::cos(half_angle));
+            const auto half_angle = rate * (JMAATan2(cross_length, from.dot(to)) * static_cast<T>(0.5));
+            const auto axis_scale = static_cast<T>(std::sin(static_cast<f64>(half_angle))) / cross_length;
+            set(axis.x * axis_scale, axis.y * axis_scale, axis.z * axis_scale, static_cast<T>(std::cos(static_cast<f64>(half_angle))));
         }
+
+        void setRotate(const TVec3<T>& from, const TVec3<T>& to);
 
         void setRotate(const TVec3f& axis, T angle) {
             const auto half_angle = angle * static_cast<T>(0.5);
@@ -114,14 +116,24 @@ namespace JGeometry {
         }
 
         void rotate(TVec3f& vector) const {
-            const auto intermediate_x = (y * vector.z) - (z * vector.y) + (w * vector.x);
-            const auto intermediate_y = (-x * vector.z) + (z * vector.x) + (w * vector.y);
-            const auto intermediate_z = (x * vector.y) - (y * vector.x) + (w * vector.z);
-            const auto intermediate_w = (-x * vector.x) - (y * vector.y) - (z * vector.z);
+            transform(vector, vector);
+        }
 
-            vector.set((intermediate_x * w) - (intermediate_y * z) + (intermediate_z * y) - (intermediate_w * x),
-                       (intermediate_x * z) + (intermediate_y * w) - (intermediate_z * x) - (intermediate_w * y),
-                       -(intermediate_x * y) + (intermediate_y * x) + (intermediate_z * w) - (intermediate_w * z));
+        void transform(const TVec3<T>& vector, TVec3<T>& destination) const {
+            TQuat4<T> intermediate;
+            intermediate.x = (y * vector.z) - (z * vector.y) + (w * vector.x);
+            intermediate.y = (-x * vector.z) + (z * vector.x) + (w * vector.y);
+            intermediate.z = (x * vector.y) - (y * vector.x) + (w * vector.z);
+            intermediate.w = (-x * vector.x) - (y * vector.y) - (z * vector.z);
+
+            destination.template set<T>(
+                intermediate.x * w + intermediate.y * -z - intermediate.z * -y + intermediate.w * -x,
+                -intermediate.x * -z + intermediate.y * w + intermediate.z * -x + intermediate.w * -y,
+                intermediate.x * -y - intermediate.y * -x + intermediate.z * w + intermediate.w * -z);
+        }
+
+        void transform(TVec3<T>& vector) const {
+            transform(vector, vector);
         }
 
         void slerp(const TQuat4& from, const TQuat4& to, T rate) {
@@ -156,6 +168,8 @@ namespace JGeometry {
 
     template <>
     void TQuat4<f32>::slerp(const TQuat4<f32>& target, f32 rate);
+    template <>
+    void TQuat4<f32>::setRotate(const TVec3<f32>& from, const TVec3<f32>& to);
 }  // namespace JGeometry
 
 using TQuat4f = JGeometry::TQuat4<f32>;

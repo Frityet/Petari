@@ -27,6 +27,10 @@ namespace {
 }  // namespace
 
 namespace MR {
+    bool isNan(const TVec3f& vector) {
+        return std::isnan(vector.x) || std::isnan(vector.y) || std::isnan(vector.z);
+    }
+
     void initAcosTable() {
         (void)acos_table();
     }

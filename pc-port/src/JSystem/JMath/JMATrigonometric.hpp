@@ -42,14 +42,7 @@ namespace JMath {
     public:
         static constexpr u32 LEN = 1U << Bits;
 
-        TSinCosTable() {
-            for (auto index = u32{}; index < LEN; ++index) {
-                const auto angle = static_cast<T>(index) *
-                                   (TAngleConstant_<T>::RADIAN_DEG360() / static_cast<T>(LEN));
-                table[index].a1 = static_cast<T>(std::sin(angle));
-                table[index].b1 = static_cast<T>(std::cos(angle));
-            }
-        }
+        TSinCosTable();
 
         [[nodiscard]] T sinShort(s16 value) const {
             return table[static_cast<u16>(value) >> (16U - Bits)].a1;
@@ -73,19 +66,25 @@ namespace JMath {
         }
 
         [[nodiscard]] T sinDegree(T value) const {
-            return sinRadian(value / TAngleConstant_<T>::RADIAN_TO_DEGREE_FACTOR());
+            const auto scaled = value * (value < static_cast<T>(0) ? static_cast<T>(-45.511112F) : static_cast<T>(45.511112F));
+            const auto sine = table[static_cast<u16>(scaled) & (LEN - 1U)].a1;
+            return value < static_cast<T>(0) ? -sine : sine;
         }
 
         [[nodiscard]] T cosDegree(T value) const {
-            return cosRadian(value / TAngleConstant_<T>::RADIAN_TO_DEGREE_FACTOR());
+            const auto scaled = std::abs(value) * static_cast<T>(45.511112F);
+            return table[static_cast<u16>(scaled) & (LEN - 1U)].b1;
         }
 
         [[nodiscard]] T sinLap(T value) const {
-            return sinRadian(value * TAngleConstant_<T>::RADIAN_DEG360());
+            const auto scaled = value * (value < static_cast<T>(0) ? -static_cast<T>(LEN) : static_cast<T>(LEN));
+            const auto sine = table[static_cast<u16>(scaled) & (LEN - 1U)].a1;
+            return value < static_cast<T>(0) ? -sine : sine;
         }
 
         [[nodiscard]] T cosLap(T value) const {
-            return cosRadian(value * TAngleConstant_<T>::RADIAN_DEG360());
+            const auto scaled = std::abs(value) * static_cast<T>(LEN);
+            return table[static_cast<u16>(scaled) & (LEN - 1U)].b1;
         }
 
         [[nodiscard]] T get(T value) const {
@@ -98,20 +97,11 @@ namespace JMath {
     template <s32 Len, typename T>
     class TAtanTable {
     public:
-        TAtanTable() {
-            for (auto index = s32{}; index < Len; ++index) {
-                mTable[index] = static_cast<T>(std::atan(static_cast<T>(index) / static_cast<T>(Len)));
-            }
-            _1000 = static_cast<T>(std::atan(static_cast<T>(1)));
-        }
+        TAtanTable();
 
-        [[nodiscard]] T atan2_(T y, T x) const {
-            return static_cast<T>(std::atan2(y, x));
-        }
+        [[nodiscard]] T atan2_(T y, T x) const;
 
-        [[nodiscard]] T get_(T y, T x) const {
-            return atan2_(y, x);
-        }
+        [[nodiscard]] T get_(T y, T x) const;
 
         T mTable[Len]{};
         T _1000{};
@@ -155,6 +145,15 @@ namespace JMath {
 
     template <>
     TAsinAcosTable<1024, f32>::TAsinAcosTable();
+
+    template <>
+    TSinCosTable<14, f32>::TSinCosTable();
+    template <>
+    TAtanTable<1024, f32>::TAtanTable();
+    template <>
+    f32 TAtanTable<1024, f32>::atan2_(f32 y, f32 x) const;
+    template <>
+    f32 TAtanTable<1024, f32>::get_(f32 y, f32 x) const;
 
     extern TSinCosTable<14, f32> sSinCosTable;
     extern TAtanTable<1024, f32> sAtanTable;

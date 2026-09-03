@@ -134,6 +134,24 @@ namespace JGeometry {
 
     template <typename T>
     struct TRotation3 : public T {
+        void setXDir(const TVec3f& source) {
+            this->mMtx[0][0] = source.x;
+            this->mMtx[1][0] = source.y;
+            this->mMtx[2][0] = source.z;
+        }
+
+        void setYDir(const TVec3f& source) {
+            this->mMtx[0][1] = source.x;
+            this->mMtx[1][1] = source.y;
+            this->mMtx[2][1] = source.z;
+        }
+
+        void setZDir(const TVec3f& source) {
+            this->mMtx[0][2] = source.x;
+            this->mMtx[1][2] = source.y;
+            this->mMtx[2][2] = source.z;
+        }
+
         void getXDir(TVec3f &destination) const {
             destination.set(this->mMtx[0][0], this->mMtx[1][0], this->mMtx[2][0]);
         }
