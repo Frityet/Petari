@@ -799,6 +799,18 @@ void J3DAnmTextureSRTKey::calcTransform(f32 frame, u16 jointNo, J3DTextureSRTInf
     }
 }
 
+void J3DAnmVisibilityFull::getVisibility(u16 index, u8* pVisibility) const {
+    int maxFrame = mAnmTable[index]._0;
+    int frame = (int)(0.5f + mFrame);
+    if (frame < 0) {
+        *pVisibility = mVisibility[mAnmTable[index]._2];
+    } else if (frame >= maxFrame) {
+        *pVisibility = mVisibility[mAnmTable[index]._2 + maxFrame - 1];
+    } else {
+        *pVisibility = mVisibility[mAnmTable[index]._2 + frame];
+    }
+}
+
 f32 J3DAnmClusterFull::getWeight(u16 index) const {
     int maxFrame = mAnmTable[index].mMaxFrame;
     int frame = (int)(mFrame + 0.5f);

@@ -1,5 +1,5 @@
 #include "JSystem/JKernel/JKRSolidHeap.hpp"
-#include "JSystem/JUtility/JUTConsole.hpp"
+#include "compat/JkrDiagnostics.hpp"
 #include <new>
 #include <stdint.h>
 
@@ -18,9 +18,9 @@ JKRSolidHeap* JKRSolidHeap::create(u32 size, JKRHeap* heap, bool useErrorHandler
         return NULL;
 
     u8* mem = (u8*)JKRAllocFromHeap(heap, alignedSize, 0x10);
-    void* dataPtr = mem + solidHeapSize;
     if (!mem)
         return NULL;
+    void* dataPtr = mem + solidHeapSize;
 
     return new (mem) JKRSolidHeap(dataPtr, alignedSize - solidHeapSize, heap, useErrorHandler);
 }
@@ -65,14 +65,14 @@ void* JKRSolidHeap::do_alloc(u32 size, int alignment) {
 void* JKRSolidHeap::allocFromHead(u32 size, int alignment) {
     size = ALIGN_NEXT(size, sizeof(void*));
     void* ptr = NULL;
-    uintptr_t alignedStart = (alignment - 1 + (uintptr_t)mSolidHead) & ~(alignment - 1);
+    uintptr_t alignedStart = (alignment - 1 + (uintptr_t)mSolidHead) & ~(uintptr_t)(alignment - 1);
     u32 totalSize = size + (alignedStart - (uintptr_t)mSolidHead);
     if (totalSize <= mFreeSize) {
         ptr = (void*)alignedStart;
         mSolidHead += totalSize;
         mFreeSize -= totalSize;
     } else {
-        JUTWarningConsole_f("allocFromHead: cannot alloc memory (0x%x byte).\n", totalSize);
+        smgpc::compat::jkr_warning_f("allocFromHead: cannot alloc memory (0x%x byte).\n", totalSize);
         if (getErrorFlag() == true) {
             callErrorHandler(this, size, alignment);
         }
@@ -84,14 +84,14 @@ void* JKRSolidHeap::allocFromHead(u32 size, int alignment) {
 void* JKRSolidHeap::allocFromTail(u32 size, int alignment) {
     size = ALIGN_NEXT(size, sizeof(void*));
     void* ptr = NULL;
-    uintptr_t alignedStart = ALIGN_PREV((uintptr_t)mSolidTail - size, alignment);
+    uintptr_t alignedStart = ALIGN_PREV((uintptr_t)mSolidTail - size, (uintptr_t)alignment);
     u32 totalSize = (uintptr_t)mSolidTail - (uintptr_t)alignedStart;
     if (totalSize <= mFreeSize) {
         ptr = (void*)alignedStart;
         mSolidTail -= totalSize;
         mFreeSize -= totalSize;
     } else {
-        JUTWarningConsole_f("allocFromTail: cannot alloc memory (0x%x byte).\n", totalSize);
+        smgpc::compat::jkr_warning_f("allocFromTail: cannot alloc memory (0x%x byte).\n", totalSize);
         if (getErrorFlag() == true) {
             callErrorHandler(this, size, alignment);
         }
@@ -134,12 +134,12 @@ void JKRSolidHeap::do_fillFreeArea() {
 }
 
 s32 JKRSolidHeap::do_resize(void* ptr, u32 newSize) {
-    JUTWarningConsole_f("resize: cannot resize memory block (%08x: %d)\n", ptr, newSize);
+    smgpc::compat::jkr_warning_f("resize: cannot resize memory block (%p: %u)\n", ptr, newSize);
     return -1;
 }
 
 s32 JKRSolidHeap::do_getSize(void* ptr) {
-    JUTWarningConsole_f("getSize: cannot get memory block size (%08x)\n", ptr);
+    smgpc::compat::jkr_warning_f("getSize: cannot get memory block size (%p)\n", ptr);
     return -1;
 }
 
@@ -150,7 +150,7 @@ bool JKRSolidHeap::check(void) {
     u32 calculatedSize = (mSolidHead - mStart) + mFreeSize + (mEnd - mSolidTail);
     if (calculatedSize != mSize) {
         result = false;
-        JUTWarningConsole_f("check: bad total memory block size (%08X, %08X)\n", mSize, calculatedSize);
+        smgpc::compat::jkr_warning_f("check: bad total memory block size (%08X, %08X)\n", mSize, calculatedSize);
     }
 
     unlock();
@@ -162,9 +162,9 @@ bool JKRSolidHeap::dump(void) {
 
     lock();
     s32 htSize = (mSolidHead - mStart) + (mEnd - mSolidTail);
-    JUTReportConsole_f("head %08x: %08x\n", mStart, (mSolidHead - mStart));
-    JUTReportConsole_f("tail %08x: %08x\n", mSolidTail, (mEnd - mSolidTail));
-    JUTReportConsole_f("%d / %d bytes (%6.2f%%) used\n", htSize, mSize, f32(htSize) / f32(mSize) * 100.0f);
+    smgpc::compat::jkr_report_f("head %p: %zx\n", (void*)mStart, (size_t)(mSolidHead - mStart));
+    smgpc::compat::jkr_report_f("tail %p: %zx\n", (void*)mSolidTail, (size_t)(mEnd - mSolidTail));
+    smgpc::compat::jkr_report_f("%d / %d bytes (%6.2f%%) used\n", htSize, mSize, f32(htSize) / f32(mSize) * 100.0f);
     unlock();
 
     return result;

@@ -1,0 +1,27 @@
+# Original MSL formatted-string boundary — 2026-09-03
+
+The original `ResourceHolder` formats paths with nullable `%s` arguments. Retail MSL prints a null string as empty; Darwin libc prints `(null)`. The new shared boundary implements the original string conversions and string-output sinks for `sprintf`, `snprintf`, `vsprintf`, and `vsnprintf`. It contains no resource path, actor, or format-string special case and changes no Game function.
+
+`MetrowerksPrintf.hpp` declares the four standard functions with compatibility symbol labels before any system stdio declaration. This preserves both global and `std::` source calls. Darwin's first declaration already owns its symbol label, so redeclaring it after `<cstdio>` does not work. `MetrowerksStdCompat.hpp` includes this header first. Disable the four corresponding compiler builtins in original caller TUs so optimization cannot replace a null-string call with `strcpy` or another host builtin. Compile `MslPrintfCompat.cpp` without the forced Game header: its numeric conversion calls deliberately use host libc.
+
+## Source and retail evidence
+
+The authoritative code already exists in `src/MSL_C/printf.c`, `mbstring.c`, and `locale.c`; no new decompilation or Game edit was needed. The configured original compilers produce **100% objdiff** for all nine relevant functions: `parse_format`, `__pformatter`, `__StringWrite`, all four string-output entrypoints, `wcstombs`, and `__wctomb_noconv`. This is an original-object comparison, not a claim of native instruction identity or complete MSL numeric emulation.
+
+The verifier also follows the actual retail instructions which replace a null narrow argument: `lis/addi` at `0x8051D980/0x8051D994` plus the null-branch `addi` at `0x8051DF04` resolve to the empty byte at `0x805628B2`. It checks `_current_locale.ctype_cmpt_ptr` at `0x80609BB8` points to `0x80609A08`, whose encoder pointer is the exact `__wctomb_noconv` at `0x8051BB08`. That function writes the low byte of each wide character. The linked MSL locale has no dynamic locale-switching implementation; native `%ls` therefore uses that actual byte conversion, independent of the host locale. Using host `wcstombs` here would be incorrect for non-ASCII input.
+
+The native parser retains the source grammar, flags, width/precision interpretation, argument categories, and conversion-error behavior. Source string handling retains null-to-empty, Pascal `%#s`, byte precision, left/right padding, zero-fill and sign-prefix handling. Wide strings first undergo the source C-locale byte conversion and then the same string handling. The bounded sink copies up to the supplied capacity, returns the complete formatted length, preserves `%n` counts even after output truncation, and terminates at the source-prescribed position.
+
+## Native ABI and explicit scope
+
+Numeric and scalar character conversions use the original spelling of each conversion with the host formatter. Native `va_copy`/`va_arg` consume the actual promoted integer, floating-point, long-double, pointer, `size_t`, `ptrdiff_t`, and `intmax_t` types; star width/precision are forwarded with their original signed values. `%n` stores through native-width pointers. Pure non-string formats and formats using host-only grammar (for example POSIX positional arguments) remain one host call. These paths preserve existing host numeric/extension behavior; they do **not** claim MSL numeric rounding, ILP32 pointer formatting, locale, or decimal conversion parity. Host-only grammar does not acquire MSL null-string semantics.
+
+Only the four string-output APIs are redirected. `printf`, `fprintf`, host loggers and `FILE` behavior remain native. No standard-library function-name macro is installed.
+
+Defined source string inputs preserve MSL's maximum field width of 509 and its literal-remainder conversion error. Native guards make signed width/precision overflow, output count overflow, zero-size null destinations, and empty zero-filled strings safe rather than reproducing undefined C accesses. Wide conversion uses owned storage instead of the original fixed 512-byte temporary, avoiding its unterminated-buffer overread for long input. This extends safe capacity; it does not invent an encoding. The native alphabet and wide-character representation remain the host types at the ABI boundary, with the source low-byte conversion applied explicitly. Compiler symbol-label support is required; current runtime validation is macOS ARM64 with LLVM, not a claim of validation on other platforms.
+
+## Verification
+
+Run `python3 pc-port/notes/original-msl-format-20260903/verify.py` from the repository root. It uses the supplied verified RMGK01 DOL and original compiler/retail split, then builds isolated native binaries without shared xmake or GPU work.
+
+All **9 groups pass** optimized, AddressSanitizer/UndefinedBehaviorSanitizer, and ThreadSanitizer runs. Coverage includes null/repeated arguments, width/precision/zero fill, Pascal embedded NUL, low-byte wide conversion, native numeric families inside mixed string formats, independent integer/FP/pointer variadic banks, all four optimized standard-symbol aliases, output truncation and complete `%n` counts, zero/one capacity, and concurrent calls. The separate alias TU's undefined-symbol inventory contains all four `smgpc_msl_*` names and none of the four host names. `evidence.json` records source hashes, compiler commands, function comparisons, concrete retail addresses and native binary hashes.

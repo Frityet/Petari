@@ -124,3 +124,8 @@ An explicit SDK allocation-identity boundary can instead reserve stable,
 16-byte-aligned original-width virtual ranges for the retained material owner,
 with checked capacity and lifetime. The parent is coordinating its exact use;
 no guessed identity or masked native pointer is introduced here.
+
+The subsequent typed animation prerequisite is documented separately in
+`../original-j3d-animation-loader-20260903/README.md`. It provides all twelve
+original animation families and explicit source-identity ownership; it does
+not independently complete the ResourceHolder class migration.

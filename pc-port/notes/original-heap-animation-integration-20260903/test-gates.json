@@ -1,0 +1,70 @@
+[
+  {
+    "target": "smg-pc-original-jkr-heap-tests",
+    "exit_code": 0
+  },
+  {
+    "target": "smg-pc-original-jkr-allocation-domain-tests",
+    "exit_code": 0
+  },
+  {
+    "target": "smg-pc-original-j3d-animation-resource-tests",
+    "exit_code": 0
+  },
+  {
+    "target": "smg-pc-msl-printf-tests",
+    "exit_code": 0
+  },
+  {
+    "target": "smg-pc-original-j3d-packet-tests",
+    "exit_code": 0
+  },
+  {
+    "target": "smg-pc-original-j3d-mtx-buffer-tests",
+    "exit_code": 0
+  },
+  {
+    "target": "smg-pc-original-j3d-texture-mtx-tests",
+    "exit_code": 0
+  },
+  {
+    "target": "smg-pc-original-j3d-material-animation-tests",
+    "exit_code": 0
+  },
+  {
+    "target": "smg-pc-original-j3d-material-block-tests",
+    "exit_code": 0
+  },
+  {
+    "target": "smg-pc-original-j3d-joint-resource-tests",
+    "exit_code": 0
+  },
+  {
+    "target": "smg-pc-original-j3d-material-resource-tests",
+    "exit_code": 0
+  },
+  {
+    "target": "smg-pc-original-j3d-geometry-resource-tests",
+    "exit_code": 0
+  },
+  {
+    "target": "smg-pc-original-j3d-texture-resource-tests",
+    "exit_code": 0
+  },
+  {
+    "target": "smg-pc-original-jkr-archive-tests",
+    "exit_code": 0
+  },
+  {
+    "target": "smg-pc-original-jmap-resource-tests",
+    "exit_code": 0
+  },
+  {
+    "target": "smg-pc-original-bck-ctrl-tests",
+    "exit_code": 0
+  },
+  {
+    "target": "smg-pc-original-camera-runtime-tests",
+    "exit_code": 0
+  }
+]

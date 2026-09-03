@@ -1,5 +1,7 @@
 #pragma once
 
+#include "compat/MetrowerksPrintf.hpp"
+
 class SaveDataHandleSequence;
 class JKRHeap;
 

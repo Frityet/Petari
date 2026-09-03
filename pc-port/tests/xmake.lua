@@ -110,6 +110,7 @@ target("smg-pc-original-camera-runtime-tests")
     set_group("tests/aurora")
     set_rundir(os.projectdir())
     add_cxxflags("-include " .. path.join(os.projectdir(), "src/compat/MetrowerksStdCompat.hpp"), {force = true})
+    add_cxxflags("-fno-builtin-sprintf", "-fno-builtin-snprintf", "-fno-builtin-vsprintf", "-fno-builtin-vsnprintf", {force = true})
     add_files {
         "CameraLocalUtilRuntimeTests.cpp",
         "../aurora/lib/compat.cpp"
@@ -138,6 +139,7 @@ target("smg-pc-only-camera-tests")
     set_group("tests/aurora")
     set_rundir(os.projectdir())
     add_cxxflags("-include " .. path.join(os.projectdir(), "src/compat/MetrowerksStdCompat.hpp"), {force = true})
+    add_cxxflags("-fno-builtin-sprintf", "-fno-builtin-snprintf", "-fno-builtin-vsprintf", "-fno-builtin-vsnprintf", {force = true})
     add_files {
         "OnlyCameraTests.cpp",
         "../aurora/lib/compat.cpp"
@@ -166,6 +168,7 @@ target("smg-pc-camera-view-interpolator-tests")
     set_group("tests/aurora")
     set_rundir(os.projectdir())
     add_cxxflags("-include " .. path.join(os.projectdir(), "src/compat/MetrowerksStdCompat.hpp"), {force = true})
+    add_cxxflags("-fno-builtin-sprintf", "-fno-builtin-snprintf", "-fno-builtin-vsprintf", "-fno-builtin-vsnprintf", {force = true})
     add_files {
         "CameraViewInterpolatorTests.cpp",
         "../aurora/lib/compat.cpp"
@@ -194,6 +197,7 @@ target("smg-pc-camera-view-service-tests")
     set_group("tests/aurora")
     set_rundir(os.projectdir())
     add_cxxflags("-include " .. path.join(os.projectdir(), "src/compat/MetrowerksStdCompat.hpp"), {force = true})
+    add_cxxflags("-fno-builtin-sprintf", "-fno-builtin-snprintf", "-fno-builtin-vsprintf", "-fno-builtin-vsnprintf", {force = true})
     add_files {
         "CameraViewServiceTests.cpp",
         "../aurora/lib/compat.cpp"
@@ -344,6 +348,7 @@ target("smg-pc-file-select-exact-source-compile")
     set_default(false)
     set_group("tests/source-boundary")
     add_cxxflags("-include " .. path.join(os.projectdir(), "src/compat/MetrowerksStdCompat.hpp"), { force = true })
+    add_cxxflags("-fno-builtin-sprintf", "-fno-builtin-snprintf", "-fno-builtin-vsprintf", "-fno-builtin-vsnprintf", {force = true})
     add_cxxflags("-include " .. path.join(os.projectdir(), "tests/FileSelectExactSourceCompileCompat.hpp"), { force = true })
     add_files {
         "../src/Game/Map/FileSelectEffect.cpp",
@@ -1209,7 +1214,8 @@ for _, fixture in ipairs {
     {"joint-resource", "OriginalJ3DJointResourceTests.cpp"},
     {"material-resource", "OriginalJ3DMaterialResourceTests.cpp"},
     {"geometry-resource", "OriginalJ3DGeometryResourceTests.cpp"},
-    {"texture-resource", "OriginalJ3DTextureResourceTests.cpp"}
+    {"texture-resource", "OriginalJ3DTextureResourceTests.cpp"},
+    {"animation-resource", "OriginalJ3DAnimationResourceTests.cpp"}
 } do
     target("smg-pc-original-j3d-" .. fixture[1] .. "-tests")
         set_kind("binary")
@@ -1228,6 +1234,8 @@ for _, fixture in ipairs {
 end
 
 for _, fixture in ipairs {
+    {"jkr-heap", "OriginalJkrHeapTests.cpp"},
+    {"jkr-allocation-domain", "JkrAllocationDomainTests.cpp"},
     {"jkr-archive", "OriginalJkrArchiveTests.cpp"},
     {"jmap-resource", "OriginalJMapResourceTests.cpp"},
     {"bck-ctrl", "OriginalBckCtrlTests.cpp"}
@@ -2241,3 +2249,13 @@ target("smg-pc-upstream-component-tests")
         rundir = os.projectdir(),
         realtime_output = true
     })
+
+
+target("smg-pc-msl-printf-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    add_files("MslPrintfTests.cpp", "MslPrintfAliasTests.cpp")
+    add_deps("smg-pc-common")
+    add_cxxflags("-fno-builtin-sprintf", "-fno-builtin-snprintf", "-fno-builtin-vsprintf", "-fno-builtin-vsnprintf", {force = true})
+    add_tests("msl_printf", {group = "aurora", rundir = os.projectdir(), realtime_output = true})

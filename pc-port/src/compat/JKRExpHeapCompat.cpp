@@ -1,11 +1,9 @@
 #include "JSystem/JKernel/JKRExpHeap.hpp"
-#include "JSystem/JUtility/JUTConsole.hpp"
-#include "JSystem/JUtility/JUTException.hpp"
+#include "compat/JkrDiagnostics.hpp"
 #include "JSystem/JSupport/JSupport.hpp"
 
-extern "C" void JUTReportConsole(const char*);
-extern "C" void JUTWarningConsole(const char*);
 #include <new>
+#include <cstdint>
 
 static u32 DBfoundSize;
 static u32 DBfoundOffset;
@@ -13,22 +11,7 @@ static JKRExpHeap::CMemBlock* DBfoundBlock;
 static JKRExpHeap::CMemBlock* DBnewFreeBlock;
 static JKRExpHeap::CMemBlock* DBnewUsedBlock;
 
-JKRExpHeap* JKRExpHeap::createRoot(int heapNum, bool a2) {
-    JKRExpHeap* heap = nullptr;
-
-    if (!JKRHeap::sRootHeap) {
-        char* stack_C;
-        u32 arenaSize;
-        JKRHeap::initArena(&stack_C, &arenaSize, heapNum);
-        char* area = stack_C + 0x90;
-        u32 size = arenaSize - 0x90;
-        heap = new (stack_C) JKRExpHeap(area, size, nullptr, a2);
-        JKRHeap::sRootHeap = heap;
-    }
-
-    heap->_6E = 1;
-    return heap;
-}
+// Wii boot-arena createRoot is replaced by explicit JkrHeapRuntime ownership.
 
 JKRExpHeap* JKRExpHeap::create(u32 size, JKRHeap* pParent, bool errorFlag) {
     if (!pParent) {
@@ -42,15 +25,15 @@ JKRExpHeap* JKRExpHeap::create(u32 size, JKRHeap* pParent, bool errorFlag) {
     u32 alignedSize = ALIGN_PREV(size, 0x10);
     u32 heapSize = ALIGN_NEXT(sizeof(JKRExpHeap), 0x10);
 
-    if (alignedSize < 0xA0) {
+    if (alignedSize < heapSize + sizeof(CMemBlock)) {
         return nullptr;
     }
 
     u8* mem = (u8*)JKRHeap::alloc(alignedSize, 16, pParent);
-    u8* data = (mem + heapSize);
     if (mem == nullptr) {
         return nullptr;
     }
+    u8* data = mem + heapSize;
 
     JKRExpHeap* heap = new (mem) JKRExpHeap(data, alignedSize - heapSize, pParent, errorFlag);
 
@@ -84,7 +67,7 @@ JKRExpHeap* JKRExpHeap::create(void* ptr, u32 size, JKRHeap* pParent, bool error
     }
 
     void* data = (u8*)ptr + heapSize;
-    u32 alignSize = ALIGN_PREV((u32)ptr + size - (u32)data, 0x10);
+    u32 alignSize = ALIGN_PREV((uintptr_t)ptr + size - (uintptr_t)data, uintptr_t(0x10));
     if (ptr != nullptr) {
         heap = new (ptr) JKRExpHeap(data, alignSize, parent, errorFlag);
     }
@@ -97,7 +80,7 @@ JKRExpHeap* JKRExpHeap::create(void* ptr, u32 size, JKRHeap* pParent, bool error
 
 void JKRExpHeap::do_destroy() {
     if (!_6E) {
-        JKRHeap* heap = mChildTree.getParent()->getObject();
+        JKRHeap* heap = getParent();
 
         if (heap != nullptr) {
             this->~JKRExpHeap();
@@ -131,7 +114,7 @@ void* JKRExpHeap::do_alloc(u32 size, int align) {
     }
 
     if (ptr == nullptr) {
-        JUTWarningConsole_f(":::cannot alloc memory (0x%x byte).\n", size);
+        smgpc::compat::jkr_warning_f(":::cannot alloc memory (0x%x byte).\n", size);
 
         if (JKRHeap::mErrorFlag == true) {
             if (JKRHeap::mErrorHandler) {
@@ -171,7 +154,7 @@ JKRExpHeap::CMemBlock* JKRExpHeap::CMemBlock::allocFore(u32 size, u8 group_1, u8
     mFlags = align_1;
 
     if (mSize >= size + sizeof(CMemBlock)) {
-        block = (CMemBlock*)((u32)this + size);
+        block = (CMemBlock*)((uintptr_t)this + size);
         block[1].mGroupId = group_2;
         block[1].mFlags = align_2;
         block[1].mSize = mSize - (size + sizeof(CMemBlock));
@@ -186,7 +169,7 @@ JKRExpHeap::CMemBlock* JKRExpHeap::CMemBlock::allocBack(u32 size, u8 group_1, u8
     CMemBlock* block = nullptr;
 
     if (mSize >= size + sizeof(CMemBlock)) {
-        block = (CMemBlock*)((u32)this + mSize - size);
+        block = (CMemBlock*)((uintptr_t)this + mSize - size);
         block->mGroupId = group_2;
         block->mFlags = align_2 | 0x80;
         block->mSize = size;
@@ -221,7 +204,8 @@ JKRExpHeap::~JKRExpHeap() {
 void* JKRExpHeap::allocFromHead(u32 size, int align) {
     u32 foundOffset;
     int foundSize;
-    size = ALIGN_NEXT(size, 4);
+    // Native block headers contain pointers and require their natural alignment.
+    size = ALIGN_NEXT(size, alignof(CMemBlock));
     foundSize = -1;
     foundOffset = 0;
     CMemBlock* foundBlock = nullptr;
@@ -229,7 +213,7 @@ void* JKRExpHeap::allocFromHead(u32 size, int align) {
     CMemBlock* newUsedBlock = nullptr;
     for (CMemBlock* block = mHeadFreeList; block; block = block->mNext) {
         u32 offset =
-            ALIGN_PREV(align - 1 + (uintptr_t)block->getContent(), align) - (uintptr_t)block->getContent();
+            ALIGN_PREV(align - 1 + (uintptr_t)block->getContent(), uintptr_t(align)) - (uintptr_t)block->getContent();
         if (block->mSize < size + offset) {
             continue;
         }
@@ -302,7 +286,8 @@ void* JKRExpHeap::allocFromHead(u32 size, int align) {
 }
 
 void* JKRExpHeap::allocFromHead(u32 size) {
-    size = ALIGN_NEXT(size, 4);
+    // Native block headers contain pointers and require their natural alignment.
+    size = ALIGN_NEXT(size, alignof(CMemBlock));
     s32 foundSize = -1;
     CMemBlock* foundBlock = nullptr;
     CMemBlock* newblock = nullptr;
@@ -341,9 +326,9 @@ void* JKRExpHeap::allocFromTail(u32 size, int align) {
     CMemBlock* foundBlock = nullptr;
     CMemBlock* newBlock = nullptr;
     u32 usedSize;
-    u32 start;
+    uintptr_t start;
     for (CMemBlock* block = mTailFreeList; block; block = block->mPrev) {
-        start = ALIGN_PREV((uintptr_t)block->getContent() + block->mSize - size, align);
+        start = ALIGN_PREV((uintptr_t)block->getContent() + block->mSize - size, uintptr_t(align));
         usedSize = (uintptr_t)block->getContent() + block->mSize - start;
         if (block->mSize >= usedSize) {
             local_2c = usedSize;
@@ -377,7 +362,8 @@ void* JKRExpHeap::allocFromTail(u32 size, int align) {
 }
 
 void* JKRExpHeap::allocFromTail(u32 size) {
-    size = ALIGN_NEXT(size, 4);
+    // Native block headers contain pointers and require their natural alignment.
+    size = ALIGN_NEXT(size, alignof(CMemBlock));
     CMemBlock* foundBlock = nullptr;
     CMemBlock* freeBlock = nullptr;
     CMemBlock* usedBlock = nullptr;
@@ -464,7 +450,8 @@ s32 JKRExpHeap::do_resize(void* ptr, u32 size) {
         unlock();
         return -1;
     }
-    size = ALIGN_NEXT(size, 4);
+    // Native block headers contain pointers and require their natural alignment.
+    size = ALIGN_NEXT(size, alignof(CMemBlock));
     if (size == block->mSize) {
         unlock();
         return size;
@@ -574,7 +561,7 @@ bool JKRExpHeap::isEmpty() {
 
 void JKRExpHeap::appendUsedList(JKRExpHeap::CMemBlock* newblock) {
     if (!newblock) {
-        JUTException::panic_f("JKRExpHeap.cpp", 1568, "%s", "bad appendUsedList\n");
+        smgpc::compat::jkr_panic("JKRExpHeap.cpp", 1568, "%s", "bad appendUsedList\n");
     }
     CMemBlock* block = mTailUsedList;
     newblock->mMagic = 'HM';
@@ -687,14 +674,14 @@ void JKRExpHeap::recycleFreeBlock(JKRExpHeap::CMemBlock* block) {
 }
 
 void JKRExpHeap::joinTwoBlocks(CMemBlock* block) {
-    u32 endAddr = (uintptr_t)(block + 1) + block->mSize;
+    uintptr_t endAddr = (uintptr_t)(block + 1) + block->mSize;
     CMemBlock* next = block->mNext;
-    u32 nextAddr = (uintptr_t)next - (next->mFlags & 0x7f);
+    uintptr_t nextAddr = (uintptr_t)next - (next->mFlags & 0x7f);
     if (endAddr > nextAddr) {
-        JUTWarningConsole_f(":::Heap may be broken. (block = %x)", block);
+        smgpc::compat::jkr_warning_f(":::Heap may be broken. (block = %p)", (void*)block);
         JKRHeap* heap = JKRHeap::getCurrentHeap();
         heap->dump();
-        JUTException::panic_f("JKRExpHeap.cpp", 1820, "%s", "Bad Block\n");
+        smgpc::compat::jkr_panic("JKRExpHeap.cpp", 1820, "%s", "Bad Block\n");
     }
     if (endAddr == nextAddr) {
         block->mSize = next->mSize + sizeof(CMemBlock) + (next->mFlags & 0x7f) + block->mSize;
@@ -710,26 +697,26 @@ bool JKRExpHeap::check() {
     for (CMemBlock* block = mHeadUsedList; block; block = block->mNext) {
         if (block->mMagic != 'HM') {
             ok = false;
-            JUTWarningConsole_f(":::addr %08x: bad heap signature. (%c%c)\n", block,
+            smgpc::compat::jkr_warning_f(":::addr %p: bad heap signature. (%c%c)\n", (void*)block,
                                 JSUHiByte(block->mMagic), JSULoByte(block->mMagic));
         }
         if (block->mNext) {
             if (block->mNext->mMagic != 'HM') {
                 ok = false;
-                JUTWarningConsole_f(":::addr %08x: bad next pointer (%08x)\nabort\n", block,
-                                    block->mNext);
+                smgpc::compat::jkr_warning_f(":::addr %p: bad next pointer (%p)\nabort\n", (void*)block,
+                                    (void*)block->mNext);
                 break;
             }
             if (block->mNext->mPrev != block) {
                 ok = false;
-                JUTWarningConsole_f(":::addr %08x: bad previous pointer (%08x)\n", block->mNext,
-                                    block->mNext->mPrev);
+                smgpc::compat::jkr_warning_f(":::addr %p: bad previous pointer (%p)\n", (void*)block->mNext,
+                                    (void*)block->mNext->mPrev);
             }
         } else {
             if (mTailUsedList != block) {
                 ok = false;
-                JUTWarningConsole_f(":::addr %08x: bad used list(REV) (%08x)\n", block,
-                                    mTailUsedList);
+                smgpc::compat::jkr_warning_f(":::addr %p: bad used list(REV) (%p)\n", (void*)block,
+                                    (void*)mTailUsedList);
             }
         }
         totalBytes += sizeof(CMemBlock) + block->mSize + block->getAlignment();
@@ -739,27 +726,27 @@ bool JKRExpHeap::check() {
         if (block->mNext) {
             if (block->mNext->mPrev != block) {
                 ok = false;
-                JUTWarningConsole_f(":::addr %08x: bad previous pointer (%08x)\n", block->mNext,
-                                    block->mNext->mPrev);
+                smgpc::compat::jkr_warning_f(":::addr %p: bad previous pointer (%p)\n", (void*)block->mNext,
+                                    (void*)block->mNext->mPrev);
             }
             if ((uintptr_t)block + block->mSize + sizeof(CMemBlock) > (uintptr_t)block->mNext) {
                 ok = false;
-                JUTWarningConsole_f(":::addr %08x: bad block size (%08x)\n", block, block->mSize);
+                smgpc::compat::jkr_warning_f(":::addr %p: bad block size (%08x)\n", (void*)block, block->mSize);
             }
         } else {
             if (mTailFreeList != block) {
                 ok = false;
-                JUTWarningConsole_f(":::addr %08x: bad used list(REV) (%08x)\n", block,
-                                    mTailFreeList);
+                smgpc::compat::jkr_warning_f(":::addr %p: bad used list(REV) (%p)\n", (void*)block,
+                                    (void*)mTailFreeList);
             }
         }
     }
     if (totalBytes != mSize) {
         ok = false;
-        JUTWarningConsole_f(":::bad total memory block size (%08X, %08X)\n", mSize, totalBytes);
+        smgpc::compat::jkr_warning_f(":::bad total memory block size (%08X, %08X)\n", mSize, static_cast<u32>(totalBytes));
     }
     if (!ok) {
-        JUTWarningConsole(":::there is some error in this heap!\n");
+        smgpc::compat::jkr_warning(":::there is some error in this heap!\n");
     }
     unlock();
     return ok;
@@ -771,35 +758,35 @@ bool JKRExpHeap::dump() {
     u32 usedBytes = 0;
     u32 usedCount = 0;
     u32 freeCount = 0;
-    JUTReportConsole(" attr  address:   size    gid aln   prev_ptr next_ptr\n");
-    JUTReportConsole("(Used Blocks)\n");
+    smgpc::compat::jkr_report(" attr  address:   size    gid aln   prev_ptr next_ptr\n");
+    smgpc::compat::jkr_report("(Used Blocks)\n");
     if (!mHeadUsedList) {
-        JUTReportConsole(" NONE\n");
+        smgpc::compat::jkr_report(" NONE\n");
     }
     for (CMemBlock* block = mHeadUsedList; block; block = block->mNext) {
         if (block->mMagic != 'HM') {
-            JUTReportConsole_f("xxxxx %08x: --------  --- ---  (-------- --------)\nabort\n",
-                               block);
+            smgpc::compat::jkr_report_f("xxxxx %p: --------  --- ---  (-------- --------)\nabort\n",
+                               (void*)block);
             break;
         }
-        JUTReportConsole_f("%s %08x: %08x  %3d %3d  (%08x %08x)\n",
+        smgpc::compat::jkr_report_f("%s %p: %08x  %3d %3d  (%p %p)\n",
                            block->isTempMemBlock() ? " temp" : "alloc", block->getContent(),
-                           block->mSize, block->mGroupId, block->getAlignment(), block->mPrev,
-                           block->mNext);
+                           block->mSize, block->mGroupId, block->getAlignment(), (void*)block->mPrev,
+                           (void*)block->mNext);
         usedBytes += sizeof(CMemBlock) + block->mSize + block->getAlignment();
         usedCount++;
     }
-    JUTReportConsole("(Free Blocks)\n");
+    smgpc::compat::jkr_report("(Free Blocks)\n");
     if (!mHeadFreeList) {
-        JUTReportConsole(" NONE\n");
+        smgpc::compat::jkr_report(" NONE\n");
     }
     for (CMemBlock* block = mHeadFreeList; block; block = block->mNext) {
-        JUTReportConsole_f("%s %08x: %08x  %3d %3d  (%08x %08x)\n", " free", block->getContent(),
-                           block->mSize, block->mGroupId, block->getAlignment(), block->mPrev,
-                           block->mNext);
+        smgpc::compat::jkr_report_f("%s %p: %08x  %3d %3d  (%p %p)\n", " free", block->getContent(),
+                           block->mSize, block->mGroupId, block->getAlignment(), (void*)block->mPrev,
+                           (void*)block->mNext);
         freeCount++;
     }
-    JUTReportConsole_f("%d / %d bytes (%6.2f%%) used (U:%d F:%d)\n", usedBytes, mSize, (f32(usedBytes) / f32(mSize)) * 100.0f,
+    smgpc::compat::jkr_report_f("%u / %u bytes (%6.2f%%) used (U:%u F:%u)\n", usedBytes, mSize, (f32(usedBytes) / f32(mSize)) * 100.0f,
                        usedCount, freeCount);
     unlock();
     return result;
@@ -811,45 +798,45 @@ bool JKRExpHeap::dump_sort() {
     u32 usedBytes = 0;
     u32 usedCount = 0;
     u32 freeCount = 0;
-    JUTReportConsole(" attr  address:   size    gid aln   prev_ptr next_ptr\n");
-    JUTReportConsole("(Used Blocks)\n");
+    smgpc::compat::jkr_report(" attr  address:   size    gid aln   prev_ptr next_ptr\n");
+    smgpc::compat::jkr_report("(Used Blocks)\n");
     if (mHeadUsedList == nullptr) {
-        JUTReportConsole(" NONE\n");
+        smgpc::compat::jkr_report(" NONE\n");
     } else {
         CMemBlock* var1 = nullptr;
         while (true) {
-            CMemBlock* block = (CMemBlock*)0xffffffff;
+            CMemBlock* block = (CMemBlock*)UINTPTR_MAX;
             for (CMemBlock* iterBlock = mHeadUsedList; iterBlock; iterBlock = iterBlock->mNext) {
                 if (var1 < iterBlock && iterBlock < block) {
                     block = iterBlock;
                 }
             }
-            if (uintptr_t(block) == 0xffffffff) {
+            if (uintptr_t(block) == UINTPTR_MAX) {
                 break;
             }
             if (block->mMagic != 'HM') {
-                JUTReportConsole_f("xxxxx %08x: --------  --- ---  (-------- --------)\nabort\n",
-                                   var1);
+                smgpc::compat::jkr_report_f("xxxxx %p: --------  --- ---  (-------- --------)\nabort\n",
+                                   (void*)var1);
                 break;
             }
-            JUTReportConsole_f("%s %08x: %08x  %3d %3d  (%08x %08x)\n", block->isTempMemBlock() ? " temp" : "alloc", block->getContent(), block->mSize,
-                               block->mGroupId, block->getAlignment(), block->mPrev, block->mNext);
+            smgpc::compat::jkr_report_f("%s %p: %08x  %3d %3d  (%p %p)\n", block->isTempMemBlock() ? " temp" : "alloc", block->getContent(), block->mSize,
+                               block->mGroupId, block->getAlignment(), (void*)block->mPrev, (void*)block->mNext);
             usedBytes += sizeof(CMemBlock) + block->mSize + block->getAlignment();
             usedCount++;
             var1 = block;
         }
     }
-    JUTReportConsole("(Free Blocks)\n");
+    smgpc::compat::jkr_report("(Free Blocks)\n");
     if (mHeadFreeList == nullptr) {
-        JUTReportConsole(" NONE\n");
+        smgpc::compat::jkr_report(" NONE\n");
     }
     for (CMemBlock* block = mHeadFreeList; block; block = block->mNext) {
-        JUTReportConsole_f("%s %08x: %08x  %3d %3d  (%08x %08x)\n", " free", block->getContent(),
-                           block->mSize, block->mGroupId, block->getAlignment(), block->mPrev,
-                           block->mNext);
+        smgpc::compat::jkr_report_f("%s %p: %08x  %3d %3d  (%p %p)\n", " free", block->getContent(),
+                           block->mSize, block->mGroupId, block->getAlignment(), (void*)block->mPrev,
+                           (void*)block->mNext);
         freeCount++;
     }
-    JUTReportConsole_f("%d / %d bytes (%6.2f%%) used (U:%d F:%d)\n", usedBytes, mSize, (f32(usedBytes) / f32(mSize)) * 100.0f,
+    smgpc::compat::jkr_report_f("%u / %u bytes (%6.2f%%) used (U:%u F:%u)\n", usedBytes, mSize, (f32(usedBytes) / f32(mSize)) * 100.0f,
                        usedCount, freeCount);
     unlock();
     return result;

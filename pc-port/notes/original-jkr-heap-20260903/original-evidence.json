@@ -1,0 +1,430 @@
+{
+  "compiler": "GC/3.0a3, configure.py cflags_jsys, VERSION=0",
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "root_sha256": {
+    "src/JSystem/JKernel/JKRExpHeap.cpp": "e734e8874eccd5ff62856c202f74b43aa80d24c8f7f42abb4b9532f28cc2b2b6",
+    "libs/JSystem/include/JSystem/JKernel/JKRExpHeap.hpp": "babfda0eaa89267e76f7474d852053cf053ccbd5b224f4a0846bf17127300f0c",
+    "libs/JSystem/include/JSystem/JKernel/JKRHeap.hpp": "92c27f6b06a2e28c688885d13e7d9b32ac060afced793feff12a80c55d2c1261"
+  },
+  "compiler_sha256": "66553cf100ee7e1793f368a39be6218292cd19a7c8636f2f1493b572ad5eaec2",
+  "compiled_object_sha256": "d5bb66f7d2313ede746de3d2bdde82695e551020a32b81373bc42ac38a1a9216",
+  "functions": [
+    {
+      "symbol": "createRoot__10JKRExpHeapFib",
+      "retail_address": "0x8040b528",
+      "retail_size": 128,
+      "compiled_size": 128,
+      "objdiff_percent": 100.0,
+      "retail_sha256": "4f4ab0610122f7d992b98e7ed7d0be09fb2748bbb71fa3e4c1a4c3ec252d00c6",
+      "verified_live_instruction_words": 32,
+      "verified_relocations": 4
+    },
+    {
+      "symbol": "create__10JKRExpHeapFUlP7JKRHeapb",
+      "retail_address": "0x8040b5a8",
+      "retail_size": 216,
+      "compiled_size": 216,
+      "objdiff_percent": 100.0,
+      "retail_sha256": "c9988f80d08522abd56b8db8446a358b18a06f3f7f0f1efd6eb73f8bc3276f30",
+      "verified_live_instruction_words": 54,
+      "verified_relocations": 7
+    },
+    {
+      "symbol": "create__10JKRExpHeapFPvUlP7JKRHeapb",
+      "retail_address": "0x8040b680",
+      "retail_size": 176,
+      "compiled_size": 176,
+      "objdiff_percent": 100.0,
+      "retail_sha256": "65e2738de7580606dc0edc7fecb6b0e2f2b3537c0a8feaed04cbba00349ef724",
+      "verified_live_instruction_words": 44,
+      "verified_relocations": 5
+    },
+    {
+      "symbol": "do_destroy__10JKRExpHeapFv",
+      "retail_address": "0x8040b730",
+      "retail_size": 132,
+      "compiled_size": 132,
+      "objdiff_percent": 100.0,
+      "retail_sha256": "a6b6b0b82065c162a5c1cc54d1dd1c08f7909365cbdb9e50734562c07075658f",
+      "verified_live_instruction_words": 33,
+      "verified_relocations": 1
+    },
+    {
+      "symbol": "__ct__10JKRExpHeapFPvUlP7JKRHeapb",
+      "retail_address": "0x8040b7b4",
+      "retail_size": 136,
+      "compiled_size": 136,
+      "objdiff_percent": 100.0,
+      "retail_sha256": "aa1f8f867b7bdca8c2934179a02f7269e3e2c99576dc5f100be8cd66747fb5b6",
+      "verified_live_instruction_words": 34,
+      "verified_relocations": 6
+    },
+    {
+      "symbol": "__dt__10JKRExpHeapFv",
+      "retail_address": "0x8040b83c",
+      "retail_size": 108,
+      "compiled_size": 108,
+      "objdiff_percent": 100.0,
+      "retail_sha256": "74b4c78ccc695bc8ca3a2e9f6a2b9333ef83ccceb8411a64108a325cf1311606",
+      "verified_live_instruction_words": 27,
+      "verified_relocations": 5
+    },
+    {
+      "symbol": "do_alloc__10JKRExpHeapFUli",
+      "retail_address": "0x8040b8a8",
+      "retail_size": 264,
+      "compiled_size": 264,
+      "objdiff_percent": 99.84849,
+      "retail_sha256": "22317ee8b24ecbe30cfecebcc36bddb05aa0a8c400ce92ea2de92ab8a8a8477d",
+      "verified_live_instruction_words": 66,
+      "verified_relocations": 12
+    },
+    {
+      "symbol": "allocFromHead__10JKRExpHeapFUli",
+      "retail_address": "0x8040b9b0",
+      "retail_size": 612,
+      "compiled_size": 612,
+      "objdiff_percent": 96.62745,
+      "retail_sha256": "55dcfe59423ff886c24a3e42591739547c9a3cd8c92efaef7f97597889858e9a",
+      "verified_live_instruction_words": 153,
+      "verified_relocations": 21
+    },
+    {
+      "symbol": "allocFromHead__10JKRExpHeapFUl",
+      "retail_address": "0x8040bc14",
+      "retail_size": 228,
+      "compiled_size": 228,
+      "objdiff_percent": 100.0,
+      "retail_sha256": "2cd5034f7716fc2bdde8c2431883efffd14b668214b12d97199f1ccb0e519df3",
+      "verified_live_instruction_words": 57,
+      "verified_relocations": 4
+    },
+    {
+      "symbol": "allocFromTail__10JKRExpHeapFUli",
+      "retail_address": "0x8040bcf8",
+      "retail_size": 352,
+      "compiled_size": 352,
+      "objdiff_percent": 100.0,
+      "retail_sha256": "aa7ba1e36ce709b5221ead758f20ccf91a5e60005183748581174937ff196474",
+      "verified_live_instruction_words": 88,
+      "verified_relocations": 10
+    },
+    {
+      "symbol": "allocFromTail__10JKRExpHeapFUl",
+      "retail_address": "0x8040be58",
+      "retail_size": 220,
+      "compiled_size": 220,
+      "objdiff_percent": 100.0,
+      "retail_sha256": "67bd951fd0adf9c871f1309ed3b9ad6a7af2ed38b79c3d5d3eaadeb25dee8029",
+      "verified_live_instruction_words": 55,
+      "verified_relocations": 6
+    },
+    {
+      "symbol": "do_free__10JKRExpHeapFPv",
+      "retail_address": "0x8040bf34",
+      "retail_size": 136,
+      "compiled_size": 136,
+      "objdiff_percent": 100.0,
+      "retail_sha256": "52d5d5ed549fac4f18e300450241da9615c78886ceea2fea2e8b8ddfa3ddbfbf",
+      "verified_live_instruction_words": 34,
+      "verified_relocations": 5
+    },
+    {
+      "symbol": "do_freeAll__10JKRExpHeapFv",
+      "retail_address": "0x8040bfbc",
+      "retail_size": 116,
+      "compiled_size": 116,
+      "objdiff_percent": 100.0,
+      "retail_sha256": "6b3b35e2f0d51ba1456eb0840d1ef16c71925ec9d9e8af0e8b05fc992bcfe669",
+      "verified_live_instruction_words": 29,
+      "verified_relocations": 4
+    },
+    {
+      "symbol": "do_freeTail__10JKRExpHeapFv",
+      "retail_address": "0x8040c030",
+      "retail_size": 148,
+      "compiled_size": 148,
+      "objdiff_percent": 100.0,
+      "retail_sha256": "112a98d090dd31215f4bd857885fa333ffe40f01e3e5905bfbd644d8c53b265f",
+      "verified_live_instruction_words": 37,
+      "verified_relocations": 7
+    },
+    {
+      "symbol": "do_fillFreeArea__10JKRExpHeapFv",
+      "retail_address": "0x8040c0c4",
+      "retail_size": 4,
+      "compiled_size": 4,
+      "objdiff_percent": 100.0,
+      "retail_sha256": "f332ea5b5437103cbb6f1508679da89eec9288ad775c96c439a17fccabe3de8e",
+      "verified_live_instruction_words": 1,
+      "verified_relocations": 0
+    },
+    {
+      "symbol": "do_changeGroupID__10JKRExpHeapFUc",
+      "retail_address": "0x8040c0c8",
+      "retail_size": 80,
+      "compiled_size": 80,
+      "objdiff_percent": 100.0,
+      "retail_sha256": "4e194d3f8f0206acdd7e3acd22bb53b0f1fb6d870b23ef9aaa8db8f3c1e4324d",
+      "verified_live_instruction_words": 20,
+      "verified_relocations": 4
+    },
+    {
+      "symbol": "do_resize__10JKRExpHeapFPvUl",
+      "retail_address": "0x8040c118",
+      "retail_size": 436,
+      "compiled_size": 436,
+      "objdiff_percent": 96.100914,
+      "retail_sha256": "b864e598f00a0625c93c70d6befddd676f4e7de954b4a4feb12e732b2dada76d",
+      "verified_live_instruction_words": 109,
+      "verified_relocations": 14
+    },
+    {
+      "symbol": "do_getSize__10JKRExpHeapFPv",
+      "retail_address": "0x8040c2cc",
+      "retail_size": 132,
+      "compiled_size": 132,
+      "objdiff_percent": 100.0,
+      "retail_sha256": "f23e3ec3dd8ede274a29139ff68e18016764f5f014e82aa62dd388130f207e8c",
+      "verified_live_instruction_words": 33,
+      "verified_relocations": 6
+    },
+    {
+      "symbol": "do_getFreeSize__10JKRExpHeapFv",
+      "retail_address": "0x8040c350",
+      "retail_size": 108,
+      "compiled_size": 108,
+      "objdiff_percent": 100.0,
+      "retail_sha256": "90469078299de30d43f9c484c5397d694d0f7df3b78e59a1bf3a77e86938d43b",
+      "verified_live_instruction_words": 27,
+      "verified_relocations": 2
+    },
+    {
+      "symbol": "do_getMaxFreeBlock__10JKRExpHeapFv",
+      "retail_address": "0x8040c3bc",
+      "retail_size": 116,
+      "compiled_size": 116,
+      "objdiff_percent": 100.0,
+      "retail_sha256": "693735212c4719a2625d3f90e15925838a6b594d3eba8ed7e82b52a1eb37c0fb",
+      "verified_live_instruction_words": 29,
+      "verified_relocations": 2
+    },
+    {
+      "symbol": "do_getTotalFreeSize__10JKRExpHeapFv",
+      "retail_address": "0x8040c430",
+      "retail_size": 100,
+      "compiled_size": 100,
+      "objdiff_percent": 100.0,
+      "retail_sha256": "d5b972d4efbfab061405405f0065b03820fa1c569b7ab529f7133854e1046fa7",
+      "verified_live_instruction_words": 25,
+      "verified_relocations": 2
+    },
+    {
+      "symbol": "getUsedSize__10JKRExpHeapCFUc",
+      "retail_address": "0x8040c494",
+      "retail_size": 120,
+      "compiled_size": 120,
+      "objdiff_percent": 100.0,
+      "retail_sha256": "293f82e89ebb28b80a22d78d447c63f9cacca1d00e8a647985a90b158b34f31c",
+      "verified_live_instruction_words": 30,
+      "verified_relocations": 4
+    },
+    {
+      "symbol": "isEmpty__10JKRExpHeapFv",
+      "retail_address": "0x8040c50c",
+      "retail_size": 72,
+      "compiled_size": 72,
+      "objdiff_percent": 100.0,
+      "retail_sha256": "172759f63c6e965977cc21e6d7c51f3724cf235dcabb5e8ebf9b660fa9386e00",
+      "verified_live_instruction_words": 18,
+      "verified_relocations": 2
+    },
+    {
+      "symbol": "appendUsedList__10JKRExpHeapFPQ210JKRExpHeap9CMemBlock",
+      "retail_address": "0x8040c554",
+      "retail_size": 160,
+      "compiled_size": 160,
+      "objdiff_percent": 98.625,
+      "retail_sha256": "578eeea2e2d048845a227080c28ff6740b1e31a501f01fe74406bbeef7c2ab6a",
+      "verified_live_instruction_words": 40,
+      "verified_relocations": 6
+    },
+    {
+      "symbol": "setFreeBlock__10JKRExpHeapFPQ210JKRExpHeap9CMemBlockPQ210JKRExpHeap9CMemBlockPQ210JKRExpHeap9CMemBlock",
+      "retail_address": "0x8040c5f4",
+      "retail_size": 76,
+      "compiled_size": 76,
+      "objdiff_percent": 100.0,
+      "retail_sha256": "eec7607ca79b1bcca2623b26b6e9d93c871c4fd2bf9b620aa7ceae12a016a4be",
+      "verified_live_instruction_words": 19,
+      "verified_relocations": 0
+    },
+    {
+      "symbol": "removeFreeBlock__10JKRExpHeapFPQ210JKRExpHeap9CMemBlock",
+      "retail_address": "0x8040c640",
+      "retail_size": 52,
+      "compiled_size": 52,
+      "objdiff_percent": 100.0,
+      "retail_sha256": "49754f67b5ce627c0847e1780528e45540c836c602ac12a718f8f64d3674de27",
+      "verified_live_instruction_words": 13,
+      "verified_relocations": 0
+    },
+    {
+      "symbol": "removeUsedBlock__10JKRExpHeapFPQ210JKRExpHeap9CMemBlock",
+      "retail_address": "0x8040c674",
+      "retail_size": 52,
+      "compiled_size": 52,
+      "objdiff_percent": 100.0,
+      "retail_sha256": "7ab32ff1c982cac5b3d316aa60e785ba73c146a714b5ee4553062c05e67d5cac",
+      "verified_live_instruction_words": 13,
+      "verified_relocations": 0
+    },
+    {
+      "symbol": "recycleFreeBlock__10JKRExpHeapFPQ210JKRExpHeap9CMemBlock",
+      "retail_address": "0x8040c6a8",
+      "retail_size": 404,
+      "compiled_size": 404,
+      "objdiff_percent": 100.0,
+      "retail_sha256": "6298f0b818beae72a54c03c4406fd5ec408811b674d5029e7c1956400c66ca37",
+      "verified_live_instruction_words": 101,
+      "verified_relocations": 12
+    },
+    {
+      "symbol": "joinTwoBlocks__10JKRExpHeapFPQ210JKRExpHeap9CMemBlock",
+      "retail_address": "0x8040c83c",
+      "retail_size": 212,
+      "compiled_size": 212,
+      "objdiff_percent": 99.20755,
+      "retail_sha256": "496641e826d79392b3a6b83a30820196fa010f15e40fb170838805e523e007ec",
+      "verified_live_instruction_words": 53,
+      "verified_relocations": 9
+    },
+    {
+      "symbol": "check__10JKRExpHeapFv",
+      "retail_address": "0x8040c910",
+      "retail_size": 488,
+      "compiled_size": 488,
+      "objdiff_percent": 99.54918,
+      "retail_sha256": "25d6914b78e931a9a3d0a1459a35bdc4e0535098cb89a961fcec864df4e6d710",
+      "verified_live_instruction_words": 122,
+      "verified_relocations": 15
+    },
+    {
+      "symbol": "dump__10JKRExpHeapFv",
+      "retail_address": "0x8040caf8",
+      "retail_size": 464,
+      "compiled_size": 464,
+      "objdiff_percent": 99.31035,
+      "retail_sha256": "c511c7fb9b8a2dd4d9df41850164d84bd74e6802be2b72dfe7248576dddde46b",
+      "verified_live_instruction_words": 116,
+      "verified_relocations": 18
+    },
+    {
+      "symbol": "dump_sort__10JKRExpHeapFv",
+      "retail_address": "0x8040ccc8",
+      "retail_size": 512,
+      "compiled_size": 512,
+      "objdiff_percent": 99.375,
+      "retail_sha256": "914ea44253b4da77f18120f533f10aaf3e4514cf110f137998f844f5dd297c64",
+      "verified_live_instruction_words": 128,
+      "verified_relocations": 18
+    },
+    {
+      "symbol": "initiate__Q210JKRExpHeap9CMemBlockFPQ210JKRExpHeap9CMemBlockPQ210JKRExpHeap9CMemBlockUlUcUc",
+      "retail_address": "0x8040cec8",
+      "retail_size": 32,
+      "compiled_size": 32,
+      "objdiff_percent": 100.0,
+      "retail_sha256": "3b0e82c9ee09fe2f6bce7de5c3ad4c889bfab1dec8c33c4a926d79f8368bca62",
+      "verified_live_instruction_words": 8,
+      "verified_relocations": 0
+    },
+    {
+      "symbol": "allocFore__Q210JKRExpHeap9CMemBlockFUlUcUcUcUc",
+      "retail_address": "0x8040cee8",
+      "retail_size": 68,
+      "compiled_size": 68,
+      "objdiff_percent": 100.0,
+      "retail_sha256": "773d2422da9156e57fa31a48102f9ed1907a544a6d9f109621a2fd3bdce36b8b",
+      "verified_live_instruction_words": 17,
+      "verified_relocations": 0
+    },
+    {
+      "symbol": "allocBack__Q210JKRExpHeap9CMemBlockFUlUcUcUcUc",
+      "retail_address": "0x8040cf2c",
+      "retail_size": 88,
+      "compiled_size": 88,
+      "objdiff_percent": 100.0,
+      "retail_sha256": "4475c589f22d3b4258c334ddb744734ed4c1c014d88e05e65a4aed3842c288f4",
+      "verified_live_instruction_words": 22,
+      "verified_relocations": 0
+    },
+    {
+      "symbol": "getHeapBlock__Q210JKRExpHeap9CMemBlockFPv",
+      "retail_address": "0x8040cf84",
+      "retail_size": 28,
+      "compiled_size": 28,
+      "objdiff_percent": 100.0,
+      "retail_sha256": "a4a347eae1b52d61c9aa593b6086a632f2d9cdb64e154dc22bae2d407023341a",
+      "verified_live_instruction_words": 7,
+      "verified_relocations": 0
+    },
+    {
+      "symbol": "state_register__10JKRExpHeapCFPQ27JKRHeap6TStateUl",
+      "retail_address": "0x8040cfa0",
+      "retail_size": 168,
+      "compiled_size": 168,
+      "objdiff_percent": 100.0,
+      "retail_sha256": "3799f74e852dcbb65e614025d2e4150f2fe4b9054f4b27189bccd3ec8ad6f575",
+      "verified_live_instruction_words": 42,
+      "verified_relocations": 4
+    },
+    {
+      "symbol": "state_compare__10JKRExpHeapCFRCQ27JKRHeap6TStateRCQ27JKRHeap6TState",
+      "retail_address": "0x8040d048",
+      "retail_size": 48,
+      "compiled_size": 48,
+      "objdiff_percent": 100.0,
+      "retail_sha256": "cbcc9ccf8055def55a09ce9f505176200bbbb4df15f31a2ba856b1bbeb7a82d4",
+      "verified_live_instruction_words": 12,
+      "verified_relocations": 0
+    },
+    {
+      "symbol": "do_getCurrentGroupId__10JKRExpHeapFv",
+      "retail_address": "0x8040d078",
+      "retail_size": 8,
+      "compiled_size": 8,
+      "objdiff_percent": 100.0,
+      "retail_sha256": "0b93617820b7151a2257d805a589aeff8d02306f4dca223e1818da7a4fdd5864",
+      "verified_live_instruction_words": 2,
+      "verified_relocations": 0
+    },
+    {
+      "symbol": "getHeapType__10JKRExpHeapFv",
+      "retail_address": "0x8040d080",
+      "retail_size": 12,
+      "compiled_size": 12,
+      "objdiff_percent": 100.0,
+      "retail_sha256": "5d8163abe5aad379f84fb7c8115217b730b628eb6e1916b0cc252488aae142c3",
+      "verified_live_instruction_words": 3,
+      "verified_relocations": 0
+    },
+    {
+      "symbol": "adjustSize__10JKRExpHeapFv",
+      "retail_address": "0x803a43cc",
+      "retail_size": 356,
+      "compiled_size": 356,
+      "objdiff_percent": 98.20225,
+      "retail_sha256": "f8c51cbe6805966eedd6ca7db61fa63a5c5d267f986077ed38d4f0e729442cc9",
+      "verified_live_instruction_words": 89,
+      "verified_relocations": 9
+    }
+  ],
+  "limit": "Percentages compare the original compiler with retail. Native pointer-width/layout changes are not PowerPC matches.",
+  "reference": {
+    "commit": "dabd6961a674f23ec0df8f2b4d16ba12e1e090e5",
+    "source_url": "https://raw.githubusercontent.com/zeldaret/tp/dabd6961a674f23ec0df8f2b4d16ba12e1e090e5/libs/JSystem/src/JKernel/JKRExpHeap.cpp",
+    "sha256": "d5b44d3405bee396b3107c38aa068789d7ec1a22769eb6c862d95b3321272087",
+    "license_url": "https://github.com/zeldaret/tp/blob/main/LICENSE.md"
+  }
+}

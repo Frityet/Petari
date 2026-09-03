@@ -1,0 +1,1018 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "compiler_commands": [
+    [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-fp_contract",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-use_lmw_stmw",
+      "off",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/JSystem/JKernel/JKRHeap.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-jkr-base-20260903/JKRHeap.o"
+    ],
+    [
+      "/Users/frityet/Projects/petari/build/tools/objdiff-cli",
+      "diff",
+      "-1",
+      "/Users/frityet/Projects/petari/build/j3d-vertex-buffer-lifecycle-20260903/retail/obj/JSystem/JKernel/JKRHeap.o",
+      "-2",
+      "/Users/frityet/Projects/petari/build/original-jkr-base-20260903/JKRHeap.o",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-jkr-base-20260903/JKRHeap.diff.json",
+      "--format",
+      "json-pretty"
+    ],
+    [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-fp_contract",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-use_lmw_stmw",
+      "off",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/JSystem/JKernel/JKRSolidHeap.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-jkr-base-20260903/JKRSolidHeap.o"
+    ],
+    [
+      "/Users/frityet/Projects/petari/build/tools/objdiff-cli",
+      "diff",
+      "-1",
+      "/Users/frityet/Projects/petari/build/j3d-vertex-buffer-lifecycle-20260903/retail/obj/JSystem/JKernel/JKRSolidHeap.o",
+      "-2",
+      "/Users/frityet/Projects/petari/build/original-jkr-base-20260903/JKRSolidHeap.o",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-jkr-base-20260903/JKRSolidHeap.diff.json",
+      "--format",
+      "json-pretty"
+    ],
+    [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-fp_contract",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-use_lmw_stmw",
+      "off",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/JSystem/JKernel/JKRDisposer.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-jkr-base-20260903/JKRDisposer.o"
+    ],
+    [
+      "/Users/frityet/Projects/petari/build/tools/objdiff-cli",
+      "diff",
+      "-1",
+      "/Users/frityet/Projects/petari/build/j3d-vertex-buffer-lifecycle-20260903/retail/obj/JSystem/JKernel/JKRDisposer.o",
+      "-2",
+      "/Users/frityet/Projects/petari/build/original-jkr-base-20260903/JKRDisposer.o",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-jkr-base-20260903/JKRDisposer.diff.json",
+      "--format",
+      "json-pretty"
+    ],
+    [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-fp_contract",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-use_lmw_stmw",
+      "off",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/JSystem/JSupport/JSUList.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-jkr-base-20260903/JSUList.o"
+    ],
+    [
+      "/Users/frityet/Projects/petari/build/tools/objdiff-cli",
+      "diff",
+      "-1",
+      "/Users/frityet/Projects/petari/build/j3d-vertex-buffer-lifecycle-20260903/retail/obj/JSystem/JSupport/JSUList.o",
+      "-2",
+      "/Users/frityet/Projects/petari/build/original-jkr-base-20260903/JSUList.o",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-jkr-base-20260903/JSUList.diff.json",
+      "--format",
+      "json-pretty"
+    ],
+    [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-fp_contract",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-use_lmw_stmw",
+      "off",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/build/original-jkr-base-20260903/layout.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-jkr-base-20260903/layout.o"
+    ]
+  ],
+  "methods": {
+    "JKRHeap": [
+      {
+        "name": "__ct__7JKRHeapFPvUlP7JKRHeapb",
+        "address": "0x8040ab8c",
+        "retail_size": 280,
+        "compiled_size": 268,
+        "objdiff_match_percent": 90.057144
+      },
+      {
+        "name": "__dt__17JSULink<7JKRHeap>Fv",
+        "address": "0x8040aca4",
+        "retail_size": 92,
+        "compiled_size": 88,
+        "objdiff_match_percent": 95.434784
+      },
+      {
+        "name": "__dt__17JSUTree<7JKRHeap>Fv",
+        "address": "0x8040ad00",
+        "retail_size": 116,
+        "compiled_size": 112,
+        "objdiff_match_percent": 96.37931
+      },
+      {
+        "name": "__dt__22JSUList<11JKRDisposer>Fv",
+        "address": "0x8040ad74",
+        "retail_size": 92,
+        "compiled_size": 88,
+        "objdiff_match_percent": 95.434784
+      },
+      {
+        "name": "__dt__7JKRHeapFv",
+        "address": "0x8040add0",
+        "retail_size": 244,
+        "compiled_size": 240,
+        "objdiff_match_percent": 98.27869
+      },
+      {
+        "name": "initArena__7JKRHeapFPPcPUli",
+        "address": "0x8040aec4",
+        "retail_size": 200,
+        "compiled_size": 200,
+        "objdiff_match_percent": 99.8
+      },
+      {
+        "name": "becomeSystemHeap__7JKRHeapFv",
+        "address": "0x8040af8c",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "becomeCurrentHeap__7JKRHeapFv",
+        "address": "0x8040af9c",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "destroy__7JKRHeapFP7JKRHeap",
+        "address": "0x8040afac",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "alloc__7JKRHeapFUliP7JKRHeap",
+        "address": "0x8040afbc",
+        "retail_size": 64,
+        "compiled_size": 64,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "alloc__7JKRHeapFUli",
+        "address": "0x8040affc",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "free__7JKRHeapFPvP7JKRHeap",
+        "address": "0x8040b00c",
+        "retail_size": 88,
+        "compiled_size": 88,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "free__7JKRHeapFPv",
+        "address": "0x8040b064",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "callAllDisposer__7JKRHeapFv",
+        "address": "0x8040b074",
+        "retail_size": 80,
+        "compiled_size": 80,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "freeAll__7JKRHeapFv",
+        "address": "0x8040b0c4",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "freeTail__7JKRHeapFv",
+        "address": "0x8040b0d4",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "resize__7JKRHeapFPvUl",
+        "address": "0x8040b0e4",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "getFreeSize__7JKRHeapFv",
+        "address": "0x8040b0f4",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "getMaxFreeBlock__7JKRHeapFv",
+        "address": "0x8040b104",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "getTotalFreeSize__7JKRHeapFv",
+        "address": "0x8040b114",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "findFromRoot__7JKRHeapFPv",
+        "address": "0x8040b124",
+        "retail_size": 68,
+        "compiled_size": 68,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "find__7JKRHeapCFPv",
+        "address": "0x8040b168",
+        "retail_size": 172,
+        "compiled_size": 172,
+        "objdiff_match_percent": 90.69768
+      },
+      {
+        "name": "findAllHeap__7JKRHeapCFPv",
+        "address": "0x8040b214",
+        "retail_size": 172,
+        "compiled_size": 172,
+        "objdiff_match_percent": 90.69768
+      },
+      {
+        "name": "dispose_subroutine__7JKRHeapFUlUl",
+        "address": "0x8040b2c0",
+        "retail_size": 180,
+        "compiled_size": 184,
+        "objdiff_match_percent": 88.44444
+      },
+      {
+        "name": "dispose__7JKRHeapFPvUl",
+        "address": "0x8040b374",
+        "retail_size": 40,
+        "compiled_size": 40,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "dispose__7JKRHeapFPvPv",
+        "address": "0x8040b39c",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "dispose__7JKRHeapFv",
+        "address": "0x8040b3a0",
+        "retail_size": 80,
+        "compiled_size": 80,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "copyMemory__7JKRHeapFPvPvUl",
+        "address": "0x8040b3f0",
+        "retail_size": 40,
+        "compiled_size": 40,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "JKRDefaultMemoryErrorRoutine__FPvUli",
+        "address": "0x8040b418",
+        "retail_size": 32,
+        "compiled_size": 32,
+        "objdiff_match_percent": 93.75
+      },
+      {
+        "name": "setErrorHandler__7JKRHeapFPFPvUli_v",
+        "address": "0x8040b438",
+        "retail_size": 32,
+        "compiled_size": 32,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "__nw__FUl",
+        "address": "0x8040b458",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "__nw__FUli",
+        "address": "0x8040b464",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "__nw__FUlP7JKRHeapi",
+        "address": "0x8040b46c",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "__nwa__FUl",
+        "address": "0x8040b47c",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "__nwa__FUli",
+        "address": "0x8040b488",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "__nwa__FUlP7JKRHeapi",
+        "address": "0x8040b490",
+        "retail_size": 16,
+        "compiled_size": 16,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "__dl__FPv",
+        "address": "0x8040b4a0",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "__dla__FPv",
+        "address": "0x8040b4a8",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "state_register__7JKRHeapCFPQ27JKRHeap6TStateUl",
+        "address": "0x8040b4b0",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "state_compare__7JKRHeapCFRCQ27JKRHeap6TStateRCQ27JKRHeap6TState",
+        "address": "0x8040b4b4",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "state_dump__7JKRHeapCFRCQ27JKRHeap6TState",
+        "address": "0x8040b4cc",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "setAltAramStartAdr__7JKRHeapFUl",
+        "address": "0x8040b4d0",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "getAltAramStartAdr__7JKRHeapFv",
+        "address": "0x8040b4d8",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "do_changeGroupID__7JKRHeapFUc",
+        "address": "0x8040b4e0",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "do_getCurrentGroupId__7JKRHeapFv",
+        "address": "0x8040b4e8",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "dump_sort__7JKRHeapFv",
+        "address": "0x8040b4f0",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "__pp__25JSUTreeIterator<7JKRHeap>Fv",
+        "address": "0x8040b4f8",
+        "retail_size": 28,
+        "compiled_size": 28,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "__pp__30JSUListIterator<11JKRDisposer>Fi",
+        "address": "0x8040b514",
+        "retail_size": 20,
+        "compiled_size": 20,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      }
+    ],
+    "JKRSolidHeap": [
+      {
+        "name": "create__12JKRSolidHeapFUlP7JKRHeapb",
+        "address": "0x8040d08c",
+        "retail_size": 164,
+        "compiled_size": 164,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "do_destroy__12JKRSolidHeapFv",
+        "address": "0x8040d130",
+        "retail_size": 96,
+        "compiled_size": 96,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "__ct__12JKRSolidHeapFPvUlP7JKRHeapb",
+        "address": "0x8040d190",
+        "retail_size": 92,
+        "compiled_size": 92,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "__dt__12JKRSolidHeapFv",
+        "address": "0x8040d1ec",
+        "retail_size": 108,
+        "compiled_size": 108,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "do_alloc__12JKRSolidHeapFUli",
+        "address": "0x8040d258",
+        "retail_size": 168,
+        "compiled_size": 168,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "allocFromHead__12JKRSolidHeapFUli",
+        "address": "0x8040d300",
+        "retail_size": 196,
+        "compiled_size": 196,
+        "objdiff_match_percent": 99.79592
+      },
+      {
+        "name": "allocFromTail__12JKRSolidHeapFUli",
+        "address": "0x8040d3c4",
+        "retail_size": 188,
+        "compiled_size": 188,
+        "objdiff_match_percent": 99.78723
+      },
+      {
+        "name": "do_freeAll__12JKRSolidHeapFv",
+        "address": "0x8040d480",
+        "retail_size": 96,
+        "compiled_size": 96,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "do_freeTail__12JKRSolidHeapFv",
+        "address": "0x8040d4e0",
+        "retail_size": 136,
+        "compiled_size": 136,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "do_fillFreeArea__12JKRSolidHeapFv",
+        "address": "0x8040d568",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "do_resize__12JKRSolidHeapFPvUl",
+        "address": "0x8040d56c",
+        "retail_size": 48,
+        "compiled_size": 48,
+        "objdiff_match_percent": 99.166664
+      },
+      {
+        "name": "do_getSize__12JKRSolidHeapFPv",
+        "address": "0x8040d59c",
+        "retail_size": 48,
+        "compiled_size": 48,
+        "objdiff_match_percent": 99.166664
+      },
+      {
+        "name": "check__12JKRSolidHeapFv",
+        "address": "0x8040d5cc",
+        "retail_size": 140,
+        "compiled_size": 140,
+        "objdiff_match_percent": 99.71429
+      },
+      {
+        "name": "dump__12JKRSolidHeapFv",
+        "address": "0x8040d658",
+        "retail_size": 248,
+        "compiled_size": 248,
+        "objdiff_match_percent": 99.22581
+      },
+      {
+        "name": "state_register__12JKRSolidHeapCFPQ27JKRHeap6TStateUl",
+        "address": "0x8040d750",
+        "retail_size": 92,
+        "compiled_size": 92,
+        "objdiff_match_percent": 72.565216
+      },
+      {
+        "name": "state_compare__12JKRSolidHeapCFRCQ27JKRHeap6TStateRCQ27JKRHeap6TState",
+        "address": "0x8040d7ac",
+        "retail_size": 48,
+        "compiled_size": 48,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "do_getTotalFreeSize__12JKRSolidHeapFv",
+        "address": "0x8040d7dc",
+        "retail_size": 4,
+        "compiled_size": 4,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "do_getMaxFreeBlock__12JKRSolidHeapFv",
+        "address": "0x8040d7e0",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "do_getFreeSize__12JKRSolidHeapFv",
+        "address": "0x8040d7e8",
+        "retail_size": 8,
+        "compiled_size": 8,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "getHeapType__12JKRSolidHeapFv",
+        "address": "0x8040d7f0",
+        "retail_size": 12,
+        "compiled_size": 12,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      }
+    ],
+    "JKRDisposer": [
+      {
+        "name": "__ct__11JKRDisposerFv",
+        "address": "0x8040e3c0",
+        "retail_size": 100,
+        "compiled_size": 100,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "__dt__22JSULink<11JKRDisposer>Fv",
+        "address": "0x8040e424",
+        "retail_size": 88,
+        "compiled_size": 88,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "__dt__11JKRDisposerFv",
+        "address": "0x8040e47c",
+        "retail_size": 128,
+        "compiled_size": 128,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      }
+    ],
+    "JSUList": [
+      {
+        "name": "__ct__10JSUPtrLinkFPv",
+        "address": "0x80416e7c",
+        "retail_size": 24,
+        "compiled_size": 24,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "__dt__10JSUPtrLinkFv",
+        "address": "0x80416e94",
+        "retail_size": 100,
+        "compiled_size": 100,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "__ct__10JSUPtrListFb",
+        "address": "0x80416ef8",
+        "retail_size": 56,
+        "compiled_size": 56,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "__dt__10JSUPtrListFv",
+        "address": "0x80416f30",
+        "retail_size": 108,
+        "compiled_size": 108,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "initiate__10JSUPtrListFv",
+        "address": "0x80416f9c",
+        "retail_size": 20,
+        "compiled_size": 20,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "setFirst__10JSUPtrListFP10JSUPtrLink",
+        "address": "0x80416fb0",
+        "retail_size": 36,
+        "compiled_size": 36,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "append__10JSUPtrListFP10JSUPtrLink",
+        "address": "0x80416fd4",
+        "retail_size": 164,
+        "compiled_size": 164,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "prepend__10JSUPtrListFP10JSUPtrLink",
+        "address": "0x80417078",
+        "retail_size": 164,
+        "compiled_size": 164,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "insert__10JSUPtrListFP10JSUPtrLinkP10JSUPtrLink",
+        "address": "0x8041711c",
+        "retail_size": 196,
+        "compiled_size": 196,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      },
+      {
+        "name": "remove__10JSUPtrListFP10JSUPtrLink",
+        "address": "0x804171e0",
+        "retail_size": 172,
+        "compiled_size": 172,
+        "objdiff_match_percent": 100.0,
+        "retail_bytes_equal_after_relocation": true
+      }
+    ]
+  },
+  "out_of_unit_methods": [
+    {
+      "name": "do_free__12JKRSolidHeapFPv",
+      "address": "0x803a43c8",
+      "size": 4,
+      "retail_bytes_equal_after_relocation": true
+    },
+    {
+      "name": "getMaxAllocatableSize__7JKRHeapFi",
+      "address": "0x803a4530",
+      "size": 96,
+      "retail_bytes_equal_after_relocation": true
+    }
+  ],
+  "verified_ppc_layout": {
+    "sizeof(JKRHeap)": 108,
+    "sizeof(JKRSolidHeap)": 124,
+    "offsetof(JKRHeap, mAllocMode)": 106,
+    "offsetof(JKRHeap, mCurrentGroupId)": 107,
+    "offsetof(JKRHeap, mDisposerList)": 92,
+    "offsetof(JKRSolidHeap, mFreeSize)": 108,
+    "sizeof(JKRDisposer)": 24,
+    "sizeof(JSUPtrLink)": 16
+  },
+  "restored_static": {
+    "address": "0x806B26D8",
+    "byte": 1
+  },
+  "source_sha256": {
+    "src/JSystem/JKernel/JKRHeap.cpp": "4f65140a77b6792a8451da6623b44097b7aafc75b08b3fc03ce0f3b5ba81ee64",
+    "src/JSystem/JKernel/JKRSolidHeap.cpp": "64d95718a72bc576221638a95574ed5b3de2e6cfc5591c825a56cd51a01ef506",
+    "src/JSystem/JKernel/JKRDisposer.cpp": "8f7e592620e25bec11fccf38dc57149d920ca185cbbfdf716e90a606346ba1e5",
+    "src/JSystem/JSupport/JSUList.cpp": "1590f545b672b375bc51e52670bb055d07ebe883564c957e3ac37076b40559f0",
+    "libs/JSystem/include/JSystem/JKernel/JKRHeap.hpp": "92c27f6b06a2e28c688885d13e7d9b32ac060afced793feff12a80c55d2c1261",
+    "libs/JSystem/include/JSystem/JKernel/JKRSolidHeap.hpp": "e1361c691376e0f8fb62b3fc6317fa1815666c2e26e3856ac1085f6f14bb58cd",
+    "libs/JSystem/include/JSystem/JKernel/JKRDisposer.hpp": "b5ed0a36382f6e472f72767d86061484d6b9ca61991c450246d4784f058f37a8",
+    "libs/JSystem/include/JSystem/JSupport/JSUList.hpp": "e3a920a1d1ee561b99223495ad73b16a169260df2ff71f9808901cd95b9fecb0"
+  },
+  "scope": "Existing original heap/list algorithms plus recovered Solid no-op free and static default. Percentages include preexisting compiler inlining/scheduling differences; only explicitly marked methods are byte-equal."
+}

@@ -1,0 +1,835 @@
+{
+  "compiler_commands": {
+    "J3DAnmLoader": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-fp_contract",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-use_lmw_stmw",
+      "off",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "src/JSystem/J3DGraphLoader/J3DAnmLoader.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-resource-holder-20260903/J3DAnmLoader.o"
+    ],
+    "J3DAnimation": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-fp_contract",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-use_lmw_stmw",
+      "off",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-resource-holder-20260903/J3DAnimation.o"
+    ]
+  },
+  "original_functions": [
+    {
+      "name": "load__20J3DAnmLoaderDataBaseFPCv24J3DAnmLoaderDataBaseFlag",
+      "address": "0x80440e20",
+      "retail_size": 1116,
+      "objdiff_match_percent": 59.060932
+    },
+    {
+      "name": "load__20J3DAnmFullLoader_v15FPCv",
+      "address": "0x8044131c",
+      "retail_size": 332,
+      "objdiff_match_percent": 100.0,
+      "retail_bytes_equal_after_relocation": true,
+      "references": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_22",
+          "addend": 0,
+          "effective_retail_target": "0x805189ec"
+        },
+        {
+          "offset": "0xb0",
+          "kind": 10,
+          "symbol": "setAnmTransform__20J3DAnmFullLoader_v15FP19J3DAnmTransformFullPC23J3DAnmTransformFullData",
+          "addend": 0,
+          "effective_retail_target": "0x804415b4"
+        },
+        {
+          "offset": "0xc4",
+          "kind": 10,
+          "symbol": "setAnmColor__20J3DAnmFullLoader_v15FP15J3DAnmColorFullPC19J3DAnmColorFullData",
+          "addend": 0,
+          "effective_retail_target": "0x80441648"
+        },
+        {
+          "offset": "0xd8",
+          "kind": 10,
+          "symbol": "setAnmTexPattern__20J3DAnmFullLoader_v15FP16J3DAnmTexPatternPC24J3DAnmTexPatternFullData",
+          "addend": 0,
+          "effective_retail_target": "0x80441730"
+        },
+        {
+          "offset": "0xec",
+          "kind": 10,
+          "symbol": "setAnmCluster__20J3DAnmFullLoader_v15FP17J3DAnmClusterFullPC21J3DAnmClusterFullData",
+          "addend": 0,
+          "effective_retail_target": "0x80441830"
+        },
+        {
+          "offset": "0x100",
+          "kind": 10,
+          "symbol": "setAnmVisibility__20J3DAnmFullLoader_v15FP20J3DAnmVisibilityFullPC24J3DAnmVisibilityFullData",
+          "addend": 0,
+          "effective_retail_target": "0x804417cc"
+        },
+        {
+          "offset": "0x114",
+          "kind": 10,
+          "symbol": "setAnmVtxColor__20J3DAnmFullLoader_v15FP18J3DAnmVtxColorFullPC22J3DAnmVtxColorFullData",
+          "addend": 0,
+          "effective_retail_target": "0x80441884"
+        },
+        {
+          "offset": "0x138",
+          "kind": 10,
+          "symbol": "_restgpr_22",
+          "addend": 0,
+          "effective_retail_target": "0x80518a38"
+        }
+      ]
+    },
+    {
+      "name": "setResource__20J3DAnmFullLoader_v15FP10J3DAnmBasePCv",
+      "address": "0x80441468",
+      "retail_size": 332,
+      "objdiff_match_percent": 100.0,
+      "retail_bytes_equal_after_relocation": true,
+      "references": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_21",
+          "addend": 0,
+          "effective_retail_target": "0x805189e8"
+        },
+        {
+          "offset": "0xb4",
+          "kind": 10,
+          "symbol": "setAnmTransform__20J3DAnmFullLoader_v15FP19J3DAnmTransformFullPC23J3DAnmTransformFullData",
+          "addend": 0,
+          "effective_retail_target": "0x804415b4"
+        },
+        {
+          "offset": "0xc8",
+          "kind": 10,
+          "symbol": "setAnmColor__20J3DAnmFullLoader_v15FP15J3DAnmColorFullPC19J3DAnmColorFullData",
+          "addend": 0,
+          "effective_retail_target": "0x80441648"
+        },
+        {
+          "offset": "0xdc",
+          "kind": 10,
+          "symbol": "setAnmTexPattern__20J3DAnmFullLoader_v15FP16J3DAnmTexPatternPC24J3DAnmTexPatternFullData",
+          "addend": 0,
+          "effective_retail_target": "0x80441730"
+        },
+        {
+          "offset": "0xf0",
+          "kind": 10,
+          "symbol": "setAnmCluster__20J3DAnmFullLoader_v15FP17J3DAnmClusterFullPC21J3DAnmClusterFullData",
+          "addend": 0,
+          "effective_retail_target": "0x80441830"
+        },
+        {
+          "offset": "0x104",
+          "kind": 10,
+          "symbol": "setAnmVisibility__20J3DAnmFullLoader_v15FP20J3DAnmVisibilityFullPC24J3DAnmVisibilityFullData",
+          "addend": 0,
+          "effective_retail_target": "0x804417cc"
+        },
+        {
+          "offset": "0x118",
+          "kind": 10,
+          "symbol": "setAnmVtxColor__20J3DAnmFullLoader_v15FP18J3DAnmVtxColorFullPC22J3DAnmVtxColorFullData",
+          "addend": 0,
+          "effective_retail_target": "0x80441884"
+        },
+        {
+          "offset": "0x138",
+          "kind": 10,
+          "symbol": "_restgpr_21",
+          "addend": 0,
+          "effective_retail_target": "0x80518a34"
+        }
+      ]
+    },
+    {
+      "name": "setAnmTransform__20J3DAnmFullLoader_v15FP19J3DAnmTransformFullPC23J3DAnmTransformFullData",
+      "address": "0x804415b4",
+      "retail_size": 148,
+      "objdiff_match_percent": 21.81081
+    },
+    {
+      "name": "setAnmColor__20J3DAnmFullLoader_v15FP15J3DAnmColorFullPC19J3DAnmColorFullData",
+      "address": "0x80441648",
+      "retail_size": 232,
+      "objdiff_match_percent": 22.896551
+    },
+    {
+      "name": "setAnmTexPattern__20J3DAnmFullLoader_v15FP16J3DAnmTexPatternPC24J3DAnmTexPatternFullData",
+      "address": "0x80441730",
+      "retail_size": 156,
+      "objdiff_match_percent": 23.74359
+    },
+    {
+      "name": "setAnmVisibility__20J3DAnmFullLoader_v15FP20J3DAnmVisibilityFullPC24J3DAnmVisibilityFullData",
+      "address": "0x804417cc",
+      "retail_size": 100,
+      "objdiff_match_percent": 24.76
+    },
+    {
+      "name": "setAnmCluster__20J3DAnmFullLoader_v15FP17J3DAnmClusterFullPC21J3DAnmClusterFullData",
+      "address": "0x80441830",
+      "retail_size": 84,
+      "objdiff_match_percent": 11.380953
+    },
+    {
+      "name": "setAnmVtxColor__20J3DAnmFullLoader_v15FP18J3DAnmVtxColorFullPC22J3DAnmVtxColorFullData",
+      "address": "0x80441884",
+      "retail_size": 428,
+      "objdiff_match_percent": 46.233646
+    },
+    {
+      "name": "load__19J3DAnmKeyLoader_v15FPCv",
+      "address": "0x80441a30",
+      "retail_size": 332,
+      "objdiff_match_percent": 100.0,
+      "retail_bytes_equal_after_relocation": true,
+      "references": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_22",
+          "addend": 0,
+          "effective_retail_target": "0x805189ec"
+        },
+        {
+          "offset": "0xb0",
+          "kind": 10,
+          "symbol": "setAnmTransform__19J3DAnmKeyLoader_v15FP18J3DAnmTransformKeyPC22J3DAnmTransformKeyData",
+          "addend": 0,
+          "effective_retail_target": "0x80441cc8"
+        },
+        {
+          "offset": "0xc4",
+          "kind": 10,
+          "symbol": "setAnmColor__19J3DAnmKeyLoader_v15FP14J3DAnmColorKeyPC18J3DAnmColorKeyData",
+          "addend": 0,
+          "effective_retail_target": "0x80441ff0"
+        },
+        {
+          "offset": "0xd8",
+          "kind": 10,
+          "symbol": "setAnmCluster__19J3DAnmKeyLoader_v15FP16J3DAnmClusterKeyPC20J3DAnmClusterKeyData",
+          "addend": 0,
+          "effective_retail_target": "0x804420f8"
+        },
+        {
+          "offset": "0xec",
+          "kind": 10,
+          "symbol": "setAnmTextureSRT__19J3DAnmKeyLoader_v15FP19J3DAnmTextureSRTKeyPC23J3DAnmTextureSRTKeyData",
+          "addend": 0,
+          "effective_retail_target": "0x80441d64"
+        },
+        {
+          "offset": "0x100",
+          "kind": 10,
+          "symbol": "setAnmTevReg__19J3DAnmKeyLoader_v15FP15J3DAnmTevRegKeyPC19J3DAnmTevRegKeyData",
+          "addend": 0,
+          "effective_retail_target": "0x8044214c"
+        },
+        {
+          "offset": "0x114",
+          "kind": 10,
+          "symbol": "setAnmVtxColor__19J3DAnmKeyLoader_v15FP17J3DAnmVtxColorKeyPC21J3DAnmVtxColorKeyData",
+          "addend": 0,
+          "effective_retail_target": "0x80442378"
+        },
+        {
+          "offset": "0x138",
+          "kind": 10,
+          "symbol": "_restgpr_22",
+          "addend": 0,
+          "effective_retail_target": "0x80518a38"
+        }
+      ]
+    },
+    {
+      "name": "setResource__19J3DAnmKeyLoader_v15FP10J3DAnmBasePCv",
+      "address": "0x80441b7c",
+      "retail_size": 332,
+      "objdiff_match_percent": 100.0,
+      "retail_bytes_equal_after_relocation": true,
+      "references": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_21",
+          "addend": 0,
+          "effective_retail_target": "0x805189e8"
+        },
+        {
+          "offset": "0xb4",
+          "kind": 10,
+          "symbol": "setAnmTransform__19J3DAnmKeyLoader_v15FP18J3DAnmTransformKeyPC22J3DAnmTransformKeyData",
+          "addend": 0,
+          "effective_retail_target": "0x80441cc8"
+        },
+        {
+          "offset": "0xc8",
+          "kind": 10,
+          "symbol": "setAnmColor__19J3DAnmKeyLoader_v15FP14J3DAnmColorKeyPC18J3DAnmColorKeyData",
+          "addend": 0,
+          "effective_retail_target": "0x80441ff0"
+        },
+        {
+          "offset": "0xdc",
+          "kind": 10,
+          "symbol": "setAnmCluster__19J3DAnmKeyLoader_v15FP16J3DAnmClusterKeyPC20J3DAnmClusterKeyData",
+          "addend": 0,
+          "effective_retail_target": "0x804420f8"
+        },
+        {
+          "offset": "0xf0",
+          "kind": 10,
+          "symbol": "setAnmTextureSRT__19J3DAnmKeyLoader_v15FP19J3DAnmTextureSRTKeyPC23J3DAnmTextureSRTKeyData",
+          "addend": 0,
+          "effective_retail_target": "0x80441d64"
+        },
+        {
+          "offset": "0x104",
+          "kind": 10,
+          "symbol": "setAnmTevReg__19J3DAnmKeyLoader_v15FP15J3DAnmTevRegKeyPC19J3DAnmTevRegKeyData",
+          "addend": 0,
+          "effective_retail_target": "0x8044214c"
+        },
+        {
+          "offset": "0x118",
+          "kind": 10,
+          "symbol": "setAnmVtxColor__19J3DAnmKeyLoader_v15FP17J3DAnmVtxColorKeyPC21J3DAnmVtxColorKeyData",
+          "addend": 0,
+          "effective_retail_target": "0x80442378"
+        },
+        {
+          "offset": "0x138",
+          "kind": 10,
+          "symbol": "_restgpr_21",
+          "addend": 0,
+          "effective_retail_target": "0x80518a34"
+        }
+      ]
+    },
+    {
+      "name": "setAnmTransform__19J3DAnmKeyLoader_v15FP18J3DAnmTransformKeyPC22J3DAnmTransformKeyData",
+      "address": "0x80441cc8",
+      "retail_size": 156,
+      "objdiff_match_percent": 25.564102
+    },
+    {
+      "name": "setAnmTextureSRT__19J3DAnmKeyLoader_v15FP19J3DAnmTextureSRTKeyPC23J3DAnmTextureSRTKeyData",
+      "address": "0x80441d64",
+      "retail_size": 652,
+      "objdiff_match_percent": 43.56442
+    },
+    {
+      "name": "setAnmColor__19J3DAnmKeyLoader_v15FP14J3DAnmColorKeyPC18J3DAnmColorKeyData",
+      "address": "0x80441ff0",
+      "retail_size": 264,
+      "objdiff_match_percent": 31.636364
+    },
+    {
+      "name": "setAnmCluster__19J3DAnmKeyLoader_v15FP16J3DAnmClusterKeyPC20J3DAnmClusterKeyData",
+      "address": "0x804420f8",
+      "retail_size": 84,
+      "objdiff_match_percent": 11.380953
+    },
+    {
+      "name": "setAnmTevReg__19J3DAnmKeyLoader_v15FP15J3DAnmTevRegKeyPC19J3DAnmTevRegKeyData",
+      "address": "0x8044214c",
+      "retail_size": 556,
+      "objdiff_match_percent": 38.863308
+    },
+    {
+      "name": "setAnmVtxColor__19J3DAnmKeyLoader_v15FP17J3DAnmVtxColorKeyPC21J3DAnmVtxColorKeyData",
+      "address": "0x80442378",
+      "retail_size": 428,
+      "objdiff_match_percent": 46.233646
+    },
+    {
+      "name": "getWeight__17J3DAnmClusterFullCFUs",
+      "address": "0x804359b4",
+      "retail_size": 148,
+      "objdiff_match_percent": 100.0,
+      "retail_bytes_equal_after_relocation": true,
+      "references": [
+        {
+          "offset": "0x0",
+          "kind": 109,
+          "symbol": "@3816",
+          "addend": 0,
+          "value_hex": "3f000000",
+          "effective_retail_target": "0x806c1b4c"
+        },
+        {
+          "offset": "0xc",
+          "kind": 109,
+          "symbol": "@3471",
+          "addend": 0,
+          "value_hex": "00000000",
+          "effective_retail_target": "0x806c1b44"
+        }
+      ]
+    },
+    {
+      "name": "getWeight__16J3DAnmClusterKeyCFUs",
+      "address": "0x80435a48",
+      "retail_size": 108,
+      "objdiff_match_percent": 100.0,
+      "retail_bytes_equal_after_relocation": true,
+      "references": [
+        {
+          "offset": "0x2c",
+          "kind": 109,
+          "symbol": "@3470",
+          "addend": 0,
+          "value_hex": "3f800000",
+          "effective_retail_target": "0x806c1b40"
+        },
+        {
+          "offset": "0x64",
+          "kind": 10,
+          "symbol": "J3DGetKeyFrameInterpolation<f>__FfP18J3DAnmKeyTableBasePf_f",
+          "addend": 0,
+          "effective_retail_target": "0x8043553c"
+        }
+      ]
+    },
+    {
+      "name": "__ct__14J3DAnmVtxColorFv",
+      "address": "0x80435ab4",
+      "retail_size": 124,
+      "objdiff_match_percent": 100.0,
+      "retail_bytes_equal_after_relocation": true,
+      "references": [
+        {
+          "offset": "0x14",
+          "kind": 10,
+          "symbol": "__ct__10J3DAnmBaseFv",
+          "addend": 0,
+          "effective_retail_target": "0x804370a4"
+        },
+        {
+          "offset": "0x1a",
+          "kind": 6,
+          "symbol": "__vt__14J3DAnmVtxColor",
+          "addend": 0,
+          "value_hex": "00",
+          "effective_retail_target": "0x805e9b1c"
+        },
+        {
+          "offset": "0x22",
+          "kind": 4,
+          "symbol": "__vt__14J3DAnmVtxColor",
+          "addend": 0,
+          "value_hex": "00",
+          "effective_retail_target": "0x805e9b1c"
+        }
+      ]
+    },
+    {
+      "name": "__ct__18J3DAnmVtxColorFullFv",
+      "address": "0x80435b30",
+      "retail_size": 92,
+      "objdiff_match_percent": 100.0,
+      "retail_bytes_equal_after_relocation": true,
+      "references": [
+        {
+          "offset": "0x14",
+          "kind": 10,
+          "symbol": "__ct__14J3DAnmVtxColorFv",
+          "addend": 0,
+          "effective_retail_target": "0x80435ab4"
+        },
+        {
+          "offset": "0x1a",
+          "kind": 6,
+          "symbol": "__vt__18J3DAnmVtxColorFull",
+          "addend": 0,
+          "value_hex": "00",
+          "effective_retail_target": "0x805e9b08"
+        },
+        {
+          "offset": "0x22",
+          "kind": 4,
+          "symbol": "__vt__18J3DAnmVtxColorFull",
+          "addend": 0,
+          "value_hex": "00",
+          "effective_retail_target": "0x805e9b08"
+        }
+      ]
+    },
+    {
+      "name": "getColor__18J3DAnmVtxColorFullCFUcUsP8_GXColor",
+      "address": "0x80435b8c",
+      "retail_size": 376,
+      "objdiff_match_percent": 100.0,
+      "retail_bytes_equal_after_relocation": true,
+      "references": [
+        {
+          "offset": "0xc",
+          "kind": 109,
+          "symbol": "@3471",
+          "addend": 0,
+          "value_hex": "00000000",
+          "effective_retail_target": "0x806c1b44"
+        },
+        {
+          "offset": "0x6c",
+          "kind": 109,
+          "symbol": "@3816",
+          "addend": 0,
+          "value_hex": "3f000000",
+          "effective_retail_target": "0x806c1b4c"
+        }
+      ]
+    },
+    {
+      "name": "__ct__17J3DAnmVtxColorKeyFv",
+      "address": "0x80435d04",
+      "retail_size": 92,
+      "objdiff_match_percent": 100.0,
+      "retail_bytes_equal_after_relocation": true,
+      "references": [
+        {
+          "offset": "0x14",
+          "kind": 10,
+          "symbol": "__ct__14J3DAnmVtxColorFv",
+          "addend": 0,
+          "effective_retail_target": "0x80435ab4"
+        },
+        {
+          "offset": "0x1a",
+          "kind": 6,
+          "symbol": "__vt__17J3DAnmVtxColorKey",
+          "addend": 0,
+          "value_hex": "00",
+          "effective_retail_target": "0x805e9af4"
+        },
+        {
+          "offset": "0x22",
+          "kind": 4,
+          "symbol": "__vt__17J3DAnmVtxColorKey",
+          "addend": 0,
+          "value_hex": "00",
+          "effective_retail_target": "0x805e9af4"
+        }
+      ]
+    },
+    {
+      "name": "getColor__17J3DAnmVtxColorKeyCFUcUsP8_GXColor",
+      "address": "0x80435d60",
+      "retail_size": 744,
+      "objdiff_match_percent": 88.92473
+    },
+    {
+      "name": "getVisibility__20J3DAnmVisibilityFullCFUsPUc",
+      "address": "0x804367d4",
+      "retail_size": 144,
+      "objdiff_match_percent": 100.0,
+      "retail_bytes_equal_after_relocation": true,
+      "references": [
+        {
+          "offset": "0x0",
+          "kind": 109,
+          "symbol": "@3816",
+          "addend": 0,
+          "value_hex": "3f000000",
+          "effective_retail_target": "0x806c1b4c"
+        }
+      ]
+    },
+    {
+      "name": "__dt__14J3DAnmVtxColorFv",
+      "address": "0x80437134",
+      "retail_size": 64,
+      "objdiff_match_percent": 100.0,
+      "retail_bytes_equal_after_relocation": true,
+      "references": [
+        {
+          "offset": "0x24",
+          "kind": 10,
+          "symbol": "__dl__FPv",
+          "addend": 0,
+          "effective_retail_target": "0x8040b4a0"
+        }
+      ]
+    },
+    {
+      "name": "getKind__17J3DAnmVtxColorKeyCFv",
+      "address": "0x80437310",
+      "retail_size": 8,
+      "objdiff_match_percent": 100.0,
+      "retail_bytes_equal_after_relocation": true,
+      "references": []
+    },
+    {
+      "name": "__dt__17J3DAnmVtxColorKeyFv",
+      "address": "0x80437318",
+      "retail_size": 64,
+      "objdiff_match_percent": 100.0,
+      "retail_bytes_equal_after_relocation": true,
+      "references": [
+        {
+          "offset": "0x24",
+          "kind": 10,
+          "symbol": "__dl__FPv",
+          "addend": 0,
+          "effective_retail_target": "0x8040b4a0"
+        }
+      ]
+    },
+    {
+      "name": "getKind__18J3DAnmVtxColorFullCFv",
+      "address": "0x80437358",
+      "retail_size": 8,
+      "objdiff_match_percent": 100.0,
+      "retail_bytes_equal_after_relocation": true,
+      "references": []
+    },
+    {
+      "name": "__dt__18J3DAnmVtxColorFullFv",
+      "address": "0x80437360",
+      "retail_size": 64,
+      "objdiff_match_percent": 100.0,
+      "retail_bytes_equal_after_relocation": true,
+      "references": [
+        {
+          "offset": "0x24",
+          "kind": 10,
+          "symbol": "__dl__FPv",
+          "addend": 0,
+          "effective_retail_target": "0x8040b4a0"
+        }
+      ]
+    },
+    {
+      "name": "getColor__14J3DAnmVtxColorCFUcUsP8_GXColor",
+      "address": "0x804373a0",
+      "retail_size": 4,
+      "objdiff_match_percent": 100.0,
+      "retail_bytes_equal_after_relocation": true,
+      "references": []
+    },
+    {
+      "name": "getKind__14J3DAnmVtxColorCFv",
+      "address": "0x804373a4",
+      "retail_size": 8,
+      "objdiff_match_percent": 100.0,
+      "retail_bytes_equal_after_relocation": true,
+      "references": []
+    }
+  ],
+  "native_source_correspondence": "Exact original methods with enumerated pointer-traversal/ownership/PPC-conversion adaptations only",
+  "native_tests": {
+    "normal": {
+      "cases": [
+        "BCK and BCA original dispatch",
+        "BPK and BPA material color",
+        "material keyed interpolation",
+        "BTK pre and post texture data",
+        "BRK signed and konst registers",
+        "BTP and BVA frame rules",
+        "BLK and BLA cluster weights",
+        "BXK and BXA index relocation",
+        "original block order",
+        "retained ownership and repeat load",
+        "explicit archive alias lifetime",
+        "bounded malformed resources",
+        "concurrent native load scopes",
+        "actual JKR allocation domain"
+      ],
+      "binary_sha256": "c88ad3f93dad202810092d62c3f606a6d82103bdc5d7097eb40be0eed0353e9b"
+    },
+    "address-undefined": {
+      "cases": [
+        "BCK and BCA original dispatch",
+        "BPK and BPA material color",
+        "material keyed interpolation",
+        "BTK pre and post texture data",
+        "BRK signed and konst registers",
+        "BTP and BVA frame rules",
+        "BLK and BLA cluster weights",
+        "BXK and BXA index relocation",
+        "original block order",
+        "retained ownership and repeat load",
+        "explicit archive alias lifetime",
+        "bounded malformed resources",
+        "concurrent native load scopes",
+        "actual JKR allocation domain"
+      ],
+      "binary_sha256": "c4e1955df22cb5b9e08df7c63aa18197ee57145240598f7ee16f0fe1aa3a6fe7"
+    },
+    "thread": {
+      "cases": [
+        "BCK and BCA original dispatch",
+        "BPK and BPA material color",
+        "material keyed interpolation",
+        "BTK pre and post texture data",
+        "BRK signed and konst registers",
+        "BTP and BVA frame rules",
+        "BLK and BLA cluster weights",
+        "BXK and BXA index relocation",
+        "original block order",
+        "retained ownership and repeat load",
+        "explicit archive alias lifetime",
+        "bounded malformed resources",
+        "concurrent native load scopes",
+        "actual JKR allocation domain"
+      ],
+      "binary_sha256": "3de3506896c12b468022b58f05516a25260357dd59b32e7c4ec7f4940d7f4f59"
+    }
+  },
+  "real_archive": {
+    "archive_sha256": "1e130baeadc0dff9000fb9cd9738310926def1777143d437d804e50eb2ec45b8",
+    "families": {
+      "bck1": 456,
+      "btk1": 4,
+      "btp1": 71
+    },
+    "total": 531,
+    "sanitizers": "address,undefined"
+  },
+  "source_sha256": {
+    "pc-port/tests/OriginalJ3DAnimationResourceTests.cpp": "63145d466d16ccd2ff0ce90677546fe9786116af8558222f57bfbb9687acfa98",
+    "pc-port/src/resource/J3dAnimationResource.cpp": "b77c1dee60f5316dc4a20b937d674e0ecbab926a881c7ad1c1552a24900d43cc",
+    "pc-port/src/resource/J3dNameData.cpp": "ffd4c7ef8480e36ee29be121f13d5d46e0aea523fa66bdaf080f25c245e31a43",
+    "pc-port/src/resource/J3dTransformAnimation.cpp": "301fcff856b01ee9fbb506c3be75a3e1474dbbd95c70a98d36da220c22b1052d",
+    "pc-port/src/compat/J3DAnmLoaderCompat.cpp": "1a39c5f8d10dfede8bd3b46a43617f238812752c55b4a1825b9cb5086d471be9",
+    "pc-port/src/compat/J3DAdditionalAnimationCompat.cpp": "f1ceeb527698d268727d775f71a011dba7dc4772e9a18229100fdce3d1b93c67",
+    "pc-port/src/compat/J3DTransformAnimationCompat.cpp": "a060535c3d434220e20c055a2ab91b3a8937343df0b74583752ac067fc65fd05",
+    "pc-port/src/compat/J3DMaterialAnimationCompat.cpp": "f8dede8d3e64e65d8d32f4ca0b0a80f4b5d828121b858bae9aefa591fec08112",
+    "pc-port/src/compat/JUTNameTabCompat.cpp": "1c79def40146b69aaab99c3b79b45aca77bd7dccd10d9db8397bfeb24dc6de93",
+    "pc-port/src/resource/RarcArchive.cpp": "750970c8ff82ce34df3739e51245b9dd3731e3d36f7c5c96800e30dd8be91d49",
+    "pc-port/src/resource/Yaz0.cpp": "81990d78ccaf5245abb94eeca24d9660be748faebe8dcfc0dc02602f5ab49c1d",
+    "pc-port/src/compat/JKRExpHeapCompat.cpp": "1816760d5b3f47b8a4e0be6fbb423bc4633202252ebba2a2933a687fe8e700d8",
+    "pc-port/src/compat/MemoryHeapScopeCompat.cpp": "06edb1e1edd206650b79e8d9c9986f9f3339fde63ef6b5fd60af0015a800ed20",
+    "pc-port/src/compat/JkrAllocationDomain.cpp": "794d4d4f7471b95e9c277935a43c1283a08b9fd3c50ec43286db72a8b6083d7c",
+    "pc-port/src/compat/JkrAllocationProvenance.cpp": "22bab0e2fb493ce3e8e76e485e4bb2a43e28c29fbc443192f1689e7dda360bb4",
+    "pc-port/src/compat/MetrowerksAlignedNew.cpp": "ff68d14a0c89f0f5a064b59081d4c782fbd51c4d37984c5500fc13f9df8ec4d2",
+    "pc-port/src/compat/JKRHeapCompat.cpp": "57214afd07581961abbd7e1488eba762a3ba3ea1f1defbf17c753c86b18272dd",
+    "pc-port/src/compat/JKRSolidHeapCompat.cpp": "f2e3903cf3ba606de9e29788f96b19bee199e8f2e1c40bd75f8583a272afa097",
+    "pc-port/src/compat/JKRDisposerCompat.cpp": "8f7e592620e25bec11fccf38dc57149d920ca185cbbfdf716e90a606346ba1e5",
+    "pc-port/src/compat/JSUListCompat.cpp": "1590f545b672b375bc51e52670bb055d07ebe883564c957e3ac37076b40559f0",
+    "pc-port/src/compat/JkrDiagnostics.cpp": "a9bd75f69b8f4827f4688a1f455d7660a624e1780abfadec8d444299fcad0539",
+    "pc-port/aurora/lib/dolphin/os/OSExecution.cpp": "9b0e0876e1113893c64d9a1ef48f31b41593aca418c01e1fafc43b79f5ffd12e",
+    "pc-port/aurora/lib/dolphin/os/OSMutex.cpp": "7b35a3e01ac6309be2ca340332e872ce4d0282319e72c23bb9ccf1003307129d",
+    "pc-port/aurora/lib/dolphin/os/OSReport.cpp": "c915273bb2dd9cfe82788186c67e926266a1d5b9288c71e7ccd919d1eb7b479f",
+    "pc-port/src/compat/MslPrintfCompat.cpp": "3b01e0a263a4abdf5bc770b66a7cc1a9fbe4a93d76695a16d4ff73bea23dc76a",
+    "pc-port/src/compat/JkrAllocationDomain.hpp": "e41098552727f4811ee0447c3d108ed9066e98431788c17d6101f356962099e0",
+    "pc-port/src/resource/J3dAnimationResource.hpp": "846cb795fc57e7c818b7553669428040631c64cd1997d0e74d9aa83f7bce8bfa",
+    "pc-port/src/resource/J3dNativeBlock.hpp": "b1f2b90d56f17fae201aa00ee5a4618751ad6105d5557f92727b5e8f483139f1",
+    "libs/JSystem/include/JSystem/J3DGraphLoader/J3DAnmLoader.hpp": "7cc47f1994630b085bc515d086ffe34472ca69e8809a577442c20aa8cdba1c1a",
+    "src/JSystem/J3DGraphLoader/J3DAnmLoader.cpp": "c19df79d57d42583c0f577eae4f244f453ac01259d1b767b3cc9bba66db0032b",
+    "src/JSystem/J3DGraphAnimator/J3DAnimation.cpp": "10834f63caea6afa92c91f9b6831a142f22992aed236c2a2356198b97780ca44"
+  },
+  "scope": "Actual original animation loader dispatch/sampling and retained decoded data. Actual JKR domain allocation and retention are verified; ResourceHolder activation remains separate."
+}

@@ -6,6 +6,7 @@ target("smg-pc-mario-gateway-walk-slice")
     add_includedirs(path.join(os.projectdir(), "..", "include"))
     add_includedirs(path.join(os.projectdir(), "..", "libs", "JSystem", "include"))
     add_cxxflags("-include " .. path.join(os.projectdir(), "src/compat/MetrowerksStdCompat.hpp"), {force = true})
+    add_cxxflags("-fno-builtin-sprintf", "-fno-builtin-snprintf", "-fno-builtin-vsprintf", "-fno-builtin-vsnprintf", {force = true})
     add_cxxflags("-ffunction-sections", "-fdata-sections", {force = true})
     add_files {
         "../Game/Player/Mario.cpp",

@@ -1,0 +1,211 @@
+{
+  "original_compiler_commands": {
+    "printf": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a5.2/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,p",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse,pool,readonly",
+      "-enc",
+      "SJIS",
+      "-ipa",
+      "file",
+      "-use_lmw_stmw",
+      "on",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "src/MSL_C/printf.c",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-msl-format-20260903/printf.o"
+    ],
+    "mbstring": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,p",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse,pool,readonly",
+      "-enc",
+      "SJIS",
+      "-ipa",
+      "file",
+      "-use_lmw_stmw",
+      "on",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "src/MSL_C/mbstring.c",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-msl-format-20260903/mbstring.o"
+    ]
+  },
+  "original_functions": {
+    "parse_format": {
+      "address": "0x8051c1e8",
+      "size": 1532,
+      "objdiff_match_percent": 100.0
+    },
+    "__pformatter": {
+      "address": "0x8051d96c",
+      "size": 2140,
+      "objdiff_match_percent": 100.0
+    },
+    "__StringWrite": {
+      "address": "0x8051e220",
+      "size": 108,
+      "objdiff_match_percent": 100.0
+    },
+    "vsnprintf": {
+      "address": "0x8051e3c8",
+      "size": 132,
+      "objdiff_match_percent": 100.0
+    },
+    "vsprintf": {
+      "address": "0x8051e44c",
+      "size": 128,
+      "objdiff_match_percent": 100.0
+    },
+    "snprintf": {
+      "address": "0x8051e4cc",
+      "size": 216,
+      "objdiff_match_percent": 100.0
+    },
+    "sprintf": {
+      "address": "0x8051e5a4",
+      "size": 208,
+      "objdiff_match_percent": 100.0
+    },
+    "__wctomb_noconv": {
+      "address": "0x8051bb08",
+      "size": 28,
+      "objdiff_match_percent": 100.0
+    },
+    "wcstombs": {
+      "address": "0x8051bbe4",
+      "size": 184,
+      "objdiff_match_percent": 100.0
+    }
+  },
+  "retail_empty_string": "0x805628b2",
+  "retail_locale": "0x80609a08",
+  "retail_wide_encoder": "0x8051bb08",
+  "native_tests": {
+    "normal": {
+      "cases": [
+        "null strings",
+        "MSL precision and padding",
+        "Pascal and wide strings",
+        "MSL wide bytes",
+        "native numeric formatting",
+        "mixed native varargs",
+        "truncation and count",
+        "original declaration aliases",
+        "concurrent formatters"
+      ],
+      "binary_sha256": "9f851b6f6f9ab1d852a913c91f81ffd1e9c60cceaa7c27b542b212bec42c19d3"
+    },
+    "address-undefined": {
+      "cases": [
+        "null strings",
+        "MSL precision and padding",
+        "Pascal and wide strings",
+        "MSL wide bytes",
+        "native numeric formatting",
+        "mixed native varargs",
+        "truncation and count",
+        "original declaration aliases",
+        "concurrent formatters"
+      ],
+      "binary_sha256": "fdd408f7aee3e774d428ee2ca3df64c6a9459ac52a43f869ab3a5a74ea27bf07"
+    },
+    "thread": {
+      "cases": [
+        "null strings",
+        "MSL precision and padding",
+        "Pascal and wide strings",
+        "MSL wide bytes",
+        "native numeric formatting",
+        "mixed native varargs",
+        "truncation and count",
+        "original declaration aliases",
+        "concurrent formatters"
+      ],
+      "binary_sha256": "6adf68df448e37c414921b875486c9798a9492a36c193b11a433f7af907c4f14"
+    }
+  },
+  "source_sha256": {
+    "pc-port/src/compat/MslPrintfCompat.cpp": "3b01e0a263a4abdf5bc770b66a7cc1a9fbe4a93d76695a16d4ff73bea23dc76a",
+    "pc-port/tests/MslPrintfTests.cpp": "b5c54e6554a13e2a12633b6423838d258ccd17f4aa943c4d713a9f8dfeba298b",
+    "pc-port/tests/MslPrintfAliasTests.cpp": "4ef87d400f3585ab25ece265265a81b19535070448e66685a5c2e3d31aa30f2d",
+    "pc-port/src/compat/MetrowerksPrintf.hpp": "9c45d18d5ff3fe06370c5a9982d2b47d688d25873f5fbf2e11a85e0afb1aae1b",
+    "pc-port/src/compat/MslPrintfCompat.hpp": "e5b3cf375c2f6296366afeda8a73dfaa227fcd8f0bd2255ee82474e52f91cc47",
+    "src/MSL_C/printf.c": "192a9457104ccb58b275e9d4e9028c20a1254b56460c7d08b27522eb5719c210",
+    "src/MSL_C/mbstring.c": "1d647be36c402e1c6906ba7800f8b67473abf229fd7da4e885b009cc4ed18ca4",
+    "src/MSL_C/locale.c": "517fdc78546824db8138045a026c872a7b905e138f3b08b74eaa28d32679198a"
+  },
+  "scope": "MSL string conversions and string-output sinks; native numeric conversions and host-only grammar remain libc behavior."
+}

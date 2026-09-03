@@ -2,6 +2,7 @@ target("smg-pc-game")
     set_kind("static")
     add_cxxflags("-Wno-register", {force = true})
     add_cxxflags("-include " .. path.join(os.projectdir(), "src/compat/MetrowerksStdCompat.hpp"), { force = true })
+    add_cxxflags("-fno-builtin-sprintf", "-fno-builtin-snprintf", "-fno-builtin-vsprintf", "-fno-builtin-vsnprintf", {force = true})
     add_files("**.cpp")
     -- Retail XanimeCore uses unfused scalar arithmetic; its paired SDK calls
     -- preserve their explicit fused instructions in the compatibility layer.
@@ -188,6 +189,8 @@ target("smg-pc-game")
     add_files("../runtime/**.cpp")
     add_files("../scene/**.cpp")
     add_files("../compat/**.cpp")
+    -- Its numeric fallback must call host libc outside the forced MSL aliases.
+    remove_files("../compat/MslPrintfCompat.cpp")
     -- Original paired-single helpers make fused and rounded operations explicit.
     add_files("../compat/GameMathCompat.cpp", {cxxflags = "-ffp-contract=off"})
     add_files {

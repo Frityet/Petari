@@ -1,0 +1,32 @@
+{
+  "source_sha256": {
+    "src/JSystem/JKernel/JKRExpHeap.cpp": "e734e8874eccd5ff62856c202f74b43aa80d24c8f7f42abb4b9532f28cc2b2b6",
+    "libs/JSystem/include/JSystem/JKernel/JKRExpHeap.hpp": "babfda0eaa89267e76f7474d852053cf053ccbd5b224f4a0846bf17127300f0c",
+    "pc-port/src/JSystem/JKernel/JKRExpHeap.hpp": "babfda0eaa89267e76f7474d852053cf053ccbd5b224f4a0846bf17127300f0c",
+    "pc-port/src/Game/Util/MutexHolder.hpp": "dde11cb9bed6751cd194994497065345241a4df76a2819e7baa920e8c067b7d1",
+    "pc-port/src/compat/JKRExpHeapCompat.cpp": "1816760d5b3f47b8a4e0be6fbb423bc4633202252ebba2a2933a687fe8e700d8",
+    "pc-port/src/compat/MemoryHeapScopeCompat.cpp": "06edb1e1edd206650b79e8d9c9986f9f3339fde63ef6b5fd60af0015a800ed20",
+    "pc-port/src/compat/JkrAllocationDomain.hpp": "e41098552727f4811ee0447c3d108ed9066e98431788c17d6101f356962099e0",
+    "pc-port/src/compat/JkrAllocationDomain.cpp": "794d4d4f7471b95e9c277935a43c1283a08b9fd3c50ec43286db72a8b6083d7c",
+    "pc-port/src/compat/JkrAllocationRouting.hpp": "5659fd86c0d58f640acbfb8154411c3edb7f0ed22940686eda64c096dba903c1",
+    "pc-port/src/compat/JkrAllocationProvenance.hpp": "3d218818cd56281a028cb59c57da6875f9a24bbba0821699af51583797ab6f0f",
+    "pc-port/src/compat/JkrAllocationProvenance.cpp": "22bab0e2fb493ce3e8e76e485e4bb2a43e28c29fbc443192f1689e7dda360bb4",
+    "pc-port/src/compat/MetrowerksAlignedNew.cpp": "ff68d14a0c89f0f5a064b59081d4c782fbd51c4d37984c5500fc13f9df8ec4d2",
+    "pc-port/tests/JkrAllocationDomainTests.cpp": "5ba24a1053a200d6c98696a8073f7bea27afcfe1b35219ab02fb19bf18e25df5"
+  },
+  "isolated_tests": {
+    "normal": 7,
+    "ASan_UBSan": 7,
+    "TSan": 7
+  },
+  "ubsan_halt_on_error": true,
+  "compiler": "/opt/homebrew/opt/llvm/bin/clang++, C++23, TARGET_PC, AURORA",
+  "final_notes": "No Game activation or shared/GPU build performed by this worker. Intentional exhaustion logs cannot-alloc once per fixture. Normal, ASan/UBSan and TSan final logs have no sanitizer diagnostics. Earlier UBSan identified default-new alignment mismatch; fixed before these final runs.",
+  "alignment_contract": {
+    "native_pointer": 8,
+    "CMemBlock": 8,
+    "ordinary_new": 16,
+    "overaligned_fixture": 128
+  },
+  "process_lifetime_metadata": "One malloc/placement-new std::mutex intentionally remains alive for global delete during static teardown; record nodes retire with actual heap frees/destruction."
+}

@@ -1,0 +1,1070 @@
+[
+  {
+    "root_start": 52,
+    "root_end": 52,
+    "before": "",
+    "after": "compat/"
+  },
+  {
+    "root_start": 53,
+    "root_end": 55,
+    "before": "Sy",
+    "after": "krDiagno"
+  },
+  {
+    "root_start": 57,
+    "root_end": 63,
+    "before": "em/JUt",
+    "after": ""
+  },
+  {
+    "root_start": 64,
+    "root_end": 75,
+    "before": "lity/JUTCon",
+    "after": "c"
+  },
+  {
+    "root_start": 76,
+    "root_end": 124,
+    "before": "ole.hpp\"\n#include \"JSystem/JUtility/JUTException",
+    "after": ""
+  },
+  {
+    "root_start": 172,
+    "root_end": 267,
+    "before": "extern \"C\" void JUTReportConsole(const char*);\nextern \"C\" void JUTWarningConsole(const char*);\n",
+    "after": ""
+  },
+  {
+    "root_start": 280,
+    "root_end": 280,
+    "before": "",
+    "after": ">\n#include <cstdint"
+  },
+  {
+    "root_start": 470,
+    "root_end": 477,
+    "before": "JKRExpH",
+    "after": "// Wii boot-ar"
+  },
+  {
+    "root_start": 478,
+    "root_end": 478,
+    "before": "",
+    "after": "n"
+  },
+  {
+    "root_start": 479,
+    "root_end": 481,
+    "before": "p*",
+    "after": ""
+  },
+  {
+    "root_start": 482,
+    "root_end": 494,
+    "before": "JKRExpHeap::",
+    "after": ""
+  },
+  {
+    "root_start": 504,
+    "root_end": 505,
+    "before": "(",
+    "after": " "
+  },
+  {
+    "root_start": 506,
+    "root_end": 507,
+    "before": "n",
+    "after": "s replaced by explici"
+  },
+  {
+    "root_start": 509,
+    "root_end": 533,
+    "before": "heapNum, bool a2) {\n    ",
+    "after": ""
+  },
+  {
+    "root_start": 534,
+    "root_end": 539,
+    "before": "KRExp",
+    "after": "kr"
+  },
+  {
+    "root_start": 543,
+    "root_end": 552,
+    "before": "* heap = ",
+    "after": "Ru"
+  },
+  {
+    "root_start": 553,
+    "root_end": 557,
+    "before": "ullp",
+    "after": ""
+  },
+  {
+    "root_start": 558,
+    "root_end": 566,
+    "before": "r;\n\n    ",
+    "after": ""
+  },
+  {
+    "root_start": 567,
+    "root_end": 694,
+    "before": "f (!JKRHeap::sRootHeap) {\n        char* stack_C;\n        u32 arenaSize;\n        JKRHeap::initArena(&stack_C, &arenaSize, heapNu",
+    "after": ""
+  },
+  {
+    "root_start": 695,
+    "root_end": 750,
+    "before": ");\n        char* area = stack_C + 0x90;\n        u32 siz",
+    "after": ""
+  },
+  {
+    "root_start": 752,
+    "root_end": 787,
+    "before": "= arenaSize - 0x90;\n        heap = ",
+    "after": "ow"
+  },
+  {
+    "root_start": 789,
+    "root_end": 792,
+    "before": "w (",
+    "after": "r"
+  },
+  {
+    "root_start": 793,
+    "root_end": 806,
+    "before": "tack_C) JKREx",
+    "after": "hi"
+  },
+  {
+    "root_start": 807,
+    "root_end": 917,
+    "before": "Heap(area, size, nullptr, a2);\n        JKRHeap::sRootHeap = heap;\n    }\n\n    heap->_6E = 1;\n    return heap;\n}",
+    "after": "."
+  },
+  {
+    "root_start": 1277,
+    "root_end": 1281,
+    "before": "0xA0",
+    "after": "heapSize + sizeof(CMemBlock)"
+  },
+  {
+    "root_start": 1381,
+    "root_end": 1414,
+    "before": "u8* data = (mem + heapSize);\n    ",
+    "after": ""
+  },
+  {
+    "root_start": 1465,
+    "root_end": 1465,
+    "before": "",
+    "after": "\n    u8* data = mem + heapSize;"
+  },
+  {
+    "root_start": 2213,
+    "root_end": 2215,
+    "before": "32",
+    "after": "intptr_t"
+  },
+  {
+    "root_start": 2231,
+    "root_end": 2233,
+    "before": "32",
+    "after": "intptr_t"
+  },
+  {
+    "root_start": 2240,
+    "root_end": 2240,
+    "before": "",
+    "after": "uintptr_t("
+  },
+  {
+    "root_start": 2244,
+    "root_end": 2244,
+    "before": "",
+    "after": ")"
+  },
+  {
+    "root_start": 2507,
+    "root_end": 2518,
+    "before": "mChildTree.",
+    "after": ""
+  },
+  {
+    "root_start": 2526,
+    "root_end": 2539,
+    "before": "t()->getObjec",
+    "after": ""
+  },
+  {
+    "root_start": 3200,
+    "root_end": 3204,
+    "before": "JUTW",
+    "after": "smgpc::compat::jkr_w"
+  },
+  {
+    "root_start": 3210,
+    "root_end": 3217,
+    "before": "Console",
+    "after": ""
+  },
+  {
+    "root_start": 4379,
+    "root_end": 4381,
+    "before": "32",
+    "after": "intptr_t"
+  },
+  {
+    "root_start": 4821,
+    "root_end": 4823,
+    "before": "32",
+    "after": "intptr_t"
+  },
+  {
+    "root_start": 5535,
+    "root_end": 5535,
+    "before": "",
+    "after": "// Native block headers contain pointers and require their natural alignment.\n    "
+  },
+  {
+    "root_start": 5559,
+    "root_end": 5560,
+    "before": "4",
+    "after": "alignof(CMemBlock)"
+  },
+  {
+    "root_start": 5881,
+    "root_end": 5881,
+    "before": "",
+    "after": "uintptr_t("
+  },
+  {
+    "root_start": 5886,
+    "root_end": 5886,
+    "before": "",
+    "after": ")"
+  },
+  {
+    "root_start": 8569,
+    "root_end": 8569,
+    "before": "",
+    "after": "// Native block headers contain pointers and require their natural alignment.\n    "
+  },
+  {
+    "root_start": 8593,
+    "root_end": 8594,
+    "before": "4",
+    "after": "alignof(CMemBlock)"
+  },
+  {
+    "root_start": 9657,
+    "root_end": 9659,
+    "before": "32",
+    "after": "intptr_t"
+  },
+  {
+    "root_start": 9822,
+    "root_end": 9822,
+    "before": "",
+    "after": "uintptr_t("
+  },
+  {
+    "root_start": 9827,
+    "root_end": 9827,
+    "before": "",
+    "after": ")"
+  },
+  {
+    "root_start": 11081,
+    "root_end": 11081,
+    "before": "",
+    "after": "// Native block headers contain pointers and require their natural alignment.\n    "
+  },
+  {
+    "root_start": 11105,
+    "root_end": 11106,
+    "before": "4",
+    "after": "alignof(CMemBlock)"
+  },
+  {
+    "root_start": 13354,
+    "root_end": 13354,
+    "before": "",
+    "after": "// Native block headers contain pointers and require their natural alignment.\n    "
+  },
+  {
+    "root_start": 13378,
+    "root_end": 13379,
+    "before": "4",
+    "after": "alignof(CMemBlock)"
+  },
+  {
+    "root_start": 16269,
+    "root_end": 16274,
+    "before": "JUTEx",
+    "after": "smgp"
+  },
+  {
+    "root_start": 16275,
+    "root_end": 16281,
+    "before": "eption",
+    "after": ""
+  },
+  {
+    "root_start": 16283,
+    "root_end": 16283,
+    "before": "",
+    "after": "compat::jkr_"
+  },
+  {
+    "root_start": 16288,
+    "root_end": 16290,
+    "before": "_f",
+    "after": ""
+  },
+  {
+    "root_start": 19488,
+    "root_end": 19490,
+    "before": "32",
+    "after": "intptr_t"
+  },
+  {
+    "root_start": 19581,
+    "root_end": 19583,
+    "before": "32",
+    "after": "intptr_t"
+  },
+  {
+    "root_start": 19674,
+    "root_end": 19678,
+    "before": "JUTW",
+    "after": "smgpc::compat::jkr_w"
+  },
+  {
+    "root_start": 19684,
+    "root_end": 19691,
+    "before": "Console",
+    "after": ""
+  },
+  {
+    "root_start": 19728,
+    "root_end": 19729,
+    "before": "x",
+    "after": "p"
+  },
+  {
+    "root_start": 19733,
+    "root_end": 19733,
+    "before": "",
+    "after": "(void*)"
+  },
+  {
+    "root_start": 19822,
+    "root_end": 19827,
+    "before": "JUTEx",
+    "after": "smgp"
+  },
+  {
+    "root_start": 19828,
+    "root_end": 19834,
+    "before": "eption",
+    "after": ""
+  },
+  {
+    "root_start": 19836,
+    "root_end": 19836,
+    "before": "",
+    "after": "compat::jkr_"
+  },
+  {
+    "root_start": 19841,
+    "root_end": 19843,
+    "before": "_f",
+    "after": ""
+  },
+  {
+    "root_start": 20357,
+    "root_end": 20361,
+    "before": "JUTW",
+    "after": "smgpc::compat::jkr_w"
+  },
+  {
+    "root_start": 20367,
+    "root_end": 20374,
+    "before": "Console",
+    "after": ""
+  },
+  {
+    "root_start": 20387,
+    "root_end": 20390,
+    "before": "08x",
+    "after": "p"
+  },
+  {
+    "root_start": 20423,
+    "root_end": 20423,
+    "before": "",
+    "after": "(void*)"
+  },
+  {
+    "root_start": 20645,
+    "root_end": 20649,
+    "before": "JUTW",
+    "after": "smgpc::compat::jkr_w"
+  },
+  {
+    "root_start": 20655,
+    "root_end": 20662,
+    "before": "Console",
+    "after": ""
+  },
+  {
+    "root_start": 20675,
+    "root_end": 20678,
+    "before": "08x",
+    "after": "p"
+  },
+  {
+    "root_start": 20699,
+    "root_end": 20702,
+    "before": "08x",
+    "after": "p"
+  },
+  {
+    "root_start": 20715,
+    "root_end": 20715,
+    "before": "",
+    "after": "(void*)"
+  },
+  {
+    "root_start": 20758,
+    "root_end": 20758,
+    "before": "",
+    "after": "(void*)"
+  },
+  {
+    "root_start": 20902,
+    "root_end": 20906,
+    "before": "JUTW",
+    "after": "smgpc::compat::jkr_w"
+  },
+  {
+    "root_start": 20912,
+    "root_end": 20919,
+    "before": "Console",
+    "after": ""
+  },
+  {
+    "root_start": 20932,
+    "root_end": 20935,
+    "before": "08x",
+    "after": "p"
+  },
+  {
+    "root_start": 20960,
+    "root_end": 20963,
+    "before": "08x",
+    "after": "p"
+  },
+  {
+    "root_start": 20969,
+    "root_end": 20969,
+    "before": "",
+    "after": "(void*)"
+  },
+  {
+    "root_start": 21019,
+    "root_end": 21019,
+    "before": "",
+    "after": "(void*)"
+  },
+  {
+    "root_start": 21158,
+    "root_end": 21162,
+    "before": "JUTW",
+    "after": "smgpc::compat::jkr_w"
+  },
+  {
+    "root_start": 21168,
+    "root_end": 21175,
+    "before": "Console",
+    "after": ""
+  },
+  {
+    "root_start": 21188,
+    "root_end": 21191,
+    "before": "08x",
+    "after": "p"
+  },
+  {
+    "root_start": 21214,
+    "root_end": 21217,
+    "before": "08x",
+    "after": "p"
+  },
+  {
+    "root_start": 21223,
+    "root_end": 21223,
+    "before": "",
+    "after": "(void*)"
+  },
+  {
+    "root_start": 21266,
+    "root_end": 21266,
+    "before": "",
+    "after": "(void*)"
+  },
+  {
+    "root_start": 21642,
+    "root_end": 21646,
+    "before": "JUTW",
+    "after": "smgpc::compat::jkr_w"
+  },
+  {
+    "root_start": 21652,
+    "root_end": 21659,
+    "before": "Console",
+    "after": ""
+  },
+  {
+    "root_start": 21672,
+    "root_end": 21675,
+    "before": "08x",
+    "after": "p"
+  },
+  {
+    "root_start": 21700,
+    "root_end": 21703,
+    "before": "08x",
+    "after": "p"
+  },
+  {
+    "root_start": 21709,
+    "root_end": 21709,
+    "before": "",
+    "after": "(void*)"
+  },
+  {
+    "root_start": 21759,
+    "root_end": 21759,
+    "before": "",
+    "after": "(void*)"
+  },
+  {
+    "root_start": 21936,
+    "root_end": 21940,
+    "before": "JUTW",
+    "after": "smgpc::compat::jkr_w"
+  },
+  {
+    "root_start": 21946,
+    "root_end": 21953,
+    "before": "Console",
+    "after": ""
+  },
+  {
+    "root_start": 21966,
+    "root_end": 21969,
+    "before": "08x",
+    "after": "p"
+  },
+  {
+    "root_start": 21997,
+    "root_end": 21997,
+    "before": "",
+    "after": "(void*)"
+  },
+  {
+    "root_start": 22136,
+    "root_end": 22140,
+    "before": "JUTW",
+    "after": "smgpc::compat::jkr_w"
+  },
+  {
+    "root_start": 22146,
+    "root_end": 22153,
+    "before": "Console",
+    "after": ""
+  },
+  {
+    "root_start": 22166,
+    "root_end": 22169,
+    "before": "08x",
+    "after": "p"
+  },
+  {
+    "root_start": 22192,
+    "root_end": 22195,
+    "before": "08x",
+    "after": "p"
+  },
+  {
+    "root_start": 22201,
+    "root_end": 22201,
+    "before": "",
+    "after": "(void*)"
+  },
+  {
+    "root_start": 22244,
+    "root_end": 22244,
+    "before": "",
+    "after": "(void*)"
+  },
+  {
+    "root_start": 22349,
+    "root_end": 22353,
+    "before": "JUTW",
+    "after": "smgpc::compat::jkr_w"
+  },
+  {
+    "root_start": 22359,
+    "root_end": 22366,
+    "before": "Console",
+    "after": ""
+  },
+  {
+    "root_start": 22425,
+    "root_end": 22425,
+    "before": "",
+    "after": "static_cast<u32>("
+  },
+  {
+    "root_start": 22435,
+    "root_end": 22435,
+    "before": "",
+    "after": ")"
+  },
+  {
+    "root_start": 22467,
+    "root_end": 22471,
+    "before": "JUTW",
+    "after": "smgpc::compat::jkr_w"
+  },
+  {
+    "root_start": 22477,
+    "root_end": 22484,
+    "before": "Console",
+    "after": ""
+  },
+  {
+    "root_start": 22704,
+    "root_end": 22708,
+    "before": "JUTR",
+    "after": "smgpc::compat::jkr_r"
+  },
+  {
+    "root_start": 22713,
+    "root_end": 22720,
+    "before": "Console",
+    "after": ""
+  },
+  {
+    "root_start": 22785,
+    "root_end": 22789,
+    "before": "JUTR",
+    "after": "smgpc::compat::jkr_r"
+  },
+  {
+    "root_start": 22794,
+    "root_end": 22801,
+    "before": "Console",
+    "after": ""
+  },
+  {
+    "root_start": 22856,
+    "root_end": 22860,
+    "before": "JUTR",
+    "after": "smgpc::compat::jkr_r"
+  },
+  {
+    "root_start": 22865,
+    "root_end": 22872,
+    "before": "Console",
+    "after": ""
+  },
+  {
+    "root_start": 23014,
+    "root_end": 23018,
+    "before": "JUTR",
+    "after": "smgpc::compat::jkr_r"
+  },
+  {
+    "root_start": 23023,
+    "root_end": 23030,
+    "before": "Console",
+    "after": ""
+  },
+  {
+    "root_start": 23041,
+    "root_end": 23044,
+    "before": "08x",
+    "after": "p"
+  },
+  {
+    "root_start": 23127,
+    "root_end": 23127,
+    "before": "",
+    "after": "(void*)"
+  },
+  {
+    "root_start": 23172,
+    "root_end": 23176,
+    "before": "JUTR",
+    "after": "smgpc::compat::jkr_r"
+  },
+  {
+    "root_start": 23181,
+    "root_end": 23188,
+    "before": "Console",
+    "after": ""
+  },
+  {
+    "root_start": 23196,
+    "root_end": 23199,
+    "before": "08x",
+    "after": "p"
+  },
+  {
+    "root_start": 23218,
+    "root_end": 23221,
+    "before": "08x",
+    "after": "p"
+  },
+  {
+    "root_start": 23223,
+    "root_end": 23226,
+    "before": "08x",
+    "after": "p"
+  },
+  {
+    "root_start": 23406,
+    "root_end": 23406,
+    "before": "",
+    "after": "(void*)"
+  },
+  {
+    "root_start": 23447,
+    "root_end": 23447,
+    "before": "",
+    "after": "(void*)"
+  },
+  {
+    "root_start": 23572,
+    "root_end": 23576,
+    "before": "JUTR",
+    "after": "smgpc::compat::jkr_r"
+  },
+  {
+    "root_start": 23581,
+    "root_end": 23588,
+    "before": "Console",
+    "after": ""
+  },
+  {
+    "root_start": 23643,
+    "root_end": 23647,
+    "before": "JUTR",
+    "after": "smgpc::compat::jkr_r"
+  },
+  {
+    "root_start": 23652,
+    "root_end": 23659,
+    "before": "Console",
+    "after": ""
+  },
+  {
+    "root_start": 23760,
+    "root_end": 23764,
+    "before": "JUTR",
+    "after": "smgpc::compat::jkr_r"
+  },
+  {
+    "root_start": 23769,
+    "root_end": 23776,
+    "before": "Console",
+    "after": ""
+  },
+  {
+    "root_start": 23784,
+    "root_end": 23787,
+    "before": "08x",
+    "after": "p"
+  },
+  {
+    "root_start": 23806,
+    "root_end": 23809,
+    "before": "08x",
+    "after": "p"
+  },
+  {
+    "root_start": 23811,
+    "root_end": 23814,
+    "before": "08x",
+    "after": "p"
+  },
+  {
+    "root_start": 23931,
+    "root_end": 23931,
+    "before": "",
+    "after": "(void*)"
+  },
+  {
+    "root_start": 23972,
+    "root_end": 23972,
+    "before": "",
+    "after": "(void*)"
+  },
+  {
+    "root_start": 24018,
+    "root_end": 24022,
+    "before": "JUTR",
+    "after": "smgpc::compat::jkr_r"
+  },
+  {
+    "root_start": 24027,
+    "root_end": 24034,
+    "before": "Console",
+    "after": ""
+  },
+  {
+    "root_start": 24039,
+    "root_end": 24040,
+    "before": "d",
+    "after": "u"
+  },
+  {
+    "root_start": 24044,
+    "root_end": 24045,
+    "before": "d",
+    "after": "u"
+  },
+  {
+    "root_start": 24071,
+    "root_end": 24072,
+    "before": "d",
+    "after": "u"
+  },
+  {
+    "root_start": 24076,
+    "root_end": 24077,
+    "before": "d",
+    "after": "u"
+  },
+  {
+    "root_start": 24366,
+    "root_end": 24370,
+    "before": "JUTR",
+    "after": "smgpc::compat::jkr_r"
+  },
+  {
+    "root_start": 24375,
+    "root_end": 24382,
+    "before": "Console",
+    "after": ""
+  },
+  {
+    "root_start": 24447,
+    "root_end": 24451,
+    "before": "JUTR",
+    "after": "smgpc::compat::jkr_r"
+  },
+  {
+    "root_start": 24456,
+    "root_end": 24463,
+    "before": "Console",
+    "after": ""
+  },
+  {
+    "root_start": 24528,
+    "root_end": 24532,
+    "before": "JUTR",
+    "after": "smgpc::compat::jkr_r"
+  },
+  {
+    "root_start": 24537,
+    "root_end": 24544,
+    "before": "Console",
+    "after": ""
+  },
+  {
+    "root_start": 24671,
+    "root_end": 24681,
+    "before": "0xffffffff",
+    "after": "UINTPTR_MAX"
+  },
+  {
+    "root_start": 24949,
+    "root_end": 24959,
+    "before": "0xffffffff",
+    "after": "UINTPTR_MAX"
+  },
+  {
+    "root_start": 25057,
+    "root_end": 25061,
+    "before": "JUTR",
+    "after": "smgpc::compat::jkr_r"
+  },
+  {
+    "root_start": 25066,
+    "root_end": 25073,
+    "before": "Console",
+    "after": ""
+  },
+  {
+    "root_start": 25084,
+    "root_end": 25087,
+    "before": "08x",
+    "after": "p"
+  },
+  {
+    "root_start": 25174,
+    "root_end": 25174,
+    "before": "",
+    "after": "(void*)"
+  },
+  {
+    "root_start": 25230,
+    "root_end": 25234,
+    "before": "JUTR",
+    "after": "smgpc::compat::jkr_r"
+  },
+  {
+    "root_start": 25239,
+    "root_end": 25246,
+    "before": "Console",
+    "after": ""
+  },
+  {
+    "root_start": 25254,
+    "root_end": 25257,
+    "before": "08x",
+    "after": "p"
+  },
+  {
+    "root_start": 25276,
+    "root_end": 25279,
+    "before": "08x",
+    "after": "p"
+  },
+  {
+    "root_start": 25281,
+    "root_end": 25284,
+    "before": "08x",
+    "after": "p"
+  },
+  {
+    "root_start": 25441,
+    "root_end": 25441,
+    "before": "",
+    "after": "(void*)"
+  },
+  {
+    "root_start": 25455,
+    "root_end": 25455,
+    "before": "",
+    "after": "(void*)"
+  },
+  {
+    "root_start": 25624,
+    "root_end": 25628,
+    "before": "JUTR",
+    "after": "smgpc::compat::jkr_r"
+  },
+  {
+    "root_start": 25633,
+    "root_end": 25640,
+    "before": "Console",
+    "after": ""
+  },
+  {
+    "root_start": 25705,
+    "root_end": 25709,
+    "before": "JUTR",
+    "after": "smgpc::compat::jkr_r"
+  },
+  {
+    "root_start": 25714,
+    "root_end": 25721,
+    "before": "Console",
+    "after": ""
+  },
+  {
+    "root_start": 25822,
+    "root_end": 25826,
+    "before": "JUTR",
+    "after": "smgpc::compat::jkr_r"
+  },
+  {
+    "root_start": 25831,
+    "root_end": 25838,
+    "before": "Console",
+    "after": ""
+  },
+  {
+    "root_start": 25846,
+    "root_end": 25849,
+    "before": "08x",
+    "after": "p"
+  },
+  {
+    "root_start": 25868,
+    "root_end": 25871,
+    "before": "08x",
+    "after": "p"
+  },
+  {
+    "root_start": 25873,
+    "root_end": 25876,
+    "before": "08x",
+    "after": "p"
+  },
+  {
+    "root_start": 25993,
+    "root_end": 25993,
+    "before": "",
+    "after": "(void*)"
+  },
+  {
+    "root_start": 26034,
+    "root_end": 26034,
+    "before": "",
+    "after": "(void*)"
+  },
+  {
+    "root_start": 26080,
+    "root_end": 26084,
+    "before": "JUTR",
+    "after": "smgpc::compat::jkr_r"
+  },
+  {
+    "root_start": 26089,
+    "root_end": 26096,
+    "before": "Console",
+    "after": ""
+  },
+  {
+    "root_start": 26101,
+    "root_end": 26102,
+    "before": "d",
+    "after": "u"
+  },
+  {
+    "root_start": 26106,
+    "root_end": 26107,
+    "before": "d",
+    "after": "u"
+  },
+  {
+    "root_start": 26133,
+    "root_end": 26134,
+    "before": "d",
+    "after": "u"
+  },
+  {
+    "root_start": 26138,
+    "root_end": 26139,
+    "before": "d",
+    "after": "u"
+  }
+]

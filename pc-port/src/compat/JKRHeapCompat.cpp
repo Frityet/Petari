@@ -1,6 +1,17 @@
 #include "JSystem/JKernel/JKRHeap.hpp"
-#include "JSystem/JUtility/JUTException.hpp"
-#include <revolution/os/OSBootInfo.h>
+#include "compat/JkrDiagnostics.hpp"
+#include "compat/JkrAllocationProvenance.hpp"
+#include <cstdint>
+
+namespace {
+    // The original virtual methods also lock. Keep that recursive mutex held
+    // until native provenance has made the same allocation transition visible.
+    struct HeapLock {
+        JKRHeap& heap;
+        explicit HeapLock(JKRHeap& owner) : heap(owner) { heap.lock(); }
+        ~HeapLock() { heap.unlock(); }
+    };
+}
 
 JKRHeap* JKRHeap::sCurrentHeap;
 JKRHeap* JKRHeap::sRootHeap;
@@ -53,7 +64,10 @@ JKRHeap::JKRHeap(void* data, u32 size, JKRHeap* parent, bool error) : JKRDispose
 }
 
 JKRHeap::~JKRHeap() {
-    mChildTree.getParent()->removeChild(&mChildTree);
+    smgpc::compat::detail::retire_jkr_heap_allocations(this);
+    // Retail keeps its parentless root for process lifetime. A native runtime
+    // can release its host arena after all children and resources are gone.
+    if (auto* parent = mChildTree.getParent()) parent->removeChild(&mChildTree);
     JSUTree< JKRHeap >* nextRootHeap = sRootHeap->mChildTree.getFirstChild();
 
     if (sCurrentHeap == this)
@@ -63,36 +77,7 @@ JKRHeap::~JKRHeap() {
         sSystemHeap = !nextRootHeap ? sRootHeap : nextRootHeap->getObject();
 }
 
-bool JKRHeap::initArena(char** memory, u32* size, int maxHeaps) {
-    void *ramStart, *ramEnd, *arenaStart;
-
-    void* arenaLo = OSGetArenaLo();
-    void* arenaHi = OSGetArenaHi();
-
-    OSReport("original arenaLo = %p arenaHi = %p\n", arenaLo, arenaHi);
-
-    if (arenaLo == arenaHi) {
-        return false;
-    }
-
-    arenaStart = OSInitAlloc(arenaLo, arenaHi, maxHeaps);
-    OSBootInfo* code = (OSBootInfo*)OSPhysicalToCached(0);
-    ramStart = (void*)(((u32)arenaStart + 31) & 0xFFFFFFE0);
-    ramEnd = (void*)((u32)arenaHi & 0xFFFFFFE0);
-
-    JKRHeap::mCodeStart = code;
-    JKRHeap::mCodeEnd = ramStart;
-    JKRHeap::mUserRamStart = ramStart;
-    JKRHeap::mUserRamEnd = ramEnd;
-    JKRHeap::mMemorySize = code->memorySize;
-
-    OSSetArenaLo(ramEnd);
-    OSSetArenaHi(ramEnd);
-
-    *memory = (char*)ramStart;
-    *size = (u32)ramEnd - (u32)ramStart;
-    return true;
-}
+// Wii boot-arena setup is not used by the explicit native JkrHeapRuntime.
 
 JKRHeap* JKRHeap::becomeSystemHeap() {
     JKRHeap* sys = sSystemHeap;
@@ -123,7 +108,10 @@ void* JKRHeap::alloc(u32 size, int align, JKRHeap* pHeap) {
 }
 
 void* JKRHeap::alloc(u32 size, int align) {
-    return do_alloc(size, align);
+    HeapLock lock(*this);
+    void* memory = do_alloc(size, align);
+    smgpc::compat::detail::record_jkr_allocation(memory, this, align);
+    return memory;
 }
 
 void JKRHeap::free(void* pData, JKRHeap* pHeap) {
@@ -135,10 +123,12 @@ void JKRHeap::free(void* pData, JKRHeap* pHeap) {
         }
     }
 
+    smgpc::compat::detail::forget_jkr_allocation(pData);
     pHeap->do_free(pData);
 }
 
 void JKRHeap::free(void* pData) {
+    smgpc::compat::detail::forget_jkr_allocation(pData);
     do_free(pData);
 }
 
@@ -149,11 +139,15 @@ void JKRHeap::callAllDisposer() {
 }
 
 void JKRHeap::freeAll() {
+    HeapLock lock(*this);
     do_freeAll();
+    smgpc::compat::detail::retire_jkr_heap_allocations(this);
 }
 
 void JKRHeap::freeTail() {
+    HeapLock lock(*this);
     do_freeTail();
+    smgpc::compat::detail::retire_jkr_heap_allocations(this, true);
 }
 
 s32 JKRHeap::resize(void* pData, u32 size) {
@@ -227,7 +221,7 @@ JKRHeap* JKRHeap::findAllHeap(void* ptr) const {
     return nullptr;
 }
 
-void JKRHeap::dispose_subroutine(u32 start, u32 end) {
+void JKRHeap::dispose_subroutine(uintptr_t start, uintptr_t end) {
     JSUListIterator< JKRDisposer > last_it;
     JSUListIterator< JKRDisposer > next_it;
     JSUListIterator< JKRDisposer > it;
@@ -253,14 +247,14 @@ void JKRHeap::dispose_subroutine(u32 start, u32 end) {
 }
 
 bool JKRHeap::dispose(void* ptr, u32 size) {
-    u32 begin = (u32)ptr;
-    u32 end = (u32)ptr + size;
+    uintptr_t begin = (uintptr_t)ptr;
+    uintptr_t end = (uintptr_t)ptr + size;
     dispose_subroutine(begin, end);
     return false;
 }
 
 void JKRHeap::dispose(void* begin, void* end) {
-    dispose_subroutine((u32)begin, (u32)end);
+    dispose_subroutine((uintptr_t)begin, (uintptr_t)end);
 }
 
 void JKRHeap::dispose() {
@@ -287,7 +281,7 @@ void JKRHeap::copyMemory(void* pDst, void* pSrc, u32 size) {
 }
 
 void JKRDefaultMemoryErrorRoutine(void* pHeap, u32 size, int alignment) {
-    JUTException::panic_f(__FILE__, 0x355, "%s", "abort\n");
+    smgpc::compat::jkr_panic(__FILE__, 0x355, "%s", "abort\n");
 }
 
 JKRErrorHandler JKRHeap::setErrorHandler(JKRErrorHandler errorHandler) {
@@ -301,37 +295,7 @@ JKRErrorHandler JKRHeap::setErrorHandler(JKRErrorHandler errorHandler) {
     return prev;
 }
 
-void* operator new(u32 size) {
-    return JKRHeap::alloc(size, 4, nullptr);
-}
-
-void* operator new(u32 size, int align) {
-    return JKRHeap::alloc(size, align, nullptr);
-}
-
-void* operator new(u32 size, JKRHeap* pHeap, int align) {
-    return JKRHeap::alloc(size, align, pHeap);
-}
-
-void* operator new[](u32 size) {
-    return JKRHeap::alloc(size, 4, nullptr);
-}
-
-void* operator new[](u32 size, int align) {
-    return JKRHeap::alloc(size, align, nullptr);
-}
-
-void* operator new[](u32 size, JKRHeap* pHeap, int align) {
-    return JKRHeap::alloc(size, align, pHeap);
-}
-
-void operator delete(void* pData) {
-    JKRHeap::free(pData, nullptr);
-}
-
-void operator delete[](void* pData) {
-    JKRHeap::free(pData, nullptr);
-}
+// Native global allocation routing is supplied by MetrowerksAlignedNew.cpp.
 
 void JKRHeap::state_register(TState*, u32) const {
     return;

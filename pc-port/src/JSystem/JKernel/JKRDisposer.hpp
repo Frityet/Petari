@@ -1,10 +1,14 @@
 #pragma once
 
-// The host port does not emulate JKRHeap disposer-list ownership yet. Keep the
-// SDK ownership type present so original Game classes retain their inheritance
-// surface; unsupported heap registration remains absent.
+#include "JSystem/JSupport/JSUList.hpp"
+
+class JKRHeap;
+
 class JKRDisposer {
 public:
-    JKRDisposer() = default;
-    virtual ~JKRDisposer() = default;
+    JKRDisposer();
+    virtual ~JKRDisposer();
+
+    JKRHeap* mHeap;                // 0x4
+    JSULink< JKRDisposer > mLink;  // 0x8
 };

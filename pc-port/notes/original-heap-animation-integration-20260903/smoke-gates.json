@@ -1,0 +1,12 @@
+[
+  {
+    "scene": "title",
+    "exit_code": 0,
+    "max_frames": 600
+  },
+  {
+    "scene": "gateway",
+    "exit_code": 0,
+    "max_frames": 600
+  }
+]
