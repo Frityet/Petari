@@ -1,0 +1,190 @@
+#include "runtime/ConsoleNandImport.hpp"
+#include "runtime/SystemConfigService.hpp"
+#include "runtime/RuntimeServices.hpp"
+#include "resource/GameResourceRuntime.hpp"
+#include "compat/JkrAllocationDomain.hpp"
+#include <aurora/aurora.h>
+#include <aurora/sysconf.hpp>
+#include <array>
+#include <chrono>
+#include <filesystem>
+#include <fstream>
+#include <iostream>
+#include <stdexcept>
+#include <string>
+
+namespace aurora { extern AuroraConfig g_config; }
+namespace {
+    namespace fs = std::filesystem;
+    using Policy = smgpc::runtime::NandImportExisting;
+    void require(bool ok, const char* message) { if (!ok) throw std::runtime_error(message); }
+    struct Directory {
+        fs::path path;
+        Directory() {
+            const auto seed = std::chrono::steady_clock::now().time_since_epoch().count();
+            for (unsigned attempt = 0; attempt < 1000; ++attempt) {
+                auto candidate = fs::temp_directory_path() /
+                    ("smg-console-nand-" + std::to_string(seed) + "-" + std::to_string(attempt));
+                if (fs::create_directory(candidate)) { path = std::move(candidate); return; }
+            }
+            throw std::runtime_error("Cannot create actual temporary console directory");
+        }
+        ~Directory() { std::error_code error; fs::remove_all(path, error); }
+    };
+    void file(const fs::path& path, std::span<const u8> bytes) {
+        fs::create_directories(path.parent_path());
+        std::ofstream output(path, std::ios::binary);
+        output.write(reinterpret_cast<const char*>(bytes.data()), bytes.size());
+        require(bool(output), "write complete actual fixture file");
+    }
+    std::array<u8, 256> product() {
+        constexpr std::string_view text = "AREA=KOR\r\nGAME=KR\r\n";
+        std::array<u8, 256> bytes{};
+        u32 seed = 0x73B5DBFA;
+        for (std::size_t i = 0; i < text.size(); ++i) {
+            bytes[i] = u8(text[i]) ^ u8(seed);
+            require(bytes[i] != 0, "fixture avoids ambiguous cipher zero");
+            seed = (seed << 1) | (seed >> 31);
+        }
+        return bytes;
+    }
+    void import_and_sc(smgpc::resource::GameResourceRuntime& process) {
+        Directory directory;
+        aurora::SysConf doc;
+        doc.replace_integer("IPL.AR", aurora::SysConf::Type::Byte, 1);
+        doc.replace_integer("IPL.LNG", aurora::SysConf::Type::Byte, 9);
+        const auto config = doc.encode();
+        file(directory.path / "shared2/sys/SYSCONF", config);
+        file(directory.path / "title/00000001/00000002/data/setting.txt", product());
+        const std::array<u8, 2> alternate{0x12, 0x34};
+        file(directory.path / "other/SYSCONF", alternate);
+        const auto title = aurora::NandFileSystem::title_data_root();
+        const std::array<u8, 3> dump_save{1, 2, 3};
+        const std::array<u8, 2> current_save{7, 8};
+        file(directory.path / (title.substr(1) + "/GameData.bin"), dump_save);
+        aurora::NandFileSystem nand;
+        nand.write_file("GameData.bin", current_save, 0x12, 7);
+        auto domain = smgpc::compat::JkrAllocationDomain::create(process.host_heaps(), 4096);
+        smgpc::runtime::NandImportResult result;
+        {
+            smgpc::compat::JkrAllocationScope original(domain);
+            result = smgpc::runtime::import_console_nand_directory(nand, directory.path, Policy::Preserve);
+        }
+        domain.reset();
+        require(result.imported_files == 3 && result.preserved_files == 1 &&
+                    result.imported_bytes == config.size() + product().size() + alternate.size(),
+                "import report reflects actual files while preserving existing title save");
+        require(nand.read_file("GameData.bin") == std::vector<u8>(current_save.begin(), current_save.end()),
+                "existing relative title-save mapping and contents remain authoritative");
+        require(nand.read_file("/shared2/sys/SYSCONF") == config &&
+                    nand.read_file("/other/SYSCONF") == std::vector<u8>(alternate.begin(), alternate.end()),
+                "absolute console paths retain distinct same-basename resources after Game heap retirement");
+        require(!nand.exists(title + "/shared2/sys/SYSCONF"), "console resources are not nested under title save data");
+        {
+            smgpc::runtime::SystemConfigService settings(nand);
+            require(SCGetAspectRatio() == 1 && SCGetLanguage() == 9 && SCGetProductArea() == 6 && SCGetProductGameRegion() == 4,
+                    "actual imported bytes feed original SDK config and encrypted product accessors");
+        }
+        result = smgpc::runtime::import_console_nand_directory(nand, directory.path, Policy::Replace);
+        require(result.imported_files == 4 && result.preserved_files == 0 &&
+                    nand.read_file("GameData.bin") == std::vector<u8>(dump_save.begin(), dump_save.end()),
+                "explicit Replace imports an actual refreshed snapshot");
+        const auto metadata = nand.metadata("GameData.bin");
+        require(metadata && metadata->permission == 0x12 && metadata->attribute == 7,
+                "existing real NAND metadata survives a byte-only dump refresh");
+    }
+    void failures() {
+        Directory directory;
+        const std::array<u8, 2> old{4, 5};
+        const std::array<u8, 3> source{1, 2, 3};
+        aurora::NandFileSystem nand;
+        nand.write_file("/kept", old);
+        file(directory.path / "candidate", source);
+        fs::create_symlink(directory.path / "candidate", directory.path / "unsupported-link");
+        auto trace_size = nand.trace().size();
+        bool rejected = false;
+        try { (void)smgpc::runtime::import_console_nand_directory(nand, directory.path, Policy::Replace); }
+        catch (const std::invalid_argument&) { rejected = true; }
+        require(rejected && nand.trace().size() == trace_size && !nand.exists("/candidate") &&
+                    nand.read_file("/kept") == std::vector<u8>(old.begin(), old.end()),
+                "unsupported host symlink rejects complete import without partial NAND mutation");
+        fs::remove(directory.path / "unsupported-link");
+        file(directory.path / "a/b", source);
+        file(directory.path / "a\\b", source);
+        trace_size = nand.trace().size();
+        rejected = false;
+        try { (void)smgpc::runtime::import_console_nand_directory(nand, directory.path, Policy::Replace); }
+        catch (const std::invalid_argument&) { rejected = true; }
+        require(rejected && nand.trace().size() == trace_size && !nand.exists("/candidate"),
+                "NAND-normalized path collision rejects ambiguous host data atomically");
+        rejected = false;
+        try { (void)smgpc::runtime::import_console_nand_directory(nand, directory.path / "candidate", Policy::Preserve); }
+        catch (const std::invalid_argument&) { rejected = true; }
+        require(rejected, "a console root must be a directory");
+    }
+    void title_reload() {
+        Directory directory;
+        smgpc::runtime::SaveDataService saves;
+        auto& nand = saves.nand();
+        const std::array<u8, 2> old{3, 4};
+        const std::array<u8, 3> fresh{8, 9, 10};
+        const auto title = aurora::NandFileSystem::title_data_root();
+        nand.write_file("old.bin", old);
+        nand.write_file("nested/old.bin", old);
+        nand.write_file("/shared2/sys/SYSCONF", old, 0x12, 3);
+        nand.write_file("/shared2/menu/FaceLib/RFL_DB.dat", old);
+        nand.write_file("/title/00010000/OTHER/data/save.bin", old);
+        nand.write_file(title + "-sibling/keep.bin", old);
+        nand.write_file(title + "2/keep.bin", old);
+        file(directory.path / "nested/current.bin", fresh);
+        saves.set_host_directory(directory.path);
+        require(!nand.exists("old.bin") && !nand.exists("nested/old.bin") &&
+                    nand.read_file("nested/current.bin") == std::vector<u8>(fresh.begin(), fresh.end()) &&
+                    saves.read_file("nested/current.bin") == std::vector<u8>(fresh.begin(), fresh.end()),
+                "actual title save reload replaces its own root and preserves relative file mapping");
+        for (const auto& path : {std::string("/shared2/sys/SYSCONF"), std::string("/shared2/menu/FaceLib/RFL_DB.dat"),
+                                std::string("/title/00010000/OTHER/data/save.bin"), title + "-sibling/keep.bin", title + "2/keep.bin"})
+            require(nand.read_file(path) == std::vector<u8>(old.begin(), old.end()),
+                    "title reload preserves shared files, other title files and non-descendant prefix siblings");
+        const auto metadata = nand.metadata("/shared2/sys/SYSCONF");
+        require(metadata && metadata->permission == 0x12 && metadata->attribute == 3,
+                "title reload preserves console file metadata");
+        require(nand.erase_subtree("/title/00010000/OTHER/./data/") == 1 &&
+                    !nand.exists("/title/00010000/OTHER/data/save.bin") && nand.exists("nested/current.bin"),
+                "subtree erase normalizes paths and preserves unrelated roots");
+        nand.write_file("/only-prefix-sibling", old);
+        nand.write_file("/only/subdir/file", old);
+        nand.write_file("/only", old);
+        require(nand.erase_subtree("/only") == 2 && nand.exists("/only-prefix-sibling"),
+                "subtree erase handles exact root and descendants despite lexically earlier sibling names");
+        require(nand.erase_subtree("/absent") == 0, "absent subtree reports no removed files");
+        require(nand.erase_subtree("/") == 6 && !nand.exists("nested/current.bin") && !nand.exists("/shared2/sys/SYSCONF"),
+                "root subtree erase removes every actual file without changing explicit clear API");
+        nand.write_file("/clear", fresh);
+        nand.clear();
+        require(!nand.exists("/clear") && nand.trace().empty(), "explicit full clear retains full map and trace reset semantics");
+    }
+    void empty_and_opaque() {
+        Directory directory;
+        aurora::NandFileSystem nand;
+        auto result = smgpc::runtime::import_console_nand_directory(nand, directory.path, Policy::Preserve);
+        require(result.imported_files == 0 && !nand.exists("/shared2/sys/SYSCONF"), "empty root does not synthesize system files");
+        file(directory.path / "opaque/empty", {});
+        const std::array<u8, 5> raw{0, 0xFF, 1, 0x80, 0};
+        file(directory.path / "opaque/binary", raw);
+        result = smgpc::runtime::import_console_nand_directory(nand, directory.path, Policy::Preserve);
+        require(result.imported_files == 2 && result.imported_bytes == 5 && nand.read_file("/opaque/empty")->empty() &&
+                    nand.read_file("/opaque/binary") == std::vector<u8>(raw.begin(), raw.end()),
+                "import preserves zero-length files and unrecognized binary payloads without parsing/filtering");
+    }
+}
+int main() {
+    try {
+        aurora::g_config.mem1Size = 24U * 1024U * 1024U;
+        smgpc::resource::GameResourceRuntime process;
+        import_and_sc(process); std::cout << "PASS console paths, title preservation, actual SC consumption and heap lifetime\n";
+        failures(); std::cout << "PASS unsupported/colliding input rejects without destination mutation\n";
+        title_reload(); std::cout << "PASS actual title reload preserves shared console and cross-title files\n";
+        empty_and_opaque(); std::cout << "PASS empty roots and exact opaque file ownership\n";
+    } catch (const std::exception& error) { std::cerr << "FAIL " << error.what() << '\n'; return 1; }
+}

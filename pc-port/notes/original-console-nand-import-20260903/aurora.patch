@@ -1,0 +1,40 @@
+--- a/include/aurora/nand.hpp
++++ b/include/aurora/nand.hpp
+@@ -59,6 +59,8 @@
+   [[nodiscard]] std::optional<std::vector<std::uint8_t>> read_file(std::string_view path) const;
+   [[nodiscard]] bool exists(std::string_view path) const;
+   bool erase(std::string_view path);
++  // Remove an exact normalized path and its descendants, leaving sibling roots intact.
++  std::size_t erase_subtree(std::string_view path);
+   [[nodiscard]] s32 rename(std::string_view source_path, std::string_view destination_path);
+   [[nodiscard]] NandCheckResult check(u32 requested_blocks, u32 requested_inodes);
+   [[nodiscard]] std::optional<NandFileMetadata> metadata(std::string_view path) const;
+--- a/lib/nand.cpp
++++ b/lib/nand.cpp
+@@ -111,6 +111,26 @@
+   return erased;
+ }
+ 
++std::size_t NandFileSystem::erase_subtree(std::string_view path) {
++  const auto normalized = normalize_path(path);
++  const auto prefix = normalized == "/" ? normalized : normalized + "/";
++  auto removed = std::size_t{};
++  for (auto it = m_files.begin(); it != m_files.end();) {
++    if (it->first != normalized && !it->first.starts_with(prefix)) {
++      ++it;
++      continue;
++    }
++    auto trace = NandOperationTrace{};
++    trace.kind = NandOperationKind::Delete;
++    trace.path = it->first;
++    trace.result = NAND_RESULT_OK;
++    push_trace(std::move(trace));
++    it = m_files.erase(it);
++    ++removed;
++  }
++  return removed;
++}
++
+ s32 NandFileSystem::rename(std::string_view source_path, std::string_view destination_path) {
+   const auto source = normalize_path(source_path);
+   const auto destination = normalize_path(destination_path);

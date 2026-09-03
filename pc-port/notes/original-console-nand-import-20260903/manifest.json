@@ -1,0 +1,42 @@
+{
+  "native": [
+    {
+      "path": "pc-port/src/runtime/ConsoleNandImport.hpp",
+      "staged": "build/original-console-nand-import-20260903/staged/runtime/ConsoleNandImport.hpp",
+      "baseline_sha256": null,
+      "sha256": "603fb3a278669fc72731cb61f34a5edd8cab89268a1a06771fe3a642d199e857"
+    },
+    {
+      "path": "pc-port/src/runtime/ConsoleNandImport.cpp",
+      "staged": "build/original-console-nand-import-20260903/staged/runtime/ConsoleNandImport.cpp",
+      "baseline_sha256": null,
+      "sha256": "09938d909c78a6fbba4140b817b4744829ac64469fdc978420ffb7b26b83fee3"
+    },
+    {
+      "path": "pc-port/src/runtime/RuntimeServices.cpp",
+      "staged": "build/original-console-nand-import-20260903/staged/runtime/RuntimeServices.cpp",
+      "baseline_sha256": "aadc0098fe6165b897e20754d3e5e63ce9b15fccd01fc8fef61562dc1032a684",
+      "sha256": "cf5310fac278a077d0f0d3ac8ab166e8db880af8a97588fab0e0db820cc63d79"
+    },
+    {
+      "path": "pc-port/tests/ConsoleNandImportTests.cpp",
+      "staged": "build/original-console-nand-import-20260903/ConsoleNandImportTests.cpp",
+      "baseline_sha256": null,
+      "sha256": "df3aa767af6c6b0bb0c86081b3a99cc20dc3537751b7803d21d9a233c5309c6f"
+    }
+  ],
+  "aurora": [
+    {
+      "path": "include/aurora/nand.hpp",
+      "staged": "build/original-console-nand-import-20260903/staged-aurora/include/aurora/nand.hpp",
+      "baseline_sha256": "1f03d36fbb5c13f5b3d2f6eb2a30c77bc5d06c073acd64ee6da57037568e4ba3",
+      "sha256": "a290e332d84631e251c0821cf9ebf6d2f5f47c8f6d87413ae36784d34caf1f4e"
+    },
+    {
+      "path": "lib/nand.cpp",
+      "staged": "build/original-console-nand-import-20260903/staged-aurora/lib/nand.cpp",
+      "baseline_sha256": "44e56acd7b0839a4cd2840f723b7f48601f4e61eba67eca4ffda5ab6c19e9d27",
+      "sha256": "b127767be1c9db5c1afb47c251d204a696a947f0fbb55b8f859399c718df1979"
+    }
+  ]
+}

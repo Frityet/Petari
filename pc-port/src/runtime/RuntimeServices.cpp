@@ -4081,7 +4081,7 @@ namespace smgpc::runtime {
         }
 
         _files.clear();
-        _nand.clear();
+        _nand.erase_subtree(NandFileSystemService::title_data_root());
         _has_valid_game_data_container = false;
         for (const auto &entry : std::filesystem::recursive_directory_iterator(*_host_directory, error)) {
             if (error) {
