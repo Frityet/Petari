@@ -1549,6 +1549,11 @@ target("smg-pc-gravity-math-foundation-tests")
     })
 
 target("smg-pc-game-math-rotation-tests")
+    if is_plat("macosx", "iphoneos") then
+        add_ldflags("-Wl,-dead_strip", {force = true})
+    else
+        add_ldflags("-Wl,--gc-sections", {force = true})
+    end
     set_kind("binary")
     set_default(false)
     set_group("tests/aurora")

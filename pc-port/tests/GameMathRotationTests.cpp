@@ -339,6 +339,27 @@ namespace {
                        "the SDK matrix rotation must preserve in-place vector calls");
     }
 
+    void test_original_angle_boundaries() {
+        require(MR::normalizeAngleAbs(TWO_PI) == TWO_PI &&
+                    MR::normalizeAngleAbs(2.0F * TWO_PI) == TWO_PI,
+                "positive full turns retain the original inclusive upper endpoint");
+        require(MR::normalizeAngleAbs(-TWO_PI) == 0.0F &&
+                    std::signbit(MR::normalizeAngleAbs(-0.0F)),
+                "negative full turns and signed zero retain original wrapping semantics");
+        require(near(MR::blendAngle(0.25F, TWO_PI - 0.25F, 0.5F), TWO_PI),
+                "angle interpolation crosses the wrap along the short arc");
+        require(near(MR::blendAngle(0.5F, 1.5F, 0.25F), 0.75F),
+                "ordinary angle interpolation retains its requested weight");
+        require(near(MR::convergeRadian(1.0F, 1.125F, 0.25F), 1.125F),
+                "angle convergence must stop at its target without overshoot");
+        require(near(MR::convergeRadian(TWO_PI - 0.125F, 0.125F, 0.25F), 0.125F),
+                "angle convergence follows the target across a full turn");
+        TVec2f direction(3.0F, 4.0F);
+        MR::normalize(&direction);
+        require(near(direction.x, 0.6F) && near(direction.y, 0.8F),
+                "two-dimensional normalization uses the shared original vector path");
+    }
+
     void test_near_parallel_angle_table() {
         MR::initAcosTable();
         // 0.999 selects retail table entry 242, whose ratio is 12737/12750.
@@ -371,6 +392,7 @@ int main() {
         test_spherical_vector_blend();
         test_axis_rotation_snap_and_sign();
         test_near_parallel_angle_table();
+        test_original_angle_boundaries();
         std::cout << "game math rotation tests passed\n";
         return 0;
     } catch (const std::exception& exception) {

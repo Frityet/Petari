@@ -1,0 +1,7 @@
+{
+  "f32 normalizeAngleAbs(f32 angle)": "e744d9a2d0a35710390a5f21bad86b18ef5d7ee6306e6f5a8b614bceeb4b31f9",
+  "f32 convergeRadian(f32 angle, f32 target, f32 speed)": "cd41f3519945cd3a770a3856106a9acca5a7f842b2973a8ba3a0adbd27792fc1",
+  "bool isAngleBetween(f32 angle, f32 min, f32 max)": "62b502d93d8d60a9ec6c9318d908bd8ebbde3dad38c41e56852ec8f837b3e2bb",
+  "f32 blendAngle(f32 angleA, f32 angleB, f32 rate)": "3ed973a3d6f4c9656a26fa3d020d1e44f9c6cbae82688a9ec5a00305a32e53d8",
+  "void normalize(TVec2f* pVec)": "f66cdfcca0d0cb3edf7f4a49e509beba55d880c15cc5313951cd41de390a4dcf"
+}

@@ -50,6 +50,72 @@ f32 PSVECKillElement(const Vec* pSrc, const Vec* pKill, const Vec* pDst) {
 
 
 namespace MR {
+    void normalize(TVec2f* pVec) {
+        TVec3f temp(pVec->x, pVec->y, 0.0f);
+        normalize(&temp);
+        pVec->x = temp.x;
+        pVec->y = temp.y;
+    }
+
+    f32 blendAngle(f32 angleA, f32 angleB, f32 rate) {
+        // FIXME: float regswap
+        f32 a1_n = normalizeAngleAbs(angleA);
+        f32 a2_n = normalizeAngleAbs(angleB);
+
+        if (!isAngleBetween((a1_n + a2_n) / 2.0f, a1_n, a2_n)) {
+            if (a1_n < a2_n) {
+                a1_n += TWO_PI;
+            } else {
+                a2_n += TWO_PI;
+            }
+        }
+
+        return normalizeAngleAbs((1.0f - rate) * a1_n + rate * a2_n);
+    }
+
+    bool isAngleBetween(f32 angle, f32 min, f32 max) {
+        f32 a1_n = normalizeAngleAbs(angle);
+        f32 a2_n = normalizeAngleAbs(min);
+        f32 a3_n = normalizeAngleAbs(max);
+
+        if (a3_n > a2_n) {
+            f32 val = a3_n;
+            a3_n = a2_n;
+            a2_n = val;
+        }
+
+        bool res = a1_n >= a3_n && a1_n <= a2_n;
+
+        if (a2_n - a3_n > PI) {
+            res = !res;
+        }
+
+        return res;
+    }
+
+    f32 convergeRadian(f32 angle, f32 target, f32 speed) {
+        f32 convergeTarget = target;
+        if ((target + pi2()) - angle < pi()) {
+            convergeTarget = target + pi2();
+        } else if (angle - (target - pi2()) < pi()) {
+            convergeTarget = target - pi2();
+        }
+
+        if (angle < convergeTarget) {
+            angle += speed;
+            if (angle > convergeTarget) {
+                angle = convergeTarget;
+            }
+        } else {
+            angle -= speed;
+            if (angle < convergeTarget) {
+                angle = convergeTarget;
+            }
+        }
+
+        return repeat(angle, 0.0f, pi2());
+    }
+
     bool isNan(const TVec3f& vector) {
         return std::isnan(vector.x) || std::isnan(vector.y) || std::isnan(vector.z);
     }
@@ -98,11 +164,15 @@ namespace MR {
     }
 
     f32 normalizeAngleAbs(f32 angle) {
-        auto normalized = std::fmod(angle, 2.0F * std::numbers::pi_v<f32>);
-        if (normalized < 0.0F) {
-            normalized += 2.0F * std::numbers::pi_v<f32>;
+        while (true) {
+            if (angle < 0.0f) {
+                angle += TWO_PI;
+            } else if (angle > TWO_PI) {
+                angle -= TWO_PI;
+            } else {
+                return angle;
+            }
         }
-        return normalized;
     }
 
     f32 diffAngleAbs(const TVec3f& left, const TVec3f& right) {
