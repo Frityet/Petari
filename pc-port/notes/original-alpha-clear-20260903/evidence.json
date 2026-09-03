@@ -1,0 +1,830 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "source_sha256": "a5390cf46766a000cb9ee4c90d7383a6a82c100e8c5a76076754e2b3d81d4806",
+  "native_body_sha256": "758706c938c732b92be506b274b77371447f4590314204417f7c8bb392df4829",
+  "command": [
+    "build/tools/wibo",
+    "build/tools/sjiswrap.exe",
+    "build/compilers/GC/3.0a3/mwcceppc.exe",
+    "-nodefaults",
+    "-proc",
+    "gekko",
+    "-align",
+    "powerpc",
+    "-enum",
+    "int",
+    "-fp",
+    "hardware",
+    "-Cpp_exceptions",
+    "off",
+    "-O4,s",
+    "-inline",
+    "auto",
+    "-pragma",
+    "cats off",
+    "-pragma",
+    "warn_notinlined off",
+    "-maxerrors",
+    "1",
+    "-nosyspath",
+    "-RTTI",
+    "off",
+    "-str",
+    "reuse",
+    "-enc",
+    "SJIS",
+    "-sdata",
+    "4",
+    "-sdata2",
+    "4",
+    "-ipa",
+    "file",
+    "-sym",
+    "on",
+    "-i",
+    "include",
+    "-i",
+    "libs/JSystem/include",
+    "-i",
+    "libs/MSL_C++/include",
+    "-i",
+    "libs/MSL_C/include",
+    "-i",
+    "libs/MetroTRK/include",
+    "-i",
+    "libs/RVLFaceLib/include",
+    "-i",
+    "libs/RVL_SDK/include",
+    "-i",
+    "libs/Runtime/include",
+    "-i",
+    "libs/nw4r/include",
+    "-i",
+    "build/RMGK01/include",
+    "-DVERSION=0",
+    "-c",
+    "/Users/frityet/Projects/petari/src/Game/Util/DrawUtil.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/build/original-alpha-clear-20260903/DrawUtil.o"
+  ],
+  "functions": [
+    {
+      "name": "clearAlphaBuffer__2MRFUc",
+      "address": "0x803cc10c",
+      "bytes": 120,
+      "match_percent": 98.166664,
+      "same_direct_call_order": true,
+      "retail_references": [
+        {
+          "offset": "0xa",
+          "kind": 6,
+          "symbol": "lbl_8053EB40",
+          "addend": 0,
+          "value_hex": "4330000000000000"
+        },
+        {
+          "offset": "0xc",
+          "kind": 109,
+          "symbol": "@60329",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x1a",
+          "kind": 4,
+          "symbol": "lbl_8053EB40",
+          "addend": 0,
+          "value_hex": "4330000000000000"
+        },
+        {
+          "offset": "0x20",
+          "kind": 109,
+          "symbol": "sManager__8JUTVideo",
+          "addend": 0
+        },
+        {
+          "offset": "0x64",
+          "kind": 10,
+          "symbol": "clearAlphaBuffer__2MRFUcRCQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec2<f>",
+          "addend": 0
+        }
+      ],
+      "compiled_references": [
+        {
+          "offset": "0xa",
+          "kind": 6,
+          "symbol": "@9158",
+          "addend": 0,
+          "value_hex": "4330000000000000"
+        },
+        {
+          "offset": "0xc",
+          "kind": 109,
+          "symbol": "@9120",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x1a",
+          "kind": 4,
+          "symbol": "@9158",
+          "addend": 0,
+          "value_hex": "4330000000000000"
+        },
+        {
+          "offset": "0x20",
+          "kind": 109,
+          "symbol": "sManager__8JUTVideo",
+          "addend": 0
+        },
+        {
+          "offset": "0x64",
+          "kind": 10,
+          "symbol": "clearAlphaBuffer__2MRFUcRCQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec2<f>",
+          "addend": 0
+        }
+      ],
+      "retail_sha256": "9af529ba595f570c82b821f8ed9843d4054f377ca325a84115d62a6be3fa1894"
+    },
+    {
+      "name": "clearAlphaBuffer__2MRFUcRCQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec2<f>",
+      "address": "0x803cc184",
+      "bytes": 744,
+      "match_percent": 99.758064,
+      "same_direct_call_order": true,
+      "retail_references": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_27",
+          "addend": 0
+        },
+        {
+          "offset": "0x48",
+          "kind": 10,
+          "symbol": "getScreenHeight__2MRFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x50",
+          "kind": 10,
+          "symbol": "getFrameBufferWidth__2MRFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x5a",
+          "kind": 6,
+          "symbol": "lbl_8053EB38",
+          "addend": 0,
+          "value_hex": "4330000080000000"
+        },
+        {
+          "offset": "0x64",
+          "kind": 109,
+          "symbol": "@60329",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x6e",
+          "kind": 4,
+          "symbol": "lbl_8053EB38",
+          "addend": 0,
+          "value_hex": "4330000080000000"
+        },
+        {
+          "offset": "0x80",
+          "kind": 109,
+          "symbol": "@61471",
+          "addend": 0,
+          "value_hex": "bf800000"
+        },
+        {
+          "offset": "0x88",
+          "kind": 109,
+          "symbol": "@60328",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x90",
+          "kind": 10,
+          "symbol": "C_MTXOrtho",
+          "addend": 0
+        },
+        {
+          "offset": "0x9c",
+          "kind": 10,
+          "symbol": "GXSetProjection",
+          "addend": 0
+        },
+        {
+          "offset": "0xa4",
+          "kind": 10,
+          "symbol": "GXSetCurrentMtx",
+          "addend": 0
+        },
+        {
+          "offset": "0xac",
+          "kind": 10,
+          "symbol": "PSMTXIdentity",
+          "addend": 0
+        },
+        {
+          "offset": "0xb8",
+          "kind": 10,
+          "symbol": "GXLoadPosMtxImm",
+          "addend": 0
+        },
+        {
+          "offset": "0xbc",
+          "kind": 10,
+          "symbol": "GXClearVtxDesc",
+          "addend": 0
+        },
+        {
+          "offset": "0xc8",
+          "kind": 10,
+          "symbol": "GXSetVtxDesc",
+          "addend": 0
+        },
+        {
+          "offset": "0xe0",
+          "kind": 10,
+          "symbol": "GXSetVtxAttrFmt",
+          "addend": 0
+        },
+        {
+          "offset": "0xe8",
+          "kind": 10,
+          "symbol": "GXSetNumTexGens",
+          "addend": 0
+        },
+        {
+          "offset": "0xf0",
+          "kind": 10,
+          "symbol": "GXSetNumTevStages",
+          "addend": 0
+        },
+        {
+          "offset": "0xf8",
+          "kind": 10,
+          "symbol": "GXSetTevDirect",
+          "addend": 0
+        },
+        {
+          "offset": "0x104",
+          "kind": 10,
+          "symbol": "GXSetTevOp",
+          "addend": 0
+        },
+        {
+          "offset": "0x10c",
+          "kind": 10,
+          "symbol": "GXSetNumChans",
+          "addend": 0
+        },
+        {
+          "offset": "0x12c",
+          "kind": 10,
+          "symbol": "GXSetChanCtrl",
+          "addend": 0
+        },
+        {
+          "offset": "0x14c",
+          "kind": 10,
+          "symbol": "GXSetChanCtrl",
+          "addend": 0
+        },
+        {
+          "offset": "0x154",
+          "kind": 10,
+          "symbol": "GXSetCoPlanar",
+          "addend": 0
+        },
+        {
+          "offset": "0x15c",
+          "kind": 10,
+          "symbol": "GXSetClipMode",
+          "addend": 0
+        },
+        {
+          "offset": "0x164",
+          "kind": 10,
+          "symbol": "GXSetCullMode",
+          "addend": 0
+        },
+        {
+          "offset": "0x174",
+          "kind": 10,
+          "symbol": "GXSetZMode",
+          "addend": 0
+        },
+        {
+          "offset": "0x18c",
+          "kind": 10,
+          "symbol": "GXSetAlphaCompare",
+          "addend": 0
+        },
+        {
+          "offset": "0x1a0",
+          "kind": 10,
+          "symbol": "GXSetBlendMode",
+          "addend": 0
+        },
+        {
+          "offset": "0x1a8",
+          "kind": 10,
+          "symbol": "GXSetColorUpdate",
+          "addend": 0
+        },
+        {
+          "offset": "0x1b0",
+          "kind": 10,
+          "symbol": "GXSetAlphaUpdate",
+          "addend": 0
+        },
+        {
+          "offset": "0x1bc",
+          "kind": 10,
+          "symbol": "GXSetDstAlpha",
+          "addend": 0
+        },
+        {
+          "offset": "0x1cc",
+          "kind": 10,
+          "symbol": "GXBegin",
+          "addend": 0
+        },
+        {
+          "offset": "0x1d8",
+          "kind": 109,
+          "symbol": "@60329",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x1dc",
+          "kind": 10,
+          "symbol": "GXPosition3f32",
+          "addend": 0
+        },
+        {
+          "offset": "0x1e6",
+          "kind": 6,
+          "symbol": "lbl_8053EB40",
+          "addend": 0,
+          "value_hex": "4330000000000000"
+        },
+        {
+          "offset": "0x1ee",
+          "kind": 4,
+          "symbol": "lbl_8053EB40",
+          "addend": 0,
+          "value_hex": "4330000000000000"
+        },
+        {
+          "offset": "0x200",
+          "kind": 109,
+          "symbol": "@60329",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x208",
+          "kind": 10,
+          "symbol": "GXPosition3f32",
+          "addend": 0
+        },
+        {
+          "offset": "0x21a",
+          "kind": 4,
+          "symbol": "lbl_8053EB40",
+          "addend": 0,
+          "value_hex": "4330000000000000"
+        },
+        {
+          "offset": "0x238",
+          "kind": 109,
+          "symbol": "@60329",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x244",
+          "kind": 10,
+          "symbol": "GXPosition3f32",
+          "addend": 0
+        },
+        {
+          "offset": "0x250",
+          "kind": 109,
+          "symbol": "@60329",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x254",
+          "kind": 10,
+          "symbol": "GXPosition3f32",
+          "addend": 0
+        },
+        {
+          "offset": "0x266",
+          "kind": 4,
+          "symbol": "lbl_8053EB40",
+          "addend": 0,
+          "value_hex": "4330000000000000"
+        },
+        {
+          "offset": "0x284",
+          "kind": 109,
+          "symbol": "@60329",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x290",
+          "kind": 10,
+          "symbol": "GXPosition3f32",
+          "addend": 0
+        },
+        {
+          "offset": "0x29a",
+          "kind": 4,
+          "symbol": "lbl_8053EB40",
+          "addend": 0,
+          "value_hex": "4330000000000000"
+        },
+        {
+          "offset": "0x2b0",
+          "kind": 109,
+          "symbol": "@60329",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x2b8",
+          "kind": 10,
+          "symbol": "GXPosition3f32",
+          "addend": 0
+        },
+        {
+          "offset": "0x2c4",
+          "kind": 10,
+          "symbol": "GXSetDstAlpha",
+          "addend": 0
+        },
+        {
+          "offset": "0x2cc",
+          "kind": 10,
+          "symbol": "GXSetClipMode",
+          "addend": 0
+        },
+        {
+          "offset": "0x2d4",
+          "kind": 10,
+          "symbol": "_restgpr_27",
+          "addend": 0
+        }
+      ],
+      "compiled_references": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_27",
+          "addend": 0
+        },
+        {
+          "offset": "0x48",
+          "kind": 10,
+          "symbol": "getScreenHeight__2MRFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x50",
+          "kind": 10,
+          "symbol": "getFrameBufferWidth__2MRFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x5a",
+          "kind": 6,
+          "symbol": "@9124",
+          "addend": 0,
+          "value_hex": "4330000080000000"
+        },
+        {
+          "offset": "0x64",
+          "kind": 109,
+          "symbol": "@9120",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x6e",
+          "kind": 4,
+          "symbol": "@9124",
+          "addend": 0,
+          "value_hex": "4330000080000000"
+        },
+        {
+          "offset": "0x80",
+          "kind": 109,
+          "symbol": "@9176",
+          "addend": 0,
+          "value_hex": "bf800000"
+        },
+        {
+          "offset": "0x88",
+          "kind": 109,
+          "symbol": "@9129",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x90",
+          "kind": 10,
+          "symbol": "C_MTXOrtho",
+          "addend": 0
+        },
+        {
+          "offset": "0x9c",
+          "kind": 10,
+          "symbol": "GXSetProjection",
+          "addend": 0
+        },
+        {
+          "offset": "0xa4",
+          "kind": 10,
+          "symbol": "GXSetCurrentMtx",
+          "addend": 0
+        },
+        {
+          "offset": "0xac",
+          "kind": 10,
+          "symbol": "PSMTXIdentity",
+          "addend": 0
+        },
+        {
+          "offset": "0xb8",
+          "kind": 10,
+          "symbol": "GXLoadPosMtxImm",
+          "addend": 0
+        },
+        {
+          "offset": "0xbc",
+          "kind": 10,
+          "symbol": "GXClearVtxDesc",
+          "addend": 0
+        },
+        {
+          "offset": "0xc8",
+          "kind": 10,
+          "symbol": "GXSetVtxDesc",
+          "addend": 0
+        },
+        {
+          "offset": "0xe0",
+          "kind": 10,
+          "symbol": "GXSetVtxAttrFmt",
+          "addend": 0
+        },
+        {
+          "offset": "0xe8",
+          "kind": 10,
+          "symbol": "GXSetNumTexGens",
+          "addend": 0
+        },
+        {
+          "offset": "0xf0",
+          "kind": 10,
+          "symbol": "GXSetNumTevStages",
+          "addend": 0
+        },
+        {
+          "offset": "0xf8",
+          "kind": 10,
+          "symbol": "GXSetTevDirect",
+          "addend": 0
+        },
+        {
+          "offset": "0x104",
+          "kind": 10,
+          "symbol": "GXSetTevOp",
+          "addend": 0
+        },
+        {
+          "offset": "0x10c",
+          "kind": 10,
+          "symbol": "GXSetNumChans",
+          "addend": 0
+        },
+        {
+          "offset": "0x12c",
+          "kind": 10,
+          "symbol": "GXSetChanCtrl",
+          "addend": 0
+        },
+        {
+          "offset": "0x14c",
+          "kind": 10,
+          "symbol": "GXSetChanCtrl",
+          "addend": 0
+        },
+        {
+          "offset": "0x154",
+          "kind": 10,
+          "symbol": "GXSetCoPlanar",
+          "addend": 0
+        },
+        {
+          "offset": "0x15c",
+          "kind": 10,
+          "symbol": "GXSetClipMode",
+          "addend": 0
+        },
+        {
+          "offset": "0x164",
+          "kind": 10,
+          "symbol": "GXSetCullMode",
+          "addend": 0
+        },
+        {
+          "offset": "0x174",
+          "kind": 10,
+          "symbol": "GXSetZMode",
+          "addend": 0
+        },
+        {
+          "offset": "0x18c",
+          "kind": 10,
+          "symbol": "GXSetAlphaCompare",
+          "addend": 0
+        },
+        {
+          "offset": "0x1a0",
+          "kind": 10,
+          "symbol": "GXSetBlendMode",
+          "addend": 0
+        },
+        {
+          "offset": "0x1a8",
+          "kind": 10,
+          "symbol": "GXSetColorUpdate",
+          "addend": 0
+        },
+        {
+          "offset": "0x1b0",
+          "kind": 10,
+          "symbol": "GXSetAlphaUpdate",
+          "addend": 0
+        },
+        {
+          "offset": "0x1bc",
+          "kind": 10,
+          "symbol": "GXSetDstAlpha",
+          "addend": 0
+        },
+        {
+          "offset": "0x1cc",
+          "kind": 10,
+          "symbol": "GXBegin",
+          "addend": 0
+        },
+        {
+          "offset": "0x1d8",
+          "kind": 109,
+          "symbol": "@9120",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x1dc",
+          "kind": 10,
+          "symbol": "GXPosition3f32",
+          "addend": 0
+        },
+        {
+          "offset": "0x1e6",
+          "kind": 6,
+          "symbol": "@9158",
+          "addend": 0,
+          "value_hex": "4330000000000000"
+        },
+        {
+          "offset": "0x1ee",
+          "kind": 4,
+          "symbol": "@9158",
+          "addend": 0,
+          "value_hex": "4330000000000000"
+        },
+        {
+          "offset": "0x200",
+          "kind": 109,
+          "symbol": "@9120",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x208",
+          "kind": 10,
+          "symbol": "GXPosition3f32",
+          "addend": 0
+        },
+        {
+          "offset": "0x21a",
+          "kind": 4,
+          "symbol": "@9158",
+          "addend": 0,
+          "value_hex": "4330000000000000"
+        },
+        {
+          "offset": "0x238",
+          "kind": 109,
+          "symbol": "@9120",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x244",
+          "kind": 10,
+          "symbol": "GXPosition3f32",
+          "addend": 0
+        },
+        {
+          "offset": "0x250",
+          "kind": 109,
+          "symbol": "@9120",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x254",
+          "kind": 10,
+          "symbol": "GXPosition3f32",
+          "addend": 0
+        },
+        {
+          "offset": "0x266",
+          "kind": 4,
+          "symbol": "@9158",
+          "addend": 0,
+          "value_hex": "4330000000000000"
+        },
+        {
+          "offset": "0x284",
+          "kind": 109,
+          "symbol": "@9120",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x290",
+          "kind": 10,
+          "symbol": "GXPosition3f32",
+          "addend": 0
+        },
+        {
+          "offset": "0x29a",
+          "kind": 4,
+          "symbol": "@9158",
+          "addend": 0,
+          "value_hex": "4330000000000000"
+        },
+        {
+          "offset": "0x2b0",
+          "kind": 109,
+          "symbol": "@9120",
+          "addend": 0,
+          "value_hex": "00000000"
+        },
+        {
+          "offset": "0x2b8",
+          "kind": 10,
+          "symbol": "GXPosition3f32",
+          "addend": 0
+        },
+        {
+          "offset": "0x2c4",
+          "kind": 10,
+          "symbol": "GXSetDstAlpha",
+          "addend": 0
+        },
+        {
+          "offset": "0x2cc",
+          "kind": 10,
+          "symbol": "GXSetClipMode",
+          "addend": 0
+        },
+        {
+          "offset": "0x2d4",
+          "kind": 10,
+          "symbol": "_restgpr_27",
+          "addend": 0
+        }
+      ],
+      "retail_sha256": "49b8e6e8d6bd07361c0675cd52263f6c339f0c4c72ffdfdb37a5fa5982b291ae"
+    }
+  ]
+}

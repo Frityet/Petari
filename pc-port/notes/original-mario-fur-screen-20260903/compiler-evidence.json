@@ -1,0 +1,579 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "compiler_commands": [
+    [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/Game/Player/MarioActorSpecialDraw.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-mario-fur-screen-20260903/MarioActorSpecialDraw.o"
+    ],
+    [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/Game/Util/FurMulti.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-mario-fur-screen-20260903/FurMulti.o"
+    ],
+    [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/Game/Util/LiveActorUtil.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-mario-fur-screen-20260903/LiveActorUtil.o"
+    ]
+  ],
+  "source_sha256": {
+    "Game/Player/MarioActorSpecialDraw": "6875124bcd5e1cb7ad3594d80732834014dcb74d797b534f312841fee2680f88",
+    "Game/Util/FurMulti": "d7f13a9b5cdfae6fa34042b04b5200ac99cbf584fde89c4bddc86bebf519f168",
+    "Game/Util/LiveActorUtil": "cbb1b422492b37649b65702827d8cbda3321a82c6c21c75c765dfa36ef1770ba"
+  },
+  "functions": [
+    {
+      "symbol": "initScreenBox__10MarioActorFv",
+      "address": "0x802c1384",
+      "retail_bytes": 92,
+      "compiled_bytes": 92,
+      "objdiff_match_percent": 99.78261,
+      "all_normalized_instructions_identical": true,
+      "all_reference_targets_identical": true,
+      "references": [
+        {
+          "offset": "0x1c",
+          "kind": 10,
+          "target": "__nwa__FUli",
+          "addend": 0
+        },
+        {
+          "offset": "0x20",
+          "kind": 109,
+          "target": "00000000",
+          "addend": 0
+        }
+      ],
+      "dol_function_sha256": "3ac30f1e241b6c2dc3ed885f63aba90fea4212b84e57e95f241b274d12a0ab52"
+    },
+    {
+      "symbol": "hideBeeFur__10MarioActorFv",
+      "address": "0x802c1cf4",
+      "retail_bytes": 160,
+      "compiled_bytes": 160,
+      "objdiff_match_percent": 99.75,
+      "all_normalized_instructions_identical": true,
+      "all_reference_targets_identical": true,
+      "references": [
+        {
+          "offset": "0x18",
+          "kind": 10,
+          "target": "isPlayerModeBee__11MarioModuleCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x40",
+          "kind": 10,
+          "target": "offDraw__8FurMultiFUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x48",
+          "kind": 10,
+          "target": "getCarrySensor__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x58",
+          "kind": 10,
+          "target": "getCarrySensor__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x60",
+          "kind": 10,
+          "target": "hideModel__2MRFP9LiveActor",
+          "addend": 0
+        },
+        {
+          "offset": "0x68",
+          "kind": 10,
+          "target": "isPlayerModeInvincible__11MarioModuleCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x7a",
+          "kind": 6,
+          "target": "96b39347928600",
+          "addend": 0
+        },
+        {
+          "offset": "0x86",
+          "kind": 4,
+          "target": "96b39347928600",
+          "addend": 0
+        },
+        {
+          "offset": "0x88",
+          "kind": 10,
+          "target": "stopEffect__10MarioActorFPCc",
+          "addend": 0
+        }
+      ],
+      "dol_function_sha256": "13da6c862dd04c65dd6f29c789c8be9bc9a4e21fc1ee7b2206724f72adf70541"
+    },
+    {
+      "symbol": "showBeeFur__10MarioActorFv",
+      "address": "0x802c4264",
+      "retail_bytes": 180,
+      "compiled_bytes": 180,
+      "objdiff_match_percent": 99.55556,
+      "all_normalized_instructions_identical": true,
+      "all_reference_targets_identical": true,
+      "references": [
+        {
+          "offset": "0x18",
+          "kind": 10,
+          "target": "isPlayerModeBee__11MarioModuleCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x40",
+          "kind": 10,
+          "target": "onDraw__8FurMultiFUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x48",
+          "kind": 10,
+          "target": "getCarrySensor__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x58",
+          "kind": 10,
+          "target": "getCarrySensor__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x60",
+          "kind": 10,
+          "target": "showModel__2MRFP9LiveActor",
+          "addend": 0
+        },
+        {
+          "offset": "0x68",
+          "kind": 10,
+          "target": "isPlayerModeInvincible__11MarioModuleCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x78",
+          "kind": 10,
+          "target": "getJ3DModel__10MarioActorCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x7e",
+          "kind": 6,
+          "target": "466163653000",
+          "addend": 0
+        },
+        {
+          "offset": "0x82",
+          "kind": 4,
+          "target": "466163653000",
+          "addend": 0
+        },
+        {
+          "offset": "0x84",
+          "kind": 10,
+          "target": "showJoint__2MRFP8J3DModelPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x8e",
+          "kind": 6,
+          "target": "96b39347928600",
+          "addend": 0
+        },
+        {
+          "offset": "0x9a",
+          "kind": 4,
+          "target": "96b39347928600",
+          "addend": 0
+        },
+        {
+          "offset": "0x9c",
+          "kind": 10,
+          "target": "playEffect__10MarioActorFPCc",
+          "addend": 0
+        }
+      ],
+      "dol_function_sha256": "4963333e2ff9ddb0da2c59649e2dcbab782b379b336b87dda515ad4e43e9679e"
+    },
+    {
+      "symbol": "drawSphereMask__10MarioActorCFv",
+      "address": "0x802c3ca8",
+      "retail_bytes": 188,
+      "compiled_bytes": 188,
+      "objdiff_match_percent": 99.25532,
+      "all_normalized_instructions_identical": true,
+      "all_reference_targets_identical": true,
+      "references": [
+        {
+          "offset": "0x18",
+          "kind": 10,
+          "target": "isVisibleRecoveryWarpBubble__5MarioCFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x30",
+          "kind": 10,
+          "target": "setup__6TDDrawFUlUlUc",
+          "addend": 0
+        },
+        {
+          "offset": "0x34",
+          "kind": 109,
+          "target": "3f800000",
+          "addend": 0
+        },
+        {
+          "offset": "0x38",
+          "kind": 109,
+          "target": "3727c5ac",
+          "addend": 0
+        },
+        {
+          "offset": "0x3c",
+          "kind": 10,
+          "target": "GXSetZScaleOffset",
+          "addend": 0
+        },
+        {
+          "offset": "0x44",
+          "kind": 10,
+          "target": "GXSetCullMode",
+          "addend": 0
+        },
+        {
+          "offset": "0x54",
+          "kind": 10,
+          "target": "GXSetZMode",
+          "addend": 0
+        },
+        {
+          "offset": "0x68",
+          "kind": 10,
+          "target": "GXSetBlendMode",
+          "addend": 0
+        },
+        {
+          "offset": "0x6e",
+          "kind": 6,
+          "target": "5370696e653100",
+          "addend": 0
+        },
+        {
+          "offset": "0x76",
+          "kind": 4,
+          "target": "5370696e653100",
+          "addend": 0
+        },
+        {
+          "offset": "0x7c",
+          "kind": 10,
+          "target": "getRealPos__10MarioActorCFPCcPQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x88",
+          "kind": 10,
+          "target": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x8c",
+          "kind": 109,
+          "target": "43340000",
+          "addend": 0
+        },
+        {
+          "offset": "0x98",
+          "kind": 10,
+          "target": "drawSphere3D__6TDDrawFQ29JGeometry8TVec3<f>fUlUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x9c",
+          "kind": 109,
+          "target": "3f800000",
+          "addend": 0
+        },
+        {
+          "offset": "0xa0",
+          "kind": 109,
+          "target": "00000000",
+          "addend": 0
+        },
+        {
+          "offset": "0xa4",
+          "kind": 10,
+          "target": "GXSetZScaleOffset",
+          "addend": 0
+        }
+      ],
+      "dol_function_sha256": "c7e57c561ae6d52c271b4206ef6f059efa67c71f47d976f0923151f0be708ea6"
+    },
+    {
+      "symbol": "__ct__8FurMultiFP9LiveActorUl",
+      "address": "0x803d235c",
+      "retail_bytes": 164,
+      "compiled_bytes": 164,
+      "objdiff_match_percent": 100.0,
+      "all_normalized_instructions_identical": true,
+      "all_reference_targets_identical": true,
+      "references": [
+        {
+          "offset": "0x24",
+          "kind": 10,
+          "target": "getJ3DModel__2MRFPC9LiveActor",
+          "addend": 0
+        },
+        {
+          "offset": "0x34",
+          "kind": 10,
+          "target": "__nwa__FUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x40",
+          "kind": 10,
+          "target": "__nwa__FUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x4c",
+          "kind": 10,
+          "target": "__nwa__FUl",
+          "addend": 0
+        }
+      ],
+      "dol_function_sha256": "92d9f628f9719035a85ea7bee474c2b1ddee15e53cac07a9203ac15afd1d2a57"
+    },
+    {
+      "symbol": "offDraw__8FurMultiFUl",
+      "address": "0x803d2650",
+      "retail_bytes": 68,
+      "compiled_bytes": 68,
+      "objdiff_match_percent": 100.0,
+      "all_normalized_instructions_identical": true,
+      "all_reference_targets_identical": true,
+      "references": [],
+      "dol_function_sha256": "a3879fa026c9d7812e242b2a618a81bc30c91330722802601a11aa29ffa3a130"
+    },
+    {
+      "symbol": "onDraw__8FurMultiFUl",
+      "address": "0x803d2694",
+      "retail_bytes": 64,
+      "compiled_bytes": 64,
+      "objdiff_match_percent": 100.0,
+      "all_normalized_instructions_identical": true,
+      "all_reference_targets_identical": true,
+      "references": [],
+      "dol_function_sha256": "c70d078eefb8aa32bd4e780f135f0a0fee9295f2e6142bc20838ea97ed229d1e"
+    },
+    {
+      "symbol": "initFurPlayer__2MRFP9LiveActor",
+      "address": "0x803df7fc",
+      "retail_bytes": 8,
+      "compiled_bytes": 8,
+      "objdiff_match_percent": 100.0,
+      "all_normalized_instructions_identical": true,
+      "all_reference_targets_identical": true,
+      "references": [
+        {
+          "offset": "0x4",
+          "kind": 10,
+          "target": "initMultiFur__2MRFP9LiveActorl",
+          "addend": 0
+        }
+      ],
+      "dol_function_sha256": "830dc3853b8f0b03673752623845d2a5978e51618ccad132cc0fe8c24ce4bd16"
+    }
+  ],
+  "instruction_bytes_verified": 924,
+  "normalization": "Only relocation fields cleared; identical offsets, kinds, addends and resolved constant/string bytes or external symbol identities required. NOBITS reads as zeros."
+}

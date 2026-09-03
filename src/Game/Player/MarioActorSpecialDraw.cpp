@@ -1,6 +1,12 @@
 #include "Game/Player/DLchanger.hpp"
+#include "Game/Player/J3DModelX.hpp"
 #include "Game/Player/MarioActor.hpp"
 #include "Game/Player/MarioConst.hpp"
+#include "Game/Player/MarioParts.hpp"
+#include "Game/LiveActor/HitSensor.hpp"
+#include "Game/Util/DirectDraw.hpp"
+#include "Game/Util/FurMulti.hpp"
+#include "Game/Util/JointUtil.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
@@ -8,6 +14,7 @@
 #include "Game/Util/SchedulerUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
 #include <JSystem/JGeometry/TBox.hpp>
+#include <JSystem/JKernel/JKRHeap.hpp>
 #include <JSystem/JUtility/JUTTexture.hpp>
 #include <revolution/gd/GDBase.h>
 #include <revolution/gd/GDGeometry.h>
@@ -17,10 +24,12 @@
 #include <revolution/gx/GXEnum.h>
 #include <revolution/gx/GXFrameBuf.h>
 #include <revolution/gx/GXPixel.h>
+#include <revolution/gx/GXCull.h>
+#include <revolution/gx/GXTransform.h>
 #include <revolution/os/OSCache.h>
 
 void MarioActor::initScreenBox() {
-    //_B44 = new (32) u8[0x80000];
+    _B44 = new (32) u8[0x20000];
     mScreenBoxMin.y = 0.0f;
     mScreenBoxMin.x = 0.0f;
     mScreenBoxMax.y = 0.0f;
@@ -153,7 +162,19 @@ void MarioActor::calc1stPersonView() {
     }
 }
 
-// void MarioActor::hideBeeFur() {}
+void MarioActor::hideBeeFur() {
+    if (mMario->isPlayerModeBee()) {
+        _9E8->kill();
+        _9EC->offDraw(0xFFFFFFFF);
+    }
+    if (getCarrySensor()) {
+        MR::hideModel(getCarrySensor()->mHost);
+    }
+    if (mMario->isPlayerModeInvincible()) {
+        _A6E = 0;
+        stopEffect("無敵中");
+    }
+}
 
 void MarioActor::calcFogLighting() {
     Color8 fog(240, 16, 80, 0);
@@ -376,7 +397,19 @@ void MarioActor::drawLifeUp() const {
 
 // void MarioActor::drawSpinEffect() const {}
 
-// void MarioActor::drawSphereMask() const {}
+void MarioActor::drawSphereMask() const {
+    if (mMario->isVisibleRecoveryWarpBubble()) {
+        TDDraw::setup(0, 1, 0);
+        GXSetZScaleOffset(1.0f, 0.00001f);
+        GXSetCullMode(GX_CULL_FRONT);
+        GXSetZMode(GX_TRUE, GX_GREATER, GX_TRUE);
+        GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_ONE, GX_LO_NOOP);
+        TVec3f position;
+        getRealPos("Spine1", &position);
+        TDDraw::drawSphere3D(position, 180.0f, 0xFFFFFF30, 16);
+        GXSetZScaleOffset(1.0f, 0.0f);
+    }
+}
 
 // void MarioActor::initDarkMask() {}
 
@@ -384,7 +417,20 @@ void MarioActor::drawLifeUp() const {
 
 // bool MarioActor::drawDarkMask() const {}
 
-// void MarioActor::showBeeFur() {}
+void MarioActor::showBeeFur() {
+    if (mMario->isPlayerModeBee()) {
+        _9E8->appear();
+        _9EC->onDraw(0xFFFFFFFF);
+    }
+    if (getCarrySensor()) {
+        MR::showModel(getCarrySensor()->mHost);
+    }
+    if (mMario->isPlayerModeInvincible()) {
+        MR::showJoint(getJ3DModel(), "Face0");
+        _A6E = 2;
+        playEffect("無敵中");
+    }
+}
 
 DLholder* DLchanger::swap() {
     mCurrentBuffer = (mCurrentBuffer + 1) % mNumBuffers;

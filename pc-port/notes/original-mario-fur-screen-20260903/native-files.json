@@ -1,0 +1,10 @@
+[
+  "Game/Player/MarioActorSpecialDraw.cpp",
+  "Game/Util/FurMulti.cpp",
+  "Game/Util/FurMulti.hpp",
+  "Game/Util/FurCtrl.hpp",
+  "Game/Player/MarioActor.hpp",
+  "Game/Util/LiveActorUtil.hpp",
+  "Game/Util/LiveActorUtil.cpp",
+  "revolution/gx/GXTransform.h"
+]

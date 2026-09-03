@@ -1,0 +1,223 @@
+--- a/src/Game/Player/MarioActorSpecialDraw.cpp
++++ b/src/Game/Player/MarioActorSpecialDraw.cpp
+@@ -1,6 +1,12 @@
+ #include "Game/Player/DLchanger.hpp"
++#include "Game/Player/J3DModelX.hpp"
+ #include "Game/Player/MarioActor.hpp"
+ #include "Game/Player/MarioConst.hpp"
++#include "Game/Player/MarioParts.hpp"
++#include "Game/LiveActor/HitSensor.hpp"
++#include "Game/Util/DirectDraw.hpp"
++#include "Game/Util/FurMulti.hpp"
++#include "Game/Util/JointUtil.hpp"
+ #include "Game/Util/CameraUtil.hpp"
+ #include "Game/Util/LiveActorUtil.hpp"
+ #include "Game/Util/MathUtil.hpp"
+@@ -8,6 +14,7 @@
+ #include "Game/Util/SchedulerUtil.hpp"
+ #include "Game/Util/ScreenUtil.hpp"
+ #include <JSystem/JGeometry/TBox.hpp>
++#include <JSystem/JKernel/JKRHeap.hpp>
+ #include <JSystem/JUtility/JUTTexture.hpp>
+ #include <revolution/gd/GDBase.h>
+ #include <revolution/gd/GDGeometry.h>
+@@ -17,10 +24,12 @@
+ #include <revolution/gx/GXEnum.h>
+ #include <revolution/gx/GXFrameBuf.h>
+ #include <revolution/gx/GXPixel.h>
++#include <revolution/gx/GXCull.h>
++#include <revolution/gx/GXTransform.h>
+ #include <revolution/os/OSCache.h>
+ 
+ void MarioActor::initScreenBox() {
+-    //_B44 = new (32) u8[0x80000];
++    _B44 = new (32) u8[0x20000];
+     mScreenBoxMin.y = 0.0f;
+     mScreenBoxMin.x = 0.0f;
+     mScreenBoxMax.y = 0.0f;
+@@ -153,7 +162,19 @@
+     }
+ }
+ 
+-// void MarioActor::hideBeeFur() {}
++void MarioActor::hideBeeFur() {
++    if (mMario->isPlayerModeBee()) {
++        _9E8->kill();
++        _9EC->offDraw(0xFFFFFFFF);
++    }
++    if (getCarrySensor()) {
++        MR::hideModel(getCarrySensor()->mHost);
++    }
++    if (mMario->isPlayerModeInvincible()) {
++        _A6E = 0;
++        stopEffect("無敵中");
++    }
++}
+ 
+ void MarioActor::calcFogLighting() {
+     Color8 fog(240, 16, 80, 0);
+@@ -376,7 +397,19 @@
+ 
+ // void MarioActor::drawSpinEffect() const {}
+ 
+-// void MarioActor::drawSphereMask() const {}
++void MarioActor::drawSphereMask() const {
++    if (mMario->isVisibleRecoveryWarpBubble()) {
++        TDDraw::setup(0, 1, 0);
++        GXSetZScaleOffset(1.0f, 0.00001f);
++        GXSetCullMode(GX_CULL_FRONT);
++        GXSetZMode(GX_TRUE, GX_GREATER, GX_TRUE);
++        GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_ONE, GX_LO_NOOP);
++        TVec3f position;
++        getRealPos("Spine1", &position);
++        TDDraw::drawSphere3D(position, 180.0f, 0xFFFFFF30, 16);
++        GXSetZScaleOffset(1.0f, 0.0f);
++    }
++}
+ 
+ // void MarioActor::initDarkMask() {}
+ 
+@@ -384,7 +417,20 @@
+ 
+ // bool MarioActor::drawDarkMask() const {}
+ 
+-// void MarioActor::showBeeFur() {}
++void MarioActor::showBeeFur() {
++    if (mMario->isPlayerModeBee()) {
++        _9E8->appear();
++        _9EC->onDraw(0xFFFFFFFF);
++    }
++    if (getCarrySensor()) {
++        MR::showModel(getCarrySensor()->mHost);
++    }
++    if (mMario->isPlayerModeInvincible()) {
++        MR::showJoint(getJ3DModel(), "Face0");
++        _A6E = 2;
++        playEffect("無敵中");
++    }
++}
+ 
+ DLholder* DLchanger::swap() {
+     mCurrentBuffer = (mCurrentBuffer + 1) % mNumBuffers;
+--- a/include/Game/Player/MarioActor.hpp
++++ b/include/Game/Player/MarioActor.hpp
+@@ -12,6 +12,7 @@
+ class DrawAdaptor;
+ class FixedPosition;
+ class FootPrint;
++class FurMulti;
+ class HashSortTable;
+ class IceStep;
+ class FireMarioBall;
+@@ -777,7 +778,7 @@
+     /* 0x9D8 */ TVec3f _9D8;
+     /* 0x9E4 */ ModelHolder* _9E4;
+     /* 0x9E8 */ MarioParts* _9E8;
+-    /* 0x9EC */ LiveActor* _9EC;
++    /* 0x9EC */ FurMulti* _9EC;
+     /* 0x9F0 */ u8 _9F0;
+     /* 0x9F1 */ u8 mBeeWallWalk;
+     /* 0x9F2 */ u16 _9F2;
+--- a/include/Game/Util/FurMulti.hpp
++++ b/include/Game/Util/FurMulti.hpp
+@@ -1,7 +1,31 @@
+ #pragma once
+ 
+-#include "Game/LiveActor/LiveActor.hpp"
++#include <revolution/types.h>
++
++class FurCtrl;
++class J3DModel;
++class LiveActor;
++
++class FurMulti {
++public:
++    FurMulti(LiveActor*, u32);
++
++    void offDraw(u32);
++    void onDraw(u32);
++
++    u8 _0;
++    u8 _1;
++    u8 mLayerCount;
++    u8* _4;
++    u8* _8;
++    u32 _C;
++    u32 _10;
++    u32 _14;
++    LiveActor* mActor;
++    J3DModel* mModel;
++    FurCtrl** mFurCtrls;
++};
+ 
+ namespace MR {
+-    LiveActor* initMultiFur(LiveActor*, s32);
+-};  // namespace MR
++    FurMulti* initMultiFur(LiveActor*, s32);
++}  // namespace MR
+--- a/include/Game/Util/LiveActorUtil.hpp
++++ b/include/Game/Util/LiveActorUtil.hpp
+@@ -16,6 +16,7 @@
+ class CollisionPartsFilterBase;
+ class Flag;
+ class HitSensor;
++class FurMulti;
+ class LiveActor;
+ class LiveActorGroup;
+ class LodCtrl;
+@@ -371,7 +372,7 @@
+ 
+     void initFur(LiveActor*);
+     void initFurPlanet(LiveActor*);
+-    LiveActor* initFurPlayer(LiveActor*);
++    FurMulti* initFurPlayer(LiveActor*);
+ 
+     void initCollisionParts(LiveActor*, const char*, HitSensor*, MtxPtr);
+     void initCollisionPartsAutoEqualScale(LiveActor*, const char*, HitSensor*, MtxPtr);
+--- a/src/Game/Util/LiveActorUtil.cpp
++++ b/src/Game/Util/LiveActorUtil.cpp
+@@ -2247,7 +2247,7 @@
+         initMultiFur(pActor, 3);
+     }
+ 
+-    LiveActor* initFurPlayer(LiveActor* pActor) {
++    FurMulti* initFurPlayer(LiveActor* pActor) {
+         return initMultiFur(pActor, 0);
+     }
+ 
+--- a/src/Game/Util/FurMulti.cpp
++++ b/src/Game/Util/FurMulti.cpp
+@@ -0,0 +1,33 @@
++#include "Game/Util/FurMulti.hpp"
++#include "Game/Util/FurCtrl.hpp"
++#include "Game/Util/ModelUtil.hpp"
++
++FurMulti::FurMulti(LiveActor* actor, u32 count) {
++    mActor = actor;
++    mModel = MR::getJ3DModel(actor);
++    mLayerCount = count;
++    _4 = new u8[count];
++    _8 = new u8[count];
++    mFurCtrls = new FurCtrl*[count];
++    for (u32 i = 0; i < count; i++) {
++        _8[i] = 0xFF;
++    }
++    _0 = 0;
++    _1 = 1;
++}
++
++void FurMulti::offDraw(u32 mask) {
++    for (u32 i = 0; i < mLayerCount; i++) {
++        if (mask & (1 << i)) {
++            mFurCtrls[i]->_1C = 0;
++        }
++    }
++}
++
++void FurMulti::onDraw(u32 mask) {
++    for (u32 i = 0; i < mLayerCount; i++) {
++        if (mask & (1 << i)) {
++            mFurCtrls[i]->_1C = 1;
++        }
++    }
++}
