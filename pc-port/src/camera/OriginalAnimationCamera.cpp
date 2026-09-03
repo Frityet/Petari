@@ -25,13 +25,17 @@ namespace smgpc::camera {
 
     struct OriginalAnimationCamera::Impl {
         Impl(const CameraAnimation &animation, const StageCameraTargetState &initial_target,
-             float speed, const CameraPoseParam *manager_seed, CameraTargetObj *original_target = nullptr)
+             float speed, const CameraPoseParam *manager_seed, CameraTargetObj *original_target,
+             const TPos3f *manager_matrix_seed)
             : data(animation.native_data()), man("OriginalAnimationCameraMan"),
               camera("OriginalAnimationCamera"), man_pose(man.mPoseParam),
               camera_pose(camera.mPoseParam),
               linear_accessor(camera.mDataAccessor), key_accessor(camera.mKeyDataAccessor) {
             if (manager_seed != nullptr) {
                 man_pose->copyFrom(*manager_seed);
+            }
+            if (manager_matrix_seed != nullptr) {
+                man.mMatrix.set(*manager_matrix_seed);
             }
             camera.mCameraMan = &man;
             // loadBin and both original accessors only read this block. The
@@ -58,6 +62,7 @@ namespace smgpc::camera {
 
         NativeCameraAnimationData data;
         PublishedCameraTarget target;
+        CameraTargetObj *used_target = nullptr;
         CameraMan man;
         CameraAnim camera;
         // Original Game allocations use a stage arena. Retire those children
@@ -70,25 +75,28 @@ namespace smgpc::camera {
 
     OriginalAnimationCamera::OriginalAnimationCamera(
         const CameraAnimation &animation, const StageCameraTargetState &target,
-        float speed, const CameraPoseParam *manager_seed) {
+        float speed, const CameraPoseParam *manager_seed,
+        const TPos3f *manager_matrix_seed) {
         validate_speed(speed);
         validate_original_camera_target(target);
         if (animation.native_data().bytes().empty()) {
             throw std::invalid_argument("Original animation camera requires a decoded CANM or CKAN resource.");
         }
-        _impl = std::make_unique<Impl>(animation, target, speed, manager_seed);
+        _impl = std::make_unique<Impl>(animation, target, speed, manager_seed, nullptr, manager_matrix_seed);
     }
 
     OriginalAnimationCamera::~OriginalAnimationCamera() = default;
 
     OriginalAnimationCamera::OriginalAnimationCamera(
         const CameraAnimation &animation, CameraTargetObj &target,
-        float speed, const CameraPoseParam *manager_seed) {
+        float speed, const CameraPoseParam *manager_seed,
+        const TPos3f *manager_matrix_seed) {
         validate_speed(speed);
         if (animation.native_data().bytes().empty()) {
             throw std::invalid_argument("Original animation camera requires a decoded CANM or CKAN resource.");
         }
-        _impl = std::make_unique<Impl>(animation, StageCameraTargetState{}, speed, manager_seed, &target);
+        _impl = std::make_unique<Impl>(animation, StageCameraTargetState{}, speed, manager_seed,
+                                       &target, manager_matrix_seed);
     }
 
     CameraPose OriginalAnimationCamera::calc(const StageCameraTargetState &target) {
@@ -99,7 +107,9 @@ namespace smgpc::camera {
     CameraPose OriginalAnimationCamera::calc(CameraTargetObj &target) {
         const auto binding = smgpc::compat::ScopedCameraTargetBinding(
             _impl->camera, target, smgpc::compat::OriginalCameraMode::Event);
-        (void)_impl->camera.calc();
+        // CameraManEvent passes this return value to setUsedTarget. CANM
+        // still reads its selected target, but returns no view-correction target.
+        _impl->used_target = _impl->camera.calc();
         // The existing original helper uses the same finite-pose arithmetic
         // as CameraManEvent::setSafePose, including its 300-unit watch distance.
         CameraLocalUtil::calcSafePose(&_impl->man, &_impl->camera);
@@ -109,11 +119,15 @@ namespace smgpc::camera {
     CameraPose OriginalAnimationCamera::pose() const { return _impl->pose(); }
     const CameraPoseParam &OriginalAnimationCamera::pose_param() const { return *_impl->man_pose; }
 
+    const CameraTargetObj *OriginalAnimationCamera::target_object() const { return _impl->used_target; }
+    CameraMan &OriginalAnimationCamera::manager() { return _impl->man; }
+
     OriginalCameraViewFlags OriginalAnimationCamera::view_flags() const {
         return {
             .interpolation_off = _impl->camera.isInterpolationOff(),
             .collision_off = _impl->camera.isCollisionOff(),
             .correcting_position_off = _impl->camera.isCorrectingErpPositionOff(),
+            .zero_frame_move_off = _impl->camera.isZeroFrameMoveOff(),
         };
     }
     float OriginalAnimationCamera::current_frame() const { return _impl->camera.mCurrentFrame; }

@@ -1,0 +1,911 @@
+{
+  "verification": "All six retail methods (including generated destructor) and the full vtable are byte-identical after relocation.",
+  "source": "src/Game/Camera/OnlyCamera.cpp",
+  "source_sha256": "247cc62f78562e1cf84724711906e6865360350d8abe1c88afb90497ff3be91d",
+  "header": "include/Game/Camera/OnlyCamera.hpp",
+  "header_sha256": "24529a35ec8f939360f545c2d9241e5ba7bd26dec86cda1c2dcdb220f4df53c8",
+  "compiler": "GC/3.0a3, configure.py cflags_game, RMGK01, VERSION=0",
+  "compiler_sha256": "66553cf100ee7e1793f368a39be6218292cd19a7c8636f2f1493b572ad5eaec2",
+  "object_sha256": "9a91fa932577bf7a751e39a99f739da8ad8aee838fe454a44882b77da5200c93",
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "functions_and_vtable": [
+    {
+      "name": "__vt__10OnlyCamera",
+      "kind": "vtable",
+      "address": "0x80576bb8",
+      "size": "0x24",
+      "sha256": "47973046e09d35c847143a4f91fcaa1352141fbd013cd3b032e5bfb7e44fdc5c",
+      "relocations": [
+        {
+          "offset": "0x20",
+          "kind": 1,
+          "symbol": "calcViewAndEntry__7NameObjFv",
+          "target": "0x80261760"
+        },
+        {
+          "offset": "0x1c",
+          "kind": 1,
+          "symbol": "calcAnim__7NameObjFv",
+          "target": "0x8026175c"
+        },
+        {
+          "offset": "0x18",
+          "kind": 1,
+          "symbol": "draw__7NameObjCFv",
+          "target": "0x80261758"
+        },
+        {
+          "offset": "0x14",
+          "kind": 1,
+          "symbol": "movement__7NameObjFv",
+          "target": "0x80261754"
+        },
+        {
+          "offset": "0x10",
+          "kind": 1,
+          "symbol": "initAfterPlacement__7NameObjFv",
+          "target": "0x80261750"
+        },
+        {
+          "offset": "0xc",
+          "kind": 1,
+          "symbol": "init__7NameObjFRC12JMapInfoIter",
+          "target": "0x8026174c"
+        },
+        {
+          "offset": "0x8",
+          "kind": 1,
+          "symbol": "__dt__10OnlyCameraFv",
+          "target": "0x800b784c"
+        }
+      ],
+      "relocated_bytes_equal": true
+    },
+    {
+      "name": "__ct__10OnlyCameraFPCc",
+      "kind": "function",
+      "address": "0x800b70d8",
+      "size": "0x98",
+      "sha256": "58ebc3648fa1327975c6a0a79b78fed62f740728450cd3fb1ec3a0e1160b686c",
+      "relocations": [
+        {
+          "offset": "0x14",
+          "kind": 10,
+          "symbol": "__ct__7NameObjFPCc",
+          "target": "0x802616b4"
+        },
+        {
+          "offset": "0x1a",
+          "kind": 6,
+          "symbol": "__vt__10OnlyCamera",
+          "target": "0x80576bb8"
+        },
+        {
+          "offset": "0x22",
+          "kind": 4,
+          "symbol": "__vt__10OnlyCamera",
+          "target": "0x80576bb8"
+        },
+        {
+          "offset": "0x28",
+          "kind": 10,
+          "symbol": "__nw__FUl",
+          "target": "0x8040b458"
+        },
+        {
+          "offset": "0x34",
+          "kind": 10,
+          "symbol": "__ct__15CameraPoseParamFv",
+          "target": "0x800ab5bc"
+        },
+        {
+          "offset": "0x38",
+          "kind": 109,
+          "symbol": "@3356",
+          "target": "0x806b9bd4"
+        }
+      ],
+      "relocated_bytes_equal": true
+    },
+    {
+      "name": "calcPose__10OnlyCameraFP9CameraMan",
+      "kind": "function",
+      "address": "0x800b7170",
+      "size": "0x74",
+      "sha256": "9c96a7b0ddf49b6366201d0782940c752d0a9844d4baa304342af060581469aa",
+      "relocations": [
+        {
+          "offset": "0x48",
+          "kind": 10,
+          "symbol": "calcStartPose__10OnlyCameraFP9CameraMan",
+          "target": "0x800b71e4"
+        },
+        {
+          "offset": "0x5c",
+          "kind": 10,
+          "symbol": "calcSafePose__10OnlyCameraFP9CameraMan",
+          "target": "0x800b7434"
+        }
+      ],
+      "relocated_bytes_equal": true
+    },
+    {
+      "name": "calcStartPose__10OnlyCameraFP9CameraMan",
+      "kind": "function",
+      "address": "0x800b71e4",
+      "size": "0x250",
+      "sha256": "8806f74c022351cb946b4ec18ac8a8e7a63aba0f8e7beada464e382a1d8735cd",
+      "relocations": [
+        {
+          "offset": "0x20",
+          "kind": 10,
+          "symbol": "getPos__15CameraLocalUtilFPC9CameraMan",
+          "target": "0x800a2ac4"
+        },
+        {
+          "offset": "0x2c",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "target": "0x80018ef0"
+        },
+        {
+          "offset": "0x34",
+          "kind": 10,
+          "symbol": "getWatchPos__15CameraLocalUtilFPC9CameraMan",
+          "target": "0x800a2ab8"
+        },
+        {
+          "offset": "0x40",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "target": "0x80018ef0"
+        },
+        {
+          "offset": "0x48",
+          "kind": 10,
+          "symbol": "getUpVec__15CameraLocalUtilFPC9CameraMan",
+          "target": "0x800a2ad0"
+        },
+        {
+          "offset": "0x54",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "target": "0x80018ef0"
+        },
+        {
+          "offset": "0x64",
+          "kind": 10,
+          "symbol": "__mi__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>",
+          "target": "0x80018f38"
+        },
+        {
+          "offset": "0x6c",
+          "kind": 10,
+          "symbol": "PSVECMag",
+          "target": "0x804b90d8"
+        },
+        {
+          "offset": "0x70",
+          "kind": 109,
+          "symbol": "@3393",
+          "target": "0x806b9be0"
+        },
+        {
+          "offset": "0x7c",
+          "kind": 109,
+          "symbol": "@3394",
+          "target": "0x806b9be4"
+        },
+        {
+          "offset": "0x84",
+          "kind": 10,
+          "symbol": "isNearZero__2MRFRCQ29JGeometry8TVec3<f>f",
+          "target": "0x803e6fe8"
+        },
+        {
+          "offset": "0x90",
+          "kind": 109,
+          "symbol": "@3356",
+          "target": "0x806b9bd4"
+        },
+        {
+          "offset": "0x98",
+          "kind": 109,
+          "symbol": "@3358",
+          "target": "0x806b9bdc"
+        },
+        {
+          "offset": "0xa0",
+          "kind": 10,
+          "symbol": "__ct<f>__Q29JGeometry8TVec3<f>Ffff_Pv",
+          "target": "0x80018f28"
+        },
+        {
+          "offset": "0xac",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "target": "0x80018ef0"
+        },
+        {
+          "offset": "0xb8",
+          "kind": 10,
+          "symbol": "add__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "target": "0x8001d2e4"
+        },
+        {
+          "offset": "0xc4",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>_v",
+          "target": "0x8001d2c8"
+        },
+        {
+          "offset": "0xd0",
+          "kind": 10,
+          "symbol": "normalize__2MRFPQ29JGeometry8TVec3<f>",
+          "target": "0x803e63b0"
+        },
+        {
+          "offset": "0xdc",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "target": "0x80018ef0"
+        },
+        {
+          "offset": "0xe0",
+          "kind": 109,
+          "symbol": "@3393",
+          "target": "0x806b9be0"
+        },
+        {
+          "offset": "0xe8",
+          "kind": 10,
+          "symbol": "scale__Q29JGeometry8TVec3<f>Ff",
+          "target": "0x800200d0"
+        },
+        {
+          "offset": "0xf4",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "target": "0x80018ef0"
+        },
+        {
+          "offset": "0x100",
+          "kind": 10,
+          "symbol": "add__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "target": "0x8001d2e4"
+        },
+        {
+          "offset": "0x10c",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>_v",
+          "target": "0x8001d2c8"
+        },
+        {
+          "offset": "0x11c",
+          "kind": 10,
+          "symbol": "__mi__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>",
+          "target": "0x80018f38"
+        },
+        {
+          "offset": "0x124",
+          "kind": 10,
+          "symbol": "normalize__2MRFPQ29JGeometry8TVec3<f>",
+          "target": "0x803e63b0"
+        },
+        {
+          "offset": "0x12c",
+          "kind": 10,
+          "symbol": "normalizeOrZero__2MRFPQ29JGeometry8TVec3<f>",
+          "target": "0x803e653c"
+        },
+        {
+          "offset": "0x130",
+          "kind": 109,
+          "symbol": "@3394",
+          "target": "0x806b9be4"
+        },
+        {
+          "offset": "0x138",
+          "kind": 10,
+          "symbol": "isNearZero__2MRFRCQ29JGeometry8TVec3<f>f",
+          "target": "0x803e6fe8"
+        },
+        {
+          "offset": "0x14c",
+          "kind": 10,
+          "symbol": "dot__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>",
+          "target": "0x8001d2a8"
+        },
+        {
+          "offset": "0x154",
+          "kind": 109,
+          "symbol": "@3395",
+          "target": "0x806b9be8"
+        },
+        {
+          "offset": "0x160",
+          "kind": 109,
+          "symbol": "@3356",
+          "target": "0x806b9bd4"
+        },
+        {
+          "offset": "0x168",
+          "kind": 109,
+          "symbol": "@3358",
+          "target": "0x806b9bdc"
+        },
+        {
+          "offset": "0x170",
+          "kind": 10,
+          "symbol": "__ct<f>__Q29JGeometry8TVec3<f>Ffff_Pv",
+          "target": "0x80018f28"
+        },
+        {
+          "offset": "0x180",
+          "kind": 10,
+          "symbol": "setRotate__Q29JGeometry9TQuat4<f>FRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+          "target": "0x80016314"
+        },
+        {
+          "offset": "0x184",
+          "kind": 109,
+          "symbol": "@3356",
+          "target": "0x806b9bd4"
+        },
+        {
+          "offset": "0x18c",
+          "kind": 109,
+          "symbol": "@3355",
+          "target": "0x806b9bd0"
+        },
+        {
+          "offset": "0x194",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>Ffff_v",
+          "target": "0x800172e4"
+        },
+        {
+          "offset": "0x1a4",
+          "kind": 10,
+          "symbol": "transform__Q29JGeometry9TQuat4<f>CFRCQ29JGeometry8TVec3<f>RQ29JGeometry8TVec3<f>",
+          "target": "0x80092758"
+        },
+        {
+          "offset": "0x1b4",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>_v",
+          "target": "0x8001d2c8"
+        },
+        {
+          "offset": "0x1c4",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>_v",
+          "target": "0x8001d2c8"
+        },
+        {
+          "offset": "0x1d4",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>_v",
+          "target": "0x8001d2c8"
+        },
+        {
+          "offset": "0x1dc",
+          "kind": 10,
+          "symbol": "getWatchUpVec__15CameraLocalUtilFPC9CameraMan",
+          "target": "0x800a2adc"
+        },
+        {
+          "offset": "0x1e8",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>_v",
+          "target": "0x8001d2c8"
+        },
+        {
+          "offset": "0x1f0",
+          "kind": 10,
+          "symbol": "getGlobalOffset__15CameraLocalUtilFPC9CameraMan",
+          "target": "0x800a2af0"
+        },
+        {
+          "offset": "0x200",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>_v",
+          "target": "0x8001d2c8"
+        },
+        {
+          "offset": "0x208",
+          "kind": 10,
+          "symbol": "getLocalOffset__15CameraLocalUtilFPC9CameraMan",
+          "target": "0x800a2afc"
+        },
+        {
+          "offset": "0x218",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>_v",
+          "target": "0x8001d2c8"
+        },
+        {
+          "offset": "0x220",
+          "kind": 10,
+          "symbol": "getRoll__15CameraLocalUtilFPC9CameraMan",
+          "target": "0x800a2b08"
+        },
+        {
+          "offset": "0x234",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>_v",
+          "target": "0x8001d2c8"
+        }
+      ],
+      "relocated_bytes_equal": true
+    },
+    {
+      "name": "calcSafePose__10OnlyCameraFP9CameraMan",
+      "kind": "function",
+      "address": "0x800b7434",
+      "size": "0x28c",
+      "sha256": "3818dbd45cede7f64a4fec5773df8f442dd3a0bf3dbc8d6fd753c0137ae73742",
+      "relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_29",
+          "target": "0x80518a08"
+        },
+        {
+          "offset": "0x20",
+          "kind": 10,
+          "symbol": "getPos__15CameraLocalUtilFPC9CameraMan",
+          "target": "0x800a2ac4"
+        },
+        {
+          "offset": "0x2c",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "target": "0x80018ef0"
+        },
+        {
+          "offset": "0x34",
+          "kind": 10,
+          "symbol": "getWatchPos__15CameraLocalUtilFPC9CameraMan",
+          "target": "0x800a2ab8"
+        },
+        {
+          "offset": "0x40",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "target": "0x80018ef0"
+        },
+        {
+          "offset": "0x48",
+          "kind": 10,
+          "symbol": "getUpVec__15CameraLocalUtilFPC9CameraMan",
+          "target": "0x800a2ad0"
+        },
+        {
+          "offset": "0x54",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "target": "0x80018ef0"
+        },
+        {
+          "offset": "0x64",
+          "kind": 10,
+          "symbol": "__mi__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>",
+          "target": "0x80018f38"
+        },
+        {
+          "offset": "0x6c",
+          "kind": 10,
+          "symbol": "PSVECMag",
+          "target": "0x804b90d8"
+        },
+        {
+          "offset": "0x70",
+          "kind": 109,
+          "symbol": "@3393",
+          "target": "0x806b9be0"
+        },
+        {
+          "offset": "0x7c",
+          "kind": 109,
+          "symbol": "@3355",
+          "target": "0x806b9bd0"
+        },
+        {
+          "offset": "0x98",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "target": "0x80018ef0"
+        },
+        {
+          "offset": "0xa4",
+          "kind": 10,
+          "symbol": "add__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "target": "0x8001d2e4"
+        },
+        {
+          "offset": "0xb8",
+          "kind": 10,
+          "symbol": "__mi__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>",
+          "target": "0x80018f38"
+        },
+        {
+          "offset": "0xc4",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>_v",
+          "target": "0x8001d2c8"
+        },
+        {
+          "offset": "0xd0",
+          "kind": 10,
+          "symbol": "normalize__2MRFPQ29JGeometry8TVec3<f>",
+          "target": "0x803e63b0"
+        },
+        {
+          "offset": "0xdc",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "target": "0x80018ef0"
+        },
+        {
+          "offset": "0xe0",
+          "kind": 109,
+          "symbol": "@3393",
+          "target": "0x806b9be0"
+        },
+        {
+          "offset": "0xe8",
+          "kind": 10,
+          "symbol": "scale__Q29JGeometry8TVec3<f>Ff",
+          "target": "0x800200d0"
+        },
+        {
+          "offset": "0xf4",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "target": "0x80018ef0"
+        },
+        {
+          "offset": "0x100",
+          "kind": 10,
+          "symbol": "add__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "target": "0x8001d2e4"
+        },
+        {
+          "offset": "0x10c",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>_v",
+          "target": "0x8001d2c8"
+        },
+        {
+          "offset": "0x118",
+          "kind": 10,
+          "symbol": "moveToIdealPosition__10OnlyCameraFPQ29JGeometry8TVec3<f>",
+          "target": "0x800b76c0"
+        },
+        {
+          "offset": "0x130",
+          "kind": 10,
+          "symbol": "__mi__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>",
+          "target": "0x80018f38"
+        },
+        {
+          "offset": "0x138",
+          "kind": 10,
+          "symbol": "normalize__2MRFPQ29JGeometry8TVec3<f>",
+          "target": "0x803e63b0"
+        },
+        {
+          "offset": "0x140",
+          "kind": 10,
+          "symbol": "normalizeOrZero__2MRFPQ29JGeometry8TVec3<f>",
+          "target": "0x803e653c"
+        },
+        {
+          "offset": "0x144",
+          "kind": 109,
+          "symbol": "@3394",
+          "target": "0x806b9be4"
+        },
+        {
+          "offset": "0x14c",
+          "kind": 10,
+          "symbol": "isNearZero__2MRFRCQ29JGeometry8TVec3<f>f",
+          "target": "0x803e6fe8"
+        },
+        {
+          "offset": "0x160",
+          "kind": 10,
+          "symbol": "dot__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>",
+          "target": "0x8001d2a8"
+        },
+        {
+          "offset": "0x168",
+          "kind": 109,
+          "symbol": "@3395",
+          "target": "0x806b9be8"
+        },
+        {
+          "offset": "0x184",
+          "kind": 10,
+          "symbol": "__mi__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>",
+          "target": "0x80018f38"
+        },
+        {
+          "offset": "0x18c",
+          "kind": 10,
+          "symbol": "normalize__2MRFPQ29JGeometry8TVec3<f>",
+          "target": "0x803e63b0"
+        },
+        {
+          "offset": "0x198",
+          "kind": 10,
+          "symbol": "dot__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>",
+          "target": "0x8001d2a8"
+        },
+        {
+          "offset": "0x1a0",
+          "kind": 109,
+          "symbol": "@3395",
+          "target": "0x806b9be8"
+        },
+        {
+          "offset": "0x1b8",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>_v",
+          "target": "0x8001d2c8"
+        },
+        {
+          "offset": "0x1cc",
+          "kind": 10,
+          "symbol": "setRotate__Q29JGeometry9TQuat4<f>FRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+          "target": "0x80016314"
+        },
+        {
+          "offset": "0x1e0",
+          "kind": 10,
+          "symbol": "transform__Q29JGeometry9TQuat4<f>CFRCQ29JGeometry8TVec3<f>RQ29JGeometry8TVec3<f>",
+          "target": "0x80092758"
+        },
+        {
+          "offset": "0x1ec",
+          "kind": 10,
+          "symbol": "recalcUpVec__15CameraLocalUtilFPQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+          "target": "0x800a2d80"
+        },
+        {
+          "offset": "0x1fc",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>_v",
+          "target": "0x8001d2c8"
+        },
+        {
+          "offset": "0x20c",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>_v",
+          "target": "0x8001d2c8"
+        },
+        {
+          "offset": "0x21c",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>_v",
+          "target": "0x8001d2c8"
+        },
+        {
+          "offset": "0x224",
+          "kind": 10,
+          "symbol": "getWatchUpVec__15CameraLocalUtilFPC9CameraMan",
+          "target": "0x800a2adc"
+        },
+        {
+          "offset": "0x230",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>_v",
+          "target": "0x8001d2c8"
+        },
+        {
+          "offset": "0x238",
+          "kind": 10,
+          "symbol": "getGlobalOffset__15CameraLocalUtilFPC9CameraMan",
+          "target": "0x800a2af0"
+        },
+        {
+          "offset": "0x248",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>_v",
+          "target": "0x8001d2c8"
+        },
+        {
+          "offset": "0x250",
+          "kind": 10,
+          "symbol": "getLocalOffset__15CameraLocalUtilFPC9CameraMan",
+          "target": "0x800a2afc"
+        },
+        {
+          "offset": "0x260",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>_v",
+          "target": "0x8001d2c8"
+        },
+        {
+          "offset": "0x268",
+          "kind": 10,
+          "symbol": "getRoll__15CameraLocalUtilFPC9CameraMan",
+          "target": "0x800a2b08"
+        },
+        {
+          "offset": "0x278",
+          "kind": 10,
+          "symbol": "_restgpr_29",
+          "target": "0x80518a54"
+        }
+      ],
+      "relocated_bytes_equal": true
+    },
+    {
+      "name": "moveToIdealPosition__10OnlyCameraFPQ29JGeometry8TVec3<f>",
+      "kind": "function",
+      "address": "0x800b76c0",
+      "size": "0x18c",
+      "sha256": "31efd317532d561d709dd7546ca09ef5819cb82bad7aa28f5c25ffcab94cc26b",
+      "relocations": [
+        {
+          "offset": "0x20",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "target": "0x80018ef0"
+        },
+        {
+          "offset": "0x3c",
+          "kind": 10,
+          "symbol": "__mi__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>",
+          "target": "0x80018f38"
+        },
+        {
+          "offset": "0x4c",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "target": "0x80018ef0"
+        },
+        {
+          "offset": "0x58",
+          "kind": 10,
+          "symbol": "add__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "target": "0x8001d2e4"
+        },
+        {
+          "offset": "0x64",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>_v",
+          "target": "0x8001d2c8"
+        },
+        {
+          "offset": "0x74",
+          "kind": 10,
+          "symbol": "__mi__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>",
+          "target": "0x80018f38"
+        },
+        {
+          "offset": "0x7c",
+          "kind": 10,
+          "symbol": "PSVECMag",
+          "target": "0x804b90d8"
+        },
+        {
+          "offset": "0x8a",
+          "kind": 6,
+          "symbol": "@3463",
+          "target": "0x80531990"
+        },
+        {
+          "offset": "0x8c",
+          "kind": 109,
+          "symbol": "@3357",
+          "target": "0x806b9bd8"
+        },
+        {
+          "offset": "0x9a",
+          "kind": 4,
+          "symbol": "@3463",
+          "target": "0x80531990"
+        },
+        {
+          "offset": "0xc4",
+          "kind": 109,
+          "symbol": "@3355",
+          "target": "0x806b9bd0"
+        },
+        {
+          "offset": "0xc8",
+          "kind": 109,
+          "symbol": "@3356",
+          "target": "0x806b9bd4"
+        },
+        {
+          "offset": "0xe4",
+          "kind": 109,
+          "symbol": "@3355",
+          "target": "0x806b9bd0"
+        },
+        {
+          "offset": "0xe8",
+          "kind": 109,
+          "symbol": "@3458",
+          "target": "0x806b9bec"
+        },
+        {
+          "offset": "0x10c",
+          "kind": 109,
+          "symbol": "@3356",
+          "target": "0x806b9bd4"
+        },
+        {
+          "offset": "0x118",
+          "kind": 109,
+          "symbol": "@3356",
+          "target": "0x806b9bd4"
+        },
+        {
+          "offset": "0x130",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>_v",
+          "target": "0x8001d2c8"
+        },
+        {
+          "offset": "0x13c",
+          "kind": 10,
+          "symbol": "normalize__2MRFPQ29JGeometry8TVec3<f>",
+          "target": "0x803e63b0"
+        },
+        {
+          "offset": "0x148",
+          "kind": 10,
+          "symbol": "scale__Q29JGeometry8TVec3<f>Ff",
+          "target": "0x800200d0"
+        },
+        {
+          "offset": "0x154",
+          "kind": 10,
+          "symbol": "add__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "target": "0x8001d2e4"
+        },
+        {
+          "offset": "0x164",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>_v",
+          "target": "0x8001d2c8"
+        },
+        {
+          "offset": "0x170",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>_v",
+          "target": "0x8001d2c8"
+        }
+      ],
+      "relocated_bytes_equal": true
+    },
+    {
+      "name": "__dt__10OnlyCameraFv",
+      "kind": "function",
+      "address": "0x800b784c",
+      "size": "0x58",
+      "sha256": "a6a01bc739aac8797dcc081671d8ac6e58c056eaa8dfc6eb7aa8cf2fa2173c85",
+      "relocations": [
+        {
+          "offset": "0x28",
+          "kind": 10,
+          "symbol": "__dt__7NameObjFv",
+          "target": "0x8026170c"
+        },
+        {
+          "offset": "0x38",
+          "kind": 10,
+          "symbol": "__dl__FPv",
+          "target": "0x8040b4a0"
+        }
+      ],
+      "relocated_bytes_equal": true
+    }
+  ]
+}

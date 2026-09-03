@@ -753,6 +753,7 @@ namespace smgpc::runtime {
         void push_shake_event(ShakeRequestKind kind);
 
         std::uint64_t _frame_index = 0U;
+        std::optional<std::uint64_t> _last_camera_movement_frame;
         std::uint32_t _reset_camera_man_count = 0U;
         std::array<std::optional<std::uint32_t>, 7U> _vertical_shake_steps;
         float _shake_offset_x = 0.0F;

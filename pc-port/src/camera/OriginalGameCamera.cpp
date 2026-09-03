@@ -42,7 +42,8 @@ namespace smgpc::camera {
              const StageCameraTargetState &initial_target, float default_fovy,
              const StageCameraCalculationState &initial_state,
              smgpc::compat::OriginalCameraMode mode, const CameraPoseParam *manager_seed,
-             bool reset_local_offset, CameraTargetObj *original_target = nullptr)
+             bool reset_local_offset, CameraTargetObj *original_target,
+             const TPos3f *manager_matrix_seed)
             : zone_transform(zone), camera_param(param), default_fovy_degrees(default_fovy),
               mode(mode), man("OriginalGameCameraMan"), camera(create_camera(param)),
               man_pose(man.mPoseParam), camera_pose(camera->mPoseParam), height(camera->mVPan),
@@ -50,6 +51,9 @@ namespace smgpc::camera {
               height_current(height ? height->mCurrParam : nullptr) {
             camera->mCameraMan = &man;
             man.mRequestLOfsReset = reset_local_offset;
+            if (manager_matrix_seed != nullptr) {
+                man.mMatrix.set(*manager_matrix_seed);
+            }
 
             if (manager_seed != nullptr) {
                 man_pose->copyFrom(*manager_seed);
@@ -64,7 +68,6 @@ namespace smgpc::camera {
                 original_target = &target;
             }
             const auto binding = smgpc::compat::ScopedCameraTargetBinding(*camera, *original_target, mode);
-            selected_target = original_target;
             camera->reset();
             if (mode == smgpc::compat::OriginalCameraMode::Event) {
                 // CameraManEvent resets and calculates in the same phase,
@@ -154,7 +157,7 @@ namespace smgpc::camera {
         float default_fovy_degrees;
         smgpc::compat::OriginalCameraMode mode;
         PublishedCameraTarget target;
-        CameraTargetObj *selected_target = nullptr;
+        CameraTargetObj *used_target = nullptr;
         CameraMan man;
         std::unique_ptr<Camera> camera;
         // These Game objects use stage-arena allocation and do not release
@@ -174,14 +177,16 @@ namespace smgpc::camera {
                                          const StageCameraCalculationState &initial_state,
                                          smgpc::compat::OriginalCameraMode mode,
                                          const CameraPoseParam *manager_seed,
-                                         bool reset_local_offset) {
+                                         bool reset_local_offset,
+                                         const TPos3f *manager_matrix_seed) {
         if (camera_param.camera_type != "CAM_TYPE_XZ_PARA" &&
             camera_param.camera_type != "CAM_TYPE_EYEPOS_FIX") {
             throw std::invalid_argument("Original game camera does not support " + camera_param.camera_type + ".");
         }
         validate_original_camera_target(initial_target);
         _impl = std::make_unique<Impl>(zone_transform, camera_param, initial_target,
-                                       default_fovy_degrees, initial_state, mode, manager_seed, reset_local_offset);
+                                       default_fovy_degrees, initial_state, mode, manager_seed, reset_local_offset,
+                                       nullptr, manager_matrix_seed);
     }
 
     OriginalGameCamera::~OriginalGameCamera() = default;
@@ -189,7 +194,8 @@ namespace smgpc::camera {
     OriginalGameCamera::OriginalGameCamera(const smgpc::scene::StageZoneTransform &zone_transform,
                                          const CameraParamChunk &camera_param, CameraTargetObj &target,
                                          float default_fovy_degrees, const CameraPoseParam *manager_seed,
-                                         bool reset_local_offset) {
+                                         bool reset_local_offset,
+                                         const TPos3f *manager_matrix_seed) {
         if (camera_param.camera_type != "CAM_TYPE_XZ_PARA" &&
             camera_param.camera_type != "CAM_TYPE_EYEPOS_FIX") {
             throw std::invalid_argument("Original game camera does not support " + camera_param.camera_type + ".");
@@ -197,7 +203,7 @@ namespace smgpc::camera {
         _impl = std::make_unique<Impl>(zone_transform, camera_param, StageCameraTargetState{},
                                        default_fovy_degrees, StageCameraCalculationState{},
                                        smgpc::compat::OriginalCameraMode::Event, manager_seed,
-                                       reset_local_offset, &target);
+                                       reset_local_offset, &target, manager_matrix_seed);
     }
 
     void OriginalGameCamera::reset(const StageCameraTargetState &target) {
@@ -231,15 +237,14 @@ namespace smgpc::camera {
     }
 
     StageCameraPoseCalculation OriginalGameCamera::calc(CameraTargetObj &target) {
-        _impl->selected_target = &target;
         if (!_impl->parameter_applied_for_reset) {
             _impl->apply_parameter();
         }
         const auto binding = smgpc::compat::ScopedCameraTargetBinding(
             *_impl->camera, target, _impl->mode);
-        if (_impl->camera->calc() != &target) {
-            throw std::logic_error("Original game camera returned a different target owner.");
-        }
+        // CameraManGame::calc / CameraLocalUtil::setUsedTarget retain the
+        // controller's result independently of its selected input target.
+        _impl->used_target = _impl->camera->calc();
         CameraLocalUtil::calcSafePose(&_impl->man, _impl->camera.get());
         _impl->parameter_applied_for_reset = false;
         _impl->man.mRequestLOfsReset = false;
@@ -254,8 +259,10 @@ namespace smgpc::camera {
         return *_impl->man_pose;
     }
 
+    CameraMan &OriginalGameCamera::manager() { return _impl->man; }
+
     const CameraTargetObj *OriginalGameCamera::target_object() const {
-        return _impl->selected_target;
+        return _impl->used_target;
     }
 
     OriginalCameraViewFlags OriginalGameCamera::view_flags() const {
@@ -265,6 +272,7 @@ namespace smgpc::camera {
             .interpolation_off = _impl->camera->isInterpolationOff() || _impl->camera_param.is_anti_blur_off(),
             .collision_off = _impl->camera->isCollisionOff() || _impl->camera_param.is_collision_off(),
             .correcting_position_off = _impl->camera->isCorrectingErpPositionOff(),
+            .zero_frame_move_off = _impl->camera->isZeroFrameMoveOff(),
         };
     }
 

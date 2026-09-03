@@ -106,6 +106,15 @@ namespace {
                     std::abs(pose->projection_offset_y - expected_y) < 0.000001F,
                 "normal shake must use the decompiled 25-frame sine and exact 30/EFB-height scaling");
 
+        camera.begin_frame(21U);
+        require(camera.effective_camera_pose()->projection_offset_y == pose->projection_offset_y,
+                "repeating a director phase must not advance its shake a second time");
+        camera.pause_on_camera_director();
+        camera.begin_frame(22U);
+        require(camera.effective_camera_pose()->projection_offset_y == pose->projection_offset_y,
+                "pausing the director must freeze its original shake phase with its camera pose");
+        camera.pause_off_camera_director();
+
         for (auto frame = std::uint64_t{22U}; frame <= 45U; ++frame) {
             camera.begin_frame(frame);
         }

@@ -7,6 +7,7 @@
 #include <memory>
 
 class CameraPoseParam;
+class CameraMan;
 
 namespace smgpc::camera {
 
@@ -22,12 +23,14 @@ namespace smgpc::camera {
                            const StageCameraCalculationState &initial_state = {},
                            smgpc::compat::OriginalCameraMode mode = smgpc::compat::OriginalCameraMode::Game,
                            const CameraPoseParam *manager_seed = nullptr,
-                           bool reset_local_offset = false);
+                           bool reset_local_offset = false,
+                           const TPos3f *manager_matrix_seed = nullptr);
         OriginalGameCamera(const smgpc::scene::StageZoneTransform &zone_transform,
                            const CameraParamChunk &camera_param, CameraTargetObj &target,
                            float default_fovy_degrees = 45.0F,
                            const CameraPoseParam *manager_seed = nullptr,
-                           bool reset_local_offset = false);
+                           bool reset_local_offset = false,
+                           const TPos3f *manager_matrix_seed = nullptr);
         ~OriginalGameCamera();
 
         OriginalGameCamera(const OriginalGameCamera &) = delete;
@@ -39,6 +42,7 @@ namespace smgpc::camera {
         [[nodiscard]] StageCameraPoseCalculation calc(CameraTargetObj &target);
         [[nodiscard]] StageCameraPoseCalculation calculation() const;
         [[nodiscard]] const CameraPoseParam &pose_param() const;
+        [[nodiscard]] CameraMan &manager();
         [[nodiscard]] const CameraTargetObj *target_object() const;
         [[nodiscard]] OriginalCameraViewFlags view_flags() const;
 

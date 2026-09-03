@@ -537,6 +537,9 @@ namespace {
         camera.set_game_camera_target(owner, target);
         camera.begin_frame(1U);
         const auto before_reset = *camera.game_camera_pose();
+        camera.begin_frame(1U);
+        require(same_pose(*camera.game_camera_pose(), before_reset),
+                "a repeated camera movement phase must not accumulate the original manager's local offset twice");
         camera.pause_on_camera_director();
         camera.pause_on_camera_director();
         camera.reset_camera_man();
@@ -675,9 +678,15 @@ namespace {
                 "a repeated true start must retain the zero interpolation count");
         camera.end_event_camera(0, "DemoMeetTico", true, -1);
         require(camera.effective_camera_pose().has_value() &&
-                    same_pose(*camera.effective_camera_pose(), *guide_pose_before_restart) &&
-                    same_pose(*camera.game_camera_pose(), start_pose),
+                    same_pose(*camera.effective_camera_pose(), *guide_pose_before_restart),
                 "ending DemoMeetTico must retain the last rendered view until the original finish interpolation advances");
+        const auto copied_game_pose = *camera.game_camera_pose();
+        require_near(copied_game_pose.eye.x, guide_pose_before_restart->eye.x, 0.0001F,
+                     "positive finish with resetView must seed the returning game manager from the latest OnlyCamera position");
+        require_near(copied_game_pose.fovy_degrees, 40.0F, 0.0001F,
+                     "the director copies OnlyCamera's untouched pose FOV before the game manager reapplies its authored FOV");
+        require_near(copied_game_pose.aspect_ratio, start_pose.aspect_ratio, 0.0001F,
+                     "the returning manager must keep the game scene's projection geometry");
 
         MR::startStartPosCamera(false);
         require(camera.start_position_camera_zero_interpolation_frames() == 5U,
@@ -826,8 +835,10 @@ namespace {
                 "actor retirement must withdraw its camera target before another camera phase");
         const auto last_pose = *camera.game_camera_pose();
         camera.begin_frame(7U);
+        camera.begin_frame(8U);
+        camera.begin_frame(9U);
         require(same_pose(*camera.game_camera_pose(), last_pose),
-                "an absent player target must retain the last calculated camera pose");
+                "an absent player target must retain its last pose across subsequent camera phases without retaining its pointer");
         player.attach_actor(actor);
         player.set_camera_target(std::make_unique<smgpc::tests::CameraTargetFixture>([&actor] {
             return actor.camera_state;
@@ -835,7 +846,7 @@ namespace {
         require(!player.camera_target_state().has_value(),
                 "a replacement target must not publish uninitialized cached vectors");
         target = static_cast<smgpc::tests::CameraTargetFixture*>(player.camera_target());
-        camera.begin_frame(8U);
+        camera.begin_frame(10U);
         require(target->movement_count == 1U && player.camera_target_state().has_value(),
                 "a replacement player target must initialize at its next camera phase");
         camera.clear_stage_start_camera(owner);
@@ -883,7 +894,7 @@ namespace {
         require(same_pose(*camera.game_camera_pose(), prior) &&
                     !same_pose(*camera.effective_camera_pose(), prior),
                 "an event camera must own the effective pose while game state remains frozen");
-        camera.end_event_camera(0, "tracking-event", true, -1);
+        camera.end_event_camera(0, "tracking-event", false, -1);
         camera.begin_frame(5U);
         require_near(camera.game_camera_pose()->watch.z - target.position.z,
                      34.39F, 0.0001F,

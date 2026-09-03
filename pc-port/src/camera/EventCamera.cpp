@@ -2,6 +2,7 @@
 
 #include "Game/Camera/CameraTargetMtx.hpp"
 #include "Game/Camera/CameraPoseParam.hpp"
+#include "Game/Camera/CameraMan.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "resource/BcsvTable.hpp"
@@ -256,7 +257,8 @@ namespace smgpc::camera {
     void EventCameraRuntime::start(std::int32_t zone_id, std::string_view name,
                                    EventCameraTarget target,
                                    std::int32_t interpolation_frames,
-                                   float speed, const CameraPoseParam *game_seed) {
+                                   float speed, const CameraPoseParam *game_seed,
+                                   const TPos3f *manager_matrix_seed) {
         if (name.empty() || !std::isfinite(speed) || !(speed > 0.0F)) {
             throw std::invalid_argument(
                 "Event-camera start requires a name and positive finite speed.");
@@ -312,30 +314,42 @@ namespace smgpc::camera {
             return;
         }
         // CameraDirector::startEvent copies the original game manager pose
-        // only on entry; event-to-event requests retain the event manager pose.
+        // and current rendered matrix only on entry. Event-to-event requests
+        // retain that manager's own raw pose and preceding rendered matrix.
         const CameraPoseParam *seed = game_seed;
+        const TPos3f *matrix_seed = manager_matrix_seed;
         if (_active.has_value()) {
             if (_active->animation_controller) {
                 seed = &_active->animation_controller->pose_param();
+                matrix_seed = &_active->animation_controller->manager().mMatrix;
             } else if (_active->controller) {
                 seed = &_active->controller->pose_param();
+                matrix_seed = &_active->controller->manager().mMatrix;
             } else {
                 // A pending request has not updated the manager. Preserve
                 // its full raw pose through further requests in this phase.
                 seed = _active->manager_seed.get();
+                matrix_seed = _active->manager_matrix_seed.get();
             }
         } else if (_pending) {
             seed = _pending->manager_seed.get();
+            matrix_seed = _pending->manager_matrix_seed.get();
         }
         std::shared_ptr<CameraPoseParam> manager_seed;
         if (seed != nullptr) {
             manager_seed = std::make_shared<CameraPoseParam>();
             manager_seed->copyFrom(*seed);
         }
+        std::shared_ptr<TPos3f> copied_matrix_seed;
+        if (matrix_seed != nullptr) {
+            copied_matrix_seed = std::make_shared<TPos3f>();
+            copied_matrix_seed->set(*matrix_seed);
+        }
         auto candidate = ActiveEvent{
             .key = key,
             .target = target,
             .manager_seed = std::move(manager_seed),
+            .manager_matrix_seed = std::move(copied_matrix_seed),
             .pose = active_pose(),
             .speed = speed,
             .interpolation_frames = interpolation_frames,
@@ -520,8 +534,24 @@ namespace smgpc::camera {
         return _active->controller ? &_active->controller->pose_param() : nullptr;
     }
 
+    CameraMan *EventCameraRuntime::view_manager() {
+        if (!_active) {
+            return nullptr;
+        }
+        if (_active->animation_controller) {
+            return &_active->animation_controller->manager();
+        }
+        return _active->controller ? &_active->controller->manager() : nullptr;
+    }
+
     const CameraTargetObj *EventCameraRuntime::view_target() const {
-        return view_pose_param() != nullptr ? &selected_target() : nullptr;
+        if (!_active) {
+            return nullptr;
+        }
+        if (_active->animation_controller) {
+            return _active->animation_controller->target_object();
+        }
+        return _active->controller ? _active->controller->target_object() : nullptr;
     }
 
     OriginalCameraViewFlags EventCameraRuntime::view_flags() const {
@@ -544,7 +574,8 @@ namespace smgpc::camera {
             }
             if (!active.animation_controller) {
                 active.animation_controller = std::make_unique<OriginalAnimationCamera>(
-                    *animation, target, active.speed, active.manager_seed.get());
+                    *animation, target, active.speed, active.manager_seed.get(),
+                    active.manager_matrix_seed.get());
             }
             return active.animation_controller->calc(target);
         }
@@ -564,7 +595,8 @@ namespace smgpc::camera {
                 active.controller = std::make_unique<OriginalGameCamera>(
                     definition->zone_transform, definition->camera_param,
                     target, 45.0F, active.manager_seed.get(),
-                    start_interpolation_frames(definition->camera_param, active.interpolation_frames) == 0);
+                    start_interpolation_frames(definition->camera_param, active.interpolation_frames) == 0,
+                    active.manager_matrix_seed.get());
             }
             return active.controller->calc(target).pose;
         }

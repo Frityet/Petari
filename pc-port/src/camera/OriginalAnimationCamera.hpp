@@ -7,6 +7,7 @@
 #include <memory>
 
 class CameraPoseParam;
+class CameraMan;
 class CameraTargetObj;
 
 namespace smgpc::camera {
@@ -17,9 +18,11 @@ namespace smgpc::camera {
     public:
         OriginalAnimationCamera(const CameraAnimation &animation,
                                 const StageCameraTargetState &target, float speed,
-                                const CameraPoseParam *manager_seed = nullptr);
+                                const CameraPoseParam *manager_seed = nullptr,
+                                const TPos3f *manager_matrix_seed = nullptr);
         OriginalAnimationCamera(const CameraAnimation &animation, CameraTargetObj &target,
-                                float speed, const CameraPoseParam *manager_seed = nullptr);
+                                float speed, const CameraPoseParam *manager_seed = nullptr,
+                                const TPos3f *manager_matrix_seed = nullptr);
         ~OriginalAnimationCamera();
 
         OriginalAnimationCamera(const OriginalAnimationCamera &) = delete;
@@ -29,6 +32,8 @@ namespace smgpc::camera {
         [[nodiscard]] CameraPose calc(CameraTargetObj &target);
         [[nodiscard]] CameraPose pose() const;
         [[nodiscard]] const CameraPoseParam &pose_param() const;
+        [[nodiscard]] CameraMan &manager();
+        [[nodiscard]] const CameraTargetObj *target_object() const;
         [[nodiscard]] OriginalCameraViewFlags view_flags() const;
         [[nodiscard]] float current_frame() const;
         [[nodiscard]] bool is_end() const;

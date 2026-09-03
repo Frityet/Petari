@@ -1,6 +1,10 @@
 #include "CameraTargetTestSupport.hpp"
+#include "Game/Camera/CameraMan.hpp"
+#include "Game/Camera/CameraPoseParam.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "camera/CameraAnimation.hpp"
+#include "camera/OriginalAnimationCamera.hpp"
+#include "camera/OriginalGameCamera.hpp"
 #include "compat/DemoSceneRuntime.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"
@@ -199,6 +203,105 @@ namespace {
         require(scene.target.movement_count == 1U, "finish interpolation must not retain an ended event's target movement");
     }
 
+    TPos3f make_matrix(float eye_x) {
+        auto matrix = TPos3f{};
+        matrix.identity();
+        matrix.mMtx[0][0] = 0.0F;
+        matrix.mMtx[0][1] = -1.0F;
+        matrix.mMtx[1][0] = 1.0F;
+        matrix.mMtx[1][1] = 0.0F;
+        matrix.setTrans(TVec3f{eye_x, 22.0F, 33.0F});
+        return matrix;
+    }
+
+    void require_matrix(const TPos3f& actual, const TPos3f& expected, std::string_view message) {
+        for (auto row = 0U; row < 3U; ++row) {
+            for (auto column = 0U; column < 4U; ++column) {
+                require_near(actual.mMtx[row][column], expected.mMtx[row][column], message);
+            }
+        }
+    }
+
+    void test_original_controller_reset_retains_manager_matrix_seed() {
+        auto scene = CameraScene{};
+        const auto matrix = make_matrix(11.0F);
+        auto pose = CameraPoseParam{};
+        pose.mPos.set(10.0F, 0.0F, 600.0F);
+        pose.mWatchPos.set(10.0F, 0.0F, 0.0F);
+        pose.mFovy = 63.0F;
+        auto param = smgpc::camera::CameraParamChunk{};
+        param.camera_type = "CAM_TYPE_XZ_PARA";
+        param.general.num1 = 1;
+        param.general.dist = 600.0F;
+        param.general.angle_a = 0.0F;
+        param.general.angle_b = 0.0F;
+        param.extra.w_offset = {};
+        param.extra.v_pan_use = 0;
+
+        auto game = smgpc::camera::OriginalGameCamera({}, param, scene.target, 45.0F, &pose, false, &matrix);
+        require_matrix(game.manager().mMatrix, matrix,
+                       "the original static reset must retain the manager's distinct rendered matrix seed");
+        require(game.target_object() == nullptr, "resetting a controller must not invent a returned used target");
+        (void)game.calc(scene.target);
+        require(game.target_object() == &scene.target,
+                "the actual Parallel calc return must become the static camera's used target");
+
+        auto animation = smgpc::camera::OriginalAnimationCamera(make_constant_animation(), scene.target, 1.0F, &pose, &matrix);
+        require_matrix(animation.manager().mMatrix, matrix,
+                       "the original animation reset must retain the manager's rendered matrix seed");
+        require_near(animation.pose_param().mFovy, 63.0F,
+                     "animation reset must copy the raw manager FOV independently of its matrix seed");
+        require(animation.current_frame() == 0.0F && animation.target_object() == nullptr,
+                "construction must complete original reset without calculating or fabricating a used target");
+    }
+
+    void test_pending_event_matrix_seed_ownership_and_handoff() {
+        auto scene = CameraScene{};
+        auto event = smgpc::camera::EventCameraRuntime{};
+        for (const auto name : {"A", "B", "C"}) {
+            event.declare_animation(0, name, make_constant_animation());
+        }
+        auto matrix = make_matrix(11.0F);
+        const auto original_matrix = matrix;
+        event.start(0, "A", smgpc::camera::EventCameraTarget::target_object(scene.target), 0,
+                    1.0F, nullptr, &matrix);
+        matrix.identity();
+        const auto unrelated_game_matrix = make_matrix(-999.0F);
+        event.start(0, "B", smgpc::camera::EventCameraTarget::retain(), 0,
+                    1.0F, nullptr, &unrelated_game_matrix);
+        event.begin_frame(1U, false);
+        require(event.view_manager() != nullptr, "the requested event must construct its original manager in the camera phase");
+        require_matrix(event.view_manager()->mMatrix, original_matrix,
+                       "replacing an uncalculated request must preserve an owned copy of the first game matrix seed");
+
+        const auto rendered_matrix = make_matrix(55.0F);
+        event.view_manager()->mMatrix.set(rendered_matrix);
+        event.start(0, "C", smgpc::camera::EventCameraTarget::retain(), 0,
+                    1.0F, nullptr, &unrelated_game_matrix);
+        event.start(0, "A", smgpc::camera::EventCameraTarget::retain(), 0,
+                    1.0F, nullptr, &unrelated_game_matrix);
+        event.begin_frame(2U, false);
+        require_matrix(event.view_manager()->mMatrix, rendered_matrix,
+                       "event changes must inherit the calculated manager's last rendered matrix instead of a game seed");
+    }
+
+    void test_animation_used_target_is_distinct_from_moved_input() {
+        auto scene = CameraScene{};
+        auto event = smgpc::camera::EventCameraRuntime{};
+        event.declare_animation(0, "moving-input", make_constant_animation());
+        event.start(0, "moving-input", smgpc::camera::EventCameraTarget::target_object(scene.target), 0);
+        event.begin_frame(1U, false);
+        require(scene.target.movement_count == 1U && event.view_target() == nullptr,
+                "CameraAnim must move its selected input while returning no view-correction target");
+        scene.target_state.position.x = 25.0F;
+        scene.target_state.last_move.x = 25.0F;
+        event.begin_frame(2U, false);
+        require(scene.target.movement_count == 2U && event.view_target() == nullptr,
+                "a moving animation input must not become the director's used target on a later phase");
+        require_view(*event.active_pose(), 125.0F, 1200.0F, 80.0F,
+                     "actual CANM calculation must still use the live selected target transform");
+    }
+
     struct TestCase {
         std::string_view name;
         void (*run)();
@@ -210,6 +313,9 @@ int main() {
         TestCase{"manual view seeds original event interpolation", test_manual_view_seeds_event_transition_once_per_phase},
         TestCase{"event finish cuts back to manual view", test_event_finish_cut_returns_to_manual_view},
         TestCase{"event finish interpolates back to manual view", test_event_finish_interpolates_back_to_manual_view},
+        TestCase{"controller reset retains manager matrix seed", test_original_controller_reset_retains_manager_matrix_seed},
+        TestCase{"pending event matrix seed ownership", test_pending_event_matrix_seed_ownership_and_handoff},
+        TestCase{"animation used target versus moved input", test_animation_used_target_is_distinct_from_moved_input},
     };
     auto failures = 0;
     for (const auto& test : tests) {

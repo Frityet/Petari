@@ -98,7 +98,8 @@ namespace smgpc::camera {
                                CameraAnimation animation);
         void start(std::int32_t zone_id, std::string_view name,
                    EventCameraTarget target, std::int32_t interpolation_frames,
-                   float speed = 1.0F, const CameraPoseParam *game_seed = nullptr);
+                   float speed = 1.0F, const CameraPoseParam *game_seed = nullptr,
+                   const TPos3f *manager_matrix_seed = nullptr);
         void end(std::int32_t zone_id, std::string_view name, bool force,
                  std::int32_t interpolation_frames);
         void begin_frame(std::uint64_t frame_index, bool paused);
@@ -119,6 +120,7 @@ namespace smgpc::camera {
                                                 std::string_view name) const;
         [[nodiscard]] std::size_t actor_camera_info_count() const noexcept;
         [[nodiscard]] const CameraPoseParam *view_pose_param() const;
+        [[nodiscard]] CameraMan *view_manager();
         [[nodiscard]] const CameraTargetObj *view_target() const;
         [[nodiscard]] OriginalCameraViewFlags view_flags() const;
         [[nodiscard]] std::optional<std::uint32_t> take_interpolation_request();
@@ -130,6 +132,7 @@ namespace smgpc::camera {
             std::unique_ptr<OriginalGameCamera> controller;
             std::unique_ptr<OriginalAnimationCamera> animation_controller;
             std::shared_ptr<const CameraPoseParam> manager_seed;
+            std::shared_ptr<const TPos3f> manager_matrix_seed;
             std::optional<CameraPose> pose;
             float speed = 1.0F;
             std::int32_t interpolation_frames = 0;

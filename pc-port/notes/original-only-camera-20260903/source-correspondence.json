@@ -1,0 +1,31 @@
+{
+  "verification": "Both PC files are unchanged root copies. All six original-compiler methods and full vtable match retail byte for byte after verified relocations.",
+  "historical_source_commit": "b3d02bedd657534f007633ade7a6d0c21852a092",
+  "files": [
+    {
+      "source": "src/Game/Camera/OnlyCamera.cpp",
+      "destination": "pc-port/src/Game/Camera/OnlyCamera.cpp",
+      "sha256": "247cc62f78562e1cf84724711906e6865360350d8abe1c88afb90497ff3be91d"
+    },
+    {
+      "source": "include/Game/Camera/OnlyCamera.hpp",
+      "destination": "pc-port/src/Game/Camera/OnlyCamera.hpp",
+      "sha256": "24529a35ec8f939360f545c2d9241e5ba7bd26dec86cda1c2dcdb220f4df53c8"
+    }
+  ],
+  "dol": {
+    "path": "build/compat-math-oracle/main.dol",
+    "sha1": "25c5959534b3c21246c6c7e42021b916b41fb578"
+  },
+  "compiler_verification": {
+    "toolchain": "GC/3.0a3",
+    "flags": "configure.py cflags_game, RMGK01, VERSION=0",
+    "verifier": "verify-object.py",
+    "evidence": "compiler-evidence.json",
+    "matching_method_instructions": 499,
+    "method_relocations": 131,
+    "matching_vtable_words": 9,
+    "vtable_relocations": 7
+  },
+  "scope": "Source import and original-compiler verification only; native pipeline integration/build/runtime validation owned by the root agent."
+}

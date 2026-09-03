@@ -15,6 +15,7 @@
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Camera/CameraTargetObj.hpp"
 #include "Game/Camera/CameraPoseParam.hpp"
+#include "Game/Camera/CameraMan.hpp"
 #include "Game/Camera/CameraViewInterpolator.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/System/WPadRumbleData.hpp"
@@ -2723,6 +2724,11 @@ namespace smgpc::runtime {
 
     void CameraSystemService::begin_frame(std::uint64_t frame_index) {
         _frame_index = frame_index;
+        // CameraDirector owns one target/manager/pose/view/shake movement
+        // sequence per frame. A paused call does not consume that phase.
+        if (is_camera_director_paused() || _last_camera_movement_frame == frame_index) {
+            return;
+        }
         if (!is_camera_director_paused() && !_event_cameras.active_key().has_value()) {
             auto *player = _authored_game_camera.has_value()
                                ? _authored_game_camera->player_target : nullptr;
@@ -2750,13 +2756,15 @@ namespace smgpc::runtime {
         }
         _event_cameras.begin_frame(frame_index, is_camera_director_paused());
         update_camera_view();
+        _last_camera_movement_frame = frame_index;
     }
 
     void CameraSystemService::update_camera_view() {
         if (is_camera_director_paused() || _last_view_frame == _frame_index) {
             return;
         }
-        const CameraPoseParam *pose = _event_cameras.view_pose_param();
+        auto *manager = _event_cameras.view_manager();
+        const CameraPoseParam *pose = manager != nullptr ? manager->mPoseParam : nullptr;
         const CameraTargetObj *target = nullptr;
         auto flags = smgpc::camera::OriginalCameraViewFlags{};
         auto projection = smgpc::camera::CameraPose{};
@@ -2768,7 +2776,17 @@ namespace smgpc::runtime {
         } else if (!_event_cameras.active_key() && !active_programmable_camera_pose() &&
                    _authored_game_camera && _game_camera_pose) {
             pose = &_authored_game_camera->controller->pose_param();
-            target = _authored_game_camera->controller->target_object();
+            manager = &_authored_game_camera->controller->manager();
+            // Native player targets can retire before their controller. Do
+            // not retain a borrowed used-target pointer after publication
+            // is withdrawn; the last valid manager pose remains available.
+            if (auto *player = _authored_game_camera->player_target) {
+                target = player->camera_target_state()
+                             ? _authored_game_camera->controller->target_object() : nullptr;
+            } else {
+                target = _authored_game_camera->target
+                             ? _authored_game_camera->controller->target_object() : nullptr;
+            }
             flags = _authored_game_camera->controller->view_flags();
             projection = *_game_camera_pose;
         } else if (!_event_cameras.active_key() && !active_programmable_camera_pose() &&
@@ -2792,7 +2810,9 @@ namespace smgpc::runtime {
         if (const auto frames = _event_cameras.take_interpolation_request()) {
             _camera_view->set_interpolation(*frames, _start_position_camera_active);
         }
-        _view_camera_pose = _camera_view->update(*pose, target, projection, flags);
+        _view_camera_pose = manager != nullptr
+                                ? _camera_view->update(*manager, target, projection, flags)
+                                : _camera_view->update(*pose, target, projection, flags);
         _last_view_frame = _frame_index;
     }
 
@@ -2892,6 +2912,7 @@ namespace smgpc::runtime {
         std::int32_t interpolation_frames, float speed) {
         const CameraPoseParam *seed = nullptr;
         std::optional<CameraPoseParam> native_seed;
+        std::optional<TPos3f> native_matrix_seed;
         std::optional<smgpc::camera::CameraPose> native_projection;
         if (_authored_game_camera.has_value() && !active_programmable_camera_pose().has_value()) {
             seed = &_authored_game_camera->controller->pose_param();
@@ -2908,8 +2929,12 @@ namespace smgpc::runtime {
             native_projection = active_programmable_camera_pose().value_or(
                 _view_camera_pose.value_or(_game_camera_pose.value_or(*visible)));
             seed = &*native_seed;
+            native_matrix_seed.emplace();
+            smgpc::compat::calcCameraViewMtxFromPoseParam(&*native_matrix_seed, seed);
         }
-        _event_cameras.start(zone_id, name, target, interpolation_frames, speed, seed);
+        _event_cameras.start(zone_id, name, target, interpolation_frames, speed, seed,
+                             _camera_view ? &_camera_view->output().inverse_view
+                                          : (native_matrix_seed ? &*native_matrix_seed : nullptr));
         if (!_camera_view && native_seed) {
             // A native/manual camera still supplies the scene's previous
             // view when the original event manager takes ownership.
@@ -2925,14 +2950,33 @@ namespace smgpc::runtime {
     }
 
     void CameraSystemService::end_event_camera(
-        std::int32_t zone_id, std::string_view name, bool force,
+        std::int32_t zone_id, std::string_view name, bool reset_view,
         std::int32_t interpolation_frames) {
-        _event_cameras.end(zone_id, name, force, interpolation_frames);
+        const auto was_event_active = _event_cameras.active_key().has_value();
+        _event_cameras.end(zone_id, name, reset_view, interpolation_frames);
         if (_camera_view) {
             if (const auto frames = _event_cameras.take_interpolation_request()) {
                 _camera_view->set_interpolation(*frames, _start_position_camera_active);
             }
-            if (!_event_cameras.active_key()) {
+            if (was_event_active && !_event_cameras.active_key()) {
+                // CameraDirector::endEvent copies its adjusted pose only
+                // after the finish request (a zero-frame cut forbids it).
+                if (reset_view && !_camera_view->original().mIsForceCameraChange &&
+                    _authored_game_camera) {
+                    auto &game_manager = _authored_game_camera->controller->manager();
+                    game_manager.mPoseParam->copyFrom(_camera_view->processed_pose());
+                    game_manager.mMatrix.set(_camera_view->output().inverse_view);
+                    const auto projection = _game_camera_pose;
+                    auto restored = _authored_game_camera->controller->calculation().pose;
+                    if (projection) {
+                        restored.aspect_ratio = projection->aspect_ratio;
+                        restored.near_clip = projection->near_clip;
+                        restored.far_clip = projection->far_clip;
+                        restored.projection_offset_x = projection->projection_offset_x;
+                        restored.projection_offset_y = projection->projection_offset_y;
+                    }
+                    _game_camera_pose = restored;
+                }
                 // CameraDirector::endEvent protects the finish interpolation
                 // from the game manager's first chunk request after pop().
                 _camera_view->original().mIsInterpolationOff = true;
@@ -3037,7 +3081,7 @@ namespace smgpc::runtime {
         // CameraDirector already has when its manager changes chunks.
         _camera_view->set_interpolation(0U, start_position_active);
         _view_camera_pose = _camera_view->update(
-            _authored_game_camera->controller->pose_param(),
+            _authored_game_camera->controller->manager(),
             _authored_game_camera->controller->target_object(), restored_pose,
             _authored_game_camera->controller->view_flags());
         _last_view_frame.reset();
@@ -3115,6 +3159,10 @@ namespace smgpc::runtime {
 
         const auto &initial = *_stage_start_camera;
         if (_authored_game_camera->manager_reset_requested) {
+            if (_camera_view) {
+                _camera_view->set_interpolation(0U, _start_position_camera_active);
+                _camera_view->request_pose_reset();
+            }
             _authored_game_camera->controller->reset_manager(
                 *target);
         } else if (_authored_game_camera->reset_requested) {
