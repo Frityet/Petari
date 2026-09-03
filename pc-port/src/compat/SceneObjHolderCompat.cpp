@@ -23,6 +23,7 @@
 #include "Game/Screen/LensFlare.hpp"
 #include "Game/Util/BaseMatrixFollowTargetHolder.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
+#include "compat/JkrAllocationDomain.hpp"
 #include "compat/CapturedFrameBlurService.hpp"
 #include "compat/GlobalGravityOwnership.hpp"
 #include "compat/TalkRuntime.hpp"
@@ -68,11 +69,11 @@ namespace smgpc::scene {
         : _holder(&holder), _owned_objects(),
           _owned_registration_objects(),
           _provisional_slots(), _factory_override(factory_override),
-          _factory_context(factory_context),
-          _global_gravity_ownership(
-              std::make_unique<smgpc::compat::GlobalGravityOwnership>(holder)),
-          _area_obj_runtime(std::make_unique<AreaObjRuntime>()),
-          _captured_frame_blur_service(std::make_unique<smgpc::compat::CapturedFrameBlurService>()) {
+          _factory_context(factory_context) {
+        smgpc::compat::JkrHostAllocationScope host;
+        _global_gravity_ownership = std::make_unique<smgpc::compat::GlobalGravityOwnership>(holder);
+        _area_obj_runtime = std::make_unique<AreaObjRuntime>();
+        _captured_frame_blur_service = std::make_unique<smgpc::compat::CapturedFrameBlurService>();
         if (sCurrentSceneObjHolder != nullptr) {
             throw std::logic_error("a SceneObjHolder is already bound to the active scene");
         }
@@ -140,6 +141,7 @@ namespace smgpc::scene {
     }
 
     void adopt_current_scene_obj_holder_descendant(NameObj *object) {
+        smgpc::compat::JkrHostAllocationScope host;
         if (object == nullptr || sCurrentSceneObjHolderBinding == nullptr) {
             throw std::logic_error(
                 "cannot adopt a NameObj without an active SceneObjHolder binding");
@@ -221,6 +223,7 @@ NameObj *SceneObjHolder::create(int id) {
         }
 
         object->initWithoutIter();
+        smgpc::compat::JkrHostAllocationScope host_metadata;
         auto registrations =
             smgpc::compat::snapshot_name_obj_runtime_objects_since(
                 marker);

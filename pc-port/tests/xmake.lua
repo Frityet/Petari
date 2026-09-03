@@ -1548,6 +1548,22 @@ target("smg-pc-gravity-math-foundation-tests")
         realtime_output = true
     })
 
+target("smg-pc-scene-scheduler-heap-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    if is_plat("macosx", "iphoneos") then
+        add_ldflags("-Wl,-dead_strip", {force = true})
+    else
+        add_ldflags("-Wl,--gc-sections", {force = true})
+    end
+    add_files("SceneSchedulerHeapTests.cpp", "../aurora/lib/compat.cpp")
+    add_deps {"smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
+              "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"}
+    add_tests("scene_scheduler_heap", {
+        group = "aurora", rundir = os.projectdir(), realtime_output = true
+    })
+
 target("smg-pc-game-math-rotation-tests")
     if is_plat("macosx", "iphoneos") then
         add_ldflags("-Wl,-dead_strip", {force = true})

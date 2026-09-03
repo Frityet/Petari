@@ -8,6 +8,7 @@
 #include "Game/System/ResourceInfo.hpp"
 #include "JSystem/J3DGraphBase/J3DSys.hpp"
 #include "compat/SceneJ3dScope.hpp"
+#include "compat/JkrAllocationDomain.hpp"
 
 #include <algorithm>
 #include <array>
@@ -483,6 +484,7 @@ namespace smgpc::runtime {
     SceneScheduler::~SceneScheduler() { clear(); }
 
     void SceneScheduler::begin_draw_buffer_registration(std::shared_ptr<smgpc::compat::JkrAllocationDomain> domain) {
+        smgpc::compat::JkrHostAllocationScope host;
         retire_draw_buffers();
         _draw_buffers = std::make_unique<smgpc::scene::SceneDrawBufferService>(std::move(domain));
     }
@@ -514,6 +516,7 @@ namespace smgpc::runtime {
     }
 
     void SceneScheduler::connect_name_obj(NameObj &obj, s32 movement_type, s32 calc_anim_type, s32 draw_buffer_type, s32 draw_type) {
+        smgpc::compat::JkrHostAllocationScope host;
         if (auto *entry = find_entry(SceneEntryKind::NameObj, &obj)) {
             entry->movement_type = movement_type;
             entry->calc_anim_type = calc_anim_type;
@@ -593,6 +596,7 @@ namespace smgpc::runtime {
     }
 
     void SceneScheduler::register_layout(smgpc::layout::LayoutRuntime &layout, s32 movement_type, s32 calc_anim_type, s32 draw_type) {
+        smgpc::compat::JkrHostAllocationScope host;
         if (auto *entry = find_entry(SceneEntryKind::Layout, &layout)) {
             entry->movement_type = movement_type;
             entry->calc_anim_type = calc_anim_type;
@@ -624,6 +628,7 @@ namespace smgpc::runtime {
     }
 
     void SceneScheduler::register_layout_actor(LayoutActor &layout, s32 movement_type, s32 calc_anim_type, s32 draw_type) {
+        smgpc::compat::JkrHostAllocationScope host;
         if (auto *entry = find_entry(SceneEntryKind::LayoutActor, &layout)) {
             entry->movement_type = movement_type;
             entry->calc_anim_type = calc_anim_type;
@@ -656,6 +661,7 @@ namespace smgpc::runtime {
     }
 
     void SceneScheduler::register_live_actor_model(LiveActor &actor, s32 movement_type, s32 calc_anim_type, s32 draw_buffer_type, s32 draw_type) {
+        smgpc::compat::JkrHostAllocationScope host;
         if (auto *entry = find_entry(SceneEntryKind::LiveActorModel, &actor)) {
             if (entry->draw_buffer_type != draw_buffer_type)
                 throw std::logic_error("An original draw registration cannot change categories before retirement");
