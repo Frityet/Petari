@@ -1,0 +1,22 @@
+[
+  {
+    "source": "src/Game/MapObj/ElectricBall.cpp",
+    "unchanged_functions": 38,
+    "unchanged_instruction_bytes": 3332
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "unchanged_functions": 69,
+    "unchanged_instruction_bytes": 9588
+  },
+  {
+    "source": "src/Game/AreaObj/AreaObj.cpp",
+    "unchanged_functions": 24,
+    "unchanged_instruction_bytes": 1984
+  },
+  {
+    "source": "src/Game/LiveActor/EffectKeeper.cpp",
+    "unchanged_functions": 37,
+    "unchanged_instruction_bytes": 3956
+  }
+]

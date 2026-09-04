@@ -1,0 +1,311 @@
+{
+  "source_sha256": "eb52365f5426909e7442c865aab36c5e7a750e536f9dc24269b27b535fe5b5f2",
+  "functional_sha256": "853fab32c43ce3d34f7c9ab776a9f0c758358e559348a3459da636c442b3be9a",
+  "command": [
+    "build/tools/wibo",
+    "build/tools/sjiswrap.exe",
+    "build/compilers/GC/3.0a3/mwcceppc.exe",
+    "-nodefaults",
+    "-proc",
+    "gekko",
+    "-align",
+    "powerpc",
+    "-enum",
+    "int",
+    "-fp",
+    "hardware",
+    "-Cpp_exceptions",
+    "off",
+    "-O4,s",
+    "-inline",
+    "auto",
+    "-pragma",
+    "cats off",
+    "-pragma",
+    "warn_notinlined off",
+    "-maxerrors",
+    "1",
+    "-nosyspath",
+    "-RTTI",
+    "off",
+    "-str",
+    "reuse",
+    "-enc",
+    "SJIS",
+    "-sdata",
+    "4",
+    "-sdata2",
+    "4",
+    "-ipa",
+    "file",
+    "-sym",
+    "on",
+    "-i",
+    "include",
+    "-i",
+    "libs/JSystem/include",
+    "-i",
+    "libs/MSL_C++/include",
+    "-i",
+    "libs/MSL_C/include",
+    "-i",
+    "libs/MetroTRK/include",
+    "-i",
+    "libs/RVLFaceLib/include",
+    "-i",
+    "libs/RVL_SDK/include",
+    "-i",
+    "libs/Runtime/include",
+    "-i",
+    "libs/nw4r/include",
+    "-i",
+    "build/RMGK01/include",
+    "-DVERSION=0",
+    "-c",
+    "/Users/frityet/Projects/petari/src/Game/LiveActor/EffectKeeper.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/build/original-effect-keeper-completion-20260903/EffectKeeper.o"
+  ],
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "functions": [
+    {
+      "symbol": "initAfterPlacementForAttributeEffect__12EffectKeeperFPA4_f",
+      "bytes": 392,
+      "retail_address": "0x801622fc",
+      "match_percent": 97.60204,
+      "relocated_instruction_bytes_equal": false,
+      "verified_register_and_schedule_differences": [
+        {
+          "offset": "0xdc",
+          "retail": "0xe09f0000",
+          "compiled": "0xe07f0000"
+        },
+        {
+          "offset": "0xe8",
+          "retail": "0xec4207f2",
+          "compiled": "0xd001003c"
+        },
+        {
+          "offset": "0xec",
+          "retail": "0xd001003c",
+          "compiled": "0xec4207f2"
+        },
+        {
+          "offset": "0xf4",
+          "retail": "0xe07f8008",
+          "compiled": "0xe03f8008"
+        },
+        {
+          "offset": "0xf8",
+          "retail": "0xe021803c",
+          "compiled": "0xe081803c"
+        },
+        {
+          "offset": "0x100",
+          "retail": "0x1023082a",
+          "compiled": "0x1021202a"
+        },
+        {
+          "offset": "0x110",
+          "retail": "0x1004002a",
+          "compiled": "0x1003002a"
+        }
+      ],
+      "relocations": [
+        {
+          "offset": "0x30",
+          "kind": 10,
+          "symbol": "checkExistenceAttributeEffect__12EffectKeeperFv",
+          "addend": 0,
+          "effective_retail_target": "0x80163058"
+        },
+        {
+          "offset": "0x80",
+          "kind": 109,
+          "symbol": "@5269",
+          "addend": 0,
+          "value_hex": "42c80000",
+          "effective_retail_target": "0x806bbc44"
+        },
+        {
+          "offset": "0x8c",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>Ffff_v",
+          "addend": 0,
+          "effective_retail_target": "0x800172e4"
+        },
+        {
+          "offset": "0x98",
+          "kind": 10,
+          "symbol": "negateInternal__9JGeometryFPCfPf",
+          "addend": 0,
+          "effective_retail_target": "0x80053cb4"
+        },
+        {
+          "offset": "0xa0",
+          "kind": 10,
+          "symbol": "normalize__2MRFPQ29JGeometry8TVec3<f>",
+          "addend": 0,
+          "effective_retail_target": "0x803e63b0"
+        },
+        {
+          "offset": "0xb4",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>Ffff_v",
+          "addend": 0,
+          "effective_retail_target": "0x800172e4"
+        },
+        {
+          "offset": "0xc0",
+          "kind": 10,
+          "symbol": "negateInternal__9JGeometryFPCfPf",
+          "addend": 0,
+          "effective_retail_target": "0x80053cb4"
+        },
+        {
+          "offset": "0x118",
+          "kind": 10,
+          "symbol": "__ct__8TriangleFv",
+          "addend": 0,
+          "effective_retail_target": "0x80182920"
+        },
+        {
+          "offset": "0x12c",
+          "kind": 10,
+          "symbol": "getFirstPolyOnLineToMap__2MRFPQ29JGeometry8TVec3<f>P8TriangleRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+          "addend": 0,
+          "effective_retail_target": "0x803e1f00"
+        },
+        {
+          "offset": "0x144",
+          "kind": 10,
+          "symbol": "getAttributes__8TriangleCFv",
+          "addend": 0,
+          "effective_retail_target": "0x80182ec4"
+        },
+        {
+          "offset": "0x154",
+          "kind": 10,
+          "symbol": "getFloorCodeIndex__2MRFRC12JMapInfoIter",
+          "addend": 0,
+          "effective_retail_target": "0x803e3170"
+        }
+      ]
+    },
+    {
+      "symbol": "onDraw__12EffectKeeperFv",
+      "bytes": 112,
+      "retail_address": "0x80162eac",
+      "match_percent": 100.0,
+      "relocated_instruction_bytes_equal": true,
+      "verified_register_and_schedule_differences": [],
+      "relocations": [
+        {
+          "offset": "0xa",
+          "kind": 6,
+          "symbol": "@4169",
+          "addend": 0,
+          "value_hex": "00000000ffffffff800c7ee0",
+          "effective_retail_target": "0x80587b2c"
+        },
+        {
+          "offset": "0x1a",
+          "kind": 4,
+          "symbol": "@4169",
+          "addend": 0,
+          "value_hex": "00000000ffffffff800c7ee0",
+          "effective_retail_target": "0x80587b2c"
+        },
+        {
+          "offset": "0x1c",
+          "kind": 109,
+          "symbol": "@4171",
+          "addend": 0,
+          "value_hex": "ffffffff",
+          "effective_retail_target": "0x806b1b54"
+        },
+        {
+          "offset": "0x5c",
+          "kind": 10,
+          "symbol": "for_each<PP12MultiEmitter,Q23std51binder2nd<Q23std30mem_fun1_t<v,12MultiEmitter,l>,l>>__3stdFPP12MultiEmitterPP12MultiEmitterQ23std51binder2nd<Q23std30mem_fun1_t<v,12MultiEmitter,l>,l>_Q23std51binder2nd<Q23std30mem_fun1_t<v,12MultiEmitter,l>,l>",
+          "addend": 0,
+          "effective_retail_target": "0x80163308"
+        }
+      ]
+    },
+    {
+      "symbol": "offDraw__12EffectKeeperFv",
+      "bytes": 112,
+      "retail_address": "0x80162f1c",
+      "match_percent": 100.0,
+      "relocated_instruction_bytes_equal": true,
+      "verified_register_and_schedule_differences": [],
+      "relocations": [
+        {
+          "offset": "0xa",
+          "kind": 6,
+          "symbol": "@4261",
+          "addend": 0,
+          "value_hex": "00000000ffffffff800c7e3c",
+          "effective_retail_target": "0x80587b38"
+        },
+        {
+          "offset": "0x1a",
+          "kind": 4,
+          "symbol": "@4261",
+          "addend": 0,
+          "value_hex": "00000000ffffffff800c7e3c",
+          "effective_retail_target": "0x80587b38"
+        },
+        {
+          "offset": "0x1c",
+          "kind": 109,
+          "symbol": "@4263",
+          "addend": 0,
+          "value_hex": "ffffffff",
+          "effective_retail_target": "0x806b1b58"
+        },
+        {
+          "offset": "0x5c",
+          "kind": 10,
+          "symbol": "for_each<PP12MultiEmitter,Q23std51binder2nd<Q23std30mem_fun1_t<v,12MultiEmitter,l>,l>>__3stdFPP12MultiEmitterPP12MultiEmitterQ23std51binder2nd<Q23std30mem_fun1_t<v,12MultiEmitter,l>,l>_Q23std51binder2nd<Q23std30mem_fun1_t<v,12MultiEmitter,l>,l>",
+          "addend": 0,
+          "effective_retail_target": "0x80163308"
+        }
+      ]
+    },
+    {
+      "symbol": "updateFloorCode__12EffectKeeperFv",
+      "bytes": 156,
+      "retail_address": "0x80163174",
+      "match_percent": 99.74359,
+      "relocated_instruction_bytes_equal": true,
+      "verified_register_and_schedule_differences": [],
+      "relocations": [
+        {
+          "offset": "0x20",
+          "kind": 109,
+          "symbol": "@5284",
+          "addend": 0,
+          "value_hex": "00000000",
+          "effective_retail_target": "0x806bbc40"
+        },
+        {
+          "offset": "0x68",
+          "kind": 109,
+          "symbol": "@5284",
+          "addend": 0,
+          "value_hex": "00000000",
+          "effective_retail_target": "0x806bbc40"
+        },
+        {
+          "offset": "0x94",
+          "kind": 10,
+          "symbol": "updateFloorCode__12EffectKeeperFPC8Triangle",
+          "addend": 0,
+          "effective_retail_target": "0x80163210"
+        }
+      ]
+    }
+  ]
+}

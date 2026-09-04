@@ -67,8 +67,8 @@ namespace std {
     }
 
     template < class Func, class Type >
-    binder2nd< Func, typename Func::second_argument_type > bind2nd(const Func& mf, const Type& a) {
-        return binder2nd< Func, typename Func::second_argument_type >(mf, a);
+    binder2nd< Func, const Type& > bind2nd(const Func& mf, const Type& a) {
+        return binder2nd< Func, const Type& >(mf, a);
     }
 
     // Mem funcs

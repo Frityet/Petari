@@ -2431,6 +2431,14 @@ target("smg-pc-upstream-component-tests")
     })
 
 
+target("smg-pc-msl-functional-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    add_includedirs("../aurora/include")
+    add_files("MslFunctionalTests.cpp")
+    add_tests("msl_functional", {group = "aurora", rundir = os.projectdir(), realtime_output = true})
+
 target("smg-pc-msl-printf-tests")
     set_kind("binary")
     set_default(false)

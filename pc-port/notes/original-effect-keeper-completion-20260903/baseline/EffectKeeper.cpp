@@ -1,5 +1,4 @@
 #include "Game/LiveActor/EffectKeeper.hpp"
-#include "Game/LiveActor/Binder.hpp"
 #include "Game/Effect/AutoEffectInfo.hpp"
 #include "Game/Effect/EffectSystemUtil.hpp"
 #include "Game/Effect/MultiEmitter.hpp"
@@ -8,7 +7,6 @@
 #include "Game/System/ResourceHolder.hpp"
 #include "Game/Util/HashUtil.hpp"
 #include "Game/Util/MapUtil.hpp"
-#include "Game/Util/MathUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
 #include <algorithm>
 #include <cstdio>
@@ -18,34 +16,6 @@ namespace {
 };  // namespace
 
 namespace {
-    s32 getFloorCode(MtxPtr pMtx, f32 distance) {
-        TPos3f mtx(pMtx);
-        TVec3f direction;
-        mtx.getYDir(direction);
-        direction.negate();
-        MR::normalize(&direction);
-
-        TVec3f start;
-        mtx.getTrans(start);
-        start += -direction * distance;
-
-        TVec3f position;
-        Triangle triangle;
-        if (!MR::getFirstPolyOnLineToMap(&position, &triangle, start, direction)) {
-            return -1;
-        }
-
-        return MR::getFloorCodeIndex(triangle.getAttributes());
-    }
-
-    bool isBinded(const Binder* pBinder) {
-        if (pBinder == nullptr) {
-            return false;
-        }
-
-        return (pBinder->isBindedGround() || pBinder->isBindedWall()) || pBinder->isBindedRoof();
-    }
-
     const char* getMultiEmitterName(const MultiEmitter* pEmitter) {
         return pEmitter->_28->getName();
     }
@@ -77,26 +47,7 @@ void EffectKeeper::init(LiveActor* pActor) {
     }
 }
 
-void EffectKeeper::initAfterPlacementForAttributeEffect(MtxPtr pMtx) {
-    if (mBinder != nullptr) {
-        return;
-    }
-
-    checkExistenceAttributeEffect();
-    if (!_30) {
-        return;
-    }
-    if (pMtx == nullptr) {
-        return;
-    }
-
-    s32 floorCode = ::getFloorCode(pMtx, 100.0f);
-
-    if (floorCode >= 0) {
-        _28 = floorCode;
-        _2C = floorCode;
-    }
-}
+// EffectKeeper::initAfterPlacementForAttributeEffect(MtxPtr)
 
 void EffectKeeper::setBinder(const Binder* pBinder) {
     mBinder = pBinder;
@@ -305,13 +256,8 @@ void EffectKeeper::changeBck() {
     }
 }
 
-void EffectKeeper::onDraw() {
-    std::for_each(_C.begin(), _C.end(), std::bind2nd(std::mem_func(&MultiEmitter::playDrawParticle), -1L));
-}
-
-void EffectKeeper::offDraw() {
-    std::for_each(_C.begin(), _C.end(), std::bind2nd(std::mem_func(&MultiEmitter::stopDrawParticle), -1L));
-}
+// EffectKeeper::onDraw
+// EffectKeeper::offDraw
 
 void EffectKeeper::enableSort() {
     _18 = new HashSortTable(_C.capacity());
@@ -358,16 +304,7 @@ void EffectKeeper::registMultiEmitter(MultiEmitter* pEmitter, const char* pParam
     _C.push_back(pEmitter);
 }
 
-void EffectKeeper::updateFloorCode() {
-    if (mBinder == nullptr) {
-        return;
-    }
-
-    _2C = _28;
-    if (::isBinded(mBinder)) {
-        updateFloorCode(&mBinder->mGroundInfo.mParentTriangle);
-    }
-}
+// EffectKeeper::updateFloorCode
 
 void EffectKeeper::updateFloorCode(const Triangle* pTriangle) {
     if (pTriangle == nullptr) {

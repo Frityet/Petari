@@ -1,0 +1,788 @@
+[
+  {
+    "source": "src/Game/MapObj/ElectricBall.cpp",
+    "symbol": "__sinit_\\ElectricBall_cpp",
+    "bytes": 52,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/MapObj/ElectricBall.cpp",
+    "symbol": "__ct__Q212ElectricBall4BallFv",
+    "bytes": 80,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/MapObj/ElectricBall.cpp",
+    "symbol": "__ct__Q29JGeometry8TVec3<f>FRC3Vec",
+    "bytes": 20,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/MapObj/ElectricBall.cpp",
+    "symbol": "init__Q212ElectricBall4BallFP9LiveActor",
+    "bytes": 152,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/MapObj/ElectricBall.cpp",
+    "symbol": "updatePosition__Q212ElectricBall4BallFRCQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>",
+    "bytes": 24,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/MapObj/ElectricBall.cpp",
+    "symbol": "activate__Q212ElectricBall4BallFv",
+    "bytes": 24,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/MapObj/ElectricBall.cpp",
+    "symbol": "__ct__12ElectricBallFPCc",
+    "bytes": 124,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/MapObj/ElectricBall.cpp",
+    "symbol": "__dt__9LiveActorFv",
+    "bytes": 88,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/MapObj/ElectricBall.cpp",
+    "symbol": "__dt__Q22MR38AssignableArray<Q212ElectricBall4Ball>Fv",
+    "bytes": 104,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/MapObj/ElectricBall.cpp",
+    "symbol": "startMove__12ElectricBallFv",
+    "bytes": 180,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/MapObj/ElectricBall.cpp",
+    "symbol": "init__12ElectricBallFRC12JMapInfoIter",
+    "bytes": 440,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/MapObj/ElectricBall.cpp",
+    "symbol": "__ct<f>__Q29JGeometry8TVec3<f>Ffff_Pv",
+    "bytes": 16,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/MapObj/ElectricBall.cpp",
+    "symbol": "initBalls__12ElectricBallFRC12JMapInfoIter",
+    "bytes": 452,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/MapObj/ElectricBall.cpp",
+    "symbol": "initAfterPlacement__12ElectricBallFv",
+    "bytes": 148,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/MapObj/ElectricBall.cpp",
+    "symbol": "for_each<PQ212ElectricBall4Ball,Q23std221binder2nd<Q23std120mem_fun1_ref_t<v,Q212ElectricBall4Ball,RCQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>>,RCQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>>>__3stdFPQ212ElectricBall4BallPQ212ElectricBall4BallQ23std221binder2nd<Q23std120mem_fun1_ref_t<v,Q212ElectricBall4Ball,RCQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>>,RCQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>>_Q23std221binder2nd<Q23std120mem_fun1_ref_t<v,Q212ElectricBall4Ball,RCQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>>,RCQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>>",
+    "bytes": 128,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/MapObj/ElectricBall.cpp",
+    "symbol": "getNearestBall__12ElectricBallFv",
+    "bytes": 140,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/MapObj/ElectricBall.cpp",
+    "symbol": "set<f>__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>_v",
+    "bytes": 28,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/MapObj/ElectricBall.cpp",
+    "symbol": "control__12ElectricBallFv",
+    "bytes": 444,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/MapObj/ElectricBall.cpp",
+    "symbol": "attackSensor__12ElectricBallFP9HitSensorP9HitSensor",
+    "bytes": 160,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/MapObj/ElectricBall.cpp",
+    "symbol": "receiveMsgPlayerAttack__12ElectricBallFUlP9HitSensorP9HitSensor",
+    "bytes": 8,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/MapObj/ElectricBall.cpp",
+    "symbol": "exeAttack__12ElectricBallFv",
+    "bytes": 132,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/MapObj/ElectricBall.cpp",
+    "symbol": "__cl__Q22MR51FunctorV0M<P12ElectricBall,M12ElectricBallFPCvPv_v>CFv",
+    "bytes": 48,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/MapObj/ElectricBall.cpp",
+    "symbol": "clone__Q22MR51FunctorV0M<P12ElectricBall,M12ElectricBallFPCvPv_v>CFP7JKRHeap",
+    "bytes": 104,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/MapObj/ElectricBall.cpp",
+    "symbol": "receiveOtherMsg__9LiveActorFUlP9HitSensorP9HitSensor",
+    "bytes": 8,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/MapObj/ElectricBall.cpp",
+    "symbol": "receiveMsgThrow__9LiveActorFP9HitSensorP9HitSensor",
+    "bytes": 8,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/MapObj/ElectricBall.cpp",
+    "symbol": "receiveMsgTaken__9LiveActorFP9HitSensorP9HitSensor",
+    "bytes": 8,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/MapObj/ElectricBall.cpp",
+    "symbol": "receiveMsgTake__9LiveActorFP9HitSensorP9HitSensor",
+    "bytes": 8,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/MapObj/ElectricBall.cpp",
+    "symbol": "receiveMsgEnemyAttack__9LiveActorFUlP9HitSensorP9HitSensor",
+    "bytes": 8,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/MapObj/ElectricBall.cpp",
+    "symbol": "receiveMsgPush__9LiveActorFP9HitSensorP9HitSensor",
+    "bytes": 8,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/MapObj/ElectricBall.cpp",
+    "symbol": "updateHitSensor__9LiveActorFP9HitSensor",
+    "bytes": 4,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/MapObj/ElectricBall.cpp",
+    "symbol": "getBaseMtx__12ElectricBallCFv",
+    "bytes": 8,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/MapObj/ElectricBall.cpp",
+    "symbol": "__dt__12ElectricBallFv",
+    "bytes": 112,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/MapObj/ElectricBall.cpp",
+    "symbol": "__ct__Q215NrvElectricBall12HostTypeWaitFv",
+    "bytes": 16,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/MapObj/ElectricBall.cpp",
+    "symbol": "__ct__Q215NrvElectricBall12HostTypeMoveFv",
+    "bytes": 16,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/MapObj/ElectricBall.cpp",
+    "symbol": "__ct__Q215NrvElectricBall14HostTypeAttackFv",
+    "bytes": 16,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/MapObj/ElectricBall.cpp",
+    "symbol": "execute__Q215NrvElectricBall14HostTypeAttackCFP5Spine",
+    "bytes": 8,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/MapObj/ElectricBall.cpp",
+    "symbol": "execute__Q215NrvElectricBall12HostTypeMoveCFP5Spine",
+    "bytes": 4,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/MapObj/ElectricBall.cpp",
+    "symbol": "execute__Q215NrvElectricBall12HostTypeWaitCFP5Spine",
+    "bytes": 4,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "__sinit_\\GalaxyMap_cpp",
+    "bytes": 76,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "execute__Q223@unnamed@GalaxyMap_cpp@19GalaxyMapShowDetailCFP5Spine",
+    "bytes": 8,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "execute__Q223@unnamed@GalaxyMap_cpp@23GalaxyMapFadeinAstroMapCFP5Spine",
+    "bytes": 8,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "execute__Q223@unnamed@GalaxyMap_cpp@24GalaxyMapFadeinGalaxyMapCFP5Spine",
+    "bytes": 8,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "execute__Q223@unnamed@GalaxyMap_cpp@17GalaxyMapFocusOutCFP5Spine",
+    "bytes": 8,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "execute__Q223@unnamed@GalaxyMap_cpp@16GalaxyMapFocusInCFP5Spine",
+    "bytes": 8,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "execute__Q223@unnamed@GalaxyMap_cpp@13GalaxyMapIdleCFP5Spine",
+    "bytes": 8,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "__ct__9GalaxyMapFv",
+    "bytes": 164,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "__dt__11LayoutActorFv",
+    "bytes": 88,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "__dt__Q22MR33AssignableArray<P13GalaxyMapIcon>Fv",
+    "bytes": 96,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "__dt__Q22MR48Vector<Q22MR33AssignableArray<P13GalaxyMapIcon>>Fv",
+    "bytes": 88,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "__dt__Q22MR38AssignableArray<P18GalaxyMapCometIcon>Fv",
+    "bytes": 96,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "__dt__Q22MR53Vector<Q22MR38AssignableArray<P18GalaxyMapCometIcon>>Fv",
+    "bytes": 88,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "__dt__Q22MR37AssignableArray<P17GalaxyMapDomeIcon>Fv",
+    "bytes": 96,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "__dt__Q22MR52Vector<Q22MR37AssignableArray<P17GalaxyMapDomeIcon>>Fv",
+    "bytes": 88,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "__dt__Q22MR37AssignableArray<P17GalaxyMapTicoIcon>Fv",
+    "bytes": 96,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "__dt__Q22MR52Vector<Q22MR37AssignableArray<P17GalaxyMapTicoIcon>>Fv",
+    "bytes": 88,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "init__9GalaxyMapFRC12JMapInfoIter",
+    "bytes": 284,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "initDomeIcon__9GalaxyMapFv",
+    "bytes": 184,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "initMarioIcon__9GalaxyMapFv",
+    "bytes": 212,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "initTicoIcon__9GalaxyMapFv",
+    "bytes": 208,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "appear__9GalaxyMapFv",
+    "bytes": 376,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "for_each<PP17GalaxyMapDomeIcon,Q23std26mem_fun_t<v,11LayoutActor>>__3stdFPP17GalaxyMapDomeIconPP17GalaxyMapDomeIconQ23std26mem_fun_t<v,11LayoutActor>_Q23std26mem_fun_t<v,11LayoutActor>",
+    "bytes": 116,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "for_each<PP13GalaxyMapIcon,Q23std26mem_fun_t<v,11LayoutActor>>__3stdFPP13GalaxyMapIconPP13GalaxyMapIconQ23std26mem_fun_t<v,11LayoutActor>_Q23std26mem_fun_t<v,11LayoutActor>",
+    "bytes": 116,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "for_each<PP18GalaxyMapCometIcon,Q23std26mem_fun_t<v,11LayoutActor>>__3stdFPP18GalaxyMapCometIconPP18GalaxyMapCometIconQ23std26mem_fun_t<v,11LayoutActor>_Q23std26mem_fun_t<v,11LayoutActor>",
+    "bytes": 116,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "for_each<PP17GalaxyMapTicoIcon,Q23std26mem_fun_t<v,11LayoutActor>>__3stdFPP17GalaxyMapTicoIconPP17GalaxyMapTicoIconQ23std26mem_fun_t<v,11LayoutActor>_Q23std26mem_fun_t<v,11LayoutActor>",
+    "bytes": 116,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "kill__9GalaxyMapFv",
+    "bytes": 460,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "movement__9GalaxyMapFv",
+    "bytes": 480,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "calcAnim__9GalaxyMapFv",
+    "bytes": 460,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "draw__9GalaxyMapCFv",
+    "bytes": 464,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "drawGalaxyIconWithOrder__9GalaxyMapCFi",
+    "bytes": 176,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "movementForCapture__9GalaxyMapFv",
+    "bytes": 232,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "calcAnimForCapture__9GalaxyMapFRCQ34nw4r3lyt8DrawInfo",
+    "bytes": 364,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "drawForCapture__9GalaxyMapFRCQ34nw4r3lyt8DrawInfo",
+    "bytes": 284,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "setModeNormal__9GalaxyMapFv",
+    "bytes": 276,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "for_each<PP13GalaxyMapIcon,Q23std28mem_fun_t<v,13GalaxyMapIcon>>__3stdFPP13GalaxyMapIconPP13GalaxyMapIconQ23std28mem_fun_t<v,13GalaxyMapIcon>_Q23std28mem_fun_t<v,13GalaxyMapIcon>",
+    "bytes": 116,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "for_each<PP17GalaxyMapTicoIcon,Q23std32mem_fun_t<v,17GalaxyMapTicoIcon>>__3stdFPP17GalaxyMapTicoIconPP17GalaxyMapTicoIconQ23std32mem_fun_t<v,17GalaxyMapTicoIcon>_Q23std32mem_fun_t<v,17GalaxyMapTicoIcon>",
+    "bytes": 116,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "for_each<PP17GalaxyMapDomeIcon,Q23std32mem_fun_t<v,17GalaxyMapDomeIcon>>__3stdFPP17GalaxyMapDomeIconPP17GalaxyMapDomeIconQ23std32mem_fun_t<v,17GalaxyMapDomeIcon>_Q23std32mem_fun_t<v,17GalaxyMapDomeIcon>",
+    "bytes": 116,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "setModeNewGalaxyDiscover__9GalaxyMapFv",
+    "bytes": 276,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "setModeNewTicoGalaxyDiscover__9GalaxyMapFv",
+    "bytes": 276,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "setModeNewDomeDiscover__9GalaxyMapFv",
+    "bytes": 276,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "setModeTicoCometPray__9GalaxyMapFv",
+    "bytes": 276,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "setModeCapture__9GalaxyMapFv",
+    "bytes": 152,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "forceToGalaxyMap__9GalaxyMapFv",
+    "bytes": 108,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "drawGalaxyInfo__9GalaxyMapCFv",
+    "bytes": 92,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "isTransition__9GalaxyMapCFv",
+    "bytes": 96,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "isPointingAnything__9GalaxyMapCFv",
+    "bytes": 16,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "isShowDetail__9GalaxyMapCFv",
+    "bytes": 92,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "dispIconAButton__9GalaxyMapFv",
+    "bytes": 8,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "changeToGalaxyMap__9GalaxyMapFv",
+    "bytes": 68,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "changeToAstroMap__9GalaxyMapFv",
+    "bytes": 68,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "forceToAstroMap__9GalaxyMapFv",
+    "bytes": 108,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "exeIdle__9GalaxyMapFv",
+    "bytes": 4,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "tryFocusIn__9GalaxyMapFv",
+    "bytes": 244,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "exeFocusIn__9GalaxyMapFv",
+    "bytes": 64,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "updateGalaxyName__9GalaxyMapFv",
+    "bytes": 36,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "exeFocusOut__9GalaxyMapFv",
+    "bytes": 100,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "exeFadeinGalaxyMap__9GalaxyMapFv",
+    "bytes": 124,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "exeFadeinAstroMap__9GalaxyMapFv",
+    "bytes": 124,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "exeShowDetail__9GalaxyMapFv",
+    "bytes": 232,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "getPointingGalaxyIcon__9GalaxyMapCFv",
+    "bytes": 116,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "control__11LayoutActorFv",
+    "bytes": 4,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "__dt__9GalaxyMapFv",
+    "bytes": 148,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "__ct__Q223@unnamed@GalaxyMap_cpp@13GalaxyMapIdleFv",
+    "bytes": 16,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "__ct__Q223@unnamed@GalaxyMap_cpp@16GalaxyMapFocusInFv",
+    "bytes": 16,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "__ct__Q223@unnamed@GalaxyMap_cpp@17GalaxyMapFocusOutFv",
+    "bytes": 16,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "__ct__Q223@unnamed@GalaxyMap_cpp@24GalaxyMapFadeinGalaxyMapFv",
+    "bytes": 16,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "__ct__Q223@unnamed@GalaxyMap_cpp@23GalaxyMapFadeinAstroMapFv",
+    "bytes": 16,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/Screen/GalaxyMap.cpp",
+    "symbol": "__ct__Q223@unnamed@GalaxyMap_cpp@19GalaxyMapShowDetailFv",
+    "bytes": 16,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/AreaObj/AreaObj.cpp",
+    "symbol": "Functor<7AreaObj>__2MRFP7AreaObjM7AreaObjFPCvPv_v_Q22MR39FunctorV0M<P7AreaObj,M7AreaObjFPCvPv_v>",
+    "bytes": 64,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/AreaObj/AreaObj.cpp",
+    "symbol": "__ct__7AreaObjFiPCc",
+    "bytes": 328,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/AreaObj/AreaObj.cpp",
+    "symbol": "validate__7AreaObjFv",
+    "bytes": 12,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/AreaObj/AreaObj.cpp",
+    "symbol": "invalidate__7AreaObjFv",
+    "bytes": 12,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/AreaObj/AreaObj.cpp",
+    "symbol": "init__7AreaObjFRC12JMapInfoIter",
+    "bytes": 424,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/AreaObj/AreaObj.cpp",
+    "symbol": "entry__10AreaObjMgrFP7AreaObj",
+    "bytes": 108,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/AreaObj/AreaObj.cpp",
+    "symbol": "getManagerName__7AreaObjCFv",
+    "bytes": 8,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/AreaObj/AreaObj.cpp",
+    "symbol": "isInVolume__7AreaObjCFRCQ29JGeometry8TVec3<f>",
+    "bytes": 112,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/AreaObj/AreaObj.cpp",
+    "symbol": "onSwitchA__7AreaObjFv",
+    "bytes": 8,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/AreaObj/AreaObj.cpp",
+    "symbol": "offSwitchA__7AreaObjFv",
+    "bytes": 8,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/AreaObj/AreaObj.cpp",
+    "symbol": "isOnSwitchA__7AreaObjCFv",
+    "bytes": 8,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/AreaObj/AreaObj.cpp",
+    "symbol": "isOnSwitchB__7AreaObjCFv",
+    "bytes": 8,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/AreaObj/AreaObj.cpp",
+    "symbol": "isValidSwitchA__7AreaObjCFv",
+    "bytes": 8,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/AreaObj/AreaObj.cpp",
+    "symbol": "isValidSwitchB__7AreaObjCFv",
+    "bytes": 8,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/AreaObj/AreaObj.cpp",
+    "symbol": "setFollowMtx__7AreaObjFPCQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>",
+    "bytes": 12,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/AreaObj/AreaObj.cpp",
+    "symbol": "getFollowMtx__7AreaObjCFv",
+    "bytes": 12,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/AreaObj/AreaObj.cpp",
+    "symbol": "__ct__10AreaObjMgrFlPCc",
+    "bytes": 96,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/AreaObj/AreaObj.cpp",
+    "symbol": "__dt__Q22MR26AssignableArray<P7AreaObj>Fv",
+    "bytes": 96,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/AreaObj/AreaObj.cpp",
+    "symbol": "__dt__Q22MR41Vector<Q22MR26AssignableArray<P7AreaObj>>Fv",
+    "bytes": 88,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/AreaObj/AreaObj.cpp",
+    "symbol": "find_in__10AreaObjMgrCFRCQ29JGeometry8TVec3<f>",
+    "bytes": 220,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/AreaObj/AreaObj.cpp",
+    "symbol": "__cl__Q22MR39FunctorV0M<P7AreaObj,M7AreaObjFPCvPv_v>CFv",
+    "bytes": 48,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/AreaObj/AreaObj.cpp",
+    "symbol": "clone__Q22MR39FunctorV0M<P7AreaObj,M7AreaObjFPCvPv_v>CFP7JKRHeap",
+    "bytes": 104,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/AreaObj/AreaObj.cpp",
+    "symbol": "__dt__10AreaObjMgrFv",
+    "bytes": 104,
+    "reference_argument_consumer_unchanged": true
+  },
+  {
+    "source": "src/Game/AreaObj/AreaObj.cpp",
+    "symbol": "__dt__7AreaObjFv",
+    "bytes": 88,
+    "reference_argument_consumer_unchanged": true
+  }
+]
