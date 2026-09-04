@@ -28,6 +28,7 @@ namespace smgpc::resource {
 
         [[nodiscard]] const std::vector<RarcEntry> &entries() const;
         [[nodiscard]] std::span<const std::uint8_t> bytes() const noexcept { return _bytes; }
+        [[nodiscard]] const std::uint8_t* file_data_start() const noexcept { return _bytes.data() + _file_data_start; }
         [[nodiscard]] static std::uint16_t hash_name(std::string_view name);
         [[nodiscard]] bool contains(std::string_view path) const;
         [[nodiscard]] bool contains_normalized(std::string_view path) const;

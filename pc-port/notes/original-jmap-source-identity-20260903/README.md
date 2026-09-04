@@ -1,5 +1,35 @@
 # Original stage-table addresses and memory-archive indexes
 
+## Regular native integration checkpoint
+
+The raw-source reader, original archive index/fetch methods, BothDirList and
+shape-ID query prerequisites are now selected in the production native build.
+The two frozen patches were applied with `--exclude='pc-port/src/Game/Scene/*'`;
+complete StageDataHolder and PlacementInfoOrdered remain staged until the
+original factory graph is ready. This prevents an incomplete scene constructor
+from being selected by the build's Game source glob.
+
+After rebuilding all dependent translation units for the new JMapInfo and
+JKRArchive layouts, these regular LLVM 23 macOS ARM64 tests pass:
+
+- `smg-pc-original-jmap-resource-tests`: all 13 groups, including exact raw
+  identity, original heap retirement and source lifetimes.
+- `smg-pc-original-resource-holder-tests` with `SMGPC_REAL_DISC`: all five
+  groups, including the actual model/material holder and retained parser
+  cleanup. The resource-only fixture discards unused code at link time;
+  otherwise unused gameplay facades pull in incomplete Mario methods. No
+  reachable resource provider was replaced.
+- `smg-pc-original-scenario-catalog-tests` with `SMGPC_REAL_DISC`: two complete
+  48-archive / 234-zone catalogs, authored Gateway queries and original
+  allocation-failure cleanup. The allocation diagnostic is the intentional
+  failure fixture; it passes and restores ownership.
+
+`regular-test.log`, `holder-test.log` and `catalog-test.log` retain output.
+The ordinary command is `xmake build -j8 <target>` followed by its executable
+under `build/macosx/arm64/debug`; disc-backed tests use the actual RMGK01 RVZ.
+This checkpoint supplies resource identity/lifetime, not a complete stage or
+camera constructor runtime.
+
 StageDataHolder compares the actual raw BCSV row address against the address
 range of each placed zone's tables. The native JMap reader previously exposed
 only a shared decoded count/cache object, which cannot supply that identity.

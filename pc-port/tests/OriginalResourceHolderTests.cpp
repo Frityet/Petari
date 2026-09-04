@@ -216,10 +216,12 @@ namespace {
         rejects([&] { JMapInfo invalid; invalid.attach(holder.mFileInfoTable->getRes("unrelated.raw")); },
                 "unrelated bytes are parsed only when explicitly attached and then rejected");
         owner.reset(); source.reset(); domain.reset();
-        require(weak_source.expired() && !find_jmap_resource(identity), "archive retirement removes raw identity and original owner");
+        require(!weak_source.expired() && !find_jmap_resource(identity), "archive unpublication removes lookup while the parser retains raw bytes");
         const char* surviving = nullptr;
         MR::getCsvDataStr(&surviving, parser.get(), "name", 0);
-        require(surviving == name && std::string_view(surviving) == long_name, "attached parser retains decoded names independently");
+        require(surviving == name && std::string_view(surviving) == long_name, "attached parser retains decoded names and exact source bytes");
+        parser.reset();
+        require(weak_source.expired(), "final attached parser releases the archive source owner");
     }
 
     void test_original_constructor(GameResourceRuntime& process) {

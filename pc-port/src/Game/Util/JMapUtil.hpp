@@ -104,3 +104,37 @@ namespace MR {
         return rIter.getValue< T >(pName, pOut);
     }
 }  // namespace MR
+
+namespace MR {
+    bool getJMapInfoShapeIdWithInit(const JMapInfoIter&, s32*);
+}
+
+namespace MR {
+    inline bool checkJMapDataEntries(const JMapInfoIter& rIter) {
+        bool flag;
+        bool ret;
+
+        ret = false;
+        flag = false;
+
+        if (rIter.mInfo != nullptr && rIter.mIndex >= 0) {
+            flag = true;
+        }
+
+        if (flag) {
+            s32 numEntries;
+
+            if (rIter.mInfo->mData != nullptr) {
+                numEntries = rIter.mInfo->mData->mNumEntries;
+            } else {
+                numEntries = 0;
+            }
+
+            if (rIter.mIndex < numEntries) {
+                ret = true;
+            }
+        }
+
+        return ret;
+    }
+}

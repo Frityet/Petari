@@ -59,6 +59,8 @@ JMapInfo::JMapInfo(const smgpc::resource::BcsvTable& table) {
     smgpc::compat::JkrHostAllocationScope host;
     mData = std::make_shared< DataCompat >(static_cast< s32 >(table.entry_count()));
     mTable = std::make_shared< smgpc::resource::BcsvTable >(table);
+    mSourceData = mTable->bytes().data();
+    mSourceOwner = mTable;
 }
 
 JMapInfo::JMapInfo(const JMapInfo& info) : smgpc::compat::NativeJkrDisposer(info) {
@@ -74,6 +76,8 @@ JMapInfo& JMapInfo::operator=(const JMapInfo& info) {
     if (this != &info) {
         mData = info.mData;
         mTable = info.mTable;
+        mSourceData = info.mSourceData;
+        mSourceOwner = info.mSourceOwner;
         mChildObjInfo = info.mChildObjInfo;
         mRailInfo = info.mRailInfo;
         mName = info.mName;
@@ -88,6 +92,8 @@ JMapInfo& JMapInfo::operator=(JMapInfo&& info) noexcept {
     if (this != &info) {
         mData = std::move(info.mData);
         mTable = std::move(info.mTable);
+        mSourceData = std::exchange(info.mSourceData, nullptr);
+        mSourceOwner = std::move(info.mSourceOwner);
         mChildObjInfo = std::move(info.mChildObjInfo);
         mRailInfo = std::move(info.mRailInfo);
         mName = std::move(info.mName);
@@ -104,6 +110,8 @@ JMapInfo JMapInfo::from_bcsv(std::span< const std::uint8_t > data) {
     JMapInfo info;
     info.mTable = std::make_shared< smgpc::resource::BcsvTable >(smgpc::resource::BcsvTable::from_bytes(data));
     info.mData = std::make_shared< DataCompat >(static_cast< s32 >(info.mTable->entry_count()));
+    info.mSourceData = info.mTable->bytes().data();
+    info.mSourceOwner = info.mTable;
     return info;
 }
 
@@ -129,6 +137,22 @@ int JMapInfo::getNumFields() const {
     return count > static_cast< std::size_t >(std::numeric_limits< int >::max()) ? std::numeric_limits< int >::max() : static_cast< int >(count);
 }
 
+const void* JMapInfo::getData() const {
+    return mSourceData;
+}
+
+const char* JMapInfo::getEntryData(s32 entryIndex) const {
+    if (!mTable) throw std::logic_error("JMap entry address requires attached table data");
+    const auto address = reinterpret_cast<std::uintptr_t>(mSourceData) + mTable->data_offset() +
+                         mTable->entry_size() * entryIndex;
+    return reinterpret_cast<const char*>(address);
+}
+
+u32 JMapInfo::getDataSize() const {
+    if (!mTable) throw std::logic_error("JMap data extent requires attached table data");
+    return mTable->data_offset() + mTable->entry_size() * mTable->entry_count();
+}
+
 bool JMapInfo::attach(const void* data) {
     smgpc::compat::JkrHostAllocationScope host;
     if (data == nullptr) {
@@ -140,6 +164,8 @@ bool JMapInfo::attach(const void* data) {
     }
     mData = resource->mData;
     mTable = resource->mTable;
+    mSourceData = data;
+    mSourceOwner = resource;
     mFloatOverrides.clear();
     return true;
 }

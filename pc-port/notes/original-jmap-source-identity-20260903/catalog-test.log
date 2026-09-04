@@ -1,0 +1,9 @@
+allocFromHead: cannot alloc memory (0x30 byte).
+allocFromHead: cannot alloc memory (0x30 byte).
+PASS exact embedded table and original sort query
+AUTHORED gateway rows=2 visible=2 stars=2 zones=7
+PASS catalog cycle=0 archives=48 authored zones=234
+AUTHORED gateway rows=2 visible=2 stars=2 zones=7
+PASS catalog cycle=1 archives=48 authored zones=234
+PASS name updates and registration snapshots escape Game heap lifetime
+PASS actual parser allocation-failure unwind and heap retirement

@@ -33,6 +33,8 @@ namespace smgpc::resource {
     public:
         static BcsvTable from_bytes(std::span<const std::uint8_t> data);
 
+        [[nodiscard]] std::span<const std::uint8_t> bytes() const { return _data; }
+        [[nodiscard]] std::uint32_t data_offset() const { return _data_offset; }
         [[nodiscard]] std::uint32_t entry_count() const;
         [[nodiscard]] std::uint32_t entry_size() const;
         [[nodiscard]] std::span<const BcsvField> fields() const;

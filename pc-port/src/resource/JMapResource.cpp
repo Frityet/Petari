@@ -163,12 +163,18 @@ namespace smgpc::resource {
             const auto found = owners.tables.find(data);
             if (found == owners.tables.end())
                 return nullptr;
-            if (auto table = found->second.table.lock())
-                return table;
+            if (auto table = found->second.table.lock()) {
+                auto owner = found->second.owner.lock();
+                return owner ? std::shared_ptr<const JMapInfo>(std::move(owner), table.get()) : nullptr;
+            }
             deferred = found->second.deferred.lock();
         }
         // Parsing and final source release can allocate or retire owners;
         // neither operation runs while holding the identity registry lock.
-        return deferred ? deferred->load() : nullptr;
+        if (!deferred) return nullptr;
+        const auto table = deferred->load();
+        // The alias retains the actual archive byte owner as well as its
+        // decoded table, without retaining a Game heap or introducing a cycle.
+        return std::shared_ptr<const JMapInfo>(std::move(deferred), table.get());
     }
 }  // namespace smgpc::resource

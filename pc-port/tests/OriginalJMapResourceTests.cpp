@@ -3,6 +3,8 @@
 #include "resource/JMapResource.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
+#include "JSystem/JKernel/JKRArchive.hpp"
+#include "resource/RarcArchive.hpp"
 #include <optional>
 
 #include <array>
@@ -175,11 +177,13 @@ namespace {
         first.reset();
         require(find_jmap_resource(identity) != nullptr, "duplicate registration retains the same source");
         second.reset();
-        require(weak.expired() && find_jmap_resource(identity) == nullptr,
-                "final registration removes the raw identity and source lease");
+        require(!weak.expired() && find_jmap_resource(identity) == nullptr,
+                "unpublication removes lookup while the attached reader retains actual source bytes");
         const char* again = nullptr;
         require(survivor.getValue(0, "name", &again) && again == value,
-                "attached reader retains decoded table after archive source retirement");
+                "attached reader retains decoded table after archive source unpublication");
+        survivor = JMapInfo();
+        require(weak.expired(), "last reader releases the retained source lease");
     }
     void test_deferred_validation() {
         using namespace smgpc::resource;
@@ -214,9 +218,90 @@ namespace {
         for (auto* pointer : pointers)
             require(pointer == pointers[0], "concurrent first readers publish one decoded table/cache");
     }
+    void test_raw_source_identity() {
+        using namespace smgpc::resource;
+        auto first = fixture(), second = first;
+        JMapResource owner(first);
+        auto reg1 = owner.register_source(first), reg2 = owner.register_source(second);
+        JMapInfo a, b;
+        require(a.attach(first.data()) && b.attach(second.data()), "both raw aliases attach");
+        require(a.mData == b.mData && !(a == b), "shared decoded cache does not conflate distinct raw tables");
+        require(a.getData() == first.data() && b.getData() == second.data(), "source addresses remain exact");
+        require(a.getEntryData(0) == reinterpret_cast<const char*>(first.data() + 40), "entry starts at original data offset");
+        require(a.getEntryData(1) == reinterpret_cast<const char*>(first.data() + 76) && a.getDataSize() == 76,
+                "original row stride and row-range extent exclude the string table");
+        const char *av, *bv;
+        require(a.getValue(0, "name", &av) && b.getValue(0, "name", &bv) && av == bv, "raw aliases keep shared cached strings");
+        JMapInfo copy(a), moved(std::move(copy));
+        require(moved == a && moved.getData() == first.data() && copy.getData() == nullptr,
+                "copy and move preserve raw identity without retaining a moved-from alias");
+        JMapInfo owned = JMapInfo::from_bcsv(fixture());
+        require(owned.getData() != first.data() && std::memcmp(owned.getData(), first.data(), first.size()) == 0,
+                "direct parser owns the complete original byte image");
+    }
+    void test_raw_source_heap_retirement() {
+        using namespace smgpc::compat;
+        auto runtime = JkrHeapRuntime::create(1 << 20);
+        auto domain = JkrAllocationDomain::create(runtime, 1 << 18);
+        auto raw = std::make_shared<const std::vector<u8>>(fixture());
+        std::weak_ptr<const std::vector<u8>> weak = raw;
+        std::optional<smgpc::resource::JMapSourceRegistration> registration;
+        registration.emplace(smgpc::resource::register_jmap_source(*raw, raw));
+        {
+            JkrAllocationScope original(domain);
+            auto* info = new JMapInfo;
+            require(info->attach(raw->data()), "actual Game-heap parser attaches retained source");
+            require(JKRHeap::findFromRoot(info) == &domain->heap(), "parser belongs to original heap");
+            require(JKRHeap::findFromRoot(const_cast<void*>(info->getData())) == nullptr, "archive source stays host-owned");
+        }
+        registration.reset(); raw.reset();
+        require(!weak.expired(), "Game parser retains source after unpublication");
+        domain->heap().freeAll();
+        require(weak.expired(), "original disposer dispatch releases raw source before arena reuse");
+        {
+            JkrAllocationScope original(domain);
+            auto* reused = new JMapInfo;
+            require(reused->getData() == nullptr, "reused arena starts with no stale raw identity");
+        }
+        domain.reset(); runtime.reset();
+    }
+    void test_original_archive_index() {
+        using namespace smgpc::resource;
+        const auto table = fixture();
+        constexpr std::size_t dirs = 0x40, files = 0x50, strings = 0x8c, data = 0xc0;
+        constexpr std::array<u8, 24> names{'r','o','o','t',0,'.',0,'.','.',0,'t','a','b','l','e','.','b','c','s','v',0,0,0,0};
+        std::vector<u8> bytes(data + table.size());
+        auto put16 = [&](std::size_t off, u16 value) { bytes.at(off) = value >> 8; bytes.at(off + 1) = value; };
+        std::memcpy(bytes.data(), "RARC", 4); put32(bytes, 4, bytes.size()); put32(bytes, 8, 0x20);
+        put32(bytes, 12, data - 0x20); put32(bytes, 16, table.size());
+        put32(bytes, 0x20, 1); put32(bytes, 0x24, dirs - 0x20); put32(bytes, 0x28, 3); put32(bytes, 0x2c, files - 0x20);
+        put32(bytes, 0x30, names.size()); put32(bytes, 0x34, strings - 0x20); put16(0x38, 101);
+        std::memcpy(bytes.data() + dirs, "ROOT", 4); put32(bytes, dirs + 4, 0); put16(dirs + 8, RarcArchive::hash_name("root"));
+        put16(dirs + 10, 3); put32(bytes, dirs + 12, 0);
+        auto entry = [&](unsigned i, u16 id, u32 name_offset, u8 flags, u32 offset, u32 size) {
+            const auto p = files + i * 20; put16(p, id); put16(p + 2, RarcArchive::hash_name(reinterpret_cast<const char*>(names.data() + name_offset)));
+            put32(bytes, p + 4, (u32(flags) << 24) | name_offset); put32(bytes, p + 8, offset); put32(bytes, p + 12, size);
+        };
+        entry(0, 100, 10, 0x11, 0, table.size()); entry(1, 0xffff, 5, 2, 0, 16); entry(2, 0xffff, 7, 2, 0xffffffff, 16);
+        std::copy(names.begin(), names.end(), bytes.begin() + strings); std::copy(table.begin(), table.end(), bytes.begin() + data);
+        auto archive = std::make_shared<RarcArchive>(RarcArchive::from_bytes(std::move(bytes)));
+        JKRMemArchive original(*archive);
+        auto* index = original.getIdxResource(0);
+        require(index == archive->file_data_start() && index == original.getResource(u16(100)), "index fetch returns actual memory-archive bytes");
+        require(original.getIdxResource(100) == nullptr && original.getResource(u16(0)) == nullptr, "index and file ID remain distinct domains");
+        require(original.getIdxResource(3) == nullptr, "original index bounds reject end of file table");
+        u32 size = 0; require(original.fetchResource(original.findIdxResource(0), &size) == index && size == table.size(),
+                             "original cached memory fetch returns exact pointer and full file size");
+        auto registration = register_jmap_source(archive->file_data(archive->entries().front()), archive);
+        JMapInfo info; require(info.attach(index) && info.getData() == index, "index-fed parser retains real raw file identity");
+    }
+
 }
 int main() {
     const std::array tests{
+        std::pair{"raw source identity and original row ranges", test_raw_source_identity},
+        std::pair{"raw source original heap retirement", test_raw_source_heap_retirement},
+        std::pair{"original memory-archive index fetch", test_original_archive_index},
         std::pair{"borrowed name outlives local reader", test_reader_lifetime},
         std::pair{"attached reader retains released resource", test_attached_reader_retains_data},
         std::pair{"rebind preserves other owner", test_rebind_keeps_other_owner},

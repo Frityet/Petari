@@ -5,7 +5,8 @@
 #include <span>
 namespace smgpc::resource {
     // Explicitly retains one borrowed source identity for original unsized attach.
-    // The caller retains the matching byte range until this registration ends.
+    // The caller retains borrowed alias bytes through their use by attached readers.
+    // Archive registrations instead retain their explicit source owner.
     class JMapSourceRegistration final {
     public:
         ~JMapSourceRegistration();

@@ -148,6 +148,9 @@ public:
         return 0U;
     }
 
+    [[nodiscard]] void* getIdxResource(u32);
+    virtual void* fetchResource(SDIFileEntry*, u32*) = 0;
+
     [[nodiscard]] u32 countResource() const;
     [[nodiscard]] virtual s32 countFile(const char*) const;
     [[nodiscard]] JKRArcFinder* getFirstFile(const char*) const;
@@ -220,14 +223,18 @@ private:
 class JKRMemArchive final : public JKRArchive {
 public:
     explicit JKRMemArchive(const smgpc::resource::RarcArchive &archive)
-        : JKRArchive(&archive) {
+        : JKRArchive(&archive), mFileDataStart(const_cast<u8*>(archive.file_data_start())) {
     }
 
     explicit JKRMemArchive(smgpc::resource::RarcArchive &&archive)
         : JKRArchive(nullptr), mOwnedArchive(std::make_unique<smgpc::resource::RarcArchive>(std::move(archive))) {
         attach_archive(mOwnedArchive.get());
+        mFileDataStart = const_cast<u8*>(mOwnedArchive->file_data_start());
     }
 
+    void* fetchResource(SDIFileEntry*, u32*) override;
+
 private:
+    u8* mFileDataStart = nullptr;
     std::unique_ptr<smgpc::resource::RarcArchive> mOwnedArchive;
 };

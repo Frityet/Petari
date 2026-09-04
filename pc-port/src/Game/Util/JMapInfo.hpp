@@ -63,7 +63,7 @@ public:
     ~JMapInfo() override;
 
     [[nodiscard]] bool operator==(const JMapInfo& rInfo) const {
-        return mTable == rInfo.mTable;
+        return mSourceData == rInfo.mSourceData;
     }
 
     [[nodiscard]] static JMapInfo from_bcsv(std::span< const std::uint8_t > data);
@@ -71,6 +71,9 @@ public:
     [[nodiscard]] bool dataExists() const;
     [[nodiscard]] int getNumEntries() const;
     [[nodiscard]] int getNumFields() const;
+    [[nodiscard]] const void* getData() const;
+    [[nodiscard]] const char* getEntryData(s32 entryIndex) const;
+    [[nodiscard]] u32 getDataSize() const;
     bool attach(const void* pData);
     void setName(const char* pName);
     [[nodiscard]] const char* getName() const;
@@ -122,6 +125,10 @@ private:
     [[nodiscard]] bool getStringValueByHash(int entryIndex, std::uint32_t hash, const char** pValueOut) const;
 
     std::shared_ptr< smgpc::resource::BcsvTable > mTable;
+    // Each original attachment keeps its own raw identity. Distinct aliases
+    // can share decoded fields/string caches while remaining different tables.
+    const void* mSourceData = nullptr;
+    std::shared_ptr<const void> mSourceOwner;
     std::shared_ptr< JMapInfo > mChildObjInfo;
     std::map< int, RailInfo > mRailInfo;
     std::string mName;

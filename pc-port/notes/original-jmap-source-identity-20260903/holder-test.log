@@ -1,0 +1,6 @@
+PASS original holder, typed animation, control table and lifetime
+PASS original CSV helpers and deferred archive tables
+PASS original loader exception restoration
+PASS service/archive ownership and process reuse
+resource cohort used=39024 MEM1 available=16674976
+PASS real model/material holder
