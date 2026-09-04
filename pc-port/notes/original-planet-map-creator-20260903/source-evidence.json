@@ -1,0 +1,15 @@
+{
+  "root_sources": [
+    {
+      "path": "src/Game/Map/PlanetMapCreator.cpp",
+      "sha256": "9f49d0eddb7bf3a7a6341320b78f952e9743a5b8f06ca033b5548674cb4dd455"
+    },
+    {
+      "path": "include/Game/Map/PlanetMap.hpp",
+      "sha256": "39df5f6072123c0a4ff98395ba379a4d0c7ff2ec5c1076dd20dbe3ffe1c3921c"
+    }
+  ],
+  "native_all_method_class_and_table_bodies_literal": true,
+  "native_headers_root_identical": true,
+  "patch_scope": "Compile proposal only; no provider activation"
+}

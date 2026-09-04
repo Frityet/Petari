@@ -1,0 +1,227 @@
+--- a/src/Game/Map/PlanetMapCreator.cpp
++++ b/src/Game/Map/PlanetMapCreator.cpp
+@@ -4,6 +4,11 @@
+ #include "Game/Enemy.hpp"
+ #include "Game/Gravity.hpp"
+ #include "Game/Map.hpp"
++#include "Game/MapObj/BeamGoRoundPlanet.hpp"
++#include "Game/MapObj/BumpAppearPlanet.hpp"
++#include "Game/Map/PlanetMap.hpp"
++#include "Game/Map/PlanetMapWithoutHighModel.hpp"
++#include "Game/MapObj/QuestionBoxGalleryObj.hpp"
+ #include "Game/MapObj.hpp"
+ #include "Game/NPC.hpp"
+ #include "Game/NameObj.hpp"
+@@ -13,19 +18,27 @@
+ #include <cstdio>
+ #include <cstring>
+ 
++class PlanetMapFarClippable : public PlanetMap {
++public:
++    PlanetMapFarClippable(const char* pName) : PlanetMap(pName, nullptr) {}
++
++    virtual ~PlanetMapFarClippable() {}
++    virtual f32 getFarClipDistance() const { return 50.0f; }
++};
++
+ namespace {
+     static const PlanetEntry sUniquePlanetCreateFuncTable[] = {
+         {
+             "BeamGoRoundPlanet",
+-            /* createNameObj<BeamGoRoundPlanet>, */
++            createNameObj< BeamGoRoundPlanet >,
+         },
+         {
+             "BumpAppearPlanet",
+-            /* createNameObj<BumpAppearPlanet>, */
++            createNameObj< BumpAppearPlanet >,
+         },
+         {
+             "ChoConveyorPlanetB",
+-            /* createNameObj<RailPlanetMap>, */
++            createNameObj< RailPlanetMap >,
+         },
+         {
+             "ChoConveyorPlanetD",
+@@ -33,7 +46,7 @@
+         },
+         {
+             "DinoPackunBattlePlanet",
+-            /* createNameObj<FurPlanetMap>, */
++            createNameObj< FurPlanetMap >,
+         },
+         {
+             "DarkHopperPlanetA",
+@@ -57,11 +70,11 @@
+         },
+         {
+             "FlagDiscPlanetB",
+-            /* createNameObj<PlanetMapFarClippable>, */
++            createNameObj< PlanetMapFarClippable >,
+         },
+         {
+             "FlagDiscPlanetC",
+-            /* createNameObj<PlanetMapFarClippable>, */
++            createNameObj< PlanetMapFarClippable >,
+         },
+         {
+             "FlagDiscPlanetD",
+@@ -69,7 +82,7 @@
+         },
+         {
+             "FlagDiscPlanetE",
+-            /* createNameObj<PlanetMapFarClippable>, */
++            createNameObj< PlanetMapFarClippable >,
+         },
+         {
+             "HatchWaterPlanet",
+@@ -81,7 +94,7 @@
+         },
+         {
+             "HoneyQueenPlanet",
+-            /* createNameObj<FurPlanetMap>, */
++            createNameObj< FurPlanetMap >,
+         },
+         {
+             "LavaJamboSunPlanet",
+@@ -117,7 +130,7 @@
+         },
+         {
+             "TeresaRoomPlanet",
+-            /* createNameObj<PlanetMapAnimLow>, */
++            createNameObj< PlanetMapAnimLow >,
+         },
+         {
+             "TridentPlanet",
+@@ -125,27 +138,27 @@
+         },
+         {
+             "QuestionBoxPlanetA",
+-            /* createNameObj<QuestionBoxGalleryObj>, */
++            createNameObj< QuestionBoxGalleryObj >,
+         },
+         {
+             "QuestionBoxPlanetB",
+-            /* createNameObj<QuestionBoxGalleryObj>, */
++            createNameObj< QuestionBoxGalleryObj >,
+         },
+         {
+             "QuestionBoxPlanetC",
+-            /* createNameObj<QuestionBoxGalleryObj>, */
++            createNameObj< QuestionBoxGalleryObj >,
+         },
+         {
+             "QuestionBoxPlanetD",
+-            /* createNameObj<QuestionBoxGalleryObj>, */
++            createNameObj< QuestionBoxGalleryObj >,
+         },
+         {
+             "QuestionBoxPlanetE",
+-            /* createNameObj<QuestionBoxGalleryObj>, */
++            createNameObj< QuestionBoxGalleryObj >,
+         },
+         {
+             "Quicksand2DPlanet",
+-            /* createNameObj<RailPlanetMap>, */
++            createNameObj< RailPlanetMap >,
+         },
+         {
+             "ReverseGravityRoomPlanet",
+@@ -153,15 +166,15 @@
+         },
+         {
+             "SandStreamHighTowerPlanet",
+-            /* createNameObj<RailPlanetMap>, */
++            createNameObj< RailPlanetMap >,
+         },
+         {
+             "SandStreamJointPlanetA",
+-            /* createNameObj<RailPlanetMap>, */
++            createNameObj< RailPlanetMap >,
+         },
+         {
+             "SandStreamJointPlanetB",
+-            /* createNameObj<RailPlanetMap>, */
++            createNameObj< RailPlanetMap >,
+         },
+         {
+             "StarDustStartPlanet",
+@@ -172,6 +185,17 @@
+             createNameObj< WormEatenPlanet >,
+         },
+     };
++    inline const PlanetEntry* findUniquePlanet(const char* pName) {
++        for (u32 i = 0; i < ARRAY_SIZE(sUniquePlanetCreateFuncTable); i++) {
++            const PlanetEntry* pEntry = &sUniquePlanetCreateFuncTable[i];
++            if (MR::isEqualString(pName, pEntry->mName)) {
++                return pEntry;
++            }
++        }
++
++        return nullptr;
++    }
++
+     static const UniqueEntry sUniquePlanetUniqueArchiveName[] = {
+         {
+             "BeamGoRoundPlanet",
+@@ -267,24 +291,16 @@
+ 
+ CreatorFuncPtr PlanetMapCreator::getCreateFunc(const char* pParam1) {
+     if (isScenarioForceLow(getTableData(pParam1))) {
+-        return nullptr;  // createNameObj<PlanetMapWithoutHighModel>
+-    }
+-
+-    const PlanetEntry* pEntry = nullptr;
+-
+-    for (u32 i = 0; i < ARRAY_SIZE(::sUniquePlanetCreateFuncTable); i++) {
+-        pEntry = &::sUniquePlanetCreateFuncTable[i];
+-
+-        if (!MR::isEqualString(pParam1, ::sUniquePlanetCreateFuncTable[i].mName)) {
+-            break;
+-        }
+-    }
++        return createNameObj< PlanetMapWithoutHighModel >;
++    }
++
++    const PlanetEntry* pEntry = ::findUniquePlanet(pParam1);
+ 
+     if (pEntry != nullptr) {
+         return pEntry->mCreateFunc;
+     }
+ 
+-    return nullptr;  // createNameObj<PlanetMap>
++    return createNameObj< PlanetMap >;
+ }
+ 
+ void PlanetMapCreator::makeArchiveListPlanet(NameObjArchiveListCollector* pArchiveList, const JMapInfoIter& rIter, const char* pName) {
+@@ -399,7 +415,9 @@
+     MR::getSceneObj< PlanetMapCreator >(SceneObj_PlanetMapCreator)->makeArchiveListPlanet(pArchiveList, rIter, pName);
+ }
+ 
+-// PlanetMapCreatorFunction::getPlanetMapCreator
++CreatorFuncPtr PlanetMapCreatorFunction::getPlanetMapCreator(const char* pName) {
++    return MR::getSceneObj< PlanetMapCreator >(SceneObj_PlanetMapCreator)->getCreateFunc(pName);
++}
+ 
+ bool PlanetMapCreatorFunction::isLoadArchiveAfterScenarioSelected(const char* pArchive) {
+     bool isExistTableData = MR::getSceneObj< PlanetMapCreator >(SceneObj_PlanetMapCreator)->getTableData(pArchive);
+--- a/include/Game/Map/PlanetMap.hpp
++++ b/include/Game/Map/PlanetMap.hpp
+@@ -9,7 +9,7 @@
+ 
+ class PlanetMap : public LiveActor {
+ public:
+-    PlanetMap(const char*, const char*);
++    PlanetMap(const char*, const char* = nullptr);
+ 
+     virtual ~PlanetMap();
+     virtual void init(const JMapInfoIter&);
+@@ -53,7 +53,7 @@
+ 
+ class PlanetMapAnimLow : public PlanetMap {
+ public:
+-    PlanetMapAnimLow();
++    PlanetMapAnimLow(const char* pName) : PlanetMap(pName, nullptr) {}
+ 
+     virtual ~PlanetMapAnimLow();
+     virtual s32 getLowMovementType() const;

@@ -1,0 +1,142 @@
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |     /* 0x14 */ virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |     /* 0x14 */ virtual void movement();
+      |                             ^
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |     /* 0x1C */ virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here
+   28 |     /* 0x1C */ virtual void calcAnim();
+      |                             ^
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/pc-port/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:43:29: warning: 'calcViewAndEntry' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   43 |     /* 0x20 */ virtual void calcViewAndEntry();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:29:29: note: overridden virtual function is here
+   29 |     /* 0x20 */ virtual void calcViewAndEntry();
+      |                             ^
+In file included from /Users/frityet/Projects/petari/src/Game/NameObj/NameObjFactory.cpp:3:
+In file included from /Users/frityet/Projects/petari/include/Game/Boss.hpp:29:
+/Users/frityet/Projects/petari/include/Game/Boss/DinoPackun.hpp:83:5: error: unknown type name 'TVec4f'
+   83 |     TVec4f _CC;
+      |     ^
+In file included from /Users/frityet/Projects/petari/src/Game/NameObj/NameObjFactory.cpp:6:
+/Users/frityet/Projects/petari/include/Game/Enemy.hpp:23:10: warning: non-portable path to file '"Game/Enemy/KarikariDirector.hpp"'; specified path differs in case from file name on disk [-Wnonportable-include-path]
+   23 | #include "Game/Enemy/KariKariDirector.hpp"
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |          "Game/Enemy/KarikariDirector.hpp"
+In file included from /Users/frityet/Projects/petari/src/Game/NameObj/NameObjFactory.cpp:6:
+In file included from /Users/frityet/Projects/petari/include/Game/Enemy.hpp:32:
+In file included from /Users/frityet/Projects/petari/include/Game/Enemy/RingBeam.hpp:4:
+/Users/frityet/Projects/petari/include/Game/LiveActor/ShadowVolumeDrawer.hpp:21:18: error: 'loadModelDrawMtx' marked 'override' but does not override any member functions
+   21 |     virtual void loadModelDrawMtx() const override;
+      |                  ^
+/Users/frityet/Projects/petari/include/Game/LiveActor/ShadowVolumeDrawer.hpp:22:18: error: 'drawShape' marked 'override' but does not override any member functions
+   22 |     virtual void drawShape() const override;
+      |                  ^
+In file included from /Users/frityet/Projects/petari/src/Game/NameObj/NameObjFactory.cpp:10:
+In file included from /Users/frityet/Projects/petari/include/Game/MapObj.hpp:98:
+/Users/frityet/Projects/petari/include/Game/MapObj/FloaterFloatingForce.hpp:21:16: warning: returning reference to local temporary object [-Wreturn-stack-address]
+   21 |         return TVec3f(0.0f, 0.0f, 0.0f);
+      |                ^~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /Users/frityet/Projects/petari/src/Game/NameObj/NameObjFactory.cpp:13:
+In file included from /Users/frityet/Projects/petari/include/Game/NameObj/NameObjFactoryStubs.hpp:18:
+/Users/frityet/Projects/petari/include/Game/Enemy/BegomanLauncher.hpp:11:13: error: array is too large (18'446'744'073'709'551'564 elements)
+   11 |     u8 mPad[(0x9C) - sizeof(LiveActor)];
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /Users/frityet/Projects/petari/src/Game/NameObj/NameObjFactory.cpp:13:
+In file included from /Users/frityet/Projects/petari/include/Game/NameObj/NameObjFactoryStubs.hpp:23:
+/Users/frityet/Projects/petari/include/Game/Enemy/CocoSambo.hpp:35:13: error: array is too large (18'446'744'073'709'551'608 elements)
+   35 |     u8 mPad[(0xC8) - sizeof(LiveActor)];
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /Users/frityet/Projects/petari/src/Game/NameObj/NameObjFactory.cpp:13:
+In file included from /Users/frityet/Projects/petari/include/Game/NameObj/NameObjFactoryStubs.hpp:24:
+/Users/frityet/Projects/petari/include/Game/Enemy/DharmaSambo.hpp:11:13: error: array is too large (18'446'744'073'709'551'608 elements)
+   11 |     u8 mPad[(0xC8) - sizeof(LiveActor)];
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /Users/frityet/Projects/petari/src/Game/NameObj/NameObjFactory.cpp:13:
+In file included from /Users/frityet/Projects/petari/include/Game/NameObj/NameObjFactoryStubs.hpp:40:
+/Users/frityet/Projects/petari/include/Game/Enemy/KoteBug.hpp:11:13: error: array is too large (18'446'744'073'709'551'596 elements)
+   11 |     u8 mPad[(0xBC) - sizeof(LiveActor)];
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /Users/frityet/Projects/petari/src/Game/NameObj/NameObjFactory.cpp:13:
+In file included from /Users/frityet/Projects/petari/include/Game/NameObj/NameObjFactoryStubs.hpp:48:
+/Users/frityet/Projects/petari/include/Game/Enemy/NokonokoLand.hpp:11:13: error: array is too large (18'446'744'073'709'551'608 elements)
+   11 |     u8 mPad[(0xC8) - sizeof(LiveActor)];
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /Users/frityet/Projects/petari/src/Game/NameObj/NameObjFactory.cpp:13:
+In file included from /Users/frityet/Projects/petari/include/Game/NameObj/NameObjFactoryStubs.hpp:49:
+/Users/frityet/Projects/petari/include/Game/Enemy/OnimasuJump.hpp:11:13: error: array is too large (18'446'744'073'709'551'560 elements)
+   11 |     u8 mPad[(0x110) - sizeof(Onimasu)];
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /Users/frityet/Projects/petari/src/Game/NameObj/NameObjFactory.cpp:13:
+In file included from /Users/frityet/Projects/petari/include/Game/NameObj/NameObjFactoryStubs.hpp:60:
+/Users/frityet/Projects/petari/include/Game/Enemy/UnizoLauncher.hpp:11:13: error: array is too large (18'446'744'073'709'551'556 elements)
+   11 |     u8 mPad[(0x94) - sizeof(LiveActor)];
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /Users/frityet/Projects/petari/src/Game/NameObj/NameObjFactory.cpp:13:
+In file included from /Users/frityet/Projects/petari/include/Game/NameObj/NameObjFactoryStubs.hpp:62:
+/Users/frityet/Projects/petari/include/Game/Map/FishGroup.hpp:11:13: error: array is too large (18'446'744'073'709'551'584 elements)
+   11 |     u8 mPad[(0xB0) - sizeof(LiveActor)];
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /Users/frityet/Projects/petari/src/Game/NameObj/NameObjFactory.cpp:13:
+In file included from /Users/frityet/Projects/petari/include/Game/NameObj/NameObjFactoryStubs.hpp:68:
+/Users/frityet/Projects/petari/include/Game/Map/WhirlPoolAccelerator.hpp:13:13: error: array is too large (18'446'744'073'709'551'604 elements)
+   13 |     u8 mPad[(0xC4) - sizeof(LiveActor)];
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /Users/frityet/Projects/petari/src/Game/NameObj/NameObjFactory.cpp:13:
+In file included from /Users/frityet/Projects/petari/include/Game/NameObj/NameObjFactoryStubs.hpp:73:
+/Users/frityet/Projects/petari/include/Game/MapObj/CoconutTreeLeaf.hpp:11:13: error: array is too large (18'446'744'073'709'551'572 elements)
+   11 |     u8 mPad[(0xA4) - sizeof(LiveActor)];
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /Users/frityet/Projects/petari/src/Game/NameObj/NameObjFactory.cpp:13:
+In file included from /Users/frityet/Projects/petari/include/Game/NameObj/NameObjFactoryStubs.hpp:88:
+/Users/frityet/Projects/petari/include/Game/MapObj/ItemBubble.hpp:36:34: error: too many arguments to function call, expected single argument 'source', have 3 arguments
+   36 |         mtx.setXDir(cosY * cosZ, cosY * sinZ, -sinY);
+      |         ~~~~~~~~~~~              ^~~~~~~~~~~~~~~~~~
+src/JSystem/JGeometry/TMatrix.hpp:173:14: note: 'setXDir' declared here
+  173 |         void setXDir(const TVec3f& source) {
+      |              ^       ~~~~~~~~~~~~~~~~~~~~
+In file included from /Users/frityet/Projects/petari/src/Game/NameObj/NameObjFactory.cpp:13:
+In file included from /Users/frityet/Projects/petari/include/Game/NameObj/NameObjFactoryStubs.hpp:88:
+/Users/frityet/Projects/petari/include/Game/MapObj/ItemBubble.hpp:38:55: error: too many arguments to function call, expected single argument 'source', have 3 arguments
+   38 |         mtx.setYDir(sinX * sinY * cosZ - cosX * sinZ, sinX * sinY * sinZ + cosX * cosZ, asds);
+      |         ~~~~~~~~~~~                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/JSystem/JGeometry/TMatrix.hpp:179:14: note: 'setYDir' declared here
+  179 |         void setYDir(const TVec3f& source) {
+      |              ^       ~~~~~~~~~~~~~~~~~~~~
+In file included from /Users/frityet/Projects/petari/src/Game/NameObj/NameObjFactory.cpp:13:
+In file included from /Users/frityet/Projects/petari/include/Game/NameObj/NameObjFactoryStubs.hpp:88:
+/Users/frityet/Projects/petari/include/Game/MapObj/ItemBubble.hpp:39:55: error: too many arguments to function call, expected single argument 'source', have 3 arguments
+   39 |         mtx.setZDir(cosX * cosZ * sinY + sinX * sinZ, cosX * sinZ * sinY - sinX * cosZ, cosX * cosY);
+      |         ~~~~~~~~~~~                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/JSystem/JGeometry/TMatrix.hpp:185:14: note: 'setZDir' declared here
+  185 |         void setZDir(const TVec3f& source) {
+      |              ^       ~~~~~~~~~~~~~~~~~~~~
+In file included from /Users/frityet/Projects/petari/src/Game/NameObj/NameObjFactory.cpp:13:
+In file included from /Users/frityet/Projects/petari/include/Game/NameObj/NameObjFactoryStubs.hpp:91:
+/Users/frityet/Projects/petari/include/Game/MapObj/LavaBreakColumn.hpp:11:13: error: array is too large (18'446'744'073'709'551'504 elements)
+   11 |     u8 mPad[(0xE0) - sizeof(AnmModelSwitchMove)];
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /Users/frityet/Projects/petari/src/Game/NameObj/NameObjFactory.cpp:13:
+In file included from /Users/frityet/Projects/petari/include/Game/NameObj/NameObjFactoryStubs.hpp:94:
+/Users/frityet/Projects/petari/include/Game/MapObj/LavaHomeSeesaw.hpp:11:13: error: array is too large (18'446'744'073'709'551'572 elements)
+   11 |     u8 mPad[(0xA4) - sizeof(LiveActor)];
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /Users/frityet/Projects/petari/src/Game/NameObj/NameObjFactory.cpp:13:
+In file included from /Users/frityet/Projects/petari/include/Game/NameObj/NameObjFactoryStubs.hpp:100:
+/Users/frityet/Projects/petari/include/Game/MapObj/MorphItemObjNeo.hpp:154:16: error: taking the address of a temporary object of type 'TVec3f' (aka 'JGeometry::TVec3<float>') [-Waddress-of-temporary]
+  154 |         return &(TVec3f(0.0f, 200.0f, 0.0f));
+      |                ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/frityet/Projects/petari/include/Game/MapObj/MorphItemObjNeo.hpp:173:16: error: taking the address of a temporary object of type 'TVec3f' (aka 'JGeometry::TVec3<float>') [-Waddress-of-temporary]
+  173 |         return &(TVec3f(0.0f, 200.0f, 0.0f));
+      |                ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+5 warnings and 21 errors generated.

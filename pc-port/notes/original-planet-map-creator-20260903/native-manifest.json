@@ -1,0 +1,26 @@
+[
+  {
+    "staged": "build/original-planet-map-creator-20260903/staged/Game/Map/PlanetMap.hpp",
+    "destination": "pc-port/src/Game/Map/PlanetMap.hpp",
+    "sha256": "39df5f6072123c0a4ff98395ba379a4d0c7ff2ec5c1076dd20dbe3ffe1c3921c",
+    "production_before_sha256": "2fa4acb1e40655035e6548c4c16de96a359b65b046c6eb57380961b5fd6075a2"
+  },
+  {
+    "staged": "build/original-planet-map-creator-20260903/staged/Game/Map/PlanetMapCreator.cpp",
+    "destination": "pc-port/src/Game/Map/PlanetMapCreator.cpp",
+    "sha256": "9f616d9573bbe41a34ce137b4295646e0529bdfa99a76cc21a6f290fc50f00a6",
+    "production_before_sha256": null
+  },
+  {
+    "staged": "build/original-planet-map-creator-20260903/staged/Game/Map/PlanetMapCreator.hpp",
+    "destination": "pc-port/src/Game/Map/PlanetMapCreator.hpp",
+    "sha256": "639e1d05db9c1427e764cee38e7402d07a6fe4c6d7be5759b17fc5f9d38e5606",
+    "production_before_sha256": null
+  },
+  {
+    "staged": "build/original-planet-map-creator-20260903/staged/Game/Util/ObjUtil.hpp",
+    "destination": "pc-port/src/Game/Util/ObjUtil.hpp",
+    "sha256": "5c54f6261ee204faa3f176193418c9c1f281dc76e2435a92f6eba27bf18d9c1c",
+    "production_before_sha256": "de180c4e5d968ebe5136bcdfcf8d6df6881fec6c44f467d9d727436c603bdd00"
+  }
+]

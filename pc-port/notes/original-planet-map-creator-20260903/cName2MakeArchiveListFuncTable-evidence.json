@@ -1,0 +1,917 @@
+{
+  "symbol": "cName2MakeArchiveListFuncTable__28@unnamed@NameObjFactory_cpp@",
+  "bytes": 728,
+  "all_relocated_pointers_and_unrelocated_bytes_equal": true,
+  "entries": [
+    {
+      "offset": "0x0",
+      "retail_pointer": "0x805a8446",
+      "value": "BallBeamer"
+    },
+    {
+      "offset": "0x4",
+      "retail_pointer": "0x800cc6ec",
+      "value": "makeArchiveList__10BallBeamerFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x8",
+      "retail_pointer": "0x805a8e5b",
+      "value": "BreakableCage"
+    },
+    {
+      "offset": "0xc",
+      "retail_pointer": "0x801d10f0",
+      "value": "makeArchiveListDummyDisplayModel__2MRFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x10",
+      "retail_pointer": "0x805a8e69",
+      "value": "BreakableCageRotate"
+    },
+    {
+      "offset": "0x14",
+      "retail_pointer": "0x801d10f0",
+      "value": "makeArchiveListDummyDisplayModel__2MRFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x18",
+      "retail_pointer": "0x805a8e7d",
+      "value": "BreakableCageL"
+    },
+    {
+      "offset": "0x1c",
+      "retail_pointer": "0x801d10f0",
+      "value": "makeArchiveListDummyDisplayModel__2MRFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x20",
+      "retail_pointer": "0x805a93c7",
+      "value": "CrystalCageS"
+    },
+    {
+      "offset": "0x24",
+      "retail_pointer": "0x801d10f0",
+      "value": "makeArchiveListDummyDisplayModel__2MRFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x28",
+      "retail_pointer": "0x805a93d4",
+      "value": "CrystalCageM"
+    },
+    {
+      "offset": "0x2c",
+      "retail_pointer": "0x801d10f0",
+      "value": "makeArchiveListDummyDisplayModel__2MRFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x30",
+      "retail_pointer": "0x805a8099",
+      "value": "DemoRabbit"
+    },
+    {
+      "offset": "0x34",
+      "retail_pointer": "0x80270bd0",
+      "value": "makeArchiveList__10DemoRabbitFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x38",
+      "retail_pointer": "0x805a8135",
+      "value": "GhostPlayer"
+    },
+    {
+      "offset": "0x3c",
+      "retail_pointer": "0x802a475c",
+      "value": "makeArchiveList__11GhostPlayerFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x40",
+      "retail_pointer": "0x805a8339",
+      "value": "KuriboChief"
+    },
+    {
+      "offset": "0x44",
+      "retail_pointer": "0x8011a7e0",
+      "value": "makeArchiveList__11KuriboChiefFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x48",
+      "retail_pointer": "0x805abfaf",
+      "value": "YellowChip"
+    },
+    {
+      "offset": "0x4c",
+      "retail_pointer": "0x801be920",
+      "value": "makeArchiveList__8ChipBaseFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x50",
+      "retail_pointer": "0x805abfa6",
+      "value": "BlueChip"
+    },
+    {
+      "offset": "0x54",
+      "retail_pointer": "0x801be920",
+      "value": "makeArchiveList__8ChipBaseFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x58",
+      "retail_pointer": "0x805a8ffa",
+      "value": "CocoNut"
+    },
+    {
+      "offset": "0x5c",
+      "retail_pointer": "0x801c3e50",
+      "value": "makeArchiveList__7CocoNutFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x60",
+      "retail_pointer": "0x805a8a87",
+      "value": "Coin"
+    },
+    {
+      "offset": "0x64",
+      "retail_pointer": "0x801c8230",
+      "value": "makeArchiveList__4CoinFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x68",
+      "retail_pointer": "0x805abf32",
+      "value": "PurpleCoin"
+    },
+    {
+      "offset": "0x6c",
+      "retail_pointer": "0x801c8230",
+      "value": "makeArchiveList__4CoinFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x70",
+      "retail_pointer": "0x805abf3d",
+      "value": "RailCoin"
+    },
+    {
+      "offset": "0x74",
+      "retail_pointer": "0x801c8230",
+      "value": "makeArchiveList__4CoinFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x78",
+      "retail_pointer": "0x805abf46",
+      "value": "CircleCoinGroup"
+    },
+    {
+      "offset": "0x7c",
+      "retail_pointer": "0x801c8230",
+      "value": "makeArchiveList__4CoinFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x80",
+      "retail_pointer": "0x805abf56",
+      "value": "PurpleRailCoin"
+    },
+    {
+      "offset": "0x84",
+      "retail_pointer": "0x801c8230",
+      "value": "makeArchiveList__4CoinFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x88",
+      "retail_pointer": "0x805abf65",
+      "value": "CirclePurpleCoinGroup"
+    },
+    {
+      "offset": "0x8c",
+      "retail_pointer": "0x801c8230",
+      "value": "makeArchiveList__4CoinFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x90",
+      "retail_pointer": "0x805a86e2",
+      "value": "OtaKing"
+    },
+    {
+      "offset": "0x94",
+      "retail_pointer": "0x8006a2b8",
+      "value": "makeArchiveList__7OtaKingFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x98",
+      "retail_pointer": "0x805a8361",
+      "value": "OtaRock"
+    },
+    {
+      "offset": "0x9c",
+      "retail_pointer": "0x8012f338",
+      "value": "makeArchiveList__7OtaRockFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0xa0",
+      "retail_pointer": "0x805a8fd1",
+      "value": "PowerStar"
+    },
+    {
+      "offset": "0xa4",
+      "retail_pointer": "0x8020f844",
+      "value": "makeArchiveList__9PowerStarFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0xa8",
+      "retail_pointer": "0x805a9c45",
+      "value": "RainCloud"
+    },
+    {
+      "offset": "0xac",
+      "retail_pointer": "0x802199b8",
+      "value": "makeArchiveList__9RainCloudFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0xb0",
+      "retail_pointer": "0x805a80e4",
+      "value": "RosettaReading"
+    },
+    {
+      "offset": "0xb4",
+      "retail_pointer": "0x80284c74",
+      "value": "makeArchiveList__14RosettaReadingFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0xb8",
+      "retail_pointer": "0x805a80f3",
+      "value": "RosettaPictureBook"
+    },
+    {
+      "offset": "0xbc",
+      "retail_pointer": "0x8021e290",
+      "value": "makeArchiveList__18RosettaPictureBookFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0xc0",
+      "retail_pointer": "0x805adfdf",
+      "value": "RunawayTico"
+    },
+    {
+      "offset": "0xc4",
+      "retail_pointer": "0x802870a4",
+      "value": "makeArchiveList__11RunawayTicoFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0xc8",
+      "retail_pointer": "0x805a8496",
+      "value": "Teresa"
+    },
+    {
+      "offset": "0xcc",
+      "retail_pointer": "0x801d10f0",
+      "value": "makeArchiveListDummyDisplayModel__2MRFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0xd0",
+      "retail_pointer": "0x805a7f27",
+      "value": "Caretaker"
+    },
+    {
+      "offset": "0xd4",
+      "retail_pointer": "0x8026ed30",
+      "value": "makeArchiveList__9CaretakerFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0xd8",
+      "retail_pointer": "0x805a7fc8",
+      "value": "Kinopio"
+    },
+    {
+      "offset": "0xdc",
+      "retail_pointer": "0x8029abb4",
+      "value": "makeArchiveList__8NPCActorFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0xe0",
+      "retail_pointer": "0x805a7fd0",
+      "value": "KinopioAstro"
+    },
+    {
+      "offset": "0xe4",
+      "retail_pointer": "0x80275258",
+      "value": "makeArchiveList__12KinopioAstroFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0xe8",
+      "retail_pointer": "0x805a8061",
+      "value": "Tico"
+    },
+    {
+      "offset": "0xec",
+      "retail_pointer": "0x8028c6ac",
+      "value": "makeArchiveList__4TicoFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0xf0",
+      "retail_pointer": "0x805a8086",
+      "value": "TicoAstro"
+    },
+    {
+      "offset": "0xf4",
+      "retail_pointer": "0x8028c6ac",
+      "value": "makeArchiveList__4TicoFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0xf8",
+      "retail_pointer": "0x805a8066",
+      "value": "TicoComet"
+    },
+    {
+      "offset": "0xfc",
+      "retail_pointer": "0x8029acbc",
+      "value": "makeArchiveListDefault__8NPCActorFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x100",
+      "retail_pointer": "0x805a8070",
+      "value": "TicoShop"
+    },
+    {
+      "offset": "0x104",
+      "retail_pointer": "0x8029acbc",
+      "value": "makeArchiveListDefault__8NPCActorFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x108",
+      "retail_pointer": "0x805a80a4",
+      "value": "TicoFat"
+    },
+    {
+      "offset": "0x10c",
+      "retail_pointer": "0x8028f780",
+      "value": "makeArchiveList__7TicoFatFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x110",
+      "retail_pointer": "0x805a80ac",
+      "value": "TicoGalaxy"
+    },
+    {
+      "offset": "0x114",
+      "retail_pointer": "0x8028f780",
+      "value": "makeArchiveList__7TicoFatFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x118",
+      "retail_pointer": "0x805a801a",
+      "value": "PenguinRacer"
+    },
+    {
+      "offset": "0x11c",
+      "retail_pointer": "0x8029acbc",
+      "value": "makeArchiveListDefault__8NPCActorFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x120",
+      "retail_pointer": "0x805a8027",
+      "value": "PenguinRacerLeader"
+    },
+    {
+      "offset": "0x124",
+      "retail_pointer": "0x8029acbc",
+      "value": "makeArchiveListDefault__8NPCActorFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x128",
+      "retail_pointer": "0x805a80dc",
+      "value": "Rosetta"
+    },
+    {
+      "offset": "0x12c",
+      "retail_pointer": "0x80282234",
+      "value": "makeArchiveList__7RosettaFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x130",
+      "retail_pointer": "0x805a7fdd",
+      "value": "HoneyBee"
+    },
+    {
+      "offset": "0x134",
+      "retail_pointer": "0x80271e34",
+      "value": "makeArchiveList__8HoneyBeeFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x138",
+      "retail_pointer": "0x805a8106",
+      "value": "LuigiNPC"
+    },
+    {
+      "offset": "0x13c",
+      "retail_pointer": "0x80276790",
+      "value": "makeArchiveList__8LuigiNPCFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x140",
+      "retail_pointer": "0x805a810f",
+      "value": "LuigiEvent"
+    },
+    {
+      "offset": "0x144",
+      "retail_pointer": "0x80276790",
+      "value": "makeArchiveList__8LuigiNPCFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x148",
+      "retail_pointer": "0x805acbe5",
+      "value": "StarReturnDemoStarter"
+    },
+    {
+      "offset": "0x14c",
+      "retail_pointer": "0x800c38a0",
+      "value": "makeArchiveList__21StarReturnDemoStarterFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x150",
+      "retail_pointer": "0x805ab0e3",
+      "value": "UFOKinoko"
+    },
+    {
+      "offset": "0x154",
+      "retail_pointer": "0x8024ff1c",
+      "value": "makeArchiveList__9UFOKinokoFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x158",
+      "retail_pointer": "0x805abd9a",
+      "value": "UFOKinokoUnderConstruction"
+    },
+    {
+      "offset": "0x15c",
+      "retail_pointer": "0x80227450",
+      "value": "makeArchiveListUFOKinokoUnderConstruction__2MRFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x160",
+      "retail_pointer": "0x805aa14c",
+      "value": "SunakazeKun"
+    },
+    {
+      "offset": "0x164",
+      "retail_pointer": "0x8021fac4",
+      "value": "makeArchiveList__9SandstormFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x168",
+      "retail_pointer": "0x805abc41",
+      "value": "AstroDome"
+    },
+    {
+      "offset": "0x16c",
+      "retail_pointer": "0x801b0218",
+      "value": "makeArchiveListFromArg0__19AstroMapObjFunctionFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x170",
+      "retail_pointer": "0x805abc4b",
+      "value": "AstroDomeEntrance"
+    },
+    {
+      "offset": "0x174",
+      "retail_pointer": "0x801b0218",
+      "value": "makeArchiveListFromArg0__19AstroMapObjFunctionFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x178",
+      "retail_pointer": "0x805abdcb",
+      "value": "AstroDomeSky"
+    },
+    {
+      "offset": "0x17c",
+      "retail_pointer": "0x801b0218",
+      "value": "makeArchiveListFromArg0__19AstroMapObjFunctionFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x180",
+      "retail_pointer": "0x805acbcd",
+      "value": "AstroDomeGalaxySelector"
+    },
+    {
+      "offset": "0x184",
+      "retail_pointer": "0x803618d0",
+      "value": "makeArchiveList__16GalaxySelectInfoFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x188",
+      "retail_pointer": "0x805abc5d",
+      "value": "AstroStarPlate"
+    },
+    {
+      "offset": "0x18c",
+      "retail_pointer": "0x801b0218",
+      "value": "makeArchiveListFromArg0__19AstroMapObjFunctionFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x190",
+      "retail_pointer": "0x805abd3d",
+      "value": "AstroLibrary"
+    },
+    {
+      "offset": "0x194",
+      "retail_pointer": "0x801b02c0",
+      "value": "makeArchiveListAstroNamePlate__19AstroMapObjFunctionFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x198",
+      "retail_pointer": "0x805abd21",
+      "value": "AstroChildRoom"
+    },
+    {
+      "offset": "0x19c",
+      "retail_pointer": "0x801b02c0",
+      "value": "makeArchiveListAstroNamePlate__19AstroMapObjFunctionFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x1a0",
+      "retail_pointer": "0x805abd30",
+      "value": "AstroParking"
+    },
+    {
+      "offset": "0x1a4",
+      "retail_pointer": "0x801b02c0",
+      "value": "makeArchiveListAstroNamePlate__19AstroMapObjFunctionFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x1a8",
+      "retail_pointer": "0x805ac735",
+      "value": "MiniEggStarGalaxy"
+    },
+    {
+      "offset": "0x1ac",
+      "retail_pointer": "0x801ff3d4",
+      "value": "makeArchiveList__15MiniatureGalaxyFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x1b0",
+      "retail_pointer": "0x805ac747",
+      "value": "MiniHoneyBeeKingdomGalaxy"
+    },
+    {
+      "offset": "0x1b4",
+      "retail_pointer": "0x801ff3d4",
+      "value": "makeArchiveList__15MiniatureGalaxyFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x1b8",
+      "retail_pointer": "0x805ac761",
+      "value": "MiniFlipPanelExGalaxy"
+    },
+    {
+      "offset": "0x1bc",
+      "retail_pointer": "0x801ff3d4",
+      "value": "makeArchiveList__15MiniatureGalaxyFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x1c0",
+      "retail_pointer": "0x805ac777",
+      "value": "MiniSurfingLv1Galaxy"
+    },
+    {
+      "offset": "0x1c4",
+      "retail_pointer": "0x801ff3d4",
+      "value": "makeArchiveList__15MiniatureGalaxyFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x1c8",
+      "retail_pointer": "0x805ac78c",
+      "value": "MiniTriLegLv1Galaxy"
+    },
+    {
+      "offset": "0x1cc",
+      "retail_pointer": "0x801ff3d4",
+      "value": "makeArchiveList__15MiniatureGalaxyFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x1d0",
+      "retail_pointer": "0x805ac7a0",
+      "value": "MiniStarDustGalaxy"
+    },
+    {
+      "offset": "0x1d4",
+      "retail_pointer": "0x801ff3d4",
+      "value": "makeArchiveList__15MiniatureGalaxyFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x1d8",
+      "retail_pointer": "0x805ac7b3",
+      "value": "MiniTamakoroExLv1Galaxy"
+    },
+    {
+      "offset": "0x1dc",
+      "retail_pointer": "0x801ff3d4",
+      "value": "makeArchiveList__15MiniatureGalaxyFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x1e0",
+      "retail_pointer": "0x805ac7cb",
+      "value": "MiniBattleShipGalaxy"
+    },
+    {
+      "offset": "0x1e4",
+      "retail_pointer": "0x801ff3d4",
+      "value": "makeArchiveList__15MiniatureGalaxyFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x1e8",
+      "retail_pointer": "0x805ac7e0",
+      "value": "MiniBreakDownPlanetGalaxy"
+    },
+    {
+      "offset": "0x1ec",
+      "retail_pointer": "0x801ff3d4",
+      "value": "makeArchiveList__15MiniatureGalaxyFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x1f0",
+      "retail_pointer": "0x805ac7fa",
+      "value": "MiniKoopaBattleVs1Galaxy"
+    },
+    {
+      "offset": "0x1f4",
+      "retail_pointer": "0x801ff3d4",
+      "value": "makeArchiveList__15MiniatureGalaxyFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x1f8",
+      "retail_pointer": "0x805ac813",
+      "value": "MiniHeavenlyBeachGalaxy"
+    },
+    {
+      "offset": "0x1fc",
+      "retail_pointer": "0x801ff3d4",
+      "value": "makeArchiveList__15MiniatureGalaxyFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x200",
+      "retail_pointer": "0x805ac82b",
+      "value": "MiniCubeBubbleExLv1Galaxy"
+    },
+    {
+      "offset": "0x204",
+      "retail_pointer": "0x801ff3d4",
+      "value": "makeArchiveList__15MiniatureGalaxyFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x208",
+      "retail_pointer": "0x805ac845",
+      "value": "MiniPhantomGalaxy"
+    },
+    {
+      "offset": "0x20c",
+      "retail_pointer": "0x801ff3d4",
+      "value": "makeArchiveList__15MiniatureGalaxyFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x210",
+      "retail_pointer": "0x805ac857",
+      "value": "MiniOceanFloaterLandGalaxy"
+    },
+    {
+      "offset": "0x214",
+      "retail_pointer": "0x801ff3d4",
+      "value": "makeArchiveList__15MiniatureGalaxyFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x218",
+      "retail_pointer": "0x805ac872",
+      "value": "MiniKoopaJrShipLv1Galaxy"
+    },
+    {
+      "offset": "0x21c",
+      "retail_pointer": "0x801ff3d4",
+      "value": "makeArchiveList__15MiniatureGalaxyFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x220",
+      "retail_pointer": "0x805ac88b",
+      "value": "MiniCosmosGardenGalaxy"
+    },
+    {
+      "offset": "0x224",
+      "retail_pointer": "0x801ff3d4",
+      "value": "makeArchiveList__15MiniatureGalaxyFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x228",
+      "retail_pointer": "0x805ac8a2",
+      "value": "MiniIceVolcanoGalaxy"
+    },
+    {
+      "offset": "0x22c",
+      "retail_pointer": "0x801ff3d4",
+      "value": "makeArchiveList__15MiniatureGalaxyFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x230",
+      "retail_pointer": "0x805ac8b7",
+      "value": "MiniHoneyBeeExGalaxy"
+    },
+    {
+      "offset": "0x234",
+      "retail_pointer": "0x801ff3d4",
+      "value": "makeArchiveList__15MiniatureGalaxyFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x238",
+      "retail_pointer": "0x805ac8cc",
+      "value": "MiniSandClockGalaxy"
+    },
+    {
+      "offset": "0x23c",
+      "retail_pointer": "0x801ff3d4",
+      "value": "makeArchiveList__15MiniatureGalaxyFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x240",
+      "retail_pointer": "0x805ac8e0",
+      "value": "MiniKoopaBattleVs2Galaxy"
+    },
+    {
+      "offset": "0x244",
+      "retail_pointer": "0x801ff3d4",
+      "value": "makeArchiveList__15MiniatureGalaxyFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x248",
+      "retail_pointer": "0x805ac8f9",
+      "value": "MiniReverseKingdomGalaxy"
+    },
+    {
+      "offset": "0x24c",
+      "retail_pointer": "0x801ff3d4",
+      "value": "makeArchiveList__15MiniatureGalaxyFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x250",
+      "retail_pointer": "0x805ac912",
+      "value": "MiniOceanRingGalaxy"
+    },
+    {
+      "offset": "0x254",
+      "retail_pointer": "0x801ff3d4",
+      "value": "makeArchiveList__15MiniatureGalaxyFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x258",
+      "retail_pointer": "0x805ac926",
+      "value": "MiniFactoryGalaxy"
+    },
+    {
+      "offset": "0x25c",
+      "retail_pointer": "0x801ff3d4",
+      "value": "makeArchiveList__15MiniatureGalaxyFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x260",
+      "retail_pointer": "0x805ac938",
+      "value": "MiniSkullSharkGalaxy"
+    },
+    {
+      "offset": "0x264",
+      "retail_pointer": "0x801ff3d4",
+      "value": "makeArchiveList__15MiniatureGalaxyFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x268",
+      "retail_pointer": "0x805ac94d",
+      "value": "MiniFloaterOtaKingGalaxy"
+    },
+    {
+      "offset": "0x26c",
+      "retail_pointer": "0x801ff3d4",
+      "value": "makeArchiveList__15MiniatureGalaxyFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x270",
+      "retail_pointer": "0x805ac966",
+      "value": "MiniOceanPhantomCaveGalaxy"
+    },
+    {
+      "offset": "0x274",
+      "retail_pointer": "0x801ff3d4",
+      "value": "makeArchiveList__15MiniatureGalaxyFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x278",
+      "retail_pointer": "0x805ac981",
+      "value": "MiniCannonFleetGalaxy"
+    },
+    {
+      "offset": "0x27c",
+      "retail_pointer": "0x801ff3d4",
+      "value": "makeArchiveList__15MiniatureGalaxyFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x280",
+      "retail_pointer": "0x805ac997",
+      "value": "MiniDarkRoomGalaxy"
+    },
+    {
+      "offset": "0x284",
+      "retail_pointer": "0x801ff3d4",
+      "value": "makeArchiveList__15MiniatureGalaxyFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x288",
+      "retail_pointer": "0x805ac9aa",
+      "value": "MiniHellProminenceGalaxy"
+    },
+    {
+      "offset": "0x28c",
+      "retail_pointer": "0x801ff3d4",
+      "value": "makeArchiveList__15MiniatureGalaxyFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x290",
+      "retail_pointer": "0x805ac9c3",
+      "value": "MiniKoopaBattleVs3Galaxy"
+    },
+    {
+      "offset": "0x294",
+      "retail_pointer": "0x801ff3d4",
+      "value": "makeArchiveList__15MiniatureGalaxyFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x298",
+      "retail_pointer": "0x805adfeb",
+      "value": "Hopper"
+    },
+    {
+      "offset": "0x29c",
+      "retail_pointer": "0x80200e78",
+      "value": "makeArchiveList__15MorphItemObjNeoFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x2a0",
+      "retail_pointer": "0x805a8d5e",
+      "value": "BenefitItemInvincible"
+    },
+    {
+      "offset": "0x2a4",
+      "retail_pointer": "0x80200e78",
+      "value": "makeArchiveList__15MorphItemObjNeoFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x2a8",
+      "retail_pointer": "0x805a9083",
+      "value": "MorphItemNeoBee"
+    },
+    {
+      "offset": "0x2ac",
+      "retail_pointer": "0x80200e78",
+      "value": "makeArchiveList__15MorphItemObjNeoFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x2b0",
+      "retail_pointer": "0x805a90da",
+      "value": "MorphItemNeoFire"
+    },
+    {
+      "offset": "0x2b4",
+      "retail_pointer": "0x80200e78",
+      "value": "makeArchiveList__15MorphItemObjNeoFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x2b8",
+      "retail_pointer": "0x805a90f7",
+      "value": "MorphItemNeoFoo"
+    },
+    {
+      "offset": "0x2bc",
+      "retail_pointer": "0x80200e78",
+      "value": "makeArchiveList__15MorphItemObjNeoFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x2c0",
+      "retail_pointer": "0x805a9062",
+      "value": "MorphItemNeoHopper"
+    },
+    {
+      "offset": "0x2c4",
+      "retail_pointer": "0x80200e78",
+      "value": "makeArchiveList__15MorphItemObjNeoFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x2c8",
+      "retail_pointer": "0x805a90bf",
+      "value": "MorphItemNeoIce"
+    },
+    {
+      "offset": "0x2cc",
+      "retail_pointer": "0x80200e78",
+      "value": "makeArchiveList__15MorphItemObjNeoFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    },
+    {
+      "offset": "0x2d0",
+      "retail_pointer": "0x805a909e",
+      "value": "MorphItemNeoTeresa"
+    },
+    {
+      "offset": "0x2d4",
+      "retail_pointer": "0x80200e78",
+      "value": "makeArchiveList__15MorphItemObjNeoFP27NameObjArchiveListCollectorRC12JMapInfoIter"
+    }
+  ]
+}

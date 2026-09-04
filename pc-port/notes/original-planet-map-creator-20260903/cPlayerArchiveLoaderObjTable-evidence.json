@@ -1,0 +1,47 @@
+{
+  "symbol": "cPlayerArchiveLoaderObjTable__28@unnamed@NameObjFactory_cpp@",
+  "bytes": 32,
+  "all_relocated_pointers_and_unrelocated_bytes_equal": true,
+  "entries": [
+    {
+      "offset": "0x0",
+      "retail_pointer": "0x805adfeb",
+      "value": "Hopper"
+    },
+    {
+      "offset": "0x4",
+      "retail_pointer": "0x805a8d5e",
+      "value": "BenefitItemInvincible"
+    },
+    {
+      "offset": "0x8",
+      "retail_pointer": "0x805a9083",
+      "value": "MorphItemNeoBee"
+    },
+    {
+      "offset": "0xc",
+      "retail_pointer": "0x805a90da",
+      "value": "MorphItemNeoFire"
+    },
+    {
+      "offset": "0x10",
+      "retail_pointer": "0x805a90f7",
+      "value": "MorphItemNeoFoo"
+    },
+    {
+      "offset": "0x14",
+      "retail_pointer": "0x805a9062",
+      "value": "MorphItemNeoHopper"
+    },
+    {
+      "offset": "0x18",
+      "retail_pointer": "0x805a90bf",
+      "value": "MorphItemNeoIce"
+    },
+    {
+      "offset": "0x1c",
+      "retail_pointer": "0x805a909e",
+      "value": "MorphItemNeoTeresa"
+    }
+  ]
+}

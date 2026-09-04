@@ -1,0 +1,37 @@
+### mwcceppc.exe Compiler:
+#      In: include\Game\Effect\SimpleEffectObj.hpp
+#    From: src\Game\NameObj\NameObjFactory.cpp
+# --------------------------------------------
+#      25:         return &vec; 
+# Warning:                    ^
+#   function result is a pointer/reference to an automatic/temporary variable
+#   (included from:
+#       
+#   Z:\Users\frityet\Projects\petari\include\Game\Effect\AstroEffectObj.hpp:3
+#       Z:\Users\frityet\Projects\petari\include\Game\Effect.hpp:3
+#       
+#   Z:\Users\frityet\Projects\petari\src\Game\NameObj\NameObjFactory.cpp:5)
+### mwcceppc.exe Compiler:
+#      In: include\Game\MapObj\MorphItemObjNeo.hpp
+# ------------------------------------------------
+#     154:         return &(TVec3f(0.0f, 200.0f, 0.0f)); 
+# Warning:                                             ^
+#   not an lvalue
+### mwcceppc.exe Compiler:
+#     173:         return &(TVec3f(0.0f, 200.0f, 0.0f)); 
+# Warning:                                             ^
+#   not an lvalue
+### mwcceppc.exe Compiler:
+#     192:         return &TVec3f(0.0f, 580.0f, 0.0f); 
+# Warning:                                           ^
+#   not an lvalue
+### mwcceppc.exe Compiler:
+#      In: include\Game\Player\MarioActor.hpp
+# -------------------------------------------
+#     702:         /* 0x468 */ TVec3f _468Vec; 
+# Warning:                                   ^
+#   unions cannot have nontrivial class members
+### mwcceppc.exe Compiler:
+#     918:         /* 0xF2C */ TVec3f _F2CVec; 
+# Warning:                                   ^
+#   unions cannot have nontrivial class members

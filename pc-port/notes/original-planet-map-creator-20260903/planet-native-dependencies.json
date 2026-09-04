@@ -1,0 +1,396 @@
+{
+  "libraries": [
+    {
+      "path": "pc-port/build/macosx/arm64/debug/libsmg-pc-game.a",
+      "size": 361236592,
+      "mtime_ns": 1788481214364112309
+    },
+    {
+      "path": "pc-port/build/macosx/arm64/debug/libsmg-pc-common.a",
+      "size": 7310424,
+      "mtime_ns": 1788438535508605986
+    },
+    {
+      "path": "pc-port/build/macosx/arm64/debug/libsmg-pc-render.a",
+      "size": 1903432,
+      "mtime_ns": 1788480089059444849
+    }
+  ],
+  "dependencies": [
+    {
+      "symbol": "__Unwind_Resume",
+      "demangled": "__Unwind_Resume",
+      "present_in_native_game_common_render": false
+    },
+    {
+      "symbol": "__ZN11MapObjActorC2EPKc",
+      "demangled": "MapObjActor::MapObjActor(char const*)",
+      "present_in_native_game_common_render": false
+    },
+    {
+      "symbol": "__ZN12FurPlanetMapC1EPKc",
+      "demangled": "FurPlanetMap::FurPlanetMap(char const*)",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZN12MarblePlanetC1EPKc",
+      "demangled": "MarblePlanet::MarblePlanet(char const*)",
+      "present_in_native_game_common_render": false
+    },
+    {
+      "symbol": "__ZN13LavaSunPlanetC1EPKc",
+      "demangled": "LavaSunPlanet::LavaSunPlanet(char const*)",
+      "present_in_native_game_common_render": false
+    },
+    {
+      "symbol": "__ZN13RailPlanetMapC1EPKc",
+      "demangled": "RailPlanetMap::RailPlanetMap(char const*)",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZN14AstroSimpleObjC1EPKc",
+      "demangled": "AstroSimpleObj::AstroSimpleObj(char const*)",
+      "present_in_native_game_common_render": false
+    },
+    {
+      "symbol": "__ZN14FlexibleSphereC1EPKc",
+      "demangled": "FlexibleSphere::FlexibleSphere(char const*)",
+      "present_in_native_game_common_render": false
+    },
+    {
+      "symbol": "__ZN15WormEatenPlanetC1EPKc",
+      "demangled": "WormEatenPlanet::WormEatenPlanet(char const*)",
+      "present_in_native_game_common_render": false
+    },
+    {
+      "symbol": "__ZN16BumpAppearPlanetC1EPKc",
+      "demangled": "BumpAppearPlanet::BumpAppearPlanet(char const*)",
+      "present_in_native_game_common_render": false
+    },
+    {
+      "symbol": "__ZN16HatchWaterPlanetC1EPKc",
+      "demangled": "HatchWaterPlanet::HatchWaterPlanet(char const*)",
+      "present_in_native_game_common_render": false
+    },
+    {
+      "symbol": "__ZN17BeamGoRoundPlanetC1EPKc",
+      "demangled": "BeamGoRoundPlanet::BeamGoRoundPlanet(char const*)",
+      "present_in_native_game_common_render": false
+    },
+    {
+      "symbol": "__ZN17SnowCapsulePlanetC1EPKc",
+      "demangled": "SnowCapsulePlanet::SnowCapsulePlanet(char const*)",
+      "present_in_native_game_common_render": false
+    },
+    {
+      "symbol": "__ZN18LavaJamboSunPlanetC1EPKc",
+      "demangled": "LavaJamboSunPlanet::LavaJamboSunPlanet(char const*)",
+      "present_in_native_game_common_render": false
+    },
+    {
+      "symbol": "__ZN18SimpleClipPartsObjC1EPKc",
+      "demangled": "SimpleClipPartsObj::SimpleClipPartsObj(char const*)",
+      "present_in_native_game_common_render": false
+    },
+    {
+      "symbol": "__ZN21QuestionBoxGalleryObjC1EPKc",
+      "demangled": "QuestionBoxGalleryObj::QuestionBoxGalleryObj(char const*)",
+      "present_in_native_game_common_render": false
+    },
+    {
+      "symbol": "__ZN23PeachCastleGardenPlanetC1EPKc",
+      "demangled": "PeachCastleGardenPlanet::PeachCastleGardenPlanet(char const*)",
+      "present_in_native_game_common_render": false
+    },
+    {
+      "symbol": "__ZN23SandCapsuleInsidePlanetC1EPKc",
+      "demangled": "SandCapsuleInsidePlanet::SandCapsuleInsidePlanet(char const*)",
+      "present_in_native_game_common_render": false
+    },
+    {
+      "symbol": "__ZN24ReverseGravityRoomPlanetC1EPKc",
+      "demangled": "ReverseGravityRoomPlanet::ReverseGravityRoomPlanet(char const*)",
+      "present_in_native_game_common_render": false
+    },
+    {
+      "symbol": "__ZN25PlanetMapWithoutHighModelC1EPKc",
+      "demangled": "PlanetMapWithoutHighModel::PlanetMapWithoutHighModel(char const*)",
+      "present_in_native_game_common_render": false
+    },
+    {
+      "symbol": "__ZN27NameObjArchiveListCollector10addArchiveEPKc",
+      "demangled": "NameObjArchiveListCollector::addArchive(char const*)",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZN2MR12isExistModelEPKc",
+      "demangled": "MR::isExistModel(char const*)",
+      "present_in_native_game_common_render": false
+    },
+    {
+      "symbol": "__ZN2MR13getCsvDataS32EPiPK8JMapInfoPKci",
+      "demangled": "MR::getCsvDataS32(int*, JMapInfo const*, char const*, int)",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZN2MR13getCsvDataStrEPPKcPK8JMapInfoS1_i",
+      "demangled": "MR::getCsvDataStr(char const**, JMapInfo const*, char const*, int)",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZN2MR13isEqualStringEPKcS1_",
+      "demangled": "MR::isEqualString(char const*, char const*)",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZN2MR15createCsvParserEPKcS1_z",
+      "demangled": "MR::createCsvParser(char const*, char const*, ...)",
+      "present_in_native_game_common_render": false
+    },
+    {
+      "symbol": "__ZN2MR17getSceneObjHolderEv",
+      "demangled": "MR::getSceneObjHolder()",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZN2MR19getCurrentStageNameEv",
+      "demangled": "MR::getCurrentStageName()",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZN2MR20getCsvDataElementNumEPK8JMapInfo",
+      "demangled": "MR::getCsvDataElementNum(JMapInfo const*)",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZN2MR20getCurrentScenarioNoEv",
+      "demangled": "MR::getCurrentScenarioNo()",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZN7NameObj16calcViewAndEntryEv",
+      "demangled": "NameObj::calcViewAndEntry()",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZN7NameObj18initAfterPlacementEv",
+      "demangled": "NameObj::initAfterPlacement()",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZN7NameObj4initERK12JMapInfoIter",
+      "demangled": "NameObj::init(JMapInfoIter const&)",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZN7NameObj8calcAnimEv",
+      "demangled": "NameObj::calcAnim()",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZN7NameObj8movementEv",
+      "demangled": "NameObj::movement()",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZN7NameObjC2EPKc",
+      "demangled": "NameObj::NameObj(char const*)",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZN7NameObjD2Ev",
+      "demangled": "NameObj::~NameObj()",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZN9LiveActor12attackSensorEP9HitSensorS1_",
+      "demangled": "LiveActor::attackSensor(HitSensor*, HitSensor*)",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZN9LiveActor14receiveMessageEjP9HitSensorS1_",
+      "demangled": "LiveActor::receiveMessage(unsigned int, HitSensor*, HitSensor*)",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZN9LiveActor15receiveMsgApartEP9HitSensorS1_",
+      "demangled": "LiveActor::receiveMsgApart(HitSensor*, HitSensor*)",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZN9LiveActor16calcViewAndEntryEv",
+      "demangled": "LiveActor::calcViewAndEntry()",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZN9LiveActor17calcAndSetBaseMtxEv",
+      "demangled": "LiveActor::calcAndSetBaseMtx()",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZN9LiveActor4killEv",
+      "demangled": "LiveActor::kill()",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZN9LiveActor6appearEv",
+      "demangled": "LiveActor::appear()",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZN9LiveActor8calcAnimEv",
+      "demangled": "LiveActor::calcAnim()",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZN9LiveActor8movementEv",
+      "demangled": "LiveActor::movement()",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZN9PlanetMap10endClippedEv",
+      "demangled": "PlanetMap::endClipped()",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZN9PlanetMap12startClippedEv",
+      "demangled": "PlanetMap::startClipped()",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZN9PlanetMap13makeActorDeadEv",
+      "demangled": "PlanetMap::makeActorDead()",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZN9PlanetMap17makeActorAppearedEv",
+      "demangled": "PlanetMap::makeActorAppeared()",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZN9PlanetMap4initERK12JMapInfoIter",
+      "demangled": "PlanetMap::init(JMapInfoIter const&)",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZN9PlanetMap7controlEv",
+      "demangled": "PlanetMap::control()",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZN9PlanetMapC1EPKcS1_",
+      "demangled": "PlanetMap::PlanetMap(char const*, char const*)",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZN9PlanetMapC2EPKcS1_",
+      "demangled": "PlanetMap::PlanetMap(char const*, char const*)",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZN9PlanetMapD2Ev",
+      "demangled": "PlanetMap::~PlanetMap()",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZNK14SceneObjHolder6getObjEi",
+      "demangled": "SceneObjHolder::getObj(int) const",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZNK7NameObj4drawEv",
+      "demangled": "NameObj::draw() const",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZNK9LiveActor10getBaseMtxEv",
+      "demangled": "LiveActor::getBaseMtx() const",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZNK9LiveActor12getTakingMtxEv",
+      "demangled": "LiveActor::getTakingMtx() const",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZNK9PlanetMap18getLowMovementTypeEv",
+      "demangled": "PlanetMap::getLowMovementType() const",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZTI7NameObj",
+      "demangled": "typeinfo for NameObj",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZTI9PlanetMap",
+      "demangled": "typeinfo for PlanetMap",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZTV12SimpleMapObj",
+      "demangled": "vtable for SimpleMapObj",
+      "present_in_native_game_common_render": false
+    },
+    {
+      "symbol": "__ZTV13RotateMoveObj",
+      "demangled": "vtable for RotateMoveObj",
+      "present_in_native_game_common_render": false
+    },
+    {
+      "symbol": "__ZTV16PlanetMapAnimLow",
+      "demangled": "vtable for PlanetMapAnimLow",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__ZTVN10__cxxabiv120__si_class_type_infoE",
+      "demangled": "vtable for __cxxabiv1::__si_class_type_info",
+      "present_in_native_game_common_render": false
+    },
+    {
+      "symbol": "__ZdlPvm",
+      "demangled": "operator delete(void*, unsigned long)",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__Znam",
+      "demangled": "operator new[](unsigned long)",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "__Znwm",
+      "demangled": "operator new(unsigned long)",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "___gxx_personality_v0",
+      "demangled": "___gxx_personality_v0",
+      "present_in_native_game_common_render": false
+    },
+    {
+      "symbol": "___stack_chk_fail",
+      "demangled": "___stack_chk_fail",
+      "present_in_native_game_common_render": false
+    },
+    {
+      "symbol": "___stack_chk_guard",
+      "demangled": "___stack_chk_guard",
+      "present_in_native_game_common_render": false
+    },
+    {
+      "symbol": "_memset",
+      "demangled": "_memset",
+      "present_in_native_game_common_render": false
+    },
+    {
+      "symbol": "_smgpc_msl_snprintf",
+      "demangled": "_smgpc_msl_snprintf",
+      "present_in_native_game_common_render": true
+    },
+    {
+      "symbol": "_strlen",
+      "demangled": "_strlen",
+      "present_in_native_game_common_render": false
+    }
+  ]
+}

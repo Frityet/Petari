@@ -1,0 +1,4417 @@
+{
+  "symbol": "cName2ArchiveNamesTable__28@unnamed@NameObjFactory_cpp@",
+  "bytes": 3528,
+  "all_relocated_pointers_and_unrelocated_bytes_equal": true,
+  "entries": [
+    {
+      "offset": "0x0",
+      "retail_pointer": "0x805a8f03",
+      "value": "AirBubbleGenerator"
+    },
+    {
+      "offset": "0x4",
+      "retail_pointer": "0x805a9112",
+      "value": "AirBubble"
+    },
+    {
+      "offset": "0x8",
+      "retail_pointer": "0x805aa86e",
+      "value": "AssemblyBlockPartsTimerA"
+    },
+    {
+      "offset": "0xc",
+      "retail_pointer": "0x805acc3b",
+      "value": "AssemblyBlockPartsTimerABloom"
+    },
+    {
+      "offset": "0x10",
+      "retail_pointer": "0x805a9b07",
+      "value": "AstroDomeBlueStar"
+    },
+    {
+      "offset": "0x14",
+      "retail_pointer": "0x805acc59",
+      "value": "GCaptureRibbon"
+    },
+    {
+      "offset": "0x18",
+      "retail_pointer": "0x805a9b19",
+      "value": "AstroDomeComet"
+    },
+    {
+      "offset": "0x1c",
+      "retail_pointer": "0x805acc68",
+      "value": "AstroDomeCometBloom"
+    },
+    {
+      "offset": "0x20",
+      "retail_pointer": "0x805acbb8",
+      "value": "AstroDomeDemoStarter"
+    },
+    {
+      "offset": "0x24",
+      "retail_pointer": "0x805acc7c",
+      "value": "AstroDomeDemoCamera"
+    },
+    {
+      "offset": "0x28",
+      "retail_pointer": "0x805acbb8",
+      "value": "AstroDomeDemoStarter"
+    },
+    {
+      "offset": "0x2c",
+      "retail_pointer": "0x805acc90",
+      "value": "SpinDriverPath"
+    },
+    {
+      "offset": "0x30",
+      "retail_pointer": "0x805acbcd",
+      "value": "AstroDomeGalaxySelector"
+    },
+    {
+      "offset": "0x34",
+      "retail_pointer": "0x805acc9f",
+      "value": "BackButton"
+    },
+    {
+      "offset": "0x38",
+      "retail_pointer": "0x805acbcd",
+      "value": "AstroDomeGalaxySelector"
+    },
+    {
+      "offset": "0x3c",
+      "retail_pointer": "0x805accaa",
+      "value": "GalaxySelect"
+    },
+    {
+      "offset": "0x40",
+      "retail_pointer": "0x805a85f4",
+      "value": "BasaBasa"
+    },
+    {
+      "offset": "0x44",
+      "retail_pointer": "0x805accb7",
+      "value": "BasaBasaHang"
+    },
+    {
+      "offset": "0x48",
+      "retail_pointer": "0x805a85fd",
+      "value": "BasaBasaIce"
+    },
+    {
+      "offset": "0x4c",
+      "retail_pointer": "0x805accc4",
+      "value": "BasaBasaIceHang"
+    },
+    {
+      "offset": "0x50",
+      "retail_pointer": "0x805a95e5",
+      "value": "BeeFlowerHover"
+    },
+    {
+      "offset": "0x54",
+      "retail_pointer": "0x805accd4",
+      "value": "BeeFlowerHoverLow"
+    },
+    {
+      "offset": "0x58",
+      "retail_pointer": "0x805a8427",
+      "value": "BegomanBabyLauncher"
+    },
+    {
+      "offset": "0x5c",
+      "retail_pointer": "0x805a83ca",
+      "value": "BegomanBaby"
+    },
+    {
+      "offset": "0x60",
+      "retail_pointer": "0x805a8403",
+      "value": "BegomanLauncher"
+    },
+    {
+      "offset": "0x64",
+      "retail_pointer": "0x805a83d6",
+      "value": "BegomanSpring"
+    },
+    {
+      "offset": "0x68",
+      "retail_pointer": "0x805a8403",
+      "value": "BegomanLauncher"
+    },
+    {
+      "offset": "0x6c",
+      "retail_pointer": "0x805acce6",
+      "value": "BegomanSpringHead"
+    },
+    {
+      "offset": "0x70",
+      "retail_pointer": "0x805a83f6",
+      "value": "BegomanSpike"
+    },
+    {
+      "offset": "0x74",
+      "retail_pointer": "0x805accf8",
+      "value": "BegomanBrokenPiece"
+    },
+    {
+      "offset": "0x78",
+      "retail_pointer": "0x805a83f6",
+      "value": "BegomanSpike"
+    },
+    {
+      "offset": "0x7c",
+      "retail_pointer": "0x805acd0b",
+      "value": "BegomanSpikeHead"
+    },
+    {
+      "offset": "0x80",
+      "retail_pointer": "0x805a83d6",
+      "value": "BegomanSpring"
+    },
+    {
+      "offset": "0x84",
+      "retail_pointer": "0x805acce6",
+      "value": "BegomanSpringHead"
+    },
+    {
+      "offset": "0x88",
+      "retail_pointer": "0x805a83e4",
+      "value": "BegomanSpringHide"
+    },
+    {
+      "offset": "0x8c",
+      "retail_pointer": "0x805a83ca",
+      "value": "BegomanBaby"
+    },
+    {
+      "offset": "0x90",
+      "retail_pointer": "0x805a83e4",
+      "value": "BegomanSpringHide"
+    },
+    {
+      "offset": "0x94",
+      "retail_pointer": "0x805acce6",
+      "value": "BegomanSpringHead"
+    },
+    {
+      "offset": "0x98",
+      "retail_pointer": "0x805a8ef0",
+      "value": "BigBubbleGenerator"
+    },
+    {
+      "offset": "0x9c",
+      "retail_pointer": "0x805a8ead",
+      "value": "BigBubble"
+    },
+    {
+      "offset": "0xa0",
+      "retail_pointer": "0x805a8af1",
+      "value": "BigFan"
+    },
+    {
+      "offset": "0xa4",
+      "retail_pointer": "0x805acd1c",
+      "value": "BigFanWind"
+    },
+    {
+      "offset": "0xa8",
+      "retail_pointer": "0x805a8af8",
+      "value": "BigFanNoLeg"
+    },
+    {
+      "offset": "0xac",
+      "retail_pointer": "0x805acd1c",
+      "value": "BigFanWind"
+    },
+    {
+      "offset": "0xb0",
+      "retail_pointer": "0x805a8f16",
+      "value": "BigObstructBubbleGenerator"
+    },
+    {
+      "offset": "0xb4",
+      "retail_pointer": "0x805a8ead",
+      "value": "BigBubble"
+    },
+    {
+      "offset": "0xb8",
+      "retail_pointer": "0x805a8f80",
+      "value": "BlackHole"
+    },
+    {
+      "offset": "0xbc",
+      "retail_pointer": "0x805acd27",
+      "value": "BlackHoleRange"
+    },
+    {
+      "offset": "0xc0",
+      "retail_pointer": "0x805a8f8a",
+      "value": "BlackHoleCube"
+    },
+    {
+      "offset": "0xc4",
+      "retail_pointer": "0x805acd27",
+      "value": "BlackHoleRange"
+    },
+    {
+      "offset": "0xc8",
+      "retail_pointer": "0x805acd36",
+      "value": "BlueStar"
+    },
+    {
+      "offset": "0xcc",
+      "retail_pointer": "0x805acd3f",
+      "value": "BlueStarDemo"
+    },
+    {
+      "offset": "0xd0",
+      "retail_pointer": "0x805a8adb",
+      "value": "BlueStarCupsulePlanet"
+    },
+    {
+      "offset": "0xd4",
+      "retail_pointer": "0x805acc59",
+      "value": "GCaptureRibbon"
+    },
+    {
+      "offset": "0xd8",
+      "retail_pointer": "0x805a860f",
+      "value": "BombBird"
+    },
+    {
+      "offset": "0xdc",
+      "retail_pointer": "0x805acd4c",
+      "value": "BombBirdBomb"
+    },
+    {
+      "offset": "0xe0",
+      "retail_pointer": "0x805a82d1",
+      "value": "BombHeiLauncher"
+    },
+    {
+      "offset": "0xe4",
+      "retail_pointer": "0x805a82bc",
+      "value": "BombHei"
+    },
+    {
+      "offset": "0xe8",
+      "retail_pointer": "0x805a82e1",
+      "value": "BombLauncher"
+    },
+    {
+      "offset": "0xec",
+      "retail_pointer": "0x805a82bc",
+      "value": "BombHei"
+    },
+    {
+      "offset": "0xf0",
+      "retail_pointer": "0x805a867b",
+      "value": "BossBegoman"
+    },
+    {
+      "offset": "0xf4",
+      "retail_pointer": "0x805a83ca",
+      "value": "BegomanBaby"
+    },
+    {
+      "offset": "0xf8",
+      "retail_pointer": "0x805a867b",
+      "value": "BossBegoman"
+    },
+    {
+      "offset": "0xfc",
+      "retail_pointer": "0x805acd59",
+      "value": "BossBegomanHead"
+    },
+    {
+      "offset": "0x100",
+      "retail_pointer": "0x805a8751",
+      "value": "BossKameck"
+    },
+    {
+      "offset": "0x104",
+      "retail_pointer": "0x805acd69",
+      "value": "BossKameckBattleDemo"
+    },
+    {
+      "offset": "0x108",
+      "retail_pointer": "0x805a8751",
+      "value": "BossKameck"
+    },
+    {
+      "offset": "0x10c",
+      "retail_pointer": "0x805acd7e",
+      "value": "BossKameckFireBall"
+    },
+    {
+      "offset": "0x110",
+      "retail_pointer": "0x805a8751",
+      "value": "BossKameck"
+    },
+    {
+      "offset": "0x114",
+      "retail_pointer": "0x805a818e",
+      "value": "Koura"
+    },
+    {
+      "offset": "0x118",
+      "retail_pointer": "0x805a875c",
+      "value": "BossKameck2"
+    },
+    {
+      "offset": "0x11c",
+      "retail_pointer": "0x805acd91",
+      "value": "BossKameckBarrier"
+    },
+    {
+      "offset": "0x120",
+      "retail_pointer": "0x805a875c",
+      "value": "BossKameck2"
+    },
+    {
+      "offset": "0x124",
+      "retail_pointer": "0x805acd69",
+      "value": "BossKameckBattleDemo"
+    },
+    {
+      "offset": "0x128",
+      "retail_pointer": "0x805a875c",
+      "value": "BossKameck2"
+    },
+    {
+      "offset": "0x12c",
+      "retail_pointer": "0x805acd7e",
+      "value": "BossKameckFireBall"
+    },
+    {
+      "offset": "0x130",
+      "retail_pointer": "0x805a875c",
+      "value": "BossKameck2"
+    },
+    {
+      "offset": "0x134",
+      "retail_pointer": "0x805a818e",
+      "value": "Koura"
+    },
+    {
+      "offset": "0x138",
+      "retail_pointer": "0x805a8687",
+      "value": "BossStinkBug"
+    },
+    {
+      "offset": "0x13c",
+      "retail_pointer": "0x805acda3",
+      "value": "BossStinkBugBomb"
+    },
+    {
+      "offset": "0x140",
+      "retail_pointer": "0x805a8687",
+      "value": "BossStinkBug"
+    },
+    {
+      "offset": "0x144",
+      "retail_pointer": "0x805acdb4",
+      "value": "BossStinkBugBombLauncher"
+    },
+    {
+      "offset": "0x148",
+      "retail_pointer": "0x805a8687",
+      "value": "BossStinkBug"
+    },
+    {
+      "offset": "0x14c",
+      "retail_pointer": "0x805acdcd",
+      "value": "BossStinkBugDemo"
+    },
+    {
+      "offset": "0x150",
+      "retail_pointer": "0x805a8687",
+      "value": "BossStinkBug"
+    },
+    {
+      "offset": "0x154",
+      "retail_pointer": "0x805acdde",
+      "value": "BossStinkBugWing"
+    },
+    {
+      "offset": "0x158",
+      "retail_pointer": "0x805a8e5b",
+      "value": "BreakableCage"
+    },
+    {
+      "offset": "0x15c",
+      "retail_pointer": "0x805acdef",
+      "value": "BreakableCageBreak"
+    },
+    {
+      "offset": "0x160",
+      "retail_pointer": "0x805a8e69",
+      "value": "BreakableCageRotate"
+    },
+    {
+      "offset": "0x164",
+      "retail_pointer": "0x805acdef",
+      "value": "BreakableCageBreak"
+    },
+    {
+      "offset": "0x168",
+      "retail_pointer": "0x805a8e7d",
+      "value": "BreakableCageL"
+    },
+    {
+      "offset": "0x16c",
+      "retail_pointer": "0x805acdef",
+      "value": "BreakableCageBreak"
+    },
+    {
+      "offset": "0x170",
+      "retail_pointer": "0x805a8e9e",
+      "value": "BreakableTrash"
+    },
+    {
+      "offset": "0x174",
+      "retail_pointer": "0x805acdef",
+      "value": "BreakableCageBreak"
+    },
+    {
+      "offset": "0x178",
+      "retail_pointer": "0x805a94c5",
+      "value": "BrightObj"
+    },
+    {
+      "offset": "0x17c",
+      "retail_pointer": "0x805ace02",
+      "value": "GlareGlow"
+    },
+    {
+      "offset": "0x180",
+      "retail_pointer": "0x805a94c5",
+      "value": "BrightObj"
+    },
+    {
+      "offset": "0x184",
+      "retail_pointer": "0x805ace0c",
+      "value": "GlareLine"
+    },
+    {
+      "offset": "0x188",
+      "retail_pointer": "0x805a94d9",
+      "value": "BrightSun"
+    },
+    {
+      "offset": "0x18c",
+      "retail_pointer": "0x805ace02",
+      "value": "GlareGlow"
+    },
+    {
+      "offset": "0x190",
+      "retail_pointer": "0x805a94d9",
+      "value": "BrightSun"
+    },
+    {
+      "offset": "0x194",
+      "retail_pointer": "0x805ace0c",
+      "value": "GlareLine"
+    },
+    {
+      "offset": "0x198",
+      "retail_pointer": "0x805a94d9",
+      "value": "BrightSun"
+    },
+    {
+      "offset": "0x19c",
+      "retail_pointer": "0x806b20e0",
+      "value": "Sun"
+    },
+    {
+      "offset": "0x1a0",
+      "retail_pointer": "0x805a8148",
+      "value": "ButlerMap"
+    },
+    {
+      "offset": "0x1a4",
+      "retail_pointer": "0x805ace16",
+      "value": "AllStarList"
+    },
+    {
+      "offset": "0x1a8",
+      "retail_pointer": "0x805a8148",
+      "value": "ButlerMap"
+    },
+    {
+      "offset": "0x1ac",
+      "retail_pointer": "0x805acc9f",
+      "value": "BackButton"
+    },
+    {
+      "offset": "0x1b0",
+      "retail_pointer": "0x805a8148",
+      "value": "ButlerMap"
+    },
+    {
+      "offset": "0x1b4",
+      "retail_pointer": "0x805ace22",
+      "value": "MapButton"
+    },
+    {
+      "offset": "0x1b8",
+      "retail_pointer": "0x805a8148",
+      "value": "ButlerMap"
+    },
+    {
+      "offset": "0x1bc",
+      "retail_pointer": "0x805ace2c",
+      "value": "MapDomeIcon"
+    },
+    {
+      "offset": "0x1c0",
+      "retail_pointer": "0x805a8148",
+      "value": "ButlerMap"
+    },
+    {
+      "offset": "0x1c4",
+      "retail_pointer": "0x805ace38",
+      "value": "MapGalaxyBG"
+    },
+    {
+      "offset": "0x1c8",
+      "retail_pointer": "0x805a8148",
+      "value": "ButlerMap"
+    },
+    {
+      "offset": "0x1cc",
+      "retail_pointer": "0x805ace44",
+      "value": "MapGalaxyIcon"
+    },
+    {
+      "offset": "0x1d0",
+      "retail_pointer": "0x805a8148",
+      "value": "ButlerMap"
+    },
+    {
+      "offset": "0x1d4",
+      "retail_pointer": "0x805ace52",
+      "value": "MapGrandGalaxy"
+    },
+    {
+      "offset": "0x1d8",
+      "retail_pointer": "0x805a8148",
+      "value": "ButlerMap"
+    },
+    {
+      "offset": "0x1dc",
+      "retail_pointer": "0x805ace61",
+      "value": "GalaxyDetail"
+    },
+    {
+      "offset": "0x1e0",
+      "retail_pointer": "0x805a8148",
+      "value": "ButlerMap"
+    },
+    {
+      "offset": "0x1e4",
+      "retail_pointer": "0x805ace6e",
+      "value": "GalaxyInfoTexture"
+    },
+    {
+      "offset": "0x1e8",
+      "retail_pointer": "0x805a8148",
+      "value": "ButlerMap"
+    },
+    {
+      "offset": "0x1ec",
+      "retail_pointer": "0x805ace80",
+      "value": "IconComet"
+    },
+    {
+      "offset": "0x1f0",
+      "retail_pointer": "0x805a8148",
+      "value": "ButlerMap"
+    },
+    {
+      "offset": "0x1f4",
+      "retail_pointer": "0x805ace8a",
+      "value": "IconMario"
+    },
+    {
+      "offset": "0x1f8",
+      "retail_pointer": "0x805a8148",
+      "value": "ButlerMap"
+    },
+    {
+      "offset": "0x1fc",
+      "retail_pointer": "0x805ace94",
+      "value": "MapTicoIcon"
+    },
+    {
+      "offset": "0x200",
+      "retail_pointer": "0x805a8148",
+      "value": "ButlerMap"
+    },
+    {
+      "offset": "0x204",
+      "retail_pointer": "0x805acea0",
+      "value": "MapTitle"
+    },
+    {
+      "offset": "0x208",
+      "retail_pointer": "0x805acea9",
+      "value": "ChainedBall"
+    },
+    {
+      "offset": "0x20c",
+      "retail_pointer": "0x805aceb5",
+      "value": "IronBall"
+    },
+    {
+      "offset": "0x210",
+      "retail_pointer": "0x805a992f",
+      "value": "ChooChooTrain"
+    },
+    {
+      "offset": "0x214",
+      "retail_pointer": "0x805acebe",
+      "value": "ChooChooTrainBody"
+    },
+    {
+      "offset": "0x218",
+      "retail_pointer": "0x805a83a8",
+      "value": "CocoSambo"
+    },
+    {
+      "offset": "0x21c",
+      "retail_pointer": "0x805aced0",
+      "value": "CocoSamboHead"
+    },
+    {
+      "offset": "0x220",
+      "retail_pointer": "0x805a7f53",
+      "value": "CollectTico"
+    },
+    {
+      "offset": "0x224",
+      "retail_pointer": "0x805a9034",
+      "value": "ItemBubble"
+    },
+    {
+      "offset": "0x228",
+      "retail_pointer": "0x805a8b55",
+      "value": "ConcreteBlock"
+    },
+    {
+      "offset": "0x22c",
+      "retail_pointer": "0x805acede",
+      "value": "ConcreteBlockBreak"
+    },
+    {
+      "offset": "0x230",
+      "retail_pointer": "0x805a817c",
+      "value": "Creeper"
+    },
+    {
+      "offset": "0x234",
+      "retail_pointer": "0x805acef1",
+      "value": "CreeperFlower"
+    },
+    {
+      "offset": "0x238",
+      "retail_pointer": "0x805a817c",
+      "value": "Creeper"
+    },
+    {
+      "offset": "0x23c",
+      "retail_pointer": "0x805aceff",
+      "value": "CreeperLeaf"
+    },
+    {
+      "offset": "0x240",
+      "retail_pointer": "0x805a93e1",
+      "value": "CrystalCageL"
+    },
+    {
+      "offset": "0x244",
+      "retail_pointer": "0x805acf0b",
+      "value": "CrystalCageLBreak"
+    },
+    {
+      "offset": "0x248",
+      "retail_pointer": "0x805a93ee",
+      "value": "CrystalCageMoving"
+    },
+    {
+      "offset": "0x24c",
+      "retail_pointer": "0x805a8061",
+      "value": "Tico"
+    },
+    {
+      "offset": "0x250",
+      "retail_pointer": "0x805a93c7",
+      "value": "CrystalCageS"
+    },
+    {
+      "offset": "0x254",
+      "retail_pointer": "0x805acf1d",
+      "value": "CrystalCageSBreak"
+    },
+    {
+      "offset": "0x258",
+      "retail_pointer": "0x805a93d4",
+      "value": "CrystalCageM"
+    },
+    {
+      "offset": "0x25c",
+      "retail_pointer": "0x805acf1d",
+      "value": "CrystalCageSBreak"
+    },
+    {
+      "offset": "0x260",
+      "retail_pointer": "0x805a8160",
+      "value": "DemoKoopaJrShip"
+    },
+    {
+      "offset": "0x264",
+      "retail_pointer": "0x805acf2f",
+      "value": "KoopaJr"
+    },
+    {
+      "offset": "0x268",
+      "retail_pointer": "0x805a8160",
+      "value": "DemoKoopaJrShip"
+    },
+    {
+      "offset": "0x26c",
+      "retail_pointer": "0x805acf37",
+      "value": "KoopaJrMiddle"
+    },
+    {
+      "offset": "0x270",
+      "retail_pointer": "0x805a8160",
+      "value": "DemoKoopaJrShip"
+    },
+    {
+      "offset": "0x274",
+      "retail_pointer": "0x805acf45",
+      "value": "KoopaJrLow"
+    },
+    {
+      "offset": "0x278",
+      "retail_pointer": "0x805a864e",
+      "value": "DharmaSambo"
+    },
+    {
+      "offset": "0x27c",
+      "retail_pointer": "0x805acf50",
+      "value": "DharmaSamboParts"
+    },
+    {
+      "offset": "0x280",
+      "retail_pointer": "0x805a8694",
+      "value": "DinoPackun"
+    },
+    {
+      "offset": "0x284",
+      "retail_pointer": "0x805acf61",
+      "value": "DinoPackunDemoPosition"
+    },
+    {
+      "offset": "0x288",
+      "retail_pointer": "0x805a8694",
+      "value": "DinoPackun"
+    },
+    {
+      "offset": "0x28c",
+      "retail_pointer": "0x805acf78",
+      "value": "DinoPackunEggShell"
+    },
+    {
+      "offset": "0x290",
+      "retail_pointer": "0x805a8694",
+      "value": "DinoPackun"
+    },
+    {
+      "offset": "0x294",
+      "retail_pointer": "0x805acf8b",
+      "value": "DinoPackunEggShellBreak"
+    },
+    {
+      "offset": "0x298",
+      "retail_pointer": "0x805a8694",
+      "value": "DinoPackun"
+    },
+    {
+      "offset": "0x29c",
+      "retail_pointer": "0x805acfa3",
+      "value": "DinoPackunTailBall"
+    },
+    {
+      "offset": "0x2a0",
+      "retail_pointer": "0x805a869f",
+      "value": "DinoPackunVs2"
+    },
+    {
+      "offset": "0x2a4",
+      "retail_pointer": "0x805acf61",
+      "value": "DinoPackunDemoPosition"
+    },
+    {
+      "offset": "0x2a8",
+      "retail_pointer": "0x805a869f",
+      "value": "DinoPackunVs2"
+    },
+    {
+      "offset": "0x2ac",
+      "retail_pointer": "0x805acf78",
+      "value": "DinoPackunEggShell"
+    },
+    {
+      "offset": "0x2b0",
+      "retail_pointer": "0x805a869f",
+      "value": "DinoPackunVs2"
+    },
+    {
+      "offset": "0x2b4",
+      "retail_pointer": "0x805acf8b",
+      "value": "DinoPackunEggShellBreak"
+    },
+    {
+      "offset": "0x2b8",
+      "retail_pointer": "0x805a869f",
+      "value": "DinoPackunVs2"
+    },
+    {
+      "offset": "0x2bc",
+      "retail_pointer": "0x805acfb6",
+      "value": "DinoPackunFireBall"
+    },
+    {
+      "offset": "0x2c0",
+      "retail_pointer": "0x805a869f",
+      "value": "DinoPackunVs2"
+    },
+    {
+      "offset": "0x2c4",
+      "retail_pointer": "0x805acfa3",
+      "value": "DinoPackunTailBall"
+    },
+    {
+      "offset": "0x2c8",
+      "retail_pointer": "0x805a86b9",
+      "value": "Dodoryu"
+    },
+    {
+      "offset": "0x2cc",
+      "retail_pointer": "0x805acfc9",
+      "value": "DodoryuBank"
+    },
+    {
+      "offset": "0x2d0",
+      "retail_pointer": "0x805a86b9",
+      "value": "Dodoryu"
+    },
+    {
+      "offset": "0x2d4",
+      "retail_pointer": "0x805acfd5",
+      "value": "DodoryuHillA"
+    },
+    {
+      "offset": "0x2d8",
+      "retail_pointer": "0x805a86b9",
+      "value": "Dodoryu"
+    },
+    {
+      "offset": "0x2dc",
+      "retail_pointer": "0x805acfe2",
+      "value": "DodoryuHillB"
+    },
+    {
+      "offset": "0x2e0",
+      "retail_pointer": "0x805a86b9",
+      "value": "Dodoryu"
+    },
+    {
+      "offset": "0x2e4",
+      "retail_pointer": "0x805acfef",
+      "value": "DodoryuHillC"
+    },
+    {
+      "offset": "0x2e8",
+      "retail_pointer": "0x805a86b9",
+      "value": "Dodoryu"
+    },
+    {
+      "offset": "0x2ec",
+      "retail_pointer": "0x805acffc",
+      "value": "DodoryuLeadHill"
+    },
+    {
+      "offset": "0x2f0",
+      "retail_pointer": "0x805a86b9",
+      "value": "Dodoryu"
+    },
+    {
+      "offset": "0x2f4",
+      "retail_pointer": "0x805ad00c",
+      "value": "DodoryuRabbit"
+    },
+    {
+      "offset": "0x2f8",
+      "retail_pointer": "0x805a8df6",
+      "value": "EarthenPipeInWater"
+    },
+    {
+      "offset": "0x2fc",
+      "retail_pointer": "0x805ad01a",
+      "value": "EarthenPipeStream"
+    },
+    {
+      "offset": "0x300",
+      "retail_pointer": "0x805a955a",
+      "value": "ElectricBazooka"
+    },
+    {
+      "offset": "0x304",
+      "retail_pointer": "0x805ad02c",
+      "value": "ElectricBazookaBreak"
+    },
+    {
+      "offset": "0x308",
+      "retail_pointer": "0x805a955a",
+      "value": "ElectricBazooka"
+    },
+    {
+      "offset": "0x30c",
+      "retail_pointer": "0x805ad041",
+      "value": "ElectricBullet"
+    },
+    {
+      "offset": "0x310",
+      "retail_pointer": "0x805a955a",
+      "value": "ElectricBazooka"
+    },
+    {
+      "offset": "0x314",
+      "retail_pointer": "0x805ad050",
+      "value": "MogucchiShooter"
+    },
+    {
+      "offset": "0x318",
+      "retail_pointer": "0x805a955a",
+      "value": "ElectricBazooka"
+    },
+    {
+      "offset": "0x31c",
+      "retail_pointer": "0x805ad060",
+      "value": "WaterBazookaCapsule"
+    },
+    {
+      "offset": "0x320",
+      "retail_pointer": "0x805a8e09",
+      "value": "ElectricRail"
+    },
+    {
+      "offset": "0x324",
+      "retail_pointer": "0x805ad074",
+      "value": "ElectricRailPoint"
+    },
+    {
+      "offset": "0x328",
+      "retail_pointer": "0x805a8e16",
+      "value": "ElectricRailMoving"
+    },
+    {
+      "offset": "0x32c",
+      "retail_pointer": "0x805ad074",
+      "value": "ElectricRailPoint"
+    },
+    {
+      "offset": "0x330",
+      "retail_pointer": "0x805a8ce4",
+      "value": "ExterminationSkeletalFishBaby"
+    },
+    {
+      "offset": "0x334",
+      "retail_pointer": "0x805a9112",
+      "value": "AirBubble"
+    },
+    {
+      "offset": "0x338",
+      "retail_pointer": "0x805a8cc7",
+      "value": "ExterminationKuriboKeySwitch"
+    },
+    {
+      "offset": "0x33c",
+      "retail_pointer": "0x805ac252",
+      "value": "KeySwitch"
+    },
+    {
+      "offset": "0x340",
+      "retail_pointer": "0x805a837e",
+      "value": "EyeBeamer"
+    },
+    {
+      "offset": "0x344",
+      "retail_pointer": "0x805ad086",
+      "value": "EyeBeamerBeam"
+    },
+    {
+      "offset": "0x348",
+      "retail_pointer": "0x805a837e",
+      "value": "EyeBeamer"
+    },
+    {
+      "offset": "0x34c",
+      "retail_pointer": "0x805ad094",
+      "value": "EyeBeamerBeamBloom"
+    },
+    {
+      "offset": "0x350",
+      "retail_pointer": "0x805a837e",
+      "value": "EyeBeamer"
+    },
+    {
+      "offset": "0x354",
+      "retail_pointer": "0x805ad0a7",
+      "value": "EyeBeamerBeamVolume"
+    },
+    {
+      "offset": "0x358",
+      "retail_pointer": "0x805acc2e",
+      "value": "FileSelector"
+    },
+    {
+      "offset": "0x35c",
+      "retail_pointer": "0x805ad0bb",
+      "value": "FileInfo"
+    },
+    {
+      "offset": "0x360",
+      "retail_pointer": "0x805acc2e",
+      "value": "FileSelector"
+    },
+    {
+      "offset": "0x364",
+      "retail_pointer": "0x805ad0c4",
+      "value": "FileSelect"
+    },
+    {
+      "offset": "0x368",
+      "retail_pointer": "0x805acc2e",
+      "value": "FileSelector"
+    },
+    {
+      "offset": "0x36c",
+      "retail_pointer": "0x805ad0cf",
+      "value": "FileSelectDataPlanet"
+    },
+    {
+      "offset": "0x370",
+      "retail_pointer": "0x805acc2e",
+      "value": "FileSelector"
+    },
+    {
+      "offset": "0x374",
+      "retail_pointer": "0x805ad0e4",
+      "value": "FileSelectDataMario"
+    },
+    {
+      "offset": "0x378",
+      "retail_pointer": "0x805acc2e",
+      "value": "FileSelector"
+    },
+    {
+      "offset": "0x37c",
+      "retail_pointer": "0x805ad0f8",
+      "value": "FileSelectDataYoshi"
+    },
+    {
+      "offset": "0x380",
+      "retail_pointer": "0x805acc2e",
+      "value": "FileSelector"
+    },
+    {
+      "offset": "0x384",
+      "retail_pointer": "0x805ad10c",
+      "value": "FileSelectDataLuigi"
+    },
+    {
+      "offset": "0x388",
+      "retail_pointer": "0x805acc2e",
+      "value": "FileSelector"
+    },
+    {
+      "offset": "0x38c",
+      "retail_pointer": "0x805ad120",
+      "value": "FileSelectDataPeach"
+    },
+    {
+      "offset": "0x390",
+      "retail_pointer": "0x805acc2e",
+      "value": "FileSelector"
+    },
+    {
+      "offset": "0x394",
+      "retail_pointer": "0x805ad134",
+      "value": "FileSelectDataKinopio"
+    },
+    {
+      "offset": "0x398",
+      "retail_pointer": "0x805acc2e",
+      "value": "FileSelector"
+    },
+    {
+      "offset": "0x39c",
+      "retail_pointer": "0x805ad14a",
+      "value": "CometNearOrbitSky"
+    },
+    {
+      "offset": "0x3a0",
+      "retail_pointer": "0x805acc2e",
+      "value": "FileSelector"
+    },
+    {
+      "offset": "0x3a4",
+      "retail_pointer": "0x805ad15c",
+      "value": "MiiFaceDatabase"
+    },
+    {
+      "offset": "0x3a8",
+      "retail_pointer": "0x805acc2e",
+      "value": "FileSelector"
+    },
+    {
+      "offset": "0x3ac",
+      "retail_pointer": "0x805acc9f",
+      "value": "BackButton"
+    },
+    {
+      "offset": "0x3b0",
+      "retail_pointer": "0x805acc2e",
+      "value": "FileSelector"
+    },
+    {
+      "offset": "0x3b4",
+      "retail_pointer": "0x805ad16c",
+      "value": "FileNumber"
+    },
+    {
+      "offset": "0x3b8",
+      "retail_pointer": "0x805acc2e",
+      "value": "FileSelector"
+    },
+    {
+      "offset": "0x3bc",
+      "retail_pointer": "0x805ad177",
+      "value": "TitleLogo"
+    },
+    {
+      "offset": "0x3c0",
+      "retail_pointer": "0x805acc2e",
+      "value": "FileSelector"
+    },
+    {
+      "offset": "0x3c4",
+      "retail_pointer": "0x805ad181",
+      "value": "PressStart"
+    },
+    {
+      "offset": "0x3c8",
+      "retail_pointer": "0x805acc2e",
+      "value": "FileSelector"
+    },
+    {
+      "offset": "0x3cc",
+      "retail_pointer": "0x805ad18c",
+      "value": "MiiSelect"
+    },
+    {
+      "offset": "0x3d0",
+      "retail_pointer": "0x805acc2e",
+      "value": "FileSelector"
+    },
+    {
+      "offset": "0x3d4",
+      "retail_pointer": "0x805ad18c",
+      "value": "MiiSelect"
+    },
+    {
+      "offset": "0x3d8",
+      "retail_pointer": "0x805acc2e",
+      "value": "FileSelector"
+    },
+    {
+      "offset": "0x3dc",
+      "retail_pointer": "0x805ad196",
+      "value": "MiiIcon"
+    },
+    {
+      "offset": "0x3e0",
+      "retail_pointer": "0x805acc2e",
+      "value": "FileSelector"
+    },
+    {
+      "offset": "0x3e4",
+      "retail_pointer": "0x805ad19e",
+      "value": "MiiConfirmIcon"
+    },
+    {
+      "offset": "0x3e8",
+      "retail_pointer": "0x805acc2e",
+      "value": "FileSelector"
+    },
+    {
+      "offset": "0x3ec",
+      "retail_pointer": "0x805ad1ad",
+      "value": "BrosButton"
+    },
+    {
+      "offset": "0x3f0",
+      "retail_pointer": "0x805acc2e",
+      "value": "FileSelector"
+    },
+    {
+      "offset": "0x3f4",
+      "retail_pointer": "0x805ad1b8",
+      "value": "P2Manual"
+    },
+    {
+      "offset": "0x3f8",
+      "retail_pointer": "0x805acc2e",
+      "value": "FileSelector"
+    },
+    {
+      "offset": "0x3fc",
+      "retail_pointer": "0x805ad1c1",
+      "value": "MiniatureGalaxySelect"
+    },
+    {
+      "offset": "0x400",
+      "retail_pointer": "0x805acc2e",
+      "value": "FileSelector"
+    },
+    {
+      "offset": "0x404",
+      "retail_pointer": "0x805ad1d7",
+      "value": "SysPALInfo"
+    },
+    {
+      "offset": "0x408",
+      "retail_pointer": "0x805acc2e",
+      "value": "FileSelector"
+    },
+    {
+      "offset": "0x40c",
+      "retail_pointer": "0x805ad1e2",
+      "value": "MiiFont"
+    },
+    {
+      "offset": "0x410",
+      "retail_pointer": "0x805a8768",
+      "value": "FireBallBeamKameck"
+    },
+    {
+      "offset": "0x414",
+      "retail_pointer": "0x805acd7e",
+      "value": "BossKameckFireBall"
+    },
+    {
+      "offset": "0x418",
+      "retail_pointer": "0x805a9f13",
+      "value": "FireBar"
+    },
+    {
+      "offset": "0x41c",
+      "retail_pointer": "0x805ad1ea",
+      "value": "FireBarBall"
+    },
+    {
+      "offset": "0x420",
+      "retail_pointer": "0x805a9578",
+      "value": "FirePressure"
+    },
+    {
+      "offset": "0x424",
+      "retail_pointer": "0x805ad1f6",
+      "value": "FireBullet"
+    },
+    {
+      "offset": "0x428",
+      "retail_pointer": "0x805a97ee",
+      "value": "FlipPanel"
+    },
+    {
+      "offset": "0x42c",
+      "retail_pointer": "0x805ad201",
+      "value": "FlipPanelBloom"
+    },
+    {
+      "offset": "0x430",
+      "retail_pointer": "0x805a980a",
+      "value": "FlipPanelReverse"
+    },
+    {
+      "offset": "0x434",
+      "retail_pointer": "0x805ad210",
+      "value": "FlipPanelReverseBloom"
+    },
+    {
+      "offset": "0x438",
+      "retail_pointer": "0x805a8194",
+      "value": "Fluff"
+    },
+    {
+      "offset": "0x43c",
+      "retail_pointer": "0x805ad226",
+      "value": "FluffLeaf"
+    },
+    {
+      "offset": "0x440",
+      "retail_pointer": "0x805a8f31",
+      "value": "GCaptureTarget"
+    },
+    {
+      "offset": "0x444",
+      "retail_pointer": "0x805acc59",
+      "value": "GCaptureRibbon"
+    },
+    {
+      "offset": "0x448",
+      "retail_pointer": "0x805a8135",
+      "value": "GhostPlayer"
+    },
+    {
+      "offset": "0x44c",
+      "retail_pointer": "0x805ad230",
+      "value": "Race"
+    },
+    {
+      "offset": "0x450",
+      "retail_pointer": "0x805acbfb",
+      "value": "GrandStarReturnDemoStarter"
+    },
+    {
+      "offset": "0x454",
+      "retail_pointer": "0x805acc90",
+      "value": "SpinDriverPath"
+    },
+    {
+      "offset": "0x458",
+      "retail_pointer": "0x805acbfb",
+      "value": "GrandStarReturnDemoStarter"
+    },
+    {
+      "offset": "0x45c",
+      "retail_pointer": "0x805ad235",
+      "value": "DemoAstroReturn"
+    },
+    {
+      "offset": "0x460",
+      "retail_pointer": "0x805acbfb",
+      "value": "GrandStarReturnDemoStarter"
+    },
+    {
+      "offset": "0x464",
+      "retail_pointer": "0x805ad245",
+      "value": "ResultWindow"
+    },
+    {
+      "offset": "0x468",
+      "retail_pointer": "0x805aa4f2",
+      "value": "GravityLightA"
+    },
+    {
+      "offset": "0x46c",
+      "retail_pointer": "0x805ad252",
+      "value": "GravityLightALightVolume"
+    },
+    {
+      "offset": "0x470",
+      "retail_pointer": "0x805a8630",
+      "value": "HammerHeadPackun"
+    },
+    {
+      "offset": "0x474",
+      "retail_pointer": "0x805ad26b",
+      "value": "PackunLeaf"
+    },
+    {
+      "offset": "0x478",
+      "retail_pointer": "0x805a859d",
+      "value": "Hanachan"
+    },
+    {
+      "offset": "0x47c",
+      "retail_pointer": "0x805ad276",
+      "value": "HanachanBody"
+    },
+    {
+      "offset": "0x480",
+      "retail_pointer": "0x805a859d",
+      "value": "Hanachan"
+    },
+    {
+      "offset": "0x484",
+      "retail_pointer": "0x805ad283",
+      "value": "HanachanBodyS"
+    },
+    {
+      "offset": "0x488",
+      "retail_pointer": "0x805a7b54",
+      "value": "HazeCube"
+    },
+    {
+      "offset": "0x48c",
+      "retail_pointer": "0x805ad291",
+      "value": "ShimmerBoard"
+    },
+    {
+      "offset": "0x490",
+      "retail_pointer": "0x805aaa7a",
+      "value": "HeavensDoorInsidePlanetPartsA"
+    },
+    {
+      "offset": "0x494",
+      "retail_pointer": "0x805ad29e",
+      "value": "HeavensDoorInsidePlanetPartsABloom"
+    },
+    {
+      "offset": "0x498",
+      "retail_pointer": "0x805a9a9e",
+      "value": "HipDropRock"
+    },
+    {
+      "offset": "0x49c",
+      "retail_pointer": "0x805ad2c1",
+      "value": "HipDropRockBreak"
+    },
+    {
+      "offset": "0x4a0",
+      "retail_pointer": "0x805a7fdd",
+      "value": "HoneyBee"
+    },
+    {
+      "offset": "0x4a4",
+      "retail_pointer": "0x805ad2d2",
+      "value": "HoneyBeeLow"
+    },
+    {
+      "offset": "0x4a8",
+      "retail_pointer": "0x805a7fdd",
+      "value": "HoneyBee"
+    },
+    {
+      "offset": "0x4ac",
+      "retail_pointer": "0x805ad2de",
+      "value": "HoneyBeeMIddle"
+    },
+    {
+      "offset": "0x4b0",
+      "retail_pointer": "0x805a7fe6",
+      "value": "HoneyQueen"
+    },
+    {
+      "offset": "0x4b4",
+      "retail_pointer": "0x805ad2ed",
+      "value": "HoneyQueenLow"
+    },
+    {
+      "offset": "0x4b8",
+      "retail_pointer": "0x805a7fe6",
+      "value": "HoneyQueen"
+    },
+    {
+      "offset": "0x4bc",
+      "retail_pointer": "0x805ad2fb",
+      "value": "HoneyQueenMiddle"
+    },
+    {
+      "offset": "0x4c0",
+      "retail_pointer": "0x805a7fe6",
+      "value": "HoneyQueen"
+    },
+    {
+      "offset": "0x4c4",
+      "retail_pointer": "0x805ad30c",
+      "value": "HoneyQueenWing"
+    },
+    {
+      "offset": "0x4c8",
+      "retail_pointer": "0x805a962c",
+      "value": "IceMerameraKing"
+    },
+    {
+      "offset": "0x4cc",
+      "retail_pointer": "0x805ad31b",
+      "value": "IceManIce"
+    },
+    {
+      "offset": "0x4d0",
+      "retail_pointer": "0x805a962c",
+      "value": "IceMerameraKing"
+    },
+    {
+      "offset": "0x4d4",
+      "retail_pointer": "0x805ad325",
+      "value": "IceMerameraKingShock"
+    },
+    {
+      "offset": "0x4d8",
+      "retail_pointer": "0x805a962c",
+      "value": "IceMerameraKing"
+    },
+    {
+      "offset": "0x4dc",
+      "retail_pointer": "0x805ad33a",
+      "value": "IceMerameraKingBreak"
+    },
+    {
+      "offset": "0x4e0",
+      "retail_pointer": "0x805a97b1",
+      "value": "IcicleRock"
+    },
+    {
+      "offset": "0x4e4",
+      "retail_pointer": "0x805ad34f",
+      "value": "IcicleRockBreak"
+    },
+    {
+      "offset": "0x4e8",
+      "retail_pointer": "0x805aceb5",
+      "value": "IronBall"
+    },
+    {
+      "offset": "0x4ec",
+      "retail_pointer": "0x805ad35f",
+      "value": "BallTornado"
+    },
+    {
+      "offset": "0x4f0",
+      "retail_pointer": "0x805aceb5",
+      "value": "IronBall"
+    },
+    {
+      "offset": "0x4f4",
+      "retail_pointer": "0x805ad36b",
+      "value": "IronBallSpin"
+    },
+    {
+      "offset": "0x4f8",
+      "retail_pointer": "0x805a9585",
+      "value": "IronCannonLauncher"
+    },
+    {
+      "offset": "0x4fc",
+      "retail_pointer": "0x805ad378",
+      "value": "KoopaJrShipCannonShell"
+    },
+    {
+      "offset": "0x500",
+      "retail_pointer": "0x805a9598",
+      "value": "IronCannonLauncherPoint"
+    },
+    {
+      "offset": "0x504",
+      "retail_pointer": "0x805ad378",
+      "value": "KoopaJrShipCannonShell"
+    },
+    {
+      "offset": "0x508",
+      "retail_pointer": "0x805a8451",
+      "value": "JumpBeamer"
+    },
+    {
+      "offset": "0x50c",
+      "retail_pointer": "0x805ad38f",
+      "value": "JumpBeamerBeam"
+    },
+    {
+      "offset": "0x510",
+      "retail_pointer": "0x805a8451",
+      "value": "JumpBeamer"
+    },
+    {
+      "offset": "0x514",
+      "retail_pointer": "0x805ad39e",
+      "value": "JumpBeamerBeamBloom"
+    },
+    {
+      "offset": "0x518",
+      "retail_pointer": "0x805a8451",
+      "value": "JumpBeamer"
+    },
+    {
+      "offset": "0x51c",
+      "retail_pointer": "0x805ad3b2",
+      "value": "JumpBeamerHead"
+    },
+    {
+      "offset": "0x520",
+      "retail_pointer": "0x805a846b",
+      "value": "JumpGuarder"
+    },
+    {
+      "offset": "0x524",
+      "retail_pointer": "0x805a83ca",
+      "value": "BegomanBaby"
+    },
+    {
+      "offset": "0x528",
+      "retail_pointer": "0x805a846b",
+      "value": "JumpGuarder"
+    },
+    {
+      "offset": "0x52c",
+      "retail_pointer": "0x805ad3c1",
+      "value": "JumpGuarderHead"
+    },
+    {
+      "offset": "0x530",
+      "retail_pointer": "0x805a8350",
+      "value": "Kabokuri"
+    },
+    {
+      "offset": "0x534",
+      "retail_pointer": "0x805ad3d1",
+      "value": "KabokuriBreak"
+    },
+    {
+      "offset": "0x538",
+      "retail_pointer": "0x805a8350",
+      "value": "Kabokuri"
+    },
+    {
+      "offset": "0x53c",
+      "retail_pointer": "0x805a8332",
+      "value": "Kuribo"
+    },
+    {
+      "offset": "0x540",
+      "retail_pointer": "0x805ad3df",
+      "value": "Kart"
+    },
+    {
+      "offset": "0x544",
+      "retail_pointer": "0x805a8a87",
+      "value": "Coin"
+    },
+    {
+      "offset": "0x548",
+      "retail_pointer": "0x805a7fc8",
+      "value": "Kinopio"
+    },
+    {
+      "offset": "0x54c",
+      "retail_pointer": "0x805ad3e4",
+      "value": "KinopioMiddle"
+    },
+    {
+      "offset": "0x550",
+      "retail_pointer": "0x805a7fc8",
+      "value": "Kinopio"
+    },
+    {
+      "offset": "0x554",
+      "retail_pointer": "0x805ad3f2",
+      "value": "KinopioLow"
+    },
+    {
+      "offset": "0x558",
+      "retail_pointer": "0x805a7fd0",
+      "value": "KinopioAstro"
+    },
+    {
+      "offset": "0x55c",
+      "retail_pointer": "0x805ad3e4",
+      "value": "KinopioMiddle"
+    },
+    {
+      "offset": "0x560",
+      "retail_pointer": "0x805a7fd0",
+      "value": "KinopioAstro"
+    },
+    {
+      "offset": "0x564",
+      "retail_pointer": "0x805ad3f2",
+      "value": "KinopioLow"
+    },
+    {
+      "offset": "0x568",
+      "retail_pointer": "0x805a8502",
+      "value": "Kiraira"
+    },
+    {
+      "offset": "0x56c",
+      "retail_pointer": "0x805ad3fd",
+      "value": "KirairaChain"
+    },
+    {
+      "offset": "0x570",
+      "retail_pointer": "0x805a8502",
+      "value": "Kiraira"
+    },
+    {
+      "offset": "0x574",
+      "retail_pointer": "0x805ad40a",
+      "value": "KirairaFixPointBottom"
+    },
+    {
+      "offset": "0x578",
+      "retail_pointer": "0x805a8502",
+      "value": "Kiraira"
+    },
+    {
+      "offset": "0x57c",
+      "retail_pointer": "0x805ad420",
+      "value": "KirairaFixPointTop"
+    },
+    {
+      "offset": "0x580",
+      "retail_pointer": "0x805acf2f",
+      "value": "KoopaJr"
+    },
+    {
+      "offset": "0x584",
+      "retail_pointer": "0x805acf45",
+      "value": "KoopaJrLow"
+    },
+    {
+      "offset": "0x588",
+      "retail_pointer": "0x805acf2f",
+      "value": "KoopaJr"
+    },
+    {
+      "offset": "0x58c",
+      "retail_pointer": "0x805acf37",
+      "value": "KoopaJrMiddle"
+    },
+    {
+      "offset": "0x590",
+      "retail_pointer": "0x805ab19d",
+      "value": "KoopaJrNormalShipA"
+    },
+    {
+      "offset": "0x594",
+      "retail_pointer": "0x805ad433",
+      "value": "KoopaJrNormalShipALow"
+    },
+    {
+      "offset": "0x598",
+      "retail_pointer": "0x805a8170",
+      "value": "KoopaJrShip"
+    },
+    {
+      "offset": "0x59c",
+      "retail_pointer": "0x805acf2f",
+      "value": "KoopaJr"
+    },
+    {
+      "offset": "0x5a0",
+      "retail_pointer": "0x805a8170",
+      "value": "KoopaJrShip"
+    },
+    {
+      "offset": "0x5a4",
+      "retail_pointer": "0x805acf45",
+      "value": "KoopaJrLow"
+    },
+    {
+      "offset": "0x5a8",
+      "retail_pointer": "0x805a8170",
+      "value": "KoopaJrShip"
+    },
+    {
+      "offset": "0x5ac",
+      "retail_pointer": "0x805acf37",
+      "value": "KoopaJrMiddle"
+    },
+    {
+      "offset": "0x5b0",
+      "retail_pointer": "0x805a8170",
+      "value": "KoopaJrShip"
+    },
+    {
+      "offset": "0x5b4",
+      "retail_pointer": "0x805ad449",
+      "value": "KoopaJrShipBreak"
+    },
+    {
+      "offset": "0x5b8",
+      "retail_pointer": "0x805a8170",
+      "value": "KoopaJrShip"
+    },
+    {
+      "offset": "0x5bc",
+      "retail_pointer": "0x805ad45a",
+      "value": "KoopaJrShipCannonMainShell"
+    },
+    {
+      "offset": "0x5c0",
+      "retail_pointer": "0x805a8170",
+      "value": "KoopaJrShip"
+    },
+    {
+      "offset": "0x5c4",
+      "retail_pointer": "0x805ad378",
+      "value": "KoopaJrShipCannonShell"
+    },
+    {
+      "offset": "0x5c8",
+      "retail_pointer": "0x805a8170",
+      "value": "KoopaJrShip"
+    },
+    {
+      "offset": "0x5cc",
+      "retail_pointer": "0x805ad475",
+      "value": "KoopaJrShipPod"
+    },
+    {
+      "offset": "0x5d0",
+      "retail_pointer": "0x805a8170",
+      "value": "KoopaJrShip"
+    },
+    {
+      "offset": "0x5d4",
+      "retail_pointer": "0x805a877b",
+      "value": "Kameck"
+    },
+    {
+      "offset": "0x5d8",
+      "retail_pointer": "0x805a8170",
+      "value": "KoopaJrShip"
+    },
+    {
+      "offset": "0x5dc",
+      "retail_pointer": "0x805a839b",
+      "value": "HomingKiller"
+    },
+    {
+      "offset": "0x5e0",
+      "retail_pointer": "0x805a8170",
+      "value": "KoopaJrShip"
+    },
+    {
+      "offset": "0x5e4",
+      "retail_pointer": "0x805acd7e",
+      "value": "BossKameckFireBall"
+    },
+    {
+      "offset": "0x5e8",
+      "retail_pointer": "0x805ab13d",
+      "value": "KoopaShipE"
+    },
+    {
+      "offset": "0x5ec",
+      "retail_pointer": "0x805ad484",
+      "value": "KoopaShipELow"
+    },
+    {
+      "offset": "0x5f0",
+      "retail_pointer": "0x805a9ee6",
+      "value": "KoopaStatue"
+    },
+    {
+      "offset": "0x5f4",
+      "retail_pointer": "0x805ad492",
+      "value": "KoopaStatueBreak"
+    },
+    {
+      "offset": "0x5f8",
+      "retail_pointer": "0x805a86c1",
+      "value": "KoopaVs1"
+    },
+    {
+      "offset": "0x5fc",
+      "retail_pointer": "0x805ab3a3",
+      "value": "KoopaPlate"
+    },
+    {
+      "offset": "0x600",
+      "retail_pointer": "0x805a86c1",
+      "value": "KoopaVs1"
+    },
+    {
+      "offset": "0x604",
+      "retail_pointer": "0x805ab3c6",
+      "value": "KoopaPlateCoin"
+    },
+    {
+      "offset": "0x608",
+      "retail_pointer": "0x805a86c1",
+      "value": "KoopaVs1"
+    },
+    {
+      "offset": "0x60c",
+      "retail_pointer": "0x805ad4a3",
+      "value": "KoopaPlateDamage"
+    },
+    {
+      "offset": "0x610",
+      "retail_pointer": "0x805a86c1",
+      "value": "KoopaVs1"
+    },
+    {
+      "offset": "0x614",
+      "retail_pointer": "0x805ad4b4",
+      "value": "KoopaPlanetShadow"
+    },
+    {
+      "offset": "0x618",
+      "retail_pointer": "0x805a86c1",
+      "value": "KoopaVs1"
+    },
+    {
+      "offset": "0x61c",
+      "retail_pointer": "0x805ad4c6",
+      "value": "KoopaArmorBreak"
+    },
+    {
+      "offset": "0x620",
+      "retail_pointer": "0x805a86c1",
+      "value": "KoopaVs1"
+    },
+    {
+      "offset": "0x624",
+      "retail_pointer": "0x805ad4d6",
+      "value": "KoopaBattleMapPlanet"
+    },
+    {
+      "offset": "0x628",
+      "retail_pointer": "0x805a86c1",
+      "value": "KoopaVs1"
+    },
+    {
+      "offset": "0x62c",
+      "retail_pointer": "0x805ad4eb",
+      "value": "KoopaBattleMapPlanetBloom"
+    },
+    {
+      "offset": "0x630",
+      "retail_pointer": "0x805a86c1",
+      "value": "KoopaVs1"
+    },
+    {
+      "offset": "0x634",
+      "retail_pointer": "0x805ad505",
+      "value": "KoopaFire"
+    },
+    {
+      "offset": "0x638",
+      "retail_pointer": "0x805a86c1",
+      "value": "KoopaVs1"
+    },
+    {
+      "offset": "0x63c",
+      "retail_pointer": "0x805ad50f",
+      "value": "KoopaFireBloom"
+    },
+    {
+      "offset": "0x640",
+      "retail_pointer": "0x805a86c1",
+      "value": "KoopaVs1"
+    },
+    {
+      "offset": "0x644",
+      "retail_pointer": "0x805ad51e",
+      "value": "KoopaShockWave"
+    },
+    {
+      "offset": "0x648",
+      "retail_pointer": "0x805a86c1",
+      "value": "KoopaVs1"
+    },
+    {
+      "offset": "0x64c",
+      "retail_pointer": "0x805ad52d",
+      "value": "KoopaShockWaveBloom"
+    },
+    {
+      "offset": "0x650",
+      "retail_pointer": "0x805a86c1",
+      "value": "KoopaVs1"
+    },
+    {
+      "offset": "0x654",
+      "retail_pointer": "0x805ad541",
+      "value": "KoopaShockWaveShadow"
+    },
+    {
+      "offset": "0x658",
+      "retail_pointer": "0x805a86c1",
+      "value": "KoopaVs1"
+    },
+    {
+      "offset": "0x65c",
+      "retail_pointer": "0x805ad556",
+      "value": "KoopaThorn"
+    },
+    {
+      "offset": "0x660",
+      "retail_pointer": "0x805a86c1",
+      "value": "KoopaVs1"
+    },
+    {
+      "offset": "0x664",
+      "retail_pointer": "0x805ad561",
+      "value": "KoopaThornBreak"
+    },
+    {
+      "offset": "0x668",
+      "retail_pointer": "0x805a86c1",
+      "value": "KoopaVs1"
+    },
+    {
+      "offset": "0x66c",
+      "retail_pointer": "0x805a9493",
+      "value": "MeteorStrike"
+    },
+    {
+      "offset": "0x670",
+      "retail_pointer": "0x805a86c1",
+      "value": "KoopaVs1"
+    },
+    {
+      "offset": "0x674",
+      "retail_pointer": "0x805ad571",
+      "value": "MeteorStrikeBreak"
+    },
+    {
+      "offset": "0x678",
+      "retail_pointer": "0x805a86d0",
+      "value": "KoopaVs2"
+    },
+    {
+      "offset": "0x67c",
+      "retail_pointer": "0x805ad4c6",
+      "value": "KoopaArmorBreak"
+    },
+    {
+      "offset": "0x680",
+      "retail_pointer": "0x805a86d0",
+      "value": "KoopaVs2"
+    },
+    {
+      "offset": "0x684",
+      "retail_pointer": "0x805ad583",
+      "value": "KoopaBattleMapPlanetVs2"
+    },
+    {
+      "offset": "0x688",
+      "retail_pointer": "0x805a86d0",
+      "value": "KoopaVs2"
+    },
+    {
+      "offset": "0x68c",
+      "retail_pointer": "0x805ad59b",
+      "value": "KoopaBattleMapPlanetVs2Bloom"
+    },
+    {
+      "offset": "0x690",
+      "retail_pointer": "0x805a86d0",
+      "value": "KoopaVs2"
+    },
+    {
+      "offset": "0x694",
+      "retail_pointer": "0x805ad505",
+      "value": "KoopaFire"
+    },
+    {
+      "offset": "0x698",
+      "retail_pointer": "0x805a86d0",
+      "value": "KoopaVs2"
+    },
+    {
+      "offset": "0x69c",
+      "retail_pointer": "0x805ad50f",
+      "value": "KoopaFireBloom"
+    },
+    {
+      "offset": "0x6a0",
+      "retail_pointer": "0x805a86d0",
+      "value": "KoopaVs2"
+    },
+    {
+      "offset": "0x6a4",
+      "retail_pointer": "0x805ab3a3",
+      "value": "KoopaPlate"
+    },
+    {
+      "offset": "0x6a8",
+      "retail_pointer": "0x805a86d0",
+      "value": "KoopaVs2"
+    },
+    {
+      "offset": "0x6ac",
+      "retail_pointer": "0x805ab3c6",
+      "value": "KoopaPlateCoin"
+    },
+    {
+      "offset": "0x6b0",
+      "retail_pointer": "0x805a86d0",
+      "value": "KoopaVs2"
+    },
+    {
+      "offset": "0x6b4",
+      "retail_pointer": "0x805ad4a3",
+      "value": "KoopaPlateDamage"
+    },
+    {
+      "offset": "0x6b8",
+      "retail_pointer": "0x805a86d0",
+      "value": "KoopaVs2"
+    },
+    {
+      "offset": "0x6bc",
+      "retail_pointer": "0x805ad5b8",
+      "value": "KoopaRollBall"
+    },
+    {
+      "offset": "0x6c0",
+      "retail_pointer": "0x805a86d0",
+      "value": "KoopaVs2"
+    },
+    {
+      "offset": "0x6c4",
+      "retail_pointer": "0x805ad51e",
+      "value": "KoopaShockWave"
+    },
+    {
+      "offset": "0x6c8",
+      "retail_pointer": "0x805a86d0",
+      "value": "KoopaVs2"
+    },
+    {
+      "offset": "0x6cc",
+      "retail_pointer": "0x805ad52d",
+      "value": "KoopaShockWaveBloom"
+    },
+    {
+      "offset": "0x6d0",
+      "retail_pointer": "0x805a86d0",
+      "value": "KoopaVs2"
+    },
+    {
+      "offset": "0x6d4",
+      "retail_pointer": "0x805ad541",
+      "value": "KoopaShockWaveShadow"
+    },
+    {
+      "offset": "0x6d8",
+      "retail_pointer": "0x805a86d0",
+      "value": "KoopaVs2"
+    },
+    {
+      "offset": "0x6dc",
+      "retail_pointer": "0x805ad556",
+      "value": "KoopaThorn"
+    },
+    {
+      "offset": "0x6e0",
+      "retail_pointer": "0x805a86d0",
+      "value": "KoopaVs2"
+    },
+    {
+      "offset": "0x6e4",
+      "retail_pointer": "0x805ad561",
+      "value": "KoopaThornBreak"
+    },
+    {
+      "offset": "0x6e8",
+      "retail_pointer": "0x805a86d9",
+      "value": "KoopaVs3"
+    },
+    {
+      "offset": "0x6ec",
+      "retail_pointer": "0x805ad4c6",
+      "value": "KoopaArmorBreak"
+    },
+    {
+      "offset": "0x6f0",
+      "retail_pointer": "0x805a86d9",
+      "value": "KoopaVs3"
+    },
+    {
+      "offset": "0x6f4",
+      "retail_pointer": "0x805ad5c6",
+      "value": "KoopaBattleMapPlanetVs3Lv1"
+    },
+    {
+      "offset": "0x6f8",
+      "retail_pointer": "0x805a86d9",
+      "value": "KoopaVs3"
+    },
+    {
+      "offset": "0x6fc",
+      "retail_pointer": "0x805ad5e1",
+      "value": "KoopaBattleMapPlanetVs3Lv2"
+    },
+    {
+      "offset": "0x700",
+      "retail_pointer": "0x805a86d9",
+      "value": "KoopaVs3"
+    },
+    {
+      "offset": "0x704",
+      "retail_pointer": "0x805ad5fc",
+      "value": "KoopaBattleMapPlanetVs3Lv3"
+    },
+    {
+      "offset": "0x708",
+      "retail_pointer": "0x805a86d9",
+      "value": "KoopaVs3"
+    },
+    {
+      "offset": "0x70c",
+      "retail_pointer": "0x805ad505",
+      "value": "KoopaFire"
+    },
+    {
+      "offset": "0x710",
+      "retail_pointer": "0x805a86d9",
+      "value": "KoopaVs3"
+    },
+    {
+      "offset": "0x714",
+      "retail_pointer": "0x805ad50f",
+      "value": "KoopaFireBloom"
+    },
+    {
+      "offset": "0x718",
+      "retail_pointer": "0x805a86d9",
+      "value": "KoopaVs3"
+    },
+    {
+      "offset": "0x71c",
+      "retail_pointer": "0x805ad4a3",
+      "value": "KoopaPlateDamage"
+    },
+    {
+      "offset": "0x720",
+      "retail_pointer": "0x805a86d9",
+      "value": "KoopaVs3"
+    },
+    {
+      "offset": "0x724",
+      "retail_pointer": "0x805ad4b4",
+      "value": "KoopaPlanetShadow"
+    },
+    {
+      "offset": "0x728",
+      "retail_pointer": "0x805a86d9",
+      "value": "KoopaVs3"
+    },
+    {
+      "offset": "0x72c",
+      "retail_pointer": "0x805ad5b8",
+      "value": "KoopaRollBall"
+    },
+    {
+      "offset": "0x730",
+      "retail_pointer": "0x805a86d9",
+      "value": "KoopaVs3"
+    },
+    {
+      "offset": "0x734",
+      "retail_pointer": "0x805ad617",
+      "value": "KoopaRock"
+    },
+    {
+      "offset": "0x738",
+      "retail_pointer": "0x805a86d9",
+      "value": "KoopaVs3"
+    },
+    {
+      "offset": "0x73c",
+      "retail_pointer": "0x805ad621",
+      "value": "KoopaRockBreak"
+    },
+    {
+      "offset": "0x740",
+      "retail_pointer": "0x805a86d9",
+      "value": "KoopaVs3"
+    },
+    {
+      "offset": "0x744",
+      "retail_pointer": "0x805ad51e",
+      "value": "KoopaShockWave"
+    },
+    {
+      "offset": "0x748",
+      "retail_pointer": "0x805a86d9",
+      "value": "KoopaVs3"
+    },
+    {
+      "offset": "0x74c",
+      "retail_pointer": "0x805ad52d",
+      "value": "KoopaShockWaveBloom"
+    },
+    {
+      "offset": "0x750",
+      "retail_pointer": "0x805a86d9",
+      "value": "KoopaVs3"
+    },
+    {
+      "offset": "0x754",
+      "retail_pointer": "0x805ad541",
+      "value": "KoopaShockWaveShadow"
+    },
+    {
+      "offset": "0x758",
+      "retail_pointer": "0x805a86d9",
+      "value": "KoopaVs3"
+    },
+    {
+      "offset": "0x75c",
+      "retail_pointer": "0x805ad556",
+      "value": "KoopaThorn"
+    },
+    {
+      "offset": "0x760",
+      "retail_pointer": "0x805a86d9",
+      "value": "KoopaVs3"
+    },
+    {
+      "offset": "0x764",
+      "retail_pointer": "0x805ad561",
+      "value": "KoopaThornBreak"
+    },
+    {
+      "offset": "0x768",
+      "retail_pointer": "0x805a86d9",
+      "value": "KoopaVs3"
+    },
+    {
+      "offset": "0x76c",
+      "retail_pointer": "0x805ad630",
+      "value": "KoopaVS3HoleSunPlanet"
+    },
+    {
+      "offset": "0x770",
+      "retail_pointer": "0x805a86d9",
+      "value": "KoopaVs3"
+    },
+    {
+      "offset": "0x774",
+      "retail_pointer": "0x805ad646",
+      "value": "KoopaVS3HoleSunPlanetBloom"
+    },
+    {
+      "offset": "0x778",
+      "retail_pointer": "0x805a86d9",
+      "value": "KoopaVs3"
+    },
+    {
+      "offset": "0x77c",
+      "retail_pointer": "0x805ad661",
+      "value": "KoopaVS3HoleSunInsidePlanet"
+    },
+    {
+      "offset": "0x780",
+      "retail_pointer": "0x805a86d9",
+      "value": "KoopaVs3"
+    },
+    {
+      "offset": "0x784",
+      "retail_pointer": "0x805ad67d",
+      "value": "KoopaVS3HoleSunInsidePlanetBloom"
+    },
+    {
+      "offset": "0x788",
+      "retail_pointer": "0x805a86d9",
+      "value": "KoopaVs3"
+    },
+    {
+      "offset": "0x78c",
+      "retail_pointer": "0x805a9493",
+      "value": "MeteorStrike"
+    },
+    {
+      "offset": "0x790",
+      "retail_pointer": "0x805a86d9",
+      "value": "KoopaVs3"
+    },
+    {
+      "offset": "0x794",
+      "retail_pointer": "0x805ad571",
+      "value": "MeteorStrikeBreak"
+    },
+    {
+      "offset": "0x798",
+      "retail_pointer": "0x805a86d9",
+      "value": "KoopaVs3"
+    },
+    {
+      "offset": "0x79c",
+      "retail_pointer": "0x805a7ff1",
+      "value": "Peach"
+    },
+    {
+      "offset": "0x7a0",
+      "retail_pointer": "0x805a86d9",
+      "value": "KoopaVs3"
+    },
+    {
+      "offset": "0x7a4",
+      "retail_pointer": "0x805ad69e",
+      "value": "PeachMiddle"
+    },
+    {
+      "offset": "0x7a8",
+      "retail_pointer": "0x805a86d9",
+      "value": "KoopaVs3"
+    },
+    {
+      "offset": "0x7ac",
+      "retail_pointer": "0x805ad6aa",
+      "value": "PeachLow"
+    },
+    {
+      "offset": "0x7b0",
+      "retail_pointer": "0x805a86d9",
+      "value": "KoopaVs3"
+    },
+    {
+      "offset": "0x7b4",
+      "retail_pointer": "0x805acf2f",
+      "value": "KoopaJr"
+    },
+    {
+      "offset": "0x7b8",
+      "retail_pointer": "0x805a86d9",
+      "value": "KoopaVs3"
+    },
+    {
+      "offset": "0x7bc",
+      "retail_pointer": "0x805acf37",
+      "value": "KoopaJrMiddle"
+    },
+    {
+      "offset": "0x7c0",
+      "retail_pointer": "0x805a86d9",
+      "value": "KoopaVs3"
+    },
+    {
+      "offset": "0x7c4",
+      "retail_pointer": "0x805acf45",
+      "value": "KoopaJrLow"
+    },
+    {
+      "offset": "0x7c8",
+      "retail_pointer": "0x805a86d9",
+      "value": "KoopaVs3"
+    },
+    {
+      "offset": "0x7cc",
+      "retail_pointer": "0x805a8170",
+      "value": "KoopaJrShip"
+    },
+    {
+      "offset": "0x7d0",
+      "retail_pointer": "0x805a97a6",
+      "value": "LargeChain"
+    },
+    {
+      "offset": "0x7d4",
+      "retail_pointer": "0x805ad6b3",
+      "value": "LargeChainFixPoint"
+    },
+    {
+      "offset": "0x7d8",
+      "retail_pointer": "0x805a914b",
+      "value": "LavaProminence"
+    },
+    {
+      "offset": "0x7dc",
+      "retail_pointer": "0x805ad6c6",
+      "value": "LavaProminenceBloom"
+    },
+    {
+      "offset": "0x7e0",
+      "retail_pointer": "0x805a916f",
+      "value": "LavaProminenceEnvironment"
+    },
+    {
+      "offset": "0x7e4",
+      "retail_pointer": "0x805ad6da",
+      "value": "LavaProminenceEnvironmentBloom"
+    },
+    {
+      "offset": "0x7e8",
+      "retail_pointer": "0x805a915a",
+      "value": "LavaProminenceTriple"
+    },
+    {
+      "offset": "0x7ec",
+      "retail_pointer": "0x805ad6f9",
+      "value": "LavaProminenceTripleBloom"
+    },
+    {
+      "offset": "0x7f0",
+      "retail_pointer": "0x805a9189",
+      "value": "LavaProminenceWithoutShadow"
+    },
+    {
+      "offset": "0x7f4",
+      "retail_pointer": "0x805ad6c6",
+      "value": "LavaProminenceBloom"
+    },
+    {
+      "offset": "0x7f8",
+      "retail_pointer": "0x805a9374",
+      "value": "LavaStrangeRockL"
+    },
+    {
+      "offset": "0x7fc",
+      "retail_pointer": "0x805ad713",
+      "value": "LavaStrangeRockLLow"
+    },
+    {
+      "offset": "0x800",
+      "retail_pointer": "0x805ad727",
+      "value": "LODTestPlanet"
+    },
+    {
+      "offset": "0x804",
+      "retail_pointer": "0x805ad735",
+      "value": "LODTestBillboard"
+    },
+    {
+      "offset": "0x808",
+      "retail_pointer": "0x805ad727",
+      "value": "LODTestPlanet"
+    },
+    {
+      "offset": "0x80c",
+      "retail_pointer": "0x805ad746",
+      "value": "LODTestLowPolygon"
+    },
+    {
+      "offset": "0x810",
+      "retail_pointer": "0x805a9528",
+      "value": "MarioLauncher"
+    },
+    {
+      "offset": "0x814",
+      "retail_pointer": "0x805ad758",
+      "value": "Telescope"
+    },
+    {
+      "offset": "0x818",
+      "retail_pointer": "0x805a9528",
+      "value": "MarioLauncher"
+    },
+    {
+      "offset": "0x81c",
+      "retail_pointer": "0x805ad762",
+      "value": "Sight"
+    },
+    {
+      "offset": "0x820",
+      "retail_pointer": "0x805aab61",
+      "value": "MechaKoopaPartsBody"
+    },
+    {
+      "offset": "0x824",
+      "retail_pointer": "0x805ad768",
+      "value": "MechaKoopaPartsBodyLow"
+    },
+    {
+      "offset": "0x828",
+      "retail_pointer": "0x805a94b8",
+      "value": "MeteorCannon"
+    },
+    {
+      "offset": "0x82c",
+      "retail_pointer": "0x805ad77f",
+      "value": "MeteorCannonBreak"
+    },
+    {
+      "offset": "0x830",
+      "retail_pointer": "0x805a9493",
+      "value": "MeteorStrike"
+    },
+    {
+      "offset": "0x834",
+      "retail_pointer": "0x805ad571",
+      "value": "MeteorStrikeBreak"
+    },
+    {
+      "offset": "0x838",
+      "retail_pointer": "0x805a8577",
+      "value": "Mogu"
+    },
+    {
+      "offset": "0x83c",
+      "retail_pointer": "0x805ad791",
+      "value": "MoguHole"
+    },
+    {
+      "offset": "0x840",
+      "retail_pointer": "0x805a8577",
+      "value": "Mogu"
+    },
+    {
+      "offset": "0x844",
+      "retail_pointer": "0x805ad79a",
+      "value": "MoguStone"
+    },
+    {
+      "offset": "0x848",
+      "retail_pointer": "0x805a857c",
+      "value": "Mogucchi"
+    },
+    {
+      "offset": "0x84c",
+      "retail_pointer": "0x805ad7a4",
+      "value": "MogucchiHillA"
+    },
+    {
+      "offset": "0x850",
+      "retail_pointer": "0x805a857c",
+      "value": "Mogucchi"
+    },
+    {
+      "offset": "0x854",
+      "retail_pointer": "0x805ad7b2",
+      "value": "MogucchiHillB"
+    },
+    {
+      "offset": "0x858",
+      "retail_pointer": "0x805a857c",
+      "value": "Mogucchi"
+    },
+    {
+      "offset": "0x85c",
+      "retail_pointer": "0x805ad7c0",
+      "value": "MogucchiHillC"
+    },
+    {
+      "offset": "0x860",
+      "retail_pointer": "0x805a857c",
+      "value": "Mogucchi"
+    },
+    {
+      "offset": "0x864",
+      "retail_pointer": "0x805ad7ce",
+      "value": "MogucchiHole"
+    },
+    {
+      "offset": "0x868",
+      "retail_pointer": "0x805a8516",
+      "value": "NokonokoLand"
+    },
+    {
+      "offset": "0x86c",
+      "retail_pointer": "0x805a818e",
+      "value": "Koura"
+    },
+    {
+      "offset": "0x870",
+      "retail_pointer": "0x805a8de0",
+      "value": "NoteFairy"
+    },
+    {
+      "offset": "0x874",
+      "retail_pointer": "0x805ad7db",
+      "value": "Note"
+    },
+    {
+      "offset": "0x878",
+      "retail_pointer": "0x805ac032",
+      "value": "OceanBowl"
+    },
+    {
+      "offset": "0x87c",
+      "retail_pointer": "0x805ad7e0",
+      "value": "WaterCameraFilter"
+    },
+    {
+      "offset": "0x880",
+      "retail_pointer": "0x805ac03c",
+      "value": "OceanRing"
+    },
+    {
+      "offset": "0x884",
+      "retail_pointer": "0x805ad7e0",
+      "value": "WaterCameraFilter"
+    },
+    {
+      "offset": "0x888",
+      "retail_pointer": "0x805ac03c",
+      "value": "OceanRing"
+    },
+    {
+      "offset": "0x88c",
+      "retail_pointer": "0x805a8252",
+      "value": "WaterWave"
+    },
+    {
+      "offset": "0x890",
+      "retail_pointer": "0x805ac046",
+      "value": "OceanRingAndFlag"
+    },
+    {
+      "offset": "0x894",
+      "retail_pointer": "0x805ac15a",
+      "value": "FlagSurfing"
+    },
+    {
+      "offset": "0x898",
+      "retail_pointer": "0x805ac046",
+      "value": "OceanRingAndFlag"
+    },
+    {
+      "offset": "0x89c",
+      "retail_pointer": "0x805ad7e0",
+      "value": "WaterCameraFilter"
+    },
+    {
+      "offset": "0x8a0",
+      "retail_pointer": "0x805ac046",
+      "value": "OceanRingAndFlag"
+    },
+    {
+      "offset": "0x8a4",
+      "retail_pointer": "0x805a8252",
+      "value": "WaterWave"
+    },
+    {
+      "offset": "0x8a8",
+      "retail_pointer": "0x805ac057",
+      "value": "OceanSphere"
+    },
+    {
+      "offset": "0x8ac",
+      "retail_pointer": "0x805ad7e0",
+      "value": "WaterCameraFilter"
+    },
+    {
+      "offset": "0x8b0",
+      "retail_pointer": "0x805a8361",
+      "value": "OtaRock"
+    },
+    {
+      "offset": "0x8b4",
+      "retail_pointer": "0x805ad7f2",
+      "value": "FireBall"
+    },
+    {
+      "offset": "0x8b8",
+      "retail_pointer": "0x805a85cb",
+      "value": "PackunPetit"
+    },
+    {
+      "offset": "0x8bc",
+      "retail_pointer": "0x805ad7fb",
+      "value": "PackunPetitHead"
+    },
+    {
+      "offset": "0x8c0",
+      "retail_pointer": "0x805a7ff1",
+      "value": "Peach"
+    },
+    {
+      "offset": "0x8c4",
+      "retail_pointer": "0x805ad6aa",
+      "value": "PeachLow"
+    },
+    {
+      "offset": "0x8c8",
+      "retail_pointer": "0x805a7ff1",
+      "value": "Peach"
+    },
+    {
+      "offset": "0x8cc",
+      "retail_pointer": "0x805ad69e",
+      "value": "PeachMiddle"
+    },
+    {
+      "offset": "0x8d0",
+      "retail_pointer": "0x805aa029",
+      "value": "PeachCastleTownBeforeAttack"
+    },
+    {
+      "offset": "0x8d4",
+      "retail_pointer": "0x805ad80b",
+      "value": "PeachCastleTownBeforeAttackBloom"
+    },
+    {
+      "offset": "0x8d8",
+      "retail_pointer": "0x805a7ff7",
+      "value": "Penguin"
+    },
+    {
+      "offset": "0x8dc",
+      "retail_pointer": "0x805ad82c",
+      "value": "PenguinLow"
+    },
+    {
+      "offset": "0x8e0",
+      "retail_pointer": "0x805a7ff7",
+      "value": "Penguin"
+    },
+    {
+      "offset": "0x8e4",
+      "retail_pointer": "0x805ad837",
+      "value": "PenguinMiddle"
+    },
+    {
+      "offset": "0x8e8",
+      "retail_pointer": "0x805a7fff",
+      "value": "PenguinCoach"
+    },
+    {
+      "offset": "0x8ec",
+      "retail_pointer": "0x805ad845",
+      "value": "TiltGuidance"
+    },
+    {
+      "offset": "0x8f0",
+      "retail_pointer": "0x805a803a",
+      "value": "PenguinSkater"
+    },
+    {
+      "offset": "0x8f4",
+      "retail_pointer": "0x805ad82c",
+      "value": "PenguinLow"
+    },
+    {
+      "offset": "0x8f8",
+      "retail_pointer": "0x805a803a",
+      "value": "PenguinSkater"
+    },
+    {
+      "offset": "0x8fc",
+      "retail_pointer": "0x805ad837",
+      "value": "PenguinMiddle"
+    },
+    {
+      "offset": "0x900",
+      "retail_pointer": "0x805a8048",
+      "value": "PenguinStudent"
+    },
+    {
+      "offset": "0x904",
+      "retail_pointer": "0x805a81cf",
+      "value": "KouraShine"
+    },
+    {
+      "offset": "0x908",
+      "retail_pointer": "0x805a8048",
+      "value": "PenguinStudent"
+    },
+    {
+      "offset": "0x90c",
+      "retail_pointer": "0x805ad82c",
+      "value": "PenguinLow"
+    },
+    {
+      "offset": "0x910",
+      "retail_pointer": "0x805a8048",
+      "value": "PenguinStudent"
+    },
+    {
+      "offset": "0x914",
+      "retail_pointer": "0x805ad837",
+      "value": "PenguinMiddle"
+    },
+    {
+      "offset": "0x918",
+      "retail_pointer": "0x805a81e5",
+      "value": "Plant"
+    },
+    {
+      "offset": "0x91c",
+      "retail_pointer": "0x805ad852",
+      "value": "PlantLeaf"
+    },
+    {
+      "offset": "0x920",
+      "retail_pointer": "0x805a81e5",
+      "value": "Plant"
+    },
+    {
+      "offset": "0x924",
+      "retail_pointer": "0x805ad85c",
+      "value": "PlantSeed"
+    },
+    {
+      "offset": "0x928",
+      "retail_pointer": "0x805a81e5",
+      "value": "Plant"
+    },
+    {
+      "offset": "0x92c",
+      "retail_pointer": "0x805ad866",
+      "value": "PlantTop"
+    },
+    {
+      "offset": "0x930",
+      "retail_pointer": "0x805a86ea",
+      "value": "Polta"
+    },
+    {
+      "offset": "0x934",
+      "retail_pointer": "0x805ad86f",
+      "value": "PoltaArmBreak"
+    },
+    {
+      "offset": "0x938",
+      "retail_pointer": "0x805a86ea",
+      "value": "Polta"
+    },
+    {
+      "offset": "0x93c",
+      "retail_pointer": "0x805ad87d",
+      "value": "PoltaBodyBreak"
+    },
+    {
+      "offset": "0x940",
+      "retail_pointer": "0x805a86ea",
+      "value": "Polta"
+    },
+    {
+      "offset": "0x944",
+      "retail_pointer": "0x805ad88c",
+      "value": "PoltaFormationRock"
+    },
+    {
+      "offset": "0x948",
+      "retail_pointer": "0x805a86ea",
+      "value": "Polta"
+    },
+    {
+      "offset": "0x94c",
+      "retail_pointer": "0x805ad89f",
+      "value": "PoltaGroundRock"
+    },
+    {
+      "offset": "0x950",
+      "retail_pointer": "0x805a86ea",
+      "value": "Polta"
+    },
+    {
+      "offset": "0x954",
+      "retail_pointer": "0x805ad8af",
+      "value": "PoltaGroundRockBreak"
+    },
+    {
+      "offset": "0x958",
+      "retail_pointer": "0x805a86ea",
+      "value": "Polta"
+    },
+    {
+      "offset": "0x95c",
+      "retail_pointer": "0x805ad8c4",
+      "value": "PoltaLeftArm"
+    },
+    {
+      "offset": "0x960",
+      "retail_pointer": "0x805a86ea",
+      "value": "Polta"
+    },
+    {
+      "offset": "0x964",
+      "retail_pointer": "0x805ad8d1",
+      "value": "PoltaRightArm"
+    },
+    {
+      "offset": "0x968",
+      "retail_pointer": "0x805a86ea",
+      "value": "Polta"
+    },
+    {
+      "offset": "0x96c",
+      "retail_pointer": "0x805ad8df",
+      "value": "PoltaRock"
+    },
+    {
+      "offset": "0x970",
+      "retail_pointer": "0x805aa690",
+      "value": "PrologueDirector"
+    },
+    {
+      "offset": "0x974",
+      "retail_pointer": "0x805ad8e9",
+      "value": "PeachLetterMini"
+    },
+    {
+      "offset": "0x978",
+      "retail_pointer": "0x805aa690",
+      "value": "PrologueDirector"
+    },
+    {
+      "offset": "0x97c",
+      "retail_pointer": "0x805ad8f9",
+      "value": "PrologueDemo"
+    },
+    {
+      "offset": "0x980",
+      "retail_pointer": "0x805aa690",
+      "value": "PrologueDirector"
+    },
+    {
+      "offset": "0x984",
+      "retail_pointer": "0x805ad906",
+      "value": "DemoPeachCastleGate"
+    },
+    {
+      "offset": "0x988",
+      "retail_pointer": "0x805a7f31",
+      "value": "Rabbit"
+    },
+    {
+      "offset": "0x98c",
+      "retail_pointer": "0x805ad91a",
+      "value": "MoonRabbitLow"
+    },
+    {
+      "offset": "0x990",
+      "retail_pointer": "0x805a7f31",
+      "value": "Rabbit"
+    },
+    {
+      "offset": "0x994",
+      "retail_pointer": "0x805ad928",
+      "value": "MoonRabbitMiddle"
+    },
+    {
+      "offset": "0x998",
+      "retail_pointer": "0x805acb59",
+      "value": "RaceRail"
+    },
+    {
+      "offset": "0x99c",
+      "retail_pointer": "0x805ad230",
+      "value": "Race"
+    },
+    {
+      "offset": "0x9a0",
+      "retail_pointer": "0x805a8477",
+      "value": "RingBeamer"
+    },
+    {
+      "offset": "0x9a4",
+      "retail_pointer": "0x805ad38f",
+      "value": "JumpBeamerBeam"
+    },
+    {
+      "offset": "0x9a8",
+      "retail_pointer": "0x805a8477",
+      "value": "RingBeamer"
+    },
+    {
+      "offset": "0x9ac",
+      "retail_pointer": "0x805ad39e",
+      "value": "JumpBeamerBeamBloom"
+    },
+    {
+      "offset": "0x9b0",
+      "retail_pointer": "0x805ad939",
+      "value": "RockBall"
+    },
+    {
+      "offset": "0x9b4",
+      "retail_pointer": "0x805ad35f",
+      "value": "BallTornado"
+    },
+    {
+      "offset": "0x9b8",
+      "retail_pointer": "0x805a8b99",
+      "value": "RockCreator"
+    },
+    {
+      "offset": "0x9bc",
+      "retail_pointer": "0x805ad942",
+      "value": "RockBreak"
+    },
+    {
+      "offset": "0x9c0",
+      "retail_pointer": "0x805ad94c",
+      "value": "Ruby"
+    },
+    {
+      "offset": "0x9c4",
+      "retail_pointer": "0x805ad951",
+      "value": "LODTestLow"
+    },
+    {
+      "offset": "0x9c8",
+      "retail_pointer": "0x805ad94c",
+      "value": "Ruby"
+    },
+    {
+      "offset": "0x9cc",
+      "retail_pointer": "0x805ad95c",
+      "value": "LODTestMiddle"
+    },
+    {
+      "offset": "0x9d0",
+      "retail_pointer": "0x805a7fa2",
+      "value": "RunawayRabbitCollect"
+    },
+    {
+      "offset": "0x9d4",
+      "retail_pointer": "0x805ad96a",
+      "value": "SpotMarkLight"
+    },
+    {
+      "offset": "0x9d8",
+      "retail_pointer": "0x805a7fa2",
+      "value": "RunawayRabbitCollect"
+    },
+    {
+      "offset": "0x9dc",
+      "retail_pointer": "0x805a8061",
+      "value": "Tico"
+    },
+    {
+      "offset": "0x9e0",
+      "retail_pointer": "0x805a7fa2",
+      "value": "RunawayRabbitCollect"
+    },
+    {
+      "offset": "0x9e4",
+      "retail_pointer": "0x805a8090",
+      "value": "TicoBaby"
+    },
+    {
+      "offset": "0x9e8",
+      "retail_pointer": "0x805a7fa2",
+      "value": "RunawayRabbitCollect"
+    },
+    {
+      "offset": "0x9ec",
+      "retail_pointer": "0x805ad978",
+      "value": "TrickRabbitBaby"
+    },
+    {
+      "offset": "0x9f0",
+      "retail_pointer": "0x805aa2d7",
+      "value": "SandUpDownTowerBreakableWallA"
+    },
+    {
+      "offset": "0x9f4",
+      "retail_pointer": "0x805ad988",
+      "value": "SandUpDownTowerBreakableWallBreak"
+    },
+    {
+      "offset": "0x9f8",
+      "retail_pointer": "0x805aa2f5",
+      "value": "SandUpDownTowerBreakableWallB"
+    },
+    {
+      "offset": "0x9fc",
+      "retail_pointer": "0x805ad988",
+      "value": "SandUpDownTowerBreakableWallBreak"
+    },
+    {
+      "offset": "0xa00",
+      "retail_pointer": "0x805a8701",
+      "value": "SkeletalFishBaby"
+    },
+    {
+      "offset": "0xa04",
+      "retail_pointer": "0x805a9112",
+      "value": "AirBubble"
+    },
+    {
+      "offset": "0xa08",
+      "retail_pointer": "0x805a86f0",
+      "value": "SkeletalFishBoss"
+    },
+    {
+      "offset": "0xa0c",
+      "retail_pointer": "0x805ad9aa",
+      "value": "SkeletalFishBossHeadA"
+    },
+    {
+      "offset": "0xa10",
+      "retail_pointer": "0x805a86f0",
+      "value": "SkeletalFishBoss"
+    },
+    {
+      "offset": "0xa14",
+      "retail_pointer": "0x805ad9c0",
+      "value": "SkeletalFishBossLight"
+    },
+    {
+      "offset": "0xa18",
+      "retail_pointer": "0x805a86f0",
+      "value": "SkeletalFishBoss"
+    },
+    {
+      "offset": "0xa1c",
+      "retail_pointer": "0x805ad9d6",
+      "value": "SkeletalFishBossLightBloom"
+    },
+    {
+      "offset": "0xa20",
+      "retail_pointer": "0x805a86f0",
+      "value": "SkeletalFishBoss"
+    },
+    {
+      "offset": "0xa24",
+      "retail_pointer": "0x805ad9f1",
+      "value": "SkeletalFishBossScarFlash"
+    },
+    {
+      "offset": "0xa28",
+      "retail_pointer": "0x805a86f0",
+      "value": "SkeletalFishBoss"
+    },
+    {
+      "offset": "0xa2c",
+      "retail_pointer": "0x805ada0b",
+      "value": "SkeletalFishBossBreak"
+    },
+    {
+      "offset": "0xa30",
+      "retail_pointer": "0x805a86f0",
+      "value": "SkeletalFishBoss"
+    },
+    {
+      "offset": "0xa34",
+      "retail_pointer": "0x805ada21",
+      "value": "SkeletalFishBossShadow"
+    },
+    {
+      "offset": "0xa38",
+      "retail_pointer": "0x805a86f0",
+      "value": "SkeletalFishBoss"
+    },
+    {
+      "offset": "0xa3c",
+      "retail_pointer": "0x805ada38",
+      "value": "SkeletalFishGuard"
+    },
+    {
+      "offset": "0xa40",
+      "retail_pointer": "0x805a86f0",
+      "value": "SkeletalFishBoss"
+    },
+    {
+      "offset": "0xa44",
+      "retail_pointer": "0x805ada4a",
+      "value": "SkeletalFishGUardShadow"
+    },
+    {
+      "offset": "0xa48",
+      "retail_pointer": "0x805a8531",
+      "value": "Snakehead"
+    },
+    {
+      "offset": "0xa4c",
+      "retail_pointer": "0x805ada62",
+      "value": "SnakeheadShadow"
+    },
+    {
+      "offset": "0xa50",
+      "retail_pointer": "0x805a853b",
+      "value": "SnakeheadSmall"
+    },
+    {
+      "offset": "0xa54",
+      "retail_pointer": "0x805ada72",
+      "value": "SnakeheadSmallShadow"
+    },
+    {
+      "offset": "0xa58",
+      "retail_pointer": "0x805a8a7c",
+      "value": "SpiderCoin"
+    },
+    {
+      "offset": "0xa5c",
+      "retail_pointer": "0x805a822b",
+      "value": "SpaceCocoon"
+    },
+    {
+      "offset": "0xa60",
+      "retail_pointer": "0x805a82ee",
+      "value": "SpinDriver"
+    },
+    {
+      "offset": "0xa64",
+      "retail_pointer": "0x805ada87",
+      "value": "SpinDriverShadow"
+    },
+    {
+      "offset": "0xa68",
+      "retail_pointer": "0x805acbe5",
+      "value": "StarReturnDemoStarter"
+    },
+    {
+      "offset": "0xa6c",
+      "retail_pointer": "0x805ad245",
+      "value": "ResultWindow"
+    },
+    {
+      "offset": "0xa70",
+      "retail_pointer": "0x805a85be",
+      "value": "StringSpider"
+    },
+    {
+      "offset": "0xa74",
+      "retail_pointer": "0x805ada98",
+      "value": "StringSpiderString"
+    },
+    {
+      "offset": "0xa78",
+      "retail_pointer": "0x805ab207",
+      "value": "SubmarineVolcanoBigColumn"
+    },
+    {
+      "offset": "0xa7c",
+      "retail_pointer": "0x805adaab",
+      "value": "SubmarineVolcanoBigColumnBreak"
+    },
+    {
+      "offset": "0xa80",
+      "retail_pointer": "0x805ab221",
+      "value": "SubmarineVolcanoSmallColumn"
+    },
+    {
+      "offset": "0xa84",
+      "retail_pointer": "0x805a9112",
+      "value": "AirBubble"
+    },
+    {
+      "offset": "0xa88",
+      "retail_pointer": "0x805ab221",
+      "value": "SubmarineVolcanoSmallColumn"
+    },
+    {
+      "offset": "0xa8c",
+      "retail_pointer": "0x805adaca",
+      "value": "SubmarineVolcanoSmallColumnBreak"
+    },
+    {
+      "offset": "0xa90",
+      "retail_pointer": "0x805a82f9",
+      "value": "SuperSpinDriver"
+    },
+    {
+      "offset": "0xa94",
+      "retail_pointer": "0x805acc90",
+      "value": "SpinDriverPath"
+    },
+    {
+      "offset": "0xa98",
+      "retail_pointer": "0x805a82f9",
+      "value": "SuperSpinDriver"
+    },
+    {
+      "offset": "0xa9c",
+      "retail_pointer": "0x805adaeb",
+      "value": "SuperSpinDriverShadow"
+    },
+    {
+      "offset": "0xaa0",
+      "retail_pointer": "0x805a8309",
+      "value": "SuperSpinDriverGreen"
+    },
+    {
+      "offset": "0xaa4",
+      "retail_pointer": "0x805acc90",
+      "value": "SpinDriverPath"
+    },
+    {
+      "offset": "0xaa8",
+      "retail_pointer": "0x805a8309",
+      "value": "SuperSpinDriverGreen"
+    },
+    {
+      "offset": "0xaac",
+      "retail_pointer": "0x805adb01",
+      "value": "SuperSpinDriverEmpty"
+    },
+    {
+      "offset": "0xab0",
+      "retail_pointer": "0x805a8309",
+      "value": "SuperSpinDriverGreen"
+    },
+    {
+      "offset": "0xab4",
+      "retail_pointer": "0x805adaeb",
+      "value": "SuperSpinDriverShadow"
+    },
+    {
+      "offset": "0xab8",
+      "retail_pointer": "0x805adb16",
+      "value": "SuperSpinDriverRed"
+    },
+    {
+      "offset": "0xabc",
+      "retail_pointer": "0x805acc90",
+      "value": "SpinDriverPath"
+    },
+    {
+      "offset": "0xac0",
+      "retail_pointer": "0x805adb16",
+      "value": "SuperSpinDriverRed"
+    },
+    {
+      "offset": "0xac4",
+      "retail_pointer": "0x805adb01",
+      "value": "SuperSpinDriverEmpty"
+    },
+    {
+      "offset": "0xac8",
+      "retail_pointer": "0x805adb16",
+      "value": "SuperSpinDriverRed"
+    },
+    {
+      "offset": "0xacc",
+      "retail_pointer": "0x805adaeb",
+      "value": "SuperSpinDriverShadow"
+    },
+    {
+      "offset": "0xad0",
+      "retail_pointer": "0x805a7f4d",
+      "value": "Syati"
+    },
+    {
+      "offset": "0xad4",
+      "retail_pointer": "0x805adb29",
+      "value": "PrizeRing"
+    },
+    {
+      "offset": "0xad8",
+      "retail_pointer": "0x805a7f4d",
+      "value": "Syati"
+    },
+    {
+      "offset": "0xadc",
+      "retail_pointer": "0x805ad230",
+      "value": "Race"
+    },
+    {
+      "offset": "0xae0",
+      "retail_pointer": "0x805a8290",
+      "value": "Takobo"
+    },
+    {
+      "offset": "0xae4",
+      "retail_pointer": "0x805adb33",
+      "value": "IceBox"
+    },
+    {
+      "offset": "0xae8",
+      "retail_pointer": "0x805a8359",
+      "value": "TakoHei"
+    },
+    {
+      "offset": "0xaec",
+      "retail_pointer": "0x805adb3a",
+      "value": "TakoHeiInk"
+    },
+    {
+      "offset": "0xaf0",
+      "retail_pointer": "0x805a81ad",
+      "value": "TamakoroWithTutorial"
+    },
+    {
+      "offset": "0xaf4",
+      "retail_pointer": "0x805a7e12",
+      "value": "BallGuidance"
+    },
+    {
+      "offset": "0xaf8",
+      "retail_pointer": "0x805a81ad",
+      "value": "TamakoroWithTutorial"
+    },
+    {
+      "offset": "0xafc",
+      "retail_pointer": "0x805a8057",
+      "value": "SignBoard"
+    },
+    {
+      "offset": "0xb00",
+      "retail_pointer": "0x805a9e8e",
+      "value": "TeresaMansionLightA"
+    },
+    {
+      "offset": "0xb04",
+      "retail_pointer": "0x805adb45",
+      "value": "TeresaMansionGlaringLightA"
+    },
+    {
+      "offset": "0xb08",
+      "retail_pointer": "0x805a9e8e",
+      "value": "TeresaMansionLightA"
+    },
+    {
+      "offset": "0xb0c",
+      "retail_pointer": "0x805adb60",
+      "value": "TeresaMansionLightALightVolume"
+    },
+    {
+      "offset": "0xb10",
+      "retail_pointer": "0x805a9ea2",
+      "value": "TeresaMansionLightB"
+    },
+    {
+      "offset": "0xb14",
+      "retail_pointer": "0x805adb7f",
+      "value": "TeresaMansionGlaringLightB"
+    },
+    {
+      "offset": "0xb18",
+      "retail_pointer": "0x805a9ea2",
+      "value": "TeresaMansionLightB"
+    },
+    {
+      "offset": "0xb1c",
+      "retail_pointer": "0x805adb9a",
+      "value": "TeresaMansionGlaringLightBBloom"
+    },
+    {
+      "offset": "0xb20",
+      "retail_pointer": "0x805a9ea2",
+      "value": "TeresaMansionLightB"
+    },
+    {
+      "offset": "0xb24",
+      "retail_pointer": "0x805adbba",
+      "value": "TeresaMansionLightBLightVolume"
+    },
+    {
+      "offset": "0xb28",
+      "retail_pointer": "0x805a993d",
+      "value": "SandRiverLightA"
+    },
+    {
+      "offset": "0xb2c",
+      "retail_pointer": "0x805adbd9",
+      "value": "SandRiverGlaringLightA"
+    },
+    {
+      "offset": "0xb30",
+      "retail_pointer": "0x805a993d",
+      "value": "SandRiverLightA"
+    },
+    {
+      "offset": "0xb34",
+      "retail_pointer": "0x805adbf0",
+      "value": "SandRiverLightALightVolume"
+    },
+    {
+      "offset": "0xb38",
+      "retail_pointer": "0x805a80a4",
+      "value": "TicoFat"
+    },
+    {
+      "offset": "0xb3c",
+      "retail_pointer": "0x805adc0b",
+      "value": "StarPieceTargetMeter"
+    },
+    {
+      "offset": "0xb40",
+      "retail_pointer": "0x805a80a4",
+      "value": "TicoFat"
+    },
+    {
+      "offset": "0xb44",
+      "retail_pointer": "0x805adc20",
+      "value": "StarPieceTargetCounter"
+    },
+    {
+      "offset": "0xb48",
+      "retail_pointer": "0x805a80ac",
+      "value": "TicoGalaxy"
+    },
+    {
+      "offset": "0xb4c",
+      "retail_pointer": "0x805adc0b",
+      "value": "StarPieceTargetMeter"
+    },
+    {
+      "offset": "0xb50",
+      "retail_pointer": "0x805a80ac",
+      "value": "TicoGalaxy"
+    },
+    {
+      "offset": "0xb54",
+      "retail_pointer": "0x805adc20",
+      "value": "StarPieceTargetCounter"
+    },
+    {
+      "offset": "0xb58",
+      "retail_pointer": "0x805a8079",
+      "value": "TicoStarRing"
+    },
+    {
+      "offset": "0xb5c",
+      "retail_pointer": "0x805adc37",
+      "value": "TicoLow"
+    },
+    {
+      "offset": "0xb60",
+      "retail_pointer": "0x805a8079",
+      "value": "TicoStarRing"
+    },
+    {
+      "offset": "0xb64",
+      "retail_pointer": "0x805adc3f",
+      "value": "TicoMiddle"
+    },
+    {
+      "offset": "0xb68",
+      "retail_pointer": "0x805a80b7",
+      "value": "TicoRail"
+    },
+    {
+      "offset": "0xb6c",
+      "retail_pointer": "0x805adc37",
+      "value": "TicoLow"
+    },
+    {
+      "offset": "0xb70",
+      "retail_pointer": "0x805a80b7",
+      "value": "TicoRail"
+    },
+    {
+      "offset": "0xb74",
+      "retail_pointer": "0x805adc3f",
+      "value": "TicoMiddle"
+    },
+    {
+      "offset": "0xb78",
+      "retail_pointer": "0x805a8413",
+      "value": "TogeBegomanLauncher"
+    },
+    {
+      "offset": "0xb7c",
+      "retail_pointer": "0x805accf8",
+      "value": "BegomanBrokenPiece"
+    },
+    {
+      "offset": "0xb80",
+      "retail_pointer": "0x805a8413",
+      "value": "TogeBegomanLauncher"
+    },
+    {
+      "offset": "0xb84",
+      "retail_pointer": "0x805a83f6",
+      "value": "BegomanSpike"
+    },
+    {
+      "offset": "0xb88",
+      "retail_pointer": "0x805a8413",
+      "value": "TogeBegomanLauncher"
+    },
+    {
+      "offset": "0xb8c",
+      "retail_pointer": "0x805acd0b",
+      "value": "BegomanSpikeHead"
+    },
+    {
+      "offset": "0xb90",
+      "retail_pointer": "0x805a8746",
+      "value": "TombSpider"
+    },
+    {
+      "offset": "0xb94",
+      "retail_pointer": "0x805adc4a",
+      "value": "SpiderThread"
+    },
+    {
+      "offset": "0xb98",
+      "retail_pointer": "0x805a8746",
+      "value": "TombSpider"
+    },
+    {
+      "offset": "0xb9c",
+      "retail_pointer": "0x805adc57",
+      "value": "TombSpiderCocoon"
+    },
+    {
+      "offset": "0xba0",
+      "retail_pointer": "0x805a8746",
+      "value": "TombSpider"
+    },
+    {
+      "offset": "0xba4",
+      "retail_pointer": "0x805adc68",
+      "value": "TombSpiderGland"
+    },
+    {
+      "offset": "0xba8",
+      "retail_pointer": "0x805a8746",
+      "value": "TombSpider"
+    },
+    {
+      "offset": "0xbac",
+      "retail_pointer": "0x805adc78",
+      "value": "TombSpiderPlanet"
+    },
+    {
+      "offset": "0xbb0",
+      "retail_pointer": "0x805a8746",
+      "value": "TombSpider"
+    },
+    {
+      "offset": "0xbb4",
+      "retail_pointer": "0x805adc89",
+      "value": "TombSpiderPlanetLow"
+    },
+    {
+      "offset": "0xbb8",
+      "retail_pointer": "0x805a8746",
+      "value": "TombSpider"
+    },
+    {
+      "offset": "0xbbc",
+      "retail_pointer": "0x805adc9d",
+      "value": "TombSpiderVitalSpot"
+    },
+    {
+      "offset": "0xbc0",
+      "retail_pointer": "0x805a84b5",
+      "value": "Torpedo"
+    },
+    {
+      "offset": "0xbc4",
+      "retail_pointer": "0x805adcb1",
+      "value": "TorpedoPropeller"
+    },
+    {
+      "offset": "0xbc8",
+      "retail_pointer": "0x805a84b5",
+      "value": "Torpedo"
+    },
+    {
+      "offset": "0xbcc",
+      "retail_pointer": "0x805adcc2",
+      "value": "TorpedoLight"
+    },
+    {
+      "offset": "0xbd0",
+      "retail_pointer": "0x805ab9a4",
+      "value": "TreasureBoxCrackedAirBubble"
+    },
+    {
+      "offset": "0xbd4",
+      "retail_pointer": "0x805a9112",
+      "value": "AirBubble"
+    },
+    {
+      "offset": "0xbd8",
+      "retail_pointer": "0x805a7f69",
+      "value": "TrickRabbit"
+    },
+    {
+      "offset": "0xbdc",
+      "retail_pointer": "0x805ad96a",
+      "value": "SpotMarkLight"
+    },
+    {
+      "offset": "0xbe0",
+      "retail_pointer": "0x805a7fb7",
+      "value": "TrickRabbitGhost"
+    },
+    {
+      "offset": "0xbe4",
+      "retail_pointer": "0x805ad96a",
+      "value": "SpotMarkLight"
+    },
+    {
+      "offset": "0xbe8",
+      "retail_pointer": "0x805a7f75",
+      "value": "TrickRabbitFreeRun"
+    },
+    {
+      "offset": "0xbec",
+      "retail_pointer": "0x805ad96a",
+      "value": "SpotMarkLight"
+    },
+    {
+      "offset": "0xbf0",
+      "retail_pointer": "0x805a7f88",
+      "value": "TrickRabbitFreeRunCollect"
+    },
+    {
+      "offset": "0xbf4",
+      "retail_pointer": "0x805ad96a",
+      "value": "SpotMarkLight"
+    },
+    {
+      "offset": "0xbf8",
+      "retail_pointer": "0x805a7f88",
+      "value": "TrickRabbitFreeRunCollect"
+    },
+    {
+      "offset": "0xbfc",
+      "retail_pointer": "0x805adccf",
+      "value": "BombTimer"
+    },
+    {
+      "offset": "0xc00",
+      "retail_pointer": "0x805a879e",
+      "value": "Tripod2Boss"
+    },
+    {
+      "offset": "0xc04",
+      "retail_pointer": "0x805adcd9",
+      "value": "Tripod2BossLow"
+    },
+    {
+      "offset": "0xc08",
+      "retail_pointer": "0x805a879e",
+      "value": "Tripod2Boss"
+    },
+    {
+      "offset": "0xc0c",
+      "retail_pointer": "0x805adce8",
+      "value": "Tripod2BossLegShadow"
+    },
+    {
+      "offset": "0xc10",
+      "retail_pointer": "0x805a8793",
+      "value": "TripodBoss"
+    },
+    {
+      "offset": "0xc14",
+      "retail_pointer": "0x805adcfd",
+      "value": "TripodBossLegShadow"
+    },
+    {
+      "offset": "0xc18",
+      "retail_pointer": "0x805a8793",
+      "value": "TripodBoss"
+    },
+    {
+      "offset": "0xc1c",
+      "retail_pointer": "0x805add11",
+      "value": "TripodBossLow"
+    },
+    {
+      "offset": "0xc20",
+      "retail_pointer": "0x805a8793",
+      "value": "TripodBoss"
+    },
+    {
+      "offset": "0xc24",
+      "retail_pointer": "0x805a8fdb",
+      "value": "GrandStar"
+    },
+    {
+      "offset": "0xc28",
+      "retail_pointer": "0x805a8a35",
+      "value": "TripodBossBottomKillerCannon"
+    },
+    {
+      "offset": "0xc2c",
+      "retail_pointer": "0x805a839b",
+      "value": "HomingKiller"
+    },
+    {
+      "offset": "0xc30",
+      "retail_pointer": "0x805a880b",
+      "value": "TripodBossCore"
+    },
+    {
+      "offset": "0xc34",
+      "retail_pointer": "0x805add1f",
+      "value": "TripodBossCoreBloom"
+    },
+    {
+      "offset": "0xc38",
+      "retail_pointer": "0x805a880b",
+      "value": "TripodBossCore"
+    },
+    {
+      "offset": "0xc3c",
+      "retail_pointer": "0x805add33",
+      "value": "TripodBossCoreBreak"
+    },
+    {
+      "offset": "0xc40",
+      "retail_pointer": "0x805a87c6",
+      "value": "TripodBossKillerGenerater"
+    },
+    {
+      "offset": "0xc44",
+      "retail_pointer": "0x805a839b",
+      "value": "HomingKiller"
+    },
+    {
+      "offset": "0xc48",
+      "retail_pointer": "0x805a884b",
+      "value": "TripodBossShell"
+    },
+    {
+      "offset": "0xc4c",
+      "retail_pointer": "0x805add47",
+      "value": "TripodBossShellBreak"
+    },
+    {
+      "offset": "0xc50",
+      "retail_pointer": "0x805a8a19",
+      "value": "TripodBossUnderKillerCannon"
+    },
+    {
+      "offset": "0xc54",
+      "retail_pointer": "0x805a839b",
+      "value": "HomingKiller"
+    },
+    {
+      "offset": "0xc58",
+      "retail_pointer": "0x805a89fd",
+      "value": "TripodBossUpperKillerCannon"
+    },
+    {
+      "offset": "0xc5c",
+      "retail_pointer": "0x805a839b",
+      "value": "HomingKiller"
+    },
+    {
+      "offset": "0xc60",
+      "retail_pointer": "0x805a8782",
+      "value": "TurtleBeamKameck"
+    },
+    {
+      "offset": "0xc64",
+      "retail_pointer": "0x805a818e",
+      "value": "Koura"
+    },
+    {
+      "offset": "0xc68",
+      "retail_pointer": "0x805add5c",
+      "value": "UFOBattleStageA"
+    },
+    {
+      "offset": "0xc6c",
+      "retail_pointer": "0x805add6c",
+      "value": "UFOBattleStageABloom"
+    },
+    {
+      "offset": "0xc70",
+      "retail_pointer": "0x805ab0fe",
+      "value": "UFOBlueStarCupsule"
+    },
+    {
+      "offset": "0xc74",
+      "retail_pointer": "0x805acc59",
+      "value": "GCaptureRibbon"
+    },
+    {
+      "offset": "0xc78",
+      "retail_pointer": "0x805a84d9",
+      "value": "Unizo"
+    },
+    {
+      "offset": "0xc7c",
+      "retail_pointer": "0x805add81",
+      "value": "UnizoBreak"
+    },
+    {
+      "offset": "0xc80",
+      "retail_pointer": "0x805a84df",
+      "value": "UnizoLand"
+    },
+    {
+      "offset": "0xc84",
+      "retail_pointer": "0x805add8c",
+      "value": "UnizoLandBreak"
+    },
+    {
+      "offset": "0xc88",
+      "retail_pointer": "0x805a84f4",
+      "value": "UnizoLauncher"
+    },
+    {
+      "offset": "0xc8c",
+      "retail_pointer": "0x805add8c",
+      "value": "UnizoLandBreak"
+    },
+    {
+      "offset": "0xc90",
+      "retail_pointer": "0x805a84e9",
+      "value": "UnizoShoal"
+    },
+    {
+      "offset": "0xc94",
+      "retail_pointer": "0x805add9b",
+      "value": "UnizoShoalBreak"
+    },
+    {
+      "offset": "0xc98",
+      "retail_pointer": "0x805a8e29",
+      "value": "WanwanRolling"
+    },
+    {
+      "offset": "0xc9c",
+      "retail_pointer": "0x805addab",
+      "value": "WanwanRollingBreak"
+    },
+    {
+      "offset": "0xca0",
+      "retail_pointer": "0x805a8e49",
+      "value": "WanwanRollingGold"
+    },
+    {
+      "offset": "0xca4",
+      "retail_pointer": "0x805addbe",
+      "value": "WanwanRollingGoldBreak"
+    },
+    {
+      "offset": "0xca8",
+      "retail_pointer": "0x805a9aba",
+      "value": "WatchTowerRotateStep"
+    },
+    {
+      "offset": "0xcac",
+      "retail_pointer": "0x805addd5",
+      "value": "WatchTowerRotateStepLift"
+    },
+    {
+      "offset": "0xcb0",
+      "retail_pointer": "0x805a954d",
+      "value": "WaterBazooka"
+    },
+    {
+      "offset": "0xcb4",
+      "retail_pointer": "0x805ad050",
+      "value": "MogucchiShooter"
+    },
+    {
+      "offset": "0xcb8",
+      "retail_pointer": "0x805a954d",
+      "value": "WaterBazooka"
+    },
+    {
+      "offset": "0xcbc",
+      "retail_pointer": "0x805addee",
+      "value": "WaterBazookaBreak"
+    },
+    {
+      "offset": "0xcc0",
+      "retail_pointer": "0x805a954d",
+      "value": "WaterBazooka"
+    },
+    {
+      "offset": "0xcc4",
+      "retail_pointer": "0x805ad060",
+      "value": "WaterBazookaCapsule"
+    },
+    {
+      "offset": "0xcc8",
+      "retail_pointer": "0x805a954d",
+      "value": "WaterBazooka"
+    },
+    {
+      "offset": "0xccc",
+      "retail_pointer": "0x805ade00",
+      "value": "WaterBullet"
+    },
+    {
+      "offset": "0xcd0",
+      "retail_pointer": "0x805a95f4",
+      "value": "WaterfallCaveCover"
+    },
+    {
+      "offset": "0xcd4",
+      "retail_pointer": "0x805ade0c",
+      "value": "WaterfallCaveCoverBreak"
+    },
+    {
+      "offset": "0xcd8",
+      "retail_pointer": "0x805aa182",
+      "value": "WaterLeakPipe"
+    },
+    {
+      "offset": "0xcdc",
+      "retail_pointer": "0x805ade24",
+      "value": "IceStepNoSlip"
+    },
+    {
+      "offset": "0xce0",
+      "retail_pointer": "0x805a956a",
+      "value": "WaterPressure"
+    },
+    {
+      "offset": "0xce4",
+      "retail_pointer": "0x805ade00",
+      "value": "WaterBullet"
+    },
+    {
+      "offset": "0xce8",
+      "retail_pointer": "0x805a8248",
+      "value": "WaterRoad"
+    },
+    {
+      "offset": "0xcec",
+      "retail_pointer": "0x805ad7e0",
+      "value": "WaterCameraFilter"
+    },
+    {
+      "offset": "0xcf0",
+      "retail_pointer": "0x805a7934",
+      "value": "WaterCube"
+    },
+    {
+      "offset": "0xcf4",
+      "retail_pointer": "0x805ad7e0",
+      "value": "WaterCameraFilter"
+    },
+    {
+      "offset": "0xcf8",
+      "retail_pointer": "0x805a793e",
+      "value": "WaterSphere"
+    },
+    {
+      "offset": "0xcfc",
+      "retail_pointer": "0x805ad7e0",
+      "value": "WaterCameraFilter"
+    },
+    {
+      "offset": "0xd00",
+      "retail_pointer": "0x805a794a",
+      "value": "WaterCylinder"
+    },
+    {
+      "offset": "0xd04",
+      "retail_pointer": "0x805ad7e0",
+      "value": "WaterCameraFilter"
+    },
+    {
+      "offset": "0xd08",
+      "retail_pointer": "0x805ac06d",
+      "value": "WhirlPoolAccelerator"
+    },
+    {
+      "offset": "0xd0c",
+      "retail_pointer": "0x805ad7e0",
+      "value": "WaterCameraFilter"
+    },
+    {
+      "offset": "0xd10",
+      "retail_pointer": "0x805abdd8",
+      "value": "WhiteRoom"
+    },
+    {
+      "offset": "0xd14",
+      "retail_pointer": "0x805ade32",
+      "value": "WhiteRoomBloom"
+    },
+    {
+      "offset": "0xd18",
+      "retail_pointer": "0x805a902c",
+      "value": "WoodBox"
+    },
+    {
+      "offset": "0xd1c",
+      "retail_pointer": "0x805ade41",
+      "value": "WoodBoxBreak"
+    },
+    {
+      "offset": "0xd20",
+      "retail_pointer": "0x805abe04",
+      "value": "SummerSky"
+    },
+    {
+      "offset": "0xd24",
+      "retail_pointer": "0x805ade4e",
+      "value": "SpaceInner"
+    },
+    {
+      "offset": "0xd28",
+      "retail_pointer": "0x805ade59",
+      "value": "KoopaBattleMapPole"
+    },
+    {
+      "offset": "0xd2c",
+      "retail_pointer": "0x805ac117",
+      "value": "FlagKoopaCastle"
+    },
+    {
+      "offset": "0xd30",
+      "retail_pointer": "0x805a8f4a",
+      "value": "AsteroidB"
+    },
+    {
+      "offset": "0xd34",
+      "retail_pointer": "0x805ade6c",
+      "value": "AsteroidBLow"
+    },
+    {
+      "offset": "0xd38",
+      "retail_pointer": "0x805a8f54",
+      "value": "AsteroidC"
+    },
+    {
+      "offset": "0xd3c",
+      "retail_pointer": "0x805ade79",
+      "value": "AsteroidCLow"
+    },
+    {
+      "offset": "0xd40",
+      "retail_pointer": "0x805a8f5e",
+      "value": "AsteroidD"
+    },
+    {
+      "offset": "0xd44",
+      "retail_pointer": "0x805ade86",
+      "value": "AsteroidDLow"
+    },
+    {
+      "offset": "0xd48",
+      "retail_pointer": "0x805a8f68",
+      "value": "SpaceStickA"
+    },
+    {
+      "offset": "0xd4c",
+      "retail_pointer": "0x805ade93",
+      "value": "SpaceStickALow"
+    },
+    {
+      "offset": "0xd50",
+      "retail_pointer": "0x805a8f74",
+      "value": "SpaceStickB"
+    },
+    {
+      "offset": "0xd54",
+      "retail_pointer": "0x805adea2",
+      "value": "SpaceStickBLow"
+    },
+    {
+      "offset": "0xd58",
+      "retail_pointer": "0x805a93ba",
+      "value": "LavaBlackUFO"
+    },
+    {
+      "offset": "0xd5c",
+      "retail_pointer": "0x805adeb1",
+      "value": "LavaBlackUFOLow"
+    },
+    {
+      "offset": "0xd60",
+      "retail_pointer": "0x805a933c",
+      "value": "LavaStepA"
+    },
+    {
+      "offset": "0xd64",
+      "retail_pointer": "0x805adec1",
+      "value": "LavaStepALow"
+    },
+    {
+      "offset": "0xd68",
+      "retail_pointer": "0x805a9346",
+      "value": "LavaStepB"
+    },
+    {
+      "offset": "0xd6c",
+      "retail_pointer": "0x805adece",
+      "value": "LavaStepBLow"
+    },
+    {
+      "offset": "0xd70",
+      "retail_pointer": "0x805a9350",
+      "value": "LavaStepC"
+    },
+    {
+      "offset": "0xd74",
+      "retail_pointer": "0x805adedb",
+      "value": "LavaStepCLow"
+    },
+    {
+      "offset": "0xd78",
+      "retail_pointer": "0x805a91f8",
+      "value": "LavaFloatingStepA"
+    },
+    {
+      "offset": "0xd7c",
+      "retail_pointer": "0x805adee8",
+      "value": "LavaFloatingStepALow"
+    },
+    {
+      "offset": "0xd80",
+      "retail_pointer": "0x805a927c",
+      "value": "LavaRotatePlanetStartStep"
+    },
+    {
+      "offset": "0xd84",
+      "retail_pointer": "0x805adefd",
+      "value": "LavaRotatePlanetStartStepLow"
+    },
+    {
+      "offset": "0xd88",
+      "retail_pointer": "0x805aa0ed",
+      "value": "SweetsDecoratePartsFork"
+    },
+    {
+      "offset": "0xd8c",
+      "retail_pointer": "0x805adf1a",
+      "value": "SweetsDecoratePartsForkLow"
+    },
+    {
+      "offset": "0xd90",
+      "retail_pointer": "0x805aa0d4",
+      "value": "SweetsDecoratePartsSpoon"
+    },
+    {
+      "offset": "0xd94",
+      "retail_pointer": "0x805adf35",
+      "value": "SweetsDecoratePartsSpoonLow"
+    },
+    {
+      "offset": "0xd98",
+      "retail_pointer": "0x805acb88",
+      "value": "MovieStarter"
+    },
+    {
+      "offset": "0xd9c",
+      "retail_pointer": "0x805adf51",
+      "value": "MoviePadRumblePrologueA"
+    },
+    {
+      "offset": "0xda0",
+      "retail_pointer": "0x805acb88",
+      "value": "MovieStarter"
+    },
+    {
+      "offset": "0xda4",
+      "retail_pointer": "0x805adf69",
+      "value": "MoviePadRumblePrologueB"
+    },
+    {
+      "offset": "0xda8",
+      "retail_pointer": "0x805acb88",
+      "value": "MovieStarter"
+    },
+    {
+      "offset": "0xdac",
+      "retail_pointer": "0x805adf81",
+      "value": "MoviePadRumbleFinalBattle"
+    },
+    {
+      "offset": "0xdb0",
+      "retail_pointer": "0x805acb88",
+      "value": "MovieStarter"
+    },
+    {
+      "offset": "0xdb4",
+      "retail_pointer": "0x805adf9b",
+      "value": "MoviePadRumbleEpilogueA"
+    },
+    {
+      "offset": "0xdb8",
+      "retail_pointer": "0x805acb88",
+      "value": "MovieStarter"
+    },
+    {
+      "offset": "0xdbc",
+      "retail_pointer": "0x805adfb3",
+      "value": "MoviePadRumbleEndingA"
+    },
+    {
+      "offset": "0xdc0",
+      "retail_pointer": "0x805acb88",
+      "value": "MovieStarter"
+    },
+    {
+      "offset": "0xdc4",
+      "retail_pointer": "0x805adfc9",
+      "value": "MoviePadRumbleEndingB"
+    }
+  ]
+}

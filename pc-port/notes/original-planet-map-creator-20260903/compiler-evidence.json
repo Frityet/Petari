@@ -1,0 +1,1369 @@
+{
+  "source_sha256": "9f49d0eddb7bf3a7a6341320b78f952e9743a5b8f06ca033b5548674cb4dd455",
+  "header_sha256": "39df5f6072123c0a4ff98395ba379a4d0c7ff2ec5c1076dd20dbe3ffe1c3921c",
+  "compiler_command": [
+    "build/tools/wibo",
+    "build/tools/sjiswrap.exe",
+    "build/compilers/GC/3.0a3/mwcceppc.exe",
+    "-nodefaults",
+    "-proc",
+    "gekko",
+    "-align",
+    "powerpc",
+    "-enum",
+    "int",
+    "-fp",
+    "hardware",
+    "-Cpp_exceptions",
+    "off",
+    "-O4,s",
+    "-inline",
+    "auto",
+    "-pragma",
+    "cats off",
+    "-pragma",
+    "warn_notinlined off",
+    "-maxerrors",
+    "1",
+    "-nosyspath",
+    "-RTTI",
+    "off",
+    "-str",
+    "reuse",
+    "-enc",
+    "SJIS",
+    "-sdata",
+    "4",
+    "-sdata2",
+    "4",
+    "-ipa",
+    "file",
+    "-sym",
+    "on",
+    "-i",
+    "include",
+    "-i",
+    "libs/JSystem/include",
+    "-i",
+    "libs/MSL_C++/include",
+    "-i",
+    "libs/MSL_C/include",
+    "-i",
+    "libs/MetroTRK/include",
+    "-i",
+    "libs/RVLFaceLib/include",
+    "-i",
+    "libs/RVL_SDK/include",
+    "-i",
+    "libs/Runtime/include",
+    "-i",
+    "libs/nw4r/include",
+    "-i",
+    "build/RMGK01/include",
+    "-DVERSION=0",
+    "-c",
+    "/Users/frityet/Projects/petari/src/Game/Map/PlanetMapCreator.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/build/original-planet-map-creator-20260903/PlanetMapCreator.o"
+  ],
+  "functions": [
+    {
+      "symbol": "createNameObj<17BeamGoRoundPlanet>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj",
+      "retail_address": "0x801951dc",
+      "bytes": 64,
+      "match_percent": 100.0,
+      "all_instructions_identical_after_verified_relocations": true,
+      "verified_relocations": [
+        {
+          "offset": "0x18",
+          "kind": 10,
+          "symbol": "__nw__FUl",
+          "addend": 0,
+          "effective_retail_target": "0x8040b458"
+        },
+        {
+          "offset": "0x28",
+          "kind": 10,
+          "symbol": "__ct__17BeamGoRoundPlanetFPCc",
+          "addend": 0,
+          "effective_retail_target": "0x801b2a10"
+        }
+      ]
+    },
+    {
+      "symbol": "createNameObj<16BumpAppearPlanet>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj",
+      "retail_address": "0x8019521c",
+      "bytes": 64,
+      "match_percent": 100.0,
+      "all_instructions_identical_after_verified_relocations": true,
+      "verified_relocations": [
+        {
+          "offset": "0x18",
+          "kind": 10,
+          "symbol": "__nw__FUl",
+          "addend": 0,
+          "effective_retail_target": "0x8040b458"
+        },
+        {
+          "offset": "0x28",
+          "kind": 10,
+          "symbol": "__ct__16BumpAppearPlanetFPCc",
+          "addend": 0,
+          "effective_retail_target": "0x801bc0fc"
+        }
+      ]
+    },
+    {
+      "symbol": "createNameObj<13RailPlanetMap>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj",
+      "retail_address": "0x8019525c",
+      "bytes": 64,
+      "match_percent": 100.0,
+      "all_instructions_identical_after_verified_relocations": true,
+      "verified_relocations": [
+        {
+          "offset": "0x18",
+          "kind": 10,
+          "symbol": "__nw__FUl",
+          "addend": 0,
+          "effective_retail_target": "0x8040b458"
+        },
+        {
+          "offset": "0x28",
+          "kind": 10,
+          "symbol": "__ct__13RailPlanetMapFPCc",
+          "addend": 0,
+          "effective_retail_target": "0x80194f7c"
+        }
+      ]
+    },
+    {
+      "symbol": "createNameObj<13RotateMoveObj>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj",
+      "retail_address": "0x8019529c",
+      "bytes": 92,
+      "match_percent": 100.0,
+      "all_instructions_identical_after_verified_relocations": true,
+      "verified_relocations": [
+        {
+          "offset": "0x1c",
+          "kind": 10,
+          "symbol": "__nw__FUl",
+          "addend": 0,
+          "effective_retail_target": "0x8040b458"
+        },
+        {
+          "offset": "0x30",
+          "kind": 10,
+          "symbol": "__ct__11MapObjActorFPCc",
+          "addend": 0,
+          "effective_retail_target": "0x801f66a4"
+        },
+        {
+          "offset": "0x36",
+          "kind": 6,
+          "symbol": "__vt__13RotateMoveObj",
+          "addend": 0,
+          "effective_retail_target": "0x8059db04"
+        },
+        {
+          "offset": "0x3a",
+          "kind": 4,
+          "symbol": "__vt__13RotateMoveObj",
+          "addend": 0,
+          "effective_retail_target": "0x8059db04"
+        }
+      ]
+    },
+    {
+      "symbol": "createNameObj<12FurPlanetMap>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj",
+      "retail_address": "0x801952f8",
+      "bytes": 64,
+      "match_percent": 100.0,
+      "all_instructions_identical_after_verified_relocations": true,
+      "verified_relocations": [
+        {
+          "offset": "0x18",
+          "kind": 10,
+          "symbol": "__nw__FUl",
+          "addend": 0,
+          "effective_retail_target": "0x8040b458"
+        },
+        {
+          "offset": "0x28",
+          "kind": 10,
+          "symbol": "__ct__12FurPlanetMapFPCc",
+          "addend": 0,
+          "effective_retail_target": "0x80194eac"
+        }
+      ]
+    },
+    {
+      "symbol": "createNameObj<18SimpleClipPartsObj>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj",
+      "retail_address": "0x80195338",
+      "bytes": 64,
+      "match_percent": 100.0,
+      "all_instructions_identical_after_verified_relocations": true,
+      "verified_relocations": [
+        {
+          "offset": "0x18",
+          "kind": 10,
+          "symbol": "__nw__FUl",
+          "addend": 0,
+          "effective_retail_target": "0x8040b458"
+        },
+        {
+          "offset": "0x28",
+          "kind": 10,
+          "symbol": "__ct__18SimpleClipPartsObjFPCc",
+          "addend": 0,
+          "effective_retail_target": "0x802269fc"
+        }
+      ]
+    },
+    {
+      "symbol": "createNameObj<21PlanetMapFarClippable>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj",
+      "retail_address": "0x80195378",
+      "bytes": 96,
+      "match_percent": 100.0,
+      "all_instructions_identical_after_verified_relocations": true,
+      "verified_relocations": [
+        {
+          "offset": "0x1c",
+          "kind": 10,
+          "symbol": "__nw__FUl",
+          "addend": 0,
+          "effective_retail_target": "0x8040b458"
+        },
+        {
+          "offset": "0x34",
+          "kind": 10,
+          "symbol": "__ct__9PlanetMapFPCcPCc",
+          "addend": 0,
+          "effective_retail_target": "0x80194790"
+        },
+        {
+          "offset": "0x3a",
+          "kind": 6,
+          "symbol": "__vt__21PlanetMapFarClippable",
+          "addend": 0,
+          "effective_retail_target": "0x8058b9a4"
+        },
+        {
+          "offset": "0x3e",
+          "kind": 4,
+          "symbol": "__vt__21PlanetMapFarClippable",
+          "addend": 0,
+          "effective_retail_target": "0x8058b9a4"
+        }
+      ]
+    },
+    {
+      "symbol": "createNameObj<16HatchWaterPlanet>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj",
+      "retail_address": "0x801953d8",
+      "bytes": 64,
+      "match_percent": 100.0,
+      "all_instructions_identical_after_verified_relocations": true,
+      "verified_relocations": [
+        {
+          "offset": "0x18",
+          "kind": 10,
+          "symbol": "__nw__FUl",
+          "addend": 0,
+          "effective_retail_target": "0x8040b458"
+        },
+        {
+          "offset": "0x28",
+          "kind": 10,
+          "symbol": "__ct__16HatchWaterPlanetFPCc",
+          "addend": 0,
+          "effective_retail_target": "0x801e42dc"
+        }
+      ]
+    },
+    {
+      "symbol": "createNameObj<12SimpleMapObj>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj",
+      "retail_address": "0x80195418",
+      "bytes": 92,
+      "match_percent": 100.0,
+      "all_instructions_identical_after_verified_relocations": true,
+      "verified_relocations": [
+        {
+          "offset": "0x1c",
+          "kind": 10,
+          "symbol": "__nw__FUl",
+          "addend": 0,
+          "effective_retail_target": "0x8040b458"
+        },
+        {
+          "offset": "0x30",
+          "kind": 10,
+          "symbol": "__ct__11MapObjActorFPCc",
+          "addend": 0,
+          "effective_retail_target": "0x801f66a4"
+        },
+        {
+          "offset": "0x36",
+          "kind": 6,
+          "symbol": "__vt__12SimpleMapObj",
+          "addend": 0,
+          "effective_retail_target": "0x8059fb7c"
+        },
+        {
+          "offset": "0x3a",
+          "kind": 4,
+          "symbol": "__vt__12SimpleMapObj",
+          "addend": 0,
+          "effective_retail_target": "0x8059fb7c"
+        }
+      ]
+    },
+    {
+      "symbol": "createNameObj<18LavaJamboSunPlanet>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj",
+      "retail_address": "0x80195474",
+      "bytes": 64,
+      "match_percent": 100.0,
+      "all_instructions_identical_after_verified_relocations": true,
+      "verified_relocations": [
+        {
+          "offset": "0x18",
+          "kind": 10,
+          "symbol": "__nw__FUl",
+          "addend": 0,
+          "effective_retail_target": "0x8040b458"
+        },
+        {
+          "offset": "0x28",
+          "kind": 10,
+          "symbol": "__ct__18LavaJamboSunPlanetFPCc",
+          "addend": 0,
+          "effective_retail_target": "0x801f2208"
+        }
+      ]
+    },
+    {
+      "symbol": "createNameObj<13LavaSunPlanet>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj",
+      "retail_address": "0x801954b4",
+      "bytes": 64,
+      "match_percent": 100.0,
+      "all_instructions_identical_after_verified_relocations": true,
+      "verified_relocations": [
+        {
+          "offset": "0x18",
+          "kind": 10,
+          "symbol": "__nw__FUl",
+          "addend": 0,
+          "effective_retail_target": "0x8040b458"
+        },
+        {
+          "offset": "0x28",
+          "kind": 10,
+          "symbol": "__ct__13LavaSunPlanetFPCc",
+          "addend": 0,
+          "effective_retail_target": "0x80187d10"
+        }
+      ]
+    },
+    {
+      "symbol": "createNameObj<12MarblePlanet>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj",
+      "retail_address": "0x801954f4",
+      "bytes": 64,
+      "match_percent": 100.0,
+      "all_instructions_identical_after_verified_relocations": true,
+      "verified_relocations": [
+        {
+          "offset": "0x18",
+          "kind": 10,
+          "symbol": "__nw__FUl",
+          "addend": 0,
+          "effective_retail_target": "0x8040b458"
+        },
+        {
+          "offset": "0x28",
+          "kind": 10,
+          "symbol": "__ct__12MarblePlanetFPCc",
+          "addend": 0,
+          "effective_retail_target": "0x801f8bdc"
+        }
+      ]
+    },
+    {
+      "symbol": "createNameObj<23PeachCastleGardenPlanet>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj",
+      "retail_address": "0x80195534",
+      "bytes": 64,
+      "match_percent": 100.0,
+      "all_instructions_identical_after_verified_relocations": true,
+      "verified_relocations": [
+        {
+          "offset": "0x18",
+          "kind": 10,
+          "symbol": "__nw__FUl",
+          "addend": 0,
+          "effective_retail_target": "0x8040b458"
+        },
+        {
+          "offset": "0x28",
+          "kind": 10,
+          "symbol": "__ct__23PeachCastleGardenPlanetFPCc",
+          "addend": 0,
+          "effective_retail_target": "0x8020a6ec"
+        }
+      ]
+    },
+    {
+      "symbol": "createNameObj<23SandCapsuleInsidePlanet>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj",
+      "retail_address": "0x80195574",
+      "bytes": 64,
+      "match_percent": 100.0,
+      "all_instructions_identical_after_verified_relocations": true,
+      "verified_relocations": [
+        {
+          "offset": "0x18",
+          "kind": 10,
+          "symbol": "__nw__FUl",
+          "addend": 0,
+          "effective_retail_target": "0x8040b458"
+        },
+        {
+          "offset": "0x28",
+          "kind": 10,
+          "symbol": "__ct__23SandCapsuleInsidePlanetFPCc",
+          "addend": 0,
+          "effective_retail_target": "0x8021ec08"
+        }
+      ]
+    },
+    {
+      "symbol": "createNameObj<14FlexibleSphere>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj",
+      "retail_address": "0x801955b4",
+      "bytes": 64,
+      "match_percent": 100.0,
+      "all_instructions_identical_after_verified_relocations": true,
+      "verified_relocations": [
+        {
+          "offset": "0x18",
+          "kind": 10,
+          "symbol": "__nw__FUl",
+          "addend": 0,
+          "effective_retail_target": "0x8040b458"
+        },
+        {
+          "offset": "0x28",
+          "kind": 10,
+          "symbol": "__ct__14FlexibleSphereFPCc",
+          "addend": 0,
+          "effective_retail_target": "0x801dca64"
+        }
+      ]
+    },
+    {
+      "symbol": "createNameObj<17SnowCapsulePlanet>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj",
+      "retail_address": "0x801955f4",
+      "bytes": 64,
+      "match_percent": 100.0,
+      "all_instructions_identical_after_verified_relocations": true,
+      "verified_relocations": [
+        {
+          "offset": "0x18",
+          "kind": 10,
+          "symbol": "__nw__FUl",
+          "addend": 0,
+          "effective_retail_target": "0x8040b458"
+        },
+        {
+          "offset": "0x28",
+          "kind": 10,
+          "symbol": "__ct__17SnowCapsulePlanetFPCc",
+          "addend": 0,
+          "effective_retail_target": "0x8022944c"
+        }
+      ]
+    },
+    {
+      "symbol": "createNameObj<16PlanetMapAnimLow>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj",
+      "retail_address": "0x80195634",
+      "bytes": 96,
+      "match_percent": 100.0,
+      "all_instructions_identical_after_verified_relocations": true,
+      "verified_relocations": [
+        {
+          "offset": "0x1c",
+          "kind": 10,
+          "symbol": "__nw__FUl",
+          "addend": 0,
+          "effective_retail_target": "0x8040b458"
+        },
+        {
+          "offset": "0x34",
+          "kind": 10,
+          "symbol": "__ct__9PlanetMapFPCcPCc",
+          "addend": 0,
+          "effective_retail_target": "0x80194790"
+        },
+        {
+          "offset": "0x3a",
+          "kind": 6,
+          "symbol": "__vt__16PlanetMapAnimLow",
+          "addend": 0,
+          "effective_retail_target": "0x8058b2e8"
+        },
+        {
+          "offset": "0x3e",
+          "kind": 4,
+          "symbol": "__vt__16PlanetMapAnimLow",
+          "addend": 0,
+          "effective_retail_target": "0x8058b2e8"
+        }
+      ]
+    },
+    {
+      "symbol": "createNameObj<14AstroSimpleObj>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj",
+      "retail_address": "0x80195694",
+      "bytes": 64,
+      "match_percent": 100.0,
+      "all_instructions_identical_after_verified_relocations": true,
+      "verified_relocations": [
+        {
+          "offset": "0x18",
+          "kind": 10,
+          "symbol": "__nw__FUl",
+          "addend": 0,
+          "effective_retail_target": "0x8040b458"
+        },
+        {
+          "offset": "0x28",
+          "kind": 10,
+          "symbol": "__ct__14AstroSimpleObjFPCc",
+          "addend": 0,
+          "effective_retail_target": "0x801afb90"
+        }
+      ]
+    },
+    {
+      "symbol": "createNameObj<21QuestionBoxGalleryObj>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj",
+      "retail_address": "0x801956d4",
+      "bytes": 64,
+      "match_percent": 100.0,
+      "all_instructions_identical_after_verified_relocations": true,
+      "verified_relocations": [
+        {
+          "offset": "0x18",
+          "kind": 10,
+          "symbol": "__nw__FUl",
+          "addend": 0,
+          "effective_retail_target": "0x8040b458"
+        },
+        {
+          "offset": "0x28",
+          "kind": 10,
+          "symbol": "__ct__21QuestionBoxGalleryObjFPCc",
+          "addend": 0,
+          "effective_retail_target": "0x802166d0"
+        }
+      ]
+    },
+    {
+      "symbol": "createNameObj<24ReverseGravityRoomPlanet>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj",
+      "retail_address": "0x80195714",
+      "bytes": 64,
+      "match_percent": 100.0,
+      "all_instructions_identical_after_verified_relocations": true,
+      "verified_relocations": [
+        {
+          "offset": "0x18",
+          "kind": 10,
+          "symbol": "__nw__FUl",
+          "addend": 0,
+          "effective_retail_target": "0x8040b458"
+        },
+        {
+          "offset": "0x28",
+          "kind": 10,
+          "symbol": "__ct__24ReverseGravityRoomPlanetFPCc",
+          "addend": 0,
+          "effective_retail_target": "0x8021a6bc"
+        }
+      ]
+    },
+    {
+      "symbol": "createNameObj<15WormEatenPlanet>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj",
+      "retail_address": "0x80195754",
+      "bytes": 64,
+      "match_percent": 100.0,
+      "all_instructions_identical_after_verified_relocations": true,
+      "verified_relocations": [
+        {
+          "offset": "0x18",
+          "kind": 10,
+          "symbol": "__nw__FUl",
+          "addend": 0,
+          "effective_retail_target": "0x8040b458"
+        },
+        {
+          "offset": "0x28",
+          "kind": 10,
+          "symbol": "__ct__15WormEatenPlanetFPCc",
+          "addend": 0,
+          "effective_retail_target": "0x802565e4"
+        }
+      ]
+    },
+    {
+      "symbol": "getCreateFunc__16PlanetMapCreatorFPCc",
+      "retail_address": "0x80195880",
+      "bytes": 176,
+      "match_percent": 100.0,
+      "all_instructions_identical_after_verified_relocations": true,
+      "verified_relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_27",
+          "addend": 0,
+          "effective_retail_target": "0x80518a00"
+        },
+        {
+          "offset": "0x1c",
+          "kind": 10,
+          "symbol": "getTableData__16PlanetMapCreatorCFPCc",
+          "addend": 0,
+          "effective_retail_target": "0x80195c98"
+        },
+        {
+          "offset": "0x28",
+          "kind": 10,
+          "symbol": "isScenarioForceLow__16PlanetMapCreatorCFPC13PlanetMapData",
+          "addend": 0,
+          "effective_retail_target": "0x80195d18"
+        },
+        {
+          "offset": "0x36",
+          "kind": 6,
+          "symbol": "createNameObj<25PlanetMapWithoutHighModel>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj",
+          "addend": 0,
+          "effective_retail_target": "0x80195974"
+        },
+        {
+          "offset": "0x3a",
+          "kind": 4,
+          "symbol": "createNameObj<25PlanetMapWithoutHighModel>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj",
+          "addend": 0,
+          "effective_retail_target": "0x80195974"
+        },
+        {
+          "offset": "0x42",
+          "kind": 6,
+          "symbol": "sUniquePlanetCreateFuncTable__30@unnamed@PlanetMapCreator_cpp@",
+          "addend": 0,
+          "effective_retail_target": "0x80532c98"
+        },
+        {
+          "offset": "0x4a",
+          "kind": 4,
+          "symbol": "sUniquePlanetCreateFuncTable__30@unnamed@PlanetMapCreator_cpp@",
+          "addend": 0,
+          "effective_retail_target": "0x80532c98"
+        },
+        {
+          "offset": "0x5c",
+          "kind": 10,
+          "symbol": "isEqualString__2MRFPCcPCc",
+          "addend": 0,
+          "effective_retail_target": "0x803feb68"
+        },
+        {
+          "offset": "0x92",
+          "kind": 6,
+          "symbol": "createNameObj<9PlanetMap>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj",
+          "addend": 0,
+          "effective_retail_target": "0x80195930"
+        },
+        {
+          "offset": "0x96",
+          "kind": 4,
+          "symbol": "createNameObj<9PlanetMap>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj",
+          "addend": 0,
+          "effective_retail_target": "0x80195930"
+        },
+        {
+          "offset": "0x9c",
+          "kind": 10,
+          "symbol": "_restgpr_27",
+          "addend": 0,
+          "effective_retail_target": "0x80518a4c"
+        }
+      ]
+    },
+    {
+      "symbol": "createNameObj<9PlanetMap>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj",
+      "retail_address": "0x80195930",
+      "bytes": 68,
+      "match_percent": 100.0,
+      "all_instructions_identical_after_verified_relocations": true,
+      "verified_relocations": [
+        {
+          "offset": "0x18",
+          "kind": 10,
+          "symbol": "__nw__FUl",
+          "addend": 0,
+          "effective_retail_target": "0x8040b458"
+        },
+        {
+          "offset": "0x2c",
+          "kind": 10,
+          "symbol": "__ct__9PlanetMapFPCcPCc",
+          "addend": 0,
+          "effective_retail_target": "0x80194790"
+        }
+      ]
+    },
+    {
+      "symbol": "createNameObj<25PlanetMapWithoutHighModel>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj",
+      "retail_address": "0x80195974",
+      "bytes": 64,
+      "match_percent": 100.0,
+      "all_instructions_identical_after_verified_relocations": true,
+      "verified_relocations": [
+        {
+          "offset": "0x18",
+          "kind": 10,
+          "symbol": "__nw__FUl",
+          "addend": 0,
+          "effective_retail_target": "0x8040b458"
+        },
+        {
+          "offset": "0x28",
+          "kind": 10,
+          "symbol": "__ct__25PlanetMapWithoutHighModelFPCc",
+          "addend": 0,
+          "effective_retail_target": "0x80195fd8"
+        }
+      ]
+    },
+    {
+      "symbol": "getPlanetMapCreator__24PlanetMapCreatorFunctionFPCc",
+      "retail_address": "0x80195e38",
+      "bytes": 60,
+      "match_percent": 100.0,
+      "all_instructions_identical_after_verified_relocations": true,
+      "verified_relocations": [
+        {
+          "offset": "0x14",
+          "kind": 10,
+          "symbol": "getSceneObjHolder__2MRFv",
+          "addend": 0,
+          "effective_retail_target": "0x803453dc"
+        },
+        {
+          "offset": "0x1c",
+          "kind": 10,
+          "symbol": "getObj__14SceneObjHolderCFi",
+          "addend": 0,
+          "effective_retail_target": "0x80345388"
+        },
+        {
+          "offset": "0x24",
+          "kind": 10,
+          "symbol": "getCreateFunc__16PlanetMapCreatorFPCc",
+          "addend": 0,
+          "effective_retail_target": "0x80195880"
+        }
+      ]
+    },
+    {
+      "symbol": "__dt__21PlanetMapFarClippableFv",
+      "retail_address": "0x80195f78",
+      "bytes": 88,
+      "match_percent": 100.0,
+      "all_instructions_identical_after_verified_relocations": true,
+      "verified_relocations": [
+        {
+          "offset": "0x28",
+          "kind": 10,
+          "symbol": "__dt__9PlanetMapFv",
+          "addend": 0,
+          "effective_retail_target": "0x80194eec"
+        },
+        {
+          "offset": "0x38",
+          "kind": 10,
+          "symbol": "__dl__FPv",
+          "addend": 0,
+          "effective_retail_target": "0x8040b4a0"
+        }
+      ]
+    },
+    {
+      "symbol": "getFarClipDistance__21PlanetMapFarClippableCFv",
+      "retail_address": "0x80195fd0",
+      "bytes": 8,
+      "match_percent": 97.5,
+      "all_instructions_identical_after_verified_relocations": true,
+      "verified_relocations": [
+        {
+          "offset": "0x0",
+          "kind": 109,
+          "symbol": "@12699",
+          "addend": 0,
+          "value_hex": "42480000",
+          "effective_retail_target": "0x806bc330"
+        }
+      ]
+    }
+  ],
+  "pointer_objects": [
+    {
+      "symbol": "sUniquePlanetCreateFuncTable__30@unnamed@PlanetMapCreator_cpp@",
+      "bytes": 312,
+      "all_relocated_pointers_and_unrelocated_bytes_equal": true,
+      "entries": [
+        {
+          "offset": "0x0",
+          "retail_pointer": "0x8058b527",
+          "value": "BeamGoRoundPlanet"
+        },
+        {
+          "offset": "0x4",
+          "retail_pointer": "0x801951dc",
+          "value": "createNameObj<17BeamGoRoundPlanet>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj"
+        },
+        {
+          "offset": "0x8",
+          "retail_pointer": "0x8058b539",
+          "value": "BumpAppearPlanet"
+        },
+        {
+          "offset": "0xc",
+          "retail_pointer": "0x8019521c",
+          "value": "createNameObj<16BumpAppearPlanet>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj"
+        },
+        {
+          "offset": "0x10",
+          "retail_pointer": "0x8058b54a",
+          "value": "ChoConveyorPlanetB"
+        },
+        {
+          "offset": "0x14",
+          "retail_pointer": "0x8019525c",
+          "value": "createNameObj<13RailPlanetMap>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj"
+        },
+        {
+          "offset": "0x18",
+          "retail_pointer": "0x8058b55d",
+          "value": "ChoConveyorPlanetD"
+        },
+        {
+          "offset": "0x1c",
+          "retail_pointer": "0x8019529c",
+          "value": "createNameObj<13RotateMoveObj>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj"
+        },
+        {
+          "offset": "0x20",
+          "retail_pointer": "0x8058b570",
+          "value": "DinoPackunBattlePlanet"
+        },
+        {
+          "offset": "0x24",
+          "retail_pointer": "0x801952f8",
+          "value": "createNameObj<12FurPlanetMap>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj"
+        },
+        {
+          "offset": "0x28",
+          "retail_pointer": "0x8058b587",
+          "value": "DarkHopperPlanetA"
+        },
+        {
+          "offset": "0x2c",
+          "retail_pointer": "0x80195338",
+          "value": "createNameObj<18SimpleClipPartsObj>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj"
+        },
+        {
+          "offset": "0x30",
+          "retail_pointer": "0x8058b599",
+          "value": "DarkHopperPlanetB"
+        },
+        {
+          "offset": "0x34",
+          "retail_pointer": "0x80195338",
+          "value": "createNameObj<18SimpleClipPartsObj>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj"
+        },
+        {
+          "offset": "0x38",
+          "retail_pointer": "0x8058b5ab",
+          "value": "DarkHopperPlanetC"
+        },
+        {
+          "offset": "0x3c",
+          "retail_pointer": "0x80195338",
+          "value": "createNameObj<18SimpleClipPartsObj>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj"
+        },
+        {
+          "offset": "0x40",
+          "retail_pointer": "0x8058b5bd",
+          "value": "DarkHopperPlanetD"
+        },
+        {
+          "offset": "0x44",
+          "retail_pointer": "0x80195338",
+          "value": "createNameObj<18SimpleClipPartsObj>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj"
+        },
+        {
+          "offset": "0x48",
+          "retail_pointer": "0x8058b5cf",
+          "value": "DarknessRoomPlanet"
+        },
+        {
+          "offset": "0x4c",
+          "retail_pointer": "0x80195338",
+          "value": "createNameObj<18SimpleClipPartsObj>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj"
+        },
+        {
+          "offset": "0x50",
+          "retail_pointer": "0x8058b5e2",
+          "value": "FlagDiscPlanetB"
+        },
+        {
+          "offset": "0x54",
+          "retail_pointer": "0x80195378",
+          "value": "createNameObj<21PlanetMapFarClippable>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj"
+        },
+        {
+          "offset": "0x58",
+          "retail_pointer": "0x8058b5f2",
+          "value": "FlagDiscPlanetC"
+        },
+        {
+          "offset": "0x5c",
+          "retail_pointer": "0x80195378",
+          "value": "createNameObj<21PlanetMapFarClippable>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj"
+        },
+        {
+          "offset": "0x60",
+          "retail_pointer": "0x8058b602",
+          "value": "FlagDiscPlanetD"
+        },
+        {
+          "offset": "0x64",
+          "retail_pointer": "0x8019529c",
+          "value": "createNameObj<13RotateMoveObj>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj"
+        },
+        {
+          "offset": "0x68",
+          "retail_pointer": "0x8058b612",
+          "value": "FlagDiscPlanetE"
+        },
+        {
+          "offset": "0x6c",
+          "retail_pointer": "0x80195378",
+          "value": "createNameObj<21PlanetMapFarClippable>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj"
+        },
+        {
+          "offset": "0x70",
+          "retail_pointer": "0x8058b622",
+          "value": "HatchWaterPlanet"
+        },
+        {
+          "offset": "0x74",
+          "retail_pointer": "0x801953d8",
+          "value": "createNameObj<16HatchWaterPlanet>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj"
+        },
+        {
+          "offset": "0x78",
+          "retail_pointer": "0x8058b633",
+          "value": "HeavensDoorInsidePlanet"
+        },
+        {
+          "offset": "0x7c",
+          "retail_pointer": "0x80195418",
+          "value": "createNameObj<12SimpleMapObj>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj"
+        },
+        {
+          "offset": "0x80",
+          "retail_pointer": "0x8058b64b",
+          "value": "HoneyQueenPlanet"
+        },
+        {
+          "offset": "0x84",
+          "retail_pointer": "0x801952f8",
+          "value": "createNameObj<12FurPlanetMap>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj"
+        },
+        {
+          "offset": "0x88",
+          "retail_pointer": "0x8058b65c",
+          "value": "LavaJamboSunPlanet"
+        },
+        {
+          "offset": "0x8c",
+          "retail_pointer": "0x80195474",
+          "value": "createNameObj<18LavaJamboSunPlanet>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj"
+        },
+        {
+          "offset": "0x90",
+          "retail_pointer": "0x8058b66f",
+          "value": "LavaRotatePlanet"
+        },
+        {
+          "offset": "0x94",
+          "retail_pointer": "0x801954b4",
+          "value": "createNameObj<13LavaSunPlanet>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj"
+        },
+        {
+          "offset": "0x98",
+          "retail_pointer": "0x8058b680",
+          "value": "LavaDomedPlanet"
+        },
+        {
+          "offset": "0x9c",
+          "retail_pointer": "0x801954b4",
+          "value": "createNameObj<13LavaSunPlanet>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj"
+        },
+        {
+          "offset": "0xa0",
+          "retail_pointer": "0x8058b690",
+          "value": "MarblePlanet"
+        },
+        {
+          "offset": "0xa4",
+          "retail_pointer": "0x801954f4",
+          "value": "createNameObj<12MarblePlanet>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj"
+        },
+        {
+          "offset": "0xa8",
+          "retail_pointer": "0x8058b69d",
+          "value": "PeachCastleGardenPlanet"
+        },
+        {
+          "offset": "0xac",
+          "retail_pointer": "0x80195534",
+          "value": "createNameObj<23PeachCastleGardenPlanet>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj"
+        },
+        {
+          "offset": "0xb0",
+          "retail_pointer": "0x8058b6b5",
+          "value": "SandCapsuleInsidePlanet"
+        },
+        {
+          "offset": "0xb4",
+          "retail_pointer": "0x80195574",
+          "value": "createNameObj<23SandCapsuleInsidePlanet>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj"
+        },
+        {
+          "offset": "0xb8",
+          "retail_pointer": "0x8058b6cd",
+          "value": "ScaleDownRelayPlanet"
+        },
+        {
+          "offset": "0xbc",
+          "retail_pointer": "0x801955b4",
+          "value": "createNameObj<14FlexibleSphere>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj"
+        },
+        {
+          "offset": "0xc0",
+          "retail_pointer": "0x8058b6e2",
+          "value": "SnowCapsulePlanet"
+        },
+        {
+          "offset": "0xc4",
+          "retail_pointer": "0x801955f4",
+          "value": "createNameObj<17SnowCapsulePlanet>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj"
+        },
+        {
+          "offset": "0xc8",
+          "retail_pointer": "0x8058b6f4",
+          "value": "TeresaRoomPlanet"
+        },
+        {
+          "offset": "0xcc",
+          "retail_pointer": "0x80195634",
+          "value": "createNameObj<16PlanetMapAnimLow>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj"
+        },
+        {
+          "offset": "0xd0",
+          "retail_pointer": "0x8058b705",
+          "value": "TridentPlanet"
+        },
+        {
+          "offset": "0xd4",
+          "retail_pointer": "0x80195694",
+          "value": "createNameObj<14AstroSimpleObj>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj"
+        },
+        {
+          "offset": "0xd8",
+          "retail_pointer": "0x8058b713",
+          "value": "QuestionBoxPlanetA"
+        },
+        {
+          "offset": "0xdc",
+          "retail_pointer": "0x801956d4",
+          "value": "createNameObj<21QuestionBoxGalleryObj>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj"
+        },
+        {
+          "offset": "0xe0",
+          "retail_pointer": "0x8058b726",
+          "value": "QuestionBoxPlanetB"
+        },
+        {
+          "offset": "0xe4",
+          "retail_pointer": "0x801956d4",
+          "value": "createNameObj<21QuestionBoxGalleryObj>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj"
+        },
+        {
+          "offset": "0xe8",
+          "retail_pointer": "0x8058b739",
+          "value": "QuestionBoxPlanetC"
+        },
+        {
+          "offset": "0xec",
+          "retail_pointer": "0x801956d4",
+          "value": "createNameObj<21QuestionBoxGalleryObj>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj"
+        },
+        {
+          "offset": "0xf0",
+          "retail_pointer": "0x8058b74c",
+          "value": "QuestionBoxPlanetD"
+        },
+        {
+          "offset": "0xf4",
+          "retail_pointer": "0x801956d4",
+          "value": "createNameObj<21QuestionBoxGalleryObj>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj"
+        },
+        {
+          "offset": "0xf8",
+          "retail_pointer": "0x8058b75f",
+          "value": "QuestionBoxPlanetE"
+        },
+        {
+          "offset": "0xfc",
+          "retail_pointer": "0x801956d4",
+          "value": "createNameObj<21QuestionBoxGalleryObj>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj"
+        },
+        {
+          "offset": "0x100",
+          "retail_pointer": "0x8058b772",
+          "value": "Quicksand2DPlanet"
+        },
+        {
+          "offset": "0x104",
+          "retail_pointer": "0x8019525c",
+          "value": "createNameObj<13RailPlanetMap>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj"
+        },
+        {
+          "offset": "0x108",
+          "retail_pointer": "0x8058b784",
+          "value": "ReverseGravityRoomPlanet"
+        },
+        {
+          "offset": "0x10c",
+          "retail_pointer": "0x80195714",
+          "value": "createNameObj<24ReverseGravityRoomPlanet>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj"
+        },
+        {
+          "offset": "0x110",
+          "retail_pointer": "0x8058b79d",
+          "value": "SandStreamHighTowerPlanet"
+        },
+        {
+          "offset": "0x114",
+          "retail_pointer": "0x8019525c",
+          "value": "createNameObj<13RailPlanetMap>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj"
+        },
+        {
+          "offset": "0x118",
+          "retail_pointer": "0x8058b7b7",
+          "value": "SandStreamJointPlanetA"
+        },
+        {
+          "offset": "0x11c",
+          "retail_pointer": "0x8019525c",
+          "value": "createNameObj<13RailPlanetMap>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj"
+        },
+        {
+          "offset": "0x120",
+          "retail_pointer": "0x8058b7ce",
+          "value": "SandStreamJointPlanetB"
+        },
+        {
+          "offset": "0x124",
+          "retail_pointer": "0x8019525c",
+          "value": "createNameObj<13RailPlanetMap>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj"
+        },
+        {
+          "offset": "0x128",
+          "retail_pointer": "0x8058b7e5",
+          "value": "StarDustStartPlanet"
+        },
+        {
+          "offset": "0x12c",
+          "retail_pointer": "0x8019529c",
+          "value": "createNameObj<13RotateMoveObj>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj"
+        },
+        {
+          "offset": "0x130",
+          "retail_pointer": "0x8058b7f9",
+          "value": "WormEatenPlanet"
+        },
+        {
+          "offset": "0x134",
+          "retail_pointer": "0x80195754",
+          "value": "createNameObj<15WormEatenPlanet>__30@unnamed@PlanetMapCreator_cpp@FPCc_P7NameObj"
+        }
+      ]
+    },
+    {
+      "symbol": "__vt__21PlanetMapFarClippable",
+      "bytes": 128,
+      "all_relocated_pointers_and_unrelocated_bytes_equal": true,
+      "entries": [
+        {
+          "offset": "0x8",
+          "retail_pointer": "0x80195f78",
+          "value": "__dt__21PlanetMapFarClippableFv"
+        },
+        {
+          "offset": "0xc",
+          "retail_pointer": "0x80194800",
+          "value": "init__9PlanetMapFRC12JMapInfoIter"
+        },
+        {
+          "offset": "0x10",
+          "retail_pointer": "0x80261750",
+          "value": "initAfterPlacement__7NameObjFv"
+        },
+        {
+          "offset": "0x14",
+          "retail_pointer": "0x801658e8",
+          "value": "movement__9LiveActorFv"
+        },
+        {
+          "offset": "0x18",
+          "retail_pointer": "0x80261758",
+          "value": "draw__7NameObjCFv"
+        },
+        {
+          "offset": "0x1c",
+          "retail_pointer": "0x80165a04",
+          "value": "calcAnim__9LiveActorFv"
+        },
+        {
+          "offset": "0x20",
+          "retail_pointer": "0x80165aac",
+          "value": "calcViewAndEntry__9LiveActorFv"
+        },
+        {
+          "offset": "0x24",
+          "retail_pointer": "0x80165760",
+          "value": "appear__9LiveActorFv"
+        },
+        {
+          "offset": "0x28",
+          "retail_pointer": "0x80194a5c",
+          "value": "makeActorAppeared__9PlanetMapFv"
+        },
+        {
+          "offset": "0x2c",
+          "retail_pointer": "0x80165834",
+          "value": "kill__9LiveActorFv"
+        },
+        {
+          "offset": "0x30",
+          "retail_pointer": "0x80194a98",
+          "value": "makeActorDead__9PlanetMapFv"
+        },
+        {
+          "offset": "0x34",
+          "retail_pointer": "0x80165ad0",
+          "value": "receiveMessage__9LiveActorFUlP9HitSensorP9HitSensor"
+        },
+        {
+          "offset": "0x38",
+          "retail_pointer": "0x80165cfc",
+          "value": "getBaseMtx__9LiveActorCFv"
+        },
+        {
+          "offset": "0x3c",
+          "retail_pointer": "0x80165c84",
+          "value": "getTakingMtx__9LiveActorCFv"
+        },
+        {
+          "offset": "0x40",
+          "retail_pointer": "0x80194da4",
+          "value": "startClipped__9PlanetMapFv"
+        },
+        {
+          "offset": "0x44",
+          "retail_pointer": "0x80194dd8",
+          "value": "endClipped__9PlanetMapFv"
+        },
+        {
+          "offset": "0x48",
+          "retail_pointer": "0x80194d9c",
+          "value": "control__9PlanetMapFv"
+        },
+        {
+          "offset": "0x4c",
+          "retail_pointer": "0x80165be0",
+          "value": "calcAndSetBaseMtx__9LiveActorFv"
+        },
+        {
+          "offset": "0x50",
+          "retail_pointer": "0x80021dac",
+          "value": "updateHitSensor__9LiveActorFP9HitSensor"
+        },
+        {
+          "offset": "0x54",
+          "retail_pointer": "0x80166438",
+          "value": "attackSensor__9LiveActorFP9HitSensorP9HitSensor"
+        },
+        {
+          "offset": "0x58",
+          "retail_pointer": "0x80021da4",
+          "value": "receiveMsgPush__9LiveActorFP9HitSensorP9HitSensor"
+        },
+        {
+          "offset": "0x5c",
+          "retail_pointer": "0x80021d9c",
+          "value": "receiveMsgPlayerAttack__9LiveActorFUlP9HitSensorP9HitSensor"
+        },
+        {
+          "offset": "0x60",
+          "retail_pointer": "0x80021d94",
+          "value": "receiveMsgEnemyAttack__9LiveActorFUlP9HitSensorP9HitSensor"
+        },
+        {
+          "offset": "0x64",
+          "retail_pointer": "0x80021d8c",
+          "value": "receiveMsgTake__9LiveActorFP9HitSensorP9HitSensor"
+        },
+        {
+          "offset": "0x68",
+          "retail_pointer": "0x80021d84",
+          "value": "receiveMsgTaken__9LiveActorFP9HitSensorP9HitSensor"
+        },
+        {
+          "offset": "0x6c",
+          "retail_pointer": "0x80021d7c",
+          "value": "receiveMsgThrow__9LiveActorFP9HitSensorP9HitSensor"
+        },
+        {
+          "offset": "0x70",
+          "retail_pointer": "0x8016643c",
+          "value": "receiveMsgApart__9LiveActorFP9HitSensorP9HitSensor"
+        },
+        {
+          "offset": "0x74",
+          "retail_pointer": "0x80021d74",
+          "value": "receiveOtherMsg__9LiveActorFUlP9HitSensorP9HitSensor"
+        },
+        {
+          "offset": "0x78",
+          "retail_pointer": "0x80195fd0",
+          "value": "getFarClipDistance__21PlanetMapFarClippableCFv"
+        },
+        {
+          "offset": "0x7c",
+          "retail_pointer": "0x80194c14",
+          "value": "getLowMovementType__9PlanetMapCFv"
+        }
+      ]
+    }
+  ],
+  "no_runtime_creator_table_initialization": true
+}
