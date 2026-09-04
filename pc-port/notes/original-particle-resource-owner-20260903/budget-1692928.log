@@ -1,0 +1,2 @@
+budget=1692928 partial_constructor_failure_rollback=pass
+allocFromHead: cannot alloc memory (0x10 byte).

@@ -1,0 +1,7 @@
+fresh_owner_cycles=2 minimum_and_default_budget=pass literal_resource_queries=pass original_disposers_jpa_finalizer_archive_release=pass mount_unpublication_lease=pass
+borrowed_mount_identity_and_publication=pass
+early_and_late_constructor_failure_rollback=pass failure_jmap_jpa_backing_expiration=pass no_nameobj_registration=pass
+domain_budget=1692960 construction_bytes=1692720 native_heap_header=240 remaining=0 resources=3327 textures=225 names=3327 auto_effects=2591 groups_case_insensitive=612 groups_case_sensitive=614
+allocFromHead: cannot alloc memory (0x67f8 byte).
+allocFromHead: cannot alloc memory (0x10 byte).
+allocFromHead: cannot alloc memory (0x10 byte).

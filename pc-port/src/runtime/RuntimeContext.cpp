@@ -1119,6 +1119,22 @@ namespace smgpc::runtime {
     ArchiveMountService &RuntimeContext::archive_mounts() { return _archive_mounts; }
     const ArchiveMountService &RuntimeContext::archive_mounts() const { return _archive_mounts; }
 
+    void RuntimeContext::initialize_particle_resources(const resource::GameResourceRuntime &resources) {
+        compat::JkrHostAllocationScope host;
+        if (_particle_resources) {
+            throw std::logic_error("The process particle resources are already initialized.");
+        }
+        _particle_resources = std::make_shared<ParticleResourceOwnership>(
+            resources.host_heaps(), resources.budget().particle_resource_bytes, _archive_mounts);
+    }
+
+    std::shared_ptr<ParticleResourceOwnership> RuntimeContext::retain_particle_resources() const {
+        if (!_particle_resources) {
+            throw std::logic_error("The process particle resources have not reached resource-ready startup.");
+        }
+        return _particle_resources;
+    }
+
     void RuntimeContext::initialize_scenario_catalog(const resource::GameResourceRuntime &resources) {
         compat::JkrHostAllocationScope host;
         if (_scenario_catalog) {

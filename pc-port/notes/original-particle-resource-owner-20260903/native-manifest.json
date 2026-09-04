@@ -1,0 +1,30 @@
+{
+  "base_head": "adc61a5395dc1dd7e1e327edb86fa70c189e8ed1",
+  "patch_sha256": "36182447bd45db550f3f1d8f749ac924e52343b73b74cc976a51bb4df3193d93",
+  "files": [
+    {
+      "path": "pc-port/src/compat/OriginalParticleResourceLookup.cpp",
+      "before_sha256": null,
+      "after_sha256": "32835394d15edd773f2794e6834ff441d33a1aaf10d2ec93f6883140b941db2a",
+      "new_file": true
+    },
+    {
+      "path": "pc-port/src/compat/OriginalParticleResourceQueries.cpp",
+      "before_sha256": null,
+      "after_sha256": "be1294f816e2bff9aa267649f699e55ea1628383513a8e9fffadc12d0578230a",
+      "new_file": true
+    },
+    {
+      "path": "pc-port/src/runtime/ParticleResourceOwnership.cpp",
+      "before_sha256": null,
+      "after_sha256": "bec86e7563f8f3bb08ba01312c8bc8955e860578af4e42f1c94d31893c3e9133",
+      "new_file": true
+    },
+    {
+      "path": "pc-port/src/runtime/ParticleResourceOwnership.hpp",
+      "before_sha256": null,
+      "after_sha256": "1561c7c9575b364363ce4f9681a87439f2ad0c119976c8ff0d4f5f9e68124548",
+      "new_file": true
+    }
+  ]
+}

@@ -4,6 +4,8 @@
 #include "Game/Screen/ScreenAlphaCapture.hpp"
 #include "Game/System/ScenarioDataParser.hpp"
 #include "Game/Camera/CameraContext.hpp"
+#include "Game/Effect/ParticleResourceHolder.hpp"
+#include "Game/Util/SystemUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
 #include "runtime/SystemConfigService.hpp"
 #include "JSystem/JUtility/JUTVideo.hpp"
@@ -94,6 +96,7 @@ int main() {
         require(JUTVideo::getManager() == nullptr, "failed/destroyed runtime retains its JUTVideo owner");
         require(smgpc::compat::ResourceHolderService::active() == nullptr, "failed/destroyed runtime retains archive service");
         require(smgpc::runtime::ScenarioCatalogOwnership::active() == nullptr, "failed/destroyed runtime retains scenario catalog publication");
+        require(smgpc::runtime::ParticleResourceOwnership::active() == nullptr, "failed/destroyed runtime retains particle resources");
         require(smgpc::runtime::SystemConfigService::active() == nullptr, "failed/destroyed runtime retains console settings owner");
         require(smgpc::compat::name_obj_runtime_state_count() == objects, "failed/destroyed runtime retains NameObj callbacks");
         require(heap->available_bytes() == expected_capacity, "failed/destroyed runtime retains mapped texture storage");
@@ -149,7 +152,13 @@ int main() {
             }
             require(smgpc::runtime::ScenarioCatalogOwnership::active() == nullptr, "platform construction eagerly created the Game catalog");
             if (disc) {
+                require(smgpc::runtime::ParticleResourceOwnership::active() == nullptr, "platform constructor eagerly created particle resources");
                 runtime.initialize_scenario_catalog(process);
+                runtime.initialize_particle_resources(process);
+                auto particles = runtime.retain_particle_resources();
+                require(MR::getParticleResourceHolder() == &particles->holder(), "resource-ready startup published a different particle holder");
+                require(particles->holder().mResourceMgr->mResNum == 3327 && particles->holder().mNumParticles == 612,
+                        "resource-ready startup did not load the actual original particle catalog");
                 auto catalog = runtime.retain_scenario_catalog();
                 require(ScenarioDataFunction::getScenarioDataParser() == &catalog->parser(), "resource-ready startup published a different parser");
                 require(catalog->parser().mScenarioData.size() == 48, "resource-ready startup did not load the actual disc catalog");
@@ -157,6 +166,6 @@ int main() {
         }
         require_retired(capacity);
     }
-    std::cout << "RuntimeContext: imported 4:3/16:9 settings drive original render mode and CameraContext; both reconstructions restore all owners\n";
+    std::cout << "RuntimeContext: imported 4:3/16:9 settings drive original render mode and CameraContext; both reconstructions restore all owners including actual particle resources\n";
     renderer.end_frame();
 }

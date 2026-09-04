@@ -429,6 +429,7 @@ namespace smgpc::app {
                     auto runtime = std::make_unique<smgpc::runtime::RuntimeContext>(logger.get(), window_service.get(), resources.get(),
                                                                                   smgpc::runtime::RuntimeContextSceneServiceMode::External);
                     runtime->initialize_scenario_catalog(resources.get());
+                    runtime->initialize_particle_resources(resources.get());
                     return runtime;
                 });
         }

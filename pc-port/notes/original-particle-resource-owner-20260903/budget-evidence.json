@@ -1,0 +1,17 @@
+{
+  "actual_disc_path": "/ParticleData/Effect.arc",
+  "architecture": "arm64-apple-macos26.0",
+  "sizeof_JKRSolidHeap": 232,
+  "allocated_heap_header": 240,
+  "construction_allocation_bytes": 1692720,
+  "minimum_domain_budget": 1692960,
+  "free_at_minimum": 0,
+  "largest_failed_budget_tested": 1692928,
+  "late_failed_allocation_bytes": 16,
+  "early_failed_budget_tested": 10240,
+  "early_failed_allocation_bytes": 26616,
+  "approved_default_domain_budget": 2097152,
+  "free_at_default": 404192,
+  "root_budget_in_final_fixture": 4194304,
+  "source_identity_preserved": true
+}

@@ -1,0 +1,83 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "methods": [
+    {
+      "symbol": "getGameSystemObjHolder__2MRFv",
+      "address": "0x803ff1ec",
+      "size": 12,
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "symbol": "getParticleResourceHolder__2MRFv",
+      "address": "0x803ff254",
+      "size": 16,
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "symbol": "isExistInResource__Q22MR6EffectFPUsPCc",
+      "address": "0x800c5aa4",
+      "size": 68,
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "symbol": "getAutoEffectNum__Q22MR6EffectFPCc",
+      "address": "0x800c5b2c",
+      "size": 52,
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "symbol": "getAutoEffectListBinary__Q22MR6EffectFv",
+      "address": "0x800c5b60",
+      "size": 36,
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "symbol": "isExistInResource__Q22MR6EffectFPUsPCcl",
+      "address": "0x800c6308",
+      "size": 88,
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "symbol": "__ct__22ParticleResourceHolderFPCc",
+      "address": "0x800ca47c",
+      "size": 300,
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "symbol": "getUserIndex__22ParticleResourceHolderCFPCc",
+      "address": "0x800ca5a8",
+      "size": 292,
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "symbol": "countAutoEffectNum__22ParticleResourceHolderFv",
+      "address": "0x800ca6cc",
+      "size": 376,
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "symbol": "swapTexture__22ParticleResourceHolderFPC7ResTIMGPCc",
+      "address": "0x800ca844",
+      "size": 8,
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "symbol": "isExistInResource__22ParticleResourceHolderCFPCcPUs",
+      "address": "0x800ca84c",
+      "size": 80,
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "symbol": "getAutoEffectListBinary__22ParticleResourceHolderCFv",
+      "address": "0x800ca89c",
+      "size": 8,
+      "normalized_retail_dol_equal": true
+    },
+    {
+      "symbol": "getAutoEffectNum__22ParticleResourceHolderCFPCc",
+      "address": "0x800ca8a4",
+      "size": 144,
+      "normalized_retail_dol_equal": true
+    }
+  ]
+}

@@ -15,6 +15,7 @@ namespace smgpc::resource {
         std::size_t cohort_bytes = 64U * 1024U * 1024U;
         std::size_t mem1_bytes = 16U * 1024U * 1024U;
         std::size_t scenario_catalog_bytes = 8U * 1024U * 1024U;
+        std::size_t particle_resource_bytes = 2U * 1024U * 1024U;
     };
 
     // Explicit process startup after Aurora configuration. Reuse this owner
