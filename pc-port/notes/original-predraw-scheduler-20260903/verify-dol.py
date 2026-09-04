@@ -4,9 +4,10 @@ R=Path(__file__).resolve().parents[3];N=Path(__file__).resolve().parent;B=R/'bui
 s=importlib.util.spec_from_file_location('h',R/'pc-port/notes/j3d-vertex-buffer-lifecycle-20260903/verify-object.py');h=importlib.util.module_from_spec(s);s.loader.exec_module(h)
 dol=(R/'build/compat-math-oracle/main.dol').read_bytes();assert hashlib.sha1(dol).hexdigest()=='25c5959534b3c21246c6c7e42021b916b41fb578'
 symbols=(R/'config/RMGK01/symbols.txt').read_text();rows=[]
-for name in ['NameObjCategoryList','NameObjListExecutor']:
- elf=h.Elf(R/'build/mario-update-restoration-20260903/retail/obj/Game/NameObj'/(name+'.o'))
+for name in ['NameObj/NameObjCategoryList','NameObj/NameObjListExecutor','Util/ObjUtil']:
+ elf=h.Elf(R/'build/mario-update-restoration-20260903/retail/obj/Game'/(name+'.o'))
  for symbol,start,size,index in elf.symbols:
+  if name=='Util/ObjUtil' and symbol!='registerPreDrawFunction__2MRFRCQ22MR11FunctorBasei':continue
   m=re.search(r'^'+re.escape(symbol)+r' = \.text:0x([0-9A-Fa-f]+);.*size:0x([0-9A-Fa-f]+)',symbols,re.M)
   if not m or not size:continue
   addr,n=[int(v,16) for v in m.groups()];assert n==size

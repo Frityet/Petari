@@ -1,0 +1,91 @@
+{
+  "base_head": "00e7ae37bc0461b3f27a674700c61dd919b3a24f",
+  "review_revision": "preserve invocation allocation routing",
+  "patch_sha256": "5b00861224eb96f648ef2f61323717a9da077e59cf8ae948669b651d73c83658",
+  "files": [
+    {
+      "path": "pc-port/src/Game/NameObj/NameObj.cpp",
+      "before_sha256": "df9bc2f8de4d75a888c42ecc1cf50a7621b4b5f559637923b13e5223c4f8dec2",
+      "after_sha256": "22db79a55aea1adf8f019700bb786511228164f3de8215b5600346fe2cde98a3",
+      "new_file": false
+    },
+    {
+      "path": "pc-port/src/Game/NameObj/NameObjCategoryList.cpp",
+      "before_sha256": null,
+      "after_sha256": "26d30a4b871379783e6fa0da929cd7a4c72e2f8a3b79f2c27e0a3fcb929246c0",
+      "new_file": true
+    },
+    {
+      "path": "pc-port/src/Game/NameObj/NameObjCategoryList.hpp",
+      "before_sha256": null,
+      "after_sha256": "cbb46040759184cc5fe334e3360c97e062e9a703bf60c9bd1590ca4d1556c49b",
+      "new_file": true
+    },
+    {
+      "path": "pc-port/src/Game/NameObj/NameObjListExecutor.cpp",
+      "before_sha256": null,
+      "after_sha256": "260c79e1a424456323d572e7232693189fcb894604d6a3d0bfa2ac1504c0ca7c",
+      "new_file": true
+    },
+    {
+      "path": "pc-port/src/Game/NameObj/NameObjListExecutor.hpp",
+      "before_sha256": null,
+      "after_sha256": "7063fc367b71c64f7a7c8a8a1e59f0e2393ce6c9f7b1aee7301ffdce1e378963",
+      "new_file": true
+    },
+    {
+      "path": "pc-port/src/Game/Scene/SceneFunction.hpp",
+      "before_sha256": "67e1dbe856211f02e00dcefa6dc4127babd62d44a76ef02bb37eda1d856958f3",
+      "after_sha256": "137d893907409e05c1a00c46aaa7828a5b3eb268f0cf7db1651ab7d458fb9c2a",
+      "new_file": false
+    },
+    {
+      "path": "pc-port/src/Game/Util/Functor.hpp",
+      "before_sha256": "9abcc221b2706fbad5b8bcf90eac8640ef9c0823a4aff2c0f771e2b0724ea6f4",
+      "after_sha256": "c4577d1b2d112318e07def90d8cba67daae19e650d4a4dc47b241870a858a810",
+      "new_file": false
+    },
+    {
+      "path": "pc-port/src/Game/Util/ObjUtil.hpp",
+      "before_sha256": "e15e7b0177924d62057d2cacda082fcfee13adcbaa472c7320e0f4acdf4f2885",
+      "after_sha256": "de180c4e5d968ebe5136bcdfcf8d6df6881fec6c44f467d9d727436c603bdd00",
+      "new_file": false
+    },
+    {
+      "path": "pc-port/src/compat/OriginalPreDrawRegistration.cpp",
+      "before_sha256": null,
+      "after_sha256": "e8db9f522ffa30a9806ec6b2784ed58f9b99df09562ad1affb2c4d26ce8fe99a",
+      "new_file": true
+    },
+    {
+      "path": "pc-port/src/runtime/SceneScheduler.cpp",
+      "before_sha256": "49cebb5c06f4eb79ea9a0914ab5c38f668c7ac3aeced26fae6962acb3a2afeb6",
+      "after_sha256": "c84a56491e769f3ec361c63aba116f9385078e1045884a2ea7df530ddc289119",
+      "new_file": false
+    },
+    {
+      "path": "pc-port/src/runtime/SceneScheduler.hpp",
+      "before_sha256": "dd668e362e129b790ad9c83ca279189b0eafe951899eaa0625bde742d16cf95c",
+      "after_sha256": "1d2de3543900d3a949bf3efbb09858f7835facf011ef250a4123deb1933cd24a",
+      "new_file": false
+    },
+    {
+      "path": "pc-port/src/scene/DrawCategoryInitialTable.inc",
+      "before_sha256": null,
+      "after_sha256": "652377c29d62d74db24d24cc3d17f153ac212ccdd3b757182290f927ec61882c",
+      "new_file": true
+    },
+    {
+      "path": "pc-port/src/scene/SceneDrawBufferService.cpp",
+      "before_sha256": "5715978bbcec8065d56064113342ae67fa6cd6ce025e5b2b9938cd4ea8bd011c",
+      "after_sha256": "4788fd754c2c8b2a4f4057924e91727a7b182f8bb822561845e41f92f60cdbe5",
+      "new_file": false
+    },
+    {
+      "path": "pc-port/src/scene/SceneDrawBufferService.hpp",
+      "before_sha256": "d72df7108d199ca5dfa9280c31020ee3c6cfedc0f63b22455697c5ee9aa23d0e",
+      "after_sha256": "8b062f73b607d8e976d1267a9f4c699bccdbaaf7508a4777134c7f4f2b4d3373",
+      "new_file": false
+    }
+  ]
+}

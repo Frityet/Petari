@@ -1,0 +1,1306 @@
+--- a/pc-port/src/Game/NameObj/NameObj.cpp
++++ b/pc-port/src/Game/NameObj/NameObj.cpp
+@@ -14,7 +14,9 @@
+ }
+ 
+ NameObj::~NameObj() {
+-    if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
++    if (auto* scheduler = smgpc::runtime::try_active_scene_scheduler()) {
++        scheduler->disconnect_name_obj(*this);
++    } else if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
+         runtime->scheduler().disconnect_name_obj(*this);
+     }
+     smgpc::compat::release_name_obj_runtime_state(this);
+--- /dev/null
++++ b/pc-port/src/Game/NameObj/NameObjCategoryList.cpp
+@@ -0,0 +1,105 @@
++#include "Game/NameObj/NameObjCategoryList.hpp"
++#include "Game/Util/Functor.hpp"
++#include <algorithm>
++
++NameObjCategoryList::NameObjCategoryList(u32 count, const CategoryListInitialTable* pTable, NameObjMethod pMethod, bool a4,
++                                         const char* /* unused */) {
++    NameObjMethod method;
++    method = pMethod;
++    mDelegator = new NameObjRealDelegator< NameObjMethod >(method);
++    _D = a4;
++    _C = 0;
++    initTable(count, pTable);
++}
++
++NameObjCategoryList::NameObjCategoryList(u32 count, const CategoryListInitialTable* pTable, NameObjMethodConst pMethod, bool a4,
++                                         const char* /* unused */) {
++    NameObjMethodConst method;
++    method = pMethod;
++    mDelegatorConst = new NameObjRealDelegator< NameObjMethodConst >(method);
++    _D = a4;
++    _C = 0;
++    initTable(count, pTable);
++}
++
++void NameObjCategoryList::execute(int idx) {
++    CategoryInfo* pCategoryInfo = &mCategoryInfo[idx];
++
++    if (pCategoryInfo->mNameObjArr.size() == 0) {
++        return;
++    }
++
++    if (pCategoryInfo->_C != nullptr) {
++        (*pCategoryInfo->_C)();
++    }
++
++    for (NameObj** pNameObj = pCategoryInfo->mNameObjArr.begin(); pNameObj != pCategoryInfo->mNameObjArr.end(); pNameObj++) {
++        (*mDelegator)(*pNameObj);
++    }
++}
++
++void NameObjCategoryList::incrementCheck(NameObj* /*unused*/, int index) {
++    mCategoryInfo[index].mCheck++;
++}
++
++void NameObjCategoryList::allocateBuffer() {
++    if (_D) {
++        for (int i = 0; i < mCategoryInfo.size(); i++) {
++            NameObjCategoryList::CategoryInfo* inf = &mCategoryInfo[i];
++            u32 size = inf->mCheck;
++            NameObj** nameObjArr = new NameObj*[size];
++            MR::Vector< MR::AssignableArray< NameObj* > >* arr = &mCategoryInfo[i].mNameObjArr;
++            arr->mArray.mArr = nameObjArr;
++            arr->mArray.mMaxSize = size;
++        }
++
++        _C = 1;
++    }
++}
++
++void NameObjCategoryList::add(NameObj* pObj, int idx) {
++    mCategoryInfo[idx].mNameObjArr.push_back(pObj);
++}
++
++void NameObjCategoryList::remove(NameObj* pObj, int idx) {
++    MR::Vector< MR::AssignableArray< NameObj* > >& array = mCategoryInfo[idx].mNameObjArr;
++    array[std::find(array.begin(), array.end(), pObj) - array.begin()] = array[array.mCount - 1];
++    array.mCount--;
++}
++
++void NameObjCategoryList::registerExecuteBeforeFunction(const MR::FunctorBase& rFunc, int idx) {
++    NameObjCategoryList::CategoryInfo* pCategoryInfo = &mCategoryInfo[idx];
++
++    pCategoryInfo->_C = rFunc.clone(nullptr);
++}
++
++void NameObjCategoryList::initTable(u32 count, const CategoryListInitialTable* pTable) {
++    mCategoryInfo.init(count);
++
++    for (CategoryInfo* pCategoryInfo = mCategoryInfo.begin(); pCategoryInfo != mCategoryInfo.end(); pCategoryInfo++) {
++        pCategoryInfo->_C = nullptr;
++    }
++
++    for (const CategoryListInitialTable* pEntry = &pTable[0]; pEntry->mIndex != -1; pEntry++) {
++        if (!_D) {
++            u32 size = pEntry->mCount;
++            NameObj** arr = new NameObj*[size];
++            NameObjCategoryList::CategoryInfo* inf = &mCategoryInfo[pEntry->mIndex];
++            inf->mNameObjArr.mArray.mArr = arr;
++            inf->mNameObjArr.mArray.mMaxSize = size;
++            _C = 1;
++        }
++
++        mCategoryInfo[pEntry->mIndex].mCheck = 0;
++    }
++}
++
++NameObjCategoryList::CategoryInfo::CategoryInfo() : mNameObjArr() {
++}
++
++NameObjCategoryList::CategoryInfo::~CategoryInfo() {
++}
++
++NameObjCategoryList::~NameObjCategoryList() {
++    delete mDelegator;
++}
+--- /dev/null
++++ b/pc-port/src/Game/NameObj/NameObjCategoryList.hpp
+@@ -0,0 +1,72 @@
++#pragma once
++
++#include "Game/NameObj/NameObj.hpp"
++#include "Game/NameObj/NameObjHolder.hpp"
++#include "Game/Util/Array.hpp"
++
++namespace MR {
++    class FunctorBase;
++};  // namespace MR
++
++class NameObjDelegator {
++public:
++    virtual ~NameObjDelegator() = default;
++    virtual void operator()(NameObj*) = 0;
++};
++
++namespace {
++    template < typename T >
++    class NameObjRealDelegator : public NameObjDelegator {
++    public:
++        inline NameObjRealDelegator(T in_func) {
++            mNameObjFunc = in_func;
++        }
++
++        virtual void operator()(NameObj* pNameObj) {
++            (pNameObj->*mNameObjFunc)();
++        }
++
++        T mNameObjFunc;  // 0x4
++    };
++};  // namespace
++
++struct CategoryListInitialTable {
++    u32 mIndex;  // 0x0
++    u32 mCount;  // 0x4
++};
++
++/// @brief Organizes NameObjs by execution category.
++class NameObjCategoryList {
++public:
++    class CategoryInfo {
++    public:
++        CategoryInfo();
++        ~CategoryInfo();
++
++        MR::Vector< MR::AssignableArray< NameObj* > > mNameObjArr;  // 0x0
++        MR::FunctorBase* _C;
++        u32 mCheck;  // 0x10
++    };
++
++    NameObjCategoryList(u32, const CategoryListInitialTable*, NameObjMethod, bool, const char*);
++    NameObjCategoryList(u32, const CategoryListInitialTable*, NameObjMethodConst, bool, const char*);
++    ~NameObjCategoryList();
++
++    void execute(int);
++    void incrementCheck(NameObj*, int);
++    void allocateBuffer();
++    void add(NameObj*, int);
++    void remove(NameObj*, int);
++    void registerExecuteBeforeFunction(const MR::FunctorBase&, int);
++    void initTable(u32, const CategoryListInitialTable*);
++
++    MR::AssignableArray< NameObjCategoryList::CategoryInfo > mCategoryInfo;  // 0x0
++
++    union {
++        NameObjDelegator* mDelegator;
++        NameObjDelegator* mDelegatorConst;
++    };
++
++    u8 _C;
++    u8 _D;
++};
+\ No newline at end of file
+--- /dev/null
++++ b/pc-port/src/Game/NameObj/NameObjListExecutor.cpp
+@@ -0,0 +1,114 @@
++#include "Game/NameObj/NameObjListExecutor.hpp"
++#include "Game/Scene/SceneFunction.hpp"
++
++NameObjListExecutor::NameObjListExecutor() : mBufferHolder(nullptr), mMovementList(nullptr), mCalcAnimList(nullptr), mDrawList(nullptr) {
++}
++
++NameObjListExecutor::~NameObjListExecutor() {
++    delete mMovementList;
++    delete mCalcAnimList;
++    delete mDrawList;
++    delete mBufferHolder;
++}
++
++void NameObjListExecutor::init() {
++    initMovementList();
++    initCalcAnimList();
++    initCalcViewAndEntryList();
++    initDrawList();
++}
++
++s32 NameObjListExecutor::registerDrawBuffer(LiveActor* pActor, int drawBufferType) {
++    return mBufferHolder->registerDrawBuffer(pActor, drawBufferType);
++}
++
++void NameObjListExecutor::allocateDrawBufferActorList() {
++    mMovementList->allocateBuffer();
++    mCalcAnimList->allocateBuffer();
++    mDrawList->allocateBuffer();
++    mBufferHolder->allocateActorListBuffer();
++}
++
++void NameObjListExecutor::registerPreDrawFunction(const MR::FunctorBase& rFunc, int drawType) {
++    mDrawList->registerExecuteBeforeFunction(rFunc, drawType);
++}
++
++void NameObjListExecutor::findLightInfo(LiveActor* pActor, int drawBufferType, int executorIndex) const {
++    mBufferHolder->findLightInfo(pActor, drawBufferType, executorIndex);
++}
++
++void NameObjListExecutor::incrementCheckMovement(NameObj* pObj, int category) {
++    mMovementList->incrementCheck(pObj, category);
++}
++
++void NameObjListExecutor::incrementCheckCalcAnim(NameObj* pObj, int category) {
++    mCalcAnimList->incrementCheck(pObj, category);
++}
++
++void NameObjListExecutor::incrementCheckDraw(NameObj* pObj, int category) {
++    mDrawList->incrementCheck(pObj, category);
++}
++
++void NameObjListExecutor::addToMovement(NameObj* pObj, int category) {
++    mMovementList->add(pObj, category);
++}
++
++void NameObjListExecutor::addToCalcAnim(NameObj* pObj, int category) {
++    mCalcAnimList->add(pObj, category);
++}
++
++void NameObjListExecutor::addToDrawBuffer(LiveActor* pActor, int drawBufferType, int executorIndex) {
++    mBufferHolder->active(pActor, drawBufferType, executorIndex);
++}
++
++void NameObjListExecutor::addToDraw(NameObj* pObj, int category) {
++    mDrawList->add(pObj, category);
++}
++
++void NameObjListExecutor::removeToMovement(NameObj* pObj, int category) {
++    mMovementList->remove(pObj, category);
++}
++
++void NameObjListExecutor::removeToCalcAnim(NameObj* pObj, int category) {
++    mCalcAnimList->remove(pObj, category);
++}
++
++void NameObjListExecutor::removeToDrawBuffer(LiveActor* pActor, int drawBufferType, int executorIndex) {
++    mBufferHolder->deactive(pActor, drawBufferType, executorIndex);
++}
++
++void NameObjListExecutor::removeToDraw(NameObj* pObj, int category) {
++    mDrawList->remove(pObj, category);
++}
++
++void NameObjListExecutor::executeMovement(int category) {
++    mMovementList->execute(category);
++}
++
++void NameObjListExecutor::executeCalcAnim(int category) {
++    mCalcAnimList->execute(category);
++}
++
++void NameObjListExecutor::entryDrawBuffer2D() {
++    mBufferHolder->entry(MR::CameraType_2D);
++}
++
++void NameObjListExecutor::entryDrawBuffer3D() {
++    mBufferHolder->entry(MR::CameraType_3D);
++}
++
++void NameObjListExecutor::entryDrawBufferMirror() {
++    mBufferHolder->entry(MR::CameraType_Mirror);
++}
++
++void NameObjListExecutor::drawOpa(int drawBufferType) {
++    mBufferHolder->drawOpa(drawBufferType);
++}
++
++void NameObjListExecutor::drawXlu(int drawBufferType) {
++    mBufferHolder->drawXlu(drawBufferType);
++}
++
++void NameObjListExecutor::executeDraw(int category) {
++    mDrawList->execute(category);
++}
+--- /dev/null
++++ b/pc-port/src/Game/NameObj/NameObjListExecutor.hpp
+@@ -0,0 +1,52 @@
++#pragma once
++
++#include "Game/NameObj/NameObjCategoryList.hpp"
++#include "Game/System/DrawBufferHolder.hpp"
++
++class LiveActor;
++
++/// @brief Class that executes NameObjCategoryList instances.
++class NameObjListExecutor {
++public:
++    NameObjListExecutor();
++
++    virtual ~NameObjListExecutor();
++    virtual void initMovementList() {
++    }
++    virtual void initCalcAnimList() {
++    }
++    virtual void initCalcViewAndEntryList() {
++    }
++    virtual void initDrawList() {
++    }
++
++    void init();
++    s32 registerDrawBuffer(LiveActor*, int);
++    void allocateDrawBufferActorList();
++    void registerPreDrawFunction(const MR::FunctorBase&, int drawType);
++    void findLightInfo(LiveActor*, int, int) const;
++    void incrementCheckMovement(NameObj*, int);
++    void incrementCheckCalcAnim(NameObj*, int);
++    void incrementCheckDraw(NameObj*, int);
++    void addToMovement(NameObj*, int);
++    void addToCalcAnim(NameObj*, int);
++    void addToDrawBuffer(LiveActor*, int, int);
++    void addToDraw(NameObj*, int);
++    void removeToMovement(NameObj*, int);
++    void removeToCalcAnim(NameObj*, int);
++    void removeToDrawBuffer(LiveActor*, int, int);
++    void removeToDraw(NameObj*, int);
++    void executeMovement(int);
++    void executeCalcAnim(int);
++    void entryDrawBuffer2D();
++    void entryDrawBuffer3D();
++    void entryDrawBufferMirror();
++    void drawOpa(int);
++    void drawXlu(int);
++    void executeDraw(int);
++
++    DrawBufferHolder* mBufferHolder;     // 0x4
++    NameObjCategoryList* mMovementList;  // 0x8
++    NameObjCategoryList* mCalcAnimList;  // 0xC
++    NameObjCategoryList* mDrawList;      // 0x10
++};
+--- a/pc-port/src/Game/Scene/SceneFunction.hpp
++++ b/pc-port/src/Game/Scene/SceneFunction.hpp
+@@ -6,6 +6,11 @@
+ class NameObj;
+ 
+ namespace MR {
++    enum CameraType {
++        CameraType_3D = 0,
++        CameraType_2D = 1,
++        CameraType_Mirror = 2,
++    };
+ 
+     enum MovementType {
+         MovementType_UNK_0x00 = 0x00,
+--- a/pc-port/src/Game/Util/Functor.hpp
++++ b/pc-port/src/Game/Util/Functor.hpp
+@@ -1,6 +1,6 @@
+ #pragma once
+ 
+-class JKRHeap;
++#include <JSystem/JKernel/JKRHeap.hpp>
+ 
+ namespace MR {
+     class FunctorBase {
+@@ -20,8 +20,8 @@
+             (mCaller->*mCallee)();
+         }
+ 
+-        [[nodiscard]] FunctorBase* clone(JKRHeap*) const override {
+-            return new FunctorV0M(*this);
++        [[nodiscard]] FunctorBase* clone(JKRHeap* pHeap) const override {
++            return new (pHeap, 0) FunctorV0M(*this);
+         }
+ 
+         T mCaller;
+@@ -46,4 +46,20 @@
+     inline static FunctorV0M< T*, void (T::*)() const > Functor_Inline(T* a1, void (T::*a2)() const) {
+         return FunctorV0M< T*, void (T::*)() const >(a1, a2);
+     }
++
++    template < class T >
++    inline static FunctorV0M< const T*, void (T::*)() const > Functor(const T* caller, void (T::*callee)() const) {
++        return FunctorV0M< const T*, void (T::*)() const >(caller, callee);
++    }
++
++    class FunctorV0F : public FunctorBase {
++    public:
++        explicit FunctorV0F(void (*func)()) : mFunc(func) {}
++        void operator()() const override { (*mFunc)(); }
++        FunctorBase* clone(JKRHeap* heap) const override { return new (heap, 0) FunctorV0F(*this); }
++        void (*mFunc)();
++    };
++
++    inline static FunctorV0F Functor(void (*func)()) { return FunctorV0F(func); }
++    inline static FunctorV0F Functor_Inline(void (*func)()) { return FunctorV0F(func); }
+ }  // namespace MR
+--- a/pc-port/src/Game/Util/ObjUtil.hpp
++++ b/pc-port/src/Game/Util/ObjUtil.hpp
+@@ -14,6 +14,8 @@
+ struct ResTIMG;
+ 
+ namespace MR {
++    class FunctorBase;
++    void registerPreDrawFunction(const MR::FunctorBase&, int);
+     bool isStageStateScenarioOpeningCamera();
+     NameObjGroup* joinToNameObjGroup(NameObj*, const char*);
+     void connectToSceneCollisionMapObj(LiveActor* pActor);
+--- /dev/null
++++ b/pc-port/src/compat/OriginalPreDrawRegistration.cpp
+@@ -0,0 +1,18 @@
++#include "Game/Util/ObjUtil.hpp"
++#include "runtime/SceneScheduler.hpp"
++#include "runtime/RuntimeContext.hpp"
++#include <stdexcept>
++
++namespace MR {
++void registerPreDrawFunction(const MR::FunctorBase& functor, int category) {
++    if (auto* scheduler = smgpc::runtime::try_active_scene_scheduler()) {
++        scheduler->register_pre_draw_function(functor, category);
++        return;
++    }
++    if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
++        runtime->scheduler().register_pre_draw_function(functor, category);
++        return;
++    }
++    throw std::logic_error("Pre-draw registration requires an active scene scheduler");
++}
++}
+--- a/pc-port/src/runtime/SceneScheduler.cpp
++++ b/pc-port/src/runtime/SceneScheduler.cpp
+@@ -45,6 +45,17 @@
+     namespace {
+ 
+         SceneScheduler *sActiveSceneScheduler = nullptr;
++
++        // LayoutRuntime is a native layout owner; its bridge is an actual
++        // NameObj so the original category delegator handles mixed batches.
++        class LayoutDrawAdaptor final : public NameObj {
++        public:
++            explicit LayoutDrawAdaptor(smgpc::layout::LayoutRuntime& layout)
++                : NameObj(layout.getName().c_str()), _layout(layout) {}
++            void draw() const override { _layout.draw(); }
++        private:
++            smgpc::layout::LayoutRuntime& _layout;
++        };
+ 
+         constexpr auto ORIGINAL_MOVEMENT_ORDER = std::array<s32, 43U>{
+             MR::MovementType_StopSceneDelayRequest,
+@@ -480,17 +491,20 @@
+         sActiveSceneScheduler = _previous;
+     }
+ 
+-    SceneScheduler::SceneScheduler() = default;
++    SceneScheduler::SceneScheduler() {
++        smgpc::compat::JkrHostAllocationScope host;
++        _draw_buffers = std::make_unique<smgpc::scene::SceneDrawBufferService>();
++    }
+     SceneScheduler::~SceneScheduler() { clear(); }
+ 
+     void SceneScheduler::begin_draw_buffer_registration(std::shared_ptr<smgpc::compat::JkrAllocationDomain> domain) {
+         smgpc::compat::JkrHostAllocationScope host;
+         retire_draw_buffers();
+-        _draw_buffers = std::make_unique<smgpc::scene::SceneDrawBufferService>(std::move(domain));
++        _draw_buffers->begin_draw_buffer_registration(std::move(domain));
+     }
+ 
+     void SceneScheduler::allocate_draw_buffers() {
+-        if (!_draw_buffers) throw std::logic_error("Original draw buffers need an explicit scene construction owner");
++        if (!_draw_buffers->has_draw_buffers()) throw std::logic_error("Original draw buffers need an explicit scene construction owner");
+         _draw_buffers->allocate_actor_lists();
+         refresh_draw_buffer_activation();
+     }
+@@ -498,7 +512,7 @@
+     void SceneScheduler::retire_draw_buffers() {
+         if (_draw_buffers && _draw_buffers->registration_count() != 0)
+             throw std::logic_error("Remove every actor registration before retiring original scene draw buffers");
+-        _draw_buffers.reset();
++        _draw_buffers->retire_draw_buffers();
+     }
+ 
+     void SceneScheduler::find_actor_light_info(LiveActor &actor) {
+@@ -544,6 +558,7 @@
+     }
+ 
+     void SceneScheduler::disconnect_name_obj(NameObj &obj) {
++        _draw_buffers->remove_draw_object(obj);
+         for (auto &entry : _entries)
+             if (entry.name_obj == &obj && entry.has_draw_buffer_registration)
+                 _draw_buffers->remove_actor(*entry.live_actor);
+@@ -567,6 +582,7 @@
+     }
+ 
+     void SceneScheduler::disconnect_draw(NameObj &obj) {
++        _draw_buffers->remove_draw_object(obj);
+         auto found = false;
+         for (auto &entry : _entries) {
+             if (entry.name_obj == &obj) {
+@@ -608,6 +624,7 @@
+             return;
+         }
+ 
++        _layout_draw_adaptors.try_emplace(&layout, std::make_unique<LayoutDrawAdaptor>(layout));
+         _entries.push_back(Entry {
+             .kind = SceneEntryKind::Layout,
+             .layout = &layout,
+@@ -622,9 +639,12 @@
+     }
+ 
+     void SceneScheduler::unregister_layout(smgpc::layout::LayoutRuntime &layout) {
++        if (const auto found = _layout_draw_adaptors.find(&layout); found != _layout_draw_adaptors.end())
++            _draw_buffers->remove_draw_object(*found->second);
+         std::erase_if(_entries, [&layout](const auto &entry) {
+             return entry.kind == SceneEntryKind::Layout && entry.layout == &layout;
+         });
++        _layout_draw_adaptors.erase(&layout);
+     }
+ 
+     void SceneScheduler::register_layout_actor(LayoutActor &layout, s32 movement_type, s32 calc_anim_type, s32 draw_type) {
+@@ -655,6 +675,7 @@
+     }
+ 
+     void SceneScheduler::unregister_layout_actor(LayoutActor &layout) {
++        _draw_buffers->remove_draw_object(layout);
+         std::erase_if(_entries, [&layout](const auto &entry) {
+             return entry.kind == SceneEntryKind::LayoutActor && entry.layout_actor == &layout;
+         });
+@@ -697,6 +718,7 @@
+     }
+ 
+     void SceneScheduler::unregister_live_actor_model(LiveActor &actor) {
++        _draw_buffers->remove_draw_object(actor);
+         if (_draw_buffers) _draw_buffers->remove_actor(actor);
+         std::erase_if(_entries, [&actor](const auto &entry) {
+             return entry.kind == SceneEntryKind::LiveActorModel && entry.live_actor == &actor;
+@@ -877,7 +899,7 @@
+     }
+ 
+     void SceneScheduler::execute_calc_view_and_entry() {
+-        if (!_draw_buffers) return;
++        if (!_draw_buffers->has_draw_buffers()) return;
+         if (!_draw_buffers->is_allocated())
+             throw std::logic_error("Scene construction must allocate draw lists before view entry");
+         if (auto* runtime = RuntimeContext::try_instance(); runtime && runtime->scene_camera_pose()) {
+@@ -1112,12 +1134,22 @@
+         for (const auto &entry : _entries)
+             if (entry.order >= marker && entry.has_draw_buffer_registration)
+                 _draw_buffers->remove_actor(*entry.live_actor);
++        _draw_buffers->rollback_pre_draw_functions(marker);
++        for (const auto& registration : registrations) {
++            if (registration.name_obj) _draw_buffers->remove_draw_object(*registration.name_obj);
++            if (registration.layout) {
++                const auto found = _layout_draw_adaptors.find(registration.layout);
++                if (found != _layout_draw_adaptors.end()) _draw_buffers->remove_draw_object(*found->second);
++            }
++        }
+         std::erase_if(_entries, [marker](const auto &entry) { return entry.order >= marker; });
++        for (const auto& registration : registrations)
++            if (registration.layout) _layout_draw_adaptors.erase(registration.layout);
+         return registrations;
+     }
+ 
+     void SceneScheduler::execute_draw_buffer(const smgpc::camera::CameraPose &camera_pose, s32 draw_buffer_type, SceneDrawBufferPass pass) {
+-        if (!_draw_buffers) return;
++        if (!_draw_buffers->has_draw_buffers()) return;
+         if (!_draw_buffers->is_allocated()) throw std::logic_error("Draw lists have not completed scene construction");
+         refresh_draw_buffer_activation();
+         smgpc::compat::SceneJ3dScope commands;
+@@ -1140,36 +1172,42 @@
+         execute_draw_buffer({}, draw_buffer_type, pass);
+     }
+ 
++    void SceneScheduler::register_pre_draw_function(const MR::FunctorBase& functor, s32 draw_type) {
++        _draw_buffers->register_pre_draw_function(functor, draw_type, _next_order);
++        ++_next_order;
++    }
++
+     void SceneScheduler::execute_draw_type(s32 draw_type) {
+         smgpc::compat::SceneJ3dScope j3d_scope;
+-        auto draw_entries = std::vector<Entry *>{};
+-        for (auto &entry : _entries) {
+-            if (entry.draw_type == draw_type && entry.draw_connected && !entry_is_dead(entry)) {
+-                draw_entries.push_back(&entry);
+-            }
+-        }
+-        std::ranges::stable_sort(draw_entries, draw_category_less);
+-
+-        for (auto *entry : draw_entries) {
+-            switch (entry->kind) {
+-            case SceneEntryKind::NameObj:
+-                entry->name_obj->draw();
+-                break;
+-            case SceneEntryKind::Layout:
+-                entry->layout->draw();
+-                break;
+-            case SceneEntryKind::LayoutActor:
+-                entry->layout_actor->draw();
+-                break;
+-            case SceneEntryKind::LiveActorModel:
+-                entry->live_actor->draw();
+-                break;
+-            }
+-#ifndef NDEBUG
+-            push_trace(*entry, SceneSchedulerPhase::DrawType);
+-#endif
+-        }
+-
++        std::vector<Entry> draw_entries;
++        std::vector<NameObj*> objects;
++        {
++            smgpc::compat::JkrHostAllocationScope host;
++            for (const auto& entry : _entries)
++                if (entry.draw_type == draw_type && entry.draw_connected && !entry_is_dead(entry))
++                    draw_entries.push_back(entry);
++            std::ranges::stable_sort(draw_entries, [](const Entry& a, const Entry& b) { return draw_category_less(&a, &b); });
++            objects.reserve(draw_entries.size());
++            for (const auto& entry : draw_entries) {
++                if (entry.kind == SceneEntryKind::Layout) objects.push_back(_layout_draw_adaptors.at(entry.layout).get());
++                else objects.push_back(entry.name_obj);
++            }
++        }
++        const auto drawn = _draw_buffers->execute_draw_category(draw_type, objects);
++#ifndef NDEBUG
++        {
++            smgpc::compat::JkrHostAllocationScope host;
++            // Resolve current registrations after callbacks: rollback may have
++            // removed and destroyed members of the batch during its pre-draw call.
++            for (auto* object : drawn) {
++                for (const auto& entry : _entries) {
++                    const auto* registered = entry.name_obj;
++                    if (entry.kind == SceneEntryKind::Layout) registered = _layout_draw_adaptors.at(entry.layout).get();
++                    if (registered == object) { push_trace(entry, SceneSchedulerPhase::DrawType); break; }
++                }
++            }
++        }
++#endif
+         if (auto *runtime = RuntimeContext::try_instance()) {
+             const auto &camera_pose = runtime->last_camera_pose();
+             runtime->effects().draw(draw_type, camera_pose.has_value() ? &*camera_pose : nullptr);
+@@ -1417,6 +1455,8 @@
+         for (const auto& entry : _entries)
+             if (entry.has_draw_buffer_registration) _draw_buffers->remove_actor(*entry.live_actor);
+         _entries.clear();
++        _draw_buffers->clear_draw_categories();
++        _layout_draw_adaptors.clear();
+         retire_draw_buffers();
+ #ifndef NDEBUG
+         _last_execution_trace.clear();
+--- a/pc-port/src/runtime/SceneScheduler.hpp
++++ b/pc-port/src/runtime/SceneScheduler.hpp
+@@ -8,6 +8,7 @@
+ #include <span>
+ #include <string>
+ #include <vector>
++#include <unordered_map>
+ 
+ #include <revolution.h>
+ 
+@@ -17,6 +18,7 @@
+ class LiveActor;
+ class LayoutActor;
+ class NameObj;
++namespace MR { class FunctorBase; }
+ 
+ namespace smgpc::scene { class SceneDrawBufferService; }
+ namespace smgpc::compat { class JkrAllocationDomain; }
+@@ -290,6 +292,7 @@
+                                              s32 interleaved_draw_type = -1, s32 interleaved_light_type = -1);
+         void execute_draw_after_indirect(const smgpc::camera::CameraPose &camera_pose);
+         void execute_draw_type(s32 draw_type);
++        void register_pre_draw_function(const MR::FunctorBase&, s32 draw_type);
+         void execute_draw_list_2d_normal();
+         std::size_t send_message_to_live_actors(u32 msg, LiveActor *exclude_actor);
+ 
+@@ -341,6 +344,7 @@
+         void refresh_draw_buffer_activation();
+         std::unique_ptr<smgpc::scene::SceneDrawBufferService> _draw_buffers;
+         std::vector<Entry> _entries;
++        std::unordered_map<smgpc::layout::LayoutRuntime*, std::unique_ptr<NameObj>> _layout_draw_adaptors;
+ #ifndef NDEBUG
+         std::vector<SceneSchedulerEntryState> _last_execution_trace;
+         std::vector<SceneSchedulerMessageTraceEntry> _message_trace;
+--- /dev/null
++++ b/pc-port/src/scene/DrawCategoryInitialTable.inc
+@@ -0,0 +1,338 @@
++    const CategoryListInitialTable cDrawListInitTable[] = {
++        {
++            MR::DrawType_Layout,
++            128,
++        },
++        {
++            MR::DrawType_LayoutDecoration,
++            32,
++        },
++        {
++            MR::DrawType_LayoutOnPause,
++            32,
++        },
++        {
++            MR::DrawType_Movie,
++            1,
++        },
++        {
++            MR::DrawType_MovieSubtitles,
++            8,
++        },
++        {
++            MR::DrawType_WipeLayout,
++            8,
++        },
++        {
++            MR::DrawType_CometScreenFilter,
++            3,
++        },
++        {
++            MR::DrawType_TalkLayout,
++            32,
++        },
++        {
++            MR::DrawType_0x44,
++            32,
++        },
++        {
++            MR::DrawType_CinemaFrame,
++            1,
++        },
++        {
++            MR::DrawType_CaptureScreenIndirect,
++            1,
++        },
++        {
++            MR::DrawType_CenterScreenBlur,
++            2,
++        },
++        {
++            MR::DrawType_0x30,
++            16,
++        },
++        {
++            MR::DrawType_Fur,
++            1,
++        },
++        {
++            MR::DrawType_0x3B,
++            1,
++        },
++        {
++            MR::DrawType_GalaxyNamePlate,
++            1,
++        },
++        {
++            MR::DrawType_CaptureScreenCamera,
++            1,
++        },
++        {
++            MR::DrawType_MessageBoardCapture,
++            1,
++        },
++        {
++            MR::DrawType_CameraCover,
++            1,
++        },
++        {
++            MR::DrawType_ShadowSurface,
++            256,
++        },
++        {
++            MR::DrawType_ShadowVolume,
++            1024,
++        },
++        {
++            MR::DrawType_0x28,
++            4,
++        },
++        {
++            MR::DrawType_AlphaShadow,
++            1,
++        },
++        {
++            MR::DrawType_OceanBowl,
++            8,
++        },
++        {
++            MR::DrawType_OceanRing,
++            16,
++        },
++        {
++            MR::DrawType_OceanRingPipeInside,
++            8,
++        },
++        {
++            MR::DrawType_OceanRingPipeOutside,
++            8,
++        },
++        {
++            MR::DrawType_OceanSphere,
++            8,
++        },
++        {
++            MR::DrawType_WaterRoad,
++            16,
++        },
++        {
++            MR::DrawType_WhirlPoolAccelerator,
++            64,
++        },
++        {
++            MR::DrawType_0x33,
++            1,
++        },
++        {
++            MR::DrawType_DashRing,
++            16,
++        },
++        {
++            MR::DrawType_BrightSun,
++            16,
++        },
++        {
++            MR::DrawType_WaterCameraFilter,
++            1,
++        },
++        {
++            MR::DrawType_Player,
++            4,
++        },
++        {
++            MR::DrawType_0x23,
++            4,
++        },
++        {
++            MR::DrawType_0x24,
++            4,
++        },
++        {
++            MR::DrawType_MiiFacePartsHolder,
++            1,
++        },
++        {
++            MR::DrawType_MiiFaceIcon,
++            1,
++        },
++        {
++            MR::DrawType_MiiFaceNew,
++            1,
++        },
++        {
++            MR::DrawType_KirairaChain,
++            64,
++        },
++        {
++            MR::DrawType_VolumeModel,
++            64,
++        },
++        {
++            MR::DrawType_0x20,
++            8,
++        },
++        {
++            MR::DrawType_SwingRope,
++            256,
++        },
++        {
++            MR::DrawType_Creeper,
++            64,
++        },
++        {
++            MR::DrawType_0x1,
++            64,
++        },
++        {
++            MR::DrawType_0x3,
++            64,
++        },
++        {
++            MR::DrawType_PlantStalk,
++            64,
++        },
++        {
++            MR::DrawType_Plant,
++            64,
++        },
++        {
++            MR::DrawType_Trapeze,
++            64,
++        },
++        {
++            MR::DrawType_ElectricRailHolder,
++            1,
++        },
++        {
++            MR::DrawType_BigBubble,
++            1,
++        },
++        {
++            MR::DrawType_BigBubbleGoal,
++            32,
++        },
++        {
++            MR::DrawType_0x11,
++            64,
++        },
++        {
++            MR::DrawType_0x17,
++            32,
++        },
++        {
++            MR::DrawType_WarpPodPath,
++            256,
++        },
++        {
++            MR::DrawType_FlexibleSphere,
++            16,
++        },
++        {
++            MR::DrawType_FallOutFieldDraw,
++            1,
++        },
++        {
++            MR::DrawType_ClipFieldFillDraw,
++            1,
++        },
++        {
++            MR::DrawType_ClipArea,
++            256,
++        },
++        {
++            MR::DrawType_SpinDriverPathDrawer,
++            64,
++        },
++        {
++            MR::DrawType_GCapture,
++            64,
++        },
++        {
++            MR::DrawType_ClipAreaDropLaser,
++            64,
++        },
++        {
++            MR::DrawType_SpiderThread,
++            1,
++        },
++        {
++            MR::DrawType_SpaceCocoon,
++            64,
++        },
++        {
++            MR::DrawType_0x32,
++            2,
++        },
++        {
++            MR::DrawType_AstroDomeSkyClear,
++            1,
++        },
++        {
++            MR::DrawType_AstroDomeOrbit,
++            8,
++        },
++        {
++            MR::DrawType_WaterPlant,
++            256,
++        },
++        {
++            MR::DrawType_Flag,
++            1024,
++        },
++        {
++            MR::DrawType_BloomEffectPreDraw,
++            1,
++        },
++        {
++            MR::DrawType_BloomEffectPostDraw,
++            1,
++        },
++        {
++            MR::DrawType_BloomModel,
++            64,
++        },
++        {
++            MR::DrawType_OceanBowlBloomDrawer,
++            32,
++        },
++        {
++            MR::DrawType_ImageEffect,
++            4,
++        },
++        {
++            MR::DrawType_EffectDraw3D,
++            1,
++        },
++        {
++            MR::DrawType_EffectDrawIndirect,
++            1,
++        },
++        {
++            MR::DrawType_EffectDrawAfterIndirect,
++            1,
++        },
++        {
++            MR::DrawType_EffectDrawForBloomEffect,
++            1,
++        },
++        {
++            MR::DrawType_EffectDrawAfterImageEffect,
++            1,
++        },
++        {
++            MR::DrawType_EffectDraw2D,
++            2,
++        },
++        {
++            MR::DrawType_EffectDrawFor2DModel,
++            1,
++        },
++        {
++            MR::DrawType_0x52,
++            256,
++        },
++        {
++            static_cast<u32>(-1),  // Original unsigned sentinel.
++            0,
++        },
++    };
+--- a/pc-port/src/scene/SceneDrawBufferService.cpp
++++ b/pc-port/src/scene/SceneDrawBufferService.cpp
+@@ -4,6 +4,12 @@
+ #include "Game/LiveActor/ModelManager.hpp"
+ #include "Game/LiveActor/LiveActor.hpp"
+ #include "Game/System/DrawBufferHolder.hpp"
++#include "Game/NameObj/NameObjListExecutor.hpp"
++#include "Game/NameObj/NameObjCategoryList.hpp"
++#include "Game/Util/Functor.hpp"
++#include <algorithm>
++#include <array>
++#include <limits>
+ #include "Game/Scene/SceneFunction.hpp"
+ #include "Game/Util/LiveActorUtil.hpp"
+ #include <map>
+@@ -11,17 +17,15 @@
+ #include <stdexcept>
+ #include <iterator>
+ 
+-namespace MR {
+-    enum CameraType {
+-        CameraType_3D = 0,
+-        CameraType_2D = 1,
+-        CameraType_Mirror = 2,
+-    };
+-
+-}
+ namespace smgpc::scene {
+ namespace {
+ #include "DrawBufferInitialTable.inc"
++#include "DrawCategoryInitialTable.inc"
++constexpr auto draw_category_count = std::size(cDrawListInitTable) - 1;
++void require_draw_category(int category) {
++    if (category < 0 || static_cast<std::size_t>(category) >= draw_category_count)
++        throw std::out_of_range("Draw category is outside the original initial table");
++}
+ constexpr auto category_count = std::size(cDrawBufferListInitTable) - 1;
+ void require_category(int category) {
+     if (category < 0 || static_cast<std::size_t>(category) >= category_count)
+@@ -32,14 +36,31 @@
+     struct Registration { int category; int executor = -1; bool active = false; };
+     std::shared_ptr<compat::JkrAllocationDomain> domain;
+     std::vector<std::vector<std::shared_ptr<compat::ModelManagerOwner>>> prototypes;
+-    std::unique_ptr<DrawBufferHolder> holder;
++    std::unique_ptr<NameObjListExecutor> executor;
++    DrawBufferHolder* holder = nullptr;
++    struct Callback {
++        std::shared_ptr<compat::JkrAllocationDomain> domain;
++        std::unique_ptr<MR::FunctorBase> functor;
++        std::size_t order;
++    };
++    std::array<std::vector<std::shared_ptr<Callback>>, draw_category_count> callbacks;
++    std::array<unsigned, draw_category_count> executing{};
+     std::map<LiveActor*, Registration> actors;
+     bool allocated = false;
+ };
+-SceneDrawBufferService::SceneDrawBufferService(std::shared_ptr<compat::JkrAllocationDomain> domain) {
++SceneDrawBufferService::SceneDrawBufferService() {
++    compat::JkrHostAllocationScope host;
++    _state = std::make_shared<State>();
++    _state->executor = std::make_unique<NameObjListExecutor>();
++    _state->executor->mDrawList = new NameObjCategoryList(draw_category_count, cDrawListInitTable, &NameObj::draw, true, "");
++}
++SceneDrawBufferService::SceneDrawBufferService(std::shared_ptr<compat::JkrAllocationDomain> domain) : SceneDrawBufferService() {
++    begin_draw_buffer_registration(std::move(domain));
++}
++void SceneDrawBufferService::begin_draw_buffer_registration(std::shared_ptr<compat::JkrAllocationDomain> domain) {
+     compat::JkrHostAllocationScope host;
+     if (!domain) throw std::invalid_argument("Original draw holder requires a retained allocation domain");
+-    _state = std::make_unique<State>();
++    retire_draw_buffers();
+     _state->domain = std::move(domain);
+     _state->prototypes.resize(category_count);
+     for (std::size_t i = 0; i < category_count; ++i) {
+@@ -47,8 +68,20 @@
+         _state->prototypes.at(row.mDrawBufferType).resize(row.mCapacity);
+     }
+     compat::JkrAllocationScope heap(_state->domain);
+-    _state->holder = std::make_unique<DrawBufferHolder>();
++    _state->holder = new DrawBufferHolder();
++    _state->executor->mBufferHolder = _state->holder;
+     _state->holder->initTable(cDrawBufferListInitTable, category_count);
++}
++void SceneDrawBufferService::retire_draw_buffers() {
++    compat::JkrHostAllocationScope host;
++    if (!_state->actors.empty()) throw std::logic_error("Remove actor registrations before retiring original draw buffers");
++    if (_state->holder) GXDrawDone();
++    delete _state->holder;
++    _state->holder = nullptr;
++    _state->executor->mBufferHolder = nullptr;
++    _state->prototypes.clear();
++    _state->domain.reset();
++    _state->allocated = false;
+ }
+ SceneDrawBufferService::~SceneDrawBufferService() {
+     compat::JkrHostAllocationScope host;
+@@ -58,12 +91,14 @@
+     for (auto& [actor, registration] : _state->actors)
+         if (registration.active)
+             _state->holder->deactive(actor, registration.category, registration.executor);
+-    GXDrawDone();
++    if (_state->holder) GXDrawDone();
++    clear_draw_categories();
+     _state.reset();
+ }
+ int SceneDrawBufferService::register_actor(LiveActor& actor, int category,
+                                           std::shared_ptr<compat::ModelManagerOwner> owner) {
+     compat::JkrHostAllocationScope host;
++    if (!_state->holder) throw std::logic_error("Construct original draw buffers before registering a model");
+     require_category(category);
+     if (_state->allocated) throw std::logic_error("Draw registrations must precede original actor-list allocation");
+     if (!owner || &owner->manager() != actor.mModelManager)
+@@ -123,6 +158,95 @@
+     _state->holder->drawXlu(category);
+ }
+ bool SceneDrawBufferService::is_allocated() const noexcept { return _state->allocated; }
++bool SceneDrawBufferService::has_draw_buffers() const noexcept { return _state->holder != nullptr; }
+ std::size_t SceneDrawBufferService::registration_count() const noexcept { return _state->actors.size(); }
+ DrawBufferHolder& SceneDrawBufferService::holder() noexcept { return *_state->holder; }
+-}
++
++void SceneDrawBufferService::register_pre_draw_function(const MR::FunctorBase& functor, int category, std::size_t order) {
++    compat::JkrHostAllocationScope host;
++    require_draw_category(category);
++    auto callback = std::make_shared<State::Callback>();
++    callback->domain = compat::current_jkr_allocation_domain();
++    if (!callback->domain) callback->domain = _state->domain;
++    callback->order = order;
++    auto& history = _state->callbacks[category];
++    history.reserve(history.size() + 1);
++    if (callback->domain) {
++        compat::JkrAllocationScope heap(callback->domain);
++        _state->executor->registerPreDrawFunction(functor, category);
++        callback->functor.reset(_state->executor->mDrawList->mCategoryInfo[category]._C);
++    } else {
++        _state->executor->registerPreDrawFunction(functor, category);
++        callback->functor.reset(_state->executor->mDrawList->mCategoryInfo[category]._C);
++    }
++    history.push_back(std::move(callback));
++}
++
++void SceneDrawBufferService::rollback_pre_draw_functions(std::size_t marker) {
++    compat::JkrHostAllocationScope host;
++    for (std::size_t i = 0; i < draw_category_count; ++i) {
++        auto& history = _state->callbacks[i];
++        std::erase_if(history, [marker](const auto& callback) { return callback->order >= marker; });
++        _state->executor->mDrawList->mCategoryInfo[i]._C = history.empty() ? nullptr : history.back()->functor.get();
++    }
++}
++
++std::vector<NameObj*> SceneDrawBufferService::execute_draw_category(int category, std::span<NameObj* const> objects) {
++    require_draw_category(category);
++    auto state = _state;
++    auto& array = state->executor->mDrawList->mCategoryInfo[category].mNameObjArr;
++    if (state->executing[category]) throw std::logic_error("A draw category cannot rebuild its active batch recursively");
++    {
++        compat::JkrHostAllocationScope host;
++        for (int i = 0; i < array.size();) {
++            if (std::ranges::find(objects, array[i]) == objects.end()) state->executor->removeToDraw(array[i], category);
++            else ++i;
++        }
++        if (objects.size() > static_cast<std::size_t>(std::numeric_limits<int>::max()))
++            throw std::length_error("Original draw category capacity exceeds s32");
++        if (objects.size() > static_cast<std::size_t>(array.capacity())) {
++            std::vector<NameObj*> previous;
++            if (array.size()) previous.assign(array.begin(), array.end());
++            // The host scheduler discovers category membership dynamically. Grow the
++            // actual typed array; the original register/execute algorithms stay intact.
++            auto storage = std::make_unique<NameObj*[]>(objects.size());
++            delete[] array.mArray.mArr;
++            array.mArray.mArr = storage.release();
++            array.mArray.mMaxSize = static_cast<s32>(objects.size());
++            array.clear();
++            for (auto* object : previous) state->executor->addToDraw(object, category);
++        }
++        for (auto* object : objects) {
++            if (!object) throw std::invalid_argument("An original draw category requires actual NameObj objects");
++            if (array.size() == 0 || std::find(array.begin(), array.end(), object) == array.end())
++                state->executor->addToDraw(object, category);
++        }
++    }
++    // Retain an executing callback even when it replaces itself or clears its
++    // registration. Its borrowed caller's scene allocation domain stays alive.
++    const auto callback = state->callbacks[category].empty() ? nullptr : state->callbacks[category].back();
++    struct Guard { unsigned& value; explicit Guard(unsigned& n) : value(n) { ++value; } ~Guard() { --value; } } guard(state->executing[category]);
++    // Original callbacks inherit the caller's current heap and routing.
++    state->executor->executeDraw(category);
++    compat::JkrHostAllocationScope host;
++    if (array.size() == 0) return {};
++    return {array.begin(), array.end()};
++}
++
++void SceneDrawBufferService::remove_draw_object(NameObj& object) {
++    for (std::size_t i = 0; i < draw_category_count; ++i) {
++        auto& array = _state->executor->mDrawList->mCategoryInfo[i].mNameObjArr;
++        if (array.size() && std::find(array.begin(), array.end(), &object) != array.end())
++            _state->executor->removeToDraw(&object, i);
++    }
++}
++
++void SceneDrawBufferService::clear_draw_categories() {
++    for (std::size_t i = 0; i < draw_category_count; ++i) {
++        auto& info = _state->executor->mDrawList->mCategoryInfo[i];
++        info.mNameObjArr.clear();
++        info._C = nullptr;
++        _state->callbacks[i].clear();
++    }
++}
++}
+--- a/pc-port/src/scene/SceneDrawBufferService.hpp
++++ b/pc-port/src/scene/SceneDrawBufferService.hpp
+@@ -1,18 +1,25 @@
+ #pragma once
+ #include <memory>
+ #include <cstddef>
++#include <span>
++#include <vector>
+ class LiveActor;
+ class DrawBufferHolder;
++class NameObj;
++namespace MR { class FunctorBase; }
+ namespace smgpc::compat { class JkrAllocationDomain; class ModelManagerOwner; }
+ namespace smgpc::scene {
+ // Native lifetime owner for the original scene draw holder. Registration and
+ // allocation are separate, matching NameObjListExecutor's construction phases.
+ class SceneDrawBufferService final {
+ public:
++    SceneDrawBufferService();
+     explicit SceneDrawBufferService(std::shared_ptr<compat::JkrAllocationDomain>);
+     ~SceneDrawBufferService();
+     SceneDrawBufferService(const SceneDrawBufferService&) = delete;
+     SceneDrawBufferService& operator=(const SceneDrawBufferService&) = delete;
++    void begin_draw_buffer_registration(std::shared_ptr<compat::JkrAllocationDomain>);
++    void retire_draw_buffers();
+     int register_actor(LiveActor&, int category, std::shared_ptr<compat::ModelManagerOwner>);
+     void allocate_actor_lists();
+     void set_active(LiveActor&, bool);
+@@ -22,10 +29,16 @@
+     void draw_opaque(int category);
+     void draw_translucent(int category);
+     bool is_allocated() const noexcept;
++    bool has_draw_buffers() const noexcept;
+     std::size_t registration_count() const noexcept;
+     DrawBufferHolder& holder() noexcept;
++    void register_pre_draw_function(const MR::FunctorBase&, int category, std::size_t order);
++    void rollback_pre_draw_functions(std::size_t marker);
++    std::vector<NameObj*> execute_draw_category(int category, std::span<NameObj* const> objects);
++    void remove_draw_object(NameObj&);
++    void clear_draw_categories();
+ private:
+     struct State;
+-    std::unique_ptr<State> _state;
++    std::shared_ptr<State> _state;
+ };
+ }
