@@ -1,0 +1,4 @@
+[ 89%]: <aurora-os> archiving.debug libaurora-os.a
+[ 90%]: <aurora-gx> archiving.debug libaurora-gx.a
+[ 93%]: <smg-pc-gx-misc-state-tests> linking.debug smg-pc-gx-misc-state-tests
+[100%]: build ok, spent 2.955s
