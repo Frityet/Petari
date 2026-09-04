@@ -1,0 +1,15 @@
+# Original particle callback follow, color and rotation
+
+Recovered the missing AutoEffectInfo follow-flag prefix in MultiEmitterCallBack::isFollowSRT, corrected setColor operands/channels, and restored the original integer-angle JPA rotation path in setSRTFromHostSRT. Also recovered the absent MR::Effect::isEffect2D metadata query.
+
+Original first emission uses authored bits 8/16/32. Subsequent updates use bits 1/2/4, unless callback bits 0x42 stop all following. Existing host-pointer availability and force-flag logic then applies. The complete 456-byte predicate equals the original DOL exactly. The original 2D query accepts authored draw groups 6 or 7 and returns false without metadata; all 52 bytes equal the DOL. Both functions have no external relocations.
+
+When light influence is active, original setColor snapshots both global colors but uses the saved primary color for both products. It combines that primary with the callback primary/environment colors respectively, divides channels by 255, and writes distinct red, green and blue channels. The old source combined the wrong primary operand and wrote green into the blue channel. The recovered whole function scores 97.01316% against retail; the remaining differences involve temporary Color8 construction versus the equivalent GXColor assignment helper and stack placement. It is not claimed byte-exact.
+
+The original host-SRT path rotates the offset using its float matrix, while global emitter rotation converts degrees using float bits 0x43360b61 (182.04445f), narrows to signed halfwords, and calls JPAGetXYZRotateMtx. The old MR::makeMtxRotate call skipped that quantization and used the wrong rotation path. The whole recovered method scores 94.65432%; remaining compiler differences are register allocation, temporary stack layout and independent load order in the scalar trigonometric/matrix sequence. The 0x3c8efa35 radian scale and 0x43360b61 angle conversion constants match retail. This method is not claimed byte-exact.
+
+verify-root.py preserves complete original-compiler commands, retail and compiled disassembly, source hashes, references and scores. It checks 39 other callback-TU methods and 21 existing utility-TU methods retain identical compiled bytes and reference identities. No Game runtime method has been replaced with a native approximation.
+
+The original callback's mScale/mTranslation field names are misleading: the +8 pointer supplies position and the +16 pointer supplies scale. Their existing layout and argument order remain intact. The original followSRT local flags are uninitialized when metadata is absent; this checkpoint does not invent default flags or alter that original caller precondition.
+
+Native activation is separate. General JGeometry integer-vector conversions now use Aurora's existing Gekko conversion helpers (original-vector-integer-conversion-20260903), preserving normal wrapped angles without out-of-range C++ casts. An independent actual-resource/native callback fixture is in progress and will be recorded separately.

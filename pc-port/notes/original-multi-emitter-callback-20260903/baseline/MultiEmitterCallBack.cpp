@@ -1,6 +1,5 @@
 #include "Game/Effect/MultiEmitterCallBack.hpp"
 #include "Game/Effect/EffectSystemUtil.hpp"
-#include "Game/Effect/AutoEffectInfo.hpp"
 #include "Game/Effect/MultiEmitter.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/MtxUtil.hpp"
@@ -124,9 +123,7 @@ void MultiEmitterCallBack::setSRTFromHostSRT(JPABaseEmitter* pEmitter, const Fla
         if (rFlag.mRotation) {
             TRot3f mtxD4;
             mtxD4.identity();
-            TVec3f rotation(*mRotation);
-            rotation.scale(PI_180);
-            mtxD4.setRotate(rotation);
+            mtxD4.setRotate(*mRotation * PI_180);
             mtxD4.mult33(_18, vecE0);
         } else {
             vecE0.set(_18);
@@ -142,7 +139,7 @@ void MultiEmitterCallBack::setSRTFromHostSRT(JPABaseEmitter* pEmitter, const Fla
     }
 
     if (rFlag.mRotation) {
-        pEmitter->setGlobalRotation(TVec3s(182.04445f * mRotation->x, 182.04445f * mRotation->y, 182.04445f * mRotation->z));
+        MR::makeMtxRotate(pEmitter->mGlobalRot, mRotation->x, mRotation->y, mRotation->z);
     }
 
     setScaleFromHostScale(pEmitter, TVec3f(1.0f, 1.0f, 1.0f), rFlag.mTranslation, b2);
@@ -184,6 +181,7 @@ void MultiEmitterCallBack::followSRT(JPABaseEmitter* pEmitter, bool b2) {
 }
 
 void MultiEmitterCallBack::setColor(JPABaseEmitter* pEmitter) {
+    // FIXME: something goes wrong with GXColor/Color8
     if (MR::isNearZero(mEmitter->_2C)) {
         pEmitter->setGlobalPrmColor(mPrmColor.r, mPrmColor.g, mPrmColor.b);
         pEmitter->setGlobalEnvColor(mEnvColor.r, mEnvColor.g, mEnvColor.b);
@@ -191,37 +189,19 @@ void MultiEmitterCallBack::setColor(JPABaseEmitter* pEmitter) {
         return;
     }
 
-    GXColor colorC;
-    GXColor color10;
-    colorC = pEmitter->mGlobalPrmClr;
-    color10 = pEmitter->mGlobalEnvClr;
+    GXColor colorC = pEmitter->mGlobalPrmClr;
+    GXColor color10 = pEmitter->mGlobalEnvClr;
 
-    Color8 prm = getSyntheticColor(colorC, mPrmColor);
-    pEmitter->setGlobalPrmColor(prm.r, prm.g, prm.b);
+    GXColor col = getSyntheticColor(colorC, color10);
 
-    Color8 env = getSyntheticColor(colorC, mEnvColor);
-    pEmitter->setGlobalEnvColor(env.r, env.g, env.b);
+    pEmitter->setGlobalPrmColor(col.r, col.g, col.g);
+
+    col = getSyntheticColor(colorC, mEnvColor);
+    pEmitter->setGlobalEnvColor(col.r, col.g, col.b);
 }
 
 void MultiEmitterCallBack::isFollowSRT(FlagSRT* rFlag, bool b2) const {
-    if (b2) {
-        if (mEmitter->_28 != nullptr) {
-            rFlag->mScale = !((mEmitter->_28->mFlag & 0x8) - 0x8);
-            rFlag->mRotation = !((mEmitter->_28->mFlag & 0x10) - 0x10);
-            rFlag->mTranslation = !((mEmitter->_28->mFlag & 0x20) - 0x20);
-        }
-    } else {
-        if (mFlags & 0x42) {
-            rFlag->mScale = rFlag->mRotation = rFlag->mTranslation = false;
-            return;
-        }
-
-        if (mEmitter->_28 != nullptr) {
-            rFlag->mScale = !((mEmitter->_28->mFlag & 0x1) - 0x1);
-            rFlag->mRotation = !((mEmitter->_28->mFlag & 0x2) - 0x2);
-            rFlag->mTranslation = !((mEmitter->_28->mFlag & 0x4) - 0x4);
-        }
-    }
+    // FIXME: missing class at _28 in MultiEmitter
 
     if (mMtx == nullptr && mScale == nullptr) {
         rFlag->mScale = false;

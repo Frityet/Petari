@@ -1,0 +1,3 @@
+Recovered three complete methods; exact follow flags: 456 bytes; other methods preserved: 39
+[('isFollowSRT__20MultiEmitterCallBackCFPQ220MultiEmitterCallBack7FlagSRTb', 100.0), ('setColor__20MultiEmitterCallBackFP14JPABaseEmitter', 97.01316), ('setSRTFromHostSRT__20MultiEmitterCallBackFP14JPABaseEmitterRCQ220MultiEmitterCallBack7FlagSRTb', 94.65432)]
+Original 2D metadata query: 52 bytes exact; existing utility methods preserved: 21

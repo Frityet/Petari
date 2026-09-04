@@ -48,14 +48,6 @@ namespace {
 
 namespace MR {
     namespace Effect {
-        bool isEffect2D(const MultiEmitter* pEmitter) {
-            if (pEmitter->_28 == nullptr) {
-                return false;
-            }
-
-            return pEmitter->_28->mDrawOrder == 6 || pEmitter->_28->mDrawOrder == 7;
-        }
-
         void initEffectSyncBck(EffectKeeper* pKeeper, const ModelManager* pModelManager, const char* pEffectName,
                                const char* pAnimName, s32 count, f32 startFrame, f32 endFrame, bool deleteOnEnd) {
             pKeeper->registerSyncBckEffect(pModelManager->mXanimePlayer, pEffectName, pAnimName, count, startFrame, endFrame, deleteOnEnd);

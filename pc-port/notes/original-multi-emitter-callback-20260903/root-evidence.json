@@ -1,0 +1,617 @@
+{
+  "commands": [
+    [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/pc-port/notes/original-multi-emitter-callback-20260903/baseline/MultiEmitterCallBack.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-multi-emitter-callback-20260903/baseline.o"
+    ],
+    [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/Game/Effect/MultiEmitterCallBack.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-multi-emitter-callback-20260903/current.o"
+    ]
+  ],
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "source_sha256": "23870a6a89871c6577ce505863d63df0a2af6d57a291389364dba0b122848127",
+  "selected": [
+    {
+      "symbol": "isFollowSRT__20MultiEmitterCallBackCFPQ220MultiEmitterCallBack7FlagSRTb",
+      "retail_address": "0x800c8d40",
+      "retail_bytes": 456,
+      "compiled_bytes": 456,
+      "match_percent": 100.0,
+      "byte_exact": true,
+      "retail_references": [],
+      "compiled_references": []
+    },
+    {
+      "symbol": "setColor__20MultiEmitterCallBackFP14JPABaseEmitter",
+      "retail_address": "0x800c8c10",
+      "retail_bytes": 304,
+      "compiled_bytes": 296,
+      "match_percent": 97.01316,
+      "byte_exact": false,
+      "retail_references": [
+        {
+          "offset": "0x8",
+          "kind": 109,
+          "symbol": "@57287",
+          "addend": 0,
+          "value_hex": "3a83126f"
+        },
+        {
+          "offset": "0x28",
+          "kind": 10,
+          "symbol": "isNearZero__2MRFff",
+          "addend": 0
+        },
+        {
+          "offset": "0x44",
+          "kind": 10,
+          "symbol": "setGlobalPrmColor__14JPABaseEmitterFUcUcUc",
+          "addend": 0
+        },
+        {
+          "offset": "0x58",
+          "kind": 10,
+          "symbol": "setGlobalEnvColor__14JPABaseEmitterFUcUcUc",
+          "addend": 0
+        },
+        {
+          "offset": "0x68",
+          "kind": 10,
+          "symbol": "__as__8_GXColorFRC8_GXColor",
+          "addend": 0
+        },
+        {
+          "offset": "0x74",
+          "kind": 10,
+          "symbol": "__as__8_GXColorFRC8_GXColor",
+          "addend": 0
+        },
+        {
+          "offset": "0xa0",
+          "kind": 10,
+          "symbol": "__as__8_GXColorFRC8_GXColor",
+          "addend": 0
+        },
+        {
+          "offset": "0xac",
+          "kind": 10,
+          "symbol": "getSyntheticColor__34@unnamed@MultiEmitterCallBack_cpp@FRC6Color8RC6Color8",
+          "addend": 0
+        },
+        {
+          "offset": "0xc4",
+          "kind": 10,
+          "symbol": "setGlobalPrmColor__14JPABaseEmitterFUcUcUc",
+          "addend": 0
+        },
+        {
+          "offset": "0xf0",
+          "kind": 10,
+          "symbol": "__as__8_GXColorFRC8_GXColor",
+          "addend": 0
+        },
+        {
+          "offset": "0xfc",
+          "kind": 10,
+          "symbol": "getSyntheticColor__34@unnamed@MultiEmitterCallBack_cpp@FRC6Color8RC6Color8",
+          "addend": 0
+        },
+        {
+          "offset": "0x114",
+          "kind": 10,
+          "symbol": "setGlobalEnvColor__14JPABaseEmitterFUcUcUc",
+          "addend": 0
+        }
+      ],
+      "compiled_references": [
+        {
+          "offset": "0x8",
+          "kind": 109,
+          "symbol": "@4485",
+          "addend": 0,
+          "value_hex": "3a83126f"
+        },
+        {
+          "offset": "0x28",
+          "kind": 10,
+          "symbol": "isNearZero__2MRFff",
+          "addend": 0
+        },
+        {
+          "offset": "0x44",
+          "kind": 10,
+          "symbol": "setGlobalPrmColor__14JPABaseEmitterFUcUcUc",
+          "addend": 0
+        },
+        {
+          "offset": "0x58",
+          "kind": 10,
+          "symbol": "setGlobalEnvColor__14JPABaseEmitterFUcUcUc",
+          "addend": 0
+        },
+        {
+          "offset": "0x68",
+          "kind": 10,
+          "symbol": "__as__8_GXColorFRC8_GXColor",
+          "addend": 0
+        },
+        {
+          "offset": "0x74",
+          "kind": 10,
+          "symbol": "__as__8_GXColorFRC8_GXColor",
+          "addend": 0
+        },
+        {
+          "offset": "0xa0",
+          "kind": 10,
+          "symbol": "__ct__6Color8F8_GXColor",
+          "addend": 0
+        },
+        {
+          "offset": "0xa8",
+          "kind": 10,
+          "symbol": "getSyntheticColor__34@unnamed@MultiEmitterCallBack_cpp@FRC6Color8RC6Color8",
+          "addend": 0
+        },
+        {
+          "offset": "0xc0",
+          "kind": 10,
+          "symbol": "setGlobalPrmColor__14JPABaseEmitterFUcUcUc",
+          "addend": 0
+        },
+        {
+          "offset": "0xec",
+          "kind": 10,
+          "symbol": "__ct__6Color8F8_GXColor",
+          "addend": 0
+        },
+        {
+          "offset": "0xf4",
+          "kind": 10,
+          "symbol": "getSyntheticColor__34@unnamed@MultiEmitterCallBack_cpp@FRC6Color8RC6Color8",
+          "addend": 0
+        },
+        {
+          "offset": "0x10c",
+          "kind": 10,
+          "symbol": "setGlobalEnvColor__14JPABaseEmitterFUcUcUc",
+          "addend": 0
+        }
+      ]
+    },
+    {
+      "symbol": "setSRTFromHostSRT__20MultiEmitterCallBackFP14JPABaseEmitterRCQ220MultiEmitterCallBack7FlagSRTb",
+      "retail_address": "0x800c87e0",
+      "retail_bytes": 648,
+      "compiled_bytes": 632,
+      "match_percent": 94.65432,
+      "byte_exact": false,
+      "retail_references": [
+        {
+          "offset": "0x48",
+          "kind": 10,
+          "symbol": "_savegpr_28",
+          "addend": 0
+        },
+        {
+          "offset": "0x78",
+          "kind": 10,
+          "symbol": "identity__Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>Fv",
+          "addend": 0
+        },
+        {
+          "offset": "0x84",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x88",
+          "kind": 109,
+          "symbol": "@57184",
+          "addend": 0,
+          "value_hex": "3c8efa35"
+        },
+        {
+          "offset": "0x90",
+          "kind": 10,
+          "symbol": "scale__Q29JGeometry8TVec3<f>Ff",
+          "addend": 0
+        },
+        {
+          "offset": "0xa4",
+          "kind": 10,
+          "symbol": "cos",
+          "addend": 0
+        },
+        {
+          "offset": "0xb0",
+          "kind": 10,
+          "symbol": "cos",
+          "addend": 0
+        },
+        {
+          "offset": "0xbc",
+          "kind": 10,
+          "symbol": "cos",
+          "addend": 0
+        },
+        {
+          "offset": "0xc8",
+          "kind": 10,
+          "symbol": "sin",
+          "addend": 0
+        },
+        {
+          "offset": "0xd4",
+          "kind": 10,
+          "symbol": "sin",
+          "addend": 0
+        },
+        {
+          "offset": "0xe0",
+          "kind": 10,
+          "symbol": "sin",
+          "addend": 0
+        },
+        {
+          "offset": "0x160",
+          "kind": 10,
+          "symbol": "mult33__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>CFRCQ29JGeometry8TVec3<f>RQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x170",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>_v",
+          "addend": 0
+        },
+        {
+          "offset": "0x190",
+          "kind": 10,
+          "symbol": "mul__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x19c",
+          "kind": 10,
+          "symbol": "add__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x1a8",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>_v",
+          "addend": 0
+        },
+        {
+          "offset": "0x1c0",
+          "kind": 109,
+          "symbol": "@57185",
+          "addend": 0,
+          "value_hex": "43360b61"
+        },
+        {
+          "offset": "0x20c",
+          "kind": 10,
+          "symbol": "JPAGetXYZRotateMtx__FsssPA4_f",
+          "addend": 0
+        },
+        {
+          "offset": "0x210",
+          "kind": 109,
+          "symbol": "@55723",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x234",
+          "kind": 10,
+          "symbol": "setScaleFromHostScale__20MultiEmitterCallBackFP14JPABaseEmitterRCQ29JGeometry8TVec3<f>bb",
+          "addend": 0
+        },
+        {
+          "offset": "0x274",
+          "kind": 10,
+          "symbol": "_restgpr_28",
+          "addend": 0
+        }
+      ],
+      "compiled_references": [
+        {
+          "offset": "0x40",
+          "kind": 10,
+          "symbol": "_savegpr_28",
+          "addend": 0
+        },
+        {
+          "offset": "0x70",
+          "kind": 10,
+          "symbol": "identity__Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>Fv",
+          "addend": 0
+        },
+        {
+          "offset": "0x7c",
+          "kind": 10,
+          "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x80",
+          "kind": 109,
+          "symbol": "@4455",
+          "addend": 0,
+          "value_hex": "3c8efa35"
+        },
+        {
+          "offset": "0x88",
+          "kind": 10,
+          "symbol": "scale__Q29JGeometry8TVec3<f>Ff",
+          "addend": 0
+        },
+        {
+          "offset": "0x9c",
+          "kind": 10,
+          "symbol": "cos",
+          "addend": 0
+        },
+        {
+          "offset": "0xa8",
+          "kind": 10,
+          "symbol": "cos",
+          "addend": 0
+        },
+        {
+          "offset": "0xb4",
+          "kind": 10,
+          "symbol": "cos",
+          "addend": 0
+        },
+        {
+          "offset": "0xc0",
+          "kind": 10,
+          "symbol": "sin",
+          "addend": 0
+        },
+        {
+          "offset": "0xcc",
+          "kind": 10,
+          "symbol": "sin",
+          "addend": 0
+        },
+        {
+          "offset": "0xd8",
+          "kind": 10,
+          "symbol": "sin",
+          "addend": 0
+        },
+        {
+          "offset": "0x158",
+          "kind": 10,
+          "symbol": "mult33__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>CFRCQ29JGeometry8TVec3<f>RQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x168",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>_v",
+          "addend": 0
+        },
+        {
+          "offset": "0x188",
+          "kind": 10,
+          "symbol": "mul__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x194",
+          "kind": 10,
+          "symbol": "add__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+          "addend": 0
+        },
+        {
+          "offset": "0x1a0",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>_v",
+          "addend": 0
+        },
+        {
+          "offset": "0x1b8",
+          "kind": 109,
+          "symbol": "@4456",
+          "addend": 0,
+          "value_hex": "43360b61"
+        },
+        {
+          "offset": "0x204",
+          "kind": 10,
+          "symbol": "JPAGetXYZRotateMtx__FsssPA4_f",
+          "addend": 0
+        },
+        {
+          "offset": "0x208",
+          "kind": 109,
+          "symbol": "@4331",
+          "addend": 0,
+          "value_hex": "3f800000"
+        },
+        {
+          "offset": "0x22c",
+          "kind": 10,
+          "symbol": "setScaleFromHostScale__20MultiEmitterCallBackFP14JPABaseEmitterRCQ29JGeometry8TVec3<f>bb",
+          "addend": 0
+        },
+        {
+          "offset": "0x264",
+          "kind": 10,
+          "symbol": "_restgpr_28",
+          "addend": 0
+        }
+      ]
+    }
+  ],
+  "unchanged_methods": [
+    "getSyntheticColor__34@unnamed@MultiEmitterCallBack_cpp@FRC6Color8RC6Color8",
+    "__ct__6Color8FUcUcUcUc",
+    "__ct__20MultiEmitterCallBackFPC12MultiEmitterRCQ29JGeometry8TVec3<f>",
+    "__ct__24MultiEmitterCallBackBaseFv",
+    "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+    "__dt__24MultiEmitterCallBackBaseFv",
+    "__ct__20MultiEmitterCallBackFPC12MultiEmitterPCQ29JGeometry8TVec3<f>PCQ29JGeometry8TVec3<f>PCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+    "__ct__20MultiEmitterCallBackFPC12MultiEmitterPA4_fRCQ29JGeometry8TVec3<f>",
+    "__ct__20MultiEmitterCallBackFPC12MultiEmitterPA4_fPCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+    "execute__20MultiEmitterCallBackFP14JPABaseEmitter",
+    "followSRT__20MultiEmitterCallBackFP14JPABaseEmitterb",
+    "effectLight__20MultiEmitterCallBackFP14JPABaseEmitter",
+    "setHostSRT__20MultiEmitterCallBackFPCQ29JGeometry8TVec3<f>PCQ29JGeometry8TVec3<f>PCQ29JGeometry8TVec3<f>",
+    "setHostMtx__20MultiEmitterCallBackFPA4_f",
+    "setBaseScale__20MultiEmitterCallBackFf",
+    "forceFollowOn__20MultiEmitterCallBackFv",
+    "forceFollowOff__20MultiEmitterCallBackFv",
+    "forceScaleOn__20MultiEmitterCallBackFv",
+    "resetFollowCurrent__20MultiEmitterCallBackFv",
+    "init__20MultiEmitterCallBackFP14JPABaseEmitter",
+    "setSRTFromHostMtx__20MultiEmitterCallBackFP14JPABaseEmitterPA4_fRCQ220MultiEmitterCallBack7FlagSRTb",
+    "mult33__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>CFRCQ29JGeometry8TVec3<f>RQ29JGeometry8TVec3<f>",
+    "mul__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+    "add__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+    "set<f>__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>_v",
+    "setScaleFromHostScale__20MultiEmitterCallBackFP14JPABaseEmitterRCQ29JGeometry8TVec3<f>bb",
+    "set<f>__Q29JGeometry8TVec3<f>Ffff_v",
+    "scale__Q29JGeometry8TVec3<f>Ff",
+    "setGlobalScale__14JPABaseEmitterFRCQ29JGeometry8TVec3<f>",
+    "setGlobalPrmColor__14JPABaseEmitterFUcUcUc",
+    "setGlobalEnvColor__14JPABaseEmitterFUcUcUc",
+    "__ct__6Color8F8_GXColor",
+    "drawAfter__18JPAEmitterCallBackFP14JPABaseEmitter",
+    "draw__18JPAEmitterCallBackFP14JPABaseEmitter",
+    "executeAfter__18JPAEmitterCallBackFP14JPABaseEmitter",
+    "__dt__20MultiEmitterCallBackFv",
+    "execute__18JPAEmitterCallBackFP14JPABaseEmitter",
+    "init__24MultiEmitterCallBackBaseFP14JPABaseEmitter",
+    "init__18JPAEmitterCallBackFP14JPABaseEmitter"
+  ]
+}

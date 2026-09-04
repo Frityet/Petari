@@ -1,0 +1,102 @@
+--- a/src/Game/Effect/MultiEmitterCallBack.cpp
++++ b/src/Game/Effect/MultiEmitterCallBack.cpp
+@@ -1,5 +1,6 @@
+ #include "Game/Effect/MultiEmitterCallBack.hpp"
+ #include "Game/Effect/EffectSystemUtil.hpp"
++#include "Game/Effect/AutoEffectInfo.hpp"
+ #include "Game/Effect/MultiEmitter.hpp"
+ #include "Game/Util/MathUtil.hpp"
+ #include "Game/Util/MtxUtil.hpp"
+@@ -123,7 +124,9 @@
+         if (rFlag.mRotation) {
+             TRot3f mtxD4;
+             mtxD4.identity();
+-            mtxD4.setRotate(*mRotation * PI_180);
++            TVec3f rotation(*mRotation);
++            rotation.scale(PI_180);
++            mtxD4.setRotate(rotation);
+             mtxD4.mult33(_18, vecE0);
+         } else {
+             vecE0.set(_18);
+@@ -139,7 +142,7 @@
+     }
+ 
+     if (rFlag.mRotation) {
+-        MR::makeMtxRotate(pEmitter->mGlobalRot, mRotation->x, mRotation->y, mRotation->z);
++        pEmitter->setGlobalRotation(TVec3s(182.04445f * mRotation->x, 182.04445f * mRotation->y, 182.04445f * mRotation->z));
+     }
+ 
+     setScaleFromHostScale(pEmitter, TVec3f(1.0f, 1.0f, 1.0f), rFlag.mTranslation, b2);
+@@ -181,7 +184,6 @@
+ }
+ 
+ void MultiEmitterCallBack::setColor(JPABaseEmitter* pEmitter) {
+-    // FIXME: something goes wrong with GXColor/Color8
+     if (MR::isNearZero(mEmitter->_2C)) {
+         pEmitter->setGlobalPrmColor(mPrmColor.r, mPrmColor.g, mPrmColor.b);
+         pEmitter->setGlobalEnvColor(mEnvColor.r, mEnvColor.g, mEnvColor.b);
+@@ -189,19 +191,37 @@
+         return;
+     }
+ 
+-    GXColor colorC = pEmitter->mGlobalPrmClr;
+-    GXColor color10 = pEmitter->mGlobalEnvClr;
+-
+-    GXColor col = getSyntheticColor(colorC, color10);
+-
+-    pEmitter->setGlobalPrmColor(col.r, col.g, col.g);
+-
+-    col = getSyntheticColor(colorC, mEnvColor);
+-    pEmitter->setGlobalEnvColor(col.r, col.g, col.b);
++    GXColor colorC;
++    GXColor color10;
++    colorC = pEmitter->mGlobalPrmClr;
++    color10 = pEmitter->mGlobalEnvClr;
++
++    Color8 prm = getSyntheticColor(colorC, mPrmColor);
++    pEmitter->setGlobalPrmColor(prm.r, prm.g, prm.b);
++
++    Color8 env = getSyntheticColor(colorC, mEnvColor);
++    pEmitter->setGlobalEnvColor(env.r, env.g, env.b);
+ }
+ 
+ void MultiEmitterCallBack::isFollowSRT(FlagSRT* rFlag, bool b2) const {
+-    // FIXME: missing class at _28 in MultiEmitter
++    if (b2) {
++        if (mEmitter->_28 != nullptr) {
++            rFlag->mScale = !((mEmitter->_28->mFlag & 0x8) - 0x8);
++            rFlag->mRotation = !((mEmitter->_28->mFlag & 0x10) - 0x10);
++            rFlag->mTranslation = !((mEmitter->_28->mFlag & 0x20) - 0x20);
++        }
++    } else {
++        if (mFlags & 0x42) {
++            rFlag->mScale = rFlag->mRotation = rFlag->mTranslation = false;
++            return;
++        }
++
++        if (mEmitter->_28 != nullptr) {
++            rFlag->mScale = !((mEmitter->_28->mFlag & 0x1) - 0x1);
++            rFlag->mRotation = !((mEmitter->_28->mFlag & 0x2) - 0x2);
++            rFlag->mTranslation = !((mEmitter->_28->mFlag & 0x4) - 0x4);
++        }
++    }
+ 
+     if (mMtx == nullptr && mScale == nullptr) {
+         rFlag->mScale = false;
+--- a/src/Game/Effect/EffectSystemUtil.cpp
++++ b/src/Game/Effect/EffectSystemUtil.cpp
+@@ -48,6 +48,14 @@
+ 
+ namespace MR {
+     namespace Effect {
++        bool isEffect2D(const MultiEmitter* pEmitter) {
++            if (pEmitter->_28 == nullptr) {
++                return false;
++            }
++
++            return pEmitter->_28->mDrawOrder == 6 || pEmitter->_28->mDrawOrder == 7;
++        }
++
+         void initEffectSyncBck(EffectKeeper* pKeeper, const ModelManager* pModelManager, const char* pEffectName,
+                                const char* pAnimName, s32 count, f32 startFrame, f32 endFrame, bool deleteOnEnd) {
+             pKeeper->registerSyncBckEffect(pModelManager->mXanimePlayer, pEffectName, pAnimName, count, startFrame, endFrame, deleteOnEnd);
