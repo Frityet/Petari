@@ -1,0 +1,125 @@
+
+/Users/frityet/Projects/petari/build/original-effect-sync-checker-20260903/MultiEmitter-native.o:
+__Unwind_Resume
+EffectSystem::createSingleEmitter(SingleEmitter*, MultiEmitterCallBackBase*, MultiEmitterParticleCallBack*)
+MultiEmitter::playCalcEmitter(int)
+MultiEmitter::stopCalcEmitter(int)
+MultiEmitter::playDrawParticle(int)
+MultiEmitter::stopDrawParticle(int)
+MultiEmitter::setGlobalRotation(JGeometry::TVec3<short> const&, int)
+SingleEmitter::deleteEmitter()
+SingleEmitter::scanParticleEmitter(EffectSystem*)
+SingleEmitter::init(unsigned short)
+SingleEmitter::SingleEmitter()
+SyncBckEffectInfo::addBck(XanimePlayer const*, char const*)
+SyncBckEffectInfo::SyncBckEffectInfo(XanimePlayer const*, char const*, int, float, float, bool)
+MultiEmitterCallBack::setHostMtx(float (*) [4])
+MultiEmitterCallBack::setHostSRT(JGeometry::TVec3<float> const*, JGeometry::TVec3<float> const*, JGeometry::TVec3<float> const*)
+MultiEmitterCallBack::forceScaleOn()
+MultiEmitterCallBack::setBaseScale(float)
+MultiEmitterCallBack::forceFollowOn()
+MultiEmitterCallBack::forceFollowOff()
+MultiEmitterCallBack::resetFollowCurrent()
+MultiEmitterCallBack::MultiEmitterCallBack(MultiEmitter const*, float (*) [4], JGeometry::TVec3<float> const*, JGeometry::TVec3<float> const&)
+MultiEmitterCallBack::MultiEmitterCallBack(MultiEmitter const*, float (*) [4], JGeometry::TVec3<float> const&)
+MultiEmitterCallBack::MultiEmitterCallBack(MultiEmitter const*, JGeometry::TVec3<float> const*, JGeometry::TVec3<float> const*, JGeometry::TVec3<float> const*, JGeometry::TVec3<float> const&)
+MultiEmitterCallBack::MultiEmitterCallBack(MultiEmitter const*, JGeometry::TVec3<float> const&)
+MultiEmitterParticleCallBack::MultiEmitterParticleCallBack()
+MR::zeroMemory(void*, unsigned int)
+MR::getHashCode(char const*)
+MR::hasStringSpace(char const*)
+MR::getEffectSystem()
+MR::isDigitStringTail(char const*, int)
+MR::Effect::isExistInResource(unsigned short*, char const*)
+MR::Effect::isExistInResource(unsigned short*, char const*, int)
+EffectSystem::forceDeleteSingleEmitter(SingleEmitter*) const
+SingleEmitter::isValid() const
+SingleEmitter::isOneTime() const
+operator delete[](void*)
+operator delete[](void*, unsigned long)
+operator delete(void*, unsigned long)
+operator new[](unsigned long)
+operator new(unsigned long)
+___gxx_personality_v0
+___stack_chk_fail
+___stack_chk_guard
+_strlen
+
+/Users/frityet/Projects/petari/build/original-effect-sync-checker-20260903/SyncBckEffectChecker-native.o:
+MR::isNearZero(float, float)
+MR::Effect::isExistSyncBckDeleteFrame(SyncBckEffectInfo const*)
+XanimePlayer::isTerminate(char const*) const
+XanimePlayer::getCurrentBckName() const
+XanimePlayer::checkPass(float) const
+SyncBckEffectInfo::isRegisteredBck(char const*) const
+SyncBckEffectInfo::isBckLoop(char const*) const
+
+/Users/frityet/Projects/petari/build/original-effect-sync-checker-20260903/SyncBckEffectInfo-native.o:
+__Unwind_Resume
+MR::isEqualStringCase(char const*, char const*)
+XanimeResourceTable::findResMotion(char const*) const
+operator delete[](void*)
+operator delete(void*, unsigned long)
+operator new[](unsigned long)
+operator new(unsigned long)
+___gxx_personality_v0
+
+/Users/frityet/Projects/petari/build/original-effect-sync-checker-20260903/EffectKeeper-native.o:
+__Unwind_Resume
+MultiEmitter::initSyncBck(XanimePlayer*, char const*, int, float)
+MultiEmitter::createEmitter()
+MultiEmitter::deleteEmitter()
+MultiEmitter::onDeleteSyncBck(bool, float)
+MultiEmitter::playDrawParticle(int)
+MultiEmitter::stopDrawParticle(int)
+MultiEmitter::forceDeleteEmitter()
+MultiEmitter::createForeverEmitter()
+MultiEmitter::createOneTimeEmitter()
+MultiEmitter::deleteForeverEmitter()
+MultiEmitter::stopEmitterOnClipped()
+MultiEmitter::playEmitterOffClipped()
+MultiEmitter::playCalcAndDeleteForeverEmitter()
+MultiEmitter::setName(char const*)
+MultiEmitter::MultiEmitter(char const*)
+MultiEmitter::MultiEmitter(char const*, float (*) [4], JGeometry::TVec3<float> const*, JGeometry::TVec3<float> const&)
+MultiEmitter::MultiEmitter(char const*, float (*) [4], JGeometry::TVec3<float> const&)
+MultiEmitter::MultiEmitter(char const*, JGeometry::TVec3<float> const*, JGeometry::TVec3<float> const*, JGeometry::TVec3<float> const*, JGeometry::TVec3<float> const&)
+HashSortTable::add(char const*, unsigned long, bool)
+HashSortTable::sort()
+HashSortTable::swap(char const*, char const*)
+HashSortTable::search(char const*, unsigned long*)
+HashSortTable::HashSortTable(unsigned int)
+SyncBckEffectChecker::updateAfter()
+SyncBckEffectChecker::updateBefore()
+SyncBckEffectChecker::reset()
+SyncBckEffectChecker::SyncBckEffectChecker(XanimePlayer*)
+MR::getHashCode(char const*)
+MR::extractString(char*, char const*, unsigned int, unsigned int)
+MR::isEqualSubString(char const*, char const*)
+MR::getFloorCodeIndex(JMapInfoIter const&)
+MR::getFirstPolyOnLineToMap(JGeometry::TVec3<float>*, Triangle*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)
+MR::Effect::addAutoEffect(EffectKeeper*, LiveActor const*, AutoEffectInfo const*)
+MR::Effect::createAutoEffect(char const*, char const*)
+MR::Effect::getAutoEffectNum(char const*)
+MR::Effect::getEffectAttributeName(int)
+MR::Effect::registerAutoEffectInfoGroup(EffectKeeper*, LiveActor const*, char const*)
+MR::normalize(JGeometry::TVec3<float>*)
+Triangle::Triangle()
+MultiEmitter::isEqualName(unsigned short) const
+MultiEmitter::isExistOneTimeEmitter() const
+MultiEmitter::isValid() const
+AutoEffectInfo::getName() const
+SyncBckEffectChecker::isCreate(SyncBckEffectInfo const*, bool) const
+SyncBckEffectChecker::isDelete(SyncBckEffectInfo const*) const
+ResTable::getResName(unsigned int) const
+Triangle::getAttributes() const
+operator delete[](void*)
+operator delete(void*, unsigned long)
+operator new[](unsigned long)
+operator new(unsigned long)
+___gxx_personality_v0
+___stack_chk_fail
+___stack_chk_guard
+_smgpc_msl_snprintf
+_strlen
+_strstr

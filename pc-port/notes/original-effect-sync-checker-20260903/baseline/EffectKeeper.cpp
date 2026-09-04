@@ -235,20 +235,19 @@ void EffectKeeper::syncEffectBck(MultiEmitter* pEmitter) {
     bool b2 = _20->isCreate(pInfo, false);
 
     if (b1 || b2) {
-        MultiEmitter* pCreateEmitter = pEmitter;
         if (MR::isEqualSubString(::getMultiEmitterName(pEmitter), ::cAttributeEffectTag)) {
             char buf[256];
             ::makeAttibuteEffectBaseName(buf, sizeof(buf), ::getMultiEmitterName(pEmitter));
 
-            pCreateEmitter = getEmitter(buf);
+            pEmitter = getEmitter(buf);
         }
 
         if (b1) {
-            pCreateEmitter->createOneTimeEmitter();
+            pEmitter->createOneTimeEmitter();
         }
 
-        if (b2) {
-            pCreateEmitter->createForeverEmitter();
+        if (b1) {
+            pEmitter->createForeverEmitter();
         }
     }
 

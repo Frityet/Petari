@@ -1,0 +1,1293 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "commands": [
+    [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/Game/Effect/SyncBckEffectChecker.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-effect-sync-checker-20260903/SyncBckEffectChecker.o"
+    ],
+    [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/pc-port/notes/original-effect-sync-checker-20260903/baseline/SyncBckEffectChecker.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-effect-sync-checker-20260903/SyncBckEffectChecker-before.o"
+    ],
+    [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/Game/Effect/MultiEmitter.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-effect-sync-checker-20260903/MultiEmitter.o"
+    ],
+    [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/pc-port/notes/original-effect-sync-checker-20260903/baseline/MultiEmitter.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-effect-sync-checker-20260903/MultiEmitter-before.o"
+    ],
+    [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/src/Game/LiveActor/EffectKeeper.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-effect-sync-checker-20260903/EffectKeeper.o"
+    ],
+    [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/RMGK01/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/pc-port/notes/original-effect-sync-checker-20260903/baseline/EffectKeeper.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/build/original-effect-sync-checker-20260903/EffectKeeper-before.o"
+    ]
+  ],
+  "source_sha256": {
+    "src/Game/Effect/MultiEmitter.cpp": "86a5226d7cc9cfece58c3678110c0562a124c4d445c689e01746b1e6b789c1e5",
+    "src/Game/Effect/SyncBckEffectChecker.cpp": "c550ffd191d991349c94751e21b3c9ff28b134551f8f11d3b8e7b5ba1b6f3563",
+    "src/Game/LiveActor/EffectKeeper.cpp": "34e00308c47d9ac237535a6fe742fea099a86608f76e9337ad36081cc4b1c2c1"
+  },
+  "functions": [
+    {
+      "name": "__ct__20SyncBckEffectCheckerFP12XanimePlayer",
+      "address": "0x800cb670",
+      "size": 32,
+      "objdiff_percent": 100.0,
+      "relocated_bytes_equal": true,
+      "relocations": [
+        {
+          "offset": "0x0",
+          "kind": 109,
+          "symbol": "@3325",
+          "addend": 0,
+          "value_hex": "00000000",
+          "effective_retail_target": "0x806b9d88"
+        }
+      ],
+      "checked_temporary_register_difference": null
+    },
+    {
+      "name": "updateBefore__20SyncBckEffectCheckerFv",
+      "address": "0x800cb690",
+      "size": 148,
+      "objdiff_percent": 100.0,
+      "relocated_bytes_equal": true,
+      "relocations": [
+        {
+          "offset": "0x38",
+          "kind": 109,
+          "symbol": "@3325",
+          "addend": 0,
+          "value_hex": "00000000",
+          "effective_retail_target": "0x806b9d88"
+        },
+        {
+          "offset": "0x70",
+          "kind": 10,
+          "symbol": "getCurrentBckName__12XanimePlayerCFv",
+          "addend": 0,
+          "effective_retail_target": "0x8001c2c8"
+        }
+      ],
+      "checked_temporary_register_difference": null
+    },
+    {
+      "name": "updateAfter__20SyncBckEffectCheckerFv",
+      "address": "0x800cb724",
+      "size": 36,
+      "objdiff_percent": 97.77778,
+      "relocated_bytes_equal": false,
+      "relocations": [],
+      "checked_temporary_register_difference": {
+        "0": [
+          2158166028,
+          2147680268
+        ],
+        "4": [
+          939524096,
+          947912704
+        ],
+        "8": [
+          2550333448,
+          2558722056
+        ],
+        "16": [
+          2426601488,
+          2416115728
+        ]
+      }
+    },
+    {
+      "name": "reset__20SyncBckEffectCheckerFv",
+      "address": "0x800cb748",
+      "size": 20,
+      "objdiff_percent": 100.0,
+      "relocated_bytes_equal": true,
+      "relocations": [
+        {
+          "offset": "0x0",
+          "kind": 109,
+          "symbol": "@3325",
+          "addend": 0,
+          "value_hex": "00000000",
+          "effective_retail_target": "0x806b9d88"
+        }
+      ],
+      "checked_temporary_register_difference": null
+    },
+    {
+      "name": "isCreate__20SyncBckEffectCheckerCFPC17SyncBckEffectInfob",
+      "address": "0x800cb75c",
+      "size": 232,
+      "objdiff_percent": 100.0,
+      "relocated_bytes_equal": true,
+      "relocations": [
+        {
+          "offset": "0x18",
+          "kind": 10,
+          "symbol": "_savegpr_29",
+          "addend": 0,
+          "effective_retail_target": "0x80518a08"
+        },
+        {
+          "offset": "0x30",
+          "kind": 10,
+          "symbol": "isRegisteredBck__17SyncBckEffectInfoCFPCc",
+          "addend": 0,
+          "effective_retail_target": "0x800cbbd8"
+        },
+        {
+          "offset": "0x5c",
+          "kind": 10,
+          "symbol": "isRegisteredBck__17SyncBckEffectInfoCFPCc",
+          "addend": 0,
+          "effective_retail_target": "0x800cbbd8"
+        },
+        {
+          "offset": "0x8c",
+          "kind": 109,
+          "symbol": "@3325",
+          "addend": 0,
+          "value_hex": "00000000",
+          "effective_retail_target": "0x806b9d88"
+        },
+        {
+          "offset": "0xa0",
+          "kind": 109,
+          "symbol": "@3383",
+          "addend": 0,
+          "value_hex": "3a83126f",
+          "effective_retail_target": "0x806b9d8c"
+        },
+        {
+          "offset": "0xa8",
+          "kind": 10,
+          "symbol": "isNearZero__2MRFff",
+          "addend": 0,
+          "effective_retail_target": "0x803e6fc0"
+        },
+        {
+          "offset": "0xc4",
+          "kind": 10,
+          "symbol": "checkPass__20SyncBckEffectCheckerCFf",
+          "addend": 0,
+          "effective_retail_target": "0x800cb940"
+        },
+        {
+          "offset": "0xd4",
+          "kind": 10,
+          "symbol": "_restgpr_29",
+          "addend": 0,
+          "effective_retail_target": "0x80518a54"
+        }
+      ],
+      "checked_temporary_register_difference": null
+    },
+    {
+      "name": "isDelete__20SyncBckEffectCheckerCFPC17SyncBckEffectInfo",
+      "address": "0x800cb844",
+      "size": 252,
+      "objdiff_percent": 100.0,
+      "relocated_bytes_equal": true,
+      "relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_29",
+          "addend": 0,
+          "effective_retail_target": "0x80518a08"
+        },
+        {
+          "offset": "0x24",
+          "kind": 10,
+          "symbol": "isRegisteredBck__17SyncBckEffectInfoCFPCc",
+          "addend": 0,
+          "effective_retail_target": "0x800cbbd8"
+        },
+        {
+          "offset": "0x38",
+          "kind": 10,
+          "symbol": "isBckLoop__17SyncBckEffectInfoCFPCc",
+          "addend": 0,
+          "effective_retail_target": "0x800cbc64"
+        },
+        {
+          "offset": "0x6c",
+          "kind": 10,
+          "symbol": "getCurrentBckName__12XanimePlayerCFv",
+          "addend": 0,
+          "effective_retail_target": "0x8001c2c8"
+        },
+        {
+          "offset": "0x8c",
+          "kind": 10,
+          "symbol": "isRegisteredBck__17SyncBckEffectInfoCFPCc",
+          "addend": 0,
+          "effective_retail_target": "0x800cbbd8"
+        },
+        {
+          "offset": "0xa0",
+          "kind": 10,
+          "symbol": "isTerminate__12XanimePlayerCFPCc",
+          "addend": 0,
+          "effective_retail_target": "0x8001c0cc"
+        },
+        {
+          "offset": "0xc4",
+          "kind": 10,
+          "symbol": "isExistSyncBckDeleteFrame__Q22MR6EffectFPC17SyncBckEffectInfo",
+          "addend": 0,
+          "effective_retail_target": "0x800cbd08"
+        },
+        {
+          "offset": "0xe0",
+          "kind": 10,
+          "symbol": "checkPass__20SyncBckEffectCheckerCFf",
+          "addend": 0,
+          "effective_retail_target": "0x800cb940"
+        },
+        {
+          "offset": "0xe8",
+          "kind": 10,
+          "symbol": "_restgpr_29",
+          "addend": 0,
+          "effective_retail_target": "0x80518a54"
+        }
+      ],
+      "checked_temporary_register_difference": null
+    },
+    {
+      "name": "checkPass__20SyncBckEffectCheckerCFf",
+      "address": "0x800cb940",
+      "size": 80,
+      "objdiff_percent": 100.0,
+      "relocated_bytes_equal": true,
+      "relocations": [
+        {
+          "offset": "0x10",
+          "kind": 109,
+          "symbol": "@3325",
+          "addend": 0,
+          "value_hex": "00000000",
+          "effective_retail_target": "0x806b9d88"
+        },
+        {
+          "offset": "0x24",
+          "kind": 10,
+          "symbol": "checkPassIfRate0__20SyncBckEffectCheckerCFf",
+          "addend": 0,
+          "effective_retail_target": "0x800cb990"
+        },
+        {
+          "offset": "0x30",
+          "kind": 10,
+          "symbol": "checkPass__12XanimePlayerCFf",
+          "addend": 0,
+          "effective_retail_target": "0x8001c308"
+        }
+      ],
+      "checked_temporary_register_difference": null
+    },
+    {
+      "name": "checkPassIfRate0__20SyncBckEffectCheckerCFf",
+      "address": "0x800cb990",
+      "size": 244,
+      "objdiff_percent": 99.672134,
+      "relocated_bytes_equal": true,
+      "relocations": [
+        {
+          "offset": "0x42",
+          "kind": 6,
+          "symbol": "@3422",
+          "addend": 0,
+          "value_hex": "4330000080000000",
+          "effective_retail_target": "0x80531bd0"
+        },
+        {
+          "offset": "0x4a",
+          "kind": 4,
+          "symbol": "@3422",
+          "addend": 0,
+          "value_hex": "4330000080000000",
+          "effective_retail_target": "0x80531bd0"
+        },
+        {
+          "offset": "0x6e",
+          "kind": 6,
+          "symbol": "@3422",
+          "addend": 0,
+          "value_hex": "4330000080000000",
+          "effective_retail_target": "0x80531bd0"
+        },
+        {
+          "offset": "0x76",
+          "kind": 4,
+          "symbol": "@3422",
+          "addend": 0,
+          "value_hex": "4330000080000000",
+          "effective_retail_target": "0x80531bd0"
+        }
+      ],
+      "checked_temporary_register_difference": null
+    },
+    {
+      "name": "setDrawOrder__12MultiEmitterFl",
+      "address": "0x800c71dc",
+      "size": 148,
+      "objdiff_percent": 99.72973,
+      "relocated_bytes_equal": true,
+      "relocations": [
+        {
+          "offset": "0x1a",
+          "kind": 6,
+          "symbol": "@4358",
+          "addend": 0,
+          "value_hex": "00000000ffffffff800c7684",
+          "effective_retail_target": "0x80578594"
+        },
+        {
+          "offset": "0x1e",
+          "kind": 4,
+          "symbol": "@4358",
+          "addend": 0,
+          "value_hex": "00000000ffffffff800c7684",
+          "effective_retail_target": "0x80578594"
+        },
+        {
+          "offset": "0x68",
+          "kind": 10,
+          "symbol": "__ptmf_scall",
+          "addend": 0,
+          "effective_retail_target": "0x805188b0"
+        }
+      ],
+      "checked_temporary_register_difference": null
+    },
+    {
+      "name": "syncEffectBck__12EffectKeeperFP12MultiEmitter",
+      "address": "0x80162b8c",
+      "size": 248,
+      "objdiff_percent": 100.0,
+      "relocated_bytes_equal": true,
+      "relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_26",
+          "addend": 0,
+          "effective_retail_target": "0x805189fc"
+        },
+        {
+          "offset": "0x34",
+          "kind": 10,
+          "symbol": "isCreate__20SyncBckEffectCheckerCFPC17SyncBckEffectInfob",
+          "addend": 0,
+          "effective_retail_target": "0x800cb75c"
+        },
+        {
+          "offset": "0x48",
+          "kind": 10,
+          "symbol": "isCreate__20SyncBckEffectCheckerCFPC17SyncBckEffectInfob",
+          "addend": 0,
+          "effective_retail_target": "0x800cb75c"
+        },
+        {
+          "offset": "0x68",
+          "kind": 10,
+          "symbol": "getName__14AutoEffectInfoCFv",
+          "addend": 0,
+          "effective_retail_target": "0x800c52a8"
+        },
+        {
+          "offset": "0x6c",
+          "kind": 109,
+          "symbol": "cAttributeEffectTag__26@unnamed@EffectKeeper_cpp@",
+          "addend": 0,
+          "value_hex": "80587ad8",
+          "effective_retail_target": "0x806b1b50"
+        },
+        {
+          "offset": "0x70",
+          "kind": 10,
+          "symbol": "isEqualSubString__2MRFPCcPCc",
+          "addend": 0,
+          "effective_retail_target": "0x803febb8"
+        },
+        {
+          "offset": "0x80",
+          "kind": 10,
+          "symbol": "getName__14AutoEffectInfoCFv",
+          "addend": 0,
+          "effective_retail_target": "0x800c52a8"
+        },
+        {
+          "offset": "0x90",
+          "kind": 10,
+          "symbol": "makeAttibuteEffectBaseName__26@unnamed@EffectKeeper_cpp@FPcUlPCc",
+          "addend": 0,
+          "effective_retail_target": "0x801621c0"
+        },
+        {
+          "offset": "0x9c",
+          "kind": 10,
+          "symbol": "getEmitter__12EffectKeeperCFPCc",
+          "addend": 0,
+          "effective_retail_target": "0x80162910"
+        },
+        {
+          "offset": "0xb0",
+          "kind": 10,
+          "symbol": "createOneTimeEmitter__12MultiEmitterFv",
+          "addend": 0,
+          "effective_retail_target": "0x800c7520"
+        },
+        {
+          "offset": "0xc0",
+          "kind": 10,
+          "symbol": "createForeverEmitter__12MultiEmitterFv",
+          "addend": 0,
+          "effective_retail_target": "0x800c7598"
+        },
+        {
+          "offset": "0xcc",
+          "kind": 10,
+          "symbol": "isDelete__20SyncBckEffectCheckerCFPC17SyncBckEffectInfo",
+          "addend": 0,
+          "effective_retail_target": "0x800cb844"
+        },
+        {
+          "offset": "0xdc",
+          "kind": 10,
+          "symbol": "deleteEmitter__12MultiEmitterFv",
+          "addend": 0,
+          "effective_retail_target": "0x800c6918"
+        },
+        {
+          "offset": "0xe4",
+          "kind": 10,
+          "symbol": "_restgpr_26",
+          "addend": 0,
+          "effective_retail_target": "0x80518a48"
+        }
+      ],
+      "checked_temporary_register_difference": null
+    }
+  ],
+  "preserved_existing_methods": [
+    {
+      "unit": "SyncBckEffectChecker",
+      "name": "reset__20SyncBckEffectCheckerFv",
+      "size": 20
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "__ct__12MultiEmitterFPCcPCQ29JGeometry8TVec3<f>PCQ29JGeometry8TVec3<f>PCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+      "size": 204
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "allocateEmitter__12MultiEmitterFPCc",
+      "size": 432
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "__dt__Q22MR32AssignableArray<13SingleEmitter>Fv",
+      "size": 104
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "__dt__Q22MR44Vector<Q22MR29FixedArray<P12MultiEmitter,4>>Fv",
+      "size": 64
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "__ct__12MultiEmitterFPCcPA4_fRCQ29JGeometry8TVec3<f>",
+      "size": 188
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "__ct__12MultiEmitterFPCcPA4_fPCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+      "size": 196
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "__ct__12MultiEmitterFPCc",
+      "size": 192
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "createEmitter__12MultiEmitterFv",
+      "size": 56
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "create__12MultiEmitterFP12EffectSystem",
+      "size": 164
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "createEmitterWithCallBack__12MultiEmitterFP24MultiEmitterCallBackBase",
+      "size": 108
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "deleteEmitter__12MultiEmitterFv",
+      "size": 208
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "for_each<PP12MultiEmitter,Q23std27mem_fun_t<v,12MultiEmitter>>__3stdFPP12MultiEmitterPP12MultiEmitterQ23std27mem_fun_t<v,12MultiEmitter>_Q23std27mem_fun_t<v,12MultiEmitter>",
+      "size": 116
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "forceDeleteEmitter__12MultiEmitterFv",
+      "size": 168
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "forceDelete__12MultiEmitterFP12EffectSystem",
+      "size": 100
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "deleteForeverEmitter__12MultiEmitterFv",
+      "size": 196
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "playCalcAndDeleteForeverEmitter__12MultiEmitterFv",
+      "size": 56
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "isValid__12MultiEmitterCFv",
+      "size": 112
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "isExistOneTimeEmitter__12MultiEmitterCFv",
+      "size": 112
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "setHostSRT__12MultiEmitterFPCQ29JGeometry8TVec3<f>PCQ29JGeometry8TVec3<f>PCQ29JGeometry8TVec3<f>",
+      "size": 8
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "setHostMtx__12MultiEmitterFPA4_f",
+      "size": 8
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "setOffset__12MultiEmitterFRCQ29JGeometry8TVec3<f>",
+      "size": 32
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "setBaseScale__12MultiEmitterFf",
+      "size": 8
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "setName__12MultiEmitterFPCc",
+      "size": 52
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "isEqualName__12MultiEmitterCFUs",
+      "size": 20
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "getParticleEmitter__12MultiEmitterCFi",
+      "size": 76
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "scanParticleEmitter__12MultiEmitterFP12EffectSystem",
+      "size": 144
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "forceFollowOn__12MultiEmitterFv",
+      "size": 8
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "forceFollowOff__12MultiEmitterFv",
+      "size": 8
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "forceScaleOn__12MultiEmitterFv",
+      "size": 8
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "initSyncBck__12MultiEmitterFP12XanimePlayerPCclf",
+      "size": 132
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "onDeleteSyncBck__12MultiEmitterFbf",
+      "size": 12
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "addSyncBck__12MultiEmitterFPC12XanimePlayerPCc",
+      "size": 8
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "setContinueBckEnd__12MultiEmitterFb",
+      "size": 12
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "onCreateSyncClipping__12MultiEmitterFv",
+      "size": 16
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "onForceDeleteSyncClipping__12MultiEmitterFv",
+      "size": 16
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "stopEmitterOnClipped__12MultiEmitterFv",
+      "size": 232
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "playEmitterOffClipped__12MultiEmitterFv",
+      "size": 224
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "addChildEmitter__12MultiEmitterFP12MultiEmitter",
+      "size": 28
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "setGlobalRotationDegree__12MultiEmitterFRCQ29JGeometry8TVec3<f>l",
+      "size": 112
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "push_back__Q22MR32Vector<Q22MR17FixedArray<Us,32>>FRCUs",
+      "size": 28
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "__dt__Q22MR32Vector<Q22MR17FixedArray<Us,32>>Fv",
+      "size": 64
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "getValidEmitter__12MultiEmitterFlb",
+      "size": 76
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "createOneTimeEmitter__12MultiEmitterFv",
+      "size": 120
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "createForeverEmitter__12MultiEmitterFv",
+      "size": 120
+    },
+    {
+      "unit": "MultiEmitter",
+      "name": "setGroupID__13SingleEmitterFUc",
+      "size": 8
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "makeAttibuteEffectBaseName__26@unnamed@EffectKeeper_cpp@FPcUlPCc",
+      "size": 124
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "negateInternal__9JGeometryFPCfPf",
+      "size": 28
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "set<f>__Q29JGeometry8TVec3<f>Ffff_v",
+      "size": 16
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "__ct__12EffectKeeperFPCcP14ResourceHolderiPCc",
+      "size": 172
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "__dt__Q22MR32AssignableArray<P12MultiEmitter>Fv",
+      "size": 96
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "__dt__Q22MR47Vector<Q22MR32AssignableArray<P12MultiEmitter>>Fv",
+      "size": 88
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "init__12EffectKeeperFP9LiveActor",
+      "size": 20
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "initAfterPlacementForAttributeEffect__12EffectKeeperFPA4_f",
+      "size": 392
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "checkExistenceAttributeEffect__12EffectKeeperFv",
+      "size": 124
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "setBinder__12EffectKeeperFPC6Binder",
+      "size": 20
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "addEffect__12EffectKeeperFPCcP9LiveActor",
+      "size": 76
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "registerEffect__12EffectKeeperFPCcPCQ29JGeometry8TVec3<f>PCQ29JGeometry8TVec3<f>PCQ29JGeometry8TVec3<f>PCc",
+      "size": 160
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "__ct<f>__Q29JGeometry8TVec3<f>Ffff_Pv",
+      "size": 16
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "registMultiEmitter__12EffectKeeperFP12MultiEmitterPCcPCc",
+      "size": 160
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "registerEffect__12EffectKeeperFPCcPA4_fPCcPCc",
+      "size": 144
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "registerEffect__12EffectKeeperFPCcPA4_fPCQ29JGeometry8TVec3<f>PCcPCc",
+      "size": 152
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "registerEffectWithoutSRT__12EffectKeeperFPCcPCc",
+      "size": 104
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "registerSyncBckEffect__12EffectKeeperFP12XanimePlayerPCcPCclffb",
+      "size": 184
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "getEmitter__12EffectKeeperCFPCc",
+      "size": 344
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "createEmitter__12EffectKeeperFPCc",
+      "size": 52
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "deleteEmitter__12EffectKeeperFPCc",
+      "size": 36
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "forceDeleteEmitter__12EffectKeeperFPCc",
+      "size": 36
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "deleteEmitterAll__12EffectKeeperFv",
+      "size": 100
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "for_each<PP12MultiEmitter,Q23std27mem_fun_t<v,12MultiEmitter>>__3stdFPP12MultiEmitterPP12MultiEmitterQ23std27mem_fun_t<v,12MultiEmitter>_Q23std27mem_fun_t<v,12MultiEmitter>",
+      "size": 116
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "forceDeleteEmitterAll__12EffectKeeperFv",
+      "size": 100
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "isTypeAttributeEffect__12EffectKeeperCFPCc",
+      "size": 164
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "isRegisteredEmitter__12EffectKeeperCFPCc",
+      "size": 128
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "getEmitter__12EffectKeeperCFl",
+      "size": 16
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "changeEffectName__12EffectKeeperFPCcPCc",
+      "size": 96
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "update__12EffectKeeperFv",
+      "size": 52
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "updateSyncBckEffect__12EffectKeeperFv",
+      "size": 124
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "updateAttributeEffect__12EffectKeeperFv",
+      "size": 232
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "updateFloorCode__12EffectKeeperFv",
+      "size": 156
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "stopEmitterOnClipped__12EffectKeeperFv",
+      "size": 100
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "playEmitterOffClipped__12EffectKeeperFv",
+      "size": 100
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "clear__12EffectKeeperFv",
+      "size": 100
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "changeBck__12EffectKeeperFv",
+      "size": 20
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "onDraw__12EffectKeeperFv",
+      "size": 112
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "for_each<PP12MultiEmitter,Q23std51binder2nd<Q23std30mem_fun1_t<v,12MultiEmitter,l>,l>>__3stdFPP12MultiEmitterPP12MultiEmitterQ23std51binder2nd<Q23std30mem_fun1_t<v,12MultiEmitter,l>,l>_Q23std51binder2nd<Q23std30mem_fun1_t<v,12MultiEmitter,l>,l>",
+      "size": 128
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "offDraw__12EffectKeeperFv",
+      "size": 112
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "enableSort__12EffectKeeperFv",
+      "size": 68
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "finalizeSort__12EffectKeeperFv",
+      "size": 8
+    },
+    {
+      "unit": "EffectKeeper",
+      "name": "updateFloorCode__12EffectKeeperFPC8Triangle",
+      "size": 84
+    }
+  ]
+}

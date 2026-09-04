@@ -1,0 +1,3 @@
+PASS original player phases, creation/deletion and reset correction
+PASS 23 stopped-frame boundaries and original moving-frame dispatch
+PASS animation transitions, stop/continue behavior and bank identity

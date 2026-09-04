@@ -226,10 +226,10 @@ void MultiEmitter::playEmitterOffClipped() {
         }
     }
 }
+/*
 void MultiEmitter::setDrawOrder(s32 idx) {
-    std::for_each_array(mEmitters.begin(), mEmitters.end(), std::bind2nd(std::mem_func(&SingleEmitter::setGroupID), idx));
 }
-
+ */
 void MultiEmitter::addChildEmitter(MultiEmitter* pChild) {
     mChildren.push_back(pChild);
 }

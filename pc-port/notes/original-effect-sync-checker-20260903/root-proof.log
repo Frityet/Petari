@@ -1,0 +1,11 @@
+__ct__20SyncBckEffectCheckerFP12XanimePlayer 100.0 32 exact=True
+updateBefore__20SyncBckEffectCheckerFv 100.0 148 exact=True
+updateAfter__20SyncBckEffectCheckerFv 97.77778 36 exact=False
+reset__20SyncBckEffectCheckerFv 100.0 20 exact=True
+isCreate__20SyncBckEffectCheckerCFPC17SyncBckEffectInfob 100.0 232 exact=True
+isDelete__20SyncBckEffectCheckerCFPC17SyncBckEffectInfo 100.0 252 exact=True
+checkPass__20SyncBckEffectCheckerCFf 100.0 80 exact=True
+checkPassIfRate0__20SyncBckEffectCheckerCFf 99.672134 244 exact=True
+setDrawOrder__12MultiEmitterFl 99.72973 148 exact=True
+syncEffectBck__12EffectKeeperFP12MultiEmitter 100.0 248 exact=True
+10 functions / 1440 bytes verified; 89 existing methods unchanged
