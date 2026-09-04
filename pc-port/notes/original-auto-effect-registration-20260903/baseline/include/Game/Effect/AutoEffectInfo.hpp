@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Game/Util/Color.hpp"
-#include <JSystem/JGeometry/TVec.hpp>
 
 class JMapInfoIter;
 
@@ -24,7 +23,9 @@ public:
     /* 0x20 */ bool mIsValidPrmColor;
     /* 0x24 */ Color8 mEnvColor;
     /* 0x28 */ bool mIsValidEnvColor;
-    /* 0x2C */ TVec3f mOffset;
+    /* 0x2C */ f32 mOffsetX;
+    /* 0x30 */ f32 mOffsetY;
+    /* 0x34 */ f32 mOffsetZ;
     /* 0x38 */ s32 mStartFrame;
     /* 0x3C */ s32 mEndFrame;
     /* 0x40 */ f32 mScaleValue;

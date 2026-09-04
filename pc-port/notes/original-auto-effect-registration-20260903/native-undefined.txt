@@ -1,0 +1,46 @@
+MultiScene::getJointMtx(MultiSceneActor const*, char const*)
+EffectKeeper::registerEffect(char const*, float (*) [4], JGeometry::TVec3<float> const*, char const*, char const*)
+EffectKeeper::registerEffect(char const*, float (*) [4], char const*, char const*)
+EffectKeeper::registerEffect(char const*, JGeometry::TVec3<float> const*, JGeometry::TVec3<float> const*, JGeometry::TVec3<float> const*, char const*)
+EffectKeeper::registerSyncBckEffect(XanimePlayer*, char const*, char const*, int, float, float, bool)
+MultiEmitter::addSyncBck(XanimePlayer const*, char const*)
+MultiEmitter::setBaseScale(float)
+MultiEmitter::setDrawOrder(int)
+MultiEmitter::addChildEmitter(MultiEmitter*)
+MultiEmitter::setContinueBckEnd(bool)
+MultiEmitter::setGlobalEnvColor(unsigned char, unsigned char, unsigned char, int)
+MultiEmitter::setGlobalPrmColor(unsigned char, unsigned char, unsigned char, int)
+MultiEmitter::scanParticleEmitter(EffectSystem*)
+MultiEmitter::setRate(float, int)
+MultiEmitter::pauseOff(int)
+MultiEmitter::setOffset(JGeometry::TVec3<float> const&)
+ParticleEmitter::init(unsigned short)
+PaneEffectKeeper::add(char const*, char const*, char const*)
+JPAEmitterManager::createSimpleEmitterID(JGeometry::TVec3<float> const&, unsigned short, unsigned char, unsigned char, JPAEmitterCallBack*, JPAParticleCallBack*)
+MultiSceneEffectKeeper::add(char const*, float (*) [4], char const*)
+MultiSceneEffectKeeper::add(char const*, JGeometry::TVec3<float> const*, JGeometry::TVec3<float> const*, JGeometry::TVec3<float> const*, char const*)
+MR::isNearZero(float, float)
+MR::zeroMemory(void*, unsigned int)
+MR::getJointMtx(LiveActor const*, char const*)
+MR::hasStringSpace(char const*)
+MR::getEffectSystem()
+MR::getParticleResourceHolder()
+MR::findBckNameStringInResource(char const**, ResourceHolder const*, char const*)
+MR::Effect::registerAutoEffectInfos(AutoEffectGroupHolder*, EffectKeeper*, LiveActor const*, char const*)
+MR::Effect::registerAutoEffectInfos(AutoEffectGroupHolder*, PaneEffectKeeper*, LayoutActor const*, char const*)
+MR::Effect::registerAutoEffectInfos(AutoEffectGroupHolder*, MultiSceneEffectKeeper*, MultiSceneActor const*, char const*)
+MR::Effect::createAndAddAutoEffectGroup(AutoEffectGroupHolder*, char const*)
+EffectKeeper::getEmitter(char const*) const
+EffectKeeper::getEmitter(int) const
+ModelManager::getResourceHolder() const
+MultiEmitter::isValid() const
+AutoEffectInfo::getName() const
+PaneEffectKeeper::getEmitter(char const*) const
+MultiSceneEffectKeeper::get(char const*) const
+ParticleResourceHolder::getAutoEffectNum(char const*) const
+ParticleResourceHolder::isExistInResource(char const*, unsigned short*) const
+ParticleResourceHolder::getAutoEffectListBinary() const
+___stack_chk_fail
+___stack_chk_guard
+_smgpc_msl_snprintf
+_strlen

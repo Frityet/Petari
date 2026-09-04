@@ -1,0 +1,93 @@
+[
+  {
+    "source": "include/Game/Effect/EffectSystemUtil.hpp",
+    "staged": "build/original-auto-effect-registration-20260903/staged/Game/Effect/EffectSystemUtil.hpp",
+    "sha256": "fa765cbc06459d165bbf77f17841c306741902f42bce88c2077d4426337061c2",
+    "root_identical": true
+  },
+  {
+    "source": "include/Game/Effect/AutoEffectInfo.hpp",
+    "staged": "build/original-auto-effect-registration-20260903/staged/Game/Effect/AutoEffectInfo.hpp",
+    "sha256": "df004264eb9c98df4d26a87d4941ef2899dae2dd0815ec53b0e6b8a5c64a441e",
+    "root_identical": true
+  },
+  {
+    "source": "include/Game/Effect/MultiEmitter.hpp",
+    "staged": "build/original-auto-effect-registration-20260903/staged/Game/Effect/MultiEmitter.hpp",
+    "sha256": "24298c1f01a0a0f8b066c65f67597a2692f2a3e088112be19f2fc4f4ebcaefd3",
+    "root_identical": true
+  },
+  {
+    "source": "include/Game/Effect/AutoEffectGroupHolder.hpp",
+    "staged": "build/original-auto-effect-registration-20260903/staged/Game/Effect/AutoEffectGroupHolder.hpp",
+    "sha256": "79b4cea7563571a2d679bdf2197f61356c13aebe3221977100e612213591281d",
+    "root_identical": true
+  },
+  {
+    "source": "include/Game/Effect/AutoEffectGroup.hpp",
+    "staged": "build/original-auto-effect-registration-20260903/staged/Game/Effect/AutoEffectGroup.hpp",
+    "sha256": "77873297c3bb9f49aa5bda4fca91287cde4091038f84b214de2d528a125f9748",
+    "root_identical": true
+  },
+  {
+    "source": "include/Game/Effect/EffectSystem.hpp",
+    "staged": "build/original-auto-effect-registration-20260903/staged/Game/Effect/EffectSystem.hpp",
+    "sha256": "f863add4b4f9f4991c4536c90fd63334b9d1c64acac449dc0aacc6a9fe542b9c",
+    "root_identical": true
+  },
+  {
+    "source": "include/Game/Effect/ParticleResourceHolder.hpp",
+    "staged": "build/original-auto-effect-registration-20260903/staged/Game/Effect/ParticleResourceHolder.hpp",
+    "sha256": "ba533a624489e16f9c1058ce3c661a03415c56b96f3a453f29210bd74a7cc1ed",
+    "root_identical": true
+  },
+  {
+    "source": "include/Game/LiveActor/EffectKeeper.hpp",
+    "staged": "build/original-auto-effect-registration-20260903/staged/Game/LiveActor/EffectKeeper.hpp",
+    "sha256": "f0f26410e53dd24d4deeb61b99e5e57e0f0def07547352dd03283488a38fb5b2",
+    "root_identical": true
+  },
+  {
+    "source": "include/Game/Scene/MultiSceneEffectKeeper.hpp",
+    "staged": "build/original-auto-effect-registration-20260903/staged/Game/Scene/MultiSceneEffectKeeper.hpp",
+    "sha256": "56385123633534ad5ddcfbba02b4d2e3c85837974b127384399bf9869bdc1c46",
+    "root_identical": true
+  },
+  {
+    "source": "include/Game/Scene/MultiSceneActor.hpp",
+    "staged": "build/original-auto-effect-registration-20260903/staged/Game/Scene/MultiSceneActor.hpp",
+    "sha256": "19ce7ac29a6d1904aab1b8f3069d7351ba274008dcef1a9f5448a8bc88d85294",
+    "root_identical": true
+  },
+  {
+    "source": "include/Game/Screen/PaneEffectKeeper.hpp",
+    "staged": "build/original-auto-effect-registration-20260903/staged/Game/Screen/PaneEffectKeeper.hpp",
+    "sha256": "e4a164f0538da48ab5a7a0727e320a543fbe62f5e837409902c8872cdfd3b205",
+    "root_identical": true
+  },
+  {
+    "source": "src/Game/Effect/EffectSystemUtil.cpp",
+    "staged": "build/original-auto-effect-registration-20260903/staged/Game/Effect/EffectSystemUtil.cpp",
+    "sha256": "c5ac05d6a77b931b4998bcde5a92918e963a8b56f3879016d9868d69c871c412",
+    "root_identical": true
+  },
+  {
+    "source": "src/Game/Effect/AutoEffectInfo.cpp",
+    "staged": "build/original-auto-effect-registration-20260903/staged/Game/Effect/AutoEffectInfo.cpp",
+    "sha256": "534ca3b92af4854ccf4862e53b94dc8f3418d8901e227e79425122a8f7f368d5",
+    "root_identical": true
+  },
+  {
+    "source": "src/Game/Effect/AutoEffectGroup.cpp",
+    "staged": "build/original-auto-effect-registration-20260903/staged/Game/Effect/AutoEffectGroup.cpp",
+    "sha256": "20641858c7a008a5b81700c1d537def6275ced5a773bf6c29d992168fbc640a9",
+    "root_identical": true
+  },
+  {
+    "source": "pc-port/src/Game/Util/Color.hpp",
+    "staged": "build/original-auto-effect-registration-20260903/staged/Game/Util/Color.hpp",
+    "sha256": "4e1494804ee951ae98d43acfce199621bfc4cb2839e67b0d3801f9d25c09a93b",
+    "root_identical": false,
+    "adaptation": "Existing original-auto-effect-20260903/color-native.patch integer RGBA endian correction"
+  }
+]

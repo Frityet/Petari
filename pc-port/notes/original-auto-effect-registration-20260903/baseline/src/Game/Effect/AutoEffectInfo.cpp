@@ -94,9 +94,9 @@ void AutoEffectInfo::init(const JMapInfoIter& rIter) {
     mJointName = getStringValue(rIter, "JointName");
     mEffectName = getStringValue(rIter, "EffectName");
     mParentName = getStringValue(rIter, "ParentName");
-    rIter.getValue("OffsetX", &mOffset.x);
-    rIter.getValue("OffsetY", &mOffset.y);
-    rIter.getValue("OffsetZ", &mOffset.z);
+    rIter.getValue("OffsetX", &mOffsetX);
+    rIter.getValue("OffsetY", &mOffsetY);
+    rIter.getValue("OffsetZ", &mOffsetZ);
     rIter.getValue("StartFrame", &mStartFrame);
     rIter.getValue("EndFrame", &mEndFrame);
 

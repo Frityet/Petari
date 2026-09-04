@@ -1,0 +1,22 @@
+[
+  {
+    "path": "src/Game/Effect/EffectSystemUtil.cpp",
+    "baseline_sha256": "d189179da55d0897eb6dbe3e32a321ad326a19e0d26a350eb580c9903224654d",
+    "sha256": "c5ac05d6a77b931b4998bcde5a92918e963a8b56f3879016d9868d69c871c412"
+  },
+  {
+    "path": "src/Game/Effect/AutoEffectInfo.cpp",
+    "baseline_sha256": "2b03d5ac211ee13fdcd0507b3665ea299e313a6c4dc2e7f87691393250f21677",
+    "sha256": "534ca3b92af4854ccf4862e53b94dc8f3418d8901e227e79425122a8f7f368d5"
+  },
+  {
+    "path": "include/Game/Effect/AutoEffectInfo.hpp",
+    "baseline_sha256": "05e24a042cf79acaf6fadf35560b9008cff0da19b996646a9d8e7c12293f2c25",
+    "sha256": "df004264eb9c98df4d26a87d4941ef2899dae2dd0815ec53b0e6b8a5c64a441e"
+  },
+  {
+    "path": "include/Game/Effect/MultiEmitter.hpp",
+    "baseline_sha256": "5eaaf306f6dc6941c26be2c975aa337b6c36fffe035c767d2b02c8cde69fdee5",
+    "sha256": "24298c1f01a0a0f8b066c65f67597a2692f2a3e088112be19f2fc4f4ebcaefd3"
+  }
+]
