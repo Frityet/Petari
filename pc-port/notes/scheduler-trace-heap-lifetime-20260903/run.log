@@ -1,0 +1,1 @@
+NameObj registry and scheduler sorting/history/snapshots survive original heap retirement; movement and animation callbacks retain original heap routing

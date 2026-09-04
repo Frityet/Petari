@@ -1,0 +1,2 @@
+runtime fixture compile=0 link=0
+Not run: actual Aurora window/renderer lifecycle is parent-owned.

@@ -768,7 +768,10 @@ namespace smgpc::runtime {
                     continue;
                 }
                 smgpc::compat::update_actor_clipping(*actor, *clipping_camera);
-                updated_actors.push_back(actor);
+                {
+                    smgpc::compat::JkrHostAllocationScope host;
+                    updated_actors.push_back(actor);
+                }
             }
         }
         for (auto *entry : sorted_entries_for_movement()) {
@@ -822,8 +825,11 @@ namespace smgpc::runtime {
             }
 
             smgpc::compat::update_actor_hit_sensors(actor);
-            smgpc::compat::collect_actor_hit_sensors(actor, sensors);
-            actors.push_back(actor);
+            {
+                smgpc::compat::JkrHostAllocationScope host;
+                smgpc::compat::collect_actor_hit_sensors(actor, sensors);
+                actors.push_back(actor);
+            }
         }
 
         for (auto *sensor : sensors) {
@@ -1066,7 +1072,10 @@ namespace smgpc::runtime {
             if (actor == nullptr || std::ranges::find(seen_actors, actor) != seen_actors.end()) {
                 continue;
             }
-            seen_actors.push_back(actor);
+            {
+                smgpc::compat::JkrHostAllocationScope host;
+                seen_actors.push_back(actor);
+            }
 
             const auto dead = entry_is_dead(entry);
             const auto suspended = entry_is_suspended(entry);
@@ -1081,6 +1090,7 @@ namespace smgpc::runtime {
             }
 
 #ifndef NDEBUG
+            smgpc::compat::JkrHostAllocationScope host;
             push_message_trace(SceneSchedulerMessageTraceEntry {
                 .sequence = _next_message_sequence++,
                 .message = msg,
@@ -1115,20 +1125,23 @@ namespace smgpc::runtime {
 
     std::vector<SceneSchedulerRegistration> SceneScheduler::remove_registrations_since(std::size_t marker) {
         auto registrations = std::vector<SceneSchedulerRegistration>{};
-        for (auto &entry : _entries) {
-            if (entry.order < marker) {
-                continue;
-            }
+        {
+            smgpc::compat::JkrHostAllocationScope host;
+            for (auto &entry : _entries) {
+                if (entry.order < marker) {
+                    continue;
+                }
 
-            registrations.push_back(SceneSchedulerRegistration{
-                .kind = entry.kind,
-                .name_obj = entry.name_obj,
-                .layout = entry.layout,
-                .layout_actor = entry.layout_actor,
-                .live_actor = entry_live_actor(entry),
-                .name = entry_name(entry),
-                .order = entry.order,
-            });
+                registrations.push_back(SceneSchedulerRegistration{
+                    .kind = entry.kind,
+                    .name_obj = entry.name_obj,
+                    .layout = entry.layout,
+                    .layout_actor = entry.layout_actor,
+                    .live_actor = entry_live_actor(entry),
+                    .name = entry_name(entry),
+                    .order = entry.order,
+                });
+            }
         }
 
         for (const auto &entry : _entries)
@@ -1218,6 +1231,7 @@ namespace smgpc::runtime {
     void fill_actor_model_debug_state(SceneSchedulerEntryState&, const LiveActor*);
 
     std::vector<SceneSchedulerEntryState> SceneScheduler::snapshot() const {
+        smgpc::compat::JkrHostAllocationScope host;
         auto states = std::vector<SceneSchedulerEntryState>{};
         states.reserve(_entries.size());
         for (const auto &entry : _entries) {
@@ -1267,6 +1281,7 @@ namespace smgpc::runtime {
     }
 
     std::vector<SceneLayoutRuntimeDebugState> SceneScheduler::debug_layout_runtime_snapshot() const {
+        smgpc::compat::JkrHostAllocationScope host;
         auto states = std::vector<SceneLayoutRuntimeDebugState>{};
         for (const auto &entry : _entries) {
             if ((entry.kind != SceneEntryKind::Layout || entry.layout == nullptr) &&
@@ -1493,6 +1508,7 @@ namespace smgpc::runtime {
     }
 
     std::vector<SceneScheduler::Entry *> SceneScheduler::sorted_entries_for_movement() {
+        smgpc::compat::JkrHostAllocationScope host;
         auto entries = std::vector<Entry *>{};
         for (auto &entry : _entries) {
             entries.push_back(&entry);
@@ -1502,6 +1518,7 @@ namespace smgpc::runtime {
     }
 
     std::vector<SceneScheduler::Entry *> SceneScheduler::sorted_entries_for_calc_anim() {
+        smgpc::compat::JkrHostAllocationScope host;
         auto entries = std::vector<Entry *>{};
         for (auto &entry : _entries) {
             entries.push_back(&entry);
@@ -1511,6 +1528,7 @@ namespace smgpc::runtime {
     }
 
     std::vector<SceneScheduler::Entry *> SceneScheduler::sorted_entries_for_calc_view_and_entry() {
+        smgpc::compat::JkrHostAllocationScope host;
         auto entries = std::vector<Entry *>{};
         for (auto &entry : _entries) {
             entries.push_back(&entry);
@@ -1572,6 +1590,9 @@ namespace smgpc::runtime {
         }
 
     void SceneScheduler::push_trace(const Entry &entry, SceneSchedulerPhase phase, SceneDrawBufferPass pass) {
+        // Debug history outlives scene arenas. Scope only metadata construction;
+        // movement, animation and draw callbacks keep their caller's Game heap.
+        smgpc::compat::JkrHostAllocationScope host;
         auto state = SceneSchedulerEntryState {
             .kind = entry.kind,
             .phase = phase,
@@ -1607,6 +1628,7 @@ namespace smgpc::runtime {
     }
 
     void SceneScheduler::push_message_trace(SceneSchedulerMessageTraceEntry trace) {
+        smgpc::compat::JkrHostAllocationScope host;
         constexpr auto max_message_trace_entries = std::size_t {512U};
         if (_message_trace.size() >= max_message_trace_entries) {
             _message_trace.erase(_message_trace.begin());
