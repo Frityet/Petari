@@ -17,7 +17,7 @@ public:
     }
 
     Color8(u32 color) {
-        mColor = color;
+        set(static_cast<u8>(color >> 24), static_cast<u8>(color >> 16), static_cast<u8>(color >> 8), static_cast<u8>(color));
     }
 
     inline operator GXColor() const {
@@ -25,7 +25,7 @@ public:
     }
 
     inline operator u32() const {
-        return mColor;
+        return (static_cast<u32>(r) << 24) | (static_cast<u32>(g) << 16) | (static_cast<u32>(b) << 8) | a;
     }
 
     inline const Color8& operator=(const GXColor& other) {
