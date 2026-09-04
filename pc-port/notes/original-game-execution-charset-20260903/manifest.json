@@ -1,0 +1,19 @@
+{
+  "compiler-probe.cpp": "bdd3973b113dc5251af2552eef0d2a6894c7be6c1b635d4767bd7793092230e2",
+  "original-proof.json": "e98f43ba533fc1a60e064ff679eabf94cc80bf201a9761bb09ac7fe0f3de3d77",
+  "tool-proposal.patch": "503a72360a7007550ec7af8332eaf5f3772a9e8e10dccf74d47f91029e13c49d",
+  "original-compiler.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "build-hook-proof.json": "d666d675915b2b0a33f17b13a778f9174978d66c87b72df49ea11ed9751c35cb",
+  "diagnostic-path.log": "d4122d5a436e1b534a8e4aedf3d49a9ab3167e97512634b312e273f10be30c08",
+  "verify-original.py": "3260c87543189e046dd0f311c48958a60b7a7a5464864b6da392e255b10120f5",
+  "native-proof.json": "9b3f0d3425ae8f83dcc823d6ab8511ead2db536ceb1b5209c164023f5c083c87",
+  "verify-native.py": "329f889d6558ecab55481d1166907c1fc888ef00249849efa98ff25e6ae4bc63",
+  "PROPOSAL.md": "9b520d90cff9d4be4f5140a21231951832c7a6dd5acf62e7eef1e04713b0de7e",
+  "BOUNDARY_AUDIT.md": "a78289bca3621aa48109dfe304a96ef70cd754c91383e14540538e0d262cda50",
+  "clang-exec-charset.log": "ac5bfd0b9b53bc32c176f608ca6a13d4234ae4beb79ed8adf6955ffa2eb8705a",
+  "native-fixture.log": "4646a2e4c02c2197f61a3c76198e038c4bfc8033a5a02ebf4d41e7f026901978",
+  "verify-build-hook.py": "b742e34330149508f9df328258ff0afc4d0d9db2fc119f9d7aac50e77c1d70ed",
+  "staged/tools/game_execution_charset.py": "470640220833478017a6349712b1d6eb309e01ed6d8b18b65e8c3091ba419217",
+  "staged/tools/game_literal_lexer.cpp": "f167f221d98e86bfb80f4e0a507846ca9607c13245ea5e49fa34e6d5e386637d",
+  "staged/tools/game_execution_charset.lua": "cad65826ded58c66c7bcee9e9fa5b00858b49153f24dd460fb78f2451d824316"
+}

@@ -1,0 +1,219 @@
+#!/usr/bin/env python3
+"""Build immutable CP932 compiler views. Editable sources stay UTF-8.
+
+C++ token boundaries come from game_literal_lexer (Clang raw lexer), never a
+regular expression. This tool changes ordinary narrow execution payloads only.
+"""
+from __future__ import annotations
+import argparse
+import hashlib
+import json
+from pathlib import Path
+import subprocess
+import unicodedata
+import tempfile
+
+VERSION = 1
+NARROW = {'string_literal', 'char_constant'}
+STRINGS = {'string_literal', 'wide_string_literal', 'utf8_string_literal', 'utf16_string_literal', 'utf32_string_literal'}
+SKIP_DIRECTIVES = {'include', 'include_next', 'import', 'line', 'error', 'warning', 'pragma'}
+
+class EncodingError(ValueError): pass
+
+def sha(data: bytes) -> str: return hashlib.sha256(data).hexdigest()
+def octal(data: bytes) -> str: return ''.join('\\%03o' % byte for byte in data)
+def cp932(text: str) -> str:
+    try: return octal(text.encode('cp932', errors='strict'))
+    except UnicodeEncodeError as error: raise EncodingError(f'not representable in original CP932: {text!r}') from error
+
+def splice_end(text: str, index: int) -> int | None:
+    if text.startswith('\\\r\n', index): return index + 3
+    if text.startswith('\\\n', index) or text.startswith('\\\r', index): return index + 2
+    return None
+
+def physical_splices(text: str) -> str:
+    output=[];index=0
+    while index<len(text):
+        end=splice_end(text,index)
+        if end is not None: output.append(text[index:end]);index=end
+        else: index+=1
+    return ''.join(output)
+
+def unsplice(text: str) -> str:
+    output=[];index=0
+    while index<len(text):
+        end=splice_end(text,index)
+        if end is not None: index=end
+        else: output.append(text[index]);index+=1
+    return ''.join(output)
+
+def convert(token: str) -> str:
+    """Token is known by Clang to be an ordinary narrow string or character."""
+    logical=unsplice(token)
+    raw=logical.startswith('R"')
+    if raw:
+        # Raw contents revert phase-2 line splicing. Only the prefix/delimiter
+        # participates in ordinary source processing; keep raw body bytes.
+        quote=token.index('"');opening=token.index('(',quote+1)
+        delimiter=unsplice(token[quote+1:opening])
+        closing=')'+delimiter+'"';end=token.rfind(closing)
+        if end<opening: raise EncodingError('malformed raw literal')
+        body=token[opening+1:end]
+        if not any(ord(c)>127 for c in body): return token
+        result='"' + physical_splices(token[:opening+1])
+        index=0
+        while index<len(body):
+            char=body[index]
+            if char in '\r\n':
+                # Translation phase 1 normalizes physical source newlines,
+                # including inside raw strings; phase 2 splicing is reverted.
+                newline='\r\n' if body.startswith('\r\n',index) else char
+                result+=cp932('\n')+'\\'+newline
+                index+=len(newline)
+            else:
+                result+=cp932(char);index+=1
+        result+='"'+token[end+len(closing):]
+        return result
+    quote=token.index('"') if '"' in token and (not token.startswith("'")) else token.index("'")
+    delimiter=token[quote];output=[token[:quote+1]];index=quote+1;changed=False
+    while index<len(token):
+        char=token[index]
+        if char==delimiter:
+            output.append(token[index:]);return ''.join(output) if changed else token
+        if char=='\\':
+            end=splice_end(token,index)
+            if end is not None: output.append(token[index:end]);index=end;continue
+            if index+1>=len(token): raise EncodingError('unterminated escape')
+            escaped=token[index+1]
+            if escaped in 'uUN':
+                # UCN digits may themselves contain phase-2 splices. Decode the
+                # logical sequence, retaining its physical line count.
+                logical_tail=unsplice(token[index:])
+                if escaped=='N' or logical_tail.startswith('\\u{'):
+                    closing=logical_tail.find('}')
+                    if not logical_tail.startswith('\\'+escaped+'{') or closing<0: raise EncodingError('malformed braced UCN')
+                    sequence=logical_tail[:closing+1]
+                    try: value=unicodedata.lookup(sequence[3:-1]) if escaped=='N' else chr(int(sequence[3:-1],16))
+                    except (ValueError,KeyError) as error: raise EncodingError('invalid universal character name') from error
+                else:
+                    length=6 if escaped=='u' else 10;sequence=logical_tail[:length]
+                    if len(sequence)!=length: raise EncodingError('short universal character name')
+                    try: value=chr(int(sequence[2:],16))
+                    except ValueError as error: raise EncodingError('invalid universal character name') from error
+                physical_end=index;logical_count=0
+                while logical_count<len(sequence):
+                    end=splice_end(token,physical_end)
+                    if end is not None: physical_end=end
+                    else: physical_end+=1;logical_count+=1
+                original=token[index:physical_end]
+                if ord(value)>127:
+                    output.append(cp932(value));output.append(physical_splices(original));changed=True
+                else: output.append(original)
+                index=physical_end;continue
+            # Keep numeric/simple escapes as authored. In particular a literal
+            # backslash followed by 'u' must not become a universal character.
+            output.append(token[index:index+2]);index+=2;continue
+        if ord(char)>127: output.append(cp932(char));changed=True
+        else: output.append(char)
+        index+=1
+    raise EncodingError('unterminated ordinary literal')
+
+def transform(data: bytes, tokens: list[dict], ranges: list[tuple[int,int]] | None = None) -> tuple[bytes,dict]:
+    protected=set()
+    # C++ adjacent unprefixed strings inherit a neighboring wide/UTF kind.
+    # Comments do not interrupt adjacency; all other tokens do.
+    run=[]
+    def close():
+        if any(t['kind']!='string_literal' for t in run): protected.update(t['begin'] for t in run)
+        run.clear()
+    previous=None
+    for t in tokens:
+        if t['kind'] not in STRINGS: close();previous=None;continue
+        if previous is None or t['sequence']!=previous+1: close()
+        run.append(t);previous=t['sequence']
+    close()
+    parts=[];cursor=0;changed=[];skipped_unicode=0;macro_literals=[]
+    for t in tokens:
+        start,end=t['begin'],t['end']
+        if t['kind'] not in NARROW or start in protected: skipped_unicode+=1;continue
+        if unsplice(t['directive']) in SKIP_DIRECTIVES: continue
+        if ranges is not None and not any(a<=start and end<=b for a,b in ranges): continue
+        original=data[start:end].decode('utf-8',errors='strict')
+        try: converted=convert(original).encode('utf-8')
+        except EncodingError as error: raise EncodingError(f'line {data[:start].count(bytes([10]))+1}: {error}') from error
+        if converted==data[start:end]: continue
+        if converted.count(b'\n')!=data[start:end].count(b'\n'): raise EncodingError('source line count changed')
+        parts.extend((data[cursor:start],converted));cursor=end
+        changed.append({'begin':start,'end':end,'line':data[:start].count(b'\n')+1,'kind':t['kind'],'encoded_sha256':sha(converted)})
+        if t['directive']=='define':macro_literals.append(changed[-1])
+    parts.append(data[cursor:])
+    return b''.join(parts),{'literals':len(tokens),'converted':changed,'protected_unicode_literals':skipped_unicode,'macro_literals':macro_literals}
+
+def write_if_changed(path: Path, data: bytes):
+    if path.exists() and path.read_bytes()==data: return
+    path.parent.mkdir(parents=True,exist_ok=True)
+    with tempfile.NamedTemporaryFile(dir=path.parent,prefix=path.name+'.',delete=False) as temporary:
+        temporary.write(data);temporary_path=Path(temporary.name)
+    temporary_path.replace(path)
+
+def build(lexer: Path, paths: list[Path], output: Path, extracts: list[dict] = ()) -> dict:
+    lexer=lexer.resolve();output=output.resolve();paths=sorted(set(p.resolve() for p in paths))
+    admitted={}
+    # Mixed native files are eligible only for explicit byte-identical ranges
+    # from an original source. All other host/UI literals remain untouched.
+    for record in extracts:
+        path=Path(record['path']).resolve();data=path.read_bytes()
+        if sha(data)!=record['sha256']: raise EncodingError(f'extraction provenance changed: {path}')
+        allowed=[]
+        for span in record['ranges']:
+            source=Path(span['source']).resolve().read_bytes()
+            a,b=span['begin'],span['end'];x,y=span['source_begin'],span['source_end']
+            if data[a:b]!=source[x:y]: raise EncodingError(f'original extraction is not byte-identical: {path}')
+            allowed.append((a,b))
+        admitted[path]=allowed
+        if path not in paths:paths.append(path)
+    fingerprint=sha(Path(__file__).read_bytes()+lexer.read_bytes()+json.dumps(extracts,sort_keys=True).encode())
+    cache_path=output/'cache.json';cache={}
+    if cache_path.exists():
+        previous=json.loads(cache_path.read_text())
+        if previous.get('fingerprint')==fingerprint:cache=previous['entries']
+    entries={};pending=[];data_by_path={};tokens_by_path={};hits=0
+    for path in paths:
+        data=path.read_bytes();data.decode('utf-8',errors='strict');key=str(path);digest=sha(data)
+        entry=cache.get(key)
+        if entry and entry['source_sha256']==digest and Path(entry['view']).exists() and sha(Path(entry['view']).read_bytes())==entry['view_sha256']:entries[key]=entry;hits+=1
+        else:pending.append(path);data_by_path[key]=data
+    for first in range(0,len(pending),100):
+        command=[str(lexer)]+[str(p) for p in pending[first:first+100]]
+        rows=json.loads(subprocess.run(command,check=True,capture_output=True,text=True).stdout)
+        for row in rows:tokens_by_path[row['path']]=row['tokens']
+    for path in pending:
+        key=str(path);data=data_by_path[key]
+        if path.read_bytes()!=data: raise EncodingError(f'source changed while tokenizing: {path}')
+        try:view,stats=transform(data,tokens_by_path[key],admitted.get(path))
+        except EncodingError as error:raise EncodingError(f'{path}: {error}') from error
+        view_path=output/'views'/sha(view+key.encode())/path.name
+        write_if_changed(view_path,view)
+        entries[key]={'source_sha256':sha(data),'view_sha256':sha(view),'view':str(view_path),'stats':stats}
+    overlay={'version':0,'case-sensitive':True,'use-external-names':False,'roots':[
+        {'type':'file','name':path,'external-contents':entry['view']} for path,entry in sorted(entries.items()) if entry['stats']['converted']]}
+    write_if_changed(output/'overlay.json',(json.dumps(overlay,indent=2)+'\n').encode())
+    write_if_changed(cache_path,(json.dumps({'fingerprint':fingerprint,'entries':entries},indent=2)+'\n').encode())
+    mapping_fingerprint=sha(json.dumps({path:[item['encoded_sha256'] for item in entry['stats']['converted']] for path,entry in sorted(entries.items()) if entry['stats']['converted']},sort_keys=True).encode())
+    report={'mapping_fingerprint':mapping_fingerprint,'version':VERSION,'fingerprint':fingerprint,'files':len(paths),'cache_hits':hits,'lexed':len(pending),
+            'mapped_files':len(overlay['roots']),'converted_literals':sum(len(e['stats']['converted']) for e in entries.values()),
+            'macro_literals':{p:e['stats']['macro_literals'] for p,e in entries.items() if e['stats']['macro_literals']},
+            'overlay':str(output/'overlay.json')}
+    write_if_changed(output/'report.json',(json.dumps(report,indent=2)+'\n').encode())
+    return report
+
+def main():
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--lexer',type=Path,required=True);parser.add_argument('--output',type=Path,required=True)
+    parser.add_argument('--root',type=Path,action='append',default=[])
+    parser.add_argument('--extracts',type=Path);parser.add_argument('files',nargs='*',type=Path)
+    args=parser.parse_args();paths=args.files
+    for root in args.root:paths += [p for p in root.rglob('*') if p.suffix in {'.cpp','.hpp','.h','.inc'}]
+    extracts=json.loads(args.extracts.read_text()) if args.extracts else []
+    print(json.dumps(build(args.lexer,paths,args.output,extracts),indent=2))
+if __name__=='__main__':main()

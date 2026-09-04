@@ -1,0 +1,306 @@
+{
+  "commands": [
+    {
+      "command": [
+        "/opt/homebrew/opt/llvm/bin/clang++",
+        "-std=c++23",
+        "/Users/frityet/Projects/petari/pc-port/notes/original-game-execution-charset-20260903/staged/tools/game_literal_lexer.cpp",
+        "-I/opt/homebrew/opt/llvm/include",
+        "-L/opt/homebrew/opt/llvm/lib",
+        "-Wl,-rpath,/opt/homebrew/opt/llvm/lib",
+        "-lclang-cpp",
+        "-lLLVM",
+        "-o",
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/game-literal-lexer"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/game-literal-lexer",
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/token-probe.cpp"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/game-literal-lexer",
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/token-probe.cpp"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/game-literal-lexer",
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/token-probe.cpp"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/game-literal-lexer",
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/token-probe.cpp"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/game-literal-lexer",
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/token-probe.cpp"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/game-literal-lexer",
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/token-probe.cpp"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/game-literal-lexer",
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/token-probe.cpp"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/game-literal-lexer",
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/token-probe.cpp"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/game-literal-lexer",
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/token-probe.cpp"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/game-literal-lexer",
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/token-probe.cpp"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/game-literal-lexer",
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/token-probe.cpp"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/game-literal-lexer",
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/token-probe.cpp"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/game-literal-lexer",
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/token-probe.cpp"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/game-literal-lexer",
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/token-probe.cpp"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/game-literal-lexer",
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/token-probe.cpp"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/game-literal-lexer",
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/token-probe.cpp"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/game-literal-lexer",
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/token-probe.cpp"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/game-literal-lexer",
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/token-probe.cpp"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/game-literal-lexer",
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/token-probe.cpp"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/game-literal-lexer",
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/token-probe.cpp"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/game-literal-lexer",
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/token-probe.cpp"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/game-literal-lexer",
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/token-probe.cpp"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/game-literal-lexer",
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/token-probe.cpp"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/game-literal-lexer",
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/token-probe.cpp"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/opt/homebrew/opt/llvm/bin/clang++",
+        "-std=c++23",
+        "-g",
+        "-O0",
+        "-ivfsoverlay",
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/fixture-view/overlay.json",
+        "-MMD",
+        "-MF",
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/fixture.d",
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/main.cpp",
+        "-o",
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/fixture"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/fixture"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/opt/homebrew/opt/llvm/bin/clang++",
+        "-std=c++23",
+        "-ivfsoverlay",
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/fixture-view/overlay.json",
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/main.cpp",
+        "-o",
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/fixture-updated"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/fixture-updated"
+      ],
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/opt/homebrew/opt/llvm/bin/clang++",
+        "-std=c++23",
+        "-fsyntax-only",
+        "-ivfsoverlay",
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/diagnostic-view/overlay.json",
+        "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/diagnostic.cpp"
+      ],
+      "returncode": 1,
+      "expected_failure": true
+    }
+  ],
+  "lexical_cases": 20,
+  "rejection_cases": 3,
+  "source_unchanged": {
+    "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/original-literals.cpp": "62e914da9f58b295f366d9a1f69104db34919da891491ed9571e4fc1712ee389",
+    "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/modern-literals.hpp": "fcf525b12d02cb2f16575af00af448894606a645acce5076e51e81831a2c301b",
+    "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/main.cpp": "7da2cd1e80c4345544fa8e9448fab45ccf2012b88790574c964b876c21247320"
+  },
+  "native_output": "plain=8ba492ca8fed00\nmaterial=91ae90ab9285926e00\ntrailing=955c835c8f5c00\njoined=8ba492ca00\nascii_escape=41098ba40a005800\ncharacter=00008ba4\nordinary_ucn=8ba492ca\nraw=8ba45c75353137310a92ca\nescaped_newline=8ba492ca\nfile=/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/main.cpp\noriginal_mario_prefixes=pass unicode_kinds=pass\n",
+  "fixture": {
+    "mapping_fingerprint": "8fbef37eaac7b56bff49e7d487b57514dbc42914af4c7746e160502f17a69e1d",
+    "version": 1,
+    "fingerprint": "7338bae4b097e1165ceaa394374f62b558285841b8bd2ca604ab63236b2ad60c",
+    "files": 2,
+    "cache_hits": 0,
+    "lexed": 2,
+    "mapped_files": 2,
+    "converted_literals": 11,
+    "macro_literals": {},
+    "overlay": "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/fixture-view/overlay.json"
+  },
+  "cache": {
+    "mapping_fingerprint": "8fbef37eaac7b56bff49e7d487b57514dbc42914af4c7746e160502f17a69e1d",
+    "version": 1,
+    "fingerprint": "7338bae4b097e1165ceaa394374f62b558285841b8bd2ca604ab63236b2ad60c",
+    "files": 2,
+    "cache_hits": 2,
+    "lexed": 0,
+    "mapped_files": 2,
+    "converted_literals": 11,
+    "macro_literals": {},
+    "overlay": "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/fixture-view/overlay.json"
+  },
+  "header_update": {
+    "mapping_fingerprint": "28ad9aeda658eff7ec34b5478ea0c960b5209463b9e277f111307c89424b99dd",
+    "version": 1,
+    "fingerprint": "7338bae4b097e1165ceaa394374f62b558285841b8bd2ca604ab63236b2ad60c",
+    "files": 2,
+    "cache_hits": 1,
+    "lexed": 1,
+    "mapped_files": 2,
+    "converted_literals": 11,
+    "macro_literals": {},
+    "overlay": "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/fixture-view/overlay.json"
+  },
+  "full_game": {
+    "mapping_fingerprint": "42c7e19020234bb4503c86964dfca5e46308215aec67788dbfb3db5bf8369a48",
+    "version": 1,
+    "fingerprint": "7338bae4b097e1165ceaa394374f62b558285841b8bd2ca604ab63236b2ad60c",
+    "files": 3876,
+    "cache_hits": 0,
+    "lexed": 3876,
+    "mapped_files": 817,
+    "converted_literals": 7590,
+    "macro_literals": {
+      "/Users/frityet/Projects/petari/src/Game/System/GameSystem.cpp": [
+        {
+          "begin": 1555,
+          "end": 1581,
+          "line": 39,
+          "kind": "string_literal",
+          "encoded_sha256": "5f8d2fb3b93c5b00d555ea26e3f5f5e5fe4af72058b7cad335cc838874469ef4"
+        }
+      ]
+    },
+    "overlay": "/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/all-game/overlay.json"
+  }
+}

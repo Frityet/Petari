@@ -1,0 +1,4 @@
+/Users/frityet/Projects/petari/build/original-game-execution-charset-20260903/diagnostic.cpp:3:15: error: static assertion failed: failure
+    3 | static_assert(false, "failure");
+      |               ^~~~~
+1 error generated.
