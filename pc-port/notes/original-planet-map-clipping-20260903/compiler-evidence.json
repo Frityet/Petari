@@ -1,0 +1,565 @@
+{
+  "source_sha256": "88d14b1665df1b8f5ebd3611d270bb16f982e835537a798fcbfa18d9dfa1d93a",
+  "header_sha256": "a959f4619c65f4e79005855ff674b5db0c83633cbf05baccf97e86f013cbe78f",
+  "compiler_command": [
+    "build/tools/wibo",
+    "build/tools/sjiswrap.exe",
+    "build/compilers/GC/3.0a3/mwcceppc.exe",
+    "-nodefaults",
+    "-proc",
+    "gekko",
+    "-align",
+    "powerpc",
+    "-enum",
+    "int",
+    "-fp",
+    "hardware",
+    "-Cpp_exceptions",
+    "off",
+    "-O4,s",
+    "-inline",
+    "auto",
+    "-pragma",
+    "cats off",
+    "-pragma",
+    "warn_notinlined off",
+    "-maxerrors",
+    "1",
+    "-nosyspath",
+    "-RTTI",
+    "off",
+    "-str",
+    "reuse",
+    "-enc",
+    "SJIS",
+    "-sdata",
+    "4",
+    "-sdata2",
+    "4",
+    "-ipa",
+    "file",
+    "-sym",
+    "on",
+    "-i",
+    "include",
+    "-i",
+    "libs/JSystem/include",
+    "-i",
+    "libs/MSL_C++/include",
+    "-i",
+    "libs/MSL_C/include",
+    "-i",
+    "libs/MetroTRK/include",
+    "-i",
+    "libs/RVLFaceLib/include",
+    "-i",
+    "libs/RVL_SDK/include",
+    "-i",
+    "libs/Runtime/include",
+    "-i",
+    "libs/nw4r/include",
+    "-i",
+    "build/RMGK01/include",
+    "-DVERSION=0",
+    "-c",
+    "/Users/frityet/Projects/petari/src/Game/Map/PlanetMap.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/build/original-planet-map-clipping-20260903/PlanetMap.o"
+  ],
+  "functions": [
+    {
+      "symbol": "init__9PlanetMapFRC12JMapInfoIter",
+      "retail_address": "0x80194800",
+      "bytes": 604,
+      "match_percent": 99.834435,
+      "all_instructions_identical_after_verified_relocations_and_stack_slot_mapping": true,
+      "relocated_byte_exact": true,
+      "verified_relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_29",
+          "addend": 0,
+          "effective_retail_target": "0x80518a08"
+        },
+        {
+          "offset": "0x20",
+          "kind": 10,
+          "symbol": "getObjectName__2MRFPPCcRC12JMapInfoIter",
+          "addend": 0,
+          "effective_retail_target": "0x803d5c0c"
+        },
+        {
+          "offset": "0x28",
+          "kind": 10,
+          "symbol": "isValidInfo__2MRFRC12JMapInfoIter",
+          "addend": 0,
+          "effective_retail_target": "0x803d5470"
+        },
+        {
+          "offset": "0x34",
+          "kind": 109,
+          "symbol": "@5863",
+          "addend": 0,
+          "value_hex": "bf800000",
+          "effective_retail_target": "0x806bc31c"
+        },
+        {
+          "offset": "0x44",
+          "kind": 10,
+          "symbol": "getJMapInfoArg0NoInit__2MRFRC12JMapInfoIterPf",
+          "addend": 0,
+          "effective_retail_target": "0x803d5968"
+        },
+        {
+          "offset": "0x48",
+          "kind": 109,
+          "symbol": "@5863",
+          "addend": 0,
+          "value_hex": "bf800000",
+          "effective_retail_target": "0x806bc31c"
+        },
+        {
+          "offset": "0x58",
+          "kind": 10,
+          "symbol": "getJMapInfoArg2NoInit__2MRFRC12JMapInfoIterPf",
+          "addend": 0,
+          "effective_retail_target": "0x803d59c8"
+        },
+        {
+          "offset": "0x5c",
+          "kind": 109,
+          "symbol": "@5843",
+          "addend": 0,
+          "value_hex": "00000000",
+          "effective_retail_target": "0x806bc318"
+        },
+        {
+          "offset": "0x70",
+          "kind": 10,
+          "symbol": "initDefaultPos__2MRFP9LiveActorRC12JMapInfoIter",
+          "addend": 0,
+          "effective_retail_target": "0x803db194"
+        },
+        {
+          "offset": "0x80",
+          "kind": 10,
+          "symbol": "initModel__9PlanetMapFPCcRC12JMapInfoIter",
+          "addend": 0,
+          "effective_retail_target": "0x80194c1c"
+        },
+        {
+          "offset": "0x88",
+          "kind": 10,
+          "symbol": "connectToScenePlanet__2MRFP9LiveActor",
+          "addend": 0,
+          "effective_retail_target": "0x803f08c0"
+        },
+        {
+          "offset": "0x9c",
+          "kind": 10,
+          "symbol": "initEffectKeeper__9LiveActorFiPCcb",
+          "addend": 0,
+          "effective_retail_target": "0x80166080"
+        },
+        {
+          "offset": "0xa8",
+          "kind": 10,
+          "symbol": "initHitSensor__9LiveActorFi",
+          "addend": 0,
+          "effective_retail_target": "0x80165f28"
+        },
+        {
+          "offset": "0xb0",
+          "kind": 10,
+          "symbol": "addBodyMessageSensorMapObj__2MRFP9LiveActor",
+          "addend": 0,
+          "effective_retail_target": "0x803c3928"
+        },
+        {
+          "offset": "0xbc",
+          "kind": 10,
+          "symbol": "isExistCollisionResource__2MRFPC9LiveActorPCc",
+          "addend": 0,
+          "effective_retail_target": "0x803eabe0"
+        },
+        {
+          "offset": "0xc8",
+          "kind": 109,
+          "symbol": "cFollowJointName__23@unnamed@PlanetMap_cpp@",
+          "addend": 0,
+          "effective_retail_target": "0x806b1c58"
+        },
+        {
+          "offset": "0xd4",
+          "kind": 10,
+          "symbol": "isExistJoint__2MRFPC9LiveActorPCc",
+          "addend": 0,
+          "effective_retail_target": "0x803d6958"
+        },
+        {
+          "offset": "0xe0",
+          "kind": 109,
+          "symbol": "cFollowJointName__23@unnamed@PlanetMap_cpp@",
+          "addend": 0,
+          "effective_retail_target": "0x806b1c58"
+        },
+        {
+          "offset": "0xe8",
+          "kind": 10,
+          "symbol": "getJointMtx__2MRFPC9LiveActorPCc",
+          "addend": 0,
+          "effective_retail_target": "0x803d6834"
+        },
+        {
+          "offset": "0xf2",
+          "kind": 6,
+          "symbol": "@5865",
+          "addend": 0,
+          "value_hex": "626f647900",
+          "effective_retail_target": "0x8058b2c5"
+        },
+        {
+          "offset": "0xfa",
+          "kind": 4,
+          "symbol": "@5865",
+          "addend": 0,
+          "value_hex": "626f647900",
+          "effective_retail_target": "0x8058b2c5"
+        },
+        {
+          "offset": "0xfc",
+          "kind": 10,
+          "symbol": "getSensor__9LiveActorCFPCc",
+          "addend": 0,
+          "effective_retail_target": "0x80165ce4"
+        },
+        {
+          "offset": "0x110",
+          "kind": 10,
+          "symbol": "initCollisionParts__2MRFP9LiveActorPCcP9HitSensorPA4_f",
+          "addend": 0,
+          "effective_retail_target": "0x803df804"
+        },
+        {
+          "offset": "0x116",
+          "kind": 6,
+          "symbol": "@5865",
+          "addend": 0,
+          "value_hex": "626f647900",
+          "effective_retail_target": "0x8058b2c5"
+        },
+        {
+          "offset": "0x11e",
+          "kind": 4,
+          "symbol": "@5865",
+          "addend": 0,
+          "value_hex": "626f647900",
+          "effective_retail_target": "0x8058b2c5"
+        },
+        {
+          "offset": "0x120",
+          "kind": 10,
+          "symbol": "getSensor__9LiveActorCFPCc",
+          "addend": 0,
+          "effective_retail_target": "0x80165ce4"
+        },
+        {
+          "offset": "0x12c",
+          "kind": 10,
+          "symbol": "tryCreateCollisionMoveLimit__2MRFP9LiveActorP9HitSensor",
+          "addend": 0,
+          "effective_retail_target": "0x803da438"
+        },
+        {
+          "offset": "0x136",
+          "kind": 4,
+          "symbol": "@5865",
+          "addend": 0,
+          "value_hex": "626f647900",
+          "effective_retail_target": "0x8058b2c5"
+        },
+        {
+          "offset": "0x138",
+          "kind": 10,
+          "symbol": "getSensor__9LiveActorCFPCc",
+          "addend": 0,
+          "effective_retail_target": "0x80165ce4"
+        },
+        {
+          "offset": "0x144",
+          "kind": 10,
+          "symbol": "tryCreateCollisionWaterSurface__2MRFP9LiveActorP9HitSensor",
+          "addend": 0,
+          "effective_retail_target": "0x803da4f4"
+        },
+        {
+          "offset": "0x154",
+          "kind": 10,
+          "symbol": "initSound__9LiveActorFib",
+          "addend": 0,
+          "effective_retail_target": "0x8016612c"
+        },
+        {
+          "offset": "0x160",
+          "kind": 10,
+          "symbol": "isExistAnim__2MRFPC9LiveActorPCc",
+          "addend": 0,
+          "effective_retail_target": "0x803dbb6c"
+        },
+        {
+          "offset": "0x174",
+          "kind": 10,
+          "symbol": "startAllAnim__2MRFPC9LiveActorPCc",
+          "addend": 0,
+          "effective_retail_target": "0x803dc05c"
+        },
+        {
+          "offset": "0x180",
+          "kind": 10,
+          "symbol": "isExistEffectTexMtx__2MRFP9LiveActor",
+          "addend": 0,
+          "effective_retail_target": "0x803e9eac"
+        },
+        {
+          "offset": "0x1a4",
+          "kind": 10,
+          "symbol": "offCalcAnim__2MRFP9LiveActor",
+          "addend": 0,
+          "effective_retail_target": "0x803defb0"
+        },
+        {
+          "offset": "0x1b0",
+          "kind": 10,
+          "symbol": "initClipping__9PlanetMapFRC12JMapInfoIter",
+          "addend": 0,
+          "effective_retail_target": "0x80194ad8"
+        },
+        {
+          "offset": "0x1b8",
+          "kind": 10,
+          "symbol": "tryEntryOceanHomeMap__20OceanHomeMapFunctionFP9PlanetMap",
+          "addend": 0,
+          "effective_retail_target": "0x8018bca8"
+        },
+        {
+          "offset": "0x1d8",
+          "kind": 10,
+          "symbol": "useStageSwitchReadAppear__2MRFP9LiveActorRC12JMapInfoIter",
+          "addend": 0,
+          "effective_retail_target": "0x803c7e44"
+        },
+        {
+          "offset": "0x1e8",
+          "kind": 10,
+          "symbol": "syncStageSwitchAppear__2MRFP9LiveActor",
+          "addend": 0,
+          "effective_retail_target": "0x803c81c8"
+        },
+        {
+          "offset": "0x208",
+          "kind": 10,
+          "symbol": "tryRegisterDemoCast__2MRFP9LiveActorRC12JMapInfoIter",
+          "addend": 0,
+          "effective_retail_target": "0x803ca518"
+        },
+        {
+          "offset": "0x218",
+          "kind": 10,
+          "symbol": "isRegisteredDemoActionAppear__2MRFPC9LiveActor",
+          "addend": 0,
+          "effective_retail_target": "0x803ca80c"
+        },
+        {
+          "offset": "0x240",
+          "kind": 10,
+          "symbol": "useStageSwitchSleep__2MRFP9LiveActorRC12JMapInfoIter",
+          "addend": 0,
+          "effective_retail_target": "0x803c7ec4"
+        },
+        {
+          "offset": "0x248",
+          "kind": 10,
+          "symbol": "_restgpr_29",
+          "addend": 0,
+          "effective_retail_target": "0x80518a54"
+        }
+      ]
+    },
+    {
+      "symbol": "initClipping__9PlanetMapFRC12JMapInfoIter",
+      "retail_address": "0x80194ad8",
+      "bytes": 316,
+      "match_percent": 99.87342,
+      "all_instructions_identical_after_verified_relocations_and_stack_slot_mapping": true,
+      "relocated_byte_exact": false,
+      "verified_relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_29",
+          "addend": 0,
+          "effective_retail_target": "0x80518a08"
+        },
+        {
+          "offset": "0x14",
+          "kind": 109,
+          "symbol": "@5843",
+          "addend": 0,
+          "value_hex": "00000000",
+          "effective_retail_target": "0x806bc318"
+        },
+        {
+          "offset": "0x28",
+          "kind": 10,
+          "symbol": "isValidInfo__2MRFRC12JMapInfoIter",
+          "addend": 0,
+          "effective_retail_target": "0x803d5470"
+        },
+        {
+          "offset": "0x3c",
+          "kind": 10,
+          "symbol": "getJMapInfoArg1NoInit__2MRFRC12JMapInfoIterPf",
+          "addend": 0,
+          "effective_retail_target": "0x803d5998"
+        },
+        {
+          "offset": "0x42",
+          "kind": 6,
+          "symbol": "sClippingInfo__23@unnamed@PlanetMap_cpp@",
+          "addend": 0,
+          "effective_retail_target": "0x80532c80"
+        },
+        {
+          "offset": "0x4a",
+          "kind": 4,
+          "symbol": "sClippingInfo__23@unnamed@PlanetMap_cpp@",
+          "addend": 0,
+          "effective_retail_target": "0x80532c80"
+        },
+        {
+          "offset": "0x4c",
+          "kind": 10,
+          "symbol": "isEqualStringCase__2MRFPCcPCc",
+          "addend": 0,
+          "effective_retail_target": "0x803feb90"
+        },
+        {
+          "offset": "0xb0",
+          "kind": 10,
+          "symbol": "set<f>__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>_v",
+          "addend": 0,
+          "effective_retail_target": "0x8001d2c8"
+        },
+        {
+          "offset": "0xc0",
+          "kind": 10,
+          "symbol": "setClippingTypeSphere__2MRFP9LiveActorfPCQ29JGeometry8TVec3<f>",
+          "addend": 0,
+          "effective_retail_target": "0x803db434"
+        },
+        {
+          "offset": "0xcc",
+          "kind": 109,
+          "symbol": "@5843",
+          "addend": 0,
+          "value_hex": "00000000",
+          "effective_retail_target": "0x806bc318"
+        },
+        {
+          "offset": "0xe4",
+          "kind": 10,
+          "symbol": "calcModelBoundingRadius__2MRFPfPC9LiveActor",
+          "addend": 0,
+          "effective_retail_target": "0x803eab04"
+        },
+        {
+          "offset": "0xec",
+          "kind": 109,
+          "symbol": "@5884",
+          "addend": 0,
+          "value_hex": "42c80000",
+          "effective_retail_target": "0x806bc320"
+        },
+        {
+          "offset": "0x100",
+          "kind": 10,
+          "symbol": "setClippingTypeSphere__2MRFP9LiveActorf",
+          "addend": 0,
+          "effective_retail_target": "0x803db3e8"
+        },
+        {
+          "offset": "0x108",
+          "kind": 10,
+          "symbol": "isValidInfo__2MRFRC12JMapInfoIter",
+          "addend": 0,
+          "effective_retail_target": "0x803d5470"
+        },
+        {
+          "offset": "0x120",
+          "kind": 10,
+          "symbol": "setGroupClipping__2MRFP9LiveActorRC12JMapInfoIteri",
+          "addend": 0,
+          "effective_retail_target": "0x803db778"
+        },
+        {
+          "offset": "0x128",
+          "kind": 10,
+          "symbol": "_restgpr_29",
+          "addend": 0,
+          "effective_retail_target": "0x80518a54"
+        }
+      ]
+    }
+  ],
+  "pointer_objects": [
+    {
+      "symbol": "sClippingInfo__23@unnamed@PlanetMap_cpp@",
+      "bytes": 20,
+      "all_relocated_pointers_and_unrelocated_bytes_equal": true,
+      "entries": [
+        {
+          "offset": "0x0",
+          "retail_pointer": "0x8058b2ca",
+          "value": "PhantomShipA"
+        }
+      ]
+    },
+    {
+      "symbol": "cFollowJointName__23@unnamed@PlanetMap_cpp@",
+      "bytes": 4,
+      "all_relocated_pointers_and_unrelocated_bytes_equal": true,
+      "entries": [
+        {
+          "offset": "0x0",
+          "retail_pointer": "0x8058b2c0",
+          "value": "Move"
+        }
+      ]
+    }
+  ],
+  "clipping_record_floats": [
+    3000,
+    800,
+    1300,
+    0
+  ],
+  "argument_comparison_offset": "0x64",
+  "argument_comparison_word": "fc010040",
+  "argument_results_not_written_to_actor": true,
+  "clipping_normalization": {
+    "kind": "Two independent 12-byte stack-temporary locations exchanged",
+    "source_offset_vector": "[0x18,0x24)",
+    "retail_offset_vector": "[0x0c,0x18)",
+    "source_sum_result": "[0x0c,0x18)",
+    "retail_sum_result": "[0x18,0x24)",
+    "checked_instruction_offsets": [
+      "0x6c",
+      "0x88",
+      "0x90",
+      "0x94",
+      "0xa4"
+    ],
+    "no_instruction_reordering_or_arithmetic_change": true
+  }
+}

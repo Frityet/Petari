@@ -1,0 +1,396 @@
+{
+  "libraries": [
+    {
+      "path": "pc-port/build/macosx/arm64/debug/libsmg-pc-game.a",
+      "size": 362368416,
+      "mtime_ns": 1788482019378872332
+    },
+    {
+      "path": "pc-port/build/macosx/arm64/debug/libsmg-pc-common.a",
+      "size": 7310424,
+      "mtime_ns": 1788438535508605986
+    },
+    {
+      "path": "pc-port/build/macosx/arm64/debug/libsmg-pc-render.a",
+      "size": 1903928,
+      "mtime_ns": 1788482018775217601
+    }
+  ],
+  "dependencies": [
+    {
+      "symbol": "__Unwind_Resume",
+      "demangled": "__Unwind_Resume",
+      "present_in_current_native_archives": false
+    },
+    {
+      "symbol": "__ZN20OceanHomeMapFunction20tryEntryOceanHomeMapEP9PlanetMap",
+      "demangled": "OceanHomeMapFunction::tryEntryOceanHomeMap(PlanetMap*)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN2MR10emitEffectEP9LiveActorPKc",
+      "demangled": "MR::emitEffect(LiveActor*, char const*)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN2MR11getJointMtxEPK9LiveActorPKc",
+      "demangled": "MR::getJointMtx(LiveActor const*, char const*)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN2MR11isExistAnimEPK9LiveActorPKc",
+      "demangled": "MR::isExistAnim(LiveActor const*, char const*)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN2MR11isValidInfoERK12JMapInfoIter",
+      "demangled": "MR::isValidInfo(JMapInfoIter const&)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN2MR11offCalcAnimEP9LiveActor",
+      "demangled": "MR::offCalcAnim(LiveActor*)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN2MR12deleteEffectEP9LiveActorPKc",
+      "demangled": "MR::deleteEffect(LiveActor*, char const*)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN2MR12isExistJointEPK9LiveActorPKc",
+      "demangled": "MR::isExistJoint(LiveActor const*, char const*)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN2MR12startAllAnimEPK9LiveActorPKc",
+      "demangled": "MR::startAllAnim(LiveActor const*, char const*)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN2MR13getObjectNameEPPKcRK12JMapInfoIter",
+      "demangled": "MR::getObjectName(char const**, JMapInfoIter const&)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN2MR13initFurPlanetEP9LiveActor",
+      "demangled": "MR::initFurPlanet(LiveActor*)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN2MR14initDefaultPosEP9LiveActorRK12JMapInfoIter",
+      "demangled": "MR::initDefaultPos(LiveActor*, JMapInfoIter const&)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN2MR15isExistSubModelEPKcS1_",
+      "demangled": "MR::isExistSubModel(char const*, char const*)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN2MR16createWaterModelEP9LiveActorPA4_f",
+      "demangled": "MR::createWaterModel(LiveActor*, float (*) [4])",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN2MR16setGroupClippingEP9LiveActorRK12JMapInfoIteri",
+      "demangled": "MR::setGroupClipping(LiveActor*, JMapInfoIter const&, int)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN2MR17isEqualStringCaseEPKcS1_",
+      "demangled": "MR::isEqualStringCase(char const*, char const*)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN2MR17setClippingFarMaxEP9LiveActor",
+      "demangled": "MR::setClippingFarMax(LiveActor*)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN2MR18initCollisionPartsEP9LiveActorPKcP9HitSensorPA4_f",
+      "demangled": "MR::initCollisionParts(LiveActor*, char const*, HitSensor*, float (*) [4])",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN2MR18isRegisteredEffectEPK9LiveActorPKc",
+      "demangled": "MR::isRegisteredEffect(LiveActor const*, char const*)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN2MR19createLodCtrlPlanetEP9LiveActorRK12JMapInfoIterfi",
+      "demangled": "MR::createLodCtrlPlanet(LiveActor*, JMapInfoIter const&, float, int)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN2MR19isExistEffectTexMtxEP9LiveActor",
+      "demangled": "MR::isExistEffectTexMtx(LiveActor*)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN2MR19tryRegisterDemoCastEP9LiveActorRK12JMapInfoIter",
+      "demangled": "MR::tryRegisterDemoCast(LiveActor*, JMapInfoIter const&)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN2MR19useStageSwitchSleepEP9LiveActorRK12JMapInfoIter",
+      "demangled": "MR::useStageSwitchSleep(LiveActor*, JMapInfoIter const&)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN2MR20connectToScenePlanetEP9LiveActor",
+      "demangled": "MR::connectToScenePlanet(LiveActor*)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN2MR21getJMapInfoArg0NoInitERK12JMapInfoIterPf",
+      "demangled": "MR::getJMapInfoArg0NoInit(JMapInfoIter const&, float*)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN2MR21getJMapInfoArg1NoInitERK12JMapInfoIterPf",
+      "demangled": "MR::getJMapInfoArg1NoInit(JMapInfoIter const&, float*)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN2MR21getJMapInfoArg2NoInitERK12JMapInfoIterPf",
+      "demangled": "MR::getJMapInfoArg2NoInit(JMapInfoIter const&, float*)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN2MR21setClippingTypeSphereEP9LiveActorf",
+      "demangled": "MR::setClippingTypeSphere(LiveActor*, float)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN2MR21setClippingTypeSphereEP9LiveActorfPKN9JGeometry5TVec3IfEE",
+      "demangled": "MR::setClippingTypeSphere(LiveActor*, float, JGeometry::TVec3<float> const*)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN2MR21syncStageSwitchAppearEP9LiveActor",
+      "demangled": "MR::syncStageSwitchAppear(LiveActor*)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN2MR23calcModelBoundingRadiusEPfPK9LiveActor",
+      "demangled": "MR::calcModelBoundingRadius(float*, LiveActor const*)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN2MR24createModelObjBloomModelEPKcS1_PA4_f",
+      "demangled": "MR::createModelObjBloomModel(char const*, char const*, float (*) [4])",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN2MR24isExistCollisionResourceEPK9LiveActorPKc",
+      "demangled": "MR::isExistCollisionResource(LiveActor const*, char const*)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN2MR24useStageSwitchReadAppearEP9LiveActorRK12JMapInfoIter",
+      "demangled": "MR::useStageSwitchReadAppear(LiveActor*, JMapInfoIter const&)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN2MR25createIndirectPlanetModelEP9LiveActorPA4_f",
+      "demangled": "MR::createIndirectPlanetModel(LiveActor*, float (*) [4])",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN2MR26addBodyMessageSensorMapObjEP9LiveActor",
+      "demangled": "MR::addBodyMessageSensorMapObj(LiveActor*)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN2MR27tryCreateCollisionMoveLimitEP9LiveActorP9HitSensor",
+      "demangled": "MR::tryCreateCollisionMoveLimit(LiveActor*, HitSensor*)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN2MR28isRegisteredDemoActionAppearEPK9LiveActor",
+      "demangled": "MR::isRegisteredDemoActionAppear(LiveActor const*)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN2MR30tryCreateCollisionWaterSurfaceEP9LiveActorP9HitSensor",
+      "demangled": "MR::tryCreateCollisionWaterSurface(LiveActor*, HitSensor*)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN7LodCtrl10invalidateEv",
+      "demangled": "LodCtrl::invalidate()",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN7LodCtrl6updateEv",
+      "demangled": "LodCtrl::update()",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN7LodCtrl8validateEv",
+      "demangled": "LodCtrl::validate()",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN7NameObj18initAfterPlacementEv",
+      "demangled": "NameObj::initAfterPlacement()",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN9LiveActor10endClippedEv",
+      "demangled": "LiveActor::endClipped()",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN9LiveActor12attackSensorEP9HitSensorS1_",
+      "demangled": "LiveActor::attackSensor(HitSensor*, HitSensor*)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN9LiveActor12startClippedEv",
+      "demangled": "LiveActor::startClipped()",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN9LiveActor13initHitSensorEi",
+      "demangled": "LiveActor::initHitSensor(int)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN9LiveActor13initRailRiderERK12JMapInfoIter",
+      "demangled": "LiveActor::initRailRider(JMapInfoIter const&)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN9LiveActor13makeActorDeadEv",
+      "demangled": "LiveActor::makeActorDead()",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN9LiveActor14receiveMessageEjP9HitSensorS1_",
+      "demangled": "LiveActor::receiveMessage(unsigned int, HitSensor*, HitSensor*)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN9LiveActor15receiveMsgApartEP9HitSensorS1_",
+      "demangled": "LiveActor::receiveMsgApart(HitSensor*, HitSensor*)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN9LiveActor16calcViewAndEntryEv",
+      "demangled": "LiveActor::calcViewAndEntry()",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN9LiveActor16initEffectKeeperEiPKcb",
+      "demangled": "LiveActor::initEffectKeeper(int, char const*, bool)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN9LiveActor17calcAndSetBaseMtxEv",
+      "demangled": "LiveActor::calcAndSetBaseMtx()",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN9LiveActor17makeActorAppearedEv",
+      "demangled": "LiveActor::makeActorAppeared()",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN9LiveActor23initModelManagerWithAnmEPKcS1_b",
+      "demangled": "LiveActor::initModelManagerWithAnm(char const*, char const*, bool)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN9LiveActor4killEv",
+      "demangled": "LiveActor::kill()",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN9LiveActor6appearEv",
+      "demangled": "LiveActor::appear()",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN9LiveActor8calcAnimEv",
+      "demangled": "LiveActor::calcAnim()",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN9LiveActor8movementEv",
+      "demangled": "LiveActor::movement()",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN9LiveActor9initSoundEib",
+      "demangled": "LiveActor::initSound(int, bool)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN9LiveActorC2EPKc",
+      "demangled": "LiveActor::LiveActor(char const*)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZN9LiveActorD2Ev",
+      "demangled": "LiveActor::~LiveActor()",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZNK7NameObj4drawEv",
+      "demangled": "NameObj::draw() const",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZNK9LiveActor10getBaseMtxEv",
+      "demangled": "LiveActor::getBaseMtx() const",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZNK9LiveActor12getTakingMtxEv",
+      "demangled": "LiveActor::getTakingMtx() const",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZNK9LiveActor9getSensorEPKc",
+      "demangled": "LiveActor::getSensor(char const*) const",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZTI9LiveActor",
+      "demangled": "typeinfo for LiveActor",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "__ZTVN10__cxxabiv120__si_class_type_infoE",
+      "demangled": "vtable for __cxxabiv1::__si_class_type_info",
+      "present_in_current_native_archives": false
+    },
+    {
+      "symbol": "__ZdlPvm",
+      "demangled": "operator delete(void*, unsigned long)",
+      "present_in_current_native_archives": true
+    },
+    {
+      "symbol": "___gxx_personality_v0",
+      "demangled": "___gxx_personality_v0",
+      "present_in_current_native_archives": false
+    },
+    {
+      "symbol": "___stack_chk_fail",
+      "demangled": "___stack_chk_fail",
+      "present_in_current_native_archives": false
+    },
+    {
+      "symbol": "___stack_chk_guard",
+      "demangled": "___stack_chk_guard",
+      "present_in_current_native_archives": false
+    },
+    {
+      "symbol": "_smgpc_msl_snprintf",
+      "demangled": "_smgpc_msl_snprintf",
+      "present_in_current_native_archives": true
+    }
+  ]
+}

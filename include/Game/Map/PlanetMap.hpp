@@ -61,9 +61,6 @@ public:
 
 struct PlanetMapClippingInfo {
     const char* mName;
-    f32 _4;
-    f32 _8;
-    f32 _C;
-    f32 _10;
-    s32 _14;
+    f32 mRadius;
+    Vec mCenterOffset;
 };

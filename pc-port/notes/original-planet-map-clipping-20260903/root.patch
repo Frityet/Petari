@@ -1,0 +1,94 @@
+--- a/src/Game/Map/PlanetMap.cpp
++++ b/src/Game/Map/PlanetMap.cpp
+@@ -17,7 +17,18 @@
+ namespace {
+     const char* cFollowJointName = "Move";
+ 
+-    static PlanetMapClippingInfo sClippingInfo = {"PhantomShipA", 3000.0f, 800.0f, 1300.0f, 0.0f, 0};
++    static const PlanetMapClippingInfo sClippingInfo[] = {{"PhantomShipA", 3000.0f, {800.0f, 1300.0f, 0.0f}}};
++
++    inline const PlanetMapClippingInfo* findClippingInfo(const char* pName) {
++        for (u32 i = 0; i < ARRAY_SIZE(sClippingInfo); i++) {
++            const PlanetMapClippingInfo* pInfo = &sClippingInfo[i];
++            if (MR::isEqualStringCase(pName, pInfo->mName)) {
++                return pInfo;
++            }
++        }
++
++        return nullptr;
++    }
+ };  // namespace
+ 
+ PlanetMap::PlanetMap(const char* pName, const char* pModelName)
+@@ -28,11 +39,11 @@
+ void PlanetMap::init(const JMapInfoIter& rIter) {
+     MR::getObjectName(&mModelName, rIter);
+     if (MR::isValidInfo(rIter)) {
+-        f32 v11 = -1.0f;
+-        MR::getJMapInfoArg0NoInit(rIter, &v11);
+-        f32 v12 = -1.0f;
+-        MR::getJMapInfoArg2NoInit(rIter, &v12);
+-        f32 unknownUse = -1.0f > v11 ? 1.0f : -1.0f;
++        f32 arg0 = -1.0f;
++        MR::getJMapInfoArg0NoInit(rIter, &arg0);
++        f32 arg2 = -1.0f;
++        MR::getJMapInfoArg2NoInit(rIter, &arg2);
++        f32 unused = 0.0f < arg0 ? 1.0f : -1.0f;
+     }
+     MR::initDefaultPos(this, rIter);
+     initModel(mModelName, rIter);
+@@ -85,28 +96,23 @@
+ }
+ 
+ void PlanetMap::initClipping(const JMapInfoIter& rIter) {
+-    f32 v2 = 0.0f;
++    f32 radius = 0.0f;
+     if (MR::isValidInfo(rIter)) {
+-        MR::getJMapInfoArg1NoInit(rIter, &v2);
+-    }
+-    PlanetMapClippingInfo* info = &::sClippingInfo;
+-
+-    if (MR::isEqualStringCase(mModelName, ::sClippingInfo.mName)) {
+-        info = nullptr;
+-    }
++        MR::getJMapInfoArg1NoInit(rIter, &radius);
++    }
++    const PlanetMapClippingInfo* info = ::findClippingInfo(mModelName);
+ 
+     if (info != nullptr) {
+-        TVec3f _4 = TVec3f(info->_4, info->_8, info->_C);
+-        TVec3f _8;
+-        _8.add(_4);
+-        _90.set(_8);
+-        MR::setClippingTypeSphere(this, v2, &_90);
++        radius = info->mRadius;
++        TVec3f offset(info->mCenterOffset);
++        _90.set(mPosition + offset);
++        MR::setClippingTypeSphere(this, info->mRadius, &_90);
+     } else {
+-        if (v2 <= 0.0f) {
+-            MR::calcModelBoundingRadius(&v2, this);
+-            v2 += 100.0f;
++        if (radius <= 0.0f) {
++            MR::calcModelBoundingRadius(&radius, this);
++            radius += 100.0f;
+         }
+-        MR::setClippingTypeSphere(this, v2);
++        MR::setClippingTypeSphere(this, radius);
+     }
+ 
+     if (MR::isValidInfo(rIter)) {
+--- a/include/Game/Map/PlanetMap.hpp
++++ b/include/Game/Map/PlanetMap.hpp
+@@ -61,9 +61,6 @@
+ 
+ struct PlanetMapClippingInfo {
+     const char* mName;
+-    f32 _4;
+-    f32 _8;
+-    f32 _C;
+-    f32 _10;
+-    s32 _14;
++    f32 mRadius;
++    Vec mCenterOffset;
+ };

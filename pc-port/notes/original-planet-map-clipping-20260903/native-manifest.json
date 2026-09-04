@@ -1,0 +1,14 @@
+[
+  {
+    "staged": "build/original-planet-map-clipping-20260903/staged/Game/Map/PlanetMap.cpp",
+    "destination": "pc-port/src/Game/Map/PlanetMap.cpp",
+    "sha256": "88d14b1665df1b8f5ebd3611d270bb16f982e835537a798fcbfa18d9dfa1d93a",
+    "production_before_sha256": "f8e0523ee6c61cd9054cd95dc53a313d757e2b8ef4635492078ff1d9ed9ee0ae"
+  },
+  {
+    "staged": "build/original-planet-map-clipping-20260903/staged/Game/Map/PlanetMap.hpp",
+    "destination": "pc-port/src/Game/Map/PlanetMap.hpp",
+    "sha256": "a959f4619c65f4e79005855ff674b5db0c83633cbf05baccf97e86f013cbe78f",
+    "production_before_sha256": "2fa4acb1e40655035e6548c4c16de96a359b65b046c6eb57380961b5fd6075a2"
+  }
+]

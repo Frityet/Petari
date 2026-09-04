@@ -1,0 +1,14 @@
+{
+  "root_files": [
+    {
+      "path": "src/Game/Map/PlanetMap.cpp",
+      "sha256": "88d14b1665df1b8f5ebd3611d270bb16f982e835537a798fcbfa18d9dfa1d93a"
+    },
+    {
+      "path": "include/Game/Map/PlanetMap.hpp",
+      "sha256": "a959f4619c65f4e79005855ff674b5db0c83633cbf05baccf97e86f013cbe78f"
+    }
+  ],
+  "native_complete_source_and_header_literal": true,
+  "root_header_fallback": false
+}
