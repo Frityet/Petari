@@ -1,0 +1,6 @@
+{
+  "binary_sha256": "8d1c59b16daa53902d9f1ad2843ee24c41666f24d566e3c1dae2fb4b14a1886e",
+  "exit_code": 0,
+  "sanitizers": "address,undefined",
+  "expected_allocation_failure_diagnostic": "allocFromHead: cannot alloc memory (0x818 byte)."
+}

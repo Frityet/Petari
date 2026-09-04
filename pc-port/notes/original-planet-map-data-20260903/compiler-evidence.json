@@ -1,0 +1,5238 @@
+{
+  "source_sha256": "504282c11a845b18aba8f88152697b4be84c49b7bae0571092bc3a99e5e2af2b",
+  "compiler_command": [
+    "build/tools/wibo",
+    "build/tools/sjiswrap.exe",
+    "build/compilers/GC/3.0a3/mwcceppc.exe",
+    "-nodefaults",
+    "-proc",
+    "gekko",
+    "-align",
+    "powerpc",
+    "-enum",
+    "int",
+    "-fp",
+    "hardware",
+    "-Cpp_exceptions",
+    "off",
+    "-O4,s",
+    "-inline",
+    "auto",
+    "-pragma",
+    "cats off",
+    "-pragma",
+    "warn_notinlined off",
+    "-maxerrors",
+    "1",
+    "-nosyspath",
+    "-RTTI",
+    "off",
+    "-str",
+    "reuse",
+    "-enc",
+    "SJIS",
+    "-sdata",
+    "4",
+    "-sdata2",
+    "4",
+    "-ipa",
+    "file",
+    "-sym",
+    "on",
+    "-i",
+    "include",
+    "-i",
+    "libs/JSystem/include",
+    "-i",
+    "libs/MSL_C++/include",
+    "-i",
+    "libs/MSL_C/include",
+    "-i",
+    "libs/MetroTRK/include",
+    "-i",
+    "libs/RVLFaceLib/include",
+    "-i",
+    "libs/RVL_SDK/include",
+    "-i",
+    "libs/Runtime/include",
+    "-i",
+    "libs/nw4r/include",
+    "-i",
+    "build/RMGK01/include",
+    "-DVERSION=0",
+    "-c",
+    "/Users/frityet/Projects/petari/src/Game/Map/PlanetMapCreator.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/build/original-planet-map-data-20260903/PlanetMapCreator.o"
+  ],
+  "functions": [
+    {
+      "symbol": "makeSubModelName__30@unnamed@PlanetMapCreator_cpp@FPPCcPC8JMapInfolPCcPCc",
+      "retail_address": "0x80195118",
+      "retail_bytes": 196,
+      "compiled_bytes": 196,
+      "match_percent": 99.591835,
+      "all_canonical_instructions_identical": true,
+      "relocated_byte_exact": true,
+      "verified_relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_28",
+          "addend": 0,
+          "effective_retail_target": "0x80518a04"
+        },
+        {
+          "offset": "0x30",
+          "kind": 10,
+          "symbol": "getCsvDataS32__2MRFPlPC8JMapInfoPCcl",
+          "addend": 0,
+          "effective_retail_target": "0x803f1b2c"
+        },
+        {
+          "offset": "0x36",
+          "kind": 6,
+          "symbol": "@12325",
+          "addend": 0,
+          "value_hex": "506c616e65744e616d6500",
+          "effective_retail_target": "0x8058b517"
+        },
+        {
+          "offset": "0x46",
+          "kind": 4,
+          "symbol": "@12325",
+          "addend": 0,
+          "value_hex": "506c616e65744e616d6500",
+          "effective_retail_target": "0x8058b517"
+        },
+        {
+          "offset": "0x48",
+          "kind": 10,
+          "symbol": "getCsvDataStr__2MRFPPCcPC8JMapInfoPCcl",
+          "addend": 0,
+          "effective_retail_target": "0x803f1a88"
+        },
+        {
+          "offset": "0x5c",
+          "kind": 10,
+          "symbol": "strlen",
+          "addend": 0,
+          "effective_retail_target": "0x80518350"
+        },
+        {
+          "offset": "0x68",
+          "kind": 10,
+          "symbol": "strlen",
+          "addend": 0,
+          "effective_retail_target": "0x80518350"
+        },
+        {
+          "offset": "0x78",
+          "kind": 10,
+          "symbol": "__nwa__FUl",
+          "addend": 0,
+          "effective_retail_target": "0x8040b47c"
+        },
+        {
+          "offset": "0x7e",
+          "kind": 6,
+          "symbol": "@12326",
+          "addend": 0,
+          "value_hex": "2573257300",
+          "effective_retail_target": "0x8058b522"
+        },
+        {
+          "offset": "0x92",
+          "kind": 4,
+          "symbol": "@12326",
+          "addend": 0,
+          "value_hex": "2573257300",
+          "effective_retail_target": "0x8058b522"
+        },
+        {
+          "offset": "0x98",
+          "kind": 10,
+          "symbol": "snprintf",
+          "addend": 0,
+          "effective_retail_target": "0x8051e4cc"
+        },
+        {
+          "offset": "0xb0",
+          "kind": 10,
+          "symbol": "_restgpr_28",
+          "addend": 0,
+          "effective_retail_target": "0x80518a50"
+        }
+      ],
+      "canonical_instructions": [
+        [
+          "stwu",
+          [
+            "r1",
+            -32,
+            "r1"
+          ]
+        ],
+        [
+          "mflr",
+          [
+            "r0"
+          ]
+        ],
+        [
+          "stw",
+          [
+            "r0",
+            36,
+            "r1"
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r11",
+            "r1",
+            32
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "_savegpr_28",
+              0
+            ]
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r30",
+            "r5"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r28",
+            "r3"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r5",
+            "r6"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r31",
+            "r4"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r29",
+            "r7"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r6",
+            "r30"
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r3",
+            "r1",
+            12
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "getCsvDataS32__2MRFPlPC8JMapInfoPCcl",
+              0
+            ]
+          ]
+        ],
+        [
+          "lis",
+          [
+            "r5",
+            [
+              "constant",
+              6,
+              "506c616e65744e616d6500"
+            ]
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r4",
+            "r31"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r6",
+            "r30"
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r3",
+            "r1",
+            8
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r5",
+            "r5",
+            [
+              "constant",
+              4,
+              "506c616e65744e616d6500"
+            ]
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "getCsvDataStr__2MRFPPCcPC8JMapInfoPCcl",
+              0
+            ]
+          ]
+        ],
+        [
+          "lwz",
+          [
+            "r0",
+            12,
+            "r1"
+          ]
+        ],
+        [
+          "cmpwi",
+          [
+            "r0",
+            0
+          ]
+        ],
+        [
+          "beq",
+          [
+            [
+              "branch",
+              41
+            ]
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r3",
+            "r29"
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "strlen",
+              0
+            ]
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r31",
+            "r3"
+          ]
+        ],
+        [
+          "lwz",
+          [
+            "r3",
+            8,
+            "r1"
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "strlen",
+              0
+            ]
+          ]
+        ],
+        [
+          "add",
+          [
+            "r31",
+            "r3",
+            "r31"
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r31",
+            "r31",
+            1
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r3",
+            "r31"
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "__nwa__FUl",
+              0
+            ]
+          ]
+        ],
+        [
+          "lis",
+          [
+            "r5",
+            [
+              "constant",
+              6,
+              "2573257300"
+            ]
+          ]
+        ],
+        [
+          "lwz",
+          [
+            "r6",
+            8,
+            "r1"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r30",
+            "r3"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r4",
+            "r31"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r7",
+            "r29"
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r5",
+            "r5",
+            [
+              "constant",
+              4,
+              "2573257300"
+            ]
+          ]
+        ],
+        [
+          "crclr",
+          [
+            "cr1eq"
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "snprintf",
+              0
+            ]
+          ]
+        ],
+        [
+          "stw",
+          [
+            "r30",
+            0,
+            "r28"
+          ]
+        ],
+        [
+          "b",
+          [
+            [
+              "branch",
+              43
+            ]
+          ]
+        ],
+        [
+          "li",
+          [
+            "r0",
+            0
+          ]
+        ],
+        [
+          "stw",
+          [
+            "r0",
+            0,
+            "r28"
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r11",
+            "r1",
+            32
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "_restgpr_28",
+              0
+            ]
+          ]
+        ],
+        [
+          "lwz",
+          [
+            "r0",
+            36,
+            "r1"
+          ]
+        ],
+        [
+          "mtlr",
+          [
+            "r0"
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r1",
+            "r1",
+            32
+          ]
+        ],
+        [
+          "blr",
+          []
+        ]
+      ],
+      "retail_relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_28",
+          "addend": 0
+        },
+        {
+          "offset": "0x30",
+          "kind": 10,
+          "symbol": "getCsvDataS32__2MRFPlPC8JMapInfoPCcl",
+          "addend": 0
+        },
+        {
+          "offset": "0x36",
+          "kind": 6,
+          "symbol": "lbl_8058B517",
+          "addend": 0,
+          "value_hex": "506c616e65744e616d6500"
+        },
+        {
+          "offset": "0x46",
+          "kind": 4,
+          "symbol": "lbl_8058B517",
+          "addend": 0,
+          "value_hex": "506c616e65744e616d6500"
+        },
+        {
+          "offset": "0x48",
+          "kind": 10,
+          "symbol": "getCsvDataStr__2MRFPPCcPC8JMapInfoPCcl",
+          "addend": 0
+        },
+        {
+          "offset": "0x5c",
+          "kind": 10,
+          "symbol": "strlen",
+          "addend": 0
+        },
+        {
+          "offset": "0x68",
+          "kind": 10,
+          "symbol": "strlen",
+          "addend": 0
+        },
+        {
+          "offset": "0x78",
+          "kind": 10,
+          "symbol": "__nwa__FUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x7e",
+          "kind": 6,
+          "symbol": "lbl_8058B522",
+          "addend": 0,
+          "value_hex": "2573257300"
+        },
+        {
+          "offset": "0x92",
+          "kind": 4,
+          "symbol": "lbl_8058B522",
+          "addend": 0,
+          "value_hex": "2573257300"
+        },
+        {
+          "offset": "0x98",
+          "kind": 10,
+          "symbol": "snprintf",
+          "addend": 0
+        },
+        {
+          "offset": "0xb0",
+          "kind": 10,
+          "symbol": "_restgpr_28",
+          "addend": 0
+        }
+      ],
+      "compiled_relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_28",
+          "addend": 0
+        },
+        {
+          "offset": "0x30",
+          "kind": 10,
+          "symbol": "getCsvDataS32__2MRFPlPC8JMapInfoPCcl",
+          "addend": 0
+        },
+        {
+          "offset": "0x36",
+          "kind": 6,
+          "symbol": "@12325",
+          "addend": 0,
+          "value_hex": "506c616e65744e616d6500"
+        },
+        {
+          "offset": "0x46",
+          "kind": 4,
+          "symbol": "@12325",
+          "addend": 0,
+          "value_hex": "506c616e65744e616d6500"
+        },
+        {
+          "offset": "0x48",
+          "kind": 10,
+          "symbol": "getCsvDataStr__2MRFPPCcPC8JMapInfoPCcl",
+          "addend": 0
+        },
+        {
+          "offset": "0x5c",
+          "kind": 10,
+          "symbol": "strlen",
+          "addend": 0
+        },
+        {
+          "offset": "0x68",
+          "kind": 10,
+          "symbol": "strlen",
+          "addend": 0
+        },
+        {
+          "offset": "0x78",
+          "kind": 10,
+          "symbol": "__nwa__FUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x7e",
+          "kind": 6,
+          "symbol": "@12326",
+          "addend": 0,
+          "value_hex": "2573257300"
+        },
+        {
+          "offset": "0x92",
+          "kind": 4,
+          "symbol": "@12326",
+          "addend": 0,
+          "value_hex": "2573257300"
+        },
+        {
+          "offset": "0x98",
+          "kind": 10,
+          "symbol": "snprintf",
+          "addend": 0
+        },
+        {
+          "offset": "0xb0",
+          "kind": 10,
+          "symbol": "_restgpr_28",
+          "addend": 0
+        }
+      ]
+    },
+    {
+      "symbol": "isDataForceLow__30@unnamed@PlanetMapCreator_cpp@FPC13PlanetMapData",
+      "retail_address": "0x80195794",
+      "retail_bytes": 108,
+      "compiled_bytes": 108,
+      "match_percent": 99.81481,
+      "all_canonical_instructions_identical": true,
+      "relocated_byte_exact": true,
+      "verified_relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_29",
+          "addend": 0,
+          "effective_retail_target": "0x80518a08"
+        },
+        {
+          "offset": "0x24",
+          "kind": 109,
+          "symbol": "@12335",
+          "addend": 0,
+          "value_hex": "00",
+          "effective_retail_target": "0x806b1c60"
+        },
+        {
+          "offset": "0x2c",
+          "kind": 10,
+          "symbol": "isEqualString__2MRFPCcPCc",
+          "addend": 0,
+          "effective_retail_target": "0x803feb68"
+        },
+        {
+          "offset": "0x58",
+          "kind": 10,
+          "symbol": "_restgpr_29",
+          "addend": 0,
+          "effective_retail_target": "0x80518a54"
+        }
+      ],
+      "canonical_instructions": [
+        [
+          "stwu",
+          [
+            "r1",
+            -32,
+            "r1"
+          ]
+        ],
+        [
+          "mflr",
+          [
+            "r0"
+          ]
+        ],
+        [
+          "stw",
+          [
+            "r0",
+            36,
+            "r1"
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r11",
+            "r1",
+            32
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "_savegpr_29",
+              0
+            ]
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r29",
+            "r3"
+          ]
+        ],
+        [
+          "li",
+          [
+            "r30",
+            0
+          ]
+        ],
+        [
+          "li",
+          [
+            "r31",
+            0
+          ]
+        ],
+        [
+          "add",
+          [
+            "r3",
+            "r29",
+            "r31"
+          ]
+        ],
+        [
+          "li",
+          [
+            "r4",
+            [
+              "constant",
+              109,
+              "00"
+            ]
+          ]
+        ],
+        [
+          "lwz",
+          [
+            "r3",
+            24,
+            "r3"
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "isEqualString__2MRFPCcPCc",
+              0
+            ]
+          ]
+        ],
+        [
+          "cmpwi",
+          [
+            "r3",
+            0
+          ]
+        ],
+        [
+          "bne",
+          [
+            [
+              "branch",
+              16
+            ]
+          ]
+        ],
+        [
+          "li",
+          [
+            "r3",
+            1
+          ]
+        ],
+        [
+          "b",
+          [
+            [
+              "branch",
+              21
+            ]
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r30",
+            "r30",
+            1
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r31",
+            "r31",
+            4
+          ]
+        ],
+        [
+          "cmpwi",
+          [
+            "r30",
+            8
+          ]
+        ],
+        [
+          "blt",
+          [
+            [
+              "branch",
+              8
+            ]
+          ]
+        ],
+        [
+          "li",
+          [
+            "r3",
+            0
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r11",
+            "r1",
+            32
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "_restgpr_29",
+              0
+            ]
+          ]
+        ],
+        [
+          "lwz",
+          [
+            "r0",
+            36,
+            "r1"
+          ]
+        ],
+        [
+          "mtlr",
+          [
+            "r0"
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r1",
+            "r1",
+            32
+          ]
+        ],
+        [
+          "blr",
+          []
+        ]
+      ],
+      "retail_relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_29",
+          "addend": 0
+        },
+        {
+          "offset": "0x24",
+          "kind": 109,
+          "symbol": "lbl_806B1C60",
+          "addend": 0,
+          "value_hex": "00"
+        },
+        {
+          "offset": "0x2c",
+          "kind": 10,
+          "symbol": "isEqualString__2MRFPCcPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x58",
+          "kind": 10,
+          "symbol": "_restgpr_29",
+          "addend": 0
+        }
+      ],
+      "compiled_relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_29",
+          "addend": 0
+        },
+        {
+          "offset": "0x24",
+          "kind": 109,
+          "symbol": "@12335",
+          "addend": 0,
+          "value_hex": "00"
+        },
+        {
+          "offset": "0x2c",
+          "kind": 10,
+          "symbol": "isEqualString__2MRFPCcPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x58",
+          "kind": 10,
+          "symbol": "_restgpr_29",
+          "addend": 0
+        }
+      ]
+    },
+    {
+      "symbol": "__ct__16PlanetMapCreatorFPCc",
+      "retail_address": "0x80195800",
+      "retail_bytes": 128,
+      "compiled_bytes": 128,
+      "match_percent": 92.96875,
+      "all_canonical_instructions_identical": true,
+      "relocated_byte_exact": false,
+      "verified_relocations": null,
+      "canonical_instructions": [
+        [
+          "stwu",
+          [
+            "r1",
+            -16,
+            "r1"
+          ]
+        ],
+        [
+          "mflr",
+          [
+            "r0"
+          ]
+        ],
+        [
+          "stw",
+          [
+            "r0",
+            20,
+            "r1"
+          ]
+        ],
+        [
+          "stw",
+          [
+            "r31",
+            12,
+            "r1"
+          ]
+        ],
+        [
+          "stw",
+          [
+            "r30",
+            8,
+            "r1"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r30",
+            "r3"
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "__ct__7NameObjFPCc",
+              0
+            ]
+          ]
+        ],
+        [
+          "lis",
+          [
+            "r3",
+            [
+              "symbol",
+              6,
+              "__vt__16PlanetMapCreator",
+              0
+            ]
+          ]
+        ],
+        [
+          "li",
+          [
+            "r0",
+            0
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r3",
+            "r3",
+            [
+              "symbol",
+              4,
+              "__vt__16PlanetMapCreator",
+              0
+            ]
+          ]
+        ],
+        [
+          "stw",
+          [
+            "r0",
+            12,
+            "r30"
+          ]
+        ],
+        [
+          "stw",
+          [
+            "r3",
+            0,
+            "r30"
+          ]
+        ],
+        [
+          "lwz",
+          [
+            "r3",
+            [
+              "symbol",
+              109,
+              "sArcName__30@unnamed@PlanetMapCreator_cpp@",
+              0
+            ]
+          ]
+        ],
+        [
+          "lwz",
+          [
+            "r4",
+            [
+              "symbol",
+              109,
+              "sFileName__30@unnamed@PlanetMapCreator_cpp@",
+              0
+            ]
+          ]
+        ],
+        [
+          "crclr",
+          [
+            "cr1eq"
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "createCsvParser__2MRFPCcPCce",
+              0
+            ]
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r31",
+            "r3"
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "getCsvDataElementNum__2MRFPC8JMapInfo",
+              0
+            ]
+          ]
+        ],
+        [
+          "stw",
+          [
+            "r3",
+            16,
+            "r30"
+          ]
+        ],
+        [
+          "slwi",
+          [
+            "r3",
+            "r3",
+            "2"
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "__nwa__FUl",
+              0
+            ]
+          ]
+        ],
+        [
+          "stw",
+          [
+            "r3",
+            12,
+            "r30"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r3",
+            "r30"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r4",
+            "r31"
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "createPlanetMapDataTable__16PlanetMapCreatorFP8JMapInfo",
+              0
+            ]
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r3",
+            "r30"
+          ]
+        ],
+        [
+          "lwz",
+          [
+            "r31",
+            12,
+            "r1"
+          ]
+        ],
+        [
+          "lwz",
+          [
+            "r30",
+            8,
+            "r1"
+          ]
+        ],
+        [
+          "lwz",
+          [
+            "r0",
+            20,
+            "r1"
+          ]
+        ],
+        [
+          "mtlr",
+          [
+            "r0"
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r1",
+            "r1",
+            16
+          ]
+        ],
+        [
+          "blr",
+          []
+        ]
+      ],
+      "retail_relocations": [
+        {
+          "offset": "0x18",
+          "kind": 10,
+          "symbol": "__ct__7NameObjFPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x1e",
+          "kind": 6,
+          "symbol": "__vt__16PlanetMapCreator",
+          "addend": 0
+        },
+        {
+          "offset": "0x26",
+          "kind": 4,
+          "symbol": "__vt__16PlanetMapCreator",
+          "addend": 0
+        },
+        {
+          "offset": "0x2c",
+          "kind": 109,
+          "symbol": "sArcName__30@unnamed@PlanetMapCreator_cpp@",
+          "addend": 0
+        },
+        {
+          "offset": "0x34",
+          "kind": 109,
+          "symbol": "sFileName__30@unnamed@PlanetMapCreator_cpp@",
+          "addend": 0
+        },
+        {
+          "offset": "0x3c",
+          "kind": 10,
+          "symbol": "createCsvParser__2MRFPCcPCce",
+          "addend": 0
+        },
+        {
+          "offset": "0x44",
+          "kind": 10,
+          "symbol": "getCsvDataElementNum__2MRFPC8JMapInfo",
+          "addend": 0
+        },
+        {
+          "offset": "0x50",
+          "kind": 10,
+          "symbol": "__nwa__FUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x60",
+          "kind": 10,
+          "symbol": "createPlanetMapDataTable__16PlanetMapCreatorFP8JMapInfo",
+          "addend": 0
+        }
+      ],
+      "compiled_relocations": [
+        {
+          "offset": "0x18",
+          "kind": 10,
+          "symbol": "__ct__7NameObjFPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x1e",
+          "kind": 6,
+          "symbol": "__vt__16PlanetMapCreator",
+          "addend": 0
+        },
+        {
+          "offset": "0x26",
+          "kind": 4,
+          "symbol": "__vt__16PlanetMapCreator",
+          "addend": 0
+        },
+        {
+          "offset": "0x30",
+          "kind": 109,
+          "symbol": "sArcName__30@unnamed@PlanetMapCreator_cpp@",
+          "addend": 0
+        },
+        {
+          "offset": "0x34",
+          "kind": 109,
+          "symbol": "sFileName__30@unnamed@PlanetMapCreator_cpp@",
+          "addend": 0
+        },
+        {
+          "offset": "0x3c",
+          "kind": 10,
+          "symbol": "createCsvParser__2MRFPCcPCce",
+          "addend": 0
+        },
+        {
+          "offset": "0x44",
+          "kind": 10,
+          "symbol": "getCsvDataElementNum__2MRFPC8JMapInfo",
+          "addend": 0
+        },
+        {
+          "offset": "0x50",
+          "kind": 10,
+          "symbol": "__nwa__FUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x60",
+          "kind": 10,
+          "symbol": "createPlanetMapDataTable__16PlanetMapCreatorFP8JMapInfo",
+          "addend": 0
+        }
+      ]
+    },
+    {
+      "symbol": "makeArchiveListPlanet__16PlanetMapCreatorFP27NameObjArchiveListCollectorRC12JMapInfoIterPCc",
+      "retail_address": "0x801959b4",
+      "retail_bytes": 284,
+      "compiled_bytes": 284,
+      "match_percent": 98.73239,
+      "all_canonical_instructions_identical": true,
+      "relocated_byte_exact": false,
+      "verified_relocations": null,
+      "canonical_instructions": [
+        [
+          "stwu",
+          [
+            "r1",
+            -32,
+            "r1"
+          ]
+        ],
+        [
+          "mflr",
+          [
+            "r0"
+          ]
+        ],
+        [
+          "stw",
+          [
+            "r0",
+            36,
+            "r1"
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r11",
+            "r1",
+            32
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "_savegpr_26",
+              0
+            ]
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r26",
+            "r4"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r28",
+            "r3"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r4",
+            "r6"
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "getTableData__16PlanetMapCreatorCFPCc",
+              0
+            ]
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r27",
+            "r3"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r3",
+            "r28"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r4",
+            "r27"
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "isScenarioForceLow__16PlanetMapCreatorCFPC13PlanetMapData",
+              0
+            ]
+          ]
+        ],
+        [
+          "cmpwi",
+          [
+            "r3",
+            0
+          ]
+        ],
+        [
+          "beq",
+          [
+            [
+              "branch",
+              19
+            ]
+          ]
+        ],
+        [
+          "lwz",
+          [
+            "r4",
+            4,
+            "r27"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r3",
+            "r26"
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "addArchive__27NameObjArchiveListCollectorFPCc",
+              0
+            ]
+          ]
+        ],
+        [
+          "b",
+          [
+            [
+              "branch",
+              65
+            ]
+          ]
+        ],
+        [
+          "lwz",
+          [
+            "r4",
+            0,
+            "r27"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r3",
+            "r26"
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "addArchive__27NameObjArchiveListCollectorFPCc",
+              0
+            ]
+          ]
+        ],
+        [
+          "lwz",
+          [
+            "r4",
+            4,
+            "r27"
+          ]
+        ],
+        [
+          "cmpwi",
+          [
+            "r4",
+            0
+          ]
+        ],
+        [
+          "beq",
+          [
+            [
+              "branch",
+              27
+            ]
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r3",
+            "r26"
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "addArchive__27NameObjArchiveListCollectorFPCc",
+              0
+            ]
+          ]
+        ],
+        [
+          "lwz",
+          [
+            "r4",
+            8,
+            "r27"
+          ]
+        ],
+        [
+          "cmpwi",
+          [
+            "r4",
+            0
+          ]
+        ],
+        [
+          "beq",
+          [
+            [
+              "branch",
+              32
+            ]
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r3",
+            "r26"
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "addArchive__27NameObjArchiveListCollectorFPCc",
+              0
+            ]
+          ]
+        ],
+        [
+          "lwz",
+          [
+            "r4",
+            12,
+            "r27"
+          ]
+        ],
+        [
+          "cmpwi",
+          [
+            "r4",
+            0
+          ]
+        ],
+        [
+          "beq",
+          [
+            [
+              "branch",
+              37
+            ]
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r3",
+            "r26"
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "addArchive__27NameObjArchiveListCollectorFPCc",
+              0
+            ]
+          ]
+        ],
+        [
+          "lwz",
+          [
+            "r4",
+            16,
+            "r27"
+          ]
+        ],
+        [
+          "cmpwi",
+          [
+            "r4",
+            0
+          ]
+        ],
+        [
+          "beq",
+          [
+            [
+              "branch",
+              42
+            ]
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r3",
+            "r26"
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "addArchive__27NameObjArchiveListCollectorFPCc",
+              0
+            ]
+          ]
+        ],
+        [
+          "lwz",
+          [
+            "r4",
+            20,
+            "r27"
+          ]
+        ],
+        [
+          "cmpwi",
+          [
+            "r4",
+            0
+          ]
+        ],
+        [
+          "beq",
+          [
+            [
+              "branch",
+              47
+            ]
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r3",
+            "r26"
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "addArchive__27NameObjArchiveListCollectorFPCc",
+              0
+            ]
+          ]
+        ],
+        [
+          "lis",
+          [
+            "r30",
+            [
+              "symbol",
+              6,
+              "sUniquePlanetUniqueArchiveName__30@unnamed@PlanetMapCreator_cpp@",
+              0
+            ]
+          ]
+        ],
+        [
+          "lwz",
+          [
+            "r29",
+            0,
+            "r27"
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r30",
+            "r30",
+            [
+              "symbol",
+              4,
+              "sUniquePlanetUniqueArchiveName__30@unnamed@PlanetMapCreator_cpp@",
+              0
+            ]
+          ]
+        ],
+        [
+          "li",
+          [
+            "r27",
+            0
+          ]
+        ],
+        [
+          "li",
+          [
+            "r31",
+            0
+          ]
+        ],
+        [
+          "lwzx",
+          [
+            "r4",
+            "r30",
+            "r31"
+          ]
+        ],
+        [
+          "add",
+          [
+            "r28",
+            "r30",
+            "r31"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r3",
+            "r29"
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "isEqualString__2MRFPCcPCc",
+              0
+            ]
+          ]
+        ],
+        [
+          "cmpwi",
+          [
+            "r3",
+            0
+          ]
+        ],
+        [
+          "beq",
+          [
+            [
+              "branch",
+              61
+            ]
+          ]
+        ],
+        [
+          "lwz",
+          [
+            "r4",
+            4,
+            "r28"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r3",
+            "r26"
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "addArchive__27NameObjArchiveListCollectorFPCc",
+              0
+            ]
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r27",
+            "r27",
+            1
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r31",
+            "r31",
+            8
+          ]
+        ],
+        [
+          "cmplwi",
+          [
+            "r27",
+            13
+          ]
+        ],
+        [
+          "blt",
+          [
+            [
+              "branch",
+              52
+            ]
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r11",
+            "r1",
+            32
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "_restgpr_26",
+              0
+            ]
+          ]
+        ],
+        [
+          "lwz",
+          [
+            "r0",
+            36,
+            "r1"
+          ]
+        ],
+        [
+          "mtlr",
+          [
+            "r0"
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r1",
+            "r1",
+            32
+          ]
+        ],
+        [
+          "blr",
+          []
+        ]
+      ],
+      "retail_relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_26",
+          "addend": 0
+        },
+        {
+          "offset": "0x20",
+          "kind": 10,
+          "symbol": "getTableData__16PlanetMapCreatorCFPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x30",
+          "kind": 10,
+          "symbol": "isScenarioForceLow__16PlanetMapCreatorCFPC13PlanetMapData",
+          "addend": 0
+        },
+        {
+          "offset": "0x44",
+          "kind": 10,
+          "symbol": "addArchive__27NameObjArchiveListCollectorFPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x54",
+          "kind": 10,
+          "symbol": "addArchive__27NameObjArchiveListCollectorFPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x68",
+          "kind": 10,
+          "symbol": "addArchive__27NameObjArchiveListCollectorFPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x7c",
+          "kind": 10,
+          "symbol": "addArchive__27NameObjArchiveListCollectorFPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x90",
+          "kind": 10,
+          "symbol": "addArchive__27NameObjArchiveListCollectorFPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0xa4",
+          "kind": 10,
+          "symbol": "addArchive__27NameObjArchiveListCollectorFPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0xb8",
+          "kind": 10,
+          "symbol": "addArchive__27NameObjArchiveListCollectorFPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0xbe",
+          "kind": 6,
+          "symbol": "sUniquePlanetUniqueArchiveName__30@unnamed@PlanetMapCreator_cpp@",
+          "addend": 0
+        },
+        {
+          "offset": "0xc6",
+          "kind": 4,
+          "symbol": "sUniquePlanetUniqueArchiveName__30@unnamed@PlanetMapCreator_cpp@",
+          "addend": 0
+        },
+        {
+          "offset": "0xdc",
+          "kind": 10,
+          "symbol": "isEqualString__2MRFPCcPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0xf0",
+          "kind": 10,
+          "symbol": "addArchive__27NameObjArchiveListCollectorFPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x108",
+          "kind": 10,
+          "symbol": "_restgpr_26",
+          "addend": 0
+        }
+      ],
+      "compiled_relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_26",
+          "addend": 0
+        },
+        {
+          "offset": "0x20",
+          "kind": 10,
+          "symbol": "getTableData__16PlanetMapCreatorCFPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x30",
+          "kind": 10,
+          "symbol": "isScenarioForceLow__16PlanetMapCreatorCFPC13PlanetMapData",
+          "addend": 0
+        },
+        {
+          "offset": "0x44",
+          "kind": 10,
+          "symbol": "addArchive__27NameObjArchiveListCollectorFPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x54",
+          "kind": 10,
+          "symbol": "addArchive__27NameObjArchiveListCollectorFPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x68",
+          "kind": 10,
+          "symbol": "addArchive__27NameObjArchiveListCollectorFPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x7c",
+          "kind": 10,
+          "symbol": "addArchive__27NameObjArchiveListCollectorFPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x90",
+          "kind": 10,
+          "symbol": "addArchive__27NameObjArchiveListCollectorFPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0xa4",
+          "kind": 10,
+          "symbol": "addArchive__27NameObjArchiveListCollectorFPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0xb8",
+          "kind": 10,
+          "symbol": "addArchive__27NameObjArchiveListCollectorFPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0xbe",
+          "kind": 6,
+          "symbol": "sUniquePlanetUniqueArchiveName__30@unnamed@PlanetMapCreator_cpp@",
+          "addend": 0
+        },
+        {
+          "offset": "0xc6",
+          "kind": 4,
+          "symbol": "sUniquePlanetUniqueArchiveName__30@unnamed@PlanetMapCreator_cpp@",
+          "addend": 0
+        },
+        {
+          "offset": "0xdc",
+          "kind": 10,
+          "symbol": "isEqualString__2MRFPCcPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0xf0",
+          "kind": 10,
+          "symbol": "addArchive__27NameObjArchiveListCollectorFPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x108",
+          "kind": 10,
+          "symbol": "_restgpr_26",
+          "addend": 0
+        }
+      ]
+    },
+    {
+      "symbol": "createPlanetMapDataTable__16PlanetMapCreatorFP8JMapInfo",
+      "retail_address": "0x80195ad0",
+      "retail_bytes": 116,
+      "compiled_bytes": 116,
+      "match_percent": 100.0,
+      "all_canonical_instructions_identical": true,
+      "relocated_byte_exact": true,
+      "verified_relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_28",
+          "addend": 0,
+          "effective_retail_target": "0x80518a04"
+        },
+        {
+          "offset": "0x2c",
+          "kind": 10,
+          "symbol": "__nw__FUl",
+          "addend": 0,
+          "effective_retail_target": "0x8040b458"
+        },
+        {
+          "offset": "0x44",
+          "kind": 10,
+          "symbol": "addTableData__16PlanetMapCreatorFPC8JMapInfol",
+          "addend": 0,
+          "effective_retail_target": "0x80195b44"
+        },
+        {
+          "offset": "0x60",
+          "kind": 10,
+          "symbol": "_restgpr_28",
+          "addend": 0,
+          "effective_retail_target": "0x80518a50"
+        }
+      ],
+      "canonical_instructions": [
+        [
+          "stwu",
+          [
+            "r1",
+            -32,
+            "r1"
+          ]
+        ],
+        [
+          "mflr",
+          [
+            "r0"
+          ]
+        ],
+        [
+          "stw",
+          [
+            "r0",
+            36,
+            "r1"
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r11",
+            "r1",
+            32
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "_savegpr_28",
+              0
+            ]
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r28",
+            "r3"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r29",
+            "r4"
+          ]
+        ],
+        [
+          "li",
+          [
+            "r30",
+            0
+          ]
+        ],
+        [
+          "li",
+          [
+            "r31",
+            0
+          ]
+        ],
+        [
+          "b",
+          [
+            [
+              "branch",
+              20
+            ]
+          ]
+        ],
+        [
+          "li",
+          [
+            "r3",
+            56
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "__nw__FUl",
+              0
+            ]
+          ]
+        ],
+        [
+          "lwz",
+          [
+            "r6",
+            12,
+            "r28"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r4",
+            "r29"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r5",
+            "r30"
+          ]
+        ],
+        [
+          "stwx",
+          [
+            "r3",
+            "r6",
+            "r31"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r3",
+            "r28"
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "addTableData__16PlanetMapCreatorFPC8JMapInfol",
+              0
+            ]
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r30",
+            "r30",
+            1
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r31",
+            "r31",
+            4
+          ]
+        ],
+        [
+          "lwz",
+          [
+            "r0",
+            16,
+            "r28"
+          ]
+        ],
+        [
+          "cmpw",
+          [
+            "r30",
+            "r0"
+          ]
+        ],
+        [
+          "blt",
+          [
+            [
+              "branch",
+              10
+            ]
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r11",
+            "r1",
+            32
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "_restgpr_28",
+              0
+            ]
+          ]
+        ],
+        [
+          "lwz",
+          [
+            "r0",
+            36,
+            "r1"
+          ]
+        ],
+        [
+          "mtlr",
+          [
+            "r0"
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r1",
+            "r1",
+            32
+          ]
+        ],
+        [
+          "blr",
+          []
+        ]
+      ],
+      "retail_relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_28",
+          "addend": 0
+        },
+        {
+          "offset": "0x2c",
+          "kind": 10,
+          "symbol": "__nw__FUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x44",
+          "kind": 10,
+          "symbol": "addTableData__16PlanetMapCreatorFPC8JMapInfol",
+          "addend": 0
+        },
+        {
+          "offset": "0x60",
+          "kind": 10,
+          "symbol": "_restgpr_28",
+          "addend": 0
+        }
+      ],
+      "compiled_relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_28",
+          "addend": 0
+        },
+        {
+          "offset": "0x2c",
+          "kind": 10,
+          "symbol": "__nw__FUl",
+          "addend": 0
+        },
+        {
+          "offset": "0x44",
+          "kind": 10,
+          "symbol": "addTableData__16PlanetMapCreatorFPC8JMapInfol",
+          "addend": 0
+        },
+        {
+          "offset": "0x60",
+          "kind": 10,
+          "symbol": "_restgpr_28",
+          "addend": 0
+        }
+      ]
+    },
+    {
+      "symbol": "addTableData__16PlanetMapCreatorFPC8JMapInfol",
+      "retail_address": "0x80195b44",
+      "retail_bytes": 340,
+      "compiled_bytes": 340,
+      "match_percent": 98.28236,
+      "all_canonical_instructions_identical": true,
+      "relocated_byte_exact": false,
+      "verified_relocations": null,
+      "canonical_instructions": [
+        [
+          "stwu",
+          [
+            "r1",
+            -80,
+            "r1"
+          ]
+        ],
+        [
+          "mflr",
+          [
+            "r0"
+          ]
+        ],
+        [
+          "stw",
+          [
+            "r0",
+            84,
+            "r1"
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r11",
+            "r1",
+            80
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "_savegpr_24",
+              0
+            ]
+          ]
+        ],
+        [
+          "lwz",
+          [
+            "r3",
+            12,
+            "r3"
+          ]
+        ],
+        [
+          "slwi",
+          [
+            "r0",
+            "r5",
+            "2"
+          ]
+        ],
+        [
+          "lis",
+          [
+            "r28",
+            [
+              "pool",
+              6
+            ]
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r25",
+            "r5"
+          ]
+        ],
+        [
+          "lwzx",
+          [
+            "r27",
+            "r3",
+            "r0"
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r28",
+            "r28",
+            [
+              "pool",
+              4
+            ]
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r24",
+            "r4"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r6",
+            "r25"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r3",
+            "r27"
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r5",
+            "r28",
+            [
+              "pool-string",
+              "506c616e65744e616d6500"
+            ]
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "getCsvDataStr__2MRFPPCcPC8JMapInfoPCcl",
+              0
+            ]
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r4",
+            "r24"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r5",
+            "r25"
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r3",
+            "r27",
+            4
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r6",
+            "r28",
+            [
+              "pool-string",
+              "4c6f77466c616700"
+            ]
+          ]
+        ],
+        [
+          "li",
+          [
+            "r7",
+            [
+              "constant",
+              109,
+              "4c6f7700"
+            ]
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "makeSubModelName__30@unnamed@PlanetMapCreator_cpp@FPPCcPC8JMapInfolPCcPCc",
+              0
+            ]
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r4",
+            "r24"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r5",
+            "r25"
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r3",
+            "r27",
+            8
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r6",
+            "r28",
+            [
+              "pool-string",
+              "4d6964646c65466c616700"
+            ]
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r7",
+            "r28",
+            [
+              "pool-string",
+              "4d6964646c6500"
+            ]
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "makeSubModelName__30@unnamed@PlanetMapCreator_cpp@FPPCcPC8JMapInfolPCcPCc",
+              0
+            ]
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r4",
+            "r24"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r5",
+            "r25"
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r3",
+            "r27",
+            12
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r6",
+            "r28",
+            [
+              "pool-string",
+              "426c6f6f6d466c616700"
+            ]
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r7",
+            "r28",
+            [
+              "pool-string",
+              "426c6f6f6d00"
+            ]
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "makeSubModelName__30@unnamed@PlanetMapCreator_cpp@FPPCcPC8JMapInfolPCcPCc",
+              0
+            ]
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r4",
+            "r24"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r5",
+            "r25"
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r3",
+            "r27",
+            16
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r6",
+            "r28",
+            [
+              "pool-string",
+              "5761746572466c616700"
+            ]
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r7",
+            "r28",
+            [
+              "pool-string",
+              "576174657200"
+            ]
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "makeSubModelName__30@unnamed@PlanetMapCreator_cpp@FPPCcPC8JMapInfolPCcPCc",
+              0
+            ]
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r4",
+            "r24"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r5",
+            "r25"
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r3",
+            "r27",
+            20
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r6",
+            "r28",
+            [
+              "pool-string",
+              "496e646972656374466c616700"
+            ]
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r7",
+            "r28",
+            [
+              "pool-string",
+              "496e64697265637400"
+            ]
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "makeSubModelName__30@unnamed@PlanetMapCreator_cpp@FPPCcPC8JMapInfolPCcPCc",
+              0
+            ]
+          ]
+        ],
+        [
+          "li",
+          [
+            "r26",
+            0
+          ]
+        ],
+        [
+          "li",
+          [
+            "r31",
+            0
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r30",
+            "r26"
+          ]
+        ],
+        [
+          "add",
+          [
+            "r29",
+            "r27",
+            "r31"
+          ]
+        ],
+        [
+          "lwz",
+          [
+            "r3",
+            4,
+            "r29"
+          ]
+        ],
+        [
+          "cmpwi",
+          [
+            "r3",
+            0
+          ]
+        ],
+        [
+          "beq",
+          [
+            [
+              "branch",
+              57
+            ]
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "isExistModel__2MRFPCc",
+              0
+            ]
+          ]
+        ],
+        [
+          "cmpwi",
+          [
+            "r3",
+            0
+          ]
+        ],
+        [
+          "bne",
+          [
+            [
+              "branch",
+              57
+            ]
+          ]
+        ],
+        [
+          "stw",
+          [
+            "r30",
+            4,
+            "r29"
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r26",
+            "r26",
+            1
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r31",
+            "r31",
+            4
+          ]
+        ],
+        [
+          "cmpwi",
+          [
+            "r26",
+            5
+          ]
+        ],
+        [
+          "blt",
+          [
+            [
+              "branch",
+              49
+            ]
+          ]
+        ],
+        [
+          "li",
+          [
+            "r26",
+            0
+          ]
+        ],
+        [
+          "li",
+          [
+            "r31",
+            0
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r6",
+            "r26"
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r3",
+            "r1",
+            8
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r5",
+            "r28",
+            [
+              "pool-string",
+              "466f7263654c6f775363656e6172696f4e616d65256400"
+            ]
+          ]
+        ],
+        [
+          "li",
+          [
+            "r4",
+            32
+          ]
+        ],
+        [
+          "crclr",
+          [
+            "cr1eq"
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "snprintf",
+              0
+            ]
+          ]
+        ],
+        [
+          "add",
+          [
+            "r3",
+            "r27",
+            "r31"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r4",
+            "r24"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r6",
+            "r25"
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r5",
+            "r1",
+            8
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r3",
+            "r3",
+            24
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "getCsvDataStr__2MRFPPCcPC8JMapInfoPCcl",
+              0
+            ]
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r26",
+            "r26",
+            1
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r31",
+            "r31",
+            4
+          ]
+        ],
+        [
+          "cmpwi",
+          [
+            "r26",
+            8
+          ]
+        ],
+        [
+          "blt",
+          [
+            [
+              "branch",
+              63
+            ]
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r11",
+            "r1",
+            80
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "_restgpr_24",
+              0
+            ]
+          ]
+        ],
+        [
+          "lwz",
+          [
+            "r0",
+            84,
+            "r1"
+          ]
+        ],
+        [
+          "mtlr",
+          [
+            "r0"
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r1",
+            "r1",
+            80
+          ]
+        ],
+        [
+          "blr",
+          []
+        ]
+      ],
+      "retail_relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_24",
+          "addend": 0
+        },
+        {
+          "offset": "0x1e",
+          "kind": 6,
+          "symbol": "lbl_8058B4E8",
+          "addend": 0,
+          "value_hex": "506c616e65744d6170446174615461626c652e61726300"
+        },
+        {
+          "offset": "0x2a",
+          "kind": 4,
+          "symbol": "lbl_8058B4E8",
+          "addend": 0,
+          "value_hex": "506c616e65744d6170446174615461626c652e61726300"
+        },
+        {
+          "offset": "0x3c",
+          "kind": 10,
+          "symbol": "getCsvDataStr__2MRFPPCcPC8JMapInfoPCcl",
+          "addend": 0
+        },
+        {
+          "offset": "0x50",
+          "kind": 109,
+          "symbol": "lbl_806B1C61",
+          "addend": 0,
+          "value_hex": "4c6f7700"
+        },
+        {
+          "offset": "0x54",
+          "kind": 10,
+          "symbol": "makeSubModelName__30@unnamed@PlanetMapCreator_cpp@FPPCcPC8JMapInfolPCcPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x6c",
+          "kind": 10,
+          "symbol": "makeSubModelName__30@unnamed@PlanetMapCreator_cpp@FPPCcPC8JMapInfolPCcPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x84",
+          "kind": 10,
+          "symbol": "makeSubModelName__30@unnamed@PlanetMapCreator_cpp@FPPCcPC8JMapInfolPCcPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x9c",
+          "kind": 10,
+          "symbol": "makeSubModelName__30@unnamed@PlanetMapCreator_cpp@FPPCcPC8JMapInfolPCcPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0xb4",
+          "kind": 10,
+          "symbol": "makeSubModelName__30@unnamed@PlanetMapCreator_cpp@FPPCcPC8JMapInfolPCcPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0xd4",
+          "kind": 10,
+          "symbol": "isExistModel__2MRFPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x110",
+          "kind": 10,
+          "symbol": "snprintf",
+          "addend": 0
+        },
+        {
+          "offset": "0x128",
+          "kind": 10,
+          "symbol": "getCsvDataStr__2MRFPPCcPC8JMapInfoPCcl",
+          "addend": 0
+        },
+        {
+          "offset": "0x140",
+          "kind": 10,
+          "symbol": "_restgpr_24",
+          "addend": 0
+        }
+      ],
+      "compiled_relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_24",
+          "addend": 0
+        },
+        {
+          "offset": "0x1e",
+          "kind": 6,
+          "symbol": "...data.0",
+          "addend": 0,
+          "value_hex": "4265616d476f526f756e64506c616e657400"
+        },
+        {
+          "offset": "0x2a",
+          "kind": 4,
+          "symbol": "...data.0",
+          "addend": 0,
+          "value_hex": "4265616d476f526f756e64506c616e657400"
+        },
+        {
+          "offset": "0x3c",
+          "kind": 10,
+          "symbol": "getCsvDataStr__2MRFPPCcPC8JMapInfoPCcl",
+          "addend": 0
+        },
+        {
+          "offset": "0x50",
+          "kind": 109,
+          "symbol": "@12386",
+          "addend": 0,
+          "value_hex": "4c6f7700"
+        },
+        {
+          "offset": "0x54",
+          "kind": 10,
+          "symbol": "makeSubModelName__30@unnamed@PlanetMapCreator_cpp@FPPCcPC8JMapInfolPCcPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x6c",
+          "kind": 10,
+          "symbol": "makeSubModelName__30@unnamed@PlanetMapCreator_cpp@FPPCcPC8JMapInfolPCcPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x84",
+          "kind": 10,
+          "symbol": "makeSubModelName__30@unnamed@PlanetMapCreator_cpp@FPPCcPC8JMapInfolPCcPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x9c",
+          "kind": 10,
+          "symbol": "makeSubModelName__30@unnamed@PlanetMapCreator_cpp@FPPCcPC8JMapInfolPCcPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0xb4",
+          "kind": 10,
+          "symbol": "makeSubModelName__30@unnamed@PlanetMapCreator_cpp@FPPCcPC8JMapInfolPCcPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0xd4",
+          "kind": 10,
+          "symbol": "isExistModel__2MRFPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x110",
+          "kind": 10,
+          "symbol": "snprintf",
+          "addend": 0
+        },
+        {
+          "offset": "0x128",
+          "kind": 10,
+          "symbol": "getCsvDataStr__2MRFPPCcPC8JMapInfoPCcl",
+          "addend": 0
+        },
+        {
+          "offset": "0x140",
+          "kind": 10,
+          "symbol": "_restgpr_24",
+          "addend": 0
+        }
+      ]
+    },
+    {
+      "symbol": "getTableData__16PlanetMapCreatorCFPCc",
+      "retail_address": "0x80195c98",
+      "retail_bytes": 128,
+      "compiled_bytes": 128,
+      "match_percent": 100.0,
+      "all_canonical_instructions_identical": true,
+      "relocated_byte_exact": true,
+      "verified_relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_28",
+          "addend": 0,
+          "effective_retail_target": "0x80518a04"
+        },
+        {
+          "offset": "0x38",
+          "kind": 10,
+          "symbol": "isEqualString__2MRFPCcPCc",
+          "addend": 0,
+          "effective_retail_target": "0x803feb68"
+        },
+        {
+          "offset": "0x6c",
+          "kind": 10,
+          "symbol": "_restgpr_28",
+          "addend": 0,
+          "effective_retail_target": "0x80518a50"
+        }
+      ],
+      "canonical_instructions": [
+        [
+          "stwu",
+          [
+            "r1",
+            -32,
+            "r1"
+          ]
+        ],
+        [
+          "mflr",
+          [
+            "r0"
+          ]
+        ],
+        [
+          "stw",
+          [
+            "r0",
+            36,
+            "r1"
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r11",
+            "r1",
+            32
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "_savegpr_28",
+              0
+            ]
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r28",
+            "r3"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r29",
+            "r4"
+          ]
+        ],
+        [
+          "li",
+          [
+            "r30",
+            0
+          ]
+        ],
+        [
+          "li",
+          [
+            "r31",
+            0
+          ]
+        ],
+        [
+          "b",
+          [
+            [
+              "branch",
+              22
+            ]
+          ]
+        ],
+        [
+          "lwz",
+          [
+            "r4",
+            12,
+            "r28"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r3",
+            "r29"
+          ]
+        ],
+        [
+          "lwzx",
+          [
+            "r4",
+            "r4",
+            "r31"
+          ]
+        ],
+        [
+          "lwz",
+          [
+            "r4",
+            0,
+            "r4"
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "isEqualString__2MRFPCcPCc",
+              0
+            ]
+          ]
+        ],
+        [
+          "cmpwi",
+          [
+            "r3",
+            0
+          ]
+        ],
+        [
+          "beq",
+          [
+            [
+              "branch",
+              20
+            ]
+          ]
+        ],
+        [
+          "lwz",
+          [
+            "r3",
+            12,
+            "r28"
+          ]
+        ],
+        [
+          "lwzx",
+          [
+            "r3",
+            "r3",
+            "r31"
+          ]
+        ],
+        [
+          "b",
+          [
+            [
+              "branch",
+              26
+            ]
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r30",
+            "r30",
+            1
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r31",
+            "r31",
+            4
+          ]
+        ],
+        [
+          "lwz",
+          [
+            "r0",
+            16,
+            "r28"
+          ]
+        ],
+        [
+          "cmpw",
+          [
+            "r30",
+            "r0"
+          ]
+        ],
+        [
+          "blt",
+          [
+            [
+              "branch",
+              10
+            ]
+          ]
+        ],
+        [
+          "li",
+          [
+            "r3",
+            0
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r11",
+            "r1",
+            32
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "_restgpr_28",
+              0
+            ]
+          ]
+        ],
+        [
+          "lwz",
+          [
+            "r0",
+            36,
+            "r1"
+          ]
+        ],
+        [
+          "mtlr",
+          [
+            "r0"
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r1",
+            "r1",
+            32
+          ]
+        ],
+        [
+          "blr",
+          []
+        ]
+      ],
+      "retail_relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_28",
+          "addend": 0
+        },
+        {
+          "offset": "0x38",
+          "kind": 10,
+          "symbol": "isEqualString__2MRFPCcPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x6c",
+          "kind": 10,
+          "symbol": "_restgpr_28",
+          "addend": 0
+        }
+      ],
+      "compiled_relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_28",
+          "addend": 0
+        },
+        {
+          "offset": "0x38",
+          "kind": 10,
+          "symbol": "isEqualString__2MRFPCcPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x6c",
+          "kind": 10,
+          "symbol": "_restgpr_28",
+          "addend": 0
+        }
+      ]
+    },
+    {
+      "symbol": "isScenarioForceLow__16PlanetMapCreatorCFPC13PlanetMapData",
+      "retail_address": "0x80195d18",
+      "retail_bytes": 204,
+      "compiled_bytes": 200,
+      "match_percent": 97.94118,
+      "all_canonical_instructions_identical": true,
+      "relocated_byte_exact": false,
+      "verified_relocations": null,
+      "canonical_instructions": [
+        [
+          "stwu",
+          [
+            "r1",
+            -96,
+            "r1"
+          ]
+        ],
+        [
+          "mflr",
+          [
+            "r0"
+          ]
+        ],
+        [
+          "stw",
+          [
+            "r0",
+            100,
+            "r1"
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r11",
+            "r1",
+            96
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "_savegpr_28",
+              0
+            ]
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r28",
+            "r4"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r3",
+            "r28"
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "isDataForceLow__30@unnamed@PlanetMapCreator_cpp@FPC13PlanetMapData",
+              0
+            ]
+          ]
+        ],
+        [
+          "cmpwi",
+          [
+            "r3",
+            0
+          ]
+        ],
+        [
+          "bne",
+          [
+            [
+              "branch",
+              12
+            ]
+          ]
+        ],
+        [
+          "li",
+          [
+            "r3",
+            0
+          ]
+        ],
+        [
+          "b",
+          [
+            [
+              "branch",
+              44
+            ]
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "getCurrentScenarioNo__2MRFv",
+              0
+            ]
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r31",
+            "r3"
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "getCurrentStageName__2MRFv",
+              0
+            ]
+          ]
+        ],
+        [
+          "lis",
+          [
+            "r5",
+            [
+              "constant",
+              6,
+              "25735f256400"
+            ]
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r6",
+            "r3"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r7",
+            "r31"
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r3",
+            "r1",
+            8
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r5",
+            "r5",
+            [
+              "constant",
+              4,
+              "25735f256400"
+            ]
+          ]
+        ],
+        [
+          "li",
+          [
+            "r4",
+            64
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "snprintf",
+              0
+            ]
+          ]
+        ],
+        [
+          "li",
+          [
+            "r29",
+            0
+          ]
+        ],
+        [
+          "li",
+          [
+            "r31",
+            0
+          ]
+        ],
+        [
+          "add",
+          [
+            "r30",
+            "r28",
+            "r31"
+          ]
+        ],
+        [
+          "li",
+          [
+            "r4",
+            [
+              "constant",
+              109,
+              "00"
+            ]
+          ]
+        ],
+        [
+          "lwz",
+          [
+            "r3",
+            24,
+            "r30"
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "isEqualString__2MRFPCcPCc",
+              0
+            ]
+          ]
+        ],
+        [
+          "cmpwi",
+          [
+            "r3",
+            0
+          ]
+        ],
+        [
+          "beq",
+          [
+            [
+              "branch",
+              32
+            ]
+          ]
+        ],
+        [
+          "li",
+          [
+            "r3",
+            0
+          ]
+        ],
+        [
+          "b",
+          [
+            [
+              "branch",
+              44
+            ]
+          ]
+        ],
+        [
+          "lwz",
+          [
+            "r4",
+            24,
+            "r30"
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r3",
+            "r1",
+            8
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "isEqualString__2MRFPCcPCc",
+              0
+            ]
+          ]
+        ],
+        [
+          "cmpwi",
+          [
+            "r3",
+            0
+          ]
+        ],
+        [
+          "beq",
+          [
+            [
+              "branch",
+              39
+            ]
+          ]
+        ],
+        [
+          "li",
+          [
+            "r3",
+            1
+          ]
+        ],
+        [
+          "b",
+          [
+            [
+              "branch",
+              44
+            ]
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r29",
+            "r29",
+            1
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r31",
+            "r31",
+            4
+          ]
+        ],
+        [
+          "cmpwi",
+          [
+            "r29",
+            8
+          ]
+        ],
+        [
+          "blt",
+          [
+            [
+              "branch",
+              24
+            ]
+          ]
+        ],
+        [
+          "li",
+          [
+            "r3",
+            0
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r11",
+            "r1",
+            96
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "_restgpr_28",
+              0
+            ]
+          ]
+        ],
+        [
+          "lwz",
+          [
+            "r0",
+            100,
+            "r1"
+          ]
+        ],
+        [
+          "mtlr",
+          [
+            "r0"
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r1",
+            "r1",
+            96
+          ]
+        ],
+        [
+          "blr",
+          []
+        ]
+      ],
+      "retail_relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_28",
+          "addend": 0
+        },
+        {
+          "offset": "0x1c",
+          "kind": 10,
+          "symbol": "isDataForceLow__30@unnamed@PlanetMapCreator_cpp@FPC13PlanetMapData",
+          "addend": 0
+        },
+        {
+          "offset": "0x30",
+          "kind": 10,
+          "symbol": "getCurrentScenarioNo__2MRFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x38",
+          "kind": 10,
+          "symbol": "getCurrentStageName__2MRFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x3e",
+          "kind": 6,
+          "symbol": "lbl_8058B99D",
+          "addend": 0,
+          "value_hex": "25735f256400"
+        },
+        {
+          "offset": "0x4e",
+          "kind": 4,
+          "symbol": "lbl_8058B99D",
+          "addend": 0,
+          "value_hex": "25735f256400"
+        },
+        {
+          "offset": "0x58",
+          "kind": 10,
+          "symbol": "snprintf",
+          "addend": 0
+        },
+        {
+          "offset": "0x68",
+          "kind": 109,
+          "symbol": "lbl_806B1C60",
+          "addend": 0,
+          "value_hex": "00"
+        },
+        {
+          "offset": "0x70",
+          "kind": 10,
+          "symbol": "isEqualString__2MRFPCcPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x8c",
+          "kind": 10,
+          "symbol": "isEqualString__2MRFPCcPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0xb8",
+          "kind": 10,
+          "symbol": "_restgpr_28",
+          "addend": 0
+        }
+      ],
+      "compiled_relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_28",
+          "addend": 0
+        },
+        {
+          "offset": "0x1c",
+          "kind": 10,
+          "symbol": "isDataForceLow__30@unnamed@PlanetMapCreator_cpp@FPC13PlanetMapData",
+          "addend": 0
+        },
+        {
+          "offset": "0x30",
+          "kind": 10,
+          "symbol": "getCurrentScenarioNo__2MRFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x38",
+          "kind": 10,
+          "symbol": "getCurrentStageName__2MRFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x3e",
+          "kind": 6,
+          "symbol": "@12418",
+          "addend": 0,
+          "value_hex": "25735f256400"
+        },
+        {
+          "offset": "0x4e",
+          "kind": 4,
+          "symbol": "@12418",
+          "addend": 0,
+          "value_hex": "25735f256400"
+        },
+        {
+          "offset": "0x54",
+          "kind": 10,
+          "symbol": "snprintf",
+          "addend": 0
+        },
+        {
+          "offset": "0x64",
+          "kind": 109,
+          "symbol": "@12335",
+          "addend": 0,
+          "value_hex": "00"
+        },
+        {
+          "offset": "0x6c",
+          "kind": 10,
+          "symbol": "isEqualString__2MRFPCcPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x88",
+          "kind": 10,
+          "symbol": "isEqualString__2MRFPCcPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0xb4",
+          "kind": 10,
+          "symbol": "_restgpr_28",
+          "addend": 0
+        }
+      ]
+    },
+    {
+      "symbol": "makeArchiveList__24PlanetMapCreatorFunctionFP27NameObjArchiveListCollectorRC12JMapInfoIterPCc",
+      "retail_address": "0x80195de4",
+      "retail_bytes": 84,
+      "compiled_bytes": 84,
+      "match_percent": 100.0,
+      "all_canonical_instructions_identical": true,
+      "relocated_byte_exact": true,
+      "verified_relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_29",
+          "addend": 0,
+          "effective_retail_target": "0x80518a08"
+        },
+        {
+          "offset": "0x20",
+          "kind": 10,
+          "symbol": "getSceneObjHolder__2MRFv",
+          "addend": 0,
+          "effective_retail_target": "0x803453dc"
+        },
+        {
+          "offset": "0x28",
+          "kind": 10,
+          "symbol": "getObj__14SceneObjHolderCFi",
+          "addend": 0,
+          "effective_retail_target": "0x80345388"
+        },
+        {
+          "offset": "0x38",
+          "kind": 10,
+          "symbol": "makeArchiveListPlanet__16PlanetMapCreatorFP27NameObjArchiveListCollectorRC12JMapInfoIterPCc",
+          "addend": 0,
+          "effective_retail_target": "0x801959b4"
+        },
+        {
+          "offset": "0x40",
+          "kind": 10,
+          "symbol": "_restgpr_29",
+          "addend": 0,
+          "effective_retail_target": "0x80518a54"
+        }
+      ],
+      "canonical_instructions": [
+        [
+          "stwu",
+          [
+            "r1",
+            -32,
+            "r1"
+          ]
+        ],
+        [
+          "mflr",
+          [
+            "r0"
+          ]
+        ],
+        [
+          "stw",
+          [
+            "r0",
+            36,
+            "r1"
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r11",
+            "r1",
+            32
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "_savegpr_29",
+              0
+            ]
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r29",
+            "r3"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r30",
+            "r4"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r31",
+            "r5"
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "getSceneObjHolder__2MRFv",
+              0
+            ]
+          ]
+        ],
+        [
+          "li",
+          [
+            "r4",
+            116
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "getObj__14SceneObjHolderCFi",
+              0
+            ]
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r4",
+            "r29"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r5",
+            "r30"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r6",
+            "r31"
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "makeArchiveListPlanet__16PlanetMapCreatorFP27NameObjArchiveListCollectorRC12JMapInfoIterPCc",
+              0
+            ]
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r11",
+            "r1",
+            32
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "_restgpr_29",
+              0
+            ]
+          ]
+        ],
+        [
+          "lwz",
+          [
+            "r0",
+            36,
+            "r1"
+          ]
+        ],
+        [
+          "mtlr",
+          [
+            "r0"
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r1",
+            "r1",
+            32
+          ]
+        ],
+        [
+          "blr",
+          []
+        ]
+      ],
+      "retail_relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_29",
+          "addend": 0
+        },
+        {
+          "offset": "0x20",
+          "kind": 10,
+          "symbol": "getSceneObjHolder__2MRFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x28",
+          "kind": 10,
+          "symbol": "getObj__14SceneObjHolderCFi",
+          "addend": 0
+        },
+        {
+          "offset": "0x38",
+          "kind": 10,
+          "symbol": "makeArchiveListPlanet__16PlanetMapCreatorFP27NameObjArchiveListCollectorRC12JMapInfoIterPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x40",
+          "kind": 10,
+          "symbol": "_restgpr_29",
+          "addend": 0
+        }
+      ],
+      "compiled_relocations": [
+        {
+          "offset": "0x10",
+          "kind": 10,
+          "symbol": "_savegpr_29",
+          "addend": 0
+        },
+        {
+          "offset": "0x20",
+          "kind": 10,
+          "symbol": "getSceneObjHolder__2MRFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x28",
+          "kind": 10,
+          "symbol": "getObj__14SceneObjHolderCFi",
+          "addend": 0
+        },
+        {
+          "offset": "0x38",
+          "kind": 10,
+          "symbol": "makeArchiveListPlanet__16PlanetMapCreatorFP27NameObjArchiveListCollectorRC12JMapInfoIterPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x40",
+          "kind": 10,
+          "symbol": "_restgpr_29",
+          "addend": 0
+        }
+      ]
+    },
+    {
+      "symbol": "isLoadArchiveAfterScenarioSelected__24PlanetMapCreatorFunctionFPCc",
+      "retail_address": "0x80195e74",
+      "retail_bytes": 104,
+      "compiled_bytes": 104,
+      "match_percent": 100.0,
+      "all_canonical_instructions_identical": true,
+      "relocated_byte_exact": true,
+      "verified_relocations": [
+        {
+          "offset": "0x14",
+          "kind": 10,
+          "symbol": "getSceneObjHolder__2MRFv",
+          "addend": 0,
+          "effective_retail_target": "0x803453dc"
+        },
+        {
+          "offset": "0x1c",
+          "kind": 10,
+          "symbol": "getObj__14SceneObjHolderCFi",
+          "addend": 0,
+          "effective_retail_target": "0x80345388"
+        },
+        {
+          "offset": "0x24",
+          "kind": 10,
+          "symbol": "getTableData__16PlanetMapCreatorCFPCc",
+          "addend": 0,
+          "effective_retail_target": "0x80195c98"
+        },
+        {
+          "offset": "0x3c",
+          "kind": 10,
+          "symbol": "getSceneObjHolder__2MRFv",
+          "addend": 0,
+          "effective_retail_target": "0x803453dc"
+        },
+        {
+          "offset": "0x44",
+          "kind": 10,
+          "symbol": "getObj__14SceneObjHolderCFi",
+          "addend": 0,
+          "effective_retail_target": "0x80345388"
+        },
+        {
+          "offset": "0x4c",
+          "kind": 10,
+          "symbol": "getTableData__16PlanetMapCreatorCFPCc",
+          "addend": 0,
+          "effective_retail_target": "0x80195c98"
+        },
+        {
+          "offset": "0x50",
+          "kind": 10,
+          "symbol": "isDataForceLow__30@unnamed@PlanetMapCreator_cpp@FPC13PlanetMapData",
+          "addend": 0,
+          "effective_retail_target": "0x80195794"
+        }
+      ],
+      "canonical_instructions": [
+        [
+          "stwu",
+          [
+            "r1",
+            -16,
+            "r1"
+          ]
+        ],
+        [
+          "mflr",
+          [
+            "r0"
+          ]
+        ],
+        [
+          "stw",
+          [
+            "r0",
+            20,
+            "r1"
+          ]
+        ],
+        [
+          "stw",
+          [
+            "r31",
+            12,
+            "r1"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r31",
+            "r3"
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "getSceneObjHolder__2MRFv",
+              0
+            ]
+          ]
+        ],
+        [
+          "li",
+          [
+            "r4",
+            116
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "getObj__14SceneObjHolderCFi",
+              0
+            ]
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r4",
+            "r31"
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "getTableData__16PlanetMapCreatorCFPCc",
+              0
+            ]
+          ]
+        ],
+        [
+          "subic",
+          [
+            "r0",
+            "r3",
+            1
+          ]
+        ],
+        [
+          "subfe.",
+          [
+            "r0",
+            "r0",
+            "r3"
+          ]
+        ],
+        [
+          "bne",
+          [
+            [
+              "branch",
+              15
+            ]
+          ]
+        ],
+        [
+          "li",
+          [
+            "r3",
+            0
+          ]
+        ],
+        [
+          "b",
+          [
+            [
+              "branch",
+              21
+            ]
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "getSceneObjHolder__2MRFv",
+              0
+            ]
+          ]
+        ],
+        [
+          "li",
+          [
+            "r4",
+            116
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "getObj__14SceneObjHolderCFi",
+              0
+            ]
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r4",
+            "r31"
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "getTableData__16PlanetMapCreatorCFPCc",
+              0
+            ]
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "isDataForceLow__30@unnamed@PlanetMapCreator_cpp@FPC13PlanetMapData",
+              0
+            ]
+          ]
+        ],
+        [
+          "lwz",
+          [
+            "r0",
+            20,
+            "r1"
+          ]
+        ],
+        [
+          "lwz",
+          [
+            "r31",
+            12,
+            "r1"
+          ]
+        ],
+        [
+          "mtlr",
+          [
+            "r0"
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r1",
+            "r1",
+            16
+          ]
+        ],
+        [
+          "blr",
+          []
+        ]
+      ],
+      "retail_relocations": [
+        {
+          "offset": "0x14",
+          "kind": 10,
+          "symbol": "getSceneObjHolder__2MRFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x1c",
+          "kind": 10,
+          "symbol": "getObj__14SceneObjHolderCFi",
+          "addend": 0
+        },
+        {
+          "offset": "0x24",
+          "kind": 10,
+          "symbol": "getTableData__16PlanetMapCreatorCFPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x3c",
+          "kind": 10,
+          "symbol": "getSceneObjHolder__2MRFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x44",
+          "kind": 10,
+          "symbol": "getObj__14SceneObjHolderCFi",
+          "addend": 0
+        },
+        {
+          "offset": "0x4c",
+          "kind": 10,
+          "symbol": "getTableData__16PlanetMapCreatorCFPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x50",
+          "kind": 10,
+          "symbol": "isDataForceLow__30@unnamed@PlanetMapCreator_cpp@FPC13PlanetMapData",
+          "addend": 0
+        }
+      ],
+      "compiled_relocations": [
+        {
+          "offset": "0x14",
+          "kind": 10,
+          "symbol": "getSceneObjHolder__2MRFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x1c",
+          "kind": 10,
+          "symbol": "getObj__14SceneObjHolderCFi",
+          "addend": 0
+        },
+        {
+          "offset": "0x24",
+          "kind": 10,
+          "symbol": "getTableData__16PlanetMapCreatorCFPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x3c",
+          "kind": 10,
+          "symbol": "getSceneObjHolder__2MRFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x44",
+          "kind": 10,
+          "symbol": "getObj__14SceneObjHolderCFi",
+          "addend": 0
+        },
+        {
+          "offset": "0x4c",
+          "kind": 10,
+          "symbol": "getTableData__16PlanetMapCreatorCFPCc",
+          "addend": 0
+        },
+        {
+          "offset": "0x50",
+          "kind": 10,
+          "symbol": "isDataForceLow__30@unnamed@PlanetMapCreator_cpp@FPC13PlanetMapData",
+          "addend": 0
+        }
+      ]
+    },
+    {
+      "symbol": "isRegisteredObj__24PlanetMapCreatorFunctionFPCc",
+      "retail_address": "0x80195edc",
+      "retail_bytes": 68,
+      "compiled_bytes": 68,
+      "match_percent": 100.0,
+      "all_canonical_instructions_identical": true,
+      "relocated_byte_exact": true,
+      "verified_relocations": [
+        {
+          "offset": "0x14",
+          "kind": 10,
+          "symbol": "getSceneObjHolder__2MRFv",
+          "addend": 0,
+          "effective_retail_target": "0x803453dc"
+        },
+        {
+          "offset": "0x1c",
+          "kind": 10,
+          "symbol": "getObj__14SceneObjHolderCFi",
+          "addend": 0,
+          "effective_retail_target": "0x80345388"
+        },
+        {
+          "offset": "0x24",
+          "kind": 10,
+          "symbol": "getTableData__16PlanetMapCreatorCFPCc",
+          "addend": 0,
+          "effective_retail_target": "0x80195c98"
+        }
+      ],
+      "canonical_instructions": [
+        [
+          "stwu",
+          [
+            "r1",
+            -16,
+            "r1"
+          ]
+        ],
+        [
+          "mflr",
+          [
+            "r0"
+          ]
+        ],
+        [
+          "stw",
+          [
+            "r0",
+            20,
+            "r1"
+          ]
+        ],
+        [
+          "stw",
+          [
+            "r31",
+            12,
+            "r1"
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r31",
+            "r3"
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "getSceneObjHolder__2MRFv",
+              0
+            ]
+          ]
+        ],
+        [
+          "li",
+          [
+            "r4",
+            116
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "getObj__14SceneObjHolderCFi",
+              0
+            ]
+          ]
+        ],
+        [
+          "mr",
+          [
+            "r4",
+            "r31"
+          ]
+        ],
+        [
+          "bl",
+          [
+            [
+              "symbol",
+              10,
+              "getTableData__16PlanetMapCreatorCFPCc",
+              0
+            ]
+          ]
+        ],
+        [
+          "subic",
+          [
+            "r0",
+            "r3",
+            1
+          ]
+        ],
+        [
+          "lwz",
+          [
+            "r31",
+            12,
+            "r1"
+          ]
+        ],
+        [
+          "subfe",
+          [
+            "r3",
+            "r0",
+            "r3"
+          ]
+        ],
+        [
+          "lwz",
+          [
+            "r0",
+            20,
+            "r1"
+          ]
+        ],
+        [
+          "mtlr",
+          [
+            "r0"
+          ]
+        ],
+        [
+          "addi",
+          [
+            "r1",
+            "r1",
+            16
+          ]
+        ],
+        [
+          "blr",
+          []
+        ]
+      ],
+      "retail_relocations": [
+        {
+          "offset": "0x14",
+          "kind": 10,
+          "symbol": "getSceneObjHolder__2MRFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x1c",
+          "kind": 10,
+          "symbol": "getObj__14SceneObjHolderCFi",
+          "addend": 0
+        },
+        {
+          "offset": "0x24",
+          "kind": 10,
+          "symbol": "getTableData__16PlanetMapCreatorCFPCc",
+          "addend": 0
+        }
+      ],
+      "compiled_relocations": [
+        {
+          "offset": "0x14",
+          "kind": 10,
+          "symbol": "getSceneObjHolder__2MRFv",
+          "addend": 0
+        },
+        {
+          "offset": "0x1c",
+          "kind": 10,
+          "symbol": "getObj__14SceneObjHolderCFi",
+          "addend": 0
+        },
+        {
+          "offset": "0x24",
+          "kind": 10,
+          "symbol": "getTableData__16PlanetMapCreatorCFPCc",
+          "addend": 0
+        }
+      ]
+    }
+  ],
+  "pointer_objects": [
+    {
+      "symbol": "sUniquePlanetUniqueArchiveName__30@unnamed@PlanetMapCreator_cpp@",
+      "all_relocated_strings_equal": true,
+      "pointer_count": 26
+    },
+    {
+      "symbol": "sArcName__30@unnamed@PlanetMapCreator_cpp@",
+      "all_relocated_strings_equal": true,
+      "pointer_count": 1
+    },
+    {
+      "symbol": "sFileName__30@unnamed@PlanetMapCreator_cpp@",
+      "all_relocated_strings_equal": true,
+      "pointer_count": 1
+    }
+  ],
+  "normalization": {
+    "constructor": "One vtable temporary register and independent vtable store and archive-pointer load reordered after base construction.",
+    "makeArchiveListPlanet": "Two explicit disjoint register-allocation live ranges, separated at instruction offset 0xc8.",
+    "addTableData": "Bijective r28/r29 allocation; each string-pool address resolved to its full literal, including shared PlanetName literal at a different pool offset.",
+    "isScenarioForceLow": "Compiler omits crclr cr1eq at the integer/string-only snprintf call; all argument registers, literal format, branches and remaining instructions match."
+  }
+}

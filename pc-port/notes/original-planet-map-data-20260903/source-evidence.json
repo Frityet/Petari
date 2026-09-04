@@ -1,0 +1,69 @@
+{
+  "root_sha256": "504282c11a845b18aba8f88152697b4be84c49b7bae0571092bc3a99e5e2af2b",
+  "native_sha256": "e41900f26dd751ce7350db5511c8b40b7a0586d8f1be4f41ff7c4ca8e2f0b94f",
+  "bodies": [
+    {
+      "signature": "void makeSubModelName(",
+      "complete_body_identical": true
+    },
+    {
+      "signature": "static bool isDataForceLow(",
+      "complete_body_identical": true
+    },
+    {
+      "signature": "PlanetMapCreator::PlanetMapCreator(",
+      "complete_body_identical": true
+    },
+    {
+      "signature": "void PlanetMapCreator::makeArchiveListPlanet(",
+      "complete_body_identical": true
+    },
+    {
+      "signature": "void PlanetMapCreator::createPlanetMapDataTable(",
+      "complete_body_identical": true
+    },
+    {
+      "signature": "void PlanetMapCreator::addTableData(",
+      "complete_body_identical": true
+    },
+    {
+      "signature": "PlanetMapData* PlanetMapCreator::getTableData(",
+      "complete_body_identical": true
+    },
+    {
+      "signature": "bool PlanetMapCreator::isScenarioForceLow(",
+      "complete_body_identical": true
+    },
+    {
+      "signature": "void PlanetMapCreatorFunction::makeArchiveList(",
+      "complete_body_identical": true
+    },
+    {
+      "signature": "bool PlanetMapCreatorFunction::isLoadArchiveAfterScenarioSelected(",
+      "complete_body_identical": true
+    },
+    {
+      "signature": "bool PlanetMapCreatorFunction::isRegisteredObj(",
+      "complete_body_identical": true
+    },
+    {
+      "signature": "NameObjArchiveListCollector::NameObjArchiveListCollector(",
+      "complete_body_identical": true
+    },
+    {
+      "signature": "void NameObjArchiveListCollector::addArchive(",
+      "complete_body_identical": true
+    },
+    {
+      "signature": "const char* NameObjArchiveListCollector::getArchive(",
+      "complete_body_identical": true
+    },
+    {
+      "signature": "bool isExistModel(",
+      "complete_body_identical": true
+    }
+  ],
+  "archive_table_and_static_names_identical": true,
+  "planet_header_identical": true,
+  "archive_csv_boundary": "Only ResourceHolderManager singleton lookup is replaced by the existing ResourceHolderService actual owner; original resource-holder overload call preserved."
+}

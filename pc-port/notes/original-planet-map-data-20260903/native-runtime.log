@@ -1,0 +1,4 @@
+PASS actual planet constructor cycle=0 rows=258 retained=135 missing=0 disabled=1155 forced=10 empty=248 duplicates=1 worm archives=8
+PASS actual planet constructor cycle=1 rows=258 retained=135 missing=0 disabled=1155 forced=10 empty=248 duplicates=1 worm archives=8
+PASS actual constrained constructor rollback and JKR parser disposal
+allocFromHead: cannot alloc memory (0x818 byte).

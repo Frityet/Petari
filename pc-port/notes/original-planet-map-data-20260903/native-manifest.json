@@ -1,0 +1,37 @@
+[
+  {
+    "path": "pc-port/src/Game/Map/PlanetMapCreator.hpp",
+    "staged": "build/original-planet-map-data-20260903/staged/Game/Map/PlanetMapCreator.hpp",
+    "sha256": "639e1d05db9c1427e764cee38e7402d07a6fe4c6d7be5759b17fc5f9d38e5606"
+  },
+  {
+    "path": "pc-port/src/Game/NameObj/NameObjArchiveListCollector.cpp",
+    "staged": "build/original-planet-map-data-20260903/staged/Game/NameObj/NameObjArchiveListCollector.cpp",
+    "sha256": "2fae6f557c9e798a44262b26da6d7bb1ff41ec2ccf17b106f5fa1b1047581a1c"
+  },
+  {
+    "path": "pc-port/src/Game/Util/ObjUtil.hpp",
+    "staged": "build/original-planet-map-data-20260903/staged/Game/Util/ObjUtil.hpp",
+    "sha256": "58625187425c083a7c3b023a04f63b0dc970a91c0c5ce2f03dc060f79dd197b2"
+  },
+  {
+    "path": "pc-port/src/compat/OriginalArchiveCsvReader.cpp",
+    "staged": "build/original-planet-map-data-20260903/staged/compat/OriginalArchiveCsvReader.cpp",
+    "sha256": "0aa6290509d665b703f99044afc3fb1a9dd9851367de337afa6e2357430c4676"
+  },
+  {
+    "path": "pc-port/src/compat/OriginalModelExistence.cpp",
+    "staged": "build/original-planet-map-data-20260903/staged/compat/OriginalModelExistence.cpp",
+    "sha256": "1b68295897e7d3b9132a715acd91df06fe968486e7ba71d26c16e6f9439cf1b4"
+  },
+  {
+    "path": "pc-port/src/compat/OriginalPlanetMapData.cpp",
+    "staged": "build/original-planet-map-data-20260903/staged/compat/OriginalPlanetMapData.cpp",
+    "sha256": "e41900f26dd751ce7350db5511c8b40b7a0586d8f1be4f41ff7c4ca8e2f0b94f"
+  },
+  {
+    "path": "pc-port/tests/OriginalPlanetMapDataTests.cpp",
+    "staged": "build/original-planet-map-data-20260903/PlanetMapDataTests.cpp",
+    "sha256": "1791234ae158021b72c084643b56284b6d624d0915e664644629c9d6412935d5"
+  }
+]

@@ -1,0 +1,523 @@
+diff --git a/pc-port/src/Game/Map/PlanetMapCreator.hpp b/pc-port/src/Game/Map/PlanetMapCreator.hpp
+new file mode 100644
+--- /dev/null
++++ b/pc-port/src/Game/Map/PlanetMapCreator.hpp
+@@ -0,0 +1,48 @@
++#pragma once
++
++#include "Game/NameObj/NameObj.hpp"
++
++class NameObjArchiveListCollector;
++
++struct PlanetMapData {
++    const char* mPlanetName;            // 0x0
++    const char* mData[5];               // 0x4
++    const char* mForceScenarioData[8];  // 0x18
++};
++
++struct UniqueEntry {
++    const char* _0;
++    const char* _4;
++};
++
++typedef NameObj* (*CreatorFuncPtr)(const char*);
++
++struct PlanetEntry {
++    /* 0x0 */ const char* mName;
++    /* 0x4 */ CreatorFuncPtr mCreateFunc;
++};
++
++class PlanetMapCreator : public NameObj {
++public:
++    PlanetMapCreator(const char*);
++
++    CreatorFuncPtr getCreateFunc(const char*);
++    void makeArchiveListPlanet(NameObjArchiveListCollector*, const JMapInfoIter&, const char*);
++    void createPlanetMapDataTable(JMapInfo*);
++    void addTableData(const JMapInfo*, s32);
++    PlanetMapData* getTableData(const char*) const;
++    bool isScenarioForceLow(const PlanetMapData*) const;
++
++    PlanetMapData** mPlanetMapData;  // 0xC
++    s32 mTableCount;                 // 0x10
++};
++
++class PlanetMapCreatorFunction {
++public:
++    static void makeArchiveList(NameObjArchiveListCollector*, const JMapInfoIter&, const char*);
++
++    static bool isLoadArchiveAfterScenarioSelected(const char*);
++    static bool isRegisteredObj(const char*);
++
++    static CreatorFuncPtr getPlanetMapCreator(const char*);
++};
+diff --git a/pc-port/src/Game/NameObj/NameObjArchiveListCollector.cpp b/pc-port/src/Game/NameObj/NameObjArchiveListCollector.cpp
+--- a/pc-port/src/Game/NameObj/NameObjArchiveListCollector.cpp
++++ b/pc-port/src/Game/NameObj/NameObjArchiveListCollector.cpp
+@@ -1,23 +1,16 @@
+ #include "Game/NameObj/NameObjArchiveListCollector.hpp"
+-
+-#include <algorithm>
+-#include <cstring>
++#include "Game/Util/StringUtil.hpp"
+ 
+ NameObjArchiveListCollector::NameObjArchiveListCollector() {
+     mCount = 0;
+ }
+ 
+ void NameObjArchiveListCollector::addArchive(const char* pArchive) {
+-    char* dst = mArchiveNames[mCount];
+-    std::fill_n(dst, 0x40, '\0');
+-
+-    if (pArchive != nullptr) {
+-        std::strncpy(dst, pArchive, 0x3F);
+-    }
+-
++    char* str = mArchiveNames[mCount];
++    MR::copyString(str, pArchive, 0x40);
+     mCount++;
+ }
+ 
+ const char* NameObjArchiveListCollector::getArchive(s32 idx) const {
+     return mArchiveNames[idx];
+-}
++}diff --git a/pc-port/src/Game/Util/ObjUtil.hpp b/pc-port/src/Game/Util/ObjUtil.hpp
+--- a/pc-port/src/Game/Util/ObjUtil.hpp
++++ b/pc-port/src/Game/Util/ObjUtil.hpp
+@@ -84,6 +84,7 @@
+ 
+     bool isExistFileInArc(const ResourceHolder*, const char*, ...);
+     JMapInfo* createCsvParser(const ResourceHolder*, const char*, ...);
++    JMapInfo* createCsvParser(const char*, const char*, ...);
+     JMapInfo* tryCreateCsvParser(const LiveActor*, const char*, ...);
+     JMapInfo* tryCreateCsvParser(const ResourceHolder*, const char*, ...);
+     s32 getCsvDataElementNum(const JMapInfo*);
+diff --git a/pc-port/src/compat/OriginalArchiveCsvReader.cpp b/pc-port/src/compat/OriginalArchiveCsvReader.cpp
+new file mode 100644
+--- /dev/null
++++ b/pc-port/src/compat/OriginalArchiveCsvReader.cpp
+@@ -0,0 +1,13 @@
++#include "Game/Util/ObjUtil.hpp"
++#include "compat/ResourceHolderCompat.hpp"
++#include <stdexcept>
++
++namespace MR {
++    JMapInfo* createCsvParser(const char* pArchive, const char* pFormat, ...) {
++        auto* service = smgpc::compat::ResourceHolderService::active();
++        if (!service) throw std::logic_error("Archive CSV reader requires the actual resource-holder owner");
++        ResourceHolder* pResourceHolder = service->create_and_add(pArchive);
++
++        return MR::createCsvParser(pResourceHolder, pFormat);
++    }
++}
+diff --git a/pc-port/src/compat/OriginalModelExistence.cpp b/pc-port/src/compat/OriginalModelExistence.cpp
+new file mode 100644
+--- /dev/null
++++ b/pc-port/src/compat/OriginalModelExistence.cpp
+@@ -0,0 +1,11 @@
++#include "Game/Util/ModelUtil.hpp"
++#include "Game/Util/FileUtil.hpp"
++#include <cstdio>
++
++namespace MR {
++    bool isExistModel(const char* pName) {
++        char buff[0x100];
++        snprintf(buff, sizeof(buff), "/ObjectData/%s.arc", pName);
++        return isFileExist(buff, false);
++    }
++}
+diff --git a/pc-port/src/compat/OriginalPlanetMapData.cpp b/pc-port/src/compat/OriginalPlanetMapData.cpp
+new file mode 100644
+--- /dev/null
++++ b/pc-port/src/compat/OriginalPlanetMapData.cpp
+@@ -0,0 +1,228 @@
++#include "Game/Map/PlanetMapCreator.hpp"
++#include "Game/NameObj/NameObjArchiveListCollector.hpp"
++#include "Game/Scene/SceneObjHolder.hpp"
++#include "Game/Util/ObjUtil.hpp"
++#include "Game/Util/ModelUtil.hpp"
++#include "Game/Util/SceneUtil.hpp"
++#include "Game/Util/StringUtil.hpp"
++#include <cstdio>
++#include <cstring>
++
++namespace {
++    static const UniqueEntry sUniquePlanetUniqueArchiveName[] = {
++        {
++            "BeamGoRoundPlanet",
++            "BeamGoRoundBeam",
++        },
++        {
++            "BeamGoRoundPlanet",
++            "BeamGoRoundBeamVolume",
++        },
++        {
++            "BeamGoRoundPlanet",
++            "BeamGoRoundBeamBloom",
++        },
++        {
++            "MarblePlanet",
++            "MarblePlanetCore",
++        },
++        {
++            "MarblePlanet",
++            "MarblePlanetElectron",
++        },
++        {
++            "MarblePlanet",
++            "MarblePlanetElectronShadow",
++        },
++        {
++            "OceanRingPlanet",
++            "OceanRingPlanetLowInWater",
++        },
++        {
++            "WormEatenPlanet",
++            "GreenCaterpillarBigFace",
++        },
++        {
++            "WormEatenPlanet",
++            "GreenCaterpillarBigFaceLow",
++        },
++        {
++            "WormEatenPlanet",
++            "GreenCaterpillarBigBody",
++        },
++        {
++            "WormEatenPlanet",
++            "GreenCaterpillarBigBodyLow",
++        },
++        {
++            "WormEatenPlanet",
++            "WormEatenHill",
++        },
++        {
++            "WormEatenPlanet",
++            "WormEatenPlanetLow",
++        },
++    };
++    static const char* sArcName = "PlanetMapDataTable.arc";
++    static const char* sFileName = "PlanetMapDataTable.bcsv";
++
++    void makeSubModelName(const char** pOut, const JMapInfo* pInfo, s32 index, const char* pFlag, const char* pSuffix) {
++        s32 flag;
++        const char* planetName;
++        MR::getCsvDataS32(&flag, pInfo, pFlag, index);
++        MR::getCsvDataStr(&planetName, pInfo, "PlanetName", index);
++
++        if (flag) {
++            u32 size = strlen(planetName) + strlen(pSuffix) + 1;
++            char* name = new char[size];
++            snprintf(name, size, "%s%s", planetName, pSuffix);
++            *pOut = name;
++        } else {
++            *pOut = nullptr;
++        }
++    }
++
++    static bool isDataForceLow(const PlanetMapData* pMapData) {
++        for (int i = 0; i < 8; i++) {
++            if (!MR::isEqualString(pMapData->mForceScenarioData[i], "")) {
++                return true;
++            }
++        }
++
++        return false;
++    }
++}
++
++PlanetMapCreator::PlanetMapCreator(const char* pName) : NameObj(pName), mPlanetMapData(nullptr) {
++    JMapInfo* pIter = MR::createCsvParser(::sArcName, ::sFileName);
++
++    mTableCount = MR::getCsvDataElementNum(pIter);
++    mPlanetMapData = new PlanetMapData*[mTableCount];
++    createPlanetMapDataTable(pIter);
++}
++
++void PlanetMapCreator::makeArchiveListPlanet(NameObjArchiveListCollector* pArchiveList, const JMapInfoIter& rIter, const char* pName) {
++    PlanetMapData* pTableData = getTableData(pName);
++    if (isScenarioForceLow(pTableData)) {
++        pArchiveList->addArchive(pTableData->mData[0]);
++    } else {
++        pArchiveList->addArchive(pTableData->mPlanetName);
++
++        const char* pData0 = pTableData->mData[0];
++        if (pData0 != nullptr) {
++            pArchiveList->addArchive(pData0);
++        }
++
++        const char* pData1 = pTableData->mData[1];
++        if (pData1 != nullptr) {
++            pArchiveList->addArchive(pData1);
++        }
++
++        const char* pData2 = pTableData->mData[2];
++        if (pData2 != nullptr) {
++            pArchiveList->addArchive(pData2);
++        }
++
++        const char* pData3 = pTableData->mData[3];
++        if (pData3 != nullptr) {
++            pArchiveList->addArchive(pData3);
++        }
++
++        const char* pData4 = pTableData->mData[4];
++        if (pData4 != nullptr) {
++            pArchiveList->addArchive(pData4);
++        }
++
++        const char* pPlanetName = pTableData->mPlanetName;
++        for (u32 i = 0; i < ARRAY_SIZE(::sUniquePlanetUniqueArchiveName); i++) {
++            const UniqueEntry* pUniqueEntry = &::sUniquePlanetUniqueArchiveName[i];
++            if (MR::isEqualString(pPlanetName, pUniqueEntry->_0)) {
++                pArchiveList->addArchive(pUniqueEntry->_4);
++            }
++        }
++    }
++}
++
++void PlanetMapCreator::createPlanetMapDataTable(JMapInfo* pInfo) {
++    for (int i = 0; i < mTableCount; i++) {
++        mPlanetMapData[i] = new PlanetMapData();
++
++        addTableData(pInfo, i);
++    }
++}
++
++void PlanetMapCreator::addTableData(const JMapInfo* pInfo, s32 idx) {
++    PlanetMapData* curData = mPlanetMapData[idx];
++    MR::getCsvDataStr(&curData->mPlanetName, pInfo, "PlanetName", idx);
++    ::makeSubModelName(&curData->mData[0], pInfo, idx, "LowFlag", "Low");
++    ::makeSubModelName(&curData->mData[1], pInfo, idx, "MiddleFlag", "Middle");
++    ::makeSubModelName(&curData->mData[2], pInfo, idx, "BloomFlag", "Bloom");
++    ::makeSubModelName(&curData->mData[3], pInfo, idx, "WaterFlag", "Water");
++    ::makeSubModelName(&curData->mData[4], pInfo, idx, "IndirectFlag", "Indirect");
++
++    for (int i = 0; i < 5; i++) {
++        if (curData->mData[i]) {
++            if (!MR::isExistModel(curData->mData[i])) {
++                curData->mData[i] = 0;
++            }
++        }
++    }
++
++    for (int i = 0; i < 8; i++) {
++        char data[32];
++        snprintf(data, sizeof(data), "ForceLowScenarioName%d", i);
++
++        MR::getCsvDataStr(&curData->mForceScenarioData[i], pInfo, data, idx);
++    }
++}
++
++PlanetMapData* PlanetMapCreator::getTableData(const char* pName) const {
++    for (int i = 0; i < mTableCount; i++) {
++        if (MR::isEqualString(pName, mPlanetMapData[i]->mPlanetName)) {
++            return mPlanetMapData[i];
++        }
++    }
++
++    return nullptr;
++}
++
++bool PlanetMapCreator::isScenarioForceLow(const PlanetMapData* pData) const {
++    bool isForce = ::isDataForceLow(pData);
++
++    if (!isForce) {
++        return false;
++    }
++
++    char name[64];
++    snprintf(name, sizeof(name), "%s_%d", MR::getCurrentStageName(), MR::getCurrentScenarioNo());
++
++    for (int i = 0; i < 8; i++) {
++        if (MR::isEqualString(pData->mForceScenarioData[i], "")) {
++            return false;
++        }
++
++        if (MR::isEqualString(name, pData->mForceScenarioData[i])) {
++            return true;
++        }
++    }
++
++    return false;
++}
++
++void PlanetMapCreatorFunction::makeArchiveList(NameObjArchiveListCollector* pArchiveList, const JMapInfoIter& rIter, const char* pName) {
++    MR::getSceneObj< PlanetMapCreator >(SceneObj_PlanetMapCreator)->makeArchiveListPlanet(pArchiveList, rIter, pName);
++}
++
++bool PlanetMapCreatorFunction::isLoadArchiveAfterScenarioSelected(const char* pArchive) {
++    bool isExistTableData = MR::getSceneObj< PlanetMapCreator >(SceneObj_PlanetMapCreator)->getTableData(pArchive);
++
++    if (!isExistTableData) {
++        return false;
++    }
++
++    return ::isDataForceLow(MR::getSceneObj< PlanetMapCreator >(SceneObj_PlanetMapCreator)->getTableData(pArchive));
++}
++
++bool PlanetMapCreatorFunction::isRegisteredObj(const char* pArchive) {
++    return MR::getSceneObj< PlanetMapCreator >(SceneObj_PlanetMapCreator)->getTableData(pArchive);
++}
+diff --git a/pc-port/tests/OriginalPlanetMapDataTests.cpp b/pc-port/tests/OriginalPlanetMapDataTests.cpp
+new file mode 100644
+--- /dev/null
++++ b/pc-port/tests/OriginalPlanetMapDataTests.cpp
+@@ -0,0 +1,157 @@
++#include "Game/Map/PlanetMapCreator.hpp"
++#include "Game/NameObj/NameObjArchiveListCollector.hpp"
++#include "Game/Scene/SceneObjHolder.hpp"
++#include "Game/Util/JMapInfo.hpp"
++#include "Game/Util/ObjUtil.hpp"
++#include "compat/ActorRuntimeRegistry.hpp"
++#include "compat/ResourceHolderCompat.hpp"
++#include "compat/StageSessionState.hpp"
++#include "resource/GameResourceRuntime.hpp"
++#include "resource/BcsvTable.hpp"
++#include "runtime/ArchiveMountService.hpp"
++#include "runtime/RuntimeServices.hpp"
++#include "scene/SceneObjHolderRuntime.hpp"
++#include "JSystem/JKernel/JKRHeap.hpp"
++#include <aurora/aurora.h>
++#include <aurora/dvd.h>
++#include <array>
++#include <cstdlib>
++#include <iostream>
++#include <map>
++#include <stdexcept>
++#include <string>
++#include <vector>
++namespace aurora { extern AuroraConfig g_config; }
++namespace {
++using namespace smgpc;
++void require(bool condition, const char* message) {
++    if (!condition) { compat::JkrHostAllocationScope host; throw std::runtime_error(message); }
++}
++NameObj* factory(int id, void*) {
++    if (id == SceneObj_PlanetMapCreator) return new PlanetMapCreator("PlanetMapCreator");
++    return nullptr;
++}
++void exercise(resource::GameResourceRuntime& process, runtime::DvdFileSystemService& dvd, unsigned cycle) {
++    const auto baseline = compat::name_obj_runtime_state_count();
++    auto domain = process.create_cohort();
++    auto resources = std::make_unique<compat::ResourceHolderService>(dvd, domain, process.mem1_heap());
++    std::weak_ptr<JMapInfo::DataCompat> metadata;
++    std::weak_ptr<const compat::ResourceArchiveOwner> resource_owner;
++    {
++        SceneObjHolder holder;
++        scene::SceneObjHolderBinding binding(holder, factory);
++        PlanetMapCreator* creator;
++        {
++            compat::JkrAllocationScope heap(domain);
++            creator = static_cast<PlanetMapCreator*>(holder.create(SceneObj_PlanetMapCreator));
++        }
++        require(creator && JKRHeap::findFromRoot(creator) == &domain->heap(), "actual planet creator belongs to original scene heap");
++        require(scene::current_scene_obj_holder_binding_owns(creator), "scene transaction owns actual registered planet creator");
++        auto* resource = resources->create_and_add("PlanetMapDataTable.arc");
++        resource_owner = resources->retain(*resource);
++        JMapInfo table;
++        require(table.attach(resource->mFileInfoTable->getRes("PlanetMapDataTable.bcsv")), "attach actual authored planet table");
++        metadata = table.mData;
++        require(creator->mTableCount == table.getNumEntries() && creator->mTableCount > 100, "constructor traverses complete authored table");
++        constexpr std::array flags{"LowFlag", "MiddleFlag", "BloomFlag", "WaterFlag", "IndirectFlag"};
++        constexpr std::array suffixes{"Low", "Middle", "Bloom", "Water", "Indirect"};
++        std::size_t retained_models = 0, missing_models = 0, disabled_models = 0, forced_rows = 0, empty_rows = 0;
++        std::map<std::string, const PlanetMapData*> first_rows;
++        std::size_t duplicate_rows = 0;
++        for (int i = 0; i < creator->mTableCount; ++i) {
++            const char* name = nullptr; require(table.getValue(i,"PlanetName",&name), "authored planet name");
++            const auto* row = creator->mPlanetMapData[i];
++            const auto [first, inserted] = first_rows.try_emplace(name, row);
++            if (!inserted) ++duplicate_rows;
++            require(row->mPlanetName == name && creator->getTableData(name) == first->second,
++                    "original lookup preserves first matching row and exact cached name identity");
++            require(JKRHeap::findFromRoot(const_cast<PlanetMapData*>(row)) == &domain->heap(), "original row allocation belongs to scene heap");
++            for (std::size_t f = 0; f < flags.size(); ++f) {
++                s32 flag = 0; require(table.getValue(i, flags[f], &flag), "authored submodel flag");
++                const std::string expected = std::string(name) + suffixes[f];
++                const bool exists = dvd.exists("/ObjectData/" + expected + ".arc");
++                if (flag && exists) {
++                    ++retained_models;
++                    require(row->mData[f] && std::string_view(row->mData[f]) == expected, "original submodel allocation concatenates authored name and suffix");
++                    require(JKRHeap::findFromRoot(const_cast<char*>(row->mData[f])) == &domain->heap(), "generated submodel string belongs to scene heap");
++                } else {
++                    if (flag) ++missing_models; else ++disabled_models;
++                    require(row->mData[f] == nullptr, "original flag and actual DVD existence gate submodel");
++                }
++            }
++            for (int f = 0; f < 8; ++f) {
++                const char* value = nullptr;
++                require(table.getValue(i, ("ForceLowScenarioName"+std::to_string(f)).c_str(), &value) && row->mForceScenarioData[f] == value,
++                        "original force-scenario fields retain exact shared strings");
++            }
++            if (*row->mForceScenarioData[0]) {
++                ++forced_rows;
++                std::string forced(row->mForceScenarioData[0]);
++                const auto split = forced.rfind('_');
++                require(split != std::string::npos, "authored forced scenario has stage and number");
++                compat::StageSessionState session("Game", forced.substr(0, split), std::stoi(forced.substr(split + 1)), JMapIdInfo(0,0));
++                compat::StageSessionBinding active(session);
++                require(creator->isScenarioForceLow(row), "exact authored scenario selects original forced-low path");
++            } else {
++                ++empty_rows;
++                require(!creator->isScenarioForceLow(row), "empty first authored scenario terminates original force-low selection");
++            }
++        }
++        require(retained_models && disabled_models && forced_rows && empty_rows, "actual table covers both model and scenario branches");
++        require(creator->getTableData("AbsentPlanetFixture") == nullptr && !PlanetMapCreatorFunction::isRegisteredObj("AbsentPlanetFixture"),
++                "actual original table query reports absent name");
++        const auto* worm = creator->getTableData("WormEatenPlanet");
++        require(worm && PlanetMapCreatorFunction::isRegisteredObj(worm->mPlanetName), "real scene accessor reaches original creator");
++        NameObjArchiveListCollector list;
++        PlanetMapCreatorFunction::makeArchiveList(&list, JMapInfoIter(), worm->mPlanetName);
++        std::vector<std::string> expected{worm->mPlanetName};
++        for (auto* model : worm->mData) if (model) expected.emplace_back(model);
++        for (const char* extra : {"GreenCaterpillarBigFace", "GreenCaterpillarBigFaceLow", "GreenCaterpillarBigBody", "GreenCaterpillarBigBodyLow", "WormEatenHill", "WormEatenPlanetLow"}) expected.emplace_back(extra);
++        require(list.mCount == static_cast<s32>(expected.size()), "original archive list preserves complete extra-resource multiplicity");
++        for (s32 i = 0; i < list.mCount; ++i) require(list.getArchive(i) == expected[i], "original archive list order");
++        std::cout << "PASS actual planet constructor cycle=" << cycle << " rows=" << creator->mTableCount << " retained=" << retained_models
++                  << " missing=" << missing_models << " disabled=" << disabled_models << " forced=" << forced_rows << " empty=" << empty_rows
++                  << " duplicates=" << duplicate_rows << " worm archives=" << list.mCount << '\n';
++    }
++    require(compat::name_obj_runtime_state_count() == baseline, "scene transaction retires actual planet NameObj");
++    resources.reset();
++    require(resource_owner.expired() && !metadata.expired(), "original heap parser retains table after resource service retirement");
++    domain.reset();
++    require(metadata.expired(), "actual JKR disposer releases constructor CSV metadata at scene heap retirement");
++}
++void constructor_failure(resource::GameResourceRuntime& process, runtime::DvdFileSystemService& dvd) {
++    auto resource_domain = process.create_cohort();
++    compat::ResourceHolderService resources(dvd, resource_domain, process.mem1_heap());
++    require(resources.create_and_add("PlanetMapDataTable.arc") != nullptr, "preload actual table in retained resource cohort");
++    auto domain = compat::JkrAllocationDomain::create(process.host_heaps(), 1024);
++    const auto baseline = compat::name_obj_runtime_state_count();
++    bool failed = false;
++    {
++        SceneObjHolder holder;
++        scene::SceneObjHolderBinding binding(holder, factory);
++        try {
++            compat::JkrAllocationScope heap(domain);
++            (void)holder.create(SceneObj_PlanetMapCreator);
++        } catch (const std::bad_alloc&) { failed = true; }
++        require(failed && !holder.isExist(SceneObj_PlanetMapCreator), "failed actual constructor never publishes its scene slot");
++        require(compat::name_obj_runtime_state_count() == baseline, "partial constructor retires registered NameObj base");
++        require(domain->heap().mDisposerList.getNumLinks() == 1, "failed original constructor leaves its actual CSV parser on the JKR disposer list");
++        domain->heap().freeAll();
++        require(domain->heap().mDisposerList.getNumLinks() == 0, "original heap disposal releases partial constructor metadata");
++    }
++    std::cout << "PASS actual constrained constructor rollback and JKR parser disposal\n";
++}
++
++}
++int main() {
++    try {
++        const char* disc = std::getenv("SMGPC_REAL_DISC");
++        require(disc && aurora_dvd_open(disc), "actual disc required");
++        struct Guard { ~Guard() { aurora_dvd_close(); } } guard;
++        DVDInit(); aurora::g_config.mem1Size = 24U * 1024U * 1024U;
++        resource::GameResourceRuntime process;
++        runtime::DvdFileSystemService dvd({}); runtime::ArchiveMountService mounts(dvd);
++        compat::StageSessionState session("Game", "HeavensDoorGalaxy", 1, JMapIdInfo(0,0)); compat::StageSessionBinding active(session);
++        exercise(process,dvd,0); exercise(process,dvd,1); constructor_failure(process,dvd);
++    } catch (const std::exception& error) { std::cerr << "FAIL " << error.what() << '\n'; return 1; }
++}
