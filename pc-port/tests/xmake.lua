@@ -2496,3 +2496,14 @@ target("smg-pc-original-vector-integer-conversion-tests")
     add_defines("TARGET_PC", "AURORA")
     add_files("OriginalVectorIntegerConversionTests.cpp")
     add_tests("original_vector_integer_conversion", {group = "aurora", rundir = os.projectdir(), realtime_output = true})
+
+target("smg-pc-text-encoding-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/resource")
+    add_includedirs("../src")
+    add_files("TextEncodingTests.cpp", "../src/resource/TextEncoding.cpp")
+    if is_plat("macosx") then
+        add_syslinks("iconv")
+    end
+    add_tests("text_encoding", {group = "resource", rundir = os.projectdir(), realtime_output = true})
