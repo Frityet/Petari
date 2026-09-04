@@ -1,0 +1,88 @@
+{
+  "search": "mAreaLightName|default_area_light_name|getDefaultAreaLightName|findAreaLight",
+  "scope": "current native source tree; root original providers read separately",
+  "uses": [
+    {
+      "path": "pc-port/src/render/light/LightData.hpp",
+      "line": 33,
+      "code": "        [[nodiscard]] const char *default_area_light_name();"
+    },
+    {
+      "path": "pc-port/src/render/light/LightData.cpp",
+      "line": 131,
+      "code": "            return info.mAreaLightName != nullptr && name == std::string_view(info.mAreaLightName);"
+    },
+    {
+      "path": "pc-port/src/render/light/LightData.cpp",
+      "line": 235,
+      "code": "    const char *StageLightData::default_area_light_name() {"
+    },
+    {
+      "path": "pc-port/src/render/light/LightData.cpp",
+      "line": 245,
+      "code": "            return _area_lights.front().mAreaLightName;"
+    },
+    {
+      "path": "pc-port/src/render/light/LightData.cpp",
+      "line": 303,
+      "code": "            info.mAreaLightName = _area_light_names.back().c_str();"
+    },
+    {
+      "path": "pc-port/src/Game/Map/LightZoneDataHolder.hpp",
+      "line": 21,
+      "code": "    const char* mAreaLightName;  // 0x4"
+    },
+    {
+      "path": "pc-port/src/Game/Map/LightDataHolder.hpp",
+      "line": 40,
+      "code": "    const char* mAreaLightName;   // 0x0"
+    },
+    {
+      "path": "pc-port/src/Game/Map/LightDataHolder.hpp",
+      "line": 59,
+      "code": "    AreaLightInfo* findAreaLight(const char*) const;"
+    },
+    {
+      "path": "pc-port/src/Game/Map/LightDataHolder.hpp",
+      "line": 60,
+      "code": "    const char* getDefaultAreaLightName() const;"
+    },
+    {
+      "path": "pc-port/src/Game/Map/LightFunction.cpp",
+      "line": 207,
+      "code": "const char* LightFunction::getDefaultAreaLightName() {"
+    },
+    {
+      "path": "pc-port/src/Game/Map/LightFunction.cpp",
+      "line": 208,
+      "code": "    return smgpc::render::light::StageLightData::instance().default_area_light_name();"
+    },
+    {
+      "path": "pc-port/src/Game/Map/LightFunction.hpp",
+      "line": 32,
+      "code": "    static const char* getDefaultAreaLightName();"
+    },
+    {
+      "path": "pc-port/src/Game/Map/LightDataHolder.cpp",
+      "line": 17,
+      "code": "AreaLightInfo* LightDataHolder::findAreaLight(const char* pName) const {"
+    },
+    {
+      "path": "pc-port/src/Game/Map/LightDataHolder.cpp",
+      "line": 25,
+      "code": "        if (pName != nullptr && info->mAreaLightName != nullptr && std::strcmp(pName, info->mAreaLightName) == 0) {"
+    },
+    {
+      "path": "pc-port/src/Game/Map/LightDataHolder.cpp",
+      "line": 33,
+      "code": "const char* LightDataHolder::getDefaultAreaLightName() const {"
+    }
+  ],
+  "no_current_runtime_name_presentation_sink": true,
+  "raw_game_fields": [
+    "AreaLightInfo::mAreaLightName",
+    "ZoneAreaLight::area_light_name",
+    "StageLightData::_default_stage_area_light_name"
+  ],
+  "host_presentation_decoder": "smgpc::resource::decode_cp932"
+}

@@ -1,0 +1,3 @@
+[note] unmatched zone_table=lightfoofightermap.bcsv light_id=0 display=ダミー decoded_main_alias=0
+[note] unmatched zone_table=lightfoofightermap.bcsv light_id=1 display=テスト２ decoded_main_alias=0
+[pass] main_rows=200 main_non_ascii=200 zone_tables=264 zone_rows=748 verified_main_names=179 verified_non_ascii_rows=746 unmatched_rows=2 raw Game identities; explicit UTF-8 presentation; reset

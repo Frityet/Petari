@@ -1,0 +1,249 @@
+--- a/pc-port/src/render/light/LightData.cpp
++++ b/pc-port/src/render/light/LightData.cpp
+@@ -13,7 +13,6 @@
+ 
+ #include "resource/BcsvTable.hpp"
+ #include "resource/RarcArchive.hpp"
+-#include "resource/TextEncoding.hpp"
+ #include "runtime/RuntimeContext.hpp"
+ 
+ namespace smgpc::render::light {
+@@ -298,8 +297,8 @@
+         _area_lights.reserve(light_table.entry_count());
+         for (auto row = std::size_t {}; row < light_table.entry_count(); ++row) {
+             auto info = AreaLightInfo {};
+-            _area_light_names.push_back(smgpc::resource::decode_cp932(
+-                light_table.get_string(row, "AreaLightName").value_or(std::string {})));
++            _area_light_names.push_back(
++                light_table.get_string(row, "AreaLightName").value_or(std::string {}));
+             info.mAreaLightName = _area_light_names.back().c_str();
+             info.mInterpolate = get_s32_or(light_table, row, "Interpolate", -1);
+             read_actor_light_info(light_table, row, info.mPlayerLight, "Player");
+@@ -327,8 +326,7 @@
+                 _zone_area_lights.push_back(ZoneAreaLight {
+                     .zone_id = zone.zone_id,
+                     .light_id = get_s32_or(zone_table, row, "LightID", -1),
+-                    .area_light_name = smgpc::resource::decode_cp932(
+-                        zone_table.get_string(row, "AreaLightName").value_or(std::string {})),
++                    .area_light_name = zone_table.get_string(row, "AreaLightName").value_or(std::string {}),
+                 });
+             }
+         }
+--- a/pc-port/src/render/light/LightData.hpp
++++ b/pc-port/src/render/light/LightData.hpp
+@@ -29,6 +29,7 @@
+         void configure_stage_zones(std::span<const StageLightZone> zones);
+         void load_stage(smgpc::runtime::DvdFileSystemService &dvd, std::string_view stage_name);
+         [[nodiscard]] std::span<const StageLightZone> stage_zones() const;
++        // Game-facing names retain authored CP932 bytes. Decode only for host presentation.
+         [[nodiscard]] AreaLightInfo *area_light_info(const ZoneLightID &zone_id);
+         [[nodiscard]] const char *default_area_light_name();
+ 
+--- a/pc-port/tests/AreaObjRealOrAbsentTests.cpp
++++ b/pc-port/tests/AreaObjRealOrAbsentTests.cpp
+@@ -20,6 +20,7 @@
+ #include "runtime/RuntimeServices.hpp"
+ #include "runtime/SceneScheduler.hpp"
+ #include "render/light/LightData.hpp"
++#include "resource/TextEncoding.hpp"
+ #include "scene/AreaObjRuntime.hpp"
+ #include "scene/SceneObjHolderRuntime.hpp"
+ #include "scene/StageLightSceneBinding.hpp"
+@@ -891,8 +892,8 @@
+         auto root_id = ZoneLightID{};
+         auto *root = light_data.area_light_info(root_id);
+         require(root != nullptr && root->mAreaLightName != nullptr &&
+-                    std::string_view(root->mAreaLightName) == "[共通]宇宙の星" &&
+-                    std::string_view(light_data.default_area_light_name()) == "[共通]宇宙の星",
++                    smgpc::resource::decode_cp932(root->mAreaLightName) == "[共通]宇宙の星" &&
++                    smgpc::resource::decode_cp932(light_data.default_area_light_name()) == "[共通]宇宙の星",
+                 "the clear ZoneLightID must resolve the exact root-zone default row");
+ 
+         auto child_id = ZoneLightID{};
+@@ -900,7 +901,7 @@
+         child_id.mLightID = 0;
+         auto *child = light_data.area_light_info(child_id);
+         require(child != nullptr && child != root && child->mAreaLightName != nullptr &&
+-                    std::string_view(child->mAreaLightName) == "ロゼッタ出会い" &&
++                    smgpc::resource::decode_cp932(child->mAreaLightName) == "ロゼッタ出会い" &&
+                     child->mPlayerLight.mInfo0.mColor.r == 90U &&
+                     child->mPlayerLight.mInfo0.mColor.g == 90U &&
+                     child->mPlayerLight.mInfo0.mColor.b == 90U &&
+@@ -915,7 +916,7 @@
+         child_id.mLightID = 1;
+         auto *observatory = light_data.area_light_info(child_id);
+         require(observatory != nullptr && observatory->mAreaLightName != nullptr &&
+-                    std::string_view(observatory->mAreaLightName) == "天文台（ロゼッタ）",
++                    smgpc::resource::decode_cp932(observatory->mAreaLightName) == "天文台（ロゼッタ）",
+                 "zone 5/light 1 must resolve the second exact child-zone light row");
+ 
+         child_id.mLightID = 999;
+@@ -951,7 +952,7 @@
+             const auto* next_scene_light = light_data.area_light_info(stale_child);
+             require(light_data.stage_zones().size() == 1U &&
+                         next_scene_light != nullptr &&
+-                        std::string_view(next_scene_light->mAreaLightName) ==
++                        smgpc::resource::decode_cp932(next_scene_light->mAreaLightName) ==
+                             "[共通]宇宙の星",
+                     "a recreated scene without child metadata must not inherit the previous scene's child light table");
+         }
+--- /dev/null
++++ b/pc-port/tests/LightNameTextBoundaryTests.cpp
+@@ -0,0 +1,157 @@
++#include "render/light/LightData.hpp"
++#include "resource/BcsvTable.hpp"
++#include "resource/TextEncoding.hpp"
++#include "runtime/RuntimeServices.hpp"
++#include "Game/Map/LightFunction.hpp"
++#include <aurora/dvd.h>
++#include <dolphin/dvd.h>
++#include <algorithm>
++#include <array>
++#include <cctype>
++#include <cstdlib>
++#include <iostream>
++#include <map>
++#include <stdexcept>
++#include <set>
++#include <string>
++#include <string_view>
++#include <vector>
++
++namespace {
++void require(bool value, const char* message) {
++    if (!value) throw std::runtime_error(message);
++}
++std::string lower_ascii(std::string_view text) {
++    std::string out(text);
++    std::ranges::transform(out, out.begin(), [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
++    return out;
++}
++bool non_ascii(std::string_view value) {
++    return std::ranges::any_of(value, [](unsigned char c) { return c >= 0x80; });
++}
++void exercise(smgpc::runtime::DvdFileSystemService& dvd) {
++    using namespace smgpc;
++    auto& lights = render::light::StageLightData::instance();
++    struct Reset { ~Reset() { render::light::StageLightData::instance().reset(); } } reset;
++    const auto& archive = dvd.archive("ObjectData/LightData.arc");
++    const resource::RarcEntry* main_entry = nullptr;
++    for (const auto& entry : archive.entries())
++        if (lower_ascii(entry.name) == "lightdata.bcsv") main_entry = &entry;
++    require(main_entry != nullptr, "actual LightData.arc contains its main table");
++    const auto main = resource::BcsvTable::from_bytes(archive.file_data(*main_entry));
++    std::map<std::string, std::size_t> main_rows;
++    std::size_t main_non_ascii = 0;
++    for (std::size_t row = 0; row < main.entry_count(); ++row) {
++        auto name = main.get_string(row, "AreaLightName");
++        require(name.has_value(), "every actual main light row has an authored name");
++        main_non_ascii += non_ascii(*name);
++        main_rows.try_emplace(*name, row);
++    }
++    require(main_non_ascii > 0, "real fixture includes CP932 Japanese identities");
++
++    std::size_t zone_tables = 0, zone_rows = 0, non_ascii_rows = 0, unmatched_rows = 0;
++    std::set<std::string> verified_main_names;
++    for (const auto& entry : archive.entries()) {
++        const auto file = lower_ascii(entry.name);
++        if (file == "lightdata.bcsv" || !file.starts_with("light") || !file.ends_with(".bcsv")) continue;
++        const auto table = resource::BcsvTable::from_bytes(archive.file_data(entry));
++        if (!table.field_index("LightID")) continue;
++        const auto zone_name = file.substr(5, file.size() - 10);
++        const auto zones = std::array{render::light::StageLightZone{0, zone_name}};
++        lights.configure_stage_zones(zones);
++        lights.load_stage(dvd, zone_name);
++        std::map<s32, std::string> first_zone_rows;
++        for (std::size_t row = 0; row < table.entry_count(); ++row) {
++            const auto id = table.get_s32(row, "LightID").value_or(-1);
++            const auto raw = table.get_string(row, "AreaLightName").value_or(std::string{});
++            first_zone_rows.try_emplace(id, raw);
++            ++zone_rows;
++        }
++        for (const auto& [id, raw] : first_zone_rows) {
++            ZoneLightID key;
++            key._0 = 0;
++            key.mLightID = id;
++            auto* published = LightFunction::getAreaLightInfo(key);
++            require(published == lights.area_light_info(key), "Game accessor publishes the retained service object");
++            require(published && published->mAreaLightName, "actual authored zone resolves an AreaLight object");
++            const auto found = main_rows.find(raw);
++            if (found == main_rows.end()) {
++                ++unmatched_rows;
++                require(std::string_view(published->mAreaLightName) ==
++                            main.get_string(0, "AreaLightName").value(),
++                        "unmatched raw names retain the existing first-main-row fallback");
++                const auto display = resource::decode_cp932(raw);
++                const auto decoded_alias = std::ranges::any_of(main_rows, [&](const auto& candidate) {
++                    return resource::decode_cp932(candidate.first) == display;
++                });
++                std::cout << "[note] unmatched zone_table=" << entry.name << " light_id=" << id
++                          << " display=" << display << " decoded_main_alias=" << decoded_alias << '\n';
++                continue;
++            }
++            const auto source_name = main.get_string(found->second, "AreaLightName");
++            require(std::string_view(published->mAreaLightName) == *source_name,
++                    "Game light identity preserves exact authored CP932 bytes");
++            require(std::string_view(published->mAreaLightName) == raw,
++                    "zone-to-main light resolution compares the same raw byte identity");
++            non_ascii_rows += non_ascii(raw);
++            verified_main_names.insert(raw);
++            const auto saved = published->mAreaLightName;
++            const auto display = resource::decode_cp932(raw);
++            require(resource::decode_cp932(published->mAreaLightName) == display,
++                    "host presentation explicitly decodes the original CP932 identity");
++            require(saved == published->mAreaLightName && std::string_view(saved) == raw,
++                    "presentation conversion does not replace the Game-owned name");
++        }
++        if (!first_zone_rows.empty()) {
++            auto fallback = first_zone_rows.find(-1);
++            if (fallback != first_zone_rows.end()) {
++                require(std::string_view(LightFunction::getDefaultAreaLightName()) == fallback->second,
++                        "Game default-name accessor returns raw zone-table bytes");
++            }
++        }
++        ++zone_tables;
++    }
++    require(zone_tables > 1 && non_ascii_rows > 1, "actual fixture covers multiple zone tables and Japanese names");
++
++    const auto zones = std::array{render::light::StageLightZone{0,"HeavensDoorGalaxy"},
++                                 render::light::StageLightZone{5,"HeavensDoorMysteriousZone"}};
++    lights.configure_stage_zones(zones);
++    lights.load_stage(dvd,"HeavensDoorGalaxy");
++    ZoneLightID root;
++    ZoneLightID child; child._0 = 5; child.mLightID = 0;
++    auto* root_info = lights.area_light_info(root);
++    auto* child_info = lights.area_light_info(child);
++    require(resource::decode_cp932(root_info->mAreaLightName) == "[共通]宇宙の星",
++            "explicit host decoding displays the authored root light name");
++    require(resource::decode_cp932(child_info->mAreaLightName) == "ロゼッタ出会い",
++            "explicit host decoding displays the authored child light name");
++    require(std::string_view(child_info->mAreaLightName) != "ロゼッタ出会い",
++            "Game light identity is CP932 rather than host UTF-8");
++    require(child_info->mPlayerLight.mInfo0.mColor.r == 90 && child_info->mPlayerLight.mColor.b == 115,
++            "raw-name boundary preserves the authored selected light payload");
++    lights.reset();
++    require(LightFunction::getDefaultAreaLightName() == nullptr &&
++                LightFunction::getAreaLightInfo(root) == nullptr,
++            "reset unpublishes raw-name storage through Game accessors");
++    std::cout << "[pass] main_rows=" << main.entry_count() << " main_non_ascii=" << main_non_ascii
++              << " zone_tables=" << zone_tables << " zone_rows=" << zone_rows
++              << " verified_main_names=" << verified_main_names.size()
++              << " verified_non_ascii_rows=" << non_ascii_rows << " unmatched_rows=" << unmatched_rows
++              << " raw Game identities; explicit UTF-8 presentation; reset\n";
++}
++}
++int main() {
++    try {
++        const auto* disc = std::getenv("SMGPC_REAL_DISC");
++        require(disc && *disc, "SMGPC_REAL_DISC must name the actual disc fixture");
++        require(aurora_dvd_open(disc), "actual disc fixture opens");
++        struct Close { ~Close() { aurora_dvd_close(); } } close;
++        DVDInit();
++        smgpc::runtime::DvdFileSystemService dvd("/");
++        exercise(dvd);
++        return 0;
++    } catch (const std::exception& error) {
++        std::cerr << "[fail] " << error.what() << '\n';
++        return 1;
++    }
++}

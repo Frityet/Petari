@@ -1,0 +1,26 @@
+[
+  {
+    "staged": "build/light-name-text-boundary-20260903/staged/src/render/light/LightData.cpp",
+    "destination": "pc-port/src/render/light/LightData.cpp",
+    "sha256": "22ba977076e119f2779516611db4dabae8673680125fc466ce75b939d9e1da9d",
+    "production_before_sha256": "380edd8acd2636d71a3ec9910b363248d59c5c96b8261bf64767fac109624bc5"
+  },
+  {
+    "staged": "build/light-name-text-boundary-20260903/staged/src/render/light/LightData.hpp",
+    "destination": "pc-port/src/render/light/LightData.hpp",
+    "sha256": "33988740c3f8cf0736ad66a65076b0fc75b6a94a0515ad42c423a83bff9fe2de",
+    "production_before_sha256": "3b7a9cafa42eb180ae7a704128939a7bafe175a8285dfaf29d664de8cf51ed6d"
+  },
+  {
+    "staged": "build/light-name-text-boundary-20260903/staged/tests/AreaObjRealOrAbsentTests.cpp",
+    "destination": "pc-port/tests/AreaObjRealOrAbsentTests.cpp",
+    "sha256": "8ad51e7dd432fc384caf0491942787265e125d507bf1ce2f71b69121bee8ea22",
+    "production_before_sha256": "3aefb8be3e144613cbadc928fffaaab67674c1576d4476146843dc2f6446d6f6"
+  },
+  {
+    "staged": "build/light-name-text-boundary-20260903/staged/tests/LightNameTextBoundaryTests.cpp",
+    "destination": "pc-port/tests/LightNameTextBoundaryTests.cpp",
+    "sha256": "31dc09eae425f4fcef6526ba00a5d9d30f5debf0c2e2e94a5cac3994329ed961",
+    "production_before_sha256": null
+  }
+]
