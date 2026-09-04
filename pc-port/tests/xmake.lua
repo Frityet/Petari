@@ -2470,3 +2470,13 @@ target("smg-pc-msl-printf-tests")
     add_deps("smg-pc-common")
     add_cxxflags("-fno-builtin-sprintf", "-fno-builtin-snprintf", "-fno-builtin-vsprintf", "-fno-builtin-vsnprintf", {force = true})
     add_tests("msl_printf", {group = "aurora", rundir = os.projectdir(), realtime_output = true})
+
+
+target("smg-pc-original-vector-integer-conversion-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    add_includedirs("../src", "../aurora/include")
+    add_defines("TARGET_PC", "AURORA")
+    add_files("OriginalVectorIntegerConversionTests.cpp")
+    add_tests("original_vector_integer_conversion", {group = "aurora", rundir = os.projectdir(), realtime_output = true})

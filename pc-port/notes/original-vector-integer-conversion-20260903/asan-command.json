@@ -1,0 +1,23 @@
+[
+  "/opt/homebrew/opt/llvm/bin/clang++",
+  "-Qunused-arguments",
+  "-target",
+  "arm64-apple-macos26.0",
+  "-isysroot",
+  "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+  "-stdlib=libc++",
+  "-cxx-isystem/opt/homebrew/opt/llvm/include/c++/v1",
+  "-g",
+  "-O0",
+  "-std=c++23",
+  "-Isrc",
+  "-Iaurora/include",
+  "-DSMGPC_DEBUG_BUILD",
+  "-DTARGET_PC",
+  "-DAURORA",
+  "-o",
+  "/Users/frityet/Projects/petari/build/original-vector-integer-conversion-20260903/conversion-asan",
+  "tests/OriginalVectorIntegerConversionTests.cpp",
+  "-fsanitize=address,undefined,float-cast-overflow",
+  "-fno-omit-frame-pointer"
+]

@@ -3,12 +3,29 @@
 #include "JSystem/JGeometry/TUtil.hpp"
 #include "JSystem/JMath/JMath.hpp"
 
+#include <aurora/ppc_math.hpp>
 #include <cmath>
 #include <type_traits>
 
 #include <revolution/types.h>
 
 namespace JGeometry {
+    namespace detail {
+        // Original integral vector components use fctiwz before halfword
+        // narrowing. Native floating-to-short casts do not preserve wrapping.
+        template <typename T, typename U>
+        constexpr T castVectorComponent(U value) {
+            if constexpr (std::is_floating_point_v<U> && std::is_same_v<T, s16>)
+                return aurora::ppc::truncate_s16(value);
+            else if constexpr (std::is_floating_point_v<U> && std::is_same_v<T, u16>)
+                return aurora::ppc::truncate_u16(value);
+            else if constexpr (std::is_floating_point_v<U> && std::is_same_v<T, s32>)
+                return aurora::ppc::truncate_s32(value);
+            else
+                return static_cast<T>(value);
+        }
+    }
+
     template <typename T>
     struct TVec2 {
         constexpr TVec2() = default;
@@ -18,19 +35,19 @@ namespace JGeometry {
 
         template <typename U>
         constexpr TVec2(U newX, U newY)
-            : x(static_cast<T>(newX)), y(static_cast<T>(newY)) {
+            : x(detail::castVectorComponent<T>(newX)), y(detail::castVectorComponent<T>(newY)) {
         }
 
         template <typename U>
         void set(U newX, U newY) {
-            x = static_cast<T>(newX);
-            y = static_cast<T>(newY);
+            x = detail::castVectorComponent<T>(newX);
+            y = detail::castVectorComponent<T>(newY);
         }
 
         template <typename U>
         void set(const TVec2<U> &value) {
-            x = static_cast<T>(value.x);
-            y = static_cast<T>(value.y);
+            x = detail::castVectorComponent<T>(value.x);
+            y = detail::castVectorComponent<T>(value.y);
         }
 
         void set(T value) {
@@ -72,12 +89,12 @@ namespace JGeometry {
         }
 
         void scale(f32 factor) {
-            x = static_cast<T>(x * factor);
-            y = static_cast<T>(y * factor);
+            x = detail::castVectorComponent<T>(x * factor);
+            y = detail::castVectorComponent<T>(y * factor);
         }
 
         void zero() {
-            set(static_cast<T>(0));
+            set(detail::castVectorComponent<T>(0));
         }
 
         [[nodiscard]] T squared() const {
@@ -116,7 +133,7 @@ namespace JGeometry {
         }
 
         [[nodiscard]] TVec2 operator*(f32 factor) const {
-            return TVec2{static_cast<T>(x * factor), static_cast<T>(y * factor)};
+            return TVec2{detail::castVectorComponent<T>(x * factor), detail::castVectorComponent<T>(y * factor)};
         }
 
         T x{};
@@ -136,21 +153,21 @@ namespace JGeometry {
 
         template <typename U>
         constexpr TVec3(U newX, U newY, U newZ)
-            : x(static_cast<T>(newX)), y(static_cast<T>(newY)), z(static_cast<T>(newZ)) {
+            : x(detail::castVectorComponent<T>(newX)), y(detail::castVectorComponent<T>(newY)), z(detail::castVectorComponent<T>(newZ)) {
         }
 
         template <typename U>
         void set(U newX, U newY, U newZ) {
-            x = static_cast<T>(newX);
-            y = static_cast<T>(newY);
-            z = static_cast<T>(newZ);
+            x = detail::castVectorComponent<T>(newX);
+            y = detail::castVectorComponent<T>(newY);
+            z = detail::castVectorComponent<T>(newZ);
         }
 
         template <typename U>
         void set(const TVec3<U> &value) {
-            x = static_cast<T>(value.x);
-            y = static_cast<T>(value.y);
-            z = static_cast<T>(value.z);
+            x = detail::castVectorComponent<T>(value.x);
+            y = detail::castVectorComponent<T>(value.y);
+            z = detail::castVectorComponent<T>(value.z);
         }
     };
 
