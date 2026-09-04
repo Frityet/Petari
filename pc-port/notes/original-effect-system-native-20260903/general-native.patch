@@ -1,0 +1,55 @@
+--- a/pc-port/src/Game/Scene/SceneFunction.cpp
++++ b/pc-port/src/Game/Scene/SceneFunction.cpp
+@@ -8,7 +8,12 @@
+ namespace MR {
+ 
+     void connectToScene(NameObj* pObj, s32 movementType, s32 calcAnimType, s32 drawBufferType, s32 drawType) {
+-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr && pObj != nullptr) {
++        if (pObj == nullptr) return;
++        auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
++        auto* scheduler = smgpc::runtime::try_active_scene_scheduler();
++        if (scheduler == nullptr && runtime != nullptr) scheduler = &runtime->scheduler();
++        if (scheduler == nullptr) return;
++        if (runtime != nullptr && scheduler == &runtime->scheduler()) {
+             if (auto* actor = dynamic_cast< LiveActor* >(pObj); actor != nullptr && drawBufferType >= 0) {
+                 runtime->register_live_actor_model(*actor, movementType, calcAnimType, drawBufferType, drawType);
+                 return;
+@@ -17,13 +22,15 @@
+                 runtime->register_layout_actor(*layout, movementType, calcAnimType, drawType);
+                 return;
+             }
+-
+-            runtime->scheduler().connect_name_obj(*pObj, movementType, calcAnimType, drawBufferType, drawType);
+         }
++        scheduler->connect_name_obj(*pObj, movementType, calcAnimType, drawBufferType, drawType);
+     }
+ 
+     void disconnectToScene(NameObj* pObj) {
+-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr && pObj != nullptr) {
++        if (pObj == nullptr) return;
++        if (auto* scheduler = smgpc::runtime::try_active_scene_scheduler()) {
++            scheduler->disconnect_name_obj(*pObj);
++        } else if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
+             runtime->scheduler().disconnect_name_obj(*pObj);
+         }
+     }
+--- a/pc-port/src/Game/Util/Color.hpp
++++ b/pc-port/src/Game/Util/Color.hpp
+@@ -17,7 +17,7 @@
+     }
+ 
+     Color8(u32 color) {
+-        mColor = color;
++        set(static_cast<u8>(color >> 24), static_cast<u8>(color >> 16), static_cast<u8>(color >> 8), static_cast<u8>(color));
+     }
+ 
+     inline operator GXColor() const {
+@@ -25,7 +25,7 @@
+     }
+ 
+     inline operator u32() const {
+-        return mColor;
++        return (static_cast<u32>(r) << 24) | (static_cast<u32>(g) << 16) | (static_cast<u32>(b) << 8) | a;
+     }
+ 
+     inline const Color8& operator=(const GXColor& other) {

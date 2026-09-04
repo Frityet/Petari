@@ -1,0 +1,15 @@
+{
+  "command": [
+    "/opt/homebrew/opt/llvm/bin/clang++",
+    "-std=c++23",
+    "-DTARGET_PC",
+    "-I/Users/frityet/Projects/petari/pc-port/notes/original-effect-system-native-20260903/aurora/include",
+    "-I/Users/frityet/Projects/petari/pc-port/aurora/include",
+    "-fsanitize=address,undefined",
+    "-fno-omit-frame-pointer",
+    "/Users/frityet/Projects/petari/pc-port/notes/original-effect-system-native-20260903/functional-probe.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/build/original-effect-system-native-20260903/functional-probe"
+  ],
+  "returncode": 0
+}

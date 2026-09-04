@@ -1,0 +1,1723 @@
+--- /dev/null
++++ b/pc-port/src/Game/Effect/AutoEffectGroup.cpp
+@@ -0,0 +1,50 @@
++#include "Game/Effect/AutoEffectGroup.hpp"
++#include "Game/Effect/AutoEffectInfo.hpp"
++#include "Game/Effect/EffectSystemUtil.hpp"
++#include "Game/Util/JMapInfo.hpp"
++
++AutoEffectGroup::AutoEffectGroup(const char* pName, int num) : mName(pName), mInfos() {
++    mInfos.init(num);
++}
++
++void AutoEffectGroup::add(const JMapInfoIter& rIter) {
++    AutoEffectInfo* pInfo = new AutoEffectInfo();
++    pInfo->init(rIter);
++    mInfos.push_back(pInfo);
++}
++
++namespace MR {
++    namespace Effect {
++        void addAutoEffectsFromGroup(const AutoEffectGroup* pGroup, EffectKeeper* pKeeper, const LiveActor* pActor) {
++            for (s32 i = 0; i < pGroup->mInfos.size(); i++) {
++                addAutoEffect(pKeeper, pActor, pGroup->mInfos[i]);
++            }
++        }
++
++        void addAutoEffectsFromGroup(const AutoEffectGroup* pGroup, PaneEffectKeeper* pKeeper, const LayoutActor* pActor) {
++            for (s32 i = 0; i < pGroup->mInfos.size(); i++) {
++                addAutoEffect(pKeeper, pActor, pGroup->mInfos[i]);
++            }
++        }
++
++        void addAutoEffectsFromGroup(const AutoEffectGroup* pGroup, MultiSceneEffectKeeper* pKeeper, const MultiSceneActor* pActor) {
++            for (s32 i = 0; i < pGroup->mInfos.size(); i++) {
++                addAutoEffect(pKeeper, pActor, pGroup->mInfos[i]);
++            }
++        }
++
++        AutoEffectGroup* createAutoEffectGroup(const char* pName) {
++            JMapInfoIter iter = MR::findJMapInfoElementNoCase(getAutoEffectListBinary(), "GroupName", pName, 0);
++            if (!iter.isValid()) {
++                return nullptr;
++            }
++
++            AutoEffectGroup* pGroup = new AutoEffectGroup(pName, getAutoEffectNum(pName));
++            while (iter != getAutoEffectListBinary()->end()) {
++                pGroup->add(iter);
++                iter = MR::findJMapInfoElementNoCase(getAutoEffectListBinary(), "GroupName", pName, iter.mIndex + 1);
++            }
++            return pGroup;
++        }
++    }  // namespace Effect
++}  // namespace MR
+--- /dev/null
++++ b/pc-port/src/Game/Effect/AutoEffectGroup.hpp
+@@ -0,0 +1,31 @@
++#pragma once
++
++#include "Game/Util/Array.hpp"
++
++class AutoEffectInfo;
++class EffectKeeper;
++class JMapInfoIter;
++class LayoutActor;
++class LiveActor;
++class MultiSceneActor;
++class MultiSceneEffectKeeper;
++class PaneEffectKeeper;
++
++class AutoEffectGroup {
++public:
++    AutoEffectGroup(const char*, int);
++    void add(const JMapInfoIter&);
++    const char* getName() const { return mName; }
++
++    /* 0x00 */ const char* mName;
++    /* 0x04 */ MR::Vector< MR::AssignableArray< AutoEffectInfo* > > mInfos;
++};
++
++namespace MR {
++    namespace Effect {
++        void addAutoEffectsFromGroup(const AutoEffectGroup*, EffectKeeper*, const LiveActor*);
++        void addAutoEffectsFromGroup(const AutoEffectGroup*, PaneEffectKeeper*, const LayoutActor*);
++        void addAutoEffectsFromGroup(const AutoEffectGroup*, MultiSceneEffectKeeper*, const MultiSceneActor*);
++        AutoEffectGroup* createAutoEffectGroup(const char*);
++    }
++}
+--- /dev/null
++++ b/pc-port/src/Game/Effect/AutoEffectGroupHolder.cpp
+@@ -0,0 +1,64 @@
++#include "Game/Effect/AutoEffectGroupHolder.hpp"
++#include "Game/Util/StringUtil.hpp"
++#include <algorithm>
++
++namespace MR {
++    template < class T >
++    struct eq_ptr_case {
++        eq_ptr_case(const char* pName) : mName(pName) {}
++        bool operator()(T pItem) const {
++            return MR::strcasecmp(pItem->getName(), mName) == 0;
++        }
++        const char* mName;
++    };
++}
++
++AutoEffectGroupHolder::AutoEffectGroupHolder() {
++}
++
++AutoEffectGroup* AutoEffectGroupHolder::find(const char* pName) const {
++    AutoEffectGroup* const* pGroup = std::find_if(mGroups.begin(), mGroups.end(), MR::eq_ptr_case< AutoEffectGroup* >(pName));
++    return pGroup != mGroups.end() ? *pGroup : nullptr;
++}
++
++bool AutoEffectGroupHolder::isExist(const char* pName) const {
++    AutoEffectGroup* const* pGroup = std::find_if(mGroups.begin(), mGroups.end(), MR::eq_ptr_case< AutoEffectGroup* >(pName));
++    return pGroup != mGroups.end();
++}
++
++namespace MR {
++    namespace Effect {
++        bool createAndAddAutoEffectGroup(AutoEffectGroupHolder* pHolder, const char* pName) {
++            if (pHolder->isExist(pName)) {
++                return false;
++            }
++            AutoEffectGroup* pGroup = createAutoEffectGroup(pName);
++            if (pGroup == nullptr) {
++                return false;
++            }
++            pHolder->mGroups.push_back(pGroup);
++            return true;
++        }
++
++        void registerAutoEffectInfos(AutoEffectGroupHolder* pHolder, EffectKeeper* pKeeper, const LiveActor* pActor, const char* pName) {
++            AutoEffectGroup* pGroup = pHolder->find(pName);
++            if (pGroup != nullptr) {
++                addAutoEffectsFromGroup(pGroup, pKeeper, pActor);
++            }
++        }
++
++        void registerAutoEffectInfos(AutoEffectGroupHolder* pHolder, PaneEffectKeeper* pKeeper, const LayoutActor* pActor, const char* pName) {
++            AutoEffectGroup* pGroup = pHolder->find(pName);
++            if (pGroup != nullptr) {
++                addAutoEffectsFromGroup(pGroup, pKeeper, pActor);
++            }
++        }
++
++        void registerAutoEffectInfos(AutoEffectGroupHolder* pHolder, MultiSceneEffectKeeper* pKeeper, const MultiSceneActor* pActor, const char* pName) {
++            AutoEffectGroup* pGroup = pHolder->find(pName);
++            if (pGroup != nullptr) {
++                addAutoEffectsFromGroup(pGroup, pKeeper, pActor);
++            }
++        }
++    }
++}
+--- /dev/null
++++ b/pc-port/src/Game/Effect/AutoEffectGroupHolder.hpp
+@@ -0,0 +1,22 @@
++#pragma once
++
++#include "Game/Effect/AutoEffectGroup.hpp"
++#include "Game/Util/Array.hpp"
++
++class AutoEffectGroupHolder {
++public:
++    AutoEffectGroupHolder();
++    AutoEffectGroup* find(const char*) const;
++    bool isExist(const char*) const;
++
++    /* 0x000 */ MR::Vector< MR::FixedArray< AutoEffectGroup*, 256 > > mGroups;
++};
++
++namespace MR {
++    namespace Effect {
++        bool createAndAddAutoEffectGroup(AutoEffectGroupHolder*, const char*);
++        void registerAutoEffectInfos(AutoEffectGroupHolder*, EffectKeeper*, const LiveActor*, const char*);
++        void registerAutoEffectInfos(AutoEffectGroupHolder*, PaneEffectKeeper*, const LayoutActor*, const char*);
++        void registerAutoEffectInfos(AutoEffectGroupHolder*, MultiSceneEffectKeeper*, const MultiSceneActor*, const char*);
++    }
++}
+--- /dev/null
++++ b/pc-port/src/Game/Effect/AutoEffectInfo.cpp
+@@ -0,0 +1,159 @@
++#include "Game/Effect/AutoEffectInfo.hpp"
++#include "Game/Util/JMapInfo.hpp"
++#include "Game/Util/StringUtil.hpp"
++#include "Inline.hpp"
++#include <cstdlib>
++#include <cstring>
++
++namespace {
++    u32 str2Color(const char*) NO_INLINE;
++    bool isValueOnR(const JMapInfoIter&, const char*) NO_INLINE;
++    bool isValueOnS(const JMapInfoIter&, const char*) NO_INLINE;
++    bool isValueOnT(const JMapInfoIter&, const char*) NO_INLINE;
++
++    struct DrawOrderData {
++        s32 mOrder;
++        const char* mName;
++    };
++
++    const DrawOrderData sDrawOrderDataTable[] = {
++        {0, "3D"},
++        {1, "PAUSE_IGNORE"},
++        {2, "INDIRECT"},
++        {3, "AFTER_INDIRECT"},
++        {4, "BLOOM_EFFECT"},
++        {5, "AFTER_IMAGE_EFFECT"},
++        {6, "2D"},
++        {7, "2D_PAUSE_IGNORE"},
++        {8, "FOR_2D_MODEL"},
++    };
++
++    u32 str2Color(const char* pValue) {
++        return strtoul(pValue + 1, nullptr, 16) << 8;
++    }
++
++    bool isValueOnR(const JMapInfoIter& rIter, const char* pKey) {
++        const char* pValue = "";
++        rIter.getValue(pKey, &pValue);
++        return strchr(pValue, 'R') != nullptr;
++    }
++
++    bool isValueOnS(const JMapInfoIter& rIter, const char* pKey) {
++        const char* pValue = "";
++        rIter.getValue(pKey, &pValue);
++        return strchr(pValue, 'S') != nullptr;
++    }
++
++    const char* getStringValue(const JMapInfoIter& rIter, const char* pKey) {
++        const char* pValue = "";
++        rIter.getValue(pKey, &pValue);
++        if (MR::isEqualString(pValue, "")) {
++            return nullptr;
++        }
++        return pValue;
++    }
++
++    bool isValueOnT(const JMapInfoIter& rIter, const char* pKey) {
++        const char* pValue = "";
++        rIter.getValue(pKey, &pValue);
++        return strchr(pValue, 'T') != nullptr;
++    }
++
++    s32 getDrawOrder(const char* pName) {
++        for (u32 i = 0; i < sizeof(sDrawOrderDataTable) / sizeof(*sDrawOrderDataTable); i++) {
++            if (MR::isEqualString(pName, sDrawOrderDataTable[i].mName)) {
++                return sDrawOrderDataTable[i].mOrder;
++            }
++        }
++        return 0;
++    }
++}  // namespace
++
++AutoEffectInfo::AutoEffectInfo()
++    : mGroupName(nullptr), mAnimName(nullptr), mUniqueName(nullptr), mEffectName(nullptr), mParentName(nullptr), mJointName(nullptr),
++      mFlag(0), mStartFrame(0), mEndFrame(-1), mScaleValue(1.0f), mRateValue(1.0f), mLightAffectValue(0.0f), mDrawOrder(0) {
++    mPrmColor.mColor = 0;
++    mIsValidPrmColor = false;
++    mEnvColor.mColor = 0;
++    mIsValidEnvColor = false;
++}
++
++void AutoEffectInfo::init(const JMapInfoIter& rIter) {
++    mGroupName = getStringValue(rIter, "GroupName");
++    mUniqueName = getStringValue(rIter, "UniqueName");
++    mAnimName = getStringValue(rIter, "AnimName");
++
++    const char* pContinueAnimEnd = "";
++    rIter.getValue("ContinueAnimEnd", &pContinueAnimEnd);
++    if (MR::isEqualString(pContinueAnimEnd, "on")) {
++        mFlag |= 0x40;
++    } else {
++        mFlag &= ~0x40;
++    }
++
++    mJointName = getStringValue(rIter, "JointName");
++    mEffectName = getStringValue(rIter, "EffectName");
++    mParentName = getStringValue(rIter, "ParentName");
++    rIter.getValue("OffsetX", &mOffset.x);
++    rIter.getValue("OffsetY", &mOffset.y);
++    rIter.getValue("OffsetZ", &mOffset.z);
++    rIter.getValue("StartFrame", &mStartFrame);
++    rIter.getValue("EndFrame", &mEndFrame);
++
++    if (isValueOnT(rIter, "Affect")) {
++        mFlag |= 8;
++    } else {
++        mFlag &= ~8;
++    }
++    if (isValueOnR(rIter, "Affect")) {
++        mFlag |= 0x10;
++    } else {
++        mFlag &= ~0x10;
++    }
++    if (isValueOnS(rIter, "Affect")) {
++        mFlag |= 0x20;
++    } else {
++        mFlag &= ~0x20;
++    }
++    if (isValueOnT(rIter, "Follow")) {
++        mFlag |= 1;
++    } else {
++        mFlag &= ~1;
++    }
++    if (isValueOnR(rIter, "Follow")) {
++        mFlag |= 2;
++    } else {
++        mFlag &= ~2;
++    }
++    if (isValueOnS(rIter, "Follow")) {
++        mFlag |= 4;
++    } else {
++        mFlag &= ~4;
++    }
++
++    rIter.getValue("ScaleValue", &mScaleValue);
++    rIter.getValue("RateValue", &mRateValue);
++
++    const char* pPrmColor = "";
++    rIter.getValue("PrmColor", &pPrmColor);
++    mIsValidPrmColor = !MR::isEqualString(pPrmColor, "");
++    if (mIsValidPrmColor) {
++        mPrmColor.set(Color8(str2Color(pPrmColor)));
++    }
++
++    const char* pEnvColor = "";
++    rIter.getValue("EnvColor", &pEnvColor);
++    mIsValidEnvColor = !MR::isEqualString(pEnvColor, "");
++    if (mIsValidEnvColor) {
++        mEnvColor.set(Color8(str2Color(pEnvColor)));
++    }
++
++    rIter.getValue("LightAffectValue", &mLightAffectValue);
++    const char* pDrawOrder = "";
++    rIter.getValue("DrawOrder", &pDrawOrder);
++    mDrawOrder = getDrawOrder(pDrawOrder);
++}
++
++const char* AutoEffectInfo::getName() const {
++    return mUniqueName ? mUniqueName : mEffectName;
++}
+--- /dev/null
++++ b/pc-port/src/Game/Effect/AutoEffectInfo.hpp
+@@ -0,0 +1,34 @@
++#pragma once
++
++#include "Game/Util/Color.hpp"
++#include <JSystem/JGeometry/TVec.hpp>
++
++class JMapInfoIter;
++
++class AutoEffectInfo {
++public:
++    /// @brief Creates a new `AutoEffectInfo`.
++    AutoEffectInfo();
++
++    void init(const JMapInfoIter& rIter);
++    const char* getName() const;
++
++    /* 0x00 */ const char* mGroupName;
++    /* 0x04 */ const char* mAnimName;
++    /* 0x08 */ const char* mUniqueName;
++    /* 0x0C */ const char* mEffectName;
++    /* 0x10 */ const char* mParentName;
++    /* 0x14 */ const char* mJointName;
++    /* 0x18 */ u16 mFlag;
++    /* 0x1C */ Color8 mPrmColor;
++    /* 0x20 */ bool mIsValidPrmColor;
++    /* 0x24 */ Color8 mEnvColor;
++    /* 0x28 */ bool mIsValidEnvColor;
++    /* 0x2C */ TVec3f mOffset;
++    /* 0x38 */ s32 mStartFrame;
++    /* 0x3C */ s32 mEndFrame;
++    /* 0x40 */ f32 mScaleValue;
++    /* 0x44 */ f32 mRateValue;
++    /* 0x48 */ f32 mLightAffectValue;
++    /* 0x4C */ s32 mDrawOrder;
++};
+--- /dev/null
++++ b/pc-port/src/Game/Effect/EffectSystem.cpp
+@@ -0,0 +1,98 @@
++#include "Game/Effect/EffectSystem.hpp"
++#include "Game/Effect/AutoEffectGroupHolder.hpp"
++#include "Game/Effect/ParticleCalcExecutor.hpp"
++#include "Game/Effect/ParticleDrawExecutor.hpp"
++#include "Game/Effect/ParticleEmitterHolder.hpp"
++#include "Game/Effect/ParticleResourceHolder.hpp"
++#include "Game/Util/MemoryUtil.hpp"
++#include "Game/Util/ScreenUtil.hpp"
++#include "Game/Effect/EffectSystemUtil.hpp"
++#include "Game/Effect/SingleEmitter.hpp"
++#include "Game/Scene/SceneObjHolder.hpp"
++#include "JSystem/JParticle/JPAParticle.hpp"
++#include <JSystem/JParticle/JPAEmitter.hpp>
++#include <JSystem/JParticle/JPAEmitterManager.hpp>
++
++EffectSystem::EffectSystem(const char* pName, bool createAdaptor)
++    : NameObj(pName), mEmitterManager(nullptr), mDrawExec(nullptr), mCalcExec(nullptr), mGroupHolder(new AutoEffectGroupHolder()), _20(true) {
++    mDrawExec = new ParticleDrawExecutor(this, createAdaptor);
++    mCalcExec = new ParticleCalcExecutor(this, createAdaptor);
++}
++
++ParticleEmitter* EffectSystem::createEmitter(u16 id, u8 groupId, u8 resourceId) {
++    if (!_20) {
++        return nullptr;
++    }
++    ParticleEmitter* pEmitter = mEmitterHolder->findAvailableParticleEmitter();
++    if (pEmitter == nullptr) {
++        return nullptr;
++    }
++    MR::Effect::createParticleEmitter(pEmitter, mEmitterManager, TVec3f(0.0f, 0.0f, 0.0f), id, groupId, resourceId);
++    return pEmitter->mEmitter != nullptr ? pEmitter : nullptr;
++}
++
++void EffectSystem::entry(ParticleResourceHolder* pResource, u32 particleNum, u32 emitterNum) {
++    mEmitterManager = new JPAEmitterManager(particleNum, emitterNum, MR::getCurrentHeap(), 9, 1);
++    mEmitterManager->entryResourceManager(pResource->mResourceMgr, 0);
++    mEmitterHolder = new ParticleEmitterHolder(this, emitterNum);
++    pResource->swapTexture(MR::getScreenResTIMG(), "IndDummy");
++}
++
++void EffectSystem::init(const JMapInfoIter& rIter) {
++}
++
++void EffectSystem::forceDeleteEmitter(ParticleEmitter* pEmitter) const {
++    if (pEmitter->mEmitter != nullptr) {
++        SingleEmitter* pSingleEmitter = MR::Effect::getLinkSingleEmitter(pEmitter->mEmitter);
++
++        if (pSingleEmitter != nullptr) {
++            pSingleEmitter->mEmitter = nullptr;
++        }
++
++        mEmitterManager->forceDeleteEmitter(pEmitter->mEmitter);
++        pEmitter->invalidate();
++    }
++}
++
++void EffectSystem::forceDeleteSingleEmitter(SingleEmitter* pSingleEmitter) const {
++    ParticleEmitter* pEmitter = pSingleEmitter->mEmitter;
++
++    if (pSingleEmitter->mEmitter != nullptr) {
++        pSingleEmitter->mEmitter = nullptr;
++
++        mEmitterManager->forceDeleteEmitter(pEmitter->mEmitter);
++        pEmitter->invalidate();
++    }
++}
++
++void EffectSystem::createSingleEmitter(SingleEmitter* pSingleEmitter, MultiEmitterCallBackBase* pCallBack,
++                                       MultiEmitterParticleCallBack* pParticleCallBack) {
++    if (pSingleEmitter->isValid()) {
++        if (!pSingleEmitter->isOneTime()) {
++            return;
++        }
++
++        pSingleEmitter->unlink();
++    }
++
++    ParticleEmitter* pEmitter = createEmitter(pSingleEmitter->_4, pSingleEmitter->mGroupId, 0);
++
++    if (pEmitter != nullptr) {
++        pSingleEmitter->link(pEmitter);
++
++        // todo -- probably some internal stuff that happens here...look into this
++        if (pCallBack != nullptr) {
++            pEmitter->mEmitter->mpEmtrCallBack = (JPAEmitterCallBack*)pCallBack;
++        }
++
++        if (pParticleCallBack != nullptr) {
++            pEmitter->mEmitter->mpPtclCallBack = (JPAParticleCallBack*)pParticleCallBack;
++        }
++    }
++}
++
++namespace MR {
++    EffectSystem* getEffectSystem() {
++        return getSceneObj< EffectSystem >(SceneObj_EffectSystem);
++    }
++};  // namespace MR
+--- /dev/null
++++ b/pc-port/src/Game/Effect/EffectSystem.hpp
+@@ -0,0 +1,38 @@
++#pragma once
++
++#include "Game/NameObj/NameObj.hpp"
++
++class AutoEffectGroupHolder;
++class JPAEmitterManager;
++class MultiEmitterCallBackBase;
++class MultiEmitterParticleCallBack;
++class ParticleCalcExecutor;
++class ParticleDrawExecutor;
++class ParticleEmitter;
++class ParticleEmitterHolder;
++class ParticleResourceHolder;
++class SingleEmitter;
++
++class EffectSystem : public NameObj {
++public:
++    EffectSystem(const char*, bool);
++
++    virtual void init(const JMapInfoIter& rIter);
++
++    ParticleEmitter* createEmitter(u16, u8, u8);
++    void forceDeleteEmitter(ParticleEmitter*) const;
++    void forceDeleteSingleEmitter(SingleEmitter*) const;
++    void createSingleEmitter(SingleEmitter*, MultiEmitterCallBackBase*, MultiEmitterParticleCallBack*);
++    void entry(ParticleResourceHolder*, u32, u32);
++
++    /* 0x0C */ JPAEmitterManager* mEmitterManager;
++    /* 0x10 */ ParticleEmitterHolder* mEmitterHolder;
++    /* 0x14 */ ParticleDrawExecutor* mDrawExec;
++    /* 0x18 */ ParticleCalcExecutor* mCalcExec;
++    /* 0x1C */ AutoEffectGroupHolder* mGroupHolder;
++    /* 0x20 */ bool _20;
++};
++
++namespace MR {
++    EffectSystem* getEffectSystem();
++};  // namespace MR
+--- /dev/null
++++ b/pc-port/src/Game/Effect/EffectSystemUtil.cpp
+@@ -0,0 +1,216 @@
++#include "Game/Effect/EffectSystemUtil.hpp"
++#include "Game/Effect/AutoEffectGroupHolder.hpp"
++#include "Game/Effect/AutoEffectInfo.hpp"
++#include "Game/Effect/EffectSystem.hpp"
++#include "Game/Effect/MultiEmitter.hpp"
++#include "Game/LiveActor/EffectKeeper.hpp"
++#include "Game/LiveActor/LiveActor.hpp"
++#include "Game/LiveActor/ModelManager.hpp"
++#include "Game/Scene/MultiSceneActor.hpp"
++#include "Game/Scene/MultiSceneEffectKeeper.hpp"
++#include "Game/Screen/PaneEffectKeeper.hpp"
++#include "Game/Util/JointUtil.hpp"
++#include "Game/Util/MathUtil.hpp"
++#include "Game/Util/MemoryUtil.hpp"
++#include "Game/Util/ModelUtil.hpp"
++#include "Game/Util/StringUtil.hpp"
++#include "Game/Effect/ParticleResourceHolder.hpp"
++#include "Game/Effect/ParticleEmitter.hpp"
++#include "Game/Util/SystemUtil.hpp"
++#include "JSystem/JParticle/JPAEmitterManager.hpp"
++#include <cstdio>
++#include <cstring>
++
++namespace {
++    void setupMultiEmitter(MultiEmitter* pEmitter, const AutoEffectInfo* pInfo) {
++        pEmitter->_28 = pInfo;
++        pEmitter->setDrawOrder(pInfo->mDrawOrder);
++        pEmitter->setOffset(pInfo->mOffset);
++        if (!MR::isNearZero(pInfo->mScaleValue - 1.0f)) {
++            pEmitter->setBaseScale(pInfo->mScaleValue);
++        }
++        if (!MR::isNearZero(pInfo->mRateValue - 1.0f)) {
++            pEmitter->setRate(pInfo->mRateValue, -1);
++        }
++        if (pInfo->mIsValidPrmColor) {
++            Color8 color = pInfo->mPrmColor;
++            pEmitter->setGlobalPrmColor(color.r, color.g, color.b, -1);
++        }
++        if (pInfo->mIsValidEnvColor) {
++            Color8 color = pInfo->mEnvColor;
++            pEmitter->setGlobalEnvColor(color.r, color.g, color.b, -1);
++        }
++        if (!MR::isNearZero(pInfo->mLightAffectValue)) {
++            pEmitter->_2C = pInfo->mLightAffectValue;
++        }
++    }
++}  // namespace
++
++namespace MR {
++    namespace Effect {
++        bool isEffect2D(const MultiEmitter* pEmitter) {
++            if (pEmitter->_28 == nullptr) {
++                return false;
++            }
++
++            return pEmitter->_28->mDrawOrder == 6 || pEmitter->_28->mDrawOrder == 7;
++        }
++
++        void initEffectSyncBck(EffectKeeper* pKeeper, const ModelManager* pModelManager, const char* pEffectName,
++                               const char* pAnimName, s32 count, f32 startFrame, f32 endFrame, bool deleteOnEnd) {
++            pKeeper->registerSyncBckEffect(pModelManager->mXanimePlayer, pEffectName, pAnimName, count, startFrame, endFrame, deleteOnEnd);
++        }
++
++        void addEffectSyncBck(MultiEmitter* pEmitter, const ModelManager* pModelManager, const char* pAnimName) {
++            pEmitter->addSyncBck(pModelManager->mXanimePlayer, pAnimName);
++        }
++
++        void setupMultiEmitter(EffectKeeper* pKeeper, const ModelManager* pModelManager, const AutoEffectInfo* pInfo) {
++            MultiEmitter* pEmitter = pKeeper->getEmitter(pInfo->getName());
++            setupMultiEmitterSyncBck(pKeeper, pModelManager, pInfo);
++            ::setupMultiEmitter(pEmitter, pInfo);
++            pEmitter->scanParticleEmitter(MR::getEffectSystem());
++            if (pInfo->mParentName != nullptr) {
++                pKeeper->getEmitter(pInfo->mParentName)->addChildEmitter(pEmitter);
++            }
++        }
++
++        void setupMultiEmitterSyncBck(EffectKeeper* pKeeper, const ModelManager* pModelManager, const AutoEffectInfo* pInfo) {
++            if (pInfo->mAnimName == nullptr) {
++                return;
++            }
++
++            MultiEmitter* pEmitter = pKeeper->getEmitter(pInfo->getName());
++            if (!MR::hasStringSpace(pInfo->mAnimName)) {
++                initEffectSyncBck(pKeeper, pModelManager, pInfo->getName(), pInfo->mAnimName, 1,
++                                 pInfo->mStartFrame, pInfo->mEndFrame, false);
++            } else {
++                const char* pAnimNames = pInfo->mAnimName;
++                char name[256];
++                MR::zeroMemory(name, sizeof(name));
++                s32 length = 0;
++                for (u32 i = 0; i <= strlen(pAnimNames); i++) {
++                    if (pAnimNames[i] == ' ' || pAnimNames[i] == '\0') {
++                        name[length] = '\0';
++                        const char* pName = nullptr;
++                        MR::findBckNameStringInResource(&pName, pModelManager->getResourceHolder(), name);
++                        if (pEmitter->_24 == nullptr) {
++                            s32 count = 0;
++                            for (u32 j = 0; j <= strlen(pAnimNames); j++) {
++                                if (pAnimNames[j] == ' ' || pAnimNames[j] == '\0') {
++                                    count++;
++                                }
++                            }
++                            initEffectSyncBck(pKeeper, pModelManager, pInfo->getName(), pName, count, 0.0f, -1.0f, false);
++                        } else {
++                            addEffectSyncBck(pEmitter, pModelManager, pName);
++                        }
++                        length = 0;
++                        MR::zeroMemory(name, sizeof(name));
++                    } else {
++                        name[length++] = pAnimNames[i];
++                    }
++                }
++            }
++            pEmitter->setContinueBckEnd((pInfo->mFlag & 0x40) == 0x40);
++        }
++
++        void registerAutoEffectInfoGroup(EffectKeeper* pKeeper, const LiveActor* pActor, const char* pName) {
++            createAndAddAutoEffectGroup(MR::getEffectSystem()->mGroupHolder, pName);
++            registerAutoEffectInfos(MR::getEffectSystem()->mGroupHolder, pKeeper, pActor, pName);
++        }
++
++        void requestMovementOn(EffectKeeper* pKeeper) {
++            for (s32 i = 0; i < pKeeper->_C.size(); i++) {
++                MultiEmitter* pEmitter = pKeeper->getEmitter(i);
++                if (pEmitter != nullptr && pEmitter->isValid()) {
++                    pEmitter->pauseOff(-1);
++                }
++            }
++        }
++
++        void registerAutoEffectInfoGroup(PaneEffectKeeper* pKeeper, const LayoutActor* pActor, const char* pName) {
++            registerAutoEffectInfoGroup(pKeeper, MR::getEffectSystem(), pActor, pName);
++        }
++
++        void registerAutoEffectInfoGroup(PaneEffectKeeper* pKeeper, const EffectSystem* pSystem, const LayoutActor* pActor, const char* pName) {
++            createAndAddAutoEffectGroup(pSystem->mGroupHolder, pName);
++            registerAutoEffectInfos(pSystem->mGroupHolder, pKeeper, pActor, pName);
++        }
++
++        void addAutoEffect(EffectKeeper* pKeeper, const LiveActor* pActor, const AutoEffectInfo* pInfo) {
++            if (pInfo->mJointName != nullptr) {
++                const char* pEffectName = pInfo->mEffectName;
++                pKeeper->registerEffect(pEffectName, MR::getJointMtx(pActor, pInfo->mJointName), pInfo->mUniqueName, nullptr);
++            } else if (pActor->getBaseMtx() != nullptr) {
++                const char* pEffectName = pInfo->mEffectName;
++                pKeeper->registerEffect(pEffectName, pActor->getBaseMtx(), &pActor->mScale, pInfo->mUniqueName, nullptr);
++            } else {
++                pKeeper->registerEffect(pInfo->mEffectName, &pActor->mPosition, &pActor->mRotation, &pActor->mScale, pInfo->mUniqueName);
++            }
++            setupMultiEmitter(pKeeper, pActor->mModelManager, pInfo);
++        }
++
++        void addAutoEffect(PaneEffectKeeper* pKeeper, const LayoutActor*, const AutoEffectInfo* pInfo) {
++            pKeeper->add(pInfo->mJointName, pInfo->mEffectName, pInfo->mUniqueName);
++            ::setupMultiEmitter(pKeeper->getEmitter(pInfo->mUniqueName), pInfo);
++        }
++
++        void addAutoEffect(MultiSceneEffectKeeper* pKeeper, const MultiSceneActor* pActor, const AutoEffectInfo* pInfo) {
++            if (pInfo->mJointName != nullptr) {
++                const char* pEffectName = pInfo->mEffectName;
++                pKeeper->add(pEffectName, MultiScene::getJointMtx(pActor, pInfo->mJointName), pInfo->mUniqueName);
++            } else {
++                pKeeper->add(pInfo->mEffectName, &pActor->mTranslation, &pActor->mRotation, &pActor->mScale, pInfo->mUniqueName);
++            }
++            ::setupMultiEmitter(pKeeper->get(pInfo->mUniqueName), pInfo);
++        }
++
++        void registerAutoEffectInfoGroup(MultiSceneEffectKeeper* pKeeper, const EffectSystem* pSystem, const MultiSceneActor* pActor, const char* pName) {
++            createAndAddAutoEffectGroup(pSystem->mGroupHolder, pName);
++            registerAutoEffectInfos(pSystem->mGroupHolder, pKeeper, pActor, pName);
++        }
++
++        bool isExistInResource(u16* pIndex, const char* pName) {
++            return MR::getParticleResourceHolder()->isExistInResource(pName, pIndex);
++        }
++
++        int getAutoEffectNum(const char* pName) {
++            return MR::getParticleResourceHolder()->getAutoEffectNum(pName);
++        }
++
++        JMapInfo* getAutoEffectListBinary() {
++            return MR::getParticleResourceHolder()->getAutoEffectListBinary();
++        }
++
++        void deleteParticleEmitter(ParticleEmitter* pEmitter) {
++            if (pEmitter->mEmitter != nullptr) {
++                pEmitter->mEmitter->playCalcEmitter();
++                pEmitter->mEmitter->becomeInvalidEmitter();
++            }
++        }
++
++        void setLinkSingleEmitter(ParticleEmitter* pEmitter, SingleEmitter* pSingleEmitter) {
++            pEmitter->mEmitter->setUserWork(reinterpret_cast<uintptr_t>(pSingleEmitter));
++        }
++
++        SingleEmitter* getLinkSingleEmitter(const JPABaseEmitter* pEmitter) {
++            return reinterpret_cast<SingleEmitter*>(pEmitter->getUserWork());
++        }
++
++        void createParticleEmitter(ParticleEmitter* pEmitter, JPAEmitterManager* pManager, const TVec3f& rPosition,
++                                   u16 userIndex, u8 groupId, u8 resourceManagerId) {
++            JPABaseEmitter* emitter = pManager->createSimpleEmitterID(rPosition, userIndex, groupId, resourceManagerId, nullptr, nullptr);
++            if (emitter != nullptr) {
++                pEmitter->mEmitter = emitter;
++                pEmitter->init(userIndex);
++            }
++        }
++
++        bool isExistInResource(u16* pIndex, const char* pName, s32 index) {
++            char name[42];
++            snprintf(name, sizeof(name), "%s%02d", pName, index);
++            return MR::getParticleResourceHolder()->isExistInResource(name, pIndex);
++        }
++    };  // namespace Effect
++};  // namespace MR
+--- /dev/null
++++ b/pc-port/src/Game/Effect/MultiEmitter.hpp
+@@ -0,0 +1,119 @@
++#pragma once
++
++#include "Game/Util/Array.hpp"
++#include <JSystem/JGeometry/TVec.hpp>
++
++class AutoEffectInfo;
++class EffectSystem;
++class JPAParticleCallBack;
++class MultiEmitterCallBack;
++class MultiEmitterCallBackBase;
++class MultiEmitterParticleCallBack;
++class ParticleEmitter;
++class SingleEmitter;
++class SyncBckEffectInfo;
++class XanimePlayer;
++
++class MultiEmitter {
++public:
++    MultiEmitter(const char*, const TVec3f*, const TVec3f*, const TVec3f*, const TVec3f&);
++    MultiEmitter(const char*, MtxPtr, const TVec3f&);
++    MultiEmitter(const char*, MtxPtr, const TVec3f*, const TVec3f&);
++    MultiEmitter(const char*);
++
++    void createEmitter();
++    void createEmitterWithCallBack(MultiEmitterCallBackBase*);
++
++    void deleteEmitter();
++    void forceDeleteEmitter();
++    void forceDelete(EffectSystem*);
++    void deleteForeverEmitter();
++    void playCalcAndDeleteForeverEmitter();
++
++    bool isValid() const;
++    bool isExistOneTimeEmitter() const;
++
++    void setHostSRT(const TVec3f*, const TVec3f*, const TVec3f*);
++    void setHostMtx(MtxPtr);
++    void setOffset(const TVec3f&);
++    void setBaseScale(f32);
++    void setName(const char*);
++    bool isEqualName(u16) const;
++
++    ParticleEmitter* getParticleEmitter(int) const;
++    void create(EffectSystem*);
++    void scanParticleEmitter(EffectSystem*);
++
++    void forceFollowOn();
++    void forceFollowOff();
++    void forceScaleOn();
++
++    void initSyncBck(XanimePlayer*, const char*, s32, f32);
++    void onDeleteSyncBck(bool, f32);
++    void addSyncBck(const XanimePlayer*, const char*);
++    void setContinueBckEnd(bool);
++    void onCreateSyncClipping();
++    void onForceDeleteSyncClipping();
++    void stopEmitterOnClipped();
++    void playEmitterOffClipped();
++
++    void setDrawOrder(s32);
++
++    void addChildEmitter(MultiEmitter*);
++
++    void setGlobalRotationDegree(const TVec3f&, s32);
++
++    void allocateEmitter(const char*);
++    SingleEmitter* getValidEmitter(s32, bool);
++    void createOneTimeEmitter();
++    void createForeverEmitter();
++
++    // In MultiEmitterAccess
++    void setGlobalRotation(const TVec3s&, s32);
++    void setGlobalTranslation(const TVec3f&, s32);
++    void setGlobalScale(const TVec3f&, s32);
++    void setGlobalSRTMatrix(const MtxPtr, s32);
++    void setGlobalPrmColor(u8, u8, u8, s32);
++    void setGlobalEnvColor(u8, u8, u8, s32);
++    void setLocalScale(const TVec3f&, s32);
++    void setDirectionalSpeed(f32, s32);
++    void setRate(f32, s32);
++    void stopCalcEmitter(s32);
++    void playCalcEmitter(s32);
++    void stopDrawParticle(s32);
++    void playDrawParticle(s32);
++    void setParticleCallBackPtr(JPAParticleCallBack*, s32);
++    void pauseOff(s32);
++
++    // In MarioEffect
++    void setGlobalScale(f32, s32);
++
++    inline bool isFlagOn(u16 flag) const {
++        u16 mask = mFlags & flag;
++        return mask == flag;
++    }
++
++    inline bool isFlagOff(u16 flag) const {
++        u16 mask = mFlags & flag;
++        return mask != flag;
++    }
++
++    inline void turnFlagOn(u16 flag) {
++        mFlags |= flag;
++    }
++
++    inline void turnFlagOff(u16 flag) {
++        mFlags &= ~flag;
++    }
++
++    /* 0x00 */ MR::AssignableArray< SingleEmitter > mEmitters;
++    /* 0x08 */ MR::Vector< MR::FixedArray< MultiEmitter*, 4 > > mChildren;
++    /* 0x1C */ MultiEmitterCallBack* mCallBack;
++    /* 0x20 */ MultiEmitterParticleCallBack* mParticleCallBack;
++    /* 0x24 */ SyncBckEffectInfo* _24;
++    /* 0x28 */ const AutoEffectInfo* _28;
++    /* 0x2C */ f32 _2C;
++    /* 0x30 */ f32 _30;
++    /* 0x34 */ u16 mHash;
++    /* 0x36 */ u8 mFlags;
++};
+--- /dev/null
++++ b/pc-port/src/Game/Effect/MultiEmitterCallBack.hpp
+@@ -0,0 +1,81 @@
++#pragma once
++
++#include "Game/Util/Color.hpp"
++#include <JSystem/JGeometry/TVec.hpp>
++#include <JSystem/JParticle/JPAEmitterCallBack.hpp>
++
++enum { FORCE_FOLLOW_ON = 0x1, FORCE_FOLLOW_OFF = 0x2, FORCE_SCALE_ON = 0x10, RESET_FOLLOW_CURRENT = 0x40, BASE_SCALE = 0x100 };
++
++class MultiEmitter;
++
++class MultiEmitterCallBackBase : public JPAEmitterCallBack {
++public:
++    MultiEmitterCallBackBase() {};
++
++    virtual ~MultiEmitterCallBackBase() {};
++    virtual void init(JPABaseEmitter*) {};
++};
++
++class MultiEmitterCallBack : public MultiEmitterCallBackBase {
++public:
++    struct FlagSRT {
++        bool mScale;
++        bool mRotation;
++        bool mTranslation;
++
++        inline bool isTransform() const {
++            return mScale || mRotation || mTranslation ? true : false;
++        }
++    };
++
++    MultiEmitterCallBack(const MultiEmitter*, const TVec3f&);
++    MultiEmitterCallBack(const MultiEmitter*, const TVec3f*, const TVec3f*, const TVec3f*, const TVec3f&);
++    MultiEmitterCallBack(const MultiEmitter*, MtxPtr, const TVec3f&);
++    MultiEmitterCallBack(const MultiEmitter*, MtxPtr, const TVec3f*, const TVec3f&);
++
++    void execute(JPABaseEmitter*);
++    void setHostSRT(const TVec3f*, const TVec3f*, const TVec3f*);
++    void setHostMtx(MtxPtr);
++    void setBaseScale(f32);
++    void forceFollowOn();
++    void forceFollowOff();
++    void forceScaleOn();
++    void resetFollowCurrent();
++    void init(JPABaseEmitter*);
++    void setSRTFromHostMtx(JPABaseEmitter*, MtxPtr, const FlagSRT&, bool);
++    void setSRTFromHostSRT(JPABaseEmitter*, const FlagSRT&, bool);
++    void setScaleFromHostScale(JPABaseEmitter*, const TVec3f&, bool, bool);
++    bool effectLight(JPABaseEmitter*) NO_INLINE;
++    void followSRT(JPABaseEmitter*, bool);
++    void setColor(JPABaseEmitter*);
++    void isFollowSRT(FlagSRT*, bool) const;
++
++    inline bool isFlagOn(u16 flag) const {
++        u16 mask = mFlags & flag;
++        return mask == flag;
++    }
++
++    inline bool isFlagOff(u16 flag) const {
++        u16 mask = mFlags & flag;
++        return mask != flag;
++    }
++
++    inline void turnFlagOn(u16 flag) {
++        mFlags |= flag;
++    }
++
++    inline void turnFlagOff(u16 flag) {
++        mFlags &= ~flag;
++    }
++
++    /* 0x04 */ const MultiEmitter* mEmitter;
++    /* 0x08 */ const TVec3f* mScale;
++    /* 0x0C */ const TVec3f* mRotation;
++    /* 0x10 */ const TVec3f* mTranslation;
++    /* 0x14 */ MtxPtr mMtx;
++    /* 0x18 */ TVec3f _18;
++    /* 0x24 */ f32 mBaseScale;
++    /* 0x28 */ Color8 mPrmColor;
++    /* 0x2C */ Color8 mEnvColor;
++    /* 0x30 */ u16 mFlags;
++};
+--- /dev/null
++++ b/pc-port/src/Game/Effect/ParticleCalcExecutor.cpp
+@@ -0,0 +1,85 @@
++#include "Game/Effect/ParticleCalcExecutor.hpp"
++#include "Game/Effect/EffectSystem.hpp"
++#include "Game/Effect/ParticleEmitterHolder.hpp"
++#include "Game/NameObj/NameObjAdaptor.hpp"
++#include "Game/Util/Functor.hpp"
++#include "Game/Util/ObjUtil.hpp"
++#include "JSystem/JParticle/JPAEmitterManager.hpp"
++
++ParticleCalcExecutor::ParticleCalcExecutor(const EffectSystem* pHost, bool createAdaptor)
++    : mHost(pHost), _4(nullptr), _8(nullptr), _C(nullptr), _10(nullptr), _14(true), _15(false) {
++    if (createAdaptor) {
++        initMovementAdaptor();
++    }
++}
++
++void ParticleCalcExecutor::movementNormal() {
++    if (_14 && _15) {
++        mHost->mEmitterHolder->update(false);
++        mHost->mEmitterManager->calc(0);
++        mHost->mEmitterManager->calc(1);
++        mHost->mEmitterManager->calc(2);
++        mHost->mEmitterManager->calc(3);
++        mHost->mEmitterManager->calc(4);
++        mHost->mEmitterManager->calc(5);
++        mHost->mEmitterManager->calc(6);
++        mHost->mEmitterManager->calc(7);
++        mHost->mEmitterManager->calc(8);
++    }
++    _15 = false;
++}
++
++void ParticleCalcExecutor::movementIgnorePause3D() {
++    if (_15) {
++        mHost->mEmitterHolder->update(true);
++        mHost->mEmitterManager->calc(1);
++    }
++}
++
++void ParticleCalcExecutor::movementIgnorePause2D() {
++    if (_15) {
++        mHost->mEmitterHolder->update(true);
++        mHost->mEmitterManager->calc(7);
++    }
++}
++
++void ParticleCalcExecutor::movementCheckUpdate() {
++    _15 = true;
++}
++
++void ParticleCalcExecutor::requestMovementOnPauseIgnore() {
++    MR::requestMovementOn(_4);
++    MR::requestMovementOn(_8);
++    MR::requestMovementOn(_C);
++}
++
++void ParticleCalcExecutor::initMovementAdaptor() {
++    _4 = new NameObjAdaptor("パーティクル");
++    {
++        const MR::FunctorBase& functor = MR::Functor(this, &ParticleCalcExecutor::movementNormal);
++        NameObjAdaptor* pAdaptor = _4;
++        pAdaptor->connectToCalcAnim(functor);
++        MR::connectToScene(pAdaptor, -1, 19, -1, -1);
++    }
++    _8 = new NameObjAdaptor("ポーズ無効3Dパーティクル");
++    {
++        const MR::FunctorBase& functor = MR::Functor(this, &ParticleCalcExecutor::movementIgnorePause3D);
++        NameObjAdaptor* pAdaptor = _8;
++        pAdaptor->connectToCalcAnim(functor);
++        MR::connectToScene(pAdaptor, -1, 20, -1, -1);
++    }
++    _C = new NameObjAdaptor("ポーズ無効2Dパーティクル");
++    {
++        const MR::FunctorBase& functor = MR::Functor(this, &ParticleCalcExecutor::movementIgnorePause2D);
++        NameObjAdaptor* pAdaptor = _C;
++        pAdaptor->connectToCalcAnim(functor);
++        MR::connectToScene(pAdaptor, -1, 20, -1, -1);
++    }
++    _10 = new NameObjAdaptor("更新チェック");
++    {
++        const MR::FunctorBase& functor = MR::Functor(this, &ParticleCalcExecutor::movementCheckUpdate);
++        NameObjAdaptor* pAdaptor = _10;
++        pAdaptor->connectToMovement(functor);
++        MR::connectToScene(pAdaptor, 20, -1, -1, -1);
++    }
++}
+--- /dev/null
++++ b/pc-port/src/Game/Effect/ParticleCalcExecutor.hpp
+@@ -0,0 +1,24 @@
++#pragma once
++
++class EffectSystem;
++class NameObjAdaptor;
++
++class ParticleCalcExecutor {
++public:
++    ParticleCalcExecutor(const EffectSystem*, bool);
++
++    void movementNormal();
++    void movementIgnorePause3D();
++    void movementIgnorePause2D();
++    void movementCheckUpdate();
++    void requestMovementOnPauseIgnore();
++    void initMovementAdaptor();
++
++    /* 0x00 */ const EffectSystem* mHost;
++    /* 0x04 */ NameObjAdaptor* _4;
++    /* 0x08 */ NameObjAdaptor* _8;
++    /* 0x0C */ NameObjAdaptor* _C;
++    /* 0x10 */ NameObjAdaptor* _10;
++    /* 0x14 */ bool _14;
++    /* 0x15 */ bool _15;
++};
+--- /dev/null
++++ b/pc-port/src/Game/Effect/ParticleDrawExecutor.cpp
+@@ -0,0 +1,139 @@
++#include "Game/Effect/ParticleDrawExecutor.hpp"
++#include "Game/Effect/EffectSystem.hpp"
++#include "Game/NameObj/NameObjAdaptor.hpp"
++#include "Game/Util/CameraUtil.hpp"
++#include "Game/Util/Color.hpp"
++#include "Game/Util/Functor.hpp"
++#include "Game/Util/ObjUtil.hpp"
++#include "Game/Util/ScreenUtil.hpp"
++#include "Game/Util/SystemUtil.hpp"
++#include "JSystem/J3DGraphBase/J3DSys.hpp"
++#include "JSystem/JParticle/JPAEmitterManager.hpp"
++#include "JSystem/JUtility/JUTVideo.hpp"
++
++namespace {
++    void connectToSceneDrawAdaptor(NameObjAdaptor*, const MR::FunctorBase&, int) NO_INLINE;
++
++    void connectToSceneDrawAdaptor(NameObjAdaptor* pAdaptor, const MR::FunctorBase& rFunctor, int drawType) {
++        pAdaptor->connectToDraw(rFunctor);
++        MR::connectToScene(pAdaptor, -1, -1, -1, drawType);
++        MR::registerPreDrawFunction(MR::Functor_Inline(ParticleDrawExecutor::initDraw), drawType);
++    }
++}  // namespace
++
++ParticleDrawExecutor::ParticleDrawExecutor(const EffectSystem* pHost, bool createAdaptor)
++    : mHost(pHost), _4(nullptr), _8(nullptr), _C(nullptr), _10(nullptr), _14(nullptr), _18(nullptr), _1C(nullptr), _20(true), _21(false) {
++    if (createAdaptor) {
++        initDrawAdaptor();
++    }
++}
++
++void ParticleDrawExecutor::initDraw() {
++    GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, Color8(0, 0, 0, 0));
++}
++
++void ParticleDrawExecutor::draw3D() const {
++    drawWithViewMtx3D(MR::getCameraViewMtx());
++}
++
++void ParticleDrawExecutor::draw2D() const {
++    if (_20) {
++        TPos3f viewMtx;
++        viewMtx.identity();
++        JPADrawInfo info(viewMtx.toMtxPtr());
++        f32 width;
++        f32 height = static_cast< s32 >(JUTVideo::getManager()->getEfbHeight());
++        width = MR::isScreen16Per9() ? MR::getScreenWidth() : 608.0f;
++        width *= 0.5f;
++        height *= 0.5f;
++        Mtx44 projMtx;
++        C_MTXOrtho(projMtx, height, -height, -width, width, -1000.0f, 1000.0f);
++        GXSetProjection(projMtx, GX_ORTHOGRAPHIC);
++        GXSetCullMode(GX_CULL_NONE);
++        GXSetZMode(GX_FALSE, GX_NEVER, GX_FALSE);
++        C_MTXLightOrtho(info.mPrjMtx, height, -height, -width, width, 0.5f, 0.5f, 0.5f, 0.5f);
++        mHost->mEmitterManager->draw(&info, 6);
++        GXSetClipMode(GX_CLIP_ENABLE);
++        mHost->mEmitterManager->draw(&info, 7);
++        GXSetClipMode(GX_CLIP_ENABLE);
++    }
++}
++
++void ParticleDrawExecutor::drawIndirect() const {
++    if (_20) {
++        JPADrawInfo info(j3dSys.getViewMtx(), MR::getFovy(), MR::getAspect());
++        mHost->mEmitterManager->draw(&info, 2);
++        GXSetClipMode(GX_CLIP_ENABLE);
++    }
++}
++
++void ParticleDrawExecutor::drawAfterIndirect() const {
++    drawWithViewMtxAfterIndirect(MR::getCameraViewMtx());
++}
++
++void ParticleDrawExecutor::drawFor2DModel() const {
++    if (_20) {
++        JPADrawInfo info(j3dSys.getViewMtx());
++        mHost->mEmitterManager->draw(&info, 8);
++        GXSetClipMode(GX_CLIP_ENABLE);
++    }
++}
++
++void ParticleDrawExecutor::drawForBloomEffect() const {
++    drawWithViewMtxForBloomEffect(MR::getCameraViewMtx());
++}
++
++void ParticleDrawExecutor::drawAfterImageEffect() const {
++    drawWithViewMtxAfterImageEffect(MR::getCameraViewMtx());
++}
++
++void ParticleDrawExecutor::drawWithViewMtx3D(const TPos3f& rViewMtx) const {
++    if (_20) {
++        JPADrawInfo info(rViewMtx);
++        mHost->mEmitterManager->draw(&info, 0);
++        GXSetClipMode(GX_CLIP_ENABLE);
++        mHost->mEmitterManager->draw(&info, 1);
++        GXSetClipMode(GX_CLIP_ENABLE);
++    }
++}
++
++void ParticleDrawExecutor::drawWithViewMtxAfterIndirect(const TPos3f& rViewMtx) const {
++    if (_20) {
++        JPADrawInfo info(rViewMtx);
++        mHost->mEmitterManager->draw(&info, 3);
++        GXSetClipMode(GX_CLIP_ENABLE);
++    }
++}
++
++void ParticleDrawExecutor::drawWithViewMtxForBloomEffect(const TPos3f& rViewMtx) const {
++    if (_20) {
++        JPADrawInfo info(rViewMtx);
++        mHost->mEmitterManager->draw(&info, 4);
++        GXSetClipMode(GX_CLIP_ENABLE);
++    }
++}
++
++void ParticleDrawExecutor::drawWithViewMtxAfterImageEffect(const TPos3f& rViewMtx) const {
++    if (_20) {
++        JPADrawInfo info(rViewMtx);
++        mHost->mEmitterManager->draw(&info, 5);
++        GXSetClipMode(GX_CLIP_ENABLE);
++    }
++}
++
++void ParticleDrawExecutor::initDrawAdaptor() {
++    _4 = new NameObjAdaptor("3Dパーティクル");
++    connectToSceneDrawAdaptor(_4, MR::Functor(static_cast< const ParticleDrawExecutor* >(this), &ParticleDrawExecutor::draw3D), 71);
++    _8 = new NameObjAdaptor("2Dパーティクル");
++    connectToSceneDrawAdaptor(_8, MR::Functor(static_cast< const ParticleDrawExecutor* >(this), &ParticleDrawExecutor::draw2D), 74);
++    _C = new NameObjAdaptor("インダイレクトパーティクル");
++    connectToSceneDrawAdaptor(_C, MR::Functor(static_cast< const ParticleDrawExecutor* >(this), &ParticleDrawExecutor::drawIndirect), 72);
++    _10 = new NameObjAdaptor("インダイレクト後パーティクル");
++    connectToSceneDrawAdaptor(_10, MR::Functor(static_cast< const ParticleDrawExecutor* >(this), &ParticleDrawExecutor::drawAfterIndirect), 73);
++    _14 = new NameObjAdaptor("2Dモデル用パーティクル");
++    connectToSceneDrawAdaptor(_14, MR::Functor(static_cast< const ParticleDrawExecutor* >(this), &ParticleDrawExecutor::drawFor2DModel), 75);
++    _18 = new NameObjAdaptor("ブルーム用パーティクル");
++    connectToSceneDrawAdaptor(_18, MR::Functor(static_cast< const ParticleDrawExecutor* >(this), &ParticleDrawExecutor::drawForBloomEffect), 76);
++    _1C = new NameObjAdaptor("イメージエフェクト後パーティクル");
++    connectToSceneDrawAdaptor(_1C, MR::Functor(static_cast< const ParticleDrawExecutor* >(this), &ParticleDrawExecutor::drawAfterImageEffect), 77);
++}
+--- /dev/null
++++ b/pc-port/src/Game/Effect/ParticleDrawExecutor.hpp
+@@ -0,0 +1,36 @@
++#pragma once
++
++#include <JSystem/JGeometry/TMatrix.hpp>
++
++class EffectSystem;
++class NameObjAdaptor;
++
++class ParticleDrawExecutor {
++public:
++    ParticleDrawExecutor(const EffectSystem*, bool);
++
++    static void initDraw();
++    void draw3D() const;
++    void draw2D() const;
++    void drawIndirect() const;
++    void drawAfterIndirect() const;
++    void drawFor2DModel() const;
++    void drawForBloomEffect() const;
++    void drawAfterImageEffect() const;
++    void drawWithViewMtx3D(const TPos3f&) const;
++    void drawWithViewMtxAfterIndirect(const TPos3f&) const;
++    void drawWithViewMtxForBloomEffect(const TPos3f&) const;
++    void drawWithViewMtxAfterImageEffect(const TPos3f&) const;
++    void initDrawAdaptor();
++
++    /* 0x00 */ const EffectSystem* mHost;
++    /* 0x04 */ NameObjAdaptor* _4;
++    /* 0x08 */ NameObjAdaptor* _8;
++    /* 0x0C */ NameObjAdaptor* _C;
++    /* 0x10 */ NameObjAdaptor* _10;
++    /* 0x14 */ NameObjAdaptor* _14;
++    /* 0x18 */ NameObjAdaptor* _18;
++    /* 0x1C */ NameObjAdaptor* _1C;
++    /* 0x20 */ bool _20;
++    /* 0x21 */ bool _21;
++};
+--- /dev/null
++++ b/pc-port/src/Game/Effect/ParticleEmitter.cpp
+@@ -0,0 +1,33 @@
++#include "Game/Effect/ParticleEmitter.hpp"
++#include <JSystem/JParticle/JPAEmitter.hpp>
++
++ParticleEmitter::ParticleEmitter() : mEmitter(nullptr), mPaused(false), mStopped(false) {
++}
++
++void ParticleEmitter::invalidate() {
++    mEmitter = nullptr;
++}
++
++void ParticleEmitter::init(u16 unused) {
++    mPaused = false;
++    mStopped = false;
++    mEmitter->mStatus |= JPAEmtrStts_Immortal;
++}
++
++void ParticleEmitter::pauseOn() {
++    bool paused = mEmitter && mEmitter->mStatus & JPAEmtrStts_StopCalc;
++
++    if (paused) {
++        return;
++    }
++
++    mEmitter->mStatus |= JPAEmtrStts_StopCalc;
++    mPaused = true;
++}
++
++void ParticleEmitter::pauseOff() {
++    if (mPaused) {
++        mEmitter->mStatus &= ~JPAEmtrStts_StopCalc;
++        mPaused = false;
++    }
++}
+--- /dev/null
++++ b/pc-port/src/Game/Effect/ParticleEmitter.hpp
+@@ -0,0 +1,34 @@
++#pragma once
++
++#include <JSystem/JGeometry/TVec.hpp>
++#include <JSystem/JParticle/JPAEmitter.hpp>
++#include <revolution/types.h>
++
++class JPABaseEmitter;
++
++class ParticleEmitter {
++public:
++    ParticleEmitter();
++
++    void invalidate();
++    void init(u16);
++    void pauseOn();
++    void pauseOff();
++    bool isValid() const {
++        return mEmitter != nullptr;
++    }
++    bool isContinuousParticle() const NO_INLINE {
++        return mEmitter != nullptr && mEmitter->mMaxFrame == 0;
++    }
++
++    // In MultiEmitterAccess
++    void setGlobalRotation(const TVec3s&);
++    void setGlobalScale(const TVec3f&);
++    void setGlobalSRTMatrix(const MtxPtr);
++    void setGlobalPrmColor(u8, u8, u8);
++    void setGlobalEnvColor(u8, u8, u8);
++
++    /* 0x0 */ JPABaseEmitter* mEmitter;
++    /* 0x4 */ bool mPaused;
++    /* 0x5 */ bool mStopped;  // Not sure if it is stopped, but good chance it is.
++};
+--- /dev/null
++++ b/pc-port/src/Game/Effect/ParticleEmitterHolder.cpp
+@@ -0,0 +1,64 @@
++#include "Game/Effect/ParticleEmitterHolder.hpp"
++#include "Game/Effect/EffectSystem.hpp"
++
++#include "Game/Effect/EffectSystemUtil.hpp"
++#include "Game/Effect/MultiEmitterCallBack.hpp"
++#include <algorithm>
++#include <functional.hpp>
++
++ParticleEmitterHolder::ParticleEmitterHolder(const EffectSystem* pEffectSystem, int numEmitters) : mEffectSystem(pEffectSystem) {
++    mEmitters.init(numEmitters);
++}
++
++void ParticleEmitterHolder::update(bool isCalcFor2D) {
++    for (ParticleEmitter* pEmitter = mEmitters.begin(); pEmitter != mEmitters.end(); pEmitter++) {
++        JPABaseEmitter* pBaseEmitter = pEmitter->mEmitter;
++        if (pBaseEmitter == nullptr || isCalcFor2D != (pBaseEmitter->getGroupID() == 1)) {
++            continue;
++        }
++
++        if (pBaseEmitter->isEnableDeleteEmitter()) {
++            mEffectSystem->forceDeleteEmitter(pEmitter);
++        } else if (!pEmitter->mStopped) {
++            if (MR::Effect::getLinkSingleEmitter(pBaseEmitter) != nullptr) {
++                static_cast< MultiEmitterCallBackBase* >(pBaseEmitter->mpEmtrCallBack)->init(pBaseEmitter);
++            }
++            pEmitter->mStopped = true;
++        }
++    }
++}
++
++void ParticleEmitterHolder::forceDeleteAllOneTimeEmitters() {
++    for (ParticleEmitter* pEmitter = mEmitters.begin(); pEmitter != mEmitters.end(); pEmitter++) {
++        if (pEmitter->isValid() && !pEmitter->isContinuousParticle()) {
++            mEffectSystem->forceDeleteEmitter(pEmitter);
++        }
++    }
++}
++
++void ParticleEmitterHolder::forceDeleteAllEmitters() {
++    for (ParticleEmitter* pEmitter = mEmitters.begin(); pEmitter != mEmitters.end(); pEmitter++) {
++        mEffectSystem->forceDeleteEmitter(pEmitter);
++    }
++}
++
++void ParticleEmitterHolder::requestMovementOnAllEmitters() {
++    for (ParticleEmitter* pEmitter = mEmitters.begin(); pEmitter != mEmitters.end(); pEmitter++) {
++        if (pEmitter->isValid() && pEmitter->mEmitter->getGroupID() != 1 && pEmitter->mEmitter->getGroupID() != 7) {
++            pEmitter->pauseOff();
++        }
++    }
++}
++
++ParticleEmitter* ParticleEmitterHolder::findAvailableParticleEmitter() {
++    ParticleEmitter* pEmitter = std::find_if(mEmitters.begin(), mEmitters.end(), std::not1(std::mem_fun_ref(&ParticleEmitter::isValid)));
++    return pEmitter == mEmitters.end() ? nullptr : pEmitter;
++}
++
++void ParticleEmitterHolder::requestMovementOffAllLoopEmitters() {
++    for (ParticleEmitter* pEmitter = mEmitters.begin(); pEmitter != mEmitters.end(); pEmitter++) {
++        if (pEmitter->isValid() && pEmitter->isContinuousParticle()) {
++            pEmitter->pauseOn();
++        }
++    }
++}
+--- /dev/null
++++ b/pc-port/src/Game/Effect/ParticleEmitterHolder.hpp
+@@ -0,0 +1,21 @@
++#pragma once
++
++#include "Game/Effect/ParticleEmitter.hpp"
++#include "Game/Util/Array.hpp"
++
++class EffectSystem;
++
++class ParticleEmitterHolder {
++public:
++    ParticleEmitterHolder(EffectSystem const*, int);
++
++    void update(bool);
++    void forceDeleteAllOneTimeEmitters();
++    void forceDeleteAllEmitters();
++    void requestMovementOnAllEmitters();
++    ParticleEmitter* findAvailableParticleEmitter();
++    void requestMovementOffAllLoopEmitters();
++
++    EffectSystem const* mEffectSystem;                 // 0x0
++    MR::AssignableArray< ParticleEmitter > mEmitters;  // 0x4
++};
+--- /dev/null
++++ b/pc-port/src/Game/Effect/SingleEmitter.cpp
+@@ -0,0 +1,55 @@
++#include "Game/Effect/SingleEmitter.hpp"
++#include "Game/Effect/EffectSystem.hpp"
++#include "Game/Effect/EffectSystemUtil.hpp"
++
++SingleEmitter::SingleEmitter() {
++    mEmitter = nullptr;
++    _4 = 0;
++    mGroupId = 0;
++    mSpawn = SINGLE_EMITTER_UNDEF_SPAWN;
++}
++
++void SingleEmitter::init(u16 unk) {
++    _4 = unk;
++}
++
++void SingleEmitter::deleteEmitter() {
++    if (isValid()) {
++        MR::Effect::deleteParticleEmitter(mEmitter);
++    }
++}
++
++void SingleEmitter::scanParticleEmitter(EffectSystem* pSystem) {
++    ParticleEmitter* emitter;
++    if (mSpawn == SINGLE_EMITTER_UNDEF_SPAWN) {
++        emitter = pSystem->createEmitter(_4, mGroupId, 0);
++        mSpawn = emitter->isContinuousParticle() ? SINGLE_EMITTER_CONTINUOUS_SPAWN : SINGLE_EMITTER_ONE_TIME_SPAWN;
++        pSystem->forceDeleteEmitter(emitter);
++    }
++}
++
++bool SingleEmitter::isOneTime() const {
++    if (mEmitter) {
++        return !mEmitter->isContinuousParticle();
++    } else {
++        return !mSpawn;
++    }
++}
++
++bool SingleEmitter::isValid() const {
++    if (mEmitter == nullptr) {
++        return false;
++    } else {
++        return mEmitter->mEmitter != nullptr;
++    }
++}
++
++void SingleEmitter::link(ParticleEmitter* pEmitter) {
++    mEmitter = pEmitter;
++    MR::Effect::setLinkSingleEmitter(pEmitter, this);
++}
++
++void SingleEmitter::unlink() {
++    MR::Effect::setLinkSingleEmitter(mEmitter, nullptr);
++    mEmitter = nullptr;
++}
+\ No newline at end of file
+--- /dev/null
++++ b/pc-port/src/Game/Effect/SingleEmitter.hpp
+@@ -0,0 +1,27 @@
++#pragma once
++
++#include "Game/Effect/ParticleEmitter.hpp"
++
++class EffectSystem;
++
++enum SingleEmitterSpawn { SINGLE_EMITTER_ONE_TIME_SPAWN, SINGLE_EMITTER_CONTINUOUS_SPAWN, SINGLE_EMITTER_UNDEF_SPAWN };
++
++class SingleEmitter {
++public:
++    SingleEmitter();
++
++    void init(u16);
++    void deleteEmitter();
++    void scanParticleEmitter(EffectSystem*);
++    bool isOneTime() const;
++    bool isValid() const;
++    void link(ParticleEmitter*);
++    void unlink();
++
++    void setGroupID(u8);
++
++    /* 0x0 */ ParticleEmitter* mEmitter;
++    /* 0x4 */ u16 _4;
++    /* 0x6 */ u8 mGroupId;
++    /* 0x7 */ s8 mSpawn;
++};
+--- /dev/null
++++ b/pc-port/src/Game/NameObj/NameObjAdaptor.cpp
+@@ -0,0 +1,49 @@
++#include "Game/NameObj/NameObjAdaptor.hpp"
++#include "Game/Util/Functor.hpp"
++
++NameObjAdaptor::NameObjAdaptor(const char* pName)
++    : NameObj(pName), mMovementFunc(nullptr), mCalcAnimFunc(nullptr), mCalcViewFunc(nullptr), mDrawAnimFunc(nullptr) {
++}
++
++NameObjAdaptor::~NameObjAdaptor() {
++    delete mMovementFunc;
++    delete mCalcAnimFunc;
++    delete mCalcViewFunc;
++    delete mDrawAnimFunc;
++}
++
++void NameObjAdaptor::movement() {
++    if (mMovementFunc != nullptr) {
++        (*mMovementFunc)();
++    }
++}
++
++void NameObjAdaptor::calcAnim() {
++    if (mCalcAnimFunc != nullptr) {
++        (*mCalcAnimFunc)();
++    }
++}
++
++void NameObjAdaptor::calcViewAndEntry() {
++    if (mCalcViewFunc != nullptr) {
++        (*mCalcViewFunc)();
++    }
++}
++
++void NameObjAdaptor::draw() const {
++    if (mDrawAnimFunc != nullptr) {
++        (*mDrawAnimFunc)();
++    }
++}
++
++void NameObjAdaptor::connectToMovement(const MR::FunctorBase& rFunctor) {
++    mMovementFunc = rFunctor.clone(nullptr);
++}
++
++void NameObjAdaptor::connectToCalcAnim(const MR::FunctorBase& rFunctor) {
++    mCalcAnimFunc = rFunctor.clone(nullptr);
++}
++
++void NameObjAdaptor::connectToDraw(const MR::FunctorBase& rFunctor) {
++    mDrawAnimFunc = rFunctor.clone(nullptr);
++}
+--- /dev/null
++++ b/pc-port/src/Game/NameObj/NameObjAdaptor.hpp
+@@ -0,0 +1,28 @@
++#pragma once
++
++#include "Game/NameObj/NameObj.hpp"
++
++namespace MR {
++    class FunctorBase;
++};  // namespace MR
++
++/// @brief Implementation of a NameObj that stores function pointers to movement, calcAnim, calcView, and draw functions.
++class NameObjAdaptor : public NameObj {
++public:
++    NameObjAdaptor(const char*);
++
++    virtual ~NameObjAdaptor();
++    virtual void movement();
++    virtual void draw() const;
++    virtual void calcAnim();
++    virtual void calcViewAndEntry();
++
++    void connectToMovement(const MR::FunctorBase&);
++    void connectToCalcAnim(const MR::FunctorBase&);
++    void connectToDraw(const MR::FunctorBase&);
++
++    MR::FunctorBase* mMovementFunc;  // 0xC
++    MR::FunctorBase* mCalcAnimFunc;  // 0x10
++    MR::FunctorBase* mCalcViewFunc;  // 0x14
++    MR::FunctorBase* mDrawAnimFunc;  // 0x18
++};
+--- /dev/null
++++ b/pc-port/src/Game/Scene/MultiSceneActor.hpp
+@@ -0,0 +1,66 @@
++#pragma once
++
++#include "Game/NameObj/NameObj.hpp"
++#include <JSystem/JGeometry/TVec.hpp>
++
++class EffectSystem;
++class ModelManager;
++class MultiSceneEffectKeeper;
++class Nerve;
++class Spine;
++
++class MultiSceneActor : public NameObj {
++public:
++    MultiSceneActor(const char*, const char*, bool);
++
++    virtual void init(const JMapInfoIter&);
++    virtual void movement();
++    virtual void calcAnim();
++    virtual void calcViewAndEntry();
++    virtual void appear();
++    virtual void kill();
++    virtual void control();
++
++    ModelManager* getModelManager() const;
++    EffectSystem* getEffectSystem() const;
++    MultiSceneEffectKeeper* getEffectKeeper() const;
++    void initEffect(EffectSystem*, int, const char*);
++    void setNerve(const Nerve*);
++    bool isNerve(const Nerve*) const;
++    void initNerve(const Nerve*);
++    s32 getNerveStep() const;
++
++    /* 0x0C */ TVec3f mTranslation;
++    /* 0x18 */ TVec3f mRotation;
++    /* 0x24 */ TVec3f mScale;
++    /* 0x30 */ bool _30;
++    /* 0x34 */ ModelManager* mModelManager;
++    /* 0x38 */ EffectSystem* mEffectSystem;
++    /* 0x3C */ MultiSceneEffectKeeper* mEffectKeeper;
++    /* 0x40 */ Spine* mSpine;
++};
++
++namespace MultiScene {
++    void startBck(MultiSceneActor*, const char*);
++    void startBtk(MultiSceneActor*, const char*);
++    void startBtp(MultiSceneActor*, const char*);
++    void startBva(MultiSceneActor*, const char*);
++    void setBtpFrameAndStop(MultiSceneActor*, f32);
++    void setBvaFrameAndStop(MultiSceneActor*, f32);
++    bool isBckStopped(MultiSceneActor*);
++    bool isStep(const MultiSceneActor*, s32);
++    bool isFirstStep(const MultiSceneActor*);
++    bool isGreaterStep(const MultiSceneActor*, s32);
++    bool isLessStep(const MultiSceneActor*, s32);
++    bool isLessEqualStep(const MultiSceneActor*, s32);
++    void setNerveAtStep(MultiSceneActor*, const Nerve*, s32);
++    void setNerveAtBckStopped(MultiSceneActor*, const Nerve*);
++    f32 calcNerveRate(const MultiSceneActor*, s32);
++    f32 calcNerveRate(const MultiSceneActor*, s32, s32);
++    f32 calcNerveEaseOutRate(const MultiSceneActor*, s32);
++    f32 calcNerveValue(const MultiSceneActor*, s32, f32, f32);
++    void emitEffect(const MultiSceneActor*, const char*);
++    void deleteEffectAll(const MultiSceneActor*);
++    void forceDeleteEffectAll(const MultiSceneActor*);
++    MtxPtr getJointMtx(const MultiSceneActor*, const char*);
++};  // namespace MultiScene
+--- /dev/null
++++ b/pc-port/src/Game/Scene/MultiSceneEffectKeeper.hpp
+@@ -0,0 +1,27 @@
++#pragma once
++
++#include "Game/Util/Array.hpp"
++
++class EffectSystem;
++class ModelManager;
++class MultiEmitter;
++class MultiSceneActor;
++
++class MultiSceneEffectKeeper {
++public:
++    MultiSceneEffectKeeper(const char*, ModelManager*, int, const char*);
++
++    void init(const MultiSceneActor*, const EffectSystem*);
++    void add(const char*, const TVec3f*, const TVec3f*, const TVec3f*, const char*);
++    void add(const char*, MtxPtr, const char*);
++    MultiEmitter* create(const char*, EffectSystem*);
++    void deleteAll();
++    void forceDeleteAll(EffectSystem*);
++    void clear();
++    MultiEmitter* get(const char*) const;
++    MultiEmitter* find(const char*) const;
++    void registerEmitter(MultiEmitter*, const char*);
++
++    /* 0x00 */ MR::Vector< MR::AssignableArray< MultiEmitter* > > mEmitter;
++    /* 0x0C */ const char* mResName;
++};
+--- /dev/null
++++ b/pc-port/src/Game/Screen/PaneEffectKeeper.hpp
+@@ -0,0 +1,30 @@
++#pragma once
++
++#include "Game/Util/Array.hpp"
++
++class LayoutActor;
++class LayoutManager;
++class EffectSystem;
++class MultiEmitter;
++
++class PaneEffectKeeper {
++public:
++    PaneEffectKeeper(LayoutActor*, const LayoutManager*, int, const char*);
++
++    void init(const LayoutActor*, const EffectSystem*);
++    void add(const char*, const char*, const char*);
++    MultiEmitter* createEmitter(const char*);
++    void deleteEmitter(const char*);
++    void forceDeleteEmitter(const char*);
++    void deleteEmitterAll();
++    void forceDeleteEmitterAll();
++    void clear();
++    MultiEmitter* getEmitter(const char*) const;
++    void changeAnim();
++    void registerEffect(MultiEmitter*, const char*);
++    MultiEmitter* find(const char*) const;
++
++    /* 0x00 */ LayoutActor* mHost;
++    /* 0x04 */ const char* mName;
++    /* 0x08 */ MR::Vector< MR::AssignableArray< MultiEmitter* > > mEmitters;
++};
+--- a/pc-port/src/JSystem/JParticle/JPADrawInfo.hpp
++++ b/pc-port/src/JSystem/JParticle/JPADrawInfo.hpp
+@@ -4,6 +4,11 @@
+ 
+ class JPADrawInfo {
+ public:
++    JPADrawInfo(const Mtx mtx) {
++        PSMTXCopy(mtx, mCamMtx);
++        PSMTXIdentity(mPrjMtx);
++    }
++
+     JPADrawInfo(const Mtx param_0, f32 fovY, f32 aspect) {
+         PSMTXCopy(param_0, mCamMtx);
+         C_MTXLightPerspective(mPrjMtx, fovY, aspect, 0.5f, -0.5f, 0.5f, 0.5f);

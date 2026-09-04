@@ -1,0 +1,62 @@
+[
+  {
+    "file": "ParticleEmitter.d",
+    "sha256": "85478734e519209b38f7be98561e8a0e75445d50cc58ef8aa945b8a85bc34f80",
+    "root_fallback_references": 0
+  },
+  {
+    "file": "EffectSystem.d",
+    "sha256": "5e45cb763e444394541e420645d38ec41924d3114951b72c28b004a99d5b931b",
+    "root_fallback_references": 0
+  },
+  {
+    "file": "EffectSystemUtil.d",
+    "sha256": "b9b270c1dcd5e3434d94857917bd7c6a81299e617f9a416a9fc4d5f52cb19a13",
+    "root_fallback_references": 0
+  },
+  {
+    "file": "AutoEffectGroup.d",
+    "sha256": "96b70a82fff6d57ec2e6ecb85866defa0ad47737a71c69ee618f1429b4925dc2",
+    "root_fallback_references": 0
+  },
+  {
+    "file": "ParticleEmitterHolder.d",
+    "sha256": "fab5d0ed234a2185d0fc03bb50f0517b4351d86003a4ec19008fc7c9cb13dd49",
+    "root_fallback_references": 0
+  },
+  {
+    "file": "AutoEffectGroupHolder.d",
+    "sha256": "2d77ee35c11ab8a0a6499a2d162d14276237742e1cfa597d24fb9092ac59a138",
+    "root_fallback_references": 0
+  },
+  {
+    "file": "SingleEmitter.d",
+    "sha256": "ba0afed9dbd7f763bb0977e7d3521829c1e83fcc1183d349f10bba101b9695b2",
+    "root_fallback_references": 0
+  },
+  {
+    "file": "AutoEffectInfo.d",
+    "sha256": "153578379eb2f44d5f98cec9eb3407bd61d404848a55eea0505006e5a0c4e4be",
+    "root_fallback_references": 0
+  },
+  {
+    "file": "SceneFunction.d",
+    "sha256": "832dae89211b041cf1015bbb2e20f352d2fc2edc0275902c51df5dc59ac74828",
+    "root_fallback_references": 0
+  },
+  {
+    "file": "ParticleDrawExecutor.d",
+    "sha256": "35f82d0efae31ffcd6cd741dcc3dfafc396b8212d36e125f90a1df875c958fd0",
+    "root_fallback_references": 0
+  },
+  {
+    "file": "NameObjAdaptor.d",
+    "sha256": "7b9a6876e85a48521b3212ab1f9e3cd4fe2c359ff64df252b6fc4e9f3f17797e",
+    "root_fallback_references": 0
+  },
+  {
+    "file": "ParticleCalcExecutor.d",
+    "sha256": "eb7c17fbef4d2427d01854971cba036aa6d1935fc87adcb4ff0eebf4150c2175",
+    "root_fallback_references": 0
+  }
+]

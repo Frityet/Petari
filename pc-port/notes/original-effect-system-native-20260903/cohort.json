@@ -1,0 +1,13 @@
+[
+  "Effect/EffectSystem",
+  "Effect/ParticleEmitter",
+  "Effect/ParticleEmitterHolder",
+  "Effect/ParticleDrawExecutor",
+  "Effect/ParticleCalcExecutor",
+  "Effect/AutoEffectGroup",
+  "Effect/AutoEffectGroupHolder",
+  "Effect/AutoEffectInfo",
+  "NameObj/NameObjAdaptor",
+  "Effect/SingleEmitter",
+  "Effect/EffectSystemUtil"
+]

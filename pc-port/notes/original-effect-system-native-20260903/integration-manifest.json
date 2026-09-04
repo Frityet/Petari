@@ -1,0 +1,17 @@
+[
+  {
+    "path": "pc-port/src/Game/Scene/SceneFunction.hpp",
+    "base_sha256": "137d893907409e05c1a00c46aaa7828a5b3eb268f0cf7db1651ab7d458fb9c2a",
+    "final_sha256": "01de95ee02ea801277dd8f5c259d06b296212b322fcbbe604aa877786b85e929"
+  },
+  {
+    "path": "pc-port/src/compat/OriginalSceneEffectInitialization.cpp",
+    "base_sha256": null,
+    "final_sha256": "00c1109531f5361ce20c540e3c0cea114a956ca83f5fe93424edffe1c962a4aa"
+  },
+  {
+    "path": "pc-port/src/compat/SceneObjHolderCompat.cpp",
+    "base_sha256": "f839d25d95c4d80871382a0a15c4cc0711762e91e97c343a5cec76296ec80828",
+    "final_sha256": "4f637005ab2fd26dc681516d11cdd3ed354c900af2aefc2089183dd83bec07c9"
+  }
+]

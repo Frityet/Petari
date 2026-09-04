@@ -1,0 +1,142 @@
+[
+  {
+    "path": "pc-port/src/Game/Effect/AutoEffectGroup.cpp",
+    "base_sha256": null,
+    "final_sha256": "20641858c7a008a5b81700c1d537def6275ced5a773bf6c29d992168fbc640a9"
+  },
+  {
+    "path": "pc-port/src/Game/Effect/AutoEffectGroup.hpp",
+    "base_sha256": null,
+    "final_sha256": "77873297c3bb9f49aa5bda4fca91287cde4091038f84b214de2d528a125f9748"
+  },
+  {
+    "path": "pc-port/src/Game/Effect/AutoEffectGroupHolder.cpp",
+    "base_sha256": null,
+    "final_sha256": "b30eaa5d5c22af22c23537ae14673b0b6493db4f6c3ade189471e183308dbf41"
+  },
+  {
+    "path": "pc-port/src/Game/Effect/AutoEffectGroupHolder.hpp",
+    "base_sha256": null,
+    "final_sha256": "79b4cea7563571a2d679bdf2197f61356c13aebe3221977100e612213591281d"
+  },
+  {
+    "path": "pc-port/src/Game/Effect/AutoEffectInfo.cpp",
+    "base_sha256": null,
+    "final_sha256": "534ca3b92af4854ccf4862e53b94dc8f3418d8901e227e79425122a8f7f368d5"
+  },
+  {
+    "path": "pc-port/src/Game/Effect/AutoEffectInfo.hpp",
+    "base_sha256": null,
+    "final_sha256": "df004264eb9c98df4d26a87d4941ef2899dae2dd0815ec53b0e6b8a5c64a441e"
+  },
+  {
+    "path": "pc-port/src/Game/Effect/EffectSystem.cpp",
+    "base_sha256": null,
+    "final_sha256": "8e0ad3b52ee8b3e0409993b26c753ddf2171cdc7453b3fdaa855bca70ae2eaf3"
+  },
+  {
+    "path": "pc-port/src/Game/Effect/EffectSystem.hpp",
+    "base_sha256": null,
+    "final_sha256": "f863add4b4f9f4991c4536c90fd63334b9d1c64acac449dc0aacc6a9fe542b9c"
+  },
+  {
+    "path": "pc-port/src/Game/Effect/EffectSystemUtil.cpp",
+    "base_sha256": null,
+    "final_sha256": "c4f9f83ddb3cf51c975307d4c0d26137e7691a273848af6afbc16ea3c7ad2f11"
+  },
+  {
+    "path": "pc-port/src/Game/Effect/EffectSystemUtil.hpp",
+    "base_sha256": "fa765cbc06459d165bbf77f17841c306741902f42bce88c2077d4426337061c2",
+    "final_sha256": "fa765cbc06459d165bbf77f17841c306741902f42bce88c2077d4426337061c2"
+  },
+  {
+    "path": "pc-port/src/Game/Effect/MultiEmitter.hpp",
+    "base_sha256": null,
+    "final_sha256": "24298c1f01a0a0f8b066c65f67597a2692f2a3e088112be19f2fc4f4ebcaefd3"
+  },
+  {
+    "path": "pc-port/src/Game/Effect/MultiEmitterCallBack.hpp",
+    "base_sha256": null,
+    "final_sha256": "4dfc7b325689b4f70ea288fc8b44b21080e734a70e67b991fdcbfef9acb4efeb"
+  },
+  {
+    "path": "pc-port/src/Game/Effect/ParticleCalcExecutor.cpp",
+    "base_sha256": null,
+    "final_sha256": "4764ec5073a4c401866a237a493d99d68878e2599607c5bfca4cdce9f077a486"
+  },
+  {
+    "path": "pc-port/src/Game/Effect/ParticleCalcExecutor.hpp",
+    "base_sha256": null,
+    "final_sha256": "3c78e9c644b6530e634b912f2629b7978356a465cc347380d536c4511f8a5dcc"
+  },
+  {
+    "path": "pc-port/src/Game/Effect/ParticleDrawExecutor.cpp",
+    "base_sha256": null,
+    "final_sha256": "ab930a200255aeed18918b44ddfa79a1c2ca39ca38b05ce897e31f6b51a59fc1"
+  },
+  {
+    "path": "pc-port/src/Game/Effect/ParticleDrawExecutor.hpp",
+    "base_sha256": null,
+    "final_sha256": "65cb1dcf7bafc023d4a14b9b550bb48b292d3daad9618708c6b3ff96efdb118a"
+  },
+  {
+    "path": "pc-port/src/Game/Effect/ParticleEmitter.cpp",
+    "base_sha256": null,
+    "final_sha256": "45920a2365e225e583fac7599551778d554284fba980a54de66eb43c4c1802a2"
+  },
+  {
+    "path": "pc-port/src/Game/Effect/ParticleEmitter.hpp",
+    "base_sha256": null,
+    "final_sha256": "1a0f50d2b503adee89129083273c3ed072fd73db77629d7bb9fa0f682daeaba7"
+  },
+  {
+    "path": "pc-port/src/Game/Effect/ParticleEmitterHolder.cpp",
+    "base_sha256": null,
+    "final_sha256": "0936947a99975fe94ae3677a92b45b26594ccf67a777ceac7e60d7adf07704aa"
+  },
+  {
+    "path": "pc-port/src/Game/Effect/ParticleEmitterHolder.hpp",
+    "base_sha256": null,
+    "final_sha256": "5a199086d25da8071abe94a206cf357f543cbc48d98ccf95c064a5e4e28a3144"
+  },
+  {
+    "path": "pc-port/src/Game/Effect/SingleEmitter.cpp",
+    "base_sha256": null,
+    "final_sha256": "83f3c10281e6a93b3191854371688c385745fcc050bcbc9bd74391b33d5a9944"
+  },
+  {
+    "path": "pc-port/src/Game/Effect/SingleEmitter.hpp",
+    "base_sha256": null,
+    "final_sha256": "de92f724c9f5824a534086e17e8311580198764a6472c1069a252d274a4334d1"
+  },
+  {
+    "path": "pc-port/src/Game/NameObj/NameObjAdaptor.cpp",
+    "base_sha256": null,
+    "final_sha256": "21780d330c9f77b4c3fcb1a4c837954a2a0db182d3ac4d52515b488f21fc71ef"
+  },
+  {
+    "path": "pc-port/src/Game/NameObj/NameObjAdaptor.hpp",
+    "base_sha256": null,
+    "final_sha256": "870011aad585c4b6a70621396dcd64dab51fa5651e3e6d5c7150f435f0ef0da8"
+  },
+  {
+    "path": "pc-port/src/Game/Scene/MultiSceneActor.hpp",
+    "base_sha256": null,
+    "final_sha256": "19ce7ac29a6d1904aab1b8f3069d7351ba274008dcef1a9f5448a8bc88d85294"
+  },
+  {
+    "path": "pc-port/src/Game/Scene/MultiSceneEffectKeeper.hpp",
+    "base_sha256": null,
+    "final_sha256": "56385123633534ad5ddcfbba02b4d2e3c85837974b127384399bf9869bdc1c46"
+  },
+  {
+    "path": "pc-port/src/Game/Screen/PaneEffectKeeper.hpp",
+    "base_sha256": null,
+    "final_sha256": "e4a164f0538da48ab5a7a0727e320a543fbe62f5e837409902c8872cdfd3b205"
+  },
+  {
+    "path": "pc-port/src/JSystem/JParticle/JPADrawInfo.hpp",
+    "base_sha256": "ae2a270fdddf162d44e86abd88f3802292412233349a99295ea2454c808433fc",
+    "final_sha256": "dc95d9eb93f7307856aaf8a05121332e1a21d0045781a67aed25afac6d2065f5"
+  }
+]

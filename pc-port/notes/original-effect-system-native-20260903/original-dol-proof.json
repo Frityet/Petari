@@ -1,0 +1,65 @@
+[
+  {
+    "source_unit": "GXMisc",
+    "symbol": "GXSetMisc",
+    "retail_address": "0x804bbf14",
+    "size": 140,
+    "normalized_dol_equal": true,
+    "relocations": [
+      {
+        "offset": 44,
+        "kind": 109,
+        "symbol": "__GXData"
+      },
+      {
+        "offset": 96,
+        "kind": 109,
+        "symbol": "__GXData"
+      },
+      {
+        "offset": 120,
+        "kind": 109,
+        "symbol": "__GXData"
+      }
+    ]
+  },
+  {
+    "source_unit": "SceneFunction",
+    "symbol": "initEffectSystem__13SceneFunctionFUlUl",
+    "retail_address": "0x803450c8",
+    "size": 88,
+    "normalized_dol_equal": true,
+    "relocations": [
+      {
+        "offset": 16,
+        "kind": 10,
+        "symbol": "_savegpr_29"
+      },
+      {
+        "offset": 32,
+        "kind": 10,
+        "symbol": "createSceneObj__2MRFi"
+      },
+      {
+        "offset": 36,
+        "kind": 10,
+        "symbol": "getParticleResourceHolder__2MRFv"
+      },
+      {
+        "offset": 44,
+        "kind": 10,
+        "symbol": "getEffectSystem__2MRFv"
+      },
+      {
+        "offset": 60,
+        "kind": 10,
+        "symbol": "entry__12EffectSystemFP22ParticleResourceHolderUlUl"
+      },
+      {
+        "offset": 68,
+        "kind": 10,
+        "symbol": "_restgpr_29"
+      }
+    ]
+  }
+]

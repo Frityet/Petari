@@ -1,0 +1,3 @@
+constructor_bytes=3440 authored_color_fields=170 constructor_failure_rollback=pass
+actual_effect_system_scene_binding_cycles=2 nameobjs=12 draw_categories=7 calc_adaptors=3 update_adaptors=1 actual_auto_effect_group=pass scheduler_rollback=pass arena_retirement=pass entry_screen_owner=absent_not_invoked
+allocFromHead: cannot alloc memory (0x28 byte).

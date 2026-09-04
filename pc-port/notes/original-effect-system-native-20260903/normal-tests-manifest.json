@@ -1,0 +1,14 @@
+[
+  {
+    "path": "normal-tests/GxMiscStateTests.cpp",
+    "sha256": "421aaf2dfaa1910b46da7ef000b0fcc3b7e4c1bfba68007fd87b0356557aa24f"
+  },
+  {
+    "path": "normal-tests/LegacyFunctionalAdaptersTests.cpp",
+    "sha256": "9b950ec7d5ee1792f001837490e89f0210b9a6bba51cb7469ce0dd8a886d139a"
+  },
+  {
+    "path": "normal-tests/targets.lua",
+    "sha256": "c9551f0595467af6f34b7144897a46a7d5c66d3343f1b3be953fc4f6509fa1c0"
+  }
+]

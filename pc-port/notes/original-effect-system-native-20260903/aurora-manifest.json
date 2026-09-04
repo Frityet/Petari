@@ -1,0 +1,32 @@
+[
+  {
+    "path": "pc-port/aurora/include/dolphin/gx/GXEnum.h",
+    "base_sha256": "f458d3d2b5bab2c62758f24d753e647fbbae33f1b34a752ee885d444c5a34702",
+    "final_sha256": "e09d286638bc8a878fca281c195dc84d079d4cd5c2d9a37dda1a034d0f387f6b"
+  },
+  {
+    "path": "pc-port/aurora/include/functional.hpp",
+    "base_sha256": "975acca1428c0ca1acaf9ced36a6e55a4bb6b7ca55f7ff20b432dce15d4ef652",
+    "final_sha256": "772a8c1e3637d57a89004f91ca5eebdc5812a7d233584ee22163a1822a953fed"
+  },
+  {
+    "path": "pc-port/aurora/lib/dolphin/gx/GXDispList.cpp",
+    "base_sha256": "4fbb909532e524f8a0d9d8d5115e7cac1b69293dcfc7bcff6f2b90a8e5517a1c",
+    "final_sha256": "8093004c676e5571c0d5b51d05b2c106784650417dcf9824fec8e88c6f8cd8d6"
+  },
+  {
+    "path": "pc-port/aurora/lib/dolphin/gx/GXManage.cpp",
+    "base_sha256": "6685f4e3ddd3e949e6ace44fc2d4887d7f7ebd354301330beda7930b3bcd0eeb",
+    "final_sha256": "3d3667f3603627fbe77bf4ca8fea85d42374d70212a06ca79eb2c86b89011661"
+  },
+  {
+    "path": "pc-port/aurora/lib/dolphin/gx/GXVert.cpp",
+    "base_sha256": "b266abed92a7bb05009c4622315c90b488109648ca8e1283008dc7c6dae7335d",
+    "final_sha256": "aca928d1065c04fcaf643de8706b7beeb5571211b4ad902291da9f2d35a1a33d"
+  },
+  {
+    "path": "pc-port/aurora/lib/dolphin/gx/__gx.h",
+    "base_sha256": "c584bc1d90575811cefd2dfe9a32a0edfbd0a2633f9231f1bfa3d36b74ae3c7b",
+    "final_sha256": "90f681e04e1d3e1805bbfac34af5f4c88fce8c3696b5206a80517e69ce9f431e"
+  }
+]

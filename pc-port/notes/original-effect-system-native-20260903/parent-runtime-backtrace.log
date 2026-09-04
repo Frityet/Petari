@@ -1,0 +1,84 @@
+(lldb) target create "./build/original-effect-system-native-20260903/runtime-probe"
+Current executable set to '/Users/frityet/Projects/petari/build/original-effect-system-native-20260903/runtime-probe' (arm64).
+(lldb) breakpoint set -n abort
+Breakpoint 1: 9 locations.
+(lldb) run
+2 locations added to breakpoint 1
+[aurora:info:aurora] Aurora initializing
+[aurora:info:aurora::system_info] CPU model: Apple M5 Max
+[aurora:info:aurora::system_info] Memory: 131072 MiB
+[aurora:info:aurora::system_info] Architecture: aarch64
+[aurora:info:aurora::system_info] OS: macOS Version 26.6.2 (Build 25G83)
+2026-09-03 17:54:16.204812-0700 runtime-probe[57876:6147653] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-03 17:54:16.205097-0700 runtime-probe[57876:6147653] [Application] Error registering app with intents framework: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-03 17:54:16.205388-0700 runtime-probe[57876:6147677] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-03 17:54:16.205432-0700 runtime-probe[57876:6147677] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-03 17:54:16.205747-0700 runtime-probe[57876:6147678] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-03 17:54:16.205767-0700 runtime-probe[57876:6147678] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-03 17:54:16.205990-0700 runtime-probe[57876:6147678] [Connection] Will NOT re-try to establish the connection
+2026-09-03 17:54:16.206025-0700 runtime-probe[57876:6147677] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-03 17:54:16.206041-0700 runtime-probe[57876:6147677] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+45 locations added to breakpoint 1
+2026-09-03 17:54:17.186144-0700 runtime-probe[57876:6147634] [WindowTab] Cannot index window tabs due to missing main bundle identifier
+[aurora:info:aurora::gpu] Creating WebGPU instance
+[aurora:info:aurora::gpu] Attempting to initialize Metal
+[aurora:info:aurora::gpu] Requesting adapter
+  Feature level: Compatibility
+  Power preference: HighPerformance
+  Backend: Metal
+  Compatible surface: true
+[aurora:info:aurora::gpu] Graphics adapter information
+  API: Metal
+  Device: Apple M5 Max (IntegratedGPU)
+  Driver: Metal driver on macOS Version 26.6.2 (Build 25G83)
+[aurora:info:aurora::gpu] Using limits:
+  maxTextureDimension1D: 16384
+  maxTextureDimension2D: 16384
+  maxTextureDimension3D: 2048
+  maxTextureArrayLayers: 2048
+  maxStorageBuffersPerShaderStage: 2
+  minUniformBufferOffsetAlignment: 256
+  minStorageBufferOffsetAlignment: 256
+  maxImmediateSize: 64
+[aurora:info:aurora::gpu] Enabling features: 
+  CoreFeaturesAndLimits
+  DepthClipControl
+  TextureCompressionBC
+  TextureCompressionASTC
+  ClipDistances
+  TextureComponentSwizzle
+[aurora:info:aurora::gpu] Using surface format BGRA8Unorm, present mode Fifo
+[aurora:info:aurora::gfx::pipeline_cache] No bundled initial pipeline cache found at '/Users/frityet/Projects/petari/build/original-effect-system-native-20260903/initial_pipeline_cache.db'
+[aurora:info:aurora] Using framebuffer size 1280x960 scale 2
+cycle=0 entry_and_emitters_bytes=19208 authored_resource=2PGlowActiveLoop00 actual_screen_texture=pass groups=0,1,7,8 frames=8
+PANIC src/compat/JkrAllocationDomain.cpp:253: Delete has no original allocation provenance: 0x14256a2c0
+Process 57876 launched: '/Users/frityet/Projects/petari/build/original-effect-system-native-20260903/runtime-probe' (arm64)
+Process 57876 stopped
+* thread #1, name = 'Main thread', queue = 'com.apple.main-thread', stop reason = breakpoint 1.2
+    frame #0: 0x00000001889498e4 libsystem_c.dylib`abort
+libsystem_c.dylib`abort:
+->  0x1889498e4 <+0>:  adrp   x8, 434285
+    0x1889498e8 <+4>:  ldr    x9, [x8, #0xc48]
+    0x1889498ec <+8>:  cbnz   x9, 0x1889498fc           ; <+24>
+    0x1889498f0 <+12>: adrp   x9, 7
+Target 0: (runtime-probe) stopped.
+(lldb) thread backtrace -c 30
+* thread #1, name = 'Main thread', queue = 'com.apple.main-thread', stop reason = breakpoint 1.2
+  * frame #0: 0x00000001889498e4 libsystem_c.dylib`abort
+    frame #1: 0x000000010046bd68 runtime-probe`OSPanic(file="src/compat/JkrAllocationDomain.cpp", line=253, msg="%s") at OSReport.cpp:33:3
+    frame #2: 0x0000000100381768 runtime-probe`smgpc::compat::jkr_panic(file="src/compat/JkrAllocationDomain.cpp", line=253, format="Delete has no original allocation provenance: %p") at JkrDiagnostics.cpp:37:9
+    frame #3: 0x000000010037ee18 runtime-probe`smgpc::compat::detail::deallocate_jkr_or_host(memory=0x000000014256a2c0) at JkrAllocationDomain.cpp:253:17
+    frame #4: 0x0000000100388a4c runtime-probe`(anonymous namespace)::release(memory=0x000000014256a2c0) at MetrowerksAlignedNew.cpp:26:43
+    frame #5: 0x0000000100388a98 runtime-probe`operator delete(memory=0x000000014256a2c0, (null)=40) at MetrowerksAlignedNew.cpp:48:60
+    frame #6: 0x00000001889576f0 libc++.1.dylib`std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>::~basic_string() + 44
+    frame #7: 0x0000000100019d48 runtime-probe`smgpc::runtime::SceneSchedulerEntryState::~SceneSchedulerEntryState(this=0x0000000142568680) at SceneScheduler.hpp:83:12
+    frame #8: 0x0000000100019cbc runtime-probe`smgpc::runtime::SceneSchedulerEntryState::~SceneSchedulerEntryState(this=0x0000000142568680) at SceneScheduler.hpp:83:12
+    frame #10: 0x0000000100294658 runtime-probe`void std::__1::allocator_traits<std::__1::allocator<smgpc::runtime::SceneSchedulerEntryState>>::destroy[abi:nqe230100]<smgpc::runtime::SceneSchedulerEntryState, 0>((null)=0x000000016fdfb5b0, __p=0x0000000142568680) at allocator_traits.h:373:5
+    frame #11: 0x00000001000198ac runtime-probe`std::__1::vector<smgpc::runtime::SceneSchedulerEntryState, std::__1::allocator<smgpc::runtime::SceneSchedulerEntryState>>::__base_destruct_at_end[abi:nqe230100](this=size=error: Failed to determine start/end of vector data., __new_last=0x0000000142568110) at vector.h:776:7
+    frame #12: 0x00000001000193ec runtime-probe`std::__1::vector<smgpc::runtime::SceneSchedulerEntryState, std::__1::allocator<smgpc::runtime::SceneSchedulerEntryState>>::clear[abi:nqe230100](this=size=error: Failed to determine start/end of vector data.) at vector.h:560:5
+    frame #13: 0x000000010028ceec runtime-probe`smgpc::runtime::SceneScheduler::clear(this=0x000000016fdfb558) at SceneScheduler.cpp:1462:31
+    frame #14: 0x00000001002ba250 runtime-probe`smgpc::runtime::RuntimeContext::retire_owned_runtime_objects(this=0x000000016fdfb550) at RuntimeContext.cpp:620:20
+    frame #15: 0x00000001002ba790 runtime-probe`smgpc::runtime::RuntimeContext::~RuntimeContext(this=0x000000016fdfb550) at RuntimeContext.cpp:600:9
+    frame #16: 0x00000001002baa9c runtime-probe`smgpc::runtime::RuntimeContext::~RuntimeContext(this=0x000000016fdfb550) at RuntimeContext.cpp:599:39
+    frame #17: 0x0000000100016c64 runtime-probe`main at runtime-probe.cpp:123:9
+    frame #18: 0x00000001886784e4 dyld`start + 6992

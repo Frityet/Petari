@@ -1,0 +1,21 @@
+{
+  "command": [
+    "/opt/homebrew/opt/llvm/bin/clang++",
+    "-DAURORA",
+    "-DTARGET_PC",
+    "-std=c++23",
+    "-fsanitize=address,undefined",
+    "-fno-omit-frame-pointer",
+    "-ivfsoverlay",
+    "/Users/frityet/Projects/petari/build/original-effect-system-native-20260903/aurora-overlay.json",
+    "-I/Users/frityet/Projects/petari/pc-port/aurora/include",
+    "-I/Users/frityet/Projects/petari/pc-port/tests",
+    "-isystem",
+    "/Users/frityet/.xmake/packages/f/fmt/11.1.4/a23f254af04947698db166ccf54afc0e/include",
+    "-c",
+    "/Users/frityet/Projects/petari/build/original-effect-system-native-20260903/normal-tests/GxMiscStateTests.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/build/original-effect-system-native-20260903/normal-gx-test.o"
+  ],
+  "returncode": 0
+}

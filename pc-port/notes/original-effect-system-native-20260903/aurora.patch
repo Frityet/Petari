@@ -1,0 +1,117 @@
+--- a/pc-port/aurora/include/dolphin/gx/GXEnum.h
++++ b/pc-port/aurora/include/dolphin/gx/GXEnum.h
+@@ -884,6 +884,7 @@
+ typedef enum {
+   GX_MT_XF_FLUSH = 1,
+   GX_MT_DL_SAVE_CONTEXT = 2,
++  GX_MT_ABORT_WAIT_COPYOUT = 3,
+   GX_MT_NULL = 0,
+ } GXMiscToken;
+ 
+--- a/pc-port/aurora/include/functional.hpp
++++ b/pc-port/aurora/include/functional.hpp
+@@ -17,6 +17,16 @@
+   template <typename Object, typename... Arguments>
+   constexpr decltype(auto) operator()(Object&& object, Arguments&&... arguments) const {
+     return std::invoke(member, std::forward<Object>(object), std::forward<Arguments>(arguments)...);
++  }
++};
++
++template <typename Function>
++struct LegacyUnaryNegate {
++  Function function;
++
++  template <typename Argument>
++  constexpr bool operator()(Argument&& argument) const {
++    return !std::invoke(function, std::forward<Argument>(argument));
+   }
+ };
+ 
+@@ -61,6 +71,18 @@
+   return aurora::compat::LegacyMemberFunction<MemberPointer>{member};
+ }
+ 
++template <typename MemberPointer>
++constexpr auto mem_fun_ref(MemberPointer member) {
++  return aurora::compat::LegacyMemberFunction<MemberPointer>{member};
++}
++
++// Specialize on our adapter so standard libraries retaining their removed
++// negator overload can coexist with clients of the original member adapter.
++template <typename MemberPointer>
++constexpr auto not1(const aurora::compat::LegacyMemberFunction<MemberPointer>& function) {
++  return aurora::compat::LegacyUnaryNegate<aurora::compat::LegacyMemberFunction<MemberPointer>>{function};
++}
++
+ // Specialize on our adapter so host libraries that still expose their obsolete
+ // bind2nd overload can coexist with MSL. Store the member's declared argument
+ // type: value parameters are copied/converted and reference parameters retain
+--- a/pc-port/aurora/lib/dolphin/gx/GXDispList.cpp
++++ b/pc-port/aurora/lib/dolphin/gx/GXDispList.cpp
+@@ -53,7 +53,7 @@
+   }
+ 
+   // Flush pending primitives
+-  if (*reinterpret_cast<u32*>(&__gx->vNum) != 0) {
++  if (__gx->vNum != 0 && __gx->bpSent != 0) {
+     __GXSendFlushPrim();
+   }
+ 
+--- a/pc-port/aurora/lib/dolphin/gx/GXManage.cpp
++++ b/pc-port/aurora/lib/dolphin/gx/GXManage.cpp
+@@ -26,6 +26,7 @@
+   __gx = &sGXData;
+   __gx->inDispList = 0;
+   __gx->dlSaveContext = 1;
++  __gx->abtWaitPECopy = 1;
+   __gx->tcsManEnab = 0;
+   __gx->vNum = 0;
+   __gx->zScale = 16777216.0f;
+@@ -263,6 +264,25 @@
+   // GXPokeZMode(GX_TRUE, GX_ALWAYS, GX_TRUE);
+ 
+   return &sFifoObj;
++}
++
++void GXSetMisc(GXMiscToken token, u32 val) {
++  switch (token) {
++  case GX_MT_NULL:
++    break;
++  case GX_MT_XF_FLUSH:
++    __gx->vNum = static_cast<u16>(val);
++    // Aurora stores the positive pending-BP flag; the SDK stores bpSentNot.
++    __gx->bpSent = 0;
++    if (__gx->vNum > 0) __gx->dirtyState |= 8;
++    break;
++  case GX_MT_DL_SAVE_CONTEXT:
++    __gx->dlSaveContext = (val != 0);
++    break;
++  case GX_MT_ABORT_WAIT_COPYOUT:
++    __gx->abtWaitPECopy = (val != 0);
++    break;
++  }
+ }
+ 
+ void GXDrawDone() {
+--- a/pc-port/aurora/lib/dolphin/gx/GXVert.cpp
++++ b/pc-port/aurora/lib/dolphin/gx/GXVert.cpp
+@@ -20,7 +20,7 @@
+   }
+ 
+   // Flush pending primitives if needed
+-  if (*reinterpret_cast<u32*>(&__gx->vNum) != 0) {
++  if (__gx->vNum != 0 && __gx->bpSent != 0) {
+     __GXSendFlushPrim();
+   }
+ }
+--- a/pc-port/aurora/lib/dolphin/gx/__gx.h
++++ b/pc-port/aurora/lib/dolphin/gx/__gx.h
+@@ -162,6 +162,8 @@
+                     // bit 2: gen mode
+                     // bit 3: VCD
+                     // bit 4: VAT
++
++  u8 abtWaitPECopy; // SDK abort waits for pending copy-out when enabled
+ };
+ 
+ extern __GXData_struct* __gx;
