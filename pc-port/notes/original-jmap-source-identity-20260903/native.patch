@@ -1,0 +1,1104 @@
+diff --git a/pc-port/src/Game/Util/JMapInfo.hpp b/pc-port/src/Game/Util/JMapInfo.hpp
+--- a/pc-port/src/Game/Util/JMapInfo.hpp
++++ b/pc-port/src/Game/Util/JMapInfo.hpp
+@@ -63,7 +63,7 @@
+     ~JMapInfo() override;
+ 
+     [[nodiscard]] bool operator==(const JMapInfo& rInfo) const {
+-        return mTable == rInfo.mTable;
++        return mSourceData == rInfo.mSourceData;
+     }
+ 
+     [[nodiscard]] static JMapInfo from_bcsv(std::span< const std::uint8_t > data);
+@@ -71,6 +71,9 @@
+     [[nodiscard]] bool dataExists() const;
+     [[nodiscard]] int getNumEntries() const;
+     [[nodiscard]] int getNumFields() const;
++    [[nodiscard]] const void* getData() const;
++    [[nodiscard]] const char* getEntryData(s32 entryIndex) const;
++    [[nodiscard]] u32 getDataSize() const;
+     bool attach(const void* pData);
+     void setName(const char* pName);
+     [[nodiscard]] const char* getName() const;
+@@ -122,6 +125,10 @@
+     [[nodiscard]] bool getStringValueByHash(int entryIndex, std::uint32_t hash, const char** pValueOut) const;
+ 
+     std::shared_ptr< smgpc::resource::BcsvTable > mTable;
++    // Each original attachment keeps its own raw identity. Distinct aliases
++    // can share decoded fields/string caches while remaining different tables.
++    const void* mSourceData = nullptr;
++    std::shared_ptr<const void> mSourceOwner;
+     std::shared_ptr< JMapInfo > mChildObjInfo;
+     std::map< int, RailInfo > mRailInfo;
+     std::string mName;
+diff --git a/pc-port/src/Game/Util/JMapInfo.cpp b/pc-port/src/Game/Util/JMapInfo.cpp
+--- a/pc-port/src/Game/Util/JMapInfo.cpp
++++ b/pc-port/src/Game/Util/JMapInfo.cpp
+@@ -59,6 +59,8 @@
+     smgpc::compat::JkrHostAllocationScope host;
+     mData = std::make_shared< DataCompat >(static_cast< s32 >(table.entry_count()));
+     mTable = std::make_shared< smgpc::resource::BcsvTable >(table);
++    mSourceData = mTable->bytes().data();
++    mSourceOwner = mTable;
+ }
+ 
+ JMapInfo::JMapInfo(const JMapInfo& info) : smgpc::compat::NativeJkrDisposer(info) {
+@@ -74,6 +76,8 @@
+     if (this != &info) {
+         mData = info.mData;
+         mTable = info.mTable;
++        mSourceData = info.mSourceData;
++        mSourceOwner = info.mSourceOwner;
+         mChildObjInfo = info.mChildObjInfo;
+         mRailInfo = info.mRailInfo;
+         mName = info.mName;
+@@ -88,6 +92,8 @@
+     if (this != &info) {
+         mData = std::move(info.mData);
+         mTable = std::move(info.mTable);
++        mSourceData = std::exchange(info.mSourceData, nullptr);
++        mSourceOwner = std::move(info.mSourceOwner);
+         mChildObjInfo = std::move(info.mChildObjInfo);
+         mRailInfo = std::move(info.mRailInfo);
+         mName = std::move(info.mName);
+@@ -104,6 +110,8 @@
+     JMapInfo info;
+     info.mTable = std::make_shared< smgpc::resource::BcsvTable >(smgpc::resource::BcsvTable::from_bytes(data));
+     info.mData = std::make_shared< DataCompat >(static_cast< s32 >(info.mTable->entry_count()));
++    info.mSourceData = info.mTable->bytes().data();
++    info.mSourceOwner = info.mTable;
+     return info;
+ }
+ 
+@@ -129,6 +137,22 @@
+     return count > static_cast< std::size_t >(std::numeric_limits< int >::max()) ? std::numeric_limits< int >::max() : static_cast< int >(count);
+ }
+ 
++const void* JMapInfo::getData() const {
++    return mSourceData;
++}
++
++const char* JMapInfo::getEntryData(s32 entryIndex) const {
++    if (!mTable) throw std::logic_error("JMap entry address requires attached table data");
++    const auto address = reinterpret_cast<std::uintptr_t>(mSourceData) + mTable->data_offset() +
++                         mTable->entry_size() * entryIndex;
++    return reinterpret_cast<const char*>(address);
++}
++
++u32 JMapInfo::getDataSize() const {
++    if (!mTable) throw std::logic_error("JMap data extent requires attached table data");
++    return mTable->data_offset() + mTable->entry_size() * mTable->entry_count();
++}
++
+ bool JMapInfo::attach(const void* data) {
+     smgpc::compat::JkrHostAllocationScope host;
+     if (data == nullptr) {
+@@ -140,6 +164,8 @@
+     }
+     mData = resource->mData;
+     mTable = resource->mTable;
++    mSourceData = data;
++    mSourceOwner = resource;
+     mFloatOverrides.clear();
+     return true;
+ }
+diff --git a/pc-port/src/resource/JMapResource.hpp b/pc-port/src/resource/JMapResource.hpp
+--- a/pc-port/src/resource/JMapResource.hpp
++++ b/pc-port/src/resource/JMapResource.hpp
+@@ -5,7 +5,8 @@
+ #include <span>
+ namespace smgpc::resource {
+     // Explicitly retains one borrowed source identity for original unsized attach.
+-    // The caller retains the matching byte range until this registration ends.
++    // The caller retains borrowed alias bytes through their use by attached readers.
++    // Archive registrations instead retain their explicit source owner.
+     class JMapSourceRegistration final {
+     public:
+         ~JMapSourceRegistration();
+diff --git a/pc-port/src/resource/JMapResource.cpp b/pc-port/src/resource/JMapResource.cpp
+--- a/pc-port/src/resource/JMapResource.cpp
++++ b/pc-port/src/resource/JMapResource.cpp
+@@ -163,12 +163,18 @@
+             const auto found = owners.tables.find(data);
+             if (found == owners.tables.end())
+                 return nullptr;
+-            if (auto table = found->second.table.lock())
+-                return table;
++            if (auto table = found->second.table.lock()) {
++                auto owner = found->second.owner.lock();
++                return owner ? std::shared_ptr<const JMapInfo>(std::move(owner), table.get()) : nullptr;
++            }
+             deferred = found->second.deferred.lock();
+         }
+         // Parsing and final source release can allocate or retire owners;
+         // neither operation runs while holding the identity registry lock.
+-        return deferred ? deferred->load() : nullptr;
++        if (!deferred) return nullptr;
++        const auto table = deferred->load();
++        // The alias retains the actual archive byte owner as well as its
++        // decoded table, without retaining a Game heap or introducing a cycle.
++        return std::shared_ptr<const JMapInfo>(std::move(deferred), table.get());
+     }
+ }  // namespace smgpc::resource
+diff --git a/pc-port/src/resource/BcsvTable.hpp b/pc-port/src/resource/BcsvTable.hpp
+--- a/pc-port/src/resource/BcsvTable.hpp
++++ b/pc-port/src/resource/BcsvTable.hpp
+@@ -33,6 +33,8 @@
+     public:
+         static BcsvTable from_bytes(std::span<const std::uint8_t> data);
+ 
++        [[nodiscard]] std::span<const std::uint8_t> bytes() const { return _data; }
++        [[nodiscard]] std::uint32_t data_offset() const { return _data_offset; }
+         [[nodiscard]] std::uint32_t entry_count() const;
+         [[nodiscard]] std::uint32_t entry_size() const;
+         [[nodiscard]] std::span<const BcsvField> fields() const;
+diff --git a/pc-port/src/resource/RarcArchive.hpp b/pc-port/src/resource/RarcArchive.hpp
+--- a/pc-port/src/resource/RarcArchive.hpp
++++ b/pc-port/src/resource/RarcArchive.hpp
+@@ -28,6 +28,7 @@
+ 
+         [[nodiscard]] const std::vector<RarcEntry> &entries() const;
+         [[nodiscard]] std::span<const std::uint8_t> bytes() const noexcept { return _bytes; }
++        [[nodiscard]] const std::uint8_t* file_data_start() const noexcept { return _bytes.data() + _file_data_start; }
+         [[nodiscard]] static std::uint16_t hash_name(std::string_view name);
+         [[nodiscard]] bool contains(std::string_view path) const;
+         [[nodiscard]] bool contains_normalized(std::string_view path) const;
+diff --git a/pc-port/src/JSystem/JKernel/JKRArchive.hpp b/pc-port/src/JSystem/JKernel/JKRArchive.hpp
+--- a/pc-port/src/JSystem/JKernel/JKRArchive.hpp
++++ b/pc-port/src/JSystem/JKernel/JKRArchive.hpp
+@@ -148,6 +148,9 @@
+         return 0U;
+     }
+ 
++    [[nodiscard]] void* getIdxResource(u32);
++    virtual void* fetchResource(SDIFileEntry*, u32*) = 0;
++
+     [[nodiscard]] u32 countResource() const;
+     [[nodiscard]] virtual s32 countFile(const char*) const;
+     [[nodiscard]] JKRArcFinder* getFirstFile(const char*) const;
+@@ -220,14 +223,18 @@
+ class JKRMemArchive final : public JKRArchive {
+ public:
+     explicit JKRMemArchive(const smgpc::resource::RarcArchive &archive)
+-        : JKRArchive(&archive) {
++        : JKRArchive(&archive), mFileDataStart(const_cast<u8*>(archive.file_data_start())) {
+     }
+ 
+     explicit JKRMemArchive(smgpc::resource::RarcArchive &&archive)
+         : JKRArchive(nullptr), mOwnedArchive(std::make_unique<smgpc::resource::RarcArchive>(std::move(archive))) {
+         attach_archive(mOwnedArchive.get());
+-    }
++        mFileDataStart = const_cast<u8*>(mOwnedArchive->file_data_start());
++    }
++
++    void* fetchResource(SDIFileEntry*, u32*) override;
+ 
+ private:
++    u8* mFileDataStart = nullptr;
+     std::unique_ptr<smgpc::resource::RarcArchive> mOwnedArchive;
+ };
+diff --git a/pc-port/src/compat/OriginalArchiveIndex.cpp b/pc-port/src/compat/OriginalArchiveIndex.cpp
+new file mode 100644
+--- /dev/null
++++ b/pc-port/src/compat/OriginalArchiveIndex.cpp
+@@ -0,0 +1,23 @@
++#include "JSystem/JKernel/JKRArchive.hpp"
++
++void* JKRArchive::getIdxResource(u32 fileIndex) {
++    SDIFileEntry* file = findIdxResource(fileIndex);
++
++    if (file != nullptr) {
++        return fetchResource(file, 0);
++    }
++
++    return nullptr;
++}
++
++void* JKRMemArchive::fetchResource(SDIFileEntry* pFile, u32* pSize) {
++    if (pFile->mFileData == nullptr) {
++        pFile->mFileData = mFileDataStart + pFile->mDataOffset;
++    }
++
++    if (pSize != nullptr) {
++        *pSize = pFile->mDataSize;
++    }
++
++    return pFile->mFileData;
++}
+diff --git a/pc-port/src/Game/Util/JMapUtil.hpp b/pc-port/src/Game/Util/JMapUtil.hpp
+--- a/pc-port/src/Game/Util/JMapUtil.hpp
++++ b/pc-port/src/Game/Util/JMapUtil.hpp
+@@ -108,3 +108,33 @@
+ namespace MR {
+     bool getJMapInfoShapeIdWithInit(const JMapInfoIter&, s32*);
+ }
++
++namespace MR {
++    inline bool checkJMapDataEntries(const JMapInfoIter& rIter) {
++        bool flag;
++        bool ret;
++
++        ret = false;
++        flag = false;
++
++        if (rIter.mInfo != nullptr && rIter.mIndex >= 0) {
++            flag = true;
++        }
++
++        if (flag) {
++            s32 numEntries;
++
++            if (rIter.mInfo->mData != nullptr) {
++                numEntries = rIter.mInfo->mData->mNumEntries;
++            } else {
++                numEntries = 0;
++            }
++
++            if (rIter.mIndex < numEntries) {
++                ret = true;
++            }
++        }
++
++        return ret;
++    }
++}
+diff --git a/pc-port/src/Game/Scene/StageDataHolder.hpp b/pc-port/src/Game/Scene/StageDataHolder.hpp
+new file mode 100644
+--- /dev/null
++++ b/pc-port/src/Game/Scene/StageDataHolder.hpp
+@@ -0,0 +1,101 @@
++#pragma once
++
++#include "Game/NameObj/NameObj.hpp"
++#include "Game/Util/Array.hpp"
++#include <JSystem/JGeometry/TMatrix.hpp>
++#include <stdint.h>
++
++class JKRArchive;
++class JMapIdInfo;
++class PlacementInfoOrdered;
++
++class StageDataHolder : public NameObj {
++public:
++    StageDataHolder(const char*, int, bool);
++
++    virtual void init(const JMapInfoIter&);
++
++    void initAfterScenarioSelected();
++    void requestFileLoadCommon();
++    void requestFileLoadScenario();
++    void initPlacement();
++    JMapInfoIter getCommonPathPointInfo(const JMapInfo**, int) const;
++    JMapInfoIter getCommonPathPointInfoFromRailDataIndex(const JMapInfo**, int) const;
++    s32 getCommonPathInfoElementNum() const;
++    s32 getStartPosNum() const;
++    s32 getCurrentStartZoneId() const;
++    s32 getCurrentStartCameraId() const;
++    void getStartCameraIdInfoFromStartDataIndex(JMapIdInfo*, int) const;
++    s32 getGeneralPosNum() const;
++    JMapInfoIter getGeneralPosInfoFromDataIndex(int) const;
++    s32 getChildObjNum(const JMapInfoIter&) const;
++    JMapInfoIter getChildObjInfoFromDataIndex(const JMapInfoIter&, int) const;
++
++    JMapInfoIter makeMarioJMapInfoIter(const JMapIdInfo&) const;
++
++    const StageDataHolder* findPlacedStageDataHolder(const JMapInfoIter&) const;
++    const StageDataHolder* getStageDataHolderFromZoneId(int) const;
++    StageDataHolder* getStageDataHolderFromZoneId(int);
++    bool isPlacedZone(int) const;
++    const char* getJapaneseObjectName(const char*) const;
++    void* getStageArchiveResource(const char*);
++    s32 getStageArchiveResourceSize(void*);
++
++    JMapInfoIter makeCurrentMarioJMapInfoIter() const;
++
++    void initPlacementMario();
++
++    void initTableData();
++
++    void calcDataAddress();
++    void updateDataAddress(const MR::AssignableArray< JMapInfo >*);
++
++    void initPlacementInfoOrderedScenario();
++    void initPlacementInfoOrderedCommon();
++
++    void createLocalStageDataHolder(const MR::AssignableArray< JMapInfo >&, bool);
++
++    void initJmpInfo(MR::AssignableArray< JMapInfo >*, const char*);
++
++    void initLayerJmpInfo(MR::AssignableArray< JMapInfo >*, const char*, const char*, u32);
++    void initAllLayerJmpInfo(MR::AssignableArray< JMapInfo >*, const char*, const char*);
++    void initAllLayerJmpInfo(MR::AssignableArray< JMapInfo >*, const char*);
++
++    const JMapInfo* findJmpInfoFromArray(const MR::AssignableArray< JMapInfo >*, const char*) const;
++    JMapInfoIter getStartJMapInfoIterFromStartDataIndex(int) const;
++
++    void calcPlacementMtx(const JMapInfoIter&);
++
++    JMapInfo* attachJmpInfoToArray(JMapInfo*, const char*);
++
++    MR::AssignableArray< JMapInfo > mPlacementObjs;   // 0xC
++    MR::AssignableArray< JMapInfo > mStartObjs;       // 0x14
++    MR::AssignableArray< JMapInfo > mGeneralPosObjs;  // 0x1C
++    MR::AssignableArray< JMapInfo > mChildObjs;       // 0x24
++    MR::AssignableArray< JMapInfo > mListObjs;        // 0x2C
++    MR::AssignableArray< JMapInfo > mPathObjs;        // 0x34
++    JMapInfo* mObjNameTbl;                            // 0x3C
++    s32 mStageDataHolderCount;                        // 0x40
++    StageDataHolder* mStageDataArray[0x18];           // 0x44
++    JKRArchive* mArchive;                             // 0xA4
++    const char* _A8;
++    TPos3f mPlacementMtx;  // 0xAC
++    s32 mZoneID;        // 0xDC
++    u8 _E0;
++    u8 _E1;
++    u8 _E2;
++    u8 _E3;
++    uintptr_t _E4;
++    uintptr_t _E8;
++    MR::AssignableArray< JMapInfo > _EC;
++    MR::AssignableArray< JMapInfo > _F4;
++    PlacementInfoOrdered* _FC;
++    PlacementInfoOrdered* _100;
++    PlacementInfoOrdered* _104;
++    PlacementInfoOrdered* _108;
++    PlacementInfoOrdered* _10C;
++};
++
++namespace MR {
++    StageDataHolder* getStageDataHolder();
++};  // namespace MR
+diff --git a/pc-port/src/Game/Scene/StageDataHolder.cpp b/pc-port/src/Game/Scene/StageDataHolder.cpp
+new file mode 100644
+--- /dev/null
++++ b/pc-port/src/Game/Scene/StageDataHolder.cpp
+@@ -0,0 +1,591 @@
++#include "Game/Scene/StageDataHolder.hpp"
++#include "Game/NameObj/NameObjFactory.hpp"
++#include "Game/Scene/PlacementInfoOrdered.hpp"
++#include "Game/Scene/SceneObjHolder.hpp"
++#include "Game/Scene/StageResourceLoader.hpp"
++#include "Game/System/ScenarioDataParser.hpp"
++#include "Game/Util/FileUtil.hpp"
++#include "Game/Util/JMapIdInfo.hpp"
++#include "Game/Util/JMapUtil.hpp"
++#include "Game/Util/MtxUtil.hpp"
++#include "Game/Util/MemoryUtil.hpp"
++#include "Game/System/GalaxyStatusAccessor.hpp"
++#include "Game/Util/SceneUtil.hpp"
++#include "Game/Util/StringUtil.hpp"
++#include <JSystem/JKernel/JKRFileFinder.hpp>
++#include <JSystem/JKernel/JKRMemArchive.hpp>
++#include <cstdio>
++
++namespace {
++    static const char* cLayerDirName[0x11] = {"Common", "LayerA", "LayerB", "LayerC", "LayerD", "LayerE", "LayerF", "LayerG", "LayerH",
++                                              "LayerI", "LayerJ", "LayerK", "LayerL", "LayerM", "LayerN", "LayerO", "LayerP"};
++
++    static bool isPrioPlacementObjInfo(const char* pName) NO_INLINE {
++        return MR::isEqualStringCase(pName, "AreaObjInfo") || MR::isEqualStringCase(pName, "PlanetObjInfo") ||
++               MR::isEqualStringCase(pName, "DemoObjInfo") || MR::isEqualStringCase(pName, "CameraCubeInfo");
++    }
++
++    static void calcPlacementInfoNum(int* a1, int* a2, const MR::AssignableArray< JMapInfo >& rArray) NO_INLINE {
++        *a1 = 0;
++        *a2 = 0;
++
++        for (const JMapInfo* pInfo = rArray.begin(); pInfo != rArray.end(); pInfo++) {
++            if (::isPrioPlacementObjInfo(pInfo->getName())) {
++                int size;
++
++                if (pInfo->mData != nullptr) {
++                    size = pInfo->mData->mNumEntries;
++                } else {
++                    size = 0;
++                }
++
++                *a1 += size;
++            } else {
++                int size;
++
++                if (pInfo->mData != nullptr) {
++                    size = pInfo->mData->mNumEntries;
++                } else {
++                    size = 0;
++                }
++
++                *a2 += size;
++            }
++        }
++    }
++
++    static void attachJmpInfoToPlacementInfoOrdered(PlacementInfoOrdered* a1, PlacementInfoOrdered* a2, PlacementInfoOrdered* a3,
++                                                    const MR::AssignableArray< JMapInfo >& rArray) NO_INLINE {
++        for (const JMapInfo* pInfo = rArray.begin(); pInfo != rArray.end(); pInfo++) {
++            if (::isPrioPlacementObjInfo(pInfo->getName())) {
++                a1->attach(pInfo, nullptr);
++            } else {
++                a2->attach(pInfo, a3);
++            }
++        }
++    }
++};  // namespace
++
++StageDataHolder::StageDataHolder(const char* pStageName, int zoneId, bool common)
++    : NameObj("StageDataHolder"), mPlacementObjs(), mStartObjs(), mGeneralPosObjs(), mChildObjs(), mListObjs(), mPathObjs(),
++      mObjNameTbl(nullptr), mStageDataHolderCount(0), mArchive(MR::getStageArchive(pStageName)), _A8(pStageName), mZoneID(zoneId),
++      _E0(common), _E4(0), _E8(0), _EC(), _F4(), _FC(nullptr), _100(nullptr), _104(nullptr), _108(nullptr), _10C(nullptr) {
++    MR::zeroMemory(mStageDataArray, sizeof(mStageDataArray));
++    mPlacementMtx.identity();
++}
++
++void StageDataHolder::init(const JMapInfoIter& rIter) {
++    if (!mZoneID) {
++        initTableData();
++    }
++
++    if (_E0) {
++        u32 commonLayer = ScenarioDataFunction::getCurrentCommonLayers(_A8);
++        initLayerJmpInfo(&_EC, "/jmp/Placement", "/jmp/MapParts", commonLayer);
++    }
++
++    createLocalStageDataHolder(_EC, 1);
++
++    if (!mZoneID) {
++        initPlacementInfoOrderedCommon();
++    }
++}
++
++void StageDataHolder::initAfterScenarioSelected() {
++    s32 curScenarioNo = MR::getCurrentScenarioNo();
++    u32 curLayers = ScenarioDataFunction::getCurrentScenarioLayers(_A8, curScenarioNo);
++
++    if (!_E0) {
++        curLayers |= ScenarioDataFunction::getCurrentCommonLayers(_A8);
++    }
++
++    initLayerJmpInfo(&_F4, "/jmp/Placement", "/jmp/MapParts", curLayers);
++    createLocalStageDataHolder(_F4, false);
++
++    for (s32 i = 0; i < mStageDataHolderCount; i++) {
++        mStageDataArray[i]->initAfterScenarioSelected();
++    }
++
++    if (!mZoneID) {
++        initPlacementInfoOrderedScenario();
++    }
++
++    initAllLayerJmpInfo(&mPlacementObjs, "/jmp/Placement", "/jmp/MapParts");
++    initAllLayerJmpInfo(&mStartObjs, "/jmp/Start");
++
++    s32 generalPosFileCount = mArchive->countFile("/jmp/GeneralPos");
++    generalPosFileCount -= 2;
++    s32 isValidGeneralPosCount = (generalPosFileCount > 0) ? generalPosFileCount : 0;
++
++    if (isValidGeneralPosCount) {
++        initAllLayerJmpInfo(&mGeneralPosObjs, "/jmp/GeneralPos");
++    }
++
++    s32 childObjFileCount = mArchive->countFile("/jmp/ChildObj");
++    childObjFileCount -= 2;
++    s32 isValidChildObjCount = (childObjFileCount > 0) ? childObjFileCount : 0;
++
++    if (isValidChildObjCount) {
++        initAllLayerJmpInfo(&mChildObjs, "/jmp/ChildObj");
++    }
++
++    initJmpInfo(&mListObjs, "/jmp/List");
++    initJmpInfo(&mPathObjs, "/jmp/Path");
++    calcDataAddress();
++}
++
++void StageDataHolder::requestFileLoadCommon() {
++    if (!MR::tryRequestLoadStageResource()) {
++        _FC->requestFileLoad();
++        _100->requestFileLoad();
++    }
++}
++
++void StageDataHolder::requestFileLoadScenario() {
++    if (MR::isLoadStageScenarioResource()) {
++        _104->requestFileLoad();
++        _108->requestFileLoad();
++        _10C->requestFileLoad();
++    }
++}
++
++void StageDataHolder::initPlacement() {
++    MR::setInitializeStatePlacementPlayer();
++    initPlacementMario();
++    MR::setInitializeStatePlacementHighPriority();
++    _FC->initPlacement();
++    _104->initPlacement();
++    MR::setInitializeStatePlacement();
++    _100->initPlacement();
++    _108->initPlacement();
++    _10C->initPlacement();
++}
++
++JMapInfoIter StageDataHolder::getCommonPathPointInfo(const JMapInfo** ppOut, int idx) const {
++    const JMapInfo* pInfo = findJmpInfoFromArray(&mPathObjs, "CommonPathInfo");
++    JMapInfoIter pathIter = pInfo->findElement< s32 >("l_id", idx, 0);
++    return getCommonPathPointInfoFromRailDataIndex(ppOut, pathIter.mIndex);
++}
++
++JMapInfoIter StageDataHolder::getCommonPathPointInfoFromRailDataIndex(const JMapInfo** ppInfo, int idx) const {
++    const JMapInfo* pInfo = findJmpInfoFromArray(&mPathObjs, "CommonPathInfo");
++    char buf[128];
++    snprintf(buf, sizeof(buf), "CommonPathPointInfo.%d", idx);
++    *ppInfo = findJmpInfoFromArray(&mPathObjs, buf);
++    return JMapInfoIter(pInfo, idx);
++}
++
++s32 StageDataHolder::getCommonPathInfoElementNum() const {
++    return findJmpInfoFromArray(&mPathObjs, "CommonPathInfo")->getNumEntries();
++}
++
++s32 StageDataHolder::getStartPosNum() const {
++    s32 cur = 0;
++    for (const JMapInfo* i = &mStartObjs[0]; i != mStartObjs.end(); i++) {
++        cur += i->getNumEntries();
++    }
++
++    for (s32 i = 0; i < mStageDataHolderCount; i++) {
++        cur += mStageDataArray[i]->getStartPosNum();
++    }
++
++    return cur;
++}
++
++s32 StageDataHolder::getCurrentStartZoneId() const {
++    return findPlacedStageDataHolder(makeCurrentMarioJMapInfoIter())->mZoneID;
++}
++
++s32 StageDataHolder::getCurrentStartCameraId() const {
++    JMapInfoIter marioIter = makeCurrentMarioJMapInfoIter();
++    s32 cameraID;
++    bool ret = marioIter.getValue< s32 >("Camera_id", &cameraID);
++
++    if (ret) {
++        return cameraID;
++    }
++
++    return -1;
++}
++
++void StageDataHolder::getStartCameraIdInfoFromStartDataIndex(JMapIdInfo* pInfo, int startDataIdx) const {
++    JMapInfoIter startIter = getStartJMapInfoIterFromStartDataIndex(startDataIdx);
++    s32 cameraID;
++    startIter.getValue< s32 >("Camera_id", &cameraID);
++    pInfo->initialize(cameraID, startIter);
++}
++
++const StageDataHolder* StageDataHolder::findPlacedStageDataHolder(const JMapInfoIter& rIter) const {
++    uintptr_t data = reinterpret_cast< uintptr_t >(rIter.mInfo->getEntryData(rIter.mIndex));
++
++    if (_E4 <= data && data < _E8) {
++        return this;
++    }
++
++    for (s32 i = 0; i < mStageDataHolderCount; i++) {
++        const StageDataHolder* pHolder = mStageDataArray[i]->findPlacedStageDataHolder(rIter);
++
++        if (pHolder != nullptr) {
++            return pHolder;
++        }
++    }
++
++    return nullptr;
++}
++
++const StageDataHolder* StageDataHolder::getStageDataHolderFromZoneId(int zoneID) const {
++    if (zoneID == 0) {
++        return this;
++    }
++
++    for (s32 i = 0; i < mStageDataHolderCount; i++) {
++        StageDataHolder* pHolder = mStageDataArray[i];
++        s32 curZoneID = pHolder->mZoneID;
++
++        if (zoneID == curZoneID) {
++            return pHolder;
++        }
++    }
++
++    return nullptr;
++}
++
++StageDataHolder* StageDataHolder::getStageDataHolderFromZoneId(int zoneID) {
++    return const_cast< StageDataHolder* >(static_cast< const StageDataHolder* >(this)->getStageDataHolderFromZoneId(zoneID));
++}
++
++bool StageDataHolder::isPlacedZone(int zoneID) const {
++    if (!zoneID) {
++        return true;
++    }
++
++    for (s32 i = 0; i < mStageDataHolderCount; i++) {
++        if (zoneID == mStageDataArray[i]->mZoneID) {
++            return true;
++        }
++    }
++
++    return false;
++}
++
++const char* StageDataHolder::getJapaneseObjectName(const char* pName) const {
++    const JMapInfoIter englishName = mObjNameTbl->findElement< const char* >("en_name", pName, 0);
++
++    if (englishName == mObjNameTbl->end()) {
++        return nullptr;
++    }
++
++    const char* japaneseName;
++    englishName.getValue< const char* >("jp_name", &japaneseName);
++    return japaneseName;
++}
++
++void* StageDataHolder::getStageArchiveResource(const char* pName) {
++    return mArchive->getResource('????', pName);
++}
++
++s32 StageDataHolder::getStageArchiveResourceSize(void* pData) {
++    return mArchive->getResSize(pData);
++}
++
++void StageDataHolder::initPlacementMario() {
++    JMapInfoIter iter = makeCurrentMarioJMapInfoIter();
++    MR::setCurrentPlacementZoneId(MR::getPlacedZoneId(iter));
++    const char* objName = "";
++    MR::getObjectName(&objName, iter);
++    CreationFuncPtr funcPtr = NameObjFactory::getCreator(objName);
++
++    NameObj* obj = funcPtr("マリオアクター");
++    obj->init(iter);
++    MR::clearCurrentPlacementZoneId();
++}
++
++JMapInfoIter StageDataHolder::makeMarioJMapInfoIter(const JMapIdInfo& rInfo) const {
++    const StageDataHolder* hldr = getStageDataHolderFromZoneId(rInfo.mZoneID);
++    s32 id = rInfo._0;
++    const JMapInfo* i = hldr->mStartObjs.begin();
++
++    while (i != hldr->mStartObjs.end()) {
++        JMapInfoIter iter = i->findElement< s32 >("MarioNo", id, 0);
++        bool res = !(iter == i->end());
++
++        if (res) {
++            return iter;
++        }
++
++        i++;
++    }
++
++    return JMapInfoIter();
++}
++
++JMapInfoIter StageDataHolder::makeCurrentMarioJMapInfoIter() const {
++    JMapIdInfo startInfo = MR::getCurrentMarioStartIdInfo();
++    JMapInfoIter iter = makeMarioJMapInfoIter(startInfo);
++
++    if (MR::checkJMapDataEntries(iter)) {
++        return iter;
++    }
++
++    return JMapInfoIter();
++}
++
++void StageDataHolder::initJmpInfo(MR::AssignableArray< JMapInfo >* pInfo, const char* pName) {
++    s32 fileCnt = mArchive->countFile(pName) - 2;
++    s32 v = fileCnt > 0 ? fileCnt : 0;
++
++    if (v != 0) {
++        JMapInfo* inf = new JMapInfo[v];
++        pInfo->mArr = inf;
++        pInfo->mMaxSize = v;
++        attachJmpInfoToArray(inf, pName);
++    }
++}
++
++void StageDataHolder::initAllLayerJmpInfo(MR::AssignableArray< JMapInfo >* pInfo, const char* pName) {
++    s32 v = 0;
++    u32 curScenario = MR::getCurrentScenarioNo();
++    u32 commonLayers = ScenarioDataFunction::getCurrentCommonLayers(_A8);
++    u32 mask = commonLayers | ScenarioDataFunction::getCurrentScenarioLayers(_A8, curScenario);
++    char buf[64];
++
++    for (u32 i = 0; i < 0x11; i++) {
++        if ((mask & (1 << i)) != 0) {
++            snprintf(buf, sizeof(buf), "%s/%s", pName, cLayerDirName[i]);
++            s32 fileCnt = mArchive->countFile(buf) - 2;
++            v += fileCnt > 0 ? fileCnt : 0;
++        }
++    }
++
++    if (v != 0) {
++        JMapInfo* inf = new JMapInfo[v];
++        pInfo->mMaxSize = v;
++        pInfo->mArr = inf;
++
++        for (u32 i = 0; i < 0x11; i++) {
++            if ((mask & (1 << i)) != 0) {
++                snprintf(buf, sizeof(buf), "%s/%s", pName, cLayerDirName[i]);
++                inf = attachJmpInfoToArray(inf, buf);
++            }
++        }
++    }
++}
++
++void StageDataHolder::initAllLayerJmpInfo(MR::AssignableArray< JMapInfo >* pInfo, const char* a2, const char* a3) {
++    u32 commonLayers = ScenarioDataFunction::getCurrentCommonLayers(_A8);
++    u32 scenarioLayers = ScenarioDataFunction::getCurrentScenarioLayers(_A8, MR::getCurrentScenarioNo());
++    initLayerJmpInfo(pInfo, a2, a3, commonLayers | scenarioLayers);
++}
++
++void StageDataHolder::initLayerJmpInfo(MR::AssignableArray< JMapInfo >* pInfo, const char* pDir1, const char* pDir2, u32 mask) {
++    s32 count = 0;
++    char path[64];
++
++    for (u32 i = 0; i < 0x11; i++) {
++        if ((mask & (1 << i)) != 0) {
++            snprintf(path, sizeof(path), "%s/%s", pDir1, cLayerDirName[i]);
++            s32 fileCount = mArchive->countFile(path) - 2;
++            count += fileCount > 0 ? fileCount : 0;
++            snprintf(path, sizeof(path), "%s/%s", pDir2, cLayerDirName[i]);
++            fileCount = mArchive->countFile(path) - 2;
++            count += fileCount > 0 ? fileCount : 0;
++        }
++    }
++
++    if (count != 0) {
++        JMapInfo* info = new JMapInfo[count];
++        pInfo->mMaxSize = count;
++        pInfo->mArr = info;
++
++        for (u32 i = 0; i < 0x11; i++) {
++            if ((mask & (1 << i)) != 0) {
++                snprintf(path, sizeof(path), "%s/%s", pDir1, cLayerDirName[i]);
++                info = attachJmpInfoToArray(info, path);
++                snprintf(path, sizeof(path), "%s/%s", pDir2, cLayerDirName[i]);
++                info = attachJmpInfoToArray(info, path);
++            }
++        }
++    }
++}
++
++JMapInfo* StageDataHolder::attachJmpInfoToArray(JMapInfo* pInfo, const char* a2) {
++    s32 fileCnt = mArchive->countFile(a2) - 2;
++    s32 v = fileCnt > 0 ? fileCnt : 0;
++
++    if (v == 0) {
++        return pInfo;
++    }
++
++    JKRArcFinder* arch = mArchive->getFirstFile(a2);
++
++    for (u32 i = 0; i < v; i++, pInfo++, arch->findNextFile()) {
++        pInfo->attach(mArchive->getIdxResource(arch->mDirIndex));
++        pInfo->setName(arch->mName);
++    }
++
++    delete arch;
++    return pInfo;
++}
++
++void StageDataHolder::initTableData() {
++    void* tableFile = MR::receiveArchive("/StageData/ObjNameTable.arc")->getResource('????', "ObjNameTable.tbl");
++
++    mObjNameTbl = new JMapInfo();
++    mObjNameTbl->attach(tableFile);
++}
++
++void StageDataHolder::initPlacementInfoOrderedCommon() {
++    int v12, v11;
++    ::calcPlacementInfoNum(&v12, &v11, _EC);
++
++    s32 v2 = 0;
++    s32 v3 = 0;
++
++    for (s32 i = 0; i < mStageDataHolderCount; i++) {
++        int v10, v9;
++        ::calcPlacementInfoNum(&v10, &v9, mStageDataArray[i]->_EC);
++        v12 += v10;
++        v11 += v9;
++    }
++
++    _FC = new PlacementInfoOrdered(v12);
++    _100 = new PlacementInfoOrdered(v11);
++    _10C = new PlacementInfoOrdered(0x20);
++    ::attachJmpInfoToPlacementInfoOrdered(_FC, _100, _10C, _EC);
++
++    s32 v7 = 0;
++    s32 v8 = 0;
++
++    for (s32 i = 0; i < mStageDataHolderCount; i++) {
++        ::attachJmpInfoToPlacementInfoOrdered(_FC, _100, _10C, mStageDataArray[i]->_EC);
++    }
++
++    _FC->sort();
++    _100->sort();
++}
++
++void StageDataHolder::initPlacementInfoOrderedScenario() {
++    int priorityCount, count;
++    ::calcPlacementInfoNum(&priorityCount, &count, _F4);
++
++    for (s32 i = 0; i < mStageDataHolderCount; i++) {
++        int localPriorityCount, localCount;
++        ::calcPlacementInfoNum(&localPriorityCount, &localCount, mStageDataArray[i]->_F4);
++        priorityCount += localPriorityCount;
++        count += localCount;
++    }
++
++    _104 = new PlacementInfoOrdered(priorityCount);
++    _108 = new PlacementInfoOrdered(count);
++    ::attachJmpInfoToPlacementInfoOrdered(_104, _108, nullptr, _F4);
++
++    for (s32 i = 0; i < mStageDataHolderCount; i++) {
++        ::attachJmpInfoToPlacementInfoOrdered(_104, _108, nullptr, mStageDataArray[i]->_F4);
++    }
++
++    _104->sort();
++    _108->sort();
++    _10C->sort();
++}
++
++const JMapInfo* StageDataHolder::findJmpInfoFromArray(const MR::AssignableArray< JMapInfo >* pInfoArr, const char* pName) const {
++    for (const JMapInfo* pInfo = pInfoArr->begin(); pInfo != pInfoArr->end(); pInfo++) {
++        if (MR::isEqualStringCase(pInfo->getName(), pName)) {
++            return pInfo;
++        }
++    }
++
++    return nullptr;
++}
++
++JMapInfoIter StageDataHolder::getStartJMapInfoIterFromStartDataIndex(int idx_) const {
++    int idx = idx_;
++
++    for (JMapInfo* pInfo = mStartObjs.mArr; pInfo != mStartObjs.end(); pInfo++) {
++        int curIdx = pInfo->getNumEntries();
++
++        if (idx < curIdx) {
++            return JMapInfoIter(pInfo, idx);
++        }
++
++        curIdx = pInfo->getNumEntries();
++
++        idx -= curIdx;
++    }
++
++    for (s32 i = 0; i < mStageDataHolderCount; i++) {
++        StageDataHolder* pHolder = mStageDataArray[i];
++        int startPosNum = pHolder->getStartPosNum();
++
++        if (idx < startPosNum) {
++            return pHolder->getStartJMapInfoIterFromStartDataIndex(idx);
++        }
++
++        idx -= startPosNum;
++    }
++
++    return JMapInfoIter();
++}
++
++void StageDataHolder::calcDataAddress() {
++    _E4 = -1;
++    _E8 = 0;
++    updateDataAddress(&mPlacementObjs);
++    updateDataAddress(&mStartObjs);
++    updateDataAddress(&mGeneralPosObjs);
++    updateDataAddress(&mChildObjs);
++    updateDataAddress(&mPathObjs);
++}
++
++void StageDataHolder::createLocalStageDataHolder(const MR::AssignableArray< JMapInfo >& rArray, bool common) {
++    for (const JMapInfo* pInfo = rArray.begin(); pInfo != rArray.end(); pInfo++) {
++        if (!MR::isEqualStringCase(pInfo->getName(), "StageObjInfo")) {
++            continue;
++        }
++
++        for (s32 i = 0; i < pInfo->getNumEntries(); i++) {
++            JMapInfoIter iter(pInfo, i);
++            const char* name = "";
++            MR::getObjectName(&name, iter);
++            s32 zoneId = MR::makeCurrentGalaxyStatusAccessor().getZoneId(name);
++            mStageDataArray[mStageDataHolderCount] = new StageDataHolder(name, zoneId, common);
++            mStageDataArray[mStageDataHolderCount]->initWithoutIter();
++            mStageDataArray[mStageDataHolderCount]->calcPlacementMtx(iter);
++            mStageDataHolderCount++;
++        }
++    }
++}
++
++void StageDataHolder::calcPlacementMtx(const JMapInfoIter& rIter) {
++    TVec3f pos;
++    rIter.getValue< f32 >("pos_x", &pos.x);
++    rIter.getValue< f32 >("pos_y", &pos.y);
++    rIter.getValue< f32 >("pos_z", &pos.z);
++
++    TVec3f rot;
++    rIter.getValue< f32 >("dir_x", &rot.x);
++    rIter.getValue< f32 >("dir_y", &rot.y);
++    rIter.getValue< f32 >("dir_z", &rot.z);
++
++    MR::makeMtxTR(mPlacementMtx, pos, rot);
++}
++
++void StageDataHolder::updateDataAddress(const MR::AssignableArray< JMapInfo >* pInfoArray) {
++    for (const JMapInfo* pInfo = pInfoArray->begin(); pInfo != pInfoArray->end(); pInfo++) {
++        if (reinterpret_cast< uintptr_t >(pInfo->getData()) < _E4) {
++            _E4 = reinterpret_cast< uintptr_t >(pInfo->getData());
++        }
++
++        uintptr_t addr = reinterpret_cast< uintptr_t >(pInfo->getData()) + pInfo->getDataSize();
++
++        if (_E8 < addr) {
++            _E8 = addr;
++        }
++    }
++}
++
++namespace MR {
++    StageDataHolder* getStageDataHolder() {
++        return getSceneObj< StageDataHolder >(SceneObj_StageDataHolder);
++    }
++};  // namespace MR
+diff --git a/pc-port/tests/OriginalJMapResourceTests.cpp b/pc-port/tests/OriginalJMapResourceTests.cpp
+--- a/pc-port/tests/OriginalJMapResourceTests.cpp
++++ b/pc-port/tests/OriginalJMapResourceTests.cpp
+@@ -3,6 +3,8 @@
+ #include "resource/JMapResource.hpp"
+ #include "compat/JkrAllocationDomain.hpp"
+ #include "JSystem/JKernel/JKRHeap.hpp"
++#include "JSystem/JKernel/JKRArchive.hpp"
++#include "resource/RarcArchive.hpp"
+ #include <optional>
+ 
+ #include <array>
+@@ -175,11 +177,13 @@
+         first.reset();
+         require(find_jmap_resource(identity) != nullptr, "duplicate registration retains the same source");
+         second.reset();
+-        require(weak.expired() && find_jmap_resource(identity) == nullptr,
+-                "final registration removes the raw identity and source lease");
++        require(!weak.expired() && find_jmap_resource(identity) == nullptr,
++                "unpublication removes lookup while the attached reader retains actual source bytes");
+         const char* again = nullptr;
+         require(survivor.getValue(0, "name", &again) && again == value,
+-                "attached reader retains decoded table after archive source retirement");
++                "attached reader retains decoded table after archive source unpublication");
++        survivor = JMapInfo();
++        require(weak.expired(), "last reader releases the retained source lease");
+     }
+     void test_deferred_validation() {
+         using namespace smgpc::resource;
+@@ -214,9 +218,90 @@
+         for (auto* pointer : pointers)
+             require(pointer == pointers[0], "concurrent first readers publish one decoded table/cache");
+     }
++    void test_raw_source_identity() {
++        using namespace smgpc::resource;
++        auto first = fixture(), second = first;
++        JMapResource owner(first);
++        auto reg1 = owner.register_source(first), reg2 = owner.register_source(second);
++        JMapInfo a, b;
++        require(a.attach(first.data()) && b.attach(second.data()), "both raw aliases attach");
++        require(a.mData == b.mData && !(a == b), "shared decoded cache does not conflate distinct raw tables");
++        require(a.getData() == first.data() && b.getData() == second.data(), "source addresses remain exact");
++        require(a.getEntryData(0) == reinterpret_cast<const char*>(first.data() + 40), "entry starts at original data offset");
++        require(a.getEntryData(1) == reinterpret_cast<const char*>(first.data() + 76) && a.getDataSize() == 76,
++                "original row stride and row-range extent exclude the string table");
++        const char *av, *bv;
++        require(a.getValue(0, "name", &av) && b.getValue(0, "name", &bv) && av == bv, "raw aliases keep shared cached strings");
++        JMapInfo copy(a), moved(std::move(copy));
++        require(moved == a && moved.getData() == first.data() && copy.getData() == nullptr,
++                "copy and move preserve raw identity without retaining a moved-from alias");
++        JMapInfo owned = JMapInfo::from_bcsv(fixture());
++        require(owned.getData() != first.data() && std::memcmp(owned.getData(), first.data(), first.size()) == 0,
++                "direct parser owns the complete original byte image");
++    }
++    void test_raw_source_heap_retirement() {
++        using namespace smgpc::compat;
++        auto runtime = JkrHeapRuntime::create(1 << 20);
++        auto domain = JkrAllocationDomain::create(runtime, 1 << 18);
++        auto raw = std::make_shared<const std::vector<u8>>(fixture());
++        std::weak_ptr<const std::vector<u8>> weak = raw;
++        std::optional<smgpc::resource::JMapSourceRegistration> registration;
++        registration.emplace(smgpc::resource::register_jmap_source(*raw, raw));
++        {
++            JkrAllocationScope original(domain);
++            auto* info = new JMapInfo;
++            require(info->attach(raw->data()), "actual Game-heap parser attaches retained source");
++            require(JKRHeap::findFromRoot(info) == &domain->heap(), "parser belongs to original heap");
++            require(JKRHeap::findFromRoot(const_cast<void*>(info->getData())) == nullptr, "archive source stays host-owned");
++        }
++        registration.reset(); raw.reset();
++        require(!weak.expired(), "Game parser retains source after unpublication");
++        domain->heap().freeAll();
++        require(weak.expired(), "original disposer dispatch releases raw source before arena reuse");
++        {
++            JkrAllocationScope original(domain);
++            auto* reused = new JMapInfo;
++            require(reused->getData() == nullptr, "reused arena starts with no stale raw identity");
++        }
++        domain.reset(); runtime.reset();
++    }
++    void test_original_archive_index() {
++        using namespace smgpc::resource;
++        const auto table = fixture();
++        constexpr std::size_t dirs = 0x40, files = 0x50, strings = 0x8c, data = 0xc0;
++        constexpr std::array<u8, 24> names{'r','o','o','t',0,'.',0,'.','.',0,'t','a','b','l','e','.','b','c','s','v',0,0,0,0};
++        std::vector<u8> bytes(data + table.size());
++        auto put16 = [&](std::size_t off, u16 value) { bytes.at(off) = value >> 8; bytes.at(off + 1) = value; };
++        std::memcpy(bytes.data(), "RARC", 4); put32(bytes, 4, bytes.size()); put32(bytes, 8, 0x20);
++        put32(bytes, 12, data - 0x20); put32(bytes, 16, table.size());
++        put32(bytes, 0x20, 1); put32(bytes, 0x24, dirs - 0x20); put32(bytes, 0x28, 3); put32(bytes, 0x2c, files - 0x20);
++        put32(bytes, 0x30, names.size()); put32(bytes, 0x34, strings - 0x20); put16(0x38, 101);
++        std::memcpy(bytes.data() + dirs, "ROOT", 4); put32(bytes, dirs + 4, 0); put16(dirs + 8, RarcArchive::hash_name("root"));
++        put16(dirs + 10, 3); put32(bytes, dirs + 12, 0);
++        auto entry = [&](unsigned i, u16 id, u32 name_offset, u8 flags, u32 offset, u32 size) {
++            const auto p = files + i * 20; put16(p, id); put16(p + 2, RarcArchive::hash_name(reinterpret_cast<const char*>(names.data() + name_offset)));
++            put32(bytes, p + 4, (u32(flags) << 24) | name_offset); put32(bytes, p + 8, offset); put32(bytes, p + 12, size);
++        };
++        entry(0, 100, 10, 0x11, 0, table.size()); entry(1, 0xffff, 5, 2, 0, 16); entry(2, 0xffff, 7, 2, 0xffffffff, 16);
++        std::copy(names.begin(), names.end(), bytes.begin() + strings); std::copy(table.begin(), table.end(), bytes.begin() + data);
++        auto archive = std::make_shared<RarcArchive>(RarcArchive::from_bytes(std::move(bytes)));
++        JKRMemArchive original(*archive);
++        auto* index = original.getIdxResource(0);
++        require(index == archive->file_data_start() && index == original.getResource(u16(100)), "index fetch returns actual memory-archive bytes");
++        require(original.getIdxResource(100) == nullptr && original.getResource(u16(0)) == nullptr, "index and file ID remain distinct domains");
++        require(original.getIdxResource(3) == nullptr, "original index bounds reject end of file table");
++        u32 size = 0; require(original.fetchResource(original.findIdxResource(0), &size) == index && size == table.size(),
++                             "original cached memory fetch returns exact pointer and full file size");
++        auto registration = register_jmap_source(archive->file_data(archive->entries().front()), archive);
++        JMapInfo info; require(info.attach(index) && info.getData() == index, "index-fed parser retains real raw file identity");
++    }
++
+ }
+ int main() {
+     const std::array tests{
++        std::pair{"raw source identity and original row ranges", test_raw_source_identity},
++        std::pair{"raw source original heap retirement", test_raw_source_heap_retirement},
++        std::pair{"original memory-archive index fetch", test_original_archive_index},
+         std::pair{"borrowed name outlives local reader", test_reader_lifetime},
+         std::pair{"attached reader retains released resource", test_attached_reader_retains_data},
+         std::pair{"rebind preserves other owner", test_rebind_keeps_other_owner},
+diff --git a/pc-port/tests/OriginalResourceHolderTests.cpp b/pc-port/tests/OriginalResourceHolderTests.cpp
+--- a/pc-port/tests/OriginalResourceHolderTests.cpp
++++ b/pc-port/tests/OriginalResourceHolderTests.cpp
+@@ -216,10 +216,12 @@
+         rejects([&] { JMapInfo invalid; invalid.attach(holder.mFileInfoTable->getRes("unrelated.raw")); },
+                 "unrelated bytes are parsed only when explicitly attached and then rejected");
+         owner.reset(); source.reset(); domain.reset();
+-        require(weak_source.expired() && !find_jmap_resource(identity), "archive retirement removes raw identity and original owner");
++        require(!weak_source.expired() && !find_jmap_resource(identity), "archive unpublication removes lookup while the parser retains raw bytes");
+         const char* surviving = nullptr;
+         MR::getCsvDataStr(&surviving, parser.get(), "name", 0);
+-        require(surviving == name && std::string_view(surviving) == long_name, "attached parser retains decoded names independently");
++        require(surviving == name && std::string_view(surviving) == long_name, "attached parser retains decoded names and exact source bytes");
++        parser.reset();
++        require(weak_source.expired(), "final attached parser releases the archive source owner");
+     }
+ 
+     void test_original_constructor(GameResourceRuntime& process) {

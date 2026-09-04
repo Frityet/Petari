@@ -1,0 +1,22 @@
+{
+  "original_sdk_methods": [
+    {
+      "root": "src/JSystem/JKernel/JKRArchivePub.cpp",
+      "root_sha256": "a3e7c8e13209e3d9c618ce0c52f4c6117d43dd479bab085abd85420f08c24e66",
+      "native": "build/original-jmap-source-identity-20260903/staged/compat/OriginalArchiveIndex.cpp",
+      "native_sha256": "d77a3f81ef53b6b64a3ab0fec470583daa2c183c646ceb30f4dfd0a87c5a4301",
+      "complete_body_identical": true,
+      "native_type_adaptation": "unsigned long -> u32 (SDK 32-bit ABI)"
+    },
+    {
+      "root": "src/JSystem/JKernel/JKRMemArchive.cpp",
+      "root_sha256": "014de88e47ba47fb9485febee369bc711de70bb345de39f229ff485ab12f1901",
+      "native": "build/original-jmap-source-identity-20260903/staged/compat/OriginalArchiveIndex.cpp",
+      "native_sha256": "d77a3f81ef53b6b64a3ab0fec470583daa2c183c646ceb30f4dfd0a87c5a4301",
+      "complete_body_identical": true,
+      "native_type_adaptation": "unsigned long -> u32 (SDK 32-bit ABI)"
+    }
+  ],
+  "staged_stage_source_and_header_identical_to_root": true,
+  "ordered_native_patches_reproduce_all_13_manifest_files": true
+}

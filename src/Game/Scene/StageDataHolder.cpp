@@ -216,7 +216,7 @@ void StageDataHolder::getStartCameraIdInfoFromStartDataIndex(JMapIdInfo* pInfo, 
 }
 
 const StageDataHolder* StageDataHolder::findPlacedStageDataHolder(const JMapInfoIter& rIter) const {
-    s32 data = (s32)rIter.mInfo->mData + rIter.mInfo->mData->mDataOffset + rIter.mInfo->mData->mEntrySize * rIter.mIndex;
+    uintptr_t data = reinterpret_cast< uintptr_t >(rIter.mInfo->getEntryData(rIter.mIndex));
 
     if (_E4 <= data && data < _E8) {
         return this;
@@ -502,15 +502,13 @@ JMapInfoIter StageDataHolder::getStartJMapInfoIterFromStartDataIndex(int idx_) c
     int idx = idx_;
 
     for (JMapInfo* pInfo = mStartObjs.mArr; pInfo != mStartObjs.end(); pInfo++) {
-        const JMapData* curData = pInfo->mData;
-        bool isValid = curData;
-        int curIdx = isValid ? curData->mNumEntries : 0;
+        int curIdx = pInfo->getNumEntries();
 
         if (idx < curIdx) {
             return JMapInfoIter(pInfo, idx);
         }
 
-        curIdx = isValid ? curData->mNumEntries : 0;
+        curIdx = pInfo->getNumEntries();
 
         idx -= curIdx;
     }
@@ -574,11 +572,11 @@ void StageDataHolder::calcPlacementMtx(const JMapInfoIter& rIter) {
 
 void StageDataHolder::updateDataAddress(const MR::AssignableArray< JMapInfo >* pInfoArray) {
     for (const JMapInfo* pInfo = pInfoArray->begin(); pInfo != pInfoArray->end(); pInfo++) {
-        if ((u32)pInfo->mData < _E4) {
-            _E4 = (u32)pInfo->mData;
+        if (reinterpret_cast< uintptr_t >(pInfo->getData()) < _E4) {
+            _E4 = reinterpret_cast< uintptr_t >(pInfo->getData());
         }
 
-        u32 addr = (pInfo->mData->mEntrySize * pInfo->mData->mNumEntries) + ((s32)pInfo->mData + pInfo->mData->mDataOffset);
+        uintptr_t addr = reinterpret_cast< uintptr_t >(pInfo->getData()) + pInfo->getDataSize();
 
         if (_E8 < addr) {
             _E8 = addr;

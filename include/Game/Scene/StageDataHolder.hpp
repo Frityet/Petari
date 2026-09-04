@@ -3,6 +3,7 @@
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/Util/Array.hpp"
 #include <JSystem/JGeometry/TMatrix.hpp>
+#include <stdint.h>
 
 class JKRArchive;
 class JMapIdInfo;
@@ -84,8 +85,8 @@ public:
     u8 _E1;
     u8 _E2;
     u8 _E3;
-    u32 _E4;
-    u32 _E8;
+    uintptr_t _E4;
+    uintptr_t _E8;
     MR::AssignableArray< JMapInfo > _EC;
     MR::AssignableArray< JMapInfo > _F4;
     PlacementInfoOrdered* _FC;

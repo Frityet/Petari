@@ -1,0 +1,14 @@
+[
+  {
+    "path": "include/Game/Util/JMapInfo.hpp",
+    "sha256": "76bc928766f292a067c56b142b47a9fa7b640da120d68c08c6f5ec4ed71a59ae"
+  },
+  {
+    "path": "include/Game/Scene/StageDataHolder.hpp",
+    "sha256": "59a774622d51750fad795cd48369f86443db6a5cb14f1c354e8752c9077b7e14"
+  },
+  {
+    "path": "src/Game/Scene/StageDataHolder.cpp",
+    "sha256": "b4eac95a209b0c2ff48b4b42a6ae45f4835667d250825adade53b439de630bbd"
+  }
+]

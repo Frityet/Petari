@@ -1,0 +1,67 @@
+[
+  {
+    "path": "pc-port/src/Game/Util/JMapInfo.hpp",
+    "staged": "build/original-jmap-source-identity-20260903/staged/Game/Util/JMapInfo.hpp",
+    "sha256": "2e3a85a90a09a7b9004212fef24c19db125788f6b45ce3477aa7656552b57810"
+  },
+  {
+    "path": "pc-port/src/Game/Util/JMapInfo.cpp",
+    "staged": "build/original-jmap-source-identity-20260903/staged/Game/Util/JMapInfo.cpp",
+    "sha256": "f9d29f6847dc49474f7ef698cacbdefd64e7bec86094d6984857c28a2b7cb266"
+  },
+  {
+    "path": "pc-port/src/resource/JMapResource.hpp",
+    "staged": "build/original-jmap-source-identity-20260903/staged/resource/JMapResource.hpp",
+    "sha256": "7f22a366626353ccbb4eacb01fdf97553bf1f95dc74025ce86b19392027aca1e"
+  },
+  {
+    "path": "pc-port/src/resource/JMapResource.cpp",
+    "staged": "build/original-jmap-source-identity-20260903/staged/resource/JMapResource.cpp",
+    "sha256": "7d897b64022fe059393026fa6801a80cb208e3f51c55726f3bbce0b1195a8731"
+  },
+  {
+    "path": "pc-port/src/resource/BcsvTable.hpp",
+    "staged": "build/original-jmap-source-identity-20260903/staged/resource/BcsvTable.hpp",
+    "sha256": "57336c34a92d1b1ace538c45d96d483a8680dbac7135644ed7f34a7c5b138667"
+  },
+  {
+    "path": "pc-port/src/resource/RarcArchive.hpp",
+    "staged": "build/original-jmap-source-identity-20260903/staged/resource/RarcArchive.hpp",
+    "sha256": "7141c7a6ca4332dfefc39a5d908082ef4e12afae270bbc64b5f084eba438fc19"
+  },
+  {
+    "path": "pc-port/src/JSystem/JKernel/JKRArchive.hpp",
+    "staged": "build/original-jmap-source-identity-20260903/staged/JSystem/JKernel/JKRArchive.hpp",
+    "sha256": "5c1e4c795089eaca6e521e8201b5b5c2c5cedac918945444a9f0499cfe536c65"
+  },
+  {
+    "path": "pc-port/src/compat/OriginalArchiveIndex.cpp",
+    "staged": "build/original-jmap-source-identity-20260903/staged/compat/OriginalArchiveIndex.cpp",
+    "sha256": "d77a3f81ef53b6b64a3ab0fec470583daa2c183c646ceb30f4dfd0a87c5a4301"
+  },
+  {
+    "path": "pc-port/src/Game/Util/JMapUtil.hpp",
+    "staged": "build/original-jmap-source-identity-20260903/staged/Game/Util/JMapUtil.hpp",
+    "sha256": "1e3efc71e1f56cce0b1ca16a9b4336b601361b4881d27fa01e68607d2f082703"
+  },
+  {
+    "path": "pc-port/src/Game/Scene/StageDataHolder.hpp",
+    "staged": "build/original-jmap-source-identity-20260903/staged/Game/Scene/StageDataHolder.hpp",
+    "sha256": "59a774622d51750fad795cd48369f86443db6a5cb14f1c354e8752c9077b7e14"
+  },
+  {
+    "path": "pc-port/src/Game/Scene/StageDataHolder.cpp",
+    "staged": "build/original-jmap-source-identity-20260903/staged/Game/Scene/StageDataHolder.cpp",
+    "sha256": "b4eac95a209b0c2ff48b4b42a6ae45f4835667d250825adade53b439de630bbd"
+  },
+  {
+    "path": "pc-port/tests/OriginalJMapResourceTests.cpp",
+    "staged": "build/original-jmap-source-identity-20260903/tests/OriginalJMapResourceTests.cpp",
+    "sha256": "579d710ce9752aa750cfd465b065127472d863d1eee39f3a527f3da6e728ccbd"
+  },
+  {
+    "path": "pc-port/tests/OriginalResourceHolderTests.cpp",
+    "staged": "build/original-jmap-source-identity-20260903/tests/OriginalResourceHolderTests.cpp",
+    "sha256": "6a411e0bbb097fb422b0468d675931a5787b4f3e55734afd4950b52e4bf7ae71"
+  }
+]

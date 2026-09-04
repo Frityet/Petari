@@ -65,6 +65,18 @@ public:
         return dataExists() ? mData->mNumFields : 0;
     }
 
+    inline const void* getData() const {
+        return mData;
+    }
+
+    inline const char* getEntryData(s32 entryIndex) const {
+        return reinterpret_cast< const char* >(mData) + mData->mDataOffset + mData->mEntrySize * entryIndex;
+    }
+
+    inline u32 getDataSize() const {
+        return mData->mEntrySize * mData->mNumEntries + mData->mDataOffset;
+    }
+
     bool attach(const void*);
     void setName(const char*);
     const char* getName() const;

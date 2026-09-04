@@ -1,0 +1,6 @@
+{
+  "binary_sha256": "2d6d41285016503ea105ca9be0e54559996550796fc1116d6acea08b3eea52d5",
+  "returncode": 0,
+  "pass_groups": 13,
+  "sanitizers": "address,undefined"
+}

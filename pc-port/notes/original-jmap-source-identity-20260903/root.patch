@@ -1,0 +1,92 @@
+diff --git a/include/Game/Scene/StageDataHolder.hpp b/include/Game/Scene/StageDataHolder.hpp
+index bbe224a8d..71334d762 100644
+--- a/include/Game/Scene/StageDataHolder.hpp
++++ b/include/Game/Scene/StageDataHolder.hpp
+@@ -3,6 +3,7 @@
+ #include "Game/NameObj/NameObj.hpp"
+ #include "Game/Util/Array.hpp"
+ #include <JSystem/JGeometry/TMatrix.hpp>
++#include <stdint.h>
+ 
+ class JKRArchive;
+ class JMapIdInfo;
+@@ -84,8 +85,8 @@ public:
+     u8 _E1;
+     u8 _E2;
+     u8 _E3;
+-    u32 _E4;
+-    u32 _E8;
++    uintptr_t _E4;
++    uintptr_t _E8;
+     MR::AssignableArray< JMapInfo > _EC;
+     MR::AssignableArray< JMapInfo > _F4;
+     PlacementInfoOrdered* _FC;
+diff --git a/include/Game/Util/JMapInfo.hpp b/include/Game/Util/JMapInfo.hpp
+index f55562291..9f55022d2 100644
+--- a/include/Game/Util/JMapInfo.hpp
++++ b/include/Game/Util/JMapInfo.hpp
+@@ -65,6 +65,18 @@ public:
+         return dataExists() ? mData->mNumFields : 0;
+     }
+ 
++    inline const void* getData() const {
++        return mData;
++    }
++
++    inline const char* getEntryData(s32 entryIndex) const {
++        return reinterpret_cast< const char* >(mData) + mData->mDataOffset + mData->mEntrySize * entryIndex;
++    }
++
++    inline u32 getDataSize() const {
++        return mData->mEntrySize * mData->mNumEntries + mData->mDataOffset;
++    }
++
+     bool attach(const void*);
+     void setName(const char*);
+     const char* getName() const;
+diff --git a/src/Game/Scene/StageDataHolder.cpp b/src/Game/Scene/StageDataHolder.cpp
+index e29b3e463..1d60c8e74 100644
+--- a/src/Game/Scene/StageDataHolder.cpp
++++ b/src/Game/Scene/StageDataHolder.cpp
+@@ -216,7 +216,7 @@ void StageDataHolder::getStartCameraIdInfoFromStartDataIndex(JMapIdInfo* pInfo,
+ }
+ 
+ const StageDataHolder* StageDataHolder::findPlacedStageDataHolder(const JMapInfoIter& rIter) const {
+-    s32 data = (s32)rIter.mInfo->mData + rIter.mInfo->mData->mDataOffset + rIter.mInfo->mData->mEntrySize * rIter.mIndex;
++    uintptr_t data = reinterpret_cast< uintptr_t >(rIter.mInfo->getEntryData(rIter.mIndex));
+ 
+     if (_E4 <= data && data < _E8) {
+         return this;
+@@ -502,15 +502,13 @@ JMapInfoIter StageDataHolder::getStartJMapInfoIterFromStartDataIndex(int idx_) c
+     int idx = idx_;
+ 
+     for (JMapInfo* pInfo = mStartObjs.mArr; pInfo != mStartObjs.end(); pInfo++) {
+-        const JMapData* curData = pInfo->mData;
+-        bool isValid = curData;
+-        int curIdx = isValid ? curData->mNumEntries : 0;
++        int curIdx = pInfo->getNumEntries();
+ 
+         if (idx < curIdx) {
+             return JMapInfoIter(pInfo, idx);
+         }
+ 
+-        curIdx = isValid ? curData->mNumEntries : 0;
++        curIdx = pInfo->getNumEntries();
+ 
+         idx -= curIdx;
+     }
+@@ -574,11 +572,11 @@ void StageDataHolder::calcPlacementMtx(const JMapInfoIter& rIter) {
+ 
+ void StageDataHolder::updateDataAddress(const MR::AssignableArray< JMapInfo >* pInfoArray) {
+     for (const JMapInfo* pInfo = pInfoArray->begin(); pInfo != pInfoArray->end(); pInfo++) {
+-        if ((u32)pInfo->mData < _E4) {
+-            _E4 = (u32)pInfo->mData;
++        if (reinterpret_cast< uintptr_t >(pInfo->getData()) < _E4) {
++            _E4 = reinterpret_cast< uintptr_t >(pInfo->getData());
+         }
+ 
+-        u32 addr = (pInfo->mData->mEntrySize * pInfo->mData->mNumEntries) + ((s32)pInfo->mData + pInfo->mData->mDataOffset);
++        uintptr_t addr = reinterpret_cast< uintptr_t >(pInfo->getData()) + pInfo->getDataSize();
+ 
+         if (_E8 < addr) {
+             _E8 = addr;
