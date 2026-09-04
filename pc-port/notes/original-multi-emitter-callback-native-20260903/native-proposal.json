@@ -1,0 +1,159 @@
+{
+  "files": [
+    {
+      "native_destination": "pc-port/src/Game/Effect/AutoEffectInfo.cpp",
+      "staged_source": "build/original-multi-emitter-callback-native-20260903/staged/Game/Effect/AutoEffectInfo.cpp",
+      "sha256": "534ca3b92af4854ccf4862e53b94dc8f3418d8901e227e79425122a8f7f368d5",
+      "changed": true
+    },
+    {
+      "native_destination": "pc-port/src/Game/Effect/AutoEffectInfo.hpp",
+      "staged_source": "build/original-multi-emitter-callback-native-20260903/staged/Game/Effect/AutoEffectInfo.hpp",
+      "sha256": "df004264eb9c98df4d26a87d4941ef2899dae2dd0815ec53b0e6b8a5c64a441e",
+      "changed": true
+    },
+    {
+      "native_destination": "pc-port/src/Game/Effect/MultiEmitter.cpp",
+      "staged_source": "build/original-multi-emitter-callback-native-20260903/staged/Game/Effect/MultiEmitter.cpp",
+      "sha256": "86a5226d7cc9cfece58c3678110c0562a124c4d445c689e01746b1e6b789c1e5",
+      "changed": true
+    },
+    {
+      "native_destination": "pc-port/src/Game/Effect/MultiEmitter.hpp",
+      "staged_source": "build/original-multi-emitter-callback-native-20260903/staged/Game/Effect/MultiEmitter.hpp",
+      "sha256": "24298c1f01a0a0f8b066c65f67597a2692f2a3e088112be19f2fc4f4ebcaefd3",
+      "changed": true
+    },
+    {
+      "native_destination": "pc-port/src/Game/Effect/MultiEmitterCallBack.cpp",
+      "staged_source": "build/original-multi-emitter-callback-native-20260903/staged/Game/Effect/MultiEmitterCallBack.cpp",
+      "sha256": "23870a6a89871c6577ce505863d63df0a2af6d57a291389364dba0b122848127",
+      "changed": true
+    },
+    {
+      "native_destination": "pc-port/src/Game/Effect/MultiEmitterCallBack.hpp",
+      "staged_source": "build/original-multi-emitter-callback-native-20260903/staged/Game/Effect/MultiEmitterCallBack.hpp",
+      "sha256": "4dfc7b325689b4f70ea288fc8b44b21080e734a70e67b991fdcbfef9acb4efeb",
+      "changed": true
+    },
+    {
+      "native_destination": "pc-port/src/Game/Effect/MultiEmitterParticleCallBack.cpp",
+      "staged_source": "build/original-multi-emitter-callback-native-20260903/staged/Game/Effect/MultiEmitterParticleCallBack.cpp",
+      "sha256": "cbca8fb7eb7456ff1bf744c2ca36367a3b085dcf4c874e9f1d4044ea41b297b0",
+      "changed": true
+    },
+    {
+      "native_destination": "pc-port/src/Game/Effect/MultiEmitterParticleCallBack.hpp",
+      "staged_source": "build/original-multi-emitter-callback-native-20260903/staged/Game/Effect/MultiEmitterParticleCallBack.hpp",
+      "sha256": "3d2cea4e46ff71b00806a04accccbf394f6c5f732abb04830dde9cfac6196246",
+      "changed": true
+    },
+    {
+      "native_destination": "pc-port/src/Game/Effect/SingleEmitter.cpp",
+      "staged_source": "build/original-multi-emitter-callback-native-20260903/staged/Game/Effect/SingleEmitter.cpp",
+      "sha256": "83f3c10281e6a93b3191854371688c385745fcc050bcbc9bd74391b33d5a9944",
+      "changed": true
+    },
+    {
+      "native_destination": "pc-port/src/Game/Effect/SingleEmitter.hpp",
+      "staged_source": "build/original-multi-emitter-callback-native-20260903/staged/Game/Effect/SingleEmitter.hpp",
+      "sha256": "de92f724c9f5824a534086e17e8311580198764a6472c1069a252d274a4334d1",
+      "changed": true
+    },
+    {
+      "native_destination": "pc-port/src/compat/OriginalEffect2D.cpp",
+      "staged_source": "build/original-multi-emitter-callback-native-20260903/staged/compat/OriginalEffect2D.cpp",
+      "sha256": "c6bd04d0b818268f03084b84e4f613aa2360b0cfe0913c76eccda9451e2bfd66",
+      "changed": true
+    },
+    {
+      "native_destination": "pc-port/src/compat/OriginalEmitterStringQueries.cpp",
+      "staged_source": "build/original-multi-emitter-callback-native-20260903/staged/compat/OriginalEmitterStringQueries.cpp",
+      "sha256": "ce0c486ced0d99f66269b2c19104e6ed0265dea1e5dbb9f62f5bec12e06d1aae",
+      "changed": true
+    }
+  ],
+  "source_correspondence": [
+    {
+      "source": "src/Game/Effect/MultiEmitter.cpp",
+      "staged": "build/original-multi-emitter-callback-native-20260903/staged/Game/Effect/MultiEmitter.cpp",
+      "byte_identical": true
+    },
+    {
+      "source": "include/Game/Effect/MultiEmitter.hpp",
+      "staged": "build/original-multi-emitter-callback-native-20260903/staged/Game/Effect/MultiEmitter.hpp",
+      "byte_identical": true
+    },
+    {
+      "source": "src/Game/Effect/MultiEmitterCallBack.cpp",
+      "staged": "build/original-multi-emitter-callback-native-20260903/staged/Game/Effect/MultiEmitterCallBack.cpp",
+      "byte_identical": true
+    },
+    {
+      "source": "include/Game/Effect/MultiEmitterCallBack.hpp",
+      "staged": "build/original-multi-emitter-callback-native-20260903/staged/Game/Effect/MultiEmitterCallBack.hpp",
+      "byte_identical": true
+    },
+    {
+      "source": "src/Game/Effect/SingleEmitter.cpp",
+      "staged": "build/original-multi-emitter-callback-native-20260903/staged/Game/Effect/SingleEmitter.cpp",
+      "byte_identical": true
+    },
+    {
+      "source": "include/Game/Effect/SingleEmitter.hpp",
+      "staged": "build/original-multi-emitter-callback-native-20260903/staged/Game/Effect/SingleEmitter.hpp",
+      "byte_identical": true
+    },
+    {
+      "source": "src/Game/Effect/MultiEmitterParticleCallBack.cpp",
+      "staged": "build/original-multi-emitter-callback-native-20260903/staged/Game/Effect/MultiEmitterParticleCallBack.cpp",
+      "byte_identical": true
+    },
+    {
+      "source": "include/Game/Effect/MultiEmitterParticleCallBack.hpp",
+      "staged": "build/original-multi-emitter-callback-native-20260903/staged/Game/Effect/MultiEmitterParticleCallBack.hpp",
+      "byte_identical": true
+    },
+    {
+      "source": "src/Game/Effect/AutoEffectInfo.cpp",
+      "staged": "build/original-multi-emitter-callback-native-20260903/staged/Game/Effect/AutoEffectInfo.cpp",
+      "byte_identical": true
+    },
+    {
+      "source": "include/Game/Effect/AutoEffectInfo.hpp",
+      "staged": "build/original-multi-emitter-callback-native-20260903/staged/Game/Effect/AutoEffectInfo.hpp",
+      "byte_identical": true
+    },
+    {
+      "source": "pc-port/notes/original-particle-resource-owner-20260903/native/compat/OriginalParticleResourceQueries.cpp",
+      "staged": "build/original-multi-emitter-callback-native-20260903/staged/compat/OriginalParticleResourceQueries.cpp",
+      "byte_identical": true
+    },
+    {
+      "source": "pc-port/notes/original-particle-resource-owner-20260903/native/compat/OriginalParticleResourceLookup.cpp",
+      "staged": "build/original-multi-emitter-callback-native-20260903/staged/compat/OriginalParticleResourceLookup.cpp",
+      "byte_identical": true
+    },
+    {
+      "source": "pc-port/notes/original-particle-resource-owner-20260903/native/runtime/ParticleResourceOwnership.cpp",
+      "staged": "build/original-multi-emitter-callback-native-20260903/staged/runtime/ParticleResourceOwnership.cpp",
+      "byte_identical": true
+    },
+    {
+      "source": "pc-port/notes/original-particle-resource-owner-20260903/native/runtime/ParticleResourceOwnership.hpp",
+      "staged": "build/original-multi-emitter-callback-native-20260903/staged/runtime/ParticleResourceOwnership.hpp",
+      "byte_identical": true
+    },
+    {
+      "source": "pc-port/src/runtime/ParticleResourceOwnership.hpp",
+      "staged": "build/original-multi-emitter-callback-native-20260903/staged/runtime/ParticleResourceOwnership.hpp",
+      "byte_identical": true
+    },
+    {
+      "source": "pc-port/src/runtime/ParticleResourceOwnership.cpp",
+      "staged": "build/original-multi-emitter-callback-native-20260903/staged/runtime/ParticleResourceOwnership.cpp",
+      "byte_identical": true
+    }
+  ],
+  "patch_sha256": "004bb96470253f51e8a5cf25e42766b813330b1efe5966a8a4d08370a52acab9"
+}
