@@ -4,7 +4,6 @@
 #include "Game/Effect/MultiEmitterCallBack.hpp"
 #include "Game/Effect/MultiEmitterParticleCallBack.hpp"
 #include "Game/Effect/SingleEmitter.hpp"
-#include "Game/Effect/SyncBckEffectInfo.hpp"
 #include "Game/Util/HashUtil.hpp"
 #include "Game/Util/MemoryUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
@@ -152,9 +151,8 @@ void MultiEmitter::create(EffectSystem* pSystem) {
     }
 }
 
-void MultiEmitter::scanParticleEmitter(EffectSystem* pSystem) {
-    std::for_each_array(mEmitters.begin(), mEmitters.end(), std::bind2nd(std::mem_func(&SingleEmitter::scanParticleEmitter), pSystem));
-}
+/* void MultiEmitter::scanParticleEmitter(EffectSystem* pSystem) {
+} */
 
 void MultiEmitter::forceFollowOn() {
     mCallBack->forceFollowOn();
@@ -168,23 +166,19 @@ void MultiEmitter::forceScaleOn() {
     mCallBack->forceScaleOn();
 }
 
-void MultiEmitter::initSyncBck(XanimePlayer* pPlayer, const char* pName, s32 count, f32 startFrame) {
-    _24 = new SyncBckEffectInfo(pPlayer, pName, count, 0.0f, -1.0f, false);
-    _24->mStartFrame = startFrame;
+/*
+void MultiEmitter::initSyncBck(XanimePlayer* pPlayer, const char* pName, s32 i1, f32 f2) {
 }
 
-void MultiEmitter::onDeleteSyncBck(bool, f32 endFrame) {
-    _24->mEndFrame = endFrame;
+void MultiEmitter::onDeleteSyncBck(bool, f32) {
 }
 
-void MultiEmitter::addSyncBck(const XanimePlayer* pPlayer, const char* pName) {
-    _24->addBck(pPlayer, pName);
+void MultiEmitter::addSyncBck(const XanimePlayer*, const char*) {
 }
 
-void MultiEmitter::setContinueBckEnd(bool continueBckEnd) {
-    _24->mContinueBckEnd = continueBckEnd;
+void MultiEmitter::setContinueBckEnd(bool) {
 }
-
+ */
 void MultiEmitter::onCreateSyncClipping() {
     turnFlagOn(JPAEmtrStts_FirstEmit);
 }

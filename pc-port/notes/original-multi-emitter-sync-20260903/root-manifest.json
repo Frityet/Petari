@@ -1,0 +1,14 @@
+[
+  {
+    "path": "src/Game/Effect/MultiEmitter.cpp",
+    "sha256": "d1a6084c480e9f7a977815647d4d6f101595d70bd7db9e28f5ea63007c6e7ed8"
+  },
+  {
+    "path": "src/Game/Effect/SyncBckEffectInfo.cpp",
+    "sha256": "9a54ee00dce57c6769f67169da425fa75f83f4f4b8c9696afdf25c999814ef01"
+  },
+  {
+    "path": "include/Game/Effect/SyncBckEffectInfo.hpp",
+    "sha256": "fe3a0f7402a836092d3d1c9cd714174f7e1589e9fe95806469875fda15e1ec88"
+  }
+]

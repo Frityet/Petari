@@ -1,0 +1,68 @@
+[
+  {
+    "source": "include/Game/Effect/MultiEmitter.hpp",
+    "staged": "build/original-multi-emitter-sync-20260903/staged/Game/Effect/MultiEmitter.hpp",
+    "sha256": "24298c1f01a0a0f8b066c65f67597a2692f2a3e088112be19f2fc4f4ebcaefd3",
+    "root_identical": true
+  },
+  {
+    "source": "include/Game/Effect/SyncBckEffectInfo.hpp",
+    "staged": "build/original-multi-emitter-sync-20260903/staged/Game/Effect/SyncBckEffectInfo.hpp",
+    "sha256": "fe3a0f7402a836092d3d1c9cd714174f7e1589e9fe95806469875fda15e1ec88",
+    "root_identical": true
+  },
+  {
+    "source": "include/Game/Effect/EffectSystem.hpp",
+    "staged": "build/original-multi-emitter-sync-20260903/staged/Game/Effect/EffectSystem.hpp",
+    "sha256": "f863add4b4f9f4991c4536c90fd63334b9d1c64acac449dc0aacc6a9fe542b9c",
+    "root_identical": true
+  },
+  {
+    "source": "include/Game/Effect/EffectSystemUtil.hpp",
+    "staged": "build/original-multi-emitter-sync-20260903/staged/Game/Effect/EffectSystemUtil.hpp",
+    "sha256": "fa765cbc06459d165bbf77f17841c306741902f42bce88c2077d4426337061c2",
+    "root_identical": true
+  },
+  {
+    "source": "include/Game/Effect/ParticleResourceHolder.hpp",
+    "staged": "build/original-multi-emitter-sync-20260903/staged/Game/Effect/ParticleResourceHolder.hpp",
+    "sha256": "ba533a624489e16f9c1058ce3c661a03415c56b96f3a453f29210bd74a7cc1ed",
+    "root_identical": true
+  },
+  {
+    "source": "include/Game/Effect/MultiEmitterCallBack.hpp",
+    "staged": "build/original-multi-emitter-sync-20260903/staged/Game/Effect/MultiEmitterCallBack.hpp",
+    "sha256": "4dfc7b325689b4f70ea288fc8b44b21080e734a70e67b991fdcbfef9acb4efeb",
+    "root_identical": true
+  },
+  {
+    "source": "include/Game/Effect/MultiEmitterParticleCallBack.hpp",
+    "staged": "build/original-multi-emitter-sync-20260903/staged/Game/Effect/MultiEmitterParticleCallBack.hpp",
+    "sha256": "3d2cea4e46ff71b00806a04accccbf394f6c5f732abb04830dde9cfac6196246",
+    "root_identical": true
+  },
+  {
+    "source": "include/Game/Effect/SingleEmitter.hpp",
+    "staged": "build/original-multi-emitter-sync-20260903/staged/Game/Effect/SingleEmitter.hpp",
+    "sha256": "de92f724c9f5824a534086e17e8311580198764a6472c1069a252d274a4334d1",
+    "root_identical": true
+  },
+  {
+    "source": "include/Game/Effect/ParticleEmitter.hpp",
+    "staged": "build/original-multi-emitter-sync-20260903/staged/Game/Effect/ParticleEmitter.hpp",
+    "sha256": "1a0f50d2b503adee89129083273c3ed072fd73db77629d7bb9fa0f682daeaba7",
+    "root_identical": true
+  },
+  {
+    "source": "src/Game/Effect/MultiEmitter.cpp",
+    "staged": "build/original-multi-emitter-sync-20260903/staged/Game/Effect/MultiEmitter.cpp",
+    "sha256": "d1a6084c480e9f7a977815647d4d6f101595d70bd7db9e28f5ea63007c6e7ed8",
+    "root_identical": true
+  },
+  {
+    "source": "src/Game/Effect/SyncBckEffectInfo.cpp",
+    "staged": "build/original-multi-emitter-sync-20260903/staged/Game/Effect/SyncBckEffectInfo.cpp",
+    "sha256": "9a54ee00dce57c6769f67169da425fa75f83f4f4b8c9696afdf25c999814ef01",
+    "root_identical": true
+  }
+]

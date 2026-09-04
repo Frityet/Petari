@@ -1,0 +1,13 @@
+scanParticleEmitter__12MultiEmitterFP12EffectSystem 99.72222 144 relocated bytes exact=True
+initSyncBck__12MultiEmitterFP12XanimePlayerPCclf 100.0 132 relocated bytes exact=True
+onDeleteSyncBck__12MultiEmitterFbf 100.0 12 relocated bytes exact=True
+addSyncBck__12MultiEmitterFPC12XanimePlayerPCc 100.0 8 relocated bytes exact=True
+setContinueBckEnd__12MultiEmitterFb 100.0 12 relocated bytes exact=True
+__ct__Q217SyncBckEffectInfo15BckResourceInfoFPC12XanimePlayerPCc 100.0 72 relocated bytes exact=True
+isLoop__Q217SyncBckEffectInfo15BckResourceInfoCFv 100.0 36 relocated bytes exact=True
+__ct__17SyncBckEffectInfoFPC12XanimePlayerPCclffb 100.0 124 relocated bytes exact=True
+addBck__17SyncBckEffectInfoFPC12XanimePlayerPCc 100.0 108 relocated bytes exact=True
+isRegisteredBck__17SyncBckEffectInfoCFPCc 100.0 140 relocated bytes exact=True
+isBckLoop__17SyncBckEffectInfoCFPCc 100.0 164 relocated bytes exact=True
+isExistSyncBckDeleteFrame__Q22MR6EffectFPC17SyncBckEffectInfo 100.0 28 relocated bytes exact=True
+12 functions / 980 bytes verified; 40 previous functions unchanged

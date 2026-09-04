@@ -1,0 +1,56 @@
+
+/Users/frityet/Projects/petari/build/original-multi-emitter-sync-20260903/MultiEmitter-native.o:
+__Unwind_Resume
+EffectSystem::createSingleEmitter(SingleEmitter*, MultiEmitterCallBackBase*, MultiEmitterParticleCallBack*)
+MultiEmitter::playCalcEmitter(int)
+MultiEmitter::stopCalcEmitter(int)
+MultiEmitter::playDrawParticle(int)
+MultiEmitter::stopDrawParticle(int)
+MultiEmitter::setGlobalRotation(JGeometry::TVec3<short> const&, int)
+SingleEmitter::deleteEmitter()
+SingleEmitter::scanParticleEmitter(EffectSystem*)
+SingleEmitter::init(unsigned short)
+SingleEmitter::SingleEmitter()
+SyncBckEffectInfo::addBck(XanimePlayer const*, char const*)
+SyncBckEffectInfo::SyncBckEffectInfo(XanimePlayer const*, char const*, int, float, float, bool)
+MultiEmitterCallBack::setHostMtx(float (*) [4])
+MultiEmitterCallBack::setHostSRT(JGeometry::TVec3<float> const*, JGeometry::TVec3<float> const*, JGeometry::TVec3<float> const*)
+MultiEmitterCallBack::forceScaleOn()
+MultiEmitterCallBack::setBaseScale(float)
+MultiEmitterCallBack::forceFollowOn()
+MultiEmitterCallBack::forceFollowOff()
+MultiEmitterCallBack::resetFollowCurrent()
+MultiEmitterCallBack::MultiEmitterCallBack(MultiEmitter const*, float (*) [4], JGeometry::TVec3<float> const*, JGeometry::TVec3<float> const&)
+MultiEmitterCallBack::MultiEmitterCallBack(MultiEmitter const*, float (*) [4], JGeometry::TVec3<float> const&)
+MultiEmitterCallBack::MultiEmitterCallBack(MultiEmitter const*, JGeometry::TVec3<float> const*, JGeometry::TVec3<float> const*, JGeometry::TVec3<float> const*, JGeometry::TVec3<float> const&)
+MultiEmitterCallBack::MultiEmitterCallBack(MultiEmitter const*, JGeometry::TVec3<float> const&)
+MultiEmitterParticleCallBack::MultiEmitterParticleCallBack()
+MR::zeroMemory(void*, unsigned int)
+MR::getHashCode(char const*)
+MR::hasStringSpace(char const*)
+MR::getEffectSystem()
+MR::isDigitStringTail(char const*, int)
+MR::Effect::isExistInResource(unsigned short*, char const*)
+MR::Effect::isExistInResource(unsigned short*, char const*, int)
+EffectSystem::forceDeleteSingleEmitter(SingleEmitter*) const
+SingleEmitter::isValid() const
+SingleEmitter::isOneTime() const
+operator delete[](void*)
+operator delete[](void*, unsigned long)
+operator delete(void*, unsigned long)
+operator new[](unsigned long)
+operator new(unsigned long)
+___gxx_personality_v0
+___stack_chk_fail
+___stack_chk_guard
+_strlen
+
+/Users/frityet/Projects/petari/build/original-multi-emitter-sync-20260903/SyncBckEffectInfo-native.o:
+__Unwind_Resume
+MR::isEqualStringCase(char const*, char const*)
+XanimeResourceTable::findResMotion(char const*) const
+operator delete[](void*)
+operator delete(void*, unsigned long)
+operator new[](unsigned long)
+operator new(unsigned long)
+___gxx_personality_v0
