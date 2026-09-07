@@ -34,7 +34,23 @@ namespace {
         pFrameCtrl->setFrame(pFrameCtrl->mEnd);
     }
     bool getTextDrawRectRecursive(nw4r::ut::Rect*, const nw4r::lyt::Pane*, bool);
-    u32 getTextLineNumMaxRecursiveSub(const nw4r::lyt::Pane*);
+    u32 getTextLineNumMaxRecursiveSub(const nw4r::lyt::Pane* pPane) {
+        u32 lineNum = 0;
+        for (nw4r::lyt::PaneList::ConstIterator iter = pPane->mChildList.GetBeginIter(); iter != pPane->mChildList.GetEndIter(); iter++) {
+            u32 childLineNum = getTextLineNumMaxRecursiveSub(&*iter);
+            if (childLineNum > lineNum) {
+                lineNum = childLineNum;
+            }
+        }
+        const nw4r::lyt::TextBox* pTextBox = nw4r::ut::DynamicCast<const nw4r::lyt::TextBox*>(pPane);
+        if (pTextBox != nullptr) {
+            u32 textLineNum = MR::countMessageLine(pTextBox->mTextBuf);
+            if (textLineNum > lineNum) {
+                lineNum = textLineNum;
+            }
+        }
+        return lineNum;
+    }
 
     f32 getCometColorAnimFrameFromId(s32 id) {
         switch (id) {
@@ -586,3 +602,10 @@ namespace MR {
         pLayout->getLayoutManager()->getPane(pPaneName)->mRotate = rotate;
     }
 }
+
+namespace MR {
+    void copyPaneRotate(TVec3f* pRotate, const LayoutActor* pActor, const char* pPaneName) {
+        nw4r::lyt::Pane* pPane = pActor->getLayoutManager()->getPane(pPaneName);
+        pRotate->set<f32>(pPane->mRotate.x, pPane->mRotate.y, pPane->mRotate.z);
+    }
+}  // namespace MR

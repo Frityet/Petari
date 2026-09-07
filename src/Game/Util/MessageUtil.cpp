@@ -1,4 +1,5 @@
 #include "Game/Util/MessageUtil.hpp"
+#include "Game/Screen/MessageEditorMessageTag.hpp"
 #include "Game/Map/RaceManager.hpp"
 #include "Game/NPC/TalkMessageInfo.hpp"
 #include "Game/System/MessageHolder.hpp"
@@ -60,7 +61,25 @@ namespace MR {
     }
 
     // getMessageLine
-    // countMessageLine
+    s32 countMessageLine(const wchar_t* pMessage) {
+        s32 count = 1;
+        while (*pMessage != 0) {
+            if (*pMessage == 0x1A) {
+                pMessage++;
+                MessageEditorMessageTag tag(pMessage);
+                pMessage += tag.getSkipLength();
+                if (tag.isGroupTagId(1, 1)) {
+                    break;
+                }
+            } else {
+                if (*pMessage == L'\n') {
+                    count++;
+                }
+                pMessage++;
+            }
+        }
+        return count;
+    }
     // countMessageChar
     // countMessageFigure
     // getNextMessagePage
@@ -94,3 +113,7 @@ namespace MR {
         snprintf(pDst, bufferSize, "CometName_%s", pCometName);
     }
 };  // namespace MR
+
+bool MessageEditorMessageTag::isGroupTagId(int group, int tag) const {
+    return reinterpret_cast< const u8* >(mMessage)[1] == group && mMessage[1] == tag;
+}

@@ -44,4 +44,6 @@ void LayoutAnmPlayer::stop() {
     mFrameCtrl.setRate(0.0f);
 }
 
-// LayoutAnmPlayer::isStop
+bool LayoutAnmPlayer::isStop() const {
+    return mAnimTransform == nullptr || mFrameCtrl.checkState(1) || mFrameCtrl.getRate() == 0.0f;
+}

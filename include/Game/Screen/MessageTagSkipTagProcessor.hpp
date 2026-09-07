@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Game/Screen/MessageEditorMessageTag.hpp"
 #include <nw4r/ut/TagProcessorBase.h>
 
 class MessageTagSkipTagProcessor : public nw4r::ut::TagProcessorBase< wchar_t > {
@@ -13,19 +14,4 @@ public:
     virtual nw4r::ut::TagProcessorBase< wchar_t >::Operation CalcRect(nw4r::ut::Rect*, u16, ContextType*);
 
     nw4r::ut::TagProcessorBase< wchar_t >::Operation skipTag(nw4r::ut::Rect*, ContextType*, bool);
-};
-
-class MessageEditorMessageTag {
-public:
-    MessageEditorMessageTag(const wchar_t*);
-
-    u32 getTagLength() const;
-    u32 getSkipLength() const;
-    u32 getParamLength() const;
-    u8 getParam8(int) const;
-    u16 getParam16(int) const;
-    u32 getParam32(int) const;
-    wchar_t* getParamPtr(int) const;
-
-    /* 0x00 */ const wchar_t* mMessage;
 };

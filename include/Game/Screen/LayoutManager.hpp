@@ -31,7 +31,7 @@ public:
     bool isExistPaneCtrl(const char*) const;
     void addGroupCtrl(LayoutGroupCtrl*);
     bool isPointing(const nw4r::lyt::Pane*, const TVec2f&) const;
-    LayoutPaneCtrl* createAndAddGroupCtrl(const char*, u32);
+    LayoutGroupCtrl* createAndAddGroupCtrl(const char*, u32);
     s32 getIndexOfGroupCtrl(const char*) const;
     void createPaneMtxRef(const char*);
     MtxPtr getPaneMtxRef(const char*) const;

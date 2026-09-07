@@ -33,6 +33,17 @@ namespace nw4r {
                 }
             };
         };  // namespace detail
+        template <typename T>
+        inline const detail::RuntimeTypeInfo* GetTypeInfo(T*) { return &T::typeInfo; }
+
+        template <typename To, typename From>
+        inline To DynamicCast(From* pObject) {
+            const detail::RuntimeTypeInfo* pTypeInfo = GetTypeInfo(static_cast<To>(nullptr));
+            if (pObject != nullptr && pObject->GetRuntimeTypeInfo()->IsDerivedFrom(pTypeInfo)) {
+                return static_cast<To>(pObject);
+            }
+            return nullptr;
+        }
     };  // namespace ut
 };  // namespace nw4r
 

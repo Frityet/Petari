@@ -188,7 +188,26 @@ namespace nw4r {
                 TIt_base_ it_;
             };
 
+            class ConstIterator : public detail::Iterator<value_type, PtrDiff, const_pointer, const_reference> {
+            public:
+                explicit ConstIterator(const Node* p) : mPointer(p) {}
+                const_pointer operator->() const {
+                    return reinterpret_cast<const_pointer>(reinterpret_cast<IntPtr>(mPointer) - TNOffset);
+                }
+                const_reference operator*() const { return *operator->(); }
+                ConstIterator& operator++() { mPointer = mPointer->GetNext(); return *this; }
+                ConstIterator operator++(int) { ConstIterator iter(*this); ++*this; return iter; }
+                friend bool operator==(ConstIterator a, ConstIterator b) { return a.mPointer == b.mPointer; }
+                friend bool operator!=(ConstIterator a, ConstIterator b) { return !(a == b); }
+                const Node* mPointer;
+            };
+
+            ConstIterator GetBeginIter() const { return ConstIterator(Base::mNode.GetNext()); }
+            ConstIterator GetEndIter() const { return ConstIterator(&this->mNode); }
+
             explicit LinkList() {}
+
+            size_type GetSize() const { return Base::mSize; }
 
             Iterator Insert(Iterator it, pointer p) { return Iterator(Base::Insert(it.it_, GetNodeFromPointer(p))); }
 

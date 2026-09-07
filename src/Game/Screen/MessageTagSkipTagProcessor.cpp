@@ -25,3 +25,10 @@ nw4r::ut::TagProcessorBase<wchar_t>::Operation MessageTagSkipTagProcessor::skipT
     return (nw4r::ut::TagProcessorBase<wchar_t>::Operation)0;
 }
 */
+
+MessageEditorMessageTag::MessageEditorMessageTag(const wchar_t* pMessage) : mMessage(pMessage) {
+}
+
+u32 MessageEditorMessageTag::getSkipLength() const {
+    return (reinterpret_cast< const u8* >(mMessage)[0] - 2U) >> 1;
+}
