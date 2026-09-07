@@ -5,18 +5,17 @@
 #include "Game/Util/ModelUtil.hpp"
 #include "Game/Util/MtxUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
+#include "Game/Util/SystemUtil.hpp"
 #include "JSystem/JUtility/JUTTexture.hpp"
 #include "math_types.hpp"
 #include "revolution/gx/GXEnum.h"
 #include "revolution/gx/GXVert.h"
 #include <revolution/gx/GXGeometry.h>
+#include <revolution/gx/GXTransform.h>
 
 namespace {
     static Mtx mViewMtx;
 
-    static u8 byte_806B7048;
-    static u8 byte_806B7049;
-    static u8 byte_806B704A;
 
 };  // namespace
 
@@ -201,17 +200,16 @@ namespace TDDraw {
     }
 
     void drawFillCircle(const TVec3f& a1, f32 a2, u32 a3, u32 a4, u32 a5) {
+        TVec3f position;
+        position.z = a1.z;
         GXBegin(GX_TRIANGLEFAN, GX_VTXFMT0, a5 + 2);
-        {
-            GXPosition3f32(a1.x, a1.y, a1.z);
-            GXCmd1u32(a3);
-
-            for (u32 i = 0; i <= a5; i++) {
-                f32 v12 = a1.x - (a2 * MR::cos(2.0f * (i) / (a5 * PI)));
-                f32 v13 = a1.y + (a2 * MR::sin(2.0f * (i) / (a5 * PI)));
-                GXPosition3f32(v12, v13, a1.z);
-                GXCmd1u32(a4);
-            }
+        GXPosition3f32(a1.x, a1.y, a1.z);
+        GXCmd1u32(a3);
+        for (u32 i = 0; i <= a5; i++) {
+            position.x = a1.x - a2 * MR::cos(2.0f * (static_cast< f32 >(i) / a5 * PI));
+            position.y = a1.y + a2 * MR::sin(2.0f * (static_cast< f32 >(i) / a5 * PI));
+            GXPosition3f32(position.x, position.y, position.z);
+            GXCmd1u32(a4);
         }
         GXEnd();
     }
@@ -331,7 +329,7 @@ namespace TDDraw {
         f32 v23 = a6 - a5;
 
         for (u32 i = 1; i <= a8; i++) {
-            f32 v25 = (a3 + (i / a8)) * (a4 - a3);
+            f32 v25 = a3 + (static_cast< f32 >(i) / static_cast< f32 >(a8)) * (a4 - a3);
             f32 v26 = MR::sin(v25);
             f32 v27 = MR::cos(v25);
             TVec3f v33(v46);
@@ -339,13 +337,13 @@ namespace TDDraw {
             TVec3f v34(v47);
             v34 *= v27;
             TVec3f v35(v34);
-            v34 += v33;
+            v35 += v33;
             TVec3f v42(v35);
             v42 *= a2;
 
             GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, 2 * (a9 + 1));
-            for (s32 j = 0; j <= a9; j++) {
-                f32 v29 = (a5 + (j / a9) * v23);
+            for (u32 j = 0; j <= a9; j++) {
+                f32 v29 = a5 + (static_cast< f32 >(j) / static_cast< f32 >(a9)) * v23;
                 f32 v30 = MR::sin(v29);
                 f32 v31 = MR::cos(v29);
                 TVec3f v32(v45);
@@ -378,7 +376,7 @@ namespace TDDraw {
         TPos3f v8;
         v8.identity();
         v8.setTrans(a1);
-        drawSpherePart(v8, a2, a3, a3, a4, 0.0f, TWO_PI, 0.0f, PI);
+        drawSpherePart(v8, a2, 0.0f, TWO_PI, 0.0f, PI, a3, a4, a4);
     }
 
     void drawTexture(const TVec2f& a1, JUTTexture* a2, const TVec2f& a3) {
@@ -398,7 +396,51 @@ namespace TDDraw {
         GXEnd();
     }
 
-    // TDDraw::drawTexture3D
+    void drawTexture3D(const TVec3f& rPosition, const TVec3f& rDirection, const TVec3f& rNormal, f32 width, f32 height, JUTTexture* pTexture,
+                       bool flipHorizontal, bool flipVertical) {
+        if (pTexture != nullptr) {
+            pTexture->load(GX_TEXMAP0);
+        }
+
+        TVec3f bottomLeft;
+        TVec3f bottomRight;
+        TVec3f topRight;
+        TVec3f topLeft;
+        TVec3f heightDirection;
+        TVec3f widthDirection;
+
+        PSVECCrossProduct(rDirection, rNormal, heightDirection);
+        MR::normalizeOrZero(&heightDirection);
+
+        PSVECCrossProduct(heightDirection, rDirection, widthDirection);
+        MR::normalizeOrZero(&widthDirection);
+
+        topLeft = rPosition - heightDirection * height + widthDirection * width;
+
+        topRight = rPosition + heightDirection * height + widthDirection * width;
+
+        bottomRight = rPosition + heightDirection * height - widthDirection * width;
+
+        bottomLeft = rPosition - heightDirection * height - widthDirection * width;
+
+        f32 texLeft = flipHorizontal ? 1.0f : 0.0f;
+        f32 texRight = flipHorizontal ? 0.0f : 1.0f;
+        f32 texTop = flipVertical ? 1.0f : 0.0f;
+        f32 texBottom = flipVertical ? 0.0f : 1.0f;
+
+        GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+        {
+            GXPosition3f32(topLeft.x, topLeft.y, topLeft.z);
+            GXTexCoord2f32(texLeft, texTop);
+            sendPoint(topRight);
+            GXTexCoord2f32(texRight, texTop);
+            sendPoint(bottomRight);
+            GXTexCoord2f32(texRight, texBottom);
+            sendPoint(bottomLeft);
+            GXTexCoord2f32(texLeft, texBottom);
+        }
+        GXEnd();
+    }
 
     void drawFillBox(const TVec3f& a1, const TVec3f& a2, u32 a3) {
         GXBegin(GX_QUADS, GX_VTXFMT0, 4);
@@ -430,7 +472,54 @@ namespace TDDraw {
         GXEnd();
     }
 
-    //  TDDraw::drawFillBox3D
+    void drawFillBox3D(const TVec3f& position, const TVec3f& height, const TVec3f& side, const TVec3f& depth, u32 color) {
+        TVec3f a, b, c, d, e, f, g, h;
+        a = position + side - depth;
+        b = position - side - depth;
+        c = position - side + depth;
+        d = position + side + depth;
+        e = a + height;
+        f = b + height;
+        g = c + height;
+        h = d + height;
+
+        GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+        sendPoint(a, color);
+        sendPoint(b, color);
+        sendPoint(c, color);
+        sendPoint(d, color);
+        GXEnd();
+        GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+        sendPoint(h, color);
+        sendPoint(e, color);
+        sendPoint(a, color);
+        sendPoint(d, color);
+        GXEnd();
+        GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+        sendPoint(g, color);
+        sendPoint(c, color);
+        sendPoint(b, color);
+        sendPoint(f, color);
+        GXEnd();
+        GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+        sendPoint(a, color);
+        sendPoint(e, color);
+        sendPoint(f, color);
+        sendPoint(b, color);
+        GXEnd();
+        GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+        sendPoint(g, color);
+        sendPoint(h, color);
+        sendPoint(d, color);
+        sendPoint(c, color);
+        GXEnd();
+        GXBegin(GX_QUADS, GX_VTXFMT0, 4);
+        sendPoint(g, color);
+        sendPoint(f, color);
+        sendPoint(e, color);
+        sendPoint(h, color);
+        GXEnd();
+    }
 
     void cameraInit3D() {
         MR::loadProjectionMtx();
@@ -438,26 +527,17 @@ namespace TDDraw {
 
     // https://decomp.me/scratch/33EPL
     void cameraInit2D() {
-        if (!byte_806B7048) {
-            static TVec3f camLoc = TVec3f(MR::getScreenWidth() / 2.0f, MR::getScreenHeight() / 2.0f, -30.0f);
-            byte_806B7048 = 1;
-        }
+        static TVec3f camLoc(MR::getScreenWidth() / 2.0f, MR::getScreenHeight() / 2.0f, -30.0f);
+        static TVec3f objPt(MR::getScreenWidth() / 2.0f, MR::getScreenHeight() / 2.0f, 0.0f);
+        static TVec3f up = TVec3f(0, -10, 0);
 
-        if (!byte_806B7049) {
-            static TVec3f objPt = TVec3f(MR::getScreenWidth() / 2.0f, MR::getScreenHeight() / 2.0f, 0.0f);
-            byte_806B7049 = 1;
-        }
-
-        if (!byte_806B704A) {
-            static TVec3f up = TVec3f(0, -10, 0);
-            byte_806B704A = 1;
-        }
-
+        f32 nearZ = 0.0f;
+        f32 farZ = 1.0f;
         f32 width = MR::getScreenWidth() / 2;
         f32 height = MR::getScreenHeight() / 2;
 
-        Mtx proj;
-        C_MTXOrtho(proj, height, -height, -width, width, 0.0f, -1.0f);
+        Mtx44 proj;
+        C_MTXOrtho(proj, height, -height, -width, width, nearZ, -farZ);
         GXSetProjection(proj, GX_ORTHOGRAPHIC);
         MR::setDefaultViewportAndScissor();
     }
@@ -480,19 +560,104 @@ namespace TDDraw {
     // TDDraw::setTexel32
 
     // https://decomp.me/scratch/WFf2R
-    void setTexel32(u8* tex, u32 width, u32 x, u32 y, u32 color) {
-        u32 offset = ((width << 4) & ~0x3F) * (y >> 2) + ((x << 4) & ~0x3F) + ((x & 3) << 1) + ((y & 3) << 3);
-        u8* dst = tex + offset;
-        dst[0x00] = color;
-        dst[0x20] = color >> 8;
-        dst[0x21] = color >> 16;
-        dst[0x01] = color >> 24;
+    u32 getTexel32(const JUTTexture* pTexture, u32 x, u32 y) {
+        return getTexel32(pTexture->mImage, pTexture->getWidth(), x, y);
     }
 
-    // TDDraw::invProject
-    // TDDraw::project2D
-    // TDDraw::project2D
-    // TDDraw::fix2Dpos
+    u32 getTexel32(const u8* tex, u32 width, u32 x, u32 y) {
+        u32 offset = ((width << 4) & ~0x3F) * (y >> 2) + (((x << 4) & ~0x3F) + (((x & 3) << 1) + ((y & 3) << 3)));
+        const u8* src = tex + offset;
+        return src[0x00] | (src[0x21] << 8) | ((src[0x20] << 16) | (src[0x01] << 24));
+    }
+
+    void setTexel32(JUTTexture* pTexture, u32 x, u32 y, u32 color) {
+        setTexel32(pTexture->mImage, pTexture->getWidth(), x, y, color);
+    }
+
+    void setTexel32(u8* tex, u32 width, u32 x, u32 y, u32 color) {
+        u32 offset = ((width << 4) & ~0x3F) * (y >> 2) + (((x << 4) & ~0x3F) + (((x & 3) << 1) + ((y & 3) << 3)));
+        u8* dst = tex + offset;
+        dst[0x00] = color;
+        dst[0x01] = color >> 24;
+        dst[0x20] = color >> 16;
+        dst[0x21] = color >> 8;
+    }
+
+    void invProject(TVec3f* pOut, const TVec3f& rScreenPos, MtxPtr pViewMtx, const f32* pProjection, const f32* pViewport,
+                    bool isNormalizedDepth) {
+        f32 depth;
+        if (!isNormalizedDepth) {
+            depth = rScreenPos.z / 16777215.0f;
+        } else {
+            depth = rScreenPos.z;
+        }
+
+        f32 depthOffset = depth - pViewport[5];
+        f32 projectedZ = (depthOffset * pProjection[6]) / (depthOffset + pProjection[5] * (pViewport[5] - pViewport[4]));
+        f32 inverseW = pProjection[5] / (pProjection[6] - projectedZ);
+
+        f32 x;
+        if (MR::isScreen16Per9()) {
+            f32 screenWidth = MR::getScreenWidth();
+            f32 frameBufferWidth = MR::getFrameBufferWidth();
+            f32 halfWidth = pViewport[2] * 0.5f;
+            x = ((rScreenPos.x * frameBufferWidth / screenWidth - (pViewport[0] + halfWidth)) / inverseW) / halfWidth;
+        } else {
+            f32 halfWidth = pViewport[2] * 0.5f;
+            x = ((rScreenPos.x - (pViewport[0] + halfWidth)) / inverseW) / halfWidth;
+        }
+
+        f32 halfHeight = pViewport[3] * 0.5f;
+        f32 y = (-(rScreenPos.y - (pViewport[1] + halfHeight)) / inverseW) / halfHeight;
+
+        TVec3f viewPos;
+        if (pProjection[0] == 0.0f) {
+            viewPos.z = (projectedZ - pProjection[6]) / pProjection[5];
+            viewPos.x = (x - viewPos.z * pProjection[2]) / pProjection[1];
+            viewPos.y = (y - viewPos.z * pProjection[4]) / pProjection[3];
+        } else {
+            viewPos.z = (projectedZ - pProjection[6]) / pProjection[5];
+            viewPos.x = (x - pProjection[2]) / pProjection[1];
+            viewPos.y = (y - pProjection[4]) / pProjection[3];
+        }
+
+        Mtx inverseView;
+        PSMTXInverse(pViewMtx, inverseView);
+        PSMTXMultVec(inverseView, &viewPos, pOut);
+    }
+    void project2D(TVec3f* pDst, const TVec3f& rPosition) {
+        f32 viewport[6];
+        GXGetViewportv(viewport);
+        const TProj3f& rMtx = MR::getCameraProjectionMtx();
+        f32 projection[7];
+        projection[0] = 0.0f;
+        projection[1] = rMtx.mMtx[0][0];
+        projection[2] = rMtx.mMtx[0][2];
+        projection[3] = rMtx.mMtx[1][1];
+        projection[4] = rMtx.mMtx[1][2];
+        projection[5] = rMtx.mMtx[2][2];
+        projection[6] = rMtx.mMtx[2][3];
+        GXProject(rPosition.x, rPosition.y, rPosition.z, MR::getCameraViewMtx(), projection, viewport, &pDst->x, &pDst->y, &pDst->z);
+        if (MR::isScreen16Per9()) {
+            f32 frameBufferWidth = MR::getFrameBufferWidth();
+            f32 screenWidth = MR::getScreenWidth();
+            pDst->x *= screenWidth / frameBufferWidth;
+        }
+    }
+
+    void project2D(TVec2f* pDst, const TVec3f& rPosition) {
+        TVec3f position;
+        project2D(&position, rPosition);
+        pDst->x = position.x;
+        pDst->y = position.y;
+    }
+    void fix2Dpos(TVec3f* position) {
+        if (MR::isScreen16Per9()) {
+            f32 frameBufferWidth = MR::getFrameBufferWidth();
+            f32 screenWidth = MR::getScreenWidth();
+            position->x *= screenWidth / frameBufferWidth;
+        }
+    }
 
     void setGXColor(u32 a1, GXColor* pColor) {
         pColor->r = (a1 >> 24) & 0xFF;

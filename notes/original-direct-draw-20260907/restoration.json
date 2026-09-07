@@ -1,0 +1,12 @@
+[
+  {
+    "path": "decomp/src/Game/Util/DirectDraw.cpp",
+    "restored_from": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4:src/Game/Util/DirectDraw.cpp",
+    "sha256": "86b14f5cc2257e76bcb6cd96b1ab5a53399255daf0eac6534b45aa7970211486"
+  },
+  {
+    "path": "decomp/include/Game/Util/DirectDraw.hpp",
+    "restored_from": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4:include/Game/Util/DirectDraw.hpp",
+    "sha256": "13259a1b6ecb6cdf1093bec332f404b1c7841ee871cd72599ee1ef0e2653ead4"
+  }
+]

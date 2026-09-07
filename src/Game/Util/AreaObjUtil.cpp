@@ -1,5 +1,6 @@
 #include "Game/Util/AreaObjUtil.hpp"
 #include "Game/AreaObj/AreaObj.hpp"
+#include "Game/AreaObj/AreaForm.hpp"
 #include "Game/AreaObj/AreaObjContainer.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 
@@ -47,4 +48,8 @@ namespace MR {
     AreaObj* getCurrentAstroOverlookAreaObj() {
         return getAreaIn("AstroOverlookArea", *MR::getPlayerPos());
     }
+    void calcCylinderCenterPos(TVec3f* pPos, const AreaObj* pAreaObj) {
+        static_cast< AreaFormCylinder* >(pAreaObj->mForm)->calcCenterPos(pPos);
+    }
+
 };  // namespace MR

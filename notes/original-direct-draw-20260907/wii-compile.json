@@ -1,0 +1,296 @@
+{
+  "command": [
+    "build/tools/wibo",
+    "build/tools/sjiswrap.exe",
+    "build/compilers/GC/3.0a3/mwcceppc.exe",
+    "-nodefaults",
+    "-proc",
+    "gekko",
+    "-align",
+    "powerpc",
+    "-enum",
+    "int",
+    "-fp",
+    "hardware",
+    "-Cpp_exceptions",
+    "off",
+    "-O4,s",
+    "-inline",
+    "auto",
+    "-pragma",
+    "cats off",
+    "-pragma",
+    "warn_notinlined off",
+    "-maxerrors",
+    "1",
+    "-nosyspath",
+    "-RTTI",
+    "off",
+    "-str",
+    "reuse",
+    "-enc",
+    "SJIS",
+    "-sdata",
+    "4",
+    "-sdata2",
+    "4",
+    "-ipa",
+    "file",
+    "-sym",
+    "on",
+    "-i",
+    "include",
+    "-i",
+    "libs/JSystem/include",
+    "-i",
+    "libs/MSL_C++/include",
+    "-i",
+    "libs/MSL_C/include",
+    "-i",
+    "libs/MetroTRK/include",
+    "-i",
+    "libs/RVLFaceLib/include",
+    "-i",
+    "libs/RVL_SDK/include",
+    "-i",
+    "libs/Runtime/include",
+    "-i",
+    "libs/nw4r/include",
+    "-i",
+    "build/original-j3d-joint-traversal-20260903/retail/include",
+    "-DVERSION=0",
+    "-c",
+    "src/Game/Util/DirectDraw.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-direct-draw-20260907/DirectDraw.o"
+  ],
+  "exit_code": 0,
+  "source_sha256": "8bd3de308bedd71e4b0736c16109d1669fe34021bf63714f1ce97d8d1cbbbdd8",
+  "symbols": [
+    {
+      "name": "setViewMtx__6TDDrawFPA4_f",
+      "demangled_name": "TDDraw::setViewMtx(float(*)[4])",
+      "size": "12",
+      "match_percent": 100.0
+    },
+    {
+      "name": "loadViewMtx__6TDDrawFPA4_f",
+      "demangled_name": "TDDraw::loadViewMtx(float(*)[4])",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "setModelMtx__6TDDrawFPA4_f",
+      "demangled_name": "TDDraw::setModelMtx(float(*)[4])",
+      "size": "80",
+      "match_percent": 100.0
+    },
+    {
+      "name": "resetViewMtx__6TDDrawFv",
+      "demangled_name": "TDDraw::resetViewMtx()",
+      "size": "64",
+      "match_percent": 100.0
+    },
+    {
+      "name": "close__6TDDrawFv",
+      "demangled_name": "TDDraw::close()",
+      "size": "52",
+      "match_percent": 100.0
+    },
+    {
+      "name": "setup__6TDDrawFUlUlUc",
+      "demangled_name": "TDDraw::setup(unsigned long, unsigned long, unsigned char)",
+      "size": "1500",
+      "match_percent": 99.92
+    },
+    {
+      "name": "sendPoint__6TDDrawFRCQ29JGeometry8TVec3<f>Ul",
+      "demangled_name": "TDDraw::sendPoint(const JGeometry::TVec3<float>&, unsigned long)",
+      "size": "64",
+      "match_percent": 100.0
+    },
+    {
+      "name": "sendPoint__6TDDrawFRCQ29JGeometry8TVec3<f>",
+      "demangled_name": "TDDraw::sendPoint(const JGeometry::TVec3<float>&)",
+      "size": "16",
+      "match_percent": 100.0
+    },
+    {
+      "name": "drawLine__6TDDrawFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>Ul",
+      "demangled_name": "TDDraw::drawLine(const JGeometry::TVec3<float>&, const JGeometry::TVec3<float>&, unsigned long)",
+      "size": "116",
+      "match_percent": 100.0
+    },
+    {
+      "name": "drawCircle__6TDDrawFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>fUlUl",
+      "demangled_name": "TDDraw::drawCircle(const JGeometry::TVec3<float>&, const JGeometry::TVec3<float>&, float, unsigned long, unsigned long)",
+      "size": "176",
+      "match_percent": 100.0
+    },
+    {
+      "name": "drawCircle__6TDDrawFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>fUlUl",
+      "demangled_name": "TDDraw::drawCircle(const JGeometry::TVec3<float>&, const JGeometry::TVec3<float>&, const JGeometry::TVec3<float>&, float, unsigned long, unsigned long)",
+      "size": "268",
+      "match_percent": 99.656715
+    },
+    {
+      "name": "drawFillCircle__6TDDrawFRCQ29JGeometry8TVec3<f>fUlUlUl",
+      "demangled_name": "TDDraw::drawFillCircle(const JGeometry::TVec3<float>&, float, unsigned long, unsigned long, unsigned long)",
+      "size": "356",
+      "match_percent": 99.55056
+    },
+    {
+      "name": "drawFillCircle__6TDDrawFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>fUlUl",
+      "demangled_name": "TDDraw::drawFillCircle(const JGeometry::TVec3<float>&, const JGeometry::TVec3<float>&, float, unsigned long, unsigned long)",
+      "size": "344",
+      "match_percent": 99.73256
+    },
+    {
+      "name": "drawFillFan__6TDDrawFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>UlffUl",
+      "demangled_name": "TDDraw::drawFillFan(const JGeometry::TVec3<float>&, const JGeometry::TVec3<float>&, const JGeometry::TVec3<float>&, unsigned long, float, float, unsigned long)",
+      "size": "300",
+      "match_percent": 99.86667
+    },
+    {
+      "name": "drawCylinder__6TDDrawFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>fUlUlUl",
+      "demangled_name": "TDDraw::drawCylinder(const JGeometry::TVec3<float>&, const JGeometry::TVec3<float>&, float, unsigned long, unsigned long, unsigned long)",
+      "size": "440",
+      "match_percent": 99.67273
+    },
+    {
+      "name": "drawSpherePart__6TDDrawFRCQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>fffffUlUlUl",
+      "demangled_name": "TDDraw::drawSpherePart(const JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>>&, float, float, float, float, float, unsigned long, unsigned long, unsigned long)",
+      "size": "912",
+      "match_percent": 97.89474
+    },
+    {
+      "name": "drawSphere__6TDDrawFRCQ29JGeometry8TVec3<f>fUlUl",
+      "demangled_name": "TDDraw::drawSphere(const JGeometry::TVec3<float>&, float, unsigned long, unsigned long)",
+      "size": "112",
+      "match_percent": 88.96429
+    },
+    {
+      "name": "drawSphere3D__6TDDrawFQ29JGeometry8TVec3<f>fUlUl",
+      "demangled_name": "TDDraw::drawSphere3D(JGeometry::TVec3<float>, float, unsigned long, unsigned long)",
+      "size": "136",
+      "match_percent": 70.0
+    },
+    {
+      "name": "drawTexture__6TDDrawFRCQ29JGeometry8TVec2<f>P10JUTTextureRCQ29JGeometry8TVec2<f>",
+      "demangled_name": "TDDraw::drawTexture(const JGeometry::TVec2<float>&, JUTTexture*, const JGeometry::TVec2<float>&)",
+      "size": "244",
+      "match_percent": 99.672134
+    },
+    {
+      "name": "drawTexture3D__6TDDrawFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>ffP10JUTTexturebb",
+      "demangled_name": "TDDraw::drawTexture3D(const JGeometry::TVec3<float>&, const JGeometry::TVec3<float>&, const JGeometry::TVec3<float>&, float, float, JUTTexture*, bool, bool)",
+      "size": "776",
+      "match_percent": 99.896904
+    },
+    {
+      "name": "drawFillBox__6TDDrawFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>Ul",
+      "demangled_name": "TDDraw::drawFillBox(const JGeometry::TVec3<float>&, const JGeometry::TVec3<float>&, unsigned long)",
+      "size": "156",
+      "match_percent": 100.0
+    },
+    {
+      "name": "drawFillBox__6TDDrawFRCQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec2<f>Ul",
+      "demangled_name": "TDDraw::drawFillBox(const JGeometry::TVec2<float>&, const JGeometry::TVec2<float>&, unsigned long)",
+      "size": "156",
+      "match_percent": 100.0
+    },
+    {
+      "name": "drawFillBox3D__6TDDrawFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>Ul",
+      "demangled_name": "TDDraw::drawFillBox3D(const JGeometry::TVec3<float>&, const JGeometry::TVec3<float>&, const JGeometry::TVec3<float>&, const JGeometry::TVec3<float>&, unsigned long)",
+      "size": "828",
+      "match_percent": 66.251205
+    },
+    {
+      "name": "cameraInit3D__6TDDrawFv",
+      "demangled_name": "TDDraw::cameraInit3D()",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "cameraInit2D__6TDDrawFv",
+      "demangled_name": "TDDraw::cameraInit2D()",
+      "size": "480",
+      "match_percent": 91.041664
+    },
+    {
+      "name": "mixFogColor__6TDDrawFQ29JGeometry8TVec3<f>fUl",
+      "demangled_name": "TDDraw::mixFogColor(JGeometry::TVec3<float>, float, unsigned long)",
+      "size": "220",
+      "match_percent": 100.0
+    },
+    {
+      "name": "tileConversion8__6TDDrawFPUcUlUl",
+      "demangled_name": "TDDraw::tileConversion8(unsigned char*, unsigned long, unsigned long)",
+      "size": "208"
+    },
+    {
+      "name": "tileConversion16__6TDDrawFPUsUlUl",
+      "demangled_name": "TDDraw::tileConversion16(unsigned short*, unsigned long, unsigned long)",
+      "size": "212"
+    },
+    {
+      "name": "getTexel32__6TDDrawFPC10JUTTextureUlUl",
+      "demangled_name": "TDDraw::getTexel32(const JUTTexture*, unsigned long, unsigned long)",
+      "size": "24",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getTexel32__6TDDrawFPCUcUlUlUl",
+      "demangled_name": "TDDraw::getTexel32(const unsigned char*, unsigned long, unsigned long, unsigned long)",
+      "size": "76",
+      "match_percent": 71.68421
+    },
+    {
+      "name": "setTexel32__6TDDrawFP10JUTTextureUlUlUl",
+      "demangled_name": "TDDraw::setTexel32(JUTTexture*, unsigned long, unsigned long, unsigned long)",
+      "size": "36",
+      "match_percent": 100.0
+    },
+    {
+      "name": "setTexel32__6TDDrawFPUcUlUlUlUl",
+      "demangled_name": "TDDraw::setTexel32(unsigned char*, unsigned long, unsigned long, unsigned long, unsigned long)",
+      "size": "72",
+      "match_percent": 58.333332
+    },
+    {
+      "name": "invProject__6TDDrawFPQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PA4_fPCfPCfb",
+      "demangled_name": "TDDraw::invProject(JGeometry::TVec3<float>*, const JGeometry::TVec3<float>&, float(*)[4], const float*, const float*, bool)",
+      "size": "564",
+      "match_percent": 93.61702
+    },
+    {
+      "name": "project2D__6TDDrawFPQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+      "demangled_name": "TDDraw::project2D(JGeometry::TVec3<float>*, const JGeometry::TVec3<float>&)",
+      "size": "268",
+      "match_percent": 99.62687
+    },
+    {
+      "name": "project2D__6TDDrawFPQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec3<f>",
+      "demangled_name": "TDDraw::project2D(JGeometry::TVec2<float>*, const JGeometry::TVec3<float>&)",
+      "size": "64",
+      "match_percent": 100.0
+    },
+    {
+      "name": "fix2Dpos__6TDDrawFPQ29JGeometry8TVec3<f>",
+      "demangled_name": "TDDraw::fix2Dpos(JGeometry::TVec3<float>*)",
+      "size": "156",
+      "match_percent": 99.61539
+    },
+    {
+      "name": "GXPosition3f32",
+      "size": "20",
+      "match_percent": 100.0
+    },
+    {
+      "name": "setGXColor__6TDDrawFUlP8_GXColor",
+      "demangled_name": "TDDraw::setGXColor(unsigned long, _GXColor*)",
+      "size": "32",
+      "match_percent": 100.0
+    }
+  ]
+}
