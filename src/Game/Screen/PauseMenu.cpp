@@ -1,4 +1,5 @@
 #include "Game/Screen/PauseMenu.hpp"
+#include "Game/System/GalaxyStatusAccessor.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Screen/ButtonPaneController.hpp"
 #include "Game/Screen/LuigiLetter.hpp"
@@ -192,7 +193,44 @@ void PauseMenu::control() {
     mStageTitleOffset.y = 39.0f;
 }
 
-// PauseMenu::updateStarPane
+void PauseMenu::updateStarPane() {
+    GalaxyStatusAccessor accessor = MR::makeCurrentGalaxyStatusAccessor();
+    const char* pStarPaneNames[] = {"ShaStarA", "ShaStarB", "ShaStarC", "ShaStarD", "ShaStarE", "ShaStarF", "ShaStarG"};
+    const char* pStarPictureNames[] = {"PicStarA", "PicStarB", "PicStarC", "PicStarD", "PicStarE", "PicStarF", "PicStarG"};
+
+    for (u32 i = 0; i < 7; i++) {
+        MR::hidePaneRecursive(this, pStarPaneNames[i]);
+    }
+
+    if (!::isStageHideScenarioTitle()) {
+        s32 hiddenStarNum = 0;
+        bool isBeforeAstroDome = !MR::isOnGameEventFlagUseAstroDome();
+
+        for (u32 i = 0; i < 7; i++) {
+            if (static_cast<s32>(i) < accessor.getPowerStarNum()) {
+                if (MR::hasPowerStarInCurrentStage(i + 1)) {
+                    if (static_cast<s32>(i) < accessor.getNormalScenarioNum()) {
+                        MR::showPaneRecursive(this, pStarPaneNames[i]);
+                    } else {
+                        MR::showPaneRecursive(this, pStarPaneNames[hiddenStarNum + accessor.getNormalScenarioNum()]);
+                        hiddenStarNum++;
+                    }
+                } else if (static_cast<s32>(i) < accessor.getNormalScenarioNum()) {
+                    MR::showPaneRecursive(this, pStarPaneNames[i]);
+                    MR::hidePaneRecursive(this, pStarPictureNames[i]);
+                }
+            }
+
+            if (isBeforeAstroDome) {
+                break;
+            }
+        }
+
+        MR::startPaneAnim(this, "Stars", "Star", 1);
+        f32 frame = isBeforeAstroDome ? 0.0f : hiddenStarNum + accessor.getNormalScenarioNum() - 1;
+        MR::setPaneAnimFrameAndStop(this, "Stars", frame, 1);
+    }
+}
 
 void PauseMenu::startPaneAnimWithoutButton(const char* pAnimName) {
     MR::startPaneAnim(this, "BG", pAnimName, 0);
