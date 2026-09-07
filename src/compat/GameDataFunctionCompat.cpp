@@ -6,6 +6,7 @@
 #include <string_view>
 
 #include "Game/System/GameDataHolder.hpp"
+#include "Game/System/GameDataGalaxyStorage.hpp"
 #include "Game/System/SaveDataHandleSequence.hpp"
 #include "Game/System/SysConfigFile.hpp"
 #include "Game/System/UserFile.hpp"
@@ -62,6 +63,30 @@ ScopedGameDataHolderOverride::~ScopedGameDataHolderOverride() {
 }  // namespace smgpc::compat
 
 namespace GameDataFunction {
+
+bool hasPowerStar(const char* galaxy_name, s32 scenario_num) {
+    return getCurrentGameDataHolder()->hasPowerStar(galaxy_name, scenario_num);
+}
+
+bool hasGrandStar(int index) {
+    return getCurrentGameDataHolder()->hasGrandStar(index);
+}
+
+void setGameFlagPowerStarSuccess(const char* galaxy_name, s32 scenario_num, bool owned) {
+    getCurrentGameDataHolder()->setPowerStar(galaxy_name, scenario_num, owned);
+}
+
+GameDataSomeScenarioAccessor makeGalaxyScenarioAccessor(const char* galaxy_name, s32 scenario_num) {
+    return getCurrentGameDataHolder()->makeGalaxyScenarioAccessor(galaxy_name, scenario_num);
+}
+
+s32 calcCurrentPowerStarNum() {
+    return getCurrentGameDataHolder()->calcCurrentPowerStarNum();
+}
+
+s32 getPowerStarNumOwned(const char* galaxy_name) {
+    return getCurrentGameDataHolder()->getPowerStarNumOwned(galaxy_name);
+}
 
 const wchar_t* getUserName() {
     auto& file = require_current_user_file();

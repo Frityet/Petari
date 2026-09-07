@@ -2542,3 +2542,35 @@ target("smg-pc-color8-byte-order-tests")
     add_defines("TARGET_PC", "AURORA")
     add_files("Color8ByteOrderTests.cpp")
     add_tests("color8_byte_order", {group = "aurora", rundir = os.projectdir(), realtime_output = true})
+
+target("smg-pc-demo-start-request-holder-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    if is_plat("macosx", "iphoneos") then
+        add_ldflags("-Wl,-dead_strip", {force = true})
+    else
+        add_ldflags("-Wl,--gc-sections", {force = true})
+    end
+    add_files("DemoStartRequestHolderTests.cpp", "../aurora/lib/compat.cpp")
+    add_deps {"smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
+              "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"}
+    add_tests("demo_start_request_holder", {
+        group = "aurora", rundir = os.projectdir(), realtime_output = true
+    })
+
+target("smg-pc-game-data-star-storage-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    if is_plat("macosx", "iphoneos") then
+        add_ldflags("-Wl,-dead_strip", {force = true})
+    else
+        add_ldflags("-Wl,--gc-sections", {force = true})
+    end
+    add_files("GameDataStarStorageTests.cpp", "../aurora/lib/compat.cpp")
+    add_deps {"smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
+              "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"}
+    add_tests("game_data_star_storage", {
+        group = "aurora", rundir = os.projectdir(), realtime_output = true
+    })

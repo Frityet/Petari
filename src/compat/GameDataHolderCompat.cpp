@@ -10,9 +10,13 @@
 #include <string_view>
 
 #include "Game/System/GameDataHolder.hpp"
+#include "Game/System/GameDataGalaxyStorage.hpp"
+#include "Game/System/GalaxyStatusAccessor.hpp"
 #include "Game/System/GameEventFlag.hpp"
+#include "Game/System/ScenarioDataParser.hpp"
 #include "Game/System/UserFile.hpp"
 #include "compat/GameDataRegistry.hpp"
+#include "compat/JkrAllocationDomain.hpp"
 
 namespace {
 struct HolderState {
@@ -24,6 +28,9 @@ struct HolderState {
     std::array<u16, 16> star_piece_alms{};
     std::map<std::string, bool> event_flags;
     std::map<std::string, u16> event_values;
+    bool power_star_data_complete = true;
+    mutable bool galaxies_initialized = false;
+    mutable std::map<std::string, GameDataSomeGalaxyStorage> galaxies;
 };
 
 std::map<const GameDataHolder*, HolderState> sHolderStates;
@@ -49,6 +56,56 @@ const HolderState& require_state(const GameDataHolder& holder) {
     return found->second;
 }
 
+void initialize_galaxies(const HolderState& state) {
+    if (!state.power_star_data_complete) {
+        unavailable("per-galaxy Power Star ownership from aggregate-only save data");
+    }
+    if (state.galaxies_initialized) {
+        return;
+    }
+
+    smgpc::compat::JkrHostAllocationScope host;
+    auto* parser = ScenarioDataFunction::getScenarioDataParser();
+    auto galaxies = std::map<std::string, GameDataSomeGalaxyStorage>{};
+    for (s32 index = 0; index < parser->mScenarioData.size(); ++index) {
+        const auto accessor = GalaxyStatusAccessor(parser->getScenarioData(index));
+        const auto count = accessor.getPowerStarNum();
+        if (count < 0 || count > 8) {
+            throw std::out_of_range("Galaxy Power Star count exceeds the original eight-bit storage");
+        }
+        if (count == 0) {
+            continue;
+        }
+        auto [entry, inserted] = galaxies.try_emplace(accessor.getName(), accessor);
+        if (!inserted) {
+            throw std::logic_error("The actual scenario catalog contains a duplicate galaxy name");
+        }
+        // The holder can outlive the process catalog and every scene heap.
+        entry->second.mGalaxyName = entry->first.c_str();
+    }
+    state.galaxies.swap(galaxies);
+    state.galaxies_initialized = true;
+}
+
+GameDataSomeGalaxyStorage& require_galaxy(const GameDataHolder& holder, const char* name) {
+    if (name == nullptr || *name == '\0') {
+        throw std::invalid_argument("Power Star storage requires a galaxy name");
+    }
+    const auto& state = require_state(holder);
+    initialize_galaxies(state);
+    const auto entry = state.galaxies.find(name);
+    if (entry == state.galaxies.end()) {
+        throw std::invalid_argument("Galaxy has no authored Power Star storage: " + std::string(name));
+    }
+    return entry->second;
+}
+
+void require_scenario_bit(s32 scenario_num) {
+    if (scenario_num < 1 || scenario_num > 8) {
+        throw std::out_of_range("Power Star scenario is outside the original eight-bit storage");
+    }
+}
+
 bool can_turn_on(const GameDataHolder& holder, const GameEventFlag& flag, unsigned depth) {
     if (depth > 32U) {
         throw std::logic_error("Retail game event dependency graph exceeded its recursion bound");
@@ -62,7 +119,7 @@ bool can_turn_on(const GameDataHolder& holder, const GameEventFlag& flag, unsign
         if (holder.calcCurrentPowerStarNum() == 0) {
             return false;
         }
-        unavailable("per-galaxy Power Star ownership for " + std::string(flag.mName));
+        return holder.hasPowerStar(flag.mGalaxyName, flag.mStarID);
     case GameEventFlag::Type_4:
         return (flag.mRequirement1 == nullptr || holder.isOnGameEventFlag(flag.mRequirement1)) &&
                (flag.mRequirement2 == nullptr || holder.isOnGameEventFlag(flag.mRequirement2));
@@ -98,6 +155,7 @@ GameDataHolder::GameDataHolder(const UserFile* user_file)
     : mEventFlagChecker(nullptr), mEventValueChecker(nullptr), mPlayerStatus(nullptr), mAllGalaxyStorage(nullptr),
       mSpinDriverPathStorage(nullptr), mStarPieceAlmsStorage(nullptr), mMapInfo(nullptr), mScenarioProgressTestRun(nullptr),
       mChunkHolder(nullptr), mName{}, mUserFile(user_file) {
+    smgpc::compat::JkrHostAllocationScope host;
     sHolderStates[this] = HolderState{};
     std::snprintf(mName, sizeof(mName), "mario1");
 }
@@ -217,11 +275,25 @@ s32 GameDataHolder::getPlayerMissNum() const {
     return std::clamp(getGameEventValue("MissNum"), 0, 9999);
 }
 
-bool GameDataHolder::hasPowerStar(const char*, s32) const {
-    if (calcCurrentPowerStarNum() == 0) {
-        return false;
-    }
-    unavailable("per-galaxy Power Star ownership");
+bool GameDataHolder::hasPowerStar(const char* galaxy_name, s32 scenario_num) const {
+    return makeGalaxyScenarioAccessor(galaxy_name, scenario_num).hasPowerStar();
+}
+
+void GameDataHolder::setPowerStar(const char* galaxy_name, s32 scenario_num, bool owned) {
+    makeGalaxyScenarioAccessor(galaxy_name, scenario_num).setPowerStarFlag(owned);
+}
+
+s32 GameDataHolder::getPowerStarNumOwned(const char* galaxy_name) const {
+    return require_galaxy(*this, galaxy_name).getPowerStarNumOwned();
+}
+
+GameDataSomeScenarioAccessor GameDataHolder::makeGalaxyScenarioAccessor(const char* galaxy_name, s32 scenario_num) {
+    return static_cast<const GameDataHolder&>(*this).makeGalaxyScenarioAccessor(galaxy_name, scenario_num);
+}
+
+GameDataSomeScenarioAccessor GameDataHolder::makeGalaxyScenarioAccessor(const char* galaxy_name, s32 scenario_num) const {
+    require_scenario_bit(scenario_num);
+    return GameDataSomeScenarioAccessor(&require_galaxy(*this, galaxy_name), scenario_num);
 }
 
 bool GameDataHolder::hasGrandStar(int index) const {
@@ -231,7 +303,15 @@ bool GameDataHolder::hasGrandStar(int index) const {
 }
 
 s32 GameDataHolder::calcCurrentPowerStarNum() const {
-    return require_state(*this).power_star_num;
+    const auto& state = require_state(*this);
+    if (!state.power_star_data_complete) {
+        return state.power_star_num;
+    }
+    s32 count = 0;
+    for (const auto& [name, storage] : state.galaxies) {
+        count += storage.getPowerStarNumOwned();
+    }
+    return count;
 }
 
 s32 GameDataHolder::getPlayerLeft() const {
@@ -283,7 +363,15 @@ void GameDataHolder::followStoryEventByName(const char* name) {
 }
 
 void GameDataHolder::resetAllData() {
-    require_state(*this) = HolderState{};
+    smgpc::compat::JkrHostAllocationScope host;
+    auto& state = require_state(*this);
+    auto reset = HolderState{};
+    reset.galaxies = std::move(state.galaxies);
+    reset.galaxies_initialized = state.galaxies_initialized;
+    for (auto& [name, storage] : reset.galaxies) {
+        storage.resetAllData();
+    }
+    state = std::move(reset);
 }
 
 u32 GameDataHolder::makeFileBinary(u8* buffer, u32 size) {
@@ -305,11 +393,17 @@ std::size_t holder_state_count() noexcept {
 }
 
 void destroy_holder_state(const GameDataHolder& holder) {
+    JkrHostAllocationScope host;
     sHolderStates.erase(&holder);
 }
 
 void copy_holder_state(GameDataHolder& destination, const GameDataHolder& source) {
-    require_state(destination) = require_state(source);
+    JkrHostAllocationScope host;
+    auto copy = require_state(source);
+    for (auto& [name, storage] : copy.galaxies) {
+        storage.mGalaxyName = name.c_str();
+    }
+    require_state(destination) = std::move(copy);
     std::memcpy(destination.mName, source.mName, sizeof(destination.mName));
 }
 
@@ -324,8 +418,14 @@ void set_holder_save_counts(GameDataHolder& holder, s32 power_star_num, s32 star
     if (power_star_num < 0 || star_piece_num < 0 || player_miss_num < 0) {
         throw std::invalid_argument("Game data counts must not be negative");
     }
+    JkrHostAllocationScope host;
     auto& state = require_state(holder);
     state.power_star_num = power_star_num;
+    // Aggregate-only imports carry no information about which stars were won.
+    // A zero total does prove that every ownership bit is clear.
+    state.power_star_data_complete = power_star_num == 0;
+    state.galaxies.clear();
+    state.galaxies_initialized = false;
     state.stocked_star_piece_num = star_piece_num;
     holder.setGameEventValue("MissNum", static_cast<u16>(std::min(player_miss_num, 9999)));
 }

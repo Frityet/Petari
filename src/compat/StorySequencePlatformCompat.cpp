@@ -38,16 +38,8 @@ namespace {
         throw std::runtime_error("StorySequenceExecutor platform operation is unavailable: " + std::string(operation));
     }
 
-    [[nodiscard]] UserFile &require_current_user_file() {
-        auto *file = smgpc::game::save_data_handle_sequence().getCurrentUserFile();
-        if (file == nullptr || file->mGameDataHolder == nullptr) {
-            unavailable("current user file");
-        }
-        return *file;
-    }
-
     [[nodiscard]] GameDataHolder &require_current_game_data() {
-        return *require_current_user_file().mGameDataHolder;
+        return *GameDataFunction::getCurrentGameDataHolder();
     }
 
     [[nodiscard]] const GameEventFlag &require_retail_flag(std::string_view name) {
@@ -67,14 +59,10 @@ namespace {
 
     [[nodiscard]] bool has_retail_special_star(const GameEventFlag &flag) {
         auto &holder = require_current_game_data();
-        // Zero aggregate stars proves that no per-galaxy star can be owned.
-        // A positive aggregate without the per-star bit is incomplete input,
-        // not evidence that this particular star is absent.
         if (holder.calcCurrentPowerStarNum() == 0) {
             return false;
         }
-
-        unavailable("per-galaxy Power Star ownership for " + std::string(flag.mName));
+        return holder.hasPowerStar(flag.mGalaxyName, flag.mStarID);
     }
 
     [[nodiscard]] bool is_retail_flag_on(const GameEventFlag &flag, unsigned depth);
@@ -120,21 +108,6 @@ namespace {
         return require_current_game_data().isOnGameEventFlag(flag.mName);
     }
 
-    [[nodiscard]] const GameEventFlag &require_special_star_flag(const char *galaxy_name, s32 star_id) {
-        if (galaxy_name == nullptr) {
-            throw std::invalid_argument("Power Star query requires a galaxy name");
-        }
-
-        for (auto index = s32{}; index < GameEventFlagTable::getTableSize(); ++index) {
-            const auto *flag = GameEventFlagTable::getFlag(index);
-            if (flag != nullptr && flag->mType == GameEventFlag::Type_SpecialStar && flag->mGalaxyName != nullptr &&
-                std::string_view(flag->mGalaxyName) == galaxy_name && flag->mStarID == star_id) {
-                return *flag;
-            }
-        }
-
-        unavailable("retail Power Star mapping for " + std::string(galaxy_name) + ":" + std::to_string(star_id));
-    }
 }  // namespace
 
 namespace smgpc::compat::story_sequence {
@@ -186,20 +159,6 @@ namespace GameDataFunction {
         return require_current_game_data().isDataMario();
     }
 
-    bool hasPowerStar(const char *galaxy_name, s32 star_id) {
-        return has_retail_special_star(require_special_star_flag(galaxy_name, star_id));
-    }
-
-    bool hasGrandStar(int index) {
-        char name[32];
-        std::snprintf(name, sizeof(name), "SpecialStarGrand%1d", index);
-        const auto &flag = require_retail_flag(name);
-        if (flag.mType != GameEventFlag::Type_SpecialStar) {
-            throw std::logic_error("Retail Grand Star flag is not a special-star predicate");
-        }
-        return has_retail_special_star(flag);
-    }
-
     bool canOnGameEventFlag(const char *name) {
         if (name == nullptr) {
             throw std::invalid_argument("Game event flag query requires a name");
@@ -224,10 +183,6 @@ namespace GameDataFunction {
 }  // namespace GameDataFunction
 
 namespace GameDataConst {
-    bool isGrandStar(const char *, s32) {
-        unavailable("GalaxyID Grand Star classification");
-    }
-
     u32 getIncludedGrandGalaxyId(const char *) {
         unavailable("GalaxyID included Grand Galaxy lookup");
     }
