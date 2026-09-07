@@ -1,0 +1,206 @@
+[
+  {
+    "path": "decomp",
+    "commit": "83f9414678f88312670d842cc7a236fa26fa162d"
+  },
+  {
+    "path": "src/Game/Screen/SceneWipeHolder.cpp",
+    "sha256": "93df73978978d9a34fe2bc1e382d1c3591da916bdea71859ea622f0097f2acbd"
+  },
+  {
+    "path": "src/Game/Screen/SceneWipeHolder.hpp",
+    "sha256": "43b8a3859b38a8ff66b7be4f0bce8c1d77dedb24c163fc0564d36dfd1aa8f2e2"
+  },
+  {
+    "path": "src/Game/Screen/WipeFade.cpp",
+    "sha256": "1fb5ae9c1d46d3bd5d4066dd94f8e410b13919d92b2f4b01cb3f85e9522db805"
+  },
+  {
+    "path": "src/Game/Screen/WipeFade.hpp",
+    "sha256": "d140f2636b8bf57e0838bbb21e9262ab69d2b10a43d848be7709712b7b4f0c14"
+  },
+  {
+    "path": "src/Game/Screen/WipeGameOver.cpp",
+    "sha256": "2986434b3203ee52f51421ac19069a30f5c2405dc15b7aee11945cb82c85fc04"
+  },
+  {
+    "path": "src/Game/Screen/WipeGameOver.hpp",
+    "sha256": "9228fb6af540af6a96287f0f83faa03d7f7f4b61c8a0425c4ec5c1868b05a1c0"
+  },
+  {
+    "path": "src/Game/Screen/WipeHolderBase.cpp",
+    "sha256": "4866925dcb4428c744021cec19bdbfe3916ed6b90bf4f673f011fdbe2a06eac2"
+  },
+  {
+    "path": "src/Game/Screen/WipeHolderBase.hpp",
+    "sha256": "8836c2aaebf9280dd47a8f8afdff9245528a99408efb085753373859041c74aa"
+  },
+  {
+    "path": "src/Game/Screen/WipeKoopa.cpp",
+    "sha256": "b019adf4a3234bc54e78003f41cdd57291e087aac8843a2c98e2f63b5349877b"
+  },
+  {
+    "path": "src/Game/Screen/WipeKoopa.hpp",
+    "sha256": "e9ac22c0cbd5a7097393e217eb857bc1a5434c41e3a801d4a46b88b1e4296832"
+  },
+  {
+    "path": "src/Game/Screen/WipeLayoutBase.hpp",
+    "sha256": "9963cec225b01c380043e2ccd0b180d7d6ef83dafb473b7a6b91156cf6c4f0ac"
+  },
+  {
+    "path": "src/Game/Screen/WipeRing.cpp",
+    "sha256": "d1e3b18a678ccdb4308fe2b6e1d64ea3c126b7b80e9d964b887b7e49bd9dc95e"
+  },
+  {
+    "path": "src/Game/Screen/WipeRing.hpp",
+    "sha256": "76e1780fe6c23123afa3ef07e7e4ea0237b2b463ac838d788cf6624c3d851483"
+  },
+  {
+    "path": "src/Game/System/GameDataPlayerStatus.cpp",
+    "sha256": "e591e729174941d87d6450a2af746e826a78dda47163a4f03beb9412a6c8be76"
+  },
+  {
+    "path": "src/Game/System/GameDataPlayerStatus.hpp",
+    "sha256": "a5fa4559d1fd957278ac6a898a68b32d4fb2bf497e3901f8c5fdf413f49a228d"
+  },
+  {
+    "path": "src/Game/Util/LayoutUtil.hpp",
+    "sha256": "45adbc66b965a51cb1b034dce33fba951411c423ea5fe25dad0235f6cfe83b15"
+  },
+  {
+    "path": "src/Game/Util/ScreenUtil.cpp",
+    "sha256": "e62eb2435f1cdb445cfb1c24d458ee384aec0874703e4d9f8c544187f24c81d2"
+  },
+  {
+    "path": "src/Game/xmake.lua",
+    "sha256": "c13ee60c41c12dec412d9050027d0baccead7c04cb77c17f14315084af2c8894"
+  },
+  {
+    "path": "src/compat/ActorRuntimeRegistry.cpp",
+    "sha256": "39dd9f2eefc995fede27aa006b812cc23cea07e99ceffbf351dd8866abb99cc7"
+  },
+  {
+    "path": "src/compat/ClippingDirectorCompat.cpp",
+    "sha256": "da0a69bb4f72f53542821609a3abde45bf9f39c346a8d390c63f7c7d12bc1a92"
+  },
+  {
+    "path": "src/compat/GameDataHolderCompat.cpp",
+    "sha256": "5e848645ad2d28e17d8bdeea57d88a002660616401c35aa221575c624250da8b"
+  },
+  {
+    "path": "src/compat/GameDataHolderCompat.hpp",
+    "sha256": "8a6a8195c43cdbb497bc1b11aa3e0b2f56fcc3638db62b26c202f6814bfbe93a"
+  },
+  {
+    "path": "src/compat/OriginalScenePredicates.cpp",
+    "sha256": "cd4a695997d0b6638ad80ec17357479a5a626784743a1c89e9802d1e6d657fee"
+  },
+  {
+    "path": "src/compat/OriginalSceneWipeUtil.cpp",
+    "sha256": "73a53f99e198dfb11614eea12cd74065764fb01175127b28f2f0cf2179b3fcfe"
+  },
+  {
+    "path": "src/compat/PlayerStatusStorage.cpp",
+    "sha256": "fa7562079b822481bbb5af50197ab3102a7c3b0bf6e1d44de8f5d320c9d176dd"
+  },
+  {
+    "path": "src/compat/PlayerStatusStorage.hpp",
+    "sha256": "fde0abf46806ebfb95d85815ed1677bce1d6f3b1ff24a68c8d9b385659ee6373"
+  },
+  {
+    "path": "src/compat/SceneMovementCompat.cpp",
+    "sha256": "cacff3707b41285b13423b2f90fac35bf9440bf03a5871481d84308cb14fc0f5"
+  },
+  {
+    "path": "src/compat/SceneObjHolderCompat.cpp",
+    "sha256": "031e75a700b73755709c4cc9ceb40c276fdb874b0c2787ff1e8ccfa4490cc523"
+  },
+  {
+    "path": "src/compat/ScreenSystemAndCaptureCompat.cpp",
+    "sha256": "229211b94b7892301d65e67689a64cf19c17adbae9f09a344f29a9447afee737"
+  },
+  {
+    "path": "src/layout/LayoutHost.hpp",
+    "sha256": "a947a2fa46bb9529b301a8ba002c90f43311281f3992f2c3d905d9167cecacf9"
+  },
+  {
+    "path": "src/layout/LayoutManagerCompat.cpp",
+    "sha256": "c3bbb3dabe02a621956362c7b4469ee9bc88dca55a814b5c6f483d00ca361103"
+  },
+  {
+    "path": "src/layout/LayoutUtilCompat.cpp",
+    "sha256": "05144d49c0ed99a75e129f39e8b97ad7ce1aa0588e1aa9fb15a97ead17e3ec95"
+  },
+  {
+    "path": "src/runtime/SceneScheduler.cpp",
+    "sha256": "abc78a5080a506a16b6f49e4c8cfe311419ec8ec5a15fe83cdb2918fb43c5f95"
+  },
+  {
+    "path": "src/runtime/SceneScheduler.hpp",
+    "sha256": "1cc11fd8f2e404fd11c778499ffea8513c4672ea9a4c34bb1a69846615fe5f66"
+  },
+  {
+    "path": "src/scene/StageHostScene.cpp",
+    "sha256": "3205361735f57bd0738e3dccfa2821192c9f1e865ae830259216352ebaad79bc"
+  },
+  {
+    "path": "src/scene/StageHostScene.hpp",
+    "sha256": "056340ed7a0fb40347d138a4a5ac337b9ac66edebb0107117f4a3a08fc2f8014"
+  },
+  {
+    "path": "src/scene/StageInitializationService.cpp",
+    "sha256": "cf2713b7598d6af0486ba8147de7c8098764c05a37910a6b743bb0d6c2dc63cc"
+  },
+  {
+    "path": "src/scene/StageInitializationService.hpp",
+    "sha256": "1d26e8e6e460bf22974030bf70c2e984ebfcba626ad3d59594d0eb5a9f236df6"
+  },
+  {
+    "path": "tests/AuroraNativeTests.cpp",
+    "sha256": "2f3313cb105a3fb3e5a378c5b998a8cb149a06c6bbdda12a1167651793d41a7b"
+  },
+  {
+    "path": "tests/GatewayDemoSceneTests.cpp",
+    "sha256": "57137f78b49cad817b91cac1ddec6679a80013aa49d9065245a448ba638f2767"
+  },
+  {
+    "path": "tests/GravityRealOrAbsentTests.cpp",
+    "sha256": "04cba799b3368ba5031d626cffbe24e6fa9f038511594cf2a588a87f010338ce"
+  },
+  {
+    "path": "tests/NameObjFactoryPlacementTests.cpp",
+    "sha256": "b1b8832c620459a1913e1d5903de79f581c326bd79c0ec50e74f094dc85aedbf"
+  },
+  {
+    "path": "tests/NameObjGroupLifetimeTests.cpp",
+    "sha256": "3d3014d88c5dd3e76d1a8698d996d4efcd23ea7dbb5066cd441f04d8f3148fc6"
+  },
+  {
+    "path": "tests/OriginalCameraDirectorTests.cpp",
+    "sha256": "bc05daeab4e4896ead013e69f991f2431bd88587f8eee4a9e52e4cae445c7559"
+  },
+  {
+    "path": "tests/OriginalPlayerStatusStorageTests.cpp",
+    "sha256": "d6ac0d0f8fae086e9c98e18142559fdba3aec2bd82127b58ea5d39adf5fb47e2"
+  },
+  {
+    "path": "tests/OriginalSceneWipeOwnerTests.cpp",
+    "sha256": "1a7ced3be0784413d055162c3bcf44610c02b184600d29c1cfe1467d0987a240"
+  },
+  {
+    "path": "tests/SceneObjHolderRealOrAbsentTests.cpp",
+    "sha256": "1a53e6ba366d2a03b3dadc1f1f1cddc4a116058be9f5af2653afac43ae91cae3"
+  },
+  {
+    "path": "tests/SceneSchedulerHeapTests.cpp",
+    "sha256": "a301e19833fac2fb13ac9112c68dd773a3c9bfeb5ea4b21800145a8d201f29b3"
+  },
+  {
+    "path": "tests/StageInitializationResourceTests.cpp",
+    "sha256": "307926d6d72e098f1a2eb98c52d6d99db7231ca0b4f99f247903c2ecd241a6aa"
+  },
+  {
+    "path": "tests/xmake.lua",
+    "sha256": "0356da789396c2950205f5bb2153ad68cf497f89f9aaaaf49c62c7ed70119716"
+  }
+]

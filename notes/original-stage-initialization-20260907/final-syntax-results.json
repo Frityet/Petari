@@ -1,0 +1,27 @@
+[
+  {
+    "source": "src/scene/StageInitializationService.cpp",
+    "exit": 0,
+    "log": "notes/original-stage-initialization-20260907/StageInitializationService-final-syntax.log"
+  },
+  {
+    "source": "src/scene/StageHostScene.cpp",
+    "exit": 0,
+    "log": "notes/original-stage-initialization-20260907/StageHostScene-final-syntax.log"
+  },
+  {
+    "source": "src/scene/SceneLifecycleService.cpp",
+    "exit": 0,
+    "log": "notes/original-stage-initialization-20260907/SceneLifecycleService-final-syntax.log"
+  },
+  {
+    "source": "tests/StageInitializationResourceTests.cpp",
+    "exit": 0,
+    "log": "notes/original-stage-initialization-20260907/StageInitializationResourceTests-final-syntax.log"
+  },
+  {
+    "source": "tests/SceneObjHolderRealOrAbsentTests.cpp",
+    "exit": 0,
+    "log": "notes/original-stage-initialization-20260907/SceneObjHolderRealOrAbsentTests-final-syntax.log"
+  }
+]

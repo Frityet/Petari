@@ -1,0 +1,10 @@
+[
+  {
+    "path": "src/Game/Screen/SceneWipeHolder.cpp",
+    "sha256": "93df73978978d9a34fe2bc1e382d1c3591da916bdea71859ea622f0097f2acbd"
+  },
+  {
+    "path": "src/Game/Screen/WipeRing.cpp",
+    "sha256": "d1e3b18a678ccdb4308fe2b6e1d64ea3c126b7b80e9d964b887b7e49bd9dc95e"
+  }
+]

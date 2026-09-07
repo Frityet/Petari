@@ -297,6 +297,14 @@ namespace smgpc::runtime {
         void execute_movement();
         void execute_calc_anim();
         void execute_calc_view_and_entry();
+        // The original SceneExecutor selects category order and interleaves
+        // collision animation with movement. These dispatch only one category.
+        void begin_frame();
+        void execute_movement_category(s32 movement_type);
+        void execute_calc_anim_category(s32 calc_anim_type);
+        void entry_draw_buffer(s32 camera_type);
+        void execute_draw_buffer_opa(s32 draw_buffer_type);
+        void execute_draw_buffer_xlu(s32 draw_buffer_type);
         void execute_draw_buffer_opa(const smgpc::camera::CameraPose &camera_pose, s32 draw_buffer_type);
         void execute_draw_buffer_xlu(const smgpc::camera::CameraPose &camera_pose, s32 draw_buffer_type);
         void execute_draw_buffer_list_normal_opa_before_volume_shadow(const smgpc::camera::CameraPose &camera_pose, bool prior_draw_air);
@@ -349,7 +357,10 @@ namespace smgpc::runtime {
         [[nodiscard]] static bool entry_is_suspended(const Entry &entry);
         [[nodiscard]] static std::string entry_name(const Entry &entry);
         void execute_sensor_hit_check();
-        void execute_draw_buffer(const smgpc::camera::CameraPose &camera_pose, s32 draw_buffer_type, SceneDrawBufferPass pass);
+        void execute_actor_clipping();
+        void execute_movement_entry(const Entry&, s32 movement_type);
+        void execute_calc_anim_entry(const Entry&, s32 calc_anim_type);
+        void execute_draw_buffer(s32 draw_buffer_type, SceneDrawBufferPass pass);
         void execute_draw_buffer_model_3d_for_2d(
             const smgpc::render::Model3DFor2DProjection &projection,
             s32 draw_buffer_type, SceneDrawBufferPass pass);

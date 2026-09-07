@@ -1,0 +1,268 @@
+[
+  {
+    "symbol": "__Unwind_Resume",
+    "demangled": "__Unwind_Resume",
+    "referenced_by": [
+      "NameObjCategoryList",
+      "NameObjExecuteHolder",
+      "SceneNameObjListExecutor"
+    ]
+  },
+  {
+    "symbol": "__ZN16DrawBufferHolder13findLightInfoEP9LiveActorii",
+    "demangled": "DrawBufferHolder::findLightInfo(LiveActor*, int, int)",
+    "referenced_by": [
+      "NameObjListExecutor"
+    ]
+  },
+  {
+    "symbol": "__ZN16DrawBufferHolder18registerDrawBufferEP9LiveActori",
+    "demangled": "DrawBufferHolder::registerDrawBuffer(LiveActor*, int)",
+    "referenced_by": [
+      "NameObjListExecutor"
+    ]
+  },
+  {
+    "symbol": "__ZN16DrawBufferHolder23allocateActorListBufferEv",
+    "demangled": "DrawBufferHolder::allocateActorListBuffer()",
+    "referenced_by": [
+      "NameObjListExecutor"
+    ]
+  },
+  {
+    "symbol": "__ZN16DrawBufferHolder5entryEi",
+    "demangled": "DrawBufferHolder::entry(int)",
+    "referenced_by": [
+      "NameObjListExecutor"
+    ]
+  },
+  {
+    "symbol": "__ZN16DrawBufferHolder6activeEP9LiveActorii",
+    "demangled": "DrawBufferHolder::active(LiveActor*, int, int)",
+    "referenced_by": [
+      "NameObjListExecutor"
+    ]
+  },
+  {
+    "symbol": "__ZN16DrawBufferHolder8deactiveEP9LiveActorii",
+    "demangled": "DrawBufferHolder::deactive(LiveActor*, int, int)",
+    "referenced_by": [
+      "NameObjListExecutor"
+    ]
+  },
+  {
+    "symbol": "__ZN16DrawBufferHolder9initTableEPK22DrawBufferInitialTablei",
+    "demangled": "DrawBufferHolder::initTable(DrawBufferInitialTable const*, int)",
+    "referenced_by": [
+      "SceneNameObjListExecutor"
+    ]
+  },
+  {
+    "symbol": "__ZN16DrawBufferHolderC1Ev",
+    "demangled": "DrawBufferHolder::DrawBufferHolder()",
+    "referenced_by": [
+      "SceneNameObjListExecutor"
+    ]
+  },
+  {
+    "symbol": "__ZN19NameObjCategoryList6removeEP7NameObji",
+    "demangled": "NameObjCategoryList::remove(NameObj*, int)",
+    "referenced_by": [
+      "NameObjListExecutor"
+    ]
+  },
+  {
+    "symbol": "__ZN2MR17getSceneObjHolderEv",
+    "demangled": "MR::getSceneObjHolder()",
+    "referenced_by": [
+      "NameObjExecuteHolder"
+    ]
+  },
+  {
+    "symbol": "__ZN2MR17requestMovementOnEP7NameObj",
+    "demangled": "MR::requestMovementOn(NameObj*)",
+    "referenced_by": [
+      "NameObjExecuteHolder"
+    ]
+  },
+  {
+    "symbol": "__ZN2MR18requestMovementOffEP7NameObj",
+    "demangled": "MR::requestMovementOff(NameObj*)",
+    "referenced_by": [
+      "NameObjExecuteHolder"
+    ]
+  },
+  {
+    "symbol": "__ZN7NameObj15executeMovementEv",
+    "demangled": "NameObj::executeMovement()",
+    "referenced_by": [
+      "SceneNameObjListExecutor"
+    ]
+  },
+  {
+    "symbol": "__ZN7NameObj16calcViewAndEntryEv",
+    "demangled": "NameObj::calcViewAndEntry()",
+    "referenced_by": [
+      "NameObjExecuteHolder"
+    ]
+  },
+  {
+    "symbol": "__ZN7NameObj18initAfterPlacementEv",
+    "demangled": "NameObj::initAfterPlacement()",
+    "referenced_by": [
+      "NameObjExecuteHolder"
+    ]
+  },
+  {
+    "symbol": "__ZN7NameObj4initERK12JMapInfoIter",
+    "demangled": "NameObj::init(JMapInfoIter const&)",
+    "referenced_by": [
+      "NameObjExecuteHolder"
+    ]
+  },
+  {
+    "symbol": "__ZN7NameObj8calcAnimEv",
+    "demangled": "NameObj::calcAnim()",
+    "referenced_by": [
+      "NameObjExecuteHolder"
+    ]
+  },
+  {
+    "symbol": "__ZN7NameObj8movementEv",
+    "demangled": "NameObj::movement()",
+    "referenced_by": [
+      "NameObjExecuteHolder"
+    ]
+  },
+  {
+    "symbol": "__ZN7NameObjC2EPKc",
+    "demangled": "NameObj::NameObj(char const*)",
+    "referenced_by": [
+      "NameObjExecuteHolder"
+    ]
+  },
+  {
+    "symbol": "__ZN7NameObjD2Ev",
+    "demangled": "NameObj::~NameObj()",
+    "referenced_by": [
+      "NameObjExecuteHolder"
+    ]
+  },
+  {
+    "symbol": "__ZNK14SceneObjHolder6getObjEi",
+    "demangled": "SceneObjHolder::getObj(int) const",
+    "referenced_by": [
+      "NameObjExecuteHolder"
+    ]
+  },
+  {
+    "symbol": "__ZNK16DrawBufferHolder7drawOpaEi",
+    "demangled": "DrawBufferHolder::drawOpa(int) const",
+    "referenced_by": [
+      "NameObjListExecutor"
+    ]
+  },
+  {
+    "symbol": "__ZNK16DrawBufferHolder7drawXluEi",
+    "demangled": "DrawBufferHolder::drawXlu(int) const",
+    "referenced_by": [
+      "NameObjListExecutor"
+    ]
+  },
+  {
+    "symbol": "__ZNK25GameSystemSceneController22getNameObjListExecutorEv",
+    "demangled": "GameSystemSceneController::getNameObjListExecutor() const",
+    "referenced_by": [
+      "NameObjExecuteHolder"
+    ]
+  },
+  {
+    "symbol": "__ZNK7NameObj4drawEv",
+    "demangled": "NameObj::draw() const",
+    "referenced_by": [
+      "NameObjExecuteHolder"
+    ]
+  },
+  {
+    "symbol": "__ZTI7NameObj",
+    "demangled": "typeinfo for NameObj",
+    "referenced_by": [
+      "NameObjExecuteHolder"
+    ]
+  },
+  {
+    "symbol": "__ZTVN10__cxxabiv117__class_type_infoE",
+    "demangled": "vtable for __cxxabiv1::__class_type_info",
+    "referenced_by": [
+      "NameObjCategoryList",
+      "NameObjListExecutor"
+    ]
+  },
+  {
+    "symbol": "__ZTVN10__cxxabiv120__si_class_type_infoE",
+    "demangled": "vtable for __cxxabiv1::__si_class_type_info",
+    "referenced_by": [
+      "NameObjCategoryList",
+      "NameObjExecuteHolder",
+      "SceneNameObjListExecutor"
+    ]
+  },
+  {
+    "symbol": "__ZdaPv",
+    "demangled": "operator delete[](void*)",
+    "referenced_by": [
+      "NameObjCategoryList",
+      "NameObjListExecutor"
+    ]
+  },
+  {
+    "symbol": "__ZdaPvm",
+    "demangled": "operator delete[](void*, unsigned long)",
+    "referenced_by": [
+      "NameObjCategoryList",
+      "NameObjListExecutor"
+    ]
+  },
+  {
+    "symbol": "__ZdlPvm",
+    "demangled": "operator delete(void*, unsigned long)",
+    "referenced_by": [
+      "NameObjCategoryList",
+      "NameObjExecuteHolder",
+      "NameObjListExecutor",
+      "SceneNameObjListExecutor"
+    ]
+  },
+  {
+    "symbol": "__Znam",
+    "demangled": "operator new[](unsigned long)",
+    "referenced_by": [
+      "NameObjCategoryList",
+      "NameObjExecuteHolder"
+    ]
+  },
+  {
+    "symbol": "__Znwm",
+    "demangled": "operator new(unsigned long)",
+    "referenced_by": [
+      "NameObjCategoryList",
+      "SceneNameObjListExecutor"
+    ]
+  },
+  {
+    "symbol": "___cxa_pure_virtual",
+    "demangled": "___cxa_pure_virtual",
+    "referenced_by": [
+      "NameObjCategoryList"
+    ]
+  },
+  {
+    "symbol": "___gxx_personality_v0",
+    "demangled": "___gxx_personality_v0",
+    "referenced_by": [
+      "NameObjCategoryList",
+      "NameObjExecuteHolder",
+      "SceneNameObjListExecutor"
+    ]
+  }
+]

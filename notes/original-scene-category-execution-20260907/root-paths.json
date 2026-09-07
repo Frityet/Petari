@@ -1,0 +1,7 @@
+[
+  "src/runtime/SceneScheduler.cpp",
+  "src/runtime/SceneScheduler.hpp",
+  "src/compat/SceneMovementCompat.cpp",
+  "src/compat/ClippingDirectorCompat.cpp",
+  "tests/SceneSchedulerHeapTests.cpp"
+]

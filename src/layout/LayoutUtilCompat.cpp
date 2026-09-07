@@ -151,11 +151,7 @@ namespace MR {
         smgpc::layout::start_layout_anim(pLayout, pAnimName, animLayer);
     }
 
-    bool isAnimStopped(SimpleLayout* pLayout, u32 animLayer) {
-        return smgpc::layout::is_layout_anim_stopped(pLayout, animLayer);
-    }
-
-    bool isAnimStopped(LayoutActor* pLayout, u32 animLayer) {
+    bool isAnimStopped(const LayoutActor* pLayout, u32 animLayer) {
         return smgpc::layout::is_layout_anim_stopped(pLayout, animLayer);
     }
 

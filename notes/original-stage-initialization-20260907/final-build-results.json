@@ -1,0 +1,20 @@
+[
+  {
+    "target": "smg-pc-game",
+    "exit": 0,
+    "log": "notes/original-stage-initialization-20260907/smg-pc-game-final-build.log",
+    "errors": []
+  },
+  {
+    "target": "smg-pc-showcase",
+    "exit": 255,
+    "log": "notes/original-stage-initialization-20260907/smg-pc-showcase-final-build.log",
+    "errors": [
+      "Undefined symbols for architecture arm64:",
+      "  \"MR::requestEndMissDemo()\", referenced from:",
+      "  \"MR::requestEndGameOverDemo()\", referenced from:",
+      "  \"MR::requestStartGameOverDemo()\", referenced from:",
+      "clang++: error: linker command failed with exit code 1 (use -v to see invocation)"
+    ]
+  }
+]

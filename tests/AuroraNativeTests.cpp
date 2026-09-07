@@ -44,7 +44,7 @@
 #include "resource/BcsvTable.hpp"
 #include "resource/TplTexture.hpp"
 #include "scene/StageCollisionService.hpp"
-#include "scene/StageHostScene.hpp"
+#include "scene/StageInitializationService.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "scene/nameobj/NameObjFactory.hpp"
 #include "compat/ActorMotionCompat.hpp"

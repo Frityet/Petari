@@ -25,8 +25,10 @@
 #include "Game/Camera/CameraTargetArg.hpp"
 #include "Game/Camera/CameraTargetMtx.hpp"
 #include "Game/LiveActor/ActorCameraInfo.hpp"
+#include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/CameraUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 
@@ -89,6 +91,61 @@ namespace {
             require(pattern->mIntensity == 1 && pattern->mSpeed == 15,
                     "original infinity helper replaces the four overwritten slots");
         }
+    }
+
+    void camera_category_precedes_clipping(smgpc::runtime::RuntimeContext& runtime, CameraDirector& director) {
+        auto& scheduler = runtime.scheduler();
+        // This is a synthetic scheduler input into the actual CameraContext.
+        // Full Director movement needs the separately owned Mario graph; its
+        // original resources and manager selection are exercised above.
+        struct RestoreFlags {
+            CameraDirector& director; u16 flags;
+            ~RestoreFlags() { director.mFlag = flags; }
+        } restore{director, director.mFlag};
+        NameObjFunction::requestMovementOff(&director);
+        struct Publisher final : NameObj {
+            Publisher() : NameObj("Camera category fixture") {}
+            void movement() override {
+                MR::setCameraViewMtx(view, false, false, TVec3f(0, 0, 0));
+                ++calls;
+            }
+            TPos3f view;
+            u32 calls = 0;
+        } publisher;
+        struct Subject final : LiveActor {
+            Subject() : LiveActor("Clipping category fixture") {}
+            void startClipped() override { ++starts; LiveActor::startClipped(); }
+            void endClipped() override { ++ends; LiveActor::endClipped(); }
+            u32 starts = 0, ends = 0;
+        } actor;
+        actor.mPosition.set(0, 0, 0);
+        actor.makeActorAppeared();
+        smgpc::compat::configure_actor_clipping_sphere(&actor, 10, nullptr);
+        scheduler.connect_name_obj(actor, MR::MovementType_Player, -1, -1, -1);
+        scheduler.connect_name_obj(publisher, MR::MovementType_Camera, -1, -1, -1);
+        TPos3f far_view, near_view;
+        far_view.setPositionFromLookAt(TVec3f(100000, 0, 1000), TVec3f(0, 1, 0), TVec3f(100000, 0, 0));
+        near_view.setPositionFromLookAt(TVec3f(0, 0, 1000), TVec3f(0, 1, 0), TVec3f(0, 0, 0));
+        MR::setCameraViewMtx(far_view, false, false, TVec3f(0, 0, 0));
+        runtime.refresh_scene_camera_pose();
+        scheduler.execute_movement_category(MR::MovementType_ClippingDirector);
+        require(actor.mFlag.mIsClipped && actor.starts == 1, "old actual context view initially clips the subject");
+        publisher.view.set(near_view);
+        scheduler.begin_frame();
+        scheduler.execute_movement_category(MR::MovementType_Camera);
+        require(publisher.calls == 1 && runtime.scene_camera_pose().has_value(), "Camera category publishes the actual context view in this frame");
+        near(runtime.scene_camera_pose()->eye.x, 0, "Camera callback publication reaches the renderer before clipping");
+        require(actor.mFlag.mIsClipped && actor.ends == 0, "Camera category does not evaluate clipping early");
+        scheduler.execute_movement_category(MR::MovementType_ClippingDirector);
+        require(!actor.mFlag.mIsClipped && actor.ends == 1, "category4 uses the new actual camera view and invokes original endClipped");
+        publisher.view.set(far_view);
+        scheduler.begin_frame();
+        scheduler.execute_movement_category(MR::MovementType_Camera);
+        near(runtime.scene_camera_pose()->eye.x, 100000, "next Camera category publishes the next view rather than a cached pose");
+        require(!actor.mFlag.mIsClipped, "subject retains prior clipping state until category4");
+        scheduler.execute_movement_category(MR::MovementType_ClippingDirector);
+        require(actor.mFlag.mIsClipped && actor.starts == 2 && actor.ends == 1,
+                "next category4 evaluates the changed view exactly at its original boundary");
     }
 }
 
@@ -192,6 +249,7 @@ int main() {
             near(pose->near_clip, 75, "renderer receives original near clip");
             near(pose->fovy_degrees, 55, "renderer receives original fovy");
             near(pose->projection_offset_y, -0.02F, "renderer receives original shaker projection offset");
+            camera_category_precedes_clipping(runtime, director);
         }
         require(weak_domain.expired() && !smgpc::camera::current_camera_director_runtime() &&
                 !smgpc::camera::current_original_camera_context(), "scene teardown retires camera publication and its entire Game domain");

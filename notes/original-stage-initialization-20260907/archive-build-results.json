@@ -1,0 +1,12 @@
+[
+  {
+    "target": "smg-pc-common",
+    "exit": 0,
+    "log": "notes/original-stage-initialization-20260907/smg-pc-common-build.log"
+  },
+  {
+    "target": "smg-pc-game",
+    "exit": 0,
+    "log": "notes/original-stage-initialization-20260907/smg-pc-game-build.log"
+  }
+]

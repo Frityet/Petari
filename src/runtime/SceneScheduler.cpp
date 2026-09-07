@@ -774,12 +774,14 @@ namespace smgpc::runtime {
         }
     }
 
-    void SceneScheduler::execute_movement() {
+    void SceneScheduler::begin_frame() {
         smgpc::compat::JkrHostAllocationScope host;
-        smgpc::compat::SceneJ3dScope j3d_scope;
 #ifndef NDEBUG
         _last_execution_trace.clear();
 #endif
+    }
+
+    void SceneScheduler::execute_actor_clipping() {
         auto clipping_camera = std::optional<smgpc::camera::CameraPose>{};
         if (auto* runtime = RuntimeContext::try_instance(); runtime != nullptr) {
             clipping_camera = runtime->camera_system().effective_camera_pose();
@@ -810,70 +812,73 @@ namespace smgpc::runtime {
                 }
             }
         }
-        bool checked_sensors = false;
-        for (const auto& registered : sorted_entries_for_movement()) {
-            // The original SensorHitChecker runs before actor movement. It
-            // uses positions published by the preceding actor updates; contact
-            // delivery belongs to LiveActor::movement through its keeper.
-            if (!checked_sensors &&
-                category_rank(registered.movement_type, ORIGINAL_MOVEMENT_ORDER) >=
-                    category_rank(MR::MovementType_SensorHitChecker, ORIGINAL_MOVEMENT_ORDER)) {
-                execute_sensor_hit_check();
-                checked_sensors = true;
-            }
-            auto entry = current_entry(registered);
-            if (!entry || entry->movement_type < 0 || entry_is_dead(*entry) || entry_is_suspended(*entry)) {
-                continue;
-            }
+    }
 
-            if (auto *actor = entry_live_actor(*entry); actor != nullptr && actor->mFlag.mIsClipped) {
-                continue;
+    void SceneScheduler::execute_movement() {
+        smgpc::compat::JkrHostAllocationScope host;
+        smgpc::compat::SceneJ3dScope j3d_scope;
+        begin_frame();
+        // Host-only scenes still use this aggregate entry. Original GameScene
+        // calls categories itself through SceneExecutor, including its separate
+        // collision calcAnim passes. Both routes share the same callback owner.
+        auto categories = std::vector<s32>(ORIGINAL_MOVEMENT_ORDER.begin(), ORIGINAL_MOVEMENT_ORDER.end());
+        for (const auto& entry : sorted_entries_for_movement())
+            if (entry.movement_type >= 0 && std::ranges::find(categories, entry.movement_type) == categories.end())
+                categories.push_back(entry.movement_type);
+        for (const auto category : categories) execute_movement_category(category);
+    }
+
+    void SceneScheduler::execute_movement_category(s32 movement_type) {
+        smgpc::compat::JkrHostAllocationScope host;
+        smgpc::compat::SceneJ3dScope j3d_scope;
+        if (movement_type < 0)
+            aurora::throw_host_exception<std::out_of_range>("Movement category must be nonnegative");
+        // ClippingDirectorCompat has no second movement evaluator, and the
+        // original SensorHitChecker is not registered by the native owner.
+        // Keep each current native subsystem at its original category boundary.
+        if (movement_type == MR::MovementType_ClippingDirector) execute_actor_clipping();
+        if (movement_type == MR::MovementType_SensorHitChecker) execute_sensor_hit_check();
+        for (const auto& registered : entries_snapshot())
+            if (registered.movement_type == movement_type)
+                execute_movement_entry(registered, movement_type);
+    }
+
+    void SceneScheduler::execute_movement_entry(const Entry& registered, s32 movement_type) {
+        auto entry = current_entry(registered);
+        if (!entry || entry->movement_type != movement_type || entry_is_dead(*entry) || entry_is_suspended(*entry)) return;
+        if (auto* actor = entry_live_actor(*entry); actor && actor->mFlag.mIsClipped) return;
+
+        invoke_game_callback(_allocation_domain, [&] {
+            switch (entry->kind) {
+            case SceneEntryKind::NameObj:
+                entry->name_obj->executeMovement();
+                break;
+            case SceneEntryKind::Layout: {
+                smgpc::compat::JkrHostAllocationScope native;
+                entry->layout->update();
+                break;
             }
-
-            invoke_game_callback(_allocation_domain, [&] {
-                switch (entry->kind) {
-                case SceneEntryKind::NameObj:
-                    entry->name_obj->executeMovement();
-                    break;
-                case SceneEntryKind::Layout: {
-                    smgpc::compat::JkrHostAllocationScope native;
-                    entry->layout->update();
-                    break;
-                }
-                case SceneEntryKind::LayoutActor:
-                    entry->layout_actor->executeMovement();
-                    break;
-                case SceneEntryKind::LiveActorModel:
-                    entry->live_actor->movement();
-                    break;
-                }
-            });
-
-            if (auto* runtime = RuntimeContext::try_instance()) {
-                // Publish the context after each camera-category callback so
-                // subsequent original Player movement sees this frame's view.
-                if (registered.movement_type == MR::MovementType_Camera) {
-                    runtime->refresh_scene_camera_pose();
-                }
+            case SceneEntryKind::LayoutActor:
+                entry->layout_actor->executeMovement();
+                break;
+            case SceneEntryKind::LiveActorModel:
+                entry->live_actor->movement();
+                break;
             }
+        });
+        if (auto* runtime = RuntimeContext::try_instance(); runtime && movement_type == MR::MovementType_Camera)
+            runtime->refresh_scene_camera_pose();
 
-            // Callback registration changes may reallocate the host vector or
-            // destroy this object. Resolve its never-reused registration order.
-            entry = current_entry(registered);
-            if (!entry) continue;
-
-            if (auto *actor = entry_live_actor(*entry); actor != nullptr && !actor->mFlag.mIsDead) {
-                if (auto *runtime = RuntimeContext::try_instance();
-                    runtime != nullptr && runtime->player_system().attached_actor() == actor) {
-                    runtime->player_system().synchronize_attached_actor();
-                }
-            }
+        // Re-resolve the never-reused registration after a callback may remove
+        // itself, another object, or the entire scene and replace registrations.
+        entry = current_entry(registered);
+        if (!entry) return;
+        if (auto* actor = entry_live_actor(*entry); actor && !actor->mFlag.mIsDead)
+            if (auto* runtime = RuntimeContext::try_instance(); runtime && runtime->player_system().attached_actor() == actor)
+                runtime->player_system().synchronize_attached_actor();
 #ifndef NDEBUG
-            push_trace(*entry, SceneSchedulerPhase::Movement);
+        push_trace(*entry, SceneSchedulerPhase::Movement);
 #endif
-        }
-
-        if (!checked_sensors) execute_sensor_hit_check();
     }
 
     void SceneScheduler::execute_sensor_hit_check() {
@@ -949,37 +954,56 @@ namespace smgpc::runtime {
     void SceneScheduler::execute_calc_anim() {
         smgpc::compat::JkrHostAllocationScope host;
         smgpc::compat::SceneJ3dScope j3d_scope;
-        // SceneNameObjListExecutor calls NameObj::calcAnim directly. Only
-        // its movement list uses executeMovement's movement-off flag.
-        for (const auto& registered : sorted_entries_for_calc_anim()) {
-            auto entry = current_entry(registered);
-            if (!entry || entry->calc_anim_type < 0 || entry_is_dead(*entry)) {
-                continue;
-            }
-            if (const auto* actor = entry_live_actor(*entry); actor != nullptr && actor->mFlag.mIsClipped) {
-                continue;
-            }
+        for (const auto& registered : sorted_entries_for_calc_anim())
+            if (registered.calc_anim_type >= 0)
+                execute_calc_anim_entry(registered, registered.calc_anim_type);
+    }
 
-            invoke_game_callback(_allocation_domain, [&] {
-                switch (entry->kind) {
-                case SceneEntryKind::NameObj:
-                    entry->name_obj->calcAnim();
-                    break;
-                case SceneEntryKind::Layout:
-                    break;
-                case SceneEntryKind::LayoutActor:
-                    entry->layout_actor->calcAnim();
-                    break;
-                case SceneEntryKind::LiveActorModel:
-                    entry->live_actor->calcAnim();
-                    break;
-                }
-            });
+    void SceneScheduler::execute_calc_anim_category(s32 calc_anim_type) {
+        smgpc::compat::JkrHostAllocationScope host;
+        smgpc::compat::SceneJ3dScope j3d_scope;
+        if (calc_anim_type < 0)
+            aurora::throw_host_exception<std::out_of_range>("Animation category must be nonnegative");
+        for (const auto& registered : entries_snapshot())
+            if (registered.calc_anim_type == calc_anim_type)
+                execute_calc_anim_entry(registered, calc_anim_type);
+    }
+
+    void SceneScheduler::execute_calc_anim_entry(const Entry& registered, s32 calc_anim_type) {
+        // Original animation calls calcAnim directly, regardless of the
+        // executeMovement movement-off flag.
+        auto entry = current_entry(registered);
+        if (!entry || entry->calc_anim_type != calc_anim_type || entry_is_dead(*entry)) return;
+        if (auto* actor = entry_live_actor(*entry); actor && actor->mFlag.mIsClipped) return;
+        invoke_game_callback(_allocation_domain, [&] {
+            switch (entry->kind) {
+            case SceneEntryKind::NameObj:
+                entry->name_obj->calcAnim();
+                break;
+            case SceneEntryKind::Layout:
+                break;
+            case SceneEntryKind::LayoutActor:
+                entry->layout_actor->calcAnim();
+                break;
+            case SceneEntryKind::LiveActorModel:
+                entry->live_actor->calcAnim();
+                break;
+            }
+        });
 #ifndef NDEBUG
-            entry = current_entry(registered);
-            if (entry) push_trace(*entry, SceneSchedulerPhase::CalcAnim);
+        entry = current_entry(registered);
+        if (entry) push_trace(*entry, SceneSchedulerPhase::CalcAnim);
 #endif
-        }
+    }
+
+    void SceneScheduler::entry_draw_buffer(s32 camera_type) {
+        smgpc::compat::JkrHostAllocationScope host;
+        if (!_draw_buffers->has_draw_buffers() || !_draw_buffers->is_allocated())
+            aurora::throw_host_exception<std::logic_error>("Original category view entry requires allocated scene draw buffers");
+        refresh_draw_buffer_activation();
+        smgpc::compat::SceneJ3dScope commands;
+        // The original SceneExecutor has already selected the view matrix.
+        invoke_game_callback(_allocation_domain, [&] { _draw_buffers->entry(camera_type); });
     }
 
     void SceneScheduler::execute_calc_view_and_entry() {
@@ -1019,20 +1043,28 @@ namespace smgpc::runtime {
     }
 
     void SceneScheduler::execute_draw_buffer_opa(const smgpc::camera::CameraPose &camera_pose, s32 draw_buffer_type) {
-        execute_draw_buffer(camera_pose, draw_buffer_type, SceneDrawBufferPass::Opaque);
+        execute_draw_buffer(draw_buffer_type, SceneDrawBufferPass::Opaque);
+    }
+
+    void SceneScheduler::execute_draw_buffer_opa(s32 draw_buffer_type) {
+        execute_draw_buffer(draw_buffer_type, SceneDrawBufferPass::Opaque);
+    }
+
+    void SceneScheduler::execute_draw_buffer_xlu(s32 draw_buffer_type) {
+        execute_draw_buffer(draw_buffer_type, SceneDrawBufferPass::Translucent);
     }
 
     void SceneScheduler::execute_draw_buffer_xlu(const smgpc::camera::CameraPose &camera_pose, s32 draw_buffer_type) {
-        execute_draw_buffer(camera_pose, draw_buffer_type, SceneDrawBufferPass::Translucent);
+        execute_draw_buffer(draw_buffer_type, SceneDrawBufferPass::Translucent);
     }
 
     void SceneScheduler::execute_draw_buffer_list_normal_opa_before_volume_shadow(const smgpc::camera::CameraPose &camera_pose, bool prior_draw_air) {
         for (const auto &command : NORMAL_OPA_BEFORE_VOLUME_SHADOW_COMMANDS) {
-            execute_draw_buffer(camera_pose, command.draw_buffer_type, command.pass);
+            execute_draw_buffer(command.draw_buffer_type, command.pass);
             if (command.draw_buffer_type == MR::DrawBufferType_AstroDomeSky && command.pass == SceneDrawBufferPass::Translucent &&
                 prior_draw_air) {
                 for (const auto &air_command : PRIOR_AIR_COMMANDS) {
-                    execute_draw_buffer(camera_pose, air_command.draw_buffer_type, air_command.pass);
+                    execute_draw_buffer(air_command.draw_buffer_type, air_command.pass);
                 }
             }
             if (command.draw_buffer_type == MR::DrawBufferType_PlanetLow) {
@@ -1043,24 +1075,24 @@ namespace smgpc::runtime {
 
     void SceneScheduler::execute_draw_buffer_list_normal_opa_before_silhouette(const smgpc::camera::CameraPose &camera_pose) {
         for (const auto &command : NORMAL_OPA_BEFORE_SILHOUETTE_COMMANDS) {
-            execute_draw_buffer(camera_pose, command.draw_buffer_type, command.pass);
+            execute_draw_buffer(command.draw_buffer_type, command.pass);
         }
     }
 
     void SceneScheduler::execute_draw_buffer_list_normal_opa(const smgpc::camera::CameraPose &camera_pose, bool prior_draw_air) {
         for (const auto &command : NORMAL_OPA_COMMANDS) {
-            execute_draw_buffer(camera_pose, command.draw_buffer_type, command.pass);
+            execute_draw_buffer(command.draw_buffer_type, command.pass);
         }
         if (!prior_draw_air) {
             for (const auto &air_command : PRIOR_AIR_COMMANDS) {
-                execute_draw_buffer(camera_pose, air_command.draw_buffer_type, air_command.pass);
+                execute_draw_buffer(air_command.draw_buffer_type, air_command.pass);
             }
         }
     }
 
     void SceneScheduler::execute_draw_buffer_list_normal_xlu(const smgpc::camera::CameraPose &camera_pose) {
         for (const auto &command : NORMAL_XLU_COMMANDS) {
-            execute_draw_buffer(camera_pose, command.draw_buffer_type, command.pass);
+            execute_draw_buffer(command.draw_buffer_type, command.pass);
         }
     }
 
@@ -1117,7 +1149,7 @@ namespace smgpc::runtime {
 
     void SceneScheduler::execute_draw_after_indirect(const smgpc::camera::CameraPose &camera_pose) {
         for (const auto &command : AFTER_INDIRECT_COMMANDS) {
-            execute_draw_buffer(camera_pose, command.draw_buffer_type, command.pass);
+            execute_draw_buffer(command.draw_buffer_type, command.pass);
         }
         for (const auto draw_type : AFTER_INDIRECT_DRAW_TYPES) {
             execute_draw_type(draw_type);
@@ -1252,7 +1284,7 @@ namespace smgpc::runtime {
         return registrations;
     }
 
-    void SceneScheduler::execute_draw_buffer(const smgpc::camera::CameraPose &camera_pose, s32 draw_buffer_type, SceneDrawBufferPass pass) {
+    void SceneScheduler::execute_draw_buffer(s32 draw_buffer_type, SceneDrawBufferPass pass) {
         smgpc::compat::JkrHostAllocationScope host;
         if (!_draw_buffers->has_draw_buffers()) return;
         if (!_draw_buffers->is_allocated()) aurora::throw_host_exception<std::logic_error>("Draw lists have not completed scene construction");
@@ -1276,7 +1308,7 @@ namespace smgpc::runtime {
         s32 draw_buffer_type, SceneDrawBufferPass pass) {
         if (!draw_buffer_uses_model_3d_for_2d(draw_buffer_type))
             aurora::throw_host_exception<std::logic_error>("Only original 2D camera categories use the model 3D-for-2D pass");
-        execute_draw_buffer({}, draw_buffer_type, pass);
+        execute_draw_buffer(draw_buffer_type, pass);
     }
 
     void SceneScheduler::register_pre_draw_function(const MR::FunctorBase& functor, s32 draw_type) {

@@ -4,7 +4,10 @@
 #include "compat/ActorPhysicsRuntime.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/LiveActor/HitSensor.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
+#include "Game/Scene/SceneFunction.hpp"
+#include "JSystem/J3DGraphBase/J3DSys.hpp"
 #include "Game/Util/Functor.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
@@ -285,6 +288,123 @@ void verify_explicit_scene_callbacks(const std::shared_ptr<smgpc::compat::JkrHea
     std::cout << "explicit_scene_heap=pass nested_exception_restoration=pass stable_registration_mutation=pass "
                  "sensor_message_retirement=pass clipping_transitions=pass predraw_draw=pass callback_lease=pass scene_heap_retirement=pass\n";
 }
+
+void verify_category_execution(const std::shared_ptr<smgpc::compat::JkrHeapRuntime>& heaps) {
+    using namespace smgpc::compat;
+    using namespace smgpc::runtime;
+    const auto free_before = heaps->root_heap().getFreeSize();
+    {
+        auto domain = JkrAllocationDomain::create(heaps, 128U << 10);
+        auto caller = JkrAllocationDomain::create(heaps, 32U << 10);
+        SceneScheduler scheduler;
+        SceneSchedulerBinding active(scheduler);
+        SceneSchedulerAllocationBinding game(scheduler, domain);
+        CallbackObject camera(scheduler), clipping(scheduler), platform(scheduler), collision(scheduler), player(scheduler);
+        std::vector<unsigned> order;
+        const auto record = [&](unsigned event) {
+            JkrHostAllocationScope host;
+            order.push_back(event);
+        };
+        camera.movement_hook = [&] { record(1); };
+        clipping.movement_hook = [&] { require(order == std::vector<unsigned>{1}, "camera category precedes clipping category"); record(2); };
+        platform.movement_hook = [&] { record(3); };
+        platform.animation_hook = [&] { record(4); };
+        collision.movement_hook = [&] { require(platform.allocation.calls[1] == 1, "collision director sees this frame's collision animation"); record(5); };
+        player.movement_hook = [&] { record(6); };
+        // Deliberately register in an order different from the caller's phases.
+        scheduler.connect_name_obj(player, MR::MovementType_Player, MR::CalcAnimType_Player, -1, -1);
+        scheduler.connect_name_obj(collision, MR::MovementType_CollisionDirector, -1, -1, -1);
+        scheduler.connect_name_obj(platform, MR::MovementType_CollisionMapObj, MR::CalcAnimType_CollisionMapObj, -1, -1);
+        scheduler.connect_name_obj(clipping, MR::MovementType_ClippingDirector, -1, -1, -1);
+        scheduler.connect_name_obj(camera, MR::MovementType_Camera, -1, -1, -1);
+        {
+            JkrAllocationScope external(caller);
+            scheduler.begin_frame();
+            CategoryList::execute(MR::MovementType_Camera);
+            CategoryList::execute(MR::MovementType_ClippingDirector);
+            CategoryList::execute(MR::MovementType_SensorHitChecker);
+            CategoryList::execute(MR::MovementType_CollisionMapObj);
+            CategoryList::execute(MR::CalcAnimType_CollisionMapObj);
+            CategoryList::execute(MR::MovementType_CollisionDirector);
+            CategoryList::execute(MR::MovementType_Player);
+            require(current_jkr_allocation_domain() == caller, "category callbacks restore the caller's selected heap");
+        }
+        require(order == std::vector<unsigned>({1, 2, 3, 4, 5, 6}), "categories execute exactly the caller's movement/animation interleave");
+        require(player.allocation.calls[1] == 0 && scheduler.last_execution_trace().size() == 6,
+                "category dispatch never executes an aggregate animation list or clears earlier category traces");
+        scheduler.request_movement_off(MR::MovementType_Player);
+        CategoryList::execute(MR::MovementType_Player);
+        CategoryList::execute(MR::CalcAnimType_Player);
+        require(player.allocation.calls[0] == 1 && player.allocation.calls[1] == 1,
+                "movement-off does not suppress original animation category calls");
+        scheduler.clear();
+
+        CallbackObject mutator(scheduler), survivor(scheduler), replacement(scheduler);
+        auto victim = std::make_unique<CallbackObject>(scheduler);
+        bool changed = false;
+        mutator.movement_hook = [&] {
+            if (changed) return;
+            changed = true;
+            victim.reset();
+            scheduler.disconnect_name_obj(survivor);
+            scheduler.connect_name_obj(survivor, MR::MovementType_Player, -1, -1, -1);
+            scheduler.connect_name_obj(replacement, MR::MovementType_Player, -1, -1, -1);
+        };
+        for (auto* object : {&mutator, victim.get(), &survivor})
+            scheduler.connect_name_obj(*object, MR::MovementType_Player, -1, -1, -1);
+        CategoryList::execute(MR::MovementType_Player);
+        require(!victim && survivor.allocation.calls[0] == 0 && replacement.allocation.calls[0] == 0,
+                "a category batch never uses deleted or re-registered snapshot identities");
+        CategoryList::execute(MR::MovementType_Player);
+        require(survivor.allocation.calls[0] == 1 && replacement.allocation.calls[0] == 1,
+                "new category registrations become visible to the next category call");
+        scheduler.clear();
+
+        const auto original_mode = j3dSys.mDrawMode;
+        mutator.movement_hook = [&] {
+            j3dSys.mDrawMode = 0x1234;
+            CategoryList::execute(MR::CalcAnimType_Player);
+            require(j3dSys.mDrawMode == 0x1234, "nested category restores its calling J3D context");
+            throw 83;
+        };
+        replacement.animation_hook = [&] { j3dSys.mDrawMode = 0x5678; };
+        scheduler.connect_name_obj(mutator, MR::MovementType_Player, -1, -1, -1);
+        scheduler.connect_name_obj(replacement, -1, MR::CalcAnimType_Player, -1, -1);
+        {
+            JkrAllocationScope external(caller);
+            bool caught = false;
+            try { CategoryList::execute(MR::MovementType_Player); } catch (int code) { caught = code == 83; }
+            require(caught && current_jkr_allocation_domain() == caller && j3dSys.mDrawMode == original_mode,
+                    "nested category exception restores both heap routing and J3D caller state");
+        }
+        scheduler.clear();
+
+        CallbackActor first(scheduler), second(scheduler);
+        for (auto* actor : {&first, &second}) {
+            actor->initHitSensor(1);
+            (void)add_actor_hit_sensor(actor, "body", 1U, 4U, 10.0F, {});
+            actor->makeActorAppeared();
+            scheduler.connect_name_obj(*actor, MR::MovementType_Player, MR::CalcAnimType_Player, -1, -1);
+        }
+        CategoryList::execute(MR::MovementType_Player);
+        require(first.allocation.calls[4] == 0, "player category does not inject a sensor checker");
+        CategoryList::execute(MR::MovementType_SensorHitChecker);
+        auto* sensor = actor_hit_sensor(&first, "body");
+        require(sensor && sensor->mSensorCount == 1, "sensor category computes one contact pass");
+        second.mPosition.x = 1000.0F;
+        update_actor_hit_sensors(&second);
+        CategoryList::execute(MR::CalcAnimType_Player);
+        CategoryList::execute(MR::MovementType_CollisionDirector);
+        CategoryList::execute(MR::MovementType_Player);
+        require(first.allocation.calls[4] == 1 && second.allocation.calls[4] == 1,
+                "later categories deliver the existing contacts instead of silently recomputing them");
+        CategoryList::execute(MR::MovementType_SensorHitChecker);
+        require(sensor->mSensorCount == 0, "the next explicit sensor category publishes the new positions");
+        scheduler.clear();
+    }
+    require(heaps->root_heap().getFreeSize() == free_before, "category callbacks retain no retired scene arena");
+    std::cout << "category_interleave=pass category_identity=pass category_exception_restore=pass single_sensor_phase=pass\n";
+}
 }
 
 class AllocatingNameObj final : public NameObj {
@@ -445,4 +565,5 @@ int main() {
                  "movement and animation callbacks retain original heap routing\n";
     verify_explicit_scene_callbacks(heaps);
     verify_backend_allocation_routing(heaps);
+    verify_category_execution(heaps);
 }

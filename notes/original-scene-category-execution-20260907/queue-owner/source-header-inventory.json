@@ -1,0 +1,82 @@
+[
+  {
+    "path": "decomp/src/Game/NameObj/NameObjListExecutor.cpp",
+    "exists": true,
+    "sha256": "260c79e1a424456323d572e7232693189fcb894604d6a3d0bfa2ac1504c0ca7c"
+  },
+  {
+    "path": "decomp/include/Game/NameObj/NameObjListExecutor.hpp",
+    "exists": true,
+    "sha256": "7063fc367b71c64f7a7c8a8a1e59f0e2393ce6c9f7b1aee7301ffdce1e378963"
+  },
+  {
+    "path": "src/Game/NameObj/NameObjListExecutor.cpp",
+    "exists": true,
+    "sha256": "260c79e1a424456323d572e7232693189fcb894604d6a3d0bfa2ac1504c0ca7c"
+  },
+  {
+    "path": "src/Game/NameObj/NameObjListExecutor.hpp",
+    "exists": true,
+    "sha256": "7063fc367b71c64f7a7c8a8a1e59f0e2393ce6c9f7b1aee7301ffdce1e378963"
+  },
+  {
+    "path": "decomp/src/Game/NameObj/NameObjCategoryList.cpp",
+    "exists": true,
+    "sha256": "64a15594133606e538b9c826e7531c4ac31d9d35567e8a75e81d9fbafa40aa75"
+  },
+  {
+    "path": "decomp/include/Game/NameObj/NameObjCategoryList.hpp",
+    "exists": true,
+    "sha256": "c4391cbe2a92e7db6bf78739e816a57e0ddb59f38f52b42b58d38d77c496b906"
+  },
+  {
+    "path": "src/Game/NameObj/NameObjCategoryList.cpp",
+    "exists": true,
+    "sha256": "26d30a4b871379783e6fa0da929cd7a4c72e2f8a3b79f2c27e0a3fcb929246c0"
+  },
+  {
+    "path": "src/Game/NameObj/NameObjCategoryList.hpp",
+    "exists": true,
+    "sha256": "cbb46040759184cc5fe334e3360c97e062e9a703bf60c9bd1590ca4d1556c49b"
+  },
+  {
+    "path": "decomp/src/Game/NameObj/NameObjExecuteHolder.cpp",
+    "exists": true,
+    "sha256": "cc87b09943a5a79c9474488d8d82823e5153026fef3fb3508b0cbfaf6881bb19"
+  },
+  {
+    "path": "decomp/include/Game/NameObj/NameObjExecuteHolder.hpp",
+    "exists": true,
+    "sha256": "c64a8d278cfb0874830ef98d20182b35b8b9f71d7416d7704998c8f808927705"
+  },
+  {
+    "path": "src/Game/NameObj/NameObjExecuteHolder.cpp",
+    "exists": false,
+    "sha256": null
+  },
+  {
+    "path": "src/Game/NameObj/NameObjExecuteHolder.hpp",
+    "exists": true,
+    "sha256": "c64a8d278cfb0874830ef98d20182b35b8b9f71d7416d7704998c8f808927705"
+  },
+  {
+    "path": "decomp/src/Game/Scene/SceneNameObjListExecutor.cpp",
+    "exists": true,
+    "sha256": "541770beb8ece07668f4d5a50dff5c936350c190908758076a969b5ae6cf8328"
+  },
+  {
+    "path": "decomp/include/Game/Scene/SceneNameObjListExecutor.hpp",
+    "exists": true,
+    "sha256": "19d228c4d09d134a4a29fe639b7b1b0ac8b679118292bc88c85629e9a77861cc"
+  },
+  {
+    "path": "src/Game/Scene/SceneNameObjListExecutor.cpp",
+    "exists": false,
+    "sha256": null
+  },
+  {
+    "path": "src/Game/Scene/SceneNameObjListExecutor.hpp",
+    "exists": false,
+    "sha256": null
+  }
+]

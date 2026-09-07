@@ -1,0 +1,986 @@
+[
+  {
+    "object": "SceneWipeHolder",
+    "symbol": "__ct__15SceneWipeHolderFv",
+    "demangled": "SceneWipeHolder::SceneWipeHolder()",
+    "retail_size": "524",
+    "baseline": 99.68702,
+    "restored": 99.69466
+  },
+  {
+    "object": "SceneWipeHolder",
+    "symbol": "__dt__14WipeHolderBaseFv",
+    "demangled": "WipeHolderBase::~WipeHolderBase()",
+    "retail_size": "88",
+    "baseline": 63.636364,
+    "restored": 63.636364
+  },
+  {
+    "object": "SceneWipeHolder",
+    "symbol": "getSceneWipeHolder__23SceneWipeHolderFunctionFv",
+    "demangled": "SceneWipeHolderFunction::getSceneWipeHolder()",
+    "retail_size": "40",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "SceneWipeHolder",
+    "symbol": "openWipe__23SceneWipeHolderFunctionFPCcl",
+    "demangled": "SceneWipeHolderFunction::openWipe(const char*, long)",
+    "retail_size": "120",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "SceneWipeHolder",
+    "symbol": "closeWipe__23SceneWipeHolderFunctionFPCcl",
+    "demangled": "SceneWipeHolderFunction::closeWipe(const char*, long)",
+    "retail_size": "120",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "SceneWipeHolder",
+    "symbol": "forceOpenWipe__23SceneWipeHolderFunctionFPCc",
+    "demangled": "SceneWipeHolderFunction::forceOpenWipe(const char*)",
+    "retail_size": "72",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "SceneWipeHolder",
+    "symbol": "forceCloseWipe__23SceneWipeHolderFunctionFPCc",
+    "demangled": "SceneWipeHolderFunction::forceCloseWipe(const char*)",
+    "retail_size": "72",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "SceneWipeHolder",
+    "symbol": "__dt__15SceneWipeHolderFv",
+    "demangled": "SceneWipeHolder::~SceneWipeHolder()",
+    "retail_size": "92",
+    "baseline": 95.434784,
+    "restored": 95.434784
+  },
+  {
+    "object": "SceneWipeHolder",
+    "symbol": "__vt__15SceneWipeHolder",
+    "demangled": "SceneWipeHolder::__vtable",
+    "retail_size": "84",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeHolderBase",
+    "symbol": "__ct__14WipeHolderBaseFUlPCc",
+    "demangled": "WipeHolderBase::WipeHolderBase(unsigned long, const char*)",
+    "retail_size": "104",
+    "baseline": 56.192307,
+    "restored": 56.192307
+  },
+  {
+    "object": "WipeHolderBase",
+    "symbol": "setCurrent__14WipeHolderBaseFPCc",
+    "demangled": "WipeHolderBase::setCurrent(const char*)",
+    "retail_size": "156",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeHolderBase",
+    "symbol": "wipe__14WipeHolderBaseFPCcl",
+    "demangled": "WipeHolderBase::wipe(const char*, long)",
+    "retail_size": "92",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeHolderBase",
+    "symbol": "forceClose__14WipeHolderBaseFPCc",
+    "demangled": "WipeHolderBase::forceClose(const char*)",
+    "retail_size": "76",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeHolderBase",
+    "symbol": "forceOpen__14WipeHolderBaseFPCc",
+    "demangled": "WipeHolderBase::forceOpen(const char*)",
+    "retail_size": "76",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeHolderBase",
+    "symbol": "isOpen__14WipeHolderBaseCFv",
+    "demangled": "WipeHolderBase::isOpen() const",
+    "retail_size": "20",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeHolderBase",
+    "symbol": "isClose__14WipeHolderBaseCFv",
+    "demangled": "WipeHolderBase::isClose() const",
+    "retail_size": "20",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeHolderBase",
+    "symbol": "isWipeIn__14WipeHolderBaseCFv",
+    "demangled": "WipeHolderBase::isWipeIn() const",
+    "retail_size": "20",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeHolderBase",
+    "symbol": "isWipeOut__14WipeHolderBaseCFv",
+    "demangled": "WipeHolderBase::isWipeOut() const",
+    "retail_size": "20",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeHolderBase",
+    "symbol": "isCurrent__14WipeHolderBaseCFPCc",
+    "demangled": "WipeHolderBase::isCurrent(const char*) const",
+    "retail_size": "76",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeHolderBase",
+    "symbol": "addWipeLayout__14WipeHolderBaseFP14WipeLayoutBase",
+    "demangled": "WipeHolderBase::addWipeLayout(WipeLayoutBase*)",
+    "retail_size": "104",
+    "baseline": 79.96154,
+    "restored": 79.96154
+  },
+  {
+    "object": "WipeHolderBase",
+    "symbol": "updateWipe__14WipeHolderBaseFPCc",
+    "demangled": "WipeHolderBase::updateWipe(const char*)",
+    "retail_size": "108",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeHolderBase",
+    "symbol": "findWipe__14WipeHolderBaseCFPCc",
+    "demangled": "WipeHolderBase::findWipe(const char*) const",
+    "retail_size": "176",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeHolderBase",
+    "symbol": "__vt__14WipeHolderBase",
+    "demangled": "WipeHolderBase::__vtable",
+    "retail_size": "84",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeRing",
+    "symbol": "__ct__8WipeRingFbPCc",
+    "demangled": "WipeRing::WipeRing(bool, const char*)",
+    "retail_size": "112",
+    "baseline": 99.82143,
+    "restored": 99.82143
+  },
+  {
+    "object": "WipeRing",
+    "symbol": "init__8WipeRingFRC12JMapInfoIter",
+    "demangled": "WipeRing::init(const JMapInfoIter&)",
+    "retail_size": "132",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeRing",
+    "symbol": "exeWipeIn__8WipeRingFv",
+    "demangled": "WipeRing::exeWipeIn()",
+    "retail_size": "336",
+    "baseline": 99.04762,
+    "restored": 99.70238
+  },
+  {
+    "object": "WipeRing",
+    "symbol": "exeWipeOut__8WipeRingFv",
+    "demangled": "WipeRing::exeWipeOut()",
+    "retail_size": "384",
+    "baseline": 99.166664,
+    "restored": 99.739586
+  },
+  {
+    "object": "WipeRing",
+    "symbol": "wipe__8WipeRingFl",
+    "demangled": "WipeRing::wipe(long)",
+    "retail_size": "288",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeRing",
+    "symbol": "forceClose__8WipeRingFv",
+    "demangled": "WipeRing::forceClose()",
+    "retail_size": "116",
+    "baseline": 99.82758,
+    "restored": 99.82758
+  },
+  {
+    "object": "WipeRing",
+    "symbol": "forceOpen__8WipeRingFv",
+    "demangled": "WipeRing::forceOpen()",
+    "retail_size": "68",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeRing",
+    "symbol": "isOpen__8WipeRingCFv",
+    "demangled": "WipeRing::isOpen() const",
+    "retail_size": "8",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeRing",
+    "symbol": "isClose__8WipeRingCFv",
+    "demangled": "WipeRing::isClose() const",
+    "retail_size": "8",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeRing",
+    "symbol": "isWipeIn__8WipeRingCFv",
+    "demangled": "WipeRing::isWipeIn() const",
+    "retail_size": "8",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeRing",
+    "symbol": "isWipeOut__8WipeRingCFv",
+    "demangled": "WipeRing::isWipeOut() const",
+    "retail_size": "8",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeRing",
+    "symbol": "setCenterPos__8WipeRingFRCQ29JGeometry8TVec3<f>",
+    "demangled": "WipeRing::setCenterPos(const JGeometry::TVec3<float>&)",
+    "retail_size": "172",
+    "baseline": 99.76744,
+    "restored": 99.76744
+  },
+  {
+    "object": "WipeRing",
+    "symbol": "startAnim__8WipeRingFPCc",
+    "demangled": "WipeRing::startAnim(const char*)",
+    "retail_size": "156",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeRing",
+    "symbol": "getMarioCenterPos__8WipeRingFPQ29JGeometry8TVec3<f>",
+    "demangled": "WipeRing::getMarioCenterPos(JGeometry::TVec3<float>*)",
+    "retail_size": "216",
+    "baseline": 86.07407,
+    "restored": 99.5
+  },
+  {
+    "object": "WipeRing",
+    "symbol": "calcRadius__8WipeRingCFv",
+    "demangled": "WipeRing::calcRadius() const",
+    "retail_size": "336",
+    "baseline": 99.88095,
+    "restored": 99.88095
+  },
+  {
+    "object": "WipeRing",
+    "symbol": "calcMaxRadius__8WipeRingCFv",
+    "demangled": "WipeRing::calcMaxRadius() const",
+    "retail_size": "64",
+    "baseline": 8.125,
+    "restored": 98.75
+  },
+  {
+    "object": "WipeRing",
+    "symbol": "updatePlayerPos__8WipeRingFv",
+    "demangled": "WipeRing::updatePlayerPos()",
+    "retail_size": "220",
+    "baseline": 99.818184,
+    "restored": 99.818184
+  },
+  {
+    "object": "WipeRing",
+    "symbol": "__dt__8WipeRingFv",
+    "demangled": "WipeRing::~WipeRing()",
+    "retail_size": "88",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeRing",
+    "symbol": "__ct__Q222@unnamed@WipeRing_cpp@16WipeRingNrvCloseFv",
+    "demangled": "@unnamed@WipeRing_cpp@::WipeRingNrvClose::WipeRingNrvClose()",
+    "retail_size": "16",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeRing",
+    "symbol": "__ct__Q222@unnamed@WipeRing_cpp@17WipeRingNrvWipeInFv",
+    "demangled": "@unnamed@WipeRing_cpp@::WipeRingNrvWipeIn::WipeRingNrvWipeIn()",
+    "retail_size": "16",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeRing",
+    "symbol": "__ct__Q222@unnamed@WipeRing_cpp@15WipeRingNrvOpenFv",
+    "demangled": "@unnamed@WipeRing_cpp@::WipeRingNrvOpen::WipeRingNrvOpen()",
+    "retail_size": "16",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeRing",
+    "symbol": "__ct__Q222@unnamed@WipeRing_cpp@18WipeRingNrvWipeOutFv",
+    "demangled": "@unnamed@WipeRing_cpp@::WipeRingNrvWipeOut::WipeRingNrvWipeOut()",
+    "retail_size": "16",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeRing",
+    "symbol": "execute__Q222@unnamed@WipeRing_cpp@18WipeRingNrvWipeOutCFP5Spine",
+    "demangled": "@unnamed@WipeRing_cpp@::WipeRingNrvWipeOut::execute(Spine*) const",
+    "retail_size": "8",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeRing",
+    "symbol": "execute__Q222@unnamed@WipeRing_cpp@15WipeRingNrvOpenCFP5Spine",
+    "demangled": "@unnamed@WipeRing_cpp@::WipeRingNrvOpen::execute(Spine*) const",
+    "retail_size": "84",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeRing",
+    "symbol": "execute__Q222@unnamed@WipeRing_cpp@17WipeRingNrvWipeInCFP5Spine",
+    "demangled": "@unnamed@WipeRing_cpp@::WipeRingNrvWipeIn::execute(Spine*) const",
+    "retail_size": "8",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeRing",
+    "symbol": "execute__Q222@unnamed@WipeRing_cpp@16WipeRingNrvCloseCFP5Spine",
+    "demangled": "@unnamed@WipeRing_cpp@::WipeRingNrvClose::execute(Spine*) const",
+    "retail_size": "8",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeRing",
+    "symbol": "distance__Q29JGeometry8TVec2<f>CFRCQ29JGeometry8TVec2<f>",
+    "demangled": "JGeometry::TVec2<float>::distance(const JGeometry::TVec2<float>&) const",
+    "retail_size": "40",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeRing",
+    "symbol": "__vt__8WipeRing",
+    "demangled": "WipeRing::__vtable",
+    "retail_size": "84",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeRing",
+    "symbol": "__vt__Q222@unnamed@WipeRing_cpp@18WipeRingNrvWipeOut",
+    "demangled": "@unnamed@WipeRing_cpp@::WipeRingNrvWipeOut::__vtable",
+    "retail_size": "16",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeRing",
+    "symbol": "__vt__Q222@unnamed@WipeRing_cpp@15WipeRingNrvOpen",
+    "demangled": "@unnamed@WipeRing_cpp@::WipeRingNrvOpen::__vtable",
+    "retail_size": "16",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeRing",
+    "symbol": "__vt__Q222@unnamed@WipeRing_cpp@17WipeRingNrvWipeIn",
+    "demangled": "@unnamed@WipeRing_cpp@::WipeRingNrvWipeIn::__vtable",
+    "retail_size": "16",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeRing",
+    "symbol": "__vt__Q222@unnamed@WipeRing_cpp@16WipeRingNrvClose",
+    "demangled": "@unnamed@WipeRing_cpp@::WipeRingNrvClose::__vtable",
+    "retail_size": "16",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeRing",
+    "symbol": "sOutAnimName__22@unnamed@WipeRing_cpp@",
+    "demangled": "@unnamed@WipeRing_cpp@::sOutAnimName",
+    "retail_size": "4",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeRing",
+    "symbol": "sInAnimName__22@unnamed@WipeRing_cpp@",
+    "demangled": "@unnamed@WipeRing_cpp@::sInAnimName",
+    "retail_size": "4",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeRing",
+    "symbol": "sInstance__Q222@unnamed@WipeRing_cpp@16WipeRingNrvClose",
+    "demangled": "@unnamed@WipeRing_cpp@::WipeRingNrvClose::sInstance",
+    "retail_size": "4",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeRing",
+    "symbol": "sInstance__Q222@unnamed@WipeRing_cpp@17WipeRingNrvWipeIn",
+    "demangled": "@unnamed@WipeRing_cpp@::WipeRingNrvWipeIn::sInstance",
+    "retail_size": "4",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeRing",
+    "symbol": "sInstance__Q222@unnamed@WipeRing_cpp@15WipeRingNrvOpen",
+    "demangled": "@unnamed@WipeRing_cpp@::WipeRingNrvOpen::sInstance",
+    "retail_size": "4",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeRing",
+    "symbol": "sInstance__Q222@unnamed@WipeRing_cpp@18WipeRingNrvWipeOut",
+    "demangled": "@unnamed@WipeRing_cpp@::WipeRingNrvWipeOut::sInstance",
+    "retail_size": "4",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeFade",
+    "symbol": "__ct__8WipeFadeFPCcRC6Color8",
+    "demangled": "WipeFade::WipeFade(const char*, const Color8&)",
+    "retail_size": "128",
+    "baseline": 99.25,
+    "restored": 99.25
+  },
+  {
+    "object": "WipeFade",
+    "symbol": "__dt__14WipeLayoutBaseFv",
+    "demangled": "WipeLayoutBase::~WipeLayoutBase()",
+    "retail_size": "92",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeFade",
+    "symbol": "init__8WipeFadeFRC12JMapInfoIter",
+    "demangled": "WipeFade::init(const JMapInfoIter&)",
+    "retail_size": "16",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeFade",
+    "symbol": "control__8WipeFadeFv",
+    "demangled": "WipeFade::control()",
+    "retail_size": "96",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeFade",
+    "symbol": "draw__8WipeFadeCFv",
+    "demangled": "WipeFade::draw() const",
+    "retail_size": "272",
+    "baseline": 99.77941,
+    "restored": 99.77941
+  },
+  {
+    "object": "WipeFade",
+    "symbol": "wipe__8WipeFadeFl",
+    "demangled": "WipeFade::wipe(long)",
+    "retail_size": "140",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeFade",
+    "symbol": "forceClose__8WipeFadeFv",
+    "demangled": "WipeFade::forceClose()",
+    "retail_size": "88",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeFade",
+    "symbol": "forceOpen__8WipeFadeFv",
+    "demangled": "WipeFade::forceOpen()",
+    "retail_size": "32",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeFade",
+    "symbol": "isOpen__8WipeFadeCFv",
+    "demangled": "WipeFade::isOpen() const",
+    "retail_size": "44",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeFade",
+    "symbol": "isClose__8WipeFadeCFv",
+    "demangled": "WipeFade::isClose() const",
+    "retail_size": "44",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeFade",
+    "symbol": "isWipeIn__8WipeFadeCFv",
+    "demangled": "WipeFade::isWipeIn() const",
+    "retail_size": "44",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeFade",
+    "symbol": "isWipeOut__8WipeFadeCFv",
+    "demangled": "WipeFade::isWipeOut() const",
+    "retail_size": "44",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeFade",
+    "symbol": "__dt__8WipeFadeFv",
+    "demangled": "WipeFade::~WipeFade()",
+    "retail_size": "88",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeFade",
+    "symbol": "getWipeType__14WipeLayoutBaseCFv",
+    "demangled": "WipeLayoutBase::getWipeType() const",
+    "retail_size": "8",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeFade",
+    "symbol": "getWipeName__14WipeLayoutBaseCFv",
+    "demangled": "WipeLayoutBase::getWipeName() const",
+    "retail_size": "8",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeFade",
+    "symbol": "__vt__8WipeFade",
+    "demangled": "WipeFade::__vtable",
+    "retail_size": "84",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeGameOver",
+    "symbol": "__ct__12WipeGameOverFv",
+    "demangled": "WipeGameOver::WipeGameOver()",
+    "retail_size": "72",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeGameOver",
+    "symbol": "init__12WipeGameOverFRC12JMapInfoIter",
+    "demangled": "WipeGameOver::init(const JMapInfoIter&)",
+    "retail_size": "68",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeGameOver",
+    "symbol": "kill__12WipeGameOverFv",
+    "demangled": "WipeGameOver::kill()",
+    "retail_size": "56",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeGameOver",
+    "symbol": "wipe__12WipeGameOverFl",
+    "demangled": "WipeGameOver::wipe(long)",
+    "retail_size": "96",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeGameOver",
+    "symbol": "forceClose__12WipeGameOverFv",
+    "demangled": "WipeGameOver::forceClose()",
+    "retail_size": "20",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeGameOver",
+    "symbol": "forceOpen__12WipeGameOverFv",
+    "demangled": "WipeGameOver::forceOpen()",
+    "retail_size": "64",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeGameOver",
+    "symbol": "isOpen__12WipeGameOverCFv",
+    "demangled": "WipeGameOver::isOpen() const",
+    "retail_size": "92",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeGameOver",
+    "symbol": "isClose__12WipeGameOverCFv",
+    "demangled": "WipeGameOver::isClose() const",
+    "retail_size": "96",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeGameOver",
+    "symbol": "isWipeIn__12WipeGameOverCFv",
+    "demangled": "WipeGameOver::isWipeIn() const",
+    "retail_size": "8",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeGameOver",
+    "symbol": "isWipeOut__12WipeGameOverCFv",
+    "demangled": "WipeGameOver::isWipeOut() const",
+    "retail_size": "96",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeGameOver",
+    "symbol": "__dt__12WipeGameOverFv",
+    "demangled": "WipeGameOver::~WipeGameOver()",
+    "retail_size": "88",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeGameOver",
+    "symbol": "__ct__Q215NrvWipeGameOver16WipeGameOverWaitFv",
+    "demangled": "NrvWipeGameOver::WipeGameOverWait::WipeGameOverWait()",
+    "retail_size": "16",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeGameOver",
+    "symbol": "__ct__Q215NrvWipeGameOver18WipeGameOverActiveFv",
+    "demangled": "NrvWipeGameOver::WipeGameOverActive::WipeGameOverActive()",
+    "retail_size": "16",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeGameOver",
+    "symbol": "execute__Q215NrvWipeGameOver18WipeGameOverActiveCFP5Spine",
+    "demangled": "NrvWipeGameOver::WipeGameOverActive::execute(Spine*) const",
+    "retail_size": "84",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeGameOver",
+    "symbol": "execute__Q215NrvWipeGameOver16WipeGameOverWaitCFP5Spine",
+    "demangled": "NrvWipeGameOver::WipeGameOverWait::execute(Spine*) const",
+    "retail_size": "4",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeGameOver",
+    "symbol": "getWipeType__12WipeGameOverCFv",
+    "demangled": "WipeGameOver::getWipeType() const",
+    "retail_size": "8",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeGameOver",
+    "symbol": "__vt__12WipeGameOver",
+    "demangled": "WipeGameOver::__vtable",
+    "retail_size": "84",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeGameOver",
+    "symbol": "__vt__Q215NrvWipeGameOver18WipeGameOverActive",
+    "demangled": "NrvWipeGameOver::WipeGameOverActive::__vtable",
+    "retail_size": "16",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeGameOver",
+    "symbol": "__vt__Q215NrvWipeGameOver16WipeGameOverWait",
+    "demangled": "NrvWipeGameOver::WipeGameOverWait::__vtable",
+    "retail_size": "16",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeGameOver",
+    "symbol": "sInstance__Q215NrvWipeGameOver16WipeGameOverWait",
+    "demangled": "NrvWipeGameOver::WipeGameOverWait::sInstance",
+    "retail_size": "4",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeGameOver",
+    "symbol": "sInstance__Q215NrvWipeGameOver18WipeGameOverActive",
+    "demangled": "NrvWipeGameOver::WipeGameOverActive::sInstance",
+    "retail_size": "4",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeKoopa",
+    "symbol": "__ct__9WipeKoopaFv",
+    "demangled": "WipeKoopa::WipeKoopa()",
+    "retail_size": "80",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeKoopa",
+    "symbol": "init__9WipeKoopaFRC12JMapInfoIter",
+    "demangled": "WipeKoopa::init(const JMapInfoIter&)",
+    "retail_size": "68",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeKoopa",
+    "symbol": "exeWipeOut__9WipeKoopaFv",
+    "demangled": "WipeKoopa::exeWipeOut()",
+    "retail_size": "208",
+    "baseline": 91.80769,
+    "restored": 91.80769
+  },
+  {
+    "object": "WipeKoopa",
+    "symbol": "wipe__9WipeKoopaFl",
+    "demangled": "WipeKoopa::wipe(long)",
+    "retail_size": "92",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeKoopa",
+    "symbol": "forceClose__9WipeKoopaFv",
+    "demangled": "WipeKoopa::forceClose()",
+    "retail_size": "132",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeKoopa",
+    "symbol": "forceOpen__9WipeKoopaFv",
+    "demangled": "WipeKoopa::forceOpen()",
+    "retail_size": "56",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeKoopa",
+    "symbol": "isOpen__9WipeKoopaCFv",
+    "demangled": "WipeKoopa::isOpen() const",
+    "retail_size": "8",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeKoopa",
+    "symbol": "isClose__9WipeKoopaCFv",
+    "demangled": "WipeKoopa::isClose() const",
+    "retail_size": "8",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeKoopa",
+    "symbol": "isWipeIn__9WipeKoopaCFv",
+    "demangled": "WipeKoopa::isWipeIn() const",
+    "retail_size": "8",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeKoopa",
+    "symbol": "isWipeOut__9WipeKoopaCFv",
+    "demangled": "WipeKoopa::isWipeOut() const",
+    "retail_size": "8",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeKoopa",
+    "symbol": "__dt__9WipeKoopaFv",
+    "demangled": "WipeKoopa::~WipeKoopa()",
+    "retail_size": "88",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeKoopa",
+    "symbol": "__ct__Q223@unnamed@WipeKoopa_cpp@16WipeKoopaNrvWaitFv",
+    "demangled": "@unnamed@WipeKoopa_cpp@::WipeKoopaNrvWait::WipeKoopaNrvWait()",
+    "retail_size": "16",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeKoopa",
+    "symbol": "__ct__Q223@unnamed@WipeKoopa_cpp@19WipeKoopaNrvWipeOutFv",
+    "demangled": "@unnamed@WipeKoopa_cpp@::WipeKoopaNrvWipeOut::WipeKoopaNrvWipeOut()",
+    "retail_size": "16",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeKoopa",
+    "symbol": "__ct__Q223@unnamed@WipeKoopa_cpp@17WipeKoopaNrvCloseFv",
+    "demangled": "@unnamed@WipeKoopa_cpp@::WipeKoopaNrvClose::WipeKoopaNrvClose()",
+    "retail_size": "16",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeKoopa",
+    "symbol": "execute__Q223@unnamed@WipeKoopa_cpp@17WipeKoopaNrvCloseCFP5Spine",
+    "demangled": "@unnamed@WipeKoopa_cpp@::WipeKoopaNrvClose::execute(Spine*) const",
+    "retail_size": "4",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeKoopa",
+    "symbol": "execute__Q223@unnamed@WipeKoopa_cpp@19WipeKoopaNrvWipeOutCFP5Spine",
+    "demangled": "@unnamed@WipeKoopa_cpp@::WipeKoopaNrvWipeOut::execute(Spine*) const",
+    "retail_size": "8",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeKoopa",
+    "symbol": "execute__Q223@unnamed@WipeKoopa_cpp@16WipeKoopaNrvWaitCFP5Spine",
+    "demangled": "@unnamed@WipeKoopa_cpp@::WipeKoopaNrvWait::execute(Spine*) const",
+    "retail_size": "4",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeKoopa",
+    "symbol": "getWipeType__9WipeKoopaCFv",
+    "demangled": "WipeKoopa::getWipeType() const",
+    "retail_size": "8",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeKoopa",
+    "symbol": "__vt__9WipeKoopa",
+    "demangled": "WipeKoopa::__vtable",
+    "retail_size": "84",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeKoopa",
+    "symbol": "__vt__Q223@unnamed@WipeKoopa_cpp@17WipeKoopaNrvClose",
+    "demangled": "@unnamed@WipeKoopa_cpp@::WipeKoopaNrvClose::__vtable",
+    "retail_size": "16",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeKoopa",
+    "symbol": "__vt__Q223@unnamed@WipeKoopa_cpp@19WipeKoopaNrvWipeOut",
+    "demangled": "@unnamed@WipeKoopa_cpp@::WipeKoopaNrvWipeOut::__vtable",
+    "retail_size": "16",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeKoopa",
+    "symbol": "__vt__Q223@unnamed@WipeKoopa_cpp@16WipeKoopaNrvWait",
+    "demangled": "@unnamed@WipeKoopa_cpp@::WipeKoopaNrvWait::__vtable",
+    "retail_size": "16",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeKoopa",
+    "symbol": "sInstance__Q223@unnamed@WipeKoopa_cpp@16WipeKoopaNrvWait",
+    "demangled": "@unnamed@WipeKoopa_cpp@::WipeKoopaNrvWait::sInstance",
+    "retail_size": "4",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeKoopa",
+    "symbol": "sInstance__Q223@unnamed@WipeKoopa_cpp@19WipeKoopaNrvWipeOut",
+    "demangled": "@unnamed@WipeKoopa_cpp@::WipeKoopaNrvWipeOut::sInstance",
+    "retail_size": "4",
+    "baseline": 100.0,
+    "restored": 100.0
+  },
+  {
+    "object": "WipeKoopa",
+    "symbol": "sInstance__Q223@unnamed@WipeKoopa_cpp@17WipeKoopaNrvClose",
+    "demangled": "@unnamed@WipeKoopa_cpp@::WipeKoopaNrvClose::sInstance",
+    "retail_size": "4",
+    "baseline": 100.0,
+    "restored": 100.0
+  }
+]

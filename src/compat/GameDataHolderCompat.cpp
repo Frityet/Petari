@@ -1,5 +1,6 @@
 #include <aurora/exception.hpp>
 #include "compat/GameDataHolderCompat.hpp"
+#include "compat/PlayerStatusStorage.hpp"
 
 #include <algorithm>
 #include <array>
@@ -22,10 +23,7 @@
 namespace {
 struct HolderState {
     s32 power_star_num = 0;
-    s32 stocked_star_piece_num = 0;
-    u16 player_left = 4;
-    u16 player_left_supply = 4;
-    u8 story_progress = 0;
+    smgpc::compat::PlayerStatusStorage player_status;
     std::array<u16, 16> star_piece_alms{};
     std::map<std::string, bool> event_flags;
     std::map<std::string, u16> event_values;
@@ -157,7 +155,9 @@ GameDataHolder::GameDataHolder(const UserFile* user_file)
       mSpinDriverPathStorage(nullptr), mStarPieceAlmsStorage(nullptr), mMapInfo(nullptr), mScenarioProgressTestRun(nullptr),
       mChunkHolder(nullptr), mName{}, mUserFile(user_file) {
     smgpc::compat::JkrHostAllocationScope host;
-    sHolderStates[this] = HolderState{};
+    auto& state = sHolderStates[this];
+    state = HolderState{};
+    mPlayerStatus = &state.player_status;
     std::snprintf(mName, sizeof(mName), "mario1");
 }
 
@@ -323,29 +323,27 @@ s32 GameDataHolder::calcCurrentPowerStarNum() const {
 }
 
 s32 GameDataHolder::getPlayerLeft() const {
-    return std::clamp<s32>(require_state(*this).player_left, 0, 99);
+    return mPlayerStatus->getPlayerLeft();
 }
 
 void GameDataHolder::addPlayerLeft(int value) {
-    auto& state = require_state(*this);
-    state.player_left = static_cast<u16>(std::clamp<s32>(state.player_left + value, 0, 99));
+    mPlayerStatus->addPlayerLeft(value);
 }
 
 bool GameDataHolder::isPlayerLeftSupply() const {
-    return require_state(*this).player_left_supply >= 10;
+    return mPlayerStatus->isPlayerLeftSupply();
 }
 
 void GameDataHolder::offPlayerLeftSupply() {
-    require_state(*this).player_left_supply = 0;
+    mPlayerStatus->offPlayerLeftSupply();
 }
 
 s32 GameDataHolder::getStockedStarPieceNum() const {
-    return require_state(*this).stocked_star_piece_num;
+    return mPlayerStatus->mStockedStarPiece;
 }
 
 void GameDataHolder::addStockedStarPiece(int value) {
-    auto& state = require_state(*this);
-    state.stocked_star_piece_num = std::clamp(state.stocked_star_piece_num + value, 0, 9999);
+    mPlayerStatus->addStockedStarPiece(value);
 }
 
 bool GameDataHolder::isCompleteMarioAndLuigi() const {
@@ -360,14 +358,14 @@ bool GameDataHolder::isPassedStoryEvent(const char* name) const {
         aurora::throw_host_exception<std::invalid_argument>("Story event query requires a name");
     }
     const auto& event = smgpc::compat::game_data::require_retail_story_event(name);
-    return require_state(*this).story_progress >= event.progress;
+    return mPlayerStatus->mStoryProgress >= event.progress;
 }
 
 void GameDataHolder::followStoryEventByName(const char* name) {
     if (name == nullptr) {
         aurora::throw_host_exception<std::invalid_argument>("Story event write requires a name");
     }
-    require_state(*this).story_progress = smgpc::compat::game_data::require_retail_story_event(name).progress;
+    mPlayerStatus->mStoryProgress = smgpc::compat::game_data::require_retail_story_event(name).progress;
 }
 
 void GameDataHolder::resetAllData() {
@@ -400,9 +398,10 @@ std::size_t holder_state_count() noexcept {
     return sHolderStates.size();
 }
 
-void destroy_holder_state(const GameDataHolder& holder) {
+void destroy_holder_state(GameDataHolder& holder) {
     JkrHostAllocationScope host;
     sHolderStates.erase(&holder);
+    holder.mPlayerStatus = nullptr;
 }
 
 void copy_holder_state(GameDataHolder& destination, const GameDataHolder& source) {
@@ -434,7 +433,7 @@ void set_holder_save_counts(GameDataHolder& holder, s32 power_star_num, s32 star
     state.power_star_data_complete = power_star_num == 0;
     state.galaxies.clear();
     state.galaxies_initialized = false;
-    state.stocked_star_piece_num = star_piece_num;
+    holder.mPlayerStatus->mStockedStarPiece = star_piece_num;
     holder.setGameEventValue("MissNum", static_cast<u16>(std::min(player_miss_num, 9999)));
 }
 
@@ -479,13 +478,13 @@ const std::map<std::string, u16>& holder_event_values(const GameDataHolder& hold
 }
 
 u8 holder_story_progress(const GameDataHolder& holder) {
-    return require_state(holder).story_progress;
+    return holder.mPlayerStatus->mStoryProgress;
 }
 
 void set_holder_story_progress(GameDataHolder& holder, u8 progress) {
     if (progress > 60U) {
         aurora::throw_host_exception<std::invalid_argument>("Story progress is outside the retail StoryEvent BCSV range");
     }
-    require_state(holder).story_progress = progress;
+    holder.mPlayerStatus->mStoryProgress = progress;
 }
 }  // namespace smgpc::compat::game_data

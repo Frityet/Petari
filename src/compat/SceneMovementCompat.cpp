@@ -41,3 +41,31 @@ void CategoryList::execute(MR::DrawType type) {
     // the active native scheduler, including nested immediate captures.
     require_scheduler().execute_draw_type(type);
 }
+
+void CategoryList::execute(MR::MovementType type) {
+    require_scheduler().execute_movement_category(type);
+}
+
+void CategoryList::execute(MR::CalcAnimType type) {
+    require_scheduler().execute_calc_anim_category(type);
+}
+
+void CategoryList::entryDrawBuffer2D() {
+    require_scheduler().entry_draw_buffer(MR::CameraType_2D);
+}
+
+void CategoryList::entryDrawBuffer3D() {
+    require_scheduler().entry_draw_buffer(MR::CameraType_3D);
+}
+
+void CategoryList::entryDrawBufferMirror() {
+    require_scheduler().entry_draw_buffer(MR::CameraType_Mirror);
+}
+
+void CategoryList::drawOpa(MR::DrawBufferType type) {
+    require_scheduler().execute_draw_buffer_opa(type);
+}
+
+void CategoryList::drawXlu(MR::DrawBufferType type) {
+    require_scheduler().execute_draw_buffer_xlu(type);
+}

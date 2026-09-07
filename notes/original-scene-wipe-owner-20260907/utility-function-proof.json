@@ -1,0 +1,104 @@
+[
+  {
+    "symbol": "closeWipeCircle__2MRFl",
+    "demangled": "MR::closeWipeCircle(long)",
+    "retail_size": "16",
+    "match": 100.0
+  },
+  {
+    "symbol": "forceOpenWipeCircle__2MRFv",
+    "demangled": "MR::forceOpenWipeCircle()",
+    "retail_size": "12",
+    "match": 100.0
+  },
+  {
+    "symbol": "forceCloseWipeCircle__2MRFv",
+    "demangled": "MR::forceCloseWipeCircle()",
+    "retail_size": "12",
+    "match": 100.0
+  },
+  {
+    "symbol": "closeWipeFade__2MRFl",
+    "demangled": "MR::closeWipeFade(long)",
+    "retail_size": "16",
+    "match": 100.0
+  },
+  {
+    "symbol": "forceOpenWipeFade__2MRFv",
+    "demangled": "MR::forceOpenWipeFade()",
+    "retail_size": "12",
+    "match": 100.0
+  },
+  {
+    "symbol": "forceCloseWipeFade__2MRFv",
+    "demangled": "MR::forceCloseWipeFade()",
+    "retail_size": "12",
+    "match": 100.0
+  },
+  {
+    "symbol": "closeWipeWhiteFade__2MRFl",
+    "demangled": "MR::closeWipeWhiteFade(long)",
+    "retail_size": "16",
+    "match": 100.0
+  },
+  {
+    "symbol": "forceOpenWipeWhiteFade__2MRFv",
+    "demangled": "MR::forceOpenWipeWhiteFade()",
+    "retail_size": "12",
+    "match": 100.0
+  },
+  {
+    "symbol": "forceCloseWipeWhiteFade__2MRFv",
+    "demangled": "MR::forceCloseWipeWhiteFade()",
+    "retail_size": "12",
+    "match": 100.0
+  },
+  {
+    "symbol": "isWipeActive__2MRFv",
+    "demangled": "MR::isWipeActive()",
+    "retail_size": "104",
+    "match": 100.0
+  },
+  {
+    "symbol": "isWipeBlank__2MRFv",
+    "demangled": "MR::isWipeBlank()",
+    "retail_size": "48",
+    "match": 100.0
+  },
+  {
+    "symbol": "isWipeOpen__2MRFv",
+    "demangled": "MR::isWipeOpen()",
+    "retail_size": "48",
+    "match": 100.0
+  },
+  {
+    "symbol": "openWipeCircle__2MRFl",
+    "demangled": "MR::openWipeCircle(long)",
+    "retail_size": "16",
+    "match": 100.0
+  },
+  {
+    "symbol": "openWipeFade__2MRFl",
+    "demangled": "MR::openWipeFade(long)",
+    "retail_size": "16",
+    "match": 100.0
+  },
+  {
+    "symbol": "openWipeWhiteFade__2MRFl",
+    "demangled": "MR::openWipeWhiteFade(long)",
+    "retail_size": "16",
+    "match": 100.0
+  },
+  {
+    "symbol": "startGameOverWipe__2MRFv",
+    "demangled": "MR::startGameOverWipe()",
+    "retail_size": "60",
+    "match": 100.0
+  },
+  {
+    "symbol": "startDownWipe__2MRFv",
+    "demangled": "MR::startDownWipe()",
+    "retail_size": "60",
+    "match": 100.0
+  }
+]

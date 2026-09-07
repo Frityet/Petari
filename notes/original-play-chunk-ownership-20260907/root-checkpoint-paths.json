@@ -1,0 +1,10 @@
+[
+  "src/Game/System/GameDataPlayerStatus.cpp",
+  "src/Game/System/GameDataPlayerStatus.hpp",
+  "src/compat/PlayerStatusStorage.cpp",
+  "src/compat/PlayerStatusStorage.hpp",
+  "src/compat/GameDataHolderCompat.cpp",
+  "src/compat/GameDataHolderCompat.hpp",
+  "tests/OriginalPlayerStatusStorageTests.cpp",
+  "tests/xmake.lua"
+]

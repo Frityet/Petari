@@ -1,0 +1,26 @@
+[
+  {
+    "path": "decomp/src/Game/Scene/SceneExecutor.cpp",
+    "sha256": "473eb6eb6692b2c7b5e53554b16557763f98cc707c6af60ea0f682c936fc58de"
+  },
+  {
+    "path": "decomp/src/Game/NameObj/NameObjExecuteHolder.cpp",
+    "sha256": "cc87b09943a5a79c9474488d8d82823e5153026fef3fb3508b0cbfaf6881bb19"
+  },
+  {
+    "path": "decomp/src/Game/Scene/SceneNameObjListExecutor.cpp",
+    "sha256": "541770beb8ece07668f4d5a50dff5c936350c190908758076a969b5ae6cf8328"
+  },
+  {
+    "path": "decomp/src/Game/LiveActor/ClippingDirector.cpp",
+    "sha256": "ea76498a5ee46e52aabd688348820df854ba8d8cf83fcd537e4f837d1327b9dc"
+  },
+  {
+    "path": "decomp/src/Game/LiveActor/SensorHitChecker.cpp",
+    "sha256": "24506112988120602cc2274a4862b654f956c07cdf29c094a20c7330898508d4"
+  },
+  {
+    "path": "decomp/src/Game/Util/ObjUtil.cpp",
+    "sha256": "2fbc7f12f3b97a8e10604b6c2d93cb058c24ec048069493947c4e7bee82c84f1"
+  }
+]

@@ -11,7 +11,7 @@ class GameDataHolder;
 namespace smgpc::compat::game_data {
 
 [[nodiscard]] std::size_t holder_state_count() noexcept;
-void destroy_holder_state(const GameDataHolder& holder);
+void destroy_holder_state(GameDataHolder& holder);
 void copy_holder_state(GameDataHolder& destination, const GameDataHolder& source);
 void set_holder_name(GameDataHolder& holder, const char* name);
 void set_holder_save_counts(GameDataHolder& holder, s32 power_star_num, s32 star_piece_num, s32 player_miss_num);

@@ -30,7 +30,7 @@
 #include "runtime/RuntimeServices.hpp"
 #include "scene/AuthoredPlacementInstantiator.hpp"
 #include "scene/GatewayDemoScene.hpp"
-#include "scene/StageHostScene.hpp"
+#include "scene/StageInitializationService.hpp"
 #include "scene/nameobj/NameObjFactory.hpp"
 #include "GatewayDemoSceneTestSupport.hpp"
 

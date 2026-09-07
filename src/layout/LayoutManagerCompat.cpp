@@ -759,7 +759,14 @@ void LayoutPaneCtrl::stop(u32 layer) {
 bool LayoutPaneCtrl::isAnimStopped(u32 layer) const {
     auto& state = require_pane_control_state(this, "Reading a pane animation state");
     (void)require_pane_layer(state, layer, "Reading a pane animation state");
-    return require_runtime(mHost, "Reading a pane animation state").isPaneAnimStopped(state.pane_name, layer);
+    auto& runtime = require_runtime(mHost, "Reading a pane animation state");
+    if (state.pane_name.empty()) {
+        return smgpc::layout::is_layout_anim_stopped(require_manager_state(mHost, "Reading a root animation state").actor, layer);
+    }
+    // The original initialized player has a null transform until start().
+    if (state.animation_names[layer].empty()) return true;
+    const auto& control = state.animation_controls[layer];
+    return control.checkState(1) || control.getRate() == 0.0F || runtime.isPaneAnimStopped(state.pane_name, layer);
 }
 
 void LayoutPaneCtrl::reflectFollowPos() {
@@ -897,10 +904,18 @@ f32 layout_anim_frame_max(const LayoutActor* actor, u32 layer) {
     return require_layout_runtime(actor, "Reading a layout animation duration").getAnimFrameMax(layer);
 }
 
-bool is_layout_anim_stopped(LayoutActor* actor, u32 layer) {
-    sync_actor_control_to_runtime(actor, layer);
-    const auto stopped = require_layout_runtime(actor, "Reading a layout animation state").isAnimStopped(layer);
-    sync_actor_control_from_runtime(actor, layer);
+bool is_layout_anim_stopped(const LayoutActor* actor, u32 layer) {
+    auto& manager = require_manager_state(actor != nullptr ? actor->mLayoutManager : nullptr, "Reading a layout animation state");
+    (void)require_actor_layer(manager, layer, "Reading a layout animation state");
+    auto& runtime = require_runtime(actor->mLayoutManager, "Reading a layout animation state");
+    if (!find_pane_control(manager, {})) {
+        aurora::throw_host_exception<std::logic_error>("Reading a layout animation state requires the initialized root pane control");
+    }
+    if (!runtime.hasActiveAnimation(layer)) return true;
+    auto* mutable_actor = const_cast<LayoutActor*>(actor);
+    sync_actor_control_to_runtime(mutable_actor, layer);
+    const auto stopped = runtime.isAnimStopped(layer);
+    sync_actor_control_from_runtime(mutable_actor, layer);
     return stopped;
 }
 

@@ -29,8 +29,7 @@ namespace MR {
     bool isDead(const LayoutActor* pLayout);
     void startAnim(SimpleLayout* pLayout, const char* pAnimName, u32 animLayer);
     void startAnim(LayoutActor* pLayout, const char* pAnimName, u32 animLayer);
-    bool isAnimStopped(SimpleLayout* pLayout, u32 animLayer);
-    bool isAnimStopped(LayoutActor* pLayout, u32 animLayer);
+    bool isAnimStopped(const LayoutActor* pLayout, u32 animLayer);
     void setAnimFrameAndStop(SimpleLayout* pLayout, f32 frame, u32 animLayer);
     void setAnimFrameAndStop(LayoutActor* pLayout, f32 frame, u32 animLayer);
     void setAnimFrame(SimpleLayout* pLayout, f32 frame, u32 animLayer);

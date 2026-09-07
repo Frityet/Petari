@@ -18,7 +18,7 @@
 #include "resource/BcsvTable.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
-#include "scene/StageHostScene.hpp"
+#include "scene/StageInitializationService.hpp"
 #include "scene/nameobj/NameObjFactory.hpp"
 
 #include <algorithm>

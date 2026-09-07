@@ -112,47 +112,10 @@ namespace {
                 "repeated creation must preserve the same empty holder until the real actor registers itself");
     }
 
-    void test_stage_host_creates_mario_holder_before_start_preflight() {
-        const auto source = read_file("src/scene/StageHostScene.cpp");
-        const auto required_objects = source.find("constexpr auto required_scene_objects");
-        const auto mario_holder = source.find("SceneObj_MarioHolder", required_objects);
-        const auto group_check = source.find("SceneObj_GroupCheckManager", mario_holder);
-        const auto talk_director = source.find("SceneObj_TalkDirector", group_check);
-        const auto create_loop = source.find("for (const auto id : required_scene_objects)", mario_holder);
-        const auto placement_init_call = source.find("init_placement_roots();", create_loop);
-        const auto placement_init = source.find("void StageHostScene::init_placement_roots()", placement_init_call);
-        const auto placement_preflight = source.find("prepare_authored_placements();", placement_init);
-        const auto start_preflight = source.find("preflight_stage_start_or_throw();", placement_init);
-        const auto placement_preload = source.find("preload_authored_placements();", start_preflight);
-        const auto start_construction = source.find("construct_stage_start_root();", placement_preload);
-        const auto placement_construction = source.find("construct_authored_placements();", start_construction);
-
-        require(required_objects != std::string::npos && mario_holder != std::string::npos &&
-                    group_check != std::string::npos &&
-                    talk_director != std::string::npos &&
-                    create_loop != std::string::npos && placement_init_call != std::string::npos &&
-                    placement_init != std::string::npos &&
-                    placement_preflight != std::string::npos &&
-                    start_preflight != std::string::npos &&
-                    placement_preload != std::string::npos &&
-                    start_construction != std::string::npos &&
-                    placement_construction != std::string::npos &&
-                    required_objects < mario_holder && mario_holder < group_check &&
-                    group_check < talk_director && talk_director < create_loop &&
-                    create_loop < placement_init_call &&
-                    placement_init_call < placement_init &&
-                    placement_init < placement_preflight &&
-                    placement_preflight < start_preflight &&
-                    start_preflight < placement_preload &&
-                    placement_preload < start_construction &&
-                    start_construction < placement_construction,
-                "StageHost must create Mario/group services, strictly preflight, preload every holder, then construct StartInfo before authored placements");
-    }
-
     void test_planet_catalog_precedes_authored_data_resolution() {
-        const auto host = read_file("src/scene/StageHostScene.cpp");
+        const auto host = read_file("src/scene/StageInitializationService.cpp");
         const auto host_environment =
-            host.find("void StageHostScene::init_stage_environment()");
+            host.find("void StageInitializationService::load_stage_files()");
         const auto host_catalog =
             host.find("_planet_map_catalog =", host_environment);
         const auto host_data = host.find("_authored_data =", host_catalog);
@@ -371,7 +334,6 @@ int main() {
         TestCase{"no holder means no scene object", test_no_holder_means_no_scene_object},
         TestCase{"bound holder requires explicit real creation", test_bound_holder_requires_explicit_real_creation},
         TestCase{"MarioHolder precedes real actor creation", test_mario_holder_precedes_real_actor_creation},
-        TestCase{"StageHost creates MarioHolder before StartInfo", test_stage_host_creates_mario_holder_before_start_preflight},
         TestCase{"planet catalog precedes authored data resolution",
                  test_planet_catalog_precedes_authored_data_resolution},
         TestCase{"model-changing archive path uses retail mounted prefix",

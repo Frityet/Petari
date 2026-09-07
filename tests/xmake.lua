@@ -2927,3 +2927,63 @@ target("smg-pc-original-image-effect-ownership-tests")
     add_tests("original_image_effect_ownership", {
         group = "aurora", rundir = os.projectdir(), realtime_output = true
     })
+
+target("smg-pc-original-player-status-storage-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    add_files {
+        "OriginalPlayerStatusStorageTests.cpp",
+        "../aurora/lib/compat.cpp"
+    }
+    add_deps {
+        "smg-pc-common",
+        "smg-pc-game",
+        "aurora-card",
+        "aurora-dvd",
+        "aurora-gd",
+        "aurora-gx",
+        "aurora-os",
+        "aurora-pad",
+        "aurora-si",
+        "aurora-vi"
+    }
+    add_tests("original_player_status_storage", {
+        group = "aurora",
+        rundir = os.projectdir(),
+        realtime_output = true
+    })
+
+target("smg-pc-name-obj-group-lifetime-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    add_files("NameObjGroupLifetimeTests.cpp", "../aurora/lib/compat.cpp")
+    add_deps {"smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
+              "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"}
+    add_tests("name_obj_group_lifetime", {
+        group = "aurora", rundir = os.projectdir(), realtime_output = true
+    })
+
+target("smg-pc-original-scene-wipe-owner-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    add_files("OriginalSceneWipeOwnerTests.cpp", "../aurora/lib/compat.cpp")
+    add_deps {"smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
+              "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"}
+    add_tests("original_scene_wipe_owner", {
+        group = "aurora", rundir = os.projectdir(), realtime_output = true
+    })
+
+
+target("smg-pc-stage-initialization-resource-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    add_files("StageInitializationResourceTests.cpp", "../aurora/lib/compat.cpp")
+    add_deps {"smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
+              "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"}
+    add_tests("stage_initialization_resources", {
+        group = "aurora", rundir = os.projectdir(), realtime_output = true
+    })

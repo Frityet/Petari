@@ -1,0 +1,8 @@
+{
+  "source": "decomp/src/Game/NameObj/NameObjExecuteHolder.cpp",
+  "source_sha256": "cc87b09943a5a79c9474488d8d82823e5153026fef3fb3508b0cbfaf6881bb19",
+  "lookup_replacement_count": 6,
+  "old_lookup": "SingletonHolder< GameSystem >::get()->mSceneController->getNameObjListExecutor()",
+  "new_lookup": "(&smgpc::scene::current_scene_name_obj_list_executor())",
+  "other_changes": "Replace now-unused GameSystem/controller/SingletonHolder includes with the typed native binding include; no state, category, registration or loop changes."
+}

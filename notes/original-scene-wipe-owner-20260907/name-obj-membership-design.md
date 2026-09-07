@@ -1,0 +1,13 @@
+# General NameObjGroup membership retirement
+
+The smallest coverage-complete native boundary is `release_name_obj_runtime_state` in `src/compat/ActorRuntimeRegistry.cpp`. Every actual NameObj reaches it from its base destructor; the existing live registry already identifies all other retained objects without a new side table.
+
+Before erasing the retiring NameObj, iterate the existing registry directly, skip that same pointer, and dynamic-cast each other live object to the real `NameObjGroup` type. For every actual group, compact its initialized `[0,mObjectCount)` array in place, preserving all remaining member order and duplicate occurrences, excluding every occurrence of the retiring pointer. Set the new count and clear the formerly occupied trailing slots. Capacity stays unchanged. This uses no allocation and invokes no group/member virtual callbacks, so iteration cannot invalidate itself.
+
+This belongs outside Game and does not change the original registerObj, group destructor, or pauseOffAll methods. A join-only side table would be incomplete: `LiveActorGroup::registerActor` calls original `NameObjGroup::registerObj` directly. Scanning actual live typed groups covers both that path and `MR::joinToNameObjGroup` without a second invented membership representation.
+
+The retiring group's own slot is skipped because its original derived destructor already released its member array before `NameObj::~NameObj` runs. Other objects in their base destructor no longer dynamic-cast to NameObjGroup. Fully live derived groups retain their real base fields. No registry snapshot or newly allocated container is needed. The existing runtime assumes serialized scene/object mutation; this does not add cross-thread registry access.
+
+Focused regression should retain two groups and three members, register the retiring member repeatedly and through both direct original registerObj and MR join, delete that member, and verify exact surviving order/count and cleared tails in both groups. Destroy a group before a member to cover its already-released array. An actual SceneObj factory override can create/register a child and throw after registration; after generic captured rollback, the surviving group must have no stale member and the registry count must return to its baseline. A subsequent original pauseOffAll must dispatch only live members, followed by successful factory creation in the same holder. Repeated ownership cycles should leave registry/group counts unchanged.
+
+Current status: design only during parent source checkpoint freeze. No production membership or wipe imports have been saved.

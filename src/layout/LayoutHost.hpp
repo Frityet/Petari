@@ -65,7 +65,7 @@ void set_layout_anim_frame_and_stop(LayoutActor* actor, f32 frame, u32 layer);
 void set_layout_anim_rate(LayoutActor* actor, f32 rate, u32 layer);
 [[nodiscard]] f32 layout_anim_frame(const LayoutActor* actor, u32 layer);
 [[nodiscard]] f32 layout_anim_frame_max(const LayoutActor* actor, u32 layer);
-[[nodiscard]] bool is_layout_anim_stopped(LayoutActor* actor, u32 layer);
+[[nodiscard]] bool is_layout_anim_stopped(const LayoutActor* actor, u32 layer);
 [[nodiscard]] J3DFrameCtrl* layout_anim_ctrl(LayoutActor* actor, u32 layer);
 
 void set_text_box_number(LayoutActor* actor, const char* pane_name, s32 number);

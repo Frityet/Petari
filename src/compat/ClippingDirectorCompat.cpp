@@ -17,7 +17,7 @@ ClippingDirector::ClippingDirector()
 
 void ClippingDirector::movement() {
     // The host scene scheduler evaluates registered actor clipping from the
-    // current real camera before this retail movement category executes.
+    // current real camera at this retail movement category, after Camera.
 }
 
 void ClippingDirector::endInitActorSystemInfo() {

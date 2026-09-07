@@ -1,0 +1,22 @@
+[
+  {
+    "path": "src/runtime/SceneScheduler.cpp",
+    "sha256": "abc78a5080a506a16b6f49e4c8cfe311419ec8ec5a15fe83cdb2918fb43c5f95"
+  },
+  {
+    "path": "src/runtime/SceneScheduler.hpp",
+    "sha256": "1cc11fd8f2e404fd11c778499ffea8513c4672ea9a4c34bb1a69846615fe5f66"
+  },
+  {
+    "path": "src/compat/SceneMovementCompat.cpp",
+    "sha256": "cacff3707b41285b13423b2f90fac35bf9440bf03a5871481d84308cb14fc0f5"
+  },
+  {
+    "path": "src/compat/ClippingDirectorCompat.cpp",
+    "sha256": "da0a69bb4f72f53542821609a3abde45bf9f39c346a8d390c63f7c7d12bc1a92"
+  },
+  {
+    "path": "tests/SceneSchedulerHeapTests.cpp",
+    "sha256": "a301e19833fac2fb13ac9112c68dd773a3c9bfeb5ea4b21800145a8d201f29b3"
+  }
+]

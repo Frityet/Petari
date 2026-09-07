@@ -1,0 +1,34 @@
+[
+  {
+    "path": "src/Game/System/GameDataPlayerStatus.cpp",
+    "sha256": "e591e729174941d87d6450a2af746e826a78dda47163a4f03beb9412a6c8be76"
+  },
+  {
+    "path": "src/Game/System/GameDataPlayerStatus.hpp",
+    "sha256": "a5fa4559d1fd957278ac6a898a68b32d4fb2bf497e3901f8c5fdf413f49a228d"
+  },
+  {
+    "path": "src/compat/PlayerStatusStorage.cpp",
+    "sha256": "fa7562079b822481bbb5af50197ab3102a7c3b0bf6e1d44de8f5d320c9d176dd"
+  },
+  {
+    "path": "src/compat/PlayerStatusStorage.hpp",
+    "sha256": "fde0abf46806ebfb95d85815ed1677bce1d6f3b1ff24a68c8d9b385659ee6373"
+  },
+  {
+    "path": "src/compat/GameDataHolderCompat.cpp",
+    "sha256": "5e848645ad2d28e17d8bdeea57d88a002660616401c35aa221575c624250da8b"
+  },
+  {
+    "path": "src/compat/GameDataHolderCompat.hpp",
+    "sha256": "8a6a8195c43cdbb497bc1b11aa3e0b2f56fcc3638db62b26c202f6814bfbe93a"
+  },
+  {
+    "path": "tests/OriginalPlayerStatusStorageTests.cpp",
+    "sha256": "d6ac0d0f8fae086e9c98e18142559fdba3aec2bd82127b58ea5d39adf5fb47e2"
+  },
+  {
+    "path": "tests/xmake.lua",
+    "sha256": "95132e2e5907205cb660103c095ed0015ec5de17883074d094e2235b30012da1"
+  }
+]

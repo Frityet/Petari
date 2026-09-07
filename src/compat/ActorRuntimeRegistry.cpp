@@ -15,6 +15,7 @@
 #include "Game/LiveActor/Spine.hpp"
 #include "Game/Map/StageSwitch.hpp"
 #include "Game/NameObj/NameObj.hpp"
+#include "Game/NameObj/NameObjGroup.hpp"
 #include "compat/CollisionPartsCompat.hpp"
 #include "compat/GameActorSensorCompat.hpp"
 #include "compat/ModelManagerOwner.hpp"
@@ -214,6 +215,18 @@ namespace smgpc::compat {
     }
 
     void release_name_obj_runtime_state(const NameObj* object) {
+        // Groups borrow their members. Native factory rollback and object
+        // retirement may leave the group alive after one member is deleted.
+        // Scan actual groups so direct original registerObj calls are covered.
+        for (const auto& [registered, state] : name_obj_states()) {
+            if (registered == object) continue;
+            auto* group = dynamic_cast<NameObjGroup*>(const_cast<NameObj*>(registered));
+            if (!group || group->mObjectCount == 0) continue;
+            auto* old_end = group->mObjects + group->mObjectCount;
+            auto* new_end = std::remove(group->mObjects, old_end, object);
+            std::fill(new_end, old_end, nullptr);
+            group->mObjectCount = static_cast<s32>(new_end - group->mObjects);
+        }
         name_obj_states().erase(object);
     }
 

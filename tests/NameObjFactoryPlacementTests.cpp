@@ -23,7 +23,7 @@
 #include "scene/PlacementZoneNameScope.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "scene/StageCollisionService.hpp"
-#include "scene/StageHostScene.hpp"
+#include "scene/StageInitializationService.hpp"
 #include "scene/StagePlacementResolver.hpp"
 #include "scene/nameobj/NameObjFactory.hpp"
 

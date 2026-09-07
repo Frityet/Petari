@@ -1,0 +1,54 @@
+[
+  {
+    "path": "src/Game/Screen/SceneWipeHolder.cpp",
+    "sha256": "93df73978978d9a34fe2bc1e382d1c3591da916bdea71859ea622f0097f2acbd"
+  },
+  {
+    "path": "include/Game/Screen/SceneWipeHolder.hpp",
+    "sha256": "43b8a3859b38a8ff66b7be4f0bce8c1d77dedb24c163fc0564d36dfd1aa8f2e2"
+  },
+  {
+    "path": "src/Game/Screen/WipeHolderBase.cpp",
+    "sha256": "4866925dcb4428c744021cec19bdbfe3916ed6b90bf4f673f011fdbe2a06eac2"
+  },
+  {
+    "path": "include/Game/Screen/WipeHolderBase.hpp",
+    "sha256": "8836c2aaebf9280dd47a8f8afdff9245528a99408efb085753373859041c74aa"
+  },
+  {
+    "path": "src/Game/Screen/WipeRing.cpp",
+    "sha256": "d1e3b18a678ccdb4308fe2b6e1d64ea3c126b7b80e9d964b887b7e49bd9dc95e"
+  },
+  {
+    "path": "include/Game/Screen/WipeRing.hpp",
+    "sha256": "76e1780fe6c23123afa3ef07e7e4ea0237b2b463ac838d788cf6624c3d851483"
+  },
+  {
+    "path": "src/Game/Screen/WipeFade.cpp",
+    "sha256": "1fb5ae9c1d46d3bd5d4066dd94f8e410b13919d92b2f4b01cb3f85e9522db805"
+  },
+  {
+    "path": "include/Game/Screen/WipeFade.hpp",
+    "sha256": "d140f2636b8bf57e0838bbb21e9262ab69d2b10a43d848be7709712b7b4f0c14"
+  },
+  {
+    "path": "src/Game/Screen/WipeGameOver.cpp",
+    "sha256": "2986434b3203ee52f51421ac19069a30f5c2405dc15b7aee11945cb82c85fc04"
+  },
+  {
+    "path": "include/Game/Screen/WipeGameOver.hpp",
+    "sha256": "9228fb6af540af6a96287f0f83faa03d7f7f4b61c8a0425c4ec5c1868b05a1c0"
+  },
+  {
+    "path": "src/Game/Screen/WipeKoopa.cpp",
+    "sha256": "b019adf4a3234bc54e78003f41cdd57291e087aac8843a2c98e2f63b5349877b"
+  },
+  {
+    "path": "include/Game/Screen/WipeKoopa.hpp",
+    "sha256": "e9ac22c0cbd5a7097393e217eb857bc1a5434c41e3a801d4a46b88b1e4296832"
+  },
+  {
+    "path": "include/Game/Screen/WipeLayoutBase.hpp",
+    "sha256": "9963cec225b01c380043e2ccd0b180d7d6ef83dafb473b7a6b91156cf6c4f0ac"
+  }
+]

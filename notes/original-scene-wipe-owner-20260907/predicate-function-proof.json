@@ -1,0 +1,14 @@
+[
+  {
+    "symbol": "isExistMario__2MRFv",
+    "demangled": "MR::isExistMario()",
+    "retail_size": "8",
+    "match": 100.0
+  },
+  {
+    "symbol": "isStageSuddenDeathDodoryu__2MRFv",
+    "demangled": "MR::isStageSuddenDeathDodoryu()",
+    "retail_size": "88",
+    "match": 90.22727
+  }
+]

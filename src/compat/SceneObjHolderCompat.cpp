@@ -41,6 +41,7 @@
 #include "Game/Screen/CenterScreenBlur.hpp"
 #include "Game/Screen/InformationObserver.hpp"
 #include "Game/Screen/GameSceneLayoutHolder.hpp"
+#include "Game/Screen/SceneWipeHolder.hpp"
 #include "Game/Screen/LensFlare.hpp"
 #include "Game/Util/BaseMatrixFollowTargetHolder.hpp"
 #include "Game/Util/FurCtrl.hpp"
@@ -491,6 +492,8 @@ NameObj *SceneObjHolder::newEachObj(int id) {
         return new InformationObserver();
     case SceneObj_NameObjGroup:
         return new NameObjGroup("IgnorePauseNameObj", 16);
+    case SceneObj_SceneWipeHolder:
+        return new SceneWipeHolder();
     case SceneObj_GameSceneLayoutHolder:
         return new GameSceneLayoutHolder();
     case SceneObj_ShadowControllerHolder:
