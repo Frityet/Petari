@@ -1,0 +1,23 @@
+[
+  "src/Game/Player/MarioFaint.cpp",
+  "src/Game/Player/MarioFlip.cpp",
+  "src/Game/Player/MarioWarp.cpp",
+  "notes/original-mario-flip-warp-20260907/README.md",
+  "notes/original-mario-flip-warp-20260907/function-proof.json",
+  "notes/original-mario-flip-warp-20260907/validation-commands.json",
+  "notes/original-mario-flip-warp-20260907/native-compile-results.json",
+  "notes/original-mario-flip-warp-20260907/retail-string-proof.json",
+  "notes/original-mario-flip-warp-20260907/Faint-string-proof.json",
+  "notes/original-mario-flip-warp-20260907/native-mirror-hashes.json",
+  "notes/original-mario-flip-warp-20260907/refresh-proof.py",
+  "notes/original-mario-flip-warp-20260907/baseline/MarioFaint.cpp",
+  "notes/original-mario-flip-warp-20260907/baseline/MarioFlip.cpp",
+  "notes/original-mario-flip-warp-20260907/baseline/MarioWarp.cpp",
+  "notes/original-mario-flip-warp-20260907/update__9MarioFlipFv.asm",
+  "notes/original-mario-flip-warp-20260907/updateJump__9MarioWarpFv.asm",
+  "notes/original-mario-flip-warp-20260907/start__9MarioWarpFv.asm",
+  "notes/original-mario-flip-warp-20260907/update__9MarioWarpFv.asm",
+  "notes/original-mario-flip-warp-20260907/close__9MarioWarpFv.asm",
+  "notes/original-mario-flip-warp-20260907/calcAxis__9MarioWarpFv.asm",
+  "notes/original-mario-flip-warp-20260907/doCubeWarp__5MarioFv.asm"
+]

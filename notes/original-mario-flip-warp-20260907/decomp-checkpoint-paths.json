@@ -1,0 +1,5 @@
+[
+  "src/Game/Player/MarioFaint.cpp",
+  "src/Game/Player/MarioFlip.cpp",
+  "src/Game/Player/MarioWarp.cpp"
+]

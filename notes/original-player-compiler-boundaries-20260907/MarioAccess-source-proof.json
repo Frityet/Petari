@@ -1,0 +1,5 @@
+{
+  "change": "Include the definition of FixedPosition before dereferencing it.",
+  "paired_symbols": 105,
+  "changed_symbols": []
+}

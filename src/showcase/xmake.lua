@@ -18,19 +18,13 @@ target("smg-pc-mario-gateway-walk-slice")
         "../Game/Player/MarioActorParts.cpp",
         "../Game/Player/MarioSearchLight.cpp",
         "../Game/Player/MarioNullBck.cpp",
-        "../Game/Player/MarioTeresa.cpp",
         "../Game/Player/FireMarioBall.cpp",
         "../Game/Player/JetTurtleShadow.cpp",
         "../Game/Player/TornadoMario.cpp",
-        "../Game/Player/MarioWait.cpp",
         "../Game/Player/MarioActorInit.cpp",
         "../Game/Player/MarioActorPad.cpp",
         "../Game/Player/MarioConst.cpp",
-        "../Game/Player/MarioInit.cpp",
         "../Game/Player/MarioMove.cpp",
-        "../Game/Player/MarioMove2D.cpp",
-        "../Game/Player/MarioSlip.cpp",
-        "../Game/Player/MarioTask.cpp",
         "../Game/Player/MarioWalk.cpp"
     }
     add_deps("smg-pc-game")

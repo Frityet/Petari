@@ -2725,3 +2725,14 @@ target("smg-pc-jkr-exception-ownership-tests")
     add_tests("jkr_exception_ownership", {
         group = "aurora", rundir = os.projectdir(), realtime_output = true
     })
+
+target("smg-pc-original-direct-draw-util-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    add_files("OriginalDirectDrawUtilTests.cpp", "../aurora/lib/compat.cpp")
+    add_deps {"smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
+              "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"}
+    add_tests("original_direct_draw_util", {
+        group = "aurora", rundir = os.projectdir(), realtime_output = true
+    })

@@ -1,0 +1,15 @@
+{
+  "command": [
+    "build/tools/objdiff-cli",
+    "diff",
+    "-1",
+    "/Users/frityet/Projects/petari/decomp/build/original-player-state-recovery-20260907/retail/obj/Game/Player/MarioActor.o",
+    "-2",
+    "/Users/frityet/Projects/petari/notes/mario-actor-movement-restoration-20260907/MarioActor.wii.o",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/mario-actor-movement-restoration-20260907/MarioActor.objdiff.json",
+    "--format",
+    "json-pretty"
+  ],
+  "result": 0
+}

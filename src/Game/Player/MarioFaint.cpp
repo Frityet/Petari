@@ -6,8 +6,6 @@
 #include "Game/Player/MarioSwim.hpp"
 #include "Game/Util/MathUtil.hpp"
 
-extern const char lbl_805C64D8[];
-
 bool Mario::doFlipWeak(const TVec3f& rVec) {
     if (mMovementStates._1C) {
         return false;
@@ -108,7 +106,6 @@ bool MarioFaint::update() {
 }
 
 bool MarioFaint::start() {
-    const char* pString = lbl_805C64D8;
     _12 = 0;
     _16 = 0;
     getPlayer()->mMovementStates._B = false;
@@ -116,20 +113,20 @@ bool MarioFaint::start() {
 
     if (_18.dot(getPlayer()->mFrontVec) > 0.0f) {
         getPlayer()->setFrontVecKeepUp(_18);
-        changeAnimation(pString, static_cast<const char*>(nullptr));
+        changeAnimation("後方小ダメージ", static_cast<const char*>(nullptr));
     }
     else {
         getPlayer()->setFrontVecKeepUp(-_18);
-        changeAnimation(pString + 0xF, static_cast<const char*>(nullptr));
+        changeAnimation("前方小ダメージ", static_cast<const char*>(nullptr));
     }
 
     if (_24) {
-        changeAnimation(pString + 0x1E, static_cast<const char*>(nullptr));
+        changeAnimation("ノーダメージ", static_cast<const char*>(nullptr));
     }
 
-    playSound(pString + 0x2B, -1);
-    playSound(pString + 0x38, -1);
-    playEffect(pString + 0x38);
+    playSound("声小ダメージ", -1);
+    playSound("ダメージ", -1);
+    playEffect("ダメージ");
     startPadVib(2);
     addVelocity(_18);
 
@@ -156,11 +153,10 @@ bool MarioFaint::start() {
 }
 
 bool MarioFaint::close() {
-    const char* pString = lbl_805C64D8;
 
     if (getPlayer()->mMovementStates._1) {
-        stopAnimation(pString, static_cast<const char*>(nullptr));
-        stopAnimation(pString + 0xF, pString + 0x41);
+        stopAnimation("後方小ダメージ", static_cast<const char*>(nullptr));
+        stopAnimation("前方小ダメージ", "基本");
     }
 
     if (_25) {

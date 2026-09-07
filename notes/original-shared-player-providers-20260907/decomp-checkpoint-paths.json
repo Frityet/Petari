@@ -1,0 +1,7 @@
+[
+  "src/Game/Util/AreaObjUtil.cpp",
+  "include/Game/Util/AreaObjUtil.hpp",
+  "src/Game/Util/ModelUtil.cpp",
+  "include/Game/Util/ModelUtil.hpp",
+  "notes/original-shared-player-providers-20260907"
+]

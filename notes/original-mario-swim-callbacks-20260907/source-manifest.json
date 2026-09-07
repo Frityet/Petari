@@ -1,0 +1,19 @@
+{
+  "reference_paths": [
+    "include/Game/Player/MarioSwim.hpp"
+  ],
+  "root_source_paths": [
+    "src/Game/Player/MarioSwim.hpp"
+  ],
+  "root_notes_path": "notes/original-mario-swim-callbacks-20260907",
+  "files": [
+    {
+      "path": "decomp/include/Game/Player/MarioSwim.hpp",
+      "sha256": "2fdb281f9b41f1a0ccb31e89510f1835752f16d58db9cca0dbb95a6bee0a5139"
+    },
+    {
+      "path": "src/Game/Player/MarioSwim.hpp",
+      "sha256": "cf5be514baa052323e2048a61d7488b8a513fba7b8f8b24d80cdbfe7b525a421"
+    }
+  ]
+}

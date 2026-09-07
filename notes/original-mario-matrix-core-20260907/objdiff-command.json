@@ -1,0 +1,15 @@
+{
+  "command": [
+    "build/tools/objdiff-cli",
+    "diff",
+    "-1",
+    "/Users/frityet/Projects/petari/decomp/build/original-player-state-recovery-20260907/retail/obj/Game/Player/Mario.o",
+    "-2",
+    "/Users/frityet/Projects/petari/notes/original-mario-matrix-core-20260907/Mario.candidate.o",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-mario-matrix-core-20260907/Mario.candidate.objdiff.json",
+    "--format",
+    "json-pretty"
+  ],
+  "exit_code": 0
+}

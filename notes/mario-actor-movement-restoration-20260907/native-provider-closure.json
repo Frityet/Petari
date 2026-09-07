@@ -1,0 +1,5477 @@
+{
+  "scope": "LLVM IR references from five restored methods; local function/global graph only. Archive availability snapshot does not prove transitive archive closure, initialization or runtime correctness.",
+  "archives": [
+    {
+      "path": "build/macosx/arm64/debug/libaurora-base.a",
+      "mtime_ns": 1788783349332350437
+    },
+    {
+      "path": "build/macosx/arm64/debug/libaurora-card.a",
+      "mtime_ns": 1788783349345654033
+    },
+    {
+      "path": "build/macosx/arm64/debug/libaurora-core.a",
+      "mtime_ns": 1788783349388108042
+    },
+    {
+      "path": "build/macosx/arm64/debug/libaurora-dvd.a",
+      "mtime_ns": 1788783349346030118
+    },
+    {
+      "path": "build/macosx/arm64/debug/libaurora-gd.a",
+      "mtime_ns": 1788783349390176883
+    },
+    {
+      "path": "build/macosx/arm64/debug/libaurora-gx.a",
+      "mtime_ns": 1788783349376618203
+    },
+    {
+      "path": "build/macosx/arm64/debug/libaurora-main.a",
+      "mtime_ns": 1788771990641548212
+    },
+    {
+      "path": "build/macosx/arm64/debug/libaurora-ms.a",
+      "mtime_ns": 1788783349345744325
+    },
+    {
+      "path": "build/macosx/arm64/debug/libaurora-mtx.a",
+      "mtime_ns": 1788771984796082983
+    },
+    {
+      "path": "build/macosx/arm64/debug/libaurora-nw4r.a",
+      "mtime_ns": 1788783293243969979
+    },
+    {
+      "path": "build/macosx/arm64/debug/libaurora-os.a",
+      "mtime_ns": 1788783349343497983
+    },
+    {
+      "path": "build/macosx/arm64/debug/libaurora-pad.a",
+      "mtime_ns": 1788783349357959417
+    },
+    {
+      "path": "build/macosx/arm64/debug/libaurora-platform.a",
+      "mtime_ns": 1788783349344376986
+    },
+    {
+      "path": "build/macosx/arm64/debug/libaurora-si.a",
+      "mtime_ns": 1788783349346647162
+    },
+    {
+      "path": "build/macosx/arm64/debug/libaurora-thp.a",
+      "mtime_ns": 1788775291960716682
+    },
+    {
+      "path": "build/macosx/arm64/debug/libaurora-vi.a",
+      "mtime_ns": 1788783349355682366
+    },
+    {
+      "path": "build/macosx/arm64/debug/libsmg-pc-app.a",
+      "mtime_ns": 1788783294523601960
+    },
+    {
+      "path": "build/macosx/arm64/debug/libsmg-pc-common.a",
+      "mtime_ns": 1788783293231886804
+    },
+    {
+      "path": "build/macosx/arm64/debug/libsmg-pc-game.a",
+      "mtime_ns": 1788783441452037458
+    },
+    {
+      "path": "build/macosx/arm64/debug/libsmg-pc-mario-gateway-walk-slice.a",
+      "mtime_ns": 1788783294539181649
+    },
+    {
+      "path": "build/macosx/arm64/debug/libsmg-pc-render.a",
+      "mtime_ns": 1788783349401317929
+    }
+  ],
+  "methods": [
+    {
+      "root": "_ZN10MarioActorC2EPKc",
+      "name": "MarioActor::MarioActor(char const*)",
+      "direct_dependencies": [
+        {
+          "symbol": "C_MTXIdentity",
+          "name": "C_MTXIdentity",
+          "providers": [
+            "libaurora-mtx.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor10initMemberEv",
+          "name": "MarioActor::initMember()",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor13resetPadSwingEv",
+          "name": "MarioActor::resetPadSwing()",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor6init2DEv",
+          "name": "MarioActor::init2D()",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR13isPlayerLuigiEv",
+          "name": "MR::isPlayerLuigi()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR37isGalaxyDarkCometAppearInCurrentStageEv",
+          "name": "MR::isGalaxyDarkCometAppearInCurrentStage()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5MarioC1EP10MarioActor",
+          "name": "Mario::Mario(MarioActor*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN6Color83setEhhhh",
+          "name": "Color8::set(unsigned char, unsigned char, unsigned char, unsigned char)",
+          "providers": [
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN6Color8C1Ej",
+          "name": "Color8::Color8(unsigned int)",
+          "providers": [
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN9JGeometry5TVec2IfEC1Ev",
+          "name": "JGeometry::TVec2<float>::TVec2()",
+          "providers": [
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-render.a"
+          ]
+        },
+        {
+          "symbol": "_ZN9JGeometry5TVec3IfE4zeroEv",
+          "name": "JGeometry::TVec3<float>::zero()",
+          "providers": [
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN9JGeometry5TVec3IfEC1Ev",
+          "name": "JGeometry::TVec3<float>::TVec3()",
+          "providers": [
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN9LiveActorC2EPKc",
+          "name": "LiveActor::LiveActor(char const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN9LiveActorD2Ev",
+          "name": "LiveActor::~LiveActor()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZTV10MarioActor",
+          "name": "vtable for MarioActor",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZdlPvm",
+          "name": "operator delete(void*, unsigned long)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_Znwm",
+          "name": "operator new(unsigned long)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "__gxx_personality_v0",
+          "name": "__gxx_personality_v0",
+          "providers": []
+        }
+      ],
+      "direct_project_gaps": [],
+      "new_external_project_dependencies": [
+        {
+          "symbol": "_ZN10MarioActor10initEffectEv",
+          "name": "MarioActor::initEffect()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor10playEffectEPKc",
+          "name": "MarioActor::playEffect(char const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor11initForJumpEv",
+          "name": "MarioActor::initForJump()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor11tryCoinPullEv",
+          "name": "MarioActor::tryCoinPull()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor11tryJumpRushEv",
+          "name": "MarioActor::tryJumpRush()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor11updateBlinkEv",
+          "name": "MarioActor::updateBlink()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor12playEffectRTEPKcRKN9JGeometry5TVec3IfEES6_",
+          "name": "MarioActor::playEffectRT(char const*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor12setupSensorsEv",
+          "name": "MarioActor::setupSensors()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor12trySpinPunchEv",
+          "name": "MarioActor::trySpinPunch()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor12updateEffectEv",
+          "name": "MarioActor::updateEffect()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor13getStickValueEPfS0_",
+          "name": "MarioActor::getStickValue(float*, float*)",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor13shootFireBallEv",
+          "name": "MarioActor::shootFireBall()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor13tryRushInRushEv",
+          "name": "MarioActor::tryRushInRush()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor13updateTornadoEv",
+          "name": "MarioActor::updateTornado()",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor14calcSpinEffectEv",
+          "name": "MarioActor::calcSpinEffect()",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor14doFreezeAttackEv",
+          "name": "MarioActor::doFreezeAttack()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor14updateThrowingEv",
+          "name": "MarioActor::updateThrowing()",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor15stopEffectForceEPKc",
+          "name": "MarioActor::stopEffectForce(char const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor15tryStandardRushEv",
+          "name": "MarioActor::tryStandardRush()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor15updateFairyStarEv",
+          "name": "MarioActor::updateFairyStar()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor15updateForCameraEv",
+          "name": "MarioActor::updateForCamera()",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor16initActionMatrixEv",
+          "name": "MarioActor::initActionMatrix()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor16resetSensorCountEv",
+          "name": "MarioActor::resetSensorCount()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor16updatePlayerModeEv",
+          "name": "MarioActor::updatePlayerMode()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor17isEnableSpinPunchEv",
+          "name": "MarioActor::isEnableSpinPunch()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor17tryCoinPullInRushEv",
+          "name": "MarioActor::tryCoinPullInRush()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor17updateSearchLightEv",
+          "name": "MarioActor::updateSearchLight()",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor17updateThrowVectorEv",
+          "name": "MarioActor::updateThrowVector()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor18stopSpinTicoEffectEb",
+          "name": "MarioActor::stopSpinTicoEffect(bool)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor19updateActionTriggerEv",
+          "name": "MarioActor::updateActionTrigger()",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor20checkPriorRushTargetEv",
+          "name": "MarioActor::checkPriorRushTarget()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor20initMorphStringTableEv",
+          "name": "MarioActor::initMorphStringTable()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor20tryReleaseBombTeresaEv",
+          "name": "MarioActor::tryReleaseBombTeresa()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor20updateTakingPositionEv",
+          "name": "MarioActor::updateTakingPosition()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor20updateTransForCameraEv",
+          "name": "MarioActor::updateTransForCamera()",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor21changeTeresaAnimationEPKci",
+          "name": "MarioActor::changeTeresaAnimation(char const*, int)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor21emitEffectWaterColumnERKN9JGeometry5TVec3IfEES4_",
+          "name": "MarioActor::emitEffectWaterColumn(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor22updateBeeWingAnimationEv",
+          "name": "MarioActor::updateBeeWingAnimation()",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor25updateControllerSwingLeftEv",
+          "name": "MarioActor::updateControllerSwingLeft()",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor6init2DEv",
+          "name": "MarioActor::init2D()",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor7endRushEPK11RushEndInfo",
+          "name": "MarioActor::endRush(RushEndInfo const*)",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor8bodyClapEv",
+          "name": "MarioActor::bodyClap()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor8setBlinkEPKc",
+          "name": "MarioActor::setBlink(char const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor8tryThrowEv",
+          "name": "MarioActor::tryThrow()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor8update2DEv",
+          "name": "MarioActor::update2D()",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor9initPartsEv",
+          "name": "MarioActor::initParts()",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor9lockOnDPDEv",
+          "name": "MarioActor::lockOnDPD()",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN11MarioEffectC1EP10MarioActor",
+          "name": "MarioEffect::MarioEffect(MarioActor*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN11MarioModule11startPadVibEPKc",
+          "name": "MarioModule::startPadVib(char const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN11MarioModule11startPadVibEj",
+          "name": "MarioModule::startPadVib(unsigned int)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN11MarioModule13stopAnimationEPKcS1_",
+          "name": "MarioModule::stopAnimation(char const*, char const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN11MarioModule15changeAnimationEPKcS1_",
+          "name": "MarioModule::changeAnimation(char const*, char const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN11MarioModule18stopAnimationUpperEPKcS1_",
+          "name": "MarioModule::stopAnimationUpper(char const*, char const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN11MarioModule22changeAnimationNonStopEPKc",
+          "name": "MarioModule::changeAnimationNonStop(char const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN11MarioModule29changeAnimationInterpoleFrameEj",
+          "name": "MarioModule::changeAnimationInterpoleFrame(unsigned int)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN11MarioModule9playSoundEPKci",
+          "name": "MarioModule::playSound(char const*, int)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN11RushEndInfoC1EP9LiveActorjRKN9JGeometry5TVec3IfEEbj",
+          "name": "RushEndInfo::RushEndInfo(LiveActor*, unsigned int, JGeometry::TVec3<float> const&, bool, unsigned int)",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN12XanimePlayer20changeTrackAnimationEhPKc",
+          "name": "XanimePlayer::changeTrackAnimation(unsigned char, char const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN13FixedPositionC1EPK9LiveActorPKcRKN9JGeometry5TVec3IfEES9_",
+          "name": "FixedPosition::FixedPosition(LiveActor const*, char const*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN13MarioAnimator8setSpeedEf",
+          "name": "MarioAnimator::setSpeed(float)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN13MarioAnimator9setHomingEv",
+          "name": "MarioAnimator::setHoming()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN14MarioMessengerC1EP9HitSensor",
+          "name": "MarioMessenger::MarioMessenger(HitSensor*)",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN15CameraTargetArgC1EP15CameraTargetObjP15CameraTargetMtxPK9LiveActorP10MarioActor",
+          "name": "CameraTargetArg::CameraTargetArg(CameraTargetObj*, CameraTargetMtx*, LiveActor const*, MarioActor*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN15CollisionShadowC1Eff",
+          "name": "CollisionShadow::CollisionShadow(float, float)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN21GameSceneLayoutHolder24changeLifeMeterModeWaterEv",
+          "name": "GameSceneLayoutHolder::changeLifeMeterModeWater()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN21GameSceneLayoutHolder25changeLifeMeterModeGroundEv",
+          "name": "GameSceneLayoutHolder::changeLifeMeterModeGround()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR10isNearZeroEff",
+          "name": "MR::isNearZero(float, float)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR11getBrkFrameEPK9LiveActor",
+          "name": "MR::getBrkFrame(LiveActor const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR11getJointNumEPK9LiveActor",
+          "name": "MR::getJointNum(LiveActor const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR11setBrkFrameEPK9LiveActorf",
+          "name": "MR::setBrkFrame(LiveActor const*, float)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR12copyJointPosEPK9LiveActorPKcPN9JGeometry5TVec3IfEE",
+          "name": "MR::copyJointPos(LiveActor const*, char const*, JGeometry::TVec3<float>*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR12diffAngleAbsERKN9JGeometry5TVec3IfEES4_",
+          "name": "MR::diffAngleAbs(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR13getTexFromArcEPKcPK9LiveActor",
+          "name": "MR::getTexFromArc(char const*, LiveActor const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR13isPlayerLuigiEv",
+          "name": "MR::isPlayerLuigi()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR13startSystemSEEPKcii",
+          "name": "MR::startSystemSE(char const*, int, int)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR13stopAnimFrameEP9LiveActor",
+          "name": "MR::stopAnimFrame(LiveActor*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR15getWaterAreaObjEP9WaterInfoRKN9JGeometry5TVec3IfEE",
+          "name": "MR::getWaterAreaObj(WaterInfo*, JGeometry::TVec3<float> const&)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR16getCameraViewMtxEv",
+          "name": "MR::getCameraViewMtx()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR16isSensorPressObjEPK9HitSensor",
+          "name": "MR::isSensorPressObj(HitSensor const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR16makeRTFromMtxPtrEPN9JGeometry5TVec3IfEES3_PA4_fb",
+          "name": "MR::makeRTFromMtxPtr(JGeometry::TVec3<float>*, JGeometry::TVec3<float>*, float (*) [4], bool)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR16releaseAnimFrameEP9LiveActor",
+          "name": "MR::releaseAnimFrame(LiveActor*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR17requestMovementOnEP7NameObj",
+          "name": "MR::requestMovementOn(NameObj*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR18isWallCodeNoActionEPK8Triangle",
+          "name": "MR::isWallCodeNoAction(Triangle const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR19isOppositeDirectionERKN9JGeometry5TVec3IfEES4_f",
+          "name": "MR::isOppositeDirection(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, float)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR19updateHitSensorsAllEP9LiveActor",
+          "name": "MR::updateHitSensorsAll(LiveActor*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR20endGlobalEventCameraEPKcib",
+          "name": "MR::endGlobalEventCamera(char const*, int, bool)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR20forceDeleteEffectAllEP9LiveActor",
+          "name": "MR::forceDeleteEffectAll(LiveActor*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR21requestPowerUpHPMeterEv",
+          "name": "MR::requestPowerUpHPMeter()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR22declareBlackHoleCameraEPKc",
+          "name": "MR::declareBlackHoleCamera(char const*)",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR22explainLifeUpIfAtFirstEv",
+          "name": "MR::explainLifeUpIfAtFirst()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR22start2PJumpAssistSoundEv",
+          "name": "MR::start2PJumpAssistSound()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR22startGlobalEventCameraEPKcRK15CameraTargetArgi",
+          "name": "MR::startGlobalEventCamera(char const*, CameraTargetArg const&, int)",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR22zoomInTargetGameCameraEv",
+          "name": "MR::zoomInTargetGameCamera()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR23getFirstPolyOnLineToMapEPN9JGeometry5TVec3IfEEP8TriangleRKS2_S7_",
+          "name": "MR::getFirstPolyOnLineToMap(JGeometry::TVec3<float>*, Triangle*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR23zoomOutTargetGameCameraEv",
+          "name": "MR::zoomOutTargetGameCamera()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR24declareGlobalEventCameraEPKc",
+          "name": "MR::declareGlobalEventCamera(char const*)",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR24explainBeeMarioIfAtFirstEv",
+          "name": "MR::explainBeeMarioIfAtFirst()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR24explainIceMarioIfAtFirstEv",
+          "name": "MR::explainIceMarioIfAtFirst()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR24getGameSceneLayoutHolderEv",
+          "name": "MR::getGameSceneLayoutHolder()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR25explainFireMarioIfAtFirstEv",
+          "name": "MR::explainFireMarioIfAtFirst()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR25makeAxisAndCosignVecToVecEPN9JGeometry5TVec3IfEEPfRKS2_S6_",
+          "name": "MR::makeAxisAndCosignVecToVec(JGeometry::TVec3<float>*, float*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR26setProgrammableCameraParamEPKcRKN9JGeometry5TVec3IfEES6_S6_b",
+          "name": "MR::setProgrammableCameraParam(char const*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, bool)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR27explainFlyingMarioIfAtFirstEv",
+          "name": "MR::explainFlyingMarioIfAtFirst()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR27explainHopperMarioIfAtFirstEv",
+          "name": "MR::explainHopperMarioIfAtFirst()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR27explainTeresaMarioIfAtFirstEv",
+          "name": "MR::explainTeresaMarioIfAtFirst()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR27setGameCameraTargetToPlayerEv",
+          "name": "MR::setGameCameraTargetToPlayer()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR28declareGlobalEventCameraDeadEPKcfii",
+          "name": "MR::declareGlobalEventCameraDead(char const*, float, int, int)",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR29declareGlobalEventCameraAbyssEPKc",
+          "name": "MR::declareGlobalEventCameraAbyss(char const*)",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR30declareEventCameraProgrammableEPKc",
+          "name": "MR::declareEventCameraProgrammable(char const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR30tryStartDemoWithoutCinemaFrameEP9LiveActorPKc",
+          "name": "MR::tryStartDemoWithoutCinemaFrame(LiveActor*, char const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR31explainInvincibleMarioIfAtFirstEv",
+          "name": "MR::explainInvincibleMarioIfAtFirst()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR32isOnGameEventFlagBeeMarioAtFirstEv",
+          "name": "MR::isOnGameEventFlagBeeMarioAtFirst()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR32isOnGameEventFlagIceMarioAtFirstEv",
+          "name": "MR::isOnGameEventFlagIceMarioAtFirst()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR33isOnGameEventFlagFireMarioAtFirstEv",
+          "name": "MR::isOnGameEventFlagFireMarioAtFirst()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR34startStarPointerModeDemoMarioDeathEPv",
+          "name": "MR::startStarPointerModeDemoMarioDeath(void*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR35isOnGameEventFlagFlyingMarioAtFirstEv",
+          "name": "MR::isOnGameEventFlagFlyingMarioAtFirst()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR35isOnGameEventFlagHopperMarioAtFirstEv",
+          "name": "MR::isOnGameEventFlagHopperMarioAtFirst()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR35isOnGameEventFlagTeresaMarioAtFirstEv",
+          "name": "MR::isOnGameEventFlagTeresaMarioAtFirst()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR37isGalaxyDarkCometAppearInCurrentStageEv",
+          "name": "MR::isGalaxyDarkCometAppearInCurrentStage()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR6onBindEP9LiveActor",
+          "name": "MR::onBind(LiveActor*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR7endDemoEP7NameObjPKc",
+          "name": "MR::endDemo(NameObj*, char const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR7offBindEP9LiveActor",
+          "name": "MR::offBind(LiveActor*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR9isInRangeEfff",
+          "name": "MR::isInRange(float, float, float)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR9isSameMtxEPA4_fS1_",
+          "name": "MR::isSameMtx(float (*) [4], float (*) [4])",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5JMath14sAsinAcosTableE",
+          "name": "JMath::sAsinAcosTable",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario10inputStickEv",
+          "name": "Mario::inputStick()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario11checkGroundEv",
+          "name": "Mario::checkGround()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario11closeStatusEP10MarioState",
+          "name": "Mario::closeStatus(MarioState*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario11trySpinJumpEh",
+          "name": "Mario::trySpinJump(unsigned char)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario12tryWallPunchEv",
+          "name": "Mario::tryWallPunch()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario13forceExitSwimEv",
+          "name": "Mario::forceExitSwim()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario13powerAreaMoveEv",
+          "name": "Mario::powerAreaMove()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario13powerRailMoveEv",
+          "name": "Mario::powerRailMove()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario14updateCubeCodeEv",
+          "name": "Mario::updateCubeCode()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario15incAirWalkTimerEv",
+          "name": "Mario::incAirWalkTimer()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario15updateFloorCodeEv",
+          "name": "Mario::updateFloorCode()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario16checkEnforceMoveEv",
+          "name": "Mario::checkEnforceMove()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario18checkVerticalPressEb",
+          "name": "Mario::checkVerticalPress(bool)",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN5Mario19decDamageAfterTimerEv",
+          "name": "Mario::decDamageAfterTimer()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario20startTeresaDisappearEv",
+          "name": "Mario::startTeresaDisappear()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario21updateMorphResetTimerEv",
+          "name": "Mario::updateMorphResetTimer()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario22recordRelativePositionEv",
+          "name": "Mario::recordRelativePosition()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario4pushERKN9JGeometry5TVec3IfEE",
+          "name": "Mario::push(JGeometry::TVec3<float> const&)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario8startBasEPKcbff",
+          "name": "Mario::startBas(char const*, bool, float, float)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario8stopWalkEv",
+          "name": "Mario::stopWalk()",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN8JUTVideo10getManagerEv",
+          "name": "JUTVideo::getManager()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN9FootPrint10setTextureEP7ResTIMG",
+          "name": "FootPrint::setTexture(ResTIMG*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN9FootPrintC1EPKcii",
+          "name": "FootPrint::FootPrint(char const*, int, int)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN9HitSensor14receiveMessageEjPS_",
+          "name": "HitSensor::receiveMessage(unsigned int, HitSensor*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN9LiveActor19addToSoundObjHolderEv",
+          "name": "LiveActor::addToSoundObjHolder()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN9LiveActor9initSoundEib",
+          "name": "LiveActor::initSound(int, bool)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN9MarioSwim14checkWaterCubeEb",
+          "name": "MarioSwim::checkWaterCube(bool)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN9WaterInfoC1Ev",
+          "name": "WaterInfo::WaterInfo()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK10MarioActor12selectActionEPKc",
+          "name": "MarioActor::selectAction(char const*) const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK10MarioActor13isRequestRushEv",
+          "name": "MarioActor::isRequestRush() const",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK10MarioActor16getGravityVectorEv",
+          "name": "MarioActor::getGravityVector() const",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK10MarioActor19isRequestSpinJump2PEv",
+          "name": "MarioActor::isRequestSpinJump2P() const",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK10MarioActor20selectWaterInOutRushEPK9HitSensor",
+          "name": "MarioActor::selectWaterInOutRush(HitSensor const*) const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK10MarioActor21selectRecoverFlyMeterEPK9HitSensor",
+          "name": "MarioActor::selectRecoverFlyMeter(HitSensor const*) const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK10MarioActor22selectWaterInOutEffectEPKc",
+          "name": "MarioActor::selectWaterInOutEffect(char const*) const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK11MarioModule13getTmpPolygonEv",
+          "name": "MarioModule::getTmpPolygon() const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK11MarioModule14isAnimationRunEPKc",
+          "name": "MarioModule::isAnimationRun(char const*) const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK11MarioModule20isAnimationTerminateEPKc",
+          "name": "MarioModule::isAnimationTerminate(char const*) const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK11MarioModule9isStickOnEv",
+          "name": "MarioModule::isStickOn() const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK12XanimePlayer23getCurrentAnimationNameEv",
+          "name": "XanimePlayer::getCurrentAnimationName() const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK13MarioAnimator15isAnimationStopEv",
+          "name": "MarioAnimator::isAnimationStop() const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK5Mario10isDamagingEv",
+          "name": "Mario::isDamaging() const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK5Mario15isForceStopRushEv",
+          "name": "Mario::isForceStopRush() const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK5Mario16getCurrentStatusEv",
+          "name": "Mario::getCurrentStatus() const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK5Mario19getDamageAfterTimerEv",
+          "name": "Mario::getDamageAfterTimer() const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK5Mario24isOnimasuBinderPressSkipEv",
+          "name": "Mario::isOnimasuBinderPressSkip() const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK6Binder8getPlaneEi",
+          "name": "Binder::getPlane(int) const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK8JUTVideo13getRenderModeEv",
+          "name": "JUTVideo::getRenderMode() const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK8Triangle10getBaseMtxEv",
+          "name": "Triangle::getBaseMtx() const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK8Triangle14getPrevBaseMtxEv",
+          "name": "Triangle::getPrevBaseMtx() const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK8Triangle7isValidEv",
+          "name": "Triangle::isValid() const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK9LiveActor7isNerveEPK5Nerve",
+          "name": "LiveActor::isNerve(Nerve const*) const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZdaPvm",
+          "name": "operator delete[](void*, unsigned long)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_Znam",
+          "name": "operator new[](unsigned long)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_Znami",
+          "name": "operator new[](unsigned long, int)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        }
+      ],
+      "local_graph_external_count": 321
+    },
+    {
+      "root": "_ZN10MarioActor5init2ERKN9JGeometry5TVec3IfEES4_i",
+      "name": "MarioActor::init2(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, int)",
+      "direct_dependencies": [
+        {
+          "symbol": "_ZN10MarioActor10initEffectEv",
+          "name": "MarioActor::initEffect()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor12binderFilterEPK8Triangle",
+          "name": "MarioActor::binderFilter(Triangle const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor12setupSensorsEv",
+          "name": "MarioActor::setupSensors()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor13calcCenterPosEv",
+          "name": "MarioActor::calcCenterPos()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor16initActionMatrixEv",
+          "name": "MarioActor::initActionMatrix()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor16initDrawAndModelEv",
+          "name": "MarioActor::initDrawAndModel()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor18updateBaseScaleMtxEv",
+          "name": "MarioActor::updateBaseScaleMtx()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor20initMorphStringTableEv",
+          "name": "MarioActor::initMorphStringTable()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor20updateTransForCameraEv",
+          "name": "MarioActor::updateTransForCamera()",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor9initPartsEv",
+          "name": "MarioActor::initParts()",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioConst11changeTableEj",
+          "name": "MarioConst::changeTable(unsigned int)",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioConstC1Ev",
+          "name": "MarioConst::MarioConst()",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN11GravityInfoC1Ev",
+          "name": "GravityInfo::GravityInfo()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN11MarioEffectC1EP10MarioActor",
+          "name": "MarioEffect::MarioEffect(MarioActor*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN11MarioHolder13setMarioActorEP10MarioActor",
+          "name": "MarioHolder::setMarioActor(MarioActor*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN11MarioModule15changeAnimationEPKcS1_",
+          "name": "MarioModule::changeAnimation(char const*, char const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN11MarioModule22changeAnimationNonStopEPKc",
+          "name": "MarioModule::changeAnimationNonStop(char const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN13FixedPositionC1EPK9LiveActorPKcRKN9JGeometry5TVec3IfEES9_",
+          "name": "FixedPosition::FixedPosition(LiveActor const*, char const*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN13MarioAnimatorC1EP10MarioActor",
+          "name": "MarioAnimator::MarioAnimator(MarioActor*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN13NrvMarioActor17MarioActorNrvWait9sInstanceE",
+          "name": "NrvMarioActor::MarioActorNrvWait::sInstance",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN14MarioMessengerC1EP9HitSensor",
+          "name": "MarioMessenger::MarioMessenger(HitSensor*)",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN15CollisionShadowC1Eff",
+          "name": "CollisionShadow::CollisionShadow(float, float)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR11getJointNumEPK9LiveActor",
+          "name": "MR::getJointNum(LiveActor const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR13getTexFromArcEPKcPK9LiveActor",
+          "name": "MR::getTexFromArc(char const*, LiveActor const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR13isPlayerLuigiEv",
+          "name": "MR::isPlayerLuigi()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR14connectToSceneEP7NameObjiiii",
+          "name": "MR::connectToScene(NameObj*, int, int, int, int)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR14getMarioHolderEv",
+          "name": "MR::getMarioHolder()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR18invalidateClippingEP9LiveActor",
+          "name": "MR::invalidateClipping(LiveActor*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR18setBinderOffsetVecEP9LiveActorPKN9JGeometry5TVec3IfEEb",
+          "name": "MR::setBinderOffsetVec(LiveActor*, JGeometry::TVec3<float> const*, bool)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR19getFrameBufferWidthEv",
+          "name": "MR::getFrameBufferWidth()",
+          "providers": [
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR22declareBlackHoleCameraEPKc",
+          "name": "MR::declareBlackHoleCamera(char const*)",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR22initLightCtrlForPlayerEP9LiveActor",
+          "name": "MR::initLightCtrlForPlayer(LiveActor*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR24declareGlobalEventCameraEPKc",
+          "name": "MR::declareGlobalEventCamera(char const*)",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR27setGameCameraTargetToPlayerEv",
+          "name": "MR::setGameCameraTargetToPlayer()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR28declareGlobalEventCameraDeadEPKcfii",
+          "name": "MR::declareGlobalEventCameraDead(char const*, float, int, int)",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR29declareGlobalEventCameraAbyssEPKc",
+          "name": "MR::declareGlobalEventCameraAbyss(char const*)",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR30declareEventCameraProgrammableEPKc",
+          "name": "MR::declareEventCameraProgrammable(char const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MRL29createTriangleFilterDelegatorI10MarioActorEEP23TriangleFilterDelegatorIT_EPS3_MS3_FbPK8TriangleE",
+          "name": "TriangleFilterDelegator<MarioActor>* MR::createTriangleFilterDelegator<MarioActor>(MarioActor*, bool (MarioActor::*)(Triangle const*))",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario14initAfterConstEv",
+          "name": "Mario::initAfterConst()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario28setHeadAndFrontVecFromRotateERKN9JGeometry5TVec3IfEE",
+          "name": "Mario::setHeadAndFrontVecFromRotate(JGeometry::TVec3<float> const&)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN6Binder17setTriangleFilterEP18TriangleFilterBase",
+          "name": "Binder::setTriangleFilter(TriangleFilterBase*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN9FootPrint10setTextureEP7ResTIMG",
+          "name": "FootPrint::setTexture(ResTIMG*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN9FootPrintC1EPKcii",
+          "name": "FootPrint::FootPrint(char const*, int, int)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN9JGeometry5TVec3IfE3setIfEEvRKNS0_IT_EE",
+          "name": "void JGeometry::TVec3<float>::set<float>(JGeometry::TVec3<float> const&)",
+          "providers": [
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN9JGeometry5TVec3IfE3setIfEEvT_S3_S3_",
+          "name": "void JGeometry::TVec3<float>::set<float>(float, float, float)",
+          "providers": [
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN9JGeometry5TVec3IfE4zeroEv",
+          "name": "JGeometry::TVec3<float>::zero()",
+          "providers": [
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN9JGeometry5TVec3IfEC1Efff",
+          "name": "JGeometry::TVec3<float>::TVec3(float, float, float)",
+          "providers": [
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN9JGeometry5TVec3IfEC1Ev",
+          "name": "JGeometry::TVec3<float>::TVec3()",
+          "providers": [
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN9LiveActor10initBinderEffj",
+          "name": "LiveActor::initBinder(float, float, unsigned int)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN9LiveActor19addToSoundObjHolderEv",
+          "name": "LiveActor::addToSoundObjHolder()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN9LiveActor9initNerveEPK5Nerve",
+          "name": "LiveActor::initNerve(Nerve const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN9LiveActor9initSoundEib",
+          "name": "LiveActor::initSound(int, bool)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK9JGeometry5TVec3IfEngEv",
+          "name": "JGeometry::TVec3<float>::operator-() const",
+          "providers": [
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK9LiveActor9getSensorEPKc",
+          "name": "LiveActor::getSensor(char const*) const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZdaPvm",
+          "name": "operator delete[](void*, unsigned long)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZdlPvm",
+          "name": "operator delete(void*, unsigned long)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_Znam",
+          "name": "operator new[](unsigned long)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_Znami",
+          "name": "operator new[](unsigned long, int)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_Znwm",
+          "name": "operator new(unsigned long)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "__gxx_personality_v0",
+          "name": "__gxx_personality_v0",
+          "providers": []
+        },
+        {
+          "symbol": "gIsLuigi",
+          "name": "gIsLuigi",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        }
+      ],
+      "direct_project_gaps": [
+        {
+          "symbol": "_ZN10MarioActor12setupSensorsEv",
+          "name": "MarioActor::setupSensors()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor20initMorphStringTableEv",
+          "name": "MarioActor::initMorphStringTable()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN14MarioMessengerC1EP9HitSensor",
+          "name": "MarioMessenger::MarioMessenger(HitSensor*)",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR22declareBlackHoleCameraEPKc",
+          "name": "MR::declareBlackHoleCamera(char const*)",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR24declareGlobalEventCameraEPKc",
+          "name": "MR::declareGlobalEventCamera(char const*)",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR27setGameCameraTargetToPlayerEv",
+          "name": "MR::setGameCameraTargetToPlayer()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR28declareGlobalEventCameraDeadEPKcfii",
+          "name": "MR::declareGlobalEventCameraDead(char const*, float, int, int)",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR29declareGlobalEventCameraAbyssEPKc",
+          "name": "MR::declareGlobalEventCameraAbyss(char const*)",
+          "providers": []
+        }
+      ],
+      "new_external_project_dependencies": [
+        {
+          "symbol": "_ZN10MarioActor10initEffectEv",
+          "name": "MarioActor::initEffect()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor12setupSensorsEv",
+          "name": "MarioActor::setupSensors()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor16initActionMatrixEv",
+          "name": "MarioActor::initActionMatrix()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor20initMorphStringTableEv",
+          "name": "MarioActor::initMorphStringTable()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor20updateTransForCameraEv",
+          "name": "MarioActor::updateTransForCamera()",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor9initPartsEv",
+          "name": "MarioActor::initParts()",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN11MarioEffectC1EP10MarioActor",
+          "name": "MarioEffect::MarioEffect(MarioActor*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN11MarioModule15changeAnimationEPKcS1_",
+          "name": "MarioModule::changeAnimation(char const*, char const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN11MarioModule22changeAnimationNonStopEPKc",
+          "name": "MarioModule::changeAnimationNonStop(char const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN13FixedPositionC1EPK9LiveActorPKcRKN9JGeometry5TVec3IfEES9_",
+          "name": "FixedPosition::FixedPosition(LiveActor const*, char const*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN14MarioMessengerC1EP9HitSensor",
+          "name": "MarioMessenger::MarioMessenger(HitSensor*)",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN15CollisionShadowC1Eff",
+          "name": "CollisionShadow::CollisionShadow(float, float)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR11getJointNumEPK9LiveActor",
+          "name": "MR::getJointNum(LiveActor const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR12copyJointPosEPK9LiveActorPKcPN9JGeometry5TVec3IfEE",
+          "name": "MR::copyJointPos(LiveActor const*, char const*, JGeometry::TVec3<float>*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR13getTexFromArcEPKcPK9LiveActor",
+          "name": "MR::getTexFromArc(char const*, LiveActor const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR13isPlayerLuigiEv",
+          "name": "MR::isPlayerLuigi()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR22declareBlackHoleCameraEPKc",
+          "name": "MR::declareBlackHoleCamera(char const*)",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR24declareGlobalEventCameraEPKc",
+          "name": "MR::declareGlobalEventCamera(char const*)",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR27setGameCameraTargetToPlayerEv",
+          "name": "MR::setGameCameraTargetToPlayer()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR28declareGlobalEventCameraDeadEPKcfii",
+          "name": "MR::declareGlobalEventCameraDead(char const*, float, int, int)",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR29declareGlobalEventCameraAbyssEPKc",
+          "name": "MR::declareGlobalEventCameraAbyss(char const*)",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR30declareEventCameraProgrammableEPKc",
+          "name": "MR::declareEventCameraProgrammable(char const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN8JUTVideo10getManagerEv",
+          "name": "JUTVideo::getManager()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN9FootPrint10setTextureEP7ResTIMG",
+          "name": "FootPrint::setTexture(ResTIMG*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN9FootPrintC1EPKcii",
+          "name": "FootPrint::FootPrint(char const*, int, int)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN9LiveActor19addToSoundObjHolderEv",
+          "name": "LiveActor::addToSoundObjHolder()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN9LiveActor9initSoundEib",
+          "name": "LiveActor::initSound(int, bool)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK10MarioActor13getGravityVecEv",
+          "name": "MarioActor::getGravityVec() const",
+          "providers": [
+            "libsmg-pc-game.a",
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK5Mario10isSwimmingEv",
+          "name": "Mario::isSwimming() const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK5Mario14isStatusActiveEj",
+          "name": "Mario::isStatusActive(unsigned int) const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK8JUTVideo13getRenderModeEv",
+          "name": "JUTVideo::getRenderMode() const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK9LiveActor9getSensorEPKc",
+          "name": "LiveActor::getSensor(char const*) const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZdaPvm",
+          "name": "operator delete[](void*, unsigned long)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_Znam",
+          "name": "operator new[](unsigned long)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_Znami",
+          "name": "operator new[](unsigned long, int)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        }
+      ],
+      "local_graph_external_count": 64
+    },
+    {
+      "root": "_ZN10MarioActor18initAfterPlacementEv",
+      "name": "MarioActor::initAfterPlacement()",
+      "direct_dependencies": [
+        {
+          "symbol": "_ZN10MarioActor13calcCenterPosEv",
+          "name": "MarioActor::calcCenterPos()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor16calcBaseFrontVecERKN9JGeometry5TVec3IfEE",
+          "name": "MarioActor::calcBaseFrontVec(JGeometry::TVec3<float> const&)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor16updateCameraInfoEv",
+          "name": "MarioActor::updateCameraInfo()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor16updateGravityVecEbb",
+          "name": "MarioActor::updateGravityVec(bool, bool)",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR19updateHitSensorsAllEP9LiveActor",
+          "name": "MR::updateHitSensorsAll(LiveActor*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK10MarioActor16getGravityVectorEv",
+          "name": "MarioActor::getGravityVector() const",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK9JGeometry5TVec3IfEmlEf",
+          "name": "JGeometry::TVec3<float>::operator*(float) const",
+          "providers": [
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK9JGeometry5TVec3IfEngEv",
+          "name": "JGeometry::TVec3<float>::operator-() const",
+          "providers": [
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        }
+      ],
+      "direct_project_gaps": [],
+      "new_external_project_dependencies": [
+        {
+          "symbol": "_ZN10MarioActor16updateGravityVecEbb",
+          "name": "MarioActor::updateGravityVec(bool, bool)",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor18stopSpinTicoEffectEb",
+          "name": "MarioActor::stopSpinTicoEffect(bool)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN11MarioModule29changeAnimationInterpoleFrameEj",
+          "name": "MarioModule::changeAnimationInterpoleFrame(unsigned int)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR10getCamXdirEv",
+          "name": "MR::getCamXdir()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR10getCamYdirEv",
+          "name": "MR::getCamYdir()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR10getCamZdirEv",
+          "name": "MR::getCamZdir()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR12copyJointPosEPK9LiveActorPKcPN9JGeometry5TVec3IfEE",
+          "name": "MR::copyJointPos(LiveActor const*, char const*, JGeometry::TVec3<float>*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR12diffAngleAbsERKN9JGeometry5TVec3IfEES4_",
+          "name": "MR::diffAngleAbs(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR19updateHitSensorsAllEP9LiveActor",
+          "name": "MR::updateHitSensorsAll(LiveActor*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR25makeAxisAndCosignVecToVecEPN9JGeometry5TVec3IfEEPfRKS2_S6_",
+          "name": "MR::makeAxisAndCosignVecToVec(JGeometry::TVec3<float>*, float*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR9getCamPosEv",
+          "name": "MR::getCamPos()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5JMath14sAsinAcosTableE",
+          "name": "JMath::sAsinAcosTable",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK10MarioActor13getGravityVecEv",
+          "name": "MarioActor::getGravityVec() const",
+          "providers": [
+            "libsmg-pc-game.a",
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK10MarioActor16getGravityVectorEv",
+          "name": "MarioActor::getGravityVector() const",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK5Mario10isSwimmingEv",
+          "name": "Mario::isSwimming() const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK5Mario14isStatusActiveEj",
+          "name": "Mario::isStatusActive(unsigned int) const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        }
+      ],
+      "local_graph_external_count": 24
+    },
+    {
+      "root": "_ZN10MarioActor8movementEv",
+      "name": "MarioActor::movement()",
+      "direct_dependencies": [
+        {
+          "symbol": "C_MTXCopy",
+          "name": "C_MTXCopy",
+          "providers": [
+            "libaurora-mtx.a"
+          ]
+        },
+        {
+          "symbol": "C_MTXMultVec",
+          "name": "C_MTXMultVec",
+          "providers": [
+            "libaurora-mtx.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor16updateCameraInfoEv",
+          "name": "MarioActor::updateCameraInfo()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor18calcAnimInMovementEv",
+          "name": "MarioActor::calcAnimInMovement()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor20updateTransForCameraEv",
+          "name": "MarioActor::updateTransForCamera()",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor8setPressEhi",
+          "name": "MarioActor::setPress(unsigned char, int)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN11MarioModule15changeAnimationEPKcS1_",
+          "name": "MarioModule::changeAnimation(char const*, char const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN13MarioAnimator6updateEv",
+          "name": "MarioAnimator::update()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR10isNearZeroERKN9JGeometry5TVec3IfEEf",
+          "name": "MR::isNearZero(JGeometry::TVec3<float> const&, float)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR10isNearZeroEff",
+          "name": "MR::isNearZero(float, float)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR14vecKillElementERKN9JGeometry5TVec3IfEES4_PS2_",
+          "name": "MR::vecKillElement(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, JGeometry::TVec3<float>*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR15normalizeOrZeroEPN9JGeometry5TVec3IfEE",
+          "name": "MR::normalizeOrZero(JGeometry::TVec3<float>*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR16getCameraViewMtxEv",
+          "name": "MR::getCameraViewMtx()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR16isSensorPressObjEPK9HitSensor",
+          "name": "MR::isSensorPressObj(HitSensor const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR18isWallCodeNoActionEPK8Triangle",
+          "name": "MR::isWallCodeNoAction(Triangle const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR19isOppositeDirectionERKN9JGeometry5TVec3IfEES4_f",
+          "name": "MR::isOppositeDirection(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, float)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR23getFirstPolyOnLineToMapEPN9JGeometry5TVec3IfEEP8TriangleRKS2_S7_",
+          "name": "MR::getFirstPolyOnLineToMap(JGeometry::TVec3<float>*, Triangle*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario16updateGroundInfoEv",
+          "name": "Mario::updateGroundInfo()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario22recordRelativePositionEv",
+          "name": "Mario::recordRelativePosition()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario4pushERKN9JGeometry5TVec3IfEE",
+          "name": "Mario::push(JGeometry::TVec3<float> const&)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario8stopJumpEv",
+          "name": "Mario::stopJump()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario8stopWalkEv",
+          "name": "Mario::stopWalk()",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN8TriangleaSERKS_",
+          "name": "Triangle::operator=(Triangle const&)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN9JGeometry10SMatrix34CIfE8toMtxPtrEv",
+          "name": "JGeometry::SMatrix34C<float>::toMtxPtr()",
+          "providers": [
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN9JGeometry5TVec3IfE4zeroEv",
+          "name": "JGeometry::TVec3<float>::zero()",
+          "providers": [
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN9JGeometry5TVec3IfE9setLengthEf",
+          "name": "JGeometry::TVec3<float>::setLength(float)",
+          "providers": [
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN9JGeometry5TVec3IfEC1Ev",
+          "name": "JGeometry::TVec3<float>::TVec3()",
+          "providers": [
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN9JGeometry5TVec3IfEmIERKS1_",
+          "name": "JGeometry::TVec3<float>::operator-=(JGeometry::TVec3<float> const&)",
+          "providers": [
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN9JGeometry5TVec3IfEpLERKS1_",
+          "name": "JGeometry::TVec3<float>::operator+=(JGeometry::TVec3<float> const&)",
+          "providers": [
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN9LiveActor8movementEv",
+          "name": "LiveActor::movement()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK10MarioActor13getDrawStatesEv",
+          "name": "MarioActor::getDrawStates() const",
+          "providers": [
+            "libsmg-pc-game.a",
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK10MarioActor13getGravityVecEv",
+          "name": "MarioActor::getGravityVec() const",
+          "providers": [
+            "libsmg-pc-game.a",
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK10MarioActor17getMovementStatesEv",
+          "name": "MarioActor::getMovementStates() const",
+          "providers": [
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK10MarioActor17getPrevDrawStatesEv",
+          "name": "MarioActor::getPrevDrawStates() const",
+          "providers": []
+        },
+        {
+          "symbol": "_ZNK11MarioModule13getTmpPolygonEv",
+          "name": "MarioModule::getTmpPolygon() const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK11MarioModule14isAnimationRunEPKc",
+          "name": "MarioModule::isAnimationRun(char const*) const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK5Mario17getMovementStatesEv",
+          "name": "Mario::getMovementStates() const",
+          "providers": [
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK5Mario24isOnimasuBinderPressSkipEv",
+          "name": "Mario::isOnimasuBinderPressSkip() const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK6Binder8getPlaneEi",
+          "name": "Binder::getPlane(int) const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK8Triangle7isValidEv",
+          "name": "Triangle::isValid() const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK8Triangle9getNormalEi",
+          "name": "Triangle::getNormal(int) const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK9JGeometry10SMatrix34CIfEcvPA4_KfEv",
+          "name": "JGeometry::SMatrix34C<float>::operator float const (*) [4]() const",
+          "providers": [
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK9JGeometry5TVec3IfE3dotERKS1_",
+          "name": "JGeometry::TVec3<float>::dot(JGeometry::TVec3<float> const&) const",
+          "providers": [
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK9JGeometry5TVec3IfE6lengthEv",
+          "name": "JGeometry::TVec3<float>::length() const",
+          "providers": [
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK9JGeometry5TVec3IfEmiERKS1_",
+          "name": "JGeometry::TVec3<float>::operator-(JGeometry::TVec3<float> const&) const",
+          "providers": [
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK9JGeometry5TVec3IfEmlEf",
+          "name": "JGeometry::TVec3<float>::operator*(float) const",
+          "providers": [
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK9JGeometry5TVec3IfEngEv",
+          "name": "JGeometry::TVec3<float>::operator-() const",
+          "providers": [
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-game.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a",
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        }
+      ],
+      "direct_project_gaps": [],
+      "new_external_project_dependencies": [
+        {
+          "symbol": "_ZN10MarioActor11updateBlinkEv",
+          "name": "MarioActor::updateBlink()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor14calcSpinEffectEv",
+          "name": "MarioActor::calcSpinEffect()",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor18stopSpinTicoEffectEb",
+          "name": "MarioActor::stopSpinTicoEffect(bool)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor20updateTransForCameraEv",
+          "name": "MarioActor::updateTransForCamera()",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN11MarioModule11startPadVibEPKc",
+          "name": "MarioModule::startPadVib(char const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN11MarioModule15changeAnimationEPKcS1_",
+          "name": "MarioModule::changeAnimation(char const*, char const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN11MarioModule29changeAnimationInterpoleFrameEj",
+          "name": "MarioModule::changeAnimationInterpoleFrame(unsigned int)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN11MarioModule9playSoundEPKci",
+          "name": "MarioModule::playSound(char const*, int)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN13MarioAnimator8setSpeedEf",
+          "name": "MarioAnimator::setSpeed(float)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN15CameraTargetArgC1EP15CameraTargetObjP15CameraTargetMtxPK9LiveActorP10MarioActor",
+          "name": "CameraTargetArg::CameraTargetArg(CameraTargetObj*, CameraTargetMtx*, LiveActor const*, MarioActor*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR10getCamXdirEv",
+          "name": "MR::getCamXdir()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR10getCamYdirEv",
+          "name": "MR::getCamYdir()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR10getCamZdirEv",
+          "name": "MR::getCamZdir()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR10isNearZeroERKN9JGeometry5TVec3IfEEf",
+          "name": "MR::isNearZero(JGeometry::TVec3<float> const&, float)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR10isNearZeroEff",
+          "name": "MR::isNearZero(float, float)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR11getBrkFrameEPK9LiveActor",
+          "name": "MR::getBrkFrame(LiveActor const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR11setBrkFrameEPK9LiveActorf",
+          "name": "MR::setBrkFrame(LiveActor const*, float)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR12diffAngleAbsERKN9JGeometry5TVec3IfEES4_",
+          "name": "MR::diffAngleAbs(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR14vecKillElementERKN9JGeometry5TVec3IfEES4_PS2_",
+          "name": "MR::vecKillElement(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, JGeometry::TVec3<float>*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR15normalizeOrZeroEPN9JGeometry5TVec3IfEE",
+          "name": "MR::normalizeOrZero(JGeometry::TVec3<float>*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR16getCameraViewMtxEv",
+          "name": "MR::getCameraViewMtx()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR16isSensorPressObjEPK9HitSensor",
+          "name": "MR::isSensorPressObj(HitSensor const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR16releaseAnimFrameEP9LiveActor",
+          "name": "MR::releaseAnimFrame(LiveActor*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR18isWallCodeNoActionEPK8Triangle",
+          "name": "MR::isWallCodeNoAction(Triangle const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR19isOppositeDirectionERKN9JGeometry5TVec3IfEES4_f",
+          "name": "MR::isOppositeDirection(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, float)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR20endGlobalEventCameraEPKcib",
+          "name": "MR::endGlobalEventCamera(char const*, int, bool)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR20forceDeleteEffectAllEP9LiveActor",
+          "name": "MR::forceDeleteEffectAll(LiveActor*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR22explainLifeUpIfAtFirstEv",
+          "name": "MR::explainLifeUpIfAtFirst()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR22startGlobalEventCameraEPKcRK15CameraTargetArgi",
+          "name": "MR::startGlobalEventCamera(char const*, CameraTargetArg const&, int)",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR22zoomInTargetGameCameraEv",
+          "name": "MR::zoomInTargetGameCamera()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR23getFirstPolyOnLineToMapEPN9JGeometry5TVec3IfEEP8TriangleRKS2_S7_",
+          "name": "MR::getFirstPolyOnLineToMap(JGeometry::TVec3<float>*, Triangle*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR23zoomOutTargetGameCameraEv",
+          "name": "MR::zoomOutTargetGameCamera()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR24explainBeeMarioIfAtFirstEv",
+          "name": "MR::explainBeeMarioIfAtFirst()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR24explainIceMarioIfAtFirstEv",
+          "name": "MR::explainIceMarioIfAtFirst()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR25explainFireMarioIfAtFirstEv",
+          "name": "MR::explainFireMarioIfAtFirst()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR26setProgrammableCameraParamEPKcRKN9JGeometry5TVec3IfEES6_S6_b",
+          "name": "MR::setProgrammableCameraParam(char const*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, bool)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR27explainFlyingMarioIfAtFirstEv",
+          "name": "MR::explainFlyingMarioIfAtFirst()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR27explainHopperMarioIfAtFirstEv",
+          "name": "MR::explainHopperMarioIfAtFirst()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR27explainTeresaMarioIfAtFirstEv",
+          "name": "MR::explainTeresaMarioIfAtFirst()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR31explainInvincibleMarioIfAtFirstEv",
+          "name": "MR::explainInvincibleMarioIfAtFirst()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR32isOnGameEventFlagBeeMarioAtFirstEv",
+          "name": "MR::isOnGameEventFlagBeeMarioAtFirst()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR32isOnGameEventFlagIceMarioAtFirstEv",
+          "name": "MR::isOnGameEventFlagIceMarioAtFirst()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR33isOnGameEventFlagFireMarioAtFirstEv",
+          "name": "MR::isOnGameEventFlagFireMarioAtFirst()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR34startStarPointerModeDemoMarioDeathEPv",
+          "name": "MR::startStarPointerModeDemoMarioDeath(void*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR35isOnGameEventFlagFlyingMarioAtFirstEv",
+          "name": "MR::isOnGameEventFlagFlyingMarioAtFirst()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR35isOnGameEventFlagHopperMarioAtFirstEv",
+          "name": "MR::isOnGameEventFlagHopperMarioAtFirst()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR35isOnGameEventFlagTeresaMarioAtFirstEv",
+          "name": "MR::isOnGameEventFlagTeresaMarioAtFirst()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR7endDemoEP7NameObjPKc",
+          "name": "MR::endDemo(NameObj*, char const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR9getCamPosEv",
+          "name": "MR::getCamPos()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario11closeStatusEP10MarioState",
+          "name": "Mario::closeStatus(MarioState*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario14calcDistToCeilEb",
+          "name": "Mario::calcDistToCeil(bool)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario16updateGroundInfoEv",
+          "name": "Mario::updateGroundInfo()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario17setFrontVecKeepUpERKN9JGeometry5TVec3IfEE",
+          "name": "Mario::setFrontVecKeepUp(JGeometry::TVec3<float> const&)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario21updateMorphResetTimerEv",
+          "name": "Mario::updateMorphResetTimer()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario22recordRelativePositionEv",
+          "name": "Mario::recordRelativePosition()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario4pushERKN9JGeometry5TVec3IfEE",
+          "name": "Mario::push(JGeometry::TVec3<float> const&)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario8stopJumpEv",
+          "name": "Mario::stopJump()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario8stopWalkEv",
+          "name": "Mario::stopWalk()",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK10MarioActor13getGravityVecEv",
+          "name": "MarioActor::getGravityVec() const",
+          "providers": [
+            "libsmg-pc-game.a",
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK11MarioModule13getTmpPolygonEv",
+          "name": "MarioModule::getTmpPolygon() const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK11MarioModule14isAnimationRunEPKc",
+          "name": "MarioModule::isAnimationRun(char const*) const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK5Mario10isDamagingEv",
+          "name": "Mario::isDamaging() const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK5Mario14isStatusActiveEj",
+          "name": "Mario::isStatusActive(unsigned int) const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK5Mario19getDamageAfterTimerEv",
+          "name": "Mario::getDamageAfterTimer() const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK5Mario24isOnimasuBinderPressSkipEv",
+          "name": "Mario::isOnimasuBinderPressSkip() const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK5Nerve12executeOnEndEP5Spine",
+          "name": "Nerve::executeOnEnd(Spine*) const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK6Binder8getPlaneEi",
+          "name": "Binder::getPlane(int) const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK8Triangle7isValidEv",
+          "name": "Triangle::isValid() const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        }
+      ],
+      "local_graph_external_count": 88
+    },
+    {
+      "root": "_ZN10MarioActor7controlEv",
+      "name": "MarioActor::control()",
+      "direct_dependencies": [
+        {
+          "symbol": "_ZN10MarioActor10playEffectEPKc",
+          "name": "MarioActor::playEffect(char const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor13changeMaxLifeEi",
+          "name": "MarioActor::changeMaxLife(int)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor21changeTeresaAnimationEPKci",
+          "name": "MarioActor::changeTeresaAnimation(char const*, int)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor8control2Ev",
+          "name": "MarioActor::control2()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN11MarioModule11startPadVibEPKc",
+          "name": "MarioModule::startPadVib(char const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR13startSystemSEEPKcii",
+          "name": "MR::startSystemSE(char const*, int, int)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR13stopAnimFrameEP9LiveActor",
+          "name": "MR::stopAnimFrame(LiveActor*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR17requestMovementOnEP7NameObj",
+          "name": "MR::requestMovementOn(NameObj*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR21requestPowerUpHPMeterEv",
+          "name": "MR::requestPowerUpHPMeter()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR30tryStartDemoWithoutCinemaFrameEP9LiveActorPKc",
+          "name": "MR::tryStartDemoWithoutCinemaFrame(LiveActor*, char const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        }
+      ],
+      "direct_project_gaps": [
+        {
+          "symbol": "_ZN2MR21requestPowerUpHPMeterEv",
+          "name": "MR::requestPowerUpHPMeter()",
+          "providers": []
+        }
+      ],
+      "new_external_project_dependencies": [
+        {
+          "symbol": "_ZN10MarioActor10playEffectEPKc",
+          "name": "MarioActor::playEffect(char const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor11initForJumpEv",
+          "name": "MarioActor::initForJump()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor11tryCoinPullEv",
+          "name": "MarioActor::tryCoinPull()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor11tryJumpRushEv",
+          "name": "MarioActor::tryJumpRush()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor12playEffectRTEPKcRKN9JGeometry5TVec3IfEES6_",
+          "name": "MarioActor::playEffectRT(char const*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor12trySpinPunchEv",
+          "name": "MarioActor::trySpinPunch()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor12updateEffectEv",
+          "name": "MarioActor::updateEffect()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor13getStickValueEPfS0_",
+          "name": "MarioActor::getStickValue(float*, float*)",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor13shootFireBallEv",
+          "name": "MarioActor::shootFireBall()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor13tryRushInRushEv",
+          "name": "MarioActor::tryRushInRush()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor13updateTornadoEv",
+          "name": "MarioActor::updateTornado()",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor14doFreezeAttackEv",
+          "name": "MarioActor::doFreezeAttack()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor14updateThrowingEv",
+          "name": "MarioActor::updateThrowing()",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor15stopEffectForceEPKc",
+          "name": "MarioActor::stopEffectForce(char const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor15tryStandardRushEv",
+          "name": "MarioActor::tryStandardRush()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor15updateFairyStarEv",
+          "name": "MarioActor::updateFairyStar()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor15updateForCameraEv",
+          "name": "MarioActor::updateForCamera()",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor16resetSensorCountEv",
+          "name": "MarioActor::resetSensorCount()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor16updateGravityVecEbb",
+          "name": "MarioActor::updateGravityVec(bool, bool)",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor16updatePlayerModeEv",
+          "name": "MarioActor::updatePlayerMode()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor17isEnableSpinPunchEv",
+          "name": "MarioActor::isEnableSpinPunch()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor17tryCoinPullInRushEv",
+          "name": "MarioActor::tryCoinPullInRush()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor17updateSearchLightEv",
+          "name": "MarioActor::updateSearchLight()",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor17updateThrowVectorEv",
+          "name": "MarioActor::updateThrowVector()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor18stopSpinTicoEffectEb",
+          "name": "MarioActor::stopSpinTicoEffect(bool)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor19updateActionTriggerEv",
+          "name": "MarioActor::updateActionTrigger()",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor20checkPriorRushTargetEv",
+          "name": "MarioActor::checkPriorRushTarget()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor20tryReleaseBombTeresaEv",
+          "name": "MarioActor::tryReleaseBombTeresa()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor20updateTakingPositionEv",
+          "name": "MarioActor::updateTakingPosition()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor21changeTeresaAnimationEPKci",
+          "name": "MarioActor::changeTeresaAnimation(char const*, int)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor21emitEffectWaterColumnERKN9JGeometry5TVec3IfEES4_",
+          "name": "MarioActor::emitEffectWaterColumn(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor22updateBeeWingAnimationEv",
+          "name": "MarioActor::updateBeeWingAnimation()",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor25updateControllerSwingLeftEv",
+          "name": "MarioActor::updateControllerSwingLeft()",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor7endRushEPK11RushEndInfo",
+          "name": "MarioActor::endRush(RushEndInfo const*)",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor8bodyClapEv",
+          "name": "MarioActor::bodyClap()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor8setBlinkEPKc",
+          "name": "MarioActor::setBlink(char const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor8tryThrowEv",
+          "name": "MarioActor::tryThrow()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN10MarioActor8update2DEv",
+          "name": "MarioActor::update2D()",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN10MarioActor9lockOnDPDEv",
+          "name": "MarioActor::lockOnDPD()",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN11MarioModule11startPadVibEPKc",
+          "name": "MarioModule::startPadVib(char const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN11MarioModule11startPadVibEj",
+          "name": "MarioModule::startPadVib(unsigned int)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN11MarioModule13stopAnimationEPKcS1_",
+          "name": "MarioModule::stopAnimation(char const*, char const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN11MarioModule15changeAnimationEPKcS1_",
+          "name": "MarioModule::changeAnimation(char const*, char const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN11MarioModule18stopAnimationUpperEPKcS1_",
+          "name": "MarioModule::stopAnimationUpper(char const*, char const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN11MarioModule9playSoundEPKci",
+          "name": "MarioModule::playSound(char const*, int)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN11RushEndInfoC1EP9LiveActorjRKN9JGeometry5TVec3IfEEbj",
+          "name": "RushEndInfo::RushEndInfo(LiveActor*, unsigned int, JGeometry::TVec3<float> const&, bool, unsigned int)",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN12XanimePlayer20changeTrackAnimationEhPKc",
+          "name": "XanimePlayer::changeTrackAnimation(unsigned char, char const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN13MarioAnimator8setSpeedEf",
+          "name": "MarioAnimator::setSpeed(float)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN13MarioAnimator9setHomingEv",
+          "name": "MarioAnimator::setHoming()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN21GameSceneLayoutHolder24changeLifeMeterModeWaterEv",
+          "name": "GameSceneLayoutHolder::changeLifeMeterModeWater()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN21GameSceneLayoutHolder25changeLifeMeterModeGroundEv",
+          "name": "GameSceneLayoutHolder::changeLifeMeterModeGround()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR10isNearZeroERKN9JGeometry5TVec3IfEEf",
+          "name": "MR::isNearZero(JGeometry::TVec3<float> const&, float)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR10isNearZeroEff",
+          "name": "MR::isNearZero(float, float)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR13startSystemSEEPKcii",
+          "name": "MR::startSystemSE(char const*, int, int)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR13stopAnimFrameEP9LiveActor",
+          "name": "MR::stopAnimFrame(LiveActor*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR14makeMtxUpFrontEPN9JGeometry10TPosition3INS0_9TMatrix34INS0_10SMatrix34CIfEEEEEERKNS0_5TVec3IfEESB_",
+          "name": "MR::makeMtxUpFront(JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>>*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR15getWaterAreaObjEP9WaterInfoRKN9JGeometry5TVec3IfEE",
+          "name": "MR::getWaterAreaObj(WaterInfo*, JGeometry::TVec3<float> const&)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR15isSameDirectionERKN9JGeometry5TVec3IfEES4_f",
+          "name": "MR::isSameDirection(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, float)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR16makeRTFromMtxPtrEPN9JGeometry5TVec3IfEES3_PA4_fb",
+          "name": "MR::makeRTFromMtxPtr(JGeometry::TVec3<float>*, JGeometry::TVec3<float>*, float (*) [4], bool)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR17requestMovementOnEP7NameObj",
+          "name": "MR::requestMovementOn(NameObj*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR21requestPowerUpHPMeterEv",
+          "name": "MR::requestPowerUpHPMeter()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR22start2PJumpAssistSoundEv",
+          "name": "MR::start2PJumpAssistSound()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR24getGameSceneLayoutHolderEv",
+          "name": "MR::getGameSceneLayoutHolder()",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN2MR30tryStartDemoWithoutCinemaFrameEP9LiveActorPKc",
+          "name": "MR::tryStartDemoWithoutCinemaFrame(LiveActor*, char const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR6onBindEP9LiveActor",
+          "name": "MR::onBind(LiveActor*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR7offBindEP9LiveActor",
+          "name": "MR::offBind(LiveActor*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR9isInRangeEfff",
+          "name": "MR::isInRange(float, float, float)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN2MR9isSameMtxEPA4_fS1_",
+          "name": "MR::isSameMtx(float (*) [4], float (*) [4])",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario10inputStickEv",
+          "name": "Mario::inputStick()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario11checkGroundEv",
+          "name": "Mario::checkGround()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario11trySpinJumpEh",
+          "name": "Mario::trySpinJump(unsigned char)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario12tryWallPunchEv",
+          "name": "Mario::tryWallPunch()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario13forceExitSwimEv",
+          "name": "Mario::forceExitSwim()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario13powerAreaMoveEv",
+          "name": "Mario::powerAreaMove()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario13powerRailMoveEv",
+          "name": "Mario::powerRailMove()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario14updateCubeCodeEv",
+          "name": "Mario::updateCubeCode()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario15incAirWalkTimerEv",
+          "name": "Mario::incAirWalkTimer()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario15updateFloorCodeEv",
+          "name": "Mario::updateFloorCode()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario16checkEnforceMoveEv",
+          "name": "Mario::checkEnforceMove()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario16updateGroundInfoEv",
+          "name": "Mario::updateGroundInfo()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario18checkVerticalPressEb",
+          "name": "Mario::checkVerticalPress(bool)",
+          "providers": []
+        },
+        {
+          "symbol": "_ZN5Mario19decDamageAfterTimerEv",
+          "name": "Mario::decDamageAfterTimer()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario20startTeresaDisappearEv",
+          "name": "Mario::startTeresaDisappear()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario8startBasEPKcbff",
+          "name": "Mario::startBas(char const*, bool, float, float)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN5Mario8stopWalkEv",
+          "name": "Mario::stopWalk()",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZN9HitSensor14receiveMessageEjPS_",
+          "name": "HitSensor::receiveMessage(unsigned int, HitSensor*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN9LiveActor8setNerveEPK5Nerve",
+          "name": "LiveActor::setNerve(Nerve const*)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN9MarioSwim14checkWaterCubeEb",
+          "name": "MarioSwim::checkWaterCube(bool)",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZN9WaterInfoC1Ev",
+          "name": "WaterInfo::WaterInfo()",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK10MarioActor12selectActionEPKc",
+          "name": "MarioActor::selectAction(char const*) const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK10MarioActor13getGravityVecEv",
+          "name": "MarioActor::getGravityVec() const",
+          "providers": [
+            "libsmg-pc-game.a",
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK10MarioActor13isRequestRushEv",
+          "name": "MarioActor::isRequestRush() const",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK10MarioActor19isRequestSpinJump2PEv",
+          "name": "MarioActor::isRequestSpinJump2P() const",
+          "providers": [
+            "libsmg-pc-mario-gateway-walk-slice.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK10MarioActor20selectWaterInOutRushEPK9HitSensor",
+          "name": "MarioActor::selectWaterInOutRush(HitSensor const*) const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK10MarioActor21selectRecoverFlyMeterEPK9HitSensor",
+          "name": "MarioActor::selectRecoverFlyMeter(HitSensor const*) const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK10MarioActor22selectWaterInOutEffectEPKc",
+          "name": "MarioActor::selectWaterInOutEffect(char const*) const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK11MarioModule14isAnimationRunEPKc",
+          "name": "MarioModule::isAnimationRun(char const*) const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK11MarioModule20isAnimationTerminateEPKc",
+          "name": "MarioModule::isAnimationTerminate(char const*) const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK11MarioModule9isStickOnEv",
+          "name": "MarioModule::isStickOn() const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK12XanimePlayer23getCurrentAnimationNameEv",
+          "name": "XanimePlayer::getCurrentAnimationName() const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK13MarioAnimator15isAnimationStopEv",
+          "name": "MarioAnimator::isAnimationStop() const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK5Mario10isDamagingEv",
+          "name": "Mario::isDamaging() const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK5Mario10isSwimmingEv",
+          "name": "Mario::isSwimming() const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK5Mario14isStatusActiveEj",
+          "name": "Mario::isStatusActive(unsigned int) const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK5Mario15isForceStopRushEv",
+          "name": "Mario::isForceStopRush() const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK5Mario16getCurrentStatusEv",
+          "name": "Mario::getCurrentStatus() const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK5Mario9isWallingEv",
+          "name": "Mario::isWalling() const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK5Nerve12executeOnEndEP5Spine",
+          "name": "Nerve::executeOnEnd(Spine*) const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK8Triangle10getBaseMtxEv",
+          "name": "Triangle::getBaseMtx() const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK8Triangle14getPrevBaseMtxEv",
+          "name": "Triangle::getPrevBaseMtx() const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK9LiveActor7isNerveEPK5Nerve",
+          "name": "LiveActor::isNerve(Nerve const*) const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        },
+        {
+          "symbol": "_ZNK9LiveActor9getSensorEPKc",
+          "name": "LiveActor::getSensor(char const*) const",
+          "providers": [
+            "libsmg-pc-game.a"
+          ]
+        }
+      ],
+      "local_graph_external_count": 130
+    }
+  ]
+}

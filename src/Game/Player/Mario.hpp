@@ -75,21 +75,13 @@ public:
     void doExtraServices();
     bool isEnableCheckGround() NO_INLINE;
     void setGroundNorm(const TVec3f&);
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
     void checkForceGrounding();
-#else  // SMGPC_RETAIL_SOURCE
-    bool checkForceGrounding();
-#endif  // SMGPC_PC_DIVERGENCE
     void updateGroundInfo();
     void fixHeadFrontVecByGravity();
     bool isNonFixHeadVec() const;
     void createMtxDir(MtxPtr, const TVec3f&, const TVec3f&, const TVec3f&);
     void createDirectionMtx(MtxPtr);
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
     bool createCorrectionMtx(MtxPtr, TVec3f*);
-#else  // SMGPC_RETAIL_SOURCE
-    void createCorrectionMtx(MtxPtr, TVec3f*);
-#endif  // SMGPC_PC_DIVERGENCE
     void createAngleMtx(MtxPtr, bool);
     void slopeTiltHead(TVec3f*);
     void fixFrontVecByGravity();
@@ -168,11 +160,7 @@ public:
     const TVec3f* calcShadowPos();
     bool updateBinderInfo();
     bool isThroughWall(const Triangle*) const;
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
     bool checkGround();
-#else  // SMGPC_RETAIL_SOURCE
-    void checkGround();
-#endif  // SMGPC_PC_DIVERGENCE
     CubeCameraArea* getCameraCubeCode() const;
     void updateCubeCode();
 
@@ -967,6 +955,7 @@ public:
 
     /* 0x8F4 */ f32 _8F4;
 
+    // FAKE
     /* 0x8F8 */ TVec3f _8F8;
     /* 0x904 */ TVec3f _904;
     // NOT FAKE

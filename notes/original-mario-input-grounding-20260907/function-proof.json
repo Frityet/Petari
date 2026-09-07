@@ -1,0 +1,144 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "methods": [
+    {
+      "symbol": "checkForceGrounding__5MarioFv",
+      "retail_address": "0x802aa308",
+      "retail_bytes": 712,
+      "compiled_bytes": 712,
+      "match_percent": 97.764046,
+      "retail_span_sha256": "78bc5e8543fbf6904106ef11d87aac695e10a1749f7d5da31f5c61a5ad5cb7a8",
+      "direct_calls_equal": true,
+      "direct_calls": [
+        "getNormal__8TriangleCFi",
+        "diffAngleAbs__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+        "__mi__Q29JGeometry8TVec3<f>CFv",
+        "getGravityVec__5MarioCFv",
+        "dot__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>",
+        "getGravityVec__5MarioCFv",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__mi__Q29JGeometry8TVec3<f>CFv",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+        "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "dot__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>",
+        "isNearZero__2MRFff",
+        "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "scale__Q29JGeometry8TVec3<f>Ff",
+        "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "getGravityVec__5MarioCFv",
+        "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+        "PSVECMag",
+        "sqrt<f>__2MRFf_f",
+        "normalizeOrZero__2MRFPQ29JGeometry8TVec3<f>",
+        "getGravityVec__5MarioCFv",
+        "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "scale__Q29JGeometry8TVec3<f>Ff",
+        "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "scale__Q29JGeometry8TVec3<f>Ff",
+        "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>"
+      ],
+      "constant_value_sets_equal": true,
+      "retail_constant_counts": {
+        "3f490fdb": 1,
+        "3f7d70a4": 1,
+        "3a83126f": 1,
+        "41f00000": 1,
+        "00000000": 2
+      },
+      "compiled_constant_counts": {
+        "3f490fdb": 1,
+        "3f7d70a4": 1,
+        "3a83126f": 1,
+        "41f00000": 1,
+        "00000000": 2
+      },
+      "external_data_relocations_equal": true,
+      "external_data_relocations": []
+    },
+    {
+      "symbol": "inputStick__5MarioFv",
+      "retail_address": "0x802ac404",
+      "retail_bytes": 792,
+      "compiled_bytes": 792,
+      "match_percent": 97.06061,
+      "retail_span_sha256": "b16cd037e18926548e017ca78b9a171f07dba171956d72b963b1de20986b71ab",
+      "direct_calls_equal": true,
+      "direct_calls": [
+        "getStickValue__10MarioActorFPfPf",
+        "clamp__2MRFfff",
+        "clamp__2MRFfff",
+        "sqrt<f>__2MRFf_f",
+        "clamp__2MRFfff",
+        "isNearZero__2MRFff",
+        "atan2___Q25JMath18TAtanTable<1024,f>CFff",
+        "normalizeAngleAbs__2MRFf",
+        "getPlayer__11MarioModuleCFv",
+        "stick2DadjustGround__5MarioFRfRf",
+        "stick2Dadjust__5MarioFRfRf",
+        "update25Dmode__5MarioFv",
+        "updateAxisFromMode__5MarioFUc",
+        "calcWorldPadDir__11MarioModuleFPQ29JGeometry8TVec3<f>ffb",
+        "normalizeOrZero__2MRFPQ29JGeometry8TVec3<f>"
+      ],
+      "constant_value_sets_equal": true,
+      "retail_constant_counts": {
+        "00000000": 7,
+        "3fc00000": 1,
+        "bf800000": 2,
+        "3f800000": 3,
+        "3c23d70a": 2,
+        "3fc90fdb": 1,
+        "40000000": 1,
+        "4330000000000000": 2,
+        "4522f983": 1,
+        "c522f983": 1
+      },
+      "compiled_constant_counts": {
+        "00000000": 7,
+        "3fc00000": 1,
+        "bf800000": 2,
+        "3f800000": 3,
+        "3c23d70a": 2,
+        "3fc90fdb": 2,
+        "40000000": 1,
+        "4330000000000000": 2,
+        "4522f983": 1,
+        "c522f983": 1
+      },
+      "external_data_relocations_equal": true,
+      "external_data_relocations": [
+        [
+          "sAtanTable__5JMath",
+          4,
+          0
+        ],
+        [
+          "sAtanTable__5JMath",
+          6,
+          0
+        ],
+        [
+          "sSinCosTable__5JMath",
+          4,
+          0
+        ],
+        [
+          "sSinCosTable__5JMath",
+          6,
+          0
+        ]
+      ]
+    }
+  ],
+  "preexisting_retail_regressions": [],
+  "preexisting_codegen_change": {
+    "symbol": "writeBackPhyisicalVector__5MarioFv",
+    "before_match": 96.18802,
+    "after_match": 97.61364,
+    "reason": "Full-TU IPA changes existing MR::clamp call from inline to out of line when new callers are present; unchanged source, improved retail match."
+  }
+}

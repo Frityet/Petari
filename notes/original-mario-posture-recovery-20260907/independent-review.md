@@ -1,0 +1,11 @@
+# Independent posture and look-offset review — 2026-09-07
+
+Reviewed `recovered-methods.cpp` against both complete retail disassemblies (`postureCtrl__5MarioFPA4_f.left.txt` and `updateLookOfs__5MarioFv.left.txt`), retail data and the current typed Player headers. No actionable control-flow, field, constant or output discrepancy was found in these two recovered bodies.
+
+For `postureCtrl`, the ground/slip condition, speed-index split, repeated triangle-angle calls, 45/60-degree blend, Wait-only animation branch and frame boundaries at 260/290 agree with the original. The individual `getAnimator()->getFrame()` calls remain separate. The air-gravity near-zero probes and final Climb query are discarded in retail too. The four swimming-animation alternatives retain the same short-circuit order, normalization fallback and draw flag. The final head-angle margin, sphere interpolation and 0.1-radian side-axis fallback agree. Its return is consistently false.
+
+For `updateLookOfs`, the Blown early return, preliminary actor-flag blend, mutually exclusive wall/Swim branches, strict vertical-speed boundaries at 5 and 50, dangerous-shadow rejection and projected ground displacement agree. The Swim state ID is 6 and its surface-offset member is the original offset `0x48`. The sink timer is an unsigned byte at `0x735`; the original first gravity-based calculation is intentionally overwritten by the negative-head-vector calculation. Both retained expressions multiply successively by the timer, `1/256` and 120, matching the original sequence rather than combining constants. `_3CE` is the unsigned 16-bit timer used for the `0.02 * timer` blend capped at 0.2. The landing/idle branches and final independent offset blends are preserved.
+
+Verified animation names against the original CP932 string table, including the layer-2 slope animation and `壁押し`. The paired-object call-list differences reported in `function-proof.json` are one elided nonvirtual `TVec3f` copy construction in each method. Their unchanged vector values do not represent missing gameplay callbacks; all semantic helper queries remain.
+
+This was a read-only source and retail-instruction review. It does not claim native runtime validation, an exact binary match or full Mario movement correctness.

@@ -1,0 +1,147 @@
+{
+  "wii_vtable_bytes": 76,
+  "wii_vtable_match_percent": 100.0,
+  "method_slots": [
+    {
+      "method_slot": 0,
+      "retail_byte_offset": 8,
+      "native_byte_offset": 16,
+      "retail_target": "getStickY__9MarioSwimCFv",
+      "native_target": "__ZNK9MarioSwim9getStickYEv",
+      "same_owner_method": true
+    },
+    {
+      "method_slot": 1,
+      "retail_byte_offset": 12,
+      "native_byte_offset": 24,
+      "retail_target": "addVelocity__9MarioSwimFRCQ29JGeometry8TVec3<f>",
+      "native_target": "__ZN9MarioSwim11addVelocityERKN9JGeometry5TVec3IfEE",
+      "same_owner_method": true
+    },
+    {
+      "method_slot": 2,
+      "retail_byte_offset": 16,
+      "native_byte_offset": 32,
+      "retail_target": "addVelocity__9MarioSwimFRCQ29JGeometry8TVec3<f>f",
+      "native_target": "__ZN9MarioSwim11addVelocityERKN9JGeometry5TVec3IfEEf",
+      "same_owner_method": true
+    },
+    {
+      "method_slot": 3,
+      "retail_byte_offset": 20,
+      "native_byte_offset": 40,
+      "retail_target": "init__9MarioSwimFv",
+      "native_target": "__ZN9MarioSwim4initEv",
+      "same_owner_method": true
+    },
+    {
+      "method_slot": 4,
+      "retail_byte_offset": 24,
+      "native_byte_offset": 48,
+      "retail_target": "proc__10MarioStateFUl",
+      "native_target": "__ZN10MarioState4procEj",
+      "same_owner_method": true
+    },
+    {
+      "method_slot": 5,
+      "retail_byte_offset": 28,
+      "native_byte_offset": 56,
+      "retail_target": "start__9MarioSwimFv",
+      "native_target": "__ZN9MarioSwim5startEv",
+      "same_owner_method": true
+    },
+    {
+      "method_slot": 6,
+      "retail_byte_offset": 32,
+      "native_byte_offset": 64,
+      "retail_target": "close__9MarioSwimFv",
+      "native_target": "__ZN9MarioSwim5closeEv",
+      "same_owner_method": true
+    },
+    {
+      "method_slot": 7,
+      "retail_byte_offset": 36,
+      "native_byte_offset": 72,
+      "retail_target": "update__9MarioSwimFv",
+      "native_target": "__ZN9MarioSwim6updateEv",
+      "same_owner_method": true
+    },
+    {
+      "method_slot": 8,
+      "retail_byte_offset": 40,
+      "native_byte_offset": 80,
+      "retail_target": "notice__9MarioSwimFv",
+      "native_target": "__ZN9MarioSwim6noticeEv",
+      "same_owner_method": true
+    },
+    {
+      "method_slot": 9,
+      "retail_byte_offset": 44,
+      "native_byte_offset": 88,
+      "retail_target": "keep__10MarioStateFv",
+      "native_target": "__ZN10MarioState4keepEv",
+      "same_owner_method": true
+    },
+    {
+      "method_slot": 10,
+      "retail_byte_offset": 48,
+      "native_byte_offset": 96,
+      "retail_target": "postureCtrl__10MarioStateFPA4_f",
+      "native_target": "__ZN10MarioState11postureCtrlEPA4_f",
+      "same_owner_method": true
+    },
+    {
+      "method_slot": 11,
+      "retail_byte_offset": 52,
+      "native_byte_offset": 104,
+      "retail_target": "hitWall__9MarioSwimFRCQ29JGeometry8TVec3<f>P9HitSensor",
+      "native_target": "__ZN9MarioSwim7hitWallERKN9JGeometry5TVec3IfEEP9HitSensor",
+      "same_owner_method": true
+    },
+    {
+      "method_slot": 12,
+      "retail_byte_offset": 56,
+      "native_byte_offset": 112,
+      "retail_target": "hitPoly__9MarioSwimFUcRCQ29JGeometry8TVec3<f>P9HitSensor",
+      "native_target": "__ZN9MarioSwim7hitPolyEhRKN9JGeometry5TVec3IfEEP9HitSensor",
+      "same_owner_method": true
+    },
+    {
+      "method_slot": 13,
+      "retail_byte_offset": 60,
+      "native_byte_offset": 120,
+      "retail_target": "passRing__9MarioSwimFPC9HitSensor",
+      "native_target": "__ZN9MarioSwim8passRingEPK9HitSensor",
+      "same_owner_method": true
+    },
+    {
+      "method_slot": 14,
+      "retail_byte_offset": 64,
+      "native_byte_offset": 128,
+      "retail_target": "getBlurOffset__9MarioSwimCFv",
+      "native_target": "__ZNK9MarioSwim13getBlurOffsetEv",
+      "same_owner_method": true
+    },
+    {
+      "method_slot": 15,
+      "retail_byte_offset": 68,
+      "native_byte_offset": 136,
+      "retail_target": "draw3D__9MarioSwimCFv",
+      "native_target": "__ZNK9MarioSwim6draw3DEv",
+      "same_owner_method": true
+    },
+    {
+      "method_slot": 16,
+      "retail_byte_offset": 72,
+      "native_byte_offset": 144,
+      "retail_target": "getGravityVec__9MarioSwimCFv",
+      "native_target": "__ZNK9MarioSwim13getGravityVecEv",
+      "same_owner_method": true
+    }
+  ],
+  "preexisting_function_count": 61,
+  "preexisting_function_score_changes": [],
+  "reference_cpp_unchanged": true,
+  "native_cpp_unchanged": true,
+  "headers_identical": false
+}

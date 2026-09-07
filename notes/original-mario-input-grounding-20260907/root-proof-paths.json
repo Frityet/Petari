@@ -1,0 +1,12 @@
+[
+  "notes/original-mario-input-grounding-20260907/README.md",
+  "notes/original-mario-input-grounding-20260907/source-proof.json",
+  "notes/original-mario-input-grounding-20260907/function-proof.json",
+  "notes/original-mario-input-grounding-20260907/validation-commands.json",
+  "notes/original-mario-input-grounding-20260907/native-probe.command.json",
+  "notes/original-mario-input-grounding-20260907/baseline/Mario.cpp",
+  "notes/original-mario-input-grounding-20260907/checkForceGrounding.cpp",
+  "notes/original-mario-input-grounding-20260907/inputStick.cpp",
+  "notes/original-mario-input-grounding-20260907/checkForceGrounding.aligned.txt",
+  "notes/original-mario-input-grounding-20260907/inputStick.aligned.txt"
+]

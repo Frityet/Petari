@@ -15,6 +15,7 @@
 #include "Game/Player/MarioSwim.hpp"
 #include "Game/Player/RushEndInfo.hpp"
 #include "Game/Util.hpp"
+#include "Game/Util/FixedPosition.hpp"
 
 namespace MarioAccess {
     void getTakePos(TVec3f* pOut) {

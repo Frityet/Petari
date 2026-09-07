@@ -1,0 +1,50 @@
+[
+  {
+    "symbol": "__ct__10MarioActorFPCc",
+    "name": "MarioActor::MarioActor(const char*)",
+    "retail_bytes": "892",
+    "match_percent": 99.97758
+  },
+  {
+    "symbol": "init2__10MarioActorFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>l",
+    "name": "MarioActor::init2(const JGeometry::TVec3<float>&, const JGeometry::TVec3<float>&, long)",
+    "retail_bytes": "1688",
+    "match_percent": 99.66824
+  },
+  {
+    "symbol": "initAfterPlacement__10MarioActorFv",
+    "name": "MarioActor::initAfterPlacement()",
+    "retail_bytes": "292",
+    "match_percent": 99.9315
+  },
+  {
+    "symbol": "movement__10MarioActorFv",
+    "name": "MarioActor::movement()",
+    "retail_bytes": "2516",
+    "match_percent": 99.88076
+  },
+  {
+    "symbol": "control__10MarioActorFv",
+    "name": "MarioActor::control()",
+    "retail_bytes": "296",
+    "match_percent": 99.52702
+  },
+  {
+    "symbol": "control2__10MarioActorFv",
+    "name": "MarioActor::control2()",
+    "retail_bytes": "420",
+    "match_percent": 100.0
+  },
+  {
+    "symbol": "controlMain__10MarioActorFv",
+    "name": "MarioActor::controlMain()",
+    "retail_bytes": "232",
+    "match_percent": 100.0
+  },
+  {
+    "symbol": "__vt__10MarioActor",
+    "name": "MarioActor::__vtable",
+    "retail_bytes": "132",
+    "match_percent": 100.0
+  }
+]

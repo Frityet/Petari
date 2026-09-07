@@ -1,0 +1,13 @@
+[
+  "src/compat/OriginalModelAccess.cpp",
+  "src/compat/OriginalActorModelAccess.cpp",
+  "src/compat/OriginalMtxGeometry.cpp",
+  "src/Game/Util/AreaObjUtil.cpp",
+  "src/Game/Util/AreaObjUtil.hpp",
+  "src/Game/Util/ModelUtil.hpp",
+  "src/Game/Util/DirectDrawUtil.cpp",
+  "tests/GameMathRotationTests.cpp",
+  "tests/OriginalDirectDrawUtilTests.cpp",
+  "tests/xmake.lua",
+  "notes/original-shared-player-providers-20260907"
+]

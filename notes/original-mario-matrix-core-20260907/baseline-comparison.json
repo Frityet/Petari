@@ -1,0 +1,82 @@
+{
+  "baseline_compilation_source_sha256": "9de343d9fd036f947abc7fd4bf09c038a6928cc92df614ee82aa37db71ef4159",
+  "preexisting_compared": 94,
+  "score_changes": [
+    {
+      "name": "@78680",
+      "before": 50.0,
+      "after": 100.0
+    },
+    {
+      "name": "[.data-0]",
+      "before": 49.781277,
+      "after": 49.4807
+    },
+    {
+      "name": "[.sdata2-0]",
+      "before": 56.382977,
+      "after": 53.061222
+    }
+  ],
+  "new_symbols": [
+    {
+      "name": "fixHeadFrontVecByGravity__5MarioFv",
+      "before": null,
+      "after": 98.97155
+    },
+    {
+      "name": "createDirectionMtx__5MarioFPA4_f",
+      "before": null,
+      "after": 99.793816
+    },
+    {
+      "name": "createCorrectionMtx__5MarioFPA4_fPQ29JGeometry8TVec3<f>",
+      "before": null,
+      "after": 99.94012
+    },
+    {
+      "name": "createAngleMtx__5MarioFPA4_fb",
+      "before": null,
+      "after": 96.71635
+    },
+    {
+      "name": "@77437",
+      "before": null,
+      "after": 100.0
+    },
+    {
+      "name": "@78792",
+      "before": null,
+      "after": 50.0
+    },
+    {
+      "name": "@78889",
+      "before": null,
+      "after": 100.0
+    }
+  ],
+  "preexisting_function_count": 46,
+  "preexisting_function_score_changes": [],
+  "new_functions": [
+    {
+      "name": "fixHeadFrontVecByGravity__5MarioFv",
+      "before": null,
+      "after": 98.97155
+    },
+    {
+      "name": "createDirectionMtx__5MarioFPA4_f",
+      "before": null,
+      "after": 99.793816
+    },
+    {
+      "name": "createCorrectionMtx__5MarioFPA4_fPQ29JGeometry8TVec3<f>",
+      "before": null,
+      "after": 99.94012
+    },
+    {
+      "name": "createAngleMtx__5MarioFPA4_fb",
+      "before": null,
+      "after": 96.71635
+    }
+  ]
+}

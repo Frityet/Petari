@@ -1,0 +1,40 @@
+{
+  "retail_pool_address": "0x805c64d8",
+  "retail_pool_hex": "8ce395fb8fac835f8381815b835700914f95fb8fac835f8381815b835700836d815b835f8381815b83570090ba8fac835f8381815b835700835f8381815b8357008aee967b000000",
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "strings": [
+    {
+      "offset": "0x0",
+      "bytes": "8ce395fb8fac835f8381815b8357",
+      "text": "後方小ダメージ"
+    },
+    {
+      "offset": "0xf",
+      "bytes": "914f95fb8fac835f8381815b8357",
+      "text": "前方小ダメージ"
+    },
+    {
+      "offset": "0x1e",
+      "bytes": "836d815b835f8381815b8357",
+      "text": "ノーダメージ"
+    },
+    {
+      "offset": "0x2b",
+      "bytes": "90ba8fac835f8381815b8357",
+      "text": "声小ダメージ"
+    },
+    {
+      "offset": "0x38",
+      "bytes": "835f8381815b8357",
+      "text": "ダメージ"
+    },
+    {
+      "offset": "0x41",
+      "bytes": "8aee967b",
+      "text": "基本"
+    }
+  ],
+  "new_source_sha256": "9474d0a19df0b1454dbbf2c0d637640297b8b9c3c5be5e68968e05fde4b808ae",
+  "native_compile_exit": 0,
+  "source_change": "Replace undefined external blob and byte-offset arithmetic with six exact retail string literals; native copied byte-identical after Wii proof."
+}

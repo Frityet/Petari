@@ -1,0 +1,45 @@
+{
+  "methods": [
+    {
+      "method": "MarioActor",
+      "reference_line": 69,
+      "native_line": 86,
+      "reference_sha256": "e7eaf02016ef2a50b1991d95b0d3378a840349d7469e44c4b6ec141531786b67",
+      "native_sha256": "8b88434e9d0cc600c08458ce03d15dfa03a13009fb97398f1a266880a3299d57"
+    },
+    {
+      "method": "init2",
+      "reference_line": 283,
+      "native_line": 303,
+      "reference_sha256": "5ae30dad6fdcf2d43f69ecb47305e67c99d5594ea43c03f1f2559f5c2e5089a0",
+      "native_sha256": "9349450f428618432d2463ca900ecf863a3288f954c7d6fb70379ccb67d1e8e2"
+    },
+    {
+      "method": "initAfterPlacement",
+      "reference_line": 414,
+      "native_line": 493,
+      "reference_sha256": "00da4dd861284ea56664ce001b19c4474fdc118a72ca8076ea5f592c01c12ec0",
+      "native_sha256": "f224853079a9e48e30f92c52167b1a7801d4794a7beebf82f6754493b26870e6"
+    },
+    {
+      "method": "movement",
+      "reference_line": 672,
+      "native_line": 802,
+      "reference_sha256": "b1ba0c3851ba0a7fd5723ea8d5c351927fceb770619fba0674eb26f4756099e6",
+      "native_sha256": "f373ec545f7dedb324a8d48514e4f087cd07594eef95fe42c8ac245188ebf9ec"
+    },
+    {
+      "method": "control",
+      "reference_line": 842,
+      "native_line": 1010,
+      "reference_sha256": "1597686764752c1991f381bec614e6f89cc4cc362cd8845cdc2df53c5f61f5d8",
+      "native_sha256": "f8b5f49a3544f1a510e48c98f14e77fc3f309db918b3c9adbb6dbd8ee934d328"
+    }
+  ],
+  "native_source_sha256": "79ef8e04b33d282142d899889d53a9a0e0c7a9dbfebd732b398f9183b99c6f4c",
+  "probe_sha256": "7053f8e5ff8a0fd503f4ec04976653a144efc016fa4ac45f3a18e3a2c768db18",
+  "production_changes": false,
+  "native_adaptations": [
+    "Reference _1D8/_1DC mapped to existing native mRasterBuffers[0]/[1]"
+  ]
+}

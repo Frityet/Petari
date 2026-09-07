@@ -10,6 +10,14 @@
 #include "Game/Util/MtxUtil.hpp"
 
 namespace MR {
+    f32 getSphereRadius(const AreaObj* pAreaObj) {
+        return static_cast< AreaFormSphere* >(pAreaObj->mForm)->_14;
+    }
+
+    void calcSpherePos(TVec3f* pPos, const AreaObj* pAreaObj) {
+        static_cast< AreaFormSphere* >(pAreaObj->mForm)->calcPos(pPos);
+    }
+
 
     inline AreaObj* getAreaIn(const char* pName, const TVec3f& rPos) {
         return getAreaObjContainer()->getAreaObj(pName, rPos);

@@ -1,0 +1,10 @@
+[
+  {
+    "file": "src/Game/Player/MarioFlip.cpp",
+    "sha256": "8721c93b15b0b6f1b3f5a4a9e2f14b26c29efba1f0f917e7c8851f2e01380040"
+  },
+  {
+    "file": "src/Game/Player/MarioWarp.cpp",
+    "sha256": "dfe47617d7448957876aed63940dcb710f55bd22b90b1bd2388842c81a00d5c6"
+  }
+]

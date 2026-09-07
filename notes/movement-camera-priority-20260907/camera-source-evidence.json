@@ -1,0 +1,368 @@
+{
+  "date": "2026-09-07",
+  "validation": "Read-only source inspection and text equality; no build, GPU run, or new PPC match",
+  "root_head": "07ce381b769bb7064ca9c3918d92ac1a98c0eb35",
+  "decomp_head": "c1e04e79c8eb92c73604d80c3156ada0ec9ae10f",
+  "sources": [
+    {
+      "path": "decomp/src/Game/Camera/CamTranslatorParallel.cpp",
+      "sha256": "1861ab88d2f2f3346c3d8c0371ff791ba88e6bb053c0d75260b5f90135cb9491"
+    },
+    {
+      "path": "decomp/src/Game/Camera/CameraAnim.cpp",
+      "sha256": "5f9f737b174e583cf571aa1878f972550855788498c8347238a3f2b042a0c40a"
+    },
+    {
+      "path": "decomp/src/Game/Camera/CameraContext.cpp",
+      "sha256": "ff72f1e9d2986c4eaaa44d3023c61027852a2ebfdf68d2aa6b4653941c40cd67"
+    },
+    {
+      "path": "decomp/src/Game/Camera/CameraDirector.cpp",
+      "sha256": "10eb05dc2b2615e8bdf1f948c12102e5337f6a17c1ac20be42946c3ba2c12fa0"
+    },
+    {
+      "path": "decomp/src/Game/Camera/CameraFixedPoint.cpp",
+      "sha256": "876d1a229a572b1cf4ded76a76dd15634837143bfff40fd9d6bcf8f2e62a98b7"
+    },
+    {
+      "path": "decomp/src/Game/Camera/CameraHeightArrange.cpp",
+      "sha256": "62fe145ba96e599a8f99d93dc9556ba79f37a274d1cca95fba8804e57e46612a"
+    },
+    {
+      "path": "decomp/src/Game/Camera/CameraManEvent.cpp",
+      "sha256": "4e3f231e2bf7435fbfe49ec4d88ea0125d967f1c97f77e4fe68ffb5383a03902"
+    },
+    {
+      "path": "decomp/src/Game/Camera/CameraManGame.cpp",
+      "sha256": "042b4a541c841a433786e5d94c0f9a66da0d0c600616253644483260f5fd52f4"
+    },
+    {
+      "path": "decomp/src/Game/Camera/CameraManSubjective.cpp",
+      "sha256": "8d98ffa88ade5f82961e66e952e47e3f7b19c8bd011ecb3585f3e8fe85d75d6e"
+    },
+    {
+      "path": "decomp/src/Game/Camera/CameraParallel.cpp",
+      "sha256": "184a1505a3077ac0441f781292b214d9244889a6efc13f365b3b97ced995f6ff"
+    },
+    {
+      "path": "decomp/src/Game/Camera/CameraTargetHolder.cpp",
+      "sha256": "426dd80fb1167fcd431f78305456b012cdd31d626dc4bd2b2125434fc19377c8"
+    },
+    {
+      "path": "decomp/src/Game/Camera/CameraTargetMtx.cpp",
+      "sha256": "08d58aaae22394550a724b93affe042dcbba7266bc41ce1c4f98bf3f5793ffa1"
+    },
+    {
+      "path": "decomp/src/Game/Camera/CameraTargetObj.cpp",
+      "sha256": "c72c38a23bbf8946c96b54feffa4c5d38463db68c9d73d0081affb1944f5bf6e"
+    },
+    {
+      "path": "decomp/src/Game/Camera/CameraViewInterpolator.cpp",
+      "sha256": "ad02e5500579508532fbf37bd668365497d17f21ad06d03df4492356f3993d25"
+    },
+    {
+      "path": "decomp/src/Game/Camera/OnlyCamera.cpp",
+      "sha256": "247cc62f78562e1cf84724711906e6865360350d8abe1c88afb90497ff3be91d"
+    },
+    {
+      "path": "decomp/src/Game/Player/MarioActorCamera.cpp",
+      "sha256": "07d975f685d028e51aa3d6e732e938923666432fc855473c976cc975cbf91be6"
+    },
+    {
+      "path": "decomp/src/Game/Scene/SceneExecutor.cpp",
+      "sha256": "473eb6eb6692b2c7b5e53554b16557763f98cc707c6af60ea0f682c936fc58de"
+    },
+    {
+      "path": "decomp/src/Game/Util/CameraUtil.cpp",
+      "sha256": "5fc7e8bc9c6116563b920b2961d4a01eec67eb72995ee9d3152ba845f59f094c"
+    },
+    {
+      "path": "src/Game/Camera/CamTranslatorParallel.cpp",
+      "sha256": "1861ab88d2f2f3346c3d8c0371ff791ba88e6bb053c0d75260b5f90135cb9491"
+    },
+    {
+      "path": "src/Game/Camera/CameraAnim.cpp",
+      "sha256": "5f9f737b174e583cf571aa1878f972550855788498c8347238a3f2b042a0c40a"
+    },
+    {
+      "path": "src/Game/Camera/CameraContext.cpp",
+      "sha256": "ff72f1e9d2986c4eaaa44d3023c61027852a2ebfdf68d2aa6b4653941c40cd67"
+    },
+    {
+      "path": "src/Game/Camera/CameraFixedPoint.cpp",
+      "sha256": "876d1a229a572b1cf4ded76a76dd15634837143bfff40fd9d6bcf8f2e62a98b7"
+    },
+    {
+      "path": "src/Game/Camera/CameraHeightArrange.cpp",
+      "sha256": "62fe145ba96e599a8f99d93dc9556ba79f37a274d1cca95fba8804e57e46612a"
+    },
+    {
+      "path": "src/Game/Camera/CameraParallel.cpp",
+      "sha256": "184a1505a3077ac0441f781292b214d9244889a6efc13f365b3b97ced995f6ff"
+    },
+    {
+      "path": "src/Game/Camera/CameraTargetMtx.cpp",
+      "sha256": "08d58aaae22394550a724b93affe042dcbba7266bc41ce1c4f98bf3f5793ffa1"
+    },
+    {
+      "path": "src/Game/Camera/CameraViewInterpolator.cpp",
+      "sha256": "ad02e5500579508532fbf37bd668365497d17f21ad06d03df4492356f3993d25"
+    },
+    {
+      "path": "src/Game/Camera/OnlyCamera.cpp",
+      "sha256": "247cc62f78562e1cf84724711906e6865360350d8abe1c88afb90497ff3be91d"
+    },
+    {
+      "path": "src/Game/Player/MarioActorCamera.cpp",
+      "sha256": "07d975f685d028e51aa3d6e732e938923666432fc855473c976cc975cbf91be6"
+    },
+    {
+      "path": "src/Game/xmake.lua",
+      "sha256": "81efb85e8b04d46f796416618b35408b4cbf5eb7b8316c16aab2640eca64d9fc"
+    },
+    {
+      "path": "src/camera/CameraParam.cpp",
+      "sha256": "42969d079cd9b7c8a18acabfe1b327f463236d401b774f6812245740051ebbec"
+    },
+    {
+      "path": "src/camera/EventCamera.cpp",
+      "sha256": "7959dc48203e4ff9c1761e6e091b86a531ebf81727d81f5871ba6ee17b140da4"
+    },
+    {
+      "path": "src/camera/EventCamera.hpp",
+      "sha256": "3fc520a19e6d0d1d59f41a5270140526e7edfc84f6706d8f0620a9e54b67cd01"
+    },
+    {
+      "path": "src/camera/OriginalCameraView.cpp",
+      "sha256": "7b6cdb7d6f0fa715782f102f33bfa67e522137603948dd43615d6c47d86e98d6"
+    },
+    {
+      "path": "src/camera/OriginalGameCamera.cpp",
+      "sha256": "4f3e606ca962ba8d7df8ae6756669b422f74b0b97a5fa3078a69c0bf8e1e82a1"
+    },
+    {
+      "path": "src/compat/CameraLocalUtilRuntime.cpp",
+      "sha256": "5957a528fe20ec8a1e4b7906b3e02af6441c9fe3bc4c565a92d2a0e90b5cc3af"
+    },
+    {
+      "path": "src/compat/CameraUtilCompat.cpp",
+      "sha256": "3e9b2e05d78fd5fd489c398b06d36ba254d1b5c578f45a6c506244b6a156d78a"
+    },
+    {
+      "path": "src/compat/GamePadUtilCompat.cpp",
+      "sha256": "4693bfe589635c64924f25aa342008d9d8646c9537717c1b5c722b09b6449064"
+    },
+    {
+      "path": "src/compat/MarioCameraAccessCompat.cpp",
+      "sha256": "cec77a9d2838414cafd18b15712741c21ab462a85c5fc9f0f63937877fd9191c"
+    },
+    {
+      "path": "src/compat/MarioCameraTarget.cpp",
+      "sha256": "a1f1cfd22682937ebdac4173b46fadfb62e4766993ed0b16c1fb36f2ec4f0121"
+    },
+    {
+      "path": "src/compat/MarioStateAccessCompat.cpp",
+      "sha256": "27d4836d5de37dce5b0ea68e49b1f0a2fd240d850e7c8a00c00ef22eff1cdcb8"
+    },
+    {
+      "path": "src/compat/OriginalCameraTargetPlayer.cpp",
+      "sha256": "748ac8e5e1dbb365168ce3d9950ccc20c7c7b1d728828750240c98eeb1243a78"
+    },
+    {
+      "path": "src/render/RendererService.cpp",
+      "sha256": "a1e0ad2a555b68bcc3c2a9d00c6a4803eab46bac068b52bd9930690498b51ff0"
+    },
+    {
+      "path": "src/runtime/RuntimeContext.cpp",
+      "sha256": "04ace204b43ae6efe4809b9ad48dfc1a3607251affac561431f1cbac9c209e31"
+    },
+    {
+      "path": "src/runtime/RuntimeServices.cpp",
+      "sha256": "e31087108f9ff80dc000e02bc69304adb1dc7c4e9edd68dd95f82b9274fdc883"
+    },
+    {
+      "path": "src/runtime/SceneScheduler.cpp",
+      "sha256": "9dbc9196db09efdf30d0a1b6cd63bc81a3e8b665980cad68d76ac74961a08676"
+    },
+    {
+      "path": "src/scene/StageHostScene.cpp",
+      "sha256": "80682a78741ca02237c52daf44a6c9bf6f4686cd9d1d189f1e6e52efa95fb7bc"
+    },
+    {
+      "path": "src/showcase/Showcase.cpp",
+      "sha256": "369b2054ff3134ec69a4ad1fd8a093716df75c2d969cf56f8f9d37ec21c1c716"
+    },
+    {
+      "path": "src/showcase/xmake.lua",
+      "sha256": "fa765d35dcf6cb4673ed4c1e9c12d65a0336f695b592b52a3fddab831705d0e5"
+    }
+  ],
+  "byte_parity": [
+    {
+      "native": "src/Game/Camera/CameraParallel.cpp",
+      "reference": "decomp/src/Game/Camera/CameraParallel.cpp",
+      "byte_equal": true
+    },
+    {
+      "native": "src/Game/Camera/CameraFixedPoint.cpp",
+      "reference": "decomp/src/Game/Camera/CameraFixedPoint.cpp",
+      "byte_equal": true
+    },
+    {
+      "native": "src/Game/Camera/CameraHeightArrange.cpp",
+      "reference": "decomp/src/Game/Camera/CameraHeightArrange.cpp",
+      "byte_equal": true
+    },
+    {
+      "native": "src/Game/Camera/CameraViewInterpolator.cpp",
+      "reference": "decomp/src/Game/Camera/CameraViewInterpolator.cpp",
+      "byte_equal": true
+    },
+    {
+      "native": "src/Game/Camera/OnlyCamera.cpp",
+      "reference": "decomp/src/Game/Camera/OnlyCamera.cpp",
+      "byte_equal": true
+    },
+    {
+      "native": "src/Game/Camera/CameraAnim.cpp",
+      "reference": "decomp/src/Game/Camera/CameraAnim.cpp",
+      "byte_equal": true
+    },
+    {
+      "native": "src/Game/Camera/CameraContext.cpp",
+      "reference": "decomp/src/Game/Camera/CameraContext.cpp",
+      "byte_equal": true
+    },
+    {
+      "native": "src/Game/Camera/CameraTargetMtx.cpp",
+      "reference": "decomp/src/Game/Camera/CameraTargetMtx.cpp",
+      "byte_equal": true
+    },
+    {
+      "native": "src/Game/Camera/CamTranslatorParallel.cpp",
+      "reference": "decomp/src/Game/Camera/CamTranslatorParallel.cpp",
+      "byte_equal": true
+    },
+    {
+      "native": "src/Game/Player/MarioActorCamera.cpp",
+      "reference": "decomp/src/Game/Player/MarioActorCamera.cpp",
+      "byte_equal": true
+    }
+  ],
+  "player_target_bodies": [
+    {
+      "signature": "CameraTargetPlayer::CameraTargetPlayer(const char* pName)",
+      "body_equal": true
+    },
+    {
+      "signature": "CameraTargetPlayer::movement() {",
+      "body_equal": true
+    },
+    {
+      "signature": "CameraTargetPlayer::getPosition() const {",
+      "body_equal": true
+    },
+    {
+      "signature": "CameraTargetPlayer::getUpVec() const {",
+      "body_equal": true
+    },
+    {
+      "signature": "CameraTargetPlayer::getFrontVec() const {",
+      "body_equal": true
+    },
+    {
+      "signature": "CameraTargetPlayer::getSideVec() const {",
+      "body_equal": true
+    },
+    {
+      "signature": "CameraTargetPlayer::getGroundPos() const {",
+      "body_equal": true
+    },
+    {
+      "signature": "CameraTargetPlayer::getGravityVector() const {",
+      "body_equal": true
+    },
+    {
+      "signature": "CameraTargetPlayer::getLastMove() const {",
+      "body_equal": true
+    },
+    {
+      "signature": "CameraTargetPlayer::isTurning() const {",
+      "body_equal": true
+    },
+    {
+      "signature": "CameraTargetPlayer::isJumping() const {",
+      "body_equal": true
+    },
+    {
+      "signature": "CameraTargetPlayer::isLongDrop() const {",
+      "body_equal": true
+    },
+    {
+      "signature": "CameraTargetPlayer::isFastDrop() const {",
+      "body_equal": true
+    },
+    {
+      "signature": "CameraTargetPlayer::isFastRise() const {",
+      "body_equal": true
+    },
+    {
+      "signature": "CameraTargetPlayer::isWaterMode() const {",
+      "body_equal": true
+    },
+    {
+      "signature": "CameraTargetPlayer::isOnWaterSurface() const {",
+      "body_equal": true
+    },
+    {
+      "signature": "CameraTargetPlayer::isFooFighterMode() const {",
+      "body_equal": true
+    },
+    {
+      "signature": "CameraTargetPlayer::getSpecialMode() const {",
+      "body_equal": true
+    },
+    {
+      "signature": "CameraTargetPlayer::isCameraStateOn(u32 status) const {",
+      "body_equal": true
+    },
+    {
+      "signature": "CameraTargetPlayer::getCubeCameraArea() const {",
+      "body_equal": true
+    },
+    {
+      "signature": "CameraTargetPlayer::getGroundTriangle() const {",
+      "body_equal": true
+    },
+    {
+      "signature": "CameraTargetPlayer::getGravityInfo() const {",
+      "body_equal": true
+    },
+    {
+      "signature": "CameraTargetPlayer::isDebugMode() const {",
+      "body_equal": true
+    },
+    {
+      "signature": "CameraTargetPlayer::getMapBaseMtx() const {",
+      "body_equal": true
+    }
+  ],
+  "native_camera_sources": [
+    "src/Game/Camera/CamTranslatorAnim.cpp",
+    "src/Game/Camera/CamTranslatorFixedPoint.cpp",
+    "src/Game/Camera/CamTranslatorParallel.cpp",
+    "src/Game/Camera/Camera.cpp",
+    "src/Game/Camera/CameraAnim.cpp",
+    "src/Game/Camera/CameraCalc.cpp",
+    "src/Game/Camera/CameraContext.cpp",
+    "src/Game/Camera/CameraFixedPoint.cpp",
+    "src/Game/Camera/CameraHeightArrange.cpp",
+    "src/Game/Camera/CameraMan.cpp",
+    "src/Game/Camera/CameraParallel.cpp",
+    "src/Game/Camera/CameraPoseParam.cpp",
+    "src/Game/Camera/CameraTargetArg.cpp",
+    "src/Game/Camera/CameraTargetMtx.cpp",
+    "src/Game/Camera/CameraViewInterpolator.cpp",
+    "src/Game/Camera/OnlyCamera.cpp"
+  ]
+}

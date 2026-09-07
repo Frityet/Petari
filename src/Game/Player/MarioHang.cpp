@@ -525,50 +525,65 @@ bool MarioHang::update() {
         return false;
     }
 
-    if (!MR::isSameMtx(*_20->getBaseMtx(), *_20->getPrevBaseMtx())) {
-        if (getPlayer()->mMovementStates._1A && _14 > 2 && mActor->getLastMove().dot(getPlayer()->getSideWallNorm()) < 0.0f) {
-            _1C = true;
-        }
-        if (getPlayer()->_184.dot(getFrontVec()) > 0.95f && getPlayer()->_4E4 < 6.0f && !isAnimationRun("崖つかまり開始")) {
-            _1C = true;
-        }
-    } else if (getPlayer()->_8D4 != nullptr) {
-        addTrans(getPlayer()->mFrontVec * -150.0f, "Module");
-        mActor->setBlendMtxTimer(16);
-        stopAnimation("崖つかまり中", "基本");
-        return false;
-    }
-
-    if ((getPlayer()->_8D4 != nullptr && mWallSensor != getPlayer()->_8D4) || _1C) {
-        addTrans(getPlayer()->mFrontVec * -150.0f, "Module");
-        mActor->setBlendMtxTimer(16);
-        stopAnimation("崖つかまり中", "基本");
-        return false;
-    }
-
-    if (_12 == 1) {
-        if (calcAngleD(getPlayer()->_368) <= 45.0f) {
-            changeAnimation("崖つかまり終了", "基本");
-        } else {
-            changeAnimationNonStop("崖つかまり終了坂");
-            changeAnimation(static_cast< const char* >(nullptr), "基本");
-        }
-        playSound("声崖つかまり終了", -1);
-        _12++;
-        return true;
-    }
-
-    if (_12 == 0) {
-        if (getPlayer()->mVerticalSpeed < 0.1f && getGravityVec().dot(getPlayer()->getShadowNorm()) < -0.707f) {
+    if (MR::isSameMtx(*_20->getBaseMtx(), *_20->getPrevBaseMtx())) {
+        if (getPlayer()->_8D4 != nullptr) {
             addTrans(getPlayer()->mFrontVec * -150.0f, "Module");
             mActor->setBlendMtxTimer(16);
             stopAnimation("崖つかまり中", "基本");
             return false;
         }
-        if (!getPlayer()->mMovementStates._1 || getPlayer()->calcDistToCeilHead() < 80.0f) {
+    } else {
+        if (getPlayer()->mMovementStates._1A && _14 > 2) {
+            TVec3f lastMove(mActor->getLastMove());
+            if (lastMove.dot(getPlayer()->getSideWallNorm()) < 0.0f) {
+                _1C = true;
+            }
+        }
+        if (getPlayer()->_184.dot(getFrontVec()) > 0.95f && getPlayer()->_4E4 < 6.0f && !isAnimationRun("崖つかまり開始")) {
             _1C = true;
         }
-    } else if (_12 == 2) {
+    }
+
+    if (getPlayer()->_8D4 != nullptr && mWallSensor != getPlayer()->_8D4) {
+        addTrans(getPlayer()->mFrontVec * -150.0f, "Module");
+        mActor->setBlendMtxTimer(16);
+        stopAnimation("崖つかまり中", "基本");
+        return false;
+    }
+
+    if (_1C) {
+        addTrans(getPlayer()->mFrontVec * -150.0f, "Module");
+        mActor->setBlendMtxTimer(16);
+        stopAnimation("崖つかまり中", "基本");
+        return false;
+    }
+
+    switch (_12) {
+    case 0:
+        if (getPlayer()->mVerticalSpeed < 0.1f && getPlayer()->getShadowNorm().dot(getGravityVec()) < -0.707f) {
+            addTrans(getPlayer()->mFrontVec * -150.0f, "Module");
+            mActor->setBlendMtxTimer(16);
+            stopAnimation("崖つかまり中", "基本");
+            return false;
+        }
+        if (!getPlayer()->mMovementStates._1) {
+            _1C = true;
+        }
+        if (getPlayer()->calcDistToCeilHead() < 80.0f) {
+            _1C = true;
+        }
+        break;
+    case 1:
+        if (calcAngleD(getPlayer()->_368) > 45.0f) {
+            changeAnimationNonStop("崖つかまり終了坂");
+            changeAnimation(static_cast< const char* >(nullptr), "基本");
+        } else {
+            changeAnimation("崖つかまり終了", "基本");
+        }
+        playSound("声崖つかまり終了", -1);
+        _12++;
+        return true;
+    case 2:
         if (!getPlayer()->mMovementStates._1) {
             addVelocity(getFrontVec() * -100.0f);
         }
@@ -589,7 +604,7 @@ bool MarioHang::update() {
     if (checkTrgA()) {
         tryClimb(true);
     }
-    if (getPlayer()->mMovementStates._2) {
+    if (getPlayer()->mMovementStates._1D) {
         return true;
     }
 
@@ -604,7 +619,13 @@ bool MarioHang::update() {
         }
     }
 
-    if (stickDirection == 2) {
+    switch (stickDirection) {
+    case 1:
+        if (_14 > 18) {
+            tryClimb(false);
+        }
+        break;
+    case 2:
         if (isAnimationRun("崖つかまり開始") && getAnimator()->getFrame() < 15.0f) {
             _1D = true;
         } else {
@@ -617,8 +638,7 @@ bool MarioHang::update() {
             getPlayer()->_3CA = 120;
             return false;
         }
-    } else if (stickDirection == 1 && _14 > 18) {
-        tryClimb(false);
+        break;
     }
 
     if (_1B && _12 == 0 && _14 > 18) {

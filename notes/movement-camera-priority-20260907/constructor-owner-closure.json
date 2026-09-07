@@ -1,0 +1,362 @@
+[
+  {
+    "name": "MarioBlown::MarioBlown(MarioActor*)",
+    "symbol": "__ZN10MarioBlownC1EP10MarioActor",
+    "normal_archive_providers": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a"
+    ],
+    "decomp_source_candidates": [
+      "decomp/src/Game/Player/MarioBlown.cpp"
+    ]
+  },
+  {
+    "name": "MarioClimb::MarioClimb(MarioActor*)",
+    "symbol": "__ZN10MarioClimbC1EP10MarioActor",
+    "normal_archive_providers": [],
+    "decomp_source_candidates": [
+      "decomp/src/Game/Player/MarioClimb.cpp"
+    ]
+  },
+  {
+    "name": "MarioCrush::MarioCrush(MarioActor*)",
+    "symbol": "__ZN10MarioCrushC1EP10MarioActor",
+    "normal_archive_providers": [],
+    "decomp_source_candidates": [
+      "decomp/src/Game/Player/MarioDamageCrush.cpp"
+    ]
+  },
+  {
+    "name": "MarioFaint::MarioFaint(MarioActor*)",
+    "symbol": "__ZN10MarioFaintC1EP10MarioActor",
+    "normal_archive_providers": [],
+    "decomp_source_candidates": []
+  },
+  {
+    "name": "MarioMagic::MarioMagic(MarioActor*)",
+    "symbol": "__ZN10MarioMagicC1EP10MarioActor",
+    "normal_archive_providers": [],
+    "decomp_source_candidates": [
+      "decomp/src/Game/Player/MarioMagic.cpp"
+    ]
+  },
+  {
+    "name": "MarioSkate::MarioSkate(MarioActor*)",
+    "symbol": "__ZN10MarioSkateC1EP10MarioActor",
+    "normal_archive_providers": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a"
+    ],
+    "decomp_source_candidates": [
+      "decomp/src/Game/Player/MarioSkate.cpp"
+    ]
+  },
+  {
+    "name": "MarioStick::MarioStick(MarioActor*)",
+    "symbol": "__ZN10MarioStickC1EP10MarioActor",
+    "normal_archive_providers": [],
+    "decomp_source_candidates": [
+      "decomp/src/Game/Player/MarioStick.cpp"
+    ]
+  },
+  {
+    "name": "MarioDamage::MarioDamage(MarioActor*)",
+    "symbol": "__ZN11MarioDamageC1EP10MarioActor",
+    "normal_archive_providers": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a"
+    ],
+    "decomp_source_candidates": [
+      "decomp/src/Game/Player/MarioDamage.cpp"
+    ]
+  },
+  {
+    "name": "MarioFpView::MarioFpView(MarioActor*)",
+    "symbol": "__ZN11MarioFpViewC1EP10MarioActor",
+    "normal_archive_providers": [],
+    "decomp_source_candidates": [
+      "decomp/src/Game/Player/MarioFpView.cpp"
+    ]
+  },
+  {
+    "name": "MarioFreeze::MarioFreeze(MarioActor*)",
+    "symbol": "__ZN11MarioFreezeC1EP10MarioActor",
+    "normal_archive_providers": [],
+    "decomp_source_candidates": [
+      "decomp/src/Game/Player/MarioDamageFreeze.cpp"
+    ]
+  },
+  {
+    "name": "MarioRabbit::MarioRabbit(MarioActor*)",
+    "symbol": "__ZN11MarioRabbitC1EP10MarioActor",
+    "normal_archive_providers": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a"
+    ],
+    "decomp_source_candidates": [
+      "decomp/src/Game/Player/MarioRabbit.cpp"
+    ]
+  },
+  {
+    "name": "MarioSlider::MarioSlider(MarioActor*)",
+    "symbol": "__ZN11MarioSliderC1EP10MarioActor",
+    "normal_archive_providers": [],
+    "decomp_source_candidates": [
+      "decomp/src/Game/Player/MarioSlider.cpp"
+    ]
+  },
+  {
+    "name": "MarioTeresa::MarioTeresa(MarioActor*)",
+    "symbol": "__ZN11MarioTeresaC1EP10MarioActor",
+    "normal_archive_providers": [],
+    "decomp_source_candidates": []
+  },
+  {
+    "name": "MarioFireRun::MarioFireRun(MarioActor*)",
+    "symbol": "__ZN12MarioFireRunC1EP10MarioActor",
+    "normal_archive_providers": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a"
+    ],
+    "decomp_source_candidates": [
+      "decomp/src/Game/Player/MarioDamage.cpp"
+    ]
+  },
+  {
+    "name": "MarioParalyze::MarioParalyze(MarioActor*)",
+    "symbol": "__ZN13MarioParalyzeC1EP10MarioActor",
+    "normal_archive_providers": [],
+    "decomp_source_candidates": []
+  },
+  {
+    "name": "MarioRecovery::MarioRecovery(MarioActor*)",
+    "symbol": "__ZN13MarioRecoveryC1EP10MarioActor",
+    "normal_archive_providers": [],
+    "decomp_source_candidates": []
+  },
+  {
+    "name": "MarioSideStep::MarioSideStep(MarioActor*)",
+    "symbol": "__ZN13MarioSideStepC1EP10MarioActor",
+    "normal_archive_providers": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a"
+    ],
+    "decomp_source_candidates": [
+      "decomp/src/Game/Player/MarioSideStep.cpp"
+    ]
+  },
+  {
+    "name": "MarioSukekiyo::MarioSukekiyo(MarioActor*)",
+    "symbol": "__ZN13MarioSukekiyoC1EP10MarioActor",
+    "normal_archive_providers": [],
+    "decomp_source_candidates": [
+      "decomp/src/Game/Player/MarioSukekiyo.cpp"
+    ]
+  },
+  {
+    "name": "MarioFireDance::MarioFireDance(MarioActor*)",
+    "symbol": "__ZN14MarioFireDanceC1EP10MarioActor",
+    "normal_archive_providers": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a"
+    ],
+    "decomp_source_candidates": [
+      "decomp/src/Game/Player/MarioDamage.cpp"
+    ]
+  },
+  {
+    "name": "MarioFrontStep::MarioFrontStep(MarioActor*)",
+    "symbol": "__ZN14MarioFrontStepC1EP10MarioActor",
+    "normal_archive_providers": [],
+    "decomp_source_candidates": [
+      "decomp/src/Game/Player/MarioFrontStep.cpp"
+    ]
+  },
+  {
+    "name": "MarioDarkDamage::MarioDarkDamage(MarioActor*)",
+    "symbol": "__ZN15MarioDarkDamageC1EP10MarioActor",
+    "normal_archive_providers": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a"
+    ],
+    "decomp_source_candidates": [
+      "decomp/src/Game/Player/MarioDamage.cpp"
+    ]
+  },
+  {
+    "name": "MarioFireDamage::MarioFireDamage(MarioActor*)",
+    "symbol": "__ZN15MarioFireDamageC1EP10MarioActor",
+    "normal_archive_providers": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a"
+    ],
+    "decomp_source_candidates": [
+      "decomp/src/Game/Player/MarioDamage.cpp"
+    ]
+  },
+  {
+    "name": "MarioAbyssDamage::MarioAbyssDamage(MarioActor*)",
+    "symbol": "__ZN16MarioAbyssDamageC1EP10MarioActor",
+    "normal_archive_providers": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a"
+    ],
+    "decomp_source_candidates": [
+      "decomp/src/Game/Player/MarioDamage.cpp"
+    ]
+  },
+  {
+    "name": "Mario::clearSlope()",
+    "symbol": "__ZN5Mario10clearSlopeEv",
+    "normal_archive_providers": [],
+    "decomp_source_candidates": [
+      "decomp/src/Game/Player/MarioSlip.cpp"
+    ]
+  },
+  {
+    "name": "Mario::initMember()",
+    "symbol": "__ZN5Mario10initMemberEv",
+    "normal_archive_providers": [],
+    "decomp_source_candidates": [
+      "decomp/src/Game/Player/MarioInit.cpp"
+    ]
+  },
+  {
+    "name": "Mario::clear2DStick()",
+    "symbol": "__ZN5Mario12clear2DStickEv",
+    "normal_archive_providers": [],
+    "decomp_source_candidates": [
+      "decomp/src/Game/Player/MarioMove2D.cpp"
+    ]
+  },
+  {
+    "name": "Mario::isIgnoreTriangle(Triangle const*)",
+    "symbol": "__ZN5Mario16isIgnoreTriangleEPK8Triangle",
+    "normal_archive_providers": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a"
+    ],
+    "decomp_source_candidates": [
+      "decomp/src/Game/Player/MarioCollision.cpp"
+    ]
+  },
+  {
+    "name": "Mario::initTask()",
+    "symbol": "__ZN5Mario8initTaskEv",
+    "normal_archive_providers": [],
+    "decomp_source_candidates": [
+      "decomp/src/Game/Player/MarioTask.cpp"
+    ]
+  },
+  {
+    "name": "Mario::initSound()",
+    "symbol": "__ZN5Mario9initSoundEv",
+    "normal_archive_providers": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a"
+    ],
+    "decomp_source_candidates": [
+      "decomp/src/Game/Player/MarioSound.cpp"
+    ]
+  },
+  {
+    "name": "MarioFoo::MarioFoo(MarioActor*)",
+    "symbol": "__ZN8MarioFooC1EP10MarioActor",
+    "normal_archive_providers": [],
+    "decomp_source_candidates": []
+  },
+  {
+    "name": "MarioBump::MarioBump(MarioActor*)",
+    "symbol": "__ZN9MarioBumpC1EP10MarioActor",
+    "normal_archive_providers": [],
+    "decomp_source_candidates": [
+      "decomp/src/Game/Player/MarioBump.cpp"
+    ]
+  },
+  {
+    "name": "MarioBury::MarioBury(MarioActor*)",
+    "symbol": "__ZN9MarioBuryC1EP10MarioActor",
+    "normal_archive_providers": [],
+    "decomp_source_candidates": [
+      "decomp/src/Game/Player/MarioSukekiyo.cpp"
+    ]
+  },
+  {
+    "name": "MarioFlip::MarioFlip(MarioActor*)",
+    "symbol": "__ZN9MarioFlipC1EP10MarioActor",
+    "normal_archive_providers": [],
+    "decomp_source_candidates": [
+      "decomp/src/Game/Player/MarioFlip.cpp"
+    ]
+  },
+  {
+    "name": "MarioFlow::MarioFlow(MarioActor*)",
+    "symbol": "__ZN9MarioFlowC1EP10MarioActor",
+    "normal_archive_providers": [],
+    "decomp_source_candidates": [
+      "decomp/src/Game/Player/MarioFlow.cpp"
+    ]
+  },
+  {
+    "name": "MarioHang::MarioHang(MarioActor*)",
+    "symbol": "__ZN9MarioHangC1EP10MarioActor",
+    "normal_archive_providers": [],
+    "decomp_source_candidates": []
+  },
+  {
+    "name": "MarioMove::MarioMove(MarioActor*)",
+    "symbol": "__ZN9MarioMoveC1EP10MarioActor",
+    "normal_archive_providers": [],
+    "decomp_source_candidates": [
+      "decomp/src/Game/Player/MarioMoveSphere.cpp"
+    ]
+  },
+  {
+    "name": "MarioStep::MarioStep(MarioActor*)",
+    "symbol": "__ZN9MarioStepC1EP10MarioActor",
+    "normal_archive_providers": [],
+    "decomp_source_candidates": [
+      "decomp/src/Game/Player/MarioStep.cpp"
+    ]
+  },
+  {
+    "name": "MarioStun::MarioStun(MarioActor*)",
+    "symbol": "__ZN9MarioStunC1EP10MarioActor",
+    "normal_archive_providers": [],
+    "decomp_source_candidates": [
+      "decomp/src/Game/Player/MarioDamageStun.cpp"
+    ]
+  },
+  {
+    "name": "MarioSwim::MarioSwim(MarioActor*)",
+    "symbol": "__ZN9MarioSwimC1EP10MarioActor",
+    "normal_archive_providers": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a"
+    ],
+    "decomp_source_candidates": [
+      "decomp/src/Game/Player/MarioSwim.cpp"
+    ]
+  },
+  {
+    "name": "MarioTalk::MarioTalk(MarioActor*)",
+    "symbol": "__ZN9MarioTalkC1EP10MarioActor",
+    "normal_archive_providers": [],
+    "decomp_source_candidates": [
+      "decomp/src/Game/Player/MarioTalk.cpp"
+    ]
+  },
+  {
+    "name": "MarioWait::MarioWait(MarioActor*)",
+    "symbol": "__ZN9MarioWaitC1EP10MarioActor",
+    "normal_archive_providers": [],
+    "decomp_source_candidates": []
+  },
+  {
+    "name": "MarioWall::MarioWall(MarioActor*)",
+    "symbol": "__ZN9MarioWallC1EP10MarioActor",
+    "normal_archive_providers": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a"
+    ],
+    "decomp_source_candidates": [
+      "decomp/src/Game/Player/MarioWall.cpp"
+    ]
+  },
+  {
+    "name": "MarioWarp::MarioWarp(MarioActor*)",
+    "symbol": "__ZN9MarioWarpC1EP10MarioActor",
+    "normal_archive_providers": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a"
+    ],
+    "decomp_source_candidates": [
+      "decomp/src/Game/Player/MarioWarp.cpp"
+    ]
+  }
+]

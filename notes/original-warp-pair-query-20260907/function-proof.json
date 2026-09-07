@@ -1,0 +1,50 @@
+[
+  {
+    "name": "__dt__8WarpCubeFv",
+    "match_percent": 100.0,
+    "retail_bytes": 92,
+    "candidate_bytes": 92
+  },
+  {
+    "name": "getPairCube__11WarpCubeMgrFPC7AreaObj",
+    "match_percent": 100.0,
+    "retail_bytes": 136,
+    "candidate_bytes": 136
+  },
+  {
+    "name": "setInvalidateTimer__11WarpCubeMgrFP7AreaObjUs",
+    "match_percent": 100.0,
+    "retail_bytes": 16,
+    "candidate_bytes": 16
+  },
+  {
+    "name": "startEventCamera__11WarpCubeMgrFPC7AreaObj",
+    "match_percent": 100.0,
+    "retail_bytes": 72,
+    "candidate_bytes": 72
+  },
+  {
+    "name": "endEventCamera__11WarpCubeMgrFv",
+    "match_percent": 100.0,
+    "retail_bytes": 80,
+    "candidate_bytes": 80
+  },
+  {
+    "name": "movement__8WarpCubeFv",
+    "match_percent": 99.82758,
+    "retail_bytes": 116,
+    "candidate_bytes": 116
+  },
+  {
+    "name": "draw__8WarpCubeCFv",
+    "match_percent": 99.94505,
+    "retail_bytes": 364,
+    "candidate_bytes": 364
+  },
+  {
+    "name": "init__8WarpCubeFRC12JMapInfoIter",
+    "match_percent": 100.0,
+    "retail_bytes": 264,
+    "candidate_bytes": 264
+  }
+]

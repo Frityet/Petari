@@ -1,0 +1,18 @@
+[
+  "include/Game/AreaObj/WarpCube.hpp",
+  "include/Game/Player/Mario.hpp",
+  "include/Game/Player/MarioSwim.hpp",
+  "include/Game/Util/AreaObjUtil.hpp",
+  "include/Game/Util/ModelUtil.hpp",
+  "src/Game/AreaObj/WarpCube.cpp",
+  "src/Game/Player/Mario.cpp",
+  "src/Game/Player/MarioAccess.cpp",
+  "src/Game/Player/MarioActor.cpp",
+  "src/Game/Player/MarioFaint.cpp",
+  "src/Game/Player/MarioFlip.cpp",
+  "src/Game/Player/MarioWarp.cpp",
+  "src/Game/Util/AreaObjUtil.cpp",
+  "src/Game/Util/ModelUtil.cpp",
+  "notes/original-shared-player-providers-20260907/recovery-summary.json",
+  "notes/original-shared-player-providers-20260907/README.md"
+]

@@ -13,6 +13,10 @@
 
 
 namespace MR {
+    ResTIMG* getTexture(ResourceHolder* pResourceHolder, const char* pTextureName) {
+        return static_cast< ResTIMG* >(pResourceHolder->mFileInfoTable->getRes(pTextureName));
+    }
+
 
     void updateModelManager(LiveActor* pActor) {
         pActor->mModelManager->update();

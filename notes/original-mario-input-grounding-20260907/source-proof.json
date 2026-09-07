@@ -1,0 +1,22 @@
+{
+  "source": "decomp/src/Game/Player/Mario.cpp",
+  "baseline_sha256": "1eae0ff29ca5a8b620180e9e84b183ff94856d50a5123f719b9fbd329030df71",
+  "restored_sha256": "9de343d9fd036f947abc7fd4bf09c038a6928cc92df614ee82aa37db71ef4159",
+  "append_only": true,
+  "provenance": {
+    "commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "path": "src/Game/Player/Mario.cpp",
+    "sha256": "9c739ddcaf1c031e7094b4458acb9994a883e58f4522c1cebb0e008f1f77acab"
+  },
+  "methods": [
+    {
+      "method": "checkForceGrounding",
+      "sha256": "ea3ba02095c2cbffb06c7608b59852f2ca2e13827b17cf3ce29805604efad353"
+    },
+    {
+      "method": "inputStick",
+      "sha256": "2b9a2751f63ada2c397972a0e6625943292bd4fce0050bb6fa5345032e040896"
+    }
+  ],
+  "native_changes": false
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "symbol": "fixHeadFrontVecByGravity__5MarioFv",
+    "score": 98.97155,
+    "retail_bytes": "1828",
+    "candidate_bytes": "1812"
+  },
+  {
+    "symbol": "createDirectionMtx__5MarioFPA4_f",
+    "score": 99.793816,
+    "retail_bytes": "388",
+    "candidate_bytes": "388"
+  },
+  {
+    "symbol": "createCorrectionMtx__5MarioFPA4_fPQ29JGeometry8TVec3<f>",
+    "score": 99.94012,
+    "retail_bytes": "668",
+    "candidate_bytes": "668"
+  },
+  {
+    "symbol": "createAngleMtx__5MarioFPA4_fb",
+    "score": 96.71635,
+    "retail_bytes": "832",
+    "candidate_bytes": "808"
+  }
+]

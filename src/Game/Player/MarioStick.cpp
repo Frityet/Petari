@@ -91,7 +91,7 @@ bool MarioStick::setStickSensor(const HitSensor* pSensor) {
 bool MarioStick::start() {
     _4C = 0;
     changeAnimation("ハチ壁くっつき", "ハチ壁くっつき中");
-    startPadVib(0ul);
+    startPadVib(u32(0));
     playEffectTrans("ハチ花くっつき", _38);
     playSound("ハチ壁くっつき");
     mActor->_F44 = 0;

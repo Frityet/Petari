@@ -22,7 +22,15 @@ public:
         mZoneID = rhs.mZoneID;
     }
 
-    bool operator==(const JMapIdInfo&) const;
+    inline bool operator==(const JMapIdInfo& rOther) const {
+        bool ret = false;
+
+        if (_0 == rOther._0 && mZoneID == rOther.mZoneID) {
+            ret = true;
+        }
+
+        return ret;
+    }
 
     s32 _0;
     s32 mZoneID;

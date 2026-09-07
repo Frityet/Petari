@@ -1,0 +1,251 @@
+[
+  {
+    "owner": "MarioFaint",
+    "retail_address": "0x805c64d8",
+    "retail_span_sha256": "894adeeeea556b46dd47e83e427054f9466a3746901d6ee39b5a5c90da5e53b0",
+    "strings": [
+      {
+        "offset": "0x0",
+        "text": "後方小ダメージ",
+        "hex": "8ce395fb8fac835f8381815b8357",
+        "present_in_compiled_object": true
+      },
+      {
+        "offset": "0xf",
+        "text": "前方小ダメージ",
+        "hex": "914f95fb8fac835f8381815b8357",
+        "present_in_compiled_object": true
+      },
+      {
+        "offset": "0x1e",
+        "text": "ノーダメージ",
+        "hex": "836d815b835f8381815b8357",
+        "present_in_compiled_object": true
+      },
+      {
+        "offset": "0x2b",
+        "text": "声小ダメージ",
+        "hex": "90ba8fac835f8381815b8357",
+        "present_in_compiled_object": true
+      },
+      {
+        "offset": "0x38",
+        "text": "ダメージ",
+        "hex": "835f8381815b8357",
+        "present_in_compiled_object": true
+      },
+      {
+        "offset": "0x41",
+        "text": "基本",
+        "hex": "8aee967b",
+        "present_in_compiled_object": true
+      }
+    ]
+  },
+  {
+    "owner": "MarioFlip",
+    "retail_address": "0x805c6608",
+    "retail_span_sha256": "4483e1f332c68c894a99179e39754d510615228eac78961d3fef612de0efc027",
+    "strings": [
+      {
+        "offset": "0x0",
+        "text": "壁はじき",
+        "hex": "95c782cd82b682ab",
+        "present_in_compiled_object": true
+      },
+      {
+        "offset": "0x9",
+        "text": "後転ふっとび",
+        "hex": "8ce3935d82d382c182c682d1",
+        "present_in_compiled_object": true
+      },
+      {
+        "offset": "0x16",
+        "text": "後転ふっとび着地",
+        "hex": "8ce3935d82d382c182c682d19285926e",
+        "present_in_compiled_object": true
+      },
+      {
+        "offset": "0x27",
+        "text": "後転ふっとび空中",
+        "hex": "8ce3935d82d382c182c682d18bf39286",
+        "present_in_compiled_object": true
+      },
+      {
+        "offset": "0x38",
+        "text": "はねとばされ",
+        "hex": "82cd82cb82c682ce82b382ea",
+        "present_in_compiled_object": true
+      },
+      {
+        "offset": "0x45",
+        "text": "声小ダメージ",
+        "hex": "90ba8fac835f8381815b8357",
+        "present_in_compiled_object": true
+      },
+      {
+        "offset": "0x52",
+        "text": "壁衝突",
+        "hex": "95c78fd593cb",
+        "present_in_compiled_object": true
+      },
+      {
+        "offset": "0x59",
+        "text": "ダメージ",
+        "hex": "835f8381815b8357",
+        "present_in_compiled_object": true
+      },
+      {
+        "offset": "0x62",
+        "text": "はねとばされ終了",
+        "hex": "82cd82cb82c682ce82b382ea8f4997b9",
+        "present_in_compiled_object": true
+      },
+      {
+        "offset": "0x73",
+        "text": "壁ヒット",
+        "hex": "95c7837183628367",
+        "present_in_compiled_object": true
+      }
+    ]
+  },
+  {
+    "owner": "MarioWarp",
+    "retail_address": "0x805cd1d0",
+    "retail_span_sha256": "34123202b3d71bcbc18972897072de124406ff9e89f2661af392ffe8eb2a6e22",
+    "strings": [
+      {
+        "offset": "0x0",
+        "text": "WarpCube",
+        "hex": "5761727043756265",
+        "present_in_compiled_object": true
+      },
+      {
+        "offset": "0x9",
+        "text": "引き戻し",
+        "hex": "88f882ab96df82b5",
+        "present_in_compiled_object": true
+      },
+      {
+        "offset": "0x12",
+        "text": "Module",
+        "hex": "4d6f64756c65",
+        "present_in_compiled_object": true
+      },
+      {
+        "offset": "0x19",
+        "text": "引き戻し泡",
+        "hex": "88f882ab96df82b59641",
+        "present_in_compiled_object": true
+      },
+      {
+        "offset": "0x24",
+        "text": "ワープポッドブラー",
+        "hex": "838f815b8376837c8362836883758389815b",
+        "present_in_compiled_object": true
+      },
+      {
+        "offset": "0x37",
+        "text": "ワープポッド入り",
+        "hex": "838f815b8376837c8362836893fc82e8",
+        "present_in_compiled_object": true
+      },
+      {
+        "offset": "0x48",
+        "text": "声小ジャンプ",
+        "hex": "90ba8fac8357838383938376",
+        "present_in_compiled_object": true
+      },
+      {
+        "offset": "0x55",
+        "text": "声慌て",
+        "hex": "90ba8d5182c4",
+        "present_in_compiled_object": true
+      },
+      {
+        "offset": "0x5c",
+        "text": "ポッドワープ開始",
+        "hex": "837c83628368838f815b83768a4a8e6e",
+        "present_in_compiled_object": true
+      },
+      {
+        "offset": "0x6d",
+        "text": "しゃがみジャンプ",
+        "hex": "82b582e182aa82dd8357838383938376",
+        "present_in_compiled_object": true
+      },
+      {
+        "offset": "0x7e",
+        "text": "引き戻し基本",
+        "hex": "88f882ab96df82b58aee967b",
+        "present_in_compiled_object": true
+      },
+      {
+        "offset": "0x8b",
+        "text": "ワープポッド移動",
+        "hex": "838f815b8376837c8362836888da93ae",
+        "present_in_compiled_object": true
+      },
+      {
+        "offset": "0x9c",
+        "text": "惑星貫通中",
+        "hex": "986690af8ad192ca9286",
+        "present_in_compiled_object": true
+      },
+      {
+        "offset": "0xa7",
+        "text": "引き戻し浮遊",
+        "hex": "88f882ab96df82b595829756",
+        "present_in_compiled_object": true
+      },
+      {
+        "offset": "0xb4",
+        "text": "ポッドワープ終了",
+        "hex": "837c83628368838f815b83768f4997b9",
+        "present_in_compiled_object": true
+      },
+      {
+        "offset": "0xc5",
+        "text": "ワープポッド出",
+        "hex": "838f815b8376837c836283688f6f",
+        "present_in_compiled_object": true
+      },
+      {
+        "offset": "0xd4",
+        "text": "基本",
+        "hex": "8aee967b",
+        "present_in_compiled_object": true
+      },
+      {
+        "offset": "0xd9",
+        "text": "惑星貫通終了",
+        "hex": "986690af8ad192ca8f4997b9",
+        "present_in_compiled_object": true
+      },
+      {
+        "offset": "0xe6",
+        "text": "引き戻し泡破裂",
+        "hex": "88f882ab96df82b59641946a97f4",
+        "present_in_compiled_object": true
+      },
+      {
+        "offset": "0xf5",
+        "text": "しゃがみジャンプ着地",
+        "hex": "82b582e182aa82dd83578383839383769285926e",
+        "present_in_compiled_object": true
+      },
+      {
+        "offset": "0x10a",
+        "text": "声中ジャンプ",
+        "hex": "90ba92868357838383938376",
+        "present_in_compiled_object": true
+      },
+      {
+        "offset": "0x117",
+        "text": "落下",
+        "hex": "978e89ba",
+        "present_in_compiled_object": true
+      }
+    ]
+  }
+]

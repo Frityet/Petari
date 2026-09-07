@@ -1,6 +1,7 @@
 #include "compat/MetrowerksStdCompat.hpp"
 
 #include "Game/Util/MathUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
 
 #include <bit>
 #include <cmath>
@@ -456,6 +457,37 @@ namespace {
                     std::isinf(floating.y) && floating.y < 0.0F && std::isnan(floating.z),
                 "a zero fixed-point divisor preserves original IEEE infinities and unordered zero products");
     }
+    void test_original_matrix_basis_and_axis_rotation() {
+        TPos3f matrix;
+        matrix.identity();
+        matrix.setTrans(TVec3f{17.0F, -8.0F, 31.0F});
+        MR::makeMtxUpSide(&matrix, TVec3f{0.0F, 3.0F, 0.0F}, TVec3f{4.0F, 1.0F, 0.0F});
+        TVec3f side, up, front;
+        matrix.getXYZDir(side, up, front);
+        require_vector(side, TVec3f{1.0F, 0.0F, 0.0F}, "up/side removes the supplied side's up component");
+        require_vector(up, TVec3f{0.0F, 1.0F, 0.0F}, "up/side normalizes the primary up direction");
+        require_vector(front, TVec3f{0.0F, 0.0F, -1.0F}, "up/side preserves the original cross-product orientation");
+        MR::makeMtxFrontUp(&matrix, TVec3f{0.0F, 0.0F, 4.0F}, TVec3f{0.0F, 3.0F, 1.0F});
+        matrix.getXYZDir(side, up, front);
+        require_vector(side, TVec3f{1.0F, 0.0F, 0.0F}, "front/up retains the original side direction");
+        require_vector(up, TVec3f{0.0F, 1.0F, 0.0F}, "front/up removes the supplied up's front component");
+        require_vector(front, TVec3f{0.0F, 0.0F, 1.0F}, "front/up normalizes the primary front direction");
+        require(matrix.mMtx[0][3] == 17.0F && matrix.mMtx[1][3] == -8.0F && matrix.mMtx[2][3] == 31.0F,
+                "basis-only helpers retain the destination's existing translation");
+
+        const auto vector = TVec3f{1.0F, 0.0F, 0.0F};
+        const auto axis = TVec3f{0.0F, 0.0F, 2.0F};
+        TVec3f rotated;
+        MR::rotAxisVecRad(vector, axis, &rotated, HALF_PI);
+        require_vector(rotated, TVec3f{0.0F, 1.0F, 0.0F},
+                       "axis rotation takes the input vector first and normalizes its second argument as the rotation axis");
+        auto input_alias = vector;
+        MR::rotAxisVecRad(input_alias, axis, &input_alias, HALF_PI);
+        require_vector(input_alias, rotated, "axis rotation supports destination aliasing its input vector");
+        auto axis_alias = axis;
+        MR::rotAxisVecRad(vector, axis_alias, &axis_alias, HALF_PI);
+        require_vector(axis_alias, rotated, "axis rotation builds the rotation before overwriting an aliased axis");
+    }
 }  // namespace
 
 int main() {
@@ -473,6 +505,7 @@ int main() {
         test_scaled_velocity_fused_rounding_and_aliasing();
         test_vec2_near_zero_boundaries();
         test_fixed16_conversion_boundaries();
+        test_original_matrix_basis_and_axis_rotation();
         std::cout << "game math rotation tests passed\n";
         return 0;
     } catch (const std::exception& exception) {

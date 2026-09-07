@@ -1,0 +1,133 @@
+{
+  "reference_head_at_manifest": "475e213726f7850a5587617c896b03daecccc0e3",
+  "reference_paths": [
+    "src/Game/Player/Mario.cpp",
+    "include/Game/Player/Mario.hpp"
+  ],
+  "root_source_paths": [],
+  "root_notes_path": "notes/original-mario-matrix-core-20260907/",
+  "additional_review_path": "notes/original-mario-posture-recovery-20260907/independent-review.md",
+  "methods": [
+    {
+      "name": "createDirectionMtx",
+      "sha256": "e17e64b38809da601adf8fc9a201b06646fda0dead2438eaef05c1d87c41080d",
+      "matches_current_reference": true
+    },
+    {
+      "name": "createCorrectionMtx",
+      "sha256": "34866785d93ee0405dcd467ff7940ba3cd13ab996729c83f74004ae6f3f197b7",
+      "matches_current_reference": true
+    },
+    {
+      "name": "createAngleMtx",
+      "sha256": "cbbdc798b25e19883d3c3e712ef81d50b9f0b1955e32f5d1b0764c008085f426",
+      "matches_current_reference": true
+    },
+    {
+      "name": "fixHeadFrontVecByGravity",
+      "sha256": "650f3a560b054b275fbcba2555eeac0311647515166a374d6f6b50466cf10b79",
+      "matches_current_reference": true
+    }
+  ],
+  "reference_header_sha256_at_manifest": "e970d71352c548f8de35201381dd482df7b05713a42efba693b59713106c49f4",
+  "reference_source_sha256_at_manifest": "3c9927603f259a365e458c06be805500de752656222e17e697f4d232fca2071d",
+  "notes": [
+    {
+      "path": "notes/original-mario-matrix-core-20260907/Mario.baseline.cpp",
+      "sha256": "1eae0ff29ca5a8b620180e9e84b183ff94856d50a5123f719b9fbd329030df71"
+    },
+    {
+      "path": "notes/original-mario-matrix-core-20260907/Mario.before-append.cpp",
+      "sha256": "9de343d9fd036f947abc7fd4bf09c038a6928cc92df614ee82aa37db71ef4159"
+    },
+    {
+      "path": "notes/original-mario-matrix-core-20260907/Mario.candidate.cpp",
+      "sha256": "9442a21d3a75fdf6e9f26d39802dfdb4795f96c9e12621caca27f59baec13976"
+    },
+    {
+      "path": "notes/original-mario-matrix-core-20260907/README.md",
+      "sha256": "2eb2ffe9dae27010caac74972aca502e91e94be5fbd6845d37dc5d301bf2e32b"
+    },
+    {
+      "path": "notes/original-mario-matrix-core-20260907/baseline-comparison.json",
+      "sha256": "aa3186943524f91ac2fe0df153791685591d465ddfb2420f19d7e4133318c5ad"
+    },
+    {
+      "path": "notes/original-mario-matrix-core-20260907/before-append-compile-command.json",
+      "sha256": "99e999a2f7c13067dd6dc835f7ceef9acb308d3397f442c997db48e3635d4b00"
+    },
+    {
+      "path": "notes/original-mario-matrix-core-20260907/before-append-compile.log",
+      "sha256": "422e6fdc7840df8fd9a894dcd29925b11e604aa9fbda0b54a9e1cd2e5a82282b"
+    },
+    {
+      "path": "notes/original-mario-matrix-core-20260907/before-append-objdiff-command.json",
+      "sha256": "edb2f226dcbd92e6800c733debf5f2967277fb0638cf96bed671d8d70ec7b7fb"
+    },
+    {
+      "path": "notes/original-mario-matrix-core-20260907/call-proof.json",
+      "sha256": "7ca63c5637b5823f819b7c3907a0f8701b7c78c252aa90ed13c099308f19c9de"
+    },
+    {
+      "path": "notes/original-mario-matrix-core-20260907/compile-command.json",
+      "sha256": "7b0611bb41409e375429e855542cbb2f3504413dac6ca83e1dc5203719d5f485"
+    },
+    {
+      "path": "notes/original-mario-matrix-core-20260907/compile.log",
+      "sha256": "c7dc548761dca7c673d5dbfff8e21d8a95f810d1d842825ef67a46c3714efb85"
+    },
+    {
+      "path": "notes/original-mario-matrix-core-20260907/createAngleMtx.retail.s",
+      "sha256": "bb2220bdf187ef107ff48eab18c862c2a8a488b9f7eeafc5aa8eec55018fbe91"
+    },
+    {
+      "path": "notes/original-mario-matrix-core-20260907/createCorrectionMtx.retail.s",
+      "sha256": "d29c5e913f8915cd02fab2c6d0bff28befc74eeda7bee9499b3a20a3952a15c2"
+    },
+    {
+      "path": "notes/original-mario-matrix-core-20260907/createDirectionMtx.retail.s",
+      "sha256": "d5d9e912fe64e836e7dcc2cab21232065db4089eea28e447327d37f2b61e5ff5"
+    },
+    {
+      "path": "notes/original-mario-matrix-core-20260907/fixHeadFrontVecByGravity.retail.s",
+      "sha256": "ecada166f0f429deb76ab663c4d63294c6986c2d0b90564764d88717842ef8e0"
+    },
+    {
+      "path": "notes/original-mario-matrix-core-20260907/function-proof.json",
+      "sha256": "6d576b32365f91b80f5f4e73722eb097dd5dbd2f7da67a2c02fb4daafccea7f6"
+    },
+    {
+      "path": "notes/original-mario-matrix-core-20260907/methods.cpp",
+      "sha256": "57f10154d768fa1bc455885d59fb28a9e9a7cdd166a87422b03ced228823211c"
+    },
+    {
+      "path": "notes/original-mario-matrix-core-20260907/methods.first.cpp",
+      "sha256": "861ba8545514948d6fe36eeb9f0f6deebb7011da5c6289a839a5fb4ab5ec54f0"
+    },
+    {
+      "path": "notes/original-mario-matrix-core-20260907/objdiff-command.json",
+      "sha256": "310d5312dc8451a61d580903deffb5ddfeecb524dcb49618b95924a63015c3f5"
+    },
+    {
+      "path": "notes/original-mario-matrix-core-20260907/probe.py",
+      "sha256": "5baea25ca8fa65ec373d47fffdaf07da78d1ef98bc5e759c14ca55814fc089c7"
+    },
+    {
+      "path": "notes/original-mario-matrix-core-20260907/reference-compile-command.json",
+      "sha256": "1b4f43d6422f507510917fe67834d982faa64383f06803df20698baa4eb47d47"
+    },
+    {
+      "path": "notes/original-mario-matrix-core-20260907/reference-compile.log",
+      "sha256": "f24ffba586472e4ecdc603156f802be9070b96819e0feea3f691d18ac5bc31e0"
+    },
+    {
+      "path": "notes/original-mario-matrix-core-20260907/reference-function-proof.json",
+      "sha256": "5d8dfcbe5ab3eefd788e7911e525146d0f2c6d3f83e6b6d3cbd92e14ec3bccc1"
+    },
+    {
+      "path": "notes/original-mario-matrix-core-20260907/reference-objdiff-command.json",
+      "sha256": "ca3acdcf186628048d65207985afea698e3fa6ede729fb16d5c50208152183af"
+    }
+  ],
+  "scope": "Only the four method bodies, HitSensor include and bool correction declaration belong to this tranche. Shared reference files contain other agents\u2019 authorized recovery; parent owns staging and subsequent native mirroring."
+}

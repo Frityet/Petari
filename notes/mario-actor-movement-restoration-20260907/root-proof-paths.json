@@ -1,0 +1,16 @@
+[
+  "notes/mario-actor-movement-restoration-20260907/README.md",
+  "notes/mario-actor-movement-restoration-20260907/source-probe.json",
+  "notes/mario-actor-movement-restoration-20260907/function-proof.json",
+  "notes/mario-actor-movement-restoration-20260907/native-provider-closure.json",
+  "notes/mario-actor-movement-restoration-20260907/native-probe.command.json",
+  "notes/mario-actor-movement-restoration-20260907/wii-compile-command.json",
+  "notes/mario-actor-movement-restoration-20260907/wii-objdiff-command.json",
+  "notes/mario-actor-movement-restoration-20260907/audit-native-dependencies.py",
+  "notes/mario-actor-movement-restoration-20260907/probe/MarioActor.cpp",
+  "notes/mario-actor-movement-restoration-20260907/MarioActor.diff",
+  "notes/mario-actor-movement-restoration-20260907/init2.diff",
+  "notes/mario-actor-movement-restoration-20260907/initAfterPlacement.diff",
+  "notes/mario-actor-movement-restoration-20260907/movement.diff",
+  "notes/mario-actor-movement-restoration-20260907/control.diff"
+]

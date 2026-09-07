@@ -1,0 +1,108 @@
+{
+  "functions": [
+    {
+      "translation_unit": "AreaObjUtil",
+      "symbol": "calcSpherePos__2MRFPQ29JGeometry8TVec3<f>PC7AreaObj",
+      "retail_bytes": "16",
+      "fuzzy_percent": 100.0
+    },
+    {
+      "translation_unit": "AreaObjUtil",
+      "symbol": "getSphereRadius__2MRFPC7AreaObj",
+      "retail_bytes": "12",
+      "fuzzy_percent": 100.0
+    },
+    {
+      "translation_unit": "DirectDrawUtil",
+      "symbol": "ddSetVtxFormat__2MRFUl",
+      "retail_bytes": "280",
+      "fuzzy_percent": 100.0
+    },
+    {
+      "translation_unit": "DirectDrawUtil",
+      "symbol": "ddChangeTev__2MRFv",
+      "retail_bytes": "352",
+      "fuzzy_percent": 100.0
+    },
+    {
+      "translation_unit": "DirectDrawUtil",
+      "symbol": "ddSendVtxData__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec2<f>",
+      "retail_bytes": "120",
+      "fuzzy_percent": 88.166664
+    },
+    {
+      "translation_unit": "DirectDrawUtil",
+      "symbol": "ddSendVtxData__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec2<f>",
+      "retail_bytes": "80",
+      "fuzzy_percent": 100.0
+    },
+    {
+      "translation_unit": "DirectDrawUtil",
+      "symbol": "ddLightingOn__2MRFUs",
+      "retail_bytes": "88",
+      "fuzzy_percent": 100.0
+    },
+    {
+      "translation_unit": "DirectDrawUtil",
+      "symbol": "ddLightingOff__2MRFv",
+      "retail_bytes": "84",
+      "fuzzy_percent": 100.0
+    },
+    {
+      "translation_unit": "MtxUtil",
+      "symbol": "makeMtxUpSide__2MRFPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+      "retail_bytes": "124",
+      "fuzzy_percent": 99.48387
+    },
+    {
+      "translation_unit": "MtxUtil",
+      "symbol": "makeMtxFrontUp__2MRFPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+      "retail_bytes": "124",
+      "fuzzy_percent": 99.80645
+    },
+    {
+      "translation_unit": "MtxUtil",
+      "symbol": "rotAxisVecRad__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>f",
+      "retail_bytes": "76",
+      "fuzzy_percent": 100.0
+    },
+    {
+      "translation_unit": "ModelUtil",
+      "symbol": "getTexture__2MRFP14ResourceHolderPCc",
+      "retail_bytes": "8",
+      "fuzzy_percent": 100.0
+    },
+    {
+      "translation_unit": "LiveActorUtil",
+      "symbol": "onCalcAnim__2MRFP9LiveActor",
+      "retail_bytes": "12",
+      "fuzzy_percent": 100.0
+    }
+  ],
+  "complete_direct_draw_tu_byte_identical": true,
+  "native_syntax_passed": 5,
+  "final_type_syntax_passed": 2,
+  "math_build_exit": 0,
+  "math_run_exit": 0,
+  "direct_draw_build_exit": 0,
+  "direct_draw_run_exit": 0,
+  "showcase_build_exit": 255,
+  "remaining_unresolved": 27,
+  "decomp_paths": [
+    "src/Game/Util/AreaObjUtil.cpp",
+    "include/Game/Util/AreaObjUtil.hpp",
+    "src/Game/Util/ModelUtil.cpp",
+    "include/Game/Util/ModelUtil.hpp"
+  ],
+  "native_source_sha256": {
+    "src/compat/OriginalModelAccess.cpp": "c895712f668f7ce63d90e323ec22ab9ec7c90fd8706965ce8072017cca5210db",
+    "src/compat/OriginalActorModelAccess.cpp": "687ee22ff7755cee9e05ee02c2e13e4c6f35ccf5ac5321ce038473fa748a69f7",
+    "src/compat/OriginalMtxGeometry.cpp": "701b8665851c26f1e00b167e1934c3a04795a3a7056d87af715a96c808b96e89",
+    "src/Game/Util/AreaObjUtil.cpp": "4e17d07f5cc29dd4a23017ef5832303b9b6a2bba70e76e2e4da61efc7c3f7cc9",
+    "src/Game/Util/AreaObjUtil.hpp": "0d481b3a9ee269f96637f502c522ee3556f7795230abbe94937b272246e1b2cf",
+    "src/Game/Util/ModelUtil.hpp": "046e861378c2cbeb25b270c32e360c089a252e7755da6b357b652a789e6df845",
+    "src/Game/Util/DirectDrawUtil.cpp": "8b581043c1cd4b7f80ba60158be8ef68a28f9bb01d52f978774f42bd74f20251",
+    "tests/GameMathRotationTests.cpp": "5e78df72ffcae7d719fac7af7542f293321e6289b512a64d80e71693608f1a9d",
+    "tests/OriginalDirectDrawUtilTests.cpp": "1024b3979fd6c3ed584b88dcdc008969b755c8bae41e9cc48b50e35312374b90"
+  }
+}

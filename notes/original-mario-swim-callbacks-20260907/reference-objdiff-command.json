@@ -1,0 +1,16 @@
+{
+  "command": [
+    "build/tools/objdiff-cli",
+    "diff",
+    "-1",
+    "/Users/frityet/Projects/petari/decomp/build/original-player-state-recovery-20260907/retail/obj/Game/Player/MarioSwim.o",
+    "-2",
+    "/Users/frityet/Projects/petari/notes/original-mario-swim-callbacks-20260907/MarioSwim.reference.o",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-mario-swim-callbacks-20260907/MarioSwim.reference.objdiff.json",
+    "--format",
+    "json-pretty"
+  ],
+  "cwd": "/Users/frityet/Projects/petari/decomp",
+  "exit_code": 0
+}

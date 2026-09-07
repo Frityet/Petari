@@ -13,6 +13,10 @@ namespace {
 }
 
 namespace MR {
+    void onCalcAnim(LiveActor* pActor) {
+        pActor->mFlag.mIsNoCalcAnim = false;
+    }
+
 
     void calcAnimDirect(LiveActor* pActor) {
         bool isNoCalcAnim = pActor->mFlag.mIsNoCalcAnim;

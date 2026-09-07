@@ -1,0 +1,34 @@
+[
+  {
+    "mangled": "__ZN5Mario10inputStickEv",
+    "name": "Mario::inputStick()"
+  },
+  {
+    "mangled": "__ZN5Mario11postureCtrlEPA4_f",
+    "name": "Mario::postureCtrl(float (*) [4])"
+  },
+  {
+    "mangled": "__ZN5Mario13updateLookOfsEv",
+    "name": "Mario::updateLookOfs()"
+  },
+  {
+    "mangled": "__ZN5Mario14createAngleMtxEPA4_fb",
+    "name": "Mario::createAngleMtx(float (*) [4], bool)"
+  },
+  {
+    "mangled": "__ZN5Mario18createDirectionMtxEPA4_f",
+    "name": "Mario::createDirectionMtx(float (*) [4])"
+  },
+  {
+    "mangled": "__ZN5Mario19checkForceGroundingEv",
+    "name": "Mario::checkForceGrounding()"
+  },
+  {
+    "mangled": "__ZN5Mario19createCorrectionMtxEPA4_fPN9JGeometry5TVec3IfEE",
+    "name": "Mario::createCorrectionMtx(float (*) [4], JGeometry::TVec3<float>*)"
+  },
+  {
+    "mangled": "__ZN5Mario24fixHeadFrontVecByGravityEv",
+    "name": "Mario::fixHeadFrontVecByGravity()"
+  }
+]

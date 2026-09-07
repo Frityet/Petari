@@ -1,0 +1,6 @@
+{
+  "change": "Bound the initialized local lifetimes within the two original switch arms. No control flow or operations changed.",
+  "native_architecture_change": "reference _1D8/_1DC fields use existing native mRasterBuffers[0]/[1] pointer storage",
+  "paired_symbols": 297,
+  "changed_symbols": []
+}

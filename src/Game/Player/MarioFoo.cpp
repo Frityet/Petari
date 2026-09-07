@@ -628,9 +628,9 @@ bool MarioFoo::passRing(const HitSensor* pSensor) {
     }
 
     DashRing* pRing = static_cast< DashRing* >(pSensor->mHost);
-    _5A = pRing->_AC;
-    _5C = pRing->_B0;
-    _4E = pRing->_A8;
+    _5A = pRing->mMaxDuration;
+    _5C = pRing->mSpeedScale;
+    _4E = pRing->mBoostTime;
     return true;
 }
 
