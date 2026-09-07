@@ -1,0 +1,47 @@
+[
+  {
+    "path": "AudioRes/Stream/SMG_ev_prolo01_b_strm.ast",
+    "size": 6683488,
+    "sha256": "b1ce1985fc527424f8f02a1cc6a3753ae3e0f5f6d11782f5d4608b40bee51f9d"
+  },
+  {
+    "path": "AudioRes/Stream/SMG_ev_prolo01_strm.ast",
+    "size": 7690592,
+    "sha256": "ce19e648e7761660d0a258374b26c97cc0d6b1cb8a0d23d43176eaf654a0d85d"
+  },
+  {
+    "path": "AudioRes/Stream/SMG_ev_prolo02_strm.ast",
+    "size": 6422048,
+    "sha256": "18519aa192ead1ea6e2f5b9473e0cf77b83f99f09077a233ce7dccb15742a01b"
+  },
+  {
+    "path": "AudioRes/Stream/SMG_title_strm.ast",
+    "size": 5694208,
+    "sha256": "4880d6dfdf8b9a3bbb4ecc04706988f052d9abeb04c5f703f2dcf36f475453a0"
+  },
+  {
+    "path": "AudioRes/Waves/B115take_0.aw",
+    "size": 194496,
+    "sha256": "6b9f6d6248fabb2a111390dd45b096eff982dca9ccd36808e8d2a61329ac1fc9"
+  },
+  {
+    "path": "AudioRes/Waves/B65kawa_0.aw",
+    "size": 119712,
+    "sha256": "19f04d9a36885d6dfad308466dce63d5d52595eb406a5124775f268ce5be26af"
+  },
+  {
+    "path": "AudioRes/Waves/B88kawa_0.aw",
+    "size": 358432,
+    "sha256": "ae0043e6e75ff6fa4a007f7355c99ca21416390e6b33be6e0512fb7adcac2555"
+  },
+  {
+    "path": "KrKorean/AudioRes/SMR.szs",
+    "size": 196608,
+    "sha256": "a9f7d2f7828052098a1828b1cd172f301f2b2091526dd207dde154b59f9f49aa"
+  },
+  {
+    "path": "KrKorean/AudioRes/Waves/B64kawa_0.aw",
+    "size": 4770848,
+    "sha256": "088f96c7ac62ace546a5f3234cfcdd4d2a2b478b8a2629e3195a1f608efcbbc8"
+  }
+]

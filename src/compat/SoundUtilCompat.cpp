@@ -254,6 +254,16 @@ namespace MR {
         return smgpc::compat::require_active_audio_event_service().is_cube_bgm_change_invalid();
     }
 
+    void setSoundVolumeSetting(s32 volumeSet, u32 maxSteps) {
+        require_audio_runtime("SE volume preset")
+            .j_audio_playback().set_sound_volume_setting(volumeSet, maxSteps);
+    }
+
+    void recoverSoundVolumeSetting(u32 maxSteps) {
+        require_audio_runtime("SE volume preset recovery")
+            .j_audio_playback().recover_sound_volume_setting(maxSteps);
+    }
+
     void submitTrigSE() {
         require_audio_runtime("Trigger-SE submission")
             .j_audio_playback().set_trigger_sound_permitted(false);

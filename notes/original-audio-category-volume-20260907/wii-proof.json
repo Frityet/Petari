@@ -1,0 +1,206 @@
+[
+  {
+    "name": "JAISoundParams",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/decomp/src/JSystem/JAudio2/JAISoundParams.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-audio-category-volume-20260907/JAISoundParams.wii.o"
+    ],
+    "compile_exit": 0,
+    "diff_exit": 0,
+    "symbols": [
+      {
+        "name": "moveVolume__18JAISoundParamsMoveFfUl",
+        "score": 100.0
+      },
+      {
+        "name": "movePitch__18JAISoundParamsMoveFfUl",
+        "score": 100.0
+      },
+      {
+        "name": "moveFxMix__18JAISoundParamsMoveFfUl",
+        "score": 100.0
+      },
+      {
+        "name": "set__Q224JAISoundParamsTransition11TTransitionFffUl",
+        "score": 100.0
+      },
+      {
+        "name": "[.rodata-0]",
+        "score": 100.0
+      }
+    ]
+  },
+  {
+    "name": "AudSystemVolumeController",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/decomp/src/Game/AudioLib/AudSystemVolumeController.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-audio-category-volume-20260907/AudSystemVolumeController.wii.o"
+    ],
+    "compile_exit": 0,
+    "diff_exit": 0,
+    "symbols": [
+      {
+        "name": "__ct__25AudSystemVolumeControllerFP9AudSystem",
+        "score": 100.0
+      },
+      {
+        "name": "init__25AudSystemVolumeControllerFv",
+        "score": 100.0
+      },
+      {
+        "name": "update__25AudSystemVolumeControllerFv",
+        "score": 100.0
+      },
+      {
+        "name": "setSeVolumeSetTrig__25AudSystemVolumeControllerFlUl",
+        "score": 100.0
+      },
+      {
+        "name": "recoverSeVolumeSet__25AudSystemVolumeControllerFUl",
+        "score": 100.0
+      },
+      {
+        "name": "setSeVolumeSetLevel__25AudSystemVolumeControllerFl",
+        "score": 100.0
+      },
+      {
+        "name": "updateSeVolumeSetLevel__25AudSystemVolumeControllerFv",
+        "score": 100.0
+      },
+      {
+        "name": "setSeVolumeSetInner__25AudSystemVolumeControllerFlUl",
+        "score": 100.0
+      },
+      {
+        "name": "pushVolumeSet__25AudSystemVolumeControllerFv",
+        "score": 100.0
+      },
+      {
+        "name": "popVolumeSet__25AudSystemVolumeControllerFv",
+        "score": 100.0
+      }
+    ]
+  }
+]

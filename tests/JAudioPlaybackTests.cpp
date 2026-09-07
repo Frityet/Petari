@@ -1031,6 +1031,10 @@ namespace {
                     service.is_stage_bgm_paused() &&
                     service.active_voice_count() == 1U,
                 "prepared Title BGM must own a paused concrete retail stream token");
+        service.set_sound_volume_setting(5, 0);
+        require(mixer_observer->voice_bus_gain_multiplier(prepared_stop_token) == 1.0F,
+                "SE preset changes must not change the stage stream bus gain");
+        service.recover_sound_volume_setting(0);
         const auto paused_callback_deadline =
             std::chrono::steady_clock::now() + std::chrono::seconds(3);
         while (service.playback_stats().device_callbacks == 0U &&
@@ -1155,6 +1159,25 @@ namespace {
                         prologue_stream.first);
         }
 
+        service.set_sound_volume_setting(5, 0);
+        auto *category_muted = service.start_sound_effect("SE_SY_GAME_START", -1, -1);
+        const auto category_token = aurora::audio::VoiceToken{category_muted->backendToken()};
+        require(mixer_observer->voice_bus_gain_multiplier(category_token) == 0.0F,
+                "a new finite SE must inherit its original category's current gain");
+        service.stop_sound_effect("SE_SY_GAME_START", 6);
+        service.recover_sound_volume_setting(0);
+        require(mixer_observer->voice_bus_gain_multiplier(category_token) == 1.2F,
+                "recovering the original preset must update already playing finite voices");
+        const auto category_stop_deadline = std::chrono::steady_clock::now() + std::chrono::seconds(3);
+        while (mixer_observer->is_voice_active(category_token) &&
+               std::chrono::steady_clock::now() < category_stop_deadline) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        }
+        require(!mixer_observer->is_voice_active(category_token),
+                "category recovery must preserve the finite voice's pending stop fade");
+        service.begin_frame(2); service.end_frame();
+        require(!category_muted->isSoundAttached(), "the category-updated stopped voice must detach");
+
         constexpr auto prologue_effects = std::array{
             "SE_SY_LETTER_APPEAR",
             "SE_SV_PEACH_OPENING_LETTER",
@@ -1242,6 +1265,16 @@ namespace {
                     service.is_device_open(),
                 "a level call must return a handle attached to a resumed SDL voice");
         const auto first_wind1_token = wind1->backendToken();
+        const auto wind1_backend = aurora::audio::VoiceToken{first_wind1_token};
+        require(mixer_observer->voice_bus_gain_multiplier(wind1_backend) == 1.2F,
+                "new level voices must use their authored category volume");
+        service.set_sound_volume_setting(1, 0);
+        require(mixer_observer->voice_bus_gain_multiplier(wind1_backend) == 0.3F,
+                "preset changes must update existing level voices");
+        (void)service.start_level_sound("SE_AT_LV_ASTRO_DOME_WIND_1", 100, -1);
+        require(mixer_observer->voice_bus_gain_multiplier(wind1_backend) == 0.3F,
+                "level refresh must preserve independently routed category volume");
+        service.recover_sound_volume_setting(0);
         require(mixer_observer->voice_pitch_multiplier(
                     aurora::audio::VoiceToken{first_wind1_token}) == 1.5F,
                 "RMGK02 wind-1 parameter 100 must apply the retail 1.5 pitch");
@@ -1677,6 +1710,13 @@ namespace {
 
 int main(int argc, char **argv) {
     try {
+        if (argc == 2 && std::string_view(argv[1]) == "--playback-service-probe") {
+            const auto fixture = load_retail_audio_fixture();
+            require(fixture.has_value(), "Playback service probe requires the audited retail fixture");
+            test_real_stream_handle_and_lifetime(*fixture);
+            std::cout << "[ok] real retail stage/SE/category/level voices and stop lifetimes\n";
+            return 0;
+        }
         if (argc == 2 &&
             std::string_view(argv[1]) == "--missing-device-probe") {
             test_missing_device_fails_explicitly();

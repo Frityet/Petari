@@ -1,0 +1,14 @@
+[
+  "src/Game/AudioLib/AudSystemVolumeController.cpp",
+  "src/Game/AudioLib/AudSystemVolumeController.hpp",
+  "src/compat/JAudioCategoryVolumeOwnership.cpp",
+  "src/compat/JAudioCategoryVolumeOwnership.hpp",
+  "src/compat/OriginalAudioVolumeController.cpp",
+  "src/runtime/JAudioPlaybackService.cpp",
+  "src/runtime/JAudioPlaybackService.hpp",
+  "src/compat/SoundUtilCompat.cpp",
+  "src/Game/xmake.lua",
+  "tests/JAudioPlaybackTests.cpp",
+  "tests/OriginalAudioCategoryVolumeTests.cpp",
+  "tests/xmake.lua"
+]

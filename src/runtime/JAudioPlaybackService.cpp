@@ -1,7 +1,9 @@
 #include <aurora/exception.hpp>
+#include <aurora/allocation.hpp>
 #include "runtime/JAudioPlaybackService.hpp"
 
 #include "compat/JAudioSoundParameterSemantics.hpp"
+#include "compat/JAudioCategoryVolumeOwnership.hpp"
 #include "resource/Yaz0.hpp"
 #include "runtime/RuntimeServices.hpp"
 
@@ -86,7 +88,8 @@ namespace smgpc::runtime {
         std::unique_ptr<aurora::audio::PcmAudioMixer> mixer)
         : _archive_factory(std::move(archive_factory)),
           _stream_loader(std::move(stream_loader)),
-          _mixer(std::move(mixer)) {
+          _mixer(std::move(mixer)),
+          _category_volume(std::make_unique<compat::JAudioCategoryVolumeOwnership>()) {
         if (!_archive_factory) {
             aurora::throw_host_exception<std::invalid_argument>(
                 "JAudio playback requires an archive factory");
@@ -111,6 +114,8 @@ namespace smgpc::runtime {
                 "JAudio playback frame was begun before the previous frame ended");
         }
 
+        _category_volume->update();
+        apply_category_gains();
         _frame_index = frame_index;
         _frame_open = true;
         require_working_output();
@@ -143,6 +148,7 @@ namespace smgpc::runtime {
     JAISoundHandle *JAudioPlaybackService::start_level_sound(
         std::string_view name, std::int32_t parameter_1,
         std::int32_t parameter_2) {
+        const auto host_allocations = aurora::allocation::HostAllocationScope{};
         if (name.empty()) {
             aurora::throw_host_exception<std::invalid_argument>(
                 "JAudio level playback requires a nonempty sound name");
@@ -223,6 +229,7 @@ namespace smgpc::runtime {
         auto spec = voice.recipe.voice;
         spec.gain_multiplier = adjustment->gain_multiplier;
         spec.pitch_multiplier = adjustment->pitch_multiplier;
+        spec.bus_gain_multiplier = sound_category_gain(*sound_id);
         voice.token = _mixer->start_voice(spec);
         voice.handle.attachBackend(this, voice.token.value);
         voice.refreshed = true;
@@ -233,6 +240,7 @@ namespace smgpc::runtime {
     JAISoundHandle *JAudioPlaybackService::start_sound_effect(
         std::string_view name, std::int32_t parameter_1,
         std::int32_t parameter_2) {
+        const auto host_allocations = aurora::allocation::HostAllocationScope{};
         if (name.empty()) {
             aurora::throw_host_exception<std::invalid_argument>(
                 "JAudio sound-effect playback requires a nonempty sound name");
@@ -269,7 +277,9 @@ namespace smgpc::runtime {
         _mixer->open_default_playback();
         require_working_output();
         retire_finished_voices();
-        const auto token = _mixer->start_voice(recipe->second.voice);
+        auto spec = recipe->second.voice;
+        spec.bus_gain_multiplier = sound_category_gain(*sound_id);
+        const auto token = _mixer->start_voice(spec);
         auto voice = std::make_unique<SoundEffectVoiceEntry>();
         voice->name = std::string(name);
         voice->sound_id = *sound_id;
@@ -358,6 +368,34 @@ namespace smgpc::runtime {
         return _trigger_sound_permitted && _level_sound_permitted;
     }
 
+    void JAudioPlaybackService::set_sound_volume_setting(std::int32_t volume_set, std::uint32_t steps) {
+        _category_volume->controller().setSeVolumeSetTrig(volume_set, steps);
+        apply_category_gains();
+    }
+
+    void JAudioPlaybackService::recover_sound_volume_setting(std::uint32_t steps) {
+        _category_volume->controller().recoverSeVolumeSet(steps);
+        apply_category_gains();
+    }
+
+    void JAudioPlaybackService::set_sound_volume_setting_level(std::int32_t volume_set) {
+        _category_volume->controller().setSeVolumeSetLevel(volume_set);
+    }
+
+    float JAudioPlaybackService::sound_category_gain(std::uint32_t sound_id) const {
+        return _category_volume->sound_gain(sound_id);
+    }
+
+    void JAudioPlaybackService::apply_category_gains() {
+        for (const auto &[sound_id, voice] : _level_voices) {
+            (void)_mixer->try_set_voice_bus_gain(voice.token, sound_category_gain(sound_id));
+        }
+        for (const auto &[token, voice] : _sound_effect_voices) {
+            (void)token;
+            (void)_mixer->try_set_voice_bus_gain(voice->token, sound_category_gain(voice->sound_id));
+        }
+    }
+
     JAISoundHandle *JAudioPlaybackService::start_stage_bgm(
         std::string_view name, bool prepared) {
         if (name.empty()) {
@@ -383,6 +421,7 @@ namespace smgpc::runtime {
     JAISoundHandle *JAudioPlaybackService::start_stage_bgm(
         aurora::audio::JAudioSoundMetadata metadata,
         std::string_view name, bool prepared) {
+        const auto host_allocations = aurora::allocation::HostAllocationScope{};
         if (metadata.kind != aurora::audio::JAudioSoundKind::Stream) {
             aurora::throw_host_exception<std::logic_error>(
                 "The requested stage BGM is not a retail JAudio stream");
@@ -562,6 +601,7 @@ namespace smgpc::runtime {
         }
         _sound_effect_voices.clear();
         _retired_sound_effect_voices.clear();
+        _category_volume->reset();
         _trigger_sound_permitted = true;
         _level_sound_permitted = true;
         _stage_voice.reset();
@@ -599,6 +639,7 @@ namespace smgpc::runtime {
     }
 
     void JAudioPlaybackService::ensure_archive() {
+        const auto host_allocations = aurora::allocation::HostAllocationScope{};
         if (_archive == nullptr) {
             _archive = _archive_factory();
             if (_archive == nullptr) {
@@ -630,6 +671,7 @@ namespace smgpc::runtime {
     }
 
     void JAudioPlaybackService::retire_finished_voices() {
+        const auto host_allocations = aurora::allocation::HostAllocationScope{};
         for (auto &[sound_id, voice] : _level_voices) {
             (void)sound_id;
             if (voice.token && !_mixer->is_voice_active(voice.token)) {

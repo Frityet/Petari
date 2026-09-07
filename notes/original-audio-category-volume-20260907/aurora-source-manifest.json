@@ -1,0 +1,30 @@
+[
+  {
+    "path": "include/aurora/audio.hpp",
+    "sha256": "936a0df523400c554f024eeec319b9a775fe4bc501a858103fd060a9d9ebc691"
+  },
+  {
+    "path": "lib/audio.cpp",
+    "sha256": "265a8be92c369d42481fc2e147bba96f1e17e62568e63ca8a297d9e1323a8c0f"
+  },
+  {
+    "path": "include/JSystem/JAudio2/JASSoundParams.hpp",
+    "sha256": "a7bf9c02ec088f3e1a6efc35d73db1c62bd9aad7376ed99352cf9e28432d76cd"
+  },
+  {
+    "path": "include/JSystem/JAudio2/JAISoundParams.hpp",
+    "sha256": "890b6e162c7dd0707034d58d141d0b474b61f5eafe460e167195208496cc2fd8"
+  },
+  {
+    "path": "lib/j_audio_sound_params.cpp",
+    "sha256": "15f913b275e1e5aa025a172ee80abb9482b152e922dc41fede2244901d94c732"
+  },
+  {
+    "path": "xmake.lua",
+    "sha256": "2339f7d8674c86777ef7c065edfc9fd60369c01cfad9707e6870caa961d3a29f"
+  },
+  {
+    "path": "cmake/aurora_base.cmake",
+    "sha256": "da4eb7c73afa1871877786918b5d895522ea21fd74272c45c4aba72288b44ca7"
+  }
+]

@@ -15,6 +15,8 @@
 #include <string_view>
 #include <vector>
 
+namespace smgpc::compat { class JAudioCategoryVolumeOwnership; }
+
 namespace smgpc::runtime {
 
     class DvdFileSystemService;
@@ -59,6 +61,10 @@ namespace smgpc::runtime {
         [[nodiscard]] bool is_level_sound_permitted() const;
         [[nodiscard]] bool is_level_sound_permitted(std::uint32_t sound_id) const;
         [[nodiscard]] bool is_sound_permitted() const;
+        void set_sound_volume_setting(std::int32_t volume_set, std::uint32_t steps);
+        void recover_sound_volume_setting(std::uint32_t steps);
+        void set_sound_volume_setting_level(std::int32_t volume_set);
+        [[nodiscard]] float sound_category_gain(std::uint32_t sound_id) const;
         [[nodiscard]] JAISoundHandle *start_stage_bgm(
             std::string_view name, bool prepared);
         [[nodiscard]] JAISoundHandle *start_stage_bgm(
@@ -110,6 +116,7 @@ namespace smgpc::runtime {
             JAISoundHandle handle;
         };
 
+        void apply_category_gains();
         void ensure_archive();
         void require_working_output() const;
         void retire_finished_voices();
@@ -120,6 +127,7 @@ namespace smgpc::runtime {
         StreamLoader _stream_loader;
         std::unique_ptr<aurora::audio::JAudioSoundArchive> _archive;
         std::unique_ptr<aurora::audio::PcmAudioMixer> _mixer;
+        std::unique_ptr<compat::JAudioCategoryVolumeOwnership> _category_volume;
         std::map<std::uint32_t, LevelVoiceEntry> _level_voices;
         std::map<std::uint32_t, aurora::audio::JAudioSoundEffectRecipe>
             _sound_effect_recipes;

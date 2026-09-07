@@ -1,0 +1,9 @@
+[
+  "include/aurora/audio.hpp",
+  "lib/audio.cpp",
+  "include/JSystem/JAudio2/JASSoundParams.hpp",
+  "include/JSystem/JAudio2/JAISoundParams.hpp",
+  "lib/j_audio_sound_params.cpp",
+  "xmake.lua",
+  "cmake/aurora_base.cmake"
+]
