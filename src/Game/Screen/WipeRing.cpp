@@ -155,22 +155,21 @@ void WipeRing::startAnim(const char* pAnimName) {
 
 bool WipeRing::getMarioCenterPos(TVec3f* pCenterPos) {
     if (MR::isExistMario()) {
-        if (!MR::isEqualStageName("IceVolcanoGalaxy") || MR::getCurrentScenarioNo() != 1) {
-            TVec3f pos(15060.0f, -11800.0f, 1260.0f);
-
-            if (MR::getPlayerPos()->distance(pos) < 600.0f) {
-            }
+        bool isCenterOnMario;
+        if (MR::isEqualStageName("IceVolcanoGalaxy") && MR::getCurrentScenarioNo() == 1 &&
+            MR::getPlayerPos()->distance(TVec3f(15060.0f, -11800.0f, 1260.0f)) < 600.0f) {
+            isCenterOnMario = false;
+        } else {
+            isCenterOnMario = !MR::isStageSuddenDeathDodoryu();
         }
 
-        if (MR::isStageSuddenDeathDodoryu()) {
+        if (isCenterOnMario) {
             pCenterPos->set(*MR::getPlayerCenterPos());
-
             return true;
         }
     }
 
     pCenterPos->set(0.0f);
-
     return false;
 }
 
@@ -202,7 +201,7 @@ f32 WipeRing::calcRadius() const {
 }
 
 f32 WipeRing::calcMaxRadius() const {
-    return JGeometry::TUtil< f32 >::inv_sqrt(900160.0f);
+    return MR::sqrt(900160.0f);
 }
 
 void WipeRing::updatePlayerPos() {
