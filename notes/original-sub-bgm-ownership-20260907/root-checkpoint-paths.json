@@ -1,0 +1,16 @@
+[
+  "src/Game/AudioLib/AudBgm.hpp",
+  "src/Game/AudioLib/AudBgm.cpp",
+  "src/Game/xmake.lua",
+  "src/compat/AudioFacadeCompat.cpp",
+  "src/compat/AudioFacadeCompat.hpp",
+  "src/compat/SoundUtilCompat.cpp",
+  "src/runtime/JAudioPlaybackService.cpp",
+  "src/runtime/JAudioPlaybackService.hpp",
+  "src/runtime/RuntimeContext.cpp",
+  "src/runtime/RuntimeContext.hpp",
+  "src/runtime/RuntimeServices.cpp",
+  "src/runtime/RuntimeServices.hpp",
+  "src/runtime/ParityTrace.cpp",
+  "tests/JAudioPlaybackTests.cpp"
+]

@@ -396,35 +396,41 @@ namespace smgpc::runtime {
         }
     }
 
-    JAISoundHandle *JAudioPlaybackService::start_stage_bgm(
+    JAISoundHandle *JAudioPlaybackService::start_bgm(BgmLane lane,
         std::string_view name, bool prepared) {
         if (name.empty()) {
             aurora::throw_host_exception<std::invalid_argument>(
-                "JAudio stage BGM playback requires a nonempty sound name");
+                "JAudio BGM playback requires a nonempty sound name");
         }
         ensure_archive();
         const auto metadata = _archive->resolve_sound(name);
         if (!metadata.has_value()) {
             aurora::throw_host_exception<std::invalid_argument>(
-                "Stage BGM is absent from the retail JAudio name table: " +
+                "BGM is absent from the retail JAudio name table: " +
                 std::string(name));
         }
-        return start_stage_bgm(*metadata, name, prepared);
+        return start_bgm(lane, *metadata, name, prepared);
     }
 
-    JAISoundHandle *JAudioPlaybackService::start_stage_bgm(
+    JAISoundHandle *JAudioPlaybackService::start_bgm(BgmLane lane,
         std::uint32_t sound_id, bool prepared) {
         ensure_archive();
-        return start_stage_bgm(_archive->resolve_sound(sound_id), {}, prepared);
+        return start_bgm(lane, _archive->resolve_sound(sound_id), {}, prepared);
     }
 
-    JAISoundHandle *JAudioPlaybackService::start_stage_bgm(
+    JAISoundHandle *JAudioPlaybackService::start_bgm(BgmLane lane,
         aurora::audio::JAudioSoundMetadata metadata,
         std::string_view name, bool prepared) {
         const auto host_allocations = aurora::allocation::HostAllocationScope{};
+        if (metadata.kind == aurora::audio::JAudioSoundKind::Sequence || (metadata.sound_id & 0x10000U) != 0) {
+            // This backend has no section-one JAS sequencer yet. A disabled
+            // decoder produces no voice, matching an unattached JAudio start.
+            stop_bgm(lane, 0);
+            return nullptr;
+        }
         if (metadata.kind != aurora::audio::JAudioSoundKind::Stream) {
-            aurora::throw_host_exception<std::logic_error>(
-                "The requested stage BGM is not a retail JAudio stream");
+            aurora::throw_host_exception<std::invalid_argument>(
+                "BGM playback requires a retail stream or sequence ID");
         }
         if (metadata.stream_path.empty()) {
             aurora::throw_host_exception<std::logic_error>(
@@ -439,10 +445,10 @@ namespace smgpc::runtime {
         _mixer->open_default_playback();
         require_working_output();
 
-        if (_stage_voice.has_value()) {
-            _mixer->stop_voice(_stage_voice->token);
-            _stage_voice.reset();
-            _stage_handle.releaseSound();
+        if (_bgm_voices[static_cast<std::size_t>(lane)].has_value()) {
+            _mixer->stop_voice(_bgm_voices[static_cast<std::size_t>(lane)]->token);
+            _bgm_voices[static_cast<std::size_t>(lane)].reset();
+            _bgm_handles[static_cast<std::size_t>(lane)].releaseSound();
         }
 
         const auto token = _mixer->start_voice(recipe.voice);
@@ -450,8 +456,8 @@ namespace smgpc::runtime {
             if (prepared) {
                 _mixer->set_voice_paused(token, true);
             }
-            _stage_handle.attachBackend(this, token.value);
-            _stage_voice = StageVoiceEntry{
+            _bgm_handles[static_cast<std::size_t>(lane)].attachBackend(this, token.value);
+            _bgm_voices[static_cast<std::size_t>(lane)] = BgmVoiceEntry{
                 .name = std::string(name),
                 .metadata = std::move(metadata),
                 .recipe = std::move(recipe),
@@ -463,122 +469,129 @@ namespace smgpc::runtime {
             };
         } catch (...) {
             _mixer->stop_voice(token);
-            _stage_handle.releaseSound();
+            _bgm_handles[static_cast<std::size_t>(lane)].releaseSound();
             throw;
         }
-        return &_stage_handle;
+        return &_bgm_handles[static_cast<std::size_t>(lane)];
     }
 
-    void JAudioPlaybackService::unlock_stage_bgm() {
+    void JAudioPlaybackService::unlock_bgm(BgmLane lane) {
         retire_finished_voices();
-        if (!_stage_voice.has_value()) {
+        if (!_bgm_voices[static_cast<std::size_t>(lane)].has_value()) {
             aurora::throw_host_exception<std::logic_error>(
-                "Cannot unlock stage BGM without a concrete backend voice");
+                "Cannot unlock BGM without a concrete backend voice");
         }
-        if (_stage_voice->prepared && !_stage_voice->unlocked) {
-            _stage_voice->unlocked = true;
-            _mixer->set_voice_paused(_stage_voice->token,
-                                     _stage_voice->host_paused);
+        if (_bgm_voices[static_cast<std::size_t>(lane)]->prepared && !_bgm_voices[static_cast<std::size_t>(lane)]->unlocked) {
+            _bgm_voices[static_cast<std::size_t>(lane)]->unlocked = true;
+            _mixer->set_voice_paused(_bgm_voices[static_cast<std::size_t>(lane)]->token,
+                                     _bgm_voices[static_cast<std::size_t>(lane)]->host_paused);
         }
     }
 
-    void JAudioPlaybackService::stop_stage_bgm(std::uint32_t fade_frames) {
+    void JAudioPlaybackService::stop_bgm(BgmLane lane, std::uint32_t fade_frames) {
         retire_finished_voices();
-        if (!_stage_voice.has_value()) {
+        if (!_bgm_voices[static_cast<std::size_t>(lane)].has_value()) {
             return;
         }
         if (fade_frames == 0U) {
-            _mixer->stop_voice(_stage_voice->token);
-            _stage_voice.reset();
-            _stage_handle.releaseSound();
+            _mixer->stop_voice(_bgm_voices[static_cast<std::size_t>(lane)]->token);
+            _bgm_voices[static_cast<std::size_t>(lane)].reset();
+            _bgm_handles[static_cast<std::size_t>(lane)].releaseSound();
             return;
         }
         // A prepared or explicitly paused host voice cannot advance its gain
         // ramp. Release the mixer pause as the host mechanism for preserving
         // JAudio's stop/fade retirement lifecycle, including a stop issued
         // before the first unlock.
-        _mixer->set_voice_paused(_stage_voice->token, false);
-        _stage_voice->unlocked = true;
-        _stage_voice->host_paused = false;
+        _mixer->set_voice_paused(_bgm_voices[static_cast<std::size_t>(lane)]->token, false);
+        _bgm_voices[static_cast<std::size_t>(lane)]->unlocked = true;
+        _bgm_voices[static_cast<std::size_t>(lane)]->host_paused = false;
         _mixer->fade_out_voice(
-            _stage_voice->token, static_cast<double>(fade_frames) / 60.0);
-        _stage_voice->stopping = true;
+            _bgm_voices[static_cast<std::size_t>(lane)]->token, static_cast<double>(fade_frames) / 60.0);
+        _bgm_voices[static_cast<std::size_t>(lane)]->stopping = true;
     }
 
-    void JAudioPlaybackService::pause_stage_bgm(bool paused) {
+    void JAudioPlaybackService::pause_bgm(BgmLane lane, bool paused) {
         retire_finished_voices();
-        if (!_stage_voice.has_value()) {
+        if (!_bgm_voices[static_cast<std::size_t>(lane)].has_value()) {
             aurora::throw_host_exception<std::logic_error>(
-                "Cannot change stage-BGM pause state without a concrete backend voice");
+                "Cannot change BGM pause state without a concrete backend voice");
         }
-        if (_stage_voice->stopping) {
+        if (_bgm_voices[static_cast<std::size_t>(lane)]->stopping) {
             aurora::throw_host_exception<std::logic_error>(
-                "Cannot change stage-BGM pause state while its concrete voice is stopping");
+                "Cannot change BGM pause state while its concrete voice is stopping");
         }
-        _stage_voice->host_paused = paused;
+        _bgm_voices[static_cast<std::size_t>(lane)]->host_paused = paused;
         const auto preparation_locked =
-            _stage_voice->prepared && !_stage_voice->unlocked;
-        _mixer->set_voice_paused(_stage_voice->token,
+            _bgm_voices[static_cast<std::size_t>(lane)]->prepared && !_bgm_voices[static_cast<std::size_t>(lane)]->unlocked;
+        _mixer->set_voice_paused(_bgm_voices[static_cast<std::size_t>(lane)]->token,
                                  paused || preparation_locked);
     }
 
-    bool JAudioPlaybackService::is_stage_bgm_prepared() const {
-        return _stage_voice.has_value() && _stage_voice->prepared &&
-               !_stage_voice->unlocked &&
-               _mixer->is_voice_active(_stage_voice->token);
+    bool JAudioPlaybackService::is_bgm_prepared(BgmLane lane) const {
+        return _bgm_voices[static_cast<std::size_t>(lane)].has_value() && _bgm_voices[static_cast<std::size_t>(lane)]->prepared &&
+               !_bgm_voices[static_cast<std::size_t>(lane)]->unlocked &&
+               _mixer->is_voice_active(_bgm_voices[static_cast<std::size_t>(lane)]->token);
     }
 
-    bool JAudioPlaybackService::is_stage_bgm_paused() const {
-        if (!has_active_stage_bgm()) {
+    bool JAudioPlaybackService::is_bgm_paused(BgmLane lane) const {
+        if (!has_active_bgm(lane)) {
             return false;
         }
-        const auto paused = _mixer->voice_paused(_stage_voice->token);
+        const auto paused = _mixer->voice_paused(_bgm_voices[static_cast<std::size_t>(lane)]->token);
         if (!paused.has_value()) {
             aurora::throw_host_exception<std::logic_error>(
-                "Active stage-BGM token disappeared during its pause query");
+                "Active BGM token disappeared during its pause query");
         }
         return *paused;
     }
 
-    bool JAudioPlaybackService::is_stage_bgm_stopping() const {
-        return has_active_stage_bgm() && _stage_voice->stopping;
+    bool JAudioPlaybackService::is_bgm_stopping(BgmLane lane) const {
+        return has_active_bgm(lane) && _bgm_voices[static_cast<std::size_t>(lane)]->stopping;
     }
 
-    bool JAudioPlaybackService::has_active_stage_bgm() const {
-        return _stage_voice.has_value() &&
-               _mixer->is_voice_active(_stage_voice->token);
+    bool JAudioPlaybackService::has_active_bgm(BgmLane lane) const {
+        return _bgm_voices[static_cast<std::size_t>(lane)].has_value() &&
+               _mixer->is_voice_active(_bgm_voices[static_cast<std::size_t>(lane)]->token);
     }
 
-    std::optional<std::uint32_t> JAudioPlaybackService::stage_bgm_id() const {
-        if (!has_active_stage_bgm()) {
+    std::optional<std::uint32_t> JAudioPlaybackService::bgm_id(BgmLane lane) const {
+        if (!has_active_bgm(lane)) {
             return std::nullopt;
         }
-        return _stage_voice->metadata.sound_id;
+        return _bgm_voices[static_cast<std::size_t>(lane)]->metadata.sound_id;
     }
 
-    std::string_view JAudioPlaybackService::stage_bgm_name() const {
-        if (!has_active_stage_bgm()) {
+    std::string_view JAudioPlaybackService::bgm_name(BgmLane lane) const {
+        if (!has_active_bgm(lane)) {
             return {};
         }
-        return _stage_voice->name;
+        return _bgm_voices[static_cast<std::size_t>(lane)]->name;
     }
 
-    JAISoundHandle *JAudioPlaybackService::stage_bgm_handle() {
-        if (!has_active_stage_bgm()) {
+    JAISoundHandle *JAudioPlaybackService::bgm_handle(BgmLane lane) {
+        if (!has_active_bgm(lane)) {
             return nullptr;
         }
-        if (!_stage_handle.isBackendAttached(this, _stage_voice->token.value)) {
+        if (!_bgm_handles[static_cast<std::size_t>(lane)].isBackendAttached(this, _bgm_voices[static_cast<std::size_t>(lane)]->token.value)) {
             aurora::throw_host_exception<std::logic_error>(
-                "Stage-BGM handle is detached from its concrete backend voice");
+                "BGM handle is detached from its concrete backend voice");
         }
-        return &_stage_handle;
+        return &_bgm_handles[static_cast<std::size_t>(lane)];
     }
 
-    std::uint64_t JAudioPlaybackService::stage_bgm_backend_token() const {
-        if (!has_active_stage_bgm()) {
+    std::uint64_t JAudioPlaybackService::bgm_backend_token(BgmLane lane) const {
+        if (!has_active_bgm(lane)) {
             return 0U;
         }
-        return _stage_voice->token.value;
+        return _bgm_voices[static_cast<std::size_t>(lane)]->token.value;
+    }
+
+    void JAudioPlaybackService::set_bgm_bus_gain(BgmLane lane, float volume) {
+        auto &voice = _bgm_voices[static_cast<std::size_t>(lane)];
+        if (voice.has_value()) {
+            (void)_mixer->try_set_voice_bus_gain(voice->token, volume);
+        }
     }
 
     bool JAudioPlaybackService::has_me() const {
@@ -604,8 +617,10 @@ namespace smgpc::runtime {
         _category_volume->reset();
         _trigger_sound_permitted = true;
         _level_sound_permitted = true;
-        _stage_voice.reset();
-        _stage_handle.releaseSound();
+        for (std::size_t index = 0; index < _bgm_voices.size(); ++index) {
+            _bgm_voices[index].reset();
+            _bgm_handles[index].releaseSound();
+        }
     }
 
     bool JAudioPlaybackService::is_device_open() const {
@@ -626,9 +641,10 @@ namespace smgpc::runtime {
                 ++count;
             }
         }
-        if (_stage_voice.has_value() &&
-            _mixer->is_voice_active(_stage_voice->token)) {
-            ++count;
+        for (const auto &voice : _bgm_voices) {
+            if (voice.has_value() && _mixer->is_voice_active(voice->token)) {
+                ++count;
+            }
         }
         return count;
     }
@@ -655,15 +671,15 @@ namespace smgpc::runtime {
                 return entry.second.token &&
                        _mixer->is_voice_active(entry.second.token);
             });
-        const auto has_stage_voice = _stage_voice.has_value() &&
-                                     _stage_voice->token &&
-                                     _mixer->is_voice_active(_stage_voice->token);
+        const auto has_bgm_voice = std::ranges::any_of(_bgm_voices, [this](const auto &voice) {
+            return voice.has_value() && voice->token && _mixer->is_voice_active(voice->token);
+        });
         const auto has_sound_effect_voice = std::ranges::any_of(
             _sound_effect_voices, [this](const auto &entry) {
                 return entry.second->token &&
                        _mixer->is_voice_active(entry.second->token);
             });
-        if ((has_backend_voice || has_stage_voice || has_sound_effect_voice) &&
+        if ((has_backend_voice || has_bgm_voice || has_sound_effect_voice) &&
             !_mixer->is_device_open()) {
             aurora::throw_host_exception<std::runtime_error>(
                 "SDL JAudio playback device stopped accepting mixed audio");
@@ -694,10 +710,12 @@ namespace smgpc::runtime {
                 std::move(voice->second));
             voice = _sound_effect_voices.erase(voice);
         }
-        if (_stage_voice.has_value() && _stage_voice->token &&
-            !_mixer->is_voice_active(_stage_voice->token)) {
-            _stage_voice.reset();
-            _stage_handle.releaseSound();
+        for (std::size_t index = 0; index < _bgm_voices.size(); ++index) {
+            auto &voice = _bgm_voices[index];
+            if (voice.has_value() && voice->token && !_mixer->is_voice_active(voice->token)) {
+                voice.reset();
+                _bgm_handles[index].releaseSound();
+            }
         }
     }
 

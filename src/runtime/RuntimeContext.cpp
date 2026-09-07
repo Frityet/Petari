@@ -1,3 +1,5 @@
+#include "Game/AudioLib/AudBgm.hpp"
+#include "Game/AudioLib/AudWrap.hpp"
 #include <aurora/exception.hpp>
 #include "RuntimeContext.hpp"
 #include "compat/DisabledObjectAudioService.hpp"
@@ -622,6 +624,7 @@ namespace smgpc::runtime {
         _scene_execution = nullptr;
         _name_obj_lifecycle = nullptr;
         _j_audio_playback->reset_scene();
+        smgpc::compat::retire_audio_facade_state();
         _star_pointer_depth.reset();
         _scheduler.clear();
         _capture_screen_camera_actor.reset();
@@ -1113,11 +1116,11 @@ namespace smgpc::runtime {
     }
 
     bool RuntimeContext::is_stage_bgm_prepared() const {
-        return _j_audio_playback->is_stage_bgm_prepared();
+        return _j_audio_playback->is_bgm_prepared(smgpc::runtime::BgmLane::Stage);
     }
 
     std::string_view RuntimeContext::current_stage_bgm_name() const {
-        return _j_audio_playback->stage_bgm_name();
+        return _j_audio_playback->bgm_name(smgpc::runtime::BgmLane::Stage);
     }
 
     std::optional<std::filesystem::path> RuntimeContext::find_layout_archive(std::string_view layout_name) const {
@@ -1445,6 +1448,7 @@ namespace smgpc::runtime {
         _scene_effect_emission_instances.clear();
         _scene_effect_keeper_instances.clear();
         _j_audio_playback->reset_scene();
+        smgpc::compat::retire_audio_facade_state();
         _active_scene_registration_scope.reset();
         _scene_scheduler_registration_marker = 0U;
         return registrations.size();
@@ -1513,10 +1517,44 @@ namespace smgpc::runtime {
         _scene_lifecycle = &service;
     }
 
+    JAISoundHandle *RuntimeContext::start_sub_bgm(std::string_view name, bool prepared) {
+        auto *handle = _j_audio_playback->start_bgm(BgmLane::Sub, name, prepared);
+        if (handle == nullptr) {
+            _audio.stop_sub_bgm(0);
+            return nullptr;
+        }
+        _audio.start_sub_bgm(name, prepared, _j_audio_playback->bgm_id(BgmLane::Sub));
+        return handle;
+    }
+
+    JAISoundHandle *RuntimeContext::start_sub_bgm(u32 sound_id, bool prepared) {
+        auto *handle = _j_audio_playback->start_bgm(BgmLane::Sub, sound_id, prepared);
+        if (handle == nullptr) {
+            _audio.stop_sub_bgm(0);
+            return nullptr;
+        }
+        _audio.start_sub_bgm({}, prepared, sound_id);
+        return handle;
+    }
+
+    void RuntimeContext::stop_sub_bgm(u32 fade_frames) {
+        _j_audio_playback->stop_bgm(BgmLane::Sub, fade_frames);
+        _audio.stop_sub_bgm(fade_frames);
+    }
+
+    void RuntimeContext::unlock_sub_bgm() {
+        _j_audio_playback->unlock_bgm(BgmLane::Sub);
+        _audio.unlock_sub_bgm();
+    }
+
     JAISoundHandle *RuntimeContext::start_stage_bgm(
         std::string_view name, bool prepared) {
-        auto *handle = _j_audio_playback->start_stage_bgm(name, prepared);
-        const auto sound_id = _j_audio_playback->stage_bgm_id();
+        auto *handle = _j_audio_playback->start_bgm(smgpc::runtime::BgmLane::Stage, name, prepared);
+        if (handle == nullptr) {
+            _audio.resolve_stage_bgm_absent();
+            return nullptr;
+        }
+        const auto sound_id = _j_audio_playback->bgm_id(smgpc::runtime::BgmLane::Stage);
         if (!sound_id.has_value()) {
             aurora::throw_host_exception<std::logic_error>(
                 "A concrete stage-BGM voice has no retail sound ID");
@@ -1530,7 +1568,11 @@ namespace smgpc::runtime {
 
     JAISoundHandle *RuntimeContext::start_stage_bgm(
         u32 sound_id, bool prepared) {
-        auto *handle = _j_audio_playback->start_stage_bgm(sound_id, prepared);
+        auto *handle = _j_audio_playback->start_bgm(smgpc::runtime::BgmLane::Stage, sound_id, prepared);
+        if (handle == nullptr) {
+            _audio.resolve_stage_bgm_absent();
+            return nullptr;
+        }
         _audio.start_stage_bgm(sound_id);
         _logger.info(logging::Category::APP,
                      logging::Message{"SMG started retail stage BGM {:#010x}"},
@@ -1539,7 +1581,7 @@ namespace smgpc::runtime {
     }
 
     void RuntimeContext::unlock_stage_bgm() {
-        _j_audio_playback->unlock_stage_bgm();
+        _j_audio_playback->unlock_bgm(smgpc::runtime::BgmLane::Stage);
         _audio.unlock_stage_bgm();
         _logger.info(logging::Category::APP, logging::Message{"SMG unlocked stage BGM"});
     }
@@ -1549,17 +1591,19 @@ namespace smgpc::runtime {
             aurora::throw_host_exception<std::invalid_argument>(
                 "A stage-BGM fade cannot use negative frames");
         }
-        _j_audio_playback->stop_stage_bgm(static_cast<u32>(fade_frames));
+        _j_audio_playback->stop_bgm(smgpc::runtime::BgmLane::Stage, static_cast<u32>(fade_frames));
         _audio.stop_stage_bgm(fade_frames);
         _logger.info(logging::Category::APP, logging::Message{"SMG stopped stage BGM over {} frames"}, fade_frames);
     }
 
     void RuntimeContext::set_stage_bgm_state(s32 state, u32 change_frames) {
-        if (!_j_audio_playback->has_active_stage_bgm()) {
+        if (!_j_audio_playback->has_active_bgm(smgpc::runtime::BgmLane::Stage)) {
             return;
         }
-        aurora::throw_host_exception<std::logic_error>(
-            "Stage-BGM track-state transitions require the retail multi-BGM scheduler");
+        auto *bgm = AudWrap::getStageBgm();
+        if (bgm != nullptr) {
+            bgm->changeTrackMuteState(state, static_cast<s32>(change_frames));
+        }
     }
 
     JAISoundHandle *RuntimeContext::start_system_sound(

@@ -1,3 +1,4 @@
+#include <aurora/allocation.hpp>
 #include "camera/CameraDirectorRuntime.hpp"
 #include "Game/Camera/CameraDirector.hpp"
 #include "Game/Camera/CameraShaker.hpp"
@@ -1453,9 +1454,11 @@ namespace smgpc::runtime {
     }
 
     void AudioEventService::begin_frame(std::uint64_t frame_index) {
+        const auto host_allocations = aurora::allocation::HostAllocationScope{};
         _frame_index = frame_index;
         if (_sub_bgm_stopping && frame_index >= _sub_bgm_stop_frame) {
             _sub_bgm_name.clear();
+        _sub_bgm_id.reset();
             _sub_bgm_stop_frame = 0U;
             _sub_bgm_active = false;
             _sub_bgm_stopping = false;
@@ -1464,6 +1467,7 @@ namespace smgpc::runtime {
     }
 
     void AudioEventService::reset_stage_state() {
+        const auto host_allocations = aurora::allocation::HostAllocationScope{};
         _stage_bgm_name.clear();
         _stage_bgm_id.reset();
         _last_stage_bgm_id.reset();
@@ -1471,6 +1475,7 @@ namespace smgpc::runtime {
         _stage_bgm_identity_resolved = false;
         _cube_bgm_change_invalid = false;
         _sub_bgm_name.clear();
+        _sub_bgm_id.reset();
         _sub_bgm_stop_frame = 0U;
         _sub_bgm_active = false;
         _sub_bgm_stopping = false;
@@ -1478,6 +1483,7 @@ namespace smgpc::runtime {
     }
 
     void AudioEventService::resolve_stage_bgm_absent() {
+        const auto host_allocations = aurora::allocation::HostAllocationScope{};
         _stage_bgm_name.clear();
         _stage_bgm_id.reset();
         _stage_bgm_requested = false;
@@ -1485,10 +1491,12 @@ namespace smgpc::runtime {
     }
 
     void AudioEventService::start_stage_bgm(u32 sound_id) {
+        const auto host_allocations = aurora::allocation::HostAllocationScope{};
         start_stage_bgm({}, sound_id);
     }
 
     void AudioEventService::start_stage_bgm(std::string_view name, u32 sound_id) {
+        const auto host_allocations = aurora::allocation::HostAllocationScope{};
         _last_stage_bgm_id = _stage_bgm_requested ? _stage_bgm_id : std::nullopt;
         _stage_bgm_requested = true;
         _stage_bgm_identity_resolved = true;
@@ -1502,10 +1510,12 @@ namespace smgpc::runtime {
     }
 
     void AudioEventService::unlock_stage_bgm() {
+        const auto host_allocations = aurora::allocation::HostAllocationScope{};
         push_event(AudioEvent{.kind = AudioEventKind::StageBgmUnlock});
     }
 
     void AudioEventService::stop_stage_bgm(s32 fade_frames) {
+        const auto host_allocations = aurora::allocation::HostAllocationScope{};
         const auto stopped_name = _stage_bgm_name;
         const auto stopped_id = _stage_bgm_id;
         _last_stage_bgm_id = _stage_bgm_id;
@@ -1522,14 +1532,17 @@ namespace smgpc::runtime {
     }
 
     void AudioEventService::clear_last_stage_bgm_id() {
+        const auto host_allocations = aurora::allocation::HostAllocationScope{};
         _last_stage_bgm_id.reset();
     }
 
     void AudioEventService::set_cube_bgm_change_invalid(bool invalid) {
+        const auto host_allocations = aurora::allocation::HostAllocationScope{};
         _cube_bgm_change_invalid = invalid;
     }
 
     void AudioEventService::start_system_sound(std::string_view name) {
+        const auto host_allocations = aurora::allocation::HostAllocationScope{};
         push_event(AudioEvent{
             .kind = AudioEventKind::SystemSoundStart,
             .name = std::string(name),
@@ -1537,6 +1550,7 @@ namespace smgpc::runtime {
     }
 
     void AudioEventService::stop_system_sound(std::string_view name, u32 delay_frames) {
+        const auto host_allocations = aurora::allocation::HostAllocationScope{};
         push_event(AudioEvent{
             .kind = AudioEventKind::SystemSoundStop,
             .name = std::string(name),
@@ -1545,6 +1559,7 @@ namespace smgpc::runtime {
     }
 
     void AudioEventService::start_system_level_sound(std::string_view name) {
+        const auto host_allocations = aurora::allocation::HostAllocationScope{};
         push_event(AudioEvent{
             .kind = AudioEventKind::SystemLevelSoundStart,
             .name = std::string(name),
@@ -1553,6 +1568,7 @@ namespace smgpc::runtime {
 
     void AudioEventService::start_actor_sound(const void *actor_identity, std::string_view actor_name,
                                               std::string_view name, s32 parameter_1, s32 parameter_2) {
+        const auto host_allocations = aurora::allocation::HostAllocationScope{};
         push_event(AudioEvent{
             .kind = AudioEventKind::ActorSoundStart,
             .name = std::string(name),
@@ -1566,6 +1582,7 @@ namespace smgpc::runtime {
     void AudioEventService::start_actor_level_sound(const void *actor_identity, std::string_view actor_name,
                                                     std::string_view name, s32 parameter_1, s32 parameter_2,
                                                     s32 parameter_3) {
+        const auto host_allocations = aurora::allocation::HostAllocationScope{};
         // Level sounds are refreshed calls, not independent one-shot voices.
         // Preserve one logical request per actor/sound key in a frame and
         // retain the final parameters submitted for that frame.
@@ -1597,6 +1614,7 @@ namespace smgpc::runtime {
     }
 
     void AudioEventService::register_limited_sound(std::string_view name, s32 limit) {
+        const auto host_allocations = aurora::allocation::HostAllocationScope{};
         push_event(AudioEvent{
             .kind = AudioEventKind::LimitedSoundRegister,
             .name = std::string(name),
@@ -1604,7 +1622,9 @@ namespace smgpc::runtime {
         });
     }
 
-    void AudioEventService::start_sub_bgm(std::string_view name, bool prepared) {
+    void AudioEventService::start_sub_bgm(std::string_view name, bool prepared, std::optional<u32> sound_id) {
+        const auto host_allocations = aurora::allocation::HostAllocationScope{};
+        _sub_bgm_id = sound_id;
         _sub_bgm_name = name;
         _sub_bgm_stop_frame = 0U;
         _sub_bgm_active = true;
@@ -1613,11 +1633,18 @@ namespace smgpc::runtime {
         push_event(AudioEvent{
             .kind = AudioEventKind::SubBgmStart,
             .name = std::string(name),
+            .sound_id = sound_id,
             .prepared = prepared,
         });
     }
 
+    void AudioEventService::unlock_sub_bgm() {
+        const auto host_allocations = aurora::allocation::HostAllocationScope{};
+        _sub_bgm_prepared = false;
+    }
+
     void AudioEventService::stop_sub_bgm(u32 fade_frames) {
+        const auto host_allocations = aurora::allocation::HostAllocationScope{};
         if (!_sub_bgm_active) {
             return;
         }
@@ -1625,11 +1652,13 @@ namespace smgpc::runtime {
         push_event(AudioEvent{
             .kind = AudioEventKind::SubBgmStop,
             .name = _sub_bgm_name,
+            .sound_id = _sub_bgm_id,
             .fade_frames = static_cast<s32>(std::min<u32>(
                 fade_frames, static_cast<u32>(std::numeric_limits<s32>::max()))),
         });
         if (fade_frames == 0U) {
             _sub_bgm_name.clear();
+        _sub_bgm_id.reset();
             _sub_bgm_stop_frame = 0U;
             _sub_bgm_active = false;
             _sub_bgm_stopping = false;
@@ -1645,14 +1674,17 @@ namespace smgpc::runtime {
     }
 
     void AudioEventService::submit_level_sound() {
+        const auto host_allocations = aurora::allocation::HostAllocationScope{};
         push_event(AudioEvent{.kind = AudioEventKind::LevelSoundSubmit});
     }
 
     void AudioEventService::permit_level_sound() {
+        const auto host_allocations = aurora::allocation::HostAllocationScope{};
         push_event(AudioEvent{.kind = AudioEventKind::LevelSoundPermit});
     }
 
     void AudioEventService::start_atmosphere_sound(std::string_view name) {
+        const auto host_allocations = aurora::allocation::HostAllocationScope{};
         push_event(AudioEvent{
             .kind = AudioEventKind::AtmosphereSoundStart,
             .name = std::string(name),
@@ -1717,6 +1749,7 @@ namespace smgpc::runtime {
     }
 
     void AudioEventService::push_event(AudioEvent event) {
+        const auto host_allocations = aurora::allocation::HostAllocationScope{};
         if (_events.size() >= cEventRetentionLimit) {
             const auto trim_count = std::min(
                 cEventRetentionTrimCount, _events.size());

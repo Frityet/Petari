@@ -1,0 +1,58 @@
+[
+  {
+    "path": "src/Game/AudioLib/AudBgm.hpp",
+    "sha256": "af49e4eed81d9462ce2fad793ec6da4c47f52faf2ae4d553f025c3a37ed6e4b7"
+  },
+  {
+    "path": "src/Game/AudioLib/AudBgm.cpp",
+    "sha256": "f9dcf880137a1bcaf0bd8914cd8332a8476d73e29197c4a4a6a8147359376a2d"
+  },
+  {
+    "path": "src/Game/xmake.lua",
+    "sha256": "0026cc0c6e1de8e9d940fbd76e4a1800164ba171fb4d8941bec25a3ba8ad8bbb"
+  },
+  {
+    "path": "src/compat/AudioFacadeCompat.cpp",
+    "sha256": "2bf6661474e2c89d7e5ec4e899a7005b76f86ea18b48c6a0810346d564721414"
+  },
+  {
+    "path": "src/compat/AudioFacadeCompat.hpp",
+    "sha256": "75c78950f45efead7e5d92ed57a945628f28da73e2b8076b3350ee8266ed708c"
+  },
+  {
+    "path": "src/compat/SoundUtilCompat.cpp",
+    "sha256": "5aa3a6f41d1a66512df783a2f1b406b8cb5a3c2ba8f154566d8aaab664d5489a"
+  },
+  {
+    "path": "src/runtime/JAudioPlaybackService.cpp",
+    "sha256": "5f4b7b3e27ef786b7b495fd0aad3c5c21170507c1dbdbb0fd4fffd3a303b9ab2"
+  },
+  {
+    "path": "src/runtime/JAudioPlaybackService.hpp",
+    "sha256": "db57ef9e8ad96aa21f414a5b17b7fa04b65a04bb2ed7811af15434a7ec9c24d0"
+  },
+  {
+    "path": "src/runtime/RuntimeContext.cpp",
+    "sha256": "d04e6845d2b81933c76d0287690c596bace15e657934d548b9844cba2a9d9008"
+  },
+  {
+    "path": "src/runtime/RuntimeContext.hpp",
+    "sha256": "07bf93e1628ac39d360a7e5d0b25565b17d0f33a2db98ebb3b9d9a02fdff66aa"
+  },
+  {
+    "path": "src/runtime/RuntimeServices.cpp",
+    "sha256": "b01068662607e73f9b417f1720f13d08502d6bf4dafb382729e2685d38d839b9"
+  },
+  {
+    "path": "src/runtime/RuntimeServices.hpp",
+    "sha256": "7eea8feda75fbde74c6b5a25a2111b127e9bed1e5393f7a114354fe9f7d45805"
+  },
+  {
+    "path": "src/runtime/ParityTrace.cpp",
+    "sha256": "860c46c3cf95985542ae5262dde36138ee0666584c76d55964d5500ddf1291d2"
+  },
+  {
+    "path": "tests/JAudioPlaybackTests.cpp",
+    "sha256": "0c1e932338667725aa5b0a47db5d62d59a77d4a64d32a0738c8e97c9f66f7eca"
+  }
+]

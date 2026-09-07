@@ -165,14 +165,12 @@ namespace MR {
     }
 
     JAISoundHandle *startSubBGM(const char *pName, bool prepared) {
-        smgpc::compat::require_active_audio_event_service().start_sub_bgm(
+        return require_audio_runtime("Sub-BGM playback").start_sub_bgm(
             require_sound_name(pName, "Sub-BGM playback"), prepared);
-        return nullptr;
     }
 
     void stopSubBGM(u32 fadeFrames) {
-        smgpc::compat::require_active_audio_event_service().stop_sub_bgm(
-            fadeFrames);
+        require_audio_runtime("Sub-BGM stop").stop_sub_bgm(fadeFrames);
     }
 
     void stopStageBGM(u32 fadeFrames) {
@@ -188,18 +186,18 @@ namespace MR {
     bool isPlayingStageBgm() {
         auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
         return runtime != nullptr &&
-               runtime->j_audio_playback().has_active_stage_bgm() &&
-               !runtime->j_audio_playback().is_stage_bgm_stopping();
+               runtime->j_audio_playback().has_active_bgm(smgpc::runtime::BgmLane::Stage) &&
+               !runtime->j_audio_playback().is_bgm_stopping(smgpc::runtime::BgmLane::Stage);
     }
 
     bool isPlayingStageBgmID(u32 id) {
         auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
         if (runtime == nullptr ||
-            !runtime->j_audio_playback().has_active_stage_bgm() ||
-            runtime->j_audio_playback().is_stage_bgm_stopping()) {
+            !runtime->j_audio_playback().has_active_bgm(smgpc::runtime::BgmLane::Stage) ||
+            runtime->j_audio_playback().is_bgm_stopping(smgpc::runtime::BgmLane::Stage)) {
             return false;
         }
-        const auto current_id = runtime->j_audio_playback().stage_bgm_id();
+        const auto current_id = runtime->j_audio_playback().bgm_id(smgpc::runtime::BgmLane::Stage);
         if (!current_id.has_value()) {
             aurora::throw_host_exception<std::logic_error>("An active stage BGM is missing its resolved raw ID.");
         }
@@ -212,8 +210,8 @@ namespace MR {
         }
         auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
         if (runtime == nullptr ||
-            !runtime->j_audio_playback().has_active_stage_bgm() ||
-            runtime->j_audio_playback().is_stage_bgm_stopping()) {
+            !runtime->j_audio_playback().has_active_bgm(smgpc::runtime::BgmLane::Stage) ||
+            runtime->j_audio_playback().is_bgm_stopping(smgpc::runtime::BgmLane::Stage)) {
             return false;
         }
         const auto wanted = runtime->j_audio_playback().find_sound_id(pName);
@@ -222,7 +220,7 @@ namespace MR {
                 "Stage-BGM name is absent from the retail JAudio table: " +
                 std::string(pName));
         }
-        return runtime->j_audio_playback().stage_bgm_id() == wanted;
+        return runtime->j_audio_playback().bgm_id(smgpc::runtime::BgmLane::Stage) == wanted;
     }
 
     bool isStopOrFadeoutStageBgmID(u32 id) {

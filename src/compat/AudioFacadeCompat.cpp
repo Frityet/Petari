@@ -16,6 +16,7 @@
 #include <JSystem/JAudio2/JAISound.hpp>
 
 #include <algorithm>
+#include <array>
 #include <stdexcept>
 #include <utility>
 
@@ -23,7 +24,8 @@ namespace {
     thread_local smgpc::runtime::AudioEventService *s_audio_override = nullptr;
 
     AudBgmMgr s_bgm_manager;
-    JAISoundHandle s_stage_handle;
+    using BgmLane = smgpc::runtime::BgmLane;
+    std::array<u64, 2> s_bound_bgm_tokens{};
 
     [[noreturn]] void unavailable(const char *operation) {
         aurora::throw_host_exception<std::logic_error>(std::string("The concrete JAudio backend does not provide ") + operation + ".");
@@ -32,30 +34,39 @@ namespace {
     [[nodiscard]] AudBgm *allocate_bgm(u32 sound_id) {
         const auto type = (sound_id & 0x10000U) == 0U ? AudBgmKeeper::BgmType_Single : AudBgmKeeper::BgmType_Multi;
         auto *bgm = s_bgm_manager.mKeeper.get(type);
-        if (bgm == nullptr) {
-            aurora::throw_host_exception<std::logic_error>("The retail-shaped BGM keeper has no free stage BGM object.");
-        }
         return bgm;
     }
 
-    [[nodiscard]] AudBgm *allocate_bound_stage_bgm(u32 sound_id) {
-        auto *bgm = allocate_bgm(sound_id);
-        if ((sound_id & 0x10000U) != 0U) {
+    [[nodiscard]] std::optional<BgmLane> bound_lane(const AudBgm *bgm) {
+        for (std::size_t index = 0; index < 2; ++index) {
+            if (s_bgm_manager.mBgm[index] == bgm &&
+                bgm->mVolumeController == &s_bgm_manager.mVolumeController[index]) {
+                return static_cast<BgmLane>(index);
+            }
+        }
+        return std::nullopt;
+    }
+
+    [[nodiscard]] BgmLane require_lane(const AudBgm *bgm) {
+        const auto lane = bound_lane(bgm);
+        if (!lane.has_value()) {
+            aurora::throw_host_exception<std::logic_error>("BGM object is not retained by its stage/sub owner");
+        }
+        return *lane;
+    }
+
+    void release_bgm_object(BgmLane lane) {
+        s_bound_bgm_tokens[static_cast<std::size_t>(lane)] = 0;
+        auto &bgm = s_bgm_manager.mBgm[static_cast<std::size_t>(lane)];
+        if (bgm != nullptr) {
             s_bgm_manager.mKeeper.release(bgm);
-            unavailable("multi-BGM facade binding");
+            bgm = nullptr;
         }
-        bgm->_18 = static_cast<s32>(sound_id);
-        bgm->setVolumeController(
-            &s_bgm_manager.mVolumeController[AudBgmMgr::BgmType_Stage]);
-        static_cast<AudSingleBgm *>(bgm)->startTrackControl();
-        return bgm;
     }
 
-    void release_stage_bgm_object() {
-        if (s_bgm_manager.mBgm[AudBgmMgr::BgmType_Stage] != nullptr) {
-            s_bgm_manager.mKeeper.release(s_bgm_manager.mBgm[AudBgmMgr::BgmType_Stage]);
-            s_bgm_manager.mBgm[AudBgmMgr::BgmType_Stage] = nullptr;
-        }
+    void release_bgm_objects() {
+        release_bgm_object(BgmLane::Stage);
+        release_bgm_object(BgmLane::Sub);
     }
 
     [[nodiscard]] smgpc::runtime::RuntimeContext *try_concrete_audio_runtime() {
@@ -78,14 +89,45 @@ namespace {
         return *runtime;
     }
 
-    void synchronize_stage_handle(
-        smgpc::runtime::JAudioPlaybackService &playback) {
-        const auto token = playback.stage_bgm_backend_token();
-        if (token == 0U) {
-            s_stage_handle.releaseSound();
-            return;
+    void synchronize_bgm_handle(AudSingleBgm &bgm, smgpc::runtime::JAudioPlaybackService &playback) {
+        const auto lane = bound_lane(&bgm);
+        const auto token = lane.has_value() ? playback.bgm_backend_token(*lane) : 0;
+        if (token == 0) {
+            bgm.mHandle.releaseSound();
+        } else {
+            bgm.mHandle.attachBackend(&playback, token);
         }
-        s_stage_handle.attachBackend(&playback, token);
+    }
+
+    AudBgm *reconcile_bgm(BgmLane lane, smgpc::runtime::JAudioPlaybackService &playback) {
+        const auto index = static_cast<std::size_t>(lane);
+        auto &object = s_bgm_manager.mBgm[index];
+        const auto id = playback.bgm_id(lane);
+        if (!id.has_value()) {
+            if (object != nullptr) {
+                static_cast<AudSingleBgm *>(object)->mHandle.releaseSound();
+            }
+            return object;
+        }
+        if (object != nullptr && static_cast<u32>(static_cast<AudSingleBgm *>(object)->mSoundID) != *id) {
+            release_bgm_object(lane);
+        }
+        if (object == nullptr) {
+            object = allocate_bgm(*id);
+            if (object == nullptr) {
+                return nullptr;
+            }
+            object->setVolumeController(&s_bgm_manager.mVolumeController[index]);
+            static_cast<AudSingleBgm *>(object)->mSoundID = *id;
+        }
+        const auto token = playback.bgm_backend_token(lane);
+        if (s_bound_bgm_tokens[index] != token) {
+            object->resetAuxVolume();
+            s_bound_bgm_tokens[index] = token;
+        }
+        s_bgm_manager.mCurrentBGM[index] = *id;
+        synchronize_bgm_handle(*static_cast<AudSingleBgm *>(object), playback);
+        return object;
     }
 
     void require_detached_track_controller(
@@ -120,8 +162,7 @@ namespace smgpc::compat {
         try {
             synchronize_audio_facade_state();
         } catch (...) {
-            release_stage_bgm_object();
-            s_stage_handle.releaseSound();
+            release_bgm_objects();
             s_audio_override = _previous;
             try {
                 auto *restored = try_active_audio_event_service();
@@ -129,16 +170,14 @@ namespace smgpc::compat {
                     synchronize_audio_facade_state();
                 }
             } catch (...) {
-                release_stage_bgm_object();
-                s_stage_handle.releaseSound();
-            }
+                release_bgm_objects();
+                }
             throw;
         }
     }
 
     ScopedAudioEventServiceOverride::~ScopedAudioEventServiceOverride() {
-        release_stage_bgm_object();
-        s_stage_handle.releaseSound();
+        release_bgm_objects();
         s_audio_override = _previous;
         try {
             auto *restored = try_active_audio_event_service();
@@ -146,67 +185,51 @@ namespace smgpc::compat {
                 synchronize_audio_facade_state();
             }
         } catch (...) {
-            release_stage_bgm_object();
-            s_stage_handle.releaseSound();
+            release_bgm_objects();
         }
     }
 
     void synchronize_audio_facade_state() {
         auto &audio = require_active_audio_event_service();
-        release_stage_bgm_object();
-        s_stage_handle.releaseSound();
-        for (auto index = 0; index < 2; ++index) {
-            s_bgm_manager.mBgm[index] = nullptr;
+        release_bgm_objects();
+        for (std::size_t index = 0; index < 2; ++index) {
             s_bgm_manager.mNextBGM[index] = static_cast<u32>(-1);
             s_bgm_manager.mCurrentBGM[index] = static_cast<u32>(-1);
             s_bgm_manager.mLastBGM[index] = static_cast<u32>(-1);
         }
         if (audio.last_stage_bgm_id().has_value()) {
-            s_bgm_manager.mLastBGM[AudBgmMgr::BgmType_Stage] = *audio.last_stage_bgm_id();
+            s_bgm_manager.mLastBGM[0] = *audio.last_stage_bgm_id();
         }
         if (audio.current_stage_bgm_id().has_value()) {
-            s_bgm_manager.mCurrentBGM[AudBgmMgr::BgmType_Stage] = *audio.current_stage_bgm_id();
+            s_bgm_manager.mCurrentBGM[0] = *audio.current_stage_bgm_id();
         }
         auto *runtime = try_concrete_audio_runtime();
-        const auto backend_active =
-            runtime != nullptr &&
-            runtime->j_audio_playback().has_active_stage_bgm();
-        if (audio.has_active_stage_bgm() && !backend_active) {
-            if (runtime == nullptr) {
-                aurora::throw_host_exception<std::logic_error>(
-                    "Active stage-BGM state has no concrete RuntimeContext backend");
+        if (runtime == nullptr) {
+            if (audio.has_active_stage_bgm() || audio.has_active_sub_bgm()) {
+                aurora::throw_host_exception<std::logic_error>("Active BGM state has no concrete RuntimeContext backend");
             }
-            aurora::throw_host_exception<std::logic_error>(
-                "Logical stage-BGM state has no matching concrete backend voice");
+            return;
         }
-        if (backend_active) {
-            auto &playback = runtime->j_audio_playback();
-            const auto id = playback.stage_bgm_id();
-            if (!id.has_value()) {
-                aurora::throw_host_exception<std::logic_error>(
-                    "Concrete stage-BGM backend has no retail sound ID");
-            }
-            if (audio.has_active_stage_bgm()) {
-                if (audio.current_stage_bgm_id() != id) {
-                    aurora::throw_host_exception<std::logic_error>(
-                        "Logical stage-BGM identity disagrees with its concrete backend voice");
-                }
-            } else if (!playback.is_stage_bgm_stopping()) {
-                aurora::throw_host_exception<std::logic_error>(
-                    "Concrete stage-BGM voice is active without logical start/stop state");
-            }
-            s_bgm_manager.mCurrentBGM[AudBgmMgr::BgmType_Stage] = *id;
-            s_bgm_manager.mBgm[AudBgmMgr::BgmType_Stage] =
-                allocate_bound_stage_bgm(*id);
-            synchronize_stage_handle(playback);
+        auto &playback = runtime->j_audio_playback();
+        if (audio.has_active_stage_bgm() && !playback.has_active_bgm(BgmLane::Stage)) {
+            aurora::throw_host_exception<std::logic_error>("Logical stage-BGM state has no matching concrete backend voice");
+        }
+        for (auto lane : {BgmLane::Stage, BgmLane::Sub}) {
+            (void)reconcile_bgm(lane, playback);
+            s_bgm_manager.mCurrentBGM[static_cast<std::size_t>(lane)] = playback.bgm_id(lane).value_or(static_cast<u32>(-1));
         }
     }
 
+    void retire_audio_facade_state() {
+        release_bgm_objects();
+    }
+
     void advance_audio_facade_state() {
-        if (try_concrete_audio_runtime() == nullptr) {
-            return;
+        if (auto *runtime = try_concrete_audio_runtime()) {
+            (void)reconcile_bgm(BgmLane::Stage, runtime->j_audio_playback());
+            (void)reconcile_bgm(BgmLane::Sub, runtime->j_audio_playback());
+            s_bgm_manager.movement();
         }
-        s_bgm_manager.movement();
     }
 
 }  // namespace smgpc::compat
@@ -291,176 +314,163 @@ void AudTrackController::muteIfVolumeZero() {
     }
 }
 
-AudBgm::AudBgm() : _4(nullptr), mRhythmStrategy(), mRhythmHandle(nullptr), _18(0), mTrackController() {
-    mRhythmStrategy.mBgmIdx = -1;
-    mRhythmStrategy.mBgm = nullptr;
-    for (auto index = 0; index < 16; ++index) {
-        mTrackController[index].mTrackNo = index;
-    }
-}
-
-void AudBgm::setVolumeController(AudBgmVolumeController *controller) {
-    _4 = controller;
-}
-
-AudBgmRhythmStrategy *AudBgm::getRhythmStrategy() {
-    return &mRhythmStrategy;
+AudBgm::AudBgm() : mVolumeController(nullptr) {
 }
 
 void AudBgm::resetAuxVolume() {
-    unavailable("BGM auxiliary-volume reset");
+    if (mVolumeController == nullptr) {
+        return;
+    }
+    mVolumeController->moveAuxVolume(1.0f, 0);
+    mVolumeController->moveNoteFairyVolume(1.0f, 0);
 }
 
-AudSingleBgm::AudSingleBgm() : AudBgm() {
+AudSingleBgm::AudSingleBgm() : AudBgm(), mHandle(), mSoundID(-1) {
     init();
 }
 
 void AudSingleBgm::init() {
-    mRhythmHandle = nullptr;
-    _18 = -1;
+    mHandle.releaseSound();
+    mSoundID.setAnonymous();
     initTrackController();
 }
 
 JAISoundHandle *AudSingleBgm::start(u32 sound_id, bool prepared) {
-    _18 = static_cast<s32>(sound_id);
-    auto &runtime = require_concrete_audio_runtime("Stage-BGM start");
-    auto *backend_handle = runtime.start_stage_bgm(sound_id, prepared);
-    if (backend_handle == nullptr || !backend_handle->isSoundAttached()) {
-        aurora::throw_host_exception<std::logic_error>(
-            "Stage-BGM runtime returned no concrete backend handle");
+    auto &runtime = require_concrete_audio_runtime("BGM start");
+    const auto lane = require_lane(this);
+    resetAuxVolume();
+    mSoundID = sound_id;
+    auto *handle = lane == BgmLane::Stage ? runtime.start_stage_bgm(sound_id, prepared)
+                                         : runtime.start_sub_bgm(sound_id, prepared);
+    synchronize_bgm_handle(*this, runtime.j_audio_playback());
+    s_bound_bgm_tokens[static_cast<std::size_t>(lane)] = mHandle.backendToken();
+    if (handle != nullptr && mVolumeController != nullptr) {
+        runtime.j_audio_playback().set_bgm_bus_gain(lane, mVolumeController->getVolume());
     }
-    synchronize_stage_handle(runtime.j_audio_playback());
-    startTrackControl();
-    return &s_stage_handle;
+    return &mHandle;
 }
 
 void AudSingleBgm::stop(u32 fade_frames) {
-    auto &runtime = require_concrete_audio_runtime("Stage-BGM stop");
-    runtime.stop_stage_bgm(static_cast<s32>(fade_frames));
-    synchronize_stage_handle(runtime.j_audio_playback());
-    stopTrackControl();
+    if (!isSoundAttached()) return;
+    auto &runtime = require_concrete_audio_runtime("BGM stop");
+    const auto lane = require_lane(this);
+    if (lane == BgmLane::Stage) runtime.stop_stage_bgm(static_cast<s32>(fade_frames));
+    else runtime.stop_sub_bgm(fade_frames);
+    synchronize_bgm_handle(*this, runtime.j_audio_playback());
+    if (mSoundID.getSectionID() != 2) stopTrackControl();
 }
 
 bool AudSingleBgm::isPreparedPlay() {
-    return require_concrete_audio_runtime("Stage-BGM prepared query")
-        .j_audio_playback()
-        .is_stage_bgm_prepared();
+    return isSoundAttached() && require_concrete_audio_runtime("BGM prepared query")
+        .j_audio_playback().is_bgm_prepared(require_lane(this));
 }
 
 void AudSingleBgm::playAfterPrepared() {
-    require_concrete_audio_runtime("Stage-BGM unlock").unlock_stage_bgm();
+    if (!isSoundAttached()) return;
+    auto &runtime = require_concrete_audio_runtime("BGM unlock");
+    if (require_lane(this) == BgmLane::Stage) runtime.unlock_stage_bgm();
+    else runtime.unlock_sub_bgm();
 }
 
 void AudSingleBgm::movement() {
     updateTrackControl();
-}
-
-void AudSingleBgm::moveVolume(f32, u32) {
-    unavailable("stage-BGM volume movement");
-}
-
-void AudSingleBgm::moveVolumeForNoteFairy(f32, u32) {
-    unavailable("Note Fairy stage-BGM volume movement");
-}
-
-void AudSingleBgm::changeTrackMuteState(s32 state, s32 frames) {
-    if (frames < 0) {
-        aurora::throw_host_exception<std::invalid_argument>(
-            "A stage-BGM track-state transition cannot use negative frames");
+    if (!isSoundAttached()) {
+        resetAuxVolume();
+        return;
     }
-    require_concrete_audio_runtime("Stage-BGM track-state transition")
-        .set_stage_bgm_state(state, static_cast<u32>(frames));
+    if (mVolumeController != nullptr) {
+        require_concrete_audio_runtime("BGM volume update").j_audio_playback()
+            .set_bgm_bus_gain(require_lane(this), mVolumeController->getVolume());
+    }
+}
+
+bool AudSingleBgm::moveVolume(f32 volume, u32 time) {
+    if (!isSoundAttached()) return false;
+    if (mVolumeController != nullptr) {
+        mVolumeController->moveAuxVolume(volume, time);
+        return true;
+    }
+    return false;
+}
+
+bool AudSingleBgm::moveVolumeForNoteFairy(f32 volume, u32 time) {
+    if (!isSoundAttached()) return false;
+    if (mVolumeController != nullptr) {
+        mVolumeController->moveNoteFairyVolume(volume, time);
+        return true;
+    }
+    return false;
+}
+
+void AudSingleBgm::changeTrackMuteState(s32, s32) {
+    if (mSoundID.getSectionID() == 2) return;
+    if (isSoundAttached()) unavailable("section-one JAS track-mute transitions");
 }
 
 JAISoundHandle *AudSingleBgm::getHandle() {
-    auto &runtime = require_concrete_audio_runtime("Stage-BGM handle query");
-    synchronize_stage_handle(runtime.j_audio_playback());
-    // Retail keeps the handle object's address through detach so the BGM
-    // keeper can observe completion and release the owning AudBgm object.
-    return &s_stage_handle;
+    if (auto *runtime = try_concrete_audio_runtime()) {
+        synchronize_bgm_handle(*this, runtime->j_audio_playback());
+    } else {
+        mHandle.releaseSound();
+    }
+    return &mHandle;
 }
 
 JAISoundHandle *AudSingleBgm::getRhythmHandle() {
-    return mRhythmHandle;
+    if (isSoundAttached() && mSoundID.getSectionID() == 1) return &mHandle;
+    return nullptr;
 }
 
 bool AudSingleBgm::isSoundAttached() const {
-    auto &runtime = require_concrete_audio_runtime("Stage-BGM attachment query");
-    synchronize_stage_handle(runtime.j_audio_playback());
-    return s_stage_handle.isSoundAttached();
+    return const_cast<AudSingleBgm *>(this)->getHandle()->isSoundAttached();
 }
 
 void AudSingleBgm::pause(bool paused) {
-    require_concrete_audio_runtime("Stage-BGM pause")
-        .j_audio_playback()
-        .pause_stage_bgm(paused);
+    if (isSoundAttached()) require_concrete_audio_runtime("BGM pause")
+        .j_audio_playback().pause_bgm(require_lane(this), paused);
 }
 
 bool AudSingleBgm::isStopping() const {
-    const auto &playback =
-        require_concrete_audio_runtime("Stage-BGM stopping query")
-            .j_audio_playback();
-    return !playback.has_active_stage_bgm() ||
-           playback.is_stage_bgm_stopping();
+    return !isSoundAttached() || require_concrete_audio_runtime("BGM stopping query")
+        .j_audio_playback().is_bgm_stopping(require_lane(this));
 }
 
 bool AudSingleBgm::isPaused() const {
-    return require_concrete_audio_runtime("Stage-BGM pause query")
-        .j_audio_playback()
-        .is_stage_bgm_paused();
+    return isSoundAttached() && require_concrete_audio_runtime("BGM pause query")
+        .j_audio_playback().is_bgm_paused(require_lane(this));
 }
 
 JAISoundID AudSingleBgm::getSoundID() const {
-    const auto id = require_concrete_audio_runtime("Stage-BGM ID query")
-                        .j_audio_playback()
-                        .stage_bgm_id();
-    if (!id.has_value()) {
-        aurora::throw_host_exception<std::logic_error>("The active stage BGM has no resolved raw sound ID.");
-    }
-    return JAISoundID(*id);
-}
-
-void AudSingleBgm::sendToSyncStream() {
-}
-
-void AudSingleBgm::rejectFromSyncStream() {
+    return isSoundAttached() ? mSoundID : JAISoundID(0);
 }
 
 void AudSingleBgm::initTrackController() {
-    for (auto &controller : mTrackController) {
-        controller.stop();
+    for (s32 index = 0; index < mNumTracks; ++index) {
+        mTrackController[index].stop();
+        mTrackController[index].mTrackNo = index;
     }
 }
 
 void AudSingleBgm::startTrackControl() {
-    for (auto &controller : mTrackController) {
-        controller.start(&s_stage_handle);
-    }
+    for (auto &controller : mTrackController) controller.start(&mHandle);
 }
 
 void AudSingleBgm::stopTrackControl() {
-    for (auto &controller : mTrackController) {
-        controller.stop();
-    }
+    for (auto &controller : mTrackController) controller.stop();
 }
 
 void AudSingleBgm::updateTrackControl() {
-    for (auto &controller : mTrackController) {
-        if (controller.mHandle != nullptr &&
-            controller.mHandle->isSoundAttached() &&
-            controller.mFader.mStepVolume == 0.0F) {
-            continue;
-        }
-        controller.update();
-    }
+    if (mSoundID.getSectionID() == 2) return;
+    for (auto &controller : mTrackController) controller.update();
 }
 
-AudMultiBgm::AudMultiBgm() : AudBgm(), mFader(), _1F4(0U), _1F8(-1), _1FC(0U) {
+AudMultiBgm::AudMultiBgm() : AudBgm(), mHandle(), mRhythmHandle(), mFader(), _1F4(0), mBgmId(-1), mIsLocked(false) {
     init();
 }
 
 void AudMultiBgm::init() {
-    mRhythmHandle = nullptr;
+    mHandle.releaseSound();
+    mRhythmHandle.releaseSound();
     initTrackController();
 }
 
@@ -487,11 +497,11 @@ void AudMultiBgm::movement() {
     updateTrackControl();
 }
 
-void AudMultiBgm::moveVolume(f32, u32) {
+bool AudMultiBgm::moveVolume(f32, u32) {
     unavailable("multi-BGM volume movement");
 }
 
-void AudMultiBgm::moveVolumeForNoteFairy(f32, u32) {
+bool AudMultiBgm::moveVolumeForNoteFairy(f32, u32) {
     unavailable("multi-BGM Note Fairy volume movement");
 }
 
@@ -506,7 +516,7 @@ JAISoundHandle *AudMultiBgm::getHandle() {
 }
 
 JAISoundHandle *AudMultiBgm::getRhythmHandle() {
-    return mRhythmHandle;
+    return &mRhythmHandle;
 }
 
 bool AudMultiBgm::isSoundAttached() const {
@@ -545,7 +555,7 @@ void AudMultiBgm::initTrackController() {
 
 void AudMultiBgm::startTrackControl() {
     for (auto &controller : mTrackController) {
-        controller.start(&s_stage_handle);
+        controller.start(&mRhythmHandle);
     }
 }
 
@@ -555,7 +565,7 @@ void AudMultiBgm::updateTrackControl() {
     }
 }
 
-void *AudMultiBgm::prepare(u32) {
+JAISoundHandle *AudMultiBgm::prepare(u32) {
     unavailable("multi-BGM prepare handle");
 }
 
@@ -653,41 +663,50 @@ AudBgmMgr::AudBgmMgr() : mBgm{}, mNextBGM{}, mCurrentBGM{}, mLastBGM{}, mKeeper(
 }
 
 void AudBgmMgr::movement() {
-    for (auto index = 0; index < 2; ++index) {
-        if (mBgm[index] != nullptr) {
-            mBgm[index]->movement();
-        }
+    volDownStageBgmWhenSubBgmPlaying();
+    for (int index = 0; index < 2; ++index) {
+        mVolumeController[index].mIsMuted = _8FC;
+        mVolumeController[index].update();
+        if (mBgm[index] != nullptr) mBgm[index]->movement();
+        startNextBgmWhenStopping(index);
         releaseStoppingBgm(index);
     }
 }
 
 JAISoundHandle *AudBgmMgr::start(s32 bgm_index, u32 sound_id, bool prepared) {
-    if (bgm_index != BgmType_Stage) {
-        unavailable("sub-BGM start");
+    if (bgm_index < 0 || bgm_index >= 2) {
+        aurora::throw_host_exception<std::out_of_range>("BGM index is outside the original stage/sub lanes");
     }
-    release_stage_bgm_object();
-    mBgm[bgm_index] = allocate_bgm(sound_id);
+    const auto lane = static_cast<BgmLane>(bgm_index);
+    if (mBgm[bgm_index] != nullptr) mBgm[bgm_index]->stop(0);
+    release_bgm_object(lane);
+    if ((sound_id & 0x10000U) != 0) {
+        // Multi-BGM needs a synchronized JAS sequence and stream. Neither a
+        // replacement stream nor a detached logical success stands in for it.
+        auto &runtime = require_concrete_audio_runtime("Multi-BGM disabled start");
+        if (lane == BgmLane::Stage) runtime.stop_stage_bgm(0);
+        else runtime.stop_sub_bgm(0);
+        return nullptr;
+    }
+    mBgm[bgm_index] = mKeeper.get(AudBgmKeeper::BgmType_Single);
+    if (mBgm[bgm_index] == nullptr) return nullptr;
     mBgm[bgm_index]->setVolumeController(&mVolumeController[bgm_index]);
-    JAISoundHandle *handle = nullptr;
+    JAISoundHandle *handle;
     try {
         handle = mBgm[bgm_index]->start(sound_id, prepared);
     } catch (...) {
-        release_stage_bgm_object();
+        release_bgm_object(lane);
         throw;
     }
-    if (handle == nullptr) {
-        release_stage_bgm_object();
-        aurora::throw_host_exception<std::logic_error>("The concrete stage-BGM backend did not attach a sound handle.");
+    if (handle != nullptr) {
+        mLastBGM[bgm_index] = mCurrentBGM[bgm_index];
+        mCurrentBGM[bgm_index] = sound_id;
     }
-    mLastBGM[bgm_index] = mCurrentBGM[bgm_index];
-    mCurrentBGM[bgm_index] = sound_id;
     return handle;
 }
 
 void AudBgmMgr::setNextBGM(s32 bgm_index, u32 sound_id) {
-    (void)bgm_index;
-    (void)sound_id;
-    unavailable("the retail next-BGM scheduler");
+    mNextBGM[bgm_index] = sound_id;
 }
 
 void AudBgmMgr::clearNextBGM(s32 bgm_index) {
@@ -695,9 +714,7 @@ void AudBgmMgr::clearNextBGM(s32 bgm_index) {
 }
 
 JAISoundHandle *AudBgmMgr::startLastBGM(s32 bgm_index) {
-    if (bgm_index != BgmType_Stage || mLastBGM[bgm_index] == static_cast<u32>(-1)) {
-        aurora::throw_host_exception<std::logic_error>("No resolved last stage BGM is available.");
-    }
+    if (mLastBGM[bgm_index] == static_cast<u32>(-1)) return nullptr;
     return start(bgm_index, mLastBGM[bgm_index], false);
 }
 
@@ -709,30 +726,35 @@ void AudBgmMgr::clearLastBGM(s32 bgm_index) {
 }
 
 void AudBgmMgr::pause() {
-    require_concrete_audio_runtime("BGM manager pause")
-        .j_audio_playback()
-        .pause_stage_bgm(true);
+    for (auto *bgm : mBgm) if (bgm != nullptr) bgm->pause(true);
 }
 
 void AudBgmMgr::unpause() {
-    require_concrete_audio_runtime("BGM manager unpause")
-        .j_audio_playback()
-        .pause_stage_bgm(false);
+    for (auto *bgm : mBgm) if (bgm != nullptr) bgm->pause(false);
 }
 
-void AudBgmMgr::volDownLevel(bool) {
-    unavailable("BGM manager level-volume reduction");
+void AudBgmMgr::volDownLevel(bool immediate) {
+    for (auto &controller : mVolumeController) controller.volDown(immediate);
 }
 
 void AudBgmMgr::volDownStageBgmWhenSubBgmPlaying() {
-    unavailable("sub-BGM stage-volume interruption");
+    auto *bgm = mBgm[BgmType_Sub];
+    if (bgm == nullptr) return;
+    auto *handle = bgm->getHandle();
+    if (handle == nullptr) return;
+    if (handle->isSoundAttached() && mBgm[BgmType_Stage] != nullptr) {
+        mVolumeController[BgmType_Stage].interruptedByOther();
+    }
+    auto *rhythm = bgm->getRhythmHandle();
+    if (rhythm != nullptr && rhythm->isSoundAttached()) setBgmToRhythmDominant(BgmType_Sub);
 }
 
 void AudBgmMgr::startNextBgmWhenStopping(s32 bgm_index) {
-    if (mNextBGM[bgm_index] == static_cast<u32>(-1) || mBgm[bgm_index] == nullptr) {
-        return;
+    if (mNextBGM[bgm_index] == static_cast<u32>(-1) || mBgm[bgm_index] == nullptr) return;
+    if (mBgm[bgm_index]->isStopping()) {
+        start(bgm_index, mNextBGM[bgm_index], false);
+        clearNextBGM(bgm_index);
     }
-    unavailable("the retail next-BGM scheduler");
 }
 
 void AudBgmMgr::releaseStoppingBgm(s32 bgm_index) {
@@ -773,19 +795,10 @@ namespace AudWrap {
     }
 
     AudBgmMgr *getBgmMgr() {
-        auto &audio = smgpc::compat::require_active_audio_event_service();
-        if (!audio.is_stage_bgm_identity_resolved()) {
-            aurora::throw_host_exception<std::logic_error>("The current stage-BGM identity has not been resolved.");
-        }
-        auto *runtime = try_concrete_audio_runtime();
-        if (runtime != nullptr &&
-            runtime->j_audio_playback().has_active_stage_bgm()) {
-            s_bgm_manager.mCurrentBGM[AudBgmMgr::BgmType_Stage] =
-                runtime->j_audio_playback().stage_bgm_id().value_or(
-                    static_cast<u32>(-1));
-        } else {
-            s_bgm_manager.mCurrentBGM[AudBgmMgr::BgmType_Stage] =
-                audio.current_stage_bgm_id().value_or(static_cast<u32>(-1));
+        (void)smgpc::compat::require_active_audio_event_service();
+        if (auto *runtime = try_concrete_audio_runtime()) {
+            (void)reconcile_bgm(BgmLane::Stage, runtime->j_audio_playback());
+            (void)reconcile_bgm(BgmLane::Sub, runtime->j_audio_playback());
         }
         return &s_bgm_manager;
     }
@@ -797,53 +810,35 @@ namespace AudWrap {
         }
         auto *runtime = try_concrete_audio_runtime();
         if (runtime == nullptr) {
-            if (!audio.has_active_stage_bgm()) {
-                return nullptr;
-            }
-            aurora::throw_host_exception<std::logic_error>(
-                "Active stage-BGM state has no concrete RuntimeContext backend");
-        }
-        auto &playback = runtime->j_audio_playback();
-        if (!playback.has_active_stage_bgm()) {
-            if (audio.has_active_stage_bgm()) {
-                aurora::throw_host_exception<std::logic_error>(
-                    "Logical stage-BGM state has no matching concrete backend voice");
-            }
+            if (audio.has_active_stage_bgm()) unavailable("active stage-BGM state without a concrete RuntimeContext backend");
             return nullptr;
         }
-        const auto backend_id = playback.stage_bgm_id();
-        if (!backend_id.has_value()) {
-            aurora::throw_host_exception<std::logic_error>(
-                "Concrete stage-BGM backend has no retail sound ID");
+        auto &playback = runtime->j_audio_playback();
+        if (audio.has_active_stage_bgm() && !playback.has_active_bgm(BgmLane::Stage)) {
+            aurora::throw_host_exception<std::logic_error>("Logical stage-BGM state has no matching concrete backend voice");
         }
-        if (audio.has_active_stage_bgm() &&
-            backend_id != audio.current_stage_bgm_id()) {
-            aurora::throw_host_exception<std::logic_error>(
-                "Logical stage-BGM identity disagrees with its concrete backend voice");
+        if (audio.has_active_stage_bgm() && audio.current_stage_bgm_id() != playback.bgm_id(BgmLane::Stage)) {
+            aurora::throw_host_exception<std::logic_error>("Logical stage-BGM identity disagrees with its concrete backend voice");
         }
-        if (!audio.has_active_stage_bgm() &&
-            !playback.is_stage_bgm_stopping()) {
-            aurora::throw_host_exception<std::logic_error>(
-                "Concrete stage-BGM voice is active without logical start/stop state");
-        }
-        if (s_bgm_manager.mBgm[AudBgmMgr::BgmType_Stage] == nullptr) {
-            s_bgm_manager.mBgm[AudBgmMgr::BgmType_Stage] =
-                allocate_bound_stage_bgm(*backend_id);
-        }
-        synchronize_stage_handle(playback);
-        return s_bgm_manager.mBgm[AudBgmMgr::BgmType_Stage];
+        return reconcile_bgm(BgmLane::Stage, playback);
     }
 
     AudBgm *getSubBgm() {
-        unavailable("sub-BGM access");
+        auto *runtime = try_concrete_audio_runtime();
+        if (runtime == nullptr) {
+            auto *audio = smgpc::compat::try_active_audio_event_service();
+            if (audio != nullptr && audio->has_active_sub_bgm()) unavailable("active sub-BGM state without a concrete RuntimeContext backend");
+            return nullptr;
+        }
+        return reconcile_bgm(BgmLane::Sub, runtime->j_audio_playback());
     }
 
     JAISoundHandle *startStageBgm(u32 sound_id, bool prepared) {
         return s_bgm_manager.start(AudBgmMgr::BgmType_Stage, sound_id, prepared);
     }
 
-    JAISoundHandle *startSubBgm(u32, bool) {
-        unavailable("sub-BGM start");
+    JAISoundHandle *startSubBgm(u32 sound_id, bool prepared) {
+        return s_bgm_manager.start(AudBgmMgr::BgmType_Sub, sound_id, prepared);
     }
 
     void setNextIdStageBgm(u32 sound_id) {

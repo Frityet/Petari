@@ -2319,7 +2319,7 @@ namespace smgpc::runtime {
             {"audio",
              Json{
                  {"stage_bgm", runtime.current_stage_bgm_name()},
-                 {"stage_bgm_active", runtime.j_audio_playback().has_active_stage_bgm()},
+                 {"stage_bgm_active", runtime.j_audio_playback().has_active_bgm(smgpc::runtime::BgmLane::Stage)},
                  {"stage_bgm_prepared", runtime.is_stage_bgm_prepared()},
                  {"sub_bgm", runtime.audio().current_sub_bgm_name()},
                  {"sub_bgm_active", runtime.audio().has_active_sub_bgm()},

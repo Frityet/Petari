@@ -5,6 +5,7 @@
 #include <aurora/j_audio_sound_archive.hpp>
 #include <aurora/j_audio_stream.hpp>
 
+#include <array>
 #include <cstddef>
 #include <cstdint>
 #include <functional>
@@ -20,6 +21,8 @@ namespace smgpc::compat { class JAudioCategoryVolumeOwnership; }
 namespace smgpc::runtime {
 
     class DvdFileSystemService;
+
+    enum class BgmLane : std::size_t { Stage, Sub };
 
     // Owns the concrete PCM voices behind retail JAudio sound effects and
     // streams. Level sounds must be refreshed during every open frame;
@@ -65,21 +68,22 @@ namespace smgpc::runtime {
         void recover_sound_volume_setting(std::uint32_t steps);
         void set_sound_volume_setting_level(std::int32_t volume_set);
         [[nodiscard]] float sound_category_gain(std::uint32_t sound_id) const;
-        [[nodiscard]] JAISoundHandle *start_stage_bgm(
+        [[nodiscard]] JAISoundHandle *start_bgm(BgmLane lane,
             std::string_view name, bool prepared);
-        [[nodiscard]] JAISoundHandle *start_stage_bgm(
+        [[nodiscard]] JAISoundHandle *start_bgm(BgmLane lane,
             std::uint32_t sound_id, bool prepared);
-        void unlock_stage_bgm();
-        void stop_stage_bgm(std::uint32_t fade_frames);
-        void pause_stage_bgm(bool paused);
-        [[nodiscard]] bool is_stage_bgm_prepared() const;
-        [[nodiscard]] bool is_stage_bgm_paused() const;
-        [[nodiscard]] bool is_stage_bgm_stopping() const;
-        [[nodiscard]] bool has_active_stage_bgm() const;
-        [[nodiscard]] std::optional<std::uint32_t> stage_bgm_id() const;
-        [[nodiscard]] std::string_view stage_bgm_name() const;
-        [[nodiscard]] JAISoundHandle *stage_bgm_handle();
-        [[nodiscard]] std::uint64_t stage_bgm_backend_token() const;
+        void unlock_bgm(BgmLane lane);
+        void stop_bgm(BgmLane lane, std::uint32_t fade_frames);
+        void pause_bgm(BgmLane lane, bool paused);
+        [[nodiscard]] bool is_bgm_prepared(BgmLane lane) const;
+        [[nodiscard]] bool is_bgm_paused(BgmLane lane) const;
+        [[nodiscard]] bool is_bgm_stopping(BgmLane lane) const;
+        [[nodiscard]] bool has_active_bgm(BgmLane lane) const;
+        [[nodiscard]] std::optional<std::uint32_t> bgm_id(BgmLane lane) const;
+        [[nodiscard]] std::string_view bgm_name(BgmLane lane) const;
+        [[nodiscard]] JAISoundHandle *bgm_handle(BgmLane lane);
+        [[nodiscard]] std::uint64_t bgm_backend_token(BgmLane lane) const;
+        void set_bgm_bus_gain(BgmLane lane, float volume);
         [[nodiscard]] bool has_me() const;
 
         void reset_scene();
@@ -98,7 +102,7 @@ namespace smgpc::runtime {
             bool releasing = false;
         };
 
-        struct StageVoiceEntry {
+        struct BgmVoiceEntry {
             std::string name;
             aurora::audio::JAudioSoundMetadata metadata;
             aurora::audio::JAudioStreamRecipe recipe;
@@ -120,7 +124,7 @@ namespace smgpc::runtime {
         void ensure_archive();
         void require_working_output() const;
         void retire_finished_voices();
-        [[nodiscard]] JAISoundHandle *start_stage_bgm(
+        [[nodiscard]] JAISoundHandle *start_bgm(BgmLane lane,
             aurora::audio::JAudioSoundMetadata metadata,
             std::string_view name, bool prepared);
         ArchiveFactory _archive_factory;
@@ -135,8 +139,8 @@ namespace smgpc::runtime {
             _sound_effect_voices;
         std::vector<std::unique_ptr<SoundEffectVoiceEntry>>
             _retired_sound_effect_voices;
-        std::optional<StageVoiceEntry> _stage_voice;
-        JAISoundHandle _stage_handle;
+        std::array<std::optional<BgmVoiceEntry>, 2> _bgm_voices;
+        std::array<JAISoundHandle, 2> _bgm_handles;
         std::uint64_t _frame_index = 0U;
         bool _frame_open = false;
         bool _trigger_sound_permitted = true;

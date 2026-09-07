@@ -265,6 +265,10 @@ namespace smgpc::runtime {
         void attach_scene_execution(smgpc::scene::SceneExecutionService &service);
         void attach_scene_lifecycle(smgpc::scene::SceneLifecycleService &service);
 
+        [[nodiscard]] JAISoundHandle *start_sub_bgm(std::string_view name, bool prepared);
+        [[nodiscard]] JAISoundHandle *start_sub_bgm(u32 sound_id, bool prepared);
+        void stop_sub_bgm(u32 fade_frames);
+        void unlock_sub_bgm();
         [[nodiscard]] JAISoundHandle *start_stage_bgm(
             std::string_view name, bool prepared);
         [[nodiscard]] JAISoundHandle *start_stage_bgm(

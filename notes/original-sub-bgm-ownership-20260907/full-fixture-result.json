@@ -1,0 +1,19 @@
+{
+  "build": "parent coordinated complete shared archives then target build0",
+  "executable": "build/macosx/arm64/debug/smg-pc-j-audio-playback-tests",
+  "executable_sha256": "253dda113069bd196e445106840b01bf2a255c05ff93331c47f3b10173f2d707",
+  "environment": {
+    "SMGPC_RETAIL_FILES_ROOT": "notes/original-audio-category-volume-20260907/fixture"
+  },
+  "arguments": [],
+  "exit": 0,
+  "log": "full-fixture-run.log",
+  "observed_audio": {
+    "sink": "explicit SDL dummy test device",
+    "callbacks": 80,
+    "mixed_frames": 81920,
+    "nonzero_samples": 46556
+  },
+  "runtime_window": "real Metal",
+  "limitation": "Does not prove audible output, JAS sequence decoder, Multi-BGM rhythm graph, or gameplay."
+}

@@ -203,7 +203,8 @@ namespace smgpc::runtime {
                                      std::string_view name, s32 parameter_1, s32 parameter_2,
                                      s32 parameter_3);
         void register_limited_sound(std::string_view name, s32 limit);
-        void start_sub_bgm(std::string_view name, bool prepared);
+        void start_sub_bgm(std::string_view name, bool prepared, std::optional<u32> sound_id = std::nullopt);
+        void unlock_sub_bgm();
         void stop_sub_bgm(u32 fade_frames);
         void submit_level_sound();
         void permit_level_sound();
@@ -237,6 +238,7 @@ namespace smgpc::runtime {
         bool _stage_bgm_identity_resolved = false;
         bool _cube_bgm_change_invalid = false;
         std::string _sub_bgm_name;
+        std::optional<u32> _sub_bgm_id;
         std::uint64_t _sub_bgm_stop_frame = 0U;
         bool _sub_bgm_active = false;
         bool _sub_bgm_stopping = false;

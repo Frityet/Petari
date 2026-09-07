@@ -1,0 +1,702 @@
+[
+  {
+    "name": "AudBgm",
+    "compile_exit": 0,
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/decomp/src/Game/AudioLib/AudBgm.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-sub-bgm-ownership-20260907/AudBgm.wii.o"
+    ],
+    "diff_exit": 0,
+    "symbols": [
+      {
+        "name": "__ct__6AudBgmFv",
+        "score": 100.0
+      },
+      {
+        "name": "resetAuxVolume__6AudBgmFv",
+        "score": 100.0
+      },
+      {
+        "name": "__ct__12AudSingleBgmFv",
+        "score": 100.0
+      },
+      {
+        "name": "init__12AudSingleBgmFv",
+        "score": 100.0
+      },
+      {
+        "name": "movement__12AudSingleBgmFv",
+        "score": 100.0
+      },
+      {
+        "name": "start__12AudSingleBgmFUlb",
+        "score": 100.0
+      },
+      {
+        "name": "stop__12AudSingleBgmFUl",
+        "score": 100.0
+      },
+      {
+        "name": "isPreparedPlay__12AudSingleBgmFv",
+        "score": 100.0
+      },
+      {
+        "name": "playAfterPrepared__12AudSingleBgmFv",
+        "score": 100.0
+      },
+      {
+        "name": "getRhythmHandle__12AudSingleBgmFv",
+        "score": 100.0
+      },
+      {
+        "name": "moveVolume__12AudSingleBgmFfUl",
+        "score": 100.0
+      },
+      {
+        "name": "moveVolumeForNoteFairy__12AudSingleBgmFfUl",
+        "score": 100.0
+      },
+      {
+        "name": "changeTrackMuteState__12AudSingleBgmFll",
+        "score": 100.0
+      },
+      {
+        "name": "initTrackController__12AudSingleBgmFv",
+        "score": 100.0
+      },
+      {
+        "name": "startTrackControl__12AudSingleBgmFv",
+        "score": 100.0
+      },
+      {
+        "name": "stopTrackControl__12AudSingleBgmFv",
+        "score": 100.0
+      },
+      {
+        "name": "updateTrackControl__12AudSingleBgmFv",
+        "score": 100.0
+      },
+      {
+        "name": "__ct__11AudMultiBgmFv",
+        "score": 100.0
+      },
+      {
+        "name": "init__11AudMultiBgmFv",
+        "score": 100.0
+      },
+      {
+        "name": "start__11AudMultiBgmFUlb",
+        "score": 100.0
+      },
+      {
+        "name": "stop__11AudMultiBgmFUl",
+        "score": 100.0
+      },
+      {
+        "name": "isPreparedPlay__11AudMultiBgmFv",
+        "score": 100.0
+      },
+      {
+        "name": "playAfterPrepared__11AudMultiBgmFv",
+        "score": 100.0
+      },
+      {
+        "name": "sendToSyncStream__11AudMultiBgmFv",
+        "score": 100.0
+      },
+      {
+        "name": "rejectFromSyncStream__11AudMultiBgmFv",
+        "score": 100.0
+      },
+      {
+        "name": "movement__11AudMultiBgmFv",
+        "score": 100.0
+      },
+      {
+        "name": "moveVolume__11AudMultiBgmFfUl",
+        "score": 100.0
+      },
+      {
+        "name": "moveVolumeForNoteFairy__11AudMultiBgmFfUl",
+        "score": 100.0
+      },
+      {
+        "name": "changeTrackMuteState__11AudMultiBgmFll",
+        "score": 100.0
+      },
+      {
+        "name": "getHandle__11AudMultiBgmFv",
+        "score": 100.0
+      },
+      {
+        "name": "getRhythmHandle__11AudMultiBgmFv",
+        "score": 100.0
+      },
+      {
+        "name": "isSoundAttached__11AudMultiBgmCFv",
+        "score": 100.0
+      },
+      {
+        "name": "pause__11AudMultiBgmFb",
+        "score": 100.0
+      },
+      {
+        "name": "isStopping__11AudMultiBgmCFv",
+        "score": 100.0
+      },
+      {
+        "name": "isPaused__11AudMultiBgmCFv",
+        "score": 100.0
+      },
+      {
+        "name": "getSoundID__11AudMultiBgmCFv",
+        "score": 100.0
+      },
+      {
+        "name": "initTrackController__11AudMultiBgmFv",
+        "score": 100.0
+      },
+      {
+        "name": "startTrackControl__11AudMultiBgmFv",
+        "score": 100.0
+      },
+      {
+        "name": "updateTrackControl__11AudMultiBgmFv",
+        "score": 100.0
+      },
+      {
+        "name": "prepare__11AudMultiBgmFUl",
+        "score": 100.0
+      },
+      {
+        "name": "isPrepared__11AudMultiBgmFv",
+        "score": 100.0
+      },
+      {
+        "name": "unlock__11AudMultiBgmFv",
+        "score": 100.0
+      },
+      {
+        "name": "updateSyncProcess__11AudMultiBgmFv",
+        "score": 100.0
+      },
+      {
+        "name": "pauseSyncProcess__11AudMultiBgmFv",
+        "score": 100.0
+      },
+      {
+        "name": "setStreamVolume__11AudMultiBgmFff",
+        "score": 100.0
+      },
+      {
+        "name": "isStopping__8JAISoundCFv",
+        "score": 100.0
+      },
+      {
+        "name": "getRhythmStrategy__6AudBgmFv",
+        "score": 100.0
+      },
+      {
+        "name": "setVolumeController__6AudBgmFP22AudBgmVolumeController",
+        "score": 100.0
+      },
+      {
+        "name": "rejectFromSyncStream__12AudSingleBgmFv",
+        "score": 100.0
+      },
+      {
+        "name": "sendToSyncStream__12AudSingleBgmFv",
+        "score": 100.0
+      },
+      {
+        "name": "getSoundID__12AudSingleBgmCFv",
+        "score": 98.888885
+      },
+      {
+        "name": "isPaused__12AudSingleBgmCFv",
+        "score": 100.0
+      },
+      {
+        "name": "isStopping__12AudSingleBgmCFv",
+        "score": 100.0
+      },
+      {
+        "name": "pause__12AudSingleBgmFb",
+        "score": 100.0
+      },
+      {
+        "name": "isSoundAttached__12AudSingleBgmCFv",
+        "score": 100.0
+      },
+      {
+        "name": "getHandle__12AudSingleBgmFv",
+        "score": 100.0
+      },
+      {
+        "name": "__sinit_\\AudBgm_cpp",
+        "score": 100.0
+      },
+      {
+        "name": "__vt__11AudMultiBgm",
+        "score": 100.0
+      },
+      {
+        "name": "__vt__12AudSingleBgm",
+        "score": 100.0
+      },
+      {
+        "name": "__vt__6AudBgm",
+        "score": 100.0
+      },
+      {
+        "name": "@57010",
+        "score": 100.0
+      },
+      {
+        "name": "@57011",
+        "score": 100.0
+      },
+      {
+        "name": "sInstance__38JASGlobalInstance<17AudRhythmMeSystem>",
+        "score": 100.0
+      },
+      {
+        "name": "@59604",
+        "score": 100.0
+      },
+      {
+        "name": "@61180",
+        "score": 100.0
+      },
+      {
+        "name": "@61226",
+        "score": 100.0
+      },
+      {
+        "name": "[.ctors-0]",
+        "score": 100.0
+      },
+      {
+        "name": "[.rodata-0]",
+        "score": 100.0
+      },
+      {
+        "name": "[.data-0]",
+        "score": 99.56209
+      },
+      {
+        "name": "[.sdata2-0]",
+        "score": 85.71429
+      }
+    ]
+  },
+  {
+    "name": "AudBgmMgr",
+    "compile_exit": 0,
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/decomp/src/Game/AudioLib/AudBgmMgr.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-sub-bgm-ownership-20260907/AudBgmMgr.wii.o"
+    ],
+    "diff_exit": 0,
+    "symbols": [
+      {
+        "name": "__ct__9AudBgmMgrFv",
+        "score": 100.0
+      },
+      {
+        "name": "movement__9AudBgmMgrFv",
+        "score": 100.0
+      },
+      {
+        "name": "start__9AudBgmMgrFlUlb",
+        "score": 100.0
+      },
+      {
+        "name": "setNextBGM__9AudBgmMgrFlUl",
+        "score": 100.0
+      },
+      {
+        "name": "clearNextBGM__9AudBgmMgrFl",
+        "score": 100.0
+      },
+      {
+        "name": "startLastBGM__9AudBgmMgrFl",
+        "score": 100.0
+      },
+      {
+        "name": "clearLastBGM__9AudBgmMgrFl",
+        "score": 100.0
+      },
+      {
+        "name": "pause__9AudBgmMgrFv",
+        "score": 100.0
+      },
+      {
+        "name": "unpause__9AudBgmMgrFv",
+        "score": 100.0
+      },
+      {
+        "name": "volDownLevel__9AudBgmMgrFb",
+        "score": 100.0
+      },
+      {
+        "name": "volDownStageBgmWhenSubBgmPlaying__9AudBgmMgrFv",
+        "score": 100.0
+      },
+      {
+        "name": "startNextBgmWhenStopping__9AudBgmMgrFl",
+        "score": 100.0
+      },
+      {
+        "name": "releaseStoppingBgm__9AudBgmMgrFl",
+        "score": 100.0
+      },
+      {
+        "name": "sendToRhythmSystem__9AudBgmMgrFl",
+        "score": 100.0
+      },
+      {
+        "name": "setBgmToRhythmDominant__9AudBgmMgrFl",
+        "score": 100.0
+      },
+      {
+        "name": "stopRhythmProcess__9AudBgmMgrFl",
+        "score": 100.0
+      }
+    ]
+  },
+  {
+    "name": "AudBgmVolumeController",
+    "compile_exit": 0,
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/decomp/src/Game/AudioLib/AudBgmVolumeController.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-sub-bgm-ownership-20260907/AudBgmVolumeController.wii.o"
+    ],
+    "diff_exit": 0,
+    "symbols": [
+      {
+        "name": "__ct__22AudBgmVolumeControllerFv",
+        "score": 100.0
+      },
+      {
+        "name": "update__22AudBgmVolumeControllerFv",
+        "score": 100.0
+      },
+      {
+        "name": "getVolume__22AudBgmVolumeControllerCFv",
+        "score": 100.0
+      },
+      {
+        "name": "volDown__22AudBgmVolumeControllerFb",
+        "score": 100.0
+      },
+      {
+        "name": "interruptedByOther__22AudBgmVolumeControllerFv",
+        "score": 100.0
+      },
+      {
+        "name": "moveAuxVolume__22AudBgmVolumeControllerFfl",
+        "score": 100.0
+      },
+      {
+        "name": "moveNoteFairyVolume__22AudBgmVolumeControllerFfl",
+        "score": 100.0
+      },
+      {
+        "name": "@54763",
+        "score": 100.0
+      },
+      {
+        "name": "@54764",
+        "score": 100.0
+      },
+      {
+        "name": "[.sdata2-0]",
+        "score": 100.0
+      }
+    ]
+  },
+  {
+    "name": "AudFader",
+    "compile_exit": 0,
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/decomp/src/Game/AudioLib/AudFader.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-sub-bgm-ownership-20260907/AudFader.wii.o"
+    ],
+    "diff_exit": 0,
+    "symbols": [
+      {
+        "name": "__ct__8AudFaderFv",
+        "score": 100.0
+      },
+      {
+        "name": "set__8AudFaderFfl",
+        "score": 100.0
+      },
+      {
+        "name": "update__8AudFaderFv",
+        "score": 100.0
+      },
+      {
+        "name": "@52500",
+        "score": 100.0
+      },
+      {
+        "name": "@52501",
+        "score": 100.0
+      },
+      {
+        "name": "[.rodata-0]",
+        "score": 100.0
+      },
+      {
+        "name": "[.sdata2-0]",
+        "score": 100.0
+      }
+    ]
+  }
+]

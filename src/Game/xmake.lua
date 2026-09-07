@@ -38,6 +38,7 @@ target("smg-pc-game")
             cxxflags = "-include " .. path.join(os.projectdir(), "src/JSystem/JMath/JMATrigonometric.hpp")
         }
     })
+    remove_files("AudioLib/AudBgm.cpp")
     remove_files("AudioLib/AudBgmKeeper.cpp")
     remove_files("AudioLib/AudBgmMgr.cpp")
     remove_files("AudioLib/AudBgmRhythmStrategy.cpp")
