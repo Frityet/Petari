@@ -1,0 +1,62 @@
+[
+  {
+    "unit": "MarioActorSpecialDraw",
+    "function": "calcSpinEffect",
+    "body_identical": true,
+    "body_sha256": "47bce8a87eb5a977be884fcad288e476dfed0a61d693520635d26b2f19320715",
+    "name": "calcSpinEffect__10MarioActorFv",
+    "demangled_name": "MarioActor::calcSpinEffect()",
+    "size": "328",
+    "match_percent": 97.743904
+  },
+  {
+    "unit": "MarioActorSpecialDraw",
+    "function": "drawSpinEffect",
+    "body_identical": true,
+    "body_sha256": "a2d0468f65c0323ca24f220c6924f5516434b97aa6ea5bf2395a0b07e9bfb3b1",
+    "name": "drawSpinEffect__10MarioActorCFv",
+    "demangled_name": "MarioActor::drawSpinEffect() const",
+    "size": "832",
+    "match_percent": 81.52404
+  },
+  {
+    "unit": "MarioActorSpecialDraw",
+    "function": "initDarkMask",
+    "body_identical": true,
+    "body_sha256": "1344e7a31700466e955be066f8b8d92b925d1f4c0829f0c8eaf2c3dda0a445c9",
+    "name": "initDarkMask__10MarioActorFv",
+    "demangled_name": "MarioActor::initDarkMask()",
+    "size": "116",
+    "match_percent": 90.68965
+  },
+  {
+    "unit": "MarioActorSpecialDraw",
+    "function": "updateDarkMask",
+    "body_identical": true,
+    "body_sha256": "eca2d35d28a47a031421c7f3864c2333df1a56ae38424c4f8eee24b78bb4ea89",
+    "name": "updateDarkMask__10MarioActorFUs",
+    "demangled_name": "MarioActor::updateDarkMask(unsigned short)",
+    "size": "176",
+    "match_percent": 100.0
+  },
+  {
+    "unit": "MarioActorSpecialDraw",
+    "function": "drawDarkMask",
+    "body_identical": true,
+    "body_sha256": "786d38db3c4be9a5e5d4829d4487adbc324fbc2a14c2d39c9b2d1d80d8852d5e",
+    "name": "drawDarkMask__10MarioActorCFv",
+    "demangled_name": "MarioActor::drawDarkMask() const",
+    "size": "948",
+    "match_percent": 97.31223
+  },
+  {
+    "unit": "MarioActorGravity",
+    "function": "updateBeeStickMode",
+    "body_identical": true,
+    "body_sha256": "8ed1f9a212bb784877176498a5a13d7a5b722e0256b5fa61eb268eedef82dc27",
+    "name": "updateBeeStickMode__10MarioActorFRQ29JGeometry8TVec3<f>",
+    "demangled_name": "MarioActor::updateBeeStickMode(JGeometry::TVec3<float>&)",
+    "size": "772",
+    "match_percent": 99.1658
+  }
+]

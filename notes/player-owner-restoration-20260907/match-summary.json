@@ -1,0 +1,74 @@
+[
+  {
+    "unit": "MarioAnimationEfx",
+    "text_bytes": "2000",
+    "text_match_percent": 98.912,
+    "text_symbols": 14,
+    "exact": 4,
+    "target_sha256": "f55c861a763cad469b21cca29ea7f15d693ea657b0e237a60104b1655700d73e",
+    "compiled_sha256": "28d757b741e658fdaebae3b3cd0fafae614fb609cdb1d268ef49bc5a4eae7724"
+  },
+  {
+    "unit": "MarioBee",
+    "text_bytes": "2736",
+    "text_match_percent": 99.70468,
+    "text_symbols": 4,
+    "exact": 3,
+    "target_sha256": "fe4128de70a2ba8a40376ffdf8adc84cd182f1cddd8043b30f032f90d3ac1da1",
+    "compiled_sha256": "972eaee310cd747f32b43b577e7ad60c1ca70ff18f44ae3aca1a12a12b484002"
+  },
+  {
+    "unit": "MarioSideStep",
+    "text_bytes": "2428",
+    "text_match_percent": 99.691925,
+    "text_symbols": 7,
+    "exact": 2,
+    "target_sha256": "b81b1ce6219e2ddc0bbe100d71b956829c4de4b8b00be7af749e54b126f4fabe",
+    "compiled_sha256": "5c5c83ad1fe094f038fb715344547bb3bb455cfa10e8bf099a4253a3c7e12a0e"
+  },
+  {
+    "unit": "MarioCollision",
+    "text_bytes": "25088",
+    "text_match_percent": 73.60395,
+    "text_symbols": 40,
+    "exact": 6,
+    "target_sha256": "7e1e34887b15b3daa09759c49fe49dfd4336b0fce2c7d5a8f721bdd19438f81b",
+    "compiled_sha256": "2942b77570975deedee5ebde36973609da2d7714e65eb4e9a8e921356715e152"
+  },
+  {
+    "unit": "MarioWall",
+    "text_bytes": "9328",
+    "text_match_percent": 93.25643,
+    "text_symbols": 26,
+    "exact": 8,
+    "target_sha256": "ec9faf854693f1c4453cedfca5975b232a632797aa69b0d5f858c6c7f4162a3c",
+    "compiled_sha256": "b1b41197f560b92274328fedeb79a2194f46f3c0fbef1632e30d1e97ecfc51fa"
+  },
+  {
+    "unit": "MarioDamage",
+    "text_bytes": "12756",
+    "text_match_percent": 98.96457,
+    "text_symbols": 56,
+    "exact": 28,
+    "target_sha256": "d46f988535ea11896587fe638622d40397b6fb21e4b10578520a83e26ca33293",
+    "compiled_sha256": "bae82f3906806df7bc79feaaeb24865e9bb5419f8b43a1ecd0228113a7e0de3f"
+  },
+  {
+    "unit": "MarioSpecial",
+    "text_bytes": "3712",
+    "text_match_percent": 99.26617,
+    "text_symbols": 11,
+    "exact": 1,
+    "target_sha256": "04bc1c1d0b5b9666febb36a0d640bba1a16c768e309f3630c623f954464c0245",
+    "compiled_sha256": "82e32e034f05be3a989d8c2d186d53d0316b5095963055cd751de8fb894ea2a7"
+  },
+  {
+    "unit": "MarioSlope",
+    "text_bytes": "2060",
+    "text_match_percent": 99.3767,
+    "text_symbols": 5,
+    "exact": 2,
+    "target_sha256": "ae0b609cb857d5e728f211d65dc9280d0922df2701344f94c354be0e146d0db9",
+    "compiled_sha256": "76370b77dd3436e754ae07da7f3b6cec603a6da6c80d7bca5de958e33bccb752"
+  }
+]

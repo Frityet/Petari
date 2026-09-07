@@ -299,8 +299,8 @@ void MarioActor::initMember() {
     _B74 = 0;
     mEyeRes = nullptr;
     _B7C = 0;
-    _B80 = 0;
-    _B84 = 0;
+    _B80[0] = 0;
+    _B80[1] = 0;
     _B88 = 0;
     mNullAnimation = nullptr;
     _B90 = 0;

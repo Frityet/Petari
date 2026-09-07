@@ -7,5 +7,8 @@ class MarioActor;
 class MarioFireDamage : public MarioState {
 public:
     MarioFireDamage(MarioActor*);
-    u16 _12;
+
+    void decAfterTimer();
+
+    /* 0x12 */ u16 _12;
 };

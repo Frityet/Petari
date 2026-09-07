@@ -171,20 +171,20 @@ public:
     u16 getDamageAfterTimer() const;
     bool damageFloorCheck();
     bool damageWallCheck();
-    void damagePolygonCheck(const Triangle*);
+    bool damagePolygonCheck(const Triangle*);
     bool flipLarge(const TVec3f&);
     bool isEnableAddDamage() const;
     bool damage(const TVec3f&);
-    void doAbyssDamage();
+    bool doAbyssDamage();
     void connectToFireRun();
-    void doFireDanceWithInitialDamage(u8);
-    void doFireObjHitWithInitialDamage();
-    void doNeedleWithInitialDamage(u8);
-    void doNeedleWithInitialDamage(const Triangle*);
-    void doNeedle(const Triangle*);
-    void doFireDance();
+    bool doFireDanceWithInitialDamage(u8);
+    bool doFireObjHitWithInitialDamage();
+    bool doNeedleWithInitialDamage(u8);
+    bool doNeedleWithInitialDamage(const Triangle*);
+    bool doNeedle(const Triangle*);
+    bool doFireDance();
     void checkKarikariDamage();
-    void doDarkDamage();
+    bool doDarkDamage();
     bool doParalyze();
     bool doFreeze();
     bool requestCrush();
@@ -292,7 +292,7 @@ public:
     void endRabbitMode();
 
     bool checkWallJumpCode();
-    void doSideStep();
+    bool doSideStep();
 
     bool isSkatableFloor() const;
     void doSkate();
@@ -308,7 +308,7 @@ public:
     void playSoundTrampleCombo(u8);
     void setSeVersion(u32);
 
-    bool checkOnimasu(const HitSensor*);
+    void checkOnimasu(const HitSensor*);
     bool isDossun(const Triangle*) const;
     bool isStageCameraRotate2D() const;
     bool isNoWalkFallOnDossun() const;
@@ -400,7 +400,7 @@ public:
     void updateOnPoison();
     void updateOnWater();
 
-    void doRecovery();
+    bool doRecovery();
 
     bool isSliderFloor() const NO_INLINE;
     bool checkSliderMode() const;
@@ -829,7 +829,7 @@ public:
     /* 0x574 */ void* _574;
     /* 0x578 */ u32 _578;
     /* 0x57C */ Triangle* _57C[0x20];
-    /* 0x5FC */ u32 _5FC;
+    /* 0x5FC */ HitSensor* _5FC;
     /* 0x600 */ TVec3f _600;
     /* 0x60C */ u8 _60C;
     /* 0x60D */ u8 _60D;  // bool?

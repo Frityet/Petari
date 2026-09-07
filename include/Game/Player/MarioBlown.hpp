@@ -7,5 +7,14 @@ class MarioActor;
 class MarioBlown : public MarioState {
 public:
     MarioBlown(MarioActor*);
-    u8 _11[0x17];
+
+    virtual bool start();
+    virtual bool close();
+    virtual bool update();
+
+    /* 0x12 */ u16 _12;
+    /* 0x14 */ u16 _14;
+    /* 0x18 */ TVec3f _18;
+    /* 0x24 */ u8 _24;
+    /* 0x25 */ u8 _25;
 };

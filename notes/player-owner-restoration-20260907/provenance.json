@@ -1,0 +1,60 @@
+{
+  "reference": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4 (1347a481f^), original src/Game/Player source blobs before flatten",
+  "source_files": [
+    "src/Game/Player/MarioAnimationEfx.cpp",
+    "src/Game/Player/MarioBee.cpp",
+    "src/Game/Player/MarioSideStep.cpp",
+    "src/Game/Player/MarioCollision.cpp",
+    "src/Game/Player/MarioWall.cpp",
+    "src/Game/Player/MarioDamage.cpp",
+    "src/Game/Player/MarioSpecial.cpp",
+    "src/Game/Player/MarioSlope.cpp"
+  ],
+  "headers": [
+    "include/Game/Player/Mario.hpp",
+    "include/Game/Player/MarioAnimator.hpp",
+    "include/Game/Player/MarioAnimatorData.hpp",
+    "include/Game/Player/MarioAbyssDamage.hpp",
+    "include/Game/Player/MarioBlown.hpp",
+    "include/Game/Player/MarioDamage.hpp",
+    "include/Game/Player/MarioDarkDamage.hpp",
+    "include/Game/Player/MarioFaint.hpp",
+    "include/Game/Player/MarioFireDamage.hpp",
+    "include/Game/Player/MarioFireDance.hpp",
+    "include/Game/Player/MarioFireRun.hpp",
+    "include/Game/Player/MarioParalyze.hpp",
+    "include/Game/Player/MarioSideStep.hpp",
+    "include/Game/Player/MarioWall.hpp"
+  ],
+  "original_dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "native_only_imports": [
+    "src/Game/MapObj/IceStep.cpp",
+    "src/Game/MapObj/IceStep.hpp",
+    "src/Game/Map/SunshadeMapHolder.hpp",
+    "src/Game/AreaObj/WaterArea.hpp",
+    "src/Game/AreaObj/WarpCube.hpp",
+    "src/Game/MapObj/DashRing.hpp",
+    "src/Game/MapObj/WarpPod.hpp"
+  ],
+  "native_compile_declaration_fixes": "Mario.hpp: return declarations match their recovered function bodies; _5FC is actual HitSensor* (the reconstructed code stores/dereferences that identity). Decomp declarations changed first, then port; field offsets on PPC stay unchanged.",
+  "source_sha256": {
+    "src/Game/Player/MarioAnimationEfx.cpp": "2f68d47c3bde7c0fc249dea47186447bd9026209a35c1204de6f1c8ae069e6e7",
+    "src/Game/Player/MarioBee.cpp": "e8ed414085d379b33d0302f1fa646b1091c90d50ad83c422327dbebb348d4721",
+    "src/Game/Player/MarioSideStep.cpp": "7b9d5c8680e6ef9c40c2cac24e9f7b293669502ce82e449dcbfbfe388482f8fb",
+    "src/Game/Player/MarioCollision.cpp": "e01b79d3e6b37188f1dedd436e2dbee84d3abae01c9085f0c7ad0156f7549268",
+    "src/Game/Player/MarioWall.cpp": "b4fba54fff4a0e5db941ee407d6755c58182773aa5b865a2070b2dd3835eb463",
+    "src/Game/Player/MarioDamage.cpp": "0782b8ed440e87441e9fbd49c32903bb8bf5066edad936e3b13ce0ea53a2656b",
+    "src/Game/Player/MarioSpecial.cpp": "6a02859bc9cc2a4ffbf922de6431922b085456102b6f1154c5ccb23ff511eea6",
+    "src/Game/Player/MarioSlope.cpp": "19f64c2542b3a5e0b283683ecd9b7598c801fae47329b4aaa873263059cff092"
+  },
+  "historical_source_byte_identical": {
+    "src/Game/Player/MarioAnimationEfx.cpp": true,
+    "src/Game/Player/MarioBee.cpp": true,
+    "src/Game/Player/MarioSideStep.cpp": true,
+    "src/Game/Player/MarioCollision.cpp": true,
+    "src/Game/Player/MarioWall.cpp": true,
+    "src/Game/Player/MarioDamage.cpp": true,
+    "src/Game/Player/MarioSpecial.cpp": true,
+    "src/Game/Player/MarioSlope.cpp": true
+  }
+}

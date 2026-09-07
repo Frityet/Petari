@@ -166,7 +166,7 @@ void MarioActor::initDrawAndModel() {
         MR::CurrentHeapRestorer restorer(static_cast< JKRHeap* >(MR::getSceneHeapGDDR3()));
         _B7C = new JUTTexture(0x80, 0x40, GX_TF_RGBA8);
 
-        JUTTexture** ppTexture = &_B80;
+        JUTTexture** ppTexture = _B80;
         for (u32 i = 0; i < 2; i++) {
             ppTexture[i] = new JUTTexture(8, 8, GX_TF_IA8);
             ppTexture[i]->mWrapS = 1;

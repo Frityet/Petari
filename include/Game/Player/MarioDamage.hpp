@@ -8,6 +8,15 @@ class MarioDamage : public MarioState {
 public:
     MarioDamage(MarioActor*);
 
+    virtual bool start();
+    virtual bool close();
+    virtual bool update();
+    virtual bool notice();
+
+    void setVec(const TVec3f&);
+    void setVecSize(f32, f32);
+    void stopHead(const TVec3f&);
+
     inline void setStrings(const char* pChar1, const char* pChar2) {
         _28 = pChar1;
         _2C = pChar2;
