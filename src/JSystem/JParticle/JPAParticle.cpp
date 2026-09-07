@@ -1,3 +1,4 @@
+#include <aurora/ppc_math.hpp>
 #include "JSystem/JParticle/JPAParticle.hpp"
 #include "JSystem/JParticle/JPABaseShape.hpp"
 #include "JSystem/JParticle/JPAChildShape.hpp"
@@ -97,8 +98,8 @@ void JPABaseParticle::init_p(JPAEmitterWorkData* work) {
 
     if (esp != NULL) {
         if (esp->isEnableRotateAnm()) {
-            mRotateAngle = esp->getRotateInitAngle() + esp->getRotateRndmAngle() * emtr->get_r_zh();
-            mRotateSpeed = esp->getRotateInitSpeed() * (esp->getRotateRndmSpeed() * emtr->get_r_zp() + 1.0f);
+            mRotateAngle = aurora::ppc::truncate_u16(esp->getRotateInitAngle() + esp->getRotateRndmAngle() * emtr->get_r_zh());
+            mRotateSpeed = aurora::ppc::truncate_s16(esp->getRotateInitSpeed() * (esp->getRotateRndmSpeed() * emtr->get_r_zp() + 1.0f));
             mRotateSpeed = emtr->get_r_zp() < esp->getRotateDirection() ? mRotateSpeed : (s16)-mRotateSpeed;
         } else {
             mRotateAngle = 0;

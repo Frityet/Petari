@@ -814,7 +814,7 @@ namespace MR {
     }
 
     const char* getModelResName(const LiveActor* pActor) {
-        return getModelResourceHolder(pActor)->mModelResTable->getResName(static_cast< u32 >(0));
+        return getModelResourceHolder(pActor)->mModelResTable->getResName(0UL);
     }
 
     bool isExistAnim(const LiveActor* pActor, const char* pName) {
@@ -1731,7 +1731,7 @@ namespace MR {
 
     void setJointTransformLocalMtx(const LiveActor* pActor, const char* pName, MtxPtr pMtx) {
         XjointTransform* pTransform = pActor->mModelManager->getJointTransform(pName);
-        pTransform->_68 = pMtx;
+        pTransform->_68 = (u32)pMtx;
     }
 
     f32 getBckFrame(const LiveActor* pActor) {

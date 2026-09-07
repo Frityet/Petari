@@ -1,3 +1,5 @@
+#include "compat/JkrHeapFinalizer.hpp"
+#include "resource/JpcResource.hpp"
 #include "JSystem/JParticle/JPAResourceManager.hpp"
 #include "JSystem/JParticle/JPADynamicsBlock.hpp"
 #include "JSystem/JParticle/JPAResource.hpp"
@@ -15,7 +17,19 @@ JPAResourceManager::JPAResourceManager(void const* pData, JKRHeap* pHeap) {
     mTexMax = 0;
     mTexNum = 0;
     mpHeap = pHeap;
-    JPAResourceLoader loader((u8 const*)pData, this);
+    smgpc::compat::register_jkr_heap_finalizer(this, [](void* p) noexcept {
+        static_cast<JPAResourceManager*>(p)->~JPAResourceManager();
+    });
+    try {
+        JPAResourceLoader loader((u8 const*)pData, this);
+    } catch (...) {
+        smgpc::compat::unregister_jkr_heap_finalizer(this);
+        throw;
+    }
+}
+
+JPAResourceManager::~JPAResourceManager() {
+    smgpc::compat::unregister_jkr_heap_finalizer(this);
 }
 
 JPAResource* JPAResourceManager::getResource(u16 usrIdx) const {

@@ -1,3 +1,5 @@
+#include "resource/JpcResource.hpp"
+#include <stdexcept>
 #include "JSystem/JParticle/JPAResourceLoader.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include "JSystem/JParticle/JPABaseShape.hpp"
@@ -11,85 +13,66 @@
 #include "JSystem/JParticle/JPAResourceManager.hpp"
 
 JPAResourceLoader::JPAResourceLoader(u8 const* data, JPAResourceManager* mgr) {
-    if (*(u32*)(data + 4) == '2-10') {
-        load_jpc(data, mgr);
-    }
+    load_jpc(data, mgr);
 }
 
-struct JPAResourceHeader {
-    /* 0x0 */ u16 mUsrIdx;
-    /* 0x2 */ u16 mBlockNum;
-    /* 0x4 */ u8 mFieldBlockNum;
-    /* 0x5 */ u8 mKeyBlockNum;
-    /* 0x6 */ u8 mTDB1Num;
-};
-
 void JPAResourceLoader::load_jpc(u8 const* data, JPAResourceManager* mgr) {
+    if (mgr->mpResArr || mgr->mpTexArr)
+        throw std::logic_error("JPAResourceLoader requires an empty manager");
+    mgr->mNativeResource = smgpc::resource::resolve_jpc_source(data);
+    const auto& decoded = *mgr->mNativeResource;
     JKRHeap* heap = mgr->mpHeap;
-    mgr->mResMax = *(u16*)(data + 8);
-    mgr->mTexMax = *(u16*)(data + 0xA);
+    mgr->mResMax = decoded.resources().size();
+    mgr->mTexMax = decoded.textures().size();
     mgr->mpResArr = new (heap, 0) JPAResource*[mgr->mResMax];
     mgr->mpTexArr = new (heap, 0) JPATexture*[mgr->mTexMax];
-
-    u32 offset = 0x10;
-    for (int i = 0; i < *(u16*)(data + 8); i++) {
-        JPAResourceHeader* header = (JPAResourceHeader*)(data + offset);
+    for (const auto& header : decoded.resources()) {
         JPAResource* res = new (heap, 0) JPAResource();
-        res->mFieldBlockNum = header->mFieldBlockNum;
+        res->mFieldBlockNum = header.field_count;
         res->mpFieldBlocks = res->mFieldBlockNum != 0 ? new (heap, 0) JPAFieldBlock*[res->mFieldBlockNum] : NULL;
-        res->mKeyBlockNum = header->mKeyBlockNum;
+        res->mKeyBlockNum = header.key_count;
         res->mpKeyBlocks = res->mKeyBlockNum != 0 ? new (heap, 0) JPAKeyBlock*[res->mKeyBlockNum] : NULL;
-        res->mTDB1Num = header->mTDB1Num;
+        res->mTDB1Num = header.texture_reference_count;
         res->mpTDB1 = NULL;
-        res->mUsrIdx = header->mUsrIdx;
-
-        offset += 8;
+        res->mUsrIdx = header.user_index;
         u32 field_idx = 0;
         u32 key_idx = 0;
-
-        for (int j = 0; j < header->mBlockNum; j++) {
-            u32 magic = *(u32*)(data + offset);
-            u32 size = *(u32*)(data + offset + 4);
+        for (const auto& block : header.blocks) {
+            const u32 magic = block.tag;
             switch (magic) {
             case 'FLD1':
-                res->mpFieldBlocks[field_idx] = new (heap, 0) JPAFieldBlock(data + offset, heap);
+                res->mpFieldBlocks[field_idx] = new (heap, 0) JPAFieldBlock(block.bytes.data(), heap);
                 field_idx++;
                 break;
             case 'KFA1':
-                res->mpKeyBlocks[key_idx] = new (heap, 0) JPAKeyBlock(data + offset);
+                res->mpKeyBlocks[key_idx] = new (heap, 0) JPAKeyBlock(block.bytes.data());
                 key_idx++;
                 break;
             case 'BEM1':
-                res->mpDynamicsBlock = new (heap, 0) JPADynamicsBlock(data + offset);
+                res->mpDynamicsBlock = new (heap, 0) JPADynamicsBlock(block.bytes.data());
                 break;
             case 'BSP1':
-                res->mpBaseShape = new (heap, 0) JPABaseShape(data + offset, heap);
+                res->mpBaseShape = new (heap, 0) JPABaseShape(block.bytes.data(), heap);
                 break;
             case 'ESP1':
-                res->mpExtraShape = new (heap, 0) JPAExtraShape(data + offset);
+                res->mpExtraShape = new (heap, 0) JPAExtraShape(block.bytes.data());
                 break;
             case 'SSP1':
-                res->mpChildShape = new (heap, 0) JPAChildShape(data + offset);
+                res->mpChildShape = new (heap, 0) JPAChildShape(block.bytes.data());
                 break;
             case 'ETX1':
-                res->mpExTexShape = new (heap, 0) JPAExTexShape(data + offset);
+                res->mpExTexShape = new (heap, 0) JPAExTexShape(block.bytes.data());
                 break;
             case 'TDB1':
-                res->mpTDB1 = (const u16*)(data + offset + 8);
+                res->mpTDB1 = (const u16*)(block.bytes.data() + 8);
                 break;
             }
-            offset += size;
         }
-
         res->init(heap);
         mgr->registRes(res);
     }
-
-    offset = *(u32*)(data + 0xC);
-    for (int i = 0; i < *(u16*)(data + 0xA); i++) {
-        u32 size = *(u32*)(data + offset + 4);
-        JPATexture* tex = new (heap, 0) JPATexture(data + offset);
+    for (const auto& block : decoded.textures()) {
+        JPATexture* tex = new (heap, 0) JPATexture(block.bytes.data());
         mgr->registTex(tex);
-        offset += size;
     }
 }

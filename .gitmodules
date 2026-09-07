@@ -1,7 +1,11 @@
-[submodule "pc-port/dolphin"]
-	path = pc-port/dolphin
+[submodule "dolphin"]
+	path = dolphin
 	url = https://github.com/Frityet/dolphin
 	branch = master
-[submodule "pc-port/aurora"]
-	path = pc-port/aurora
+[submodule "aurora"]
+	path = aurora
 	url = https://github.com/frityet/aurora
+[submodule "decomp"]
+	path = decomp
+	url = https://github.com/Frityet/Petari
+	branch = pcp-decomp

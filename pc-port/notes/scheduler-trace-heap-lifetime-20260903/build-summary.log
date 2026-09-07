@@ -1,4 +1,0 @@
-[  2%]: <smg-pc-scene-scheduler-heap-tests> cache compiling.debug tests/SceneSchedulerHeapTests.cpp
-[ 94%]: <smg-pc-game> archiving.debug libsmg-pc-game.a
-[ 94%]: <smg-pc-scene-scheduler-heap-tests> linking.debug smg-pc-scene-scheduler-heap-tests
-[100%]: build ok, spent 1.21s

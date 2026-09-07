@@ -1,3 +1,4 @@
+#include "compat/MarioAnimatorLifetime.hpp"
 #include "Game/Player/MarioAnimator.hpp"
 #include "Game/Animation/XanimeCore.hpp"
 #include "Game/Animation/XanimePlayer.hpp"
@@ -26,6 +27,7 @@ static const char sHip[] = "Hip";
 static const char sRun[8] = "Run";
 
 MarioAnimator::MarioAnimator(MarioActor* actor) : MarioModule(actor) {
+    smgpc::compat::MarioAnimatorConstructionScope lifetime(*this);
     init();
 }
 
@@ -425,8 +427,7 @@ void MarioAnimator::calc() {
         s32 spineIdx = MR::getJointIndex(mActor, "Spine1");
         J3DModelData* modelData = mActor->getModelData();
         J3DJoint* joint = modelData->mJointTree.mJointNodePointer[spineIdx];
-        J3DMtxCalc** jointMtxCalc = (J3DMtxCalc**)((u8*)joint + 0x54);
-        *jointMtxCalc = nullptr;
+        joint->mMtxCalc = nullptr;
         mXanimePlayer->calcAnm(0);
     }
     mXanimePlayer->mCore->_6 = 1;
@@ -1021,6 +1022,7 @@ void MarioAnimator::updateJointRumble() {
         goto setIdentity;
     }
 
+    {
     Mario* playerVec = getPlayer();
     Mario* playerAngle = getPlayer();
     f32 angle = playerAngle->calcAngleD(playerVec->_368);
@@ -1050,6 +1052,7 @@ void MarioAnimator::updateJointRumble() {
 afterSlide:
     PSMTXRotRad(_AC.toMtxPtr(), 'Z', hipRot);
     goto afterRotate;
+    }
 
 setIdentity:
     PSMTXIdentity(_AC.toMtxPtr());

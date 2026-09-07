@@ -1,2 +1,0 @@
-budget=10240 partial_constructor_failure_rollback=pass
-allocFromHead: cannot alloc memory (0x67f8 byte).

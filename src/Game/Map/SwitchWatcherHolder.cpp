@@ -5,7 +5,9 @@
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/ObjUtil.hpp"
+#include "scene/SceneObjHolderRuntime.hpp"
 #include <algorithm>
+#include <memory>
 
 SwitchWatcherHolder::SwitchWatcherHolder() : NameObj("SwitchWatcherHolder") {
     mWatcherCount = 0;
@@ -48,7 +50,10 @@ void SwitchWatcherHolder::joinSwitchEventListener(const StageSwitchCtrl* pCtrl, 
 }
 
 void SwitchWatcherHolder::addSwitchWatcher(SwitchWatcher* pWatcher) {
+    auto guard = std::unique_ptr<SwitchWatcher>{pWatcher};
+    smgpc::scene::adopt_current_scene_obj_holder_descendant(pWatcher);
     mWatchers[mWatcherCount++] = pWatcher;
+    (void)guard.release();
 }
 
 namespace MR {

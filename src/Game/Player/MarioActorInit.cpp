@@ -390,7 +390,10 @@ void MarioActor::initMember() {
     _FA8.zero();
     _FB4 = 0;
     _FB8 = 0;
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+#else  // SMGPC_RETAIL_SOURCE
     initActionMatrix();
+#endif  // SMGPC_PC_DIVERGENCE
     _FBC = 0;
     _FC0 = 0;
     _FC4 = 0;

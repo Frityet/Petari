@@ -277,7 +277,13 @@ void MarioActor::updateControllerSwing() {
     bool F20 = _F20;
     _F00 = false;
 
+#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
+    // Swimming is structurally outside the stand/walk slice. Sample the real
+    // host core-swing level used by the supported grounded controller path.
+    bool isCorePadSwing = MR::isCorePadSwing(0);
+#else  // SMGPC_RETAIL_SOURCE
     bool isCorePadSwing = !mMario->isSwimming() ? MR::isCorePadSwing(0) : MR::isCorePadSwingTrigger(0);
+#endif  // SMGPC_PC_DIVERGENCE
     _F20 = isCorePadSwing;
 
     if (_F1C != 0) {

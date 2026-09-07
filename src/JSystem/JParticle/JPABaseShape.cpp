@@ -683,7 +683,7 @@ static void makeColorTable(GXColor** o_color_table, JPAClrAnmKeyData const* i_da
     f32 a = i_data[0].color.a;
     int j = 0;
     for (s16 i = 0; i < i_size + 1; i++) {
-        if (i == i_data[j].index) {
+        if (j < param_2 && i == i_data[j].index) {
             color_table[i] = i_data[j].color;
             r = i_data[j].color.r;
             g = i_data[j].color.g;

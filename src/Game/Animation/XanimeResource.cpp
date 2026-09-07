@@ -3,6 +3,7 @@
 #include "Game/System/ResourceInfo.hpp"
 #include "Game/Util/HashUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
+#include "JSystem/J3DGraphAnimator/J3DAnimation.hpp"
 #include "revolution/types.h"
 #include <cstring>
 
@@ -187,10 +188,10 @@ u32 XanimeResourceTable::initGroupInfo(ResourceHolder* pResourceHolder, XanimeGr
             entry->mLoop = 0.0f;
             entry->mAttribute = 0;
         } else {
-            // Unsure of what is happening there.
-            entry->mAttribute = static_cast< u8* >(entry->_20[0])[4];
+            // Native pointers widen the vtable slot preceding these original animation fields.
+            entry->mAttribute = static_cast< J3DAnmTransform* >(entry->_20[0])->getAttribute();
             entry->mLoop = 0.0f;
-            entry->mEnd = static_cast< f32 >(reinterpret_cast< const s16* >(entry->_20[0])[3]);
+            entry->mEnd = static_cast< f32 >(static_cast< J3DAnmTransform* >(entry->_20[0])->getFrameMax());
         }
 
         XanimeBckTable* ofsTables[1];
@@ -215,7 +216,7 @@ const XanimeGroupInfo* XanimeResourceTable::getGroupInfo(const char* pArg) const
     case 0:
         return nullptr;
 
-    case 1:
+    case 1: {
         s32 groupIndex = getGroupIndex(pArg);
         if (groupIndex == -1) {
             s32 simpleIndex = getSimpleIndex(pArg);
@@ -227,6 +228,7 @@ const XanimeGroupInfo* XanimeResourceTable::getGroupInfo(const char* pArg) const
         }
 
         return &mGroupInfos[groupIndex];
+    }
 
     case 2:
         return getGroupInfo(pArg, mDirectories);

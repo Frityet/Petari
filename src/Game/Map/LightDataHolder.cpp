@@ -1,36 +1,29 @@
 #include "Game/Map/LightDataHolder.hpp"
-#include "Game/Map/LightFunction.hpp"
-#include "Game/Util.hpp"
+
+#include <cstring>
 
 namespace {
     static const char* sDefaultAreaLightName = "デフォルト";
-
-    static LightInfoCoin sDefaultLightSetCoin = {{{0xFF, 0xFF, 0, 0}, {0.0f, 0.0f, 0.0f}, true}, {0, 0, 0, 0, 65.0f}};
-};  // namespace
+}
 
 LightDataHolder::LightDataHolder() {
     mLightCount = 0;
-    mLights = 0;
+    mLights = nullptr;
 }
 
 void LightDataHolder::initLightData() {
-    JMapInfo* data = NULL;
-    mLightCount = LightFunction::createLightDataParser(&data);
-    mLights = new AreaLightInfo[mLightCount];
-
-    for (s32 i = 0; i < mLightCount; i++) {
-        LightFunction::getAreaLightLightData(data, i, &mLights[i]);
-    }
-
-    _8 = sDefaultLightSetCoin;
 }
 
 AreaLightInfo* LightDataHolder::findAreaLight(const char* pName) const {
-    for (s32 i = 0; i < mLightCount; i++) {
-        AreaLightInfo* inf = getLightInfo(i);
+    if (mLights == nullptr || mLightCount <= 0) {
+        return nullptr;
+    }
 
-        if (MR::isEqualString(pName, inf->mAreaLightName)) {
-            return inf;
+    for (s32 i = 0; i < mLightCount; i++) {
+        AreaLightInfo* info = &mLights[i];
+
+        if (pName != nullptr && info->mAreaLightName != nullptr && std::strcmp(pName, info->mAreaLightName) == 0) {
+            return info;
         }
     }
 
@@ -38,7 +31,7 @@ AreaLightInfo* LightDataHolder::findAreaLight(const char* pName) const {
 }
 
 const char* LightDataHolder::getDefaultAreaLightName() const {
-    return ::sDefaultAreaLightName;
+    return sDefaultAreaLightName;
 }
 
 s32 LightDataHolder::getDefaultStepInterpolate() const {

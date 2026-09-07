@@ -1,71 +1,114 @@
 #include "Game/Util/JMapUtil.hpp"
-#include "Game/Util.hpp"
-#include "math_types.hpp"
-#include <cmath>
+
+#include "Game/LiveActor/LiveActor.hpp"
+#include "Game/NameObj/NameObj.hpp"
+
+#include <array>
 #include <cstdio>
+#include <cstring>
+#include <type_traits>
 
 namespace {
-    bool getJMapInfoRailArg(const JMapInfoIter& rIter, const char* pName, s32* pOut) NO_INLINE {
-        s32 val;
-        bool hasValue = rIter.getValue< s32 >(pName, &val);
-
-        if (!hasValue) {
+    [[nodiscard]] bool is_equal_string_case(const char* lhs, const char* rhs) {
+        if (lhs == nullptr || rhs == nullptr) {
             return false;
         }
 
-        if (val != -1) {
-            *pOut = val;
-            return true;
-        }
-
-        return false;
+        return std::strcmp(lhs, rhs) == 0;
     }
 
-    bool getJMapInfoArgNoInit(const JMapInfoIter& rIter, const char* pName, s32* pOut) NO_INLINE {
-        s32 val;
-        bool hasValue = rIter.getValue< s32 >(pName, &val);
-
-        if (!hasValue) {
+    template < typename T >
+    [[nodiscard]] bool get_arg_no_init(const JMapInfoIter& rIter, const char* pName, T* pOut) {
+        if (pOut == nullptr) {
             return false;
         }
 
-        if (val != -1) {
-            *pOut = val;
-            return true;
-        }
-
-        return false;
-    }
-
-    bool getJMapInfoArgNoInit(const JMapInfoIter& rIter, const char* pName, f32* pOut) NO_INLINE {
-        s32 val;
-        bool hasValue = ::getJMapInfoArgNoInit(rIter, pName, &val);
-
-        if (!hasValue) {
+        auto value = s32{};
+        if (!rIter.getValue(pName, &value) || value == -1) {
             return false;
         }
 
-        *pOut = val;
-        return true;
-    }
-
-    bool getJMapInfoArgNoInit(const JMapInfoIter& rIter, const char* pName, bool* pOut) NO_INLINE {
-        s32 val;
-        bool hasValue = rIter.getValue< s32 >(pName, &val);
-
-        if (!hasValue) {
-            return false;
-        }
-
-        if (val != -1) {
-            *pOut = true;
+        if constexpr (std::is_same_v< T, bool >) {
+            *pOut = value != 0;
         } else {
-            *pOut = false;
+            *pOut = static_cast< T >(value);
         }
-
         return true;
     }
-};  // namespace
+
+    template < typename T >
+    [[nodiscard]] bool get_arg_and_init(const JMapInfoIter& rIter, const char* pName, T* pOut) {
+        if (pOut == nullptr) {
+            return false;
+        }
+
+        if constexpr (std::is_same_v< T, bool >) {
+            *pOut = false;
+        } else {
+            *pOut = static_cast< T >(-1);
+        }
+        return get_arg_no_init(rIter, pName, pOut);
+    }
+
+    [[nodiscard]] std::array< char, 16U > obj_arg_name(std::size_t index) {
+        auto name = std::array< char, 16U >{};
+        std::snprintf(name.data(), name.size(), "Obj_arg%zu", index);
+        return name;
+    }
+
+    template < typename T >
+    [[nodiscard]] bool get_obj_arg_no_init(const JMapInfoIter& rIter, std::size_t index, T* pOut) {
+        const auto name = obj_arg_name(index);
+        return get_arg_no_init(rIter, name.data(), pOut);
+    }
+
+    template < typename T >
+    [[nodiscard]] bool get_obj_arg_with_init(const JMapInfoIter& rIter, std::size_t index, T* pOut) {
+        const auto name = obj_arg_name(index);
+        return get_arg_and_init(rIter, name.data(), pOut);
+    }
+
+    [[nodiscard]] bool get_vec3_components(const JMapInfoIter& rIter, const char* x, const char* y, const char* z, TVec3f* pOut) {
+        return pOut != nullptr && rIter.getValue(x, &pOut->x) && rIter.getValue(y, &pOut->y) && rIter.getValue(z, &pOut->z);
+    }
+
+    [[nodiscard]] s32 link_id(const JMapInfoIter& rIter) {
+        auto id = s32{-1};
+        (void)rIter.getValue("l_id", &id);
+        return id;
+    }
+
+    [[nodiscard]] const JMapInfo* child_info(const JMapInfoIter& rIter) {
+        return rIter.mInfo != nullptr ? rIter.mInfo->getChildObjInfo() : nullptr;
+    }
+
+    [[nodiscard]] JMapInfoIter child_obj_iter(const JMapInfoIter& rIter, int child_index) {
+        const auto* info = child_info(rIter);
+        if (info == nullptr || child_index < 0) {
+            return {};
+        }
+
+        const auto parent_id = link_id(rIter);
+        if (parent_id < 0) {
+            return {};
+        }
+
+        auto matched_index = 0;
+        for (auto entry_index = 0; entry_index < info->getNumEntries(); ++entry_index) {
+            auto child_parent_id = s32{-1};
+            if (!info->getValue(entry_index, "ParentID", &child_parent_id) || child_parent_id != parent_id) {
+                continue;
+            }
+
+            if (matched_index == child_index) {
+                return JMapInfoIter(info, entry_index);
+            }
+            ++matched_index;
+        }
+
+        return {};
+    }
+}  // namespace
 
 namespace MR {
     bool isValidInfo(const JMapInfoIter& rIter) {
@@ -73,531 +116,341 @@ namespace MR {
     }
 
     bool isObjectName(const JMapInfoIter& rIter, const char* pName) {
-        const char* objName = nullptr;
-        if (MR::getObjectName(&objName, rIter)) {
-            return MR::isEqualString(pName, objName);
-        }
-
-        return false;
+        const char* object_name = nullptr;
+        return getObjectName(&object_name, rIter) && is_equal_string_case(object_name, pName);
     }
 
-    inline bool getArgAndInit(const JMapInfoIter& rIter, const char* pName, s32* pOut) {
-        *pOut = -1;
-        return ::getJMapInfoArgNoInit(rIter, pName, pOut);
+    bool isEqualObjectName(const JMapInfoIter& rIter, const char* pName) {
+        return isObjectName(rIter, pName);
     }
 
-    inline bool getArgAndInit(const JMapInfoIter& rIter, const char* pName, f32* pOut) {
-        *pOut = -1.0f;
-        return ::getJMapInfoArgNoInit(rIter, pName, pOut);
-    }
-
-    inline bool getArgAndInit(const JMapInfoIter& rIter, const char* pName, bool* pOut) {
-        *pOut = false;
-        return ::getJMapInfoArgNoInit(rIter, pName, pOut);
-    }
-};  // namespace MR
-
-namespace MR {
-    bool getJMapInfoTrans(const JMapInfoIter& rIter, TVec3f* pOut) {
-        if (!getJMapInfoTransLocal(rIter, pOut)) {
+    bool getObjectName(const char** pDest, const JMapInfoIter& rIter) {
+        if (pDest == nullptr || !rIter.isValid()) {
             return false;
         }
 
-        if (isPlacementLocalStage()) {
-            getZonePlacementMtx(rIter)->mult(*pOut, *pOut);
-        }
-
-        return true;
-    }
-
-    bool getJMapInfoRotate(const JMapInfoIter& rIter, TVec3f* pOut) {
-        if (!getJMapInfoRotateLocal(rIter, pOut)) {
-            return false;
-        }
-
-        if (isPlacementLocalStage()) {
-            TMtx34f rotateMtx;
-            makeMtxRotate(rotateMtx.toMtxPtr(), *pOut);
-            TMtx34f* placementMtx = getZonePlacementMtx(rIter);
-            rotateMtx.concat(*placementMtx, rotateMtx);
-
-            // TODO: getEuler but for std?
-            if (-0.001f <= rotateMtx.mMtx[2][0] - 1.0f) {
-                pOut->x = std::atan2(-rotateMtx.mMtx[0][1], rotateMtx.mMtx[1][1]);
-                pOut->y = -1.5707964f;
-                pOut->z = 0.0f;
-            } else if (rotateMtx.mMtx[2][0] + 1.0f <= 0.001f) {
-                pOut->x = std::atan2(rotateMtx.mMtx[0][1], rotateMtx.mMtx[1][1]);
-                pOut->y = 1.5707964f;
-                pOut->z = 0.0f;
-            } else {
-                pOut->x = std::atan2(rotateMtx.mMtx[2][1], rotateMtx.mMtx[2][2]);
-                pOut->z = std::atan2(rotateMtx.mMtx[1][0], rotateMtx.mMtx[0][0]);
-                pOut->y = ::asin(-rotateMtx.mMtx[2][0]);
-            }
-
-            *pOut = *pOut * _180_PI;
-        }
-
-        return true;
-    }
-
-    bool getJMapInfoMatrixFromRT(const JMapInfoIter& rIter, TPos3f* pOut) {
-        TVec3f trans;
-        if (!getJMapInfoTrans(rIter, &trans)) {
-            return false;
-        }
-
-        TVec3f rot;
-        if (!getJMapInfoRotate(rIter, &rot)) {
-            return false;
-        }
-
-        makeMtxTR(pOut->toMtxPtr(), trans, rot);
-        return true;
-    }
-
-    bool getJMapInfoArg0WithInit(const JMapInfoIter& rIter, s32* pOut) {
-        return getArgAndInit(rIter, "Obj_arg0", pOut);
-    }
-
-    bool getJMapInfoArg0WithInit(const JMapInfoIter& rIter, f32* pOut) {
-        return getArgAndInit(rIter, "Obj_arg0", pOut);
-    }
-
-    bool getJMapInfoArg0WithInit(const JMapInfoIter& rIter, bool* pOut) {
-        return getArgAndInit(rIter, "Obj_arg0", pOut);
-    }
-
-    bool getJMapInfoArg1WithInit(const JMapInfoIter& rIter, f32* pOut) {
-        return getArgAndInit(rIter, "Obj_arg1", pOut);
-    }
-
-    bool getJMapInfoArg1WithInit(const JMapInfoIter& rIter, bool* pOut) {
-        return getArgAndInit(rIter, "Obj_arg1", pOut);
-    }
-
-    bool getJMapInfoArg2WithInit(const JMapInfoIter& rIter, f32* pOut) {
-        return getArgAndInit(rIter, "Obj_arg2", pOut);
-    }
-
-    bool getJMapInfoArg2WithInit(const JMapInfoIter& rIter, bool* pOut) {
-        return getArgAndInit(rIter, "Obj_arg2", pOut);
-    }
-
-    bool getJMapInfoArg3WithInit(const JMapInfoIter& rIter, f32* pOut) {
-        return getArgAndInit(rIter, "Obj_arg3", pOut);
-    }
-
-    bool getJMapInfoArg3WithInit(const JMapInfoIter& rIter, bool* pOut) {
-        return getArgAndInit(rIter, "Obj_arg3", pOut);
-    }
-
-    bool getJMapInfoArg4WithInit(const JMapInfoIter& rIter, bool* pOut) {
-        return getArgAndInit(rIter, "Obj_arg4", pOut);
-    }
-
-    bool getJMapInfoArg7WithInit(const JMapInfoIter& rIter, bool* pOut) {
-        return getArgAndInit(rIter, "Obj_arg7", pOut);
-    }
-
-    bool getJMapInfoArg0NoInit(const JMapInfoIter& rIter, s32* pOut) {
-        return ::getJMapInfoArgNoInit(rIter, "Obj_arg0", pOut);
-    }
-
-    bool getJMapInfoArg0NoInit(const JMapInfoIter& rIter, f32* pOut) {
-        return ::getJMapInfoArgNoInit(rIter, "Obj_arg0", pOut);
-    }
-
-    bool getJMapInfoArg0NoInit(const JMapInfoIter& rIter, bool* pOut) {
-        return ::getJMapInfoArgNoInit(rIter, "Obj_arg0", pOut);
-    }
-
-    bool getJMapInfoArg1NoInit(const JMapInfoIter& rIter, s32* pOut) {
-        return ::getJMapInfoArgNoInit(rIter, "Obj_arg1", pOut);
-    }
-
-    bool getJMapInfoArg1NoInit(const JMapInfoIter& rIter, f32* pOut) {
-        return ::getJMapInfoArgNoInit(rIter, "Obj_arg1", pOut);
-    }
-
-    bool getJMapInfoArg1NoInit(const JMapInfoIter& rIter, bool* pOut) {
-        return ::getJMapInfoArgNoInit(rIter, "Obj_arg1", pOut);
-    }
-
-    bool getJMapInfoArg2NoInit(const JMapInfoIter& rIter, s32* pOut) {
-        return ::getJMapInfoArgNoInit(rIter, "Obj_arg2", pOut);
-    }
-
-    bool getJMapInfoArg2NoInit(const JMapInfoIter& rIter, f32* pOut) {
-        return ::getJMapInfoArgNoInit(rIter, "Obj_arg2", pOut);
-    }
-
-    bool getJMapInfoArg2NoInit(const JMapInfoIter& rIter, bool* pOut) {
-        return ::getJMapInfoArgNoInit(rIter, "Obj_arg2", pOut);
-    }
-
-    bool getJMapInfoArg3NoInit(const JMapInfoIter& rIter, s32* pOut) {
-        return ::getJMapInfoArgNoInit(rIter, "Obj_arg3", pOut);
-    }
-
-    bool getJMapInfoArg3NoInit(const JMapInfoIter& rIter, f32* pOut) {
-        return ::getJMapInfoArgNoInit(rIter, "Obj_arg3", pOut);
-    }
-
-    bool getJMapInfoArg3NoInit(const JMapInfoIter& rIter, bool* pOut) {
-        return ::getJMapInfoArgNoInit(rIter, "Obj_arg3", pOut);
-    }
-
-    bool getJMapInfoArg4NoInit(const JMapInfoIter& rIter, s32* pOut) {
-        return ::getJMapInfoArgNoInit(rIter, "Obj_arg4", pOut);
-    }
-
-    bool getJMapInfoArg4NoInit(const JMapInfoIter& rIter, f32* pOut) {
-        return ::getJMapInfoArgNoInit(rIter, "Obj_arg4", pOut);
-    }
-
-    bool getJMapInfoArg4NoInit(const JMapInfoIter& rIter, bool* pOut) {
-        return ::getJMapInfoArgNoInit(rIter, "Obj_arg4", pOut);
-    }
-
-    bool getJMapInfoArg5NoInit(const JMapInfoIter& rIter, s32* pOut) {
-        return ::getJMapInfoArgNoInit(rIter, "Obj_arg5", pOut);
-    }
-
-    bool getJMapInfoArg5NoInit(const JMapInfoIter& rIter, f32* pOut) {
-        return ::getJMapInfoArgNoInit(rIter, "Obj_arg5", pOut);
-    }
-
-    bool getJMapInfoArg5NoInit(const JMapInfoIter& rIter, bool* pOut) {
-        return ::getJMapInfoArgNoInit(rIter, "Obj_arg5", pOut);
-    }
-
-    bool getJMapInfoArg6NoInit(const JMapInfoIter& rIter, s32* pOut) {
-        return ::getJMapInfoArgNoInit(rIter, "Obj_arg6", pOut);
-    }
-
-    bool getJMapInfoArg6NoInit(const JMapInfoIter& rIter, f32* pOut) {
-        return ::getJMapInfoArgNoInit(rIter, "Obj_arg6", pOut);
-    }
-
-    bool getJMapInfoArg6NoInit(const JMapInfoIter& rIter, bool* pOut) {
-        return ::getJMapInfoArgNoInit(rIter, "Obj_arg6", pOut);
-    }
-
-    bool getJMapInfoArg7NoInit(const JMapInfoIter& rIter, s32* pOut) {
-        return ::getJMapInfoArgNoInit(rIter, "Obj_arg7", pOut);
-    }
-
-    bool getJMapInfoArg7NoInit(const JMapInfoIter& rIter, f32* pOut) {
-        return ::getJMapInfoArgNoInit(rIter, "Obj_arg7", pOut);
-    }
-
-    bool getJMapInfoArg7NoInit(const JMapInfoIter& rIter, bool* pOut) {
-        return ::getJMapInfoArgNoInit(rIter, "Obj_arg7", pOut);
-    }
-
-    bool isEqualObjectName(const JMapInfoIter& rIter, const char* pOtherName) {
-        const char* objName;
-        getObjectName(&objName, rIter);
-        return isEqualStringCase(objName, pOtherName);
-    }
-
-    s32 getDemoGroupID(const JMapInfoIter& rIter) {
-        s32 groupID = -1;
-        rIter.getValue< s32 >("DemoGroupId", &groupID);
-        return groupID;
-    }
-
-    s32 getDemoGroupLinkID(const JMapInfoIter& rIter) {
-        s32 linkID = -1;
-        rIter.getValue< s32 >("l_id", &linkID);
-        return linkID;
-    }
-
-    bool getJMapInfoRailArg0NoInit(const JMapInfoIter& rIter, s32* pRailArg0) {
-        return ::getJMapInfoRailArg(rIter, "path_arg0", pRailArg0);
-    }
-
-    bool getRailId(const JMapInfoIter& rIter, s32* pRailID) {
-        return getArgAndInit(rIter, "CommonPath_ID", pRailID);
-    }
-
-    bool getObjectName(const char** pName, const JMapInfoIter& rIter) {
-        if (!rIter.isValid()) {
-            return false;
-        }
-
-        if (rIter.getValue< const char* >("type", pName)) {
+        if (rIter.getValue("type", pDest)) {
             return true;
         }
 
-        return rIter.getValue< const char* >("name", pName);
+        return rIter.getValue("name", pDest);
     }
 
     bool isExistJMapArg(const JMapInfoIter& rIter) {
-        if (!rIter.isValid()) {
-            return false;
-        }
-
-        s32 val;
-        return rIter.getValue< s32 >("Obj_arg0", &val);
+        auto value = s32{};
+        return rIter.isValid() && rIter.getValue("Obj_arg0", &value);
     }
 
-    bool getJMapInfoShapeIdWithInit(const JMapInfoIter& rIter, s32* pShapeID) {
-        return rIter.getValue< s32 >("ShapeModelNo", pShapeID);
+    bool getJMapInfoArgNoInit(const JMapInfoIter& rIter, const char* pFieldName, s32* pOut) {
+        return get_arg_no_init(rIter, pFieldName, pOut);
     }
 
+    bool getJMapInfoArgNoInit(const JMapInfoIter& rIter, const char* pFieldName, f32* pOut) {
+        return get_arg_no_init(rIter, pFieldName, pOut);
+    }
+
+    bool getJMapInfoArgNoInit(const JMapInfoIter& rIter, const char* pFieldName, bool* pOut) {
+        return get_arg_no_init(rIter, pFieldName, pOut);
+    }
+
+    bool getJMapInfoArg0WithInit(const JMapInfoIter& rIter, s32* pOut) {
+        return get_obj_arg_with_init(rIter, 0U, pOut);
+    }
+    bool getJMapInfoArg0WithInit(const JMapInfoIter& rIter, f32* pOut) {
+        return get_obj_arg_with_init(rIter, 0U, pOut);
+    }
+    bool getJMapInfoArg0WithInit(const JMapInfoIter& rIter, bool* pOut) {
+        return get_obj_arg_with_init(rIter, 0U, pOut);
+    }
+    bool getJMapInfoArg1WithInit(const JMapInfoIter& rIter, s32* pOut) {
+        return get_obj_arg_with_init(rIter, 1U, pOut);
+    }
+    bool getJMapInfoArg1WithInit(const JMapInfoIter& rIter, f32* pOut) {
+        return get_obj_arg_with_init(rIter, 1U, pOut);
+    }
+    bool getJMapInfoArg1WithInit(const JMapInfoIter& rIter, bool* pOut) {
+        return get_obj_arg_with_init(rIter, 1U, pOut);
+    }
+    bool getJMapInfoArg2WithInit(const JMapInfoIter& rIter, s32* pOut) {
+        return get_obj_arg_with_init(rIter, 2U, pOut);
+    }
+    bool getJMapInfoArg2WithInit(const JMapInfoIter& rIter, f32* pOut) {
+        return get_obj_arg_with_init(rIter, 2U, pOut);
+    }
+    bool getJMapInfoArg2WithInit(const JMapInfoIter& rIter, bool* pOut) {
+        return get_obj_arg_with_init(rIter, 2U, pOut);
+    }
+    bool getJMapInfoArg3WithInit(const JMapInfoIter& rIter, s32* pOut) {
+        return get_obj_arg_with_init(rIter, 3U, pOut);
+    }
+    bool getJMapInfoArg3WithInit(const JMapInfoIter& rIter, f32* pOut) {
+        return get_obj_arg_with_init(rIter, 3U, pOut);
+    }
+    bool getJMapInfoArg3WithInit(const JMapInfoIter& rIter, bool* pOut) {
+        return get_obj_arg_with_init(rIter, 3U, pOut);
+    }
+    bool getJMapInfoArg4WithInit(const JMapInfoIter& rIter, s32* pOut) {
+        return get_obj_arg_with_init(rIter, 4U, pOut);
+    }
+    bool getJMapInfoArg4WithInit(const JMapInfoIter& rIter, bool* pOut) {
+        return get_obj_arg_with_init(rIter, 4U, pOut);
+    }
+    bool getJMapInfoArg5WithInit(const JMapInfoIter& rIter, s32* pOut) {
+        return get_obj_arg_with_init(rIter, 5U, pOut);
+    }
+    bool getJMapInfoArg6WithInit(const JMapInfoIter& rIter, s32* pOut) {
+        return get_obj_arg_with_init(rIter, 6U, pOut);
+    }
+    bool getJMapInfoArg7WithInit(const JMapInfoIter& rIter, s32* pOut) {
+        return get_obj_arg_with_init(rIter, 7U, pOut);
+    }
+    bool getJMapInfoArg7WithInit(const JMapInfoIter& rIter, bool* pOut) {
+        return get_obj_arg_with_init(rIter, 7U, pOut);
+    }
+
+    bool getJMapInfoArg0NoInit(const JMapInfoIter& rIter, s32* pOut) {
+        return get_obj_arg_no_init(rIter, 0U, pOut);
+    }
+    bool getJMapInfoArg0NoInit(const JMapInfoIter& rIter, f32* pOut) {
+        return get_obj_arg_no_init(rIter, 0U, pOut);
+    }
+    bool getJMapInfoArg0NoInit(const JMapInfoIter& rIter, bool* pOut) {
+        return get_obj_arg_no_init(rIter, 0U, pOut);
+    }
+    bool getJMapInfoArg1NoInit(const JMapInfoIter& rIter, s32* pOut) {
+        return get_obj_arg_no_init(rIter, 1U, pOut);
+    }
+    bool getJMapInfoArg1NoInit(const JMapInfoIter& rIter, f32* pOut) {
+        return get_obj_arg_no_init(rIter, 1U, pOut);
+    }
+    bool getJMapInfoArg1NoInit(const JMapInfoIter& rIter, bool* pOut) {
+        return get_obj_arg_no_init(rIter, 1U, pOut);
+    }
+    bool getJMapInfoArg2NoInit(const JMapInfoIter& rIter, s32* pOut) {
+        return get_obj_arg_no_init(rIter, 2U, pOut);
+    }
+    bool getJMapInfoArg2NoInit(const JMapInfoIter& rIter, f32* pOut) {
+        return get_obj_arg_no_init(rIter, 2U, pOut);
+    }
+    bool getJMapInfoArg2NoInit(const JMapInfoIter& rIter, bool* pOut) {
+        return get_obj_arg_no_init(rIter, 2U, pOut);
+    }
+    bool getJMapInfoArg3NoInit(const JMapInfoIter& rIter, s32* pOut) {
+        return get_obj_arg_no_init(rIter, 3U, pOut);
+    }
+    bool getJMapInfoArg3NoInit(const JMapInfoIter& rIter, f32* pOut) {
+        return get_obj_arg_no_init(rIter, 3U, pOut);
+    }
+    bool getJMapInfoArg3NoInit(const JMapInfoIter& rIter, bool* pOut) {
+        return get_obj_arg_no_init(rIter, 3U, pOut);
+    }
+    bool getJMapInfoArg4NoInit(const JMapInfoIter& rIter, s32* pOut) {
+        return get_obj_arg_no_init(rIter, 4U, pOut);
+    }
+    bool getJMapInfoArg4NoInit(const JMapInfoIter& rIter, f32* pOut) {
+        return get_obj_arg_no_init(rIter, 4U, pOut);
+    }
+    bool getJMapInfoArg4NoInit(const JMapInfoIter& rIter, bool* pOut) {
+        return get_obj_arg_no_init(rIter, 4U, pOut);
+    }
+    bool getJMapInfoArg5NoInit(const JMapInfoIter& rIter, s32* pOut) {
+        return get_obj_arg_no_init(rIter, 5U, pOut);
+    }
+    bool getJMapInfoArg5NoInit(const JMapInfoIter& rIter, f32* pOut) {
+        return get_obj_arg_no_init(rIter, 5U, pOut);
+    }
+    bool getJMapInfoArg5NoInit(const JMapInfoIter& rIter, bool* pOut) {
+        return get_obj_arg_no_init(rIter, 5U, pOut);
+    }
+    bool getJMapInfoArg6NoInit(const JMapInfoIter& rIter, s32* pOut) {
+        return get_obj_arg_no_init(rIter, 6U, pOut);
+    }
+    bool getJMapInfoArg6NoInit(const JMapInfoIter& rIter, f32* pOut) {
+        return get_obj_arg_no_init(rIter, 6U, pOut);
+    }
+    bool getJMapInfoArg6NoInit(const JMapInfoIter& rIter, bool* pOut) {
+        return get_obj_arg_no_init(rIter, 6U, pOut);
+    }
+    bool getJMapInfoArg7NoInit(const JMapInfoIter& rIter, s32* pOut) {
+        return get_obj_arg_no_init(rIter, 7U, pOut);
+    }
+    bool getJMapInfoArg7NoInit(const JMapInfoIter& rIter, f32* pOut) {
+        return get_obj_arg_no_init(rIter, 7U, pOut);
+    }
+    bool getJMapInfoArg7NoInit(const JMapInfoIter& rIter, bool* pOut) {
+        return get_obj_arg_no_init(rIter, 7U, pOut);
+    }
+
+    bool getJMapInfoTrans(const JMapInfoIter& rIter, TVec3f* pOut) {
+        return getJMapInfoTransLocal(rIter, pOut);
+    }
+    bool getJMapInfoRotate(const JMapInfoIter& rIter, TVec3f* pOut) {
+        return getJMapInfoRotateLocal(rIter, pOut);
+    }
     bool getJMapInfoTransLocal(const JMapInfoIter& rIter, TVec3f* pOut) {
-        if (!MR::getValue< f32 >(rIter, "pos_x", &pOut->x)) {
-            return false;
-        } else if (!MR::getValue< f32 >(rIter, "pos_y", &pOut->y)) {
-            return false;
-        }
-
-        return MR::getValue< f32 >(rIter, "pos_z", &pOut->z);
+        return get_vec3_components(rIter, "pos_x", "pos_y", "pos_z", pOut);
     }
-
     bool getJMapInfoRotateLocal(const JMapInfoIter& rIter, TVec3f* pOut) {
-        if (!MR::getValue< f32 >(rIter, "dir_x", &pOut->x)) {
-            return false;
-        } else if (!MR::getValue< f32 >(rIter, "dir_y", &pOut->y)) {
-            return false;
-        }
-
-        return MR::getValue< f32 >(rIter, "dir_z", &pOut->z);
+        return get_vec3_components(rIter, "dir_x", "dir_y", "dir_z", pOut);
     }
-
     bool getJMapInfoScale(const JMapInfoIter& rIter, TVec3f* pOut) {
-        if (!MR::getValue< f32 >(rIter, "scale_x", &pOut->x)) {
-            return false;
-        } else if (!MR::getValue< f32 >(rIter, "scale_y", &pOut->y)) {
-            return false;
-        }
-
-        return MR::getValue< f32 >(rIter, "scale_z", &pOut->z);
+        return get_vec3_components(rIter, "scale_x", "scale_y", "scale_z", pOut);
     }
 
     bool getJMapInfoV3f(const JMapInfoIter& rIter, const char* pName, TVec3f* pOut) {
-        char str[0x20];
-        sprintf(str, "%sX", pName);
-
-        if (!MR::getValue< f32 >(rIter, str, &pOut->x)) {
+        if (pName == nullptr || pOut == nullptr) {
             return false;
         }
 
-        sprintf(str, "%sY", pName);
-
-        if (!MR::getValue< f32 >(rIter, str, &pOut->y)) {
-            return false;
-        }
-
-        sprintf(str, "%sZ", pName);
-        return MR::getValue< f32 >(rIter, str, &pOut->z);
-    }
-
-    bool getJMapInfoArg1WithInit(const JMapInfoIter& rIter, s32* pOut) {
-        return MR::getArgAndInit(rIter, "Obj_arg1", pOut);
-    }
-
-    bool getJMapInfoArg2WithInit(const JMapInfoIter& rIter, s32* pOut) {
-        return MR::getArgAndInit(rIter, "Obj_arg2", pOut);
-    }
-
-    bool getJMapInfoArg3WithInit(const JMapInfoIter& rIter, s32* pOut) {
-        return MR::getArgAndInit(rIter, "Obj_arg3", pOut);
-    }
-
-    bool getJMapInfoArg4WithInit(const JMapInfoIter& rIter, s32* pOut) {
-        return MR::getArgAndInit(rIter, "Obj_arg4", pOut);
-    }
-
-    bool getJMapInfoArg5WithInit(const JMapInfoIter& rIter, s32* pOut) {
-        return MR::getArgAndInit(rIter, "Obj_arg5", pOut);
-    }
-
-    bool getJMapInfoArg6WithInit(const JMapInfoIter& rIter, s32* pOut) {
-        return MR::getArgAndInit(rIter, "Obj_arg6", pOut);
-    }
-
-    bool getJMapInfoArg7WithInit(const JMapInfoIter& rIter, s32* pOut) {
-        return MR::getArgAndInit(rIter, "Obj_arg7", pOut);
+        auto x = std::array< char, 64U >{};
+        auto y = std::array< char, 64U >{};
+        auto z = std::array< char, 64U >{};
+        std::snprintf(x.data(), x.size(), "%sX", pName);
+        std::snprintf(y.data(), y.size(), "%sY", pName);
+        std::snprintf(z.data(), z.size(), "%sZ", pName);
+        return get_vec3_components(rIter, x.data(), y.data(), z.data(), pOut);
     }
 
     bool getJMapInfoFollowID(const JMapInfoIter& rIter, s32* pOut) {
-        return MR::getArgAndInit(rIter, "FollowId", pOut);
+        return get_arg_and_init(rIter, "FollowId", pOut);
     }
-
     bool getJMapInfoGroupID(const JMapInfoIter& rIter, s32* pOut) {
-        if (MR::getArgAndInit(rIter, "GroupId", pOut)) {
-            return true;
-        }
-
-        return MR::getJMapInfoClippingGroupID(rIter, pOut);
+        return get_arg_and_init(rIter, "GroupId", pOut) || getJMapInfoClippingGroupID(rIter, pOut);
     }
-
     bool getJMapInfoClippingGroupID(const JMapInfoIter& rIter, s32* pOut) {
-        return MR::getArgAndInit(rIter, "ClippingGroupId", pOut);
+        return get_arg_and_init(rIter, "ClippingGroupId", pOut);
     }
-
     bool getJMapInfoDemoGroupID(const JMapInfoIter& rIter, s32* pOut) {
-        return MR::getArgAndInit(rIter, "DemoGroupId", pOut);
+        return get_arg_and_init(rIter, "DemoGroupId", pOut);
     }
-
     bool getJMapInfoLinkID(const JMapInfoIter& rIter, s32* pOut) {
-        return rIter.getValue< s32 >("l_id", pOut);
+        return pOut != nullptr && rIter.getValue("l_id", pOut);
+    }
+    bool getJMapInfoCameraSetID(const JMapInfoIter& rIter, s32* pOut) {
+        return get_arg_and_init(rIter, "CameraSetId", pOut);
+    }
+    bool getJMapInfoViewGroupID(const JMapInfoIter& rIter, s32* pOut) {
+        return get_arg_and_init(rIter, "ViewGroupId", pOut);
+    }
+    bool getJMapInfoMessageID(const JMapInfoIter& rIter, s32* pOut) {
+        return get_arg_and_init(rIter, "MessageId", pOut);
     }
 
     bool isConnectedWithRail(const JMapInfoIter& rIter) {
-        if (!rIter.isValid()) {
-            return false;
-        }
+        auto id = s32{};
+        return get_arg_and_init(rIter, "CommonPath_ID", &id) && id != -1;
+    }
 
-        s32 id;
-        return !MR::getArgAndInit(rIter, "CommonPath_ID", &id) ? false : id != -1;
+    void getRailPointPos0(const JMapInfoIter& rIter, TVec3f* pOut) {
+        if (pOut != nullptr) {
+            (void)get_vec3_components(rIter, "pnt0_x", "pnt0_y", "pnt0_z", pOut);
+        }
+    }
+
+    void getRailPointPos1(const JMapInfoIter& rIter, TVec3f* pOut) {
+        if (pOut != nullptr) {
+            (void)get_vec3_components(rIter, "pnt1_x", "pnt1_y", "pnt1_z", pOut);
+        }
+    }
+
+    void getRailPointPos2(const JMapInfoIter& rIter, TVec3f* pOut) {
+        if (pOut != nullptr) {
+            (void)get_vec3_components(rIter, "pnt2_x", "pnt2_y", "pnt2_z", pOut);
+        }
     }
 
     bool isExistStageSwitchA(const JMapInfoIter& rIter) {
-        if (!rIter.isValid()) {
-            return false;
-        }
-
-        s32 id;
-        MR::getArgAndInit(rIter, "SW_A", &id);
-        return id != -1;
+        auto id = s32{};
+        return get_arg_and_init(rIter, "SW_A", &id) && id != -1;
     }
 
     bool isExistStageSwitchB(const JMapInfoIter& rIter) {
-        if (!rIter.isValid()) {
-            return false;
-        }
-
-        s32 id;
-        MR::getArgAndInit(rIter, "SW_B", &id);
-        return id != -1;
+        auto id = s32{};
+        return get_arg_and_init(rIter, "SW_B", &id) && id != -1;
     }
 
     bool isExistStageSwitchAppear(const JMapInfoIter& rIter) {
-        if (!rIter.isValid()) {
-            return false;
-        }
-
-        s32 id;
-        MR::getArgAndInit(rIter, "SW_APPEAR", &id);
-        return id != -1;
+        auto id = s32{};
+        return get_arg_and_init(rIter, "SW_APPEAR", &id) && id != -1;
     }
 
     bool isExistStageSwitchDead(const JMapInfoIter& rIter) {
-        if (!rIter.isValid()) {
-            return false;
-        }
-
-        s32 id;
-        MR::getArgAndInit(rIter, "SW_DEAD", &id);
-        return id != -1;
+        auto id = s32{};
+        return get_arg_and_init(rIter, "SW_DEAD", &id) && id != -1;
     }
 
     bool isExistStageSwitchSleep(const JMapInfoIter& rIter) {
-        if (!rIter.isValid()) {
-            return false;
-        }
-
-        s32 id;
-        MR::getArgAndInit(rIter, "SW_SLEEP", &id);
-        return id != -1;
+        auto id = s32{};
+        return get_arg_and_init(rIter, "SW_SLEEP", &id) && id != -1;
     }
 
-    bool getJMapInfoCameraSetID(const JMapInfoIter& rIter, s32* pOut) {
-        *pOut = -1;
-
-        if (!rIter.isValid()) {
-            return false;
-        }
-
-        return ::getJMapInfoArgNoInit(rIter, "CameraSetId", pOut);
+    s32 getDemoGroupID(const JMapInfoIter& rIter) {
+        auto id = s32{-1};
+        (void)rIter.getValue("DemoGroupId", &id);
+        return id;
     }
 
-    bool getJMapInfoViewGroupID(const JMapInfoIter& rIter, s32* pOut) {
-        *pOut = -1;
-
-        if (!rIter.isValid()) {
-            return false;
-        }
-
-        return ::getJMapInfoArgNoInit(rIter, "ViewGroupId", pOut);
-    }
-
-    bool getJMapInfoMessageID(const JMapInfoIter& rIter, s32* pOut) {
-        *pOut = -1;
-
-        if (!rIter.isValid()) {
-            return false;
-        }
-
-        return ::getJMapInfoArgNoInit(rIter, "MessageId", pOut);
+    s32 getDemoGroupLinkID(const JMapInfoIter& rIter) {
+        auto id = s32{-1};
+        (void)rIter.getValue("l_id", &id);
+        return id;
     }
 
     s32 getDemoCastID(const JMapInfoIter& rIter) {
-        s32 id = -1;
-        rIter.getValue< s32 >("CastId", &id);
+        auto id = s32{-1};
+        (void)rIter.getValue("CastId", &id);
         return id;
     }
 
     const char* getDemoName(const JMapInfoIter& rIter) {
         const char* name = nullptr;
-        rIter.getValue< const char* >("DemoName", &name);
+        (void)rIter.getValue("DemoName", &name);
         return name;
     }
 
     const char* getDemoSheetName(const JMapInfoIter& rIter) {
         const char* name = nullptr;
-        rIter.getValue< const char* >("TimeSheetName", &name);
+        (void)rIter.getValue("TimeSheetName", &name);
         return name;
     }
 
-    bool getNextLinkRailID(const JMapInfoIter& rIter, s32* pOut) {
-        return rIter.getValue< s32 >("Path_ID", pOut);
-    }
-
-    bool isEqualRailUsage(const JMapInfoIter& rIter, const char* pUsage) {
-        const char* str = nullptr;
-        rIter.getValue< const char* >("usage", &str);
-        return isEqualStringCase(str, pUsage);
-    }
-
-    void getRailPointPos0(const JMapInfoIter& rIter, TVec3f* pOut) {
-        rIter.getValue< f32 >("pnt0_x", &pOut->x);
-        rIter.getValue< f32 >("pnt0_y", &pOut->y);
-        rIter.getValue< f32 >("pnt0_z", &pOut->z);
-
-        if (isPlacementLocalStage()) {
-            getZonePlacementMtx(rIter)->mult(*pOut, *pOut);
+    s32 getChildObjNum(const JMapInfoIter& rIter) {
+        const auto* info = child_info(rIter);
+        if (info == nullptr) {
+            return 0;
         }
-    }
 
-    void getRailPointPos1(const JMapInfoIter& rIter, TVec3f* pOut) {
-        rIter.getValue< f32 >("pnt1_x", &pOut->x);
-        rIter.getValue< f32 >("pnt1_y", &pOut->y);
-        rIter.getValue< f32 >("pnt1_z", &pOut->z);
-
-        if (isPlacementLocalStage()) {
-            getZonePlacementMtx(rIter)->mult(*pOut, *pOut);
+        const auto parent_id = link_id(rIter);
+        if (parent_id < 0) {
+            return 0;
         }
-    }
 
-    void getRailPointPos2(const JMapInfoIter& rIter, TVec3f* pOut) {
-        rIter.getValue< f32 >("pnt2_x", &pOut->x);
-        rIter.getValue< f32 >("pnt2_y", &pOut->y);
-        rIter.getValue< f32 >("pnt2_z", &pOut->z);
-
-        if (isPlacementLocalStage()) {
-            getZonePlacementMtx(rIter)->mult(*pOut, *pOut);
+        auto count = s32{};
+        for (auto entry_index = 0; entry_index < info->getNumEntries(); ++entry_index) {
+            auto child_parent_id = s32{-1};
+            if (info->getValue(entry_index, "ParentID", &child_parent_id) && child_parent_id == parent_id) {
+                ++count;
+            }
         }
+        return count;
     }
 
-    bool isLoopRailPathIter(const JMapInfoIter& rIter) {
-        const char* status = "";
-        rIter.getValue< const char* >("closed", &status);
-        return isEqualString(status, "CLOSE");
+    void getChildObjName(const char** pDest, const JMapInfoIter& rIter, int index) {
+        if (pDest == nullptr) {
+            return;
+        }
+
+        *pDest = nullptr;
+        const auto iter = child_obj_iter(rIter, index);
+        (void)getObjectName(pDest, iter);
     }
-};  // namespace MR
+
+    void initChildObj(NameObj* pObj, const JMapInfoIter& rIter, int index) {
+        if (pObj == nullptr) {
+            return;
+        }
+
+        const auto iter = child_obj_iter(rIter, index);
+        pObj->init(iter);
+    }
+}  // namespace MR

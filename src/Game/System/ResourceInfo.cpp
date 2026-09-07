@@ -1,8 +1,9 @@
 #include "Game/System/ResourceInfo.hpp"
 #include "Game/Util.hpp"
+#include "Game/Util/HashUtil.hpp"
 #include <cstdio>
 #include <cstring>
-#include <size_t.h>
+#include <cstddef>
 
 ResFileInfo::ResFileInfo() {
     mName = 0;

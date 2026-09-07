@@ -1,3 +1,4 @@
+#include <aurora/ppc_math.hpp>
 #include "JSystem/JParticle/JPADynamicsBlock.hpp"
 #include "JSystem/JMath/JMATrigonometric.hpp"
 #include "JSystem/JParticle/JPAEmitter.hpp"
@@ -25,11 +26,11 @@ void JPAVolumeCircle(JPAEmitterWorkData* work) {
     f32 distance;
 
     if (work->mpEmtr->checkFlag(JPADynFlag_FixedInterval)) {
-        theta = (s16)((work->mVolumeEmitIdx << 16) / work->mEmitCount);
-        theta = theta * work->mVolumeSweep;
+        theta = aurora::ppc::narrow_s16(aurora::ppc::divide_s32(aurora::ppc::shift_left_s32(work->mVolumeEmitIdx, 16), work->mEmitCount));
+        theta = aurora::ppc::truncate_s16(theta * work->mVolumeSweep);
         work->mVolumeEmitIdx++;
     } else {
-        theta = work->mVolumeSweep * work->mpEmtr->get_r_ss();
+        theta = aurora::ppc::truncate_s16(work->mVolumeSweep * work->mpEmtr->get_r_ss());
     }
 
     distance = work->mpEmtr->get_r_f();
@@ -53,9 +54,9 @@ void JPAVolumeCube(JPAEmitterWorkData* work) {
 static void JPAVolumeSphere(JPAEmitterWorkData* work) {
     s16 phi, theta;
     if (work->mpEmtr->checkFlag(JPADynFlag_FixedInterval)) {
-        phi = (u16)(work->mVolumeX * 0x8000 / (work->mDivNumber - 1) + 0x4000);
-        f32 tmp = (u16)(work->mVolumeAngleNum * 0x10000 / (work->mVolumeAngleMax - 1));
-        theta = tmp * work->mVolumeSweep + 0x8000;
+        phi = aurora::ppc::narrow_s16(static_cast<u32>(aurora::ppc::divide_s32(aurora::ppc::shift_left_s32(work->mVolumeX, 15), work->mDivNumber - 1)) + 0x4000U);
+        f32 tmp = static_cast<u16>(aurora::ppc::divide_s32(aurora::ppc::shift_left_s32(work->mVolumeAngleNum, 16), work->mVolumeAngleMax - 1));
+        theta = aurora::ppc::truncate_s16(tmp * work->mVolumeSweep + 0x8000);
         work->mVolumeAngleNum++;
         if (work->mVolumeAngleNum == work->mVolumeAngleMax) {
             work->mVolumeAngleNum = 0;
@@ -68,7 +69,7 @@ static void JPAVolumeSphere(JPAEmitterWorkData* work) {
         }
     } else {
         phi = work->mpEmtr->get_r_ss() >> 1;
-        theta = work->mVolumeSweep * work->mpEmtr->get_r_ss();
+        theta = aurora::ppc::truncate_s16(work->mVolumeSweep * work->mpEmtr->get_r_ss());
     }
 
     f32 rnd = work->mpEmtr->get_r_f();
@@ -82,7 +83,7 @@ static void JPAVolumeSphere(JPAEmitterWorkData* work) {
 }
 
 static void JPAVolumeCylinder(JPAEmitterWorkData* work) {
-    s16 theta = work->mVolumeSweep * work->mpEmtr->get_r_ss();
+    s16 theta = aurora::ppc::truncate_s16(work->mVolumeSweep * work->mpEmtr->get_r_ss());
     f32 rnd = work->mpEmtr->get_r_f();
     if (work->mpEmtr->checkFlag(JPADynFlag_FixedDensity)) {
         rnd = 1.0f - rnd * rnd;
@@ -94,7 +95,7 @@ static void JPAVolumeCylinder(JPAEmitterWorkData* work) {
 }
 
 static void JPAVolumeTorus(JPAEmitterWorkData* work) {
-    s16 theta = work->mVolumeSweep * work->mpEmtr->get_r_ss();
+    s16 theta = aurora::ppc::truncate_s16(work->mVolumeSweep * work->mpEmtr->get_r_ss());
     s16 phi = work->mpEmtr->get_r_ss();
     f32 rad = work->mVolumeSize * work->mVolumeMinRad;
     work->mVolumeCalcData.mVelAxis.set(rad * JMASSin(theta) * JMASCos(phi), rad * JMASSin(phi), rad * JMASCos(theta) * JMASCos(phi));

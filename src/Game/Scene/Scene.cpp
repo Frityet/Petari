@@ -1,19 +1,12 @@
 #include "Game/Scene/Scene.hpp"
 
-Scene::Scene(const char* pName) : NerveExecutor(pName) {
-    mListExecutor = nullptr;
-    _C = 0;
-    mSceneObjHolder = nullptr;
+#include "Game/Scene/SceneObjHolder.hpp"
+
+Scene::Scene(const char* pName) : NerveExecutor(pName), mListExecutor(nullptr), _C(0), mSceneObjHolder(nullptr) {
 }
 
 Scene::~Scene() {
-    if (mSceneObjHolder != nullptr) {
-        delete mSceneObjHolder;
-    }
-
-    if (mListExecutor != nullptr) {
-        delete mListExecutor;
-    }
+    delete mSceneObjHolder;
 }
 
 void Scene::init() {
@@ -32,9 +25,7 @@ void Scene::calcAnim() {
 }
 
 void Scene::initNameObjListExecutor() {
-    SceneNameObjListExecutor* exec = new SceneNameObjListExecutor();
-    exec->init();
-    mListExecutor = exec;
+    mListExecutor = nullptr;
 }
 
 void Scene::initSceneObjHolder() {

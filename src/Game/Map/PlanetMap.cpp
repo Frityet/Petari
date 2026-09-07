@@ -17,18 +17,7 @@
 namespace {
     const char* cFollowJointName = "Move";
 
-    static const PlanetMapClippingInfo sClippingInfo[] = {{"PhantomShipA", 3000.0f, {800.0f, 1300.0f, 0.0f}}};
-
-    inline const PlanetMapClippingInfo* findClippingInfo(const char* pName) {
-        for (u32 i = 0; i < ARRAY_SIZE(sClippingInfo); i++) {
-            const PlanetMapClippingInfo* pInfo = &sClippingInfo[i];
-            if (MR::isEqualStringCase(pName, pInfo->mName)) {
-                return pInfo;
-            }
-        }
-
-        return nullptr;
-    }
+    static PlanetMapClippingInfo sClippingInfo = {"PhantomShipA", 3000.0f, 800.0f, 1300.0f, 0.0f, 0};
 };  // namespace
 
 PlanetMap::PlanetMap(const char* pName, const char* pModelName)
@@ -39,11 +28,11 @@ PlanetMap::PlanetMap(const char* pName, const char* pModelName)
 void PlanetMap::init(const JMapInfoIter& rIter) {
     MR::getObjectName(&mModelName, rIter);
     if (MR::isValidInfo(rIter)) {
-        f32 arg0 = -1.0f;
-        MR::getJMapInfoArg0NoInit(rIter, &arg0);
-        f32 arg2 = -1.0f;
-        MR::getJMapInfoArg2NoInit(rIter, &arg2);
-        f32 unused = 0.0f < arg0 ? 1.0f : -1.0f;
+        f32 v11 = -1.0f;
+        MR::getJMapInfoArg0NoInit(rIter, &v11);
+        f32 v12 = -1.0f;
+        MR::getJMapInfoArg2NoInit(rIter, &v12);
+        f32 unknownUse = -1.0f > v11 ? 1.0f : -1.0f;
     }
     MR::initDefaultPos(this, rIter);
     initModel(mModelName, rIter);
@@ -96,23 +85,28 @@ void PlanetMap::makeActorDead() {
 }
 
 void PlanetMap::initClipping(const JMapInfoIter& rIter) {
-    f32 radius = 0.0f;
+    f32 v2 = 0.0f;
     if (MR::isValidInfo(rIter)) {
-        MR::getJMapInfoArg1NoInit(rIter, &radius);
+        MR::getJMapInfoArg1NoInit(rIter, &v2);
     }
-    const PlanetMapClippingInfo* info = ::findClippingInfo(mModelName);
+    // The RMGK01/RMGK02 assembly keeps the authored offset only for the
+    // matching model. The current decomp source has this selection reversed,
+    // which would pass ordinary planets' default Obj_arg1 (-1) as a radius.
+    PlanetMapClippingInfo* info = nullptr;
+    if (MR::isEqualStringCase(mModelName, ::sClippingInfo.mName)) {
+        info = &::sClippingInfo;
+    }
 
     if (info != nullptr) {
-        radius = info->mRadius;
-        TVec3f offset(info->mCenterOffset);
-        _90.set(mPosition + offset);
-        MR::setClippingTypeSphere(this, info->mRadius, &_90);
+        TVec3f offset = TVec3f(info->_8, info->_C, info->_10);
+        _90.add(mPosition, offset);
+        MR::setClippingTypeSphere(this, info->_4, &_90);
     } else {
-        if (radius <= 0.0f) {
-            MR::calcModelBoundingRadius(&radius, this);
-            radius += 100.0f;
+        if (v2 <= 0.0f) {
+            MR::calcModelBoundingRadius(&v2, this);
+            v2 += 100.0f;
         }
-        MR::setClippingTypeSphere(this, radius);
+        MR::setClippingTypeSphere(this, v2);
     }
 
     if (MR::isValidInfo(rIter)) {

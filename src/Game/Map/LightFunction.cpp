@@ -1,231 +1,302 @@
 #include "Game/Map/LightFunction.hpp"
-#include "Game/AreaObj/LightArea.hpp"
+
+#include <algorithm>
+#include <array>
+#include <cstddef>
+#include <cmath>
+
 #include "Game/AreaObj/LightAreaHolder.hpp"
-#include "Game/Map/LightDataHolder.hpp"
-#include "Game/Map/LightDirector.hpp"
-#include "Game/Map/LightPointCtrl.hpp"
-#include "Game/Scene/SceneObjHolder.hpp"
-#include "Game/Util.hpp"
-#include "revolution/gx/GXEnum.h"
-#include <cstdio>
-#include <cstring>
+#include "Game/LiveActor/ActorLightCtrl.hpp"
+#include "Game/Scene/SceneFunction.hpp"
+#include "render/GXState.hpp"
+#include "render/light/LightData.hpp"
+#include "runtime/RuntimeContext.hpp"
 
-const GXLightID cLightDataIDs[8] = {GX_LIGHT0, GX_LIGHT1, GX_LIGHT2, GX_LIGHT3, GX_LIGHT4, GX_LIGHT5, GX_LIGHT6, GX_LIGHT7};
+namespace {
+    constexpr auto cLightDataIDs =
+        std::array< GXLightID, 8U >{GX_LIGHT0, GX_LIGHT1, GX_LIGHT2, GX_LIGHT3, GX_LIGHT4, GX_LIGHT5, GX_LIGHT6, GX_LIGHT7};
 
-namespace {};  // namespace
+    LightAreaHolder* sLightAreaHolder = nullptr;
 
-void LightFunction::initLightRegisterAll() {
-    const GXLightID cLightDataIDs[8] = {GX_LIGHT0, GX_LIGHT1, GX_LIGHT2, GX_LIGHT3, GX_LIGHT4, GX_LIGHT5, GX_LIGHT6, GX_LIGHT7};
-    Color8 c(255, 255, 255, 255);
-
-    for (s32 i = 0; i < 8; i++) {
-        GXLightObj obj;
-        GXInitLightColor(&obj, c);
-        GXInitLightPos(&obj, 0.0f, 0.0f, 0.0f);
-        GXInitLightDir(&obj, 0.0f, -1.0f, 0.0f);
-        GXInitLightAttn(&obj, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
-        GXInitSpecularDir(&obj, 0.0f, -1.0f, 0.0f);
-        GXInitSpecularDirHA(&obj, 0.0f, -1.0f, 0.0f, 0.0f, -1.0f, 0.0f);
-        GXInitLightAttn(&obj, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f);
-        GXLoadLightObjImm(&obj, cLightDataIDs[i]);
-    }
-}
-
-void LightFunction::initLightData() {
-    MR::getSceneObj< LightDirector >(SceneObj_LightDirector)->initData();
-}
-
-ResourceHolder* LightFunction::loadLightArchive() {
-    char buf[0x100];
-    snprintf(buf, sizeof(buf), "LightData.arc");
-    return MR::createAndAddResourceHolder(buf);
-}
-
-s32 LightFunction::createLightDataParser(JMapInfo** pOut) {
-    ResourceHolder* holder = MR::getSceneObj< LightDirector >(SceneObj_LightDirector)->mResourceHolder;
-    JMapInfo* info = MR::tryCreateCsvParser(holder, "LightData.bcsv");
-    *pOut = info;
-    if (info->mData != nullptr) {
-        return info->mData->mNumEntries;
+    [[nodiscard]] std::array< std::uint8_t, 4U > color_value(_GXColor color) {
+        return {color.r, color.g, color.b, color.a};
     }
 
-    return 0;
-}
+    [[nodiscard]] std::array< float, 3U > vec3_value(const TVec3f& value) {
+        return {value.x, value.y, value.z};
+    }
 
-s32 LightFunction::createZoneDataParser(const char* pZone, JMapInfo** pOut) {
-    ResourceHolder* holder = MR::getSceneObj< LightDirector >(SceneObj_LightDirector)->mResourceHolder;
-    JMapInfo* info = MR::tryCreateCsvParser(holder, "Light%s.bcsv", pZone);
-    *pOut = info;
-
-    if (info != nullptr) {
-        if (info->mData != nullptr) {
-            return info->mData->mNumEntries;
+    [[nodiscard]] std::size_t light_slot(_GXLightID lightID) {
+        for (auto index = std::size_t{}; index < cLightDataIDs.size(); ++index) {
+            if (cLightDataIDs[index] == lightID) {
+                return index;
+            }
         }
 
-        return 0;
+        return cLightDataIDs.size();
     }
 
-    return 0;
-}
-
-namespace {
-    void getDataLightInfo(JMapInfo* pInfo, int id, LightInfo* pLightInfo, const char* pName) {
-        char colorBuf[256];
-        snprintf(colorBuf, sizeof(colorBuf), "%sColor", pName);
-        MR::getCsvDataColor(&pLightInfo->mColor, pInfo, colorBuf, id);
-        char posBuf[256];
-        snprintf(posBuf, sizeof(posBuf), "%sPos", pName);
-        MR::getCsvDataVec(&pLightInfo->mPos, pInfo, posBuf, id);
-        char camBuf[128];
-        snprintf(camBuf, sizeof(camBuf), "%sFollowCamera", pName);
-        MR::getCsvDataBool(&pLightInfo->mIsFollowCamera, pInfo, camBuf, id);
-    }
-
-    void getDataActorLightInfo(JMapInfo* pInfo, int lightID, ActorLightInfo* pActorInfo, const char* pName) {
-        char lightBuf[256];
-        snprintf(lightBuf, sizeof(lightBuf), "%sLight%d", pName, 0);
-        getDataLightInfo(pInfo, lightID, &pActorInfo->mInfo0, lightBuf);
-        snprintf(lightBuf, sizeof(lightBuf), "%sLight%d", pName, 1);
-        getDataLightInfo(pInfo, lightID, &pActorInfo->mInfo1, lightBuf);
-        char alphaBuf[256];
-        snprintf(alphaBuf, sizeof(alphaBuf), "%sAlpha2", pName);
-        MR::getCsvDataU8(&pActorInfo->mAlpha2, pInfo, alphaBuf, lightID);
-        char ambBuf[256];
-        snprintf(ambBuf, sizeof(ambBuf), "%sAmbient", pName);
-        MR::getCsvDataColor(&pActorInfo->mColor, pInfo, ambBuf, lightID);
-    }
-};  // namespace
-
-void LightFunction::getAreaLightLightData(JMapInfo* pInfo, int idx, AreaLightInfo* pLightInfo) {
-    MR::getCsvDataStr(&pLightInfo->mAreaLightName, pInfo, "AreaLightName", idx);
-    MR::getCsvDataS32(&pLightInfo->mInterpolate, pInfo, "Interpolate", idx);
-    ::getDataActorLightInfo(pInfo, idx, &pLightInfo->mPlayerLight, "Player");
-    ::getDataActorLightInfo(pInfo, idx, &pLightInfo->mStrongLight, "Strong");
-    ::getDataActorLightInfo(pInfo, idx, &pLightInfo->mWeakLight, "Weak");
-    ::getDataActorLightInfo(pInfo, idx, &pLightInfo->mPlanetLight, "Planet");
-    MR::getCsvDataBool(&pLightInfo->mFix, pInfo, "Fix", idx);
-}
-
-const char* LightFunction::getDefaultAreaLightName() {
-    return MR::getSceneObj< LightDirector >(SceneObj_LightDirector)->mDataHolder->getDefaultAreaLightName();
-}
-
-s32 LightFunction::getDefaultStepInterpolate() {
-    return MR::getSceneObj< LightDirector >(SceneObj_LightDirector)->mDataHolder->getDefaultStepInterpolate();
-}
-
-void LightFunction::registerPlayerLightCtrl(const ActorLightCtrl* pCtrl) {
-    MR::getSceneObj< LightDirector >(SceneObj_LightDirector)->_1C = pCtrl;
-}
-
-void LightFunction::registerLightAreaHolder(LightAreaHolder* pHolder) {
-    MR::getSceneObj< LightDirector >(SceneObj_LightDirector)->_C = pHolder;
-}
-
-bool LightFunction::tryFindNewAreaLightID(const TVec3f& rPos, ZoneLightID* pId) {
-    return MR::getSceneObj< LightDirector >(SceneObj_LightDirector)->_C->tryFindLightID(rPos, pId);
-}
-
-AreaLightInfo* LightFunction::getAreaLightInfo(const ZoneLightID& rId) {
-    const char* name = MR::getSceneObj< LightDirector >(SceneObj_LightDirector)->mZoneDataHolder->getAreaLightNameInZoneData(rId);
-    return MR::getSceneObj< LightDirector >(SceneObj_LightDirector)->mDataHolder->findAreaLight(name);
-}
-
-namespace {
-    void blendActorLightPos(const LightInfo& a1, const LightInfo& a2, LightInfo* a3, f32 a4) {
-        if (!a3->mIsFollowCamera) {
-            if (!a1.mIsFollowCamera) {
-                TVec3f v11(a1.mPos);
-                MR::getCameraViewMtx().mult(v11, v11);
-                MR::blendVec(&a3->mPos, v11, a2.mPos, a4);
-                return;
-            }
-        } else if (a1.mIsFollowCamera) {
-            TVec3f v9(a1.mPos);
-            MR::getCameraInvViewMtx().mult(v9, v9);
-            MR::blendVec(&a3->mPos, v9, a2.mPos, a4);
+    void loadLightDiffuse(_GXColor color, const TVec3f& rPos, _GXLightID lightID,
+                          smgpc::render::GXLightCoordinateSpace coordinateSpace =
+                              smgpc::render::GXLightCoordinateSpace::View) {
+        auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
+        const auto slot = light_slot(lightID);
+        if (runtime == nullptr || slot >= cLightDataIDs.size()) {
             return;
         }
 
-        MR::blendVec(&a3->mPos, a1.mPos, a2.mPos, a4);
-    }
-};  // namespace
-
-void LightFunction::blendActorLightInfo(ActorLightInfo* a1, const ActorLightInfo& a2, const ActorLightInfo& a3, f32 a4) {
-    MR::blendColor(&a1->mInfo0.mColor, a2.mInfo0.mColor, a3.mInfo0.mColor, a4);
-    MR::blendColor(&a1->mInfo1.mColor, a2.mInfo1.mColor, a3.mInfo1.mColor, a4);
-    MR::blendColor(&a1->mColor, a2.mColor, a3.mColor, a4);
-    ::blendActorLightPos(a2.mInfo0, a3.mInfo0, &a1->mInfo0, a4);
-    ::blendActorLightPos(a2.mInfo1, a3.mInfo1, &a1->mInfo1, a4);
-    a1->mAlpha2 = MR::getInterpolateValue(a4, a2.mAlpha2, a3.mAlpha2);
-}
-
-namespace {
-    void loadLightDiffuse(GXColor color, const TVec3f& rPos, GXLightID lightID) NO_INLINE {
-        GXLightObj lightObj;
-
-        GXInitLightPos(&lightObj, rPos.x, rPos.y, rPos.z);
-        GXInitLightAttn(&lightObj, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f);
-
-        GXColor new_color(color);
-        GXInitLightColor(&lightObj, new_color);
-        GXLoadLightObjImm(&lightObj, lightID);
+        auto light = smgpc::render::GXLightState{};
+        light.loaded = true;
+        light.coordinate_space = coordinateSpace;
+        light.color = color_value(color);
+        light.position = vec3_value(rPos);
+        light.cosine_attenuation = {1.0F, 0.0F, 0.0F};
+        light.distance_attenuation = {1.0F, 0.0F, 0.0F};
+        runtime->scene_lights().set_light(slot, light);
     }
 
-    void loadLightInfoDiffuse(const LightInfo& a1, GXLightID a2) NO_INLINE {
-        if (a1.mIsFollowCamera) {
-            TVec3f v13(a1.mPos);
-            ::loadLightDiffuse(GXColor(a1.mColor), v13, a2);
-        } else {
-            TVec3f v14(a1.mPos);
-            MR::getCameraViewMtx().mult(v14, v14);
-            ::loadLightDiffuse(GXColor(a1.mColor), v14, a2);
+    void loadLightInfoDiffuse(const LightInfo& rInfo, _GXLightID lightID) {
+        // Follow-camera values are authored directly in GX/view space.  Fixed
+        // values are authored in stage/world space and are transformed once by
+        // the J3D draw camera.
+        const auto coordinate_space = rInfo.mIsFollowCamera
+                                          ? smgpc::render::GXLightCoordinateSpace::View
+                                          : smgpc::render::GXLightCoordinateSpace::World;
+        loadLightDiffuse(rInfo.mColor, rInfo.mPos, lightID, coordinate_space);
+    }
+
+    [[nodiscard]] u8 blend_channel(u8 from, u8 to, f32 rate) {
+        const auto clamped = std::clamp(rate, 0.0F, 1.0F);
+        return static_cast< u8 >(static_cast< f32 >(from) + ((static_cast< f32 >(to) - static_cast< f32 >(from)) * clamped));
+    }
+
+    [[nodiscard]] f32 blend_float(f32 from, f32 to, f32 rate) {
+        const auto clamped = std::clamp(rate, 0.0F, 1.0F);
+        return from + ((to - from) * clamped);
+    }
+
+    void blendColor(_GXColor* pOut, const _GXColor& rFrom, const _GXColor& rTo, f32 rate) {
+        pOut->r = blend_channel(rFrom.r, rTo.r, rate);
+        pOut->g = blend_channel(rFrom.g, rTo.g, rate);
+        pOut->b = blend_channel(rFrom.b, rTo.b, rate);
+        pOut->a = blend_channel(rFrom.a, rTo.a, rate);
+    }
+
+    void blendVec(TVec3f* pOut, const TVec3f& rFrom, const TVec3f& rTo, f32 rate) {
+        pOut->x = blend_float(rFrom.x, rTo.x, rate);
+        pOut->y = blend_float(rFrom.y, rTo.y, rate);
+        pOut->z = blend_float(rFrom.z, rTo.z, rate);
+    }
+
+    void blendLightInfo(LightInfo* pOut, const LightInfo& rFrom, const LightInfo& rTo, f32 rate) {
+        blendColor(&pOut->mColor, rFrom.mColor, rTo.mColor, rate);
+        blendVec(&pOut->mPos, rFrom.mPos, rTo.mPos, rate);
+        pOut->mIsFollowCamera = rTo.mIsFollowCamera;
+    }
+
+    [[nodiscard]] TVec3f normalized_or(const TVec3f& value, const TVec3f& fallback) {
+        const auto length = std::sqrt(value.x * value.x + value.y * value.y + value.z * value.z);
+        if (length <= 0.000001F) {
+            return fallback;
         }
+        return TVec3f{value.x / length, value.y / length, value.z / length};
+    }
+
+    [[nodiscard]] TVec3f cross(const TVec3f& left, const TVec3f& right) {
+        return TVec3f{
+            left.y * right.z - left.z * right.y,
+            left.z * right.x - left.x * right.z,
+            left.x * right.y - left.y * right.x,
+        };
     }
 }  // namespace
 
-void LightFunction::loadActorLightInfo(const ActorLightInfo* pInfo) {
-    ::loadLightInfoDiffuse(pInfo->mInfo0, GX_LIGHT0);
-    ::loadLightInfoDiffuse(pInfo->mInfo1, GX_LIGHT1);
-
-    GXColor c = {0, 0, 0, pInfo->mAlpha2};
-    ::loadLightDiffuse(c, TVec3f(0.0f, 0.0f, 0.0f), GX_LIGHT2);
-    GXSetChanAmbColor(GX_COLOR0A0, GXColor(pInfo->mColor));
+void LightFunction::initLightRegisterAll() {
+    loadAllLightWhite();
 }
 
-void LightFunction::loadLightInfoCoin(const LightInfoCoin* pInfo) {
-    ::loadLightInfoDiffuse(pInfo->base, GX_LIGHT0);
-    TVec3f v7(0.0f, 0.0f, -1.0f);
-    GXLightObj obj;
-    f32 v = pInfo->_18;
-    GXInitLightColor(&obj, GXColor(pInfo->_14));
-    GXInitSpecularDir(&obj, v7.x, v7.y, v7.z);
-    GXInitLightAttn(&obj, 0.0f, 0.0f, 1.0f, (v / 2.0f), 0.0f, (1.0f - (v / 2.0f)));
-    GXLoadLightObjImm(&obj, GX_LIGHT3);
+void LightFunction::initLightData() {
+    (void)smgpc::render::light::StageLightData::instance().area_light_info(ZoneLightID{});
+}
+
+ResourceHolder* LightFunction::loadLightArchive() {
+    return nullptr;
+}
+
+s32 LightFunction::createLightDataParser(JMapInfo**) {
+    return 0;
+}
+
+s32 LightFunction::createZoneDataParser(const char*, JMapInfo**) {
+    return 0;
+}
+
+void LightFunction::loadAllLightWhite() {
+    auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
+    if (runtime == nullptr) {
+        return;
+    }
+
+    runtime->scene_lights().clear_actor_ambient();
+
+    auto light = smgpc::render::GXLightState{};
+    light.loaded = true;
+    light.color = {255U, 255U, 255U, 255U};
+    light.position = {1.0F, 1.0F, 1.0F};
+    light.cosine_attenuation = {1.0F, 0.0F, 0.0F};
+    light.distance_attenuation = {1.0F, 0.0F, 0.0F};
+    for (auto lightID : cLightDataIDs) {
+        runtime->scene_lights().set_light(light_slot(lightID), light);
+    }
+}
+
+AreaLightInfo* LightFunction::getAreaLightInfo(const ZoneLightID& rZoneID) {
+    return smgpc::render::light::StageLightData::instance().area_light_info(rZoneID);
+}
+
+s32 LightFunction::getDefaultStepInterpolate() {
+    return 0x1E;
+}
+
+bool LightFunction::tryFindNewAreaLightID(const TVec3f& rPosition, ZoneLightID* pLightID) {
+    if (pLightID == nullptr) {
+        return false;
+    }
+
+    if (sLightAreaHolder != nullptr) {
+        return sLightAreaHolder->tryFindLightID(rPosition, pLightID);
+    }
+
+    ZoneLightID candidate;
+    if (pLightID->_0 == candidate._0 && pLightID->mLightID == candidate.mLightID) {
+        return false;
+    }
+
+    *pLightID = candidate;
+    return true;
+}
+
+void LightFunction::loadActorLightInfo(const ActorLightInfo* pInfo) {
+    if (pInfo == nullptr) {
+        return;
+    }
+
+    loadLightInfoDiffuse(pInfo->mInfo0, GX_LIGHT0);
+    loadLightInfoDiffuse(pInfo->mInfo1, GX_LIGHT1);
+    const auto alpha = pInfo->mAlpha2;
+    loadLightDiffuse(_GXColor{0U, 0U, 0U, alpha}, TVec3f{}, GX_LIGHT2);
+    if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr) {
+        runtime->scene_lights().set_actor_ambient(color_value(pInfo->mColor));
+    }
+}
+
+void LightFunction::blendActorLightInfo(ActorLightInfo* pOut, const ActorLightInfo& rFrom, const ActorLightInfo& rTo, f32 rate) {
+    if (pOut == nullptr) {
+        return;
+    }
+
+    blendLightInfo(&pOut->mInfo0, rFrom.mInfo0, rTo.mInfo0, rate);
+    blendLightInfo(&pOut->mInfo1, rFrom.mInfo1, rTo.mInfo1, rate);
+    pOut->mAlpha2 = blend_channel(rFrom.mAlpha2, rTo.mAlpha2, rate);
+    blendColor(&pOut->mColor, rFrom.mColor, rTo.mColor, rate);
+}
+
+void LightFunction::getAreaLightLightData(JMapInfo*, int, AreaLightInfo*) {
+}
+
+const char* LightFunction::getDefaultAreaLightName() {
+    return smgpc::render::light::StageLightData::instance().default_area_light_name();
 }
 
 void LightFunction::loadPointLightInfo(const PointLightInfo* pInfo) {
-    TVec3f v7(pInfo->_0);
-    MR::getCameraViewMtx().mult(v7, v7);
-    GXLightObj obj;
-    GXInitLightPos(&obj, v7.x, v7.y, v7.z);
-    GXInitLightDistAttn(&obj, pInfo->_10, pInfo->_14, pInfo->_18);
-    GXInitLightSpot(&obj, 0.0, GX_SP_OFF);
-    GXInitLightColor(&obj, GXColor(pInfo->_C));
-    GXLoadLightObjImm(&obj, GX_LIGHT4);
+    if (pInfo == nullptr) {
+        return;
+    }
+
+    auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
+    if (runtime == nullptr) {
+        return;
+    }
+
+    auto light = smgpc::render::GXLightState{};
+    light.loaded = true;
+    light.coordinate_space = smgpc::render::GXLightCoordinateSpace::World;
+    light.color = color_value(pInfo->mColor);
+    light.position = vec3_value(pInfo->mPosition);
+    light.cosine_attenuation = {1.0F, 0.0F, 0.0F};
+    light.distance_attenuation = smgpc::render::gx_light_distance_attenuation(
+        pInfo->mRadius, pInfo->mBrightness, pInfo->mDistAttnFn);
+    runtime->scene_lights().set_light(light_slot(GX_LIGHT4), light);
 }
 
-// LightFunction::loadAllLightWhite
+void LightFunction::loadLightInfoCoin(const LightInfoCoin* pInfo) {
+    if (pInfo == nullptr) {
+        return;
+    }
 
-void LightFunction::calcLightWorldPos(TVec3f* pPos, const LightInfo& rInfo) {
-    pPos->x = rInfo.mPos.x;
-    pPos->y = rInfo.mPos.y;
-    pPos->z = rInfo.mPos.z;
+    loadLightInfoDiffuse(*pInfo, GX_LIGHT1);
+    loadLightDiffuse(_GXColor{pInfo->_14, pInfo->_15, pInfo->_16, pInfo->_17}, TVec3f{0.0F, 0.0F, 1.0F}, GX_LIGHT3);
+}
 
-    if (rInfo.mIsFollowCamera) {
-        TPos3f mtx;
-        mtx.setInline(MR::getCameraViewMtx());
-        mtx.invert(mtx);
-        mtx.mult(*pPos, *pPos);
+void LightFunction::registerLightAreaHolder(LightAreaHolder* pHolder) {
+    sLightAreaHolder = pHolder;
+}
+
+void LightFunction::unregisterLightAreaHolder(const LightAreaHolder* pHolder) {
+    if (sLightAreaHolder == pHolder) {
+        sLightAreaHolder = nullptr;
+    }
+}
+
+void LightFunction::calcLightWorldPos(TVec3f* pOut, const LightInfo& rInfo) {
+    if (pOut == nullptr) {
+        return;
+    }
+
+    if (!rInfo.mIsFollowCamera) {
+        *pOut = rInfo.mPos;
+        return;
+    }
+
+    auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
+    if (runtime == nullptr) {
+        *pOut = rInfo.mPos;
+        return;
+    }
+
+    auto pose = runtime->last_camera_pose();
+    if (!pose.has_value()) {
+        pose = runtime->camera_system().effective_camera_pose();
+    }
+    if (!pose.has_value()) {
+        *pOut = rInfo.mPos;
+        return;
+    }
+
+    const auto eye = TVec3f{pose->eye.x, pose->eye.y, pose->eye.z};
+    const auto forward = normalized_or(
+        TVec3f{pose->watch.x - pose->eye.x, pose->watch.y - pose->eye.y,
+               pose->watch.z - pose->eye.z},
+        TVec3f{0.0F, 0.0F, -1.0F});
+    const auto right = normalized_or(
+        cross(forward, TVec3f{pose->up.x, pose->up.y, pose->up.z}),
+        TVec3f{1.0F, 0.0F, 0.0F});
+    const auto up = normalized_or(cross(right, forward), TVec3f{0.0F, 1.0F, 0.0F});
+    pOut->set(
+        eye.x + right.x * rInfo.mPos.x + up.x * rInfo.mPos.y - forward.x * rInfo.mPos.z,
+        eye.y + right.y * rInfo.mPos.x + up.y * rInfo.mPos.y - forward.y * rInfo.mPos.z,
+        eye.z + right.z * rInfo.mPos.x + up.z * rInfo.mPos.y - forward.z * rInfo.mPos.z);
+}
+
+void LightFunction::registerPlayerLightCtrl(const ActorLightCtrl* pLightCtrl) {
+    if (pLightCtrl == nullptr) {
+        return;
+    }
+
+    const_cast<ActorLightCtrl*>(pLightCtrl)->_4 = MR::LightType_Player;
+    if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr) {
+        // Retail stores this non-owning pointer in LightDirector::_1C.  Keep
+        // the same scene lifetime without adding a process-static Game pointer.
+        runtime->scene_lights().register_player_light_ctrl(pLightCtrl);
     }
 }

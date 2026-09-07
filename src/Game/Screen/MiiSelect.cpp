@@ -1,14 +1,17 @@
 #include "Game/Screen/MiiSelect.hpp"
+
 #include "Game/LiveActor/Nerve.hpp"
-#include "Game/Map/FileSelectIconID.hpp"
-#include "Game/Screen/ButtonPaneController.hpp"
-#include "Game/Screen/MiiSelectIcon.hpp"
-#include "Game/Util/BitArray.hpp"
+#include "Game/Map/FileSelectFunc.hpp"
 #include "Game/Util/GamePadUtil.hpp"
 #include "Game/Util/LayoutUtil.hpp"
+#include "Game/Util/NerveUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
-#include <JSystem/J3DGraphAnimator/J3DAnimation.hpp>
+#include "Game/Util/StarPointerUtil.hpp"
+#include "runtime/RuntimeContext.hpp"
+
+#include <algorithm>
+#include <cstdio>
 #include <RVLFaceLib.h>
 
 namespace {
@@ -19,115 +22,148 @@ namespace {
     NEW_NERVE(MiiSelectNrvSelected, MiiSelect, Selected);
     NEW_NERVE(MiiSelectNrvDisappear, MiiSelect, Disappear);
     NEW_NERVE(MiiSelectNrvDummySelected, MiiSelect, DummySelected);
-};  // namespace
+
+    constexpr auto cIconsPerPage = 8;
+
+    [[nodiscard]] std::wstring icon_name(const FileSelectIconID& icon_id) {
+        auto name = std::array< u16, RFL_NAME_LEN + 1U >{};
+        FileSelectFunc::copyMiiName(name.data(), icon_id);
+
+        auto result = std::wstring{};
+        result.reserve(name.size());
+        for (const auto character : name) {
+            if (character == 0U) {
+                break;
+            }
+            result.push_back(static_cast< wchar_t >(character));
+        }
+        return result;
+    }
+}  // namespace
 
 MiiSelect::MiiSelect(const char* pName) : LayoutActor(pName, true) {
-    _28 = new MR::BitArray(5);
-    _2C = 0;
-    _2E = 0;
-    _58 = 0;
-    _1EC = 0;
-    _1F0 = 0;
-    _1F4 = nullptr;
-    _1F8 = nullptr;
-    _1FC = nullptr;
-    _200 = 0;
-    _204 = new FileSelectIconID();
-
-    for (int i = 0; i < ARRAY_SIZE(_20); i++) {
-        _20[i] = nullptr;
-    }
-
     validateAllSpecialMii();
+    rebuildIconList();
 }
 
-void MiiSelect::init(const JMapInfoIter& rIter) {
+void MiiSelect::init(const JMapInfoIter&) {
     initLayoutManager("MiiSelect", 1);
-    MR::invalidateParentAnim(this);
-    createButtons();
     MR::connectToSceneLayout(this);
     initNerve(&MiiSelectNrvAppear::sInstance);
-    createPage();
     kill();
+}
+
+void MiiSelect::initWithoutIter() {
+    init(JMapInfoIter());
 }
 
 void MiiSelect::appear() {
     LayoutActor::appear();
     setNerve(&MiiSelectNrvAppear::sInstance);
-    _1EC = 0;
+    mCurrentPageStart = 0;
+    mSelectedIndex = 0;
+    mSelectedTexMap = nullptr;
     refresh();
-    setCurrentPageGroupA();
-    appearButtons();
-    updateButtons();
-    _1F8->invalidateAllIcon();
-    _1FC->invalidateAllIcon();
     MR::setTextBoxMessageRecursive(this, "TxtName", L"");
 }
 
-void MiiSelect::disappear() {
-    _1F8->invalidateAllIcon();
-    _1FC->invalidateAllIcon();
-    disappearButtons();
-    setNerve(&MiiSelectNrvDisappear::sInstance);
+void MiiSelect::control() {
+    if (!isNerve(&MiiSelectNrvWait::sInstance)) {
+        return;
+    }
+
+    const auto icon_count = getIconNum();
+    if (icon_count <= 0) {
+        return;
+    }
+
+    auto pointed_index = -1;
+    for (auto i = 0; i < cIconsPerPage; ++i) {
+        const auto icon_index = mCurrentPageStart + i;
+        if (icon_index >= icon_count) {
+            break;
+        }
+
+        auto pane_name = std::array< char, 8U >{};
+        std::snprintf(pane_name.data(), pane_name.size(), "Mii%02d", i + 1);
+        if (MR::isStarPointerPointingPane(this, pane_name.data(), 0, true, "弱")) {
+            pointed_index = icon_index;
+            break;
+        }
+    }
+
+    if (pointed_index >= 0 && static_cast< std::size_t >(pointed_index) < mIconNames.size()) {
+        MR::setTextBoxMessageRecursive(this, "TxtName", mIconNames[static_cast< std::size_t >(pointed_index)].c_str());
+        if (MR::testDPDMenuPadDecideTrigger()) {
+            onSelect(pointed_index, nullptr);
+            return;
+        }
+    } else {
+        MR::setTextBoxMessageRecursive(this, "TxtName", L"");
+    }
+
+    if (icon_count > cIconsPerPage && (MR::testCorePadTriggerRight(WPAD_CHAN0) || MR::testSubPadStickTriggerRight(WPAD_CHAN0) ||
+                                       (MR::isStarPointerPointingPane(this, "Right", 0, true, "弱") && MR::testDPDMenuPadDecideTrigger()))) {
+        setNerve(&MiiSelectNrvScrollRight::sInstance);
+    } else if (icon_count > cIconsPerPage && (MR::testCorePadTriggerLeft(WPAD_CHAN0) || MR::testSubPadStickTriggerLeft(WPAD_CHAN0) ||
+                                              (MR::isStarPointerPointingPane(this, "Left", 0, true, "弱") && MR::testDPDMenuPadDecideTrigger()))) {
+        setNerve(&MiiSelectNrvScrollLeft::sInstance);
+    }
 }
 
-void MiiSelect::calcAnim() {
-    LayoutActor::calcAnim();
-    _1F8->calcAnim();
-    _1FC->calcAnim();
+void MiiSelect::disappear() {
+    setNerve(&MiiSelectNrvDisappear::sInstance);
 }
 
 bool MiiSelect::isAppearing() const {
     return isNerve(&MiiSelectNrvAppear::sInstance);
 }
 
-bool MiiSelect::isSelected() {
+bool MiiSelect::isSelected() const {
     return isNerve(&MiiSelectNrvSelected::sInstance);
 }
 
-bool MiiSelect::isDummySelected() {
+bool MiiSelect::isDummySelected() const {
     return isNerve(&MiiSelectNrvDummySelected::sInstance);
 }
 
-void MiiSelect::getSelectedID(FileSelectIconID* pSelectedID) {
-    getIconID(pSelectedID, _1F0);
+void MiiSelect::getSelectedID(FileSelectIconID* pSelectedID) const {
+    getIconID(pSelectedID, mSelectedIndex);
 }
 
 nw4r::lyt::TexMap* MiiSelect::getSelectedMiiTexMap() {
-    return _1F4;
+    return mSelectedTexMap;
 }
 
 void MiiSelect::admitIcon() {
-    _200 = 0;
+    mHasProhibitedIcon = false;
+    rebuildIconList();
 }
 
 void MiiSelect::prohibitIcon(const FileSelectIconID& rIconID) {
-    _200 = 1;
-
-    _204->set(rIconID);
+    mHasProhibitedIcon = true;
+    mProhibitedIcon.set(rIconID);
+    rebuildIconList();
 }
 
 void MiiSelect::invalidateSpecialMii(FileSelectIconID::EFellowID fellowID) {
-    if (_28->isOn(fellowID)) {
-        _28->set(fellowID, false);
-
-        _2C--;
+    const auto index = static_cast< std::size_t >(fellowID);
+    if (index < mSpecialMiiValid.size()) {
+        mSpecialMiiValid[index] = false;
     }
+    rebuildIconList();
 }
 
 void MiiSelect::validateAllSpecialMii() {
-    for (int i = 0; i < _28->size(); i++) {
-        _28->set(i, true);
-    }
-
-    _2C = _28->size();
+    mSpecialMiiValid.fill(true);
+    rebuildIconList();
 }
 
 void MiiSelect::exeAppear() {
     if (MR::isFirstStep(this)) {
         MR::startAnim(this, "Appear", 0);
-        MR::startSystemSE("SE_SY_FILE_SEL_MIISEL_OPEN");
-        setCurrentPageNum();
+        MR::startSystemSE("SE_SY_FILE_SEL_MIISEL_OPEN", -1, -1);
+        MR::setTextBoxNumberRecursive(this, "TxtPage", getIconNum() > 0 ? 1 : 0);
     }
 
     if (MR::isAnimStopped(this, 0)) {
@@ -138,50 +174,21 @@ void MiiSelect::exeAppear() {
 void MiiSelect::exeWait() {
     if (MR::isFirstStep(this)) {
         MR::startAnim(this, "Wait", 0);
-        validateAllIcon();
-        setCurrentPageGroupB();
-
-        for (int i = 0; i < ARRAY_SIZE(_20); i++) {
-            if (_20[i]->isHidden()) {
-                continue;
-            }
-
-            _20[i]->_24 = true;
-            _20[i]->forceToWait();
-        }
-
-        setCurrentPageNum();
-    }
-
-    for (int i = 0; i < ARRAY_SIZE(_20); i++) {
-        if (_20[i]->trySelect()) {
-            // ...
-        }
-    }
-
-    if (!_20[0]->isHidden() && (MR::testCorePadTriggerLeft(WPAD_CHAN0) || MR::testSubPadStickTriggerLeft(WPAD_CHAN0))) {
-        callbackLeft();
-    } else if (!_20[1]->isHidden() && (MR::testCorePadTriggerRight(WPAD_CHAN0) || MR::testSubPadStickTriggerRight(WPAD_CHAN0))) {
-        callbackRight();
+        MR::setTextBoxNumberRecursive(this, "TxtPage", getIconNum() > 0 ? (mCurrentPageStart / cIconsPerPage) + 1 : 0);
     }
 }
 
-void MiiSelect::exeScrollLeft() {
+void MiiSelect::exeScrollRight() {
     if (MR::isFirstStep(this)) {
-        MR::startAnim(this, "PreviousMii", 0);
-
-        _1EC -= 8;
-
-        if (_1EC < 0) {
-            _1EC = ((getIconNum() - 1) / 8) * 8;
+        MR::startAnim(this, "NextMii", 0);
+        if (getIconNum() > cIconsPerPage) {
+            mCurrentPageStart += cIconsPerPage;
+            if (mCurrentPageStart >= getIconNum()) {
+                mCurrentPageStart = 0;
+            }
         }
-
-        flipPage();
-        setCurrentPageGroupB();
+        MR::startSystemSE("SE_SY_FILE_SEL_MIISEL_SCRL", -1, -1);
         refresh();
-        updateButtons();
-        _1F8->invalidateAllIcon();
-        _1FC->invalidateAllIcon();
     }
 
     if (MR::isAnimStopped(this, 0)) {
@@ -189,22 +196,17 @@ void MiiSelect::exeScrollLeft() {
     }
 }
 
-void MiiSelect::exeScrollRight() {
+void MiiSelect::exeScrollLeft() {
     if (MR::isFirstStep(this)) {
-        MR::startAnim(this, "NextMii", 0);
-
-        _1EC += 8;
-
-        if (_1EC >= getIconNum()) {
-            _1EC = 0;
+        MR::startAnim(this, "PreviousMii", 0);
+        if (getIconNum() > cIconsPerPage) {
+            mCurrentPageStart -= cIconsPerPage;
+            if (mCurrentPageStart < 0) {
+                mCurrentPageStart = ((getIconNum() - 1) / cIconsPerPage) * cIconsPerPage;
+            }
         }
-
-        flipPage();
-        setCurrentPageGroupB();
+        MR::startSystemSE("SE_SY_FILE_SEL_MIISEL_SCRL", -1, -1);
         refresh();
-        updateButtons();
-        _1F8->invalidateAllIcon();
-        _1FC->invalidateAllIcon();
     }
 
     if (MR::isAnimStopped(this, 0)) {
@@ -228,271 +230,88 @@ void MiiSelect::exeDisappear() {
 void MiiSelect::exeDummySelected() {
 }
 
-void MiiSelect::control() {
-    for (int i = 0; i < ARRAY_SIZE(_20); i++) {
-        _20[i]->update();
-    }
-
-    J3DFrameCtrl* pAnimCtrl;
-
-    if (_20[0]->isFirstStepWait() && !_20[1]->isFirstStepWait() && _20[1]->isWait()) {
-        pAnimCtrl = MR::getPaneAnimCtrl(this, _20[0]->mPaneName, 0);
-
-        pAnimCtrl->setFrame(MR::getPaneAnimFrame(this, _20[1]->mPaneName, 0));
-    }
-
-    if (_20[1]->isFirstStepWait() && !_20[0]->isFirstStepWait() && _20[0]->isWait()) {
-        pAnimCtrl = MR::getPaneAnimCtrl(this, _20[1]->mPaneName, 0);
-
-        pAnimCtrl->setFrame(MR::getPaneAnimFrame(this, _20[0]->mPaneName, 0));
-    }
-
-    _1F8->movement();
-}
-
-void MiiSelect::createButtons() {
-    static const char* pane[] = {
-        "Left",
-        "Right",
-    };
-    static const char* bound[] = {
-        "PicArrowL",
-        "PicArrowR",
-    };
-
-    for (int i = 0; i < ARRAY_SIZE(_20); i++) {
-        MR::createAndAddPaneCtrl(this, pane[i], 1);
-
-        _20[i] = new ButtonPaneController(this, pane[i], bound[i], 0, true);
-        _20[i]->_22 = false;
-    }
-}
-
-void MiiSelect::callbackLeft() {
-    _20[0]->_24 = false;
-
-    MR::startSystemSE("SE_SY_FILE_SEL_MIISEL_SCRL");
-    setNerve(&MiiSelectNrvScrollLeft::sInstance);
-}
-
-void MiiSelect::callbackRight() {
-    _20[1]->_24 = false;
-
-    MR::startSystemSE("SE_SY_FILE_SEL_MIISEL_SCRL");
-    setNerve(&MiiSelectNrvScrollRight::sInstance);
-}
-
-void MiiSelect::appearButtons() {
-    for (int i = 0; i < ARRAY_SIZE(_20); i++) {
-        _20[i]->appear();
-    }
-}
-
-void MiiSelect::disappearButtons() {
-    for (int i = 0; i < ARRAY_SIZE(_20); i++) {
-        _20[i]->disappear();
-    }
-}
-
-void MiiSelect::updateButtons() {
-    if (getIconNum() > 16) {
-        if (_20[0]->isHidden()) {
-            _20[0]->appear();
-        }
-
-        if (_20[1]->isHidden()) {
-            _20[1]->appear();
-        }
-    } else {
-        if (_1EC - 8 < 0) {
-            if (!_20[0]->isHidden()) {
-                _20[0]->disappear();
-            }
-        } else if (_20[0]->isHidden()) {
-            _20[0]->appear();
-        }
-
-        if (_1EC + 8 >= getIconNum()) {
-            if (!_20[1]->isHidden()) {
-                _20[1]->disappear();
-            }
-        } else if (_20[1]->isHidden()) {
-            _20[1]->appear();
-        }
-    }
-}
-
 void MiiSelect::collectValidMiiIndex() {
-    for (u32 i = 0; i < RFL_DB_CHAR_MAX; i++) {
-        if (!RFLIsAvailableOfficialData(i)) {
-            continue;
-        }
-
-        RFLAdditionalInfo additionalInfo;
-
-        if (RFLGetAdditionalInfo(&additionalInfo, RFLDataSource_Official, nullptr, i) != RFLErrcode_Success) {
-            continue;
-        }
-
-        if (additionalInfo.favorite == 1) {
-            _30[_2E] = static_cast< u16 >(i);
-            _2E++;
-        } else {
-            _5C[_58] = static_cast< u16 >(i);
-            _58++;
-        }
-    }
-}
-
-void MiiSelect::createPage() {
-    _1F8 = new MiiSelectSub::Page(this);
-    _1FC = new MiiSelectSub::Page(this);
-}
-
-void MiiSelect::flipPage() {
-    MiiSelectSub::Page* pPage = _1F8;
-
-    _1F8 = _1FC;
-    _1FC = pPage;
-}
-
-void MiiSelect::setCurrentPageGroupA() {
-    _1F8->_20 = 1;
-    _1FC->_20 = 0;
-}
-
-void MiiSelect::setCurrentPageGroupB() {
-    _1F8->_20 = 0;
-    _1FC->_20 = 1;
-}
-
-void MiiSelect::setCurrentPageNum() {
-    s32 v2 = (getIconNum() - 1) / 8;
-    s32 v1 = _1EC / 8;
-
-    MR::setTextBoxFormatRecursive(this, "TxtPage", L"%d/%d", v1 + 1, v2 + 1);
-}
-
-void MiiSelect::validateAllIcon() {
-    _1F8->validateAllIcon();
-    _1FC->validateAllIcon();
-
-    if (_200) {
-        _1F8->prohibitIcon(*_204);
-        _1FC->prohibitIcon(*_204);
-    }
+    ++mCollectValidMiiIndexCount;
+    rebuildIconList();
 }
 
 void MiiSelect::refresh() {
-    _1F8->refresh(_1EC);
-
-    if (_200) {
-        _1F8->prohibitIcon(*_204);
-        _1FC->prohibitIcon(*_204);
+    rebuildIconList();
+    if (mCurrentPageStart >= getIconNum()) {
+        mCurrentPageStart = getIconNum() > 0 ? ((getIconNum() - 1) / cIconsPerPage) * cIconsPerPage : 0;
+    }
+    if (mCurrentPageStart < 0) {
+        mCurrentPageStart = 0;
     }
 }
 
-void MiiSelect::getIconID(FileSelectIconID* pIconID, s32 param2) const {
-    if (param2 < _2C) {
-        s32 v = 0;
-
-        for (int i = 0; i < _28->size(); i++) {
-            if (!_28->isOn(i)) {
-                continue;
-            }
-
-            if (v == param2) {
-                pIconID->setFellowID(static_cast< FileSelectIconID::EFellowID >(i));
-                break;
-            }
-
-            v++;
-        }
-    } else if (param2 < _2E + _2C) {
-        pIconID->setMiiIndex(_30[param2 - _2C]);
-    } else {
-        pIconID->setMiiIndex(_5C[param2 - _2E - _2C]);
+void MiiSelect::getIconID(FileSelectIconID* pIconID, s32 index) const {
+    if (pIconID == nullptr) {
+        return;
     }
+
+    if (index < 0 || static_cast< std::size_t >(index) >= mIconIds.size()) {
+        pIconID->setFellowID(FileSelectIconID::Mario);
+        return;
+    }
+
+    pIconID->set(mIconIds[static_cast< std::size_t >(index)]);
 }
 
-void MiiSelect::onSelect(s32 param1, nw4r::lyt::TexMap* pTexMap) {
-    _1F0 = param1;
-    _1F4 = pTexMap;
+void MiiSelect::onSelect(s32 index, nw4r::lyt::TexMap* pTexMap) {
+    if (index < 0 || static_cast< std::size_t >(index) >= mIconIds.size()) {
+        return;
+    }
 
-    _1F8->invalidateAllIcon();
-    _1FC->invalidateAllIcon();
-    disappearButtons();
+    mSelectedIndex = index;
+    mSelectedTexMap = pTexMap;
     setNerve(&MiiSelectNrvSelected::sInstance);
 }
 
 void MiiSelect::onSelectDummy() {
-    _1F8->invalidateAllIcon();
-    _1FC->invalidateAllIcon();
-    disappearButtons();
     setNerve(&MiiSelectNrvDummySelected::sInstance);
 }
 
-namespace MiiSelectSub {
-    Page::Page(MiiSelect* pHost) : mHost(pHost), _20(true) {
-        for (u32 i = 0; i < ARRAY_SIZE(mIconArray); i++) {
-            mIconArray[i] = new MiiSelectIcon(-1, -1, -1, "Miiセレクト用アイコン");
+s32 MiiSelect::getIconNum() const {
+    return static_cast< s32 >(mIconIds.size());
+}
+
+s32 MiiSelect::getCollectValidMiiIndexCount() const {
+    return mCollectValidMiiIndexCount;
+}
+
+void MiiSelect::rebuildIconList() {
+    mIconIds.clear();
+    mIconNames.clear();
+
+    for (auto i = std::size_t{}; i < mSpecialMiiValid.size(); ++i) {
+        if (!mSpecialMiiValid[i]) {
+            continue;
         }
+
+        auto icon_id = FileSelectIconID();
+        icon_id.setFellowID(static_cast< FileSelectIconID::EFellowID >(i));
+        if (mHasProhibitedIcon && icon_id == mProhibitedIcon) {
+            continue;
+        }
+
+        mIconIds.push_back(icon_id);
+        mIconNames.push_back(icon_name(icon_id));
     }
 
-    // Page::refresh
-    // Page::movement
-
-    void Page::calcAnim() {
-        s32 v = 9;
-
-        if (_20) {
-            v = 1;
-        }
-
-        for (s32 i = 0; i < ARRAY_SIZE(mIconArray); i++) {
-            char paneName[128];
-
-            snprintf(paneName, sizeof(paneName), "Mii%02d", v + i);
-            MR::setLayoutPosAtPaneTrans(mIconArray[i], mHost, paneName);
-            mIconArray[i]->calcAnim();
-        }
+    const auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
+    if (runtime == nullptr) {
+        return;
     }
 
-    void Page::invalidateAllIcon() {
-        for (int i = 0; i < ARRAY_SIZE(mIconArray); i++) {
-            mIconArray[i]->invalidate();
+    for (const auto& entry : runtime->rfl().valid_miis()) {
+        auto icon_id = FileSelectIconID();
+        icon_id.setMiiIndex(static_cast< u16 >(std::clamp(entry.index, 0, 0xffff)));
+        if (mHasProhibitedIcon && icon_id == mProhibitedIcon) {
+            continue;
         }
+
+        mIconIds.push_back(icon_id);
+        mIconNames.push_back(icon_name(icon_id));
     }
-
-    void Page::validateAllIcon() {
-        for (int i = 0; i < ARRAY_SIZE(mIconArray); i++) {
-            mIconArray[i]->validate();
-        }
-    }
-
-    void Page::prohibitIcon(const FileSelectIconID& rIconID) {
-        for (int i = 0; i < ARRAY_SIZE(mIconArray); i++) {
-            if (MR::isDead(mIconArray[i])) {
-                continue;
-            }
-
-            if (mIconArray[i]->isMiiDummy()) {
-                continue;
-            }
-
-            FileSelectIconID iconID = FileSelectIconID();
-
-            mIconArray[i]->copyIconID(&iconID);
-
-            if (iconID != rIconID) {
-                continue;
-            }
-
-            mIconArray[i]->prohibit();
-        }
-    }
-};  // namespace MiiSelectSub
-
-s32 MiiSelect::getIconNum() {
-    return _58 + _2E + _2C;
 }

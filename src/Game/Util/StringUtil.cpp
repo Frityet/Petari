@@ -5,7 +5,6 @@
 #include <cctype>
 // #include <cstdarg>
 #include <cstdio>
-#include <stdint.h>
 #include <va_list.h>
 
 #define CENTISEC_PER_SEC 100
@@ -100,8 +99,7 @@ namespace MR {
         char* pExtSeparator = strrchr(pDst, '.');
         char* pDirSeparator = strrchr(pDst, '/');
 
-        if (reinterpret_cast<uintptr_t>(pExtSeparator) < reinterpret_cast<uintptr_t>(pDirSeparator) ||
-            reinterpret_cast<uintptr_t>(pDirSeparator) + 1 == reinterpret_cast<uintptr_t>(pExtSeparator)) {
+        if (pExtSeparator < pDirSeparator || pDirSeparator + 1 == pExtSeparator) {
             return pDirSeparator;
         }
 
@@ -176,11 +174,12 @@ namespace MR {
     }
     */
 
+    // FIXME: Missing stack accesses.
     const char* getBasename(const char* pPath) {
         const char* pBasename = strrchr(pPath, '/');
 
         if (pBasename == nullptr) {
-            return pPath;
+            return pBasename;
         }
 
         return pBasename + 1;

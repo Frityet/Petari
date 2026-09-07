@@ -1,16 +1,21 @@
 #include "Game/MapObj/Sun.hpp"
-#include "Game/LiveActor/Nerve.hpp"
-#include "Game/Util.hpp"
+
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 
-Sun::Sun(const char* pName) : LiveActor(pName) {
+// The exact source helper is not yet part of pc-port's compiled ObjUtil
+// subset.  Keep the actor call source-shaped; its generalized provider is a
+// separate scheduler integration step.
+namespace MR {
+    void connectToSceneSun(LiveActor* actor);
 }
 
-Sun::~Sun() {
+Sun::Sun(const char* name) : LiveActor(name) {
 }
 
-void Sun::init(const JMapInfoIter& rIter) {
+Sun::~Sun() = default;
+
+void Sun::init(const JMapInfoIter&) {
     initModelManagerWithAnm("Sun", nullptr, false);
     MR::connectToSceneSun(this);
     MR::invalidateClipping(this);

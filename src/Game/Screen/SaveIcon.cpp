@@ -1,4 +1,5 @@
 #include "Game/Screen/SaveIcon.hpp"
+
 #include "Game/Util/LayoutUtil.hpp"
 
 SaveIcon::SaveIcon(const LayoutActor* pActor) : LayoutActor("SaveIcon", true), mActor(pActor) {

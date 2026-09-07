@@ -1,16 +1,16 @@
 #include "Game/Map/Sky.hpp"
+
 #include "Game/LiveActor/MaterialCtrl.hpp"
-#include "Game/LiveActor/MirrorReflectionModel.hpp"
 #include "Game/LiveActor/Nerve.hpp"
-#include "Game/Map/SpaceInner.hpp"
 #include "Game/Util/ActorSwitchUtil.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/DemoUtil.hpp"
-#include "Game/Util/Functor.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
+
+#include <stdexcept>
 
 namespace {
     const char* cChangeAnimName = "Change";
@@ -36,28 +36,23 @@ void Sky::init(const JMapInfoIter& rIter) {
     MR::useStageSwitchReadB(this, rIter);
     MR::useStageSwitchReadAppear(this, rIter);
 
+    // SummerSky's exact SpaceInner child and switch listeners are outside the
+    // compiled PC actor subset. Reject only the authored row that requests
+    // that subfeature; every ordinary Sky keeps the original path below.
     if (MR::isEqualString(objectName, "SummerSky")) {
-        mSpaceInner = new SpaceInner("内側宇宙");
-        mSpaceInner->initWithoutIter();
-
-        if (MR::isValidSwitchB(this)) {
-            MR::listenStageSwitchOnOffB(this, MR::Functor(this, &Sky::appearSpaceInner), MR::Functor(this, &Sky::disappearSpaceInner));
-        }
+        throw std::logic_error("SummerSky requires the unavailable exact SpaceInner actor.");
     }
 
     s32 arg = -1;
     MR::getJMapInfoArg0NoInit(rIter, &arg);
 
+    // Obj_arg0 == 0 is the retail request for a MirrorReflectionModel child.
+    // Keep the request explicit instead of silently substituting a renderer.
     if (!arg) {
-        mReflectionModel = new MirrorReflectionModel(this, "鏡内モデル", objectName, getBaseMtx());
-        mReflectionModel->initWithoutIter();
+        throw std::logic_error("Sky mirror mode requires the unavailable exact MirrorReflectionModel actor.");
     }
 
     MR::tryStartAllAnim(this, objectName);
-
-    if (mReflectionModel) {
-        MR::tryStartAllAnim(mReflectionModel, objectName);
-    }
 
     MR::invalidateClipping(this);
     MR::registerDemoSimpleCastAll(this);
@@ -84,29 +79,17 @@ void Sky::initModel(const char* pModelName) {
 }
 
 void Sky::control() {
-    if (mSpaceInner && MR::isValidSwitchB(this)) {
-        if (MR::isDead(mSpaceInner)) {
-            MR::showModelIfHidden(this);
-        } else {
-            if (mSpaceInner->isAppeared()) {
-                MR::hideModelIfShown(this);
-            } else {
-                MR::showModelIfHidden(this);
-            }
-        }
+    if (mSpaceInner != 0 || mReflectionModel != 0) {
+        throw std::logic_error("Sky child actors are unavailable in the compiled PC subset.");
     }
 }
 
 void Sky::appearSpaceInner() {
-    if (mSpaceInner && MR::isValidSwitchB(this)) {
-        mSpaceInner->appear();
-    }
+    throw std::logic_error("Sky SpaceInner is unavailable in the compiled PC subset.");
 }
 
 void Sky::disappearSpaceInner() {
-    if (mSpaceInner && MR::isValidSwitchB(this)) {
-        mSpaceInner->disappear();
-    }
+    throw std::logic_error("Sky SpaceInner is unavailable in the compiled PC subset.");
 }
 
 void Sky::exeWait() {
