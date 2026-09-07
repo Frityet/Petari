@@ -9,7 +9,7 @@ inline int tolower(int c) {
 
 HashSortTable::HashSortTable(u32 cnt) {
     mHashCodes = new u32[cnt];
-    _8 = new u32[cnt];
+    _8 = new Value[cnt];
     _C = new u16[0x100];
     _10 = new u16[0x100];
     mCurrentLength = 0;
@@ -17,7 +17,7 @@ HashSortTable::HashSortTable(u32 cnt) {
     mHasBeenSorted = false;
 }
 
-bool HashSortTable::add(const char* pName, u32 a2, bool isValidSkip) {
+bool HashSortTable::add(const char* pName, Value a2, bool isValidSkip) {
     u32 hash = MR::getHashCode(pName);
 
     if (isValidSkip) {
@@ -27,7 +27,7 @@ bool HashSortTable::add(const char* pName, u32 a2, bool isValidSkip) {
     }
 }
 
-bool HashSortTable::add(u32 a1, u32 a2) {
+bool HashSortTable::add(u32 a1, Value a2) {
     mHashCodes[mCurrentLength] = a1;
     _8[mCurrentLength] = a2;
     mCurrentLength++;
@@ -35,7 +35,7 @@ bool HashSortTable::add(u32 a1, u32 a2) {
     return true;
 }
 
-bool HashSortTable::addOrSkip(u32 a1, u32 a2) {
+bool HashSortTable::addOrSkip(u32 a1, Value a2) {
     for (u32 i = 0; i < mCurrentLength; i++) {
         if (a1 == mHashCodes[i]) {
             return false;
@@ -56,7 +56,7 @@ void HashSortTable::sort() {
 
     s32 originalIndices[0x400];
     MR::sortSmall(mCurrentLength, mHashCodes, originalIndices);
-    u32 swapArray[0x400];
+    Value swapArray[0x400];
 
     for (int i = 0; i < mCurrentLength; i++) {
         swapArray[i] = _8[originalIndices[i]];
@@ -108,7 +108,7 @@ void HashSortTable::sort() {
     mHasBeenSorted = true;
 }
 
-bool HashSortTable::search(u32 a1, u32* a2) {
+bool HashSortTable::search(u32 a1, Value* a2) {
     u8 upperByte = a1 >> 24;
 
     if (a2 != nullptr) {
@@ -142,13 +142,13 @@ bool HashSortTable::search(u32 a1, u32* a2) {
     return false;
 }
 
-bool HashSortTable::search(const char* a1, u32* a2) {
+bool HashSortTable::search(const char* a1, Value* a2) {
     u32 hash = MR::getHashCode(a1);
 
     return search(hash, a2);
 }
 
-bool HashSortTable::search(const char* a1, const char* a2, u32* a3) {
+bool HashSortTable::search(const char* a1, const char* a2, Value* a3) {
     u32 hash = MR::getHashCode(a1) + MR::getHashCode(a2);
 
     return search(hash, a3);

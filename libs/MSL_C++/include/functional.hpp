@@ -67,8 +67,8 @@ namespace std {
     }
 
     template < class Func, class Type >
-    binder2nd< Func, const Type& > bind2nd(const Func& mf, const Type& a) {
-        return binder2nd< Func, const Type& >(mf, a);
+    binder2nd< Func, typename Func::second_argument_type > bind2nd(const Func& mf, const Type& a) {
+        return binder2nd< Func, typename Func::second_argument_type >(mf, a);
     }
 
     // Mem funcs
@@ -169,6 +169,25 @@ namespace std {
     template < class Result, class Type, class Arg >
     inline const_mem_fun1_t< Result, Type, Arg > mem_func(Result (Type::*f)(Arg) const) {
         return const_mem_fun1_t< Result, Type, Arg >(f);
+    }
+
+    template < class Return, class Type >
+    class const_mem_fun_ref_t : public unary_function< Type, Return > {
+    public:
+        explicit const_mem_fun_ref_t(Return (Type::*mf)() const) : mf_(mf) {}
+        Return operator()(const Type& t) const { return (t.*mf_)(); }
+    private:
+        Return (Type::*mf_)() const;
+    };
+
+    template < class Result, class Type >
+    inline mem_fun_ref_t< Result, Type > mem_fun_ref(Result (Type::*f)()) {
+        return mem_fun_ref_t< Result, Type >(f);
+    }
+
+    template < class Result, class Type >
+    inline const_mem_fun_ref_t< Result, Type > mem_fun_ref(Result (Type::*f)() const) {
+        return const_mem_fun_ref_t< Result, Type >(f);
     }
 
     template < class Predicate >

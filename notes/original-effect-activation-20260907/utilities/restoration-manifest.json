@@ -1,0 +1,74 @@
+[
+  {
+    "path": "src/Game/Effect/EffectSystemUtil.cpp",
+    "source_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "sha256": "c4f9f83ddb3cf51c975307d4c0d26137e7691a273848af6afbc16ea3c7ad2f11",
+    "previous_sha256": null
+  },
+  {
+    "path": "include/Game/Effect/EffectSystemUtil.hpp",
+    "source_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "sha256": "fa765cbc06459d165bbf77f17841c306741902f42bce88c2077d4426337061c2",
+    "previous_sha256": "fa765cbc06459d165bbf77f17841c306741902f42bce88c2077d4426337061c2"
+  },
+  {
+    "path": "src/Game/Effect/AutoEffectGroup.cpp",
+    "source_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "sha256": "20641858c7a008a5b81700c1d537def6275ced5a773bf6c29d992168fbc640a9",
+    "previous_sha256": null
+  },
+  {
+    "path": "include/Game/Effect/AutoEffectGroup.hpp",
+    "source_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "sha256": "77873297c3bb9f49aa5bda4fca91287cde4091038f84b214de2d528a125f9748",
+    "previous_sha256": null
+  },
+  {
+    "path": "src/Game/Effect/AutoEffectGroupHolder.cpp",
+    "source_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "sha256": "b30eaa5d5c22af22c23537ae14673b0b6493db4f6c3ade189471e183308dbf41",
+    "previous_sha256": null
+  },
+  {
+    "path": "include/Game/Effect/AutoEffectGroupHolder.hpp",
+    "source_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "sha256": "79b4cea7563571a2d679bdf2197f61356c13aebe3221977100e612213591281d",
+    "previous_sha256": null
+  },
+  {
+    "path": "src/Game/Effect/AutoEffectInfo.cpp",
+    "source_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "sha256": "534ca3b92af4854ccf4862e53b94dc8f3418d8901e227e79425122a8f7f368d5",
+    "previous_sha256": "af72504f0b9ad85ac8dffe38ef30da12280b4109b1911656211056f8c7f26ab9"
+  },
+  {
+    "path": "include/Game/Effect/AutoEffectInfo.hpp",
+    "source_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "sha256": "df004264eb9c98df4d26a87d4941ef2899dae2dd0815ec53b0e6b8a5c64a441e",
+    "previous_sha256": "7a452df2095d9b7fcd7d152f617111b2234ddefb49c4c55281af0e43ed1bf8fc"
+  },
+  {
+    "path": "src/Game/Util/EffectUtil.cpp",
+    "source_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "sha256": "9bc941f22b896908552f788ea5b8ee93ff5d6d4f5620626d86f09134b46c2ae6",
+    "previous_sha256": "9bc941f22b896908552f788ea5b8ee93ff5d6d4f5620626d86f09134b46c2ae6"
+  },
+  {
+    "path": "include/Game/Util/EffectUtil.hpp",
+    "source_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "sha256": "f05409ad5dac9e7113dff524ee25cbcd0f1d515b7ab54f62421e07129736e8af",
+    "previous_sha256": "f05409ad5dac9e7113dff524ee25cbcd0f1d515b7ab54f62421e07129736e8af"
+  },
+  {
+    "path": "include/Game/Util/HashUtil.hpp",
+    "source_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "sha256": "d98bcc17a3ed40ff62ed00c5bc07b14c8065672ef01701573405d4221f07b55f",
+    "previous_sha256": "e50529b54e40b20f4a9494eb9dd4054f58557ce72f2494766bb0da421aa35e98"
+  },
+  {
+    "path": "src/Game/Util/HashUtil.cpp",
+    "source_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "sha256": "cf19ed3c5e05d5184f5b621eeee269b99e7e8cffdbdac8c95107cbd84e410f41",
+    "previous_sha256": "aded413ec3398e4814aa028e1a254d42c3ff3641bac32d47e95458d5e25d15c7"
+  }
+]

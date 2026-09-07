@@ -1,0 +1,254 @@
+[
+  {
+    "provenance_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "provenance_path": "src/Game/Effect/EffectSystem.cpp",
+    "decomp_path": "decomp/src/Game/Effect/EffectSystem.cpp",
+    "native_path": "src/Game/Effect/EffectSystem.cpp",
+    "source_sha256": "8e0ad3b52ee8b3e0409993b26c753ddf2171cdc7453b3fdaa855bca70ae2eaf3",
+    "decomp_before_sha256": "d4b615f19aa0fd92a0ba6add143f67e964c90ae94c6325942290e5d24eac5595",
+    "native_before_sha256": null
+  },
+  {
+    "provenance_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "provenance_path": "include/Game/Effect/EffectSystem.hpp",
+    "decomp_path": "decomp/include/Game/Effect/EffectSystem.hpp",
+    "native_path": "src/Game/Effect/EffectSystem.hpp",
+    "source_sha256": "f863add4b4f9f4991c4536c90fd63334b9d1c64acac449dc0aacc6a9fe542b9c",
+    "decomp_before_sha256": "f863add4b4f9f4991c4536c90fd63334b9d1c64acac449dc0aacc6a9fe542b9c",
+    "native_before_sha256": null
+  },
+  {
+    "provenance_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "provenance_path": "src/Game/Effect/ParticleEmitter.cpp",
+    "decomp_path": "decomp/src/Game/Effect/ParticleEmitter.cpp",
+    "native_path": "src/Game/Effect/ParticleEmitter.cpp",
+    "source_sha256": "45920a2365e225e583fac7599551778d554284fba980a54de66eb43c4c1802a2",
+    "decomp_before_sha256": "45920a2365e225e583fac7599551778d554284fba980a54de66eb43c4c1802a2",
+    "native_before_sha256": null
+  },
+  {
+    "provenance_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "provenance_path": "include/Game/Effect/ParticleEmitter.hpp",
+    "decomp_path": "decomp/include/Game/Effect/ParticleEmitter.hpp",
+    "native_path": "src/Game/Effect/ParticleEmitter.hpp",
+    "source_sha256": "1a0f50d2b503adee89129083273c3ed072fd73db77629d7bb9fa0f682daeaba7",
+    "decomp_before_sha256": "a5fae4065e35110b1caf767f3ea608546d065ee5085bc2e40f467aa222317284",
+    "native_before_sha256": "1a0f50d2b503adee89129083273c3ed072fd73db77629d7bb9fa0f682daeaba7"
+  },
+  {
+    "provenance_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "provenance_path": "src/Game/Effect/ParticleEmitterHolder.cpp",
+    "decomp_path": "decomp/src/Game/Effect/ParticleEmitterHolder.cpp",
+    "native_path": "src/Game/Effect/ParticleEmitterHolder.cpp",
+    "source_sha256": "0936947a99975fe94ae3677a92b45b26594ccf67a777ceac7e60d7adf07704aa",
+    "decomp_before_sha256": "fee5a70d98f05b08786b471e6be432dabeb1d0f6134d81be0c6b352bfb8ce068",
+    "native_before_sha256": null
+  },
+  {
+    "provenance_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "provenance_path": "include/Game/Effect/ParticleEmitterHolder.hpp",
+    "decomp_path": "decomp/include/Game/Effect/ParticleEmitterHolder.hpp",
+    "native_path": "src/Game/Effect/ParticleEmitterHolder.hpp",
+    "source_sha256": "5a199086d25da8071abe94a206cf357f543cbc48d98ccf95c064a5e4e28a3144",
+    "decomp_before_sha256": "8889054e2f44deb12a0125ba90d8e46c7d40ac890165b0b1494c0bde433af96b",
+    "native_before_sha256": null
+  },
+  {
+    "provenance_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "provenance_path": "src/Game/Effect/ParticleDrawExecutor.cpp",
+    "decomp_path": "decomp/src/Game/Effect/ParticleDrawExecutor.cpp",
+    "native_path": "src/Game/Effect/ParticleDrawExecutor.cpp",
+    "source_sha256": "ab930a200255aeed18918b44ddfa79a1c2ca39ca38b05ce897e31f6b51a59fc1",
+    "decomp_before_sha256": "65a6df48b8821c026e6712c9acba8bbfe27e835ef0e29df0cc815afc8dc30b89",
+    "native_before_sha256": null
+  },
+  {
+    "provenance_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "provenance_path": "include/Game/Effect/ParticleDrawExecutor.hpp",
+    "decomp_path": "decomp/include/Game/Effect/ParticleDrawExecutor.hpp",
+    "native_path": "src/Game/Effect/ParticleDrawExecutor.hpp",
+    "source_sha256": "65cb1dcf7bafc023d4a14b9b550bb48b292d3daad9618708c6b3ff96efdb118a",
+    "decomp_before_sha256": "adb228c5cb7fbad77c6dd0f9e22d5cc589d69f4d39d7b929691f6a1042031f87",
+    "native_before_sha256": null
+  },
+  {
+    "provenance_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "provenance_path": "src/Game/Effect/ParticleCalcExecutor.cpp",
+    "decomp_path": "decomp/src/Game/Effect/ParticleCalcExecutor.cpp",
+    "native_path": "src/Game/Effect/ParticleCalcExecutor.cpp",
+    "source_sha256": "4764ec5073a4c401866a237a493d99d68878e2599607c5bfca4cdce9f077a486",
+    "decomp_before_sha256": null,
+    "native_before_sha256": null
+  },
+  {
+    "provenance_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "provenance_path": "include/Game/Effect/ParticleCalcExecutor.hpp",
+    "decomp_path": "decomp/include/Game/Effect/ParticleCalcExecutor.hpp",
+    "native_path": "src/Game/Effect/ParticleCalcExecutor.hpp",
+    "source_sha256": "3c78e9c644b6530e634b912f2629b7978356a465cc347380d536c4511f8a5dcc",
+    "decomp_before_sha256": null,
+    "native_before_sha256": null
+  },
+  {
+    "provenance_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "provenance_path": "src/Game/Effect/SingleEmitter.cpp",
+    "decomp_path": "decomp/src/Game/Effect/SingleEmitter.cpp",
+    "native_path": "src/Game/Effect/SingleEmitter.cpp",
+    "source_sha256": "83f3c10281e6a93b3191854371688c385745fcc050bcbc9bd74391b33d5a9944",
+    "decomp_before_sha256": "83f3c10281e6a93b3191854371688c385745fcc050bcbc9bd74391b33d5a9944",
+    "native_before_sha256": null
+  },
+  {
+    "provenance_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "provenance_path": "include/Game/Effect/SingleEmitter.hpp",
+    "decomp_path": "decomp/include/Game/Effect/SingleEmitter.hpp",
+    "native_path": "src/Game/Effect/SingleEmitter.hpp",
+    "source_sha256": "de92f724c9f5824a534086e17e8311580198764a6472c1069a252d274a4334d1",
+    "decomp_before_sha256": "de92f724c9f5824a534086e17e8311580198764a6472c1069a252d274a4334d1",
+    "native_before_sha256": null
+  },
+  {
+    "provenance_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "provenance_path": "src/Game/Effect/MultiEmitter.cpp",
+    "decomp_path": "decomp/src/Game/Effect/MultiEmitter.cpp",
+    "native_path": "src/Game/Effect/MultiEmitter.cpp",
+    "source_sha256": "86a5226d7cc9cfece58c3678110c0562a124c4d445c689e01746b1e6b789c1e5",
+    "decomp_before_sha256": "bfbccd6fa68cb796c59bfcf6275c1cb55c0301ecdb24f038f516a2435f0e7651",
+    "native_before_sha256": null
+  },
+  {
+    "provenance_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "provenance_path": "include/Game/Effect/MultiEmitter.hpp",
+    "decomp_path": "decomp/include/Game/Effect/MultiEmitter.hpp",
+    "native_path": "src/Game/Effect/MultiEmitter.hpp",
+    "source_sha256": "24298c1f01a0a0f8b066c65f67597a2692f2a3e088112be19f2fc4f4ebcaefd3",
+    "decomp_before_sha256": "5eaaf306f6dc6941c26be2c975aa337b6c36fffe035c767d2b02c8cde69fdee5",
+    "native_before_sha256": "24298c1f01a0a0f8b066c65f67597a2692f2a3e088112be19f2fc4f4ebcaefd3"
+  },
+  {
+    "provenance_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "provenance_path": "src/Game/Effect/MultiEmitterAccess.cpp",
+    "decomp_path": "decomp/src/Game/Effect/MultiEmitterAccess.cpp",
+    "native_path": "src/Game/Effect/MultiEmitterAccess.cpp",
+    "source_sha256": "1f85cfb99f93eba049bcf85d599a2ef837a4a7ac195a97fb2e4d89bf124ba1bf",
+    "decomp_before_sha256": "1f85cfb99f93eba049bcf85d599a2ef837a4a7ac195a97fb2e4d89bf124ba1bf",
+    "native_before_sha256": null
+  },
+  {
+    "provenance_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "provenance_path": "src/Game/Effect/MultiEmitterCallBack.cpp",
+    "decomp_path": "decomp/src/Game/Effect/MultiEmitterCallBack.cpp",
+    "native_path": "src/Game/Effect/MultiEmitterCallBack.cpp",
+    "source_sha256": "23870a6a89871c6577ce505863d63df0a2af6d57a291389364dba0b122848127",
+    "decomp_before_sha256": "b62097571cdddf97788cf0fd4ea9d6d4d4097ca996e56872e0504ab30c4cdd27",
+    "native_before_sha256": null
+  },
+  {
+    "provenance_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "provenance_path": "include/Game/Effect/MultiEmitterCallBack.hpp",
+    "decomp_path": "decomp/include/Game/Effect/MultiEmitterCallBack.hpp",
+    "native_path": "src/Game/Effect/MultiEmitterCallBack.hpp",
+    "source_sha256": "4dfc7b325689b4f70ea288fc8b44b21080e734a70e67b991fdcbfef9acb4efeb",
+    "decomp_before_sha256": "4dfc7b325689b4f70ea288fc8b44b21080e734a70e67b991fdcbfef9acb4efeb",
+    "native_before_sha256": "4dfc7b325689b4f70ea288fc8b44b21080e734a70e67b991fdcbfef9acb4efeb"
+  },
+  {
+    "provenance_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "provenance_path": "src/Game/Effect/MultiEmitterParticleCallBack.cpp",
+    "decomp_path": "decomp/src/Game/Effect/MultiEmitterParticleCallBack.cpp",
+    "native_path": "src/Game/Effect/MultiEmitterParticleCallBack.cpp",
+    "source_sha256": "cbca8fb7eb7456ff1bf744c2ca36367a3b085dcf4c874e9f1d4044ea41b297b0",
+    "decomp_before_sha256": "cbca8fb7eb7456ff1bf744c2ca36367a3b085dcf4c874e9f1d4044ea41b297b0",
+    "native_before_sha256": null
+  },
+  {
+    "provenance_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "provenance_path": "include/Game/Effect/MultiEmitterParticleCallBack.hpp",
+    "decomp_path": "decomp/include/Game/Effect/MultiEmitterParticleCallBack.hpp",
+    "native_path": "src/Game/Effect/MultiEmitterParticleCallBack.hpp",
+    "source_sha256": "3d2cea4e46ff71b00806a04accccbf394f6c5f732abb04830dde9cfac6196246",
+    "decomp_before_sha256": "3d2cea4e46ff71b00806a04accccbf394f6c5f732abb04830dde9cfac6196246",
+    "native_before_sha256": null
+  },
+  {
+    "provenance_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "provenance_path": "src/Game/Effect/SyncBckEffectChecker.cpp",
+    "decomp_path": "decomp/src/Game/Effect/SyncBckEffectChecker.cpp",
+    "native_path": "src/Game/Effect/SyncBckEffectChecker.cpp",
+    "source_sha256": "c550ffd191d991349c94751e21b3c9ff28b134551f8f11d3b8e7b5ba1b6f3563",
+    "decomp_before_sha256": null,
+    "native_before_sha256": null
+  },
+  {
+    "provenance_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "provenance_path": "include/Game/Effect/SyncBckEffectChecker.hpp",
+    "decomp_path": "decomp/include/Game/Effect/SyncBckEffectChecker.hpp",
+    "native_path": "src/Game/Effect/SyncBckEffectChecker.hpp",
+    "source_sha256": "2e9610903767a814b6710a7fb0e4fdd7e6f5457cf7686da12a67be5ced06bc32",
+    "decomp_before_sha256": "2e9610903767a814b6710a7fb0e4fdd7e6f5457cf7686da12a67be5ced06bc32",
+    "native_before_sha256": "2e9610903767a814b6710a7fb0e4fdd7e6f5457cf7686da12a67be5ced06bc32"
+  },
+  {
+    "provenance_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "provenance_path": "src/Game/Effect/SyncBckEffectInfo.cpp",
+    "decomp_path": "decomp/src/Game/Effect/SyncBckEffectInfo.cpp",
+    "native_path": "src/Game/Effect/SyncBckEffectInfo.cpp",
+    "source_sha256": "9a54ee00dce57c6769f67169da425fa75f83f4f4b8c9696afdf25c999814ef01",
+    "decomp_before_sha256": null,
+    "native_before_sha256": null
+  },
+  {
+    "provenance_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "provenance_path": "include/Game/Effect/SyncBckEffectInfo.hpp",
+    "decomp_path": "decomp/include/Game/Effect/SyncBckEffectInfo.hpp",
+    "native_path": "src/Game/Effect/SyncBckEffectInfo.hpp",
+    "source_sha256": "fe3a0f7402a836092d3d1c9cd714174f7e1589e9fe95806469875fda15e1ec88",
+    "decomp_before_sha256": null,
+    "native_before_sha256": null
+  },
+  {
+    "provenance_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "provenance_path": "src/Game/LiveActor/EffectKeeper.cpp",
+    "decomp_path": "decomp/src/Game/LiveActor/EffectKeeper.cpp",
+    "native_path": "src/Game/LiveActor/EffectKeeper.cpp",
+    "source_sha256": "34e00308c47d9ac237535a6fe742fea099a86608f76e9337ad36081cc4b1c2c1",
+    "decomp_before_sha256": "820329100489f4cb5c4608d8629978be8556bb680de56b62c824200d2e080923",
+    "native_before_sha256": null
+  },
+  {
+    "provenance_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "provenance_path": "include/Game/LiveActor/EffectKeeper.hpp",
+    "decomp_path": "decomp/include/Game/LiveActor/EffectKeeper.hpp",
+    "native_path": "src/Game/LiveActor/EffectKeeper.hpp",
+    "source_sha256": "f0f26410e53dd24d4deeb61b99e5e57e0f0def07547352dd03283488a38fb5b2",
+    "decomp_before_sha256": "f0f26410e53dd24d4deeb61b99e5e57e0f0def07547352dd03283488a38fb5b2",
+    "native_before_sha256": "f0f26410e53dd24d4deeb61b99e5e57e0f0def07547352dd03283488a38fb5b2"
+  },
+  {
+    "provenance_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "provenance_path": "src/Game/NameObj/NameObjAdaptor.cpp",
+    "decomp_path": "decomp/src/Game/NameObj/NameObjAdaptor.cpp",
+    "native_path": "src/Game/NameObj/NameObjAdaptor.cpp",
+    "source_sha256": "21780d330c9f77b4c3fcb1a4c837954a2a0db182d3ac4d52515b488f21fc71ef",
+    "decomp_before_sha256": "21780d330c9f77b4c3fcb1a4c837954a2a0db182d3ac4d52515b488f21fc71ef",
+    "native_before_sha256": null
+  },
+  {
+    "provenance_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "provenance_path": "include/Game/NameObj/NameObjAdaptor.hpp",
+    "decomp_path": "decomp/include/Game/NameObj/NameObjAdaptor.hpp",
+    "native_path": "src/Game/NameObj/NameObjAdaptor.hpp",
+    "source_sha256": "870011aad585c4b6a70621396dcd64dab51fa5651e3e6d5c7150f435f0ef0da8",
+    "decomp_before_sha256": "870011aad585c4b6a70621396dcd64dab51fa5651e3e6d5c7150f435f0ef0da8",
+    "native_before_sha256": null
+  },
+  {
+    "provenance_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "provenance_path": "libs/JSystem/include/JSystem/JParticle/JPADrawInfo.hpp",
+    "decomp_path": "decomp/libs/JSystem/include/JSystem/JParticle/JPADrawInfo.hpp",
+    "native_path": "src/JSystem/JParticle/JPADrawInfo.hpp",
+    "source_sha256": "dc95d9eb93f7307856aaf8a05121332e1a21d0045781a67aed25afac6d2065f5",
+    "decomp_before_sha256": "ae2a270fdddf162d44e86abd88f3802292412233349a99295ea2454c808433fc",
+    "native_before_sha256": "ae2a270fdddf162d44e86abd88f3802292412233349a99295ea2454c808433fc"
+  }
+]

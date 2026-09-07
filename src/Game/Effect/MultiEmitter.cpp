@@ -1,11 +1,16 @@
 #include "Game/Effect/MultiEmitter.hpp"
 #include "Game/Effect/EffectSystem.hpp"
+#include "Game/Effect/EffectSystemUtil.hpp"
 #include "Game/Effect/MultiEmitterCallBack.hpp"
 #include "Game/Effect/MultiEmitterParticleCallBack.hpp"
 #include "Game/Effect/SingleEmitter.hpp"
+#include "Game/Effect/SyncBckEffectInfo.hpp"
 #include "Game/Util/HashUtil.hpp"
+#include "Game/Util/MemoryUtil.hpp"
+#include "Game/Util/StringUtil.hpp"
 #include <JSystem/JParticle/JPAEmitter.hpp>
 #include <algorithm>
+#include <cstring>
 
 MultiEmitter::MultiEmitter(const char* pName, const TVec3f* pScale, const TVec3f* pRotation, const TVec3f* pTranslation, const TVec3f& rVec)
     : mEmitters(), mCallBack(), mParticleCallBack(), _24(), _28(), _2C(), _30(), mHash(), mFlags() {
@@ -46,6 +51,8 @@ void MultiEmitter::createEmitterWithCallBack(MultiEmitterCallBackBase* pCallBack
     for (SingleEmitter* pEmitter = mEmitters.begin(); pEmitter != mEmitters.end(); pEmitter++) {
         MR::getEffectSystem()->createSingleEmitter(pEmitter, pCallBackBase, nullptr);
     }
+
+    std::for_each(mChildren.begin(), mChildren.end(), std::bind2nd(std::mem_func(&MultiEmitter::createEmitterWithCallBack), pCallBackBase));
 }
 
 void MultiEmitter::deleteEmitter() {
@@ -65,6 +72,8 @@ void MultiEmitter::forceDelete(EffectSystem* pSystem) {
     for (SingleEmitter* pEmitter = mEmitters.begin(); pEmitter != mEmitters.end(); pEmitter++) {
         pSystem->forceDeleteSingleEmitter(pEmitter);
     }
+
+    std::for_each(mChildren.begin(), mChildren.end(), std::bind2nd(std::mem_func(&MultiEmitter::forceDelete), pSystem));
 }
 
 void MultiEmitter::deleteForeverEmitter() {
@@ -147,8 +156,9 @@ void MultiEmitter::create(EffectSystem* pSystem) {
     }
 }
 
-/* void MultiEmitter::scanParticleEmitter(EffectSystem* pSystem) {
-} */
+void MultiEmitter::scanParticleEmitter(EffectSystem* pSystem) {
+    std::for_each_array(mEmitters.begin(), mEmitters.end(), std::bind2nd(std::mem_func(&SingleEmitter::scanParticleEmitter), pSystem));
+}
 
 void MultiEmitter::forceFollowOn() {
     mCallBack->forceFollowOn();
@@ -162,19 +172,23 @@ void MultiEmitter::forceScaleOn() {
     mCallBack->forceScaleOn();
 }
 
-/*
-void MultiEmitter::initSyncBck(XanimePlayer* pPlayer, const char* pName, s32 i1, f32 f2) {
+void MultiEmitter::initSyncBck(XanimePlayer* pPlayer, const char* pName, s32 count, f32 startFrame) {
+    _24 = new SyncBckEffectInfo(pPlayer, pName, count, 0.0f, -1.0f, false);
+    _24->mStartFrame = startFrame;
 }
 
-void MultiEmitter::onDeleteSyncBck(bool, f32) {
+void MultiEmitter::onDeleteSyncBck(bool, f32 endFrame) {
+    _24->mEndFrame = endFrame;
 }
 
-void MultiEmitter::addSyncBck(const XanimePlayer*, const char*) {
+void MultiEmitter::addSyncBck(const XanimePlayer* pPlayer, const char* pName) {
+    _24->addBck(pPlayer, pName);
 }
 
-void MultiEmitter::setContinueBckEnd(bool) {
+void MultiEmitter::setContinueBckEnd(bool continueBckEnd) {
+    _24->mContinueBckEnd = continueBckEnd;
 }
- */
+
 void MultiEmitter::onCreateSyncClipping() {
     turnFlagOn(JPAEmtrStts_FirstEmit);
 }
@@ -216,10 +230,10 @@ void MultiEmitter::playEmitterOffClipped() {
         }
     }
 }
-/*
 void MultiEmitter::setDrawOrder(s32 idx) {
+    std::for_each_array(mEmitters.begin(), mEmitters.end(), std::bind2nd(std::mem_func(&SingleEmitter::setGroupID), idx));
 }
- */
+
 void MultiEmitter::addChildEmitter(MultiEmitter* pChild) {
     mChildren.push_back(pChild);
 }
@@ -228,8 +242,45 @@ void MultiEmitter::setGlobalRotationDegree(const TVec3f& rRotation, s32 idx) {
     setGlobalRotation(TVec3s(rRotation.x * DEGREE_TO_S16, rRotation.y * DEGREE_TO_S16, rRotation.z * DEGREE_TO_S16), idx);
 }
 
-/* void MultiEmitter::allocateEmitter(const char* pName) {
-} */
+void MultiEmitter::allocateEmitter(const char* pName) {
+    MR::Vector< MR::FixedArray< u16, 32 > > indices;
+    bool isNumbered = !MR::hasStringSpace(pName) && !MR::isDigitStringTail(pName, 2);
+
+    if (isNumbered) {
+        u16 index = 0;
+        while (MR::Effect::isExistInResource(&index, pName, indices.size())) {
+            indices.push_back(index);
+        }
+    } else {
+        u32 length = strlen(pName);
+        s32 nameLength = 0;
+        char name[40];
+        MR::zeroMemory(name, sizeof(name));
+
+        for (u32 i = 0; i <= length; i++) {
+            char c = pName[i];
+            if (c == ' ' || c == '\0') {
+                name[nameLength] = '\0';
+                u16 index;
+                MR::Effect::isExistInResource(&index, name);
+                indices.push_back(index);
+                nameLength = 0;
+                MR::zeroMemory(name, sizeof(name));
+            } else {
+                name[nameLength++] = c;
+            }
+        }
+    }
+
+    mEmitters.init(indices.size());
+    for (s32 i = 0; i < indices.size(); i++) {
+        mEmitters[i].init(indices[i]);
+    }
+
+    if (isNumbered) {
+        mHash = MR::getHashCode(pName);
+    }
+}
 
 SingleEmitter* MultiEmitter::getValidEmitter(s32 idx, bool) {
     SingleEmitter* pEmitter = &mEmitters[idx];

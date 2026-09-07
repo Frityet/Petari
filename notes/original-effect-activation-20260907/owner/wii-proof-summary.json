@@ -1,0 +1,120 @@
+{
+  "compiler": "Metrowerks GC3.0a3 via wibo/sjiswrap",
+  "sources": [
+    {
+      "source": "src/Game/Effect/EffectSystem.cpp",
+      "retail_function_symbols": 9,
+      "supplied_symbols": 9,
+      "objdiff_100_count": 9,
+      "at_least90_count": 9,
+      "minimum": 100.0
+    },
+    {
+      "source": "src/Game/Effect/ParticleEmitter.cpp",
+      "retail_function_symbols": 5,
+      "supplied_symbols": 5,
+      "objdiff_100_count": 5,
+      "at_least90_count": 5,
+      "minimum": 100.0
+    },
+    {
+      "source": "src/Game/Effect/ParticleEmitterHolder.cpp",
+      "retail_function_symbols": 9,
+      "supplied_symbols": 9,
+      "objdiff_100_count": 9,
+      "at_least90_count": 9,
+      "minimum": 100.0
+    },
+    {
+      "source": "src/Game/Effect/ParticleDrawExecutor.cpp",
+      "retail_function_symbols": 20,
+      "supplied_symbols": 20,
+      "objdiff_100_count": 17,
+      "at_least90_count": 20,
+      "minimum": 99.82143
+    },
+    {
+      "source": "src/Game/Effect/ParticleCalcExecutor.cpp",
+      "retail_function_symbols": 10,
+      "supplied_symbols": 10,
+      "objdiff_100_count": 9,
+      "at_least90_count": 10,
+      "minimum": 99.88095
+    },
+    {
+      "source": "src/Game/Effect/SingleEmitter.cpp",
+      "retail_function_symbols": 8,
+      "supplied_symbols": 8,
+      "objdiff_100_count": 8,
+      "at_least90_count": 8,
+      "minimum": 100.0
+    },
+    {
+      "source": "src/Game/Effect/MultiEmitter.cpp",
+      "retail_function_symbols": 44,
+      "supplied_symbols": 43,
+      "objdiff_100_count": 41,
+      "at_least90_count": 42,
+      "minimum": 52.68421
+    },
+    {
+      "source": "src/Game/Effect/MultiEmitterAccess.cpp",
+      "retail_function_symbols": 22,
+      "supplied_symbols": 22,
+      "objdiff_100_count": 20,
+      "at_least90_count": 22,
+      "minimum": 97.37705
+    },
+    {
+      "source": "src/Game/Effect/MultiEmitterCallBack.cpp",
+      "retail_function_symbols": 34,
+      "supplied_symbols": 34,
+      "objdiff_100_count": 31,
+      "at_least90_count": 33,
+      "minimum": 12.272727
+    },
+    {
+      "source": "src/Game/Effect/MultiEmitterParticleCallBack.cpp",
+      "retail_function_symbols": 4,
+      "supplied_symbols": 4,
+      "objdiff_100_count": 4,
+      "at_least90_count": 4,
+      "minimum": 100.0
+    },
+    {
+      "source": "src/Game/Effect/SyncBckEffectChecker.cpp",
+      "retail_function_symbols": 8,
+      "supplied_symbols": 8,
+      "objdiff_100_count": 6,
+      "at_least90_count": 8,
+      "minimum": 97.77778
+    },
+    {
+      "source": "src/Game/Effect/SyncBckEffectInfo.cpp",
+      "retail_function_symbols": 7,
+      "supplied_symbols": 7,
+      "objdiff_100_count": 7,
+      "at_least90_count": 7,
+      "minimum": 100.0
+    },
+    {
+      "source": "src/Game/LiveActor/EffectKeeper.cpp",
+      "retail_function_symbols": 38,
+      "supplied_symbols": 38,
+      "objdiff_100_count": 31,
+      "at_least90_count": 38,
+      "minimum": 97.60204
+    },
+    {
+      "source": "src/Game/NameObj/NameObjAdaptor.cpp",
+      "retail_function_symbols": 9,
+      "supplied_symbols": 9,
+      "objdiff_100_count": 9,
+      "at_least90_count": 9,
+      "minimum": 100.0
+    }
+  ],
+  "supplied_symbols": 226,
+  "objdiff_100_count": 206,
+  "at_least90_count": 224
+}
