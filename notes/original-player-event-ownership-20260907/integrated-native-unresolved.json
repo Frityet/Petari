@@ -1,0 +1,30 @@
+[
+  [
+    "__ZN2MR13decPlayerLeftEv",
+    "MR::decPlayerLeft()"
+  ],
+  [
+    "__ZN2MR13startDownWipeEv",
+    "MR::startDownWipe()"
+  ],
+  [
+    "__ZN2MR17startGameOverWipeEv",
+    "MR::startGameOverWipe()"
+  ],
+  [
+    "__ZN2MR18requestEndMissDemoEv",
+    "MR::requestEndMissDemo()"
+  ],
+  [
+    "__ZN2MR21setSoundVolumeSettingEij",
+    "MR::setSoundVolumeSetting(int, unsigned int)"
+  ],
+  [
+    "__ZN2MR22requestEndGameOverDemoEv",
+    "MR::requestEndGameOverDemo()"
+  ],
+  [
+    "__ZN2MR24requestStartGameOverDemoEv",
+    "MR::requestStartGameOverDemo()"
+  ]
+]

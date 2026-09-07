@@ -261,6 +261,8 @@ namespace smgpc::scene {
             SceneObj_FurDrawManager,
             SceneObj_PlanetGravityManager,
             SceneObj_MarioHolder,
+            SceneObj_AudBgmConductor,
+            SceneObj_EventSequencer,
             SceneObj_StageSwitchContainer,
             SceneObj_SwitchWatcherHolder,
             SceneObj_SleepControllerHolder,

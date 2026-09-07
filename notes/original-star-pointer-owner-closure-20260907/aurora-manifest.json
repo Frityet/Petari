@@ -1,0 +1,14 @@
+[
+  {
+    "path": "include/aurora/wpad.hpp",
+    "sha256": "c57784ca590342caf91b96d333b46611e823c195fdea990640ca03fb771d86fe"
+  },
+  {
+    "path": "include/revolution.h",
+    "sha256": "1ab615cba192bc171c6d3e0ba506f9f42572af4ea571d32894c6c89ca37974ff"
+  },
+  {
+    "path": "lib/wpad.cpp",
+    "sha256": "92fa418bfb2259b067d42639ee804964deb7c3298b6c4fae7d81ca1a84d44d25"
+  }
+]

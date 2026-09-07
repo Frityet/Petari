@@ -1,0 +1,27 @@
+{
+  "StarPointerBlur": [
+    "StarPointerFunction::getPastPointNum(int)",
+    "StarPointerFunction::getPastPosition(int, int)",
+    "StarPointerFunction::getNextPastPointNum(int)",
+    "MR::normalizeOrZero(JGeometry::TVec2<float>*)",
+    "vtable for __cxxabiv1::__si_class_type_info"
+  ],
+  "StarPointerCommandStream": [
+    "MR::setPaneScale(LayoutActor const*, float, float, char const*)",
+    "MR::setPaneRotate(LayoutActor const*, float, float, float, char const*)",
+    "MR::separateScalarAndDirection(float*, JGeometry::TVec2<float>*, JGeometry::TVec2<float> const&)",
+    "vtable for __cxxabiv1::__si_class_type_info"
+  ],
+  "StarPointerOnOffController": [
+    "StarPointerDirector::startHandPointer()",
+    "StarPointerDirector::startStarPointer()",
+    "StarPointerDirector::startFingerPointer()",
+    "StarPointerDirector::startStarPointerNozzle()",
+    "StarPointerDirector::startHandPointerReactionWithCrossCursor()",
+    "StarPointerFunction::getStarPointerDirector()",
+    "MR::enableStarPointerShootStarPiece()",
+    "MR::disableStarPointerShootStarPiece()",
+    "StarPointerDirector::getStarPointerLayout(int) const",
+    "vtable for __cxxabiv1::__si_class_type_info"
+  ]
+}

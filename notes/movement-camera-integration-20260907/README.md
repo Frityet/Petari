@@ -1,0 +1,7 @@
+# Movement and original camera integration checkpoint
+
+Replaces more host-only state with original collision, pointer/input, and player event owners. CollisionParts now owns actual native-decoded KCL/PA data and a retained archive lease; original registration, matrix commit, independent collision categories, triangle identity, scene retirement and failed-factory rollback are wired. Original cursor/mode classes and WPad typed child records retain resource and message lifetimes and original update order. Original warp/fan and BGM conductor classes are restored.
+
+Focused native input history, sound permission and EventSequence engine tests build/link/run successfully. The explicit J2D CPU projection check also passes after correcting the test's depth sign. The combined source build compiles, but the full collision/camera owner fixture remains blocked at linking on pending layout, scene-event/wipe, audio and geometry providers. The exact inventory from that build is validation.json; subsequent independent geometry/pointer leaves are source-complete but not a claim that this inventory is unchanged.
+
+The full CameraDirector and original Mario movement/jump paths are still being integrated. This checkpoint is not a playable jumping demo and does not validate the bunny chase. ShadowController recovery is published in decomp with native activation pending. Source manifests and per-cohort notes give narrower proof boundaries.

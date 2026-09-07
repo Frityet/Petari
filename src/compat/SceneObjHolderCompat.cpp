@@ -2,6 +2,10 @@
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Effect/EffectSystem.hpp"
 #include "compat/EffectSystemOwnership.hpp"
+#include "compat/CollisionDirectorOwnership.hpp"
+#include "compat/CollisionPartsCompat.hpp"
+#include "Game/Map/CollisionDirector.hpp"
+#include "Game/Map/SunshadeMapHolder.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "Game/Scene/PlacementStateChecker.hpp"
@@ -28,6 +32,10 @@
 #include "Game/NameObj/NameObjGroup.hpp"
 #include "Game/Player/GroupChecker.hpp"
 #include "Game/Player/MarioHolder.hpp"
+#include "Game/Player/PlayerEvent.hpp"
+#include "Game/GameAudio/AudBgmConductor.hpp"
+#include "Game/MapObj/BigFanHolder.hpp"
+#include "Game/MapObj/WarpPod.hpp"
 #include "Game/Screen/CenterScreenBlur.hpp"
 #include "Game/Screen/InformationObserver.hpp"
 #include "Game/Screen/GameSceneLayoutHolder.hpp"
@@ -75,6 +83,10 @@ namespace {
 
 namespace smgpc::scene {
 
+    smgpc::compat::CollisionDirectorOwnership* current_collision_director_ownership() noexcept {
+        return sCurrentSceneObjHolderBinding ? sCurrentSceneObjHolderBinding->_collision_director_ownership.get() : nullptr;
+    }
+
     SceneObjHolderBinding::SceneObjHolderBinding(
         SceneObjHolder &holder,
         SceneObjFactoryOverride factory_override,
@@ -85,6 +97,7 @@ namespace smgpc::scene {
           _factory_context(factory_context) {
         smgpc::compat::JkrHostAllocationScope host;
         _global_gravity_ownership = std::make_unique<smgpc::compat::GlobalGravityOwnership>(holder);
+        _collision_director_ownership = std::make_unique<smgpc::compat::CollisionDirectorOwnership>();
         _area_obj_runtime = std::make_unique<AreaObjRuntime>();
         _captured_frame_blur_service = std::make_unique<smgpc::compat::CapturedFrameBlurService>();
         if (sCurrentSceneObjHolder != nullptr) {
@@ -103,6 +116,7 @@ namespace smgpc::scene {
     }
 
     SceneObjHolderBinding::~SceneObjHolderBinding() {
+        _collision_director_ownership->prepare_retirement();
         if (_camera_runtime) _camera_runtime->unpublish();
         if (_effect_scheduler) {
             (void)_effect_scheduler->remove_registrations_since(_effect_registration_marker);
@@ -118,6 +132,9 @@ namespace smgpc::scene {
         while (!_owned_objects.empty()) {
             _owned_objects.pop_back();
         }
+        smgpc::compat::release_scene_collision_parts(_holder);
+        _collision_director_ownership->reclaim();
+        _collision_director_ownership.reset();
         _owned_registration_objects.clear();
         _camera_runtime.reset();
         // The external holder storage outlives this binding in test and scene
@@ -353,6 +370,7 @@ NameObj *SceneObjHolder::create(int id) {
         --binding->_construction_depth;
         return result;
     } catch (...) {
+        const bool collision_rollback = binding->_collision_director_ownership->prepare_rollback(marker);
         if (object != nullptr &&
             smgpc::compat::name_obj_runtime_object_was_registered_since(
                 object.get(), marker)) {
@@ -366,6 +384,7 @@ NameObj *SceneObjHolder::create(int id) {
             }
         }
         rollback_scene_obj_registrations(marker);
+        if (collision_rollback) binding->_collision_director_ownership->reclaim();
         --binding->_construction_depth;
         if (outermost) {
             binding->_provisional_slots.clear();
@@ -397,6 +416,10 @@ NameObj *SceneObjHolder::newEachObj(int id) {
     }
 
     switch (id) {
+    case SceneObj_SunshadeMapHolder:
+        return new SunshadeMapHolder();
+    case SceneObj_CollisionDirector:
+        return sCurrentSceneObjHolderBinding->_collision_director_ownership->construct();
     case SceneObj_CameraContext:
         return new CameraContext();
     case SceneObj_CameraDirector:
@@ -429,6 +452,10 @@ NameObj *SceneObjHolder::newEachObj(int id) {
         return new PlacementStateChecker("オブジェクト配置状態の監視");
     case SceneObj_MarioHolder:
         return new MarioHolder();
+    case SceneObj_BigFanHolder:
+        return new BigFanHolder();
+    case SceneObj_WarpPodMgr:
+        return new WarpPodMgr("ワープポッド管理局");
     case SceneObj_CoinHolder:
         return new CoinHolder("コイン管理");
     case SceneObj_PurpleCoinHolder:
@@ -445,6 +472,10 @@ NameObj *SceneObjHolder::newEachObj(int id) {
         return new NameObjGroup("IgnorePauseNameObj", 16);
     case SceneObj_GameSceneLayoutHolder:
         return new GameSceneLayoutHolder();
+    case SceneObj_AudBgmConductor:
+        return new AudBgmConductor();
+    case SceneObj_EventSequencer:
+        return new EventSequencer();
     case SceneObj_ScenePlayingResult:
         return new ScenePlayingResult();
     case SceneObj_TalkDirector:

@@ -1,3 +1,5 @@
+#include "JSystem/JUtility/JUTVideo.hpp"
+#include "Game/Util/CameraUtil.hpp"
 #include "Game/Screen/StarPointerController.hpp"
 
 #include "Game/Screen/StarPointerDirector.hpp"
@@ -100,3 +102,16 @@ TVec3f* getStarPointerWorldPosUsingDepth(s32 channel) {
     return &smgpc::compat::require_star_pointer_depth().world_position(channel);
 }
 } // namespace MR
+
+namespace MR {
+    f32 calcPointRadius2D(const TVec3f& rPosition, f32 radius) {
+        f32 fovyRad = MR::getFovy() * PI_180;
+        f32 tan = MR::tan(fovyRad * 0.5f);
+        f32 focalDist = (static_cast< s32 >(JUTVideo::getManager()->getEfbHeight()) * 0.5f) / tan;
+
+        TVec3f viewPos;
+        MR::getCameraViewMtx().mult(rPosition, viewPos);
+
+        return radius * focalDist / -viewPos.z;
+    }
+}

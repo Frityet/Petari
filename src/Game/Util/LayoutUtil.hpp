@@ -1,5 +1,10 @@
 #pragma once
 
+#include <JSystem/JGeometry/TBox.hpp>
+class LayoutHolder;
+class TextBoxRecursiveOperation;
+namespace nw4r::lyt { class DrawInfo; }
+
 #include <JSystem/JGeometry/TVec.hpp>
 #include <revolution/types.h>
 
@@ -120,4 +125,55 @@ namespace MR {
 namespace MR {
     u32 getTextLineNumMaxRecursive(const LayoutActor*, const char*);
     void clearTextBoxMessageRecursive(LayoutActor*, const char*);
+}
+
+namespace MR {
+    LayoutHolder* createAndAddLayoutHolder(const char*);
+    LayoutHolder* createAndAddLayoutHolderRawData(const char*);
+    void createAndAddGroupCtrl(LayoutActor*, const char*, u32);
+    u8 getPaneAlpha(const LayoutActor*, const char*);
+    void setInfluencedAlphaToChild(const LayoutActor*);
+    void setLayoutAlpha(const LayoutActor*, u8);
+    void setLayoutAlphaFloat(const LayoutActor*, f32);
+    void setPaneAlpha(const LayoutActor*, const char*, u8);
+    void executeTextBoxRecursive(LayoutActor*, const char*, const TextBoxRecursiveOperation&);
+    void setTextBoxArgGameMessageRecursive(LayoutActor*, const char*, const char*, s32);
+    void updateClearTimeTextBox(LayoutActor*, const char*, u32);
+    void updateMinuteAndSecondTextBox(LayoutActor*, const char*, u32);
+    void showScreen(LayoutActor*);
+    void hideScreen(LayoutActor*);
+    void setPaneScale(const LayoutActor*, f32, f32, const char*);
+    void copyPaneRotate(TVec3f*, const LayoutActor*, const char*);
+    void setPaneRotate(const LayoutActor*, f32, f32, f32, const char*);
+    nw4r::lyt::TexMap* getLytTexMap(LayoutActor*, const char*, u8);
+    void startPaneAnimAtStep(LayoutActor*, const char*, const char*, s32, u32);
+    void startPaneAnimAtFirstStep(LayoutActor*, const char*, const char*, u32);
+    void startPaneAnimReverseOneTime(LayoutActor*, const char*, const char*, u32);
+    void setAnimFrameAndStopAtEnd(LayoutActor*, u32);
+    void setAnimFrameAndStopAdjustTextWidth(LayoutActor*, const char*, u32);
+    void setPaneAnimFrameAndStopAtEnd(LayoutActor*, const char*, u32);
+    J3DFrameCtrl* getPaneAnimCtrl(const LayoutActor*, const char*, u32);
+    void deleteEffect(LayoutActor*, const char*);
+    void forceDeleteEffect(LayoutActor*, const char*);
+    void forceDeleteEffectAll(LayoutActor*);
+    void setEffectHostMtx(LayoutActor*, const char*, MtxPtr);
+    void setEffectRate(LayoutActor*, const char*, f32);
+    void setEffectDirectionalSpeed(LayoutActor*, const char*, f32);
+    void pauseOffEffectAll(LayoutActor*);
+    bool isRegisteredEffect(const LayoutActor*, const char*);
+    void copyLayoutDrawInfoWithAspect(nw4r::lyt::DrawInfo*, const LayoutActor*, bool);
+    void calcAnimLayoutWithDrawInfo(const LayoutActor*, const nw4r::lyt::DrawInfo&);
+    void drawLayoutWithDrawInfoWithoutProjectionSetup(const LayoutActor*, const nw4r::lyt::DrawInfo&);
+    f32 calcNerveEaseInValue(const LayoutActor*, s32, s32, f32, f32);
+    bool isStopAnimFrame(const LayoutActor*);
+    void stopAnimFrame(LayoutActor*);
+    void releaseAnimFrame(LayoutActor*);
+    void onCalcAnim(LayoutActor*);
+    void offCalcAnim(LayoutActor*);
+    SimpleLayout* createSimpleLayout(const char*, const char*, u32);
+    SimpleLayout* createSimpleLayoutTalkParts(const char*, const char*, u32);
+    nw4r::lyt::Pane* getRootPane(const LayoutActor*);
+    void calcTextBoxRectRecursive(TBox2f*, const LayoutActor*, const char*);
+    void setCometPaneAnimFromId(LayoutActor*, const char*, int, u32);
+    void setCometAnimFromId(LayoutActor*, int, u32);
 }

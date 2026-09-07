@@ -13,6 +13,7 @@ namespace smgpc::runtime { class SceneScheduler; class SceneSchedulerAllocationB
 namespace smgpc::camera { class CameraDirectorRuntime; }
 
 namespace smgpc::compat {
+    class CollisionDirectorOwnership;
     class EffectSystemOwnership;
     class JkrAllocationDomain;
     class CapturedFrameBlurService;
@@ -46,6 +47,7 @@ namespace smgpc::scene {
 
     private:
         friend class ::SceneObjHolder;
+        friend smgpc::compat::CollisionDirectorOwnership* current_collision_director_ownership() noexcept;
         friend smgpc::compat::EffectSystemOwnership* current_effect_system_ownership() noexcept;
         friend AreaObjRuntime *current_area_obj_runtime() noexcept;
         friend smgpc::compat::CapturedFrameBlurService *
@@ -62,6 +64,7 @@ namespace smgpc::scene {
         std::unique_ptr<smgpc::runtime::SceneSchedulerAllocationBinding> _game_allocation_binding;
         std::unique_ptr<smgpc::camera::CameraDirectorRuntime> _camera_runtime;
         std::unique_ptr<smgpc::compat::EffectSystemOwnership> _effect_system_ownership;
+        std::unique_ptr<smgpc::compat::CollisionDirectorOwnership> _collision_director_ownership;
         smgpc::runtime::SceneScheduler* _effect_scheduler = nullptr;
         std::size_t _effect_registration_marker = 0U;
         SceneObjHolder *_holder;
@@ -83,6 +86,7 @@ namespace smgpc::scene {
             _captured_frame_blur_service;
     };
 
+    [[nodiscard]] smgpc::compat::CollisionDirectorOwnership* current_collision_director_ownership() noexcept;
     [[nodiscard]] smgpc::compat::EffectSystemOwnership* current_effect_system_ownership() noexcept;
     [[nodiscard]] SceneObjHolder *current_scene_obj_holder() noexcept;
     [[nodiscard]] bool current_scene_obj_holder_binding_owns(

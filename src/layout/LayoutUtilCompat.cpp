@@ -620,3 +620,33 @@ namespace MR {
     }
 
 }  // namespace MR
+
+namespace MR {
+    void setPaneScale(const LayoutActor* layout, f32 x, f32 y, const char* pane) {
+        smgpc::layout::require_layout_runtime(const_cast<LayoutActor*>(layout), "Setting pane scale")
+            .setPaneScale(pane ? pane : "", x, y);
+    }
+
+    void setPaneRotate(const LayoutActor* layout, f32 x, f32 y, f32 z, const char* pane) {
+        smgpc::layout::require_layout_runtime(const_cast<LayoutActor*>(layout), "Setting pane rotation")
+            .setPaneRotation(pane ? pane : "", x, y, z);
+    }
+}
+
+namespace MR {
+    void stopAnimFrame(LayoutActor* pActor) {
+        pActor->mFlag.mIsStopAnimFrame = true;
+    }
+
+    void releaseAnimFrame(LayoutActor* pActor) {
+        pActor->mFlag.mIsStopAnimFrame = false;
+    }
+
+    void onCalcAnim(LayoutActor* pActor) {
+        pActor->mFlag.mIsOffCalcAnim = false;
+    }
+
+    void offCalcAnim(LayoutActor* pActor) {
+        pActor->mFlag.mIsOffCalcAnim = true;
+    }
+}

@@ -1,0 +1,12 @@
+[
+  "Game/Screen/StarPointerBlur.hpp",
+  "Game/Screen/StarPointerCommandStream.hpp",
+  "Game/System/GameSystem.hpp",
+  "Game/System/GameSystemObjHolder.hpp",
+  "Game/System/StarPointerOnOffController.hpp",
+  "Game/System/WPad.hpp",
+  "Game/System/WPadHolder.hpp",
+  "Game/System/WPadPointer.hpp",
+  "Game/Util/LayoutUtil.hpp",
+  "Game/Util/StarPointerUtil.hpp"
+]

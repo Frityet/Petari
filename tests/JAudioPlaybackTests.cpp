@@ -1202,9 +1202,21 @@ namespace {
                         "SE_AT_LV_ASTRO_DOME_WIND_1", 0, -1) == nullptr &&
                     service.active_voice_count() == 0U,
                 "submitted level sounds must suppress allocation without a logical-only event");
+        service.set_trigger_sound_permitted(false);
+        require(!service.is_sound_permitted() &&
+                    service.start_sound_effect("SE_DM_ARRIVE_CASTLE_STAR", 10, -1) == nullptr &&
+                    service.active_voice_count() == 0U,
+                "trigger submission must reject ordinary allocation before voice-parameter processing");
+        auto *exempt_system = service.start_sound_effect("SE_SY_GAME_START", -1, -1);
+        require(exempt_system != nullptr && exempt_system->isSoundAttached(),
+                "the original system sound group must remain playable while both permissions are submitted");
+        service.stop_sound_effect("SE_SY_GAME_START", 0U);
         service.set_level_sound_permitted(true);
-        require(service.is_level_sound_permitted(),
-                "permitting level sounds must restore concrete allocation eligibility");
+        require(service.is_level_sound_permitted() && !service.is_sound_permitted(),
+                "permitting levels must not also permit submitted trigger sounds");
+        service.set_trigger_sound_permitted(true);
+        require(service.is_sound_permitted(),
+                "both independent permissions must agree with the combined query");
 
         require_throws<std::invalid_argument>(
             [&] {
@@ -1419,7 +1431,27 @@ namespace {
         require(!game_start->isSoundAttached(),
                 "SoundUtil stop-by-name must detach its concrete system-SE handle");
 
+        require(MR::isPermitSE(), "a live audio owner must initially permit both sound classes");
+        MR::submitTrigSE();
+        require(!MR::isPermitSE() && !playback_observer->is_trigger_sound_permitted() &&
+                    playback_observer->is_level_sound_permitted(),
+                "trigger submission must update the real playback owner only for triggers");
+        MR::permitTrigSE();
+        require(MR::isPermitSE(), "trigger permission must restore the combined query");
+        MR::submitSE();
+        require(!MR::isPermitSE() && !playback_observer->is_trigger_sound_permitted() &&
+                    !playback_observer->is_level_sound_permitted(),
+                "submitSE must submit both independent real permissions");
+        const auto blocked_event_count = runtime.audio().events().size();
+        require(MR::startSystemSE("SE_DM_ARRIVE_CASTLE_STAR", 10, -1) == nullptr &&
+                    MR::startAtmosphereSE("SE_DM_ARRIVE_CASTLE_STAR", 10, -1) == nullptr &&
+                    runtime.audio().events().size() == blocked_event_count,
+                "a denied allocation must not record a system or atmosphere playback event");
+        MR::permitSE();
+        require(MR::isPermitSE(), "permitSE must restore both real permissions");
         MR::submitLevelSE();
+        require(!MR::isPermitSE() && playback_observer->is_trigger_sound_permitted(),
+                "level submission must leave trigger permission intact");
         const auto submitted_event_count = runtime.audio().events().size();
         require(MR::startSystemLevelSE(
                     "SE_AT_LV_ASTRO_DOME_WIND_1", 0, -1) == nullptr &&

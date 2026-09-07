@@ -1,4 +1,7 @@
 #include "Game/Util/GamePadUtil.hpp"
+#include "Game/System/WPadHolder.hpp"
+#include "Game/System/WPad.hpp"
+#include "Game/System/WPadPointer.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
@@ -33,40 +36,27 @@ namespace {
 
 namespace MR {
     void getCorePadPointingPos(TVec2f* pPos, s32 channel) {
-        const auto pointer = wpad_service().pointer(channel);
-        if (pointer.valid) {
-            // Host input stores framebuffer pixels. WPadPointer::getPointingPos
-            // exposes the original normalized coordinates before screen mapping.
-            pPos->x = (pointer.x / static_cast<f32>(getFrameBufferWidth())) * 2.0F - 1.0F;
-            pPos->y = (pointer.y / static_cast<f32>(getFrameBufferHeight())) * 2.0F - 1.0F;
-        } else {
-            pPos->x = 0.0F;
-            pPos->y = 0.0F;
-        }
+        MR::getWPad(channel)->mPointer->getPointingPos(pPos);
     }
 
     f32 getCorePadDistanceToDisplay(s32 channel) {
-        return wpad_service().distance_to_display(channel);
+        return MR::getWPad(channel)->mPointer->mDistDisplay;
     }
 
-    void getCorePadPastPointingPos(TVec2f* pPos, s32 index, s32 channel) {
-        const auto pointer = wpad_service().past_pointer(channel, static_cast<u32>(index));
-        pPos->x = (pointer.x / static_cast<f32>(getFrameBufferWidth())) * 2.0F - 1.0F;
-        pPos->y = (pointer.y / static_cast<f32>(getFrameBufferHeight())) * 2.0F - 1.0F;
+    void getCorePadPastPointingPos(TVec2f* pPos, s32 idx, s32 channel) {
+        MR::getWPad(channel)->mPointer->getPastPointingPos(pPos, idx);
     }
 
     void getCorePadPointingPosBasedOnScreen(TVec2f* pPos, s32 channel) {
-        const auto pointer = wpad_service().pointer(channel);
-        pPos->x = pointer.x;
-        pPos->y = pointer.y;
+        MR::getWPad(channel)->mPointer->getPointingPosBasedOnScreen(pPos);
     }
 
     s32 getCorePadEnablePastCount(s32 channel) {
-        return static_cast<s32>(wpad_service().pointer_history_count(channel));
+        return MR::getWPad(channel)->mPointer->getEnablePastCount();
     }
 
     bool isCorePadPointInScreen(s32 channel) {
-        return wpad_service().pointer(channel).valid;
+        return MR::getWPad(channel)->mPointer->mIsPointInScreen;
     }
 
     bool testCorePadButtonUp(s32 channel) {

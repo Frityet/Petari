@@ -1,0 +1,798 @@
+[
+  {
+    "source": "decomp/src/Game/Player/PlayerEvent.cpp",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Player/PlayerEvent.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-player-event-ownership-20260907/PlayerEvent.wii.o"
+    ],
+    "exit": 0,
+    "log": "",
+    "diff_exit": 0,
+    "scores": [
+      {
+        "name": "__ct__14EventSequencerFv",
+        "size": "112",
+        "match_percent": 100.0
+      },
+      {
+        "name": "init__14EventSequencerFRC12JMapInfoIter",
+        "size": "352",
+        "match_percent": 99.318184
+      },
+      {
+        "name": "movement__14EventSequencerFv",
+        "size": "92",
+        "match_percent": 100.0
+      },
+      {
+        "name": "startEvent__14EventSequencerFPCc",
+        "size": "84",
+        "match_percent": 95.2381
+      },
+      {
+        "name": "__ct__13EventSequenceFUl",
+        "size": "156",
+        "match_percent": 100.0
+      },
+      {
+        "name": "clearFlag__13EventSequenceFv",
+        "size": "64",
+        "match_percent": 100.0
+      },
+      {
+        "name": "addEventOnTime__13EventSequenceFPCcM13EventSequenceFPCvPvUsUs_vUs",
+        "size": "88",
+        "match_percent": 100.0
+      },
+      {
+        "name": "addEventInTime__13EventSequenceFPCcM13EventSequenceFPCvPvUsUs_vUsUs",
+        "size": "88",
+        "match_percent": 100.0
+      },
+      {
+        "name": "addEventInStatus__13EventSequenceFPCcM13EventSequenceFPCvPvUsUs_vM13EventSequenceFPCvPvUs_b",
+        "size": "128",
+        "match_percent": 100.0
+      },
+      {
+        "name": "addEventInPhase__13EventSequenceFPCcM13EventSequenceFPCvPvUsUs_vUs",
+        "size": "136",
+        "match_percent": 100.0
+      },
+      {
+        "name": "checkAndRun__13EventSequenceFUl",
+        "size": "408",
+        "match_percent": 100.0
+      },
+      {
+        "name": "playSound__13EventSequenceFPCc",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "playAnimation__13EventSequenceFPCc",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isMissLayoutClosed__13EventSequenceFUs",
+        "size": "80",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setSpot__13EventSequenceFfUl",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "decLeft__13EventSequenceFUsUs",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "closeDefaultLayout__13EventSequenceFUsUs",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "doCloseWipe__13EventSequenceFUsUs",
+        "size": "76",
+        "match_percent": 100.0
+      },
+      {
+        "name": "doWaitAfterWipe__13EventSequenceFUsUs",
+        "size": "60",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__dt__14EventSequencerFv",
+        "size": "88",
+        "match_percent": 100.0
+      },
+      {
+        "name": "updateBefore__13EventSequenceFv",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "updateAfter__13EventSequenceFv",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__14EventSequencer",
+        "size": "36",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__13EventSequence",
+        "size": "16",
+        "match_percent": 100.0
+      }
+    ]
+  },
+  {
+    "source": "decomp/src/Game/Player/PlayerEventAbyss.cpp",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Player/PlayerEventAbyss.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-player-event-ownership-20260907/PlayerEventAbyss.wii.o"
+    ],
+    "exit": 0,
+    "log": "",
+    "diff_exit": 0,
+    "scores": [
+      {
+        "name": "__ct__10EventAbyssFv",
+        "size": "396",
+        "match_percent": 99.747475
+      },
+      {
+        "name": "init__10EventAbyssFUsUs",
+        "size": "88",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sound__10EventAbyssFUsUs",
+        "size": "56",
+        "match_percent": 100.0
+      },
+      {
+        "name": "updateAfter__10EventAbyssFv",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__10EventAbyss",
+        "size": "16",
+        "match_percent": 100.0
+      }
+    ]
+  },
+  {
+    "source": "decomp/src/Game/Player/PlayerEventDown.cpp",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Player/PlayerEventDown.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-player-event-ownership-20260907/PlayerEventDown.wii.o"
+    ],
+    "exit": 0,
+    "log": "### mwcceppc.exe Compiler:\n#      In: include\\Game\\Player\\MarioActor.hpp\n#    From: src\\Game\\Player\\PlayerEventDown.cpp\n# --------------------------------------------\n#     707:         /* 0x468 */ TVec3f _468Vec; \n# Warning:                                   ^\n#   unions cannot have nontrivial class members\n### mwcceppc.exe Compiler:\n#     928:         /* 0xF2C */ TVec3f _F2CVec; \n# Warning:                                   ^\n#   unions cannot have nontrivial class members\n",
+    "diff_exit": 0,
+    "scores": [
+      {
+        "name": "__ct__9EventDownFv",
+        "size": "420",
+        "match_percent": 99.71429
+      },
+      {
+        "name": "init__9EventDownFUsUs",
+        "size": "108",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sound__9EventDownFUsUs",
+        "size": "68",
+        "match_percent": 100.0
+      },
+      {
+        "name": "missLayoutOpen__9EventDownFUsUs",
+        "size": "52",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__9EventDown",
+        "size": "16",
+        "match_percent": 100.0
+      }
+    ]
+  },
+  {
+    "source": "decomp/src/Game/Player/PlayerEventFireDown.cpp",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Player/PlayerEventFireDown.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-player-event-ownership-20260907/PlayerEventFireDown.wii.o"
+    ],
+    "exit": 0,
+    "log": "### mwcceppc.exe Compiler:\n#      In: include\\Game\\Player\\MarioActor.hpp\n#    From: src\\Game\\Player\\PlayerEventFireDown.cpp\n# ------------------------------------------------\n#     707:         /* 0x468 */ TVec3f _468Vec; \n# Warning:                                   ^\n#   unions cannot have nontrivial class members\n### mwcceppc.exe Compiler:\n#     928:         /* 0xF2C */ TVec3f _F2CVec; \n# Warning:                                   ^\n#   unions cannot have nontrivial class members\n",
+    "diff_exit": 0,
+    "scores": [
+      {
+        "name": "__ct__13EventFireDownFv",
+        "size": "444",
+        "match_percent": 99.675674
+      },
+      {
+        "name": "init__13EventFireDownFUsUs",
+        "size": "120",
+        "match_percent": 99.333336
+      },
+      {
+        "name": "sound__13EventFireDownFUsUs",
+        "size": "56",
+        "match_percent": 99.28571
+      },
+      {
+        "name": "updateAfter__13EventFireDownFv",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sound2__13EventFireDownFUsUs",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__13EventFireDown",
+        "size": "16",
+        "match_percent": 100.0
+      }
+    ]
+  },
+  {
+    "source": "decomp/src/Game/Player/PlayerEventGameOver.cpp",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Player/PlayerEventGameOver.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-player-event-ownership-20260907/PlayerEventGameOver.wii.o"
+    ],
+    "exit": 0,
+    "log": "",
+    "diff_exit": 0,
+    "scores": [
+      {
+        "name": "__ct__13EventGameOverFv",
+        "size": "320",
+        "match_percent": 99.75
+      },
+      {
+        "name": "init__13EventGameOverFUsUs",
+        "size": "108",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sound__13EventGameOverFUsUs",
+        "size": "68",
+        "match_percent": 100.0
+      },
+      {
+        "name": "updateAfter__13EventGameOverFv",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "reqLayout__13EventGameOverFUsUs",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "finish__13EventGameOverFUsUs",
+        "size": "52",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__13EventGameOver",
+        "size": "16",
+        "match_percent": 100.0
+      }
+    ]
+  },
+  {
+    "source": "decomp/src/Game/Player/PlayerEventGhostRaceDown.cpp",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Player/PlayerEventGhostRaceDown.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-player-event-ownership-20260907/PlayerEventGhostRaceDown.wii.o"
+    ],
+    "exit": 0,
+    "log": "",
+    "diff_exit": 0,
+    "scores": [
+      {
+        "name": "__ct__18EventGhostRaceDownFv",
+        "size": "468",
+        "match_percent": 99.70085
+      },
+      {
+        "name": "init__18EventGhostRaceDownFUsUs",
+        "size": "112",
+        "match_percent": 99.46429
+      },
+      {
+        "name": "sound__18EventGhostRaceDownFUsUs",
+        "size": "92",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__18EventGhostRaceDown",
+        "size": "16",
+        "match_percent": 100.0
+      }
+    ]
+  },
+  {
+    "source": "decomp/src/Game/Player/PlayerEventRaceDown.cpp",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Player/PlayerEventRaceDown.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-player-event-ownership-20260907/PlayerEventRaceDown.wii.o"
+    ],
+    "exit": 0,
+    "log": "",
+    "diff_exit": 0,
+    "scores": [
+      {
+        "name": "__ct__13EventRaceDownFv",
+        "size": "540",
+        "match_percent": 99.703705
+      },
+      {
+        "name": "init__13EventRaceDownFUsUs",
+        "size": "120",
+        "match_percent": 99.5
+      },
+      {
+        "name": "sound__13EventRaceDownFUsUs",
+        "size": "92",
+        "match_percent": 100.0
+      },
+      {
+        "name": "checkCloseWipeStart__13EventRaceDownFUs",
+        "size": "76",
+        "match_percent": 100.0
+      },
+      {
+        "name": "missLayoutOpen__13EventRaceDownFUsUs",
+        "size": "52",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__13EventRaceDown",
+        "size": "16",
+        "match_percent": 100.0
+      }
+    ]
+  }
+]

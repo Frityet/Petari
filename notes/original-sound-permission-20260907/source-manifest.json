@@ -1,0 +1,30 @@
+[
+  {
+    "path": "src/runtime/JAudioPlaybackService.cpp",
+    "sha256": "92411a09105615b2261a5ee4110a60a81610abea7a1086ecdcf04bafa8fdd884"
+  },
+  {
+    "path": "src/runtime/JAudioPlaybackService.hpp",
+    "sha256": "5ef4cb8288755a1f2033f3d62f2b42424742a9bc282b7c49de83b512b83c9a8e"
+  },
+  {
+    "path": "src/compat/SoundUtilCompat.cpp",
+    "sha256": "2d35f9767d318aa64610e8367644b9383936e1d64613da0ac0fca6f333345741"
+  },
+  {
+    "path": "src/runtime/RuntimeContext.cpp",
+    "sha256": "02e49e6cb6df7e162728dbb177d0f2e7338c2c9e98c816344215d0d9be51ef1f"
+  },
+  {
+    "path": "tests/SoundPermissionTests.cpp",
+    "sha256": "b8e6d111233bc45806aeb054a7bb6a8f812b7484713ec33427606eddac270a8c"
+  },
+  {
+    "path": "tests/JAudioPlaybackTests.cpp",
+    "sha256": "b00641cdfa332fbe6ea4e675a068651523253e092a11918bc67fd88f15e85392"
+  },
+  {
+    "path": "tests/xmake.lua",
+    "sha256": "762da7ce237067f1b50b61cc9c283ceb3ade1aa532e24f85f499034b14eb20e8"
+  }
+]

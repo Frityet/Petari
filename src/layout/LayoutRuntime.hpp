@@ -76,6 +76,8 @@ public:
     void setTextBoxArgStringRecursive(const char* pPaneName, std::u16string_view text, s32 argIndex);
     void replacePaneTexture(std::string_view paneName, const nw4r::lyt::TexMap& texMap, u8 texMapIndex);
     void setPaneAlpha(std::string_view paneName, f32 alpha);
+    void setPaneScale(std::string_view paneName, f32 x, f32 y);
+    void setPaneRotation(std::string_view paneName, f32 x, f32 y, f32 z);
     void setPaneVisible(std::string_view paneName, bool visible);
     void setPaneVisibleRecursive(std::string_view paneName, bool visible);
     void setTextBoxHorizontalPosition(std::string_view paneName, u8 position);

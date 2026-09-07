@@ -1,0 +1,4 @@
+[
+  "src/Game/MapObj/WarpPod.cpp",
+  "include/Game/MapObj/WarpPod.hpp"
+]

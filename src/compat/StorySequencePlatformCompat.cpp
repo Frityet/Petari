@@ -311,9 +311,7 @@ namespace MR {
         unavailable("all-galaxy Power Star completion state");
     }
 
-    void startStarPointerModeEnding(void *) {
-        unavailable("ending Star Pointer mode");
-    }
+
 
     void requestChangeScene(const char *) {
         unavailable("story-driven scene request");

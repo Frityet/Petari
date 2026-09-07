@@ -1,3 +1,4 @@
+#include "Game/Map/CollisionParts.hpp"
 #include <aurora/exception.hpp>
 #include "scene/StageCollisionService.hpp"
 
@@ -319,8 +320,8 @@ namespace smgpc::scene {
 
     }  // namespace
 
-    StageCollisionRegistrationState::StageCollisionRegistrationState(const bool *inactive_flag) noexcept
-        : _inactive_flag(inactive_flag) {
+    StageCollisionRegistrationState::StageCollisionRegistrationState(const bool *inactive_flag, CollisionParts* parts) noexcept
+        : _inactive_flag(inactive_flag), _parts(parts) {
     }
 
     void StageCollisionRegistrationState::set_enabled(bool enabled) noexcept {
@@ -339,11 +340,14 @@ namespace smgpc::scene {
         set_enabled(false);
         _inactive_flag = nullptr;
         _released = true;
+        _parts = nullptr;
     }
 
     bool StageCollisionRegistrationState::enabled() const noexcept {
         return !_released && _enabled && (_inactive_flag == nullptr || !*_inactive_flag);
     }
+
+    CollisionParts* StageCollisionRegistrationState::parts() const noexcept { return _parts; }
 
     StageCollisionService::StageCollisionService() : _generation(next_service_generation()) {
         const aurora::allocation::HostAllocationScope host_allocations;
@@ -687,6 +691,9 @@ namespace smgpc::scene {
                                     std::sqrt(matrix[2] * matrix[2] + matrix[6] * matrix[6] + matrix[10] * matrix[10])) / 3.0F;
                 source.area_bounding_radius = scale * server.mMaxVertexDistance;
                 source.area_server = std::move(owner);
+            }
+            if (source.registration && source.registration->parts()) {
+                source.area_bounding_radius = source.registration->parts()->_D8;
             }
     }
 
@@ -1169,11 +1176,13 @@ namespace smgpc::scene {
         } scope(this);
         struct QueryFilter final : TriangleFilterBase {
             const StageCollisionTriangleFilter& filter;
-            explicit QueryFilter(const StageCollisionTriangleFilter& value) : filter(value) {}
+            const StageCollisionService& service;
+            QueryFilter(const StageCollisionTriangleFilter& value, const StageCollisionService& owner) : filter(value), service(owner) {}
             bool isInvalidTriangle(const ::Triangle* triangle) const override {
-                return !filter(triangle->mIdx);
+                const auto source = triangle->mParts ? service.surface(triangle->mParts, triangle->mIdx) : service.surface(triangle->mIdx);
+                return !source || !filter(source->triangle_index);
             }
-        } query_filter(filter);
+        } query_filter(filter, *this);
 
         // Gravity affects only ground/wall/roof classification, which these
         // geometry probes do not consume. Game actors retain their own gravity.
@@ -1188,7 +1197,8 @@ namespace smgpc::scene {
         result.contacts.reserve(binder.mPlaneNum);
         for (auto index = u32{}; index < binder.mPlaneNum; ++index) {
             const auto& info = *binder.getPlane(static_cast<int>(index));
-            const auto source = surface(info.mParentTriangle.mIdx);
+            const auto& triangle = info.mParentTriangle;
+            const auto source = triangle.mParts ? surface(triangle.mParts, triangle.mIdx) : surface(triangle.mIdx);
             if (!source.has_value()) {
                 aurora::throw_host_exception<std::logic_error>("A Binder contact must retain its live source prism.");
             }
@@ -1198,19 +1208,19 @@ namespace smgpc::scene {
                 .moving_reaction = info._7C,
                 .penetration = info._60,
                 .attribute = source->attribute,
-                .triangle_index = info.mParentTriangle.mIdx,
+                .triangle_index = source->triangle_index,
             });
         }
         return result;
     }
 
-    std::optional<StageCollisionSurface> StageCollisionService::surface(std::uint32_t triangle_index) const {
+    std::optional<StageCollisionSurface> StageCollisionService::surface(std::uint32_t triangle_index, bool require_enabled) const {
         const auto lookup = _triangle_lookup.find(triangle_index);
         if (lookup == _triangle_lookup.end() || lookup->second >= _triangles.size()) {
             return std::nullopt;
         }
         const auto& triangle = _triangles[lookup->second];
-        if (triangle.registration != nullptr && !triangle.registration->enabled()) {
+        if (require_enabled && triangle.registration != nullptr && !triangle.registration->enabled()) {
             return std::nullopt;
         }
         if (triangle.source_index >= _sources.size()) {
@@ -1225,10 +1235,23 @@ namespace smgpc::scene {
             .attributes = source.attributes,
             .source_name = source.name,
             .sensor = source.sensor,
+            .parts = source.registration ? source.registration->parts() : nullptr,
             .placement_zone_id = source.placement_zone_id,
             .vertices = {triangle.vertices[0], triangle.vertices[1], triangle.vertices[2]},
             .normals = triangle.source_normals,
         };
+    }
+
+    std::optional<StageCollisionSurface> StageCollisionService::surface(const CollisionParts* parts,
+                                                                       std::uint32_t prism_index) const {
+        if (parts == nullptr) return std::nullopt;
+        for (const auto& source : _sources) {
+            if (source.registration && source.registration->parts() == parts &&
+                prism_index < source.prism_triangles.size()) {
+                return surface(source.prism_triangles[prism_index], false);
+            }
+        }
+        return std::nullopt;
     }
 
     StageCollisionMatrices& StageCollisionService::matrices_for_triangle(std::uint32_t triangle_index) const {

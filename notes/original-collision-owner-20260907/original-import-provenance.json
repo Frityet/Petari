@@ -1,0 +1,27 @@
+{
+  "src/Game/Map/CollisionDirector.cpp": {
+    "reference": "decomp/src/Game/Map/CollisionDirector.cpp",
+    "identical": true,
+    "sha256": "b5d24ac4e5bb6d52e72dab1987d983cad7314074a7c9ecac38318816a6f4de73"
+  },
+  "src/Game/Map/CollisionCategorizedKeeper.cpp": {
+    "reference": "decomp/src/Game/Map/CollisionCategorizedKeeper.cpp",
+    "identical": true,
+    "sha256": "8a3fa981d7cef9ce73fb674e4aa34e3890a31764d1ce7a20be9a546bff58d61e"
+  },
+  "src/Game/Map/SunshadeMapHolder.cpp": {
+    "reference": "decomp/src/Game/Map/SunshadeMapHolder.cpp",
+    "identical": true,
+    "sha256": "6cf98b665f9ebad2227ded1b38b360f351fa7d3764c5968a16a7743691a30335"
+  },
+  "src/Game/Camera/CameraPolygonCodeUtil.cpp": {
+    "reference": "decomp/src/Game/Camera/CameraPolygonCodeUtil.cpp",
+    "identical": true,
+    "sha256": "145d6055fb4eee9084f056b4261b432f017eeb1b9564ad998fab95881f15d30f"
+  },
+  "src/Game/Util/CollisionPartsFilter.cpp": {
+    "reference": "decomp/src/Game/Util/CollisionPartsFilter.cpp",
+    "identical": true,
+    "sha256": "1f9ba9f3433f2497366b29d791f6c7ef2a9880192ac28376d701e4fa5eddc3ef"
+  }
+}

@@ -11,6 +11,7 @@
 #include "Game/LiveActor/MessageSensorHolder.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/ActorMovementUtil.hpp"
 #include "compat/GameActorSensorCompat.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 
@@ -325,6 +326,25 @@ namespace {
                 "original keeper and messenger storage must retire with their Game arena");
     }
 
+    void test_original_sensor_distance_and_direction() {
+        LiveActor first("first distance owner"), second("second distance owner");
+        first.initHitSensor(1);
+        second.initHitSensor(1);
+        auto* a = MR::addHitSensorEnemy(&first, "body", 0, 100, TVec3f(0, 0, 0));
+        auto* b = MR::addHitSensorEnemy(&second, "body", 0, 200, TVec3f(0, 0, 0));
+        a->mPosition.set(10, -5, 2);
+        b->mPosition.set(13, -1, 2);
+        TVec3f direction(9, 9, 9);
+        require(MR::calcDistance(a, b, &direction) == 5, "sensor distance must use centers without subtracting radii");
+        require_vec(direction, TVec3f(0.6F, 0.8F, 0), "direction must point from the first sensor toward the second");
+        require(MR::calcDistance(b, a, nullptr) == 5, "the original direction output is optional");
+        require(MR::calcDistance(a, b, &b->mPosition) == 5, "distance must support an output alias of a sensor position");
+        require_vec(b->mPosition, direction, "the original difference snapshot must precede output writes");
+        b->mPosition = a->mPosition;
+        require(MR::calcDistance(a, b, &direction) == 0, "coincident sensor centers must return zero distance");
+        require_vec(direction, TVec3f(0, 0, 0), "coincident centers must clear the direction");
+    }
+
     struct TestCase {
         std::string_view name;
         void (*run)();
@@ -334,6 +354,7 @@ namespace {
 
 int main() {
     constexpr auto tests = std::array{
+        TestCase{"original sensor center distance", test_original_sensor_distance_and_direction},
         TestCase{"original keeper callbacks, offsets and validity", test_original_keeper_callbacks_offsets_and_validity},
         TestCase{"original contact delivery and retirement", test_original_contact_delivery_and_retirement},
         TestCase{"original keeper and messenger arena lifetime", test_keeper_and_original_messenger_game_heap_lifetime},

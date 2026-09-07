@@ -3,9 +3,13 @@
 
 #include "Game/Map/CollisionCode.hpp"
 #include "Game/Map/HitInfo.hpp"
+#include "Game/LiveActor/HitSensor.hpp"
 #include "Game/Util/TriangleFilter.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "compat/HitInfoCompat.hpp"
+#include "compat/CollisionDirectorOwnership.hpp"
+#include "scene/SceneObjHolderRuntime.hpp"
+#include "Game/Util/CollisionPartsFilter.hpp"
 #include "scene/StageCollisionService.hpp"
 #include "aurora/allocation.hpp"
 
@@ -83,19 +87,35 @@ namespace {
         return info;
     }
 
-    void require_supported_parts_filter(const CollisionPartsFilterBase* filter) {
-        if (filter != nullptr) {
-            aurora::throw_host_exception<std::logic_error>(
-                "CollisionParts filtering requires the deferred exact CollisionParts provider; static KCL has no fabricated parts.");
-        }
+    smgpc::scene::StageCollisionTriangleFilter make_query_filter(
+        const smgpc::scene::StageCollisionService& collision,
+        const CollisionPartsFilterBase* parts_filter, const TriangleFilterBase* triangle_filter) {
+        const aurora::allocation::HostAllocationScope host;
+        if (!parts_filter) return smgpc::compat::make_collision_triangle_filter(collision, triangle_filter);
+        return [&collision, parts_filter, triangle_filter](std::uint32_t index) {
+            const auto source = collision.surface(index);
+            if (!source) return false;
+            const aurora::allocation::ClientAllocationScope client;
+            if (source->parts) {
+                if (parts_filter->isInvalidParts(source->parts)) return false;
+            } else if (const auto* sensor_filter = dynamic_cast<const CollisionPartsFilterSensor*>(parts_filter)) {
+                if (source->sensor == sensor_filter->mSensor) return false;
+            } else if (const auto* actor_filter = dynamic_cast<const CollisionPartsFilterActor*>(parts_filter)) {
+                if (source->sensor && source->sensor->mHost == actor_filter->mActor) return false;
+            } else {
+                aurora::throw_host_exception<std::logic_error>("A custom CollisionParts filter requires an actual collision part.");
+            }
+            if (!triangle_filter) return true;
+            const auto triangle = smgpc::compat::make_collision_triangle(collision, index);
+            return !triangle_filter->isInvalidTriangle(&triangle);
+        };
     }
 
     [[nodiscard]] bool first_line_hit(TVec3f* position, Triangle* triangle, const TVec3f& start,
                                       const TVec3f& offset, const CollisionPartsFilterBase* parts_filter,
                                       const TriangleFilterBase* triangle_filter) {
-        require_supported_parts_filter(parts_filter);
         const auto& collision = require_stage_collision();
-        const auto filter = smgpc::compat::make_collision_triangle_filter(collision, triangle_filter);
+        const auto filter = make_query_filter(collision, parts_filter, triangle_filter);
         auto hit = smgpc::scene::StageCollisionHit{};
         if (!collision.line_cast(start, offset, &hit, filter)) {
             return false;
@@ -131,9 +151,8 @@ namespace {
                                             const CollisionPartsFilterBase* parts_filter,
                                             const TriangleFilterBase* triangle_filter,
                                             const float* thickness) {
-        require_supported_parts_filter(parts_filter);
         const auto& collision = require_stage_collision();
-        const auto filter = smgpc::compat::make_collision_triangle_filter(collision, triangle_filter);
+        const auto filter = make_query_filter(collision, parts_filter, triangle_filter);
         auto contacts = thickness == nullptr
                             ? collision.sphere_contacts(center, radius, cMaximumStrikeInfos, filter)
                             : collision.sphere_contacts_with_thickness(
@@ -144,6 +163,31 @@ namespace {
         infos.reserve(contacts.size());
         for (const auto& contact : contacts) {
             infos.push_back(make_hit_info(contact));
+        }
+        return static_cast<s32>(infos.size());
+    }
+
+    s32 store_line_hits(const smgpc::scene::StageCollisionService& collision, const TVec3f& start, const TVec3f& offset, s32 maximum,
+                        const CollisionPartsFilterBase* parts_filter, const TriangleFilterBase* triangle_filter) {
+        const aurora::allocation::HostAllocationScope host_allocations;
+        if (maximum < 0 || maximum > static_cast<s32>(cMaximumStrikeInfos)) {
+            aurora::throw_host_exception<std::invalid_argument>("Line strike queries exceed the original 32-hit storage.");
+        }
+        const auto filter = make_query_filter(collision, parts_filter, triangle_filter);
+        const auto hits = collision.line_hits(start, offset,
+            maximum == 0 ? cMaximumStrikeInfos : static_cast<std::size_t>(maximum), filter);
+        auto& infos = strike_infos();
+        infos.clear();
+        infos.reserve(hits.size());
+        const auto length = PSVECMag(&offset);
+        for (const auto& hit : hits) {
+            auto& info = infos.emplace_back();
+            info.mParentTriangle = smgpc::compat::make_collision_triangle(collision, hit.triangle_index);
+            info._60 = length * hit.fraction;
+            info.mHitPos = hit.position;
+            // Retail checkArrow's all-hit branch does not write the flag
+            // array consumed by CollisionParts. Retain the native HitInfo
+            // constructor's initialized value for those unspecified bytes.
         }
         return static_cast<s32>(infos.size());
     }
@@ -326,6 +370,19 @@ namespace MR {
         return require_stage_collision().line_cast(start, offset);
     }
 
+    bool isExistMapCollisionExceptActor(const TVec3f& start, const TVec3f& offset,
+                                        const LiveActor* actor) {
+        const aurora::allocation::HostAllocationScope host_allocations;
+        const auto& collision = require_stage_collision();
+        // The original CollisionPartsFilterActor compares the owning sensor's
+        // host. Keep every other part eligible before the single-hit limit.
+        const auto filter = [&collision, actor](std::uint32_t index) {
+            const auto surface = collision.surface(index);
+            return surface && (surface->sensor == nullptr || surface->sensor->mHost != actor);
+        };
+        return !collision.line_hits(start, offset, 1U, filter).empty();
+    }
+
     bool checkStrikePointToMap(const TVec3f& point, HitInfo* output) {
         return Collision::checkStrikePointToMap(point, output) != 0;
     }
@@ -439,31 +496,14 @@ namespace MR {
 
 namespace Collision {
     s32 checkStrikeLineToMap(const TVec3f& start, const TVec3f& offset, s32 maximum,
-                              const CollisionPartsFilterBase* parts_filter,
-                              const TriangleFilterBase* triangle_filter) {
-        const aurora::allocation::HostAllocationScope host_allocations;
-        require_supported_parts_filter(parts_filter);
-        if (maximum < 0 || maximum > static_cast<s32>(cMaximumStrikeInfos)) {
-            aurora::throw_host_exception<std::invalid_argument>("Line strike queries exceed the original 32-hit storage.");
-        }
-        const auto& collision = require_stage_collision();
-        const auto filter = smgpc::compat::make_collision_triangle_filter(collision, triangle_filter);
-        const auto hits = collision.line_hits(start, offset,
-            maximum == 0 ? cMaximumStrikeInfos : static_cast<std::size_t>(maximum), filter);
-        auto& infos = strike_infos();
-        infos.clear();
-        infos.reserve(hits.size());
-        const auto length = PSVECMag(&offset);
-        for (const auto& hit : hits) {
-            auto& info = infos.emplace_back();
-            info.mParentTriangle = smgpc::compat::make_collision_triangle(collision, hit.triangle_index);
-            info._60 = length * hit.fraction;
-            info.mHitPos = hit.position;
-            // Retail checkArrow's all-hit branch does not write the flag
-            // array consumed by CollisionParts. Retain the native HitInfo
-            // constructor's initialized value for those unspecified bytes.
-        }
-        return static_cast<s32>(infos.size());
+                            const CollisionPartsFilterBase* parts_filter, const TriangleFilterBase* triangle_filter) {
+        return store_line_hits(require_stage_collision(), start, offset, maximum, parts_filter, triangle_filter);
+    }
+    s32 checkStrikeLineToSunshade(const TVec3f& start, const TVec3f& offset, s32 maximum,
+                                 const CollisionPartsFilterBase* parts_filter, const TriangleFilterBase* triangle_filter) {
+        auto* owner = smgpc::scene::current_collision_director_ownership();
+        if (!owner) aurora::throw_host_exception<std::logic_error>("Sunshade collision queries require the scene category owner.");
+        return store_line_hits(owner->category_service(1), start, offset, maximum, parts_filter, triangle_filter);
     }
 
     s32 checkStrikePointToMap(const TVec3f& point, HitInfo* output) {

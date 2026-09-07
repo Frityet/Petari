@@ -1,0 +1,12 @@
+[
+  "src/Game/MapObj/WarpPod.cpp",
+  "src/Game/MapObj/WarpPod.hpp",
+  "notes/original-warp-pod-draw-20260907/README.md",
+  "notes/original-warp-pod-draw-20260907/verify.py",
+  "notes/original-warp-pod-draw-20260907/proof.json",
+  "notes/original-warp-pod-draw-20260907/source-manifest.json",
+  "notes/original-warp-pod-draw-20260907/wii-command.json",
+  "notes/original-warp-pod-draw-20260907/native-command.json",
+  "notes/original-warp-pod-draw-20260907/root-checkpoint-paths.json",
+  "notes/original-warp-pod-draw-20260907/decomp-checkpoint-paths.json"
+]

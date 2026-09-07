@@ -2062,6 +2062,28 @@ void smgpc::layout::LayoutRuntime::replacePaneTexture(std::string_view paneName,
     }
 }
 
+void smgpc::layout::LayoutRuntime::setPaneScale(std::string_view paneName, f32 x, f32 y) {
+    smgpc::compat::JkrHostAllocationScope host;
+    loadRenderData();
+    const auto index = paneName.empty() ? std::optional<std::size_t>(0) : find_preferred_pane_index(mBrlytLayout, paneName);
+    if (!index || *index >= mBrlytLayout.panes.size())
+        aurora::throw_host_exception<std::runtime_error>("Setting scale requires an existing layout pane");
+    auto& values = mCommittedPaneFrames[mBrlytLayout.panes[*index].name];
+    values.scale_x = x;
+    values.scale_y = y;
+}
+
+void smgpc::layout::LayoutRuntime::setPaneRotation(std::string_view paneName, f32 x, f32 y, f32 z) {
+    smgpc::compat::JkrHostAllocationScope host;
+    if (x != 0.0F || y != 0.0F)
+        aurora::throw_host_exception<std::logic_error>("Native layout matrices require the remaining three-dimensional pane rotation boundary");
+    loadRenderData();
+    const auto index = paneName.empty() ? std::optional<std::size_t>(0) : find_preferred_pane_index(mBrlytLayout, paneName);
+    if (!index || *index >= mBrlytLayout.panes.size())
+        aurora::throw_host_exception<std::runtime_error>("Setting rotation requires an existing layout pane");
+    mCommittedPaneFrames[mBrlytLayout.panes[*index].name].rotate_z = z;
+}
+
 void smgpc::layout::LayoutRuntime::setPaneAlpha(std::string_view paneName, f32 alpha) {
     loadRenderData();
     if (paneName.empty()) {

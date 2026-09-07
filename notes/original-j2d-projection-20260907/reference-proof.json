@@ -1,0 +1,207 @@
+[
+  {
+    "source": "Game/Util/DrawUtil.cpp",
+    "functions": [
+      {
+        "name": "loadProjectionMtxFor2D__2MRFv",
+        "match": 100.0,
+        "size": "56"
+      },
+      {
+        "name": "__ct__19J2DOrthoGraphSimpleFv",
+        "match": 61.973682,
+        "size": "304"
+      },
+      {
+        "name": "setPort__19J2DOrthoGraphSimpleFv",
+        "match": 100.0,
+        "size": "4"
+      },
+      {
+        "name": "__vt__19J2DOrthoGraphSimple",
+        "match": 100.0,
+        "size": "40"
+      }
+    ]
+  },
+  {
+    "source": "JSystem/J2DGraph/J2DGrafContext.cpp",
+    "functions": [
+      {
+        "name": "__ct__14J2DGrafContextFffff",
+        "match": 52.017242,
+        "size": "232"
+      },
+      {
+        "name": "setPort__14J2DGrafContextFv",
+        "match": 100.0,
+        "size": "172"
+      },
+      {
+        "name": "setup2D__14J2DGrafContextFv",
+        "match": 100.0,
+        "size": "476"
+      },
+      {
+        "name": "setScissor__14J2DGrafContextFv",
+        "match": 90.245766,
+        "size": "472"
+      },
+      {
+        "name": "__as__Q29JGeometry8TBox2<f>FRCQ29JGeometry8TBox2<f>",
+        "match": 100.0,
+        "size": "36"
+      },
+      {
+        "name": "place__14J2DGrafContextFRCQ29JGeometry8TBox2<f>",
+        "match": 100.0,
+        "size": "72"
+      },
+      {
+        "name": "setColor__14J2DGrafContextFQ28JUtility6TColorQ28JUtility6TColorQ28JUtility6TColorQ28JUtility6TColor",
+        "match": 100.0,
+        "size": "256"
+      },
+      {
+        "name": "fillBox__14J2DGrafContextFRCQ29JGeometry8TBox2<f>",
+        "match": 100.0,
+        "size": "248"
+      },
+      {
+        "name": "setLookat__14J2DGrafContextFv",
+        "match": 100.0,
+        "size": "4"
+      },
+      {
+        "name": "getGrafType__14J2DGrafContextCFv",
+        "match": 100.0,
+        "size": "8"
+      },
+      {
+        "name": "__dt__14J2DGrafContextFv",
+        "match": 100.0,
+        "size": "64"
+      },
+      {
+        "name": "__ct__Q29JGeometry8TBox2<f>FRCQ29JGeometry8TBox2<f>",
+        "match": 100.0,
+        "size": "36"
+      },
+      {
+        "name": "setMax__Q29JGeometry8TVec2<f>FRCQ29JGeometry8TVec2<f>",
+        "match": 100.0,
+        "size": "52"
+      },
+      {
+        "name": "setMin__Q29JGeometry8TVec2<f>FRCQ29JGeometry8TVec2<f>",
+        "match": 100.0,
+        "size": "52"
+      },
+      {
+        "name": "isValid__Q29JGeometry27TBox<Q29JGeometry8TVec2<f>>CFv",
+        "match": 100.0,
+        "size": "56"
+      },
+      {
+        "name": "GXPosition3f32",
+        "match": 100.0,
+        "size": "20"
+      },
+      {
+        "name": "__vt__14J2DGrafContext",
+        "match": 100.0,
+        "size": "40"
+      },
+      {
+        "name": "@12381",
+        "match": 100.0,
+        "size": "4"
+      },
+      {
+        "name": "@12382",
+        "match": 100.0,
+        "size": "4"
+      },
+      {
+        "name": "@12404",
+        "match": 100.0,
+        "size": "4"
+      },
+      {
+        "name": "[.data-0]",
+        "match": 100.0,
+        "size": "40"
+      },
+      {
+        "name": "[.sdata2-0]",
+        "match": 85.71429,
+        "size": "16"
+      }
+    ]
+  },
+  {
+    "source": "JSystem/J2DGraph/J2DOrthoGraph.cpp",
+    "functions": [
+      {
+        "name": "__ct__13J2DOrthoGraphFv",
+        "match": 100.0,
+        "size": "96"
+      },
+      {
+        "name": "__ct__13J2DOrthoGraphFffffff",
+        "match": 100.0,
+        "size": "212"
+      },
+      {
+        "name": "setPort__13J2DOrthoGraphFv",
+        "match": 100.0,
+        "size": "88"
+      },
+      {
+        "name": "setOrtho__13J2DOrthoGraphFRCQ29JGeometry8TBox2<f>ff",
+        "match": 100.0,
+        "size": "88"
+      },
+      {
+        "name": "setLookat__13J2DOrthoGraphFv",
+        "match": 100.0,
+        "size": "60"
+      },
+      {
+        "name": "J2DFillBox__FffffQ28JUtility6TColor",
+        "match": 55.0,
+        "size": "64"
+      },
+      {
+        "name": "J2DFillBox__FRCQ29JGeometry8TBox2<f>Q28JUtility6TColor",
+        "match": 0.0,
+        "size": "92"
+      },
+      {
+        "name": "set__Q29JGeometry8TBox2<f>Fffff",
+        "match": 100.0,
+        "size": "20"
+      },
+      {
+        "name": "__vt__13J2DOrthoGraph",
+        "match": 100.0,
+        "size": "40"
+      },
+      {
+        "name": "@12449",
+        "match": 100.0,
+        "size": "4"
+      },
+      {
+        "name": "[.data-0]",
+        "match": 100.0,
+        "size": "40"
+      },
+      {
+        "name": "[.sdata2-0]",
+        "match": 66.66667,
+        "size": "8"
+      }
+    ]
+  }
+]

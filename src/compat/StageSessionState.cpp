@@ -1,3 +1,4 @@
+#include "compat/StarPointerDepthOwnership.hpp"
 #include <aurora/exception.hpp>
 #include "compat/StageSessionState.hpp"
 #include "compat/JkrAllocationDomain.hpp"
@@ -159,6 +160,7 @@ namespace smgpc::compat {
 
     StageSessionBinding::StageSessionBinding(StageSessionState &session)
         : _previous(s_active_binding), _session(&session) {
+        if (try_star_pointer_depth()) _pointer_scene = std::make_unique<StarPointerSceneBinding>();
         s_active_binding = this;
         s_active_session = _session;
     }
@@ -167,6 +169,7 @@ namespace smgpc::compat {
         if (s_active_binding != this) {
             std::terminate();
         }
+        _pointer_scene.reset();
         s_active_binding = _previous;
         s_active_session = _previous != nullptr ? _previous->_session : nullptr;
     }

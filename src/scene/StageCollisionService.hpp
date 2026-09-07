@@ -16,6 +16,7 @@
 #include <JSystem/JGeometry/TVec.hpp>
 
 class HitSensor;
+class CollisionParts;
 namespace smgpc::resource {
     class OwnedKCollisionServer;
 }
@@ -59,6 +60,7 @@ namespace smgpc::scene {
         std::span<const std::uint8_t> attributes{};
         std::string_view source_name{};
         HitSensor* sensor = nullptr;
+        CollisionParts* parts = nullptr;
         std::optional<std::int32_t> placement_zone_id;
         std::array<TVec3f, 3U> vertices{};
         std::array<TVec3f, 4U> normals{};
@@ -86,17 +88,20 @@ namespace smgpc::scene {
     // cached BVH triangles inert before that actor storage is destroyed.
     class StageCollisionRegistrationState final {
     public:
-        explicit StageCollisionRegistrationState(const bool *inactive_flag = nullptr) noexcept;
+        explicit StageCollisionRegistrationState(const bool *inactive_flag = nullptr,
+                                                  CollisionParts* parts = nullptr) noexcept;
 
         void set_enabled(bool enabled) noexcept;
         void release_owner() noexcept;
         [[nodiscard]] bool enabled() const noexcept;
+        [[nodiscard]] CollisionParts* parts() const noexcept;
 
     private:
         friend class StageCollisionService;
         const bool *_inactive_flag;
         bool _enabled = true;
         bool _released = false;
+        CollisionParts* _parts = nullptr;
         std::vector<std::weak_ptr<StageCollisionAreaMembership>> _area_memberships{};
     };
 
@@ -159,7 +164,9 @@ namespace smgpc::scene {
                                                            float radius, std::size_t maximum_contacts = 32U,
                                                            bool skip_initial_check = false,
                                                            const StageCollisionTriangleFilter& filter = {}) const;
-        [[nodiscard]] std::optional<StageCollisionSurface> surface(std::uint32_t triangle_index) const;
+        [[nodiscard]] std::optional<StageCollisionSurface> surface(std::uint32_t triangle_index, bool require_enabled = true) const;
+        [[nodiscard]] std::optional<StageCollisionSurface> surface(const CollisionParts* parts,
+                                                                 std::uint32_t prism_index) const;
         [[nodiscard]] StageCollisionMatrices& matrices_for_triangle(std::uint32_t triangle_index) const;
         // CollisionCategorizedKeeper / CollisionParts area queries retain
         // authored zone, part and KCL octree encounter order. The supplied

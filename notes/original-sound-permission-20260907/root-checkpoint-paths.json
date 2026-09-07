@@ -1,0 +1,14 @@
+[
+  "src/runtime/JAudioPlaybackService.cpp",
+  "src/runtime/JAudioPlaybackService.hpp",
+  "src/compat/SoundUtilCompat.cpp",
+  "src/runtime/RuntimeContext.cpp",
+  "tests/SoundPermissionTests.cpp",
+  "tests/JAudioPlaybackTests.cpp",
+  "tests/xmake.lua",
+  "notes/original-sound-permission-20260907/README.md",
+  "notes/original-sound-permission-20260907/source-manifest.json",
+  "notes/original-sound-permission-20260907/compile-results.json",
+  "notes/original-sound-permission-20260907/retail-proof.json",
+  "notes/original-sound-permission-20260907/root-checkpoint-paths.json"
+]

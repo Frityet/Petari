@@ -6,6 +6,13 @@
 #include "Game/Screen/StarPointerLayout.hpp"
 #include "Game/Util/GamePadUtil.hpp"
 #include "compat/JkrAllocationDomain.hpp"
+#include "compat/WPadOwnership.hpp"
+#include "compat/ActorRuntimeRegistry.hpp"
+#include "Game/System/StarPointerOnOffController.hpp"
+#include "Game/Screen/StarPointerBlur.hpp"
+#include "Game/Util/CameraUtil.hpp"
+#include "Game/Util/StarPointerUtil.hpp"
+#include "JSystem/JUtility/JUTTexture.hpp"
 #include "layout/LayoutHost.hpp"
 
 #include <aurora/depth_snapshot.hpp>
@@ -19,6 +26,7 @@
 namespace smgpc::compat {
 namespace {
 thread_local StarPointerDepthOwnership* current_owner = nullptr;
+thread_local StarPointerSceneBinding* current_scene_binding = nullptr;
 }
 
 struct StarPointerDepthOwnership::State {
@@ -30,27 +38,77 @@ struct StarPointerDepthOwnership::State {
         std::array<f32, 6> viewport;
     };
 
-    explicit State(std::shared_ptr<JkrHeapRuntime> heaps)
-        : domain(JkrAllocationDomain::create(std::move(heaps), 1024U * 1024U)) {
+    explicit State(const void* owner, std::shared_ptr<JkrHeapRuntime> heaps)
+        : native_owner(owner), domain(JkrAllocationDomain::create(std::move(heaps), 1024U * 1024U)) {
+        input = std::make_unique<WPadOwnership>(domain);
         JkrAllocationScope game(domain);
-        controllers = new StarPointerController[2];
-        transform = new StarPointerTransformHolder;
-        peek = new StarPointerPeekZ;
-        for (s32 channel = 0; channel < 2; ++channel) {
-            controllers[channel].initAndSetPort(channel);
-            peek->mInfos[channel] = &controllers[channel].mInfo;
+        director = new StarPointerDirector;
+        controllers = director->mControllers;
+        transform = director->mTransHolder;
+        peek = director->mPeekZ;
+        modes = new StarPointerOnOffController;
+    }
+
+    static void retire_layout_object(NameObj* object) noexcept {
+        if (auto* blur = dynamic_cast<StarPointerBlur*>(object)) {
+            delete blur->mTexture;
+            blur->mTexture = nullptr;
         }
+        smgpc::layout::release_layout_actor_if_registered(object);
+        delete object;
+    }
+
+    void rollback_layouts(NameObjRuntimeRegistrationMarker marker) noexcept {
+        layouts = {director->mStarPointerLayouts, director->mStarPointerLayouts ? director->mStarPointerLayouts + 1 : nullptr};
+        const auto separate_child = [](const NameObj* object, const void* context) noexcept {
+            const auto& state = *static_cast<const State*>(context);
+            return object != state.layouts[0] && object != state.layouts[1] &&
+                   (!name_obj_runtime_ownership_is_claimed(object) || name_obj_runtime_owner(object) == state.native_owner);
+        };
+        while (auto* object = newest_name_obj_runtime_object_since_if(marker, separate_child, this)) retire_layout_object(object);
+        layout_objects.clear();
+        for (auto* layout : layouts) smgpc::layout::release_layout_actor_if_registered(layout);
+        delete[] director->mStarPointerLayouts;
+        director->mStarPointerLayouts = nullptr;
+        director->mGuidance = nullptr;
+        guidance = nullptr;
+        layouts = {};
+    }
+
+    void release_layouts() noexcept {
+        // Each original array element has a NameObj identity but must be
+        // destroyed by delete[], after its separately allocated children.
+        for (auto it = layout_objects.rbegin(); it != layout_objects.rend(); ++it) {
+            auto* object = *it;
+            if (object == layouts[0] || object == layouts[1]) continue;
+            retire_layout_object(object);
+        }
+        layout_objects.clear();
+        for (auto* layout : layouts) smgpc::layout::release_layout_actor_if_registered(layout);
+        delete[] director->mStarPointerLayouts;
+        director->mStarPointerLayouts = nullptr;
+        director->mGuidance = nullptr;
+        guidance = nullptr;
+        layouts = {};
     }
 
     ~State() {
         for (const auto& capture : pending) GXAuroraReleaseDepthSnapshot(capture.id);
-        if (guidance) {
-            smgpc::layout::release_layout_actor_if_registered(guidance);
-            delete guidance;
-        }
+        release_layouts();
+        delete modes;
+        delete[] controllers;
+        delete transform;
+        delete peek;
+        delete director;
+        input.reset();
     }
 
+    const void* native_owner;
     std::shared_ptr<JkrAllocationDomain> domain;
+    std::unique_ptr<WPadOwnership> input;
+    StarPointerDirector* director = nullptr;
+    StarPointerOnOffController* modes = nullptr;
+    std::vector<NameObj*> layout_objects;
     StarPointerController* controllers = nullptr;
     StarPointerTransformHolder* transform = nullptr;
     StarPointerPeekZ* peek = nullptr;
@@ -62,7 +120,7 @@ struct StarPointerDepthOwnership::State {
 
 StarPointerDepthOwnership::StarPointerDepthOwnership(std::shared_ptr<JkrHeapRuntime> heaps) {
     JkrHostAllocationScope host;
-    _state = std::make_unique<State>(std::move(heaps));
+    _state = std::make_unique<State>(this, std::move(heaps));
     _previous = current_owner;
     current_owner = this;
 }
@@ -100,6 +158,7 @@ void StarPointerDepthOwnership::capture() {
 
 void StarPointerDepthOwnership::update() {
     JkrHostAllocationScope host;
+    _state->input->update_pointer_samples();
     // A pending image cannot borrow a later image's camera or pointer position.
     // Consume at most the newest completed prefix, once per original movement.
     State::Capture completed;
@@ -142,38 +201,40 @@ void StarPointerDepthOwnership::update() {
 
     {
         JkrAllocationScope game(_state->domain);
-        if (_state->camera_ready) _state->transform->movement();
-        for (s32 channel = 0; channel < 2; ++channel) {
-            if (MR::isConnectedWPad(channel))
-                _state->controllers[channel].movement(_state->peek->mProjectionParameters, _state->peek->mViewportParameters);
-        }
-        if (_state->guidance) {
-            _state->guidance->movement();
-            _state->guidance->calcAnim();
-        }
+        if (_state->camera_ready) _state->director->update();
+        _state->modes->update();
     }
 }
 
-void StarPointerDepthOwnership::initialize_guidance() {
+void StarPointerDepthOwnership::initialize_layouts() {
     if (_state->guidance) return;
-    JkrAllocationScope game(_state->domain);
-    auto* guidance = new StarPointerGuidance("スターポインタガイダンス");
+    JkrHostAllocationScope host;
+    const auto marker = mark_name_obj_runtime_registrations();
     try {
-        guidance->initWithoutIter();
+        {
+            JkrAllocationScope game(_state->domain);
+            _state->director->createLayout();
+        }
+        _state->layouts = {_state->director->mStarPointerLayouts, _state->director->mStarPointerLayouts + 1};
+        _state->guidance = _state->director->mGuidance;
+        _state->layout_objects = snapshot_name_obj_runtime_objects_since(marker);
+        std::erase_if(_state->layout_objects, [](const NameObj* object) { return name_obj_runtime_ownership_is_claimed(object); });
+        for (auto* object : _state->layout_objects) claim_name_obj_runtime_ownership(object, this);
     } catch (...) {
-        smgpc::layout::release_layout_actor_if_registered(guidance);
-        delete guidance;
+        _state->rollback_layouts(marker);
         throw;
     }
-    _state->guidance = guidance;
 }
 
-void StarPointerDepthOwnership::draw_guidance() {
+void StarPointerDepthOwnership::draw() {
     if (_state->guidance) {
         JkrAllocationScope game(_state->domain);
-        _state->guidance->draw();
+        _state->director->draw();
     }
 }
+
+StarPointerDirector& StarPointerDepthOwnership::director() { return *_state->director; }
+StarPointerOnOffController& StarPointerDepthOwnership::modes() { return *_state->modes; }
 
 StarPointerController& StarPointerDepthOwnership::controller(s32 channel) {
     if (channel < 0 || channel >= 2)
@@ -192,20 +253,31 @@ TVec3f& StarPointerDepthOwnership::world_position(s32 channel) {
     return record.mWorldPos;
 }
 
-StarPointerLayout* StarPointerDepthOwnership::bind_layout(s32 channel, StarPointerLayout* layout) {
-    (void)controller(channel);
+void StarPointerDepthOwnership::discard_depth_samples() {
     JkrHostAllocationScope host;
     for (const auto& capture : _state->pending) GXAuroraReleaseDepthSnapshot(capture.id);
     _state->pending.clear();
     for (s32 port = 0; port < 2; ++port) _state->controllers[port].mInfo.mDrawReady = false;
-    auto* previous = _state->layouts[channel];
-    _state->layouts[channel] = layout;
-    return previous;
 }
 
-StarPointerLayoutBinding::StarPointerLayoutBinding(StarPointerDepthOwnership& owner, s32 channel, StarPointerLayout& layout)
-    : _owner(owner), _channel(channel), _previous(owner.bind_layout(channel, &layout)) {}
-StarPointerLayoutBinding::~StarPointerLayoutBinding() { _owner.bind_layout(_channel, _previous); }
+StarPointerSceneBinding::StarPointerSceneBinding() : _owner(current_owner), _previous(current_scene_binding) {
+    if (!_owner) return;
+    _owner->initialize_layouts();
+    _previous_transform_update = _owner->director().mIsUpdateTransHolder;
+    if (!_previous || _previous->_owner != _owner) _owner->modes().setStateToBase(this);
+    _owner->modes().incModeCounter(this, StarPointerMode_Game);
+    _owner->director().init();
+    current_scene_binding = this;
+}
+StarPointerSceneBinding::~StarPointerSceneBinding() {
+    if (!_owner) return;
+    _owner->modes().popState(this);
+    _owner->discard_depth_samples();
+    _owner->director().mIsUpdateTransHolder = _previous_transform_update;
+    current_scene_binding = _previous;
+}
+
+StarPointerDepthOwnership* try_star_pointer_depth() noexcept { return current_owner; }
 
 StarPointerDepthOwnership& require_star_pointer_depth() {
     if (!current_owner)

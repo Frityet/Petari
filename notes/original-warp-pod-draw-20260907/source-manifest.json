@@ -1,0 +1,6 @@
+{
+  "decomp/src/Game/MapObj/WarpPod.cpp": "250f15f15152cb630fd761e38197347ae672bd451fcf64d1e444a770a1e8b727",
+  "decomp/include/Game/MapObj/WarpPod.hpp": "3dc975d4aa3d033ef9504a971e943688f211b9f0ddcd658bd13aa969929ae647",
+  "src/Game/MapObj/WarpPod.cpp": "38aab0d8477d84d4d4992bf1b24b97bf47bc5a621b09458fd1fc1e9cb238ddd0",
+  "src/Game/MapObj/WarpPod.hpp": "3dc975d4aa3d033ef9504a971e943688f211b9f0ddcd658bd13aa969929ae647"
+}

@@ -1,0 +1,41 @@
+{
+  "combined_build_exit": 255,
+  "combined_build_failure": "collision owner fixture link; all production sources compiled",
+  "undefined_symbols_at_combined_build": [
+    "MR::onCalcAnim(LayoutActor*)",
+    "MR::getRootPane(LayoutActor const*)",
+    "MR::offCalcAnim(LayoutActor*)",
+    "MR::normalizeAbs(float, float, float)",
+    "MR::startDownWipe()",
+    "MR::stopAnimFrame(LayoutActor*)",
+    "MR::copyPaneRotate(JGeometry::TVec3<float>*, LayoutActor const*, char const*)",
+    "MR::countMessageLine(wchar_t const*)",
+    "MR::moveVolumeSubBGM(float, unsigned int)",
+    "MR::releaseAnimFrame(LayoutActor*)",
+    "MR::isPlayingSubBgmID(unsigned int)",
+    "MR::startGameOverWipe()",
+    "MR::requestEndMissDemo()",
+    "MR::createAndAddGroupCtrl(LayoutActor*, char const*, unsigned int)",
+    "MR::setSoundVolumeSetting(int, unsigned int)",
+    "MR::requestEndGameOverDemo()",
+    "MR::requestStartGameOverDemo()",
+    "MR::getTextLineNumMaxRecursive(LayoutActor const*, char const*)",
+    "MR::convertPaneLocalPosToScreenPos(JGeometry::TVec2<float>*, nw4r::lyt::Pane const*, JGeometry::TVec2<float> const&)",
+    "MR::normalize(JGeometry::TVec2<float> const&, JGeometry::TVec2<float>*)",
+    "JGeometry::TRotation3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>>::getScale(JGeometry::TVec3<float>&) const"
+  ],
+  "successful_root_build_and_run": [
+    "original-pointer-input",
+    "sound-permission",
+    "original-event-sequence",
+    "original-j2d-projection CPU"
+  ],
+  "pending": [
+    "J2D Simple owner fixture",
+    "full CameraDirector fixture",
+    "collision owner fixture",
+    "main executable",
+    "interactive jumping and full camera",
+    "Gateway bunny chase through Rosalina"
+  ]
+}

@@ -1,252 +1,240 @@
-#include <aurora/exception.hpp>
 #include "compat/CollisionPartsCompat.hpp"
+#include "compat/CollisionDirectorOwnership.hpp"
 
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
-#include "Game/Util/ActorMovementUtil.hpp"
+#include "Game/Map/CollisionParts.hpp"
+#include "Game/Map/KCollision.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "compat/ResourceHolderCompat.hpp"
+#include "resource/KCollisionResource.hpp"
 #include "resource/RarcArchive.hpp"
+#include "scene/SceneObjHolderRuntime.hpp"
 #include "scene/StageCollisionService.hpp"
 
+#include <aurora/allocation.hpp>
+#include <aurora/exception.hpp>
 #include <array>
-#include <cmath>
+#include <cstdio>
 #include <memory>
-#include <ranges>
 #include <span>
 #include <stdexcept>
 #include <string>
 #include <unordered_map>
 
 namespace {
+    struct PartsDeleter {
+        void operator()(CollisionParts* parts) const noexcept {
+            if (parts == nullptr) return;
+            delete parts->mServer->mapInfo;
+            delete parts->mServer;
+            delete parts;
+        }
+    };
 
     struct ActorCollisionPartsState {
-        ResourceHolder *resource_holder = nullptr;
-        HitSensor *sensor = nullptr;
-        std::span<const std::uint8_t> kcl{};
-        std::span<const std::uint8_t> attributes{};
-        std::array<float, 12U> matrix{};
-        float bounding_radius = 0.0F;
+        std::shared_ptr<const smgpc::compat::ResourceArchiveOwner> resource_owner;
+        SceneObjHolder* scene_holder = nullptr;
+        smgpc::scene::StageCollisionService* service = nullptr;
+        std::uint64_t service_generation = 0;
+        std::span<const std::uint8_t> kcl;
+        std::span<const std::uint8_t> attributes;
         std::string resource_name;
         std::string source;
         std::string attributes_source;
+        std::unique_ptr<smgpc::resource::KCollisionResource> decoded;
+        std::unique_ptr<CollisionParts, PartsDeleter> parts;
         std::shared_ptr<smgpc::scene::StageCollisionRegistrationState> registration;
+        std::array<float, 12> published_current;
+        std::array<float, 12> published_previous;
+
+        ~ActorCollisionPartsState() {
+            if (registration) registration->release_owner();
+            // The original zone has a borrowed pointer. Remove it while its
+            // scene is available; whole-scene teardown drops the zones next.
+            if (parts && parts->_CC && smgpc::scene::current_scene_obj_holder() == scene_holder &&
+                scene_holder->isExist(SceneObj_CollisionDirector)) {
+                MR::invalidateCollisionParts(parts.get());
+            }
+        }
     };
 
-    auto &actor_collision_parts() {
-        static auto states =
-            std::unordered_map<const LiveActor *, std::vector<ActorCollisionPartsState>>{};
+    auto& actor_collision_parts() {
+        static std::unordered_map<const LiveActor*, std::vector<std::unique_ptr<ActorCollisionPartsState>>> states;
         return states;
     }
 
-    [[nodiscard]] std::array<float, 12U> copy_matrix(MtxPtr matrix) {
-        if (matrix == nullptr) {
-            aurora::throw_host_exception<std::invalid_argument>("CollisionParts requires a real placement matrix.");
-        }
-        return {
-            matrix[0][0],
-            matrix[0][1],
-            matrix[0][2],
-            matrix[0][3],
-            matrix[1][0],
-            matrix[1][1],
-            matrix[1][2],
-            matrix[1][3],
-            matrix[2][0],
-            matrix[2][1],
-            matrix[2][2],
-            matrix[2][3],
-        };
+    std::array<float, 12> copy_matrix(const TPos3f& matrix) {
+        std::array<float, 12> result;
+        for (std::size_t row = 0; row < 3; ++row)
+            for (std::size_t col = 0; col < 4; ++col) result[row * 4 + col] = matrix.mMtx[row][col];
+        return result;
     }
 
-    [[nodiscard]] float average_matrix_scale(const std::array<float, 12U> &matrix) {
-        const auto column_length = [&](std::size_t column) {
-            return std::sqrt(matrix[column] * matrix[column] +
-                             matrix[4U + column] * matrix[4U + column] +
-                             matrix[8U + column] * matrix[8U + column]);
-        };
-        return (column_length(0U) + column_length(1U) + column_length(2U)) / 3.0F;
-    }
-
-    [[nodiscard]] ActorCollisionPartsState &require_actor_collision_parts(const LiveActor *actor) {
-        const auto found = actor_collision_parts().find(actor);
-        if (found == actor_collision_parts().end()) {
-            aurora::throw_host_exception<std::logic_error>("LiveActor has no registered CollisionParts.");
+    ActorCollisionPartsState* find_state(const CollisionParts& parts) {
+        for (auto& [actor, entries] : actor_collision_parts()) {
+            for (auto& entry : entries) if (entry->parts.get() == &parts) return entry.get();
         }
-        if (found->second.empty()) {
-            aurora::throw_host_exception<std::logic_error>("LiveActor has an empty CollisionParts registration list.");
-        }
-        return found->second.front();
+        return nullptr;
     }
-
-}  // namespace
+}
 
 namespace smgpc::compat {
-
-    bool has_actor_collision_parts(const LiveActor *actor) noexcept {
-        const auto found = actor_collision_parts().find(actor);
-        return actor != nullptr && found != actor_collision_parts().end() &&
-               !found->second.empty();
-    }
-
-    std::size_t actor_collision_parts_count(const LiveActor *actor) noexcept {
-        const auto found = actor_collision_parts().find(actor);
-        return actor != nullptr && found != actor_collision_parts().end() ?
-                   found->second.size() :
-                   0U;
-    }
-
-    std::string_view actor_collision_parts_source(const LiveActor *actor) noexcept {
-        const auto found = actor_collision_parts().find(actor);
-        return found != actor_collision_parts().end() && !found->second.empty() ?
-                   std::string_view(found->second.front().source) :
-                   std::string_view{};
-    }
-
-    std::vector<ActorCollisionPartsResource>
-    actor_collision_parts_resources(const LiveActor *actor) {
-        auto resources = std::vector<ActorCollisionPartsResource>{};
-        const auto found = actor_collision_parts().find(actor);
-        if (actor == nullptr || found == actor_collision_parts().end()) {
-            return resources;
+    CollisionParts* create_collision_parts(ResourceHolder* resources, const char* name,
+                                           HitSensor* sensor, const TPos3f& matrix,
+                                           int scale_type, s32 category) {
+        const aurora::allocation::HostAllocationScope host;
+        auto* collision = scene::StageCollisionService::active();
+        auto* resource_service = ResourceHolderService::active();
+        auto* holder = scene::current_scene_obj_holder();
+        if (!resources || !name || !sensor || !sensor->mHost || !collision || !resource_service || !holder) {
+            aurora::throw_host_exception<std::logic_error>("CollisionParts requires its actor, resources, scene and collision owners.");
         }
-
-        resources.reserve(found->second.size());
-        for (const auto &state : found->second) {
-            resources.push_back(ActorCollisionPartsResource{
-                .resource_name = state.resource_name,
-                .kcl_source = state.source,
-                .attributes_source = state.attributes_source,
-                .kcl_size = state.kcl.size(),
-                .attributes_size = state.attributes.size(),
-                .bounding_radius = state.bounding_radius,
-            });
+        if (category != 0) collision = &scene::current_collision_director_ownership()->category_service(category);
+        if (scale_type < MR::CollisionScaleType_AutoEqualScale || scale_type > MR::CollisionScaleType_Unk2) {
+            aurora::throw_host_exception<std::invalid_argument>("CollisionParts scale policy is outside the original enum.");
         }
-        return resources;
-    }
-
-    void release_actor_collision_parts(const LiveActor *actor) noexcept {
-        const auto found = actor_collision_parts().find(actor);
-        if (found == actor_collision_parts().end()) {
-            return;
+        const auto placement_zone_id = MR::getCurrentPlacementZoneId();
+        if (placement_zone_id < 0 || placement_zone_id >= MR::getZoneNum() || MR::getZoneNum() > 32) {
+            aurora::throw_host_exception<std::logic_error>("CollisionParts requires a valid original placement zone.");
         }
-        for (const auto &state : found->second) {
-            if (state.registration != nullptr) {
-                state.registration->release_owner();
+        const auto& backing = resource_service->backing(*resources);
+        // Retail resource lookup uses two 0x80-byte filename buffers.
+        char kcl_name[0x80];
+        char attributes_name[0x80];
+        std::snprintf(kcl_name, sizeof(kcl_name), "%s.kcl", name);
+        std::snprintf(attributes_name, sizeof(attributes_name), "%s.pa", name);
+        const auto* kcl_entry = backing.archive().find_resource(kcl_name);
+        const auto* attributes_entry = backing.archive().find_resource(attributes_name);
+        if (!kcl_entry) aurora::throw_host_exception<std::runtime_error>("Required CollisionParts KCL is unavailable: " + std::string(kcl_name));
+        auto state = std::make_unique<ActorCollisionPartsState>();
+        state->resource_owner = resource_service->retain(*resources);
+        state->scene_holder = holder;
+        state->service = collision;
+        state->service_generation = collision->generation();
+        state->resource_name = name;
+        state->source = backing.resolved_path().generic_string() + ":/" + kcl_entry->path;
+        state->kcl = backing.archive().file_data(*kcl_entry);
+        if (attributes_entry) {
+            state->attributes = backing.archive().file_data(*attributes_entry);
+            state->attributes_source = backing.resolved_path().generic_string() + ":/" + attributes_entry->path;
+        }
+        state->decoded = std::make_unique<resource::KCollisionResource>(state->kcl, state->attributes);
+        {
+            const aurora::allocation::ClientAllocationScope client;
+            if (MR::createSceneObj(SceneObj_CollisionDirector) == nullptr) {
+                aurora::throw_host_exception<std::logic_error>("CollisionParts requires its original CollisionDirector.");
+            }
+            state->parts.reset(new CollisionParts());
+            auto* data = state->decoded->native_file();
+            auto* attrs = state->decoded->attributes_data();
+            switch (scale_type) {
+            case MR::CollisionScaleType_AutoEqualScale:
+                state->parts->initWithAutoEqualScale(matrix, sensor, data, attrs, category, false);
+                break;
+            case MR::CollisionScaleType_NotUsingScale:
+                state->parts->initWithNotUsingScale(matrix, sensor, data, attrs, category, false);
+                break;
+            case MR::CollisionScaleType_Unk2:
+                state->parts->init(matrix, sensor, data, attrs, category, false);
+                break;
             }
         }
-        actor_collision_parts().erase(found);
+        state->registration = std::make_shared<scene::StageCollisionRegistrationState>(nullptr, state->parts.get());
+        state->registration->set_enabled(false);
+        state->published_current = copy_matrix(state->parts->mBaseMatrix);
+        state->published_previous = copy_matrix(state->parts->mPrevBaseMatrix);
+        const auto result = collision->register_kcl(state->kcl, state->published_current, state->source,
+            state->registration, state->attributes, sensor, placement_zone_id);
+        if (!result.accepted) aurora::throw_host_exception<std::runtime_error>("Required CollisionParts KCL is malformed: " + state->source);
+        if (category != 0) collision->build();
+        auto* result_parts = state->parts.get();
+        actor_collision_parts()[sensor->mHost].push_back(std::move(state));
+        return result_parts;
     }
 
-}  // namespace smgpc::compat
+    scene::StageCollisionService* collision_service_for_parts(const CollisionParts* parts) noexcept {
+        if (!parts) return nullptr;
+        // Address comparison does not dereference a possibly retired borrower.
+        for (auto& [actor, entries] : actor_collision_parts()) {
+            for (auto& state : entries) if (state->parts.get() == parts) return state->service;
+        }
+        return nullptr;
+    }
+
+    void publish_collision_parts(CollisionParts& parts) {
+        const aurora::allocation::HostAllocationScope host;
+        auto* state = find_state(parts);
+        // resetAllMtx is also called during init, before native publication.
+        if (!state) return;
+        if (scene::current_scene_obj_holder() != state->scene_holder || state->service->generation() != state->service_generation) {
+            aurora::throw_host_exception<std::logic_error>("CollisionParts matrix publication requires its live collision owner.");
+        }
+        const auto current = copy_matrix(parts.mBaseMatrix);
+        const auto previous = copy_matrix(parts.mPrevBaseMatrix);
+        if (current == state->published_current && previous == state->published_previous) return;
+        state->service->update_registered_transform(*state->registration, current, previous);
+        state->published_current = current;
+        state->published_previous = previous;
+    }
+
+    void publish_collision_parts_membership(CollisionParts& parts, bool enabled) {
+        const aurora::allocation::HostAllocationScope host;
+        if (auto* state = find_state(parts)) state->registration->set_enabled(enabled);
+    }
+
+    bool has_actor_collision_parts(const LiveActor* actor) noexcept {
+        const auto found = actor_collision_parts().find(actor);
+        return actor && found != actor_collision_parts().end() && !found->second.empty();
+    }
+    std::size_t actor_collision_parts_count(const LiveActor* actor) noexcept {
+        const auto found = actor_collision_parts().find(actor);
+        return actor && found != actor_collision_parts().end() ? found->second.size() : 0;
+    }
+    std::string_view actor_collision_parts_source(const LiveActor* actor) noexcept {
+        const auto found = actor_collision_parts().find(actor);
+        return found != actor_collision_parts().end() && !found->second.empty() ? found->second.front()->source : std::string_view{};
+    }
+    std::vector<ActorCollisionPartsResource> actor_collision_parts_resources(const LiveActor* actor) {
+        const aurora::allocation::HostAllocationScope host;
+        std::vector<ActorCollisionPartsResource> result;
+        const auto found = actor_collision_parts().find(actor);
+        if (found == actor_collision_parts().end()) return result;
+        for (const auto& state : found->second) {
+            result.push_back({state->resource_name, state->source, state->attributes_source,
+                              state->kcl.size(), state->attributes.size(), state->parts->_D8});
+        }
+        return result;
+    }
+    void release_actor_collision_parts(const LiveActor* actor) noexcept {
+        const aurora::allocation::HostAllocationScope host;
+        const auto found = actor_collision_parts().find(actor);
+        if (found == actor_collision_parts().end()) return;
+        // Detach the entries before destroying them: original invalidation
+        // publishes membership and must not traverse an erasing container.
+        auto entries = std::move(found->second);
+        actor_collision_parts().erase(found);
+        const_cast<LiveActor*>(actor)->mCollisionParts = nullptr;
+    }
+    void release_scene_collision_parts(const SceneObjHolder* holder) noexcept {
+        const aurora::allocation::HostAllocationScope host;
+        for (auto it = actor_collision_parts().begin(); it != actor_collision_parts().end();) {
+            auto* actor = it->first;
+            bool belongs = !it->second.empty() && it->second.front()->scene_holder == holder;
+            ++it;
+            if (belongs) release_actor_collision_parts(actor);
+        }
+    }
+}
 
 namespace MR {
-
-    ResourceHolder *createAndAddResourceHolder(const char *archive_name) {
-        if (archive_name == nullptr) {
-            aurora::throw_host_exception<std::invalid_argument>("ResourceHolder requires an exact archive name.");
-        }
-        auto *service = smgpc::compat::ResourceHolderService::active();
-        if (service == nullptr) {
-            aurora::throw_host_exception<std::logic_error>("ResourceHolder requires an active runtime owner.");
-        }
+    ResourceHolder* createAndAddResourceHolder(const char* archive_name) {
+        if (!archive_name) aurora::throw_host_exception<std::invalid_argument>("ResourceHolder requires an exact archive name.");
+        auto* service = smgpc::compat::ResourceHolderService::active();
+        if (!service) aurora::throw_host_exception<std::logic_error>("ResourceHolder requires an active runtime owner.");
         return service->create_and_add(archive_name);
     }
-
-    void initCollisionPartsFromResourceHolder(LiveActor *actor, const char *resource_name,
-                                              HitSensor *sensor, ResourceHolder *resource_holder,
-                                              MtxPtr matrix) {
-        if (actor == nullptr || resource_name == nullptr || sensor == nullptr ||
-            resource_holder == nullptr) {
-            aurora::throw_host_exception<std::invalid_argument>(
-                "CollisionParts requires an actor, resource name, sensor, and ResourceHolder.");
-        }
-        auto *collision = smgpc::scene::StageCollisionService::active();
-        if (collision == nullptr) {
-            aurora::throw_host_exception<std::logic_error>("CollisionParts requires an active stage collision owner.");
-        }
-
-        auto actor_matrix = TPos3f{};
-        if (matrix == nullptr) {
-            MR::makeMtxTRS(actor_matrix.toMtxPtr(), actor);
-            matrix = actor_matrix.toMtxPtr();
-        }
-        const auto host_matrix = copy_matrix(matrix);
-
-        auto* resources = smgpc::compat::ResourceHolderService::active();
-        if (resources == nullptr) aurora::throw_host_exception<std::logic_error>("CollisionParts requires its ResourceHolder owner");
-        const auto& backing = resources->backing(*resource_holder);
-        const auto kcl_name = std::string(resource_name) + ".kcl";
-        const auto attributes_name = std::string(resource_name) + ".pa";
-        const auto *kcl_entry = backing.archive().find_resource(kcl_name);
-        if (kcl_entry == nullptr) {
-            aurora::throw_host_exception<std::runtime_error>("Required CollisionParts KCL is unavailable: " + kcl_name);
-        }
-        const auto *attributes_entry = backing.archive().find_resource(attributes_name);
-        const auto kcl = backing.archive().file_data(*kcl_entry);
-        const auto attributes = attributes_entry != nullptr ?
-                                    backing.archive().file_data(*attributes_entry) :
-                                    std::span<const std::uint8_t>{};
-        const auto source = backing.resolved_path().generic_string() + ":/" +
-                            kcl_entry->path;
-        const auto attributes_source =
-            attributes_entry != nullptr ?
-                backing.resolved_path().generic_string() + ":/" +
-                    attributes_entry->path :
-                std::string{};
-
-        if (const auto found = actor_collision_parts().find(actor);
-            found != actor_collision_parts().end()) {
-            if (std::ranges::any_of(found->second, [&](const auto &state) {
-                    return state.resource_holder == resource_holder && state.source == source;
-                })) {
-                return;
-            }
-        }
-
-        // CollisionParts::init selects its CollisionZone from the placement
-        // checker at creation. Retain that identity when the scope ends.
-        const auto placement_zone_id = MR::getCurrentPlacementZoneId();
-        if (placement_zone_id < 0) {
-            aurora::throw_host_exception<std::logic_error>("CollisionParts requires an active placement-zone ownership scope.");
-        }
-        auto registration = std::make_shared<smgpc::scene::StageCollisionRegistrationState>(
-            &actor->mFlag.mIsDead);
-        const auto result = collision->register_kcl(kcl, host_matrix, source, registration,
-                                                    attributes, sensor, placement_zone_id);
-        if (!result.accepted) {
-            registration->release_owner();
-            aurora::throw_host_exception<std::runtime_error>("Required CollisionParts KCL is malformed: " + source);
-        }
-
-        actor_collision_parts()[actor].push_back(ActorCollisionPartsState{
-            .resource_holder = resource_holder,
-            .sensor = sensor,
-            .kcl = kcl,
-            .attributes = attributes,
-            .matrix = host_matrix,
-            .bounding_radius = result.local_bounding_radius * average_matrix_scale(host_matrix),
-            .resource_name = resource_name,
-            .source = source,
-            .attributes_source = attributes_source,
-            .registration = std::move(registration),
-        });
-    }
-
-    f32 getCollisionBoundingSphereRange(const LiveActor *actor) {
-        if (actor == nullptr) {
-            aurora::throw_host_exception<std::invalid_argument>("CollisionParts bounding range requires a LiveActor.");
-        }
-        return require_actor_collision_parts(actor).bounding_radius;
-    }
-
-    void invalidateCollisionParts(LiveActor *actor) {
-        // The primary registration owns the native equivalent of the original
-        // CollisionParts zone membership. Query filters consult it even after
-        // the stage acceleration structure has been built.
-        require_actor_collision_parts(actor).registration->set_enabled(false);
-    }
-
-}  // namespace MR
+}

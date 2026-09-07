@@ -1,6 +1,21 @@
 #pragma once
 
+#include "JSystem/J2DGraph/J2DOrthoGraph.hpp"
+
+class J2DOrthoGraphSimple : public J2DOrthoGraph {
+public:
+    J2DOrthoGraphSimple();
+
+    virtual ~J2DOrthoGraphSimple() {
+    }
+
+    virtual void setPort();
+};
+
+
+
 namespace MR {
+    void loadProjectionMtxFor2D();
     void reinitGX();
     void resetTextureCacheSize();
     void loadViewMtxFor2DModel();

@@ -1,0 +1,672 @@
+{
+  "CollisionParts": [
+    {
+      "name": "__ct__14CollisionPartsFv",
+      "size": "172",
+      "match_percent": 99.88372
+    },
+    {
+      "name": "init__14CollisionPartsFRCQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>P9HitSensorPCvPCvlb",
+      "size": "196",
+      "match_percent": 100.0
+    },
+    {
+      "name": "addToBelongZone__14CollisionPartsFv",
+      "size": "88",
+      "match_percent": 100.0
+    },
+    {
+      "name": "removeFromBelongZone__14CollisionPartsFv",
+      "size": "88",
+      "match_percent": 100.0
+    },
+    {
+      "name": "initWithAutoEqualScale__14CollisionPartsFRCQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>P9HitSensorPCvPCvlb",
+      "size": "20",
+      "match_percent": 100.0
+    },
+    {
+      "name": "initWithNotUsingScale__14CollisionPartsFRCQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>P9HitSensorPCvPCvlb",
+      "size": "20",
+      "match_percent": 100.0
+    },
+    {
+      "name": "resetAllMtx__14CollisionPartsFRCQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>",
+      "size": "48",
+      "match_percent": 100.0
+    },
+    {
+      "name": "resetAllMtx__14CollisionPartsFv",
+      "size": "116",
+      "match_percent": 100.0
+    },
+    {
+      "name": "forceResetAllMtxAndSetUpdateMtxOneTime__14CollisionPartsFv",
+      "size": "84",
+      "match_percent": 100.0
+    },
+    {
+      "name": "resetAllMtxPrivate__14CollisionPartsFRCQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>",
+      "size": "96",
+      "match_percent": 100.0
+    },
+    {
+      "name": "setMtx__14CollisionPartsFRCQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "setMtx__14CollisionPartsFv",
+      "size": "12",
+      "match_percent": 100.0
+    },
+    {
+      "name": "updateMtx__14CollisionPartsFv",
+      "size": "324",
+      "match_percent": 99.93827
+    },
+    {
+      "name": "makeEqualScale__14CollisionPartsFPA4_f",
+      "size": "444",
+      "match_percent": 99.34234
+    },
+    {
+      "name": "updateBoundingSphereRange__14CollisionPartsFv",
+      "size": "72",
+      "match_percent": 100.0
+    },
+    {
+      "name": "updateBoundingSphereRange__14CollisionPartsFQ29JGeometry8TVec3<f>",
+      "size": "32",
+      "match_percent": 99.375
+    },
+    {
+      "name": "updateBoundingSphereRangePrivate__14CollisionPartsFf",
+      "size": "24",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getHostName__14CollisionPartsCFv",
+      "size": "48",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getPlacementZoneID__14CollisionPartsCFv",
+      "size": "12",
+      "match_percent": 100.0
+    },
+    {
+      "name": "projectToPlane__14CollisionPartsFPQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+      "size": "180",
+      "match_percent": 32.511112
+    },
+    {
+      "name": "createAreaPolygonListArray__14CollisionPartsFP8TriangleUlPQ29JGeometry8TVec3<f>Ul",
+      "size": "272",
+      "match_percent": 92.27941
+    },
+    {
+      "name": "calcForceMovePower__14CollisionPartsCFPQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+      "size": "136",
+      "match_percent": 83.52941
+    },
+    {
+      "name": "@60988",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "@60989",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "@62033",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "@62135",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "@62423",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "[.sdata2-0]",
+      "size": "32",
+      "match_percent": 53.846157
+    }
+  ],
+  "CollisionDirector": [
+    {
+      "name": "__ct__17CollisionDirectorFv",
+      "size": "204",
+      "match_percent": 100.0
+    },
+    {
+      "name": "init__17CollisionDirectorFRC12JMapInfoIter",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "initAfterPlacement__17CollisionDirectorFv",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "movement__17CollisionDirectorFv",
+      "size": "96",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getCollisionDirector__2MRFv",
+      "size": "40",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__dt__17CollisionDirectorFv",
+      "size": "88",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__vt__17CollisionDirector",
+      "size": "36",
+      "match_percent": 100.0
+    },
+    {
+      "name": "[.data-0]",
+      "size": "56",
+      "match_percent": 97.53087
+    }
+  ],
+  "CollisionCategorizedKeeper": [
+    {
+      "name": "__ct__26CollisionCategorizedKeeperFl",
+      "size": "152",
+      "match_percent": 100.0
+    },
+    {
+      "name": "movement__26CollisionCategorizedKeeperFv",
+      "size": "224",
+      "match_percent": 97.14286
+    },
+    {
+      "name": "addToZone__26CollisionCategorizedKeeperFP14CollisionPartsl",
+      "size": "68",
+      "match_percent": 100.0
+    },
+    {
+      "name": "removeFromZone__26CollisionCategorizedKeeperFP14CollisionPartsl",
+      "size": "68",
+      "match_percent": 100.0
+    },
+    {
+      "name": "addToGlobal__26CollisionCategorizedKeeperFP14CollisionParts",
+      "size": "60",
+      "match_percent": 100.0
+    },
+    {
+      "name": "removeFromGlobal__26CollisionCategorizedKeeperFP14CollisionParts",
+      "size": "60",
+      "match_percent": 100.0
+    },
+    {
+      "name": "createAreaPolygonListArray__26CollisionCategorizedKeeperFP8TriangleUlPQ29JGeometry8TVec3<f>Ul",
+      "size": "352",
+      "match_percent": 93.13636
+    },
+    {
+      "name": "isSphereOverlappingWithBox__26CollisionCategorizedKeeperFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>f",
+      "size": "140",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getZone__26CollisionCategorizedKeeperFi",
+      "size": "160",
+      "match_percent": 92.575
+    },
+    {
+      "name": "__ct__13CollisionZoneFl",
+      "size": "124",
+      "match_percent": 100.0
+    },
+    {
+      "name": "addParts__13CollisionZoneFP14CollisionParts",
+      "size": "44",
+      "match_percent": 100.0
+    },
+    {
+      "name": "calcMinMaxAndRadius__13CollisionZoneFv",
+      "size": "440",
+      "match_percent": 98.63636
+    },
+    {
+      "name": "calcMinMaxAndRadiusIfMoveOuter__13CollisionZoneFP14CollisionParts",
+      "size": "236",
+      "match_percent": 100.0
+    },
+    {
+      "name": "addAndUpdateMinMax__13CollisionZoneFQ29JGeometry8TVec3<f>Q29JGeometry8TVec3<f>",
+      "size": "220",
+      "match_percent": 100.0
+    },
+    {
+      "name": "eraseParts__13CollisionZoneFP14CollisionParts",
+      "size": "116",
+      "match_percent": 86.89655
+    },
+    {
+      "name": "__dt__26CollisionCategorizedKeeperFv",
+      "size": "88",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getTrans__14CollisionPartsFv",
+      "size": "16",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__vt__26CollisionCategorizedKeeper",
+      "size": "36",
+      "match_percent": 100.0
+    },
+    {
+      "name": "@61210",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "@62246",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "@63108",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "[.data-0]",
+      "size": "72",
+      "match_percent": 97.942856
+    },
+    {
+      "name": "[.sdata2-0]",
+      "size": "16",
+      "match_percent": 85.71429
+    }
+  ],
+  "KCollision": [
+    {
+      "name": "calcFarthestVertexDistance__16KCollisionServerFv",
+      "size": "392",
+      "match_percent": 99.234695
+    }
+  ],
+  "LiveActor": [
+    {
+      "name": "initActorCollisionParts__9LiveActorFPCcP9HitSensorP14ResourceHolderPA4_fbb",
+      "size": "276",
+      "match_percent": 100.0
+    }
+  ],
+  "LiveActorUtil": [
+    {
+      "name": "createCollisionParts__27@unnamed@LiveActorUtil_cpp@FP14ResourceHolderPCcP9HitSensorRCQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>Q22MR18CollisionScaleTypel",
+      "size": "352",
+      "match_percent": 99.77273
+    },
+    {
+      "name": "calcCollisionMtx__27@unnamed@LiveActorUtil_cpp@FPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>PC9LiveActor",
+      "size": "196",
+      "match_percent": 100.0
+    },
+    {
+      "name": "validateExCollisionParts__2MRFP9LiveActor",
+      "size": "20",
+      "match_percent": 100.0
+    },
+    {
+      "name": "invalidateExCollisionParts__2MRFP9LiveActor",
+      "size": "20",
+      "match_percent": 100.0
+    },
+    {
+      "name": "setBinderCollisionPartsFilter__2MRFP9LiveActorP24CollisionPartsFilterBase",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "initCollisionParts__2MRFP9LiveActorPCcP9HitSensorPA4_f",
+      "size": "20",
+      "match_percent": 100.0
+    },
+    {
+      "name": "initCollisionPartsAutoEqualScale__2MRFP9LiveActorPCcP9HitSensorPA4_f",
+      "size": "20",
+      "match_percent": 100.0
+    },
+    {
+      "name": "initCollisionPartsAutoEqualScaleOne__2MRFP9LiveActorPCcP9HitSensorPA4_f",
+      "size": "20",
+      "match_percent": 100.0
+    },
+    {
+      "name": "initCollisionPartsFromResourceHolder__2MRFP9LiveActorPCcP9HitSensorP14ResourceHolderPA4_f",
+      "size": "12",
+      "match_percent": 100.0
+    },
+    {
+      "name": "createCollisionPartsFromLiveActor__2MRFP9LiveActorPCcP9HitSensorQ22MR18CollisionScaleType",
+      "size": "104",
+      "match_percent": 100.0
+    },
+    {
+      "name": "createCollisionPartsFromLiveActor__2MRFP9LiveActorPCcP9HitSensorPA4_fQ22MR18CollisionScaleType",
+      "size": "112",
+      "match_percent": 100.0
+    },
+    {
+      "name": "createCollisionPartsFromResourceHolder__2MRFP14ResourceHolderPCcP9HitSensorRCQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>Q22MR18CollisionScaleType",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "tryCreateCollisionAllOtherCategory__2MRFP9LiveActorP9HitSensorPP14CollisionPartsPP14CollisionPartsPP14CollisionParts",
+      "size": "136",
+      "match_percent": 100.0
+    },
+    {
+      "name": "tryCreateCollisionAllOtherCategory__2MRFP9LiveActorPA4_fP9HitSensorPP14CollisionPartsPP14CollisionPartsPP14CollisionParts",
+      "size": "148",
+      "match_percent": 100.0
+    },
+    {
+      "name": "isValidCollisionParts__2MRFP9LiveActor",
+      "size": "12",
+      "match_percent": 100.0
+    },
+    {
+      "name": "validateCollisionParts__2MRFP9LiveActor",
+      "size": "116",
+      "match_percent": 100.0
+    },
+    {
+      "name": "validateCollisionParts__2MRFP14CollisionParts",
+      "size": "64",
+      "match_percent": 100.0
+    },
+    {
+      "name": "invalidateCollisionParts__2MRFP9LiveActor",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "invalidateCollisionParts__2MRFP14CollisionParts",
+      "size": "64",
+      "match_percent": 100.0
+    },
+    {
+      "name": "onUpdateCollisionParts__2MRFP9LiveActor",
+      "size": "72",
+      "match_percent": 100.0
+    },
+    {
+      "name": "onUpdateCollisionPartsOnetimeImmediately__2MRFP9LiveActor",
+      "size": "128",
+      "match_percent": 100.0
+    },
+    {
+      "name": "offUpdateCollisionParts__2MRFP9LiveActor",
+      "size": "72",
+      "match_percent": 100.0
+    },
+    {
+      "name": "resetAllCollisionMtx__2MRFP9LiveActor",
+      "size": "88",
+      "match_percent": 100.0
+    },
+    {
+      "name": "setCollisionMtx__2MRFP9LiveActor",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "setCollisionMtx__2MRFP9LiveActorP14CollisionParts",
+      "size": "100",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getCollisionParts__2MRFPC9LiveActor",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "isExistCollisionParts__2MRFPC9LiveActor",
+      "size": "16",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getCollisionSensorType__2MRFPC14CollisionParts",
+      "size": "12",
+      "match_percent": 100.0
+    }
+  ],
+  "HitInfo": [
+    {
+      "name": "__ct__8TriangleFv",
+      "size": "120",
+      "match_percent": 100.0
+    },
+    {
+      "name": "fillData__8TriangleFP14CollisionPartsUlP9HitSensor",
+      "size": "424",
+      "match_percent": 99.85849
+    },
+    {
+      "name": "getHostName__8TriangleCFv",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getHostPlacementZoneID__8TriangleCFv",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "isHostMoved__8TriangleCFv",
+      "size": "20",
+      "match_percent": 100.0
+    },
+    {
+      "name": "isValid__8TriangleCFv",
+      "size": "20",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getNormal__8TriangleCFi",
+      "size": "16",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getFaceNormal__8TriangleCFv",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getEdgeNormal__8TriangleCFi",
+      "size": "20",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getPos__8TriangleCFi",
+      "size": "16",
+      "match_percent": 100.0
+    },
+    {
+      "name": "calcAndGetNormal__8TriangleFi",
+      "size": "344",
+      "match_percent": 100.0
+    },
+    {
+      "name": "calcAndGetEdgeNormal__8TriangleFi",
+      "size": "292",
+      "match_percent": 100.0
+    },
+    {
+      "name": "calcAndGetPos__8TriangleFi",
+      "size": "140",
+      "match_percent": 100.0
+    },
+    {
+      "name": "calcForceMovePower__8TriangleCFPQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getAttributes__8TriangleCFv",
+      "size": "84",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getBaseMtx__8TriangleCFv",
+      "size": "12",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getBaseInvMtx__8TriangleCFv",
+      "size": "12",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getPrevBaseMtx__8TriangleCFv",
+      "size": "12",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__ct__7HitInfoFv",
+      "size": "124",
+      "match_percent": 100.0
+    },
+    {
+      "name": "isCollisionAtFace__7HitInfoCFv",
+      "size": "20",
+      "match_percent": 100.0
+    },
+    {
+      "name": "isCollisionAtEdge__7HitInfoCFv",
+      "size": "32",
+      "match_percent": 100.0
+    },
+    {
+      "name": "isCollisionAtCorner__7HitInfoCFv",
+      "size": "32",
+      "match_percent": 100.0
+    },
+    {
+      "name": "@55647",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "[.sdata2-0]",
+      "size": "8",
+      "match_percent": 66.66667
+    }
+  ],
+  "SunshadeMapHolder": [
+    {
+      "name": "__ct__17SunshadeMapHolderFv",
+      "size": "88",
+      "match_percent": 99.545456
+    },
+    {
+      "name": "isInShadeFromTheSun__2MRFRCQ29JGeometry8TVec3<f>f",
+      "size": "204",
+      "match_percent": 100.0
+    },
+    {
+      "name": "createSunshadeMapHolder__2MRFv",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__dt__17SunshadeMapHolderFv",
+      "size": "88",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__vt__17SunshadeMapHolder",
+      "size": "36",
+      "match_percent": 100.0
+    },
+    {
+      "name": "@53310",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "@53311",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "[.data-0]",
+      "size": "72",
+      "match_percent": 100.0
+    },
+    {
+      "name": "[.sdata2-0]",
+      "size": "8",
+      "match_percent": 50.0
+    }
+  ],
+  "CameraPolygonCodeUtil": [
+    {
+      "name": "initCameraCodeCollection__2MRFPCcl",
+      "size": "68",
+      "match_percent": 100.0
+    },
+    {
+      "name": "registerCameraCode__2MRFUl",
+      "size": "52",
+      "match_percent": 100.0
+    },
+    {
+      "name": "termCameraCodeCollection__2MRFv",
+      "size": "36",
+      "match_percent": 100.0
+    }
+  ],
+  "CollisionPartsFilter": [
+    {
+      "name": "isInvalidParts__26CollisionPartsFilterSensorCFPC14CollisionParts",
+      "size": "24",
+      "match_percent": 100.0
+    },
+    {
+      "name": "isInvalidParts__25CollisionPartsFilterActorCFPC14CollisionParts",
+      "size": "28",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__vt__25CollisionPartsFilterActor",
+      "size": "12",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__vt__26CollisionPartsFilterSensor",
+      "size": "12",
+      "match_percent": 100.0
+    },
+    {
+      "name": "[.data-0]",
+      "size": "24",
+      "match_percent": 100.0
+    }
+  ]
+}

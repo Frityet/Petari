@@ -1,3 +1,6 @@
+#include "Game/Camera/CameraPolygonCodeUtil.hpp"
+#include "Game/Map/CollisionDirector.hpp"
+#include "Game/Map/CollisionCode.hpp"
 #include "Game/Map/KCollision.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include <algorithm>
@@ -690,4 +693,37 @@ void KCollisionServer::V3u::setUsingCast(const TVec3f& rPos) {
     x = aurora::ppc::truncate_s32(rPos.x);
     y = aurora::ppc::truncate_s32(rPos.y);
     z = aurora::ppc::truncate_s32(rPos.z);
+}
+
+bool KCollisionServer::calcFarthestVertexDistance() {
+    s32 triCount = getTriangleNum();
+    f32 maxDistance = 0.0f;
+    bool result = true;
+
+    for (u32 i = 0; i < (u32)triCount; i++) {
+        KC_PrismData* prism = &mFile->mPrisms[i + 1];
+        JMapInfoIter iter = getAttributes(i);
+
+        if (!iter.isValid()) {
+            result = false;
+        } else {
+            MR::registerCameraCode(MR::getCollisionDirector()->mCode->getCameraID(iter));
+        }
+
+        if (isNearParallelNormal(prism)) {
+            prism->mHeight = -MR::abs(prism->mHeight);
+        } else {
+            for (s32 j = 0; j < 3; j++) {
+                TVec3f pos = getPos(prism, j);
+                f32 distSq = pos.squared();
+
+                if (maxDistance < distSq) {
+                    maxDistance = distSq;
+                }
+            }
+        }
+    }
+
+    mMaxVertexDistance = MR::sqrt(maxDistance);
+    return result;
 }

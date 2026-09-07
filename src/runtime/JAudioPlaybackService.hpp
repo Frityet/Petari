@@ -52,8 +52,13 @@ namespace smgpc::runtime {
                                std::uint32_t delay_frames);
         [[nodiscard]] std::optional<std::uint32_t>
         find_sound_id(std::string_view name);
+        void set_trigger_sound_permitted(bool permitted);
+        [[nodiscard]] bool is_trigger_sound_permitted() const;
+        [[nodiscard]] bool is_trigger_sound_permitted(std::uint32_t sound_id) const;
         void set_level_sound_permitted(bool permitted);
         [[nodiscard]] bool is_level_sound_permitted() const;
+        [[nodiscard]] bool is_level_sound_permitted(std::uint32_t sound_id) const;
+        [[nodiscard]] bool is_sound_permitted() const;
         [[nodiscard]] JAISoundHandle *start_stage_bgm(
             std::string_view name, bool prepared);
         [[nodiscard]] JAISoundHandle *start_stage_bgm(
@@ -126,6 +131,7 @@ namespace smgpc::runtime {
         JAISoundHandle _stage_handle;
         std::uint64_t _frame_index = 0U;
         bool _frame_open = false;
+        bool _trigger_sound_permitted = true;
         bool _level_sound_permitted = true;
     };
 

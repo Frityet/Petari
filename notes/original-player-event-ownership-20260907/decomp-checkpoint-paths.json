@@ -1,0 +1,4 @@
+[
+  "src/Game/Player/PlayerEvent.cpp",
+  "include/Game/Player/PlayerEvent.hpp"
+]

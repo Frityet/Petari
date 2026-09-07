@@ -1,0 +1,26 @@
+[
+  {
+    "path": "include/Game/System/WPadAcceleration.hpp",
+    "sha256": "cb84e74f46adf2a099c1541118da7dbc519ebe6aefc2bfc06dbe30d03854e8e4"
+  },
+  {
+    "path": "libs/RVL_SDK/include/revolution/kpad.h",
+    "sha256": "e9a2ecc05efc733b96ab7d8dfae1c5bdff8a0a6f6046c93f5684ba35941b0ab4"
+  },
+  {
+    "path": "src/Game/System/WPadAcceleration.cpp",
+    "sha256": "1b72aa24864be2be7c2edbf7bac60f41c5724158a5e1f64e8a83e7f3311b4605"
+  },
+  {
+    "path": "src/Game/System/WPadHVSwing.cpp",
+    "sha256": "76fb49a449cb1c4dc911d34f9e8fae6cd47bd80de27d676fb0b0f2eeca383af9"
+  },
+  {
+    "path": "src/Game/System/WPadPointer.cpp",
+    "sha256": "5eb140a50a293046af6ca22eee81fc32f3c688b5bef43dce9209b6e89e182bf5"
+  },
+  {
+    "path": "src/Game/Util/LayoutUtil.cpp",
+    "sha256": "8cbf870c857a24c1522faef619b1975491d8255f333cc2e42dc7b8be42159f0c"
+  }
+]

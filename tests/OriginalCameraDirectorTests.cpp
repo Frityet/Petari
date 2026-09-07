@@ -4,6 +4,7 @@
 #include "compat/JkrAllocationDomain.hpp"
 #include "compat/StageResourceBinding.hpp"
 #include "compat/StageSessionState.hpp"
+#include "compat/StarPointerDepthOwnership.hpp"
 #include "compat/StageZoneMatrixRegistry.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
@@ -105,6 +106,7 @@ int main() {
     auto& scheduler = runtime.scheduler();
     smgpc::runtime::SceneSchedulerBinding scheduler_binding(scheduler);
     (void)renderer.begin_frame();
+    smgpc::compat::require_star_pointer_depth().initialize_layouts();
     const auto baseline_entries = scheduler.snapshot().size();
     const auto baseline_objects = smgpc::compat::name_obj_runtime_state_count();
     const auto baseline_free = process.host_heaps()->root_heap().getFreeSize();

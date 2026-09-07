@@ -1,0 +1,1380 @@
+[
+  {
+    "source": "Screen/StarPointerDirector",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Screen/StarPointerDirector.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-star-pointer-owner-closure-20260907/StarPointerDirector-wii.o"
+    ],
+    "exit_code": 0,
+    "symbols": [
+      {
+        "name": "__ct__19StarPointerDirectorFv",
+        "demangled_name": "StarPointerDirector::StarPointerDirector()",
+        "size": "260",
+        "match_percent": 100.0
+      },
+      {
+        "name": "update__19StarPointerDirectorFv",
+        "demangled_name": "StarPointerDirector::update()",
+        "size": "356",
+        "match_percent": 100.0
+      },
+      {
+        "name": "draw__19StarPointerDirectorFv",
+        "demangled_name": "StarPointerDirector::draw()",
+        "size": "140",
+        "match_percent": 100.0
+      },
+      {
+        "name": "startHandPointer__19StarPointerDirectorFv",
+        "demangled_name": "StarPointerDirector::startHandPointer()",
+        "size": "24",
+        "match_percent": 100.0
+      },
+      {
+        "name": "startHandPointerReactionWithCrossCursor__19StarPointerDirectorFv",
+        "demangled_name": "StarPointerDirector::startHandPointerReactionWithCrossCursor()",
+        "size": "24",
+        "match_percent": 100.0
+      },
+      {
+        "name": "startFingerPointer__19StarPointerDirectorFv",
+        "demangled_name": "StarPointerDirector::startFingerPointer()",
+        "size": "24",
+        "match_percent": 100.0
+      },
+      {
+        "name": "startStarPointer__19StarPointerDirectorFv",
+        "demangled_name": "StarPointerDirector::startStarPointer()",
+        "size": "24",
+        "match_percent": 100.0
+      },
+      {
+        "name": "startStarPointerNozzle__19StarPointerDirectorFv",
+        "demangled_name": "StarPointerDirector::startStarPointerNozzle()",
+        "size": "24",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setGameSceneCameraMtx__19StarPointerDirectorFv",
+        "demangled_name": "StarPointerDirector::setGameSceneCameraMtx()",
+        "size": "100",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getStarPointerController__19StarPointerDirectorCFl",
+        "demangled_name": "StarPointerDirector::getStarPointerController(long) const",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getStarPointerLayout__19StarPointerDirectorCFl",
+        "demangled_name": "StarPointerDirector::getStarPointerLayout(long) const",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__26StarPointerTransformHolderFv",
+        "demangled_name": "StarPointerTransformHolder::StarPointerTransformHolder()",
+        "size": "76",
+        "match_percent": 100.0
+      },
+      {
+        "name": "movement__26StarPointerTransformHolderFv",
+        "demangled_name": "StarPointerTransformHolder::movement()",
+        "size": "288",
+        "match_percent": 99.72222
+      },
+      {
+        "name": "__ct__16StarPointerPeekZFv",
+        "demangled_name": "StarPointerPeekZ::StarPointerPeekZ()",
+        "size": "92",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setDrawSyncToken__16StarPointerPeekZFv",
+        "demangled_name": "StarPointerPeekZ::setDrawSyncToken()",
+        "size": "72",
+        "match_percent": 100.0
+      },
+      {
+        "name": "drawSyncCallback__16StarPointerPeekZFUs",
+        "demangled_name": "StarPointerPeekZ::drawSyncCallback(unsigned short)",
+        "size": "300",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isOnScreenEdge__19StarPointerFunctionFRCQ29JGeometry8TVec2<f>ff",
+        "demangled_name": "StarPointerFunction::isOnScreenEdge(const JGeometry::TVec2<float>&, float, float)",
+        "size": "252",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isOnScreenEdge__19StarPointerFunctionFl",
+        "demangled_name": "StarPointerFunction::isOnScreenEdge(long)",
+        "size": "104",
+        "match_percent": 100.0
+      },
+      {
+        "name": "forceInsideScreenEdge__19StarPointerFunctionFPQ29JGeometry8TVec2<f>",
+        "demangled_name": "StarPointerFunction::forceInsideScreenEdge(JGeometry::TVec2<float>*)",
+        "size": "244",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getStarPointerDirector__19StarPointerFunctionFv",
+        "demangled_name": "StarPointerFunction::getStarPointerDirector()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getNumStarPointer__19StarPointerFunctionFv",
+        "demangled_name": "StarPointerFunction::getNumStarPointer()",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getPastPointNum__19StarPointerFunctionFl",
+        "demangled_name": "StarPointerFunction::getPastPointNum(long)",
+        "size": "60",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getPastPosition__19StarPointerFunctionFll",
+        "demangled_name": "StarPointerFunction::getPastPosition(long, long)",
+        "size": "80",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getNextPastPointNum__19StarPointerFunctionFl",
+        "demangled_name": "StarPointerFunction::getNextPastPointNum(long)",
+        "size": "60",
+        "match_percent": 100.0
+      },
+      {
+        "name": "canShoot__19StarPointerFunctionFl",
+        "demangled_name": "StarPointerFunction::canShoot(long)",
+        "size": "68",
+        "match_percent": 100.0
+      },
+      {
+        "name": "createLayout__19StarPointerDirectorFv",
+        "demangled_name": "StarPointerDirector::createLayout()",
+        "size": "176",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__defctor__17StarPointerLayoutFv",
+        "demangled_name": "StarPointerLayout::__defctor()",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__dt__17StarPointerLayoutFv",
+        "demangled_name": "StarPointerLayout::~StarPointerLayout()",
+        "size": "92",
+        "match_percent": 100.0
+      },
+      {
+        "name": "gekko_ps_copy16__5JMathFPvPCv",
+        "demangled_name": "JMath::gekko_ps_copy16(void*, const void*)",
+        "size": "68",
+        "match_percent": 100.0
+      }
+    ]
+  },
+  {
+    "source": "Screen/StarPointerLayout",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Screen/StarPointerLayout.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-star-pointer-owner-closure-20260907/StarPointerLayout-wii.o"
+    ],
+    "exit_code": 0,
+    "symbols": [
+      {
+        "name": "__ct__17StarPointerLayoutFPCc",
+        "demangled_name": "StarPointerLayout::StarPointerLayout(const char*)",
+        "size": "188",
+        "match_percent": 99.893616
+      },
+      {
+        "name": "initWithPort__17StarPointerLayoutFl",
+        "demangled_name": "StarPointerLayout::initWithPort(long)",
+        "size": "516",
+        "match_percent": 100.0
+      },
+      {
+        "name": "appear__17StarPointerLayoutFv",
+        "demangled_name": "StarPointerLayout::appear()",
+        "size": "56",
+        "match_percent": 100.0
+      },
+      {
+        "name": "kill__17StarPointerLayoutFv",
+        "demangled_name": "StarPointerLayout::kill()",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "startCommandStream__17StarPointerLayoutFPC9LiveActorPCQ29JGeometry8TVec3<f>b",
+        "demangled_name": "StarPointerLayout::startCommandStream(const LiveActor*, const JGeometry::TVec3<float>*, bool)",
+        "size": "116",
+        "match_percent": 100.0
+      },
+      {
+        "name": "endCommandStream__17StarPointerLayoutFPC9LiveActor",
+        "demangled_name": "StarPointerLayout::endCommandStream(const LiveActor*)",
+        "size": "52",
+        "match_percent": 100.0
+      },
+      {
+        "name": "forceEndCommandStream__17StarPointerLayoutFv",
+        "demangled_name": "StarPointerLayout::forceEndCommandStream()",
+        "size": "72",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isCommandStream__17StarPointerLayoutFPC9LiveActor",
+        "demangled_name": "StarPointerLayout::isCommandStream(const LiveActor*)",
+        "size": "44",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeWait__17StarPointerLayoutFv",
+        "demangled_name": "StarPointerLayout::exeWait()",
+        "size": "388",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeGrip__17StarPointerLayoutFv",
+        "demangled_name": "StarPointerLayout::exeGrip()",
+        "size": "612",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeHold__17StarPointerLayoutFv",
+        "demangled_name": "StarPointerLayout::exeHold()",
+        "size": "612",
+        "match_percent": 100.0
+      },
+      {
+        "name": "tearDownHold__17StarPointerLayoutFv",
+        "demangled_name": "StarPointerLayout::tearDownHold()",
+        "size": "144",
+        "match_percent": 99.72222
+      },
+      {
+        "name": "exeRelease__17StarPointerLayoutFv",
+        "demangled_name": "StarPointerLayout::exeRelease()",
+        "size": "504",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeOnReaction__17StarPointerLayoutFv",
+        "demangled_name": "StarPointerLayout::exeOnReaction()",
+        "size": "436",
+        "match_percent": 100.0
+      },
+      {
+        "name": "updateTouch__17StarPointerLayoutFv",
+        "demangled_name": "StarPointerLayout::updateTouch()",
+        "size": "144",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isTouch__17StarPointerLayoutFv",
+        "demangled_name": "StarPointerLayout::isTouch()",
+        "size": "20",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeOutScreen__17StarPointerLayoutFv",
+        "demangled_name": "StarPointerLayout::exeOutScreen()",
+        "size": "232",
+        "match_percent": 100.0
+      },
+      {
+        "name": "hideAll__17StarPointerLayoutFv",
+        "demangled_name": "StarPointerLayout::hideAll()",
+        "size": "132",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeHide__17StarPointerLayoutFv",
+        "demangled_name": "StarPointerLayout::exeHide()",
+        "size": "420",
+        "match_percent": 99.95238
+      },
+      {
+        "name": "tearDownHide__17StarPointerLayoutFv",
+        "demangled_name": "StarPointerLayout::tearDownHide()",
+        "size": "168",
+        "match_percent": 99.88095
+      },
+      {
+        "name": "calcAnim__17StarPointerLayoutFv",
+        "demangled_name": "StarPointerLayout::calcAnim()",
+        "size": "84",
+        "match_percent": 100.0
+      },
+      {
+        "name": "draw__17StarPointerLayoutCFv",
+        "demangled_name": "StarPointerLayout::draw() const",
+        "size": "164",
+        "match_percent": 100.0
+      },
+      {
+        "name": "drawDecoration__17StarPointerLayoutCFv",
+        "demangled_name": "StarPointerLayout::drawDecoration() const",
+        "size": "148",
+        "match_percent": 100.0
+      },
+      {
+        "name": "control__17StarPointerLayoutFv",
+        "demangled_name": "StarPointerLayout::control()",
+        "size": "984",
+        "match_percent": 99.939026
+      },
+      {
+        "name": "setPosition__17StarPointerLayoutFv",
+        "demangled_name": "StarPointerLayout::setPosition()",
+        "size": "92",
+        "match_percent": 100.0
+      },
+      {
+        "name": "rotateTest__17StarPointerLayoutFv",
+        "demangled_name": "StarPointerLayout::rotateTest()",
+        "size": "320",
+        "match_percent": 99.875
+      },
+      {
+        "name": "calcPoseNozzle__17StarPointerLayoutFRCQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec2<f>",
+        "demangled_name": "StarPointerLayout::calcPoseNozzle(const JGeometry::TVec2<float>&, const JGeometry::TVec2<float>&)",
+        "size": "208",
+        "match_percent": 100.0
+      },
+      {
+        "name": "changeLayout__17StarPointerLayoutF15StarPointerKind",
+        "demangled_name": "StarPointerLayout::changeLayout(StarPointerKind)",
+        "size": "332",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isChanceToRumble__17StarPointerLayoutCFv",
+        "demangled_name": "StarPointerLayout::isChanceToRumble() const",
+        "size": "156",
+        "match_percent": 100.0
+      },
+      {
+        "name": "hideBlur__17StarPointerLayoutFv",
+        "demangled_name": "StarPointerLayout::hideBlur()",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "resetSameNerve__17StarPointerLayoutFv",
+        "demangled_name": "StarPointerLayout::resetSameNerve()",
+        "size": "392",
+        "match_percent": 100.0
+      },
+      {
+        "name": "changeToStarPointer__17StarPointerLayoutFv",
+        "demangled_name": "StarPointerLayout::changeToStarPointer()",
+        "size": "100",
+        "match_percent": 100.0
+      },
+      {
+        "name": "changeToHandPointer__17StarPointerLayoutFv",
+        "demangled_name": "StarPointerLayout::changeToHandPointer()",
+        "size": "152",
+        "match_percent": 100.0
+      },
+      {
+        "name": "startAnimHandPaa__17StarPointerLayoutFv",
+        "demangled_name": "StarPointerLayout::startAnimHandPaa()",
+        "size": "108",
+        "match_percent": 99.81481
+      },
+      {
+        "name": "startAnimHandGuu__17StarPointerLayoutFv",
+        "demangled_name": "StarPointerLayout::startAnimHandGuu()",
+        "size": "108",
+        "match_percent": 99.81481
+      },
+      {
+        "name": "startAnimHandFinger__17StarPointerLayoutFv",
+        "demangled_name": "StarPointerLayout::startAnimHandFinger()",
+        "size": "108",
+        "match_percent": 99.81481
+      },
+      {
+        "name": "updateDecoration__17StarPointerLayoutFv",
+        "demangled_name": "StarPointerLayout::updateDecoration()",
+        "size": "76",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__17StarPointerNumberFP17StarPointerLayoutlPCc",
+        "demangled_name": "StarPointerNumber::StarPointerNumber(StarPointerLayout*, long, const char*)",
+        "size": "144",
+        "match_percent": 100.0
+      },
+      {
+        "name": "control__17StarPointerNumberFv",
+        "demangled_name": "StarPointerNumber::control()",
+        "size": "340",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isOffState__17StarPointerNumberCFv",
+        "demangled_name": "StarPointerNumber::isOffState() const",
+        "size": "180",
+        "match_percent": 100.0
+      },
+      {
+        "name": "startAnimPosition__17StarPointerNumberFUl",
+        "demangled_name": "StarPointerNumber::startAnimPosition(unsigned long)",
+        "size": "100",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__dt__17StarPointerNumberFv",
+        "demangled_name": "StarPointerNumber::~StarPointerNumber()",
+        "size": "92",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__sinit_\\StarPointerLayout_cpp",
+        "size": "124",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q220NrvStarPointerLayout15HostTypeNrvWaitFv",
+        "demangled_name": "NrvStarPointerLayout::HostTypeNrvWait::HostTypeNrvWait()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q220NrvStarPointerLayout21HostTypeNrvOnReactionFv",
+        "demangled_name": "NrvStarPointerLayout::HostTypeNrvOnReaction::HostTypeNrvOnReaction()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q220NrvStarPointerLayout15HostTypeNrvGripFv",
+        "demangled_name": "NrvStarPointerLayout::HostTypeNrvGrip::HostTypeNrvGrip()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q220NrvStarPointerLayout15HostTypeNrvHoldFv",
+        "demangled_name": "NrvStarPointerLayout::HostTypeNrvHold::HostTypeNrvHold()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q220NrvStarPointerLayout20HostTypeNrvHoldTouchFv",
+        "demangled_name": "NrvStarPointerLayout::HostTypeNrvHoldTouch::HostTypeNrvHoldTouch()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q220NrvStarPointerLayout18HostTypeNrvReleaseFv",
+        "demangled_name": "NrvStarPointerLayout::HostTypeNrvRelease::HostTypeNrvRelease()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q220NrvStarPointerLayout20HostTypeNrvOutScreenFv",
+        "demangled_name": "NrvStarPointerLayout::HostTypeNrvOutScreen::HostTypeNrvOutScreen()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q220NrvStarPointerLayout23HostTypeNrvNotConnectedFv",
+        "demangled_name": "NrvStarPointerLayout::HostTypeNrvNotConnected::HostTypeNrvNotConnected()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q220NrvStarPointerLayout15HostTypeNrvHideFv",
+        "demangled_name": "NrvStarPointerLayout::HostTypeNrvHide::HostTypeNrvHide()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q220NrvStarPointerLayout26HostTypeNrvHideImmediatelyFv",
+        "demangled_name": "NrvStarPointerLayout::HostTypeNrvHideImmediately::HostTypeNrvHideImmediately()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q220NrvStarPointerLayout21HostTypeNrvInvalidateFv",
+        "demangled_name": "NrvStarPointerLayout::HostTypeNrvInvalidate::HostTypeNrvInvalidate()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q220NrvStarPointerLayout25HostTypeNrvInvalidateWaitFv",
+        "demangled_name": "NrvStarPointerLayout::HostTypeNrvInvalidateWait::HostTypeNrvInvalidateWait()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "executeOnEnd__Q220NrvStarPointerLayout25HostTypeNrvInvalidateWaitCFP5Spine",
+        "demangled_name": "NrvStarPointerLayout::HostTypeNrvInvalidateWait::executeOnEnd(Spine*) const",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q220NrvStarPointerLayout25HostTypeNrvInvalidateWaitCFP5Spine",
+        "demangled_name": "NrvStarPointerLayout::HostTypeNrvInvalidateWait::execute(Spine*) const",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "executeOnEnd__Q220NrvStarPointerLayout21HostTypeNrvInvalidateCFP5Spine",
+        "demangled_name": "NrvStarPointerLayout::HostTypeNrvInvalidate::executeOnEnd(Spine*) const",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q220NrvStarPointerLayout21HostTypeNrvInvalidateCFP5Spine",
+        "demangled_name": "NrvStarPointerLayout::HostTypeNrvInvalidate::execute(Spine*) const",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q220NrvStarPointerLayout26HostTypeNrvHideImmediatelyCFP5Spine",
+        "demangled_name": "NrvStarPointerLayout::HostTypeNrvHideImmediately::execute(Spine*) const",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q220NrvStarPointerLayout15HostTypeNrvHideCFP5Spine",
+        "demangled_name": "NrvStarPointerLayout::HostTypeNrvHide::execute(Spine*) const",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "executeOnEnd__Q220NrvStarPointerLayout23HostTypeNrvNotConnectedCFP5Spine",
+        "demangled_name": "NrvStarPointerLayout::HostTypeNrvNotConnected::executeOnEnd(Spine*) const",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q220NrvStarPointerLayout23HostTypeNrvNotConnectedCFP5Spine",
+        "demangled_name": "NrvStarPointerLayout::HostTypeNrvNotConnected::execute(Spine*) const",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q220NrvStarPointerLayout20HostTypeNrvOutScreenCFP5Spine",
+        "demangled_name": "NrvStarPointerLayout::HostTypeNrvOutScreen::execute(Spine*) const",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q220NrvStarPointerLayout18HostTypeNrvReleaseCFP5Spine",
+        "demangled_name": "NrvStarPointerLayout::HostTypeNrvRelease::execute(Spine*) const",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "executeOnEnd__Q220NrvStarPointerLayout20HostTypeNrvHoldTouchCFP5Spine",
+        "demangled_name": "NrvStarPointerLayout::HostTypeNrvHoldTouch::executeOnEnd(Spine*) const",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q220NrvStarPointerLayout20HostTypeNrvHoldTouchCFP5Spine",
+        "demangled_name": "NrvStarPointerLayout::HostTypeNrvHoldTouch::execute(Spine*) const",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "executeOnEnd__Q220NrvStarPointerLayout15HostTypeNrvHoldCFP5Spine",
+        "demangled_name": "NrvStarPointerLayout::HostTypeNrvHold::executeOnEnd(Spine*) const",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q220NrvStarPointerLayout15HostTypeNrvHoldCFP5Spine",
+        "demangled_name": "NrvStarPointerLayout::HostTypeNrvHold::execute(Spine*) const",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q220NrvStarPointerLayout15HostTypeNrvGripCFP5Spine",
+        "demangled_name": "NrvStarPointerLayout::HostTypeNrvGrip::execute(Spine*) const",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "executeOnEnd__Q220NrvStarPointerLayout21HostTypeNrvOnReactionCFP5Spine",
+        "demangled_name": "NrvStarPointerLayout::HostTypeNrvOnReaction::executeOnEnd(Spine*) const",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q220NrvStarPointerLayout21HostTypeNrvOnReactionCFP5Spine",
+        "demangled_name": "NrvStarPointerLayout::HostTypeNrvOnReaction::execute(Spine*) const",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q220NrvStarPointerLayout15HostTypeNrvWaitCFP5Spine",
+        "demangled_name": "NrvStarPointerLayout::HostTypeNrvWait::execute(Spine*) const",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setPortAndColor__15StarPointerBlurFlPC8_GXColorPC8_GXColor",
+        "demangled_name": "StarPointerBlur::setPortAndColor(long, const _GXColor*, const _GXColor*)",
+        "size": "16",
+        "match_percent": 100.0
+      }
+    ]
+  },
+  {
+    "source": "Screen/StarPointerBlur",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Screen/StarPointerBlur.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-star-pointer-owner-closure-20260907/StarPointerBlur-wii.o"
+    ],
+    "exit_code": 0,
+    "symbols": [
+      {
+        "name": "__dt__15StarPointerBlurFv",
+        "demangled_name": "StarPointerBlur::~StarPointerBlur()",
+        "size": "88",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__15StarPointerBlurFP10JUTTexture",
+        "demangled_name": "StarPointerBlur::StarPointerBlur(JUTTexture*)",
+        "size": "300",
+        "match_percent": 99.73333
+      },
+      {
+        "name": "__ct__Q215StarPointerBlur9BlurPointFv",
+        "demangled_name": "StarPointerBlur::BlurPoint::BlurPoint()",
+        "size": "36",
+        "match_percent": 98.888885
+      },
+      {
+        "name": "show__15StarPointerBlurFv",
+        "demangled_name": "StarPointerBlur::show()",
+        "size": "76",
+        "match_percent": 100.0
+      },
+      {
+        "name": "hide__15StarPointerBlurFv",
+        "demangled_name": "StarPointerBlur::hide()",
+        "size": "32",
+        "match_percent": 100.0
+      },
+      {
+        "name": "hideAll__15StarPointerBlurFv",
+        "demangled_name": "StarPointerBlur::hideAll()",
+        "size": "60",
+        "match_percent": 100.0
+      },
+      {
+        "name": "movement__15StarPointerBlurFv",
+        "demangled_name": "StarPointerBlur::movement()",
+        "size": "160",
+        "match_percent": 100.0
+      },
+      {
+        "name": "updatePoint__15StarPointerBlurFRCQ29JGeometry8TVec2<f>bPQ29JGeometry8TVec2<f>",
+        "demangled_name": "StarPointerBlur::updatePoint(const JGeometry::TVec2<float>&, bool, JGeometry::TVec2<float>*)",
+        "size": "304",
+        "match_percent": 100.0
+      },
+      {
+        "name": "findDrawPointRange__15StarPointerBlurCFPUsPUs",
+        "demangled_name": "StarPointerBlur::findDrawPointRange(unsigned short*, unsigned short*) const",
+        "size": "180",
+        "match_percent": 100.0
+      },
+      {
+        "name": "draw__15StarPointerBlurCFv",
+        "demangled_name": "StarPointerBlur::draw() const",
+        "size": "64",
+        "match_percent": 100.0
+      },
+      {
+        "name": "draw2__15StarPointerBlurCFv",
+        "demangled_name": "StarPointerBlur::draw2() const",
+        "size": "624",
+        "match_percent": 99.74359
+      },
+      {
+        "name": "initDraw__15StarPointerBlurCFv",
+        "demangled_name": "StarPointerBlur::initDraw() const",
+        "size": "528",
+        "match_percent": 100.0
+      },
+      {
+        "name": "GXPosition2f32",
+        "size": "16",
+        "match_percent": 100.0
+      }
+    ]
+  },
+  {
+    "source": "Screen/StarPointerCommandStream",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Screen/StarPointerCommandStream.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-star-pointer-owner-closure-20260907/StarPointerCommandStream-wii.o"
+    ],
+    "exit_code": 0,
+    "symbols": [
+      {
+        "name": "__ct__24StarPointerCommandStreamFPCQ29JGeometry8TVec2<f>",
+        "demangled_name": "StarPointerCommandStream::StarPointerCommandStream(const JGeometry::TVec2<float>*)",
+        "size": "124",
+        "match_percent": 99.83871
+      },
+      {
+        "name": "start__24StarPointerCommandStreamFPCQ29JGeometry8TVec3<f>b",
+        "demangled_name": "StarPointerCommandStream::start(const JGeometry::TVec3<float>*, bool)",
+        "size": "120",
+        "match_percent": 100.0
+      },
+      {
+        "name": "show__24StarPointerCommandStreamFv",
+        "demangled_name": "StarPointerCommandStream::show()",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "hide__24StarPointerCommandStreamFv",
+        "demangled_name": "StarPointerCommandStream::hide()",
+        "size": "68",
+        "match_percent": 99.70588
+      },
+      {
+        "name": "clear__24StarPointerCommandStreamFv",
+        "demangled_name": "StarPointerCommandStream::clear()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "init__24StarPointerCommandStreamFRC12JMapInfoIter",
+        "demangled_name": "StarPointerCommandStream::init(const JMapInfoIter&)",
+        "size": "208",
+        "match_percent": 99.90385
+      },
+      {
+        "name": "control__24StarPointerCommandStreamFv",
+        "demangled_name": "StarPointerCommandStream::control()",
+        "size": "188",
+        "match_percent": 99.893616
+      },
+      {
+        "name": "calcPose__24StarPointerCommandStreamFRCQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec2<f>",
+        "demangled_name": "StarPointerCommandStream::calcPose(const JGeometry::TVec2<float>&, const JGeometry::TVec2<float>&)",
+        "size": "252",
+        "match_percent": 99.52381
+      },
+      {
+        "name": "exeWait__24StarPointerCommandStreamFv",
+        "demangled_name": "StarPointerCommandStream::exeWait()",
+        "size": "100",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeSignal__24StarPointerCommandStreamFv",
+        "demangled_name": "StarPointerCommandStream::exeSignal()",
+        "size": "72",
+        "match_percent": 100.0
+      },
+      {
+        "name": "calcLineWidth__24StarPointerCommandStreamCFf",
+        "demangled_name": "StarPointerCommandStream::calcLineWidth(float) const",
+        "size": "68",
+        "match_percent": 98.52941
+      },
+      {
+        "name": "__dt__24StarPointerCommandStreamFv",
+        "demangled_name": "StarPointerCommandStream::~StarPointerCommandStream()",
+        "size": "92",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__sinit_\\StarPointerCommandStream_cpp",
+        "size": "88",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q227NrvStarPointerCommandStream15HostTypeNrvWaitFv",
+        "demangled_name": "NrvStarPointerCommandStream::HostTypeNrvWait::HostTypeNrvWait()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q227NrvStarPointerCommandStream17HostTypeNrvSignalFv",
+        "demangled_name": "NrvStarPointerCommandStream::HostTypeNrvSignal::HostTypeNrvSignal()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q227NrvStarPointerCommandStream17HostTypeNrvSignalCFP5Spine",
+        "demangled_name": "NrvStarPointerCommandStream::HostTypeNrvSignal::execute(Spine*) const",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q227NrvStarPointerCommandStream15HostTypeNrvWaitCFP5Spine",
+        "demangled_name": "NrvStarPointerCommandStream::HostTypeNrvWait::execute(Spine*) const",
+        "size": "8",
+        "match_percent": 100.0
+      }
+    ]
+  },
+  {
+    "source": "System/StarPointerOnOffController",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/System/StarPointerOnOffController.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-star-pointer-owner-closure-20260907/StarPointerOnOffController-wii.o"
+    ],
+    "exit_code": 0,
+    "symbols": [
+      {
+        "name": "__ct__26StarPointerOnOffControllerFv",
+        "demangled_name": "StarPointerOnOffController::StarPointerOnOffController()",
+        "size": "240",
+        "match_percent": 100.0
+      },
+      {
+        "name": "update__26StarPointerOnOffControllerFv",
+        "demangled_name": "StarPointerOnOffController::update()",
+        "size": "76",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setStateToTitle__26StarPointerOnOffControllerFPv",
+        "demangled_name": "StarPointerOnOffController::setStateToTitle(void*)",
+        "size": "72",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setStateToFileSelect__26StarPointerOnOffControllerFPv",
+        "demangled_name": "StarPointerOnOffController::setStateToFileSelect(void*)",
+        "size": "72",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setStateToBase__26StarPointerOnOffControllerFPv",
+        "demangled_name": "StarPointerOnOffController::setStateToBase(void*)",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "popState__26StarPointerOnOffControllerFPv",
+        "demangled_name": "StarPointerOnOffController::popState(void*)",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "requestMode__26StarPointerOnOffControllerFPv19StarPointerModeEnum",
+        "demangled_name": "StarPointerOnOffController::requestMode(void*, StarPointerModeEnum)",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setupHomeButton__26StarPointerOnOffControllerFv",
+        "demangled_name": "StarPointerOnOffController::setupHomeButton()",
+        "size": "116",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setupErrorWindow__26StarPointerOnOffControllerFv",
+        "demangled_name": "StarPointerOnOffController::setupErrorWindow()",
+        "size": "116",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setupLogo__26StarPointerOnOffControllerFv",
+        "demangled_name": "StarPointerOnOffController::setupLogo()",
+        "size": "120",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setupTitle__26StarPointerOnOffControllerFv",
+        "demangled_name": "StarPointerOnOffController::setupTitle()",
+        "size": "120",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setupFileSelect__26StarPointerOnOffControllerFv",
+        "demangled_name": "StarPointerOnOffController::setupFileSelect()",
+        "size": "120",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setupPictureBook__26StarPointerOnOffControllerFv",
+        "demangled_name": "StarPointerOnOffController::setupPictureBook()",
+        "size": "116",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setupDemo__26StarPointerOnOffControllerFv",
+        "demangled_name": "StarPointerOnOffController::setupDemo()",
+        "size": "120",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setupDemoWithStarPointer__26StarPointerOnOffControllerFv",
+        "demangled_name": "StarPointerOnOffController::setupDemoWithStarPointer()",
+        "size": "120",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setupDemoWithHandPointerFinger__26StarPointerOnOffControllerFv",
+        "demangled_name": "StarPointerOnOffController::setupDemoWithHandPointerFinger()",
+        "size": "120",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setupDemoMarioDeath__26StarPointerOnOffControllerFv",
+        "demangled_name": "StarPointerOnOffController::setupDemoMarioDeath()",
+        "size": "120",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setup1PInvalid2PValid__26StarPointerOnOffControllerFv",
+        "demangled_name": "StarPointerOnOffController::setup1PInvalid2PValid()",
+        "size": "120",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setupMarioLauncher__26StarPointerOnOffControllerFv",
+        "demangled_name": "StarPointerOnOffController::setupMarioLauncher()",
+        "size": "120",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setupChooseYesNo__26StarPointerOnOffControllerFv",
+        "demangled_name": "StarPointerOnOffController::setupChooseYesNo()",
+        "size": "120",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setupPauseMenu__26StarPointerOnOffControllerFv",
+        "demangled_name": "StarPointerOnOffController::setupPauseMenu()",
+        "size": "120",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setupScenarioSelectScene__26StarPointerOnOffControllerFv",
+        "demangled_name": "StarPointerOnOffController::setupScenarioSelectScene()",
+        "size": "120",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setupBlueStar__26StarPointerOnOffControllerFv",
+        "demangled_name": "StarPointerOnOffController::setupBlueStar()",
+        "size": "120",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setupBlueStarReady__26StarPointerOnOffControllerFv",
+        "demangled_name": "StarPointerOnOffController::setupBlueStarReady()",
+        "size": "120",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setupPowerStarGetDemo__26StarPointerOnOffControllerFv",
+        "demangled_name": "StarPointerOnOffController::setupPowerStarGetDemo()",
+        "size": "120",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setupStarPieceTarget__26StarPointerOnOffControllerFv",
+        "demangled_name": "StarPointerOnOffController::setupStarPieceTarget()",
+        "size": "124",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setupSphereSelectorFinger__26StarPointerOnOffControllerFv",
+        "demangled_name": "StarPointerOnOffController::setupSphereSelectorFinger()",
+        "size": "120",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setupSphereSelectorOnReaction__26StarPointerOnOffControllerFv",
+        "demangled_name": "StarPointerOnOffController::setupSphereSelectorOnReaction()",
+        "size": "120",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setupBigBubble__26StarPointerOnOffControllerFv",
+        "demangled_name": "StarPointerOnOffController::setupBigBubble()",
+        "size": "128",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setupCommandStream__26StarPointerOnOffControllerFv",
+        "demangled_name": "StarPointerOnOffController::setupCommandStream()",
+        "size": "128",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setupGame__26StarPointerOnOffControllerFv",
+        "demangled_name": "StarPointerOnOffController::setupGame()",
+        "size": "120",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setupBase__26StarPointerOnOffControllerFv",
+        "demangled_name": "StarPointerOnOffController::setupBase()",
+        "size": "120",
+        "match_percent": 100.0
+      },
+      {
+        "name": "updateMode__26StarPointerOnOffControllerFv",
+        "demangled_name": "StarPointerOnOffController::updateMode()",
+        "size": "504",
+        "match_percent": 100.0
+      },
+      {
+        "name": "clearInfo__26StarPointerOnOffControllerFv",
+        "demangled_name": "StarPointerOnOffController::clearInfo()",
+        "size": "100",
+        "match_percent": 100.0
+      },
+      {
+        "name": "incModeCounter__26StarPointerOnOffControllerFPvl",
+        "demangled_name": "StarPointerOnOffController::incModeCounter(void*, long)",
+        "size": "132",
+        "match_percent": 100.0
+      },
+      {
+        "name": "decModeCounter__26StarPointerOnOffControllerFPv",
+        "demangled_name": "StarPointerOnOffController::decModeCounter(void*)",
+        "size": "168",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__dt__26StarPointerOnOffControllerFv",
+        "demangled_name": "StarPointerOnOffController::~StarPointerOnOffController()",
+        "size": "88",
+        "match_percent": 100.0
+      },
+      {
+        "name": "show__17StarPointerLayoutFv",
+        "demangled_name": "StarPointerLayout::show()",
+        "size": "32",
+        "match_percent": 100.0
+      }
+    ]
+  }
+]

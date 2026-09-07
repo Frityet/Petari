@@ -1,0 +1,19 @@
+# Original pointer ownership source checkpoint — 2026-09-07
+
+The native runtime now retains the real original StarPointerDirector, its two controllers, PeekZ and transform records, both complete cursor layout graphs, Guidance and the original OnOff controller. StageSessionBinding enters actual Base then Game mode; nested sessions remove only their own request and restore outer transform ownership. Runtime-free session fixtures remain data-only. Process layout NameObjs are claimed by their actual lifetime owner and retired in reverse order; failed construction rolls back only unclaimed or self-owned descendants.
+
+Game imports are the complete reference StarPointerLayout, Blur, CommandStream and OnOff TUs. Director original methods remain in the native ownership provider because the Wii singleton boundary is replaced by real typed runtime ownership. Its null layout accessor has a native null-arithmetic correction. The actual assets are DPDPointer, DPDPointerSub, DPDPointerNumber, CommandStream, PointerGuidance, and StarPointerBlur.arc/Blur.bti. No fake cursor validity or synthesized world point is used.
+
+KPAD now publishes normalized coordinates, precise positive flag 2, the producer's horizon and motion, and one current-frame sample. KB+M explicitly supplies upright (1,0) orientation. Original WPadPointer owns 120 sample records and applies its original confirmation/dropout filtering; the full typed WPad constructor's children are retained and cleaned up. KPAD sampling parameters are retained per port. Pointer filtering parameters describe the IR sensor estimator; direct mouse coordinates do not simulate IR noise. KPAD button delay/pulse drives the existing 60 Hz input clock. MessageService retains each message's original UTF-16 code units in native wide storage so Guidance pointers survive later message lookups.
+
+## Verification scope
+
+- `native-syntax-results.json`: all 22 production/test TUs pass isolated Homebrew LLVM compilation. `aurora-wpad-syntax.json`: Aurora input provider passes its actual C++20 compile environment.
+- `wii-compile-results.json`: five complete original cursor/director/mode TUs pass MW compilation. 171 paired function symbols; 152 exact; every paired function >=98.529%. OnOff: all 38 exact.
+- `notes/original-wpad-pointer-history-20260907`: recovered WPadPointer::update 98.1667%,480 bytes; acceleration constructor99.6%,200 bytes; HVSwing constructor99.7059%,68 bytes.
+- `LayoutUtil.objdiff.json`: recovered pane rotate100%; pane scale83.7778% (SDK VEC2 assignment inlining discrepancy; same component stores and lookup order).
+- Focused test targets: `smg-pc-original-pointer-input-tests` (typed records, original batch/filter boundaries, KPAD horizon/repeat and retained messages), and `smg-pc-original-star-pointer-owner-tests` (real-disc full resources, original Guidance state predicates, priority/capacity, nested sessions, repeated teardown). Parent freshly built and ran the input fixture successfully (exit0); log: `notes/original-j2d-projection-20260907/original-pointer-input-run.log`. The full pointer owner fixture still awaits its genuine Group boundary.
+
+The real owner fixture currently exposes the required generalized LayoutGroupCtrl/NW4R typed resource boundary. That is the next closure, not a fake successful initialization. Exact-ID GPU snapshot read selection was previously source-checkpointed in Aurora3cc9448; a completed tagged-depth render/callback regression remains pending. This is not yet a jumping/camera gameplay claim.
+
+Manifests record the exact current source hashes. Shared files (RuntimeContext, LayoutRuntime, StorySequencePlatformCompat, tests/xmake) may contain other coordinated owners' work; the manifests identify source snapshots, not permission to discard their edits. Generated `.o` files and raw retail objects are local proof artifacts, not checkpoint inputs.

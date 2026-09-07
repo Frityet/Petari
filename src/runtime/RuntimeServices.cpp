@@ -4214,12 +4214,15 @@ namespace smgpc::runtime {
     }
 
     void MessageService::set_message(std::string_view tag, std::string_view text) {
+        smgpc::compat::JkrHostAllocationScope host;
         set_message(tag, smgpc::resource::utf16_from_utf8_lossy(text));
     }
 
     void MessageService::set_message(std::string_view tag, std::u16string_view text) {
+        smgpc::compat::JkrHostAllocationScope host;
         _messages[std::string(tag)] = MessageText{
             .raw_utf16 = std::u16string(text),
+            .raw_wide = std::wstring(text.begin(), text.end()),
             .utf16 = std::u16string(text),
             .utf8 = smgpc::resource::utf8_from_utf16_lossy(text),
             .info = {},
@@ -4228,6 +4231,7 @@ namespace smgpc::runtime {
     }
 
     std::size_t MessageService::load_message_archive(const smgpc::resource::RarcArchive &archive) {
+        smgpc::compat::JkrHostAllocationScope host;
         const auto messages = smgpc::resource::BmgMessageArchive::from_message_archive(archive);
         _message_indices.clear();
         _message_ids_by_index.clear();
@@ -4236,6 +4240,7 @@ namespace smgpc::runtime {
         for (const auto &message : messages.messages()) {
             _messages[message.id] = MessageText{
                 .raw_utf16 = message.raw_text,
+                .raw_wide = std::wstring(message.raw_text.begin(), message.raw_text.end()),
                 .utf16 = message.display_text,
                 .utf8 = smgpc::resource::utf8_from_utf16_lossy(message.display_text),
                 .info = message.info,
@@ -4274,6 +4279,22 @@ namespace smgpc::runtime {
             return &it->second.raw_utf16;
         }
 
+        return nullptr;
+    }
+
+    const std::wstring *MessageService::message_raw_wide(std::string_view tag) const {
+        smgpc::compat::JkrHostAllocationScope host;
+        if (auto it = _messages.find(std::string(tag)); it != _messages.end()) {
+            return &it->second.raw_wide;
+        }
+        return nullptr;
+    }
+
+    const char *MessageService::message_id_for_wide_pointer(const wchar_t *text) const noexcept {
+        if (text == nullptr) return nullptr;
+        for (const auto &[id, message] : _messages) {
+            if (message.raw_wide.c_str() == text) return id.c_str();
+        }
         return nullptr;
     }
 

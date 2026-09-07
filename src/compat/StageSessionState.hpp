@@ -13,6 +13,7 @@
 class GameDataTemporaryInGalaxy;
 
 namespace smgpc::compat {
+    class StarPointerSceneBinding;
 
     enum class StageCometType {
         None,
@@ -96,6 +97,7 @@ namespace smgpc::compat {
     private:
         StageSessionBinding *_previous = nullptr;
         StageSessionState *_session = nullptr;
+        std::unique_ptr<StarPointerSceneBinding> _pointer_scene;
     };
 
     [[nodiscard]] StageSessionState *try_active_stage_session();

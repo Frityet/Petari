@@ -992,6 +992,8 @@ namespace smgpc::runtime {
         [[nodiscard]] const std::string *message(std::string_view tag) const;
         [[nodiscard]] const std::u16string *message_utf16(std::string_view tag) const;
         [[nodiscard]] const std::u16string *message_raw_utf16(std::string_view tag) const;
+        [[nodiscard]] const std::wstring *message_raw_wide(std::string_view tag) const;
+        [[nodiscard]] const char *message_id_for_wide_pointer(const wchar_t *text) const noexcept;
         [[nodiscard]] const smgpc::resource::BmgMessageInfo *message_info(std::string_view tag) const;
         [[nodiscard]] const std::vector<smgpc::resource::BmgControlTag> *message_control_tags(std::string_view tag) const;
         [[nodiscard]] std::u16string format_message_utf16(std::string_view tag, std::span<const smgpc::resource::BmgFormatArg> args) const;
@@ -1005,6 +1007,7 @@ namespace smgpc::runtime {
     private:
         struct MessageText {
             std::u16string raw_utf16;
+            std::wstring raw_wide;
             std::u16string utf16;
             std::string utf8;
             smgpc::resource::BmgMessageInfo info{};

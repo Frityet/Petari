@@ -147,18 +147,15 @@ namespace smgpc::runtime {
             aurora::throw_host_exception<std::invalid_argument>(
                 "JAudio level playback requires a nonempty sound name");
         }
-        if (!_level_sound_permitted) {
-            // AudSystem::_82C rejects level-sound allocation while submitted.
-            // This is an exact retail absence, not a logical playback event.
-            return nullptr;
-        }
-
         ensure_archive();
         const auto sound_id = _archive->find_sound_id(name);
         if (!sound_id.has_value()) {
             aurora::throw_host_exception<std::invalid_argument>(
                 "Level sound is absent from the retail JAudio name table: " +
                 std::string(name));
+        }
+        if (!is_level_sound_permitted(*sound_id)) {
+            return nullptr;
         }
         const auto adjustment =
             smgpc::compat::resolve_jaudio_sound_parameter_adjustment(
@@ -240,13 +237,6 @@ namespace smgpc::runtime {
             aurora::throw_host_exception<std::invalid_argument>(
                 "JAudio sound-effect playback requires a nonempty sound name");
         }
-        if (parameter_1 != -1) {
-            aurora::throw_host_exception<std::logic_error>(
-                "Parameterized JAudio one-shot semantics are unavailable for " +
-                std::string(name) + " (parameter 1=" +
-                std::to_string(parameter_1) + ", parameter 2=" +
-                std::to_string(parameter_2) + ")");
-        }
 
         ensure_archive();
         const auto sound_id = _archive->find_sound_id(name);
@@ -255,6 +245,17 @@ namespace smgpc::runtime {
                 "Sound effect is absent from the retail JAudio name table: " +
                 std::string(name));
         }
+        if (!is_trigger_sound_permitted(*sound_id)) {
+            return nullptr;
+        }
+        if (parameter_1 != -1) {
+            aurora::throw_host_exception<std::logic_error>(
+                "Parameterized JAudio one-shot semantics are unavailable for " +
+                std::string(name) + " (parameter 1=" +
+                std::to_string(parameter_1) + ", parameter 2=" +
+                std::to_string(parameter_2) + ")");
+        }
+
         auto recipe = _sound_effect_recipes.find(*sound_id);
         if (recipe == _sound_effect_recipes.end()) {
             const auto resolved = _archive->resolve_sound_effect(name);
@@ -325,12 +326,36 @@ namespace smgpc::runtime {
         return _archive->find_sound_id(name);
     }
 
+    void JAudioPlaybackService::set_trigger_sound_permitted(bool permitted) {
+        _trigger_sound_permitted = permitted;
+    }
+
+    bool JAudioPlaybackService::is_trigger_sound_permitted() const {
+        return _trigger_sound_permitted;
+    }
+
+    bool JAudioPlaybackService::is_trigger_sound_permitted(std::uint32_t sound_id) const {
+        const auto group = JAISoundID(sound_id).getGroupID();
+        // AudSystem::_82B exempts the system and HOME-menu groups.
+        return _trigger_sound_permitted || group == 0U || group == 0xDU;
+    }
+
     void JAudioPlaybackService::set_level_sound_permitted(bool permitted) {
         _level_sound_permitted = permitted;
     }
 
     bool JAudioPlaybackService::is_level_sound_permitted() const {
         return _level_sound_permitted;
+    }
+
+    bool JAudioPlaybackService::is_level_sound_permitted(std::uint32_t sound_id) const {
+        const auto group = JAISoundID(sound_id).getGroupID();
+        // AudSystem::_82C has the same exemptions, independently of _82B.
+        return _level_sound_permitted || group == 0U || group == 0xDU;
+    }
+
+    bool JAudioPlaybackService::is_sound_permitted() const {
+        return _trigger_sound_permitted && _level_sound_permitted;
     }
 
     JAISoundHandle *JAudioPlaybackService::start_stage_bgm(
@@ -537,6 +562,7 @@ namespace smgpc::runtime {
         }
         _sound_effect_voices.clear();
         _retired_sound_effect_voices.clear();
+        _trigger_sound_permitted = true;
         _level_sound_permitted = true;
         _stage_voice.reset();
         _stage_handle.releaseSound();

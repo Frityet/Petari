@@ -39,33 +39,12 @@ namespace MR {
             .activate_default_game_layout();
     }
 
-    TVec2f getStarPointerScreenPositionOrEdge(s32 channel) {
-        require_pointer_channel(channel);
-        const auto pointer = require_runtime("Star-pointer screen-position query")
-                                 .wpad()
-                                 .pointer(channel);
-        return TVec2f{
-            std::clamp(pointer.x, 0.0F,
-                       static_cast<f32>(smgpc::render::core::kWiiLayoutWidth)),
-            std::clamp(pointer.y, 0.0F,
-                       static_cast<f32>(smgpc::render::core::kWiiLogicalFramebufferHeight)),
-        };
-    }
 
-    void startStarPointerModeSphereSelectorFinger(void *requester) {
-        require_runtime("Sphere-selector finger mode")
-            .star_pointer()
-            .push_mode(requester, smgpc::runtime::StarPointerMode::SphereSelectorFinger);
-    }
 
-    void startStarPointerModeSphereSelectorOnReaction(void *requester) {
-        require_runtime("Sphere-selector reaction mode")
-            .star_pointer()
-            .push_mode(requester, smgpc::runtime::StarPointerMode::SphereSelectorReaction);
-    }
 
-    void endStarPointerMode(void *requester) {
-        require_runtime("Star-pointer mode release").star_pointer().pop_mode(requester);
-    }
+
+
+
+
 
 }  // namespace MR

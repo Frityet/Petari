@@ -4,6 +4,11 @@
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
+#include "Game/AudioLib/AudBgmMgr.hpp"
+#include "Game/AudioLib/AudWrap.hpp"
+#include "Game/GameAudio/AudBgmConductor.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
+#include "Game/Scene/SceneFunction.hpp"
 
 #include "compat/AudioFacadeCompat.hpp"
 #include "compat/StageSessionState.hpp"
@@ -35,6 +40,20 @@ namespace {
 }  // namespace
 
 namespace MR {
+    void setStageBGMStateBit(u32 bit) {
+        AudBgmConductor* conductor = getSceneObj< AudBgmConductor >(SceneObj_AudBgmConductor);
+        if (conductor != nullptr) {
+            conductor->setStateBit(bit);
+        }
+    }
+
+    void clearBgmQueue() {
+        AudWrap::getBgmMgr()->clearLastBGM(0);
+        AudWrap::getBgmMgr()->clearLastBGM(1);
+        AudWrap::getBgmMgr()->clearNextBGM(0);
+        AudWrap::getBgmMgr()->clearNextBGM(1);
+    }
+
     void startSpinHitSound(const LiveActor* pActor) {
         startCSSound("CS_SPIN_HIT", nullptr, 0);
     }
@@ -235,12 +254,37 @@ namespace MR {
         return smgpc::compat::require_active_audio_event_service().is_cube_bgm_change_invalid();
     }
 
+    void submitTrigSE() {
+        require_audio_runtime("Trigger-SE submission")
+            .j_audio_playback().set_trigger_sound_permitted(false);
+    }
+
+    void permitTrigSE() {
+        require_audio_runtime("Trigger-SE permission")
+            .j_audio_playback().set_trigger_sound_permitted(true);
+    }
+
     void submitLevelSE() {
         require_audio_runtime("Level-SE submission").submit_level_sound();
     }
 
     void permitLevelSE() {
         require_audio_runtime("Level-SE permission").permit_level_sound();
+    }
+
+    void submitSE() {
+        submitTrigSE();
+        submitLevelSE();
+    }
+
+    void permitSE() {
+        permitTrigSE();
+        permitLevelSE();
+    }
+
+    bool isPermitSE() {
+        return require_audio_runtime("SE permission query")
+            .j_audio_playback().is_sound_permitted();
     }
 
     void startCSSound(const char *, const char *pSEName, s32) {

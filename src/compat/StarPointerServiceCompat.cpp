@@ -94,91 +94,31 @@ namespace MR {
         pActor->mStarPointerTarget->mRadius3d = radius;
     }
 
-    TVec2f* getStarPointerScreenPosition(s32 channel) {
-        if (!is_valid_channel(channel)) {
-            return nullptr;
-        }
 
-        sScreenPositions[static_cast< std::size_t >(channel)] = pointer_screen_position(channel);
-        return &sScreenPositions[static_cast< std::size_t >(channel)];
-    }
 
-    TVec2f* getStarPointerScreenVelocity(s32 channel) {
-        if (!is_valid_channel(channel)) {
-            return nullptr;
-        }
 
-        sScreenVelocities[static_cast< std::size_t >(channel)] = pointer_screen_velocity(channel);
-        return &sScreenVelocities[static_cast< std::size_t >(channel)];
-    }
 
-    f32 getStarPointerScreenSpeed(s32 channel) {
-        const auto velocity = pointer_screen_velocity(channel);
-        return std::sqrt((velocity.x * velocity.x) + (velocity.y * velocity.y));
-    }
 
-    bool isStarPointerInScreen(s32 channel) {
-        const auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
-        if (runtime == nullptr || !is_valid_channel(channel)) {
-            return false;
-        }
 
-        return runtime->wpad().pointer(channel).valid;
-    }
 
-    void startStarPointerModeTitle(void*) {
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->star_pointer().start_mode(cStarPointerModeTitle);
-        }
-    }
 
-    void startStarPointerModeFileSelect(void*) {
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->star_pointer().start_mode(cStarPointerModeFileSelect);
-        }
-    }
 
-    void startStarPointerModeDemoMarioDeath(void*) {
-        aurora::throw_host_exception<std::logic_error>("Mario-death star-pointer mode is outside the PC walking-demo surface.");
-    }
 
-    void requestStarPointerModeSaveLoad(void*) {
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->star_pointer().start_mode(cStarPointerModeSaveLoad);
-        }
-    }
 
-    void requestStarPointerModePictureBook(void*) {
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->star_pointer().start_mode(cStarPointerModePictureBook);
-        }
-    }
 
-    void activeStarPointerGuidance() {
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->star_pointer().set_guidance_active(true);
-        }
-    }
 
-    void deactiveStarPointerGuidance() {
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->star_pointer().set_guidance_active(false);
-        }
-    }
 
-    bool requestFileSelectGuidance() {
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->star_pointer().request_guidance(cFileSelectGuidanceRequest);
-        }
-        return true;
-    }
 
-    bool requestFileSelectCopyGuidance() {
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->star_pointer().request_guidance(cFileSelectCopyGuidanceRequest);
-        }
-        return true;
-    }
+
+
+
+
+
+
+
+
+
+
 }  // namespace MR
 
 namespace MR {

@@ -301,14 +301,16 @@ namespace {
         auto &wpad = aurora::wpad_service();
         wpad.begin_frame();
         wpad.set_button_mask(WPAD_CHAN0, WPAD_BUTTON_A | WPAD_BUTTON_UP);
+        wpad.set_pointer_resolution(WPAD_CHAN0, 640.0F, 480.0F);
         wpad.set_pointer(WPAD_CHAN0, 123.0F, 234.0F, true);
         wpad.set_distance_to_display(WPAD_CHAN0, 1.0F);
         require(WPADProbe(WPAD_CHAN0, &type) == TRUE, "WPADProbe should report Aurora-fed controller state");
         require(KPADRead(WPAD_CHAN0, &status, 1U) == 1, "KPADRead should expose Aurora-fed controller samples");
         require((status.hold & WPAD_BUTTON_A) != 0U && (status.hold & WPAD_BUTTON_UP) != 0U,
                 "KPADRead should preserve held WPAD buttons");
-        require(status.dpd_valid_fg == 1 && status.pos.x == 123.0F && status.pos.y == 234.0F,
-                "KPADRead should preserve pointer coordinates");
+        require(status.dpd_valid_fg == 2 && status.pos.x == 123.0F * 2.0F / 640.0F - 1.0F &&
+                status.pos.y == 234.0F * 2.0F / 480.0F - 1.0F && status.horizon.x == 1.0F && status.horizon.y == 0.0F,
+                "KPADRead should publish precise normalized pointing with the supplied upright horizon");
         WPADDisconnect(WPAD_CHAN0);
         require(WPADProbe(WPAD_CHAN0, nullptr) == FALSE, "WPADDisconnect should clear Aurora controller state");
     }

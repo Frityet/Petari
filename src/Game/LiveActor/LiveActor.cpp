@@ -91,6 +91,9 @@ void LiveActor::calcAnim() {
         return;
     }
     calcAnmMtx();
+    if (mCollisionParts != nullptr) {
+        MR::setCollisionMtx(this);
+    }
 }
 
 void LiveActor::calcAnmMtx() {
@@ -132,6 +135,9 @@ void LiveActor::makeActorAppeared() {
         endClipped();
     }
     mFlag.mIsDead = false;
+    if (mCollisionParts != nullptr) {
+        MR::validateCollisionParts(this);
+    }
     if (mSensorKeeper) mSensorKeeper->validateBySystem();
     smgpc::compat::update_actor_hit_sensors(this);
 }
@@ -140,6 +146,9 @@ void LiveActor::makeActorDead() {
     mVelocity.zero();
     if (mEffectKeeper != nullptr) {
         mEffectKeeper->clear();
+    }
+    if (mCollisionParts != nullptr) {
+        MR::invalidateCollisionParts(this);
     }
     mFlag.mIsDead = true;
     if (mSensorKeeper) mSensorKeeper->invalidateBySystem();
@@ -300,13 +309,38 @@ void LiveActor::initShadowControllerList(u32 controllerCount) {
     smgpc::compat::initialize_actor_shadow_controller_list(this, controllerCount);
 }
 
-void LiveActor::initActorCollisionParts(const char* resourceName, HitSensor* sensor,
-                                        ResourceHolder* resourceHolder, MtxPtr matrix, bool, bool) {
-    if (resourceHolder == nullptr) {
-        throw std::logic_error("Model-owned CollisionParts are unavailable without an exact ModelManager resource provider.");
+void LiveActor::initActorCollisionParts(const char* pParam1, HitSensor* pParam2, ResourceHolder* pParam3, MtxPtr pParam4, bool param5, bool param6) {
+    MR::CollisionScaleType scaleType;
+
+    if (param6) {
+        scaleType = MR::CollisionScaleType_NotUsingScale;
+    } else {
+        scaleType = MR::CollisionScaleType_Unk2;
+
+        if (param5) {
+            scaleType = MR::CollisionScaleType_AutoEqualScale;
+        }
     }
-    MR::initCollisionPartsFromResourceHolder(this, resourceName, sensor, resourceHolder, matrix);
+
+    if (pParam3 != nullptr) {
+        TPos3f mtx;
+
+        if (pParam4 != nullptr) {
+            mtx.set(pParam4);
+        } else {
+            MR::makeMtxTRS(mtx.toMtxPtr(), this);
+        }
+
+        mCollisionParts = MR::createCollisionPartsFromResourceHolder(pParam3, pParam1, pParam2, mtx, scaleType);
+    } else if (pParam4 == nullptr) {
+        mCollisionParts = MR::createCollisionPartsFromLiveActor(this, pParam1, pParam2, scaleType);
+    } else {
+        mCollisionParts = MR::createCollisionPartsFromLiveActor(this, pParam1, pParam2, pParam4, scaleType);
+    }
+
+    MR::invalidateCollisionParts(this);
 }
+
 
 void LiveActor::initStageSwitch(const JMapInfoIter& rIter) {
     smgpc::compat::adopt_actor_stage_switch(this, MR::createStageSwitchCtrl(this, rIter));

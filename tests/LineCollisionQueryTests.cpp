@@ -1,4 +1,6 @@
 #include "Game/Map/HitInfo.hpp"
+#include "Game/LiveActor/LiveActor.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/MapUtil.hpp"
 #include "Game/Util/TriangleFilter.hpp"
 #include "Game/Map/KCollision.hpp"
@@ -241,6 +243,39 @@ namespace {
         require(::Collision::checkStrikeLineToMap(TVec3f(1,1,5),TVec3f(0,0,10),0,nullptr,nullptr)==0 &&
                 ::Collision::getStrikeInfoNumMap()==0,"A direct miss must clear the unsorted strike count");
     }
+    void original_actor_exclusion_before_hit_limit() {
+        LiveActor first("first part owner"), second("second part owner");
+        first.initHitSensor(2);
+        second.initHitSensor(1);
+        auto* first_a = MR::addHitSensorMapObj(&first, "a", 0, 1, TVec3f(0,0,0));
+        auto* first_b = MR::addHitSensorMapObj(&first, "b", 0, 1, TVec3f(0,0,0));
+        auto* other = MR::addHitSensorMapObj(&second, "body", 0, 1, TVec3f(0,0,0));
+        Collision collision;
+        std::array<std::shared_ptr<Registration>,3> registrations;
+        std::array sensors{first_a,first_b,other};
+        for (std::size_t i=0; i<sensors.size(); ++i) {
+            registrations[i]=std::make_shared<Registration>();
+            require(collision.register_kcl(kcl({1}), identity, "actor exclusion", registrations[i], {}, sensors[i], 1).accepted,
+                    "Actor exclusion fixture requires registered owner geometry");
+        }
+        collision.build();
+        collision.activate();
+        const TVec3f start(1,1,5), offset(0,0,-10);
+        require(MR::isExistMapCollisionExceptActor(start,offset,&first),
+                "Every sensor of the excluded actor must leave capacity for another actor's part");
+        registrations[2]->set_enabled(false);
+        require(!MR::isExistMapCollisionExceptActor(start,offset,&first),
+                "Excluded parts cannot obstruct a line when all other owners are disabled");
+        require(MR::isExistMapCollisionExceptActor(start,offset,&second),
+                "An excluded actor must not hide another actor's geometry");
+        registrations[2]->set_enabled(true);
+        require(!MR::isExistMapCollisionExceptActor(start,TVec3f(0,0,10),&first),
+                "Actor filtering must preserve the original one-sided KCL line direction");
+        registrations[0]->release_owner();
+        registrations[1]->release_owner();
+        require(!MR::isExistMapCollisionExceptActor(start,offset,&second),
+                "Released owner geometry must remain absent from an actor-filtered query");
+    }
     void enable_remove_reentry_and_heap_lifetime() {
         Collision collision;
         std::array<std::shared_ptr<Registration>,3> registrations;
@@ -287,6 +322,7 @@ int main() {
         transforms_and_stable_sorted_results();
         reference_distance_zone_order_and_sensor_capacity();
         direct_strike_filter_capacity_and_callback_domain();
+        original_actor_exclusion_before_hit_limit();
         enable_remove_reentry_and_heap_lifetime();
         std::cout<<"PASS: original all-hit KCL ordering, boundaries, sorting, ownership and capacity\n";
         return 0;

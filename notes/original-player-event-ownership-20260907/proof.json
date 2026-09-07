@@ -1,0 +1,21 @@
+{
+  "wii_tus": 7,
+  "all_wii_exit0": true,
+  "compared_symbols": 57,
+  "minimum_match": 95.2381,
+  "exact_symbols": 45,
+  "native_tus": 7,
+  "all_native_exit0": true,
+  "event_engine_native_test": {
+    "compile": 0,
+    "link": 0,
+    "run": 0,
+    "source": "tests/OriginalEventSequenceTests.cpp",
+    "linked_production_objects": [
+      "src/Game/Player/PlayerEvent.cpp",
+      "src/compat/HashSortTableCompat.cpp"
+    ],
+    "limitations": "No scene factory, death callbacks, wipe rendering, save transition or scene retirement exercised; those require remaining actual owners."
+  },
+  "pointer_change": "HashSortTable::Value local avoids writing integer payload through EventSequence**; native registration uses pointer-width Value. Wii startEvent loses only its redundant stack reload before clearFlag (95.2381%)."
+}

@@ -1,0 +1,202 @@
+[
+  {
+    "path": "src/Game/Screen/StarPointerBlur.cpp",
+    "sha256": "30e3037c24d07e2a7707f71a16d8dd57f424985cf987d3cc1c319e15d3241c8d"
+  },
+  {
+    "path": "src/Game/Screen/StarPointerBlur.hpp",
+    "sha256": "dfe34b6a4aad0ebacee93b71b7413b9e13504dbc5201535d95664202375b0510"
+  },
+  {
+    "path": "src/Game/Screen/StarPointerCommandStream.cpp",
+    "sha256": "5ac43ecb799f4672d0a49837818bdc1bbff5460d3be7fbfdccf903f26cef07d5"
+  },
+  {
+    "path": "src/Game/Screen/StarPointerCommandStream.hpp",
+    "sha256": "ca6a42b6af8bda2ed5f32966a440ab658d61cde68f758650144ed6d6fbcfe0fd"
+  },
+  {
+    "path": "src/Game/Screen/StarPointerLayout.cpp",
+    "sha256": "6bdbfaca13cbaf969c7fc452946c5a7c1d0ecb20fe06aa48b68a369862a67a58"
+  },
+  {
+    "path": "src/Game/Screen/StarPointerLayout.hpp",
+    "sha256": "5b22afbb08302b699c5b4a8f03147e5b411599022aec87e20b4f178ae80fbb5f"
+  },
+  {
+    "path": "src/Game/System/StarPointerOnOffController.cpp",
+    "sha256": "d0c7ab3a7d6ba288737e2b4c5fc20e8a07413da8955910f898dd6295c21a042f"
+  },
+  {
+    "path": "src/Game/System/StarPointerOnOffController.hpp",
+    "sha256": "5e5280fa79118fe0f0437d1feaa701a20e86b2d90f26a580574fe65f59dd591d"
+  },
+  {
+    "path": "src/Game/System/WPad.hpp",
+    "sha256": "f3c5b7b7ea4909d0d5dee07fb51246876cb61280513b6e818ad35554186ec208"
+  },
+  {
+    "path": "src/Game/System/WPadAcceleration.hpp",
+    "sha256": "cb84e74f46adf2a099c1541118da7dbc519ebe6aefc2bfc06dbe30d03854e8e4"
+  },
+  {
+    "path": "src/Game/System/WPadButton.hpp",
+    "sha256": "2f03e529f556e4f0bd0a916185f6cc52a53b6949622669116d8dec2a078af419"
+  },
+  {
+    "path": "src/Game/System/WPadHVSwing.cpp",
+    "sha256": "76fb49a449cb1c4dc911d34f9e8fae6cd47bd80de27d676fb0b0f2eeca383af9"
+  },
+  {
+    "path": "src/Game/System/WPadHVSwing.hpp",
+    "sha256": "99796d5a008aa6036806a2be0cbba13472770c05cd9b19b04a4de483ad826391"
+  },
+  {
+    "path": "src/Game/System/WPadHolder.hpp",
+    "sha256": "bec705356f8ddf7af917cc42eb430e672ee990d3e1e3f23688c4acfe6c0d03aa"
+  },
+  {
+    "path": "src/Game/System/WPadInfoChecker.hpp",
+    "sha256": "f6d5cde25b8571e20d068275127d76710f5e8c35424a686aad10d461cad6ec80"
+  },
+  {
+    "path": "src/Game/System/WPadLeaveWatcher.hpp",
+    "sha256": "314bfc2bf005ade320d1bad591b9edb45350a3cec9e39dde8a27e6b5b1b09363"
+  },
+  {
+    "path": "src/Game/System/WPadPointer.cpp",
+    "sha256": "5eb140a50a293046af6ca22eee81fc32f3c688b5bef43dce9209b6e89e182bf5"
+  },
+  {
+    "path": "src/Game/System/WPadPointer.hpp",
+    "sha256": "70b48f4160a3da493ac7ed7128e59d29ed2a63f589d7ffc465b1129da7d473d2"
+  },
+  {
+    "path": "src/Game/System/WPadRumble.hpp",
+    "sha256": "3cb4caba30a78c5aab79bd40cd0c610948af0a2922a3ff17e72b61ea72fd5e62"
+  },
+  {
+    "path": "src/Game/System/WPadStick.hpp",
+    "sha256": "c24b17fc3bd2cb97b267740ac90410d0ce726937c9a1c9ad0402967d1058102a"
+  },
+  {
+    "path": "src/Game/Util/LayoutUtil.hpp",
+    "sha256": "051558b1a3b4a3e24c2e792ae5b0850c0b443899f52d8d93bb706f1f9fd97f1d"
+  },
+  {
+    "path": "src/Game/Util/StarPointerUtil.hpp",
+    "sha256": "dbb14395daf72ec9943cae837832c3a2cbc1bbbae79562cda579c83fa463fbf3"
+  },
+  {
+    "path": "src/compat/GamePadUtilCompat.cpp",
+    "sha256": "b717596f637512dadf720638c35e0d1a3c11e1c7b3ddc9e8cd54c75c4fe9cde9"
+  },
+  {
+    "path": "src/compat/MessageUtilCompat.cpp",
+    "sha256": "3699cef85b9984648910405d6fe0799b39e53ade7954d51116662bef34c9cf4f"
+  },
+  {
+    "path": "src/compat/OriginalPointerVectorQueries.cpp",
+    "sha256": "e64c7dae48b87f38e52bb0953667a60af1a23063f8b917a758082d653f5c4380"
+  },
+  {
+    "path": "src/compat/OriginalStarPointerDepth.cpp",
+    "sha256": "a09b1b015aaf233286455bf7dc376bb1a9692eefea48b8440dbac8749ca28267"
+  },
+  {
+    "path": "src/compat/OriginalStarPointerDirector.cpp",
+    "sha256": "15326f6a54ad0647fec8fed43d98d8014305b901241067052bfd42fdedbd4b4c"
+  },
+  {
+    "path": "src/compat/OriginalStarPointerOwnerQueries.cpp",
+    "sha256": "6a9f96a828f991677c29de571be77b2a2642020539a0b1b7bfd1e6e57921171a"
+  },
+  {
+    "path": "src/compat/OriginalWPadRecords.cpp",
+    "sha256": "25c7de230d0c4398203e302286eb1ee1007b6419eae363fecce5fc951d185c9c"
+  },
+  {
+    "path": "src/compat/SphereSelectorRuntimeCompat.cpp",
+    "sha256": "ac94bddffab296e09ecb6571380de8097d1d229129578308510e57d7ab36d834"
+  },
+  {
+    "path": "src/compat/StageSessionState.cpp",
+    "sha256": "b5e1dd5127beeb8f7c2874d1a797d1c3f7b28a6bff3765723918cbd27cb5bd4e"
+  },
+  {
+    "path": "src/compat/StageSessionState.hpp",
+    "sha256": "bdb3fc960e2539d76b529e1722e84a9d507aa53056cab34add2a39aeab3865d8"
+  },
+  {
+    "path": "src/compat/StarPointerDepthOwnership.cpp",
+    "sha256": "8b364904e530051933bad8aa037d1b688446620d9b75dbe728ac3c232455bdc7"
+  },
+  {
+    "path": "src/compat/StarPointerDepthOwnership.hpp",
+    "sha256": "2a44e7f6474c3f731595f42d88a896f8456636ca2247dfb93a4bb004afc9bd14"
+  },
+  {
+    "path": "src/compat/StarPointerServiceCompat.cpp",
+    "sha256": "ff96586c5b881d966bcdff163fe19effd0db5d08257a1a8d5954cfee87e2add3"
+  },
+  {
+    "path": "src/compat/StorySequencePlatformCompat.cpp",
+    "sha256": "267ea187988bc9ca8f69c4b09b8e3d7d8f0e11480ad2849f55199ce57c729577"
+  },
+  {
+    "path": "src/compat/WPadOwnership.cpp",
+    "sha256": "cc42ba0a427b361ebd55275aada579e65bcf95c9fe665ccb305b040a2eeedacf"
+  },
+  {
+    "path": "src/compat/WPadOwnership.hpp",
+    "sha256": "1ebddefbabffd3fbf4561a885b590998d96f768bf104bc643b283efdfb5ff4e8"
+  },
+  {
+    "path": "src/layout/LayoutRuntime.cpp",
+    "sha256": "d834aead6638fb5be3b9744919daa8446dba59f6315d30136c001bb4a0f7a270"
+  },
+  {
+    "path": "src/layout/LayoutRuntime.hpp",
+    "sha256": "d60a3efe47380c2306a4b4bc5537f2ccdc62b2367f24c3fdc2b9a3ef4f3a8c0f"
+  },
+  {
+    "path": "src/layout/LayoutUtilCompat.cpp",
+    "sha256": "7c2e5ef32fa6e38710dd1afed198960f64fb1f1fbb1ae0e2dbd6dc32db79a4f4"
+  },
+  {
+    "path": "src/revolution/wpad.h",
+    "sha256": "76e77c1da497fb2e2be7eac777a08917885bdc7340c5358131147976614ca8d2"
+  },
+  {
+    "path": "src/runtime/RuntimeContext.cpp",
+    "sha256": "06e7512ea55bc942b2c1535fa3d9171301f34a948e8ec1f18b068afe84e1de26"
+  },
+  {
+    "path": "src/runtime/RuntimeServices.cpp",
+    "sha256": "3b00a6797e3f6414c46be2f51a582d3efa35b72efde5f97526c265022c6f8972"
+  },
+  {
+    "path": "src/runtime/RuntimeServices.hpp",
+    "sha256": "1169a794c0af5873a4d7249db664f9ac4bb16d0eb138bb4a1021021f77c6c76c"
+  },
+  {
+    "path": "tests/AuroraNativeTests.cpp",
+    "sha256": "fe6ca8181c00e6fb98b360963335da4ed0f8ed7f5eca7eaf1a1af8f0675e8c15"
+  },
+  {
+    "path": "tests/OriginalCameraDirectorTests.cpp",
+    "sha256": "b0ef35bb02d32f20d023763ccef1cc4a65b5a1368ce4fde5a2a90961a85484a9"
+  },
+  {
+    "path": "tests/OriginalPointerInputTests.cpp",
+    "sha256": "e6353d5339b1592a3add81f733af41f9f037023623c6cc52299bca14e0fe4ce0"
+  },
+  {
+    "path": "tests/OriginalStarPointerOwnerTests.cpp",
+    "sha256": "8f19463f524cf90863ecdd53be88e335eee665a275d27db8b3501869d3f3589c"
+  },
+  {
+    "path": "tests/xmake.lua",
+    "sha256": "2e056e5bfc8227bda8f255b968d1dfe96709fec4d7f4f91e9fb80471f832aa0d"
+  }
+]

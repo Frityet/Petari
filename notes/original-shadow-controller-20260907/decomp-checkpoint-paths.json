@@ -1,0 +1,18 @@
+[
+  "include/Game/MapObj/WarpPod.hpp",
+  "include/Game/Player/PlayerEvent.hpp",
+  "include/Game/System/WPadAcceleration.hpp",
+  "libs/RVL_SDK/include/revolution/kpad.h",
+  "src/Game/LiveActor/ShadowController.cpp",
+  "src/Game/Map/CollisionParts.cpp",
+  "src/Game/MapObj/WarpPod.cpp",
+  "src/Game/Player/PlayerEvent.cpp",
+  "src/Game/System/WPadAcceleration.cpp",
+  "src/Game/System/WPadHVSwing.cpp",
+  "src/Game/System/WPadPointer.cpp",
+  "src/Game/Util/DrawUtil.cpp",
+  "src/Game/Util/LayoutUtil.cpp",
+  "src/Game/Util/MapUtil.cpp",
+  "src/JSystem/J2DGraph/J2DGrafContext.cpp",
+  "src/JSystem/J2DGraph/J2DOrthoGraph.cpp"
+]

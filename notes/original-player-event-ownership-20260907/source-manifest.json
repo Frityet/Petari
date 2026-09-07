@@ -1,0 +1,22 @@
+{
+  "src/Game/Player/PlayerEvent.cpp": "862e42d3a48cd609e24daa76dd20660547f75659906d2599a9f0f97914d1d9d3",
+  "src/Game/Player/PlayerEvent.hpp": "72acb47488403adccdef33f91cbd32d4a7b16ee1b075477ba2b7f71a77ec555b",
+  "src/Game/Player/PlayerEventAbyss.cpp": "33989dafc45a1a49deb4fed955e9e3bceb126647f405d50f956a7665d515db5e",
+  "src/Game/Player/PlayerEventAbyss.hpp": "a6ee3e890b16106e446d8aa37c74c9cc7ea67091507b698536fed3a951664d85",
+  "src/Game/Player/PlayerEventDown.cpp": "2a8c4adbd34a38fcc1c82640755a7c2aefc8d918488ee2781d5c9ce51f7368db",
+  "src/Game/Player/PlayerEventDown.hpp": "525768263b722ee3e6762493f5a5dedb5fcb634470ce091b9be055f7a6a11866",
+  "src/Game/Player/PlayerEventFireDown.cpp": "2d54e15806ffba427ce129a3f5818468213c039db4d8349e607e48c26ce05e84",
+  "src/Game/Player/PlayerEventFireDown.hpp": "42183432ce2cbe4363fb5d21823b0433dde482436da9b40895c9c3541ed0a07c",
+  "src/Game/Player/PlayerEventGameOver.cpp": "e30b8b0f51998394b43183a330927abd38b642b9a0e8e62146f62f86ec47a683",
+  "src/Game/Player/PlayerEventGameOver.hpp": "a3329406578826d3427a996c49d1a59766172bd00da5ddcf01d48e6762a50d7a",
+  "src/Game/Player/PlayerEventGhostRaceDown.cpp": "c8e3aabf4d4ac76f8c41ba23f21450871c696368b6222e039a7243fa8d21bacb",
+  "src/Game/Player/PlayerEventGhostRaceDown.hpp": "7feec1063388d0b7ac0ae6875051e175b1a3db05d47522b7636229f150308d68",
+  "src/Game/Player/PlayerEventRaceDown.cpp": "c7d7049d9356324c7985335e6502e1289f5cb006944f596b52b9851d3f5d356d",
+  "src/Game/Player/PlayerEventRaceDown.hpp": "0021c9787e51142f4c111aef4d447a3d30aede522ad8ee409846acba9b99a050",
+  "src/compat/OriginalPlayerEventUtil.cpp": "71568f9f20f8401771670b239f1233957ad78a3bafea16fe8a8702e8bcd4b0f2",
+  "src/compat/SceneObjHolderCompat.cpp": "e632fbfa3debe97bf41065133a0eaaf62b8ce2d43f5e5b231449896163367b48",
+  "tests/OriginalEventSequenceTests.cpp": "ac2202479b47bc904ccf24a07e734438fb785f7e1472360d375db02b16901124",
+  "tests/xmake.lua": "f31c52e03b66c20e3cf29e3356044ae2de14d88364284abf42f248b5819e0a38",
+  "decomp/src/Game/Player/PlayerEvent.cpp": "862e42d3a48cd609e24daa76dd20660547f75659906d2599a9f0f97914d1d9d3",
+  "decomp/include/Game/Player/PlayerEvent.hpp": "72acb47488403adccdef33f91cbd32d4a7b16ee1b075477ba2b7f71a77ec555b"
+}

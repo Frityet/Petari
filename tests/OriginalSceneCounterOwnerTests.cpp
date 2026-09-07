@@ -16,6 +16,7 @@
 #include <aurora/exception.hpp>
 #include <array>
 #include <iostream>
+#include <limits>
 #include <memory>
 #include <stdexcept>
 #include <string_view>
@@ -122,6 +123,26 @@ void test_original_counter_leaves() {
     MR::incPlayerLeft();
     require(MR::getPlayerLeft() == 18 && GameDataFunction::getPlayerLeft() == 18,
             "life increment and query use the same original profile owner");
+    profile.setGameEventValue("MissPointForLetter", 19);
+    profile.setGameEventValue("MissNum", 9998);
+    MR::decPlayerLeft();
+    require(MR::getPlayerLeft() == 17 && profile.getGameEventValue("MissPointForLetter") == 20 &&
+                profile.getPlayerMissNum() == 9999,
+            "one death must update lives, letter miss points and miss count in the same selected profile");
+    MR::decPlayerLeft();
+    require(MR::getPlayerLeft() == 16 && profile.getGameEventValue("MissPointForLetter") == 20 &&
+                profile.getPlayerMissNum() == 9999,
+            "death counters retain original upper saturation");
+    GameDataFunction::addMissPoint(-99);
+    require(profile.getGameEventValue("MissPointForLetter") == 0, "letter miss points clamp below zero");
+    profile.setGameEventValue("MissPointForLetter", 1);
+    GameDataFunction::addMissPoint(std::numeric_limits<s32>::max());
+    require(profile.getGameEventValue("MissPointForLetter") == 0,
+            "letter miss point addition preserves PPC unsigned wrap followed by signed clamp");
+    profile.addPlayerLeft(-profile.getPlayerLeft());
+    MR::decPlayerLeft();
+    require(MR::getPlayerLeft() == 0 && profile.getGameEventValue("MissPointForLetter") == 1,
+            "zero remaining lives still records the real death counters");
     require(MR::getPowerStarNum() == profile.calcCurrentPowerStarNum(), "HUD Power Star query uses actual profile state");
     ScenePlayingResult result;
     require(result.getCoinNum() == 0 && result.mPurpleCoinNum == 0, "original scene result initializes both coin counters");

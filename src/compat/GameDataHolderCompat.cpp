@@ -268,6 +268,13 @@ void GameDataHolder::setPictureBookChapterAlreadyRead(int value) {
     setGameEventValue("絵本既読章", static_cast<u16>(value));
 }
 
+void GameDataHolder::addMissPoint(int points) {
+    const auto value = static_cast<u32>(getGameEventValue("MissPointForLetter"));
+    // Retail adds in u32, then clamps the wrapped result as signed PPC long.
+    const auto next = std::clamp(static_cast<s32>(value + static_cast<u32>(points)), 0, 20);
+    setGameEventValue("MissPointForLetter", static_cast<u16>(next));
+}
+
 void GameDataHolder::incPlayerMissNum() {
     setGameEventValue("MissNum", static_cast<u16>(std::min(getPlayerMissNum() + 1, 9999)));
 }

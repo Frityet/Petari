@@ -4,6 +4,7 @@
 #include "compat/SceneJ3dScope.hpp"
 #include "compat/StarPointerDepthOwnership.hpp"
 #include "Game/Util/DrawUtil.hpp"
+#include "Game/Util/ScreenUtil.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "compat/JutTextureAllocation.hpp"
 #include "runtime/ScreenAlphaCaptureService.hpp"
@@ -867,7 +868,8 @@ namespace smgpc::runtime {
         auto &wpad = aurora::wpad_service();
         wpad.set_connected(WPAD_CHAN0, true);
         wpad.set_button_mask(WPAD_CHAN0, hold_mask);
-        wpad.set_pointer(WPAD_CHAN0, pointer.x, pointer.y, pointer.valid);
+        wpad.set_pointer_resolution(WPAD_CHAN0, static_cast<f32>(MR::getFrameBufferWidth()), static_cast<f32>(MR::getFrameBufferHeight()));
+        wpad.set_pointer(WPAD_CHAN0, pointer.x, pointer.y, pointer.valid, 1.0F, 0.0F);
         wpad.set_sub_stick(WPAD_CHAN0, sub_stick_x, sub_stick_y);
         wpad.set_swing(WPAD_CHAN0, core_swing, false);
         wpad.set_distance_to_display(WPAD_CHAN0, pointer.valid ? 1.0F : 0.0F);
@@ -983,7 +985,7 @@ namespace smgpc::runtime {
             scene_execution().draw_2d_normal();
         }
         // GameSystem draws its pointer/guidance after the scene layouts.
-        _star_pointer_depth->draw_guidance();
+        _star_pointer_depth->draw();
     }
 
 #ifndef NDEBUG
@@ -1564,6 +1566,9 @@ namespace smgpc::runtime {
         std::string_view name, s32 parameter_1, s32 parameter_2) {
         auto *handle = _j_audio_playback->start_sound_effect(
             name, parameter_1, parameter_2);
+        if (handle == nullptr) {
+            return nullptr;
+        }
         _audio.start_system_sound(name);
         _logger.info(logging::Category::APP,
                      logging::Message{"SMG started retail system sound {}"}, name);
@@ -1605,6 +1610,9 @@ namespace smgpc::runtime {
         std::string_view name, s32 parameter_1, s32 parameter_2) {
         auto *handle = _j_audio_playback->start_sound_effect(
             name, parameter_1, parameter_2);
+        if (handle == nullptr) {
+            return nullptr;
+        }
         _audio.start_atmosphere_sound(name);
         _logger.info(logging::Category::APP,
                      logging::Message{"SMG started retail atmosphere sound {}"}, name);
