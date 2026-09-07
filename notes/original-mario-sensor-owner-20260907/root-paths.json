@@ -1,0 +1,50 @@
+[
+  {
+    "path": "src/Game/LiveActor/HitSensorInfo.cpp",
+    "sha256": "d46dffbe7f7c4e905defe66a919b444283ca9c423285c923130156cc60ed8545"
+  },
+  {
+    "path": "src/Game/LiveActor/HitSensorInfo.hpp",
+    "sha256": "3c8efaefbc17c8265461042051de9a9485e1e95ece6aa1af189cf34c04590a94"
+  },
+  {
+    "path": "src/Game/LiveActor/HitSensorKeeper.cpp",
+    "sha256": "44568410d6aab31af40d7c875cc34cf1662567be9a5cf39d65eb7bd569692b6a"
+  },
+  {
+    "path": "src/Game/LiveActor/HitSensor.cpp",
+    "sha256": "bbee103b18cadb3a717c53cef4a9d9751a9eeb54add5733c99f9d0e850ffa66f"
+  },
+  {
+    "path": "src/Game/LiveActor/LiveActor.cpp",
+    "sha256": "4b3b5ebb55a5668b66b6a4ff93cf39d9f6950848e0cbcf0116982f31464e6157"
+  },
+  {
+    "path": "src/Game/Player/MarioActorSensor.cpp",
+    "sha256": "bcc0d183a472aabea3106f49abbf751cfdeba54210df935213fdbed25f9d9f17"
+  },
+  {
+    "path": "src/compat/ActorRuntimeRegistry.cpp",
+    "sha256": "5cd13b1fac57f52ebc2fbb6b46a48aaee71b0b45eb127736b123df99d57d43fe"
+  },
+  {
+    "path": "src/compat/GameActorSensorCompat.cpp",
+    "sha256": "644a716a3c284bfebecc4051177debb49a9f9b5c55eeef5099a76cf68ced5b64"
+  },
+  {
+    "path": "src/compat/GameActorSensorCompat.hpp",
+    "sha256": "ce50b1c956be109ae0942e0b11515cbef32467d9ffc56041a44582b74f61e254"
+  },
+  {
+    "path": "src/runtime/SceneScheduler.cpp",
+    "sha256": "ca109fcf6503195f9fefc9b292b5a7c5343d7d7642de99c33a8f8e732b56c868"
+  },
+  {
+    "path": "tests/ActorSensorRealOrAbsentTests.cpp",
+    "sha256": "27241f8b182abd8a9c5275eadd9a516c5e570d2ab94ee4eb3ed60505b59cb3f2"
+  },
+  {
+    "path": "tests/SceneSchedulerHeapTests.cpp",
+    "sha256": "76e2244ac83185401bf9ed19fd59dc9977e2f7dd2272071edec6ca85bbb255df"
+  }
+]

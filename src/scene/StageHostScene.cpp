@@ -19,7 +19,6 @@
 #include "scene/SceneExecutionService.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "scene/StagePlacementResolver.hpp"
-#include "scene/StageEventCameraBinding.hpp"
 #include "scene/StageLightSceneBinding.hpp"
 #include "scene/nameobj/NameObjFactory.hpp"
 #include "scene/nameobj/ObjectNameTable.hpp"
@@ -202,9 +201,6 @@ namespace smgpc::scene {
     }
 
     StageHostScene::~StageHostScene() {
-        _runtime.camera_system().clear_stage_start_camera(
-            _stage_start_camera_owner_generation);
-        _stage_start_camera_owner_generation = 0U;
         // Scheduler registrations retain raw object pointers, so remove the scene
         // scope while its roots and child objects are still alive.
         (void)_runtime.end_scene_registration_scope(_registration_scope_id);
@@ -220,7 +216,6 @@ namespace smgpc::scene {
         _scene_obj_holder_binding.reset();
         _planet_map_catalog.reset();
         _stage_light_binding.reset();
-        _event_camera_binding.reset();
         _zone_matrix_binding.reset();
         _stage_resource_binding.reset();
         _authored_data.reset();
@@ -258,6 +253,8 @@ namespace smgpc::scene {
         _scene_obj_holder_binding = std::make_unique<SceneObjHolderBinding>(*mSceneObjHolder);
         _scene_obj_holder_binding->initialize_effect_system(3072, 256);
         constexpr auto required_scene_objects = std::array{
+            SceneObj_NameObjGroup,
+            SceneObj_ScenePlayingResult,
             SceneObj_MessageSensorHolder,
             SceneObj_ClippingDirector,
             SceneObj_LightDirector,
@@ -334,11 +331,12 @@ namespace smgpc::scene {
                     ";start_zone_id=" + std::to_string(_request.start_zone_id) + ";reason=start_info_not_found");
         }
 #endif
-        init_stage_start_camera();
         SleepControlFunc::initSyncSleepController();
         _runtime.scheduler().allocate_draw_buffers();
         appear_roots();
         _scene_obj_holder_binding->complete_initialization();
+        _stage_session->set_execution_phase(
+            smgpc::compat::StageSessionState::ExecutionPhase::Gameplay);
         _initialized = true;
     }
 
@@ -418,6 +416,7 @@ namespace smgpc::scene {
 
     void StageHostScene::init_placement_roots() {
         init_stage_environment();
+        _scene_obj_holder_binding->initialize_camera_system();
         prepare_authored_placements();
         preflight_stage_start_or_throw();
         // PlacementInfoOrdered ranks and requests every holder before retail
@@ -557,11 +556,9 @@ namespace smgpc::scene {
                 _runtime.dvd(), _request.stage_name, _request.scenario_no,
                 _request.start_id, _request.start_zone_id));
         _stage_resource_binding = std::make_unique<smgpc::compat::StageResourceBinding>(
-            _runtime.dvd(), _authored_data->holders());
+            _runtime.dvd(), _authored_data->holders(), _authored_data->tables());
         _zone_matrix_binding = std::make_unique<smgpc::compat::StageZoneMatrixBinding>(
             _authored_data->holders(), _authored_data->tables());
-        _event_camera_binding = std::make_unique<StageEventCameraBinding>(
-            _runtime.camera_system(), _runtime.dvd(), _authored_data->tables());
         _stage_light_binding = std::make_unique<StageLightSceneBinding>(
             _runtime.dvd(), _request.stage_name, _authored_data->tables());
         // The original DemoDirector/executors exist before placement actors
@@ -638,58 +635,6 @@ namespace smgpc::scene {
         if (_authored_placements != nullptr) {
             (void)_authored_placements->init_after_placement();
         }
-    }
-
-    void StageHostScene::init_stage_start_camera() {
-        _runtime.camera_system().clear_stage_start_camera(
-            _stage_start_camera_owner_generation);
-        _stage_start_camera_owner_generation = 0U;
-
-        if (_authored_data == nullptr ||
-            !_authored_data->start_info().has_value()) {
-            return;
-        }
-
-        auto resolved = smgpc::camera::resolve_stage_start_camera(
-            _runtime.dvd(), *_authored_data->start_info());
-        if (!resolved.camera.has_value()) {
-#ifndef NDEBUG
-            _runtime.emit_semantic_trace_event(
-                "camera", "stage_start_camera_unavailable",
-                "stage=" + _request.stage_name + ";scenario=" + std::to_string(_request.scenario_no) +
-                    ";start_id=" + std::to_string(_request.start_id) + ";start_zone_id=" + std::to_string(_request.start_zone_id) +
-                    ";status=" + std::string(smgpc::camera::stage_start_camera_status_name(resolved.status)) +
-                    ";detail=" + resolved.detail + ";camera=absent");
-#endif
-            return;
-        }
-
-        _stage_start_camera_owner_generation =
-            _runtime.camera_system().set_stage_start_camera(
-                std::move(*resolved.camera));
-#ifndef NDEBUG
-        const auto *retained_camera =
-            _runtime.camera_system().stage_start_camera();
-        if (retained_camera == nullptr) {
-            aurora::throw_host_exception<std::logic_error>(
-                "Stage-start camera service lost its retained resolved camera.");
-        }
-        const auto &camera = *retained_camera;
-        const auto &pose = camera.calculation.pose;
-        _runtime.emit_semantic_trace_event(
-            "camera", "stage_start_camera_selected",
-            "stage=" + _request.stage_name + ";scenario=" + std::to_string(_request.scenario_no) +
-                ";start_id=" + std::to_string(camera.start_info.start_id) +
-                ";start_zone_id=" + std::to_string(camera.start_info.zone_id) +
-                ";start_layer=" + camera.start_info.layer_name + ";start_table=" + camera.start_info.table_path +
-                ";start_row=" + std::to_string(camera.start_info.jmap_entry_index) +
-                ";camera_id=" + std::to_string(camera.start_info.camera_id) + ";camera_key=" + camera.camera_key +
-                ";camera_type=" + camera.camera_param.camera_type + ";camera_archive=" + camera.start_info.archive_path +
-                ";eye=" + std::to_string(pose.eye.x) + "," + std::to_string(pose.eye.y) + "," + std::to_string(pose.eye.z) +
-                ";watch=" + std::to_string(pose.watch.x) + "," + std::to_string(pose.watch.y) + "," + std::to_string(pose.watch.z) +
-                ";up=" + std::to_string(pose.up.x) + "," + std::to_string(pose.up.y) + "," + std::to_string(pose.up.z) +
-                ";fovy=" + std::to_string(pose.fovy_degrees));
-#endif
     }
 
     void StageHostScene::appear_roots() {

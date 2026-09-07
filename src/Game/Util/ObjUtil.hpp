@@ -123,6 +123,7 @@ namespace MR {
     void shakeCameraWeak();
     void shakeCameraVeryWeak();
     void declarePowerStarCoin100();
+    void requestAppearPowerStarCoin100();
     void declareStarPiece(const NameObj* pObj, s32 num);
     bool appearStarPiece(const NameObj*, const TVec3f&, s32, f32, f32, bool);
     void stopScene(s32);

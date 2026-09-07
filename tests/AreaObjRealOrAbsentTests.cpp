@@ -15,6 +15,7 @@
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/AreaObjUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/PlayerUtilCompat.hpp"
 #include "runtime/RuntimeServices.hpp"
@@ -500,6 +501,7 @@ namespace {
             std::tuple{"BlueStarGuidanceCube", "BlueStarGuidanceCube", 40, 0x10, AreaForm::Type_Cube2, false},
             std::tuple{"MessageAreaCube", "MessageArea", 42, 0x10, AreaForm::Type_Cube2, false},
             std::tuple{"MessageAreaCylinder", "MessageArea", 42, 0x10, AreaForm::Type_Cylinder, false},
+            std::tuple{"AreaMoveSphere", "AreaMoveSphere", 54, 0x10, AreaForm::Type_Sphere, false},
         };
         require(descriptors.size() == expected_descriptors.size(),
                 "the registry must contain only the completed exact and passive AreaObj closures");
@@ -983,6 +985,35 @@ namespace {
         require(result.writes == 0, "unavailable Mercator placement must not emit invented rail positions");
     }
 
+    void test_area_movement_uses_actual_sphere_and_arguments() {
+        TVec3f velocity(1, 2, 3);
+        require_throws<std::logic_error>([&] { MR::calcAreaMoveVelocity(&velocity, TVec3f(0,0,0)); }, "active scene-owned");
+        auto holder = SceneObjHolder{};
+        auto binding = smgpc::scene::SceneObjHolderBinding(holder);
+        auto* container = static_cast<AreaObjContainer*>(holder.create(SceneObj_AreaObjContainer));
+        auto* manager = container->getManager("AreaMoveSphere");
+        require(manager != nullptr && manager->_18 == 0x10, "Area movement requires the actual retail manager");
+        require(!MR::calcAreaMoveVelocity(&velocity, TVec3f(0,0,0)) && velocity.squared() == 0,
+                "An empty real manager returns the original zero/false result");
+        auto area = AreaObj(AreaForm::Type_Sphere, "AreaMoveSphere");
+        auto* sphere = static_cast<AreaFormSphere*>(area.mForm);
+        sphere->mTranslation.set(0,0,0);
+        sphere->_14 = 100;
+        sphere->mUp.set(0,1,0);
+        manager->entry(&area);
+        require(MR::calcAreaMoveVelocity(&velocity, TVec3f(10,0,0)) && velocity.epsilonEquals(TVec3f(0,10,0), 1e-5F),
+                "Missing authored speed defaults to ten along the sphere's tangent up vector");
+        area.mObjArg0 = -4;
+        require(MR::calcAreaMoveVelocity(&velocity, TVec3f(10,0,0)) && velocity.epsilonEquals(TVec3f(0,-4,0), 1e-5F),
+                "Explicit negative authored speed must be preserved");
+        require(MR::calcAreaMoveVelocity(&velocity, TVec3f(0,10,0)) && velocity.squared() == 0,
+                "An axial point has no tangent up component");
+        require(MR::calcAreaMoveVelocity(&velocity, TVec3f(0,0,0)) && velocity.epsilonEquals(TVec3f(0,-4,0), 1e-5F),
+                "Original normalize-or-zero keeps the up vector at the exact center");
+        require(!MR::calcAreaMoveVelocity(&velocity, TVec3f(100,0,0)) && velocity.squared() == 0,
+                "Original sphere membership excludes its exact radius");
+    }
+
     struct TestCase {
         std::string_view name;
         void (*run)();
@@ -1005,6 +1036,7 @@ int main() {
         TestCase{"RMGK01 MessageArea rows construct exactly", test_rmgk01_message_area_rows_construct_exactly},
         TestCase{"RMGK01 SwitchArea rows drive authored switches", test_rmgk01_switch_area_rows_drive_authored_switches},
         TestCase{"RMGK01 zone-light data resolves child tables", test_rmgk01_zone_light_data_resolves_child_tables},
+        TestCase{"area movement uses actual sphere and arguments", test_area_movement_uses_actual_sphere_and_arguments},
         TestCase{"water and Mercator do not fabricate results", test_water_and_mercator_do_not_fabricate_results},
     };
 

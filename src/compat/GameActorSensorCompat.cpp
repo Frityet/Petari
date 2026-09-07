@@ -3,6 +3,7 @@
 
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/HitSensorKeeper.hpp"
+#include "Game/LiveActor/HitSensorInfo.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/MessageSensorHolder.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
@@ -19,116 +20,22 @@
 
 namespace {
 
-    enum class SensorBindingKind {
-        Position,
-        Matrix,
-        Joint,
-    };
-
-    struct SensorBinding {
-        HitSensor* sensor = nullptr;
-        SensorBindingKind kind = SensorBindingKind::Position;
-        const TVec3f* position = nullptr;
-        MtxPtr matrix = nullptr;
-        std::string joint_name{};
-        TVec3f offset{};
-    };
-
-    using ActorSensorBindings = std::unordered_map<const LiveActor*, std::vector<SensorBinding>>;
-
-    [[nodiscard]] ActorSensorBindings& actor_sensor_bindings() {
-        static auto bindings = ActorSensorBindings{};
-        return bindings;
-    }
-
     [[nodiscard]] bool can_register_sensor(const LiveActor* actor, const char* name) {
-        return actor != nullptr && name != nullptr && *name != '\0';
-    }
-
-    [[nodiscard]] TVec3f transform_point(MtxPtr matrix, const TVec3f& point) {
-        return TVec3f{
-            matrix[0][0] * point.x + matrix[0][1] * point.y + matrix[0][2] * point.z + matrix[0][3],
-            matrix[1][0] * point.x + matrix[1][1] * point.y + matrix[1][2] * point.z + matrix[1][3],
-            matrix[2][0] * point.x + matrix[2][1] * point.y + matrix[2][2] * point.z + matrix[2][3],
-        };
-    }
-
-    [[nodiscard]] MtxPtr resolve_binding_matrix(LiveActor* actor, const SensorBinding& binding) {
-        if (binding.kind == SensorBindingKind::Joint) {
-            return MR::getJointMtx(actor, binding.joint_name.c_str());
-        }
-        return binding.matrix;
-    }
-
-    void update_binding(LiveActor* actor, SensorBinding& binding) {
-        if (binding.sensor == nullptr) {
-            return;
-        }
-
-        switch (binding.kind) {
-        case SensorBindingKind::Position:
-            if (binding.position == nullptr) {
-                binding.sensor->invalidateBySystem();
-                return;
-            }
-            binding.sensor->mPosition = *binding.position + binding.offset;
-            break;
-        case SensorBindingKind::Matrix:
-        case SensorBindingKind::Joint:
-            if (auto* matrix = resolve_binding_matrix(actor, binding); matrix != nullptr) {
-                binding.sensor->mPosition = transform_point(matrix, binding.offset);
-            } else {
-                binding.sensor->invalidateBySystem();
-                return;
-            }
-            break;
-        }
-
-        binding.sensor->validateBySystem();
-    }
-
-    void register_binding(LiveActor* actor, SensorBinding binding) {
-        auto& stored = actor_sensor_bindings()[actor].emplace_back(std::move(binding));
-        update_binding(actor, stored);
+        return actor != nullptr && actor->mSensorKeeper != nullptr && name != nullptr && *name != '\0';
     }
 
     [[nodiscard]] HitSensor* add_position_sensor(LiveActor* actor, const char* name, u32 type, u16 group_size, f32 radius,
                                                  const TVec3f* position, const TVec3f& offset) {
-        if (!can_register_sensor(actor, name) || position == nullptr) {
-            return nullptr;
-        }
-
-        auto* sensor = smgpc::compat::add_actor_hit_sensor(actor, name, type, group_size, radius, {});
-        if (sensor == nullptr) {
-            return nullptr;
-        }
-        register_binding(actor, SensorBinding{
-                                    .sensor = sensor,
-                                    .kind = SensorBindingKind::Position,
-                                    .position = position,
-                                    .offset = offset,
-                                });
-        return sensor;
+        if (!can_register_sensor(actor, name) || !position) return nullptr;
+        return actor->mSensorKeeper->addPos(name, type, group_size, radius, actor, position, offset);
     }
 
     [[nodiscard]] HitSensor* add_joint_sensor(LiveActor* actor, const char* name, const char* joint_name, u32 type,
                                               u16 group_size, f32 radius, const TVec3f& offset) {
-        if (!can_register_sensor(actor, name) || joint_name == nullptr || *joint_name == '\0' ||
-            MR::getJointMtx(actor, joint_name) == nullptr) {
-            return nullptr;
-        }
-
-        auto* sensor = smgpc::compat::add_actor_hit_sensor(actor, name, type, group_size, radius, {});
-        if (sensor == nullptr) {
-            return nullptr;
-        }
-        register_binding(actor, SensorBinding{
-                                    .sensor = sensor,
-                                    .kind = SensorBindingKind::Joint,
-                                    .joint_name = joint_name,
-                                    .offset = offset,
-                                });
-        return sensor;
+        if (!can_register_sensor(actor, name) || !joint_name || !*joint_name) return nullptr;
+        auto* matrix = MR::getJointMtx(actor, joint_name);
+        if (!matrix) return nullptr;
+        return actor->mSensorKeeper->addMtx(name, type, group_size, radius, actor, matrix, offset);
     }
 
     [[nodiscard]] HitSensor* sensor_at(LiveActor* actor, int index) {
@@ -153,23 +60,14 @@ namespace {
 
 namespace smgpc::compat {
 
-    void update_actor_sensor_bindings(LiveActor* actor) {
-        const auto found = actor_sensor_bindings().find(actor);
-        if (found == actor_sensor_bindings().end()) {
-            return;
-        }
-        for (auto& binding : found->second) {
-            update_binding(actor, binding);
-        }
-    }
-
-    void release_actor_sensor_bindings(const LiveActor* actor) {
-        actor_sensor_bindings().erase(actor);
-    }
-
     std::size_t actor_sensor_binding_count(const LiveActor* actor) {
-        const auto found = actor_sensor_bindings().find(actor);
-        return found != actor_sensor_bindings().end() ? found->second.size() : 0U;
+        if (!actor || !actor->mSensorKeeper) return 0;
+        std::size_t count = 0;
+        for (s32 i = 0; i < actor->mSensorKeeper->mSensorInfosSize; ++i) {
+            auto* info = actor->mSensorKeeper->mSensorInfos[i];
+            if (info->_18 || info->_1C || info->_20) ++count;
+        }
+        return count;
     }
 
     const char* actor_message_name(std::uint32_t message) {
@@ -212,6 +110,14 @@ namespace smgpc::compat {
 }  // namespace smgpc::compat
 
 namespace MR {
+
+    HitSensor* getTaking(const LiveActor* pActor) {
+        if (pActor->mSensorKeeper != nullptr) {
+            return pActor->mSensorKeeper->mTaking;
+        }
+
+        return nullptr;
+    }
 
     HitSensor* getTaken(const LiveActor* pActor) {
         if (pActor->mSensorKeeper != nullptr) {
@@ -316,17 +222,7 @@ namespace MR {
             return nullptr;
         }
 
-        auto* sensor = smgpc::compat::add_actor_hit_sensor(actor, name, type, group_size, radius, {});
-        if (sensor == nullptr) {
-            return nullptr;
-        }
-        register_binding(actor, SensorBinding{
-                                    .sensor = sensor,
-                                    .kind = SensorBindingKind::Matrix,
-                                    .matrix = matrix,
-                                    .offset = offset,
-                                });
-        return sensor;
+        return actor->mSensorKeeper->addMtx(name, type, group_size, radius, actor, matrix, offset);
     }
 
     HitSensor* addHitSensorMtxRide(LiveActor* actor, const char* name, u16 group_size, f32 radius, MtxPtr matrix,
@@ -408,6 +304,42 @@ namespace MR {
         return addHitSensor(actor, "body", type, 0U, 0.0F, {});
     }
 
+    HitSensor* addHitSensorCallback(LiveActor* pActor, const char* pName, u32 type, u16 groupSize, f32 radius) {
+        return pActor->mSensorKeeper->addCallback(pName, type, groupSize, radius, pActor);
+    }
+
+    HitSensor* addHitSensorCallbackBinder(LiveActor* pActor, const char* pName, u16 groupSize, f32 radius) {
+        return addHitSensorCallback(pActor, pName, ATYPE_BINDER, groupSize, radius);
+    }
+
+    HitSensor* addHitSensorCallbackPriorBinder(LiveActor* pActor, const char* pName, u16 groupSize, f32 radius) {
+        return addHitSensorCallback(pActor, pName, ATYPE_PRIOR_BINDER, groupSize, radius);
+    }
+
+    HitSensor* addHitSensorCallbackRide(LiveActor* pActor, const char* pName, u16 groupSize, f32 radius) {
+        return addHitSensorCallback(pActor, pName, ATYPE_RIDE, groupSize, radius);
+    }
+
+    HitSensor* addHitSensorCallbackMapObj(LiveActor* pActor, const char* pName, u16 groupSize, f32 radius) {
+        return addHitSensorCallback(pActor, pName, ATYPE_MAP_OBJ, groupSize, radius);
+    }
+
+    HitSensor* addHitSensorCallbackMapObjSimple(LiveActor* pActor, const char* pName, u16 groupSize, f32 radius) {
+        return addHitSensorCallback(pActor, pName, ATYPE_MAP_OBJ_SIMPLE, groupSize, radius);
+    }
+
+    HitSensor* addHitSensorCallbackEnemy(LiveActor* pActor, const char* pName, u16 groupSize, f32 radius) {
+        return addHitSensorCallback(pActor, pName, ATYPE_ENEMY, groupSize, radius);
+    }
+
+    HitSensor* addHitSensorCallbackEnemyAttack(LiveActor* pActor, const char* pName, u16 groupSize, f32 radius) {
+        return addHitSensorCallback(pActor, pName, ATYPE_ENEMY_ATTACK, groupSize, radius);
+    }
+
+    HitSensor* addHitSensorCallbackEye(LiveActor* pActor, const char* pName, u16 groupSize, f32 radius) {
+        return addHitSensorCallback(pActor, pName, ATYPE_EYE, groupSize, radius);
+    }
+
     HitSensor* addBodyMessageSensorReceiver(LiveActor* actor) {
         return addBodyMessageSensor(actor, ATYPE_RECEIVER);
     }
@@ -444,23 +376,18 @@ namespace MR {
         return addHitSensor(actor, name, ATYPE_ENEMY, 0U, 0.0F, {});
     }
 
-    bool tryUpdateHitSensorsAll(LiveActor* actor) {
-        if (actor == nullptr) {
-            return false;
+    bool tryUpdateHitSensorsAll(LiveActor* pActor) {
+        if (pActor->mSensorKeeper != nullptr) {
+            updateHitSensorsAll(pActor);
+
+            return true;
         }
-        auto sensors = std::vector<HitSensor*>{};
-        smgpc::compat::collect_actor_hit_sensors(actor, sensors);
-        if (sensors.empty()) {
-            return false;
-        }
-        smgpc::compat::update_actor_hit_sensors(actor);
-        return true;
+
+        return false;
     }
 
-    void updateHitSensorsAll(LiveActor* actor) {
-        if (actor != nullptr) {
-            smgpc::compat::update_actor_hit_sensors(actor);
-        }
+    void updateHitSensorsAll(LiveActor* pActor) {
+        pActor->mSensorKeeper->update();
     }
 
     bool isSensorType(const HitSensor* sensor, u32 type) {
@@ -485,6 +412,10 @@ namespace MR {
         }
     }
 
+    void setSensorOffset(LiveActor* pActor, const char* pName, const TVec3f& rOffset) {
+        pActor->mSensorKeeper->getSensorInfo(pName)->setOffset(rOffset);
+    }
+
     void setSensorRadius(LiveActor* actor, const char* name, f32 radius) {
         if (actor == nullptr || name == nullptr) {
             return;
@@ -494,13 +425,14 @@ namespace MR {
         }
     }
 
-    void setHitSensorApart(HitSensor* sender, HitSensor* receiver) {
-        // Native sensor ownership lives in ActorRuntimeRegistry; the PC
-        // provider does not currently retain the retail taking/taken links.
-        // Keep the exact dispatch endpoint total while there is no link to
-        // clear.
-        (void)sender;
-        (void)receiver;
+    void setHitSensorApart(HitSensor* pSender, HitSensor* pReceiver) {
+        if (getTaking(getSensorHost(pSender)) == pReceiver || getTaken(getSensorHost(pReceiver)) == pSender) {
+            getSensorHost(pSender)->mSensorKeeper->mTaking = nullptr;
+            getSensorHost(pReceiver)->mSensorKeeper->mTaken = nullptr;
+        } else {
+            getSensorHost(pSender)->mSensorKeeper->mTaken = nullptr;
+            getSensorHost(pReceiver)->mSensorKeeper->mTaking = nullptr;
+        }
     }
 
     void validateHitSensors(LiveActor* actor) {

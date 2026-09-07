@@ -26,5 +26,9 @@
   {
     "path": "include/Game/Map/WhirlPoolAccelerator.hpp",
     "sha256": "894b2f398ff478b48604804cd5ee1a50400662ab4b2a868112c3040101f24575"
+  },
+  {
+    "path": "src/Game/Screen/WaterCameraFilter.cpp",
+    "sha256": "e945cf6c60644e49c48640170539ec0ba69c1279a1ca3f7d63698d4310187f73"
   }
 ]

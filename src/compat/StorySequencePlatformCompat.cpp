@@ -289,7 +289,22 @@ namespace MR {
     }
 
     const JMapIdInfo &getInitializeStartIdInfo() {
+        static const JMapIdInfo initial(0, 0);
+        return initial;
+    }
+
+    const JMapIdInfo &getCurrentMarioStartIdInfo() {
         return smgpc::compat::require_active_stage_session().initial_start_id();
+    }
+
+    bool isStageStateScenarioOpeningCamera() {
+        return smgpc::compat::require_active_stage_session().execution_phase() ==
+               smgpc::compat::StageSessionState::ExecutionPhase::ScenarioOpeningCamera;
+    }
+
+    bool isExecScenarioStarter() {
+        return smgpc::compat::require_active_stage_session().execution_phase() ==
+               smgpc::compat::StageSessionState::ExecutionPhase::ScenarioStarter;
     }
 
     bool isStarCompleteAllGalaxy() {

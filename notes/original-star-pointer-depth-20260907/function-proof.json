@@ -1,0 +1,154 @@
+[
+  {
+    "source": "StarPointerController",
+    "symbol": "__ct__7DpdInfoFv",
+    "name": "DpdInfo::DpdInfo()",
+    "match_percent": 99.44444,
+    "retail_size": "36",
+    "candidate_size": "36"
+  },
+  {
+    "source": "StarPointerController",
+    "symbol": "__ct__21StarPointerControllerFv",
+    "name": "StarPointerController::StarPointerController()",
+    "match_percent": 89.5,
+    "retail_size": "208",
+    "candidate_size": "220"
+  },
+  {
+    "source": "StarPointerController",
+    "symbol": "isOutScreenLong__21StarPointerControllerCFv",
+    "name": "StarPointerController::isOutScreenLong() const",
+    "match_percent": 100.0,
+    "retail_size": "28",
+    "candidate_size": "28"
+  },
+  {
+    "source": "StarPointerController",
+    "symbol": "initAndSetPort__21StarPointerControllerFl",
+    "name": "StarPointerController::initAndSetPort(long)",
+    "match_percent": 100.0,
+    "retail_size": "8",
+    "candidate_size": "8"
+  },
+  {
+    "source": "StarPointerController",
+    "symbol": "movement__21StarPointerControllerFPCfPCf",
+    "name": "StarPointerController::movement(const float*, const float*)",
+    "match_percent": 100.0,
+    "retail_size": "60",
+    "candidate_size": "60"
+  },
+  {
+    "source": "StarPointerController",
+    "symbol": "storeDataFromCallback__21StarPointerControllerFPCfPCf",
+    "name": "StarPointerController::storeDataFromCallback(const float*, const float*)",
+    "match_percent": 100.0,
+    "retail_size": "264",
+    "candidate_size": "264"
+  },
+  {
+    "source": "StarPointerController",
+    "symbol": "storePastPointingData__21StarPointerControllerFv",
+    "name": "StarPointerController::storePastPointingData()",
+    "match_percent": 100.0,
+    "retail_size": "196",
+    "candidate_size": "196"
+  },
+  {
+    "source": "StarPointerController",
+    "symbol": "calcPastPointingPosOnScreen__21StarPointerControllerCFPQ29JGeometry8TVec2<f>l",
+    "name": "StarPointerController::calcPastPointingPosOnScreen(JGeometry::TVec2<float>*, long) const",
+    "match_percent": 99.893616,
+    "retail_size": "188",
+    "candidate_size": "188"
+  },
+  {
+    "source": "StarPointerController",
+    "symbol": "updateDpdInfo__21StarPointerControllerFv",
+    "name": "StarPointerController::updateDpdInfo()",
+    "match_percent": 100.0,
+    "retail_size": "168",
+    "candidate_size": "168"
+  },
+  {
+    "source": "StarPointerController",
+    "symbol": "updateAdditionalInfo__21StarPointerControllerFv",
+    "name": "StarPointerController::updateAdditionalInfo()",
+    "match_percent": 99.87805,
+    "retail_size": "164",
+    "candidate_size": "164"
+  },
+  {
+    "source": "StarPointerController",
+    "symbol": "calcViewDistanceZ__21StarPointerControllerFRCQ29JGeometry8TVec3<f>PA4_f",
+    "name": "StarPointerController::calcViewDistanceZ(const JGeometry::TVec3<float>&, float(*)[4])",
+    "match_percent": 100.0,
+    "retail_size": "60",
+    "candidate_size": "60"
+  },
+  {
+    "source": "StarPointerController",
+    "symbol": "sub__Q29JGeometry8TVec2<f>FRCQ29JGeometry8TVec2<f>",
+    "name": "JGeometry::TVec2<float>::sub(const JGeometry::TVec2<float>&)",
+    "match_percent": 100.0,
+    "retail_size": "36",
+    "candidate_size": "36"
+  },
+  {
+    "source": "StarPointerDirector",
+    "symbol": "__ct__26StarPointerTransformHolderFv",
+    "name": "StarPointerTransformHolder::StarPointerTransformHolder()",
+    "match_percent": 100.0,
+    "retail_size": "76",
+    "candidate_size": "76"
+  },
+  {
+    "source": "StarPointerDirector",
+    "symbol": "movement__26StarPointerTransformHolderFv",
+    "name": "StarPointerTransformHolder::movement()",
+    "match_percent": 99.72222,
+    "retail_size": "288",
+    "candidate_size": "288"
+  },
+  {
+    "source": "StarPointerDirector",
+    "symbol": "__ct__16StarPointerPeekZFv",
+    "name": "StarPointerPeekZ::StarPointerPeekZ()",
+    "match_percent": 100.0,
+    "retail_size": "92",
+    "candidate_size": "92"
+  },
+  {
+    "source": "StarPointerDirector",
+    "symbol": "setDrawSyncToken__16StarPointerPeekZFv",
+    "name": "StarPointerPeekZ::setDrawSyncToken()",
+    "match_percent": 100.0,
+    "retail_size": "72",
+    "candidate_size": "72"
+  },
+  {
+    "source": "StarPointerDirector",
+    "symbol": "drawSyncCallback__16StarPointerPeekZFUs",
+    "name": "StarPointerPeekZ::drawSyncCallback(unsigned short)",
+    "match_percent": 100.0,
+    "retail_size": "300",
+    "candidate_size": "300"
+  },
+  {
+    "source": "StarPointerDirector",
+    "symbol": "forceInsideScreenEdge__19StarPointerFunctionFPQ29JGeometry8TVec2<f>",
+    "name": "StarPointerFunction::forceInsideScreenEdge(JGeometry::TVec2<float>*)",
+    "match_percent": 100.0,
+    "retail_size": "244",
+    "candidate_size": "244"
+  },
+  {
+    "source": "StarPointerDirector",
+    "symbol": "getNumStarPointer__19StarPointerFunctionFv",
+    "name": "StarPointerFunction::getNumStarPointer()",
+    "match_percent": 100.0,
+    "retail_size": "8",
+    "candidate_size": "8"
+  }
+]

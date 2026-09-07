@@ -16,6 +16,7 @@
 
 #include "Game/LiveActor/ActorLightCtrl.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/HitSensorKeeper.hpp"
 #include "Game/LiveActor/Spine.hpp"
 #include "Game/Map/StageSwitch.hpp"
 #include "Game/Util/ActorMovementUtil.hpp"
@@ -54,16 +55,13 @@ void LiveActor::movement() {
             mAnimKeeper->update();
         }
     }
-    if (mFlag.mIsDead) {
-        return;
-    }
-
     // Keep physics ownership at the retail virtual-call boundary. Derived
     // actors such as MarioActor call LiveActor::movement() and immediately
     // inspect the displacement and contact planes after it returns, so the
     // scheduler cannot legally run either phase outside this call.
     smgpc::compat::update_live_actor_gravity(*this);
-    smgpc::compat::update_actor_hit_sensors(this);
+    if (mSensorKeeper) mSensorKeeper->doObjCol();
+    if (mFlag.mIsDead) return;
     smgpc::compat::update_actor_nerve(this);
 
     if (mFlag.mIsDead) {
@@ -77,13 +75,13 @@ void LiveActor::movement() {
         if (mEffectKeeper != nullptr) {
             mEffectKeeper->update();
         }
-        smgpc::compat::update_actor_hit_sensors(this);
         if (mCameraCtrl != nullptr) {
             mCameraCtrl->update();
         }
         if (mActorLightCtrl != nullptr) {
             MR::updateLightCtrl(this);
         }
+        smgpc::compat::update_actor_hit_sensors(this);
         MR::actorSoundMovement(this);
     }
 }
@@ -134,7 +132,7 @@ void LiveActor::makeActorAppeared() {
         endClipped();
     }
     mFlag.mIsDead = false;
-    smgpc::compat::validate_actor_hit_sensors(this);
+    if (mSensorKeeper) mSensorKeeper->validateBySystem();
     smgpc::compat::update_actor_hit_sensors(this);
 }
 
@@ -144,7 +142,7 @@ void LiveActor::makeActorDead() {
         mEffectKeeper->clear();
     }
     mFlag.mIsDead = true;
-    smgpc::compat::invalidate_actor_hit_sensors(this);
+    if (mSensorKeeper) mSensorKeeper->invalidateBySystem();
     smgpc::compat::clear_actor_binder_contacts(this);
 }
 
@@ -198,7 +196,7 @@ void LiveActor::startClipped() {
     if (mEffectKeeper != nullptr) {
         mEffectKeeper->stopEmitterOnClipped();
     }
-    smgpc::compat::invalidate_actor_hit_sensors(this);
+    if (mSensorKeeper) mSensorKeeper->invalidateBySystem();
 }
 
 void LiveActor::endClipped() {
@@ -207,7 +205,7 @@ void LiveActor::endClipped() {
         mEffectKeeper->playEmitterOffClipped();
     }
     if (!mFlag.mIsDead) {
-        smgpc::compat::validate_actor_hit_sensors(this);
+        if (mSensorKeeper) mSensorKeeper->validateBySystem();
         smgpc::compat::update_actor_hit_sensors(this);
     }
 }

@@ -259,7 +259,7 @@ void test_optional_disc_parameters() {
         smgpc::scene::StageHolderOccurrence root;
         root.stage_name = stage;
         const std::array holders{root};
-        StageResourceBinding resources(dvd, holders);
+        StageResourceBinding resources(dvd, holders, {});
         Owners owners;
         const auto archive = dvd.retain_archive_for_path(std::string("/StageData/") + stage + ".arc");
         const auto bytes = archive->resource_data("CameraParam.bcam");

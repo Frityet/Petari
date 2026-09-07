@@ -1,0 +1,703 @@
+[
+  {
+    "source": "ImageEffectLocalUtil",
+    "symbols": [
+      {
+        "name": "connectToSceneImageEffect__2MRFP7NameObj",
+        "match_percent": 100.0,
+        "size": "20"
+      },
+      {
+        "name": "connectToSceneImageEffectMovement__2MRFP7NameObj",
+        "match_percent": 100.0,
+        "size": "20"
+      },
+      {
+        "name": "capture__20ImageEffectLocalUtilFP10JUTTexturell9_GXTexFmtbUc",
+        "match_percent": 86.030304,
+        "size": "132"
+      },
+      {
+        "name": "setupDrawTexture__20ImageEffectLocalUtilFv",
+        "match_percent": 99.86144,
+        "size": "664"
+      },
+      {
+        "name": "drawTexture__20ImageEffectLocalUtilFP10JUTTexturellUcQ220ImageEffectLocalUtil12ETexDrawType",
+        "match_percent": 100.0,
+        "size": "496"
+      },
+      {
+        "name": "sendTextureVertex__20ImageEffectLocalUtilFll",
+        "match_percent": 99.48276,
+        "size": "464"
+      },
+      {
+        "name": "connectToSceneNormalBloom__2MRFP11BloomEffect",
+        "match_percent": 99.8,
+        "size": "300"
+      }
+    ],
+    "command": [
+      "build/tools/objdiff-cli",
+      "diff",
+      "-1",
+      "/Users/frityet/Projects/petari/notes/gateway-audit-20260907/restoration/retail/obj/Game/Screen/ImageEffectLocalUtil.o",
+      "-2",
+      "/Users/frityet/Projects/petari/notes/original-camera-director-lifecycle-20260907/ImageEffectLocalUtil.wii.o",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-camera-director-lifecycle-20260907/ImageEffectLocalUtil.objdiff.json",
+      "--format",
+      "json-pretty"
+    ]
+  },
+  {
+    "source": "CameraShaker",
+    "symbols": [
+      {
+        "name": "__ct__12CameraShakerFPCc",
+        "match_percent": 100.0,
+        "size": "84"
+      },
+      {
+        "name": "movement__12CameraShakerFv",
+        "match_percent": 100.0,
+        "size": "68"
+      },
+      {
+        "name": "shakeVertical__12CameraShakerFQ212CameraShaker20ESinglyVerticalPower",
+        "match_percent": 100.0,
+        "size": "76"
+      },
+      {
+        "name": "shakeInfinity__12CameraShakerFP7NameObjff",
+        "match_percent": 100.0,
+        "size": "152"
+      },
+      {
+        "name": "stopShakingInfinity__12CameraShakerFP7NameObj",
+        "match_percent": 100.0,
+        "size": "92"
+      },
+      {
+        "name": "createSinglyVerticalTask__12CameraShakerFv",
+        "match_percent": 100.0,
+        "size": "144"
+      },
+      {
+        "name": "createSinglyHorizontalTask__12CameraShakerFv",
+        "match_percent": 100.0,
+        "size": "204"
+      },
+      {
+        "name": "createInfinityTask__12CameraShakerFv",
+        "match_percent": 100.0,
+        "size": "148"
+      },
+      {
+        "name": "updateSinglyVerticalTask__12CameraShakerFv",
+        "match_percent": 100.0,
+        "size": "84"
+      },
+      {
+        "name": "updateSinglyHorizontalTask__12CameraShakerFv",
+        "match_percent": 100.0,
+        "size": "84"
+      },
+      {
+        "name": "updateInfinityTask__12CameraShakerFv",
+        "match_percent": 100.0,
+        "size": "84"
+      },
+      {
+        "name": "setOffset__12CameraShakerFv",
+        "match_percent": 100.0,
+        "size": "108"
+      },
+      {
+        "name": "addSinglyVerticalTaskOffset__12CameraShakerFPQ29JGeometry8TVec2<f>",
+        "match_percent": 100.0,
+        "size": "140"
+      },
+      {
+        "name": "addSinglyHorizontalTaskOffset__12CameraShakerFPQ29JGeometry8TVec2<f>",
+        "match_percent": 100.0,
+        "size": "140"
+      },
+      {
+        "name": "addInfinityTaskOffset__12CameraShakerFPQ29JGeometry8TVec2<f>",
+        "match_percent": 100.0,
+        "size": "140"
+      },
+      {
+        "name": "adjustOffsetToScreen__12CameraShakerFPQ29JGeometry8TVec2<f>",
+        "match_percent": 100.0,
+        "size": "160"
+      },
+      {
+        "name": "startInfinity__12CameraShakerFUlff",
+        "match_percent": 100.0,
+        "size": "36"
+      },
+      {
+        "name": "__dt__12CameraShakerFv",
+        "match_percent": 100.0,
+        "size": "88"
+      }
+    ],
+    "command": [
+      "build/tools/objdiff-cli",
+      "diff",
+      "-1",
+      "/Users/frityet/Projects/petari/notes/gateway-audit-20260907/restoration/retail/obj/Game/Camera/CameraShaker.o",
+      "-2",
+      "/Users/frityet/Projects/petari/notes/original-camera-director-lifecycle-20260907/CameraShaker.wii.o",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-camera-director-lifecycle-20260907/CameraShaker.objdiff.json",
+      "--format",
+      "json-pretty"
+    ]
+  },
+  {
+    "source": "CameraUtil",
+    "symbols": [
+      {
+        "name": "__ct<f>__Q29JGeometry8TVec4<f>Fffff_Pv",
+        "match_percent": 100.0,
+        "size": "20"
+      },
+      {
+        "name": "calcNormalizedScreenPosToScreenPos__24@unnamed@CameraUtil_cpp@FPQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+        "match_percent": 100.0,
+        "size": "188"
+      },
+      {
+        "name": "calcScreenPosition__2MRFPQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec3<f>",
+        "match_percent": 100.0,
+        "size": "128"
+      },
+      {
+        "name": "calcScreenPosition__2MRFPQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+        "match_percent": 100.0,
+        "size": "112"
+      },
+      {
+        "name": "calcNormalizedScreenPosition__2MRFPQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+        "match_percent": 100.0,
+        "size": "92"
+      },
+      {
+        "name": "calcNormalizedScreenPositionFromView__2MRFPQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+        "match_percent": 99.87342,
+        "size": "316"
+      },
+      {
+        "name": "calcWorldPositionFromScreen__2MRFPQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec2<f>f",
+        "match_percent": 84.5098,
+        "size": "204"
+      },
+      {
+        "name": "calcWorldPositionFromCenterScreen__2MRFPQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec2<f>f",
+        "match_percent": 99.93827,
+        "size": "324"
+      },
+      {
+        "name": "calcWorldRayDirectionFromScreen__2MRFPQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec2<f>",
+        "match_percent": 100.0,
+        "size": "84"
+      },
+      {
+        "name": "calcCameraDistanceZ__2MRFRCQ29JGeometry8TVec3<f>",
+        "match_percent": 100.0,
+        "size": "112"
+      },
+      {
+        "name": "loadProjectionMtx__2MRFv",
+        "match_percent": 100.0,
+        "size": "52"
+      },
+      {
+        "name": "loadViewMtx__2MRFv",
+        "match_percent": 100.0,
+        "size": "56"
+      },
+      {
+        "name": "getCameraViewMtx__2MRFv",
+        "match_percent": 100.0,
+        "size": "44"
+      },
+      {
+        "name": "getCameraInvViewMtx__2MRFv",
+        "match_percent": 100.0,
+        "size": "44"
+      },
+      {
+        "name": "getCameraProjectionMtx__2MRFv",
+        "match_percent": 100.0,
+        "size": "44"
+      },
+      {
+        "name": "getAspect__2MRFv",
+        "match_percent": 100.0,
+        "size": "44"
+      },
+      {
+        "name": "getNearZ__2MRFv",
+        "match_percent": 100.0,
+        "size": "44"
+      },
+      {
+        "name": "getFarZ__2MRFv",
+        "match_percent": 100.0,
+        "size": "44"
+      },
+      {
+        "name": "getFovy__2MRFv",
+        "match_percent": 100.0,
+        "size": "44"
+      },
+      {
+        "name": "setCameraViewMtx__2MRFRCQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>bbRCQ29JGeometry8TVec3<f>",
+        "match_percent": 100.0,
+        "size": "92"
+      },
+      {
+        "name": "setNearZ__2MRFf",
+        "match_percent": 100.0,
+        "size": "60"
+      },
+      {
+        "name": "setFovy__2MRFf",
+        "match_percent": 100.0,
+        "size": "60"
+      },
+      {
+        "name": "setShakeOffset__2MRFff",
+        "match_percent": 100.0,
+        "size": "76"
+      },
+      {
+        "name": "getCamPos__2MRFv",
+        "match_percent": 100.0,
+        "size": "104"
+      },
+      {
+        "name": "getCamXdir__2MRFv",
+        "match_percent": 100.0,
+        "size": "112"
+      },
+      {
+        "name": "getCamYdir__2MRFv",
+        "match_percent": 100.0,
+        "size": "112"
+      },
+      {
+        "name": "getCamZdir__2MRFv",
+        "match_percent": 100.0,
+        "size": "124"
+      },
+      {
+        "name": "createMirrorCamera__2MRFv",
+        "match_percent": 100.0,
+        "size": "8"
+      },
+      {
+        "name": "isExistMirrorCamera__2MRFv",
+        "match_percent": 100.0,
+        "size": "8"
+      },
+      {
+        "name": "getMirrorCameraViewMtx__2MRFv",
+        "match_percent": 100.0,
+        "size": "36"
+      },
+      {
+        "name": "getMirrorModelTexMtx__2MRFv",
+        "match_percent": 100.0,
+        "size": "36"
+      },
+      {
+        "name": "completeCameraParameters__2MRFv",
+        "match_percent": 100.0,
+        "size": "36"
+      },
+      {
+        "name": "resetCameraMan__2MRFv",
+        "match_percent": 100.0,
+        "size": "36"
+      },
+      {
+        "name": "startCameraInterpolation__2MRFUl",
+        "match_percent": 100.0,
+        "size": "52"
+      },
+      {
+        "name": "declareEventCamera__2MRFPC15ActorCameraInfoPCc",
+        "match_percent": 100.0,
+        "size": "68"
+      },
+      {
+        "name": "endEventCamera__2MRFPC15ActorCameraInfoPCcbl",
+        "match_percent": 100.0,
+        "size": "84"
+      },
+      {
+        "name": "endEventCameraAtLanding__2MRFPC15ActorCameraInfoPCcl",
+        "match_percent": 100.0,
+        "size": "76"
+      },
+      {
+        "name": "isEventCameraActive__2MRFv",
+        "match_percent": 100.0,
+        "size": "36"
+      },
+      {
+        "name": "isEventCameraActive__2MRFPC15ActorCameraInfoPCc",
+        "match_percent": 100.0,
+        "size": "68"
+      },
+      {
+        "name": "declareGlobalEventCamera__2MRFPCc",
+        "match_percent": 100.0,
+        "size": "56"
+      },
+      {
+        "name": "endGlobalEventCamera__2MRFPCclb",
+        "match_percent": 100.0,
+        "size": "80"
+      },
+      {
+        "name": "declareGlobalEventCameraAbyss__2MRFPCc",
+        "match_percent": 100.0,
+        "size": "124"
+      },
+      {
+        "name": "declareGlobalEventCameraFixedThere__2MRFPCcbf",
+        "match_percent": 100.0,
+        "size": "164"
+      },
+      {
+        "name": "declareGlobalEventCameraDead__2MRFPCcfll",
+        "match_percent": 99.91228,
+        "size": "228"
+      },
+      {
+        "name": "declareEventCameraAnim__2MRFPC15ActorCameraInfoPCcPv",
+        "match_percent": 99.7619,
+        "size": "168"
+      },
+      {
+        "name": "isAnimCameraEnd__2MRFPC15ActorCameraInfoPCc",
+        "match_percent": 100.0,
+        "size": "68"
+      },
+      {
+        "name": "getAnimCameraFrame__2MRFPC15ActorCameraInfoPCc",
+        "match_percent": 99.57143,
+        "size": "140"
+      },
+      {
+        "name": "pauseOnAnimCamera__2MRFPC15ActorCameraInfoPCc",
+        "match_percent": 100.0,
+        "size": "68"
+      },
+      {
+        "name": "pauseOffAnimCamera__2MRFPC15ActorCameraInfoPCc",
+        "match_percent": 100.0,
+        "size": "68"
+      },
+      {
+        "name": "declareBlackHoleCamera__2MRFPCc",
+        "match_percent": 99.71429,
+        "size": "140"
+      },
+      {
+        "name": "startBlackHoleCamera__2MRFPCcRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+        "match_percent": 100.0,
+        "size": "148"
+      },
+      {
+        "name": "declareLauncherCamera__2MRFv",
+        "match_percent": 99.435486,
+        "size": "248"
+      },
+      {
+        "name": "endLauncherCamera__2MRFv",
+        "match_percent": 100.0,
+        "size": "52"
+      },
+      {
+        "name": "setLauncherCameraAngle__2MRFffff",
+        "match_percent": 100.0,
+        "size": "204"
+      },
+      {
+        "name": "declareLauncherFlightCamera__2MRFv",
+        "match_percent": 99.82143,
+        "size": "224"
+      },
+      {
+        "name": "endLauncherFlightCamera__2MRFv",
+        "match_percent": 100.0,
+        "size": "52"
+      },
+      {
+        "name": "isActiveLauncherCamera__2MRFv",
+        "match_percent": 100.0,
+        "size": "44"
+      },
+      {
+        "name": "isActiveLauncherFlightCamera__2MRFv",
+        "match_percent": 100.0,
+        "size": "44"
+      },
+      {
+        "name": "startSubjectiveCamera__2MRFl",
+        "match_percent": 100.0,
+        "size": "52"
+      },
+      {
+        "name": "endSubjectiveCamera__2MRFl",
+        "match_percent": 100.0,
+        "size": "52"
+      },
+      {
+        "name": "declareEventCameraProgrammable__2MRFPCc",
+        "match_percent": 100.0,
+        "size": "116"
+      },
+      {
+        "name": "setProgrammableCameraParam__2MRFPCcRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>b",
+        "match_percent": 100.0,
+        "size": "176"
+      },
+      {
+        "name": "setProgrammableCameraParamFovy__2MRFPCcf",
+        "match_percent": 100.0,
+        "size": "88"
+      },
+      {
+        "name": "getEventCameraFrames__2MRFPC15ActorCameraInfoPCc",
+        "match_percent": 100.0,
+        "size": "88"
+      },
+      {
+        "name": "createRegisterName__24@unnamed@CameraUtil_cpp@FPC7NameObjUl",
+        "match_percent": 100.0,
+        "size": "100"
+      },
+      {
+        "name": "declareCameraRegisterMtx__2MRFPC7NameObjUlPA4_f",
+        "match_percent": 100.0,
+        "size": "76"
+      },
+      {
+        "name": "declareCameraRegisterVec__2MRFPC7NameObjUlPQ29JGeometry8TVec3<f>",
+        "match_percent": 100.0,
+        "size": "76"
+      },
+      {
+        "name": "startStartPosCamera__2MRFb",
+        "match_percent": 100.0,
+        "size": "52"
+      },
+      {
+        "name": "endStartPosCamera__2MRFv",
+        "match_percent": 100.0,
+        "size": "36"
+      },
+      {
+        "name": "isStartPosCameraEnd__2MRFv",
+        "match_percent": 100.0,
+        "size": "44"
+      },
+      {
+        "name": "hasStartAnimCamera__2MRFv",
+        "match_percent": 100.0,
+        "size": "36"
+      },
+      {
+        "name": "startStartAnimCamera__2MRFv",
+        "match_percent": 100.0,
+        "size": "36"
+      },
+      {
+        "name": "isStartAnimCameraEnd__2MRFv",
+        "match_percent": 100.0,
+        "size": "36"
+      },
+      {
+        "name": "getStartAnimCameraFrame__2MRFv",
+        "match_percent": 100.0,
+        "size": "36"
+      },
+      {
+        "name": "endStartAnimCamera__2MRFv",
+        "match_percent": 100.0,
+        "size": "36"
+      },
+      {
+        "name": "isCameraInterpolatingNearlyEnd__2MRFv",
+        "match_percent": 100.0,
+        "size": "36"
+      },
+      {
+        "name": "isFirstPersonCamera__2MRFv",
+        "match_percent": 100.0,
+        "size": "36"
+      },
+      {
+        "name": "isPossibleToShiftToFirstPersonCamera__2MRFv",
+        "match_percent": 100.0,
+        "size": "116"
+      },
+      {
+        "name": "isCameraPossibleToRoundLeft__2MRFv",
+        "match_percent": 100.0,
+        "size": "36"
+      },
+      {
+        "name": "isCameraPossibleToRoundRight__2MRFv",
+        "match_percent": 100.0,
+        "size": "36"
+      },
+      {
+        "name": "isCameraControlNG__2MRFv",
+        "match_percent": 100.0,
+        "size": "76"
+      },
+      {
+        "name": "startTalkCamera__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>ffl",
+        "match_percent": 100.0,
+        "size": "108"
+      },
+      {
+        "name": "endTalkCamera__2MRFbl",
+        "match_percent": 100.0,
+        "size": "68"
+      },
+      {
+        "name": "pauseOnCameraDirector__2MRFv",
+        "match_percent": 100.0,
+        "size": "36"
+      },
+      {
+        "name": "pauseOffCameraDirector__2MRFv",
+        "match_percent": 100.0,
+        "size": "36"
+      },
+      {
+        "name": "getCameraWatchPos__2MRFv",
+        "match_percent": 100.0,
+        "size": "40"
+      },
+      {
+        "name": "zoomInTargetGameCamera__2MRFv",
+        "match_percent": 100.0,
+        "size": "36"
+      },
+      {
+        "name": "zoomOutTargetGameCamera__2MRFv",
+        "match_percent": 100.0,
+        "size": "36"
+      },
+      {
+        "name": "isCameraInWater__2MRFv",
+        "match_percent": 100.0,
+        "size": "4"
+      },
+      {
+        "name": "resetCameraLocalOffset__2MRFv",
+        "match_percent": 100.0,
+        "size": "40"
+      },
+      {
+        "name": "overlayWithPreviousScreen__2MRFUl",
+        "match_percent": 100.0,
+        "size": "52"
+      },
+      {
+        "name": "isSubjectiveCameraOnForObjClipping__2MRFv",
+        "match_percent": 100.0,
+        "size": "48"
+      },
+      {
+        "name": "setGameCameraTargetToPlayer__2MRFv",
+        "match_percent": 100.0,
+        "size": "52"
+      },
+      {
+        "name": "setGameCameraTarget__2MRFRC15CameraTargetArg",
+        "match_percent": 100.0,
+        "size": "4"
+      },
+      {
+        "name": "changeEventCameraTarget__2MRFPC15ActorCameraInfoPCcRC15CameraTargetArg",
+        "match_percent": 100.0,
+        "size": "8"
+      },
+      {
+        "name": "startEventCameraNoTarget__2MRFPC15ActorCameraInfoPCcl",
+        "match_percent": 100.0,
+        "size": "88"
+      },
+      {
+        "name": "startEventCameraTargetPlayer__2MRFPC15ActorCameraInfoPCcl",
+        "match_percent": 100.0,
+        "size": "96"
+      },
+      {
+        "name": "startEventCamera__2MRFPC15ActorCameraInfoPCcRC15CameraTargetArgl",
+        "match_percent": 100.0,
+        "size": "84"
+      },
+      {
+        "name": "startGlobalEventCameraNoTarget__2MRFPCcl",
+        "match_percent": 100.0,
+        "size": "84"
+      },
+      {
+        "name": "startGlobalEventCameraTargetPlayer__2MRFPCcl",
+        "match_percent": 100.0,
+        "size": "92"
+      },
+      {
+        "name": "startGlobalEventCamera__2MRFPCcRC15CameraTargetArgl",
+        "match_percent": 100.0,
+        "size": "80"
+      },
+      {
+        "name": "startEventCameraAnim__2MRFPC15ActorCameraInfoPCcRC15CameraTargetArglf",
+        "match_percent": 100.0,
+        "size": "128"
+      },
+      {
+        "name": "startLauncherCamera__2MRFRC15CameraTargetArg",
+        "match_percent": 100.0,
+        "size": "64"
+      },
+      {
+        "name": "startLauncherFlightCamera__2MRFl",
+        "match_percent": 100.0,
+        "size": "92"
+      },
+      {
+        "name": "cleanEventCameraTarget_temporally__2MRFv",
+        "match_percent": 100.0,
+        "size": "52"
+      }
+    ],
+    "command": [
+      "build/tools/objdiff-cli",
+      "diff",
+      "-1",
+      "/Users/frityet/Projects/petari/notes/gateway-audit-20260907/restoration/retail/obj/Game/Util/CameraUtil.o",
+      "-2",
+      "/Users/frityet/Projects/petari/notes/original-camera-director-lifecycle-20260907/CameraUtil.wii.o",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-camera-director-lifecycle-20260907/CameraUtil.objdiff.json",
+      "--format",
+      "json-pretty"
+    ]
+  }
+]

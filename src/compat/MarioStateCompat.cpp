@@ -152,9 +152,6 @@ f32 MarioState::getBlurOffset() const {
 void MarioState::draw3D() const {
 }
 
-void MarioState::hitWall(const TVec3f&, HitSensor*) {
-}
 
-bool MarioState::passRing(const HitSensor*) {
-    return false;
-}
+
+

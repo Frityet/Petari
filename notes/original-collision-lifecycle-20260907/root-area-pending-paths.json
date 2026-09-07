@@ -1,0 +1,14 @@
+[
+  {
+    "path": "src/compat/OriginalAreaMovement.cpp",
+    "sha256": "331a77d974ae69b67d65bf21329daba8a61edc47a351a5822438604fcba7eac3"
+  },
+  {
+    "path": "src/scene/AreaObjRuntime.cpp",
+    "sha256": "ffeea6afdee62601adb73bf4929ab645647f0cbf83a6a0d85dad878813f7933a"
+  },
+  {
+    "path": "tests/AreaObjRealOrAbsentTests.cpp",
+    "sha256": "a0d293967e8bfef3761caf7510a7e175d040c01bd6af83f294612d8121f40b3e"
+  }
+]

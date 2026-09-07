@@ -116,12 +116,6 @@ namespace MR {
         }
     }
 
-    void getCameraRailInfo(JMapInfoIter *pPathIter, const JMapInfo **pPointInfo, s32, s32) {
-        static_cast<void>(pPathIter);
-        static_cast<void>(pPointInfo);
-        aurora::throw_host_exception<std::logic_error>("Camera rail lookup is unavailable without parsed stage camera rail data.");
-    }
-
     bool isDisplayEncouragePal60Window() {
         return VIGetTvFormat() == VI_PAL;
     }

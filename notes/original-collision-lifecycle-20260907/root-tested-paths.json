@@ -1,0 +1,26 @@
+[
+  {
+    "path": "src/scene/StageCollisionService.hpp",
+    "sha256": "31feacca998db652b1e4c63fd7cd592e2f69a5505ca647b3243285e263425985"
+  },
+  {
+    "path": "src/scene/StageCollisionService.cpp",
+    "sha256": "b3d4eb813858ded5d035ede5bdd4479b323587af25a16208e824549634dd5b8f"
+  },
+  {
+    "path": "src/compat/GameMapCollisionCompat.cpp",
+    "sha256": "f2fd200a8f45ac1cf1dc1356ef6b940f6041fad75ae01322003b29a2a397b5d5"
+  },
+  {
+    "path": "src/compat/OriginalCollisionGeometry.cpp",
+    "sha256": "a168d818bb2d2e531dde55fc02d3dbaac465390135435a528dd196b0e0e28c86"
+  },
+  {
+    "path": "src/compat/HitInfoCompat.cpp",
+    "sha256": "c5a7c0f1343acb2a0ba1cf8f47bbd36ccc61da64722c6e5e13ef08e7cb355c37"
+  },
+  {
+    "path": "tests/LineCollisionQueryTests.cpp",
+    "sha256": "2ec5d03fe1fc028728896a1d0dedbc198cbae7d10e9d8d405853f75a22a05585"
+  }
+]

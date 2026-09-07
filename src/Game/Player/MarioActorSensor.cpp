@@ -82,7 +82,7 @@ void MarioActor::updateHitSensor(HitSensor* pSensor) {
             radius = 1000.0f;
         }
 
-        if (_468 != nullptr || mMario->isSwimming()) {
+        if (_468 != 0 || mMario->isSwimming()) {
             radius = 2000.0f;
         }
 
@@ -291,7 +291,7 @@ void MarioActor::trampleJump(f32 ySpeed, f32 ySpeedLvlA) {
 
     playSound("ジャンプ", -1);
     playEffect("踏み");
-    mMario->startPadVib(0ul);
+    mMario->startPadVib(0U);
     mMario->mMovementStates._2F = false;
     mMario->mMovementStates._22 = false;
     mMario->mMovementStates._3E = 0;
@@ -370,7 +370,7 @@ void MarioActor::updateScouter() {
     HitSensor* previousTarget = _F24;
     _F24 = nullptr;
 
-    if (_468 != nullptr) {
+    if (_468 != 0) {
         if (_9D4 != nullptr && MR::isExistInAttributeGroupSearchTurtle(_9D4->mHost)) {
             if (MR::isSensorEnemy(_9D4)) {
                 _F28 = 0x10;
@@ -401,7 +401,7 @@ void MarioActor::updateScouter() {
         maxDist = 2400.0f;
     }
 
-    if (_468 != nullptr) {
+    if (_468 != 0) {
         maxDist = 3000.0f;
     }
 

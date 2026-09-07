@@ -1,0 +1,14 @@
+[
+  {
+    "path": "src/Game/Player/MarioActorSensor.cpp",
+    "sha256": "6ae91b7a9209ba4ae49f8e317d045dad7dd373c99ea4503add0f05ddc653f014"
+  },
+  {
+    "path": "include/Game/Player/MarioActor.hpp",
+    "sha256": "79995666d803e3677ff76f2d86cb526bda76d70bd7b2d27fefb2adcf001966fd"
+  },
+  {
+    "path": "src/Game/LiveActor/HitSensorInfo.cpp",
+    "sha256": "d46dffbe7f7c4e905defe66a919b444283ca9c423285c923130156cc60ed8545"
+  }
+]

@@ -1,0 +1,2 @@
+jumping word = 0x00000001; retail mask = 0x80000000
+draw._5 word = 0x00000020; retail mask = 0x04000000

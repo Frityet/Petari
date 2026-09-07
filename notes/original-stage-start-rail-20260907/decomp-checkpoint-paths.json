@@ -1,0 +1,14 @@
+[
+  {
+    "path": "include/Game/Scene/StageDataHolder.hpp",
+    "sha256": "6cd9d2cddee9345e91b5faea14ff3866036e6b54e2ce73ed5c2097f48440ddfe"
+  },
+  {
+    "path": "src/Game/Scene/StageDataHolder.cpp",
+    "sha256": "8e1e5c5087cb02f0ecebbabe94e15cfc57d91e4d16d8da216c83ce87a678f900"
+  },
+  {
+    "path": "src/Game/Util/SceneUtil.cpp",
+    "sha256": "31a8295638607da1451ab526fb24a14147c7475ea081fe16de9d99be4ae76cba"
+  }
+]

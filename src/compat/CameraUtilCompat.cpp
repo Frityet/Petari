@@ -1,3 +1,11 @@
+#include "camera/CameraDirectorRuntime.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Player/MarioAccess.hpp"
+#include "Game/Camera/CameraParamChunk.hpp"
+#include "Game/Camera/CameraDirector.hpp"
+#include "Game/Camera/CameraContext.hpp"
+#include "Game/Camera/CameraAnim.hpp"
+#include "Game/Camera/CameraCalc.hpp"
 #include <aurora/exception.hpp>
 #include "Game/Util/CameraUtil.hpp"
 
@@ -14,6 +22,7 @@
 #include "compat/CameraUtilCompat.hpp"
 #include "compat/CameraViewRuntime.hpp"
 #include "compat/J3dSystemCompat.hpp"
+#include "compat/JkrAllocationDomain.hpp"
 #include "core/RenderTypes.hpp"
 #include "runtime/RuntimeContext.hpp"
 
@@ -268,19 +277,32 @@ namespace smgpc::compat {
     void declare_event_camera_animation(
         const ActorCameraInfo& info, std::string_view name,
         std::span<const std::uint8_t> resource) {
-        auto* camera_system = active_camera_system_for_camera_util();
-        if (camera_system == nullptr) {
+        auto* owner = smgpc::camera::current_camera_director_runtime();
+        if (owner == nullptr) {
             aurora::throw_host_exception<std::logic_error>(
-                "Animation event-camera declaration requires the active RuntimeContext.");
+                "Animation event-camera declaration requires the original scene camera owner.");
         }
-        camera_system->declare_event_camera_animation(
-            info.mZoneID, name,
-            smgpc::camera::CameraAnimation::from_bytes(resource));
+        JkrHostAllocationScope host;
+        const std::string event_name(name);
+        void* animation = owner->retain_animation(resource);
+        auto* scheduler = smgpc::runtime::try_active_scene_scheduler();
+        if (scheduler == nullptr || !scheduler->allocation_domain()) {
+            aurora::throw_host_exception<std::logic_error>(
+                "Animation camera parameters require the original scene Game heap.");
+        }
+        JkrAllocationScope game(scheduler->allocation_domain());
+        MR::declareEventCameraAnim(&info, event_name.c_str(), animation);
     }
 
 }  // namespace smgpc::compat
 
 namespace MR {
+
+    CameraHolder* getCameraHolder();
+
+    inline bool isCameraType(CameraParamChunkEvent* pChunk, const char* pType) {
+        return pChunk->getCameraTypeIndex() == getCameraHolder()->getIndexOf(pType);
+    }
     void loadProjectionMtx() {
         GXSetProjection(getCameraProjectionMtx().mMtx, GX_PERSPECTIVE);
     }
@@ -290,9 +312,13 @@ namespace MR {
     }
 
     const TProj3f& getCameraProjectionMtx() {
+        if (!smgpc::compat::bound_camera_view_output()) {
+            if (auto* context = smgpc::camera::current_original_camera_context()) return context->mProjection;
+        }
         const auto& pose = require_camera_pose();
-        sCameraProjectionMatrix.makePerspective(pose.fovy_degrees, pose.aspect_ratio,
-                                                pose.near_clip, pose.far_clip);
+        const auto* output = smgpc::compat::bound_camera_view_output();
+        sCameraProjectionMatrix.makePerspective(output ? output->fovy : pose.fovy_degrees, pose.aspect_ratio,
+                                                output ? output->near_clip : pose.near_clip, pose.far_clip);
         sCameraProjectionMatrix.mMtx[0][2] -= pose.projection_offset_x;
         sCameraProjectionMatrix.mMtx[1][2] -= pose.projection_offset_y;
         return sCameraProjectionMatrix;
@@ -302,6 +328,7 @@ namespace MR {
         if (const auto *output = smgpc::compat::bound_camera_view_output()) {
             return output->view;
         }
+        if (auto* context = smgpc::camera::current_original_camera_context()) return context->getViewMtx();
         const auto &pose = require_camera_pose();
         const auto basis = camera_basis(pose);
         const auto back = scale(basis.forward, -1.0F);
@@ -325,6 +352,7 @@ namespace MR {
         if (const auto *output = smgpc::compat::bound_camera_view_output()) {
             return output->inverse_view;
         }
+        if (auto* context = smgpc::camera::current_original_camera_context()) return context->getInvViewMtx();
         sCameraInverseViewMatrix.invert(getCameraViewMtx());
         return sCameraInverseViewMatrix;
     }
@@ -335,6 +363,10 @@ namespace MR {
             // unused by the retail context as well.
             output->view.set(matrix);
             output->inverse_view.invert(matrix);
+            return;
+        }
+        if (auto* context = smgpc::camera::current_original_camera_context()) {
+            context->setViewMtx(matrix, false, false, TVec3f(0.0f, 0.0f, 0.0f));
             return;
         }
         auto pose = require_camera_pose();
@@ -384,14 +416,34 @@ namespace MR {
     }
 
     f32 getAspect() {
+        if (auto* context = smgpc::camera::current_original_camera_context()) return context->getAspect();
         return require_camera_pose().aspect_ratio;
     }
 
     f32 getNearZ() {
+        if (const auto* output = smgpc::compat::bound_camera_view_output()) {
+            return output->near_clip;
+        }
+        if (auto* context = smgpc::camera::current_original_camera_context()) return context->getNearZ();
         return require_camera_pose().near_clip;
     }
 
+    void setNearZ(f32 nearZ) {
+        if (auto* output = smgpc::compat::bound_camera_view_output()) {
+            output->near_clip = nearZ;
+            return;
+        }
+        if (auto* context = smgpc::camera::current_original_camera_context()) {
+            context->setNearZ(nearZ);
+            return;
+        }
+        auto pose = require_camera_pose();
+        pose.near_clip = nearZ;
+        smgpc::runtime::RuntimeContext::instance().set_scene_camera_pose(pose);
+    }
+
     f32 getFarZ() {
+        if (auto* context = smgpc::camera::current_original_camera_context()) return context->getFarZ();
         return require_camera_pose().far_clip;
     }
 
@@ -399,6 +451,7 @@ namespace MR {
         if (const auto *output = smgpc::compat::bound_camera_view_output()) {
             return output->fovy;
         }
+        if (auto* context = smgpc::camera::current_original_camera_context()) return context->getFovy();
         return require_camera_pose().fovy_degrees;
     }
 
@@ -407,236 +460,170 @@ namespace MR {
             output->fovy = fovy;
             return;
         }
+        if (auto* context = smgpc::camera::current_original_camera_context()) {
+            context->setFovy(fovy);
+            return;
+        }
         auto pose = require_camera_pose();
         pose.fovy_degrees = fovy;
         smgpc::runtime::RuntimeContext::instance().set_scene_camera_pose(pose);
     }
 
-    void startStartPosCamera(bool immediate) {
-        smgpc::compat::require_camera_system_for_camera_util(
-            "Start-position camera restore")
-            .start_start_position_camera(immediate);
+    void setShakeOffset(f32 offsetX, f32 offsetY) {
+        auto* context = smgpc::camera::current_original_camera_context();
+        if (!context) aurora::throw_host_exception<std::logic_error>("Camera shake offset requires the original scene CameraContext");
+        context->setShakeOffset(offsetX, offsetY);
+    }
+
+    void startStartPosCamera(bool interpolate) {
+        getCameraDirector()->startStartPosCamera(interpolate);
     }
 
     void endStartPosCamera() {
-        smgpc::compat::require_camera_system_for_camera_util(
-            "Start-position camera termination")
-            .end_start_position_camera();
+        getCameraDirector()->started();
     }
 
     bool isStartPosCameraEnd() {
-        return smgpc::compat::require_camera_system_for_camera_util(
-                   "Start-position camera state query")
-            .is_start_position_camera_end();
+        return !getCameraDirector()->mIsStartCameraActive;
     }
 
     bool isStartAnimCameraEnd() {
-        aurora::throw_host_exception<std::logic_error>(
-            "Start-animation camera completion is unavailable without the exact CameraDirector start-camera owner.");
+        return getCameraDirector()->isStartAnimCameraEnd();
     }
 
     void resetCameraMan() {
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->camera_system().reset_camera_man();
-        }
+        MR::getCameraDirector()->requestToResetCameraMan();
     }
 
     void pauseOnCameraDirector() {
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->camera_system().pause_on_camera_director();
-        }
+        requestMovementOff(getCameraDirector());
     }
 
     void pauseOffCameraDirector() {
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->camera_system().pause_off_camera_director();
+        requestMovementOn(getCameraDirector());
+    }
+
+    void declareEventCamera(const ActorCameraInfo* pInfo, const char* pEventName) {
+        MR::getCameraDirector()->declareEvent(pInfo->mZoneID, pEventName);
+    }
+
+    void declareEventCameraAnim(const ActorCameraInfo* pCamInfo, const char* pAnimName, void* pAnimData) {
+        declareEventCamera(pCamInfo, pAnimName);
+        CameraParamChunkEvent* chunk = getCameraDirector()->getEventParameter(pCamInfo->mZoneID, pAnimName);
+        if (chunk != nullptr) {
+            chunk->setCameraType("CAM_TYPE_ANIM", getCameraDirector()->mHolder);
+            CameraGeneralParam* param = chunk->mGeneralParam;
+            chunk->mGeneralParam->mNum1 = reinterpret_cast< intptr_t >(pAnimData);
+            chunk->mGeneralParam->mDist = 1.0f;
+            chunk->getGeneralParam()->mNum2 = CameraAnim::getAnimFrame(reinterpret_cast< u8* >(pAnimData));
+            chunk->_64 = true;
         }
     }
 
-    void declareEventCamera(const ActorCameraInfo* pInfo,
-                            const char* pEventName) {
-        if (pInfo == nullptr) {
-            aurora::throw_host_exception<std::invalid_argument>(
-                "Event-camera declaration requires ActorCameraInfo.");
-        }
-        if (auto* camera_system =
-                smgpc::compat::active_camera_system_for_camera_util()) {
-            camera_system->declare_event_camera(pInfo->mZoneID,
-                                                event_name(pEventName));
-        }
+    void startEventCamera(const ActorCameraInfo* pInfo, const char* pName, const CameraTargetArg& rCamTarget, s32 frame) {
+        getCameraDirector()->startEvent(pInfo->mZoneID, pName, rCamTarget, frame);
     }
 
-    void declareEventCameraAnim(const ActorCameraInfo* pInfo,
-                                const char* pEventName, void* pData) {
-        if (pInfo == nullptr) {
-            aurora::throw_host_exception<std::invalid_argument>(
-                "Animation event-camera declaration requires ActorCameraInfo.");
-        }
-        smgpc::compat::declare_event_camera_animation(
-            *pInfo, event_name(pEventName),
-            std::span<const std::uint8_t>(
-                static_cast<const std::uint8_t*>(pData),
-                inferred_camera_animation_size(pData)));
+    void startEventCameraNoTarget(const ActorCameraInfo* pInfo, const char* pName, s32 frame) {
+        startEventCamera(pInfo, pName, CameraTargetArg(), frame);
     }
 
-    void startEventCamera(const ActorCameraInfo* pInfo,
-                          const char* pEventName,
-                          const CameraTargetArg& rTarget, s32 frames) {
-        if (pInfo == nullptr) {
-            aurora::throw_host_exception<std::invalid_argument>(
-                "Event-camera start requires ActorCameraInfo.");
-        }
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->camera_system().start_event_camera(
-                pInfo->mZoneID, event_name(pEventName),
-                event_target(*runtime, rTarget), frames);
-            sync_active_event_camera_pose(*runtime);
-        }
+    void startEventCameraTargetPlayer(const ActorCameraInfo* pInfo, const char* pName, s32 frame) {
+        CameraTargetArg camTarget = CameraTargetArg();
+        setCameraTargetToPlayer(&camTarget);
+        startEventCamera(pInfo, pName, camTarget, frame);
     }
 
-    void startEventCameraNoTarget(const ActorCameraInfo* pInfo,
-                                  const char* pEventName, s32 frames) {
-        startEventCamera(pInfo, pEventName, CameraTargetArg{}, frames);
+    void startEventCameraAnim(const ActorCameraInfo* pInfo, const char* pEventName, const CameraTargetArg& rCamTarget, s32 frame, f32 speed) {
+        CameraParamChunkEvent* pChunk = getCameraDirector()->getEventParameter(pInfo->mZoneID, pEventName);
+        if (pChunk) {
+            pChunk->mGeneralParam->mDist = speed;
+        }
+        startEventCamera(pInfo, pEventName, rCamTarget, frame);
     }
 
-    void startEventCameraTargetPlayer(const ActorCameraInfo* pInfo,
-                                      const char* pEventName, s32 frames) {
-        if (pInfo == nullptr) {
-            aurora::throw_host_exception<std::invalid_argument>(
-                "Player-target event-camera start requires ActorCameraInfo.");
-        }
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->camera_system().start_event_camera(
-                pInfo->mZoneID, event_name(pEventName),
-                smgpc::camera::EventCameraTarget::target_player(
-                    runtime->player_system()),
-                frames);
-            sync_active_event_camera_pose(*runtime);
-        }
+    void endEventCamera(const ActorCameraInfo* pInfo, const char* pEventName, bool resetView, s32 frame) {
+        MR::getCameraDirector()->endEvent(pInfo->mZoneID, pEventName, resetView, frame);
     }
 
-    void startEventCameraAnim(const ActorCameraInfo* pInfo,
-                              const char* pEventName,
-                              const CameraTargetArg& rTarget, s32 frames,
-                              f32 speed) {
-        if (pInfo == nullptr) {
-            aurora::throw_host_exception<std::invalid_argument>(
-                "Animation event-camera start requires ActorCameraInfo.");
-        }
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->camera_system().start_event_camera(
-                pInfo->mZoneID, event_name(pEventName),
-                event_target(*runtime, rTarget), frames, speed);
-            sync_active_event_camera_pose(*runtime);
-        }
-    }
-
-    void endEventCamera(const ActorCameraInfo* pInfo, const char* pEventName,
-                        bool endForce, s32 frames) {
-        if (pInfo == nullptr) {
-            aurora::throw_host_exception<std::invalid_argument>(
-                "Event-camera end requires ActorCameraInfo.");
-        }
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->camera_system().end_event_camera(
-                pInfo->mZoneID, event_name(pEventName), endForce, frames);
-            runtime->refresh_scene_camera_pose();
-        }
-    }
-
-    void endEventCameraAtLanding(const ActorCameraInfo*, const char*, s32) {
-        aurora::throw_host_exception<std::logic_error>(
-            "Landing-delayed event-camera release requires the unavailable retail landing owner.");
+    void endEventCameraAtLanding(const ActorCameraInfo* pInfo, const char* pName, s32 frame) {
+        getCameraDirector()->endEventAtLanding(pInfo->mZoneID, pName, frame);
     }
 
     bool isEventCameraActive() {
-        const auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
-        return runtime != nullptr &&
-               runtime->camera_system().active_event_camera_key().has_value();
+        return getCameraDirector()->isEventCameraActive();
     }
 
-    bool isEventCameraActive(const ActorCameraInfo* pInfo,
-                             const char* pEventName) {
-        const auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
-        return runtime != nullptr && pInfo != nullptr &&
-               runtime->camera_system().is_event_camera_active(
-                   pInfo->mZoneID, event_name(pEventName));
+    bool isEventCameraActive(const ActorCameraInfo* pInfo, const char* pEventName) {
+        return getCameraDirector()->isEventCameraActive(pInfo->mZoneID, pEventName);
     }
 
-    bool isAnimCameraEnd(const ActorCameraInfo* pInfo,
-                         const char* pEventName) {
-        const auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
-        return runtime == nullptr || pInfo == nullptr ||
-               runtime->camera_system().is_event_camera_animation_end(
-                   pInfo->mZoneID, event_name(pEventName));
+    bool isAnimCameraEnd(const ActorCameraInfo* pInfo, const char* pAnimName) {
+        return getCameraDirector()->isAnimCameraEnd(pInfo->mZoneID, pAnimName);
     }
 
-    s32 getAnimCameraFrame(const ActorCameraInfo* pInfo,
-                           const char* pEventName) {
-        const auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
-        return runtime != nullptr && pInfo != nullptr
-                   ? runtime->camera_system().event_camera_animation_frame(
-                         pInfo->mZoneID, event_name(pEventName))
-                   : 0;
+    s32 getAnimCameraFrame(const ActorCameraInfo* pCamInfo, const char* pAnimName) {
+        CameraParamChunkEvent* chunk = getCameraDirector()->getEventParameter(pCamInfo->mZoneID, pAnimName);
+        if (chunk != nullptr) {
+            if (isCameraType(chunk, "CAM_TYPE_ANIM")) {
+                return chunk->mGeneralParam->mNum2;
+            }
+        }
+
+        return 0;
     }
 
-    u32 getEventCameraFrames(const ActorCameraInfo* pInfo,
-                             const char* pEventName) {
-        const auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
-        return runtime != nullptr && pInfo != nullptr
-                   ? static_cast<u32>(runtime->camera_system().event_camera_frames(
-                         pInfo->mZoneID, event_name(pEventName)))
-                   : 0U;
+    u32 getEventCameraFrames(const ActorCameraInfo* pInfo, const char* pEventName) {
+        CameraParamChunkEvent* chunk = getCameraDirector()->getEventParameter(pInfo->mZoneID, pEventName);
+        if (chunk != nullptr) {
+            return chunk->mEvFrame;
+        }
+
+        return 0;
     }
 
     void setCameraTargetToPlayer(CameraTargetArg* pTarget) {
-        if (pTarget == nullptr) {
-            return;
-        }
-        auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
+        pTarget->mMarioActor = MarioAccess::getPlayerActor();
         pTarget->mTargetObj = nullptr;
         pTarget->mTargetMtx = nullptr;
         pTarget->mLiveActor = nullptr;
-        pTarget->mMarioActor =
-            runtime != nullptr
-                ? reinterpret_cast<MarioActor*>(
-                      runtime->player_system().attached_actor())
-                : nullptr;
     }
 
     void declareEventCameraProgrammable(const char* pEventName) {
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->camera_system().declare_event_camera_programmable(event_name(pEventName));
+        declareGlobalEventCamera(pEventName);
+        CameraParamChunkEvent* chunk = getCameraDirector()->getEventParameter(0, pEventName);
+        if (chunk != nullptr) {
+            chunk->setCameraType("CAM_TYPE_POINT_FIX", getCameraDirector()->mHolder);
+            chunk->_64 = true;
         }
     }
 
-    void startGlobalEventCameraNoTarget(const char* pEventName, s32 frames) {
-        (void)frames;
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->camera_system().start_global_event_camera_no_target(event_name(pEventName));
-            sync_active_programmable_camera_pose(*runtime, runtime->camera_system().active_programmable_camera_pose());
-        }
+    void startGlobalEventCameraNoTarget(const char* pName, s32 frame) {
+        startGlobalEventCamera(pName, CameraTargetArg(), frame);
     }
 
-    void endGlobalEventCamera(const char* pEventName, s32 frames, bool endForce) {
-        (void)frames;
-        (void)endForce;
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->camera_system().end_global_event_camera(event_name(pEventName));
-        }
+    void endGlobalEventCamera(const char* pEventName, s32 frame, bool resetView) {
+        getCameraDirector()->endEvent(0, pEventName, resetView, frame);
     }
 
-    void setProgrammableCameraParam(const char* pEventName, const TVec3f& rWPoint, const TVec3f& rEye, const TVec3f& rUpVec, bool doZeroWOffset) {
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            sync_active_programmable_camera_pose(
-                *runtime, runtime->camera_system().set_programmable_camera_param(event_name(pEventName), camera_vec3(rWPoint), camera_vec3(rEye),
-                                                                                 camera_vec3(rUpVec), doZeroWOffset));
+    void setProgrammableCameraParam(const char* pEventName, const TVec3f& rWPoint, const TVec3f& rPos, const TVec3f& rUpVec, bool isLOfsErpOff) {
+        CameraParamChunkEvent* chunk = getCameraDirector()->getEventParameter(0, pEventName);
+        if (chunk != nullptr) {
+            chunk->mGeneralParam->mWPoint.set(rWPoint);
+            MR::crossToPolar(rWPoint, rPos, &chunk->mGeneralParam->mDist, &chunk->mGeneralParam->mAxis.x, &chunk->mGeneralParam->mAxis.y);
+            chunk->mGeneralParam->mUp.set(rUpVec);
+            chunk->setLOfsErpOff(isLOfsErpOff);
+            if (!isLOfsErpOff) {
+                chunk->mExParam.mWOffset.zero();
+            }
         }
     }
 
     void setProgrammableCameraParamFovy(const char* pEventName, f32 fovy) {
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            sync_active_programmable_camera_pose(*runtime, runtime->camera_system().set_programmable_camera_fovy(event_name(pEventName), fovy));
+        CameraParamChunkEvent* chunk = getCameraDirector()->getEventParameter(0, pEventName);
+        if (chunk != nullptr) {
+            chunk->mExParam.mFovy = fovy;
+            chunk->setUseFovy(true);
         }
     }
 

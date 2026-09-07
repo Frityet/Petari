@@ -10,37 +10,15 @@ target("smg-pc-game")
     add_files("Animation/XanimePlayer.cpp", {cxxflags = "-ffp-contract=off"})
     add_files("Camera/CameraContext.cpp", {cxxflags = "-ffp-contract=off"})
     add_files("LiveActor/Binder.cpp", {cxxflags = "-ffp-contract=off"})
+    add_files("LiveActor/HitSensorInfo.cpp", {cxxflags = "-ffp-contract=off"})
     add_files("Map/CollisionCategorizedKeeper.cpp", {cxxflags = "-ffp-contract=off"})
     -- Original Player sources move into the normal archive as their native
     -- provider dependencies become available.
     -- Xmake's broad-remove/explicit-re-add order drops the re-added object from
     -- the archive, so keep the provider-incomplete set explicit here.
     remove_files {
-        "Player/FireMarioBall.cpp",
-        "Player/JetTurtleShadow.cpp",
-        "Player/MarioActorCamera.cpp",
-        "Player/MarioActorClap.cpp",
-        "Player/MarioActorDefensiveMsg.cpp",
-        "Player/MarioActorGravity.cpp",
-        "Player/MarioActorHand.cpp",
-        "Player/MarioActorInit.cpp",
-        "Player/MarioActorPad.cpp",
-        "Player/MarioActorParts.cpp",
-        "Player/MarioActorRush.cpp",
-        "Player/MarioActorRushMsg.cpp",
-        "Player/MarioActorSensor.cpp",
-        "Player/MarioActorShadow.cpp",
-        "Player/MarioActorSpecialDraw.cpp",
-        "Player/MarioActorWipe.cpp",
-        "Player/MarioConst.cpp",
-        "Player/MarioMove.cpp",
-        "Player/MarioNullBck.cpp",
-        "Player/MarioParts.cpp",
-        "Player/MarioSearchLight.cpp",
         "Player/MarioSound.cpp",
         "Player/MarioState.cpp",
-        "Player/MarioWalk.cpp",
-        "Player/TornadoMario.cpp",
     }
     -- The retail source explicitly narrows its opaque host pointer to u32.
     -- Clang accepts this legacy cast in its extension mode; -fpermissive is GCC-only.
@@ -88,7 +66,6 @@ target("smg-pc-game")
     remove_files("System/BinaryDataChunkHolder.cpp")
     remove_files("System/BinaryDataContentAccessor.cpp")
     remove_files("System/ConfigDataMisc.cpp")
-    remove_files("System/GameDataTemporaryInGalaxy.cpp")
     remove_files("System/SysConfigFile.cpp")
     remove_files("Util/ActorSensorUtil.cpp")
     remove_files("Util/SequenceUtil.cpp")

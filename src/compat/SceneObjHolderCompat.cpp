@@ -5,8 +5,12 @@
 #include "runtime/SceneScheduler.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "Game/Scene/PlacementStateChecker.hpp"
+#include "Game/Scene/ScenePlayingResult.hpp"
 
 #include "Game/AreaObj/AreaObjContainer.hpp"
+#include "Game/Camera/CameraDirector.hpp"
+#include "Game/Camera/CameraContext.hpp"
+#include "camera/CameraDirectorRuntime.hpp"
 #include "Game/Demo/PrologueDirector.hpp"
 #include "Game/Gravity/PlanetGravityManager.hpp"
 #include "Game/LiveActor/ClippingDirector.hpp"
@@ -21,6 +25,7 @@
 #include "Game/MapObj/CoinRotater.hpp"
 #include "Game/MapObj/PurpleCoinHolder.hpp"
 #include "Game/NameObj/NameObj.hpp"
+#include "Game/NameObj/NameObjGroup.hpp"
 #include "Game/Player/GroupChecker.hpp"
 #include "Game/Player/MarioHolder.hpp"
 #include "Game/Screen/CenterScreenBlur.hpp"
@@ -98,6 +103,7 @@ namespace smgpc::scene {
     }
 
     SceneObjHolderBinding::~SceneObjHolderBinding() {
+        if (_camera_runtime) _camera_runtime->unpublish();
         if (_effect_scheduler) {
             (void)_effect_scheduler->remove_registrations_since(_effect_registration_marker);
         }
@@ -113,6 +119,7 @@ namespace smgpc::scene {
             _owned_objects.pop_back();
         }
         _owned_registration_objects.clear();
+        _camera_runtime.reset();
         // The external holder storage outlives this binding in test and scene
         // hosts. Reconstruct its exact empty value so no slot retains a freed
         // SceneObj and a later generation can bind/recreate normally.
@@ -145,6 +152,15 @@ namespace smgpc::scene {
         return sCurrentSceneObjHolderBinding ? sCurrentSceneObjHolderBinding->_effect_system_ownership.get() : nullptr;
     }
 
+    void SceneObjHolderBinding::initialize_camera_system() {
+        smgpc::compat::JkrHostAllocationScope host;
+        if (_camera_runtime) {
+            aurora::throw_host_exception<std::logic_error>("scene camera system already initialized");
+        }
+        _camera_runtime = std::make_unique<smgpc::camera::CameraDirectorRuntime>(
+            *_holder, _game_allocation_domain);
+    }
+
     void SceneObjHolderBinding::init_after_placement() {
         const auto phase = SceneInitializationScope(SceneInitializeState_AfterPlacement);
         // Advance by index so callback-time SceneObj creation can append to
@@ -170,6 +186,10 @@ namespace smgpc::scene {
     }
 
     void SceneObjHolderBinding::complete_initialization() {
+        if (_camera_runtime) {
+            smgpc::compat::JkrAllocationScope heap(_game_allocation_domain);
+            _camera_runtime->close_creating_chunks();
+        }
         _initialization_state.complete();
     }
 
@@ -377,6 +397,10 @@ NameObj *SceneObjHolder::newEachObj(int id) {
     }
 
     switch (id) {
+    case SceneObj_CameraContext:
+        return new CameraContext();
+    case SceneObj_CameraDirector:
+        return new CameraDirector("カメラ管理");
     case SceneObj_EffectSystem:
         if (!sCurrentSceneObjHolderBinding->_effect_system_ownership)
             aurora::throw_host_exception<std::logic_error>("EffectSystem requires scene heap initialization");
@@ -417,8 +441,12 @@ NameObj *SceneObjHolder::newEachObj(int id) {
         return new CenterScreenBlur();
     case SceneObj_InformationObserver:
         return new InformationObserver();
+    case SceneObj_NameObjGroup:
+        return new NameObjGroup("IgnorePauseNameObj", 16);
     case SceneObj_GameSceneLayoutHolder:
         return new GameSceneLayoutHolder();
+    case SceneObj_ScenePlayingResult:
+        return new ScenePlayingResult();
     case SceneObj_TalkDirector:
         return new smgpc::compat::TalkRuntime();
     case SceneObj_LensFlareDirector:

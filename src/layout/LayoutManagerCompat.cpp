@@ -173,6 +173,7 @@ void bind_actor_manager(LayoutActor* actor, LayoutManager* manager) {
     manager_state.runtime->initWithoutIter();
     manager_state.runtime->kill();
     manager_state.runtime->setTrans(actor_state.translation.x, actor_state.translation.y);
+    manager->createAndAddRootPaneCtrl(manager_state.animation_layer_count);
 }
 
 void refresh_pane_matrix(ManagerState& manager, PaneMatrixReference& reference) {

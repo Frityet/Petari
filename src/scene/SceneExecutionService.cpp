@@ -4,6 +4,7 @@
 #include "Game/Scene/SceneFunction.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "runtime/SceneScheduler.hpp"
+#include "compat/StarPointerDepthOwnership.hpp"
 
 namespace smgpc::scene {
 
@@ -33,6 +34,8 @@ namespace smgpc::scene {
         scheduler.execute_draw_type(MR::DrawType_CenterScreenBlur);
         scheduler.execute_draw_type(MR::DrawType_CaptureScreenIndirect);
         scheduler.execute_draw_after_indirect(camera_pose);
+        scheduler.execute_draw_type(MR::DrawType_0x33);
+        smgpc::compat::require_star_pointer_depth().capture();
     }
 
     void SceneExecutionService::draw_2d_normal() {

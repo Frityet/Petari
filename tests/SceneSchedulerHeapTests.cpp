@@ -55,7 +55,7 @@ struct CallbackObject final : NameObj {
 
 struct CallbackActor final : LiveActor {
     explicit CallbackActor(smgpc::runtime::SceneScheduler& scheduler) : LiveActor("scene sensor callback ownership"), allocation(scheduler) {}
-    void movement() override { allocation.record(0); }
+    void movement() override { allocation.record(0); LiveActor::movement(); }
     void calcAnim() override { allocation.record(1); }
     void attackSensor(HitSensor*, HitSensor*) override { allocation.record(4); if (sensor_hook) sensor_hook(); }
     bool receiveMessage(u32, HitSensor*, HitSensor*) override {

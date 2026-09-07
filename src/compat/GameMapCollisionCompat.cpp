@@ -18,6 +18,13 @@
 #include <vector>
 
 namespace MR {
+    u32 createAreaPolygonList(Triangle* triangles, u32 maximum, const TVec3f& point_a, const TVec3f& point_b) {
+        // Both retail entry points use the same world bounds and part order.
+        // checkArea3D sorts its two local inputs, making the array path with
+        // exactly these two points equivalent after the full inverse transform.
+        auto points = std::array{point_a, point_b};
+        return createAreaPolygonListArray(triangles, maximum, points.data(), 2U);
+    }
     u32 createAreaPolygonListArray(Triangle* triangles, u32 maximum, TVec3f* points, u32 point_count) {
         const aurora::allocation::HostAllocationScope host_allocations;
         const auto& collision = smgpc::scene::StageCollisionService::active();

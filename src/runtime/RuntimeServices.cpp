@@ -1,3 +1,6 @@
+#include "camera/CameraDirectorRuntime.hpp"
+#include "Game/Camera/CameraDirector.hpp"
+#include "Game/Camera/CameraShaker.hpp"
 #include <aurora/exception.hpp>
 #include "Game/Screen/StarPointerTarget.hpp"
 #include "compat/JkrAllocationDomain.hpp"
@@ -2726,6 +2729,7 @@ namespace smgpc::runtime {
 
     void CameraSystemService::begin_frame(std::uint64_t frame_index) {
         _frame_index = frame_index;
+        if (smgpc::camera::current_camera_director_runtime()) return;
         // CameraDirector owns one target/manager/pose/view/shake movement
         // sequence per frame. A paused call does not consume that phase.
         if (is_camera_director_paused() || _last_camera_movement_frame == frame_index) {
@@ -3371,6 +3375,7 @@ namespace smgpc::runtime {
     }
 
     std::optional<smgpc::camera::CameraPose> CameraSystemService::effective_camera_pose() const {
+        if (auto* camera = smgpc::camera::current_camera_director_runtime()) return camera->pose();
         if (_view_camera_pose && (active_event_camera_key() ||
                                   (_game_camera_pose && !active_programmable_camera_pose()))) {
             return apply_shake(*_view_camera_pose);
@@ -3385,6 +3390,7 @@ namespace smgpc::runtime {
     }
 
     smgpc::camera::CameraPose CameraSystemService::apply_shake(const smgpc::camera::CameraPose &pose) const {
+        if (smgpc::camera::current_camera_director_runtime()) return pose;
         auto shaken = pose;
         if (_shake_offset_x == 0.0F && _shake_offset_y == 0.0F) {
             return shaken;
@@ -3430,6 +3436,11 @@ namespace smgpc::runtime {
     }
 
     void CameraSystemService::request_shake(ShakeRequestKind kind) {
+        if (auto* camera = smgpc::camera::current_camera_director_runtime()) {
+            camera->director().mShaker->shakeVertical(
+                static_cast<CameraShaker::ESinglyVerticalPower>(camera_shake_index(kind)));
+            return;
+        }
         if (!_shake_screen_width.has_value() || !_shake_efb_height.has_value()) {
             aurora::throw_host_exception<std::logic_error>("Camera shake requires an exact retail projection size.");
         }

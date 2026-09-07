@@ -133,6 +133,12 @@ namespace smgpc::scene {
             std::span<const std::uint8_t> attributes = {}, HitSensor* sensor = nullptr,
             std::optional<std::int32_t> placement_zone_id = std::nullopt);
         void build();
+        // The caller supplies the collision owner's two committed transforms.
+        // Refits all geometry owned by this registration without replacing
+        // Triangle identities or borrowed transform objects.
+        void update_registered_transform(const StageCollisionRegistrationState& registration,
+                                         const std::array<float, 12U>& current,
+                                         const std::array<float, 12U>& previous);
 
         [[nodiscard]] bool line_cast(const TVec3f& start, const TVec3f& offset,
                                      StageCollisionHit* hit = nullptr,
@@ -180,6 +186,9 @@ namespace smgpc::scene {
 
         struct Triangle {
             TVec3f vertices[3]{};
+            std::array<TVec3f, 3U> local_vertices{};
+            std::array<TVec3f, 4U> local_normals{};
+            float local_thickness = 0.0F;
             TVec3f normal{};
             std::array<TVec3f, 4U> source_normals{};
             Bounds bounds{};
@@ -220,6 +229,8 @@ namespace smgpc::scene {
 
         [[nodiscard]] std::uint32_t build_node(std::uint32_t first, std::uint32_t count);
         void prepare_kcl_source(const Source& source) const;
+        [[nodiscard]] static bool transform_triangle_geometry(Triangle& triangle,
+                                                              const std::array<float, 12U>& matrix);
         [[nodiscard]] std::vector<StageCollisionContact> sphere_contacts_impl(
             const TVec3f& center, float radius, std::size_t maximum,
             std::optional<float> thickness_override,

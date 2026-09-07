@@ -1,59 +1,28 @@
 #include "Game/Map/HitInfo.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
+#include "JSystem/JMath/JMATrigonometric.hpp"
 #include "Game/Player/Mario.hpp"
 #include "Game/Player/MarioActor.hpp"
 #include "Game/Player/MarioAnimator.hpp"
 #include "Game/Player/MarioConst.hpp"
 #include "Game/Player/MarioSkate.hpp"
+#include "Game/Player/MarioState.hpp"
 #include "Game/Util/MathUtil.hpp"
-#include "JSystem/JMath/JMATrigonometric.hpp"
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
-#include <stdexcept>
-#else  // SMGPC_RETAIL_SOURCE
-#endif  // SMGPC_PC_DIVERGENCE
+#include "Game/Util/MtxUtil.hpp"
+#include "revolution/mtx.h"
+#include "revolution/types.h"
 
-#define MARIO_MOVE_TURNING_MASK 0x10000000
-#define MARIO_MOVE_LOCK_TURN_MASK 0x00080000
+void FORCE_INLINE() {
+    TVec3f vec;
+    TVec3f vec2;
+    vec - vec2;
+    vec.setLength(1.0f);
+}
+
+//required (for now) to match the inlined isBeeWallWalk calls
+#pragma opt_propagation off
 
 void Mario::mainMove() {
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
-    if (mMovementStates._23 || mMovementStates._37 || _10._15 || mMovementStates._3A || mMovementStates._F ||
-        mMovementStates._34 || mMovementStates._35 || mMovementStates._A || mMovementStates.jumping) {
-        throw std::logic_error("special Mario movement state is unavailable in the PC walk slice");
-    }
-
-    TVec3f moveDir(mFrontVec);
-    if (!MR::isNearZero(mStickPos.z, 0.001f)) {
-        moveDir = mWorldPadDir;
-        if (!MR::normalizeOrZero(&moveDir)) {
-            const MarioConstTable* table = mActor->mConst->getTable();
-            const f32 angle = MR::diffAngleAbs(mFrontVec, moveDir);
-            if (angle > 0.0f) {
-                f32 blend = table->mTurnAngleSpeed / angle;
-                MR::clamp01(&blend);
-                TVec3f nextFront;
-                if (!MR::vecBlendSphere(mFrontVec, moveDir, &nextFront, blend)) {
-                    MR::vecRotAxis(mFrontVec, moveDir, mHeadVec, &nextFront, 0.3926991f);
-                }
-                mFrontVec = nextFront;
-                MR::normalize(&mFrontVec);
-                mSideVec.cross(mHeadVec, mFrontVec);
-                MR::normalize(&mSideVec);
-                mFrontVec = mSideVec.cross(mHeadVec);
-                MR::normalize(&mFrontVec);
-            }
-        }
-    }
-
-    const f32 walkSpeed = mActor->mConst->getTable()->mWalkSpeed;
-    TVec3f velocity(mFrontVec);
-    velocity.scale(mWalkSpeed * walkSpeed);
-    mVelocity += velocity;
-    _22C = moveDir;
-    _328 = moveDir;
-    _334 = moveDir;
-    return;
-#else  // SMGPC_RETAIL_SOURCE
     TVec3f vec1;
     MR::setNan(vec1);
 
@@ -344,7 +313,7 @@ void Mario::mainMove() {
                 _2B8 = mActor->getLastMove();
                 stopWalk();
                 _754 = 10;
-                pushTask(&taskOnSlipTurn, 1);
+                pushTask(&Mario::taskOnSlipTurn, 1);
             } else {
                 _3D0 = mActor->getConst().getTable()->mTurnSlipTime;
                 mMovementStates._4 = true;
@@ -393,7 +362,7 @@ void Mario::mainMove() {
         }
 
         // needs to be written as two nested if statements to match for some reason
-        if (isActiveTask(&taskOnSlipTurn)) {
+        if (isActiveTask(&Mario::taskOnSlipTurn)) {
             if (isAnimationRun("ターンブレーキ滑り床")) {
                 setFrontVecKeepUp(-_220);
                 a1 = true;
@@ -402,7 +371,7 @@ void Mario::mainMove() {
                 _754 = 0;
                 _74C = 0.0f;
                 mWalkSpeed = 0.0f;
-                popTask(&taskOnSlipTurn);
+                popTask(&Mario::taskOnSlipTurn);
             }
         }
     }
@@ -700,8 +669,10 @@ void Mario::mainMove() {
     newVelocity.setLength(speed);
 
     mVelocity = newVelocity;
-#endif  // SMGPC_PC_DIVERGENCE
 }
+
+
+#pragma opt_propagation reset
 
 bool Mario::isEnableTurn() {
     if (!mMovementStates._1) {
@@ -1023,11 +994,6 @@ bool Mario::retainMoveDir(f32 stickX, f32 stickY, TVec3f* pOut) {
 }
 
 void Mario::calcMoveDir(f32 stickX, f32 stickY, TVec3f* pOut, bool doRetain) {
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
-    if (mMovementStates._37 || _10._15 || mMovementStates._3A || doRetain) {
-        throw std::logic_error("2D, 2.5D, and retained movement directions are unavailable in the PC walk slice");
-    }
-#else  // SMGPC_RETAIL_SOURCE
     if (mMovementStates._37) {
         calcDir2D(stickX, stickY, pOut);
         return;
@@ -1048,7 +1014,6 @@ void Mario::calcMoveDir(f32 stickX, f32 stickY, TVec3f* pOut, bool doRetain) {
             return;
         }
     }
-#endif  // SMGPC_PC_DIVERGENCE
 
     TVec3f camX(getCamDirX());
     const TVec3f& camY = getCamDirY();

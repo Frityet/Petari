@@ -37,3 +37,7 @@ Fresh Metrowerks builds pass for all eight checked complete TUs, including Mario
 The line test covers real KCL leaf order and repeated entries, exact endpoint/front-face behavior, affine transforms, reference-distance sorting and equal-distance order, zone order, sensor exclusion after 32-hit capacity, direct original strike storage and world distances, predicate filtering after each part's KCL capacity, original callback allocations in Game, registration removal/reentry/release, and query/cache retention after the caller's real JKR arena expires. The initial sensor fixture omitted its required retained registration; correcting that fixture resolved the rejection without production changes.
 
 Root and reference explicit path/hash lists are recorded separately for parent-coordinated commits. Root native source is frozen after the passing direct-line test. This is bounded subsystem validation, not a claim that Gateway movement, the chase, Rosalina, or the full game now work.
+
+## WaterCameraFilter projection proof and screen owner frontier
+
+See [screen-owner-frontier.md](screen-owner-frontier.md). The exact reference Mtx44 correction is included in the decomp manifest; 12 screen/holder TUs pass isolated native syntax after two notes-only include/declaration adaptations. BloomEffect still lacks four rendering bodies, so the native water effect graph remains inactive.

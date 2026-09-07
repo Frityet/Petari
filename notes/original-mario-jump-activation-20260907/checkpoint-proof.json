@@ -1,0 +1,1995 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "compile_results": [
+    {
+      "tu": "Player/MarioActor",
+      "kind": "wii",
+      "source": "decomp/src/Game/Player/MarioActor.cpp",
+      "source_sha256": "f0165b7762d272f1453db875ebc85aa45e91f1067012bbc48069ae1872caf02c",
+      "exit_code": 0,
+      "log": "notes/original-mario-jump-activation-20260907/checkpoint/Player-MarioActor.wii.log",
+      "objdiff_exit_code": 0,
+      "retail_object_sha256": "9ab66bef5461e40a06fe9de1983e0f3982510f519b06ec3a839a7270f730322d",
+      "object_sha256": "e4783547f58e84d6dcfb612aa53f903a8a06357b350a47330a8bf1f7e0775da4",
+      "symbols": [
+        {
+          "name": "__as__8TriangleFRC8Triangle",
+          "size": "164",
+          "match_percent": 100.0
+        },
+        {
+          "name": "getEuler__Q29JGeometry64TRotation3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>CFRQ29JGeometry8TVec3<f>",
+          "size": "256",
+          "match_percent": 99.6875
+        },
+        {
+          "name": "__ct__10MarioActorFPCc",
+          "size": "892",
+          "match_percent": 99.97758
+        },
+        {
+          "name": "__dt__10MarioActorFv",
+          "size": "120",
+          "match_percent": 100.0
+        },
+        {
+          "name": "init__10MarioActorFRC12JMapInfoIter",
+          "size": "288",
+          "match_percent": 99.513885
+        },
+        {
+          "name": "init2__10MarioActorFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>l",
+          "size": "1688",
+          "match_percent": 99.66824
+        },
+        {
+          "name": "initAfterPlacement__10MarioActorFv",
+          "size": "292",
+          "match_percent": 99.9315
+        },
+        {
+          "name": "initAfterOpeningDemo__10MarioActorFv",
+          "size": "64",
+          "match_percent": 100.0
+        },
+        {
+          "name": "calcBaseFrontVec__10MarioActorFRCQ29JGeometry8TVec3<f>",
+          "size": "240",
+          "match_percent": 99.916664
+        },
+        {
+          "name": "playSound__10MarioActorFPCcl",
+          "size": "8",
+          "match_percent": 100.0
+        },
+        {
+          "name": "changeAnimation__10MarioActorFPCcPCc",
+          "size": "8",
+          "match_percent": 100.0
+        },
+        {
+          "name": "changeAnimationNonStop__10MarioActorFPCc",
+          "size": "8",
+          "match_percent": 100.0
+        },
+        {
+          "name": "changeAnimationUpper__10MarioActorFPCc",
+          "size": "128",
+          "match_percent": 100.0
+        },
+        {
+          "name": "stopAnimation__10MarioActorFPCc",
+          "size": "12",
+          "match_percent": 100.0
+        },
+        {
+          "name": "isAnimationRun__10MarioActorCFPCc",
+          "size": "8",
+          "match_percent": 100.0
+        },
+        {
+          "name": "changeNullAnimation__10MarioActorFPCcSc",
+          "size": "96",
+          "match_percent": 100.0
+        },
+        {
+          "name": "clearNullAnimation__10MarioActorFSc",
+          "size": "24",
+          "match_percent": 100.0
+        },
+        {
+          "name": "isStopNullAnimation__10MarioActorCFv",
+          "size": "72",
+          "match_percent": 100.0
+        },
+        {
+          "name": "changeGameOverAnimation__10MarioActorFv",
+          "size": "928",
+          "match_percent": 99.331894
+        },
+        {
+          "name": "getJointCtrl__10MarioActorCFPCc",
+          "size": "64",
+          "match_percent": 100.0
+        },
+        {
+          "name": "updateRotationInfo__10MarioActorFv",
+          "size": "400",
+          "match_percent": 99.65
+        },
+        {
+          "name": "exeWait__10MarioActorFv",
+          "size": "84",
+          "match_percent": 100.0
+        },
+        {
+          "name": "movement__10MarioActorFv",
+          "size": "2516",
+          "match_percent": 99.88076
+        },
+        {
+          "name": "control__10MarioActorFv",
+          "size": "296",
+          "match_percent": 99.52702
+        },
+        {
+          "name": "control2__10MarioActorFv",
+          "size": "420",
+          "match_percent": 100.0
+        },
+        {
+          "name": "controlMain__10MarioActorFv",
+          "size": "232",
+          "match_percent": 100.0
+        },
+        {
+          "name": "updateBehavior__10MarioActorFv",
+          "size": "516",
+          "match_percent": 100.0
+        },
+        {
+          "name": "updateBindRatio__10MarioActorFv",
+          "size": "268",
+          "match_percent": 99.55224
+        },
+        {
+          "name": "isInPunchTimerRange__10MarioActorCFv",
+          "size": "96",
+          "match_percent": 99.791664
+        },
+        {
+          "name": "updatePunching__10MarioActorFv",
+          "size": "364",
+          "match_percent": 99.83517
+        },
+        {
+          "name": "doRush__10MarioActorFv",
+          "size": "756",
+          "match_percent": 100.0
+        },
+        {
+          "name": "updateSwingTimer__10MarioActorFv",
+          "size": "352",
+          "match_percent": 99.77273
+        },
+        {
+          "name": "updateSwingAction__10MarioActorFv",
+          "size": "1336",
+          "match_percent": 99.79042
+        },
+        {
+          "name": "checkClapCatchStart__10MarioActorFv",
+          "size": "64",
+          "match_percent": 100.0
+        },
+        {
+          "name": "updateRealMtx__10MarioActorFv",
+          "size": "564",
+          "match_percent": 99.71631
+        },
+        {
+          "name": "setUpperRotateY__10MarioActorFf",
+          "size": "8",
+          "match_percent": 100.0
+        },
+        {
+          "name": "decLife__10MarioActorFUs",
+          "size": "164",
+          "match_percent": 100.0
+        },
+        {
+          "name": "decLifeLarge__10MarioActorFv",
+          "size": "8",
+          "match_percent": 100.0
+        },
+        {
+          "name": "decLifeMiddle__10MarioActorFv",
+          "size": "8",
+          "match_percent": 100.0
+        },
+        {
+          "name": "decLifeSmall__10MarioActorFv",
+          "size": "8",
+          "match_percent": 100.0
+        },
+        {
+          "name": "resetWaterLife__10MarioActorFv",
+          "size": "12",
+          "match_percent": 100.0
+        },
+        {
+          "name": "updateLife__10MarioActorFv",
+          "size": "48",
+          "match_percent": 100.0
+        },
+        {
+          "name": "incLife__10MarioActorFUl",
+          "size": "260",
+          "match_percent": 99.723076
+        },
+        {
+          "name": "changeMaxLife__10MarioActorFl",
+          "size": "112",
+          "match_percent": 100.0
+        },
+        {
+          "name": "doPressing__10MarioActorFv",
+          "size": "456",
+          "match_percent": 99.82456
+        },
+        {
+          "name": "careMovingObject__10MarioActorFv",
+          "size": "264",
+          "match_percent": 100.0
+        },
+        {
+          "name": "doStun__10MarioActorFv",
+          "size": "300",
+          "match_percent": 99.86667
+        },
+        {
+          "name": "scaleMtx__10MarioActorFPA4_f",
+          "size": "464",
+          "match_percent": 99.956894
+        },
+        {
+          "name": "updateBaseScaleMtx__10MarioActorFv",
+          "size": "44",
+          "match_percent": 100.0
+        },
+        {
+          "name": "getRealMtx__10MarioActorCFPA4_fPCc",
+          "size": "100",
+          "match_percent": 100.0
+        },
+        {
+          "name": "getRealPos__10MarioActorCFPCcPQ29JGeometry8TVec3<f>",
+          "size": "64",
+          "match_percent": 100.0
+        },
+        {
+          "name": "getGlobalJointMtx__10MarioActorFPCc",
+          "size": "92",
+          "match_percent": 100.0
+        },
+        {
+          "name": "calcAnimInMovement__10MarioActorFv",
+          "size": "1048",
+          "match_percent": 97.76717
+        },
+        {
+          "name": "forceSetBaseMtx__10MarioActorFPA4_f",
+          "size": "192",
+          "match_percent": 100.0
+        },
+        {
+          "name": "calcAnim__10MarioActorFv",
+          "size": "2036",
+          "match_percent": 98.05305
+        },
+        {
+          "name": "calcAndSetBaseMtx__10MarioActorFv",
+          "size": "4228",
+          "match_percent": 58.933773
+        },
+        {
+          "name": "setBlendMtxTimer__10MarioActorFUs",
+          "size": "36",
+          "match_percent": 100.0
+        },
+        {
+          "name": "getGroundPos__10MarioActorCFPQ29JGeometry8TVec3<f>",
+          "size": "20",
+          "match_percent": 100.0
+        },
+        {
+          "name": "getShadowPos__10MarioActorCFv",
+          "size": "12",
+          "match_percent": 100.0
+        },
+        {
+          "name": "isTurning__10MarioActorCFv",
+          "size": "16",
+          "match_percent": 100.0
+        },
+        {
+          "name": "isJumping__10MarioActorCFv",
+          "size": "200",
+          "match_percent": 99.9
+        },
+        {
+          "name": "isJumpRising__10MarioActorCFv",
+          "size": "76",
+          "match_percent": 100.0
+        },
+        {
+          "name": "isPunching__10MarioActorCFv",
+          "size": "288",
+          "match_percent": 99.583336
+        },
+        {
+          "name": "isItemSwinging__10MarioActorCFv",
+          "size": "128",
+          "match_percent": 99.4375
+        },
+        {
+          "name": "isDamaging__10MarioActorCFv",
+          "size": "44",
+          "match_percent": 100.0
+        },
+        {
+          "name": "isNeedDamageFog__10MarioActorCFv",
+          "size": "120",
+          "match_percent": 100.0
+        },
+        {
+          "name": "isStaggering__10MarioActorCFv",
+          "size": "48",
+          "match_percent": 100.0
+        },
+        {
+          "name": "isSleeping__10MarioActorCFv",
+          "size": "108",
+          "match_percent": 99.25926
+        },
+        {
+          "name": "isRefuseTalk__10MarioActorCFv",
+          "size": "372",
+          "match_percent": 98.27957
+        },
+        {
+          "name": "isDebugMode__10MarioActorCFv",
+          "size": "16",
+          "match_percent": 100.0
+        },
+        {
+          "name": "jumpHop__10MarioActorFv",
+          "size": "388",
+          "match_percent": 100.0
+        },
+        {
+          "name": "calcCenterPos__10MarioActorFv",
+          "size": "460",
+          "match_percent": 90.82609
+        },
+        {
+          "name": "calcHeadPos__10MarioActorFv",
+          "size": "68",
+          "match_percent": 100.0
+        },
+        {
+          "name": "setPress__10MarioActorFUcl",
+          "size": "504",
+          "match_percent": 98.809525
+        },
+        {
+          "name": "getResourceTable__10MarioActorCFv",
+          "size": "12",
+          "match_percent": 100.0
+        },
+        {
+          "name": "isEnableMoveMario__10MarioActorCFv",
+          "size": "104",
+          "match_percent": 100.0
+        },
+        {
+          "name": "isEnableNerveChange__10MarioActorCFv",
+          "size": "76",
+          "match_percent": 100.0
+        },
+        {
+          "name": "forceGameOver__10MarioActorFv",
+          "size": "64",
+          "match_percent": 100.0
+        },
+        {
+          "name": "forceGameOverAbyss__10MarioActorFv",
+          "size": "64",
+          "match_percent": 100.0
+        },
+        {
+          "name": "forceGameOverBlackHole__10MarioActorFv",
+          "size": "64",
+          "match_percent": 100.0
+        },
+        {
+          "name": "forceGameOverNonStop__10MarioActorFv",
+          "size": "64",
+          "match_percent": 100.0
+        },
+        {
+          "name": "forceGameOverSink__10MarioActorFv",
+          "size": "64",
+          "match_percent": 100.0
+        },
+        {
+          "name": "updateCameraInfo__10MarioActorFv",
+          "size": "288",
+          "match_percent": 99.861115
+        },
+        {
+          "name": "binderFilter__10MarioActorFPC8Triangle",
+          "size": "40",
+          "match_percent": 100.0
+        },
+        {
+          "name": "getFrameBufferWidth__2MRFv",
+          "size": "16",
+          "match_percent": 100.0
+        },
+        {
+          "name": "setPunchHitTimer__10MarioActorFUc",
+          "size": "32",
+          "match_percent": 100.0
+        },
+        {
+          "name": "isInvalidTriangle__37TriangleFilterDelegator<10MarioActor>CFPC8Triangle",
+          "size": "48",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__vt__37TriangleFilterDelegator<10MarioActor>",
+          "size": "12",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__vt__10MarioActor",
+          "size": "132",
+          "match_percent": 100.0
+        }
+      ]
+    },
+    {
+      "tu": "Player/MarioActor",
+      "kind": "native",
+      "source": "src/Game/Player/MarioActor.cpp",
+      "source_sha256": "db15a55856592ecfa74605ab8332939810d6373d95b86941738782c9446c573f",
+      "exit_code": 0,
+      "log": "notes/original-mario-jump-activation-20260907/checkpoint/Player-MarioActor.native.log"
+    },
+    {
+      "tu": "Player/MarioActorInit",
+      "kind": "wii",
+      "source": "decomp/src/Game/Player/MarioActorInit.cpp",
+      "source_sha256": "9590436349fa8cb07d6acce3b41880036b2323db6fe67b3d0a2d40d8406ac0f3",
+      "exit_code": 0,
+      "log": "notes/original-mario-jump-activation-20260907/checkpoint/Player-MarioActorInit.wii.log",
+      "objdiff_exit_code": 0,
+      "retail_object_sha256": "d60e73094a511609a14093b90cc131353a0e594e5d0fc6d4b225b1ede351b8b7",
+      "object_sha256": "e211b23caae8ab4e978c094ff16bf1df448470f4c8cfd6a9f4c542951b80bf49",
+      "symbols": [
+        {
+          "name": "initMember__10MarioActorFv",
+          "size": "2156",
+          "match_percent": 99.88868
+        }
+      ]
+    },
+    {
+      "tu": "Player/MarioActorInit",
+      "kind": "native",
+      "source": "src/Game/Player/MarioActorInit.cpp",
+      "source_sha256": "58548c45ef2de78d618f76fa25bfb681f5145324814e184823eb3f25eb9e7dcb",
+      "exit_code": 0,
+      "log": "notes/original-mario-jump-activation-20260907/checkpoint/Player-MarioActorInit.native.log"
+    },
+    {
+      "tu": "Player/MarioActorPad",
+      "kind": "wii",
+      "source": "decomp/src/Game/Player/MarioActorPad.cpp",
+      "source_sha256": "da9d25d2629a064fdbe9f1eb50bf57e975b06737820ca184f944f2d9be08602b",
+      "exit_code": 0,
+      "log": "notes/original-mario-jump-activation-20260907/checkpoint/Player-MarioActorPad.wii.log",
+      "objdiff_exit_code": 0,
+      "retail_object_sha256": "5eefe51c4c82b4d173ed1fac913ddee7a4065eaed94bd504da56d6faf50e81c2",
+      "object_sha256": "bd0e945039268ae14d6a4263e2d12662a42cc0568b7aca29f6552ad76b910f00",
+      "symbols": [
+        {
+          "name": "resetPadSwing__10MarioActorFv",
+          "size": "44",
+          "match_percent": 100.0
+        },
+        {
+          "name": "isRequestHipDrop__10MarioActorCFv",
+          "size": "68",
+          "match_percent": 100.0
+        },
+        {
+          "name": "isRequestRush__10MarioActorCFv",
+          "size": "216",
+          "match_percent": 100.0
+        },
+        {
+          "name": "isRequestThrow__10MarioActorCFv",
+          "size": "136",
+          "match_percent": 100.0
+        },
+        {
+          "name": "isRequestSpin__10MarioActorCFv",
+          "size": "156",
+          "match_percent": 100.0
+        },
+        {
+          "name": "isRequestJump__10MarioActorCFv",
+          "size": "68",
+          "match_percent": 100.0
+        },
+        {
+          "name": "isRequestJump2P__10MarioActorCFv",
+          "size": "192",
+          "match_percent": 100.0
+        },
+        {
+          "name": "isKeepJump__10MarioActorCFv",
+          "size": "12",
+          "match_percent": 100.0
+        },
+        {
+          "name": "isKeepJump2P__10MarioActorCFv",
+          "size": "92",
+          "match_percent": 100.0
+        },
+        {
+          "name": "checkButtonType__10MarioActorCFUsb",
+          "size": "372",
+          "match_percent": 100.0
+        },
+        {
+          "name": "getStickValue__10MarioActorFPfPf",
+          "size": "132",
+          "match_percent": 100.0
+        },
+        {
+          "name": "updateActionTrigger__10MarioActorFv",
+          "size": "148",
+          "match_percent": 100.0
+        },
+        {
+          "name": "updateControllerSwing__10MarioActorFv",
+          "size": "248",
+          "match_percent": 100.0
+        },
+        {
+          "name": "updateControllerSwingLeft__10MarioActorFv",
+          "size": "220",
+          "match_percent": 100.0
+        },
+        {
+          "name": "lockOnDPD__10MarioActorFv",
+          "size": "4",
+          "match_percent": 100.0
+        },
+        {
+          "name": "isRequestSpinJump2P__10MarioActorCFv",
+          "size": "344",
+          "match_percent": 100.0
+        }
+      ]
+    },
+    {
+      "tu": "Player/MarioActorPad",
+      "kind": "native",
+      "source": "src/Game/Player/MarioActorPad.cpp",
+      "source_sha256": "da9d25d2629a064fdbe9f1eb50bf57e975b06737820ca184f944f2d9be08602b",
+      "exit_code": 0,
+      "log": "notes/original-mario-jump-activation-20260907/checkpoint/Player-MarioActorPad.native.log"
+    },
+    {
+      "tu": "Player/MarioActorParts",
+      "kind": "wii",
+      "source": "decomp/src/Game/Player/MarioActorParts.cpp",
+      "source_sha256": "afb9bcc1800c1aa6fc08d994f47461567885cd01179e4eed6551fe51556aacf6",
+      "exit_code": 0,
+      "log": "notes/original-mario-jump-activation-20260907/checkpoint/Player-MarioActorParts.wii.log",
+      "objdiff_exit_code": 0,
+      "retail_object_sha256": "8c9d808223bee01a5367221aa9818eaf49872b21233908fd95a38c1cbfdc1c7f",
+      "object_sha256": "160eea464cf6606f7f327e6d99c8aea1cbf84b247e892e75e78032006103428f",
+      "symbols": [
+        {
+          "name": "init2D__10MarioActorFv",
+          "size": "88",
+          "match_percent": 100.0
+        },
+        {
+          "name": "initParts__10MarioActorFv",
+          "size": "392",
+          "match_percent": 99.591835
+        },
+        {
+          "name": "updateBeeWingAnimation__10MarioActorFv",
+          "size": "472",
+          "match_percent": 99.40678
+        },
+        {
+          "name": "updateTornado__10MarioActorFv",
+          "size": "236",
+          "match_percent": 100.0
+        },
+        {
+          "name": "updateTakingPosition__10MarioActorFv",
+          "size": "1272",
+          "match_percent": 91.18239
+        },
+        {
+          "name": "getCarrySensor__10MarioActorCFv",
+          "size": "28",
+          "match_percent": 100.0
+        },
+        {
+          "name": "changeSpecialModeAnimation__10MarioActorFPCc",
+          "size": "164",
+          "match_percent": 99.39024
+        },
+        {
+          "name": "updateSpecialModeAnimation__10MarioActorFv",
+          "size": "480",
+          "match_percent": 99.666664
+        },
+        {
+          "name": "initFireBall__10MarioActorFv",
+          "size": "112",
+          "match_percent": 100.0
+        },
+        {
+          "name": "shootFireBall__10MarioActorFv",
+          "size": "636",
+          "match_percent": 97.04402
+        },
+        {
+          "name": "showFreezeModel__10MarioActorFv",
+          "size": "84",
+          "match_percent": 100.0
+        },
+        {
+          "name": "hideFreezeModel__10MarioActorFv",
+          "size": "88",
+          "match_percent": 100.0
+        },
+        {
+          "name": "updateFairyStar__10MarioActorFv",
+          "size": "376",
+          "match_percent": 91.0
+        },
+        {
+          "name": "update2D__10MarioActorFv",
+          "size": "292",
+          "match_percent": 99.72603
+        },
+        {
+          "name": "updateThrowVector__10MarioActorFv",
+          "size": "500",
+          "match_percent": 90.912
+        },
+        {
+          "name": "createIceFloor__10MarioActorFRCQ29JGeometry8TVec3<f>",
+          "size": "164",
+          "match_percent": 99.87805
+        },
+        {
+          "name": "createIceFloor__10MarioActorFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+          "size": "148",
+          "match_percent": 100.0
+        },
+        {
+          "name": "createIceWall__10MarioActorFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+          "size": "224",
+          "match_percent": 99.91071
+        },
+        {
+          "name": "finalizeFreezeModel__10MarioActorFv",
+          "size": "96",
+          "match_percent": 100.0
+        },
+        {
+          "name": "offTakingFlag__10MarioActorFv",
+          "size": "12",
+          "match_percent": 100.0
+        },
+        {
+          "name": "setLocalScale__15XjointTransformFf",
+          "size": "16",
+          "match_percent": 100.0
+        }
+      ]
+    },
+    {
+      "tu": "Player/MarioActorParts",
+      "kind": "native",
+      "source": "src/Game/Player/MarioActorParts.cpp",
+      "source_sha256": "afb9bcc1800c1aa6fc08d994f47461567885cd01179e4eed6551fe51556aacf6",
+      "exit_code": 0,
+      "log": "notes/original-mario-jump-activation-20260907/checkpoint/Player-MarioActorParts.native.log"
+    },
+    {
+      "tu": "Player/MarioActorRush",
+      "kind": "wii",
+      "source": "decomp/src/Game/Player/MarioActorRush.cpp",
+      "source_sha256": "2942eb1b658c0acdc0e2ca260227e9dbf48d6222e54c9390383e18ec33719524",
+      "exit_code": 0,
+      "log": "notes/original-mario-jump-activation-20260907/checkpoint/Player-MarioActorRush.wii.log",
+      "objdiff_exit_code": 0,
+      "retail_object_sha256": "1d217a102dead6ddafe9525665c20982b743025e31c18ba28edab31b0440707a",
+      "object_sha256": "e10d5c0d499331d7f4172b3ecf9080ccd11368e41c1d9b0ffe1030e553bf7c47",
+      "symbols": [
+        {
+          "name": "settingRush__10MarioActorFv",
+          "size": "108",
+          "match_percent": 100.0
+        },
+        {
+          "name": "isFixJumpRushSensor__10MarioActorCFPC9HitSensor",
+          "size": "80",
+          "match_percent": 100.0
+        },
+        {
+          "name": "isLandEffectRushSensor__10MarioActorCFPC9HitSensor",
+          "size": "44",
+          "match_percent": 100.0
+        },
+        {
+          "name": "resetCondition__10MarioActorFv",
+          "size": "888",
+          "match_percent": 99.81982
+        },
+        {
+          "name": "endRush__10MarioActorFPC11RushEndInfo",
+          "size": "2120",
+          "match_percent": 98.669815
+        },
+        {
+          "name": "takeSensor__10MarioActorFP9HitSensor",
+          "size": "164",
+          "match_percent": 99.51219
+        }
+      ]
+    },
+    {
+      "tu": "Player/MarioActorRush",
+      "kind": "native",
+      "source": "src/Game/Player/MarioActorRush.cpp",
+      "source_sha256": "609cdb71b5164c2e6f3c1277f64c75412718dbbcbbf9fd51907726f14604112e",
+      "exit_code": 0,
+      "log": "notes/original-mario-jump-activation-20260907/checkpoint/Player-MarioActorRush.native.log"
+    },
+    {
+      "tu": "Player/MarioActorRushMsg",
+      "kind": "wii",
+      "source": "decomp/src/Game/Player/MarioActorRushMsg.cpp",
+      "source_sha256": "4a0fbc3d072c6c2d10eb46fb8254e3b3c566e1f43cb3d81ac39eab8cc566ed0c",
+      "exit_code": 0,
+      "log": "notes/original-mario-jump-activation-20260907/checkpoint/Player-MarioActorRushMsg.wii.log",
+      "objdiff_exit_code": 0,
+      "retail_object_sha256": "dd4a9a4b25a0711d5949f2e288dbad08695198da8c8a75ae9d7070599fae0e1b",
+      "object_sha256": "08af2d3ef24fc357f769c2da5bd888e5b89db772bf7489ecca112acf2146eb32",
+      "symbols": [
+        {
+          "name": "addRushSensor__10MarioActorFP9HitSensorb",
+          "size": "128",
+          "match_percent": 100.0
+        },
+        {
+          "name": "tryStandardRush__10MarioActorFv",
+          "size": "260",
+          "match_percent": 100.0
+        },
+        {
+          "name": "checkPriorRushTarget__10MarioActorFv",
+          "size": "188",
+          "match_percent": 100.0
+        },
+        {
+          "name": "getNearestRushTarget__10MarioActorCFb",
+          "size": "764",
+          "match_percent": 100.0
+        },
+        {
+          "name": "getNearestJumpTarget__10MarioActorCFv",
+          "size": "384",
+          "match_percent": 99.375
+        },
+        {
+          "name": "getHighPriorityTarget__10MarioActorCFv",
+          "size": "232",
+          "match_percent": 100.0
+        },
+        {
+          "name": "getRescueTarget__10MarioActorCFv",
+          "size": "192",
+          "match_percent": 100.0
+        },
+        {
+          "name": "tryStartRush__10MarioActorFb",
+          "size": "464",
+          "match_percent": 95.94827
+        },
+        {
+          "name": "tryJumpRush__10MarioActorFv",
+          "size": "444",
+          "match_percent": 100.0
+        },
+        {
+          "name": "tryRushInRush__10MarioActorFv",
+          "size": "436",
+          "match_percent": 100.0
+        }
+      ]
+    },
+    {
+      "tu": "Player/MarioActorRushMsg",
+      "kind": "native",
+      "source": "src/Game/Player/MarioActorRushMsg.cpp",
+      "source_sha256": "4a0fbc3d072c6c2d10eb46fb8254e3b3c566e1f43cb3d81ac39eab8cc566ed0c",
+      "exit_code": 0,
+      "log": "notes/original-mario-jump-activation-20260907/checkpoint/Player-MarioActorRushMsg.native.log"
+    },
+    {
+      "tu": "Player/MarioActorBlackHole",
+      "kind": "wii",
+      "source": "decomp/src/Game/Player/MarioActorBlackHole.cpp",
+      "source_sha256": "dc505d36415eac5d7350db2a9f58a47ce239f262152a906fea77af7fa09ea730",
+      "exit_code": 0,
+      "log": "notes/original-mario-jump-activation-20260907/checkpoint/Player-MarioActorBlackHole.wii.log",
+      "objdiff_exit_code": 0,
+      "retail_object_sha256": "94b978fa49da798b675f861d920c53a2defa6eeaa65a825e75f3dabe48b5ef4b",
+      "object_sha256": "3229056aaf1d6bb463e9a692eaa7cfecde7ba6f9a9a3cf573bda1ba1965c2389",
+      "symbols": [
+        {
+          "name": "initBlackHoleOut__10MarioActorFv",
+          "size": "272",
+          "match_percent": 100.0
+        },
+        {
+          "name": "exeGameOverBlackHole2__10MarioActorFv",
+          "size": "956",
+          "match_percent": 99.56067
+        },
+        {
+          "name": "__sinit_\\MarioActorBlackHole_cpp",
+          "size": "108",
+          "match_percent": 100.0
+        }
+      ]
+    },
+    {
+      "tu": "Player/MarioActorBlackHole",
+      "kind": "native",
+      "source": "src/Game/Player/MarioActorBlackHole.cpp",
+      "source_sha256": "dc505d36415eac5d7350db2a9f58a47ce239f262152a906fea77af7fa09ea730",
+      "exit_code": 0,
+      "log": "notes/original-mario-jump-activation-20260907/checkpoint/Player-MarioActorBlackHole.native.log"
+    },
+    {
+      "tu": "Player/MarioActorClap",
+      "kind": "wii",
+      "source": "decomp/src/Game/Player/MarioActorClap.cpp",
+      "source_sha256": "5bbc0a073656414c3c93fd80c172cd791841d0f333015db0182eb50574b4dda6",
+      "exit_code": 0,
+      "log": "notes/original-mario-jump-activation-20260907/checkpoint/Player-MarioActorClap.wii.log",
+      "objdiff_exit_code": 0,
+      "retail_object_sha256": "41a0459e5848057fd9a4e69ce5133383f6fcac74c305f8d96778db6240da4233",
+      "object_sha256": "a7006ee615cb27f99e991aebdd9960c77cb626e5e58a736b911011f75122b390",
+      "symbols": [
+        {
+          "name": "bodyClap__10MarioActorFv",
+          "size": "224",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__sinit_\\MarioActorClap_cpp",
+          "size": "108",
+          "match_percent": 100.0
+        }
+      ]
+    },
+    {
+      "tu": "Player/MarioActorClap",
+      "kind": "native",
+      "source": "src/Game/Player/MarioActorClap.cpp",
+      "source_sha256": "5bbc0a073656414c3c93fd80c172cd791841d0f333015db0182eb50574b4dda6",
+      "exit_code": 0,
+      "log": "notes/original-mario-jump-activation-20260907/checkpoint/Player-MarioActorClap.native.log"
+    },
+    {
+      "tu": "Player/MarioMove",
+      "kind": "wii",
+      "source": "decomp/src/Game/Player/MarioMove.cpp",
+      "source_sha256": "5bbd0a926b04d38c25a874f47db4e1bb7ec38403aee6210569192a4a70cdc84d",
+      "exit_code": 0,
+      "log": "notes/original-mario-jump-activation-20260907/checkpoint/Player-MarioMove.wii.log",
+      "objdiff_exit_code": 0,
+      "retail_object_sha256": "6963ff6ea032cc7fa333d90e1e60b88d3ffe0d84c8fd8ff87e124e400420c4a8",
+      "object_sha256": "d5ec8f5a111b46cd74fb9426143276205eb27c1aa6ae5d011ef3f9870d903ee4",
+      "symbols": [
+        {
+          "name": "mainMove__5MarioFv",
+          "size": "6692",
+          "match_percent": 99.29468
+        },
+        {
+          "name": "isEnableTurn__5MarioFv",
+          "size": "548",
+          "match_percent": 95.875916
+        },
+        {
+          "name": "recordTurnSlipAngle__5MarioFv",
+          "size": "96",
+          "match_percent": 100.0
+        },
+        {
+          "name": "decideInertia__5MarioFf",
+          "size": "708",
+          "match_percent": 96.242935
+        },
+        {
+          "name": "decideInertiaOnIce__5MarioFf",
+          "size": "108",
+          "match_percent": 99.81481
+        },
+        {
+          "name": "decideInertiaOnSlip__5MarioFf",
+          "size": "96",
+          "match_percent": 99.791664
+        },
+        {
+          "name": "calcShadowDir__5MarioFRCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+          "size": "276",
+          "match_percent": 99.49275
+        },
+        {
+          "name": "retainMoveDir__5MarioFffPQ29JGeometry8TVec3<f>",
+          "size": "736",
+          "match_percent": 96.277176
+        },
+        {
+          "name": "calcMoveDir__5MarioFffPQ29JGeometry8TVec3<f>b",
+          "size": "836",
+          "match_percent": 95.52153
+        },
+        {
+          "name": "checkLockOnHoming__5MarioFv",
+          "size": "168",
+          "match_percent": 99.88095
+        },
+        {
+          "name": "doLockOnHoming__5MarioFv",
+          "size": "224",
+          "match_percent": 99.76786
+        },
+        {
+          "name": "fixPositionInTower__5MarioFv",
+          "size": "196",
+          "match_percent": 98.77551
+        }
+      ]
+    },
+    {
+      "tu": "Player/MarioMove",
+      "kind": "native",
+      "source": "src/Game/Player/MarioMove.cpp",
+      "source_sha256": "5bbd0a926b04d38c25a874f47db4e1bb7ec38403aee6210569192a4a70cdc84d",
+      "exit_code": 0,
+      "log": "notes/original-mario-jump-activation-20260907/checkpoint/Player-MarioMove.native.log"
+    },
+    {
+      "tu": "Player/MarioWalk",
+      "kind": "wii",
+      "source": "decomp/src/Game/Player/MarioWalk.cpp",
+      "source_sha256": "a6d0632b42790c836f1a883c94c41b85c97cdaa5bc67c8ab274ff210da1ca026",
+      "exit_code": 0,
+      "log": "notes/original-mario-jump-activation-20260907/checkpoint/Player-MarioWalk.wii.log",
+      "objdiff_exit_code": 0,
+      "retail_object_sha256": "fa17169131fe0436bee36ccf64ada6b36fc8464aa931d7f30d3d0da58e331196",
+      "object_sha256": "402526970ee59ef7c7d918b22e1d82def8d4056ab08354a983583818a395c6ec",
+      "symbols": [
+        {
+          "name": "stopWalk__5MarioFv",
+          "size": "208",
+          "match_percent": 99.71154
+        },
+        {
+          "name": "cancelSquatMode__5MarioFv",
+          "size": "300",
+          "match_percent": 99.6
+        },
+        {
+          "name": "getTargetWalkSpeed__5MarioCFv",
+          "size": "272",
+          "match_percent": 99.55882
+        },
+        {
+          "name": "decideSquatWalkAnimation__5MarioFv",
+          "size": "1320",
+          "match_percent": 99.530304
+        },
+        {
+          "name": "decideWalkSpeed__5MarioFv",
+          "size": "464",
+          "match_percent": 99.05173
+        },
+        {
+          "name": "decideWalkAnimation__5MarioFv",
+          "size": "2420",
+          "match_percent": 99.14876
+        },
+        {
+          "name": "doBrakingAnimation__5MarioFv",
+          "size": "136",
+          "match_percent": 99.70588
+        },
+        {
+          "name": "checkWallPush__5MarioFv",
+          "size": "412",
+          "match_percent": 96.79612
+        },
+        {
+          "name": "updateBrakeAnimation__5MarioFv",
+          "size": "408",
+          "match_percent": 99.85294
+        },
+        {
+          "name": "updateWalkSpeed__5MarioFv",
+          "size": "1280",
+          "match_percent": 97.48125
+        },
+        {
+          "name": "decideOnIceAnimation__5MarioFv",
+          "size": "268",
+          "match_percent": 99.477615
+        },
+        {
+          "name": "updateOnSand__5MarioFv",
+          "size": "676",
+          "match_percent": 99.76331
+        },
+        {
+          "name": "updateOnPoison__5MarioFv",
+          "size": "304",
+          "match_percent": 99.802635
+        },
+        {
+          "name": "updateOnWater__5MarioFv",
+          "size": "284",
+          "match_percent": 99.71831
+        },
+        {
+          "name": "sSpeedTableA__23@unnamed@MarioWalk_cpp@",
+          "size": "28",
+          "match_percent": 100.0
+        },
+        {
+          "name": "sSpeedTableB__23@unnamed@MarioWalk_cpp@",
+          "size": "28",
+          "match_percent": 100.0
+        },
+        {
+          "name": "sWalkTargetTable__23@unnamed@MarioWalk_cpp@",
+          "size": "32",
+          "match_percent": 100.0
+        },
+        {
+          "name": "sWeightTable__23@unnamed@MarioWalk_cpp@",
+          "size": "128",
+          "match_percent": 100.0
+        },
+        {
+          "name": "sFootStep__23@unnamed@MarioWalk_cpp@",
+          "size": "16",
+          "match_percent": 100.0
+        },
+        {
+          "name": "sFootStepBeeWallWalk__23@unnamed@MarioWalk_cpp@",
+          "size": "16",
+          "match_percent": 100.0
+        }
+      ]
+    },
+    {
+      "tu": "Player/MarioWalk",
+      "kind": "native",
+      "source": "src/Game/Player/MarioWalk.cpp",
+      "source_sha256": "a6d0632b42790c836f1a883c94c41b85c97cdaa5bc67c8ab274ff210da1ca026",
+      "exit_code": 0,
+      "log": "notes/original-mario-jump-activation-20260907/checkpoint/Player-MarioWalk.native.log"
+    },
+    {
+      "tu": "Player/MarioJump",
+      "kind": "wii",
+      "source": "decomp/src/Game/Player/MarioJump.cpp",
+      "source_sha256": "0f40b65ab2b07c36b6964c35235d170385ffdca36e1fbd1dbef586d882ad8212",
+      "exit_code": 0,
+      "log": "notes/original-mario-jump-activation-20260907/checkpoint/Player-MarioJump.wii.log",
+      "objdiff_exit_code": 0,
+      "retail_object_sha256": "0f5ad0cceefa475c973aa724b5a3468886b73a8694239afe27921f156e3a6f08",
+      "object_sha256": "5b35c59d6715c7f2d6089d9ebd4a078b9f5f5b041a075ca19563627618134636",
+      "symbols": [
+        {
+          "name": "isRising__5MarioCFv",
+          "size": "160",
+          "match_percent": 99.75
+        },
+        {
+          "name": "checkWallRiseAndSlipFront__5MarioFv",
+          "size": "52",
+          "match_percent": 99.61539
+        },
+        {
+          "name": "tryJump__5MarioFv",
+          "size": "3360",
+          "match_percent": 99.5881
+        },
+        {
+          "name": "tryTurnJump__5MarioFv",
+          "size": "604",
+          "match_percent": 99.76821
+        },
+        {
+          "name": "trySquatJump__5MarioFv",
+          "size": "860",
+          "match_percent": 99.60465
+        },
+        {
+          "name": "tryBackJump__5MarioFv",
+          "size": "544",
+          "match_percent": 99.55882
+        },
+        {
+          "name": "tryTornadoJump__5MarioFv",
+          "size": "536",
+          "match_percent": 99.850746
+        },
+        {
+          "name": "startTornadoCentering__5MarioFP9HitSensor",
+          "size": "104",
+          "match_percent": 100.0
+        },
+        {
+          "name": "taskOnTornadoCentering__5MarioFUl",
+          "size": "252",
+          "match_percent": 99.7619
+        },
+        {
+          "name": "trySpinJump__5MarioFUc",
+          "size": "656",
+          "match_percent": 98.506096
+        },
+        {
+          "name": "tryForceJumpDelay__5MarioFRCQ29JGeometry8TVec3<f>",
+          "size": "20",
+          "match_percent": 100.0
+        },
+        {
+          "name": "tryFreeJumpDelay__5MarioFRCQ29JGeometry8TVec3<f>",
+          "size": "20",
+          "match_percent": 100.0
+        },
+        {
+          "name": "tryForceJump__5MarioFRCQ29JGeometry8TVec3<f>b",
+          "size": "316",
+          "match_percent": 99.81013
+        },
+        {
+          "name": "tryForceFreeJump__5MarioFRCQ29JGeometry8TVec3<f>",
+          "size": "180",
+          "match_percent": 99.77778
+        },
+        {
+          "name": "tryForcePowerJump__5MarioFRCQ29JGeometry8TVec3<f>b",
+          "size": "220",
+          "match_percent": 100.0
+        },
+        {
+          "name": "tryFreeJump__5MarioFRCQ29JGeometry8TVec3<f>b",
+          "size": "256",
+          "match_percent": 99.921875
+        },
+        {
+          "name": "tryWallJump__5MarioFRCQ29JGeometry8TVec3<f>b",
+          "size": "352",
+          "match_percent": 99.77273
+        },
+        {
+          "name": "tryStickJump__5MarioFRCQ29JGeometry8TVec3<f>",
+          "size": "280",
+          "match_percent": 95.97143
+        },
+        {
+          "name": "trySlipUpJump__5MarioFv",
+          "size": "832",
+          "match_percent": 99.08654
+        },
+        {
+          "name": "tryHangSlipUp__5MarioFv",
+          "size": "352",
+          "match_percent": 99.88636
+        },
+        {
+          "name": "tryDrop__5MarioFv",
+          "size": "1424",
+          "match_percent": 99.7191
+        },
+        {
+          "name": "isDigitalJump__5MarioCFv",
+          "size": "12",
+          "match_percent": 100.0
+        },
+        {
+          "name": "initActiveJumpVec__5MarioFv",
+          "size": "100",
+          "match_percent": 100.0
+        },
+        {
+          "name": "initJumpParam__5MarioFv",
+          "size": "388",
+          "match_percent": 99.639175
+        },
+        {
+          "name": "isEnableFutureJump__5MarioCFv",
+          "size": "176",
+          "match_percent": 99.77273
+        },
+        {
+          "name": "procJump__5MarioFb",
+          "size": "3248",
+          "match_percent": 96.40148
+        },
+        {
+          "name": "checkWallRising__5MarioFv",
+          "size": "4",
+          "match_percent": 100.0
+        },
+        {
+          "name": "checkWallJumpHit__5MarioFv",
+          "size": "608",
+          "match_percent": 99.86842
+        },
+        {
+          "name": "decideSlipUp__5MarioFv",
+          "size": "588",
+          "match_percent": 99.89796
+        },
+        {
+          "name": "moveWallSlide__5MarioFf",
+          "size": "240",
+          "match_percent": 99.583336
+        },
+        {
+          "name": "jumpToHipDrop__5MarioFv",
+          "size": "912",
+          "match_percent": 99.5614
+        },
+        {
+          "name": "procHipDrop__5MarioFv",
+          "size": "2196",
+          "match_percent": 99.3898
+        },
+        {
+          "name": "doAirWalk__5MarioFv",
+          "size": "3104",
+          "match_percent": 87.73969
+        },
+        {
+          "name": "stopJump__5MarioFv",
+          "size": "272",
+          "match_percent": 100.0
+        },
+        {
+          "name": "cancelTornadoJump__5MarioFv",
+          "size": "132",
+          "match_percent": 100.0
+        },
+        {
+          "name": "setRocketBooster__5MarioFRCQ29JGeometry8TVec3<f>fUs",
+          "size": "16",
+          "match_percent": 100.0
+        },
+        {
+          "name": "procRocketBooster__5MarioFv",
+          "size": "84",
+          "match_percent": 100.0
+        },
+        {
+          "name": "isSoftLandingFloor__5MarioCFv",
+          "size": "64",
+          "match_percent": 100.0
+        },
+        {
+          "name": "checkAndTryForceJump__5MarioFv",
+          "size": "896",
+          "match_percent": 98.23661
+        },
+        {
+          "name": "doLanding__5MarioFv",
+          "size": "3408",
+          "match_percent": 99.60094
+        },
+        {
+          "name": "startSlidingTask__5MarioFUlfUs",
+          "size": "152",
+          "match_percent": 100.0
+        },
+        {
+          "name": "taskOnSlide__5MarioFUl",
+          "size": "84",
+          "match_percent": 100.0
+        },
+        {
+          "name": "taskOnWallRising__5MarioFUl",
+          "size": "80",
+          "match_percent": 99.0
+        },
+        {
+          "name": "incAirWalkTimer__5MarioFv",
+          "size": "180",
+          "match_percent": 99.77778
+        },
+        {
+          "name": "__sinit_\\MarioJump_cpp",
+          "size": "108",
+          "match_percent": 100.0
+        },
+        {
+          "name": "cDropFrontSpeed__23@unnamed@MarioJump_cpp@",
+          "size": "4",
+          "match_percent": 100.0
+        }
+      ]
+    },
+    {
+      "tu": "Player/MarioJump",
+      "kind": "native",
+      "source": "src/Game/Player/MarioJump.cpp",
+      "source_sha256": "0f40b65ab2b07c36b6964c35235d170385ffdca36e1fbd1dbef586d882ad8212",
+      "exit_code": 0,
+      "log": "notes/original-mario-jump-activation-20260907/checkpoint/Player-MarioJump.native.log"
+    },
+    {
+      "tu": "MapObj/BlackHole",
+      "kind": "wii",
+      "source": "decomp/src/Game/MapObj/BlackHole.cpp",
+      "source_sha256": "40d542a2ab578ee74bf918d56582d1ae576d46a4d3d0efa19a218adfe8ea6711",
+      "exit_code": 0,
+      "log": "notes/original-mario-jump-activation-20260907/checkpoint/MapObj-BlackHole.wii.log",
+      "objdiff_exit_code": 0,
+      "retail_object_sha256": "97f26567b70f32cbc0c80fc5181132b0a4bf645fda4b59ee44762b59e82c51bb",
+      "object_sha256": "6dd44f16b76d957ee0c4d6446041f1faeab0a7c4b2ca1974bfbf05d543c2d129",
+      "symbols": [
+        {
+          "name": "init__9BlackHoleFRC12JMapInfoIter",
+          "size": "444",
+          "match_percent": 99.324326
+        },
+        {
+          "name": "makeActorAppeared__9BlackHoleFv",
+          "size": "120",
+          "match_percent": 100.0
+        },
+        {
+          "name": "kill__9BlackHoleFv",
+          "size": "64",
+          "match_percent": 100.0
+        },
+        {
+          "name": "tryStartDemoCamera__9BlackHoleFv",
+          "size": "60",
+          "match_percent": 100.0
+        },
+        {
+          "name": "attackSensor__9BlackHoleFP9HitSensorP9HitSensor",
+          "size": "156",
+          "match_percent": 100.0
+        },
+        {
+          "name": "initMapToolInfo__9BlackHoleFRC12JMapInfoIter",
+          "size": "292",
+          "match_percent": 99.438354
+        },
+        {
+          "name": "initModel__9BlackHoleFv",
+          "size": "144",
+          "match_percent": 99.583336
+        },
+        {
+          "name": "initCubeBox__9BlackHoleFv",
+          "size": "240",
+          "match_percent": 95.85
+        },
+        {
+          "name": "isInCubeBox__9BlackHoleCFRCQ29JGeometry8TVec3<f>",
+          "size": "160",
+          "match_percent": 99.875
+        },
+        {
+          "name": "updateModelScale__9BlackHoleFff",
+          "size": "88",
+          "match_percent": 99.77273
+        },
+        {
+          "name": "exeWait__9BlackHoleFv",
+          "size": "200",
+          "match_percent": 99.7
+        },
+        {
+          "name": "exeDisappear__9BlackHoleFv",
+          "size": "232",
+          "match_percent": 99.74138
+        },
+        {
+          "name": "__dt__9BlackHoleFv",
+          "size": "92",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__sinit_\\BlackHole_cpp",
+          "size": "52",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__ct__Q212NrvBlackHole16BlackHoleNrvWaitFv",
+          "size": "16",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__ct__Q212NrvBlackHole16BlackHoleNrvDemoFv",
+          "size": "16",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__ct__Q212NrvBlackHole21BlackHoleNrvDisappearFv",
+          "size": "16",
+          "match_percent": 100.0
+        },
+        {
+          "name": "execute__Q212NrvBlackHole21BlackHoleNrvDisappearCFP5Spine",
+          "size": "8",
+          "match_percent": 100.0
+        },
+        {
+          "name": "execute__Q212NrvBlackHole16BlackHoleNrvDemoCFP5Spine",
+          "size": "28",
+          "match_percent": 100.0
+        },
+        {
+          "name": "execute__Q212NrvBlackHole16BlackHoleNrvWaitCFP5Spine",
+          "size": "8",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__vt__9BlackHole",
+          "size": "120",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__vt__Q212NrvBlackHole21BlackHoleNrvDisappear",
+          "size": "16",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__vt__Q212NrvBlackHole16BlackHoleNrvDemo",
+          "size": "16",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__vt__Q212NrvBlackHole16BlackHoleNrvWait",
+          "size": "16",
+          "match_percent": 100.0
+        },
+        {
+          "name": "sInstance__Q212NrvBlackHole16BlackHoleNrvWait",
+          "size": "4",
+          "match_percent": 100.0
+        },
+        {
+          "name": "sInstance__Q212NrvBlackHole16BlackHoleNrvDemo",
+          "size": "4",
+          "match_percent": 100.0
+        },
+        {
+          "name": "sInstance__Q212NrvBlackHole21BlackHoleNrvDisappear",
+          "size": "4",
+          "match_percent": 100.0
+        }
+      ]
+    },
+    {
+      "tu": "MapObj/BlackHole",
+      "kind": "native",
+      "source": "src/Game/MapObj/BlackHole.cpp",
+      "source_sha256": "40d542a2ab578ee74bf918d56582d1ae576d46a4d3d0efa19a218adfe8ea6711",
+      "exit_code": 0,
+      "log": "notes/original-mario-jump-activation-20260907/checkpoint/MapObj-BlackHole.native.log"
+    },
+    {
+      "tu": "MapObj/CollectCounter",
+      "kind": "wii",
+      "source": "decomp/src/Game/MapObj/CollectCounter.cpp",
+      "source_sha256": "ed3ae9a5f65a234d7a2a26ffe9d4397d5f108a6ed6fa3c01b77f2d31e9b56c65",
+      "exit_code": 0,
+      "log": "notes/original-mario-jump-activation-20260907/checkpoint/MapObj-CollectCounter.wii.log",
+      "objdiff_exit_code": 0,
+      "retail_object_sha256": "d400d0d61dd19c0d671be10f60df771de38c3acf3831dff212c37dc0c87c8970",
+      "object_sha256": "7d0c1d0e4e9d0743eddc1803af91bc2390f5e3fcb02dafe3d4a2813d400965d4",
+      "symbols": [
+        {
+          "name": "__ct__14CollectCounterFPCc",
+          "size": "76",
+          "match_percent": 100.0
+        },
+        {
+          "name": "init__14CollectCounterFRC12JMapInfoIter",
+          "size": "112",
+          "match_percent": 100.0
+        },
+        {
+          "name": "control__14CollectCounterFv",
+          "size": "4",
+          "match_percent": 100.0
+        },
+        {
+          "name": "setCount__14CollectCounterFl",
+          "size": "100",
+          "match_percent": 100.0
+        },
+        {
+          "name": "tryEndShow__14CollectCounterFv",
+          "size": "100",
+          "match_percent": 100.0
+        },
+        {
+          "name": "setPosition__14CollectCounterFv",
+          "size": "116",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__dt__14CollectCounterFv",
+          "size": "92",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__sinit_\\CollectCounter_cpp",
+          "size": "44",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__ct__Q217NrvCollectCounter21CollectCounterNrvHideFv",
+          "size": "16",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__ct__Q217NrvCollectCounter21CollectCounterNrvShowFv",
+          "size": "16",
+          "match_percent": 100.0
+        },
+        {
+          "name": "execute__Q217NrvCollectCounter21CollectCounterNrvShowCFP5Spine",
+          "size": "84",
+          "match_percent": 100.0
+        },
+        {
+          "name": "execute__Q217NrvCollectCounter21CollectCounterNrvHideCFP5Spine",
+          "size": "4",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__vt__14CollectCounter",
+          "size": "48",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__vt__Q217NrvCollectCounter21CollectCounterNrvShow",
+          "size": "16",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__vt__Q217NrvCollectCounter21CollectCounterNrvHide",
+          "size": "16",
+          "match_percent": 100.0
+        },
+        {
+          "name": "sInstance__Q217NrvCollectCounter21CollectCounterNrvHide",
+          "size": "4",
+          "match_percent": 100.0
+        },
+        {
+          "name": "sInstance__Q217NrvCollectCounter21CollectCounterNrvShow",
+          "size": "4",
+          "match_percent": 100.0
+        }
+      ]
+    },
+    {
+      "tu": "MapObj/CollectCounter",
+      "kind": "native",
+      "source": "src/Game/MapObj/CollectCounter.cpp",
+      "source_sha256": "ed3ae9a5f65a234d7a2a26ffe9d4397d5f108a6ed6fa3c01b77f2d31e9b56c65",
+      "exit_code": 0,
+      "log": "notes/original-mario-jump-activation-20260907/checkpoint/MapObj-CollectCounter.native.log"
+    },
+    {
+      "tu": "MapObj/ChipCounter",
+      "kind": "wii",
+      "source": "decomp/src/Game/MapObj/ChipCounter.cpp",
+      "source_sha256": "0d96cd0a14330ad81484f5c254d9557dd8442e30d487893d4a7efa182f52c6c0",
+      "exit_code": 0,
+      "log": "notes/original-mario-jump-activation-20260907/checkpoint/MapObj-ChipCounter.wii.log",
+      "objdiff_exit_code": 0,
+      "retail_object_sha256": "949cc636b0dfb76c25d2a1bf00e203b8579a2b80d149c67aacabb1a1db5e0dc6",
+      "object_sha256": "c94d7e82cfce5112f03bd7071097823eea1c827ae01428e91ac8738053af0494",
+      "symbols": [
+        {
+          "name": "__ct__11ChipCounterFPCcl",
+          "size": "108",
+          "match_percent": 100.0
+        },
+        {
+          "name": "init__11ChipCounterFRC12JMapInfoIter",
+          "size": "300",
+          "match_percent": 99.26667
+        },
+        {
+          "name": "control__11ChipCounterFv",
+          "size": "144",
+          "match_percent": 99.44444
+        },
+        {
+          "name": "setCount__11ChipCounterFl",
+          "size": "232",
+          "match_percent": 99.74138
+        },
+        {
+          "name": "requestShow__11ChipCounterFll",
+          "size": "244",
+          "match_percent": 99.91803
+        },
+        {
+          "name": "requestComplete__11ChipCounterFl",
+          "size": "152",
+          "match_percent": 99.73684
+        },
+        {
+          "name": "requestHide__11ChipCounterFl",
+          "size": "124",
+          "match_percent": 99.51613
+        },
+        {
+          "name": "requestActive__11ChipCounterFv",
+          "size": "120",
+          "match_percent": 99.5
+        },
+        {
+          "name": "requestDeactive__11ChipCounterFv",
+          "size": "160",
+          "match_percent": 99.5
+        },
+        {
+          "name": "tryEndFrameIn__11ChipCounterFv",
+          "size": "80",
+          "match_percent": 100.0
+        },
+        {
+          "name": "tryEndFrameOut__11ChipCounterFv",
+          "size": "100",
+          "match_percent": 100.0
+        },
+        {
+          "name": "tryEndComplete__11ChipCounterFv",
+          "size": "80",
+          "match_percent": 100.0
+        },
+        {
+          "name": "exeComplete__11ChipCounterFv",
+          "size": "164",
+          "match_percent": 99.756096
+        },
+        {
+          "name": "exeCompleteOut__11ChipCounterFv",
+          "size": "144",
+          "match_percent": 99.72222
+        },
+        {
+          "name": "__dt__11ChipCounterFv",
+          "size": "92",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__sinit_\\ChipCounter_cpp",
+          "size": "84",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__ct__Q214NrvChipCounter18ChipCounterNrvHideFv",
+          "size": "16",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__ct__Q214NrvChipCounter21ChipCounterNrvFrameInFv",
+          "size": "16",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__ct__Q214NrvChipCounter18ChipCounterNrvShowFv",
+          "size": "16",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__ct__Q214NrvChipCounter22ChipCounterNrvFrameOutFv",
+          "size": "16",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__ct__Q214NrvChipCounter21ChipCounterNrvTryDemoFv",
+          "size": "16",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__ct__Q214NrvChipCounter22ChipCounterNrvCompleteFv",
+          "size": "16",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__ct__Q214NrvChipCounter25ChipCounterNrvCompleteOutFv",
+          "size": "16",
+          "match_percent": 100.0
+        },
+        {
+          "name": "execute__Q214NrvChipCounter25ChipCounterNrvCompleteOutCFP5Spine",
+          "size": "8",
+          "match_percent": 100.0
+        },
+        {
+          "name": "execute__Q214NrvChipCounter22ChipCounterNrvCompleteCFP5Spine",
+          "size": "8",
+          "match_percent": 100.0
+        },
+        {
+          "name": "execute__Q214NrvChipCounter21ChipCounterNrvTryDemoCFP5Spine",
+          "size": "64",
+          "match_percent": 100.0
+        },
+        {
+          "name": "execute__Q214NrvChipCounter22ChipCounterNrvFrameOutCFP5Spine",
+          "size": "80",
+          "match_percent": 100.0
+        },
+        {
+          "name": "execute__Q214NrvChipCounter18ChipCounterNrvShowCFP5Spine",
+          "size": "76",
+          "match_percent": 99.47369
+        },
+        {
+          "name": "execute__Q214NrvChipCounter21ChipCounterNrvFrameInCFP5Spine",
+          "size": "84",
+          "match_percent": 99.52381
+        },
+        {
+          "name": "execute__Q214NrvChipCounter18ChipCounterNrvHideCFP5Spine",
+          "size": "4",
+          "match_percent": 100.0
+        },
+        {
+          "name": "sChipPainName__25@unnamed@ChipCounter_cpp@",
+          "size": "20",
+          "match_percent": 50.0
+        },
+        {
+          "name": "__vt__11ChipCounter",
+          "size": "48",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__vt__Q214NrvChipCounter25ChipCounterNrvCompleteOut",
+          "size": "16",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__vt__Q214NrvChipCounter22ChipCounterNrvComplete",
+          "size": "16",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__vt__Q214NrvChipCounter21ChipCounterNrvTryDemo",
+          "size": "16",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__vt__Q214NrvChipCounter22ChipCounterNrvFrameOut",
+          "size": "16",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__vt__Q214NrvChipCounter18ChipCounterNrvShow",
+          "size": "16",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__vt__Q214NrvChipCounter21ChipCounterNrvFrameIn",
+          "size": "16",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__vt__Q214NrvChipCounter18ChipCounterNrvHide",
+          "size": "16",
+          "match_percent": 100.0
+        },
+        {
+          "name": "sChipPainCount__25@unnamed@ChipCounter_cpp@",
+          "size": "4",
+          "match_percent": 100.0
+        },
+        {
+          "name": "sInstance__Q214NrvChipCounter18ChipCounterNrvHide",
+          "size": "4",
+          "match_percent": 100.0
+        },
+        {
+          "name": "sInstance__Q214NrvChipCounter21ChipCounterNrvFrameIn",
+          "size": "4",
+          "match_percent": 100.0
+        },
+        {
+          "name": "sInstance__Q214NrvChipCounter18ChipCounterNrvShow",
+          "size": "4",
+          "match_percent": 100.0
+        },
+        {
+          "name": "sInstance__Q214NrvChipCounter22ChipCounterNrvFrameOut",
+          "size": "4",
+          "match_percent": 100.0
+        },
+        {
+          "name": "sInstance__Q214NrvChipCounter21ChipCounterNrvTryDemo",
+          "size": "4",
+          "match_percent": 100.0
+        },
+        {
+          "name": "sInstance__Q214NrvChipCounter22ChipCounterNrvComplete",
+          "size": "4",
+          "match_percent": 100.0
+        },
+        {
+          "name": "sInstance__Q214NrvChipCounter25ChipCounterNrvCompleteOut",
+          "size": "4",
+          "match_percent": 100.0
+        }
+      ]
+    },
+    {
+      "tu": "MapObj/ChipCounter",
+      "kind": "native",
+      "source": "src/Game/MapObj/ChipCounter.cpp",
+      "source_sha256": "0d96cd0a14330ad81484f5c254d9557dd8442e30d487893d4a7efa182f52c6c0",
+      "exit_code": 0,
+      "log": "notes/original-mario-jump-activation-20260907/checkpoint/MapObj-ChipCounter.native.log"
+    },
+    {
+      "tu": "MapObj/ChipHolder",
+      "kind": "wii",
+      "source": "decomp/src/Game/MapObj/ChipHolder.cpp",
+      "source_sha256": "fa781496f27e0e4c758556922f1caff4c7106bdf7a3d0bc7a06c9c4f446d6f35",
+      "exit_code": 0,
+      "log": "notes/original-mario-jump-activation-20260907/checkpoint/MapObj-ChipHolder.wii.log",
+      "objdiff_exit_code": 0,
+      "retail_object_sha256": "41804d693213bc9d0bb3e1c39ffd8194d297469efaf14a8490dbbd8db4f6d77d",
+      "object_sha256": "3d6f3def2fb9b55e4089e4913e733347703f9a197721c755eb0a75dff116ccf5",
+      "symbols": [
+        {
+          "name": "__ct__10ChipHolderFPCcl",
+          "size": "92",
+          "match_percent": 100.0
+        },
+        {
+          "name": "registerChipGroup__10ChipHolderFP9ChipGroup",
+          "size": "32",
+          "match_percent": 100.0
+        },
+        {
+          "name": "findChipGroup__10ChipHolderCFl",
+          "size": "80",
+          "match_percent": 100.0
+        },
+        {
+          "name": "createChipHolder__2MRFl",
+          "size": "40",
+          "match_percent": 100.0
+        },
+        {
+          "name": "getChipHolder__2MRFl",
+          "size": "88",
+          "match_percent": 100.0
+        },
+        {
+          "name": "registerChipGroup__2MRFlP9ChipGroup",
+          "size": "52",
+          "match_percent": 100.0
+        },
+        {
+          "name": "registerChip__2MRFlP8ChipBasel",
+          "size": "72",
+          "match_percent": 100.0
+        },
+        {
+          "name": "noticeGetChip__2MRFlP8ChipBasel",
+          "size": "108",
+          "match_percent": 100.0
+        },
+        {
+          "name": "showChipCounter__2MRFll",
+          "size": "84",
+          "match_percent": 100.0
+        },
+        {
+          "name": "hideChipCounter__2MRFll",
+          "size": "56",
+          "match_percent": 100.0
+        },
+        {
+          "name": "requestStartChipCompleteDemo__2MRFll",
+          "size": "56",
+          "match_percent": 100.0
+        },
+        {
+          "name": "noticeEndChipCompleteDemo__2MRFll",
+          "size": "56",
+          "match_percent": 100.0
+        },
+        {
+          "name": "getGotChipCount__2MRFll",
+          "size": "56",
+          "match_percent": 100.0
+        },
+        {
+          "name": "activateChipLayout__2MRFv",
+          "size": "92",
+          "match_percent": 100.0
+        },
+        {
+          "name": "deactivateChipLayout__2MRFv",
+          "size": "92",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__dt__10ChipHolderFv",
+          "size": "88",
+          "match_percent": 100.0
+        },
+        {
+          "name": "init__10ChipHolderFRC12JMapInfoIter",
+          "size": "164",
+          "match_percent": 100.0
+        },
+        {
+          "name": "__vt__10ChipHolder",
+          "size": "36",
+          "match_percent": 100.0
+        }
+      ]
+    },
+    {
+      "tu": "MapObj/ChipHolder",
+      "kind": "native",
+      "source": "src/Game/MapObj/ChipHolder.cpp",
+      "source_sha256": "fa781496f27e0e4c758556922f1caff4c7106bdf7a3d0bc7a06c9c4f446d6f35",
+      "exit_code": 0,
+      "log": "notes/original-mario-jump-activation-20260907/checkpoint/MapObj-ChipHolder.native.log"
+    }
+  ]
+}

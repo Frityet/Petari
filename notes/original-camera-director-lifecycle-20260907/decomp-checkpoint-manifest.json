@@ -1,0 +1,14 @@
+[
+  {
+    "path": "src/Game/Camera/CameraShaker.cpp",
+    "sha256": "4666538eea15e709efbc2461a46d328c5d84650dec80118fc7dbf333df1ce367"
+  },
+  {
+    "path": "src/Game/Screen/ImageEffectLocalUtil.cpp",
+    "sha256": "cc30f4f69b25573ee1255263c8176b199c49768979353ea287a75d3289903b0d"
+  },
+  {
+    "path": "src/Game/Util/CameraUtil.cpp",
+    "sha256": "ffd714534115af145cc3aa7b22e15f2fd51cc82f12a81be79b05c327f13baff6"
+  }
+]

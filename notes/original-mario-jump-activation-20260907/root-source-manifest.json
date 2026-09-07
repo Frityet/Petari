@@ -1,0 +1,98 @@
+[
+  {
+    "path": "src/Game/Player/MarioActor.cpp",
+    "sha256": "db15a55856592ecfa74605ab8332939810d6373d95b86941738782c9446c573f"
+  },
+  {
+    "path": "src/Game/Player/MarioActor.hpp",
+    "sha256": "c3f4cd35e1d1b717e7ab599ab9836795a0ce064031609d5957651f9363eddf7e"
+  },
+  {
+    "path": "src/Game/Player/MarioActorInit.cpp",
+    "sha256": "58548c45ef2de78d618f76fa25bfb681f5145324814e184823eb3f25eb9e7dcb"
+  },
+  {
+    "path": "src/Game/Player/MarioActorPad.cpp",
+    "sha256": "da9d25d2629a064fdbe9f1eb50bf57e975b06737820ca184f944f2d9be08602b"
+  },
+  {
+    "path": "src/Game/Player/MarioActorParts.cpp",
+    "sha256": "afb9bcc1800c1aa6fc08d994f47461567885cd01179e4eed6551fe51556aacf6"
+  },
+  {
+    "path": "src/Game/Player/MarioActorRush.cpp",
+    "sha256": "609cdb71b5164c2e6f3c1277f64c75412718dbbcbbf9fd51907726f14604112e"
+  },
+  {
+    "path": "src/Game/Player/MarioActorRushMsg.cpp",
+    "sha256": "4a0fbc3d072c6c2d10eb46fb8254e3b3c566e1f43cb3d81ac39eab8cc566ed0c"
+  },
+  {
+    "path": "src/Game/Player/MarioActorBlackHole.cpp",
+    "sha256": "dc505d36415eac5d7350db2a9f58a47ce239f262152a906fea77af7fa09ea730"
+  },
+  {
+    "path": "src/Game/Player/MarioActorClap.cpp",
+    "sha256": "5bbc0a073656414c3c93fd80c172cd791841d0f333015db0182eb50574b4dda6"
+  },
+  {
+    "path": "src/Game/Player/MarioMove.cpp",
+    "sha256": "5bbd0a926b04d38c25a874f47db4e1bb7ec38403aee6210569192a4a70cdc84d"
+  },
+  {
+    "path": "src/Game/Player/MarioWalk.cpp",
+    "sha256": "a6d0632b42790c836f1a883c94c41b85c97cdaa5bc67c8ab274ff210da1ca026"
+  },
+  {
+    "path": "src/Game/Player/MarioJump.cpp",
+    "sha256": "0f40b65ab2b07c36b6964c35235d170385ffdca36e1fbd1dbef586d882ad8212"
+  },
+  {
+    "path": "src/compat/HitInfoCompat.cpp",
+    "sha256": "9c9eb8a53e70cfe4fb2f14a2ba363aed4a0e4a9b77316cd72b70220814b6630a"
+  },
+  {
+    "path": "src/Game/MapObj/BlackHole.cpp",
+    "sha256": "40d542a2ab578ee74bf918d56582d1ae576d46a4d3d0efa19a218adfe8ea6711"
+  },
+  {
+    "path": "src/Game/MapObj/BlackHole.hpp",
+    "sha256": "fa97337b8a05246096e136b16b0ba229810e47449b3d103ea6418a69cce54450"
+  },
+  {
+    "path": "src/Game/MapObj/ChipBase.hpp",
+    "sha256": "b73d7f26aaf7f600bb20948f4f344a84c21816b8c2b269eea60718464cf5e36f"
+  },
+  {
+    "path": "src/Game/MapObj/ChipCounter.cpp",
+    "sha256": "0d96cd0a14330ad81484f5c254d9557dd8442e30d487893d4a7efa182f52c6c0"
+  },
+  {
+    "path": "src/Game/MapObj/ChipCounter.hpp",
+    "sha256": "f5023aad92a22cac59e458f109178410e63e39db0a0e33565d796cff59ce6aac"
+  },
+  {
+    "path": "src/Game/MapObj/ChipGroup.hpp",
+    "sha256": "c638931beb2eb519d5c318edbccedb5b44d124946821a9b8b99f8ac4691d95e6"
+  },
+  {
+    "path": "src/Game/MapObj/ChipHolder.cpp",
+    "sha256": "fa781496f27e0e4c758556922f1caff4c7106bdf7a3d0bc7a06c9c4f446d6f35"
+  },
+  {
+    "path": "src/Game/MapObj/ChipHolder.hpp",
+    "sha256": "255c68f11a514dd8bfc4807c6e7024ab9df36ebe847a5c6265d09a30f5f33344"
+  },
+  {
+    "path": "src/Game/MapObj/CollectCounter.cpp",
+    "sha256": "ed3ae9a5f65a234d7a2a26ffe9d4397d5f108a6ed6fa3c01b77f2d31e9b56c65"
+  },
+  {
+    "path": "src/Game/MapObj/CollectCounter.hpp",
+    "sha256": "40032f5f1d0b8f3b02cb41fd0160b7b103c4f4d3e9455876e685cef8163b6e09"
+  },
+  {
+    "path": "src/Game/NPC/TalkDirector.hpp",
+    "sha256": "d8b8f649dc6840e9331d1af380e5fd5a077b33a948168c89a198402290afc65b"
+  }
+]

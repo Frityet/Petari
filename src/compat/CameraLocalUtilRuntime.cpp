@@ -2,6 +2,8 @@
 #include "compat/CameraLocalUtilRuntime.hpp"
 
 #include "Game/Camera/Camera.hpp"
+#include "Game/Camera/CameraDirector.hpp"
+#include "camera/CameraDirectorRuntime.hpp"
 #include "Game/Camera/CameraLocalUtil.hpp"
 #include "Game/Camera/CameraMan.hpp"
 #include "Game/Camera/CameraPoseParam.hpp"
@@ -74,10 +76,12 @@ CameraTargetObj::CameraTargetObj(const char* pName) : NameObj(pName), mCameraWal
 
 namespace CameraLocalUtil {
     CameraTargetObj* getTarget(const Camera* pCamera) {
+        if (pCamera->mCameraMan->mDirector != nullptr) return pCamera->mCameraMan->mDirector->getTarget();
         return require_bound_target(pCamera);
     }
 
     CameraTargetObj* getTarget(const CameraMan* pCameraMan) {
+        if (pCameraMan->mDirector != nullptr) return pCameraMan->mDirector->getTarget();
         if (sBoundCamera == nullptr || pCameraMan == nullptr || sBoundCamera->mCameraMan != pCameraMan) {
             aurora::throw_host_exception<std::logic_error>("Camera manager target lookup requires its active camera calculation scope.");
         }
@@ -428,6 +432,7 @@ namespace CameraLocalUtil {
 
 namespace MR {
     bool isFirstPersonCamera() {
+        if (auto* camera = smgpc::camera::current_camera_director_runtime()) return camera->director().isSubjectiveCamera();
         if (sBoundCamera == nullptr || sBoundTarget == nullptr || !sBoundMode.has_value()) {
             aurora::throw_host_exception<std::logic_error>("First-person camera state requires an active original camera owner and explicit mode.");
         }

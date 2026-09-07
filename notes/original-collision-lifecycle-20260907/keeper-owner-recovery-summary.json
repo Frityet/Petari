@@ -1,0 +1,27 @@
+[
+  {
+    "name": "__ct__26CollisionCategorizedKeeperFl",
+    "size": "152",
+    "match_percent": 100.0
+  },
+  {
+    "name": "movement__26CollisionCategorizedKeeperFv",
+    "size": "224",
+    "match_percent": 97.14286
+  },
+  {
+    "name": "getZone__26CollisionCategorizedKeeperFi",
+    "size": "160",
+    "match_percent": 92.575
+  },
+  {
+    "name": "calcMinMaxAndRadiusIfMoveOuter__13CollisionZoneFP14CollisionParts",
+    "size": "236",
+    "match_percent": 100.0
+  },
+  {
+    "name": "__dt__26CollisionCategorizedKeeperFv",
+    "size": "88",
+    "match_percent": 100.0
+  }
+]

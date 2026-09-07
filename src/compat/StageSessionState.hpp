@@ -2,13 +2,15 @@
 
 #include "Game/Util/JMapIdInfo.hpp"
 
-#include <array>
 #include <cstddef>
+#include <memory>
 #include <optional>
 #include <string>
 #include <string_view>
 
 #include <revolution/types.h>
+
+class GameDataTemporaryInGalaxy;
 
 namespace smgpc::compat {
 
@@ -33,8 +35,18 @@ namespace smgpc::compat {
 
     class StageSessionState final {
     public:
+        // The host scene publishes the phase it is actually executing.
+        // Camera mode flags do not imply a scene introduction is running.
+        enum class ExecutionPhase {
+            Initialization,
+            Gameplay,
+            ScenarioOpeningCamera,
+            ScenarioStarter,
+        };
+
         StageSessionState(std::string_view scene_name, std::string_view stage_name, s32 scenario_no,
                           const JMapIdInfo &initial_start_id, StageScenarioMetadata metadata = {});
+        ~StageSessionState();
 
         [[nodiscard]] const std::string &scene_name() const;
         [[nodiscard]] const std::string &stage_name() const;
@@ -43,39 +55,34 @@ namespace smgpc::compat {
         [[nodiscard]] JMapIdInfo &restart_id();
         [[nodiscard]] const JMapIdInfo &restart_id() const;
         void set_restart_id(const JMapIdInfo &restart_id);
+        [[nodiscard]] GameDataTemporaryInGalaxy &temporary_data();
+        [[nodiscard]] const GameDataTemporaryInGalaxy &temporary_data() const;
 
         [[nodiscard]] const StageScenarioMetadata &metadata() const;
         void set_metadata(StageScenarioMetadata metadata);
+        [[nodiscard]] ExecutionPhase execution_phase() const;
+        void set_execution_phase(ExecutionPhase phase);
 
         [[nodiscard]] bool is_power_star_get_demo_active() const;
         void set_power_star_get_demo_active(bool active);
 
-        // GameDataTemporaryInGalaxy owns 64 AlreadyDoneInfo entries for one
-        // stage lifetime. Keep the same bounded, insertion-ordered identity
-        // here without widening any retail Game object.
+        // Native callers already have the original masked hash/placement key.
+        // These access the actual GameDataTemporaryInGalaxy-owned records.
         [[nodiscard]] s32 setup_already_done_flag(u16 name_hash, s32 zone_id,
                                                   s32 link_id, u32 *value);
         void update_already_done_flag(s32 index, u32 value);
 
     private:
-        struct AlreadyDoneEntry {
-            u16 name_hash = 0U;
-            u16 zone_id = 0xffffU;
-            u16 link_id = 0xffffU;
-            bool value = false;
-        };
-
-        static constexpr std::size_t cAlreadyDoneCapacity = 64U;
+        struct TemporaryData;
 
         std::string _scene_name;
         std::string _stage_name;
         s32 _scenario_no = 0;
         const JMapIdInfo _initial_start_id;
-        JMapIdInfo _restart_id;
         StageScenarioMetadata _metadata;
+        ExecutionPhase _execution_phase = ExecutionPhase::Initialization;
         bool _power_star_get_demo_active = false;
-        std::array<AlreadyDoneEntry, cAlreadyDoneCapacity> _already_done{};
-        std::size_t _already_done_count = 0U;
+        std::unique_ptr<TemporaryData> _temporary;
     };
 
     class StageSessionBinding final {

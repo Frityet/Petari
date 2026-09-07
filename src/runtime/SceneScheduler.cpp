@@ -810,7 +810,17 @@ namespace smgpc::runtime {
                 }
             }
         }
+        bool checked_sensors = false;
         for (const auto& registered : sorted_entries_for_movement()) {
+            // The original SensorHitChecker runs before actor movement. It
+            // uses positions published by the preceding actor updates; contact
+            // delivery belongs to LiveActor::movement through its keeper.
+            if (!checked_sensors &&
+                category_rank(registered.movement_type, ORIGINAL_MOVEMENT_ORDER) >=
+                    category_rank(MR::MovementType_SensorHitChecker, ORIGINAL_MOVEMENT_ORDER)) {
+                execute_sensor_hit_check();
+                checked_sensors = true;
+            }
             auto entry = current_entry(registered);
             if (!entry || entry->movement_type < 0 || entry_is_dead(*entry) || entry_is_suspended(*entry)) {
                 continue;
@@ -839,6 +849,14 @@ namespace smgpc::runtime {
                 }
             });
 
+            if (auto* runtime = RuntimeContext::try_instance()) {
+                // Publish the context after each camera-category callback so
+                // subsequent original Player movement sees this frame's view.
+                if (registered.movement_type == MR::MovementType_Camera) {
+                    runtime->refresh_scene_camera_pose();
+                }
+            }
+
             // Callback registration changes may reallocate the host vector or
             // destroy this object. Resolve its never-reused registration order.
             entry = current_entry(registered);
@@ -855,7 +873,7 @@ namespace smgpc::runtime {
 #endif
         }
 
-        execute_sensor_hit_check();
+        if (!checked_sensors) execute_sensor_hit_check();
     }
 
     void SceneScheduler::execute_sensor_hit_check() {
@@ -874,9 +892,6 @@ namespace smgpc::runtime {
                 continue;
             }
 
-            invoke_game_callback(_allocation_domain, [&] { smgpc::compat::update_actor_hit_sensors(actor); });
-            entry = current_entry(registered);
-            if (!entry) continue;
             {
                 std::vector<HitSensor*> collected;
                 smgpc::compat::collect_actor_hit_sensors(actor, collected);
@@ -925,15 +940,8 @@ namespace smgpc::runtime {
                     continue;
                 }
 
-                invoke_game_callback(_allocation_domain, [&] {
-                    lhs->addHitSensor(rhs);
-                    rhs->addHitSensor(lhs);
-                    if (!lhs->mHost->mFlag.mIsDead) lhs->mHost->attackSensor(lhs, rhs);
-                });
-                lhs = current_sensor(sensors[lhs_index]);
-                rhs = current_sensor(sensors[rhs_index]);
-                if (lhs != nullptr && rhs != nullptr && !rhs->mHost->mFlag.mIsDead)
-                    invoke_game_callback(_allocation_domain, [&] { rhs->mHost->attackSensor(rhs, lhs); });
+                lhs->addHitSensor(rhs);
+                rhs->addHitSensor(lhs);
             }
         }
     }

@@ -33,7 +33,6 @@ namespace smgpc::compat {
 namespace smgpc::scene {
 
     class SceneObjHolderBinding;
-    class StageEventCameraBinding;
     class StageLightSceneBinding;
     struct NameObjPlacementContext;
 
@@ -82,7 +81,6 @@ namespace smgpc::scene {
         void init_stage_audio();
         void trace_placement_object(const StagePlacementObject &placement) const;
         void init_roots_after_placement();
-        void init_stage_start_camera();
         void appear_roots();
         void destroy_roots();
         [[nodiscard]] const char *resolve_actor_name(
@@ -107,7 +105,6 @@ namespace smgpc::scene {
         std::unique_ptr<StageAuthoredData> _authored_data;
         std::unique_ptr<smgpc::compat::StageResourceBinding> _stage_resource_binding;
         std::unique_ptr<smgpc::compat::StageZoneMatrixBinding> _zone_matrix_binding;
-        std::unique_ptr<StageEventCameraBinding> _event_camera_binding;
         std::unique_ptr<AuthoredPlacementInstantiator> _authored_placements;
         std::vector<std::unique_ptr<NameObj>> _roots;
         std::vector<std::unique_ptr<NameObjChildOwner>>
@@ -115,7 +112,6 @@ namespace smgpc::scene {
         std::vector<bool> _root_host_appear;
         const StagePlacementObject *_explicit_placement_source = nullptr;
         NameObj *_explicit_placement_root = nullptr;
-        std::uint64_t _stage_start_camera_owner_generation = 0U;
     };
 
 }  // namespace smgpc::scene

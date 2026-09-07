@@ -1,0 +1,30 @@
+{
+  "smg-pc-line-collision-query-tests": {
+    "build": 0,
+    "run": 0,
+    "log_prefix": "line-final",
+    "initial_fixture_correction": "Expected sphere contact count corrected from1 to3: three physical prisms exist, leaf selects1 only for original octree traversal. No production correction."
+  },
+  "smg-pc-stage-collision-registration-tests": {
+    "build": 0,
+    "run": 0,
+    "log_prefix": "registration"
+  },
+  "smg-pc-area-polygon-query-tests": {
+    "build": 0,
+    "run": 0,
+    "log_prefix": "area-polygon"
+  },
+  "smg-pc-area-obj-real-or-absent-tests": {
+    "build": 255,
+    "run": null,
+    "log_prefix": "area-runtime",
+    "blockers": [
+      "MR::deactivateChipLayout",
+      "MR::isExistStarPointerGuidance",
+      "MR::isStarPointerInScreenAnyPort",
+      "MR::startStarPointerModeChooseYesNo",
+      "MR::isExistStarPointerGuidanceFrame1P"
+    ]
+  }
+}

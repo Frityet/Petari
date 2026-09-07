@@ -1,0 +1,46 @@
+[
+  {
+    "path": "notes/original-camera-director-lifecycle-20260907/README.md",
+    "sha256": "123de79999e7fe0675483977094f912360afd2526a84d954d740960f1caddf0e"
+  },
+  {
+    "path": "notes/original-camera-director-lifecycle-20260907/camera-shaker-data-proof.json",
+    "sha256": "0b1553742e333cd510d4a03e5d422af4db78ab2dc6b190430c24676cb00c90f8"
+  },
+  {
+    "path": "notes/original-camera-director-lifecycle-20260907/compile-native.py",
+    "sha256": "b54c2aa304cd8808a8b58e2e63ffafbd0a8b99894d138660bb5d2233d7118e8c"
+  },
+  {
+    "path": "notes/original-camera-director-lifecycle-20260907/decomp-checkpoint-manifest.json",
+    "sha256": "b6b8f1839a554a4231644f817eada85c9757a7b9898bd9c7eaee8409109440b2"
+  },
+  {
+    "path": "notes/original-camera-director-lifecycle-20260907/function-proof.json",
+    "sha256": "32aa13f942745bac9ea9dc6977ca60d9a89ec812977c7f4ac4d6c723873c0e1a"
+  },
+  {
+    "path": "notes/original-camera-director-lifecycle-20260907/native-syntax-results.json",
+    "sha256": "f3122c51eb26d48a175ee9979662e43d0d00bb064d2b26b590bde852bbe673fa"
+  },
+  {
+    "path": "notes/original-camera-director-lifecycle-20260907/restore-wrappers.py",
+    "sha256": "fdbd0d0cb6565433ffade844215f415508c2e74514ec97f457afd44cd7529570"
+  },
+  {
+    "path": "notes/original-camera-director-lifecycle-20260907/root-checkpoint-manifest.json",
+    "sha256": "a11fad2a05f578ec81256b23c86911bc38bfe0cdca028b65140bb95134d8447d"
+  },
+  {
+    "path": "notes/original-camera-director-lifecycle-20260907/test-syntax-result.json",
+    "sha256": "e46d48724ba806a63cd1abd50858eac44ea151e0b205056b44bf4cf297a66cfa"
+  },
+  {
+    "path": "notes/original-camera-director-lifecycle-20260907/wii-compile-results.json",
+    "sha256": "74bc1e0e235d450ace1d9a34c14e41baca0c2846c0e80611cbdda9ec530d6a67"
+  },
+  {
+    "path": "notes/original-camera-director-lifecycle-20260907/wrapper-imports.json",
+    "sha256": "13722aba340cda92ec4b054e06d6ac420790c5b6a4920b297a4addde0b4d7c30"
+  }
+]

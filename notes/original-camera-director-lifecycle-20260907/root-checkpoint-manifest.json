@@ -1,0 +1,98 @@
+[
+  {
+    "path": "src/camera/CameraDirectorRuntime.hpp",
+    "sha256": "ed2ffa620c2137e6aa46619ed64f414305be414f85f7e55a9325e77bd9f767fe"
+  },
+  {
+    "path": "src/camera/CameraDirectorRuntime.cpp",
+    "sha256": "c31868b2c307316526ce6f4912aff53dbb756d0924e1e9bb508bf3e44d4775b8"
+  },
+  {
+    "path": "src/Game/Camera/CameraShaker.cpp",
+    "sha256": "4666538eea15e709efbc2461a46d328c5d84650dec80118fc7dbf333df1ce367"
+  },
+  {
+    "path": "src/Game/Camera/CameraTargetArg.hpp",
+    "sha256": "70a0f8babe510661d059d8a9758a905749f2c8d1d3056fde9a67d53cef3b8511"
+  },
+  {
+    "path": "src/Game/Camera/CameraTargetArg.cpp",
+    "sha256": "329e0b1b7dea41ff45a5c404253d14efe9067c791cb8f9e1c36188a4f4f7d368"
+  },
+  {
+    "path": "src/Game/Screen/BloomEffect.hpp",
+    "sha256": "17f98b8567d16b18706565ea2830d0fedf15fba1081a0ee85227626cc066017c"
+  },
+  {
+    "path": "src/Game/Screen/ImageEffectBase.hpp",
+    "sha256": "640d19cc348888e5c7151e385093c66fc2dc142daba5dff064f85781be971b6b"
+  },
+  {
+    "path": "src/Game/Screen/ImageEffectLocalUtil.cpp",
+    "sha256": "cc30f4f69b25573ee1255263c8176b199c49768979353ea287a75d3289903b0d"
+  },
+  {
+    "path": "src/Game/Util/CameraUtil.cpp",
+    "sha256": "ffd714534115af145cc3aa7b22e15f2fd51cc82f12a81be79b05c327f13baff6"
+  },
+  {
+    "path": "src/compat/CameraLocalUtilRuntime.cpp",
+    "sha256": "02bd280470bf6d7acedbc03daada55dae70b9dd245666caf9f4fbd4eda58cf43"
+  },
+  {
+    "path": "src/compat/CameraUtilCompat.cpp",
+    "sha256": "494328672dc8d099dc04c2389a3bc4c60f124b21fba486d7af62b270a9592ddd"
+  },
+  {
+    "path": "src/compat/OriginalCameraOwnerUtil.cpp",
+    "sha256": "f4d8848938476df9085430903a887ff0724d1a4c7fe608a761524b2ede72004d"
+  },
+  {
+    "path": "src/compat/OriginalImageEffectOwnerQuery.cpp",
+    "sha256": "a56f1fdee3536bb59d49d0cb179082c9dd5bfd2ba9a85cd9c02f41709b1aca13"
+  },
+  {
+    "path": "src/compat/SceneMovementCompat.cpp",
+    "sha256": "f055c261c9b10da26b52edb126a4c2efc8a849aabcf175060ffaec6f5988fe38"
+  },
+  {
+    "path": "src/compat/SceneObjHolderCompat.cpp",
+    "sha256": "90e3b15e54ba7dccf7861c0d189f8860386ed7ca20d98929282619dbea4add2a"
+  },
+  {
+    "path": "src/runtime/RuntimeServices.cpp",
+    "sha256": "772814c2d69aac08c7ce3b14aa7f75afa077c5f9f37ba411514eeef5006d007d"
+  },
+  {
+    "path": "src/runtime/SceneScheduler.cpp",
+    "sha256": "ca109fcf6503195f9fefc9b292b5a7c5343d7d7642de99c33a8f8e732b56c868"
+  },
+  {
+    "path": "src/scene/SceneObjHolderRuntime.hpp",
+    "sha256": "9a295e709a9bf722d173698c7b8816e59cc44222a4cd35c6c26e98943868c25d"
+  },
+  {
+    "path": "src/scene/GatewayDemoScene.cpp",
+    "sha256": "e9064c949a988159a9bdf7c1cd1011bc6cbb92769ea6611ce22a7cd0bfbf2b72"
+  },
+  {
+    "path": "src/scene/StageHostScene.cpp",
+    "sha256": "ddf0a8845af458336068bd9817de92b1af96d60785a51c62c045e553c0953250"
+  },
+  {
+    "path": "src/scene/StageHostScene.hpp",
+    "sha256": "5e5b02a24fed32bbe1e0c6384cb0833e75c157cfc5a610481c5f6ac192ea089c"
+  },
+  {
+    "path": "src/showcase/Showcase.cpp",
+    "sha256": "fdb449e37fdfe896117a7999e03e30d1e4bac353b68061e4a5428b40a92313a6"
+  },
+  {
+    "path": "tests/OriginalCameraDirectorTests.cpp",
+    "sha256": "1fd6c5ee4859c42c4ca9a08e5e220586fa83f448ab6d8928256918db91a50a06"
+  },
+  {
+    "path": "tests/xmake.lua",
+    "sha256": "a70277e007276837835c3e4c543ee97626c17f01f26aa59b66e7151ad57eaced"
+  }
+]

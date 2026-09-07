@@ -4,6 +4,7 @@
 #include "Game/Map/KCollision.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include "compat/JkrAllocationDomain.hpp"
+#include "compat/HitInfoCompat.hpp"
 #include "resource/KCollisionResource.hpp"
 #include "scene/StageCollisionService.hpp"
 
@@ -99,6 +100,84 @@ namespace {
         require(MR::getNearPolyOnLineSort(start,start,TVec3f(0,0,1),nullptr)==0,"Upward query must miss");
         require(MR::getSortedPoly(0)->mIdx==retained,"Retail zero-total-hit early return must retain the previous sorted buffer");
     }
+    void dynamic_transform_refit_and_original_point_velocity() {
+        Collision collision;
+        auto registration = std::make_shared<Registration>();
+        require(collision.register_kcl(kcl({1}), identity, "moving source", registration, {}, nullptr, 2).accepted,
+                "Dynamic fixture requires an actual registered KCL source");
+        collision.build();
+        collision.activate();
+        const TVec3f point(1, 1, 0);
+        auto hit = collision.line_hits(TVec3f(1, 1, 5), TVec3f(0, 0, -10));
+        require(hit.size() == 1, "Initial source must populate original decoded KCL cache");
+        auto triangle = smgpc::compat::make_collision_triangle(collision, hit[0].triangle_index);
+        const auto copied = triangle;
+        auto* base = triangle.getBaseMtx();
+        auto* inverse = triangle.getBaseInvMtx();
+        auto* previous = triangle.getPrevBaseMtx();
+        TVec3f velocity(7, 8, 9);
+        MR::calcVelocityMovingPoint(&triangle, point, &velocity);
+        require(velocity.squared() == 0.0F, "Original equal-matrix branch must write zero velocity");
+
+        // Nonuniform scale and rotation deliberately distinguish inverse-base
+        // point velocity from the forward force-move formula.
+        const auto current = std::array<float, 12>{0, -2, 0, 10, 3, 0, 0, 20, 0, 0, 4, 30};
+        collision.update_registered_transform(*registration, current, identity);
+        require(copied.getBaseMtx() == base && copied.getBaseInvMtx() == inverse && copied.getPrevBaseMtx() == previous,
+                "Refit must preserve borrowed matrix addresses and copied Triangle identities");
+        const TVec3f moved_point(8, 23, 30);
+        MR::calcVelocityMovingPoint(&copied, moved_point, &velocity);
+        require(velocity.epsilonEquals(TVec3f(7, 22, 30), 0.00001F),
+                "Original point velocity must transform the current world point back into the previous frame");
+        TVec3f force_move;
+        copied.calcForceMovePower(&force_move, point);
+        require(force_move.epsilonEquals(TVec3f(7,22,30), 0.00001F),
+                "Forward force movement must advance the previous world point through the actual transforms");
+        copied.calcForceMovePower(&force_move, moved_point);
+        require(!force_move.epsilonEquals(velocity, 0.00001F),
+                "Forward force movement and backward point velocity must remain distinct under rotation and scale");
+        auto alias = moved_point;
+        MR::calcVelocityMovingPoint(&copied, alias, &alias);
+        require(alias.epsilonEquals(velocity, 0.00001F), "Original output may alias the input point");
+        smgpc::scene::StageCollisionHit nearest;
+        require(!collision.line_cast(TVec3f(1, 1, 5), TVec3f(0, 0, -10)), "Refit must retire old BVH geometry");
+        require(collision.line_cast(TVec3f(8, 23, 50), TVec3f(0, 0, -40), &nearest) && nearest.triangle_index == triangle.mIdx,
+                "Refit must publish new BVH geometry with the same stable prism identity");
+        require(collision.line_hits(TVec3f(8, 23, 50), TVec3f(0, 0, -40)).size() == 1,
+                "Original octree query must use updated transform and cached broad-phase radius");
+        require(collision.sphere_contacts(TVec3f(8, 23, 30.5F), 1.0F).size() == 3,
+                "Sphere contacts must refit all three physical source prisms, independently of the one-entry octree leaf");
+        std::array<Triangle, 4> areas;
+        require(MR::createAreaPolygonList(areas.data(), 4, TVec3f(7,22,30), TVec3f(9,24,30)) == 1 && areas[0].mIdx == triangle.mIdx,
+                "Original two-point area query must use transformed local bounds and original KCL order");
+        require(MR::createAreaPolygonList(areas.data(), 4, TVec3f(9,24,30), TVec3f(7,22,30)) == 1,
+                "Two-point area queries must retain reversed-endpoint and collapsed-axis behavior");
+        collision.update_registered_transform(*registration, current, current);
+        MR::calcVelocityMovingPoint(&copied, moved_point, &velocity);
+        require(velocity.squared() == 0.0F, "Owner-supplied reset must clear previous-frame point velocity");
+        auto singular = current; singular[10] = 0;
+        bool rejected = false;
+        try { collision.update_registered_transform(*registration, singular, current); }
+        catch (const std::invalid_argument&) { rejected = true; }
+        require(rejected && collision.line_cast(TVec3f(8,23,50), TVec3f(0,0,-40)),
+                "Invalid updates must preserve prior geometry and borrowed transforms");
+        auto other = std::make_shared<Registration>();
+        rejected = false;
+        try { collision.update_registered_transform(*other, identity, identity); }
+        catch (const std::logic_error&) { rejected = true; }
+        require(rejected, "An unrelated registration must not move another owner's collision");
+        registration->set_enabled(false);
+        collision.update_registered_transform(*registration, identity, identity);
+        require(!collision.line_cast(TVec3f(1,1,5), TVec3f(0,0,-10)), "Updating a disabled owner must not re-enable it");
+        registration->set_enabled(true);
+        require(collision.line_cast(TVec3f(1,1,5), TVec3f(0,0,-10)), "Re-entry must expose the exact newly committed geometry");
+        registration->release_owner();
+        rejected = false;
+        try { collision.update_registered_transform(*registration, current, current); }
+        catch (const std::logic_error&) { rejected = true; }
+        require(rejected, "A released owner must never regain transform authority");
+    }
+
     void reference_distance_zone_order_and_sensor_capacity() {
         Collision collision;
         auto far=identity; far[11]=-2;
@@ -180,7 +259,10 @@ namespace {
         // The query's original KCL/cache/vector allocations must survive the
         // calling Game arena. The actor's own next allocation stays in Game.
         Collision retained;
-        require(retained.add_kcl(kcl(),identity),"Retained source registration failed");
+        auto retained_registration = std::make_shared<Registration>();
+        require(retained.register_kcl(kcl(), identity, "retained", retained_registration).accepted,
+                "Retained source registration failed");
+        retained.build();
         retained.activate();
         {
             auto runtime = smgpc::compat::JkrHeapRuntime::create(2U<<20);
@@ -189,7 +271,8 @@ namespace {
             auto* heap=&domain->heap();
             const auto before=heap->getFreeSize();
             require(MR::getNearPolyOnLineSort(start,start,offset,nullptr)==4,"Query in Game domain failed");
-            require(before==heap->getFreeSize(),"Persistent native query allocations leaked into Game");
+            retained.update_registered_transform(*retained_registration, identity, identity);
+            require(before==heap->getFreeSize(),"Persistent native query/refit allocations leaked into Game");
             auto* value=new int(42);
             require(JKRHeap::findFromRoot(value)==heap,"Query must restore original Game allocation routing");
             delete value;
@@ -199,6 +282,7 @@ namespace {
 }
 int main() {
     try {
+        dynamic_transform_refit_and_original_point_velocity();
         original_octree_and_boundary_contract();
         transforms_and_stable_sorted_results();
         reference_distance_zone_order_and_sensor_capacity();

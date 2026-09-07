@@ -198,6 +198,14 @@ namespace smgpc::scene {
                     .manager_capacity = 0x10,
                     .manager_creator = create_area_obj_manager,
                 },
+                AreaObjPlacementDescriptor{
+                    .object_name = "AreaMoveSphere",
+                    .object_creator = create_area_obj<AreaObj, AreaForm::Type_Sphere>,
+                    .manager_name = "AreaMoveSphere",
+                    .retail_manager_order = 54,
+                    .manager_capacity = 0x10,
+                    .manager_creator = create_area_obj_manager,
+                },
             };
 
         [[nodiscard]] bool equal_string_case(std::string_view left, std::string_view right) noexcept {

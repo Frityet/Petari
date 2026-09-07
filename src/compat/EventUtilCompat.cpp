@@ -130,3 +130,79 @@ namespace MR {
         GameDataFunction::setGameEventValue("MsgLedPattern", 1U);
     }
 }  // namespace MR
+
+// Original EventUtil queries and explanation dispatch use the actual profile
+// flags and InformationObserver owner.
+namespace MR {
+    bool isOnGameEventFlagBeeMarioAtFirst() {
+        return GameDataFunction::isOnGameEventFlag("ハチマリオ初変身");
+    }
+
+    bool isOnGameEventFlagTeresaMarioAtFirst() {
+        return GameDataFunction::isOnGameEventFlag("テレサマリオ初変身");
+    }
+
+    bool isOnGameEventFlagHopperMarioAtFirst() {
+        return GameDataFunction::isOnGameEventFlag("ホッパーマリオ初変身");
+    }
+
+    bool isOnGameEventFlagFireMarioAtFirst() {
+        return GameDataFunction::isOnGameEventFlag("ファイアマリオ初変身");
+    }
+
+    bool isOnGameEventFlagIceMarioAtFirst() {
+        return GameDataFunction::isOnGameEventFlag("アイスマリオ初変身");
+    }
+
+    bool isOnGameEventFlagFlyingMarioAtFirst() {
+        return GameDataFunction::isOnGameEventFlag("フライングマリオ初変身");
+    }
+
+    void explainBeeMarioIfAtFirst() {
+        if (!GameDataFunction::isOnGameEventFlag("ハチマリオ初変身")) {
+            InformationObserverFunction::explainBee();
+        }
+    }
+
+    void explainTeresaMarioIfAtFirst() {
+        if (!GameDataFunction::isOnGameEventFlag("テレサマリオ初変身")) {
+            InformationObserverFunction::explainTeresa();
+        }
+    }
+
+    void explainHopperMarioIfAtFirst() {
+        if (!GameDataFunction::isOnGameEventFlag("ホッパーマリオ初変身")) {
+            InformationObserverFunction::explainHopper();
+        }
+    }
+
+    void explainFireMarioIfAtFirst() {
+        if (!GameDataFunction::isOnGameEventFlag("ファイアマリオ初変身")) {
+            InformationObserverFunction::explainFire();
+        }
+    }
+
+    void explainIceMarioIfAtFirst() {
+        if (!GameDataFunction::isOnGameEventFlag("アイスマリオ初変身")) {
+            InformationObserverFunction::explainIce();
+        }
+    }
+
+    void explainFlyingMarioIfAtFirst() {
+        if (!GameDataFunction::isOnGameEventFlag("フライングマリオ初変身")) {
+            InformationObserverFunction::explainFlying();
+        }
+    }
+
+    void explainInvincibleMarioIfAtFirst() {
+        if (!GameDataFunction::isOnGameEventFlag("無敵マリオ初変身")) {
+            InformationObserverFunction::explainInvincible();
+        }
+    }
+
+    void explainLifeUpIfAtFirst() {
+        if (!GameDataFunction::isOnGameEventFlag("ライフアップキノコ解説")) {
+            InformationObserverFunction::explainLifeUp();
+        }
+    }
+}

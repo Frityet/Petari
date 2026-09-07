@@ -13,10 +13,6 @@
 #include "Game/Player/MarioConst.hpp"
 #include "Game/Player/MarioEffect.hpp"
 #include "Game/Player/MarioHolder.hpp"
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
-#include "Game/Player/MarioMapCode.hpp"
-#else  // SMGPC_RETAIL_SOURCE
-#endif  // SMGPC_PC_DIVERGENCE
 #include "Game/Player/MarioMessenger.hpp"
 #include "Game/Player/MarioNullBck.hpp"
 #include "Game/Player/MarioParts.hpp"
@@ -45,12 +41,6 @@
 #include "Game/Util/ScreenUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
-#include "compat/ActorMotionCompat.hpp"
-#include "compat/ActorRuntimeRegistry.hpp"
-#include <stdexcept>
-#else  // SMGPC_RETAIL_SOURCE
-#endif  // SMGPC_PC_DIVERGENCE
 #include <JSystem/JKernel/JKRHeap.hpp>
 #include <JSystem/JUtility/JUTVideo.hpp>
 
@@ -61,12 +51,6 @@ void MarioActor_DUMMY() {
 bool gIsLuigi;
 static f32 BASE_ROTATION = 0.0f;
 
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
-template <>
-bool TriangleFilterDelegator< MarioActor >::isInvalidTriangle(const Triangle* pTriangle) const {
-    return (mParent->*mFunc)(pTriangle);
-}
-#else  // SMGPC_RETAIL_SOURCE
 Triangle& Triangle::operator=(const Triangle& rOther) {
     mParts = rOther.mParts;
     mIdx = rOther.mIdx;
@@ -81,7 +65,6 @@ Triangle& Triangle::operator=(const Triangle& rOther) {
 
     return *this;
 }
-#endif  // SMGPC_PC_DIVERGENCE
 
 MarioActor::MarioActor(const char* pName) : LiveActor(pName), _1B0(0xFFFFFFFF) {
     initMember();
@@ -92,8 +75,6 @@ MarioActor::MarioActor(const char* pName) : LiveActor(pName), _1B0(0xFFFFFFFF) {
     mHealth = 3;
     mWaterLife = 8;
 
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
-#else  // SMGPC_RETAIL_SOURCE
     if (MR::isPlayerLuigi()) {
         mMaxHealth = 3;
         mHealth = 3;
@@ -104,7 +85,6 @@ MarioActor::MarioActor(const char* pName) : LiveActor(pName), _1B0(0xFFFFFFFF) {
         mHealth = 1;
     }
     init2D();
-#endif  // SMGPC_PC_DIVERGENCE
     _989 = 0;
     _41C = 0;
     _420 = 0;
@@ -301,64 +281,6 @@ struct DUMMY {
 };
 
 void MarioActor::init2(const TVec3f& a, const TVec3f& b, s32 initialAnimation) {
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
-    if (initialAnimation != -1) {
-        throw std::logic_error("non-default Mario start animation is unavailable in the PC walk slice");
-    }
-
-    _8C = 1;
-    gIsLuigi = false;
-    mPosition.set(a);
-    mRotation.set(b);
-    mScale.set(TVec3f(1.0f, 1.0f, 1.0f));
-    mMario->setHeadAndFrontVecFromRotate(mRotation);
-    mMario->_290 = mMario->mSideVec;
-    updateBaseScaleMtx();
-    _A18 = mRotation;
-    initDrawAndModel();
-
-    MR::connectToScene(this, MR::MovementType_Player, MR::CalcAnimType_Player, MR::DrawBufferType_Player, MR::DrawType_Player);
-    MR::initLightCtrlForPlayer(this);
-    mMarioAnim = new MarioAnimator(this);
-    mConst = new MarioConst();
-    mMario->initAfterConst();
-    mGravityInfo = new GravityInfo();
-    mGravityRatio = 1.0f;
-    initNerve(&NrvMarioActor::MarioActorNrvWait::sInstance);
-
-    initBinder(60.0f, 0.0f, 8);
-    _240.set(0.0f, -1.0f, 0.0f);
-    _24C = _240;
-    _2C4 = _240 * -70.0f;
-    mBinder->_1EC._0 = false;
-    MR::setBinderOffsetVec(this, &_2C4, false);
-    mBinder->setTriangleFilter(MR::createTriangleFilterDelegator(this, &MarioActor::binderFilter));
-    mBinder->_1EC._3 = true;
-    MR::onCalcGravity(this);
-    MR::invalidateClipping(this);
-
-    _334 = 0;
-    _336 = 0;
-    _338 = 0;
-    mLastMove.zero();
-    _270 = mPosition;
-    _294 = mPosition;
-    _2A0 = mPosition + (-_240 * 60.0f);
-    _2B8 = mPosition;
-    _33C = mPosition;
-    _300 = mMario->mHeadVec;
-    mUpVec = _300;
-    mCameraTrans = mPosition;
-    mCamPos = MR::getCamPos();
-    mCamDirX = MR::getCamXdir();
-    mCamDirY = MR::getCamYdir();
-    mCamDirZ = MR::getCamZdir();
-    MR::getMarioHolder()->setMarioActor(this);
-
-    _F44 = 1;
-    appear();
-    _8C = 0;
-#else  // SMGPC_RETAIL_SOURCE
     _8C = 1;
     gIsLuigi = false;
     if (MR::isPlayerLuigi()) {
@@ -386,7 +308,7 @@ void MarioActor::init2(const TVec3f& a, const TVec3f& b, s32 initialAnimation) {
     }
     mMario->initAfterConst();
     mGravityInfo = new GravityInfo();
-    mGravityRatio = 1.0f;
+    mGravityRatio = 0.0f;
     initNerve(&NrvMarioActor::MarioActorNrvWait::sInstance);
     _FB4 = 0;
     _FB8 = 0;
@@ -487,60 +409,9 @@ void MarioActor::init2(const TVec3f& a, const TVec3f& b, s32 initialAnimation) {
         _F3CVec[i].set(1.0f, 0.0f, 0.0f);
     }
     _8C = 0;  // is this to indicate that we are in the process of initialization?
-#endif  // SMGPC_PC_DIVERGENCE
 }
 
 void MarioActor::initAfterPlacement() {
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
-    smgpc::compat::update_live_actor_gravity(*this);
-    if (MR::isNearZero(mGravity)) {
-        throw std::logic_error("MarioActor requires a real gravity field before initAfterPlacement");
-    }
-
-    _240 = mGravity;
-    MR::normalize(&_240);
-    _24C = _240;
-    mMario->mAirGravityVec = _240;
-    mMario->mHeadVec = -_240;
-    MR::normalize(&mMario->mHeadVec);
-    mMario->_1FC = mMario->mHeadVec;
-
-    TVec3f tangent;
-    MR::vecKillElement(mMario->mFrontVec, _240, &tangent);
-    if (MR::normalizeOrZero(&tangent)) {
-        MR::vecKillElement(-mCamDirZ, _240, &tangent);
-    }
-    if (MR::normalizeOrZero(&tangent)) {
-        throw std::logic_error("MarioActor could not derive a gravity-tangent front direction");
-    }
-    mMario->mFrontVec = tangent;
-    mMario->mSideVec.cross(mMario->mHeadVec, mMario->mFrontVec);
-    MR::normalize(&mMario->mSideVec);
-    mMario->mFrontVec = mMario->mSideVec.cross(mMario->mHeadVec);
-    MR::normalize(&mMario->mFrontVec);
-    mMario->_22C = mMario->mFrontVec;
-    mMario->_328 = mMario->mFrontVec;
-    mMario->_334 = mMario->mFrontVec;
-    mMario->_368 = mMario->mHeadVec;
-    mMario->_374 = _240;
-    mMario->_398 = mMario->mHeadVec;
-
-    _300 = mMario->mHeadVec;
-    mUpVec = _300;
-    _2C4 = _240 * -70.0f;
-    MR::setBinderOffsetVec(this, &_2C4, false);
-    _2A0 = mPosition + (mMario->mHeadVec * 60.0f);
-    _270 = mPosition;
-    _294 = mPosition;
-    mMario->mPosition = mPosition;
-    mMario->mGroundPos = mPosition;
-    mMario->mShadowPos = mPosition;
-    mCameraTrans = mPosition;
-    _360 = _240;
-    _9F4 = _240;
-    _1C0 = true;
-    calcAndSetBaseMtx();
-#else  // SMGPC_RETAIL_SOURCE
     updateGravityVec(true, true);
     mMario->mAirGravityVec = _240;
     mMario->mHeadVec = -_240;
@@ -555,7 +426,6 @@ void MarioActor::initAfterPlacement() {
     _9F4 = getGravityVector();
     updateCameraInfo();
     calcBaseFrontVec(-_240);
-#endif  // SMGPC_PC_DIVERGENCE
 }
 
 void MarioActor::initAfterOpeningDemo() {
@@ -800,43 +670,6 @@ void MarioActor::exeWait() {
 }
 
 void MarioActor::movement() {
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
-    const TVec3f previousPosition(mPosition);
-    _378++;
-    LiveActor::movement();
-
-    mLastMove = mPosition - previousPosition;
-    _27C = mLastMove;
-    _270 = mPosition;
-    mMario->mPosition = mPosition;
-    mMario->mGroundPos = mPosition;
-    mMario->mShadowPos = mPosition;
-    mCameraTrans = mPosition;
-    _2A0 = mPosition + (mMario->mHeadVec * 60.0f);
-
-    if (mBinder != nullptr && mBinder->isBindedGround()) {
-        const Triangle& ground = mBinder->mGroundInfo.mParentTriangle;
-        *mMario->mGroundPolygon = ground;
-        *mMario->_45C = ground;
-        mMario->mGroundPos = mBinder->mGroundInfo.mHitPos;
-        mMario->mShadowPos = mBinder->mGroundInfo.mHitPos;
-        mMario->_368 = *ground.getNormal(0);
-        MR::normalize(&mMario->_368);
-        mMario->_374 = -mMario->_368;
-        mMario->mMovementStates._1 = true;
-        const u32 floorCode = mMario->_95C->getCode(mMario->mGroundPolygon);
-        if (floorCode != 0xFFFFFFFFu) {
-            mMario->_960 = static_cast< u16 >(floorCode);
-            mMario->_962 = static_cast< u16 >(floorCode);
-        }
-    } else {
-        mMario->mMovementStates._1 = false;
-    }
-
-    mMarioAnim->update();
-    _935 = false;
-    mMario->_2D0 = 0.0f;
-#else  // SMGPC_RETAIL_SOURCE
     // FIXME: wrong stack
     _46C = nullptr;
     _378++;
@@ -1004,48 +837,9 @@ void MarioActor::movement() {
     mMario->_2D0 = 0.0f;
     _F3CVec[_F40] = mMario->mFrontVec;
     _F40 = (u16)(_F40 + 1) % _F42;
-#endif  // SMGPC_PC_DIVERGENCE
 }
 
 void MarioActor::control() {
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
-    _294 = mPosition;
-    _37C++;
-
-    _240 = mGravity;
-    if (MR::normalizeOrZero(&_240)) {
-        throw std::logic_error("MarioActor lost its real gravity vector during movement");
-    }
-    _24C = _240;
-    mMario->mAirGravityVec = _240;
-    mMario->mHeadVec = -_240;
-    mMario->_1FC = mMario->mHeadVec;
-
-    TVec3f tangent;
-    MR::vecKillElement(mMario->mFrontVec, _240, &tangent);
-    if (!MR::normalizeOrZero(&tangent)) {
-        mMario->mFrontVec = tangent;
-        mMario->mSideVec.cross(mMario->mHeadVec, mMario->mFrontVec);
-        MR::normalize(&mMario->mSideVec);
-        mMario->mFrontVec = mMario->mSideVec.cross(mMario->mHeadVec);
-        MR::normalize(&mMario->mFrontVec);
-    }
-
-    _300 = mMario->mHeadVec;
-    mUpVec = _300;
-    _2C4 = _240 * -70.0f;
-    MR::setBinderOffsetVec(this, &_2C4, false);
-    _2A0 = mPosition + (mMario->mHeadVec * 60.0f);
-    mCamPos = MR::getCamPos();
-    mCamDirX = MR::getCamXdir();
-    mCamDirY = MR::getCamYdir();
-    mCamDirZ = MR::getCamZdir();
-    // Preserve the retail controller edge/timer state without entering the
-    // unavailable spin-action controller. Entitlement remains gated by
-    // isRequestRush() through MarioActor::_EEB.
-    updateControllerSwing();
-    mMario->update();
-#else  // SMGPC_RETAIL_SOURCE
     if (mSuperKinokoCollected) {
         if (MR::tryStartDemoWithoutCinemaFrame(this, "マリオスーパー化")) {  // 6-up camera
             mSuperKinokoCollected = false;
@@ -1072,7 +866,6 @@ void MarioActor::control() {
     }
     control2();
     _294 = mPosition;
-#endif  // SMGPC_PC_DIVERGENCE
 }
 
 void MarioActor::control2() {
@@ -1409,11 +1202,7 @@ void MarioActor::updateSwingAction() {
     }
     u8 action = selectAction("スピンアタック");
     switch (action) {
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
     case 1: {
-#else  // SMGPC_RETAIL_SOURCE
-    case 1:
-#endif  // SMGPC_PC_DIVERGENCE
         bool didSpinPunch = true;
         if (!mMario->mMovementStates._F && isJumping() && !mMario->isDamaging() && !mMario->mMovementStates._2B) {
             bool tmp = false;
@@ -1457,10 +1246,7 @@ void MarioActor::updateSwingAction() {
             _946 = mConst->getTable()->mSpinIntervalTime + 0x22;
         }
         break;
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
     }
-#else  // SMGPC_RETAIL_SOURCE
-#endif  // SMGPC_PC_DIVERGENCE
     case 2:
         if (isEnableSpinPunch() && !mMario->isSwimming()) {
             shootFireBall();
@@ -1472,7 +1258,6 @@ void MarioActor::updateSwingAction() {
             setPunchHitTimer(0x1e);
         }
         break;
-#if defined(TARGET_PC)  // SMGPC_PC_DIVERGENCE
     case 4: {
         if (mMario->_418 != 0) {
             break;
@@ -1482,16 +1267,6 @@ void MarioActor::updateSwingAction() {
         _946 = pConstants->mTeresaWallThroughTime + pConstants->mSpinIntervalTime;
         break;
     }
-#else  // SMGPC_RETAIL_SOURCE
-    case 4:
-        if (mMario->_418 != 0) {
-            break;
-        }
-        mMario->startTeresaDisappear();
-        const MarioConstTable* pConstants = mConst->getTable();
-        _946 = pConstants->mTeresaWallThroughTime + pConstants->mSpinIntervalTime;
-        break;
-#endif  // SMGPC_PC_DIVERGENCE
     case 5:
         if (!isEnableSpinPunch()) {
             break;

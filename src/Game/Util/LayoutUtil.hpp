@@ -116,3 +116,8 @@ namespace MR {
     bool isExecuteDrawLayout(const LayoutActor*);
     void setFollowTypeReplace(const LayoutActor*, const char*);
 }
+
+namespace MR {
+    u32 getTextLineNumMaxRecursive(const LayoutActor*, const char*);
+    void clearTextBoxMessageRecursive(LayoutActor*, const char*);
+}

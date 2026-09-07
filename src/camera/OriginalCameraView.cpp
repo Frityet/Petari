@@ -53,6 +53,7 @@ namespace smgpc::camera {
         const auto &pose = *_impl->only_pose;
         auto matrix = TPos3f{};
         smgpc::compat::calcCameraViewMtxFromPoseParam(&matrix, &pose);
+        _impl->output.near_clip = projection.near_clip;
         const auto binding = smgpc::compat::ScopedCameraViewOutput(_impl->output);
         // CameraDirector gets FOV from the manager, not OnlyCamera's pose.
         interpolator.updateCameraMtx(matrix, pose.getWatchPos(), target, manager.mPoseParam->mFovy);
@@ -73,6 +74,7 @@ namespace smgpc::camera {
         result.watch = {watch.x, watch.y, watch.z};
         result.up = {up.x, up.y, up.z};
         result.fovy_degrees = _impl->output.fovy;
+        result.near_clip = _impl->output.near_clip;
         return result;
     }
 

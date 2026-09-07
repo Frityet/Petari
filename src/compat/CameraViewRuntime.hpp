@@ -11,6 +11,7 @@ namespace smgpc::compat {
         TPos3f view;
         TPos3f inverse_view;
         float fovy = 45.0F;
+        float near_clip = 100.0F;
     };
 
     class ScopedCameraViewOutput final {

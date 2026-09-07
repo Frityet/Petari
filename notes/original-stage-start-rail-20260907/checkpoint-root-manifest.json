@@ -1,0 +1,774 @@
+[
+  {
+    "path": "aurora",
+    "git_head": "3cc9448c7ad3977d43c9cdfe4c171d8a0dc7ff33"
+  },
+  {
+    "path": "decomp",
+    "git_head": "121197e00092a6f45fc4df0fe1b8e9d9fb0e40ec"
+  },
+  {
+    "path": "notes/original-camera-director-lifecycle-20260907/README.md",
+    "sha256": "123de79999e7fe0675483977094f912360afd2526a84d954d740960f1caddf0e"
+  },
+  {
+    "path": "notes/original-camera-director-lifecycle-20260907/camera-shaker-data-proof.json",
+    "sha256": "0b1553742e333cd510d4a03e5d422af4db78ab2dc6b190430c24676cb00c90f8"
+  },
+  {
+    "path": "notes/original-camera-director-lifecycle-20260907/compile-native.py",
+    "sha256": "b54c2aa304cd8808a8b58e2e63ffafbd0a8b99894d138660bb5d2233d7118e8c"
+  },
+  {
+    "path": "notes/original-camera-director-lifecycle-20260907/decomp-checkpoint-manifest.json",
+    "sha256": "b6b8f1839a554a4231644f817eada85c9757a7b9898bd9c7eaee8409109440b2"
+  },
+  {
+    "path": "notes/original-camera-director-lifecycle-20260907/function-proof.json",
+    "sha256": "32aa13f942745bac9ea9dc6977ca60d9a89ec812977c7f4ac4d6c723873c0e1a"
+  },
+  {
+    "path": "notes/original-camera-director-lifecycle-20260907/native-syntax-results.json",
+    "sha256": "f3122c51eb26d48a175ee9979662e43d0d00bb064d2b26b590bde852bbe673fa"
+  },
+  {
+    "path": "notes/original-camera-director-lifecycle-20260907/notes-checkpoint-manifest.json",
+    "sha256": "18da76e4d549642dc9feeefa7645c38995c63a0fa806227bdb3a11679cfc05c8"
+  },
+  {
+    "path": "notes/original-camera-director-lifecycle-20260907/restore-wrappers.py",
+    "sha256": "fdbd0d0cb6565433ffade844215f415508c2e74514ec97f457afd44cd7529570"
+  },
+  {
+    "path": "notes/original-camera-director-lifecycle-20260907/root-checkpoint-manifest.json",
+    "sha256": "a11fad2a05f578ec81256b23c86911bc38bfe0cdca028b65140bb95134d8447d"
+  },
+  {
+    "path": "notes/original-camera-director-lifecycle-20260907/test-syntax-result.json",
+    "sha256": "e46d48724ba806a63cd1abd50858eac44ea151e0b205056b44bf4cf297a66cfa"
+  },
+  {
+    "path": "notes/original-camera-director-lifecycle-20260907/wii-compile-results.json",
+    "sha256": "74bc1e0e235d450ace1d9a34c14e41baca0c2846c0e80611cbdda9ec530d6a67"
+  },
+  {
+    "path": "notes/original-camera-director-lifecycle-20260907/wrapper-imports.json",
+    "sha256": "13722aba340cda92ec4b054e06d6ac420790c5b6a4920b297a4addde0b4d7c30"
+  },
+  {
+    "path": "notes/original-collision-lifecycle-20260907/CollisionCategorizedKeeper-compile.json",
+    "sha256": "7a1d9c374286799dad390646a38b37e0a848beb42229f15b14d156be2da2b7b1"
+  },
+  {
+    "path": "notes/original-collision-lifecycle-20260907/MapUtil-compile.json",
+    "sha256": "bc24d3e8307e13095cdb9bfaf7154c795a5c8be8667b72d47e70af4a06cb7616"
+  },
+  {
+    "path": "notes/original-collision-lifecycle-20260907/README.md",
+    "sha256": "f86ee039d9bc5c9370bb965815e2ad69c0e2ab843bb331469a4c790993093243"
+  },
+  {
+    "path": "notes/original-collision-lifecycle-20260907/area-and-fixture-syntax.json",
+    "sha256": "90563ce8906e7ce1cdcccbe396250ca3bc552b878e229abb6c0a023f071a9faf"
+  },
+  {
+    "path": "notes/original-collision-lifecycle-20260907/decomp-paths.json",
+    "sha256": "cf6c6e3331aed5ec5c2b17725047ee87d66746414753b8b659d2f99bc0f06661"
+  },
+  {
+    "path": "notes/original-collision-lifecycle-20260907/dynamic-boundary-syntax.json",
+    "sha256": "aa391c3587f2f9f532f8fd372d5a6a0c4e4ac8e354c9c037216a16ff1bced0bb"
+  },
+  {
+    "path": "notes/original-collision-lifecycle-20260907/keeper-owner-recovery-summary.json",
+    "sha256": "7d6c659b4bf5e05e1611c8d309d68fc67b1f8bf5e826ca509f0aaf87a3364224"
+  },
+  {
+    "path": "notes/original-collision-lifecycle-20260907/original-owner-frontier.md",
+    "sha256": "c92200b69471e7a115a72f5a7d27b6740afc80d08375f8dee12dc6cb4ade7742"
+  },
+  {
+    "path": "notes/original-collision-lifecycle-20260907/reference-recovery-summary.json",
+    "sha256": "5e7e8dce103c87129a975440a1c48a527e8f95d160c016cd09f77c02a95738f9"
+  },
+  {
+    "path": "notes/original-collision-lifecycle-20260907/root-area-pending-paths.json",
+    "sha256": "fe8b512c910e085afa57cccd74c5921b3966a570059b26cd8dc5a2782d00ba18"
+  },
+  {
+    "path": "notes/original-collision-lifecycle-20260907/root-tested-paths.json",
+    "sha256": "9372371edb6e4c3ae91ca67a5202d0443ffc9821db497198c5e035cb1be6b50f"
+  },
+  {
+    "path": "notes/original-collision-lifecycle-20260907/test-results.json",
+    "sha256": "31a543628ff86fe4bd6fe8376bb96e0fe9bb7eb8f7344af8c468cea521258881"
+  },
+  {
+    "path": "notes/original-mario-jump-activation-20260907/README.md",
+    "sha256": "538ad400181e33f475982b8029dce44719eeb349c2cd9fc965d40085dedeb06b"
+  },
+  {
+    "path": "notes/original-mario-jump-activation-20260907/checkpoint-proof.json",
+    "sha256": "d6112464106e56c8795e8c7bd8473f5c558e4cdd1420e81071239b3f0237cd9f"
+  },
+  {
+    "path": "notes/original-mario-jump-activation-20260907/checkpoint/bitfield-layout-build.log",
+    "sha256": "991a0e12e2cba97c46a27074d7c0be87b0d39f660be78d42ab7d88c9434020bd"
+  },
+  {
+    "path": "notes/original-mario-jump-activation-20260907/checkpoint/bitfield-layout-probe.cpp",
+    "sha256": "c68ab07cd076fe400c20033cd857f8ab7df0eca81bf2f29b77b4b6f49fdd26ab"
+  },
+  {
+    "path": "notes/original-mario-jump-activation-20260907/checkpoint/bitfield-layout-run.log",
+    "sha256": "c0aefcb61e4b600518c6880051a334326b70d08507d8720d3b472926cda01422"
+  },
+  {
+    "path": "notes/original-mario-jump-activation-20260907/decomp-checkpoint-paths.json",
+    "sha256": "7ef222d613db28a75db2063ecbd72beca8d8b2484d69b151cba8492dab5777e1"
+  },
+  {
+    "path": "notes/original-mario-jump-activation-20260907/decomp-source-manifest.json",
+    "sha256": "158bdf6aee94fc6040b2ebac2b714d15c96f72260463542bfad2dab2babd21fa"
+  },
+  {
+    "path": "notes/original-mario-jump-activation-20260907/root-checkpoint-paths.json",
+    "sha256": "e2707cefb6ecc18e42ef7549a7ac505110ec693140b3c47ec88966b216aecadb"
+  },
+  {
+    "path": "notes/original-mario-jump-activation-20260907/root-source-manifest.json",
+    "sha256": "3baddc264ccf3c2313a4421597fc021090df8ec18b95fbbca9a598dfd4ad878d"
+  },
+  {
+    "path": "notes/original-mario-jump-activation-20260907/rush-relocation-proof.json",
+    "sha256": "063ded95c2081065e94b465cb7ef598cb61209423625d1096978b94889dff745"
+  },
+  {
+    "path": "notes/original-mario-jump-activation-20260907/shared-header-manifest.json",
+    "sha256": "4d4406c2ff5af833f9544429cee9c4701acd0c079b5587c3fff1264c78dd4a07"
+  },
+  {
+    "path": "notes/original-mario-jump-activation-20260907/verify-checkpoint.py",
+    "sha256": "bd5f4c90705b24712725271861edb061b3d998d4e1f9abdfb3470d10392e4345"
+  },
+  {
+    "path": "notes/original-mario-sensor-messages-20260907/MarioActorDefensiveMsg-compile-command.json",
+    "sha256": "e75678c9c603631d7fea7435b611c320d361627ae60de9eb3a8e2a189117e2d5"
+  },
+  {
+    "path": "notes/original-mario-sensor-messages-20260907/MarioActorMorph-compile-command.json",
+    "sha256": "c50ff2740b8a419a5315b0ca51ef5716503d75f0f6baaefbd0a694a569b5d247"
+  },
+  {
+    "path": "notes/original-mario-sensor-messages-20260907/MarioActorOffensiveMsg-compile-command.json",
+    "sha256": "d17fb607aa54394139d79d850051457bd1d89c3fe762ec8636903f0c80598654"
+  },
+  {
+    "path": "notes/original-mario-sensor-messages-20260907/README.md",
+    "sha256": "08c06bfb4bb89a5b487a661d1cd2cbcb55867951629473da319223d86764b27a"
+  },
+  {
+    "path": "notes/original-mario-sensor-messages-20260907/decomp-paths.json",
+    "sha256": "460af64572bec56a5cf5c8b4062e10ba5b52af356f0b14c98fc36c6beb0170c2"
+  },
+  {
+    "path": "notes/original-mario-sensor-messages-20260907/defensive-side-effect-calls.json",
+    "sha256": "5b914835e41ba2f220cf683de7bcc920b1bf48733aa676b67baa1f11a7f2b72b"
+  },
+  {
+    "path": "notes/original-mario-sensor-messages-20260907/native-syntax-results.json",
+    "sha256": "8820186e5bff45c8ad659d21f2f771162c38c6cc3e5bbcb1c9c984b62a4bd0c4"
+  },
+  {
+    "path": "notes/original-mario-sensor-messages-20260907/offensive-compile-command.json",
+    "sha256": "126b5596fa8828a2a926f2c13133566fe129a68a00236e225f0e38fd3ecd1427"
+  },
+  {
+    "path": "notes/original-mario-sensor-messages-20260907/root-paths.json",
+    "sha256": "a83afd40606ebe6a05f51e8af5c2ea2770b45055b5cff2dc2994a0d5f1853dbd"
+  },
+  {
+    "path": "notes/original-mario-sensor-owner-20260907/README.md",
+    "sha256": "dcac43c4d6353def37217db62bd58d0bcdad6807790ea84efd331aa86ad995de"
+  },
+  {
+    "path": "notes/original-mario-sensor-owner-20260907/decomp-paths.json",
+    "sha256": "79548dd1552703d57c94a352e28d2ca2ccbfedb710155b8301e7c8f13ac85598"
+  },
+  {
+    "path": "notes/original-mario-sensor-owner-20260907/native-syntax-results.json",
+    "sha256": "6ba40ce8315bfb7106ba6b95f505273cf1a573e9e482fc54e4a2ecaf141c4b09"
+  },
+  {
+    "path": "notes/original-mario-sensor-owner-20260907/reference-compile-results.json",
+    "sha256": "753e11a487727eec79697e50c025f039e9672e8097a9afec05fff5b6cc25cc41"
+  },
+  {
+    "path": "notes/original-mario-sensor-owner-20260907/root-paths.json",
+    "sha256": "1208f5516e728173f4b0050f747f034ccc877d0ed071ea5bf5faf4d5a7b5f6a9"
+  },
+  {
+    "path": "notes/original-mario-sensor-owner-20260907/sensor-restoration-provenance.json",
+    "sha256": "0a1b4216ccd2ab4e2538b023aa1f155c9e60aaf5530c367347cf0970b57ab8ff"
+  },
+  {
+    "path": "notes/original-scene-counter-owners-20260907/README.md",
+    "sha256": "ea7065969b15f49b3bb00d47afbcdec7bc7ddd7b406d74f530356b8f578affcb"
+  },
+  {
+    "path": "notes/original-scene-counter-owners-20260907/compile-results.json",
+    "sha256": "85c79dd6b56832f2a30fd6887517804e962990f23f9c64cd159a6376a7f73001"
+  },
+  {
+    "path": "notes/original-stage-start-rail-20260907/README.md",
+    "sha256": "5154993bc30394667fcfc9df29d5c98443a7c4b8cd33baa61e10336caada79b6"
+  },
+  {
+    "path": "notes/original-stage-start-rail-20260907/checkpoint-decomp-manifest.json",
+    "sha256": "74334c34786021712018ef46f9a53dfcfe44100499b6c87b5ae5c3f6cd9a2ec7"
+  },
+  {
+    "path": "notes/original-stage-start-rail-20260907/checkpoint-test-results.json",
+    "sha256": "8e1923f605a25792c6b990f8b9de12f3abe4b91c23054962775b478ef47798e8"
+  },
+  {
+    "path": "notes/original-stage-start-rail-20260907/checkpoint-undefined.json",
+    "sha256": "e7c571aee58e5d73ba3e6908cc6ba218706d61063d8575b3435c4eebbd927000"
+  },
+  {
+    "path": "notes/original-stage-start-rail-20260907/checkpoint-validation.json",
+    "sha256": "6e0431c147beae3aa280358864ca1a077a3aec43951979d52dcf2b2ff5367bff"
+  },
+  {
+    "path": "notes/original-stage-start-rail-20260907/decomp-checkpoint-paths.json",
+    "sha256": "4d2b0ffc536372542fef82edc7dac721a3118476f5349c0675a9e6fbbcca7165"
+  },
+  {
+    "path": "notes/original-stage-start-rail-20260907/reference-function-proof.json",
+    "sha256": "99b9bbff014e1199b40664898c5e6c4b98d744dec38603fbb3516081a7740c05"
+  },
+  {
+    "path": "notes/original-star-pointer-depth-20260907/README.md",
+    "sha256": "b808aefafb9228d41f159550e0a4cdf4f03f2d698a3fc3b94966a1257551caee"
+  },
+  {
+    "path": "notes/original-star-pointer-depth-20260907/aurora-checkpoint-manifest.json",
+    "sha256": "afc9cd60e84bdb63f44366472d9ada53e00d5d7773ac846063dd62bea7cede56"
+  },
+  {
+    "path": "notes/original-star-pointer-depth-20260907/decomp-checkpoint-manifest.json",
+    "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+  },
+  {
+    "path": "notes/original-star-pointer-depth-20260907/design.md",
+    "sha256": "026002d871501863675049eb76d0508dafc8e5b62bdf41a89c689b20f783fd1a"
+  },
+  {
+    "path": "notes/original-star-pointer-depth-20260907/function-proof.json",
+    "sha256": "f9e650b958f8a8f4b60e7c55beedde6553b749ea54eba13245ee60d9af4adced"
+  },
+  {
+    "path": "notes/original-star-pointer-depth-20260907/native-compile-results.json",
+    "sha256": "d4554623ba8fc43d7ed911a82c46acd506eff8380ce8811237339e1032edfc9e"
+  },
+  {
+    "path": "notes/original-star-pointer-depth-20260907/native-final-leaves-compile-results.json",
+    "sha256": "07de5bec76de3a8b53ced284cd2029628476e65a29cd829256fa909f89b8a4f3"
+  },
+  {
+    "path": "notes/original-star-pointer-depth-20260907/notes-checkpoint-manifest.json",
+    "sha256": "e90c4f5c2c78de76142d42729e4d175fceab426ef676f2524537b0661dea55f7"
+  },
+  {
+    "path": "notes/original-star-pointer-depth-20260907/original-depth-final-native-command.json",
+    "sha256": "d2f1c56a2d7bf412f14feab836ba0ced04dc6035073d93647de728b50d19223c"
+  },
+  {
+    "path": "notes/original-star-pointer-depth-20260907/paused-source-manifest.json",
+    "sha256": "afd64abb00b304b34225bb2f82c20c26c12096abdc51132ff13f4cbe7e4add95"
+  },
+  {
+    "path": "notes/original-star-pointer-depth-20260907/root-checkpoint-manifest.json",
+    "sha256": "6196f9f5a5b41d2e8d4a2b042cd0eb819db30e5462efe7d61f17fb45031ac1f9"
+  },
+  {
+    "path": "notes/original-star-pointer-depth-20260907/snapshot-scope-test.cpp",
+    "sha256": "1ee2aa674a7bcc9de5fcd62889bc4bef143952f9be8106cc7095bf1cbbe064bf"
+  },
+  {
+    "path": "notes/original-star-pointer-depth-20260907/verify-reference.py",
+    "sha256": "9be25e9211571dad59f0762b3a412f6f3e33955ca618a28892ba9e60abe42952"
+  },
+  {
+    "path": "notes/original-star-pointer-depth-20260907/wii-compile-results.json",
+    "sha256": "98b40e4ae71653f800a24fa148efd895d606cd633e7fc790e6ba67be0809e371"
+  },
+  {
+    "path": "notes/original-water-line-query-20260907/README.md",
+    "sha256": "ac6078848e807d9e269373f357a68e520f6209783e72de5d6b422c8c9d1fc620"
+  },
+  {
+    "path": "notes/original-water-line-query-20260907/decomp-checkpoint-paths.json",
+    "sha256": "c9d85f995702c503e18636c49ea5fb115aed39cae78aec8ee4401a5668d4b5c8"
+  },
+  {
+    "path": "notes/original-water-line-query-20260907/water-filter-matrix-proof.json",
+    "sha256": "ccfa154beeff4ff3dcd6de2caaf0f9a1e3010f1de7f6b249c6b28298a2261bc4"
+  },
+  {
+    "path": "src/Game/Camera/CameraShaker.cpp",
+    "sha256": "4666538eea15e709efbc2461a46d328c5d84650dec80118fc7dbf333df1ce367"
+  },
+  {
+    "path": "src/Game/Camera/CameraTargetArg.cpp",
+    "sha256": "329e0b1b7dea41ff45a5c404253d14efe9067c791cb8f9e1c36188a4f4f7d368"
+  },
+  {
+    "path": "src/Game/Camera/CameraTargetArg.hpp",
+    "sha256": "70a0f8babe510661d059d8a9758a905749f2c8d1d3056fde9a67d53cef3b8511"
+  },
+  {
+    "path": "src/Game/LiveActor/HitSensor.cpp",
+    "sha256": "bbee103b18cadb3a717c53cef4a9d9751a9eeb54add5733c99f9d0e850ffa66f"
+  },
+  {
+    "path": "src/Game/LiveActor/HitSensorInfo.cpp",
+    "sha256": "d46dffbe7f7c4e905defe66a919b444283ca9c423285c923130156cc60ed8545"
+  },
+  {
+    "path": "src/Game/LiveActor/HitSensorInfo.hpp",
+    "sha256": "3c8efaefbc17c8265461042051de9a9485e1e95ece6aa1af189cf34c04590a94"
+  },
+  {
+    "path": "src/Game/LiveActor/HitSensorKeeper.cpp",
+    "sha256": "44568410d6aab31af40d7c875cc34cf1662567be9a5cf39d65eb7bd569692b6a"
+  },
+  {
+    "path": "src/Game/LiveActor/LiveActor.cpp",
+    "sha256": "4b3b5ebb55a5668b66b6a4ff93cf39d9f6950848e0cbcf0116982f31464e6157"
+  },
+  {
+    "path": "src/Game/MapObj/BlackHole.cpp",
+    "sha256": "40d542a2ab578ee74bf918d56582d1ae576d46a4d3d0efa19a218adfe8ea6711"
+  },
+  {
+    "path": "src/Game/MapObj/BlackHole.hpp",
+    "sha256": "fa97337b8a05246096e136b16b0ba229810e47449b3d103ea6418a69cce54450"
+  },
+  {
+    "path": "src/Game/MapObj/ChipBase.hpp",
+    "sha256": "b73d7f26aaf7f600bb20948f4f344a84c21816b8c2b269eea60718464cf5e36f"
+  },
+  {
+    "path": "src/Game/MapObj/ChipCounter.cpp",
+    "sha256": "0d96cd0a14330ad81484f5c254d9557dd8442e30d487893d4a7efa182f52c6c0"
+  },
+  {
+    "path": "src/Game/MapObj/ChipCounter.hpp",
+    "sha256": "f5023aad92a22cac59e458f109178410e63e39db0a0e33565d796cff59ce6aac"
+  },
+  {
+    "path": "src/Game/MapObj/ChipGroup.hpp",
+    "sha256": "c638931beb2eb519d5c318edbccedb5b44d124946821a9b8b99f8ac4691d95e6"
+  },
+  {
+    "path": "src/Game/MapObj/ChipHolder.cpp",
+    "sha256": "fa781496f27e0e4c758556922f1caff4c7106bdf7a3d0bc7a06c9c4f446d6f35"
+  },
+  {
+    "path": "src/Game/MapObj/ChipHolder.hpp",
+    "sha256": "255c68f11a514dd8bfc4807c6e7024ab9df36ebe847a5c6265d09a30f5f33344"
+  },
+  {
+    "path": "src/Game/MapObj/CollectCounter.cpp",
+    "sha256": "ed3ae9a5f65a234d7a2a26ffe9d4397d5f108a6ed6fa3c01b77f2d31e9b56c65"
+  },
+  {
+    "path": "src/Game/NPC/TalkDirector.hpp",
+    "sha256": "d8b8f649dc6840e9331d1af380e5fd5a077b33a948168c89a198402290afc65b"
+  },
+  {
+    "path": "src/Game/NameObj/NameObjFinder.hpp",
+    "sha256": "a44082af8f25aa67f38740023034395dc1ea4674b0f2b58b4b9b4d2a5311aecb"
+  },
+  {
+    "path": "src/Game/Player/MarioActor.cpp",
+    "sha256": "db15a55856592ecfa74605ab8332939810d6373d95b86941738782c9446c573f"
+  },
+  {
+    "path": "src/Game/Player/MarioActor.hpp",
+    "sha256": "c3f4cd35e1d1b717e7ab599ab9836795a0ce064031609d5957651f9363eddf7e"
+  },
+  {
+    "path": "src/Game/Player/MarioActorBlackHole.cpp",
+    "sha256": "dc505d36415eac5d7350db2a9f58a47ce239f262152a906fea77af7fa09ea730"
+  },
+  {
+    "path": "src/Game/Player/MarioActorDefensiveMsg.cpp",
+    "sha256": "9a736e7dee49530295d00e3a3389f2cdece20c5f114f40c94e073ea78dccc1e1"
+  },
+  {
+    "path": "src/Game/Player/MarioActorInit.cpp",
+    "sha256": "58548c45ef2de78d618f76fa25bfb681f5145324814e184823eb3f25eb9e7dcb"
+  },
+  {
+    "path": "src/Game/Player/MarioActorPad.cpp",
+    "sha256": "da9d25d2629a064fdbe9f1eb50bf57e975b06737820ca184f944f2d9be08602b"
+  },
+  {
+    "path": "src/Game/Player/MarioActorParts.cpp",
+    "sha256": "afb9bcc1800c1aa6fc08d994f47461567885cd01179e4eed6551fe51556aacf6"
+  },
+  {
+    "path": "src/Game/Player/MarioActorRush.cpp",
+    "sha256": "609cdb71b5164c2e6f3c1277f64c75412718dbbcbbf9fd51907726f14604112e"
+  },
+  {
+    "path": "src/Game/Player/MarioActorRushMsg.cpp",
+    "sha256": "4a0fbc3d072c6c2d10eb46fb8254e3b3c566e1f43cb3d81ac39eab8cc566ed0c"
+  },
+  {
+    "path": "src/Game/Player/MarioActorSensor.cpp",
+    "sha256": "bcc0d183a472aabea3106f49abbf751cfdeba54210df935213fdbed25f9d9f17"
+  },
+  {
+    "path": "src/Game/Player/MarioMove.cpp",
+    "sha256": "5bbd0a926b04d38c25a874f47db4e1bb7ec38403aee6210569192a4a70cdc84d"
+  },
+  {
+    "path": "src/Game/Player/MarioWalk.cpp",
+    "sha256": "a6d0632b42790c836f1a883c94c41b85c97cdaa5bc67c8ab274ff210da1ca026"
+  },
+  {
+    "path": "src/Game/Scene/ScenePlayingResult.cpp",
+    "sha256": "b0f6543c8e731ecf55c7456d3b18a17437b462bb38bd848f263b70070c61ae26"
+  },
+  {
+    "path": "src/Game/Scene/ScenePlayingResult.hpp",
+    "sha256": "036a59503baccedbbff8e39ed9c3e87ad14d000b603a41fddfcebf47b1e7f8ed"
+  },
+  {
+    "path": "src/Game/Screen/BloomEffect.hpp",
+    "sha256": "17f98b8567d16b18706565ea2830d0fedf15fba1081a0ee85227626cc066017c"
+  },
+  {
+    "path": "src/Game/Screen/ImageEffectBase.hpp",
+    "sha256": "640d19cc348888e5c7151e385093c66fc2dc142daba5dff064f85781be971b6b"
+  },
+  {
+    "path": "src/Game/Screen/ImageEffectDirector.hpp",
+    "sha256": "b2c86cbc077228949def5f7b64822964d641bc665f6cf6064e3e212626c93c53"
+  },
+  {
+    "path": "src/Game/Screen/ImageEffectLocalUtil.cpp",
+    "sha256": "cc30f4f69b25573ee1255263c8176b199c49768979353ea287a75d3289903b0d"
+  },
+  {
+    "path": "src/Game/Screen/ImageEffectSystemHolder.hpp",
+    "sha256": "af01c71a84e14eba3ce6e6ca936a7059d8803eec8a1837ae5b3f6abbd674bc01"
+  },
+  {
+    "path": "src/Game/Screen/StarPointerController.cpp",
+    "sha256": "f436f07da49407963a7351c85fffd25663556a32ccbf3357929670d34429c538"
+  },
+  {
+    "path": "src/Game/Screen/StarPointerController.hpp",
+    "sha256": "a5d65fce786220fe0d87a0821bba84da0dafd28859126e5f36883dafe6bb2c65"
+  },
+  {
+    "path": "src/Game/Screen/StarPointerDirector.hpp",
+    "sha256": "0f57046c9eadfabdde1c242a18a940c30246079e1e4534ad4f2b38fa40573a86"
+  },
+  {
+    "path": "src/Game/Screen/StarPointerGuidance.cpp",
+    "sha256": "6a8a1898730a8496baa4ee25c9155486994f866c7a1ef85d0ec0cd4f5f94e60b"
+  },
+  {
+    "path": "src/Game/Screen/StarPointerGuidance.hpp",
+    "sha256": "881cc26e858a473bf601020a6e4a08e9e8e8c32be32fc465b9b425a9fe964024"
+  },
+  {
+    "path": "src/Game/Screen/StarPointerLayout.hpp",
+    "sha256": "5b22afbb08302b699c5b4a8f03147e5b411599022aec87e20b4f178ae80fbb5f"
+  },
+  {
+    "path": "src/Game/System/AlreadyDoneFlagInGalaxy.cpp",
+    "sha256": "d289f588ce33eae039a5b6902e0b3569fb2b7245a8e3509b70e3e0a3825abcc8"
+  },
+  {
+    "path": "src/Game/System/AlreadyDoneFlagInGalaxy.hpp",
+    "sha256": "0b76e4c40c09fff6368058e0765843fd2a45c57f832fb334592b523c799e1dfc"
+  },
+  {
+    "path": "src/Game/System/DrawSyncManager.hpp",
+    "sha256": "fdf197e3551d16c2f179235f1b53e9b440c3483c95221069b866a9da9787ee8f"
+  },
+  {
+    "path": "src/Game/Util/CameraUtil.cpp",
+    "sha256": "ffd714534115af145cc3aa7b22e15f2fd51cc82f12a81be79b05c327f13baff6"
+  },
+  {
+    "path": "src/Game/Util/JMapUtil.hpp",
+    "sha256": "85adeb9bf0604f6d710a828a1ba8090efd3b4a69969eac4b67c9bb377ce5deca"
+  },
+  {
+    "path": "src/Game/Util/LayoutUtil.hpp",
+    "sha256": "35ede8e61ee546b01734a0a4b8a462b684430e08147e3605b18b02cafc111b51"
+  },
+  {
+    "path": "src/Game/Util/ObjUtil.hpp",
+    "sha256": "a18ff0bb736f49e86dccaaacd637c45e70c09a485e19a95aa57814f934d7d818"
+  },
+  {
+    "path": "src/Game/Util/StarPointerUtil.hpp",
+    "sha256": "48de37ddf99d47fa5ba821d754a48c39bf742ad2a49df77837bae7b96db00bfc"
+  },
+  {
+    "path": "src/Game/xmake.lua",
+    "sha256": "467b060f967f1071af01be623cde20d18314015387931b86be3412ccd939cdd4"
+  },
+  {
+    "path": "src/camera/CameraDirectorRuntime.cpp",
+    "sha256": "c31868b2c307316526ce6f4912aff53dbb756d0924e1e9bb508bf3e44d4775b8"
+  },
+  {
+    "path": "src/camera/CameraDirectorRuntime.hpp",
+    "sha256": "ed2ffa620c2137e6aa46619ed64f414305be414f85f7e55a9325e77bd9f767fe"
+  },
+  {
+    "path": "src/camera/OriginalCameraView.cpp",
+    "sha256": "34693d4799569401e85da1c2320262b1de345eab496a930a7180dc59f1887d68"
+  },
+  {
+    "path": "src/compat/ActorRuntimeRegistry.cpp",
+    "sha256": "5cd13b1fac57f52ebc2fbb6b46a48aaee71b0b45eb127736b123df99d57d43fe"
+  },
+  {
+    "path": "src/compat/CameraLocalUtilRuntime.cpp",
+    "sha256": "02bd280470bf6d7acedbc03daada55dae70b9dd245666caf9f4fbd4eda58cf43"
+  },
+  {
+    "path": "src/compat/CameraUtilCompat.cpp",
+    "sha256": "494328672dc8d099dc04c2389a3bc4c60f124b21fba486d7af62b270a9592ddd"
+  },
+  {
+    "path": "src/compat/CameraViewRuntime.hpp",
+    "sha256": "a0aad0488105b1512d2d52272a020cd19825fe9e11211bd268495b65a8ffec88"
+  },
+  {
+    "path": "src/compat/EventUtilCompat.cpp",
+    "sha256": "039d889d1a855bc8fd1e356235e9dba83238facbc40da372c250dcb516923240"
+  },
+  {
+    "path": "src/compat/GameActorSensorCompat.cpp",
+    "sha256": "644a716a3c284bfebecc4051177debb49a9f9b5c55eeef5099a76cf68ced5b64"
+  },
+  {
+    "path": "src/compat/GameActorSensorCompat.hpp",
+    "sha256": "ce50b1c956be109ae0942e0b11515cbef32467d9ffc56041a44582b74f61e254"
+  },
+  {
+    "path": "src/compat/GameMapCollisionCompat.cpp",
+    "sha256": "f2fd200a8f45ac1cf1dc1356ef6b940f6041fad75ae01322003b29a2a397b5d5"
+  },
+  {
+    "path": "src/compat/GameMathCompat.cpp",
+    "sha256": "95a785b9c0361a05aa7dac176ef3f554cb049352380f628ca5690faa56d57172"
+  },
+  {
+    "path": "src/compat/GamePadUtilCompat.cpp",
+    "sha256": "77292e5ee3c1c93660c1ad263f3cfa4a362553bc1a8392850ac316492ebd5930"
+  },
+  {
+    "path": "src/compat/GameRailCompat.cpp",
+    "sha256": "016e3016d16dd0b435d2eca63130e1c5288c735ebc31eb9ba976cab369feaf8e"
+  },
+  {
+    "path": "src/compat/HitInfoCompat.cpp",
+    "sha256": "9c9eb8a53e70cfe4fb2f14a2ba363aed4a0e4a9b77316cd72b70220814b6630a"
+  },
+  {
+    "path": "src/compat/JMapUtilCompat.cpp",
+    "sha256": "914fb48dd4dcd00ae7cacbeabfb5751830cf159f370a703bf66f8b070ff77b46"
+  },
+  {
+    "path": "src/compat/MarioStateCompat.cpp",
+    "sha256": "1d967062b888227f043a54f7827eb885aff03eecde0ce601dd58ae5661048714"
+  },
+  {
+    "path": "src/compat/NameObjExecuteCompat.cpp",
+    "sha256": "501a29c928f37a7762d1ca51f30ce1eb76816bc2f44264ab25dc58b5214d76e8"
+  },
+  {
+    "path": "src/compat/OriginalAreaMovement.cpp",
+    "sha256": "331a77d974ae69b67d65bf21329daba8a61edc47a351a5822438604fcba7eac3"
+  },
+  {
+    "path": "src/compat/OriginalCameraOwnerUtil.cpp",
+    "sha256": "f4d8848938476df9085430903a887ff0724d1a4c7fe608a761524b2ede72004d"
+  },
+  {
+    "path": "src/compat/OriginalCollisionGeometry.cpp",
+    "sha256": "a168d818bb2d2e531dde55fc02d3dbaac465390135435a528dd196b0e0e28c86"
+  },
+  {
+    "path": "src/compat/OriginalImageEffectOwnerQuery.cpp",
+    "sha256": "a56f1fdee3536bb59d49d0cb179082c9dd5bfd2ba9a85cd9c02f41709b1aca13"
+  },
+  {
+    "path": "src/compat/OriginalSceneCounterQueries.cpp",
+    "sha256": "fb32eddc92e40449588c1d52215a381078221dfb5944e30f56f368740ef88082"
+  },
+  {
+    "path": "src/compat/OriginalStarPointerDepth.cpp",
+    "sha256": "28271c2a4dc79d6846e14e75c834c206ad20a842f816ee59f16121ea5c75e8ac"
+  },
+  {
+    "path": "src/compat/OriginalTripodBossQuery.cpp",
+    "sha256": "674c5aadcd5b5813b56f8df72f207875f74def9800f87256487bea45d9e35fe7"
+  },
+  {
+    "path": "src/compat/SceneMovementCompat.cpp",
+    "sha256": "f055c261c9b10da26b52edb126a4c2efc8a849aabcf175060ffaec6f5988fe38"
+  },
+  {
+    "path": "src/compat/SceneObjHolderCompat.cpp",
+    "sha256": "90e3b15e54ba7dccf7861c0d189f8860386ed7ca20d98929282619dbea4add2a"
+  },
+  {
+    "path": "src/compat/SceneSystemUtilCompat.cpp",
+    "sha256": "da756ec0c434136d87a20de7476ab5edb3e7ecf7aa402d5c7684e38edadb80e8"
+  },
+  {
+    "path": "src/compat/SoundUtilCompat.cpp",
+    "sha256": "b451dbe5cab042cf65addb3648f8fb63763e0a56a21045236816767865179e7b"
+  },
+  {
+    "path": "src/compat/StageResourceBinding.cpp",
+    "sha256": "4523cde3567c431636f667132c1d48f8167d4e466a44c43a744780e8f2cd8a31"
+  },
+  {
+    "path": "src/compat/StageResourceBinding.hpp",
+    "sha256": "eeb5d98dff5b47516649e10fe3950880d01948a039f48064697f7f9215d19673"
+  },
+  {
+    "path": "src/compat/StageSessionState.cpp",
+    "sha256": "dc50946effdf48f47c952981582dfca9f7a12902c568e3f687c231d478b50021"
+  },
+  {
+    "path": "src/compat/StageSessionState.hpp",
+    "sha256": "597909dc377984f8c55089826e2610ae29f11b8315637ff374b731c36b246a4b"
+  },
+  {
+    "path": "src/compat/StarPointerDepthOwnership.cpp",
+    "sha256": "867469e0999d7b640d4eaa6bb79d04499a73f2af18a8cef68a51707a8c147059"
+  },
+  {
+    "path": "src/compat/StarPointerDepthOwnership.hpp",
+    "sha256": "43c95cc604ff29c32779961fa62fabc6ba904245292617b144cb7bb1d11b076b"
+  },
+  {
+    "path": "src/compat/StorySequencePlatformCompat.cpp",
+    "sha256": "9de1985bc2d4a658aa704d3e662aa39eecb5dc4601018e986e134bed42bdc6dc"
+  },
+  {
+    "path": "src/layout/LayoutManagerCompat.cpp",
+    "sha256": "5fc446b6c899c3ba5a4bffdd3f439839cdca8a6abc931a347541c3b332fc4f09"
+  },
+  {
+    "path": "src/runtime/RuntimeContext.cpp",
+    "sha256": "53b1ec6132ba590cd8926baf3ed0cdd2f79b81301410642a474cbd5f3eb0ceca"
+  },
+  {
+    "path": "src/runtime/RuntimeContext.hpp",
+    "sha256": "d4d96da4037d5f2b728d872f487e5270eb5254fb9887ac96c90d45dd4b6f8ed2"
+  },
+  {
+    "path": "src/runtime/RuntimeServices.cpp",
+    "sha256": "772814c2d69aac08c7ce3b14aa7f75afa077c5f9f37ba411514eeef5006d007d"
+  },
+  {
+    "path": "src/runtime/SceneScheduler.cpp",
+    "sha256": "ca109fcf6503195f9fefc9b292b5a7c5343d7d7642de99c33a8f8e732b56c868"
+  },
+  {
+    "path": "src/scene/AreaObjRuntime.cpp",
+    "sha256": "ffeea6afdee62601adb73bf4929ab645647f0cbf83a6a0d85dad878813f7933a"
+  },
+  {
+    "path": "src/scene/GatewayDemoScene.cpp",
+    "sha256": "e9064c949a988159a9bdf7c1cd1011bc6cbb92769ea6611ce22a7cd0bfbf2b72"
+  },
+  {
+    "path": "src/scene/SceneExecutionService.cpp",
+    "sha256": "70f17521feb3d47c2ee1e25911a814808ee517cc2abadf32c42f4839dcdbb441"
+  },
+  {
+    "path": "src/scene/SceneObjHolderRuntime.hpp",
+    "sha256": "9a295e709a9bf722d173698c7b8816e59cc44222a4cd35c6c26e98943868c25d"
+  },
+  {
+    "path": "src/scene/StageCollisionService.cpp",
+    "sha256": "b3d4eb813858ded5d035ede5bdd4479b323587af25a16208e824549634dd5b8f"
+  },
+  {
+    "path": "src/scene/StageCollisionService.hpp",
+    "sha256": "31feacca998db652b1e4c63fd7cd592e2f69a5505ca647b3243285e263425985"
+  },
+  {
+    "path": "src/scene/StageHostScene.cpp",
+    "sha256": "ddf0a8845af458336068bd9817de92b1af96d60785a51c62c045e553c0953250"
+  },
+  {
+    "path": "src/scene/StageHostScene.hpp",
+    "sha256": "5e5b02a24fed32bbe1e0c6384cb0833e75c157cfc5a610481c5f6ac192ea089c"
+  },
+  {
+    "path": "src/scene/StagePlacementResolver.cpp",
+    "sha256": "5c4ad8b8ab18ee3dfb0ec460087913359ecf56b705a87e9ae1ed3dc707a490d0"
+  },
+  {
+    "path": "src/showcase/Showcase.cpp",
+    "sha256": "fdb449e37fdfe896117a7999e03e30d1e4bac353b68061e4a5428b40a92313a6"
+  },
+  {
+    "path": "src/showcase/xmake.lua",
+    "sha256": "f6504a5b70f4202f6b9487bdd79fa667778e1470f581e0532cbf74dcfaba9767"
+  },
+  {
+    "path": "tests/ActorSensorRealOrAbsentTests.cpp",
+    "sha256": "27241f8b182abd8a9c5275eadd9a516c5e570d2ab94ee4eb3ed60505b59cb3f2"
+  },
+  {
+    "path": "tests/AreaObjRealOrAbsentTests.cpp",
+    "sha256": "a0d293967e8bfef3761caf7510a7e175d040c01bd6af83f294612d8121f40b3e"
+  },
+  {
+    "path": "tests/LineCollisionQueryTests.cpp",
+    "sha256": "2ec5d03fe1fc028728896a1d0dedbc198cbae7d10e9d8d405853f75a22a05585"
+  },
+  {
+    "path": "tests/OriginalCameraDirectorTests.cpp",
+    "sha256": "1fd6c5ee4859c42c4ca9a08e5e220586fa83f448ab6d8928256918db91a50a06"
+  },
+  {
+    "path": "tests/OriginalCameraHolderTests.cpp",
+    "sha256": "05122508674f4e04970b775cb165f2dd07fbdc76c1a1aefae07ad82e56a499a7"
+  },
+  {
+    "path": "tests/OriginalSceneCounterOwnerTests.cpp",
+    "sha256": "371d2cdae9c8c9309d9c32d33ae701d4cc2ea26d3fb258ea261fe053e750720c"
+  },
+  {
+    "path": "tests/SceneSchedulerHeapTests.cpp",
+    "sha256": "76e2244ac83185401bf9ed19fd59dc9977e2f7dd2272071edec6ca85bbb255df"
+  },
+  {
+    "path": "tests/StageCameraResourceTests.cpp",
+    "sha256": "b31ce12bb7611f1458d38c1cfb3a94add2b97231f6fa71846c3ee3475773c43f"
+  },
+  {
+    "path": "tests/xmake.lua",
+    "sha256": "a70277e007276837835c3e4c543ee97626c17f01f26aa59b66e7151ad57eaced"
+  }
+]

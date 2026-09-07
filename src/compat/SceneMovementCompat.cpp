@@ -35,3 +35,9 @@ void CategoryList::requestMovementOn(MR::MovementType type) {
 void CategoryList::requestMovementOff(MR::MovementType type) {
     MR::requestMovementOffWithCategory(type);
 }
+
+void CategoryList::execute(MR::DrawType type) {
+    // The original NameObjListExecutor draw-category dispatch is owned by
+    // the active native scheduler, including nested immediate captures.
+    require_scheduler().execute_draw_type(type);
+}

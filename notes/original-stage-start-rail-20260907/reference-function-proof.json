@@ -1,0 +1,122 @@
+[
+  {
+    "unit": "SceneUtil",
+    "symbol": "getRailInfoFromRailId__23@unnamed@SceneUtil_cpp@FP12JMapInfoIterPPC8JMapInfoPC15StageDataHolderi",
+    "size": "68",
+    "match_percent": 100.0
+  },
+  {
+    "unit": "SceneUtil",
+    "symbol": "getCurrentMarioStartIdInfo__2MRFv",
+    "size": "16",
+    "match_percent": 100.0
+  },
+  {
+    "unit": "SceneUtil",
+    "symbol": "getStartPosNum__2MRFv",
+    "size": "36",
+    "match_percent": 100.0
+  },
+  {
+    "unit": "SceneUtil",
+    "symbol": "getCurrentStartZoneId__2MRFv",
+    "size": "36",
+    "match_percent": 100.0
+  },
+  {
+    "unit": "SceneUtil",
+    "symbol": "getInitializeStartIdInfo__2MRFv",
+    "size": "12",
+    "match_percent": 100.0
+  },
+  {
+    "unit": "SceneUtil",
+    "symbol": "getCurrentStartCameraId__2MRFv",
+    "size": "36",
+    "match_percent": 100.0
+  },
+  {
+    "unit": "SceneUtil",
+    "symbol": "getStartCameraIdInfoFromStartDataIndex__2MRFP10JMapIdInfoi",
+    "size": "68",
+    "match_percent": 100.0
+  },
+  {
+    "unit": "SceneUtil",
+    "symbol": "getPlacedRailNum__2MRFl",
+    "size": "84",
+    "match_percent": 100.0
+  },
+  {
+    "unit": "SceneUtil",
+    "symbol": "getCameraRailInfo__2MRFP12JMapInfoIterPPC8JMapInfoll",
+    "size": "92",
+    "match_percent": 100.0
+  },
+  {
+    "unit": "SceneUtil",
+    "symbol": "getCameraRailInfoFromRailDataIndex__2MRFP12JMapInfoIterPPC8JMapInfoil",
+    "size": "116",
+    "match_percent": 99.655174
+  },
+  {
+    "unit": "SceneUtil",
+    "symbol": "getCurrentScenarioStartAnimCameraData__2MRFPPvPl",
+    "size": "152",
+    "match_percent": 99.73684
+  },
+  {
+    "unit": "StageDataHolder",
+    "symbol": "getCommonPathPointInfo__15StageDataHolderCFPPC8JMapInfoi",
+    "size": "116",
+    "match_percent": 99.31035
+  },
+  {
+    "unit": "StageDataHolder",
+    "symbol": "getCommonPathPointInfoFromRailDataIndex__15StageDataHolderCFPPC8JMapInfoi",
+    "size": "140",
+    "match_percent": 99.42857
+  },
+  {
+    "unit": "StageDataHolder",
+    "symbol": "getCommonPathInfoElementNum__15StageDataHolderCFv",
+    "size": "68",
+    "match_percent": 99.411766
+  },
+  {
+    "unit": "StageDataHolder",
+    "symbol": "getStartPosNum__15StageDataHolderCFv",
+    "size": "164",
+    "match_percent": 100.0
+  },
+  {
+    "unit": "StageDataHolder",
+    "symbol": "getCurrentStartZoneId__15StageDataHolderCFv",
+    "size": "68",
+    "match_percent": 100.0
+  },
+  {
+    "unit": "StageDataHolder",
+    "symbol": "getCurrentStartCameraId__15StageDataHolderCFv",
+    "size": "76",
+    "match_percent": 99.47369
+  },
+  {
+    "unit": "StageDataHolder",
+    "symbol": "getStartCameraIdInfoFromStartDataIndex__15StageDataHolderCFP10JMapIdInfoi",
+    "size": "96",
+    "match_percent": 99.583336
+  },
+  {
+    "unit": "StageDataHolder",
+    "symbol": "makeCurrentMarioJMapInfoIter__15StageDataHolderCFv",
+    "size": "212",
+    "match_percent": 100.0
+  },
+  {
+    "unit": "StageDataHolder",
+    "symbol": "getStartJMapInfoIterFromStartDataIndex__15StageDataHolderCFi",
+    "size": "260",
+    "match_percent": 100.0
+  }
+]

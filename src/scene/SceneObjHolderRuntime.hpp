@@ -10,6 +10,7 @@ class NameObj;
 class SceneObjHolder;
 
 namespace smgpc::runtime { class SceneScheduler; class SceneSchedulerAllocationBinding; }
+namespace smgpc::camera { class CameraDirectorRuntime; }
 
 namespace smgpc::compat {
     class EffectSystemOwnership;
@@ -39,6 +40,7 @@ namespace smgpc::scene {
 
         void initialize_effect_system(unsigned particles = 3072, unsigned emitters = 256,
                                       std::size_t byte_budget = 8U * 1024U * 1024U);
+        void initialize_camera_system();
         void init_after_placement();
         void complete_initialization();
 
@@ -58,6 +60,7 @@ namespace smgpc::scene {
         SceneInitializationBinding _initialization_state;
         std::shared_ptr<smgpc::compat::JkrAllocationDomain> _game_allocation_domain;
         std::unique_ptr<smgpc::runtime::SceneSchedulerAllocationBinding> _game_allocation_binding;
+        std::unique_ptr<smgpc::camera::CameraDirectorRuntime> _camera_runtime;
         std::unique_ptr<smgpc::compat::EffectSystemOwnership> _effect_system_ownership;
         smgpc::runtime::SceneScheduler* _effect_scheduler = nullptr;
         std::size_t _effect_registration_marker = 0U;

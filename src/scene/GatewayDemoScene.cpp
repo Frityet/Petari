@@ -27,7 +27,6 @@
 #include "scene/StageAuthoredData.hpp"
 #include "compat/StageZoneMatrixRegistry.hpp"
 #include "compat/StageResourceBinding.hpp"
-#include "scene/StageEventCameraBinding.hpp"
 #include "scene/StageLightSceneBinding.hpp"
 #include "scene/nameobj/NameObjFactory.hpp"
 #include "scene/nameobj/ObjectNameTable.hpp"
@@ -143,7 +142,7 @@ namespace smgpc::scene {
             _authored_data = std::make_unique<StageAuthoredData>(
                 StageAuthoredData::resolve(_dvd, cStageName, 1, 0, 0));
             _stage_resource_binding = std::make_unique<smgpc::compat::StageResourceBinding>(
-                _dvd, _authored_data->holders());
+                _dvd, _authored_data->holders(), _authored_data->tables());
             _zone_matrix_binding = std::make_unique<smgpc::compat::StageZoneMatrixBinding>(
                 _authored_data->holders(), _authored_data->tables());
             require(!_authored_data->tables().empty(),
@@ -195,6 +194,8 @@ namespace smgpc::scene {
             _scene_binding = std::make_unique<SceneObjHolderBinding>(_scene_obj_holder);
             _scene_binding->initialize_effect_system(3072, 256);
             constexpr auto required_scene_objects = std::array{
+                SceneObj_NameObjGroup,
+                SceneObj_ScenePlayingResult,
                 SceneObj_MessageSensorHolder,
                 SceneObj_PlacementStateChecker,
                 SceneObj_ClippingDirector,
@@ -219,11 +220,8 @@ namespace smgpc::scene {
             require(manager != nullptr,
                     "exact PlanetGravityManager SceneObj could not be created");
             LightFunction::initLightRegisterAll();
+            _scene_binding->initialize_camera_system();
 
-            _event_camera_binding =
-                std::make_unique<StageEventCameraBinding>(
-                    _runtime->camera_system(), _dvd,
-                    _authored_data->tables());
             _authored_placements =
                 std::make_unique<AuthoredPlacementInstantiator>(
                     *_authored_data, _runtime->name_obj_lifecycle(),
@@ -294,6 +292,8 @@ namespace smgpc::scene {
                 emit_placement_report(report);
 #endif
                 _scene_binding->complete_initialization();
+                _stage_session->set_execution_phase(
+                    smgpc::compat::StageSessionState::ExecutionPhase::Gameplay);
             } catch (...) {
                 retire();
                 throw;
@@ -397,7 +397,6 @@ namespace smgpc::scene {
             _scene_binding.reset();
             _runtime->scheduler().retire_draw_buffers();
             _stage_light_binding.reset();
-            _event_camera_binding.reset();
             _planet_map_catalog.reset();
         }
 
@@ -542,7 +541,6 @@ namespace smgpc::scene {
         std::unique_ptr<StageAuthoredData> _authored_data{};
         std::unique_ptr<smgpc::compat::StageResourceBinding> _stage_resource_binding{};
         std::unique_ptr<smgpc::compat::StageZoneMatrixBinding> _zone_matrix_binding{};
-        std::unique_ptr<StageEventCameraBinding> _event_camera_binding{};
         const StageStartInfo *_start = nullptr;
         std::unique_ptr<smgpc::compat::DemoSceneRuntime> _demo_scene_runtime{};
         const StagePlacementObject *_planet_placement = nullptr;

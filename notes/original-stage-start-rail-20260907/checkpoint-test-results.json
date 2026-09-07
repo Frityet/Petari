@@ -1,0 +1,9 @@
+{
+  "smg-pc-original-scene-counter-owner-tests": {
+    "build": 0,
+    "run": 0
+  },
+  "smg-pc-actor-sensor-real-or-absent-tests": {
+    "build": 255
+  }
+}

@@ -35,6 +35,10 @@ namespace {
 }  // namespace
 
 namespace MR {
+    void startSpinHitSound(const LiveActor* pActor) {
+        startCSSound("CS_SPIN_HIT", nullptr, 0);
+    }
+
     JAISoundHandle *startSystemSE(const char *pName, s32 parameter1,
                                   s32 parameter2) {
         const auto name = require_sound_name(pName, "System-SE playback");

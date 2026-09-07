@@ -1,0 +1,10 @@
+[
+  {
+    "path": "src/Game/Player/MarioActorDefensiveMsg.cpp",
+    "sha256": "9a736e7dee49530295d00e3a3389f2cdece20c5f114f40c94e073ea78dccc1e1"
+  },
+  {
+    "path": "include/Game/Player/MarioActor.hpp",
+    "sha256": "5094727ddfa3d9d29a3787507d8a8ef8f7268025b4d5742ab06da2479a535043"
+  }
+]

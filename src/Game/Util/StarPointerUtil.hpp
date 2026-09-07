@@ -50,3 +50,8 @@ namespace MR {
     void startStarPointerModeChooseYesNo(void*);
     f32 calcPointRadius2D(const TVec3f&, f32);
 }
+
+namespace MR {
+    bool isStarPointerValid(s32);
+    bool isStarPointerModeMarioLauncher();
+}

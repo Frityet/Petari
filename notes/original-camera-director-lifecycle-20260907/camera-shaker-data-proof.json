@@ -1,0 +1,35 @@
+{
+  "horizontal_loop_count": 7,
+  "first_address": "0x80531944",
+  "words": [
+    "0x3e99999a",
+    "0x3f800000",
+    "0x40400000",
+    "0x43300000",
+    "0x80000000",
+    "0x43300000",
+    "0x80000000"
+  ],
+  "f32": [
+    0.30000001192092896,
+    1.0,
+    3.0,
+    176.0,
+    -0.0,
+    176.0,
+    -0.0
+  ],
+  "adjacent_data": [
+    {
+      "address": "0x80531950",
+      "source": "CameraShaker.o .rodata+0x28",
+      "double": 4503601774854144
+    },
+    {
+      "address": "0x80531958",
+      "source": "CameraSpiral.o .rodata+0",
+      "double": 4503601774854144
+    }
+  ],
+  "original_stores": "mHorizontalTasks[0..2], followed by mInfinityTasks[0..3]; original ctor immediately replaces all four infinity slots."
+}

@@ -297,9 +297,8 @@ target("smg-pc-gateway-spin-checkpoint-tests")
         add_ldflags("-Wl,--gc-sections", {force = true})
     end
     add_deps {
-        "smg-pc-mario-gateway-walk-slice",
-        "smg-pc-common",
         "smg-pc-game",
+        "smg-pc-common",
         "aurora-card",
         "aurora-dvd",
         "aurora-gd",
@@ -333,9 +332,8 @@ target("smg-pc-mario-gateway-walk-tests")
         add_ldflags("-Wl,--gc-sections", {force = true})
     end
     add_deps {
-        "smg-pc-mario-gateway-walk-slice",
-        "smg-pc-common",
         "smg-pc-game",
+        "smg-pc-common",
         "aurora-card",
         "aurora-dvd",
         "aurora-gd",
@@ -2691,6 +2689,19 @@ target("smg-pc-original-fur-shader-tests")
         group = "aurora", rundir = os.projectdir(), realtime_output = true
     })
 
+target("smg-pc-original-scene-counter-owner-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    add_files("OriginalSceneCounterOwnerTests.cpp", "../aurora/lib/compat.cpp")
+    add_deps {
+        "smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
+        "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"
+    }
+    add_tests("original_scene_counter_owner", {
+        group = "aurora", rundir = os.projectdir(), realtime_output = true
+    })
+
 target("smg-pc-stage-camera-resource-tests")
     set_kind("binary")
     set_default(false)
@@ -2771,5 +2782,16 @@ target("smg-pc-line-collision-query-tests")
     add_deps {"smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
               "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"}
     add_tests("line_collision_query", {
+        group = "aurora", rundir = os.projectdir(), realtime_output = true
+    })
+
+target("smg-pc-original-camera-director-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    add_files("OriginalCameraDirectorTests.cpp", "../aurora/lib/compat.cpp")
+    add_deps {"smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
+              "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"}
+    add_tests("original_camera_director", {
         group = "aurora", rundir = os.projectdir(), realtime_output = true
     })

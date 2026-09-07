@@ -52,6 +52,18 @@ f32 PSVECKillElement(const Vec* pSrc, const Vec* pKill, const Vec* pDst) {
 
 
 namespace MR {
+    f32 diffAngleAbsFast(const TVec3f& rA, const TVec3f& rB) {
+        return MR::acos(rA.dot(rB));
+    }
+
+    void setNan(TVec3f& rDst) {
+        // Retail writes 0xffffffff into each component. Preserve those bits
+        // without aliasing a floating-point vector through an integer type.
+        rDst.x = std::bit_cast<f32>(u32{0xffffffff});
+        rDst.y = std::bit_cast<f32>(u32{0xffffffff});
+        rDst.z = std::bit_cast<f32>(u32{0xffffffff});
+    }
+
     void floatToFixed16(TVec3s* pDst, const TVec3f& pSrc, u8 q) {
         const f32 scale = static_cast<f32>(aurora::ppc::shift_left_s32(1, q));
         const s16 x = aurora::ppc::truncate_s16(pSrc.x * scale);

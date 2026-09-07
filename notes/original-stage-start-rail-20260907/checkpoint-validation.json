@@ -1,0 +1,39 @@
+{
+  "stage_camera_resources": {
+    "build": 0,
+    "run": 0,
+    "log": "stage-resource-final-run.log",
+    "real_disc": "RMGK01 local RVZ",
+    "gateway": {
+      "camera_rows": 42,
+      "starts": 10,
+      "root_rails": 3
+    },
+    "egg_star": {
+      "camera_rows": 111,
+      "starts": 25,
+      "root_rails": 16
+    }
+  },
+  "scene_counter_owner": {
+    "build": 0,
+    "run": 0
+  },
+  "showcase": {
+    "source_compilation": 0,
+    "archive": 0,
+    "link": 255,
+    "undefined_count": 37
+  },
+  "sensor_fixture": {
+    "build": 255,
+    "run": null,
+    "missing": [
+      "MR::isExistStarPointerGuidance",
+      "MR::isStarPointerInScreenAnyPort",
+      "MR::startStarPointerModeChooseYesNo",
+      "MR::isExistStarPointerGuidanceFrame1P",
+      "ChipGroup::noticeEndCompleteDemo"
+    ]
+  }
+}

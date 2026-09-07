@@ -2,6 +2,7 @@
 #include "RuntimeContext.hpp"
 #include "compat/DisabledObjectAudioService.hpp"
 #include "compat/SceneJ3dScope.hpp"
+#include "compat/StarPointerDepthOwnership.hpp"
 #include "Game/Util/DrawUtil.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "compat/JutTextureAllocation.hpp"
@@ -538,6 +539,7 @@ namespace smgpc::runtime {
             _rumble.attach_actuator(smgpc::compat::aurora_rumble_actuator());
             JUTVideo::createManager(MR::getSuitableRenderMode());
             aurora::wpad_service().clear();
+            _star_pointer_depth = std::make_unique<compat::StarPointerDepthOwnership>(_host_heaps);
             if (scene_service_mode == RuntimeContextSceneServiceMode::RuntimeOwned) {
                 _owned_name_obj_lifecycle = std::make_unique<smgpc::scene::NameObjLifecycleService>(*this);
                 _owned_scene_execution = std::make_unique<smgpc::scene::SceneExecutionService>(*this);
@@ -619,6 +621,7 @@ namespace smgpc::runtime {
         _scene_execution = nullptr;
         _name_obj_lifecycle = nullptr;
         _j_audio_playback->reset_scene();
+        _star_pointer_depth.reset();
         _scheduler.clear();
         _capture_screen_camera_actor.reset();
         _capture_screen_indirect_actor.reset();
@@ -868,6 +871,9 @@ namespace smgpc::runtime {
         wpad.set_sub_stick(WPAD_CHAN0, sub_stick_x, sub_stick_y);
         wpad.set_swing(WPAD_CHAN0, core_swing, false);
         wpad.set_distance_to_display(WPAD_CHAN0, pointer.valid ? 1.0F : 0.0F);
+        // GameSystemObjHolder updates WPad, then original pointer controllers,
+        // before the scene's camera and actor movement.
+        _star_pointer_depth->update();
         // Original camera controllers read the current WPAD trigger state.
         // Publish host input before the camera and player movement phases.
         _camera_system.begin_frame(_frame_index);
@@ -933,6 +939,7 @@ namespace smgpc::runtime {
         MR::loadViewMtx();
         MR::loadProjectionMtx();
         MR::setDefaultViewportAndScissor();
+        _star_pointer_depth->set_camera(MR::getCameraViewMtx(), MR::getCameraProjectionMtx(), MR::getFovy());
 #ifndef NDEBUG
         if (should_record_j3d_packet_trace()) {
             emit_sequence_state_trace_event("draw_3d_normal", {}, "3d_normal");
@@ -972,10 +979,11 @@ namespace smgpc::runtime {
         auto &lifecycle = scene_lifecycle();
         if (lifecycle.active_scene() != nullptr) {
             lifecycle.draw_2d_normal();
-            return;
+        } else {
+            scene_execution().draw_2d_normal();
         }
-
-        scene_execution().draw_2d_normal();
+        // GameSystem draws its pointer/guidance after the scene layouts.
+        _star_pointer_depth->draw_guidance();
     }
 
 #ifndef NDEBUG

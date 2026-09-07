@@ -1,0 +1,10 @@
+[
+  {
+    "path": "lib/dolphin/gx/GXCpu2Efb.cpp",
+    "sha256": "1fa46257e4d2047c7b0975cae117809fb12ecc3779220ef5d0229ca20bc5ebf4"
+  },
+  {
+    "path": "include/aurora/depth_snapshot.hpp",
+    "sha256": "0194740b38ef37cb593df7e036d85f2ec540aa1a207cf93b679057ae295c260b"
+  }
+]

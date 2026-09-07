@@ -473,69 +473,18 @@ namespace smgpc::scene {
             }
 
             auto triangle = Triangle{};
-            triangle.vertices[0] = transform_point(matrix, local_vertices[0]);
-            triangle.vertices[1] = transform_point(matrix, local_vertices[1]);
-            triangle.vertices[2] = transform_point(matrix, local_vertices[2]);
-            triangle.normal = cross(triangle.vertices[1] - triangle.vertices[0],
-                                    triangle.vertices[2] - triangle.vertices[0]);
-            const auto transformed_face_normal = transform_vector(matrix, face_normal);
-            auto source_normal = transformed_face_normal;
-            if (!normalize(triangle.normal) || !normalize(source_normal)) {
-                ++_stats.rejected_triangle_count;
-                continue;
-            }
-            if (dot(triangle.normal, source_normal) < 0.0F) {
-                triangle.normal.negate();
-            }
-            // Triangle::fillData transforms the four KCL normal axes with
-            // the matrix's linear part and normalizes each independently.
-            // Preserve these source axes separately from the geometric plane
-            // normal used by the host affine sphere-query implementation.
-            triangle.source_normals = {
-                source_normal,
-                transform_vector(matrix, edge_normal_0),
-                transform_vector(matrix, edge_normal_1),
-                transform_vector(matrix, edge_normal_2),
-            };
-            if (!normalize(triangle.source_normals[1]) ||
-                !normalize(triangle.source_normals[2]) ||
-                !normalize(triangle.source_normals[3])) {
-                ++_stats.rejected_triangle_count;
-                continue;
-            }
-            // Local KCL slab planes are separated by `thickness` along the
-            // unit face normal. After an affine transform their perpendicular
-            // separation is thickness / |M^-T n|, equivalently the projection
-            // of M*n onto the transformed unit plane normal.
-            const auto normal_scale = std::abs(dot(transformed_face_normal, triangle.normal));
-            if (!(normal_scale > 1.0e-8F)) {
-                ++_stats.rejected_triangle_count;
-                continue;
-            }
-            triangle.thickness = std::max(0.0F, thickness) * normal_scale;
+            triangle.local_vertices = local_vertices;
+            triangle.local_normals = {face_normal, edge_normal_0, edge_normal_1, edge_normal_2};
+            triangle.local_thickness = std::max(0.0F, thickness);
             triangle.arrow_edge_tolerances = {
                 cArrowEdgeTolerance * local_ac_length / local_twice_area,
                 cArrowEdgeTolerance * local_ab_length / local_twice_area,
                 cArrowEdgeTolerance * local_bc_length / local_twice_area,
             };
-            triangle.bounds = empty_bounds<Bounds>();
-            include(triangle.bounds, triangle.vertices[0]);
-            include(triangle.bounds, triangle.vertices[1]);
-            include(triangle.bounds, triangle.vertices[2]);
-            // KCL prisms are one-sided volumes extending behind the face by
-            // the file thickness. Include that volume in broad-phase bounds
-            // so an initially embedded binder is still reported.
-            include(triangle.bounds, triangle.vertices[0] - triangle.normal * triangle.thickness);
-            include(triangle.bounds, triangle.vertices[1] - triangle.normal * triangle.thickness);
-            include(triangle.bounds, triangle.vertices[2] - triangle.normal * triangle.thickness);
-            auto linear_square_sum = 0.0F;
-            for (const auto index : std::array{0U, 1U, 2U, 4U, 5U, 6U, 8U, 9U, 10U}) {
-                linear_square_sum += matrix[index] * matrix[index];
+            if (!transform_triangle_geometry(triangle, matrix)) {
+                ++_stats.rejected_triangle_count;
+                continue;
             }
-            const auto edge_padding = cArrowEdgeTolerance * std::sqrt(linear_square_sum);
-            triangle.bounds.minimum -= TVec3f(edge_padding, edge_padding, edge_padding);
-            triangle.bounds.maximum += TVec3f(edge_padding, edge_padding, edge_padding);
-            triangle.centroid = (triangle.vertices[0] + triangle.vertices[1] + triangle.vertices[2]) * (1.0F / 3.0F);
             triangle.attribute = attribute;
             const auto triangle_index = sNextTriangleIndex.fetch_add(1U, std::memory_order_relaxed);
             if (triangle_index >= std::numeric_limits<std::uint32_t>::max()) {
@@ -579,6 +528,66 @@ namespace smgpc::scene {
         };
     }
 
+    bool StageCollisionService::transform_triangle_geometry(Triangle& triangle,
+                                                             const std::array<float, 12U>& matrix) {
+        triangle.vertices[0] = transform_point(matrix, triangle.local_vertices[0]);
+        triangle.vertices[1] = transform_point(matrix, triangle.local_vertices[1]);
+        triangle.vertices[2] = transform_point(matrix, triangle.local_vertices[2]);
+        triangle.normal = cross(triangle.vertices[1] - triangle.vertices[0],
+                                triangle.vertices[2] - triangle.vertices[0]);
+        const auto transformed_face_normal = transform_vector(matrix, triangle.local_normals[0]);
+        auto source_normal = transformed_face_normal;
+        if (!normalize(triangle.normal) || !normalize(source_normal)) {
+            return false;
+        }
+        if (dot(triangle.normal, source_normal) < 0.0F) {
+            triangle.normal.negate();
+        }
+        // Triangle::fillData transforms the four KCL normal axes with
+        // the matrix's linear part and normalizes each independently.
+        // Preserve these source axes separately from the geometric plane
+        // normal used by the host affine sphere-query implementation.
+        triangle.source_normals = {
+            source_normal,
+            transform_vector(matrix, triangle.local_normals[1]),
+            transform_vector(matrix, triangle.local_normals[2]),
+            transform_vector(matrix, triangle.local_normals[3]),
+        };
+        if (!normalize(triangle.source_normals[1]) ||
+            !normalize(triangle.source_normals[2]) ||
+            !normalize(triangle.source_normals[3])) {
+            return false;
+        }
+        // Local KCL slab planes are separated by `thickness` along the
+        // unit face normal. After an affine transform their perpendicular
+        // separation is thickness / |M^-T n|, equivalently the projection
+        // of M*n onto the transformed unit plane normal.
+        const auto normal_scale = std::abs(dot(transformed_face_normal, triangle.normal));
+        if (!(normal_scale > 1.0e-8F)) {
+            return false;
+        }
+        triangle.thickness = triangle.local_thickness * normal_scale;
+        triangle.bounds = empty_bounds<Bounds>();
+        include(triangle.bounds, triangle.vertices[0]);
+        include(triangle.bounds, triangle.vertices[1]);
+        include(triangle.bounds, triangle.vertices[2]);
+        // KCL prisms are one-sided volumes extending behind the face by
+        // the file thickness. Include that volume in broad-phase bounds
+        // so an initially embedded binder is still reported.
+        include(triangle.bounds, triangle.vertices[0] - triangle.normal * triangle.thickness);
+        include(triangle.bounds, triangle.vertices[1] - triangle.normal * triangle.thickness);
+        include(triangle.bounds, triangle.vertices[2] - triangle.normal * triangle.thickness);
+        auto linear_square_sum = 0.0F;
+        for (const auto index : std::array{0U, 1U, 2U, 4U, 5U, 6U, 8U, 9U, 10U}) {
+            linear_square_sum += matrix[index] * matrix[index];
+        }
+        const auto edge_padding = cArrowEdgeTolerance * std::sqrt(linear_square_sum);
+        triangle.bounds.minimum -= TVec3f(edge_padding, edge_padding, edge_padding);
+        triangle.bounds.maximum += TVec3f(edge_padding, edge_padding, edge_padding);
+        triangle.centroid = (triangle.vertices[0] + triangle.vertices[1] + triangle.vertices[2]) * (1.0F / 3.0F);
+        return true;
+    }
+
     void StageCollisionService::build() {
         const aurora::allocation::HostAllocationScope host_allocations;
         _triangle_indices.resize(_triangles.size());
@@ -592,6 +601,65 @@ namespace smgpc::scene {
         }
         _stats.triangle_count = _triangles.size();
         _built = true;
+    }
+
+    void StageCollisionService::update_registered_transform(
+        const StageCollisionRegistrationState& registration, const std::array<float, 12U>& current,
+        const std::array<float, 12U>& previous) {
+        const aurora::allocation::HostAllocationScope host_allocations;
+        if (registration._released) {
+            aurora::throw_host_exception<std::logic_error>("Collision transform updates require a live registration owner.");
+        }
+        StageCollisionMatrices matrices;
+        std::copy(current.begin(), current.end(), &matrices.base.mMtx[0][0]);
+        std::copy(previous.begin(), previous.end(), &matrices.previous.mMtx[0][0]);
+        Mtx previous_inverse;
+        if (!std::ranges::all_of(current, [](float x) { return std::isfinite(x); }) ||
+            !std::ranges::all_of(previous, [](float x) { return std::isfinite(x); }) ||
+            PSMTXInverse(matrices.base, matrices.inverse) == 0U ||
+            PSMTXInverse(matrices.previous, previous_inverse) == 0U) {
+            aurora::throw_host_exception<std::invalid_argument>("Collision transforms require finite invertible current and previous matrices.");
+        }
+
+        auto sources = std::vector<std::size_t>{};
+        for (auto i = std::size_t{}; i < _sources.size(); ++i) {
+            if (_sources[i].registration.get() == &registration) sources.push_back(i);
+        }
+        if (sources.empty()) {
+            aurora::throw_host_exception<std::logic_error>("Collision transform registration does not belong to this live service.");
+        }
+        // Prepare every replacement before publishing any changed matrix or
+        // surface. A rejected transform leaves all previous query state valid.
+        auto transformed = std::vector<std::pair<std::size_t, Triangle>>{};
+        for (auto i = std::size_t{}; i < _triangles.size(); ++i) {
+            if (_triangles[i].registration.get() != &registration) continue;
+            auto triangle = _triangles[i];
+            if (!transform_triangle_geometry(triangle, current)) {
+                aurora::throw_host_exception<std::invalid_argument>("Collision transform produces a degenerate registered prism.");
+            }
+            transformed.emplace_back(i, std::move(triangle));
+        }
+        auto new_matrices = std::vector<std::pair<std::size_t, std::unique_ptr<StageCollisionMatrices>>>{};
+        for (const auto index : sources) {
+            if (_sources[index].matrices == nullptr) {
+                new_matrices.emplace_back(index, std::make_unique<StageCollisionMatrices>(matrices));
+            }
+        }
+        for (auto& [index, matrix] : new_matrices) _sources[index].matrices = std::move(matrix);
+        for (auto& [index, triangle] : transformed) _triangles[index] = std::move(triangle);
+        for (const auto index : sources) {
+            auto& source = _sources[index];
+            source.matrix = current;
+            *source.matrices = matrices;
+            if (source.area_server != nullptr) {
+                const auto scale = (std::sqrt(current[0] * current[0] + current[4] * current[4] + current[8] * current[8]) +
+                                    std::sqrt(current[1] * current[1] + current[5] * current[5] + current[9] * current[9]) +
+                                    std::sqrt(current[2] * current[2] + current[6] * current[6] + current[10] * current[10])) / 3.0F;
+                source.area_bounding_radius = scale * source.area_server->server().mMaxVertexDistance;
+            }
+        }
+        ++_revision;
+        if (_built) build();
     }
 
     void StageCollisionService::prepare_kcl_source(const Source& source) const {

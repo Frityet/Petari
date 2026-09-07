@@ -1,34 +1,3 @@
-target("smg-pc-mario-gateway-walk-slice")
-    set_kind("static")
-    set_default(false)
-    set_group("showcase")
-    add_includedirs(path.join(os.projectdir(), "src"), {before = true})
-    add_includedirs(path.join(os.projectdir(), "aurora", "include"), {before = true})
-    add_cxxflags("-include " .. path.join(os.projectdir(), "src/compat/MetrowerksStdCompat.hpp"), {force = true})
-    add_cxxflags("-fno-builtin-sprintf", "-fno-builtin-snprintf", "-fno-builtin-vsprintf", "-fno-builtin-vsnprintf", {force = true})
-    add_cxxflags("-ffunction-sections", "-fdata-sections", {force = true})
-    add_files {
-        "../Game/Player/MarioActorCamera.cpp",
-        "../Game/Player/MarioActorShadow.cpp",
-        "../Game/Player/MarioActorWipe.cpp",
-        "../Game/Player/MarioActorHand.cpp",
-        "../Game/Player/MarioActorSpecialDraw.cpp",
-        "../Game/Player/MarioActorGravity.cpp",
-        "../Game/Player/MarioParts.cpp",
-        "../Game/Player/MarioActorParts.cpp",
-        "../Game/Player/MarioSearchLight.cpp",
-        "../Game/Player/MarioNullBck.cpp",
-        "../Game/Player/FireMarioBall.cpp",
-        "../Game/Player/JetTurtleShadow.cpp",
-        "../Game/Player/TornadoMario.cpp",
-        "../Game/Player/MarioActorInit.cpp",
-        "../Game/Player/MarioActorPad.cpp",
-        "../Game/Player/MarioConst.cpp",
-        "../Game/Player/MarioMove.cpp",
-        "../Game/Player/MarioWalk.cpp"
-    }
-    add_deps("smg-pc-game")
-
 target("smg-pc-showcase")
     set_kind("binary")
     add_files {
@@ -37,7 +6,7 @@ target("smg-pc-showcase")
     }
     add_deps {
         "smg-pc-app",
-        "smg-pc-mario-gateway-walk-slice",
+        "smg-pc-game",
         "aurora-main"
     }
     if is_plat("macosx", "iphoneos") then

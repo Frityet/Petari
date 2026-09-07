@@ -737,18 +737,6 @@ namespace {
                     *ignored_audio);
             }
             auto scene = smgpc::scene::GatewayDemoScene(runtime.dvd());
-            const auto resolved_camera =
-                smgpc::camera::resolve_stage_start_camera(runtime.dvd(), scene.start_info());
-            if (resolved_camera.status !=
-                    smgpc::camera::StageStartCameraResolveStatus::Resolved ||
-                !resolved_camera.camera.has_value()) {
-                aurora::throw_host_exception<std::runtime_error>(
-                    "Gateway exact StartInfo camera could not be resolved: " +
-                    resolved_camera.detail);
-            }
-            const auto initial_camera = resolved_camera.camera->calculation.pose;
-            const auto camera_owner = runtime.camera_system().set_authored_game_camera(
-                *resolved_camera.camera);
             runtime.set_freecam_enabled(false);
             runtime.refresh_scene_camera_pose();
 
@@ -773,10 +761,6 @@ namespace {
                     const auto phase = smgpc::scene::SceneInitializationScope(SceneInitializeState_PlacementPlayer);
                     mario_owner.actor().init(scene.player_start_iter());
                 }
-                runtime.player_system().set_camera_target(
-                    smgpc::compat::create_mario_camera_target(mario_owner.actor()));
-                runtime.camera_system().set_game_camera_target_player(
-                    camera_owner, runtime.player_system());
                 placement_lease =
                     scene.finalize_placements(mario_owner.actor());
                 if (is_spin_route) {
@@ -799,6 +783,8 @@ namespace {
                 runtime.game_layout().activate_game_scene_draw_3d();
             }
             renderer.end_frame(runtime.wii_video().render_mode());
+
+            const auto initial_camera = runtime.scene_camera_pose().value();
 
             auto gravity_requester =
                 NameObj{"Gateway development physics probes"};
@@ -1029,7 +1015,6 @@ namespace {
                         probes.size(), gravity_active, contacting, settled);
                 }
             }
-            runtime.camera_system().clear_stage_start_camera(camera_owner);
         }
 
         if (options.smoke) {

@@ -1,0 +1,34 @@
+[
+  {
+    "source": "src/Game/System/AlreadyDoneFlagInGalaxy.cpp",
+    "exit_code": 0
+  },
+  {
+    "source": "src/Game/System/GameDataTemporaryInGalaxy.cpp",
+    "exit_code": 0
+  },
+  {
+    "source": "src/Game/Scene/ScenePlayingResult.cpp",
+    "exit_code": 0
+  },
+  {
+    "source": "src/compat/StageSessionState.cpp",
+    "exit_code": 0
+  },
+  {
+    "source": "src/compat/OriginalSceneCounterQueries.cpp",
+    "exit_code": 0
+  },
+  {
+    "source": "src/compat/SceneObjHolderCompat.cpp",
+    "exit_code": 0
+  },
+  {
+    "source": "src/scene/StageHostScene.cpp",
+    "exit_code": 0
+  },
+  {
+    "source": "src/scene/GatewayDemoScene.cpp",
+    "exit_code": 0
+  }
+]

@@ -7,6 +7,8 @@
 #include "Game/LiveActor/ActorLightCtrl.hpp"
 #include "Game/LiveActor/Binder.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/HitSensorInfo.hpp"
+#include "Game/LiveActor/HitSensorKeeper.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/LodCtrl.hpp"
 #include "Game/LiveActor/RailRider.hpp"
@@ -40,10 +42,18 @@ namespace {
         const void* postpass_delegate = nullptr;
     };
 
-    struct ActorHitSensorState {
-        std::string name{};
-        TVec3f offset{};
-        std::unique_ptr<HitSensor> sensor{};
+    struct HitSensorKeeperDeleter {
+        void operator()(HitSensorKeeper* keeper) const noexcept {
+            if (!keeper) return;
+            for (s32 i = 0; i < keeper->mSensorInfosSize; ++i) {
+                auto* info = keeper->mSensorInfos[i];
+                delete[] info->mSensor->mSensors;
+                delete info->mSensor;
+                delete info;
+            }
+            delete[] keeper->mSensorInfos;
+            delete keeper;
+        }
     };
 
     struct LiveActorRuntimeState {
@@ -52,7 +62,7 @@ namespace {
         std::unique_ptr<ActorPadAndCameraCtrl> camera_ctrl{};
         std::shared_ptr<smgpc::compat::JkrAllocationDomain> sound_domain{};
         std::unique_ptr<AudAnmSoundObject> sound_object{};
-        std::vector<ActorHitSensorState> hit_sensors{};
+        std::unique_ptr<HitSensorKeeper, HitSensorKeeperDeleter> sensor_keeper{};
         std::optional<smgpc::compat::ActorBinderRuntimeConfig> binder{};
         std::unique_ptr<Binder> binder_provider{};
         smgpc::compat::ActorBinderContactState binder_contacts{};
@@ -116,14 +126,23 @@ namespace {
     }
 
     void destroy_hit_sensors(LiveActorRuntimeState& state) {
-        for (auto& entry : state.hit_sensors) {
-            if (entry.sensor != nullptr) {
-                delete[] entry.sensor->mSensors;
-                entry.sensor->mSensors = nullptr;
-                entry.sensor->mSensorCount = 0U;
+        const auto* retiring = state.sensor_keeper.get();
+        if (!retiring) return;
+        // Native teardown can happen from an original attack callback. Remove
+        // borrowed contacts before releasing the original sensor storage.
+        for (auto& [actor, other] : actor_states()) {
+            if (!other.sensor_keeper) continue;
+            for (s32 i = 0; i < other.sensor_keeper->mSensorInfosSize; ++i) {
+                auto* sensor = other.sensor_keeper->mSensorInfos[i]->mSensor;
+                if (!sensor->mSensorCount) continue;
+                for (s32 j = 0; j < retiring->mSensorInfosSize; ++j) {
+                    auto* removed = retiring->mSensorInfos[j]->mSensor;
+                    auto* end = std::remove(sensor->mSensors, sensor->mSensors + sensor->mSensorCount, removed);
+                    sensor->mSensorCount = end - sensor->mSensors;
+                }
             }
         }
-        state.hit_sensors.clear();
+        state.sensor_keeper.reset();
     }
 
     void invalidate_shadow_joint_matrix_bindings(LiveActorRuntimeState& state) noexcept {
@@ -366,6 +385,7 @@ namespace smgpc::compat {
     }
 
     void register_actor_runtime_state(LiveActor* actor) {
+        JkrHostAllocationScope host;
         if (actor == nullptr) {
             aurora::throw_host_exception<std::invalid_argument>("LiveActor runtime state requires a real actor.");
         }
@@ -390,7 +410,6 @@ namespace smgpc::compat {
 
         release_actor_effect_keeper(actor);
         release_actor_collision_parts(actor);
-        release_actor_sensor_bindings(actor);
         release_talk_runtime_state(actor);
         release_demo_runtime_state(actor);
 
@@ -405,6 +424,7 @@ namespace smgpc::compat {
         const_cast<LiveActor*>(actor)->mStarPointerTarget = nullptr;
 
         destroy_hit_sensors(found->second);
+        const_cast<LiveActor*>(actor)->mSensorKeeper = nullptr;
         actor_states().erase(found);
     }
 
@@ -514,104 +534,62 @@ namespace smgpc::compat {
 
     void initialize_actor_hit_sensors(LiveActor* actor, int sensor_count) {
         auto& state = require_actor_state(actor);
-        release_actor_sensor_bindings(actor);
+        if (sensor_count < 0)
+            aurora::throw_host_exception<std::invalid_argument>("HitSensorKeeper capacity must be non-negative");
+        auto keeper = std::unique_ptr<HitSensorKeeper, HitSensorKeeperDeleter>(new HitSensorKeeper(sensor_count));
         destroy_hit_sensors(state);
-        if (sensor_count > 0) {
-            state.hit_sensors.reserve(static_cast<std::size_t>(sensor_count));
-        }
+        state.sensor_keeper = std::move(keeper);
+        actor->mSensorKeeper = state.sensor_keeper.get();
     }
 
     HitSensor* add_actor_hit_sensor(LiveActor* actor, const char* name, std::uint32_t type,
                                     std::uint16_t group_size, float radius, const TVec3f& offset) {
         auto& state = require_actor_state(actor);
-        auto entry = ActorHitSensorState{};
-        entry.name = name != nullptr ? name : "";
-        entry.offset = offset;
-        entry.sensor = std::make_unique<HitSensor>(type, group_size, radius, actor);
-        entry.sensor->mPosition = actor->mPosition + offset;
-        entry.sensor->validateBySystem();
-        if (actor->mFlag.mIsDead) {
-            entry.sensor->invalidate();
-        } else {
-            entry.sensor->validate();
-        }
-        state.hit_sensors.push_back(std::move(entry));
-        return state.hit_sensors.back().sensor.get();
+        if (!state.sensor_keeper)
+            aurora::throw_host_exception<std::logic_error>("Hit sensor registration requires LiveActor::initHitSensor");
+        return state.sensor_keeper->add(name, type, group_size, radius, actor, offset);
     }
 
     HitSensor* actor_hit_sensor(const LiveActor* actor, const char* name) {
-        if (actor == nullptr || name == nullptr) {
-            return nullptr;
-        }
-        auto& sensors = require_actor_state(actor).hit_sensors;
-        for (auto& entry : sensors) {
-            if (entry.name == name) {
-                return entry.sensor.get();
-            }
-        }
-        return nullptr;
+        if (!actor || !name) return nullptr;
+        auto* keeper = require_actor_state(actor).sensor_keeper.get();
+        return keeper ? keeper->getSensor(name) : nullptr;
     }
 
     const char* actor_hit_sensor_name(const LiveActor* actor, const HitSensor* sensor) {
-        if (actor == nullptr || sensor == nullptr) {
-            return "";
-        }
-        for (const auto& entry : require_actor_state(actor).hit_sensors) {
-            if (entry.sensor.get() == sensor) {
-                return entry.name.c_str();
-            }
+        if (!actor || !sensor) return "";
+        auto* keeper = require_actor_state(actor).sensor_keeper.get();
+        if (keeper) for (s32 i = 0; i < keeper->mSensorInfosSize; ++i) {
+            auto* info = keeper->mSensorInfos[i];
+            if (info->mSensor == sensor) return info->mName;
         }
         return "";
     }
 
     void collect_actor_hit_sensors(const LiveActor* actor, std::vector<HitSensor*>& sensors) {
-        if (actor == nullptr) {
-            return;
-        }
-        for (const auto& entry : require_actor_state(actor).hit_sensors) {
-            if (entry.sensor != nullptr) {
-                sensors.push_back(entry.sensor.get());
-            }
-        }
+        if (!actor) return;
+        JkrHostAllocationScope host;
+        auto* keeper = require_actor_state(actor).sensor_keeper.get();
+        if (keeper) for (s32 i = 0; i < keeper->mSensorInfosSize; ++i)
+            sensors.push_back(keeper->mSensorInfos[i]->mSensor);
     }
 
     void validate_actor_hit_sensors(LiveActor* actor) {
-        if (actor == nullptr) {
-            return;
-        }
-        for (const auto& entry : require_actor_state(actor).hit_sensors) {
-            if (entry.sensor != nullptr) {
-                entry.sensor->validate();
-            }
-        }
+        if (actor && actor->mSensorKeeper) actor->mSensorKeeper->validate();
     }
 
     void invalidate_actor_hit_sensors(LiveActor* actor) {
-        if (actor == nullptr) {
-            return;
-        }
-        for (const auto& entry : require_actor_state(actor).hit_sensors) {
-            if (entry.sensor != nullptr) {
-                entry.sensor->invalidate();
-            }
-        }
+        if (actor && actor->mSensorKeeper) actor->mSensorKeeper->invalidate();
     }
 
     void update_actor_hit_sensors(LiveActor* actor) {
-        if (actor == nullptr) {
-            return;
-        }
-        for (const auto& entry : require_actor_state(actor).hit_sensors) {
-            if (entry.sensor != nullptr) {
-                entry.sensor->mPosition = actor->mPosition + entry.offset;
-            }
-        }
-        update_actor_sensor_bindings(actor);
+        if (actor && actor->mSensorKeeper) actor->mSensorKeeper->update();
     }
 
     std::size_t actor_hit_sensor_count(const LiveActor* actor) {
         const auto found = actor_states().find(actor);
-        return found != actor_states().end() ? found->second.hit_sensors.size() : 0U;
+        return found != actor_states().end() && found->second.sensor_keeper
+                   ? found->second.sensor_keeper->mSensorInfosSize : 0U;
     }
 
     void configure_actor_binder(LiveActor* actor, float radius, float offset, std::uint32_t plane_capacity) {

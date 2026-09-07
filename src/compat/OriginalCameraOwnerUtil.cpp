@@ -5,7 +5,13 @@
 #include "Game/Camera/CameraLocalUtil.hpp"
 #include "Game/Camera/CameraMan.hpp"
 #include "Game/Camera/CameraRegisterHolder.hpp"
+#include "Game/Camera/CameraParamChunk.hpp"
+#include "Game/Camera/CameraPoseParam.hpp"
+#include "Game/Camera/CameraTargetArg.hpp"
+#include "Game/LiveActor/ActorCameraInfo.hpp"
 #include "Game/Player/MarioAccess.hpp"
+#include "Game/MapObj/GCapture.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
@@ -117,6 +123,14 @@ namespace CameraLocalUtil {
 } // namespace CameraLocalUtil
 
 namespace MR {
+    bool isPlayerDisableFpView() {
+        return MarioAccess::isDisableFpView();
+    }
+
+    bool isFpViewChangingFailure() {
+        return MarioAccess::isFpViewChangingFailure();
+    }
+
     void startCameraInterpolation(u32 time) {
         MR::getCameraDirector()->setInterpolation(time);
     }
@@ -162,3 +176,161 @@ namespace MR {
     }
 
 } // namespace MR
+
+namespace MR {
+    CameraHolder* getCameraHolder() {
+        return getCameraDirector()->getHolder();
+    }
+
+    void declareGlobalEventCamera(const char* pEventName) {
+        getCameraDirector()->declareEvent(0, pEventName);
+    }
+
+    void declareGlobalEventCameraAbyss(const char* pEventName) {
+        declareGlobalEventCamera(pEventName);
+        CameraParamChunkEvent* chunk = MR::getCameraDirector()->getEventParameter(0, pEventName);
+
+        if (chunk != nullptr) {
+            chunk->setCameraType("CAM_TYPE_EYEPOS_FIX_THERE", MR::getCameraDirector()->mHolder);
+            chunk->mGeneralParam->mNum1 = 1;
+            chunk->_64 = true;
+        }
+    }
+
+    void declareGlobalEventCameraDead(const char* pEventName, f32 dist, s32 time, s32 type) {
+        declareGlobalEventCamera(pEventName);
+        CameraParamChunkEvent* chunk = getCameraDirector()->getEventParameter(0, pEventName);
+        if (chunk != nullptr) {
+            chunk->setCameraType("CAM_TYPE_DEAD", getCameraDirector()->mHolder);
+            chunk->mGeneralParam->mDist = dist;
+            chunk->mGeneralParam->mNum1 = time;
+            chunk->mGeneralParam->mNum2 = type;
+            chunk->setLOfsErpOff(true);
+            chunk->mExParam.setWOffset(TVec3f(0.0f, 0.0f, 0.0f));
+            chunk->mExParam.mLOffsetV = 100.0f;
+            chunk->_64 = true;
+        }
+    }
+
+    void declareBlackHoleCamera(const char* pEventName) {
+        declareGlobalEventCamera(pEventName);
+        CameraParamChunkEvent* chunk = getCameraDirector()->getEventParameter(0, pEventName);
+        if (chunk != nullptr) {
+            chunk->setCameraType("CAM_TYPE_BLACK_HOLE", getCameraDirector()->mHolder);
+            chunk->_64 = true;
+            chunk->mEnableErpFrame = true;
+            chunk->mExParam.mCamInt = 240;
+            chunk->setCollisionOff(true);
+        }
+    }
+
+    void setGameCameraTargetToPlayer() {
+        CameraTargetArg camTarget = CameraTargetArg();
+        setCameraTargetToPlayer(&camTarget);
+        setGameCameraTarget(camTarget);
+    }
+
+    void setGameCameraTarget(const CameraTargetArg& rCamTarget) {
+        rCamTarget.setTarget();
+    }
+
+    void startGlobalEventCamera(const char* pName, const CameraTargetArg& rCamTarget, s32 frame) {
+        getCameraDirector()->startEvent(0, pName, rCamTarget, frame);
+    }
+
+    bool hasStartAnimCamera() {
+        return getCameraDirector()->mStartCameraCreated;
+    }
+
+    void startStartAnimCamera() {
+        getCameraDirector()->startStartAnimCamera();
+    }
+
+    s32 getStartAnimCameraFrame() {
+        return getCameraDirector()->getStartAnimCameraFrame();
+    }
+
+    void endStartAnimCamera() {
+        getCameraDirector()->endStartAnimCamera();
+    }
+
+    bool isCameraInterpolatingNearlyEnd() {
+        return getCameraDirector()->isInterpolatingNearlyEnd();
+    }
+
+    void resetCameraLocalOffset() {
+        getCameraDirector()->requestLocalOffsetReset();
+    }
+
+    void overlayWithPreviousScreen(u32 time) {
+        getCameraDirector()->cover(time);
+    }
+
+    bool isSubjectiveCameraOnForObjClipping() {
+        return getCameraDirector()->mSubjectiveFrame > 0;
+    }
+
+    const TVec3f& getCameraWatchPos() {
+        return getCameraDirector()->mPoseParam1->mWatchPos;
+    }
+
+    void zoomInTargetGameCamera() {
+        getCameraDirector()->zoomInGameCamera();
+    }
+
+    void zoomOutTargetGameCamera() {
+        getCameraDirector()->zoomOutGameCamera();
+    }
+
+    void startTalkCamera(const TVec3f& rPosition, const TVec3f& rUp, f32 axisX, f32 axisY, s32 frame) {
+        getCameraDirector()->startTalkCamera(rPosition, rUp, axisX, axisY, frame);
+    }
+
+    void endTalkCamera(bool resetView, s32 frame) {
+        getCameraDirector()->endTalkCamera(resetView, frame);
+    }
+
+    void pauseOnAnimCamera(const ActorCameraInfo* pInfo, const char* pName) {
+        getCameraDirector()->pauseOnAnimCamera(pInfo->mZoneID, pName);
+    }
+
+    void pauseOffAnimCamera(const ActorCameraInfo* pInfo, const char* pName) {
+        getCameraDirector()->pauseOffAnimCamera(pInfo->mZoneID, pName);
+    }
+}
+
+namespace MR {
+    void stopPlayerFpView() {
+        return MarioAccess::stopFpView();
+    }
+
+    bool isPlayerGCaptured() {
+        if (!MR::isExistSceneObj(SceneObj_GCapture)) {
+            return false;
+        }
+        GCapture* gCapture = static_cast< GCapture* >(MR::getSceneObjHolder()->getObj(SceneObj_GCapture));
+        if (gCapture == nullptr) {
+            return false;
+        }
+
+        return gCapture->_108;
+    }
+
+    void cleanEventCameraTarget_temporally() {
+        CameraTargetArg camTarget = CameraTargetArg();
+        setCameraTargetToPlayer(&camTarget);
+        camTarget.setTarget();
+    }
+}
+
+namespace MR {
+    void startBlackHoleCamera(const char* pEventName, const TVec3f& rWPoint, const TVec3f& rPos) {
+        CameraParamChunkEvent* chunk = getCameraDirector()->getEventParameter(0, pEventName);
+        if (chunk != nullptr) {
+            chunk->mGeneralParam->mWPoint.set(rWPoint);
+            chunk->mGeneralParam->mAxis.set(rPos);
+            startGlobalEventCameraNoTarget(pEventName, -1);
+        }
+    }
+
+}

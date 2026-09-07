@@ -1,0 +1,46 @@
+[
+  {
+    "path": "src/Game/Player/MarioMove.cpp",
+    "sha256": "5bbd0a926b04d38c25a874f47db4e1bb7ec38403aee6210569192a4a70cdc84d"
+  },
+  {
+    "path": "src/Game/Player/MarioJump.cpp",
+    "sha256": "0f40b65ab2b07c36b6964c35235d170385ffdca36e1fbd1dbef586d882ad8212"
+  },
+  {
+    "path": "src/Game/Player/MarioActorParts.cpp",
+    "sha256": "afb9bcc1800c1aa6fc08d994f47461567885cd01179e4eed6551fe51556aacf6"
+  },
+  {
+    "path": "src/Game/Player/MarioActorRush.cpp",
+    "sha256": "2942eb1b658c0acdc0e2ca260227e9dbf48d6222e54c9390383e18ec33719524"
+  },
+  {
+    "path": "src/Game/Player/MarioActorRushMsg.cpp",
+    "sha256": "4a0fbc3d072c6c2d10eb46fb8254e3b3c566e1f43cb3d81ac39eab8cc566ed0c"
+  },
+  {
+    "path": "src/Game/Player/MarioActorBlackHole.cpp",
+    "sha256": "dc505d36415eac5d7350db2a9f58a47ce239f262152a906fea77af7fa09ea730"
+  },
+  {
+    "path": "include/Game/MapObj/ChipCounter.hpp",
+    "sha256": "f5023aad92a22cac59e458f109178410e63e39db0a0e33565d796cff59ce6aac"
+  },
+  {
+    "path": "include/Game/MapObj/ChipHolder.hpp",
+    "sha256": "255c68f11a514dd8bfc4807c6e7024ab9df36ebe847a5c6265d09a30f5f33344"
+  },
+  {
+    "path": "src/Game/MapObj/ChipCounter.cpp",
+    "sha256": "0d96cd0a14330ad81484f5c254d9557dd8442e30d487893d4a7efa182f52c6c0"
+  },
+  {
+    "path": "src/Game/MapObj/ChipHolder.cpp",
+    "sha256": "fa781496f27e0e4c758556922f1caff4c7106bdf7a3d0bc7a06c9c4f446d6f35"
+  },
+  {
+    "path": "src/Game/MapObj/CollectCounter.cpp",
+    "sha256": "ed3ae9a5f65a234d7a2a26ffe9d4397d5f108a6ed6fa3c01b77f2d31e9b56c65"
+  }
+]

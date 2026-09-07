@@ -1,0 +1,18 @@
+[
+  {
+    "path": "src/Game/Util/MapUtil.cpp",
+    "sha256": "cdc96b13cdf41d2df94d41ca523e184693a6ac2207929a7f32ce06e7cfd5e469"
+  },
+  {
+    "path": "src/Game/Util/AreaObjUtil.cpp",
+    "sha256": "abfc9c13954ef46f25aff5e4fe5bf922cc021dbd80faf2299262644bded32f93"
+  },
+  {
+    "path": "src/Game/Map/CollisionCategorizedKeeper.cpp",
+    "sha256": "8a3fa981d7cef9ce73fb674e4aa34e3890a31764d1ce7a20be9a546bff58d61e"
+  },
+  {
+    "path": "src/Game/Screen/WaterCameraFilter.cpp",
+    "sha256": "e945cf6c60644e49c48640170539ec0ba69c1279a1ca3f7d63698d4310187f73"
+  }
+]

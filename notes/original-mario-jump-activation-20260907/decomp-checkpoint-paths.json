@@ -1,0 +1,13 @@
+[
+  "src/Game/Player/MarioMove.cpp",
+  "src/Game/Player/MarioJump.cpp",
+  "src/Game/Player/MarioActorParts.cpp",
+  "src/Game/Player/MarioActorRush.cpp",
+  "src/Game/Player/MarioActorRushMsg.cpp",
+  "src/Game/Player/MarioActorBlackHole.cpp",
+  "include/Game/MapObj/ChipCounter.hpp",
+  "include/Game/MapObj/ChipHolder.hpp",
+  "src/Game/MapObj/ChipCounter.cpp",
+  "src/Game/MapObj/ChipHolder.cpp",
+  "src/Game/MapObj/CollectCounter.cpp"
+]

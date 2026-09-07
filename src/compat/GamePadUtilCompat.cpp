@@ -49,6 +49,12 @@ namespace MR {
         return wpad_service().distance_to_display(channel);
     }
 
+    void getCorePadPastPointingPos(TVec2f* pPos, s32 index, s32 channel) {
+        const auto pointer = wpad_service().past_pointer(channel, static_cast<u32>(index));
+        pPos->x = (pointer.x / static_cast<f32>(getFrameBufferWidth())) * 2.0F - 1.0F;
+        pPos->y = (pointer.y / static_cast<f32>(getFrameBufferHeight())) * 2.0F - 1.0F;
+    }
+
     void getCorePadPointingPosBasedOnScreen(TVec2f* pPos, s32 channel) {
         const auto pointer = wpad_service().pointer(channel);
         pPos->x = pointer.x;

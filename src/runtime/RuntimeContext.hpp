@@ -46,6 +46,7 @@ namespace smgpc::layout {
 }
 
 namespace aurora::audio { class DisabledObjectAudioService; }
+namespace smgpc::compat { class StarPointerDepthOwnership; }
 
 namespace smgpc::runtime {
 
@@ -352,6 +353,7 @@ namespace smgpc::runtime {
         WipeService _system_wipe;
         ImageEffectService _image_effects;
         StarPointerService _star_pointer;
+        std::unique_ptr<compat::StarPointerDepthOwnership> _star_pointer_depth;
         CameraSystemService _camera_system;
         PlayerSystemService _player_system;
         GameLayoutService _game_layout;

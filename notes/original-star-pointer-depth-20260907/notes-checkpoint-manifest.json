@@ -1,0 +1,54 @@
+[
+  {
+    "path": "notes/original-star-pointer-depth-20260907/README.md",
+    "sha256": "b808aefafb9228d41f159550e0a4cdf4f03f2d698a3fc3b94966a1257551caee"
+  },
+  {
+    "path": "notes/original-star-pointer-depth-20260907/aurora-checkpoint-manifest.json",
+    "sha256": "afc9cd60e84bdb63f44366472d9ada53e00d5d7773ac846063dd62bea7cede56"
+  },
+  {
+    "path": "notes/original-star-pointer-depth-20260907/decomp-checkpoint-manifest.json",
+    "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+  },
+  {
+    "path": "notes/original-star-pointer-depth-20260907/design.md",
+    "sha256": "026002d871501863675049eb76d0508dafc8e5b62bdf41a89c689b20f783fd1a"
+  },
+  {
+    "path": "notes/original-star-pointer-depth-20260907/function-proof.json",
+    "sha256": "f9e650b958f8a8f4b60e7c55beedde6553b749ea54eba13245ee60d9af4adced"
+  },
+  {
+    "path": "notes/original-star-pointer-depth-20260907/native-compile-results.json",
+    "sha256": "d4554623ba8fc43d7ed911a82c46acd506eff8380ce8811237339e1032edfc9e"
+  },
+  {
+    "path": "notes/original-star-pointer-depth-20260907/native-final-leaves-compile-results.json",
+    "sha256": "07de5bec76de3a8b53ced284cd2029628476e65a29cd829256fa909f89b8a4f3"
+  },
+  {
+    "path": "notes/original-star-pointer-depth-20260907/original-depth-final-native-command.json",
+    "sha256": "d2f1c56a2d7bf412f14feab836ba0ced04dc6035073d93647de728b50d19223c"
+  },
+  {
+    "path": "notes/original-star-pointer-depth-20260907/paused-source-manifest.json",
+    "sha256": "afd64abb00b304b34225bb2f82c20c26c12096abdc51132ff13f4cbe7e4add95"
+  },
+  {
+    "path": "notes/original-star-pointer-depth-20260907/root-checkpoint-manifest.json",
+    "sha256": "6196f9f5a5b41d2e8d4a2b042cd0eb819db30e5462efe7d61f17fb45031ac1f9"
+  },
+  {
+    "path": "notes/original-star-pointer-depth-20260907/snapshot-scope-test.cpp",
+    "sha256": "1ee2aa674a7bcc9de5fcd62889bc4bef143952f9be8106cc7095bf1cbbe064bf"
+  },
+  {
+    "path": "notes/original-star-pointer-depth-20260907/verify-reference.py",
+    "sha256": "9be25e9211571dad59f0762b3a412f6f3e33955ca618a28892ba9e60abe42952"
+  },
+  {
+    "path": "notes/original-star-pointer-depth-20260907/wii-compile-results.json",
+    "sha256": "98b40e4ae71653f800a24fa148efd895d606cd633e7fc790e6ba67be0809e371"
+  }
+]

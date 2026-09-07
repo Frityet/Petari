@@ -1,0 +1,16 @@
+{
+  "source": "decomp/src/Game/Screen/WaterCameraFilter.cpp",
+  "correction": "Mtx v21 -> Mtx44 v21 in loadMaterial; 48-byte object replaced with required 64-byte projection matrix",
+  "retail_stack_frame_bytes": 384,
+  "projection_stack_offset": "0x114",
+  "next_scratch_stack_offset": "0x158",
+  "retail_calls": [
+    "C_MTXOrtho",
+    "GXSetProjection"
+  ],
+  "compile_before": 0,
+  "compile_after": 0,
+  "fuzzy_before": 99.39493,
+  "fuzzy_after": 99.460144,
+  "native_imported": false
+}

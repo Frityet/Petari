@@ -1,0 +1,90 @@
+[
+  {
+    "path": "src/Game/Screen/StarPointerController.cpp",
+    "sha256": "f436f07da49407963a7351c85fffd25663556a32ccbf3357929670d34429c538"
+  },
+  {
+    "path": "src/Game/Screen/StarPointerController.hpp",
+    "sha256": "a5d65fce786220fe0d87a0821bba84da0dafd28859126e5f36883dafe6bb2c65"
+  },
+  {
+    "path": "src/Game/Screen/StarPointerDirector.hpp",
+    "sha256": "0f57046c9eadfabdde1c242a18a940c30246079e1e4534ad4f2b38fa40573a86"
+  },
+  {
+    "path": "src/Game/Screen/StarPointerLayout.hpp",
+    "sha256": "5b22afbb08302b699c5b4a8f03147e5b411599022aec87e20b4f178ae80fbb5f"
+  },
+  {
+    "path": "src/Game/System/DrawSyncManager.hpp",
+    "sha256": "fdf197e3551d16c2f179235f1b53e9b440c3483c95221069b866a9da9787ee8f"
+  },
+  {
+    "path": "src/Game/Screen/ImageEffectDirector.hpp",
+    "sha256": "b2c86cbc077228949def5f7b64822964d641bc665f6cf6064e3e212626c93c53"
+  },
+  {
+    "path": "src/Game/Screen/ImageEffectSystemHolder.hpp",
+    "sha256": "af01c71a84e14eba3ce6e6ca936a7059d8803eec8a1837ae5b3f6abbd674bc01"
+  },
+  {
+    "path": "src/compat/StarPointerDepthOwnership.cpp",
+    "sha256": "867469e0999d7b640d4eaa6bb79d04499a73f2af18a8cef68a51707a8c147059"
+  },
+  {
+    "path": "src/compat/StarPointerDepthOwnership.hpp",
+    "sha256": "43c95cc604ff29c32779961fa62fabc6ba904245292617b144cb7bb1d11b076b"
+  },
+  {
+    "path": "src/compat/OriginalStarPointerDepth.cpp",
+    "sha256": "28271c2a4dc79d6846e14e75c834c206ad20a842f816ee59f16121ea5c75e8ac"
+  },
+  {
+    "path": "src/compat/OriginalTripodBossQuery.cpp",
+    "sha256": "674c5aadcd5b5813b56f8df72f207875f74def9800f87256487bea45d9e35fe7"
+  },
+  {
+    "path": "src/compat/OriginalImageEffectOwnerQuery.cpp",
+    "sha256": "a184be006752255698f9834e829ec28ff7c71e089fd1f19117109735a64745ee"
+  },
+  {
+    "path": "src/compat/OriginalCameraOwnerUtil.cpp",
+    "sha256": "450c3ac707809f23a7fe602ddef6d71d9d0636224ef1001b14e1f1b46026b056"
+  },
+  {
+    "path": "src/compat/GamePadUtilCompat.cpp",
+    "sha256": "77292e5ee3c1c93660c1ad263f3cfa4a362553bc1a8392850ac316492ebd5930"
+  },
+  {
+    "path": "src/compat/CameraViewRuntime.hpp",
+    "sha256": "a0aad0488105b1512d2d52272a020cd19825fe9e11211bd268495b65a8ffec88"
+  },
+  {
+    "path": "src/compat/CameraUtilCompat.cpp",
+    "sha256": "24e581a71c5b5bb565df504ca134b9c6f4dcea2dc8f7bfdbbe54ad87aaeeddb0"
+  },
+  {
+    "path": "src/camera/OriginalCameraView.cpp",
+    "sha256": "34693d4799569401e85da1c2320262b1de345eab496a930a7180dc59f1887d68"
+  },
+  {
+    "path": "src/runtime/RuntimeContext.cpp",
+    "sha256": "53b1ec6132ba590cd8926baf3ed0cdd2f79b81301410642a474cbd5f3eb0ceca"
+  },
+  {
+    "path": "src/runtime/RuntimeContext.hpp",
+    "sha256": "d4d96da4037d5f2b728d872f487e5270eb5254fb9887ac96c90d45dd4b6f8ed2"
+  },
+  {
+    "path": "src/scene/SceneExecutionService.cpp",
+    "sha256": "70f17521feb3d47c2ee1e25911a814808ee517cc2abadf32c42f4839dcdbb441"
+  },
+  {
+    "path": "aurora/include/aurora/depth_snapshot.hpp",
+    "sha256": "0194740b38ef37cb593df7e036d85f2ec540aa1a207cf93b679057ae295c260b"
+  },
+  {
+    "path": "aurora/lib/dolphin/gx/GXCpu2Efb.cpp",
+    "sha256": "1fa46257e4d2047c7b0975cae117809fb12ecc3779220ef5d0229ca20bc5ebf4"
+  }
+]

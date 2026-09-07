@@ -8,6 +8,20 @@
 #include <algorithm>
 
 namespace MR {
+    f32 calcNearestRailCoord(const LiveActor* pActor, const TVec3f& rPos) {
+        return pActor->mRailRider->calcNearestPos(rPos);
+    }
+
+    f32 calcNearestRailDirection(TVec3f* pOutDir, const LiveActor* pActor, const TVec3f& rPos) {
+        f32 coord = calcNearestRailCoord(pActor, rPos);
+        pActor->mRailRider->calcDirectionAtCoord(pOutDir, coord);
+        return coord;
+    }
+
+    bool getRailArg3NoInit(const LiveActor* pActor, s32* pArg) {
+        return pActor->mRailRider->getRailArgNoInit("path_arg3", pArg);
+    }
+
     void initAndSetRailClipping(TVec3f* pCenter, LiveActor* pActor, f32, f32 padding) {
         if (pCenter == nullptr || pActor == nullptr || pActor->mRailRider == nullptr) {
             return;

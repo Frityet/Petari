@@ -77,8 +77,6 @@ Triangle::Triangle()
     : mParts(nullptr), mIdx(0xFFFFFFFFU), mSensor(nullptr), mNormals{}, mPos{} {
 }
 
-Triangle& Triangle::operator=(const Triangle& other) = default;
-
 const char* Triangle::getHostName() const {
     const auto surface = triangle_surface(*this);
     // CollisionParts::getHostName reads the live sensor host's NameObj name.
@@ -108,10 +106,17 @@ void Triangle::calcForceMovePower(TVec3f* output, const TVec3f& position) const 
         mParts->calcForceMovePower(output, position);
         return;
     }
-    if (!triangle_surface(*this).has_value()) {
-        aurora::throw_host_exception<std::logic_error>("Motion queries require a live collision triangle.");
-    }
-    output->zero();
+    const auto& matrices = triangle_matrices(*this);
+    // Original CollisionParts::calcForceMovePower advances the old world
+    // point through inverse(previous) then current. Keep this distinct from
+    // MR::calcVelocityMovingPoint, which starts at the current world point.
+    TVec3f moved = position;
+    TMtx34f inverse_previous;
+    PSMTXInverse(matrices.previous.toMtxPtr(), inverse_previous.toMtxPtr());
+    inverse_previous.mult(moved, moved);
+    matrices.base.mult(moved, moved);
+    moved.sub(position);
+    *output = moved;
 }
 
 bool Triangle::isValid() const {

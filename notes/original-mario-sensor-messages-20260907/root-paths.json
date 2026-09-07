@@ -1,0 +1,14 @@
+[
+  {
+    "path": "src/Game/Player/MarioActorDefensiveMsg.cpp",
+    "sha256": "9a736e7dee49530295d00e3a3389f2cdece20c5f114f40c94e073ea78dccc1e1"
+  },
+  {
+    "path": "src/Game/Player/MarioActor.hpp",
+    "sha256": "c3f4cd35e1d1b717e7ab599ab9836795a0ce064031609d5957651f9363eddf7e"
+  },
+  {
+    "path": "src/compat/MarioStateCompat.cpp",
+    "sha256": "1d967062b888227f043a54f7827eb885aff03eecde0ce601dd58ae5661048714"
+  }
+]

@@ -157,7 +157,9 @@ namespace smgpc::scene {
             if (starts_with(path, "jmp/path/")) {
                 return "path";
             }
-            if (starts_with(path, "camera/")) {
+            // CANM/CKAN animation streams in this directory have a different
+            // binary format and are loaded through the camera resource owner.
+            if (starts_with(path, "camera/") && path.ends_with(".bcam")) {
                 return "camera";
             }
             return std::nullopt;
@@ -354,7 +356,14 @@ namespace smgpc::scene {
                     layer_name = "";
                 }
 
-                auto info = JMapInfo::from_bcsv(archive.file_data(entry));
+                auto info = [&] {
+                    try {
+                        return JMapInfo::from_bcsv(archive.file_data(entry));
+                    } catch (const std::exception& error) {
+                        aurora::throw_host_exception<std::runtime_error>(
+                            "Stage table " + holder.stage_name + "/" + entry.path + ": " + error.what());
+                    }
+                }();
                 const auto table_name = basename(entry.path);
                 const auto table_layer_id = layer_id(layer_name);
                 const auto load_batch =
