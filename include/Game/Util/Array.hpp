@@ -257,6 +257,16 @@ namespace MR {
             return pIter;
         }
 
+        Item* insert(Item* pIter, const Item& rItem) {
+            for (Item* p = end(); p != pIter; p--) {
+                *p = *(p - 1);
+            }
+
+            *pIter = rItem;
+            mCount++;
+            return pIter;
+        }
+
         /// @brief Removes all values from the container.
         void clear() {
             mCount = 0;

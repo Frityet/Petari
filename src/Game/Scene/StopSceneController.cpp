@@ -50,6 +50,7 @@ void StopSceneController::requestStopSceneDelay(s32 frame, s32 delay) {
 
         delayRequest->mFrame = frame;
         delayRequest->mDelay = delay;
+        return;
     }
 }
 
