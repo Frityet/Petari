@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "J3dTexture.hpp"
 
 #include <stdexcept>
@@ -11,7 +12,7 @@ namespace smgpc::render {
 
         [[nodiscard]] std::uint16_t read_be16(std::span<const std::uint8_t> data, std::size_t offset) {
             if (offset + 2U > data.size()) {
-                throw std::runtime_error("J3D read past end of buffer");
+                aurora::throw_host_exception<std::runtime_error>("J3D read past end of buffer");
             }
 
             return static_cast<std::uint16_t>((static_cast<std::uint16_t>(data[offset]) << 8U) | static_cast<std::uint16_t>(data[offset + 1U]));
@@ -19,7 +20,7 @@ namespace smgpc::render {
 
         [[nodiscard]] std::uint32_t read_be32(std::span<const std::uint8_t> data, std::size_t offset) {
             if (offset + 4U > data.size()) {
-                throw std::runtime_error("J3D read past end of buffer");
+                aurora::throw_host_exception<std::runtime_error>("J3D read past end of buffer");
             }
 
             return (static_cast<std::uint32_t>(data[offset]) << 24U) | (static_cast<std::uint32_t>(data[offset + 1U]) << 16U) | (static_cast<std::uint32_t>(data[offset + 2U]) << 8U) | static_cast<std::uint32_t>(data[offset + 3U]);
@@ -27,7 +28,7 @@ namespace smgpc::render {
 
         [[nodiscard]] std::string read_string(std::span<const std::uint8_t> data, std::size_t offset) {
             if (offset >= data.size()) {
-                throw std::runtime_error("J3D string offset outside buffer");
+                aurora::throw_host_exception<std::runtime_error>("J3D string offset outside buffer");
             }
 
             auto end = offset;
@@ -35,7 +36,7 @@ namespace smgpc::render {
                 ++end;
             }
             if (end == data.size()) {
-                throw std::runtime_error("J3D string is not null terminated");
+                aurora::throw_host_exception<std::runtime_error>("J3D string is not null terminated");
             }
 
             return std::string(reinterpret_cast<const char *>(data.data() + offset), end - offset);
@@ -43,7 +44,7 @@ namespace smgpc::render {
 
         [[nodiscard]] std::vector<std::string> read_string_table(std::span<const std::uint8_t> data, std::size_t table_offset) {
             if (table_offset + 4U > data.size()) {
-                throw std::runtime_error("J3D string table outside buffer");
+                aurora::throw_host_exception<std::runtime_error>("J3D string table outside buffer");
             }
 
             const auto count = read_be16(data, table_offset);
@@ -52,7 +53,7 @@ namespace smgpc::render {
             for (auto i = 0U; i < count; ++i) {
                 const auto entry_offset = table_offset + 4U + i * 4U;
                 if (entry_offset + 4U > data.size()) {
-                    throw std::runtime_error("J3D string table entry outside buffer");
+                    aurora::throw_host_exception<std::runtime_error>("J3D string table entry outside buffer");
                 }
 
                 names.push_back(read_string(data, table_offset + read_be16(data, entry_offset + 2U)));
@@ -63,14 +64,14 @@ namespace smgpc::render {
 
         [[nodiscard]] std::vector<J3dTexture> parse_tex1(std::span<const std::uint8_t> data, std::size_t section_offset, std::size_t section_size) {
             if (section_offset + section_size > data.size() || section_size < 0x20U) {
-                throw std::runtime_error("J3D TEX1 section outside buffer");
+                aurora::throw_host_exception<std::runtime_error>("J3D TEX1 section outside buffer");
             }
 
             const auto texture_count = read_be16(data, section_offset + 0x08U);
             const auto texture_header_offset = section_offset + read_be32(data, section_offset + 0x0CU);
             const auto string_table_offset = section_offset + read_be32(data, section_offset + 0x10U);
             if (texture_header_offset + texture_count * 0x20U > data.size()) {
-                throw std::runtime_error("J3D TEX1 texture headers outside buffer");
+                aurora::throw_host_exception<std::runtime_error>("J3D TEX1 texture headers outside buffer");
             }
 
             const auto names = read_string_table(data, string_table_offset);
@@ -113,25 +114,25 @@ namespace smgpc::render {
 
     std::vector<J3dTexture> extract_j3d_textures(std::span<const std::uint8_t> model_data) {
         if (model_data.size() < 0x20U) {
-            throw std::runtime_error("J3D model is too small");
+            aurora::throw_host_exception<std::runtime_error>("J3D model is too small");
         }
 
         const auto magic = read_be32(model_data, 0U);
         if (magic != J3D1_MAGIC && magic != J3D2_MAGIC) {
-            throw std::runtime_error("J3D model has unexpected magic");
+            aurora::throw_host_exception<std::runtime_error>("J3D model has unexpected magic");
         }
 
         const auto section_count = read_be32(model_data, 0x0CU);
         auto offset = std::size_t {0x20U};
         for (auto i = 0U; i < section_count; ++i) {
             if (offset + 8U > model_data.size()) {
-                throw std::runtime_error("J3D section header outside buffer");
+                aurora::throw_host_exception<std::runtime_error>("J3D section header outside buffer");
             }
 
             const auto tag = read_be32(model_data, offset);
             const auto section_size = read_be32(model_data, offset + 4U);
             if (section_size < 8U || offset + section_size > model_data.size()) {
-                throw std::runtime_error("J3D section size outside buffer");
+                aurora::throw_host_exception<std::runtime_error>("J3D section size outside buffer");
             }
 
             if (tag == TEX1_MAGIC) {

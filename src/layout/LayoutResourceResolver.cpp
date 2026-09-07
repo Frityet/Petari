@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "layout/LayoutResourceResolver.hpp"
 
 #include <algorithm>
@@ -25,7 +26,7 @@ namespace smgpc::layout {
                     continue;
                 }
                 if (match != nullptr) {
-                    throw std::runtime_error("Layout archive contains duplicate exact resource " + expected);
+                    aurora::throw_host_exception<std::runtime_error>("Layout archive contains duplicate exact resource " + expected);
                 }
                 match = &entry;
             }

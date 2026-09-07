@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Game/Util/MemoryUtil.hpp"
 
 #include <cstring>
@@ -9,7 +10,7 @@ namespace MR {
             return;
         }
         if (destination == nullptr || source == nullptr) {
-            throw std::logic_error("Cannot copy unavailable memory.");
+            aurora::throw_host_exception<std::logic_error>("Cannot copy unavailable memory.");
         }
         std::memcpy(destination, source, size);
     }
@@ -19,7 +20,7 @@ namespace MR {
             return;
         }
         if (destination == nullptr) {
-            throw std::logic_error("Cannot fill unavailable memory.");
+            aurora::throw_host_exception<std::logic_error>("Cannot fill unavailable memory.");
         }
         std::memset(destination, value, size);
     }

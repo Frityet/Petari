@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "compat/JkrAllocationDomain.hpp"
 #include "compat/JkrAllocationRouting.hpp"
 #include "compat/JkrAllocationProvenance.hpp"
@@ -51,7 +52,7 @@ namespace smgpc::compat {
 
         std::size_t checked_budget(std::size_t size, std::size_t minimum) {
             if (size < minimum || size > heap_size_limit) {
-                throw std::invalid_argument("JKR host heap budget is outside the original signed-size range");
+                aurora::throw_host_exception<std::invalid_argument>("JKR host heap budget is outside the original signed-size range");
             }
             return size & ~(heap_alignment - 1);
         }
@@ -75,7 +76,7 @@ namespace smgpc::compat {
         budget = checked_budget(budget, root_header_size + sizeof(JKRExpHeap::CMemBlock) + heap_alignment);
         HeapLock lock;
         if (JKRHeap::sRootHeap != nullptr || arena_begin.load(std::memory_order_relaxed) != 0) {
-            throw std::logic_error("An original JKR root heap already exists");
+            aurora::throw_host_exception<std::logic_error>("An original JKR root heap already exists");
         }
         if (posix_memalign(&_storage->arena, heap_alignment, budget) != 0) {
             throw std::bad_alloc();
@@ -130,7 +131,7 @@ namespace smgpc::compat {
 
     JkrAllocationDomain::JkrAllocationDomain(std::shared_ptr<JkrHeapRuntime> runtime, std::size_t budget)
         : _storage(std::make_unique<Storage>()) {
-        if (!runtime) throw std::invalid_argument("A JKR allocation domain requires its actual root owner");
+        if (!runtime) aurora::throw_host_exception<std::invalid_argument>("A JKR allocation domain requires its actual root owner");
         budget = checked_budget(budget, ((sizeof(JKRSolidHeap) + 31) & ~std::size_t(31)) + heap_alignment);
         _storage->runtime = std::move(runtime);
         HeapLock lock;
@@ -168,7 +169,7 @@ namespace smgpc::compat {
 
         Storage(std::shared_ptr<JkrAllocationDomain> owner, RoutingState previous)
             : domain(std::move(owner)), previous_routing(previous) {
-            if (!domain) throw std::invalid_argument("A JKR allocation scope requires a retained domain");
+            if (!domain) aurora::throw_host_exception<std::invalid_argument>("A JKR allocation scope requires a retained domain");
             for (auto* record = domains; record != nullptr; record = record->next) {
                 if (record->heap == JKRHeap::sCurrentHeap) {
                     previous_domain = record->owner.lock();

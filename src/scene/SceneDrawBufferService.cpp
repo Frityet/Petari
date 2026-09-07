@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "SceneDrawBufferService.hpp"
 #include "compat/ModelManagerOwner.hpp"
 #include "compat/JkrAllocationDomain.hpp"
@@ -24,12 +25,12 @@ namespace {
 constexpr auto draw_category_count = std::size(cDrawListInitTable) - 1;
 void require_draw_category(int category) {
     if (category < 0 || static_cast<std::size_t>(category) >= draw_category_count)
-        throw std::out_of_range("Draw category is outside the original initial table");
+        aurora::throw_host_exception<std::out_of_range>("Draw category is outside the original initial table");
 }
 constexpr auto category_count = std::size(cDrawBufferListInitTable) - 1;
 void require_category(int category) {
     if (category < 0 || static_cast<std::size_t>(category) >= category_count)
-        throw std::out_of_range("Draw buffer category is outside the original initial table");
+        aurora::throw_host_exception<std::out_of_range>("Draw buffer category is outside the original initial table");
 }
 }
 struct SceneDrawBufferService::State {
@@ -59,7 +60,7 @@ SceneDrawBufferService::SceneDrawBufferService(std::shared_ptr<compat::JkrAlloca
 }
 void SceneDrawBufferService::begin_draw_buffer_registration(std::shared_ptr<compat::JkrAllocationDomain> domain) {
     compat::JkrHostAllocationScope host;
-    if (!domain) throw std::invalid_argument("Original draw holder requires a retained allocation domain");
+    if (!domain) aurora::throw_host_exception<std::invalid_argument>("Original draw holder requires a retained allocation domain");
     retire_draw_buffers();
     _state->domain = std::move(domain);
     _state->prototypes.resize(category_count);
@@ -74,7 +75,7 @@ void SceneDrawBufferService::begin_draw_buffer_registration(std::shared_ptr<comp
 }
 void SceneDrawBufferService::retire_draw_buffers() {
     compat::JkrHostAllocationScope host;
-    if (!_state->actors.empty()) throw std::logic_error("Remove actor registrations before retiring original draw buffers");
+    if (!_state->actors.empty()) aurora::throw_host_exception<std::logic_error>("Remove actor registrations before retiring original draw buffers");
     if (_state->holder) GXDrawDone();
     delete _state->holder;
     _state->holder = nullptr;
@@ -98,17 +99,17 @@ SceneDrawBufferService::~SceneDrawBufferService() {
 int SceneDrawBufferService::register_actor(LiveActor& actor, int category,
                                           std::shared_ptr<compat::ModelManagerOwner> owner) {
     compat::JkrHostAllocationScope host;
-    if (!_state->holder) throw std::logic_error("Construct original draw buffers before registering a model");
+    if (!_state->holder) aurora::throw_host_exception<std::logic_error>("Construct original draw buffers before registering a model");
     require_category(category);
-    if (_state->allocated) throw std::logic_error("Draw registrations must precede original actor-list allocation");
+    if (_state->allocated) aurora::throw_host_exception<std::logic_error>("Draw registrations must precede original actor-list allocation");
     if (!owner || &owner->manager() != actor.mModelManager)
-        throw std::invalid_argument("Draw registration must retain the actor's actual ModelManager owner");
+        aurora::throw_host_exception<std::invalid_argument>("Draw registration must retain the actor's actual ModelManager owner");
     auto& group = *_state->holder->getDrawBufferGroup(category);
     const auto previous = group.findExecuterIndex(MR::getModelResName(&actor));
     if (previous < 0 && group.mExecutors.mCount >= group.mExecutors.capacity())
-        throw std::length_error("Original draw buffer executor capacity exhausted");
+        aurora::throw_host_exception<std::length_error>("Original draw buffer executor capacity exhausted");
     const auto [it, inserted] = _state->actors.try_emplace(&actor, State::Registration{category});
-    if (!inserted) throw std::logic_error("Actor already has an original draw-buffer registration");
+    if (!inserted) aurora::throw_host_exception<std::logic_error>("Actor already has an original draw-buffer registration");
     try {
         compat::JkrAllocationScope heap(_state->domain);
         it->second.executor = _state->holder->registerDrawBuffer(&actor, category);
@@ -118,14 +119,14 @@ int SceneDrawBufferService::register_actor(LiveActor& actor, int category,
     return it->second.executor;
 }
 void SceneDrawBufferService::allocate_actor_lists() {
-    if (_state->allocated) throw std::logic_error("Original draw actor lists have already been allocated");
+    if (_state->allocated) aurora::throw_host_exception<std::logic_error>("Original draw actor lists have already been allocated");
     compat::JkrAllocationScope heap(_state->domain);
     _state->holder->allocateActorListBuffer();
     _state->allocated = true;
 }
 void SceneDrawBufferService::set_active(LiveActor& actor, bool active) {
     auto& registration = _state->actors.at(&actor);
-    if (!_state->allocated) throw std::logic_error("Allocate original actor lists before activating draw packets");
+    if (!_state->allocated) aurora::throw_host_exception<std::logic_error>("Allocate original actor lists before activating draw packets");
     if (registration.active == active) return;
     if (active) _state->holder->active(&actor, registration.category, registration.executor);
     else _state->holder->deactive(&actor, registration.category, registration.executor);
@@ -146,7 +147,7 @@ void SceneDrawBufferService::find_light_info(LiveActor& actor) {
     _state->holder->findLightInfo(&actor, registration.category, registration.executor);
 }
 void SceneDrawBufferService::entry(int camera_type) {
-    if (camera_type < 0 || camera_type >= 3) throw std::out_of_range("Original draw camera category");
+    if (camera_type < 0 || camera_type >= 3) aurora::throw_host_exception<std::out_of_range>("Original draw camera category");
     _state->holder->entry(camera_type);
 }
 void SceneDrawBufferService::draw_opaque(int category) {
@@ -195,7 +196,7 @@ std::vector<NameObj*> SceneDrawBufferService::execute_draw_category(int category
     require_draw_category(category);
     auto state = _state;
     auto& array = state->executor->mDrawList->mCategoryInfo[category].mNameObjArr;
-    if (state->executing[category]) throw std::logic_error("A draw category cannot rebuild its active batch recursively");
+    if (state->executing[category]) aurora::throw_host_exception<std::logic_error>("A draw category cannot rebuild its active batch recursively");
     {
         compat::JkrHostAllocationScope host;
         for (int i = 0; i < array.size();) {
@@ -203,7 +204,7 @@ std::vector<NameObj*> SceneDrawBufferService::execute_draw_category(int category
             else ++i;
         }
         if (objects.size() > static_cast<std::size_t>(std::numeric_limits<int>::max()))
-            throw std::length_error("Original draw category capacity exceeds s32");
+            aurora::throw_host_exception<std::length_error>("Original draw category capacity exceeds s32");
         if (objects.size() > static_cast<std::size_t>(array.capacity())) {
             std::vector<NameObj*> previous;
             if (array.size()) previous.assign(array.begin(), array.end());
@@ -217,7 +218,7 @@ std::vector<NameObj*> SceneDrawBufferService::execute_draw_category(int category
             for (auto* object : previous) state->executor->addToDraw(object, category);
         }
         for (auto* object : objects) {
-            if (!object) throw std::invalid_argument("An original draw category requires actual NameObj objects");
+            if (!object) aurora::throw_host_exception<std::invalid_argument>("An original draw category requires actual NameObj objects");
             if (array.size() == 0 || std::find(array.begin(), array.end(), object) == array.end())
                 state->executor->addToDraw(object, category);
         }

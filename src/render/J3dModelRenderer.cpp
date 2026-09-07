@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "J3dModelRenderer.hpp"
 #include "compat/OriginalJ3dJointTree.hpp"
 #include "JSystem/J3DGraphBase/J3DTransform.hpp"
@@ -57,7 +58,7 @@ namespace smgpc::render {
         [[nodiscard]] std::array<float, 3U> normalized_required(std::array<float, 3U> value) {
             const auto length = std::sqrt(dot3(value, value));
             if (length <= 0.000001F) {
-                throw std::logic_error("J3D vector basis is degenerate");
+                aurora::throw_host_exception<std::logic_error>("J3D vector basis is degenerate");
             }
 
             return {value[0U] / length, value[1U] / length, value[2U] / length};
@@ -1827,7 +1828,7 @@ namespace smgpc::render {
             }
             if (!geometry.joints->joints.empty()) {
                 if (!geometry.info.has_value()) {
-                    throw std::runtime_error("J3D joint traversal requires the model's original INF1 information");
+                    aurora::throw_host_exception<std::runtime_error>("J3D joint traversal requires the model's original INF1 information");
                 }
                 _joint_tree = std::make_unique<smgpc::compat::OriginalJ3dJointTree>(*geometry.info, *geometry.joints);
             }
@@ -2270,7 +2271,7 @@ namespace smgpc::render {
             return;
         }
         if ((camera_pose == nullptr) == (model_3d_for_2d == nullptr)) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "J3D draw requires exactly one perspective or Model3DFor2D projection");
         }
 

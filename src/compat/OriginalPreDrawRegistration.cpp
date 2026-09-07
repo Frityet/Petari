@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Game/Util/ObjUtil.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "runtime/RuntimeContext.hpp"
@@ -13,6 +14,6 @@ void registerPreDrawFunction(const MR::FunctorBase& functor, int category) {
         runtime->scheduler().register_pre_draw_function(functor, category);
         return;
     }
-    throw std::logic_error("Pre-draw registration requires an active scene scheduler");
+    aurora::throw_host_exception<std::logic_error>("Pre-draw registration requires an active scene scheduler");
 }
 }

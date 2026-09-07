@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Yaz0.hpp"
 
 #include <stdexcept>
@@ -7,7 +8,7 @@ namespace smgpc::resource {
 
         [[nodiscard]] std::uint32_t read_be32(std::span<const std::uint8_t> data, std::size_t offset) {
             if (offset + 4U > data.size()) {
-                throw std::runtime_error("Yaz0 read past end of buffer");
+                aurora::throw_host_exception<std::runtime_error>("Yaz0 read past end of buffer");
             }
 
             return (static_cast<std::uint32_t>(data[offset]) << 24U) | (static_cast<std::uint32_t>(data[offset + 1U]) << 16U) | (static_cast<std::uint32_t>(data[offset + 2U]) << 8U) | static_cast<std::uint32_t>(data[offset + 3U]);
@@ -35,7 +36,7 @@ namespace smgpc::resource {
         while (dst_offset < output.size()) {
             if (valid_bits == 0U) {
                 if (src_offset >= data.size()) {
-                    throw std::runtime_error("Yaz0 code byte is outside compressed data");
+                    aurora::throw_host_exception<std::runtime_error>("Yaz0 code byte is outside compressed data");
                 }
                 code = data[src_offset++];
                 valid_bits = 8U;
@@ -43,12 +44,12 @@ namespace smgpc::resource {
 
             if ((code & 0x80U) != 0U) {
                 if (src_offset >= data.size()) {
-                    throw std::runtime_error("Yaz0 literal byte is outside compressed data");
+                    aurora::throw_host_exception<std::runtime_error>("Yaz0 literal byte is outside compressed data");
                 }
                 output[dst_offset++] = data[src_offset++];
             } else {
                 if (src_offset + 2U > data.size()) {
-                    throw std::runtime_error("Yaz0 copy command is outside compressed data");
+                    aurora::throw_host_exception<std::runtime_error>("Yaz0 copy command is outside compressed data");
                 }
 
                 const auto byte1 = data[src_offset++];
@@ -58,7 +59,7 @@ namespace smgpc::resource {
 
                 if (copy_count == 0U) {
                     if (src_offset >= data.size()) {
-                        throw std::runtime_error("Yaz0 long copy count is outside compressed data");
+                        aurora::throw_host_exception<std::runtime_error>("Yaz0 long copy count is outside compressed data");
                     }
                     copy_count = static_cast<std::size_t>(data[src_offset++]) + 0x12U;
                 } else {
@@ -66,7 +67,7 @@ namespace smgpc::resource {
                 }
 
                 if (distance > dst_offset) {
-                    throw std::runtime_error("Yaz0 copy command references data before output start");
+                    aurora::throw_host_exception<std::runtime_error>("Yaz0 copy command references data before output start");
                 }
 
                 for (std::size_t i = 0U; i < copy_count && dst_offset < output.size(); ++i) {

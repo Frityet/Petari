@@ -1,0 +1,16 @@
+
+build cache stats:
+cache directory: build/.build_cache
+cache hit rate: 0%
+cache hit: 0
+cache hit total time: 0.000s
+cache miss: 0
+cache miss total time: 0.000s
+new cached files: 0
+remote cache hit: 0
+remote new cached files: 0
+preprocess failed: 0
+compile fallback count: 0
+compile total time: 0.000s
+
+[0m[38;5;2;1m[100%]:[0m [2m[38;5;2;1mbuild ok, spent 0.415s[0m

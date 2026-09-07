@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "compat/JkrHeapFinalizer.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
@@ -62,7 +63,7 @@ namespace smgpc::compat {
     }
     void register_jkr_heap_finalizer(void* object, void (*callback)(void*) noexcept) {
         JkrHostAllocationScope host;
-        if (!object || !callback) throw std::invalid_argument("Heap finalizer requires an object and callback");
+        if (!object || !callback) aurora::throw_host_exception<std::invalid_argument>("Heap finalizer requires an object and callback");
         auto* heap = JKRHeap::findFromRoot(object);
         if (!heap) return;
         HeapLock heap_lock(*heap);
@@ -73,7 +74,7 @@ namespace smgpc::compat {
         for (auto* current = records; current; current = current->next) {
             if (current->object == object) {
                 std::free(record);
-                throw std::logic_error("Object already has a JKR heap finalizer");
+                aurora::throw_host_exception<std::logic_error>("Object already has a JKR heap finalizer");
             }
         }
         record->next = records;

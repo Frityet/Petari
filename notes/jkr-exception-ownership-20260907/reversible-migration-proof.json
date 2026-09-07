@@ -1,0 +1,1046 @@
+[
+  {
+    "file": "src/compat/CameraUtilCompat.cpp",
+    "sites": 13,
+    "original_sha256": "3e9b2e05d78fd5fd489c398b06d36ba254d1b5c578f45a6c506244b6a156d78a",
+    "restored_sha256": "3e9b2e05d78fd5fd489c398b06d36ba254d1b5c578f45a6c506244b6a156d78a"
+  },
+  {
+    "file": "src/compat/CameraLocalUtilRuntime.cpp",
+    "sites": 4,
+    "original_sha256": "5957a528fe20ec8a1e4b7906b3e02af6441c9fe3bc4c565a92d2a0e90b5cc3af",
+    "restored_sha256": "5957a528fe20ec8a1e4b7906b3e02af6441c9fe3bc4c565a92d2a0e90b5cc3af"
+  },
+  {
+    "file": "src/app/Application.cpp",
+    "sites": 4,
+    "original_sha256": "6e01e0129f18de33aeabe5771f1966dd26151c700b278b0b0e7ca0e73493f277",
+    "restored_sha256": "6e01e0129f18de33aeabe5771f1966dd26151c700b278b0b0e7ca0e73493f277"
+  },
+  {
+    "file": "src/camera/CameraAnimation.cpp",
+    "sites": 18,
+    "original_sha256": "bcb7064b05bbe121e2d9c2e4ebbed149d0d81bd6a9e93c471a2b2fdee2ec6c61",
+    "restored_sha256": "bcb7064b05bbe121e2d9c2e4ebbed149d0d81bd6a9e93c471a2b2fdee2ec6c61"
+  },
+  {
+    "file": "src/camera/CameraPose.cpp",
+    "sites": 1,
+    "original_sha256": "468c2f3582551d33da08511e057dfde694aa27d7b99789c4d38da9c1b13b4274",
+    "restored_sha256": "468c2f3582551d33da08511e057dfde694aa27d7b99789c4d38da9c1b13b4274"
+  },
+  {
+    "file": "src/camera/EventCamera.cpp",
+    "sites": 21,
+    "original_sha256": "7959dc48203e4ff9c1761e6e091b86a531ebf81727d81f5871ba6ee17b140da4",
+    "restored_sha256": "7959dc48203e4ff9c1761e6e091b86a531ebf81727d81f5871ba6ee17b140da4"
+  },
+  {
+    "file": "src/camera/OriginalAnimationCamera.cpp",
+    "sites": 3,
+    "original_sha256": "c4dcfff1f3af876690d7099ff37810c0affbe77be92cd36b3b62d4fc6bc7364f",
+    "restored_sha256": "c4dcfff1f3af876690d7099ff37810c0affbe77be92cd36b3b62d4fc6bc7364f"
+  },
+  {
+    "file": "src/camera/OriginalGameCamera.cpp",
+    "sites": 3,
+    "original_sha256": "4f3e606ca962ba8d7df8ae6756669b422f74b0b97a5fa3078a69c0bf8e1e82a1",
+    "restored_sha256": "4f3e606ca962ba8d7df8ae6756669b422f74b0b97a5fa3078a69c0bf8e1e82a1"
+  },
+  {
+    "file": "src/camera/PublishedCameraTarget.cpp",
+    "sites": 3,
+    "original_sha256": "9910108c48cec691d000b396687cc167443fff2673f6ccd8eb7c64a225b1701e",
+    "restored_sha256": "9910108c48cec691d000b396687cc167443fff2673f6ccd8eb7c64a225b1701e"
+  },
+  {
+    "file": "src/common/DumpJson.cpp",
+    "sites": 4,
+    "original_sha256": "17e4fea6e8f04e5effc81e628c31f716538a75d360e0057fd864cea40b6b4ebe",
+    "restored_sha256": "17e4fea6e8f04e5effc81e628c31f716538a75d360e0057fd864cea40b6b4ebe"
+  },
+  {
+    "file": "src/common/ServiceProvider.hpp",
+    "sites": 13,
+    "original_sha256": "b79e8d11d19c2e73dd6d4cb20fe8e78d3a90dda36d8e3fb4d3fed83ea00551ba",
+    "restored_sha256": "b79e8d11d19c2e73dd6d4cb20fe8e78d3a90dda36d8e3fb4d3fed83ea00551ba"
+  },
+  {
+    "file": "src/common/Sqlite.cpp",
+    "sites": 6,
+    "original_sha256": "674c933b23e75a6daaff578c9a6bdc9afa90e1b98023c3930491b307b2d8c035",
+    "restored_sha256": "674c933b23e75a6daaff578c9a6bdc9afa90e1b98023c3930491b307b2d8c035"
+  },
+  {
+    "file": "src/common/TraceStore.cpp",
+    "sites": 4,
+    "original_sha256": "bdf65564ad50e9906858516dab47866f2bb622a78d9be6051ed2afd5077cd82c",
+    "restored_sha256": "bdf65564ad50e9906858516dab47866f2bb622a78d9be6051ed2afd5077cd82c"
+  },
+  {
+    "file": "src/compat/ActorRuntimeRegistry.cpp",
+    "sites": 35,
+    "original_sha256": "135013de2d62ba16e8d80a6dd109619a932454068725d1f5226890ec024760ef",
+    "restored_sha256": "135013de2d62ba16e8d80a6dd109619a932454068725d1f5226890ec024760ef"
+  },
+  {
+    "file": "src/compat/ActorShadowCsvCompat.cpp",
+    "sites": 2,
+    "original_sha256": "a59465e4f90255c4f8b699f8b1ce1a83cff7ba691b3a515d79977c2860e2ef99",
+    "restored_sha256": "a59465e4f90255c4f8b699f8b1ce1a83cff7ba691b3a515d79977c2860e2ef99"
+  },
+  {
+    "file": "src/compat/AreaObjRuntimeCompat.cpp",
+    "sites": 13,
+    "original_sha256": "ceec701a5d5d6f5b309143e3286e203276779421f0893897f5ce93a851d9bb4e",
+    "restored_sha256": "ceec701a5d5d6f5b309143e3286e203276779421f0893897f5ce93a851d9bb4e"
+  },
+  {
+    "file": "src/compat/AudioFacadeCompat.cpp",
+    "sites": 24,
+    "original_sha256": "e8774d1c6895f13f545d5e65c64ba8c4322a4e05e7af4fa43f2d921c9f947d41",
+    "restored_sha256": "e8774d1c6895f13f545d5e65c64ba8c4322a4e05e7af4fa43f2d921c9f947d41"
+  },
+  {
+    "file": "src/compat/BinaryDataChunkHolderCompat.cpp",
+    "sites": 6,
+    "original_sha256": "4225702c34d708f42cf9b02ccd2624a7fbbdd6ff57d4d3d0d8f67121480162cc",
+    "restored_sha256": "4225702c34d708f42cf9b02ccd2624a7fbbdd6ff57d4d3d0d8f67121480162cc"
+  },
+  {
+    "file": "src/compat/BinderCompat.cpp",
+    "sites": 1,
+    "original_sha256": "898f0d6034274bd5197d204945c6b82d04f75a5a69ad9d4e8805aa6028a08610",
+    "restored_sha256": "898f0d6034274bd5197d204945c6b82d04f75a5a69ad9d4e8805aa6028a08610"
+  },
+  {
+    "file": "src/compat/CapturedFrameBlurService.cpp",
+    "sites": 9,
+    "original_sha256": "8cdb6fd7445e542cb018176a814d01e1fc662b70eca18acb8dc7a118e3bac4e1",
+    "restored_sha256": "8cdb6fd7445e542cb018176a814d01e1fc662b70eca18acb8dc7a118e3bac4e1"
+  },
+  {
+    "file": "src/compat/ClippingDirectorCompat.cpp",
+    "sites": 7,
+    "original_sha256": "13be453fd9f23705460d6166b06ff403c7ef4d2bbd2b4ee5cda1a7fca8dfc4c7",
+    "restored_sha256": "13be453fd9f23705460d6166b06ff403c7ef4d2bbd2b4ee5cda1a7fca8dfc4c7"
+  },
+  {
+    "file": "src/compat/CollisionPartsCompat.cpp",
+    "sites": 12,
+    "original_sha256": "79363d3f40b96a93f33b7d037d57555099f6f3e09bb60ce51a3cadeeb7fd6e07",
+    "restored_sha256": "79363d3f40b96a93f33b7d037d57555099f6f3e09bb60ce51a3cadeeb7fd6e07"
+  },
+  {
+    "file": "src/compat/ConfigDataMiscCompat.cpp",
+    "sites": 1,
+    "original_sha256": "e0e579a07d9db6d1f79749a2092508af1e532b7d3841521a27804bb79355d71a",
+    "restored_sha256": "e0e579a07d9db6d1f79749a2092508af1e532b7d3841521a27804bb79355d71a"
+  },
+  {
+    "file": "src/compat/DemoCompat.cpp",
+    "sites": 18,
+    "original_sha256": "ddd469559ebc53690c32f9478f25e56e370fc15387712d6821dda8101653cb8f",
+    "restored_sha256": "ddd469559ebc53690c32f9478f25e56e370fc15387712d6821dda8101653cb8f"
+  },
+  {
+    "file": "src/compat/DemoSceneRuntime.cpp",
+    "sites": 19,
+    "original_sha256": "166ccd380bcef68eb6dfb03added589b901a53e4f43029f94b3e1cd5b2f5bccf",
+    "restored_sha256": "166ccd380bcef68eb6dfb03added589b901a53e4f43029f94b3e1cd5b2f5bccf"
+  },
+  {
+    "file": "src/compat/DemoSheetRuntime.cpp",
+    "sites": 5,
+    "original_sha256": "509744947364d639983c9d93c1ffe3ed60f1e6af8d6e0bbce4ca6384b8772fbe",
+    "restored_sha256": "509744947364d639983c9d93c1ffe3ed60f1e6af8d6e0bbce4ca6384b8772fbe"
+  },
+  {
+    "file": "src/compat/DemoUtilCompat.cpp",
+    "sites": 8,
+    "original_sha256": "972525fa3ae76028a6f9895ef2a1bd819cedb95092439b45d2ec28d042bbf2ed",
+    "restored_sha256": "972525fa3ae76028a6f9895ef2a1bd819cedb95092439b45d2ec28d042bbf2ed"
+  },
+  {
+    "file": "src/compat/EffectSystemOwnership.cpp",
+    "sites": 6,
+    "original_sha256": "1c0c85ba7e4689a03a48ad565b737bc49e1065ab527f8251c63ee9a85aa1e8cb",
+    "restored_sha256": "1c0c85ba7e4689a03a48ad565b737bc49e1065ab527f8251c63ee9a85aa1e8cb"
+  },
+  {
+    "file": "src/compat/EventUtilCompat.cpp",
+    "sites": 2,
+    "original_sha256": "47e698414b6342ed5466daea9cdb3eddf7b4c108de752a7beab7cd5cda8f4358",
+    "restored_sha256": "47e698414b6342ed5466daea9cdb3eddf7b4c108de752a7beab7cd5cda8f4358"
+  },
+  {
+    "file": "src/compat/FixedPositionCompat.cpp",
+    "sites": 3,
+    "original_sha256": "0c54a3d3011422470e57e2253e610cbfe3a2d9f8d68f3a5ffd4f95fdc4e74a14",
+    "restored_sha256": "0c54a3d3011422470e57e2253e610cbfe3a2d9f8d68f3a5ffd4f95fdc4e74a14"
+  },
+  {
+    "file": "src/compat/GameActorPhysicsCompat.cpp",
+    "sites": 23,
+    "original_sha256": "cb2ddb0cfba48545a143908e23b63000a3ee20725214e10f0953349de33f5ca2",
+    "restored_sha256": "cb2ddb0cfba48545a143908e23b63000a3ee20725214e10f0953349de33f5ca2"
+  },
+  {
+    "file": "src/compat/GameDataFunctionCompat.cpp",
+    "sites": 1,
+    "original_sha256": "6b7baa49df2eadc8f70c08a5cf99fba59fb7207a842348e2487ee5f3375a9181",
+    "restored_sha256": "6b7baa49df2eadc8f70c08a5cf99fba59fb7207a842348e2487ee5f3375a9181"
+  },
+  {
+    "file": "src/compat/GameDataHolderCompat.cpp",
+    "sites": 25,
+    "original_sha256": "aa49ba0db6e66e4650d84351aff95a581d6b79f10f174525a6596c942f02f3d4",
+    "restored_sha256": "aa49ba0db6e66e4650d84351aff95a581d6b79f10f174525a6596c942f02f3d4"
+  },
+  {
+    "file": "src/compat/GameDataRegistry.cpp",
+    "sites": 4,
+    "original_sha256": "edddcdb14f93a36231edabdef4d58f56b66d60ac77c9576849a6f71ad7bfa4d4",
+    "restored_sha256": "edddcdb14f93a36231edabdef4d58f56b66d60ac77c9576849a6f71ad7bfa4d4"
+  },
+  {
+    "file": "src/compat/GameDataSession.cpp",
+    "sites": 1,
+    "original_sha256": "a2596e6cbef4ca1581feb996420e40065749ce8b0f4843dcf01cbd2141851b5e",
+    "restored_sha256": "a2596e6cbef4ca1581feb996420e40065749ce8b0f4843dcf01cbd2141851b5e"
+  },
+  {
+    "file": "src/compat/GameGravityCompat.cpp",
+    "sites": 11,
+    "original_sha256": "a89a1c22108a55fdaf3226c436d9f70ccce7cb093d26a5a1950a85ff75dac7b6",
+    "restored_sha256": "a89a1c22108a55fdaf3226c436d9f70ccce7cb093d26a5a1950a85ff75dac7b6"
+  },
+  {
+    "file": "src/compat/GameMapCollisionCompat.cpp",
+    "sites": 4,
+    "original_sha256": "906e4f415e1e64bf14d656169b38865fea970299aea428ccf85fef83fa280b4f",
+    "restored_sha256": "906e4f415e1e64bf14d656169b38865fea970299aea428ccf85fef83fa280b4f"
+  },
+  {
+    "file": "src/compat/GameMathCompat.cpp",
+    "sites": 1,
+    "original_sha256": "8bcfc9a91f56fb5973e0e719008cb5e990eec3123956d4f3cd98a5d7b72dc9df",
+    "restored_sha256": "8bcfc9a91f56fb5973e0e719008cb5e990eec3123956d4f3cd98a5d7b72dc9df"
+  },
+  {
+    "file": "src/compat/GameRuntimeCompat.cpp",
+    "sites": 5,
+    "original_sha256": "9ede98a19208dde4f71a92f75edc693d7b713a5257a5ca77a841941c4c986289",
+    "restored_sha256": "9ede98a19208dde4f71a92f75edc693d7b713a5257a5ca77a841941c4c986289"
+  },
+  {
+    "file": "src/compat/GlobalGravityOwnership.cpp",
+    "sites": 18,
+    "original_sha256": "671e5f732dbb7e570c5f18ad9569c86b083e24861adea0cd4e877e640e24350f",
+    "restored_sha256": "671e5f732dbb7e570c5f18ad9569c86b083e24861adea0cd4e877e640e24350f"
+  },
+  {
+    "file": "src/compat/GroupCheckManagerCompat.cpp",
+    "sites": 15,
+    "original_sha256": "44332efd99f7c6888e7efda6f66144cae49dfddc276eb91f103f28de740c6299",
+    "restored_sha256": "44332efd99f7c6888e7efda6f66144cae49dfddc276eb91f103f28de740c6299"
+  },
+  {
+    "file": "src/compat/HitInfoCompat.cpp",
+    "sites": 4,
+    "original_sha256": "ffaa3676d3c22065f7b7b0a8a0422af0fb4727a4a6328970022b201fbb1d7639",
+    "restored_sha256": "ffaa3676d3c22065f7b7b0a8a0422af0fb4727a4a6328970022b201fbb1d7639"
+  },
+  {
+    "file": "src/compat/InformationMessageCompat.cpp",
+    "sites": 5,
+    "original_sha256": "d28b16ba66c4d8bf69f662607e7fff944c21aced3c935437a5746f4b5ca88192",
+    "restored_sha256": "d28b16ba66c4d8bf69f662607e7fff944c21aced3c935437a5746f4b5ca88192"
+  },
+  {
+    "file": "src/compat/JKRArchiveCompat.cpp",
+    "sites": 6,
+    "original_sha256": "99a0834289388f7aeb0572ce7706486b31c6dd864f1c84297d32b2f65974ab40",
+    "restored_sha256": "99a0834289388f7aeb0572ce7706486b31c6dd864f1c84297d32b2f65974ab40"
+  },
+  {
+    "file": "src/compat/JkrAllocationDomain.cpp",
+    "sites": 4,
+    "original_sha256": "4babf2cc008b667302a4d6ede5fa21c1e2a520e289fdcb4576d150877e64bfc9",
+    "restored_sha256": "4babf2cc008b667302a4d6ede5fa21c1e2a520e289fdcb4576d150877e64bfc9"
+  },
+  {
+    "file": "src/compat/JkrHeapFinalizer.cpp",
+    "sites": 2,
+    "original_sha256": "742890719b2394440780f4eaaa97dd56b228f41c121c4c3982eee606b01edf7c",
+    "restored_sha256": "742890719b2394440780f4eaaa97dd56b228f41c121c4c3982eee606b01edf7c"
+  },
+  {
+    "file": "src/compat/JutTextureAllocation.cpp",
+    "sites": 6,
+    "original_sha256": "1e04f96233113d8c338bc3d4183300d06b7f80a65f928caa5ce3f182b5b05dd1",
+    "restored_sha256": "1e04f96233113d8c338bc3d4183300d06b7f80a65f928caa5ce3f182b5b05dd1"
+  },
+  {
+    "file": "src/compat/LayoutFontCompat.cpp",
+    "sites": 1,
+    "original_sha256": "0f15a459aa979ecfecfcf0380158d3ec444b89d8ed733ea350a1f56ca5117269",
+    "restored_sha256": "0f15a459aa979ecfecfcf0380158d3ec444b89d8ed733ea350a1f56ca5117269"
+  },
+  {
+    "file": "src/compat/LiveActorUtilCompat.cpp",
+    "sites": 8,
+    "original_sha256": "278c32a5d77bda056e99a57445dfa81e938ca1d55503d06ff30297a655d6b141",
+    "restored_sha256": "278c32a5d77bda056e99a57445dfa81e938ca1d55503d06ff30297a655d6b141"
+  },
+  {
+    "file": "src/compat/LodCtrlRuntimeCompat.cpp",
+    "sites": 6,
+    "original_sha256": "150a7c885f89b019882d9f25f3656156ec32b5272babafefe5f2e2ef684b243f",
+    "restored_sha256": "150a7c885f89b019882d9f25f3656156ec32b5272babafefe5f2e2ef684b243f"
+  },
+  {
+    "file": "src/compat/MarioAnimatorLifetime.cpp",
+    "sites": 2,
+    "original_sha256": "af733aa96eb09301ff5ee954145070bae48ffe228cd7280df46ad5e67c7f9836",
+    "restored_sha256": "af733aa96eb09301ff5ee954145070bae48ffe228cd7280df46ad5e67c7f9836"
+  },
+  {
+    "file": "src/compat/MemoryUtilCompat.cpp",
+    "sites": 2,
+    "original_sha256": "576add0bd01c6cf43c128e6674a872ac27e5691bd9e0a2f416eba2b929450aaf",
+    "restored_sha256": "576add0bd01c6cf43c128e6674a872ac27e5691bd9e0a2f416eba2b929450aaf"
+  },
+  {
+    "file": "src/compat/ModelManagerOwner.cpp",
+    "sites": 3,
+    "original_sha256": "0ddc5721b020b3e8c1d382de48476c091e1a006c1c552ca4bd0fc02482da295c",
+    "restored_sha256": "0ddc5721b020b3e8c1d382de48476c091e1a006c1c552ca4bd0fc02482da295c"
+  },
+  {
+    "file": "src/compat/MtxCompat.cpp",
+    "sites": 4,
+    "original_sha256": "ee3a40538075b30a69e4d7fcc3d5eaa026695a211181000f8d358b389c0f324c",
+    "restored_sha256": "ee3a40538075b30a69e4d7fcc3d5eaa026695a211181000f8d358b389c0f324c"
+  },
+  {
+    "file": "src/compat/NPCActorRuntimeCompat.cpp",
+    "sites": 20,
+    "original_sha256": "61c7e128ca4f26e80f0d57fe2803ec769b25245dd10c61993422b87c868d7c94",
+    "restored_sha256": "61c7e128ca4f26e80f0d57fe2803ec769b25245dd10c61993422b87c868d7c94"
+  },
+  {
+    "file": "src/compat/NameObjExecuteCompat.cpp",
+    "sites": 3,
+    "original_sha256": "2b361fa2cc98a6aae56fb246686bacd16e265a7aa6b41034da07f06cea1113cc",
+    "restored_sha256": "2b361fa2cc98a6aae56fb246686bacd16e265a7aa6b41034da07f06cea1113cc"
+  },
+  {
+    "file": "src/compat/Nw4rFontCompat.cpp",
+    "sites": 5,
+    "original_sha256": "f89dee05cc4f2db45c48ecedc1c4ea7529c35c1d85dcf6adb5978661876ad39a",
+    "restored_sha256": "f89dee05cc4f2db45c48ecedc1c4ea7529c35c1d85dcf6adb5978661876ad39a"
+  },
+  {
+    "file": "src/compat/OriginalJ3dJointTree.cpp",
+    "sites": 9,
+    "original_sha256": "c244f19c491d2535ee1318b6762c705e1f3a264c752b97430ebf270fa69c9e13",
+    "restored_sha256": "c244f19c491d2535ee1318b6762c705e1f3a264c752b97430ebf270fa69c9e13"
+  },
+  {
+    "file": "src/compat/OriginalParticleResourceLookup.cpp",
+    "sites": 1,
+    "original_sha256": "32835394d15edd773f2794e6834ff441d33a1aaf10d2ec93f6883140b941db2a",
+    "restored_sha256": "32835394d15edd773f2794e6834ff441d33a1aaf10d2ec93f6883140b941db2a"
+  },
+  {
+    "file": "src/compat/OriginalPreDrawRegistration.cpp",
+    "sites": 1,
+    "original_sha256": "e8db9f522ffa30a9806ec6b2784ed58f9b99df09562ad1affb2c4d26ce8fe99a",
+    "restored_sha256": "e8db9f522ffa30a9806ec6b2784ed58f9b99df09562ad1affb2c4d26ce8fe99a"
+  },
+  {
+    "file": "src/compat/PlanetMapRuntimeCompat.cpp",
+    "sites": 5,
+    "original_sha256": "6633cd308c249bdec29ea392d20a82da6620ac1c064968d524f521052ef6ed8e",
+    "restored_sha256": "6633cd308c249bdec29ea392d20a82da6620ac1c064968d524f521052ef6ed8e"
+  },
+  {
+    "file": "src/compat/PlayerStateCompat.cpp",
+    "sites": 2,
+    "original_sha256": "8795b64ebd8a5ecbd19b33805837608ff227f19b4a75c1cce755ae4154dc0d8b",
+    "restored_sha256": "8795b64ebd8a5ecbd19b33805837608ff227f19b4a75c1cce755ae4154dc0d8b"
+  },
+  {
+    "file": "src/compat/PlayerUtilCompat.cpp",
+    "sites": 12,
+    "original_sha256": "5c896ec8498a653458177603246288471ce08428239c581356f95493e684c3a1",
+    "restored_sha256": "5c896ec8498a653458177603246288471ce08428239c581356f95493e684c3a1"
+  },
+  {
+    "file": "src/compat/ResourceHolderCompat.cpp",
+    "sites": 6,
+    "original_sha256": "e564d8be5450d63d09264fad9109d2d3ccece224b4a6a49f38252cd7e8cca3a7",
+    "restored_sha256": "e564d8be5450d63d09264fad9109d2d3ccece224b4a6a49f38252cd7e8cca3a7"
+  },
+  {
+    "file": "src/compat/SaveDataHandleSequenceCompat.cpp",
+    "sites": 1,
+    "original_sha256": "e2c4414ef67fcbeeb2256c7a3df6b09cdf59a081b13c62bdb2b6d5b13a47cda8",
+    "restored_sha256": "e2c4414ef67fcbeeb2256c7a3df6b09cdf59a081b13c62bdb2b6d5b13a47cda8"
+  },
+  {
+    "file": "src/compat/ScenarioDataParserAccess.cpp",
+    "sites": 1,
+    "original_sha256": "0e1cb065b127773db93e6ec95e9ad57c7d9b0d7bb6af53157533c464761b5a14",
+    "restored_sha256": "0e1cb065b127773db93e6ec95e9ad57c7d9b0d7bb6af53157533c464761b5a14"
+  },
+  {
+    "file": "src/compat/SceneHeapAccess.cpp",
+    "sites": 1,
+    "original_sha256": "604a883eeb1ac7bf689852e8d9823e55a5d040e2798c48a3e811260fe2e1b7c5",
+    "restored_sha256": "604a883eeb1ac7bf689852e8d9823e55a5d040e2798c48a3e811260fe2e1b7c5"
+  },
+  {
+    "file": "src/compat/SceneMovementCompat.cpp",
+    "sites": 1,
+    "original_sha256": "3888378931cee1a318f296c05ae44ed957c5804ce37244d1f838fd4944a89df5",
+    "restored_sha256": "3888378931cee1a318f296c05ae44ed957c5804ce37244d1f838fd4944a89df5"
+  },
+  {
+    "file": "src/compat/SceneObjHolderCompat.cpp",
+    "sites": 8,
+    "original_sha256": "b324ba4b0fea7e309792feed9cf847eed5e28bd10bea80fc84663c276c170e81",
+    "restored_sha256": "b324ba4b0fea7e309792feed9cf847eed5e28bd10bea80fc84663c276c170e81"
+  },
+  {
+    "file": "src/compat/SceneSystemUtilCompat.cpp",
+    "sites": 7,
+    "original_sha256": "e8c8cc0435aa1048f228e218e184e110f0278332e9e584c317e61e71b000d38b",
+    "restored_sha256": "e8c8cc0435aa1048f228e218e184e110f0278332e9e584c317e61e71b000d38b"
+  },
+  {
+    "file": "src/compat/ScreenUtilCompat.cpp",
+    "sites": 2,
+    "original_sha256": "d8bd473f23f8028870877d478efa0df8d86568a2149283b8e0a826fc47fe9f9c",
+    "restored_sha256": "d8bd473f23f8028870877d478efa0df8d86568a2149283b8e0a826fc47fe9f9c"
+  },
+  {
+    "file": "src/compat/SoundUtilCompat.cpp",
+    "sites": 7,
+    "original_sha256": "6e91f1df627f9955dfdb3c304c403c3152cff0c8b8f245f09315b1316163a8b7",
+    "restored_sha256": "6e91f1df627f9955dfdb3c304c403c3152cff0c8b8f245f09315b1316163a8b7"
+  },
+  {
+    "file": "src/compat/SphereSelectorRuntimeCompat.cpp",
+    "sites": 2,
+    "original_sha256": "8510f4ec2f315279ceadaeb779908ebb288b03ea1c7a4ba35a6461eb9ac6a793",
+    "restored_sha256": "8510f4ec2f315279ceadaeb779908ebb288b03ea1c7a4ba35a6461eb9ac6a793"
+  },
+  {
+    "file": "src/compat/StageScenarioMetadataResolver.cpp",
+    "sites": 8,
+    "original_sha256": "0b75c7d389a7072c6771ca439ddad44e9cc2d6b8f4c27867a347ba573745cefa",
+    "restored_sha256": "0b75c7d389a7072c6771ca439ddad44e9cc2d6b8f4c27867a347ba573745cefa"
+  },
+  {
+    "file": "src/compat/StageSessionGameCompat.cpp",
+    "sites": 2,
+    "original_sha256": "00d97d2ca9ce4be61b104a2730a1c44d8b239979c85d6a56eb1ebbce640ac0e7",
+    "restored_sha256": "00d97d2ca9ce4be61b104a2730a1c44d8b239979c85d6a56eb1ebbce640ac0e7"
+  },
+  {
+    "file": "src/compat/StageSessionState.cpp",
+    "sites": 7,
+    "original_sha256": "c8d8d24d40c5612c77ad48404df881b9acd618529671447faad9bda40d151344",
+    "restored_sha256": "c8d8d24d40c5612c77ad48404df881b9acd618529671447faad9bda40d151344"
+  },
+  {
+    "file": "src/compat/StageZoneMatrixRegistry.cpp",
+    "sites": 11,
+    "original_sha256": "ef3cb5a38e610bd2f246ad00ab91fb183e2aea35f08fda2d463f91ebadcd7e13",
+    "restored_sha256": "ef3cb5a38e610bd2f246ad00ab91fb183e2aea35f08fda2d463f91ebadcd7e13"
+  },
+  {
+    "file": "src/compat/StarPointerRuntimeCompat.cpp",
+    "sites": 1,
+    "original_sha256": "eb9925706513b7c9f72c21245d577b62480666aa729d646a79bd8ac7ef91ae01",
+    "restored_sha256": "eb9925706513b7c9f72c21245d577b62480666aa729d646a79bd8ac7ef91ae01"
+  },
+  {
+    "file": "src/compat/StarPointerServiceCompat.cpp",
+    "sites": 1,
+    "original_sha256": "95e5ef4ba5f439ed260f2f2570a19d8209200c4946df77dd4cd1f55a787af442",
+    "restored_sha256": "95e5ef4ba5f439ed260f2f2570a19d8209200c4946df77dd4cd1f55a787af442"
+  },
+  {
+    "file": "src/compat/StorySequencePlatformCompat.cpp",
+    "sites": 8,
+    "original_sha256": "9eed191b332e89f1a412cde2a99b65483c3df3e9b854be492bf7ff7c627668c3",
+    "restored_sha256": "9eed191b332e89f1a412cde2a99b65483c3df3e9b854be492bf7ff7c627668c3"
+  },
+  {
+    "file": "src/compat/SysConfigFileCompat.cpp",
+    "sites": 2,
+    "original_sha256": "74cb17cec11bb932772f2823ca90c0c3bb8529e8a7d6580e5f4004bdd1348993",
+    "restored_sha256": "74cb17cec11bb932772f2823ca90c0c3bb8529e8a7d6580e5f4004bdd1348993"
+  },
+  {
+    "file": "src/compat/TalkCompat.cpp",
+    "sites": 1,
+    "original_sha256": "394aecaab8b78815d5d45d06f72b5df25f4d0dcb8cea2a7ba19e5a01caaded7e",
+    "restored_sha256": "394aecaab8b78815d5d45d06f72b5df25f4d0dcb8cea2a7ba19e5a01caaded7e"
+  },
+  {
+    "file": "src/compat/TalkRuntime.cpp",
+    "sites": 41,
+    "original_sha256": "3f4fdc5769b0162998db0c01bd9556e8d9c2df5051d8c899dcc25a3daaccac62",
+    "restored_sha256": "3f4fdc5769b0162998db0c01bd9556e8d9c2df5051d8c899dcc25a3daaccac62"
+  },
+  {
+    "file": "src/debug/BrfntProbe.cpp",
+    "sites": 1,
+    "original_sha256": "ca9faf3fb851001bc6ffdc4e5fe7f461138a9a2e4dde3b949e076f9175e2bd07",
+    "restored_sha256": "ca9faf3fb851001bc6ffdc4e5fe7f461138a9a2e4dde3b949e076f9175e2bd07"
+  },
+  {
+    "file": "src/debug/DebugPaths.cpp",
+    "sites": 2,
+    "original_sha256": "0c97c68c0f9982d1af44264d781e91add86c26073aa73e271d1e9119224c3b7e",
+    "restored_sha256": "0c97c68c0f9982d1af44264d781e91add86c26073aa73e271d1e9119224c3b7e"
+  },
+  {
+    "file": "src/debug/J3dAnimationProbe.cpp",
+    "sites": 1,
+    "original_sha256": "2e685a8ac2b98680244a7b58ad6ce27e82508ddf15c7fe7d7263f7a36e6a55a8",
+    "restored_sha256": "2e685a8ac2b98680244a7b58ad6ce27e82508ddf15c7fe7d7263f7a36e6a55a8"
+  },
+  {
+    "file": "src/debug/J3dModelProbe.cpp",
+    "sites": 2,
+    "original_sha256": "37b130c344dc2b62673b95eba8e7930cfd5d028de12624356a6322c829d5350e",
+    "restored_sha256": "37b130c344dc2b62673b95eba8e7930cfd5d028de12624356a6322c829d5350e"
+  },
+  {
+    "file": "src/debug/J3dTextureDump.cpp",
+    "sites": 2,
+    "original_sha256": "c1b93784bc3ed5270a157cc7e1d2b3fe353522bcf84c5e0e4300416f2119080f",
+    "restored_sha256": "c1b93784bc3ed5270a157cc7e1d2b3fe353522bcf84c5e0e4300416f2119080f"
+  },
+  {
+    "file": "src/debug/LayoutProbe.cpp",
+    "sites": 2,
+    "original_sha256": "e63ec442f53e2f80cb0a2ecfc5f4ba7391eba986e3d397be6cb6ee0c89137ba6",
+    "restored_sha256": "e63ec442f53e2f80cb0a2ecfc5f4ba7391eba986e3d397be6cb6ee0c89137ba6"
+  },
+  {
+    "file": "src/debug/PicturebookResourceProbe.cpp",
+    "sites": 5,
+    "original_sha256": "84f23484083f8d0ed58d935a75b7daa63e8a892125369c65e332030fdb2df036",
+    "restored_sha256": "84f23484083f8d0ed58d935a75b7daa63e8a892125369c65e332030fdb2df036"
+  },
+  {
+    "file": "src/debug/PngStats.cpp",
+    "sites": 8,
+    "original_sha256": "80317ae25ccc6316a50d67f7dbccca3053a0991847f965412f5ada300a4f8ebd",
+    "restored_sha256": "80317ae25ccc6316a50d67f7dbccca3053a0991847f965412f5ada300a4f8ebd"
+  },
+  {
+    "file": "src/debug/StageConstructionProbe.cpp",
+    "sites": 7,
+    "original_sha256": "c871881c915dd57e7ba7e1815dcd2846fb68fafa341a29a9b4c4da5a576acd03",
+    "restored_sha256": "c871881c915dd57e7ba7e1815dcd2846fb68fafa341a29a9b4c4da5a576acd03"
+  },
+  {
+    "file": "src/debug/TitleSequenceProbe.cpp",
+    "sites": 2,
+    "original_sha256": "f06a74810c1b63abb786c48613306d3f1fcad25034581dd7952816d3bca8ec0f",
+    "restored_sha256": "f06a74810c1b63abb786c48613306d3f1fcad25034581dd7952816d3bca8ec0f"
+  },
+  {
+    "file": "src/debug/TplDump.cpp",
+    "sites": 1,
+    "original_sha256": "8c2da3c6915d0d71d5e13a1e0e21b0751bf07af924c03edb3a1eb94944bb1cff",
+    "restored_sha256": "8c2da3c6915d0d71d5e13a1e0e21b0751bf07af924c03edb3a1eb94944bb1cff"
+  },
+  {
+    "file": "src/debug/TraceSqliteCompare.cpp",
+    "sites": 10,
+    "original_sha256": "de64ae9301c8c9183244ce03d409f314f9f2a6b3b860cffd34d8b571b3edbd91",
+    "restored_sha256": "de64ae9301c8c9183244ce03d409f314f9f2a6b3b860cffd34d8b571b3edbd91"
+  },
+  {
+    "file": "src/debug/TraceSqliteInspect.cpp",
+    "sites": 7,
+    "original_sha256": "72b69e739c5d7fd8bc27241624b568d208b0807a27bbd6157c09b051b32dd801",
+    "restored_sha256": "72b69e739c5d7fd8bc27241624b568d208b0807a27bbd6157c09b051b32dd801"
+  },
+  {
+    "file": "src/debug/TraceSqlitePack.cpp",
+    "sites": 4,
+    "original_sha256": "58f46550a1bd56e34ee865217ee2839ffd0c8d2a4264d5beae74e82d3da862ce",
+    "restored_sha256": "58f46550a1bd56e34ee865217ee2839ffd0c8d2a4264d5beae74e82d3da862ce"
+  },
+  {
+    "file": "src/debug/TraceSqliteValidate.cpp",
+    "sites": 16,
+    "original_sha256": "74d07267ec045a72b545fca86001c96eb60fd67f84fcca215570bceb958c3fcb",
+    "restored_sha256": "74d07267ec045a72b545fca86001c96eb60fd67f84fcca215570bceb958c3fcb"
+  },
+  {
+    "file": "src/debug/VisualDiff.cpp",
+    "sites": 21,
+    "original_sha256": "60b79a100aa3c44a94244353771055cb73d5fbf7ff75f19599b517f2b10d9a4d",
+    "restored_sha256": "60b79a100aa3c44a94244353771055cb73d5fbf7ff75f19599b517f2b10d9a4d"
+  },
+  {
+    "file": "src/layout/BrfntFont.cpp",
+    "sites": 17,
+    "original_sha256": "90da6cb3606e0bb117c4853f7918f6733a8f220ee75a7e1de3f8d36f469e9fed",
+    "restored_sha256": "90da6cb3606e0bb117c4853f7918f6733a8f220ee75a7e1de3f8d36f469e9fed"
+  },
+  {
+    "file": "src/layout/BrlytLayout.cpp",
+    "sites": 34,
+    "original_sha256": "4e5d55800387b0c935e2f029733ee30a7c3875e4eabed13dcea042daa2ed50a1",
+    "restored_sha256": "4e5d55800387b0c935e2f029733ee30a7c3875e4eabed13dcea042daa2ed50a1"
+  },
+  {
+    "file": "src/layout/LayoutManagerCompat.cpp",
+    "sites": 44,
+    "original_sha256": "22a61149a1853b54663d7fa584417e6c1847f117e535c8a9021fd9b298e5bbde",
+    "restored_sha256": "22a61149a1853b54663d7fa584417e6c1847f117e535c8a9021fd9b298e5bbde"
+  },
+  {
+    "file": "src/layout/LayoutResourceResolver.cpp",
+    "sites": 1,
+    "original_sha256": "d5fbde8ed0c1e15e6a0db610e98bb88248f26ab8b27ee72af6a83e856adfdae6",
+    "restored_sha256": "d5fbde8ed0c1e15e6a0db610e98bb88248f26ab8b27ee72af6a83e856adfdae6"
+  },
+  {
+    "file": "src/layout/LayoutRuntime.cpp",
+    "sites": 59,
+    "original_sha256": "3d78059b1b230e519a10a7316b10ec84bed969fe5a27a8db871af90c033c2050",
+    "restored_sha256": "3d78059b1b230e519a10a7316b10ec84bed969fe5a27a8db871af90c033c2050"
+  },
+  {
+    "file": "src/render/J3dAnimation.cpp",
+    "sites": 26,
+    "original_sha256": "395c70fc44ad3ddf1b16c2f46d580d8ac746f17c7738ed92112b191a0216ea42",
+    "restored_sha256": "395c70fc44ad3ddf1b16c2f46d580d8ac746f17c7738ed92112b191a0216ea42"
+  },
+  {
+    "file": "src/render/J3dMaterialRuntime.cpp",
+    "sites": 3,
+    "original_sha256": "c71c3392c7ad23c9438ceeecad7f2f827ae82835eeedea77175c18c1550ef1ce",
+    "restored_sha256": "c71c3392c7ad23c9438ceeecad7f2f827ae82835eeedea77175c18c1550ef1ce"
+  },
+  {
+    "file": "src/render/J3dMatrix.cpp",
+    "sites": 2,
+    "original_sha256": "654338f49991c2bd31ce392b3bc6363f3c85f501306aa274c703d8b4dad604db",
+    "restored_sha256": "654338f49991c2bd31ce392b3bc6363f3c85f501306aa274c703d8b4dad604db"
+  },
+  {
+    "file": "src/render/J3dModel.cpp",
+    "sites": 29,
+    "original_sha256": "795d441185d9c26a7f4f6fdede13ad1e6215507bb25b64b2a36e163cebb6e0b2",
+    "restored_sha256": "795d441185d9c26a7f4f6fdede13ad1e6215507bb25b64b2a36e163cebb6e0b2"
+  },
+  {
+    "file": "src/render/J3dModelRenderer.cpp",
+    "sites": 3,
+    "original_sha256": "62adcafb8009332615c7137df9114107b6042d4d9b60963aa626d97467405194",
+    "restored_sha256": "62adcafb8009332615c7137df9114107b6042d4d9b60963aa626d97467405194"
+  },
+  {
+    "file": "src/render/J3dTexture.cpp",
+    "sites": 12,
+    "original_sha256": "d26d016ff2a8eb66f45e805e4e3109bae325025a1d6eea43317ec375c391bbed",
+    "restored_sha256": "d26d016ff2a8eb66f45e805e4e3109bae325025a1d6eea43317ec375c391bbed"
+  },
+  {
+    "file": "src/render/RendererService.cpp",
+    "sites": 12,
+    "original_sha256": "a1e0ad2a555b68bcc3c2a9d00c6a4803eab46bac068b52bd9930690498b51ff0",
+    "restored_sha256": "a1e0ad2a555b68bcc3c2a9d00c6a4803eab46bac068b52bd9930690498b51ff0"
+  },
+  {
+    "file": "src/render/capture/ScreenshotService.cpp",
+    "sites": 8,
+    "original_sha256": "7add2cb2590738165372b0b98c691d0bc1bf81e1e1f2ab5f4fd1d7c26fb0c925",
+    "restored_sha256": "7add2cb2590738165372b0b98c691d0bc1bf81e1e1f2ab5f4fd1d7c26fb0c925"
+  },
+  {
+    "file": "src/render/core/FixedStepClock.hpp",
+    "sites": 1,
+    "original_sha256": "54a849e2fe96222bd2e210a69807556ffadf605eae29fc238b5108ce1bdd1494",
+    "restored_sha256": "54a849e2fe96222bd2e210a69807556ffadf605eae29fc238b5108ce1bdd1494"
+  },
+  {
+    "file": "src/render/effects/EffectResource.cpp",
+    "sites": 14,
+    "original_sha256": "264370478e5bc250cb57e32bac647a39b431150bf49aed212d2ae9bad1c6bf3e",
+    "restored_sha256": "264370478e5bc250cb57e32bac647a39b431150bf49aed212d2ae9bad1c6bf3e"
+  },
+  {
+    "file": "src/render/effects/JpcBillboard.cpp",
+    "sites": 1,
+    "original_sha256": "4c4ac112540a4c37f59f44fdddf45915535a54e202c892a7c2e0d7b259b79db8",
+    "restored_sha256": "4c4ac112540a4c37f59f44fdddf45915535a54e202c892a7c2e0d7b259b79db8"
+  },
+  {
+    "file": "src/render/light/LightData.cpp",
+    "sites": 4,
+    "original_sha256": "380edd8acd2636d71a3ec9910b363248d59c5c96b8261bf64767fac109624bc5",
+    "restored_sha256": "380edd8acd2636d71a3ec9910b363248d59c5c96b8261bf64767fac109624bc5"
+  },
+  {
+    "file": "src/resource/BasResource.cpp",
+    "sites": 6,
+    "original_sha256": "4592eef6e1dd1a515b7e45277681ec83ef5314148e75b9ad6d310551fbc03c50",
+    "restored_sha256": "4592eef6e1dd1a515b7e45277681ec83ef5314148e75b9ad6d310551fbc03c50"
+  },
+  {
+    "file": "src/resource/BcsvTable.cpp",
+    "sites": 13,
+    "original_sha256": "2b92814a77d6b4d03c0c8a4adebe6be024d909138701c2746bd528f9ff79b4be",
+    "restored_sha256": "2b92814a77d6b4d03c0c8a4adebe6be024d909138701c2746bd528f9ff79b4be"
+  },
+  {
+    "file": "src/resource/BmgMessageArchive.cpp",
+    "sites": 32,
+    "original_sha256": "251b518141e90db75e7d0b6370cc564e5e70221be9a0272a963a82f7559734f1",
+    "restored_sha256": "251b518141e90db75e7d0b6370cc564e5e70221be9a0272a963a82f7559734f1"
+  },
+  {
+    "file": "src/resource/GameResourceRuntime.cpp",
+    "sites": 1,
+    "original_sha256": "3afcbac3408db9f930de04bd781b439d95424a2acfa7fdd15d95d63f42df1156",
+    "restored_sha256": "3afcbac3408db9f930de04bd781b439d95424a2acfa7fdd15d95d63f42df1156"
+  },
+  {
+    "file": "src/resource/J3dAllocationIdentity.cpp",
+    "sites": 3,
+    "original_sha256": "4bcc1054753f2d43920726e98648d0f8dc2510b7049df222fb4d97326af843ae",
+    "restored_sha256": "4bcc1054753f2d43920726e98648d0f8dc2510b7049df222fb4d97326af843ae"
+  },
+  {
+    "file": "src/resource/J3dAnimationResource.cpp",
+    "sites": 20,
+    "original_sha256": "1c89fdb96407e03125ee12ed6f54614347dc785838ac9117e39f1497069e92ab",
+    "restored_sha256": "1c89fdb96407e03125ee12ed6f54614347dc785838ac9117e39f1497069e92ab"
+  },
+  {
+    "file": "src/resource/J3dGeometryData.cpp",
+    "sites": 17,
+    "original_sha256": "9a90facce0d914cbf6dd424605028236053773490fc2c6820ae84303911e5bc3",
+    "restored_sha256": "9a90facce0d914cbf6dd424605028236053773490fc2c6820ae84303911e5bc3"
+  },
+  {
+    "file": "src/resource/J3dJointData.cpp",
+    "sites": 18,
+    "original_sha256": "af754af45fbab55d861f1fe7b36ae47e130028095aa7d5855c25d7dafa396912",
+    "restored_sha256": "af754af45fbab55d861f1fe7b36ae47e130028095aa7d5855c25d7dafa396912"
+  },
+  {
+    "file": "src/resource/J3dMaterialBlockData.cpp",
+    "sites": 12,
+    "original_sha256": "7937de0111f14f3c53624021d801244ede87b45af432cfd6491f6422488c5ab7",
+    "restored_sha256": "7937de0111f14f3c53624021d801244ede87b45af432cfd6491f6422488c5ab7"
+  },
+  {
+    "file": "src/resource/J3dModelResource.cpp",
+    "sites": 29,
+    "original_sha256": "4c9cb6b790ab56eadd7d0c570e249f08759aaadaeeba40f974b987dd31a50c3c",
+    "restored_sha256": "4c9cb6b790ab56eadd7d0c570e249f08759aaadaeeba40f974b987dd31a50c3c"
+  },
+  {
+    "file": "src/resource/J3dNameData.cpp",
+    "sites": 3,
+    "original_sha256": "ffd4c7ef8480e36ee29be121f13d5d46e0aea523fa66bdaf080f25c245e31a43",
+    "restored_sha256": "ffd4c7ef8480e36ee29be121f13d5d46e0aea523fa66bdaf080f25c245e31a43"
+  },
+  {
+    "file": "src/resource/J3dNativeBlock.hpp",
+    "sites": 7,
+    "original_sha256": "b1f2b90d56f17fae201aa00ee5a4618751ad6105d5557f92727b5e8f483139f1",
+    "restored_sha256": "b1f2b90d56f17fae201aa00ee5a4618751ad6105d5557f92727b5e8f483139f1"
+  },
+  {
+    "file": "src/resource/J3dTextureData.cpp",
+    "sites": 11,
+    "original_sha256": "6f684581714f8ba7c4ace42be993e5dad5b6c3769be6cb25f45534183e076370",
+    "restored_sha256": "6f684581714f8ba7c4ace42be993e5dad5b6c3769be6cb25f45534183e076370"
+  },
+  {
+    "file": "src/resource/J3dTransformAnimation.cpp",
+    "sites": 7,
+    "original_sha256": "0629420279a93be62ec9b5e359ce6f091945b651a4b4a7f767ddf05ee00c8265",
+    "restored_sha256": "0629420279a93be62ec9b5e359ce6f091945b651a4b4a7f767ddf05ee00c8265"
+  },
+  {
+    "file": "src/resource/JMapResource.cpp",
+    "sites": 7,
+    "original_sha256": "7d897b64022fe059393026fa6801a80cb208e3f51c55726f3bbce0b1195a8731",
+    "restored_sha256": "7d897b64022fe059393026fa6801a80cb208e3f51c55726f3bbce0b1195a8731"
+  },
+  {
+    "file": "src/resource/JpcResource.cpp",
+    "sites": 2,
+    "original_sha256": "d3cda4e5a2a1f44f84ba7b69a6e981b15ed7fda585487639a4c82ee42b3b81d7",
+    "restored_sha256": "d3cda4e5a2a1f44f84ba7b69a6e981b15ed7fda585487639a4c82ee42b3b81d7"
+  },
+  {
+    "file": "src/resource/KCollisionResource.cpp",
+    "sites": 1,
+    "original_sha256": "dd56add1b4f7759ebc99ea9cfe1520d5f1f1e30b2c07664dcc0b6e8faaa2474f",
+    "restored_sha256": "dd56add1b4f7759ebc99ea9cfe1520d5f1f1e30b2c07664dcc0b6e8faaa2474f"
+  },
+  {
+    "file": "src/resource/Mem1ResourceHeap.cpp",
+    "sites": 6,
+    "original_sha256": "8635c578e9e9e762ba6f157c6d37020fdc8f9686f4ae8dcb5a63ed6470aba2de",
+    "restored_sha256": "8635c578e9e9e762ba6f157c6d37020fdc8f9686f4ae8dcb5a63ed6470aba2de"
+  },
+  {
+    "file": "src/resource/RarcArchive.cpp",
+    "sites": 18,
+    "original_sha256": "750970c8ff82ce34df3739e51245b9dd3731e3d36f7c5c96800e30dd8be91d49",
+    "restored_sha256": "750970c8ff82ce34df3739e51245b9dd3731e3d36f7c5c96800e30dd8be91d49"
+  },
+  {
+    "file": "src/resource/TextEncoding.cpp",
+    "sites": 14,
+    "original_sha256": "4af6ab3c20c16335aa7b92de8692ecf28a91938f3821b03941e1bbeaad8941fe",
+    "restored_sha256": "4af6ab3c20c16335aa7b92de8692ecf28a91938f3821b03941e1bbeaad8941fe"
+  },
+  {
+    "file": "src/resource/TplTexture.cpp",
+    "sites": 22,
+    "original_sha256": "bd2b9ea5ca46bed56ffe8be7c52894c138c6e7265ff849a65883e45df8f7eb56",
+    "restored_sha256": "bd2b9ea5ca46bed56ffe8be7c52894c138c6e7265ff849a65883e45df8f7eb56"
+  },
+  {
+    "file": "src/resource/Yaz0.cpp",
+    "sites": 6,
+    "original_sha256": "81990d78ccaf5245abb94eeca24d9660be748faebe8dcfc0dc02602f5ab49c1d",
+    "restored_sha256": "81990d78ccaf5245abb94eeca24d9660be748faebe8dcfc0dc02602f5ab49c1d"
+  },
+  {
+    "file": "src/runtime/ArchiveMountService.cpp",
+    "sites": 1,
+    "original_sha256": "379b9cd3b0f63a400784be8b7c91c499adaa2c8fe4994aa03f9f486b7ecdd69b",
+    "restored_sha256": "379b9cd3b0f63a400784be8b7c91c499adaa2c8fe4994aa03f9f486b7ecdd69b"
+  },
+  {
+    "file": "src/runtime/ConsoleNandImport.cpp",
+    "sites": 9,
+    "original_sha256": "09938d909c78a6fbba4140b817b4744829ac64469fdc978420ffb7b26b83fee3",
+    "restored_sha256": "09938d909c78a6fbba4140b817b4744829ac64469fdc978420ffb7b26b83fee3"
+  },
+  {
+    "file": "src/runtime/JAudioPlaybackService.cpp",
+    "sites": 34,
+    "original_sha256": "d62064cc153f5f21f5e06095a8a85a2f71893f9961ee0105d0e61afc0f482cef",
+    "restored_sha256": "d62064cc153f5f21f5e06095a8a85a2f71893f9961ee0105d0e61afc0f482cef"
+  },
+  {
+    "file": "src/runtime/ParticleResourceOwnership.cpp",
+    "sites": 4,
+    "original_sha256": "bec86e7563f8f3bb08ba01312c8bc8955e860578af4e42f1c94d31893c3e9133",
+    "restored_sha256": "bec86e7563f8f3bb08ba01312c8bc8955e860578af4e42f1c94d31893c3e9133"
+  },
+  {
+    "file": "src/runtime/RuntimeContext.cpp",
+    "sites": 23,
+    "original_sha256": "04ace204b43ae6efe4809b9ad48dfc1a3607251affac561431f1cbac9c209e31",
+    "restored_sha256": "04ace204b43ae6efe4809b9ad48dfc1a3607251affac561431f1cbac9c209e31"
+  },
+  {
+    "file": "src/runtime/RuntimeServices.cpp",
+    "sites": 51,
+    "original_sha256": "e31087108f9ff80dc000e02bc69304adb1dc7c4e9edd68dd95f82b9274fdc883",
+    "restored_sha256": "e31087108f9ff80dc000e02bc69304adb1dc7c4e9edd68dd95f82b9274fdc883"
+  },
+  {
+    "file": "src/runtime/ScenarioCatalogOwnership.cpp",
+    "sites": 4,
+    "original_sha256": "00b4cc5eedf4307d3e77ab0d8791ce5ea529fb0f9e6f5a9f878224923919b7e0",
+    "restored_sha256": "00b4cc5eedf4307d3e77ab0d8791ce5ea529fb0f9e6f5a9f878224923919b7e0"
+  },
+  {
+    "file": "src/runtime/SceneScheduler.cpp",
+    "sites": 10,
+    "original_sha256": "9dbc9196db09efdf30d0a1b6cd63bc81a3e8b665980cad68d76ac74961a08676",
+    "restored_sha256": "9dbc9196db09efdf30d0a1b6cd63bc81a3e8b665980cad68d76ac74961a08676"
+  },
+  {
+    "file": "src/runtime/SystemConfigService.cpp",
+    "sites": 4,
+    "original_sha256": "6a0deef10b5953fdf0e0a6cfc92a9874851d9f36ecb115012c8d38d807f72b69",
+    "restored_sha256": "6a0deef10b5953fdf0e0a6cfc92a9874851d9f36ecb115012c8d38d807f72b69"
+  },
+  {
+    "file": "src/runtime/screen/ScreenAlphaCapture.cpp",
+    "sites": 2,
+    "original_sha256": "4b340a63ae8f71484362f40c352a4a19129ddaed72d4b9773e9525c528e14971",
+    "restored_sha256": "4b340a63ae8f71484362f40c352a4a19129ddaed72d4b9773e9525c528e14971"
+  },
+  {
+    "file": "src/scene/AreaObjRuntime.cpp",
+    "sites": 6,
+    "original_sha256": "6d1d2469b2bb7413bf261183e9a06ad22b67e50efa7de25048f798f3c5514fcd",
+    "restored_sha256": "6d1d2469b2bb7413bf261183e9a06ad22b67e50efa7de25048f798f3c5514fcd"
+  },
+  {
+    "file": "src/scene/AuthoredPlacementInstantiator.cpp",
+    "sites": 11,
+    "original_sha256": "a5b5a7624f3cb9aab9de13f852025b6fb7f4f0f3cd84c9d55bb58784baa86d49",
+    "restored_sha256": "a5b5a7624f3cb9aab9de13f852025b6fb7f4f0f3cd84c9d55bb58784baa86d49"
+  },
+  {
+    "file": "src/scene/FileSelectFarVisual.cpp",
+    "sites": 5,
+    "original_sha256": "776dbe481468ae1695be6887d8f6e47b38ff1133ff9e2de1f066b2bf444608be",
+    "restored_sha256": "776dbe481468ae1695be6887d8f6e47b38ff1133ff9e2de1f066b2bf444608be"
+  },
+  {
+    "file": "src/scene/GatewayDemoScene.cpp",
+    "sites": 3,
+    "original_sha256": "7a1155f16183792d2571cf4c946ce8430d784bcc8e40630f81c5724313576712",
+    "restored_sha256": "7a1155f16183792d2571cf4c946ce8430d784bcc8e40630f81c5724313576712"
+  },
+  {
+    "file": "src/scene/GatewaySpinCheckpoint.cpp",
+    "sites": 1,
+    "original_sha256": "ec555f73eda46ba88bce2a8de8d21353951565c7daef4782f1faee33ff4f775d",
+    "restored_sha256": "ec555f73eda46ba88bce2a8de8d21353951565c7daef4782f1faee33ff4f775d"
+  },
+  {
+    "file": "src/scene/NameObjChildOwner.cpp",
+    "sites": 6,
+    "original_sha256": "d14eca676c771de79c3cb18fd07c91991585fe6ab2ecf8e88e482c5ce50eaf75",
+    "restored_sha256": "d14eca676c771de79c3cb18fd07c91991585fe6ab2ecf8e88e482c5ce50eaf75"
+  },
+  {
+    "file": "src/scene/NameObjLifecycleService.cpp",
+    "sites": 4,
+    "original_sha256": "83fe46068c18c3a4b00cf10722261ecc0fb6ed8795cf1135b2c13236e37f1a6b",
+    "restored_sha256": "83fe46068c18c3a4b00cf10722261ecc0fb6ed8795cf1135b2c13236e37f1a6b"
+  },
+  {
+    "file": "src/scene/SceneDrawBufferService.cpp",
+    "sites": 15,
+    "original_sha256": "4788fd754c2c8b2a4f4057924e91727a7b182f8bb822561845e41f92f60cdbe5",
+    "restored_sha256": "4788fd754c2c8b2a4f4057924e91727a7b182f8bb822561845e41f92f60cdbe5"
+  },
+  {
+    "file": "src/scene/SceneInitializationState.cpp",
+    "sites": 4,
+    "original_sha256": "249c5054c3b80f0b5386da2a3170c708cd26ef785b09a517858f4b47bbef9d61",
+    "restored_sha256": "249c5054c3b80f0b5386da2a3170c708cd26ef785b09a517858f4b47bbef9d61"
+  },
+  {
+    "file": "src/scene/SceneTransitionRequestService.cpp",
+    "sites": 1,
+    "original_sha256": "9a820181eb7d05b1051f641b115cc0ce7bdeb051847dd756bb5f99d9b63cc09d",
+    "restored_sha256": "9a820181eb7d05b1051f641b115cc0ce7bdeb051847dd756bb5f99d9b63cc09d"
+  },
+  {
+    "file": "src/scene/StageAuthoredData.cpp",
+    "sites": 4,
+    "original_sha256": "4220dc93f5388896a796988fd26723a578a94a924f75370e254a71e2fce85798",
+    "restored_sha256": "4220dc93f5388896a796988fd26723a578a94a924f75370e254a71e2fce85798"
+  },
+  {
+    "file": "src/scene/StageCollisionService.cpp",
+    "sites": 15,
+    "original_sha256": "31d6f35fe095bcaa8a31d1a558020fc32e159e843a447abc43047511a0969030",
+    "restored_sha256": "31d6f35fe095bcaa8a31d1a558020fc32e159e843a447abc43047511a0969030"
+  },
+  {
+    "file": "src/scene/StageHostScene.cpp",
+    "sites": 14,
+    "original_sha256": "80682a78741ca02237c52daf44a6c9bf6f4686cd9d1d189f1e6e52efa95fb7bc",
+    "restored_sha256": "80682a78741ca02237c52daf44a6c9bf6f4686cd9d1d189f1e6e52efa95fb7bc"
+  },
+  {
+    "file": "src/scene/StageLightSceneBinding.cpp",
+    "sites": 2,
+    "original_sha256": "1c246fa30b035e0da0789138f026b65f35d77c162326561c3923004fcb494478",
+    "restored_sha256": "1c246fa30b035e0da0789138f026b65f35d77c162326561c3923004fcb494478"
+  },
+  {
+    "file": "src/scene/TitleFileSelectRoute.cpp",
+    "sites": 6,
+    "original_sha256": "64cd95eccf15ba81dba998bc93f4a9eeeadf98d14575d01948d3035eb51c9f19",
+    "restored_sha256": "64cd95eccf15ba81dba998bc93f4a9eeeadf98d14575d01948d3035eb51c9f19"
+  },
+  {
+    "file": "src/scene/TitleFileSelectVisual.cpp",
+    "sites": 3,
+    "original_sha256": "9f25bc7bfbdfb90b8759cc313823c900b632bdf625e480015f918a61505c29e8",
+    "restored_sha256": "9f25bc7bfbdfb90b8759cc313823c900b632bdf625e480015f918a61505c29e8"
+  },
+  {
+    "file": "src/scene/nameobj/NameObjFactory.cpp",
+    "sites": 5,
+    "original_sha256": "f37dc0eccf4f56d33fb6053d3239ebc5cc84bdcb0091526731e584519875816e",
+    "restored_sha256": "f37dc0eccf4f56d33fb6053d3239ebc5cc84bdcb0091526731e584519875816e"
+  },
+  {
+    "file": "src/scene/nameobj/ObjectNameTable.cpp",
+    "sites": 4,
+    "original_sha256": "ddfbc398ffb78642afb97096cc62a05f71177a61353a98bbee07edd839ab12d4",
+    "restored_sha256": "ddfbc398ffb78642afb97096cc62a05f71177a61353a98bbee07edd839ab12d4"
+  },
+  {
+    "file": "src/scene/nameobj/PlanetMapCatalog.cpp",
+    "sites": 10,
+    "original_sha256": "b86fd47aa4ab3d3c6696763d22218626c4221c8d7cee04a7ffbcbf23591dca56",
+    "restored_sha256": "b86fd47aa4ab3d3c6696763d22218626c4221c8d7cee04a7ffbcbf23591dca56"
+  },
+  {
+    "file": "src/showcase/Showcase.cpp",
+    "sites": 28,
+    "original_sha256": "678f9911fdb6397396938a7645e4106813e6332c00ad280eaeddf1a93a2c0aa3",
+    "restored_sha256": "678f9911fdb6397396938a7645e4106813e6332c00ad280eaeddf1a93a2c0aa3"
+  },
+  {
+    "file": "aurora/lib/j_audio_sound_archive.cpp",
+    "sites": 2,
+    "original_sha256": "5b28cac350aca7488f73ba9eec63a9d95f4ca68befeb04eaa87642bd93f80b14",
+    "restored_sha256": "5b28cac350aca7488f73ba9eec63a9d95f4ca68befeb04eaa87642bd93f80b14"
+  },
+  {
+    "file": "aurora/lib/j_audio_stream.cpp",
+    "sites": 1,
+    "original_sha256": "6ec445269f1819f3fae58df61976b13932457501d4ade9e9bfcc84506d05f379",
+    "restored_sha256": "6ec445269f1819f3fae58df61976b13932457501d4ade9e9bfcc84506d05f379"
+  },
+  {
+    "file": "aurora/lib/audio.cpp",
+    "sites": 27,
+    "original_sha256": "ebeb00ef2e32aa319d3e1d93fe711b2590edf603d8b14ff796d0b46c989e9ebd",
+    "restored_sha256": "ebeb00ef2e32aa319d3e1d93fe711b2590edf603d8b14ff796d0b46c989e9ebd"
+  },
+  {
+    "file": "aurora/lib/sysconf.cpp",
+    "sites": 16,
+    "original_sha256": "50cf0c2e254fe9a8f440d66536e4ffd62f85e32219cde48a20952ff2d3946075",
+    "restored_sha256": "50cf0c2e254fe9a8f440d66536e4ffd62f85e32219cde48a20952ff2d3946075"
+  },
+  {
+    "file": "aurora/lib/nw4r/brlan.cpp",
+    "sites": 21,
+    "original_sha256": "b85740460e80fb3d88fd13eda810b8a4d35e944541de7b0c626270fcfe1f7581",
+    "restored_sha256": "b85740460e80fb3d88fd13eda810b8a4d35e944541de7b0c626270fcfe1f7581"
+  },
+  {
+    "file": "aurora/include/JSystem/JAudio2/JAISound.hpp",
+    "sites": 1,
+    "original_sha256": "890dd0b874a7d0a5ad93d699fc87ced1b980299869df0dd204d3751d108ccf1e",
+    "restored_sha256": "890dd0b874a7d0a5ad93d699fc87ced1b980299869df0dd204d3751d108ccf1e"
+  }
+]

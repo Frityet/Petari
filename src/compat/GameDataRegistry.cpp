@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "compat/GameDataRegistry.hpp"
 
 #include <array>
@@ -58,20 +59,20 @@ template <typename Entry, std::size_t Size>
 [[nodiscard]] const Entry& require_entry(const std::array<Entry, Size>& entries, std::string_view name,
                                          std::string_view table_name) {
     if (name.empty()) {
-        throw std::invalid_argument(std::string(table_name) + " name must not be empty");
+        aurora::throw_host_exception<std::invalid_argument>(std::string(table_name) + " name must not be empty");
     }
     for (const auto& entry : entries) {
         if (entry.name == name) {
             return entry;
         }
     }
-    throw std::invalid_argument(std::string(name) + " is absent from the retail " + std::string(table_name));
+    aurora::throw_host_exception<std::invalid_argument>(std::string(name) + " is absent from the retail " + std::string(table_name));
 }
 }  // namespace
 
 const GameEventFlag& require_retail_flag(std::string_view name) {
     if (name.empty()) {
-        throw std::invalid_argument("Game event flag name must not be empty");
+        aurora::throw_host_exception<std::invalid_argument>("Game event flag name must not be empty");
     }
     for (auto index = s32{}; index < GameEventFlagTable::getTableSize(); ++index) {
         const auto* flag = GameEventFlagTable::getFlag(index);
@@ -79,7 +80,7 @@ const GameEventFlag& require_retail_flag(std::string_view name) {
             return *flag;
         }
     }
-    throw std::invalid_argument(std::string(name) + " is absent from the retail GameEventFlagTable");
+    aurora::throw_host_exception<std::invalid_argument>(std::string(name) + " is absent from the retail GameEventFlagTable");
 }
 
 const StoryEventEntry& require_retail_story_event(std::string_view name) {

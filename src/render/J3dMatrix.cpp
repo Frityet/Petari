@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "J3dMatrix.hpp"
 
 #include <cmath>
@@ -188,7 +189,7 @@ namespace smgpc::render {
         const auto i = matrix.m[10U];
         const auto determinant = a * (e * i - f * h) - b * (d * i - f * g) + c * (d * h - e * g);
         if (std::abs(determinant) <= 0.000001F) {
-            throw std::logic_error("J3D normal matrix is singular");
+            aurora::throw_host_exception<std::logic_error>("J3D normal matrix is singular");
         }
 
         const auto inverse_determinant = 1.0F / determinant;
@@ -199,7 +200,7 @@ namespace smgpc::render {
         };
         const auto length = std::sqrt(result[0U] * result[0U] + result[1U] * result[1U] + result[2U] * result[2U]);
         if (length <= 0.000001F) {
-            throw std::logic_error("J3D normal vector is degenerate");
+            aurora::throw_host_exception<std::logic_error>("J3D normal vector is degenerate");
         }
 
         result[0U] /= length;

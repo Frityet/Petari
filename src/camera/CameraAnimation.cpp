@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "camera/CameraAnimation.hpp"
 
 #include "Game/Camera/CameraAnim.hpp"
@@ -46,7 +47,7 @@ namespace smgpc::camera {
         [[nodiscard]] std::uint32_t read_be_u32(
             std::span<const std::uint8_t> bytes, std::size_t offset) {
             if (offset + 4U > bytes.size()) {
-                throw std::runtime_error(
+                aurora::throw_host_exception<std::runtime_error>(
                     "Camera animation field is outside the CANM resource.");
             }
             return (static_cast<std::uint32_t>(bytes[offset]) << 24U) |
@@ -80,7 +81,7 @@ namespace smgpc::camera {
         std::span<const std::uint8_t> bytes) {
         constexpr auto cHeaderSize = std::size_t{0x20U};
         if (bytes.size() < cHeaderSize || !has_tag(bytes, 0U, "ANDO")) {
-            throw std::runtime_error(
+            aurora::throw_host_exception<std::runtime_error>(
                 "Camera animation resource does not have an ANDO header.");
         }
 
@@ -100,17 +101,17 @@ namespace smgpc::camera {
             result._format = CameraAnimationFormat::Ckan;
             component_size = 12U;
         } else {
-            throw std::runtime_error(
+            aurora::throw_host_exception<std::runtime_error>(
                 "Camera animation resource is neither CANM nor CKAN.");
         }
         if (read_be_u32(bytes, 0x08U) == 0U) {
-            throw std::runtime_error(
+            aurora::throw_host_exception<std::runtime_error>(
                 "Camera animation resource has an unsupported zero version.");
         }
 
         result._frame_count = read_be_u32(bytes, 0x18U);
         if (result._frame_count == 0U) {
-            throw std::runtime_error(
+            aurora::throw_host_exception<std::runtime_error>(
                 "Camera animation has no frames for the original camera reader.");
         }
         const auto value_offset =
@@ -119,12 +120,12 @@ namespace smgpc::camera {
             components.size() * component_size;
         if ((value_offset % alignof(std::uint32_t)) != 0U ||
             value_offset < cHeaderSize + component_table_size) {
-            throw std::runtime_error(
+            aurora::throw_host_exception<std::runtime_error>(
                 "Camera animation value table is unaligned or overlaps its components.");
         }
         if (cHeaderSize + component_table_size > bytes.size() ||
             value_offset + 4U > bytes.size()) {
-            throw std::runtime_error(
+            aurora::throw_host_exception<std::runtime_error>(
                 "Camera animation component or value table is truncated.");
         }
 
@@ -132,7 +133,7 @@ namespace smgpc::camera {
             static_cast<std::size_t>(read_be_u32(bytes, value_offset));
         if ((value_byte_count % sizeof(float)) != 0U ||
             value_offset + 4U + value_byte_count > bytes.size()) {
-            throw std::runtime_error(
+            aurora::throw_host_exception<std::runtime_error>(
                 "Camera animation float table has an invalid extent.");
         }
 
@@ -152,7 +153,7 @@ namespace smgpc::camera {
              offset < value_offset + 4U + value_byte_count; offset += 4U) {
             const auto value = read_be_float(bytes, offset);
             if (!std::isfinite(value)) {
-                throw std::runtime_error(
+                aurora::throw_host_exception<std::runtime_error>(
                     "Camera animation contains a non-finite authored value.");
             }
             values.push_back(value);
@@ -161,14 +162,14 @@ namespace smgpc::camera {
         const auto terminal_frame = static_cast<float>(result._frame_count - 1U);
         if (result._format == CameraAnimationFormat::Canm &&
             !(terminal_frame < 4294967296.0F)) {
-            throw std::runtime_error(
+            aurora::throw_host_exception<std::runtime_error>(
                 "CANM terminal frame exceeds the original unsigned frame conversion.");
         }
         for (auto component_index = std::size_t{};
              component_index < components.size(); ++component_index) {
             const auto &component = components[component_index];
             if (component.count == 0U) {
-                throw std::runtime_error(
+                aurora::throw_host_exception<std::runtime_error>(
                     "Camera animation component has no authored samples.");
             }
             const auto stride = result._format == CameraAnimationFormat::Canm ?
@@ -183,7 +184,7 @@ namespace smgpc::camera {
                                       (component.count - 1U) * stride + 3U;
             if (static_cast<std::size_t>(component.offset) + required >
                 values.size()) {
-                throw std::runtime_error(
+                aurora::throw_host_exception<std::runtime_error>(
                     "Camera animation component exceeds its float table.");
             }
 
@@ -191,14 +192,14 @@ namespace smgpc::camera {
                 component.count > 1U) {
                 auto previous = values[component.offset];
                 if (previous > 0.0F) {
-                    throw std::runtime_error(
+                    aurora::throw_host_exception<std::runtime_error>(
                         "CKAN first key would underflow the original key search at frame zero.");
                 }
                 for (auto key = std::uint32_t{1U}; key < component.count; ++key) {
                     const auto next = values[
                         static_cast<std::size_t>(component.offset) + key * stride];
                     if (previous > next) {
-                        throw std::runtime_error(
+                        aurora::throw_host_exception<std::runtime_error>(
                             "CKAN key times are not in nondecreasing order.");
                     }
                     previous = next;
@@ -217,7 +218,7 @@ namespace smgpc::camera {
                         static_cast<std::size_t>(component.offset) +
                         component.count * stride;
                     if (following + 3U > values.size()) {
-                        throw std::runtime_error(
+                        aurora::throw_host_exception<std::runtime_error>(
                             "CKAN final searched key has no readable following record.");
                     }
                     const auto boundary = values[following];
@@ -225,7 +226,7 @@ namespace smgpc::camera {
                     // retain this final segment and extrapolate in the original
                     // Hermite routine; its time does not clamp playback.
                     if (!(previous < boundary)) {
-                        throw std::runtime_error(
+                        aurora::throw_host_exception<std::runtime_error>(
                             "CKAN following record does not advance beyond the last searched key.");
                     }
                 }
@@ -295,12 +296,12 @@ namespace smgpc::camera {
     CameraAnimationSample CameraAnimation::sample(float frame) const {
         if (!std::isfinite(frame) || frame < 0.0F ||
             !(frame < static_cast<float>(_frame_count))) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "Camera animation sampling requires a finite frame within playback.");
         }
         const auto native = _native_data.bytes();
         if (native.empty()) {
-            throw std::logic_error("Camera animation has no native data owner.");
+            aurora::throw_host_exception<std::logic_error>("Camera animation has no native data owner.");
         }
         const auto *header = reinterpret_cast<const CanmFileHeader *>(native.data());
         // The original set/accessor signatures predate const-correctness. They

@@ -1,0 +1,51 @@
+{
+  "build": {
+    "command": [
+      "xmake",
+      "build",
+      "smg-pc-original-camera-resource-tests"
+    ],
+    "exit_code": 0,
+    "log": "build.log"
+  },
+  "synthetic": {
+    "command": [
+      "xmake",
+      "run",
+      "smg-pc-original-camera-resource-tests"
+    ],
+    "exit_code": 0,
+    "log": "synthetic-run.log",
+    "deterministic_cases_passed": 5,
+    "optional_disc_case": "skipped"
+  },
+  "real": {
+    "command": [
+      "xmake",
+      "run",
+      "smg-pc-original-camera-resource-tests"
+    ],
+    "environment": {
+      "SMGPC_REAL_DISC": "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz"
+    },
+    "exit_code": 0,
+    "log": "real-run.log",
+    "cases_passed": 6,
+    "catalogs": [
+      {
+        "stage": "HeavensDoorGalaxy",
+        "rows": 42,
+        "scalar_string_reads": 798,
+        "vector_reads": 210,
+        "version": 196630
+      },
+      {
+        "stage": "EggStarGalaxy",
+        "rows": 111,
+        "scalar_string_reads": 2109,
+        "vector_reads": 555,
+        "version": 196630
+      }
+    ]
+  }
+}

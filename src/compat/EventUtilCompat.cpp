@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Game/Util/EventUtil.hpp"
 
 #include "Game/Screen/InformationObserver.hpp"
@@ -13,7 +14,7 @@
 namespace {
     void require_message_bit(s8 bit) {
         if (bit < 0 || bit >= 16) {
-            throw std::out_of_range("MessageAlreadyRead bit must fit the retail u16 event value.");
+            aurora::throw_host_exception<std::out_of_range>("MessageAlreadyRead bit must fit the retail u16 event value.");
         }
     }
 }  // namespace
@@ -90,7 +91,7 @@ namespace MR {
 
     s32 setupAlreadyDoneFlag(const char* name, const JMapInfoIter& iter, u32* value) {
         if (name == nullptr) {
-            throw std::invalid_argument("Already-done setup requires a name.");
+            aurora::throw_host_exception<std::invalid_argument>("Already-done setup requires a name.");
         }
 
         auto link_id = s32{-1};

@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "compat/StorySequencePlatformCompat.hpp"
 
 struct JMapData;
@@ -35,7 +36,7 @@ namespace {
     thread_local smgpc::compat::story_sequence::SceneStateBinding *s_scene_state = nullptr;
 
     [[noreturn]] void unavailable(std::string_view operation) {
-        throw std::runtime_error("StorySequenceExecutor platform operation is unavailable: " + std::string(operation));
+        aurora::throw_host_exception<std::runtime_error>("StorySequenceExecutor platform operation is unavailable: " + std::string(operation));
     }
 
     [[nodiscard]] GameDataHolder &require_current_game_data() {
@@ -44,7 +45,7 @@ namespace {
 
     [[nodiscard]] const GameEventFlag &require_retail_flag(std::string_view name) {
         if (name.empty()) {
-            throw std::invalid_argument("Game event flag name must not be empty");
+            aurora::throw_host_exception<std::invalid_argument>("Game event flag name must not be empty");
         }
 
         for (auto index = s32{}; index < GameEventFlagTable::getTableSize(); ++index) {
@@ -54,7 +55,7 @@ namespace {
             }
         }
 
-        throw std::invalid_argument("Game event flag is absent from the retail table: " + std::string(name));
+        aurora::throw_host_exception<std::invalid_argument>("Game event flag is absent from the retail table: " + std::string(name));
     }
 
     [[nodiscard]] bool has_retail_special_star(const GameEventFlag &flag) {
@@ -69,7 +70,7 @@ namespace {
 
     [[nodiscard]] bool can_turn_on_retail_flag(const GameEventFlag &flag, unsigned depth) {
         if (depth > 32U) {
-            throw std::logic_error("Retail game event flag dependency graph exceeded its recursion bound");
+            aurora::throw_host_exception<std::logic_error>("Retail game event flag dependency graph exceeded its recursion bound");
         }
 
         switch (flag.mType) {
@@ -84,7 +85,7 @@ namespace {
                    (flag.mRequirement2 == nullptr || is_retail_flag_on(require_retail_flag(flag.mRequirement2), depth + 1U));
         case GameEventFlag::Type_EventValueIsZero:
             if (flag.mRequirement == nullptr) {
-                throw std::logic_error("Retail event-value flag has no requirement: " + std::string(flag.mName));
+                aurora::throw_host_exception<std::logic_error>("Retail event-value flag has no requirement: " + std::string(flag.mName));
             }
             return is_retail_flag_on(require_retail_flag(flag.mRequirement), depth + 1U) &&
                    require_current_game_data().getGameEventValue(flag.mEventValueName) == 0U;
@@ -114,7 +115,7 @@ namespace smgpc::compat::story_sequence {
     SceneStateBinding::SceneStateBinding(std::string_view scene_name, std::string_view stage_name, s32 scenario_no)
         : _previous(s_scene_state), _scene_name(scene_name), _stage_name(stage_name), _scenario_no(scenario_no) {
         if (_scene_name.empty()) {
-            throw std::invalid_argument("Story sequence scene state requires a scene name");
+            aurora::throw_host_exception<std::invalid_argument>("Story sequence scene state requires a scene name");
         }
         s_scene_state = this;
     }
@@ -161,7 +162,7 @@ namespace GameDataFunction {
 
     bool canOnGameEventFlag(const char *name) {
         if (name == nullptr) {
-            throw std::invalid_argument("Game event flag query requires a name");
+            aurora::throw_host_exception<std::invalid_argument>("Game event flag query requires a name");
         }
         return require_current_game_data().canOnGameEventFlag(name);
     }
@@ -249,7 +250,7 @@ const StorySequenceExecutorType::DemoSequenceInfo *StorySequenceExecutor::addDyn
 namespace MR {
     u32 getHashCode(const char *text) {
         if (text == nullptr) {
-            throw std::invalid_argument("Hash input must not be null");
+            aurora::throw_host_exception<std::invalid_argument>("Hash input must not be null");
         }
 
         auto hash = u32{};

@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "DumpJson.hpp"
 
 #include <fstream>
@@ -8,13 +9,13 @@ namespace smgpc::dump {
     Json load_json_file(const std::filesystem::path &path) {
         auto file = std::ifstream(path, std::ios::binary);
         if (!file) {
-            throw std::runtime_error("could not open JSON file " + path.string());
+            aurora::throw_host_exception<std::runtime_error>("could not open JSON file " + path.string());
         }
 
         try {
             return Json::parse(file);
         } catch (const nlohmann::json::exception &e) {
-            throw std::runtime_error("could not parse JSON file " + path.string() + ": " + e.what());
+            aurora::throw_host_exception<std::runtime_error>("could not parse JSON file " + path.string() + ": " + e.what());
         }
     }
 
@@ -29,12 +30,12 @@ namespace smgpc::dump {
 
         auto file = std::ofstream(path, std::ios::binary);
         if (!file) {
-            throw std::runtime_error("could not open JSON output " + path.string());
+            aurora::throw_host_exception<std::runtime_error>("could not open JSON output " + path.string());
         }
 
         file << dump_json(json, indent) << '\n';
         if (!file) {
-            throw std::runtime_error("could not write JSON output " + path.string());
+            aurora::throw_host_exception<std::runtime_error>("could not write JSON output " + path.string());
         }
     }
 

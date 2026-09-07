@@ -1,0 +1,3 @@
+standard_exception_types=9 nested_routing=pass message_view=pass
+guest_message_temporary=pass exception_copy=pass retained_rethrow_after_scene_retirement=pass
+actual_camera_error_after_scene_retirement=pass

@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "compat/JutTextureAllocation.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "resource/Mem1ResourceHeap.hpp"
@@ -26,10 +27,10 @@ namespace smgpc::compat {
     JutTextureAllocationService::JutTextureAllocationService(std::shared_ptr<resource::Mem1ResourceHeap> heap)
         : _heap(std::move(heap)) {
         JkrHostAllocationScope host;
-        if (!_heap) throw std::invalid_argument("JUTTexture requires an explicit mapped graphics heap");
+        if (!_heap) aurora::throw_host_exception<std::invalid_argument>("JUTTexture requires an explicit mapped graphics heap");
         auto& state = registry();
         std::lock_guard lock(state.mutex);
-        if (state.service) throw std::logic_error("A JUTTexture allocation service is already installed");
+        if (state.service) aurora::throw_host_exception<std::logic_error>("A JUTTexture allocation service is already installed");
         state.service = this;
         state.heap = _heap;
     }
@@ -59,13 +60,13 @@ namespace smgpc::compat {
             std::lock_guard lock(state.mutex);
             heap = state.heap;
         }
-        if (!heap) throw std::logic_error("Owned JUTTexture construction requires the process graphics heap");
-        if (size < sizeof(ResTIMG)) throw std::length_error("Owned JUTTexture storage must contain its complete header");
+        if (!heap) aurora::throw_host_exception<std::logic_error>("Owned JUTTexture construction requires the process graphics heap");
+        if (size < sizeof(ResTIMG)) aurora::throw_host_exception<std::length_error>("Owned JUTTexture storage must contain its complete header");
         auto allocation = heap->allocate(size);
         void* data = allocation.bytes().data();
         {
             std::lock_guard lock(state.mutex);
-            if (state.owned.contains(&texture)) throw std::logic_error("JUTTexture address still owns a mapped allocation");
+            if (state.owned.contains(&texture)) aurora::throw_host_exception<std::logic_error>("JUTTexture address still owns a mapped allocation");
             state.owned.emplace(&texture, std::move(allocation));
         }
         return JutTextureAllocation(&texture, data);
@@ -93,6 +94,6 @@ namespace smgpc::compat {
         std::lock_guard lock(state.mutex);
         for (auto& [texture, allocation] : state.owned)
             if (allocation.bytes().data() == reinterpret_cast<const std::byte*>(image)) return texture;
-        throw std::logic_error("ResTIMG does not identify an owned JUTTexture allocation");
+        aurora::throw_host_exception<std::logic_error>("ResTIMG does not identify an owned JUTTexture allocation");
     }
 }

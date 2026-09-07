@@ -1,0 +1,110 @@
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |     /* 0x14 */ virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |     /* 0x14 */ virtual void movement();
+      |                             ^
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |     /* 0x1C */ virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here
+   28 |     /* 0x1C */ virtual void calcAnim();
+      |                             ^
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:43:29: warning: 'calcViewAndEntry' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   43 |     /* 0x20 */ virtual void calcViewAndEntry();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:29:29: note: overridden virtual function is here
+   29 |     /* 0x20 */ virtual void calcViewAndEntry();
+      |                             ^
+In file included from src/resource/J3dMaterialBlockData.cpp:6:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:245:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  245 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+src/resource/J3dMaterialBlockData.cpp:185:33: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'J3DIndInitData' [-Wnontrivial-memcall]
+  185 |                     std::memcpy(&records[i], row.data(), stride);
+      |                                 ^
+src/resource/J3dMaterialBlockData.cpp:230:47: note: in instantiation of function template specialization 'smgpc::resource::(anonymous namespace)::Decoder<J3DMaterialBlock>::table<J3DIndInitData, (lambda at src/resource/J3dMaterialBlockData.cpp:230:82)>' requested here
+  230 |                 block.mpIndInitData = decoder.table<J3DIndInitData>(0x18, 0x138, [](auto& value, Bytes row) {
+      |                                               ^
+src/resource/J3dMaterialBlockData.cpp:185:33: note: explicitly cast the pointer to silence this warning
+  185 |                     std::memcpy(&records[i], row.data(), stride);
+      |                                 ^
+      |                                 (void*)
+src/resource/J3dMaterialBlockData.cpp:185:33: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'J3DTexCoordInfo' [-Wnontrivial-memcall]
+  185 |                     std::memcpy(&records[i], row.data(), stride);
+      |                                 ^
+src/resource/J3dMaterialBlockData.cpp:246:44: note: in instantiation of function template specialization 'smgpc::resource::(anonymous namespace)::Decoder<J3DMaterialBlock>::table<J3DTexCoordInfo, smgpc::resource::(anonymous namespace)::ByteFields>' requested here
+  246 |             block.mpTexCoordInfo = decoder.table<J3DTexCoordInfo>(0x38, 4, ByteFields{});
+      |                                            ^
+src/resource/J3dMaterialBlockData.cpp:185:33: note: explicitly cast the pointer to silence this warning
+  185 |                     std::memcpy(&records[i], row.data(), stride);
+      |                                 ^
+      |                                 (void*)
+src/resource/J3dMaterialBlockData.cpp:185:33: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'J3DTexMtxInfo' [-Wnontrivial-memcall]
+  185 |                     std::memcpy(&records[i], row.data(), stride);
+      |                                 ^
+src/resource/J3dMaterialBlockData.cpp:248:42: note: in instantiation of function template specialization 'smgpc::resource::(anonymous namespace)::Decoder<J3DMaterialBlock>::table<J3DTexMtxInfo, void (*)(J3DTexMtxInfo &, std::span<const unsigned char>)>' requested here
+  248 |             block.mpTexMtxInfo = decoder.table<J3DTexMtxInfo>(0x40, 0x64, texture_matrix);
+      |                                          ^
+src/resource/J3dMaterialBlockData.cpp:185:33: note: explicitly cast the pointer to silence this warning
+  185 |                     std::memcpy(&records[i], row.data(), stride);
+      |                                 ^
+      |                                 (void*)
+src/resource/J3dMaterialBlockData.cpp:185:33: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'J3DTevOrderInfo' [-Wnontrivial-memcall]
+  185 |                     std::memcpy(&records[i], row.data(), stride);
+      |                                 ^
+src/resource/J3dMaterialBlockData.cpp:251:44: note: in instantiation of function template specialization 'smgpc::resource::(anonymous namespace)::Decoder<J3DMaterialBlock>::table<J3DTevOrderInfo, smgpc::resource::(anonymous namespace)::ByteFields>' requested here
+  251 |             block.mpTevOrderInfo = decoder.table<J3DTevOrderInfo>(0x4C, 4, ByteFields{});
+      |                                            ^
+src/resource/J3dMaterialBlockData.cpp:185:33: note: explicitly cast the pointer to silence this warning
+  185 |                     std::memcpy(&records[i], row.data(), stride);
+      |                                 ^
+      |                                 (void*)
+src/resource/J3dMaterialBlockData.cpp:185:33: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'J3DFogInfo' [-Wnontrivial-memcall]
+  185 |                     std::memcpy(&records[i], row.data(), stride);
+      |                                 ^
+src/resource/J3dMaterialBlockData.cpp:258:39: note: in instantiation of function template specialization 'smgpc::resource::(anonymous namespace)::Decoder<J3DMaterialBlock>::table<J3DFogInfo, void (*)(J3DFogInfo &, std::span<const unsigned char>)>' requested here
+  258 |             block.mpFogInfo = decoder.table<J3DFogInfo>(0x68, 0x2C, fog);
+      |                                       ^
+src/resource/J3dMaterialBlockData.cpp:185:33: note: explicitly cast the pointer to silence this warning
+  185 |                     std::memcpy(&records[i], row.data(), stride);
+      |                                 ^
+      |                                 (void*)
+src/resource/J3dMaterialBlockData.cpp:185:33: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'J3DAlphaCompInfo' [-Wnontrivial-memcall]
+  185 |                     std::memcpy(&records[i], row.data(), stride);
+      |                                 ^
+src/resource/J3dMaterialBlockData.cpp:259:45: note: in instantiation of function template specialization 'smgpc::resource::(anonymous namespace)::Decoder<J3DMaterialBlock>::table<J3DAlphaCompInfo, smgpc::resource::(anonymous namespace)::ByteFields>' requested here
+  259 |             block.mpAlphaCompInfo = decoder.table<J3DAlphaCompInfo>(0x6C, 8, ByteFields{});
+      |                                             ^
+src/resource/J3dMaterialBlockData.cpp:185:33: note: explicitly cast the pointer to silence this warning
+  185 |                     std::memcpy(&records[i], row.data(), stride);
+      |                                 ^
+      |                                 (void*)
+src/resource/J3dMaterialBlockData.cpp:185:33: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'J3DBlendInfo' [-Wnontrivial-memcall]
+  185 |                     std::memcpy(&records[i], row.data(), stride);
+      |                                 ^
+src/resource/J3dMaterialBlockData.cpp:260:41: note: in instantiation of function template specialization 'smgpc::resource::(anonymous namespace)::Decoder<J3DMaterialBlock>::table<J3DBlendInfo, smgpc::resource::(anonymous namespace)::ByteFields>' requested here
+  260 |             block.mpBlendInfo = decoder.table<J3DBlendInfo>(0x70, 4, ByteFields{});
+      |                                         ^
+src/resource/J3dMaterialBlockData.cpp:185:33: note: explicitly cast the pointer to silence this warning
+  185 |                     std::memcpy(&records[i], row.data(), stride);
+      |                                 ^
+      |                                 (void*)
+src/resource/J3dMaterialBlockData.cpp:185:33: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'J3DNBTScaleInfo' [-Wnontrivial-memcall]
+  185 |                     std::memcpy(&records[i], row.data(), stride);
+      |                                 ^
+src/resource/J3dMaterialBlockData.cpp:264:44: note: in instantiation of function template specialization 'smgpc::resource::(anonymous namespace)::Decoder<J3DMaterialBlock>::table<J3DNBTScaleInfo, void (*)(J3DNBTScaleInfo &, std::span<const unsigned char>)>' requested here
+  264 |             block.mpNBTScaleInfo = decoder.table<J3DNBTScaleInfo>(0x80, 0x10, nbt);
+      |                                            ^
+src/resource/J3dMaterialBlockData.cpp:185:33: note: explicitly cast the pointer to silence this warning
+  185 |                     std::memcpy(&records[i], row.data(), stride);
+      |                                 ^
+      |                                 (void*)
+12 warnings generated.

@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "J3dMaterialRuntime.hpp"
 
 #include <algorithm>
@@ -101,7 +102,7 @@ namespace smgpc::render {
 
         [[nodiscard]] TexGenInput tex_gen_input_for_source(const J3dMeshVertex &source, const J3dTexCoordGenSummary *tex_coord_gen) {
             if (tex_coord_gen == nullptr) {
-                throw std::logic_error("J3D texture coordinate source is absent");
+                aurora::throw_host_exception<std::logic_error>("J3D texture coordinate source is absent");
             }
             if (tex_coord_gen->source == GX_TG_POS) {
                 return TexGenInput {
@@ -120,7 +121,7 @@ namespace smgpc::render {
             if (tex_coord_gen->source >= GX_TG_TEX0 && tex_coord_gen->source <= GX_TG_TEX7) {
                 const auto slot = static_cast<std::size_t>(tex_coord_gen->source - GX_TG_TEX0);
                 if (slot >= source.tex_coords.size() || slot >= source.tex_coord_count) {
-                    throw std::logic_error("J3D vertex is missing the requested texture coordinate source");
+                    aurora::throw_host_exception<std::logic_error>("J3D vertex is missing the requested texture coordinate source");
                 }
 
                 return TexGenInput {
@@ -130,7 +131,7 @@ namespace smgpc::render {
                 };
             }
 
-            throw std::logic_error("J3D texture coordinate source is not implemented exactly");
+            aurora::throw_host_exception<std::logic_error>("J3D texture coordinate source is not implemented exactly");
         }
 
         [[nodiscard]] J3dMatrix3x4 texture_srt_matrix(const J3dTexMatrixSummary &tex_matrix) {

@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "scene/NameObjChildOwner.hpp"
 
 #include "scene/SceneObjHolderRuntime.hpp"
@@ -50,11 +51,11 @@ namespace smgpc::scene {
         smgpc::compat::NameObjRuntimeRegistrationMarker marker,
         NameObj &root, const void *root_owner) {
         if (!_registrations.empty() || !_children.empty()) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "A root registration graph cannot be adopted twice.");
         }
         if (root_owner == nullptr) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "A root registration graph requires a storage owner.");
         }
 
@@ -64,7 +65,7 @@ namespace smgpc::scene {
             std::ranges::count(registrations, &root) != 1 ||
             current_scene_obj_holder_binding_owns(&root) ||
             smgpc::compat::name_obj_runtime_ownership_is_claimed(&root)) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Root construction did not produce one leading unowned registration.");
         }
 
@@ -152,16 +153,16 @@ namespace smgpc::scene {
 
     void NameObjChildOwner::validate_candidate(const NameObj *child) const {
         if (child == nullptr) {
-            throw std::invalid_argument("A scene cannot own a null NameObj child.");
+            aurora::throw_host_exception<std::invalid_argument>("A scene cannot own a null NameObj child.");
         }
         if (std::ranges::any_of(_children, [child](const auto &owned) {
                 return owned.get() == child;
             })) {
-            throw std::logic_error("A scene cannot adopt the same NameObj child twice.");
+            aurora::throw_host_exception<std::logic_error>("A scene cannot adopt the same NameObj child twice.");
         }
         if (current_scene_obj_holder_binding_owns(child) ||
             smgpc::compat::name_obj_runtime_ownership_is_claimed(child)) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "A scene cannot adopt a NameObj child owned by another runtime boundary.");
         }
     }

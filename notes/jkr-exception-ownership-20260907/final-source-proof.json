@@ -1,0 +1,1394 @@
+[
+  {
+    "path": "src/compat/CameraUtilCompat.cpp",
+    "final_sha256": "66acac2c821857159aa0dd90ba19ab728759ba681622a8cf1f609fd20fdeb812",
+    "original_sha256": "3e9b2e05d78fd5fd489c398b06d36ba254d1b5c578f45a6c506244b6a156d78a",
+    "sites": 13,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/CameraLocalUtilRuntime.cpp",
+    "final_sha256": "db88e03a68540e3807c9dc121d06055f62cbd735e43b81427de973b1359b12a8",
+    "original_sha256": "5957a528fe20ec8a1e4b7906b3e02af6441c9fe3bc4c565a92d2a0e90b5cc3af",
+    "sites": 4,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/app/Application.cpp",
+    "final_sha256": "c3a14adaf0232a2e1d6f1e2836928c204a9c2291a3545f32f9d25dcd8162cc28",
+    "original_sha256": "6e01e0129f18de33aeabe5771f1966dd26151c700b278b0b0e7ca0e73493f277",
+    "sites": 4,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/camera/CameraAnimation.cpp",
+    "final_sha256": "b6e586db3c1e2634371a57dd6b55105c8e38046e7d1fbe8736aa37a02904cf42",
+    "original_sha256": "bcb7064b05bbe121e2d9c2e4ebbed149d0d81bd6a9e93c471a2b2fdee2ec6c61",
+    "sites": 18,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/camera/CameraPose.cpp",
+    "final_sha256": "062d1618ac1c6bf533fd1fd5b7aad214dd0805ccc8228dff522e27ed110c9d2b",
+    "original_sha256": "468c2f3582551d33da08511e057dfde694aa27d7b99789c4d38da9c1b13b4274",
+    "sites": 1,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/camera/EventCamera.cpp",
+    "final_sha256": "076414899a74c25e62c4ce83545f19f54a19bd7ebfb2e9e8823ff8d23243f13c",
+    "original_sha256": "7959dc48203e4ff9c1761e6e091b86a531ebf81727d81f5871ba6ee17b140da4",
+    "sites": 21,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/camera/OriginalAnimationCamera.cpp",
+    "final_sha256": "06abe164aef89404779c62e8c0ace7179e1e62b67824babd9da0240d80764646",
+    "original_sha256": "c4dcfff1f3af876690d7099ff37810c0affbe77be92cd36b3b62d4fc6bc7364f",
+    "sites": 3,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/camera/OriginalGameCamera.cpp",
+    "final_sha256": "a5820ce4ac42509cd4c99f5d3b174fd4f2b80b8a34b3ae99bf80d3a2f04c323f",
+    "original_sha256": "4f3e606ca962ba8d7df8ae6756669b422f74b0b97a5fa3078a69c0bf8e1e82a1",
+    "sites": 3,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/camera/PublishedCameraTarget.cpp",
+    "final_sha256": "4e87848baf44c7cca6594f55155634c92c87be8c245ad36ca2f1316f6f068e83",
+    "original_sha256": "9910108c48cec691d000b396687cc167443fff2673f6ccd8eb7c64a225b1701e",
+    "sites": 3,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/common/DumpJson.cpp",
+    "final_sha256": "ad061b2d05e9787c067011557c35bc1f43689e0e786c2baa5f840471cb1db5c4",
+    "original_sha256": "17e4fea6e8f04e5effc81e628c31f716538a75d360e0057fd864cea40b6b4ebe",
+    "sites": 4,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/common/ServiceProvider.hpp",
+    "final_sha256": "e8b67157cae82b28de8d4135776f4d2af25b3c9f388b50fe2a6b0173ffe96167",
+    "original_sha256": "b79e8d11d19c2e73dd6d4cb20fe8e78d3a90dda36d8e3fb4d3fed83ea00551ba",
+    "sites": 13,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/common/Sqlite.cpp",
+    "final_sha256": "ab2ef640f02af297ae631d33d205c237055b326f3e659d6c604e0061690c67c8",
+    "original_sha256": "674c933b23e75a6daaff578c9a6bdc9afa90e1b98023c3930491b307b2d8c035",
+    "sites": 6,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/common/TraceStore.cpp",
+    "final_sha256": "f0b9bc6f17c9d1d844ef2ad1ee2b0ba62259a6d38d05b8a7c41ece55ff95926e",
+    "original_sha256": "bdf65564ad50e9906858516dab47866f2bb622a78d9be6051ed2afd5077cd82c",
+    "sites": 4,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/ActorRuntimeRegistry.cpp",
+    "final_sha256": "b47df4c0bb18e3267dcd5853c146383bd61ec793f08388073996e2e2742e952b",
+    "original_sha256": "135013de2d62ba16e8d80a6dd109619a932454068725d1f5226890ec024760ef",
+    "sites": 35,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/ActorShadowCsvCompat.cpp",
+    "final_sha256": "b806e2061713ff584dcba866bf9750e011c39716f8c32060bfde17f675cb04f7",
+    "original_sha256": "a59465e4f90255c4f8b699f8b1ce1a83cff7ba691b3a515d79977c2860e2ef99",
+    "sites": 2,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/AreaObjRuntimeCompat.cpp",
+    "final_sha256": "57dee508d9d1099349effa1af193877f5d96b4f3f36b9bb650c64f91c1cab2e4",
+    "original_sha256": "ceec701a5d5d6f5b309143e3286e203276779421f0893897f5ce93a851d9bb4e",
+    "sites": 13,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/AudioFacadeCompat.cpp",
+    "final_sha256": "dbc07f9cebcaa31402a4c4b7de94c1bd868eb5874eacfeec0229c9f8334ea863",
+    "original_sha256": "e8774d1c6895f13f545d5e65c64ba8c4322a4e05e7af4fa43f2d921c9f947d41",
+    "sites": 24,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/BinaryDataChunkHolderCompat.cpp",
+    "final_sha256": "66cc110ad62128349748d0d4d60ace835f3c3a6e38601cd38acec8332679d818",
+    "original_sha256": "4225702c34d708f42cf9b02ccd2624a7fbbdd6ff57d4d3d0d8f67121480162cc",
+    "sites": 6,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/BinderCompat.cpp",
+    "final_sha256": "082e0d40d0dad01f565779c5c965cc4a1e266fc7bdea7112dd462ffda6b355db",
+    "original_sha256": "898f0d6034274bd5197d204945c6b82d04f75a5a69ad9d4e8805aa6028a08610",
+    "sites": 1,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/CapturedFrameBlurService.cpp",
+    "final_sha256": "6286df8c0a68b9420b25af603f38a9d0d601f9e7ec6dd07dfac4a94caeee9e34",
+    "original_sha256": "8cdb6fd7445e542cb018176a814d01e1fc662b70eca18acb8dc7a118e3bac4e1",
+    "sites": 9,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/ClippingDirectorCompat.cpp",
+    "final_sha256": "cf2a76a2b875414956c8e152ed45e06a0955677f710f4571fb9bb45255178fc3",
+    "original_sha256": "13be453fd9f23705460d6166b06ff403c7ef4d2bbd2b4ee5cda1a7fca8dfc4c7",
+    "sites": 7,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/CollisionPartsCompat.cpp",
+    "final_sha256": "acaf391993d443f3368bc2de1be15e730da994ab2ab5bd9841b95e4f3a50ab0d",
+    "original_sha256": "79363d3f40b96a93f33b7d037d57555099f6f3e09bb60ce51a3cadeeb7fd6e07",
+    "sites": 12,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/ConfigDataMiscCompat.cpp",
+    "final_sha256": "05e5cacf849955b151fa03bc0779bfa6ae5122e13db0d5ca275c394ff2f5bbea",
+    "original_sha256": "e0e579a07d9db6d1f79749a2092508af1e532b7d3841521a27804bb79355d71a",
+    "sites": 1,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/DemoCompat.cpp",
+    "final_sha256": "675541b7401dbe19f4c4d88228aead36ee444af9856499a4cff2f14766422190",
+    "original_sha256": "ddd469559ebc53690c32f9478f25e56e370fc15387712d6821dda8101653cb8f",
+    "sites": 18,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/DemoSceneRuntime.cpp",
+    "final_sha256": "9dc341a0f3608c793ce8ed834968c86c28087bb74db4520fc3b070274eb5fd58",
+    "original_sha256": "166ccd380bcef68eb6dfb03added589b901a53e4f43029f94b3e1cd5b2f5bccf",
+    "sites": 19,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/DemoSheetRuntime.cpp",
+    "final_sha256": "0c80102d43674e4ae74be6a61ac1cd464433f46dbe7f82cd5941862be399a801",
+    "original_sha256": "509744947364d639983c9d93c1ffe3ed60f1e6af8d6e0bbce4ca6384b8772fbe",
+    "sites": 5,
+    "extra_custom_host_scope": 1,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/DemoUtilCompat.cpp",
+    "final_sha256": "81c9547cb1531a042a7c5859ddfc08b45c21087191ee45688d9753cbcc29a01a",
+    "original_sha256": "972525fa3ae76028a6f9895ef2a1bd819cedb95092439b45d2ec28d042bbf2ed",
+    "sites": 8,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/EffectSystemOwnership.cpp",
+    "final_sha256": "4f9e725b1bdba43922147d9d21da6921a58c9c9cac8c4f1f2f596356b39e0053",
+    "original_sha256": "1c0c85ba7e4689a03a48ad565b737bc49e1065ab527f8251c63ee9a85aa1e8cb",
+    "sites": 6,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/EventUtilCompat.cpp",
+    "final_sha256": "5f230bdf547df58cba292e74e1c041a400d8559be2db3e0fe7d2cd759589a2a1",
+    "original_sha256": "47e698414b6342ed5466daea9cdb3eddf7b4c108de752a7beab7cd5cda8f4358",
+    "sites": 2,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/FixedPositionCompat.cpp",
+    "final_sha256": "c63811c842ed3610b8f10067e9f35a0f7f712e62fc06d7ca309e98825b281676",
+    "original_sha256": "0c54a3d3011422470e57e2253e610cbfe3a2d9f8d68f3a5ffd4f95fdc4e74a14",
+    "sites": 3,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/GameActorPhysicsCompat.cpp",
+    "final_sha256": "a741e35cbc3dba1b9fb25c46482e6b23a337a7cffebe31e824d6b4210a9f51f1",
+    "original_sha256": "cb2ddb0cfba48545a143908e23b63000a3ee20725214e10f0953349de33f5ca2",
+    "sites": 23,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/GameDataFunctionCompat.cpp",
+    "final_sha256": "a029628679b7309c4768c13bd1c2cd50288435e213f24a561ca486c22a0c065e",
+    "original_sha256": "6b7baa49df2eadc8f70c08a5cf99fba59fb7207a842348e2487ee5f3375a9181",
+    "sites": 1,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/GameDataHolderCompat.cpp",
+    "final_sha256": "de96a919a2b84f29c5d4b094410c169e3435988119a30cc81f11ff9494c6e341",
+    "original_sha256": "aa49ba0db6e66e4650d84351aff95a581d6b79f10f174525a6596c942f02f3d4",
+    "sites": 25,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/GameDataRegistry.cpp",
+    "final_sha256": "66f96522054c2640544606b23806e4551687375214de7813baa38b690e55075e",
+    "original_sha256": "edddcdb14f93a36231edabdef4d58f56b66d60ac77c9576849a6f71ad7bfa4d4",
+    "sites": 4,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/GameDataSession.cpp",
+    "final_sha256": "5e6bbed3733aacd56c526a2fcc04bbbfa119d46a01617e147f7d2342eaf50347",
+    "original_sha256": "a2596e6cbef4ca1581feb996420e40065749ce8b0f4843dcf01cbd2141851b5e",
+    "sites": 1,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/GameGravityCompat.cpp",
+    "final_sha256": "6044c5cad91fad0aed987f018317cb3e700827de57dee5e8adcee804019c3036",
+    "original_sha256": "a89a1c22108a55fdaf3226c436d9f70ccce7cb093d26a5a1950a85ff75dac7b6",
+    "sites": 11,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/GameMapCollisionCompat.cpp",
+    "final_sha256": "c8bb815c44a263286f61a8cc614472aebe6f6375e0dd00b19a998d2499dc3941",
+    "original_sha256": "906e4f415e1e64bf14d656169b38865fea970299aea428ccf85fef83fa280b4f",
+    "sites": 4,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/GameMathCompat.cpp",
+    "final_sha256": "52a59c5b9489a65d6f0b2fcda22ac59ff2f4587a9dce1e9c8060e02389736b62",
+    "original_sha256": "8bcfc9a91f56fb5973e0e719008cb5e990eec3123956d4f3cd98a5d7b72dc9df",
+    "sites": 1,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/GameRuntimeCompat.cpp",
+    "final_sha256": "0bf7ff6f5faab6d53b1bb08b0a70c47b031f8ef086880672fc946726dfb6d3cb",
+    "original_sha256": "9ede98a19208dde4f71a92f75edc693d7b713a5257a5ca77a841941c4c986289",
+    "sites": 5,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/GlobalGravityOwnership.cpp",
+    "final_sha256": "1c0966e95f80a8877a2215032bdac30db04b14754c22a22f021addeaa21a6b61",
+    "original_sha256": "671e5f732dbb7e570c5f18ad9569c86b083e24861adea0cd4e877e640e24350f",
+    "sites": 18,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/GroupCheckManagerCompat.cpp",
+    "final_sha256": "49232152a3ccdfbcf94c7b22d3359b8ab85f3fc76ea9243b559bd1fa5c63261a",
+    "original_sha256": "44332efd99f7c6888e7efda6f66144cae49dfddc276eb91f103f28de740c6299",
+    "sites": 15,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/HitInfoCompat.cpp",
+    "final_sha256": "25c67d0670a599db752d7d06cfb1151506439e23c54629ed978c34f9665f09f1",
+    "original_sha256": "ffaa3676d3c22065f7b7b0a8a0422af0fb4727a4a6328970022b201fbb1d7639",
+    "sites": 4,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/InformationMessageCompat.cpp",
+    "final_sha256": "e283fc9b9c903caa2559e260d135c19eca68de5ffb0bbf4fedf843184f90d871",
+    "original_sha256": "d28b16ba66c4d8bf69f662607e7fff944c21aced3c935437a5746f4b5ca88192",
+    "sites": 5,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/JKRArchiveCompat.cpp",
+    "final_sha256": "941f2bb1a7c1f4cc38d3879edeb2ecc5eaa9fa546f5021ec55771b8067a585da",
+    "original_sha256": "99a0834289388f7aeb0572ce7706486b31c6dd864f1c84297d32b2f65974ab40",
+    "sites": 6,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/JkrAllocationDomain.cpp",
+    "final_sha256": "db3bcc25c0aefdaa9fdd66bf47efcdf7b2df17b6d6d26023b3d42d2380586472",
+    "original_sha256": "4babf2cc008b667302a4d6ede5fa21c1e2a520e289fdcb4576d150877e64bfc9",
+    "sites": 4,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/JkrHeapFinalizer.cpp",
+    "final_sha256": "dc89df1e9d25336aba46abe00b56dc0b2620762cfcc1830310b40e2fdc92754c",
+    "original_sha256": "742890719b2394440780f4eaaa97dd56b228f41c121c4c3982eee606b01edf7c",
+    "sites": 2,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/JutTextureAllocation.cpp",
+    "final_sha256": "87d8927133f858ab7b86aaa7f21ea7731716080aff3a173318cb268cb43abaeb",
+    "original_sha256": "1e04f96233113d8c338bc3d4183300d06b7f80a65f928caa5ce3f182b5b05dd1",
+    "sites": 6,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/LayoutFontCompat.cpp",
+    "final_sha256": "7ffcd81860cc2944d43d0cc87c43a557b33123420d20fa941a9e4eb5dc95962d",
+    "original_sha256": "0f15a459aa979ecfecfcf0380158d3ec444b89d8ed733ea350a1f56ca5117269",
+    "sites": 1,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/LiveActorUtilCompat.cpp",
+    "final_sha256": "3befbdf2de91bcc2055eb7eca5b2b45f89772ccfc68ec2e53926f9487aca8ece",
+    "original_sha256": "278c32a5d77bda056e99a57445dfa81e938ca1d55503d06ff30297a655d6b141",
+    "sites": 8,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/LodCtrlRuntimeCompat.cpp",
+    "final_sha256": "0128254f700bbc2c9294697f4f6e048f356f2c8b63a7d86ff91ba7646ae81987",
+    "original_sha256": "150a7c885f89b019882d9f25f3656156ec32b5272babafefe5f2e2ef684b243f",
+    "sites": 6,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/MarioAnimatorLifetime.cpp",
+    "final_sha256": "382e12769bb268da3721f0ab557f8fbe95731508a270626781334bcf3e0a3d40",
+    "original_sha256": "af733aa96eb09301ff5ee954145070bae48ffe228cd7280df46ad5e67c7f9836",
+    "sites": 2,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/MemoryUtilCompat.cpp",
+    "final_sha256": "adb2ee634b36b7f25bdb2b9cc03934fc808cc28aa992488c5efc9573911ef11a",
+    "original_sha256": "576add0bd01c6cf43c128e6674a872ac27e5691bd9e0a2f416eba2b929450aaf",
+    "sites": 2,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/ModelManagerOwner.cpp",
+    "final_sha256": "3a2875fa16288a4ff40cd7b0c16695d9f4ed5ef10defd177053e07b3155cd95e",
+    "original_sha256": "0ddc5721b020b3e8c1d382de48476c091e1a006c1c552ca4bd0fc02482da295c",
+    "sites": 3,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/MtxCompat.cpp",
+    "final_sha256": "02bdf9b4fe4acd7404948fa4cfa1f4b9764cc15b61dc7b5589421cad846a80d8",
+    "original_sha256": "ee3a40538075b30a69e4d7fcc3d5eaa026695a211181000f8d358b389c0f324c",
+    "sites": 4,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/NPCActorRuntimeCompat.cpp",
+    "final_sha256": "e694e5e428c159516d6f47c1ee55d874098e33f56969d934d5b6485eaebd624f",
+    "original_sha256": "61c7e128ca4f26e80f0d57fe2803ec769b25245dd10c61993422b87c868d7c94",
+    "sites": 20,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/NameObjExecuteCompat.cpp",
+    "final_sha256": "84491873ad55d1f9cdbf4b21a5bbd49065cd582abac8d85af716ef27dcbbc370",
+    "original_sha256": "2b361fa2cc98a6aae56fb246686bacd16e265a7aa6b41034da07f06cea1113cc",
+    "sites": 3,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/Nw4rFontCompat.cpp",
+    "final_sha256": "5183ce20fbd4abc7ecbb07b9ad33ee020c5d8467b69618b32b4c48b62986a388",
+    "original_sha256": "f89dee05cc4f2db45c48ecedc1c4ea7529c35c1d85dcf6adb5978661876ad39a",
+    "sites": 5,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/OriginalJ3dJointTree.cpp",
+    "final_sha256": "f50cf7b6c74f7fef5b110a72f3d90ce97186cc5492102e0b6617bd7c15225a7a",
+    "original_sha256": "c244f19c491d2535ee1318b6762c705e1f3a264c752b97430ebf270fa69c9e13",
+    "sites": 9,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/OriginalParticleResourceLookup.cpp",
+    "final_sha256": "3d2c5ba0b8c011debc749015d6f1b97bf4c2cddd8a603d0518ebc9ba4b38a291",
+    "original_sha256": "32835394d15edd773f2794e6834ff441d33a1aaf10d2ec93f6883140b941db2a",
+    "sites": 1,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/OriginalPreDrawRegistration.cpp",
+    "final_sha256": "fe9e29d0f3bcc76ce62936fa7974fe186871afcfdb341f05f4b7df6a6f120025",
+    "original_sha256": "e8db9f522ffa30a9806ec6b2784ed58f9b99df09562ad1affb2c4d26ce8fe99a",
+    "sites": 1,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/PlanetMapRuntimeCompat.cpp",
+    "final_sha256": "b27cf28503fca7226e885972c5301364eed088f1db27bfdef16d28b0cd6ac450",
+    "original_sha256": "6633cd308c249bdec29ea392d20a82da6620ac1c064968d524f521052ef6ed8e",
+    "sites": 5,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/PlayerStateCompat.cpp",
+    "final_sha256": "4d9ca133bbab3df1bb27b31b17bd2e6a514793babeea61dc6e521a170ecfe177",
+    "original_sha256": "8795b64ebd8a5ecbd19b33805837608ff227f19b4a75c1cce755ae4154dc0d8b",
+    "sites": 2,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/PlayerUtilCompat.cpp",
+    "final_sha256": "bfe4bc3f48368b291060c34ade3fdec6e83e43d7de4f51293954d66b5b887676",
+    "original_sha256": "5c896ec8498a653458177603246288471ce08428239c581356f95493e684c3a1",
+    "sites": 12,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/ResourceHolderCompat.cpp",
+    "final_sha256": "e8b78971356cf2cedf53b111bfec0d288cc69d73ec7f9b6d67f2548453bd7d14",
+    "original_sha256": "e564d8be5450d63d09264fad9109d2d3ccece224b4a6a49f38252cd7e8cca3a7",
+    "sites": 6,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/SaveDataHandleSequenceCompat.cpp",
+    "final_sha256": "22ae92987b3a9f89282583f4b42e4355106fe74c1b5b758d66c56297ac07b018",
+    "original_sha256": "e2c4414ef67fcbeeb2256c7a3df6b09cdf59a081b13c62bdb2b6d5b13a47cda8",
+    "sites": 1,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/ScenarioDataParserAccess.cpp",
+    "final_sha256": "eb32ec979f1945df46b7abd8aeaf78aa75ebe45234ad2f0df1eba169aea10b22",
+    "original_sha256": "0e1cb065b127773db93e6ec95e9ad57c7d9b0d7bb6af53157533c464761b5a14",
+    "sites": 1,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/SceneHeapAccess.cpp",
+    "final_sha256": "8713fe729ab5b64e417c502d2d0d26ac9bf55c070de9d08fb4ab814cffdd73f2",
+    "original_sha256": "604a883eeb1ac7bf689852e8d9823e55a5d040e2798c48a3e811260fe2e1b7c5",
+    "sites": 1,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/SceneMovementCompat.cpp",
+    "final_sha256": "eb3f96758a38e29ce4279de37c6d8a6a53fe66b37073453ce90c1456723fa541",
+    "original_sha256": "3888378931cee1a318f296c05ae44ed957c5804ce37244d1f838fd4944a89df5",
+    "sites": 1,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/SceneObjHolderCompat.cpp",
+    "final_sha256": "a261a13c4d959dc86f963440e7b46350efd4e527f0e418bc966f7c63a2fe5200",
+    "original_sha256": "b324ba4b0fea7e309792feed9cf847eed5e28bd10bea80fc84663c276c170e81",
+    "sites": 8,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/SceneSystemUtilCompat.cpp",
+    "final_sha256": "ade8dddb4e8cd7b56ef48c995e9b5bfa527599e5ee106bc18d8a15891043e955",
+    "original_sha256": "e8c8cc0435aa1048f228e218e184e110f0278332e9e584c317e61e71b000d38b",
+    "sites": 7,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/ScreenUtilCompat.cpp",
+    "final_sha256": "bbf4b6ac8774d66ca6a46fe1826867fab54a818e6e0ef9bd2067e3659802e558",
+    "original_sha256": "d8bd473f23f8028870877d478efa0df8d86568a2149283b8e0a826fc47fe9f9c",
+    "sites": 2,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/SoundUtilCompat.cpp",
+    "final_sha256": "0d952d179e4a897509f98764d91a488d66cc4bdb16666d4ed96b329842f6639d",
+    "original_sha256": "6e91f1df627f9955dfdb3c304c403c3152cff0c8b8f245f09315b1316163a8b7",
+    "sites": 7,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/SphereSelectorRuntimeCompat.cpp",
+    "final_sha256": "0d17d679b8c5023a10c6b0acba9f48eea7547b61baa9a27ff67d358ff0584bbe",
+    "original_sha256": "8510f4ec2f315279ceadaeb779908ebb288b03ea1c7a4ba35a6461eb9ac6a793",
+    "sites": 2,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/StageScenarioMetadataResolver.cpp",
+    "final_sha256": "494d74e838956d05865c29653b34ca669221af4cd46cca0066708b86a55afcbb",
+    "original_sha256": "0b75c7d389a7072c6771ca439ddad44e9cc2d6b8f4c27867a347ba573745cefa",
+    "sites": 8,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/StageSessionGameCompat.cpp",
+    "final_sha256": "63bead8386521ea9389434e2c680268bbf4fc5b18da2c6ca468094ed70faf7c6",
+    "original_sha256": "00d97d2ca9ce4be61b104a2730a1c44d8b239979c85d6a56eb1ebbce640ac0e7",
+    "sites": 2,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/StageSessionState.cpp",
+    "final_sha256": "7e73e5f555b63ec47e8d981005bcf65f81b785974c6f7093f71a1d7d7c46070c",
+    "original_sha256": "c8d8d24d40c5612c77ad48404df881b9acd618529671447faad9bda40d151344",
+    "sites": 7,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/StageZoneMatrixRegistry.cpp",
+    "final_sha256": "355a0c89fdf00117a29c14a583bebce6a5b59ed4321f4b9f2129c0a37443db6f",
+    "original_sha256": "ef3cb5a38e610bd2f246ad00ab91fb183e2aea35f08fda2d463f91ebadcd7e13",
+    "sites": 11,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/StarPointerRuntimeCompat.cpp",
+    "final_sha256": "5e6f3c5297da6b62195d5da615c1bd9ec00f66aeea9f7caa2c377c07d5fac64f",
+    "original_sha256": "eb9925706513b7c9f72c21245d577b62480666aa729d646a79bd8ac7ef91ae01",
+    "sites": 1,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/StarPointerServiceCompat.cpp",
+    "final_sha256": "57abc3778783f7feee9268ecb3493b5e647bf873cb3aac3ea6630db305f09391",
+    "original_sha256": "95e5ef4ba5f439ed260f2f2570a19d8209200c4946df77dd4cd1f55a787af442",
+    "sites": 1,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/StorySequencePlatformCompat.cpp",
+    "final_sha256": "1f9b87d66a01b7e145944a01e28659c53ca08cd7a7c1edb0f9d3cb5d7df88368",
+    "original_sha256": "9eed191b332e89f1a412cde2a99b65483c3df3e9b854be492bf7ff7c627668c3",
+    "sites": 8,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/SysConfigFileCompat.cpp",
+    "final_sha256": "3bd637d31f40c079ca43045b9bc1b014692f086c2a2e978b5e84564584243fcf",
+    "original_sha256": "74cb17cec11bb932772f2823ca90c0c3bb8529e8a7d6580e5f4004bdd1348993",
+    "sites": 2,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/TalkCompat.cpp",
+    "final_sha256": "abfd8fd36dbf2aafd31b4e33572470fa2353bf10d3fa3bae7989bc8caa7fbc2e",
+    "original_sha256": "394aecaab8b78815d5d45d06f72b5df25f4d0dcb8cea2a7ba19e5a01caaded7e",
+    "sites": 1,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/compat/TalkRuntime.cpp",
+    "final_sha256": "4afc0e5de94adb2a767c014ec32abd2e6e9693679b0f8c4e8262662d1be1e890",
+    "original_sha256": "3f4fdc5769b0162998db0c01bd9556e8d9c2df5051d8c899dcc25a3daaccac62",
+    "sites": 41,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/debug/BrfntProbe.cpp",
+    "final_sha256": "8a3191cba47df50a39212c97fe83efd312f7cba326ff2ce7974f537b2447eb02",
+    "original_sha256": "ca9faf3fb851001bc6ffdc4e5fe7f461138a9a2e4dde3b949e076f9175e2bd07",
+    "sites": 1,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/debug/DebugPaths.cpp",
+    "final_sha256": "3fb244b4bf86a704729b07d4bb1dd5e96cc7a435c0e6e5309d582c1f4a8739e2",
+    "original_sha256": "0c97c68c0f9982d1af44264d781e91add86c26073aa73e271d1e9119224c3b7e",
+    "sites": 2,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/debug/J3dAnimationProbe.cpp",
+    "final_sha256": "1b47acc90e0db015d052798488978618fbf852b7237e5f0bb2e2af3cf767484a",
+    "original_sha256": "2e685a8ac2b98680244a7b58ad6ce27e82508ddf15c7fe7d7263f7a36e6a55a8",
+    "sites": 1,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/debug/J3dModelProbe.cpp",
+    "final_sha256": "629530661036197921bac5be86ae11ba4929274720a39e20f88431ed44e2970a",
+    "original_sha256": "37b130c344dc2b62673b95eba8e7930cfd5d028de12624356a6322c829d5350e",
+    "sites": 2,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/debug/J3dTextureDump.cpp",
+    "final_sha256": "87928ff7902b49894f4d14f5c10cd0aaeefe1668cfccb681cf9ff17083fb9b5c",
+    "original_sha256": "c1b93784bc3ed5270a157cc7e1d2b3fe353522bcf84c5e0e4300416f2119080f",
+    "sites": 2,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/debug/LayoutProbe.cpp",
+    "final_sha256": "31c19852b47cf988876829e8d0254a08a7718f23806e431abb5e73041861092c",
+    "original_sha256": "e63ec442f53e2f80cb0a2ecfc5f4ba7391eba986e3d397be6cb6ee0c89137ba6",
+    "sites": 2,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/debug/PicturebookResourceProbe.cpp",
+    "final_sha256": "f203972d5f0f8fa22caf61efdd8c6b1422233c03870a6c1ca64d183f1c66c022",
+    "original_sha256": "84f23484083f8d0ed58d935a75b7daa63e8a892125369c65e332030fdb2df036",
+    "sites": 5,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/debug/PngStats.cpp",
+    "final_sha256": "b3877709796391333d931638c7928964b191c7334f714b18d765dd42b47bbf75",
+    "original_sha256": "80317ae25ccc6316a50d67f7dbccca3053a0991847f965412f5ada300a4f8ebd",
+    "sites": 8,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/debug/StageConstructionProbe.cpp",
+    "final_sha256": "a0b06af4210ebc79f922461d440b12c535dcc34cc3d7301e7f7c389be18d9ca3",
+    "original_sha256": "c871881c915dd57e7ba7e1815dcd2846fb68fafa341a29a9b4c4da5a576acd03",
+    "sites": 7,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/debug/TitleSequenceProbe.cpp",
+    "final_sha256": "ade07eceeb1733be74392c38664bf911aa4f446e566f4d7a67e573396b732286",
+    "original_sha256": "f06a74810c1b63abb786c48613306d3f1fcad25034581dd7952816d3bca8ec0f",
+    "sites": 2,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/debug/TplDump.cpp",
+    "final_sha256": "d4b991dd1c60fb49e59a4578bfb85ccc207ecf3e63f580244986c893a8d3f8c6",
+    "original_sha256": "8c2da3c6915d0d71d5e13a1e0e21b0751bf07af924c03edb3a1eb94944bb1cff",
+    "sites": 1,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/debug/TraceSqliteCompare.cpp",
+    "final_sha256": "7f32a029f92c4429362fd024fe290208ecee28536ae2b8649c09430987ed3707",
+    "original_sha256": "de64ae9301c8c9183244ce03d409f314f9f2a6b3b860cffd34d8b571b3edbd91",
+    "sites": 10,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/debug/TraceSqliteInspect.cpp",
+    "final_sha256": "3ceb4be450e382dc90b3d8d7f86b870c2e06f0a089544cd59028e4a16c16511f",
+    "original_sha256": "72b69e739c5d7fd8bc27241624b568d208b0807a27bbd6157c09b051b32dd801",
+    "sites": 7,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/debug/TraceSqlitePack.cpp",
+    "final_sha256": "6e4965532ffb2fcbde6e5da4f02166ffb9279d8ada49facd5fe51d268fb1fc2a",
+    "original_sha256": "58f46550a1bd56e34ee865217ee2839ffd0c8d2a4264d5beae74e82d3da862ce",
+    "sites": 4,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/debug/TraceSqliteValidate.cpp",
+    "final_sha256": "28b73eace2ba9d02863e58d855f052c5913c0e29024da749cdbc24b10a496337",
+    "original_sha256": "74d07267ec045a72b545fca86001c96eb60fd67f84fcca215570bceb958c3fcb",
+    "sites": 16,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/debug/VisualDiff.cpp",
+    "final_sha256": "8a3073a530472e2f428ce3b7c2d37d58a997c7c2e61052e0613afe3f38e8dc38",
+    "original_sha256": "60b79a100aa3c44a94244353771055cb73d5fbf7ff75f19599b517f2b10d9a4d",
+    "sites": 21,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/layout/BrfntFont.cpp",
+    "final_sha256": "6e8b551ce92265471fe83061dbf3ca3dc2a23f13958ad249358bb0358a35d84c",
+    "original_sha256": "90da6cb3606e0bb117c4853f7918f6733a8f220ee75a7e1de3f8d36f469e9fed",
+    "sites": 17,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/layout/BrlytLayout.cpp",
+    "final_sha256": "702a604dedf4102115a58392715db68c58c841ae9c3441c7e65c0c8852b9046e",
+    "original_sha256": "4e5d55800387b0c935e2f029733ee30a7c3875e4eabed13dcea042daa2ed50a1",
+    "sites": 34,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/layout/LayoutManagerCompat.cpp",
+    "final_sha256": "10307b0ff2d5a58ed0d458a191c37117ef16fdad4b99ab52aa550bb4c353cebe",
+    "original_sha256": "22a61149a1853b54663d7fa584417e6c1847f117e535c8a9021fd9b298e5bbde",
+    "sites": 44,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/layout/LayoutResourceResolver.cpp",
+    "final_sha256": "3f16b94cdec6ae0097b50c74240f2c0a2b30ca03c0515c2f0a35142266daa157",
+    "original_sha256": "d5fbde8ed0c1e15e6a0db610e98bb88248f26ab8b27ee72af6a83e856adfdae6",
+    "sites": 1,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/layout/LayoutRuntime.cpp",
+    "final_sha256": "441a76454fcef6de038172dba4d899ae084087a823c846123910854bc360cc6b",
+    "original_sha256": "3d78059b1b230e519a10a7316b10ec84bed969fe5a27a8db871af90c033c2050",
+    "sites": 59,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/render/J3dAnimation.cpp",
+    "final_sha256": "dc0883d5dd4c529eb5c7c9558b429b6c32f4076caab0d5a553c6b58478241d7a",
+    "original_sha256": "395c70fc44ad3ddf1b16c2f46d580d8ac746f17c7738ed92112b191a0216ea42",
+    "sites": 26,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/render/J3dMaterialRuntime.cpp",
+    "final_sha256": "80109fa236607801527efe2116e57256f4a3b4f7e61216d1ada7acf6223255e1",
+    "original_sha256": "c71c3392c7ad23c9438ceeecad7f2f827ae82835eeedea77175c18c1550ef1ce",
+    "sites": 3,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/render/J3dMatrix.cpp",
+    "final_sha256": "f6bf0f5933d3131269107235c21c10cc09a8dbab3947640303fa59c6655278c5",
+    "original_sha256": "654338f49991c2bd31ce392b3bc6363f3c85f501306aa274c703d8b4dad604db",
+    "sites": 2,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/render/J3dModel.cpp",
+    "final_sha256": "f54b09921528f8715602f51c021efeea471ba7057a301757f3a7a0e734111bc5",
+    "original_sha256": "795d441185d9c26a7f4f6fdede13ad1e6215507bb25b64b2a36e163cebb6e0b2",
+    "sites": 29,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/render/J3dModelRenderer.cpp",
+    "final_sha256": "5b2d351abe2684abd511b0330acdce4edf91039ddc5015de928caac664e66bad",
+    "original_sha256": "62adcafb8009332615c7137df9114107b6042d4d9b60963aa626d97467405194",
+    "sites": 3,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/render/J3dTexture.cpp",
+    "final_sha256": "99c4abce5e04d22606759f6c0a808d4616f7579adaebee22d1a31a02bab92709",
+    "original_sha256": "d26d016ff2a8eb66f45e805e4e3109bae325025a1d6eea43317ec375c391bbed",
+    "sites": 12,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/render/RendererService.cpp",
+    "final_sha256": "40eafb38084a5dc266e43d420ccafe462519c17ddf3b9ff446d0fddf6f7450a3",
+    "original_sha256": "a1e0ad2a555b68bcc3c2a9d00c6a4803eab46bac068b52bd9930690498b51ff0",
+    "sites": 12,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/render/capture/ScreenshotService.cpp",
+    "final_sha256": "86f99df0babea852566932181e273a3d3e70fd32390408a03d30bb65b5d31f19",
+    "original_sha256": "7add2cb2590738165372b0b98c691d0bc1bf81e1e1f2ab5f4fd1d7c26fb0c925",
+    "sites": 8,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/render/core/FixedStepClock.hpp",
+    "final_sha256": "a48aa964410ef2e083b1c1f5ba7cb0333f841e20d9c3c66b901d187f931ceafe",
+    "original_sha256": "54a849e2fe96222bd2e210a69807556ffadf605eae29fc238b5108ce1bdd1494",
+    "sites": 1,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/render/effects/EffectResource.cpp",
+    "final_sha256": "6df4170a76168440614e26e911e7aeb7e832be522a556469e419d5f765bb9f25",
+    "original_sha256": "264370478e5bc250cb57e32bac647a39b431150bf49aed212d2ae9bad1c6bf3e",
+    "sites": 14,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/render/effects/JpcBillboard.cpp",
+    "final_sha256": "6b2d2ae440b72a2c787be9a44f387fc9ff5ca4dcca7022cbc3994b8cd4157b14",
+    "original_sha256": "4c4ac112540a4c37f59f44fdddf45915535a54e202c892a7c2e0d7b259b79db8",
+    "sites": 1,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/render/light/LightData.cpp",
+    "final_sha256": "e7581cca4539bb6193bb35784627271a7bd6e4519f5e01545825de850adbd4ab",
+    "original_sha256": "380edd8acd2636d71a3ec9910b363248d59c5c96b8261bf64767fac109624bc5",
+    "sites": 4,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/resource/BasResource.cpp",
+    "final_sha256": "0414a4e2ecb657a9c631487069ece84edb4f25313bf1776256f383738c6caba2",
+    "original_sha256": "4592eef6e1dd1a515b7e45277681ec83ef5314148e75b9ad6d310551fbc03c50",
+    "sites": 6,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/resource/BcsvTable.cpp",
+    "final_sha256": "e4a85d897c3f3587a998c0b06128ed9a179004cd0001e30bf1181b458c6c0fa2",
+    "original_sha256": "2b92814a77d6b4d03c0c8a4adebe6be024d909138701c2746bd528f9ff79b4be",
+    "sites": 13,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/resource/BmgMessageArchive.cpp",
+    "final_sha256": "a6171c7cc08c08f9f69beb1b88a7ed60dd49b8c6625ed9f6543738771132cb65",
+    "original_sha256": "251b518141e90db75e7d0b6370cc564e5e70221be9a0272a963a82f7559734f1",
+    "sites": 32,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/resource/GameResourceRuntime.cpp",
+    "final_sha256": "eae10f91a30a1352ef245b0e9e9163c1734a806aebe2bb50fadae16dc2bb7207",
+    "original_sha256": "3afcbac3408db9f930de04bd781b439d95424a2acfa7fdd15d95d63f42df1156",
+    "sites": 1,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/resource/J3dAllocationIdentity.cpp",
+    "final_sha256": "8911610a6d584d2e758f3bfaa2c545be3d16e76f027d00b77caee057391122f1",
+    "original_sha256": "4bcc1054753f2d43920726e98648d0f8dc2510b7049df222fb4d97326af843ae",
+    "sites": 3,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/resource/J3dAnimationResource.cpp",
+    "final_sha256": "c3cce22ce4f0e050fae66f11ccc44d84b0a36b52eb45f3120420dea01447b60d",
+    "original_sha256": "1c89fdb96407e03125ee12ed6f54614347dc785838ac9117e39f1497069e92ab",
+    "sites": 20,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/resource/J3dGeometryData.cpp",
+    "final_sha256": "50a1c4502ed8e93288c40b3cfd9c6130c6b67948628ea549083a41c1ce872805",
+    "original_sha256": "9a90facce0d914cbf6dd424605028236053773490fc2c6820ae84303911e5bc3",
+    "sites": 17,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/resource/J3dJointData.cpp",
+    "final_sha256": "c9e1e4483cab6ebeddb7387157a2bcf78617437980729052fb264d0d6defb6a2",
+    "original_sha256": "af754af45fbab55d861f1fe7b36ae47e130028095aa7d5855c25d7dafa396912",
+    "sites": 18,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/resource/J3dMaterialBlockData.cpp",
+    "final_sha256": "d14ad4e553d3b027dc52234f77c3519085708e68814b00f620183f0117e8eb0d",
+    "original_sha256": "7937de0111f14f3c53624021d801244ede87b45af432cfd6491f6422488c5ab7",
+    "sites": 12,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/resource/J3dModelResource.cpp",
+    "final_sha256": "7ca38e4e067b0f93fade5da5e90cdc7fafb914bd1d7204b5a881cec0fa16a5ab",
+    "original_sha256": "4c9cb6b790ab56eadd7d0c570e249f08759aaadaeeba40f974b987dd31a50c3c",
+    "sites": 29,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/resource/J3dNameData.cpp",
+    "final_sha256": "556740e95b5aec13f97eccc02f3af98d0f617e7f287a4c5fb7b05e2bf79811b0",
+    "original_sha256": "ffd4c7ef8480e36ee29be121f13d5d46e0aea523fa66bdaf080f25c245e31a43",
+    "sites": 3,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/resource/J3dNativeBlock.hpp",
+    "final_sha256": "1902ba8832c505d42fd56690ac1788ab4bd39ae94cef14da49236dcb784756f8",
+    "original_sha256": "b1f2b90d56f17fae201aa00ee5a4618751ad6105d5557f92727b5e8f483139f1",
+    "sites": 7,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/resource/J3dTextureData.cpp",
+    "final_sha256": "4392bb296cf640ac39657a1d40d0b74a9ed6d3d747e0fb6a77b1b11e17dfb963",
+    "original_sha256": "6f684581714f8ba7c4ace42be993e5dad5b6c3769be6cb25f45534183e076370",
+    "sites": 11,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/resource/J3dTransformAnimation.cpp",
+    "final_sha256": "4126fd2d81a2dfac02da190737ac69656e8c1b3d8517d0e7bc3f9e9ed0bacd37",
+    "original_sha256": "0629420279a93be62ec9b5e359ce6f091945b651a4b4a7f767ddf05ee00c8265",
+    "sites": 7,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/resource/JMapResource.cpp",
+    "final_sha256": "ad7b55e799149a8de81608dada5a896ebe8f6e86c1db1a4cdd779abb3d3b7166",
+    "original_sha256": "7d897b64022fe059393026fa6801a80cb208e3f51c55726f3bbce0b1195a8731",
+    "sites": 7,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/resource/JpcResource.cpp",
+    "final_sha256": "06f195fc25444c029698a9593ed2cb837f7e41d31aea0ed09753ad022c82d8b6",
+    "original_sha256": "d3cda4e5a2a1f44f84ba7b69a6e981b15ed7fda585487639a4c82ee42b3b81d7",
+    "sites": 2,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/resource/KCollisionResource.cpp",
+    "final_sha256": "b3115e1d41fbd7eb3ee4754426a6aabda04b6f0634b4cf00e21a990f47998a8c",
+    "original_sha256": "dd56add1b4f7759ebc99ea9cfe1520d5f1f1e30b2c07664dcc0b6e8faaa2474f",
+    "sites": 1,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/resource/Mem1ResourceHeap.cpp",
+    "final_sha256": "9b752fc2907ad717e6a3843e7042f95e2d9c345c6c7c79447840dbced5896fad",
+    "original_sha256": "8635c578e9e9e762ba6f157c6d37020fdc8f9686f4ae8dcb5a63ed6470aba2de",
+    "sites": 6,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/resource/RarcArchive.cpp",
+    "final_sha256": "fdfb4b12e203689f38e4baf6b8dd3aa15b66ea24661398cdf3adffa97916f37c",
+    "original_sha256": "750970c8ff82ce34df3739e51245b9dd3731e3d36f7c5c96800e30dd8be91d49",
+    "sites": 18,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/resource/TextEncoding.cpp",
+    "final_sha256": "ba59c13e61b3268a07ae5a91aca638bdd5a7df0f5724090a4b6d3eebe4d9c808",
+    "original_sha256": "4af6ab3c20c16335aa7b92de8692ecf28a91938f3821b03941e1bbeaad8941fe",
+    "sites": 14,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/resource/TplTexture.cpp",
+    "final_sha256": "4b136c9f50dba7d4a90d81f3f895fa965615fb707aa104691a95e89641a42904",
+    "original_sha256": "bd2b9ea5ca46bed56ffe8be7c52894c138c6e7265ff849a65883e45df8f7eb56",
+    "sites": 22,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/resource/Yaz0.cpp",
+    "final_sha256": "26a26707aa47a26c069f4a80d8db2cd5b0edda96c1fb2771189000a794082cfa",
+    "original_sha256": "81990d78ccaf5245abb94eeca24d9660be748faebe8dcfc0dc02602f5ab49c1d",
+    "sites": 6,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/runtime/ArchiveMountService.cpp",
+    "final_sha256": "59f20498561534e1ce551413aae6997e4512842299c23b3071c69983fd8c1738",
+    "original_sha256": "379b9cd3b0f63a400784be8b7c91c499adaa2c8fe4994aa03f9f486b7ecdd69b",
+    "sites": 1,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/runtime/ConsoleNandImport.cpp",
+    "final_sha256": "0635f3711d52d1f637a82e2906b682a3642617a3efe9d334e1f99fc85b558f43",
+    "original_sha256": "09938d909c78a6fbba4140b817b4744829ac64469fdc978420ffb7b26b83fee3",
+    "sites": 9,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/runtime/JAudioPlaybackService.cpp",
+    "final_sha256": "cc02dc4d9394dc793a2f55b53fd9c29c6d8de440929b2f737d38fb0bd32d7970",
+    "original_sha256": "d62064cc153f5f21f5e06095a8a85a2f71893f9961ee0105d0e61afc0f482cef",
+    "sites": 34,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/runtime/ParticleResourceOwnership.cpp",
+    "final_sha256": "b01a6a8ea9d721268a25524b916dca00b8fa8c638dbdf82d49fe8c2361938bfc",
+    "original_sha256": "bec86e7563f8f3bb08ba01312c8bc8955e860578af4e42f1c94d31893c3e9133",
+    "sites": 4,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/runtime/RuntimeContext.cpp",
+    "final_sha256": "fd26599c24df264c8613579f1fcf5e5ba669878db714ccac935afc5709ba9082",
+    "original_sha256": "04ace204b43ae6efe4809b9ad48dfc1a3607251affac561431f1cbac9c209e31",
+    "sites": 23,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/runtime/RuntimeServices.cpp",
+    "final_sha256": "c01eec5f839ff942cdfe0ec675c5d5f826ce3b7ff6bab78de9805fb686b0eb82",
+    "original_sha256": "e31087108f9ff80dc000e02bc69304adb1dc7c4e9edd68dd95f82b9274fdc883",
+    "sites": 51,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/runtime/ScenarioCatalogOwnership.cpp",
+    "final_sha256": "64e326e0a7b712239cf5abda709ebdeee090b6cd59c6e2a068d1b017d1735e54",
+    "original_sha256": "00b4cc5eedf4307d3e77ab0d8791ce5ea529fb0f9e6f5a9f878224923919b7e0",
+    "sites": 4,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/runtime/SceneScheduler.cpp",
+    "final_sha256": "c89446e4f404df637bed0e6f9a014ac2737e4aa945b719113fbef653d321551f",
+    "original_sha256": "9dbc9196db09efdf30d0a1b6cd63bc81a3e8b665980cad68d76ac74961a08676",
+    "sites": 10,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/runtime/SystemConfigService.cpp",
+    "final_sha256": "a57c5e2c607edeed16e24673edceab4f57a2fe19fa8dcd43e586dd393af7df47",
+    "original_sha256": "6a0deef10b5953fdf0e0a6cfc92a9874851d9f36ecb115012c8d38d807f72b69",
+    "sites": 4,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/runtime/screen/ScreenAlphaCapture.cpp",
+    "final_sha256": "cb7febec5e37779cf5ea41288f6d70afeed67f84b79cab537fc856e09ad2e419",
+    "original_sha256": "4b340a63ae8f71484362f40c352a4a19129ddaed72d4b9773e9525c528e14971",
+    "sites": 2,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/scene/AreaObjRuntime.cpp",
+    "final_sha256": "456df2870c288d444a4133c0d38fcf87f719e7e181eaed0fb7be9ccefb0889a8",
+    "original_sha256": "6d1d2469b2bb7413bf261183e9a06ad22b67e50efa7de25048f798f3c5514fcd",
+    "sites": 6,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/scene/AuthoredPlacementInstantiator.cpp",
+    "final_sha256": "839c03318d6c9ca88c24ae5d2ed5573d190a80b070ede964d00e85ad3b799513",
+    "original_sha256": "a5b5a7624f3cb9aab9de13f852025b6fb7f4f0f3cd84c9d55bb58784baa86d49",
+    "sites": 11,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/scene/FileSelectFarVisual.cpp",
+    "final_sha256": "26754661c8811fd6de63798cceec6f4e6ed625fece4f9752af1336d19a419735",
+    "original_sha256": "776dbe481468ae1695be6887d8f6e47b38ff1133ff9e2de1f066b2bf444608be",
+    "sites": 5,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/scene/GatewayDemoScene.cpp",
+    "final_sha256": "c80964cb23c1f784838d5e6a0e220cc8d66c69fdaafaf5341a0d65c78642d63b",
+    "original_sha256": "7a1155f16183792d2571cf4c946ce8430d784bcc8e40630f81c5724313576712",
+    "sites": 3,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/scene/GatewaySpinCheckpoint.cpp",
+    "final_sha256": "f630b1099441f74f29b108c84669050670d1104279a6c659bc76fe2c5c5be913",
+    "original_sha256": "ec555f73eda46ba88bce2a8de8d21353951565c7daef4782f1faee33ff4f775d",
+    "sites": 1,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/scene/NameObjChildOwner.cpp",
+    "final_sha256": "8bb3bbc8c529835d56b9cc0eadc41223504e4906a2b54b644d47c76a000123f5",
+    "original_sha256": "d14eca676c771de79c3cb18fd07c91991585fe6ab2ecf8e88e482c5ce50eaf75",
+    "sites": 6,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/scene/NameObjLifecycleService.cpp",
+    "final_sha256": "ef0474cf1f762ad83abad12a36a80c6283727eacd6bc1430d4c67ab26504ef8c",
+    "original_sha256": "83fe46068c18c3a4b00cf10722261ecc0fb6ed8795cf1135b2c13236e37f1a6b",
+    "sites": 4,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/scene/SceneDrawBufferService.cpp",
+    "final_sha256": "2520c6794486969febef33e6be6c5500a0b01434d23cb7121b1773838df78a18",
+    "original_sha256": "4788fd754c2c8b2a4f4057924e91727a7b182f8bb822561845e41f92f60cdbe5",
+    "sites": 15,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/scene/SceneInitializationState.cpp",
+    "final_sha256": "0497e9d4955a3aedf33c606ab0370505c6a0bd2cc6c24fd9b6838c4ed43f9957",
+    "original_sha256": "249c5054c3b80f0b5386da2a3170c708cd26ef785b09a517858f4b47bbef9d61",
+    "sites": 4,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/scene/SceneTransitionRequestService.cpp",
+    "final_sha256": "d1885303f0cc803bed835e692ec3a81e0ded4c37d5534930ac864ed83751066a",
+    "original_sha256": "9a820181eb7d05b1051f641b115cc0ce7bdeb051847dd756bb5f99d9b63cc09d",
+    "sites": 1,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/scene/StageAuthoredData.cpp",
+    "final_sha256": "25f086f59ec7d7ead670799f220aa870afd79a1346ff70ab121712966469ff90",
+    "original_sha256": "4220dc93f5388896a796988fd26723a578a94a924f75370e254a71e2fce85798",
+    "sites": 4,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/scene/StageCollisionService.cpp",
+    "final_sha256": "7a3d4f17721a25775b81307e51f69206294aa5cf8b6121d54d06f42a7d6ef8f5",
+    "original_sha256": "31d6f35fe095bcaa8a31d1a558020fc32e159e843a447abc43047511a0969030",
+    "sites": 15,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/scene/StageHostScene.cpp",
+    "final_sha256": "e07d10fc6adf8e2d2b53b5decd32bd7f8dbd050c39e3b6d234a70a118b6ac26b",
+    "original_sha256": "80682a78741ca02237c52daf44a6c9bf6f4686cd9d1d189f1e6e52efa95fb7bc",
+    "sites": 14,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/scene/StageLightSceneBinding.cpp",
+    "final_sha256": "9c8b0b9ab11685584700bfa67241943939d750bf8d712f68ad80c1d21993da7c",
+    "original_sha256": "1c246fa30b035e0da0789138f026b65f35d77c162326561c3923004fcb494478",
+    "sites": 2,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/scene/TitleFileSelectRoute.cpp",
+    "final_sha256": "512083f4b691d976c7097c98c982fc93eb5a2a53d4ecb72937b34501f08a6123",
+    "original_sha256": "64cd95eccf15ba81dba998bc93f4a9eeeadf98d14575d01948d3035eb51c9f19",
+    "sites": 6,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/scene/TitleFileSelectVisual.cpp",
+    "final_sha256": "f7ee088ea5046dd86d6f3010e16de35226a54af46e75026cf6d2f7b4cdb40ca5",
+    "original_sha256": "9f25bc7bfbdfb90b8759cc313823c900b632bdf625e480015f918a61505c29e8",
+    "sites": 3,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/scene/nameobj/NameObjFactory.cpp",
+    "final_sha256": "3dd706e556afc2417cb9490af82507fd342649a5de333a8ed23cbe81d023c2d8",
+    "original_sha256": "f37dc0eccf4f56d33fb6053d3239ebc5cc84bdcb0091526731e584519875816e",
+    "sites": 5,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/scene/nameobj/ObjectNameTable.cpp",
+    "final_sha256": "e1f7072cc146f635b8b87766a63853863dcf98fd0d14c43c42bb2a24c1530278",
+    "original_sha256": "ddfbc398ffb78642afb97096cc62a05f71177a61353a98bbee07edd839ab12d4",
+    "sites": 4,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/scene/nameobj/PlanetMapCatalog.cpp",
+    "final_sha256": "fa7b8712aa73ee7917a5f50932a7059c36b8501318f72c9a13b34f986caf231c",
+    "original_sha256": "b86fd47aa4ab3d3c6696763d22218626c4221c8d7cee04a7ffbcbf23591dca56",
+    "sites": 10,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "src/showcase/Showcase.cpp",
+    "final_sha256": "daa87e951eb0f9f4ff9109a949d617322d0bcd476344af31b6887113a2f6da11",
+    "original_sha256": "678f9911fdb6397396938a7645e4106813e6332c00ad280eaeddf1a93a2c0aa3",
+    "sites": 28,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "aurora/lib/j_audio_sound_archive.cpp",
+    "final_sha256": "9bf24523b793c3bd203bd3961c3913da3202e335260aa5441120f3729a371a17",
+    "original_sha256": "5b28cac350aca7488f73ba9eec63a9d95f4ca68befeb04eaa87642bd93f80b14",
+    "sites": 2,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "aurora/lib/j_audio_stream.cpp",
+    "final_sha256": "bcb09e4b8a7e476d77524a7e30bb9f69a35ad6614ae6346ff9e909c507e0ef50",
+    "original_sha256": "6ec445269f1819f3fae58df61976b13932457501d4ade9e9bfcc84506d05f379",
+    "sites": 1,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "aurora/lib/audio.cpp",
+    "final_sha256": "9099052cb03dfc3577b16addd36531a4aee21df3d3f8e888f688069cec9946b6",
+    "original_sha256": "ebeb00ef2e32aa319d3e1d93fe711b2590edf603d8b14ff796d0b46c989e9ebd",
+    "sites": 27,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "aurora/lib/sysconf.cpp",
+    "final_sha256": "5d21e9b4b8714c7ca20fccb63ffecea8ba2a675b1460a3a1828bade802b189ec",
+    "original_sha256": "50cf0c2e254fe9a8f440d66536e4ffd62f85e32219cde48a20952ff2d3946075",
+    "sites": 16,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "aurora/lib/nw4r/brlan.cpp",
+    "final_sha256": "ecea08c419ed7ca79a7722c4c9636f9281742e16b59ba22966748b74a7f97505",
+    "original_sha256": "b85740460e80fb3d88fd13eda810b8a4d35e944541de7b0c626270fcfe1f7581",
+    "sites": 21,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  },
+  {
+    "path": "aurora/include/JSystem/JAudio2/JAISound.hpp",
+    "final_sha256": "456851e414aa40cbd49dc22928e70ae3905a15e1739e4778faa25f2153108e86",
+    "original_sha256": "890dd0b874a7d0a5ad93d699fc87ced1b980299869df0dd204d3751d108ccf1e",
+    "sites": 1,
+    "extra_custom_host_scope": 0,
+    "reverse_matches_original": true
+  }
+]

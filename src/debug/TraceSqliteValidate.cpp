@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Sqlite.hpp"
 #include "TraceAnalysis.hpp"
 
@@ -28,11 +29,11 @@ namespace {
             std::size_t parsed = 0;
             const auto value = std::stoll(std::string(text), &parsed, 10);
             if (parsed != text.size()) {
-                throw std::runtime_error("");
+                aurora::throw_host_exception<std::runtime_error>("");
             }
             return value;
         } catch (const std::exception &) {
-            throw std::runtime_error(std::string(name) + " requires an integer");
+            aurora::throw_host_exception<std::runtime_error>(std::string(name) + " requires an integer");
         }
     }
 
@@ -69,28 +70,28 @@ namespace {
             }
             if (arg == "--require-emulator") {
                 if (i + 1 >= argc) {
-                    throw std::runtime_error("--require-emulator requires a value");
+                    aurora::throw_host_exception<std::runtime_error>("--require-emulator requires a value");
                 }
                 options.require_emulator = argv[++i];
                 continue;
             }
             if (arg == "--require-frame") {
                 if (i + 1 >= argc) {
-                    throw std::runtime_error("--require-frame requires a value");
+                    aurora::throw_host_exception<std::runtime_error>("--require-frame requires a value");
                 }
                 options.require_frame = parse_i64(argv[++i], "--require-frame");
                 continue;
             }
             if (arg == "--require-record-type") {
                 if (i + 1 >= argc) {
-                    throw std::runtime_error("--require-record-type requires a value");
+                    aurora::throw_host_exception<std::runtime_error>("--require-record-type requires a value");
                 }
                 append_csv(options.require_record_types, argv[++i]);
                 continue;
             }
             if (arg == "--require-layout") {
                 if (i + 1 >= argc) {
-                    throw std::runtime_error("--require-layout requires a value");
+                    aurora::throw_host_exception<std::runtime_error>("--require-layout requires a value");
                 }
                 append_csv(options.require_layouts, argv[++i]);
                 continue;
@@ -101,7 +102,7 @@ namespace {
             }
             if (arg == "--min-render-packets") {
                 if (i + 1 >= argc) {
-                    throw std::runtime_error("--min-render-packets requires a value");
+                    aurora::throw_host_exception<std::runtime_error>("--min-render-packets requires a value");
                 }
                 options.min_render_packets = parse_i64(argv[++i], "--min-render-packets");
                 continue;
@@ -109,7 +110,7 @@ namespace {
             options.databases.emplace_back(arg);
         }
         if (options.databases.empty()) {
-            throw std::runtime_error("expected at least one SQLite trace store");
+            aurora::throw_host_exception<std::runtime_error>("expected at least one SQLite trace store");
         }
         return options;
     }
@@ -147,7 +148,7 @@ namespace {
         if (type == "layout_runtime") {
             return summary.layout_runtime_count;
         }
-        throw std::runtime_error("unknown SQLite trace record type requirement: " + std::string(type));
+        aurora::throw_host_exception<std::runtime_error>("unknown SQLite trace record type requirement: " + std::string(type));
     }
 
     [[nodiscard]] std::string optional_text(const std::optional<std::string> &value) {
@@ -160,27 +161,27 @@ namespace {
 
     void validate_summary(smgpc::sql::Database &db, const smgpc::trace::TraceSummary &summary, const Options &options) {
         if (!options.require_emulator.empty() && optional_text(summary.emulator) != options.require_emulator) {
-            throw std::runtime_error("trace " + std::to_string(summary.trace_id) + " emulator is " + optional_text(summary.emulator) +
+            aurora::throw_host_exception<std::runtime_error>("trace " + std::to_string(summary.trace_id) + " emulator is " + optional_text(summary.emulator) +
                                      ", expected " + options.require_emulator);
         }
         if (options.require_frame.has_value() && summary.frame_index != options.require_frame) {
-            throw std::runtime_error("trace " + std::to_string(summary.trace_id) + " frame is " + optional_int(summary.frame_index) +
+            aurora::throw_host_exception<std::runtime_error>("trace " + std::to_string(summary.trace_id) + " frame is " + optional_int(summary.frame_index) +
                                      ", expected " + std::to_string(*options.require_frame));
         }
         if (summary.render_packet_count < options.min_render_packets) {
-            throw std::runtime_error("trace " + std::to_string(summary.trace_id) + " render_packet count is below minimum");
+            aurora::throw_host_exception<std::runtime_error>("trace " + std::to_string(summary.trace_id) + " render_packet count is below minimum");
         }
         if (options.require_semantic_events && summary.semantic_event_count == 0) {
-            throw std::runtime_error("trace " + std::to_string(summary.trace_id) + " has no semantic events");
+            aurora::throw_host_exception<std::runtime_error>("trace " + std::to_string(summary.trace_id) + " has no semantic events");
         }
         for (const auto &type : options.require_record_types) {
             if (record_type_count(summary, type) == 0) {
-                throw std::runtime_error("trace " + std::to_string(summary.trace_id) + " is missing required record type " + type);
+                aurora::throw_host_exception<std::runtime_error>("trace " + std::to_string(summary.trace_id) + " is missing required record type " + type);
             }
         }
         for (const auto &layout : options.require_layouts) {
             if (layout_count(db, summary.trace_id, layout) == 0) {
-                throw std::runtime_error("trace " + std::to_string(summary.trace_id) + " is missing required layout " + layout);
+                aurora::throw_host_exception<std::runtime_error>("trace " + std::to_string(summary.trace_id) + " is missing required layout " + layout);
             }
         }
     }
@@ -195,7 +196,7 @@ int main(int argc, char **argv) try {
         auto db = smgpc::sql::Database(database_path);
         const auto summaries = smgpc::trace::load_trace_summaries(db);
         if (summaries.empty()) {
-            throw std::runtime_error("SQLite trace store contains no traces: " + database_path.string());
+            aurora::throw_host_exception<std::runtime_error>("SQLite trace store contains no traces: " + database_path.string());
         }
         for (const auto &summary : summaries) {
             validate_summary(db, summary, options);

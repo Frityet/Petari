@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Game/Util/CameraUtil.hpp"
 
 #include "Game/Camera/CameraTargetArg.hpp"
@@ -88,7 +89,7 @@ namespace {
     [[nodiscard]] smgpc::camera::CameraParamVec3 normalized(const smgpc::camera::CameraParamVec3& value) {
         const auto length = std::sqrt(dot(value, value));
         if (length <= 0.000001F) {
-            throw std::logic_error("Cannot derive a camera basis from a degenerate real camera pose.");
+            aurora::throw_host_exception<std::logic_error>("Cannot derive a camera basis from a degenerate real camera pose.");
         }
 
         return scale(value, 1.0F / length);
@@ -117,7 +118,7 @@ namespace {
     [[nodiscard]] const smgpc::camera::CameraPose& require_camera_pose() {
         const auto* pose = active_camera_pose();
         if (pose == nullptr) {
-            throw std::logic_error("Camera state is unavailable.");
+            aurora::throw_host_exception<std::logic_error>("Camera state is unavailable.");
         }
 
         return *pose;
@@ -155,7 +156,7 @@ namespace {
 
     [[nodiscard]] std::size_t inferred_camera_animation_size(const void* data) {
         if (data == nullptr) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "Animation event camera requires a real CANM resource.");
         }
         const auto* bytes = static_cast<const std::uint8_t*>(data);
@@ -258,7 +259,7 @@ namespace smgpc::compat {
     require_camera_system_for_camera_util(std::string_view operation) {
         auto *camera_system = active_camera_system_for_camera_util();
         if (camera_system == nullptr) {
-            throw std::logic_error(std::string(operation) +
+            aurora::throw_host_exception<std::logic_error>(std::string(operation) +
                                    " requires the active RuntimeContext camera service.");
         }
         return *camera_system;
@@ -269,7 +270,7 @@ namespace smgpc::compat {
         std::span<const std::uint8_t> resource) {
         auto* camera_system = active_camera_system_for_camera_util();
         if (camera_system == nullptr) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Animation event-camera declaration requires the active RuntimeContext.");
         }
         camera_system->declare_event_camera_animation(
@@ -430,7 +431,7 @@ namespace MR {
     }
 
     bool isStartAnimCameraEnd() {
-        throw std::logic_error(
+        aurora::throw_host_exception<std::logic_error>(
             "Start-animation camera completion is unavailable without the exact CameraDirector start-camera owner.");
     }
 
@@ -455,7 +456,7 @@ namespace MR {
     void declareEventCamera(const ActorCameraInfo* pInfo,
                             const char* pEventName) {
         if (pInfo == nullptr) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "Event-camera declaration requires ActorCameraInfo.");
         }
         if (auto* camera_system =
@@ -468,7 +469,7 @@ namespace MR {
     void declareEventCameraAnim(const ActorCameraInfo* pInfo,
                                 const char* pEventName, void* pData) {
         if (pInfo == nullptr) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "Animation event-camera declaration requires ActorCameraInfo.");
         }
         smgpc::compat::declare_event_camera_animation(
@@ -482,7 +483,7 @@ namespace MR {
                           const char* pEventName,
                           const CameraTargetArg& rTarget, s32 frames) {
         if (pInfo == nullptr) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "Event-camera start requires ActorCameraInfo.");
         }
         if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
@@ -501,7 +502,7 @@ namespace MR {
     void startEventCameraTargetPlayer(const ActorCameraInfo* pInfo,
                                       const char* pEventName, s32 frames) {
         if (pInfo == nullptr) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "Player-target event-camera start requires ActorCameraInfo.");
         }
         if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
@@ -519,7 +520,7 @@ namespace MR {
                               const CameraTargetArg& rTarget, s32 frames,
                               f32 speed) {
         if (pInfo == nullptr) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "Animation event-camera start requires ActorCameraInfo.");
         }
         if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
@@ -533,7 +534,7 @@ namespace MR {
     void endEventCamera(const ActorCameraInfo* pInfo, const char* pEventName,
                         bool endForce, s32 frames) {
         if (pInfo == nullptr) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "Event-camera end requires ActorCameraInfo.");
         }
         if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
@@ -544,7 +545,7 @@ namespace MR {
     }
 
     void endEventCameraAtLanding(const ActorCameraInfo*, const char*, s32) {
-        throw std::logic_error(
+        aurora::throw_host_exception<std::logic_error>(
             "Landing-delayed event-camera release requires the unavailable retail landing owner.");
     }
 

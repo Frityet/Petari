@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Game/Util/MapUtil.hpp"
 
 #include "Game/Map/CollisionCode.hpp"
@@ -21,10 +22,10 @@ namespace MR {
         const aurora::allocation::HostAllocationScope host_allocations;
         const auto& collision = smgpc::scene::StageCollisionService::active();
         if (collision == nullptr) {
-            throw std::logic_error("Area polygon queries require a scene-owned collision service.");
+            aurora::throw_host_exception<std::logic_error>("Area polygon queries require a scene-owned collision service.");
         }
         if ((maximum != 0U && triangles == nullptr) || (point_count != 0U && points == nullptr)) {
-            throw std::invalid_argument("Area polygon queries require the supplied output and point buffers.");
+            aurora::throw_host_exception<std::invalid_argument>("Area polygon queries require the supplied output and point buffers.");
         }
         const auto identities = collision->area_polygons({points, point_count}, maximum);
         for (auto i = std::size_t{}; i < identities.size(); ++i) {
@@ -59,7 +60,7 @@ namespace {
     [[nodiscard]] smgpc::scene::StageCollisionService& require_stage_collision() {
         auto* collision = smgpc::scene::StageCollisionService::active();
         if (collision == nullptr) {
-            throw std::logic_error("Map-collision queries require a scene-owned CollisionDirector equivalent.");
+            aurora::throw_host_exception<std::logic_error>("Map-collision queries require a scene-owned CollisionDirector equivalent.");
         }
         return *collision;
     }
@@ -77,7 +78,7 @@ namespace {
 
     void require_supported_parts_filter(const CollisionPartsFilterBase* filter) {
         if (filter != nullptr) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "CollisionParts filtering requires the deferred exact CollisionParts provider; static KCL has no fabricated parts.");
         }
     }

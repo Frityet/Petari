@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "J3dNameData.hpp"
 
 #include "JSystem/JUtility/JUTNameTab.hpp"
@@ -17,19 +18,19 @@ namespace smgpc::resource {
         explicit Storage(std::span<const std::uint8_t> source)
             : size(std::max(source.size(), sizeof(ResNTAB))) {
             if (source.size() < 4) {
-                throw std::runtime_error("J3D name table header is truncated");
+                aurora::throw_host_exception<std::runtime_error>("J3D name table header is truncated");
             }
             const auto read16 = [&](std::size_t offset) {
                 return static_cast<std::uint16_t>((std::uint16_t{source[offset]} << 8U) | source[offset + 1]);
             };
             const auto count = read16(0);
             if (count * 4U > source.size() - 4) {
-                throw std::runtime_error("J3D name records exceed their containing block");
+                aurora::throw_host_exception<std::runtime_error>("J3D name records exceed their containing block");
             }
             for (std::size_t i = 0; i < count; ++i) {
                 const auto offset = read16(6 + i * 4);
                 if (offset >= source.size() || std::find(source.begin() + offset, source.end(), 0) == source.end()) {
-                    throw std::runtime_error("J3D name is not terminated inside its containing block");
+                    aurora::throw_host_exception<std::runtime_error>("J3D name is not terminated inside its containing block");
                 }
             }
             bytes = std::make_unique<std::byte[]>(size);

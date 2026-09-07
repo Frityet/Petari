@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "compat/EffectSystemOwnership.hpp"
 
 #include "Game/Effect/AutoEffectGroup.hpp"
@@ -106,7 +107,7 @@ namespace smgpc::compat {
         JkrHostAllocationScope host;
         auto *runtime = runtime::RuntimeContext::try_instance();
         if (!runtime)
-            throw std::logic_error("EffectSystem requires the active resource runtime");
+            aurora::throw_host_exception<std::logic_error>("EffectSystem requires the active resource runtime");
         _storage = std::make_unique<Storage>();
         _storage->resources = runtime->retain_particle_resources();
         _storage->domain = JkrAllocationDomain::create(runtime->host_heaps(), byte_budget);
@@ -114,7 +115,7 @@ namespace smgpc::compat {
 
     EffectSystem *EffectSystemOwnership::construct() {
         if (_storage->system)
-            throw std::logic_error("EffectSystem already constructed");
+            aurora::throw_host_exception<std::logic_error>("EffectSystem already constructed");
         JkrAllocationScope heap(_storage->domain);
         auto *system = new EffectSystem("エフェクトシステム", true);
         _storage->system = system;
@@ -126,7 +127,7 @@ namespace smgpc::compat {
 
     void EffectSystemOwnership::entry(std::uint32_t particles, std::uint32_t emitters) {
         if (!_storage->system || _storage->entered || particles == 0 || emitters == 0)
-            throw std::logic_error("EffectSystem entry requires a fresh system and nonzero pools");
+            aurora::throw_host_exception<std::logic_error>("EffectSystem entry requires a fresh system and nonzero pools");
         JkrAllocationScope heap(_storage->domain);
         _storage->system->entry(&_storage->resources->holder(), particles, emitters);
         _storage->manager = _storage->system->mEmitterManager;
@@ -136,7 +137,7 @@ namespace smgpc::compat {
 
     EffectSystem &EffectSystemOwnership::system() const {
         if (!_storage->entered || _storage->retired)
-            throw std::logic_error("EffectSystem emitter pool is unavailable");
+            aurora::throw_host_exception<std::logic_error>("EffectSystem emitter pool is unavailable");
         return *_storage->system;
     }
 
@@ -180,10 +181,10 @@ namespace smgpc::compat {
         JkrHostAllocationScope host;
         auto *scene = scene::current_effect_system_ownership();
         if (!scene)
-            throw std::logic_error("LiveActor effect registration requires an initialized scene EffectSystem");
+            aurora::throw_host_exception<std::logic_error>("LiveActor effect registration requires an initialized scene EffectSystem");
         (void)scene->system();
         if (!actor || actor->mEffectKeeper || actor_owners().contains(actor) || capacity < 0)
-            throw std::logic_error("LiveActor effect keeper requires a fresh actor and nonnegative capacity");
+            aurora::throw_host_exception<std::logic_error>("LiveActor effect keeper requires a fresh actor and nonnegative capacity");
         auto owner = std::make_unique<ActorEffectOwner>();
         owner->scene = scene;
         owner->actor = actor;

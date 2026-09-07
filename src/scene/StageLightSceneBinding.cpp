@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "scene/StageLightSceneBinding.hpp"
 
 #include <stdexcept>
@@ -16,10 +17,10 @@ namespace smgpc::scene {
         smgpc::runtime::DvdFileSystemService &dvd, std::string_view stage_name,
         std::span<const StagePlacementTable> tables) {
         if (stage_name.empty()) {
-            throw std::invalid_argument("stage-light scene binding requires an authored stage name");
+            aurora::throw_host_exception<std::invalid_argument>("stage-light scene binding requires an authored stage name");
         }
         if (sActiveBinding != nullptr) {
-            throw std::logic_error("only one scene may own the stage-light cache at a time");
+            aurora::throw_host_exception<std::logic_error>("only one scene may own the stage-light cache at a time");
         }
 
         sActiveBinding = this;

@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "runtime/ArchiveMountService.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "compat/JkrAllocationDomain.hpp"
@@ -49,7 +50,7 @@ namespace smgpc::runtime {
     ArchiveMountService::ArchiveMountService(DvdFileSystemService& dvd) : _dvd(&dvd) {
         ArchiveMountService* expected = nullptr;
         if (!active_service.compare_exchange_strong(expected, this))
-            throw std::logic_error("An archive mount owner is already installed");
+            aurora::throw_host_exception<std::logic_error>("An archive mount owner is already installed");
     }
     ArchiveMountService::~ArchiveMountService() {
         compat::JkrHostAllocationScope host;

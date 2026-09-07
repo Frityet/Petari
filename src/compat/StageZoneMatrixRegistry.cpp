@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "compat/StageZoneMatrixRegistry.hpp"
 
 #include "Game/Util/SceneUtil.hpp"
@@ -18,11 +19,11 @@ namespace smgpc::compat {
         _holders.reserve(holders.size());
         for (const auto& source : holders) {
             if (source.instance_id != _holders.size()) {
-                throw std::invalid_argument("Zone matrices require the retained holder occurrence order.");
+                aurora::throw_host_exception<std::invalid_argument>("Zone matrices require the retained holder occurrence order.");
             }
             if (!source.parent_instance_id.has_value()) {
                 if (_root.has_value() || source.zone_id != 0) {
-                    throw std::invalid_argument("Zone matrices require one root holder with zone ID zero.");
+                    aurora::throw_host_exception<std::invalid_argument>("Zone matrices require one root holder with zone ID zero.");
                 }
                 _root = source.instance_id;
             }
@@ -35,33 +36,33 @@ namespace smgpc::compat {
             _holders.push_back(std::move(holder));
         }
         if (!_holders.empty() && !_root.has_value()) {
-            throw std::invalid_argument("Zone matrix holder data has no root occurrence.");
+            aurora::throw_host_exception<std::invalid_argument>("Zone matrix holder data has no root occurrence.");
         }
         for (const auto& source : holders) {
             for (const auto child : source.children) {
                 if (child >= holders.size() || holders[child].parent_instance_id != source.instance_id) {
-                    throw std::invalid_argument("Zone matrix holder data has inconsistent child ownership.");
+                    aurora::throw_host_exception<std::invalid_argument>("Zone matrix holder data has inconsistent child ownership.");
                 }
             }
         }
         for (const auto& table : tables) {
             if (table.holder_instance_id >= _holders.size() ||
                 _holders[table.holder_instance_id].zone_id != table.zone_id) {
-                throw std::invalid_argument("A zone placement table has no matching retained holder.");
+                aurora::throw_host_exception<std::invalid_argument>("A zone placement table has no matching retained holder.");
             }
             if (table.jmap_info.mData == nullptr) {
                 continue;
             }
             const auto [entry, inserted] = _table_holders.emplace(table.jmap_info.mData.get(), table.holder_instance_id);
             if (!inserted && entry->second != table.holder_instance_id) {
-                throw std::invalid_argument("One JMap data owner cannot belong to different holder occurrences.");
+                aurora::throw_host_exception<std::invalid_argument>("One JMap data owner cannot belong to different holder occurrences.");
             }
         }
     }
 
     TPos3f* StageZoneMatrixRegistry::matrix_for_zone(s32 zone_id) {
         if (!_root.has_value()) {
-            throw std::logic_error("The active stage has no retained zone placement holders.");
+            aurora::throw_host_exception<std::logic_error>("The active stage has no retained zone placement holders.");
         }
         auto& root = _holders[*_root];
         if (zone_id == 0) {
@@ -74,16 +75,16 @@ namespace smgpc::compat {
                 return &_holders[child].matrix;
             }
         }
-        throw std::out_of_range("The active root stage has no placed child zone " + std::to_string(zone_id) + '.');
+        aurora::throw_host_exception<std::out_of_range>("The active root stage has no placed child zone " + std::to_string(zone_id) + '.');
     }
 
     TPos3f* StageZoneMatrixRegistry::matrix_for_iter(const JMapInfoIter& iter) {
         if (!iter.isValid() || iter.mInfo->mData == nullptr) {
-            throw std::invalid_argument("Zone matrix lookup requires a valid retained JMap row.");
+            aurora::throw_host_exception<std::invalid_argument>("Zone matrix lookup requires a valid retained JMap row.");
         }
         const auto holder = _table_holders.find(iter.mInfo->mData.get());
         if (holder == _table_holders.end()) {
-            throw std::out_of_range("The JMap row does not belong to the active stage's holder data.");
+            aurora::throw_host_exception<std::out_of_range>("The JMap row does not belong to the active stage's holder data.");
         }
         return &_holders[holder->second].matrix;
     }
@@ -108,7 +109,7 @@ namespace smgpc::compat {
 
     StageZoneMatrixRegistry& require_stage_zone_matrices() {
         if (s_active_binding == nullptr) {
-            throw std::logic_error("Zone placement matrices require an active stage lifetime.");
+            aurora::throw_host_exception<std::logic_error>("Zone placement matrices require an active stage lifetime.");
         }
         return s_active_binding->registry();
     }

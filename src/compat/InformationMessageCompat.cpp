@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "compat/InformationMessageCompat.hpp"
 
 #include "Game/NameObj/NameObj.hpp"
@@ -48,15 +49,15 @@ namespace smgpc::compat {
     InformationMessageBinding::InformationMessageBinding()
         : _impl(std::make_unique<Impl>()) {
         if (sCurrentInformationMessage != nullptr) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "an InformationMessage is already bound to the active scene");
         }
         if (smgpc::runtime::RuntimeContext::try_instance() == nullptr) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "InformationMessage construction requires an active RuntimeContext");
         }
         if (smgpc::scene::current_scene_obj_holder() == nullptr) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "InformationMessage construction requires an active SceneObjHolder");
         }
 
@@ -79,7 +80,7 @@ namespace smgpc::compat {
                     registered.front()) ||
                 smgpc::scene::current_scene_obj_holder_binding_owns(
                     registered.front())) {
-                throw std::logic_error(
+                aurora::throw_host_exception<std::logic_error>(
                     "the exact InformationMessage did not create its one unowned IconAButton child");
             }
 
@@ -119,7 +120,7 @@ namespace smgpc::compat {
     InformationMessage& require_information_message() {
         auto* message = current_information_message();
         if (message == nullptr) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "InformationMessage is unavailable without its active scene binding");
         }
         return *message;

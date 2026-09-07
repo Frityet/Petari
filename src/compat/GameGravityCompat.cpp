@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "compat/GameGravityCompat.hpp"
 
 #include "Game/Gravity/GravityInfo.hpp"
@@ -18,13 +19,13 @@ namespace {
     [[nodiscard]] PlanetGravityManager& gravity_manager() {
         auto* holder = MR::getSceneObjHolder();
         if (holder == nullptr) {
-            throw std::logic_error("PlanetGravity is unavailable without a scene-owned SceneObjHolder");
+            aurora::throw_host_exception<std::logic_error>("PlanetGravity is unavailable without a scene-owned SceneObjHolder");
         }
 
         auto* manager = static_cast<PlanetGravityManager*>(
             holder->getObj(SceneObj_PlanetGravityManager));
         if (manager == nullptr) {
-            throw std::logic_error("PlanetGravity is unavailable without the scene-owned PlanetGravityManager");
+            aurora::throw_host_exception<std::logic_error>("PlanetGravity is unavailable without the scene-owned PlanetGravityManager");
         }
         return *manager;
     }
@@ -39,7 +40,7 @@ namespace {
     bool query_gravity(const NameObj* object, const TVec3f& position, TVec3f* destination,
                        GravityInfo* info, u32 host, u32 type_mask) {
         if (object == nullptr) {
-            throw std::invalid_argument("gravity queries require a real requesting NameObj");
+            aurora::throw_host_exception<std::invalid_argument>("gravity queries require a real requesting NameObj");
         }
         return gravity_manager().calcTotalGravityVector(
             destination, info, position, type_mask, host_id(object, host));
@@ -48,7 +49,7 @@ namespace {
     bool query_actor_gravity(const LiveActor* actor, TVec3f* destination, GravityInfo* info,
                              u32 host, u32 type_mask) {
         if (actor == nullptr) {
-            throw std::invalid_argument("gravity queries require a real LiveActor");
+            aurora::throw_host_exception<std::invalid_argument>("gravity queries require a real LiveActor");
         }
         return query_gravity(actor, actor->mPosition, destination, info, host, type_mask);
     }
@@ -71,11 +72,11 @@ namespace {
 namespace MR {
     void registerGravity(PlanetGravity* gravity) {
         if (gravity == nullptr) {
-            throw std::invalid_argument("cannot register a null PlanetGravity");
+            aurora::throw_host_exception<std::invalid_argument>("cannot register a null PlanetGravity");
         }
         auto& manager = gravity_manager();
         if (gravity->mIsRegistered) {
-            throw std::logic_error("PlanetGravity is already registered");
+            aurora::throw_host_exception<std::logic_error>("PlanetGravity is already registered");
         }
         manager.registerGravity(gravity);
     }
@@ -148,7 +149,7 @@ namespace MR {
 
     void settingGravityParamFromJMap(PlanetGravity* gravity, const JMapInfoIter& iter) {
         if (gravity == nullptr) {
-            throw std::invalid_argument("gravity JMap parameters require a real PlanetGravity");
+            aurora::throw_host_exception<std::invalid_argument>("gravity JMap parameters require a real PlanetGravity");
         }
 
         auto range = gravity->mRange;
@@ -177,7 +178,7 @@ namespace MR {
 
     void getJMapInfoGravityType(const JMapInfoIter& iter, PlanetGravity* gravity) {
         if (gravity == nullptr) {
-            throw std::invalid_argument("gravity type parsing requires a real PlanetGravity");
+            aurora::throw_host_exception<std::invalid_argument>("gravity type parsing requires a real PlanetGravity");
         }
 
         const char* type = nullptr;
@@ -194,7 +195,7 @@ namespace MR {
 
     void getJMapInfoGravityPower(const JMapInfoIter& iter, PlanetGravity* gravity) {
         if (gravity == nullptr) {
-            throw std::invalid_argument("gravity power parsing requires a real PlanetGravity");
+            aurora::throw_host_exception<std::invalid_argument>("gravity power parsing requires a real PlanetGravity");
         }
 
         const char* power = nullptr;
@@ -211,14 +212,14 @@ namespace MR {
 
     void calcGravityOrZero(LiveActor* actor) {
         if (actor == nullptr) {
-            throw std::invalid_argument("calcGravityOrZero requires a real LiveActor");
+            aurora::throw_host_exception<std::invalid_argument>("calcGravityOrZero requires a real LiveActor");
         }
         calcGravityOrZero(actor, actor->mPosition);
     }
 
     void calcGravityOrZero(LiveActor* actor, const TVec3f& position) {
         if (actor == nullptr) {
-            throw std::invalid_argument("calcGravityOrZero requires a real LiveActor");
+            aurora::throw_host_exception<std::invalid_argument>("calcGravityOrZero requires a real LiveActor");
         }
 
         auto gravity = TVec3f{};

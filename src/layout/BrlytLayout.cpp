@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "BrlytLayout.hpp"
 
 #include "resource/BmgMessageArchive.hpp"
@@ -24,7 +25,7 @@ namespace smgpc::layout {
 
         [[nodiscard]] std::uint16_t read_be16(std::span<const std::uint8_t> data, std::size_t offset) {
             if (offset + 2U > data.size()) {
-                throw std::runtime_error("BRLYT read_be16 out of range");
+                aurora::throw_host_exception<std::runtime_error>("BRLYT read_be16 out of range");
             }
 
             return static_cast<std::uint16_t>((static_cast<std::uint16_t>(data[offset]) << 8U) | data[offset + 1U]);
@@ -32,7 +33,7 @@ namespace smgpc::layout {
 
         [[nodiscard]] std::uint32_t read_be32(std::span<const std::uint8_t> data, std::size_t offset) {
             if (offset + 4U > data.size()) {
-                throw std::runtime_error("BRLYT read_be32 out of range");
+                aurora::throw_host_exception<std::runtime_error>("BRLYT read_be32 out of range");
             }
 
             return (static_cast<std::uint32_t>(data[offset]) << 24U) | (static_cast<std::uint32_t>(data[offset + 1U]) << 16U) | (static_cast<std::uint32_t>(data[offset + 2U]) << 8U) | data[offset + 3U];
@@ -63,7 +64,7 @@ namespace smgpc::layout {
 
         [[nodiscard]] std::string read_fixed_string(std::span<const std::uint8_t> data, std::size_t offset, std::size_t capacity) {
             if (offset + capacity > data.size()) {
-                throw std::runtime_error("BRLYT fixed string out of range");
+                aurora::throw_host_exception<std::runtime_error>("BRLYT fixed string out of range");
             }
 
             auto length = 0U;
@@ -76,7 +77,7 @@ namespace smgpc::layout {
 
         [[nodiscard]] std::string read_c_string(std::span<const std::uint8_t> data, std::size_t offset) {
             if (offset >= data.size()) {
-                throw std::runtime_error("BRLYT string out of range");
+                aurora::throw_host_exception<std::runtime_error>("BRLYT string out of range");
             }
 
             auto end = offset;
@@ -84,7 +85,7 @@ namespace smgpc::layout {
                 ++end;
             }
             if (end == data.size()) {
-                throw std::runtime_error("BRLYT string is not null terminated");
+                aurora::throw_host_exception<std::runtime_error>("BRLYT string is not null terminated");
             }
 
             return std::string(reinterpret_cast<const char *>(data.data() + offset), end - offset);
@@ -95,7 +96,7 @@ namespace smgpc::layout {
             const auto name_array_offset = 12U;
             const auto name_array_size = static_cast<std::size_t>(name_count) * 8U;
             if (name_array_offset + name_array_size > block.size()) {
-                throw std::runtime_error("BRLYT " + std::string(kind) + " list is truncated");
+                aurora::throw_host_exception<std::runtime_error>("BRLYT " + std::string(kind) + " list is truncated");
             }
 
             auto name_array = block.subspan(name_array_offset);
@@ -196,7 +197,7 @@ namespace smgpc::layout {
             const auto material_count = read_be16(block, 8U);
             const auto offset_table_offset = 12U;
             if (offset_table_offset + static_cast<std::size_t>(material_count) * 4U > block.size()) {
-                throw std::runtime_error("BRLYT material offset table is truncated");
+                aurora::throw_host_exception<std::runtime_error>("BRLYT material offset table is truncated");
             }
 
             auto materials = std::vector<BrlytMaterial>{};
@@ -204,7 +205,7 @@ namespace smgpc::layout {
             for (auto i = 0U; i < material_count; ++i) {
                 const auto material_offset = read_be32(block, offset_table_offset + static_cast<std::size_t>(i) * 4U);
                 if (material_offset + 64U > block.size()) {
-                    throw std::runtime_error("BRLYT material is truncated");
+                    aurora::throw_host_exception<std::runtime_error>("BRLYT material is truncated");
                 }
 
                 const auto res_num_bits = read_be32(block, material_offset + 60U);
@@ -236,7 +237,7 @@ namespace smgpc::layout {
                 auto cursor = material_offset + 64U;
                 if (texmap_count > 0U) {
                     if (cursor + static_cast<std::size_t>(texmap_count) * 4U > block.size()) {
-                        throw std::runtime_error("BRLYT material texture map is truncated");
+                        aurora::throw_host_exception<std::runtime_error>("BRLYT material texture map is truncated");
                     }
                     material.textures.reserve(texmap_count);
                     for (auto texture_map = 0U; texture_map < texmap_count; ++texture_map) {
@@ -255,7 +256,7 @@ namespace smgpc::layout {
                     }
                 }
                 if (cursor + static_cast<std::size_t>(texsrt_count) * 20U > block.size()) {
-                    throw std::runtime_error("BRLYT material texture SRT is truncated");
+                    aurora::throw_host_exception<std::runtime_error>("BRLYT material texture SRT is truncated");
                 }
                 material.tex_srts.reserve(texsrt_count);
                 for (auto tex_srt = 0U; tex_srt < texsrt_count; ++tex_srt) {
@@ -270,7 +271,7 @@ namespace smgpc::layout {
                 }
 
                 if (cursor + static_cast<std::size_t>(texcoordgen_count) * 4U > block.size()) {
-                    throw std::runtime_error("BRLYT material texture coord gen is truncated");
+                    aurora::throw_host_exception<std::runtime_error>("BRLYT material texture coord gen is truncated");
                 }
                 material.tex_coord_gens.reserve(texcoordgen_count);
                 for (auto tex_coord_gen = 0U; tex_coord_gen < texcoordgen_count; ++tex_coord_gen) {
@@ -284,7 +285,7 @@ namespace smgpc::layout {
 
                 if (material_has_chan_ctrl(res_num_bits)) {
                     if (cursor + 4U > block.size()) {
-                        throw std::runtime_error("BRLYT material channel control is truncated");
+                        aurora::throw_host_exception<std::runtime_error>("BRLYT material channel control is truncated");
                     }
                     material.chan_color_src = block[cursor];
                     material.chan_alpha_src = block[cursor + 1U];
@@ -294,7 +295,7 @@ namespace smgpc::layout {
 
                 if (material_has_mat_color(res_num_bits)) {
                     if (cursor + 4U > block.size()) {
-                        throw std::runtime_error("BRLYT material color is truncated");
+                        aurora::throw_host_exception<std::runtime_error>("BRLYT material color is truncated");
                     }
                     material.mat_color = std::array<std::uint8_t, 4U>{block[cursor], block[cursor + 1U], block[cursor + 2U], block[cursor + 3U]};
                     material.has_mat_color = true;
@@ -303,25 +304,25 @@ namespace smgpc::layout {
 
                 if (material_has_tev_swap_table(res_num_bits)) {
                     if (cursor + 4U > block.size()) {
-                        throw std::runtime_error("BRLYT material TEV swap table is truncated");
+                        aurora::throw_host_exception<std::runtime_error>("BRLYT material TEV swap table is truncated");
                     }
                     cursor += 4U;
                 }
 
                 const auto ind_texsrt_count = material_indtexsrt_count(res_num_bits);
                 if (cursor + static_cast<std::size_t>(ind_texsrt_count) * 20U > block.size()) {
-                    throw std::runtime_error("BRLYT material indirect texture SRT is truncated");
+                    aurora::throw_host_exception<std::runtime_error>("BRLYT material indirect texture SRT is truncated");
                 }
                 cursor += static_cast<std::size_t>(ind_texsrt_count) * 20U;
 
                 const auto ind_texstage_count = material_indtexstage_count(res_num_bits);
                 if (cursor + static_cast<std::size_t>(ind_texstage_count) * 4U > block.size()) {
-                    throw std::runtime_error("BRLYT material indirect texture stage is truncated");
+                    aurora::throw_host_exception<std::runtime_error>("BRLYT material indirect texture stage is truncated");
                 }
                 cursor += static_cast<std::size_t>(ind_texstage_count) * 4U;
 
                 if (cursor + static_cast<std::size_t>(tev_stage_count) * 16U > block.size()) {
-                    throw std::runtime_error("BRLYT material TEV stage is truncated");
+                    aurora::throw_host_exception<std::runtime_error>("BRLYT material TEV stage is truncated");
                 }
                 material.tev_stages.reserve(tev_stage_count);
                 for (auto tev_stage = 0U; tev_stage < tev_stage_count; ++tev_stage) {
@@ -341,7 +342,7 @@ namespace smgpc::layout {
 
                 if (material_has_alpha_compare(res_num_bits)) {
                     if (cursor + 4U > block.size()) {
-                        throw std::runtime_error("BRLYT material alpha compare is truncated");
+                        aurora::throw_host_exception<std::runtime_error>("BRLYT material alpha compare is truncated");
                     }
                     const auto comp = block[cursor];
                     material.alpha_compare = BrlytAlphaCompare{
@@ -357,7 +358,7 @@ namespace smgpc::layout {
 
                 if (material_has_blend_mode(res_num_bits)) {
                     if (cursor + 4U > block.size()) {
-                        throw std::runtime_error("BRLYT material blend mode is truncated");
+                        aurora::throw_host_exception<std::runtime_error>("BRLYT material blend mode is truncated");
                     }
                     material.blend_mode = BrlytBlendMode{
                         .type = block[cursor],
@@ -399,7 +400,7 @@ namespace smgpc::layout {
 
         [[nodiscard]] BrlytPane parse_pane(std::span<const std::uint8_t> block, std::int32_t parent_index) {
             if (block.size() < 76U) {
-                throw std::runtime_error("BRLYT pane is truncated");
+                aurora::throw_host_exception<std::runtime_error>("BRLYT pane is truncated");
             }
 
             return BrlytPane{
@@ -445,7 +446,7 @@ namespace smgpc::layout {
 
         [[nodiscard]] BrlytPicturePane parse_picture(std::span<const std::uint8_t> block, const PaneState &global_state, const std::vector<BrlytMaterial> &materials) {
             if (block.size() < 96U) {
-                throw std::runtime_error("BRLYT picture pane is truncated");
+                aurora::throw_host_exception<std::runtime_error>("BRLYT picture pane is truncated");
             }
 
             const auto base_position = block[9U];
@@ -526,7 +527,7 @@ namespace smgpc::layout {
         [[nodiscard]] std::array<std::array<std::uint8_t, 4U>, 4U> parse_vertex_colors(std::span<const std::uint8_t> block,
                                                                                          std::size_t offset) {
             if (offset + 16U > block.size()) {
-                throw std::runtime_error("BRLYT vertex color table is truncated");
+                aurora::throw_host_exception<std::runtime_error>("BRLYT vertex color table is truncated");
             }
 
             auto vertex_colors = std::array<std::array<std::uint8_t, 4U>, 4U>{};
@@ -550,7 +551,7 @@ namespace smgpc::layout {
             constexpr auto kTexCoordBytes = std::size_t{8U};
             const auto tex_coord_set_size = kTexCoordsPerSet * kTexCoordBytes;
             if (offset + static_cast<std::size_t>(tex_coord_count) * tex_coord_set_size > block.size()) {
-                throw std::runtime_error("BRLYT texture coordinate table is truncated");
+                aurora::throw_host_exception<std::runtime_error>("BRLYT texture coordinate table is truncated");
             }
 
             auto tex_coord_sets = std::vector<std::array<BrlytTexCoord, 4U>>{};
@@ -570,7 +571,7 @@ namespace smgpc::layout {
 
         [[nodiscard]] BrlytWindowPane parse_window(std::span<const std::uint8_t> block, const PaneState &global_state) {
             if (block.size() < 104U) {
-                throw std::runtime_error("BRLYT window pane is truncated");
+                aurora::throw_host_exception<std::runtime_error>("BRLYT window pane is truncated");
             }
 
             const auto base_position = block[9U];
@@ -581,7 +582,7 @@ namespace smgpc::layout {
             const auto content_offset = read_be32(block, 96U);
             const auto frame_offset_table_offset = read_be32(block, 100U);
             if (content_offset + 20U > block.size()) {
-                throw std::runtime_error("BRLYT window content is truncated");
+                aurora::throw_host_exception<std::runtime_error>("BRLYT window content is truncated");
             }
 
             auto content = BrlytWindowContent{
@@ -591,7 +592,7 @@ namespace smgpc::layout {
             };
 
             if (frame_count > 0U && frame_offset_table_offset + static_cast<std::size_t>(frame_count) * 4U > block.size()) {
-                throw std::runtime_error("BRLYT window frame offset table is truncated");
+                aurora::throw_host_exception<std::runtime_error>("BRLYT window frame offset table is truncated");
             }
 
             auto frames = std::vector<BrlytWindowFrame>{};
@@ -599,7 +600,7 @@ namespace smgpc::layout {
             for (auto frame_index = 0U; frame_index < frame_count; ++frame_index) {
                 const auto frame_offset = read_be32(block, frame_offset_table_offset + static_cast<std::size_t>(frame_index) * 4U);
                 if (frame_offset + 4U > block.size()) {
-                    throw std::runtime_error("BRLYT window frame is truncated");
+                    aurora::throw_host_exception<std::runtime_error>("BRLYT window frame is truncated");
                 }
 
                 frames.push_back(BrlytWindowFrame{
@@ -629,7 +630,7 @@ namespace smgpc::layout {
 
         [[nodiscard]] std::vector<std::uint16_t> parse_utf16be_string(std::span<const std::uint8_t> block, std::uint32_t offset, std::uint16_t byte_count) {
             if (offset + byte_count > block.size()) {
-                throw std::runtime_error("BRLYT text string is truncated");
+                aurora::throw_host_exception<std::runtime_error>("BRLYT text string is truncated");
             }
 
             auto text = std::vector<std::uint16_t>{};
@@ -665,7 +666,7 @@ namespace smgpc::layout {
 
         [[nodiscard]] BrlytTextBox parse_text_box(std::span<const std::uint8_t> block, const PaneState &global_state, const std::vector<std::string> &font_names, const std::vector<BrlytMaterial> &materials) {
             if (block.size() < 116U) {
-                throw std::runtime_error("BRLYT text box pane is truncated");
+                aurora::throw_host_exception<std::runtime_error>("BRLYT text box pane is truncated");
             }
 
             const auto base_position = block[9U];
@@ -728,7 +729,7 @@ namespace smgpc::layout {
         [[nodiscard]] BrlytGroup parse_group(std::span<const std::uint8_t> block, const std::vector<BrlytPane> &panes,
                                              std::uint16_t nest_level, bool root_group) {
             if (block.size() < 0x1cU) {
-                throw std::runtime_error("BRLYT group block is truncated");
+                aurora::throw_host_exception<std::runtime_error>("BRLYT group block is truncated");
             }
 
             auto group = BrlytGroup{
@@ -743,7 +744,7 @@ namespace smgpc::layout {
             const auto pane_names_offset = 0x1cU;
             const auto pane_names_size = static_cast<std::size_t>(pane_count) * 16U;
             if (pane_names_offset + pane_names_size > block.size()) {
-                throw std::runtime_error("BRLYT group pane-name table is truncated");
+                aurora::throw_host_exception<std::runtime_error>("BRLYT group pane-name table is truncated");
             }
 
             group.pane_names.reserve(pane_count);
@@ -763,7 +764,7 @@ namespace smgpc::layout {
 
     BrlytLayout parse_brlyt_layout(std::span<const std::uint8_t> data) {
         if (!has_magic(data, 0U, "RLYT")) {
-            throw std::runtime_error("BRLYT file is missing RLYT magic");
+            aurora::throw_host_exception<std::runtime_error>("BRLYT file is missing RLYT magic");
         }
 
         const auto header_size = read_be16(data, 12U);
@@ -779,12 +780,12 @@ namespace smgpc::layout {
 
         for (auto i = 0U; i < block_count; ++i) {
             if (cursor + 8U > data.size()) {
-                throw std::runtime_error("BRLYT data block header is truncated");
+                aurora::throw_host_exception<std::runtime_error>("BRLYT data block header is truncated");
             }
 
             const auto block_size = read_be32(data, cursor + 4U);
             if (block_size < 8U || cursor + block_size > data.size()) {
-                throw std::runtime_error("BRLYT data block size is invalid");
+                aurora::throw_host_exception<std::runtime_error>("BRLYT data block size is invalid");
             }
 
             const auto block = data.subspan(cursor, block_size);

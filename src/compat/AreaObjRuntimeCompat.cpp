@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Game/AreaObj/AreaObj.hpp"
 #include "Game/AreaObj/AreaObjContainer.hpp"
 #include "Game/AreaObj/MercatorTransformCube.hpp"
@@ -18,7 +19,7 @@
 namespace {
 
     [[noreturn]] void throw_area_obj_scene_unavailable() {
-        throw std::logic_error(
+        aurora::throw_host_exception<std::logic_error>(
             "AreaObj queries require the active scene-owned retail manager container.");
     }
 
@@ -31,10 +32,10 @@ AreaObjContainer::AreaObjContainer(const char *pName) : NameObj(pName) {
 void AreaObjContainer::init(const JMapInfoIter &) {
     auto *runtime = smgpc::scene::current_area_obj_runtime();
     if (runtime == nullptr) {
-        throw std::logic_error("AreaObjContainer initialization requires an active scene owner");
+        aurora::throw_host_exception<std::logic_error>("AreaObjContainer initialization requires an active scene owner");
     }
     if (mNumManagers != 0U) {
-        throw std::logic_error("AreaObjContainer cannot initialize its manager registry twice");
+        aurora::throw_host_exception<std::logic_error>("AreaObjContainer cannot initialize its manager registry twice");
     }
 
     struct InstalledManager {
@@ -52,10 +53,10 @@ void AreaObjContainer::init(const JMapInfoIter &) {
             descriptor.manager_name.empty() || descriptor.retail_manager_order < 0 ||
             descriptor.manager_capacity <= 0 ||
             descriptor.manager_creator == nullptr) {
-            throw std::logic_error("AreaObj placement registry contains an incomplete descriptor");
+            aurora::throw_host_exception<std::logic_error>("AreaObj placement registry contains an incomplete descriptor");
         }
         if (descriptor.retail_manager_order < previous_retail_order) {
-            throw std::logic_error("AreaObj placement registry is not in retail manager-table order");
+            aurora::throw_host_exception<std::logic_error>("AreaObj placement registry is not in retail manager-table order");
         }
         previous_retail_order = descriptor.retail_manager_order;
 
@@ -67,14 +68,14 @@ void AreaObjContainer::init(const JMapInfoIter &) {
                 existing->capacity != descriptor.manager_capacity ||
                 existing->creator != descriptor.manager_creator ||
                 existing->finalize != descriptor.manager_finalize) {
-                throw std::logic_error("AreaObj placement registry disagrees about manager construction for " +
+                aurora::throw_host_exception<std::logic_error>("AreaObj placement registry disagrees about manager construction for " +
                                        std::string(descriptor.manager_name));
             }
             continue;
         }
 
         if (manager_specs.size() >= std::size(mManagerArray)) {
-            throw std::length_error("AreaObj placement registry exceeds the retail container capacity");
+            aurora::throw_host_exception<std::length_error>("AreaObj placement registry exceeds the retail container capacity");
         }
 
         manager_specs.push_back(InstalledManager{
@@ -95,7 +96,7 @@ void AreaObjContainer::init(const JMapInfoIter &) {
         auto manager = std::unique_ptr<AreaObjMgr>(
             spec.creator(spec.capacity, manager_name.c_str()));
         if (manager == nullptr) {
-            throw std::runtime_error("AreaObj manager creator returned null for " +
+            aurora::throw_host_exception<std::runtime_error>("AreaObj manager creator returned null for " +
                                      manager_name);
         }
         manager->init(JMapInfoIter{});
@@ -117,14 +118,14 @@ void AreaObjContainer::init(const JMapInfoIter &) {
 
 AreaObjMgr *AreaObjContainer::getManager(const char *pName) const {
     if (pName == nullptr) {
-        throw std::invalid_argument("AreaObj manager lookup requires a non-null retail name");
+        aurora::throw_host_exception<std::invalid_argument>("AreaObj manager lookup requires a non-null retail name");
     }
 
     const auto requested_name = std::string_view(pName);
     for (auto index = u32{}; index < mNumManagers; ++index) {
         auto *manager = mManagerArray[index];
         if (manager == nullptr || manager->mName == nullptr) {
-            throw std::logic_error("AreaObjContainer contains an invalid manager entry");
+            aurora::throw_host_exception<std::logic_error>("AreaObjContainer contains an invalid manager entry");
         }
     }
     if (auto *manager = smgpc::scene::find_area_obj_manager_by_retail_prefix(
@@ -133,7 +134,7 @@ AreaObjMgr *AreaObjContainer::getManager(const char *pName) const {
         return manager;
     }
 
-    throw std::logic_error("No complete retail AreaObj manager is installed for " +
+    aurora::throw_host_exception<std::logic_error>("No complete retail AreaObj manager is installed for " +
                            std::string(requested_name));
 }
 
@@ -157,7 +158,7 @@ namespace MR {
     }
 
     bool isInWater(const TVec3f &) {
-        throw std::logic_error(
+        aurora::throw_host_exception<std::logic_error>(
             "water-volume queries are unavailable until real WaterArea and WaterAreaHolder scene data are installed.");
     }
 
@@ -174,7 +175,7 @@ namespace MR {
     }
 
     void getDivideMercatorRailPosition(DivideMercatorRailPosInfo *, const LiveActor *, u32, f32, u32) {
-        throw std::logic_error(
+        aurora::throw_host_exception<std::logic_error>(
             "Mercator rail division is unavailable because the retail transformation routine has not been decompiled.");
     }
 

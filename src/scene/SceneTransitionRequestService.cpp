@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "scene/SceneTransitionRequestService.hpp"
 
 #include "Game/System/GalaxyMoveArgument.hpp"
@@ -13,7 +14,7 @@
 namespace {
     [[nodiscard]] smgpc::scene::StageHostRequest stage_request_from_story_move(const GalaxyMoveArgument &move) {
         if (move.mStageName == nullptr || move.mStageName[0] == '\0' || move.mScenarioNo < 1) {
-            throw std::runtime_error("StorySequenceExecutor did not produce a concrete stage request");
+            aurora::throw_host_exception<std::runtime_error>("StorySequenceExecutor did not produce a concrete stage request");
         }
 
         return smgpc::scene::StageHostRequest{

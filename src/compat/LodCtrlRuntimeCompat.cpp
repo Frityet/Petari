@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Game/Util/ModelUtil.hpp"
 #include "Game/LiveActor/LodCtrl.hpp"
 
@@ -22,7 +23,7 @@ namespace {
 
     const char* createSubModelObjName(const LiveActor* pActor, const char* pSubName) {
         if (pActor == nullptr || pSubName == nullptr) {
-            throw std::invalid_argument("A LOD object name requires an actor and submodel name.");
+            aurora::throw_host_exception<std::invalid_argument>("A LOD object name requires an actor and submodel name.");
         }
         const auto length = std::strlen(pActor->getName()) + std::strlen(pSubName) + std::strlen("（）") + 1U;
         auto* name = new char[length];
@@ -34,7 +35,7 @@ namespace {
         const auto* existing = smgpc::compat::actor_shadow_runtime_state(
             static_cast<const LiveActor*>(pActor));
         if (existing == nullptr || existing->controllers.empty()) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "LOD shadow visibility synchronization is unavailable without real ShadowController ownership.");
         }
         return *smgpc::compat::actor_shadow_runtime_state(pActor);
@@ -62,7 +63,7 @@ namespace MR {
 
     void copyTransRotateScale(const LiveActor* pSource, LiveActor* pDestination) {
         if (pSource == nullptr || pDestination == nullptr) {
-            throw std::invalid_argument("Transform copying requires source and destination actors.");
+            aurora::throw_host_exception<std::invalid_argument>("Transform copying requires source and destination actors.");
         }
         pDestination->mPosition.set(pSource->mPosition);
         pDestination->mRotation.set(pSource->mRotation);
@@ -71,7 +72,7 @@ namespace MR {
 
     f32 calcDistanceToPlayer(const LiveActor* pActor) {
         if (pActor == nullptr) {
-            throw std::invalid_argument("Player distance requires a LiveActor.");
+            aurora::throw_host_exception<std::invalid_argument>("Player distance requires a LiveActor.");
         }
         const auto* player_position = MR::getPlayerPos();
         if (player_position == nullptr) {
@@ -84,7 +85,7 @@ namespace MR {
 
     void hideModelAndOnCalcAnim(LiveActor* pActor) {
         if (pActor == nullptr) {
-            throw std::invalid_argument("Model hiding requires a LiveActor.");
+            aurora::throw_host_exception<std::invalid_argument>("Model hiding requires a LiveActor.");
         }
         pActor->mFlag.mIsNoCalcAnim = true;
         pActor->mFlag.mIsNoCalcView = true;
@@ -113,7 +114,7 @@ namespace MR {
 
     LodCtrl* createLodCtrlNPC(LiveActor* pActor, const JMapInfoIter& rIter) {
         if (pActor == nullptr) {
-            throw std::invalid_argument("NPC LodCtrl requires a LiveActor.");
+            aurora::throw_host_exception<std::invalid_argument>("NPC LodCtrl requires a LiveActor.");
         }
 
         auto lod = std::make_unique<LodCtrl>(pActor, rIter);

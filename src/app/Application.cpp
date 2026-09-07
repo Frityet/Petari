@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Application.hpp"
 #include "app/SimulationClock.hpp"
 
@@ -175,7 +176,7 @@ namespace smgpc::app {
                 const auto &argument = arguments[i];
                 if (argument == "--disc") {
                     if (i + 1U >= arguments.size() || arguments[i + 1U].empty()) {
-                        throw std::runtime_error("--disc requires a disc image path");
+                        aurora::throw_host_exception<std::runtime_error>("--disc requires a disc image path");
                     }
                     return std::filesystem::path(arguments[i + 1U]);
                 }
@@ -183,7 +184,7 @@ namespace smgpc::app {
                 if (argument.starts_with(prefix)) {
                     const auto value = argument.substr(prefix.size());
                     if (value.empty()) {
-                        throw std::runtime_error("--disc requires a disc image path");
+                        aurora::throw_host_exception<std::runtime_error>("--disc requires a disc image path");
                     }
                     return std::filesystem::path(value);
                 }
@@ -201,7 +202,7 @@ namespace smgpc::app {
             if (const auto *env_disc = std::getenv("SMGPC_DISC_IMAGE"); env_disc != nullptr && env_disc[0] != '\0') {
                 return std::filesystem::path(env_disc);
             }
-            throw std::runtime_error("Missing disc image. Launch with `smg-pc --disc <path>` or set SMGPC_DISC_IMAGE.");
+            aurora::throw_host_exception<std::runtime_error>("Missing disc image. Launch with `smg-pc --disc <path>` or set SMGPC_DISC_IMAGE.");
         }
 
         void ensure_disc_image_open_impl(const BootstrapConfiguration &configuration, logging::ILogger &logger) {
@@ -218,7 +219,7 @@ namespace smgpc::app {
                 return;
             }
             if (!aurora_dvd_open(disc_path.c_str())) {
-                throw std::runtime_error("Aurora could not open disc image " + disc_path);
+                aurora::throw_host_exception<std::runtime_error>("Aurora could not open disc image " + disc_path);
             }
             g_disc_open = true;
             logger.info(logging::Category::APP, logging::Message {"Opened Aurora disc image {}"}, disc_path);

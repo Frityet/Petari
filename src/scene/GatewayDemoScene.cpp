@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "scene/GatewayDemoScene.hpp"
 
 #include "Game/Gravity/GravityInfo.hpp"
@@ -64,7 +65,7 @@ namespace smgpc::scene {
             0.0F, -3532.498046875F, -1040.0F};
 
         [[noreturn]] void reject(std::string_view detail) {
-            throw std::runtime_error("Gateway demo scene rejected non-exact retail data: " +
+            aurora::throw_host_exception<std::runtime_error>("Gateway demo scene rejected non-exact retail data: " +
                                      std::string(detail));
         }
 
@@ -245,7 +246,7 @@ namespace smgpc::scene {
 
         void finalize_placements(LiveActor &player) {
             if (_state != GatewayDemoSceneState::Preloaded) {
-                throw std::logic_error(
+                aurora::throw_host_exception<std::logic_error>(
                     "Gateway placements can only be finalized once from the preloaded boundary.");
             }
 
@@ -521,7 +522,7 @@ namespace smgpc::scene {
 
         void require_active(std::string_view surface) const {
             if (_state != GatewayDemoSceneState::Active) {
-                throw std::logic_error(
+                aurora::throw_host_exception<std::logic_error>(
                     "Gateway placement surface requires an active placement lease: " +
                     std::string(surface));
             }

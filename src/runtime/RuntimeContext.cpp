@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "RuntimeContext.hpp"
 #include "compat/DisabledObjectAudioService.hpp"
 #include "compat/SceneJ3dScope.hpp"
@@ -471,7 +472,7 @@ namespace smgpc::runtime {
         [[nodiscard]] smgpc::camera::CameraParamVec3 camera_vec_normalized(const smgpc::camera::CameraParamVec3 &value) {
             const auto length = camera_vec_length(value);
             if (length <= 0.000001F) {
-                throw std::logic_error("free-camera basis is degenerate");
+                aurora::throw_host_exception<std::logic_error>("free-camera basis is degenerate");
             }
             return value * (1.0F / length);
         }
@@ -481,7 +482,7 @@ namespace smgpc::runtime {
     struct RuntimeContext::Registration {
         explicit Registration(RuntimeContext& runtime) : owner(&runtime) {
             if (s_runtime_context != nullptr) {
-                throw std::logic_error("Only one SMG runtime context may be active.");
+                aurora::throw_host_exception<std::logic_error>("Only one SMG runtime context may be active.");
             }
             s_runtime_context = owner;
         }
@@ -629,7 +630,7 @@ namespace smgpc::runtime {
 
     RuntimeContext &RuntimeContext::instance() {
         if (s_runtime_context == nullptr) {
-            throw std::logic_error("SMG runtime context is not active.");
+            aurora::throw_host_exception<std::logic_error>("SMG runtime context is not active.");
         }
 
         return *s_runtime_context;
@@ -665,7 +666,7 @@ namespace smgpc::runtime {
                                                 ? 608.0F
                                                 : camera_pose->aspect_ratio == retail_16x9_aspect ? 832.0F : 0.0F;
             if (shake_screen_width == 0.0F) {
-                throw std::logic_error("Camera shake requires an exact retail 4:3 or 16:9 projection ratio.");
+                aurora::throw_host_exception<std::logic_error>("Camera shake requires an exact retail 4:3 or 16:9 projection ratio.");
             }
             _camera_system.set_shake_projection_dimensions(shake_screen_width,
                                                            static_cast<float>(_wii_video.render_mode().efbHeight));
@@ -1123,7 +1124,7 @@ namespace smgpc::runtime {
     void RuntimeContext::initialize_particle_resources(const resource::GameResourceRuntime &resources) {
         compat::JkrHostAllocationScope host;
         if (_particle_resources) {
-            throw std::logic_error("The process particle resources are already initialized.");
+            aurora::throw_host_exception<std::logic_error>("The process particle resources are already initialized.");
         }
         _particle_resources = std::make_shared<ParticleResourceOwnership>(
             resources.host_heaps(), resources.budget().particle_resource_bytes, _archive_mounts);
@@ -1131,7 +1132,7 @@ namespace smgpc::runtime {
 
     std::shared_ptr<ParticleResourceOwnership> RuntimeContext::retain_particle_resources() const {
         if (!_particle_resources) {
-            throw std::logic_error("The process particle resources have not reached resource-ready startup.");
+            aurora::throw_host_exception<std::logic_error>("The process particle resources have not reached resource-ready startup.");
         }
         return _particle_resources;
     }
@@ -1139,7 +1140,7 @@ namespace smgpc::runtime {
     void RuntimeContext::initialize_scenario_catalog(const resource::GameResourceRuntime &resources) {
         compat::JkrHostAllocationScope host;
         if (_scenario_catalog) {
-            throw std::logic_error("The process scenario catalog is already initialized.");
+            aurora::throw_host_exception<std::logic_error>("The process scenario catalog is already initialized.");
         }
         _scenario_catalog = std::make_shared<ScenarioCatalogOwnership>(
             resources.host_heaps(), resources.budget().scenario_catalog_bytes, _archive_mounts);
@@ -1147,7 +1148,7 @@ namespace smgpc::runtime {
 
     std::shared_ptr<ScenarioCatalogOwnership> RuntimeContext::retain_scenario_catalog() const {
         if (!_scenario_catalog) {
-            throw std::logic_error("The process scenario catalog has not reached resource-ready startup.");
+            aurora::throw_host_exception<std::logic_error>("The process scenario catalog has not reached resource-ready startup.");
         }
         return _scenario_catalog;
     }
@@ -1358,7 +1359,7 @@ namespace smgpc::runtime {
 
     std::size_t RuntimeContext::begin_scene_registration_scope() {
         if (_active_scene_registration_scope.has_value()) {
-            throw std::logic_error("RuntimeContext scene registration scope is already active.");
+            aurora::throw_host_exception<std::logic_error>("RuntimeContext scene registration scope is already active.");
         }
 
         const auto scope_id = _next_scene_registration_scope_id++;
@@ -1373,7 +1374,7 @@ namespace smgpc::runtime {
 
     std::size_t RuntimeContext::end_scene_registration_scope(std::size_t scope_id) {
         if (!_active_scene_registration_scope.has_value() || *_active_scene_registration_scope != scope_id) {
-            throw std::logic_error("RuntimeContext scene registration scope does not match the active scope.");
+            aurora::throw_host_exception<std::logic_error>("RuntimeContext scene registration scope does not match the active scope.");
         }
 
         const auto registrations = _scheduler.remove_registrations_since(_scene_scheduler_registration_marker);
@@ -1441,63 +1442,63 @@ namespace smgpc::runtime {
 
     smgpc::scene::NameObjLifecycleService &RuntimeContext::name_obj_lifecycle() {
         if (_name_obj_lifecycle == nullptr) {
-            throw std::logic_error("RuntimeContext smgpc::scene::NameObjLifecycleService has not been attached.");
+            aurora::throw_host_exception<std::logic_error>("RuntimeContext smgpc::scene::NameObjLifecycleService has not been attached.");
         }
         return *_name_obj_lifecycle;
     }
 
     const smgpc::scene::NameObjLifecycleService &RuntimeContext::name_obj_lifecycle() const {
         if (_name_obj_lifecycle == nullptr) {
-            throw std::logic_error("RuntimeContext smgpc::scene::NameObjLifecycleService has not been attached.");
+            aurora::throw_host_exception<std::logic_error>("RuntimeContext smgpc::scene::NameObjLifecycleService has not been attached.");
         }
         return *_name_obj_lifecycle;
     }
 
     smgpc::scene::SceneExecutionService &RuntimeContext::scene_execution() {
         if (_scene_execution == nullptr) {
-            throw std::logic_error("RuntimeContext smgpc::scene::SceneExecutionService has not been attached.");
+            aurora::throw_host_exception<std::logic_error>("RuntimeContext smgpc::scene::SceneExecutionService has not been attached.");
         }
         return *_scene_execution;
     }
 
     const smgpc::scene::SceneExecutionService &RuntimeContext::scene_execution() const {
         if (_scene_execution == nullptr) {
-            throw std::logic_error("RuntimeContext smgpc::scene::SceneExecutionService has not been attached.");
+            aurora::throw_host_exception<std::logic_error>("RuntimeContext smgpc::scene::SceneExecutionService has not been attached.");
         }
         return *_scene_execution;
     }
 
     smgpc::scene::SceneLifecycleService &RuntimeContext::scene_lifecycle() {
         if (_scene_lifecycle == nullptr) {
-            throw std::logic_error("RuntimeContext smgpc::scene::SceneLifecycleService has not been attached.");
+            aurora::throw_host_exception<std::logic_error>("RuntimeContext smgpc::scene::SceneLifecycleService has not been attached.");
         }
         return *_scene_lifecycle;
     }
 
     const smgpc::scene::SceneLifecycleService &RuntimeContext::scene_lifecycle() const {
         if (_scene_lifecycle == nullptr) {
-            throw std::logic_error("RuntimeContext smgpc::scene::SceneLifecycleService has not been attached.");
+            aurora::throw_host_exception<std::logic_error>("RuntimeContext smgpc::scene::SceneLifecycleService has not been attached.");
         }
         return *_scene_lifecycle;
     }
 
     void RuntimeContext::attach_name_obj_lifecycle(smgpc::scene::NameObjLifecycleService &service) {
         if (_name_obj_lifecycle != nullptr && _name_obj_lifecycle != &service) {
-            throw std::logic_error("RuntimeContext smgpc::scene::NameObjLifecycleService has already been attached.");
+            aurora::throw_host_exception<std::logic_error>("RuntimeContext smgpc::scene::NameObjLifecycleService has already been attached.");
         }
         _name_obj_lifecycle = &service;
     }
 
     void RuntimeContext::attach_scene_execution(smgpc::scene::SceneExecutionService &service) {
         if (_scene_execution != nullptr && _scene_execution != &service) {
-            throw std::logic_error("RuntimeContext smgpc::scene::SceneExecutionService has already been attached.");
+            aurora::throw_host_exception<std::logic_error>("RuntimeContext smgpc::scene::SceneExecutionService has already been attached.");
         }
         _scene_execution = &service;
     }
 
     void RuntimeContext::attach_scene_lifecycle(smgpc::scene::SceneLifecycleService &service) {
         if (_scene_lifecycle != nullptr && _scene_lifecycle != &service) {
-            throw std::logic_error("RuntimeContext smgpc::scene::SceneLifecycleService has already been attached.");
+            aurora::throw_host_exception<std::logic_error>("RuntimeContext smgpc::scene::SceneLifecycleService has already been attached.");
         }
         _scene_lifecycle = &service;
     }
@@ -1507,7 +1508,7 @@ namespace smgpc::runtime {
         auto *handle = _j_audio_playback->start_stage_bgm(name, prepared);
         const auto sound_id = _j_audio_playback->stage_bgm_id();
         if (!sound_id.has_value()) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "A concrete stage-BGM voice has no retail sound ID");
         }
         _audio.start_stage_bgm(name, *sound_id);
@@ -1535,7 +1536,7 @@ namespace smgpc::runtime {
 
     void RuntimeContext::stop_stage_bgm(s32 fade_frames) {
         if (fade_frames < 0) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "A stage-BGM fade cannot use negative frames");
         }
         _j_audio_playback->stop_stage_bgm(static_cast<u32>(fade_frames));
@@ -1547,7 +1548,7 @@ namespace smgpc::runtime {
         if (!_j_audio_playback->has_active_stage_bgm()) {
             return;
         }
-        throw std::logic_error(
+        aurora::throw_host_exception<std::logic_error>(
             "Stage-BGM track-state transitions require the retail multi-BGM scheduler");
     }
 
@@ -1609,7 +1610,7 @@ namespace smgpc::runtime {
     }
 
     void RuntimeContext::start_system_me(std::string_view name) {
-        throw std::logic_error(
+        aurora::throw_host_exception<std::logic_error>(
             "JAudio ME scheduler is unavailable for " + std::string(name));
     }
 

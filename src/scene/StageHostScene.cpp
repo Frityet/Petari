@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "scene/StageHostScene.hpp"
 
 #include "Game/LiveActor/LiveActor.hpp"
@@ -190,7 +191,7 @@ namespace smgpc::scene {
         (void)scenario_no;
 #endif
         if (!blocked_placements.empty()) {
-            throw std::runtime_error(unsupported_placement_error(stage_name, blocked_placements));
+            aurora::throw_host_exception<std::runtime_error>(unsupported_placement_error(stage_name, blocked_placements));
         }
     }
 
@@ -234,7 +235,7 @@ namespace smgpc::scene {
             return;
         }
         if (_stage_session_binding != nullptr || _scene_obj_holder_binding != nullptr) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "A partially initialized stage host must be destroyed before another initialization attempt.");
         }
 
@@ -272,7 +273,7 @@ namespace smgpc::scene {
         };
         for (const auto id : required_scene_objects) {
             if (MR::createSceneObj(id) == nullptr) {
-                throw std::runtime_error("required retail stage SceneObj is unavailable: " + std::to_string(id));
+                aurora::throw_host_exception<std::runtime_error>("required retail stage SceneObj is unavailable: " + std::to_string(id));
             }
         }
         LightFunction::initLightRegisterAll();
@@ -343,11 +344,11 @@ namespace smgpc::scene {
                                                const NameObjPlacementContext *placement,
                                                bool apply_host_appear) {
         if (!smgpc::scene::nameobj::can_create_name_obj(object_name)) {
-            throw std::runtime_error("Unsupported stage host request object: " + std::string(object_name) + " for stage " + _request.stage_name);
+            aurora::throw_host_exception<std::runtime_error>("Unsupported stage host request object: " + std::string(object_name) + " for stage " + _request.stage_name);
         }
         if (find_complete_area_obj_placement_descriptor(object_name) != nullptr &&
             (placement == nullptr || placement->source != NameObjPlacementSource::StagePlacement)) {
-            throw std::runtime_error(
+            aurora::throw_host_exception<std::runtime_error>(
                 "An exact AreaObj requires its retail placement row: " + std::string(object_name));
         }
 
@@ -365,7 +366,7 @@ namespace smgpc::scene {
             root = lifecycle.construct_and_init(
                 object_name, actor_name, placement);
             if (root == nullptr) {
-                throw std::runtime_error(
+                aurora::throw_host_exception<std::runtime_error>(
                     "Stage root lifecycle returned a null actor.");
             }
             registration_graph->adopt_root_registration_suffix(
@@ -428,7 +429,7 @@ namespace smgpc::scene {
     void StageHostScene::preflight_stage_start_or_throw() const {
         if (_authored_data == nullptr ||
             !_authored_data->start_info().has_value()) {
-            throw std::runtime_error(
+            aurora::throw_host_exception<std::runtime_error>(
                 "No active StartInfo matches stage " + _request.stage_name + ";start_id=" +
                 std::to_string(_request.start_id) + ";start_zone_id=" +
                 std::to_string(_request.start_zone_id));
@@ -436,13 +437,13 @@ namespace smgpc::scene {
 
         const auto &start = *_authored_data->start_info();
         if (start.object_name.empty()) {
-            throw std::runtime_error(
+            aurora::throw_host_exception<std::runtime_error>(
                 "StartInfo is missing its retail object name: " + start.table_path +
                 ";row=" + std::to_string(start.jmap_entry_index));
         }
         if (!smgpc::scene::nameobj::can_create_name_obj(start.object_name)) {
             const auto support = smgpc::scene::nameobj::describe_name_obj_creator_support(start.object_name);
-            throw std::runtime_error(
+            aurora::throw_host_exception<std::runtime_error>(
                 "Unsupported stage StartInfo object: " + start.object_name + " for stage " +
                 _request.stage_name + " (" + support.reason + ")");
         }
@@ -460,7 +461,7 @@ namespace smgpc::scene {
     void StageHostScene::prepare_authored_placements(
         const StagePlacementObject *explicit_placement) {
         if (_authored_data == nullptr || _authored_placements != nullptr) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Authored stage placement preparation requires one retained data owner.");
         }
 
@@ -504,7 +505,7 @@ namespace smgpc::scene {
 
     void StageHostScene::preload_authored_placements() {
         if (_authored_placements == nullptr) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Authored stage placements were not prepared before preload.");
         }
         (void)_authored_placements->preload();
@@ -512,7 +513,7 @@ namespace smgpc::scene {
 
     void StageHostScene::construct_authored_placements() {
         if (_authored_placements == nullptr) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Authored stage placements were not prepared before construction.");
         }
 
@@ -523,7 +524,7 @@ namespace smgpc::scene {
                     return instance.placement == _explicit_placement_source;
                 });
             if (found == _authored_placements->instances().end()) {
-                throw std::logic_error(
+                aurora::throw_host_exception<std::logic_error>(
                     "The explicit placement root was accepted but not constructed.");
             }
             _explicit_placement_root = found->actor;
@@ -666,7 +667,7 @@ namespace smgpc::scene {
         const auto *retained_camera =
             _runtime.camera_system().stage_start_camera();
         if (retained_camera == nullptr) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Stage-start camera service lost its retained resolved camera.");
         }
         const auto &camera = *retained_camera;

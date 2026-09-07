@@ -1,0 +1,28 @@
+(lldb) target create "build/macosx/arm64/debug/smg-pc-jkr-exception-probe"
+Current executable set to '/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-jkr-exception-probe' (arm64).
+(lldb) breakpoint set -n malloc_error_break
+Breakpoint 1: where = libsystem_malloc.dylib`malloc_error_break, address = 0x000000018032ab78
+(lldb) run
+Outer catch: Camera state is unavailable.
+smg-pc-jkr-exception-probe(25886,0x1f5482180) malloc: *** error for object 0x6e0000210: pointer being freed was not allocated
+smg-pc-jkr-exception-probe(25886,0x1f5482180) malloc: *** set a breakpoint in malloc_error_break to debug
+Process 25886 launched: '/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-jkr-exception-probe' (arm64)
+Process 25886 stopped
+* thread #1, queue = 'com.apple.main-thread', stop reason = breakpoint 1.1
+    frame #0: 0x000000018886eb78 libsystem_malloc.dylib`malloc_error_break
+libsystem_malloc.dylib`malloc_error_break:
+->  0x18886eb78 <+0>:  pacibsp 
+    0x18886eb7c <+4>:  stp    x29, x30, [sp, #-0x10]!
+    0x18886eb80 <+8>:  mov    x29, sp
+    0x18886eb84 <+12>: nop    
+Target 0: (smg-pc-jkr-exception-probe) stopped.
+(lldb) thread backtrace -c 35
+* thread #1, queue = 'com.apple.main-thread', stop reason = breakpoint 1.1
+  * frame #0: 0x000000018886eb78 libsystem_malloc.dylib`malloc_error_break
+    frame #1: 0x00000001888429b8 libsystem_malloc.dylib`malloc_vreport + 744
+    frame #2: 0x00000001888462a8 libsystem_malloc.dylib`malloc_report + 64
+    frame #3: 0x000000018884b694 libsystem_malloc.dylib`___BUG_IN_CLIENT_OF_LIBMALLOC_POINTER_BEING_FREED_WAS_NOT_ALLOCATED + 76
+    frame #4: 0x00000001000b7830 libc++abi.1.dylib`std::logic_error::~logic_error() + 120
+    frame #5: 0x00000001000bb844 libc++abi.1.dylib`__cxa_end_catch + 228
+    frame #6: 0x0000000100001164 smg-pc-jkr-exception-probe`main at JkrExceptionProbe.cpp:12:5
+    frame #7: 0x00000001886784e4 dyld`start + 6992

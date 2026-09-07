@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "scene/AuthoredPlacementInstantiator.hpp"
 
 #include "Game/NameObj/NameObj.hpp"
@@ -119,7 +120,7 @@ namespace smgpc::scene {
                     placement.shape_model_no);
                 if (written < 0 ||
                     static_cast<std::size_t>(written) >= model_name.size()) {
-                    throw std::runtime_error(
+                    aurora::throw_host_exception<std::runtime_error>(
                         "Model-changing authored placement identifier is too long.");
                 }
                 auto archive_path = std::array<char, 128U>{};
@@ -136,7 +137,7 @@ namespace smgpc::scene {
             const auto iter = JMapInfoIter(
                 &placement.jmap_info, placement.jmap_entry_index);
             if (!iter.isValid()) {
-                throw std::logic_error(
+                aurora::throw_host_exception<std::logic_error>(
                     "Authored placement ordering requires a retained JMap row.");
             }
             return NameObjFactory::isReadResourceFromDVD(
@@ -433,7 +434,7 @@ namespace smgpc::scene {
             std::unique_ptr<NameObj> construct_model_changing(
                 std::string_view, s32, const char *,
                 const NameObjPlacementContext &) override {
-                throw std::runtime_error(
+                aurora::throw_host_exception<std::runtime_error>(
                     "Model-changing NameObj creator is unavailable on PC.");
             }
 
@@ -590,13 +591,13 @@ namespace smgpc::scene {
         }
 
         _report.state = AuthoredPlacementRuntimeState::Failed;
-        throw std::runtime_error(strict_preflight_error(_data, _report));
+        aurora::throw_host_exception<std::runtime_error>(strict_preflight_error(_data, _report));
     }
 
     const AuthoredPlacementInstantiationReport &
     AuthoredPlacementInstantiator::preflight() {
         if (_report.state != AuthoredPlacementRuntimeState::Prepared) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Authored placement preflight requires a prepared runtime.");
         }
         preflight_or_throw();
@@ -606,7 +607,7 @@ namespace smgpc::scene {
     const AuthoredPlacementInstantiationReport &
     AuthoredPlacementInstantiator::preload() {
         if (_report.state != AuthoredPlacementRuntimeState::Prepared) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Authored placements can only be preloaded once.");
         }
         preflight_or_throw();
@@ -636,7 +637,7 @@ namespace smgpc::scene {
                         archives, [](const auto &request) {
                             return request.loaded;
                         })) {
-                    throw std::runtime_error(
+                    aurora::throw_host_exception<std::runtime_error>(
                         "Authored placement archive preload returned an "
                         "unloaded request.");
                 }
@@ -754,7 +755,7 @@ namespace smgpc::scene {
     const AuthoredPlacementInstantiationReport &
     AuthoredPlacementInstantiator::instantiate() {
         if (_report.state != AuthoredPlacementRuntimeState::Preloaded) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Authored placement construction requires one completed "
                 "preload pass.");
         }
@@ -860,7 +861,7 @@ namespace smgpc::scene {
                                           entry.placement->shape_model_no,
                                           group_actor_name, context);
                         if (actor == nullptr) {
-                            throw std::runtime_error(
+                            aurora::throw_host_exception<std::runtime_error>(
                                 "Authored placement lifecycle returned a null actor.");
                         }
                         _lifecycle->init(*actor, context);
@@ -876,7 +877,7 @@ namespace smgpc::scene {
                             smgpc::compat::
                                 name_obj_runtime_ownership_is_claimed(
                                     actor.get())) {
-                            throw std::logic_error(
+                            aurora::throw_host_exception<std::logic_error>(
                                 "Authored placement construction did not register "
                                 "one globally-leading, independently-owned root.");
                         }
@@ -1034,7 +1035,7 @@ namespace smgpc::scene {
     AuthoredPlacementInstantiator::init_after_placement() {
         if (_report.state !=
             AuthoredPlacementRuntimeState::Instantiated) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Authored initAfterPlacement requires a completed placement "
                 "construction pass.");
         }

@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Game/Enemy/AnimScaleController.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/PartsModel.hpp"
@@ -29,14 +30,14 @@
 
 namespace {
     [[noreturn]] void throwNPCBehaviorUnavailable() {
-        throw std::logic_error("NPC behavior utilities are unavailable without their real NPCUtil implementation.");
+        aurora::throw_host_exception<std::logic_error>("NPC behavior utilities are unavailable without their real NPCUtil implementation.");
     }
 
     TVec3f normalized(const TVec3f& value, const char* context) {
         auto result = value;
         const auto length = result.length();
         if (!(length > 1.0e-6F) || !std::isfinite(length)) {
-            throw std::logic_error(std::string(context) + " requires a finite, non-degenerate vector.");
+            aurora::throw_host_exception<std::logic_error>(std::string(context) + " requires a finite, non-degenerate vector.");
         }
         result.scale(1.0F / length);
         return result;
@@ -72,7 +73,7 @@ namespace {
     bool turnQuatAxis(TQuat4f* destination, const TQuat4f& source, const TVec3f& currentAxis,
                       const TVec3f& targetAxis, float maximumRadians) {
         if (destination == nullptr || !std::isfinite(maximumRadians) || maximumRadians < 0.0F) {
-            throw std::invalid_argument("Quaternion turning requires an output and a non-negative finite angle.");
+            aurora::throw_host_exception<std::invalid_argument>("Quaternion turning requires an output and a non-negative finite angle.");
         }
         const auto current = normalized(currentAxis, "Quaternion current axis");
         const auto target = normalized(targetAxis, "Quaternion target axis");
@@ -96,7 +97,7 @@ namespace {
 
     PartsModel* createNPCGoodsImpl(LiveActor* host, const char* modelName, const char* jointName, int drawBufferType) {
         if (host == nullptr) {
-            throw std::invalid_argument("NPC goods require a host actor.");
+            aurora::throw_host_exception<std::invalid_argument>("NPC goods require a host actor.");
         }
         if (modelName == nullptr || *modelName == '\0') {
             return nullptr;
@@ -109,7 +110,7 @@ namespace {
         if (jointName != nullptr && *jointName != '\0') {
             jointMatrix = MR::getJointMtx(host, jointName);
             if (jointMatrix == nullptr) {
-                throw std::logic_error("NPC goods require a real named model joint.");
+                aurora::throw_host_exception<std::logic_error>("NPC goods require a real named model joint.");
             }
         }
 
@@ -121,7 +122,7 @@ namespace {
 }  // namespace
 
 void JointController::registerCallBack() {
-    throw std::logic_error("J3D joint callbacks are unavailable without the real joint-controller pipeline.");
+    aurora::throw_host_exception<std::logic_error>("J3D joint callbacks are unavailable without the real joint-controller pipeline.");
 }
 
 const void* smgpcNPCActorModelPresence(const LiveActor* actor) {
@@ -131,12 +132,12 @@ const void* smgpcNPCActorModelPresence(const LiveActor* actor) {
 
 namespace MR {
     JointControlDelegator<NPCActor>* createNPCActorJointDelegator(NPCActor*, const char*) {
-        throw std::logic_error("NPC joint controllers are unavailable without the real J3D joint-controller pipeline.");
+        aurora::throw_host_exception<std::logic_error>("NPC joint controllers are unavailable without the real J3D joint-controller pipeline.");
     }
 
     void makeQuatRotateRadian(TQuat4f* destination, const TVec3f& rotation) {
         if (destination == nullptr) {
-            throw std::invalid_argument("Quaternion rotation requires an output.");
+            aurora::throw_host_exception<std::invalid_argument>("Quaternion rotation requires an output.");
         }
         const auto hx = rotation.x * 0.5F;
         const auto hy = rotation.y * 0.5F;
@@ -159,14 +160,14 @@ namespace MR {
 
     void extractMtxTrans(MtxPtr matrix, TVec3f* destination) {
         if (matrix == nullptr || destination == nullptr) {
-            throw std::invalid_argument("Matrix translation extraction requires real input and output storage.");
+            aurora::throw_host_exception<std::invalid_argument>("Matrix translation extraction requires real input and output storage.");
         }
         destination->set(matrix[0][3], matrix[1][3], matrix[2][3]);
     }
 
     void makeAxisFrontUp(TVec3f* side, TVec3f* up, const TVec3f& front, const TVec3f& supportUp) {
         if (side == nullptr || up == nullptr) {
-            throw std::invalid_argument("Axis construction requires two outputs.");
+            aurora::throw_host_exception<std::invalid_argument>("Axis construction requires two outputs.");
         }
         side->cross(supportUp, front);
         *side = normalized(*side, "Front/up side axis");
@@ -184,7 +185,7 @@ namespace MR {
 
     void clampVecAngleDeg(TVec3f* vector, const TVec3f& reference, f32 maximumDegrees) {
         if (vector == nullptr || !std::isfinite(maximumDegrees) || maximumDegrees < 0.0F) {
-            throw std::invalid_argument("Vector angle clamping requires an output and a finite non-negative angle.");
+            aurora::throw_host_exception<std::invalid_argument>("Vector angle clamping requires an output and a finite non-negative angle.");
         }
         const auto length = vector->length();
         const auto source = normalized(reference, "Vector angle reference");
@@ -214,7 +215,7 @@ namespace MR {
 
     bool faceToVector(TQuat4f* quaternion, TVec3f target, f32 maximumDegrees) {
         if (quaternion == nullptr) {
-            throw std::invalid_argument("Facing requires a quaternion.");
+            aurora::throw_host_exception<std::invalid_argument>("Facing requires a quaternion.");
         }
         auto up = TVec3f{};
         quaternion->getYDir(up);
@@ -229,12 +230,12 @@ namespace MR {
     }
 
     bool checkPlayerSwingTrigger() {
-        throw std::logic_error("Player swing state is unavailable without the real MarioActor.");
+        aurora::throw_host_exception<std::logic_error>("Player swing state is unavailable without the real MarioActor.");
     }
 
     void calcGravity(LiveActor* actor) {
         if (actor == nullptr) {
-            throw std::invalid_argument("Gravity calculation requires a LiveActor.");
+            aurora::throw_host_exception<std::invalid_argument>("Gravity calculation requires a LiveActor.");
         }
         auto gravity = TVec3f{};
         if (calcGravityVector(actor, &gravity, nullptr, 0U) && !isNearZero(gravity)) {
@@ -251,7 +252,7 @@ namespace MR {
     }
 
     bool getNPCItemData(NPCActorItem*, s32) {
-        throw std::logic_error("NPC item-table data is unavailable without the real NPC item parameter table.");
+        aurora::throw_host_exception<std::logic_error>("NPC item-table data is unavailable without the real NPC item parameter table.");
     }
 
     bool isNPCItemFileExist(const char* name) {
@@ -272,7 +273,7 @@ namespace MR {
 
     void initDefaultPosAndQuat(NPCActor* actor, const JMapInfoIter& iter) {
         if (actor == nullptr || !iter.isValid()) {
-            throw std::invalid_argument("NPC placement requires an actor and a valid JMap iterator.");
+            aurora::throw_host_exception<std::invalid_argument>("NPC placement requires an actor and a valid JMap iterator.");
         }
         initDefaultPos(actor, iter);
         makeQuatRotateDegree(&actor->_A0, actor->mRotation);
@@ -282,7 +283,7 @@ namespace MR {
 
     f32 calcFloatOffset(const NPCActor* actor, f32 current, f32 maximum) {
         if (actor == nullptr) {
-            throw std::invalid_argument("NPC float offset requires an actor.");
+            aurora::throw_host_exception<std::invalid_argument>("NPC float offset requires an actor.");
         }
 
         auto result = current - 0.5F;
@@ -297,7 +298,7 @@ namespace MR {
 
         const auto* playerPosition = getPlayerPos();
         if (playerPosition == nullptr) {
-            throw std::logic_error("NPC talk float offset requires a real player position.");
+            aurora::throw_host_exception<std::logic_error>("NPC talk float offset requires a real player position.");
         }
         auto delta = *playerPosition - actor->mPosition;
         auto playerUp = TVec3f{};
@@ -319,7 +320,7 @@ namespace MR {
 
     void calcAndSetFloatBaseMtx(NPCActor* actor, f32 offset) {
         if (actor == nullptr) {
-            throw std::invalid_argument("NPC float base matrix requires an actor.");
+            aurora::throw_host_exception<std::invalid_argument>("NPC float base matrix requires an actor.");
         }
 
         const auto position = actor->mPosition;
@@ -344,7 +345,7 @@ namespace MR {
 
     void initShadowFromCSV(LiveActor* actor, const char* definitionName) {
         if (definitionName == nullptr) {
-            throw std::invalid_argument("Shadow CSV initialization requires an exact definition name.");
+            aurora::throw_host_exception<std::invalid_argument>("Shadow CSV initialization requires an exact definition name.");
         }
         smgpc::compat::initialize_actor_shadow_from_model_archive(actor, definitionName);
     }

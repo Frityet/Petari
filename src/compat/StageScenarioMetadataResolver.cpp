@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "compat/StageScenarioMetadataResolver.hpp"
 
 #include "Game/GameAudio/AudStageBgmWrap.hpp"
@@ -37,7 +38,7 @@ namespace {
         if (name == "Purple") {
             return StageCometType::Purple;
         }
-        throw std::runtime_error("ScenarioData contains an unknown retail Comet value: " + std::string(name));
+        aurora::throw_host_exception<std::runtime_error>("ScenarioData contains an unknown retail Comet value: " + std::string(name));
     }
 }  // namespace
 
@@ -46,7 +47,7 @@ namespace smgpc::compat {
     StageScenarioMetadata resolve_stage_scenario_metadata(smgpc::runtime::DvdFileSystemService &dvd,
                                                           std::string_view stage_name, s32 scenario_no) {
         if (stage_name.empty() || scenario_no <= 0) {
-            throw std::invalid_argument("Scenario metadata resolution requires a stage and positive scenario number.");
+            aurora::throw_host_exception<std::invalid_argument>("Scenario metadata resolution requires a stage and positive scenario number.");
         }
 
         const auto archive_name = std::string(stage_name) + "Scenario.arc";
@@ -54,18 +55,18 @@ namespace smgpc::compat {
             std::filesystem::path("StageData") / std::string(stage_name) / archive_name,
         });
         if (!archive_path.has_value()) {
-            throw std::runtime_error("The retail scenario archive is unavailable for " + std::string(stage_name) + ".");
+            aurora::throw_host_exception<std::runtime_error>("The retail scenario archive is unavailable for " + std::string(stage_name) + ".");
         }
 
         auto &archive = dvd.archive_for_path(*archive_path);
         if (!archive.contains_resource("/ScenarioData.bcsv")) {
-            throw std::runtime_error("The retail scenario archive has no ScenarioData.bcsv: " + archive_path->string());
+            aurora::throw_host_exception<std::runtime_error>("The retail scenario archive has no ScenarioData.bcsv: " + archive_path->string());
         }
 
         const auto scenario_info = JMapInfo::from_bcsv(archive.resource_data("/ScenarioData.bcsv"));
         const auto scenario = scenario_info.findElement<s32>("ScenarioNo", scenario_no, 0);
         if (!scenario.isValid()) {
-            throw std::runtime_error("ScenarioData has no requested ScenarioNo row.");
+            aurora::throw_host_exception<std::runtime_error>("ScenarioData has no requested ScenarioNo row.");
         }
         auto metadata = StageScenarioMetadata{};
         if (scenario_info.searchItemInfo("Comet") < 0) {
@@ -80,7 +81,7 @@ namespace smgpc::compat {
 
         const char *comet_name = nullptr;
         if (!scenario.getValue("Comet", &comet_name)) {
-            throw std::runtime_error("ScenarioData Comet value could not be decoded.");
+            aurora::throw_host_exception<std::runtime_error>("ScenarioData Comet value could not be decoded.");
         }
 
         metadata.comet_type = parse_comet_type(comet_name != nullptr ? std::string_view(comet_name) : std::string_view{});
@@ -91,7 +92,7 @@ namespace smgpc::compat {
                            std::string_view stage_name, s32 scenario_no) {
         auto &session = require_active_stage_session();
         if (session.scene_name() != scene_name || session.stage_name() != stage_name || session.scenario_no() != scenario_no) {
-            throw std::logic_error("Stage audio identity does not match the active stage session.");
+            aurora::throw_host_exception<std::logic_error>("Stage audio identity does not match the active stage session.");
         }
 
         audio.reset_stage_state();
@@ -103,7 +104,7 @@ namespace smgpc::compat {
         } else {
             auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
             if (runtime == nullptr || &runtime->audio() != &audio) {
-                throw std::logic_error(
+                aurora::throw_host_exception<std::logic_error>(
                     "A nonempty stage-BGM table entry requires a concrete RuntimeContext backend");
             }
             (void)runtime->start_stage_bgm(

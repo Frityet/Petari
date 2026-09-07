@@ -1,4 +1,5 @@
 #pragma once
+#include <aurora/exception.hpp>
 
 #include <chrono>
 #include <cstdint>
@@ -15,7 +16,7 @@ namespace smgpc::render::core {
 
         [[nodiscard]] std::uint64_t advance(std::chrono::nanoseconds elapsed) {
             if (elapsed.count() < 0) {
-                throw std::invalid_argument("Simulation elapsed time cannot be negative");
+                aurora::throw_host_exception<std::invalid_argument>("Simulation elapsed time cannot be negative");
             }
 
             constexpr std::uint64_t nanoseconds_per_second = 1'000'000'000U;

@@ -1,0 +1,32 @@
+(lldb) target create "build/macosx/arm64/debug/smg-pc-jkr-exception-probe"
+Current executable set to '/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-jkr-exception-probe' (arm64).
+(lldb) breakpoint set -n smgpc::compat::detail::record_jkr_allocation -c "heap != JKRHeap::sRootHeap"
+Breakpoint 1: where = smg-pc-jkr-exception-probe`smgpc::compat::detail::record_jkr_allocation(void*, JKRHeap*, int) + 24 at JkrAllocationProvenance.cpp:44:13, address = 0x000000010000a3dc
+(lldb) run
+Process 25934 launched: '/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-jkr-exception-probe' (arm64)
+Process 25934 stopped
+* thread #1, queue = 'com.apple.main-thread', stop reason = breakpoint 1.1
+    frame #0: 0x000000010000a3dc smg-pc-jkr-exception-probe`smgpc::compat::detail::record_jkr_allocation(memory=0x0000000b50000210, heap=0x0000000b50000120, alignment=16) at JkrAllocationProvenance.cpp:44:13
+   41  	    }
+   42  	
+   43  	    void record_jkr_allocation(void* memory, JKRHeap* heap, int alignment) {
+-> 44  	        if (memory == nullptr) return;
+    	            ^
+   45  	        auto* fresh = static_cast<Record*>(std::malloc(sizeof(Record)));
+   46  	        if (fresh == nullptr) {
+   47  	            heap->free(memory);
+Target 0: (smg-pc-jkr-exception-probe) stopped.
+(lldb) thread backtrace -c 30
+* thread #1, queue = 'com.apple.main-thread', stop reason = breakpoint 1.1
+  * frame #0: 0x000000010000a3dc smg-pc-jkr-exception-probe`smgpc::compat::detail::record_jkr_allocation(memory=0x0000000b50000210, heap=0x0000000b50000120, alignment=16) at JkrAllocationProvenance.cpp:44:13
+    frame #1: 0x0000000100003364 smg-pc-jkr-exception-probe`JKRHeap::alloc(this=0x0000000b50000120, size=53, align=16) at JKRHeapCompat.cpp:114:5
+    frame #2: 0x0000000100008284 smg-pc-jkr-exception-probe`smgpc::compat::detail::allocate_jkr_or_host(size=53, alignment=16, from_tail=false, explicit_heap=0x0000000000000000) at JkrAllocationDomain.cpp:230:30
+    frame #3: 0x000000010000a9f8 smg-pc-jkr-exception-probe`(anonymous namespace)::allocate(size=53, alignment=16, from_tail=false, heap=0x0000000000000000) at MetrowerksAlignedNew.cpp:12:32
+    frame #4: 0x000000010000a9ac smg-pc-jkr-exception-probe`operator new(size=53) at MetrowerksAlignedNew.cpp:29:47
+    frame #5: 0x00000001002de030 libc++.1.dylib`std::logic_error::logic_error(char const*) + 60
+    frame #6: 0x0000000100001074 smg-pc-jkr-exception-probe`main at JkrExceptionProbe.cpp:9:15
+    frame #7: 0x00000001886784e4 dyld`start + 6992
+(lldb) frame variable memory heap alignment
+(void *) memory = 0x0000000b50000210
+(JKRSolidHeap *) heap = 0x0000000b50000120
+(int) alignment = 16

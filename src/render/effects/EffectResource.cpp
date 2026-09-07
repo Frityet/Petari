@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "render/effects/EffectResource.hpp"
 
 #include <algorithm>
@@ -20,7 +21,7 @@ namespace smgpc::render::effects {
 
         [[nodiscard]] std::uint16_t read_be16(std::span<const std::uint8_t> data, std::size_t offset) {
             if (offset + 2U > data.size()) {
-                throw std::runtime_error("JPC read past end of buffer");
+                aurora::throw_host_exception<std::runtime_error>("JPC read past end of buffer");
             }
 
             return static_cast<std::uint16_t>((static_cast<std::uint16_t>(data[offset]) << 8U) | static_cast<std::uint16_t>(data[offset + 1U]));
@@ -32,7 +33,7 @@ namespace smgpc::render::effects {
 
         [[nodiscard]] std::uint32_t read_be32(std::span<const std::uint8_t> data, std::size_t offset) {
             if (offset + 4U > data.size()) {
-                throw std::runtime_error("JPC read past end of buffer");
+                aurora::throw_host_exception<std::runtime_error>("JPC read past end of buffer");
             }
 
             return (static_cast<std::uint32_t>(data[offset]) << 24U) | (static_cast<std::uint32_t>(data[offset + 1U]) << 16U) |
@@ -61,7 +62,7 @@ namespace smgpc::render::effects {
 
         [[nodiscard]] std::string read_fixed_string(std::span<const std::uint8_t> data, std::size_t offset, std::size_t capacity) {
             if (offset + capacity > data.size()) {
-                throw std::runtime_error("JPC fixed string outside buffer");
+                aurora::throw_host_exception<std::runtime_error>("JPC fixed string outside buffer");
             }
 
             auto size = std::size_t {};
@@ -134,7 +135,7 @@ namespace smgpc::render::effects {
             constexpr auto DYNAMICS_BLOCK_DATA_SIZE = std::uint32_t {0x7cU};
 
             if (block_size < DYNAMICS_BLOCK_DATA_SIZE || offset + DYNAMICS_BLOCK_DATA_SIZE > data.size()) {
-                throw std::runtime_error("JPC BEM1 block too small for JPADynamicsBlockData");
+                aurora::throw_host_exception<std::runtime_error>("JPC BEM1 block too small for JPADynamicsBlockData");
             }
 
             const auto flags = read_be32(data, offset + 0x08U);
@@ -214,7 +215,7 @@ namespace smgpc::render::effects {
             constexpr auto CHILD_SHAPE_DATA_SIZE = std::uint32_t {0x48U};
 
             if (block_size < CHILD_SHAPE_DATA_SIZE || offset + CHILD_SHAPE_DATA_SIZE > data.size()) {
-                throw std::runtime_error("JPC SSP1 block too small for JPAChildShapeData");
+                aurora::throw_host_exception<std::runtime_error>("JPC SSP1 block too small for JPAChildShapeData");
             }
 
             const auto flags = read_be32(data, offset + 0x08U);
@@ -260,13 +261,13 @@ namespace smgpc::render::effects {
             constexpr auto KEY_FRAME_SIZE = FLOATS_PER_KEY * sizeof(float);
 
             if (block_size < KEY_BLOCK_HEADER_SIZE || offset + KEY_BLOCK_HEADER_SIZE > data.size()) {
-                throw std::runtime_error("JPC KFA1 block too small for JPAKeyBlock");
+                aurora::throw_host_exception<std::runtime_error>("JPC KFA1 block too small for JPAKeyBlock");
             }
 
             const auto key_count = data[offset + 0x09U];
             const auto key_data_size = static_cast<std::size_t>(key_count) * KEY_FRAME_SIZE;
             if (offset + KEY_BLOCK_HEADER_SIZE + key_data_size > data.size() || KEY_BLOCK_HEADER_SIZE + key_data_size > block_size) {
-                throw std::runtime_error("JPC KFA1 key data outside buffer");
+                aurora::throw_host_exception<std::runtime_error>("JPC KFA1 key data outside buffer");
             }
 
             auto key_block = JpcKeyBlockMetadata {
@@ -450,7 +451,7 @@ namespace smgpc::render::effects {
 
     void EffectResourceLibrary::parse_jpc(std::span<const std::uint8_t> data) {
         if (data.size() < 0x10U || read_be32(data, 0U) != JPAC_MAGIC || read_be32(data, 4U) != JPAC_VERSION_210) {
-            throw std::runtime_error("Effect particles.jpc is not JPAC2-10");
+            aurora::throw_host_exception<std::runtime_error>("Effect particles.jpc is not JPAC2-10");
         }
 
         const auto resource_count = read_be16(data, 0x08U);
@@ -461,7 +462,7 @@ namespace smgpc::render::effects {
         _resources.reserve(resource_count);
         for (auto i = std::uint16_t {}; i < resource_count; ++i) {
             if (offset + 8U > data.size()) {
-                throw std::runtime_error("JPC resource header outside buffer");
+                aurora::throw_host_exception<std::runtime_error>("JPC resource header outside buffer");
             }
 
             auto resource = JpcResourceMetadata {};
@@ -477,12 +478,12 @@ namespace smgpc::render::effects {
             resource.texture_indices.reserve(resource.texture_reference_count);
             for (auto block_index = std::uint16_t {}; block_index < resource.block_count; ++block_index) {
                 if (offset + 8U > data.size()) {
-                    throw std::runtime_error("JPC block header outside buffer");
+                    aurora::throw_host_exception<std::runtime_error>("JPC block header outside buffer");
                 }
                 const auto block_tag = read_be32(data, offset);
                 const auto block_size = read_be32(data, offset + 0x04U);
                 if (block_size < 8U || offset + block_size > data.size()) {
-                    throw std::runtime_error("JPC block size outside buffer");
+                    aurora::throw_host_exception<std::runtime_error>("JPC block size outside buffer");
                 }
 
                 resource.block_tags.push_back(block_tag_name(block_tag));
@@ -522,19 +523,19 @@ namespace smgpc::render::effects {
         }
 
         if (texture_offset >= data.size()) {
-            throw std::runtime_error("JPC texture table outside buffer");
+            aurora::throw_host_exception<std::runtime_error>("JPC texture table outside buffer");
         }
 
         offset = texture_offset;
         _textures.reserve(texture_count);
         for (auto texture_index = std::uint16_t {}; texture_index < texture_count; ++texture_index) {
             if (offset + 0x40U > data.size()) {
-                throw std::runtime_error("JPC texture header outside buffer");
+                aurora::throw_host_exception<std::runtime_error>("JPC texture header outside buffer");
             }
 
             const auto texture_size = read_be32(data, offset + 0x04U);
             if (texture_size < 0x40U || offset + texture_size > data.size()) {
-                throw std::runtime_error("JPC texture size outside buffer");
+                aurora::throw_host_exception<std::runtime_error>("JPC texture size outside buffer");
             }
 
             const auto format = static_cast<smgpc::resource::TplTextureFormat>(data[offset + 0x20U]);

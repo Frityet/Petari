@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Screen/StarPointerTarget.hpp"
 #include "Game/Util/GamePadUtil.hpp"
@@ -12,7 +13,7 @@ namespace {
         if (!MR::isConnectedWPad(channel)) {
             return false;
         }
-        throw std::logic_error(
+        aurora::throw_host_exception<std::logic_error>(
             "Connected actor pointing requires the original StarPointer controller and layout owners.");
     }
 } // namespace

@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "scene/AreaObjRuntime.hpp"
 
 #include "Game/AreaObj/AreaForm.hpp"
@@ -46,7 +47,7 @@ namespace smgpc::scene {
         void finalize_cube_camera_manager(AreaObjMgr &manager) {
             auto *camera_manager = dynamic_cast<CubeCameraMgr *>(&manager);
             if (camera_manager == nullptr) {
-                throw std::logic_error(
+                aurora::throw_host_exception<std::logic_error>(
                     "CubeCamera descriptor did not construct its exact retail manager");
             }
             camera_manager->initAfterLoad();
@@ -276,10 +277,10 @@ namespace smgpc::scene {
         std::unique_ptr<AreaObjMgr> manager,
         AreaObjManagerFinalize finalize) {
         if (manager == nullptr) {
-            throw std::invalid_argument("AreaObjRuntime cannot own a null retail manager");
+            aurora::throw_host_exception<std::invalid_argument>("AreaObjRuntime cannot own a null retail manager");
         }
         if (_did_init_after_placement) {
-            throw std::logic_error("AreaObjRuntime cannot adopt a manager after the scene post-placement phase");
+            aurora::throw_host_exception<std::logic_error>("AreaObjRuntime cannot adopt a manager after the scene post-placement phase");
         }
         _owned_managers.reserve(_owned_managers.size() + 1U);
         auto *result = manager.get();
@@ -295,15 +296,15 @@ namespace smgpc::scene {
         std::vector<std::unique_ptr<AreaObjMgr>> managers,
         std::vector<AreaObjManagerFinalize> finalizers) {
         if (_did_init_after_placement) {
-            throw std::logic_error("AreaObjRuntime cannot adopt managers after the scene post-placement phase");
+            aurora::throw_host_exception<std::logic_error>("AreaObjRuntime cannot adopt managers after the scene post-placement phase");
         }
         if (std::ranges::any_of(managers, [](const auto &manager) { return manager == nullptr; })) {
-            throw std::invalid_argument("AreaObjRuntime cannot own a null retail manager");
+            aurora::throw_host_exception<std::invalid_argument>("AreaObjRuntime cannot own a null retail manager");
         }
         if (finalizers.empty()) {
             finalizers.resize(managers.size(), nullptr);
         } else if (finalizers.size() != managers.size()) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "AreaObjRuntime manager finalizers must match the adopted manager count");
         }
 

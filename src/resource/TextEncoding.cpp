@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "TextEncoding.hpp"
 
 #include <algorithm>
@@ -166,28 +167,28 @@ namespace smgpc::resource {
 
 #if defined(_WIN32)
         if (value.size() > static_cast<std::size_t>(std::numeric_limits<int>::max())) {
-            throw std::runtime_error("UTF-8 string is too large to convert to CP932");
+            aurora::throw_host_exception<std::runtime_error>("UTF-8 string is too large to convert to CP932");
         }
 
         const auto input_size = static_cast<int>(value.size());
         const auto wide_size = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, value.data(), input_size, nullptr, 0);
         if (wide_size <= 0) {
-            throw std::runtime_error("invalid UTF-8 string (Windows error " + std::to_string(GetLastError()) + ")");
+            aurora::throw_host_exception<std::runtime_error>("invalid UTF-8 string (Windows error " + std::to_string(GetLastError()) + ")");
         }
         auto wide = std::wstring(static_cast<std::size_t>(wide_size), L'\0');
         if (MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, value.data(), input_size, wide.data(), wide_size) != wide_size) {
-            throw std::runtime_error("cannot decode UTF-8 string (Windows error " + std::to_string(GetLastError()) + ")");
+            aurora::throw_host_exception<std::runtime_error>("cannot decode UTF-8 string (Windows error " + std::to_string(GetLastError()) + ")");
         }
 
         BOOL substituted = FALSE;
         const auto output_size = WideCharToMultiByte(932U, WC_NO_BEST_FIT_CHARS, wide.data(), wide_size, nullptr, 0, nullptr, &substituted);
         if (output_size <= 0 || substituted) {
-            throw std::runtime_error("UTF-8 string cannot be represented in CP932");
+            aurora::throw_host_exception<std::runtime_error>("UTF-8 string cannot be represented in CP932");
         }
         auto output = std::string(static_cast<std::size_t>(output_size), '\0');
         substituted = FALSE;
         if (WideCharToMultiByte(932U, WC_NO_BEST_FIT_CHARS, wide.data(), wide_size, output.data(), output_size, nullptr, &substituted) != output_size || substituted) {
-            throw std::runtime_error("UTF-8 string cannot be represented in CP932");
+            aurora::throw_host_exception<std::runtime_error>("UTF-8 string cannot be represented in CP932");
         }
         return output;
 #else
@@ -195,7 +196,7 @@ namespace smgpc::resource {
         // Substituting that codec would change which resource names exist.
         const auto converter = iconv_open("CP932", "UTF-8");
         if (converter == reinterpret_cast<iconv_t>(-1)) {
-            throw std::runtime_error("CP932 text conversion is unavailable");
+            aurora::throw_host_exception<std::runtime_error>("CP932 text conversion is unavailable");
         }
         struct ConverterOwner {
             iconv_t value;
@@ -215,7 +216,7 @@ namespace smgpc::resource {
         // iconv can report success with a count of nonreversible conversions.
         // Reject those too: a substituted byte is not a valid Game identity.
         if (result != 0U || input_remaining != 0U) {
-            throw std::runtime_error("UTF-8 string cannot be represented in CP932 (iconv error " + std::to_string(conversion_error) + ")");
+            aurora::throw_host_exception<std::runtime_error>("UTF-8 string cannot be represented in CP932 (iconv error " + std::to_string(conversion_error) + ")");
         }
         output.resize(static_cast<std::size_t>(output_cursor - output.data()));
         return output;
@@ -229,26 +230,26 @@ namespace smgpc::resource {
 
 #if defined(_WIN32)
         if (value.size() > static_cast<std::size_t>(std::numeric_limits<int>::max())) {
-            throw std::runtime_error("CP932 string is too large to convert");
+            aurora::throw_host_exception<std::runtime_error>("CP932 string is too large to convert");
         }
 
         const auto input_size = static_cast<int>(value.size());
         const auto wide_size = MultiByteToWideChar(932U, MB_ERR_INVALID_CHARS, value.data(), input_size, nullptr, 0);
         if (wide_size <= 0) {
-            throw std::runtime_error("invalid CP932 string (Windows error " + std::to_string(GetLastError()) + ")");
+            aurora::throw_host_exception<std::runtime_error>("invalid CP932 string (Windows error " + std::to_string(GetLastError()) + ")");
         }
         auto wide = std::wstring(static_cast<std::size_t>(wide_size), L'\0');
         if (MultiByteToWideChar(932U, MB_ERR_INVALID_CHARS, value.data(), input_size, wide.data(), wide_size) != wide_size) {
-            throw std::runtime_error("cannot decode CP932 string (Windows error " + std::to_string(GetLastError()) + ")");
+            aurora::throw_host_exception<std::runtime_error>("cannot decode CP932 string (Windows error " + std::to_string(GetLastError()) + ")");
         }
 
         const auto output_size = WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS, wide.data(), wide_size, nullptr, 0, nullptr, nullptr);
         if (output_size <= 0) {
-            throw std::runtime_error("cannot size UTF-8 string (Windows error " + std::to_string(GetLastError()) + ")");
+            aurora::throw_host_exception<std::runtime_error>("cannot size UTF-8 string (Windows error " + std::to_string(GetLastError()) + ")");
         }
         auto output = std::string(static_cast<std::size_t>(output_size), '\0');
         if (WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS, wide.data(), wide_size, output.data(), output_size, nullptr, nullptr) != output_size) {
-            throw std::runtime_error("cannot encode UTF-8 string (Windows error " + std::to_string(GetLastError()) + ")");
+            aurora::throw_host_exception<std::runtime_error>("cannot encode UTF-8 string (Windows error " + std::to_string(GetLastError()) + ")");
         }
         return output;
 #else
@@ -257,7 +258,7 @@ namespace smgpc::resource {
             converter = iconv_open("UTF-8", "SHIFT-JIS");
         }
         if (converter == reinterpret_cast<iconv_t>(-1)) {
-            throw std::runtime_error("CP932 text conversion is unavailable");
+            aurora::throw_host_exception<std::runtime_error>("CP932 text conversion is unavailable");
         }
 
         auto input = std::string(value);
@@ -271,7 +272,7 @@ namespace smgpc::resource {
         const auto conversion_error = errno;
         iconv_close(converter);
         if (result == static_cast<std::size_t>(-1) || input_remaining != 0U) {
-            throw std::runtime_error("invalid CP932 string (iconv error " + std::to_string(conversion_error) + ")");
+            aurora::throw_host_exception<std::runtime_error>("invalid CP932 string (iconv error " + std::to_string(conversion_error) + ")");
         }
 
         output.resize(static_cast<std::size_t>(output_cursor - output.data()));

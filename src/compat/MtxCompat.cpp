@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/MtxUtil.hpp"
 
@@ -27,16 +28,16 @@ namespace MR {
     void makeMtxUpFront(TPos3f *pMatrix, const TVec3f &rUp,
                         const TVec3f &rFront) {
         if (pMatrix == nullptr) {
-            throw std::invalid_argument("An up/front matrix requires a real destination.");
+            aurora::throw_host_exception<std::invalid_argument>("An up/front matrix requires a real destination.");
         }
 
         auto axisY = rUp;
         if (axisY.normalize() <= JGeometry::TUtil<f32>::epsilon()) {
-            throw std::invalid_argument("An up/front matrix requires a non-degenerate up axis.");
+            aurora::throw_host_exception<std::invalid_argument>("An up/front matrix requires a non-degenerate up axis.");
         }
         auto axisX = axisY.cross(rFront);
         if (axisX.normalize() <= JGeometry::TUtil<f32>::epsilon()) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "An up/front matrix requires independent up and front axes.");
         }
         const auto axisZ = axisX.cross(axisY);
@@ -202,7 +203,7 @@ namespace MR {
 
     void preScaleMtx(MtxPtr pMatrix, f32 scaleX, f32 scaleY, f32 scaleZ) {
         if (pMatrix == nullptr) {
-            throw std::invalid_argument("Matrix scaling requires a real matrix.");
+            aurora::throw_host_exception<std::invalid_argument>("Matrix scaling requires a real matrix.");
         }
 
         for (auto row = 0; row < 3; ++row) {

@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "J3dTransformAnimation.hpp"
 
 #include <algorithm>
@@ -18,7 +19,7 @@ namespace smgpc::resource {
 
         void require_range(std::size_t size, std::size_t offset, std::size_t count) {
             if (offset > size || count > size - offset) {
-                throw std::runtime_error("J3D transform animation range outside its containing block");
+                aurora::throw_host_exception<std::runtime_error>("J3D transform animation range outside its containing block");
             }
         }
 
@@ -99,14 +100,14 @@ namespace smgpc::resource {
             require_range(values.size(), key.mOffset, key.mMaxFrame * stride);
             float previous = static_cast<float>(values[key.mOffset]);
             if (!std::isfinite(previous)) {
-                throw std::runtime_error("J3D transform key time is not finite");
+                aurora::throw_host_exception<std::runtime_error>("J3D transform key time is not finite");
             }
             for (std::size_t i = 1U; i < key.mMaxFrame; ++i) {
                 const float time = static_cast<float>(values[key.mOffset + i * stride]);
                 // Equal times are valid: the original upper-bound key search
                 // selects the last equal interior key before interpolation.
                 if (!std::isfinite(time) || time < previous) {
-                    throw std::runtime_error("J3D transform key times are not ordered");
+                    aurora::throw_host_exception<std::runtime_error>("J3D transform key times are not ordered");
                 }
                 previous = time;
             }
@@ -141,7 +142,7 @@ namespace smgpc::resource {
             // Unlike keyed animations, the original full sampler always reads
             // a value, including on negative frames and past the channel end.
             if (count == 0U) {
-                throw std::runtime_error("J3D full transform channel contains no samples");
+                aurora::throw_host_exception<std::runtime_error>("J3D full transform channel contains no samples");
             }
             return std::size_t{offset} + count;
         }
@@ -182,11 +183,11 @@ namespace smgpc::resource {
                                                                 bool interpolate_full) {
         require_range(data.size(), 0U, 0x20U);
         if (read_u32(data, 0U) != J3D1) {
-            throw std::runtime_error("Not a J3D1 transform animation");
+            aurora::throw_host_exception<std::runtime_error>("Not a J3D1 transform animation");
         }
         const auto type = read_u32(data, 4U);
         if (type != BCK1 && type != BCA1) {
-            throw std::runtime_error("J3D animation is not BCK or BCA");
+            aurora::throw_host_exception<std::runtime_error>("J3D animation is not BCK or BCA");
         }
         const auto file_size = read_u32(data, 8U);
         require_range(data.size(), 0U, file_size);
@@ -215,7 +216,7 @@ namespace smgpc::resource {
             offset += size;
         }
         if (!animation) {
-            throw std::runtime_error("J3D transform animation has no matching transform block");
+            aurora::throw_host_exception<std::runtime_error>("J3D transform animation has no matching transform block");
         }
         return animation;
     }

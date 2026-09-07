@@ -2691,6 +2691,19 @@ target("smg-pc-original-fur-shader-tests")
         group = "aurora", rundir = os.projectdir(), realtime_output = true
     })
 
+target("smg-pc-original-camera-resource-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    add_files("OriginalCameraResourceTests.cpp", "../aurora/lib/compat.cpp")
+    add_deps {
+        "smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
+        "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"
+    }
+    add_tests("original_camera_resource", {
+        group = "aurora", rundir = os.projectdir(), realtime_output = true
+    })
+
 target("smg-pc-aurora-clip-mode-render-tests")
     set_kind("binary")
     set_default(false)
@@ -2702,10 +2715,13 @@ target("smg-pc-aurora-clip-mode-render-tests")
         group = "aurora", rundir = os.projectdir(), realtime_output = true
     })
 
-target("smg-pc-jkr-exception-probe")
+target("smg-pc-jkr-exception-ownership-tests")
     set_kind("binary")
     set_default(false)
     set_group("tests/aurora")
-    add_files("../notes/jkr-exception-ownership-20260907/JkrExceptionProbe.cpp", "../aurora/lib/compat.cpp")
+    add_files("JkrExceptionOwnershipTests.cpp", "../aurora/lib/compat.cpp")
     add_deps {"smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
               "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"}
+    add_tests("jkr_exception_ownership", {
+        group = "aurora", rundir = os.projectdir(), realtime_output = true
+    })

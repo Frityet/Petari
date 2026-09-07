@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "compat/GroupCheckManagerCompat.hpp"
 
 #include "Game/LiveActor/LiveActor.hpp"
@@ -33,11 +34,11 @@ namespace {
 
     [[nodiscard]] GroupCheckerRuntimeState &require_group_checker_state(const GroupChecker *checker) {
         if (checker == nullptr) {
-            throw std::invalid_argument("Attribute group operation requires a GroupChecker.");
+            aurora::throw_host_exception<std::invalid_argument>("Attribute group operation requires a GroupChecker.");
         }
         const auto found = group_checker_states().find(checker);
         if (found == group_checker_states().end()) {
-            throw std::logic_error("GroupChecker has no registered native runtime state.");
+            aurora::throw_host_exception<std::logic_error>("GroupChecker has no registered native runtime state.");
         }
         return found->second;
     }
@@ -45,18 +46,18 @@ namespace {
     [[nodiscard]] GroupCheckManagerRuntimeState &require_group_check_manager_state(
         const GroupCheckManager *manager) {
         if (manager == nullptr) {
-            throw std::invalid_argument("Attribute group operation requires a GroupCheckManager.");
+            aurora::throw_host_exception<std::invalid_argument>("Attribute group operation requires a GroupCheckManager.");
         }
         const auto found = group_check_manager_states().find(manager);
         if (found == group_check_manager_states().end()) {
-            throw std::logic_error("GroupCheckManager has no registered native runtime state.");
+            aurora::throw_host_exception<std::logic_error>("GroupCheckManager has no registered native runtime state.");
         }
         return found->second;
     }
 
     [[nodiscard]] GroupChecker &require_group(GroupCheckManagerRuntimeState &state, int group_index) {
         if (group_index < 0 || group_index >= static_cast<int>(state.groups.size())) {
-            throw std::out_of_range("Attribute group index must be in the retail 0..1 range.");
+            aurora::throw_host_exception<std::out_of_range>("Attribute group index must be in the retail 0..1 range.");
         }
         return *state.groups[static_cast<std::size_t>(group_index)];
     }
@@ -64,29 +65,29 @@ namespace {
     [[nodiscard]] GroupCheckManager &require_active_group_check_manager() {
         auto *holder = MR::getSceneObjHolder();
         if (holder == nullptr) {
-            throw std::logic_error("Attribute groups require an active scene object holder.");
+            aurora::throw_host_exception<std::logic_error>("Attribute groups require an active scene object holder.");
         }
 
         auto *object = holder->getObj(SceneObj_GroupCheckManager);
         if (object == nullptr) {
-            throw std::logic_error("The active scene has no pre-created GroupCheckManager.");
+            aurora::throw_host_exception<std::logic_error>("The active scene has no pre-created GroupCheckManager.");
         }
         return *static_cast<GroupCheckManager *>(object);
     }
 
     [[nodiscard]] const NameObj &require_attribute_group_object(const LiveActor *actor) {
         if (actor == nullptr) {
-            throw std::invalid_argument("Attribute group membership requires a LiveActor.");
+            aurora::throw_host_exception<std::invalid_argument>("Attribute group membership requires a LiveActor.");
         }
         return *actor;
     }
 
     [[nodiscard]] const char *require_attribute_group_name(const NameObj *object) {
         if (object == nullptr) {
-            throw std::invalid_argument("Attribute group membership requires a NameObj.");
+            aurora::throw_host_exception<std::invalid_argument>("Attribute group membership requires a NameObj.");
         }
         if (object->mName == nullptr) {
-            throw std::logic_error("Attribute group membership requires a registered NameObj name.");
+            aurora::throw_host_exception<std::logic_error>("Attribute group membership requires a registered NameObj name.");
         }
         return object->mName;
     }
@@ -95,10 +96,10 @@ namespace {
 namespace smgpc::compat {
     void register_group_checker(GroupChecker *checker) {
         if (checker == nullptr) {
-            throw std::invalid_argument("GroupChecker runtime state requires a real checker.");
+            aurora::throw_host_exception<std::invalid_argument>("GroupChecker runtime state requires a real checker.");
         }
         if (!group_checker_states().try_emplace(checker).second) {
-            throw std::logic_error("GroupChecker runtime state is already registered.");
+            aurora::throw_host_exception<std::logic_error>("GroupChecker runtime state is already registered.");
         }
     }
 
@@ -119,10 +120,10 @@ namespace smgpc::compat {
 
     void initialize_group_check_manager(GroupCheckManager *manager) {
         if (manager == nullptr) {
-            throw std::invalid_argument("GroupCheckManager runtime state requires a real manager.");
+            aurora::throw_host_exception<std::invalid_argument>("GroupCheckManager runtime state requires a real manager.");
         }
         if (group_check_manager_states().contains(manager)) {
-            throw std::logic_error("GroupCheckManager runtime state is already registered.");
+            aurora::throw_host_exception<std::logic_error>("GroupCheckManager runtime state is already registered.");
         }
 
         auto state = GroupCheckManagerRuntimeState{};
@@ -137,7 +138,7 @@ namespace smgpc::compat {
 
         const auto [found, inserted] = group_check_manager_states().try_emplace(manager, std::move(state));
         if (!inserted) {
-            throw std::logic_error("GroupCheckManager runtime state is already registered.");
+            aurora::throw_host_exception<std::logic_error>("GroupCheckManager runtime state is already registered.");
         }
         (void)found;
         manager->mShellSearchGroup = shell_search_group;

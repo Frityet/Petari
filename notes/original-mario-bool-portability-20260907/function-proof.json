@@ -1,0 +1,556 @@
+{
+  "paired_symbols": 110,
+  "all_unchanged": true,
+  "symbols": [
+    {
+      "symbol": "FORCE_OPERATOR__Fv",
+      "bytes": "40",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "__ct__5MarioFP10MarioActor",
+      "bytes": "3204",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "updateAndClearStrideParameter__5MarioFv",
+      "bytes": "272",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "checkKeyLock__5MarioFv",
+      "bytes": "176",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "updateTimers__5MarioFv",
+      "bytes": "92",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "updateMorphResetTimer__5MarioFv",
+      "bytes": "48",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "doExtraServices__5MarioFv",
+      "bytes": "508",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "isEnableCheckGround__5MarioFv",
+      "bytes": "44",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "setGroundNorm__5MarioFRCQ29JGeometry8TVec3<f>",
+      "bytes": "136",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "createMtxDir__5MarioFPA4_fRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+      "bytes": "484",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "isNonFixHeadVec__5MarioCFv",
+      "bytes": "256",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "slopeTiltHead__5MarioFPQ29JGeometry8TVec3<f>",
+      "bytes": "172",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "fixFrontVecByGravity__5MarioFv",
+      "bytes": "488",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "fixFrontVecFromUpSide__5MarioFv",
+      "bytes": "172",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "fixSideVecFromFrontUp__5MarioFv",
+      "bytes": "96",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "setSideVec__5MarioFRCQ29JGeometry8TVec3<f>",
+      "bytes": "56",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "setHeadVec__5MarioFRCQ29JGeometry8TVec3<f>",
+      "bytes": "56",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "setFrontVec__5MarioFRCQ29JGeometry8TVec3<f>",
+      "bytes": "304",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "setFrontVecKeepUp__5MarioFRCQ29JGeometry8TVec3<f>f",
+      "bytes": "228",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "setFrontVecKeepUpAngle__5MarioFRCQ29JGeometry8TVec3<f>f",
+      "bytes": "156",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "setFrontVecKeepUp__5MarioFRCQ29JGeometry8TVec3<f>Ul",
+      "bytes": "224",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "setFrontVecKeepUp__5MarioFRCQ29JGeometry8TVec3<f>",
+      "bytes": "360",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "setFrontVecKeepSide__5MarioFRCQ29JGeometry8TVec3<f>",
+      "bytes": "284",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "setHeadAndFrontVecFromRotate__5MarioFRCQ29JGeometry8TVec3<f>",
+      "bytes": "188",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "forceSetHeadVecKeepSide__5MarioFRCQ29JGeometry8TVec3<f>",
+      "bytes": "132",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "draw__5MarioCFv",
+      "bytes": "540",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "addTrans__5MarioFRCQ29JGeometry8TVec3<f>PCc",
+      "bytes": "192",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "setTrans__5MarioFRCQ29JGeometry8TVec3<f>PCc",
+      "bytes": "216",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "isEnableRush__5MarioCFv",
+      "bytes": "144",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "isInvincible__5MarioCFv",
+      "bytes": "96",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "isCeiling__5MarioCFv",
+      "bytes": "84",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "setGravityVec__5MarioFRCQ29JGeometry8TVec3<f>",
+      "bytes": "312",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "updateSoundCode__5MarioFv",
+      "bytes": "312",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "isForceStopRush__5MarioCFv",
+      "bytes": "116",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "getShadowNorm__5MarioCFv",
+      "bytes": "12",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "getAirGravityVec__5MarioCFv",
+      "bytes": "56",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "getAirFrontVec__5MarioCFv",
+      "bytes": "112",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "initAfterConst__5MarioFv",
+      "bytes": "256",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "writeBackPhyisicalVector__5MarioFv",
+      "bytes": "1948",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "update__5MarioFv",
+      "bytes": "1408",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "actionMain__5MarioFv",
+      "bytes": "480",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "updateGroundInfo__5MarioFv",
+      "bytes": "588",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "getGravityVec__5MarioCFv",
+      "bytes": "620",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "touchWater__5MarioFv",
+      "bytes": "84",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@13116",
+      "bytes": "8",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@7770",
+      "bytes": "12",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@13265",
+      "bytes": "19",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@13266",
+      "bytes": "15",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@13267",
+      "bytes": "19",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@13395",
+      "bytes": "18",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@13396",
+      "bytes": "16",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@13415",
+      "bytes": "15",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@13430",
+      "bytes": "5",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@13431",
+      "bytes": "5",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@13450",
+      "bytes": "11",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@13455",
+      "bytes": "7",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "__vt__31TriangleFilterDelegator<5Mario>",
+      "bytes": "12",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "__vt__18TriangleFilterBase",
+      "bytes": "12",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@13346",
+      "bytes": "4",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@12399",
+      "bytes": "4",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@12841",
+      "bytes": "4",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@12842",
+      "bytes": "4",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@12843",
+      "bytes": "4",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@12844",
+      "bytes": "4",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@12845",
+      "bytes": "4",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@12846",
+      "bytes": "4",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@12905",
+      "bytes": "4",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@12906",
+      "bytes": "4",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@12918",
+      "bytes": "4",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@12964",
+      "bytes": "4",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@12965",
+      "bytes": "4",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@13024",
+      "bytes": "4",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@13039",
+      "bytes": "4",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@13040",
+      "bytes": "4",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@13065",
+      "bytes": "4",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@13097",
+      "bytes": "4",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@13110",
+      "bytes": "4",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@13111",
+      "bytes": "4",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@13112",
+      "bytes": "4",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@13113",
+      "bytes": "4",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@13344",
+      "bytes": "4",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@13345",
+      "bytes": "4",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@13347",
+      "bytes": "4",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@13348",
+      "bytes": "4",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@13349",
+      "bytes": "4",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@13353",
+      "bytes": "4",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@13357",
+      "bytes": "4",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@13390",
+      "bytes": "4",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@13391",
+      "bytes": "4",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@13392",
+      "bytes": "4",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@13393",
+      "bytes": "4",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@13394",
+      "bytes": "4",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@13432",
+      "bytes": "4",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "@13451",
+      "bytes": "4",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "scale__Q29JGeometry8TVec3<f>Ff",
+      "bytes": "40",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "zero__Q29JGeometry8TVec3<f>Fv",
+      "bytes": "20",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "bytes": "20",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "__mi__Q29JGeometry8TVec3<f>CFv",
+      "bytes": "28",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "bytes": "20",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "bytes": "36",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "dot__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>",
+      "bytes": "32",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "__ct<f>__Q29JGeometry8TVec3<f>Ffff_Pv",
+      "bytes": "16",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "bytes": "36",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "setLength__Q29JGeometry8TVec3<f>Ff",
+      "bytes": "164",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "inv_sqrt__Q29JGeometry8TUtil<f>Ff",
+      "bytes": "56",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "isInvalidTriangle__31TriangleFilterDelegator<5Mario>CFPC8Triangle",
+      "bytes": "48",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "[.rodata-0]",
+      "bytes": "8",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "[.data-0]",
+      "bytes": "168",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "[.sdata-0]",
+      "bytes": "4",
+      "match_percent": 100.0
+    },
+    {
+      "symbol": "[.sdata2-0]",
+      "bytes": "140",
+      "match_percent": 100.0
+    }
+  ]
+}

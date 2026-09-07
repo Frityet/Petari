@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "compat/PlayerUtilCompat.hpp"
 #include "runtime/RuntimeServices.hpp"
 
@@ -7,7 +8,7 @@ namespace {
     smgpc::runtime::PlayerSystemService &require_attached_player() {
         auto *player = smgpc::compat::active_player_system_for_player_util();
         if (player == nullptr || player->attached_actor() == nullptr) {
-            throw std::logic_error("Player state is unavailable without an attached player actor.");
+            aurora::throw_host_exception<std::logic_error>("Player state is unavailable without an attached player actor.");
         }
         return *player;
     }
@@ -24,7 +25,7 @@ namespace MR {
     bool isPlayerDead() {
         const auto dead = require_attached_player().player_dead_state();
         if (!dead.has_value()) {
-            throw std::logic_error("Player death/nerve-change state has not been resolved by the player implementation.");
+            aurora::throw_host_exception<std::logic_error>("Player death/nerve-change state has not been resolved by the player implementation.");
         }
         return *dead;
     }

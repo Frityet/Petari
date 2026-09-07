@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "scene/nameobj/PlanetMapCatalog.hpp"
 
 #include "resource/BcsvTable.hpp"
@@ -113,11 +114,11 @@ namespace smgpc::scene::nameobj {
                            bool (*accepts)(smgpc::resource::BcsvFieldType), std::string_view expected_type) {
             const auto index = table.field_index(field_name);
             if (!index.has_value()) {
-                throw std::runtime_error("PlanetMapDataTable.bcsv is missing required field " +
+                aurora::throw_host_exception<std::runtime_error>("PlanetMapDataTable.bcsv is missing required field " +
                                          std::string(field_name));
             }
             if (!accepts(table.fields()[*index].type)) {
-                throw std::runtime_error("PlanetMapDataTable.bcsv field " + std::string(field_name) +
+                aurora::throw_host_exception<std::runtime_error>("PlanetMapDataTable.bcsv field " + std::string(field_name) +
                                          " must be " + std::string(expected_type));
             }
         }
@@ -176,20 +177,20 @@ namespace smgpc::scene::nameobj {
     const std::optional<std::string> &PlanetMapCatalogEntry::submodel_name(PlanetMapSubmodelKind kind) const {
         const auto index = static_cast<std::size_t>(kind);
         if (index >= submodel_names.size()) {
-            throw std::out_of_range("PlanetMap submodel kind is outside the authored table");
+            aurora::throw_host_exception<std::out_of_range>("PlanetMap submodel kind is outside the authored table");
         }
         return submodel_names[index];
     }
 
     PlanetMapCatalog::PlanetMapCatalog(smgpc::runtime::DvdFileSystemService &dvd) {
         if (sActiveCatalog != nullptr) {
-            throw std::runtime_error("A PlanetMapCatalog is already active for the current scene");
+            aurora::throw_host_exception<std::runtime_error>("A PlanetMapCatalog is already active for the current scene");
         }
 
         const auto &archive = dvd.archive(cPlanetMapTableArchivePath);
         const auto *table_entry = archive.find_resource(cPlanetMapTableFileName);
         if (table_entry == nullptr) {
-            throw std::runtime_error("PlanetMapDataTable.arc does not contain PlanetMapDataTable.bcsv");
+            aurora::throw_host_exception<std::runtime_error>("PlanetMapDataTable.arc does not contain PlanetMapDataTable.bcsv");
         }
 
         const auto table = smgpc::resource::BcsvTable::from_bytes(archive.file_data(*table_entry));
@@ -207,7 +208,7 @@ namespace smgpc::scene::nameobj {
         for (auto row = std::size_t{}; row < table.entry_count(); ++row) {
             const auto raw_planet_name = table.get_string(row, "PlanetName");
             if (!raw_planet_name.has_value()) {
-                throw std::runtime_error("PlanetMapDataTable.bcsv row " + std::to_string(row) +
+                aurora::throw_host_exception<std::runtime_error>("PlanetMapDataTable.bcsv row " + std::to_string(row) +
                                          " has no PlanetName");
             }
 
@@ -218,7 +219,7 @@ namespace smgpc::scene::nameobj {
             for (auto index = std::size_t{}; index < cSubmodelFlagNames.size(); ++index) {
                 const auto flag = table.get_s32(row, cSubmodelFlagNames[index]);
                 if (!flag.has_value()) {
-                    throw std::runtime_error("PlanetMapDataTable.bcsv row " + std::to_string(row) +
+                    aurora::throw_host_exception<std::runtime_error>("PlanetMapDataTable.bcsv row " + std::to_string(row) +
                                              " has no integer " + std::string(cSubmodelFlagNames[index]));
                 }
                 entry.authored_submodel_flags[index] = *flag;
@@ -236,7 +237,7 @@ namespace smgpc::scene::nameobj {
                 const auto field_name = force_low_field_name(index);
                 const auto raw_scenario = table.get_string(row, field_name);
                 if (!raw_scenario.has_value()) {
-                    throw std::runtime_error("PlanetMapDataTable.bcsv row " + std::to_string(row) +
+                    aurora::throw_host_exception<std::runtime_error>("PlanetMapDataTable.bcsv row " + std::to_string(row) +
                                              " has no string " + field_name);
                 }
                 entry.force_low_scenarios[index] = smgpc::resource::decode_cp932(*raw_scenario);
@@ -246,7 +247,7 @@ namespace smgpc::scene::nameobj {
                 if (entry.has_authored_submodels() ||
                     std::ranges::any_of(entry.force_low_scenarios,
                                         [](const auto &scenario) { return !scenario.empty(); })) {
-                    throw std::runtime_error(
+                    aurora::throw_host_exception<std::runtime_error>(
                         "PlanetMapDataTable.bcsv row " + std::to_string(row) +
                         " is unnamed but retains submodel flags or force-low scenarios");
                 }
@@ -254,7 +255,7 @@ namespace smgpc::scene::nameobj {
                 continue;
             }
             if (_indices.contains(entry.planet_name)) {
-                throw std::runtime_error("PlanetMapDataTable.bcsv contains duplicate PlanetName " +
+                aurora::throw_host_exception<std::runtime_error>("PlanetMapDataTable.bcsv contains duplicate PlanetName " +
                                          entry.planet_name);
             }
 

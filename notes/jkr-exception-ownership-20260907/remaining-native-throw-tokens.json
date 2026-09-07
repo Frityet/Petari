@@ -1,0 +1,602 @@
+[
+  {
+    "file": "src/compat/JkrHeapFinalizer.cpp",
+    "line": 71,
+    "following": [
+      "std",
+      "::",
+      "bad_alloc",
+      "(",
+      ")",
+      ";"
+    ]
+  },
+  {
+    "file": "src/compat/GameDataSession.cpp",
+    "line": 25,
+    "following": [
+      ";",
+      "}",
+      "}",
+      "GameDataSession",
+      "::",
+      "~"
+    ]
+  },
+  {
+    "file": "src/compat/AudioFacadeCompat.cpp",
+    "line": 135,
+    "following": [
+      ";",
+      "}",
+      "}",
+      "ScopedAudioEventServiceOverride",
+      "::",
+      "~"
+    ]
+  },
+  {
+    "file": "src/compat/AudioFacadeCompat.cpp",
+    "line": 676,
+    "following": [
+      ";",
+      "}",
+      "if",
+      "(",
+      "handle",
+      "="
+    ]
+  },
+  {
+    "file": "src/compat/GlobalGravityOwnership.cpp",
+    "line": 460,
+    "following": [
+      ";",
+      "}",
+      "}",
+      "void",
+      "prepare_global_gravity_init",
+      "("
+    ]
+  },
+  {
+    "file": "src/compat/NPCActorRuntimeCompat.cpp",
+    "line": 335,
+    "following": [
+      ";",
+      "}",
+      "actor",
+      "-",
+      ">",
+      "mPosition"
+    ]
+  },
+  {
+    "file": "src/compat/TalkRuntime.cpp",
+    "line": 768,
+    "following": [
+      ";",
+      "}",
+      "return",
+      "result",
+      ";",
+      "}"
+    ]
+  },
+  {
+    "file": "src/compat/JkrAllocationDomain.cpp",
+    "line": 82,
+    "following": [
+      "std",
+      "::",
+      "bad_alloc",
+      "(",
+      ")",
+      ";"
+    ]
+  },
+  {
+    "file": "src/compat/JkrAllocationDomain.cpp",
+    "line": 139,
+    "following": [
+      "std",
+      "::",
+      "bad_alloc",
+      "(",
+      ")",
+      ";"
+    ]
+  },
+  {
+    "file": "src/compat/JkrAllocationDomain.cpp",
+    "line": 221,
+    "following": [
+      "std",
+      "::",
+      "bad_alloc",
+      "(",
+      ")",
+      ";"
+    ]
+  },
+  {
+    "file": "src/compat/JkrAllocationProvenance.cpp",
+    "line": 48,
+    "following": [
+      "std",
+      "::",
+      "bad_alloc",
+      "(",
+      ")",
+      ";"
+    ]
+  },
+  {
+    "file": "src/compat/DemoSheetRuntime.cpp",
+    "line": 250,
+    "following": [
+      "DemoSheetParseError",
+      "(",
+      "file_name",
+      "+",
+      "literal",
+      "+"
+    ]
+  },
+  {
+    "file": "src/compat/MetrowerksAlignedNew.cpp",
+    "line": 14,
+    "following": [
+      "std",
+      "::",
+      "bad_alloc",
+      "(",
+      ")",
+      ";"
+    ]
+  },
+  {
+    "file": "src/compat/MetrowerksAlignedNew.cpp",
+    "line": 20,
+    "following": [
+      "std",
+      "::",
+      "bad_alloc",
+      "(",
+      ")",
+      ";"
+    ]
+  },
+  {
+    "file": "src/compat/DemoSceneRuntime.cpp",
+    "line": 571,
+    "following": [
+      ";",
+      "}",
+      "}",
+      "template",
+      "<",
+      "typename"
+    ]
+  },
+  {
+    "file": "src/compat/InformationMessageCompat.cpp",
+    "line": 95,
+    "following": [
+      ";",
+      "}",
+      "sCurrentInformationMessage",
+      "=",
+      "_impl",
+      "-"
+    ]
+  },
+  {
+    "file": "src/compat/SceneObjHolderCompat.cpp",
+    "line": 352,
+    "following": [
+      ";",
+      "}",
+      "}",
+      "NameObj",
+      "*",
+      "SceneObjHolder"
+    ]
+  },
+  {
+    "file": "src/render/light/LightData.cpp",
+    "line": 202,
+    "following": [
+      ";",
+      "}",
+      "}",
+      "AreaLightInfo",
+      "*",
+      "StageLightData"
+    ]
+  },
+  {
+    "file": "src/resource/J3dModelResource.cpp",
+    "line": 459,
+    "following": [
+      ";",
+      "}",
+      "}",
+      "J3dModelResource",
+      "::",
+      "~"
+    ]
+  },
+  {
+    "file": "src/resource/BasResource.cpp",
+    "line": 76,
+    "following": [
+      ";",
+      "}",
+      "}",
+      "~",
+      "Storage",
+      "("
+    ]
+  },
+  {
+    "file": "src/resource/J3dAllocationIdentity.cpp",
+    "line": 31,
+    "following": [
+      ";",
+      "}",
+      "free",
+      ".",
+      "erase",
+      "("
+    ]
+  },
+  {
+    "file": "src/resource/JMapResource.cpp",
+    "line": 111,
+    "following": [
+      ";",
+      "}",
+      "}",
+      "JMapResource",
+      "::",
+      "JMapResource"
+    ]
+  },
+  {
+    "file": "src/resource/JMapResource.cpp",
+    "line": 149,
+    "following": [
+      ";",
+      "}",
+      "}",
+      "const",
+      "void",
+      "*"
+    ]
+  },
+  {
+    "file": "src/resource/J3dAnimationResource.cpp",
+    "line": 791,
+    "following": [
+      ";",
+      "}",
+      "}",
+      "J3dAnimationResource",
+      "::",
+      "~"
+    ]
+  },
+  {
+    "file": "src/resource/J3dMaterialTableData.cpp",
+    "line": 29,
+    "following": [
+      "Error",
+      "(",
+      "message",
+      ")",
+      ";",
+      "}"
+    ]
+  },
+  {
+    "file": "src/resource/Mem1ResourceHeap.cpp",
+    "line": 37,
+    "following": [
+      "std",
+      "::",
+      "bad_alloc",
+      "(",
+      ")",
+      ";"
+    ]
+  },
+  {
+    "file": "src/resource/Mem1ResourceHeap.cpp",
+    "line": 60,
+    "following": [
+      "std",
+      "::",
+      "bad_alloc",
+      "(",
+      ")",
+      ";"
+    ]
+  },
+  {
+    "file": "src/runtime/SceneScheduler.cpp",
+    "line": 744,
+    "following": [
+      ";",
+      "}",
+      "#",
+      "ifndef",
+      "NDEBUG",
+      "emit_connect_to_scene_trace"
+    ]
+  },
+  {
+    "file": "src/runtime/JAudioPlaybackService.cpp",
+    "line": 403,
+    "following": [
+      ";",
+      "}",
+      "return",
+      "&",
+      "_stage_handle",
+      ";"
+    ]
+  },
+  {
+    "file": "src/runtime/RuntimeContext.cpp",
+    "line": 597,
+    "following": [
+      ";",
+      "}",
+      "}",
+      "RuntimeContext",
+      "::",
+      "~"
+    ]
+  },
+  {
+    "file": "src/runtime/jut/JutTexture.cpp",
+    "line": 61,
+    "following": [
+      ";",
+      "}",
+      "}",
+      "JUTTexture",
+      "::",
+      "~"
+    ]
+  },
+  {
+    "file": "src/scene/SceneDrawBufferService.cpp",
+    "line": 116,
+    "following": [
+      ";",
+      "}",
+      "auto",
+      "&",
+      "prototype",
+      "="
+    ]
+  },
+  {
+    "file": "src/scene/StageHostScene.cpp",
+    "line": 597,
+    "following": [
+      ";",
+      "}",
+      "_stage_audio_started",
+      "=",
+      "true",
+      ";"
+    ]
+  },
+  {
+    "file": "src/scene/AuthoredPlacementInstantiator.cpp",
+    "line": 743,
+    "following": [
+      ";",
+      "}",
+      "catch",
+      "(",
+      ".",
+      "."
+    ]
+  },
+  {
+    "file": "src/scene/AuthoredPlacementInstantiator.cpp",
+    "line": 751,
+    "following": [
+      ";",
+      "}",
+      "}",
+      "const",
+      "AuthoredPlacementInstantiationReport",
+      "&"
+    ]
+  },
+  {
+    "file": "src/scene/AuthoredPlacementInstantiator.cpp",
+    "line": 1005,
+    "following": [
+      ";",
+      "}",
+      "entry",
+      ".",
+      "outcome",
+      "="
+    ]
+  },
+  {
+    "file": "src/scene/AuthoredPlacementInstantiator.cpp",
+    "line": 1022,
+    "following": [
+      ";",
+      "}",
+      "catch",
+      "(",
+      ".",
+      "."
+    ]
+  },
+  {
+    "file": "src/scene/AuthoredPlacementInstantiator.cpp",
+    "line": 1030,
+    "following": [
+      ";",
+      "}",
+      "}",
+      "const",
+      "AuthoredPlacementInstantiationReport",
+      "&"
+    ]
+  },
+  {
+    "file": "src/scene/AuthoredPlacementInstantiator.cpp",
+    "line": 1080,
+    "following": [
+      ";",
+      "}",
+      "catch",
+      "(",
+      ".",
+      "."
+    ]
+  },
+  {
+    "file": "src/scene/AuthoredPlacementInstantiator.cpp",
+    "line": 1094,
+    "following": [
+      ";",
+      "}",
+      "}",
+      "entry",
+      ".",
+      "outcome"
+    ]
+  },
+  {
+    "file": "src/scene/NameObjChildOwner.hpp",
+    "line": 86,
+    "following": [
+      ";",
+      "}",
+      "}",
+      ";",
+      "if",
+      "constexpr"
+    ]
+  },
+  {
+    "file": "src/scene/NameObjLifecycleService.cpp",
+    "line": 174,
+    "following": [
+      ";",
+      "}",
+      "return",
+      "object",
+      ";",
+      "}"
+    ]
+  },
+  {
+    "file": "src/scene/NameObjLifecycleService.cpp",
+    "line": 187,
+    "following": [
+      ";",
+      "}",
+      "return",
+      "object",
+      ";",
+      "}"
+    ]
+  },
+  {
+    "file": "src/scene/NameObjLifecycleService.cpp",
+    "line": 209,
+    "following": [
+      ";",
+      "}",
+      "smgpc",
+      "::",
+      "compat",
+      "::"
+    ]
+  },
+  {
+    "file": "src/scene/NameObjLifecycleService.cpp",
+    "line": 223,
+    "following": [
+      ";",
+      "}",
+      "smgpc",
+      "::",
+      "compat",
+      "::"
+    ]
+  },
+  {
+    "file": "src/scene/GatewayDemoScene.cpp",
+    "line": 296,
+    "following": [
+      ";",
+      "}",
+      "}",
+      "void",
+      "derive_authored_actors",
+      "("
+    ]
+  },
+  {
+    "file": "src/scene/NameObjChildOwner.cpp",
+    "line": 120,
+    "following": [
+      ";",
+      "}",
+      "}",
+      "void",
+      "NameObjChildOwner",
+      "::"
+    ]
+  },
+  {
+    "file": "src/scene/NameObjChildOwner.cpp",
+    "line": 144,
+    "following": [
+      ";",
+      "}",
+      "}",
+      "}",
+      "void",
+      "NameObjChildOwner"
+    ]
+  },
+  {
+    "file": "src/scene/StageLightSceneBinding.cpp",
+    "line": 46,
+    "following": [
+      ";",
+      "}",
+      "}",
+      "StageLightSceneBinding",
+      "::",
+      "~"
+    ]
+  },
+  {
+    "file": "src/scene/FileSelectFarVisual.cpp",
+    "line": 123,
+    "following": [
+      ";",
+      "}",
+      "}",
+      "~",
+      "Impl",
+      "("
+    ]
+  }
+]

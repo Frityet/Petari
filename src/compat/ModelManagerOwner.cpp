@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "compat/ModelManagerOwner.hpp"
 
 #include "Game/LiveActor/ModelManager.hpp"
@@ -58,9 +59,9 @@ namespace smgpc::compat {
                                          const char* model, const char* animation, bool create_dl) {
         JkrHostAllocationScope host;
         if (!domain || domain != service.allocation_domain())
-            throw std::invalid_argument("Models and their holder-owned material buffers require the same retained scene heap");
+            aurora::throw_host_exception<std::invalid_argument>("Models and their holder-owned material buffers require the same retained scene heap");
         if (ResourceHolderService::active() != &service)
-            throw std::invalid_argument("ModelManager requires the active original resource service");
+            aurora::throw_host_exception<std::invalid_argument>("ModelManager requires the active original resource service");
         _storage = std::make_unique<Storage>();
         auto& state = *_storage;
         state.domain = std::move(domain);
@@ -77,7 +78,7 @@ namespace smgpc::compat {
     }
     void ModelManagerOwner::retain_lifetime_dependency(std::shared_ptr<void> dependency) {
         JkrHostAllocationScope host;
-        if (!dependency) throw std::invalid_argument("Model lifetime dependency is empty");
+        if (!dependency) aurora::throw_host_exception<std::invalid_argument>("Model lifetime dependency is empty");
         _storage->lifetime_dependencies.push_back(std::move(dependency));
     }
     ModelManagerOwner::~ModelManagerOwner() {

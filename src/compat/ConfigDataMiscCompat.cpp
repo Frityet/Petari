@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Game/System/ConfigDataMisc.hpp"
 
 #include <stdexcept>
@@ -73,7 +74,7 @@ u32 ConfigDataMisc::getSignature() const {
 
 s32 ConfigDataMisc::serialize(u8* pBuffer, u32 size) const {
     if (pBuffer == nullptr || size < 1U + sizeof(OSTime)) {
-        throw std::length_error("Retail MISC chunk destination is too small");
+        aurora::throw_host_exception<std::length_error>("Retail MISC chunk destination is too small");
     }
     pBuffer[0] = mFlag;
     write_be64(pBuffer + 1U, static_cast<u64>(mLastModified));

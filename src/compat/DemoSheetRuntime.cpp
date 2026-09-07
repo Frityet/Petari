@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "compat/DemoSheetRuntime.hpp"
 
 #include "resource/BcsvTable.hpp"
@@ -28,19 +29,19 @@ namespace smgpc::compat {
         void require_string_field(const smgpc::resource::BcsvTable &table, std::string_view name) {
             const auto index = table.field_index(name);
             if (!index.has_value()) {
-                throw std::runtime_error("missing required field '" + std::string(name) + "'");
+                aurora::throw_host_exception<std::runtime_error>("missing required field '" + std::string(name) + "'");
             }
 
             const auto type = table.fields()[*index].type;
             if (!is_string_field(type)) {
-                throw std::runtime_error("field '" + std::string(name) + "' has incompatible type " + smgpc::resource::bcsv_field_type_name(type));
+                aurora::throw_host_exception<std::runtime_error>("field '" + std::string(name) + "' has incompatible type " + smgpc::resource::bcsv_field_type_name(type));
             }
         }
 
         void validate_optional_string_field(const smgpc::resource::BcsvTable &table, std::string_view name) {
             const auto index = table.field_index(name);
             if (index.has_value() && !is_string_field(table.fields()[*index].type)) {
-                throw std::runtime_error("optional field '" + std::string(name) + "' has incompatible type " +
+                aurora::throw_host_exception<std::runtime_error>("optional field '" + std::string(name) + "' has incompatible type " +
                                          smgpc::resource::bcsv_field_type_name(table.fields()[*index].type));
             }
         }
@@ -48,7 +49,7 @@ namespace smgpc::compat {
         void validate_optional_integer_field(const smgpc::resource::BcsvTable &table, std::string_view name) {
             const auto index = table.field_index(name);
             if (index.has_value() && !is_integer_field(table.fields()[*index].type)) {
-                throw std::runtime_error("optional field '" + std::string(name) + "' has incompatible type " +
+                aurora::throw_host_exception<std::runtime_error>("optional field '" + std::string(name) + "' has incompatible type " +
                                          smgpc::resource::bcsv_field_type_name(table.fields()[*index].type));
             }
         }
@@ -61,7 +62,7 @@ namespace smgpc::compat {
         [[nodiscard]] std::string read_string(const smgpc::resource::BcsvTable &table, std::size_t row, std::string_view name) {
             const auto value = table.get_string(row, name);
             if (!value.has_value()) {
-                throw std::runtime_error("cannot read string field '" + std::string(name) + "' at row " + std::to_string(row));
+                aurora::throw_host_exception<std::runtime_error>("cannot read string field '" + std::string(name) + "' at row " + std::to_string(row));
             }
             return smgpc::resource::decode_cp932(*value);
         }
@@ -246,6 +247,7 @@ namespace smgpc::compat {
                 const auto table = smgpc::resource::BcsvTable::from_bytes(archive.file_data(*entry));
                 parse(table);
             } catch (const std::exception &error) {
+                const aurora::allocation::HostAllocationScope exception_storage;
                 throw DemoSheetParseError(file_name + ": " + error.what());
             }
         };

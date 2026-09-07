@@ -1,4 +1,6 @@
 #include "compat/DemoSheetRuntime.hpp"
+#include "compat/JkrAllocationDomain.hpp"
+#include "JSystem/JKernel/JKRHeap.hpp"
 #include "resource/BcsvTable.hpp"
 #include "resource/RarcArchive.hpp"
 
@@ -513,10 +515,20 @@ namespace {
     }
 
     void test_malformed_schemas_are_contextual_errors() {
+        const auto heaps = smgpc::compat::JkrHeapRuntime::create(4U << 20);
+        const auto free_before = heaps->root_heap().getFreeSize();
+        std::weak_ptr<smgpc::compat::JkrAllocationDomain> retired;
         const auto archive = make_single_file_rarc("DemoBrokenTime.bcsv", make_missing_part_name_bcsv());
         try {
+            const auto game = smgpc::compat::JkrAllocationDomain::create(heaps, 128U << 10);
+            retired = game;
+            const smgpc::compat::JkrAllocationScope scope(game);
             static_cast<void>(smgpc::compat::DemoSheetRuntime::load(archive, "Broken"));
         } catch (const smgpc::compat::DemoSheetParseError &error) {
+            require(retired.expired() && heaps->root_heap().getFreeSize() == free_before,
+                    "a contextual schema error must outlive and release its original Game arena");
+            require(JKRHeap::findFromRoot(const_cast<char*>(error.what())) == nullptr,
+                    "the exact custom schema exception must retain a host-owned message");
             const auto message = std::string_view(error.what());
             require(message.find("DemoBrokenTime.bcsv") != std::string_view::npos &&
                         message.find("PartName") != std::string_view::npos,
@@ -524,8 +536,14 @@ namespace {
             const auto camera_archive = make_single_file_rarc(
                 "DemoBadCamera.bcsv", make_camera_bad_optional_type_bcsv());
             try {
+                const auto game = smgpc::compat::JkrAllocationDomain::create(heaps, 128U << 10);
+                retired = game;
+                const smgpc::compat::JkrAllocationScope scope(game);
                 static_cast<void>(smgpc::compat::DemoSheetRuntime::load(camera_archive, "Bad"));
             } catch (const smgpc::compat::DemoSheetParseError &camera_error) {
+                require(retired.expired() && heaps->root_heap().getFreeSize() == free_before &&
+                            JKRHeap::findFromRoot(const_cast<char*>(camera_error.what())) == nullptr,
+                        "a nested custom schema error must release its arena and retain its message independently");
                 const auto camera_message = std::string_view(camera_error.what());
                 require(camera_message.find("DemoBadCamera.bcsv") != std::string_view::npos &&
                             camera_message.find("AnimCameraStartFrame") != std::string_view::npos,

@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "BcsvTable.hpp"
 
 #include <algorithm>
@@ -12,7 +13,7 @@ namespace smgpc::resource {
 
         [[nodiscard]] std::uint16_t read_be16(std::span<const std::uint8_t> data, std::size_t offset) {
             if (offset + 2U > data.size()) {
-                throw std::runtime_error("BCSV read past end of buffer");
+                aurora::throw_host_exception<std::runtime_error>("BCSV read past end of buffer");
             }
 
             return static_cast<std::uint16_t>((static_cast<std::uint16_t>(data[offset]) << 8U) | data[offset + 1U]);
@@ -20,7 +21,7 @@ namespace smgpc::resource {
 
         [[nodiscard]] std::uint32_t read_be32(std::span<const std::uint8_t> data, std::size_t offset) {
             if (offset + 4U > data.size()) {
-                throw std::runtime_error("BCSV read past end of buffer");
+                aurora::throw_host_exception<std::runtime_error>("BCSV read past end of buffer");
             }
 
             return (static_cast<std::uint32_t>(data[offset]) << 24U) | (static_cast<std::uint32_t>(data[offset + 1U]) << 16U) |
@@ -154,7 +155,7 @@ namespace smgpc::resource {
         }
 
         if (offset + width > _data.size()) {
-            throw std::runtime_error("BCSV raw field value is outside table");
+            aurora::throw_host_exception<std::runtime_error>("BCSV raw field value is outside table");
         }
         return std::span<const std::uint8_t>(_data).subspan(offset, width);
     }
@@ -180,7 +181,7 @@ namespace smgpc::resource {
             return sign_extend((read_be16(_data, offset) & field.mask) >> field.shift, masked_bit_width(field.mask, field.shift, 16U));
         case BcsvFieldType::Int8:
             if (offset >= _data.size()) {
-                throw std::runtime_error("BCSV byte value is outside table");
+                aurora::throw_host_exception<std::runtime_error>("BCSV byte value is outside table");
             }
             return sign_extend((_data[offset] & field.mask) >> field.shift, masked_bit_width(field.mask, field.shift, 8U));
         default:
@@ -208,7 +209,7 @@ namespace smgpc::resource {
             return (read_be16(_data, offset) & field.mask) >> field.shift;
         case BcsvFieldType::Int8:
             if (offset >= _data.size()) {
-                throw std::runtime_error("BCSV byte value is outside table");
+                aurora::throw_host_exception<std::runtime_error>("BCSV byte value is outside table");
             }
             return (_data[offset] & field.mask) >> field.shift;
         default:
@@ -273,7 +274,7 @@ namespace smgpc::resource {
 
     std::string BcsvTable::value_string(std::size_t entry_index, std::size_t field_index) const {
         if (field_index >= _fields.size()) {
-            throw std::runtime_error("BCSV field index is outside table");
+            aurora::throw_host_exception<std::runtime_error>("BCSV field index is outside table");
         }
 
         const auto &field = _fields[field_index];
@@ -315,7 +316,7 @@ namespace smgpc::resource {
     void BcsvTable::parse() {
         const auto bytes = std::span<const std::uint8_t>(_data);
         if (bytes.size() < 0x10U) {
-            throw std::runtime_error("BCSV data is too short");
+            aurora::throw_host_exception<std::runtime_error>("BCSV data is too short");
         }
 
         _entry_count = read_be32(bytes, 0x00U);
@@ -325,10 +326,10 @@ namespace smgpc::resource {
 
         constexpr auto fields_offset = std::size_t {0x10U};
         if (fields_offset + static_cast<std::size_t>(field_count) * 0x0cU > bytes.size()) {
-            throw std::runtime_error("BCSV field table is truncated");
+            aurora::throw_host_exception<std::runtime_error>("BCSV field table is truncated");
         }
         if (_data_offset + static_cast<std::size_t>(_entry_count) * _entry_size > bytes.size()) {
-            throw std::runtime_error("BCSV entry data is truncated");
+            aurora::throw_host_exception<std::runtime_error>("BCSV entry data is truncated");
         }
 
         _fields.clear();
@@ -358,7 +359,7 @@ namespace smgpc::resource {
                                        field.type == BcsvFieldType::Int16                                             ? 2U :
                                                                                                                         4U;
             if (static_cast<std::uint32_t>(field.offset) + minimum_width > _entry_size) {
-                throw std::runtime_error("BCSV field offset is outside entry");
+                aurora::throw_host_exception<std::runtime_error>("BCSV field offset is outside entry");
             }
         }
 
@@ -367,7 +368,7 @@ namespace smgpc::resource {
 
     std::size_t BcsvTable::entry_offset(std::size_t entry_index) const {
         if (entry_index >= _entry_count) {
-            throw std::runtime_error("BCSV entry index is outside table");
+            aurora::throw_host_exception<std::runtime_error>("BCSV entry index is outside table");
         }
 
         return _data_offset + entry_index * _entry_size;
@@ -379,7 +380,7 @@ namespace smgpc::resource {
 
     std::string BcsvTable::read_c_string(std::size_t offset) const {
         if (offset >= _data.size()) {
-            throw std::runtime_error("BCSV string offset is outside table");
+            aurora::throw_host_exception<std::runtime_error>("BCSV string offset is outside table");
         }
 
         auto end = offset;
@@ -387,7 +388,7 @@ namespace smgpc::resource {
             ++end;
         }
         if (end == _data.size()) {
-            throw std::runtime_error("BCSV string is not null terminated");
+            aurora::throw_host_exception<std::runtime_error>("BCSV string is not null terminated");
         }
 
         return std::string(reinterpret_cast<const char *>(_data.data() + offset), end - offset);

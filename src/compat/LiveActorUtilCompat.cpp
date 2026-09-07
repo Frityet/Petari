@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Game/Util/LiveActorUtil.hpp"
 
 #include <algorithm>
@@ -227,7 +228,7 @@ namespace MR {
 
     bool isStep(const LiveActor* pActor, s32 step) {
         if (pActor == nullptr) {
-            throw std::invalid_argument("A LiveActor nerve comparison requires a real actor.");
+            aurora::throw_host_exception<std::invalid_argument>("A LiveActor nerve comparison requires a real actor.");
         }
         return pActor->getNerveStep() == step;
     }
@@ -238,42 +239,42 @@ namespace MR {
 
     bool isLessStep(const LiveActor* pActor, s32 step) {
         if (pActor == nullptr) {
-            throw std::invalid_argument("A LiveActor nerve comparison requires a real actor.");
+            aurora::throw_host_exception<std::invalid_argument>("A LiveActor nerve comparison requires a real actor.");
         }
         return pActor->getNerveStep() < step;
     }
 
     bool isLessEqualStep(const LiveActor* pActor, s32 step) {
         if (pActor == nullptr) {
-            throw std::invalid_argument("A LiveActor nerve comparison requires a real actor.");
+            aurora::throw_host_exception<std::invalid_argument>("A LiveActor nerve comparison requires a real actor.");
         }
         return pActor->getNerveStep() <= step;
     }
 
     bool isGreaterStep(const LiveActor* pActor, s32 step) {
         if (pActor == nullptr) {
-            throw std::invalid_argument("A LiveActor nerve comparison requires a real actor.");
+            aurora::throw_host_exception<std::invalid_argument>("A LiveActor nerve comparison requires a real actor.");
         }
         return pActor->getNerveStep() > step;
     }
 
     bool isGreaterEqualStep(const LiveActor* pActor, s32 step) {
         if (pActor == nullptr) {
-            throw std::invalid_argument("A LiveActor nerve comparison requires a real actor.");
+            aurora::throw_host_exception<std::invalid_argument>("A LiveActor nerve comparison requires a real actor.");
         }
         return pActor->getNerveStep() >= step;
     }
 
     bool isNewNerve(const LiveActor* pActor) {
         if (pActor == nullptr) {
-            throw std::invalid_argument("A LiveActor nerve query requires a real actor.");
+            aurora::throw_host_exception<std::invalid_argument>("A LiveActor nerve query requires a real actor.");
         }
         return pActor->getNerveStep() < 0;
     }
 
     f32 calcNerveRate(const LiveActor* pActor, s32 stepMax) {
         if (pActor == nullptr) {
-            throw std::invalid_argument("A LiveActor nerve rate requires a real actor.");
+            aurora::throw_host_exception<std::invalid_argument>("A LiveActor nerve rate requires a real actor.");
         }
         return stepMax <= 0
                    ? 1.0F
@@ -283,7 +284,7 @@ namespace MR {
 
     f32 calcNerveEaseInRate(const LiveActor *pActor, s32 stepMax) {
         if (pActor == nullptr) {
-            throw std::invalid_argument("A LiveActor nerve rate requires a real actor.");
+            aurora::throw_host_exception<std::invalid_argument>("A LiveActor nerve rate requires a real actor.");
         }
         const auto rate = stepMax <= 0
                               ? 1.0F

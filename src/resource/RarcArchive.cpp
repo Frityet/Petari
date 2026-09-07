@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "RarcArchive.hpp"
 
 #include "Yaz0.hpp"
@@ -16,7 +17,7 @@ namespace smgpc::resource {
 
         [[nodiscard]] std::uint16_t read_be16(std::span<const std::uint8_t> data, std::size_t offset) {
             if (offset + 2U > data.size()) {
-                throw std::runtime_error("RARC read past end of buffer");
+                aurora::throw_host_exception<std::runtime_error>("RARC read past end of buffer");
             }
 
             return static_cast<std::uint16_t>((static_cast<std::uint16_t>(data[offset]) << 8U) | static_cast<std::uint16_t>(data[offset + 1U]));
@@ -24,7 +25,7 @@ namespace smgpc::resource {
 
         [[nodiscard]] std::uint32_t read_be24(std::span<const std::uint8_t> data, std::size_t offset) {
             if (offset + 3U > data.size()) {
-                throw std::runtime_error("RARC read past end of buffer");
+                aurora::throw_host_exception<std::runtime_error>("RARC read past end of buffer");
             }
 
             return (static_cast<std::uint32_t>(data[offset]) << 16U) | (static_cast<std::uint32_t>(data[offset + 1U]) << 8U) | static_cast<std::uint32_t>(data[offset + 2U]);
@@ -32,7 +33,7 @@ namespace smgpc::resource {
 
         [[nodiscard]] std::uint32_t read_be32(std::span<const std::uint8_t> data, std::size_t offset) {
             if (offset + 4U > data.size()) {
-                throw std::runtime_error("RARC read past end of buffer");
+                aurora::throw_host_exception<std::runtime_error>("RARC read past end of buffer");
             }
 
             return (static_cast<std::uint32_t>(data[offset]) << 24U) | (static_cast<std::uint32_t>(data[offset + 1U]) << 16U) | (static_cast<std::uint32_t>(data[offset + 2U]) << 8U) | static_cast<std::uint32_t>(data[offset + 3U]);
@@ -41,20 +42,20 @@ namespace smgpc::resource {
         [[nodiscard]] std::vector<std::uint8_t> read_file(const std::filesystem::path &path) {
             auto file = std::ifstream(path, std::ios::binary);
             if (!file) {
-                throw std::runtime_error("Cannot open RARC archive " + path.string());
+                aurora::throw_host_exception<std::runtime_error>("Cannot open RARC archive " + path.string());
             }
 
             file.seekg(0, std::ios::end);
             const auto size = file.tellg();
             if (size < 0) {
-                throw std::runtime_error("Cannot determine RARC archive size " + path.string());
+                aurora::throw_host_exception<std::runtime_error>("Cannot determine RARC archive size " + path.string());
             }
 
             auto bytes = std::vector<std::uint8_t>(static_cast<std::size_t>(size));
             file.seekg(0, std::ios::beg);
             file.read(reinterpret_cast<char *>(bytes.data()), static_cast<std::streamsize>(bytes.size()));
             if (!file) {
-                throw std::runtime_error("Cannot read RARC archive " + path.string());
+                aurora::throw_host_exception<std::runtime_error>("Cannot read RARC archive " + path.string());
             }
 
             return bytes;
@@ -191,7 +192,7 @@ namespace smgpc::resource {
 
     std::span<const std::uint8_t> RarcArchive::file_data(const RarcEntry &entry) const {
         if (entry.data_offset + entry.data_size > _bytes.size()) {
-            throw std::runtime_error("RARC file data is outside archive");
+            aurora::throw_host_exception<std::runtime_error>("RARC file data is outside archive");
         }
 
         return std::span<const std::uint8_t>(_bytes).subspan(entry.data_offset, entry.data_size);
@@ -200,7 +201,7 @@ namespace smgpc::resource {
     std::span<const std::uint8_t> RarcArchive::file_data(std::string_view path) const {
         const auto *entry = find(path);
         if (entry == nullptr) {
-            throw std::runtime_error("RARC file does not exist: " + std::string(path));
+            aurora::throw_host_exception<std::runtime_error>("RARC file does not exist: " + std::string(path));
         }
 
         return file_data(*entry);
@@ -209,7 +210,7 @@ namespace smgpc::resource {
     std::span<const std::uint8_t> RarcArchive::file_data_normalized(std::string_view path) const {
         const auto *entry = find_normalized(path);
         if (entry == nullptr) {
-            throw std::runtime_error("RARC file does not exist: " + std::string(path));
+            aurora::throw_host_exception<std::runtime_error>("RARC file does not exist: " + std::string(path));
         }
 
         return file_data(*entry);
@@ -218,7 +219,7 @@ namespace smgpc::resource {
     std::span<const std::uint8_t> RarcArchive::file_data_by_basename(std::string_view path) const {
         const auto *entry = find_by_basename(path);
         if (entry == nullptr) {
-            throw std::runtime_error("RARC file does not exist: " + std::string(path));
+            aurora::throw_host_exception<std::runtime_error>("RARC file does not exist: " + std::string(path));
         }
 
         return file_data(*entry);
@@ -227,7 +228,7 @@ namespace smgpc::resource {
     std::span<const std::uint8_t> RarcArchive::resource_data(std::string_view path) const {
         const auto *entry = find_resource(path);
         if (entry == nullptr) {
-            throw std::runtime_error("RARC resource does not exist: " + std::string(path));
+            aurora::throw_host_exception<std::runtime_error>("RARC resource does not exist: " + std::string(path));
         }
 
         return file_data(*entry);
@@ -241,13 +242,13 @@ namespace smgpc::resource {
     void RarcArchive::parse() {
         const auto bytes = std::span<const std::uint8_t>(_bytes);
         if (bytes.size() < 0x40U || read_be32(bytes, 0U) != RARC_MAGIC) {
-            throw std::runtime_error("Archive is not a decompressed RARC file");
+            aurora::throw_host_exception<std::runtime_error>("Archive is not a decompressed RARC file");
         }
 
         _header_size = read_be32(bytes, 0x08U);
         _file_data_start = _header_size + read_be32(bytes, 0x0CU);
         if (_header_size + 0x20U > bytes.size()) {
-            throw std::runtime_error("RARC info block is outside archive");
+            aurora::throw_host_exception<std::runtime_error>("RARC info block is outside archive");
         }
 
         const auto info_offset = _header_size;
@@ -258,7 +259,7 @@ namespace smgpc::resource {
         _string_table_offset = info_offset + read_be32(bytes, info_offset + 0x14U);
 
         if (_dir_offset + (_dir_count * 0x10U) > bytes.size() || _file_offset + (_file_count * 0x14U) > bytes.size() || _string_table_offset > bytes.size()) {
-            throw std::runtime_error("RARC table is outside archive");
+            aurora::throw_host_exception<std::runtime_error>("RARC table is outside archive");
         }
 
         walk_directory(0U, "");
@@ -305,7 +306,7 @@ namespace smgpc::resource {
     std::string RarcArchive::file_name(std::uint32_t name_offset) const {
         const auto start = _string_table_offset + name_offset;
         if (start >= _bytes.size()) {
-            throw std::runtime_error("RARC string offset is outside archive");
+            aurora::throw_host_exception<std::runtime_error>("RARC string offset is outside archive");
         }
 
         auto end = start;
@@ -313,7 +314,7 @@ namespace smgpc::resource {
             ++end;
         }
         if (end == _bytes.size()) {
-            throw std::runtime_error("RARC string is not null terminated");
+            aurora::throw_host_exception<std::runtime_error>("RARC string is not null terminated");
         }
 
         return std::string(reinterpret_cast<const char *>(_bytes.data() + start), end - start);
@@ -321,7 +322,7 @@ namespace smgpc::resource {
 
     std::span<const std::uint8_t> RarcArchive::file_entry(std::uint32_t file_index) const {
         if (file_index >= _file_count) {
-            throw std::runtime_error("RARC file index is outside table");
+            aurora::throw_host_exception<std::runtime_error>("RARC file index is outside table");
         }
 
         return std::span<const std::uint8_t>(_bytes).subspan(_file_offset + file_index * 0x14U, 0x14U);
@@ -329,7 +330,7 @@ namespace smgpc::resource {
 
     std::span<const std::uint8_t> RarcArchive::dir_entry(std::uint32_t dir_index) const {
         if (dir_index >= _dir_count) {
-            throw std::runtime_error("RARC directory index is outside table");
+            aurora::throw_host_exception<std::runtime_error>("RARC directory index is outside table");
         }
 
         return std::span<const std::uint8_t>(_bytes).subspan(_dir_offset + dir_index * 0x10U, 0x10U);

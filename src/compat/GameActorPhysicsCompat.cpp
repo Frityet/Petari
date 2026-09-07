@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Game/Util/ActorMovementUtil.hpp"
 #include "Game/Util/ActorShadowUtil.hpp"
 #include "Game/Util/AreaObjUtil.hpp"
@@ -28,23 +29,23 @@
 
 namespace {
     [[noreturn]] void throw_scene_playing_result_unavailable() {
-        throw std::logic_error("ScenePlayingResult is unavailable in the active scene.");
+        aurora::throw_host_exception<std::logic_error>("ScenePlayingResult is unavailable in the active scene.");
     }
 
     [[noreturn]] void throw_game_scene_layout_unavailable() {
-        throw std::logic_error("GameSceneLayoutHolder is unavailable in the active scene.");
+        aurora::throw_host_exception<std::logic_error>("GameSceneLayoutHolder is unavailable in the active scene.");
     }
 
     LiveActor &require_actor(LiveActor *actor) {
         if (actor == nullptr) {
-            throw std::invalid_argument("Actor utility requires a LiveActor.");
+            aurora::throw_host_exception<std::invalid_argument>("Actor utility requires a LiveActor.");
         }
         return *actor;
     }
 
     const LiveActor &require_actor(const LiveActor *actor) {
         if (actor == nullptr) {
-            throw std::invalid_argument("Actor utility requires a LiveActor.");
+            aurora::throw_host_exception<std::invalid_argument>("Actor utility requires a LiveActor.");
         }
         return *actor;
     }
@@ -54,7 +55,7 @@ namespace {
         (void)require_actor(actor);
         auto *controller = smgpc::compat::actor_shadow_controller_runtime_state(actor, name);
         if (controller == nullptr) {
-            throw std::logic_error("Actor has no matching shadow controller.");
+            aurora::throw_host_exception<std::logic_error>("Actor has no matching shadow controller.");
         }
         return *controller;
     }
@@ -69,10 +70,10 @@ namespace {
 
         auto *shadow = smgpc::compat::actor_shadow_runtime_state(actor);
         if (shadow == nullptr) {
-            throw std::logic_error("Actor has no initialized shadow controller list.");
+            aurora::throw_host_exception<std::logic_error>("Actor has no initialized shadow controller list.");
         }
         if (shadow->controllers.empty()) {
-            throw std::logic_error("Actor has no shadow controllers.");
+            aurora::throw_host_exception<std::logic_error>("Actor has no shadow controllers.");
         }
         for (auto &controller : shadow->controllers) {
             operation(controller);
@@ -83,7 +84,7 @@ namespace {
         (void)require_actor(actor);
         auto *shadow = smgpc::compat::actor_shadow_runtime_state(actor);
         if (shadow == nullptr) {
-            throw std::logic_error("Actor has no initialized shadow controller list.");
+            aurora::throw_host_exception<std::logic_error>("Actor has no initialized shadow controller list.");
         }
         return *shadow;
     }
@@ -110,7 +111,7 @@ namespace {
 
     TVec3f &require_vector(TVec3f *vector) {
         if (vector == nullptr) {
-            throw std::invalid_argument("Actor utility requires an output vector.");
+            aurora::throw_host_exception<std::invalid_argument>("Actor utility requires an output vector.");
         }
         return *vector;
     }
@@ -118,13 +119,13 @@ namespace {
     const TVec3f &require_player_position() {
         const auto *position = MR::getPlayerPos();
         if (position == nullptr) {
-            throw std::logic_error("Player position is unavailable.");
+            aurora::throw_host_exception<std::logic_error>("Player position is unavailable.");
         }
         return *position;
     }
 
     [[noreturn]] void throw_shadow_projection_unavailable() {
-        throw std::logic_error("Shadow-aware clipping is unavailable without real projection and draw behavior.");
+        aurora::throw_host_exception<std::logic_error>("Shadow-aware clipping is unavailable without real projection and draw behavior.");
     }
 }  // namespace
 
@@ -156,13 +157,13 @@ namespace MR {
     }
 
     void resetPosition(LiveActor *, const char *) {
-        throw std::logic_error("Named-position reset is unavailable without NamePosHolder.");
+        aurora::throw_host_exception<std::logic_error>("Named-position reset is unavailable without NamePosHolder.");
     }
 
     bool isInDeath(const LiveActor *pActor, const TVec3f &rOffset) {
         (void)require_actor(pActor);
         (void)rOffset;
-        throw std::logic_error("DeathArea queries are unavailable without parsed AreaObj ownership.");
+        aurora::throw_host_exception<std::logic_error>("DeathArea queries are unavailable without parsed AreaObj ownership.");
     }
 
     void calcActorAxisY(TVec3f *pOut, const LiveActor *pActor) {
@@ -177,7 +178,7 @@ namespace MR {
         const auto &actor = require_actor(pActor);
         auto *player = smgpc::compat::active_player_system_for_player_util();
         if (player == nullptr || player->attached_actor() == nullptr) {
-            throw std::logic_error("Player state is unavailable.");
+            aurora::throw_host_exception<std::logic_error>("Player state is unavailable.");
         }
         return !player->is_player_hidden() &&
                actor.mPosition.squareDistance(require_player_position()) < (distance * distance);
@@ -299,15 +300,15 @@ namespace MR {
 
     MirrorActor *tryCreateMirrorActor(LiveActor *pActor, const char *) {
         (void)require_actor(pActor);
-        throw std::logic_error("MirrorActor creation is unavailable without parsed MirrorArea ownership and mirror rendering.");
+        aurora::throw_host_exception<std::logic_error>("MirrorActor creation is unavailable without parsed MirrorArea ownership and mirror rendering.");
     }
 
     void setBinderExceptSensorType(LiveActor *pActor, const TVec3f *pCenter, f32) {
         (void)require_actor(pActor);
         if (pCenter == nullptr) {
-            throw std::invalid_argument("Clip-area binder filtering requires a center position.");
+            aurora::throw_host_exception<std::invalid_argument>("Clip-area binder filtering requires a center position.");
         }
-        throw std::logic_error(
+        aurora::throw_host_exception<std::logic_error>(
             "Clip-area binder filtering is unavailable without CollisionParts sensor ownership and ClipAreaHolder.");
     }
 
@@ -321,7 +322,7 @@ namespace MR {
         if (contacts == nullptr || !contacts->roof || !contacts->ground) {
             return false;
         }
-        throw std::logic_error(
+        aurora::throw_host_exception<std::logic_error>(
             "Pressed roof/ground resolution is unavailable without bound sensors and moving CollisionParts force data.");
     }
 
@@ -353,7 +354,7 @@ namespace MR {
         const auto &actor = require_actor(pActor);
         const auto *contacts = smgpc::compat::actor_binder_contacts(&actor);
         if (contacts == nullptr || !contacts->ground) {
-            throw std::logic_error("Ground normal is unavailable without a real Binder ground contact.");
+            aurora::throw_host_exception<std::logic_error>("Ground normal is unavailable without a real Binder ground contact.");
         }
         return &contacts->ground_normal;
     }
@@ -362,7 +363,7 @@ namespace MR {
         const auto &actor = require_actor(pActor);
         const auto *contacts = smgpc::compat::actor_binder_contacts(&actor);
         if (contacts == nullptr || !contacts->wall) {
-            throw std::logic_error("Wall normal is unavailable without a real Binder wall contact.");
+            aurora::throw_host_exception<std::logic_error>("Wall normal is unavailable without a real Binder wall contact.");
         }
         return &contacts->wall_normal;
     }
@@ -371,7 +372,7 @@ namespace MR {
         const auto &actor = require_actor(pActor);
         const auto *contacts = smgpc::compat::actor_binder_contacts(&actor);
         if (contacts == nullptr || !contacts->roof) {
-            throw std::logic_error("Roof normal is unavailable without a real Binder roof contact.");
+            aurora::throw_host_exception<std::logic_error>("Roof normal is unavailable without a real Binder roof contact.");
         }
         return &contacts->roof_normal;
     }
@@ -430,7 +431,7 @@ namespace MR {
 
     void setShadowDropLength(LiveActor *actor, const char *name, f32 length) {
         if (!std::isfinite(length) || length < 0.0F) {
-            throw std::invalid_argument("Actor shadow drop length must be finite and non-negative.");
+            aurora::throw_host_exception<std::invalid_argument>("Actor shadow drop length must be finite and non-negative.");
         }
         require_shadow_controller(actor, name).drop_length = length;
     }
@@ -518,7 +519,7 @@ namespace MR {
     }
 
     void declarePowerStarCoin100() {
-        throw std::logic_error("EventPowerStar declaration is unavailable.");
+        aurora::throw_host_exception<std::logic_error>("EventPowerStar declaration is unavailable.");
     }
 
     void createPurpleCoinCounter() {

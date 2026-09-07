@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "SceneScheduler.hpp"
 #include "scene/SceneDrawBufferService.hpp"
 #include "Game/System/DrawBufferHolder.hpp"
@@ -514,7 +515,7 @@ namespace smgpc::runtime {
     SceneSchedulerAllocationBinding::SceneSchedulerAllocationBinding(
         SceneScheduler& scheduler, std::shared_ptr<smgpc::compat::JkrAllocationDomain> domain)
         : _scheduler(&scheduler), _domain(std::move(domain)), _previous(scheduler._allocation_domain) {
-        if (!_domain) throw std::invalid_argument("Scene callback allocation requires a retained Game domain");
+        if (!_domain) aurora::throw_host_exception<std::invalid_argument>("Scene callback allocation requires a retained Game domain");
         scheduler._allocation_domain = _domain;
     }
 
@@ -534,14 +535,14 @@ namespace smgpc::runtime {
     }
 
     void SceneScheduler::allocate_draw_buffers() {
-        if (!_draw_buffers->has_draw_buffers()) throw std::logic_error("Original draw buffers need an explicit scene construction owner");
+        if (!_draw_buffers->has_draw_buffers()) aurora::throw_host_exception<std::logic_error>("Original draw buffers need an explicit scene construction owner");
         _draw_buffers->allocate_actor_lists();
         refresh_draw_buffer_activation();
     }
 
     void SceneScheduler::retire_draw_buffers() {
         if (_draw_buffers && _draw_buffers->registration_count() != 0)
-            throw std::logic_error("Remove every actor registration before retiring original scene draw buffers");
+            aurora::throw_host_exception<std::logic_error>("Remove every actor registration before retiring original scene draw buffers");
         _draw_buffers->retire_draw_buffers();
     }
 
@@ -607,7 +608,7 @@ namespace smgpc::runtime {
             }
         }
         if (!found) {
-            throw std::logic_error("Cannot connect an unregistered NameObj to draw.");
+            aurora::throw_host_exception<std::logic_error>("Cannot connect an unregistered NameObj to draw.");
         }
     }
 
@@ -621,7 +622,7 @@ namespace smgpc::runtime {
             }
         }
         if (!found) {
-            throw std::logic_error("Cannot disconnect an unregistered NameObj from draw.");
+            aurora::throw_host_exception<std::logic_error>("Cannot disconnect an unregistered NameObj from draw.");
         }
     }
 
@@ -715,7 +716,7 @@ namespace smgpc::runtime {
         smgpc::compat::JkrHostAllocationScope host;
         if (auto *entry = find_entry(SceneEntryKind::LiveActorModel, &actor)) {
             if (entry->draw_buffer_type != draw_buffer_type)
-                throw std::logic_error("An original draw registration cannot change categories before retirement");
+                aurora::throw_host_exception<std::logic_error>("An original draw registration cannot change categories before retirement");
             entry->movement_type = movement_type;
             entry->calc_anim_type = calc_anim_type;
             entry->draw_type = draw_type;
@@ -723,7 +724,7 @@ namespace smgpc::runtime {
             return;
         }
         if (draw_buffer_type >= 0) {
-            if (!_draw_buffers) throw std::logic_error("Construct a scene draw holder before registering a model");
+            if (!_draw_buffers) aurora::throw_host_exception<std::logic_error>("Construct a scene draw holder before registering a model");
             _draw_buffers->register_actor(actor, draw_buffer_type, smgpc::compat::retain_actor_model_owner(&actor));
         }
         try {
@@ -977,7 +978,7 @@ namespace smgpc::runtime {
         smgpc::compat::JkrHostAllocationScope host;
         if (!_draw_buffers->has_draw_buffers()) return;
         if (!_draw_buffers->is_allocated())
-            throw std::logic_error("Scene construction must allocate draw lists before view entry");
+            aurora::throw_host_exception<std::logic_error>("Scene construction must allocate draw lists before view entry");
         if (auto* runtime = RuntimeContext::try_instance(); runtime && runtime->scene_camera_pose()) {
             const auto camera = *runtime->scene_camera_pose();
             for (const auto& registered : entries_snapshot()) {
@@ -1246,7 +1247,7 @@ namespace smgpc::runtime {
     void SceneScheduler::execute_draw_buffer(const smgpc::camera::CameraPose &camera_pose, s32 draw_buffer_type, SceneDrawBufferPass pass) {
         smgpc::compat::JkrHostAllocationScope host;
         if (!_draw_buffers->has_draw_buffers()) return;
-        if (!_draw_buffers->is_allocated()) throw std::logic_error("Draw lists have not completed scene construction");
+        if (!_draw_buffers->is_allocated()) aurora::throw_host_exception<std::logic_error>("Draw lists have not completed scene construction");
         refresh_draw_buffer_activation();
         smgpc::compat::SceneJ3dScope commands;
         invoke_game_callback(_allocation_domain, [&] {
@@ -1266,7 +1267,7 @@ namespace smgpc::runtime {
         const smgpc::render::Model3DFor2DProjection &projection,
         s32 draw_buffer_type, SceneDrawBufferPass pass) {
         if (!draw_buffer_uses_model_3d_for_2d(draw_buffer_type))
-            throw std::logic_error("Only original 2D camera categories use the model 3D-for-2D pass");
+            aurora::throw_host_exception<std::logic_error>("Only original 2D camera categories use the model 3D-for-2D pass");
         execute_draw_buffer({}, draw_buffer_type, pass);
     }
 

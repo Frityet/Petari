@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "J3dAnimationResource.hpp"
 
 #include "J3dNameData.hpp"
@@ -33,7 +34,7 @@ namespace smgpc::resource {
 
         void require_range(std::size_t size, std::size_t offset, std::size_t count) {
             if (offset > size || count > size - offset)
-                throw std::runtime_error("J3D animation range exceeds its containing block");
+                aurora::throw_host_exception<std::runtime_error>("J3D animation range exceeds its containing block");
         }
         struct Reader {
             std::span<const std::uint8_t> bytes;
@@ -63,7 +64,7 @@ namespace smgpc::resource {
                 if (count == 0)
                     return {};
                 if (at == 0)
-                    throw std::runtime_error("J3D animation nonempty table has a null offset");
+                    aurora::throw_host_exception<std::runtime_error>("J3D animation nonempty table has a null offset");
                 require_range(bytes.size(), at, count * sizeof(T));
                 std::vector<T> result;
                 result.reserve(count);
@@ -91,17 +92,17 @@ namespace smgpc::resource {
             require_range(values.size(), key.mOffset, key.mMaxFrame * stride);
             float previous = static_cast<float>(values[key.mOffset]);
             if (!std::isfinite(previous))
-                throw std::runtime_error("J3D animation key time is not finite");
+                aurora::throw_host_exception<std::runtime_error>("J3D animation key time is not finite");
             for (std::size_t i = 1; i < key.mMaxFrame; ++i) {
                 const float time = static_cast<float>(values[key.mOffset + i * stride]);
                 if (!std::isfinite(time) || time < previous)
-                    throw std::runtime_error("J3D animation key times are not ordered");
+                    aurora::throw_host_exception<std::runtime_error>("J3D animation key times are not ordered");
                 previous = time;
             }
         }
         std::size_t full_extent(std::uint16_t offset, std::uint16_t count) {
             if (count == 0)
-                throw std::runtime_error("J3D full animation channel has no readable sample");
+                aurora::throw_host_exception<std::runtime_error>("J3D full animation channel has no readable sample");
             return std::size_t(offset) + count;
         }
 
@@ -143,20 +144,20 @@ namespace smgpc::resource {
             void *names(std::uint32_t offset, std::size_t required) {
                 if (offset == 0) {
                     if (required)
-                        throw std::runtime_error("J3D animation has no material name table");
+                        aurora::throw_host_exception<std::runtime_error>("J3D animation has no material name table");
                     return nullptr;
                 }
                 require_range(input.bytes.size(), offset, 4);
                 J3dNameData names(input.bytes.subspan(offset));
                 if (names.resource()->mEntryNum < required)
-                    throw std::runtime_error("J3D animation material names do not cover its update records");
+                    aurora::throw_host_exception<std::runtime_error>("J3D animation material names do not cover its update records");
                 return builder.pointer_offset(builder.append_bytes(names.bytes(), alignof(ResNTAB)));
             }
             void *vectors(std::uint32_t offset, std::size_t count) {
                 if (count == 0)
                     return nullptr;
                 if (offset == 0)
-                    throw std::runtime_error("J3D animation centers have a null offset");
+                    aurora::throw_host_exception<std::runtime_error>("J3D animation centers have a null offset");
                 require_range(input.bytes.size(), offset, count * 12);
                 std::vector<Vec> values;
                 values.reserve(count);
@@ -172,7 +173,7 @@ namespace smgpc::resource {
         template <class Table, class Read>
         std::vector<Table> read_tables(Reader r, std::uint32_t offset, std::size_t count, std::size_t stride, Read read) {
             if (count && offset == 0)
-                throw std::runtime_error("J3D animation descriptors have a null offset");
+                aurora::throw_host_exception<std::runtime_error>("J3D animation descriptors have a null offset");
             if (count)
                 require_range(r.bytes.size(), offset, count * stride);
             std::vector<Table> tables;
@@ -653,13 +654,13 @@ namespace smgpc::resource {
                     if (i + 1 < file.mBlockNum)
                         require_range(r.bytes.size(), at, size);
                     if (is_animation_block(type) && type != expected)
-                        throw std::runtime_error("J3D animation block does not match its declared animation family");
+                        aurora::throw_host_exception<std::runtime_error>("J3D animation block does not match its declared animation family");
                     found |= type == expected;
                     blocks.push_back(decode_block({r.bytes.subspan(at)}));
                     at += size;
                 }
                 if (!found)
-                    throw std::runtime_error("J3D animation has no matching data block");
+                    aurora::throw_host_exception<std::runtime_error>("J3D animation has no matching data block");
                 if (!blocks.empty())
                     file.mFirstBlock = *blocks.front()->header();
             }
@@ -699,7 +700,7 @@ namespace smgpc::resource {
         std::vector<std::unique_ptr<LoadedData>> loads;
         explicit Storage(std::span<const std::uint8_t> bytes) : source(bytes.begin(), bytes.end()) {
             if (source.empty())
-                throw std::runtime_error("J3D animation source is empty");
+                aurora::throw_host_exception<std::runtime_error>("J3D animation source is empty");
         }
         ~Storage() {
             compat::JkrHostAllocationScope host;
@@ -739,7 +740,7 @@ namespace smgpc::resource {
         std::lock_guard lock(r.mutex);
         _storage->generation = r.next_generation++;
         if (_storage->generation == 0)
-            throw std::overflow_error("J3D animation registration identity exhausted");
+            aurora::throw_host_exception<std::overflow_error>("J3D animation registration identity exhausted");
         r.resources.emplace(_storage->source.data(), Registry::Entry{_storage, _storage->generation, 1});
     }
     struct J3dAnimationSourceRegistration::State {
@@ -765,20 +766,20 @@ namespace smgpc::resource {
     J3dAnimationSourceRegistration J3dAnimationResource::register_source(std::span<const std::uint8_t> alias) {
         compat::JkrHostAllocationScope host;
         if (!_storage || alias.size() != _storage->source.size() || !std::equal(alias.begin(), alias.end(), _storage->source.begin()))
-            throw std::invalid_argument("J3D animation alias does not match the complete retained source");
+            aurora::throw_host_exception<std::invalid_argument>("J3D animation alias does not match the complete retained source");
         auto &r = registry();
         std::lock_guard lock(r.mutex);
         const auto found = r.resources.find(alias.data());
         std::uint64_t generation;
         if (found != r.resources.end()) {
             if (found->second.owner.lock().get() != _storage.get())
-                throw std::logic_error("J3D animation source identity is registered to a different owner");
+                aurora::throw_host_exception<std::logic_error>("J3D animation source identity is registered to a different owner");
             generation = found->second.generation;
             ++found->second.references;
         } else {
             generation = r.next_generation++;
             if (generation == 0)
-                throw std::overflow_error("J3D animation registration identity exhausted");
+                aurora::throw_host_exception<std::overflow_error>("J3D animation registration identity exhausted");
             r.resources.emplace(alias.data(), Registry::Entry{_storage, generation, 1});
         }
         try {
@@ -813,22 +814,22 @@ namespace smgpc::resource {
                 owner = std::static_pointer_cast<J3dAnimationResource::Storage>(it->second.owner.lock());
         }
         if (!owner)
-            throw std::runtime_error("J3D animation load requires a registered bounded resource owner");
+            aurora::throw_host_exception<std::runtime_error>("J3D animation load requires a registered bounded resource owner");
         return owner->load(flag);
     }
     namespace detail {
         const JUTDataBlockHeader *first_animation_block(const void *file) {
             if (!current_load || file != &current_load->file)
-                throw std::logic_error("J3D animation block traversal has no native data scope");
+                aurora::throw_host_exception<std::logic_error>("J3D animation block traversal has no native data scope");
             return current_load->blocks.empty() ? nullptr : current_load->blocks.front()->header();
         }
         const JUTDataBlockHeader *next_animation_block(const void *file, const JUTDataBlockHeader *block) {
             if (!current_load || file != &current_load->file)
-                throw std::logic_error("J3D animation block traversal has no native data scope");
+                aurora::throw_host_exception<std::logic_error>("J3D animation block traversal has no native data scope");
             for (std::size_t i = 0; i < current_load->blocks.size(); ++i)
                 if (current_load->blocks[i]->header() == block)
                     return i + 1 < current_load->blocks.size() ? current_load->blocks[i + 1]->header() : nullptr;
-            throw std::logic_error("J3D animation block is not retained by its data scope");
+            aurora::throw_host_exception<std::logic_error>("J3D animation block is not retained by its data scope");
         }
     }  // namespace detail
 }  // namespace smgpc::resource

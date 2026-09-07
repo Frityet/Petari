@@ -1,4 +1,5 @@
 #pragma once
+#include <aurora/exception.hpp>
 
 #include <algorithm>
 #include <cstddef>
@@ -80,7 +81,7 @@ namespace smgpc::resource {
             bool _finished = false;
 
             void require_open() const {
-                if (_finished) throw std::logic_error("J3D native block builder has already been finalized");
+                if (_finished) aurora::throw_host_exception<std::logic_error>("J3D native block builder has already been finalized");
             }
 
         public:
@@ -91,12 +92,12 @@ namespace smgpc::resource {
                 static_assert(std::is_trivially_destructible_v<T>, "Metadata records cannot own external resources");
                 require_open();
                 if (alignment < alignof(T) || alignment > storage_alignment || (alignment & (alignment - 1)) != 0) {
-                    throw std::invalid_argument("Unsupported J3D native table alignment");
+                    aurora::throw_host_exception<std::invalid_argument>("Unsupported J3D native table alignment");
                 }
                 constexpr auto limit = static_cast<std::size_t>(std::numeric_limits<std::ptrdiff_t>::max());
-                if (_size > limit - (alignment - 1)) throw std::length_error("J3D native block is too large");
+                if (_size > limit - (alignment - 1)) aurora::throw_host_exception<std::length_error>("J3D native block is too large");
                 const auto offset = (_size + alignment - 1) & ~(alignment - 1);
-                if (values.size() > (limit - offset) / sizeof(T)) throw std::length_error("J3D native table is too large");
+                if (values.size() > (limit - offset) / sizeof(T)) aurora::throw_host_exception<std::length_error>("J3D native table is too large");
                 auto part = std::make_unique<Array<T>>(offset, values);
                 _parts.push_back(std::move(part));
                 _size = offset + values.size_bytes();
@@ -117,7 +118,7 @@ namespace smgpc::resource {
                         if (auto* array = dynamic_cast<Array<T>*>(part.get())) return array->values;
                     }
                 }
-                throw std::invalid_argument("J3D native offset does not identify the requested table type");
+                aurora::throw_host_exception<std::invalid_argument>("J3D native offset does not identify the requested table type");
             }
 
             // Register only spans whose source/native byte strides agree. A
@@ -125,13 +126,13 @@ namespace smgpc::resource {
             void map_source_range(std::size_t source, std::size_t size, std::size_t native) {
                 require_open();
                 if (source > std::numeric_limits<std::size_t>::max() - size || native > _size || size > _size - native) {
-                    throw std::out_of_range("J3D native source mapping exceeds its allocation");
+                    aurora::throw_host_exception<std::out_of_range>("J3D native source mapping exceeds its allocation");
                 }
                 for (const auto& previous : _sources) {
                     const auto overlap = std::max(source, previous.source);
                     if (overlap < source + size && overlap < previous.source + previous.size &&
                         native + (overlap - source) != previous.native + (overlap - previous.source)) {
-                        throw std::invalid_argument("Overlapping J3D source ranges require a shared native representation");
+                        aurora::throw_host_exception<std::invalid_argument>("Overlapping J3D source ranges require a shared native representation");
                     }
                 }
                 _sources.push_back({source, size, native});

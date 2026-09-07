@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "DebugPaths.hpp"
 #include "Sqlite.hpp"
 #include "TraceAnalysis.hpp"
@@ -24,11 +25,11 @@ namespace {
             std::size_t parsed = 0;
             const auto value = std::stoll(std::string(text), &parsed, 10);
             if (parsed != text.size()) {
-                throw std::runtime_error("");
+                aurora::throw_host_exception<std::runtime_error>("");
             }
             return value;
         } catch (const std::exception &) {
-            throw std::runtime_error(std::string(name) + " requires an integer");
+            aurora::throw_host_exception<std::runtime_error>(std::string(name) + " requires an integer");
         }
     }
 
@@ -49,26 +50,26 @@ namespace {
             }
             if (arg == "--database") {
                 if (i + 1 >= argc) {
-                    throw std::runtime_error("--database requires a path");
+                    aurora::throw_host_exception<std::runtime_error>("--database requires a path");
                 }
                 options.database = argv[++i];
                 continue;
             }
             if (arg == "--query") {
                 if (i + 1 >= argc) {
-                    throw std::runtime_error("--query requires a name");
+                    aurora::throw_host_exception<std::runtime_error>("--query requires a name");
                 }
                 options.query = argv[++i];
                 continue;
             }
             if (arg == "--limit") {
                 if (i + 1 >= argc) {
-                    throw std::runtime_error("--limit requires a count");
+                    aurora::throw_host_exception<std::runtime_error>("--limit requires a count");
                 }
                 options.limit = parse_i64(argv[++i], "--limit");
                 continue;
             }
-            throw std::runtime_error("unknown argument: " + std::string(arg));
+            aurora::throw_host_exception<std::runtime_error>("unknown argument: " + std::string(arg));
         }
         return options;
     }
@@ -183,7 +184,7 @@ int main(int argc, char **argv) try {
     } else if (options.query == "views") {
         print_views();
     } else {
-        throw std::runtime_error("unknown query: " + options.query);
+        aurora::throw_host_exception<std::runtime_error>("unknown query: " + options.query);
     }
 
     return 0;

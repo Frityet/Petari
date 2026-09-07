@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "compat/TalkRuntime.hpp"
 
 #include "Game/LiveActor/ActorCameraInfo.hpp"
@@ -158,7 +159,7 @@ namespace smgpc::compat {
         [[nodiscard]] smgpc::runtime::RuntimeContext& runtime_context() const {
             auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
             if (runtime == nullptr) {
-                throw std::logic_error("TalkRuntime requires an active RuntimeContext.");
+                aurora::throw_host_exception<std::logic_error>("TalkRuntime requires an active RuntimeContext.");
             }
             return *runtime;
         }
@@ -170,7 +171,7 @@ namespace smgpc::compat {
         [[nodiscard]] ControllerState& state(TalkMessageCtrl& controller) {
             const auto found = controllers.find(&controller);
             if (found == controllers.end()) {
-                throw std::logic_error("TalkMessageCtrl is not registered with the active scene TalkRuntime.");
+                aurora::throw_host_exception<std::logic_error>("TalkMessageCtrl is not registered with the active scene TalkRuntime.");
             }
             return found->second;
         }
@@ -178,7 +179,7 @@ namespace smgpc::compat {
         [[nodiscard]] const ControllerState& state(const TalkMessageCtrl& controller) const {
             const auto found = controllers.find(const_cast<TalkMessageCtrl*>(&controller));
             if (found == controllers.end()) {
-                throw std::logic_error("TalkMessageCtrl is not registered with the active scene TalkRuntime.");
+                aurora::throw_host_exception<std::logic_error>("TalkMessageCtrl is not registered with the active scene TalkRuntime.");
             }
             return found->second;
         }
@@ -186,7 +187,7 @@ namespace smgpc::compat {
         [[nodiscard]] TalkMessageCtrl& controller(TalkNodeCtrl& node_ctrl) {
             const auto found = controller_by_node.find(&node_ctrl);
             if (found == controller_by_node.end()) {
-                throw std::logic_error("TalkNodeCtrl is not registered with the active scene TalkRuntime.");
+                aurora::throw_host_exception<std::logic_error>("TalkNodeCtrl is not registered with the active scene TalkRuntime.");
             }
             return *found->second;
         }
@@ -194,7 +195,7 @@ namespace smgpc::compat {
         [[nodiscard]] const TalkMessageCtrl& controller(const TalkNodeCtrl& node_ctrl) const {
             const auto found = controller_by_node.find(&node_ctrl);
             if (found == controller_by_node.end()) {
-                throw std::logic_error("TalkNodeCtrl is not registered with the active scene TalkRuntime.");
+                aurora::throw_host_exception<std::logic_error>("TalkNodeCtrl is not registered with the active scene TalkRuntime.");
             }
             return *found->second;
         }
@@ -257,26 +258,26 @@ namespace smgpc::compat {
                 }
                 auto* result = node(current->mNextIdx);
                 if (result == nullptr) {
-                    throw std::logic_error("Talk message node points outside the retained FLW node table.");
+                    aurora::throw_host_exception<std::logic_error>("Talk message node points outside the retained FLW node table.");
                 }
                 return result;
             }
             if (current->mNodeType == 3U) {
                 const auto* flow = messages().flow_data();
                 if (flow == nullptr || current->mIndex >= flow->branch_node_indices.size()) {
-                    throw std::logic_error("Talk event node points outside the retained FLW branch table.");
+                    aurora::throw_host_exception<std::logic_error>("Talk event node points outside the retained FLW branch table.");
                 }
                 if (flow->branch_node_indices[current->mIndex] == 0xffffU) {
                     return nullptr;
                 }
                 auto* result = branch_node(current->mIndex);
                 if (result == nullptr) {
-                    throw std::logic_error("Talk event branch target is outside the retained FLW node table.");
+                    aurora::throw_host_exception<std::logic_error>("Talk event branch target is outside the retained FLW node table.");
                 }
                 return result;
             }
             if (current->mNodeType != 2U) {
-                throw std::logic_error("Talk flow contains an unknown node type.");
+                aurora::throw_host_exception<std::logic_error>("Talk flow contains an unknown node type.");
             }
             return nullptr;
         }
@@ -286,12 +287,12 @@ namespace smgpc::compat {
             auto& node_ctrl = *controller_state.node_ctrl;
             const auto* message_id = messages().message_id(message_index);
             if (message_id == nullptr) {
-                throw std::logic_error("Talk flow refers to a message index outside MessageId.tbl.");
+                aurora::throw_host_exception<std::logic_error>("Talk flow refers to a message index outside MessageId.tbl.");
             }
             const auto* raw_text = messages().message_raw_utf16(*message_id);
             const auto* info = messages().message_info(*message_id);
             if (raw_text == nullptr || info == nullptr) {
-                throw std::logic_error("Talk flow message metadata is unavailable.");
+                aurora::throw_host_exception<std::logic_error>("Talk flow message metadata is unavailable.");
             }
 
             controller_state.current_message = to_wide(*raw_text);
@@ -338,7 +339,7 @@ namespace smgpc::compat {
 
         void register_controller(TalkMessageCtrl& controller) {
             if (controllers.contains(&controller)) {
-                throw std::logic_error("TalkMessageCtrl was registered twice with one TalkRuntime.");
+                aurora::throw_host_exception<std::logic_error>("TalkMessageCtrl was registered twice with one TalkRuntime.");
             }
             auto controller_state = ControllerState{};
             controller_state.node_ctrl = std::make_unique<TalkNodeCtrl>();
@@ -391,7 +392,7 @@ namespace smgpc::compat {
         void create_message_direct(TalkMessageCtrl& controller, const JMapInfoIter& iter,
                                    std::string_view flow_key, ActorCameraInfo** camera_info) {
             if (flow_key.empty()) {
-                throw std::logic_error("Talk flow keys must not be empty.");
+                aurora::throw_host_exception<std::logic_error>("Talk flow keys must not be empty.");
             }
             auto& controller_state = state(controller);
             auto& node_ctrl = *controller_state.node_ctrl;
@@ -401,14 +402,14 @@ namespace smgpc::compat {
 
             const auto message_index = messages().message_index(flow_key);
             if (!message_index.has_value()) {
-                throw std::logic_error("Talk flow key '" + std::string(flow_key) + "' is absent from MessageId.tbl.");
+                aurora::throw_host_exception<std::logic_error>("Talk flow key '" + std::string(flow_key) + "' is absent from MessageId.tbl.");
             }
 
             const auto root_index = messages().first_flow_node_for_message(*message_index);
             if (root_index.has_value()) {
                 auto* root = node(*root_index);
                 if (root == nullptr) {
-                    throw std::logic_error("Talk flow root is outside the retained FLW node table.");
+                    aurora::throw_host_exception<std::logic_error>("Talk flow root is outside the retained FLW node table.");
                 }
                 node_ctrl._38 = root;
                 node_ctrl.mCurrentNode = root;
@@ -455,13 +456,13 @@ namespace smgpc::compat {
             const auto message_index = controller.getMessageID();
             const auto* message_id = messages().message_id(message_index);
             if (message_id == nullptr) {
-                throw std::logic_error("Current talk message is outside MessageId.tbl.");
+                aurora::throw_host_exception<std::logic_error>("Current talk message is outside MessageId.tbl.");
             }
             const auto* raw_text = messages().message_raw_utf16(*message_id);
             const auto* display_text = messages().message_utf16(*message_id);
             const auto* info = messages().message_info(*message_id);
             if (raw_text == nullptr || display_text == nullptr || info == nullptr) {
-                throw std::logic_error("Current talk presentation data is unavailable.");
+                aurora::throw_host_exception<std::logic_error>("Current talk presentation data is unavailable.");
             }
             auto formatted = *display_text;
             const auto args = format_args(controller);
@@ -551,7 +552,7 @@ namespace smgpc::compat {
             controller.rootNodePre(true);
             if (controller.mNodeCtrl->mCurrentNode == nullptr &&
                 !controller_state.direct_message_index.has_value()) {
-                throw std::logic_error("Talk start reached no message node.");
+                aurora::throw_host_exception<std::logic_error>("Talk start reached no message node.");
             }
             if (controller.mNodeCtrl->isCurrentNodeEvent()) {
                 if (!controller.rootNodeEve()) {
@@ -561,7 +562,7 @@ namespace smgpc::compat {
             }
             if (controller.mNodeCtrl->mCurrentNode != nullptr &&
                 controller.mNodeCtrl->mCurrentNode->mNodeType != 1U) {
-                throw std::logic_error("Talk start did not resolve to a message node.");
+                aurora::throw_host_exception<std::logic_error>("Talk start did not resolve to a message node.");
             }
 
             const auto is_short = controller.mNodeCtrl->mMessageInfo.isShortTalk();
@@ -577,7 +578,7 @@ namespace smgpc::compat {
                 }
             }
             if (demo_type == 1) {
-                throw std::logic_error(
+                aurora::throw_host_exception<std::logic_error>(
                     "Normal programmable talk-demo ownership is unavailable; an event talk may only use the active time-keep demo runtime.");
             }
 
@@ -629,7 +630,7 @@ namespace smgpc::compat {
             if (active != nullptr) {
                 auto& active_state = state(*active);
                 if (!presentation.has_value()) {
-                    throw std::logic_error(
+                    aurora::throw_host_exception<std::logic_error>(
                         "An active talk controller has no frozen presentation.");
                 }
                 if (presentation->info.talk_type == 1U) {
@@ -699,10 +700,10 @@ namespace smgpc::compat {
 
     void TalkRuntime::init(const JMapInfoIter&) {
         if (_impl->bound) {
-            throw std::logic_error("TalkRuntime was initialized twice.");
+            aurora::throw_host_exception<std::logic_error>("TalkRuntime was initialized twice.");
         }
         if (sCurrentTalkRuntime != nullptr) {
-            throw std::logic_error("a TalkRuntime is already bound to the active scene");
+            aurora::throw_host_exception<std::logic_error>("a TalkRuntime is already bound to the active scene");
         }
         static_cast<void>(_impl->runtime_context());
         sCurrentTalkRuntime = this;
@@ -744,7 +745,7 @@ namespace smgpc::compat {
     TalkMessageCtrl* TalkRuntime::adopt_owned_controller(
         LiveActor* actor, std::unique_ptr<TalkMessageCtrl> controller) {
         if (actor == nullptr || controller == nullptr) {
-            throw std::logic_error("TalkRuntime cannot adopt a null actor or controller.");
+            aurora::throw_host_exception<std::logic_error>("TalkRuntime cannot adopt a null actor or controller.");
         }
         auto* result = controller.get();
         // TalkMessageCtrl is a registered NameObj, but its storage belongs to
@@ -823,7 +824,7 @@ namespace smgpc::compat {
     TalkRuntime& require_talk_runtime(std::string_view operation) {
         auto* runtime = current_talk_runtime();
         if (runtime == nullptr) {
-            throw std::logic_error(std::string(operation) +
+            aurora::throw_host_exception<std::logic_error>(std::string(operation) +
                                    " requires the active scene-owned TalkRuntime.");
         }
         return *runtime;
@@ -920,18 +921,18 @@ void TalkNodeCtrl::forwardFlowNode() {
         } else {
             auto* target = runtime._impl->node(mCurrentNode->mNextIdx);
             if (target == nullptr) {
-                throw std::logic_error("Talk message node points outside the retained FLW node table.");
+                aurora::throw_host_exception<std::logic_error>("Talk message node points outside the retained FLW node table.");
             }
             mCurrentNode = target;
         }
     } else if (mCurrentNode->mNodeType == 3U) {
         auto* target = runtime._impl->branch_node(mCurrentNode->mIndex);
         if (target == nullptr) {
-            throw std::logic_error("Talk event node points outside the retained FLW branch table.");
+            aurora::throw_host_exception<std::logic_error>("Talk event node points outside the retained FLW branch table.");
         }
         mCurrentNode = target;
     } else if (mCurrentNode->mNodeType != 2U) {
-        throw std::logic_error("Talk flow contains an unknown node type.");
+        aurora::throw_host_exception<std::logic_error>("Talk flow contains an unknown node type.");
     }
     updateMessage();
 }
@@ -993,13 +994,13 @@ void TalkNodeCtrl::readMessage() {
 
 void TalkNodeCtrl::forwardCurrentBranchNode(bool left) {
     if (mCurrentNode == nullptr || mCurrentNode->mNodeType != 2U) {
-        throw std::logic_error("Talk branch traversal requires a current branch node.");
+        aurora::throw_host_exception<std::logic_error>("Talk branch traversal requires a current branch node.");
     }
     auto& runtime = smgpc::compat::require_talk_runtime("Talk branch traversal");
     mCurrentNode = runtime._impl->branch_node(
         static_cast<std::uint32_t>(mCurrentNode->mNextGroup) + (left ? 0U : 1U));
     if (mCurrentNode == nullptr) {
-        throw std::logic_error("Talk branch target is absent from the retained FLW branch table.");
+        aurora::throw_host_exception<std::logic_error>("Talk branch target is absent from the retained FLW branch table.");
     }
     updateMessage();
 }
@@ -1008,11 +1009,11 @@ void TalkNodeCtrl::createFlowNode(TalkMessageCtrl* controller, const JMapInfoIte
                                   const char* name, ActorCameraInfo** camera_info) {
     auto message_id = s32{-1};
     if (!MR::getJMapInfoMessageID(iter, &message_id) || message_id < 0) {
-        throw std::logic_error("Placement talk creation requires a non-negative MessageId.");
+        aurora::throw_host_exception<std::logic_error>("Placement talk creation requires a non-negative MessageId.");
     }
     const auto* zone_name = MR::getCurrentPlacementZoneName();
     if (zone_name == nullptr || name == nullptr) {
-        throw std::logic_error("Placement talk creation requires a zone name and actor message name.");
+        aurora::throw_host_exception<std::logic_error>("Placement talk creation requires a zone name and actor message name.");
     }
     char flow_key[0x100]{};
     std::snprintf(flow_key, sizeof(flow_key), "%s_%s%03d", zone_name, name, message_id);
@@ -1022,7 +1023,7 @@ void TalkNodeCtrl::createFlowNode(TalkMessageCtrl* controller, const JMapInfoIte
 void TalkNodeCtrl::createFlowNodeDirect(TalkMessageCtrl* controller, const JMapInfoIter& iter,
                                         const char* flow_key, ActorCameraInfo** camera_info) {
     if (controller == nullptr || flow_key == nullptr) {
-        throw std::logic_error("Direct talk creation requires a controller and flow key.");
+        aurora::throw_host_exception<std::logic_error>("Direct talk creation requires a controller and flow key.");
     }
     auto& runtime = smgpc::compat::require_talk_runtime("Direct talk creation");
     runtime._impl->create_message_direct(*controller, iter, flow_key, camera_info);
@@ -1084,13 +1085,13 @@ void TalkMessageCtrl::createMessageDirect(const JMapInfoIter& iter, const char* 
 
 u32 TalkMessageCtrl::getMessageID() const {
     if (mNodeCtrl == nullptr) {
-        throw std::logic_error("TalkMessageCtrl has no active TalkNodeCtrl.");
+        aurora::throw_host_exception<std::logic_error>("TalkMessageCtrl has no active TalkNodeCtrl.");
     }
     if (const auto* message = mNodeCtrl->getCurrentNodeMessage(); message != nullptr) {
         return message->mIndex;
     }
     if (mNodeCtrl->mCurrentNodeIdx < 0) {
-        throw std::logic_error("TalkMessageCtrl has no current message.");
+        aurora::throw_host_exception<std::logic_error>("TalkMessageCtrl has no current message.");
     }
     return static_cast<u32>(mNodeCtrl->mCurrentNodeIdx);
 }
@@ -1209,7 +1210,7 @@ void TalkMessageCtrl::rootNodePre(bool stop_at_non_branch) {
             condition = MR::isPlayerElementModeTeresa();
             break;
         case 8:
-            throw std::logic_error("Talk branch type 8 requires the PowerStar-appeared stage-state provider.");
+            aurora::throw_host_exception<std::logic_error>("Talk branch type 8 requires the PowerStar-appeared stage-state provider.");
         case 9:
             condition = _3C != 0U;
             break;
@@ -1231,7 +1232,7 @@ void TalkMessageCtrl::rootNodePre(bool stop_at_non_branch) {
             condition = TalkFunction::getBranchAstroGalaxyResult(branch->mNextIdx);
             break;
         default:
-            throw std::logic_error("Talk flow contains an unsupported branch type.");
+            aurora::throw_host_exception<std::logic_error>("Talk flow contains an unsupported branch type.");
         }
         mNodeCtrl->forwardCurrentBranchNode(condition);
     }
@@ -1274,7 +1275,7 @@ bool TalkMessageCtrl::rootNodeEve() {
         MR::onSwitchB(mHostActor);
     } else if (event->mGroupID == 7U) {
         if (mKillFunc == nullptr) {
-            throw std::logic_error("Talk kill event has no registered callback.");
+            aurora::throw_host_exception<std::logic_error>("Talk kill event has no registered callback.");
         }
         if (!(*mKillFunc)(callback_arg)) {
             return false;
@@ -1337,7 +1338,7 @@ bool TalkMessageCtrl::isSelectYesNo() const {
 
 void TalkMessageCtrl::startCamera(s32) {
     if (mNodeCtrl->mMessageInfo.isCameraNormal() || mNodeCtrl->mMessageInfo.isCameraEvent()) {
-        throw std::logic_error("Talk camera dispatch requires the generalized talk-camera provider.");
+        aurora::throw_host_exception<std::logic_error>("Talk camera dispatch requires the generalized talk-camera provider.");
     }
 }
 
@@ -1411,12 +1412,12 @@ bool TalkFunction::isTalkSystemEnd(const TalkMessageCtrl* controller) {
 }
 
 bool TalkFunction::getBranchAstroGalaxyResult(u16) {
-    throw std::logic_error("AstroGalaxy talk branches require the observatory progression provider.");
+    aurora::throw_host_exception<std::logic_error>("AstroGalaxy talk branches require the observatory progression provider.");
 }
 
 void TalkFunction::registerTalkSystem(TalkMessageCtrl* controller) {
     if (controller == nullptr) {
-        throw std::logic_error("TalkRuntime cannot register a null TalkMessageCtrl.");
+        aurora::throw_host_exception<std::logic_error>("TalkRuntime cannot register a null TalkMessageCtrl.");
     }
     smgpc::compat::require_talk_runtime("TalkMessageCtrl construction")
         ._impl->register_controller(*controller);

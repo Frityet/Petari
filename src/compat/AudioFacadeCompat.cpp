@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "compat/DisabledObjectAudioService.hpp"
 #include "compat/AudioFacadeCompat.hpp"
 
@@ -25,14 +26,14 @@ namespace {
     JAISoundHandle s_stage_handle;
 
     [[noreturn]] void unavailable(const char *operation) {
-        throw std::logic_error(std::string("The concrete JAudio backend does not provide ") + operation + ".");
+        aurora::throw_host_exception<std::logic_error>(std::string("The concrete JAudio backend does not provide ") + operation + ".");
     }
 
     [[nodiscard]] AudBgm *allocate_bgm(u32 sound_id) {
         const auto type = (sound_id & 0x10000U) == 0U ? AudBgmKeeper::BgmType_Single : AudBgmKeeper::BgmType_Multi;
         auto *bgm = s_bgm_manager.mKeeper.get(type);
         if (bgm == nullptr) {
-            throw std::logic_error("The retail-shaped BGM keeper has no free stage BGM object.");
+            aurora::throw_host_exception<std::logic_error>("The retail-shaped BGM keeper has no free stage BGM object.");
         }
         return bgm;
     }
@@ -70,7 +71,7 @@ namespace {
     require_concrete_audio_runtime(const char *operation) {
         auto *runtime = try_concrete_audio_runtime();
         if (runtime == nullptr) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 std::string(operation) +
                 " requires an active RuntimeContext audio backend; an event-only binding cannot play sound");
         }
@@ -109,7 +110,7 @@ namespace smgpc::compat {
     smgpc::runtime::AudioEventService &require_active_audio_event_service() {
         auto *audio = try_active_audio_event_service();
         if (audio == nullptr) {
-            throw std::logic_error("Audio state is unavailable without an active runtime or explicit service binding.");
+            aurora::throw_host_exception<std::logic_error>("Audio state is unavailable without an active runtime or explicit service binding.");
         }
         return *audio;
     }
@@ -172,26 +173,26 @@ namespace smgpc::compat {
             runtime->j_audio_playback().has_active_stage_bgm();
         if (audio.has_active_stage_bgm() && !backend_active) {
             if (runtime == nullptr) {
-                throw std::logic_error(
+                aurora::throw_host_exception<std::logic_error>(
                     "Active stage-BGM state has no concrete RuntimeContext backend");
             }
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Logical stage-BGM state has no matching concrete backend voice");
         }
         if (backend_active) {
             auto &playback = runtime->j_audio_playback();
             const auto id = playback.stage_bgm_id();
             if (!id.has_value()) {
-                throw std::logic_error(
+                aurora::throw_host_exception<std::logic_error>(
                     "Concrete stage-BGM backend has no retail sound ID");
             }
             if (audio.has_active_stage_bgm()) {
                 if (audio.current_stage_bgm_id() != id) {
-                    throw std::logic_error(
+                    aurora::throw_host_exception<std::logic_error>(
                         "Logical stage-BGM identity disagrees with its concrete backend voice");
                 }
             } else if (!playback.is_stage_bgm_stopping()) {
-                throw std::logic_error(
+                aurora::throw_host_exception<std::logic_error>(
                     "Concrete stage-BGM voice is active without logical start/stop state");
             }
             s_bgm_manager.mCurrentBGM[AudBgmMgr::BgmType_Stage] = *id;
@@ -215,7 +216,7 @@ AudFader::AudFader() : mCurrentVolume(1.0F), mFinalVolume(1.0F), mStepVolume(0.0
 
 void AudFader::set(f32 desired_volume, s32 fade_time) {
     if (fade_time < 0) {
-        throw std::invalid_argument("An audio fade cannot use negative frames.");
+        aurora::throw_host_exception<std::invalid_argument>("An audio fade cannot use negative frames.");
     }
     mFinalVolume = desired_volume;
     if (fade_time == 0) {
@@ -273,7 +274,7 @@ void AudTrackController::setMuteState(u8 state, s32 fade_time, bool auto_mute) {
     } else if (state == 3U) {
         unmute();
     } else {
-        throw std::invalid_argument("Unknown retail track-mute state.");
+        aurora::throw_host_exception<std::invalid_argument>("Unknown retail track-mute state.");
     }
     mAutoMute = auto_mute;
 }
@@ -325,7 +326,7 @@ JAISoundHandle *AudSingleBgm::start(u32 sound_id, bool prepared) {
     auto &runtime = require_concrete_audio_runtime("Stage-BGM start");
     auto *backend_handle = runtime.start_stage_bgm(sound_id, prepared);
     if (backend_handle == nullptr || !backend_handle->isSoundAttached()) {
-        throw std::logic_error(
+        aurora::throw_host_exception<std::logic_error>(
             "Stage-BGM runtime returned no concrete backend handle");
     }
     synchronize_stage_handle(runtime.j_audio_playback());
@@ -364,7 +365,7 @@ void AudSingleBgm::moveVolumeForNoteFairy(f32, u32) {
 
 void AudSingleBgm::changeTrackMuteState(s32 state, s32 frames) {
     if (frames < 0) {
-        throw std::invalid_argument(
+        aurora::throw_host_exception<std::invalid_argument>(
             "A stage-BGM track-state transition cannot use negative frames");
     }
     require_concrete_audio_runtime("Stage-BGM track-state transition")
@@ -414,7 +415,7 @@ JAISoundID AudSingleBgm::getSoundID() const {
                         .j_audio_playback()
                         .stage_bgm_id();
     if (!id.has_value()) {
-        throw std::logic_error("The active stage BGM has no resolved raw sound ID.");
+        aurora::throw_host_exception<std::logic_error>("The active stage BGM has no resolved raw sound ID.");
     }
     return JAISoundID(*id);
 }
@@ -599,7 +600,7 @@ void AudBgmKeeper::release(AudBgm *bgm) {
             return;
         }
     }
-    throw std::invalid_argument("The BGM object does not belong to this retail-shaped keeper.");
+    aurora::throw_host_exception<std::invalid_argument>("The BGM object does not belong to this retail-shaped keeper.");
 }
 
 AudSingleBgm *AudBgmKeeper::getValidSingleBgm() {
@@ -676,7 +677,7 @@ JAISoundHandle *AudBgmMgr::start(s32 bgm_index, u32 sound_id, bool prepared) {
     }
     if (handle == nullptr) {
         release_stage_bgm_object();
-        throw std::logic_error("The concrete stage-BGM backend did not attach a sound handle.");
+        aurora::throw_host_exception<std::logic_error>("The concrete stage-BGM backend did not attach a sound handle.");
     }
     mLastBGM[bgm_index] = mCurrentBGM[bgm_index];
     mCurrentBGM[bgm_index] = sound_id;
@@ -695,7 +696,7 @@ void AudBgmMgr::clearNextBGM(s32 bgm_index) {
 
 JAISoundHandle *AudBgmMgr::startLastBGM(s32 bgm_index) {
     if (bgm_index != BgmType_Stage || mLastBGM[bgm_index] == static_cast<u32>(-1)) {
-        throw std::logic_error("No resolved last stage BGM is available.");
+        aurora::throw_host_exception<std::logic_error>("No resolved last stage BGM is available.");
     }
     return start(bgm_index, mLastBGM[bgm_index], false);
 }
@@ -774,7 +775,7 @@ namespace AudWrap {
     AudBgmMgr *getBgmMgr() {
         auto &audio = smgpc::compat::require_active_audio_event_service();
         if (!audio.is_stage_bgm_identity_resolved()) {
-            throw std::logic_error("The current stage-BGM identity has not been resolved.");
+            aurora::throw_host_exception<std::logic_error>("The current stage-BGM identity has not been resolved.");
         }
         auto *runtime = try_concrete_audio_runtime();
         if (runtime != nullptr &&
@@ -792,37 +793,37 @@ namespace AudWrap {
     AudBgm *getStageBgm() {
         auto &audio = smgpc::compat::require_active_audio_event_service();
         if (!audio.is_stage_bgm_identity_resolved()) {
-            throw std::logic_error("The current stage-BGM identity has not been resolved.");
+            aurora::throw_host_exception<std::logic_error>("The current stage-BGM identity has not been resolved.");
         }
         auto *runtime = try_concrete_audio_runtime();
         if (runtime == nullptr) {
             if (!audio.has_active_stage_bgm()) {
                 return nullptr;
             }
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Active stage-BGM state has no concrete RuntimeContext backend");
         }
         auto &playback = runtime->j_audio_playback();
         if (!playback.has_active_stage_bgm()) {
             if (audio.has_active_stage_bgm()) {
-                throw std::logic_error(
+                aurora::throw_host_exception<std::logic_error>(
                     "Logical stage-BGM state has no matching concrete backend voice");
             }
             return nullptr;
         }
         const auto backend_id = playback.stage_bgm_id();
         if (!backend_id.has_value()) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Concrete stage-BGM backend has no retail sound ID");
         }
         if (audio.has_active_stage_bgm() &&
             backend_id != audio.current_stage_bgm_id()) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Logical stage-BGM identity disagrees with its concrete backend voice");
         }
         if (!audio.has_active_stage_bgm() &&
             !playback.is_stage_bgm_stopping()) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Concrete stage-BGM voice is active without logical start/stop state");
         }
         if (s_bgm_manager.mBgm[AudBgmMgr::BgmType_Stage] == nullptr) {

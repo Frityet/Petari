@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Application.hpp"
 #include "app/SimulationClock.hpp"
 #include "Game/NameObj/NameObj.hpp"
@@ -104,7 +105,7 @@ namespace {
               _owned(createNameObj<MarioActor>("MarioActor")) {
             _actor = dynamic_cast<MarioActor*>(_owned.get());
             if (_actor == nullptr) {
-                throw std::runtime_error("the typed Gateway MarioActor creator returned the wrong object");
+                aurora::throw_host_exception<std::runtime_error>("the typed Gateway MarioActor creator returned the wrong object");
             }
             _player_system->attach_actor(
                 *_actor,
@@ -142,7 +143,7 @@ namespace {
         static void set_swing_permission(LiveActor& actor, bool permitted) {
             auto* mario = dynamic_cast<MarioActor*>(&actor);
             if (mario == nullptr) {
-                throw std::logic_error(
+                aurora::throw_host_exception<std::logic_error>(
                     "Gateway player entitlement bridge requires MarioActor");
             }
             mario->_EEB = permitted;
@@ -151,7 +152,7 @@ namespace {
         static s32 read_element_mode(const LiveActor& actor) {
             const auto* mario = dynamic_cast<const MarioActor*>(&actor);
             if (mario == nullptr) {
-                throw std::logic_error(
+                aurora::throw_host_exception<std::logic_error>(
                     "Gateway player element-mode bridge requires MarioActor");
             }
             return mario->mPlayerMode;
@@ -194,14 +195,14 @@ namespace {
             const auto& argument = arguments[index];
             if (argument == name) {
                 if (index + 1U >= arguments.size() || arguments[index + 1U].empty()) {
-                    throw std::runtime_error(std::string(name) + " requires a value");
+                    aurora::throw_host_exception<std::runtime_error>(std::string(name) + " requires a value");
                 }
                 return arguments[index + 1U];
             }
             if (argument.starts_with(prefix)) {
                 const auto value = std::string_view(argument).substr(prefix.size());
                 if (value.empty()) {
-                    throw std::runtime_error(std::string(name) + " requires a value");
+                    aurora::throw_host_exception<std::runtime_error>(std::string(name) + " requires a value");
                 }
                 return value;
             }
@@ -223,13 +224,13 @@ namespace {
         auto value = Integer{};
         const auto result = std::from_chars(text.data(), text.data() + text.size(), value);
         if (result.ec != std::errc{} || result.ptr != text.data() + text.size()) {
-            throw std::runtime_error(std::string(option_name) + " requires an integer");
+            aurora::throw_host_exception<std::runtime_error>(std::string(option_name) + " requires an integer");
         }
         return value;
     }
 
     [[noreturn]] void throw_usage() {
-        throw std::runtime_error(
+        aurora::throw_host_exception<std::runtime_error>(
             "usage: smg-pc-showcase <title|gateway|gateway-spin> --disc PATH "
             "[--width N] [--height N] [--max-frames N] [--screenshot PATH] "
             "[--screenshot-frame N] [--exit-after-screenshot] [--smoke (title/gateway)]");
@@ -270,10 +271,10 @@ namespace {
         options.smoke = has_option(arguments, "--smoke");
 
         if (options.window_width <= 0 || options.window_height <= 0) {
-            throw std::runtime_error("showcase window dimensions must be positive");
+            aurora::throw_host_exception<std::runtime_error>("showcase window dimensions must be positive");
         }
         if (options.smoke && options.route == ShowcaseRoute::GatewaySpin) {
-            throw std::runtime_error("--smoke is available for the title and gateway showcases");
+            aurora::throw_host_exception<std::runtime_error>("--smoke is available for the title and gateway showcases");
         }
         if (options.smoke && options.max_frames == 0U) {
             options.max_frames = 360U;
@@ -291,7 +292,7 @@ namespace {
         auto error = std::error_code{};
         std::filesystem::create_directories(options.screenshot_path->parent_path(), error);
         if (error) {
-            throw std::runtime_error("could not create screenshot directory: " + error.message());
+            aurora::throw_host_exception<std::runtime_error>("could not create screenshot directory: " + error.message());
         }
     }
 
@@ -331,14 +332,14 @@ namespace {
         const smgpc::app::BootstrapConfiguration& configuration) {
 #ifdef NDEBUG
         if (options.smoke) {
-            throw std::runtime_error(
+            aurora::throw_host_exception<std::runtime_error>(
                 "Title --smoke requires a debug build for exact sky packet proof");
         }
 #endif
         auto logger = smgpc::logging::create_default_logger();
         const auto disc_image = smgpc::app::required_disc_image(configuration);
         if (!aurora_dvd_open(disc_image.string().c_str())) {
-            throw std::runtime_error("Aurora could not open disc image " + disc_image.string());
+            aurora::throw_host_exception<std::runtime_error>("Aurora could not open disc image " + disc_image.string());
         }
         const auto dvd_guard = DvdCloseGuard{};
 
@@ -462,7 +463,7 @@ namespace {
         if (options.smoke) {
             if (rendered_frames < 2U || !gpu_draw_seen ||
                 !sky_packet_submission_seen) {
-                throw std::runtime_error(
+                aurora::throw_host_exception<std::runtime_error>(
                     "Title sky smoke proof incomplete: frames=" +
                     std::to_string(rendered_frames) + ";gpu_draw=" +
                     std::to_string(gpu_draw_seen) + ";sky_packets=" +
@@ -492,7 +493,7 @@ namespace {
     [[nodiscard]] TVec3f normalized(const TVec3f& value) {
         const auto magnitude = length(value);
         if (magnitude <= 0.000001F) {
-            throw std::runtime_error("Gateway showcase camera direction is degenerate");
+            aurora::throw_host_exception<std::runtime_error>("Gateway showcase camera direction is degenerate");
         }
         return scaled(value, 1.0F / magnitude);
     }
@@ -549,7 +550,7 @@ namespace {
             if (!surface.has_value() ||
                 !std::string_view(surface->source_name).ends_with(cGatewayCollisionSource) ||
                 surface->attributes.empty()) {
-                throw std::runtime_error(
+                aurora::throw_host_exception<std::runtime_error>(
                     "Gateway development probe contacted a surface without exact planet KCL/PA provenance");
             }
             probe.real_kcl_contact_seen = true;
@@ -578,7 +579,7 @@ namespace {
             constexpr auto white = std::array<std::uint8_t, 4U>{255U, 255U, 255U, 255U};
             _texture = renderer.create_rgba8_texture(1U, 1U, white);
             if (!_texture.is_valid()) {
-                throw std::runtime_error("could not create the Gateway debug-sphere texture");
+                aurora::throw_host_exception<std::runtime_error>("could not create the Gateway debug-sphere texture");
             }
 
             constexpr auto rings = std::uint16_t{10U};
@@ -672,19 +673,19 @@ namespace {
                 &game_data_session.holder() ||
             smgpc::compat::game_data::holder_story_progress(
                 game_data_session.holder()) != 5U) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Gateway requires one active selected-file session at exact story progress 5");
         }
 #ifdef NDEBUG
         if (options.smoke) {
-            throw std::runtime_error(
+            aurora::throw_host_exception<std::runtime_error>(
                 "Gateway --smoke requires a debug build for Mario packet-trace proof");
         }
 #endif
         auto logger = smgpc::logging::create_default_logger();
         const auto disc_image = smgpc::app::required_disc_image(configuration);
         if (!aurora_dvd_open(disc_image.string().c_str())) {
-            throw std::runtime_error("Aurora could not open disc image " + disc_image.string());
+            aurora::throw_host_exception<std::runtime_error>("Aurora could not open disc image " + disc_image.string());
         }
         const auto dvd_guard = DvdCloseGuard{};
         DVDInit();
@@ -741,7 +742,7 @@ namespace {
             if (resolved_camera.status !=
                     smgpc::camera::StageStartCameraResolveStatus::Resolved ||
                 !resolved_camera.camera.has_value()) {
-                throw std::runtime_error(
+                aurora::throw_host_exception<std::runtime_error>(
                     "Gateway exact StartInfo camera could not be resolved: " +
                     resolved_camera.detail);
             }
@@ -753,7 +754,7 @@ namespace {
 
             if (NameObjFactory::getCreator("Mario") != nullptr ||
                 NameObjFactory::getCreator("MarioActor") != nullptr) {
-                throw std::runtime_error(
+                aurora::throw_host_exception<std::runtime_error>(
                     "the production Mario factory was enabled before the Gateway slice was proven complete");
             }
             auto mario_owner = [&] {
@@ -783,7 +784,7 @@ namespace {
                         "チコガイドデモ終了");
                     if (smgpc::compat::game_data::holder_story_progress(
                             game_data_session.holder()) != 10U) {
-                        throw std::logic_error(
+                        aurora::throw_host_exception<std::logic_error>(
                             "the Gateway spin development caller could not advance its selected-file holder from progress 5 to 10");
                     }
                     spin_checkpoint = std::make_unique<
@@ -806,17 +807,17 @@ namespace {
             auto *planet_actor = scene.planet();
             auto *planet_model = planet_actor ? MR::getJ3DModel(planet_actor) : nullptr;
             if (planet_actor == nullptr || planet_model == nullptr) {
-                throw std::runtime_error(
+                aurora::throw_host_exception<std::runtime_error>(
                     "the authored Gateway row did not create an ordinary PlanetMap model");
             }
             if (planet_model->getModelData() == nullptr) {
-                throw std::runtime_error(
+                aurora::throw_host_exception<std::runtime_error>(
                     "the ordinary Gateway PlanetMap did not load its real BDL");
             }
             const auto planet_collision_resources =
                 smgpc::compat::actor_collision_parts_resources(planet_actor);
             if (planet_collision_resources.size() != 2U) {
-                throw std::runtime_error(
+                aurora::throw_host_exception<std::runtime_error>(
                     "the ordinary Gateway PlanetMap did not retain its main and MoveLimit CollisionParts");
             }
 
@@ -1036,7 +1037,7 @@ namespace {
                 !planet_packet_submission_seen || !mario_center_on_screen_seen ||
                 !gravity_velocity_change_seen ||
                 !real_kcl_contact_seen) {
-                throw std::runtime_error(
+                aurora::throw_host_exception<std::runtime_error>(
                     "Gateway smoke proof incomplete: frames=" + std::to_string(rendered_frames) +
                     ";gpu_draw=" + std::to_string(gpu_draw_seen) +
                     ";mario_packets=" +
@@ -1076,12 +1077,12 @@ int main(int argc, char* argv[]) try {
     }
     if (!title_outcome.selection.has_value() ||
         title_outcome.game_data_session == nullptr) {
-        throw std::logic_error(
+        aurora::throw_host_exception<std::logic_error>(
             "the title showcase requested Gateway without a blank-file selection");
     }
     if (title_outcome.game_data_session->selected_file() !=
         static_cast<u16>(title_outcome.selection->file_number)) {
-        throw std::logic_error(
+        aurora::throw_host_exception<std::logic_error>(
             "the title showcase lost the selected file's game-data session identity");
     }
 

@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Game/Player/MarioActor.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Player/MarioAccess.hpp"
@@ -49,12 +50,12 @@ namespace MR {
         [[nodiscard]] s32 activePlayerElementMode() {
             auto* player = smgpc::compat::active_player_system_for_player_util();
             if (player == nullptr || player->attached_actor() == nullptr) {
-                throw std::logic_error(
+                aurora::throw_host_exception<std::logic_error>(
                     "Player element mode requires an attached player actor.");
             }
             const auto mode = player->player_element_mode();
             if (!mode.has_value()) {
-                throw std::logic_error(
+                aurora::throw_host_exception<std::logic_error>(
                     "The attached player actor does not expose a retail element-mode capability.");
             }
             return *mode;
@@ -67,12 +68,12 @@ namespace MR {
 
             MtxPtr matrix = getPlayerBaseMtx();
             if (matrix == nullptr) {
-                throw std::logic_error("Player base-matrix state is unavailable.");
+                aurora::throw_host_exception<std::logic_error>("Player base-matrix state is unavailable.");
             }
             pOut->set(matrix[0][column], matrix[1][column], matrix[2][column]);
             const auto length = pOut->length();
             if (length <= 0.001F) {
-                throw std::logic_error("Player base matrix has a degenerate axis.");
+                aurora::throw_host_exception<std::logic_error>("Player base matrix has a degenerate axis.");
             }
             pOut->scale(1.0F / length);
         }
@@ -81,7 +82,7 @@ namespace MR {
     void showPlayer() {
         auto* player = smgpc::compat::active_player_system_for_player_util();
         if (player == nullptr || player->attached_actor() == nullptr) {
-            throw std::logic_error("Cannot show an unavailable player actor.");
+            aurora::throw_host_exception<std::logic_error>("Cannot show an unavailable player actor.");
         }
         player->show_player();
     }
@@ -89,7 +90,7 @@ namespace MR {
     void hidePlayer() {
         auto* player = smgpc::compat::active_player_system_for_player_util();
         if (player == nullptr || player->attached_actor() == nullptr) {
-            throw std::logic_error("Cannot hide an unavailable player actor.");
+            aurora::throw_host_exception<std::logic_error>("Cannot hide an unavailable player actor.");
         }
         player->hide_player();
     }
@@ -107,7 +108,7 @@ namespace MR {
         Mtx matrix{};
         MtxPtr current = getPlayerBaseMtx();
         if (current == nullptr) {
-            throw std::logic_error("Cannot position an unavailable player actor.");
+            aurora::throw_host_exception<std::logic_error>("Cannot position an unavailable player actor.");
         }
         for (auto row = 0; row < 3; ++row) {
             for (auto column = 0; column < 4; ++column) {
@@ -138,7 +139,7 @@ namespace MR {
     f32 calcDistanceToPlayer(const TVec3f& position) {
         const auto* player_position = getPlayerPos();
         if (player_position == nullptr) {
-            throw std::logic_error("Player position is unavailable.");
+            aurora::throw_host_exception<std::logic_error>("Player position is unavailable.");
         }
         return position.distance(*player_position);
     }
@@ -146,7 +147,7 @@ namespace MR {
     bool isNearPlayerAnyTime(const LiveActor* actor, f32 distance) {
         const auto* player = activePlayerActor();
         if (actor == nullptr || player == nullptr) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Player-distance queries require a host actor and attached player actor.");
         }
         return actor->mPosition.squared(player->mPosition) < (distance * distance);
@@ -220,7 +221,7 @@ namespace MR {
     void setPlayerBaseMtx(MtxPtr matrix) {
         auto* player = smgpc::compat::active_player_system_for_player_util();
         if (player == nullptr || player->attached_actor() == nullptr || matrix == nullptr) {
-            throw std::logic_error("Cannot set the base matrix of an unavailable player actor.");
+            aurora::throw_host_exception<std::logic_error>("Cannot set the base matrix of an unavailable player actor.");
         }
         player->set_base_matrix(matrix);
     }
@@ -268,7 +269,7 @@ namespace MR {
         auto *player = smgpc::compat::active_player_system_for_player_util();
         auto *actor = player != nullptr ? player->attached_actor() : nullptr;
         if (player == nullptr || actor == nullptr) {
-            throw std::logic_error("Opening-demo player teardown requires an attached player actor.");
+            aurora::throw_host_exception<std::logic_error>("Opening-demo player teardown requires an attached player actor.");
         }
         smgpc::compat::release_puppetable_demo_control(true);
         player->finish_opening_demo();
@@ -283,6 +284,6 @@ namespace MR {
 
     void incPlayerOxygen(u32 amount) {
         static_cast< void >(amount);
-        throw std::logic_error("Player oxygen state is unavailable.");
+        aurora::throw_host_exception<std::logic_error>("Player oxygen state is unavailable.");
     }
 }  // namespace MR

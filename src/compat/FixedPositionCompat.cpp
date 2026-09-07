@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Game/Util/FixedPosition.hpp"
 
 #include "Game/LiveActor/LiveActor.hpp"
@@ -46,18 +47,18 @@ namespace {
 namespace smgpc::compat {
     FixedPositionResourceData load_fixed_position_resource(const smgpc::resource::RarcArchive& archive, std::string_view resource_name) {
         if (resource_name.empty()) {
-            throw std::invalid_argument("FixedPosition resource name is empty");
+            aurora::throw_host_exception<std::invalid_argument>("FixedPosition resource name is empty");
         }
 
         const auto file_name = std::string(resource_name) + ".bcsv";
         const auto* entry = archive.find_resource(file_name);
         if (entry == nullptr) {
-            throw std::runtime_error("FixedPosition resource does not exist: " + file_name);
+            aurora::throw_host_exception<std::runtime_error>("FixedPosition resource does not exist: " + file_name);
         }
 
         const auto table = smgpc::resource::BcsvTable::from_bytes(archive.file_data(*entry));
         if (table.entry_count() == 0U) {
-            throw std::runtime_error("FixedPosition resource has no rows: " + file_name);
+            aurora::throw_host_exception<std::runtime_error>("FixedPosition resource has no rows: " + file_name);
         }
 
         auto joint_name = table.get_string(0U, "JointName");

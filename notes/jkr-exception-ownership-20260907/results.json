@@ -1,0 +1,50 @@
+{
+  "build_exit": 0,
+  "run_exit": 0,
+  "target": "smg-pc-jkr-exception-ownership-tests",
+  "command": "xmake build -y smg-pc-jkr-exception-ownership-tests",
+  "run": "build/macosx/arm64/debug/smg-pc-jkr-exception-ownership-tests",
+  "tested_standard_types": 9,
+  "camera_migration": [
+    {
+      "path": "src/compat/CameraUtilCompat.cpp",
+      "throws": 13,
+      "only_prefix_and_include_changed": true
+    },
+    {
+      "path": "src/compat/CameraLocalUtilRuntime.cpp",
+      "throws": 4,
+      "only_prefix_and_include_changed": true
+    }
+  ],
+  "lexer_tests": {
+    "cases": 3,
+    "exit": 0
+  },
+  "production_paths": [
+    "aurora/include/aurora/exception.hpp",
+    "src/compat/CameraUtilCompat.cpp",
+    "src/compat/CameraLocalUtilRuntime.cpp"
+  ],
+  "test_paths": [
+    "tests/JkrExceptionOwnershipTests.cpp",
+    "tests/xmake.lua"
+  ],
+  "broad_native_files": 168,
+  "broad_native_sites": 1510,
+  "aurora_files": 6,
+  "aurora_sites": 68,
+  "isolated_syntax_passed": 174,
+  "ownership_broad_build_exit": 0,
+  "ownership_broad_run_exit": 0,
+  "demo_sheet_build_exit": 0,
+  "demo_sheet_run_exit": 0,
+  "demo_sheet_cases": 11,
+  "demo_sheet_optional_disc_checks_skipped": 2,
+  "main_build_exit": 0,
+  "app_archive_build_exit": 0,
+  "showcase_build_exit": 255,
+  "showcase_undefined_owner_provider_symbols": 46,
+  "aurora_helper_commit": "40b3e98",
+  "aurora_producer_commit": "9e11f4a"
+}

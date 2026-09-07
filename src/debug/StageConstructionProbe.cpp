@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Game/NameObj/NameObj.hpp"
 #include "Logger.hpp"
 #include "RendererService.hpp"
@@ -58,14 +59,14 @@ namespace {
             const auto& argument = arguments[index];
             if (argument == option) {
                 if (index + 1U >= arguments.size() || arguments[index + 1U].empty()) {
-                    throw std::runtime_error(std::string(option) + " requires a value");
+                    aurora::throw_host_exception<std::runtime_error>(std::string(option) + " requires a value");
                 }
                 return arguments[index + 1U];
             }
             if (argument.starts_with(prefix)) {
                 const auto value = std::string_view(argument).substr(prefix.size());
                 if (value.empty()) {
-                    throw std::runtime_error(std::string(option) + " requires a value");
+                    aurora::throw_host_exception<std::runtime_error>(std::string(option) + " requires a value");
                 }
                 return value;
             }
@@ -77,7 +78,7 @@ namespace {
         auto parsed = s32{};
         const auto result = std::from_chars(value.data(), value.data() + value.size(), parsed);
         if (result.ec != std::errc{} || result.ptr != value.data() + value.size()) {
-            throw std::runtime_error(std::string(option) + " requires a signed 32-bit integer");
+            aurora::throw_host_exception<std::runtime_error>(std::string(option) + " requires a signed 32-bit integer");
         }
         return parsed;
     }
@@ -87,7 +88,7 @@ namespace {
         const auto disc = option_value(arguments, "--disc");
         const auto stage = option_value(arguments, "--stage");
         if (!disc.has_value() || !stage.has_value()) {
-            throw std::runtime_error(
+            aurora::throw_host_exception<std::runtime_error>(
                 "usage: smg-pc-stage-construction-probe --disc PATH --stage NAME "
                 "[--scene NAME] [--scenario N] [--start-id N] [--start-zone-id N]");
         }
@@ -107,14 +108,14 @@ namespace {
             options.start_zone_id = parse_s32(*start_zone_id, "--start-zone-id");
         }
         if (options.scenario_no < 1) {
-            throw std::runtime_error("--scenario must be positive");
+            aurora::throw_host_exception<std::runtime_error>("--scenario must be positive");
         }
         return options;
     }
 
     [[nodiscard]] int run_probe(const ProbeOptions& options) {
         if (!aurora_dvd_open(options.disc_image.c_str())) {
-            throw std::runtime_error("Aurora could not open disc image " + options.disc_image);
+            aurora::throw_host_exception<std::runtime_error>("Aurora could not open disc image " + options.disc_image);
         }
         const auto dvd_guard = DvdCloseGuard{};
 
@@ -148,7 +149,7 @@ namespace {
         stage_host.update_scene_requests();
 
         if (!stage_host.has_active_stage(options.stage_name)) {
-            throw std::runtime_error("strict stage construction returned without an active stage");
+            aurora::throw_host_exception<std::runtime_error>("strict stage construction returned without an active stage");
         }
         logger->info(smgpc::logging::Category::APP,
                      smgpc::logging::Message{"Strictly constructed retail stage {} scenario {}"},

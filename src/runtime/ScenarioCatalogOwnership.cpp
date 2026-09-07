@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "runtime/ScenarioCatalogOwnership.hpp"
 #include "runtime/ArchiveMountService.hpp"
 #include "runtime/RuntimeServices.hpp"
@@ -35,9 +36,9 @@ ScenarioCatalogOwnership::ScenarioCatalogOwnership(
     std::size_t byte_budget, ArchiveMountService& mounts) {
     compat::JkrHostAllocationScope host;
     if (!runtime || ArchiveMountService::active() != &mounts)
-        throw std::invalid_argument("The scenario catalog requires the active archive service and real heap runtime");
+        aurora::throw_host_exception<std::invalid_argument>("The scenario catalog requires the active archive service and real heap runtime");
     if (active_catalog)
-        throw std::logic_error("An actual scenario catalog is already published");
+        aurora::throw_host_exception<std::logic_error>("An actual scenario catalog is already published");
 
     // Validate the original fixed storage before the unchanged constructor
     // enumerates the same immutable disc directory. This does not select or
@@ -50,7 +51,7 @@ ScenarioCatalogOwnership::ScenarioCatalogOwnership(
         if (mounts.dvd().exists(path)) paths.emplace_back(path);
     }
     if (paths.size() > 64)
-        throw std::length_error("Authored scenario archives exceed the original parser capacity");
+        aurora::throw_host_exception<std::length_error>("Authored scenario archives exceed the original parser capacity");
 
     auto storage = std::make_unique<Storage>();
     storage->domain = compat::JkrAllocationDomain::create(std::move(runtime), byte_budget);
@@ -60,7 +61,7 @@ ScenarioCatalogOwnership::ScenarioCatalogOwnership(
     for (const auto& path : paths) {
         auto archive = mounts.retain(path);
         if (!archive)
-            throw std::logic_error("The original preloader did not publish an authored scenario archive");
+            aurora::throw_host_exception<std::logic_error>("The original preloader did not publish an authored scenario archive");
         storage->archives.push_back(std::move(archive));
     }
     {

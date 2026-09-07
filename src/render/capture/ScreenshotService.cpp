@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "capture/ScreenshotService.hpp"
 
 #include <algorithm>
@@ -87,7 +88,7 @@ void append_le16(std::vector<std::uint8_t> &bytes, std::uint16_t value) {
 
 void append_chunk(std::vector<std::uint8_t> &png, const std::array<std::uint8_t, 4U> &type, std::span<const std::uint8_t> data) {
     if (data.size() > std::numeric_limits<std::uint32_t>::max()) {
-        throw std::runtime_error("PNG chunk too large");
+        aurora::throw_host_exception<std::runtime_error>("PNG chunk too large");
     }
 
     append_be32(png, static_cast<std::uint32_t>(data.size()));
@@ -98,18 +99,18 @@ void append_chunk(std::vector<std::uint8_t> &png, const std::array<std::uint8_t,
 
 [[nodiscard]] std::vector<std::uint8_t> make_filtered_rgba_rows(const ScreenshotImageView &image) {
     if (image.width == 0U || image.height == 0U) {
-        throw std::runtime_error("Cannot write a zero-sized PNG");
+        aurora::throw_host_exception<std::runtime_error>("Cannot write a zero-sized PNG");
     }
 
     const auto row_bytes = image.width * 4U;
     const auto pitch = image.pitch == 0U ? row_bytes : image.pitch;
     if (pitch < row_bytes) {
-        throw std::runtime_error("Screenshot pitch is shorter than one RGBA row");
+        aurora::throw_host_exception<std::runtime_error>("Screenshot pitch is shorter than one RGBA row");
     }
 
     const auto required_size = static_cast<std::size_t>(pitch) * static_cast<std::size_t>(image.height - 1U) + row_bytes;
     if (image.pixels.size() < required_size) {
-        throw std::runtime_error("Screenshot pixel buffer is shorter than the declared dimensions");
+        aurora::throw_host_exception<std::runtime_error>("Screenshot pixel buffer is shorter than the declared dimensions");
     }
 
     auto filtered = std::vector<std::uint8_t>((static_cast<std::size_t>(row_bytes) + 1U) * image.height);
@@ -204,12 +205,12 @@ public:
 
         auto file = std::ofstream(path, std::ios::binary);
         if (!file) {
-            throw std::runtime_error("Cannot write PNG screenshot: " + path.string());
+            aurora::throw_host_exception<std::runtime_error>("Cannot write PNG screenshot: " + path.string());
         }
 
         file.write(reinterpret_cast<const char *>(png.data()), static_cast<std::streamsize>(png.size()));
         if (!file) {
-            throw std::runtime_error("Failed while writing PNG screenshot: " + path.string());
+            aurora::throw_host_exception<std::runtime_error>("Failed while writing PNG screenshot: " + path.string());
         }
     }
 };
@@ -260,7 +261,7 @@ public:
         {
             auto lock = std::lock_guard(_mutex);
             if (_stopping) {
-                throw std::runtime_error("Cannot queue PNG screenshot after async writer shutdown started");
+                aurora::throw_host_exception<std::runtime_error>("Cannot queue PNG screenshot after async writer shutdown started");
             }
             _jobs.push_back(std::move(job));
         }
@@ -271,7 +272,7 @@ public:
         auto lock = std::unique_lock(_mutex);
         _finished_work.wait(lock, [this] { return _jobs.empty() && _active_jobs == 0U; });
         if (!_first_error.empty()) {
-            throw std::runtime_error(_first_error);
+            aurora::throw_host_exception<std::runtime_error>(_first_error);
         }
     }
 

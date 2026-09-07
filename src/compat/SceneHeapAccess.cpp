@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Game/Util/MemoryUtil.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "compat/ResourceHolderCompat.hpp"
@@ -8,7 +9,7 @@ namespace MR {
     JKRSolidHeap* getSceneHeapGDDR3() {
         const auto* resources = smgpc::compat::ResourceHolderService::active();
         if (!resources) {
-            throw std::logic_error("Scene heap access requires an active scene resource owner");
+            aurora::throw_host_exception<std::logic_error>("Scene heap access requires an active scene resource owner");
         }
         // The native scene cohort is an actual JKRSolidHeap. Its owner retains
         // it with the resources, models and display lists allocated within it.

@@ -1,0 +1,209 @@
+[
+  {
+    "unit": "CameraParamString",
+    "source_sha256": "19f0b136218f9a40941dca4ec6e9b17afa54951d63a986fcb6565142e43b0dc7",
+    "symbols": [
+      {
+        "symbol": "__ct__17CameraParamStringFv",
+        "before": 100.0,
+        "after": 100.0,
+        "retail_bytes": "12",
+        "current_bytes": "12"
+      },
+      {
+        "symbol": "__as__17CameraParamStringFRC17CameraParamString",
+        "before": 100.0,
+        "after": 100.0,
+        "retail_bytes": "52",
+        "current_bytes": "52"
+      },
+      {
+        "symbol": "setCharPtr__17CameraParamStringFPCc",
+        "before": 100.0,
+        "after": 100.0,
+        "retail_bytes": "4",
+        "current_bytes": "4"
+      },
+      {
+        "symbol": "getCharPtr__17CameraParamStringCFv",
+        "before": 100.0,
+        "after": 100.0,
+        "retail_bytes": "8",
+        "current_bytes": "8"
+      },
+      {
+        "symbol": "copy__17CameraParamStringFPCc",
+        "before": 100.0,
+        "after": 100.0,
+        "retail_bytes": "40",
+        "current_bytes": "40"
+      }
+    ]
+  },
+  {
+    "unit": "CameraParamChunkID",
+    "source_sha256": "a495266b17e631030b353bc2566430626eb6d3f9d84274c9a5ca8800e2dd4048",
+    "symbols": [
+      {
+        "symbol": "__ct__18CameraParamChunkIDFv",
+        "before": 100.0,
+        "after": 100.0,
+        "retail_bytes": "28",
+        "current_bytes": "28"
+      },
+      {
+        "symbol": "__ct__18CameraParamChunkIDFRC18CameraParamChunkID",
+        "before": 100.0,
+        "after": 100.0,
+        "retail_bytes": "128",
+        "current_bytes": "128"
+      },
+      {
+        "symbol": "__gt__18CameraParamChunkIDCFRC18CameraParamChunkID",
+        "before": 100.0,
+        "after": 100.0,
+        "retail_bytes": "168",
+        "current_bytes": "168"
+      },
+      {
+        "symbol": "__eq__18CameraParamChunkIDCFRC18CameraParamChunkID",
+        "before": 100.0,
+        "after": 100.0,
+        "retail_bytes": "176",
+        "current_bytes": "176"
+      },
+      {
+        "symbol": "equals__18CameraParamChunkIDCFlPCc",
+        "before": 100.0,
+        "after": 100.0,
+        "retail_bytes": "104",
+        "current_bytes": "104"
+      },
+      {
+        "symbol": "getBuffer__18CameraParamChunkIDFUl",
+        "before": 100.0,
+        "after": 100.0,
+        "retail_bytes": "8",
+        "current_bytes": "8"
+      },
+      {
+        "symbol": "createCubeID__18CameraParamChunkIDFlUs",
+        "before": 100.0,
+        "after": 100.0,
+        "retail_bytes": "108",
+        "current_bytes": "108"
+      },
+      {
+        "symbol": "createGroupID__18CameraParamChunkIDFlPCcUlUl",
+        "before": 100.0,
+        "after": 100.0,
+        "retail_bytes": "148",
+        "current_bytes": "148"
+      },
+      {
+        "symbol": "createOtherID__18CameraParamChunkIDFlPCc",
+        "before": 100.0,
+        "after": 100.0,
+        "retail_bytes": "132",
+        "current_bytes": "132"
+      },
+      {
+        "symbol": "createEventID__18CameraParamChunkIDFlPCc",
+        "before": 100.0,
+        "after": 100.0,
+        "retail_bytes": "132",
+        "current_bytes": "132"
+      },
+      {
+        "symbol": "createStartID__18CameraParamChunkIDFlUs",
+        "before": 100.0,
+        "after": 100.0,
+        "retail_bytes": "132",
+        "current_bytes": "132"
+      }
+    ]
+  },
+  {
+    "unit": "DotCamParams",
+    "source_sha256": "002bea268b8841385707b82f66482c13309e58d38f2dbe9eb7ddf64ef7159a22",
+    "symbols": [
+      {
+        "symbol": "__ct__17DotCamReaderInBinFPCv",
+        "before": 100.0,
+        "after": 100.0,
+        "retail_bytes": "112",
+        "current_bytes": "112"
+      },
+      {
+        "symbol": "__dt__17DotCamReaderInBinFv",
+        "before": 100.0,
+        "after": 100.0,
+        "retail_bytes": "124",
+        "current_bytes": "124"
+      },
+      {
+        "symbol": "hasMoreChunk__17DotCamReaderInBinCFv",
+        "before": 82.434784,
+        "after": 100.0,
+        "retail_bytes": "184",
+        "current_bytes": "184"
+      },
+      {
+        "symbol": "nextToChunk__17DotCamReaderInBinFv",
+        "before": 100.0,
+        "after": 100.0,
+        "retail_bytes": "68",
+        "current_bytes": "68"
+      },
+      {
+        "symbol": "getValueInt__17DotCamReaderInBinFPCcPl",
+        "before": 0.0,
+        "after": 0.0,
+        "retail_bytes": "8",
+        "current_bytes": "100"
+      },
+      {
+        "symbol": "getValueFloat__17DotCamReaderInBinFPCcPf",
+        "before": 100.0,
+        "after": 100.0,
+        "retail_bytes": "8",
+        "current_bytes": "8"
+      },
+      {
+        "symbol": "getValueString__17DotCamReaderInBinFPCcPPCc",
+        "before": 100.0,
+        "after": 100.0,
+        "retail_bytes": "100",
+        "current_bytes": "100"
+      },
+      {
+        "symbol": "__dt__12DotCamReaderFv",
+        "before": 100.0,
+        "after": 100.0,
+        "retail_bytes": "64",
+        "current_bytes": "64"
+      },
+      {
+        "symbol": "getVersion__17DotCamReaderInBinCFv",
+        "before": 100.0,
+        "after": 100.0,
+        "retail_bytes": "8",
+        "current_bytes": "8"
+      },
+      {
+        "symbol": "init__17DotCamReaderInBinFPCv",
+        "before": 65.05556,
+        "after": 65.05556,
+        "retail_bytes": "144",
+        "current_bytes": "108"
+      },
+      {
+        "symbol": "getValueVec__17DotCamReaderInBinFPCcPQ29JGeometry8TVec3<f>",
+        "before": 99.7,
+        "after": 99.7,
+        "retail_bytes": "240",
+        "current_bytes": "240"
+      }
+    ]
+  }
+]

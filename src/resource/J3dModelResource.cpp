@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "J3dModelResource.hpp"
 #include "J3dJointData.hpp"
 #include "J3dGeometryData.hpp"
@@ -37,7 +38,7 @@ namespace smgpc::resource {
         }
         void require_range(std::size_t size, std::size_t offset, std::size_t extent) {
             if (offset > size || extent > size - offset)
-                throw std::runtime_error("J3D model range exceeds its retained resource");
+                aurora::throw_host_exception<std::runtime_error>("J3D model range exceeds its retained resource");
         }
         std::uint16_t read_u16(Bytes bytes, std::size_t offset) {
             require_range(bytes.size(), offset, 2);
@@ -54,14 +55,14 @@ namespace smgpc::resource {
             explicit File(Bytes bytes) : source(bytes), magic(read_u32(bytes, 0)), type(read_u32(bytes, 4)) {
                 require_range(bytes.size(), 0, 0x20);
                 const auto size = read_u32(bytes, 8);
-                if (size < 0x20) throw std::runtime_error("J3D model file size is smaller than its header");
+                if (size < 0x20) aurora::throw_host_exception<std::runtime_error>("J3D model file size is smaller than its header");
                 require_range(bytes.size(), 0, size);
                 source = bytes.first(size);
                 std::size_t offset = 0x20;
                 for (std::uint32_t i = 0; i < read_u32(source, 0xc); ++i) {
                     require_range(source.size(), offset, 8);
                     const auto size = read_u32(source, offset + 4);
-                    if (size < 8) throw std::runtime_error("J3D model block is smaller than its header");
+                    if (size < 8) aurora::throw_host_exception<std::runtime_error>("J3D model block is smaller than its header");
                     require_range(source.size(), offset, size);
                     blocks.push_back(source.subspan(offset, size));
                     offset += size;
@@ -71,7 +72,7 @@ namespace smgpc::resource {
                 Bytes result;
                 for (const auto block : blocks) {
                     if (read_u32(block, 0) != type) continue;
-                    if (!result.empty()) throw std::runtime_error("J3D model contains duplicate construction blocks");
+                    if (!result.empty()) aurora::throw_host_exception<std::runtime_error>("J3D model contains duplicate construction blocks");
                     result = block;
                 }
                 return result;
@@ -96,7 +97,7 @@ namespace smgpc::resource {
                 offset += 4;
                 auto& frame = frames.back();
                 if (type == 0) {
-                    if (frames.size() != 1) throw std::runtime_error("J3D hierarchy has an unclosed child scope");
+                    if (frames.size() != 1) aurora::throw_host_exception<std::runtime_error>("J3D hierarchy has an unclosed child scope");
                     break;
                 }
                 if (type == 1) {
@@ -105,12 +106,12 @@ namespace smgpc::resource {
                     continue;
                 }
                 if (type == 2) {
-                    if (frames.size() == 1) throw std::runtime_error("J3D hierarchy closes an absent child scope");
+                    if (frames.size() == 1) aurora::throw_host_exception<std::runtime_error>("J3D hierarchy closes an absent child scope");
                     frames.pop_back();
                     continue;
                 }
                 if (type == 0x10) {
-                    if (value >= joint_count) throw std::runtime_error("J3D hierarchy joint is outside JNT1");
+                    if (value >= joint_count) aurora::throw_host_exception<std::runtime_error>("J3D hierarchy joint is outside JNT1");
                     frame.current = value;
                     if (frame.parent != absent) {
                         auto& first = child[frame.parent];
@@ -119,24 +120,24 @@ namespace smgpc::resource {
                             auto cursor = first;
                             std::size_t traversed = 0;
                             while (younger[cursor] != absent) {
-                                if (++traversed > joint_count) throw std::runtime_error("J3D hierarchy contains a sibling cycle");
+                                if (++traversed > joint_count) aurora::throw_host_exception<std::runtime_error>("J3D hierarchy contains a sibling cycle");
                                 cursor = younger[cursor];
                             }
                             younger[cursor] = value;
                         }
                     }
                 } else if (type == 0x11) {
-                    if (value >= material_count) throw std::runtime_error("J3D hierarchy material is outside MAT3/MDL3");
-                    if (frame.parent == absent) throw std::runtime_error("J3D hierarchy material has no parent joint");
+                    if (value >= material_count) aurora::throw_host_exception<std::runtime_error>("J3D hierarchy material is outside MAT3/MDL3");
+                    if (frame.parent == absent) aurora::throw_host_exception<std::runtime_error>("J3D hierarchy material has no parent joint");
                     if (mesh[frame.parent] != absent) next_material[value] = mesh[frame.parent];
                     mesh[frame.parent] = value;
                 } else if (type == 0x12) {
-                    if (value >= model.getShapeNum()) throw std::runtime_error("J3D hierarchy shape is outside SHP1");
+                    if (value >= model.getShapeNum()) aurora::throw_host_exception<std::runtime_error>("J3D hierarchy shape is outside SHP1");
                     if (frame.parent == absent || mesh[frame.parent] == absent)
-                        throw std::runtime_error("J3D hierarchy shape has no parent material");
+                        aurora::throw_host_exception<std::runtime_error>("J3D hierarchy shape has no parent material");
                     material_shape[mesh[frame.parent]] = value;
                 } else {
-                    throw std::runtime_error("J3D hierarchy contains an unknown command");
+                    aurora::throw_host_exception<std::runtime_error>("J3D hierarchy contains an unknown command");
                 }
             }
             // The two SDK links form a directed graph. Sharing is legal; an
@@ -150,7 +151,7 @@ namespace smgpc::resource {
                     pending.pop_back();
                     if (leaving) { visited[node] = 2; continue; }
                     if (visited[node] == 2) continue;
-                    if (visited[node] == 1) throw std::runtime_error("J3D hierarchy contains a joint cycle");
+                    if (visited[node] == 1) aurora::throw_host_exception<std::runtime_error>("J3D hierarchy contains a joint cycle");
                     visited[node] = 1;
                     pending.push_back({node, true});
                     if (younger[node] != absent) pending.push_back({younger[node], false});
@@ -160,9 +161,9 @@ namespace smgpc::resource {
             for (const auto first : mesh) {
                 std::size_t traversed = 0;
                 for (auto material = first; material != absent; material = next_material[material]) {
-                    if (++traversed > material_count) throw std::runtime_error("J3D hierarchy contains a material cycle");
+                    if (++traversed > material_count) aurora::throw_host_exception<std::runtime_error>("J3D hierarchy contains a material cycle");
                     if (material_shape[material] == absent)
-                        throw std::runtime_error("J3D joint mesh has no shape for original finalization");
+                        aurora::throw_host_exception<std::runtime_error>("J3D joint mesh has no shape for original finalization");
                 }
             }
         }
@@ -175,7 +176,7 @@ namespace smgpc::resource {
                     for (u16 slot = 0; slot < matrix->getUseMtxNum(); ++slot) {
                         const auto index = matrix->getUseMtxIndex(slot);
                         if (index != 0xffff && index >= model.getDrawMtxNum())
-                            throw std::runtime_error("J3D shape matrix is outside the original draw-matrix allocation");
+                            aurora::throw_host_exception<std::runtime_error>("J3D shape matrix is outside the original draw-matrix allocation");
                     }
                 }
             }
@@ -193,11 +194,11 @@ namespace smgpc::resource {
                 auto* material = table.getMaterialNodePointer(i);
                 auto* display = material->getSharedDisplayListObj();
                 if (!display || !display->getDisplayList(0) || !material->getTevBlock())
-                    throw std::runtime_error("J3D binary model lacks its original shared display list/TEV block");
+                    aurora::throw_host_exception<std::runtime_error>("J3D binary model lacks its original shared display list/TEV block");
                 const auto start = reinterpret_cast<std::uintptr_t>(display->getDisplayList(0));
                 const auto end = start + display->getDisplayListSize();
                 if (end < start || end - start < 2 || (start & 31) != 0)
-                    throw std::runtime_error("J3D display-list address range/alignment is invalid for GD");
+                    aurora::throw_host_exception<std::runtime_error>("J3D display-list address range/alignment is invalid for GD");
                 lists.push_back({start, end, i});
             }
             // Retain overlapping command views in the same preview allocation.
@@ -249,7 +250,7 @@ namespace smgpc::resource {
                     // Original getTexNoReg narrows the low 24 bits to u16.
                     const auto texture = static_cast<u16>(read_u32(commands, offset + 1));
                     if (slot >= 8 || !table.getTexture() || texture >= table.getTexture()->getNum())
-                        throw std::runtime_error("J3D display-list texture reference is outside TEX1/GX slots");
+                        aurora::throw_host_exception<std::runtime_error>("J3D display-list texture reference is outside TEX1/GX slots");
                     const auto* image = table.getTexture()->getResTIMG(texture);
                     const std::size_t written = image->mPaletteName == 1 ? 0x37 : 0x14;
                     require_range(commands.size(), offset, written);
@@ -314,8 +315,8 @@ namespace smgpc::resource {
         Storage(Bytes bytes, std::shared_ptr<compat::JkrAllocationDomain> allocation,
                 std::shared_ptr<Mem1ResourceHeap> texture_heap)
             : domain(std::move(allocation)), mem1(std::move(texture_heap)), source(bytes.begin(), bytes.end()) {
-            if (!domain) throw std::invalid_argument("J3D model owner requires an original allocation domain");
-            if (source.empty()) throw std::invalid_argument("J3D model source is empty");
+            if (!domain) aurora::throw_host_exception<std::invalid_argument>("J3D model owner requires an original allocation domain");
+            if (source.empty()) aurora::throw_host_exception<std::invalid_argument>("J3D model source is empty");
         }
         ~Storage() {
             compat::JkrHostAllocationScope host;
@@ -345,7 +346,7 @@ namespace smgpc::resource {
             if (read_u32(source, 0) != tag('J','3','D','2')) return nullptr;
             const auto type = read_u32(source, 4);
             if (!binary && type == tag('b','m','d','2'))
-                throw std::runtime_error("Original v21 J3D model loading is not yet provided on this host");
+                aurora::throw_host_exception<std::runtime_error>("Original v21 J3D model loading is not yet provided on this host");
             if (binary) {
                 if (type != tag('b','d','l','3') && type != tag('b','d','l','4')) return nullptr;
             } else if (type != tag('b','m','d','3')) return nullptr;
@@ -411,7 +412,7 @@ namespace smgpc::resource {
         auto& r = registry();
         std::lock_guard lock(r.mutex);
         _storage->generation = r.next_generation++;
-        if (_storage->generation == 0) throw std::overflow_error("J3D model registration identity exhausted");
+        if (_storage->generation == 0) aurora::throw_host_exception<std::overflow_error>("J3D model registration identity exhausted");
         r.resources.emplace(_storage->source.data(), Registry::Entry{_storage, _storage->generation, 1});
     }
     struct J3dModelSourceRegistration::State {
@@ -435,19 +436,19 @@ namespace smgpc::resource {
     J3dModelSourceRegistration J3dModelResource::register_source(Bytes bytes) {
         compat::JkrHostAllocationScope host;
         if (!_storage || bytes.size() != _storage->source.size() || !std::equal(bytes.begin(), bytes.end(), _storage->source.begin()))
-            throw std::invalid_argument("J3D model alias does not match its complete retained source");
+            aurora::throw_host_exception<std::invalid_argument>("J3D model alias does not match its complete retained source");
         auto& r = registry();
         std::lock_guard lock(r.mutex);
         auto found = r.resources.find(bytes.data());
         std::uint64_t generation;
         if (found != r.resources.end()) {
             if (found->second.owner.lock().get() != _storage.get())
-                throw std::logic_error("J3D model identity belongs to a different retained owner");
+                aurora::throw_host_exception<std::logic_error>("J3D model identity belongs to a different retained owner");
             generation = found->second.generation;
             ++found->second.references;
         } else {
             generation = r.next_generation++;
-            if (generation == 0) throw std::overflow_error("J3D model registration identity exhausted");
+            if (generation == 0) aurora::throw_host_exception<std::overflow_error>("J3D model registration identity exhausted");
             r.resources.emplace(bytes.data(), Registry::Entry{_storage, generation, 1});
         }
         try {
@@ -477,7 +478,7 @@ namespace smgpc::resource {
             const auto found = r.resources.find(data);
             if (found != r.resources.end()) owner = std::static_pointer_cast<J3dModelResource::Storage>(found->second.owner.lock());
         }
-        if (!owner) throw std::runtime_error("J3D model loading requires a registered bounded resource owner");
+        if (!owner) aurora::throw_host_exception<std::runtime_error>("J3D model loading requires a registered bounded resource owner");
         return owner->load_model(flags, binary);
     }
     J3DMaterialTable* load_registered_j3d_material_table(const void* data) {
@@ -490,7 +491,7 @@ namespace smgpc::resource {
             const auto found = r.resources.find(data);
             if (found != r.resources.end()) owner = std::static_pointer_cast<J3dModelResource::Storage>(found->second.owner.lock());
         }
-        if (!owner) throw std::runtime_error("J3D material-table loading requires a registered bounded resource owner");
+        if (!owner) aurora::throw_host_exception<std::runtime_error>("J3D material-table loading requires a registered bounded resource owner");
         return owner->load_table();
     }
 }

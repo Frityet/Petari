@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Util/ObjUtil.hpp"
@@ -16,7 +17,7 @@ namespace {
     smgpc::runtime::RuntimeContext &require_runtime(std::string_view operation) {
         auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
         if (runtime == nullptr) {
-            throw std::logic_error(std::string(operation) +
+            aurora::throw_host_exception<std::logic_error>(std::string(operation) +
                                    " requires the active game runtime.");
         }
         return *runtime;
@@ -24,7 +25,7 @@ namespace {
 
     void require_pointer_channel(s32 channel) {
         if (channel < 0 || channel >= WPAD_MAX_CONTROLLERS) {
-            throw std::out_of_range("The star-pointer channel is outside the retail WPAD table.");
+            aurora::throw_host_exception<std::out_of_range>("The star-pointer channel is outside the retail WPAD table.");
         }
     }
 

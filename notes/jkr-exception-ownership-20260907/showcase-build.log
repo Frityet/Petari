@@ -1,0 +1,193 @@
+[0m[38;5;2;1m[ 94%]:[0m [2m[38;5;5;1m<smg-pc-app>[0m [38;5;5;1marchiving.debug libsmg-pc-app.a[0m
+/opt/homebrew/opt/llvm/bin/llvm-ar cr build/macosx/arm64/debug/libsmg-pc-app.a build/.objs/smg-pc-app/macosx/arm64/debug/src/app/Application.cpp.o
+[0m[38;5;2;1m[ 94%]:[0m [2m[38;5;5;1m<smg-pc-mario-gateway-walk-slice>[0m [38;5;5;1marchiving.debug libsmg-pc-mario-gateway-walk-slice.a[0m
+/opt/homebrew/opt/llvm/bin/llvm-ar cr build/macosx/arm64/debug/libsmg-pc-mario-gateway-walk-slice.a build/.objs/smg-pc-mario-gateway-walk-slice/macosx/arm64/debug/src/Game/Player/MarioActorCamera.cpp.o build/.objs/smg-pc-mario-gateway-walk-slice/macosx/arm64/debug/src/Game/Player/MarioActorShadow.cpp.o build/.objs/smg-pc-mario-gateway-walk-slice/macosx/arm64/debug/src/Game/Player/MarioActorWipe.cpp.o build/.objs/smg-pc-mario-gateway-walk-slice/macosx/arm64/debug/src/Game/Player/MarioActorHand.cpp.o build/.objs/smg-pc-mario-gateway-walk-slice/macosx/arm64/debug/src/Game/Player/MarioActorSpecialDraw.cpp.o build/.objs/smg-pc-mario-gateway-walk-slice/macosx/arm64/debug/src/Game/Player/MarioActorGravity.cpp.o build/.objs/smg-pc-mario-gateway-walk-slice/macosx/arm64/debug/src/Game/Player/MarioParts.cpp.o build/.objs/smg-pc-mario-gateway-walk-slice/macosx/arm64/debug/src/Game/Player/MarioActorParts.cpp.o build/.objs/smg-pc-mario-gateway-walk-slice/macosx/arm64/debug/src/Game/Player/MarioSearchLight.cpp.o build/.objs/smg-pc-mario-gateway-walk-slice/macosx/arm64/debug/src/Game/Player/MarioNullBck.cpp.o build/.objs/smg-pc-mario-gateway-walk-slice/macosx/arm64/debug/src/Game/Player/FireMarioBall.cpp.o build/.objs/smg-pc-mario-gateway-walk-slice/macosx/arm64/debug/src/Game/Player/JetTurtleShadow.cpp.o build/.objs/smg-pc-mario-gateway-walk-slice/macosx/arm64/debug/src/Game/Player/TornadoMario.cpp.o build/.objs/smg-pc-mario-gateway-walk-slice/macosx/arm64/debug/src/Game/Player/MarioActorInit.cpp.o build/.objs/smg-pc-mario-gateway-walk-slice/macosx/arm64/debug/src/Game/Player/MarioActorPad.cpp.o build/.objs/smg-pc-mario-gateway-walk-slice/macosx/arm64/debug/src/Game/Player/MarioConst.cpp.o build/.objs/smg-pc-mario-gateway-walk-slice/macosx/arm64/debug/src/Game/Player/MarioMove.cpp.o build/.objs/smg-pc-mario-gateway-walk-slice/macosx/arm64/debug/src/Game/Player/MarioWalk.cpp.o
+[0m[38;5;2;1m[ 94%]:[0m [2m[38;5;5;1m<smg-pc-showcase>[0m [38;5;5;1mlinking.debug smg-pc-showcase[0m
+/opt/homebrew/opt/llvm/bin/clang++ -o build/macosx/arm64/debug/smg-pc-showcase build/.objs/smg-pc-showcase/macosx/arm64/debug/src/showcase/Showcase.cpp.o build/.objs/smg-pc-showcase/macosx/arm64/debug/aurora/lib/compat.cpp.o -target arm64-apple-macos26.0 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk -L/Users/frityet/.xmake/packages/e/encounter-nod/v2.0.0-alpha.10/6c186b0e5c14418488229286339d917f/lib -L/Users/frityet/.xmake/packages/l/libpng/v1.6.58/f8ae13cb78784172986d714555ab04d9/lib -L/Users/frityet/.xmake/packages/d/dawn-build/v20260807.225922/f69ad75814b44692a43ad687dc15bd42/lib -L/Users/frityet/.xmake/packages/z/zstd/v1.5.7/bd1f19f343564e4b8352bb261f80a519/lib -L/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/0ee3cc5024224d4da4704fa6c643e242/lib -L/Users/frityet/.xmake/packages/d/dawn-build/v20260807.225922/61767b38046f4221ae1d71b62165683c/lib -L/Users/frityet/.xmake/packages/f/freetype/2.14.1/6549e9153b644dcb9f782af328fb2d17/lib -L/Users/frityet/.xmake/packages/a/abseil/20240722.0/c0d180f8461c47a588a6da4872a3ee77/lib -L/Users/frityet/.xmake/packages/s/sqlite3/3.53.0+0/e05b3c73c8774ea4aeb176e4762c2503/lib -L/Users/frityet/.xmake/packages/t/tracy/v0.11.1/b113d1221b5a429190e079dff1b05f5f/lib -L/Users/frityet/.xmake/packages/f/fmt/11.1.4/19191b60a2b14de4836f47549929dd7a/lib -L/Users/frityet/.xmake/packages/x/xxhash/v0.8.3/7a45592449c84664bf0eb1acf089c9d8/lib -Lbuild/macosx/arm64/debug -L/Users/frityet/.xmake/packages/l/libsdl3/3.4.10/153711a8b5634d3587109ddbacab0745/lib -lsmg-pc-app -lsmg-pc-mario-gateway-walk-slice -lsmg-pc-game -lsmg-pc-render -lsmg-pc-common -laurora-core -laurora-nw4r -laurora-card -laurora-dvd -lnod -laurora-gd -laurora-gx -lpng -laurora-ms -laurora-mtx -laurora-os -laurora-pad -laurora-si -laurora-vi -laurora-platform -lzstd -limgui -lwebgpu_dawn -lfreetype -lz -laurora-base -labsl_statusor -labsl_log_flags -labsl_scoped_set_env -labsl_die_if_null -labsl_flags_parse -labsl_poison -labsl_periodic_sampler -labsl_log_initialize -labsl_random_internal_distribution_test_util -labsl_failure_signal_handler -labsl_cordz_sample_token -labsl_status -labsl_random_distributions -labsl_random_seed_sequences -labsl_flags_usage -labsl_leak_check -labsl_random_internal_pool_urbg -labsl_flags_usage_internal -labsl_bad_any_cast_impl -labsl_log_internal_check_op -labsl_random_internal_randen -labsl_random_seed_gen_exception -labsl_random_internal_seed_material -labsl_log_internal_conditions -labsl_random_internal_randen_hwaes -labsl_random_internal_randen_slow -labsl_flags_internal -labsl_flags_reflection -labsl_log_internal_message -labsl_random_internal_randen_hwaes_impl -labsl_flags_marshalling -labsl_flags_private_handle_accessor -labsl_flags_config -labsl_examine_stack -labsl_log_internal_format -labsl_log_internal_proto -labsl_log_internal_nullguard -labsl_strerror -labsl_random_internal_platform -labsl_flags_commandlineflag -labsl_flags_program_name -labsl_log_internal_log_sink_set -labsl_flags_commandlineflag_internal -labsl_raw_hash_set -labsl_log_internal_globals -labsl_log_globals -labsl_log_sink -labsl_cord -labsl_hashtablez_sampler -labsl_hash -labsl_vlog_config_internal -labsl_log_entry -labsl_city -labsl_low_level_hash -labsl_log_internal_fnmatch -labsl_cordz_info -labsl_bad_variant_access -labsl_bad_optional_access -labsl_cord_internal -labsl_cordz_functions -labsl_cordz_handle -labsl_crc_cord_state -labsl_exponential_biased -labsl_synchronization -labsl_crc32c -labsl_graphcycles_internal -labsl_kernel_timeout_internal -labsl_stacktrace -labsl_symbolize -labsl_crc_internal -labsl_time -labsl_debugging_internal -labsl_demangle_internal -labsl_malloc_internal -labsl_crc_cpu_detect -labsl_str_format_internal -labsl_civil_time -labsl_time_zone -labsl_demangle_rust -labsl_strings -labsl_decode_rust_punycode -labsl_strings_internal -labsl_int128 -labsl_utf8_for_code_point -labsl_string_view -labsl_base -labsl_throw_delegate -labsl_spinlock_wait -labsl_raw_logging_internal -labsl_log_severity -lsqlite3 -ltracy -lfmt -lxxhash -laurora-main -lSDL3 -framework IOSurface -framework AudioToolbox -framework AVFoundation -framework CoreAudio -framework CoreHaptics -framework CoreMedia -framework CoreVideo -framework Foundation -framework GameController -framework Metal -framework QuartzCore -framework CoreFoundation -framework UniformTypeIdentifiers -framework Cocoa -framework Carbon -framework ForceFeedback -framework IOKit -stdlib=libc++ -L/opt/homebrew/opt/llvm/lib -L/opt/homebrew/opt/llvm/lib/c++ -Xlinker -rpath -Xlinker /opt/homebrew/opt/llvm/lib -Xlinker -rpath -Xlinker /opt/homebrew/opt/llvm/lib/c++ -lpthread -ldl -liconv -Wl,-dead_strip
+ld: warning: object file (/Users/frityet/.xmake/packages/l/libpng/v1.6.58/f8ae13cb78784172986d714555ab04d9/lib/libpng.a[3](pngrio.c.o)) was built for newer 'macOS' version (26.5) than being linked (26.0)
+ld: warning: object file (/Users/frityet/.xmake/packages/l/libpng/v1.6.58/f8ae13cb78784172986d714555ab04d9/lib/libpng.a[4](pngerror.c.o)) was built for newer 'macOS' version (26.5) than being linked (26.0)
+ld: warning: object file (/Users/frityet/.xmake/packages/l/libpng/v1.6.58/f8ae13cb78784172986d714555ab04d9/lib/libpng.a[5](pngwio.c.o)) was built for newer 'macOS' version (26.5) than being linked (26.0)
+ld: warning: object file (/Users/frityet/.xmake/packages/l/libpng/v1.6.58/f8ae13cb78784172986d714555ab04d9/lib/libpng.a[6](pngtrans.c.o)) was built for newer 'macOS' version (26.5) than being linked (26.0)
+ld: warning: object file (/Users/frityet/.xmake/packages/l/libpng/v1.6.58/f8ae13cb78784172986d714555ab04d9/lib/libpng.a[7](pngwrite.c.o)) was built for newer 'macOS' version (26.5) than being linked (26.0)
+ld: warning: object file (/Users/frityet/.xmake/packages/l/libpng/v1.6.58/f8ae13cb78784172986d714555ab04d9/lib/libpng.a[8](pngwutil.c.o)) was built for newer 'macOS' version (26.5) than being linked (26.0)
+ld: warning: object file (/Users/frityet/.xmake/packages/l/libpng/v1.6.58/f8ae13cb78784172986d714555ab04d9/lib/libpng.a[9](pngwtran.c.o)) was built for newer 'macOS' version (26.5) than being linked (26.0)
+ld: warning: object file (/Users/frityet/.xmake/packages/l/libpng/v1.6.58/f8ae13cb78784172986d714555ab04d9/lib/libpng.a[11](pngread.c.o)) was built for newer 'macOS' version (26.5) than being linked (26.0)
+ld: warning: object file (/Users/frityet/.xmake/packages/l/libpng/v1.6.58/f8ae13cb78784172986d714555ab04d9/lib/libpng.a[12](pngmem.c.o)) was built for newer 'macOS' version (26.5) than being linked (26.0)
+ld: warning: object file (/Users/frityet/.xmake/packages/l/libpng/v1.6.58/f8ae13cb78784172986d714555ab04d9/lib/libpng.a[13](pngget.c.o)) was built for newer 'macOS' version (26.5) than being linked (26.0)
+ld: warning: object file (/Users/frityet/.xmake/packages/l/libpng/v1.6.58/f8ae13cb78784172986d714555ab04d9/lib/libpng.a[14](png.c.o)) was built for newer 'macOS' version (26.5) than being linked (26.0)
+ld: warning: object file (/Users/frityet/.xmake/packages/l/libpng/v1.6.58/f8ae13cb78784172986d714555ab04d9/lib/libpng.a[15](pngrtran.c.o)) was built for newer 'macOS' version (26.5) than being linked (26.0)
+ld: warning: object file (/Users/frityet/.xmake/packages/l/libpng/v1.6.58/f8ae13cb78784172986d714555ab04d9/lib/libpng.a[16](pngrutil.c.o)) was built for newer 'macOS' version (26.5) than being linked (26.0)
+ld: warning: object file (/Users/frityet/.xmake/packages/l/libpng/v1.6.58/f8ae13cb78784172986d714555ab04d9/lib/libpng.a[17](pngset.c.o)) was built for newer 'macOS' version (26.5) than being linked (26.0)
+ld: warning: object file (/Users/frityet/.xmake/packages/l/libpng/v1.6.58/f8ae13cb78784172986d714555ab04d9/lib/libpng.a[18](filter_neon_intrinsics.c.o)) was built for newer 'macOS' version (26.5) than being linked (26.0)
+ld: warning: object file (/Users/frityet/.xmake/packages/l/libpng/v1.6.58/f8ae13cb78784172986d714555ab04d9/lib/libpng.a[19](arm_init.c.o)) was built for newer 'macOS' version (26.5) than being linked (26.0)
+ld: warning: object file (/Users/frityet/.xmake/packages/l/libpng/v1.6.58/f8ae13cb78784172986d714555ab04d9/lib/libpng.a[20](palette_neon_intrinsics.c.o)) was built for newer 'macOS' version (26.5) than being linked (26.0)
+ld: warning: object file (/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/0ee3cc5024224d4da4704fa6c643e242/lib/libimgui.a[2](imgui_widgets.cpp.o)) was built for newer 'macOS' version (26.5) than being linked (26.0)
+ld: warning: object file (/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/0ee3cc5024224d4da4704fa6c643e242/lib/libimgui.a[3](imgui.cpp.o)) was built for newer 'macOS' version (26.5) than being linked (26.0)
+ld: warning: object file (/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/0ee3cc5024224d4da4704fa6c643e242/lib/libimgui.a[4](imgui_tables.cpp.o)) was built for newer 'macOS' version (26.5) than being linked (26.0)
+ld: warning: object file (/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/0ee3cc5024224d4da4704fa6c643e242/lib/libimgui.a[6](imgui_draw.cpp.o)) was built for newer 'macOS' version (26.5) than being linked (26.0)
+ld: warning: object file (/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/0ee3cc5024224d4da4704fa6c643e242/lib/libimgui.a[8](imgui_impl_sdl3.cpp.o)) was built for newer 'macOS' version (26.5) than being linked (26.0)
+ld: warning: object file (/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/0ee3cc5024224d4da4704fa6c643e242/lib/libimgui.a[9](imgui_impl_sdlrenderer3.cpp.o)) was built for newer 'macOS' version (26.5) than being linked (26.0)
+ld: warning: object file (/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/0ee3cc5024224d4da4704fa6c643e242/lib/libimgui.a[10](imgui_impl_wgpu.cpp.o)) was built for newer 'macOS' version (26.5) than being linked (26.0)
+ld: warning: object file (/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/0ee3cc5024224d4da4704fa6c643e242/lib/libimgui.a[11](imgui_freetype.cpp.o)) was built for newer 'macOS' version (26.5) than being linked (26.0)
+ld: warning: object file (/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/0ee3cc5024224d4da4704fa6c643e242/lib/libimgui.a[12](imgui_config.cpp.o)) was built for newer 'macOS' version (26.5) than being linked (26.0)
+ld: warning: object file (/Users/frityet/.xmake/packages/s/sqlite3/3.53.0+0/e05b3c73c8774ea4aeb176e4762c2503/lib/libsqlite3.a[2](sqlite3.c.o)) was built for newer 'macOS' version (26.5) than being linked (26.0)
+Undefined symbols for architecture arm64:
+  "MarineSnow::view()", referenced from:
+      MarioSwim::draw3D() const in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+  "MarineSnow::clear()", referenced from:
+      MarioSwim::draw3D() const in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+  "MarineSnow::MarineSnow()", referenced from:
+      MarioSwim::MarioSwim(MarioActor*) in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+  "MarioActor::tryJetAttack(HitSensor*)", referenced from:
+      MarioSwim::tryJetAttack(HitSensor*) in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+  "MarioActor::reactionPunch(HitSensor*)", referenced from:
+      MarioModule::sendPunch(HitSensor*, bool) in libsmg-pc-game.a[251](MarioModule.cpp.o)
+  "MarioActor::releaseThrowMemoSensor()", referenced from:
+      MarioSwim::dropJet(bool) in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+  "MarioActor::resetPlayerModeOnDamage()", referenced from:
+      MarioFaint::start() in libsmg-pc-game.a[232](MarioFaint.cpp.o)
+      MarioDamage::start() in libsmg-pc-game.a[249](MarioDamage.cpp.o)
+      Mario::doFireDance() in libsmg-pc-game.a[249](MarioDamage.cpp.o)
+      Mario::doNeedle(Triangle const*) in libsmg-pc-game.a[249](MarioDamage.cpp.o)
+      Mario::doParalyze() in libsmg-pc-game.a[282](MarioDamageParalyze.cpp.o)
+  "MarioActor::damageDropThrowMemoSensor()", referenced from:
+      Mario::doFireDance() in libsmg-pc-game.a[249](MarioDamage.cpp.o)
+      Mario::doNeedle(Triangle const*) in libsmg-pc-game.a[249](MarioDamage.cpp.o)
+      MarioSwim::dropJet(bool) in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+      Mario::doParalyze() in libsmg-pc-game.a[282](MarioDamageParalyze.cpp.o)
+  "MarioActor::resetPlayerModeOnNoDamage()", referenced from:
+      MarioFaint::start() in libsmg-pc-game.a[232](MarioFaint.cpp.o)
+      MarioDamage::start() in libsmg-pc-game.a[249](MarioDamage.cpp.o)
+  "MarioActor::forceKill(unsigned int)", referenced from:
+      MarioDarkDamage::update() in libsmg-pc-game.a[249](MarioDamage.cpp.o)
+  "MarioActor::sendPunch(HitSensor*, bool)", referenced from:
+      MarioModule::sendPunch(HitSensor*, bool) in libsmg-pc-game.a[251](MarioModule.cpp.o)
+  "MarioAccess::forceKill(unsigned int, unsigned int)", referenced from:
+      Mario::damagePolygonCheck(Triangle const*) in libsmg-pc-game.a[249](MarioDamage.cpp.o)
+  "BigFanFunction::calcWindInfo(JGeometry::TVec3<float>*, JGeometry::TVec3<float> const&, float*)", referenced from:
+      MarioTeresa::checkWind() in libsmg-pc-game.a[267](MarioTeresa.cpp.o)
+  "GameSceneLayoutHolder::changeLifeMeterModeWater()", referenced from:
+      MarioSwim::start() in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+  "GameSceneLayoutHolder::changeLifeMeterModeGround()", referenced from:
+      MarioSwim::close() in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+  "MR::getTexture(ResourceHolder*, char const*)", referenced from:
+      MarioFoo::init() in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+  "MR::onCalcAnim(LiveActor*)", referenced from:
+      MarioActor::showFreezeModel() in libsmg-pc-mario-gateway-walk-slice.a[9](MarioActorParts.cpp.o)
+  "MR::calcSpherePos(JGeometry::TVec3<float>*, AreaObj const*)", referenced from:
+      MarioFoo::update() in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+  "MR::ddLightingOff()", referenced from:
+      MarioFoo::draw3D() const in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+      MarioFoo::draw3D() const in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+  "MR::ddSendVtxData(JGeometry::TVec3<float> const&, JGeometry::TVec2<float> const&)", referenced from:
+      MarioFoo::draw3D() const in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+      MarioFoo::draw3D() const in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+      MarioFoo::draw3D() const in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+      MarioFoo::draw3D() const in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+      MarioFoo::draw3D() const in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+      MarioFoo::draw3D() const in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+      MarioFoo::draw3D() const in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+      MarioFoo::draw3D() const in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+      MarioFoo::draw3D() const in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+      MarioFoo::draw3D() const in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+      MarioFoo::draw3D() const in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+      MarioFoo::draw3D() const in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+      MarioFoo::draw3D() const in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+      MarioFoo::draw3D() const in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+      MarioFoo::draw3D() const in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+      MarioFoo::draw3D() const in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+      ...
+  "MR::getPlayerLeft()", referenced from:
+      MarioFireDance::update() in libsmg-pc-game.a[249](MarioDamage.cpp.o)
+  "MR::getSortedPoly(JGeometry::TVec3<float>*, Triangle*, unsigned int)", referenced from:
+      MarioSwim::checkWaterBottom() in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+  "MR::makeMtxUpSide(JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>>*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)", referenced from:
+      MarioSukekiyo::postureCtrl(float (*) [4]) in libsmg-pc-game.a[270](MarioSukekiyo.cpp.o)
+  "MR::rotAxisVecRad(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, JGeometry::TVec3<float>*, float)", referenced from:
+      MarioSwim::update() in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+      MarioSwim::update() in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+      MarioFoo::update() in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+      MarioFoo::update() in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+  "MR::ddSetVtxFormat(unsigned int)", referenced from:
+      MarioFoo::draw3D() const in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+      MarioFoo::draw3D() const in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+  "MR::makeMtxFrontUp(JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>>*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)", referenced from:
+      MarioActor::createIceWall(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&) in libsmg-pc-mario-gateway-walk-slice.a[9](MarioActorParts.cpp.o)
+      MarioHang::postureCtrl(float (*) [4]) in libsmg-pc-game.a[234](MarioHang.cpp.o)
+      MarioHang::postureCtrl(float (*) [4]) in libsmg-pc-game.a[234](MarioHang.cpp.o)
+      MarioStick::postureCtrl(float (*) [4]) in libsmg-pc-game.a[250](MarioStick.cpp.o)
+  "MR::getSphereRadius(AreaObj const*)", referenced from:
+      MarioFoo::update() in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+  "MR::getWaterAreaInfo(WaterInfo*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, bool)", referenced from:
+      MarioSwim::checkWaterCube(bool) in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+      MarioSwim::getWaterAreaInfo(WaterInfo*, JGeometry::TVec3<float> const&, JGeometry::TVec2<float>*) in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+  "MR::endSubjectiveCamera(int)", referenced from:
+      MarioFpView::update() in libsmg-pc-game.a[258](MarioFpView.cpp.o)
+      MarioFpView::close() in libsmg-pc-game.a[258](MarioFpView.cpp.o)
+  "MR::setStageBGMStateBit(unsigned int)", referenced from:
+      MarioSwim::jet() in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+  "MR::getNearPolyOnLineSort(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, HitSensor const*)", referenced from:
+      MarioSwim::checkWaterBottom() in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+  "MR::isStageSwimAngleLimit()", referenced from:
+      MarioSwim::checkWaterCube(bool) in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+      MarioSwim::update() in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+  "MR::startSubjectiveCamera(int)", referenced from:
+      MarioFpView::start() in libsmg-pc-game.a[258](MarioFpView.cpp.o)
+  "MR::calcWhirlPoolAccelInfo(JGeometry::TVec3<float> const&, JGeometry::TVec3<float>*)", referenced from:
+      MarioSwim::update() in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+  "MR::validateCollisionParts(LiveActor*)", referenced from:
+      IceStep::setOn(unsigned int, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&) in libsmg-pc-game.a[292](IceStep.cpp.o)
+  "MR::offUpdateCollisionParts(LiveActor*)", referenced from:
+      IceStep::setOn(unsigned int, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&) in libsmg-pc-game.a[292](IceStep.cpp.o)
+  "MR::getGameSceneLayoutHolder()", referenced from:
+      MarioSwim::start() in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+      MarioSwim::close() in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+  "MR::requestStartGameOverDemo()", referenced from:
+      MarioAbyssDamage::update() in libsmg-pc-game.a[249](MarioDamage.cpp.o)
+      MarioDarkDamage::update() in libsmg-pc-game.a[249](MarioDamage.cpp.o)
+  "MR::onUpdateCollisionPartsOnetimeImmediately(LiveActor*)", referenced from:
+      IceStep::setOn(unsigned int, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&) in libsmg-pc-game.a[292](IceStep.cpp.o)
+  "MarioFlip::update()", referenced from:
+      vtable for MarioFlip in libsmg-pc-game.a[273](MarioFlip.cpp.o)
+  "MarioSwim::postureCtrl(float (*) [4])", referenced from:
+      vtable for MarioSwim in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+  "MarioSwim::keep()", referenced from:
+      vtable for MarioSwim in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+  "MarioSwim::proc(unsigned int)", referenced from:
+      vtable for MarioSwim in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+  "MarineSnow::draw(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, float) const", referenced from:
+      MarioSwim::draw3D() const in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+  "vtable for MarioWarp", referenced from:
+      MarioWarp::MarioWarp(MarioActor*) in libsmg-pc-game.a[243](MarioWarp.cpp.o)
+   NOTE: a missing vtable usually means the first non-inline virtual member function has no definition.
+  "_lbl_805C64D8", referenced from:
+      MarioFaint::start() in libsmg-pc-game.a[232](MarioFaint.cpp.o)
+      MarioFaint::close() in libsmg-pc-game.a[232](MarioFaint.cpp.o)
+ld: symbol(s) not found for architecture arm64
+clang++: error: linker command failed with exit code 1 (use -v to see invocation)
+[0m[1;38;5;1;1merror: [0m@programdir/core/main.lua:274: @programdir/actions/build/main.lua:162: @programdir/modules/async/runjobs.lua:282: @programdir/modules/private/action/build/link_objects.lua:56: @programdir/core/sandbox/modules/os.lua:378: execv(/opt/homebrew/opt/llvm/bin/clang++ -o build/macosx/arm64/debug/smg-pc-showcase build/.objs/smg-pc-showcase/macosx/arm64/debug/src/showcase/Showcase.cpp.o build/.objs/smg-pc-showcase/macosx/arm64/debug/aurora/lib/compat.cpp.o -target arm64-apple-macos26.0 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk -L/Users/frityet/.xmake/packages/e/encounter-nod/v2.0.0-alpha.10/6c186b0e5c14418488229286339d917f/lib -L/Users/frityet/.xmake/packages/l/libpng/v1.6.58/f8ae13cb78784172986d714555ab04d9/lib -L/Users/frityet/.xmake/packages/d/dawn-build/v20260807.225922/f69ad75814b44692a43ad687dc15bd42/lib -L/Users/frityet/.xmake/packages/z/zstd/v1.5.7/bd1f19f343564e4b8352bb261f80a519/lib -L/Users/frityet/.xmake/packages/i/imgui/v1.91.9b-docking/0ee3cc5024224d4da4704fa6c643e242/lib -L/Users/frityet/.xmake/packages/d/dawn-build/v20260807.225922/61767b38046f4221ae1d71b62165683c/lib -L/Users/frityet/.xmake/packages/f/freetype/2.14.1/6549e9153b644dcb9f782af328fb2d17/lib -L/Users/frityet/.xmake/packages/a/abseil/20240722.0/c0d180f8461c47a588a6da4872a3ee77/lib -L/Users/frityet/.xmake/packages/s/sqlite3/3.53.0+0/e05b3c73c8774ea4aeb176e4762c2503/lib -L/Users/frityet/.xmake/packages/t/tracy/v0.11.1/b113d1221b5a429190e079dff1b05f5f/lib -L/Users/frityet/.xmake/packages/f/fmt/11.1.4/19191b60a2b14de4836f47549929dd7a/lib -L/Users/frityet/.xmake/packages/x/xxhash/v0.8.3/7a45592449c84664bf0eb1acf089c9d8/lib -Lbuild/macosx/arm64/debug -L/Users/frityet/.xmake/packages/l/libsdl3/3.4.10/153711a8b5634d3587109ddbacab0745/lib -lsmg-pc-app -lsmg-pc-mario-gateway-walk-slice -lsmg-pc-game -lsmg-pc-render -lsmg-pc-common -laurora-core -laurora-nw4r -laurora-card -laurora-dvd -lnod -laurora-gd -laurora-gx -lpng -laurora-ms -laurora-mtx -laurora-os -laurora-pad -laurora-si -laurora-vi -laurora-platform -lzstd -limgui -lwebgpu_dawn -lfreetype -lz -laurora-base -labsl_statusor -labsl_log_flags -labsl_scoped_set_env -labsl_die_if_null -labsl_flags_parse -labsl_poison -labsl_periodic_sampler -labsl_log_initialize -labsl_random_internal_distribution_test_util -labsl_failure_signal_handler -labsl_cordz_sample_token -labsl_status -labsl_random_distributions -labsl_random_seed_sequences -labsl_flags_usage -labsl_leak_check -labsl_random_internal_pool_urbg -labsl_flags_usage_internal -labsl_bad_any_cast_impl -labsl_log_internal_check_op -labsl_random_internal_randen -labsl_random_seed_gen_exception -labsl_random_internal_seed_material -labsl_log_internal_conditions -labsl_random_internal_randen_hwaes -labsl_random_internal_randen_slow -labsl_flags_internal -labsl_flags_reflection -labsl_log_internal_message -labsl_random_internal_randen_hwaes_impl -labsl_flags_marshalling -labsl_flags_private_handle_accessor -labsl_flags_config -labsl_examine_stack -labsl_log_internal_format -labsl_log_internal_proto -labsl_log_internal_nullguard -labsl_strerror -labsl_random_internal_platform -labsl_flags_commandlineflag -labsl_flags_program_name -labsl_log_internal_log_sink_set -labsl_flags_commandlineflag_internal -labsl_raw_hash_set -labsl_log_internal_globals -labsl_log_globals -labsl_log_sink -labsl_cord -labsl_hashtablez_sampler -labsl_hash -labsl_vlog_config_internal -labsl_log_entry -labsl_city -labsl_low_level_hash -labsl_log_internal_fnmatch -labsl_cordz_info -labsl_bad_variant_access -labsl_bad_optional_access -labsl_cord_internal -labsl_cordz_functions -labsl_cordz_handle -labsl_crc_cord_state -labsl_exponential_biased -labsl_synchronization -labsl_crc32c -labsl_graphcycles_internal -labsl_kernel_timeout_internal -labsl_stacktrace -labsl_symbolize -labsl_crc_internal -labsl_time -labsl_debugging_internal -labsl_demangle_internal -labsl_malloc_internal -labsl_crc_cpu_detect -labsl_str_format_internal -labsl_civil_time -labsl_time_zone -labsl_demangle_rust -labsl_strings -labsl_decode_rust_punycode -labsl_strings_internal -labsl_int128 -labsl_utf8_for_code_point -labsl_string_view -labsl_base -labsl_throw_delegate -labsl_spinlock_wait -labsl_raw_logging_internal -labsl_log_severity -lsqlite3 -ltracy -lfmt -lxxhash -laurora-main -lSDL3 -framework IOSurface -framework AudioToolbox -framework AVFoundation -framework CoreAudio -framework CoreHaptics -framework CoreMedia -framework CoreVideo -framework Foundation -framework GameController -framework Metal -framework QuartzCore -framework CoreFoundation -framework UniformTypeIdentifiers -framework Cocoa -framework Carbon -framework ForceFeedback -framework IOKit -stdlib=libc++ -L/opt/homebrew/opt/llvm/lib -L/opt/homebrew/opt/llvm/lib/c++ -Xlinker -rpath -Xlinker /opt/homebrew/opt/llvm/lib -Xlinker -rpath -Xlinker /opt/homebrew/opt/llvm/lib/c++ -lpthread -ldl -liconv -Wl,-dead_strip) failed(1), unknown reason
+stack traceback:
+    [C]: in function 'error'
+    [@programdir/core/base/os.lua:1204]:
+    [@programdir/core/sandbox/modules/os.lua:378]: in function 'execv'
+    [@programdir/modules/core/tools/gcc.lua:963]:
+    [C]: in function 'xpcall'
+    [@programdir/core/base/utils.lua:299]:
+    [@programdir/core/tool/linker.lua:245]: in function 'link'
+    [@programdir/modules/private/action/build/link_objects.lua:56]: in function 'callback'
+    [@programdir/modules/core/project/depend.lua:247]: in function 'on_changed'
+    [@programdir/modules/private/action/build/link_objects.lua:39]: in function '_do_link_target'
+    [@programdir/modules/private/action/build/link_objects.lua:77]: in function 'job_func'
+    [@programdir/modules/async/runjobs.lua:462]:
+    [C]: in function 'xpcall'
+    [@programdir/core/base/utils.lua:299]: in function 'trycall'
+    [@programdir/core/sandbox/modules/try.lua:117]: in function 'try'
+    [@programdir/modules/async/runjobs.lua:431]: in function 'cotask'
+    [@programdir/core/base/scheduler.lua:539]:
+
+stack traceback:
+	[C]: in global 'error'
+	@programdir/core/base/os.lua:1204: in function 'os.raiselevel'
+	(...tail calls...)
+	@programdir/core/main.lua:274: in upvalue 'cotask'
+	@programdir/core/base/scheduler.lua:539: in function <@programdir/core/base/scheduler.lua:532>[0m

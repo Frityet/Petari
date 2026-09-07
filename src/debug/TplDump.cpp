@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "DebugPaths.hpp"
 #include "resource/RarcArchive.hpp"
 #include "resource/TplTexture.hpp"
@@ -28,7 +29,7 @@ namespace {
         std::filesystem::create_directories(output.parent_path());
         auto file = std::ofstream(output, std::ios::binary);
         if (!file) {
-            throw std::runtime_error("cannot write texture dump " + output.string());
+            aurora::throw_host_exception<std::runtime_error>("cannot write texture dump " + output.string());
         }
         file << "P6\n" << texture.width << ' ' << texture.height << "\n255\n";
         for (auto offset = std::size_t{}; offset + 3U < texture.rgba.size(); offset += 4U) {

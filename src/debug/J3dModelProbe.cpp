@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "DebugPaths.hpp"
 #include "DebugText.hpp"
 #include "MarkdownWriter.hpp"
@@ -417,7 +418,7 @@ namespace {
 
         auto out = std::ofstream(output);
         if (!out) {
-            throw std::runtime_error("cannot write J3D model probe " + output.string());
+            aurora::throw_host_exception<std::runtime_error>("cannot write J3D model probe " + output.string());
         }
 
         out << "# J3D Model Probe: " << object_name << " / " << entry.path << "\n\n";
@@ -456,7 +457,7 @@ int main(int argc, char **argv) try {
     }
 
     if (model_count == 0U) {
-        throw std::runtime_error("object archive contains no J3D model files: " + archive_path.string());
+        aurora::throw_host_exception<std::runtime_error>("object archive contains no J3D model files: " + archive_path.string());
     }
 
     return 0;

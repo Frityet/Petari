@@ -1,0 +1,14 @@
+[skip] extracted RMGK01 DemoSheet schema check
+[ok] optional real Tico guide schema and rows
+[skip] extracted RMGK01 archive-wide DemoSheet check
+[ok] optional real archive all Time families
+[ok] case-insensitive lookup and exact part name
+[ok] CP932 Time part and source defaults
+[ok] sparse optional columns use source defaults
+[ok] spin subset timekeeper boundaries
+[ok] pause matches source early-step correction
+[ok] paused final step source boundary overshoot
+[ok] suspend ends before following dispatch
+[ok] missing and empty Time reject start
+[ok] malformed schemas are contextual errors
+11 DemoSheet runtime test(s) passed

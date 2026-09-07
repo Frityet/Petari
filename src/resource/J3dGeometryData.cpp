@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "J3dGeometryData.hpp"
 
 #include "J3dNameData.hpp"
@@ -24,7 +25,7 @@ namespace smgpc::resource {
 
         Bytes checked(Bytes bytes, std::size_t offset, std::size_t size) {
             if (offset > bytes.size() || size > bytes.size() - offset) {
-                throw std::runtime_error("J3D geometry data exceeds its containing resource");
+                aurora::throw_host_exception<std::runtime_error>("J3D geometry data exceeds its containing resource");
             }
             return bytes.subspan(offset, size);
         }
@@ -43,7 +44,7 @@ namespace smgpc::resource {
         std::size_t table_offset(Bytes block, std::size_t field, std::size_t required) {
             const auto offset = u32_at(block, field);
             if (offset == 0 && required != 0) {
-                throw std::runtime_error("J3D geometry is missing a required table");
+                aurora::throw_host_exception<std::runtime_error>("J3D geometry is missing a required table");
             }
             checked(block, offset, required);
             return offset;
@@ -84,17 +85,17 @@ namespace smgpc::resource {
             const auto type = u32_at(bytes, 4);
             if (u32_at(bytes, 0) != 0x4a334432U ||
                 (type != 0x626d6432U && type != 0x626d6433U && type != 0x62646c33U && type != 0x62646c34U)) {
-                throw std::runtime_error("J3D geometry requires a J3D2 BMD2/BMD3/BDL3/BDL4 model");
+                aurora::throw_host_exception<std::runtime_error>("J3D geometry requires a J3D2 BMD2/BMD3/BDL3/BDL4 model");
             }
             const auto size = u32_at(bytes, 8);
-            if (size < 0x20) throw std::runtime_error("J3D geometry file header is truncated");
+            if (size < 0x20) aurora::throw_host_exception<std::runtime_error>("J3D geometry file header is truncated");
             Blocks result;
             result.file = checked(bytes, 0, size);
             std::size_t cursor = 0x20;
             for (std::uint32_t i = 0; i < u32_at(bytes, 0xc); ++i) {
                 checked(result.file, cursor, 8);
                 const auto block_size = u32_at(result.file, cursor + 4);
-                if (block_size < 8) throw std::runtime_error("J3D geometry block header is truncated");
+                if (block_size < 8) aurora::throw_host_exception<std::runtime_error>("J3D geometry block header is truncated");
                 const auto block = checked(result.file, cursor, block_size);
                 Bytes* destination = nullptr;
                 switch (u32_at(block, 0)) {
@@ -107,13 +108,13 @@ namespace smgpc::resource {
                 default: break;
                 }
                 if (destination != nullptr) {
-                    if (!destination->empty()) throw std::runtime_error("J3D geometry has duplicate construction blocks");
+                    if (!destination->empty()) aurora::throw_host_exception<std::runtime_error>("J3D geometry has duplicate construction blocks");
                     *destination = block;
                 }
                 cursor += block_size;
             }
             if (result.info.empty() || result.vertex.empty() || result.shape.empty()) {
-                throw std::runtime_error("J3D geometry is missing INF1/VTX1/SHP1");
+                aurora::throw_host_exception<std::runtime_error>("J3D geometry is missing INF1/VTX1/SHP1");
             }
             return result;
         }
@@ -211,7 +212,7 @@ namespace smgpc::resource {
                     const auto max_count = value.attr == GX_VA_NRM || value.attr == GX_VA_NBT ? 2U : 1U;
                     if (static_cast<unsigned>(value.type) > static_cast<unsigned>(max_type) ||
                         static_cast<unsigned>(value.cnt) > max_count) {
-                        throw std::runtime_error("J3D vertex format has an invalid component type/count");
+                        aurora::throw_host_exception<std::runtime_error>("J3D vertex format has an invalid component type/count");
                     }
                 }
             }
@@ -225,7 +226,7 @@ namespace smgpc::resource {
             const auto normal_size = find_format(GX_VA_NRM).type == GX_F32 ? 12U : 6U;
             const auto count_to = [&](std::size_t begin, std::size_t end, std::uint32_t stride) -> std::uint32_t {
                 if (begin == 0) return 0;
-                if (end < begin) throw std::runtime_error("J3D vertex count boundary precedes its array");
+                if (end < begin) aurora::throw_host_exception<std::runtime_error>("J3D vertex count boundary precedes its array");
                 return static_cast<std::uint32_t>((end - begin) / stride + 1);
             };
             // Original readVertex uses these specific successor choices and +1;
@@ -321,17 +322,17 @@ namespace smgpc::resource {
             const auto desc = table_offset(block, 0x18, count == 0 ? 0 : 8);
             for (const auto index : indices) {
                 const auto& value = initializers[index];
-                if (value.mShapeMtxType > 3) throw std::runtime_error("J3D shape has no original matrix class for its type");
+                if (value.mShapeMtxType > 3) aurora::throw_host_exception<std::runtime_error>("J3D shape has no original matrix class for its type");
                 mtx_init_count = std::max(mtx_init_count, std::size_t{value.mMtxInitDataIndex} + value.mMtxGroupNum);
                 draw_init_count = std::max(draw_init_count, std::size_t{value.mDrawInitDataIndex} + value.mMtxGroupNum);
-                if (value.mVtxDescListIndex % sizeof(GXVtxDescList) != 0) throw std::runtime_error("J3D shape descriptor offset is unaligned");
+                if (value.mVtxDescListIndex % sizeof(GXVtxDescList) != 0) aurora::throw_host_exception<std::runtime_error>("J3D shape descriptor offset is unaligned");
                 std::size_t row = value.mVtxDescListIndex / sizeof(GXVtxDescList);
                 for (;;) {
                     const auto attr = static_cast<GXAttr>(u32_at(block, desc + row * 8));
                     const auto type = u32_at(block, desc + row * 8 + 4);
                     ++row;
                     if (!valid_descriptor_attr(attr) || (attr != GX_VA_NULL && type > GX_INDEX16)) {
-                        throw std::runtime_error("J3D shape has an invalid GX vertex descriptor");
+                        aurora::throw_host_exception<std::runtime_error>("J3D shape has an invalid GX vertex descriptor");
                     }
                     if (attr == GX_VA_NULL) break;
                 }
@@ -376,7 +377,7 @@ namespace smgpc::resource {
                         // Original multi-matrix loops skip carry entries before
                         // indexing their ten-slot load cache. Keep that suffix.
                         if (matrix_indices[matrix.mFirstUseMtxIndex + slot] != 0xffff) {
-                            throw std::runtime_error("J3D shape has a live matrix beyond its original ten load slots");
+                            aurora::throw_host_exception<std::runtime_error>("J3D shape has a live matrix beyond its original ten load slots");
                         }
                     }
                 }
@@ -408,13 +409,13 @@ namespace smgpc::resource {
                 cursor += 4;
                 if (type == 0) break;
                 if (type == 0x12) {
-                    if (value >= count) throw std::runtime_error("J3D hierarchy shape index is outside SHP1");
+                    if (value >= count) aurora::throw_host_exception<std::runtime_error>("J3D hierarchy shape index is outside SHP1");
                     order.push_back(value);
                     seen[value] = true;
                 }
             }
             if (std::find(seen.begin(), seen.end(), false) != seen.end()) {
-                throw std::runtime_error("J3D hierarchy leaves an original shape pointer uninitialized");
+                aurora::throw_host_exception<std::runtime_error>("J3D hierarchy leaves an original shape pointer uninitialized");
             }
             J3DShapeFactory factory(shape->header());
             factory.allocVcdVatCmdBuffer(count);
@@ -440,7 +441,7 @@ namespace smgpc::resource {
     void J3dGeometryData::attach_to(J3DModelData& model) {
         if (!_storage || _storage->attached || model.mShapeTable.mShapeNodePointer != nullptr ||
             model.mShapeTable.mShapeNum != 0 || model.mVertexData.mVtxAttrFmtList != nullptr) {
-            throw std::logic_error("J3D geometry can attach once to fresh original vertex/shape tables");
+            aurora::throw_host_exception<std::logic_error>("J3D geometry can attach once to fresh original vertex/shape tables");
         }
         auto& storage = *_storage;
         auto& vertex = model.mVertexData;
@@ -463,7 +464,7 @@ namespace smgpc::resource {
     }
 
     const J3DShapeBlock& J3dGeometryData::shape_block() const {
-        if (!_storage) throw std::logic_error("J3D geometry owner has been moved");
+        if (!_storage) aurora::throw_host_exception<std::logic_error>("J3D geometry owner has been moved");
         return _storage->shape->header();
     }
 

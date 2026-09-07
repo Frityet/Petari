@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Game/System/BinaryDataChunkHolder.hpp"
 
 #include <cstring>
@@ -24,7 +25,7 @@ void write_be32(u8* pData, u32 value) {
 BinaryDataChunkHolder::BinaryDataChunkHolder(u32 bufferSize, int maxChunks)
     : mChunks(nullptr), mMaxChunks(0), mNumChunks(0), mData(nullptr), mBufferSize(bufferSize) {
     if (bufferSize < cChunkHeaderSize || maxChunks < 0 || maxChunks > 0xff) {
-        throw std::invalid_argument("Invalid retail binary chunk holder dimensions");
+        aurora::throw_host_exception<std::invalid_argument>("Invalid retail binary chunk holder dimensions");
     }
 
     mData = new u8[mBufferSize]{};
@@ -34,14 +35,14 @@ BinaryDataChunkHolder::BinaryDataChunkHolder(u32 bufferSize, int maxChunks)
 
 void BinaryDataChunkHolder::addChunk(BinaryDataChunkBase* pChunk) {
     if (pChunk == nullptr || mNumChunks >= mMaxChunks) {
-        throw std::length_error("Retail binary chunk table capacity exceeded");
+        aurora::throw_host_exception<std::length_error>("Retail binary chunk table capacity exceeded");
     }
     mChunks[mNumChunks++] = pChunk;
 }
 
 u32 BinaryDataChunkHolder::makeFileBinary(u8* pData, u32 dataSize) {
     if (pData == nullptr || dataSize < cFileHeaderSize) {
-        throw std::length_error("Retail binary chunk destination is unavailable or too small");
+        aurora::throw_host_exception<std::length_error>("Retail binary chunk destination is unavailable or too small");
     }
 
     std::memset(pData, 0, cFileHeaderSize);
@@ -55,7 +56,7 @@ u32 BinaryDataChunkHolder::makeFileBinary(u8* pData, u32 dataSize) {
 
         const auto chunkSize = read_be32(static_cast<const u8*>(mData) + 8U);
         if (chunkSize < cChunkHeaderSize || chunkSize > mBufferSize || chunkSize > dataSize - offset) {
-            throw std::length_error("Retail binary chunk does not fit its destination");
+            aurora::throw_host_exception<std::length_error>("Retail binary chunk does not fit its destination");
         }
         std::memcpy(pData + offset, mData, chunkSize);
         offset += chunkSize;
@@ -107,13 +108,13 @@ bool BinaryDataChunkHolder::loadFromFileBinary(const u8* pData, u32 dataSize) {
 void BinaryDataChunkHolder::makeChunkData(BinaryDataChunkHolderChunkData* pData, u32 bufferSize,
                                           const BinaryDataChunkBase* pChunk) {
     if (pData == nullptr || pChunk == nullptr || bufferSize < cChunkHeaderSize) {
-        throw std::length_error("Retail binary chunk buffer is unavailable or too small");
+        aurora::throw_host_exception<std::length_error>("Retail binary chunk buffer is unavailable or too small");
     }
 
     auto* bytes = reinterpret_cast<u8*>(pData);
     const auto serialized = pChunk->serialize(bytes + cChunkHeaderSize, bufferSize - cChunkHeaderSize);
     if (serialized < 0 || static_cast<u32>(serialized) > bufferSize - cChunkHeaderSize) {
-        throw std::length_error("Retail binary chunk serializer exceeded its buffer");
+        aurora::throw_host_exception<std::length_error>("Retail binary chunk serializer exceeded its buffer");
     }
 
     write_be32(bytes, pChunk->getSignature());

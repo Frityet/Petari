@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "scene/TitleFileSelectVisual.hpp"
 
 #include "Game/Map/FileSelectSky.hpp"
@@ -25,7 +26,7 @@ namespace smgpc::scene {
         std::unique_ptr<FileSelectSky> sky)
         : _runtime(&runtime), _sky(std::move(sky)) {
         if (_sky == nullptr) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "Title/File Select handoff requires the retained sky actor.");
         }
     }
@@ -57,7 +58,7 @@ namespace smgpc::scene {
         smgpc::runtime::RuntimeContext &runtime, bool complete_draw_registration)
         : _runtime(&runtime), _title_camera(cTitleCamera) {
         if (smgpc::runtime::RuntimeContext::try_instance() != &runtime) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Title/File Select visuals require their active RuntimeContext.");
         }
 
@@ -97,7 +98,7 @@ namespace smgpc::scene {
     TitleFileSelectVisualHandoff
     TitleFileSelectVisual::release_sky_for_file_select() {
         if (_sky == nullptr) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Title/File Select sky ownership was already transferred.");
         }
         _transferred = true;

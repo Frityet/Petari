@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "nw4r/ut/ResFont.h"
 
 #include <algorithm>
@@ -45,7 +46,7 @@ namespace {
     [[nodiscard]] smgpc::layout::BrfntFont& require_font(nw4r::ut::HostFontResourceState& state,
                                                           std::string_view operation) {
         if (state.font == nullptr) {
-            throw std::logic_error(std::string(operation) + " requires an installed BRFNT resource");
+            aurora::throw_host_exception<std::logic_error>(std::string(operation) + " requires an installed BRFNT resource");
         }
         return *state.font;
     }
@@ -53,7 +54,7 @@ namespace {
     [[nodiscard]] const smgpc::layout::BrfntFont& require_font(const nw4r::ut::HostFontResourceState& state,
                                                                 std::string_view operation) {
         if (state.font == nullptr) {
-            throw std::logic_error(std::string(operation) + " requires an installed BRFNT resource");
+            aurora::throw_host_exception<std::logic_error>(std::string(operation) + " requires an installed BRFNT resource");
         }
         return *state.font;
     }
@@ -220,20 +221,20 @@ namespace nw4r::ut {
 
     void ResFont::GetGlyph(Glyph* pGlyph, u16 ch) const {
         if (pGlyph == nullptr) {
-            throw std::invalid_argument("Reading a font glyph requires output storage");
+            aurora::throw_host_exception<std::invalid_argument>("Reading a font glyph requires output storage");
         }
 
         const auto& font = require_font(*mHostResourceState, "Reading a font glyph");
         const auto glyph = font.glyph_for_resfont(ch);
         if (!glyph.has_value() || mHostResourceState->source == nullptr || glyph->sheet_index >= font.sheet_count) {
-            throw std::runtime_error("The installed BRFNT does not contain usable glyph sheet data");
+            aurora::throw_host_exception<std::runtime_error>("The installed BRFNT does not contain usable glyph sheet data");
         }
 
         const auto sheet_offset = static_cast< std::size_t >(font.sheet_image_offset) +
                                   static_cast< std::size_t >(glyph->sheet_index) * font.sheet_size;
         if (sheet_offset >= mHostResourceState->source_size ||
             font.sheet_size > mHostResourceState->source_size - sheet_offset) {
-            throw std::runtime_error("The installed BRFNT glyph sheet is outside its resource buffer");
+            aurora::throw_host_exception<std::runtime_error>("The installed BRFNT glyph sheet is outside its resource buffer");
         }
 
         auto* sheet_data = static_cast< const std::uint8_t* >(mHostResourceState->source) + sheet_offset;

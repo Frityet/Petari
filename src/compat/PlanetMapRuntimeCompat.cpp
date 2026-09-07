@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/LodCtrl.hpp"
 #include "Game/Map/OceanHomeMapCtrl.hpp"
@@ -51,7 +52,7 @@ namespace {
     }
 
     [[noreturn]] void reject_optional_planet_model(std::string_view kind) {
-        throw std::logic_error("PlanetMap " + std::string(kind) +
+        aurora::throw_host_exception<std::logic_error>("PlanetMap " + std::string(kind) +
                                " submodel reached the zero-optional runtime tranche.");
     }
 
@@ -64,7 +65,7 @@ namespace MR {
     void initCollisionParts(LiveActor *actor, const char *resource_name,
                             HitSensor *sensor, MtxPtr matrix) {
         if (actor == nullptr || resource_name == nullptr || sensor == nullptr) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "Planet CollisionParts requires an actor, exact resource name, and sensor.");
         }
         MR::initCollisionPartsFromResourceHolder(
@@ -104,7 +105,7 @@ namespace MR {
     LodCtrl *createLodCtrlPlanet(LiveActor *actor, const JMapInfoIter &iter,
                                  f32 far_clip, s32 low_movement_type) {
         if (actor == nullptr) {
-            throw std::invalid_argument("Planet LodCtrl requires a LiveActor.");
+            aurora::throw_host_exception<std::invalid_argument>("Planet LodCtrl requires a LiveActor.");
         }
 
         auto lod = std::make_unique<LodCtrl>(actor, iter);
@@ -127,7 +128,7 @@ namespace MR {
         }
         const auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
         if (runtime == nullptr) {
-            throw std::logic_error("Submodel lookup requires the active DVD runtime.");
+            aurora::throw_host_exception<std::logic_error>("Submodel lookup requires the active DVD runtime.");
         }
         return runtime->find_object_archive(std::string(model_name) + suffix).has_value();
     }
@@ -144,7 +145,7 @@ namespace OceanHomeMapFunction {
         }
         const auto name = std::string_view(planet->mName);
         if (name == "海洋ホーム惑星" || name == "オーシャンリング惑星") {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "OceanHome PlanetMap control is unavailable in the ordinary planet tranche.");
         }
     }

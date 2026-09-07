@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "scene/GatewaySpinCheckpoint.hpp"
 
 #include "Game/LiveActor/LiveActor.hpp"
@@ -41,7 +42,7 @@ namespace smgpc::scene {
         constexpr auto cExpectedPrePromptTicks = std::uint32_t{1670U};
 
         [[noreturn]] void reject(std::string_view detail) {
-            throw std::runtime_error(
+            aurora::throw_host_exception<std::runtime_error>(
                 "Gateway spin checkpoint rejected non-exact route data: " +
                 std::string(detail));
         }

@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Effect/EffectSystem.hpp"
 #include "compat/EffectSystemOwnership.hpp"
@@ -81,7 +82,7 @@ namespace smgpc::scene {
         _area_obj_runtime = std::make_unique<AreaObjRuntime>();
         _captured_frame_blur_service = std::make_unique<smgpc::compat::CapturedFrameBlurService>();
         if (sCurrentSceneObjHolder != nullptr) {
-            throw std::logic_error("a SceneObjHolder is already bound to the active scene");
+            aurora::throw_host_exception<std::logic_error>("a SceneObjHolder is already bound to the active scene");
         }
 
         if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
@@ -130,9 +131,9 @@ namespace smgpc::scene {
     void SceneObjHolderBinding::initialize_effect_system(unsigned particles, unsigned emitters, std::size_t byte_budget) {
         smgpc::compat::JkrHostAllocationScope host;
         if (_effect_system_ownership || _holder->isExist(SceneObj_EffectSystem))
-            throw std::logic_error("scene effect system already initialized");
+            aurora::throw_host_exception<std::logic_error>("scene effect system already initialized");
         _effect_scheduler = smgpc::runtime::try_active_scene_scheduler();
-        if (!_effect_scheduler) throw std::logic_error("EffectSystem requires the active scene scheduler");
+        if (!_effect_scheduler) aurora::throw_host_exception<std::logic_error>("EffectSystem requires the active scene scheduler");
         _effect_registration_marker = _effect_scheduler->registration_marker();
         _effect_system_ownership = std::make_unique<smgpc::compat::EffectSystemOwnership>(byte_budget);
         _holder->create(SceneObj_EffectSystem);
@@ -189,7 +190,7 @@ namespace smgpc::scene {
     void adopt_current_scene_obj_holder_descendant(NameObj *object) {
         smgpc::compat::JkrHostAllocationScope host;
         if (object == nullptr || sCurrentSceneObjHolderBinding == nullptr) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "cannot adopt a NameObj without an active SceneObjHolder binding");
         }
         if (current_scene_obj_holder_binding_owns(object)) {
@@ -197,7 +198,7 @@ namespace smgpc::scene {
         }
         if (!smgpc::compat::has_name_obj_runtime_state(object) ||
             smgpc::compat::name_obj_runtime_ownership_is_claimed(object)) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "SceneObjHolder descendant must be registered and unclaimed");
         }
 
@@ -265,7 +266,7 @@ NameObj *SceneObjHolder::create(int id) {
             if (binding->_provisional_slots.size() != slot_checkpoint ||
                 smgpc::compat::newest_name_obj_runtime_object_since_if(
                     marker, nullptr, nullptr) != nullptr) {
-                throw std::logic_error(
+                aurora::throw_host_exception<std::logic_error>(
                     "SceneObj factory returned null after creating nested scene objects");
             }
             --binding->_construction_depth;
@@ -283,7 +284,7 @@ NameObj *SceneObjHolder::create(int id) {
                 object.get()) ||
             smgpc::scene::current_scene_obj_holder_binding_owns(
                 object.get())) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "SceneObj construction did not register one leading, unclaimed root");
         }
         auto *result = object.get();
@@ -377,7 +378,7 @@ NameObj *SceneObjHolder::newEachObj(int id) {
     switch (id) {
     case SceneObj_EffectSystem:
         if (!sCurrentSceneObjHolderBinding->_effect_system_ownership)
-            throw std::logic_error("EffectSystem requires scene heap initialization");
+            aurora::throw_host_exception<std::logic_error>("EffectSystem requires scene heap initialization");
         return sCurrentSceneObjHolderBinding->_effect_system_ownership->construct();
     case SceneObj_ClippingDirector:
         return new ClippingDirector();

@@ -1,0 +1,18 @@
+(lldb) target create "build/macosx/arm64/debug/smg-pc-jkr-exception-probe"
+Current executable set to '/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-jkr-exception-probe' (arm64).
+(lldb) breakpoint set --file JkrAllocationDomain.cpp --line 249
+Breakpoint 1: where = smg-pc-jkr-exception-probe`smgpc::compat::detail::deallocate_jkr_or_host(void*) + 176 at JkrAllocationDomain.cpp:249:122, address = 0x00000001000083f4
+(lldb) run
+Outer catch: Camera state is unavailable.
+smg-pc-jkr-exception-probe(25836,0x1f5482180) malloc: *** error for object 0x504000210: pointer being freed was not allocated
+smg-pc-jkr-exception-probe(25836,0x1f5482180) malloc: *** set a breakpoint in malloc_error_break to debug
+Process 25836 launched: '/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-jkr-exception-probe' (arm64)
+Process 25836 stopped
+* thread #1, queue = 'com.apple.main-thread', stop reason = signal SIGABRT
+    frame #0: 0x0000000188a085e8 libsystem_kernel.dylib`__pthread_kill + 8
+libsystem_kernel.dylib`__pthread_kill:
+->  0x188a085e8 <+8>:  b.lo   0x188a08608               ; <+40>
+    0x188a085ec <+12>: pacibsp 
+    0x188a085f0 <+16>: stp    x29, x30, [sp, #-0x10]!
+    0x188a085f4 <+20>: mov    x29, sp
+Target 0: (smg-pc-jkr-exception-probe) stopped.

@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "compat/ResourceHolderCompat.hpp"
 #include "resource/BasResource.hpp"
 
@@ -101,7 +102,7 @@ namespace smgpc::compat {
         std::filesystem::path path, std::shared_ptr<JkrAllocationDomain> domain,
         std::shared_ptr<resource::Mem1ResourceHeap> mem1) {
         JkrHostAllocationScope host;
-        if (!source || !domain || !mem1) throw std::invalid_argument("ResourceHolder requires retained archive and heap owners");
+        if (!source || !domain || !mem1) aurora::throw_host_exception<std::invalid_argument>("ResourceHolder requires retained archive and heap owners");
         _storage = std::make_unique<Storage>();
         auto& state = *_storage;
         state.domain = std::move(domain);
@@ -152,8 +153,8 @@ namespace smgpc::compat {
     ResourceHolderService::ResourceHolderService(runtime::DvdFileSystemService& dvd,
         std::shared_ptr<JkrAllocationDomain> domain, std::shared_ptr<resource::Mem1ResourceHeap> mem1)
         : _dvd(&dvd), _domain(std::move(domain)), _mem1(std::move(mem1)) {
-        if (!_domain || !_mem1) throw std::invalid_argument("ResourceHolder service requires explicit heap owners");
-        if (active_service != nullptr) throw std::logic_error("Only one ResourceHolder service may be active");
+        if (!_domain || !_mem1) aurora::throw_host_exception<std::invalid_argument>("ResourceHolder service requires explicit heap owners");
+        if (active_service != nullptr) aurora::throw_host_exception<std::logic_error>("Only one ResourceHolder service may be active");
         active_service = this;
     }
 
@@ -167,10 +168,10 @@ namespace smgpc::compat {
         JkrHostAllocationScope host;
         const auto requested = normalize_archive_request(archive_name);
         if (requested.empty() || requested == "." || requested.filename().empty())
-            throw std::invalid_argument("ResourceHolder requires an exact archive name");
+            aurora::throw_host_exception<std::invalid_argument>("ResourceHolder requires an exact archive name");
         const auto resolved = _dvd->find_first({std::filesystem::path("ObjectData") / requested,
                                                std::filesystem::path("MapPartsData") / requested, requested});
-        if (!resolved) throw std::runtime_error("Required ResourceHolder archive is unavailable: " + requested.generic_string());
+        if (!resolved) aurora::throw_host_exception<std::runtime_error>("Required ResourceHolder archive is unavailable: " + requested.generic_string());
         const auto key = _dvd->resolve(resolved->generic_string());
         if (const auto found = _holders.find(key); found != _holders.end()) return &found->second->holder();
         auto owner = std::make_shared<ResourceArchiveOwner>(_dvd->retain_archive_for_path(*resolved), key, _domain, _mem1);
@@ -189,7 +190,7 @@ namespace smgpc::compat {
 
     std::shared_ptr<const ResourceArchiveOwner> ResourceHolderService::retain(const ResourceHolder& holder) const {
         for (const auto& [path, owner] : _holders) if (&owner->holder() == &holder) return owner;
-        throw std::invalid_argument("ResourceHolder is not owned by this service");
+        aurora::throw_host_exception<std::invalid_argument>("ResourceHolder is not owned by this service");
     }
     const ResourceArchiveOwner& ResourceHolderService::backing(const ResourceHolder& holder) const { return *retain(holder); }
     const std::shared_ptr<JkrAllocationDomain>& ResourceHolderService::allocation_domain() const noexcept { return _domain; }

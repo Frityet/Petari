@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "camera/OriginalGameCamera.hpp"
 #include "camera/PublishedCameraTarget.hpp"
 
@@ -32,7 +33,7 @@ namespace smgpc::camera {
             if (param.camera_type == "CAM_TYPE_EYEPOS_FIX") {
                 return std::make_unique<CameraFixedPoint>("OriginalCameraFixedPoint");
             }
-            throw std::invalid_argument("Original game camera does not support " + param.camera_type + ".");
+            aurora::throw_host_exception<std::invalid_argument>("Original game camera does not support " + param.camera_type + ".");
         }
 
     }  // namespace
@@ -181,7 +182,7 @@ namespace smgpc::camera {
                                          const TPos3f *manager_matrix_seed) {
         if (camera_param.camera_type != "CAM_TYPE_XZ_PARA" &&
             camera_param.camera_type != "CAM_TYPE_EYEPOS_FIX") {
-            throw std::invalid_argument("Original game camera does not support " + camera_param.camera_type + ".");
+            aurora::throw_host_exception<std::invalid_argument>("Original game camera does not support " + camera_param.camera_type + ".");
         }
         validate_original_camera_target(initial_target);
         _impl = std::make_unique<Impl>(zone_transform, camera_param, initial_target,
@@ -198,7 +199,7 @@ namespace smgpc::camera {
                                          const TPos3f *manager_matrix_seed) {
         if (camera_param.camera_type != "CAM_TYPE_XZ_PARA" &&
             camera_param.camera_type != "CAM_TYPE_EYEPOS_FIX") {
-            throw std::invalid_argument("Original game camera does not support " + camera_param.camera_type + ".");
+            aurora::throw_host_exception<std::invalid_argument>("Original game camera does not support " + camera_param.camera_type + ".");
         }
         _impl = std::make_unique<Impl>(zone_transform, camera_param, StageCameraTargetState{},
                                        default_fovy_degrees, StageCameraCalculationState{},

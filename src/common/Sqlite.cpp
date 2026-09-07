@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Sqlite.hpp"
 
 #include <sqlite3.h>
@@ -14,7 +15,7 @@ namespace smgpc::sql {
 
         if (sqlite3_open(path.string().c_str(), &mDb) != SQLITE_OK) {
             const auto message = mDb != nullptr ? sqlite3_errmsg(mDb) : "unknown sqlite open failure";
-            throw std::runtime_error("could not open SQLite database " + path.string() + ": " + message);
+            aurora::throw_host_exception<std::runtime_error>("could not open SQLite database " + path.string() + ": " + message);
         }
     }
 
@@ -33,7 +34,7 @@ namespace smgpc::sql {
         if (sqlite3_exec(mDb, std::string(sql).c_str(), nullptr, nullptr, &error) != SQLITE_OK) {
             auto message = std::string(error != nullptr ? error : sqlite3_errmsg(mDb));
             sqlite3_free(error);
-            throw std::runtime_error("SQLite exec failed: " + message);
+            aurora::throw_host_exception<std::runtime_error>("SQLite exec failed: " + message);
         }
     }
 
@@ -43,7 +44,7 @@ namespace smgpc::sql {
 
     Statement::Statement(Database &db, std::string_view sql) : mDb(db.get()) {
         if (sqlite3_prepare_v2(mDb, std::string(sql).c_str(), -1, &mStatement, nullptr) != SQLITE_OK) {
-            throw std::runtime_error("SQLite prepare failed: " + std::string(sqlite3_errmsg(mDb)));
+            aurora::throw_host_exception<std::runtime_error>("SQLite prepare failed: " + std::string(sqlite3_errmsg(mDb)));
         }
     }
 
@@ -95,13 +96,13 @@ namespace smgpc::sql {
             reset();
             return false;
         }
-        throw std::runtime_error("SQLite step failed: " + std::string(sqlite3_errmsg(mDb)));
+        aurora::throw_host_exception<std::runtime_error>("SQLite step failed: " + std::string(sqlite3_errmsg(mDb)));
     }
 
     void Statement::step_done() {
         const auto result = sqlite3_step(mStatement);
         if (result != SQLITE_DONE) {
-            throw std::runtime_error("SQLite step failed: " + std::string(sqlite3_errmsg(mDb)));
+            aurora::throw_host_exception<std::runtime_error>("SQLite step failed: " + std::string(sqlite3_errmsg(mDb)));
         }
         reset();
     }
@@ -128,7 +129,7 @@ namespace smgpc::sql {
 
     void Statement::check(int result) {
         if (result != SQLITE_OK) {
-            throw std::runtime_error("SQLite bind failed: " + std::string(sqlite3_errmsg(mDb)));
+            aurora::throw_host_exception<std::runtime_error>("SQLite bind failed: " + std::string(sqlite3_errmsg(mDb)));
         }
     }
 

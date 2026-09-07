@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "compat/GlobalGravityOwnership.hpp"
 
 #include "Game/Gravity/GlobalGravityObj.hpp"
@@ -261,32 +262,32 @@ namespace smgpc::compat {
 
     void GlobalGravityOwnership::adopt(GlobalGravityObj &actor) {
         if (_impl->reclaimed) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "GlobalGravity ownership cannot adopt after scene reclamation.");
         }
         if (actor.mGravityCreator == nullptr) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "GlobalGravity ownership requires the retail GravityCreator.");
         }
         if (creator_kind(actor.mGravityCreator) == GravityCreatorKind::Unknown) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "GlobalGravity ownership rejects an unknown GravityCreator type.");
         }
         if (_impl->find(actor) != nullptr ||
             std::ranges::any_of(_impl->records, [&](const auto &record) {
                 return record.creator == actor.mGravityCreator;
             })) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "GlobalGravity ownership rejects duplicate creator adoption.");
         }
         if (std::ranges::any_of(_impl->records, [](const auto &record) {
                 return record.capture_open;
             })) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "GlobalGravity ownership rejects overlapping uninitialized actors.");
         }
         if (_impl->records.size() == cMaxOwnedGravities) {
-            throw std::length_error(
+            aurora::throw_host_exception<std::length_error>(
                 "GlobalGravity ownership exceeded the retail manager capacity.");
         }
 
@@ -307,11 +308,11 @@ namespace smgpc::compat {
     void GlobalGravityOwnership::prepare_init(GlobalGravityObj &actor) {
         auto *record = _impl->find(actor);
         if (record == nullptr) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "GlobalGravity init does not belong to the active scene owner.");
         }
         if (!record->capture_open) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "GlobalGravity init cannot reopen a captured ownership record.");
         }
         _impl->set_suffix_start(*record);
@@ -321,7 +322,7 @@ namespace smgpc::compat {
         GlobalGravityObj &actor, bool allow_missing_target) {
         auto *record = _impl->find(actor);
         if (record == nullptr) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "GlobalGravity follower capture does not belong to the active scene owner.");
         }
         if (!record->capture_open) {
@@ -334,13 +335,13 @@ namespace smgpc::compat {
         auto *current_holder = follow_holder(*_impl->holder);
         if (record->starting_holder != nullptr &&
             current_holder != record->starting_holder) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "GlobalGravity follower holder changed during actor init.");
         }
         if (record->starting_holder == nullptr &&
             (record->starting_follower_count != 0U ||
              record->starting_target_count != 0U)) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "GlobalGravity lazy follower holder has a nonzero baseline.");
         }
         if (current_holder == nullptr) {
@@ -353,7 +354,7 @@ namespace smgpc::compat {
             static_cast<std::size_t>(current_holder->mTargets.size());
         if (follower_count < record->starting_follower_count ||
             target_count < record->starting_target_count) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "GlobalGravity follower/target holder shrank during actor init.");
         }
         const auto follower_delta =
@@ -361,7 +362,7 @@ namespace smgpc::compat {
         const auto target_delta = target_count - record->starting_target_count;
         if (follower_delta > 1U || target_delta > 1U ||
             (follower_delta == 0U && target_delta != 0U)) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "GlobalGravity actor init appended an unexpected follower/target suffix.");
         }
 
@@ -375,7 +376,7 @@ namespace smgpc::compat {
             if (follower == nullptr || follower->mFollowerObj != &actor ||
                 follower->mGravity != field || follower->mLinkInfo == nullptr ||
                 (!allow_missing_target && follower->mFollowTarget == nullptr)) {
-                throw std::logic_error(
+                aurora::throw_host_exception<std::logic_error>(
                     "GlobalGravity actor init appended foreign follower state.");
             }
             append_unique(_impl->followers, follower);
@@ -384,7 +385,7 @@ namespace smgpc::compat {
                 auto *owned_target = current_holder->mTargets[static_cast<int>(record->starting_target_count)];
                 if (owned_target == nullptr ||
                     owned_target != follower->mFollowTarget) {
-                    throw std::logic_error(
+                    aurora::throw_host_exception<std::logic_error>(
                         "GlobalGravity actor init appended foreign target state.");
                 }
                 append_unique(_impl->follow_targets, owned_target);
@@ -441,7 +442,7 @@ namespace smgpc::compat {
                 actor.mGravityCreator = nullptr;
                 ++sTotals.transactional_creator_reclaims;
             }
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "GlobalGravity creation requires the active SceneObjHolder owner.");
         }
 
@@ -467,7 +468,7 @@ namespace smgpc::compat {
         }
         auto *owner = smgpc::scene::current_global_gravity_ownership();
         if (owner == nullptr) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "GlobalGravity init requires its active scene owner.");
         }
         owner->prepare_init(*actor);
@@ -480,7 +481,7 @@ namespace smgpc::compat {
         }
         auto *owner = smgpc::scene::current_global_gravity_ownership();
         if (owner == nullptr) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "GlobalGravity follower capture requires its active scene owner.");
         }
         owner->capture_after_init(*actor, false);

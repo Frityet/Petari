@@ -1,0 +1,4 @@
+aurora/include/JSystem/JAudio2/JAISound.hpp:1:9: warning: #pragma once in main file [-Wpragma-once-outside-header]
+    1 | #pragma once
+      |         ^
+1 warning generated.

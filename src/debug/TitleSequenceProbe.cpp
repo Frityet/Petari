@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Game/Screen/TitleSequenceProduct.hpp"
 #include "Logger.hpp"
 #include "RendererService.hpp"
@@ -26,10 +27,10 @@ namespace {
 
         const auto* disc_image = std::getenv("SMGPC_DISC_IMAGE");
         if (disc_image == nullptr || disc_image[0] == '\0') {
-            throw std::runtime_error("SMGPC_DISC_IMAGE must name a real disc image");
+            aurora::throw_host_exception<std::runtime_error>("SMGPC_DISC_IMAGE must name a real disc image");
         }
         if (!aurora_dvd_open(disc_image)) {
-            throw std::runtime_error("Aurora could not open the requested disc image");
+            aurora::throw_host_exception<std::runtime_error>("Aurora could not open the requested disc image");
         }
 
         auto resource_runtime = smgpc::resource::GameResourceRuntime{};

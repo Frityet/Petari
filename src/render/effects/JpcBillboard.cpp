@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "JpcBillboard.hpp"
 
 #include <cmath>
@@ -31,7 +32,7 @@ namespace smgpc::render::effects {
         [[nodiscard]] camera::CameraParamVec3 normalized(const camera::CameraParamVec3 &value) {
             const auto length = std::sqrt(dot(value, value));
             if (length <= 0.000001F) {
-                throw std::logic_error("billboard camera basis is degenerate");
+                aurora::throw_host_exception<std::logic_error>("billboard camera basis is degenerate");
             }
 
             return {

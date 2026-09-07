@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "J3dMaterialBlockData.hpp"
 
 #include "J3dNameData.hpp"
@@ -20,7 +21,7 @@ namespace smgpc::resource {
 
         Bytes checked(Bytes bytes, std::size_t offset, std::size_t size) {
             if (offset > bytes.size() || size > bytes.size() - offset) {
-                throw std::runtime_error("J3D material metadata exceeds its containing block");
+                aurora::throw_host_exception<std::runtime_error>("J3D material metadata exceeds its containing block");
             }
             return bytes.subspan(offset, size);
         }
@@ -102,7 +103,7 @@ namespace smgpc::resource {
 
             void require_records(std::size_t field, std::size_t stride, std::size_t count) const {
                 if (count > table(field).size() / stride) {
-                    throw std::runtime_error("J3D material table does not contain its referenced records");
+                    aurora::throw_host_exception<std::runtime_error>("J3D material table does not contain its referenced records");
                 }
             }
         };
@@ -138,10 +139,10 @@ namespace smgpc::resource {
                     }
                 }
                 if (row[3] != 0xff && source.table(0x34)[row[3]] > 8) {
-                    throw std::runtime_error("J3D material exceeds the eight texture-coordinate slots");
+                    aurora::throw_host_exception<std::runtime_error>("J3D material exceeds the eight texture-coordinate slots");
                 }
                 if (row[4] != 0xff && source.table(0x58)[row[4]] > 16) {
-                    throw std::runtime_error("J3D material exceeds the sixteen TEV-stage slots");
+                    aurora::throw_host_exception<std::runtime_error>("J3D material exceeds the sixteen TEV-stage slots");
                 }
             }
             const auto indirect = u32_at(source.bytes, 0x18), names = u32_at(source.bytes, 0x14);
@@ -152,7 +153,7 @@ namespace smgpc::resource {
                 const auto records = source.table(0x18);
                 for (std::size_t i = 0; i < count; ++i) {
                     if (records[i * 0x138] == 1 && records[i * 0x138 + 1] > 3) {
-                        throw std::runtime_error("J3D indirect material exceeds its three matrix slots");
+                        aurora::throw_host_exception<std::runtime_error>("J3D indirect material exceeds its three matrix slots");
                     }
                 }
             }
@@ -174,7 +175,7 @@ namespace smgpc::resource {
             template <typename T, typename Convert>
             void* table(std::size_t field, std::size_t stride, Convert convert) {
                 static_assert(std::is_standard_layout_v<T>);
-                if (sizeof(T) != stride) throw std::logic_error("J3D material record layout differs from its decoder");
+                if (sizeof(T) != stride) aurora::throw_host_exception<std::logic_error>("J3D material record layout differs from its decoder");
                 const auto offset = u32_at(source.bytes, field);
                 if (offset == 0) return nullptr;
                 const auto bytes = source.table(field);
@@ -273,7 +274,7 @@ namespace smgpc::resource {
             decoder.source.require_records(0x14, 8, count);
             decoder.source.require_records(0x18, 1, count);
             const auto source_init = u32_at(bytes, 0xC);
-            if (count != 0 && source_init == 0) throw std::runtime_error("MDL3 has no display-list descriptors");
+            if (count != 0 && source_init == 0) aurora::throw_host_exception<std::runtime_error>("MDL3 has no display-list descriptors");
             decoder.source.require_records(0xC, 8, count);
             std::vector<J3DDisplayListInit> lists(count);
             for (std::size_t i = 0; i < count; ++i) {
@@ -294,7 +295,7 @@ namespace smgpc::resource {
             auto native_lists = decoder.builder.template edit_array<J3DDisplayListInit>(native_init);
             for (std::size_t i = 0; i < count; ++i) {
                 const auto delta = command_image + native_lists[i].mOffset - (native_init + i * sizeof(J3DDisplayListInit));
-                if (delta > std::numeric_limits<u32>::max()) throw std::length_error("MDL3 native relative offset exceeds32 bits");
+                if (delta > std::numeric_limits<u32>::max()) aurora::throw_host_exception<std::length_error>("MDL3 native relative offset exceeds32 bits");
                 native_lists[i].mOffset = static_cast<u32>(delta);
             }
             block.mpPatchingInfo = decoder.table<J3DPatchingInfo>(0x10, 0x10, [](auto& value, Bytes row) { halves(value, row, 0, 0xC); });
@@ -313,11 +314,11 @@ namespace smgpc::resource {
 
         explicit Storage(Bytes bytes) : source(bytes.begin(), bytes.end()) {
             const auto size = u32_at(source, 4);
-            if (size < 8 || size != source.size()) throw std::runtime_error("J3D material block must have its complete declared extent");
+            if (size < 8 || size != source.size()) aurora::throw_host_exception<std::runtime_error>("J3D material block must have its complete declared extent");
             switch (u32_at(source, 0)) {
             case 0x4D415433: material = decode_material(source); break;
             case 0x4D444C33: display_list = decode_display_list(source); break;
-            default: throw std::runtime_error("Expected a MAT3 or MDL3 block for original material construction");
+            default: aurora::throw_host_exception<std::runtime_error>("Expected a MAT3 or MDL3 block for original material construction");
             }
         }
     };
@@ -326,11 +327,11 @@ namespace smgpc::resource {
     J3dMaterialBlockData::~J3dMaterialBlockData() = default;
 
     const J3DMaterialBlock& J3dMaterialBlockData::material() const {
-        if (!_storage->material) throw std::logic_error("This resource contains MDL3 metadata");
+        if (!_storage->material) aurora::throw_host_exception<std::logic_error>("This resource contains MDL3 metadata");
         return _storage->material->header();
     }
     const J3DMaterialDLBlock& J3dMaterialBlockData::display_list() const {
-        if (!_storage->display_list) throw std::logic_error("This resource contains MAT3 metadata");
+        if (!_storage->display_list) aurora::throw_host_exception<std::logic_error>("This resource contains MAT3 metadata");
         return _storage->display_list->header();
     }
     Bytes J3dMaterialBlockData::source_bytes() const { return _storage->source; }

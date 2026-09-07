@@ -1,4 +1,5 @@
 #pragma once
+#include <aurora/exception.hpp>
 
 #include <algorithm>
 #include <concepts>
@@ -212,7 +213,7 @@ namespace smgpc::di {
 
         void add_dependency(std::string dependency) {
             if (_state == State::Unregistered) {
-                throw std::logic_error("Cannot add a dependency to an unregistered service.");
+                aurora::throw_host_exception<std::logic_error>("Cannot add a dependency to an unregistered service.");
             }
             if (std::find(_dependencies.begin(), _dependencies.end(), dependency) == _dependencies.end()) {
                 _dependencies.push_back(std::move(dependency));
@@ -222,10 +223,10 @@ namespace smgpc::di {
         template <typename ConcreteService>
         void register_instance(std::unique_ptr<ConcreteService> service) {
             if (_state != State::Unregistered) {
-                throw std::logic_error("Service has already been registered.");
+                aurora::throw_host_exception<std::logic_error>("Service has already been registered.");
             }
             if (not service) {
-                throw std::invalid_argument("Cannot register a null service instance.");
+                aurora::throw_host_exception<std::invalid_argument>("Cannot register a null service instance.");
             }
 
             _instance = std::unique_ptr<Service>(std::move(service));
@@ -238,7 +239,7 @@ namespace smgpc::di {
         template <typename FactoryFn>
         void register_factory(FactoryFn &&factory, std::vector<std::string> dependencies = {}) {
             if (_state != State::Unregistered) {
-                throw std::logic_error("Service has already been registered.");
+                aurora::throw_host_exception<std::logic_error>("Service has already been registered.");
             }
 
             _factory = std::make_unique<FactoryAdapter<std::remove_cv_t<FactoryFn>>>(std::forward<FactoryFn>(factory));
@@ -251,7 +252,7 @@ namespace smgpc::di {
         template <typename FactoryFn>
         void register_reference_factory(FactoryFn &&factory, std::vector<std::string> dependencies = {}) {
             if (_state != State::Unregistered) {
-                throw std::logic_error("Service has already been registered.");
+                aurora::throw_host_exception<std::logic_error>("Service has already been registered.");
             }
 
             _reference_factory = std::make_unique<ReferenceFactoryAdapter<std::remove_cv_t<FactoryFn>>>(std::forward<FactoryFn>(factory));
@@ -261,43 +262,43 @@ namespace smgpc::di {
 
         [[nodiscard]] Service &get_singleton(Provider &provider) {
             if (_state == State::Unregistered) {
-                throw std::logic_error("Service has not been registered.");
+                aurora::throw_host_exception<std::logic_error>("Service has not been registered.");
             }
             if (_state == State::Factory and not _instance) {
                 _instance = _factory->create(provider);
                 if (not _instance) {
-                    throw std::logic_error("Factory produced a null singleton service.");
+                    aurora::throw_host_exception<std::logic_error>("Factory produced a null singleton service.");
                 }
             }
             if (_state == State::ReferenceFactory and _reference_instance == nullptr) {
                 _reference_instance = std::addressof(_reference_factory->get(provider));
                 if (_reference_instance == nullptr) {
-                    throw std::logic_error("Reference factory produced a null singleton service.");
+                    aurora::throw_host_exception<std::logic_error>("Reference factory produced a null singleton service.");
                 }
             }
             if (_state == State::ReferenceFactory) {
                 return *_reference_instance;
             }
             if (not _instance) {
-                throw std::logic_error("Singleton service was not constructible from a factory.");
+                aurora::throw_host_exception<std::logic_error>("Singleton service was not constructible from a factory.");
             }
             return *_instance;
         }
 
         [[nodiscard]] std::unique_ptr<Service> get_transient(Provider &provider) {
             if (_state == State::Unregistered) {
-                throw std::logic_error("Service has not been registered.");
+                aurora::throw_host_exception<std::logic_error>("Service has not been registered.");
             }
             if (_state == State::Instance) {
-                throw std::logic_error("Cannot resolve a transient service from a singleton registration.");
+                aurora::throw_host_exception<std::logic_error>("Cannot resolve a transient service from a singleton registration.");
             }
             if (_state == State::ReferenceFactory) {
-                throw std::logic_error("Cannot resolve a transient service from a borrowed singleton registration.");
+                aurora::throw_host_exception<std::logic_error>("Cannot resolve a transient service from a borrowed singleton registration.");
             }
 
             auto product = _factory->create(provider);
             if (not product) {
-                throw std::logic_error("Factory produced a null transient service.");
+                aurora::throw_host_exception<std::logic_error>("Factory produced a null transient service.");
             }
             return product;
         }

@@ -1,0 +1,55 @@
+{
+  "mirrors": [
+    {
+      "reference": "decomp/src/Game/Camera/CameraParamString.cpp",
+      "native": "src/Game/Camera/CameraParamString.cpp",
+      "byte_equal": true,
+      "sha256": "19f0b136218f9a40941dca4ec6e9b17afa54951d63a986fcb6565142e43b0dc7"
+    },
+    {
+      "reference": "decomp/include/Game/Camera/CameraParamString.hpp",
+      "native": "src/Game/Camera/CameraParamString.hpp",
+      "byte_equal": true,
+      "sha256": "0a948eec63c08d4be6664e666e86bba8713cb57e7bb0f4bb4cb076a261bfd597"
+    },
+    {
+      "reference": "decomp/src/Game/Camera/CameraParamChunkID.cpp",
+      "native": "src/Game/Camera/CameraParamChunkID.cpp",
+      "byte_equal": true,
+      "sha256": "a495266b17e631030b353bc2566430626eb6d3f9d84274c9a5ca8800e2dd4048"
+    },
+    {
+      "reference": "decomp/include/Game/Camera/CameraParamChunkID.hpp",
+      "native": "src/Game/Camera/CameraParamChunkID.hpp",
+      "byte_equal": true,
+      "sha256": "c31c8efdbe3e5bd08354bdf2ec94951b2bc13e59ea340e3b9fb01db4887798f7"
+    },
+    {
+      "reference": "decomp/src/Game/Camera/DotCamParams.cpp",
+      "native": "src/Game/Camera/DotCamParams.cpp",
+      "byte_equal": true,
+      "sha256": "002bea268b8841385707b82f66482c13309e58d38f2dbe9eb7ddf64ef7159a22"
+    },
+    {
+      "reference": "decomp/include/Game/Camera/DotCamParams.hpp",
+      "native": "src/Game/Camera/DotCamParams.hpp",
+      "byte_equal": true,
+      "sha256": "d0c5881a2fe18cb3eb4860a97ff6110d306538bb890b22ab536984798198dff5"
+    }
+  ],
+  "test": {
+    "path": "tests/OriginalCameraResourceTests.cpp",
+    "sha256": "3701f32c45db7427b95cb645820b333479236949859ba132cb09037a17a09015"
+  },
+  "reference_changes": [
+    "src/Game/Camera/DotCamParams.cpp"
+  ],
+  "new_native_files": [
+    "src/Game/Camera/CameraParamString.cpp",
+    "src/Game/Camera/CameraParamChunkID.cpp",
+    "src/Game/Camera/CameraParamChunkID.hpp",
+    "src/Game/Camera/DotCamParams.cpp",
+    "src/Game/Camera/DotCamParams.hpp"
+  ],
+  "build_config_change": "tests/xmake.lua: smg-pc-original-camera-resource-tests"
+}

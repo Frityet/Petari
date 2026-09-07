@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Game/NameObj/NameObjExecuteHolder.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "runtime/RuntimeContext.hpp"
@@ -13,7 +14,7 @@ namespace {
         if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr) {
             return runtime->scheduler();
         }
-        throw std::logic_error("Scene movement category requests require an active scene scheduler.");
+        aurora::throw_host_exception<std::logic_error>("Scene movement category requests require an active scene scheduler.");
     }
 }  // namespace
 

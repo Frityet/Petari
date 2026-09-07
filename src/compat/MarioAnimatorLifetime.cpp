@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "compat/MarioAnimatorLifetime.hpp"
 
 #include "Game/Animation/XanimeCore.hpp"
@@ -143,7 +144,7 @@ namespace smgpc::compat {
               mutex_count(MR::MutexHolder<0>::sMutex.thread == thread ? MR::MutexHolder<0>::sMutex.count : 0) {
             auto* service = ResourceHolderService::active();
             if (!service || service->allocation_domain() != owner->allocation_domain()) {
-                throw std::logic_error("MarioAnimator requires its model's retained scene resource cohort");
+                aurora::throw_host_exception<std::logic_error>("MarioAnimator requires its model's retained scene resource cohort");
             }
             lifetime->domain = owner->allocation_domain();
             lifetime->resources = service->retain(*MR::getResourceHolder(animator.mActor));
@@ -178,7 +179,7 @@ namespace smgpc::compat {
             JkrHostAllocationScope host;
             auto owner = retain_actor_model_owner(animator.mActor);
             if (!owner || &owner->manager() != animator.mActor->mModelManager) {
-                throw std::logic_error("MarioAnimator requires the actor's actual ModelManager owner");
+                aurora::throw_host_exception<std::logic_error>("MarioAnimator requires the actor's actual ModelManager owner");
             }
             _storage = std::make_unique<Storage>(animator, std::move(owner));
         }

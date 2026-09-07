@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "compat/CameraLocalUtilRuntime.hpp"
 
 #include "Game/Camera/Camera.hpp"
@@ -21,7 +22,7 @@ namespace {
 
     CameraTargetObj* require_bound_target(const Camera* camera) {
         if (camera == nullptr || sBoundCamera != camera || sBoundTarget == nullptr) {
-            throw std::logic_error("Camera target lookup requires the matching active camera calculation scope.");
+            aurora::throw_host_exception<std::logic_error>("Camera target lookup requires the matching active camera calculation scope.");
         }
         return sBoundTarget;
     }
@@ -32,7 +33,7 @@ namespace smgpc::compat {
     ScopedCameraTargetBinding::ScopedCameraTargetBinding(Camera& camera, CameraTargetObj& target, OriginalCameraMode mode)
         : _previous_camera(sBoundCamera), _previous_target(sBoundTarget), _previous_mode(sBoundMode) {
         if (camera.mCameraMan == nullptr || camera.mPoseParam == nullptr || camera.mCameraMan->mPoseParam == nullptr) {
-            throw std::logic_error("Camera target binding requires the original CameraMan and both pose objects.");
+            aurora::throw_host_exception<std::logic_error>("Camera target binding requires the original CameraMan and both pose objects.");
         }
         sBoundCamera = &camera;
         sBoundTarget = &target;
@@ -78,7 +79,7 @@ namespace CameraLocalUtil {
 
     CameraTargetObj* getTarget(const CameraMan* pCameraMan) {
         if (sBoundCamera == nullptr || pCameraMan == nullptr || sBoundCamera->mCameraMan != pCameraMan) {
-            throw std::logic_error("Camera manager target lookup requires its active camera calculation scope.");
+            aurora::throw_host_exception<std::logic_error>("Camera manager target lookup requires its active camera calculation scope.");
         }
         return require_bound_target(sBoundCamera);
     }
@@ -428,7 +429,7 @@ namespace CameraLocalUtil {
 namespace MR {
     bool isFirstPersonCamera() {
         if (sBoundCamera == nullptr || sBoundTarget == nullptr || !sBoundMode.has_value()) {
-            throw std::logic_error("First-person camera state requires an active original camera owner and explicit mode.");
+            aurora::throw_host_exception<std::logic_error>("First-person camera state requires an active original camera owner and explicit mode.");
         }
         return *sBoundMode == smgpc::compat::OriginalCameraMode::Subjective;
     }

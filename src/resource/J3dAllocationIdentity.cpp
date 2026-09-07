@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "J3dAllocationIdentity.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 
@@ -32,7 +33,7 @@ namespace smgpc::resource {
                 free.erase(it);
                 return base;
             }
-            throw std::length_error("Original J3D allocation identity space is exhausted");
+            aurora::throw_host_exception<std::length_error>("Original J3D allocation identity space is exhausted");
         }
 
         void release(std::uint32_t base, std::uint32_t size) {
@@ -62,7 +63,7 @@ namespace smgpc::resource {
     J3dAllocationIdentity::J3dAllocationIdentity(std::size_t original_extent) : _extent(original_extent) {
         compat::JkrHostAllocationScope host_allocations;
         if (original_extent == 0 || original_extent > 0x40000000U) {
-            throw std::length_error("J3D allocation identity extent is outside its original address range");
+            aurora::throw_host_exception<std::length_error>("J3D allocation identity extent is outside its original address range");
         }
         static auto state = std::make_shared<State>();
         _state = state;
@@ -79,7 +80,7 @@ namespace smgpc::resource {
           _extent(std::exchange(other._extent, 0)), _reservation(std::exchange(other._reservation, 0)) {}
 
     std::uint32_t J3dAllocationIdentity::address(std::size_t original_offset) const {
-        if (_base == 0 || original_offset >= _extent) throw std::out_of_range("J3D allocation identity offset is outside its extent");
+        if (_base == 0 || original_offset >= _extent) aurora::throw_host_exception<std::out_of_range>("J3D allocation identity offset is outside its extent");
         return _base + static_cast<std::uint32_t>(original_offset);
     }
 }

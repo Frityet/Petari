@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "J3dModel.hpp"
 
 #include <algorithm>
@@ -22,7 +23,7 @@ namespace smgpc::render {
 
         [[nodiscard]] std::uint16_t read_be16(std::span<const std::uint8_t> data, std::size_t offset) {
             if (offset + 2U > data.size()) {
-                throw std::runtime_error("J3D read past end of buffer");
+                aurora::throw_host_exception<std::runtime_error>("J3D read past end of buffer");
             }
 
             return static_cast<std::uint16_t>((static_cast<std::uint16_t>(data[offset]) << 8U) | static_cast<std::uint16_t>(data[offset + 1U]));
@@ -34,7 +35,7 @@ namespace smgpc::render {
 
         [[nodiscard]] std::uint32_t read_be32(std::span<const std::uint8_t> data, std::size_t offset) {
             if (offset + 4U > data.size()) {
-                throw std::runtime_error("J3D read past end of buffer");
+                aurora::throw_host_exception<std::runtime_error>("J3D read past end of buffer");
             }
 
             return (static_cast<std::uint32_t>(data[offset]) << 24U) | (static_cast<std::uint32_t>(data[offset + 1U]) << 16U) |
@@ -47,7 +48,7 @@ namespace smgpc::render {
 
         [[nodiscard]] std::string read_tag(std::span<const std::uint8_t> data, std::size_t offset) {
             if (offset + 4U > data.size()) {
-                throw std::runtime_error("J3D tag read past end of buffer");
+                aurora::throw_host_exception<std::runtime_error>("J3D tag read past end of buffer");
             }
 
             return std::string(reinterpret_cast<const char *>(data.data() + offset), 4U);
@@ -55,7 +56,7 @@ namespace smgpc::render {
 
         [[nodiscard]] std::string read_string(std::span<const std::uint8_t> data, std::size_t offset) {
             if (offset >= data.size()) {
-                throw std::runtime_error("J3D string offset outside buffer");
+                aurora::throw_host_exception<std::runtime_error>("J3D string offset outside buffer");
             }
 
             auto end = offset;
@@ -63,7 +64,7 @@ namespace smgpc::render {
                 ++end;
             }
             if (end == data.size()) {
-                throw std::runtime_error("J3D string is not null terminated");
+                aurora::throw_host_exception<std::runtime_error>("J3D string is not null terminated");
             }
 
             return std::string(reinterpret_cast<const char *>(data.data() + offset), end - offset);
@@ -77,7 +78,7 @@ namespace smgpc::render {
 
             const auto table_offset = section_offset + table_relative_offset;
             if (table_offset + 4U > data.size()) {
-                throw std::runtime_error("J3D name table outside buffer");
+                aurora::throw_host_exception<std::runtime_error>("J3D name table outside buffer");
             }
 
             const auto count = read_be16(data, table_offset);
@@ -86,7 +87,7 @@ namespace smgpc::render {
             for (auto i = 0U; i < count; ++i) {
                 const auto entry_offset = table_offset + 4U + i * 4U;
                 if (entry_offset + 4U > data.size()) {
-                    throw std::runtime_error("J3D name table entry outside buffer");
+                    aurora::throw_host_exception<std::runtime_error>("J3D name table entry outside buffer");
                 }
 
                 names.push_back(read_string(data, table_offset + read_be16(data, entry_offset + 2U)));
@@ -250,7 +251,7 @@ namespace smgpc::render {
                                                                           const std::vector<J3dVertexAttributeFormat> &formats,
                                                                           std::uint32_t &parsed_bytes) {
             if (offset + size > data.size()) {
-                throw std::runtime_error("J3D shape display list outside buffer");
+                aurora::throw_host_exception<std::runtime_error>("J3D shape display list outside buffer");
             }
 
             auto primitives = std::vector<J3dPrimitiveSummary>{};
@@ -328,7 +329,7 @@ namespace smgpc::render {
         [[nodiscard]] J3dInfoSummary parse_inf1(std::span<const std::uint8_t> data, const J3dSectionInfo &section) {
             const auto section_offset = static_cast<std::size_t>(section.offset);
             if (section.size < 0x18U) {
-                throw std::runtime_error("J3D INF1 section is too small");
+                aurora::throw_host_exception<std::runtime_error>("J3D INF1 section is too small");
             }
 
             auto info = J3dInfoSummary {};
@@ -358,7 +359,7 @@ namespace smgpc::render {
         [[nodiscard]] J3dJointBlockSummary parse_jnt1(std::span<const std::uint8_t> data, const J3dSectionInfo &section) {
             const auto section_offset = static_cast<std::size_t>(section.offset);
             if (section.size < 0x18U) {
-                throw std::runtime_error("J3D JNT1 section is too small");
+                aurora::throw_host_exception<std::runtime_error>("J3D JNT1 section is too small");
             }
 
             auto summary = J3dJointBlockSummary {};
@@ -381,7 +382,7 @@ namespace smgpc::render {
                 const auto remapped_index = i < summary.remap_table.size() ? summary.remap_table[i] : static_cast<std::uint16_t>(i);
                 const auto joint_offset = relative_offset(section_offset, joint_init_relative) + static_cast<std::size_t>(remapped_index) * 0x40U;
                 if (joint_offset + 0x40U > data.size()) {
-                    throw std::runtime_error("J3D JNT1 joint init data outside buffer");
+                    aurora::throw_host_exception<std::runtime_error>("J3D JNT1 joint init data outside buffer");
                 }
 
                 summary.joints.push_back(J3dJointSummary {
@@ -409,7 +410,7 @@ namespace smgpc::render {
         [[nodiscard]] J3dEnvelopeBlockSummary parse_evp1(std::span<const std::uint8_t> data, const J3dSectionInfo &section) {
             const auto section_offset = static_cast<std::size_t>(section.offset);
             if (section.size < 0x1cU) {
-                throw std::runtime_error("J3D EVP1 section is too small");
+                aurora::throw_host_exception<std::runtime_error>("J3D EVP1 section is too small");
             }
 
             auto summary = J3dEnvelopeBlockSummary {};
@@ -423,7 +424,7 @@ namespace smgpc::render {
             const auto mix_weight_relative = read_be32(data, section_offset + 0x14U);
             const auto inv_joint_relative = read_be32(data, section_offset + 0x18U);
             if (!has_relative_offset(mix_count_relative) || !has_relative_offset(mix_index_relative) || !has_relative_offset(mix_weight_relative)) {
-                throw std::runtime_error("J3D EVP1 missing required envelope tables");
+                aurora::throw_host_exception<std::runtime_error>("J3D EVP1 missing required envelope tables");
             }
 
             const auto mix_count_offset = relative_offset(section_offset, mix_count_relative);
@@ -435,7 +436,7 @@ namespace smgpc::render {
             summary.matrices.reserve(summary.matrix_count);
             for (auto matrix_index = 0U; matrix_index < summary.matrix_count; ++matrix_index) {
                 if (mix_count_offset + matrix_index >= data.size()) {
-                    throw std::runtime_error("J3D EVP1 mix-count table outside buffer");
+                    aurora::throw_host_exception<std::runtime_error>("J3D EVP1 mix-count table outside buffer");
                 }
 
                 const auto influence_count = data[mix_count_offset + matrix_index];
@@ -473,7 +474,7 @@ namespace smgpc::render {
         [[nodiscard]] J3dDrawBlockSummary parse_drw1(std::span<const std::uint8_t> data, const J3dSectionInfo &section) {
             const auto section_offset = static_cast<std::size_t>(section.offset);
             if (section.size < 0x14U) {
-                throw std::runtime_error("J3D DRW1 section is too small");
+                aurora::throw_host_exception<std::runtime_error>("J3D DRW1 section is too small");
             }
 
             auto summary = J3dDrawBlockSummary {};
@@ -488,7 +489,7 @@ namespace smgpc::render {
             const auto index_offset = relative_offset(section_offset, index_relative);
             if (flag_offset + summary.matrix_count > data.size() ||
                 index_offset + static_cast<std::size_t>(summary.matrix_count) * 2U > data.size()) {
-                throw std::runtime_error("J3D DRW1 matrix tables outside buffer");
+                aurora::throw_host_exception<std::runtime_error>("J3D DRW1 matrix tables outside buffer");
             }
 
             summary.matrices.reserve(summary.matrix_count);
@@ -528,7 +529,7 @@ namespace smgpc::render {
         [[nodiscard]] J3dVertexSummary parse_vtx1(std::span<const std::uint8_t> data, const J3dSectionInfo &section) {
             const auto section_offset = static_cast<std::size_t>(section.offset);
             if (section.size < 0x40U) {
-                throw std::runtime_error("J3D VTX1 section is too small");
+                aurora::throw_host_exception<std::runtime_error>("J3D VTX1 section is too small");
             }
 
             auto summary = J3dVertexSummary {};
@@ -709,7 +710,7 @@ namespace smgpc::render {
                                                       const std::optional<J3dVertexSummary> &vertices) {
             const auto section_offset = static_cast<std::size_t>(section.offset);
             if (section.size < 0x2cU) {
-                throw std::runtime_error("J3D SHP1 section is too small");
+                aurora::throw_host_exception<std::runtime_error>("J3D SHP1 section is too small");
             }
 
             const auto shape_count = read_be16(data, section_offset + 0x08U);
@@ -724,7 +725,7 @@ namespace smgpc::render {
             if (!has_relative_offset(shape_init_relative) || !has_relative_offset(index_table_relative) || !has_relative_offset(vtx_desc_relative) ||
                 !has_relative_offset(display_list_relative) || !has_relative_offset(matrix_init_relative) ||
                 !has_relative_offset(draw_init_relative)) {
-                throw std::runtime_error("J3D SHP1 missing required tables");
+                aurora::throw_host_exception<std::runtime_error>("J3D SHP1 missing required tables");
             }
 
             const auto names = read_name_table(data, section_offset, name_table_relative);
@@ -823,7 +824,7 @@ namespace smgpc::render {
         [[nodiscard]] J3dMaterialBlockSummary parse_mat3(std::span<const std::uint8_t> data, const J3dSectionInfo &section) {
             const auto section_offset = static_cast<std::size_t>(section.offset);
             if (section.size < 0x84U) {
-                throw std::runtime_error("J3D MAT3 section is too small");
+                aurora::throw_host_exception<std::runtime_error>("J3D MAT3 section is too small");
             }
 
             const auto material_count = read_be16(data, section_offset + 0x08U);
@@ -849,7 +850,7 @@ namespace smgpc::render {
             const auto z_mode_relative = read_be32(data, section_offset + 0x74U);
             const auto z_comp_loc_relative = read_be32(data, section_offset + 0x78U);
             if (!has_relative_offset(init_relative) || !has_relative_offset(material_id_relative)) {
-                throw std::runtime_error("J3D MAT3 missing required tables");
+                aurora::throw_host_exception<std::runtime_error>("J3D MAT3 missing required tables");
             }
 
             const auto names = read_name_table(data, section_offset, name_table_relative);
@@ -1118,7 +1119,7 @@ namespace smgpc::render {
         [[nodiscard]] J3dMdl3BlockSummary parse_mdl3(std::span<const std::uint8_t> data, const J3dSectionInfo &section) {
             const auto section_offset = static_cast<std::size_t>(section.offset);
             if (section.size < 0x20U) {
-                throw std::runtime_error("J3D MDL3 section is too small");
+                aurora::throw_host_exception<std::runtime_error>("J3D MDL3 section is too small");
             }
 
             auto summary = J3dMdl3BlockSummary {};
@@ -1130,7 +1131,7 @@ namespace smgpc::render {
 
             const auto display_init_offset = relative_offset(section_offset, display_init_relative);
             if (display_init_offset + static_cast<std::size_t>(summary.material_count) * 8U > data.size()) {
-                throw std::runtime_error("J3D MDL3 display-list init table outside buffer");
+                aurora::throw_host_exception<std::runtime_error>("J3D MDL3 display-list init table outside buffer");
             }
 
             summary.packets.reserve(summary.material_count);
@@ -1139,7 +1140,7 @@ namespace smgpc::render {
                 const auto packet_offset = entry_offset + read_be32(data, entry_offset);
                 const auto packet_size = read_be32(data, entry_offset + 4U);
                 if (packet_offset + packet_size > data.size()) {
-                    throw std::runtime_error("J3D MDL3 display list outside buffer");
+                    aurora::throw_host_exception<std::runtime_error>("J3D MDL3 display list outside buffer");
                 }
 
                 auto packet = J3dMdl3PacketSummary {
@@ -1443,7 +1444,7 @@ namespace smgpc::render {
                                              std::size_t offset, std::uint32_t size, const std::vector<J3dVertexDesc> &desc,
                                              std::uint8_t matrix_type) {
             if (offset + size > data.size()) {
-                throw std::runtime_error("J3D geometry display list outside buffer");
+                aurora::throw_host_exception<std::runtime_error>("J3D geometry display list outside buffer");
             }
 
             const auto vertex_size = display_list_vertex_size(desc, source.formats);
@@ -1585,7 +1586,7 @@ namespace smgpc::render {
 
     J3dModelSummary inspect_j3d_model(std::span<const std::uint8_t> model_data) {
         if (model_data.size() < 0x20U) {
-            throw std::runtime_error("J3D model is too small");
+            aurora::throw_host_exception<std::runtime_error>("J3D model is too small");
         }
 
         auto summary = J3dModelSummary {};
@@ -1593,18 +1594,18 @@ namespace smgpc::render {
         summary.model_type = read_be32(model_data, 4U);
         summary.section_count = read_be32(model_data, 0x0cU);
         if (summary.magic != J3D1_MAGIC && summary.magic != J3D2_MAGIC) {
-            throw std::runtime_error("J3D model has unexpected magic");
+            aurora::throw_host_exception<std::runtime_error>("J3D model has unexpected magic");
         }
 
         auto offset = std::size_t {0x20U};
         for (auto i = 0U; i < summary.section_count; ++i) {
             if (offset + 8U > model_data.size()) {
-                throw std::runtime_error("J3D section header outside buffer");
+                aurora::throw_host_exception<std::runtime_error>("J3D section header outside buffer");
             }
 
             const auto section_size = read_be32(model_data, offset + 4U);
             if (section_size < 8U || offset + section_size > model_data.size() || section_size > std::numeric_limits<std::uint32_t>::max()) {
-                throw std::runtime_error("J3D section size outside buffer");
+                aurora::throw_host_exception<std::runtime_error>("J3D section size outside buffer");
             }
 
             summary.sections.push_back(J3dSectionInfo {

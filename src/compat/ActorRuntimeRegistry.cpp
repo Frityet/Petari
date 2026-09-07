@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Game/Screen/StarPointerTarget.hpp"
 #include "compat/EffectSystemOwnership.hpp"
 #include "Game/AudioLib/AudAnmSoundObject.hpp"
@@ -105,11 +106,11 @@ namespace {
 
     [[nodiscard]] LiveActorRuntimeState& require_actor_state(const LiveActor* actor) {
         if (actor == nullptr) {
-            throw std::invalid_argument("LiveActor runtime state requires a real actor.");
+            aurora::throw_host_exception<std::invalid_argument>("LiveActor runtime state requires a real actor.");
         }
         const auto found = actor_states().find(actor);
         if (found == actor_states().end()) {
-            throw std::logic_error("LiveActor has no registered native runtime state.");
+            aurora::throw_host_exception<std::logic_error>("LiveActor has no registered native runtime state.");
         }
         return found->second;
     }
@@ -141,7 +142,7 @@ namespace smgpc::compat {
     NameObjRuntimeRegistrationCapture::NameObjRuntimeRegistrationCapture() {
         auto& active = active_name_obj_registration_capture();
         if (active != nullptr) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "NameObj construction capture cannot overlap or nest.");
         }
         _marker = mark_name_obj_runtime_registrations();
@@ -163,7 +164,7 @@ namespace smgpc::compat {
     const char* register_name_obj_runtime_state(NameObj* object, const char* name) {
         JkrHostAllocationScope host;
         if (object == nullptr) {
-            throw std::invalid_argument("NameObj runtime state requires a real object.");
+            aurora::throw_host_exception<std::invalid_argument>("NameObj runtime state requires a real object.");
         }
         const auto registration_order = next_name_obj_registration_order()++;
         auto [found, inserted] = name_obj_states().try_emplace(
@@ -172,7 +173,7 @@ namespace smgpc::compat {
                         .registration_order = registration_order,
                     });
         if (!inserted) {
-            throw std::logic_error("NameObj runtime state is already registered.");
+            aurora::throw_host_exception<std::logic_error>("NameObj runtime state is already registered.");
         }
         return found->second.name.c_str();
     }
@@ -180,11 +181,11 @@ namespace smgpc::compat {
     const char* update_name_obj_runtime_name(NameObj* object, const char* name) {
         JkrHostAllocationScope host;
         if (object == nullptr) {
-            throw std::invalid_argument("NameObj runtime state requires a real object.");
+            aurora::throw_host_exception<std::invalid_argument>("NameObj runtime state requires a real object.");
         }
         const auto found = name_obj_states().find(object);
         if (found == name_obj_states().end()) {
-            throw std::logic_error("NameObj has no registered native runtime state.");
+            aurora::throw_host_exception<std::logic_error>("NameObj has no registered native runtime state.");
         }
         found->second.name = name != nullptr ? name : "";
         return found->second.name.c_str();
@@ -213,16 +214,16 @@ namespace smgpc::compat {
     void claim_name_obj_runtime_ownership(NameObj* object,
                                           const void* owner) {
         if (object == nullptr || owner == nullptr) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "NameObj runtime ownership requires real object and owner identities.");
         }
         const auto found = name_obj_states().find(object);
         if (found == name_obj_states().end()) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "NameObj runtime ownership requires a registered object.");
         }
         if (found->second.owner != nullptr) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "NameObj runtime ownership is already claimed.");
         }
         found->second.owner = owner;
@@ -244,17 +245,17 @@ namespace smgpc::compat {
     void delegate_name_obj_runtime_postpass(NameObj* object,
                                             const void* delegate) {
         if (object == nullptr || delegate == nullptr) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "NameObj postpass delegation requires real object and delegate identities.");
         }
         const auto found = name_obj_states().find(object);
         if (found == name_obj_states().end()) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "NameObj postpass delegation requires a registered object.");
         }
         if (found->second.postpass_delegate != nullptr &&
             found->second.postpass_delegate != delegate) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "NameObj postpass is already delegated to another boundary.");
         }
         found->second.postpass_delegate = delegate;
@@ -298,7 +299,7 @@ namespace smgpc::compat {
         NameObjRuntimeRegistrationMarker marker) {
         if (marker.next_registration_order == 0U ||
             marker.next_registration_order > next_name_obj_registration_order()) {
-            throw std::invalid_argument("NameObj runtime registration marker is invalid.");
+            aurora::throw_host_exception<std::invalid_argument>("NameObj runtime registration marker is invalid.");
         }
         return snapshot_name_obj_runtime_objects_from(marker.next_registration_order);
     }
@@ -366,10 +367,10 @@ namespace smgpc::compat {
 
     void register_actor_runtime_state(LiveActor* actor) {
         if (actor == nullptr) {
-            throw std::invalid_argument("LiveActor runtime state requires a real actor.");
+            aurora::throw_host_exception<std::invalid_argument>("LiveActor runtime state requires a real actor.");
         }
         if (!actor_states().try_emplace(actor).second) {
-            throw std::logic_error("LiveActor runtime state is already registered.");
+            aurora::throw_host_exception<std::logic_error>("LiveActor runtime state is already registered.");
         }
     }
 
@@ -442,11 +443,11 @@ namespace smgpc::compat {
 
     void adopt_actor_lod_ctrl(LiveActor* actor, LodCtrl* lod_ctrl) {
         if (lod_ctrl == nullptr) {
-            throw std::invalid_argument("LiveActor LOD ownership requires a real LodCtrl.");
+            aurora::throw_host_exception<std::invalid_argument>("LiveActor LOD ownership requires a real LodCtrl.");
         }
         auto& state = require_actor_state(actor);
         if (state.lod_ctrl != nullptr && state.lod_ctrl.get() != lod_ctrl) {
-            throw std::logic_error("LiveActor already owns a different LodCtrl.");
+            aurora::throw_host_exception<std::logic_error>("LiveActor already owns a different LodCtrl.");
         }
         state.lod_ctrl.reset(lod_ctrl);
     }
@@ -461,11 +462,11 @@ namespace smgpc::compat {
                                 const char* animation_archive, bool create_display_list) {
         auto& state = require_actor_state(actor);
         if (state.model_owner) {
-            throw std::logic_error("Actor model replacement requires scene draw retirement first");
+            aurora::throw_host_exception<std::logic_error>("Actor model replacement requires scene draw retirement first");
         }
         auto* service = ResourceHolderService::active();
         if (!service) {
-            throw std::logic_error("Actor ModelManager requires the active scene resource service");
+            aurora::throw_host_exception<std::logic_error>("Actor ModelManager requires the active scene resource service");
         }
         JkrHostAllocationScope host;
         auto owner = std::make_shared<ModelManagerOwner>(*service, service->allocation_domain(),
@@ -477,9 +478,9 @@ namespace smgpc::compat {
     std::shared_ptr<JkrAllocationDomain> actor_scene_allocation_domain(const LiveActor* actor) {
         const auto& state = require_actor_state(actor);
         auto* service = ResourceHolderService::active();
-        if (!service) throw std::logic_error("Actor sound construction requires the active scene resource cohort");
+        if (!service) aurora::throw_host_exception<std::logic_error>("Actor sound construction requires the active scene resource cohort");
         if (state.model_owner && state.model_owner->allocation_domain() != service->allocation_domain())
-            throw std::logic_error("Actor model and sound must retain the same scene resource cohort");
+            aurora::throw_host_exception<std::logic_error>("Actor model and sound must retain the same scene resource cohort");
         return service->allocation_domain();
     }
 
@@ -696,10 +697,10 @@ namespace smgpc::compat {
 
     void configure_actor_clipping_sphere(LiveActor* actor, float radius, const TVec3f* center) {
         if (actor == nullptr) {
-            throw std::invalid_argument("Actor clipping operation requires a LiveActor.");
+            aurora::throw_host_exception<std::invalid_argument>("Actor clipping operation requires a LiveActor.");
         }
         if (!std::isfinite(radius) || radius < 0.0F) {
-            throw std::invalid_argument("Actor clipping radius must be finite and non-negative.");
+            aurora::throw_host_exception<std::invalid_argument>("Actor clipping radius must be finite and non-negative.");
         }
         auto& stored_clipping = require_actor_state(actor).clipping;
         if (!stored_clipping.has_value()) {
@@ -713,10 +714,10 @@ namespace smgpc::compat {
 
     void configure_actor_clipping_far_level(LiveActor* actor, int level) {
         if (actor == nullptr) {
-            throw std::invalid_argument("Actor clipping operation requires a LiveActor.");
+            aurora::throw_host_exception<std::invalid_argument>("Actor clipping operation requires a LiveActor.");
         }
         if (level < 0 || level > 7) {
-            throw std::invalid_argument("Actor clipping far level must be in the original 0..7 range.");
+            aurora::throw_host_exception<std::invalid_argument>("Actor clipping far level must be in the original 0..7 range.");
         }
         auto& clipping = require_actor_state(actor).clipping;
         if (!clipping.has_value()) {
@@ -745,7 +746,7 @@ namespace smgpc::compat {
 
     void initialize_actor_shadow_controller_list(LiveActor* actor, std::uint32_t capacity) {
         if (actor == nullptr) {
-            throw std::invalid_argument("Actor shadow ownership requires a LiveActor.");
+            aurora::throw_host_exception<std::invalid_argument>("Actor shadow ownership requires a LiveActor.");
         }
         auto shadow = ActorShadowRuntimeState{
             .valid = false,
@@ -761,10 +762,10 @@ namespace smgpc::compat {
     ActorShadowControllerRuntimeState make_actor_shadow_controller_runtime_state(
         LiveActor* actor, std::string_view name, ActorShadowControllerKind kind, float radius) {
         if (actor == nullptr) {
-            throw std::invalid_argument("Actor shadow ownership requires a LiveActor.");
+            aurora::throw_host_exception<std::invalid_argument>("Actor shadow ownership requires a LiveActor.");
         }
         if (!std::isfinite(radius) || radius < 0.0F) {
-            throw std::invalid_argument("Actor shadow radius must be finite and non-negative.");
+            aurora::throw_host_exception<std::invalid_argument>("Actor shadow radius must be finite and non-negative.");
         }
         return ActorShadowControllerRuntimeState{
             .name = std::string{name},
@@ -806,10 +807,10 @@ namespace smgpc::compat {
 
     void replace_actor_shadow_runtime_state(LiveActor* actor, ActorShadowRuntimeState state) {
         if (actor == nullptr) {
-            throw std::invalid_argument("Actor shadow ownership requires a LiveActor.");
+            aurora::throw_host_exception<std::invalid_argument>("Actor shadow ownership requires a LiveActor.");
         }
         if (state.controllers.size() > state.capacity) {
-            throw std::length_error("Actor shadow controller list exceeds its retail capacity.");
+            aurora::throw_host_exception<std::length_error>("Actor shadow controller list exceeds its retail capacity.");
         }
         const auto index_is_valid = [&state](const std::optional<std::size_t>& index) {
             return !index.has_value() || *index < state.controllers.size();
@@ -817,7 +818,7 @@ namespace smgpc::compat {
         for (const auto& controller : state.controllers) {
             if (!index_is_valid(controller.line_start_controller_index) ||
                 !index_is_valid(controller.line_end_controller_index)) {
-                throw std::out_of_range("Actor shadow line endpoint index is outside the controller list.");
+                aurora::throw_host_exception<std::out_of_range>("Actor shadow line endpoint index is outside the controller list.");
             }
         }
         state.controllers.reserve(state.capacity);
@@ -827,14 +828,14 @@ namespace smgpc::compat {
     ActorShadowControllerRuntimeState& add_actor_shadow_controller(
         LiveActor* actor, std::string_view name, ActorShadowControllerKind kind, float radius) {
         if (actor == nullptr) {
-            throw std::invalid_argument("Actor shadow ownership requires a LiveActor.");
+            aurora::throw_host_exception<std::invalid_argument>("Actor shadow ownership requires a LiveActor.");
         }
         auto* shadow = actor_shadow_runtime_state(actor);
         if (shadow == nullptr) {
-            throw std::logic_error("Actor shadow controllers require an initialized controller list.");
+            aurora::throw_host_exception<std::logic_error>("Actor shadow controllers require an initialized controller list.");
         }
         if (shadow->controllers.size() >= shadow->capacity) {
-            throw std::length_error("Actor shadow controller list has reached its retail capacity.");
+            aurora::throw_host_exception<std::length_error>("Actor shadow controller list has reached its retail capacity.");
         }
         shadow->controllers.push_back(make_actor_shadow_controller_runtime_state(actor, name, kind, radius));
         shadow->valid = true;

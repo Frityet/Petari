@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "scene/SceneInitializationState.hpp"
 
 #include <exception>
@@ -9,7 +10,7 @@ namespace smgpc::scene {
 
         SceneInitializationBinding &require_binding() {
             if (sCurrentBinding == nullptr) {
-                throw std::logic_error(
+                aurora::throw_host_exception<std::logic_error>(
                     "Scene initialization state requires an active scene owner.");
             }
             return *sCurrentBinding;
@@ -17,14 +18,14 @@ namespace smgpc::scene {
 
         void validate_state(SceneInitializeState state) {
             if (state < SceneInitializeState_NotInit || state > SceneInitializeState_End) {
-                throw std::invalid_argument("Unknown retail scene initialization state.");
+                aurora::throw_host_exception<std::invalid_argument>("Unknown retail scene initialization state.");
             }
         }
     }  // namespace
 
     SceneInitializationBinding::SceneInitializationBinding() {
         if (sCurrentBinding != nullptr) {
-            throw std::logic_error("A scene initialization owner is already bound.");
+            aurora::throw_host_exception<std::logic_error>("A scene initialization owner is already bound.");
         }
         sCurrentBinding = this;
     }
@@ -38,7 +39,7 @@ namespace smgpc::scene {
 
     void SceneInitializationBinding::complete() {
         if (sCurrentBinding != this || _scope != nullptr) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Scene initialization can only complete after its placement scopes finish.");
         }
         _state = SceneInitializeState_End;

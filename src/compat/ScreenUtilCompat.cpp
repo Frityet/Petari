@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Game/Util/ScreenUtil.hpp"
 #include "Game/Util/SystemUtil.hpp"
 
@@ -109,12 +110,12 @@ namespace MR {
     }
 
     bool isYesNoSelected() {
-        throw std::logic_error(
+        aurora::throw_host_exception<std::logic_error>(
             "Yes/No selection state is unavailable without a scene-owned selector.");
     }
 
     bool isYesNoSelectedYes() {
-        throw std::logic_error(
+        aurora::throw_host_exception<std::logic_error>(
             "Yes/No selection state is unavailable without a scene-owned selector.");
     }
 

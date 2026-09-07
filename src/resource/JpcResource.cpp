@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "resource/JpcResource.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include <JSystem/JParticle/JPABaseShape.hpp>
@@ -22,7 +23,7 @@ namespace smgpc::resource {
 namespace {
 using Bytes = std::span<const std::uint8_t>;
 void require(bool condition, const char* message) {
-    if (!condition) throw std::runtime_error(std::string("JPC: ") + message);
+    if (!condition) aurora::throw_host_exception<std::runtime_error>(std::string("JPC: ") + message);
 }
 void range(Bytes bytes, std::size_t offset, std::size_t size) {
     require(offset <= bytes.size() && size <= bytes.size() - offset, "range outside block");
@@ -146,7 +147,7 @@ JpcBlock decode_block(Bytes source, std::size_t source_offset, std::uint8_t text
         case 1: case 2: case 9: tile_width = 8; tile_height = 4; break;
         case 3: case 4: case 5: case 10: tile_width = tile_height = 4; break;
         case 6: tile_width = tile_height = 4; tile_bytes = 64; break;
-        default: throw std::runtime_error("JPC: unsupported GX texture format");
+        default: aurora::throw_host_exception<std::runtime_error>("JPC: unsupported GX texture format");
         }
         for (std::size_t level = 0; level < source[0x38]; ++level) {
             const auto size = ((width + tile_width - 1) / tile_width) * ((height + tile_height - 1) / tile_height) * tile_bytes;

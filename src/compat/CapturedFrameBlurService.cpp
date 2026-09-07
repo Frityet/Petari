@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "compat/CapturedFrameBlurService.hpp"
 
 #include "Game/Scene/SceneObjHolder.hpp"
@@ -90,7 +91,7 @@ namespace smgpc::compat {
         void draw_textured_quad(JUTTexture& texture, float left, float top,
                                 float width, float height) {
             if (texture.getTexInfo() == nullptr || texture.mImage == nullptr) {
-                throw std::logic_error(
+                aurora::throw_host_exception<std::logic_error>(
                     "Captured-frame blur requires a real sampled texture.");
             }
 
@@ -126,17 +127,17 @@ namespace smgpc::compat {
                                         float history_expand, u8 current_alpha,
                                         u8 history_alpha) {
         if (AuroraIsFrameActive() == GX_FALSE) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Captured-frame blur requires an active Aurora GX frame.");
         }
         if (captured_frame.mImage == nullptr ||
             AuroraHasTextureCopy(captured_frame.mImage) == GX_FALSE) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Captured-frame blur requires a completed GPU screen capture.");
         }
         if (!(coordinate_width > 0.0F) || !(coordinate_height > 0.0F) ||
             framebuffer_width == 0U || framebuffer_height == 0U) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "Captured-frame blur dimensions must be positive.");
         }
 
@@ -192,7 +193,7 @@ namespace smgpc::compat {
         }
 
         if (AuroraHasTextureCopy(history.mImage) == GX_FALSE) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Aurora did not materialize the captured-frame blur history texture.");
         }
         _stats.history_valid = true;
@@ -220,7 +221,7 @@ namespace MR {
                             u8 current_alpha, u8 history_alpha) {
         auto* service = smgpc::scene::current_captured_frame_blur_service();
         if (service == nullptr) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Full-screen blur requires a scene-owned captured-frame blur service.");
         }
 
@@ -229,7 +230,7 @@ namespace MR {
         auto* video = JUTVideo::getManager();
         if (source == nullptr || source_image == nullptr || video == nullptr ||
             video->getRenderMode() == nullptr) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Full-screen blur requires the real CaptureScreenDirector texture.");
         }
 
@@ -243,7 +244,7 @@ namespace MR {
 
     void createCenterScreenBlur() {
         if (createSceneObj(SceneObj_CenterScreenBlur) == nullptr) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "CenterScreenBlur requires a scene-owned SceneObjHolder.");
         }
     }
@@ -256,7 +257,7 @@ namespace MR {
                                holder->getObj(SceneObj_CenterScreenBlur))
                          : nullptr;
         if (blur == nullptr) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "CenterScreenBlur must be created before it can be started.");
         }
         blur->start(time, offset, alpha, fade_in, fade_out);

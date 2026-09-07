@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "compat/DemoSceneRuntime.hpp"
 
 #include "Game/LiveActor/LiveActor.hpp"
@@ -91,7 +92,7 @@ namespace smgpc::compat {
 
                 const auto iter = JMapInfoIter(&placement.jmap_info, placement.jmap_entry_index);
                 if (!iter.isValid()) {
-                    throw std::runtime_error("Invalid DemoGroup placement iterator at " +
+                    aurora::throw_host_exception<std::runtime_error>("Invalid DemoGroup placement iterator at " +
                                              placement.table_path + " row " +
                                              std::to_string(placement.jmap_entry_index));
                 }
@@ -316,7 +317,7 @@ namespace smgpc::compat {
                     });
                     casts.emplace_back();
                 } catch (const std::exception &error) {
-                    throw std::runtime_error("Cannot load DemoGroup at " + seed.source_table_path +
+                    aurora::throw_host_exception<std::runtime_error>("Cannot load DemoGroup at " + seed.source_table_path +
                                              " row " + std::to_string(seed.source_row) +
                                              " (TimeSheetName='" + seed.time_sheet_name + "'): " +
                                              error.what());
@@ -376,7 +377,7 @@ namespace smgpc::compat {
         [[noreturn]] void throw_missing_action_callback(
             const DemoSceneDefinition &definition, const DemoActionRow &row,
             const Cast &cast, std::string_view callback_kind) const {
-            throw std::runtime_error(
+            aurora::throw_host_exception<std::runtime_error>(
                 "Demo Action row is missing its registered " +
                 std::string(callback_kind) + ": demo='" + definition.demo_name +
                 "' part='" + row.part_name + "' cast='" + cast.name + "'");
@@ -458,7 +459,7 @@ namespace smgpc::compat {
                         return position.name == row.position_name;
                     });
                 if (found == general_positions.end()) {
-                    throw std::runtime_error(
+                    aurora::throw_host_exception<std::runtime_error>(
                         "Demo Action PosName is absent from the active scene GeneralPos data: demo='" +
                         definition.demo_name + "' part='" + row.part_name +
                         "' position='" + row.position_name + "'");
@@ -500,7 +501,7 @@ namespace smgpc::compat {
                                    ? puppetable_player
                                    : active_player_system_for_player_util();
                 if (player == nullptr || player->attached_actor() == nullptr) {
-                    throw std::logic_error(
+                    aurora::throw_host_exception<std::logic_error>(
                         "A dispatchable Demo Player row requires the attached Mario owner.");
                 }
 
@@ -511,7 +512,7 @@ namespace smgpc::compat {
                             return position.name == row.position_name;
                         });
                     if (found == general_positions.end()) {
-                        throw std::runtime_error(
+                        aurora::throw_host_exception<std::runtime_error>(
                             "Demo Player PosName is absent from the active scene GeneralPos data: demo='" +
                             definition.demo_name + "' part='" + row.part_name +
                             "' position='" + row.position_name + "'");
@@ -544,7 +545,7 @@ namespace smgpc::compat {
                 return;
             }
             if (wipe_service == nullptr) {
-                throw std::logic_error(
+                aurora::throw_host_exception<std::logic_error>(
                     "A dispatchable DemoWipe row requires the active scene wipe service.");
             }
             for (const auto &row : definition.sheet.wipe_rows()) {
@@ -650,7 +651,7 @@ namespace smgpc::compat {
             try {
                 _impl->load(seeds.definitions, dvd.archive(cDemoSheetArchivePath));
             } catch (const std::exception &error) {
-                throw std::runtime_error("Cannot initialize scene DemoSheet definitions: " +
+                aurora::throw_host_exception<std::runtime_error>("Cannot initialize scene DemoSheet definitions: " +
                                          std::string(error.what()));
             }
         }
@@ -853,7 +854,7 @@ namespace smgpc::compat {
 
     void DemoSceneRuntime::register_simple_cast(LiveActor *actor) {
         if (actor == nullptr) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "Simple-cast registration requires a real LiveActor.");
         }
         _impl->simple_live_actors.push_back(actor);
@@ -861,7 +862,7 @@ namespace smgpc::compat {
 
     void DemoSceneRuntime::register_simple_cast(LayoutActor *actor) {
         if (actor == nullptr) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "Simple-cast registration requires a real LayoutActor.");
         }
         _impl->simple_layout_actors.push_back(actor);
@@ -869,7 +870,7 @@ namespace smgpc::compat {
 
     void DemoSceneRuntime::register_simple_cast(NameObj *object) {
         if (object == nullptr) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "Simple-cast registration requires a real NameObj.");
         }
         _impl->simple_name_objs.push_back(object);
@@ -897,7 +898,7 @@ namespace smgpc::compat {
         std::optional<std::string_view> part_name,
         DemoPlayerMode player_mode) {
         if (starter == nullptr) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "A time-keep demo requires a real starter NameObj.");
         }
         const auto found_definition = find_definition(demo_name);
@@ -912,7 +913,7 @@ namespace smgpc::compat {
         if (player_mode == DemoPlayerMode::MarioPuppetable &&
             (puppetable_player == nullptr ||
              puppetable_player->attached_actor() == nullptr)) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "A Mario-puppetable demo requires the real attached player owner.");
         }
 
@@ -990,7 +991,7 @@ namespace smgpc::compat {
             player = active_player_system_for_player_util();
         }
         if ((_impl->puppetable_control_owned || force_enable) && player == nullptr) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Puppetable demo teardown requires the real player-system owner.");
         }
         if (player != nullptr &&
@@ -1005,7 +1006,7 @@ namespace smgpc::compat {
 
     void DemoSceneRuntime::pause_time_keep(const LiveActor *actor) {
         if (!_impl->active_definition.has_value()) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Cannot pause a time-keep demo without an active executor.");
         }
         const auto active_name = _impl->definitions[*_impl->active_definition].demo_name;
@@ -1018,13 +1019,13 @@ namespace smgpc::compat {
                 return;
             }
         }
-        throw std::logic_error(
+        aurora::throw_host_exception<std::logic_error>(
             "Cannot pause a time-keep demo for an actor outside the active executor.");
     }
 
     void DemoSceneRuntime::resume_time_keep(const LiveActor *actor) {
         if (!_impl->active_definition.has_value()) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Cannot resume a time-keep demo without an active executor.");
         }
         const auto active_name = _impl->definitions[*_impl->active_definition].demo_name;
@@ -1037,7 +1038,7 @@ namespace smgpc::compat {
                 return;
             }
         }
-        throw std::logic_error(
+        aurora::throw_host_exception<std::logic_error>(
             "Cannot resume a time-keep demo for an actor outside the active executor.");
     }
 
@@ -1293,7 +1294,7 @@ namespace smgpc::compat {
         std::string_view operation) {
         auto *runtime = active_demo_scene_runtime();
         if (runtime == nullptr) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 std::string(operation) +
                 " requires the active scene-owned DemoDirector runtime.");
         }

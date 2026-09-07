@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "layout/LayoutHost.hpp"
 
 #include <algorithm>
@@ -66,33 +67,33 @@ std::unordered_map< const LayoutPaneCtrl*, PaneControlState > sPaneControlStates
 
 [[nodiscard]] ActorState& require_actor_state(const LayoutActor* actor, std::string_view operation) {
     if (actor == nullptr) {
-        throw std::invalid_argument(std::string(operation) + " requires a layout actor");
+        aurora::throw_host_exception<std::invalid_argument>(std::string(operation) + " requires a layout actor");
     }
     const auto it = sActorStates.find(actor);
     if (it == sActorStates.end()) {
-        throw std::logic_error(std::string(operation) + " requires registered layout actor state");
+        aurora::throw_host_exception<std::logic_error>(std::string(operation) + " requires registered layout actor state");
     }
     return it->second;
 }
 
 [[nodiscard]] ManagerState& require_manager_state(const LayoutManager* manager, std::string_view operation) {
     if (manager == nullptr) {
-        throw std::invalid_argument(std::string(operation) + " requires a layout manager");
+        aurora::throw_host_exception<std::invalid_argument>(std::string(operation) + " requires a layout manager");
     }
     const auto it = sManagerStates.find(manager);
     if (it == sManagerStates.end()) {
-        throw std::logic_error(std::string(operation) + " requires registered layout manager state");
+        aurora::throw_host_exception<std::logic_error>(std::string(operation) + " requires registered layout manager state");
     }
     return it->second;
 }
 
 [[nodiscard]] PaneControlState& require_pane_control_state(const LayoutPaneCtrl* pane_control, std::string_view operation) {
     if (pane_control == nullptr) {
-        throw std::invalid_argument(std::string(operation) + " requires a pane control");
+        aurora::throw_host_exception<std::invalid_argument>(std::string(operation) + " requires a pane control");
     }
     const auto it = sPaneControlStates.find(pane_control);
     if (it == sPaneControlStates.end()) {
-        throw std::logic_error(std::string(operation) + " requires registered pane-control state");
+        aurora::throw_host_exception<std::logic_error>(std::string(operation) + " requires registered pane-control state");
     }
     return it->second;
 }
@@ -100,21 +101,21 @@ std::unordered_map< const LayoutPaneCtrl*, PaneControlState > sPaneControlStates
 [[nodiscard]] smgpc::layout::LayoutRuntime& require_runtime(const LayoutManager* manager, std::string_view operation) {
     auto& state = require_manager_state(manager, operation);
     if (state.runtime == nullptr) {
-        throw std::logic_error(std::string(operation) + " requires an initialized retail layout resource");
+        aurora::throw_host_exception<std::logic_error>(std::string(operation) + " requires an initialized retail layout resource");
     }
     return *state.runtime;
 }
 
 [[nodiscard]] u32 require_actor_layer(const ManagerState& manager, u32 layer, std::string_view operation) {
     if (layer >= manager.animation_layer_count || layer >= 4U) {
-        throw std::out_of_range(std::string(operation) + " requested unavailable layout animation layer " + std::to_string(layer));
+        aurora::throw_host_exception<std::out_of_range>(std::string(operation) + " requested unavailable layout animation layer " + std::to_string(layer));
     }
     return layer;
 }
 
 [[nodiscard]] u32 require_pane_layer(const PaneControlState& pane, u32 layer, std::string_view operation) {
     if (layer >= pane.animation_controls.size()) {
-        throw std::out_of_range(std::string(operation) + " requested unavailable pane animation layer " + std::to_string(layer));
+        aurora::throw_host_exception<std::out_of_range>(std::string(operation) + " requested unavailable pane animation layer " + std::to_string(layer));
     }
     return layer;
 }
@@ -181,12 +182,12 @@ void refresh_pane_matrix(ManagerState& manager, PaneMatrixReference& reference) 
 }
 
 [[noreturn]] void throw_retail_nw4r_unavailable(std::string_view operation) {
-    throw std::logic_error(std::string(operation) + " requires the unavailable retail NW4R layout object graph");
+    aurora::throw_host_exception<std::logic_error>(std::string(operation) + " requires the unavailable retail NW4R layout object graph");
 }
 
 [[nodiscard]] std::string_view require_effect_owner_name(const char* owner_name, std::string_view operation) {
     if (owner_name == nullptr || *owner_name == '\0') {
-        throw std::logic_error(std::string(operation) + " requires a real named effect owner");
+        aurora::throw_host_exception<std::logic_error>(std::string(operation) + " requires a real named effect owner");
     }
     return owner_name;
 }
@@ -194,7 +195,7 @@ void refresh_pane_matrix(ManagerState& manager, PaneMatrixReference& reference) 
 #ifndef NDEBUG
 [[nodiscard]] const char* button_nerve_name(const ButtonPaneController& button) {
     if (button.mSpine == nullptr || button.mSpine->getCurrentNerve() == nullptr) {
-        throw std::logic_error("Inspecting a button controller requires an initialized retail nerve");
+        aurora::throw_host_exception<std::logic_error>("Inspecting a button controller requires an initialized retail nerve");
     }
 
     const auto dynamic_name = std::string_view(typeid(*button.mSpine->getCurrentNerve()).name());
@@ -214,7 +215,7 @@ void refresh_pane_matrix(ManagerState& manager, PaneMatrixReference& reference) 
             return label;
         }
     }
-    throw std::logic_error("Inspecting a button controller encountered an unknown retail nerve type");
+    aurora::throw_host_exception<std::logic_error>("Inspecting a button controller encountered an unknown retail nerve type");
 }
 #endif
 
@@ -257,7 +258,7 @@ void LayoutActor::calcAnim() {
         return;
     }
     if (mLayoutManager == nullptr) {
-        throw std::logic_error("Layout animation calculation requires an initialized layout manager");
+        aurora::throw_host_exception<std::logic_error>("Layout animation calculation requires an initialized layout manager");
     }
     mLayoutManager->calcAnim();
 }
@@ -284,21 +285,21 @@ void LayoutActor::kill() {
 
 void LayoutActor::setNerve(const Nerve* nerve) const {
     if (mSpine == nullptr) {
-        throw std::logic_error("Setting a layout nerve requires an initialized Spine");
+        aurora::throw_host_exception<std::logic_error>("Setting a layout nerve requires an initialized Spine");
     }
     mSpine->setNerve(nerve);
 }
 
 bool LayoutActor::isNerve(const Nerve* nerve) const {
     if (mSpine == nullptr) {
-        throw std::logic_error("Reading a layout nerve requires an initialized Spine");
+        aurora::throw_host_exception<std::logic_error>("Reading a layout nerve requires an initialized Spine");
     }
     return mSpine->getCurrentNerve() == nerve;
 }
 
 s32 LayoutActor::getNerveStep() const {
     if (mSpine == nullptr) {
-        throw std::logic_error("Reading a layout nerve step requires an initialized Spine");
+        aurora::throw_host_exception<std::logic_error>("Reading a layout nerve step requires an initialized Spine");
     }
     return mSpine->mStep;
 }
@@ -323,14 +324,14 @@ LayoutManager* LayoutActor::getLayoutManager() const {
 
 void LayoutActor::createPaneMtxRef(const char* name) {
     if (mLayoutManager == nullptr) {
-        throw std::logic_error("Creating a pane matrix reference requires an initialized layout manager");
+        aurora::throw_host_exception<std::logic_error>("Creating a pane matrix reference requires an initialized layout manager");
     }
     mLayoutManager->createPaneMtxRef(name);
 }
 
 MtxPtr LayoutActor::getPaneMtxRef(const char* name) {
     if (mLayoutManager == nullptr) {
-        throw std::logic_error("Reading a pane matrix reference requires an initialized layout manager");
+        aurora::throw_host_exception<std::logic_error>("Reading a pane matrix reference requires an initialized layout manager");
     }
     return mLayoutManager->getPaneMtxRef(name);
 }
@@ -379,10 +380,10 @@ LayoutManager::LayoutManager(const char* layout_name, bool convert_filename, u32
     : mLayoutHolder(nullptr), mLayout(nullptr), mAnimTransList(nullptr), mDrawInfo(), mIsScreenHidden(false), _61(false),
       _64(0U), _68(0U), _6C(0U), _70(0U), _74(0U), _78(nullptr) {
     if (layout_name == nullptr || *layout_name == '\0') {
-        throw std::invalid_argument("A layout manager requires a retail layout resource name");
+        aurora::throw_host_exception<std::invalid_argument>("A layout manager requires a retail layout resource name");
     }
     if (animation_layer_count == 0U || animation_layer_count > 4U) {
-        throw std::invalid_argument("A layout manager requires between one and four animation layers");
+        aurora::throw_host_exception<std::invalid_argument>("A layout manager requires between one and four animation layers");
     }
     auto [it, inserted] = sManagerStates.try_emplace(this);
     if (!inserted) {
@@ -400,7 +401,7 @@ void LayoutManager::movement() {
         control->movement();
     }
     if (state.actor == nullptr || state.runtime == nullptr) {
-        throw std::logic_error("Moving a layout manager requires its initialized layout actor host");
+        aurora::throw_host_exception<std::logic_error>("Moving a layout manager requires its initialized layout actor host");
     }
     for (auto layer = u32{}; layer < state.animation_layer_count; ++layer) {
         sync_actor_control_to_runtime(state.actor, layer);
@@ -435,7 +436,7 @@ void LayoutManager::calcAnim() {
 void LayoutManager::draw() const {
     const auto& state = require_manager_state(this, "Drawing a layout manager");
     if (state.actor == nullptr || state.runtime == nullptr) {
-        throw std::logic_error("Drawing a layout manager requires its initialized layout actor host");
+        aurora::throw_host_exception<std::logic_error>("Drawing a layout manager requires its initialized layout actor host");
     }
     if (!state.actor->mFlag.mIsDead && !state.actor->mFlag.mIsHidden) {
         state.runtime->draw();
@@ -444,11 +445,11 @@ void LayoutManager::draw() const {
 
 void LayoutManager::addPaneCtrl(LayoutPaneCtrl* pane_control) {
     if (pane_control == nullptr) {
-        throw std::invalid_argument("Adding a pane control requires a real control");
+        aurora::throw_host_exception<std::invalid_argument>("Adding a pane control requires a real control");
     }
     auto& state = require_manager_state(this, "Adding a pane control");
     if (std::ranges::any_of(state.pane_controls, [pane_control](const auto& existing) { return existing.get() == pane_control; })) {
-        throw std::logic_error("The pane control is already owned by this layout manager");
+        aurora::throw_host_exception<std::logic_error>("The pane control is already owned by this layout manager");
     }
     state.pane_controls.emplace_back(pane_control);
 }
@@ -465,7 +466,7 @@ LayoutPaneCtrl* LayoutManager::createAndAddPaneCtrl(const char* name, u32 layer_
     }
     auto& runtime = require_runtime(this, "Creating a pane control");
     if (!runtime.hasPane(requested_name)) {
-        throw std::runtime_error("Cannot create a control for absent layout pane " + requested_name);
+        aurora::throw_host_exception<std::runtime_error>("Cannot create a control for absent layout pane " + requested_name);
     }
     auto control = std::make_unique< LayoutPaneCtrl >(this, name, layer_count);
     auto* result = control.get();
@@ -516,7 +517,7 @@ void LayoutManager::createPaneMtxRef(const char* name) {
     refresh_pane_matrix(state, reference);
     if (!reference.valid) {
         state.pane_matrix_references.pop_back();
-        throw std::runtime_error("Cannot create a matrix reference for absent layout pane " + requested_name);
+        aurora::throw_host_exception<std::runtime_error>("Cannot create a matrix reference for absent layout pane " + requested_name);
     }
 }
 
@@ -616,15 +617,15 @@ LayoutPaneCtrl::LayoutPaneCtrl(LayoutManager* host, const char* name, u32 layer_
     : mHost(host), mPane(nullptr), mPaneIndex(-1), mAnmPlayerArray(static_cast< s32 >(layer_count)), mFollowType(0U),
       mFollowPos(nullptr) {
     if (host == nullptr) {
-        throw std::invalid_argument("A pane control requires a layout manager host");
+        aurora::throw_host_exception<std::invalid_argument>("A pane control requires a layout manager host");
     }
     if (layer_count == 0U || layer_count > 4U) {
-        throw std::invalid_argument("A pane control requires between one and four animation layers");
+        aurora::throw_host_exception<std::invalid_argument>("A pane control requires between one and four animation layers");
     }
     auto& runtime = require_runtime(host, "Creating a pane control");
     const auto requested_name = pane_name(name);
     if (!runtime.hasPane(requested_name)) {
-        throw std::runtime_error("A pane control requires a real layout pane: " + requested_name);
+        aurora::throw_host_exception<std::runtime_error>("A pane control requires a real layout pane: " + requested_name);
     }
     for (auto layer = u32{}; layer < layer_count; ++layer) {
         mAnmPlayerArray[layer] = nullptr;
@@ -691,7 +692,7 @@ bool LayoutPaneCtrl::isAnimStopped(u32 layer) const {
 
 void LayoutPaneCtrl::reflectFollowPos() {
     if (mFollowPos == nullptr) {
-        throw std::logic_error("Reflecting a pane follow position requires a real follow position");
+        aurora::throw_host_exception<std::logic_error>("Reflecting a pane follow position requires a real follow position");
     }
     throw_retail_nw4r_unavailable("Reflecting a pane follow position");
 }
@@ -726,14 +727,14 @@ LayoutRuntime& require_layout_runtime(LayoutActor* actor, std::string_view opera
 const LayoutRuntime& require_layout_runtime(const LayoutActor* actor, std::string_view operation) {
     const auto* runtime = layout_runtime(actor);
     if (runtime == nullptr) {
-        throw std::logic_error(std::string(operation) + " requires an initialized retail layout resource");
+        aurora::throw_host_exception<std::logic_error>(std::string(operation) + " requires an initialized retail layout resource");
     }
     return *runtime;
 }
 
 bool is_layout_actor_dead(const LayoutActor* actor) {
     if (actor == nullptr) {
-        throw std::invalid_argument("Reading layout actor life state requires a real layout actor");
+        aurora::throw_host_exception<std::invalid_argument>("Reading layout actor life state requires a real layout actor");
     }
     return actor->mFlag.mIsDead;
 }
@@ -769,10 +770,10 @@ void release_layout_actor_if_registered(NameObj* object) {
 
 void draw_layout_actor(const LayoutActor* actor) {
     if (actor == nullptr) {
-        throw std::invalid_argument("Drawing a layout actor requires an actor");
+        aurora::throw_host_exception<std::invalid_argument>("Drawing a layout actor requires an actor");
     }
     if (actor->mLayoutManager == nullptr) {
-        throw std::logic_error("Drawing a layout actor requires an initialized layout manager");
+        aurora::throw_host_exception<std::logic_error>("Drawing a layout actor requires an initialized layout manager");
     }
     actor->mLayoutManager->draw();
 }
@@ -824,7 +825,7 @@ J3DFrameCtrl* layout_anim_ctrl(LayoutActor* actor, u32 layer) {
     auto& manager = require_manager_state(actor != nullptr ? actor->mLayoutManager : nullptr, "Reading a layout animation control");
     (void)require_actor_layer(manager, layer, "Reading a layout animation control");
     if (!require_layout_runtime(actor, "Reading a layout animation control").hasActiveAnimation(layer)) {
-        throw std::logic_error("Reading a layout animation control requires an active retail BRLAN");
+        aurora::throw_host_exception<std::logic_error>("Reading a layout animation control requires an active retail BRLAN");
     }
     sync_actor_control_to_runtime(actor, layer);
     sync_actor_control_from_runtime(actor, layer);
@@ -913,7 +914,7 @@ f32 pane_anim_frame_max(const LayoutPaneCtrl* pane_control, u32 layer) {
     const auto& state = require_pane_control_state(pane_control, "Reading a pane animation duration");
     (void)require_pane_layer(state, layer, "Reading a pane animation duration");
     if (state.animation_names[layer].empty()) {
-        throw std::logic_error("Reading a pane animation duration requires an active retail BRLAN");
+        aurora::throw_host_exception<std::logic_error>("Reading a pane animation duration requires an active retail BRLAN");
     }
     return require_runtime(pane_control->mHost, "Reading a pane animation duration")
         .getAnimDuration(state.animation_names[layer].c_str());
@@ -926,7 +927,7 @@ f32 animation_duration(const LayoutManager* manager, const char* animation_name)
 f32 pane_animation_frame(const LayoutManager* manager, const char* name, u32 layer) {
     auto* pane_control = manager != nullptr ? manager->getPaneCtrl(name) : nullptr;
     if (pane_control == nullptr) {
-        throw std::runtime_error("Reading a pane animation frame requires a real pane control");
+        aurora::throw_host_exception<std::runtime_error>("Reading a pane animation frame requires a real pane control");
     }
     return pane_anim_frame(pane_control, layer);
 }
@@ -934,7 +935,7 @@ f32 pane_animation_frame(const LayoutManager* manager, const char* name, u32 lay
 f32 pane_animation_frame_max(const LayoutManager* manager, const char* name, u32 layer) {
     auto* pane_control = manager != nullptr ? manager->getPaneCtrl(name) : nullptr;
     if (pane_control == nullptr) {
-        throw std::runtime_error("Reading a pane animation duration requires a real pane control");
+        aurora::throw_host_exception<std::runtime_error>("Reading a pane animation duration requires a real pane control");
     }
     return pane_anim_frame_max(pane_control, layer);
 }
@@ -942,14 +943,14 @@ f32 pane_animation_frame_max(const LayoutManager* manager, const char* name, u32
 bool is_pane_animation_stopped(const LayoutManager* manager, const char* name, u32 layer) {
     auto* pane_control = manager != nullptr ? manager->getPaneCtrl(name) : nullptr;
     if (pane_control == nullptr) {
-        throw std::runtime_error("Reading a pane animation state requires a real pane control");
+        aurora::throw_host_exception<std::runtime_error>("Reading a pane animation state requires a real pane control");
     }
     return pane_control->isAnimStopped(layer);
 }
 
 void register_button_controller(LayoutManager* manager, ButtonPaneController* controller) {
     if (controller == nullptr) {
-        throw std::invalid_argument("Registering a button controller requires a controller");
+        aurora::throw_host_exception<std::invalid_argument>("Registering a button controller requires a controller");
     }
     auto& controllers = require_manager_state(manager, "Registering a button controller").button_controllers;
     if (std::ranges::find(controllers, controller) == controllers.end()) {
@@ -961,7 +962,7 @@ void unregister_button_controller(LayoutManager* manager, ButtonPaneController* 
     auto& controllers = require_manager_state(manager, "Unregistering a button controller").button_controllers;
     const auto it = std::ranges::find(controllers, controller);
     if (it == controllers.end()) {
-        throw std::logic_error("The button controller is not registered with this layout manager");
+        aurora::throw_host_exception<std::logic_error>("The button controller is not registered with this layout manager");
     }
     controllers.erase(it);
 }
@@ -971,7 +972,7 @@ void refresh_pane_matrices(LayoutManager* manager) {
     for (auto& reference : state.pane_matrix_references) {
         refresh_pane_matrix(state, reference);
         if (!reference.valid) {
-            throw std::runtime_error("A registered pane matrix reference lost its retail pane");
+            aurora::throw_host_exception<std::runtime_error>("A registered pane matrix reference lost its retail pane");
         }
     }
 }
@@ -1013,7 +1014,7 @@ std::vector< ButtonControllerDebugState > debug_button_controllers(const LayoutM
     output.reserve(state.button_controllers.size());
     for (const auto* button : state.button_controllers) {
         if (button == nullptr) {
-            throw std::logic_error("A layout manager contains an absent button controller");
+            aurora::throw_host_exception<std::logic_error>("A layout manager contains an absent button controller");
         }
         output.push_back(ButtonControllerDebugState{
             .pane_name = button->mPaneName != nullptr ? button->mPaneName : "",

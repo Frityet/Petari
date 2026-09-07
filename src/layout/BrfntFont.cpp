@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "BrfntFont.hpp"
 
 #include <algorithm>
@@ -11,7 +12,7 @@ namespace smgpc::layout {
 
         [[nodiscard]] std::uint16_t read_be16(std::span<const std::uint8_t> data, std::size_t offset) {
             if (offset + 2U > data.size()) {
-                throw std::runtime_error("BRFNT read_be16 out of range");
+                aurora::throw_host_exception<std::runtime_error>("BRFNT read_be16 out of range");
             }
 
             return static_cast<std::uint16_t>((static_cast<std::uint16_t>(data[offset]) << 8U) | data[offset + 1U]);
@@ -19,7 +20,7 @@ namespace smgpc::layout {
 
         [[nodiscard]] std::uint32_t read_be32(std::span<const std::uint8_t> data, std::size_t offset) {
             if (offset + 4U > data.size()) {
-                throw std::runtime_error("BRFNT read_be32 out of range");
+                aurora::throw_host_exception<std::runtime_error>("BRFNT read_be32 out of range");
             }
 
             return (static_cast<std::uint32_t>(data[offset]) << 24U) | (static_cast<std::uint32_t>(data[offset + 1U]) << 16U) |
@@ -28,7 +29,7 @@ namespace smgpc::layout {
 
         [[nodiscard]] std::int8_t read_s8(std::span<const std::uint8_t> data, std::size_t offset) {
             if (offset >= data.size()) {
-                throw std::runtime_error("BRFNT read_s8 out of range");
+                aurora::throw_host_exception<std::runtime_error>("BRFNT read_s8 out of range");
             }
 
             return std::bit_cast<std::int8_t>(data[offset]);
@@ -42,7 +43,7 @@ namespace smgpc::layout {
 
         [[nodiscard]] std::string magic_string(std::span<const std::uint8_t> data, std::size_t offset) {
             if (offset + 4U > data.size()) {
-                throw std::runtime_error("BRFNT magic read out of range");
+                aurora::throw_host_exception<std::runtime_error>("BRFNT magic read out of range");
             }
 
             return std::string(reinterpret_cast<const char *>(data.data() + offset), 4U);
@@ -50,7 +51,7 @@ namespace smgpc::layout {
 
         [[nodiscard]] std::size_t checked_offset(std::span<const std::uint8_t> data, std::uint32_t offset) {
             if (offset == 0U || offset >= data.size()) {
-                throw std::runtime_error("BRFNT resource offset is invalid");
+                aurora::throw_host_exception<std::runtime_error>("BRFNT resource offset is invalid");
             }
 
             return offset;
@@ -58,7 +59,7 @@ namespace smgpc::layout {
 
         [[nodiscard]] BrfntCharWidths read_width(std::span<const std::uint8_t> data, std::size_t offset) {
             if (offset + 3U > data.size()) {
-                throw std::runtime_error("BRFNT char width out of range");
+                aurora::throw_host_exception<std::runtime_error>("BRFNT char width out of range");
             }
 
             return BrfntCharWidths {
@@ -75,7 +76,7 @@ namespace smgpc::layout {
                 const auto end = read_be16(data, offset + 2U);
                 const auto next = read_be32(data, offset + 4U);
                 if (end < begin) {
-                    throw std::runtime_error("BRFNT width block has invalid range");
+                    aurora::throw_host_exception<std::runtime_error>("BRFNT width block has invalid range");
                 }
 
                 auto block = BrfntFont::WidthBlock {
@@ -110,7 +111,7 @@ namespace smgpc::layout {
                 const auto method = static_cast<BrfntFont::MapMethod>(read_be16(data, offset + 4U));
                 const auto next = read_be32(data, offset + 8U);
                 if (end < begin) {
-                    throw std::runtime_error("BRFNT code map has invalid range");
+                    aurora::throw_host_exception<std::runtime_error>("BRFNT code map has invalid range");
                 }
 
                 auto map = BrfntFont::CodeMap {
@@ -144,7 +145,7 @@ namespace smgpc::layout {
                     break;
                 }
                 default:
-                    throw std::runtime_error("Unsupported BRFNT code map method");
+                    aurora::throw_host_exception<std::runtime_error>("Unsupported BRFNT code map method");
                 }
 
                 font.code_maps.push_back(std::move(map));
@@ -158,7 +159,7 @@ namespace smgpc::layout {
 
         void parse_sheet_textures(BrfntFont &font, std::span<const std::uint8_t> data, std::size_t glyph_offset) {
             if (glyph_offset + 24U > data.size()) {
-                throw std::runtime_error("BRFNT glyph block is truncated");
+                aurora::throw_host_exception<std::runtime_error>("BRFNT glyph block is truncated");
             }
 
             font.cell_width = data[glyph_offset];
@@ -178,14 +179,14 @@ namespace smgpc::layout {
             font.sheet_image_offset = read_be32(data, glyph_offset + 20U);
             const auto sheet_image_offset = checked_offset(data, font.sheet_image_offset);
             if (sheet_size == 0U) {
-                throw std::runtime_error("BRFNT sheet size is zero");
+                aurora::throw_host_exception<std::runtime_error>("BRFNT sheet size is zero");
             }
 
             font.sheets.reserve(sheet_count);
             for (auto sheet = 0U; sheet < sheet_count; ++sheet) {
                 const auto offset = sheet_image_offset + static_cast<std::size_t>(sheet) * sheet_size;
                 if (offset + sheet_size > data.size()) {
-                    throw std::runtime_error("BRFNT sheet data is truncated");
+                    aurora::throw_host_exception<std::runtime_error>("BRFNT sheet data is truncated");
                 }
 
                 font.sheets.push_back(
@@ -320,10 +321,10 @@ namespace smgpc::layout {
 
     BrfntFont parse_brfnt_font(std::span<const std::uint8_t> data) {
         if (!has_magic(data, 0U, "RFNT")) {
-            throw std::runtime_error("BRFNT file is missing RFNT magic");
+            aurora::throw_host_exception<std::runtime_error>("BRFNT file is missing RFNT magic");
         }
         if (read_be16(data, 4U) != 0xFEFFU) {
-            throw std::runtime_error("BRFNT file is not big-endian");
+            aurora::throw_host_exception<std::runtime_error>("BRFNT file is not big-endian");
         }
 
         const auto header_size = read_be16(data, 12U);
@@ -337,12 +338,12 @@ namespace smgpc::layout {
         auto finf_offset = std::optional<std::size_t>{};
         for (auto i = 0U; i < block_count; ++i) {
             if (cursor + 8U > data.size()) {
-                throw std::runtime_error("BRFNT block header is truncated");
+                aurora::throw_host_exception<std::runtime_error>("BRFNT block header is truncated");
             }
 
             const auto block_size = read_be32(data, cursor + 4U);
             if (block_size < 8U || cursor + block_size > data.size()) {
-                throw std::runtime_error("BRFNT block size is invalid");
+                aurora::throw_host_exception<std::runtime_error>("BRFNT block size is invalid");
             }
             font.blocks.push_back(BrfntBlockInfo {
                 .magic = magic_string(data, cursor),
@@ -358,7 +359,7 @@ namespace smgpc::layout {
         }
 
         if (!finf_offset.has_value()) {
-            throw std::runtime_error("BRFNT missing FINF block");
+            aurora::throw_host_exception<std::runtime_error>("BRFNT missing FINF block");
         }
 
         const auto finf = *finf_offset;

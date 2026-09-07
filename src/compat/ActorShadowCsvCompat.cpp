@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "compat/ActorShadowCsvCompat.hpp"
 
 #include "Game/LiveActor/LiveActor.hpp"
@@ -314,7 +315,7 @@ namespace smgpc::compat {
 
     void initialize_actor_shadow_from_archive(LiveActor* actor, const smgpc::resource::RarcArchive& archive, std::string_view definition_name) {
         if (actor == nullptr) {
-            throw std::invalid_argument("Shadow CSV initialization requires a LiveActor.");
+            aurora::throw_host_exception<std::invalid_argument>("Shadow CSV initialization requires a LiveActor.");
         }
         const auto requested = resource_name(definition_name);
         const auto* entry = archive.find_resource(requested);
@@ -325,7 +326,7 @@ namespace smgpc::compat {
 
     void initialize_actor_shadow_from_model_archive(LiveActor* actor, std::string_view definition_name) {
         if (actor == nullptr) {
-            throw std::invalid_argument("Shadow CSV initialization requires a LiveActor.");
+            aurora::throw_host_exception<std::invalid_argument>("Shadow CSV initialization requires a LiveActor.");
         }
         const auto data = actor_model_resource_data_if_present(actor, resource_name(definition_name));
         auto candidate = data.has_value() ? parse_shadow_table(*actor, smgpc::resource::BcsvTable::from_bytes(*data)) : empty_missing_csv_state();

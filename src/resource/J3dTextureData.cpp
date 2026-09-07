@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "J3dTextureData.hpp"
 #include "J3dNameData.hpp"
 #include "Mem1ResourceHeap.hpp"
@@ -21,7 +22,7 @@ namespace smgpc::resource {
 
         void check_range(Bytes bytes, std::size_t offset, std::size_t count) {
             if (offset > bytes.size() || count > bytes.size() - offset) {
-                throw std::runtime_error("J3D texture range exceeds its TEX1 block");
+                aurora::throw_host_exception<std::runtime_error>("J3D texture range exceeds its TEX1 block");
             }
         }
         std::uint16_t u16_at(Bytes bytes, std::size_t offset) {
@@ -35,7 +36,7 @@ namespace smgpc::resource {
         ResTIMG decode_header(Bytes bytes) {
             check_range(bytes, 0, sizeof(ResTIMG));
             for (std::size_t offset : {0x10U, 0x11U, 0x12U}) {
-                if (bytes[offset] > 1) throw std::runtime_error("J3D texture contains an invalid bool representation");
+                if (bytes[offset] > 1) aurora::throw_host_exception<std::runtime_error>("J3D texture contains an invalid bool representation");
             }
             ResTIMG result;
             std::memcpy(&result, bytes.data(), sizeof(result));
@@ -52,7 +53,7 @@ namespace smgpc::resource {
             if (image.mWidth == 0 || image.mWidth > 1024 || image.mHeight == 0 || image.mHeight > 1024 ||
                 image.mWrapS > GX_MIRROR || image.mWrapT > GX_MIRROR || image.mMaxAnisotropy > GX_ANISO_4 ||
                 image.mMinType > GX_LIN_MIP_LIN || image.mMagType > GX_LINEAR) {
-                throw std::runtime_error("J3D texture has an invalid GX dimension or sampler field");
+                aurora::throw_host_exception<std::runtime_error>("J3D texture has an invalid GX dimension or sampler field");
             }
             u32 levels = 1;
             for (u32 dimension = std::max(image.mWidth, image.mHeight); dimension > 1; dimension >>= 1) ++levels;
@@ -72,7 +73,7 @@ namespace smgpc::resource {
             const auto image_offset = source + image.mImageDataOffset;
             check_range(block, image_offset, image_bytes);
             if ((image_offset & 31U) != 0) {
-                throw std::runtime_error("J3D texture payload is not aligned for an original BP address");
+                aurora::throw_host_exception<std::runtime_error>("J3D texture payload is not aligned for an original BP address");
             }
             const bool indexed = format == GX_TF_C4 || format == GX_TF_C8 || format == GX_TF_C14X2;
             const bool loads_palette = image.mPaletteName == 1;
@@ -82,11 +83,11 @@ namespace smgpc::resource {
                 palette_bytes = std::max<std::size_t>(palette_bytes, image.mPaletteNum > 16 ? 512 : 32);
             }
             if ((indexed || loads_palette || image.mPaletteNum != 0) && image.mPaletteFormat > GX_TL_RGB5A3) {
-                throw std::runtime_error("J3D texture has an invalid GX palette format");
+                aurora::throw_host_exception<std::runtime_error>("J3D texture has an invalid GX palette format");
             }
             check_range(block, palette_offset, palette_bytes);
             if (palette_bytes != 0 && (palette_offset & 31U) != 0) {
-                throw std::runtime_error("J3D palette payload is not aligned for an original BP address");
+                aurora::throw_host_exception<std::runtime_error>("J3D palette payload is not aligned for an original BP address");
             }
         }
     }
@@ -99,14 +100,14 @@ namespace smgpc::resource {
         bool attached = false;
 
         Storage(Bytes block, std::shared_ptr<Mem1ResourceHeap> heap) {
-            if (!heap) throw std::invalid_argument("J3D texture data requires a retained MEM1 heap");
+            if (!heap) aurora::throw_host_exception<std::invalid_argument>("J3D texture data requires a retained MEM1 heap");
             check_range(block, 0, 0x14);
             if (u32_at(block, 0) != 0x54455831U || u32_at(block, 4) != block.size()) {
-                throw std::runtime_error("J3D texture data requires one complete TEX1 block");
+                aurora::throw_host_exception<std::runtime_error>("J3D texture data requires one complete TEX1 block");
             }
             const auto count = u16_at(block, 8);
             const auto headers = u32_at(block, 0xC);
-            if (count != 0 && headers == 0) throw std::runtime_error("J3D TEX1 is missing its texture records");
+            if (count != 0 && headers == 0) aurora::throw_host_exception<std::runtime_error>("J3D TEX1 is missing its texture records");
             check_range(block, headers, count * sizeof(ResTIMG));
             const auto name_offset = u32_at(block, 0x10);
             if (name_offset != 0) {
@@ -123,7 +124,7 @@ namespace smgpc::resource {
             }
             const std::size_t payload_start = count * sizeof(ResTIMG);
             if (block.size() > std::numeric_limits<std::uint32_t>::max() - payload_start) {
-                throw std::length_error("J3D TEX1 relative offsets exceed the original record range");
+                aurora::throw_host_exception<std::length_error>("J3D TEX1 relative offsets exceed the original record range");
             }
             allocation = heap->allocate(payload_start + block.size());
             auto* storage = allocation.bytes().data();
@@ -153,7 +154,7 @@ namespace smgpc::resource {
     Bytes J3dTextureData::source_bytes() const noexcept { return _storage->source; }
     void J3dTextureData::attach_to(J3DMaterialTable& table) {
         if (_storage->attached || table.mTexture != nullptr || table.mTextureName != nullptr) {
-            throw std::logic_error("J3D texture data can only attach once to an empty texture table");
+            aurora::throw_host_exception<std::logic_error>("J3D texture data can only attach once to an empty texture table");
         }
         table.mTexture = _storage->texture.get();
         table.mTextureName = _storage->names.table();

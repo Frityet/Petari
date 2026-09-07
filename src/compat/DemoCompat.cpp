@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Game/Util/DemoUtil.hpp"
 
 #include "Game/LiveActor/LiveActor.hpp"
@@ -31,7 +32,7 @@ namespace {
         auto &runtime = smgpc::compat::require_active_demo_scene_runtime(
             "Time-keep demo start");
         if (starter == nullptr || demo_name == nullptr) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "A time-keep demo requires a real starter and demo name.");
         }
         if (require_inactive && runtime.is_active()) {
@@ -87,7 +88,7 @@ namespace smgpc::compat {
 
     void register_or_defer_scene_simple_cast(LiveActor *actor) {
         if (actor == nullptr) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "Simple-cast registration requires a real LiveActor.");
         }
         if (auto *runtime = active_demo_scene_runtime(); runtime != nullptr) {
@@ -169,7 +170,7 @@ namespace MR {
         auto &runtime = smgpc::compat::require_active_demo_scene_runtime(
             "Named demo-cast registration");
         if (pName == nullptr) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "Named demo-cast registration requires a real demo name.");
         }
         return runtime.try_register_cast(pActor, pName, rIter);
@@ -178,7 +179,7 @@ namespace MR {
     void registerDemoCast(LiveActor *pActor, const char *pName,
                           const JMapInfoIter &rIter) {
         if (!tryRegisterDemoCast(pActor, pName, rIter)) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Required demo-cast registration has no matching real group.");
         }
     }
@@ -197,7 +198,7 @@ namespace MR {
                                             const char *pDemoName,
                                             const char *pActionName) {
         if (pDemoName == nullptr) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "Direct demo functor registration requires a real demo name.");
         }
         return smgpc::compat::require_active_demo_scene_runtime(
@@ -212,7 +213,7 @@ namespace MR {
                                          const char *pActionName) {
         if (!tryRegisterDemoActionFunctorDirect(pActor, rFunctor, pDemoName,
                                                 pActionName)) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Required direct demo functor registration has no matching real Action row.");
         }
     }
@@ -228,7 +229,7 @@ namespace MR {
     void registerDemoActionNerve(const LiveActor *pActor, const Nerve *pNerve,
                                  const char *pActionName) {
         if (!tryRegisterDemoActionNerve(pActor, pNerve, pActionName)) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Required demo nerve registration has no matching real Action row.");
         }
     }
@@ -277,7 +278,7 @@ namespace MR {
                            const char *pPartName) {
         if (!start_scene_time_keep_demo(pObj, pDemoName, pPartName, false,
                                         false)) {
-            throw std::logic_error("Requested time-keep demo is unavailable.");
+            aurora::throw_host_exception<std::logic_error>("Requested time-keep demo is unavailable.");
         }
     }
 
@@ -285,13 +286,13 @@ namespace MR {
                                           const char *pPartName) {
         if (!start_scene_time_keep_demo(pObj, pDemoName, pPartName, true,
                                         false)) {
-            throw std::logic_error("Requested puppetable time-keep demo is unavailable.");
+            aurora::throw_host_exception<std::logic_error>("Requested puppetable time-keep demo is unavailable.");
         }
     }
 
     bool isDemoExist(const char *pDemoName) {
         if (pDemoName == nullptr) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "A demo-existence query requires a real demo name.");
         }
         return smgpc::compat::require_active_demo_scene_runtime(
@@ -314,7 +315,7 @@ namespace MR {
 
     bool isDemoPartExist(const LiveActor *pActor, const char *pPartName) {
         if (pPartName == nullptr) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "A demo-part existence query requires a real part name.");
         }
         return smgpc::compat::require_active_demo_scene_runtime(
@@ -330,7 +331,7 @@ namespace MR {
 
     bool isDemoPartActive(const char *pPartName) {
         if (pPartName == nullptr) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "A demo-part active query requires a real part name.");
         }
         return smgpc::compat::require_active_demo_scene_runtime(
@@ -361,14 +362,14 @@ namespace MR {
 
     s32 getDemoPartTotalStep(const char *pPartName) {
         if (pPartName == nullptr) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "A demo-part total-step query requires a real part name.");
         }
         const auto step = smgpc::compat::require_active_demo_scene_runtime(
                               "Demo-part total-step query")
                               .part_total_step(pPartName);
         if (!step.has_value()) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "The requested demo part has no real active Time/SubPart row.");
         }
         return *step;
@@ -376,14 +377,14 @@ namespace MR {
 
     s32 getDemoPartStep(const char *pPartName) {
         if (pPartName == nullptr) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "A demo-part step query requires a real part name.");
         }
         const auto step = smgpc::compat::require_active_demo_scene_runtime(
                               "Demo-part step query")
                               .part_step(pPartName);
         if (!step.has_value()) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "The requested demo part has no real active Time/SubPart row.");
         }
         return *step;
@@ -408,7 +409,7 @@ namespace MR {
 
     const char *getCurrentDemoPartNameMain(const char *pDemoName) {
         if (pDemoName == nullptr) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "A current demo-part query requires a real demo name.");
         }
         const auto part_name =
@@ -420,7 +421,7 @@ namespace MR {
 
     bool isDemoPartTalk(const char *pPartName) {
         if (pPartName == nullptr) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "A demo-part talk query requires a real part name.");
         }
         return std::string_view(pPartName).find("会話") !=

@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include <spng.h>
 
 #include <algorithm>
@@ -29,20 +30,20 @@ void print_usage(std::ostream &out) {
 [[nodiscard]] std::vector< std::uint8_t > read_file(const std::filesystem::path &path) {
     auto file = std::ifstream(path, std::ios::binary);
     if (!file) {
-        throw std::runtime_error("cannot open " + path.string());
+        aurora::throw_host_exception<std::runtime_error>("cannot open " + path.string());
     }
 
     file.seekg(0, std::ios::end);
     const auto size = file.tellg();
     if (size < 0) {
-        throw std::runtime_error("cannot determine size of " + path.string());
+        aurora::throw_host_exception<std::runtime_error>("cannot determine size of " + path.string());
     }
 
     auto bytes = std::vector< std::uint8_t >(static_cast< std::size_t >(size));
     file.seekg(0, std::ios::beg);
     file.read(reinterpret_cast< char * >(bytes.data()), static_cast< std::streamsize >(bytes.size()));
     if (!file && !bytes.empty()) {
-        throw std::runtime_error("failed to read " + path.string());
+        aurora::throw_host_exception<std::runtime_error>("failed to read " + path.string());
     }
 
     return bytes;
@@ -58,21 +59,21 @@ void free_spng_ctx(spng_ctx *ctx) {
     const auto bytes = read_file(path);
     auto ctx = std::unique_ptr< spng_ctx, decltype(&free_spng_ctx) >(spng_ctx_new(0), free_spng_ctx);
     if (ctx == nullptr) {
-        throw std::runtime_error("failed to allocate PNG decoder");
+        aurora::throw_host_exception<std::runtime_error>("failed to allocate PNG decoder");
     }
 
     if (spng_set_png_buffer(ctx.get(), bytes.data(), bytes.size()) != 0) {
-        throw std::runtime_error("failed to set PNG buffer for " + path.string());
+        aurora::throw_host_exception<std::runtime_error>("failed to set PNG buffer for " + path.string());
     }
 
     auto ihdr = spng_ihdr {};
     if (spng_get_ihdr(ctx.get(), &ihdr) != 0) {
-        throw std::runtime_error("failed to read PNG header from " + path.string());
+        aurora::throw_host_exception<std::runtime_error>("failed to read PNG header from " + path.string());
     }
 
     auto decoded_size = std::size_t {};
     if (spng_decoded_image_size(ctx.get(), SPNG_FMT_RGBA8, &decoded_size) != 0) {
-        throw std::runtime_error("failed to determine decoded PNG size for " + path.string());
+        aurora::throw_host_exception<std::runtime_error>("failed to determine decoded PNG size for " + path.string());
     }
 
     auto image = Image {
@@ -82,7 +83,7 @@ void free_spng_ctx(spng_ctx *ctx) {
     };
 
     if (spng_decode_image(ctx.get(), image.rgba.data(), image.rgba.size(), SPNG_FMT_RGBA8, SPNG_DECODE_TRNS) != 0) {
-        throw std::runtime_error("failed to decode PNG " + path.string());
+        aurora::throw_host_exception<std::runtime_error>("failed to decode PNG " + path.string());
     }
 
     return image;

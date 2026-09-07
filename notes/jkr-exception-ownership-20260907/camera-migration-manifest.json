@@ -1,0 +1,216 @@
+{
+  "applied": true,
+  "files": 2,
+  "count": 17,
+  "types": {
+    "std::logic_error": 10,
+    "std::invalid_argument": 7
+  },
+  "manifest": [
+    {
+      "path": "src/compat/CameraUtilCompat.cpp",
+      "sha256": "3e9b2e05d78fd5fd489c398b06d36ba254d1b5c578f45a6c506244b6a156d78a",
+      "held_by_parent": false,
+      "count": 13,
+      "occurrences": [
+        {
+          "line": 91,
+          "type": "std::logic_error",
+          "start": 3127,
+          "prefix_end": 3150,
+          "expression_end": 3217,
+          "before": "throw std::logic_error(",
+          "after": "aurora::throw_host_exception<std::logic_error>(",
+          "argument_sha256": "60fa00aae3338196e1ff77cd535187cc74f2e0938345dd042162e55a7b3994f9",
+          "argument": "\"Cannot derive a camera basis from a degenerate real camera pose.\""
+        },
+        {
+          "line": 120,
+          "type": "std::logic_error",
+          "start": 4200,
+          "prefix_end": 4223,
+          "expression_end": 4254,
+          "before": "throw std::logic_error(",
+          "after": "aurora::throw_host_exception<std::logic_error>(",
+          "argument_sha256": "38c31a1ee958d8e25d998ef52af4f8f506b2fcf22ba1c2cee5511f739f0e5c20",
+          "argument": "\"Camera state is unavailable.\""
+        },
+        {
+          "line": 158,
+          "type": "std::invalid_argument",
+          "start": 5635,
+          "prefix_end": 5663,
+          "expression_end": 5736,
+          "before": "throw std::invalid_argument(",
+          "after": "aurora::throw_host_exception<std::invalid_argument>(",
+          "argument_sha256": "94c0d6052bae049af99a25ded7dd91b4144095a9678fb99dd3b1196e6b9fe896",
+          "argument": "\n                \"Animation event camera requires a real CANM resource.\""
+        },
+        {
+          "line": 261,
+          "type": "std::logic_error",
+          "start": 10320,
+          "prefix_end": 10343,
+          "expression_end": 10457,
+          "before": "throw std::logic_error(",
+          "after": "aurora::throw_host_exception<std::logic_error>(",
+          "argument_sha256": "c94f1b25d0ffa633929c0758e4841727e4dcb0f05cb7b075f515b2d87522f646",
+          "argument": "std::string(operation) +\n                                   \" requires the active RuntimeContext camera service.\""
+        },
+        {
+          "line": 272,
+          "type": "std::logic_error",
+          "start": 10780,
+          "prefix_end": 10803,
+          "expression_end": 10893,
+          "before": "throw std::logic_error(",
+          "after": "aurora::throw_host_exception<std::logic_error>(",
+          "argument_sha256": "0db7bc00bc10e4722a297e2921ad5688d1b40e6b1fce77bb960359857af6c1dc",
+          "argument": "\n                \"Animation event-camera declaration requires the active RuntimeContext.\""
+        },
+        {
+          "line": 433,
+          "type": "std::logic_error",
+          "start": 16089,
+          "prefix_end": 16112,
+          "expression_end": 16229,
+          "before": "throw std::logic_error(",
+          "after": "aurora::throw_host_exception<std::logic_error>(",
+          "argument_sha256": "c661f3a92c92953eac5cbc6aa7d68d663454e223fdb3ee72f9b9356363a023fe",
+          "argument": "\n            \"Start-animation camera completion is unavailable without the exact CameraDirector start-camera owner.\""
+        },
+        {
+          "line": 458,
+          "type": "std::invalid_argument",
+          "start": 16966,
+          "prefix_end": 16994,
+          "expression_end": 17064,
+          "before": "throw std::invalid_argument(",
+          "after": "aurora::throw_host_exception<std::invalid_argument>(",
+          "argument_sha256": "1a7a3ed21ec438b8119d7c5db9634879f70a9cdca6c8a288da64201d6aae4a76",
+          "argument": "\n                \"Event-camera declaration requires ActorCameraInfo.\""
+        },
+        {
+          "line": 471,
+          "type": "std::invalid_argument",
+          "start": 17514,
+          "prefix_end": 17542,
+          "expression_end": 17622,
+          "before": "throw std::invalid_argument(",
+          "after": "aurora::throw_host_exception<std::invalid_argument>(",
+          "argument_sha256": "cf48dd739947e4ca2ccd387d44693c54db73e62e67ec99595fbc0f6cf2e9f979",
+          "argument": "\n                \"Animation event-camera declaration requires ActorCameraInfo.\""
+        },
+        {
+          "line": 485,
+          "type": "std::invalid_argument",
+          "start": 18119,
+          "prefix_end": 18147,
+          "expression_end": 18211,
+          "before": "throw std::invalid_argument(",
+          "after": "aurora::throw_host_exception<std::invalid_argument>(",
+          "argument_sha256": "fb3b52dddb8d1d962a29e7165173aa8cda812291d596bb05b35f9b58caa35a73",
+          "argument": "\n                \"Event-camera start requires ActorCameraInfo.\""
+        },
+        {
+          "line": 504,
+          "type": "std::invalid_argument",
+          "start": 18945,
+          "prefix_end": 18973,
+          "expression_end": 19051,
+          "before": "throw std::invalid_argument(",
+          "after": "aurora::throw_host_exception<std::invalid_argument>(",
+          "argument_sha256": "ab97d77d13d3d55ced6e6b223227a271e6cba0c7c9986369ecf76c751b60ad50",
+          "argument": "\n                \"Player-target event-camera start requires ActorCameraInfo.\""
+        },
+        {
+          "line": 522,
+          "type": "std::invalid_argument",
+          "start": 19736,
+          "prefix_end": 19764,
+          "expression_end": 19838,
+          "before": "throw std::invalid_argument(",
+          "after": "aurora::throw_host_exception<std::invalid_argument>(",
+          "argument_sha256": "4ff77ad164ba3299726041c05eb27143b3957e69e2e4392eb9a9a0c7b6cf737a",
+          "argument": "\n                \"Animation event-camera start requires ActorCameraInfo.\""
+        },
+        {
+          "line": 536,
+          "type": "std::invalid_argument",
+          "start": 20351,
+          "prefix_end": 20379,
+          "expression_end": 20441,
+          "before": "throw std::invalid_argument(",
+          "after": "aurora::throw_host_exception<std::invalid_argument>(",
+          "argument_sha256": "3f04f34181aa2d1b02770f59cd5a77f8b504dcfa354514516e8f8b79006dbca7",
+          "argument": "\n                \"Event-camera end requires ActorCameraInfo.\""
+        },
+        {
+          "line": 547,
+          "type": "std::logic_error",
+          "start": 20813,
+          "prefix_end": 20836,
+          "expression_end": 20935,
+          "before": "throw std::logic_error(",
+          "after": "aurora::throw_host_exception<std::logic_error>(",
+          "argument_sha256": "431d1c7dd120cdd5db51702e9a26f842ac586ec54d8c8c8d8869b2cdf92d18d9",
+          "argument": "\n            \"Landing-delayed event-camera release requires the unavailable retail landing owner.\""
+        }
+      ],
+      "after_sha256": "66acac2c821857159aa0dd90ba19ab728759ba681622a8cf1f609fd20fdeb812"
+    },
+    {
+      "path": "src/compat/CameraLocalUtilRuntime.cpp",
+      "sha256": "5957a528fe20ec8a1e4b7906b3e02af6441c9fe3bc4c565a92d2a0e90b5cc3af",
+      "held_by_parent": false,
+      "count": 4,
+      "occurrences": [
+        {
+          "line": 24,
+          "type": "std::logic_error",
+          "start": 797,
+          "prefix_end": 820,
+          "expression_end": 898,
+          "before": "throw std::logic_error(",
+          "after": "aurora::throw_host_exception<std::logic_error>(",
+          "argument_sha256": "3672fca53c32bfeda7cb211f6402948d715801bbc9f7bd653a23421a563ff810",
+          "argument": "\"Camera target lookup requires the matching active camera calculation scope.\""
+        },
+        {
+          "line": 35,
+          "type": "std::logic_error",
+          "start": 1347,
+          "prefix_end": 1370,
+          "expression_end": 1449,
+          "before": "throw std::logic_error(",
+          "after": "aurora::throw_host_exception<std::logic_error>(",
+          "argument_sha256": "72f1c65ad2ca1c2116e54b6ab7336cd43866a40eee5463c356061b06e1ba1dfa",
+          "argument": "\"Camera target binding requires the original CameraMan and both pose objects.\""
+        },
+        {
+          "line": 81,
+          "type": "std::logic_error",
+          "start": 2916,
+          "prefix_end": 2939,
+          "expression_end": 3016,
+          "before": "throw std::logic_error(",
+          "after": "aurora::throw_host_exception<std::logic_error>(",
+          "argument_sha256": "6fb7df72e8728d6b5c88807dee1e29c1094babd911145eca33c497f7ec4696ef",
+          "argument": "\"Camera manager target lookup requires its active camera calculation scope.\""
+        },
+        {
+          "line": 431,
+          "type": "std::logic_error",
+          "start": 13974,
+          "prefix_end": 13997,
+          "expression_end": 14085,
+          "before": "throw std::logic_error(",
+          "after": "aurora::throw_host_exception<std::logic_error>(",
+          "argument_sha256": "6c6f97a1bb9cc285bb383b7e85c1bc9eec64d7c008359c43f958115a1d982a9c",
+          "argument": "\"First-person camera state requires an active original camera owner and explicit mode.\""
+        }
+      ],
+      "after_sha256": "db88e03a68540e3807c9dc121d06055f62cbd735e43b81427de973b1359b12a8"
+    }
+  ]
+}

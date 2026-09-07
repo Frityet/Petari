@@ -14,6 +14,7 @@ target("smg-pc-common")
     add_headerfiles("**.hpp")
     add_includedirs("./", {public = true})
     add_includedirs("../", {public = true})
+    add_includedirs("../../aurora/include", {public = true})
     add_packages("fmt", { public = true })
     add_packages("nlohmann_json", { public = true })
     if is_mode("debug") then

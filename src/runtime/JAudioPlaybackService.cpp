@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "runtime/JAudioPlaybackService.hpp"
 
 #include "compat/JAudioSoundParameterSemantics.hpp"
@@ -19,7 +20,7 @@ namespace smgpc::runtime {
                 std::filesystem::path("AudioRes") / "SMR.szs",
             });
             if (!smr_path.has_value()) {
-                throw std::runtime_error(
+                aurora::throw_host_exception<std::runtime_error>(
                     "JAudio playback requires the retail AudioRes/SMR.szs archive");
             }
 
@@ -32,7 +33,7 @@ namespace smgpc::runtime {
                     const auto name_path = std::filesystem::path(archive_name);
                     if (name_path.empty() || name_path.is_absolute() ||
                         name_path.filename() != name_path) {
-                        throw std::runtime_error(
+                        aurora::throw_host_exception<std::runtime_error>(
                             "WSYS wave archive name is not a plain filename");
                     }
                     const auto retail_path = dvd.find_first({
@@ -40,7 +41,7 @@ namespace smgpc::runtime {
                         std::filesystem::path("AudioRes") / "Waves" / name_path,
                     });
                     if (!retail_path.has_value()) {
-                        throw std::runtime_error(
+                        aurora::throw_host_exception<std::runtime_error>(
                             "Retail JAudio wave archive is absent from localized/base AudioRes overlays: " +
                             std::string(archive_name));
                     }
@@ -52,7 +53,7 @@ namespace smgpc::runtime {
         load_retail_stream(DvdFileSystemService &dvd, std::string_view path) {
             auto stream_path = std::filesystem::path(path);
             if (stream_path.empty()) {
-                throw std::invalid_argument(
+                aurora::throw_host_exception<std::invalid_argument>(
                     "JAudio stream playback requires a retail stream path");
             }
             if (stream_path.is_absolute()) {
@@ -61,7 +62,7 @@ namespace smgpc::runtime {
             if (std::ranges::any_of(stream_path, [](const auto &component) {
                     return component == "..";
                 })) {
-                throw std::runtime_error(
+                aurora::throw_host_exception<std::runtime_error>(
                     "BST stream path escapes the retail disc root");
             }
             return dvd.read_file(stream_path.generic_string());
@@ -87,15 +88,15 @@ namespace smgpc::runtime {
           _stream_loader(std::move(stream_loader)),
           _mixer(std::move(mixer)) {
         if (!_archive_factory) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "JAudio playback requires an archive factory");
         }
         if (_mixer == nullptr) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "JAudio playback requires a concrete audio mixer");
         }
         if (!_stream_loader) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "JAudio playback requires a retail stream loader");
         }
     }
@@ -106,7 +107,7 @@ namespace smgpc::runtime {
 
     void JAudioPlaybackService::begin_frame(std::uint64_t frame_index) {
         if (_frame_open) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "JAudio playback frame was begun before the previous frame ended");
         }
 
@@ -122,7 +123,7 @@ namespace smgpc::runtime {
 
     void JAudioPlaybackService::end_frame() {
         if (!_frame_open) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "JAudio playback frame ended without a matching begin");
         }
 
@@ -143,7 +144,7 @@ namespace smgpc::runtime {
         std::string_view name, std::int32_t parameter_1,
         std::int32_t parameter_2) {
         if (name.empty()) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "JAudio level playback requires a nonempty sound name");
         }
         if (!_level_sound_permitted) {
@@ -155,7 +156,7 @@ namespace smgpc::runtime {
         ensure_archive();
         const auto sound_id = _archive->find_sound_id(name);
         if (!sound_id.has_value()) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "Level sound is absent from the retail JAudio name table: " +
                 std::string(name));
         }
@@ -163,7 +164,7 @@ namespace smgpc::runtime {
             smgpc::compat::resolve_jaudio_sound_parameter_adjustment(
                 *sound_id, parameter_1, parameter_2);
         if (!adjustment.has_value()) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Level-sound parameter semantics have not been proven for sound ID " +
                 std::to_string(*sound_id));
         }
@@ -178,7 +179,7 @@ namespace smgpc::runtime {
         if (existing != _level_voices.end() && existing->second.token) {
             auto &voice = existing->second;
             if (!voice.handle.isBackendAttached(this, voice.token.value)) {
-                throw std::logic_error(
+                aurora::throw_host_exception<std::logic_error>(
                     "JAudio level handle detached before its backend voice ended");
             }
             if (_mixer->try_update_voice(voice.token,
@@ -201,7 +202,7 @@ namespace smgpc::runtime {
         if (existing == _level_voices.end()) {
             const auto recipe = _archive->resolve_persistent_sound(name);
             if (!recipe.has_value()) {
-                throw std::logic_error(
+                aurora::throw_host_exception<std::logic_error>(
                     "JAudio sound disappeared between name lookup and recipe resolution");
             }
             existing = _level_voices.emplace(
@@ -219,7 +220,7 @@ namespace smgpc::runtime {
 
         auto &voice = existing->second;
         if (voice.name != name) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Two JAudio names unexpectedly resolved to one level-sound ID");
         }
         auto spec = voice.recipe.voice;
@@ -236,11 +237,11 @@ namespace smgpc::runtime {
         std::string_view name, std::int32_t parameter_1,
         std::int32_t parameter_2) {
         if (name.empty()) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "JAudio sound-effect playback requires a nonempty sound name");
         }
         if (parameter_1 != -1) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Parameterized JAudio one-shot semantics are unavailable for " +
                 std::string(name) + " (parameter 1=" +
                 std::to_string(parameter_1) + ", parameter 2=" +
@@ -250,7 +251,7 @@ namespace smgpc::runtime {
         ensure_archive();
         const auto sound_id = _archive->find_sound_id(name);
         if (!sound_id.has_value()) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "Sound effect is absent from the retail JAudio name table: " +
                 std::string(name));
         }
@@ -258,7 +259,7 @@ namespace smgpc::runtime {
         if (recipe == _sound_effect_recipes.end()) {
             const auto resolved = _archive->resolve_sound_effect(name);
             if (!resolved.has_value()) {
-                throw std::logic_error(
+                aurora::throw_host_exception<std::logic_error>(
                     "JAudio sound disappeared between name lookup and recipe resolution");
             }
             recipe = _sound_effect_recipes.emplace(*sound_id, *resolved).first;
@@ -279,7 +280,7 @@ namespace smgpc::runtime {
         (void)position;
         if (!inserted) {
             _mixer->stop_voice(token);
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "JAudio mixer reused an active backend token");
         }
         return handle;
@@ -288,13 +289,13 @@ namespace smgpc::runtime {
     void JAudioPlaybackService::stop_sound_effect(
         std::string_view name, std::uint32_t delay_frames) {
         if (name.empty()) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "Stopping a JAudio sound effect requires a nonempty sound name");
         }
         ensure_archive();
         const auto sound_id = _archive->find_sound_id(name);
         if (!sound_id.has_value()) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "Sound effect is absent from the retail JAudio name table: " +
                 std::string(name));
         }
@@ -335,13 +336,13 @@ namespace smgpc::runtime {
     JAISoundHandle *JAudioPlaybackService::start_stage_bgm(
         std::string_view name, bool prepared) {
         if (name.empty()) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "JAudio stage BGM playback requires a nonempty sound name");
         }
         ensure_archive();
         const auto metadata = _archive->resolve_sound(name);
         if (!metadata.has_value()) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "Stage BGM is absent from the retail JAudio name table: " +
                 std::string(name));
         }
@@ -358,11 +359,11 @@ namespace smgpc::runtime {
         aurora::audio::JAudioSoundMetadata metadata,
         std::string_view name, bool prepared) {
         if (metadata.kind != aurora::audio::JAudioSoundKind::Stream) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "The requested stage BGM is not a retail JAudio stream");
         }
         if (metadata.stream_path.empty()) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "The retail JAudio stream has no concrete disc path");
         }
 
@@ -407,7 +408,7 @@ namespace smgpc::runtime {
     void JAudioPlaybackService::unlock_stage_bgm() {
         retire_finished_voices();
         if (!_stage_voice.has_value()) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Cannot unlock stage BGM without a concrete backend voice");
         }
         if (_stage_voice->prepared && !_stage_voice->unlocked) {
@@ -443,11 +444,11 @@ namespace smgpc::runtime {
     void JAudioPlaybackService::pause_stage_bgm(bool paused) {
         retire_finished_voices();
         if (!_stage_voice.has_value()) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Cannot change stage-BGM pause state without a concrete backend voice");
         }
         if (_stage_voice->stopping) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Cannot change stage-BGM pause state while its concrete voice is stopping");
         }
         _stage_voice->host_paused = paused;
@@ -469,7 +470,7 @@ namespace smgpc::runtime {
         }
         const auto paused = _mixer->voice_paused(_stage_voice->token);
         if (!paused.has_value()) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Active stage-BGM token disappeared during its pause query");
         }
         return *paused;
@@ -503,7 +504,7 @@ namespace smgpc::runtime {
             return nullptr;
         }
         if (!_stage_handle.isBackendAttached(this, _stage_voice->token.value)) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Stage-BGM handle is detached from its concrete backend voice");
         }
         return &_stage_handle;
@@ -575,7 +576,7 @@ namespace smgpc::runtime {
         if (_archive == nullptr) {
             _archive = _archive_factory();
             if (_archive == nullptr) {
-                throw std::runtime_error(
+                aurora::throw_host_exception<std::runtime_error>(
                     "JAudio archive factory returned no archive");
             }
         }
@@ -597,7 +598,7 @@ namespace smgpc::runtime {
             });
         if ((has_backend_voice || has_stage_voice || has_sound_effect_voice) &&
             !_mixer->is_device_open()) {
-            throw std::runtime_error(
+            aurora::throw_host_exception<std::runtime_error>(
                 "SDL JAudio playback device stopped accepting mixed audio");
         }
     }

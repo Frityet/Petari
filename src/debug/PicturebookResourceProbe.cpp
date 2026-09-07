@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "DebugPaths.hpp"
 #include <aurora/nw4r/brlan.hpp>
 #include "layout/BrlytLayout.hpp"
@@ -35,7 +36,7 @@ namespace {
 
     void require(bool condition, std::string_view message) {
         if (!condition) {
-            throw std::runtime_error(std::string(message));
+            aurora::throw_host_exception<std::runtime_error>(std::string(message));
         }
     }
 
@@ -188,7 +189,7 @@ namespace {
     [[nodiscard]] std::vector<std::uint8_t> read_file_prefix(const std::filesystem::path &path, std::size_t size) {
         auto input = std::ifstream(path, std::ios::binary);
         if (!input) {
-            throw std::runtime_error("could not open " + path.string());
+            aurora::throw_host_exception<std::runtime_error>("could not open " + path.string());
         }
 
         auto bytes = std::vector<std::uint8_t>(size);
@@ -222,13 +223,13 @@ namespace {
             const auto arg = std::string_view(argv[i]);
             if (arg == "--output") {
                 if (i + 1 >= argc) {
-                    throw std::runtime_error("--output requires a path");
+                    aurora::throw_host_exception<std::runtime_error>("--output requires a path");
                 }
                 options.output = std::filesystem::path(argv[++i]);
                 continue;
             }
 
-            throw std::runtime_error("unknown argument: " + std::string(arg));
+            aurora::throw_host_exception<std::runtime_error>("unknown argument: " + std::string(arg));
         }
         return options;
     }
@@ -248,7 +249,7 @@ namespace {
 
         auto output = std::ofstream(*options.output, std::ios::trunc);
         if (!output) {
-            throw std::runtime_error("could not write " + options.output->string());
+            aurora::throw_host_exception<std::runtime_error>("could not write " + options.output->string());
         }
         for (const auto &line : report) {
             output << line << '\n';

@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "compat/GameDataSession.hpp"
 
 #include <cstdio>
@@ -11,7 +12,7 @@ GameDataSession::GameDataSession(u16 selected_file)
     : _selected_file(selected_file), _holder(nullptr) {
     try {
         if (_selected_file < 1U || _selected_file > 6U) {
-            throw std::out_of_range("Selected game-data file is outside [1, 6]");
+            aurora::throw_host_exception<std::out_of_range>("Selected game-data file is outside [1, 6]");
         }
 
         char name[sizeof(_holder.mName)];

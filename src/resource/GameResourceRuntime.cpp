@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "GameResourceRuntime.hpp"
 #include "resource/EmbeddedGameTables.hpp"
 #include "compat/JutTextureAllocation.hpp"
@@ -8,7 +9,7 @@ namespace smgpc::resource {
     GameResourceRuntime::GameResourceRuntime(GameResourceBudget budget) : _budget(budget) {
         compat::JkrHostAllocationScope host;
         if (budget.cohort_bytes >= budget.host_heap_bytes)
-            throw std::invalid_argument("Resource cohort must fit inside its original JKR root heap");
+            aurora::throw_host_exception<std::invalid_argument>("Resource cohort must fit inside its original JKR root heap");
         OSInit();
         _heaps = compat::JkrHeapRuntime::create(budget.host_heap_bytes);
         _mem1 = Mem1ResourceHeap::create(budget.mem1_bytes);

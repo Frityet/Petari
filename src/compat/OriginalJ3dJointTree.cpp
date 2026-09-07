@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "compat/OriginalJ3dJointTree.hpp"
 
 #include "Game/Animation/XanimeCore.hpp"
@@ -84,7 +85,7 @@ namespace smgpc::compat {
               animation_matrices(std::make_unique<Mtx[]>(source.joint_count)),
               scale_flags(source.joint_count), matrices(source.joint_count) {
             if (source.joints.size() != source.joint_count) {
-                throw std::runtime_error("J3D joint initialization table does not match its declared count");
+                aurora::throw_host_exception<std::runtime_error>("J3D joint initialization table does not match its declared count");
             }
             // J3DModelLoader::readInformation selects exactly these three modes.
             switch (info.flags & 0x0fU) {
@@ -98,7 +99,7 @@ namespace smgpc::compat {
                 basic = std::make_unique<J3DMtxCalcNoAnm<J3DMtxCalcCalcTransformMaya, J3DMtxCalcJ3DSysInitMaya>>();
                 break;
             default:
-                throw std::runtime_error("J3D model has an unsupported original joint matrix mode");
+                aurora::throw_host_exception<std::runtime_error>("J3D model has an unsupported original joint matrix mode");
             }
             animation = std::make_unique<AnimationCalculator>(source.joint_count, info.flags & 0x0fU);
             tree.mFlags = info.flags;
@@ -152,13 +153,13 @@ namespace smgpc::compat {
                     break;
                 case 2:
                     if (scopes.size() == 1U) {
-                        throw std::runtime_error("J3D hierarchy closes a missing child scope");
+                        aurora::throw_host_exception<std::runtime_error>("J3D hierarchy closes a missing child scope");
                     }
                     scopes.pop_back();
                     break;
                 case 0x10:
                     if (command.mValue >= joints.size() || linked[command.mValue]) {
-                        throw std::runtime_error("J3D hierarchy contains an invalid or repeated joint");
+                        aurora::throw_host_exception<std::runtime_error>("J3D hierarchy contains an invalid or repeated joint");
                     }
                     linked[command.mValue] = true;
                     scope.current = &joints[command.mValue];
@@ -166,7 +167,7 @@ namespace smgpc::compat {
                         scope.parent->appendChild(scope.current);
                     } else {
                         if (tree.mRootNode != nullptr) {
-                            throw std::runtime_error("J3D hierarchy contains disconnected root joints");
+                            aurora::throw_host_exception<std::runtime_error>("J3D hierarchy contains disconnected root joints");
                         }
                         tree.mRootNode = scope.current;
                     }
@@ -175,14 +176,14 @@ namespace smgpc::compat {
                 case 0x12:
                     break;
                 default:
-                    throw std::runtime_error("J3D hierarchy contains an unknown command");
+                    aurora::throw_host_exception<std::runtime_error>("J3D hierarchy contains an unknown command");
                 }
                 if (ended) {
                     break;
                 }
             }
             if (!ended || std::find(linked.begin(), linked.end(), false) != linked.end()) {
-                throw std::runtime_error("J3D hierarchy does not define the complete joint tree");
+                aurora::throw_host_exception<std::runtime_error>("J3D hierarchy does not define the complete joint tree");
             }
         }
     };
@@ -200,11 +201,11 @@ namespace smgpc::compat {
                                                                       const std::array<float, 3>& base_scale) {
         auto& storage = *_storage;
         if (animation != nullptr && animation->field_0x1e < storage.tree.mJointNum) {
-            throw std::runtime_error("J3D transform animation does not contain every model joint");
+            aurora::throw_host_exception<std::runtime_error>("J3D transform animation does not contain every model joint");
         }
         TraversalScope scope;
         if (storage.calculating) {
-            throw std::logic_error("J3D joint calculation cannot reenter its own matrix buffer");
+            aurora::throw_host_exception<std::logic_error>("J3D joint calculation cannot reenter its own matrix buffer");
         }
         storage.calculating = true;
         // A real SDK animation object provides the frame state for this

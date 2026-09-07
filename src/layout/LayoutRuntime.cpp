@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "layout/LayoutRuntime.hpp"
 
 #include <algorithm>
@@ -488,7 +489,7 @@ namespace {
             auto y_offset = 0.0F;
             if (input.role == smgpc::resource::BmgTextToken::Role::Picture) {
                 if (picture_font == nullptr) {
-                    throw std::logic_error(
+                    aurora::throw_host_exception<std::logic_error>(
                         "BMG picture tag requires PictureFont.brfnt from the resolved Font.arc");
                 }
                 glyph_font = picture_font;
@@ -927,7 +928,7 @@ namespace {
 smgpc::layout::LayoutRuntime::LayoutRuntime(const char* pName, const char* pLayoutName, u32 animLayerNum, int)
     : mName(pName), mLayoutName(pLayoutName), mAnimLayerNum(animLayerNum) {
     if (animLayerNum == 0U || animLayerNum > mAnimations.size()) {
-        throw std::invalid_argument("LayoutRuntime requires between one and four animation layers");
+        aurora::throw_host_exception<std::invalid_argument>("LayoutRuntime requires between one and four animation layers");
     }
     if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
         mArchivePath = runtime->find_layout_archive(mLayoutName);
@@ -944,7 +945,7 @@ smgpc::layout::LayoutRuntime::LayoutRuntime(const char* pName, const char* pLayo
     : mName(pName), mLayoutName(pLayoutName), mAnimLayerNum(animLayerNum),
       mArchivePath(std::move(archivePath)) {
     if (animLayerNum == 0U || animLayerNum > mAnimations.size()) {
-        throw std::invalid_argument("LayoutRuntime requires between one and four animation layers");
+        aurora::throw_host_exception<std::invalid_argument>("LayoutRuntime requires between one and four animation layers");
     }
 }
 
@@ -959,7 +960,7 @@ void smgpc::layout::LayoutRuntime::initWithoutIter() {
 
 void smgpc::layout::LayoutRuntime::initEffectKeeper(int effectNum, const char* pEffectName, const void*) {
     if (mName.empty()) {
-        throw std::logic_error("Initializing layout effects requires a real named effect owner");
+        aurora::throw_host_exception<std::logic_error>("Initializing layout effects requires a real named effect owner");
     }
     auto& runtime = smgpc::runtime::RuntimeContext::instance();
     const auto group_name = pEffectName != nullptr ? std::string_view(pEffectName) : std::string_view(mLayoutName);
@@ -1730,7 +1731,7 @@ void smgpc::layout::LayoutRuntime::startAnim(const char* pAnimName, u32 animLaye
 void smgpc::layout::LayoutRuntime::setAnimFrameAndStop(f32 frame, u32 animLayer) {
     auto& anim = animation(animLayer);
     if (anim.name.empty()) {
-        throw std::runtime_error("Layout " + mLayoutName + " has no active animation on layer " + std::to_string(animLayer));
+        aurora::throw_host_exception<std::runtime_error>("Layout " + mLayoutName + " has no active animation on layer " + std::to_string(animLayer));
     }
     anim.frame = frame;
     anim.rate = 0.0f;
@@ -1740,7 +1741,7 @@ void smgpc::layout::LayoutRuntime::setAnimFrameAndStop(f32 frame, u32 animLayer)
 void smgpc::layout::LayoutRuntime::setAnimFrame(f32 frame, u32 animLayer) {
     auto& anim = animation(animLayer);
     if (anim.name.empty()) {
-        throw std::runtime_error("Layout " + mLayoutName + " has no active animation on layer " + std::to_string(animLayer));
+        aurora::throw_host_exception<std::runtime_error>("Layout " + mLayoutName + " has no active animation on layer " + std::to_string(animLayer));
     }
     anim.frame = frame;
 }
@@ -1748,7 +1749,7 @@ void smgpc::layout::LayoutRuntime::setAnimFrame(f32 frame, u32 animLayer) {
 void smgpc::layout::LayoutRuntime::setAnimRate(f32 rate, u32 animLayer) {
     auto& anim = animation(animLayer);
     if (anim.name.empty()) {
-        throw std::runtime_error("Layout " + mLayoutName + " has no active animation on layer " + std::to_string(animLayer));
+        aurora::throw_host_exception<std::runtime_error>("Layout " + mLayoutName + " has no active animation on layer " + std::to_string(animLayer));
     }
     anim.rate = rate;
     anim.stopped = rate == 0.0f;
@@ -1757,7 +1758,7 @@ void smgpc::layout::LayoutRuntime::setAnimRate(f32 rate, u32 animLayer) {
 f32 smgpc::layout::LayoutRuntime::getAnimFrame(u32 animLayer) const {
     const auto& anim = animation(animLayer);
     if (anim.name.empty()) {
-        throw std::runtime_error("Layout " + mLayoutName + " has no active animation on layer " + std::to_string(animLayer));
+        aurora::throw_host_exception<std::runtime_error>("Layout " + mLayoutName + " has no active animation on layer " + std::to_string(animLayer));
     }
     return anim.frame;
 }
@@ -1765,7 +1766,7 @@ f32 smgpc::layout::LayoutRuntime::getAnimFrame(u32 animLayer) const {
 bool smgpc::layout::LayoutRuntime::isAnimStopped(u32 animLayer) {
     auto& anim = animation(animLayer);
     if (anim.name.empty()) {
-        throw std::runtime_error("Layout " + mLayoutName + " has no active animation on layer " + std::to_string(animLayer));
+        aurora::throw_host_exception<std::runtime_error>("Layout " + mLayoutName + " has no active animation on layer " + std::to_string(animLayer));
     }
     return anim.stopped;
 }
@@ -1792,7 +1793,7 @@ void smgpc::layout::LayoutRuntime::setTextBoxNumberRecursive(const char* pPaneNa
         }
     }
     if (!matched) {
-        throw std::runtime_error("Layout " + mLayoutName + " has no text box in pane " + std::string(requested_name));
+        aurora::throw_host_exception<std::runtime_error>("Layout " + mLayoutName + " has no text box in pane " + std::string(requested_name));
     }
 
     mRenderTextTextures.clear();
@@ -1826,7 +1827,7 @@ void smgpc::layout::LayoutRuntime::setTextBoxStringRecursive(const char* pPaneNa
         }
     }
     if (!matched) {
-        throw std::runtime_error("Layout " + mLayoutName + " has no text box in pane " + std::string(requested_name));
+        aurora::throw_host_exception<std::runtime_error>("Layout " + mLayoutName + " has no text box in pane " + std::string(requested_name));
     }
 
     mRenderTextTextures.clear();
@@ -1863,7 +1864,7 @@ void smgpc::layout::LayoutRuntime::setTextBoxTaggedStringRecursive(const char* p
         }
     }
     if (!matched) {
-        throw std::runtime_error("Layout " + mLayoutName + " has no text box in pane " + std::string(requested_name));
+        aurora::throw_host_exception<std::runtime_error>("Layout " + mLayoutName + " has no text box in pane " + std::string(requested_name));
     }
 
     if (needs_picture_font) {
@@ -1883,7 +1884,7 @@ void smgpc::layout::LayoutRuntime::setTextBoxFontRecursive(const char* pPaneName
 
     const auto state = font.GetHostResourceState().lock();
     if (state == nullptr || state->font == nullptr) {
-        throw std::invalid_argument("Setting a text-box font requires an installed BRFNT resource");
+        aurora::throw_host_exception<std::invalid_argument>("Setting a text-box font requires an installed BRFNT resource");
     }
 
     const auto requested_name = pPaneName != nullptr ? std::string_view(pPaneName) : std::string_view{};
@@ -1909,7 +1910,7 @@ void smgpc::layout::LayoutRuntime::setTextBoxFontRecursive(const char* pPaneName
     }
 
     if (!matched) {
-        throw std::runtime_error("Layout " + mLayoutName + " has no text box in pane " + std::string(requested_name));
+        aurora::throw_host_exception<std::runtime_error>("Layout " + mLayoutName + " has no text box in pane " + std::string(requested_name));
     }
 
     mRenderTextTextures.clear();
@@ -1918,7 +1919,7 @@ void smgpc::layout::LayoutRuntime::setTextBoxFontRecursive(const char* pPaneName
 void smgpc::layout::LayoutRuntime::setTextBoxArgNumberRecursive(const char* pPaneName, s32 number, s32 argIndex) {
     loadRenderData();
     if (argIndex < 0) {
-        throw std::out_of_range("Text-box argument index cannot be negative");
+        aurora::throw_host_exception<std::out_of_range>("Text-box argument index cannot be negative");
     }
 
     const auto requested_name = pPaneName != nullptr ? std::string_view(pPaneName) : std::string_view{};
@@ -1945,7 +1946,7 @@ void smgpc::layout::LayoutRuntime::setTextBoxArgNumberRecursive(const char* pPan
         matched = true;
     }
     if (!matched) {
-        throw std::runtime_error("Layout " + mLayoutName + " has no tagged text box in pane " + std::string(requested_name));
+        aurora::throw_host_exception<std::runtime_error>("Layout " + mLayoutName + " has no tagged text box in pane " + std::string(requested_name));
     }
 
     mRenderTextTextures.clear();
@@ -1954,7 +1955,7 @@ void smgpc::layout::LayoutRuntime::setTextBoxArgNumberRecursive(const char* pPan
 void smgpc::layout::LayoutRuntime::setTextBoxArgStringRecursive(const char* pPaneName, std::u16string_view text, s32 argIndex) {
     loadRenderData();
     if (argIndex < 0) {
-        throw std::out_of_range("Text-box argument index cannot be negative");
+        aurora::throw_host_exception<std::out_of_range>("Text-box argument index cannot be negative");
     }
 
     const auto requested_name = pPaneName != nullptr ? std::string_view(pPaneName) : std::string_view{};
@@ -1981,7 +1982,7 @@ void smgpc::layout::LayoutRuntime::setTextBoxArgStringRecursive(const char* pPan
         matched = true;
     }
     if (!matched) {
-        throw std::runtime_error("Layout " + mLayoutName + " has no tagged text box in pane " + std::string(requested_name));
+        aurora::throw_host_exception<std::runtime_error>("Layout " + mLayoutName + " has no tagged text box in pane " + std::string(requested_name));
     }
 
     mRenderTextTextures.clear();
@@ -1990,7 +1991,7 @@ void smgpc::layout::LayoutRuntime::setTextBoxArgStringRecursive(const char* pPan
 void smgpc::layout::LayoutRuntime::replacePaneTexture(std::string_view paneName, const nw4r::lyt::TexMap& texMap, u8 texMapIndex) {
     loadRenderData();
     if (paneName.empty()) {
-        throw std::invalid_argument("Replacing a pane texture requires a real pane name");
+        aurora::throw_host_exception<std::invalid_argument>("Replacing a pane texture requires a real pane name");
     }
 
     auto* render_texture = find_texture(mRenderTextures, texMap.name());
@@ -2057,14 +2058,14 @@ void smgpc::layout::LayoutRuntime::replacePaneTexture(std::string_view paneName,
         }
     }
     if (!replaced) {
-        throw std::runtime_error("Layout " + mLayoutName + " has no replaceable texture slot for pane " + std::string(paneName));
+        aurora::throw_host_exception<std::runtime_error>("Layout " + mLayoutName + " has no replaceable texture slot for pane " + std::string(paneName));
     }
 }
 
 void smgpc::layout::LayoutRuntime::setPaneAlpha(std::string_view paneName, f32 alpha) {
     loadRenderData();
     if (paneName.empty()) {
-        throw std::invalid_argument("Setting pane alpha requires a real pane name");
+        aurora::throw_host_exception<std::invalid_argument>("Setting pane alpha requires a real pane name");
     }
 
     const auto alpha_u8 = std::clamp(alpha, 0.0F, 1.0F) * 255.0F;
@@ -2076,14 +2077,14 @@ void smgpc::layout::LayoutRuntime::setPaneAlpha(std::string_view paneName, f32 a
         }
     }
     if (!matched) {
-        throw std::runtime_error("Layout " + mLayoutName + " has no pane " + std::string(paneName));
+        aurora::throw_host_exception<std::runtime_error>("Layout " + mLayoutName + " has no pane " + std::string(paneName));
     }
 }
 
 void smgpc::layout::LayoutRuntime::setPaneVisible(std::string_view paneName, bool visible) {
     loadRenderData();
     if (paneName.empty()) {
-        throw std::invalid_argument("Setting pane visibility requires a real pane name");
+        aurora::throw_host_exception<std::invalid_argument>("Setting pane visibility requires a real pane name");
     }
 
     auto matched = false;
@@ -2094,14 +2095,14 @@ void smgpc::layout::LayoutRuntime::setPaneVisible(std::string_view paneName, boo
         }
     }
     if (!matched) {
-        throw std::runtime_error("Layout " + mLayoutName + " has no pane " + std::string(paneName));
+        aurora::throw_host_exception<std::runtime_error>("Layout " + mLayoutName + " has no pane " + std::string(paneName));
     }
 }
 
 void smgpc::layout::LayoutRuntime::setPaneVisibleRecursive(std::string_view paneName, bool visible) {
     loadRenderData();
     if (paneName.empty()) {
-        throw std::invalid_argument("Setting recursive pane visibility requires a real pane name");
+        aurora::throw_host_exception<std::invalid_argument>("Setting recursive pane visibility requires a real pane name");
     }
 
     auto root_indices = std::vector< std::size_t >{};
@@ -2111,7 +2112,7 @@ void smgpc::layout::LayoutRuntime::setPaneVisibleRecursive(std::string_view pane
         }
     }
     if (root_indices.empty()) {
-        throw std::runtime_error("Layout " + mLayoutName + " has no pane " + std::string(paneName));
+        aurora::throw_host_exception<std::runtime_error>("Layout " + mLayoutName + " has no pane " + std::string(paneName));
     }
 
     auto is_descendant_of = [&](std::size_t pane_index, std::size_t root_index) {
@@ -2135,7 +2136,7 @@ void smgpc::layout::LayoutRuntime::setPaneVisibleRecursive(std::string_view pane
 void smgpc::layout::LayoutRuntime::setTextBoxHorizontalPosition(std::string_view paneName, u8 position) {
     loadRenderData();
     if (position > 2U) {
-        throw std::out_of_range("Text-box horizontal position must be left, center, or right");
+        aurora::throw_host_exception<std::out_of_range>("Text-box horizontal position must be left, center, or right");
     }
     const auto requested_name = paneName;
     auto matched = false;
@@ -2148,14 +2149,14 @@ void smgpc::layout::LayoutRuntime::setTextBoxHorizontalPosition(std::string_view
         matched = true;
     }
     if (!matched) {
-        throw std::runtime_error("Layout " + mLayoutName + " has no text box in pane " + std::string(requested_name));
+        aurora::throw_host_exception<std::runtime_error>("Layout " + mLayoutName + " has no text box in pane " + std::string(requested_name));
     }
 }
 
 void smgpc::layout::LayoutRuntime::setTextBoxVerticalPosition(std::string_view paneName, u8 position) {
     loadRenderData();
     if (position > 2U) {
-        throw std::out_of_range("Text-box vertical position must be top, center, or bottom");
+        aurora::throw_host_exception<std::out_of_range>("Text-box vertical position must be top, center, or bottom");
     }
     const auto requested_name = paneName;
     auto matched = false;
@@ -2168,7 +2169,7 @@ void smgpc::layout::LayoutRuntime::setTextBoxVerticalPosition(std::string_view p
         matched = true;
     }
     if (!matched) {
-        throw std::runtime_error("Layout " + mLayoutName + " has no text box in pane " + std::string(requested_name));
+        aurora::throw_host_exception<std::runtime_error>("Layout " + mLayoutName + " has no text box in pane " + std::string(requested_name));
     }
 }
 
@@ -2346,12 +2347,12 @@ bool smgpc::layout::LayoutRuntime::isPointingPane(std::string_view paneName, f32
 
 void smgpc::layout::LayoutRuntime::startPaneAnim(std::string_view paneName, const char* pAnimName, u32 animLayer) {
     if (paneName.empty() || pAnimName == nullptr || pAnimName[0] == '\0') {
-        throw std::logic_error("Pane animation requires a real pane and BRLAN name");
+        aurora::throw_host_exception<std::logic_error>("Pane animation requires a real pane and BRLAN name");
     }
 
     loadRenderData();
     if (!hasPane(paneName)) {
-        throw std::runtime_error("Layout " + mLayoutName + " has no pane " + std::string(paneName));
+        aurora::throw_host_exception<std::runtime_error>("Layout " + mLayoutName + " has no pane " + std::string(paneName));
     }
     const auto end = durationFor(pAnimName);
     const auto looping = isLoopingAnim(pAnimName);
@@ -2367,17 +2368,17 @@ void smgpc::layout::LayoutRuntime::startPaneAnim(std::string_view paneName, cons
 
 void smgpc::layout::LayoutRuntime::stopPaneAnim(std::string_view paneName, u32 animLayer) {
     if (paneName.empty()) {
-        throw std::logic_error("Pane animation requires a real pane name");
+        aurora::throw_host_exception<std::logic_error>("Pane animation requires a real pane name");
     }
 
     auto* pane = const_cast< PaneAnimationState* >(findPaneAnimation(paneName));
     if (pane == nullptr) {
-        throw std::runtime_error("Pane " + std::string(paneName) + " has no active animation state");
+        aurora::throw_host_exception<std::runtime_error>("Pane " + std::string(paneName) + " has no active animation state");
     }
     (void)animation(animLayer);
     auto& anim = pane->animations.at(animLayer);
     if (anim.name.empty()) {
-        throw std::runtime_error("Pane " + std::string(paneName) + " has no active animation on layer " + std::to_string(animLayer));
+        aurora::throw_host_exception<std::runtime_error>("Pane " + std::string(paneName) + " has no active animation on layer " + std::to_string(animLayer));
     }
     anim.rate = 0.0F;
     anim.stopped = true;
@@ -2385,34 +2386,34 @@ void smgpc::layout::LayoutRuntime::stopPaneAnim(std::string_view paneName, u32 a
 
 void smgpc::layout::LayoutRuntime::setPaneAnimFrame(std::string_view paneName, f32 frame, u32 animLayer) {
     if (paneName.empty()) {
-        throw std::logic_error("Pane animation requires a real pane name");
+        aurora::throw_host_exception<std::logic_error>("Pane animation requires a real pane name");
     }
 
     auto* pane = const_cast< PaneAnimationState* >(findPaneAnimation(paneName));
     if (pane == nullptr) {
-        throw std::runtime_error("Pane " + std::string(paneName) + " has no active animation state");
+        aurora::throw_host_exception<std::runtime_error>("Pane " + std::string(paneName) + " has no active animation state");
     }
     (void)animation(animLayer);
     auto& anim = pane->animations.at(animLayer);
     if (anim.name.empty()) {
-        throw std::runtime_error("Pane " + std::string(paneName) + " has no active animation on layer " + std::to_string(animLayer));
+        aurora::throw_host_exception<std::runtime_error>("Pane " + std::string(paneName) + " has no active animation on layer " + std::to_string(animLayer));
     }
     anim.frame = frame;
 }
 
 void smgpc::layout::LayoutRuntime::setPaneAnimRate(std::string_view paneName, f32 rate, u32 animLayer) {
     if (paneName.empty()) {
-        throw std::logic_error("Pane animation requires a real pane name");
+        aurora::throw_host_exception<std::logic_error>("Pane animation requires a real pane name");
     }
 
     auto* pane = const_cast< PaneAnimationState* >(findPaneAnimation(paneName));
     if (pane == nullptr) {
-        throw std::runtime_error("Pane " + std::string(paneName) + " has no active animation state");
+        aurora::throw_host_exception<std::runtime_error>("Pane " + std::string(paneName) + " has no active animation state");
     }
     (void)animation(animLayer);
     auto& anim = pane->animations.at(animLayer);
     if (anim.name.empty()) {
-        throw std::runtime_error("Pane " + std::string(paneName) + " has no active animation on layer " + std::to_string(animLayer));
+        aurora::throw_host_exception<std::runtime_error>("Pane " + std::string(paneName) + " has no active animation on layer " + std::to_string(animLayer));
     }
     anim.rate = rate;
     anim.stopped = rate == 0.0F;
@@ -2421,13 +2422,13 @@ void smgpc::layout::LayoutRuntime::setPaneAnimRate(std::string_view paneName, f3
 f32 smgpc::layout::LayoutRuntime::getPaneAnimFrame(std::string_view paneName, u32 animLayer) const {
     const auto* pane = findPaneAnimation(paneName);
     if (pane == nullptr) {
-        throw std::runtime_error("Pane " + std::string(paneName) + " has no active animation state");
+        aurora::throw_host_exception<std::runtime_error>("Pane " + std::string(paneName) + " has no active animation state");
     }
 
     (void)animation(animLayer);
     const auto& anim = pane->animations.at(animLayer);
     if (anim.name.empty()) {
-        throw std::runtime_error("Pane " + std::string(paneName) + " has no active animation on layer " + std::to_string(animLayer));
+        aurora::throw_host_exception<std::runtime_error>("Pane " + std::string(paneName) + " has no active animation on layer " + std::to_string(animLayer));
     }
     return anim.frame;
 }
@@ -2435,13 +2436,13 @@ f32 smgpc::layout::LayoutRuntime::getPaneAnimFrame(std::string_view paneName, u3
 bool smgpc::layout::LayoutRuntime::isPaneAnimStopped(std::string_view paneName, u32 animLayer) const {
     const auto* pane = findPaneAnimation(paneName);
     if (pane == nullptr) {
-        throw std::runtime_error("Pane " + std::string(paneName) + " has no active animation state");
+        aurora::throw_host_exception<std::runtime_error>("Pane " + std::string(paneName) + " has no active animation state");
     }
 
     (void)animation(animLayer);
     const auto& anim = pane->animations.at(animLayer);
     if (anim.name.empty()) {
-        throw std::runtime_error("Pane " + std::string(paneName) + " has no active animation on layer " + std::to_string(animLayer));
+        aurora::throw_host_exception<std::runtime_error>("Pane " + std::string(paneName) + " has no active animation on layer " + std::to_string(animLayer));
     }
     return anim.stopped;
 }
@@ -2449,7 +2450,7 @@ bool smgpc::layout::LayoutRuntime::isPaneAnimStopped(std::string_view paneName, 
 f32 smgpc::layout::LayoutRuntime::getAnimFrameMax(u32 animLayer) const {
     const auto& anim = animation(animLayer);
     if (anim.name.empty()) {
-        throw std::runtime_error("Layout " + mLayoutName + " has no active animation on layer " + std::to_string(animLayer));
+        aurora::throw_host_exception<std::runtime_error>("Layout " + mLayoutName + " has no active animation on layer " + std::to_string(animLayer));
     }
     return anim.end;
 }
@@ -2457,7 +2458,7 @@ f32 smgpc::layout::LayoutRuntime::getAnimFrameMax(u32 animLayer) const {
 f32 smgpc::layout::LayoutRuntime::getAnimRate(u32 animLayer) const {
     const auto& anim = animation(animLayer);
     if (anim.name.empty()) {
-        throw std::runtime_error("Layout " + mLayoutName + " has no active animation on layer " + std::to_string(animLayer));
+        aurora::throw_host_exception<std::runtime_error>("Layout " + mLayoutName + " has no active animation on layer " + std::to_string(animLayer));
     }
     return anim.rate;
 }
@@ -2468,7 +2469,7 @@ bool smgpc::layout::LayoutRuntime::hasActiveAnimation(u32 animLayer) const {
 
 f32 smgpc::layout::LayoutRuntime::getAnimDuration(const char* pAnimName) const {
     if (pAnimName == nullptr || pAnimName[0] == '\0') {
-        throw std::logic_error("Animation duration requires a real BRLAN name");
+        aurora::throw_host_exception<std::logic_error>("Animation duration requires a real BRLAN name");
     }
 
     const_cast< LayoutRuntime* >(this)->loadRenderData();
@@ -2477,7 +2478,7 @@ f32 smgpc::layout::LayoutRuntime::getAnimDuration(const char* pAnimName) const {
 
 bool smgpc::layout::LayoutRuntime::isAnimLooping(const char* pAnimName) const {
     if (pAnimName == nullptr || pAnimName[0] == '\0') {
-        throw std::logic_error("Animation loop state requires a real BRLAN name");
+        aurora::throw_host_exception<std::logic_error>("Animation loop state requires a real BRLAN name");
     }
 
     const_cast< LayoutRuntime* >(this)->loadRenderData();
@@ -2487,7 +2488,7 @@ bool smgpc::layout::LayoutRuntime::isAnimLooping(const char* pAnimName) const {
 bool smgpc::layout::LayoutRuntime::isAnimLooping(u32 animLayer) const {
     const auto& anim = animation(animLayer);
     if (anim.name.empty()) {
-        throw std::runtime_error("Layout " + mLayoutName + " has no active animation on layer " + std::to_string(animLayer));
+        aurora::throw_host_exception<std::runtime_error>("Layout " + mLayoutName + " has no active animation on layer " + std::to_string(animLayer));
     }
     return anim.looping;
 }
@@ -2807,7 +2808,7 @@ void smgpc::layout::LayoutRuntime::debugSetTextBoxRasterColors(
         matched = true;
     }
     if (!matched) {
-        throw std::runtime_error("Layout " + mLayoutName +
+        aurora::throw_host_exception<std::runtime_error>("Layout " + mLayoutName +
                                  " has no text box in pane " +
                                  std::string(paneName));
     }
@@ -2817,14 +2818,14 @@ void smgpc::layout::LayoutRuntime::debugSetTextBoxRasterColors(
 
 smgpc::layout::LayoutRuntime::AnimationState& smgpc::layout::LayoutRuntime::animation(u32 animLayer) {
     if (animLayer >= mAnimLayerNum) {
-        throw std::out_of_range("Layout " + mLayoutName + " has no animation layer " + std::to_string(animLayer));
+        aurora::throw_host_exception<std::out_of_range>("Layout " + mLayoutName + " has no animation layer " + std::to_string(animLayer));
     }
     return mAnimations.at(animLayer);
 }
 
 const smgpc::layout::LayoutRuntime::AnimationState& smgpc::layout::LayoutRuntime::animation(u32 animLayer) const {
     if (animLayer >= mAnimLayerNum) {
-        throw std::out_of_range("Layout " + mLayoutName + " has no animation layer " + std::to_string(animLayer));
+        aurora::throw_host_exception<std::out_of_range>("Layout " + mLayoutName + " has no animation layer " + std::to_string(animLayer));
     }
     return mAnimations.at(animLayer);
 }
@@ -2833,7 +2834,7 @@ smgpc::layout::LayoutRuntime::PaneAnimationState& smgpc::layout::LayoutRuntime::
     loadRenderData();
     const auto pane_index = find_preferred_pane_index(mBrlytLayout, paneName);
     if (!pane_index.has_value()) {
-        throw std::runtime_error("Layout " + mLayoutName + " has no pane " + std::string(paneName));
+        aurora::throw_host_exception<std::runtime_error>("Layout " + mLayoutName + " has no pane " + std::string(paneName));
     }
     const auto& resolved_name = mBrlytLayout.panes[*pane_index].name;
     const auto it = std::ranges::find_if(mPaneAnimations, [&resolved_name](const auto& pane) { return pane.pane_name == resolved_name; });
@@ -3239,7 +3240,7 @@ smgpc::layout::LayoutRuntime::composeTextTexture(
                 found->second.raw_text, found->second.args,
                 player_character);
         } catch (const std::exception& e) {
-            throw std::logic_error("Layout " + mLayoutName + " text box " +
+            aurora::throw_host_exception<std::logic_error>("Layout " + mLayoutName + " text box " +
                                    text_box.name + ": " + e.what());
         }
     } else if (!text_box.text.empty()) {
@@ -3770,24 +3771,24 @@ aurora::nw4r::lyt::BrlanMaterialFrame smgpc::layout::LayoutRuntime::materialFram
 
 f32 smgpc::layout::LayoutRuntime::durationFor(const char* pAnimName) const {
     if (pAnimName == nullptr || pAnimName[0] == '\0') {
-        throw std::logic_error("Animation duration requires a real BRLAN name");
+        aurora::throw_host_exception<std::logic_error>("Animation duration requires a real BRLAN name");
     }
     const auto it = mRenderAnimations.find(lower_copy(pAnimName));
     if (it != mRenderAnimations.end() && it->second.frame_size > 0U) {
         return static_cast< f32 >(it->second.frame_size);
     }
 
-    throw std::runtime_error("Layout " + mLayoutName + " has no usable BRLAN " + std::string(pAnimName));
+    aurora::throw_host_exception<std::runtime_error>("Layout " + mLayoutName + " has no usable BRLAN " + std::string(pAnimName));
 }
 
 bool smgpc::layout::LayoutRuntime::isLoopingAnim(const char* pAnimName) const {
     if (pAnimName == nullptr || pAnimName[0] == '\0') {
-        throw std::logic_error("Animation loop state requires a real BRLAN name");
+        aurora::throw_host_exception<std::logic_error>("Animation loop state requires a real BRLAN name");
     }
     const auto it = mRenderAnimations.find(lower_copy(pAnimName));
     if (it != mRenderAnimations.end()) {
         return it->second.loop;
     }
 
-    throw std::runtime_error("Layout " + mLayoutName + " has no BRLAN " + std::string(pAnimName));
+    aurora::throw_host_exception<std::runtime_error>("Layout " + mLayoutName + " has no BRLAN " + std::string(pAnimName));
 }

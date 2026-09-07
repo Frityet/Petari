@@ -1,0 +1,132 @@
+Undefined symbols for architecture arm64:
+  "MarineSnow::view()", referenced from:
+      MarioSwim::draw3D() const in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+  "MarineSnow::clear()", referenced from:
+      MarioSwim::draw3D() const in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+  "MarineSnow::MarineSnow()", referenced from:
+      MarioSwim::MarioSwim(MarioActor*) in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+  "MarioActor::tryJetAttack(HitSensor*)", referenced from:
+      MarioSwim::tryJetAttack(HitSensor*) in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+  "MarioActor::reactionPunch(HitSensor*)", referenced from:
+      MarioModule::sendPunch(HitSensor*, bool) in libsmg-pc-game.a[251](MarioModule.cpp.o)
+  "MarioActor::releaseThrowMemoSensor()", referenced from:
+      MarioSwim::dropJet(bool) in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+  "MarioActor::resetPlayerModeOnDamage()", referenced from:
+      MarioFaint::start() in libsmg-pc-game.a[232](MarioFaint.cpp.o)
+      MarioDamage::start() in libsmg-pc-game.a[249](MarioDamage.cpp.o)
+      Mario::doFireDance() in libsmg-pc-game.a[249](MarioDamage.cpp.o)
+      Mario::doNeedle(Triangle const*) in libsmg-pc-game.a[249](MarioDamage.cpp.o)
+      Mario::doParalyze() in libsmg-pc-game.a[282](MarioDamageParalyze.cpp.o)
+  "MarioActor::damageDropThrowMemoSensor()", referenced from:
+      Mario::doFireDance() in libsmg-pc-game.a[249](MarioDamage.cpp.o)
+      Mario::doNeedle(Triangle const*) in libsmg-pc-game.a[249](MarioDamage.cpp.o)
+      MarioSwim::dropJet(bool) in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+      Mario::doParalyze() in libsmg-pc-game.a[282](MarioDamageParalyze.cpp.o)
+  "MarioActor::resetPlayerModeOnNoDamage()", referenced from:
+      MarioFaint::start() in libsmg-pc-game.a[232](MarioFaint.cpp.o)
+      MarioDamage::start() in libsmg-pc-game.a[249](MarioDamage.cpp.o)
+  "MarioActor::forceKill(unsigned int)", referenced from:
+      MarioDarkDamage::update() in libsmg-pc-game.a[249](MarioDamage.cpp.o)
+  "MarioActor::sendPunch(HitSensor*, bool)", referenced from:
+      MarioModule::sendPunch(HitSensor*, bool) in libsmg-pc-game.a[251](MarioModule.cpp.o)
+  "MarioAccess::forceKill(unsigned int, unsigned int)", referenced from:
+      Mario::damagePolygonCheck(Triangle const*) in libsmg-pc-game.a[249](MarioDamage.cpp.o)
+  "BigFanFunction::calcWindInfo(JGeometry::TVec3<float>*, JGeometry::TVec3<float> const&, float*)", referenced from:
+      MarioTeresa::checkWind() in libsmg-pc-game.a[267](MarioTeresa.cpp.o)
+  "GameSceneLayoutHolder::changeLifeMeterModeWater()", referenced from:
+      MarioSwim::start() in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+  "GameSceneLayoutHolder::changeLifeMeterModeGround()", referenced from:
+      MarioSwim::close() in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+  "MR::getTexture(ResourceHolder*, char const*)", referenced from:
+      MarioFoo::init() in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+  "MR::onCalcAnim(LiveActor*)", referenced from:
+      MarioActor::showFreezeModel() in libsmg-pc-mario-gateway-walk-slice.a[9](MarioActorParts.cpp.o)
+  "MR::calcSpherePos(JGeometry::TVec3<float>*, AreaObj const*)", referenced from:
+      MarioFoo::update() in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+  "MR::ddLightingOff()", referenced from:
+      MarioFoo::draw3D() const in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+      MarioFoo::draw3D() const in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+  "MR::ddSendVtxData(JGeometry::TVec3<float> const&, JGeometry::TVec2<float> const&)", referenced from:
+      MarioFoo::draw3D() const in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+      MarioFoo::draw3D() const in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+      MarioFoo::draw3D() const in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+      MarioFoo::draw3D() const in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+      MarioFoo::draw3D() const in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+      MarioFoo::draw3D() const in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+      MarioFoo::draw3D() const in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+      MarioFoo::draw3D() const in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+      MarioFoo::draw3D() const in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+      MarioFoo::draw3D() const in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+      MarioFoo::draw3D() const in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+      MarioFoo::draw3D() const in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+      MarioFoo::draw3D() const in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+      MarioFoo::draw3D() const in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+      MarioFoo::draw3D() const in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+      MarioFoo::draw3D() const in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+      ...
+  "MR::getPlayerLeft()", referenced from:
+      MarioFireDance::update() in libsmg-pc-game.a[249](MarioDamage.cpp.o)
+  "MR::getSortedPoly(JGeometry::TVec3<float>*, Triangle*, unsigned int)", referenced from:
+      MarioSwim::checkWaterBottom() in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+  "MR::makeMtxUpSide(JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>>*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)", referenced from:
+      MarioSukekiyo::postureCtrl(float (*) [4]) in libsmg-pc-game.a[270](MarioSukekiyo.cpp.o)
+  "MR::rotAxisVecRad(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, JGeometry::TVec3<float>*, float)", referenced from:
+      MarioSwim::update() in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+      MarioSwim::update() in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+      MarioFoo::update() in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+      MarioFoo::update() in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+  "MR::ddSetVtxFormat(unsigned int)", referenced from:
+      MarioFoo::draw3D() const in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+      MarioFoo::draw3D() const in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+  "MR::makeMtxFrontUp(JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>>*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)", referenced from:
+      MarioActor::createIceWall(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&) in libsmg-pc-mario-gateway-walk-slice.a[9](MarioActorParts.cpp.o)
+      MarioHang::postureCtrl(float (*) [4]) in libsmg-pc-game.a[234](MarioHang.cpp.o)
+      MarioHang::postureCtrl(float (*) [4]) in libsmg-pc-game.a[234](MarioHang.cpp.o)
+      MarioStick::postureCtrl(float (*) [4]) in libsmg-pc-game.a[250](MarioStick.cpp.o)
+  "MR::getSphereRadius(AreaObj const*)", referenced from:
+      MarioFoo::update() in libsmg-pc-game.a[272](MarioFoo.cpp.o)
+  "MR::getWaterAreaInfo(WaterInfo*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, bool)", referenced from:
+      MarioSwim::checkWaterCube(bool) in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+      MarioSwim::getWaterAreaInfo(WaterInfo*, JGeometry::TVec3<float> const&, JGeometry::TVec2<float>*) in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+  "MR::endSubjectiveCamera(int)", referenced from:
+      MarioFpView::update() in libsmg-pc-game.a[258](MarioFpView.cpp.o)
+      MarioFpView::close() in libsmg-pc-game.a[258](MarioFpView.cpp.o)
+  "MR::setStageBGMStateBit(unsigned int)", referenced from:
+      MarioSwim::jet() in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+  "MR::getNearPolyOnLineSort(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, HitSensor const*)", referenced from:
+      MarioSwim::checkWaterBottom() in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+  "MR::isStageSwimAngleLimit()", referenced from:
+      MarioSwim::checkWaterCube(bool) in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+      MarioSwim::update() in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+  "MR::startSubjectiveCamera(int)", referenced from:
+      MarioFpView::start() in libsmg-pc-game.a[258](MarioFpView.cpp.o)
+  "MR::calcWhirlPoolAccelInfo(JGeometry::TVec3<float> const&, JGeometry::TVec3<float>*)", referenced from:
+      MarioSwim::update() in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+  "MR::validateCollisionParts(LiveActor*)", referenced from:
+      IceStep::setOn(unsigned int, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&) in libsmg-pc-game.a[292](IceStep.cpp.o)
+  "MR::offUpdateCollisionParts(LiveActor*)", referenced from:
+      IceStep::setOn(unsigned int, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&) in libsmg-pc-game.a[292](IceStep.cpp.o)
+  "MR::getGameSceneLayoutHolder()", referenced from:
+      MarioSwim::start() in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+      MarioSwim::close() in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+  "MR::requestStartGameOverDemo()", referenced from:
+      MarioAbyssDamage::update() in libsmg-pc-game.a[249](MarioDamage.cpp.o)
+      MarioDarkDamage::update() in libsmg-pc-game.a[249](MarioDamage.cpp.o)
+  "MR::onUpdateCollisionPartsOnetimeImmediately(LiveActor*)", referenced from:
+      IceStep::setOn(unsigned int, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&) in libsmg-pc-game.a[292](IceStep.cpp.o)
+  "MarioFlip::update()", referenced from:
+      vtable for MarioFlip in libsmg-pc-game.a[273](MarioFlip.cpp.o)
+  "MarioSwim::postureCtrl(float (*) [4])", referenced from:
+      vtable for MarioSwim in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+  "MarioSwim::keep()", referenced from:
+      vtable for MarioSwim in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+  "MarioSwim::proc(unsigned int)", referenced from:
+      vtable for MarioSwim in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+  "MarineSnow::draw(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, float) const", referenced from:
+      MarioSwim::draw3D() const in libsmg-pc-game.a[263](MarioSwim.cpp.o)
+  "vtable for MarioWarp", referenced from:
+      MarioWarp::MarioWarp(MarioActor*) in libsmg-pc-game.a[243](MarioWarp.cpp.o)
+   NOTE: a missing vtable usually means the first non-inline virtual member function has no definition.
+  "_lbl_805C64D8", referenced from:
+      MarioFaint::start() in libsmg-pc-game.a[232](MarioFaint.cpp.o)
+      MarioFaint::close() in libsmg-pc-game.a[232](MarioFaint.cpp.o)

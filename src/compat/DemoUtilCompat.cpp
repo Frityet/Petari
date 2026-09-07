@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Game/Util/DemoUtil.hpp"
 
 #include "Game/LiveActor/LiveActor.hpp"
@@ -15,7 +16,7 @@
 namespace {
     [[noreturn]] void throw_programmable_demo_unavailable(
         std::string_view operation) {
-        throw std::logic_error(
+        aurora::throw_host_exception<std::logic_error>(
             std::string(operation) +
             " requires the real programmable DemoDirector movement/cinema-frame closure; "
             "a DemoSheet executor is not a substitute.");
@@ -32,7 +33,7 @@ namespace smgpc::compat {
 namespace MR {
     void registerDemoActionFunctor(const LiveActor *pActor, const MR::FunctorBase &rFunctor, const char *pActionName) {
         if (!MR::tryRegisterDemoActionFunctor(pActor, rFunctor, pActionName)) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Required demo functor registration has no matching real Action row.");
         }
     }
@@ -41,7 +42,7 @@ namespace MR {
         (void)smgpc::compat::require_active_demo_scene_runtime(
             "Programmable demo start");
         if (pActor == nullptr || pDemoName == nullptr) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "A programmable demo requires a real starter and demo name.");
         }
         throw_programmable_demo_unavailable("MR::tryStartDemoWithoutCinemaFrame");
@@ -51,7 +52,7 @@ namespace MR {
         (void)smgpc::compat::require_active_demo_scene_runtime(
             "Programmable puppetable demo start");
         if (pActor == nullptr || pDemoName == nullptr) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "A programmable puppetable demo requires a real starter and demo name.");
         }
         throw_programmable_demo_unavailable("MR::tryStartDemoMarioPuppetable");
@@ -63,7 +64,7 @@ namespace MR {
         (void)smgpc::compat::require_active_demo_scene_runtime(
             "Programmable demo request");
         if (pActor == nullptr || pDemoName == nullptr) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "A programmable demo request requires a real starter and demo name.");
         }
         throw_programmable_demo_unavailable("MR::requestStartDemo");
@@ -77,7 +78,7 @@ namespace MR {
         (void)smgpc::compat::require_active_demo_scene_runtime(
             "Programmable demo request without cinema frame");
         if (pActor == nullptr || pDemoName == nullptr) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "A programmable demo request requires a real starter and demo name.");
         }
         throw_programmable_demo_unavailable(
@@ -90,7 +91,7 @@ namespace MR {
         auto &runtime = smgpc::compat::require_active_demo_scene_runtime(
             "Demo end");
         if (!runtime.stop_active_demo(nullptr, std::nullopt)) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Cannot end a demo without a real active DemoDirector state.");
         }
     }
@@ -103,7 +104,7 @@ namespace MR {
 
     bool isDemoActive(const char *pDemoName) {
         if (pDemoName == nullptr) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "A named demo-active query requires a real demo name.");
         }
         return smgpc::compat::require_active_demo_scene_runtime(

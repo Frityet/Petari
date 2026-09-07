@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "scene/nameobj/NameObjFactory.hpp"
 
 #include "Game/Demo/PrologueDirector.hpp"
@@ -587,7 +588,7 @@ namespace NameObjFactory {
 
     const Name2CreateFunc *getName2CreateFunc(const char *pName, const Name2CreateFunc *pTable) {
         if (pTable != nullptr && pTable != cSupportedCreateTable.data()) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "External NameObj creator tables are unavailable without an explicit table extent.");
         }
         const auto name = pName != nullptr ? std::string_view(pName) : std::string_view{};
@@ -600,7 +601,7 @@ namespace NameObjFactory {
     void getMountObjectArchiveList(NameObjArchiveListCollector *pArchiveList, const char *pName,
                                    const JMapInfoIter &rIter) {
         if (pArchiveList == nullptr) {
-            throw std::invalid_argument("NameObj archive collection requires a real collector.");
+            aurora::throw_host_exception<std::invalid_argument>("NameObj archive collection requires a real collector.");
         }
 
         const auto object_name = pName != nullptr ? std::string_view(pName) : std::string_view{};
@@ -745,7 +746,7 @@ namespace smgpc::scene::nameobj {
         auto requests = collect_name_obj_archive_requests(dvd, object_name, placement_iter);
         for (auto &request : requests) {
             if (request.kind == NameObjArchiveKind::Missing || request.resolved_path.empty()) {
-                throw std::runtime_error("Required retail archive is unavailable for " +
+                aurora::throw_host_exception<std::runtime_error>("Required retail archive is unavailable for " +
                                          std::string(object_name) + ": " + request.archive_name);
             }
             auto &archive = dvd.archive_for_path(request.resolved_path);
@@ -761,13 +762,13 @@ namespace smgpc::scene::nameobj {
         const auto creator = NameObjFactory::getCreator(object.c_str());
         if (creator == nullptr) {
             const auto support = describe_creator_support(object_name);
-            throw std::runtime_error("Unsupported NameObj factory request: " + object +
+            aurora::throw_host_exception<std::runtime_error>("Unsupported NameObj factory request: " + object +
                                      " (" + support.reason + ")");
         }
 
         auto result = std::unique_ptr<NameObj>(creator(actor_name));
         if (result == nullptr) {
-            throw std::runtime_error("Retail NameObj creator returned null: " + object);
+            aurora::throw_host_exception<std::runtime_error>("Retail NameObj creator returned null: " + object);
         }
         if (auto *gravity = dynamic_cast<GlobalGravityObj *>(result.get());
             gravity != nullptr) {

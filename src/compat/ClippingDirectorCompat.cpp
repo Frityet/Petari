@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Game/LiveActor/ClippingDirector.hpp"
 
 #include "Game/LiveActor/LiveActor.hpp"
@@ -24,7 +25,7 @@ void ClippingDirector::endInitActorSystemInfo() {
 
 void ClippingDirector::registerActor(LiveActor* pActor) {
     if (pActor == nullptr) {
-        throw std::invalid_argument("ClippingDirector actor registration requires a LiveActor.");
+        aurora::throw_host_exception<std::invalid_argument>("ClippingDirector actor registration requires a LiveActor.");
     }
 
     // These are the retail ClippingActorInfo constructor values.
@@ -44,13 +45,13 @@ void ClippingDirector::initActorSystemInfo(LiveActor*, const JMapInfoIter& rIter
 void ClippingDirector::joinToGroupClipping(LiveActor*, const JMapInfoIter& rIter, int) {
     auto clippingGroupId = s32{-1};
     if (MR::getJMapInfoClippingGroupID(rIter, &clippingGroupId) && clippingGroupId >= 0) {
-        throw std::logic_error("Group clipping is unavailable without a real ClippingGroupHolder.");
+        aurora::throw_host_exception<std::logic_error>("Group clipping is unavailable without a real ClippingGroupHolder.");
     }
 }
 
 void ClippingDirector::entryLodCtrl(LodCtrl* pLod, const JMapInfoIter& rIter) {
     if (pLod == nullptr) {
-        throw std::invalid_argument("LOD clipping registration requires a LodCtrl.");
+        aurora::throw_host_exception<std::invalid_argument>("LOD clipping registration requires a LodCtrl.");
     }
     auto viewGroupId = s32{-1};
     if (MR::getJMapInfoViewGroupID(rIter, &viewGroupId)) {
@@ -63,25 +64,25 @@ namespace MR {
     ClippingDirector* getClippingDirector() {
         auto* holder = MR::getSceneObjHolder();
         if (holder == nullptr) {
-            throw std::logic_error("ClippingDirector is unavailable without a scene-owned SceneObjHolder.");
+            aurora::throw_host_exception<std::logic_error>("ClippingDirector is unavailable without a scene-owned SceneObjHolder.");
         }
 
         auto* director = dynamic_cast< ClippingDirector* >(holder->getObj(SceneObj_ClippingDirector));
         if (director == nullptr) {
-            throw std::logic_error("The active scene has not created its ClippingDirector.");
+            aurora::throw_host_exception<std::logic_error>("The active scene has not created its ClippingDirector.");
         }
         return director;
     }
 
     void addToClippingTarget(LiveActor* pActor) {
         if (pActor == nullptr) {
-            throw std::invalid_argument("Clipping target registration requires a LiveActor.");
+            aurora::throw_host_exception<std::invalid_argument>("Clipping target registration requires a LiveActor.");
         }
         pActor->mFlag.mIsInvalidClipping = false;
     }
 
     void removeFromClippingTarget(LiveActor*) {
-        throw std::logic_error("Clipping target removal is unavailable without real ClippingActorHolder list ownership.");
+        aurora::throw_host_exception<std::logic_error>("Clipping target removal is unavailable without real ClippingActorHolder list ownership.");
     }
 
 }  // namespace MR

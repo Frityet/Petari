@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "camera/OriginalAnimationCamera.hpp"
 
 #include "Game/Camera/CameraAnim.hpp"
@@ -14,7 +15,7 @@ namespace smgpc::camera {
     namespace {
         void validate_speed(float speed) {
             if (!std::isfinite(speed) || !(speed > 0.0F)) {
-                throw std::invalid_argument("Original animation camera requires a positive finite speed.");
+                aurora::throw_host_exception<std::invalid_argument>("Original animation camera requires a positive finite speed.");
             }
         }
 
@@ -80,7 +81,7 @@ namespace smgpc::camera {
         validate_speed(speed);
         validate_original_camera_target(target);
         if (animation.native_data().bytes().empty()) {
-            throw std::invalid_argument("Original animation camera requires a decoded CANM or CKAN resource.");
+            aurora::throw_host_exception<std::invalid_argument>("Original animation camera requires a decoded CANM or CKAN resource.");
         }
         _impl = std::make_unique<Impl>(animation, target, speed, manager_seed, nullptr, manager_matrix_seed);
     }
@@ -93,7 +94,7 @@ namespace smgpc::camera {
         const TPos3f *manager_matrix_seed) {
         validate_speed(speed);
         if (animation.native_data().bytes().empty()) {
-            throw std::invalid_argument("Original animation camera requires a decoded CANM or CKAN resource.");
+            aurora::throw_host_exception<std::invalid_argument>("Original animation camera requires a decoded CANM or CKAN resource.");
         }
         _impl = std::make_unique<Impl>(animation, StageCameraTargetState{}, speed, manager_seed,
                                        &target, manager_matrix_seed);

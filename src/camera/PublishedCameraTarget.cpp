@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "camera/PublishedCameraTarget.hpp"
 
 #include <cmath>
@@ -20,7 +21,7 @@ namespace smgpc::camera {
             (target.ground_position.has_value() && !finite(*target.ground_position)) ||
             (target.gravity.has_value() && !finite(*target.gravity)) ||
             (target.side.has_value() && !finite(*target.side))) {
-            throw std::invalid_argument("Original camera target requires finite vectors and a non-degenerate orientation.");
+            aurora::throw_host_exception<std::invalid_argument>("Original camera target requires finite vectors and a non-degenerate orientation.");
         }
     }
 
@@ -44,14 +45,14 @@ namespace smgpc::camera {
 
     const TVec3f &PublishedCameraTarget::getGroundPos() const {
         if (!_ground.has_value()) {
-            throw std::logic_error("Original camera target has no published ground position.");
+            aurora::throw_host_exception<std::logic_error>("Original camera target has no published ground position.");
         }
         return *_ground;
     }
 
     const TVec3f &PublishedCameraTarget::getGravityVector() const {
         if (!_gravity.has_value()) {
-            throw std::logic_error("Original camera target has no published gravity vector.");
+            aurora::throw_host_exception<std::logic_error>("Original camera target has no published gravity vector.");
         }
         return *_gravity;
     }

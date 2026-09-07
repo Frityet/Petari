@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "scene/nameobj/ObjectNameTable.hpp"
 
 #include "resource/BcsvTable.hpp"
@@ -22,10 +23,10 @@ namespace smgpc::scene::nameobj {
                                                        std::string_view field_name) {
             const auto index = table.field_index(smgpc::resource::jmap_hash(field_name));
             if (!index.has_value()) {
-                throw std::runtime_error("ObjNameTable.tbl is missing required field " + std::string(field_name));
+                aurora::throw_host_exception<std::runtime_error>("ObjNameTable.tbl is missing required field " + std::string(field_name));
             }
             if (!is_string_field(table.fields()[*index].type)) {
-                throw std::runtime_error("ObjNameTable.tbl field " + std::string(field_name) +
+                aurora::throw_host_exception<std::runtime_error>("ObjNameTable.tbl field " + std::string(field_name) +
                                          " must be a string field");
             }
             return *index;
@@ -40,7 +41,7 @@ namespace smgpc::scene::nameobj {
     ObjectNameTable::ObjectNameTable(const smgpc::resource::RarcArchive &archive) {
         const auto *entry = archive.find_by_basename(cObjectNameTableFileName);
         if (entry == nullptr) {
-            throw std::runtime_error("ObjNameTable.arc does not contain ObjNameTable.tbl");
+            aurora::throw_host_exception<std::runtime_error>("ObjNameTable.arc does not contain ObjNameTable.tbl");
         }
 
         const auto table = smgpc::resource::BcsvTable::from_bytes(archive.file_data(*entry));
@@ -53,7 +54,7 @@ namespace smgpc::scene::nameobj {
             const auto english_name = table.get_string(row, smgpc::resource::jmap_hash("en_name"));
             const auto japanese_name = table.get_string(row, smgpc::resource::jmap_hash("jp_name"));
             if (!english_name.has_value() || !japanese_name.has_value()) {
-                throw std::runtime_error("ObjNameTable.tbl row " + std::to_string(row) +
+                aurora::throw_host_exception<std::runtime_error>("ObjNameTable.tbl row " + std::to_string(row) +
                                          " does not contain both object names");
             }
 

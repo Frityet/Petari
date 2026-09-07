@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "runtime/SystemConfigService.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include <algorithm>
@@ -38,7 +39,7 @@ namespace smgpc::runtime {
         }
         std::uint8_t* product_memory() {
             if (OSBaseAddress == 0 || OSGetPhysicalMemSize() < 0x3900)
-                throw std::logic_error("System configuration requires initialized original OS memory");
+                aurora::throw_host_exception<std::logic_error>("System configuration requires initialized original OS memory");
             return static_cast<std::uint8_t*>(OSPhysicalToCached(0x3800));
         }
     }
@@ -46,7 +47,7 @@ namespace smgpc::runtime {
     SystemConfigService::SystemConfigService(aurora::NandFileSystem& nand) : _nand(&nand) {
         compat::JkrHostAllocationScope host;
         InterruptScope interrupts;
-        if (active_service.load()) throw std::logic_error("A system configuration owner is already installed");
+        if (active_service.load()) aurora::throw_host_exception<std::logic_error>("A system configuration owner is already installed");
         std::copy_n(product_memory(), _previous_product.size(), _previous_product.begin());
         load();
         active_service.store(this);
@@ -60,7 +61,7 @@ namespace smgpc::runtime {
     SystemConfigService* SystemConfigService::active() noexcept { return active_service.load(); }
     SystemConfigService& SystemConfigService::require_active() {
         auto* service = active();
-        if (!service) throw std::logic_error("Original SC lookup requires an installed system configuration owner");
+        if (!service) aurora::throw_host_exception<std::logic_error>("Original SC lookup requires an installed system configuration owner");
         return *service;
     }
     void SystemConfigService::load() {
@@ -120,7 +121,7 @@ namespace smgpc::runtime {
             const std::uint32_t value = (std::uint32_t(b[0]) << 24) | (std::uint32_t(b[1]) << 16) |
                                         (std::uint32_t(b[2]) << 8) | b[3];
             std::memcpy(output, &value, sizeof(value));
-        } else throw std::logic_error("Unsupported original SC integer accessor type");
+        } else aurora::throw_host_exception<std::logic_error>("Unsupported original SC integer accessor type");
         return true;
     }
     void SystemConfigService::erase(SCItemID id) {

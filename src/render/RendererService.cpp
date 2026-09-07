@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "RendererService.hpp"
 #include "render/AuroraBrightVisibilityService.hpp"
 
@@ -156,7 +157,7 @@ namespace smgpc::render {
         void write_rgba8_png(const std::filesystem::path &path, std::uint32_t width, std::uint32_t height, std::uint32_t pitch,
                              std::span<const std::uint8_t> rgba) {
             if (width == 0U || height == 0U || pitch < width * 4U || rgba.size() < static_cast<std::size_t>(pitch) * height) {
-                throw std::runtime_error("Cannot write Aurora screenshot: invalid readback dimensions");
+                aurora::throw_host_exception<std::runtime_error>("Cannot write Aurora screenshot: invalid readback dimensions");
             }
 
             auto rows = std::vector<std::uint8_t> {};
@@ -205,11 +206,11 @@ namespace smgpc::render {
             }
             auto file = std::ofstream(path, std::ios::binary);
             if (!file) {
-                throw std::runtime_error("Cannot write Aurora screenshot: " + path.string());
+                aurora::throw_host_exception<std::runtime_error>("Cannot write Aurora screenshot: " + path.string());
             }
             file.write(reinterpret_cast<const char *>(png.data()), static_cast<std::streamsize>(png.size()));
             if (!file) {
-                throw std::runtime_error("Failed while writing Aurora screenshot: " + path.string());
+                aurora::throw_host_exception<std::runtime_error>("Failed while writing Aurora screenshot: " + path.string());
             }
         }
 
@@ -547,34 +548,34 @@ namespace smgpc::render {
             case 0xffU:
                 return GX_COLOR_NULL;
             default:
-                throw std::logic_error("GX material uses an invalid raster color channel");
+                aurora::throw_host_exception<std::logic_error>("GX material uses an invalid raster color channel");
             }
         }
 
         [[nodiscard]] GXTevKColorID gx_k_color_id(std::size_t index) {
             if (index >= GX_MAX_KCOLOR) {
-                throw std::logic_error("GX material uses an invalid konst color register");
+                aurora::throw_host_exception<std::logic_error>("GX material uses an invalid konst color register");
             }
             return static_cast<GXTevKColorID>(GX_KCOLOR0 + index);
         }
 
         [[nodiscard]] GXTevKColorSel gx_k_color_sel_for_stage(const GxTevStage2D &stage) {
             if (stage.k_color_sel > 0x1fU) {
-                throw std::logic_error("GX material uses an invalid TEV konst color selector");
+                aurora::throw_host_exception<std::logic_error>("GX material uses an invalid TEV konst color selector");
             }
             return static_cast<GXTevKColorSel>(stage.k_color_sel);
         }
 
         [[nodiscard]] GXTevKAlphaSel gx_k_alpha_sel_for_stage(const GxTevStage2D &stage) {
             if (stage.k_alpha_sel > 0x1fU) {
-                throw std::logic_error("GX material uses an invalid TEV konst alpha selector");
+                aurora::throw_host_exception<std::logic_error>("GX material uses an invalid TEV konst alpha selector");
             }
             return static_cast<GXTevKAlphaSel>(stage.k_alpha_sel);
         }
 
         [[nodiscard]] GXTevSwapSel gx_tev_swap_sel(std::uint8_t value) {
             if (value > GX_TEV_SWAP3) {
-                throw std::logic_error("GX material uses an invalid TEV swap selector");
+                aurora::throw_host_exception<std::logic_error>("GX material uses an invalid TEV swap selector");
             }
             return static_cast<GXTevSwapSel>(value);
         }
@@ -656,7 +657,7 @@ namespace smgpc::render {
         void configure_model_3d_for_2d_projection(const Model3DFor2DProjection &screen) {
             if (!std::isfinite(screen.screen_width) || !std::isfinite(screen.screen_height) ||
                 screen.screen_width <= 0.0F || screen.screen_height <= 0.0F) {
-                throw std::logic_error("Model3DFor2D requires finite positive screen dimensions");
+                aurora::throw_host_exception<std::logic_error>("Model3DFor2D requires finite positive screen dimensions");
             }
 
             constexpr auto near_z = -10000.0F;
@@ -983,7 +984,7 @@ namespace smgpc::render {
                           std::uint8_t mag_filter) {
             auto *record = texture(handle);
             if (record == nullptr) {
-                throw std::logic_error("GX material texture is absent");
+                aurora::throw_host_exception<std::logic_error>("GX material texture is absent");
             }
             GXInitTexObjWrapMode(&record->object, static_cast<GXTexWrapMode>(gx_wrap_mode(wrap_u)),
                                  static_cast<GXTexWrapMode>(gx_wrap_mode(wrap_v)));
@@ -1223,7 +1224,7 @@ namespace smgpc::render {
 
     void AuroraRenderer::set_copy_clear(const CopyClearState &state) {
         if (state.depth > GX_MAX_Z24) {
-            throw std::invalid_argument("GX copy-clear depth must fit the retail 24-bit Z buffer");
+            aurora::throw_host_exception<std::invalid_argument>("GX copy-clear depth must fit the retail 24-bit Z buffer");
         }
         _impl->copy_clear = state;
         if (_impl->frame_open) {
@@ -1527,7 +1528,7 @@ namespace smgpc::render {
 
     AuroraRenderer &current_aurora_renderer() {
         if (s_current_renderer == nullptr) {
-            throw std::runtime_error("Aurora renderer context is not active");
+            aurora::throw_host_exception<std::runtime_error>("Aurora renderer context is not active");
         }
         return *s_current_renderer;
     }

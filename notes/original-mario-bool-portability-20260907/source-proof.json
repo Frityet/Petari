@@ -1,0 +1,9 @@
+{
+  "source": "decomp/src/Game/Player/Mario.cpp",
+  "baseline_sha256": "94a11001e7185e8ff22d4cad6128639411a89b17a0df50dd38001c9093fd13a5",
+  "restored_sha256": "1eae0ff29ca5a8b620180e9e84b183ff94856d50a5123f719b9fbd329030df71",
+  "edits": [
+    "normalizeOrZero(&front) == nullptr -> == false",
+    "normalizeOrZero(&headVec) != nullptr -> != false"
+  ]
+}

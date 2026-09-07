@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "JSystem/JKernel/JKRArchive.hpp"
 #include "JSystem/JKernel/JKRFileFinder.hpp"
 
@@ -15,7 +16,7 @@ namespace {
 
     void require_range(Bytes data, std::size_t offset, std::size_t size) {
         if (offset > data.size() || size > data.size() - offset) {
-            throw std::invalid_argument("JKR archive metadata extends outside its retained resource");
+            aurora::throw_host_exception<std::invalid_argument>("JKR archive metadata extends outside its retained resource");
         }
     }
 
@@ -56,16 +57,16 @@ void JKRArchive::attach_archive(const smgpc::resource::RarcArchive* archive) {
     require_range(bytes, files, std::size_t(mNativeInfo.mNrFiles) * 0x14);
     require_range(bytes, strings, mNativeInfo.mStringTableSize);
     if (mNativeInfo.mNrDirs == 0 || mNativeInfo.mNrFiles > std::numeric_limits<s32>::max()) {
-        throw std::invalid_argument("JKR archive directory/file count cannot be represented");
+        aurora::throw_host_exception<std::invalid_argument>("JKR archive directory/file count cannot be represented");
     }
     mNativeStrings.assign(bytes.begin() + strings, bytes.begin() + strings + mNativeInfo.mStringTableSize);
     const auto validate_name = [&](u32 offset) {
         if (offset >= mNativeStrings.size()) {
-            throw std::invalid_argument("JKR archive name offset is outside its string table");
+            aurora::throw_host_exception<std::invalid_argument>("JKR archive name offset is outside its string table");
         }
         const void* end = std::memchr(mNativeStrings.data() + offset, 0, mNativeStrings.size() - offset);
         if (end == nullptr || static_cast<const char*>(end) - (mNativeStrings.data() + offset) >= 256) {
-            throw std::invalid_argument("JKR archive name is unterminated or exceeds the original lookup buffer");
+            aurora::throw_host_exception<std::invalid_argument>("JKR archive name is unterminated or exceeds the original lookup buffer");
         }
     };
     mNativeDirs.reserve(mNativeInfo.mNrDirs);
@@ -77,7 +78,7 @@ void JKRArchive::attach_archive(const smgpc::resource::RarcArchive* archive) {
         validate_name(dir.mNameOffset);
         if (dir.mFirstFileIndex > mNativeInfo.mNrFiles ||
             dir.mNrFiles > mNativeInfo.mNrFiles - dir.mFirstFileIndex) {
-            throw std::invalid_argument("JKR archive directory range is outside its file table");
+            aurora::throw_host_exception<std::invalid_argument>("JKR archive directory range is outside its file table");
         }
         mNativeDirs.push_back(dir);
     }
@@ -96,7 +97,7 @@ void JKRArchive::attach_archive(const smgpc::resource::RarcArchive* archive) {
         validate_name(file.mNameOffset);
         if ((file.mFlag & FILE_FLAG_FOLDER) != 0 && file.mDirIndex >= mNativeInfo.mNrDirs &&
             std::strcmp(mNativeStrings.data() + file.mNameOffset, "..") != 0) {
-            throw std::invalid_argument("JKR archive child directory is outside its directory table");
+            aurora::throw_host_exception<std::invalid_argument>("JKR archive child directory is outside its directory table");
         }
         mNativeFiles.push_back(file);
     }

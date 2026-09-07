@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "resource/JMapResource.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include <algorithm>
@@ -78,7 +79,7 @@ namespace smgpc::resource {
                                                std::shared_ptr<const void> source_owner) {
         compat::JkrHostAllocationScope host;
         if (bytes.empty() || !source_owner)
-            throw std::invalid_argument("Deferred JMap source requires a nonempty retained byte range");
+            aurora::throw_host_exception<std::invalid_argument>("Deferred JMap source requires a nonempty retained byte range");
         auto source = std::make_shared<DeferredJMap>();
         source->source_owner = std::move(source_owner);
         source->bytes = bytes;
@@ -91,14 +92,14 @@ namespace smgpc::resource {
             if (!existing || existing->source_owner.get() != source->source_owner.get() ||
                 existing->source_owner.owner_before(source->source_owner) ||
                 source->source_owner.owner_before(existing->source_owner) || existing->bytes.size() != bytes.size())
-                throw std::logic_error("JMap source identity belongs to a different retained byte range");
+                aurora::throw_host_exception<std::logic_error>("JMap source identity belongs to a different retained byte range");
             source = std::move(existing);
             generation = found->second.generation;
             ++found->second.references;
         } else {
             generation = owners.next_generation++;
             if (generation == 0)
-                throw std::overflow_error("JMap registration identity exhausted");
+                aurora::throw_host_exception<std::overflow_error>("JMap registration identity exhausted");
             owners.tables.emplace(bytes.data(), Registry::Entry{source, {}, generation, 1, source});
         }
         try {
@@ -117,26 +118,26 @@ namespace smgpc::resource {
         const std::lock_guard lock(owners.mutex);
         _storage->generation = owners.next_generation++;
         if (_storage->generation == 0)
-            throw std::overflow_error("JMap registration identity exhausted");
+            aurora::throw_host_exception<std::overflow_error>("JMap registration identity exhausted");
         owners.tables.emplace(_storage->bytes.data(), Registry::Entry{_storage, _storage->table, _storage->generation, 1});
     }
     JMapSourceRegistration JMapResource::register_source(std::span<const std::uint8_t> alias) {
         compat::JkrHostAllocationScope host;
         if (alias.size() != _storage->bytes.size() || !std::equal(alias.begin(), alias.end(), _storage->bytes.begin()))
-            throw std::invalid_argument("JMap alias does not match the complete retained source");
+            aurora::throw_host_exception<std::invalid_argument>("JMap alias does not match the complete retained source");
         auto &owners = registry();
         const std::lock_guard lock(owners.mutex);
         const auto found = owners.tables.find(alias.data());
         std::uint64_t generation;
         if (found != owners.tables.end()) {
             if (found->second.owner.lock().get() != _storage.get())
-                throw std::logic_error("JMap source identity belongs to a different resource owner");
+                aurora::throw_host_exception<std::logic_error>("JMap source identity belongs to a different resource owner");
             generation = found->second.generation;
             ++found->second.references;
         } else {
             generation = owners.next_generation++;
             if (generation == 0)
-                throw std::overflow_error("JMap registration identity exhausted");
+                aurora::throw_host_exception<std::overflow_error>("JMap registration identity exhausted");
             owners.tables.emplace(alias.data(), Registry::Entry{_storage, _storage->table, generation, 1});
         }
         try {

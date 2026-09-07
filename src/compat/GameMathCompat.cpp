@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Game/Util/MathUtil.hpp"
 #include "JSystem/JMath/JMATrigonometric.hpp"
 #include <aurora/ppc_math.hpp>
@@ -326,7 +327,7 @@ namespace MR {
             min > std::numeric_limits<s32>::max() ||
             max < std::numeric_limits<s32>::min() ||
             max > std::numeric_limits<s32>::max()) {
-            throw std::out_of_range("A retail long random range must fit in s32.");
+            aurora::throw_host_exception<std::out_of_range>("A retail long random range must fit in s32.");
         }
 
         return getRandom(static_cast<s32>(min), static_cast<s32>(max));

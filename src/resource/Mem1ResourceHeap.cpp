@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Mem1ResourceHeap.hpp"
 
 #include <dolphin/os.h>
@@ -19,10 +20,10 @@ namespace smgpc::resource {
     Mem1ResourceHeap::Mem1ResourceHeap(std::size_t byte_budget) {
         std::lock_guard lock(startup_mutex);
         if (AuroraOSIsAllocatorInitialized()) {
-            throw std::logic_error("Mapped resource heap cannot replace an initialized OS allocator");
+            aurora::throw_host_exception<std::logic_error>("Mapped resource heap cannot replace an initialized OS allocator");
         }
         if (byte_budget < 128 || byte_budget > std::numeric_limits<std::int32_t>::max() - 31U) {
-            throw std::invalid_argument("Mapped resource heap budget is outside the OS heap range");
+            aurora::throw_host_exception<std::invalid_argument>("Mapped resource heap budget is outside the OS heap range");
         }
         const auto low = reinterpret_cast<std::uintptr_t>(OSGetArenaLo());
         const auto high = reinterpret_cast<std::uintptr_t>(OSGetArenaHi());
@@ -30,7 +31,7 @@ namespace smgpc::resource {
         _reserved = (byte_budget + 31U) & ~std::size_t{31};
         if (OSBaseAddress == 0 || low < OSBaseAddress || high < low ||
             high - OSBaseAddress > OSGetPhysicalMemSize()) {
-            throw std::logic_error("Mapped resource heap requires completed OSInit and a valid MEM1 arena");
+            aurora::throw_host_exception<std::logic_error>("Mapped resource heap requires completed OSInit and a valid MEM1 arena");
         }
         if (aligned_high < low || _reserved > aligned_high - low) {
             throw std::bad_alloc();
@@ -39,7 +40,7 @@ namespace smgpc::resource {
         auto* end = reinterpret_cast<void*>(aligned_high);
         auto* heap_start = OSInitAlloc(region, end, 1);
         if (heap_start == nullptr || (_handle = OSCreateHeap(heap_start, end)) < 0) {
-            throw std::runtime_error("Failed to initialize the reserved mapped resource heap");
+            aurora::throw_host_exception<std::runtime_error>("Failed to initialize the reserved mapped resource heap");
         }
     }
 
@@ -51,7 +52,7 @@ namespace smgpc::resource {
 
     Mem1ResourceHeap::Allocation Mem1ResourceHeap::allocate(std::size_t size) {
         if (size == 0 || size > std::numeric_limits<std::int32_t>::max() - 63U) {
-            throw std::length_error("Mapped resource allocation exceeds the OS heap range");
+            aurora::throw_host_exception<std::length_error>("Mapped resource allocation exceeds the OS heap range");
         }
         auto owner = shared_from_this();
         std::lock_guard lock(_mutex);
@@ -71,7 +72,7 @@ namespace smgpc::resource {
     std::size_t Mem1ResourceHeap::available_bytes() const {
         std::lock_guard lock(_mutex);
         const auto bytes = OSCheckHeap(_handle);
-        if (bytes < 0) throw std::runtime_error("Mapped resource heap is invalid");
+        if (bytes < 0) aurora::throw_host_exception<std::runtime_error>("Mapped resource heap is invalid");
         return static_cast<std::size_t>(bytes);
     }
 

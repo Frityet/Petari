@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "scene/NameObjLifecycleService.hpp"
 
 #include "Game/LiveActor/LiveActor.hpp"
@@ -53,7 +54,7 @@ namespace smgpc::scene {
 
         void require_valid_placement_context(const NameObjPlacementContext &placement) {
             if (!placement.iter.isValid() || placement.row != placement.iter.mIndex) {
-                throw std::logic_error("NameObj placement context does not own a valid retail JMap row.");
+                aurora::throw_host_exception<std::logic_error>("NameObj placement context does not own a valid retail JMap row.");
             }
         }
 
@@ -98,7 +99,7 @@ namespace smgpc::scene {
             require_valid_placement_context(*placement);
         }
         if (shape_model_no == -1) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "A model-changing NameObj preload requires ShapeModelNo.");
         }
 
@@ -109,7 +110,7 @@ namespace smgpc::scene {
             identifier.c_str(), shape_model_no);
         if (written < 0 ||
             static_cast<std::size_t>(written) >= model_name.size()) {
-            throw std::runtime_error(
+            aurora::throw_host_exception<std::runtime_error>(
                 "Model-changing NameObj archive identifier is too long.");
         }
 
@@ -117,7 +118,7 @@ namespace smgpc::scene {
         if (!MR::makeObjectArchiveFileNameFromPrefix(
                 disc_path.data(), disc_path.size(), model_name.data(),
                 true)) {
-            throw std::runtime_error(
+            aurora::throw_host_exception<std::runtime_error>(
                 "Required model-changing NameObj archive is unavailable: " +
                 std::string(model_name.data()));
         }

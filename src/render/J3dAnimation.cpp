@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "J3dAnimation.hpp"
 #include "resource/J3dTransformAnimation.hpp"
 
@@ -17,7 +18,7 @@ namespace smgpc::render {
 
         [[nodiscard]] std::uint16_t read_be16(std::span<const std::uint8_t> data, std::size_t offset) {
             if (offset + 2U > data.size()) {
-                throw std::runtime_error("J3D animation read past end of buffer");
+                aurora::throw_host_exception<std::runtime_error>("J3D animation read past end of buffer");
             }
 
             return static_cast<std::uint16_t>((static_cast<std::uint16_t>(data[offset]) << 8U) | static_cast<std::uint16_t>(data[offset + 1U]));
@@ -29,7 +30,7 @@ namespace smgpc::render {
 
         [[nodiscard]] std::uint32_t read_be32(std::span<const std::uint8_t> data, std::size_t offset) {
             if (offset + 4U > data.size()) {
-                throw std::runtime_error("J3D animation read past end of buffer");
+                aurora::throw_host_exception<std::runtime_error>("J3D animation read past end of buffer");
             }
 
             return (static_cast<std::uint32_t>(data[offset]) << 24U) | (static_cast<std::uint32_t>(data[offset + 1U]) << 16U) |
@@ -42,7 +43,7 @@ namespace smgpc::render {
 
         [[nodiscard]] std::string read_tag(std::span<const std::uint8_t> data, std::size_t offset) {
             if (offset + 4U > data.size()) {
-                throw std::runtime_error("J3D animation tag read past end of buffer");
+                aurora::throw_host_exception<std::runtime_error>("J3D animation tag read past end of buffer");
             }
 
             return std::string(reinterpret_cast<const char *>(data.data() + offset), 4U);
@@ -50,7 +51,7 @@ namespace smgpc::render {
 
         [[nodiscard]] std::string read_string(std::span<const std::uint8_t> data, std::size_t offset) {
             if (offset >= data.size()) {
-                throw std::runtime_error("J3D animation string offset outside buffer");
+                aurora::throw_host_exception<std::runtime_error>("J3D animation string offset outside buffer");
             }
 
             auto end = offset;
@@ -58,7 +59,7 @@ namespace smgpc::render {
                 ++end;
             }
             if (end == data.size()) {
-                throw std::runtime_error("J3D animation string is not null terminated");
+                aurora::throw_host_exception<std::runtime_error>("J3D animation string is not null terminated");
             }
 
             return std::string(reinterpret_cast<const char *>(data.data() + offset), end - offset);
@@ -72,7 +73,7 @@ namespace smgpc::render {
 
             const auto table_offset = section_offset + table_relative_offset;
             if (table_offset + 4U > data.size()) {
-                throw std::runtime_error("J3D animation name table outside buffer");
+                aurora::throw_host_exception<std::runtime_error>("J3D animation name table outside buffer");
             }
 
             const auto count = read_be16(data, table_offset);
@@ -136,7 +137,7 @@ namespace smgpc::render {
         template <typename T>
         [[nodiscard]] float value_at(const std::vector<T> &values, std::size_t index) {
             if (index >= values.size()) {
-                throw std::runtime_error("J3D animation keyframe value outside value table");
+                aurora::throw_host_exception<std::runtime_error>("J3D animation keyframe value outside value table");
             }
 
             return static_cast<float>(values[index]);
@@ -294,7 +295,7 @@ namespace smgpc::render {
 
         [[nodiscard]] J3dBrkAnimationSummary parse_trk1(std::span<const std::uint8_t> data, std::size_t section_offset) {
             if (section_offset + 0x58U > data.size()) {
-                throw std::runtime_error("TRK1 header is outside its section");
+                aurora::throw_host_exception<std::runtime_error>("TRK1 header is outside its section");
             }
 
             auto summary = J3dBrkAnimationSummary {
@@ -333,7 +334,7 @@ namespace smgpc::render {
                         continue;
                     }
                     if (relative == 0U) {
-                        throw std::runtime_error(
+                        aurora::throw_host_exception<std::runtime_error>(
                             "TRK1 value table is missing for a nonempty channel");
                     }
                     destination[channel] = read_s16_values(
@@ -351,19 +352,19 @@ namespace smgpc::render {
                 }
                 if (table.max_frame == 1U) {
                     if (table.offset >= values.size()) {
-                        throw std::runtime_error(
+                        aurora::throw_host_exception<std::runtime_error>(
                             "TRK1 single-value channel is outside its value table");
                     }
                     return;
                 }
                 if (table.type > 1U) {
-                    throw std::runtime_error("TRK1 uses an unsupported tangent type");
+                    aurora::throw_host_exception<std::runtime_error>("TRK1 uses an unsupported tangent type");
                 }
                 const auto stride = table.type == 0U ? 3U : 4U;
                 const auto required = static_cast<std::size_t>(table.offset) +
                                       static_cast<std::size_t>(table.max_frame) * stride;
                 if (required > values.size()) {
-                    throw std::runtime_error(
+                    aurora::throw_host_exception<std::runtime_error>(
                         "TRK1 keyframe channel is outside its value table");
                 }
             };
@@ -379,12 +380,12 @@ namespace smgpc::render {
                 }
                 if (table_relative == 0U || ids_relative == 0U ||
                     names_relative == 0U) {
-                    throw std::runtime_error("TRK1 track metadata is incomplete");
+                    aurora::throw_host_exception<std::runtime_error>("TRK1 track metadata is incomplete");
                 }
                 const auto names = read_name_table(data, section_offset,
                                                    names_relative);
                 if (names.size() != track_count) {
-                    throw std::runtime_error(
+                    aurora::throw_host_exception<std::runtime_error>(
                         "TRK1 material-name table does not match its track count");
                 }
                 destination.reserve(track_count);
@@ -393,7 +394,7 @@ namespace smgpc::render {
                     const auto track_offset = section_offset + table_relative +
                                               track_index * 0x1cU;
                     if (track_offset + 0x1cU > data.size()) {
-                        throw std::runtime_error(
+                        aurora::throw_host_exception<std::runtime_error>(
                             "TRK1 register track is outside its section");
                     }
                     auto track = J3dBrkAnimationSummary::RegisterTrack{
@@ -405,7 +406,7 @@ namespace smgpc::render {
                     };
                     if (track.material_name.empty() ||
                         track.register_id > max_register) {
-                        throw std::runtime_error(
+                        aurora::throw_host_exception<std::runtime_error>(
                             "TRK1 contains an invalid material/register binding");
                     }
                     for (auto channel = 0U; channel < track.channels.size();
@@ -429,7 +430,7 @@ namespace smgpc::render {
 
         [[nodiscard]] J3dBtpAnimationSummary parse_tpt1(std::span<const std::uint8_t> data, std::size_t section_offset) {
             if (section_offset + 0x20U > data.size()) {
-                throw std::runtime_error("TPT1 header is outside its section");
+                aurora::throw_host_exception<std::runtime_error>("TPT1 header is outside its section");
             }
             auto summary = J3dBtpAnimationSummary {};
             summary.attribute = data[section_offset + 0x08U];
@@ -443,7 +444,7 @@ namespace smgpc::render {
             const auto names_relative = read_be32(data, section_offset + 0x1cU);
             if (summary.material_count == 0U || summary.texture_index_count == 0U || table_relative == 0U ||
                 values_relative == 0U || material_id_relative == 0U || names_relative == 0U) {
-                throw std::runtime_error("TPT1 contains no usable texture-pattern tracks");
+                aurora::throw_host_exception<std::runtime_error>("TPT1 contains no usable texture-pattern tracks");
             }
 
             summary.texture_indices.reserve(summary.texture_index_count);
@@ -453,14 +454,14 @@ namespace smgpc::render {
 
             const auto names = read_name_table(data, section_offset, names_relative);
             if (names.size() != summary.material_count) {
-                throw std::runtime_error("TPT1 material-name table does not match its track count");
+                aurora::throw_host_exception<std::runtime_error>("TPT1 material-name table does not match its track count");
             }
 
             summary.materials.reserve(summary.material_count);
             for (auto material = 0U; material < summary.material_count; ++material) {
                 const auto table_offset = section_offset + table_relative + material * 8U;
                 if (table_offset + 8U > data.size()) {
-                    throw std::runtime_error("TPT1 texture-pattern table is outside its section");
+                    aurora::throw_host_exception<std::runtime_error>("TPT1 texture-pattern table is outside its section");
                 }
                 auto track = J3dBtpMaterialAnimationSummary {
                     .material_name = names[material],
@@ -471,7 +472,7 @@ namespace smgpc::render {
                 };
                 if (track.material_name.empty() || track.texture_slot >= 8U || track.max_frame == 0U ||
                     static_cast<std::size_t>(track.texture_index_offset) + track.max_frame > summary.texture_indices.size()) {
-                    throw std::runtime_error("TPT1 contains an invalid texture-pattern track");
+                    aurora::throw_host_exception<std::runtime_error>("TPT1 contains an invalid texture-pattern track");
                 }
                 summary.materials.push_back(std::move(track));
             }
@@ -483,7 +484,7 @@ namespace smgpc::render {
 
     J3dAnimationSummary inspect_j3d_animation(std::span<const std::uint8_t> animation_data) {
         if (animation_data.size() < 0x28U || read_be32(animation_data, 0U) != J3D1_MAGIC) {
-            throw std::runtime_error("Not a J3D1 animation file");
+            aurora::throw_host_exception<std::runtime_error>("Not a J3D1 animation file");
         }
 
         auto summary = J3dAnimationSummary {};
@@ -503,13 +504,13 @@ namespace smgpc::render {
         auto section_offset = std::size_t {0x20U};
         for (auto block = 0U; block < summary.block_count; ++block) {
             if (section_offset + 8U > animation_data.size()) {
-                throw std::runtime_error("J3D animation section header is outside the file");
+                aurora::throw_host_exception<std::runtime_error>("J3D animation section header is outside the file");
             }
             const auto tag = read_tag(animation_data, section_offset);
             const auto size = read_be32(animation_data, section_offset + 4U);
             if (size < 8U || section_offset >= animation_data.size() ||
                 (block + 1U < summary.block_count && size > animation_data.size() - section_offset)) {
-                throw std::runtime_error("J3D animation section is outside the file");
+                aurora::throw_host_exception<std::runtime_error>("J3D animation section is outside the file");
             }
             const auto available_size = std::min<std::size_t>(size, animation_data.size() - section_offset);
             summary.sections.push_back(J3dAnimationSectionInfo {
@@ -699,7 +700,7 @@ namespace smgpc::render {
         float raw_frame) {
         if (track_index >= brk.color_tracks.size() ||
             !std::isfinite(raw_frame)) {
-            throw std::runtime_error("TRK1 color-track evaluation is invalid");
+            aurora::throw_host_exception<std::runtime_error>("TRK1 color-track evaluation is invalid");
         }
 
         const auto& track = brk.color_tracks[track_index];
@@ -724,7 +725,7 @@ namespace smgpc::render {
         float raw_frame) {
         if (track_index >= brk.konst_tracks.size() ||
             !std::isfinite(raw_frame)) {
-            throw std::runtime_error("TRK1 konst-track evaluation is invalid");
+            aurora::throw_host_exception<std::runtime_error>("TRK1 konst-track evaluation is invalid");
         }
 
         const auto& track = brk.konst_tracks[track_index];

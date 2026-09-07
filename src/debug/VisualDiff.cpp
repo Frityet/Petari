@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include <spng.h>
 
 #include <algorithm>
@@ -44,20 +45,20 @@ void print_usage(std::ostream &out) {
 [[nodiscard]] std::vector< std::uint8_t > read_file(const std::filesystem::path &path) {
     auto file = std::ifstream(path, std::ios::binary);
     if (!file) {
-        throw std::runtime_error("cannot open " + path.string());
+        aurora::throw_host_exception<std::runtime_error>("cannot open " + path.string());
     }
 
     file.seekg(0, std::ios::end);
     const auto size = file.tellg();
     if (size < 0) {
-        throw std::runtime_error("cannot determine size of " + path.string());
+        aurora::throw_host_exception<std::runtime_error>("cannot determine size of " + path.string());
     }
 
     auto bytes = std::vector< std::uint8_t >(static_cast< std::size_t >(size));
     file.seekg(0, std::ios::beg);
     file.read(reinterpret_cast< char * >(bytes.data()), static_cast< std::streamsize >(bytes.size()));
     if (!file && !bytes.empty()) {
-        throw std::runtime_error("failed to read " + path.string());
+        aurora::throw_host_exception<std::runtime_error>("failed to read " + path.string());
     }
 
     return bytes;
@@ -73,21 +74,21 @@ void free_spng_ctx(spng_ctx *ctx) {
     const auto bytes = read_file(path);
     auto ctx = std::unique_ptr< spng_ctx, decltype(&free_spng_ctx) >(spng_ctx_new(0), free_spng_ctx);
     if (ctx == nullptr) {
-        throw std::runtime_error("failed to allocate PNG decoder");
+        aurora::throw_host_exception<std::runtime_error>("failed to allocate PNG decoder");
     }
 
     if (spng_set_png_buffer(ctx.get(), bytes.data(), bytes.size()) != 0) {
-        throw std::runtime_error("failed to set PNG buffer for " + path.string());
+        aurora::throw_host_exception<std::runtime_error>("failed to set PNG buffer for " + path.string());
     }
 
     auto ihdr = spng_ihdr {};
     if (spng_get_ihdr(ctx.get(), &ihdr) != 0) {
-        throw std::runtime_error("failed to read PNG header from " + path.string());
+        aurora::throw_host_exception<std::runtime_error>("failed to read PNG header from " + path.string());
     }
 
     auto decoded_size = std::size_t {};
     if (spng_decoded_image_size(ctx.get(), SPNG_FMT_RGBA8, &decoded_size) != 0) {
-        throw std::runtime_error("failed to determine decoded PNG size for " + path.string());
+        aurora::throw_host_exception<std::runtime_error>("failed to determine decoded PNG size for " + path.string());
     }
 
     auto image = Image {
@@ -97,7 +98,7 @@ void free_spng_ctx(spng_ctx *ctx) {
     };
 
     if (spng_decode_image(ctx.get(), image.rgba.data(), image.rgba.size(), SPNG_FMT_RGBA8, SPNG_DECODE_TRNS) != 0) {
-        throw std::runtime_error("failed to decode PNG " + path.string());
+        aurora::throw_host_exception<std::runtime_error>("failed to decode PNG " + path.string());
     }
 
     return image;
@@ -105,17 +106,17 @@ void free_spng_ctx(spng_ctx *ctx) {
 
 [[nodiscard]] std::uint32_t parse_u32(std::string_view text, std::string_view field_name) {
     if (text.empty()) {
-        throw std::runtime_error("empty crop " + std::string(field_name));
+        aurora::throw_host_exception<std::runtime_error>("empty crop " + std::string(field_name));
     }
 
     auto value = std::uint64_t {};
     for (const auto ch : text) {
         if (ch < '0' || ch > '9') {
-            throw std::runtime_error("invalid crop " + std::string(field_name) + ": " + std::string(text));
+            aurora::throw_host_exception<std::runtime_error>("invalid crop " + std::string(field_name) + ": " + std::string(text));
         }
         value = value * 10U + static_cast< std::uint64_t >(ch - '0');
         if (value > std::numeric_limits< std::uint32_t >::max()) {
-            throw std::runtime_error("crop " + std::string(field_name) + " is too large");
+            aurora::throw_host_exception<std::runtime_error>("crop " + std::string(field_name) + " is too large");
         }
     }
 
@@ -124,14 +125,14 @@ void free_spng_ctx(spng_ctx *ctx) {
 
 [[nodiscard]] double parse_double(std::string_view text, std::string_view field_name) {
     if (text.empty()) {
-        throw std::runtime_error("empty " + std::string(field_name));
+        aurora::throw_host_exception<std::runtime_error>("empty " + std::string(field_name));
     }
 
     const auto value_text = std::string(text);
     std::size_t parsed = 0U;
     const auto value = std::stod(value_text, &parsed);
     if (parsed != value_text.size() || !std::isfinite(value) || value < 0.0) {
-        throw std::runtime_error("invalid " + std::string(field_name) + ": " + value_text);
+        aurora::throw_host_exception<std::runtime_error>("invalid " + std::string(field_name) + ": " + value_text);
     }
 
     return value;
@@ -150,7 +151,7 @@ void free_spng_ctx(spng_ctx *ctx) {
     }
 
     if (fields.size() != 4U) {
-        throw std::runtime_error("crop must be x,y,w,h");
+        aurora::throw_host_exception<std::runtime_error>("crop must be x,y,w,h");
     }
 
     auto crop = Crop {
@@ -161,7 +162,7 @@ void free_spng_ctx(spng_ctx *ctx) {
     };
 
     if (crop.width == 0U || crop.height == 0U) {
-        throw std::runtime_error("crop width and height must be non-zero");
+        aurora::throw_host_exception<std::runtime_error>("crop width and height must be non-zero");
     }
 
     return crop;
@@ -169,7 +170,7 @@ void free_spng_ctx(spng_ctx *ctx) {
 
 void validate_crop(const Crop &crop, const Image &image) {
     if (crop.x > image.width || crop.y > image.height || crop.width > image.width - crop.x || crop.height > image.height - crop.y) {
-        throw std::runtime_error("crop is outside image bounds");
+        aurora::throw_host_exception<std::runtime_error>("crop is outside image bounds");
     }
 }
 
@@ -244,7 +245,7 @@ int main(int argc, char **argv) {
             }
             if (arg == "--crop") {
                 if (i + 1 >= argc) {
-                    throw std::runtime_error("--crop requires x,y,w,h");
+                    aurora::throw_host_exception<std::runtime_error>("--crop requires x,y,w,h");
                 }
                 crop = parse_crop(argv[++i]);
                 continue;
@@ -255,14 +256,14 @@ int main(int argc, char **argv) {
             }
             if (arg == "--max-full-normalized-rms") {
                 if (i + 1 >= argc) {
-                    throw std::runtime_error("--max-full-normalized-rms requires a value");
+                    aurora::throw_host_exception<std::runtime_error>("--max-full-normalized-rms requires a value");
                 }
                 max_full_normalized_rms = parse_double(argv[++i], "full normalized RMS threshold");
                 continue;
             }
             if (arg == "--max-crop-normalized-rms") {
                 if (i + 1 >= argc) {
-                    throw std::runtime_error("--max-crop-normalized-rms requires a value");
+                    aurora::throw_host_exception<std::runtime_error>("--max-crop-normalized-rms requires a value");
                 }
                 max_crop_normalized_rms = parse_double(argv[++i], "crop normalized RMS threshold");
                 continue;
@@ -286,7 +287,7 @@ int main(int argc, char **argv) {
         auto applied_crop_first = false;
         if (crop_first) {
             if (!crop.has_value()) {
-                throw std::runtime_error("--crop-first requires --crop x,y,w,h");
+                aurora::throw_host_exception<std::runtime_error>("--crop-first requires --crop x,y,w,h");
             }
             expected = crop_image(expected, *crop);
             actual = crop_image(actual, *crop);
@@ -297,7 +298,7 @@ int main(int argc, char **argv) {
         }
 
         if (expected.width != actual.width || expected.height != actual.height) {
-            throw std::runtime_error("image sizes differ; RMS requires matching dimensions");
+            aurora::throw_host_exception<std::runtime_error>("image sizes differ; RMS requires matching dimensions");
         }
 
         const auto full_crop = Crop {

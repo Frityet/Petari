@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/SystemUtil.hpp"
 
@@ -22,11 +23,11 @@ namespace smgpc::scene {
           _previous_zone_id(_checker != nullptr ? _checker->getCurrentPlacementZoneId() : -1),
           _zone_name(zone_name), _previous(sCurrentPlacementZoneName) {
         if (_checker == nullptr) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "A retail placement lifecycle requires SceneObj_PlacementStateChecker.");
         }
         if (_zone_name.empty()) {
-            throw std::invalid_argument("A placement-zone scope requires a copied zone name.");
+            aurora::throw_host_exception<std::invalid_argument>("A placement-zone scope requires a copied zone name.");
         }
         _checker->setCurrentPlacementZoneId(zone_id);
         sCurrentPlacementZoneName = &_zone_name;
@@ -59,7 +60,7 @@ namespace MR {
     void setCurrentPlacementZoneId(s32 zoneId) {
         auto *checker = getPlacementStateChecker();
         if (checker == nullptr) {
-            throw std::logic_error("Setting the current placement zone requires SceneObj_PlacementStateChecker.");
+            aurora::throw_host_exception<std::logic_error>("Setting the current placement zone requires SceneObj_PlacementStateChecker.");
         }
         checker->setCurrentPlacementZoneId(zoneId);
     }
@@ -67,7 +68,7 @@ namespace MR {
     void clearCurrentPlacementZoneId() {
         auto *checker = getPlacementStateChecker();
         if (checker == nullptr) {
-            throw std::logic_error("Clearing the current placement zone requires SceneObj_PlacementStateChecker.");
+            aurora::throw_host_exception<std::logic_error>("Clearing the current placement zone requires SceneObj_PlacementStateChecker.");
         }
         checker->clearCurrentPlacementZoneId();
     }
@@ -75,7 +76,7 @@ namespace MR {
     s32 getCurrentPlacementZoneId() {
         auto *checker = getPlacementStateChecker();
         if (checker == nullptr) {
-            throw std::logic_error("Reading the current placement zone requires SceneObj_PlacementStateChecker.");
+            aurora::throw_host_exception<std::logic_error>("Reading the current placement zone requires SceneObj_PlacementStateChecker.");
         }
         return checker->getCurrentPlacementZoneId();
     }
@@ -83,7 +84,7 @@ namespace MR {
     const char* getCurrentPlacementZoneName() {
         const auto *zone_name = smgpc::scene::try_current_placement_zone_name();
         if (zone_name == nullptr) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Reading the current placement-zone name requires an active placement lifecycle.");
         }
         return zone_name;
@@ -118,7 +119,7 @@ namespace MR {
     void getCameraRailInfo(JMapInfoIter *pPathIter, const JMapInfo **pPointInfo, s32, s32) {
         static_cast<void>(pPathIter);
         static_cast<void>(pPointInfo);
-        throw std::logic_error("Camera rail lookup is unavailable without parsed stage camera rail data.");
+        aurora::throw_host_exception<std::logic_error>("Camera rail lookup is unavailable without parsed stage camera rail data.");
     }
 
     bool isDisplayEncouragePal60Window() {

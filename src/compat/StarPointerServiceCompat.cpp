@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Game/Util/StarPointerUtil.hpp"
 #include "Game/Screen/StarPointerTarget.hpp"
 #include "Game/Util/JointUtil.hpp"
@@ -138,7 +139,7 @@ namespace MR {
     }
 
     void startStarPointerModeDemoMarioDeath(void*) {
-        throw std::logic_error("Mario-death star-pointer mode is outside the PC walking-demo surface.");
+        aurora::throw_host_exception<std::logic_error>("Mario-death star-pointer mode is outside the PC walking-demo surface.");
     }
 
     void requestStarPointerModeSaveLoad(void*) {

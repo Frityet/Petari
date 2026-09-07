@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Game/Util/GamePadUtil.hpp"
 #include "Game/GameAudio/AudStageBgmWrap.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
@@ -16,7 +17,7 @@ namespace {
     require_audio_runtime(const char *operation) {
         auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
         if (runtime == nullptr) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 std::string(operation) +
                 " requires an active RuntimeContext audio backend");
         }
@@ -26,7 +27,7 @@ namespace {
     [[nodiscard]] std::string_view require_sound_name(
         const char *name, const char *operation) {
         if (name == nullptr || name[0] == '\0') {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 std::string(operation) + " requires a retail sound name");
         }
         return name;
@@ -86,7 +87,7 @@ namespace MR {
     JAISoundHandle *startSound(const LiveActor *actor, const char *pName,
                                s32 parameter1, s32 parameter2) {
         if (actor == nullptr) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "Actor sound playback requires an actor identity");
         }
         const auto name = require_sound_name(pName, "Actor sound playback");
@@ -102,7 +103,7 @@ namespace MR {
                                     s32 parameter1, s32 parameter2,
                                     s32 parameter3) {
         if (actor == nullptr) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "Actor level-sound playback requires an actor identity");
         }
         const auto name =
@@ -177,7 +178,7 @@ namespace MR {
         }
         const auto current_id = runtime->j_audio_playback().stage_bgm_id();
         if (!current_id.has_value()) {
-            throw std::logic_error("An active stage BGM is missing its resolved raw ID.");
+            aurora::throw_host_exception<std::logic_error>("An active stage BGM is missing its resolved raw ID.");
         }
         return *current_id == id;
     }
@@ -194,7 +195,7 @@ namespace MR {
         }
         const auto wanted = runtime->j_audio_playback().find_sound_id(pName);
         if (!wanted.has_value()) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "Stage-BGM name is absent from the retail JAudio table: " +
                 std::string(pName));
         }
@@ -249,7 +250,7 @@ namespace MR {
     void startCurrentStageBGM() {
         auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
         if (runtime == nullptr) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Current-stage BGM playback requires an active RuntimeContext");
         }
         const auto &session = smgpc::compat::require_active_stage_session();

@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "compat/GameDataHolderCompat.hpp"
 
 #include <algorithm>
@@ -36,7 +37,7 @@ struct HolderState {
 std::map<const GameDataHolder*, HolderState> sHolderStates;
 
 [[noreturn]] void unavailable(std::string_view operation) {
-    throw std::logic_error("GameDataHolder operation is unavailable without retail backing data: " +
+    aurora::throw_host_exception<std::logic_error>("GameDataHolder operation is unavailable without retail backing data: " +
                            std::string(operation));
 }
 
@@ -71,14 +72,14 @@ void initialize_galaxies(const HolderState& state) {
         const auto accessor = GalaxyStatusAccessor(parser->getScenarioData(index));
         const auto count = accessor.getPowerStarNum();
         if (count < 0 || count > 8) {
-            throw std::out_of_range("Galaxy Power Star count exceeds the original eight-bit storage");
+            aurora::throw_host_exception<std::out_of_range>("Galaxy Power Star count exceeds the original eight-bit storage");
         }
         if (count == 0) {
             continue;
         }
         auto [entry, inserted] = galaxies.try_emplace(accessor.getName(), accessor);
         if (!inserted) {
-            throw std::logic_error("The actual scenario catalog contains a duplicate galaxy name");
+            aurora::throw_host_exception<std::logic_error>("The actual scenario catalog contains a duplicate galaxy name");
         }
         // The holder can outlive the process catalog and every scene heap.
         entry->second.mGalaxyName = entry->first.c_str();
@@ -89,26 +90,26 @@ void initialize_galaxies(const HolderState& state) {
 
 GameDataSomeGalaxyStorage& require_galaxy(const GameDataHolder& holder, const char* name) {
     if (name == nullptr || *name == '\0') {
-        throw std::invalid_argument("Power Star storage requires a galaxy name");
+        aurora::throw_host_exception<std::invalid_argument>("Power Star storage requires a galaxy name");
     }
     const auto& state = require_state(holder);
     initialize_galaxies(state);
     const auto entry = state.galaxies.find(name);
     if (entry == state.galaxies.end()) {
-        throw std::invalid_argument("Galaxy has no authored Power Star storage: " + std::string(name));
+        aurora::throw_host_exception<std::invalid_argument>("Galaxy has no authored Power Star storage: " + std::string(name));
     }
     return entry->second;
 }
 
 void require_scenario_bit(s32 scenario_num) {
     if (scenario_num < 1 || scenario_num > 8) {
-        throw std::out_of_range("Power Star scenario is outside the original eight-bit storage");
+        aurora::throw_host_exception<std::out_of_range>("Power Star scenario is outside the original eight-bit storage");
     }
 }
 
 bool can_turn_on(const GameDataHolder& holder, const GameEventFlag& flag, unsigned depth) {
     if (depth > 32U) {
-        throw std::logic_error("Retail game event dependency graph exceeded its recursion bound");
+        aurora::throw_host_exception<std::logic_error>("Retail game event dependency graph exceeded its recursion bound");
     }
     switch (flag.mType) {
     case GameEventFlag::Type_0:
@@ -125,19 +126,19 @@ bool can_turn_on(const GameDataHolder& holder, const GameEventFlag& flag, unsign
                (flag.mRequirement2 == nullptr || holder.isOnGameEventFlag(flag.mRequirement2));
     case GameEventFlag::Type_5:
         if (flag.mEventValueName == nullptr) {
-            throw std::logic_error("Retail story-dependent flag has no story event");
+            aurora::throw_host_exception<std::logic_error>("Retail story-dependent flag has no story event");
         }
         return holder.isPassedStoryEvent(flag.mEventValueName);
     case GameEventFlag::Type_EventValueIsZero:
         if (flag.mRequirement == nullptr || flag.mEventValueName == nullptr) {
-            throw std::logic_error("Retail event-value flag has incomplete requirements");
+            aurora::throw_host_exception<std::logic_error>("Retail event-value flag has incomplete requirements");
         }
         return holder.isOnGameEventFlag(flag.mRequirement) && holder.getGameEventValue(flag.mEventValueName) == 0;
     case GameEventFlag::Type_10:
         return holder.isCompleteMarioAndLuigi();
     case GameEventFlag::Type_11:
         if (flag.mEventValueName == nullptr) {
-            throw std::logic_error("Retail synchronized flag has no requirement");
+            aurora::throw_host_exception<std::logic_error>("Retail synchronized flag has no requirement");
         }
         return holder.isOnGameEventFlag(flag.mEventValueName);
     case GameEventFlag::Type_GalaxyOpenStar:
@@ -166,14 +167,14 @@ bool GameDataHolder::isDataMario() const {
 
 bool GameDataHolder::canOnGameEventFlag(const char* name) const {
     if (name == nullptr) {
-        throw std::invalid_argument("Game event flag query requires a name");
+        aurora::throw_host_exception<std::invalid_argument>("Game event flag query requires a name");
     }
     return can_turn_on(*this, smgpc::compat::game_data::require_retail_flag(name), 0U);
 }
 
 bool GameDataHolder::isOnGameEventFlag(const char* name) const {
     if (name == nullptr) {
-        throw std::invalid_argument("Game event flag query requires a name");
+        aurora::throw_host_exception<std::invalid_argument>("Game event flag query requires a name");
     }
     const auto& flag = smgpc::compat::game_data::require_retail_flag(name);
     if ((flag.mSaveFlag & 0x1U) != 0U) {
@@ -186,7 +187,7 @@ bool GameDataHolder::isOnGameEventFlag(const char* name) const {
 
 void GameDataHolder::tryOnGameEventFlag(const char* name) {
     if (name == nullptr) {
-        throw std::invalid_argument("Game event flag write requires a name");
+        aurora::throw_host_exception<std::invalid_argument>("Game event flag write requires a name");
     }
     const auto& flag = smgpc::compat::game_data::require_retail_flag(name);
     if (!can_turn_on(*this, flag, 0U) || (flag.mSaveFlag & 0x1U) != 0U) {
@@ -208,7 +209,7 @@ void GameDataHolder::tryOnGameEventFlag(const char* name) {
 
 s32 GameDataHolder::getGameEventValue(const char* name) const {
     if (name == nullptr) {
-        throw std::invalid_argument("Game event value query requires a name");
+        aurora::throw_host_exception<std::invalid_argument>("Game event value query requires a name");
     }
     const auto& entry = smgpc::compat::game_data::require_retail_event_value(name);
     const auto& values = require_state(*this).event_values;
@@ -218,7 +219,7 @@ s32 GameDataHolder::getGameEventValue(const char* name) const {
 
 void GameDataHolder::setGameEventValue(const char* name, u16 value) {
     if (name == nullptr) {
-        throw std::invalid_argument("Game event value write requires a name");
+        aurora::throw_host_exception<std::invalid_argument>("Game event value write requires a name");
     }
     const auto& entry = smgpc::compat::game_data::require_retail_event_value(name);
     require_state(*this).event_values[std::string(entry.name)] = value;
@@ -226,14 +227,14 @@ void GameDataHolder::setGameEventValue(const char* name, u16 value) {
 
 bool GameDataHolder::isOnGameEventValueForBit(const char* name, int bit) const {
     if (bit < 0 || bit >= 16) {
-        throw std::out_of_range("Game event value bit is outside [0, 15]");
+        aurora::throw_host_exception<std::out_of_range>("Game event value bit is outside [0, 15]");
     }
     return (static_cast<u16>(getGameEventValue(name)) & static_cast<u16>(1U << bit)) != 0U;
 }
 
 void GameDataHolder::setGameEventValueForBit(const char* name, int bit, bool is_on) {
     if (bit < 0 || bit >= 16) {
-        throw std::out_of_range("Game event value bit is outside [0, 15]");
+        aurora::throw_host_exception<std::out_of_range>("Game event value bit is outside [0, 15]");
     }
     auto value = static_cast<u16>(getGameEventValue(name));
     const auto mask = static_cast<u16>(1U << bit);
@@ -262,7 +263,7 @@ s32 GameDataHolder::getPictureBookChapterAlreadyRead() const {
 
 void GameDataHolder::setPictureBookChapterAlreadyRead(int value) {
     if (value < 0 || value > 9) {
-        throw std::out_of_range("Picture-book chapter is outside the retail chapter range");
+        aurora::throw_host_exception<std::out_of_range>("Picture-book chapter is outside the retail chapter range");
     }
     setGameEventValue("絵本既読章", static_cast<u16>(value));
 }
@@ -349,7 +350,7 @@ bool GameDataHolder::isCompleteMarioAndLuigi() const {
 
 bool GameDataHolder::isPassedStoryEvent(const char* name) const {
     if (name == nullptr) {
-        throw std::invalid_argument("Story event query requires a name");
+        aurora::throw_host_exception<std::invalid_argument>("Story event query requires a name");
     }
     const auto& event = smgpc::compat::game_data::require_retail_story_event(name);
     return require_state(*this).story_progress >= event.progress;
@@ -357,7 +358,7 @@ bool GameDataHolder::isPassedStoryEvent(const char* name) const {
 
 void GameDataHolder::followStoryEventByName(const char* name) {
     if (name == nullptr) {
-        throw std::invalid_argument("Story event write requires a name");
+        aurora::throw_host_exception<std::invalid_argument>("Story event write requires a name");
     }
     require_state(*this).story_progress = smgpc::compat::game_data::require_retail_story_event(name).progress;
 }
@@ -409,14 +410,14 @@ void copy_holder_state(GameDataHolder& destination, const GameDataHolder& source
 
 void set_holder_name(GameDataHolder& holder, const char* name) {
     if (name == nullptr || *name == '\0') {
-        throw std::invalid_argument("Game data name must not be empty");
+        aurora::throw_host_exception<std::invalid_argument>("Game data name must not be empty");
     }
     std::snprintf(holder.mName, sizeof(holder.mName), "%s", name);
 }
 
 void set_holder_save_counts(GameDataHolder& holder, s32 power_star_num, s32 star_piece_num, s32 player_miss_num) {
     if (power_star_num < 0 || star_piece_num < 0 || player_miss_num < 0) {
-        throw std::invalid_argument("Game data counts must not be negative");
+        aurora::throw_host_exception<std::invalid_argument>("Game data counts must not be negative");
     }
     JkrHostAllocationScope host;
     auto& state = require_state(holder);
@@ -437,7 +438,7 @@ void set_holder_ending_flags(GameDataHolder& holder, bool view_normal_ending, bo
     }
     const auto& stored_flag = require_retail_flag("ViewCompleteEnding");
     if ((stored_flag.mSaveFlag & 0x1U) != 0U) {
-        throw std::logic_error("Retail ViewCompleteEnding unexpectedly became a derived flag");
+        aurora::throw_host_exception<std::logic_error>("Retail ViewCompleteEnding unexpectedly became a derived flag");
     }
     require_state(holder).event_flags[stored_flag.mName] = view_complete_ending;
 }
@@ -448,7 +449,7 @@ void set_holder_event_state(GameDataHolder& holder, const std::map<std::string, 
     for (const auto& [name, value] : flags) {
         const auto& flag = require_retail_flag(name);
         if ((flag.mSaveFlag & 0x1U) != 0U) {
-            throw std::invalid_argument(name + " is derived and cannot be stored as a game event flag");
+            aurora::throw_host_exception<std::invalid_argument>(name + " is derived and cannot be stored as a game event flag");
         }
         checked_flags[name] = value;
     }
@@ -476,7 +477,7 @@ u8 holder_story_progress(const GameDataHolder& holder) {
 
 void set_holder_story_progress(GameDataHolder& holder, u8 progress) {
     if (progress > 60U) {
-        throw std::invalid_argument("Story progress is outside the retail StoryEvent BCSV range");
+        aurora::throw_host_exception<std::invalid_argument>("Story progress is outside the retail StoryEvent BCSV range");
     }
     require_state(holder).story_progress = progress;
 }

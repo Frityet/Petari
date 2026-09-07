@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Game/Util/EventUtil.hpp"
 #include "Game/Util/SystemUtil.hpp"
 #include "compat/StageSessionState.hpp"
@@ -9,14 +10,14 @@ namespace {
     [[nodiscard]] smgpc::compat::StageCometType require_comet_type() {
         const auto &metadata = smgpc::compat::require_active_stage_session().metadata();
         if (!metadata.comet_type.has_value()) {
-            throw std::logic_error("The active scenario has no resolved comet metadata.");
+            aurora::throw_host_exception<std::logic_error>("The active scenario has no resolved comet metadata.");
         }
         return *metadata.comet_type;
     }
 
     [[nodiscard]] bool require_metadata_flag(const std::optional<bool> &flag, std::string_view name) {
         if (!flag.has_value()) {
-            throw std::logic_error("The active scenario has no resolved " + std::string(name) + " metadata.");
+            aurora::throw_host_exception<std::logic_error>("The active scenario has no resolved " + std::string(name) + " metadata.");
         }
         return *flag;
     }

@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "DebugPaths.hpp"
 #include "capture/ScreenshotService.hpp"
 #include "layout/BrfntFont.hpp"
@@ -23,7 +24,7 @@ namespace {
         const auto base = value_text.starts_with("0x") || value_text.starts_with("0X") ? 0 : 16;
         const auto value = std::stoul(value_text, nullptr, base);
         if (value > UINT16_MAX) {
-            throw std::runtime_error("glyph code is out of u16 range: " + value_text);
+            aurora::throw_host_exception<std::runtime_error>("glyph code is out of u16 range: " + value_text);
         }
 
         return static_cast<std::uint16_t>(value);

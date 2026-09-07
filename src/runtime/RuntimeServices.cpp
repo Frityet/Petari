@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Game/Screen/StarPointerTarget.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
@@ -61,7 +62,7 @@ namespace smgpc::runtime {
                 !(pose.fovy_degrees > 0.0F && pose.fovy_degrees < 180.0F) ||
                 !(pose.aspect_ratio > 0.0F) || !(pose.near_clip > 0.0F) ||
                 !(pose.far_clip > pose.near_clip)) {
-                throw std::invalid_argument(
+                aurora::throw_host_exception<std::invalid_argument>(
                     "Stage-start camera ownership requires a finite valid projection pose.");
             }
 
@@ -81,7 +82,7 @@ namespace smgpc::runtime {
             if (!(view_length_squared > 0.000001F) ||
                 !(up_length_squared > 0.000001F) ||
                 !(cross_length_squared > 0.000001F)) {
-                throw std::invalid_argument(
+                aurora::throw_host_exception<std::invalid_argument>(
                     "Stage-start camera ownership requires a non-degenerate view basis.");
             }
         }
@@ -195,7 +196,7 @@ namespace smgpc::runtime {
             const auto file_count = read_save_u32(bytes, 8U, source_byte_order);
             const auto data_size = read_save_u32(bytes, 12U, source_byte_order);
             if (!has_valid_save_data_checksum(bytes, source_byte_order)) {
-                throw std::invalid_argument("Save-data byte-order conversion requires a valid source container");
+                aurora::throw_host_exception<std::invalid_argument>("Save-data byte-order conversion requires a valid source container");
             }
 
             write_save_u32(converted, 4U, version, destination_byte_order);
@@ -217,7 +218,7 @@ namespace smgpc::runtime {
         [[nodiscard]] std::vector<std::uint8_t> retail_save_data_container_for_host(
             std::span<const std::uint8_t> retail_bytes) {
             if (!has_valid_save_data_checksum(retail_bytes, SaveDataByteOrder::BigEndian)) {
-                throw std::invalid_argument("Persisted GameData.bin is not a valid retail big-endian container");
+                aurora::throw_host_exception<std::invalid_argument>("Persisted GameData.bin is not a valid retail big-endian container");
             }
             return convert_save_data_container_byte_order(retail_bytes, SaveDataByteOrder::BigEndian,
                                                           SaveDataByteOrder::LittleEndian);
@@ -226,7 +227,7 @@ namespace smgpc::runtime {
         [[nodiscard]] std::vector<std::uint8_t> host_save_data_container_for_retail(
             std::span<const std::uint8_t> host_bytes) {
             if (!has_valid_save_data_checksum(host_bytes, SaveDataByteOrder::LittleEndian)) {
-                throw std::invalid_argument("Host save buffer is not a valid translated retail container");
+                aurora::throw_host_exception<std::invalid_argument>("Host save buffer is not a valid translated retail container");
             }
             return convert_save_data_container_byte_order(host_bytes, SaveDataByteOrder::LittleEndian,
                                                           SaveDataByteOrder::BigEndian);
@@ -301,20 +302,20 @@ namespace smgpc::runtime {
         [[nodiscard]] std::vector<std::uint8_t> read_binary_file(const std::filesystem::path &path) {
             auto file = std::ifstream(path, std::ios::binary);
             if (!file) {
-                throw std::runtime_error("Cannot open save file " + path.string());
+                aurora::throw_host_exception<std::runtime_error>("Cannot open save file " + path.string());
             }
 
             file.seekg(0, std::ios::end);
             const auto size = file.tellg();
             if (size < 0) {
-                throw std::runtime_error("Cannot determine save file size " + path.string());
+                aurora::throw_host_exception<std::runtime_error>("Cannot determine save file size " + path.string());
             }
 
             auto bytes = std::vector<std::uint8_t>(static_cast<std::size_t>(size));
             file.seekg(0, std::ios::beg);
             file.read(reinterpret_cast<char *>(bytes.data()), static_cast<std::streamsize>(bytes.size()));
             if (!file) {
-                throw std::runtime_error("Cannot read save file " + path.string());
+                aurora::throw_host_exception<std::runtime_error>("Cannot read save file " + path.string());
             }
 
             return bytes;
@@ -324,17 +325,17 @@ namespace smgpc::runtime {
             std::error_code error{};
             std::filesystem::create_directories(path.parent_path(), error);
             if (error) {
-                throw std::runtime_error("Cannot create save directory " + path.parent_path().string());
+                aurora::throw_host_exception<std::runtime_error>("Cannot create save directory " + path.parent_path().string());
             }
 
             auto file = std::ofstream(path, std::ios::binary | std::ios::trunc);
             if (!file) {
-                throw std::runtime_error("Cannot open save file for writing " + path.string());
+                aurora::throw_host_exception<std::runtime_error>("Cannot open save file for writing " + path.string());
             }
 
             file.write(reinterpret_cast<const char *>(bytes.data()), static_cast<std::streamsize>(bytes.size()));
             if (!file) {
-                throw std::runtime_error("Cannot write save file " + path.string());
+                aurora::throw_host_exception<std::runtime_error>("Cannot write save file " + path.string());
             }
         }
 
@@ -422,7 +423,7 @@ namespace smgpc::runtime {
             case smgpc::render::effects::JpcParticlePacketPath::WorldBillboard:
                 return "JpcBillboard3D";
             }
-            throw std::logic_error("Unknown JPC particle packet path");
+            aurora::throw_host_exception<std::logic_error>("Unknown JPC particle packet path");
         }
 
         [[nodiscard]] float effect_billboard_size(const smgpc::render::effects::JpcTextureMetadata &texture, const smgpc::render::effects::ResolvedEffectResource &resource) {
@@ -1155,22 +1156,22 @@ namespace smgpc::runtime {
                                                                     s32 priority) const {
         const auto entry = entry_metadata(disc_path);
         if (!entry.has_value() || entry->is_directory) {
-            throw std::runtime_error("Cannot open DVD file " + std::string(disc_path));
+            aurora::throw_host_exception<std::runtime_error>("Cannot open DVD file " + std::string(disc_path));
         }
         if (offset > entry->length) {
-            throw std::runtime_error("DVD read offset is outside file " + std::string(disc_path));
+            aurora::throw_host_exception<std::runtime_error>("DVD read offset is outside file " + std::string(disc_path));
         }
 
         const auto read_size = std::min(length, entry->length - offset);
         auto bytes = std::vector<std::uint8_t>(read_size);
         auto file_info = DVDFileInfo{};
         if (!DVDOpen(entry->disc_path.c_str(), &file_info)) {
-            throw std::runtime_error("Cannot open DVD file " + entry->disc_path);
+            aurora::throw_host_exception<std::runtime_error>("Cannot open DVD file " + entry->disc_path);
         }
         const auto result = DVDReadPrio(&file_info, bytes.data(), static_cast<s32>(bytes.size()), static_cast<s32>(offset), priority);
         (void)DVDClose(&file_info);
         if (result < 0) {
-            throw std::runtime_error("Cannot read DVD file " + entry->disc_path);
+            aurora::throw_host_exception<std::runtime_error>("Cannot read DVD file " + entry->disc_path);
         }
         bytes.resize(static_cast<std::size_t>(result));
 
@@ -1192,7 +1193,7 @@ namespace smgpc::runtime {
                                                           std::uint64_t delay_frames) {
         const auto entry = entry_metadata(disc_path);
         if (!entry.has_value() || entry->is_directory) {
-            throw std::runtime_error("Cannot queue DVD read for " + std::string(disc_path));
+            aurora::throw_host_exception<std::runtime_error>("Cannot queue DVD read for " + std::string(disc_path));
         }
 
         auto request = DvdAsyncReadRequest{};
@@ -1314,7 +1315,7 @@ namespace smgpc::runtime {
             }
             if (part == "..") {
                 if (parts.empty()) {
-                    throw std::runtime_error("DVD path escapes disc root: " + std::string(disc_path));
+                    aurora::throw_host_exception<std::runtime_error>("DVD path escapes disc root: " + std::string(disc_path));
                 }
                 parts.pop_back();
                 continue;
@@ -1869,7 +1870,7 @@ namespace smgpc::runtime {
     void EffectService::delete_effect(std::string_view actor_name, std::string_view effect_name, const void *host_identity) {
         const auto keeper = registered_keeper(actor_name, host_identity);
         if (!keeper.has_value()) {
-            throw std::logic_error("Effect deletion requires a registered effect keeper.");
+            aurora::throw_host_exception<std::logic_error>("Effect deletion requires a registered effect keeper.");
         }
         std::erase_if(_active_effects, [actor_name, effect_name, host_identity](const auto &active) {
             return effect_host_matches(active, actor_name, host_identity) && active.effect_name == effect_name;
@@ -1889,7 +1890,7 @@ namespace smgpc::runtime {
     void EffectService::delete_all(std::string_view actor_name, const void *host_identity) {
         const auto keeper = registered_keeper(actor_name, host_identity);
         if (!keeper.has_value()) {
-            throw std::logic_error("Effect deletion requires a registered effect keeper.");
+            aurora::throw_host_exception<std::logic_error>("Effect deletion requires a registered effect keeper.");
         }
         std::erase_if(_active_effects, [actor_name, host_identity](const auto &active) {
             return effect_host_matches(active, actor_name, host_identity);
@@ -2527,14 +2528,14 @@ namespace smgpc::runtime {
 
     void StarPointerService::push_mode(const void *requester, StarPointerMode mode) {
         if (requester == nullptr) {
-            throw std::invalid_argument("A star-pointer mode request requires a real requester.");
+            aurora::throw_host_exception<std::invalid_argument>("A star-pointer mode request requires a real requester.");
         }
         if (mode == StarPointerMode::None) {
-            throw std::invalid_argument("A requester cannot push the absent star-pointer mode.");
+            aurora::throw_host_exception<std::invalid_argument>("A requester cannot push the absent star-pointer mode.");
         }
         constexpr auto cRetailRequestCapacity = std::size_t{16U};
         if (_mode_requests.size() >= cRetailRequestCapacity) {
-            throw std::overflow_error("The retail star-pointer mode request table is full.");
+            aurora::throw_host_exception<std::overflow_error>("The retail star-pointer mode request table is full.");
         }
 
         _mode_requests.push_back(ModeRequest{.requester = requester, .mode = mode});
@@ -2825,7 +2826,7 @@ namespace smgpc::runtime {
 
     void CameraSystemService::set_shake_projection_dimensions(float screen_width, float efb_height) {
         if (!std::isfinite(screen_width) || !std::isfinite(efb_height) || screen_width <= 0.0F || efb_height <= 0.0F) {
-            throw std::invalid_argument("Camera shake projection dimensions must be finite and positive.");
+            aurora::throw_host_exception<std::invalid_argument>("Camera shake projection dimensions must be finite and positive.");
         }
         _shake_screen_width = screen_width;
         _shake_efb_height = efb_height;
@@ -3047,7 +3048,7 @@ namespace smgpc::runtime {
         smgpc::camera::ResolvedStageStartCamera camera,
         bool start_position_active) {
         if (camera.camera_param.camera_type != "CAM_TYPE_XZ_PARA") {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Authored game-camera tracking does not support " +
                 camera.camera_param.camera_type + ".");
         }
@@ -3059,7 +3060,7 @@ namespace smgpc::runtime {
             candidate->start_info.zone_transform, candidate->camera_param,
             candidate->target, restored_pose.fovy_degrees);
         if (_next_stage_start_camera_owner_generation == 0U) {
-            throw std::overflow_error(
+            aurora::throw_host_exception<std::overflow_error>(
                 "Stage-start camera owner generation space is exhausted.");
         }
         const auto owner_generation =
@@ -3097,7 +3098,7 @@ namespace smgpc::runtime {
         if (owner_generation == 0U ||
             owner_generation != _stage_start_camera_owner_generation ||
             !_authored_game_camera.has_value()) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Authored game-camera target requires its current stage owner generation.");
         }
         if (target.has_value()) {
@@ -3116,7 +3117,7 @@ namespace smgpc::runtime {
                 (target->ground_position.has_value() && !finite_vec(*target->ground_position)) ||
                 (target->gravity.has_value() && !finite_vec(*target->gravity)) ||
                 (target->side.has_value() && !finite_vec(*target->side))) {
-                throw std::invalid_argument(
+                aurora::throw_host_exception<std::invalid_argument>(
                     "Authored game-camera target requires finite vectors and a non-degenerate orientation.");
             }
         }
@@ -3215,7 +3216,7 @@ namespace smgpc::runtime {
 
     void CameraSystemService::start_start_position_camera(bool immediate) {
         if (!_stage_start_camera.has_value()) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Start-position camera restore requires an active stage-start camera owner.");
         }
 
@@ -3227,7 +3228,7 @@ namespace smgpc::runtime {
 
     void CameraSystemService::end_start_position_camera() {
         if (!_stage_start_camera.has_value()) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Start-position camera termination requires an active stage-start camera owner.");
         }
 
@@ -3309,7 +3310,7 @@ namespace smgpc::runtime {
 
     bool CameraSystemService::is_start_position_camera_end() const {
         if (!_stage_start_camera.has_value()) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Start-position camera state requires an active stage-start camera owner.");
         }
         return !_start_position_camera_active;
@@ -3318,7 +3319,7 @@ namespace smgpc::runtime {
     std::uint32_t
     CameraSystemService::start_position_camera_zero_interpolation_frames() const {
         if (!_stage_start_camera.has_value()) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Start-position camera countdown requires an active stage-start camera owner.");
         }
         return _start_position_camera_zero_interpolation_frames;
@@ -3389,7 +3390,7 @@ namespace smgpc::runtime {
             return shaken;
         }
         if (!_shake_screen_width.has_value() || !_shake_efb_height.has_value()) {
-            throw std::logic_error("Camera shake projection dimensions are unavailable.");
+            aurora::throw_host_exception<std::logic_error>("Camera shake projection dimensions are unavailable.");
         }
         shaken.projection_offset_x += _shake_offset_x * 30.0F / *_shake_screen_width;
         shaken.projection_offset_y += _shake_offset_y * 30.0F / *_shake_efb_height;
@@ -3430,7 +3431,7 @@ namespace smgpc::runtime {
 
     void CameraSystemService::request_shake(ShakeRequestKind kind) {
         if (!_shake_screen_width.has_value() || !_shake_efb_height.has_value()) {
-            throw std::logic_error("Camera shake requires an exact retail projection size.");
+            aurora::throw_host_exception<std::logic_error>("Camera shake requires an exact retail projection size.");
         }
         auto &step = _vertical_shake_steps[camera_shake_index(kind)];
         if (step.has_value()) {
@@ -3549,7 +3550,7 @@ namespace smgpc::runtime {
 
     void PlayerSystemService::set_camera_target(std::unique_ptr<CameraTargetObj> target) {
         if (target && _attached_actor == nullptr) {
-            throw std::logic_error("A player camera target requires an attached actor owner.");
+            aurora::throw_host_exception<std::logic_error>("A player camera target requires an attached actor owner.");
         }
         _camera_target = std::move(target);
         _camera_target_frame.reset();
@@ -3604,7 +3605,7 @@ namespace smgpc::runtime {
     void PlayerSystemService::set_swing_permission(bool permitted) {
         if (_attached_actor != nullptr &&
             _actor_bridge.set_swing_permission == nullptr) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "The attached player actor does not expose swing entitlement state.");
         }
         _swing_permitted = permitted;
@@ -3615,7 +3616,7 @@ namespace smgpc::runtime {
 
     void PlayerSystemService::set_player_dead_state(bool dead) {
         if (_attached_actor == nullptr) {
-            throw std::logic_error("Cannot resolve player-death state without an attached player actor.");
+            aurora::throw_host_exception<std::logic_error>("Cannot resolve player-death state without an attached player actor.");
         }
         _player_dead_state = dead;
     }
@@ -3959,14 +3960,14 @@ namespace smgpc::runtime {
 
     void SaveDataService::write_file(std::string_view name, std::span<const std::uint8_t> bytes) {
         if (!_host_directory.has_value()) {
-            throw std::logic_error("Save persistence is unavailable without a configured host directory");
+            aurora::throw_host_exception<std::logic_error>("Save persistence is unavailable without a configured host directory");
         }
         const auto file_name = NandFileSystemService::file_name(_nand.normalize_path(name));
         if (file_name != SAVE_DATA_CONTAINER_NAME && save_data_file_size(file_name).has_value()) {
-            throw std::invalid_argument("Retail save members may only be persisted inside GameData.bin");
+            aurora::throw_host_exception<std::invalid_argument>("Retail save members may only be persisted inside GameData.bin");
         }
         if (file_name == SAVE_DATA_CONTAINER_NAME && !decode_game_data_container(bytes).has_value()) {
-            throw std::invalid_argument("GameData.bin is not a valid retail big-endian container");
+            aurora::throw_host_exception<std::invalid_argument>("GameData.bin is not a valid retail big-endian container");
         }
 
         const auto key = std::string(name);
@@ -3987,14 +3988,14 @@ namespace smgpc::runtime {
 
     void SaveDataService::write_nand_file(std::string_view name, std::span<const std::uint8_t> bytes) {
         if (!_host_directory.has_value()) {
-            throw std::logic_error("NAND save persistence is unavailable without a configured host directory");
+            aurora::throw_host_exception<std::logic_error>("NAND save persistence is unavailable without a configured host directory");
         }
         const auto file_name = NandFileSystemService::file_name(_nand.normalize_path(name));
         const auto wii_bytes =
             file_name == SAVE_DATA_CONTAINER_NAME ? host_save_data_container_for_retail(bytes) : std::vector<std::uint8_t>{};
         const auto payload = file_name == SAVE_DATA_CONTAINER_NAME ? std::span<const std::uint8_t>(wii_bytes.data(), wii_bytes.size()) : bytes;
         if (file_name == SAVE_DATA_CONTAINER_NAME && !decode_game_data_container(payload).has_value()) {
-            throw std::invalid_argument("Translated GameData.bin does not match the retail container layout");
+            aurora::throw_host_exception<std::invalid_argument>("Translated GameData.bin does not match the retail container layout");
         }
         _nand.write_file(name, payload);
         if (file_name == SAVE_DATA_CONTAINER_NAME) {
@@ -4017,7 +4018,7 @@ namespace smgpc::runtime {
 
         if (file_name == SAVE_DATA_CONTAINER_NAME) {
             if (!decode_game_data_container(*bytes).has_value()) {
-                throw std::runtime_error("Persisted GameData.bin is malformed or uses a non-retail byte order");
+                aurora::throw_host_exception<std::runtime_error>("Persisted GameData.bin is malformed or uses a non-retail byte order");
             }
             return retail_save_data_container_for_host(*bytes);
         }
@@ -4038,7 +4039,7 @@ namespace smgpc::runtime {
 
     bool SaveDataService::erase(std::string_view name) {
         if (!_host_directory.has_value()) {
-            throw std::logic_error("Save persistence is unavailable without a configured host directory");
+            aurora::throw_host_exception<std::logic_error>("Save persistence is unavailable without a configured host directory");
         }
         const auto erased = _files.erase(std::string(name)) != 0U;
         const auto nand_erased = _nand.erase(name);
@@ -4070,7 +4071,7 @@ namespace smgpc::runtime {
         std::error_code error{};
         std::filesystem::create_directories(*_host_directory, error);
         if (error) {
-            throw std::runtime_error("Cannot create save directory " + _host_directory->string());
+            aurora::throw_host_exception<std::runtime_error>("Cannot create save directory " + _host_directory->string());
         }
 
         _files.clear();
@@ -4078,7 +4079,7 @@ namespace smgpc::runtime {
         _has_valid_game_data_container = false;
         for (const auto &entry : std::filesystem::recursive_directory_iterator(*_host_directory, error)) {
             if (error) {
-                throw std::runtime_error("Cannot scan save directory " + _host_directory->string());
+                aurora::throw_host_exception<std::runtime_error>("Cannot scan save directory " + _host_directory->string());
             }
             if (!entry.is_regular_file(error)) {
                 continue;
@@ -4105,7 +4106,7 @@ namespace smgpc::runtime {
 
     void SaveDataService::flush_host_files() {
         if (!_host_directory.has_value()) {
-            throw std::logic_error("Save persistence is unavailable without a configured host directory");
+            aurora::throw_host_exception<std::logic_error>("Save persistence is unavailable without a configured host directory");
         }
 
         for (const auto &[name, bytes] : _files) {
@@ -4124,12 +4125,12 @@ namespace smgpc::runtime {
 
         auto relative = std::filesystem::path(std::string(name)).lexically_normal();
         if (relative.empty() || relative.is_absolute()) {
-            throw std::runtime_error("Invalid save file name " + std::string(name));
+            aurora::throw_host_exception<std::runtime_error>("Invalid save file name " + std::string(name));
         }
 
         for (const auto &part : relative) {
             if (part == "..") {
-                throw std::runtime_error("Invalid save file name " + std::string(name));
+                aurora::throw_host_exception<std::runtime_error>("Invalid save file name " + std::string(name));
             }
         }
 
@@ -4138,7 +4139,7 @@ namespace smgpc::runtime {
 
     void SaveDataService::write_host_file(std::string_view name, std::span<const std::uint8_t> bytes) const {
         if (!_host_directory.has_value()) {
-            throw std::logic_error("Save persistence is unavailable without a configured host directory");
+            aurora::throw_host_exception<std::logic_error>("Save persistence is unavailable without a configured host directory");
         }
 
         write_binary_file(host_file_path(name), bytes);
@@ -4146,7 +4147,7 @@ namespace smgpc::runtime {
 
     void SaveDataService::erase_host_file(std::string_view name) const {
         if (!_host_directory.has_value()) {
-            throw std::logic_error("Save persistence is unavailable without a configured host directory");
+            aurora::throw_host_exception<std::logic_error>("Save persistence is unavailable without a configured host directory");
         }
 
         std::error_code error{};

@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "DebugPaths.hpp"
 
 #include <stdexcept>
@@ -28,7 +29,7 @@ namespace smgpc::debug {
                 }
             }
 
-            throw std::runtime_error("could not locate pc-port root from " + start.string());
+            aurora::throw_host_exception<std::runtime_error>("could not locate pc-port root from " + start.string());
         }
     }  // namespace
 
@@ -64,7 +65,7 @@ namespace smgpc::debug {
             }
         }
 
-        throw std::runtime_error("could not locate orig/RMGK01/files from " + std::filesystem::current_path().string());
+        aurora::throw_host_exception<std::runtime_error>("could not locate orig/RMGK01/files from " + std::filesystem::current_path().string());
     }
 
     std::filesystem::path cache_path(std::string_view tool_name) {

@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "DebugPaths.hpp"
 #include "capture/ScreenshotService.hpp"
 #include "render/J3dTexture.hpp"
@@ -167,7 +168,7 @@ int main(int argc, char **argv) try {
 
     auto manifest = std::ofstream(manifest_path);
     if (!manifest) {
-        throw std::runtime_error("cannot write J3D texture manifest " + manifest_path.string());
+        aurora::throw_host_exception<std::runtime_error>("cannot write J3D texture manifest " + manifest_path.string());
     }
 
     manifest << "object,model,index,name,dimensions,format,wrap_s,wrap_t,path\n";
@@ -184,7 +185,7 @@ int main(int argc, char **argv) try {
     }
 
     if (model_count == 0U) {
-        throw std::runtime_error("object archive contains no J3D model files: " + archive_path.string());
+        aurora::throw_host_exception<std::runtime_error>("object archive contains no J3D model files: " + archive_path.string());
     }
 
     std::cout << manifest_path << '\n';

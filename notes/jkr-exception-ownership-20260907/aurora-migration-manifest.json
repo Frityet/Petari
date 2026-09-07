@@ -1,0 +1,810 @@
+{
+  "applied": false,
+  "files": 6,
+  "count": 68,
+  "types": {
+    "std::runtime_error": 30,
+    "std::invalid_argument": 31,
+    "std::logic_error": 5,
+    "std::length_error": 1,
+    "std::out_of_range": 1
+  },
+  "manifest": [
+    {
+      "path": "aurora/lib/j_audio_sound_archive.cpp",
+      "sha256": "5b28cac350aca7488f73ba9eec63a9d95f4ca68befeb04eaa87642bd93f80b14",
+      "held_by_parent": false,
+      "count": 2,
+      "occurrences": [
+        {
+          "line": 24,
+          "type": "std::runtime_error",
+          "start": 683,
+          "prefix_end": 708,
+          "expression_end": 774,
+          "before": "throw std::runtime_error(",
+          "after": "aurora::throw_host_exception<std::runtime_error>(",
+          "argument_sha256": "83bf3e43a4f7ece10bc8cf2b8dd4f87fa668354e48a3aa0a2423176fec2ead6d",
+          "argument": "\"Malformed JAudio sound-archive resource: \" + std::string(detail)"
+        },
+        {
+          "line": 209,
+          "type": "std::invalid_argument",
+          "start": 6950,
+          "prefix_end": 6978,
+          "expression_end": 7019,
+          "before": "throw std::invalid_argument(",
+          "after": "aurora::throw_host_exception<std::invalid_argument>(",
+          "argument_sha256": "fd1cf537bfe6956bc4b191f74fbdf7fc0ca4cc85f817cb011b087b66e3784b4c",
+          "argument": "\"JAudio wave archive loader is required\""
+        }
+      ]
+    },
+    {
+      "path": "aurora/lib/j_audio_stream.cpp",
+      "sha256": "6ec445269f1819f3fae58df61976b13932457501d4ade9e9bfcc84506d05f379",
+      "held_by_parent": false,
+      "count": 1,
+      "occurrences": [
+        {
+          "line": 23,
+          "type": "std::runtime_error",
+          "start": 666,
+          "prefix_end": 691,
+          "expression_end": 750,
+          "before": "throw std::runtime_error(",
+          "after": "aurora::throw_host_exception<std::runtime_error>(",
+          "argument_sha256": "b1209925067f22155969627b27157518911d19fa2ee9712adf7216e0a56d6b25",
+          "argument": "\"Malformed JAudio stream resource: \" + std::string(detail)"
+        }
+      ]
+    },
+    {
+      "path": "aurora/lib/audio.cpp",
+      "sha256": "ebeb00ef2e32aa319d3e1d93fe711b2590edf603d8b14ff796d0b46c989e9ebd",
+      "held_by_parent": false,
+      "count": 27,
+      "occurrences": [
+        {
+          "line": 55,
+          "type": "std::invalid_argument",
+          "start": 1986,
+          "prefix_end": 2014,
+          "expression_end": 2073,
+          "before": "throw std::invalid_argument(",
+          "after": "aurora::throw_host_exception<std::invalid_argument>(",
+          "argument_sha256": "150066d0bdecd2c521a185cfed024c96981b1bacb32f7d59aa883428e087eb53",
+          "argument": "\"AFC HQ payload is shorter than its declared sample count\""
+        },
+        {
+          "line": 152,
+          "type": "std::invalid_argument",
+          "start": 5837,
+          "prefix_end": 5865,
+          "expression_end": 5924,
+          "before": "throw std::invalid_argument(",
+          "after": "aurora::throw_host_exception<std::invalid_argument>(",
+          "argument_sha256": "56bfabada709d568ce5cba9acd68c124295cb079d9c7db81267a65dc31d5c131",
+          "argument": "\"A PCM voice fade duration must be finite and nonnegative\""
+        },
+        {
+          "line": 393,
+          "type": "std::invalid_argument",
+          "start": 16176,
+          "prefix_end": 16204,
+          "expression_end": 16253,
+          "before": "throw std::invalid_argument(",
+          "after": "aurora::throw_host_exception<std::invalid_argument>(",
+          "argument_sha256": "bdbc9cc692276bb2c4a50efac9fcf03bc0d777655f8e4e0eeeba1171fa034e04",
+          "argument": "\"Audio mixer output sample rate must be nonzero\""
+        },
+        {
+          "line": 403,
+          "type": "std::runtime_error",
+          "start": 16530,
+          "prefix_end": 16555,
+          "expression_end": 16607,
+          "before": "throw std::runtime_error(",
+          "after": "aurora::throw_host_exception<std::runtime_error>(",
+          "argument_sha256": "367260c4b89aa155107a8d50bb768c20d375b0124d1faa93ded8c9431cd62db0",
+          "argument": "\"SDL playback stream stopped accepting mixed audio\""
+        },
+        {
+          "line": 408,
+          "type": "std::runtime_error",
+          "start": 16679,
+          "prefix_end": 16704,
+          "expression_end": 16770,
+          "before": "throw std::runtime_error(",
+          "after": "aurora::throw_host_exception<std::runtime_error>(",
+          "argument_sha256": "1cb8b66fd15e451ebf1fce0e86188dfab64a3abb5d0778d2a3f4a773dcd451c6",
+          "argument": "std::string(\"SDL audio initialization failed: \") + SDL_GetError()"
+        },
+        {
+          "line": 415,
+          "type": "std::runtime_error",
+          "start": 16993,
+          "prefix_end": 17018,
+          "expression_end": 17075,
+          "before": "throw std::runtime_error(",
+          "after": "aurora::throw_host_exception<std::runtime_error>(",
+          "argument_sha256": "fa87a07275d48059741ba8ab1a8057a0654234a5d6e19649471a7fa25c8aaf97",
+          "argument": "std::string(\"SDL event initialization failed: \") + error"
+        },
+        {
+          "line": 425,
+          "type": "std::runtime_error",
+          "start": 17461,
+          "prefix_end": 17486,
+          "expression_end": 17528,
+          "before": "throw std::runtime_error(",
+          "after": "aurora::throw_host_exception<std::runtime_error>(",
+          "argument_sha256": "e2b2e268303c4545d528b12048ac583fd9ea8c93eedddc4d00245bcdf5dfdb4e",
+          "argument": "\"SDL audio device watch failed: \" + error"
+        },
+        {
+          "line": 438,
+          "type": "std::runtime_error",
+          "start": 18131,
+          "prefix_end": 18156,
+          "expression_end": 18229,
+          "before": "throw std::runtime_error(",
+          "after": "aurora::throw_host_exception<std::runtime_error>(",
+          "argument_sha256": "623f44a213a9c376cd0adbe841d90da808107136496e7a7cc675a12998a47dff",
+          "argument": "\"SDL audio driver is not an audible playback device: \" + rejected_driver"
+        },
+        {
+          "line": 456,
+          "type": "std::runtime_error",
+          "start": 18865,
+          "prefix_end": 18890,
+          "expression_end": 18937,
+          "before": "throw std::runtime_error(",
+          "after": "aurora::throw_host_exception<std::runtime_error>(",
+          "argument_sha256": "3fa2b6dca214d7e0fede6bc0d019934fd02812b43c43f078bcb344b9dcd02089",
+          "argument": "\"SDL default playback stream failed: \" + error"
+        },
+        {
+          "line": 467,
+          "type": "std::runtime_error",
+          "start": 19384,
+          "prefix_end": 19409,
+          "expression_end": 19456,
+          "before": "throw std::runtime_error(",
+          "after": "aurora::throw_host_exception<std::runtime_error>(",
+          "argument_sha256": "cf655c3d93e9b975fb63d2250b20811b74e42af560a94c7f2133967b10f837b3",
+          "argument": "\"SDL default playback resume failed: \" + error"
+        },
+        {
+          "line": 507,
+          "type": "std::invalid_argument",
+          "start": 20708,
+          "prefix_end": 20736,
+          "expression_end": 20782,
+          "before": "throw std::invalid_argument(",
+          "after": "aurora::throw_host_exception<std::invalid_argument>(",
+          "argument_sha256": "ccbfd0c3f879e853861c90ba4d9f19cb4d5b46391a56e81e08ec5e761f236e0a",
+          "argument": "\"A PCM voice must contain at least one layer\""
+        },
+        {
+          "line": 510,
+          "type": "std::invalid_argument",
+          "start": 20869,
+          "prefix_end": 20897,
+          "expression_end": 20947,
+          "before": "throw std::invalid_argument(",
+          "after": "aurora::throw_host_exception<std::invalid_argument>(",
+          "argument_sha256": "b58b4b52a4f8c1bee515740a38647a9562529d35a186a8b81009b26ef8fa9f5e",
+          "argument": "\"A PCM voice gain multiplier must be nonnegative\""
+        },
+        {
+          "line": 513,
+          "type": "std::invalid_argument",
+          "start": 21037,
+          "prefix_end": 21065,
+          "expression_end": 21113,
+          "before": "throw std::invalid_argument(",
+          "after": "aurora::throw_host_exception<std::invalid_argument>(",
+          "argument_sha256": "d99f8464a7df8e3634c62971894669cb005ab8861982118126142406d491ffee",
+          "argument": "\"A PCM voice pitch multiplier must be positive\""
+        },
+        {
+          "line": 516,
+          "type": "std::invalid_argument",
+          "start": 21235,
+          "prefix_end": 21263,
+          "expression_end": 21303,
+          "before": "throw std::invalid_argument(",
+          "after": "aurora::throw_host_exception<std::invalid_argument>(",
+          "argument_sha256": "4ccaa54f03213fc68f08a4ec07fed4743924fb6987b9c58f54c3049d0293d1f1",
+          "argument": "\"A PCM voice contains an invalid layer\""
+        },
+        {
+          "line": 543,
+          "type": "std::invalid_argument",
+          "start": 22094,
+          "prefix_end": 22122,
+          "expression_end": 22172,
+          "before": "throw std::invalid_argument(",
+          "after": "aurora::throw_host_exception<std::invalid_argument>(",
+          "argument_sha256": "b58b4b52a4f8c1bee515740a38647a9562529d35a186a8b81009b26ef8fa9f5e",
+          "argument": "\"A PCM voice gain multiplier must be nonnegative\""
+        },
+        {
+          "line": 546,
+          "type": "std::invalid_argument",
+          "start": 22252,
+          "prefix_end": 22280,
+          "expression_end": 22328,
+          "before": "throw std::invalid_argument(",
+          "after": "aurora::throw_host_exception<std::invalid_argument>(",
+          "argument_sha256": "d99f8464a7df8e3634c62971894669cb005ab8861982118126142406d491ffee",
+          "argument": "\"A PCM voice pitch multiplier must be positive\""
+        },
+        {
+          "line": 563,
+          "type": "std::invalid_argument",
+          "start": 22917,
+          "prefix_end": 22945,
+          "expression_end": 22995,
+          "before": "throw std::invalid_argument(",
+          "after": "aurora::throw_host_exception<std::invalid_argument>(",
+          "argument_sha256": "b58b4b52a4f8c1bee515740a38647a9562529d35a186a8b81009b26ef8fa9f5e",
+          "argument": "\"A PCM voice gain multiplier must be nonnegative\""
+        },
+        {
+          "line": 569,
+          "type": "std::logic_error",
+          "start": 23223,
+          "prefix_end": 23246,
+          "expression_end": 23284,
+          "before": "throw std::logic_error(",
+          "after": "aurora::throw_host_exception<std::logic_error>(",
+          "argument_sha256": "83646d7c0fd93de6881d39881936d2ad0e0d0344f7578b2948849aa89cc5a8ad",
+          "argument": "\"Cannot update an inactive PCM voice\""
+        },
+        {
+          "line": 577,
+          "type": "std::invalid_argument",
+          "start": 23576,
+          "prefix_end": 23604,
+          "expression_end": 23652,
+          "before": "throw std::invalid_argument(",
+          "after": "aurora::throw_host_exception<std::invalid_argument>(",
+          "argument_sha256": "d99f8464a7df8e3634c62971894669cb005ab8861982118126142406d491ffee",
+          "argument": "\"A PCM voice pitch multiplier must be positive\""
+        },
+        {
+          "line": 583,
+          "type": "std::logic_error",
+          "start": 23880,
+          "prefix_end": 23903,
+          "expression_end": 23941,
+          "before": "throw std::logic_error(",
+          "after": "aurora::throw_host_exception<std::logic_error>(",
+          "argument_sha256": "83646d7c0fd93de6881d39881936d2ad0e0d0344f7578b2948849aa89cc5a8ad",
+          "argument": "\"Cannot update an inactive PCM voice\""
+        },
+        {
+          "line": 590,
+          "type": "std::invalid_argument",
+          "start": 24171,
+          "prefix_end": 24199,
+          "expression_end": 24249,
+          "before": "throw std::invalid_argument(",
+          "after": "aurora::throw_host_exception<std::invalid_argument>(",
+          "argument_sha256": "b58b4b52a4f8c1bee515740a38647a9562529d35a186a8b81009b26ef8fa9f5e",
+          "argument": "\"A PCM voice gain multiplier must be nonnegative\""
+        },
+        {
+          "line": 596,
+          "type": "std::logic_error",
+          "start": 24477,
+          "prefix_end": 24500,
+          "expression_end": 24536,
+          "before": "throw std::logic_error(",
+          "after": "aurora::throw_host_exception<std::logic_error>(",
+          "argument_sha256": "fcaa05ec4ba8c38778c7066c9dfe50966264b3101d92fb2bfe710430cb42e516",
+          "argument": "\"Cannot fade an inactive PCM voice\""
+        },
+        {
+          "line": 621,
+          "type": "std::invalid_argument",
+          "start": 25539,
+          "prefix_end": 25567,
+          "expression_end": 25627,
+          "before": "throw std::invalid_argument(",
+          "after": "aurora::throw_host_exception<std::invalid_argument>(",
+          "argument_sha256": "4d4f3aab111d46403a12071831dad58cfa42774f1351a68b1c412338c440b861",
+          "argument": "\"PCM layer gain multipliers must be finite and nonnegative\""
+        },
+        {
+          "line": 627,
+          "type": "std::logic_error",
+          "start": 25855,
+          "prefix_end": 25878,
+          "expression_end": 25924,
+          "before": "throw std::logic_error(",
+          "after": "aurora::throw_host_exception<std::logic_error>(",
+          "argument_sha256": "69f322e90c19a75d5e191035a7ba792e50c7161243c74f22cd490f90b372dd3e",
+          "argument": "\"Cannot fade layers on an inactive PCM voice\""
+        },
+        {
+          "line": 630,
+          "type": "std::invalid_argument",
+          "start": 25991,
+          "prefix_end": 26019,
+          "expression_end": 26075,
+          "before": "throw std::invalid_argument(",
+          "after": "aurora::throw_host_exception<std::invalid_argument>(",
+          "argument_sha256": "374f65605892277038b5a228cc87d5827c7cff923edb6a199bf28ff049840d9e",
+          "argument": "\"PCM layer gain count must match the voice layer count\""
+        },
+        {
+          "line": 643,
+          "type": "std::logic_error",
+          "start": 26602,
+          "prefix_end": 26625,
+          "expression_end": 26662,
+          "before": "throw std::logic_error(",
+          "after": "aurora::throw_host_exception<std::logic_error>(",
+          "argument_sha256": "5f6e495f2b215518151a4b70e5142de6e8ffc964e603011ff0feb263bb4546a2",
+          "argument": "\"Cannot pause an inactive PCM voice\""
+        },
+        {
+          "line": 716,
+          "type": "std::invalid_argument",
+          "start": 29206,
+          "prefix_end": 29234,
+          "expression_end": 29296,
+          "before": "throw std::invalid_argument(",
+          "after": "aurora::throw_host_exception<std::invalid_argument>(",
+          "argument_sha256": "a9f1ba3678533eb2053c658dcf2245b1630b59897c4c1e6170b529c29134e761",
+          "argument": "\"Interleaved stereo output must contain an even sample count\""
+        }
+      ]
+    },
+    {
+      "path": "aurora/lib/sysconf.cpp",
+      "sha256": "50cf0c2e254fe9a8f440d66536e4ffd62f85e32219cde48a20952ff2d3946075",
+      "held_by_parent": false,
+      "count": 16,
+      "occurrences": [
+        {
+          "line": 27,
+          "type": "std::invalid_argument",
+          "start": 511,
+          "prefix_end": 539,
+          "expression_end": 575,
+          "before": "throw std::invalid_argument(",
+          "after": "aurora::throw_host_exception<std::invalid_argument>(",
+          "argument_sha256": "b2fde5d16e0e0bf1f24755e5a566a82a0545868af78444e353039326eb375348",
+          "argument": "\"SYSCONF has an invalid entry type\""
+        },
+        {
+          "line": 32,
+          "type": "std::invalid_argument",
+          "start": 715,
+          "prefix_end": 743,
+          "expression_end": 797,
+          "before": "throw std::invalid_argument(",
+          "after": "aurora::throw_host_exception<std::invalid_argument>(",
+          "argument_sha256": "d983fd1d6b57d0c09c4c75e6ed5c267dedff8c4af92c4d9391385b1900c2e7c8",
+          "argument": "\"SYSCONF entry name or payload has an invalid length\""
+        },
+        {
+          "line": 36,
+          "type": "std::invalid_argument",
+          "start": 900,
+          "prefix_end": 928,
+          "expression_end": 987,
+          "before": "throw std::invalid_argument(",
+          "after": "aurora::throw_host_exception<std::invalid_argument>(",
+          "argument_sha256": "892fa1ce74b88234e8a31c70281759f8b7544bda33f11fdc968346ef84a1c4fe",
+          "argument": "\"SYSCONF integer payload does not match its declared type\""
+        },
+        {
+          "line": 40,
+          "type": "std::invalid_argument",
+          "start": 1153,
+          "prefix_end": 1181,
+          "expression_end": 1227,
+          "before": "throw std::invalid_argument(",
+          "after": "aurora::throw_host_exception<std::invalid_argument>(",
+          "argument_sha256": "b8e01eb9fd8b1c8662dbf4e927402fca72b099971e79ad7197636e153567a798",
+          "argument": "\"SYSCONF array exceeds its wire length field\""
+        },
+        {
+          "line": 52,
+          "type": "std::length_error",
+          "start": 1691,
+          "prefix_end": 1715,
+          "expression_end": 1769,
+          "before": "throw std::length_error(",
+          "after": "aurora::throw_host_exception<std::length_error>(",
+          "argument_sha256": "f4c2da1c9d837bfceb45e664387bd5dfec046891eb8210e8edf095ecb0f2a64c",
+          "argument": "\"SYSCONF entries exceed the 16 KiB document capacity\""
+        },
+        {
+          "line": 60,
+          "type": "std::invalid_argument",
+          "start": 1945,
+          "prefix_end": 1973,
+          "expression_end": 2002,
+          "before": "throw std::invalid_argument(",
+          "after": "aurora::throw_host_exception<std::invalid_argument>(",
+          "argument_sha256": "882339df12aeb0b5a34633921640b33d1fc799d438c205d4cbc519dc01199cb4",
+          "argument": "\"SYSCONF truncated halfword\""
+        },
+        {
+          "line": 77,
+          "type": "std::invalid_argument",
+          "start": 2679,
+          "prefix_end": 2707,
+          "expression_end": 2755,
+          "before": "throw std::invalid_argument(",
+          "after": "aurora::throw_host_exception<std::invalid_argument>(",
+          "argument_sha256": "4e6129fe34f878c92131c6885cedb56585dfb21544f1d77240362bd973d79d3e",
+          "argument": "\"SYSCONF signature or document size is invalid\""
+        },
+        {
+          "line": 83,
+          "type": "std::invalid_argument",
+          "start": 2939,
+          "prefix_end": 2967,
+          "expression_end": 3011,
+          "before": "throw std::invalid_argument(",
+          "after": "aurora::throw_host_exception<std::invalid_argument>(",
+          "argument_sha256": "3b7654792df91ae94a164a2e6501d62814e96e761728eaf0791f64e4eef035b8",
+          "argument": "\"SYSCONF offset table exceeds the document\""
+        },
+        {
+          "line": 89,
+          "type": "std::invalid_argument",
+          "start": 3205,
+          "prefix_end": 3233,
+          "expression_end": 3294,
+          "before": "throw std::invalid_argument(",
+          "after": "aurora::throw_host_exception<std::invalid_argument>(",
+          "argument_sha256": "d003df627afd4776cb273c5ab630320991899afe038d8e60e5990e17fa923a18",
+          "argument": "\"SYSCONF entries are not contiguous with their offset table\""
+        },
+        {
+          "line": 95,
+          "type": "std::invalid_argument",
+          "start": 3518,
+          "prefix_end": 3546,
+          "expression_end": 3588,
+          "before": "throw std::invalid_argument(",
+          "after": "aurora::throw_host_exception<std::invalid_argument>(",
+          "argument_sha256": "51b1a4b3fa1bea1327a1744694b78f8bc9fc7c8815ad93ed07305f711f623754",
+          "argument": "\"SYSCONF entry name exceeds the document\""
+        },
+        {
+          "line": 102,
+          "type": "std::invalid_argument",
+          "start": 3852,
+          "prefix_end": 3880,
+          "expression_end": 3911,
+          "before": "throw std::invalid_argument(",
+          "after": "aurora::throw_host_exception<std::invalid_argument>(",
+          "argument_sha256": "27b3494264bbbb9c59dbb88992a80af02db611a91a358ff08cf2e550a4e528d5",
+          "argument": "\"SYSCONF missing array length\""
+        },
+        {
+          "line": 108,
+          "type": "std::invalid_argument",
+          "start": 4105,
+          "prefix_end": 4133,
+          "expression_end": 4164,
+          "before": "throw std::invalid_argument(",
+          "after": "aurora::throw_host_exception<std::invalid_argument>(",
+          "argument_sha256": "27b3494264bbbb9c59dbb88992a80af02db611a91a358ff08cf2e550a4e528d5",
+          "argument": "\"SYSCONF missing array length\""
+        },
+        {
+          "line": 113,
+          "type": "std::invalid_argument",
+          "start": 4295,
+          "prefix_end": 4323,
+          "expression_end": 4368,
+          "before": "throw std::invalid_argument(",
+          "after": "aurora::throw_host_exception<std::invalid_argument>(",
+          "argument_sha256": "ddefc4d908d49978f9c8ae821a97742b5ea9867460480fbbaa901ee03632584e",
+          "argument": "\"SYSCONF entry payload exceeds the document\""
+        },
+        {
+          "line": 120,
+          "type": "std::invalid_argument",
+          "start": 4604,
+          "prefix_end": 4632,
+          "expression_end": 4685,
+          "before": "throw std::invalid_argument(",
+          "after": "aurora::throw_host_exception<std::invalid_argument>(",
+          "argument_sha256": "dc88d943fe3a4e74165f3ea59e4d34327165d66e8d24d44d223345846b5f0143",
+          "argument": "\"SYSCONF terminal offset does not match its entries\""
+        },
+        {
+          "line": 187,
+          "type": "std::invalid_argument",
+          "start": 7119,
+          "prefix_end": 7147,
+          "expression_end": 7203,
+          "before": "throw std::invalid_argument(",
+          "after": "aurora::throw_host_exception<std::invalid_argument>(",
+          "argument_sha256": "365a201ce1dc2fb936c8c72813aa9e330788b193f6d6b3082fec2aec42794da6",
+          "argument": "\"SYSCONF value does not fit the requested integer type\""
+        },
+        {
+          "line": 224,
+          "type": "std::out_of_range",
+          "start": 8162,
+          "prefix_end": 8186,
+          "expression_end": 8232,
+          "before": "throw std::out_of_range(",
+          "after": "aurora::throw_host_exception<std::out_of_range>(",
+          "argument_sha256": "249669522c5bfd951cc2020e82b5b2df9db0962297a00c4bfb6561e8061a2139",
+          "argument": "\"SYSCONF entry index is outside the document\""
+        }
+      ]
+    },
+    {
+      "path": "aurora/lib/nw4r/brlan.cpp",
+      "sha256": "b85740460e80fb3d88fd13eda810b8a4d35e944541de7b0c626270fcfe1f7581",
+      "held_by_parent": false,
+      "count": 21,
+      "occurrences": [
+        {
+          "line": 17,
+          "type": "std::runtime_error",
+          "start": 406,
+          "prefix_end": 431,
+          "expression_end": 462,
+          "before": "throw std::runtime_error(",
+          "after": "aurora::throw_host_exception<std::runtime_error>(",
+          "argument_sha256": "49deba72c149be2ded028ae4f7708502573da915ff8803908bdce41761ef3805",
+          "argument": "\"BRLAN read_be16 out of range\""
+        },
+        {
+          "line": 25,
+          "type": "std::runtime_error",
+          "start": 714,
+          "prefix_end": 739,
+          "expression_end": 770,
+          "before": "throw std::runtime_error(",
+          "after": "aurora::throw_host_exception<std::runtime_error>(",
+          "argument_sha256": "5012a0a8bfdd2f16e4ecd47de82d01213f39f42d2572ddbb4bfa1d7c5643634f",
+          "argument": "\"BRLAN read_be32 out of range\""
+        },
+        {
+          "line": 57,
+          "type": "std::runtime_error",
+          "start": 1856,
+          "prefix_end": 1881,
+          "expression_end": 1915,
+          "before": "throw std::runtime_error(",
+          "after": "aurora::throw_host_exception<std::runtime_error>(",
+          "argument_sha256": "0e5d6c94e27dd59d5a9b1d5409e082e78a61a51b197724a2222ffea3c4f6089b",
+          "argument": "\"BRLAN fixed string out of range\""
+        },
+        {
+          "line": 70,
+          "type": "std::runtime_error",
+          "start": 2241,
+          "prefix_end": 2266,
+          "expression_end": 2294,
+          "before": "throw std::runtime_error(",
+          "after": "aurora::throw_host_exception<std::runtime_error>(",
+          "argument_sha256": "4e5616fc99f5ef57d3ea6509fe6bdbfacd05b04e2f12a424233c8c511925e6da",
+          "argument": "\"BRLAN string out of range\""
+        },
+        {
+          "line": 78,
+          "type": "std::runtime_error",
+          "start": 2418,
+          "prefix_end": 2443,
+          "expression_end": 2481,
+          "before": "throw std::runtime_error(",
+          "after": "aurora::throw_host_exception<std::runtime_error>(",
+          "argument_sha256": "753f49a20b4e1b78435745080ebd015cde3c204b42e8453cfe5c883372e9d397",
+          "argument": "\"BRLAN string is not null terminated\""
+        },
+        {
+          "line": 242,
+          "type": "std::runtime_error",
+          "start": 6879,
+          "prefix_end": 6904,
+          "expression_end": 6932,
+          "before": "throw std::runtime_error(",
+          "after": "aurora::throw_host_exception<std::runtime_error>(",
+          "argument_sha256": "4bc8405cda3e535f1ef87aa768f72d662f68f1f8efed9a785bd8f44524c17d85",
+          "argument": "\"BRLAN target is truncated\""
+        },
+        {
+          "line": 257,
+          "type": "std::runtime_error",
+          "start": 7384,
+          "prefix_end": 7409,
+          "expression_end": 7441,
+          "before": "throw std::runtime_error(",
+          "after": "aurora::throw_host_exception<std::runtime_error>(",
+          "argument_sha256": "2c068c738f72818449bbbb687aafedf84a178e2ad3c0c93042cb45aa95cd3637",
+          "argument": "\"BRLAN step keys are truncated\""
+        },
+        {
+          "line": 269,
+          "type": "std::runtime_error",
+          "start": 7911,
+          "prefix_end": 7936,
+          "expression_end": 7971,
+          "before": "throw std::runtime_error(",
+          "after": "aurora::throw_host_exception<std::runtime_error>(",
+          "argument_sha256": "8802bea2d694b56f4b827f2e00d959b0781ae5e5564162234ce609f3e8a3e409",
+          "argument": "\"BRLAN hermite keys are truncated\""
+        },
+        {
+          "line": 287,
+          "type": "std::runtime_error",
+          "start": 8537,
+          "prefix_end": 8562,
+          "expression_end": 8598,
+          "before": "throw std::runtime_error(",
+          "after": "aurora::throw_host_exception<std::runtime_error>(",
+          "argument_sha256": "bd1a6053f4f1b06ffba367c4d75ddc66ef13ccc48b8fa140149453f32f54058e",
+          "argument": "\"BRLAN animation info is truncated\""
+        },
+        {
+          "line": 292,
+          "type": "std::runtime_error",
+          "start": 8733,
+          "prefix_end": 8758,
+          "expression_end": 8799,
+          "before": "throw std::runtime_error(",
+          "after": "aurora::throw_host_exception<std::runtime_error>(",
+          "argument_sha256": "c8b0ac5e2e378680eb287ca7654072e25bd4655068a4a8170f2b9fc4af26ff29",
+          "argument": "\"BRLAN target offset table is truncated\""
+        },
+        {
+          "line": 309,
+          "type": "std::runtime_error",
+          "start": 9320,
+          "prefix_end": 9345,
+          "expression_end": 9384,
+          "before": "throw std::runtime_error(",
+          "after": "aurora::throw_host_exception<std::runtime_error>(",
+          "argument_sha256": "5b95718a5a4fa863a0037bc7a2c56b4806840ca193f8e90288ac8f4e49e5728c",
+          "argument": "\"BRLAN animation content is truncated\""
+        },
+        {
+          "line": 314,
+          "type": "std::runtime_error",
+          "start": 9517,
+          "prefix_end": 9542,
+          "expression_end": 9591,
+          "before": "throw std::runtime_error(",
+          "after": "aurora::throw_host_exception<std::runtime_error>(",
+          "argument_sha256": "c476e52b8bdd5a1a3fcb6726e90d75badce0b9bbf531ff38715dbf46bb2d1b9a",
+          "argument": "\"BRLAN animation info offset table is truncated\""
+        },
+        {
+          "line": 335,
+          "type": "std::runtime_error",
+          "start": 10326,
+          "prefix_end": 10351,
+          "expression_end": 10396,
+          "before": "throw std::runtime_error(",
+          "after": "aurora::throw_host_exception<std::runtime_error>(",
+          "argument_sha256": "a69a88b5567be0d6e1dc51d2e3cb50b7a838c626191b9ff2833c4f3e8aae9bb9",
+          "argument": "\"BRLAN animation content table is truncated\""
+        },
+        {
+          "line": 348,
+          "type": "std::runtime_error",
+          "start": 10794,
+          "prefix_end": 10819,
+          "expression_end": 10860,
+          "before": "throw std::runtime_error(",
+          "after": "aurora::throw_host_exception<std::runtime_error>(",
+          "argument_sha256": "4a7c2a23ad9f2c91b694b6c3d771c6f60af128d93290adf1adedc7a80fa12817",
+          "argument": "\"BRLAN animation tag block is truncated\""
+        },
+        {
+          "line": 362,
+          "type": "std::runtime_error",
+          "start": 11420,
+          "prefix_end": 11445,
+          "expression_end": 11488,
+          "before": "throw std::runtime_error(",
+          "after": "aurora::throw_host_exception<std::runtime_error>(",
+          "argument_sha256": "c01afd6c3229f1f3d65690f0a035613f0d6465ac0e69713a364824ac718e70ca",
+          "argument": "\"BRLAN animation group refs are truncated\""
+        },
+        {
+          "line": 378,
+          "type": "std::runtime_error",
+          "start": 11993,
+          "prefix_end": 12018,
+          "expression_end": 12061,
+          "before": "throw std::runtime_error(",
+          "after": "aurora::throw_host_exception<std::runtime_error>(",
+          "argument_sha256": "7ce52794c8b03a9c0f8bed11841e36652a21a666e055e5c78009c1cf149642b0",
+          "argument": "\"BRLAN animation share block is truncated\""
+        },
+        {
+          "line": 385,
+          "type": "std::runtime_error",
+          "start": 12322,
+          "prefix_end": 12347,
+          "expression_end": 12391,
+          "before": "throw std::runtime_error(",
+          "after": "aurora::throw_host_exception<std::runtime_error>(",
+          "argument_sha256": "f4b03f356de2c10dad49e63b6ca344bf00fa877cd234f8070cfa4ae899c28f9b",
+          "argument": "\"BRLAN animation share infos are truncated\""
+        },
+        {
+          "line": 454,
+          "type": "std::runtime_error",
+          "start": 14260,
+          "prefix_end": 14285,
+          "expression_end": 14320,
+          "before": "throw std::runtime_error(",
+          "after": "aurora::throw_host_exception<std::runtime_error>(",
+          "argument_sha256": "7023dc6f579ad62cb7f77365dd14925a049ed730e09eaaa6b064f7f8279f29b2",
+          "argument": "\"BRLAN file is missing RLAN magic\""
+        },
+        {
+          "line": 457,
+          "type": "std::runtime_error",
+          "start": 14370,
+          "prefix_end": 14395,
+          "expression_end": 14426,
+          "before": "throw std::runtime_error(",
+          "after": "aurora::throw_host_exception<std::runtime_error>(",
+          "argument_sha256": "eed61885fc146fc0f9ffde3275669f4fd25df9fc76b03c31988646f32405ce10",
+          "argument": "\"BRLAN file is not big-endian\""
+        },
+        {
+          "line": 467,
+          "type": "std::runtime_error",
+          "start": 14711,
+          "prefix_end": 14736,
+          "expression_end": 14775,
+          "before": "throw std::runtime_error(",
+          "after": "aurora::throw_host_exception<std::runtime_error>(",
+          "argument_sha256": "5ffdeb8f6a3d0cb6a3a2d801a89a3d831cbdc606b3da6834cf539c0b07de3012",
+          "argument": "\"BRLAN data block header is truncated\""
+        },
+        {
+          "line": 472,
+          "type": "std::runtime_error",
+          "start": 14912,
+          "prefix_end": 14937,
+          "expression_end": 14972,
+          "before": "throw std::runtime_error(",
+          "after": "aurora::throw_host_exception<std::runtime_error>(",
+          "argument_sha256": "38e99ef2b093dc89eade3588ec81552200c08fa55d7099fcdc6eac3a5182f9ef",
+          "argument": "\"BRLAN data block size is invalid\""
+        }
+      ]
+    },
+    {
+      "path": "aurora/include/JSystem/JAudio2/JAISound.hpp",
+      "sha256": "890dd0b874a7d0a5ad93d699fc87ced1b980299869df0dd204d3751d108ccf1e",
+      "held_by_parent": false,
+      "count": 1,
+      "occurrences": [
+        {
+          "line": 103,
+          "type": "std::invalid_argument",
+          "start": 2262,
+          "prefix_end": 2290,
+          "expression_end": 2369,
+          "before": "throw std::invalid_argument(",
+          "after": "aurora::throw_host_exception<std::invalid_argument>(",
+          "argument_sha256": "d7dfd176d82351f8867da8cfc3463f7e5d1378cd3b2f906d4efe4d26d653a0de",
+          "argument": "\n                \"A JAudio handle requires a concrete backend owner and token\""
+        }
+      ]
+    }
+  ]
+}

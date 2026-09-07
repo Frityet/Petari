@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "compat/StageSessionState.hpp"
 
 #include <exception>
@@ -16,13 +17,13 @@ namespace smgpc::compat {
         : _scene_name(scene_name), _stage_name(stage_name), _scenario_no(scenario_no), _initial_start_id(initial_start_id),
           _restart_id(initial_start_id), _metadata(std::move(metadata)) {
         if (_scene_name.empty()) {
-            throw std::invalid_argument("A stage session requires a scene name.");
+            aurora::throw_host_exception<std::invalid_argument>("A stage session requires a scene name.");
         }
         if (_stage_name.empty()) {
-            throw std::invalid_argument("A stage session requires a stage name.");
+            aurora::throw_host_exception<std::invalid_argument>("A stage session requires a stage name.");
         }
         if (_scenario_no <= 0) {
-            throw std::invalid_argument("A stage session requires a positive scenario number.");
+            aurora::throw_host_exception<std::invalid_argument>("A stage session requires a positive scenario number.");
         }
     }
 
@@ -73,7 +74,7 @@ namespace smgpc::compat {
     s32 StageSessionState::setup_already_done_flag(u16 name_hash, s32 zone_id,
                                                    s32 link_id, u32 *value) {
         if (value == nullptr) {
-            throw std::invalid_argument("Already-done setup requires an output value.");
+            aurora::throw_host_exception<std::invalid_argument>("Already-done setup requires an output value.");
         }
 
         const auto masked_hash = static_cast<u16>(name_hash & 0x7fffU);
@@ -89,7 +90,7 @@ namespace smgpc::compat {
         }
 
         if (_already_done_count == _already_done.size()) {
-            throw std::logic_error("The stage AlreadyDoneInfo registry exceeded its retail 64-entry capacity.");
+            aurora::throw_host_exception<std::logic_error>("The stage AlreadyDoneInfo registry exceeded its retail 64-entry capacity.");
         }
 
         const auto index = _already_done_count++;
@@ -105,7 +106,7 @@ namespace smgpc::compat {
 
     void StageSessionState::update_already_done_flag(s32 index, u32 value) {
         if (index < 0 || static_cast<std::size_t>(index) >= _already_done_count) {
-            throw std::out_of_range("Already-done update refers to an unallocated stage entry.");
+            aurora::throw_host_exception<std::out_of_range>("Already-done update refers to an unallocated stage entry.");
         }
         _already_done[static_cast<std::size_t>(index)].value = value != 0U;
     }
@@ -131,7 +132,7 @@ namespace smgpc::compat {
     StageSessionState &require_active_stage_session() {
         auto *session = try_active_stage_session();
         if (session == nullptr) {
-            throw std::logic_error("Stage-session state is unavailable outside an active stage lifetime.");
+            aurora::throw_host_exception<std::logic_error>("Stage-session state is unavailable outside an active stage lifetime.");
         }
         return *session;
     }

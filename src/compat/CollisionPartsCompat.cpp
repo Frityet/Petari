@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "compat/CollisionPartsCompat.hpp"
 
 #include "Game/LiveActor/HitSensor.hpp"
@@ -42,7 +43,7 @@ namespace {
 
     [[nodiscard]] std::array<float, 12U> copy_matrix(MtxPtr matrix) {
         if (matrix == nullptr) {
-            throw std::invalid_argument("CollisionParts requires a real placement matrix.");
+            aurora::throw_host_exception<std::invalid_argument>("CollisionParts requires a real placement matrix.");
         }
         return {
             matrix[0][0],
@@ -72,10 +73,10 @@ namespace {
     [[nodiscard]] ActorCollisionPartsState &require_actor_collision_parts(const LiveActor *actor) {
         const auto found = actor_collision_parts().find(actor);
         if (found == actor_collision_parts().end()) {
-            throw std::logic_error("LiveActor has no registered CollisionParts.");
+            aurora::throw_host_exception<std::logic_error>("LiveActor has no registered CollisionParts.");
         }
         if (found->second.empty()) {
-            throw std::logic_error("LiveActor has an empty CollisionParts registration list.");
+            aurora::throw_host_exception<std::logic_error>("LiveActor has an empty CollisionParts registration list.");
         }
         return found->second.front();
     }
@@ -145,11 +146,11 @@ namespace MR {
 
     ResourceHolder *createAndAddResourceHolder(const char *archive_name) {
         if (archive_name == nullptr) {
-            throw std::invalid_argument("ResourceHolder requires an exact archive name.");
+            aurora::throw_host_exception<std::invalid_argument>("ResourceHolder requires an exact archive name.");
         }
         auto *service = smgpc::compat::ResourceHolderService::active();
         if (service == nullptr) {
-            throw std::logic_error("ResourceHolder requires an active runtime owner.");
+            aurora::throw_host_exception<std::logic_error>("ResourceHolder requires an active runtime owner.");
         }
         return service->create_and_add(archive_name);
     }
@@ -159,12 +160,12 @@ namespace MR {
                                               MtxPtr matrix) {
         if (actor == nullptr || resource_name == nullptr || sensor == nullptr ||
             resource_holder == nullptr) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "CollisionParts requires an actor, resource name, sensor, and ResourceHolder.");
         }
         auto *collision = smgpc::scene::StageCollisionService::active();
         if (collision == nullptr) {
-            throw std::logic_error("CollisionParts requires an active stage collision owner.");
+            aurora::throw_host_exception<std::logic_error>("CollisionParts requires an active stage collision owner.");
         }
 
         auto actor_matrix = TPos3f{};
@@ -175,13 +176,13 @@ namespace MR {
         const auto host_matrix = copy_matrix(matrix);
 
         auto* resources = smgpc::compat::ResourceHolderService::active();
-        if (resources == nullptr) throw std::logic_error("CollisionParts requires its ResourceHolder owner");
+        if (resources == nullptr) aurora::throw_host_exception<std::logic_error>("CollisionParts requires its ResourceHolder owner");
         const auto& backing = resources->backing(*resource_holder);
         const auto kcl_name = std::string(resource_name) + ".kcl";
         const auto attributes_name = std::string(resource_name) + ".pa";
         const auto *kcl_entry = backing.archive().find_resource(kcl_name);
         if (kcl_entry == nullptr) {
-            throw std::runtime_error("Required CollisionParts KCL is unavailable: " + kcl_name);
+            aurora::throw_host_exception<std::runtime_error>("Required CollisionParts KCL is unavailable: " + kcl_name);
         }
         const auto *attributes_entry = backing.archive().find_resource(attributes_name);
         const auto kcl = backing.archive().file_data(*kcl_entry);
@@ -209,7 +210,7 @@ namespace MR {
         // checker at creation. Retain that identity when the scope ends.
         const auto placement_zone_id = MR::getCurrentPlacementZoneId();
         if (placement_zone_id < 0) {
-            throw std::logic_error("CollisionParts requires an active placement-zone ownership scope.");
+            aurora::throw_host_exception<std::logic_error>("CollisionParts requires an active placement-zone ownership scope.");
         }
         auto registration = std::make_shared<smgpc::scene::StageCollisionRegistrationState>(
             &actor->mFlag.mIsDead);
@@ -217,7 +218,7 @@ namespace MR {
                                                     attributes, sensor, placement_zone_id);
         if (!result.accepted) {
             registration->release_owner();
-            throw std::runtime_error("Required CollisionParts KCL is malformed: " + source);
+            aurora::throw_host_exception<std::runtime_error>("Required CollisionParts KCL is malformed: " + source);
         }
 
         actor_collision_parts()[actor].push_back(ActorCollisionPartsState{
@@ -236,7 +237,7 @@ namespace MR {
 
     f32 getCollisionBoundingSphereRange(const LiveActor *actor) {
         if (actor == nullptr) {
-            throw std::invalid_argument("CollisionParts bounding range requires a LiveActor.");
+            aurora::throw_host_exception<std::invalid_argument>("CollisionParts bounding range requires a LiveActor.");
         }
         return require_actor_collision_parts(actor).bounding_radius;
     }

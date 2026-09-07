@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "render/light/LightData.hpp"
 
 #include <algorithm>
@@ -159,14 +160,14 @@ namespace smgpc::render::light {
         configured.reserve(zones.size());
         for (const auto &zone : zones) {
             if (zone.zone_id < 0 || zone.zone_name.empty()) {
-                throw std::invalid_argument("stage light zones require a non-negative ID and authored zone name");
+                aurora::throw_host_exception<std::invalid_argument>("stage light zones require a non-negative ID and authored zone name");
             }
             const auto existing = std::ranges::find_if(configured, [&zone](const auto &candidate) {
                 return candidate.zone_id == zone.zone_id;
             });
             if (existing != configured.end()) {
                 if (existing->zone_name != zone.zone_name) {
-                    throw std::invalid_argument("one stage light zone ID cannot name multiple authored zones");
+                    aurora::throw_host_exception<std::invalid_argument>("one stage light zone ID cannot name multiple authored zones");
                 }
                 continue;
             }
@@ -187,7 +188,7 @@ namespace smgpc::render::light {
 
     void StageLightData::load_stage(smgpc::runtime::DvdFileSystemService &dvd, std::string_view stage_name) {
         if (stage_name.empty()) {
-            throw std::invalid_argument("stage light data requires a non-empty authored stage name");
+            aurora::throw_host_exception<std::invalid_argument>("stage light data requires a non-empty authored stage name");
         }
 
         clear_loaded_data();
@@ -290,7 +291,7 @@ namespace smgpc::render::light {
 
         const auto *main_entry = find_archive_file(archive, cMainLightDataPath);
         if (main_entry == nullptr) {
-            throw std::runtime_error("missing lightdata.bcsv in LightData.arc");
+            aurora::throw_host_exception<std::runtime_error>("missing lightdata.bcsv in LightData.arc");
         }
 
         const auto light_table = smgpc::resource::BcsvTable::from_bytes(archive.file_data(*main_entry));

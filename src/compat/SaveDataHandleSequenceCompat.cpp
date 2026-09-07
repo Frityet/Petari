@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "compat/SaveDataHandleSequenceCompat.hpp"
 
 #include <stdexcept>
@@ -9,7 +10,7 @@
 
 namespace {
 [[noreturn]] void unavailable(std::string_view operation) {
-    throw std::logic_error("SaveDataHandleSequence operation is unavailable without retail GameData/NAND backing: " +
+    aurora::throw_host_exception<std::logic_error>("SaveDataHandleSequence operation is unavailable without retail GameData/NAND backing: " +
                            std::string(operation));
 }
 }  // namespace

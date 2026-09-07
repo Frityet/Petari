@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Game/System/SysConfigFile.hpp"
 
 #include <cstring>
@@ -127,7 +128,7 @@ void SysConfigChunk::initHeaderSerializer() {
 
 s32 SysConfigChunk::serialize(u8* pBuffer, u32 size) const {
     if (pBuffer == nullptr || size < cBinarySize) {
-        throw std::length_error("Retail SYSC chunk destination is unavailable or too small");
+        aurora::throw_host_exception<std::length_error>("Retail SYSC chunk destination is unavailable or too small");
     }
     std::memset(pBuffer, 0, cBinarySize);
     write_be16(pBuffer, cAttributeCount);
@@ -177,6 +178,6 @@ void SysConfigFile::makeDataBinary(u8* pBuffer, u32 size) const {
 
 void SysConfigFile::loadFromDataBinary(const u8* pBuffer, u32 size) {
     if (!mChunkHolder->loadFromFileBinary(pBuffer, size)) {
-        throw std::invalid_argument("SYSC data is not a valid retail binary chunk file");
+        aurora::throw_host_exception<std::invalid_argument>("SYSC data is not a valid retail binary chunk file");
     }
 }

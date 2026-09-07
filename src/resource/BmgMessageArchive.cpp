@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "BmgMessageArchive.hpp"
 
 #include <algorithm>
@@ -42,7 +43,7 @@ namespace smgpc::resource {
 
         [[nodiscard]] std::string magic_string(std::span<const std::uint8_t> data, std::size_t offset) {
             if (offset + 4U > data.size()) {
-                throw std::runtime_error("BMG magic read past end of buffer");
+                aurora::throw_host_exception<std::runtime_error>("BMG magic read past end of buffer");
             }
 
             return std::string(reinterpret_cast<const char *>(data.data() + offset), 4U);
@@ -113,7 +114,7 @@ namespace smgpc::resource {
                     continue;
                 }
                 if (cursor + 1U >= raw_text.size()) {
-                    throw std::invalid_argument(
+                    aurora::throw_host_exception<std::invalid_argument>(
                         "BMG control marker has no size/type word");
                 }
 
@@ -122,7 +123,7 @@ namespace smgpc::resource {
                 const auto word_count = tag_word_count(packed_size_type);
                 if (size < 4U || (size & 1U) != 0U || word_count == 0U ||
                     cursor + word_count >= raw_text.size()) {
-                    throw std::invalid_argument(
+                    aurora::throw_host_exception<std::invalid_argument>(
                         "BMG control tag has an invalid size or truncated payload");
                 }
 
@@ -146,7 +147,7 @@ namespace smgpc::resource {
 
         [[nodiscard]] std::uint16_t read_be16(std::span<const std::uint8_t> data, std::size_t offset) {
             if (offset + 2U > data.size()) {
-                throw std::runtime_error("BMG read past end of buffer");
+                aurora::throw_host_exception<std::runtime_error>("BMG read past end of buffer");
             }
 
             return static_cast<std::uint16_t>((static_cast<std::uint16_t>(data[offset]) << 8U) | data[offset + 1U]);
@@ -154,7 +155,7 @@ namespace smgpc::resource {
 
         [[nodiscard]] std::uint32_t read_be32(std::span<const std::uint8_t> data, std::size_t offset) {
             if (offset + 4U > data.size()) {
-                throw std::runtime_error("BMG read past end of buffer");
+                aurora::throw_host_exception<std::runtime_error>("BMG read past end of buffer");
             }
 
             return (static_cast<std::uint32_t>(data[offset]) << 24U) | (static_cast<std::uint32_t>(data[offset + 1U]) << 16U) |
@@ -167,12 +168,12 @@ namespace smgpc::resource {
 
         [[nodiscard]] BmgHeader read_bmg_header(std::span<const std::uint8_t> data) {
             if (data.size() < BMG_HEADER_SIZE || read_be64(data, 0U) != MESG_MAGIC) {
-                throw std::runtime_error("BMG data is not a MESGbmg1 file");
+                aurora::throw_host_exception<std::runtime_error>("BMG data is not a MESGbmg1 file");
             }
 
             const auto file_size = read_be32(data, 0x08U);
             if (file_size > data.size()) {
-                throw std::runtime_error("BMG declared file size is outside buffer");
+                aurora::throw_host_exception<std::runtime_error>("BMG declared file size is outside buffer");
             }
 
             return BmgHeader {
@@ -189,18 +190,18 @@ namespace smgpc::resource {
             auto cursor = BMG_HEADER_SIZE;
             for (auto i = 0U; i < header.block_count; ++i) {
                 if (cursor + BMG_BLOCK_HEADER_SIZE > data.size()) {
-                    throw std::runtime_error("BMG block header is outside file");
+                    aurora::throw_host_exception<std::runtime_error>("BMG block header is outside file");
                 }
 
                 const auto block_size = read_be32(data, cursor + 4U);
                 if (block_size < BMG_BLOCK_HEADER_SIZE) {
-                    throw std::runtime_error("BMG block size is outside file");
+                    aurora::throw_host_exception<std::runtime_error>("BMG block size is outside file");
                 }
 
                 const auto remaining_size = data.size() - cursor;
                 const auto available_size = std::min<std::size_t>(block_size, remaining_size);
                 if (available_size < BMG_BLOCK_HEADER_SIZE) {
-                    throw std::runtime_error("BMG block available size is outside file");
+                    aurora::throw_host_exception<std::runtime_error>("BMG block available size is outside file");
                 }
 
                 blocks.push_back(BmgBlockInfo {
@@ -233,7 +234,7 @@ namespace smgpc::resource {
 
         [[nodiscard]] std::span<const std::uint8_t> block_data(std::span<const std::uint8_t> data, const BmgBlockInfo &block) {
             if (block.offset + block.available_size > data.size()) {
-                throw std::runtime_error("BMG block data is outside file");
+                aurora::throw_host_exception<std::runtime_error>("BMG block data is outside file");
             }
 
             return data.subspan(block.offset, block.available_size);
@@ -248,7 +249,7 @@ namespace smgpc::resource {
 
             const auto flw = block_data(bmg_data, *flw_info);
             if (flw.size() < 0x10U) {
-                throw std::runtime_error("BMG FLW1 block is truncated");
+                aurora::throw_host_exception<std::runtime_error>("BMG FLW1 block is truncated");
             }
 
             auto flow = BmgFlowData {
@@ -266,7 +267,7 @@ namespace smgpc::resource {
             const auto branch_table_offset = node_table_offset + node_table_size;
             const auto branch_table_size = static_cast<std::size_t>(flow.branch_count) * 2U;
             if (branch_table_offset + branch_table_size > flw.size()) {
-                throw std::runtime_error("BMG FLW1 node or branch table is truncated");
+                aurora::throw_host_exception<std::runtime_error>("BMG FLW1 node or branch table is truncated");
             }
 
             flow.nodes.reserve(flow.node_count);
@@ -293,16 +294,16 @@ namespace smgpc::resource {
             if (const auto *fli_info = find_block(blocks, "FLI1"); fli_info != nullptr) {
                 const auto fli = block_data(bmg_data, *fli_info);
                 if (fli.size() < 0x10U) {
-                    throw std::runtime_error("BMG FLI1 block is truncated");
+                    aurora::throw_host_exception<std::runtime_error>("BMG FLI1 block is truncated");
                 }
 
                 const auto entry_count = read_be16(fli, 0x08U);
                 const auto entry_size = fli[0x0aU];
                 if (entry_size < 8U) {
-                    throw std::runtime_error("BMG FLI1 entry size is too small");
+                    aurora::throw_host_exception<std::runtime_error>("BMG FLI1 entry size is too small");
                 }
                 if (0x10U + static_cast<std::size_t>(entry_count) * entry_size > fli.size()) {
-                    throw std::runtime_error("BMG FLI1 entries are truncated");
+                    aurora::throw_host_exception<std::runtime_error>("BMG FLI1 entries are truncated");
                 }
 
                 flow.index_entries.reserve(entry_count);
@@ -330,13 +331,13 @@ namespace smgpc::resource {
                 }
             }
 
-            throw std::runtime_error("Message archive is missing required BMG resource");
+            aurora::throw_host_exception<std::runtime_error>("Message archive is missing required BMG resource");
         }
 
         [[nodiscard]] DecodedBmgText decode_utf16be_bmg_text(std::span<const std::uint8_t> data, std::size_t offset) {
             auto decoded = DecodedBmgText {};
             if (offset >= data.size()) {
-                throw std::runtime_error("BMG text offset is outside DAT1 data");
+                aurora::throw_host_exception<std::runtime_error>("BMG text offset is outside DAT1 data");
             }
 
             auto cursor = offset;
@@ -350,12 +351,12 @@ namespace smgpc::resource {
                 decoded.raw_text.push_back(static_cast<char16_t>(code));
                 if (code == BMG_CONTROL_MARKER) {
                     if (cursor >= data.size()) {
-                        throw std::runtime_error("BMG control sequence is truncated");
+                        aurora::throw_host_exception<std::runtime_error>("BMG control sequence is truncated");
                     }
 
                     const auto control_size = data[cursor];
                     if (control_size < 2U || cursor + static_cast<std::size_t>(control_size - 2U) > data.size()) {
-                        throw std::runtime_error("BMG control sequence size is invalid");
+                        aurora::throw_host_exception<std::runtime_error>("BMG control sequence size is invalid");
                     }
 
                     const auto control_end = cursor + static_cast<std::size_t>(control_size - 2U);
@@ -370,29 +371,29 @@ namespace smgpc::resource {
                 decoded.display_text.push_back(static_cast<char16_t>(code));
             }
 
-            throw std::runtime_error("BMG text is not null terminated");
+            aurora::throw_host_exception<std::runtime_error>("BMG text is not null terminated");
         }
 
         [[nodiscard]] std::vector<BmgMessage> parse_bmg_messages(std::span<const std::uint8_t> bmg_data,
                                                                  std::span<const BmgBlockInfo> blocks, std::uint8_t encoding) {
             if (encoding != UTF16_ENCODING_SIZE) {
-                throw std::runtime_error("BMG text encoding is not UTF-16BE");
+                aurora::throw_host_exception<std::runtime_error>("BMG text encoding is not UTF-16BE");
             }
 
             const auto *inf1 = find_block(blocks, "INF1");
             const auto *dat1 = find_block(blocks, "DAT1");
             if (inf1 == nullptr || dat1 == nullptr) {
-                throw std::runtime_error("BMG data is missing INF1 or DAT1 blocks");
+                aurora::throw_host_exception<std::runtime_error>("BMG data is missing INF1 or DAT1 blocks");
             }
 
             const auto message_count = read_be16(bmg_data, inf1->offset + 0x08U);
             const auto item_size = read_be16(bmg_data, inf1->offset + 0x0aU);
             if (item_size < 4U) {
-                throw std::runtime_error("BMG INF1 item size is too small");
+                aurora::throw_host_exception<std::runtime_error>("BMG INF1 item size is too small");
             }
             if (inf1->offset + INF1_ENTRIES_OFFSET + static_cast<std::size_t>(message_count) * item_size >
                 inf1->offset + inf1->available_size) {
-                throw std::runtime_error("BMG INF1 entries are truncated");
+                aurora::throw_host_exception<std::runtime_error>("BMG INF1 entries are truncated");
             }
 
             const auto dat1_text = bmg_data.subspan(dat1->offset + BMG_BLOCK_HEADER_SIZE, dat1->available_size - BMG_BLOCK_HEADER_SIZE);
@@ -434,10 +435,10 @@ namespace smgpc::resource {
                 const auto id = table.get_string(entry, "MessageId");
                 const auto index = table.get_s32(entry, "Index");
                 if (!id.has_value() || !index.has_value()) {
-                    throw std::runtime_error("MessageId.tbl is missing MessageId or Index fields");
+                    aurora::throw_host_exception<std::runtime_error>("MessageId.tbl is missing MessageId or Index fields");
                 }
                 if (*index < 0 || static_cast<std::size_t>(*index) >= messages.size()) {
-                    throw std::runtime_error("MessageId.tbl index is outside BMG message table");
+                    aurora::throw_host_exception<std::runtime_error>("MessageId.tbl index is outside BMG message table");
                 }
 
                 messages[static_cast<std::size_t>(*index)].id = *id;
@@ -447,7 +448,7 @@ namespace smgpc::resource {
                 return message.id.empty();
             });
             if (missing_id != messages.end()) {
-                throw std::runtime_error("MessageId.tbl did not name every BMG message");
+                aurora::throw_host_exception<std::runtime_error>("MessageId.tbl did not name every BMG message");
             }
         }
 
@@ -533,7 +534,7 @@ namespace smgpc::resource {
                 continue;
             }
             if (cursor + 1U >= raw_text.size()) {
-                throw std::invalid_argument(
+                aurora::throw_host_exception<std::invalid_argument>(
                     "BMG control marker has no size/type word");
             }
 
@@ -542,7 +543,7 @@ namespace smgpc::resource {
             const auto word_count = tag_word_count(packed_size_type);
             if (size < 4U || (size & 1U) != 0U || word_count == 0U ||
                 cursor + word_count >= raw_text.size()) {
-                throw std::invalid_argument(
+                aurora::throw_host_exception<std::invalid_argument>(
                     "BMG control tag has an invalid size or truncated payload");
             }
 
@@ -552,7 +553,7 @@ namespace smgpc::resource {
                 auto payload = static_cast<std::uint16_t>(raw_text[cursor + 2U]);
                 if (payload == BMG_PICTURE_PLAYER_PAYLOAD) {
                     if (!player_character.has_value()) {
-                        throw std::logic_error(
+                        aurora::throw_host_exception<std::logic_error>(
                             "BMG player-picture tag requires an explicit Mario or Luigi policy");
                     }
                     payload = *player_character == BmgPlayerCharacter::Mario
@@ -561,7 +562,7 @@ namespace smgpc::resource {
                 }
                 if (payload > std::numeric_limits<std::uint16_t>::max() -
                                   BMG_PICTURE_CODE_BASE) {
-                    throw std::out_of_range("BMG picture-tag payload is outside UTF-16");
+                    aurora::throw_host_exception<std::out_of_range>("BMG picture-tag payload is outside UTF-16");
                 }
                 const auto picture_code = static_cast<char16_t>(payload + BMG_PICTURE_CODE_BASE);
                 append_token(tokens, BmgTextToken::Role::Picture,

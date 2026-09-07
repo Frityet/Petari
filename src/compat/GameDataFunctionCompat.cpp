@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Game/System/GameDataFunction.hpp"
 
 #include <cstring>
@@ -17,7 +18,7 @@ thread_local GameDataHolder* sCurrentGameDataOverride = nullptr;
 thread_local GameDataHolder* sSceneStartGameDataOverride = nullptr;
 
 [[noreturn]] void unavailable(std::string_view operation) {
-    throw std::logic_error("GameDataFunction operation is unavailable: " + std::string(operation));
+    aurora::throw_host_exception<std::logic_error>("GameDataFunction operation is unavailable: " + std::string(operation));
 }
 
 UserFile& require_current_user_file() {

@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "compat/HitInfoCompat.hpp"
 
 #include "Game/LiveActor/HitSensor.hpp"
@@ -33,7 +34,7 @@ namespace {
     [[nodiscard]] smgpc::scene::StageCollisionMatrices& triangle_matrices(const Triangle& triangle) {
         auto* collision = smgpc::scene::StageCollisionService::active();
         if (collision == nullptr) {
-            throw std::logic_error("Triangle transforms require an active collision owner.");
+            aurora::throw_host_exception<std::logic_error>("Triangle transforms require an active collision owner.");
         }
         return collision->matrices_for_triangle(triangle.mIdx);
     }
@@ -45,7 +46,7 @@ namespace smgpc::compat {
                                      std::uint32_t triangle_index) {
         const auto surface = collision.surface(triangle_index);
         if (!surface.has_value()) {
-            throw std::logic_error("A collision hit requires its live source KCL prism.");
+            aurora::throw_host_exception<std::logic_error>("A collision hit requires its live source KCL prism.");
         }
         auto triangle = Triangle{};
         triangle.mIdx = triangle_index;
@@ -91,7 +92,7 @@ const char* Triangle::getHostName() const {
 s32 Triangle::getHostPlacementZoneID() const {
     const auto surface = triangle_surface(*this);
     if (!surface.has_value() || !surface->placement_zone_id.has_value()) {
-        throw std::logic_error("Triangle placement-zone lookup requires a live collision owner with placement provenance.");
+        aurora::throw_host_exception<std::logic_error>("Triangle placement-zone lookup requires a live collision owner with placement provenance.");
     }
     return *surface->placement_zone_id;
 }
@@ -108,7 +109,7 @@ void Triangle::calcForceMovePower(TVec3f* output, const TVec3f& position) const 
         return;
     }
     if (!triangle_surface(*this).has_value()) {
-        throw std::logic_error("Motion queries require a live collision triangle.");
+        aurora::throw_host_exception<std::logic_error>("Motion queries require a live collision triangle.");
     }
     output->zero();
 }

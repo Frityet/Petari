@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "DebugPaths.hpp"
 #include "render/J3dAnimation.hpp"
 #include "resource/RarcArchive.hpp"
@@ -123,7 +124,7 @@ int main(int argc, char **argv) try {
         const auto output = out_dir / (entry.path + ".md");
         auto file = std::ofstream(output);
         if (!file) {
-            throw std::runtime_error("cannot write " + output.string());
+            aurora::throw_host_exception<std::runtime_error>("cannot write " + output.string());
         }
 
         write_summary(file, entry.path, animation);

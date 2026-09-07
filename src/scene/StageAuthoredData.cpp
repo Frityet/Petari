@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "scene/StageAuthoredData.hpp"
 
 #include "runtime/RuntimeServices.hpp"
@@ -72,7 +73,7 @@ namespace smgpc::scene {
     NameObjPlacementContext StageAuthoredData::placement_context(
         std::size_t placement_index) const {
         if (placement_index >= _placements.size()) {
-            throw std::out_of_range(
+            aurora::throw_host_exception<std::out_of_range>(
                 "Authored placement index is outside the retained stage data.");
         }
 
@@ -80,7 +81,7 @@ namespace smgpc::scene {
         const auto iter = JMapInfoIter(
             &placement.jmap_info, placement.jmap_entry_index);
         if (!iter.isValid()) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Authored placement does not retain a valid JMap row.");
         }
         return NameObjPlacementContext{
@@ -96,14 +97,14 @@ namespace smgpc::scene {
 
     NameObjPlacementContext StageAuthoredData::start_context() const {
         if (!_start_info.has_value()) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "The retained stage data has no selected StartInfo row.");
         }
 
         const auto &start = *_start_info;
         const auto iter = start.iter();
         if (!iter.isValid()) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "The retained stage StartInfo does not contain a valid JMap row.");
         }
         return NameObjPlacementContext{

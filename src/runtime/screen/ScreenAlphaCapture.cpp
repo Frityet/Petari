@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Game/Screen/ScreenAlphaCapture.hpp"
 #include "runtime/ScreenAlphaCaptureService.hpp"
 
@@ -22,7 +23,7 @@ namespace {
 
 namespace smgpc::runtime {
     ScreenAlphaCaptureService::ScreenAlphaCaptureService() {
-        if (s_service) throw std::logic_error("A screen-alpha texture owner is already installed");
+        if (s_service) aurora::throw_host_exception<std::logic_error>("A screen-alpha texture owner is already installed");
         s_service = this;
     }
 
@@ -31,7 +32,7 @@ namespace smgpc::runtime {
     }
 
     ScreenAlphaCaptureService& ScreenAlphaCaptureService::active() {
-        if (!s_service) throw std::logic_error("Screen-alpha textures require an active runtime owner");
+        if (!s_service) aurora::throw_host_exception<std::logic_error>("Screen-alpha textures require an active runtime owner");
         return *s_service;
     }
 

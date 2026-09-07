@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Game/LiveActor/Binder.hpp"
 
 #include "Game/LiveActor/LiveActor.hpp"
@@ -13,7 +14,7 @@ Binder::~Binder() {
 namespace MR {
     void setBinderOffsetVec(LiveActor* actor, const TVec3f* offset, bool local_space) {
         if (actor == nullptr || actor->mBinder == nullptr) {
-            throw std::invalid_argument("setBinderOffsetVec requires a real actor Binder.");
+            aurora::throw_host_exception<std::invalid_argument>("setBinderOffsetVec requires a real actor Binder.");
         }
         actor->mBinder->mOffsetVec = offset;
         actor->mBinder->_1EC._4 = local_space;

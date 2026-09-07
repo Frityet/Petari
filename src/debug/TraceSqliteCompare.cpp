@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "DebugPaths.hpp"
 #include "Sqlite.hpp"
 #include "TraceAnalysis.hpp"
@@ -26,11 +27,11 @@ namespace {
             std::size_t parsed = 0;
             const auto value = std::stoll(std::string(text), &parsed, 10);
             if (parsed != text.size()) {
-                throw std::runtime_error("");
+                aurora::throw_host_exception<std::runtime_error>("");
             }
             return value;
         } catch (const std::exception &) {
-            throw std::runtime_error(std::string(name) + " requires an integer");
+            aurora::throw_host_exception<std::runtime_error>(std::string(name) + " requires an integer");
         }
     }
 
@@ -51,47 +52,47 @@ namespace {
             }
             if (arg == "--database") {
                 if (i + 1 >= argc) {
-                    throw std::runtime_error("--database requires a path");
+                    aurora::throw_host_exception<std::runtime_error>("--database requires a path");
                 }
                 options.database = argv[++i];
                 continue;
             }
             if (arg == "--reference-trace-id") {
                 if (i + 1 >= argc) {
-                    throw std::runtime_error("--reference-trace-id requires an id");
+                    aurora::throw_host_exception<std::runtime_error>("--reference-trace-id requires an id");
                 }
                 options.reference_trace_id = parse_i64(argv[++i], "--reference-trace-id");
                 continue;
             }
             if (arg == "--candidate-trace-id") {
                 if (i + 1 >= argc) {
-                    throw std::runtime_error("--candidate-trace-id requires an id");
+                    aurora::throw_host_exception<std::runtime_error>("--candidate-trace-id requires an id");
                 }
                 options.candidate_trace_id = parse_i64(argv[++i], "--candidate-trace-id");
                 continue;
             }
             if (arg == "--max-signature-diffs") {
                 if (i + 1 >= argc) {
-                    throw std::runtime_error("--max-signature-diffs requires a count");
+                    aurora::throw_host_exception<std::runtime_error>("--max-signature-diffs requires a count");
                 }
                 options.max_signature_diffs = parse_i64(argv[++i], "--max-signature-diffs");
                 continue;
             }
             if (arg == "--max-semantic-anchors") {
                 if (i + 1 >= argc) {
-                    throw std::runtime_error("--max-semantic-anchors requires a count");
+                    aurora::throw_host_exception<std::runtime_error>("--max-semantic-anchors requires a count");
                 }
                 options.max_semantic_anchors = parse_i64(argv[++i], "--max-semantic-anchors");
                 continue;
             }
             if (arg == "--max-layout-runtime-diffs") {
                 if (i + 1 >= argc) {
-                    throw std::runtime_error("--max-layout-runtime-diffs requires a count");
+                    aurora::throw_host_exception<std::runtime_error>("--max-layout-runtime-diffs requires a count");
                 }
                 options.max_layout_runtime_diffs = parse_i64(argv[++i], "--max-layout-runtime-diffs");
                 continue;
             }
-            throw std::runtime_error("unknown argument: " + std::string(arg));
+            aurora::throw_host_exception<std::runtime_error>("unknown argument: " + std::string(arg));
         }
 
         return options;
@@ -118,7 +119,7 @@ int main(int argc, char **argv) try {
         options.candidate_trace_id = smgpc::trace::first_trace_id_for_emulator(db, "pc-port");
     }
     if (!options.reference_trace_id.has_value() || !options.candidate_trace_id.has_value()) {
-        throw std::runtime_error("database must contain one dolphin trace and one pc-port trace, or explicit trace ids");
+        aurora::throw_host_exception<std::runtime_error>("database must contain one dolphin trace and one pc-port trace, or explicit trace ids");
     }
 
     std::cout << "database: " << options.database << '\n';

@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "CameraPose.hpp"
 
 #include <cmath>
@@ -29,7 +30,7 @@ namespace smgpc::camera {
         [[nodiscard]] CameraParamVec3 normalized(const CameraParamVec3 &value) {
             const auto length = std::sqrt(dot(value, value));
             if (length <= 0.000001F) {
-                throw std::logic_error("camera view basis is degenerate");
+                aurora::throw_host_exception<std::logic_error>("camera view basis is degenerate");
             }
 
             return CameraParamVec3 {

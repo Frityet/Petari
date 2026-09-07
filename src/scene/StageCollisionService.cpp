@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "scene/StageCollisionService.hpp"
 
 #include "scene/StagePlacementResolver.hpp"
@@ -82,12 +83,12 @@ namespace smgpc::scene {
                     return generation;
                 }
             }
-            throw std::overflow_error("Stage collision service generations are exhausted.");
+            aurora::throw_host_exception<std::overflow_error>("Stage collision service generations are exhausted.");
         }
 
         [[nodiscard]] std::uint16_t read_be16(std::span<const std::uint8_t> bytes, std::size_t offset) {
             if (offset + 2U > bytes.size()) {
-                throw std::runtime_error("KCL u16 read is outside resource");
+                aurora::throw_host_exception<std::runtime_error>("KCL u16 read is outside resource");
             }
             return static_cast<std::uint16_t>((static_cast<std::uint16_t>(bytes[offset]) << 8U) |
                                               static_cast<std::uint16_t>(bytes[offset + 1U]));
@@ -95,7 +96,7 @@ namespace smgpc::scene {
 
         [[nodiscard]] std::uint32_t read_be32(std::span<const std::uint8_t> bytes, std::size_t offset) {
             if (offset + 4U > bytes.size()) {
-                throw std::runtime_error("KCL u32 read is outside resource");
+                aurora::throw_host_exception<std::runtime_error>("KCL u32 read is outside resource");
             }
             return (static_cast<std::uint32_t>(bytes[offset]) << 24U) |
                    (static_cast<std::uint32_t>(bytes[offset + 1U]) << 16U) |
@@ -378,10 +379,10 @@ namespace smgpc::scene {
         std::optional<std::int32_t> placement_zone_id) {
         const aurora::allocation::HostAllocationScope host_allocations;
         if (sensor != nullptr && registration == nullptr) {
-            throw std::invalid_argument("Collision sensor ownership requires a retained registration lifetime.");
+            aurora::throw_host_exception<std::invalid_argument>("Collision sensor ownership requires a retained registration lifetime.");
         }
         if (placement_zone_id.has_value() && *placement_zone_id < 0) {
-            throw std::invalid_argument("Collision placement provenance requires a non-negative zone ID.");
+            aurora::throw_host_exception<std::invalid_argument>("Collision placement provenance requires a non-negative zone ID.");
         }
         if (bytes.size() < 0x38U) {
             return {};
@@ -538,7 +539,7 @@ namespace smgpc::scene {
             triangle.attribute = attribute;
             const auto triangle_index = sNextTriangleIndex.fetch_add(1U, std::memory_order_relaxed);
             if (triangle_index >= std::numeric_limits<std::uint32_t>::max()) {
-                throw std::overflow_error("Stage collision exhausted stable Triangle identities.");
+                aurora::throw_host_exception<std::overflow_error>("Stage collision exhausted stable Triangle identities.");
             }
             triangle.triangle_index = static_cast<std::uint32_t>(triangle_index);
             triangle.source_index = source_index;
@@ -603,11 +604,11 @@ namespace smgpc::scene {
         // Retail CollisionParts has 32 point and 512 prism stack slots.
         // Reject calls outside that contract instead of overrunning them.
         if (points.size() > 32U || maximum > 512U) {
-            throw std::invalid_argument("Area polygon queries exceed the original point/prism capacity.");
+            aurora::throw_host_exception<std::invalid_argument>("Area polygon queries exceed the original point/prism capacity.");
         }
         for (const auto& point : points) {
             if (!std::isfinite(point.x) || !std::isfinite(point.y) || !std::isfinite(point.z)) {
-                throw std::invalid_argument("Area polygon queries require finite points.");
+                aurora::throw_host_exception<std::invalid_argument>("Area polygon queries require finite points.");
             }
         }
 
@@ -710,7 +711,7 @@ namespace smgpc::scene {
                 Mtx matrix, inverse;
                 std::copy(source.matrix.begin(), source.matrix.end(), &matrix[0][0]);
                 if (PSMTXInverse(matrix, inverse) == 0U) {
-                    throw std::logic_error("Area polygon queries require an invertible collision part matrix.");
+                    aurora::throw_host_exception<std::logic_error>("Area polygon queries require an invertible collision part matrix.");
                 }
                 auto local_points = std::array<TVec3f, 32U>{};
                 for (auto point = std::size_t{}; point < points.size(); ++point) {
@@ -728,7 +729,7 @@ namespace smgpc::scene {
                     const auto local_index = server.toIndex(prisms[prism]);
                     const auto identity = source.prism_triangles.at(static_cast<std::size_t>(local_index));
                     if (identity == std::numeric_limits<std::uint32_t>::max()) {
-                        throw std::logic_error("KCL area query selected a prism without a registered native surface.");
+                        aurora::throw_host_exception<std::logic_error>("KCL area query selected a prism without a registered native surface.");
                     }
                     result.push_back(identity);
                 }
@@ -960,7 +961,7 @@ namespace smgpc::scene {
             return result;
         }
         if (maximum_contacts > std::numeric_limits<u32>::max()) {
-            throw std::invalid_argument("A Binder plane capacity must fit its original u32 count.");
+            aurora::throw_host_exception<std::invalid_argument>("A Binder plane capacity must fit its original u32 count.");
         }
 
         // Geometry probes use a real Binder as well. This service owns only
@@ -997,7 +998,7 @@ namespace smgpc::scene {
             const auto& info = *binder.getPlane(static_cast<int>(index));
             const auto source = surface(info.mParentTriangle.mIdx);
             if (!source.has_value()) {
-                throw std::logic_error("A Binder contact must retain its live source prism.");
+                aurora::throw_host_exception<std::logic_error>("A Binder contact must retain its live source prism.");
             }
             result.contacts.push_back(StageCollisionContact{
                 .position = info.mHitPos,
@@ -1042,7 +1043,7 @@ namespace smgpc::scene {
         const aurora::allocation::HostAllocationScope host_allocations;
         const auto hit = surface(triangle_index);
         if (!hit) {
-            throw std::logic_error("Collision transforms require a live source triangle.");
+            aurora::throw_host_exception<std::logic_error>("Collision transforms require a live source triangle.");
         }
         const auto& source = _sources[hit->source_index];
         if (!source.matrices) {
@@ -1051,7 +1052,7 @@ namespace smgpc::scene {
                 for (std::size_t column = 0; column < 4; ++column) {
                     const auto value = source.matrix[row * 4 + column];
                     if (!std::isfinite(value)) {
-                        throw std::logic_error("Collision transforms require a finite source matrix.");
+                        aurora::throw_host_exception<std::logic_error>("Collision transforms require a finite source matrix.");
                     }
                     matrices->base.mMtx[row][column] = value;
                 }
@@ -1060,7 +1061,7 @@ namespace smgpc::scene {
             // affine matrix and uses the SDK inverse, including authored scale.
             matrices->previous.set(matrices->base);
             if (PSMTXInverse(matrices->base.toMtxPtr(), matrices->inverse.toMtxPtr()) == 0) {
-                throw std::logic_error("Collision transforms require an invertible source matrix.");
+                aurora::throw_host_exception<std::logic_error>("Collision transforms require an invertible source matrix.");
             }
             source.matrices = std::move(matrices);
         }

@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Game/NameObj/NameObjExecuteHolder.hpp"
 
 #include "Game/LiveActor/LiveActor.hpp"
@@ -9,7 +10,7 @@
 namespace {
     smgpc::runtime::SceneScheduler &require_scheduler(NameObj *object) {
         if (object == nullptr) {
-            throw std::invalid_argument("Temporary draw connection requires a NameObj.");
+            aurora::throw_host_exception<std::invalid_argument>("Temporary draw connection requires a NameObj.");
         }
         if (auto *scheduler = smgpc::runtime::try_active_scene_scheduler(); scheduler != nullptr) {
             return *scheduler;
@@ -17,7 +18,7 @@ namespace {
         if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr) {
             return runtime->scheduler();
         }
-        throw std::logic_error("Temporary draw connection requires an active runtime scene.");
+        aurora::throw_host_exception<std::logic_error>("Temporary draw connection requires an active runtime scene.");
     }
 }
 
@@ -37,7 +38,7 @@ namespace MR {
 
     void findActorLightInfo(const LiveActor *actor) {
         if (actor == nullptr) {
-            throw std::invalid_argument("Actor light lookup requires a LiveActor.");
+            aurora::throw_host_exception<std::invalid_argument>("Actor light lookup requires a LiveActor.");
         }
         auto &scheduler = require_scheduler(const_cast<LiveActor *>(actor));
         scheduler.find_actor_light_info(*const_cast<LiveActor *>(actor));

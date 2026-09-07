@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
@@ -58,18 +59,18 @@ namespace MR {
 
     void setGroupClipping(LiveActor* pActor, const JMapInfoIter& rIter, int) {
         if (pActor == nullptr) {
-            throw std::invalid_argument("Group clipping requires a LiveActor.");
+            aurora::throw_host_exception<std::invalid_argument>("Group clipping requires a LiveActor.");
         }
 
         auto clipping_group_id = s32{-1};
         if (MR::getJMapInfoClippingGroupID(rIter, &clipping_group_id) && clipping_group_id >= 0) {
-            throw std::logic_error("Group clipping is unavailable without ClippingGroupHolder.");
+            aurora::throw_host_exception<std::logic_error>("Group clipping is unavailable without ClippingGroupHolder.");
         }
     }
 
     MsgSharedGroup* joinToGroupArray(LiveActor* pActor, const JMapInfoIter& rIter, const char*, s32) {
         if (pActor == nullptr) {
-            throw std::invalid_argument("LiveActorGroupArray registration requires a LiveActor.");
+            aurora::throw_host_exception<std::invalid_argument>("LiveActorGroupArray registration requires a LiveActor.");
         }
         if (!rIter.isValid()) {
             return nullptr;
@@ -79,7 +80,7 @@ namespace MR {
         if (!MR::getJMapInfoGroupID(rIter, &group_id) || group_id < 0) {
             return nullptr;
         }
-        throw std::logic_error(
+        aurora::throw_host_exception<std::logic_error>(
             "LiveActorGroupArray registration is unavailable without the real scene-owned group manager.");
     }
 
@@ -127,7 +128,7 @@ namespace MR {
         smgpc::runtime::CameraSystemService& cameraSystemForShake() {
             auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
             if (runtime == nullptr) {
-                throw std::logic_error("Camera shake requires an active camera runtime.");
+                aurora::throw_host_exception<std::logic_error>("Camera shake requires an active camera runtime.");
             }
             return runtime->camera_system();
         }

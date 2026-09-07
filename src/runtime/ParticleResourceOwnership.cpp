@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "runtime/ParticleResourceOwnership.hpp"
 #include "runtime/ArchiveMountService.hpp"
 #include "compat/JkrAllocationDomain.hpp"
@@ -35,9 +36,9 @@ ParticleResourceOwnership::ParticleResourceOwnership(
     std::size_t byte_budget, ArchiveMountService& mounts) {
     compat::JkrHostAllocationScope host;
     if (!runtime || ArchiveMountService::active() != &mounts)
-        throw std::invalid_argument("Particle resources require the active archive service and real heap runtime");
+        aurora::throw_host_exception<std::invalid_argument>("Particle resources require the active archive service and real heap runtime");
     if (active_particles)
-        throw std::logic_error("An actual particle resource holder is already published");
+        aurora::throw_host_exception<std::logic_error>("An actual particle resource holder is already published");
 
     auto storage = std::make_unique<Storage>();
     storage->domain = compat::JkrAllocationDomain::create(std::move(runtime), byte_budget);
@@ -47,10 +48,10 @@ ParticleResourceOwnership::ParticleResourceOwnership(
     auto* archive = mounts.mount(particle_archive, &storage->domain->heap());
     storage->archive = mounts.retain(particle_archive);
     if (!storage->archive || &storage->archive->archive() != archive)
-        throw std::logic_error("Particle resource preload lost its actual mounted archive");
+        aurora::throw_host_exception<std::logic_error>("Particle resource preload lost its actual mounted archive");
     for (const auto* resource : {"Particles.jpc", "ParticleNames.bcsv", "AutoEffectList.bcsv"})
         if (!archive->getResource(resource))
-            throw std::runtime_error("Particle resource archive is missing an original required resource");
+            aurora::throw_host_exception<std::runtime_error>("Particle resource archive is missing an original required resource");
     const auto initial_free = storage->domain->heap().getFreeSize();
     {
         compat::JkrAllocationScope heap(storage->domain);

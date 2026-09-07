@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "DebugPaths.hpp"
 #include <aurora/nw4r/brlan.hpp>
 #include "layout/BrlytLayout.hpp"
@@ -229,7 +230,7 @@ namespace {
 
         auto out = std::ofstream(output);
         if (!out) {
-            throw std::runtime_error("cannot write layout probe " + output.string());
+            aurora::throw_host_exception<std::runtime_error>("cannot write layout probe " + output.string());
         }
 
         out << "# Layout Probe: " << layout_name << "\n\n";
@@ -409,7 +410,7 @@ int main(int argc, char **argv) try {
     const auto archive = smgpc::resource::RarcArchive::from_file(archive_path);
     const auto brlyt = find_archive_file(archive, ".brlyt");
     if (!brlyt.has_value()) {
-        throw std::runtime_error("layout archive has no BRLYT: " + archive_path.string());
+        aurora::throw_host_exception<std::runtime_error>("layout archive has no BRLYT: " + archive_path.string());
     }
 
     const auto layout = smgpc::layout::parse_brlyt_layout(*brlyt);

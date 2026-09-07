@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "resource/KCollisionResource.hpp"
 
 #include "resource/JMapResource.hpp"
@@ -22,7 +23,7 @@ namespace {
 
     void require(bool condition, const char* message) {
         if (!condition) {
-            throw std::invalid_argument(message);
+            aurora::throw_host_exception<std::invalid_argument>(message);
         }
     }
 

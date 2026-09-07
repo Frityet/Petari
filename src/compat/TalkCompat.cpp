@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "Game/NPC/TalkMessageCtrl.hpp"
 
 #include "Game/LiveActor/LiveActor.hpp"
@@ -247,7 +248,7 @@ namespace MR {
 
     const TVec3f& getMessageBalloonFollowOffset(const TalkMessageCtrl* controller) {
         if (controller == nullptr) {
-            throw std::logic_error("Talk balloon offset query requires a TalkMessageCtrl.");
+            aurora::throw_host_exception<std::logic_error>("Talk balloon offset query requires a TalkMessageCtrl.");
         }
         return controller->mMsgBalloonFollowOffs;
     }

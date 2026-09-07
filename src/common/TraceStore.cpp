@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "TraceStore.hpp"
 
 #include <algorithm>
@@ -244,7 +245,7 @@ namespace smgpc::trace {
             try {
                 return Json::parse(text.begin(), text.end());
             } catch (const nlohmann::json::exception &e) {
-                throw std::runtime_error(std::string("could not parse stored trace JSON for ") + std::string(description) + ": " + e.what());
+                aurora::throw_host_exception<std::runtime_error>(std::string("could not parse stored trace JSON for ") + std::string(description) + ": " + e.what());
             }
         }
 
@@ -1044,7 +1045,7 @@ namespace smgpc::trace {
         auto select = sql::Statement(db, "SELECT source_json FROM traces WHERE id = ?");
         select.bind(1, trace_id);
         if (!select.step()) {
-            throw std::runtime_error("trace id not found: " + std::to_string(trace_id));
+            aurora::throw_host_exception<std::runtime_error>("trace id not found: " + std::to_string(trace_id));
         }
         const auto source = select.column_text(0).value_or(std::string {});
         return parse_stored_json(source, "trace " + std::to_string(trace_id));
@@ -1100,7 +1101,7 @@ namespace smgpc::trace {
         auto select = sql::Statement(source, "SELECT path, source_json, emulator FROM traces WHERE id = ?");
         select.bind(1, source_trace_id);
         if (!select.step()) {
-            throw std::runtime_error("source trace id not found: " + std::to_string(source_trace_id));
+            aurora::throw_host_exception<std::runtime_error>("source trace id not found: " + std::to_string(source_trace_id));
         }
 
         const auto source_path = std::filesystem::path(select.column_text(0).value_or("trace.sqlite"));
@@ -1126,7 +1127,7 @@ namespace smgpc::trace {
         auto db = sql::Database(path);
         const auto ids = trace_ids(db);
         if (ids.empty()) {
-            throw std::runtime_error("SQLite trace contains no traces: " + path.string());
+            aurora::throw_host_exception<std::runtime_error>("SQLite trace contains no traces: " + path.string());
         }
         return load_trace_json_from_database(db, ids.front());
     }

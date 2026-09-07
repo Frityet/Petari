@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "camera/EventCamera.hpp"
 
 #include "Game/Camera/CameraTargetMtx.hpp"
@@ -24,7 +25,7 @@ namespace smgpc::camera {
             switch (target.kind) {
             case EventCameraTargetKind::Player:
                 if (target.player == nullptr || target.player->camera_target() == nullptr) {
-                    throw std::logic_error(
+                    aurora::throw_host_exception<std::logic_error>(
                         "Player-target event camera requires a live player camera-state provider.");
                 }
                 return;
@@ -35,7 +36,7 @@ namespace smgpc::camera {
                         target.name_obj_identity) !=
                         target.name_obj_generation ||
                     !smgpc::compat::has_actor_runtime_state(target.actor)) {
-                    throw std::logic_error(
+                    aurora::throw_host_exception<std::logic_error>(
                         "LiveActor-target event camera lost its runtime actor.");
                 }
                 return;
@@ -46,7 +47,7 @@ namespace smgpc::camera {
                     smgpc::compat::name_obj_runtime_generation(
                         target.name_obj_identity) !=
                         target.name_obj_generation) {
-                    throw std::logic_error(
+                    aurora::throw_host_exception<std::logic_error>(
                         "Matrix-target event camera lost its runtime target.");
                 }
                 return;
@@ -55,13 +56,13 @@ namespace smgpc::camera {
                     target.name_obj_generation == 0U ||
                     smgpc::compat::name_obj_runtime_generation(target.name_obj_identity) !=
                         target.name_obj_generation) {
-                    throw std::logic_error("Object-target event camera lost its runtime target.");
+                    aurora::throw_host_exception<std::logic_error>("Object-target event camera lost its runtime target.");
                 }
                 return;
             case EventCameraTargetKind::Retain:
                 break;
             }
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Event camera has no retained target to calculate from.");
         }
 
@@ -75,7 +76,7 @@ namespace smgpc::camera {
             if (!finite(target.getPosition()) || !finite(up) || !finite(front) || !finite(side) ||
                 !finite(target.getLastMove()) || up.squared() <= 1.0e-12F ||
                 front.squared() <= 1.0e-12F || side.squared() <= 1.0e-12F) {
-                throw std::logic_error("Event camera target requires finite vectors and a non-degenerate basis.");
+                aurora::throw_host_exception<std::logic_error>("Event camera target requires finite vectors and a non-degenerate basis.");
             }
         }
 
@@ -150,7 +151,7 @@ namespace smgpc::camera {
                          table.holder_instance_id ||
                      found->second.zone_transform.matrix !=
                          table.zone_transform.matrix)) {
-                    throw std::runtime_error(
+                    aurora::throw_host_exception<std::runtime_error>(
                         "Event-camera catalog contains conflicting holder occurrences for zone-qualified identity " +
                         std::to_string(key.zone_id) + ":" + key.name + ".");
                 }
@@ -208,7 +209,7 @@ namespace smgpc::camera {
 
     void EventCameraRuntime::attach_catalog(const EventCameraCatalog &catalog) {
         if (_catalog != nullptr && _catalog != &catalog) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Only one stage event-camera catalog may be active.");
         }
         _catalog = &catalog;
@@ -234,7 +235,7 @@ namespace smgpc::camera {
     void EventCameraRuntime::declare_static(std::int32_t zone_id,
                                             std::string_view name) {
         if (name.empty()) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "Event-camera declaration requires a non-empty name.");
         }
         _declared_static.emplace(zone_id, std::string(name));
@@ -244,11 +245,11 @@ namespace smgpc::camera {
                                                std::string_view name,
                                                CameraAnimation animation) {
         if (name.empty()) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "Animation event-camera declaration requires a non-empty name.");
         }
         if (animation.native_data().bytes().empty()) {
-            throw std::invalid_argument("Animation event-camera declaration requires a decoded resource.");
+            aurora::throw_host_exception<std::invalid_argument>("Animation event-camera declaration requires a decoded resource.");
         }
         _animations.insert_or_assign(
             EventCameraKey{zone_id, std::string(name)}, std::move(animation));
@@ -260,7 +261,7 @@ namespace smgpc::camera {
                                    float speed, const CameraPoseParam *game_seed,
                                    const TPos3f *manager_matrix_seed) {
         if (name.empty() || !std::isfinite(speed) || !(speed > 0.0F)) {
-            throw std::invalid_argument(
+            aurora::throw_host_exception<std::invalid_argument>(
                 "Event-camera start requires a name and positive finite speed.");
         }
         const auto key = EventCameraKey{zone_id, std::string(name)};
@@ -269,20 +270,20 @@ namespace smgpc::camera {
             _catalog != nullptr ? _catalog->find(zone_id, name) : nullptr;
         if (animation == nullptr &&
             (!_declared_static.contains(key) || definition == nullptr)) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Zone-qualified event camera is not present in the active stage catalog.");
         }
         if (animation == nullptr &&
             definition->camera_param.camera_type != "CAM_TYPE_XZ_PARA" &&
             definition->camera_param.camera_type != "CAM_TYPE_EYEPOS_FIX") {
-            throw std::logic_error("Unsupported event-camera type " +
+            aurora::throw_host_exception<std::logic_error>("Unsupported event-camera type " +
                                    definition->camera_param.camera_type);
         }
         const auto has_explicit_target =
             target.kind != EventCameraTargetKind::Retain;
         if (!has_explicit_target) {
             if (!_last_target.has_value()) {
-                throw std::logic_error(
+                aurora::throw_host_exception<std::logic_error>(
                     "No-target event camera has no previous retail target to retain.");
             }
             target = *_last_target;
@@ -414,7 +415,7 @@ namespace smgpc::camera {
         case EventCameraTargetKind::Retain:
             break;
         }
-        throw std::logic_error("Event camera has no selected original target.");
+        aurora::throw_host_exception<std::logic_error>("Event camera has no selected original target.");
     }
 
     void EventCameraRuntime::begin_frame(std::uint64_t frame_index, bool paused) {
@@ -452,7 +453,7 @@ namespace smgpc::camera {
     ActorCameraInfo *EventCameraRuntime::create_actor_camera_info(
         std::int32_t camera_set_id, std::int32_t zone_id) {
         if (_catalog == nullptr) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "ActorCameraInfo allocation requires an active stage event-camera owner.");
         }
         auto info =
@@ -569,7 +570,7 @@ namespace smgpc::camera {
         if (active.animation) {
             const auto *animation = find_animation(active.key);
             if (animation == nullptr) {
-                throw std::logic_error(
+                aurora::throw_host_exception<std::logic_error>(
                     "Active CANM event camera lost its declaration.");
             }
             if (!active.animation_controller) {
@@ -580,13 +581,13 @@ namespace smgpc::camera {
             return active.animation_controller->calc(target);
         }
         if (_catalog == nullptr) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Active static event camera lost its stage catalog.");
         }
         const auto *definition =
             _catalog->find(active.key.zone_id, active.key.name);
         if (definition == nullptr) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "Active static event camera lost its zone-qualified chunk.");
         }
         if (definition->camera_param.camera_type == "CAM_TYPE_XZ_PARA" ||
@@ -600,7 +601,7 @@ namespace smgpc::camera {
             }
             return active.controller->calc(target).pose;
         }
-        throw std::logic_error("Unsupported event-camera type " +
+        aurora::throw_host_exception<std::logic_error>("Unsupported event-camera type " +
                                definition->camera_param.camera_type);
     }
 

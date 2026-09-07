@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "scene/FileSelectFarVisual.hpp"
 
 #include "Game/LiveActor/LiveActor.hpp"
@@ -177,7 +178,7 @@ namespace smgpc::scene {
         }
 
         void begin_far() {
-            if (_far_started) throw std::logic_error("File Select far transition has already started");
+            if (_far_started) aurora::throw_host_exception<std::logic_error>("File Select far transition has already started");
             _camera->goToFarPoint();
             for (auto& slot : _slots) slot.view.planet->makeActorAppeared();
             _far_started = true;
@@ -209,7 +210,7 @@ namespace smgpc::scene {
             std::optional<std::size_t> highlighted_slot) {
             if (highlighted_slot.has_value() &&
                 *highlighted_slot >= _slots.size()) {
-                throw std::out_of_range(
+                aurora::throw_host_exception<std::out_of_range>(
                     "File Select highlighted slot is outside the authored six slots.");
             }
             if (highlighted_slot == _highlighted_slot) {
@@ -324,15 +325,15 @@ namespace smgpc::scene {
     FileSelectFarVisual::FileSelectFarVisual(smgpc::runtime::RuntimeContext &runtime)
         : _runtime(&runtime) {
         if (smgpc::runtime::RuntimeContext::try_instance() != &runtime)
-            throw std::logic_error("File Select composition requires its active RuntimeContext");
+            aurora::throw_host_exception<std::logic_error>("File Select composition requires its active RuntimeContext");
         if (runtime.current_stage_name() != std::string_view("FileSelect"))
-            throw std::logic_error("File Select composition requires the authored stage");
+            aurora::throw_host_exception<std::logic_error>("File Select composition requires the authored stage");
         _impl = std::make_unique<Impl>(runtime);
     }
 
     void FileSelectFarVisual::begin_far(TitleFileSelectVisualHandoff &&handoff) {
         if (_handoff || handoff.sky() == nullptr)
-            throw std::logic_error("Far transition requires its original title sky exactly once");
+            aurora::throw_host_exception<std::logic_error>("Far transition requires its original title sky exactly once");
         _handoff = std::make_unique<TitleFileSelectVisualHandoff>(std::move(handoff));
         _impl->begin_far();
     }

@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "scene/TitleFileSelectRoute.hpp"
 
 #include "Game/Screen/TitleSequenceProduct.hpp"
@@ -19,7 +20,7 @@ namespace smgpc::scene {
         smgpc::runtime::RuntimeContext &runtime)
         : _runtime(&runtime) {
         if (smgpc::runtime::RuntimeContext::try_instance() != &runtime) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "The Title/File Select route requires its active RuntimeContext.");
         }
 
@@ -47,7 +48,7 @@ namespace smgpc::scene {
 
     void TitleFileSelectRoute::update() {
         if (smgpc::runtime::RuntimeContext::try_instance() != _runtime) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "The Title/File Select route outlived its RuntimeContext.");
         }
 
@@ -90,7 +91,7 @@ namespace smgpc::scene {
             return;
         }
 
-        throw std::logic_error("Unknown Title/File Select route state.");
+        aurora::throw_host_exception<std::logic_error>("Unknown Title/File Select route state.");
     }
 
     TitleFileSelectRouteState TitleFileSelectRoute::state() const {
@@ -131,7 +132,7 @@ namespace smgpc::scene {
 
     void TitleFileSelectRoute::begin_move_to_far() {
         if (_title_visual == nullptr || _far_visual == nullptr || _far_visual->sky() != nullptr) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "The Title/File Select sky can only enter the far phase once.");
         }
 
@@ -144,7 +145,7 @@ namespace smgpc::scene {
     void TitleFileSelectRoute::begin_blank_selection() {
         const auto slots = _far_visual->slots();
         if (slots.empty()) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "The File Select far composition exposed no selectable blank slot.");
         }
 
@@ -163,7 +164,7 @@ namespace smgpc::scene {
 
         const auto slots = _far_visual->slots();
         if (slots.empty() || _selection->visual_index >= slots.size()) {
-            throw std::logic_error(
+            aurora::throw_host_exception<std::logic_error>(
                 "The selected blank File Select slot is no longer available.");
         }
 

@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "DebugPaths.hpp"
 #include "Sqlite.hpp"
 #include "TraceStore.hpp"
@@ -39,7 +40,7 @@ namespace {
             }
             if (arg == "--output") {
                 if (i + 1 >= argc) {
-                    throw std::runtime_error("--output requires a path");
+                    aurora::throw_host_exception<std::runtime_error>("--output requires a path");
                 }
                 options.output = argv[++i];
                 continue;
@@ -61,12 +62,12 @@ namespace {
         }
 
         if (options.traces.empty()) {
-            throw std::runtime_error("no SQLite trace stores provided and no cached frame-1900 SQLite traces found");
+            aurora::throw_host_exception<std::runtime_error>("no SQLite trace stores provided and no cached frame-1900 SQLite traces found");
         }
 
         for (const auto &path : options.traces) {
             if (path.extension() != ".sqlite") {
-                throw std::runtime_error("trace stores must use .sqlite: " + path.string());
+                aurora::throw_host_exception<std::runtime_error>("trace stores must use .sqlite: " + path.string());
             }
         }
 
@@ -91,7 +92,7 @@ int main(int argc, char **argv) try {
         source.exec("PRAGMA foreign_keys = ON");
         const auto ids = smgpc::trace::trace_ids(source);
         if (ids.empty()) {
-            throw std::runtime_error("trace store contains no traces: " + trace_path.string());
+            aurora::throw_host_exception<std::runtime_error>("trace store contains no traces: " + trace_path.string());
         }
         for (const auto trace_id : ids) {
             const auto result = smgpc::trace::copy_trace_between_databases(output, source, trace_id);

@@ -1,3 +1,4 @@
+#include <aurora/exception.hpp>
 #include "J3dJointData.hpp"
 #include "J3dNameData.hpp"
 
@@ -17,7 +18,7 @@ namespace smgpc::resource {
 
         void require_range(Bytes data, std::size_t offset, std::size_t size) {
             if (offset > data.size() || size > data.size() - offset) {
-                throw std::runtime_error("J3D joint resource range outside its containing block");
+                aurora::throw_host_exception<std::runtime_error>("J3D joint resource range outside its containing block");
             }
         }
 
@@ -42,7 +43,7 @@ namespace smgpc::resource {
         std::size_t table_offset(Bytes block, std::size_t field, std::size_t bytes) {
             const auto offset = u32_at(block, field);
             if (bytes != 0 && offset == 0) {
-                throw std::runtime_error("J3D joint resource is missing a required table");
+                aurora::throw_host_exception<std::runtime_error>("J3D joint resource is missing a required table");
             }
             require_range(block, offset, bytes);
             return offset;
@@ -62,12 +63,12 @@ namespace smgpc::resource {
             const auto type = u32_at(bytes, 4);
             if (u32_at(bytes, 0) != 0x4a334432U ||
                 (type != 0x626d6432U && type != 0x626d6433U && type != 0x62646c33U && type != 0x62646c34U)) {
-                throw std::runtime_error("J3D joint resource requires a J3D2 BMD2/BMD3/BDL3/BDL4 model");
+                aurora::throw_host_exception<std::runtime_error>("J3D joint resource requires a J3D2 BMD2/BMD3/BDL3/BDL4 model");
             }
             const auto size = u32_at(bytes, 8);
             require_range(bytes, 0, size);
             if (size < 0x20) {
-                throw std::runtime_error("J3D joint resource file header is truncated");
+                aurora::throw_host_exception<std::runtime_error>("J3D joint resource file header is truncated");
             }
             bytes = bytes.first(size);
             Blocks blocks;
@@ -78,7 +79,7 @@ namespace smgpc::resource {
                 require_range(bytes, cursor, 8);
                 const auto block_size = u32_at(bytes, cursor + 4);
                 if (block_size < 8) {
-                    throw std::runtime_error("J3D joint resource block header is truncated");
+                    aurora::throw_host_exception<std::runtime_error>("J3D joint resource block header is truncated");
                 }
                 require_range(bytes, cursor, block_size);
                 Bytes* destination = nullptr;
@@ -94,14 +95,14 @@ namespace smgpc::resource {
                 }
                 if (destination != nullptr) {
                     if (!destination->empty()) {
-                        throw std::runtime_error("J3D joint resource has duplicate construction blocks");
+                        aurora::throw_host_exception<std::runtime_error>("J3D joint resource has duplicate construction blocks");
                     }
                     *destination = bytes.subspan(cursor, block_size);
                 }
                 cursor += block_size;
             }
             if (blocks.info.empty() || blocks.joint.empty() || blocks.envelope.empty() || blocks.draw.empty()) {
-                throw std::runtime_error("J3D joint resource is missing INF1/JNT1/EVP1/DRW1");
+                aurora::throw_host_exception<std::runtime_error>("J3D joint resource is missing INF1/JNT1/EVP1/DRW1");
             }
             return blocks;
         }
@@ -188,7 +189,7 @@ namespace smgpc::resource {
                 basic = std::make_unique<J3DMtxCalcNoAnm<J3DMtxCalcCalcTransformMaya, J3DMtxCalcJ3DSysInitMaya>>();
                 break;
             default:
-                throw std::runtime_error("J3D joint resource selects no original matrix calculator");
+                aurora::throw_host_exception<std::runtime_error>("J3D joint resource selects no original matrix calculator");
             }
             std::size_t cursor = table_offset(block, 0x14, 4);
             std::size_t depth = 0;
@@ -200,19 +201,19 @@ namespace smgpc::resource {
                 switch (type) {
                 case 0:
                     if (depth != 0) {
-                        throw std::runtime_error("J3D joint hierarchy has unclosed child scopes");
+                        aurora::throw_host_exception<std::runtime_error>("J3D joint hierarchy has unclosed child scopes");
                     }
                     return;
                 case 1: ++depth; break;
                 case 2:
                     if (depth == 0) {
-                        throw std::runtime_error("J3D joint hierarchy closes an absent child scope");
+                        aurora::throw_host_exception<std::runtime_error>("J3D joint hierarchy closes an absent child scope");
                     }
                     --depth;
                     break;
                 case 0x10:
                     if (value >= joints.size()) {
-                        throw std::runtime_error("J3D hierarchy joint index is outside JNT1");
+                        aurora::throw_host_exception<std::runtime_error>("J3D hierarchy joint index is outside JNT1");
                     }
                     break;
                 case 0x11:
@@ -221,7 +222,7 @@ namespace smgpc::resource {
                     // material/shape tables before original makeHierarchy.
                     break;
                 default:
-                    throw std::runtime_error("J3D joint hierarchy contains an unknown command");
+                    aurora::throw_host_exception<std::runtime_error>("J3D joint hierarchy contains an unknown command");
                 }
             }
         }
@@ -235,7 +236,7 @@ namespace smgpc::resource {
             for (const auto mix_count : mix_counts) {
                 // The original envelope calculation enters a do/while loop.
                 if (mix_count == 0) {
-                    throw std::runtime_error("J3D envelope has no matrix influences");
+                    aurora::throw_host_exception<std::runtime_error>("J3D envelope has no matrix influences");
                 }
                 total += mix_count;
             }
@@ -247,7 +248,7 @@ namespace smgpc::resource {
             for (std::size_t i = 0; i < total; ++i) {
                 const auto index = u16_at(block, indices + i * 2);
                 if (index >= joints.size()) {
-                    throw std::runtime_error("J3D envelope influence is outside JNT1");
+                    aurora::throw_host_exception<std::runtime_error>("J3D envelope influence is outside JNT1");
                 }
                 required_inverse_count = std::max(required_inverse_count, std::size_t{index} + 1);
                 mix_indices.push_back(index);
@@ -274,7 +275,7 @@ namespace smgpc::resource {
             require_range(block, 0, 0x14);
             const auto serialized_count = u16_at(block, 8);
             if (serialized_count < envelope_count_at_draw) {
-                throw std::runtime_error("J3D draw matrix count underflows the original envelope subtraction");
+                aurora::throw_host_exception<std::runtime_error>("J3D draw matrix count underflows the original envelope subtraction");
             }
             // Retail readDraw (0x8043ea68) subtracts the envelope count here;
             // the serialized arrays themselves retain their complete extent.
@@ -292,12 +293,12 @@ namespace smgpc::resource {
                 }
             }
             if (full_weight_count + mix_counts.size() > draw_count) {
-                throw std::runtime_error("J3D important-matrix output exceeds the original draw allocation");
+                aurora::throw_host_exception<std::runtime_error>("J3D important-matrix output exceeds the original draw allocation");
             }
             for (std::size_t i = 0; i < draw_count; ++i) {
                 const auto extent = draw_flags[i] == 0 ? joints.size() : mix_counts.size();
                 if (draw_indices[i] >= extent) {
-                    throw std::runtime_error("J3D draw matrix index is outside its joint/envelope table");
+                    aurora::throw_host_exception<std::runtime_error>("J3D draw matrix index is outside its joint/envelope table");
                 }
             }
             // findImportantMtxIndex fills this after all tables have been
@@ -319,7 +320,7 @@ namespace smgpc::resource {
             tree.mWEvlpMixWeight != nullptr || tree.mInvJointMtx != nullptr || tree.mWEvlpImportantMtxIdx != nullptr ||
             tree.mDrawMtxData.mEntryNum != 0 || tree.mDrawMtxData.mDrawMtxFlag != nullptr ||
             tree.mDrawMtxData.mDrawMtxIndex != nullptr || tree.mJointName != nullptr) {
-            throw std::logic_error("J3D joint resource requires a fresh attachment destination");
+            aurora::throw_host_exception<std::logic_error>("J3D joint resource requires a fresh attachment destination");
         }
         auto& data = *_storage;
         model.mFlags = data.flags;
