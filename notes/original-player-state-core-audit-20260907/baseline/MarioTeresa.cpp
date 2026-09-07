@@ -75,9 +75,9 @@ TeresaBckTable2Raw teresaAnime2[2] = {
 void Mario::startTeresaMode() {
     _418 = 0;
     _428 = 0;
-    getPlayer()->mMovementStates.jumping = true;
-    getPlayer()->mMovementStates._1 = false;
-    getPlayer()->mMovementStates._22 = false;
+    mMovementStates.jumping = true;
+    mMovementStates._1 = false;
+    mMovementStates._22 = false;
     mJumpVec.zero();
     changeStatus(mTeresa);
 }
@@ -97,23 +97,22 @@ void MarioTeresa::updateDropFlag() {
 }
 
 bool Mario::getHitWallNorm(TVec3f* pNorm) {
-    if (getPlayer()->mMovementStates._8) {
-        if (!isThroughWall(mFrontWallTriangle)) {
-            *pNorm = *mFrontWallTriangle->getNormal(0);
-            return true;
-        }
-    } else if (getPlayer()->mMovementStates._19) {
-        if (!isThroughWall(mBackWallTriangle)) {
-            *pNorm = *mBackWallTriangle->getNormal(0);
-            return true;
-        }
-    } else if (getPlayer()->mMovementStates._1A) {
-        if (!isThroughWall(mSideWallTriangle)) {
-            *pNorm = *mSideWallTriangle->getNormal(0);
-            return true;
-        }
+    const Triangle* pTriangle = nullptr;
+
+    if (mMovementStates._8) {
+        pTriangle = mFrontWallTriangle;
+    } else if (mMovementStates._19) {
+        pTriangle = mBackWallTriangle;
+    } else if (mMovementStates._1A) {
+        pTriangle = mSideWallTriangle;
     }
-    return false;
+
+    if (pTriangle == nullptr || isThroughWall(pTriangle)) {
+        return false;
+    }
+
+    *pNorm = *pTriangle->getNormal(0);
+    return true;
 }
 
 void Mario::resetTeresaMode() {
@@ -260,7 +259,9 @@ void MarioTeresa::checkGroundReflect() {
     getPlayer()->tryJump();
     cutGravityElementFromJumpVec(true);
 
-    const f32 vertical = MR::vecKillElement(_34, getAirGravityVec(), &_34);
+    TVec3f horizontal;
+    const f32 vertical = MR::vecKillElement(_34, getAirGravityVec(), &horizontal);
+    _34 = horizontal;
     if (vertical < 0.0f) {
         _34 += getAirGravityVec() * vertical;
     }
@@ -274,7 +275,7 @@ void MarioTeresa::procNoControl() {
     }
 
     if (MR::isNearZero(getStickP(), 0.001f)) {
-        _34 *= 0.99f;
+        _34.scale(0.99f);
     }
 }
 
@@ -283,8 +284,8 @@ void MarioTeresa::procNearGroundControl() {
         return;
     }
 
-    if (calcAngleD(getPlayer()->getShadowNorm()) >= 60.0f || _20 >= _24 + 50.0f || _46 != 0 ||
-        _34.dot(getPlayer()->getShadowNorm()) >= 0.0f) {
+    const TVec3f& rGroundNormal = getPlayer()->getShadowNorm();
+    if (calcAngleD(rGroundNormal) >= 60.0f || _20 >= _24 + 50.0f || _46 != 0 || _34.dot(rGroundNormal) >= 0.0f) {
         return;
     }
 
@@ -295,8 +296,8 @@ void MarioTeresa::procNearGroundControl() {
     }
 
     TVec3f side;
-    PSVECCrossProduct(&tangent, &getPlayer()->getShadowNorm(), &side);
-    PSVECCrossProduct(&getPlayer()->getShadowNorm(), &side, &tangent);
+    PSVECCrossProduct(&tangent, &rGroundNormal, &side);
+    PSVECCrossProduct(&rGroundNormal, &side, &tangent);
     tangent.setLength(speed);
 
     const f32 blend = 0.5f * MR::clamp((_24 + 50.0f - _20) / 50.0f, 0.0f, 1.0f);
@@ -306,18 +307,6 @@ void MarioTeresa::procNearGroundControl() {
 }
 
 void MarioTeresa::procDrop() {
-    const bool movingDown = mActor->getLastMove().dot(getGravityVec()) >= 0.0f;
-    const f32 dropDownHeight = mActor->mConst->getTable()->mTeresaDropDownHeight;
-    const bool nearGround = _20 < _24 + dropDownHeight;
-    if (movingDown) {
-        if (nearGround) {
-            f32 heightRatio = (_20 - _24) / dropDownHeight;
-            if (heightRatio < 0.0f) {
-                heightRatio = 0.0f;
-            }
-        }
-    }
-
     if (_20 > _24) {
         f32 ratio = 1.0f;
         const f32 excessHeight = _20 - _24;
@@ -325,34 +314,24 @@ void MarioTeresa::procDrop() {
             ratio = excessHeight / 100.0f;
         }
 
-        if (_58) {
-            addTeresaVerticalVelocity(0.25f * ratio);
-        } else {
-            addTeresaVerticalVelocity(0.1f * ratio);
-        }
+        addTeresaVerticalVelocity((_58 ? 0.25f : 0.1f) * ratio);
 
-        f32 vertical = MR::vecKillElement(_34, getAirGravityVec(), &_34);
-        if (1.5f * vertical > _20 - _24) {
+        TVec3f horizontal;
+        f32 vertical = MR::vecKillElement(_34, getAirGravityVec(), &horizontal);
+        if (1.5f * vertical > excessHeight) {
             vertical *= 0.75f;
         }
-        _34 += getAirGravityVec() * vertical;
+        _34 = horizontal + getAirGravityVec() * vertical;
     } else {
-        const f32 vertical = MR::vecKillElement(_34, getAirGravityVec(), &_34);
+        TVec3f horizontal;
+        const f32 vertical = MR::vecKillElement(_34, getAirGravityVec(), &horizontal);
+        _34 = horizontal;
         if (vertical < 0.0f) {
             _34 += getAirGravityVec() * vertical;
         }
     }
 
     if (_20 > _24 + 10.0f) {
-        TVec3f horizontal;
-        const f32 vertical = MR::vecKillElement(mActor->getLastMove(), getGravityVec(), &horizontal);
-        f32 brake;
-        if (vertical > -0.5f) {
-            brake = (vertical + 0.5f) / mActor->mConst->getTable()->mTeresaDropBase + 0.04f;
-        } else {
-            brake = mActor->mConst->getTable()->mTeresaRisingBrake;
-        }
-        MR::clamp(brake, 0.0f, 1.0f);
         getPlayer()->mDrawStates._1C = true;
     }
 }
@@ -368,7 +347,7 @@ void MarioTeresa::addTeresaVerticalVelocity(f32 acceleration) {
 
     if (_58) {
         const f32 disappearRatio = static_cast< f32 >(getPlayer()->_418) / pTable->mTeresaWallThroughTime;
-        maxDropSpeed *= 1.0f + 0.5f * MR::sin(MR::pi() * disappearRatio);
+        maxDropSpeed *= 1.0f + 0.5f * MR::cos(MR::pi() * disappearRatio);
     }
 
     if (getPlayer()->mDrawStates._1F && _28.dot(getAirGravityVec()) > 0.707f) {
@@ -500,8 +479,8 @@ void MarioTeresa::checkWind() {
     }
 
     wind.scale(strength);
-    _28 *= 0.94f;
-    _28 += wind * 0.1f * 1.5f;
+    _28.scale(0.94f);
+    _28 += wind * 0.15f;
     _34 += wind * 0.2f;
 
     if (_28.length() > 0.2f) {
@@ -525,11 +504,13 @@ void MarioTeresa::checkWallCeilReflect() {
         return;
     }
 
-    const f32 normalSpeed = MR::vecKillElement(_34, collisionNormal, &_34);
+    TVec3f tangent;
+    const f32 normalSpeed = MR::vecKillElement(_34, collisionNormal, &tangent);
+    _34 = tangent;
     if (normalSpeed < 0.0f) {
         _34 += collisionNormal * -normalSpeed;
     } else {
-        _34 += collisionNormal * normalSpeed * 1.5f;
+        _34 += collisionNormal * (1.5f * normalSpeed);
     }
 
     if (_42 == 0) {
@@ -590,20 +571,11 @@ void MarioTeresa::procControl() {
             getAnimator()->setSpeed(1.5f);
         }
 
-        TVec3f velocity(_14);
-        f32 directionRatio = 1.0f;
-        if (!MR::isNearZero(getStickP(), 0.001f)) {
-            velocity.dot(getWorldPadDir());
-        }
-        if (directionRatio < 0.0f) {
-            directionRatio *= 0.3f;
-        }
-
         f32 acceleration = 0.3f;
         if (getPlayer()->_418 > (mActor->mConst->getTable()->mTeresaWallThroughTime >> 1)) {
             acceleration = 2.0f;
         }
-        addTeresaHorizontalVelocity(getWorldPadDir() * directionRatio * acceleration);
+        addTeresaHorizontalVelocity(getWorldPadDir() * acceleration);
     }
 
     if (checkTrgZ()) {

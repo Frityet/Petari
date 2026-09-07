@@ -1,0 +1,88 @@
+[
+  {
+    "unit": "MarioHang",
+    "reference_checkpoint": "7c1c6b055",
+    "source_sha256": "bb927a64e9195413a950fc9331b458330ee7eb04264e416a1e247d46eb0b9c8e",
+    "changed_functions": [
+      {
+        "symbol": "update__9MarioHangFv",
+        "before": 69.730934,
+        "after": 98.180084,
+        "retail_bytes": 1888,
+        "candidate_bytes": 1884
+      }
+    ],
+    "regressions": []
+  },
+  {
+    "unit": "MarioTeresa",
+    "reference_checkpoint": "7c1c6b055",
+    "source_sha256": "4302eff9d578bfd7a3d2ebdaabaf1b32c7ad036e7e925d8de9f83023858b3d54",
+    "changed_functions": [
+      {
+        "symbol": "startTeresaMode__5MarioFv",
+        "before": 28.428572,
+        "after": 100.0,
+        "retail_bytes": 140,
+        "candidate_bytes": 140
+      },
+      {
+        "symbol": "getHitWallNorm__5MarioFPQ29JGeometry8TVec3<f>",
+        "before": 49.791046,
+        "after": 100.0,
+        "retail_bytes": 268,
+        "candidate_bytes": 268
+      },
+      {
+        "symbol": "checkGroundReflect__11MarioTeresaFv",
+        "before": 89.89855,
+        "after": 98.333336,
+        "retail_bytes": 276,
+        "candidate_bytes": 280
+      },
+      {
+        "symbol": "procNearGroundControl__11MarioTeresaFv",
+        "before": 84.539215,
+        "after": 96.27451,
+        "retail_bytes": 408,
+        "candidate_bytes": 420
+      },
+      {
+        "symbol": "procDrop__11MarioTeresaFv",
+        "before": 41.358383,
+        "after": 87.6185,
+        "retail_bytes": 692,
+        "candidate_bytes": 668
+      },
+      {
+        "symbol": "addTeresaVerticalVelocity__11MarioTeresaFf",
+        "before": 85.87075,
+        "after": 97.84354,
+        "retail_bytes": 588,
+        "candidate_bytes": 584
+      },
+      {
+        "symbol": "checkWind__11MarioTeresaFv",
+        "before": 84.75532,
+        "after": 88.5,
+        "retail_bytes": 376,
+        "candidate_bytes": 348
+      },
+      {
+        "symbol": "checkWallCeilReflect__11MarioTeresaFv",
+        "before": 75.74219,
+        "after": 82.75781,
+        "retail_bytes": 512,
+        "candidate_bytes": 484
+      },
+      {
+        "symbol": "procControl__11MarioTeresaFv",
+        "before": 76.38971,
+        "after": 98.63971,
+        "retail_bytes": 544,
+        "candidate_bytes": 544
+      }
+    ],
+    "regressions": []
+  }
+]

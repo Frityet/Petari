@@ -1,0 +1,13 @@
+[
+  "notes/original-player-state-core-audit-20260907/README.md",
+  "notes/original-player-state-core-audit-20260907/function-proof.json",
+  "notes/original-player-state-core-audit-20260907/behavior-instruction-excerpts.json",
+  "notes/original-player-state-core-audit-20260907/float-order-examples.json",
+  "notes/original-player-state-core-audit-20260907/validation-commands.json",
+  "notes/original-player-state-core-audit-20260907/refresh-proof.py",
+  "notes/original-player-state-core-audit-20260907/baseline/MarioHang.cpp",
+  "notes/original-player-state-core-audit-20260907/baseline/MarioTeresa.cpp",
+  "notes/original-player-state-core-audit-20260907/decomp-checkpoint-paths.json",
+  "notes/original-player-state-core-audit-20260907/motion-checkpoint-source-hashes.json",
+  "notes/original-player-state-core-audit-20260907/root-proof-paths.json"
+]

@@ -1,0 +1,22 @@
+{
+  "scope": "Illustrative IEEE-754 binary32 arithmetic, not native Mario gameplay execution",
+  "cases": [
+    {
+      "operation": "wind accumulation",
+      "input": 5.996661186218262,
+      "retail_value": 0.8994991779327393,
+      "historical_value": 0.899499237537384,
+      "retail_f32_hex": "3f664594",
+      "historical_f32_hex": "3f664595"
+    },
+    {
+      "operation": "positive wall reflection",
+      "normal_component": 0.10000000149011612,
+      "normal_speed": 100.0999984741211,
+      "retail_value": 15.015000343322754,
+      "historical_value": 15.014999389648438,
+      "retail_f32_hex": "41703d71",
+      "historical_f32_hex": "41703d70"
+    }
+  ]
+}
