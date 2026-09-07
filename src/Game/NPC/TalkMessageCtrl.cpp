@@ -283,8 +283,7 @@ bool TalkMessageCtrl::startTalkForcePuppetable() {
 }
 
 bool TalkMessageCtrl::startTalkForceWithoutDemo() {
-    return false;
-    TalkFunction::startTalkSystem(this, true, false, true);
+    return TalkFunction::startTalkSystem(this, true, false, true);
 }
 
 bool TalkMessageCtrl::startTalkForceWithoutDemoPuppetable() {
