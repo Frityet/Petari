@@ -1,0 +1,83 @@
+{
+  "dol": "decomp/build/compat-math-oracle/main.dol",
+  "sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "strings": [
+    {
+      "address": "0x805cce8f",
+      "hex": "8aee967b",
+      "sjis": "基本"
+    },
+    {
+      "address": "0x805cce94",
+      "hex": "626c696e6b",
+      "sjis": "blink"
+    },
+    {
+      "address": "0x805cce9a",
+      "hex": "736c656570",
+      "sjis": "sleep"
+    },
+    {
+      "address": "0x805ccea0",
+      "hex": "536c656570",
+      "sjis": "Sleep"
+    },
+    {
+      "address": "0x805ccea6",
+      "hex": "77616974",
+      "sjis": "wait"
+    },
+    {
+      "address": "0x805cceab",
+      "hex": "7370696e",
+      "sjis": "spin"
+    },
+    {
+      "address": "0x805cceb0",
+      "hex": "66616c6c",
+      "sjis": "fall"
+    },
+    {
+      "address": "0x805cceb5",
+      "hex": "8365838c83548cbb82ea82e9",
+      "sjis": "テレサ現れる"
+    },
+    {
+      "address": "0x805ccec2",
+      "hex": "8aee967b",
+      "sjis": "基本"
+    },
+    {
+      "address": "0x805ccf60",
+      "hex": "77616974",
+      "sjis": "wait"
+    },
+    {
+      "address": "0x806b22e0",
+      "hex": "686974",
+      "sjis": "hit"
+    },
+    {
+      "address": "0x806b22e4",
+      "hex": "72756e",
+      "sjis": "run"
+    },
+    {
+      "address": "0x806b22e8",
+      "hex": "666c79",
+      "sjis": "fly"
+    },
+    {
+      "address": "0x806b22ec",
+      "hex": "",
+      "sjis": ""
+    },
+    {
+      "address": "0x806b22ed",
+      "hex": "72756e",
+      "sjis": "run"
+    }
+  ],
+  "table_group_raw_hex": "805ccec23f8000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000806b22ec000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  "table_pair_raw_hex": "805ccec2805ccf603f800000806b22ed00000000806b22ec806b22ec000000000000000000000000"
+}

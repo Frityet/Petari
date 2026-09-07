@@ -1,0 +1,13 @@
+{
+  "baseline_commit": "8f6d3b49df21215eb511bd2024c9e1aceefbc815",
+  "methods": [
+    "initTeresaMarioAnimation",
+    "runTeresaBaseAnimation",
+    "changeTeresaAnimation",
+    "updateTeresaAnimation"
+  ],
+  "before_sha256": "4302eff9d578bfd7a3d2ebdaabaf1b32c7ad036e7e925d8de9f83023858b3d54",
+  "after_sha256": "e762851a79e3d0e7cde966001e6999c11990b7109bd3a6208db3dbb9851556c8",
+  "native_changed": false,
+  "only_named_methods_changed": true
+}

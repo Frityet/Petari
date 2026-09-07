@@ -1,0 +1,30 @@
+{
+  "source": "decomp/src/Game/Player/MarioTeresa.cpp",
+  "reviewed_methods": {
+    "initTeresaMarioAnimation": {
+      "line": 448,
+      "sha256": "53004f1606d8ff42898156b6706970955650e97240be8111221b0e43f2dfb693"
+    },
+    "runTeresaBaseAnimation": {
+      "line": 618,
+      "sha256": "2ba68d3ea7e1e65990f85828d871182384cb01c4bfa69555ef8ebf9426262699"
+    },
+    "changeTeresaAnimation": {
+      "line": 627,
+      "sha256": "edf6811972b3af1cc99fa6a394d8c15c69f54ac92e3c28a603886ddacbdcf4e0"
+    },
+    "updateTeresaAnimation": {
+      "line": 647,
+      "sha256": "2e06d84b4c4bb1af8d0fe8da6b787257b6980ed5988d7c6d6aeef061526bac86"
+    }
+  },
+  "evidence_files": {
+    "decomp/build/original-player-state-recovery-20260907/retail/obj/Game/Player/MarioTeresa.o": "e0cef6792259655d5b49d57c27838c34bc8f67ba1b4cfad3d0eeab1b52635638",
+    "notes/original-player-state-core-audit-20260907/MarioTeresa.left.disassembly.txt": "0b12d10921d8add13481a3cabf478de28d4916526de393f1836dd73842e8fdc7",
+    "notes/original-player-state-core-audit-20260907/teresa-animation-candidate.cpp": "40881763838e8c6128731fe29a553f1064a4a4ebfe80c21a72dd1016127abc84",
+    "notes/original-player-state-core-audit-20260907/teresa-animation-retail-data.json": "d67dc2bd9e6b312241dae1ddc9de10b675678eec66ad498e2b90be6fd9cde334"
+  },
+  "candidate_compiled": false,
+  "production_writes": false,
+  "gpu_or_root_build": false
+}

@@ -1,0 +1,61 @@
+{
+  "changed": [
+    {
+      "symbol": "update__11MarioTeresaFv",
+      "before": 96.260506,
+      "after": 96.30252,
+      "retail_bytes": 476,
+      "compiled_bytes": 468
+    },
+    {
+      "symbol": "procDrop__11MarioTeresaFv",
+      "before": 87.6185,
+      "after": 87.6474,
+      "retail_bytes": 692,
+      "compiled_bytes": 668
+    },
+    {
+      "symbol": "initTeresaMarioAnimation__10MarioActorFv",
+      "before": 73.333336,
+      "after": 99.35,
+      "retail_bytes": 240,
+      "compiled_bytes": 240
+    },
+    {
+      "symbol": "startTeresaDisappear__5MarioFv",
+      "before": 99.30909,
+      "after": 99.4,
+      "retail_bytes": 220,
+      "compiled_bytes": 220
+    },
+    {
+      "symbol": "checkWind__11MarioTeresaFv",
+      "before": 88.5,
+      "after": 88.55319,
+      "retail_bytes": 376,
+      "compiled_bytes": 348
+    },
+    {
+      "symbol": "runTeresaBaseAnimation__10MarioActorFv",
+      "before": 52.382355,
+      "after": 99.26471,
+      "retail_bytes": 136,
+      "compiled_bytes": 136
+    },
+    {
+      "symbol": "changeTeresaAnimation__10MarioActorFPCcl",
+      "before": 76.59091,
+      "after": 99.40909,
+      "retail_bytes": 264,
+      "compiled_bytes": 264
+    },
+    {
+      "symbol": "updateTeresaAnimation__10MarioActorFv",
+      "before": 58.492805,
+      "after": 98.26619,
+      "retail_bytes": 1112,
+      "compiled_bytes": 1108
+    }
+  ],
+  "regressions": []
+}
