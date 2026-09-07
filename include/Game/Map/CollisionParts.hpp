@@ -43,7 +43,7 @@ public:
     void projectToPlane(TVec3f*, const TVec3f&, const TVec3f&, const TVec3f&);
     void checkStrikeLine(HitInfo*, u32, const TVec3f&, const TVec3f&, const TriangleFilterBase*);
     void createAreaPolygonList(Triangle*, u32, const TVec3f&, const TVec3f&);
-    void createAreaPolygonListArray(Triangle*, u32, TVec3f*, u32);
+    u32 createAreaPolygonListArray(Triangle*, u32, TVec3f*, u32);
     void calcForceMovePower(TVec3f*, const TVec3f&) const;
 
     TPos3f* _0;

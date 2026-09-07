@@ -1,0 +1,56 @@
+[
+  {
+    "name": "createAreaPolygonListArray__26CollisionCategorizedKeeperFP8TriangleUlPQ29JGeometry8TVec3<f>Ul",
+    "size": "352",
+    "match_percent": 93.13636,
+    "unit": "CollisionCategorizedKeeper"
+  },
+  {
+    "name": "isSphereOverlappingWithBox__26CollisionCategorizedKeeperFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>f",
+    "size": "140",
+    "match_percent": 100.0,
+    "unit": "CollisionCategorizedKeeper"
+  },
+  {
+    "name": "calcMinMaxAndRadius__13CollisionZoneFv",
+    "size": "440",
+    "match_percent": 98.63636,
+    "unit": "CollisionCategorizedKeeper"
+  },
+  {
+    "name": "addAndUpdateMinMax__13CollisionZoneFQ29JGeometry8TVec3<f>Q29JGeometry8TVec3<f>",
+    "size": "220",
+    "match_percent": 100.0,
+    "unit": "CollisionCategorizedKeeper"
+  },
+  {
+    "name": "eraseParts__13CollisionZoneFP14CollisionParts",
+    "size": "116",
+    "match_percent": 86.89655,
+    "unit": "CollisionCategorizedKeeper"
+  },
+  {
+    "name": "createAreaPolygonListArray__14CollisionPartsFP8TriangleUlPQ29JGeometry8TVec3<f>Ul",
+    "size": "272",
+    "match_percent": 92.27941,
+    "unit": "CollisionParts"
+  },
+  {
+    "name": "checkArea3D__16KCollisionServerFP4FxyzP4FxyzPP12KC_PrismDataUl",
+    "size": "884",
+    "match_percent": 96.84163,
+    "unit": "KCollision"
+  },
+  {
+    "name": "outCheck__16KCollisionServerCFPCQ29JGeometry8TVec3<f>PCQ29JGeometry8TVec3<f>PQ216KCollisionServer3V3uPQ216KCollisionServer3V3u",
+    "size": "296",
+    "match_percent": 100.0,
+    "unit": "KCollisionPlus"
+  },
+  {
+    "name": "objectSpaceToLocalSpace__16KCollisionServerCFPQ216KCollisionServer3V3uRCQ29JGeometry8TVec3<f>",
+    "size": "100",
+    "match_percent": 100.0,
+    "unit": "KCollisionPlus"
+  }
+]

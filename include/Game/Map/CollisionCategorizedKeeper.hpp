@@ -26,7 +26,7 @@ public:
     s32 checkStrikeLine(const TVec3f&, const TVec3f&, s32, const CollisionPartsFilterBase*, const TriangleFilterBase*);
     u32 createAreaPolygonList(Triangle*, u32, const TVec3f&, const TVec3f&);
     u32 createAreaPolygonListArray(Triangle*, u32, TVec3f*, u32);
-    void isSphereOverlappingWithBox(const TVec3f&, const TVec3f&, const TVec3f&, f32);
+    bool isSphereOverlappingWithBox(const TVec3f&, const TVec3f&, const TVec3f&, f32);
     bool searchSameHostParts(CollisionParts**, CollisionParts*) const;
     HitInfo* getStrikeInfo(u32);
     CollisionZone* getZone(int);

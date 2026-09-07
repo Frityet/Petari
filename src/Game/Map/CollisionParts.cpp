@@ -261,3 +261,32 @@ void CollisionParts::calcForceMovePower(TVec3f* a1, const TVec3f& a2) const {
     tStack88.sub(a2);
     *a1 = tStack88;
 }
+
+u32 CollisionParts::createAreaPolygonListArray(Triangle* pTriangles, u32 maxCount, TVec3f* pPoints, u32 pointCount) {
+    TPos3f matrix;
+    PSMTXCopy(mInvBaseMatrix.toMtxPtr(), matrix.toMtxPtr());
+    matrix.zeroTrans();
+
+    TVec3f points[32];
+
+    for (u32 i = 0; i < pointCount; i++) {
+        mInvBaseMatrix.mult(pPoints[i], points[i]);
+    }
+
+    TVec3f boxMin;
+    TVec3f boxMax;
+    MR::createBoundingBox(points, pointCount, &boxMin, &boxMax);
+
+    KC_PrismData* prisms[512];
+    u32 foundCount = mServer->checkArea3D(reinterpret_cast< Fxyz* >(&boxMin), reinterpret_cast< Fxyz* >(&boxMax), prisms, maxCount);
+
+    if (foundCount == 0) {
+        return 0;
+    }
+
+    for (u32 i = 0; i < foundCount; i++) {
+        pTriangles[i].fillData(this, mServer->toIndex(prisms[i]), mHitSensor);
+    }
+
+    return foundCount;
+}

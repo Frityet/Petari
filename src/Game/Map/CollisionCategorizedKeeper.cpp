@@ -1,5 +1,8 @@
 #include "Game/Map/CollisionCategorizedKeeper.hpp"
 #include "Game/Map/CollisionParts.hpp"
+#include "Game/Map/CollisionDirector.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include <algorithm>
 
 TVec3f CollisionParts::getTrans() {
     TVec3f translation;
@@ -39,4 +42,123 @@ void CollisionZone::addParts(CollisionParts* pParts) {
     if (mZoneID) {
         calcMinMaxAndRadius();
     }
+}
+
+void CollisionZone::calcMinMaxAndRadius() {
+    _818.zero();
+    _824.zero();
+    mRadius = 0.0f;
+
+    for (CollisionParts** pParts = mPartsArray; pParts != mPartsArray + mNumParts; pParts++) {
+        TVec3f minimum((*pParts)->getTrans());
+        TVec3f maximum((*pParts)->getTrans());
+        f32 radius = (*pParts)->_D8;
+        minimum -= TVec3f(radius, radius, radius);
+        maximum += TVec3f(radius, radius, radius);
+        addAndUpdateMinMax(minimum, maximum);
+    }
+
+    _808 = (_824 + _818) * 0.5f;
+    f32 radius = 0.0f;
+    for (CollisionParts** pParts = mPartsArray; pParts != mPartsArray + mNumParts; pParts++) {
+        TVec3f distance((*pParts)->getTrans());
+        distance -= _808;
+        f32 extent = distance.length();
+        extent += (*pParts)->_D8;
+        if (radius < extent) {
+            radius = extent;
+        }
+    }
+    mRadius = radius;
+}
+
+void CollisionZone::addAndUpdateMinMax(TVec3f minimum, TVec3f maximum) {
+    if (mRadius == 0.0f) {
+        mRadius = 0.1f;
+        _818.set(minimum);
+        _824.set(maximum);
+    } else {
+        if (minimum.x < _818.x) {
+            _818.x = minimum.x;
+        }
+        if (minimum.y < _818.y) {
+            _818.y = minimum.y;
+        }
+        if (minimum.z < _818.z) {
+            _818.z = minimum.z;
+        }
+        if (_824.x < maximum.x) {
+            _824.x = maximum.x;
+        }
+        if (_824.y < maximum.y) {
+            _824.y = maximum.y;
+        }
+        if (_824.z < maximum.z) {
+            _824.z = maximum.z;
+        }
+    }
+}
+
+void CollisionZone::eraseParts(CollisionParts* pParts) {
+    CollisionParts** pEnd = mPartsArray + mNumParts;
+    CollisionParts** pFound = std::find(mPartsArray, pEnd, pParts);
+    if (pFound == pEnd) {
+        return;
+    }
+
+    mPartsArray[pFound - mPartsArray] = mPartsArray[mNumParts - 1];
+    mNumParts--;
+}
+
+u32 CollisionCategorizedKeeper::createAreaPolygonListArray(Triangle* pTriangles, u32 maxCount, TVec3f* pPoints, u32 pointCount) {
+    MR::getCollisionDirector();
+
+    TVec3f boxMin;
+    TVec3f boxMax;
+    u32 foundCount = 0;
+    MR::createBoundingBox(pPoints, pointCount, &boxMin, &boxMax);
+
+    for (CollisionZone** zone = mZones; zone != mZones + mZoneNum; zone++) {
+        if (zone != mZones && !isSphereOverlappingWithBox(boxMin, boxMax, (*zone)->_808, (*zone)->mRadius)) {
+            continue;
+        }
+
+        s32 partCount = (*zone)->mNumParts;
+
+        for (s32 i = 0; i < partCount; i++) {
+            CollisionParts* part = (*zone)->mPartsArray[i];
+
+            if (!part->_CC) {
+                continue;
+            }
+
+            if (!isSphereOverlappingWithBox(boxMin, boxMax, part->getTrans(), part->_D8)) {
+                continue;
+            }
+
+            foundCount += part->createAreaPolygonListArray(pTriangles + foundCount, maxCount - foundCount, pPoints, pointCount);
+
+            if (maxCount <= foundCount) {
+                return foundCount;
+            }
+        }
+    }
+
+    return foundCount;
+}
+
+bool CollisionCategorizedKeeper::isSphereOverlappingWithBox(const TVec3f& rMin, const TVec3f& rMax, const TVec3f& rCenter, f32 radius) {
+    if (rCenter.x < rMin.x - radius || rMax.x + radius < rCenter.x) {
+        return false;
+    }
+
+    if (rCenter.y < rMin.y - radius || rMax.y + radius < rCenter.y) {
+        return false;
+    }
+
+    if (rCenter.z < rMin.z - radius || rMax.z + radius < rCenter.z) {
+        return false;
+    }
+
+    return true;
 }

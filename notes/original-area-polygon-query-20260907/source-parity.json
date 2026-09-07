@@ -1,0 +1,24 @@
+[
+  {
+    "source": "decomp/src/Game/Map/CollisionCategorizedKeeper.cpp",
+    "native": "src/Game/Map/CollisionCategorizedKeeper.cpp",
+    "byte_identical": true
+  },
+  {
+    "source": "decomp/src/Game/Map/CollisionParts.cpp",
+    "native": "src/Game/Map/CollisionParts.cpp",
+    "byte_identical": true
+  },
+  {
+    "existing_native_method": "calcMinMaxAndRadius",
+    "body_preserved": true
+  },
+  {
+    "existing_native_method": "addAndUpdateMinMax",
+    "body_preserved": true
+  },
+  {
+    "existing_native_method": "eraseParts",
+    "body_preserved": true
+  }
+]
