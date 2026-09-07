@@ -1,3 +1,4 @@
+#include "Game/Util/GamePadUtil.hpp"
 #include "Game/GameAudio/AudStageBgmWrap.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Util/PlayerUtil.hpp"
@@ -260,3 +261,31 @@ namespace MR {
         }
     }
 }  // namespace MR
+
+namespace MR {
+    void startCSSound2P(const char* pCSName, const char* pSEName) {
+        if (isConnectedWPad(1)) {
+            startCSSound(pCSName, pSEName, 1);
+        }
+    }
+
+    void start2PJumpAssistSound() {
+        if (hasME()) {
+            startSystemME("ME_2P_ASSIST_JUMP");
+        } else {
+            startSystemSE("SE_SY_2P_ASSIST_JUMP");
+        }
+
+        startCSSound2P("CS_DPD_JUMP", nullptr);
+    }
+
+    void start2PJumpAssistJustSound() {
+        if (hasME()) {
+            startSystemME("ME_2P_ASSIST_JUMP_L");
+        } else {
+            startSystemSE("SE_SY_2P_ASSIST_JUMP_L");
+        }
+
+        startCSSound2P("CS_DPD_JUMP_HIGH", nullptr);
+    }
+}

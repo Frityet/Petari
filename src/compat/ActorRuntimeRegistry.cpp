@@ -1,3 +1,4 @@
+#include "compat/EffectSystemOwnership.hpp"
 #include "Game/AudioLib/AudAnmSoundObject.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 
@@ -385,6 +386,7 @@ namespace smgpc::compat {
             return;
         }
 
+        release_actor_effect_keeper(actor);
         release_actor_collision_parts(actor);
         release_actor_sensor_bindings(actor);
         release_talk_runtime_state(actor);

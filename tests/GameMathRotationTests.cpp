@@ -360,6 +360,22 @@ namespace {
                 "two-dimensional normalization uses the shared original vector path");
     }
 
+    void test_scaled_velocity_fused_rounding_and_aliasing() {
+        // (1 + 2^-23) * (1 - 2^-23) - 1 is exactly -2^-46.
+        // Rounding the multiply first would incorrectly erase this impulse.
+        auto velocity = TVec3f{-1.0F, 4.0F, -8.0F};
+        const auto impulse = TVec3f{0x1.000002p0F, 2.0F, -4.0F};
+        MR::vecScaleAdd(&velocity, &impulse, 0x1.fffffcp-1F);
+        require(velocity.x == -0x1p-46F,
+                "scaled velocity must retain the original fused multiply/add residual");
+        require(velocity.y == 6.0F && velocity.z == -12.0F,
+                "scaled velocity must preserve all three original components");
+        auto self = TVec3f{2.0F, -3.0F, 0.25F};
+        MR::vecScaleAdd(&self, &self, 0.5F);
+        require_vector(self, TVec3f{3.0F, -4.5F, 0.375F},
+                       "scaled velocity must preserve aliased source and destination loads");
+    }
+
     void test_near_parallel_angle_table() {
         MR::initAcosTable();
         // 0.999 selects retail table entry 242, whose ratio is 12737/12750.
@@ -393,6 +409,7 @@ int main() {
         test_axis_rotation_snap_and_sign();
         test_near_parallel_angle_table();
         test_original_angle_boundaries();
+        test_scaled_velocity_fused_rounding_and_aliasing();
         std::cout << "game math rotation tests passed\n";
         return 0;
     } catch (const std::exception& exception) {

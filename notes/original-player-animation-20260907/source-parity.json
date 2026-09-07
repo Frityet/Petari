@@ -1,0 +1,20 @@
+[
+  {
+    "unit": "MarioActorEye",
+    "native_equals_decomp": true,
+    "decomp_sha256": "d147871c429477902fdded9a6b01ca19dd2c0fd7e0f39f1a6444f08297b16971",
+    "native_sha256": "d147871c429477902fdded9a6b01ca19dd2c0fd7e0f39f1a6444f08297b16971"
+  },
+  {
+    "unit": "MarioAnimationEfx",
+    "native_equals_decomp": true,
+    "decomp_sha256": "2f68d47c3bde7c0fc249dea47186447bd9026209a35c1204de6f1c8ae069e6e7",
+    "native_sha256": "2f68d47c3bde7c0fc249dea47186447bd9026209a35c1204de6f1c8ae069e6e7"
+  },
+  {
+    "unit": "MarioModule",
+    "native_equals_decomp": true,
+    "decomp_sha256": "7d31ae32295210260e01c43261abfeb53e186823aebc86302b0036a65cd66792",
+    "native_sha256": "7d31ae32295210260e01c43261abfeb53e186823aebc86302b0036a65cd66792"
+  }
+]

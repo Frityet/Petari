@@ -1,0 +1,38 @@
+{
+  "left": {
+    "name": "effectLight__20MultiEmitterCallBackFP14JPABaseEmitter",
+    "bytes": 44,
+    "match_percent": 12.272727,
+    "instructions": [
+      "stwu r1, -0x10(r1)",
+      "mflr r0",
+      "lfs f2, @57287@sda21",
+      "stw r0, 0x14(r1)",
+      "lwz r3, 0x4(r3)",
+      "lfs f1, 0x2c(r3)",
+      "bl isNearZero__2MRFff",
+      "lwz r0, 0x14(r1)",
+      "mtlr r0",
+      "addi r1, r1, 0x10",
+      "blr "
+    ],
+    "epsilon_hex": "3a83126f",
+    "epsilon_float": 0.0010000000474974513,
+    "object_sha256": "1112a172ce32a8126075366d095f2d1f9548f4db20d2e6f1f18eb386bd355bb3"
+  },
+  "right": {
+    "name": "effectLight__20MultiEmitterCallBackFP14JPABaseEmitter",
+    "bytes": 16,
+    "match_percent": 12.272727,
+    "instructions": [
+      "lwz r3, 0x4(r3)",
+      "lfs f2, @4492@sda21",
+      "lfs f1, 0x2c(r3)",
+      "b isNearZero__2MRFff"
+    ],
+    "epsilon_hex": "3a83126f",
+    "epsilon_float": 0.0010000000474974513,
+    "object_sha256": "a91ef3364a04db32f63256fdafaf6257177be1a2779e52b88202db8630729675"
+  },
+  "functional_comparison": "Same mEmitter->_2C input, identical epsilon bits, same MR::isNearZero target and return value; original preserves LR on stack and candidate tail-calls."
+}

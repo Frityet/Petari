@@ -1,0 +1,101 @@
+[
+  {
+    "name": "__ct__9FurDrawerFUlP7ResTIMGP7ResTIMG",
+    "demangled": "FurDrawer::FurDrawer(unsigned long, ResTIMG*, ResTIMG*)",
+    "size": 656,
+    "calls": [
+      "GXGetTexBufferSize",
+      "PSMTXIdentity",
+      "__ct__10JUTTextureFPC7ResTIMGUc",
+      "__nw__FUl",
+      "__nwa__FUli",
+      "_restgpr_29",
+      "_savegpr_29",
+      "createFurMap__9FurDrawerFv",
+      "update__9FurDrawerFv"
+    ]
+  },
+  {
+    "name": "update__9FurDrawerFv",
+    "demangled": "FurDrawer::update()",
+    "size": 20,
+    "calls": []
+  },
+  {
+    "name": "calcValue__Q29FurDrawer11CLayerParamCFll",
+    "demangled": "FurDrawer::CLayerParam::calcValue(long, long) const",
+    "size": 132,
+    "calls": [
+      "pow"
+    ]
+  },
+  {
+    "name": "setupMaterial__9FurDrawerCFP15DynamicFurParam",
+    "demangled": "FurDrawer::setupMaterial(DynamicFurParam*) const",
+    "size": 1916,
+    "calls": [
+      "GXLoadTexMtxImm",
+      "GXSetAlphaCompare",
+      "GXSetAlphaUpdate",
+      "GXSetBlendMode",
+      "GXSetChanAmbColor",
+      "GXSetChanCtrl",
+      "GXSetChanMatColor",
+      "GXSetClipMode",
+      "GXSetCoPlanar",
+      "GXSetColorUpdate",
+      "GXSetCullMode",
+      "GXSetFog",
+      "GXSetFogRangeAdj",
+      "GXSetIndTexCoordScale",
+      "GXSetIndTexOrder",
+      "GXSetNumChans",
+      "GXSetNumIndStages",
+      "GXSetNumTevStages",
+      "GXSetNumTexGens",
+      "GXSetTevAlphaIn",
+      "GXSetTevAlphaOp",
+      "GXSetTevColorIn",
+      "GXSetTevColorOp",
+      "GXSetTevDirect",
+      "GXSetTevIndirect",
+      "GXSetTevKAlphaSel",
+      "GXSetTevKColorSel",
+      "GXSetTevOrder",
+      "GXSetTexCoordGen2",
+      "GXSetZCompLoc",
+      "GXSetZMode",
+      "PSMTXCopy",
+      "PSMTXIdentity",
+      "PSMTXScale",
+      "_restgpr_28",
+      "_savegpr_28",
+      "load__10JUTTextureF11_GXTexMapID",
+      "mixFogColor__6TDDrawFQ29JGeometry8TVec3<f>fUl"
+    ]
+  },
+  {
+    "name": "setupLayerMaterial__9FurDrawerCFl",
+    "demangled": "FurDrawer::setupLayerMaterial(long) const",
+    "size": 356,
+    "calls": [
+      "GXSetIndTexMtx",
+      "GXSetTevColor",
+      "GXSetTevKColor",
+      "_restgpr_29",
+      "_savegpr_29",
+      "calcValue__Q29FurDrawer11CLayerParamCFll"
+    ]
+  },
+  {
+    "name": "createFurMap__9FurDrawerFv",
+    "demangled": "FurDrawer::createFurMap()",
+    "size": 460,
+    "calls": [
+      "DCStoreRange",
+      "_restgpr_20",
+      "_savegpr_20",
+      "getRandom__2MRFff"
+    ]
+  }
+]

@@ -1,0 +1,100 @@
+[
+  {
+    "name": "__ct__7CShaderFPC12J3DModelDataPC7ResTIMG",
+    "demangled": "CShader::CShader(const J3DModelData*, const ResTIMG*)",
+    "size": 280,
+    "calls": [
+      "__construct_new_array",
+      "__ct__Q27CShader10CLengthMapFPC7ResTIMG",
+      "__nwa__FUl",
+      "_restgpr_28",
+      "_savegpr_28"
+    ]
+  },
+  {
+    "name": "__dt__7CShaderFv",
+    "demangled": "CShader::~CShader()",
+    "size": 100,
+    "calls": [
+      "__dl__FPv"
+    ]
+  },
+  {
+    "name": "calc__7CShaderFP8J3DModel",
+    "demangled": "CShader::calc(J3DModel*)",
+    "size": 1180,
+    "calls": [
+      "DCStoreRange",
+      "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "__ml__Q29JGeometry8TVec3<f>CFf",
+      "__pl__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>",
+      "_restgpr_14",
+      "_savegpr_14",
+      "fixed16ToFloat__2MRFPQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<s>Uc",
+      "floatToFixed16__2MRFPQ29JGeometry8TVec3<s>RCQ29JGeometry8TVec3<f>Uc",
+      "isNan__2MRFRCQ29JGeometry8TVec3<f>",
+      "normalize__2MRFPQ29JGeometry8TVec3<f>",
+      "refer__Q27CShader10CLengthMapCFff"
+    ]
+  },
+  {
+    "name": "setup__7CShaderFP12J3DModelData",
+    "demangled": "CShader::setup(J3DModelData*)",
+    "size": 4,
+    "calls": []
+  },
+  {
+    "name": "makeIndexData__7CShaderCFP8J3DShape",
+    "demangled": "CShader::makeIndexData(J3DShape*) const",
+    "size": 392,
+    "calls": [
+      "_restgpr_26",
+      "_savegpr_26"
+    ]
+  },
+  {
+    "name": "checkBorderVtx__7CShaderFP12J3DModelDataUl",
+    "demangled": "CShader::checkBorderVtx(J3DModelData*, unsigned long)",
+    "size": 448,
+    "calls": [
+      "_restgpr_24",
+      "_savegpr_24",
+      "getName__10JUTNameTabCFUs",
+      "strstr"
+    ]
+  },
+  {
+    "name": "__ct__Q27CShader10CLengthMapFPC7ResTIMG",
+    "demangled": "CShader::CLengthMap::CLengthMap(const ResTIMG*)",
+    "size": 60,
+    "calls": [
+      "setLengthMap__Q27CShader10CLengthMapFPC7ResTIMG"
+    ]
+  },
+  {
+    "name": "setLengthMap__Q27CShader10CLengthMapFPC7ResTIMG",
+    "demangled": "CShader::CLengthMap::setLengthMap(const ResTIMG*)",
+    "size": 68,
+    "calls": []
+  },
+  {
+    "name": "refer__Q27CShader10CLengthMapCFff",
+    "demangled": "CShader::CLengthMap::refer(float, float) const",
+    "size": 280,
+    "calls": [
+      "getTexelOrder__Q27CShader10CLengthMapCFUsf14_GXTexWrapMode"
+    ]
+  },
+  {
+    "name": "getTexelOrder__Q27CShader10CLengthMapCFUsf14_GXTexWrapMode",
+    "demangled": "CShader::CLengthMap::getTexelOrder(unsigned short, float, _GXTexWrapMode) const",
+    "size": 204,
+    "calls": []
+  },
+  {
+    "name": "__ct__Q27CShader6CIndexFv",
+    "demangled": "CShader::CIndex::CIndex()",
+    "size": 20,
+    "calls": []
+  }
+]

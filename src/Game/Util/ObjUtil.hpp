@@ -124,6 +124,8 @@ namespace MR {
     void shakeCameraVeryWeak();
     void declarePowerStarCoin100();
     void declareStarPiece(const NameObj* pObj, s32 num);
+    bool appearStarPiece(const NameObj*, const TVec3f&, s32, f32, f32, bool);
+    void stopScene(s32);
     void listenNameObjStageSwitchOnAppear(const NameObj*, const StageSwitchCtrl*, const MR::FunctorBase&);
     void listenNameObjStageSwitchOnOffAppear(const NameObj*, const StageSwitchCtrl*, const MR::FunctorBase&, const MR::FunctorBase&);
     void listenNameObjStageSwitchOnA(const NameObj*, const StageSwitchCtrl*, const MR::FunctorBase&);

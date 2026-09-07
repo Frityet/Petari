@@ -1,0 +1,12 @@
+{
+  "source": "decomp/src/Game/Enemy/Karikari.cpp",
+  "destination": "src/Game/Enemy/Karikari.cpp",
+  "sha256": "5d787af799fd50e6126fd4fdbf1ea101c377da2ee8816f695e4211a1dd35ca70",
+  "byte_identical": true,
+  "shared_math_source": "decomp/libs/JSystem/include/JSystem/JGeometry/TVec.hpp:223",
+  "shared_math_destination": "src/JSystem/JGeometry/TVec.hpp",
+  "declarations": [
+    "MR::appearStarPiece(const NameObj*,const TVec3f&,s32,f32,f32,bool)",
+    "MR::stopScene(s32)"
+  ]
+}

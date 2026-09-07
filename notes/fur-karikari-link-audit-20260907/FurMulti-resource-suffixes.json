@@ -1,0 +1,42 @@
+[
+  {
+    "section": ".data",
+    "offset": 8,
+    "value": "?G`"
+  },
+  {
+    "section": ".data",
+    "offset": 64,
+    "value": "60,"
+  },
+  {
+    "section": ".data",
+    "offset": 96,
+    "value": ">/iD"
+  },
+  {
+    "section": ".data",
+    "offset": 104,
+    "value": "Body"
+  },
+  {
+    "section": ".data",
+    "offset": 109,
+    "value": "Length.bti"
+  },
+  {
+    "section": ".data",
+    "offset": 120,
+    "value": "Indirect.bti"
+  },
+  {
+    "section": ".data",
+    "offset": 133,
+    "value": "Density.bti"
+  },
+  {
+    "section": ".data",
+    "offset": 145,
+    "value": ".fur.txt"
+  }
+]

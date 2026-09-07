@@ -9,6 +9,16 @@ set_project("smg-pc")
 add_rules("mode.debug", "mode.release")
 add_rules("plugin.compile_commands.autoupdate", {lsp = "clangd"})
 set_languages("c++23")
+-- Keep complete original translation units while linking the reachable native
+-- closure. Referenced functions must still have concrete native providers.
+if is_plat("macosx", "iphoneos", "linux", "mingw") then
+    add_cxflags("-ffunction-sections", "-fdata-sections")
+    if is_plat("macosx", "iphoneos") then
+        add_ldflags("-Wl,-dead_strip")
+    else
+        add_ldflags("-Wl,--gc-sections")
+    end
+end
 includes("scripts")
 
 if not is_mode("debug") then

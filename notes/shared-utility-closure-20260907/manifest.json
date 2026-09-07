@@ -1,0 +1,86 @@
+[
+  {
+    "reference": "decomp/src/Game/Util/StringUtil.cpp",
+    "destination": "src/compat/StringComparisonCompat.cpp",
+    "symbol": "bool isEqualSubString(",
+    "body_sha256": "e300102e287dedd1bef7254f78fad4b30e3e49e1b372b258835b8077c157c19c"
+  },
+  {
+    "reference": "decomp/src/Game/Util/StringUtil.cpp",
+    "destination": "src/compat/StringComparisonCompat.cpp",
+    "symbol": "bool hasStringSpace(",
+    "body_sha256": "545c03486103a2ae514abeef7dfc3282ea320ebecb4a14199f984f31c028bf1c"
+  },
+  {
+    "reference": "decomp/src/Game/Util/StringUtil.cpp",
+    "destination": "src/compat/StringComparisonCompat.cpp",
+    "symbol": "bool isDigitStringTail(",
+    "body_sha256": "a14e2fc47ec419107c8c29f9ffc7f13bba5c2ad40534a35d09afba8bfe34bc63"
+  },
+  {
+    "reference": "decomp/src/Game/Util/ModelUtil.cpp",
+    "destination": "src/compat/OriginalModelAccess.cpp",
+    "symbol": "bool findBckNameStringInResource(",
+    "body_sha256": "b1bb530cb921c74efa03271b0fb67e7b86851925758cf273f509e7e9c182560f"
+  },
+  {
+    "reference": "decomp/src/Game/Util/MtxUtil.cpp",
+    "destination": "src/compat/MtxCompat.cpp",
+    "symbol": "void makeRTFromMtxPtr(",
+    "body_sha256": "a2c818a865248a3e4997290db5033c01061b76b71dfbeeb31983aa6675fed3e5"
+  },
+  {
+    "reference": "decomp/src/Game/Util/MtxUtil.cpp",
+    "destination": "src/compat/MtxCompat.cpp",
+    "symbol": "bool isSameMtx(",
+    "body_sha256": "bdabfbc3134b081245112e53acd5f42a048239bed33483a964dd7490438276a8"
+  },
+  {
+    "reference": "decomp/src/Game/Util/MathUtil.cpp",
+    "destination": "src/compat/GameMathCompat.cpp",
+    "symbol": "void sortSmall(s32 length, f32*",
+    "body_sha256": "90c341f237f72b334c4582265a6d4e74b16be08598a6c94c0ad031bd0768efe0"
+  },
+  {
+    "reference": "decomp/src/Game/Util/MathUtil.cpp",
+    "destination": "src/compat/GameMathCompat.cpp",
+    "symbol": "void createBoundingBox(",
+    "body_sha256": "7df75a24484d5f93e62c5b3fbf2bb8a5fa72eb37db9a444a9c0e9713fffb4536"
+  },
+  {
+    "reference": "decomp/src/Game/Util/ActorSensorUtil.cpp",
+    "destination": "src/compat/GameActorSensorCompat.cpp",
+    "symbol": "HitSensor* getGroundSensor(",
+    "body_sha256": "5f22138d6effef28e86391d2cbafb8eb67aedbe983cd28bf589829e4f6a83e07"
+  },
+  {
+    "reference": "decomp/src/Game/Util/ActorSensorUtil.cpp",
+    "destination": "src/compat/GameActorSensorCompat.cpp",
+    "symbol": "HitSensor* getRoofSensor(",
+    "body_sha256": "21127c3e70fbc7a4eb2ce0377d18beb175154e61ef3fc5b46862a901b46d07a9"
+  },
+  {
+    "reference": "decomp/src/Game/Util/ActorSensorUtil.cpp",
+    "destination": "src/compat/GameActorSensorCompat.cpp",
+    "symbol": "HitSensor* getWallSensor(",
+    "body_sha256": "0d5d13fb6cea66d9677bc603cf4b82e673756be907387dd56555a5748f23b00c"
+  },
+  {
+    "reference": "decomp/src/Game/Map/HitInfo.cpp",
+    "destination": "src/compat/HitInfoCompat.cpp",
+    "symbol": "TPos3f* Triangle::getBaseMtx(",
+    "body_sha256": "b1b9be1762cbd8c5a61bdf91c70a51a4a9813cdcfcfcf39de3fdd2f3c19a170d"
+  },
+  {
+    "reference": "decomp/src/Game/Map/HitInfo.cpp",
+    "destination": "src/compat/HitInfoCompat.cpp",
+    "symbol": "TPos3f* Triangle::getBaseInvMtx(",
+    "body_sha256": "d8c2b51ec7e45197d316ddfcf7dd3921eb40b873650bcdc9bfbc317991cd8658"
+  },
+  {
+    "reference": "decomp/src/Game/Map/HitInfo.cpp",
+    "destination": "src/compat/HitInfoCompat.cpp",
+    "symbol": "TPos3f* Triangle::getPrevBaseMtx(",
+    "body_sha256": "56c1cc1402cd3da9f7ebb62ba507fc1af5131ab20924f0bf25283887bef583e4"
+  }
+]

@@ -185,6 +185,7 @@ namespace smgpc::scene {
             _collision.activate();
 
             _scene_binding = std::make_unique<SceneObjHolderBinding>(_scene_obj_holder);
+            _scene_binding->initialize_effect_system(3072, 256);
             constexpr auto required_scene_objects = std::array{
                 SceneObj_MessageSensorHolder,
                 SceneObj_PlacementStateChecker,

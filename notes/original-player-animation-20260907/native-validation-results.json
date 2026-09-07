@@ -1,0 +1,15 @@
+[
+  {
+    "target": "smg-pc-talk-real-or-absent-tests",
+    "build": 255
+  },
+  {
+    "target": "smg-pc-game-math-rotation-tests",
+    "build": 0,
+    "run": 0
+  },
+  {
+    "target": "smg-pc-nameobj-factory-placement-tests",
+    "build": 255
+  }
+]

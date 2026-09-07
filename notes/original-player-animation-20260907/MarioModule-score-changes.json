@@ -1,0 +1,14 @@
+{
+  "changeAnimationNonStop__11MarioModuleFPCc": {
+    "before": null,
+    "after": 100.0
+  },
+  "changeAnimationWithAttr__11MarioModuleFPCcUl": {
+    "before": null,
+    "after": 100.0
+  },
+  "addVelocity__11MarioModuleFRCQ29JGeometry8TVec3<f>f": {
+    "before": null,
+    "after": 25.454546
+  }
+}

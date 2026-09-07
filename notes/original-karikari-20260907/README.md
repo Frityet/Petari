@@ -1,0 +1,14 @@
+# Original Karikari activation
+
+The entire existing original `decomp/src/Game/Enemy/Karikari.cpp` is copied byte-identically to `src/Game/Enemy/Karikari.cpp`. This preserves the real HipDropRelease velocity and DPDAttacked/Land/ordinary nerve graph, including attachment registration and all animation, collision, effect, pointer and item calls. No actor-specific replacement, empty nerve or conditional bypass was added. The original directory already contained this fully recovered source; see source-manifest.json.
+
+The native shared `TVec2::setLength` body was copied from `decomp/libs/JSystem/include/JSystem/JGeometry/TVec.hpp:223`. It returns the prior length, leaves zero/tiny input unchanged, and scales with the existing original TUtil inverse-square-root helper. Only original stopScene/appearStarPiece declarations were added to native ObjUtil.hpp. The parent separately supplied the actual StarPointer target declaration/header and secondary-pointer providers. No root Xmake source selection was changed by this subtask; the existing Game glob selects the new whole TU.
+
+Validation:
+
+- Fresh Wii compile of the original source passed. HipDropRelease, DPDAttacked, and environment-velocity methods each compare at 100%; full evidence is in the preceding `notes/fur-karikari-link-audit-20260907` audit.
+- Exact production LLVM 23 object compilation passed after the parent StarPointer declarations landed. Full command and log are `native-compile.json` and `native-compile.log`.
+- The standalone shared-math smoke compiled and ran successfully. It checks 3-4-5 input rescaling/old-length return, zero input, tiny input preserved by the original epsilon branch, and negative target length. The source, command and log remain in this notes directory.
+- A symbol inventory against the existing native archives found nine candidate remaining MR providers: isNearZero(TVec2f,float), joinToGroup, appearStarPiece, declareStarPiece, startDPDHitSound, startBlowHitSound, calcMtxFromGravityAndZAxis, isBinded and stopScene. `native-provider-inventory.json` records exact signatures and archives. This is a snapshot before concurrent coordinated rebuilds, not a final strict-link failure report. Linker section retention may discard some init/virtual paths; the parent owns the fresh strict link and actual retained dependency closure.
+
+Actual Karikari scene construction still needs the real KarikariDirector factory case and normal placement/group ownership. Existing native SceneObjHolderBinding, NameObj registries and the true scene Game heap are the appropriate owners; no synthetic clinging actor or fabricated empty director was introduced. This source and compile checkpoint does not establish live Karikari or Mario gameplay. Work stopped at the requested restoration/closure audit so the parent can prioritize movement and camera.

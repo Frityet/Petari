@@ -1,3 +1,4 @@
+#include "Game/Util/StringUtil.hpp"
 #include "Game/Util/ModelUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MutexHolder.hpp"
@@ -176,3 +177,17 @@ namespace MR {
     }
 
 }  // namespace MR
+
+// Original methods from Game/Util/ModelUtil.cpp.
+namespace MR {
+    bool findBckNameStringInResource(const char** pOut, const ResourceHolder* pHolder, const char* pNameString) {
+        for (int i = 0; i < pHolder->mMotionResTable->mCount; i++) {
+            if (isEqualStringCase(pNameString, pHolder->getMotionName(i))) {
+                *pOut = pHolder->getMotionName(i);
+                return true;
+            }
+        }
+
+        return false;
+    }
+} // namespace MR

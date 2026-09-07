@@ -1,0 +1,142 @@
+[
+  {
+    "iteration": 0,
+    "exit": 0,
+    "seconds": 1.3302120419684798,
+    "two_original_scenes_passed": true,
+    "backend_allocation_passes": 2
+  },
+  {
+    "iteration": 1,
+    "exit": 0,
+    "seconds": 0.7628693750011735,
+    "two_original_scenes_passed": true,
+    "backend_allocation_passes": 2
+  },
+  {
+    "iteration": 2,
+    "exit": 0,
+    "seconds": 0.7609001660021022,
+    "two_original_scenes_passed": true,
+    "backend_allocation_passes": 2
+  },
+  {
+    "iteration": 3,
+    "exit": 0,
+    "seconds": 0.764408832998015,
+    "two_original_scenes_passed": true,
+    "backend_allocation_passes": 2
+  },
+  {
+    "iteration": 4,
+    "exit": 0,
+    "seconds": 0.7664859580108896,
+    "two_original_scenes_passed": true,
+    "backend_allocation_passes": 2
+  },
+  {
+    "iteration": 5,
+    "exit": 0,
+    "seconds": 0.785362874972634,
+    "two_original_scenes_passed": true,
+    "backend_allocation_passes": 2
+  },
+  {
+    "iteration": 6,
+    "exit": 0,
+    "seconds": 0.7994446660159156,
+    "two_original_scenes_passed": true,
+    "backend_allocation_passes": 2
+  },
+  {
+    "iteration": 7,
+    "exit": 0,
+    "seconds": 0.7594373329775408,
+    "two_original_scenes_passed": true,
+    "backend_allocation_passes": 2
+  },
+  {
+    "iteration": 8,
+    "exit": 0,
+    "seconds": 0.7670469589647837,
+    "two_original_scenes_passed": true,
+    "backend_allocation_passes": 2
+  },
+  {
+    "iteration": 9,
+    "exit": 0,
+    "seconds": 0.772550666006282,
+    "two_original_scenes_passed": true,
+    "backend_allocation_passes": 2
+  },
+  {
+    "iteration": 10,
+    "exit": 0,
+    "seconds": 0.7659585829824209,
+    "two_original_scenes_passed": true,
+    "backend_allocation_passes": 2
+  },
+  {
+    "iteration": 11,
+    "exit": 0,
+    "seconds": 0.7823480420047417,
+    "two_original_scenes_passed": true,
+    "backend_allocation_passes": 2
+  },
+  {
+    "iteration": 12,
+    "exit": 0,
+    "seconds": 0.7780775409773923,
+    "two_original_scenes_passed": true,
+    "backend_allocation_passes": 2
+  },
+  {
+    "iteration": 13,
+    "exit": 0,
+    "seconds": 0.7991676669917069,
+    "two_original_scenes_passed": true,
+    "backend_allocation_passes": 2
+  },
+  {
+    "iteration": 14,
+    "exit": 0,
+    "seconds": 0.7807667499873787,
+    "two_original_scenes_passed": true,
+    "backend_allocation_passes": 2
+  },
+  {
+    "iteration": 15,
+    "exit": 0,
+    "seconds": 0.7792125410051085,
+    "two_original_scenes_passed": true,
+    "backend_allocation_passes": 2
+  },
+  {
+    "iteration": 16,
+    "exit": 0,
+    "seconds": 0.7658739169710316,
+    "two_original_scenes_passed": true,
+    "backend_allocation_passes": 2
+  },
+  {
+    "iteration": 17,
+    "exit": 0,
+    "seconds": 0.7869375000009313,
+    "two_original_scenes_passed": true,
+    "backend_allocation_passes": 2
+  },
+  {
+    "iteration": 18,
+    "exit": 0,
+    "seconds": 0.7701888750307262,
+    "two_original_scenes_passed": true,
+    "backend_allocation_passes": 2
+  },
+  {
+    "iteration": 19,
+    "exit": 0,
+    "seconds": 0.774963999981992,
+    "two_original_scenes_passed": true,
+    "backend_allocation_passes": 2
+  }
+]

@@ -83,27 +83,6 @@ namespace MR {
             "LiveActorGroupArray registration is unavailable without the real scene-owned group manager.");
     }
 
-    void deleteEffectAll(LiveActor* pActor) {
-        if (pActor == nullptr) {
-            throw std::invalid_argument("Effect deletion requires a LiveActor.");
-        }
-        auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
-        if (runtime == nullptr) {
-            throw std::logic_error("Effect deletion requires an active effect runtime.");
-        }
-        if (!runtime->effects().registered_keeper(pActor->getName(), pActor).has_value()) {
-            throw std::logic_error("Effect deletion requires the actor's registered effect keeper.");
-        }
-        runtime->delete_effect_all(pActor->getName(), pActor);
-    }
-
-    void forceDeleteEffectAll(LiveActor* pActor) {
-        // The host effect service owns no deferred particle command buffer, so
-        // deleting the registered keeper's active instances is already the
-        // retail force-delete boundary.
-        deleteEffectAll(pActor);
-    }
-
     bool tryRumblePad(const void* pSource, const char* pPatternName, s32 channel) {
         if (pPatternName == nullptr) {
             return false;

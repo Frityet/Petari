@@ -1,0 +1,78 @@
+[
+  {
+    "path": "Game/Map/WaterAreaHolder.cpp",
+    "byte_identical": true
+  },
+  {
+    "path": "Game/Map/OceanBowl.cpp",
+    "byte_identical": true
+  },
+  {
+    "path": "Game/Map/OceanRing.cpp",
+    "byte_identical": true
+  },
+  {
+    "path": "Game/Map/OceanSphere.cpp",
+    "byte_identical": true
+  },
+  {
+    "path": "Game/Map/OceanSphere.hpp",
+    "byte_identical": true
+  },
+  {
+    "path": "Game/Map/OceanSpherePoint.hpp",
+    "byte_identical": true
+  },
+  {
+    "path": "Game/Map/OceanRing.hpp",
+    "byte_identical": true
+  },
+  {
+    "path": "Game/Map/OceanRingBloomDrawer.hpp",
+    "byte_identical": true
+  },
+  {
+    "path": "Game/Map/OceanRingDrawer.hpp",
+    "byte_identical": true
+  },
+  {
+    "path": "Game/Map/OceanRingPipe.hpp",
+    "byte_identical": true
+  },
+  {
+    "path": "Game/Map/WaterPoint.hpp",
+    "byte_identical": true
+  },
+  {
+    "path": "Game/Map/OceanBowl.hpp",
+    "byte_identical": true
+  },
+  {
+    "path": "Game/Map/OceanBowlBloomDrawer.hpp",
+    "byte_identical": true
+  },
+  {
+    "path": "Game/Map/OceanBowlPoint.hpp",
+    "byte_identical": true
+  },
+  {
+    "path": "Game/Map/WhirlPoolAccelerator.hpp",
+    "byte_identical": false
+  },
+  {
+    "path": "Game/MapObj/WhirlPool.hpp",
+    "byte_identical": true
+  },
+  {
+    "path": "Game/Screen/WaterCameraFilter.hpp",
+    "byte_identical": true
+  },
+  {
+    "path": "Game/Map/WaterInfo.cpp",
+    "byte_identical": true
+  },
+  {
+    "path": "Game/Map/WaterAreaHolder.hpp",
+    "byte_identical": true
+  }
+]

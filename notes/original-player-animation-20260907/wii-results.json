@@ -1,0 +1,907 @@
+[
+  {
+    "source": "decomp/src/Game/Player/MarioActorEye.cpp",
+    "sha256": "d147871c429477902fdded9a6b01ca19dd2c0fd7e0f39f1a6444f08297b16971",
+    "compile": 0,
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Player/MarioActorEye.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-player-animation-20260907/MarioActorEye.o"
+    ],
+    "objdiff": 0,
+    "symbols": [
+      {
+        "name": "initBlink__10MarioActorFv",
+        "score": 100.0,
+        "size": "24"
+      },
+      {
+        "name": "setBlink__10MarioActorFPCc",
+        "score": 99.85714,
+        "size": "140"
+      },
+      {
+        "name": "updateBlink__10MarioActorFv",
+        "score": 98.64341,
+        "size": "516"
+      },
+      {
+        "name": "__sinit_\\MarioActorEye_cpp",
+        "score": 100.0,
+        "size": "108"
+      }
+    ],
+    "sections": [
+      {
+        "name": ".text",
+        "score": 99.086296
+      },
+      {
+        "name": ".ctors",
+        "score": 100.0
+      },
+      {
+        "name": ".data",
+        "score": 19.095478
+      },
+      {
+        "name": ".sdata2",
+        "score": 100.0
+      },
+      {
+        "name": ".rela.text",
+        "score": null
+      },
+      {
+        "name": ".rela.ctors",
+        "score": null
+      },
+      {
+        "name": ".symtab",
+        "score": null
+      },
+      {
+        "name": ".strtab",
+        "score": null
+      },
+      {
+        "name": ".shstrtab",
+        "score": null
+      },
+      {
+        "name": ".comment",
+        "score": null
+      },
+      {
+        "name": ".note.split",
+        "score": null
+      }
+    ]
+  },
+  {
+    "source": "decomp/src/Game/Player/MarioAnimationEfx.cpp",
+    "sha256": "2f68d47c3bde7c0fc249dea47186447bd9026209a35c1204de6f1c8ae069e6e7",
+    "compile": 0,
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Player/MarioAnimationEfx.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-player-animation-20260907/MarioAnimationEfx.o"
+    ],
+    "objdiff": 0,
+    "symbols": [
+      {
+        "name": "initCallbackTable__13MarioAnimatorFv",
+        "score": 100.0,
+        "size": "192"
+      },
+      {
+        "name": "entryCallback__13MarioAnimatorFPCc",
+        "score": 91.89744,
+        "size": "156"
+      },
+      {
+        "name": "runningCallback__13MarioAnimatorFv",
+        "score": 100.0,
+        "size": "224"
+      },
+      {
+        "name": "closeCallback__13MarioAnimatorFv",
+        "score": 99.28125,
+        "size": "128"
+      },
+      {
+        "name": "spinEntry__13MarioAnimatorFv",
+        "score": 98.70968,
+        "size": "124"
+      },
+      {
+        "name": "spinUpdate__13MarioAnimatorFv",
+        "score": 99.166664,
+        "size": "72"
+      },
+      {
+        "name": "spinClose__13MarioAnimatorFv",
+        "score": 98.70968,
+        "size": "124"
+      },
+      {
+        "name": "stageInCheck__13MarioAnimatorFv",
+        "score": 99.655174,
+        "size": "116"
+      },
+      {
+        "name": "throwCheck__13MarioAnimatorFv",
+        "score": 99.44444,
+        "size": "108"
+      },
+      {
+        "name": "throwEntry__13MarioAnimatorFv",
+        "score": 97.64706,
+        "size": "68"
+      },
+      {
+        "name": "throwClose__13MarioAnimatorFv",
+        "score": 97.64706,
+        "size": "68"
+      },
+      {
+        "name": "squatSpinCheck__13MarioAnimatorFv",
+        "score": 99.791664,
+        "size": "96"
+      },
+      {
+        "name": "walkinClose__13MarioAnimatorFv",
+        "score": 100.0,
+        "size": "80"
+      },
+      {
+        "name": "__sinit_\\MarioAnimationEfx_cpp",
+        "score": 100.0,
+        "size": "444"
+      }
+    ],
+    "sections": [
+      {
+        "name": ".text",
+        "score": 98.912
+      },
+      {
+        "name": ".ctors",
+        "score": 100.0
+      },
+      {
+        "name": ".data",
+        "score": 37.90172
+      },
+      {
+        "name": ".sdata2",
+        "score": 100.0
+      },
+      {
+        "name": ".rela.text",
+        "score": null
+      },
+      {
+        "name": ".rela.ctors",
+        "score": null
+      },
+      {
+        "name": ".rela.data",
+        "score": null
+      },
+      {
+        "name": ".symtab",
+        "score": null
+      },
+      {
+        "name": ".strtab",
+        "score": null
+      },
+      {
+        "name": ".shstrtab",
+        "score": null
+      },
+      {
+        "name": ".comment",
+        "score": null
+      },
+      {
+        "name": ".note.split",
+        "score": null
+      }
+    ]
+  },
+  {
+    "source": "decomp/src/Game/Player/MarioModule.cpp",
+    "sha256": "7d31ae32295210260e01c43261abfeb53e186823aebc86302b0036a65cd66792",
+    "compile": 0,
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Player/MarioModule.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-player-animation-20260907/MarioModule.o"
+    ],
+    "objdiff": 0,
+    "symbols": [
+      {
+        "name": "getPlayer__11MarioModuleCFv",
+        "score": 100.0,
+        "size": "12"
+      },
+      {
+        "name": "getAnimator__11MarioModuleCFv",
+        "score": 100.0,
+        "size": "12"
+      },
+      {
+        "name": "getShadowPos__11MarioModuleCFv",
+        "score": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "getGravityVec__11MarioModuleCFv",
+        "score": 100.0,
+        "size": "12"
+      },
+      {
+        "name": "getAirGravityVec__11MarioModuleCFv",
+        "score": 100.0,
+        "size": "12"
+      },
+      {
+        "name": "getFrontVec__11MarioModuleCFv",
+        "score": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "isStatusActiveID__11MarioModuleCFUl",
+        "score": 100.0,
+        "size": "12"
+      },
+      {
+        "name": "isStatusActiveS__11MarioModuleCFP10MarioState",
+        "score": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "getPlayerMode__11MarioModuleCFv",
+        "score": 100.0,
+        "size": "12"
+      },
+      {
+        "name": "isPlayerModeBee__11MarioModuleCFv",
+        "score": 100.0,
+        "size": "24"
+      },
+      {
+        "name": "isPlayerModeIce__11MarioModuleCFv",
+        "score": 100.0,
+        "size": "24"
+      },
+      {
+        "name": "isPlayerModeTeresa__11MarioModuleCFv",
+        "score": 100.0,
+        "size": "24"
+      },
+      {
+        "name": "isPlayerModeHopper__11MarioModuleCFv",
+        "score": 100.0,
+        "size": "24"
+      },
+      {
+        "name": "isPlayerModeInvincible__11MarioModuleCFv",
+        "score": 100.0,
+        "size": "24"
+      },
+      {
+        "name": "isPlayerModeFoo__11MarioModuleCFv",
+        "score": 100.0,
+        "size": "24"
+      },
+      {
+        "name": "changeAnimation__11MarioModuleFPCcPCc",
+        "score": 100.0,
+        "size": "112"
+      },
+      {
+        "name": "changeAnimationNonStop__11MarioModuleFPCc",
+        "score": 100.0,
+        "size": "108"
+      },
+      {
+        "name": "changeAnimationWithAttr__11MarioModuleFPCcUl",
+        "score": 100.0,
+        "size": "104"
+      },
+      {
+        "name": "stopAnimation__11MarioModuleFPCcPCc",
+        "score": 100.0,
+        "size": "136"
+      },
+      {
+        "name": "isDefaultAnimationRun__11MarioModuleCFPCc",
+        "score": 100.0,
+        "size": "12"
+      },
+      {
+        "name": "changeAnimationInterpoleFrame__11MarioModuleFUl",
+        "score": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "isAnimationRun__11MarioModuleCFPCc",
+        "score": 100.0,
+        "size": "164"
+      },
+      {
+        "name": "isAnimationTerminate__11MarioModuleCFPCc",
+        "score": 100.0,
+        "size": "40"
+      },
+      {
+        "name": "isAnimationTerminateUpper__11MarioModuleCFPCc",
+        "score": 100.0,
+        "size": "40"
+      },
+      {
+        "name": "getAnimationStringPointer__11MarioModuleCFPCc",
+        "score": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "getCurrentBckName__11MarioModuleCFv",
+        "score": 100.0,
+        "size": "96"
+      },
+      {
+        "name": "changeAnimationUpper__11MarioModuleFPCcPCc",
+        "score": 100.0,
+        "size": "104"
+      },
+      {
+        "name": "changeAnimationUpperWeak__11MarioModuleFPCcPCc",
+        "score": 100.0,
+        "size": "116"
+      },
+      {
+        "name": "stopAnimationUpper__11MarioModuleFPCcPCc",
+        "score": 100.0,
+        "size": "96"
+      },
+      {
+        "name": "stopAnimationUpperForce__11MarioModuleFv",
+        "score": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "getAnimationFrame__11MarioModuleCFv",
+        "score": 100.0,
+        "size": "12"
+      },
+      {
+        "name": "changeAnimation__11MarioModuleFPCcUl",
+        "score": 99.583336,
+        "size": "96"
+      },
+      {
+        "name": "isAnimationRun__11MarioModuleFPCcUl",
+        "score": 99.31035,
+        "size": "116"
+      },
+      {
+        "name": "stopAnimation__11MarioModuleFPCcUl",
+        "score": 99.31035,
+        "size": "116"
+      },
+      {
+        "name": "setJointGlobalMtx__11MarioModuleFUsPA4_f",
+        "score": 100.0,
+        "size": "52"
+      },
+      {
+        "name": "setYangleOffset__11MarioModuleFf",
+        "score": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "isStickOn__11MarioModuleCFv",
+        "score": 99.64286,
+        "size": "56"
+      },
+      {
+        "name": "isStickFull__11MarioModuleCFv",
+        "score": 99.375,
+        "size": "32"
+      },
+      {
+        "name": "getWorldPadDir__11MarioModuleCFv",
+        "score": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "calcWorldPadDir__11MarioModuleFPQ29JGeometry8TVec3<f>ffb",
+        "score": 99.484535,
+        "size": "388"
+      },
+      {
+        "name": "addVelocity__11MarioModuleFRCQ29JGeometry8TVec3<f>",
+        "score": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "addVelocity__11MarioModuleFRCQ29JGeometry8TVec3<f>f",
+        "score": 25.454546,
+        "size": "44"
+      },
+      {
+        "name": "addVelocityAfter__11MarioModuleFRCQ29JGeometry8TVec3<f>",
+        "score": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "clearVelocity__11MarioModuleFv",
+        "score": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "getVelocity__11MarioModuleCFv",
+        "score": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "addTrans__11MarioModuleFRCQ29JGeometry8TVec3<f>PCc",
+        "score": 100.0,
+        "size": "12"
+      },
+      {
+        "name": "cutGravityElementFromJumpVec__11MarioModuleFb",
+        "score": 99.03846,
+        "size": "104"
+      },
+      {
+        "name": "cutVecElementFromJumpVec__11MarioModuleFRCQ29JGeometry8TVec3<f>",
+        "score": 100.0,
+        "size": "20"
+      },
+      {
+        "name": "getJumpVec__11MarioModuleCFv",
+        "score": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "setJumpVec__11MarioModuleFRCQ29JGeometry8TVec3<f>",
+        "score": 100.0,
+        "size": "28"
+      },
+      {
+        "name": "playEffect__11MarioModuleFPCc",
+        "score": 100.0,
+        "size": "8"
+      },
+      {
+        "name": "playEffectTrans__11MarioModuleFPCcRCQ29JGeometry8TVec3<f>",
+        "score": 100.0,
+        "size": "8"
+      },
+      {
+        "name": "playEffectRT__11MarioModuleFPCcRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+        "score": 100.0,
+        "size": "8"
+      },
+      {
+        "name": "playEffectRTZ__11MarioModuleFPCcRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+        "score": 100.0,
+        "size": "8"
+      },
+      {
+        "name": "playEffectRTW__11MarioModuleFPCcRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+        "score": 100.0,
+        "size": "8"
+      },
+      {
+        "name": "playEffectSRT__11MarioModuleFPCcfRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+        "score": 100.0,
+        "size": "8"
+      },
+      {
+        "name": "stopEffect__11MarioModuleFPCc",
+        "score": 100.0,
+        "size": "8"
+      },
+      {
+        "name": "stopEffectForce__11MarioModuleFPCc",
+        "score": 100.0,
+        "size": "8"
+      },
+      {
+        "name": "playSound__11MarioModuleFPCcl",
+        "score": 100.0,
+        "size": "12"
+      },
+      {
+        "name": "stopSound__11MarioModuleFPCcUl",
+        "score": 100.0,
+        "size": "12"
+      },
+      {
+        "name": "startCamVib__11MarioModuleFUl",
+        "score": 100.0,
+        "size": "68"
+      },
+      {
+        "name": "getCamPos__11MarioModuleCFv",
+        "score": 100.0,
+        "size": "12"
+      },
+      {
+        "name": "getCamDirX__11MarioModuleCFv",
+        "score": 100.0,
+        "size": "12"
+      },
+      {
+        "name": "getCamDirY__11MarioModuleCFv",
+        "score": 100.0,
+        "size": "12"
+      },
+      {
+        "name": "getCamDirZ__11MarioModuleCFv",
+        "score": 100.0,
+        "size": "12"
+      },
+      {
+        "name": "startPadVib__11MarioModuleFUl",
+        "score": 100.0,
+        "size": "92"
+      },
+      {
+        "name": "startPadVib__11MarioModuleFPCc",
+        "score": 100.0,
+        "size": "12"
+      },
+      {
+        "name": "getStickX__11MarioModuleCFv",
+        "score": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "getStickY__11MarioModuleCFv",
+        "score": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "getStickP__11MarioModuleCFv",
+        "score": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "checkTrgA__11MarioModuleCFv",
+        "score": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "checkLvlA__11MarioModuleCFv",
+        "score": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "checkTrgZ__11MarioModuleCFv",
+        "score": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "checkLvlZ__11MarioModuleCFv",
+        "score": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "checkPreLvlZ__11MarioModuleCFv",
+        "score": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "checkSquat__11MarioModuleFb",
+        "score": 99.91803,
+        "size": "244"
+      },
+      {
+        "name": "getTrans__11MarioModuleCFv",
+        "score": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "getGroundPolygon__11MarioModuleCFv",
+        "score": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "isOnSlipGround__11MarioModuleCFv",
+        "score": 100.0,
+        "size": "76"
+      },
+      {
+        "name": "isSlipFloorCode__11MarioModuleCFl",
+        "score": 98.92857,
+        "size": "56"
+      },
+      {
+        "name": "isSlipPolygon__11MarioModuleCFPC8Triangle",
+        "score": 99.621216,
+        "size": "264"
+      },
+      {
+        "name": "getFloorCode__11MarioModuleCFv",
+        "score": 100.0,
+        "size": "20"
+      },
+      {
+        "name": "calcPolygonAngleD__11MarioModuleCFPC8Triangle",
+        "score": 99.55882,
+        "size": "136"
+      },
+      {
+        "name": "calcAngleD__11MarioModuleCFRCQ29JGeometry8TVec3<f>",
+        "score": 99.61539,
+        "size": "156"
+      },
+      {
+        "name": "getTmpPolygon__11MarioModuleCFv",
+        "score": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "sendPunch__11MarioModuleFP9HitSensorb",
+        "score": 100.0,
+        "size": "104"
+      },
+      {
+        "name": "getSensor__11MarioModuleCFPC8Triangle",
+        "score": 100.0,
+        "size": "68"
+      },
+      {
+        "name": "marioAcos__11MarioModuleCFf",
+        "score": 100.0,
+        "size": "4"
+      },
+      {
+        "name": "isInputDisable__11MarioModuleCFv",
+        "score": 99.57895,
+        "size": "228"
+      },
+      {
+        "name": "__sinit_\\MarioModule_cpp",
+        "score": null,
+        "size": "108"
+      }
+    ],
+    "sections": [
+      {
+        "name": ".text",
+        "score": 96.71853
+      },
+      {
+        "name": ".ctors",
+        "score": 0.0
+      },
+      {
+        "name": ".data",
+        "score": 78.82353
+      },
+      {
+        "name": ".sdata2",
+        "score": 100.0
+      },
+      {
+        "name": ".rela.text",
+        "score": null
+      },
+      {
+        "name": ".rela.ctors",
+        "score": null
+      },
+      {
+        "name": ".rela.data",
+        "score": null
+      },
+      {
+        "name": ".symtab",
+        "score": null
+      },
+      {
+        "name": ".strtab",
+        "score": null
+      },
+      {
+        "name": ".shstrtab",
+        "score": null
+      },
+      {
+        "name": ".comment",
+        "score": null
+      },
+      {
+        "name": ".note.split",
+        "score": null
+      }
+    ]
+  }
+]

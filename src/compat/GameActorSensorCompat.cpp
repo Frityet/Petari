@@ -1,3 +1,4 @@
+#include "Game/LiveActor/Binder.hpp"
 #include "compat/GameActorSensorCompat.hpp"
 
 #include "Game/LiveActor/HitSensor.hpp"
@@ -784,3 +785,18 @@ namespace MR {
     }
 
 }  // namespace MR
+
+// Original methods from Game/Util/ActorSensorUtil.cpp.
+namespace MR {
+    HitSensor* getGroundSensor(const LiveActor* pActor) {
+        return pActor->mBinder->mGroundInfo.mParentTriangle.mSensor;
+    }
+
+    HitSensor* getRoofSensor(const LiveActor* pActor) {
+        return pActor->mBinder->mRoofInfo.mParentTriangle.mSensor;
+    }
+
+    HitSensor* getWallSensor(const LiveActor* pActor) {
+        return pActor->mBinder->mWallInfo.mParentTriangle.mSensor;
+    }
+} // namespace MR

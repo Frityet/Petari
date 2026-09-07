@@ -28,6 +28,8 @@ namespace smgpc::compat {
         std::u16string raw_text;
         std::u16string display_text;
         smgpc::resource::BmgMessageInfo info{};
+        // TalkDirector::getDemoType, captured when this talk starts.
+        std::int32_t demo_type = 0;
         bool time_keep_paused = false;
     };
 
@@ -47,6 +49,9 @@ namespace smgpc::compat {
         void movement() override;
 
         [[nodiscard]] const std::optional<TalkPresentation>& active_presentation() const;
+        [[nodiscard]] bool is_system_talking() const;
+        [[nodiscard]] bool is_normal_talking() const;
+        [[nodiscard]] LiveActor* talking_actor() const;
         [[nodiscard]] std::optional<std::uint32_t> current_node_index(const TalkMessageCtrl&) const;
         [[nodiscard]] std::string_view flow_key(const TalkMessageCtrl&) const;
 

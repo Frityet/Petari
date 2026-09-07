@@ -509,6 +509,7 @@ namespace smgpc::runtime {
         std::unique_ptr<JAudioPlaybackService> audio_playback,
         RuntimeContextSceneServiceMode scene_service_mode)
         : _logger(logger), _window_service(window_service), _disc_files_root(resolve_disc_files_root()), _dvd(_disc_files_root), _archive_mounts(_dvd),
+          _host_heaps(resources.host_heaps()),
           _j_audio_playback(audio_playback != nullptr
                                 ? std::move(audio_playback)
                                 : std::make_unique<JAudioPlaybackService>(_dvd)),

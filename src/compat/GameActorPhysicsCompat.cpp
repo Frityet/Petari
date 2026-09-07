@@ -435,6 +435,18 @@ namespace MR {
         require_shadow_controller(actor, name).drop_length = length;
     }
 
+    void setShadowVolumeStartDropOffset(LiveActor *actor, const char *name, f32 offset) {
+        require_shadow_controller(actor, name).volume_start_offset = offset;
+    }
+
+    void setShadowVolumeEndDropOffset(LiveActor *actor, const char *name, f32 offset) {
+        require_shadow_controller(actor, name).volume_end_offset = offset;
+    }
+
+    void onShadowVolumeCutDropLength(LiveActor *actor, const char *name) {
+        require_shadow_controller(actor, name).volume_cut_drop_length = true;
+    }
+
     void onCalcShadow(LiveActor *actor, const char *name) {
         for_each_shadow_controller(actor, name, [](auto &controller) {
             controller.calculation_mode = smgpc::compat::ActorShadowCalculationMode::Continuous;

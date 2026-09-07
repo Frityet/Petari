@@ -1,0 +1,20 @@
+[
+  {
+    "source": "decomp/src/Game/Util/SoundUtil.cpp",
+    "destination": "src/compat/SoundUtilCompat.cpp",
+    "method": "startCSSound2P",
+    "body_sha256": "574da1e1980afc1ec0e0c503db64fe64d0b417a963cc751a7d447d80d4a0cfb3"
+  },
+  {
+    "source": "decomp/src/Game/Util/SoundUtil.cpp",
+    "destination": "src/compat/SoundUtilCompat.cpp",
+    "method": "start2PJumpAssistSound",
+    "body_sha256": "d65aeb316aaeea5cba46b727e77af76a7162277d1cde7ad8acbf50da53369e19"
+  },
+  {
+    "source": "decomp/src/Game/Util/SoundUtil.cpp",
+    "destination": "src/compat/SoundUtilCompat.cpp",
+    "method": "start2PJumpAssistJustSound",
+    "body_sha256": "fc1678c486f8f5f47796268e5634c356171a6a781cb8bf76392f6ec2a349deb0"
+  }
+]

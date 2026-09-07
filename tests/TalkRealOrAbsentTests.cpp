@@ -143,6 +143,9 @@ namespace {
     void test_missing_scene_binding_is_explicit() {
         require(smgpc::compat::current_talk_runtime() == nullptr,
                 "the negative constructor proof must begin without a TalkRuntime binding");
+        require(!MR::isSystemTalking() && !MR::isNormalTalking() &&
+                    MR::getTalkingActor() == nullptr,
+                "absent TalkRuntime queries must report no talk or actor");
         auto actor = LiveActor("talk missing-binding actor");
         const auto baseline = smgpc::compat::name_obj_runtime_state_count();
         require_logic_error(
@@ -497,6 +500,9 @@ namespace {
                         runtime.scheduler().registration_marker() ==
                             registrations_after_talk,
                     "re-requesting SceneObj_TalkDirector must be idempotent");
+            require(!MR::isSystemTalking() && !MR::isNormalTalking() &&
+                        MR::getTalkingActor() == nullptr,
+                    "an idle scene-owned TalkRuntime must not report a talking actor");
 
             test_same_actor_multi_controller_ownership(*talk);
 
@@ -518,6 +524,14 @@ namespace {
                         controller->getMessageID() == 825U,
                     "FlowTalk node267 must be skipped and leave DemoRabbit on node268/message825");
 
+            require_logic_error(
+                [&] { controller->startTalkForce(); },
+                "demo type1 must reject normal programmable talk without its owner");
+            require(!talk->active_presentation().has_value() &&
+                        !MR::isSystemTalking() && !MR::isNormalTalking() &&
+                        MR::getTalkingActor() == nullptr,
+                    "a rejected type1 start must not publish a talking actor");
+
             // Carry A into the forced open. It must not dismiss until release
             // and a later fresh A edge.
             set_wpad_buttons(runtime, WPAD_BUTTON_A);
@@ -528,6 +542,10 @@ namespace {
                         talk->active_presentation()->node_index ==
                             std::optional<std::uint32_t>{268U},
                     "the active presentation must capture node268/message825");
+            require(talk->active_presentation()->demo_type == 0 &&
+                        MR::isSystemTalking() && !MR::isNormalTalking() &&
+                        MR::getTalkingActor() == &actor,
+                    "a non-short no-demo talk must expose its host with captured type0");
             MR::forwardNode(controller);
             require(talk->current_node_index(*controller) ==
                             std::optional<std::uint32_t>{269U} &&
@@ -535,6 +553,10 @@ namespace {
                         talk->active_presentation().has_value() &&
                         talk->active_presentation()->message_index == 825U,
                     "advancing DemoRabbit to message826 must not replace displayed message825");
+            require(talk->active_presentation()->demo_type == 0 &&
+                        !MR::isSystemTalking() && !MR::isNormalTalking() &&
+                        MR::getTalkingActor() == nullptr,
+                    "retail system-talk queries must follow the current short node, while keeping the captured demo type");
             move_talk(*talk, runtime, WPAD_BUTTON_A);
             require(talk->active_presentation().has_value() && !MR::isTalkEnd(controller),
                     "a carried A hold must not complete event talk");
@@ -548,6 +570,9 @@ namespace {
             move_talk(*talk, runtime, WPAD_BUTTON_A);
             require(!talk->active_presentation().has_value() && MR::isTalkEnd(controller),
                     "a fresh post-release A edge must complete event talk");
+            require(!MR::isSystemTalking() && !MR::isNormalTalking() &&
+                        MR::getTalkingActor() == nullptr,
+                    "an ended event talk must expose no talking actor");
             controller->endTalk();
             require(MR::isTalkEnd(controller),
                     "TalkMessageCtrl::endTalk must remain a non-recursive ABI-shaped end query");
@@ -565,6 +590,10 @@ namespace {
             require(talk->active_presentation().has_value() &&
                         talk->active_presentation()->message_index == 826U,
                     "the free chase hint must present exact short message826");
+            require(talk->active_presentation()->demo_type == 0 &&
+                        !MR::isSystemTalking() && !MR::isNormalTalking() &&
+                        MR::getTalkingActor() == nullptr,
+                    "short talk must remain type0 and must not count as system talk");
             move_talk(*talk, runtime, 0U);
             require(talk->active_presentation().has_value() &&
                         controller->requestTalkForce(),
@@ -621,6 +650,22 @@ namespace {
                         "the exact TicoGuide sheet must begin unpaused");
 
                 MR::resetNode(controller);
+                set_wpad_buttons(runtime, 0U);
+                require(MR::tryTalkForceWithoutDemoMarioPuppetable(controller),
+                        "a no-demo talk must start alongside the active timekeeper");
+                require(talk->active_presentation()->demo_type == 3 &&
+                            !talk->active_presentation()->time_keep_paused &&
+                            !guide->sheet.is_paused() && MR::isSystemTalking() &&
+                            !MR::isNormalTalking() && MR::getTalkingActor() == &actor,
+                        "type3 must expose the exact talking host without pausing the timekeeper");
+                move_talk(*talk, runtime, WPAD_BUTTON_A);
+                require(!talk->active_presentation().has_value() &&
+                            talk->consume_end(*controller) &&
+                            !guide->sheet.is_paused() && !MR::isSystemTalking() &&
+                            !MR::isNormalTalking() && MR::getTalkingActor() == nullptr,
+                        "ending type3 must clear talking identity without changing the sheet pause state");
+
+                MR::resetNode(controller);
                 require(talk->current_node_index(*controller) ==
                                 std::optional<std::uint32_t>{268U} &&
                             controller->getMessageID() == 825U,
@@ -632,12 +677,23 @@ namespace {
                             talk->active_presentation().has_value() &&
                             talk->active_presentation()->time_keep_paused,
                         "opening Talk0 must pause the real TicoGuide sheet");
+                require(talk->active_presentation()->demo_type == 2 &&
+                            MR::isSystemTalking() && !MR::isNormalTalking() &&
+                            MR::getTalkingActor() == &actor,
+                        "a paused timekeeper talk must expose its exact host with captured type2");
                 MR::forwardNode(controller);
+                require(talk->active_presentation()->demo_type == 2 &&
+                            !MR::isSystemTalking() && !MR::isNormalTalking() &&
+                            MR::getTalkingActor() == nullptr,
+                        "advancing to short talk must preserve captured type2 while clearing system-talk identity");
                 move_talk(*talk, runtime, WPAD_BUTTON_A);
                 require(!guide->sheet.is_paused() &&
                             !talk->active_presentation().has_value() &&
                             talk->consume_end(*controller),
                         "fresh-A Talk0 completion must resume the exact TicoGuide sheet");
+                require(!MR::isSystemTalking() && !MR::isNormalTalking() &&
+                            MR::getTalkingActor() == nullptr,
+                        "ending type2 must leave no talking actor");
                 require(demo.stop_active_demo(
                             &actor,
                             std::optional<std::string_view>{"チコガイドデモ"}),
@@ -684,11 +740,17 @@ namespace {
             controller->startTalkForceWithoutDemo();
             require(talk->active_presentation().has_value(),
                     "the teardown proof must own an active presentation");
+            require(MR::isSystemTalking() && !MR::isNormalTalking() &&
+                        MR::getTalkingActor() == &actor,
+                    "actor teardown must begin with the exact active talking identity");
             smgpc::compat::release_talk_runtime_state(&actor);
             require(!smgpc::compat::has_owned_talk_ctrl(&actor) &&
                         smgpc::compat::owned_talk_ctrl(&actor) == nullptr &&
                         !talk->active_presentation().has_value(),
                     "actor teardown must clear its owned controller and active presentation");
+            require(!MR::isSystemTalking() && !MR::isNormalTalking() &&
+                        MR::getTalkingActor() == nullptr,
+                    "released controller queries must not retain a stale host identity");
 
             // Exercise the non-direct retail construction path against the
             // exact cast-0 placement. The copied placement-zone scope builds
@@ -747,6 +809,9 @@ namespace {
                     smgpc::compat::name_obj_runtime_state_count() ==
                         scene_registry_baseline,
                 "SceneObjHolder teardown must release both same-actor controllers, clear the NPC pointer, and remove the TalkRuntime binding");
+        require(!MR::isSystemTalking() && !MR::isNormalTalking() &&
+                    MR::getTalkingActor() == nullptr,
+                "scene teardown must restore absent talk query semantics");
     }
 
 }  // namespace

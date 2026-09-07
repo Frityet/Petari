@@ -1,0 +1,38 @@
+[
+  {
+    "path": "decomp/src/Game/Player/MarioRabbit.cpp",
+    "restored_from": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4:src/Game/Player/MarioRabbit.cpp",
+    "sha256": "3a036aef584943a747985a81121d83a9849815a1cc9635066b4c46a220abf6ca",
+    "native_identical": true
+  },
+  {
+    "path": "decomp/src/Game/Player/MarioSpin.cpp",
+    "restored_from": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4:src/Game/Player/MarioSpin.cpp",
+    "sha256": "a8021453aba28f654e9af7be42c694c795a3728b82e2e9cc83bf94e15c014bf2",
+    "native_identical": true
+  },
+  {
+    "path": "decomp/src/Game/Player/MarioSkate.cpp",
+    "restored_from": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4:src/Game/Player/MarioSkate.cpp",
+    "sha256": "822eaca49580a27c543c10fe3defa35824bb1236143896f4ef0d8858ca97613e",
+    "native_identical": true
+  },
+  {
+    "path": "decomp/src/Game/Player/MarioBlown.cpp",
+    "restored_from": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4:src/Game/Player/MarioBlown.cpp",
+    "sha256": "9536da6e6845f3560fe428faa96b5217eeb411a9dcd4aa862568051c6351782d",
+    "native_identical": true
+  },
+  {
+    "path": "decomp/include/Game/Player/MarioRabbit.hpp",
+    "restored_from": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4:include/Game/Player/MarioRabbit.hpp",
+    "sha256": "c1b995c50dfd94993003cab590063eaa8e296f3a74fbe79b242c3c408e1c65cd",
+    "native_identical": true
+  },
+  {
+    "path": "decomp/include/Game/Player/MarioSkate.hpp",
+    "restored_from": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4:include/Game/Player/MarioSkate.hpp",
+    "sha256": "b0b5e43bfb6b01d3508aaed23500225831302ba931c297e1c62d878367475c75",
+    "native_identical": true
+  }
+]

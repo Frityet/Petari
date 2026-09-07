@@ -1,0 +1,90 @@
+[
+  {
+    "name": "__ct__8FurMultiFP9LiveActorUl",
+    "demangled": "FurMulti::FurMulti(LiveActor*, unsigned long)",
+    "size": 164,
+    "calls": [
+      "__nwa__FUl",
+      "getJ3DModel__2MRFPC9LiveActor"
+    ]
+  },
+  {
+    "name": "setLayerDirect__8FurMultiFUlUlUlUlP8FurParamP7ResTIMGP7ResTIMGP7ResTIMGP7ResTIMG",
+    "demangled": "FurMulti::setLayerDirect(unsigned long, unsigned long, unsigned long, unsigned long, FurParam*, ResTIMG*, ResTIMG*, ResTIMG*, ResTIMG*)",
+    "size": 484,
+    "calls": [
+      "__ct__7FurCtrlFP9LiveActorP8FurParambUc",
+      "__nw__FUl",
+      "_restgpr_22",
+      "_savegpr_22",
+      "calcLayerForm__7FurCtrlFv",
+      "check__7FurBankFP12J3DModelDataUl",
+      "createFurMap__7FurCtrlFv",
+      "getFurDrawManager__2MRFv",
+      "regist__7FurBankFP8FurMultiUl",
+      "setupFurClone__7FurCtrlFP8J3DModelP7FurCtrl",
+      "setupFur__7FurCtrlFP8J3DModelP7ResTIMGP7ResTIMGP7ResTIMGUsUc",
+      "storeTIMG__10JUTTextureFPC7ResTIMGUc",
+      "update__9FurDrawerFv"
+    ]
+  },
+  {
+    "name": "addToManager__8FurMultiFv",
+    "demangled": "FurMulti::addToManager()",
+    "size": 108,
+    "calls": [
+      "_restgpr_29",
+      "_savegpr_29",
+      "add__14FurDrawManagerFP7FurCtrlUc",
+      "getFurDrawManager__2MRFv"
+    ]
+  },
+  {
+    "name": "offDraw__8FurMultiFUl",
+    "demangled": "FurMulti::offDraw(unsigned long)",
+    "size": 68,
+    "calls": []
+  },
+  {
+    "name": "onDraw__8FurMultiFUl",
+    "demangled": "FurMulti::onDraw(unsigned long)",
+    "size": 64,
+    "calls": []
+  },
+  {
+    "name": "initMultiFur__2MRFP9LiveActorl",
+    "demangled": "MR::initMultiFur(LiveActor*, long)",
+    "size": 1292,
+    "calls": [
+      "__ct__7FogCtrlFP12J3DModelDatab",
+      "__ct__8FurMultiFP9LiveActorUl",
+      "__ct__Q22MR19CurrentHeapRestorerFP7JKRHeap",
+      "__dt__Q22MR19CurrentHeapRestorerFv",
+      "__nw__FUl",
+      "_restgpr_17",
+      "_savegpr_17",
+      "addToManager__8FurMultiFv",
+      "findFileInfo__8ResTableCFPCc",
+      "getJ3DModelData__2MRFPC9LiveActor",
+      "getName__10JUTNameTabCFUs",
+      "getResTIMG__2MRFPC9LiveActori",
+      "getRes__8ResTableCFPCc",
+      "getResourceHolder__2MRFPC9LiveActor",
+      "getSceneHeapGDDR3__2MRFv",
+      "getTexFromModel__2MRFPCcPC9LiveActor",
+      "initFurParamFromDvd__2MRFP8FurParamP15DynamicFurParamPcUl",
+      "isExistRes__8ResTableCFPCc",
+      "isExistTexture__2MRFPC9LiveActorPCc",
+      "setLayerDirect__8FurMultiFUlUlUlUlP8FurParamP7ResTIMGP7ResTIMGP7ResTIMGP7ResTIMG",
+      "strcat",
+      "strcpy",
+      "strstr"
+    ]
+  },
+  {
+    "name": "regist__7FurBankFP8FurMultiUl",
+    "demangled": "FurBank::regist(FurMulti*, unsigned long)",
+    "size": 64,
+    "calls": []
+  }
+]

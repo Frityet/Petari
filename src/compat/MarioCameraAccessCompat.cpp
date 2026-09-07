@@ -11,8 +11,8 @@
 #include "Game/Util/PlayerUtil.hpp"
 
 // Verbatim original accessors required by CameraTargetPlayer. Full MarioAccess,
-// PlayerUtil, MarioCollision, MarioSwim, MarioJump, and MarioActorGravity source
-// units are not enabled in the native player slice. See the source correspondence
+// PlayerUtil and MarioActorGravity source units are not enabled in the Game
+// archive. Collision, Swim and Jump own their queries directly. See the source correspondence
 // record in notes/original-camera-target-player-20260903.
 namespace MarioAccess {
 
@@ -138,52 +138,42 @@ namespace MR {
 
 }  // namespace MR
 
-CubeCameraArea* Mario::getCameraCubeCode() const {
-    if (isSwimming()) {
-        bool isSurface = mSwim->mIsOnSurface || mSwim->mIsSwimmingAtSurface;
-
-        if (isSurface) {
-            TVec3f gravity(*getGravityVec());
-            gravity.scale(100.0f);
-            TVec3f pos(mPosition);
-            pos += gravity;
-            return reinterpret_cast< CubeCameraArea* >(MR::getAreaObj("CubeCamera", pos));
-        }
-    }
-    else if (mMovementStates.jumping && isRising()) {
-        TVec3f gravity(*getGravityVec());
-        gravity.scale(100.0f);
-        TVec3f pos(mPosition);
-        pos += gravity;
-        return reinterpret_cast< CubeCameraArea* >(MR::getAreaObj("CubeCamera", pos));
-    }
-
-    return reinterpret_cast< CubeCameraArea* >(MR::getAreaObj("CubeCamera", mPosition));
-}
-
-bool Mario::isSwimming() const {
-    if (isStatusActive(MarioStatus_Swim)) {
-        return true;
-    }
-    return isStatusActive(MarioStatus_Foo);
-}
-
-bool Mario::isRising() const {
-    if (getPlayerMode() == 4 || getPlayerMode() == 6) {
-        if (_16C.dot(*getGravityVec()) < 0.0f) {
-            return true;
-        }
-
-        return false;
-    }
-
-    return mJumpVec.dot(*getGravityVec()) < 0.0f;
-}
-
 GravityInfo* MarioActor::getGravityInfo() const {
     return mGravityInfo;
 }
 
-bool MarioActor::isAnimationRun(const char* pName) const {
-    return mMario->isAnimationRun(pName);
+namespace MarioAccess {
+    bool isOnActor(const LiveActor* pActor) {
+        if (getPlayerActor()->getMario()->_1C._13) {
+            Triangle* marioGroundPolygon = getPlayerActor()->getMario()->mGroundPolygon;
+            if (marioGroundPolygon->isValid()) {
+                return marioGroundPolygon->mSensor->mHost == pActor;
+            }
+
+            return false;
+        }
+
+        if (getPlayerActor()->getMario()->_1C._14 || (getPlayerActor()->IsMarioSwimming() && getPlayerActor()->getMovementStates()._2)) {
+            Triangle* marioTri = getPlayerActor()->getMario()->_45C;
+            if (!marioTri->isValid()) {
+                return false;
+            }
+
+            return marioTri->mSensor->mHost == pActor;
+        }
+
+        return false;
+    }
+}
+
+namespace MR {
+    bool isActorOnPlayer(const LiveActor* pActor) {
+        return MarioAccess::isOnActor(pActor);
+    }
+}
+
+namespace MR {
+    bool isOnPlayer(const LiveActor* pActor) {
+        return isActorOnPlayer(pActor);
+    }
 }

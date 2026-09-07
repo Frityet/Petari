@@ -1,0 +1,17 @@
+{
+  "source": "decomp/src/Game/Util/RailUtil.cpp",
+  "destination": "src/compat/GameRailCompat.cpp",
+  "private_helpers": [
+    "const char* getRailPointArgName(s32 argNum) {",
+    "bool getRailCurrentPointArgF32NoInit(const LiveActor* pActor, s32 argNum, f32* pArg) NO_INLINE {",
+    "bool getRailNextPointArgF32NoInit(const LiveActor* pActor, s32 argNum, f32* pArg) NO_INLINE {"
+  ],
+  "public_helpers": [
+    "void calcRailDirectionAtCoord(TVec3f* pDir, const LiveActor* pActor, f32 coord) {",
+    "void calcRailPosAndDirectionAtCoord(TVec3f* pPos, TVec3f* pDir, const LiveActor* pActor, f32 coord) {",
+    "void calcDistanceToCurrentAndNextRailPoint(const LiveActor* pActor, f32* pCurrDist, f32* pNextDist) {",
+    "const TVec3f& getRailDirection(const LiveActor* pActor) {",
+    "bool getCurrentRailPointArg1NoInit(const LiveActor* pActor, f32* pArg) {",
+    "bool getNextRailPointArg1NoInit(const LiveActor* pActor, f32* pArg) {"
+  ]
+}

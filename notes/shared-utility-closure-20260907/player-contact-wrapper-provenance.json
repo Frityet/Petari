@@ -1,0 +1,23 @@
+[
+  {
+    "source": "decomp/src/Game/Player/MarioAccess.cpp",
+    "namespace": "MarioAccess",
+    "signature": "bool isOnActor(",
+    "destination": "src/compat/MarioCameraAccessCompat.cpp",
+    "body_sha256": "c56f6ff36e2ff6c2173456c79b805e8dc55a4e36210ee45c2725cbe182dac342"
+  },
+  {
+    "source": "decomp/src/Game/Util/PlayerUtil.cpp",
+    "namespace": "MR",
+    "signature": "bool isActorOnPlayer(",
+    "destination": "src/compat/MarioCameraAccessCompat.cpp",
+    "body_sha256": "325557fb01e614d34738fc0e195570fcb1e528fef6fff89258754479187b0817"
+  },
+  {
+    "source": "decomp/src/Game/Util/ActorMovementUtil.cpp",
+    "namespace": "MR",
+    "signature": "bool isOnPlayer(",
+    "destination": "src/compat/MarioCameraAccessCompat.cpp",
+    "body_sha256": "68f541d98a380efb46b1215854ed463365ecde7a3863d203cf17cab5730a9c15"
+  }
+]

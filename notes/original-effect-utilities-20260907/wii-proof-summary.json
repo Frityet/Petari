@@ -1,0 +1,1043 @@
+{
+  "baseline_source_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+  "baseline_headers": "Same current decomp headers as current-source build; source-only baseline comparison.",
+  "function_count": 110,
+  "exact_objdiff_count": 97,
+  "at_least_90_percent_count": 109,
+  "newly_covered": [
+    {
+      "name": "requestMovementOnAllEmitters__Q22MR6EffectFv",
+      "demangled_name": "MR::Effect::requestMovementOnAllEmitters()",
+      "retail_size": 52,
+      "match_percent": 100.0,
+      "baseline_match_percent": null
+    },
+    {
+      "name": "requestMovementOffAllLoopEmitters__Q22MR6EffectFv",
+      "demangled_name": "MR::Effect::requestMovementOffAllLoopEmitters()",
+      "retail_size": 40,
+      "match_percent": 100.0,
+      "baseline_match_percent": null
+    },
+    {
+      "name": "checkEffectSceneUpdate__Q22MR6EffectFPC12EffectSystem",
+      "demangled_name": "MR::Effect::checkEffectSceneUpdate(const EffectSystem*)",
+      "retail_size": 8,
+      "match_percent": 100.0,
+      "baseline_match_percent": null
+    },
+    {
+      "name": "movementEffectNormal__Q22MR6EffectFPC12EffectSystem",
+      "demangled_name": "MR::Effect::movementEffectNormal(const EffectSystem*)",
+      "retail_size": 8,
+      "match_percent": 100.0,
+      "baseline_match_percent": null
+    },
+    {
+      "name": "drawEffect3D__Q22MR6EffectFPC12EffectSystemRCQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>",
+      "demangled_name": "MR::Effect::drawEffect3D(const EffectSystem*, const JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>>&)",
+      "retail_size": 8,
+      "match_percent": 100.0,
+      "baseline_match_percent": null
+    },
+    {
+      "name": "drawEffect2D__Q22MR6EffectFPC12EffectSystem",
+      "demangled_name": "MR::Effect::drawEffect2D(const EffectSystem*)",
+      "retail_size": 8,
+      "match_percent": 100.0,
+      "baseline_match_percent": null
+    },
+    {
+      "name": "forceDeleteAllEmitters__Q22MR6EffectFPC12EffectSystem",
+      "demangled_name": "MR::Effect::forceDeleteAllEmitters(const EffectSystem*)",
+      "retail_size": 8,
+      "match_percent": 100.0,
+      "baseline_match_percent": null
+    },
+    {
+      "name": "forceDeleteAllOneTimeEmitter__Q22MR6EffectFv",
+      "demangled_name": "MR::Effect::forceDeleteAllOneTimeEmitter()",
+      "retail_size": 40,
+      "match_percent": 100.0,
+      "baseline_match_percent": null
+    },
+    {
+      "name": "getEffectAttributeName__Q22MR6EffectFl",
+      "demangled_name": "MR::Effect::getEffectAttributeName(long)",
+      "retail_size": 92,
+      "match_percent": 98.04348,
+      "baseline_match_percent": null
+    },
+    {
+      "name": "createAutoEffect__Q22MR6EffectFPCcPCc",
+      "demangled_name": "MR::Effect::createAutoEffect(const char*, const char*)",
+      "retail_size": 308,
+      "match_percent": 93.57143,
+      "baseline_match_percent": null
+    }
+  ],
+  "regressions": [],
+  "attribute_jump_table": {
+    "retail_and_candidate_equal": true,
+    "floor_code_begin": 5,
+    "floor_code_end": 32,
+    "entries": [
+      {
+        "type": 1,
+        "function_offset": 60
+      },
+      {
+        "type": 1,
+        "function_offset": 84
+      },
+      {
+        "type": 1,
+        "function_offset": 84
+      },
+      {
+        "type": 1,
+        "function_offset": 84
+      },
+      {
+        "type": 1,
+        "function_offset": 84
+      },
+      {
+        "type": 1,
+        "function_offset": 68
+      },
+      {
+        "type": 1,
+        "function_offset": 84
+      },
+      {
+        "type": 1,
+        "function_offset": 84
+      },
+      {
+        "type": 1,
+        "function_offset": 52
+      },
+      {
+        "type": 1,
+        "function_offset": 84
+      },
+      {
+        "type": 1,
+        "function_offset": 84
+      },
+      {
+        "type": 1,
+        "function_offset": 84
+      },
+      {
+        "type": 1,
+        "function_offset": 84
+      },
+      {
+        "type": 1,
+        "function_offset": 84
+      },
+      {
+        "type": 1,
+        "function_offset": 84
+      },
+      {
+        "type": 1,
+        "function_offset": 44
+      },
+      {
+        "type": 1,
+        "function_offset": 44
+      },
+      {
+        "type": 1,
+        "function_offset": 44
+      },
+      {
+        "type": 1,
+        "function_offset": 44
+      },
+      {
+        "type": 1,
+        "function_offset": 84
+      },
+      {
+        "type": 1,
+        "function_offset": 84
+      },
+      {
+        "type": 1,
+        "function_offset": 84
+      },
+      {
+        "type": 1,
+        "function_offset": 84
+      },
+      {
+        "type": 1,
+        "function_offset": 84
+      },
+      {
+        "type": 1,
+        "function_offset": 84
+      },
+      {
+        "type": 1,
+        "function_offset": 52
+      },
+      {
+        "type": 1,
+        "function_offset": 76
+      },
+      {
+        "type": 1,
+        "function_offset": 76
+      }
+    ]
+  },
+  "sources": [
+    {
+      "source": "Game/Effect/AutoEffectInfo.cpp",
+      "source_sha256": "534ca3b92af4854ccf4862e53b94dc8f3418d8901e227e79425122a8f7f368d5",
+      "current_source_unchanged": true,
+      "retail_object_sha256": "ae1c75f52a07f7421762bd8886b9c810faf90a5d8caa8d3c84c96f2f15ab49b6",
+      "compiled_object_sha256": "d1a635dd1682917b52048d3540c90b01613ed429ea8de9016459d8a46887f18b",
+      "baseline_object_sha256": "d1a635dd1682917b52048d3540c90b01613ed429ea8de9016459d8a46887f18b",
+      "function_count": 10,
+      "exact_objdiff_count": 5,
+      "symbols": [
+        {
+          "name": "getValue<PCc>__12JMapInfoIterCFPCcPPCc_b",
+          "demangled_name": "bool JMapInfoIter::getValue<const char*>(const char*, const char**) const",
+          "retail_size": 100,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "str2Color__28@unnamed@AutoEffectInfo_cpp@FPCc",
+          "demangled_name": "@unnamed@AutoEffectInfo_cpp@::str2Color(const char*)",
+          "retail_size": 48,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "isValueOnR__28@unnamed@AutoEffectInfo_cpp@FRC12JMapInfoIterPCc",
+          "demangled_name": "@unnamed@AutoEffectInfo_cpp@::isValueOnR(const JMapInfoIter&, const char*)",
+          "retail_size": 64,
+          "match_percent": 99.6875,
+          "baseline_match_percent": 99.6875
+        },
+        {
+          "name": "isValueOnS__28@unnamed@AutoEffectInfo_cpp@FRC12JMapInfoIterPCc",
+          "demangled_name": "@unnamed@AutoEffectInfo_cpp@::isValueOnS(const JMapInfoIter&, const char*)",
+          "retail_size": 64,
+          "match_percent": 99.6875,
+          "baseline_match_percent": 99.6875
+        },
+        {
+          "name": "getStringValue__28@unnamed@AutoEffectInfo_cpp@FRC12JMapInfoIterPCc",
+          "demangled_name": "@unnamed@AutoEffectInfo_cpp@::getStringValue(const JMapInfoIter&, const char*)",
+          "retail_size": 76,
+          "match_percent": 99.47369,
+          "baseline_match_percent": 99.47369
+        },
+        {
+          "name": "__ct__14AutoEffectInfoFv",
+          "demangled_name": "AutoEffectInfo::AutoEffectInfo()",
+          "retail_size": 92,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "init__14AutoEffectInfoFRC12JMapInfoIter",
+          "demangled_name": "AutoEffectInfo::init(const JMapInfoIter&)",
+          "retail_size": 960,
+          "match_percent": 99.191666,
+          "baseline_match_percent": 99.191666
+        },
+        {
+          "name": "getName__14AutoEffectInfoCFv",
+          "demangled_name": "AutoEffectInfo::getName() const",
+          "retail_size": 28,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "isValueOnT__28@unnamed@AutoEffectInfo_cpp@FRC12JMapInfoIterPCc",
+          "demangled_name": "@unnamed@AutoEffectInfo_cpp@::isValueOnT(const JMapInfoIter&, const char*)",
+          "retail_size": 64,
+          "match_percent": 99.6875,
+          "baseline_match_percent": 99.6875
+        },
+        {
+          "name": "set__6Color8F8_GXColor",
+          "demangled_name": "Color8::set(_GXColor)",
+          "retail_size": 36,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        }
+      ]
+    },
+    {
+      "source": "Game/Effect/AutoEffectGroup.cpp",
+      "source_sha256": "20641858c7a008a5b81700c1d537def6275ced5a773bf6c29d992168fbc640a9",
+      "current_source_unchanged": true,
+      "retail_object_sha256": "971a15d6afca86895964b661fd97a4585249a7fda8e1c12cdc03abb2f5e5b64b",
+      "compiled_object_sha256": "0fd20fdadf805db0240d770fa485b7d47db8a4e254f81af7343929dec2929725",
+      "baseline_object_sha256": "0fd20fdadf805db0240d770fa485b7d47db8a4e254f81af7343929dec2929725",
+      "function_count": 6,
+      "exact_objdiff_count": 5,
+      "symbols": [
+        {
+          "name": "__ct__15AutoEffectGroupFPCci",
+          "demangled_name": "AutoEffectGroup::AutoEffectGroup(const char*, int)",
+          "retail_size": 92,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "add__15AutoEffectGroupFRC12JMapInfoIter",
+          "demangled_name": "AutoEffectGroup::add(const JMapInfoIter&)",
+          "retail_size": 116,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "addAutoEffectsFromGroup__Q22MR6EffectFPC15AutoEffectGroupP12EffectKeeperPC9LiveActor",
+          "demangled_name": "MR::Effect::addAutoEffectsFromGroup(const AutoEffectGroup*, EffectKeeper*, const LiveActor*)",
+          "retail_size": 108,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "addAutoEffectsFromGroup__Q22MR6EffectFPC15AutoEffectGroupP16PaneEffectKeeperPC11LayoutActor",
+          "demangled_name": "MR::Effect::addAutoEffectsFromGroup(const AutoEffectGroup*, PaneEffectKeeper*, const LayoutActor*)",
+          "retail_size": 108,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "addAutoEffectsFromGroup__Q22MR6EffectFPC15AutoEffectGroupP22MultiSceneEffectKeeperPC15MultiSceneActor",
+          "demangled_name": "MR::Effect::addAutoEffectsFromGroup(const AutoEffectGroup*, MultiSceneEffectKeeper*, const MultiSceneActor*)",
+          "retail_size": 108,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "createAutoEffectGroup__Q22MR6EffectFPCc",
+          "demangled_name": "MR::Effect::createAutoEffectGroup(const char*)",
+          "retail_size": 412,
+          "match_percent": 99.805824,
+          "baseline_match_percent": 99.805824
+        }
+      ]
+    },
+    {
+      "source": "Game/Effect/AutoEffectGroupHolder.cpp",
+      "source_sha256": "b30eaa5d5c22af22c23537ae14673b0b6493db4f6c3ade189471e183308dbf41",
+      "current_source_unchanged": true,
+      "retail_object_sha256": "3a65c8fd21d9eee86cc543a28c5be5c4386802d9cb6a7a34007e2d6977c21c09",
+      "compiled_object_sha256": "7162fe7bc25a583138e790b1eaef60cf3f378839cb05569b9aafd4c7cf9c3873",
+      "baseline_object_sha256": "7162fe7bc25a583138e790b1eaef60cf3f378839cb05569b9aafd4c7cf9c3873",
+      "function_count": 8,
+      "exact_objdiff_count": 8,
+      "symbols": [
+        {
+          "name": "__ct__21AutoEffectGroupHolderFv",
+          "demangled_name": "AutoEffectGroupHolder::AutoEffectGroupHolder()",
+          "retail_size": 12,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "find__21AutoEffectGroupHolderCFPCc",
+          "demangled_name": "AutoEffectGroupHolder::find(const char*) const",
+          "retail_size": 96,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "isExist__21AutoEffectGroupHolderCFPCc",
+          "demangled_name": "AutoEffectGroupHolder::isExist(const char*) const",
+          "retail_size": 88,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "createAndAddAutoEffectGroup__Q22MR6EffectFP21AutoEffectGroupHolderPCc",
+          "demangled_name": "MR::Effect::createAndAddAutoEffectGroup(AutoEffectGroupHolder*, const char*)",
+          "retail_size": 120,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "registerAutoEffectInfos__Q22MR6EffectFP21AutoEffectGroupHolderP12EffectKeeperPC9LiveActorPCc",
+          "demangled_name": "MR::Effect::registerAutoEffectInfos(AutoEffectGroupHolder*, EffectKeeper*, const LiveActor*, const char*)",
+          "retail_size": 80,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "registerAutoEffectInfos__Q22MR6EffectFP21AutoEffectGroupHolderP16PaneEffectKeeperPC11LayoutActorPCc",
+          "demangled_name": "MR::Effect::registerAutoEffectInfos(AutoEffectGroupHolder*, PaneEffectKeeper*, const LayoutActor*, const char*)",
+          "retail_size": 80,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "registerAutoEffectInfos__Q22MR6EffectFP21AutoEffectGroupHolderP22MultiSceneEffectKeeperPC15MultiSceneActorPCc",
+          "demangled_name": "MR::Effect::registerAutoEffectInfos(AutoEffectGroupHolder*, MultiSceneEffectKeeper*, const MultiSceneActor*, const char*)",
+          "retail_size": 80,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "find_if<PCP15AutoEffectGroup,Q22MR31eq_ptr_case<P15AutoEffectGroup>>__3stdFPCP15AutoEffectGroupPCP15AutoEffectGroupQ22MR31eq_ptr_case<P15AutoEffectGroup>_PCP15AutoEffectGroup",
+          "demangled_name": "AutoEffectGroup* const* std::find_if<AutoEffectGroup* const*, MR::eq_ptr_case<AutoEffectGroup*>>(AutoEffectGroup* const*, AutoEffectGroup* const*, MR::eq_ptr_case<AutoEffectGroup*>)",
+          "retail_size": 104,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        }
+      ]
+    },
+    {
+      "source": "Game/Effect/EffectSystemUtil.cpp",
+      "source_sha256": "36b2dc5c8da588c80760ed78b9e37b62b86b79526bae0c4b8e5b6f3aabdd6bf9",
+      "current_source_unchanged": true,
+      "retail_object_sha256": "39b615b23d70f5c899405772fe6cdc870442a2fb7ffea90269630f5994655276",
+      "compiled_object_sha256": "8ef6339372401acf2f997db98a7209884c7db70077705b1c72d09e80f2b50a4a",
+      "baseline_object_sha256": "a2eb1c2f276de404208ed53a785622a08b34aae91d2640a6b2cd9a93044c34a0",
+      "function_count": 32,
+      "exact_objdiff_count": 27,
+      "symbols": [
+        {
+          "name": "setupMultiEmitter__30@unnamed@EffectSystemUtil_cpp@FP12MultiEmitterPC14AutoEffectInfo",
+          "demangled_name": "@unnamed@EffectSystemUtil_cpp@::setupMultiEmitter(MultiEmitter*, const AutoEffectInfo*)",
+          "retail_size": 276,
+          "match_percent": 99.78261,
+          "baseline_match_percent": 99.78261
+        },
+        {
+          "name": "requestMovementOnAllEmitters__Q22MR6EffectFv",
+          "demangled_name": "MR::Effect::requestMovementOnAllEmitters()",
+          "retail_size": 52,
+          "match_percent": 100.0,
+          "baseline_match_percent": null
+        },
+        {
+          "name": "requestMovementOffAllLoopEmitters__Q22MR6EffectFv",
+          "demangled_name": "MR::Effect::requestMovementOffAllLoopEmitters()",
+          "retail_size": 40,
+          "match_percent": 100.0,
+          "baseline_match_percent": null
+        },
+        {
+          "name": "checkEffectSceneUpdate__Q22MR6EffectFPC12EffectSystem",
+          "demangled_name": "MR::Effect::checkEffectSceneUpdate(const EffectSystem*)",
+          "retail_size": 8,
+          "match_percent": 100.0,
+          "baseline_match_percent": null
+        },
+        {
+          "name": "movementEffectNormal__Q22MR6EffectFPC12EffectSystem",
+          "demangled_name": "MR::Effect::movementEffectNormal(const EffectSystem*)",
+          "retail_size": 8,
+          "match_percent": 100.0,
+          "baseline_match_percent": null
+        },
+        {
+          "name": "drawEffect3D__Q22MR6EffectFPC12EffectSystemRCQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>",
+          "demangled_name": "MR::Effect::drawEffect3D(const EffectSystem*, const JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>>&)",
+          "retail_size": 8,
+          "match_percent": 100.0,
+          "baseline_match_percent": null
+        },
+        {
+          "name": "drawEffect2D__Q22MR6EffectFPC12EffectSystem",
+          "demangled_name": "MR::Effect::drawEffect2D(const EffectSystem*)",
+          "retail_size": 8,
+          "match_percent": 100.0,
+          "baseline_match_percent": null
+        },
+        {
+          "name": "forceDeleteAllEmitters__Q22MR6EffectFPC12EffectSystem",
+          "demangled_name": "MR::Effect::forceDeleteAllEmitters(const EffectSystem*)",
+          "retail_size": 8,
+          "match_percent": 100.0,
+          "baseline_match_percent": null
+        },
+        {
+          "name": "isExistInResource__Q22MR6EffectFPUsPCc",
+          "demangled_name": "MR::Effect::isExistInResource(unsigned short*, const char*)",
+          "retail_size": 68,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "isEffect2D__Q22MR6EffectFPC12MultiEmitter",
+          "demangled_name": "MR::Effect::isEffect2D(const MultiEmitter*)",
+          "retail_size": 52,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "initEffectSyncBck__Q22MR6EffectFP12EffectKeeperPC12ModelManagerPCcPCclffb",
+          "demangled_name": "MR::Effect::initEffectSyncBck(EffectKeeper*, const ModelManager*, const char*, const char*, long, float, float, bool)",
+          "retail_size": 8,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "addEffectSyncBck__Q22MR6EffectFP12MultiEmitterPC12ModelManagerPCc",
+          "demangled_name": "MR::Effect::addEffectSyncBck(MultiEmitter*, const ModelManager*, const char*)",
+          "retail_size": 8,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "getAutoEffectNum__Q22MR6EffectFPCc",
+          "demangled_name": "MR::Effect::getAutoEffectNum(const char*)",
+          "retail_size": 52,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "getAutoEffectListBinary__Q22MR6EffectFv",
+          "demangled_name": "MR::Effect::getAutoEffectListBinary()",
+          "retail_size": 36,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "setupMultiEmitter__Q22MR6EffectFP12EffectKeeperPC12ModelManagerPC14AutoEffectInfo",
+          "demangled_name": "MR::Effect::setupMultiEmitter(EffectKeeper*, const ModelManager*, const AutoEffectInfo*)",
+          "retail_size": 152,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "setupMultiEmitterSyncBck__Q22MR6EffectFP12EffectKeeperPC12ModelManagerPC14AutoEffectInfo",
+          "demangled_name": "MR::Effect::setupMultiEmitterSyncBck(EffectKeeper*, const ModelManager*, const AutoEffectInfo*)",
+          "retail_size": 576,
+          "match_percent": 95.3125,
+          "baseline_match_percent": 95.3125
+        },
+        {
+          "name": "registerAutoEffectInfoGroup__Q22MR6EffectFP12EffectKeeperPC9LiveActorPCc",
+          "demangled_name": "MR::Effect::registerAutoEffectInfoGroup(EffectKeeper*, const LiveActor*, const char*)",
+          "retail_size": 96,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "requestMovementOn__Q22MR6EffectFP12EffectKeeper",
+          "demangled_name": "MR::Effect::requestMovementOn(EffectKeeper*)",
+          "retail_size": 120,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "registerAutoEffectInfoGroup__Q22MR6EffectFP16PaneEffectKeeperPC11LayoutActorPCc",
+          "demangled_name": "MR::Effect::registerAutoEffectInfoGroup(PaneEffectKeeper*, const LayoutActor*, const char*)",
+          "retail_size": 96,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "registerAutoEffectInfoGroup__Q22MR6EffectFP16PaneEffectKeeperPC12EffectSystemPC11LayoutActorPCc",
+          "demangled_name": "MR::Effect::registerAutoEffectInfoGroup(PaneEffectKeeper*, const EffectSystem*, const LayoutActor*, const char*)",
+          "retail_size": 92,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "addAutoEffect__Q22MR6EffectFP12EffectKeeperPC9LiveActorPC14AutoEffectInfo",
+          "demangled_name": "MR::Effect::addAutoEffect(EffectKeeper*, const LiveActor*, const AutoEffectInfo*)",
+          "retail_size": 240,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "addAutoEffect__Q22MR6EffectFP16PaneEffectKeeperPC11LayoutActorPC14AutoEffectInfo",
+          "demangled_name": "MR::Effect::addAutoEffect(PaneEffectKeeper*, const LayoutActor*, const AutoEffectInfo*)",
+          "retail_size": 88,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "addAutoEffect__Q22MR6EffectFP22MultiSceneEffectKeeperPC15MultiSceneActorPC14AutoEffectInfo",
+          "demangled_name": "MR::Effect::addAutoEffect(MultiSceneEffectKeeper*, const MultiSceneActor*, const AutoEffectInfo*)",
+          "retail_size": 152,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "registerAutoEffectInfoGroup__Q22MR6EffectFP22MultiSceneEffectKeeperPC12EffectSystemPC15MultiSceneActorPCc",
+          "demangled_name": "MR::Effect::registerAutoEffectInfoGroup(MultiSceneEffectKeeper*, const EffectSystem*, const MultiSceneActor*, const char*)",
+          "retail_size": 92,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "deleteParticleEmitter__Q22MR6EffectFP15ParticleEmitter",
+          "demangled_name": "MR::Effect::deleteParticleEmitter(ParticleEmitter*)",
+          "retail_size": 52,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "setLinkSingleEmitter__Q22MR6EffectFP15ParticleEmitterP13SingleEmitter",
+          "demangled_name": "MR::Effect::setLinkSingleEmitter(ParticleEmitter*, SingleEmitter*)",
+          "retail_size": 12,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "getLinkSingleEmitter__Q22MR6EffectFPC14JPABaseEmitter",
+          "demangled_name": "MR::Effect::getLinkSingleEmitter(const JPABaseEmitter*)",
+          "retail_size": 8,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "forceDeleteAllOneTimeEmitter__Q22MR6EffectFv",
+          "demangled_name": "MR::Effect::forceDeleteAllOneTimeEmitter()",
+          "retail_size": 40,
+          "match_percent": 100.0,
+          "baseline_match_percent": null
+        },
+        {
+          "name": "createParticleEmitter__Q22MR6EffectFP15ParticleEmitterP17JPAEmitterManagerRCQ29JGeometry8TVec3<f>UsUcUc",
+          "demangled_name": "MR::Effect::createParticleEmitter(ParticleEmitter*, JPAEmitterManager*, const JGeometry::TVec3<float>&, unsigned short, unsigned char, unsigned char)",
+          "retail_size": 108,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "isExistInResource__Q22MR6EffectFPUsPCcl",
+          "demangled_name": "MR::Effect::isExistInResource(unsigned short*, const char*, long)",
+          "retail_size": 88,
+          "match_percent": 99.545456,
+          "baseline_match_percent": 99.545456
+        },
+        {
+          "name": "getEffectAttributeName__Q22MR6EffectFl",
+          "demangled_name": "MR::Effect::getEffectAttributeName(long)",
+          "retail_size": 92,
+          "match_percent": 98.04348,
+          "baseline_match_percent": null
+        },
+        {
+          "name": "createAutoEffect__Q22MR6EffectFPCcPCc",
+          "demangled_name": "MR::Effect::createAutoEffect(const char*, const char*)",
+          "retail_size": 308,
+          "match_percent": 93.57143,
+          "baseline_match_percent": null
+        }
+      ]
+    },
+    {
+      "source": "Game/Util/EffectUtil.cpp",
+      "source_sha256": "9bc941f22b896908552f788ea5b8ee93ff5d6d4f5620626d86f09134b46c2ae6",
+      "current_source_unchanged": true,
+      "retail_object_sha256": "58a73952703b9aba892d8b0307785becffb21b678b48f16630fe2f25ceb9e2b6",
+      "compiled_object_sha256": "fb8fc64e5feedf2076e07958853f3b7ff7cb9181905e0f13a1bb243b966a3ba0",
+      "baseline_object_sha256": "fb8fc64e5feedf2076e07958853f3b7ff7cb9181905e0f13a1bb243b966a3ba0",
+      "function_count": 43,
+      "exact_objdiff_count": 41,
+      "symbols": [
+        {
+          "name": "isExistEffect__24@unnamed@EffectUtil_cpp@FPC9LiveActorPCc",
+          "demangled_name": "@unnamed@EffectUtil_cpp@::isExistEffect(const LiveActor*, const char*)",
+          "retail_size": 56,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "requestEffectStopSceneStart__2MRFv",
+          "demangled_name": "MR::requestEffectStopSceneStart()",
+          "retail_size": 4,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "requestEffectStopSceneEnd__2MRFv",
+          "demangled_name": "MR::requestEffectStopSceneEnd()",
+          "retail_size": 4,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "addEffect__2MRFP9LiveActorPCc",
+          "demangled_name": "MR::addEffect(LiveActor*, const char*)",
+          "retail_size": 12,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "getEffect__2MRFPC9LiveActorPCc",
+          "demangled_name": "MR::getEffect(const LiveActor*, const char*)",
+          "retail_size": 8,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "getEffect__2MRFPC11LayoutActorPCc",
+          "demangled_name": "MR::getEffect(const LayoutActor*, const char*)",
+          "retail_size": 8,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "isExistEffectKeeper__2MRFPC9LiveActor",
+          "demangled_name": "MR::isExistEffectKeeper(const LiveActor*)",
+          "retail_size": 16,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "isExistEffectKeeper__2MRFPC11LayoutActor",
+          "demangled_name": "MR::isExistEffectKeeper(const LayoutActor*)",
+          "retail_size": 16,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "emitEffect__2MRFP9LiveActorPCc",
+          "demangled_name": "MR::emitEffect(LiveActor*, const char*)",
+          "retail_size": 8,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "emitEffectWithScale__2MRFP9LiveActorPCcfl",
+          "demangled_name": "MR::emitEffectWithScale(LiveActor*, const char*, float, long)",
+          "retail_size": 100,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "emitEffectWithEmitterCallBack__2MRFP9LiveActorPCcP24MultiEmitterCallBackBase",
+          "demangled_name": "MR::emitEffectWithEmitterCallBack(LiveActor*, const char*, MultiEmitterCallBackBase*)",
+          "retail_size": 72,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "emitEffectWithParticleCallBack__2MRFP9LiveActorPCcP28MultiEmitterParticleCallBack",
+          "demangled_name": "MR::emitEffectWithParticleCallBack(LiveActor*, const char*, MultiEmitterParticleCallBack*)",
+          "retail_size": 76,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "tryEmitEffect__2MRFP9LiveActorPCc",
+          "demangled_name": "MR::tryEmitEffect(LiveActor*, const char*)",
+          "retail_size": 84,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "tryDeleteEffect__2MRFP9LiveActorPCc",
+          "demangled_name": "MR::tryDeleteEffect(LiveActor*, const char*)",
+          "retail_size": 88,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "deleteEffect__2MRFP9LiveActorPCc",
+          "demangled_name": "MR::deleteEffect(LiveActor*, const char*)",
+          "retail_size": 8,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "forceDeleteEffect__2MRFP9LiveActorPCc",
+          "demangled_name": "MR::forceDeleteEffect(LiveActor*, const char*)",
+          "retail_size": 8,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "deleteEffectAll__2MRFP9LiveActor",
+          "demangled_name": "MR::deleteEffectAll(LiveActor*)",
+          "retail_size": 8,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "forceDeleteEffectAll__2MRFP9LiveActor",
+          "demangled_name": "MR::forceDeleteEffectAll(LiveActor*)",
+          "retail_size": 8,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "isRegisteredEffect__2MRFPC9LiveActorPCc",
+          "demangled_name": "MR::isRegisteredEffect(const LiveActor*, const char*)",
+          "retail_size": 32,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "isEffectValid__2MRFPC9LiveActorPCc",
+          "demangled_name": "MR::isEffectValid(const LiveActor*, const char*)",
+          "retail_size": 56,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "onDrawEffect__2MRFP9LiveActor",
+          "demangled_name": "MR::onDrawEffect(LiveActor*)",
+          "retail_size": 8,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "offDrawEffect__2MRFP9LiveActor",
+          "demangled_name": "MR::offDrawEffect(LiveActor*)",
+          "retail_size": 8,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "pauseOffEffectAll__2MRFP9LiveActor",
+          "demangled_name": "MR::pauseOffEffectAll(LiveActor*)",
+          "retail_size": 8,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "onEmitEffectSyncClipping__2MRFP9LiveActorPCc",
+          "demangled_name": "MR::onEmitEffectSyncClipping(LiveActor*, const char*)",
+          "retail_size": 40,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "onForceDeleteEffectSyncClipping__2MRFP9LiveActorPCc",
+          "demangled_name": "MR::onForceDeleteEffectSyncClipping(LiveActor*, const char*)",
+          "retail_size": 40,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "setEffectName__2MRFP9LiveActorPCcPCc",
+          "demangled_name": "MR::setEffectName(LiveActor*, const char*, const char*)",
+          "retail_size": 8,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "setEffectHostSRT__2MRFP9LiveActorPCcPCQ29JGeometry8TVec3<f>PCQ29JGeometry8TVec3<f>PCQ29JGeometry8TVec3<f>",
+          "demangled_name": "MR::setEffectHostSRT(LiveActor*, const char*, const JGeometry::TVec3<float>*, const JGeometry::TVec3<float>*, const JGeometry::TVec3<float>*)",
+          "retail_size": 80,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "setEffectHostMtx__2MRFP9LiveActorPCcPA4_f",
+          "demangled_name": "MR::setEffectHostMtx(LiveActor*, const char*, float(*)[4])",
+          "retail_size": 56,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "setEffectBaseScale__2MRFP9LiveActorPCcf",
+          "demangled_name": "MR::setEffectBaseScale(LiveActor*, const char*, float)",
+          "retail_size": 56,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "setEffectLocalScale__2MRFP9LiveActorPCcRCQ29JGeometry8TVec3<f>",
+          "demangled_name": "MR::setEffectLocalScale(LiveActor*, const char*, const JGeometry::TVec3<float>&)",
+          "retail_size": 60,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "setEffectColor__2MRFP9LiveActorPCcUcUcUcUcUcUc",
+          "demangled_name": "MR::setEffectColor(LiveActor*, const char*, unsigned char, unsigned char, unsigned char, unsigned char, unsigned char, unsigned char)",
+          "retail_size": 136,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "setEffectPrmColor__2MRFP9LiveActorPCcUcUcUc",
+          "demangled_name": "MR::setEffectPrmColor(LiveActor*, const char*, unsigned char, unsigned char, unsigned char)",
+          "retail_size": 84,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "setEffectEnvColor__2MRFP9LiveActorPCcUcUcUc",
+          "demangled_name": "MR::setEffectEnvColor(LiveActor*, const char*, unsigned char, unsigned char, unsigned char)",
+          "retail_size": 84,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "emitEffectHit__2MRFP9LiveActorRCQ29JGeometry8TVec3<f>PCc",
+          "demangled_name": "MR::emitEffectHit(LiveActor*, const JGeometry::TVec3<float>&, const char*)",
+          "retail_size": 80,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "emitEffectHit__2MRFP9LiveActorRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PCc",
+          "demangled_name": "MR::emitEffectHit(LiveActor*, const JGeometry::TVec3<float>&, const JGeometry::TVec3<float>&, const char*)",
+          "retail_size": 112,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "emitEffectHit__2MRFP9LiveActorPA4_fPCc",
+          "demangled_name": "MR::emitEffectHit(LiveActor*, float(*)[4], const char*)",
+          "retail_size": 80,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "emitEffectHitBetweenSensors__2MRFP9LiveActorPC9HitSensorPC9HitSensorfPCc",
+          "demangled_name": "MR::emitEffectHitBetweenSensors(LiveActor*, const HitSensor*, const HitSensor*, float, const char*)",
+          "retail_size": 76,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "initEffectAfterPlacement__2MRFP9LiveActor",
+          "demangled_name": "MR::initEffectAfterPlacement(LiveActor*)",
+          "retail_size": 68,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "updateEffectFloorCode__2MRFP9LiveActorPC8Triangle",
+          "demangled_name": "MR::updateEffectFloorCode(LiveActor*, const Triangle*)",
+          "retail_size": 8,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "updateEffectFloorCodeLineToMap__2MRFP9LiveActorRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+          "demangled_name": "MR::updateEffectFloorCodeLineToMap(LiveActor*, const JGeometry::TVec3<float>&, const JGeometry::TVec3<float>&)",
+          "retail_size": 120,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "updateEffectFloorCodeLineToMap__2MRFP9LiveActorff",
+          "demangled_name": "MR::updateEffectFloorCodeLineToMap(LiveActor*, float, float)",
+          "retail_size": 196,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "initEffectSyncBck__2MRFP9LiveActorPCcPCPCc",
+          "demangled_name": "MR::initEffectSyncBck(LiveActor*, const char*, const char* const*)",
+          "retail_size": 172,
+          "match_percent": 96.93023,
+          "baseline_match_percent": 96.93023
+        },
+        {
+          "name": "addEffectHitNormal__2MRFP9LiveActorPCc",
+          "demangled_name": "MR::addEffectHitNormal(LiveActor*, const char*)",
+          "retail_size": 100,
+          "match_percent": 72.4,
+          "baseline_match_percent": 72.4
+        }
+      ]
+    },
+    {
+      "source": "Game/Util/HashUtil.cpp",
+      "source_sha256": "cf19ed3c5e05d5184f5b621eeee269b99e7e8cffdbdac8c95107cbd84e410f41",
+      "current_source_unchanged": true,
+      "retail_object_sha256": "efe12c3580f5dea6727cb4a954cd6eecab6efc366a5d53054121a52a31e01f89",
+      "compiled_object_sha256": "cb1e53104eeace045b18bdf7ac7db028918cc8e6cbd4f1302262c437c273a290",
+      "baseline_object_sha256": "cb1e53104eeace045b18bdf7ac7db028918cc8e6cbd4f1302262c437c273a290",
+      "function_count": 11,
+      "exact_objdiff_count": 11,
+      "symbols": [
+        {
+          "name": "__ct__13HashSortTableFUl",
+          "demangled_name": "HashSortTable::HashSortTable(unsigned long)",
+          "retail_size": 124,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "add__13HashSortTableFPCcUlb",
+          "demangled_name": "HashSortTable::add(const char*, unsigned long, bool)",
+          "retail_size": 104,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "add__13HashSortTableFUlUl",
+          "demangled_name": "HashSortTable::add(unsigned long, unsigned long)",
+          "retail_size": 52,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "addOrSkip__13HashSortTableFUlUl",
+          "demangled_name": "HashSortTable::addOrSkip(unsigned long, unsigned long)",
+          "retail_size": 100,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "sort__13HashSortTableFv",
+          "demangled_name": "HashSortTable::sort()",
+          "retail_size": 428,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "search__13HashSortTableFUlPUl",
+          "demangled_name": "HashSortTable::search(unsigned long, unsigned long*)",
+          "retail_size": 164,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "search__13HashSortTableFPCcPUl",
+          "demangled_name": "HashSortTable::search(const char*, unsigned long*)",
+          "retail_size": 76,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "search__13HashSortTableFPCcPCcPUl",
+          "demangled_name": "HashSortTable::search(const char*, const char*, unsigned long*)",
+          "retail_size": 92,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "swap__13HashSortTableFPCcPCc",
+          "demangled_name": "HashSortTable::swap(const char*, const char*)",
+          "retail_size": 136,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "getHashCode__2MRFPCc",
+          "demangled_name": "MR::getHashCode(const char*)",
+          "retail_size": 44,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        },
+        {
+          "name": "getHashCodeLower__2MRFPCc",
+          "demangled_name": "MR::getHashCodeLower(const char*)",
+          "retail_size": 96,
+          "match_percent": 100.0,
+          "baseline_match_percent": 100.0
+        }
+      ]
+    }
+  ]
+}

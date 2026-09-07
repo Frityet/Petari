@@ -1,7 +1,8 @@
 #include "Game/Player/MarioState.hpp"
 #include "Game/Player/Mario.hpp"
 
-// Original MarioState lifecycle and base virtual bodies. The two read-only
+// Original MarioState lifecycle and base virtual bodies. MarioDamage.cpp owns
+// the original start, close and update methods. The two read-only
 // status queries stay in MarioStateAccessCompat.cpp so ordinary Game archive
 // users do not pull the optional native MarioModule/player implementation.
 // Source correspondence and retail vtable proof:
@@ -149,18 +150,6 @@ f32 MarioState::getBlurOffset() const {
 }
 
 void MarioState::draw3D() const {
-}
-
-bool MarioState::start() {
-    return true;
-}
-
-bool MarioState::close() {
-    return true;
-}
-
-bool MarioState::update() {
-    return true;
 }
 
 void MarioState::hitWall(const TVec3f&, HitSensor*) {

@@ -11,6 +11,7 @@
 
 class FileSelectSky;
 class TitleSequenceProduct;
+class SceneObjHolder;
 
 namespace smgpc::runtime {
     class RuntimeContext;
@@ -18,6 +19,7 @@ namespace smgpc::runtime {
 
 namespace smgpc::scene {
 
+    class SceneObjHolderBinding;
     class FileSelectFarVisual;
     class TitleFileSelectVisual;
 
@@ -76,6 +78,9 @@ namespace smgpc::scene {
         void move_selection(std::ptrdiff_t direction);
 
         smgpc::runtime::RuntimeContext *_runtime = nullptr;
+        // Scene resources outlive the original products and their children.
+        std::unique_ptr<SceneObjHolder> _scene_obj_holder{};
+        std::unique_ptr<SceneObjHolderBinding> _scene_binding{};
         // This owner precedes the product so reverse member destruction first
         // retires the parent and then its captured raw-new NameObj children.
         NameObjChildOwner _title_sequence_children{};

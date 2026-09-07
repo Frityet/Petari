@@ -126,32 +126,6 @@ namespace MR {
             "Fur PlanetMap reached the ordinary zero-optional runtime tranche.");
     }
 
-    bool isRegisteredEffect(const LiveActor *actor, const char *effect_name) {
-        if (actor == nullptr || effect_name == nullptr || effect_name[0] == '\0') {
-            return false;
-        }
-        const auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
-        if (runtime == nullptr) {
-            return false;
-        }
-        const auto keeper = runtime->effects().registered_keeper(actor->getName(), actor);
-        const auto *library = runtime->effects().resource_library();
-        if (!keeper.has_value() || library == nullptr) {
-            return false;
-        }
-        if (!keeper->resource_group_name.empty() &&
-            !library->resolve_auto_effect(keeper->resource_group_name, effect_name).empty()) {
-            return true;
-        }
-        return !library->resolve_effect_request(effect_name).empty();
-    }
-
-
-
-
-
-
-
     bool isExistSubModel(const char *model_name, const char *suffix) {
         if (model_name == nullptr || suffix == nullptr) {
             return false;

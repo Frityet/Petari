@@ -616,3 +616,80 @@ namespace MR {
 }  // namespace MR
 
 const Vec gZeroVec = {0.0F, 0.0F, 0.0F};
+
+// Original methods from Game/Util/MathUtil.cpp.
+namespace MR {
+    void sortSmall(s32 length, f32* sortArray, s32* indexArray) {
+        for (int i = 0; i < length; i++) {
+            indexArray[i] = i;
+        }
+        for (int index = 0; index < length; index++) {
+            f32 element = sortArray[index];
+            int indexOfSmallestElement = index;
+            for (int i = index + 1; i < length; i++) {
+                if (element > sortArray[i]) {
+                    element = sortArray[i];
+                    indexOfSmallestElement = i;
+                }
+            }
+            s32 temp = indexArray[index];
+            f32 temp2 = sortArray[index];
+            indexArray[index] = indexArray[indexOfSmallestElement];
+            sortArray[index] = element;
+            indexArray[indexOfSmallestElement] = temp;
+            sortArray[indexOfSmallestElement] = temp2;
+        }
+    }
+
+    void createBoundingBox(const TVec3f* pPoints, u32 numPoints, TVec3f* pMin, TVec3f* pMax) {
+        *pMin = pPoints[0];
+        *pMax = pPoints[0];
+
+        for (u32 idx = 1; idx < numPoints; idx++) {
+            const TVec3f& point = pPoints[idx];
+
+            if (point.x < pMin->x) {
+                pMin->x = point.x;
+            }
+            if (point.y < pMin->y) {
+                pMin->y = point.y;
+            }
+            if (point.z < pMin->z) {
+                pMin->z = point.z;
+            }
+
+            if (pMax->x < point.x) {
+                pMax->x = point.x;
+            }
+            if (pMax->y < point.y) {
+                pMax->y = point.y;
+            }
+            if (pMax->z < point.z) {
+                pMax->z = point.z;
+            }
+        }
+    }
+} // namespace MR
+
+namespace MR {
+    void vecScaleAdd(const TVec3f* destination, const TVec3f* add, f32 scale) {
+        // Retail loads both vectors before either paired-single store, and
+        // ps_madds0 rounds the multiply/add once per component.
+        const TVec3f previous = *destination;
+        const TVec3f increment = *add;
+        auto* result = const_cast<TVec3f*>(destination);
+        result->x = std::fma(increment.x, scale, previous.x);
+        result->y = std::fma(increment.y, scale, previous.y);
+        result->z = std::fma(increment.z, scale, previous.z);
+    }
+
+    f32 calcPerpendicFootToLine(TVec3f* pDst, const TVec3f& rPos, const TVec3f& rPointA, const TVec3f& rPointB) {
+        TVec3f offset = rPointB - rPointA;
+        f32 ratio = rPos.dot(offset) - rPointA.dot(offset);
+        ratio /= offset.squared();
+        offset.scale(ratio);
+        pDst->set(rPointA);
+        pDst->add(offset);
+        return ratio;
+    }
+} // namespace MR

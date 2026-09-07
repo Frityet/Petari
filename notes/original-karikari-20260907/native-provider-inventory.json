@@ -1,0 +1,65 @@
+{
+  "note": "Snapshot against existing root native archives; may precede concurrent rebuilds. This is candidate missing providers, not a fresh strict link.",
+  "archives": [
+    "build/macosx/arm64/debug/libaurora-si.a",
+    "build/macosx/arm64/debug/libaurora-base.a",
+    "build/macosx/arm64/debug/libsmg-pc-common.a",
+    "build/macosx/arm64/debug/libaurora-vi.a",
+    "build/macosx/arm64/debug/libsmg-pc-render.a",
+    "build/macosx/arm64/debug/libaurora-nw4r.a",
+    "build/macosx/arm64/debug/libaurora-ms.a",
+    "build/macosx/arm64/debug/libaurora-mtx.a",
+    "build/macosx/arm64/debug/libaurora-platform.a",
+    "build/macosx/arm64/debug/libaurora-os.a",
+    "build/macosx/arm64/debug/libaurora-dvd.a",
+    "build/macosx/arm64/debug/libsmg-pc-game.a",
+    "build/macosx/arm64/debug/libaurora-gd.a",
+    "build/macosx/arm64/debug/libaurora-core.a",
+    "build/macosx/arm64/debug/libsmg-pc-app.a",
+    "build/macosx/arm64/debug/libaurora-pad.a",
+    "build/macosx/arm64/debug/libaurora-main.a",
+    "build/macosx/arm64/debug/libsmg-pc-mario-gateway-walk-slice.a",
+    "build/macosx/arm64/debug/libaurora-card.a",
+    "build/macosx/arm64/debug/libaurora-gx.a",
+    "build/macosx/arm64/debug/libaurora-thp.a",
+    "notes/original-karikari-20260907/Karikari-native.o"
+  ],
+  "missing_mr_providers": [
+    {
+      "symbol": "__ZN2MR10isNearZeroERKN9JGeometry5TVec2IfEEf",
+      "demangled": "MR::isNearZero(JGeometry::TVec2<float> const&, float)"
+    },
+    {
+      "symbol": "__ZN2MR11joinToGroupEP9LiveActorPKc",
+      "demangled": "MR::joinToGroup(LiveActor*, char const*)"
+    },
+    {
+      "symbol": "__ZN2MR15appearStarPieceEPK7NameObjRKN9JGeometry5TVec3IfEEiffb",
+      "demangled": "MR::appearStarPiece(NameObj const*, JGeometry::TVec3<float> const&, int, float, float, bool)"
+    },
+    {
+      "symbol": "__ZN2MR16declareStarPieceEPK7NameObji",
+      "demangled": "MR::declareStarPiece(NameObj const*, int)"
+    },
+    {
+      "symbol": "__ZN2MR16startDPDHitSoundEv",
+      "demangled": "MR::startDPDHitSound()"
+    },
+    {
+      "symbol": "__ZN2MR17startBlowHitSoundEPK9LiveActor",
+      "demangled": "MR::startBlowHitSound(LiveActor const*)"
+    },
+    {
+      "symbol": "__ZN2MR26calcMtxFromGravityAndZAxisEPN9JGeometry10TPosition3INS0_9TMatrix34INS0_10SMatrix34CIfEEEEEEPK9LiveActorRKNS0_5TVec3IfEESE_",
+      "demangled": "MR::calcMtxFromGravityAndZAxis(JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>>*, LiveActor const*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)"
+    },
+    {
+      "symbol": "__ZN2MR8isBindedEPK9LiveActor",
+      "demangled": "MR::isBinded(LiveActor const*)"
+    },
+    {
+      "symbol": "__ZN2MR9stopSceneEi",
+      "demangled": "MR::stopScene(int)"
+    }
+  ]
+}

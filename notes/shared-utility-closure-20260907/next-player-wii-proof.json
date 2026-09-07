@@ -1,0 +1,534 @@
+[
+  {
+    "source": "src/Game/Player/MarioRabbit.cpp",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Player/MarioRabbit.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/shared-utility-closure-20260907/MarioRabbit.ppc.o"
+    ],
+    "exit_code": 0,
+    "source_sha256": "3a036aef584943a747985a81121d83a9849815a1cc9635066b4c46a220abf6ca",
+    "native_mirrors_decomp": true,
+    "sections": [
+      {
+        "name": ".text",
+        "size": "3748",
+        "match_percent": 96.607254
+      },
+      {
+        "name": ".ctors",
+        "size": "4",
+        "match_percent": 0.0
+      },
+      {
+        "name": ".data",
+        "size": "264",
+        "match_percent": 71.28713
+      },
+      {
+        "name": ".sdata2",
+        "size": "48",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".rela.text",
+        "size": "2244",
+        "match_percent": null
+      },
+      {
+        "name": ".rela.ctors",
+        "size": "12",
+        "match_percent": null
+      },
+      {
+        "name": ".rela.data",
+        "size": "192",
+        "match_percent": null
+      },
+      {
+        "name": ".symtab",
+        "size": "1856",
+        "match_percent": null
+      },
+      {
+        "name": ".strtab",
+        "size": "3644",
+        "match_percent": null
+      },
+      {
+        "name": ".shstrtab",
+        "size": "90",
+        "match_percent": null
+      },
+      {
+        "name": ".comment",
+        "size": "972",
+        "match_percent": null
+      },
+      {
+        "name": ".note.split",
+        "size": "572",
+        "match_percent": null
+      }
+    ]
+  },
+  {
+    "source": "src/Game/Player/MarioSpin.cpp",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Player/MarioSpin.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/shared-utility-closure-20260907/MarioSpin.ppc.o"
+    ],
+    "exit_code": 0,
+    "source_sha256": "a8021453aba28f654e9af7be42c694c795a3728b82e2e9cc83bf94e15c014bf2",
+    "native_mirrors_decomp": true,
+    "sections": [
+      {
+        "name": ".text",
+        "size": "1412",
+        "match_percent": 99.65156
+      },
+      {
+        "name": ".ctors",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".data",
+        "size": "536",
+        "match_percent": 3.1914895
+      },
+      {
+        "name": ".sdata2",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".rela.text",
+        "size": "744",
+        "match_percent": null
+      },
+      {
+        "name": ".rela.ctors",
+        "size": "12",
+        "match_percent": null
+      },
+      {
+        "name": ".rela.data",
+        "size": "12",
+        "match_percent": null
+      },
+      {
+        "name": ".symtab",
+        "size": "1072",
+        "match_percent": null
+      },
+      {
+        "name": ".strtab",
+        "size": "2187",
+        "match_percent": null
+      },
+      {
+        "name": ".shstrtab",
+        "size": "90",
+        "match_percent": null
+      },
+      {
+        "name": ".comment",
+        "size": "580",
+        "match_percent": null
+      },
+      {
+        "name": ".note.split",
+        "size": "376",
+        "match_percent": null
+      }
+    ]
+  },
+  {
+    "source": "src/Game/Player/MarioSkate.cpp",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Player/MarioSkate.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/shared-utility-closure-20260907/MarioSkate.ppc.o"
+    ],
+    "exit_code": 0,
+    "source_sha256": "822eaca49580a27c543c10fe3defa35824bb1236143896f4ef0d8858ca97613e",
+    "native_mirrors_decomp": true,
+    "sections": [
+      {
+        "name": ".text",
+        "size": "3184",
+        "match_percent": 99.19598
+      },
+      {
+        "name": ".ctors",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".data",
+        "size": "232",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".sdata2",
+        "size": "88",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".rela.text",
+        "size": "2352",
+        "match_percent": null
+      },
+      {
+        "name": ".rela.ctors",
+        "size": "12",
+        "match_percent": null
+      },
+      {
+        "name": ".rela.data",
+        "size": "192",
+        "match_percent": null
+      },
+      {
+        "name": ".symtab",
+        "size": "1760",
+        "match_percent": null
+      },
+      {
+        "name": ".strtab",
+        "size": "3136",
+        "match_percent": null
+      },
+      {
+        "name": ".shstrtab",
+        "size": "90",
+        "match_percent": null
+      },
+      {
+        "name": ".comment",
+        "size": "924",
+        "match_percent": null
+      },
+      {
+        "name": ".note.split",
+        "size": "548",
+        "match_percent": null
+      }
+    ]
+  },
+  {
+    "source": "src/Game/Player/MarioBlown.cpp",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Player/MarioBlown.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/shared-utility-closure-20260907/MarioBlown.ppc.o"
+    ],
+    "exit_code": 0,
+    "source_sha256": "9536da6e6845f3560fe428faa96b5217eeb411a9dcd4aa862568051c6351782d",
+    "native_mirrors_decomp": true,
+    "sections": [
+      {
+        "name": ".text",
+        "size": "1920",
+        "match_percent": 99.65417
+      },
+      {
+        "name": ".ctors",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".data",
+        "size": "840",
+        "match_percent": 10.698365
+      },
+      {
+        "name": ".sdata2",
+        "size": "24",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".rela.text",
+        "size": "1260",
+        "match_percent": null
+      },
+      {
+        "name": ".rela.ctors",
+        "size": "12",
+        "match_percent": null
+      },
+      {
+        "name": ".rela.data",
+        "size": "192",
+        "match_percent": null
+      },
+      {
+        "name": ".symtab",
+        "size": "1664",
+        "match_percent": null
+      },
+      {
+        "name": ".strtab",
+        "size": "2964",
+        "match_percent": null
+      },
+      {
+        "name": ".shstrtab",
+        "size": "90",
+        "match_percent": null
+      },
+      {
+        "name": ".comment",
+        "size": "876",
+        "match_percent": null
+      },
+      {
+        "name": ".note.split",
+        "size": "524",
+        "match_percent": null
+      }
+    ]
+  }
+]

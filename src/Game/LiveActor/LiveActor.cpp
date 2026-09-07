@@ -1,3 +1,5 @@
+#include "Game/LiveActor/EffectKeeper.hpp"
+#include "compat/EffectSystemOwnership.hpp"
 #include "Game/AudioLib/AudAnmSoundObject.hpp"
 #include "Game/Util/MemoryUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
@@ -71,6 +73,9 @@ void LiveActor::movement() {
 
     if (!mFlag.mIsDead) {
         updateBinder();
+        if (mEffectKeeper != nullptr) {
+            mEffectKeeper->update();
+        }
         smgpc::compat::update_actor_hit_sensors(this);
         if (mCameraCtrl != nullptr) {
             mCameraCtrl->update();
@@ -134,6 +139,9 @@ void LiveActor::makeActorAppeared() {
 
 void LiveActor::makeActorDead() {
     mVelocity.zero();
+    if (mEffectKeeper != nullptr) {
+        mEffectKeeper->clear();
+    }
     mFlag.mIsDead = true;
     smgpc::compat::invalidate_actor_hit_sensors(this);
     smgpc::compat::clear_actor_binder_contacts(this);
@@ -186,11 +194,17 @@ bool LiveActor::receiveMsgApart(HitSensor* pSender, HitSensor* pReceiver) {
 
 void LiveActor::startClipped() {
     mFlag.mIsClipped = true;
+    if (mEffectKeeper != nullptr) {
+        mEffectKeeper->stopEmitterOnClipped();
+    }
     smgpc::compat::invalidate_actor_hit_sensors(this);
 }
 
 void LiveActor::endClipped() {
     mFlag.mIsClipped = false;
+    if (mEffectKeeper != nullptr) {
+        mEffectKeeper->playEmitterOffClipped();
+    }
     if (!mFlag.mIsDead) {
         smgpc::compat::validate_actor_hit_sensors(this);
         smgpc::compat::update_actor_hit_sensors(this);
@@ -258,13 +272,7 @@ void LiveActor::initModelManagerWithAnm(const char* pModelName, const char* pAni
 }
 
 void LiveActor::initEffectKeeper(int effectNum, const char* pEffectName, bool sort) {
-    if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-        const auto* model = mModelManager;
-        const auto groupName = pEffectName != nullptr ? std::string_view(pEffectName) :
-                                                       (model != nullptr ? std::string_view(MR::getModelResourceHolder(this)->getModelName()) : std::string_view{});
-        runtime->register_effect_keeper(smgpc::runtime::EffectKeeperHostKind::LiveActor, getName(), effectNum,
-                                        groupName, sort, this);
-    }
+    smgpc::compat::initialize_actor_effect_keeper(this, effectNum, pEffectName, sort);
 }
 
 void LiveActor::initActorLightCtrl() {
@@ -277,6 +285,9 @@ void LiveActor::initHitSensor(int sensorCount) {
 
 void LiveActor::initBinder(f32 radius, f32 offset, u32 type) {
     smgpc::compat::configure_actor_binder(this, radius, offset, type);
+    if (mEffectKeeper != nullptr) {
+        mEffectKeeper->setBinder(mBinder);
+    }
     MR::onBind(this);
 }
 

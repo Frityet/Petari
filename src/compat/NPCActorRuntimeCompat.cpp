@@ -258,10 +258,6 @@ namespace MR {
         throw std::logic_error("Joint-bound StarPointer targets are unavailable without real joint-matrix binding.");
     }
 
-    bool isStarPointerPointing2POnPressButton(const LiveActor*, const char*, bool, bool) {
-        throw std::logic_error("Second-player StarPointer input is unavailable in the keyboard/mouse runtime.");
-    }
-
     bool getNPCItemData(NPCActorItem*, s32) {
         throw std::logic_error("NPC item-table data is unavailable without the real NPC item parameter table.");
     }

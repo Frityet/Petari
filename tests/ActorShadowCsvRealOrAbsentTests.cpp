@@ -1,9 +1,16 @@
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Util/ActorShadowUtil.hpp"
+#include "Game/Util/JointUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/ActorShadowCsvCompat.hpp"
+#include "compat/ModelManagerOwner.hpp"
+#include "compat/ResourceHolderCompat.hpp"
 #include "resource/BcsvTable.hpp"
+#include "resource/GameResourceRuntime.hpp"
 #include "resource/RarcArchive.hpp"
+#include "runtime/RuntimeServices.hpp"
+#include <aurora/aurora.h>
+#include <aurora/dvd.h>
 
 #include <algorithm>
 #include <array>
@@ -11,9 +18,11 @@
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
+#include <cstdlib>
 #include <filesystem>
 #include <iomanip>
 #include <iostream>
+#include <memory>
 #include <optional>
 #include <span>
 #include <sstream>
@@ -22,6 +31,8 @@
 #include <string_view>
 #include <utility>
 #include <vector>
+
+namespace aurora { extern AuroraConfig g_config; }
 
 namespace {
     class ProbeActor final : public LiveActor {
@@ -504,7 +515,11 @@ namespace {
         const auto archive = make_single_file_rarc("Shadow.bcsv", make_shadow_bcsv(rows));
         auto actor = ProbeActor{};
         actor.mPosition.set(20.0F, 30.0F, 40.0F);
-        smgpc::compat::initialize_actor_model(&actor, "FixtureModel", "");
+        if (smgpc::compat::ResourceHolderService::active() == nullptr) {
+            std::cout << "[skip] authored named-joint binding requires real Tico model resources\n";
+            return;
+        }
+        actor.initModelManagerWithAnm("Tico", nullptr, false);
         smgpc::compat::initialize_actor_shadow_from_archive(&actor, archive, "Shadow");
         const auto* state = smgpc::compat::actor_shadow_runtime_state(&actor);
         require(state != nullptr && state->capacity == 11U && state->controllers.size() == 10U,
@@ -545,6 +560,8 @@ namespace {
                 "other-matrix binding and private continuous gravity must be exact");
         require(state->controllers[5U].position_binding == smgpc::compat::ActorShadowPositionBinding::JointMatrix &&
                     state->controllers[5U].joint_name == "Body" &&
+                    state->controllers[5U].drop_position_matrix == MR::getJointMtx(&actor, "Body") &&
+                    state->controllers[5U].drop_position_matrix != nullptr &&
                     state->controllers[5U].gravity_mode == smgpc::compat::ActorShadowGravityMode::PrivateOneTime &&
                     state->controllers[5U].drop_direction == nullptr &&
                     state->controllers[5U].fixed_drop_direction.epsilonEquals(TVec3f{0.0F, 1.0F, 0.0F}, 0.0F),
@@ -589,6 +606,13 @@ namespace {
                     state->controllers.front().drop_start_offset == 50.0F &&
                     state->controllers.front().fixed_drop_direction.epsilonEquals(TVec3f{0.0F, -1.0F, 0.0F}, 0.0F),
                 "generic ShadowController construction must use retail ctor defaults");
+        MR::setShadowVolumeStartDropOffset(&actor, nullptr, -12.5F);
+        MR::setShadowVolumeEndDropOffset(&actor, nullptr, 35.25F);
+        MR::onShadowVolumeCutDropLength(&actor, nullptr);
+        require(state->controllers.front().volume_start_offset == -12.5F &&
+                    state->controllers.front().volume_end_offset == 35.25F &&
+                    state->controllers.front().volume_cut_drop_length,
+                "volume setters must preserve exact signed offsets and enable authored length clipping");
         MR::initShadowVolumeCylinder(&actor, 20.0F);
         state = smgpc::compat::actor_shadow_runtime_state(&actor);
         require(!state->calculation_enabled && state->controllers.front().calculation_mode == smgpc::compat::ActorShadowCalculationMode::Disabled,
@@ -616,16 +640,26 @@ namespace {
             candidate.controllers.push_back(std::move(controller));
         }
         smgpc::compat::replace_actor_shadow_runtime_state(&actor, std::move(candidate));
-        smgpc::compat::initialize_actor_model(&actor, "First", "");
         state = smgpc::compat::actor_shadow_runtime_state(&actor);
-        require(state->controllers[0U].drop_position_matrix == nullptr && state->controllers[1U].drop_position_matrix == base_matrix &&
+        if (smgpc::compat::ResourceHolderService::active() != nullptr) {
+            actor.initModelManagerWithAnm("Tico", nullptr, false);
+            state->controllers[0U].drop_position_matrix = MR::getJointMtx(&actor, "Body");
+        }
+        auto model_lifetime = std::weak_ptr<smgpc::compat::ModelManagerOwner>(
+            smgpc::compat::retain_actor_model_owner(&actor));
+        const auto* original_manager = actor.mModelManager;
+        const auto original_joint_matrix = state->controllers[0U].drop_position_matrix;
+        auto replacement_rejected = false;
+        try {
+            actor.initModelManagerWithAnm("Tico", nullptr, false);
+        } catch (const std::logic_error&) {
+            replacement_rejected = true;
+        }
+        require(replacement_rejected && actor.mModelManager == original_manager &&
+                    state->controllers[0U].drop_position_matrix == original_joint_matrix &&
+                    state->controllers[1U].drop_position_matrix == base_matrix &&
                     state->controllers[2U].drop_position_matrix == other_matrix,
-                "model replacement must invalidate only model-owned joint matrices");
-        state->controllers[0U].drop_position_matrix = joint_matrix;
-        smgpc::compat::release_actor_model_state(&actor);
-        require(state->controllers[0U].drop_position_matrix == nullptr && state->controllers[1U].drop_position_matrix == base_matrix &&
-                    state->controllers[2U].drop_position_matrix == other_matrix,
-                "model release must not leave a dangling named-joint binding");
+                "model replacement without draw retirement, or construction without resources, must reject without changing bindings");
 
         auto invalid = *state;
         invalid.controllers[0U].line_start_controller_index = 99U;
@@ -636,6 +670,11 @@ namespace {
             rejected = true;
         }
         require(rejected && state->controllers.size() == 3U, "invalid generic line indices must reject before replacing old state");
+        smgpc::compat::release_actor_runtime_state(&actor);
+        require(!smgpc::compat::has_actor_runtime_state(&actor) &&
+                    smgpc::compat::actor_shadow_runtime_state(static_cast<const LiveActor*>(&actor)) == nullptr &&
+                    model_lifetime.expired(),
+                "actor retirement must release the real model owner and every shadow binding together");
     }
 
     [[nodiscard]] std::optional< std::filesystem::path > find_rmgk02_object(std::string_view archive_name) {
@@ -650,15 +689,14 @@ namespace {
         return std::nullopt;
     }
 
-    void test_real_rmgk02_tico_shadow() {
-        const auto tico_path = find_rmgk02_object("Tico");
-        const auto baby_path = find_rmgk02_object("TicoBaby");
-        if (!tico_path.has_value() || !baby_path.has_value()) {
-            std::cout << "[skip] RMGK02 Tico/TicoBaby archives are absent\n";
+    void test_real_tico_shadow() {
+        auto* resources = smgpc::compat::ResourceHolderService::active();
+        if (resources == nullptr) {
+            std::cout << "[skip] real Tico/TicoBaby model archives are absent\n";
             return;
         }
-        const auto tico = smgpc::resource::RarcArchive::from_file(*tico_path);
-        const auto baby = smgpc::resource::RarcArchive::from_file(*baby_path);
+        const auto& tico = resources->backing(*resources->create_and_add("Tico.arc")).archive();
+        const auto& baby = resources->backing(*resources->create_and_add("TicoBaby.arc")).archive();
         const auto* tico_entry = tico.find_resource("shadow.bcsv");
         const auto* baby_entry = baby.find_resource("shadow.bcsv");
         require(tico_entry != nullptr && baby_entry != nullptr, "both retail Tico archives must contain shadow.bcsv");
@@ -669,6 +707,7 @@ namespace {
                 "Tico and TicoBaby shadow.bcsv must be byte-identical retail data");
 
         auto actor = ProbeActor{};
+        actor.initModelManagerWithAnm("Tico", nullptr, false);
         smgpc::compat::initialize_actor_shadow_from_archive(&actor, tico, "Shadow");
         const auto* state = smgpc::compat::actor_shadow_runtime_state(&actor);
         require(state != nullptr && state->capacity == 1U && state->controllers.size() == 1U, "retail Tico shadow must produce one controller");
@@ -688,13 +727,36 @@ namespace {
 }  // namespace
 
 int main() try {
+    struct DiscCloseGuard {
+        bool opened = false;
+        ~DiscCloseGuard() { if (opened) aurora_dvd_close(); }
+    } disc_close;
+    std::string resource_root;
+    if (const auto* disc = std::getenv("SMGPC_REAL_DISC"); disc != nullptr && *disc != '\0') {
+        require(aurora_dvd_open(disc), "SMGPC_REAL_DISC must open the actual model fixture image");
+        disc_close.opened = true;
+        resource_root = "/";
+    } else if (const auto tico = find_rmgk02_object("Tico"); tico.has_value()) {
+        resource_root = tico->parent_path().parent_path().string();
+    }
+    std::unique_ptr<smgpc::resource::GameResourceRuntime> process;
+    std::unique_ptr<smgpc::runtime::DvdFileSystemService> dvd;
+    std::unique_ptr<smgpc::compat::ResourceHolderService> resources;
+    if (!resource_root.empty()) {
+        aurora::g_config.mem1Size = 24U * 1024U * 1024U;
+        process = std::make_unique<smgpc::resource::GameResourceRuntime>();
+        DVDInit();
+        dvd = std::make_unique<smgpc::runtime::DvdFileSystemService>(resource_root);
+        resources = std::make_unique<smgpc::compat::ResourceHolderService>(
+            *dvd, process->create_cohort(), process->mem1_heap());
+    }
     const auto tests = std::array< std::pair< std::string_view, void (*)() >, 7U >{
         std::pair{"missing CSV and transaction", test_missing_csv_and_strong_replacement},
         std::pair{"all types and defaults", test_all_types_and_exact_missing_defaults},
         std::pair{"authored bindings and modes", test_authored_bindings_modes_and_line_order},
         std::pair{"single line self lookup", test_single_line_self_resolution},
         std::pair{"model binding lifetime", test_generic_ctor_and_model_binding_lifetime},
-        std::pair{"real RMGK02 Tico", test_real_rmgk02_tico_shadow},
+        std::pair{"real Tico", test_real_tico_shadow},
         std::pair{"registry teardown",
                   [] {
                       const auto baseline = smgpc::compat::actor_shadow_runtime_state_count();

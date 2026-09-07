@@ -1,0 +1,7 @@
+{
+  "reference": "decomp/src/Game/Util/MathUtil.cpp",
+  "destination": "src/compat/GameMathCompat.cpp",
+  "symbol": "MR::calcPerpendicFootToLine",
+  "body_sha256": "7b64e3029207cd4f97a74415e267678d75d84ca644304cfc75ecb1d9add5f7ac",
+  "method": "byte-identical existing reference body"
+}

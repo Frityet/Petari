@@ -253,6 +253,7 @@ namespace smgpc::scene {
         _runtime.begin_scene_draw_buffer_registration();
         initSceneObjHolder();
         _scene_obj_holder_binding = std::make_unique<SceneObjHolderBinding>(*mSceneObjHolder);
+        _scene_obj_holder_binding->initialize_effect_system(3072, 256);
         constexpr auto required_scene_objects = std::array{
             SceneObj_MessageSensorHolder,
             SceneObj_ClippingDirector,

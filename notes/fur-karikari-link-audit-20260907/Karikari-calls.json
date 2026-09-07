@@ -1,0 +1,1001 @@
+[
+  {
+    "name": "__ct__8KarikariFPCc",
+    "demangled": "Karikari::Karikari(const char*)",
+    "size": 116,
+    "calls": [
+      "__ct__9LiveActorFPCc"
+    ]
+  },
+  {
+    "name": "init__8KarikariFRC12JMapInfoIter",
+    "demangled": "Karikari::init(const JMapInfoIter&)",
+    "size": 444,
+    "calls": [
+      "__ct<f>__Q29JGeometry8TVec3<f>Ffff_Pv",
+      "_restgpr_29",
+      "_savegpr_29",
+      "addHitSensor__2MRFP9LiveActorPCcUlUsfRCQ29JGeometry8TVec3<f>",
+      "connectToSceneEnemy__2MRFP9LiveActor",
+      "createSceneObj__2MRFi",
+      "declareStarPiece__2MRFPC7NameObjl",
+      "initBinder__9LiveActorFffUl",
+      "initDefaultPos__2MRFP9LiveActorRC12JMapInfoIter",
+      "initEffectKeeper__9LiveActorFiPCcb",
+      "initHitSensor__9LiveActorFi",
+      "initLightCtrl__2MRFP9LiveActor",
+      "initModelManagerWithAnm__9LiveActorFPCcPCcb",
+      "initNerve__9LiveActorFPC5Nerve",
+      "initShadowVolumeSphere__2MRFP9LiveActorf",
+      "initSound__9LiveActorFib",
+      "initStarPointerTarget__2MRFP9LiveActorfRCQ29JGeometry8TVec3<f>",
+      "isValidSwitchAppear__2MRFPC9LiveActor",
+      "joinToGroup__2MRFP9LiveActorPCc",
+      "onCalcGravity__2MRFP9LiveActor",
+      "onCalcShadowOneTime__2MRFP9LiveActorPCc",
+      "syncStageSwitchAppear__2MRFP9LiveActor",
+      "useStageSwitchReadAppear__2MRFP9LiveActorRC12JMapInfoIter",
+      "useStageSwitchWriteDead__2MRFP9LiveActorRC12JMapInfoIter"
+    ]
+  },
+  {
+    "name": "applyEnvironmentInfluenceToVelocity__8KarikariFv",
+    "demangled": "Karikari::applyEnvironmentInfluenceToVelocity()",
+    "size": 376,
+    "calls": [
+      "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "dot__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>",
+      "getGroundNormal__2MRFPC9LiveActor",
+      "isNerve__9LiveActorCFPC5Nerve",
+      "isOnGround__2MRFPC9LiveActor",
+      "reboundVelocityFromCollision__2MRFP9LiveActorfff",
+      "scale__Q29JGeometry8TVec3<f>FfRCQ29JGeometry8TVec3<f>",
+      "squared__Q29JGeometry8TVec3<f>CFv",
+      "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>"
+    ]
+  },
+  {
+    "name": "killedInFrozenState__8KarikariFv",
+    "demangled": "Karikari::killedInFrozenState()",
+    "size": 156,
+    "calls": [
+      "deleteEffect__2MRFP9LiveActorPCc",
+      "emitEffect__2MRFP9LiveActorPCc",
+      "generateItem__8KarikariFl",
+      "startSound__2MRFPC9LiveActorPCcll",
+      "stopScene__2MRFl"
+    ]
+  },
+  {
+    "name": "control__8KarikariFv",
+    "demangled": "Karikari::control()",
+    "size": 116,
+    "calls": [
+      "__ct<f>__Q29JGeometry8TVec3<f>Ffff_Pv",
+      "isInDeath__2MRFPC9LiveActorRCQ29JGeometry8TVec3<f>",
+      "isInWater__2MRFRCQ29JGeometry8TVec3<f>"
+    ]
+  },
+  {
+    "name": "exeFall__8KarikariFv",
+    "demangled": "Karikari::exeFall()",
+    "size": 236,
+    "calls": [
+      "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "applyEnvironmentInfluenceToVelocity__8KarikariFv",
+      "emitEffect__2MRFP9LiveActorPCc",
+      "isFirstStep__2MRFPC9LiveActor",
+      "isOnGround__2MRFPC9LiveActor",
+      "onBind__2MRFP9LiveActor",
+      "onCalcGravity__2MRFP9LiveActor",
+      "onCalcShadow__2MRFP9LiveActorPCc",
+      "scale__Q29JGeometry8TVec3<f>Ff",
+      "setBtpFrameAndStop__2MRFPC9LiveActorf",
+      "setNerve__9LiveActorFPC5Nerve",
+      "startBck__2MRFPC9LiveActorPCcPCc",
+      "startBtp__2MRFPC9LiveActorPCc"
+    ]
+  },
+  {
+    "name": "exeLand__8KarikariFv",
+    "demangled": "Karikari::exeLand()",
+    "size": 460,
+    "calls": [
+      "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "applyEnvironmentInfluenceToVelocity__8KarikariFv",
+      "getPlayerPos__2MRFv",
+      "isFirstStep__2MRFPC9LiveActor",
+      "isGreaterStep__2MRFPC9LiveActorl",
+      "isStep__2MRFPC9LiveActorl",
+      "normalizeOrZero__2MRFPQ29JGeometry8TVec3<f>",
+      "onBind__2MRFP9LiveActor",
+      "onCalcGravity__2MRFP9LiveActor",
+      "onCalcShadow__2MRFP9LiveActorPCc",
+      "scale__Q29JGeometry8TVec3<f>Ff",
+      "setBtpFrameAndStop__2MRFPC9LiveActorf",
+      "setNerve__9LiveActorFPC5Nerve",
+      "squared__Q29JGeometry8TVec3<f>CFv",
+      "startBck__2MRFPC9LiveActorPCcPCc",
+      "startBtp__2MRFPC9LiveActorPCc",
+      "sub__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "tryDPDAttacked__8KarikariFv",
+      "tryTurnToDirection__8KarikariFRCQ29JGeometry8TVec3<f>f",
+      "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+      "zero__Q29JGeometry8TVec3<f>Fv"
+    ]
+  },
+  {
+    "name": "exeNoCalcWait__8KarikariFv",
+    "demangled": "Karikari::exeNoCalcWait()",
+    "size": 132,
+    "calls": [
+      "calcDistanceToPlayer__2MRFRCQ29JGeometry8TVec3<f>",
+      "isFirstStep__2MRFPC9LiveActor",
+      "offBind__2MRFP9LiveActor",
+      "offCalcGravity__2MRFP9LiveActor",
+      "offCalcShadow__2MRFP9LiveActorPCc",
+      "setNerve__9LiveActorFPC5Nerve",
+      "zero__Q29JGeometry8TVec3<f>Fv"
+    ]
+  },
+  {
+    "name": "exeWait__8KarikariFv",
+    "demangled": "Karikari::exeWait()",
+    "size": 300,
+    "calls": [
+      "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "applyEnvironmentInfluenceToVelocity__8KarikariFv",
+      "getPlayerPos__2MRFv",
+      "isFirstStep__2MRFPC9LiveActor",
+      "isOnGround__2MRFPC9LiveActor",
+      "onBind__2MRFP9LiveActor",
+      "onCalcGravity__2MRFP9LiveActor",
+      "onCalcShadow__2MRFP9LiveActorPCc",
+      "scale__Q29JGeometry8TVec3<f>Ff",
+      "setBtpFrameAndStop__2MRFPC9LiveActorf",
+      "setNerve__9LiveActorFPC5Nerve",
+      "squared__Q29JGeometry8TVec3<f>CFv",
+      "startBck__2MRFPC9LiveActorPCcPCc",
+      "startBtp__2MRFPC9LiveActorPCc",
+      "sub__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "tryDPDAttacked__8KarikariFv",
+      "validateHitSensors__2MRFP9LiveActor"
+    ]
+  },
+  {
+    "name": "exePrePursue__8KarikariFv",
+    "demangled": "Karikari::exePrePursue()",
+    "size": 424,
+    "calls": [
+      "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "applyEnvironmentInfluenceToVelocity__8KarikariFv",
+      "emitEffect__2MRFP9LiveActorPCc",
+      "getPlayerPos__2MRFv",
+      "isFirstStep__2MRFPC9LiveActor",
+      "isLessStep__2MRFPC9LiveActorl",
+      "isOnGround__2MRFPC9LiveActor",
+      "isStep__2MRFPC9LiveActorl",
+      "onBind__2MRFP9LiveActor",
+      "onCalcGravity__2MRFP9LiveActor",
+      "onCalcShadow__2MRFP9LiveActorPCc",
+      "scale__Q29JGeometry8TVec3<f>Ff",
+      "setBtpFrameAndStop__2MRFPC9LiveActorf",
+      "setNerve__9LiveActorFPC5Nerve",
+      "startBck__2MRFPC9LiveActorPCcPCc",
+      "startBtp__2MRFPC9LiveActorPCc",
+      "startSound__2MRFPC9LiveActorPCcll",
+      "sub__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "tryDPDAttacked__8KarikariFv",
+      "tryTurnToDirection__8KarikariFRCQ29JGeometry8TVec3<f>f",
+      "validateHitSensors__2MRFP9LiveActor"
+    ]
+  },
+  {
+    "name": "exePursue__8KarikariFv",
+    "demangled": "Karikari::exePursue()",
+    "size": 596,
+    "calls": [
+      "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "applyEnvironmentInfluenceToVelocity__8KarikariFv",
+      "emitEffect__2MRFP9LiveActorPCc",
+      "getObj__14SceneObjHolderCFi",
+      "getPlayerPos__2MRFv",
+      "getSceneObjHolder__2MRFv",
+      "isFirstStep__2MRFPC9LiveActor",
+      "isLessStep__2MRFPC9LiveActorl",
+      "isMaxNumCling__16KarikariDirectorCFv",
+      "isOnGround__2MRFPC9LiveActor",
+      "isStep__2MRFPC9LiveActorl",
+      "normalizeOrZero__2MRFPQ29JGeometry8TVec3<f>",
+      "onBind__2MRFP9LiveActor",
+      "onCalcGravity__2MRFP9LiveActor",
+      "onCalcShadow__2MRFP9LiveActorPCc",
+      "scale__Q29JGeometry8TVec3<f>Ff",
+      "setBckRate__2MRFPC9LiveActorf",
+      "setBtpFrameAndStop__2MRFPC9LiveActorf",
+      "setNerve__9LiveActorFPC5Nerve",
+      "squared__Q29JGeometry8TVec3<f>CFv",
+      "startBck__2MRFPC9LiveActorPCcPCc",
+      "startBtp__2MRFPC9LiveActorPCc",
+      "startSound__2MRFPC9LiveActorPCcll",
+      "sub__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "tryDPDAttacked__8KarikariFv",
+      "tryTurnToDirection__8KarikariFRCQ29JGeometry8TVec3<f>f",
+      "validateHitSensors__2MRFP9LiveActor",
+      "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>"
+    ]
+  },
+  {
+    "name": "exeWatchFor__8KarikariFv",
+    "demangled": "Karikari::exeWatchFor()",
+    "size": 444,
+    "calls": [
+      "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "applyEnvironmentInfluenceToVelocity__8KarikariFv",
+      "getObj__14SceneObjHolderCFi",
+      "getPlayerPos__2MRFv",
+      "getSceneObjHolder__2MRFv",
+      "isFirstStep__2MRFPC9LiveActor",
+      "isGreaterStep__2MRFPC9LiveActorl",
+      "isLessStep__2MRFPC9LiveActorl",
+      "isMaxNumCling__16KarikariDirectorCFv",
+      "isOnGround__2MRFPC9LiveActor",
+      "isStep__2MRFPC9LiveActorl",
+      "onBind__2MRFP9LiveActor",
+      "onCalcGravity__2MRFP9LiveActor",
+      "onCalcShadow__2MRFP9LiveActorPCc",
+      "scale__Q29JGeometry8TVec3<f>Ff",
+      "setBtpFrameAndStop__2MRFPC9LiveActorf",
+      "setNerve__9LiveActorFPC5Nerve",
+      "squared__Q29JGeometry8TVec3<f>CFv",
+      "startBck__2MRFPC9LiveActorPCcPCc",
+      "startBtp__2MRFPC9LiveActorPCc",
+      "sub__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "tryDPDAttacked__8KarikariFv",
+      "tryTurnToDirection__8KarikariFRCQ29JGeometry8TVec3<f>f",
+      "validateHitSensors__2MRFP9LiveActor"
+    ]
+  },
+  {
+    "name": "exePreCling__8KarikariFv",
+    "demangled": "Karikari::exePreCling()",
+    "size": 412,
+    "calls": [
+      "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "copyTrans__13FixedPositionCFPQ29JGeometry8TVec3<f>",
+      "getNerveStep__9LiveActorCFv",
+      "isFirstStep__2MRFPC9LiveActor",
+      "isGreaterStep__2MRFPC9LiveActorl",
+      "offBind__2MRFP9LiveActor",
+      "onBind__2MRFP9LiveActor",
+      "onCalcGravity__2MRFP9LiveActor",
+      "onCalcShadow__2MRFP9LiveActorPCc",
+      "scale__Q29JGeometry8TVec3<f>Ff",
+      "setBtpFrameAndStop__2MRFPC9LiveActorf",
+      "setNerve__9LiveActorFPC5Nerve",
+      "startBck__2MRFPC9LiveActorPCcPCc",
+      "startBtp__2MRFPC9LiveActorPCc",
+      "startLevelSound__2MRFPC9LiveActorPCclll",
+      "sub__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "tryDPDAttacked__8KarikariFv",
+      "validateHitSensors__2MRFP9LiveActor"
+    ]
+  },
+  {
+    "name": "exeCling__8KarikariFv",
+    "demangled": "Karikari::exeCling()",
+    "size": 248,
+    "calls": [
+      "copyTrans__13FixedPositionCFPQ29JGeometry8TVec3<f>",
+      "invalidateShadow__2MRFP9LiveActorPCc",
+      "isFirstStep__2MRFPC9LiveActor",
+      "offBind__2MRFP9LiveActor",
+      "offCalcGravity__2MRFP9LiveActor",
+      "offCalcShadow__2MRFP9LiveActorPCc",
+      "setBckRate__2MRFPC9LiveActorf",
+      "startBck__2MRFPC9LiveActorPCcPCc",
+      "startBtp__2MRFPC9LiveActorPCc",
+      "startLevelSound__2MRFPC9LiveActorPCclll",
+      "startSound__2MRFPC9LiveActorPCcll",
+      "tryDPDAttacked__8KarikariFv",
+      "validateHitSensors__2MRFP9LiveActor",
+      "zero__Q29JGeometry8TVec3<f>Fv"
+    ]
+  },
+  {
+    "name": "exeRelease__8KarikariFv",
+    "demangled": "Karikari::exeRelease()",
+    "size": 196,
+    "calls": [
+      "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "getPlayerPos__2MRFv",
+      "isFirstStep__2MRFPC9LiveActor",
+      "scale__Q29JGeometry8TVec3<f>Ff",
+      "set<f>__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>_v",
+      "setBtpFrameAndStop__2MRFPC9LiveActorf",
+      "setLength__Q29JGeometry8TVec3<f>Ff",
+      "setNerve__9LiveActorFPC5Nerve",
+      "startBtp__2MRFPC9LiveActorPCc",
+      "sub__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>"
+    ]
+  },
+  {
+    "name": "exeSpinAttacked__8KarikariFv",
+    "demangled": "Karikari::exeSpinAttacked()",
+    "size": 272,
+    "calls": [
+      "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "applyEnvironmentInfluenceToVelocity__8KarikariFv",
+      "isFirstStep__2MRFPC9LiveActor",
+      "isGreaterStep__2MRFPC9LiveActorl",
+      "onBind__2MRFP9LiveActor",
+      "onCalcGravity__2MRFP9LiveActor",
+      "onCalcShadow__2MRFP9LiveActorPCc",
+      "scale__Q29JGeometry8TVec3<f>Ff",
+      "setBckRate__2MRFPC9LiveActorf",
+      "setBtpFrameAndStop__2MRFPC9LiveActorf",
+      "setNerve__9LiveActorFPC5Nerve",
+      "startBck__2MRFPC9LiveActorPCcPCc",
+      "startBtp__2MRFPC9LiveActorPCc",
+      "startSystemME__2MRFPCc",
+      "validateHitSensors__2MRFP9LiveActor",
+      "validateShadow__2MRFP9LiveActorPCc"
+    ]
+  },
+  {
+    "name": "exeDPDAttacked__8KarikariFv",
+    "demangled": "Karikari::exeDPDAttacked()",
+    "size": 304,
+    "calls": [
+      "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "applyEnvironmentInfluenceToVelocity__8KarikariFv",
+      "emitEffect__2MRFP9LiveActorPCc",
+      "isFirstStep__2MRFPC9LiveActor",
+      "isOnGround__2MRFPC9LiveActor",
+      "onBind__2MRFP9LiveActor",
+      "onCalcGravity__2MRFP9LiveActor",
+      "onCalcShadow__2MRFP9LiveActorPCc",
+      "scale__Q29JGeometry8TVec3<f>Ff",
+      "setBckRate__2MRFPC9LiveActorf",
+      "setBtpFrameAndStop__2MRFPC9LiveActorf",
+      "setNerve__9LiveActorFPC5Nerve",
+      "startBck__2MRFPC9LiveActorPCcPCc",
+      "startBtp__2MRFPC9LiveActorPCc",
+      "startSound__2MRFPC9LiveActorPCcll",
+      "validateHitSensors__2MRFP9LiveActor",
+      "validateShadow__2MRFP9LiveActorPCc"
+    ]
+  },
+  {
+    "name": "exeFrozen__8KarikariFv",
+    "demangled": "Karikari::exeFrozen()",
+    "size": 288,
+    "calls": [
+      "emitEffect__2MRFP9LiveActorPCc",
+      "invalidateShadow__2MRFP9LiveActorPCc",
+      "isFirstStep__2MRFPC9LiveActor",
+      "isStep__2MRFPC9LiveActorl",
+      "offBind__2MRFP9LiveActor",
+      "offCalcGravity__2MRFP9LiveActor",
+      "offCalcShadow__2MRFP9LiveActorPCc",
+      "onBind__2MRFP9LiveActor",
+      "setBckFrameAndStop__2MRFPC9LiveActorf",
+      "setBtpFrameAndStop__2MRFPC9LiveActorf",
+      "setNerve__9LiveActorFPC5Nerve",
+      "startBck__2MRFPC9LiveActorPCcPCc",
+      "startBtp__2MRFPC9LiveActorPCc",
+      "startSound__2MRFPC9LiveActorPCcll",
+      "validateHitSensors__2MRFP9LiveActor",
+      "zero__Q29JGeometry8TVec3<f>Fv"
+    ]
+  },
+  {
+    "name": "exeFrozenRecover__8KarikariFv",
+    "demangled": "Karikari::exeFrozenRecover()",
+    "size": 356,
+    "calls": [
+      "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "__mi__Q29JGeometry8TVec3<f>CFv",
+      "applyEnvironmentInfluenceToVelocity__8KarikariFv",
+      "deleteEffect__2MRFP9LiveActorPCc",
+      "emitEffect__2MRFP9LiveActorPCc",
+      "isFirstStep__2MRFPC9LiveActor",
+      "isOnGround__2MRFPC9LiveActor",
+      "onBind__2MRFP9LiveActor",
+      "onCalcGravity__2MRFP9LiveActor",
+      "onCalcShadow__2MRFP9LiveActorPCc",
+      "scale__Q29JGeometry8TVec3<f>Ff",
+      "setBckRate__2MRFPC9LiveActorf",
+      "setBtpFrameAndStop__2MRFPC9LiveActorf",
+      "setNerve__9LiveActorFPC5Nerve",
+      "startBck__2MRFPC9LiveActorPCcPCc",
+      "startBtp__2MRFPC9LiveActorPCc",
+      "startSound__2MRFPC9LiveActorPCcll",
+      "validateHitSensors__2MRFP9LiveActor",
+      "validateShadow__2MRFP9LiveActorPCc"
+    ]
+  },
+  {
+    "name": "exeBlowOut__8KarikariFv",
+    "demangled": "Karikari::exeBlowOut()",
+    "size": 360,
+    "calls": [
+      "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "applyEnvironmentInfluenceToVelocity__8KarikariFv",
+      "generateItem__8KarikariFl",
+      "isBinded__2MRFPC9LiveActor",
+      "isFirstStep__2MRFPC9LiveActor",
+      "isGreaterStep__2MRFPC9LiveActorl",
+      "isNerve__9LiveActorCFPC5Nerve",
+      "onBind__2MRFP9LiveActor",
+      "onCalcGravity__2MRFP9LiveActor",
+      "onCalcShadow__2MRFP9LiveActorPCc",
+      "scale__Q29JGeometry8TVec3<f>Ff",
+      "setBckRate__2MRFPC9LiveActorf",
+      "setBtpFrameAndStop__2MRFPC9LiveActorf",
+      "startBck__2MRFPC9LiveActorPCcPCc",
+      "startBlowHitSound__2MRFPC9LiveActor",
+      "startBtp__2MRFPC9LiveActorPCc",
+      "startSound__2MRFPC9LiveActorPCcll",
+      "validateHitSensors__2MRFP9LiveActor",
+      "validateShadow__2MRFP9LiveActorPCc"
+    ]
+  },
+  {
+    "name": "exeInTornado__8KarikariFv",
+    "demangled": "Karikari::exeInTornado()",
+    "size": 304,
+    "calls": [
+      "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "applyEnvironmentInfluenceToVelocity__8KarikariFv",
+      "emitEffect__2MRFP9LiveActorPCc",
+      "isFirstStep__2MRFPC9LiveActor",
+      "isOnGround__2MRFPC9LiveActor",
+      "onBind__2MRFP9LiveActor",
+      "onCalcGravity__2MRFP9LiveActor",
+      "onCalcShadow__2MRFP9LiveActorPCc",
+      "scale__Q29JGeometry8TVec3<f>Ff",
+      "setBckRate__2MRFPC9LiveActorf",
+      "setBtpFrameAndStop__2MRFPC9LiveActorf",
+      "setNerve__9LiveActorFPC5Nerve",
+      "startBck__2MRFPC9LiveActorPCcPCc",
+      "startBtp__2MRFPC9LiveActorPCc",
+      "startLevelSound__2MRFPC9LiveActorPCclll",
+      "validateHitSensors__2MRFP9LiveActor"
+    ]
+  },
+  {
+    "name": "exePress__8KarikariFv",
+    "demangled": "Karikari::exePress()",
+    "size": 248,
+    "calls": [
+      "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "applyEnvironmentInfluenceToVelocity__8KarikariFv",
+      "invalidateHitSensors__2MRFP9LiveActor",
+      "isFirstStep__2MRFPC9LiveActor",
+      "isGreaterStep__2MRFPC9LiveActorl",
+      "onBind__2MRFP9LiveActor",
+      "onCalcGravity__2MRFP9LiveActor",
+      "onCalcShadow__2MRFP9LiveActorPCc",
+      "scale__Q29JGeometry8TVec3<f>Ff",
+      "setBtpFrameAndStop__2MRFPC9LiveActorf",
+      "startBck__2MRFPC9LiveActorPCcPCc",
+      "startBtp__2MRFPC9LiveActorPCc",
+      "startSound__2MRFPC9LiveActorPCcll"
+    ]
+  },
+  {
+    "name": "tryBlowOut__8KarikariFRCQ29JGeometry8TVec3<f>b",
+    "demangled": "Karikari::tryBlowOut(const JGeometry::TVec3<float>&, bool)",
+    "size": 408,
+    "calls": [
+      "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "_restgpr_29",
+      "_savegpr_29",
+      "emitEffect__2MRFP9LiveActorPCc",
+      "getObj__14SceneObjHolderCFi",
+      "getSceneObjHolder__2MRFv",
+      "isNerve__9LiveActorCFPC5Nerve",
+      "scale__Q29JGeometry8TVec3<f>Ff",
+      "setLength__Q29JGeometry8TVec3<f>Ff",
+      "setNerve__9LiveActorFPC5Nerve",
+      "sub__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "unregistCling__16KarikariDirectorFP8Karikari",
+      "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>"
+    ]
+  },
+  {
+    "name": "tryElectricKill__8KarikariFv",
+    "demangled": "Karikari::tryElectricKill()",
+    "size": 148,
+    "calls": [
+      "emitEffect__2MRFP9LiveActorPCc",
+      "isNerve__9LiveActorCFPC5Nerve"
+    ]
+  },
+  {
+    "name": "tryHipDropRelease__8KarikariFv",
+    "demangled": "Karikari::tryHipDropRelease()",
+    "size": 160,
+    "calls": [
+      "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "getPlayerPos__2MRFv",
+      "scale__Q29JGeometry8TVec3<f>Ff",
+      "set<f>__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>_v",
+      "setLength__Q29JGeometry8TVec3<f>Ff",
+      "setNerve__9LiveActorFPC5Nerve",
+      "sub__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>"
+    ]
+  },
+  {
+    "name": "tryDPDRelease__8KarikariFRCQ29JGeometry8TVec2<f>",
+    "demangled": "Karikari::tryDPDRelease(const JGeometry::TVec2<float>&)",
+    "size": 60,
+    "calls": [
+      "setNerve__9LiveActorFPC5Nerve",
+      "setVelocityFromCursorMove__8KarikariFRCQ29JGeometry8TVec2<f>"
+    ]
+  },
+  {
+    "name": "tryDPDAttacked__8KarikariFv",
+    "demangled": "Karikari::tryDPDAttacked()",
+    "size": 436,
+    "calls": [
+      "calcScreenPosition__2MRFPQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec3<f>",
+      "getCorePadPointingPosBasedOnScreen__2MRFPQ29JGeometry8TVec2<f>l",
+      "getObj__14SceneObjHolderCFi",
+      "getSceneObjHolder__2MRFv",
+      "getStarPointerLastPointedPort__2MRFPC9LiveActor",
+      "getStarPointerScreenVelocity__2MRFl",
+      "inv_sqrt__Q29JGeometry8TUtil<f>Ff",
+      "isNearZero__2MRFRCQ29JGeometry8TVec2<f>f",
+      "isNerve__9LiveActorCFPC5Nerve",
+      "isStarPointerPointing2POnPressButton__2MRFPC9LiveActorPCcbb",
+      "requestRelease__16KarikariDirectorFP8KarikariQ29JGeometry8TVec2<f>f",
+      "setNerve__9LiveActorFPC5Nerve",
+      "setVelocityFromCursorMove__8KarikariFRCQ29JGeometry8TVec2<f>",
+      "squared__Q29JGeometry8TVec2<f>CFv",
+      "startDPDHitSound__2MRFv"
+    ]
+  },
+  {
+    "name": "setVelocityFromCursorMove__8KarikariFRCQ29JGeometry8TVec2<f>",
+    "demangled": "Karikari::setVelocityFromCursorMove(const JGeometry::TVec2<float>&)",
+    "size": 276,
+    "calls": [
+      "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "__mi__Q29JGeometry8TVec3<f>CFv",
+      "dot__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>",
+      "getCamXdir__2MRFv",
+      "getCamYdir__2MRFv",
+      "scale__Q29JGeometry8TVec3<f>Ff",
+      "setLength__Q29JGeometry8TVec3<f>Ff",
+      "sub__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>"
+    ]
+  },
+  {
+    "name": "makeActorDead__8KarikariFv",
+    "demangled": "Karikari::makeActorDead()",
+    "size": 128,
+    "calls": [
+      "getObj__14SceneObjHolderCFi",
+      "getSceneObjHolder__2MRFv",
+      "isNerve__9LiveActorCFPC5Nerve",
+      "isValidSwitchDead__2MRFPC9LiveActor",
+      "makeActorDead__9LiveActorFv",
+      "onSwitchDead__2MRFP9LiveActor",
+      "unregistCling__16KarikariDirectorFP8Karikari"
+    ]
+  },
+  {
+    "name": "kill__8KarikariFv",
+    "demangled": "Karikari::kill()",
+    "size": 84,
+    "calls": [
+      "emitEffect__2MRFP9LiveActorPCc",
+      "kill__9LiveActorFv",
+      "startSound__2MRFPC9LiveActorPCcll"
+    ]
+  },
+  {
+    "name": "generateItem__8KarikariFl",
+    "demangled": "Karikari::generateItem(long)",
+    "size": 152,
+    "calls": [
+      "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "__mi__Q29JGeometry8TVec3<f>CFv",
+      "appearStarPiece__2MRFPC7NameObjRCQ29JGeometry8TVec3<f>lffb",
+      "scale__Q29JGeometry8TVec3<f>Ff",
+      "startSound__2MRFPC9LiveActorPCcll"
+    ]
+  },
+  {
+    "name": "attackSensor__8KarikariFP9HitSensorP9HitSensor",
+    "demangled": "Karikari::attackSensor(HitSensor*, HitSensor*)",
+    "size": 376,
+    "calls": [
+      "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "_restgpr_29",
+      "_savegpr_29",
+      "getObj__14SceneObjHolderCFi",
+      "getSceneObjHolder__2MRFv",
+      "isNerve__9LiveActorCFPC5Nerve",
+      "isSensorEnemy__2MRFPC9HitSensor",
+      "isSensorPlayer__2MRFPC9HitSensor",
+      "isType__9HitSensorCFUl",
+      "killedInFrozenState__8KarikariFv",
+      "registCling__16KarikariDirectorFP8Karikari",
+      "sendMsgPush__2MRFP9HitSensorP9HitSensor",
+      "setNerve__9LiveActorFPC5Nerve",
+      "squared__Q29JGeometry8TVec3<f>CFv",
+      "sub__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "zero__Q29JGeometry8TVec3<f>Fv"
+    ]
+  },
+  {
+    "name": "receiveOtherMsg__8KarikariFUlP9HitSensorP9HitSensor",
+    "demangled": "Karikari::receiveOtherMsg(unsigned long, HitSensor*, HitSensor*)",
+    "size": 124,
+    "calls": [
+      "isMsgHitmarkEmit__2MRFUl",
+      "isMsgInhaleBlackHole__2MRFUl"
+    ]
+  },
+  {
+    "name": "receiveMsgPlayerAttack__8KarikariFUlP9HitSensorP9HitSensor",
+    "demangled": "Karikari::receiveMsgPlayerAttack(unsigned long, HitSensor*, HitSensor*)",
+    "size": 220,
+    "calls": [
+      "_restgpr_28",
+      "_savegpr_28",
+      "isMsgLockOnStarPieceShoot__2MRFUl",
+      "isMsgPlayerHitAll__2MRFUl",
+      "isMsgStarPieceAttack__2MRFUl",
+      "isNerve__9LiveActorCFPC5Nerve",
+      "tryBlowOut__8KarikariFRCQ29JGeometry8TVec3<f>b"
+    ]
+  },
+  {
+    "name": "receiveMsgPush__8KarikariFP9HitSensorP9HitSensor",
+    "demangled": "Karikari::receiveMsgPush(HitSensor*, HitSensor*)",
+    "size": 268,
+    "calls": [
+      "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "isNerve__9LiveActorCFPC5Nerve",
+      "isSensorEnemy__2MRFPC9HitSensor",
+      "isSensorMapObj__2MRFPC9HitSensor",
+      "normalizeOrZero__2MRFPQ29JGeometry8TVec3<f>",
+      "sub__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>"
+    ]
+  },
+  {
+    "name": "receiveMsgEnemyAttack__8KarikariFUlP9HitSensorP9HitSensor",
+    "demangled": "Karikari::receiveMsgEnemyAttack(unsigned long, HitSensor*, HitSensor*)",
+    "size": 632,
+    "calls": [
+      "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "_restgpr_28",
+      "_savegpr_28",
+      "getObj__14SceneObjHolderCFi",
+      "getSceneObjHolder__2MRFv",
+      "isMsgExplosionAttack__2MRFUl",
+      "isMsgToEnemyAttackBlow__2MRFUl",
+      "isMsgToEnemyAttackTrample__2MRFUl",
+      "isNerve__9LiveActorCFPC5Nerve",
+      "killedInFrozenState__8KarikariFv",
+      "normalizeOrZero__2MRFPQ29JGeometry8TVec3<f>",
+      "scale__Q29JGeometry8TVec3<f>Ff",
+      "set<f>__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>_v",
+      "setLength__Q29JGeometry8TVec3<f>Ff",
+      "setNerve__9LiveActorFPC5Nerve",
+      "sub__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "unregistCling__16KarikariDirectorFP8Karikari"
+    ]
+  },
+  {
+    "name": "tryTurnToDirection__8KarikariFRCQ29JGeometry8TVec3<f>f",
+    "demangled": "Karikari::tryTurnToDirection(const JGeometry::TVec3<float>&, float)",
+    "size": 476,
+    "calls": [
+      "PSVECCrossProduct",
+      "PSVECMag",
+      "atan2___Q25JMath18TAtanTable<1024,f>CFff",
+      "cos",
+      "dot__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>",
+      "scale__Q29JGeometry8TVec3<f>FfRCQ29JGeometry8TVec3<f>",
+      "set<f>__Q29JGeometry8TVec3<f>Ffff_v",
+      "set<f>__Q29JGeometry8TVec4<f>Fffff_v",
+      "sin"
+    ]
+  },
+  {
+    "name": "calcAndSetBaseMtx__8KarikariFv",
+    "demangled": "Karikari::calcAndSetBaseMtx()",
+    "size": 108,
+    "calls": [
+      "calcMtxFromGravityAndZAxis__2MRFPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>PC9LiveActorRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+      "isNerve__9LiveActorCFPC5Nerve",
+      "setBaseTRMtx__2MRFP9LiveActorRCQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>"
+    ]
+  },
+  {
+    "name": "__dt__8KarikariFv",
+    "demangled": "Karikari::~Karikari()",
+    "size": 92,
+    "calls": [
+      "__dl__FPv",
+      "__dt__7NameObjFv"
+    ]
+  },
+  {
+    "name": "__sinit_\\Karikari_cpp",
+    "demangled": null,
+    "size": 172,
+    "calls": [
+      "__ct__Q211NrvKarikari15HostTypeNrvFallFv",
+      "__ct__Q211NrvKarikari15HostTypeNrvLandFv",
+      "__ct__Q211NrvKarikari15HostTypeNrvWaitFv",
+      "__ct__Q211NrvKarikari16HostTypeNrvClingFv",
+      "__ct__Q211NrvKarikari16HostTypeNrvPressFv",
+      "__ct__Q211NrvKarikari17HostTypeNrvFrozenFv",
+      "__ct__Q211NrvKarikari17HostTypeNrvPursueFv",
+      "__ct__Q211NrvKarikari18HostTypeNrvBlowOutFv",
+      "__ct__Q211NrvKarikari18HostTypeNrvReleaseFv",
+      "__ct__Q211NrvKarikari19HostTypeNrvPreClingFv",
+      "__ct__Q211NrvKarikari19HostTypeNrvWatchForFv",
+      "__ct__Q211NrvKarikari20HostTypeNrvInTornadoFv",
+      "__ct__Q211NrvKarikari20HostTypeNrvPrePursueFv",
+      "__ct__Q211NrvKarikari21HostTypeNrvNoCalcWaitFv",
+      "__ct__Q211NrvKarikari22HostTypeNrvDPDAttackedFv",
+      "__ct__Q211NrvKarikari23HostTypeNrvSpinAttackedFv",
+      "__ct__Q211NrvKarikari24HostTypeNrvFrozenRecoverFv",
+      "__ct__Q211NrvKarikari27HostTypeNrvBlowOutStarPieceFv"
+    ]
+  },
+  {
+    "name": "__ct__Q211NrvKarikari15HostTypeNrvFallFv",
+    "demangled": "NrvKarikari::HostTypeNrvFall::HostTypeNrvFall()",
+    "size": 16,
+    "calls": []
+  },
+  {
+    "name": "__ct__Q211NrvKarikari15HostTypeNrvLandFv",
+    "demangled": "NrvKarikari::HostTypeNrvLand::HostTypeNrvLand()",
+    "size": 16,
+    "calls": []
+  },
+  {
+    "name": "__ct__Q211NrvKarikari21HostTypeNrvNoCalcWaitFv",
+    "demangled": "NrvKarikari::HostTypeNrvNoCalcWait::HostTypeNrvNoCalcWait()",
+    "size": 16,
+    "calls": []
+  },
+  {
+    "name": "__ct__Q211NrvKarikari15HostTypeNrvWaitFv",
+    "demangled": "NrvKarikari::HostTypeNrvWait::HostTypeNrvWait()",
+    "size": 16,
+    "calls": []
+  },
+  {
+    "name": "__ct__Q211NrvKarikari20HostTypeNrvPrePursueFv",
+    "demangled": "NrvKarikari::HostTypeNrvPrePursue::HostTypeNrvPrePursue()",
+    "size": 16,
+    "calls": []
+  },
+  {
+    "name": "__ct__Q211NrvKarikari17HostTypeNrvPursueFv",
+    "demangled": "NrvKarikari::HostTypeNrvPursue::HostTypeNrvPursue()",
+    "size": 16,
+    "calls": []
+  },
+  {
+    "name": "__ct__Q211NrvKarikari19HostTypeNrvWatchForFv",
+    "demangled": "NrvKarikari::HostTypeNrvWatchFor::HostTypeNrvWatchFor()",
+    "size": 16,
+    "calls": []
+  },
+  {
+    "name": "__ct__Q211NrvKarikari19HostTypeNrvPreClingFv",
+    "demangled": "NrvKarikari::HostTypeNrvPreCling::HostTypeNrvPreCling()",
+    "size": 16,
+    "calls": []
+  },
+  {
+    "name": "__ct__Q211NrvKarikari16HostTypeNrvClingFv",
+    "demangled": "NrvKarikari::HostTypeNrvCling::HostTypeNrvCling()",
+    "size": 16,
+    "calls": []
+  },
+  {
+    "name": "__ct__Q211NrvKarikari18HostTypeNrvReleaseFv",
+    "demangled": "NrvKarikari::HostTypeNrvRelease::HostTypeNrvRelease()",
+    "size": 16,
+    "calls": []
+  },
+  {
+    "name": "__ct__Q211NrvKarikari23HostTypeNrvSpinAttackedFv",
+    "demangled": "NrvKarikari::HostTypeNrvSpinAttacked::HostTypeNrvSpinAttacked()",
+    "size": 16,
+    "calls": []
+  },
+  {
+    "name": "__ct__Q211NrvKarikari22HostTypeNrvDPDAttackedFv",
+    "demangled": "NrvKarikari::HostTypeNrvDPDAttacked::HostTypeNrvDPDAttacked()",
+    "size": 16,
+    "calls": []
+  },
+  {
+    "name": "__ct__Q211NrvKarikari17HostTypeNrvFrozenFv",
+    "demangled": "NrvKarikari::HostTypeNrvFrozen::HostTypeNrvFrozen()",
+    "size": 16,
+    "calls": []
+  },
+  {
+    "name": "__ct__Q211NrvKarikari24HostTypeNrvFrozenRecoverFv",
+    "demangled": "NrvKarikari::HostTypeNrvFrozenRecover::HostTypeNrvFrozenRecover()",
+    "size": 16,
+    "calls": []
+  },
+  {
+    "name": "__ct__Q211NrvKarikari18HostTypeNrvBlowOutFv",
+    "demangled": "NrvKarikari::HostTypeNrvBlowOut::HostTypeNrvBlowOut()",
+    "size": 16,
+    "calls": []
+  },
+  {
+    "name": "__ct__Q211NrvKarikari27HostTypeNrvBlowOutStarPieceFv",
+    "demangled": "NrvKarikari::HostTypeNrvBlowOutStarPiece::HostTypeNrvBlowOutStarPiece()",
+    "size": 16,
+    "calls": []
+  },
+  {
+    "name": "__ct__Q211NrvKarikari20HostTypeNrvInTornadoFv",
+    "demangled": "NrvKarikari::HostTypeNrvInTornado::HostTypeNrvInTornado()",
+    "size": 16,
+    "calls": []
+  },
+  {
+    "name": "__ct__Q211NrvKarikari16HostTypeNrvPressFv",
+    "demangled": "NrvKarikari::HostTypeNrvPress::HostTypeNrvPress()",
+    "size": 16,
+    "calls": []
+  },
+  {
+    "name": "execute__Q211NrvKarikari16HostTypeNrvPressCFP5Spine",
+    "demangled": "NrvKarikari::HostTypeNrvPress::execute(Spine*) const",
+    "size": 8,
+    "calls": []
+  },
+  {
+    "name": "execute__Q211NrvKarikari20HostTypeNrvInTornadoCFP5Spine",
+    "demangled": "NrvKarikari::HostTypeNrvInTornado::execute(Spine*) const",
+    "size": 8,
+    "calls": []
+  },
+  {
+    "name": "execute__Q211NrvKarikari27HostTypeNrvBlowOutStarPieceCFP5Spine",
+    "demangled": "NrvKarikari::HostTypeNrvBlowOutStarPiece::execute(Spine*) const",
+    "size": 8,
+    "calls": []
+  },
+  {
+    "name": "execute__Q211NrvKarikari18HostTypeNrvBlowOutCFP5Spine",
+    "demangled": "NrvKarikari::HostTypeNrvBlowOut::execute(Spine*) const",
+    "size": 8,
+    "calls": []
+  },
+  {
+    "name": "execute__Q211NrvKarikari24HostTypeNrvFrozenRecoverCFP5Spine",
+    "demangled": "NrvKarikari::HostTypeNrvFrozenRecover::execute(Spine*) const",
+    "size": 8,
+    "calls": []
+  },
+  {
+    "name": "execute__Q211NrvKarikari17HostTypeNrvFrozenCFP5Spine",
+    "demangled": "NrvKarikari::HostTypeNrvFrozen::execute(Spine*) const",
+    "size": 8,
+    "calls": []
+  },
+  {
+    "name": "execute__Q211NrvKarikari22HostTypeNrvDPDAttackedCFP5Spine",
+    "demangled": "NrvKarikari::HostTypeNrvDPDAttacked::execute(Spine*) const",
+    "size": 8,
+    "calls": []
+  },
+  {
+    "name": "execute__Q211NrvKarikari23HostTypeNrvSpinAttackedCFP5Spine",
+    "demangled": "NrvKarikari::HostTypeNrvSpinAttacked::execute(Spine*) const",
+    "size": 8,
+    "calls": []
+  },
+  {
+    "name": "execute__Q211NrvKarikari18HostTypeNrvReleaseCFP5Spine",
+    "demangled": "NrvKarikari::HostTypeNrvRelease::execute(Spine*) const",
+    "size": 8,
+    "calls": []
+  },
+  {
+    "name": "execute__Q211NrvKarikari16HostTypeNrvClingCFP5Spine",
+    "demangled": "NrvKarikari::HostTypeNrvCling::execute(Spine*) const",
+    "size": 8,
+    "calls": []
+  },
+  {
+    "name": "execute__Q211NrvKarikari19HostTypeNrvPreClingCFP5Spine",
+    "demangled": "NrvKarikari::HostTypeNrvPreCling::execute(Spine*) const",
+    "size": 8,
+    "calls": []
+  },
+  {
+    "name": "execute__Q211NrvKarikari19HostTypeNrvWatchForCFP5Spine",
+    "demangled": "NrvKarikari::HostTypeNrvWatchFor::execute(Spine*) const",
+    "size": 8,
+    "calls": []
+  },
+  {
+    "name": "execute__Q211NrvKarikari17HostTypeNrvPursueCFP5Spine",
+    "demangled": "NrvKarikari::HostTypeNrvPursue::execute(Spine*) const",
+    "size": 8,
+    "calls": []
+  },
+  {
+    "name": "execute__Q211NrvKarikari20HostTypeNrvPrePursueCFP5Spine",
+    "demangled": "NrvKarikari::HostTypeNrvPrePursue::execute(Spine*) const",
+    "size": 8,
+    "calls": []
+  },
+  {
+    "name": "execute__Q211NrvKarikari15HostTypeNrvWaitCFP5Spine",
+    "demangled": "NrvKarikari::HostTypeNrvWait::execute(Spine*) const",
+    "size": 8,
+    "calls": []
+  },
+  {
+    "name": "execute__Q211NrvKarikari21HostTypeNrvNoCalcWaitCFP5Spine",
+    "demangled": "NrvKarikari::HostTypeNrvNoCalcWait::execute(Spine*) const",
+    "size": 8,
+    "calls": []
+  },
+  {
+    "name": "execute__Q211NrvKarikari15HostTypeNrvLandCFP5Spine",
+    "demangled": "NrvKarikari::HostTypeNrvLand::execute(Spine*) const",
+    "size": 8,
+    "calls": []
+  },
+  {
+    "name": "execute__Q211NrvKarikari15HostTypeNrvFallCFP5Spine",
+    "demangled": "NrvKarikari::HostTypeNrvFall::execute(Spine*) const",
+    "size": 8,
+    "calls": []
+  },
+  {
+    "name": "squared__Q29JGeometry8TVec2<f>CFv",
+    "demangled": "JGeometry::TVec2<float>::squared() const",
+    "size": 24,
+    "calls": []
+  }
+]

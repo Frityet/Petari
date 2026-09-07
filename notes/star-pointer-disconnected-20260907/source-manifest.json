@@ -1,0 +1,7 @@
+{
+  "header_reference": "decomp/include/Game/Screen/StarPointerTarget.hpp",
+  "header_destination": "src/Game/Screen/StarPointerTarget.hpp",
+  "sha256": "499cd69e5d9a664345a7a5a4f38c18651a6e2df149ec57a141fb1f2299b62d5d",
+  "query_reference": "decomp/src/Game/Util/StarPointerUtil.cpp:85-94",
+  "last_channel_reference": "decomp/src/Game/Util/StarPointerUtil.cpp:479-481"
+}

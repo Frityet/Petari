@@ -1,4 +1,8 @@
 #include "Game/Scene/SceneObjHolder.hpp"
+#include "Game/Effect/EffectSystem.hpp"
+#include "compat/EffectSystemOwnership.hpp"
+#include "runtime/SceneScheduler.hpp"
+#include "runtime/RuntimeContext.hpp"
 #include "Game/Scene/PlacementStateChecker.hpp"
 
 #include "Game/AreaObj/AreaObjContainer.hpp"
@@ -32,6 +36,7 @@
 
 #include <algorithm>
 #include <memory>
+#include <optional>
 #include <stdexcept>
 #include <utility>
 
@@ -78,11 +83,22 @@ namespace smgpc::scene {
             throw std::logic_error("a SceneObjHolder is already bound to the active scene");
         }
 
+        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
+            if (auto* scheduler = smgpc::runtime::try_active_scene_scheduler()) {
+                _game_allocation_domain = smgpc::compat::JkrAllocationDomain::create(runtime->host_heaps(), 8U * 1024U * 1024U);
+                _game_allocation_binding = std::make_unique<smgpc::runtime::SceneSchedulerAllocationBinding>(*scheduler, _game_allocation_domain);
+            }
+        }
+
         sCurrentSceneObjHolder = _holder;
         sCurrentSceneObjHolderBinding = this;
     }
 
     SceneObjHolderBinding::~SceneObjHolderBinding() {
+        if (_effect_scheduler) {
+            (void)_effect_scheduler->remove_registrations_since(_effect_registration_marker);
+        }
+        if (_effect_system_ownership) _effect_system_ownership->retire();
         if (sCurrentSceneObjHolder == _holder) {
             sCurrentSceneObjHolder = nullptr;
             sCurrentSceneObjHolderBinding = nullptr;
@@ -105,6 +121,25 @@ namespace smgpc::scene {
         _global_gravity_ownership.reset();
         _area_obj_runtime.reset();
         _captured_frame_blur_service.reset();
+        _effect_system_ownership.reset();
+        _game_allocation_binding.reset();
+        _game_allocation_domain.reset();
+    }
+
+    void SceneObjHolderBinding::initialize_effect_system(unsigned particles, unsigned emitters, std::size_t byte_budget) {
+        smgpc::compat::JkrHostAllocationScope host;
+        if (_effect_system_ownership || _holder->isExist(SceneObj_EffectSystem))
+            throw std::logic_error("scene effect system already initialized");
+        _effect_scheduler = smgpc::runtime::try_active_scene_scheduler();
+        if (!_effect_scheduler) throw std::logic_error("EffectSystem requires the active scene scheduler");
+        _effect_registration_marker = _effect_scheduler->registration_marker();
+        _effect_system_ownership = std::make_unique<smgpc::compat::EffectSystemOwnership>(byte_budget);
+        _holder->create(SceneObj_EffectSystem);
+        _effect_system_ownership->entry(particles, emitters);
+    }
+
+    smgpc::compat::EffectSystemOwnership* current_effect_system_ownership() noexcept {
+        return sCurrentSceneObjHolderBinding ? sCurrentSceneObjHolderBinding->_effect_system_ownership.get() : nullptr;
     }
 
     void SceneObjHolderBinding::init_after_placement() {
@@ -118,7 +153,12 @@ namespace smgpc::scene {
                 _next_registration_postpass_index];
             if (!smgpc::compat::
                      name_obj_runtime_postpass_is_delegated(object)) {
-                object->initAfterPlacement();
+                if (_game_allocation_domain) {
+                    smgpc::compat::JkrAllocationScope heap(_game_allocation_domain);
+                    object->initAfterPlacement();
+                } else {
+                    object->initAfterPlacement();
+                }
             }
             ++_next_registration_postpass_index;
         }
@@ -210,6 +250,10 @@ NameObj *SceneObjHolder::create(int id) {
     ++binding->_construction_depth;
     auto object = std::unique_ptr<NameObj>{};
     try {
+        std::optional<smgpc::compat::JkrAllocationScope> game_heap;
+        if (binding->_game_allocation_domain) {
+            game_heap.emplace(binding->_game_allocation_domain);
+        }
         object.reset(newEachObj(id));
         if (object == nullptr) {
             if (binding->_provisional_slots.size() != slot_checkpoint ||
@@ -325,6 +369,10 @@ NameObj *SceneObjHolder::newEachObj(int id) {
     }
 
     switch (id) {
+    case SceneObj_EffectSystem:
+        if (!sCurrentSceneObjHolderBinding->_effect_system_ownership)
+            throw std::logic_error("EffectSystem requires scene heap initialization");
+        return sCurrentSceneObjHolderBinding->_effect_system_ownership->construct();
     case SceneObj_ClippingDirector:
         return new ClippingDirector();
     case SceneObj_LightDirector:

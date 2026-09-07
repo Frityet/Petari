@@ -1,0 +1,68 @@
+[
+  {
+    "name": "calcRailDirectionAtCoord__2MRFPQ29JGeometry8TVec3<f>PC9LiveActorf",
+    "demangled_name": "MR::calcRailDirectionAtCoord(JGeometry::TVec3<float>*, const LiveActor*, float)",
+    "size": "16",
+    "match_percent": 100.0
+  },
+  {
+    "name": "calcRailPosAndDirectionAtCoord__2MRFPQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>PC9LiveActorf",
+    "demangled_name": "MR::calcRailPosAndDirectionAtCoord(JGeometry::TVec3<float>*, JGeometry::TVec3<float>*, const LiveActor*, float)",
+    "size": "96",
+    "match_percent": 100.0
+  },
+  {
+    "name": "calcDistanceToCurrentAndNextRailPoint__2MRFPC9LiveActorPfPf",
+    "demangled_name": "MR::calcDistanceToCurrentAndNextRailPoint(const LiveActor*, float*, float*)",
+    "size": "288",
+    "match_percent": 93.541664
+  },
+  {
+    "name": "getRailDirection__2MRFPC9LiveActor",
+    "demangled_name": "MR::getRailDirection(const LiveActor*)",
+    "size": "12",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getRailCurrentPointArgF32NoInit__22@unnamed@RailUtil_cpp@FPC9LiveActorlPf",
+    "demangled_name": "@unnamed@RailUtil_cpp@::getRailCurrentPointArgF32NoInit(const LiveActor*, long, float*)",
+    "size": "136",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getRailNextPointArgF32NoInit__22@unnamed@RailUtil_cpp@FPC9LiveActorlPf",
+    "demangled_name": "@unnamed@RailUtil_cpp@::getRailNextPointArgF32NoInit(const LiveActor*, long, float*)",
+    "size": "136",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getCurrentRailPointArg1NoInit__2MRFPC9LiveActorPl",
+    "demangled_name": "MR::getCurrentRailPointArg1NoInit(const LiveActor*, long*)",
+    "size": "76",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getCurrentRailPointArg1NoInit__2MRFPC9LiveActorPf",
+    "demangled_name": "MR::getCurrentRailPointArg1NoInit(const LiveActor*, float*)",
+    "size": "12",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getNextRailPointArg1NoInit__2MRFPC9LiveActorPl",
+    "demangled_name": "MR::getNextRailPointArg1NoInit(const LiveActor*, long*)",
+    "size": "76",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getNextRailPointArg1NoInit__2MRFPC9LiveActorPf",
+    "demangled_name": "MR::getNextRailPointArg1NoInit(const LiveActor*, float*)",
+    "size": "12",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getRailPointArgName__22@unnamed@RailUtil_cpp@Fl",
+    "demangled_name": "@unnamed@RailUtil_cpp@::getRailPointArgName(long)",
+    "size": "140",
+    "match_percent": 100.0
+  }
+]

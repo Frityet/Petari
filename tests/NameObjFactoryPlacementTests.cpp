@@ -8,6 +8,7 @@
 #include "Game/NPC/DemoRabbit.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/JMapInfo.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/CollisionPartsCompat.hpp"
@@ -636,6 +637,14 @@ namespace {
         actor->makeActorAppeared();
         require(line_query_hits_registered_wall(collision),
                 "reappeared CollisionParts owners must restore their retained map collision");
+        MR::invalidateCollisionParts(actor);
+        MR::invalidateCollisionParts(actor);
+        require(!line_query_hits_registered_wall(collision),
+                "explicit invalidation must remove an already-built KCL from map queries");
+        actor->makeActorDead();
+        actor->makeActorAppeared();
+        require(!line_query_hits_registered_wall(collision),
+                "actor appearance must not undo explicit CollisionParts invalidation");
         object.reset();
         require(!line_query_hits_registered_wall(collision) &&
                     !triangle.isValid() && triangle.getHostName() == nullptr,

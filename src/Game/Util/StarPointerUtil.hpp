@@ -12,6 +12,9 @@ namespace MR {
     void initStarPointerTarget(LiveActor* pActor, f32 radius, const TVec3f& rOffset);
     bool isStarPointerPointing1PWithoutCheckZ(const LiveActor* pActor, const char*, bool, bool);
     bool isStarPointerPointing2P(const LiveActor* pActor, const char*, bool, bool);
+    bool isStarPointerPointing2POnPressButton(const LiveActor*, const char*, bool, bool);
+    bool isStarPointerPointing2POnTriggerButton(const LiveActor*, const char*, bool, bool);
+    s32* getStarPointerLastPointedPort(const LiveActor*);
     bool isStarPointerPointingFileSelect(const LiveActor* pActor);
     bool isExistStarPointerTarget(const LiveActor* pActor);
     void setStarPointerTargetRadius3d(LiveActor* pActor, f32 radius);

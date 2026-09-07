@@ -1,0 +1,19 @@
+[
+  {
+    "target": "smg-pc-talk-real-or-absent-tests",
+    "build": 255
+  },
+  {
+    "target": "smg-pc-nameobj-factory-placement-tests",
+    "build": 255
+  },
+  {
+    "target": "smg-pc-star-pointer-real-or-absent-tests",
+    "build": 0,
+    "run": 0
+  },
+  {
+    "target": "smg-pc-showcase",
+    "build": 255
+  }
+]

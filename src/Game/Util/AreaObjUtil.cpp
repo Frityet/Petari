@@ -1,6 +1,9 @@
 #include "Game/Util/AreaObjUtil.hpp"
 #include "Game/AreaObj/AreaObj.hpp"
 #include "Game/AreaObj/AreaObjContainer.hpp"
+#include "Game/AreaObj/WaterArea.hpp"
+#include "Game/Map/WaterAreaHolder.hpp"
+#include "Game/Map/WaterInfo.hpp"
 #include "Game/AreaObj/AreaForm.hpp"
 #include "Game/AreaObj/RestartCube.hpp"
 #include "Game/Util/PlayerUtil.hpp"
@@ -70,4 +73,19 @@ namespace MR {
             cube->updatePlayerRestartIdInfo();
         }
     }
+    bool getWaterAreaObj(WaterInfo* pInfo, const TVec3f& rPos) {
+        pInfo->clear();
+        WaterArea* pArea = static_cast< WaterArea* >(getAreaIn("Water", rPos));
+        if (pArea != nullptr) {
+            pInfo->mWaterArea = pArea;
+            return true;
+        }
+
+        return WaterAreaFunction::tryInOceanArea(rPos, pInfo);
+    }
+
+    void calcCylinderCenterPos(TVec3f* pPos, const AreaObj* pAreaObj) {
+        static_cast< AreaFormCylinder* >(pAreaObj->mForm)->calcCenterPos(pPos);
+    }
+
 };  // namespace MR

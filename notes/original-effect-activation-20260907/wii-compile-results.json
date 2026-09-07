@@ -1,0 +1,2582 @@
+[
+  {
+    "source": "src/Game/Effect/EffectSystem.cpp",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Effect/EffectSystem.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/EffectSystem.o"
+    ],
+    "exit_code": 0,
+    "source_sha256": "8e0ad3b52ee8b3e0409993b26c753ddf2171cdc7453b3fdaa855bca70ae2eaf3",
+    "log": "notes/original-effect-activation-20260907/EffectSystem-wii-compile.log",
+    "verified_at": "2026-09-07T09:23:00.760146+00:00",
+    "objdiff_exit_code": 0,
+    "objdiff_command": [
+      "/Users/frityet/Projects/petari/decomp/build/tools/objdiff-cli",
+      "diff",
+      "-1",
+      "/Users/frityet/Projects/petari/notes/gateway-audit-20260907/restoration/retail/obj/Game/Effect/EffectSystem.o",
+      "-2",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/EffectSystem.o",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/EffectSystem.objdiff.json",
+      "--format",
+      "json-pretty"
+    ],
+    "symbols": [
+      {
+        "name": "__ct__12EffectSystemFPCcb",
+        "demangled_name": "EffectSystem::EffectSystem(const char*, bool)",
+        "size": "184",
+        "match_percent": 100.0
+      },
+      {
+        "name": "init__12EffectSystemFRC12JMapInfoIter",
+        "demangled_name": "EffectSystem::init(const JMapInfoIter&)",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "createEmitter__12EffectSystemFUsUcUc",
+        "demangled_name": "EffectSystem::createEmitter(unsigned short, unsigned char, unsigned char)",
+        "size": "172",
+        "match_percent": 100.0
+      },
+      {
+        "name": "forceDeleteEmitter__12EffectSystemCFP15ParticleEmitter",
+        "demangled_name": "EffectSystem::forceDeleteEmitter(ParticleEmitter*) const",
+        "size": "108",
+        "match_percent": 100.0
+      },
+      {
+        "name": "forceDeleteSingleEmitter__12EffectSystemCFP13SingleEmitter",
+        "demangled_name": "EffectSystem::forceDeleteSingleEmitter(SingleEmitter*) const",
+        "size": "76",
+        "match_percent": 100.0
+      },
+      {
+        "name": "createSingleEmitter__12EffectSystemFP13SingleEmitterP24MultiEmitterCallBackBaseP28MultiEmitterParticleCallBack",
+        "demangled_name": "EffectSystem::createSingleEmitter(SingleEmitter*, MultiEmitterCallBackBase*, MultiEmitterParticleCallBack*)",
+        "size": "176",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getEffectSystem__2MRFv",
+        "demangled_name": "MR::getEffectSystem()",
+        "size": "40",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__dt__12EffectSystemFv",
+        "demangled_name": "EffectSystem::~EffectSystem()",
+        "size": "88",
+        "match_percent": 100.0
+      },
+      {
+        "name": "entry__12EffectSystemFP22ParticleResourceHolderUlUl",
+        "demangled_name": "EffectSystem::entry(ParticleResourceHolder*, unsigned long, unsigned long)",
+        "size": "192",
+        "match_percent": 100.0
+      }
+    ]
+  },
+  {
+    "source": "src/Game/Effect/ParticleEmitter.cpp",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Effect/ParticleEmitter.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/ParticleEmitter.o"
+    ],
+    "exit_code": 0,
+    "source_sha256": "45920a2365e225e583fac7599551778d554284fba980a54de66eb43c4c1802a2",
+    "log": "notes/original-effect-activation-20260907/ParticleEmitter-wii-compile.log",
+    "verified_at": "2026-09-07T09:23:00.739602+00:00",
+    "objdiff_exit_code": 0,
+    "objdiff_command": [
+      "/Users/frityet/Projects/petari/decomp/build/tools/objdiff-cli",
+      "diff",
+      "-1",
+      "/Users/frityet/Projects/petari/notes/gateway-audit-20260907/restoration/retail/obj/Game/Effect/ParticleEmitter.o",
+      "-2",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/ParticleEmitter.o",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/ParticleEmitter.objdiff.json",
+      "--format",
+      "json-pretty"
+    ],
+    "symbols": [
+      {
+        "name": "__ct__15ParticleEmitterFv",
+        "demangled_name": "ParticleEmitter::ParticleEmitter()",
+        "size": "20",
+        "match_percent": 100.0
+      },
+      {
+        "name": "invalidate__15ParticleEmitterFv",
+        "demangled_name": "ParticleEmitter::invalidate()",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "init__15ParticleEmitterFUs",
+        "demangled_name": "ParticleEmitter::init(unsigned short)",
+        "size": "32",
+        "match_percent": 100.0
+      },
+      {
+        "name": "pauseOn__15ParticleEmitterFv",
+        "demangled_name": "ParticleEmitter::pauseOn()",
+        "size": "64",
+        "match_percent": 100.0
+      },
+      {
+        "name": "pauseOff__15ParticleEmitterFv",
+        "demangled_name": "ParticleEmitter::pauseOff()",
+        "size": "40",
+        "match_percent": 100.0
+      }
+    ]
+  },
+  {
+    "source": "src/Game/Effect/ParticleEmitterHolder.cpp",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Effect/ParticleEmitterHolder.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/ParticleEmitterHolder.o"
+    ],
+    "exit_code": 0,
+    "source_sha256": "0936947a99975fe94ae3677a92b45b26594ccf67a777ceac7e60d7adf07704aa",
+    "log": "notes/original-effect-activation-20260907/ParticleEmitterHolder-wii-compile.log",
+    "verified_at": "2026-09-07T09:23:00.762705+00:00",
+    "objdiff_exit_code": 0,
+    "objdiff_command": [
+      "/Users/frityet/Projects/petari/decomp/build/tools/objdiff-cli",
+      "diff",
+      "-1",
+      "/Users/frityet/Projects/petari/notes/gateway-audit-20260907/restoration/retail/obj/Game/Effect/ParticleEmitterHolder.o",
+      "-2",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/ParticleEmitterHolder.o",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/ParticleEmitterHolder.objdiff.json",
+      "--format",
+      "json-pretty"
+    ],
+    "symbols": [
+      {
+        "name": "__ct__21ParticleEmitterHolderFPC12EffectSystemi",
+        "demangled_name": "ParticleEmitterHolder::ParticleEmitterHolder(const EffectSystem*, int)",
+        "size": "116",
+        "match_percent": 100.0
+      },
+      {
+        "name": "update__21ParticleEmitterHolderFb",
+        "demangled_name": "ParticleEmitterHolder::update(bool)",
+        "size": "244",
+        "match_percent": 100.0
+      },
+      {
+        "name": "forceDeleteAllOneTimeEmitters__21ParticleEmitterHolderFv",
+        "demangled_name": "ParticleEmitterHolder::forceDeleteAllOneTimeEmitters()",
+        "size": "124",
+        "match_percent": 100.0
+      },
+      {
+        "name": "forceDeleteAllEmitters__21ParticleEmitterHolderFv",
+        "demangled_name": "ParticleEmitterHolder::forceDeleteAllEmitters()",
+        "size": "96",
+        "match_percent": 100.0
+      },
+      {
+        "name": "requestMovementOnAllEmitters__21ParticleEmitterHolderFv",
+        "demangled_name": "ParticleEmitterHolder::requestMovementOnAllEmitters()",
+        "size": "124",
+        "match_percent": 100.0
+      },
+      {
+        "name": "findAvailableParticleEmitter__21ParticleEmitterHolderFv",
+        "demangled_name": "ParticleEmitterHolder::findAvailableParticleEmitter()",
+        "size": "180",
+        "match_percent": 100.0
+      },
+      {
+        "name": "requestMovementOffAllLoopEmitters__21ParticleEmitterHolderFv",
+        "demangled_name": "ParticleEmitterHolder::requestMovementOffAllLoopEmitters()",
+        "size": "120",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isValid__15ParticleEmitterCFv",
+        "demangled_name": "ParticleEmitter::isValid() const",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isContinuousParticle__15ParticleEmitterCFv",
+        "demangled_name": "ParticleEmitter::isContinuousParticle() const",
+        "size": "36",
+        "match_percent": 100.0
+      }
+    ]
+  },
+  {
+    "source": "src/Game/Effect/ParticleDrawExecutor.cpp",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Effect/ParticleDrawExecutor.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/ParticleDrawExecutor.o"
+    ],
+    "exit_code": 0,
+    "source_sha256": "ab930a200255aeed18918b44ddfa79a1c2ca39ca38b05ce897e31f6b51a59fc1",
+    "log": "notes/original-effect-activation-20260907/ParticleDrawExecutor-wii-compile.log",
+    "verified_at": "2026-09-07T09:23:00.758692+00:00",
+    "objdiff_exit_code": 0,
+    "objdiff_command": [
+      "/Users/frityet/Projects/petari/decomp/build/tools/objdiff-cli",
+      "diff",
+      "-1",
+      "/Users/frityet/Projects/petari/notes/gateway-audit-20260907/restoration/retail/obj/Game/Effect/ParticleDrawExecutor.o",
+      "-2",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/ParticleDrawExecutor.o",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/ParticleDrawExecutor.objdiff.json",
+      "--format",
+      "json-pretty"
+    ],
+    "symbols": [
+      {
+        "name": "connectToSceneDrawAdaptor__34@unnamed@ParticleDrawExecutor_cpp@FP14NameObjAdaptorRCQ22MR11FunctorBasei",
+        "demangled_name": "@unnamed@ParticleDrawExecutor_cpp@::connectToSceneDrawAdaptor(NameObjAdaptor*, const MR::FunctorBase&, int)",
+        "size": "116",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__20ParticleDrawExecutorFPC12EffectSystemb",
+        "demangled_name": "ParticleDrawExecutor::ParticleDrawExecutor(const EffectSystem*, bool)",
+        "size": "104",
+        "match_percent": 100.0
+      },
+      {
+        "name": "initDraw__20ParticleDrawExecutorFv",
+        "demangled_name": "ParticleDrawExecutor::initDraw()",
+        "size": "92",
+        "match_percent": 100.0
+      },
+      {
+        "name": "draw3D__20ParticleDrawExecutorCFv",
+        "demangled_name": "ParticleDrawExecutor::draw3D() const",
+        "size": "56",
+        "match_percent": 100.0
+      },
+      {
+        "name": "draw2D__20ParticleDrawExecutorCFv",
+        "demangled_name": "ParticleDrawExecutor::draw2D() const",
+        "size": "388",
+        "match_percent": 99.84536
+      },
+      {
+        "name": "drawIndirect__20ParticleDrawExecutorCFv",
+        "demangled_name": "ParticleDrawExecutor::drawIndirect() const",
+        "size": "176",
+        "match_percent": 99.88636
+      },
+      {
+        "name": "drawAfterIndirect__20ParticleDrawExecutorCFv",
+        "demangled_name": "ParticleDrawExecutor::drawAfterIndirect() const",
+        "size": "56",
+        "match_percent": 100.0
+      },
+      {
+        "name": "drawFor2DModel__20ParticleDrawExecutorCFv",
+        "demangled_name": "ParticleDrawExecutor::drawFor2DModel() const",
+        "size": "104",
+        "match_percent": 100.0
+      },
+      {
+        "name": "drawForBloomEffect__20ParticleDrawExecutorCFv",
+        "demangled_name": "ParticleDrawExecutor::drawForBloomEffect() const",
+        "size": "56",
+        "match_percent": 100.0
+      },
+      {
+        "name": "drawAfterImageEffect__20ParticleDrawExecutorCFv",
+        "demangled_name": "ParticleDrawExecutor::drawAfterImageEffect() const",
+        "size": "56",
+        "match_percent": 100.0
+      },
+      {
+        "name": "drawWithViewMtx3D__20ParticleDrawExecutorCFRCQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>",
+        "demangled_name": "ParticleDrawExecutor::drawWithViewMtx3D(const JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>>&) const",
+        "size": "128",
+        "match_percent": 100.0
+      },
+      {
+        "name": "drawWithViewMtxAfterIndirect__20ParticleDrawExecutorCFRCQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>",
+        "demangled_name": "ParticleDrawExecutor::drawWithViewMtxAfterIndirect(const JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>>&) const",
+        "size": "100",
+        "match_percent": 100.0
+      },
+      {
+        "name": "drawWithViewMtxForBloomEffect__20ParticleDrawExecutorCFRCQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>",
+        "demangled_name": "ParticleDrawExecutor::drawWithViewMtxForBloomEffect(const JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>>&) const",
+        "size": "100",
+        "match_percent": 100.0
+      },
+      {
+        "name": "drawWithViewMtxAfterImageEffect__20ParticleDrawExecutorCFRCQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>",
+        "demangled_name": "ParticleDrawExecutor::drawWithViewMtxAfterImageEffect(const JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>>&) const",
+        "size": "100",
+        "match_percent": 100.0
+      },
+      {
+        "name": "initDrawAdaptor__20ParticleDrawExecutorFv",
+        "demangled_name": "ParticleDrawExecutor::initDrawAdaptor()",
+        "size": "672",
+        "match_percent": 99.82143
+      },
+      {
+        "name": "Functor<20ParticleDrawExecutor>__2MRFPC20ParticleDrawExecutorM20ParticleDrawExecutorFPCvPCv_v_Q22MR69FunctorV0M<PC20ParticleDrawExecutor,M20ParticleDrawExecutorFPCvPCv_v>",
+        "demangled_name": "MR::FunctorV0M<const ParticleDrawExecutor*, void (ParticleDrawExecutor::*)() const> MR::Functor<ParticleDrawExecutor>(const ParticleDrawExecutor*, void (ParticleDrawExecutor::*)() const)",
+        "size": "64",
+        "match_percent": 100.0
+      },
+      {
+        "name": "clone__Q22MR10FunctorV0FCFP7JKRHeap",
+        "demangled_name": "MR::FunctorV0F::clone(JKRHeap*) const",
+        "size": "80",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__cl__Q22MR10FunctorV0FCFv",
+        "demangled_name": "MR::FunctorV0F::operator()() const",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__cl__Q22MR69FunctorV0M<PC20ParticleDrawExecutor,M20ParticleDrawExecutorFPCvPCv_v>CFv",
+        "demangled_name": "MR::FunctorV0M<const ParticleDrawExecutor*, void (ParticleDrawExecutor::*)() const>::operator()() const",
+        "size": "48",
+        "match_percent": 100.0
+      },
+      {
+        "name": "clone__Q22MR69FunctorV0M<PC20ParticleDrawExecutor,M20ParticleDrawExecutorFPCvPCv_v>CFP7JKRHeap",
+        "demangled_name": "MR::FunctorV0M<const ParticleDrawExecutor*, void (ParticleDrawExecutor::*)() const>::clone(JKRHeap*) const",
+        "size": "104",
+        "match_percent": 100.0
+      }
+    ]
+  },
+  {
+    "source": "src/Game/Effect/ParticleCalcExecutor.cpp",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Effect/ParticleCalcExecutor.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/ParticleCalcExecutor.o"
+    ],
+    "exit_code": 0,
+    "source_sha256": "4764ec5073a4c401866a237a493d99d68878e2599607c5bfca4cdce9f077a486",
+    "log": "notes/original-effect-activation-20260907/ParticleCalcExecutor-wii-compile.log",
+    "verified_at": "2026-09-07T09:23:00.967117+00:00",
+    "objdiff_exit_code": 0,
+    "objdiff_command": [
+      "/Users/frityet/Projects/petari/decomp/build/tools/objdiff-cli",
+      "diff",
+      "-1",
+      "/Users/frityet/Projects/petari/notes/gateway-audit-20260907/restoration/retail/obj/Game/Effect/ParticleCalcExecutor.o",
+      "-2",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/ParticleCalcExecutor.o",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/ParticleCalcExecutor.objdiff.json",
+      "--format",
+      "json-pretty"
+    ],
+    "symbols": [
+      {
+        "name": "__ct__20ParticleCalcExecutorFPC12EffectSystemb",
+        "demangled_name": "ParticleCalcExecutor::ParticleCalcExecutor(const EffectSystem*, bool)",
+        "size": "92",
+        "match_percent": 100.0
+      },
+      {
+        "name": "movementNormal__20ParticleCalcExecutorFv",
+        "demangled_name": "ParticleCalcExecutor::movementNormal()",
+        "size": "232",
+        "match_percent": 100.0
+      },
+      {
+        "name": "movementIgnorePause3D__20ParticleCalcExecutorFv",
+        "demangled_name": "ParticleCalcExecutor::movementIgnorePause3D()",
+        "size": "84",
+        "match_percent": 100.0
+      },
+      {
+        "name": "movementIgnorePause2D__20ParticleCalcExecutorFv",
+        "demangled_name": "ParticleCalcExecutor::movementIgnorePause2D()",
+        "size": "84",
+        "match_percent": 100.0
+      },
+      {
+        "name": "movementCheckUpdate__20ParticleCalcExecutorFv",
+        "demangled_name": "ParticleCalcExecutor::movementCheckUpdate()",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "requestMovementOnPauseIgnore__20ParticleCalcExecutorFv",
+        "demangled_name": "ParticleCalcExecutor::requestMovementOnPauseIgnore()",
+        "size": "64",
+        "match_percent": 100.0
+      },
+      {
+        "name": "initMovementAdaptor__20ParticleCalcExecutorFv",
+        "demangled_name": "ParticleCalcExecutor::initMovementAdaptor()",
+        "size": "504",
+        "match_percent": 99.88095
+      },
+      {
+        "name": "Functor<20ParticleCalcExecutor>__2MRFP20ParticleCalcExecutorM20ParticleCalcExecutorFPCvPv_v_Q22MR67FunctorV0M<P20ParticleCalcExecutor,M20ParticleCalcExecutorFPCvPv_v>",
+        "demangled_name": "MR::FunctorV0M<ParticleCalcExecutor*, void (ParticleCalcExecutor::*)()> MR::Functor<ParticleCalcExecutor>(ParticleCalcExecutor*, void (ParticleCalcExecutor::*)())",
+        "size": "64",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__cl__Q22MR67FunctorV0M<P20ParticleCalcExecutor,M20ParticleCalcExecutorFPCvPv_v>CFv",
+        "demangled_name": "MR::FunctorV0M<ParticleCalcExecutor*, void (ParticleCalcExecutor::*)()>::operator()() const",
+        "size": "48",
+        "match_percent": 100.0
+      },
+      {
+        "name": "clone__Q22MR67FunctorV0M<P20ParticleCalcExecutor,M20ParticleCalcExecutorFPCvPv_v>CFP7JKRHeap",
+        "demangled_name": "MR::FunctorV0M<ParticleCalcExecutor*, void (ParticleCalcExecutor::*)()>::clone(JKRHeap*) const",
+        "size": "104",
+        "match_percent": 100.0
+      }
+    ]
+  },
+  {
+    "source": "src/Game/Effect/SingleEmitter.cpp",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Effect/SingleEmitter.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/SingleEmitter.o"
+    ],
+    "exit_code": 0,
+    "source_sha256": "83f3c10281e6a93b3191854371688c385745fcc050bcbc9bd74391b33d5a9944",
+    "log": "notes/original-effect-activation-20260907/SingleEmitter-wii-compile.log",
+    "verified_at": "2026-09-07T09:23:00.980029+00:00",
+    "objdiff_exit_code": 0,
+    "objdiff_command": [
+      "/Users/frityet/Projects/petari/decomp/build/tools/objdiff-cli",
+      "diff",
+      "-1",
+      "/Users/frityet/Projects/petari/notes/gateway-audit-20260907/restoration/retail/obj/Game/Effect/SingleEmitter.o",
+      "-2",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/SingleEmitter.o",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/SingleEmitter.objdiff.json",
+      "--format",
+      "json-pretty"
+    ],
+    "symbols": [
+      {
+        "name": "__ct__13SingleEmitterFv",
+        "demangled_name": "SingleEmitter::SingleEmitter()",
+        "size": "28",
+        "match_percent": 100.0
+      },
+      {
+        "name": "init__13SingleEmitterFUs",
+        "demangled_name": "SingleEmitter::init(unsigned short)",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "deleteEmitter__13SingleEmitterFv",
+        "demangled_name": "SingleEmitter::deleteEmitter()",
+        "size": "60",
+        "match_percent": 100.0
+      },
+      {
+        "name": "scanParticleEmitter__13SingleEmitterFP12EffectSystem",
+        "demangled_name": "SingleEmitter::scanParticleEmitter(EffectSystem*)",
+        "size": "116",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isOneTime__13SingleEmitterCFv",
+        "demangled_name": "SingleEmitter::isOneTime() const",
+        "size": "76",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isValid__13SingleEmitterCFv",
+        "demangled_name": "SingleEmitter::isValid() const",
+        "size": "36",
+        "match_percent": 100.0
+      },
+      {
+        "name": "link__13SingleEmitterFP15ParticleEmitter",
+        "demangled_name": "SingleEmitter::link(ParticleEmitter*)",
+        "size": "20",
+        "match_percent": 100.0
+      },
+      {
+        "name": "unlink__13SingleEmitterFv",
+        "demangled_name": "SingleEmitter::unlink()",
+        "size": "60",
+        "match_percent": 100.0
+      }
+    ]
+  },
+  {
+    "source": "src/Game/Effect/MultiEmitter.cpp",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Effect/MultiEmitter.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/MultiEmitter.o"
+    ],
+    "exit_code": 0,
+    "source_sha256": "053cb9158d739b0c2096f83cf4422031568575d5cecee6ab9aa4d2cf8d054999",
+    "log": "notes/original-effect-activation-20260907/MultiEmitter-wii-compile.log",
+    "verified_at": "2026-09-07T09:23:01.031198+00:00",
+    "objdiff_exit_code": 0,
+    "objdiff_command": [
+      "/Users/frityet/Projects/petari/decomp/build/tools/objdiff-cli",
+      "diff",
+      "-1",
+      "/Users/frityet/Projects/petari/notes/gateway-audit-20260907/restoration/retail/obj/Game/Effect/MultiEmitter.o",
+      "-2",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/MultiEmitter.o",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/MultiEmitter.objdiff.json",
+      "--format",
+      "json-pretty"
+    ],
+    "symbols": [
+      {
+        "name": "__ct<s>__Q29JGeometry8TVec3<s>Fsss_Pv",
+        "demangled_name": "void* JGeometry::TVec3<short>::TVec3<short>(short, short, short)",
+        "size": "16",
+        "match_percent": null
+      },
+      {
+        "name": "__ct__12MultiEmitterFPCcPCQ29JGeometry8TVec3<f>PCQ29JGeometry8TVec3<f>PCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+        "demangled_name": "MultiEmitter::MultiEmitter(const char*, const JGeometry::TVec3<float>*, const JGeometry::TVec3<float>*, const JGeometry::TVec3<float>*, const JGeometry::TVec3<float>&)",
+        "size": "204",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__12MultiEmitterFPCcPA4_fRCQ29JGeometry8TVec3<f>",
+        "demangled_name": "MultiEmitter::MultiEmitter(const char*, float(*)[4], const JGeometry::TVec3<float>&)",
+        "size": "188",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__12MultiEmitterFPCcPA4_fPCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+        "demangled_name": "MultiEmitter::MultiEmitter(const char*, float(*)[4], const JGeometry::TVec3<float>*, const JGeometry::TVec3<float>&)",
+        "size": "196",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__12MultiEmitterFPCc",
+        "demangled_name": "MultiEmitter::MultiEmitter(const char*)",
+        "size": "192",
+        "match_percent": 100.0
+      },
+      {
+        "name": "createEmitter__12MultiEmitterFv",
+        "demangled_name": "MultiEmitter::createEmitter()",
+        "size": "56",
+        "match_percent": 100.0
+      },
+      {
+        "name": "createEmitterWithCallBack__12MultiEmitterFP24MultiEmitterCallBackBase",
+        "demangled_name": "MultiEmitter::createEmitterWithCallBack(MultiEmitterCallBackBase*)",
+        "size": "212",
+        "match_percent": 100.0
+      },
+      {
+        "name": "deleteEmitter__12MultiEmitterFv",
+        "demangled_name": "MultiEmitter::deleteEmitter()",
+        "size": "208",
+        "match_percent": 100.0
+      },
+      {
+        "name": "forceDeleteEmitter__12MultiEmitterFv",
+        "demangled_name": "MultiEmitter::forceDeleteEmitter()",
+        "size": "168",
+        "match_percent": 100.0
+      },
+      {
+        "name": "forceDelete__12MultiEmitterFP12EffectSystem",
+        "demangled_name": "MultiEmitter::forceDelete(EffectSystem*)",
+        "size": "204",
+        "match_percent": 100.0
+      },
+      {
+        "name": "deleteForeverEmitter__12MultiEmitterFv",
+        "demangled_name": "MultiEmitter::deleteForeverEmitter()",
+        "size": "196",
+        "match_percent": 100.0
+      },
+      {
+        "name": "playCalcAndDeleteForeverEmitter__12MultiEmitterFv",
+        "demangled_name": "MultiEmitter::playCalcAndDeleteForeverEmitter()",
+        "size": "56",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isValid__12MultiEmitterCFv",
+        "demangled_name": "MultiEmitter::isValid() const",
+        "size": "112",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isExistOneTimeEmitter__12MultiEmitterCFv",
+        "demangled_name": "MultiEmitter::isExistOneTimeEmitter() const",
+        "size": "112",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setHostSRT__12MultiEmitterFPCQ29JGeometry8TVec3<f>PCQ29JGeometry8TVec3<f>PCQ29JGeometry8TVec3<f>",
+        "demangled_name": "MultiEmitter::setHostSRT(const JGeometry::TVec3<float>*, const JGeometry::TVec3<float>*, const JGeometry::TVec3<float>*)",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setHostMtx__12MultiEmitterFPA4_f",
+        "demangled_name": "MultiEmitter::setHostMtx(float(*)[4])",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setOffset__12MultiEmitterFRCQ29JGeometry8TVec3<f>",
+        "demangled_name": "MultiEmitter::setOffset(const JGeometry::TVec3<float>&)",
+        "size": "32",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setBaseScale__12MultiEmitterFf",
+        "demangled_name": "MultiEmitter::setBaseScale(float)",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setName__12MultiEmitterFPCc",
+        "demangled_name": "MultiEmitter::setName(const char*)",
+        "size": "52",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isEqualName__12MultiEmitterCFUs",
+        "demangled_name": "MultiEmitter::isEqualName(unsigned short) const",
+        "size": "20",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getParticleEmitter__12MultiEmitterCFi",
+        "demangled_name": "MultiEmitter::getParticleEmitter(int) const",
+        "size": "76",
+        "match_percent": 100.0
+      },
+      {
+        "name": "create__12MultiEmitterFP12EffectSystem",
+        "demangled_name": "MultiEmitter::create(EffectSystem*)",
+        "size": "164",
+        "match_percent": 100.0
+      },
+      {
+        "name": "scanParticleEmitter__12MultiEmitterFP12EffectSystem",
+        "demangled_name": "MultiEmitter::scanParticleEmitter(EffectSystem*)",
+        "size": "144",
+        "match_percent": 100.0
+      },
+      {
+        "name": "forceFollowOn__12MultiEmitterFv",
+        "demangled_name": "MultiEmitter::forceFollowOn()",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "forceFollowOff__12MultiEmitterFv",
+        "demangled_name": "MultiEmitter::forceFollowOff()",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "forceScaleOn__12MultiEmitterFv",
+        "demangled_name": "MultiEmitter::forceScaleOn()",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "initSyncBck__12MultiEmitterFP12XanimePlayerPCclf",
+        "demangled_name": "MultiEmitter::initSyncBck(XanimePlayer*, const char*, long, float)",
+        "size": "132",
+        "match_percent": 100.0
+      },
+      {
+        "name": "onDeleteSyncBck__12MultiEmitterFbf",
+        "demangled_name": "MultiEmitter::onDeleteSyncBck(bool, float)",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "addSyncBck__12MultiEmitterFPC12XanimePlayerPCc",
+        "demangled_name": "MultiEmitter::addSyncBck(const XanimePlayer*, const char*)",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setContinueBckEnd__12MultiEmitterFb",
+        "demangled_name": "MultiEmitter::setContinueBckEnd(bool)",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "onCreateSyncClipping__12MultiEmitterFv",
+        "demangled_name": "MultiEmitter::onCreateSyncClipping()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "onForceDeleteSyncClipping__12MultiEmitterFv",
+        "demangled_name": "MultiEmitter::onForceDeleteSyncClipping()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "stopEmitterOnClipped__12MultiEmitterFv",
+        "demangled_name": "MultiEmitter::stopEmitterOnClipped()",
+        "size": "232",
+        "match_percent": 100.0
+      },
+      {
+        "name": "playEmitterOffClipped__12MultiEmitterFv",
+        "demangled_name": "MultiEmitter::playEmitterOffClipped()",
+        "size": "224",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setDrawOrder__12MultiEmitterFl",
+        "demangled_name": "MultiEmitter::setDrawOrder(long)",
+        "size": "148",
+        "match_percent": 100.0
+      },
+      {
+        "name": "addChildEmitter__12MultiEmitterFP12MultiEmitter",
+        "demangled_name": "MultiEmitter::addChildEmitter(MultiEmitter*)",
+        "size": "28",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setGlobalRotationDegree__12MultiEmitterFRCQ29JGeometry8TVec3<f>l",
+        "demangled_name": "MultiEmitter::setGlobalRotationDegree(const JGeometry::TVec3<float>&, long)",
+        "size": "152",
+        "match_percent": 52.68421
+      },
+      {
+        "name": "allocateEmitter__12MultiEmitterFPCc",
+        "demangled_name": "MultiEmitter::allocateEmitter(const char*)",
+        "size": "432",
+        "match_percent": 99.861115
+      },
+      {
+        "name": "getValidEmitter__12MultiEmitterFlb",
+        "demangled_name": "MultiEmitter::getValidEmitter(long, bool)",
+        "size": "76",
+        "match_percent": 100.0
+      },
+      {
+        "name": "createOneTimeEmitter__12MultiEmitterFv",
+        "demangled_name": "MultiEmitter::createOneTimeEmitter()",
+        "size": "120",
+        "match_percent": 100.0
+      },
+      {
+        "name": "createForeverEmitter__12MultiEmitterFv",
+        "demangled_name": "MultiEmitter::createForeverEmitter()",
+        "size": "120",
+        "match_percent": 100.0
+      },
+      {
+        "name": "for_each<PP12MultiEmitter,Q23std27mem_fun_t<v,12MultiEmitter>>__3stdFPP12MultiEmitterPP12MultiEmitterQ23std27mem_fun_t<v,12MultiEmitter>_Q23std27mem_fun_t<v,12MultiEmitter>",
+        "demangled_name": "std::mem_fun_t<void, MultiEmitter> std::for_each<MultiEmitter**, std::mem_fun_t<void, MultiEmitter>>(MultiEmitter**, MultiEmitter**, std::mem_fun_t<void, MultiEmitter>)",
+        "size": "116",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setGroupID__13SingleEmitterFUc",
+        "demangled_name": "SingleEmitter::setGroupID(unsigned char)",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "push_back__Q22MR32Vector<Q22MR17FixedArray<Us,32>>FRCUs",
+        "demangled_name": "MR::Vector<MR::FixedArray<unsigned short, 32>>::push_back(const unsigned short&)",
+        "size": "28",
+        "match_percent": 100.0
+      }
+    ]
+  },
+  {
+    "source": "src/Game/Effect/MultiEmitterAccess.cpp",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Effect/MultiEmitterAccess.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/MultiEmitterAccess.o"
+    ],
+    "exit_code": 0,
+    "source_sha256": "414e2cc9faeb021f5467a588524e2f32d6adc2524ba2604b419dd2e3bde2f0d4",
+    "log": "notes/original-effect-activation-20260907/MultiEmitterAccess-wii-compile.log",
+    "verified_at": "2026-09-07T09:23:01.003528+00:00",
+    "objdiff_exit_code": 0,
+    "objdiff_command": [
+      "/Users/frityet/Projects/petari/decomp/build/tools/objdiff-cli",
+      "diff",
+      "-1",
+      "/Users/frityet/Projects/petari/notes/gateway-audit-20260907/restoration/retail/obj/Game/Effect/MultiEmitterAccess.o",
+      "-2",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/MultiEmitterAccess.o",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/MultiEmitterAccess.objdiff.json",
+      "--format",
+      "json-pretty"
+    ],
+    "symbols": [
+      {
+        "name": "setGlobalRotation__12MultiEmitterFRCQ29JGeometry8TVec3<s>l",
+        "demangled_name": "MultiEmitter::setGlobalRotation(const JGeometry::TVec3<short>&, long)",
+        "size": "156",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setGlobalTranslation__12MultiEmitterFRCQ29JGeometry8TVec3<f>l",
+        "demangled_name": "MultiEmitter::setGlobalTranslation(const JGeometry::TVec3<float>&, long)",
+        "size": "172",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setGlobalScale__12MultiEmitterFRCQ29JGeometry8TVec3<f>l",
+        "demangled_name": "MultiEmitter::setGlobalScale(const JGeometry::TVec3<float>&, long)",
+        "size": "156",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setGlobalSRTMatrix__12MultiEmitterFPA4_Cfl",
+        "demangled_name": "MultiEmitter::setGlobalSRTMatrix(const float(*)[4], long)",
+        "size": "156",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setGlobalPrmColor__12MultiEmitterFUcUcUcl",
+        "demangled_name": "MultiEmitter::setGlobalPrmColor(unsigned char, unsigned char, unsigned char, long)",
+        "size": "244",
+        "match_percent": 97.37705
+      },
+      {
+        "name": "setGlobalEnvColor__12MultiEmitterFUcUcUcl",
+        "demangled_name": "MultiEmitter::setGlobalEnvColor(unsigned char, unsigned char, unsigned char, long)",
+        "size": "244",
+        "match_percent": 97.37705
+      },
+      {
+        "name": "setLocalScale__12MultiEmitterFRCQ29JGeometry8TVec3<f>l",
+        "demangled_name": "MultiEmitter::setLocalScale(const JGeometry::TVec3<float>&, long)",
+        "size": "164",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setDirectionalSpeed__12MultiEmitterFfl",
+        "demangled_name": "MultiEmitter::setDirectionalSpeed(float, long)",
+        "size": "160",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setRate__12MultiEmitterFfl",
+        "demangled_name": "MultiEmitter::setRate(float, long)",
+        "size": "160",
+        "match_percent": 100.0
+      },
+      {
+        "name": "stopCalcEmitter__12MultiEmitterFl",
+        "demangled_name": "MultiEmitter::stopCalcEmitter(long)",
+        "size": "164",
+        "match_percent": 100.0
+      },
+      {
+        "name": "playCalcEmitter__12MultiEmitterFl",
+        "demangled_name": "MultiEmitter::playCalcEmitter(long)",
+        "size": "164",
+        "match_percent": 100.0
+      },
+      {
+        "name": "stopDrawParticle__12MultiEmitterFl",
+        "demangled_name": "MultiEmitter::stopDrawParticle(long)",
+        "size": "164",
+        "match_percent": 100.0
+      },
+      {
+        "name": "playDrawParticle__12MultiEmitterFl",
+        "demangled_name": "MultiEmitter::playDrawParticle(long)",
+        "size": "164",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setParticleCallBackPtr__12MultiEmitterFP19JPAParticleCallBackl",
+        "demangled_name": "MultiEmitter::setParticleCallBackPtr(JPAParticleCallBack*, long)",
+        "size": "156",
+        "match_percent": 100.0
+      },
+      {
+        "name": "pauseOff__12MultiEmitterFl",
+        "demangled_name": "MultiEmitter::pauseOff(long)",
+        "size": "140",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setGlobalRotation__15ParticleEmitterFRCQ29JGeometry8TVec3<s>",
+        "demangled_name": "ParticleEmitter::setGlobalRotation(const JGeometry::TVec3<short>&)",
+        "size": "28",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setGlobalScale__15ParticleEmitterFRCQ29JGeometry8TVec3<f>",
+        "demangled_name": "ParticleEmitter::setGlobalScale(const JGeometry::TVec3<float>&)",
+        "size": "76",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setGlobalSRTMatrix__15ParticleEmitterFPA4_Cf",
+        "demangled_name": "ParticleEmitter::setGlobalSRTMatrix(const float(*)[4])",
+        "size": "80",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setGlobalPrmColor__15ParticleEmitterFUcUcUc",
+        "demangled_name": "ParticleEmitter::setGlobalPrmColor(unsigned char, unsigned char, unsigned char)",
+        "size": "20",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setGlobalEnvColor__15ParticleEmitterFUcUcUc",
+        "demangled_name": "ParticleEmitter::setGlobalEnvColor(unsigned char, unsigned char, unsigned char)",
+        "size": "20",
+        "match_percent": 100.0
+      },
+      {
+        "name": "set<f>__Q29JGeometry8TVec2<f>Fff_v",
+        "demangled_name": "void JGeometry::TVec2<float>::set<float>(float, float)",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "set__6Color8FUcUcUcUc",
+        "demangled_name": "Color8::set(unsigned char, unsigned char, unsigned char, unsigned char)",
+        "size": "20",
+        "match_percent": 100.0
+      }
+    ]
+  },
+  {
+    "source": "src/Game/Effect/MultiEmitterCallBack.cpp",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Effect/MultiEmitterCallBack.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/MultiEmitterCallBack.o"
+    ],
+    "exit_code": 0,
+    "source_sha256": "23870a6a89871c6577ce505863d63df0a2af6d57a291389364dba0b122848127",
+    "log": "notes/original-effect-activation-20260907/MultiEmitterCallBack-wii-compile.log",
+    "verified_at": "2026-09-07T09:23:01.232679+00:00",
+    "objdiff_exit_code": 0,
+    "objdiff_command": [
+      "/Users/frityet/Projects/petari/decomp/build/tools/objdiff-cli",
+      "diff",
+      "-1",
+      "/Users/frityet/Projects/petari/notes/gateway-audit-20260907/restoration/retail/obj/Game/Effect/MultiEmitterCallBack.o",
+      "-2",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/MultiEmitterCallBack.o",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/MultiEmitterCallBack.objdiff.json",
+      "--format",
+      "json-pretty"
+    ],
+    "symbols": [
+      {
+        "name": "mul__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+        "demangled_name": "JGeometry::TVec3<float>::mul(const JGeometry::TVec3<float>&)",
+        "size": "36",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getSyntheticColor__34@unnamed@MultiEmitterCallBack_cpp@FRC6Color8RC6Color8",
+        "demangled_name": "@unnamed@MultiEmitterCallBack_cpp@::getSyntheticColor(const Color8&, const Color8&)",
+        "size": "112",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__20MultiEmitterCallBackFPC12MultiEmitterRCQ29JGeometry8TVec3<f>",
+        "demangled_name": "MultiEmitterCallBack::MultiEmitterCallBack(const MultiEmitter*, const JGeometry::TVec3<float>&)",
+        "size": "172",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__24MultiEmitterCallBackBaseFv",
+        "demangled_name": "MultiEmitterCallBackBase::MultiEmitterCallBackBase()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__dt__24MultiEmitterCallBackBaseFv",
+        "demangled_name": "MultiEmitterCallBackBase::~MultiEmitterCallBackBase()",
+        "size": "88",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__20MultiEmitterCallBackFPC12MultiEmitterPCQ29JGeometry8TVec3<f>PCQ29JGeometry8TVec3<f>PCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+        "demangled_name": "MultiEmitterCallBack::MultiEmitterCallBack(const MultiEmitter*, const JGeometry::TVec3<float>*, const JGeometry::TVec3<float>*, const JGeometry::TVec3<float>*, const JGeometry::TVec3<float>&)",
+        "size": "184",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__20MultiEmitterCallBackFPC12MultiEmitterPA4_fRCQ29JGeometry8TVec3<f>",
+        "demangled_name": "MultiEmitterCallBack::MultiEmitterCallBack(const MultiEmitter*, float(*)[4], const JGeometry::TVec3<float>&)",
+        "size": "176",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__20MultiEmitterCallBackFPC12MultiEmitterPA4_fPCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+        "demangled_name": "MultiEmitterCallBack::MultiEmitterCallBack(const MultiEmitter*, float(*)[4], const JGeometry::TVec3<float>*, const JGeometry::TVec3<float>&)",
+        "size": "180",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__20MultiEmitterCallBackFP14JPABaseEmitter",
+        "demangled_name": "MultiEmitterCallBack::execute(JPABaseEmitter*)",
+        "size": "84",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setHostSRT__20MultiEmitterCallBackFPCQ29JGeometry8TVec3<f>PCQ29JGeometry8TVec3<f>PCQ29JGeometry8TVec3<f>",
+        "demangled_name": "MultiEmitterCallBack::setHostSRT(const JGeometry::TVec3<float>*, const JGeometry::TVec3<float>*, const JGeometry::TVec3<float>*)",
+        "size": "24",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setHostMtx__20MultiEmitterCallBackFPA4_f",
+        "demangled_name": "MultiEmitterCallBack::setHostMtx(float(*)[4])",
+        "size": "24",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setBaseScale__20MultiEmitterCallBackFf",
+        "demangled_name": "MultiEmitterCallBack::setBaseScale(float)",
+        "size": "36",
+        "match_percent": 100.0
+      },
+      {
+        "name": "forceFollowOn__20MultiEmitterCallBackFv",
+        "demangled_name": "MultiEmitterCallBack::forceFollowOn()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "forceFollowOff__20MultiEmitterCallBackFv",
+        "demangled_name": "MultiEmitterCallBack::forceFollowOff()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "forceScaleOn__20MultiEmitterCallBackFv",
+        "demangled_name": "MultiEmitterCallBack::forceScaleOn()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "resetFollowCurrent__20MultiEmitterCallBackFv",
+        "demangled_name": "MultiEmitterCallBack::resetFollowCurrent()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "init__20MultiEmitterCallBackFP14JPABaseEmitter",
+        "demangled_name": "MultiEmitterCallBack::init(JPABaseEmitter*)",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setSRTFromHostMtx__20MultiEmitterCallBackFP14JPABaseEmitterPA4_fRCQ220MultiEmitterCallBack7FlagSRTb",
+        "demangled_name": "MultiEmitterCallBack::setSRTFromHostMtx(JPABaseEmitter*, float(*)[4], const MultiEmitterCallBack::FlagSRT&, bool)",
+        "size": "384",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setSRTFromHostSRT__20MultiEmitterCallBackFP14JPABaseEmitterRCQ220MultiEmitterCallBack7FlagSRTb",
+        "demangled_name": "MultiEmitterCallBack::setSRTFromHostSRT(JPABaseEmitter*, const MultiEmitterCallBack::FlagSRT&, bool)",
+        "size": "648",
+        "match_percent": 94.65432
+      },
+      {
+        "name": "setScaleFromHostScale__20MultiEmitterCallBackFP14JPABaseEmitterRCQ29JGeometry8TVec3<f>bb",
+        "demangled_name": "MultiEmitterCallBack::setScaleFromHostScale(JPABaseEmitter*, const JGeometry::TVec3<float>&, bool, bool)",
+        "size": "192",
+        "match_percent": 100.0
+      },
+      {
+        "name": "effectLight__20MultiEmitterCallBackFP14JPABaseEmitter",
+        "demangled_name": "MultiEmitterCallBack::effectLight(JPABaseEmitter*)",
+        "size": "44",
+        "match_percent": 12.272727
+      },
+      {
+        "name": "followSRT__20MultiEmitterCallBackFP14JPABaseEmitterb",
+        "demangled_name": "MultiEmitterCallBack::followSRT(JPABaseEmitter*, bool)",
+        "size": "188",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setColor__20MultiEmitterCallBackFP14JPABaseEmitter",
+        "demangled_name": "MultiEmitterCallBack::setColor(JPABaseEmitter*)",
+        "size": "304",
+        "match_percent": 97.01316
+      },
+      {
+        "name": "isFollowSRT__20MultiEmitterCallBackCFPQ220MultiEmitterCallBack7FlagSRTb",
+        "demangled_name": "MultiEmitterCallBack::isFollowSRT(MultiEmitterCallBack::FlagSRT*, bool) const",
+        "size": "456",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setGlobalScale__14JPABaseEmitterFRCQ29JGeometry8TVec3<f>",
+        "demangled_name": "JPABaseEmitter::setGlobalScale(const JGeometry::TVec3<float>&)",
+        "size": "76",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setGlobalPrmColor__14JPABaseEmitterFUcUcUc",
+        "demangled_name": "JPABaseEmitter::setGlobalPrmColor(unsigned char, unsigned char, unsigned char)",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setGlobalEnvColor__14JPABaseEmitterFUcUcUc",
+        "demangled_name": "JPABaseEmitter::setGlobalEnvColor(unsigned char, unsigned char, unsigned char)",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__as__8_GXColorFRC8_GXColor",
+        "demangled_name": "_GXColor::operator=(const _GXColor&)",
+        "size": "36",
+        "match_percent": 100.0
+      },
+      {
+        "name": "drawAfter__18JPAEmitterCallBackFP14JPABaseEmitter",
+        "demangled_name": "JPAEmitterCallBack::drawAfter(JPABaseEmitter*)",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "draw__18JPAEmitterCallBackFP14JPABaseEmitter",
+        "demangled_name": "JPAEmitterCallBack::draw(JPABaseEmitter*)",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "executeAfter__18JPAEmitterCallBackFP14JPABaseEmitter",
+        "demangled_name": "JPAEmitterCallBack::executeAfter(JPABaseEmitter*)",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__18JPAEmitterCallBackFP14JPABaseEmitter",
+        "demangled_name": "JPAEmitterCallBack::execute(JPABaseEmitter*)",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "init__24MultiEmitterCallBackBaseFP14JPABaseEmitter",
+        "demangled_name": "MultiEmitterCallBackBase::init(JPABaseEmitter*)",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__dt__20MultiEmitterCallBackFv",
+        "demangled_name": "MultiEmitterCallBack::~MultiEmitterCallBack()",
+        "size": "92",
+        "match_percent": 100.0
+      }
+    ]
+  },
+  {
+    "source": "src/Game/Effect/MultiEmitterParticleCallBack.cpp",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Effect/MultiEmitterParticleCallBack.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/MultiEmitterParticleCallBack.o"
+    ],
+    "exit_code": 0,
+    "source_sha256": "cbca8fb7eb7456ff1bf744c2ca36367a3b085dcf4c874e9f1d4044ea41b297b0",
+    "log": "notes/original-effect-activation-20260907/MultiEmitterParticleCallBack-wii-compile.log",
+    "verified_at": "2026-09-07T09:23:01.181114+00:00",
+    "objdiff_exit_code": 0,
+    "objdiff_command": [
+      "/Users/frityet/Projects/petari/decomp/build/tools/objdiff-cli",
+      "diff",
+      "-1",
+      "/Users/frityet/Projects/petari/notes/gateway-audit-20260907/restoration/retail/obj/Game/Effect/MultiEmitterParticleCallBack.o",
+      "-2",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/MultiEmitterParticleCallBack.o",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/MultiEmitterParticleCallBack.objdiff.json",
+      "--format",
+      "json-pretty"
+    ],
+    "symbols": [
+      {
+        "name": "__ct__28MultiEmitterParticleCallBackFv",
+        "demangled_name": "MultiEmitterParticleCallBack::MultiEmitterParticleCallBack()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__dt__28MultiEmitterParticleCallBackFv",
+        "demangled_name": "MultiEmitterParticleCallBack::~MultiEmitterParticleCallBack()",
+        "size": "88",
+        "match_percent": 100.0
+      },
+      {
+        "name": "draw__19JPAParticleCallBackFP14JPABaseEmitterP15JPABaseParticle",
+        "demangled_name": "JPAParticleCallBack::draw(JPABaseEmitter*, JPABaseParticle*)",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__19JPAParticleCallBackFP14JPABaseEmitterP15JPABaseParticle",
+        "demangled_name": "JPAParticleCallBack::execute(JPABaseEmitter*, JPABaseParticle*)",
+        "size": "4",
+        "match_percent": 100.0
+      }
+    ]
+  },
+  {
+    "source": "src/Game/Effect/SyncBckEffectChecker.cpp",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Effect/SyncBckEffectChecker.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/SyncBckEffectChecker.o"
+    ],
+    "exit_code": 0,
+    "source_sha256": "c550ffd191d991349c94751e21b3c9ff28b134551f8f11d3b8e7b5ba1b6f3563",
+    "log": "notes/original-effect-activation-20260907/SyncBckEffectChecker-wii-compile.log",
+    "verified_at": "2026-09-07T09:23:01.228695+00:00",
+    "objdiff_exit_code": 0,
+    "objdiff_command": [
+      "/Users/frityet/Projects/petari/decomp/build/tools/objdiff-cli",
+      "diff",
+      "-1",
+      "/Users/frityet/Projects/petari/notes/gateway-audit-20260907/restoration/retail/obj/Game/Effect/SyncBckEffectChecker.o",
+      "-2",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/SyncBckEffectChecker.o",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/SyncBckEffectChecker.objdiff.json",
+      "--format",
+      "json-pretty"
+    ],
+    "symbols": [
+      {
+        "name": "__ct__20SyncBckEffectCheckerFP12XanimePlayer",
+        "demangled_name": "SyncBckEffectChecker::SyncBckEffectChecker(XanimePlayer*)",
+        "size": "32",
+        "match_percent": 100.0
+      },
+      {
+        "name": "updateBefore__20SyncBckEffectCheckerFv",
+        "demangled_name": "SyncBckEffectChecker::updateBefore()",
+        "size": "148",
+        "match_percent": 100.0
+      },
+      {
+        "name": "updateAfter__20SyncBckEffectCheckerFv",
+        "demangled_name": "SyncBckEffectChecker::updateAfter()",
+        "size": "36",
+        "match_percent": 97.77778
+      },
+      {
+        "name": "reset__20SyncBckEffectCheckerFv",
+        "demangled_name": "SyncBckEffectChecker::reset()",
+        "size": "20",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isCreate__20SyncBckEffectCheckerCFPC17SyncBckEffectInfob",
+        "demangled_name": "SyncBckEffectChecker::isCreate(const SyncBckEffectInfo*, bool) const",
+        "size": "232",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isDelete__20SyncBckEffectCheckerCFPC17SyncBckEffectInfo",
+        "demangled_name": "SyncBckEffectChecker::isDelete(const SyncBckEffectInfo*) const",
+        "size": "252",
+        "match_percent": 100.0
+      },
+      {
+        "name": "checkPass__20SyncBckEffectCheckerCFf",
+        "demangled_name": "SyncBckEffectChecker::checkPass(float) const",
+        "size": "80",
+        "match_percent": 100.0
+      },
+      {
+        "name": "checkPassIfRate0__20SyncBckEffectCheckerCFf",
+        "demangled_name": "SyncBckEffectChecker::checkPassIfRate0(float) const",
+        "size": "244",
+        "match_percent": 99.672134
+      }
+    ]
+  },
+  {
+    "source": "src/Game/Effect/SyncBckEffectInfo.cpp",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Effect/SyncBckEffectInfo.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/SyncBckEffectInfo.o"
+    ],
+    "exit_code": 0,
+    "source_sha256": "9a54ee00dce57c6769f67169da425fa75f83f4f4b8c9696afdf25c999814ef01",
+    "log": "notes/original-effect-activation-20260907/SyncBckEffectInfo-wii-compile.log",
+    "verified_at": "2026-09-07T09:23:01.255173+00:00",
+    "objdiff_exit_code": 0,
+    "objdiff_command": [
+      "/Users/frityet/Projects/petari/decomp/build/tools/objdiff-cli",
+      "diff",
+      "-1",
+      "/Users/frityet/Projects/petari/notes/gateway-audit-20260907/restoration/retail/obj/Game/Effect/SyncBckEffectInfo.o",
+      "-2",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/SyncBckEffectInfo.o",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/SyncBckEffectInfo.objdiff.json",
+      "--format",
+      "json-pretty"
+    ],
+    "symbols": [
+      {
+        "name": "__ct__Q217SyncBckEffectInfo15BckResourceInfoFPC12XanimePlayerPCc",
+        "demangled_name": "SyncBckEffectInfo::BckResourceInfo::BckResourceInfo(const XanimePlayer*, const char*)",
+        "size": "72",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isLoop__Q217SyncBckEffectInfo15BckResourceInfoCFv",
+        "demangled_name": "SyncBckEffectInfo::BckResourceInfo::isLoop() const",
+        "size": "36",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__17SyncBckEffectInfoFPC12XanimePlayerPCclffb",
+        "demangled_name": "SyncBckEffectInfo::SyncBckEffectInfo(const XanimePlayer*, const char*, long, float, float, bool)",
+        "size": "124",
+        "match_percent": 100.0
+      },
+      {
+        "name": "addBck__17SyncBckEffectInfoFPC12XanimePlayerPCc",
+        "demangled_name": "SyncBckEffectInfo::addBck(const XanimePlayer*, const char*)",
+        "size": "108",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isRegisteredBck__17SyncBckEffectInfoCFPCc",
+        "demangled_name": "SyncBckEffectInfo::isRegisteredBck(const char*) const",
+        "size": "140",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isBckLoop__17SyncBckEffectInfoCFPCc",
+        "demangled_name": "SyncBckEffectInfo::isBckLoop(const char*) const",
+        "size": "164",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isExistSyncBckDeleteFrame__Q22MR6EffectFPC17SyncBckEffectInfo",
+        "demangled_name": "MR::Effect::isExistSyncBckDeleteFrame(const SyncBckEffectInfo*)",
+        "size": "28",
+        "match_percent": 100.0
+      }
+    ]
+  },
+  {
+    "source": "src/Game/LiveActor/EffectKeeper.cpp",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/LiveActor/EffectKeeper.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/EffectKeeper.o"
+    ],
+    "exit_code": 0,
+    "source_sha256": "34e00308c47d9ac237535a6fe742fea099a86608f76e9337ad36081cc4b1c2c1",
+    "log": "notes/original-effect-activation-20260907/EffectKeeper-wii-compile.log",
+    "verified_at": "2026-09-07T09:23:01.422096+00:00",
+    "objdiff_exit_code": 0,
+    "objdiff_command": [
+      "/Users/frityet/Projects/petari/decomp/build/tools/objdiff-cli",
+      "diff",
+      "-1",
+      "/Users/frityet/Projects/petari/notes/gateway-audit-20260907/restoration/retail/obj/Game/LiveActor/EffectKeeper.o",
+      "-2",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/EffectKeeper.o",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/EffectKeeper.objdiff.json",
+      "--format",
+      "json-pretty"
+    ],
+    "symbols": [
+      {
+        "name": "makeAttibuteEffectBaseName__26@unnamed@EffectKeeper_cpp@FPcUlPCc",
+        "demangled_name": "@unnamed@EffectKeeper_cpp@::makeAttibuteEffectBaseName(char*, unsigned long, const char*)",
+        "size": "124",
+        "match_percent": 99.67742
+      },
+      {
+        "name": "__ct__12EffectKeeperFPCcP14ResourceHolderiPCc",
+        "demangled_name": "EffectKeeper::EffectKeeper(const char*, ResourceHolder*, int, const char*)",
+        "size": "172",
+        "match_percent": 100.0
+      },
+      {
+        "name": "init__12EffectKeeperFP9LiveActor",
+        "demangled_name": "EffectKeeper::init(LiveActor*)",
+        "size": "20",
+        "match_percent": 100.0
+      },
+      {
+        "name": "initAfterPlacementForAttributeEffect__12EffectKeeperFPA4_f",
+        "demangled_name": "EffectKeeper::initAfterPlacementForAttributeEffect(float(*)[4])",
+        "size": "392",
+        "match_percent": 97.60204
+      },
+      {
+        "name": "setBinder__12EffectKeeperFPC6Binder",
+        "demangled_name": "EffectKeeper::setBinder(const Binder*)",
+        "size": "20",
+        "match_percent": 100.0
+      },
+      {
+        "name": "addEffect__12EffectKeeperFPCcP9LiveActor",
+        "demangled_name": "EffectKeeper::addEffect(const char*, LiveActor*)",
+        "size": "76",
+        "match_percent": 100.0
+      },
+      {
+        "name": "registerEffect__12EffectKeeperFPCcPCQ29JGeometry8TVec3<f>PCQ29JGeometry8TVec3<f>PCQ29JGeometry8TVec3<f>PCc",
+        "demangled_name": "EffectKeeper::registerEffect(const char*, const JGeometry::TVec3<float>*, const JGeometry::TVec3<float>*, const JGeometry::TVec3<float>*, const char*)",
+        "size": "160",
+        "match_percent": 99.875
+      },
+      {
+        "name": "registerEffect__12EffectKeeperFPCcPA4_fPCcPCc",
+        "demangled_name": "EffectKeeper::registerEffect(const char*, float(*)[4], const char*, const char*)",
+        "size": "144",
+        "match_percent": 99.861115
+      },
+      {
+        "name": "registerEffect__12EffectKeeperFPCcPA4_fPCQ29JGeometry8TVec3<f>PCcPCc",
+        "demangled_name": "EffectKeeper::registerEffect(const char*, float(*)[4], const JGeometry::TVec3<float>*, const char*, const char*)",
+        "size": "152",
+        "match_percent": 99.86842
+      },
+      {
+        "name": "registerEffectWithoutSRT__12EffectKeeperFPCcPCc",
+        "demangled_name": "EffectKeeper::registerEffectWithoutSRT(const char*, const char*)",
+        "size": "104",
+        "match_percent": 100.0
+      },
+      {
+        "name": "registerSyncBckEffect__12EffectKeeperFP12XanimePlayerPCcPCclffb",
+        "demangled_name": "EffectKeeper::registerSyncBckEffect(XanimePlayer*, const char*, const char*, long, float, float, bool)",
+        "size": "184",
+        "match_percent": 100.0
+      },
+      {
+        "name": "createEmitter__12EffectKeeperFPCc",
+        "demangled_name": "EffectKeeper::createEmitter(const char*)",
+        "size": "52",
+        "match_percent": 100.0
+      },
+      {
+        "name": "deleteEmitter__12EffectKeeperFPCc",
+        "demangled_name": "EffectKeeper::deleteEmitter(const char*)",
+        "size": "36",
+        "match_percent": 100.0
+      },
+      {
+        "name": "forceDeleteEmitter__12EffectKeeperFPCc",
+        "demangled_name": "EffectKeeper::forceDeleteEmitter(const char*)",
+        "size": "36",
+        "match_percent": 100.0
+      },
+      {
+        "name": "deleteEmitterAll__12EffectKeeperFv",
+        "demangled_name": "EffectKeeper::deleteEmitterAll()",
+        "size": "100",
+        "match_percent": 100.0
+      },
+      {
+        "name": "forceDeleteEmitterAll__12EffectKeeperFv",
+        "demangled_name": "EffectKeeper::forceDeleteEmitterAll()",
+        "size": "100",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getEmitter__12EffectKeeperCFPCc",
+        "demangled_name": "EffectKeeper::getEmitter(const char*) const",
+        "size": "348",
+        "match_percent": 98.85058
+      },
+      {
+        "name": "getEmitter__12EffectKeeperCFl",
+        "demangled_name": "EffectKeeper::getEmitter(long) const",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "changeEffectName__12EffectKeeperFPCcPCc",
+        "demangled_name": "EffectKeeper::changeEffectName(const char*, const char*)",
+        "size": "96",
+        "match_percent": 100.0
+      },
+      {
+        "name": "update__12EffectKeeperFv",
+        "demangled_name": "EffectKeeper::update()",
+        "size": "52",
+        "match_percent": 100.0
+      },
+      {
+        "name": "updateSyncBckEffect__12EffectKeeperFv",
+        "demangled_name": "EffectKeeper::updateSyncBckEffect()",
+        "size": "124",
+        "match_percent": 100.0
+      },
+      {
+        "name": "syncEffectBck__12EffectKeeperFP12MultiEmitter",
+        "demangled_name": "EffectKeeper::syncEffectBck(MultiEmitter*)",
+        "size": "248",
+        "match_percent": 100.0
+      },
+      {
+        "name": "updateAttributeEffect__12EffectKeeperFv",
+        "demangled_name": "EffectKeeper::updateAttributeEffect()",
+        "size": "232",
+        "match_percent": 100.0
+      },
+      {
+        "name": "stopEmitterOnClipped__12EffectKeeperFv",
+        "demangled_name": "EffectKeeper::stopEmitterOnClipped()",
+        "size": "100",
+        "match_percent": 100.0
+      },
+      {
+        "name": "playEmitterOffClipped__12EffectKeeperFv",
+        "demangled_name": "EffectKeeper::playEmitterOffClipped()",
+        "size": "100",
+        "match_percent": 100.0
+      },
+      {
+        "name": "clear__12EffectKeeperFv",
+        "demangled_name": "EffectKeeper::clear()",
+        "size": "100",
+        "match_percent": 100.0
+      },
+      {
+        "name": "changeBck__12EffectKeeperFv",
+        "demangled_name": "EffectKeeper::changeBck()",
+        "size": "20",
+        "match_percent": 100.0
+      },
+      {
+        "name": "onDraw__12EffectKeeperFv",
+        "demangled_name": "EffectKeeper::onDraw()",
+        "size": "112",
+        "match_percent": 100.0
+      },
+      {
+        "name": "offDraw__12EffectKeeperFv",
+        "demangled_name": "EffectKeeper::offDraw()",
+        "size": "112",
+        "match_percent": 100.0
+      },
+      {
+        "name": "enableSort__12EffectKeeperFv",
+        "demangled_name": "EffectKeeper::enableSort()",
+        "size": "68",
+        "match_percent": 100.0
+      },
+      {
+        "name": "finalizeSort__12EffectKeeperFv",
+        "demangled_name": "EffectKeeper::finalizeSort()",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isRegisteredEmitter__12EffectKeeperCFPCc",
+        "demangled_name": "EffectKeeper::isRegisteredEmitter(const char*) const",
+        "size": "128",
+        "match_percent": 100.0
+      },
+      {
+        "name": "checkExistenceAttributeEffect__12EffectKeeperFv",
+        "demangled_name": "EffectKeeper::checkExistenceAttributeEffect()",
+        "size": "124",
+        "match_percent": 100.0
+      },
+      {
+        "name": "registMultiEmitter__12EffectKeeperFP12MultiEmitterPCcPCc",
+        "demangled_name": "EffectKeeper::registMultiEmitter(MultiEmitter*, const char*, const char*)",
+        "size": "160",
+        "match_percent": 100.0
+      },
+      {
+        "name": "updateFloorCode__12EffectKeeperFv",
+        "demangled_name": "EffectKeeper::updateFloorCode()",
+        "size": "156",
+        "match_percent": 99.74359
+      },
+      {
+        "name": "updateFloorCode__12EffectKeeperFPC8Triangle",
+        "demangled_name": "EffectKeeper::updateFloorCode(const Triangle*)",
+        "size": "84",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isTypeAttributeEffect__12EffectKeeperCFPCc",
+        "demangled_name": "EffectKeeper::isTypeAttributeEffect(const char*) const",
+        "size": "164",
+        "match_percent": 100.0
+      },
+      {
+        "name": "for_each<PP12MultiEmitter,Q23std51binder2nd<Q23std30mem_fun1_t<v,12MultiEmitter,l>,l>>__3stdFPP12MultiEmitterPP12MultiEmitterQ23std51binder2nd<Q23std30mem_fun1_t<v,12MultiEmitter,l>,l>_Q23std51binder2nd<Q23std30mem_fun1_t<v,12MultiEmitter,l>,l>",
+        "demangled_name": "std::binder2nd<std::mem_fun1_t<void, MultiEmitter, long>, long> std::for_each<MultiEmitter**, std::binder2nd<std::mem_fun1_t<void, MultiEmitter, long>, long>>(MultiEmitter**, MultiEmitter**, std::binder2nd<std::mem_fun1_t<void, MultiEmitter, long>, long>)",
+        "size": "128",
+        "match_percent": 100.0
+      }
+    ]
+  },
+  {
+    "source": "src/Game/NameObj/NameObjAdaptor.cpp",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/NameObj/NameObjAdaptor.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/NameObjAdaptor.o"
+    ],
+    "exit_code": 0,
+    "source_sha256": "21780d330c9f77b4c3fcb1a4c837954a2a0db182d3ac4d52515b488f21fc71ef",
+    "log": "notes/original-effect-activation-20260907/NameObjAdaptor-wii-compile.log",
+    "verified_at": "2026-09-07T09:23:01.415297+00:00",
+    "objdiff_exit_code": 0,
+    "objdiff_command": [
+      "/Users/frityet/Projects/petari/decomp/build/tools/objdiff-cli",
+      "diff",
+      "-1",
+      "/Users/frityet/Projects/petari/notes/gateway-audit-20260907/restoration/retail/obj/Game/NameObj/NameObjAdaptor.o",
+      "-2",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/NameObjAdaptor.o",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-effect-activation-20260907/NameObjAdaptor.objdiff.json",
+      "--format",
+      "json-pretty"
+    ],
+    "symbols": [
+      {
+        "name": "__ct__14NameObjAdaptorFPCc",
+        "demangled_name": "NameObjAdaptor::NameObjAdaptor(const char*)",
+        "size": "80",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__dt__14NameObjAdaptorFv",
+        "demangled_name": "NameObjAdaptor::~NameObjAdaptor()",
+        "size": "136",
+        "match_percent": 100.0
+      },
+      {
+        "name": "movement__14NameObjAdaptorFv",
+        "demangled_name": "NameObjAdaptor::movement()",
+        "size": "32",
+        "match_percent": 100.0
+      },
+      {
+        "name": "calcAnim__14NameObjAdaptorFv",
+        "demangled_name": "NameObjAdaptor::calcAnim()",
+        "size": "32",
+        "match_percent": 100.0
+      },
+      {
+        "name": "calcViewAndEntry__14NameObjAdaptorFv",
+        "demangled_name": "NameObjAdaptor::calcViewAndEntry()",
+        "size": "32",
+        "match_percent": 100.0
+      },
+      {
+        "name": "draw__14NameObjAdaptorCFv",
+        "demangled_name": "NameObjAdaptor::draw() const",
+        "size": "32",
+        "match_percent": 100.0
+      },
+      {
+        "name": "connectToMovement__14NameObjAdaptorFRCQ22MR11FunctorBase",
+        "demangled_name": "NameObjAdaptor::connectToMovement(const MR::FunctorBase&)",
+        "size": "68",
+        "match_percent": 100.0
+      },
+      {
+        "name": "connectToCalcAnim__14NameObjAdaptorFRCQ22MR11FunctorBase",
+        "demangled_name": "NameObjAdaptor::connectToCalcAnim(const MR::FunctorBase&)",
+        "size": "68",
+        "match_percent": 100.0
+      },
+      {
+        "name": "connectToDraw__14NameObjAdaptorFRCQ22MR11FunctorBase",
+        "demangled_name": "NameObjAdaptor::connectToDraw(const MR::FunctorBase&)",
+        "size": "68",
+        "match_percent": 100.0
+      }
+    ]
+  }
+]

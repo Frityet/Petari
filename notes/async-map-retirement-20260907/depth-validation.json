@@ -1,0 +1,38 @@
+{
+  "command": [
+    "xmake",
+    "build",
+    "-y",
+    "-j",
+    "12",
+    "smg-pc-aurora-depth-snapshot-render-tests"
+  ],
+  "build_exit": 0,
+  "runs": [
+    {
+      "iteration": 0,
+      "exit": 0,
+      "output": "[aurora:aurora::gpu] Device lost: Device was destroyed.\n[ok] tagged depth snapshots preserve exact draw and copy-clear boundaries\n"
+    },
+    {
+      "iteration": 1,
+      "exit": 0,
+      "output": "[aurora:aurora::gpu] Device lost: Device was destroyed.\n[ok] tagged depth snapshots preserve exact draw and copy-clear boundaries\n"
+    },
+    {
+      "iteration": 2,
+      "exit": 0,
+      "output": "[aurora:aurora::gpu] Device lost: Device was destroyed.\n[ok] tagged depth snapshots preserve exact draw and copy-clear boundaries\n"
+    },
+    {
+      "iteration": 3,
+      "exit": 0,
+      "output": "[aurora:aurora::gpu] Device lost: Device was destroyed.\n[ok] tagged depth snapshots preserve exact draw and copy-clear boundaries\n"
+    },
+    {
+      "iteration": 4,
+      "exit": 0,
+      "output": "[aurora:aurora::gpu] Device lost: Device was destroyed.\n[ok] tagged depth snapshots preserve exact draw and copy-clear boundaries\n"
+    }
+  ]
+}

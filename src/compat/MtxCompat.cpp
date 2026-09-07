@@ -1,3 +1,4 @@
+#include "Game/Util/MathUtil.hpp"
 #include "Game/Util/MtxUtil.hpp"
 
 #include "Game/LiveActor/LiveActor.hpp"
@@ -238,3 +239,33 @@ namespace MR {
         pMatrix->setTrans(rPosition);
     }
 }  // namespace MR
+
+// Original methods from Game/Util/MtxUtil.cpp.
+namespace MR {
+    void makeRTFromMtxPtr(TVec3f* pOutTrans, TVec3f* pOutRot, MtxPtr src, bool toDegree) {
+        if (pOutTrans) {
+            ((TPos3f*)src)->getTrans(*pOutTrans);
+        }
+
+        if (pOutRot) {
+            ((TRot3f*)src)->getEuler(*pOutRot);
+
+            if (toDegree) {
+                pOutRot->set(*pOutRot * (180.0f / PI));
+            }
+        }
+    }
+
+    bool isSameMtx(MtxPtr a, MtxPtr b) {
+        f32* pA = (f32*)a;
+        f32* pB = (f32*)b;
+        for (int i = 0; i < 12; i++) {
+            if (*pA != *pB) {
+                return false;
+            }
+            pA++;
+            pB++;
+        }
+        return true;
+    }
+} // namespace MR

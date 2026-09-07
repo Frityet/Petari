@@ -13,6 +13,7 @@
 #include "Game/Util/ActorMovementUtil.hpp"
 #include "Game/Util/ActorSwitchUtil.hpp"
 #include "Game/Util/AreaObjUtil.hpp"
+#include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/EventUtil.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
@@ -448,7 +449,8 @@ namespace smgpc::compat {
             return result;
         }
 
-        [[nodiscard]] TalkPresentation make_presentation(TalkMessageCtrl& controller) const {
+        [[nodiscard]] TalkPresentation make_presentation(TalkMessageCtrl& controller,
+                                                        std::int32_t demo_type) const {
             const auto& controller_state = state(controller);
             const auto message_index = controller.getMessageID();
             const auto* message_id = messages().message_id(message_index);
@@ -475,6 +477,7 @@ namespace smgpc::compat {
                 .raw_text = *raw_text,
                 .display_text = std::move(formatted),
                 .info = *info,
+                .demo_type = demo_type,
                 .time_keep_paused = false,
             };
         }
@@ -563,21 +566,31 @@ namespace smgpc::compat {
 
             const auto is_short = controller.mNodeCtrl->mMessageInfo.isShortTalk();
             auto* demo = active_demo_scene_runtime();
-            if (use_demo && !is_short && (demo == nullptr || !demo->is_time_keep_active())) {
+            // Preserve TalkDirector::getDemoType at acceptance. Later graph
+            // progression or timekeeper changes must not reclassify this talk.
+            auto demo_type = std::int32_t{0};
+            if (!is_short) {
+                if (demo != nullptr && demo->is_time_keep_active()) {
+                    demo_type = use_demo ? 2 : 3;
+                } else if (use_demo) {
+                    demo_type = 1;
+                }
+            }
+            if (demo_type == 1) {
                 throw std::logic_error(
                     "Normal programmable talk-demo ownership is unavailable; an event talk may only use the active time-keep demo runtime.");
             }
 
+            presentation = make_presentation(controller, demo_type);
             active = &controller;
             active_force = force;
-            presentation = make_presentation(controller);
             controller_state.start_latch = true;
             controller_state.end_latch = false;
             controller._18 = 3U;
             const auto& wpad = runtime_context().wpad();
             input_released_after_open = !wpad.is_button_held(WPAD_CHAN0, WPAD_BUTTON_A);
 
-            if (use_demo && !is_short && demo != nullptr && demo->is_time_keep_active()) {
+            if (demo_type == 2) {
                 demo->pause_time_keep(controller.mHostActor);
                 active_time_keep_pause = true;
                 presentation->time_keep_paused = true;
@@ -705,6 +718,20 @@ namespace smgpc::compat {
         return _impl->presentation;
     }
 
+    bool TalkRuntime::is_system_talking() const {
+        // Retail TalkState retains the controller itself, so this query reads
+        // its current node even when the displayed message was frozen earlier.
+        return _impl->active != nullptr && !TalkFunction::isShortTalk(_impl->active);
+    }
+
+    bool TalkRuntime::is_normal_talking() const {
+        return is_system_talking() && _impl->presentation->demo_type == 1;
+    }
+
+    LiveActor* TalkRuntime::talking_actor() const {
+        return is_system_talking() ? _impl->active->mHostActor : nullptr;
+    }
+
     std::optional<std::uint32_t> TalkRuntime::current_node_index(
         const TalkMessageCtrl& controller) const {
         return _impl->node_index(_impl->state(controller).node_ctrl->mCurrentNode);
@@ -803,6 +830,25 @@ namespace smgpc::compat {
     }
 
 }  // namespace smgpc::compat
+
+namespace MR {
+
+    bool isSystemTalking() {
+        const auto* talk = smgpc::compat::current_talk_runtime();
+        return talk != nullptr && talk->is_system_talking();
+    }
+
+    bool isNormalTalking() {
+        const auto* talk = smgpc::compat::current_talk_runtime();
+        return talk != nullptr && talk->is_normal_talking();
+    }
+
+    LiveActor* getTalkingActor() {
+        const auto* talk = smgpc::compat::current_talk_runtime();
+        return talk != nullptr ? talk->talking_actor() : nullptr;
+    }
+
+}  // namespace MR
 
 TalkMessageInfo::TalkMessageInfo()
     : _0(nullptr), mCameraSetID(0U), _6(0), mCameraType(2U), mTalkType(0U),

@@ -36,6 +36,7 @@ void JPABaseEmitter::init(JPAEmitterManager* pManager, JPAResource* pResource) {
     pResource->getBsp()->getPrmClr(&mPrmClr);
     pResource->getBsp()->getEnvClr(&mEnvClr);
     mpUserWork = 0;
+    mLastNonzeroUserWork = 0;
     mScaleOut = 1.0f;
     mEmitCount = 0.0f;
     mStatus = JPAEmtrStts_FirstEmit | JPAEmtrStts_RateStepEmit;

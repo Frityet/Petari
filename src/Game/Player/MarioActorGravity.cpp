@@ -1,3 +1,5 @@
+#include "Game/Util/AreaObjUtil.hpp"
+#include "Game/Player/MarioConst.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/Map/HitInfo.hpp"
 #include "Game/Player/MarioActor.hpp"
@@ -326,4 +328,70 @@ bool MarioActor::checkBeeCeilStick(TVec3f& rVec) {
     return false;
 }
 
-// void MarioActor::updateBeeStickMode(TVec3f& rVec) {}
+
+void MarioActor::updateBeeStickMode(TVec3f& rVec) {
+    if (mBeeWallWalk == 0) {
+        return;
+    }
+
+    bool cancel = false;
+    bool fur = mMario->mDrawStates._19;
+    if (!fur) {
+        const char* wallCode = MR::getWallCodeString(mMario->_45C);
+        if (wallCode != nullptr && strcmp(wallCode, "Fur") == 0) {
+            fur = true;
+        }
+    }
+
+    if (fur && _9F2 == 0) {
+        f32 radius = mConst->getTable()->mBeeWallWalkCancelRadius;
+        if (MR::getAreaObj("BeeWallShortDistArea", mPosition) != nullptr) {
+            radius = mConst->getTable()->mBeeWallWalkCancelRadiusShort;
+        }
+        if (mMario->mVerticalSpeed > radius) {
+            cancel = true;
+        } else if (isJumping() && mMario->checkWallCode("Normal", false)) {
+            cancel = true;
+        } else {
+            mBeeWallWalk = 5;
+        }
+        if (isJumping() && isRequestRush()) {
+            mBeeWallWalk = 0;
+        }
+    } else if (isJumping()) {
+        if (mMario->mVerticalSpeed < 100.0f) {
+            mBeeWallWalk--;
+        }
+        if (mMario->checkWallCode("Normal", false)) {
+            cancel = true;
+        }
+        f32 radius = mConst->getTable()->mBeeWallWalkCancelRadius;
+        if (MR::getAreaObj("BeeWallShortDistArea", mPosition) != nullptr) {
+            radius = mConst->getTable()->mBeeWallWalkCancelRadiusShort;
+        }
+        if (mMario->mVerticalSpeed > radius) {
+            cancel = true;
+        }
+    } else {
+        if (mMario->mMovementStates._B) {
+            mMario->mMovementStates._B = false;
+        }
+        cancel = true;
+    }
+
+    if (cancel && mBeeWallWalk != 0) {
+        mBeeWallWalk--;
+    }
+    if (mBeeWallWalk == 0) {
+        mMario->stopWalk();
+        mMario->tryJump();
+        mMario->_408 = mConst->getTable()->mBeeGravityPowerTime;
+        mMario->_3BC = mConst->getTable()->mBeeAirWalkInhibitTime - 5;
+        TVec3f push(*mMario->_45C->getNormal(0));
+        push *= 100.0f;
+        mMario->push(push);
+        mMario->cutVecElementFromJumpVec(_24C);
+    } else {
+        rVec = -*mMario->_45C->getNormal(0);
+    }
+}

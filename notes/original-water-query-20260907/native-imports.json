@@ -1,0 +1,19 @@
+[
+  "Game/Map/WaterAreaHolder.cpp",
+  "Game/Map/OceanBowl.cpp",
+  "Game/Map/OceanRing.cpp",
+  "Game/Map/OceanSphere.cpp",
+  "Game/Map/OceanSphere.hpp",
+  "Game/Map/OceanSpherePoint.hpp",
+  "Game/Map/OceanRing.hpp",
+  "Game/Map/OceanRingBloomDrawer.hpp",
+  "Game/Map/OceanRingDrawer.hpp",
+  "Game/Map/OceanRingPipe.hpp",
+  "Game/Map/WaterPoint.hpp",
+  "Game/Map/OceanBowl.hpp",
+  "Game/Map/OceanBowlBloomDrawer.hpp",
+  "Game/Map/OceanBowlPoint.hpp",
+  "Game/Map/WhirlPoolAccelerator.hpp",
+  "Game/MapObj/WhirlPool.hpp",
+  "Game/Screen/WaterCameraFilter.hpp"
+]

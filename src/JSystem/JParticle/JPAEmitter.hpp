@@ -311,6 +311,7 @@ public:
     }
     void setUserWork(uintptr_t userWork) {
         mpUserWork = userWork;
+        if (userWork != 0) mLastNonzeroUserWork = userWork;
     }
     u32 getParticleNumber() const {
         return mAlivePtclBase.getNum() + mAlivePtclChld.getNum();
@@ -388,6 +389,10 @@ public:
     /* 0x111 */ u8 mTexAnmIdx;
     /* 0x112 */ u8 mGroupID;
     /* 0x113 */ u8 mResMgrID;
+
+    // Native lifecycle provenance survives an original unlink until this pool
+    // slot is initialized again. The public user-work value keeps retail semantics.
+    uintptr_t mLastNonzeroUserWork = 0;
 };
 
 enum {

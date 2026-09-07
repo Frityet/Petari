@@ -1,0 +1,172 @@
+[
+  {
+    "name": "check__7FurBankFP12J3DModelDataUl",
+    "demangled": "FurBank::check(J3DModelData*, unsigned long)",
+    "size": 88,
+    "calls": []
+  },
+  {
+    "name": "add__14FurDrawManagerFP7FurCtrlUc",
+    "demangled": "FurDrawManager::add(FurCtrl*, unsigned char)",
+    "size": 56,
+    "calls": []
+  },
+  {
+    "name": "draw__14FurDrawManagerCFv",
+    "demangled": "FurDrawManager::draw() const",
+    "size": 184,
+    "calls": [
+      "GXSetClipMode",
+      "_restgpr_29",
+      "_savegpr_29",
+      "drawFur__7FurCtrlFv",
+      "isClipped__2MRFPC9LiveActor",
+      "isDead__2MRFPC9LiveActor",
+      "isHiddenModel__2MRFPC9LiveActor"
+    ]
+  },
+  {
+    "name": "__ct__7FurCtrlFP9LiveActorP8FurParambUc",
+    "demangled": "FurCtrl::FurCtrl(LiveActor*, FurParam*, bool, unsigned char)",
+    "size": 176,
+    "calls": [
+      "_restgpr_29",
+      "_savegpr_29",
+      "add__14FurDrawManagerFP7FurCtrlUc",
+      "getObj__14SceneObjHolderCFi",
+      "getSceneObjHolder__2MRFv"
+    ]
+  },
+  {
+    "name": "calcLayerForm__7FurCtrlFv",
+    "demangled": "FurCtrl::calcLayerForm()",
+    "size": 432,
+    "calls": [
+      "_restgpr_27",
+      "_savegpr_27",
+      "calcValue__Q29FurDrawer11CLayerParamCFll",
+      "pow"
+    ]
+  },
+  {
+    "name": "drawFur__7FurCtrlFv",
+    "demangled": "FurCtrl::drawFur()",
+    "size": 724,
+    "calls": [
+      "GXSetClipMode",
+      "GXSetFog",
+      "_restgpr_28",
+      "_savegpr_28",
+      "getJ3DModel__2MRFPC9LiveActor",
+      "getLightCtrl__2MRFPC9LiveActor",
+      "loadActorLight__2MRFPC9LiveActor",
+      "loadLight__2MRFl",
+      "prepareDraw__14J3DShapePacketCFv",
+      "setupLayerMaterial__9FurDrawerCFl",
+      "setupMaterial__9FurDrawerCFP15DynamicFurParam",
+      "update__9FurDrawerFv"
+    ]
+  },
+  {
+    "name": "createFurMap__7FurCtrlFv",
+    "demangled": "FurCtrl::createFurMap()",
+    "size": 124,
+    "calls": []
+  },
+  {
+    "name": "getFurDrawManager__2MRFv",
+    "demangled": "MR::getFurDrawManager()",
+    "size": 40,
+    "calls": [
+      "getObj__14SceneObjHolderCFi",
+      "getSceneObjHolder__2MRFv"
+    ]
+  },
+  {
+    "name": "__ct__14FurDrawManagerFUc",
+    "demangled": "FurDrawManager::FurDrawManager(unsigned char)",
+    "size": 204,
+    "calls": [
+      "__ct__7NameObjFPCc",
+      "__nw__FUl",
+      "__nwa__FUl",
+      "_restgpr_28",
+      "_savegpr_28",
+      "connectToScene__2MRFP7NameObjiiii"
+    ]
+  },
+  {
+    "name": "setupFur__7FurCtrlFP8J3DModelP7ResTIMGP7ResTIMGP7ResTIMGUsUc",
+    "demangled": "FurCtrl::setupFur(J3DModel*, ResTIMG*, ResTIMG*, ResTIMG*, unsigned short, unsigned char)",
+    "size": 548,
+    "calls": [
+      "DCStoreRange",
+      "__ct__7CShaderFPC12J3DModelDataPC7ResTIMG",
+      "__ct__9FurDrawerFUlP7ResTIMGP7ResTIMG",
+      "__ct__9J3DModel2FP8J3DModel",
+      "__nw__FUl",
+      "__nwa__FUl",
+      "__nwa__FUli",
+      "_restgpr_22",
+      "_savegpr_22",
+      "checkBorderVtx__7CShaderFP12J3DModelDataUl",
+      "makeIndexData__7CShaderCFP8J3DShape",
+      "memcpy",
+      "sprintf"
+    ]
+  },
+  {
+    "name": "setupFurClone__7FurCtrlFP8J3DModelP7FurCtrl",
+    "demangled": "FurCtrl::setupFurClone(J3DModel*, FurCtrl*)",
+    "size": 340,
+    "calls": [
+      "__ct__9J3DModel2FP8J3DModel",
+      "__nw__FUl",
+      "__nwa__FUl",
+      "_restgpr_26",
+      "_savegpr_26",
+      "sprintf"
+    ]
+  },
+  {
+    "name": "initFurParamFromDvd__2MRFP8FurParamP15DynamicFurParamPcUl",
+    "demangled": "MR::initFurParamFromDvd(FurParam*, DynamicFurParam*, char*, unsigned long)",
+    "size": 716,
+    "calls": [
+      "_restgpr_24",
+      "_savegpr_24",
+      "scan32__2MRFPCcPCcPl",
+      "scanf32__2MRFPCcPCcPf",
+      "scanf32x4__2MRFPCcPCcPf",
+      "scanu8x4__2MRFPCcPCcPUc"
+    ]
+  },
+  {
+    "name": "__ct__9J3DModel2FP8J3DModel",
+    "demangled": "J3DModel2::J3DModel2(J3DModel*)",
+    "size": 152,
+    "calls": [
+      "init__15J3DVertexBufferFv",
+      "initialize__8J3DModelFv",
+      "setVertexData__15J3DVertexBufferFP13J3DVertexData"
+    ]
+  },
+  {
+    "name": "__dt__9J3DModel2Fv",
+    "demangled": "J3DModel2::~J3DModel2()",
+    "size": 96,
+    "calls": [
+      "__dl__FPv",
+      "__dt__15J3DVertexBufferFv"
+    ]
+  },
+  {
+    "name": "__dt__14FurDrawManagerFv",
+    "demangled": "FurDrawManager::~FurDrawManager()",
+    "size": 88,
+    "calls": [
+      "__dl__FPv",
+      "__dt__7NameObjFv"
+    ]
+  }
+]

@@ -7,7 +7,11 @@
 class NameObj;
 class SceneObjHolder;
 
+namespace smgpc::runtime { class SceneScheduler; class SceneSchedulerAllocationBinding; }
+
 namespace smgpc::compat {
+    class EffectSystemOwnership;
+    class JkrAllocationDomain;
     class CapturedFrameBlurService;
     class GlobalGravityOwnership;
 }
@@ -31,10 +35,13 @@ namespace smgpc::scene {
         SceneObjHolderBinding(SceneObjHolderBinding &&) = delete;
         SceneObjHolderBinding &operator=(SceneObjHolderBinding &&) = delete;
 
+        void initialize_effect_system(unsigned particles = 3072, unsigned emitters = 256,
+                                      std::size_t byte_budget = 8U * 1024U * 1024U);
         void init_after_placement();
 
     private:
         friend class ::SceneObjHolder;
+        friend smgpc::compat::EffectSystemOwnership* current_effect_system_ownership() noexcept;
         friend AreaObjRuntime *current_area_obj_runtime() noexcept;
         friend smgpc::compat::CapturedFrameBlurService *
         current_captured_frame_blur_service() noexcept;
@@ -45,6 +52,11 @@ namespace smgpc::scene {
         friend void adopt_current_scene_obj_holder_descendant(
             NameObj *object);
 
+        std::shared_ptr<smgpc::compat::JkrAllocationDomain> _game_allocation_domain;
+        std::unique_ptr<smgpc::runtime::SceneSchedulerAllocationBinding> _game_allocation_binding;
+        std::unique_ptr<smgpc::compat::EffectSystemOwnership> _effect_system_ownership;
+        smgpc::runtime::SceneScheduler* _effect_scheduler = nullptr;
+        std::size_t _effect_registration_marker = 0U;
         SceneObjHolder *_holder;
         std::vector<std::unique_ptr<NameObj>> _owned_objects;
         std::vector<NameObj *> _owned_registration_objects;
@@ -64,6 +76,7 @@ namespace smgpc::scene {
             _captured_frame_blur_service;
     };
 
+    [[nodiscard]] smgpc::compat::EffectSystemOwnership* current_effect_system_ownership() noexcept;
     [[nodiscard]] SceneObjHolder *current_scene_obj_holder() noexcept;
     [[nodiscard]] bool current_scene_obj_holder_binding_owns(
         const NameObj *object) noexcept;

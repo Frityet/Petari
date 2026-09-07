@@ -4,6 +4,11 @@
 
 class JPADrawInfo {
 public:
+    JPADrawInfo(const Mtx mtx) {
+        PSMTXCopy(mtx, mCamMtx);
+        PSMTXIdentity(mPrjMtx);
+    }
+
     JPADrawInfo(const Mtx param_0, f32 fovY, f32 aspect) {
         PSMTXCopy(param_0, mCamMtx);
         C_MTXLightPerspective(mPrjMtx, fovY, aspect, 0.5f, -0.5f, 0.5f, 0.5f);

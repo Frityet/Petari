@@ -1,0 +1,90 @@
+[
+  {
+    "source": "src/Game/Effect/EffectSystem.cpp",
+    "returncode": 1,
+    "log": "src_Game_Effect_EffectSystem.cpp.syntax.log",
+    "errors": [
+      "src/Game/Effect/EffectSystem.cpp:2:10: fatal error: 'Game/Effect/AutoEffectGroupHolder.hpp' file not found"
+    ]
+  },
+  {
+    "source": "src/Game/Effect/ParticleEmitter.cpp",
+    "returncode": 0,
+    "log": "src_Game_Effect_ParticleEmitter.cpp.syntax.log",
+    "errors": []
+  },
+  {
+    "source": "src/Game/Effect/ParticleEmitterHolder.cpp",
+    "returncode": 0,
+    "log": "src_Game_Effect_ParticleEmitterHolder.cpp.syntax.log",
+    "errors": []
+  },
+  {
+    "source": "src/Game/Effect/ParticleDrawExecutor.cpp",
+    "returncode": 1,
+    "log": "src_Game_Effect_ParticleDrawExecutor.cpp.syntax.log",
+    "errors": [
+      "src/Game/Effect/ParticleDrawExecutor.cpp:3:10: fatal error: 'Game/NameObj/NameObjAdaptor.hpp' file not found"
+    ]
+  },
+  {
+    "source": "src/Game/Effect/ParticleCalcExecutor.cpp",
+    "returncode": 1,
+    "log": "src_Game_Effect_ParticleCalcExecutor.cpp.syntax.log",
+    "errors": [
+      "src/Game/Effect/ParticleCalcExecutor.cpp:4:10: fatal error: 'Game/NameObj/NameObjAdaptor.hpp' file not found"
+    ]
+  },
+  {
+    "source": "src/Game/Effect/SingleEmitter.cpp",
+    "returncode": 0,
+    "log": "src_Game_Effect_SingleEmitter.cpp.syntax.log",
+    "errors": []
+  },
+  {
+    "source": "src/Game/Effect/MultiEmitter.cpp",
+    "returncode": 0,
+    "log": "src_Game_Effect_MultiEmitter.cpp.syntax.log",
+    "errors": []
+  },
+  {
+    "source": "src/Game/Effect/MultiEmitterAccess.cpp",
+    "returncode": 0,
+    "log": "src_Game_Effect_MultiEmitterAccess.cpp.syntax.log",
+    "errors": []
+  },
+  {
+    "source": "src/Game/Effect/MultiEmitterCallBack.cpp",
+    "returncode": 1,
+    "log": "src_Game_Effect_MultiEmitterCallBack.cpp.syntax.log",
+    "errors": [
+      "src/Game/Effect/MultiEmitterCallBack.cpp:3:10: fatal error: 'Game/Effect/AutoEffectInfo.hpp' file not found"
+    ]
+  },
+  {
+    "source": "src/Game/Effect/MultiEmitterParticleCallBack.cpp",
+    "returncode": 0,
+    "log": "src_Game_Effect_MultiEmitterParticleCallBack.cpp.syntax.log",
+    "errors": []
+  },
+  {
+    "source": "src/Game/Effect/SyncBckEffectChecker.cpp",
+    "returncode": 0,
+    "log": "src_Game_Effect_SyncBckEffectChecker.cpp.syntax.log",
+    "errors": []
+  },
+  {
+    "source": "src/Game/Effect/SyncBckEffectInfo.cpp",
+    "returncode": 0,
+    "log": "src_Game_Effect_SyncBckEffectInfo.cpp.syntax.log",
+    "errors": []
+  },
+  {
+    "source": "src/Game/LiveActor/EffectKeeper.cpp",
+    "returncode": 1,
+    "log": "src_Game_LiveActor_EffectKeeper.cpp.syntax.log",
+    "errors": [
+      "src/Game/LiveActor/EffectKeeper.cpp:3:10: fatal error: 'Game/Effect/AutoEffectInfo.hpp' file not found"
+    ]
+  }
+]

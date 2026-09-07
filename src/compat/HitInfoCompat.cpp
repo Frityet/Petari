@@ -179,3 +179,16 @@ bool HitInfo::isCollisionAtEdge() const {
 bool HitInfo::isCollisionAtCorner() const {
     return _88 == 5U || _88 == 6U || _88 == 7U;
 }
+
+// Original methods from Game/Map/HitInfo.cpp.
+TPos3f* Triangle::getBaseMtx() const {
+    return &mParts->mBaseMatrix;
+}
+
+TPos3f* Triangle::getBaseInvMtx() const {
+    return &mParts->mInvBaseMatrix;
+}
+
+TPos3f* Triangle::getPrevBaseMtx() const {
+    return &mParts->mPrevBaseMatrix;
+}

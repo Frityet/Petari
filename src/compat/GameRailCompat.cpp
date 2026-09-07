@@ -120,3 +120,109 @@ namespace MR {
         return pActor->mRailRider->mIsNotReverse;
     }
 }  // namespace MR
+
+// Original RailUtil query bodies; operate on the actor's actual RailRider state.
+namespace {
+    const char* getRailPointArgName(s32 argNum) {
+        if (argNum == 0) {
+            return "point_arg0";
+        }
+        if (argNum == 1) {
+            return "point_arg1";
+        }
+        if (argNum == 2) {
+            return "point_arg2";
+        }
+        if (argNum == 3) {
+            return "point_arg3";
+        }
+        if (argNum == 4) {
+            return "point_arg4";
+        }
+        if (argNum == 5) {
+            return "point_arg5";
+        }
+        if (argNum == 6) {
+            return "point_arg6";
+        }
+        if (argNum == 7) {
+            return "point_arg7";
+        }
+        return nullptr;
+    }
+
+    bool getRailCurrentPointArgF32NoInit(const LiveActor* pActor, s32 argNum, f32* pArg) NO_INLINE {
+        RailRider* railRider = pActor->mRailRider;
+        s32 arg = *pArg;
+        bool b = railRider->getCurrentPointArgS32NoInit(getRailPointArgName(argNum), &arg);
+        *pArg = arg;
+        return b;
+    }
+
+    bool getRailNextPointArgF32NoInit(const LiveActor* pActor, s32 argNum, f32* pArg) NO_INLINE {
+        RailRider* railRider = pActor->mRailRider;
+        s32 arg = *pArg;
+        bool b = railRider->getNextPointArgS32NoInit(getRailPointArgName(argNum), &arg);
+        *pArg = arg;
+        return b;
+    }
+}  // namespace
+
+namespace MR {
+    void calcRailDirectionAtCoord(TVec3f* pDir, const LiveActor* pActor, f32 coord) {
+        pActor->mRailRider->calcDirectionAtCoord(pDir, coord);
+    }
+
+    void calcRailPosAndDirectionAtCoord(TVec3f* pPos, TVec3f* pDir, const LiveActor* pActor, f32 coord) {
+        calcRailPosAtCoord(pPos, pActor, coord);
+        calcRailDirectionAtCoord(pDir, pActor, coord);
+    }
+
+    void calcDistanceToCurrentAndNextRailPoint(const LiveActor* pActor, f32* pCurrDist, f32* pNextDist) {
+        // FIXME : regswap and improper re-load of pActor->mRailRider
+        // https://decomp.me/scratch/Z1FEl
+
+        RailRider* railRider = pActor->mRailRider;
+        f32 currPointCoord = railRider->getCurrentPointCoord();
+        f32 nextPointCoord = railRider->getNextPointCoord();
+
+        if (isNearZero(currPointCoord)) {
+            if (isRailGoingToEnd(pActor)) {
+                f32 coord = railRider->mCoord;
+                *pCurrDist = coord;
+
+            } else {
+                f32 coord = railRider->mCoord;
+                *pCurrDist = railRider->getTotalLength() - coord;
+            }
+        } else {
+            f32 coord = railRider->mCoord;
+            *pCurrDist = MR::abs(coord - currPointCoord);
+        }
+
+        if (isNearZero(nextPointCoord)) {
+            if (isRailGoingToEnd(pActor)) {
+                f32 coord = railRider->mCoord;
+                *pNextDist = railRider->getTotalLength() - coord;
+            } else {
+                f32 coord = railRider->mCoord;
+                *pNextDist = coord;
+            }
+        } else {
+            f32 coord = railRider->mCoord;
+            *pNextDist = MR::abs(railRider->getNextPointCoord() - coord);
+        }
+    }
+
+    const TVec3f& getRailDirection(const LiveActor* pActor) {
+        return pActor->mRailRider->mCurDirection;
+    }
+
+    bool getCurrentRailPointArg1NoInit(const LiveActor* pActor, f32* pArg) {
+        return ::getRailCurrentPointArgF32NoInit(pActor, 1, pArg);
+    }
+
+    bool getNextRailPointArg1NoInit(const LiveActor* pActor, f32* pArg) {
+        return ::getRailNextPointArgF32NoInit(pActor, 1, pArg);
+    }
+}  // namespace MR

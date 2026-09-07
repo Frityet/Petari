@@ -241,4 +241,11 @@ namespace MR {
         return require_actor_collision_parts(actor).bounding_radius;
     }
 
+    void invalidateCollisionParts(LiveActor *actor) {
+        // The primary registration owns the native equivalent of the original
+        // CollisionParts zone membership. Query filters consult it even after
+        // the stage acceleration structure has been built.
+        require_actor_collision_parts(actor).registration->set_enabled(false);
+    }
+
 }  // namespace MR

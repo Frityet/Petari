@@ -24,7 +24,7 @@ public:
     // In MultiEmitterAccess
     void setGlobalRotation(const TVec3s&);
     void setGlobalScale(const TVec3f&);
-    void setGlobalSRTMatrix(const MtxPtr);
+    void setGlobalSRTMatrix(const Mtx);
     void setGlobalPrmColor(u8, u8, u8);
     void setGlobalEnvColor(u8, u8, u8);
 

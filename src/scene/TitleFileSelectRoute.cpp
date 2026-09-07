@@ -1,6 +1,8 @@
 #include "scene/TitleFileSelectRoute.hpp"
 
 #include "Game/Screen/TitleSequenceProduct.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
+#include "scene/SceneObjHolderRuntime.hpp"
 #include "Game/Util/GamePadUtil.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "scene/FileSelectFarVisual.hpp"
@@ -25,6 +27,9 @@ namespace smgpc::scene {
         // title and far phases. Install that ordinary data context before any
         // visual child resolves stage-authored resources.
         runtime.set_current_stage_name("FileSelect");
+        _scene_obj_holder = std::make_unique<SceneObjHolder>();
+        _scene_binding = std::make_unique<SceneObjHolderBinding>(*_scene_obj_holder);
+        _scene_binding->initialize_effect_system(3072, 256);
         _title_visual = std::make_unique<TitleFileSelectVisual>(runtime, false);
         // FileSelector::init constructs its camera/items before title starts;
         // SceneNameObjListExecutor allocates every draw list only afterward.

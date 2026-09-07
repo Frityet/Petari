@@ -105,6 +105,16 @@ namespace JGeometry {
             return TUtil<T>::sqrt(squared());
         }
 
+        f32 setLength(f32 newlength) {
+            f32 oldlength = squared();
+            if (oldlength <= JGeometry::TUtil< f32 >::epsilon()) {
+                return 0.0f;
+            }
+            f32 lengthinv = JGeometry::TUtil< f32 >::inv_sqrt(oldlength);
+            scale(lengthinv * newlength);
+            return lengthinv * oldlength;
+        }
+
         [[nodiscard]] T squareDist(const TVec2& value) const {
             const auto dx = x - value.x;
             const auto dy = y - value.y;
