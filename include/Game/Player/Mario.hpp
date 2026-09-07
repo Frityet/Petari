@@ -203,7 +203,7 @@ public:
     void beeMarioOnGround();
     bool beeMarioOnAir();
 
-    void blown(const TVec3f&);
+    bool blown(const TVec3f&);
 
     bool taskOnEffectCheck(u32);
 
@@ -295,7 +295,7 @@ public:
     bool doSideStep();
 
     bool isSkatableFloor() const;
-    void doSkate();
+    bool doSkate();
 
     u32 initSoundTable(SoundList* list, u32);
     void initSound();
