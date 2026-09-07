@@ -2,9 +2,11 @@
 
 #include "Game/Util/Array.hpp"
 
+class DemoExecutor;
 class LayoutActor;
 class LiveActor;
 class NameObj;
+class Nerve;
 class NerveExecutor;
 
 class DemoStartInfo {
@@ -17,15 +19,15 @@ public:
     DemoStartInfo();
     DemoStartInfo& operator=(const DemoStartInfo&);
 
-    u32 _0;
-    u32 _4;
-    u32 _8;
-    u32 _C;
-    u32 _10;
-    u32 _14;
+    LiveActor* _0;
+    LayoutActor* _4;
+    NerveExecutor* _8;
+    NameObj* _C;
+    NameObj* _10;
+    DemoExecutor* _14;
     const char* mDemoName;  // 0x18
-    u32 _1C;
-    u32 _20;
+    const char* _1C;
+    const Nerve* _20;
     u32 _24;
     u32 _28;
     u32 _2C;
@@ -56,3 +58,14 @@ public:
     MR::FixedRingBuffer< const DemoStartInfo*, 16 > mRequestBuffer;  // 0x44
     NameObj* mProxyObj;                                              // 0xA0
 };
+
+namespace MR {
+    template <>
+    FixedRingBuffer< const DemoStartInfo*, 16 >::iterator::iterator(const DemoStartInfo**, const DemoStartInfo**);
+
+    template <>
+    void FixedRingBuffer< const DemoStartInfo*, 16 >::push_back(const DemoStartInfo* const&);
+
+    template <>
+    void FixedRingBuffer< const DemoStartInfo*, 16 >::iterator::operator++();
+};  // namespace MR

@@ -4,15 +4,15 @@
 #include "Game/Util/StringUtil.hpp"
 
 DemoStartInfo::DemoStartInfo() {
-    _0 = 0;
-    _4 = 0;
-    _8 = 0;
-    _C = 0;
-    _10 = 0;
-    _14 = 0;
+    _0 = nullptr;
+    _4 = nullptr;
+    _8 = nullptr;
+    _C = nullptr;
+    _10 = nullptr;
+    _14 = nullptr;
     mDemoName = nullptr;
-    _1C = 0;
-    _20 = 0;
+    _1C = nullptr;
+    _20 = nullptr;
     _24 = 0;
     _28 = 0;
     _2C = 0;
@@ -115,7 +115,7 @@ void DemoStartRequestHolder::registerStartDemoInfo(const DemoStartInfo& rInfo) {
 
 DemoStartInfo* DemoStartRequestHolder::find(const LiveActor* pActor, const char* pName) const {
     for (DemoStartInfo* const* pIter = mStartInfos; pIter != &mStartInfos[mNumInfos]; pIter++) {
-        if ((*pIter)->_0 == (u32)pActor && MR::isEqualString((*pIter)->mDemoName, pName)) {
+        if ((*pIter)->_0 == pActor && MR::isEqualString((*pIter)->mDemoName, pName)) {
             return *pIter;
         }
     }
@@ -124,7 +124,7 @@ DemoStartInfo* DemoStartRequestHolder::find(const LiveActor* pActor, const char*
 
 DemoStartInfo* DemoStartRequestHolder::find(const LayoutActor* pActor, const char* pName) const {
     for (DemoStartInfo* const* pIter = mStartInfos; pIter != &mStartInfos[mNumInfos]; pIter++) {
-        if ((*pIter)->_4 == (u32)pActor && MR::isEqualString((*pIter)->mDemoName, pName)) {
+        if ((*pIter)->_4 == pActor && MR::isEqualString((*pIter)->mDemoName, pName)) {
             return *pIter;
         }
     }
@@ -133,7 +133,7 @@ DemoStartInfo* DemoStartRequestHolder::find(const LayoutActor* pActor, const cha
 
 DemoStartInfo* DemoStartRequestHolder::find(const NerveExecutor* pExecutor, const char* pName) const {
     for (DemoStartInfo* const* pIter = mStartInfos; pIter != &mStartInfos[mNumInfos]; pIter++) {
-        if ((*pIter)->_8 == (u32)pExecutor && MR::isEqualString((*pIter)->mDemoName, pName)) {
+        if ((*pIter)->_8 == pExecutor && MR::isEqualString((*pIter)->mDemoName, pName)) {
             return *pIter;
         }
     }
@@ -142,7 +142,7 @@ DemoStartInfo* DemoStartRequestHolder::find(const NerveExecutor* pExecutor, cons
 
 DemoStartInfo* DemoStartRequestHolder::find(const NameObj* pObj, const char* pName) const {
     for (DemoStartInfo* const* pIter = mStartInfos; pIter != &mStartInfos[mNumInfos]; pIter++) {
-        if ((*pIter)->_C == (u32)pObj && MR::isEqualString((*pIter)->mDemoName, pName)) {
+        if ((*pIter)->_C == pObj && MR::isEqualString((*pIter)->mDemoName, pName)) {
             return *pIter;
         }
     }
