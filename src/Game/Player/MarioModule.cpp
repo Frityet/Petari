@@ -81,6 +81,29 @@ void MarioModule::changeAnimation(const char* pAnim1, const char* pAnim2) {
     }
 }
 
+void MarioModule::changeAnimationNonStop(const char* pAnim) {
+    if (!mActor->_B90) {
+        if (pAnim) {
+            changeAnimation(pAnim, (const char*)nullptr);
+        }
+
+        XanimeFrameCtrl* pFrameCtrl = mActor->mMarioAnim->mXanimePlayer->_20;
+        if (pFrameCtrl->getAttribute() == 0) {
+            pFrameCtrl->setAttribute(1);
+        }
+    }
+}
+
+void MarioModule::changeAnimationWithAttr(const char* pAnim, u32 attribute) {
+    if (!mActor->_B90) {
+        if (pAnim) {
+            changeAnimation(pAnim, (const char*)nullptr);
+        }
+
+        mActor->mMarioAnim->mXanimePlayer->_20->setAttribute(attribute);
+    }
+}
+
 void MarioModule::stopAnimation(const char* pAnim1, const char* pAnim2) {
     if (!mActor->_B90) {
         if (pAnim2) {
@@ -263,10 +286,9 @@ void MarioModule::addVelocity(const TVec3f& rAdd) {
     mActor->mMario->mVelocity += rAdd;
 }
 
-// vecScaleAdd is inlined
-/* void MarioModule::addVelocity(const TVec3f &rAdd, f32 scale) {
-    MR::vecScaleAdd(&mActor->mMario->_160, &rAdd, scale);
-} */
+void MarioModule::addVelocity(const TVec3f& rAdd, f32 scale) {
+    MR::vecScaleAdd(&mActor->mMario->mVelocity, &rAdd, scale);
+}
 
 void MarioModule::addVelocityAfter(const TVec3f& rAdd) {
     mActor->mMario->mVelocityAfter += rAdd;
