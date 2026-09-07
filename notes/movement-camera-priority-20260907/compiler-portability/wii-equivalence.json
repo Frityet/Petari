@@ -1,0 +1,14 @@
+[
+  {
+    "source": "MarioFpView",
+    "objdiff_exit": 0,
+    "compared_symbols": 20,
+    "changed_symbols": []
+  },
+  {
+    "source": "MarioStick",
+    "objdiff_exit": 0,
+    "compared_symbols": 78,
+    "changed_symbols": []
+  }
+]
