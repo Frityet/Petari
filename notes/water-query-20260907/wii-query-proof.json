@@ -1,0 +1,86 @@
+[
+  {
+    "source": "AreaObjUtil",
+    "symbol": "getWaterAreaObj__2MRFP9WaterInfoRCQ29JGeometry8TVec3<f>",
+    "demangled": "MR::getWaterAreaObj(WaterInfo*, const JGeometry::TVec3<float>&)",
+    "retail_size": 112,
+    "match_percent": 99.46429
+  },
+  {
+    "source": "OceanBowl",
+    "symbol": "isInWater__9OceanBowlCFRCQ29JGeometry8TVec3<f>",
+    "demangled": "OceanBowl::isInWater(const JGeometry::TVec3<float>&) const",
+    "retail_size": 144,
+    "match_percent": 100.0
+  },
+  {
+    "source": "OceanRing",
+    "symbol": "isInWater__9OceanRingCFRCQ29JGeometry8TVec3<f>",
+    "demangled": "OceanRing::isInWater(const JGeometry::TVec3<float>&) const",
+    "retail_size": 244,
+    "match_percent": 99.91803
+  },
+  {
+    "source": "OceanRing",
+    "symbol": "calcNearestPos__9OceanRingCFRCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+    "demangled": "OceanRing::calcNearestPos(const JGeometry::TVec3<float>&, JGeometry::TVec3<float>*, JGeometry::TVec3<float>*, JGeometry::TVec3<float>*) const",
+    "retail_size": 712,
+    "match_percent": 99.74719
+  },
+  {
+    "source": "OceanRing",
+    "symbol": "calcCurrentWidthRate__9OceanRingCFf",
+    "demangled": "OceanRing::calcCurrentWidthRate(float) const",
+    "retail_size": 192,
+    "match_percent": 99.791664
+  },
+  {
+    "source": "OceanRing",
+    "symbol": "getPoint__9OceanRingCFii",
+    "demangled": "OceanRing::getPoint(int, int) const",
+    "retail_size": 28,
+    "match_percent": 100.0
+  },
+  {
+    "source": "OceanSphere",
+    "symbol": "isInWater__11OceanSphereCFRCQ29JGeometry8TVec3<f>",
+    "demangled": "OceanSphere::isInWater(const JGeometry::TVec3<float>&) const",
+    "retail_size": 104,
+    "match_percent": 100.0
+  },
+  {
+    "source": "OceanSphere",
+    "symbol": "getPoint__16OceanSpherePlaneCFii",
+    "demangled": "OceanSpherePlane::getPoint(int, int) const",
+    "retail_size": 28,
+    "match_percent": 100.0
+  },
+  {
+    "source": "WaterAreaHolder",
+    "symbol": "tryInOceanArea__17WaterAreaFunctionFRCQ29JGeometry8TVec3<f>P9WaterInfo",
+    "demangled": "WaterAreaFunction::tryInOceanArea(const JGeometry::TVec3<float>&, WaterInfo*)",
+    "retail_size": 368,
+    "match_percent": 100.0
+  },
+  {
+    "source": "WaterInfo",
+    "symbol": "__ct__9WaterInfoFv",
+    "demangled": "WaterInfo::WaterInfo()",
+    "retail_size": 48,
+    "match_percent": 100.0
+  },
+  {
+    "source": "WaterInfo",
+    "symbol": "isInWater__9WaterInfoCFv",
+    "demangled": "WaterInfo::isInWater() const",
+    "retail_size": 64,
+    "match_percent": 100.0
+  },
+  {
+    "source": "WaterInfo",
+    "symbol": "clear__9WaterInfoFv",
+    "demangled": "WaterInfo::clear()",
+    "retail_size": 128,
+    "match_percent": 100.0
+  }
+]
