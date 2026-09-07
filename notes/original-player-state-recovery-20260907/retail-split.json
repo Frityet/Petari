@@ -1,0 +1,14 @@
+{
+  "command": [
+    "build/tools/dtk",
+    "dol",
+    "split",
+    "--no-update",
+    "-j",
+    "2",
+    "/Users/frityet/Projects/petari/decomp/build/original-player-state-recovery-20260907/config.yml",
+    "/Users/frityet/Projects/petari/decomp/build/original-player-state-recovery-20260907/retail"
+  ],
+  "result": 0,
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578"
+}

@@ -1,0 +1,720 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "units": [
+    {
+      "unit": "MarioFaint",
+      "text": {
+        "name": ".text",
+        "size": "1736",
+        "match_percent": 98.974655
+      },
+      "constructor": {
+        "symbol": "__ct__10MarioFaintFP10MarioActor",
+        "match_percent": 100.0,
+        "retail_address": "0x802d98f0",
+        "retail_bytes": 104,
+        "compiled_bytes": 104,
+        "call_order_identical": true,
+        "retail_calls": [
+          "__ct__10MarioStateFP10MarioActorUl",
+          "zero__Q29JGeometry8TVec3<f>Fv"
+        ],
+        "compiled_calls": [
+          "__ct__10MarioStateFP10MarioActorUl",
+          "zero__Q29JGeometry8TVec3<f>Fv"
+        ],
+        "dol_function_sha256": "c99003e1ad221327a961e84b66498cfe1fe2668a88a63182b3bfda83af7ff1d1"
+      },
+      "vtable": {
+        "symbol": "__vt__10MarioFaint",
+        "match_percent": 100.0,
+        "retail_bytes": 72
+      },
+      "functions": [
+        {
+          "symbol": "doFlipWeak__5MarioFRCQ29JGeometry8TVec3<f>",
+          "retail_bytes": 164,
+          "match_percent": 99.87805
+        },
+        {
+          "symbol": "faint__5MarioFRCQ29JGeometry8TVec3<f>",
+          "retail_bytes": 192,
+          "match_percent": 100.0
+        },
+        {
+          "symbol": "__ct__10MarioFaintFP10MarioActor",
+          "retail_bytes": 104,
+          "match_percent": 100.0
+        },
+        {
+          "symbol": "setVec__10MarioFaintFRCQ29JGeometry8TVec3<f>",
+          "retail_bytes": 212,
+          "match_percent": 100.0
+        },
+        {
+          "symbol": "update__10MarioFaintFv",
+          "retail_bytes": 356,
+          "match_percent": 99.7191
+        },
+        {
+          "symbol": "start__10MarioFaintFv",
+          "retail_bytes": 472,
+          "match_percent": 96.99152
+        },
+        {
+          "symbol": "close__10MarioFaintFv",
+          "retail_bytes": 128,
+          "match_percent": 98.125
+        }
+      ]
+    },
+    {
+      "unit": "MarioDamageParalyze",
+      "text": {
+        "name": ".text",
+        "size": "1244",
+        "match_percent": 99.877815
+      },
+      "constructor": {
+        "symbol": "__ct__13MarioParalyzeFP10MarioActor",
+        "match_percent": 100.0,
+        "retail_address": "0x802d86d0",
+        "retail_bytes": 84,
+        "compiled_bytes": 84,
+        "call_order_identical": true,
+        "retail_calls": [
+          "__ct__10MarioStateFP10MarioActorUl"
+        ],
+        "compiled_calls": [
+          "__ct__10MarioStateFP10MarioActorUl"
+        ],
+        "dol_function_sha256": "69adefe4292e5940ff6a9548cf5611cb4d8dcb398dd4d537dd05469686047e14"
+      },
+      "vtable": {
+        "symbol": "__vt__13MarioParalyze",
+        "match_percent": 100.0,
+        "retail_bytes": 72
+      },
+      "functions": [
+        {
+          "symbol": "doParalyze__5MarioFv",
+          "retail_bytes": 244,
+          "match_percent": 100.0
+        },
+        {
+          "symbol": "__ct__13MarioParalyzeFP10MarioActor",
+          "retail_bytes": 84,
+          "match_percent": 100.0
+        },
+        {
+          "symbol": "close__13MarioParalyzeFv",
+          "retail_bytes": 296,
+          "match_percent": 99.797295
+        },
+        {
+          "symbol": "start__13MarioParalyzeFv",
+          "retail_bytes": 180,
+          "match_percent": 99.6
+        },
+        {
+          "symbol": "update__13MarioParalyzeFv",
+          "retail_bytes": 332,
+          "match_percent": 99.93976
+        }
+      ]
+    },
+    {
+      "unit": "MarioRecovery",
+      "text": {
+        "name": ".text",
+        "size": "3776",
+        "match_percent": 99.01377
+      },
+      "constructor": {
+        "symbol": "__ct__13MarioRecoveryFP10MarioActor",
+        "match_percent": 100.0,
+        "retail_address": "0x803091ec",
+        "retail_bytes": 192,
+        "compiled_bytes": 192,
+        "call_order_identical": true,
+        "retail_calls": [
+          "__ct__10MarioStateFP10MarioActorUl",
+          "zero__Q29JGeometry8TVec3<f>Fv",
+          "zero__Q29JGeometry8TVec3<f>Fv",
+          "zero__Q29JGeometry8TVec3<f>Fv",
+          "zero__Q29JGeometry8TVec3<f>Fv",
+          "zero__Q29JGeometry8TVec3<f>Fv",
+          "zero__Q29JGeometry8TVec3<f>Fv",
+          "zero__Q29JGeometry8TVec3<f>Fv",
+          "zero__Q29JGeometry8TVec3<f>Fv"
+        ],
+        "compiled_calls": [
+          "__ct__10MarioStateFP10MarioActorUl",
+          "zero__Q29JGeometry8TVec3<f>Fv",
+          "zero__Q29JGeometry8TVec3<f>Fv",
+          "zero__Q29JGeometry8TVec3<f>Fv",
+          "zero__Q29JGeometry8TVec3<f>Fv",
+          "zero__Q29JGeometry8TVec3<f>Fv",
+          "zero__Q29JGeometry8TVec3<f>Fv",
+          "zero__Q29JGeometry8TVec3<f>Fv",
+          "zero__Q29JGeometry8TVec3<f>Fv"
+        ],
+        "dol_function_sha256": "92ac424679f6adebef2f7f141ac3cdc8b3a539a2e0998de8ddf279465882ef4a"
+      },
+      "vtable": {
+        "symbol": "__vt__13MarioRecovery",
+        "match_percent": 100.0,
+        "retail_bytes": 72
+      },
+      "functions": [
+        {
+          "symbol": "doRecovery__5MarioFv",
+          "retail_bytes": 320,
+          "match_percent": 99.9375
+        },
+        {
+          "symbol": "__ct__13MarioRecoveryFP10MarioActor",
+          "retail_bytes": 192,
+          "match_percent": 100.0
+        },
+        {
+          "symbol": "calcFirstVector__13MarioRecoveryFv",
+          "retail_bytes": 776,
+          "match_percent": 99.546394
+        },
+        {
+          "symbol": "updateJump__13MarioRecoveryFv",
+          "retail_bytes": 668,
+          "match_percent": 99.11377
+        },
+        {
+          "symbol": "start__13MarioRecoveryFv",
+          "retail_bytes": 492,
+          "match_percent": 99.51219
+        },
+        {
+          "symbol": "update__13MarioRecoveryFv",
+          "retail_bytes": 1016,
+          "match_percent": 99.173225
+        },
+        {
+          "symbol": "close__13MarioRecoveryFv",
+          "retail_bytes": 204,
+          "match_percent": 91.76471
+        }
+      ]
+    },
+    {
+      "unit": "MarioTeresa",
+      "text": {
+        "name": ".text",
+        "size": "9060",
+        "match_percent": 76.53731
+      },
+      "constructor": {
+        "symbol": "__ct__11MarioTeresaFP10MarioActor",
+        "match_percent": 99.82758,
+        "retail_address": "0x8030e164",
+        "retail_bytes": 116,
+        "compiled_bytes": 116,
+        "call_order_identical": true,
+        "retail_calls": [
+          "__ct__10MarioStateFP10MarioActorUl",
+          "zero__Q29JGeometry8TVec3<f>Fv",
+          "resetTeresaMode__11MarioTeresaFv"
+        ],
+        "compiled_calls": [
+          "__ct__10MarioStateFP10MarioActorUl",
+          "zero__Q29JGeometry8TVec3<f>Fv",
+          "resetTeresaMode__11MarioTeresaFv"
+        ],
+        "dol_function_sha256": "731ffd5ea0ecd7ec8f0275e0217a2f06cf696a7309c6bf5f2813d0dee1fef1d4"
+      },
+      "vtable": {
+        "symbol": "__vt__11MarioTeresa",
+        "match_percent": 100.0,
+        "retail_bytes": 72
+      },
+      "functions": [
+        {
+          "symbol": "startTeresaMode__5MarioFv",
+          "retail_bytes": 140,
+          "match_percent": 28.428572
+        },
+        {
+          "symbol": "updateDropFlag__11MarioTeresaFv",
+          "retail_bytes": 168,
+          "match_percent": 97.2619
+        },
+        {
+          "symbol": "getHitWallNorm__5MarioFPQ29JGeometry8TVec3<f>",
+          "retail_bytes": 268,
+          "match_percent": 49.791046
+        },
+        {
+          "symbol": "resetTeresaMode__5MarioFv",
+          "retail_bytes": 28,
+          "match_percent": 100.0
+        },
+        {
+          "symbol": "resetTeresaMode__11MarioTeresaFv",
+          "retail_bytes": 84,
+          "match_percent": 99.7619
+        },
+        {
+          "symbol": "isTeresaAccel__11MarioTeresaCFv",
+          "retail_bytes": 16,
+          "match_percent": 100.0
+        },
+        {
+          "symbol": "__ct__11MarioTeresaFP10MarioActor",
+          "retail_bytes": 116,
+          "match_percent": 99.82758
+        },
+        {
+          "symbol": "close__11MarioTeresaFv",
+          "retail_bytes": 8,
+          "match_percent": 100.0
+        },
+        {
+          "symbol": "update__11MarioTeresaFv",
+          "retail_bytes": 476,
+          "match_percent": 96.260506
+        },
+        {
+          "symbol": "checkHeight__11MarioTeresaFv",
+          "retail_bytes": 584,
+          "match_percent": 84.50685
+        },
+        {
+          "symbol": "checkAccel__11MarioTeresaFv",
+          "retail_bytes": 144,
+          "match_percent": 100.0
+        },
+        {
+          "symbol": "checkGroundReflect__11MarioTeresaFv",
+          "retail_bytes": 276,
+          "match_percent": 89.89855
+        },
+        {
+          "symbol": "procNoControl__11MarioTeresaFv",
+          "retail_bytes": 164,
+          "match_percent": 78.414635
+        },
+        {
+          "symbol": "procNearGroundControl__11MarioTeresaFv",
+          "retail_bytes": 408,
+          "match_percent": 84.539215
+        },
+        {
+          "symbol": "procDrop__11MarioTeresaFv",
+          "retail_bytes": 692,
+          "match_percent": 41.358383
+        },
+        {
+          "symbol": "addTeresaVerticalVelocity__11MarioTeresaFf",
+          "retail_bytes": 588,
+          "match_percent": 85.87075
+        },
+        {
+          "symbol": "addTeresaHorizontalVelocity__11MarioTeresaFRCQ29JGeometry8TVec3<f>",
+          "retail_bytes": 320,
+          "match_percent": 99.875
+        },
+        {
+          "symbol": "doTeresaReflection__5MarioFRCQ29JGeometry8TVec3<f>b",
+          "retail_bytes": 8,
+          "match_percent": 100.0
+        },
+        {
+          "symbol": "doTeresaReflection__11MarioTeresaFRCQ29JGeometry8TVec3<f>b",
+          "retail_bytes": 488,
+          "match_percent": 96.18033
+        },
+        {
+          "symbol": "initTeresaMarioAnimation__10MarioActorFv",
+          "retail_bytes": 240,
+          "match_percent": 73.333336
+        },
+        {
+          "symbol": "startTeresaDisappear__5MarioFv",
+          "retail_bytes": 220,
+          "match_percent": 99.30909
+        },
+        {
+          "symbol": "start__11MarioTeresaFv",
+          "retail_bytes": 172,
+          "match_percent": 90.11628
+        },
+        {
+          "symbol": "checkWind__11MarioTeresaFv",
+          "retail_bytes": 376,
+          "match_percent": 84.75532
+        },
+        {
+          "symbol": "checkWallCeilReflect__11MarioTeresaFv",
+          "retail_bytes": 512,
+          "match_percent": 75.74219
+        },
+        {
+          "symbol": "procAirControl__11MarioTeresaFv",
+          "retail_bytes": 376,
+          "match_percent": 85.42553
+        },
+        {
+          "symbol": "procControl__11MarioTeresaFv",
+          "retail_bytes": 544,
+          "match_percent": 76.38971
+        },
+        {
+          "symbol": "runTeresaBaseAnimation__10MarioActorFv",
+          "retail_bytes": 136,
+          "match_percent": 52.382355
+        },
+        {
+          "symbol": "changeTeresaAnimation__10MarioActorFPCcl",
+          "retail_bytes": 264,
+          "match_percent": 76.59091
+        },
+        {
+          "symbol": "updateTeresaAnimation__10MarioActorFv",
+          "retail_bytes": 1112,
+          "match_percent": 58.492805
+        },
+        {
+          "symbol": "keep__11MarioTeresaFv",
+          "retail_bytes": 16,
+          "match_percent": 100.0
+        },
+        {
+          "symbol": "notice__11MarioTeresaFv",
+          "retail_bytes": 8,
+          "match_percent": 100.0
+        }
+      ]
+    },
+    {
+      "unit": "MarioFoo",
+      "text": {
+        "name": ".text",
+        "size": "10508",
+        "match_percent": 96.66997
+      },
+      "constructor": {
+        "symbol": "__ct__8MarioFooFP10MarioActor",
+        "match_percent": 99.788734,
+        "retail_address": "0x802df1d4",
+        "retail_bytes": 284,
+        "compiled_bytes": 284,
+        "call_order_identical": true,
+        "retail_calls": [
+          "_savegpr_29",
+          "__ct__10MarioStateFP10MarioActorUl",
+          "zero__Q29JGeometry8TVec3<f>Fv",
+          "zero__Q29JGeometry8TVec3<f>Fv",
+          "zero__Q29JGeometry8TVec3<f>Fv",
+          "PSMTXIdentity",
+          "zero__Q29JGeometry8TVec3<f>Fv",
+          "zero__Q29JGeometry8TVec3<f>Fv",
+          "_restgpr_29"
+        ],
+        "compiled_calls": [
+          "_savegpr_29",
+          "__ct__10MarioStateFP10MarioActorUl",
+          "zero__Q29JGeometry8TVec3<f>Fv",
+          "zero__Q29JGeometry8TVec3<f>Fv",
+          "zero__Q29JGeometry8TVec3<f>Fv",
+          "PSMTXIdentity",
+          "zero__Q29JGeometry8TVec3<f>Fv",
+          "zero__Q29JGeometry8TVec3<f>Fv",
+          "_restgpr_29"
+        ],
+        "dol_function_sha256": "8c2466421d682ee1324f31c21b261db51de22d3f7f2b204e0bebbb9bb15b8482"
+      },
+      "vtable": {
+        "symbol": "__vt__8MarioFoo",
+        "match_percent": 100.0,
+        "retail_bytes": 76
+      },
+      "functions": [
+        {
+          "symbol": "tryStartFoo__5MarioFv",
+          "retail_bytes": 136,
+          "match_percent": 99.117645
+        },
+        {
+          "symbol": "__ct__8MarioFooFP10MarioActor",
+          "retail_bytes": 284,
+          "match_percent": 99.788734
+        },
+        {
+          "symbol": "init__8MarioFooFv",
+          "retail_bytes": 128,
+          "match_percent": 100.0
+        },
+        {
+          "symbol": "start__8MarioFooFv",
+          "retail_bytes": 336,
+          "match_percent": 99.70238
+        },
+        {
+          "symbol": "update__8MarioFooFv",
+          "retail_bytes": 2836,
+          "match_percent": 96.729195
+        },
+        {
+          "symbol": "notice__8MarioFooFv",
+          "retail_bytes": 80,
+          "match_percent": 100.0
+        },
+        {
+          "symbol": "close__8MarioFooFv",
+          "retail_bytes": 584,
+          "match_percent": 95.99315
+        },
+        {
+          "symbol": "getGravityVec__8MarioFooCFv",
+          "retail_bytes": 4,
+          "match_percent": 100.0
+        },
+        {
+          "symbol": "jet__8MarioFooFv",
+          "retail_bytes": 848,
+          "match_percent": 97.45283
+        },
+        {
+          "symbol": "updateTilt__8MarioFooFv",
+          "retail_bytes": 664,
+          "match_percent": 96.29518
+        },
+        {
+          "symbol": "hitWall__8MarioFooFRCQ29JGeometry8TVec3<f>P9HitSensor",
+          "retail_bytes": 240,
+          "match_percent": 100.0
+        },
+        {
+          "symbol": "getStickY__8MarioFooCFv",
+          "retail_bytes": 4,
+          "match_percent": 100.0
+        },
+        {
+          "symbol": "spin__8MarioFooFv",
+          "retail_bytes": 256,
+          "match_percent": 95.90625
+        },
+        {
+          "symbol": "passRing__8MarioFooFPC9HitSensor",
+          "retail_bytes": 220,
+          "match_percent": 99.818184
+        },
+        {
+          "symbol": "calcRingAcc__8MarioFooFv",
+          "retail_bytes": 384,
+          "match_percent": 99.427086
+        },
+        {
+          "symbol": "draw3D__8MarioFooCFv",
+          "retail_bytes": 3292,
+          "match_percent": 94.82746
+        },
+        {
+          "symbol": "getBlurOffset__8MarioFooCFv",
+          "retail_bytes": 8,
+          "match_percent": 100.0
+        }
+      ]
+    },
+    {
+      "unit": "MarioHang",
+      "text": {
+        "name": ".text",
+        "size": "9300",
+        "match_percent": 85.85462
+      },
+      "constructor": {
+        "symbol": "__ct__9MarioHangFP10MarioActor",
+        "match_percent": 100.0,
+        "retail_address": "0x802f83a8",
+        "retail_bytes": 180,
+        "compiled_bytes": 180,
+        "call_order_identical": true,
+        "retail_calls": [
+          "__ct__10MarioStateFP10MarioActorUl",
+          "zero__Q29JGeometry8TVec3<f>Fv",
+          "zero__Q29JGeometry8TVec3<f>Fv",
+          "__nw__FUl",
+          "__ct__8TriangleFv",
+          "__nw__FUl",
+          "__ct__8TriangleFv"
+        ],
+        "compiled_calls": [
+          "__ct__10MarioStateFP10MarioActorUl",
+          "zero__Q29JGeometry8TVec3<f>Fv",
+          "zero__Q29JGeometry8TVec3<f>Fv",
+          "__nw__FUl",
+          "__ct__8TriangleFv",
+          "__nw__FUl",
+          "__ct__8TriangleFv"
+        ],
+        "dol_function_sha256": "b1341a7da8476e52c6b40d5ff0e9777a5883fb5f06c365fddc1046224c44be09"
+      },
+      "vtable": {
+        "symbol": "__vt__9MarioHang",
+        "match_percent": 100.0,
+        "retail_bytes": 72
+      },
+      "functions": [
+        {
+          "symbol": "fixHangDir__5MarioFRCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+          "retail_bytes": 252,
+          "match_percent": 96.666664
+        },
+        {
+          "symbol": "isEnableBackHang__5MarioFv",
+          "retail_bytes": 700,
+          "match_percent": 82.65143
+        },
+        {
+          "symbol": "isEnableSideHang__5MarioFv",
+          "retail_bytes": 660,
+          "match_percent": 89.24848
+        },
+        {
+          "symbol": "recordWallPolygon__9MarioHangFPC8Triangle",
+          "retail_bytes": 244,
+          "match_percent": 100.0
+        },
+        {
+          "symbol": "recordHangNorm__9MarioHangFRCQ29JGeometry8TVec3<f>",
+          "retail_bytes": 96,
+          "match_percent": 100.0
+        },
+        {
+          "symbol": "forceDrop__9MarioHangFv",
+          "retail_bytes": 12,
+          "match_percent": 100.0
+        },
+        {
+          "symbol": "__ct__9MarioHangFP10MarioActor",
+          "retail_bytes": 180,
+          "match_percent": 100.0
+        },
+        {
+          "symbol": "close__9MarioHangFv",
+          "retail_bytes": 260,
+          "match_percent": 99.292305
+        },
+        {
+          "symbol": "notice__9MarioHangFv",
+          "retail_bytes": 144,
+          "match_percent": 99.083336
+        },
+        {
+          "symbol": "postureCtrl__9MarioHangFPA4_f",
+          "retail_bytes": 404,
+          "match_percent": 95.83168
+        },
+        {
+          "symbol": "checkHang__5MarioFv",
+          "retail_bytes": 2692,
+          "match_percent": 90.48291
+        },
+        {
+          "symbol": "isEnableHang__5MarioFv",
+          "retail_bytes": 640,
+          "match_percent": 78.86875
+        },
+        {
+          "symbol": "start__9MarioHangFv",
+          "retail_bytes": 192,
+          "match_percent": 99.583336
+        },
+        {
+          "symbol": "update__9MarioHangFv",
+          "retail_bytes": 1888,
+          "match_percent": 69.730934
+        },
+        {
+          "symbol": "tryClimb__9MarioHangFb",
+          "retail_bytes": 784,
+          "match_percent": 83.29082
+        }
+      ]
+    },
+    {
+      "unit": "MarioWait",
+      "text": {
+        "name": ".text",
+        "size": "2960",
+        "match_percent": 98.38243
+      },
+      "constructor": {
+        "symbol": "__ct__9MarioWaitFP10MarioActor",
+        "match_percent": 99.85,
+        "retail_address": "0x802ceec0",
+        "retail_bytes": 80,
+        "compiled_bytes": 80,
+        "call_order_identical": true,
+        "retail_calls": [
+          "__ct__10MarioStateFP10MarioActorUl"
+        ],
+        "compiled_calls": [
+          "__ct__10MarioStateFP10MarioActorUl"
+        ],
+        "dol_function_sha256": "4c4fae0dff8dc8cba49a81b58a5e2f6d1c25c0e96c818486bb42efb0ad2fc247"
+      },
+      "vtable": {
+        "symbol": "__vt__9MarioWait",
+        "match_percent": 100.0,
+        "retail_bytes": 72
+      },
+      "functions": [
+        {
+          "symbol": "controlWaitAnimation__13MarioAnimatorFv",
+          "retail_bytes": 776,
+          "match_percent": 98.12371
+        },
+        {
+          "symbol": "stopWaitAnimation__13MarioAnimatorFv",
+          "retail_bytes": 152,
+          "match_percent": 99.47369
+        },
+        {
+          "symbol": "checkStart__9MarioWaitFv",
+          "retail_bytes": 900,
+          "match_percent": 99.77778
+        },
+        {
+          "symbol": "start__9MarioWaitFv",
+          "retail_bytes": 120,
+          "match_percent": 99.333336
+        },
+        {
+          "symbol": "update__9MarioWaitFv",
+          "retail_bytes": 488,
+          "match_percent": 99.05738
+        },
+        {
+          "symbol": "close__9MarioWaitFv",
+          "retail_bytes": 112,
+          "match_percent": 99.10714
+        },
+        {
+          "symbol": "checkSpecialWaitAnimation__5MarioFv",
+          "retail_bytes": 68,
+          "match_percent": 100.0
+        },
+        {
+          "symbol": "resetSleepTimer__5MarioFv",
+          "retail_bytes": 80,
+          "match_percent": 100.0
+        },
+        {
+          "symbol": "__ct__9MarioWaitFP10MarioActor",
+          "retail_bytes": 80,
+          "match_percent": 99.85
+        }
+      ]
+    }
+  ]
+}

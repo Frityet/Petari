@@ -1,0 +1,121 @@
+[
+  {
+    "unit": "MarioFaint",
+    "command": [
+      "build/tools/objdiff-cli",
+      "diff",
+      "-1",
+      "/Users/frityet/Projects/petari/decomp/build/original-player-state-recovery-20260907/retail/obj/Game/Player/MarioFaint.o",
+      "-2",
+      "/Users/frityet/Projects/petari/notes/original-player-state-recovery-20260907/MarioFaint.o",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-player-state-recovery-20260907/MarioFaint.objdiff.json",
+      "--format",
+      "json-pretty"
+    ],
+    "result": 0,
+    "output": ""
+  },
+  {
+    "unit": "MarioDamageParalyze",
+    "command": [
+      "build/tools/objdiff-cli",
+      "diff",
+      "-1",
+      "/Users/frityet/Projects/petari/decomp/build/original-player-state-recovery-20260907/retail/obj/Game/Player/MarioDamageParalyze.o",
+      "-2",
+      "/Users/frityet/Projects/petari/notes/original-player-state-recovery-20260907/MarioDamageParalyze.o",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-player-state-recovery-20260907/MarioDamageParalyze.objdiff.json",
+      "--format",
+      "json-pretty"
+    ],
+    "result": 0,
+    "output": ""
+  },
+  {
+    "unit": "MarioRecovery",
+    "command": [
+      "build/tools/objdiff-cli",
+      "diff",
+      "-1",
+      "/Users/frityet/Projects/petari/decomp/build/original-player-state-recovery-20260907/retail/obj/Game/Player/MarioRecovery.o",
+      "-2",
+      "/Users/frityet/Projects/petari/notes/original-player-state-recovery-20260907/MarioRecovery.o",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-player-state-recovery-20260907/MarioRecovery.objdiff.json",
+      "--format",
+      "json-pretty"
+    ],
+    "result": 0,
+    "output": ""
+  },
+  {
+    "unit": "MarioTeresa",
+    "command": [
+      "build/tools/objdiff-cli",
+      "diff",
+      "-1",
+      "/Users/frityet/Projects/petari/decomp/build/original-player-state-recovery-20260907/retail/obj/Game/Player/MarioTeresa.o",
+      "-2",
+      "/Users/frityet/Projects/petari/notes/original-player-state-recovery-20260907/MarioTeresa.o",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-player-state-recovery-20260907/MarioTeresa.objdiff.json",
+      "--format",
+      "json-pretty"
+    ],
+    "result": 0,
+    "output": ""
+  },
+  {
+    "unit": "MarioFoo",
+    "command": [
+      "build/tools/objdiff-cli",
+      "diff",
+      "-1",
+      "/Users/frityet/Projects/petari/decomp/build/original-player-state-recovery-20260907/retail/obj/Game/Player/MarioFoo.o",
+      "-2",
+      "/Users/frityet/Projects/petari/notes/original-player-state-recovery-20260907/MarioFoo.o",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-player-state-recovery-20260907/MarioFoo.objdiff.json",
+      "--format",
+      "json-pretty"
+    ],
+    "result": 0,
+    "output": ""
+  },
+  {
+    "unit": "MarioHang",
+    "command": [
+      "build/tools/objdiff-cli",
+      "diff",
+      "-1",
+      "/Users/frityet/Projects/petari/decomp/build/original-player-state-recovery-20260907/retail/obj/Game/Player/MarioHang.o",
+      "-2",
+      "/Users/frityet/Projects/petari/notes/original-player-state-recovery-20260907/MarioHang.o",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-player-state-recovery-20260907/MarioHang.objdiff.json",
+      "--format",
+      "json-pretty"
+    ],
+    "result": 0,
+    "output": ""
+  },
+  {
+    "unit": "MarioWait",
+    "command": [
+      "build/tools/objdiff-cli",
+      "diff",
+      "-1",
+      "/Users/frityet/Projects/petari/decomp/build/original-player-state-recovery-20260907/retail/obj/Game/Player/MarioWait.o",
+      "-2",
+      "/Users/frityet/Projects/petari/notes/original-player-state-recovery-20260907/MarioWait.o",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-player-state-recovery-20260907/MarioWait.objdiff.json",
+      "--format",
+      "json-pretty"
+    ],
+    "result": 0,
+    "output": ""
+  }
+]

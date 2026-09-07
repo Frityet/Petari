@@ -1,0 +1,80 @@
+[
+  {
+    "path": "decomp/src/Game/Player/MarioDamageParalyze.cpp",
+    "preflatten_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "before_sha256": null,
+    "restored_sha256": "78d13b5a05fb6f5b4a371728760df76547eaf544ba2ee562d48ddc1d424322bc"
+  },
+  {
+    "path": "decomp/src/Game/Player/MarioFaint.cpp",
+    "preflatten_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "before_sha256": null,
+    "restored_sha256": "91ac9df46c3b4ecae20d4ab4b1931dd7b3c12ac48f59aa3aabb0dd39d59f9906"
+  },
+  {
+    "path": "decomp/src/Game/Player/MarioFoo.cpp",
+    "preflatten_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "before_sha256": null,
+    "restored_sha256": "b1ef73ba9f9c3d252a8dc67fc14a85ee61e2a1fe3b98b1a3a094d31027c803b0"
+  },
+  {
+    "path": "decomp/include/Game/Player/MarioFoo.hpp",
+    "preflatten_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "before_sha256": "da3ea2ee7fe1c669aa7f6fbcf2421df59885cf98c2fd7eae891b1f63421167e0",
+    "restored_sha256": "f7b75a7a8a5e5a66c80a147a94ab7ae884ead9caa50a801c944d592b875e3457"
+  },
+  {
+    "path": "decomp/src/Game/Player/MarioHang.cpp",
+    "preflatten_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "before_sha256": null,
+    "restored_sha256": "58be2327c15deceed6b089903dc3ee0b4137ad08053edfa172a5d348bf2a3d74"
+  },
+  {
+    "path": "decomp/include/Game/Player/MarioHang.hpp",
+    "preflatten_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "before_sha256": "495a7ca468ba59b1a3a15da97908ce9e0d0af4739d437035b9064fa412db8b13",
+    "restored_sha256": "23457ec6017677d006db16ac2a3ad38f4896d89934432ae014243f9a787a71c6"
+  },
+  {
+    "path": "decomp/src/Game/Player/MarioRecovery.cpp",
+    "preflatten_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "before_sha256": null,
+    "restored_sha256": "0b00affb67c88c9b592b017ecccdb368aa916359c0b2c1d49883ece980aa10f7"
+  },
+  {
+    "path": "decomp/include/Game/Player/MarioRecovery.hpp",
+    "preflatten_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "before_sha256": "00d1d87872f65359291272a6100dd110302905f21863b1e9a7ada0a072e4f737",
+    "restored_sha256": "13943b7679010db2fb8c6d6cd5c75be49f382ef33743c82a5624ec5695637680"
+  },
+  {
+    "path": "decomp/src/Game/Player/MarioTeresa.cpp",
+    "preflatten_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "before_sha256": null,
+    "restored_sha256": "5828d6d26b2d9572e5fcf0361be0a6c0644d2f1cc1566036c5ae66b4e44f8424"
+  },
+  {
+    "path": "decomp/include/Game/Player/MarioTeresa.hpp",
+    "preflatten_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "before_sha256": "d5aa4a9f699d1a85fadc3ebca2d8172facbe401c83924af68d655e87c3d3aaa9",
+    "restored_sha256": "6aaeb43b11603c0bccd885c911255ad4d68db7a80dad502e4e017aaf67719e42"
+  },
+  {
+    "path": "decomp/src/Game/Player/MarioWait.cpp",
+    "preflatten_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "before_sha256": null,
+    "restored_sha256": "cb286e999e536fd0aee291f9cf04a0b86ace7d432309bf8f41914f70290aab4f"
+  },
+  {
+    "path": "decomp/include/Game/Player/MarioWait.hpp",
+    "preflatten_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "before_sha256": "498ac1b037bd04a0510746b96a2529003ebbb85397fbb7e70023ae2e78cf6c7c",
+    "restored_sha256": "2c2896f32bdac5d8ad1ad98725a4db3631571e9823ba18485f2f4bc2ab2e4b9a"
+  },
+  {
+    "path": "decomp/include/Game/Player/MarioActor.hpp",
+    "change": "Restore original updateTeresaAnimation declaration",
+    "before_sha256": "c16c2242b9d8ab3a35db10b61e48e23856d470993b10f1bc234935d17bfd6bb0",
+    "restored_sha256": "08eb2fee55d4afa1df4e4fd7344211e524a41553ee4b9367bee3fb3fde23ba79"
+  }
+]

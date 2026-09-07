@@ -1,0 +1,119 @@
+{
+  "command": [
+    "build/tools/wibo",
+    "build/tools/sjiswrap.exe",
+    "build/compilers/GC/3.0a3/mwcceppc.exe",
+    "-nodefaults",
+    "-proc",
+    "gekko",
+    "-align",
+    "powerpc",
+    "-enum",
+    "int",
+    "-fp",
+    "hardware",
+    "-Cpp_exceptions",
+    "off",
+    "-O4,s",
+    "-inline",
+    "auto",
+    "-pragma",
+    "cats off",
+    "-pragma",
+    "warn_notinlined off",
+    "-maxerrors",
+    "1",
+    "-nosyspath",
+    "-RTTI",
+    "off",
+    "-str",
+    "reuse",
+    "-enc",
+    "SJIS",
+    "-sdata",
+    "4",
+    "-sdata2",
+    "4",
+    "-ipa",
+    "file",
+    "-sym",
+    "on",
+    "-i",
+    "include",
+    "-i",
+    "libs/JSystem/include",
+    "-i",
+    "libs/MSL_C++/include",
+    "-i",
+    "libs/MSL_C/include",
+    "-i",
+    "libs/MetroTRK/include",
+    "-i",
+    "libs/RVLFaceLib/include",
+    "-i",
+    "libs/RVL_SDK/include",
+    "-i",
+    "libs/Runtime/include",
+    "-i",
+    "libs/nw4r/include",
+    "-i",
+    "build/original-j3d-joint-traversal-20260903/retail/include",
+    "-DVERSION=0",
+    "-c",
+    "/Users/frityet/Projects/petari/notes/original-player-state-recovery-20260907/layout-proof.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-player-state-recovery-20260907/layout-proof.o"
+  ],
+  "result": 0,
+  "sizes": {
+    "MarioFaint": 40,
+    "MarioParalyze": 28,
+    "MarioRecovery": 140,
+    "MarioTeresa": 92,
+    "MarioFoo": 1724,
+    "MarioHang": 68,
+    "MarioWait": 24
+  },
+  "offsets": [
+    [
+      "MarioFaint",
+      "_18",
+      24
+    ],
+    [
+      "MarioParalyze",
+      "_18",
+      24
+    ],
+    [
+      "MarioRecovery",
+      "_88",
+      136
+    ],
+    [
+      "MarioTeresa",
+      "_59",
+      89
+    ],
+    [
+      "MarioFoo",
+      "_6B8",
+      1720
+    ],
+    [
+      "MarioHang",
+      "mHangTimer",
+      24
+    ],
+    [
+      "MarioHang",
+      "mWallSensor",
+      64
+    ],
+    [
+      "MarioWait",
+      "_16",
+      22
+    ]
+  ]
+}

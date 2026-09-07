@@ -186,6 +186,7 @@ public:
     void initIceMario();
     void initInvincibleMario();
     void initTeresaMarioAnimation();
+    void updateTeresaAnimation();
     void initTornadoMario();
     void initBoneMario();
     void swapTextureInit();
