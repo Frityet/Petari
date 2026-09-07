@@ -1,6 +1,11 @@
 #include "JSystem/J2DGraph/J2DGrafContext.hpp"
 #include <revolution/gx/GXVert.h>
 
+template <>
+void JGeometry::TBox2<f32>::operator=(const JGeometry::TBox2<f32>& rOther) {
+    *static_cast<JGeometry::TBox<TVec2f>*>(this) = rOther;
+}
+
 J2DGrafContext::J2DGrafContext(f32 x, f32 y, f32 width, f32 height)
     : mBounds(x, y, x + width, y + height), mScissorBounds(x, y, x + width, y + height) {
     JUtility::TColor color(-1);
@@ -139,4 +144,8 @@ void J2DGrafContext::setLookat() {
 
 J2DGrafType J2DGrafContext::getGrafType() const {
     return J2DGraf_Base;
+}
+
+void J2DGrafContext::place(f32 x, f32 y, f32 width, f32 height) {
+    place(TBox2f(x, y, x + width, y + height));
 }

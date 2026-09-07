@@ -37,3 +37,7 @@ void J2DFillBox(JGeometry::TBox2< f32 > const& box, JUtility::TColor color) {
 void J2DFillBox(f32 x, f32 y, f32 width, f32 height, JUtility::TColor color) {
     J2DFillBox(JGeometry::TBox2< f32 >(x, y, x + width, y + height), color);
 }
+
+J2DGrafType J2DOrthoGraph::getGrafType() const {
+    return J2DGraf_Ortho;
+}

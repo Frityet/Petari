@@ -9,6 +9,18 @@
 #include "Game/Util/MtxUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
 
+namespace JGeometry {
+    template <>
+    void TRotation3< TMatrix34< SMatrix34C< f32 > > >::getScale(TVec3f& rDest) const {
+        rDest.x = TUtil< f32 >::sqrt(this->mMtx[2][0] * this->mMtx[2][0] +
+                                   (this->mMtx[0][0] * this->mMtx[0][0] + this->mMtx[1][0] * this->mMtx[1][0]));
+        rDest.y = TUtil< f32 >::sqrt(this->mMtx[2][1] * this->mMtx[2][1] +
+                                   (this->mMtx[0][1] * this->mMtx[0][1] + this->mMtx[1][1] * this->mMtx[1][1]));
+        rDest.z = TUtil< f32 >::sqrt(this->mMtx[2][2] * this->mMtx[2][2] +
+                                   (this->mMtx[0][2] * this->mMtx[0][2] + this->mMtx[1][2] * this->mMtx[1][2]));
+    }
+}  // namespace JGeometry
+
 void FORCE_SCALE() {
     TVec3f vec;
     vec.scale(1.0f);

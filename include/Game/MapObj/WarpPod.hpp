@@ -4,6 +4,7 @@
 
 class ActorCameraInfo;
 class JMapIdInfo;
+class JUTTexture;
 class LiveActorGroup;
 
 class WarpPod : public LiveActor {
@@ -53,7 +54,8 @@ public:
     /* 0xCC */ u8 _CC;
     /* 0xCD */ u8 _CD;
     /* 0xD0 */ WarpPod* mPairPod;
-    /* 0xD4 */ u8 _D4[8];
+    /* 0xD4 */ JUTTexture* _D4;
+    /* 0xD8 */ JUTTexture* _D8;
 };
 
 class WarpPodMgr : public NameObj {

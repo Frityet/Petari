@@ -41,8 +41,9 @@ void EventSequencer::movement() {
 }
 
 void EventSequencer::startEvent(const char* pName) {
-    EventSequence* sequence;
-    if (mHashTable->search(pName, reinterpret_cast< u32* >(&sequence))) {
+    HashSortTable::Value value;
+    if (mHashTable->search(pName, &value)) {
+        EventSequence* sequence = reinterpret_cast< EventSequence* >(value);
         mSequence = sequence;
         mSequenceFrame = 0;
         sequence->clearFlag();

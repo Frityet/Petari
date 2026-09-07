@@ -2,6 +2,13 @@
 #include "Game/System/WPad.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include <revolution/wpad.h>
+#include <revolution/kpad.h>
+
+WPadAcceleration::WPadAcceleration(const WPad* pPad, u32 type)
+    : mPad(pPad), _4(type), _8(0.0f), _C(0.15f), _10(0, 0, 0), _1C(0.0f), _20(true), _624(-1), _628(0), _62C(0, 0, 0), _638(0.0f, 0.0f, 0.0f),
+      _644(128), _648(0), _64C(0) {
+    KPADSetAccParam(mPad->mChannel, _8, _C);
+}
 
 bool WPadAcceleration::getPastAcceleration(TVec3f* pOut, s32 idx) const {
     if (idx >= _628) {

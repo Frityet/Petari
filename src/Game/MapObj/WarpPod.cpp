@@ -9,11 +9,13 @@
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/DirectDraw.hpp"
+#include "Game/Util/DirectDrawUtil.hpp"
 #include "Game/Util/EventUtil.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
+#include "JSystem/JUtility/JUTTexture.hpp"
 #include <cstdio>
 
 GXColor gGlowEffectEnvColor[] = {
@@ -246,7 +248,31 @@ void WarpPod::glowEffect() {
 void WarpPod::initPair() {
     mPairPod = MR::getWarpPodManager()->getPairPod(this);
 
-    // ...
+    bool isPath;
+    if (mPairPod->mPosition.x > mPosition.x) {
+        isPath = true;
+    } else if (mPairPod->mPosition.x < mPosition.x) {
+        isPath = false;
+    } else if (mPairPod->mPosition.y < mPosition.y) {
+        isPath = true;
+    } else if (mPairPod->mPosition.y < mPosition.y) {
+        isPath = false;
+    } else if (mPairPod->mPosition.z < mPosition.z) {
+        isPath = true;
+    } else if (mPairPod->mPosition.z < mPosition.z) {
+        isPath = false;
+    }
+
+    if (mPairPod->_CA != 1 && _CA != 1) {
+        if (mArg3 == 0) {
+            _CA = false;
+        } else if (mPairPod->mArg3 == 0) {
+            _CA = true;
+        } else {
+            _CA = isPath;
+        }
+    }
+    initDraw();
 
     if (!_CB) {
         return;
@@ -412,8 +438,170 @@ void WarpPod::attackSensor(HitSensor* pSender, HitSensor* pReceiver) {
     }
 }
 
-// WarpPod::initDraw
-// WarpPod::drawCylinder
+void WarpPod::initDraw() {
+    if (!_CA) {
+        return;
+    }
+
+    TVec3f axis;
+    TVec3f centerDirection;
+    TVec3f delta = mPairPod->mPosition - mPosition;
+    f32 distance = delta.length();
+    TVec3f up;
+    MR::calcUpVec(&up, this);
+    axis.cross(delta, -up);
+    MR::normalizeOrZero(&axis);
+    TVec3f midPoint = mPosition + delta * 0.5f;
+    centerDirection.cross(axis, delta);
+    MR::normalizeOrZero(&centerDirection);
+    f32 halfAngle = PI / 4.0f;
+    f32 radius = (0.5f * distance) / MR::sin(halfAngle);
+    f32 centerDistance = MR::sqrt(radius * radius - 0.5f * (0.5f * distance * distance));
+    TVec3f rotationAxis = axis;
+    TVec3f center = midPoint + centerDirection * centerDistance;
+    TVec3f start = -centerDirection * radius;
+    f32 startAngle = -halfAngle;
+
+    u16 remaining = 60;
+    _C4 = new TVec3f[60];
+    u32 pointCount = 60;
+    _C8 = pointCount;
+    for (u32 i = 0; i < 60; i++, remaining--) {
+        f32 rate = (1.0f + MR::sin(((60 - remaining) - 0.5f * pointCount) / pointCount * PI)) * 0.5f;
+        if (mArg1 == 2) {
+            rate = 1.0f - static_cast< f32 >(remaining - 1) / pointCount;
+        }
+        Mtx rotation;
+        PSMTXRotAxisRad(rotation, rotationAxis, startAngle * (1.0f - rate) + halfAngle * rate);
+        TVec3f rotated;
+        PSMTXMultVecSR(rotation, start, rotated);
+        TVec3f position = center + rotated;
+        _C4[i] = position + up * 200.0f;
+    }
+
+    _D4 = new JUTTexture(MR::getTexture(MR::getResourceHolder(this), "TestColor.bti"), 0);
+    _D8 = new JUTTexture(MR::getTexture(MR::getResourceHolder(this), "TestMask.bti"), 0);
+}
+
+void WarpPod::drawCylinder(u32) const {
+    f32 radius = 30.0f;
+    if (!_CA) {
+        return;
+    }
+    if (mPairPod->_CB) {
+        return;
+    }
+    if (_CB) {
+        return;
+    }
+    if (mArg1 != 1) {
+        return;
+    }
+
+    TDDraw::setup(0, 1, 0);
+    GXSetZMode(GX_TRUE, GX_LEQUAL, GX_FALSE);
+    MR::ddSetVtxFormat(2);
+    MR::ddLightingOff();
+    GXSetTevColorIn(GX_TEVSTAGE0, GX_CC_C0, GX_CC_ONE, GX_CC_TEXA, GX_CC_ZERO);
+    GXSetTevColorOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_1, GX_TRUE, GX_TEVPREV);
+    GXSetTevAlphaIn(GX_TEVSTAGE0, GX_CA_ZERO, GX_CA_TEXA, GX_CA_KONST, GX_CA_ZERO);
+    GXSetTevAlphaOp(GX_TEVSTAGE0, GX_TEV_ADD, GX_TB_ZERO, GX_CS_SCALE_2, GX_TRUE, GX_TEVPREV);
+    GXSetTevColor(GX_TEVREG0, gGlowEffectEnvColor[mArg6]);
+    GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_ONE, GX_LO_NOOP);
+    _D4->load(GX_TEXMAP0);
+    _D8->load(GX_TEXMAP1);
+
+    u32 pointCount = _C8;
+    s32 timer = _A6;
+    s32 duration = mArg5;
+    if (timer == 0) {
+        timer = mPairPod->_A6;
+        duration = mPairPod->mArg5;
+    }
+    if (timer != 0) {
+        pointCount = pointCount * (1.0f - static_cast< f32 >(timer) / duration);
+    }
+
+    TVec3f prevVertices[4];
+    TVec3f nextVertices[4];
+    TVec3f prevPosition;
+    TVec2f nextTexCoords[2];
+    TVec2f prevTexCoords[2];
+    for (u32 i = 0; i < pointCount; i++) {
+        if (i == 0) {
+            u32 j = 1;
+            for (; j < pointCount; j++) {
+                TVec3f delta = _C4[j] - _C4[i];
+                TVec3f direction;
+                MR::vecKillElement(delta, MR::getCamZdir(), &direction);
+                if (MR::normalizeOrZero(&direction)) {
+                    continue;
+                }
+                TVec3f side;
+                side.cross(direction, MR::getCamZdir());
+                MR::normalizeOrZero(&side);
+                TVec3f up;
+                up.cross(side, direction);
+                MR::normalizeOrZero(&up);
+                side.setLength(radius);
+                up.setLength(radius);
+                prevVertices[0] = _C4[i] + side;
+                prevVertices[1] = _C4[i] - side;
+                prevVertices[2] = _C4[i] + up;
+                prevVertices[3] = _C4[i] - up;
+                break;
+            }
+            if (j >= pointCount) {
+                return;
+            }
+            prevPosition = _C4[0];
+            prevTexCoords[0].set(0.0f, 1.0f);
+            prevTexCoords[1].set(1.0f, 1.0f);
+        } else {
+            f32 texCoord = 2.0f * (static_cast< f32 >(i + 1) / pointCount) - 1.0f;
+            if (texCoord < 0.0f) {
+                texCoord = -texCoord;
+            }
+            nextTexCoords[0].set(0.0f, texCoord);
+            nextTexCoords[1].set(1.0f, texCoord);
+            TVec3f delta = _C4[i] - prevPosition;
+            TVec3f direction;
+            MR::vecKillElement(delta, MR::getCamZdir(), &direction);
+            if (MR::normalizeOrZero(&direction)) {
+                continue;
+            }
+            TVec3f side;
+            side.cross(direction, MR::getCamZdir());
+            MR::normalizeOrZero(&side);
+            TVec3f up;
+            up.cross(side, direction);
+            MR::normalizeOrZero(&up);
+            side.setLength(radius);
+            up.setLength(radius);
+            nextVertices[0] = _C4[i] + side;
+            nextVertices[1] = _C4[i] - side;
+            nextVertices[2] = _C4[i] + up;
+            nextVertices[3] = _C4[i] - up;
+            GXBegin(GX_QUADS, GX_VTXFMT0, 8);
+            MR::ddSendVtxData(prevVertices[0], prevTexCoords[0]);
+            MR::ddSendVtxData(nextVertices[0], nextTexCoords[0]);
+            MR::ddSendVtxData(nextVertices[1], nextTexCoords[1]);
+            MR::ddSendVtxData(prevVertices[1], prevTexCoords[1]);
+            MR::ddSendVtxData(prevVertices[2], prevTexCoords[0]);
+            MR::ddSendVtxData(nextVertices[2], nextTexCoords[0]);
+            MR::ddSendVtxData(nextVertices[3], nextTexCoords[1]);
+            MR::ddSendVtxData(prevVertices[3], prevTexCoords[1]);
+            GXEnd();
+            prevVertices[0] = nextVertices[0];
+            prevTexCoords[0] = nextTexCoords[0];
+            prevVertices[1] = nextVertices[1];
+            prevTexCoords[1] = nextTexCoords[1];
+            prevVertices[2] = nextVertices[2];
+            prevVertices[3] = nextVertices[3];
+            prevPosition = _C4[i];
+        }
+    }
+}
 
 void WarpPod::draw() const {
     if (mArg1 == 0) {

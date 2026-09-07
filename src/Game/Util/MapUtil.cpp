@@ -5,6 +5,7 @@
 #include "Game/Map/CollisionCode.hpp"
 #include "Game/Map/CollisionDirector.hpp"
 #include "Game/Map/HitInfo.hpp"
+#include "Game/Util/CollisionPartsFilter.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/MtxUtil.hpp"
 
@@ -189,7 +190,10 @@ namespace MR {
         return getCollisionDirector()->getCategoryKeeper(3)->checkStrikeLine(rParam1, rParam2, 1, nullptr, nullptr) != 0;
     }
 
-    // isExistMapCollisionExceptActor
+    bool isExistMapCollisionExceptActor(const TVec3f& rStart, const TVec3f& rOffset, const LiveActor* pActor) {
+        CollisionPartsFilterActor filter(pActor);
+        return getCollisionDirector()->getCategoryKeeper(0)->checkStrikeLine(rStart, rOffset, 1, &filter, nullptr) != 0;
+    }
 
     bool checkStrikePointToMap(const TVec3f& rParam1, HitInfo* pParam2) {
         return getCollisionDirector()->getCategoryKeeper(0)->checkStrikePoint(rParam1, pParam2) != 0;

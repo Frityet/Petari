@@ -18,10 +18,10 @@ public:
     void updateAccAverage();
     void updateIsStable();
 
-    WPad* mPad;  // 0x00
+    const WPad* mPad;  // 0x00
     u32 _4;
-    u32 _8;
-    u32 _C;
+    f32 _8;
+    f32 _C;
     TVec3f _10;
     f32 _1C;
     bool _20;

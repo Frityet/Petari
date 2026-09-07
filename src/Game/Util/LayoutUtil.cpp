@@ -571,3 +571,18 @@ namespace MR {
         setAnimFrameAndStop(pActor, ::getCometColorAnimFrameFromId(cometId), animLayer);
     }
 };  // namespace MR
+
+namespace MR {
+    void setPaneScale(const LayoutActor* pLayout, f32 x, f32 y, const char* pPaneName) {
+        nw4r::math::VEC2 scale(x, y);
+        pLayout->getLayoutManager()->getPane(pPaneName)->mScale = scale;
+    }
+
+    void setPaneRotate(const LayoutActor* pLayout, f32 x, f32 y, f32 z, const char* pPaneName) {
+        nw4r::math::VEC3 rotate;
+        rotate.x = x;
+        rotate.y = y;
+        rotate.z = z;
+        pLayout->getLayoutManager()->getPane(pPaneName)->mRotate = rotate;
+    }
+}

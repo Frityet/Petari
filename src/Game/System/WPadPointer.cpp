@@ -51,37 +51,54 @@ void WPadPointer::setSensorBarLevel(f32 lvl) {
     KPADSetSensorHeight(mPad->mChannel, lvl);
 }
 
-/*void WPadPointer::update() {
-    KPADStatus* status = mPad->getKPadStatus(0);
+void WPadPointer::update() {
+    KPADStatus* pStatus = mPad->getKPadStatus(0);
+    if (pStatus == nullptr) {
+        reset();
+        return;
+    }
 
-    if (status != nullptr) {
-        _45 = 0;
-        _30 = status->dist;
-        _34 = status->dpd_valid_fg;
-        s32 validCount = mPad->getValidStatusCount();
-        mEnablePastCount = 0;
+    _45 = 0;
+    mDistDisplay = pStatus->dist;
+    _34 = pStatus->dpd_valid_fg;
+    s32 count = mPad->getValidStatusCount();
+    mEnablePastCount = 0;
+    if (count > _C) {
+        count = _C;
+    }
 
-        if (_C > validCount) {
-            validCount = _C;
+    bool isAnyDPDValid = false;
+    for (s32 i = count - 1; i >= 0; i--) {
+        KPADStatus* pStatus = mPad->getKPadStatus(i);
+        if (pStatus->dpd_valid_fg > 0) {
+            isAnyDPDValid = true;
         }
-
-        bool isAnyDPDValid = false;
-
-        while (validCount - 1 >= 0) {
-            KPADStatus* curStatus = mPad->getKPadStatus(validCount);
-
-            if (curStatus->dpd_valid_fg) {
-                isAnyDPDValid = true;
-            }
-
-            if (curStatus->dpd_valid_fg >= 2) {
-                if (!_44 && _38 >= 5 || !_44 && _3C <= 10) {
-                    mPointingPosArray[mEnablePastCount] = (TVec2f)curStatus->pos;
+        if (pStatus->dpd_valid_fg < 2) {
+            _38 = 0;
+            _3C++;
+        } else {
+            if ((!mIsPointInScreen && static_cast<s32>(_38) >= 5) || (mIsPointInScreen && static_cast<s32>(_3C) <= 10)) {
+                mPointingPosArray[mEnablePastCount].x = pStatus->pos.x;
+                mPointingPosArray[mEnablePastCount].y = pStatus->pos.y;
+                mHorizonArray[mEnablePastCount].x = pStatus->horizon.x;
+                mHorizonArray[mEnablePastCount].y = pStatus->horizon.y;
+                if (pStatus->speed > 0.0001f) {
+                    _45 = 1;
                 }
+                mEnablePastCount++;
             }
+            _3C = 0;
+            _38++;
         }
     }
-}*/
+
+    mIsPointInScreen = mEnablePastCount != 0;
+    if (isAnyDPDValid) {
+        _2C = 0;
+    } else if (static_cast<s32>(_2C) < 20) {
+        _2C++;
+    }
+}
 
 void WPadPointer::getPointingPos(TVec2f* pOut) const {
     if (mIsPointInScreen != 0) {

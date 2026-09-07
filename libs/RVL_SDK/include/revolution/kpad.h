@@ -184,6 +184,7 @@ void KPADInit();
 
 void KPADSetBtnRepeat(s32, f32, f32);
 void KPADSetSensorHeight(s32, f32);
+void KPADSetAccParam(s32, f32, f32);
 void KPADSetPosParam(s32, f32, f32);
 void KPADSetHoriParam(s32, f32, f32);
 void KPADSetDistParam(s32, f32, f32);
