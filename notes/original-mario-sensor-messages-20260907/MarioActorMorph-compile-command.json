@@ -60,11 +60,11 @@
     "build/original-j3d-joint-traversal-20260903/retail/include",
     "-DVERSION=0",
     "-c",
-    "/Users/frityet/Projects/petari/notes/original-mario-sensor-messages-20260907/candidates/MarioActorMorph.cpp",
+    "src/Game/Player/MarioActorMorph.cpp",
     "-o",
     "/Users/frityet/Projects/petari/notes/original-mario-sensor-messages-20260907/MarioActorMorph.o"
   ],
   "exit_code": 0,
-  "source": "/Users/frityet/Projects/petari/notes/original-mario-sensor-messages-20260907/candidates/MarioActorMorph.cpp",
+  "source": "src/Game/Player/MarioActorMorph.cpp",
   "sha256": "9bf52e05454e4036ec4dc943fc613d15d591fb5dcfe2aa9350f4173bc65bb535"
 }

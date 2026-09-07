@@ -1,8 +1,10 @@
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/Map/HitInfo.hpp"
+#include "Game/MapObj/CollectCounter.hpp"
 #include "Game/Player/MarioActor.hpp"
 #include "Game/Player/MarioAnimator.hpp"
 #include "Game/Player/MarioDamage.hpp"
+#include "Game/Player/MarioConst.hpp"
 #include "Game/Player/RushEndInfo.hpp"
 #include "Game/Screen/GameSceneLayoutHolder.hpp"
 #include "Game/Player/MarioModule.hpp"
@@ -147,6 +149,42 @@ void MarioActor::resetCondition() {
     if (_EA5) {
         mMario->changeAnimationInterpoleFrame(0);
         mBlendMtxTimer = 0;
+    }
+}
+
+void MarioActor::beginRush() {
+    _924 = _7E4[0];
+    mMarioAnim->clearAllJointTransform();
+    MR::invalidateHitSensors(this);
+    stopEffect("共通壁手擦り");
+    stopEffect("スピンライト");
+    bool isSpinCatch = selectSpinCatchInRush(_924->mHost->mName);
+    if (mPlayerMode == 4 && selectHideFlyMeter(_924)) {
+        MR::getGameSceneLayoutHolder()->changeLifeMeterModeGround();
+    }
+    if (isFixJumpRushSensor(_924) || isSpinCatch) {
+        settingRush();
+        getSensor("eye")->validate();
+        getSensor("body")->validate();
+    } else {
+        getSensor("body")->validate();
+        if (_924->isType(ATYPE_POWER_STAR_BIND)) {
+            MR::forceDeleteEffectAll(this);
+            _1B8->kill();
+        }
+        if (selectLandEffect(_924)) {
+            playEffect("特殊着地");
+        }
+        switch (_924->mType) {
+        case ATYPE_POWER_STAR_BIND:
+            setPlayerMode(0, false);
+            resetFog();
+            break;
+        }
+        settingRush();
+        if (!_924->isType(ATYPE_POWER_STAR_BIND)) {
+            setBlendMtxTimer(mConst->getTable()->mRushInBlendTimer);
+        }
     }
 }
 

@@ -1,0 +1,18 @@
+[
+  {
+    "path": "src/Game/Player/Mario.hpp",
+    "sha256": "63fd9f0b3f78c283c681b6e4621a7086a6f57e294b9035a646df6b5f62626dd5"
+  },
+  {
+    "path": "src/Game/Player/J3DModelX.hpp",
+    "sha256": "58209ab03a64a5b18468ebd96e50f1dcbef35aa937d07254ac1321cdc94964fb"
+  },
+  {
+    "path": "tests/PpcBitfieldAbiTests.cpp",
+    "sha256": "ab139ce3aa87b7ebc4cf6acb223ba5a52d59b90448e45a463482237d2a04f1b9"
+  },
+  {
+    "path": "tests/xmake.lua",
+    "sha256": "65b21a84e3b1a57677798f0b03c33d96d9aceec40428adb9dd93de846d3c5164"
+  }
+]

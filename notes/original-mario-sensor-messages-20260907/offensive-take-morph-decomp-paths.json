@@ -1,0 +1,18 @@
+[
+  {
+    "path": "src/Game/Player/MarioActorOffensiveMsg.cpp",
+    "sha256": "1a59bd02c6f39b4d7fd2d0eacc7b455f273195c58a318d48c8443deb2ef6bfa6"
+  },
+  {
+    "path": "src/Game/Player/MarioActorTakeMsg.cpp",
+    "sha256": "9eb4c5b3b1586e5b0ae69619542f37e86453cbf7e9d25c3e3b19d3340c7d122e"
+  },
+  {
+    "path": "src/Game/Player/MarioActorMorph.cpp",
+    "sha256": "9bf52e05454e4036ec4dc943fc613d15d591fb5dcfe2aa9350f4173bc65bb535"
+  },
+  {
+    "path": "include/Game/Player/MarioActor.hpp",
+    "sha256": "d456b61dc8b975f0388a1a24041942f648baac612fd86836b74431bd11df03c2"
+  }
+]

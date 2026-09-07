@@ -1,0 +1,1118 @@
+[
+  {
+    "type": "Mario::MovementStates",
+    "field": "jumping",
+    "word": 0,
+    "width": 1,
+    "shift": 31,
+    "mask": "0x80000000",
+    "name": "MovementStatesjumping"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_1",
+    "word": 0,
+    "width": 1,
+    "shift": 30,
+    "mask": "0x40000000",
+    "name": "MovementStates_1"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_2",
+    "word": 0,
+    "width": 1,
+    "shift": 29,
+    "mask": "0x20000000",
+    "name": "MovementStates_2"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "turning",
+    "word": 0,
+    "width": 1,
+    "shift": 28,
+    "mask": "0x10000000",
+    "name": "MovementStatesturning"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_4",
+    "word": 0,
+    "width": 1,
+    "shift": 27,
+    "mask": "0x08000000",
+    "name": "MovementStates_4"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_5",
+    "word": 0,
+    "width": 1,
+    "shift": 26,
+    "mask": "0x04000000",
+    "name": "MovementStates_5"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_6",
+    "word": 0,
+    "width": 1,
+    "shift": 25,
+    "mask": "0x02000000",
+    "name": "MovementStates_6"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_7",
+    "word": 0,
+    "width": 1,
+    "shift": 24,
+    "mask": "0x01000000",
+    "name": "MovementStates_7"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_8",
+    "word": 0,
+    "width": 1,
+    "shift": 23,
+    "mask": "0x00800000",
+    "name": "MovementStates_8"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_9",
+    "word": 0,
+    "width": 1,
+    "shift": 22,
+    "mask": "0x00400000",
+    "name": "MovementStates_9"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_A",
+    "word": 0,
+    "width": 1,
+    "shift": 21,
+    "mask": "0x00200000",
+    "name": "MovementStates_A"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_B",
+    "word": 0,
+    "width": 1,
+    "shift": 20,
+    "mask": "0x00100000",
+    "name": "MovementStates_B"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_C",
+    "word": 0,
+    "width": 1,
+    "shift": 19,
+    "mask": "0x00080000",
+    "name": "MovementStates_C"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_D",
+    "word": 0,
+    "width": 1,
+    "shift": 18,
+    "mask": "0x00040000",
+    "name": "MovementStates_D"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_E",
+    "word": 0,
+    "width": 1,
+    "shift": 17,
+    "mask": "0x00020000",
+    "name": "MovementStates_E"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_F",
+    "word": 0,
+    "width": 1,
+    "shift": 16,
+    "mask": "0x00010000",
+    "name": "MovementStates_F"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_10",
+    "word": 0,
+    "width": 1,
+    "shift": 15,
+    "mask": "0x00008000",
+    "name": "MovementStates_10"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_11",
+    "word": 0,
+    "width": 1,
+    "shift": 14,
+    "mask": "0x00004000",
+    "name": "MovementStates_11"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_12",
+    "word": 0,
+    "width": 1,
+    "shift": 13,
+    "mask": "0x00002000",
+    "name": "MovementStates_12"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_13",
+    "word": 0,
+    "width": 1,
+    "shift": 12,
+    "mask": "0x00001000",
+    "name": "MovementStates_13"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_14",
+    "word": 0,
+    "width": 1,
+    "shift": 11,
+    "mask": "0x00000800",
+    "name": "MovementStates_14"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_15",
+    "word": 0,
+    "width": 1,
+    "shift": 10,
+    "mask": "0x00000400",
+    "name": "MovementStates_15"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "debugMode",
+    "word": 0,
+    "width": 1,
+    "shift": 9,
+    "mask": "0x00000200",
+    "name": "MovementStatesdebugMode"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_17",
+    "word": 0,
+    "width": 1,
+    "shift": 8,
+    "mask": "0x00000100",
+    "name": "MovementStates_17"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_18",
+    "word": 0,
+    "width": 1,
+    "shift": 7,
+    "mask": "0x00000080",
+    "name": "MovementStates_18"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_19",
+    "word": 0,
+    "width": 1,
+    "shift": 6,
+    "mask": "0x00000040",
+    "name": "MovementStates_19"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_1A",
+    "word": 0,
+    "width": 1,
+    "shift": 5,
+    "mask": "0x00000020",
+    "name": "MovementStates_1A"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_1B",
+    "word": 0,
+    "width": 1,
+    "shift": 4,
+    "mask": "0x00000010",
+    "name": "MovementStates_1B"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_1C",
+    "word": 0,
+    "width": 1,
+    "shift": 3,
+    "mask": "0x00000008",
+    "name": "MovementStates_1C"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_1D",
+    "word": 0,
+    "width": 1,
+    "shift": 2,
+    "mask": "0x00000004",
+    "name": "MovementStates_1D"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "digitalJump",
+    "word": 0,
+    "width": 1,
+    "shift": 1,
+    "mask": "0x00000002",
+    "name": "MovementStatesdigitalJump"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_1F",
+    "word": 0,
+    "width": 1,
+    "shift": 0,
+    "mask": "0x00000001",
+    "name": "MovementStates_1F"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_20",
+    "word": 1,
+    "width": 1,
+    "shift": 31,
+    "mask": "0x80000000",
+    "name": "MovementStates_20"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_21",
+    "word": 1,
+    "width": 1,
+    "shift": 30,
+    "mask": "0x40000000",
+    "name": "MovementStates_21"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_22",
+    "word": 1,
+    "width": 1,
+    "shift": 29,
+    "mask": "0x20000000",
+    "name": "MovementStates_22"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_23",
+    "word": 1,
+    "width": 1,
+    "shift": 28,
+    "mask": "0x10000000",
+    "name": "MovementStates_23"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_24",
+    "word": 1,
+    "width": 1,
+    "shift": 27,
+    "mask": "0x08000000",
+    "name": "MovementStates_24"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_25",
+    "word": 1,
+    "width": 1,
+    "shift": 26,
+    "mask": "0x04000000",
+    "name": "MovementStates_25"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_26",
+    "word": 1,
+    "width": 1,
+    "shift": 25,
+    "mask": "0x02000000",
+    "name": "MovementStates_26"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_27",
+    "word": 1,
+    "width": 1,
+    "shift": 24,
+    "mask": "0x01000000",
+    "name": "MovementStates_27"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_28",
+    "word": 1,
+    "width": 1,
+    "shift": 23,
+    "mask": "0x00800000",
+    "name": "MovementStates_28"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_29",
+    "word": 1,
+    "width": 1,
+    "shift": 22,
+    "mask": "0x00400000",
+    "name": "MovementStates_29"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_2A",
+    "word": 1,
+    "width": 1,
+    "shift": 21,
+    "mask": "0x00200000",
+    "name": "MovementStates_2A"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_2B",
+    "word": 1,
+    "width": 1,
+    "shift": 20,
+    "mask": "0x00100000",
+    "name": "MovementStates_2B"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_2C",
+    "word": 1,
+    "width": 1,
+    "shift": 19,
+    "mask": "0x00080000",
+    "name": "MovementStates_2C"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_2D",
+    "word": 1,
+    "width": 1,
+    "shift": 18,
+    "mask": "0x00040000",
+    "name": "MovementStates_2D"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_2E",
+    "word": 1,
+    "width": 1,
+    "shift": 17,
+    "mask": "0x00020000",
+    "name": "MovementStates_2E"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_2F",
+    "word": 1,
+    "width": 1,
+    "shift": 16,
+    "mask": "0x00010000",
+    "name": "MovementStates_2F"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_30",
+    "word": 1,
+    "width": 1,
+    "shift": 15,
+    "mask": "0x00008000",
+    "name": "MovementStates_30"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_31",
+    "word": 1,
+    "width": 1,
+    "shift": 14,
+    "mask": "0x00004000",
+    "name": "MovementStates_31"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_32",
+    "word": 1,
+    "width": 1,
+    "shift": 13,
+    "mask": "0x00002000",
+    "name": "MovementStates_32"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_33",
+    "word": 1,
+    "width": 1,
+    "shift": 12,
+    "mask": "0x00001000",
+    "name": "MovementStates_33"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_34",
+    "word": 1,
+    "width": 1,
+    "shift": 11,
+    "mask": "0x00000800",
+    "name": "MovementStates_34"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_35",
+    "word": 1,
+    "width": 1,
+    "shift": 10,
+    "mask": "0x00000400",
+    "name": "MovementStates_35"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_36",
+    "word": 1,
+    "width": 1,
+    "shift": 9,
+    "mask": "0x00000200",
+    "name": "MovementStates_36"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_37",
+    "word": 1,
+    "width": 1,
+    "shift": 8,
+    "mask": "0x00000100",
+    "name": "MovementStates_37"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_38",
+    "word": 1,
+    "width": 1,
+    "shift": 7,
+    "mask": "0x00000080",
+    "name": "MovementStates_38"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_39",
+    "word": 1,
+    "width": 1,
+    "shift": 6,
+    "mask": "0x00000040",
+    "name": "MovementStates_39"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_3A",
+    "word": 1,
+    "width": 1,
+    "shift": 5,
+    "mask": "0x00000020",
+    "name": "MovementStates_3A"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_3B",
+    "word": 1,
+    "width": 1,
+    "shift": 4,
+    "mask": "0x00000010",
+    "name": "MovementStates_3B"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_3C",
+    "word": 1,
+    "width": 1,
+    "shift": 3,
+    "mask": "0x00000008",
+    "name": "MovementStates_3C"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_3D",
+    "word": 1,
+    "width": 1,
+    "shift": 2,
+    "mask": "0x00000004",
+    "name": "MovementStates_3D"
+  },
+  {
+    "type": "Mario::MovementStates",
+    "field": "_3E",
+    "word": 1,
+    "width": 2,
+    "shift": 0,
+    "mask": "0x00000003",
+    "name": "MovementStates_3E"
+  },
+  {
+    "type": "Mario::DrawStates",
+    "field": "_0",
+    "word": 0,
+    "width": 1,
+    "shift": 31,
+    "mask": "0x80000000",
+    "name": "DrawStates_0"
+  },
+  {
+    "type": "Mario::DrawStates",
+    "field": "_1",
+    "word": 0,
+    "width": 1,
+    "shift": 30,
+    "mask": "0x40000000",
+    "name": "DrawStates_1"
+  },
+  {
+    "type": "Mario::DrawStates",
+    "field": "_2",
+    "word": 0,
+    "width": 1,
+    "shift": 29,
+    "mask": "0x20000000",
+    "name": "DrawStates_2"
+  },
+  {
+    "type": "Mario::DrawStates",
+    "field": "_3",
+    "word": 0,
+    "width": 1,
+    "shift": 28,
+    "mask": "0x10000000",
+    "name": "DrawStates_3"
+  },
+  {
+    "type": "Mario::DrawStates",
+    "field": "_4",
+    "word": 0,
+    "width": 1,
+    "shift": 27,
+    "mask": "0x08000000",
+    "name": "DrawStates_4"
+  },
+  {
+    "type": "Mario::DrawStates",
+    "field": "_5",
+    "word": 0,
+    "width": 1,
+    "shift": 26,
+    "mask": "0x04000000",
+    "name": "DrawStates_5"
+  },
+  {
+    "type": "Mario::DrawStates",
+    "field": "_6",
+    "word": 0,
+    "width": 1,
+    "shift": 25,
+    "mask": "0x02000000",
+    "name": "DrawStates_6"
+  },
+  {
+    "type": "Mario::DrawStates",
+    "field": "_7",
+    "word": 0,
+    "width": 1,
+    "shift": 24,
+    "mask": "0x01000000",
+    "name": "DrawStates_7"
+  },
+  {
+    "type": "Mario::DrawStates",
+    "field": "_8",
+    "word": 0,
+    "width": 1,
+    "shift": 23,
+    "mask": "0x00800000",
+    "name": "DrawStates_8"
+  },
+  {
+    "type": "Mario::DrawStates",
+    "field": "_9",
+    "word": 0,
+    "width": 1,
+    "shift": 22,
+    "mask": "0x00400000",
+    "name": "DrawStates_9"
+  },
+  {
+    "type": "Mario::DrawStates",
+    "field": "_A",
+    "word": 0,
+    "width": 1,
+    "shift": 21,
+    "mask": "0x00200000",
+    "name": "DrawStates_A"
+  },
+  {
+    "type": "Mario::DrawStates",
+    "field": "_B",
+    "word": 0,
+    "width": 1,
+    "shift": 20,
+    "mask": "0x00100000",
+    "name": "DrawStates_B"
+  },
+  {
+    "type": "Mario::DrawStates",
+    "field": "_C",
+    "word": 0,
+    "width": 1,
+    "shift": 19,
+    "mask": "0x00080000",
+    "name": "DrawStates_C"
+  },
+  {
+    "type": "Mario::DrawStates",
+    "field": "_D",
+    "word": 0,
+    "width": 1,
+    "shift": 18,
+    "mask": "0x00040000",
+    "name": "DrawStates_D"
+  },
+  {
+    "type": "Mario::DrawStates",
+    "field": "_E",
+    "word": 0,
+    "width": 1,
+    "shift": 17,
+    "mask": "0x00020000",
+    "name": "DrawStates_E"
+  },
+  {
+    "type": "Mario::DrawStates",
+    "field": "_F",
+    "word": 0,
+    "width": 1,
+    "shift": 16,
+    "mask": "0x00010000",
+    "name": "DrawStates_F"
+  },
+  {
+    "type": "Mario::DrawStates",
+    "field": "_10",
+    "word": 0,
+    "width": 1,
+    "shift": 15,
+    "mask": "0x00008000",
+    "name": "DrawStates_10"
+  },
+  {
+    "type": "Mario::DrawStates",
+    "field": "_11",
+    "word": 0,
+    "width": 1,
+    "shift": 14,
+    "mask": "0x00004000",
+    "name": "DrawStates_11"
+  },
+  {
+    "type": "Mario::DrawStates",
+    "field": "mIsUnderwater",
+    "word": 0,
+    "width": 1,
+    "shift": 13,
+    "mask": "0x00002000",
+    "name": "DrawStatesmIsUnderwater"
+  },
+  {
+    "type": "Mario::DrawStates",
+    "field": "_13",
+    "word": 0,
+    "width": 1,
+    "shift": 12,
+    "mask": "0x00001000",
+    "name": "DrawStates_13"
+  },
+  {
+    "type": "Mario::DrawStates",
+    "field": "_14",
+    "word": 0,
+    "width": 1,
+    "shift": 11,
+    "mask": "0x00000800",
+    "name": "DrawStates_14"
+  },
+  {
+    "type": "Mario::DrawStates",
+    "field": "_15",
+    "word": 0,
+    "width": 1,
+    "shift": 10,
+    "mask": "0x00000400",
+    "name": "DrawStates_15"
+  },
+  {
+    "type": "Mario::DrawStates",
+    "field": "_16",
+    "word": 0,
+    "width": 1,
+    "shift": 9,
+    "mask": "0x00000200",
+    "name": "DrawStates_16"
+  },
+  {
+    "type": "Mario::DrawStates",
+    "field": "_17",
+    "word": 0,
+    "width": 1,
+    "shift": 8,
+    "mask": "0x00000100",
+    "name": "DrawStates_17"
+  },
+  {
+    "type": "Mario::DrawStates",
+    "field": "_18",
+    "word": 0,
+    "width": 1,
+    "shift": 7,
+    "mask": "0x00000080",
+    "name": "DrawStates_18"
+  },
+  {
+    "type": "Mario::DrawStates",
+    "field": "_19",
+    "word": 0,
+    "width": 1,
+    "shift": 6,
+    "mask": "0x00000040",
+    "name": "DrawStates_19"
+  },
+  {
+    "type": "Mario::DrawStates",
+    "field": "_1A",
+    "word": 0,
+    "width": 1,
+    "shift": 5,
+    "mask": "0x00000020",
+    "name": "DrawStates_1A"
+  },
+  {
+    "type": "Mario::DrawStates",
+    "field": "_1B",
+    "word": 0,
+    "width": 1,
+    "shift": 4,
+    "mask": "0x00000010",
+    "name": "DrawStates_1B"
+  },
+  {
+    "type": "Mario::DrawStates",
+    "field": "_1C",
+    "word": 0,
+    "width": 1,
+    "shift": 3,
+    "mask": "0x00000008",
+    "name": "DrawStates_1C"
+  },
+  {
+    "type": "Mario::DrawStates",
+    "field": "_1D",
+    "word": 0,
+    "width": 1,
+    "shift": 2,
+    "mask": "0x00000004",
+    "name": "DrawStates_1D"
+  },
+  {
+    "type": "Mario::DrawStates",
+    "field": "_1E",
+    "word": 0,
+    "width": 1,
+    "shift": 1,
+    "mask": "0x00000002",
+    "name": "DrawStates_1E"
+  },
+  {
+    "type": "Mario::DrawStates",
+    "field": "_1F",
+    "word": 0,
+    "width": 1,
+    "shift": 0,
+    "mask": "0x00000001",
+    "name": "DrawStates_1F"
+  },
+  {
+    "type": "J3DModelX::Flags",
+    "field": "_0",
+    "word": 0,
+    "width": 1,
+    "shift": 31,
+    "mask": "0x80000000",
+    "name": "J3DModelX_Flags_0"
+  },
+  {
+    "type": "J3DModelX::Flags",
+    "field": "_1",
+    "word": 0,
+    "width": 1,
+    "shift": 30,
+    "mask": "0x40000000",
+    "name": "J3DModelX_Flags_1"
+  },
+  {
+    "type": "J3DModelX::Flags",
+    "field": "_2",
+    "word": 0,
+    "width": 1,
+    "shift": 29,
+    "mask": "0x20000000",
+    "name": "J3DModelX_Flags_2"
+  },
+  {
+    "type": "J3DModelX::Flags",
+    "field": "_3",
+    "word": 0,
+    "width": 1,
+    "shift": 28,
+    "mask": "0x10000000",
+    "name": "J3DModelX_Flags_3"
+  },
+  {
+    "type": "J3DModelX::Flags",
+    "field": "_4",
+    "word": 0,
+    "width": 1,
+    "shift": 27,
+    "mask": "0x08000000",
+    "name": "J3DModelX_Flags_4"
+  },
+  {
+    "type": "J3DModelX::Flags",
+    "field": "_5",
+    "word": 0,
+    "width": 1,
+    "shift": 26,
+    "mask": "0x04000000",
+    "name": "J3DModelX_Flags_5"
+  },
+  {
+    "type": "J3DModelX::Flags",
+    "field": "_6",
+    "word": 0,
+    "width": 1,
+    "shift": 25,
+    "mask": "0x02000000",
+    "name": "J3DModelX_Flags_6"
+  },
+  {
+    "type": "J3DModelX::Flags",
+    "field": "_7",
+    "word": 0,
+    "width": 1,
+    "shift": 24,
+    "mask": "0x01000000",
+    "name": "J3DModelX_Flags_7"
+  },
+  {
+    "type": "J3DModelX::Flags",
+    "field": "_8",
+    "word": 0,
+    "width": 1,
+    "shift": 23,
+    "mask": "0x00800000",
+    "name": "J3DModelX_Flags_8"
+  },
+  {
+    "type": "J3DModelX::Flags",
+    "field": "_9",
+    "word": 0,
+    "width": 1,
+    "shift": 22,
+    "mask": "0x00400000",
+    "name": "J3DModelX_Flags_9"
+  },
+  {
+    "type": "J3DModelX::Flags",
+    "field": "_A",
+    "word": 0,
+    "width": 1,
+    "shift": 21,
+    "mask": "0x00200000",
+    "name": "J3DModelX_Flags_A"
+  },
+  {
+    "type": "J3DModelX::Flags",
+    "field": "_B",
+    "word": 0,
+    "width": 1,
+    "shift": 20,
+    "mask": "0x00100000",
+    "name": "J3DModelX_Flags_B"
+  },
+  {
+    "type": "J3DModelX::Flags",
+    "field": "_C",
+    "word": 0,
+    "width": 1,
+    "shift": 19,
+    "mask": "0x00080000",
+    "name": "J3DModelX_Flags_C"
+  },
+  {
+    "type": "J3DModelX::Flags",
+    "field": "_D",
+    "word": 0,
+    "width": 1,
+    "shift": 18,
+    "mask": "0x00040000",
+    "name": "J3DModelX_Flags_D"
+  },
+  {
+    "type": "J3DModelX::Flags",
+    "field": "_E",
+    "word": 0,
+    "width": 1,
+    "shift": 17,
+    "mask": "0x00020000",
+    "name": "J3DModelX_Flags_E"
+  },
+  {
+    "type": "J3DModelX::Flags",
+    "field": "_F",
+    "word": 0,
+    "width": 1,
+    "shift": 16,
+    "mask": "0x00010000",
+    "name": "J3DModelX_Flags_F"
+  },
+  {
+    "type": "J3DModelX::Flags",
+    "field": "_10",
+    "word": 0,
+    "width": 1,
+    "shift": 15,
+    "mask": "0x00008000",
+    "name": "J3DModelX_Flags_10"
+  },
+  {
+    "type": "J3DModelX::Flags",
+    "field": "_11",
+    "word": 0,
+    "width": 1,
+    "shift": 14,
+    "mask": "0x00004000",
+    "name": "J3DModelX_Flags_11"
+  },
+  {
+    "type": "J3DModelX::Flags",
+    "field": "_12",
+    "word": 0,
+    "width": 1,
+    "shift": 13,
+    "mask": "0x00002000",
+    "name": "J3DModelX_Flags_12"
+  },
+  {
+    "type": "J3DModelX::Flags",
+    "field": "_13",
+    "word": 0,
+    "width": 1,
+    "shift": 12,
+    "mask": "0x00001000",
+    "name": "J3DModelX_Flags_13"
+  },
+  {
+    "type": "J3DModelX::Flags",
+    "field": "_14",
+    "word": 0,
+    "width": 1,
+    "shift": 11,
+    "mask": "0x00000800",
+    "name": "J3DModelX_Flags_14"
+  },
+  {
+    "type": "J3DModelX::Flags",
+    "field": "_15",
+    "word": 0,
+    "width": 1,
+    "shift": 10,
+    "mask": "0x00000400",
+    "name": "J3DModelX_Flags_15"
+  },
+  {
+    "type": "J3DModelX::Flags",
+    "field": "_16",
+    "word": 0,
+    "width": 1,
+    "shift": 9,
+    "mask": "0x00000200",
+    "name": "J3DModelX_Flags_16"
+  },
+  {
+    "type": "J3DModelX::Flags",
+    "field": "_17",
+    "word": 0,
+    "width": 1,
+    "shift": 8,
+    "mask": "0x00000100",
+    "name": "J3DModelX_Flags_17"
+  },
+  {
+    "type": "J3DModelX::Flags",
+    "field": "_18",
+    "word": 0,
+    "width": 1,
+    "shift": 7,
+    "mask": "0x00000080",
+    "name": "J3DModelX_Flags_18"
+  },
+  {
+    "type": "J3DModelX::Flags",
+    "field": "_19",
+    "word": 0,
+    "width": 1,
+    "shift": 6,
+    "mask": "0x00000040",
+    "name": "J3DModelX_Flags_19"
+  },
+  {
+    "type": "J3DModelX::Flags",
+    "field": "_1A",
+    "word": 0,
+    "width": 1,
+    "shift": 5,
+    "mask": "0x00000020",
+    "name": "J3DModelX_Flags_1A"
+  },
+  {
+    "type": "J3DModelX::Flags",
+    "field": "_1B",
+    "word": 0,
+    "width": 1,
+    "shift": 4,
+    "mask": "0x00000010",
+    "name": "J3DModelX_Flags_1B"
+  },
+  {
+    "type": "J3DModelX::Flags",
+    "field": "_1C",
+    "word": 0,
+    "width": 1,
+    "shift": 3,
+    "mask": "0x00000008",
+    "name": "J3DModelX_Flags_1C"
+  }
+]

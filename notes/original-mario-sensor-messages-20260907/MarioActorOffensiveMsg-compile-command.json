@@ -39,8 +39,6 @@
     "-sym",
     "on",
     "-i",
-    "/Users/frityet/Projects/petari/notes/original-mario-sensor-messages-20260907/overlay",
-    "-i",
     "include",
     "-i",
     "libs/JSystem/include",
@@ -62,11 +60,11 @@
     "build/original-j3d-joint-traversal-20260903/retail/include",
     "-DVERSION=0",
     "-c",
-    "/Users/frityet/Projects/petari/notes/original-mario-sensor-messages-20260907/candidates/MarioActorOffensiveMsg.cpp",
+    "src/Game/Player/MarioActorOffensiveMsg.cpp",
     "-o",
     "/Users/frityet/Projects/petari/notes/original-mario-sensor-messages-20260907/MarioActorOffensiveMsg.o"
   ],
   "exit_code": 0,
-  "source": "/Users/frityet/Projects/petari/notes/original-mario-sensor-messages-20260907/candidates/MarioActorOffensiveMsg.cpp",
+  "source": "src/Game/Player/MarioActorOffensiveMsg.cpp",
   "sha256": "1a59bd02c6f39b4d7fd2d0eacc7b455f273195c58a318d48c8443deb2ef6bfa6"
 }

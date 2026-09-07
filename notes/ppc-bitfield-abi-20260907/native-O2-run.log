@@ -1,0 +1,2 @@
+PASS: all Mario Movement/Draw and J3DModelX fields, bidirectional raw masks and multibit values
+PASS: generic 8/16/32-bit storage, padding, sizes and alignment

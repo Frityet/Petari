@@ -1,0 +1,9 @@
+[
+  "src/Game/Player/MarioActorRush.cpp",
+  "notes/original-mario-begin-rush-20260907/README.md",
+  "notes/original-mario-begin-rush-20260907/proof.json",
+  "notes/original-mario-begin-rush-20260907/beginRush.asm",
+  "notes/original-mario-begin-rush-20260907/retail-references.json",
+  "notes/original-mario-begin-rush-20260907/root-checkpoint-paths.json",
+  "notes/original-mario-begin-rush-20260907/decomp-checkpoint-paths.json"
+]

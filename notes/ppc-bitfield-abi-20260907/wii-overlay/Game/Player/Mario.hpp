@@ -1,5 +1,4 @@
 #pragma once
-
 #include <aurora/ppc_bitfield.hpp>
 
 #include "Game/Player/MarioModule.hpp"

@@ -1,0 +1,185 @@
+[
+  {
+    "offset": "0x10",
+    "kind": 10,
+    "symbol": "_savegpr_29",
+    "addend": 0
+  },
+  {
+    "offset": "0x1a",
+    "kind": 6,
+    "symbol": "lbl_805B8A80",
+    "addend": 0,
+    "value_hex": "9085896a835783468362836700"
+  },
+  {
+    "offset": "0x26",
+    "kind": 4,
+    "symbol": "lbl_805B8A80",
+    "addend": 0,
+    "value_hex": "9085896a835783468362836700"
+  },
+  {
+    "offset": "0x2c",
+    "kind": 10,
+    "symbol": "clearAllJointTransform__13MarioAnimatorFv",
+    "addend": 0
+  },
+  {
+    "offset": "0x34",
+    "kind": 10,
+    "symbol": "invalidateHitSensors__2MRFP9LiveActor",
+    "addend": 0
+  },
+  {
+    "offset": "0x40",
+    "kind": 10,
+    "symbol": "stopEffect__10MarioActorFPCc",
+    "addend": 0
+  },
+  {
+    "offset": "0x4c",
+    "kind": 10,
+    "symbol": "stopEffect__10MarioActorFPCc",
+    "addend": 0
+  },
+  {
+    "offset": "0x60",
+    "kind": 10,
+    "symbol": "selectSpinCatchInRush__10MarioActorCFPCc",
+    "addend": 0
+  },
+  {
+    "offset": "0x7c",
+    "kind": 10,
+    "symbol": "selectHideFlyMeter__10MarioActorCFPC9HitSensor",
+    "addend": 0
+  },
+  {
+    "offset": "0x88",
+    "kind": 10,
+    "symbol": "getGameSceneLayoutHolder__2MRFv",
+    "addend": 0
+  },
+  {
+    "offset": "0x8c",
+    "kind": 10,
+    "symbol": "changeLifeMeterModeGround__21GameSceneLayoutHolderFv",
+    "addend": 0
+  },
+  {
+    "offset": "0x98",
+    "kind": 10,
+    "symbol": "isFixJumpRushSensor__10MarioActorCFPC9HitSensor",
+    "addend": 0
+  },
+  {
+    "offset": "0xb0",
+    "kind": 10,
+    "symbol": "settingRush__10MarioActorFv",
+    "addend": 0
+  },
+  {
+    "offset": "0xb8",
+    "kind": 109,
+    "symbol": "lbl_806B2230",
+    "addend": 0,
+    "value_hex": "65796500"
+  },
+  {
+    "offset": "0xbc",
+    "kind": 10,
+    "symbol": "getSensor__9LiveActorCFPCc",
+    "addend": 0
+  },
+  {
+    "offset": "0xc0",
+    "kind": 10,
+    "symbol": "validate__9HitSensorFv",
+    "addend": 0
+  },
+  {
+    "offset": "0xcc",
+    "kind": 10,
+    "symbol": "getSensor__9LiveActorCFPCc",
+    "addend": 0
+  },
+  {
+    "offset": "0xd0",
+    "kind": 10,
+    "symbol": "validate__9HitSensorFv",
+    "addend": 0
+  },
+  {
+    "offset": "0xe0",
+    "kind": 10,
+    "symbol": "getSensor__9LiveActorCFPCc",
+    "addend": 0
+  },
+  {
+    "offset": "0xe4",
+    "kind": 10,
+    "symbol": "validate__9HitSensorFv",
+    "addend": 0
+  },
+  {
+    "offset": "0xf0",
+    "kind": 10,
+    "symbol": "isType__9HitSensorCFUl",
+    "addend": 0
+  },
+  {
+    "offset": "0x100",
+    "kind": 10,
+    "symbol": "forceDeleteEffectAll__2MRFP9LiveActor",
+    "addend": 0
+  },
+  {
+    "offset": "0x120",
+    "kind": 10,
+    "symbol": "selectLandEffect__10MarioActorCFPC9HitSensor",
+    "addend": 0
+  },
+  {
+    "offset": "0x134",
+    "kind": 10,
+    "symbol": "playEffect__10MarioActorFPCc",
+    "addend": 0
+  },
+  {
+    "offset": "0x158",
+    "kind": 10,
+    "symbol": "setPlayerMode__10MarioActorFUsb",
+    "addend": 0
+  },
+  {
+    "offset": "0x160",
+    "kind": 10,
+    "symbol": "resetFog__10MarioActorFv",
+    "addend": 0
+  },
+  {
+    "offset": "0x168",
+    "kind": 10,
+    "symbol": "settingRush__10MarioActorFv",
+    "addend": 0
+  },
+  {
+    "offset": "0x174",
+    "kind": 10,
+    "symbol": "isType__9HitSensorCFUl",
+    "addend": 0
+  },
+  {
+    "offset": "0x198",
+    "kind": 10,
+    "symbol": "setBlendMtxTimer__10MarioActorFUs",
+    "addend": 0
+  },
+  {
+    "offset": "0x1a0",
+    "kind": 10,
+    "symbol": "_restgpr_29",
+    "addend": 0
+  }
+]

@@ -1,0 +1,22 @@
+[
+  "src/Game/Player/Mario.hpp",
+  "src/Game/Player/J3DModelX.hpp",
+  "tests/PpcBitfieldAbiTests.cpp",
+  "tests/xmake.lua",
+  "notes/ppc-bitfield-abi-20260907/README.md",
+  "notes/ppc-bitfield-abi-20260907/canonical-field-masks.json",
+  "notes/ppc-bitfield-abi-20260907/field-groups.json",
+  "notes/ppc-bitfield-abi-20260907/verification.json",
+  "notes/ppc-bitfield-abi-20260907/wii-equivalence.json",
+  "notes/ppc-bitfield-abi-20260907/verify.py",
+  "notes/ppc-bitfield-abi-20260907/make-probes.py",
+  "notes/ppc-bitfield-abi-20260907/generate-header.py",
+  "notes/ppc-bitfield-abi-20260907/wii-fields.cpp",
+  "notes/ppc-bitfield-abi-20260907/wii-overlay/Game/Player/Mario.hpp",
+  "notes/ppc-bitfield-abi-20260907/wii-overlay/Game/Player/J3DModelX.hpp",
+  "notes/ppc-bitfield-abi-20260907/native-O0-run.log",
+  "notes/ppc-bitfield-abi-20260907/native-O2-run.log",
+  "notes/ppc-bitfield-abi-20260907/root-source-manifest.json",
+  "notes/ppc-bitfield-abi-20260907/aurora-source-manifest.json",
+  "notes/ppc-bitfield-abi-20260907/root-checkpoint-paths.json"
+]
