@@ -141,7 +141,12 @@ namespace MR {
         return SingletonHolder< GameSystem >::get()->mSceneController->isSceneInitializeState(SceneInitializeState_End);
     }
 
-    // isInitializeStatePlacementSomething
+    bool isInitializeStatePlacementSomething() {
+        return SingletonHolder< GameSystem >::get()->mSceneController->isSceneInitializeState(SceneInitializeState_PlacementPlayer) ||
+               SingletonHolder< GameSystem >::get()->mSceneController->isSceneInitializeState(SceneInitializeState_PlacementHighPriority) ||
+               SingletonHolder< GameSystem >::get()->mSceneController->isSceneInitializeState(SceneInitializeState_Placement);
+    }
+
     // stopSceneForScenarioOpeningCamera
     // playSceneForScenarioOpeningCamera
     // getCurrentMarioStartIdInfo
