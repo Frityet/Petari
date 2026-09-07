@@ -1,0 +1,56 @@
+[
+  {
+    "name": "requestMovementOnImageEffect__2MRFv",
+    "demangled_name": "MR::requestMovementOnImageEffect()",
+    "size": "180",
+    "match_percent": 100.0
+  },
+  {
+    "name": "tryScreenToFrameCinemaFrame__2MRFv",
+    "demangled_name": "MR::tryScreenToFrameCinemaFrame()",
+    "size": "44",
+    "match_percent": 100.0
+  },
+  {
+    "name": "tryFrameToBlankCinemaFrame__2MRFv",
+    "demangled_name": "MR::tryFrameToBlankCinemaFrame()",
+    "size": "44",
+    "match_percent": 100.0
+  },
+  {
+    "name": "tryBlankToFrameCinemaFrame__2MRFv",
+    "demangled_name": "MR::tryBlankToFrameCinemaFrame()",
+    "size": "44",
+    "match_percent": 100.0
+  },
+  {
+    "name": "tryFrameToScreenCinemaFrame__2MRFv",
+    "demangled_name": "MR::tryFrameToScreenCinemaFrame()",
+    "size": "44",
+    "match_percent": 100.0
+  },
+  {
+    "name": "forceToScreenCinemaFrame__2MRFv",
+    "demangled_name": "MR::forceToScreenCinemaFrame()",
+    "size": "44",
+    "match_percent": 100.0
+  },
+  {
+    "name": "forceToFrameCinemaFrame__2MRFv",
+    "demangled_name": "MR::forceToFrameCinemaFrame()",
+    "size": "44",
+    "match_percent": 100.0
+  },
+  {
+    "name": "forceToBlankCinemaFrame__2MRFv",
+    "demangled_name": "MR::forceToBlankCinemaFrame()",
+    "size": "44",
+    "match_percent": 100.0
+  },
+  {
+    "name": "isStopCinemaFrame__2MRFv",
+    "demangled_name": "MR::isStopCinemaFrame()",
+    "size": "44",
+    "match_percent": 100.0
+  }
+]

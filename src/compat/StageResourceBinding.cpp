@@ -46,6 +46,7 @@ namespace smgpc::compat {
         struct Holder {
             std::vector<JMapInfo> starts;
             std::vector<JMapInfo> paths;
+            std::vector<JMapInfo> general_positions;
             std::vector<std::size_t> children;
         };
         std::vector<Holder> catalogs;
@@ -93,7 +94,7 @@ namespace smgpc::compat {
                 std::vector<const scene::StagePlacementTable*> ordered;
                 for (const auto& table : tables) {
                     if (table.holder_instance_id == holder.instance_id &&
-                        (table.category == "start" || table.category == "path")) {
+                        (table.category == "start" || table.category == "path" || table.category == "generalpos")) {
                         ordered.push_back(&table);
                     }
                 }
@@ -104,8 +105,14 @@ namespace smgpc::compat {
                     return left->archive_entry_order < right->archive_entry_order;
                 });
                 for (const auto* table : ordered) {
-                    auto& destination = table->category == "start" ? catalog.starts : catalog.paths;
+                    auto& destination = table->category == "start" ? catalog.starts :
+                                        table->category == "path" ? catalog.paths : catalog.general_positions;
                     destination.push_back(table->jmap_info);
+                    if (table->category == "generalpos" && !root->children.empty()) {
+                        // Original isPlacementLocalStage tests the root's child
+                        // count. Native readers consume transformed fields.
+                        scene::apply_stage_zone_transform(destination.back(), table->zone_transform);
+                    }
                 }
             }
         }
@@ -141,6 +148,28 @@ namespace smgpc::compat {
             for (const auto child : holder.children) {
                 const auto count = count_starts(child);
                 if (index < count) return start_iter(child, index);
+                index -= count;
+            }
+            return JMapInfoIter();
+        }
+
+        s32 count_general_positions(std::size_t holder_id) const {
+            const auto& holder = catalogs[holder_id];
+            s32 count = 0;
+            for (const auto& table : holder.general_positions) count += table.getNumEntries();
+            for (const auto child : holder.children) count += count_general_positions(child);
+            return count;
+        }
+
+        JMapInfoIter general_position_iter(std::size_t holder_id, int index) const {
+            const auto& holder = catalogs[holder_id];
+            for (const auto& table : holder.general_positions) {
+                if (index < table.getNumEntries()) return JMapInfoIter(&table, index);
+                index -= table.getNumEntries();
+            }
+            for (const auto child : holder.children) {
+                const auto count = count_general_positions(child);
+                if (index < count) return general_position_iter(child, index);
                 index -= count;
             }
             return JMapInfoIter();
@@ -235,6 +264,17 @@ namespace smgpc::compat {
 
     s32 StageResourceBinding::start_count() const {
         return _state->count_starts(_state->root_id);
+    }
+
+    s32 StageResourceBinding::general_position_count() const {
+        return _state->count_general_positions(_state->root_id);
+    }
+
+    JMapInfoIter StageResourceBinding::general_position_iter(int index) const {
+        if (index < 0 || index >= general_position_count()) {
+            aurora::throw_host_exception<std::out_of_range>("General position index does not identify an authored row.");
+        }
+        return _state->general_position_iter(_state->root_id, index);
     }
 
     void StageResourceBinding::start_camera_id(JMapIdInfo* output, int index) const {

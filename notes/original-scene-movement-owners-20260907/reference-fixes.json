@@ -1,0 +1,266 @@
+[
+  {
+    "source": "decomp/src/Game/NameObj/NameObjHolder.cpp",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/NameObj/NameObjHolder.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-scene-movement-owners-20260907/NameObjHolder.wii.o"
+    ],
+    "compile": 0,
+    "diff_exit": 0,
+    "symbols": [
+      {
+        "name": "__ct__13NameObjHolderFi",
+        "size": "92",
+        "match_percent": 100.0
+      },
+      {
+        "name": "add__13NameObjHolderFP7NameObj",
+        "size": "28",
+        "match_percent": 100.0
+      },
+      {
+        "name": "suspendAllObj__13NameObjHolderFv",
+        "size": "92",
+        "match_percent": 100.0
+      },
+      {
+        "name": "resumeAllObj__13NameObjHolderFv",
+        "size": "92",
+        "match_percent": 100.0
+      },
+      {
+        "name": "syncWithFlags__13NameObjHolderFv",
+        "size": "64",
+        "match_percent": 100.0
+      },
+      {
+        "name": "callMethodAllObj__13NameObjHolderFM7NameObjFPCvPv_v",
+        "size": "128",
+        "match_percent": 89.9375
+      },
+      {
+        "name": "clearArray__13NameObjHolderFv",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "find__13NameObjHolderFPCc",
+        "size": "388",
+        "match_percent": 100.0
+      },
+      {
+        "name": "find_if<PP7NameObj,Q227@unnamed@NameObjHolder_cpp@14equal_fullname>__3stdFPP7NameObjPP7NameObjQ227@unnamed@NameObjHolder_cpp@14equal_fullname_PP7NameObj",
+        "size": "104",
+        "match_percent": 100.0
+      },
+      {
+        "name": "insert__Q22MR39Vector<Q22MR24FixedArray<P7NameObj,16>>FPP7NameObjRCP7NameObj",
+        "size": "64",
+        "match_percent": 100.0
+      },
+      {
+        "name": "@55211",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "[.data-0]",
+        "size": "16",
+        "match_percent": 88.571434
+      }
+    ]
+  },
+  {
+    "source": "decomp/src/Game/Scene/StopSceneController.cpp",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Scene/StopSceneController.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-scene-movement-owners-20260907/StopSceneController.wii.o"
+    ],
+    "compile": 0,
+    "diff_exit": 0,
+    "symbols": [
+      {
+        "name": "__ct__21StopSceneDelayRequestFv",
+        "size": "104",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__19StopSceneControllerFv",
+        "size": "188",
+        "match_percent": 100.0
+      },
+      {
+        "name": "movement__21StopSceneDelayRequestFv",
+        "size": "36",
+        "match_percent": 100.0
+      },
+      {
+        "name": "requestStopScene__19StopSceneControllerFl",
+        "size": "40",
+        "match_percent": 100.0
+      },
+      {
+        "name": "requestStopSceneDelay__19StopSceneControllerFll",
+        "size": "68",
+        "match_percent": 100.0
+      },
+      {
+        "name": "movement__19StopSceneControllerFv",
+        "size": "24",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isSceneStopped__19StopSceneControllerCFv",
+        "size": "20",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__dt__21StopSceneDelayRequestFv",
+        "size": "88",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__dt__19StopSceneControllerFv",
+        "size": "88",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__19StopSceneController",
+        "size": "36",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__21StopSceneDelayRequest",
+        "size": "36",
+        "match_percent": 100.0
+      },
+      {
+        "name": "[.data-0]",
+        "size": "144",
+        "match_percent": 98.985916
+      }
+    ]
+  }
+]

@@ -14,6 +14,9 @@
 #include "compat/ModelManagerOwner.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/ShadowController.hpp"
+#include "Game/LiveActor/Binder.hpp"
+#include "Game/LiveActor/ClippingDirector.hpp"
+#include "Game/NameObj/NameObjExecuteHolder.hpp"
 
 #include "Game/LiveActor/ActorLightCtrl.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
@@ -133,28 +136,61 @@ void LiveActor::kill() {
 }
 
 void LiveActor::makeActorAppeared() {
-    if (mFlag.mIsClipped) {
+    if (mSensorKeeper != nullptr) {
+        mSensorKeeper->validateBySystem();
+    }
+
+    if (MR::isClipped(this)) {
         endClipped();
     }
+
     mFlag.mIsDead = false;
+
     if (mCollisionParts != nullptr) {
         MR::validateCollisionParts(this);
     }
-    if (mSensorKeeper) mSensorKeeper->validateBySystem();
-    smgpc::compat::update_actor_hit_sensors(this);
+
+    MR::resetPosition(this);
+
+    if (mActorLightCtrl != nullptr) {
+        mActorLightCtrl->reset();
+    }
+
+    MR::tryUpdateHitSensorsAll(this);
+    MR::addToClippingTarget(this);
+    MR::connectToSceneTemporarily(this);
+
+    if (!MR::isNoEntryDrawBuffer(this)) {
+        MR::connectToDrawTemporarily(this);
+    }
 }
 
 void LiveActor::makeActorDead() {
     mVelocity.zero();
+
+    MR::clearHitSensors(this);
+
+    if (mSensorKeeper != nullptr) {
+        mSensorKeeper->invalidateBySystem();
+    }
+
+    if (getBinder() != nullptr) {
+        mBinder->clear();
+    }
+
     if (mEffectKeeper != nullptr) {
         mEffectKeeper->clear();
     }
+
     if (mCollisionParts != nullptr) {
         MR::invalidateCollisionParts(this);
     }
+
     mFlag.mIsDead = true;
-    if (mSensorKeeper) mSensorKeeper->invalidateBySystem();
-    smgpc::compat::clear_actor_binder_contacts(this);
+
+    MR::removeFromClippingTarget(this);
+    MR::disconnectToSceneTemporarily(this);
+    MR::disconnectToDrawTemporarily(this);
 }
 
 bool LiveActor::receiveMessage(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
@@ -204,21 +240,43 @@ bool LiveActor::receiveMsgApart(HitSensor* pSender, HitSensor* pReceiver) {
 
 void LiveActor::startClipped() {
     mFlag.mIsClipped = true;
+
+    if (getSensorKeeper() != nullptr) {
+        mSensorKeeper->invalidateBySystem();
+    }
+
     if (mEffectKeeper != nullptr) {
         mEffectKeeper->stopEmitterOnClipped();
     }
-    if (mSensorKeeper) mSensorKeeper->invalidateBySystem();
+
+    MR::disconnectToSceneTemporarily(this);
+
+    if (MR::isNoEntryDrawBuffer(this)) {
+        return;
+    }
+
+    MR::disconnectToDrawTemporarily(this);
 }
 
 void LiveActor::endClipped() {
     mFlag.mIsClipped = false;
+
+    if (getSensorKeeper() != nullptr) {
+        mSensorKeeper->validateBySystem();
+        MR::updateHitSensorsAll(this);
+    }
+
     if (mEffectKeeper != nullptr) {
         mEffectKeeper->playEmitterOffClipped();
     }
-    if (!mFlag.mIsDead) {
-        if (mSensorKeeper) mSensorKeeper->validateBySystem();
-        smgpc::compat::update_actor_hit_sensors(this);
+
+    MR::connectToSceneTemporarily(this);
+
+    if (MR::isNoEntryDrawBuffer(this)) {
+        return;
     }
+
+    MR::connectToDrawTemporarily(this);
 }
 
 void LiveActor::calcAndSetBaseMtx() {

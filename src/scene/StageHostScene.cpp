@@ -4,18 +4,29 @@
 #include "scene/SceneExecutionService.hpp"
 #include "scene/StageInitializationService.hpp"
 
+#include <aurora/exception.hpp>
+#include <stdexcept>
 #include <utility>
 
 namespace smgpc::scene {
     StageHostScene::StageHostScene(smgpc::runtime::RuntimeContext &runtime, StageHostRequest request)
         : Scene(!request.stage_name.empty() ? request.stage_name.c_str() : "StageHostScene"),
-          _runtime(runtime),
-          _initialization(std::make_unique<StageInitializationService>(runtime, *this, std::move(request))) {
+          _runtime(runtime) {
     }
 
     StageHostScene::~StageHostScene() = default;
 
+    void StageHostScene::bind_initialization(StageInitializationService &initialization) {
+        if (_initialization) {
+            aurora::throw_host_exception<std::logic_error>("Stage Scene already has an initialization owner");
+        }
+        _initialization = &initialization;
+    }
+
     void StageHostScene::init() {
+        if (!_initialization) {
+            aurora::throw_host_exception<std::logic_error>("Stage Scene requires its native initialization owner");
+        }
         _initialization->initialize_host_scene();
     }
 

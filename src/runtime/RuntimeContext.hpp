@@ -248,7 +248,6 @@ namespace smgpc::runtime {
         [[nodiscard]] const RflService &rfl() const;
         [[nodiscard]] CaptureScreenDirector &capture_screen_director();
         [[nodiscard]] const CaptureScreenDirector &capture_screen_director() const;
-        void begin_scene_draw_buffer_registration();
         [[nodiscard]] SceneScheduler &scheduler();
         [[nodiscard]] const SceneScheduler &scheduler() const;
         [[nodiscard]] std::size_t begin_scene_registration_scope();

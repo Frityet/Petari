@@ -1,0 +1,26 @@
+[
+  {
+    "target": "smg-pc-game",
+    "command": [
+      "xmake",
+      "build",
+      "-v",
+      "smg-pc-game"
+    ],
+    "exit": 0,
+    "seconds": 18.05,
+    "log": "notes/original-scene-execution-integration-20260907/smg-pc-game-build.log"
+  },
+  {
+    "target": "smg-pc-showcase",
+    "command": [
+      "xmake",
+      "build",
+      "-v",
+      "smg-pc-showcase"
+    ],
+    "exit": 255,
+    "seconds": 3.48,
+    "log": "notes/original-scene-execution-integration-20260907/smg-pc-showcase-build.log"
+  }
+]

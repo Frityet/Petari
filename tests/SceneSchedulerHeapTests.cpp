@@ -1,4 +1,6 @@
 #include "runtime/SceneScheduler.hpp"
+#include "SceneExecutionFixture.hpp"
+#include "Game/Scene/SceneNameObjMovementController.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/ActorPhysicsRuntime.hpp"
@@ -131,14 +133,16 @@ void verify_explicit_scene_callbacks(const std::shared_ptr<smgpc::compat::JkrHea
     using namespace smgpc::runtime;
     const auto free_before = heaps->root_heap().getFreeSize();
     {
-        auto game = JkrAllocationDomain::create(heaps, 384U << 10);
+        auto game = JkrAllocationDomain::create(heaps, 2U << 20);
         auto caller = JkrAllocationDomain::create(heaps, 64U << 10);
         SceneScheduler scheduler;
         SceneSchedulerBinding active(scheduler);
         SceneSchedulerAllocationBinding scene(scheduler, game);
+        smgpc::test::SceneExecutionFixture execution(scheduler, game);
         CallbackObject object(scheduler);
         scheduler.connect_name_obj(object, 34, 0, -1, 72);
         scheduler.register_pre_draw_function(MR::Functor(static_cast<const CallbackObject*>(&object), &CallbackObject::pre_draw), 72);
+        execution.complete_initialization();
         {
             JkrAllocationScope outer(caller);
             scheduler.execute_movement();
@@ -206,6 +210,7 @@ void verify_explicit_scene_callbacks(const std::shared_ptr<smgpc::compat::JkrHea
         scheduler.connect_name_obj(mutator, -1, 0, -1, -1);
         scheduler.connect_name_obj(*animation_victim, -1, 0, -1, -1);
         scheduler.connect_name_obj(survivor, -1, 0, -1, -1);
+        execution.apply_connections();
         scheduler.execute_calc_anim();
         require(animation_victim == nullptr && survivor.allocation.calls[1] == 1,
                 "animation revalidates registrations after callback removal");
@@ -223,8 +228,6 @@ void verify_explicit_scene_callbacks(const std::shared_ptr<smgpc::compat::JkrHea
         require(replacement.allocation.calls[0] == 1, "new registrations run in the next movement snapshot");
         scheduler.clear();
 
-        SceneObjHolder holder;
-        smgpc::scene::SceneObjHolderBinding helpers(holder);
         (void)MR::createSceneObj(SceneObj_MessageSensorHolder);
         CallbackActor first(scheduler);
         auto second = std::make_unique<CallbackActor>(scheduler);
@@ -266,6 +269,8 @@ void verify_explicit_scene_callbacks(const std::shared_ptr<smgpc::compat::JkrHea
     {
         SceneScheduler scheduler;
         SceneSchedulerBinding active(scheduler);
+        auto execution_domain = JkrAllocationDomain::create(heaps, 512U << 10);
+        smgpc::test::SceneExecutionFixture execution(scheduler, execution_domain);
         auto domain = JkrAllocationDomain::create(heaps, 64U << 10);
         std::weak_ptr<JkrAllocationDomain> weak = domain;
         auto scene = std::make_unique<SceneSchedulerAllocationBinding>(scheduler, domain);
@@ -280,8 +285,9 @@ void verify_explicit_scene_callbacks(const std::shared_ptr<smgpc::compat::JkrHea
             delete[] value;
         };
         scheduler.connect_name_obj(object, 34, -1, -1, -1);
+        execution.complete_initialization();
         scheduler.execute_movement();
-        require(weak.expired() && !scheduler.allocation_domain(), "the callback's last scene lease is released on return");
+        require(weak.expired() && scheduler.allocation_domain() == execution_domain, "the callback's last temporary domain lease releases on return to the execution owner");
         scheduler.clear();
     }
     require(heaps->root_heap().getFreeSize() == free_before, "removal of an active scene binding leaves no retained heap");
@@ -294,11 +300,12 @@ void verify_category_execution(const std::shared_ptr<smgpc::compat::JkrHeapRunti
     using namespace smgpc::runtime;
     const auto free_before = heaps->root_heap().getFreeSize();
     {
-        auto domain = JkrAllocationDomain::create(heaps, 128U << 10);
+        auto domain = JkrAllocationDomain::create(heaps, 1U << 20);
         auto caller = JkrAllocationDomain::create(heaps, 32U << 10);
         SceneScheduler scheduler;
         SceneSchedulerBinding active(scheduler);
         SceneSchedulerAllocationBinding game(scheduler, domain);
+        smgpc::test::SceneExecutionFixture execution(scheduler, domain);
         CallbackObject camera(scheduler), clipping(scheduler), platform(scheduler), collision(scheduler), player(scheduler);
         std::vector<unsigned> order;
         const auto record = [&](unsigned event) {
@@ -317,6 +324,7 @@ void verify_category_execution(const std::shared_ptr<smgpc::compat::JkrHeapRunti
         scheduler.connect_name_obj(platform, MR::MovementType_CollisionMapObj, MR::CalcAnimType_CollisionMapObj, -1, -1);
         scheduler.connect_name_obj(clipping, MR::MovementType_ClippingDirector, -1, -1, -1);
         scheduler.connect_name_obj(camera, MR::MovementType_Camera, -1, -1, -1);
+        execution.complete_initialization();
         {
             JkrAllocationScope external(caller);
             scheduler.begin_frame();
@@ -333,6 +341,7 @@ void verify_category_execution(const std::shared_ptr<smgpc::compat::JkrHeapRunti
         require(player.allocation.calls[1] == 0 && scheduler.last_execution_trace().size() == 6,
                 "category dispatch never executes an aggregate animation list or clears earlier category traces");
         scheduler.request_movement_off(MR::MovementType_Player);
+        MR::getSceneNameObjMovementController()->movement();
         CategoryList::execute(MR::MovementType_Player);
         CategoryList::execute(MR::CalcAnimType_Player);
         require(player.allocation.calls[0] == 1 && player.allocation.calls[1] == 1,
@@ -352,9 +361,11 @@ void verify_category_execution(const std::shared_ptr<smgpc::compat::JkrHeapRunti
         };
         for (auto* object : {&mutator, victim.get(), &survivor})
             scheduler.connect_name_obj(*object, MR::MovementType_Player, -1, -1, -1);
+        execution.apply_connections();
         CategoryList::execute(MR::MovementType_Player);
         require(!victim && survivor.allocation.calls[0] == 0 && replacement.allocation.calls[0] == 0,
                 "a category batch never uses deleted or re-registered snapshot identities");
+        execution.apply_connections();
         CategoryList::execute(MR::MovementType_Player);
         require(survivor.allocation.calls[0] == 1 && replacement.allocation.calls[0] == 1,
                 "new category registrations become visible to the next category call");
@@ -370,6 +381,7 @@ void verify_category_execution(const std::shared_ptr<smgpc::compat::JkrHeapRunti
         replacement.animation_hook = [&] { j3dSys.mDrawMode = 0x5678; };
         scheduler.connect_name_obj(mutator, MR::MovementType_Player, -1, -1, -1);
         scheduler.connect_name_obj(replacement, -1, MR::CalcAnimType_Player, -1, -1);
+        execution.apply_connections();
         {
             JkrAllocationScope external(caller);
             bool caught = false;
@@ -386,6 +398,7 @@ void verify_category_execution(const std::shared_ptr<smgpc::compat::JkrHeapRunti
             actor->makeActorAppeared();
             scheduler.connect_name_obj(*actor, MR::MovementType_Player, MR::CalcAnimType_Player, -1, -1);
         }
+        execution.apply_connections();
         CategoryList::execute(MR::MovementType_Player);
         require(first.allocation.calls[4] == 0, "player category does not inject a sensor checker");
         CategoryList::execute(MR::MovementType_SensorHitChecker);
@@ -395,6 +408,7 @@ void verify_category_execution(const std::shared_ptr<smgpc::compat::JkrHeapRunti
         update_actor_hit_sensors(&second);
         CategoryList::execute(MR::CalcAnimType_Player);
         CategoryList::execute(MR::MovementType_CollisionDirector);
+        execution.apply_connections();
         CategoryList::execute(MR::MovementType_Player);
         require(first.allocation.calls[4] == 1 && second.allocation.calls[4] == 1,
                 "later categories deliver the existing contacts instead of silently recomputing them");
@@ -427,7 +441,7 @@ public:
 
 int main() {
     using namespace smgpc::compat;
-    auto heaps = JkrHeapRuntime::create(1U << 20);
+    auto heaps = JkrHeapRuntime::create(16U << 20);
     auto domain = JkrAllocationDomain::create(heaps, 64U << 10);
     std::vector<NameObj*> snapshot;
     std::vector<smgpc::runtime::SceneSchedulerEntryState> scheduler_snapshot;
@@ -457,21 +471,23 @@ int main() {
     if (domain->heap().getTotalFreeSize() != after_object)
         throw std::runtime_error("NameObj metadata consumed additional original heap storage");
     smgpc::runtime::SceneScheduler scheduler;
+    smgpc::runtime::SceneSchedulerBinding active(scheduler);
+    auto execution_domain = JkrAllocationDomain::create(heaps, 1U << 20);
+    auto execution = std::make_unique<smgpc::test::SceneExecutionFixture>(scheduler, execution_domain);
     std::vector<std::unique_ptr<NameObj>> objects;
     for (int i = 0; i < 128; ++i)
         objects.push_back(std::make_unique<NameObj>("heap registration fixture"));
     const auto before = domain->heap().getTotalFreeSize();
     {
         JkrAllocationScope scope(domain);
-        SceneObjHolder holder;
-        smgpc::scene::SceneObjHolderBinding binding(holder);
         for (auto& object : objects)
             scheduler.connect_name_obj(*object, 34, 0, -1, -1);
-        scheduler.execute_movement();
-        scheduler.execute_calc_anim();
+        execution->complete_initialization();
+        scheduler.execute_movement_category(34);
+        scheduler.execute_calc_anim_category(0);
         scheduler_snapshot = scheduler.snapshot();
         const auto trace = scheduler.last_execution_trace();
-        if (trace.size() != objects.size() * 2 || scheduler_snapshot.size() != objects.size() ||
+        if (trace.size() != objects.size() * 2 || std::count_if(scheduler_snapshot.begin(), scheduler_snapshot.end(), [](const auto& item) { return item.name == "heap registration fixture"; }) != objects.size() ||
             JKRHeap::findFromRoot(const_cast<smgpc::runtime::SceneSchedulerEntryState*>(trace.data())) != nullptr ||
             JKRHeap::findFromRoot(scheduler_snapshot.data()) != nullptr)
             throw std::runtime_error("scheduler history or snapshots use the original Game heap");
@@ -495,7 +511,7 @@ int main() {
         if (state.name != "heap registration fixture")
             throw std::runtime_error("scheduler history changed after scene heap retirement");
     for (const auto& state : scheduler_snapshot)
-        if (state.name != "heap registration fixture")
+        if (state.movement_type == 34 && state.name != "heap registration fixture")
             throw std::runtime_error("scheduler snapshot changed after scene heap retirement");
     scheduler_snapshot.clear();
     snapshot.clear();
@@ -516,11 +532,10 @@ int main() {
             actor->makeActorAppeared();
             scheduler.connect_name_obj(*actor, 34, -1, -1, -1);
         }
-        SceneObjHolder holder;
-        smgpc::scene::SceneObjHolderBinding scene(holder);
         (void)MR::createSceneObj(SceneObj_MessageSensorHolder);
         auto invocation = JkrAllocationDomain::create(heaps, 64U << 10);
         {
+            smgpc::runtime::SceneSchedulerAllocationBinding callback_heap(scheduler, invocation);
             JkrAllocationScope scope(invocation);
             const auto free_before = invocation->heap().getTotalFreeSize();
             for (unsigned i = 0; i < 32; ++i) {
@@ -548,6 +563,7 @@ int main() {
         AllocatingNameObj object;
         scheduler.connect_name_obj(object, 34, 0, -1, -1);
         {
+            smgpc::runtime::SceneSchedulerAllocationBinding callback_heap(scheduler, invocation);
             JkrAllocationScope scope(invocation);
             scheduler.execute_movement();
             scheduler.execute_calc_anim();
@@ -563,6 +579,8 @@ int main() {
     }
     std::cout << "NameObj registry and scheduler sorting/history/snapshots survive original heap retirement; "
                  "movement and animation callbacks retain original heap routing\n";
+    execution.reset();
+    execution_domain.reset();
     verify_explicit_scene_callbacks(heaps);
     verify_backend_allocation_routing(heaps);
     verify_category_execution(heaps);

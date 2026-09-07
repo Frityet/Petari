@@ -1,6 +1,11 @@
 #include <aurora/exception.hpp>
 #include "SceneScheduler.hpp"
 #include "scene/SceneDrawBufferService.hpp"
+#include "scene/SceneExecutionBinding.hpp"
+#include "Game/NameObj/NameObjExecuteHolder.hpp"
+#include "Game/NameObj/NameObjListExecutor.hpp"
+#include "Game/NameObj/NameObjCategoryList.hpp"
+#include "Game/Scene/SceneNameObjMovementController.hpp"
 #include "Game/System/DrawBufferHolder.hpp"
 #include "Game/LiveActor/ModelManager.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
@@ -64,6 +69,10 @@ namespace smgpc::runtime {
         public:
             explicit LayoutDrawAdaptor(smgpc::layout::LayoutRuntime& layout)
                 : NameObj(layout.getName().c_str()), _layout(layout) {}
+            void movement() override {
+                smgpc::compat::JkrHostAllocationScope host;
+                _layout.update();
+            }
             void draw() const override {
                 smgpc::compat::JkrHostAllocationScope host;
                 _layout.draw();
@@ -528,250 +537,210 @@ namespace smgpc::runtime {
         return _allocation_domain;
     }
 
-    void SceneScheduler::begin_draw_buffer_registration(std::shared_ptr<smgpc::compat::JkrAllocationDomain> domain) {
-        smgpc::compat::JkrHostAllocationScope host;
-        retire_draw_buffers();
-        _draw_buffers->begin_draw_buffer_registration(std::move(domain));
+    void SceneScheduler::attach_execution(smgpc::scene::SceneExecutionBinding& binding) {
+        if (_execution || !_entries.empty())
+            aurora::throw_host_exception<std::logic_error>("Bind the original executor before scene registrations");
+        _draw_buffers->bind_executor(binding.executor(), binding._domain);
+        if (!_allocation_domain) {
+            _allocation_domain = binding._domain;
+            binding._owns_allocation_binding = true;
+        }
+        _execution = &binding;
+    }
+
+    void SceneScheduler::detach_execution(smgpc::scene::SceneExecutionBinding& binding) {
+        if (_execution != &binding) return;
+        _draw_buffers->unbind_executor();
+        if (binding._owns_allocation_binding) _allocation_domain.reset();
+        _execution = nullptr;
     }
 
     void SceneScheduler::allocate_draw_buffers() {
-        if (!_draw_buffers->has_draw_buffers()) aurora::throw_host_exception<std::logic_error>("Original draw buffers need an explicit scene construction owner");
+        if (!_execution) aurora::throw_host_exception<std::logic_error>("Execution lists need their actual scene owner");
         _draw_buffers->allocate_actor_lists();
-        refresh_draw_buffer_activation();
     }
 
-    void SceneScheduler::retire_draw_buffers() {
-        if (_draw_buffers && _draw_buffers->registration_count() != 0)
-            aurora::throw_host_exception<std::logic_error>("Remove every actor registration before retiring original scene draw buffers");
-        _draw_buffers->retire_draw_buffers();
-    }
+    void SceneScheduler::retire_draw_buffers() { _draw_buffers->retire_draw_buffers(); }
 
-    void SceneScheduler::find_actor_light_info(LiveActor &actor) {
+    void SceneScheduler::find_actor_light_info(LiveActor& actor) {
         const auto* entry = find_entry(SceneEntryKind::LiveActorModel, &actor);
-        if (!entry || !entry->has_draw_buffer_registration) return;
-        _draw_buffers->find_light_info(actor);
+        if (entry && entry->has_draw_buffer_registration) _draw_buffers->find_light_info(actor);
     }
 
     void SceneScheduler::refresh_draw_buffer_activation() {
-        if (!_draw_buffers || !_draw_buffers->is_allocated()) return;
-        for (auto& entry : _entries)
-            if (entry.has_draw_buffer_registration)
-                _draw_buffers->set_active(*entry.live_actor,
-                    entry.draw_connected && !entry_is_dead(entry) && !entry.live_actor->mFlag.mIsClipped);
+        // This field is a diagnostic snapshot only. Original requirements own
+        // actual category and DrawBufferExecuter membership.
+        for (auto& entry : _entries) entry.draw_connected = is_draw_connected(*entry.name_obj);
     }
 
-    void SceneScheduler::connect_name_obj(NameObj &obj, s32 movement_type, s32 calc_anim_type, s32 draw_buffer_type, s32 draw_type) {
+    void SceneScheduler::register_execution_entry(Entry& entry) {
+        if (!_execution || _execution->retiring())
+            aurora::throw_host_exception<std::logic_error>("Register objects only inside their active scene execution owner");
+        if (entry.name_obj->mExecutorIdx >= 0)
+            aurora::throw_host_exception<std::logic_error>("A NameObj can have only one original execution registration");
+        auto& executor = _execution->executor();
+        auto validate = [](NameObjCategoryList& list, s32 category) {
+            if (category < -1 || category >= static_cast<s32>(list.mCategoryInfo.size()))
+                aurora::throw_host_exception<std::out_of_range>("Execution category is outside the original scene table");
+        };
+        validate(*executor.mMovementList, entry.movement_type);
+        validate(*executor.mCalcAnimList, entry.calc_anim_type);
+        validate(*executor.mDrawList, entry.draw_type);
+        auto owner = entry.has_draw_buffer_registration ? smgpc::compat::retain_actor_model_owner(entry.live_actor) : nullptr;
+        if (entry.has_draw_buffer_registration)
+            _draw_buffers->validate_actor_registration(*entry.live_actor, entry.draw_buffer_type, owner);
+        const smgpc::compat::JkrAllocationScope game(_execution->_domain);
+        // The original deferred lists allocate from registration counts. A
+        // late native registration grows this same typed storage, preserving
+        // existing membership and order, before the original queue can add it.
+        auto reserve_late = [&](NameObjCategoryList& list, s32 category) {
+            if (category < 0 || !_execution->initialized()) return;
+            auto& info = list.mCategoryInfo[category];
+            auto& array = info.mNameObjArr;
+            const auto needed = info.mCheck + 1;
+            if (needed <= array.capacity()) return;
+            const auto capacity = std::max<u32>(needed, std::max<u32>(8, array.capacity() * 2));
+            auto* storage = new NameObj*[capacity];
+            std::copy(array.begin(), array.end(), storage);
+            delete[] array.mArray.mArr;
+            array.mArray.mArr = storage;
+            array.mArray.mMaxSize = capacity;
+        };
+        reserve_late(*executor.mMovementList, entry.movement_type);
+        reserve_late(*executor.mCalcAnimList, entry.calc_anim_type);
+        reserve_late(*executor.mDrawList, entry.draw_type);
+        auto& holder = _execution->requirements();
+        holder.registerActor(entry.name_obj, entry.movement_type, entry.calc_anim_type, entry.draw_buffer_type, entry.draw_type);
+        if (_execution->initialized()) holder.getConnectToSceneInfo(entry.name_obj)->initConnectting();
+        if (entry.has_draw_buffer_registration) _draw_buffers->register_actor(*entry.live_actor, entry.draw_buffer_type, std::move(owner));
+    }
+
+    void SceneScheduler::retire_execution_entry(NameObj& object) {
+        if (!_execution || object.mExecutorIdx < 0) return;
+        auto& holder = _execution->requirements();
+        auto* info = holder.getConnectToSceneInfo(&object);
+        holder.disconnectToScene(&object);
+        holder.disconnectToDraw(&object);
+        info->executeRequirementDisconnectMovement();
+        info->executeRequirementDisconnectDraw();
+        info->executeRequirementDisconnectDrawDelay();
+        info->setConnectInfo(nullptr, -1, -1, -1, -1);
+        object.mExecutorIdx = -1;
+    }
+
+    void SceneScheduler::register_name_obj(NameObj& object, s32 movement, s32 animation, s32 buffer, s32 draw) {
         smgpc::compat::JkrHostAllocationScope host;
-        if (auto *entry = find_entry(SceneEntryKind::NameObj, &obj)) {
-            entry->movement_type = movement_type;
-            entry->calc_anim_type = calc_anim_type;
-            entry->draw_buffer_type = draw_buffer_type;
-            entry->draw_type = draw_type;
-            entry->draw_connected = true;
-#ifndef NDEBUG
-            emit_connect_to_scene_trace(SceneEntryKind::NameObj, obj.getName(), movement_type, calc_anim_type, draw_buffer_type, draw_type);
-#endif
-            return;
+        if (const auto found = std::ranges::find(_entries, &object, &Entry::name_obj); found != _entries.end()) {
+            if (found->movement_type == movement && found->calc_anim_type == animation &&
+                found->draw_buffer_type == buffer && found->draw_type == draw) return;
+            aurora::throw_host_exception<std::logic_error>("Retire an original registration before changing its categories");
         }
-
-        _entries.push_back(Entry {
-            .kind = SceneEntryKind::NameObj,
-            .name_obj = &obj,
-            .movement_type = movement_type,
-            .calc_anim_type = calc_anim_type,
-            .draw_buffer_type = draw_buffer_type,
-            .draw_type = draw_type,
-            .order = _next_order++,
-        });
-#ifndef NDEBUG
-        emit_connect_to_scene_trace(SceneEntryKind::NameObj, obj.getName(), movement_type, calc_anim_type, draw_buffer_type, draw_type);
-#endif
-    }
-
-    void SceneScheduler::disconnect_name_obj(NameObj &obj) {
-        _draw_buffers->remove_draw_object(obj);
-        for (auto &entry : _entries)
-            if (entry.name_obj == &obj && entry.has_draw_buffer_registration)
-                _draw_buffers->remove_actor(*entry.live_actor);
-        smgpc::layout::release_layout_actor_if_registered(&obj);
-        std::erase_if(_entries, [&obj](const auto &entry) {
-            return entry.name_obj == &obj;
-        });
-    }
-
-    void SceneScheduler::connect_draw(NameObj &obj) {
-        auto found = false;
-        for (auto &entry : _entries) {
-            if (entry.name_obj == &obj) {
-                entry.draw_connected = true;
-                found = true;
-            }
-        }
-        if (!found) {
-            aurora::throw_host_exception<std::logic_error>("Cannot connect an unregistered NameObj to draw.");
-        }
-    }
-
-    void SceneScheduler::disconnect_draw(NameObj &obj) {
-        _draw_buffers->remove_draw_object(obj);
-        auto found = false;
-        for (auto &entry : _entries) {
-            if (entry.name_obj == &obj) {
-                entry.draw_connected = false;
-                found = true;
-            }
-        }
-        if (!found) {
-            aurora::throw_host_exception<std::logic_error>("Cannot disconnect an unregistered NameObj from draw.");
-        }
-    }
-
-    bool SceneScheduler::is_draw_connected(const NameObj &obj) const {
-        const auto entry = std::ranges::find_if(_entries, [&obj](const auto &candidate) {
-            return candidate.name_obj == &obj;
-        });
-        return entry != _entries.end() && entry->draw_connected;
-    }
-
-    std::optional<s32> SceneScheduler::light_type_for_actor(const LiveActor &actor) const {
-        const auto *entry = find_entry(SceneEntryKind::LiveActorModel, &actor);
-        if (entry == nullptr) {
-            return std::nullopt;
-        }
-        if (!entry->has_draw_buffer_registration) return std::nullopt;
-        return _draw_buffers->holder().getDrawBufferGroup(entry->draw_buffer_type)->mLightType;
-    }
-
-    void SceneScheduler::register_layout(smgpc::layout::LayoutRuntime &layout, s32 movement_type, s32 calc_anim_type, s32 draw_type) {
-        smgpc::compat::JkrHostAllocationScope host;
-        if (auto *entry = find_entry(SceneEntryKind::Layout, &layout)) {
-            entry->movement_type = movement_type;
-            entry->calc_anim_type = calc_anim_type;
-            entry->draw_type = draw_type;
-            entry->draw_connected = true;
-#ifndef NDEBUG
-            emit_connect_to_scene_trace(SceneEntryKind::Layout, layout.getName(), movement_type, calc_anim_type, -1, draw_type);
-#endif
-            return;
-        }
-
-        _layout_draw_adaptors.try_emplace(&layout, std::make_unique<LayoutDrawAdaptor>(layout));
-        _entries.push_back(Entry {
-            .kind = SceneEntryKind::Layout,
-            .layout = &layout,
-            .movement_type = movement_type,
-            .calc_anim_type = calc_anim_type,
-            .draw_type = draw_type,
-            .order = _next_order++,
-        });
-#ifndef NDEBUG
-        emit_connect_to_scene_trace(SceneEntryKind::Layout, layout.getName(), movement_type, calc_anim_type, -1, draw_type);
-#endif
-    }
-
-    void SceneScheduler::unregister_layout(smgpc::layout::LayoutRuntime &layout) {
-        if (const auto found = _layout_draw_adaptors.find(&layout); found != _layout_draw_adaptors.end())
-            _draw_buffers->remove_draw_object(*found->second);
-        std::erase_if(_entries, [&layout](const auto &entry) {
-            return entry.kind == SceneEntryKind::Layout && entry.layout == &layout;
-        });
-        _layout_draw_adaptors.erase(&layout);
-    }
-
-    void SceneScheduler::register_layout_actor(LayoutActor &layout, s32 movement_type, s32 calc_anim_type, s32 draw_type) {
-        smgpc::compat::JkrHostAllocationScope host;
-        if (auto *entry = find_entry(SceneEntryKind::LayoutActor, &layout)) {
-            entry->movement_type = movement_type;
-            entry->calc_anim_type = calc_anim_type;
-            entry->draw_type = draw_type;
-            entry->draw_connected = true;
-#ifndef NDEBUG
-            emit_connect_to_scene_trace(SceneEntryKind::LayoutActor, layout.getName(), movement_type, calc_anim_type, -1, draw_type);
-#endif
-            return;
-        }
-
-        _entries.push_back(Entry {
-            .kind = SceneEntryKind::LayoutActor,
-            .name_obj = &layout,
-            .layout_actor = &layout,
-            .movement_type = movement_type,
-            .calc_anim_type = calc_anim_type,
-            .draw_type = draw_type,
-            .order = _next_order++,
-        });
-#ifndef NDEBUG
-        emit_connect_to_scene_trace(SceneEntryKind::LayoutActor, layout.getName(), movement_type, calc_anim_type, -1, draw_type);
-#endif
-    }
-
-    void SceneScheduler::unregister_layout_actor(LayoutActor &layout) {
-        _draw_buffers->remove_draw_object(layout);
-        std::erase_if(_entries, [&layout](const auto &entry) {
-            return entry.kind == SceneEntryKind::LayoutActor && entry.layout_actor == &layout;
-        });
-    }
-
-    void SceneScheduler::register_live_actor_model(LiveActor &actor, s32 movement_type, s32 calc_anim_type, s32 draw_buffer_type, s32 draw_type) {
-        smgpc::compat::JkrHostAllocationScope host;
-        if (auto *entry = find_entry(SceneEntryKind::LiveActorModel, &actor)) {
-            if (entry->draw_buffer_type != draw_buffer_type)
-                aurora::throw_host_exception<std::logic_error>("An original draw registration cannot change categories before retirement");
-            entry->movement_type = movement_type;
-            entry->calc_anim_type = calc_anim_type;
-            entry->draw_type = draw_type;
-            entry->draw_connected = true;
-            return;
-        }
-        if (draw_buffer_type >= 0) {
-            if (!_draw_buffers) aurora::throw_host_exception<std::logic_error>("Construct a scene draw holder before registering a model");
-            _draw_buffers->register_actor(actor, draw_buffer_type, smgpc::compat::retain_actor_model_owner(&actor));
-        }
+        auto* actor = dynamic_cast<LiveActor*>(&object);
+        auto* layout = dynamic_cast<LayoutActor*>(&object);
+        if (buffer >= 0 && !actor)
+            aurora::throw_host_exception<std::invalid_argument>("An original draw buffer registration requires a LiveActor");
+        Entry entry{.kind = actor ? SceneEntryKind::LiveActorModel : layout ? SceneEntryKind::LayoutActor : SceneEntryKind::NameObj,
+                    .name_obj = &object, .layout_actor = layout, .live_actor = actor,
+                    .movement_type = movement, .calc_anim_type = animation, .draw_buffer_type = buffer, .draw_type = draw,
+                    .has_draw_buffer_registration = buffer >= 0, .order = _next_order++};
+        _entries.reserve(_entries.size() + 1);
         try {
-            _entries.push_back(Entry {
-                .kind = SceneEntryKind::LiveActorModel,
-                .name_obj = &actor,
-                .live_actor = &actor,
-                .movement_type = movement_type,
-                .calc_anim_type = calc_anim_type,
-                .draw_buffer_type = draw_buffer_type,
-                .draw_type = draw_type,
-                .has_draw_buffer_registration = draw_buffer_type >= 0,
-                .order = _next_order++,
-            });
+            register_execution_entry(entry);
+            _entries.push_back(entry);
         } catch (...) {
-            if (draw_buffer_type >= 0) _draw_buffers->remove_actor(actor);
+            retire_execution_entry(object);
+            if (actor) _draw_buffers->remove_actor(*actor);
             throw;
         }
 #ifndef NDEBUG
-        emit_connect_to_scene_trace(SceneEntryKind::LiveActorModel, actor.getName(), movement_type, calc_anim_type, draw_buffer_type, draw_type);
+        emit_connect_to_scene_trace(entry.kind, object.getName(), movement, animation, buffer, draw);
 #endif
     }
 
-    void SceneScheduler::unregister_live_actor_model(LiveActor &actor) {
-        _draw_buffers->remove_draw_object(actor);
-        if (_draw_buffers) _draw_buffers->remove_actor(actor);
-        std::erase_if(_entries, [&actor](const auto &entry) {
-            return entry.kind == SceneEntryKind::LiveActorModel && entry.live_actor == &actor;
-        });
+    void SceneScheduler::connect_name_obj(NameObj& object, s32 movement, s32 animation, s32 buffer, s32 draw) {
+        register_name_obj(object, movement, animation, buffer, draw);
+        request_scene_connection(object, true);
+        request_draw_connection(object, true);
     }
 
-    void SceneScheduler::request_movement_on(s32 movement_type) {
-        for (auto &entry : _entries) {
-            // Retail NameObjExecuteInfo stores its category in an s8 and
-            // narrows the requested category before comparing it.
-            if (static_cast<s8>(entry.movement_type) == static_cast<s8>(movement_type)) {
-                NameObjFunction::requestMovementOn(entry.name_obj);
-            }
+    void SceneScheduler::disconnect_name_obj(NameObj& object) {
+        const auto found = std::ranges::find(_entries, &object, &Entry::name_obj);
+        if (found != _entries.end()) {
+            retire_execution_entry(object);
+            if (found->has_draw_buffer_registration) _draw_buffers->remove_actor(*found->live_actor);
+            smgpc::layout::release_layout_actor_if_registered(&object);
+            std::erase_if(_entries, [&](const auto& entry) { return entry.name_obj == &object; });
         }
+        if (_execution) _execution->notify_object_retired(&object);
     }
 
-    void SceneScheduler::request_movement_off(s32 movement_type) {
-        for (auto &entry : _entries) {
-            if (static_cast<s8>(entry.movement_type) == static_cast<s8>(movement_type)) {
-                NameObjFunction::requestMovementOff(entry.name_obj);
-            }
+    void SceneScheduler::request_scene_connection(NameObj& object, bool connected) {
+        if (object.mExecutorIdx < 0) return;
+        if (!_execution) aurora::throw_host_exception<std::logic_error>("A scene connection requires its original execution holder");
+        if (connected) _execution->requirements().connectToScene(&object);
+        else _execution->requirements().disconnectToScene(&object);
+    }
+    void SceneScheduler::request_draw_connection(NameObj& object, bool connected) {
+        if (object.mExecutorIdx < 0) return;
+        if (!_execution) aurora::throw_host_exception<std::logic_error>("A draw connection requires its original execution holder");
+        if (connected) _execution->requirements().connectToDraw(&object);
+        else _execution->requirements().disconnectToDraw(&object);
+    }
+    void SceneScheduler::connect_draw(NameObj& object) { request_draw_connection(object, true); }
+    void SceneScheduler::disconnect_draw(NameObj& object) { request_draw_connection(object, false); }
+    bool SceneScheduler::is_draw_connected(const NameObj& object) const {
+        return _execution && object.mExecutorIdx >= 0 && _execution->requirements().isConnectToDraw(&object);
+    }
+    void SceneScheduler::apply_execution_requirements(bool connect, bool draw, bool delayed) {
+        if (!_execution || !_execution->initialized())
+            aurora::throw_host_exception<std::logic_error>("Apply requirements after original scene initialization");
+        if (draw) {
+            if (delayed) _execution->requirements().executeRequirementDisconnectDrawDelay();
+            else if (connect) _execution->requirements().executeRequirementConnectDraw();
+            else _execution->requirements().executeRequirementDisconnectDraw();
+        } else if (connect) _execution->requirements().executeRequirementConnectMovement();
+        else _execution->requirements().executeRequirementDisconnectMovement();
+    }
+    std::optional<s32> SceneScheduler::light_type_for_actor(const LiveActor& actor) const {
+        const auto* entry = find_entry(SceneEntryKind::LiveActorModel, &actor);
+        if (!entry || !entry->has_draw_buffer_registration) return std::nullopt;
+        return _draw_buffers->holder().getDrawBufferGroup(entry->draw_buffer_type)->mLightType;
+    }
+
+    void SceneScheduler::register_layout(smgpc::layout::LayoutRuntime& layout, s32 movement, s32 animation, s32 draw) {
+        smgpc::compat::JkrHostAllocationScope host;
+        if (find_entry(SceneEntryKind::Layout, &layout)) return;
+        auto adaptor = std::make_unique<LayoutDrawAdaptor>(layout);
+        auto* object = adaptor.get();
+        _layout_draw_adaptors.emplace(&layout, std::move(adaptor));
+        try {
+            connect_name_obj(*object, movement, animation, -1, draw);
+            auto& entry = *_entries.rbegin();
+            entry.kind = SceneEntryKind::Layout;
+            entry.layout = &layout;
+        } catch (...) { _layout_draw_adaptors.erase(&layout); throw; }
+    }
+    void SceneScheduler::unregister_layout(smgpc::layout::LayoutRuntime& layout) {
+        if (const auto found = _layout_draw_adaptors.find(&layout); found != _layout_draw_adaptors.end()) {
+            disconnect_name_obj(*found->second);
+            _layout_draw_adaptors.erase(found);
         }
+    }
+    void SceneScheduler::register_layout_actor(LayoutActor& layout, s32 movement, s32 animation, s32 draw) {
+        connect_name_obj(layout, movement, animation, -1, draw);
+    }
+    void SceneScheduler::unregister_layout_actor(LayoutActor& layout) { disconnect_name_obj(layout); }
+    void SceneScheduler::register_live_actor_model(LiveActor& actor, s32 movement, s32 animation, s32 buffer, s32 draw) {
+        register_name_obj(actor, movement, animation, buffer, draw);
+    }
+    void SceneScheduler::unregister_live_actor_model(LiveActor& actor) { disconnect_name_obj(actor); }
+    void SceneScheduler::request_movement_on(s32 movement) {
+        if (!_execution || movement < 0) aurora::throw_host_exception<std::logic_error>("Movement category requires an active original holder");
+        _execution->requirements().requestMovementOn(movement);
+    }
+    void SceneScheduler::request_movement_off(s32 movement) {
+        if (!_execution || movement < 0) aurora::throw_host_exception<std::logic_error>("Movement category requires an active original holder");
+        _execution->requirements().requestMovementOff(movement);
     }
 
     void SceneScheduler::begin_frame() {
@@ -798,7 +767,7 @@ namespace smgpc::runtime {
                 auto entry = current_entry(registered);
                 if (!entry) continue;
                 auto* actor = entry_live_actor(*entry);
-                if (actor == nullptr || actor->mFlag.mIsDead ||
+                if (actor == nullptr || actor->mFlag.mIsDead || !smgpc::compat::actor_is_clipping_target(actor) ||
                     draw_buffer_uses_model_3d_for_2d(entry->draw_buffer_type) ||
                     std::ranges::find(updated_actors, actor) != updated_actors.end()) {
                     continue;
@@ -818,6 +787,8 @@ namespace smgpc::runtime {
         smgpc::compat::JkrHostAllocationScope host;
         smgpc::compat::SceneJ3dScope j3d_scope;
         begin_frame();
+        invoke_game_callback(_allocation_domain, [] { MR::getSceneNameObjMovementController()->movement(); });
+        apply_execution_requirements(false, true, true);
         // Host-only scenes still use this aggregate entry. Original GameScene
         // calls categories itself through SceneExecutor, including its separate
         // collision calcAnim passes. Both routes share the same callback owner.
@@ -825,7 +796,17 @@ namespace smgpc::runtime {
         for (const auto& entry : sorted_entries_for_movement())
             if (entry.movement_type >= 0 && std::ranges::find(categories, entry.movement_type) == categories.end())
                 categories.push_back(entry.movement_type);
-        for (const auto category : categories) execute_movement_category(category);
+        for (const auto category : categories) {
+            execute_movement_category(category);
+            if (category == MR::MovementType_ClippingDirector) {
+                apply_execution_requirements(true, false);
+                apply_execution_requirements(true, true);
+                apply_execution_requirements(false, false);
+                apply_execution_requirements(false, true);
+            }
+        }
+        apply_execution_requirements(false, false);
+        apply_execution_requirements(false, true);
     }
 
     void SceneScheduler::execute_movement_category(s32 movement_type) {
@@ -838,33 +819,18 @@ namespace smgpc::runtime {
         // Keep each current native subsystem at its original category boundary.
         if (movement_type == MR::MovementType_ClippingDirector) execute_actor_clipping();
         if (movement_type == MR::MovementType_SensorHitChecker) execute_sensor_hit_check();
-        for (const auto& registered : entries_snapshot())
-            if (registered.movement_type == movement_type)
-                execute_movement_entry(registered, movement_type);
+        for (const auto& registered : category_entries(movement_type, false))
+            execute_movement_entry(registered, movement_type);
     }
 
     void SceneScheduler::execute_movement_entry(const Entry& registered, s32 movement_type) {
         auto entry = current_entry(registered);
-        if (!entry || entry->movement_type != movement_type || entry_is_dead(*entry) || entry_is_suspended(*entry)) return;
-        if (auto* actor = entry_live_actor(*entry); actor && actor->mFlag.mIsClipped) return;
+        if (!entry || entry->movement_type != movement_type) return;
+        const auto members = category_entries(movement_type, false);
+        if (std::ranges::find(members, entry->order, &Entry::order) == members.end()) return;
 
         invoke_game_callback(_allocation_domain, [&] {
-            switch (entry->kind) {
-            case SceneEntryKind::NameObj:
-                entry->name_obj->executeMovement();
-                break;
-            case SceneEntryKind::Layout: {
-                smgpc::compat::JkrHostAllocationScope native;
-                entry->layout->update();
-                break;
-            }
-            case SceneEntryKind::LayoutActor:
-                entry->layout_actor->executeMovement();
-                break;
-            case SceneEntryKind::LiveActorModel:
-                entry->live_actor->movement();
-                break;
-            }
+            entry->name_obj->executeMovement();
         });
         if (auto* runtime = RuntimeContext::try_instance(); runtime && movement_type == MR::MovementType_Camera)
             runtime->refresh_scene_camera_pose();
@@ -954,9 +920,11 @@ namespace smgpc::runtime {
     void SceneScheduler::execute_calc_anim() {
         smgpc::compat::JkrHostAllocationScope host;
         smgpc::compat::SceneJ3dScope j3d_scope;
-        for (const auto& registered : sorted_entries_for_calc_anim())
-            if (registered.calc_anim_type >= 0)
-                execute_calc_anim_entry(registered, registered.calc_anim_type);
+        std::vector<s32> categories;
+        for (const auto& entry : sorted_entries_for_calc_anim())
+            if (entry.calc_anim_type >= 0 && std::ranges::find(categories, entry.calc_anim_type) == categories.end())
+                categories.push_back(entry.calc_anim_type);
+        for (auto category : categories) execute_calc_anim_category(category);
     }
 
     void SceneScheduler::execute_calc_anim_category(s32 calc_anim_type) {
@@ -964,17 +932,17 @@ namespace smgpc::runtime {
         smgpc::compat::SceneJ3dScope j3d_scope;
         if (calc_anim_type < 0)
             aurora::throw_host_exception<std::out_of_range>("Animation category must be nonnegative");
-        for (const auto& registered : entries_snapshot())
-            if (registered.calc_anim_type == calc_anim_type)
-                execute_calc_anim_entry(registered, calc_anim_type);
+        for (const auto& registered : category_entries(calc_anim_type, true))
+            execute_calc_anim_entry(registered, calc_anim_type);
     }
 
     void SceneScheduler::execute_calc_anim_entry(const Entry& registered, s32 calc_anim_type) {
         // Original animation calls calcAnim directly, regardless of the
         // executeMovement movement-off flag.
         auto entry = current_entry(registered);
-        if (!entry || entry->calc_anim_type != calc_anim_type || entry_is_dead(*entry)) return;
-        if (auto* actor = entry_live_actor(*entry); actor && actor->mFlag.mIsClipped) return;
+        if (!entry || entry->calc_anim_type != calc_anim_type) return;
+        const auto members = category_entries(calc_anim_type, true);
+        if (std::ranges::find(members, entry->order, &Entry::order) == members.end()) return;
         invoke_game_callback(_allocation_domain, [&] {
             switch (entry->kind) {
             case SceneEntryKind::NameObj:
@@ -1267,20 +1235,11 @@ namespace smgpc::runtime {
             }
         }
 
-        for (const auto &entry : _entries)
-            if (entry.order >= marker && entry.has_draw_buffer_registration)
-                _draw_buffers->remove_actor(*entry.live_actor);
         _draw_buffers->rollback_pre_draw_functions(marker);
         for (const auto& registration : registrations) {
-            if (registration.name_obj) _draw_buffers->remove_draw_object(*registration.name_obj);
-            if (registration.layout) {
-                const auto found = _layout_draw_adaptors.find(registration.layout);
-                if (found != _layout_draw_adaptors.end()) _draw_buffers->remove_draw_object(*found->second);
-            }
-        }
-        std::erase_if(_entries, [marker](const auto &entry) { return entry.order >= marker; });
-        for (const auto& registration : registrations)
+            if (registration.name_obj) disconnect_name_obj(*registration.name_obj);
             if (registration.layout) _layout_draw_adaptors.erase(registration.layout);
+        }
         return registrations;
     }
 
@@ -1599,12 +1558,9 @@ namespace smgpc::runtime {
 #endif
 
     void SceneScheduler::clear() {
-        for (const auto& entry : _entries)
-            if (entry.has_draw_buffer_registration) _draw_buffers->remove_actor(*entry.live_actor);
-        _entries.clear();
+        while (!_entries.empty()) disconnect_name_obj(*_entries.back().name_obj);
         _draw_buffers->clear_draw_categories();
         _layout_draw_adaptors.clear();
-        retire_draw_buffers();
 #ifndef NDEBUG
         _last_execution_trace.clear();
         _message_trace.clear();
@@ -1649,6 +1605,25 @@ namespace smgpc::runtime {
     std::vector<SceneScheduler::Entry> SceneScheduler::entries_snapshot() const {
         smgpc::compat::JkrHostAllocationScope host;
         return _entries;
+    }
+
+    std::vector<SceneScheduler::Entry> SceneScheduler::category_entries(s32 category, bool animation) const {
+        smgpc::compat::JkrHostAllocationScope host;
+        if (!_execution || !_execution->initialized())
+            aurora::throw_host_exception<std::logic_error>("Execute categories after original scene list allocation");
+        auto& list = *(animation ? _execution->executor().mCalcAnimList : _execution->executor().mMovementList);
+        if (category < 0 || category >= static_cast<s32>(list.mCategoryInfo.size()))
+            aurora::throw_host_exception<std::out_of_range>("Execution category is outside the original scene table");
+        std::vector<Entry> result;
+        const auto& objects = list.mCategoryInfo[category].mNameObjArr;
+        result.reserve(objects.size());
+        for (auto* object : objects) {
+            const auto found = std::ranges::find(_entries, object, &Entry::name_obj);
+            if (found == _entries.end())
+                aurora::throw_host_exception<std::logic_error>("An original execution-list member lost its callback lifetime registration");
+            result.push_back(*found);
+        }
+        return result;
     }
 
     std::vector<SceneScheduler::Entry> SceneScheduler::sorted_entries_for_movement() {

@@ -17,9 +17,14 @@ namespace smgpc::runtime {
     class RuntimeContext;
 }  // namespace smgpc::runtime
 
+namespace smgpc::compat {
+    class JkrAllocationDomain;
+}
+
 namespace smgpc::scene {
 
     class StageHostScene;
+    class StageInitializationService;
 
     class SceneLifecycleService final {
     public:
@@ -52,6 +57,10 @@ namespace smgpc::scene {
         std::string _active_scene_name;
         std::string _active_stage_name;
         s32 _active_scenario_no = 0;
+        // Destruction order: original Scene (and base/delete), then native
+        // initialization services, then the retained original Game heap.
+        std::shared_ptr<smgpc::compat::JkrAllocationDomain> _active_scene_domain;
+        std::unique_ptr<StageInitializationService> _active_initialization;
         std::unique_ptr<StageHostScene> _active_scene;
     };
 

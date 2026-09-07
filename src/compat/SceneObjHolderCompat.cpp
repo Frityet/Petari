@@ -32,6 +32,9 @@
 #include "Game/MapObj/PurpleCoinHolder.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/NameObj/NameObjGroup.hpp"
+#include "Game/NameObj/NameObjExecuteHolder.hpp"
+#include "Game/Scene/StopSceneController.hpp"
+#include "Game/Scene/SceneNameObjMovementController.hpp"
 #include "Game/Player/GroupChecker.hpp"
 #include "Game/Player/MarioHolder.hpp"
 #include "Game/Player/PlayerEvent.hpp"
@@ -42,6 +45,8 @@
 #include "Game/Screen/InformationObserver.hpp"
 #include "Game/Screen/GameSceneLayoutHolder.hpp"
 #include "Game/Screen/SceneWipeHolder.hpp"
+#include "Game/Screen/CinemaFrame.hpp"
+#include "Game/Map/NamePosHolder.hpp"
 #include "Game/Screen/LensFlare.hpp"
 #include "Game/Util/BaseMatrixFollowTargetHolder.hpp"
 #include "Game/Util/FurCtrl.hpp"
@@ -97,8 +102,9 @@ namespace smgpc::scene {
     SceneObjHolderBinding::SceneObjHolderBinding(
         SceneObjHolder &holder,
         SceneObjFactoryOverride factory_override,
-        void *factory_context)
-        : _holder(&holder), _owned_objects(),
+        void *factory_context,
+        std::shared_ptr<smgpc::compat::JkrAllocationDomain> allocation_domain)
+        : _game_allocation_domain(std::move(allocation_domain)), _holder(&holder), _owned_objects(),
           _owned_registration_objects(),
           _provisional_slots(), _factory_override(factory_override),
           _factory_context(factory_context) {
@@ -114,7 +120,9 @@ namespace smgpc::scene {
 
         if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
             if (auto* scheduler = smgpc::runtime::try_active_scene_scheduler()) {
-                _game_allocation_domain = smgpc::compat::JkrAllocationDomain::create(runtime->host_heaps(), 8U * 1024U * 1024U);
+                if (!_game_allocation_domain) {
+                    _game_allocation_domain = smgpc::compat::JkrAllocationDomain::create(runtime->host_heaps(), 8U * 1024U * 1024U);
+                }
                 _game_allocation_binding = std::make_unique<smgpc::runtime::SceneSchedulerAllocationBinding>(*scheduler, _game_allocation_domain);
             }
         }
@@ -490,8 +498,18 @@ NameObj *SceneObjHolder::newEachObj(int id) {
         return new CenterScreenBlur();
     case SceneObj_InformationObserver:
         return new InformationObserver();
+    case SceneObj_NameObjExecuteHolder:
+        return new NameObjExecuteHolder(4096);
+    case SceneObj_StopSceneController:
+        return new StopSceneController();
+    case SceneObj_SceneNameObjMovementController:
+        return new SceneNameObjMovementController();
     case SceneObj_NameObjGroup:
         return new NameObjGroup("IgnorePauseNameObj", 16);
+    case SceneObj_NamePosHolder:
+        return new NamePosHolder();
+    case SceneObj_CinemaFrame:
+        return new CinemaFrame(true);
     case SceneObj_SceneWipeHolder:
         return new SceneWipeHolder();
     case SceneObj_GameSceneLayoutHolder:

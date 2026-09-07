@@ -1,0 +1,65 @@
+[
+  {
+    "target": "smg-pc-original-name-pos-owner-tests",
+    "unresolved": [
+      "MR::requestEndMissDemo()",
+      "MR::requestEndGameOverDemo()",
+      "MR::requestStartGameOverDemo()"
+    ],
+    "run": "not run"
+  },
+  {
+    "target": "smg-pc-original-scene-execution-owner-tests",
+    "unresolved": [
+      "MR::requestEndMissDemo()",
+      "MR::requestEndGameOverDemo()",
+      "MR::requestStartGameOverDemo()"
+    ],
+    "run": "not run"
+  },
+  {
+    "target": "smg-pc-scene-scheduler-heap-tests",
+    "unresolved": [
+      "MR::requestEndMissDemo()",
+      "MR::requestEndGameOverDemo()",
+      "MR::requestStartGameOverDemo()"
+    ],
+    "run": "not run"
+  },
+  {
+    "target": "smg-pc-original-camera-director-tests",
+    "unresolved": [
+      "MR::requestEndMissDemo()",
+      "MR::requestEndGameOverDemo()",
+      "MR::requestStartGameOverDemo()"
+    ],
+    "run": "not run"
+  },
+  {
+    "target": "smg-pc-original-scene-wipe-owner-tests",
+    "unresolved": [
+      "MR::requestEndMissDemo()",
+      "MR::requestEndGameOverDemo()",
+      "MR::requestStartGameOverDemo()"
+    ],
+    "run": "not run"
+  },
+  {
+    "target": "smg-pc-original-image-effect-ownership-tests",
+    "unresolved": [
+      "MR::requestEndMissDemo()",
+      "MR::requestEndGameOverDemo()",
+      "MR::requestStartGameOverDemo()"
+    ],
+    "run": "not run"
+  },
+  {
+    "target": "smg-pc-stage-initialization-resource-tests",
+    "unresolved": [
+      "MR::requestEndMissDemo()",
+      "MR::requestEndGameOverDemo()",
+      "MR::requestStartGameOverDemo()"
+    ],
+    "run": "not run"
+  }
+]

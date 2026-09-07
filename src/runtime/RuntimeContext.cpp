@@ -1349,9 +1349,7 @@ namespace smgpc::runtime {
         return *_capture_screen_director;
     }
 
-    void RuntimeContext::begin_scene_draw_buffer_registration() {
-        _scheduler.begin_draw_buffer_registration(_resource_holders.allocation_domain());
-    }
+
 
     SceneScheduler &RuntimeContext::scheduler() {
         return _scheduler;

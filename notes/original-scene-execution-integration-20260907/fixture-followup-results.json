@@ -1,0 +1,38 @@
+[
+  {
+    "target": "smg-pc-original-scene-execution-owner-tests",
+    "build_exit": 255,
+    "build_seconds": 1.85,
+    "build_log": "notes/original-scene-execution-integration-20260907/smg-pc-original-scene-execution-owner-tests-build.log"
+  },
+  {
+    "target": "smg-pc-scene-scheduler-heap-tests",
+    "build_exit": 255,
+    "build_seconds": 1.89,
+    "build_log": "notes/original-scene-execution-integration-20260907/smg-pc-scene-scheduler-heap-tests-build.log"
+  },
+  {
+    "target": "smg-pc-original-camera-director-tests",
+    "build_exit": 255,
+    "build_seconds": 2.12,
+    "build_log": "notes/original-scene-execution-integration-20260907/smg-pc-original-camera-director-tests-build.log"
+  },
+  {
+    "target": "smg-pc-original-scene-wipe-owner-tests",
+    "build_exit": 255,
+    "build_seconds": 2.13,
+    "build_log": "notes/original-scene-execution-integration-20260907/smg-pc-original-scene-wipe-owner-tests-build.log"
+  },
+  {
+    "target": "smg-pc-original-image-effect-ownership-tests",
+    "build_exit": 255,
+    "build_seconds": 2.11,
+    "build_log": "notes/original-scene-execution-integration-20260907/smg-pc-original-image-effect-ownership-tests-build.log"
+  },
+  {
+    "target": "smg-pc-stage-initialization-resource-tests",
+    "build_exit": 255,
+    "build_seconds": 2.11,
+    "build_log": "notes/original-scene-execution-integration-20260907/smg-pc-stage-initialization-resource-tests-build.log"
+  }
+]

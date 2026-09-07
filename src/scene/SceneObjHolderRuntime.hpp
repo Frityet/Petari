@@ -32,7 +32,8 @@ namespace smgpc::scene {
         explicit SceneObjHolderBinding(
             SceneObjHolder &holder,
             SceneObjFactoryOverride factory_override = nullptr,
-            void *factory_context = nullptr);
+            void *factory_context = nullptr,
+            std::shared_ptr<smgpc::compat::JkrAllocationDomain> allocation_domain = {});
         ~SceneObjHolderBinding();
 
         SceneObjHolderBinding(const SceneObjHolderBinding &) = delete;

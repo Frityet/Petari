@@ -1,0 +1,6 @@
+{
+  "aurora/lib/dolphin/os/OSMessage.cpp": "aed2532d1ca5ef3bcc3126df9f1cefd51c1c39d6cad5984ffc5b752f27991b42",
+  "aurora/tests/os_message_test.cpp": "4a25cf4bcf05de8de88e221b4ec1e5788da41d631baa35dc5807c184d52beb5d",
+  "aurora/tests/CMakeLists.txt": "79221e6123c69f0a2e2f5e961617a940531129a8c4fb785da2e0ec55d6b50b9f",
+  "aurora/xmake.lua": "33f85a700007d0ff69892714eceb69dc78197e2d5463337dc5aa41af2420c592"
+}

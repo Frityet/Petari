@@ -91,6 +91,11 @@ namespace smgpc::scene {
         const StageHolderChildrenResolver &children_resolver,
         const StageHolderCreatedObserver &created_observer = {});
 
+    // Reuse the native placement boundary for catalogs consumed outside actor
+    // creation. The copied JMap retains source/string identity and overrides
+    // only its world-space placement fields.
+    void apply_stage_zone_transform(JMapInfo& info, const StageZoneTransform& transform);
+
     struct StagePlacementTable {
         std::string stage_name;
         std::string zone_name;

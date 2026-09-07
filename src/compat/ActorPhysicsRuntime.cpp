@@ -36,6 +36,7 @@ namespace {
 
 namespace smgpc::compat {
     void update_actor_clipping(LiveActor& actor, const smgpc::camera::CameraPose& camera) {
+        if (!actor_is_clipping_target(&actor)) return;
         const auto* state = actor_clipping_runtime_state(&actor);
         if (state == nullptr || !state->sphere_configured || actor.mFlag.mIsInvalidClipping) {
             if (actor.mFlag.mIsInvalidClipping && actor.mFlag.mIsClipped) {

@@ -1,28 +1,20 @@
 #include "Game/NameObj/NameObj.hpp"
+#include "Game/NameObj/NameObjRegister.hpp"
+#include "Game/Scene/SceneNameObjMovementController.hpp"
+#include "Game/Util/SingletonHolder.hpp"
 
-#include "compat/ActorRuntimeRegistry.hpp"
-#include "runtime/RuntimeContext.hpp"
+#define FLAG_MOVEMENT_OFF 1u
+#define FLAG_SUSPEND 2u
+#define FLAG_RESUME 4u
 
-namespace {
-    constexpr auto FLAG_MOVEMENT_OFF = u16{1U};
-    constexpr auto FLAG_SUSPEND = u16{2U};
-    constexpr auto FLAG_RESUME = u16{4U};
-}
-
-NameObj::NameObj(const char* pName)
-    : mName(smgpc::compat::register_name_obj_runtime_state(this, pName)), mFlag(), mExecutorIdx(-1) {
+NameObj::NameObj(const char* pName) : mName(pName), mFlag(), mExecutorIdx(-1) {
+    SingletonHolder< NameObjRegister >::get()->add(this);
 }
 
 NameObj::~NameObj() {
-    if (auto* scheduler = smgpc::runtime::try_active_scene_scheduler()) {
-        scheduler->disconnect_name_obj(*this);
-    } else if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-        runtime->scheduler().disconnect_name_obj(*this);
-    }
-    smgpc::compat::release_name_obj_runtime_state(this);
 }
 
-void NameObj::init(const JMapInfoIter&) {
+void NameObj::init(const JMapInfoIter& rIter) {
 }
 
 void NameObj::initAfterPlacement() {
@@ -41,12 +33,11 @@ void NameObj::calcViewAndEntry() {
 }
 
 void NameObj::initWithoutIter() {
-    const auto iter = JMapInfoIter{};
-    init(iter);
+    init(JMapInfoIter());
 }
 
 void NameObj::setName(const char* pName) {
-    mName = smgpc::compat::update_name_obj_runtime_name(this, pName);
+    mName = pName;
 }
 
 void NameObj::executeMovement() {
@@ -86,15 +77,11 @@ void NameObj::syncWithFlags() {
 }
 
 void NameObjFunction::requestMovementOn(NameObj* pObj) {
-    if (pObj != nullptr) {
-        pObj->requestResume();
-        pObj->syncWithFlags();
-    }
+    pObj->requestResume();
+    MR::notifyRequestNameObjMovementOnOff();
 }
 
 void NameObjFunction::requestMovementOff(NameObj* pObj) {
-    if (pObj != nullptr) {
-        pObj->requestSuspend();
-        pObj->syncWithFlags();
-    }
+    pObj->requestSuspend();
+    MR::notifyRequestNameObjMovementOnOff();
 }

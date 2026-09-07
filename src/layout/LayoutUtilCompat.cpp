@@ -499,7 +499,7 @@ namespace MR {
             &require_layout_manager(pLayout, "Reading a pane animation duration"), pPaneName, animLayer));
     }
 
-    bool isPaneAnimStopped(LayoutActor* pLayout, const char* pPaneName, u32 animLayer) {
+    bool isPaneAnimStopped(const LayoutActor* pLayout, const char* pPaneName, u32 animLayer) {
         return smgpc::layout::is_pane_animation_stopped(
             &require_layout_manager(pLayout, "Reading a pane animation state"), pPaneName, animLayer);
     }

@@ -19,7 +19,7 @@ namespace smgpc::runtime {
 
 namespace smgpc::scene {
 
-    class SceneObjHolderBinding;
+    class TitleFileSelectSceneOwnership;
     class FileSelectFarVisual;
     class TitleFileSelectVisual;
 
@@ -79,8 +79,7 @@ namespace smgpc::scene {
 
         smgpc::runtime::RuntimeContext *_runtime = nullptr;
         // Scene resources outlive the original products and their children.
-        std::unique_ptr<SceneObjHolder> _scene_obj_holder{};
-        std::unique_ptr<SceneObjHolderBinding> _scene_binding{};
+        std::shared_ptr<TitleFileSelectSceneOwnership> _scene_ownership;
         // This owner precedes the product so reverse member destruction first
         // retires the parent and then its captured raw-new NameObj children.
         NameObjChildOwner _title_sequence_children{};

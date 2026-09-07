@@ -68,7 +68,11 @@ namespace {
         std::optional<smgpc::compat::ActorBinderRuntimeConfig> binder{};
         std::unique_ptr<Binder> binder_provider{};
         smgpc::compat::ActorBinderContactState binder_contacts{};
-        std::optional<smgpc::compat::ActorClippingRuntimeState> clipping{};
+        // Original ClippingActorInfo constructor defaults; new actors belong
+        // to the dormant list until their original appearance operation.
+        std::optional<smgpc::compat::ActorClippingRuntimeState> clipping{
+            smgpc::compat::ActorClippingRuntimeState{true, 300.0F, nullptr, 6}};
+        bool clipping_target = false;
         std::optional<smgpc::compat::ActorShadowRuntimeState> shadow{};
         std::unique_ptr<smgpc::compat::ShadowControllerOwnership> shadow_owner{};
         std::unique_ptr<Spine> spine{};
@@ -393,11 +397,9 @@ namespace smgpc::compat {
         if (object == nullptr) {
             return true;
         }
-        constexpr auto movement_off = u16{1U};
-        constexpr auto suspend_requested = u16{2U};
-        constexpr auto resume_requested = u16{4U};
-        return (object->mFlag & (movement_off | suspend_requested)) != 0U &&
-               (object->mFlag & resume_requested) == 0U;
+        // Pending suspend/resume requests take effect only when the original
+        // scene movement controller synchronizes the NameObj flags.
+        return (object->mFlag & 1U) != 0U;
     }
 
     void register_actor_runtime_state(LiveActor* actor) {
@@ -732,9 +734,20 @@ namespace smgpc::compat {
         return clipping.has_value() ? &*clipping : nullptr;
     }
 
+    void set_actor_clipping_target(LiveActor* actor, bool active) {
+        require_actor_state(actor).clipping_target = active;
+    }
+
+    bool actor_is_clipping_target(const LiveActor* actor) noexcept {
+        const auto found = actor_states().find(actor);
+        return found != actor_states().end() && found->second.clipping_target;
+    }
+
     void release_actor_clipping_state(const LiveActor* actor) {
         if (actor != nullptr) {
-            require_actor_state(actor).clipping.reset();
+            auto& state = require_actor_state(actor);
+            state.clipping_target = false;
+            state.clipping.reset();
         }
     }
 

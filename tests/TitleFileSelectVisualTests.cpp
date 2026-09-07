@@ -12,6 +12,11 @@
 #include "runtime/RuntimeContext.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "scene/TitleFileSelectVisual.hpp"
+#include "scene/SceneExecutionBinding.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
+#include "Game/NameObj/NameObjListExecutor.hpp"
+#include "compat/JkrAllocationDomain.hpp"
+#include "JSystem/JKernel/JKRHeap.hpp"
 
 #include <aurora/dvd.h>
 #include <dolphin/dvd.h>
@@ -121,8 +126,18 @@ namespace {
         auto retained_visual =
             std::optional<smgpc::scene::TitleFileSelectVisualHandoff>{};
         auto packet_count = std::size_t{};
+        NameObjListExecutor* original_executor = nullptr;
+        SceneObjHolder* original_holder = nullptr;
+        std::weak_ptr<smgpc::compat::JkrAllocationDomain> scene_domain;
         {
             auto visual = smgpc::scene::TitleFileSelectVisual(runtime);
+            auto* execution = smgpc::scene::current_scene_execution_binding();
+            require(execution && execution->initialized(), "title owns and completes its actual original execution lists");
+            original_executor = &execution->executor();
+            original_holder = MR::getSceneObjHolder();
+            scene_domain = visual.scene_ownership()->domain();
+            require(original_holder && JKRHeap::findFromRoot(original_executor) == &visual.scene_ownership()->domain()->heap(),
+                    "title executor resides in the same retained original Game domain as its scene");
             const auto &camera = visual.title_camera();
             require_near(camera.eye.x, 0.0F, 0.0001F, "title camera eye X");
             require_near(camera.eye.y, 15800.0F, 0.0001F, "title camera eye Y");
@@ -192,7 +207,13 @@ namespace {
                     MR::isBckPlaying(retained_visual->sky(), "CometNearOrbitSky"),
                 "transferred sky did not preserve 3D activation and scheduler registration");
 #endif
+        require(smgpc::scene::current_scene_execution_binding() &&
+                    &smgpc::scene::current_scene_execution_binding()->executor() == original_executor &&
+                    MR::getSceneObjHolder() == original_holder && !scene_domain.expired(),
+                "Sky handoff preserves the exact holder, executor and allocation domain after title owner retirement");
         retained_visual.reset();
+        require(!smgpc::scene::current_scene_execution_binding() && !MR::getSceneObjHolder() && scene_domain.expired(),
+                "the final handoff retires original connection lists, scene roots and Game allocation domain exactly once");
 #ifndef NDEBUG
         require(!runtime.game_layout().is_game_scene_draw_3d_active() &&
                     std::ranges::none_of(runtime.scheduler().snapshot(), [](const auto &entry) {

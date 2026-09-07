@@ -31,6 +31,7 @@ void ClippingDirector::registerActor(LiveActor* pActor) {
     // These are the retail ClippingActorInfo constructor values.
     smgpc::compat::configure_actor_clipping_sphere(pActor, 300.0F, nullptr);
     smgpc::compat::configure_actor_clipping_far_level(pActor, 6);
+    smgpc::compat::set_actor_clipping_target(pActor, false);
 }
 
 void ClippingDirector::initActorSystemInfo(LiveActor*, const JMapInfoIter& rIter) {
@@ -78,11 +79,18 @@ namespace MR {
         if (pActor == nullptr) {
             aurora::throw_host_exception<std::invalid_argument>("Clipping target registration requires a LiveActor.");
         }
-        pActor->mFlag.mIsInvalidClipping = false;
+        if (!pActor->mFlag.mIsInvalidClipping) {
+            smgpc::compat::set_actor_clipping_target(pActor, true);
+        }
     }
 
-    void removeFromClippingTarget(LiveActor*) {
-        aurora::throw_host_exception<std::logic_error>("Clipping target removal is unavailable without real ClippingActorHolder list ownership.");
+    void removeFromClippingTarget(LiveActor* pActor) {
+        if (pActor == nullptr) {
+            aurora::throw_host_exception<std::invalid_argument>("Clipping target removal requires a LiveActor.");
+        }
+        if (!pActor->mFlag.mIsInvalidClipping) {
+            smgpc::compat::set_actor_clipping_target(pActor, false);
+        }
     }
 
 }  // namespace MR

@@ -1,0 +1,938 @@
+[
+  {
+    "source": "decomp/src/Game/Scene/GameScenePauseControl.cpp",
+    "functions": [
+      {
+        "name": "__ct__21GameScenePauseControlFP9GameScene",
+        "demangled_name": "GameScenePauseControl::GameScenePauseControl(GameScene*)",
+        "size": "136",
+        "match_percent": 100.0
+      },
+      {
+        "name": "registerNervePauseMenu__21GameScenePauseControlFPC5Nerve",
+        "demangled_name": "GameScenePauseControl::registerNervePauseMenu(const Nerve*)",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "requestPauseMenuOff__21GameScenePauseControlFv",
+        "demangled_name": "GameScenePauseControl::requestPauseMenuOff()",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeNormal__21GameScenePauseControlFv",
+        "demangled_name": "GameScenePauseControl::exeNormal()",
+        "size": "92",
+        "match_percent": 100.0
+      },
+      {
+        "name": "tryStartPauseMenu__21GameScenePauseControlFv",
+        "demangled_name": "GameScenePauseControl::tryStartPauseMenu()",
+        "size": "172",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__dt__21GameScenePauseControlFv",
+        "demangled_name": "GameScenePauseControl::~GameScenePauseControl()",
+        "size": "88",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__sinit_\\GameScenePauseControl_cpp",
+        "demangled_name": null,
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q235@unnamed@GameScenePauseControl_cpp@27GameScenePauseControlNormalFv",
+        "demangled_name": "@unnamed@GameScenePauseControl_cpp@::GameScenePauseControlNormal::GameScenePauseControlNormal()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q235@unnamed@GameScenePauseControl_cpp@27GameScenePauseControlNormalCFP5Spine",
+        "demangled_name": "@unnamed@GameScenePauseControl_cpp@::GameScenePauseControlNormal::execute(Spine*) const",
+        "size": "8",
+        "match_percent": 100.0
+      }
+    ],
+    "unpaired_retail_functions": []
+  },
+  {
+    "source": "decomp/src/Game/Scene/GameSceneScenarioOpeningCameraState.cpp",
+    "functions": [
+      {
+        "name": "__ct__35GameSceneScenarioOpeningCameraStateFv",
+        "demangled_name": "GameSceneScenarioOpeningCameraState::GameSceneScenarioOpeningCameraState()",
+        "size": "136",
+        "match_percent": 100.0
+      },
+      {
+        "name": "update__35GameSceneScenarioOpeningCameraStateFv",
+        "demangled_name": "GameSceneScenarioOpeningCameraState::update()",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isDone__35GameSceneScenarioOpeningCameraStateCFv",
+        "demangled_name": "GameSceneScenarioOpeningCameraState::isDone() const",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "start__35GameSceneScenarioOpeningCameraStateFv",
+        "demangled_name": "GameSceneScenarioOpeningCameraState::start()",
+        "size": "132",
+        "match_percent": 100.0
+      },
+      {
+        "name": "end__35GameSceneScenarioOpeningCameraStateFv",
+        "demangled_name": "GameSceneScenarioOpeningCameraState::end()",
+        "size": "96",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exePlay__35GameSceneScenarioOpeningCameraStateFv",
+        "demangled_name": "GameSceneScenarioOpeningCameraState::exePlay()",
+        "size": "240",
+        "match_percent": 100.0
+      },
+      {
+        "name": "trySkipTrigger__35GameSceneScenarioOpeningCameraStateCFv",
+        "demangled_name": "GameSceneScenarioOpeningCameraState::trySkipTrigger() const",
+        "size": "72",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__dt__35GameSceneScenarioOpeningCameraStateFv",
+        "demangled_name": "GameSceneScenarioOpeningCameraState::~GameSceneScenarioOpeningCameraState()",
+        "size": "88",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__sinit_\\GameSceneScenarioOpeningCameraState_cpp",
+        "demangled_name": null,
+        "size": "44",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q249@unnamed@GameSceneScenarioOpeningCameraState_cpp@39GameSceneScenarioOpeningCameraStateWaitFv",
+        "demangled_name": "@unnamed@GameSceneScenarioOpeningCameraState_cpp@::GameSceneScenarioOpeningCameraStateWait::GameSceneScenarioOpeningCameraStateWait()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q249@unnamed@GameSceneScenarioOpeningCameraState_cpp@39GameSceneScenarioOpeningCameraStatePlayFv",
+        "demangled_name": "@unnamed@GameSceneScenarioOpeningCameraState_cpp@::GameSceneScenarioOpeningCameraStatePlay::GameSceneScenarioOpeningCameraStatePlay()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q249@unnamed@GameSceneScenarioOpeningCameraState_cpp@39GameSceneScenarioOpeningCameraStatePlayCFP5Spine",
+        "demangled_name": "@unnamed@GameSceneScenarioOpeningCameraState_cpp@::GameSceneScenarioOpeningCameraStatePlay::execute(Spine*) const",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q249@unnamed@GameSceneScenarioOpeningCameraState_cpp@39GameSceneScenarioOpeningCameraStateWaitCFP5Spine",
+        "demangled_name": "@unnamed@GameSceneScenarioOpeningCameraState_cpp@::GameSceneScenarioOpeningCameraStateWait::execute(Spine*) const",
+        "size": "4",
+        "match_percent": 100.0
+      }
+    ],
+    "unpaired_retail_functions": []
+  },
+  {
+    "source": "decomp/src/Game/Screen/GamePauseSequence.cpp",
+    "functions": [
+      {
+        "name": "__ct__17GamePauseSequenceFv",
+        "demangled_name": "GamePauseSequence::GamePauseSequence()",
+        "size": "88",
+        "match_percent": 100.0
+      },
+      {
+        "name": "init__17GamePauseSequenceFRC12JMapInfoIter",
+        "demangled_name": "GamePauseSequence::init(const JMapInfoIter&)",
+        "size": "92",
+        "match_percent": 100.0
+      },
+      {
+        "name": "initWindowMenu__17GamePauseSequenceFRCQ22MR11FunctorBase",
+        "demangled_name": "GamePauseSequence::initWindowMenu(const MR::FunctorBase&)",
+        "size": "68",
+        "match_percent": 100.0
+      },
+      {
+        "name": "startPause__17GamePauseSequenceFQ217GamePauseSequence8MenuType",
+        "demangled_name": "GamePauseSequence::startPause(GamePauseSequence::MenuType)",
+        "size": "212",
+        "match_percent": 100.0
+      },
+      {
+        "name": "deactivate__17GamePauseSequenceFv",
+        "demangled_name": "GamePauseSequence::deactivate()",
+        "size": "80",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeActivePauseMenu__17GamePauseSequenceFv",
+        "demangled_name": "GamePauseSequence::exeActivePauseMenu()",
+        "size": "76",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeActivePowerStarList__17GamePauseSequenceFv",
+        "demangled_name": "GamePauseSequence::exeActivePowerStarList()",
+        "size": "76",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__dt__17GamePauseSequenceFv",
+        "demangled_name": "GamePauseSequence::~GamePauseSequence()",
+        "size": "92",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__sinit_\\GamePauseSequence_cpp",
+        "demangled_name": null,
+        "size": "60",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q231@unnamed@GamePauseSequence_cpp@25GamePauseSequenceDeactiveFv",
+        "demangled_name": "@unnamed@GamePauseSequence_cpp@::GamePauseSequenceDeactive::GamePauseSequenceDeactive()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q231@unnamed@GamePauseSequence_cpp@32GamePauseSequenceActivePauseMenuFv",
+        "demangled_name": "@unnamed@GamePauseSequence_cpp@::GamePauseSequenceActivePauseMenu::GamePauseSequenceActivePauseMenu()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q231@unnamed@GamePauseSequence_cpp@36GamePauseSequenceActivePowerStarListFv",
+        "demangled_name": "@unnamed@GamePauseSequence_cpp@::GamePauseSequenceActivePowerStarList::GamePauseSequenceActivePowerStarList()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q231@unnamed@GamePauseSequence_cpp@33GamePauseSequenceSceneInformationFv",
+        "demangled_name": "@unnamed@GamePauseSequence_cpp@::GamePauseSequenceSceneInformation::GamePauseSequenceSceneInformation()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q231@unnamed@GamePauseSequence_cpp@33GamePauseSequenceSceneInformationCFP5Spine",
+        "demangled_name": "@unnamed@GamePauseSequence_cpp@::GamePauseSequenceSceneInformation::execute(Spine*) const",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q231@unnamed@GamePauseSequence_cpp@36GamePauseSequenceActivePowerStarListCFP5Spine",
+        "demangled_name": "@unnamed@GamePauseSequence_cpp@::GamePauseSequenceActivePowerStarList::execute(Spine*) const",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q231@unnamed@GamePauseSequence_cpp@32GamePauseSequenceActivePauseMenuCFP5Spine",
+        "demangled_name": "@unnamed@GamePauseSequence_cpp@::GamePauseSequenceActivePauseMenu::execute(Spine*) const",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q231@unnamed@GamePauseSequence_cpp@25GamePauseSequenceDeactiveCFP5Spine",
+        "demangled_name": "@unnamed@GamePauseSequence_cpp@::GamePauseSequenceDeactive::execute(Spine*) const",
+        "size": "4",
+        "match_percent": 100.0
+      }
+    ],
+    "unpaired_retail_functions": []
+  },
+  {
+    "source": "decomp/src/Game/Screen/GameStageClearSequence.cpp",
+    "functions": [
+      {
+        "name": "__ct__22GameStageClearSequenceFv",
+        "demangled_name": "GameStageClearSequence::GameStageClearSequence()",
+        "size": "92",
+        "match_percent": 100.0
+      },
+      {
+        "name": "init__22GameStageClearSequenceFRC12JMapInfoIter",
+        "demangled_name": "GameStageClearSequence::init(const JMapInfoIter&)",
+        "size": "172",
+        "match_percent": 100.0
+      },
+      {
+        "name": "startPowerStarGetDemo__22GameStageClearSequenceFv",
+        "demangled_name": "GameStageClearSequence::startPowerStarGetDemo()",
+        "size": "108",
+        "match_percent": 100.0
+      },
+      {
+        "name": "startGrandStarGetDemo__22GameStageClearSequenceFv",
+        "demangled_name": "GameStageClearSequence::startGrandStarGetDemo()",
+        "size": "108",
+        "match_percent": 100.0
+      },
+      {
+        "name": "appearGetStarLayout__22GameStageClearSequenceFv",
+        "demangled_name": "GameStageClearSequence::appearGetStarLayout()",
+        "size": "100",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exePowerStarGetDemo__22GameStageClearSequenceFv",
+        "demangled_name": "GameStageClearSequence::exePowerStarGetDemo()",
+        "size": "252",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeGrandStarGetDemo__22GameStageClearSequenceFv",
+        "demangled_name": "GameStageClearSequence::exeGrandStarGetDemo()",
+        "size": "388",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__dt__22GameStageClearSequenceFv",
+        "demangled_name": "GameStageClearSequence::~GameStageClearSequence()",
+        "size": "92",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__sinit_\\GameStageClearSequence_cpp",
+        "demangled_name": null,
+        "size": "44",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q225NrvGameStageClearSequence38GameStageClearSequencePowerStarGetDemoFv",
+        "demangled_name": "NrvGameStageClearSequence::GameStageClearSequencePowerStarGetDemo::GameStageClearSequencePowerStarGetDemo()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q225NrvGameStageClearSequence38GameStageClearSequenceGrandStarGetDemoFv",
+        "demangled_name": "NrvGameStageClearSequence::GameStageClearSequenceGrandStarGetDemo::GameStageClearSequenceGrandStarGetDemo()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q225NrvGameStageClearSequence38GameStageClearSequenceGrandStarGetDemoCFP5Spine",
+        "demangled_name": "NrvGameStageClearSequence::GameStageClearSequenceGrandStarGetDemo::execute(Spine*) const",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q225NrvGameStageClearSequence38GameStageClearSequencePowerStarGetDemoCFP5Spine",
+        "demangled_name": "NrvGameStageClearSequence::GameStageClearSequencePowerStarGetDemo::execute(Spine*) const",
+        "size": "8",
+        "match_percent": 100.0
+      }
+    ],
+    "unpaired_retail_functions": []
+  },
+  {
+    "source": "decomp/src/Game/Screen/CinemaFrame.cpp",
+    "functions": [
+      {
+        "name": "__ct__11CinemaFrameFb",
+        "demangled_name": "CinemaFrame::CinemaFrame(bool)",
+        "size": "116",
+        "match_percent": 100.0
+      },
+      {
+        "name": "init__11CinemaFrameFRC12JMapInfoIter",
+        "demangled_name": "CinemaFrame::init(const JMapInfoIter&)",
+        "size": "88",
+        "match_percent": 100.0
+      },
+      {
+        "name": "appear__11CinemaFrameFv",
+        "demangled_name": "CinemaFrame::appear()",
+        "size": "56",
+        "match_percent": 100.0
+      },
+      {
+        "name": "tryScreenToFrame__11CinemaFrameFv",
+        "demangled_name": "CinemaFrame::tryScreenToFrame()",
+        "size": "168",
+        "match_percent": 100.0
+      },
+      {
+        "name": "tryFrameToBlank__11CinemaFrameFv",
+        "demangled_name": "CinemaFrame::tryFrameToBlank()",
+        "size": "148",
+        "match_percent": 100.0
+      },
+      {
+        "name": "tryBlankToFrame__11CinemaFrameFv",
+        "demangled_name": "CinemaFrame::tryBlankToFrame()",
+        "size": "168",
+        "match_percent": 100.0
+      },
+      {
+        "name": "tryFrameToScreen__11CinemaFrameFv",
+        "demangled_name": "CinemaFrame::tryFrameToScreen()",
+        "size": "148",
+        "match_percent": 100.0
+      },
+      {
+        "name": "forceToScreen__11CinemaFrameFv",
+        "demangled_name": "CinemaFrame::forceToScreen()",
+        "size": "84",
+        "match_percent": 100.0
+      },
+      {
+        "name": "forceToFrame__11CinemaFrameFv",
+        "demangled_name": "CinemaFrame::forceToFrame()",
+        "size": "84",
+        "match_percent": 100.0
+      },
+      {
+        "name": "forceToBlank__11CinemaFrameFv",
+        "demangled_name": "CinemaFrame::forceToBlank()",
+        "size": "84",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isStop__11CinemaFrameCFv",
+        "demangled_name": "CinemaFrame::isStop() const",
+        "size": "116",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeScreen__11CinemaFrameFv",
+        "demangled_name": "CinemaFrame::exeScreen()",
+        "size": "156",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__dt__11CinemaFrameFv",
+        "demangled_name": "CinemaFrame::~CinemaFrame()",
+        "size": "92",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__sinit_\\CinemaFrame_cpp",
+        "demangled_name": null,
+        "size": "84",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q214NrvCinemaFrame20CinemaFrameNrvScreenFv",
+        "demangled_name": "NrvCinemaFrame::CinemaFrameNrvScreen::CinemaFrameNrvScreen()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q214NrvCinemaFrame19CinemaFrameNrvFrameFv",
+        "demangled_name": "NrvCinemaFrame::CinemaFrameNrvFrame::CinemaFrameNrvFrame()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q214NrvCinemaFrame19CinemaFrameNrvBlankFv",
+        "demangled_name": "NrvCinemaFrame::CinemaFrameNrvBlank::CinemaFrameNrvBlank()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q214NrvCinemaFrame27CinemaFrameNrvScreenToFrameFv",
+        "demangled_name": "NrvCinemaFrame::CinemaFrameNrvScreenToFrame::CinemaFrameNrvScreenToFrame()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q214NrvCinemaFrame26CinemaFrameNrvFrameToBlankFv",
+        "demangled_name": "NrvCinemaFrame::CinemaFrameNrvFrameToBlank::CinemaFrameNrvFrameToBlank()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q214NrvCinemaFrame26CinemaFrameNrvBlankToFrameFv",
+        "demangled_name": "NrvCinemaFrame::CinemaFrameNrvBlankToFrame::CinemaFrameNrvBlankToFrame()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q214NrvCinemaFrame27CinemaFrameNrvFrameToScreenFv",
+        "demangled_name": "NrvCinemaFrame::CinemaFrameNrvFrameToScreen::CinemaFrameNrvFrameToScreen()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q214NrvCinemaFrame27CinemaFrameNrvFrameToScreenCFP5Spine",
+        "demangled_name": "NrvCinemaFrame::CinemaFrameNrvFrameToScreen::execute(Spine*) const",
+        "size": "72",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q214NrvCinemaFrame26CinemaFrameNrvBlankToFrameCFP5Spine",
+        "demangled_name": "NrvCinemaFrame::CinemaFrameNrvBlankToFrame::execute(Spine*) const",
+        "size": "76",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q214NrvCinemaFrame26CinemaFrameNrvFrameToBlankCFP5Spine",
+        "demangled_name": "NrvCinemaFrame::CinemaFrameNrvFrameToBlank::execute(Spine*) const",
+        "size": "76",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q214NrvCinemaFrame27CinemaFrameNrvScreenToFrameCFP5Spine",
+        "demangled_name": "NrvCinemaFrame::CinemaFrameNrvScreenToFrame::execute(Spine*) const",
+        "size": "76",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q214NrvCinemaFrame19CinemaFrameNrvBlankCFP5Spine",
+        "demangled_name": "NrvCinemaFrame::CinemaFrameNrvBlank::execute(Spine*) const",
+        "size": "92",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q214NrvCinemaFrame19CinemaFrameNrvFrameCFP5Spine",
+        "demangled_name": "NrvCinemaFrame::CinemaFrameNrvFrame::execute(Spine*) const",
+        "size": "20",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q214NrvCinemaFrame20CinemaFrameNrvScreenCFP5Spine",
+        "demangled_name": "NrvCinemaFrame::CinemaFrameNrvScreen::execute(Spine*) const",
+        "size": "8",
+        "match_percent": 100.0
+      }
+    ],
+    "unpaired_retail_functions": []
+  },
+  {
+    "source": "decomp/src/Game/NPC/EventDirector.cpp",
+    "functions": [
+      {
+        "name": "__ct__13EventDirectorFv",
+        "demangled_name": "EventDirector::EventDirector()",
+        "size": "92",
+        "match_percent": 100.0
+      },
+      {
+        "name": "init__13EventDirectorFRC12JMapInfoIter",
+        "demangled_name": "EventDirector::init(const JMapInfoIter&)",
+        "size": "196",
+        "match_percent": 100.0
+      },
+      {
+        "name": "declareEventPowerStar__2MRFPCclb",
+        "demangled_name": "MR::declareEventPowerStar(const char*, long, bool)",
+        "size": "96",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getStageStateKeeper__13EventFunctionFv",
+        "demangled_name": "EventFunction::getStageStateKeeper()",
+        "size": "44",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getPowerStarHolder__13EventFunctionFv",
+        "demangled_name": "EventFunction::getPowerStarHolder()",
+        "size": "44",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isStartCometEvent__13EventFunctionFPCc",
+        "demangled_name": "EventFunction::isStartCometEvent(const char*)",
+        "size": "64",
+        "match_percent": 100.0
+      },
+      {
+        "name": "startCometEvent__13EventFunctionFv",
+        "demangled_name": "EventFunction::startCometEvent()",
+        "size": "68",
+        "match_percent": 100.0
+      },
+      {
+        "name": "endCometEvent__13EventFunctionFv",
+        "demangled_name": "EventFunction::endCometEvent()",
+        "size": "68",
+        "match_percent": 100.0
+      },
+      {
+        "name": "initEventSystemAfterPlacement__2MRFv",
+        "demangled_name": "MR::initEventSystemAfterPlacement()",
+        "size": "48",
+        "match_percent": 100.0
+      },
+      {
+        "name": "declareEventPowerStar__2MRFPC7NameObjlb",
+        "demangled_name": "MR::declareEventPowerStar(const NameObj*, long, bool)",
+        "size": "92",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isSuccessEventPowerStar__2MRFPCcl",
+        "demangled_name": "MR::isSuccessEventPowerStar(const char*, long)",
+        "size": "80",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isGreenEventPowerStar__2MRFPCcl",
+        "demangled_name": "MR::isGreenEventPowerStar(const char*, long)",
+        "size": "80",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isRedEventPowerStar__2MRFPCcl",
+        "demangled_name": "MR::isRedEventPowerStar(const char*, long)",
+        "size": "80",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isGrandEventPowerStar__2MRFPCcl",
+        "demangled_name": "MR::isGrandEventPowerStar(const char*, long)",
+        "size": "80",
+        "match_percent": 100.0
+      },
+      {
+        "name": "appearEventPowerStar__2MRFPCclPCQ29JGeometry8TVec3<f>bb",
+        "demangled_name": "MR::appearEventPowerStar(const char*, long, const JGeometry::TVec3<float>*, bool, bool)",
+        "size": "104",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isEndEventPowerStarAppearDemo__2MRFPCc",
+        "demangled_name": "MR::isEndEventPowerStarAppearDemo(const char*)",
+        "size": "68",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__dt__13EventDirectorFv",
+        "demangled_name": "EventDirector::~EventDirector()",
+        "size": "88",
+        "match_percent": 100.0
+      }
+    ],
+    "unpaired_retail_functions": []
+  },
+  {
+    "source": "decomp/src/Game/Map/NamePosHolder.cpp",
+    "functions": [
+      {
+        "name": "__ct__13NamePosHolderFv",
+        "demangled_name": "NamePosHolder::NamePosHolder()",
+        "size": "208",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__11NamePosInfoFv",
+        "demangled_name": "NamePosInfo::NamePosInfo()",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "find__13NamePosHolderCFPC7NameObjPCcPQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+        "demangled_name": "NamePosHolder::find(const NameObj*, const char*, JGeometry::TVec3<float>*, JGeometry::TVec3<float>*) const",
+        "size": "204",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getNamePosHolder__2MRFv",
+        "demangled_name": "MR::getNamePosHolder()",
+        "size": "40",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__dt__13NamePosHolderFv",
+        "demangled_name": "NamePosHolder::~NamePosHolder()",
+        "size": "88",
+        "match_percent": 100.0
+      }
+    ],
+    "unpaired_retail_functions": [
+      {
+        "name": "tryRegisterLinkObj__13NamePosHolderFPC7NameObjRC12JMapInfoIter",
+        "demangled_name": "NamePosHolder::tryRegisterLinkObj(const NameObj*, const JMapInfoIter&)",
+        "size": "232"
+      }
+    ]
+  },
+  {
+    "source": "decomp/src/Game/MapObj/StarPieceDirector.cpp",
+    "functions": [
+      {
+        "name": "__dt__17StarPieceDirectorFv",
+        "demangled_name": "StarPieceDirector::~StarPieceDirector()",
+        "size": "92",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__dt__16StarPieceShooterFv",
+        "demangled_name": "StarPieceShooter::~StarPieceShooter()",
+        "size": "92",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getStarPieceDirector__2MRFv",
+        "demangled_name": "MR::getStarPieceDirector()",
+        "size": "40",
+        "match_percent": 100.0
+      },
+      {
+        "name": "createStarPiece__2MRFv",
+        "demangled_name": "MR::createStarPiece()",
+        "size": "184",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getDeadStarPiece__2MRFv",
+        "demangled_name": "MR::getDeadStarPiece()",
+        "size": "44",
+        "match_percent": 100.0
+      },
+      {
+        "name": "resetChasingStarPiece__2MRFv",
+        "demangled_name": "MR::resetChasingStarPiece()",
+        "size": "48",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isResetChasingStarPiece__2MRFv",
+        "demangled_name": "MR::isResetChasingStarPiece()",
+        "size": "44",
+        "match_percent": 100.0
+      },
+      {
+        "name": "gotByPlayer__2MRFv",
+        "demangled_name": "MR::gotByPlayer()",
+        "size": "44",
+        "match_percent": 100.0
+      },
+      {
+        "name": "giftStarPieceToTarget__2MRFP9HitSensorUl",
+        "demangled_name": "MR::giftStarPieceToTarget(HitSensor*, unsigned long)",
+        "size": "76",
+        "match_percent": 100.0
+      },
+      {
+        "name": "incNumStarPieceGettable__2MRFl",
+        "demangled_name": "MR::incNumStarPieceGettable(long)",
+        "size": "64",
+        "match_percent": 100.0
+      },
+      {
+        "name": "incNumStarPieceNewed__2MRFv",
+        "demangled_name": "MR::incNumStarPieceNewed()",
+        "size": "52",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__17StarPieceDirectorFPCc",
+        "demangled_name": "StarPieceDirector::StarPieceDirector(const char*)",
+        "size": "328",
+        "match_percent": 100.0
+      },
+      {
+        "name": "declare__17StarPieceDirectorFPC7NameObjl",
+        "demangled_name": "StarPieceDirector::declare(const NameObj*, long)",
+        "size": "164",
+        "match_percent": 100.0
+      },
+      {
+        "name": "declareReceiveNum__17StarPieceDirectorFPC7NameObjl",
+        "demangled_name": "StarPieceDirector::declareReceiveNum(const NameObj*, long)",
+        "size": "140",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getDeclareRemnantStarPieceCount__17StarPieceDirectorFPC7NameObj",
+        "demangled_name": "StarPieceDirector::getDeclareRemnantStarPieceCount(const NameObj*)",
+        "size": "44",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getDeclareRemnantStarPieceCountNotExist__17StarPieceDirectorFPC7NameObj",
+        "demangled_name": "StarPieceDirector::getDeclareRemnantStarPieceCountNotExist(const NameObj*)",
+        "size": "52",
+        "match_percent": 100.0
+      },
+      {
+        "name": "hopPiece__17StarPieceDirectorFPC7NameObjRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+        "demangled_name": "StarPieceDirector::hopPiece(const NameObj*, const JGeometry::TVec3<float>&, const JGeometry::TVec3<float>&)",
+        "size": "168",
+        "match_percent": 100.0
+      },
+      {
+        "name": "appearPiece__17StarPieceDirectorFPC7NameObjRCQ29JGeometry8TVec3<f>lffbb",
+        "demangled_name": "StarPieceDirector::appearPiece(const NameObj*, const JGeometry::TVec3<float>&, long, float, float, bool, bool)",
+        "size": "228",
+        "match_percent": 100.0
+      },
+      {
+        "name": "appearPieceToDirection__17StarPieceDirectorFPC7NameObjRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>lffbb",
+        "demangled_name": "StarPieceDirector::appearPieceToDirection(const NameObj*, const JGeometry::TVec3<float>&, const JGeometry::TVec3<float>&, long, float, float, bool, bool)",
+        "size": "236",
+        "match_percent": 100.0
+      },
+      {
+        "name": "gotByPlayer__17StarPieceDirectorFv",
+        "demangled_name": "StarPieceDirector::gotByPlayer()",
+        "size": "104",
+        "match_percent": 100.0
+      },
+      {
+        "name": "movement__17StarPieceDirectorFv",
+        "demangled_name": "StarPieceDirector::movement()",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "updateSound__17StarPieceDirectorFv",
+        "demangled_name": "StarPieceDirector::updateSound()",
+        "size": "160",
+        "match_percent": 100.0
+      },
+      {
+        "name": "initCSDelay__17StarPieceDirectorFv",
+        "demangled_name": "StarPieceDirector::initCSDelay()",
+        "size": "36",
+        "match_percent": 100.0
+      },
+      {
+        "name": "initCSSound__17StarPieceDirectorFv",
+        "demangled_name": "StarPieceDirector::initCSSound()",
+        "size": "64",
+        "match_percent": 100.0
+      },
+      {
+        "name": "giftToTarget__17StarPieceDirectorFP9HitSensorUl",
+        "demangled_name": "StarPieceDirector::giftToTarget(HitSensor*, unsigned long)",
+        "size": "256",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getDeadStarPiece__17StarPieceDirectorFv",
+        "demangled_name": "StarPieceDirector::getDeadStarPiece()",
+        "size": "120",
+        "match_percent": 100.0
+      },
+      {
+        "name": "calcPosCameraShoot__17StarPieceDirectorFl",
+        "demangled_name": "StarPieceDirector::calcPosCameraShoot(long)",
+        "size": "236",
+        "match_percent": 97.9661
+      },
+      {
+        "name": "clearGotCountReceiver__17StarPieceDirectorFPC7NameObj",
+        "demangled_name": "StarPieceDirector::clearGotCountReceiver(const NameObj*)",
+        "size": "40",
+        "match_percent": 100.0
+      },
+      {
+        "name": "findHostInfo__17StarPieceDirectorFPC7NameObj",
+        "demangled_name": "StarPieceDirector::findHostInfo(const NameObj*)",
+        "size": "64",
+        "match_percent": 100.0
+      },
+      {
+        "name": "findReceiverInfo__17StarPieceDirectorFPC7NameObj",
+        "demangled_name": "StarPieceDirector::findReceiverInfo(const NameObj*)",
+        "size": "64",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__16StarPieceShooterFlPCc",
+        "demangled_name": "StarPieceShooter::StarPieceShooter(long, const char*)",
+        "size": "156",
+        "match_percent": 99.74359
+      },
+      {
+        "name": "init__16StarPieceShooterFRC12JMapInfoIter",
+        "demangled_name": "StarPieceShooter::init(const JMapInfoIter&)",
+        "size": "204",
+        "match_percent": 99.803925
+      },
+      {
+        "name": "exeWait__16StarPieceShooterFv",
+        "demangled_name": "StarPieceShooter::exeWait()",
+        "size": "36",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeLockOn__16StarPieceShooterFv",
+        "demangled_name": "StarPieceShooter::exeLockOn()",
+        "size": "120",
+        "match_percent": 99.833336
+      },
+      {
+        "name": "attackSensor__16StarPieceShooterFP9HitSensorP9HitSensor",
+        "demangled_name": "StarPieceShooter::attackSensor(HitSensor*, HitSensor*)",
+        "size": "160",
+        "match_percent": 100.0
+      },
+      {
+        "name": "control__16StarPieceShooterFv",
+        "demangled_name": "StarPieceShooter::control()",
+        "size": "192",
+        "match_percent": 99.0625
+      },
+      {
+        "name": "shoot__16StarPieceShooterFv",
+        "demangled_name": "StarPieceShooter::shoot()",
+        "size": "500",
+        "match_percent": 99.56
+      },
+      {
+        "name": "tryShoot__16StarPieceShooterFv",
+        "demangled_name": "StarPieceShooter::tryShoot()",
+        "size": "680",
+        "match_percent": 99.79412
+      },
+      {
+        "name": "calcShootGoalUsingPointingDepth__16StarPieceShooterFv",
+        "demangled_name": "StarPieceShooter::calcShootGoalUsingPointingDepth()",
+        "size": "408",
+        "match_percent": 99.60784
+      },
+      {
+        "name": "__sinit_\\StarPieceDirector_cpp",
+        "demangled_name": null,
+        "size": "44",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q219NrvStarPieceShooter15HostTypeNrvWaitFv",
+        "demangled_name": "NrvStarPieceShooter::HostTypeNrvWait::HostTypeNrvWait()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q219NrvStarPieceShooter17HostTypeNrvLockOnFv",
+        "demangled_name": "NrvStarPieceShooter::HostTypeNrvLockOn::HostTypeNrvLockOn()",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q219NrvStarPieceShooter17HostTypeNrvLockOnCFP5Spine",
+        "demangled_name": "NrvStarPieceShooter::HostTypeNrvLockOn::execute(Spine*) const",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q219NrvStarPieceShooter15HostTypeNrvWaitCFP5Spine",
+        "demangled_name": "NrvStarPieceShooter::HostTypeNrvWait::execute(Spine*) const",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isAppearable__17StarPieceHostInfoFv",
+        "demangled_name": "StarPieceHostInfo::isAppearable()",
+        "size": "48",
+        "match_percent": 100.0
+      }
+    ],
+    "unpaired_retail_functions": []
+  }
+]

@@ -1,3 +1,4 @@
+#include "SceneExecutionFixture.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
@@ -31,10 +32,10 @@ namespace {
                    smgpc::logging::Category, std::string_view) override {}
     };
     struct Failure {
-        SceneObjHolder& holder;
+        SceneObjHolder* holder = nullptr;
         static NameObj* factory(int id, void* context) {
             if (id != SceneObj_SphereSelector) return nullptr;
-            auto& holder = static_cast<Failure*>(context)->holder;
+            auto& holder = *static_cast<Failure*>(context)->holder;
             holder.create(SceneObj_BloomEffect);
             holder.create(SceneObj_ScreenBlurEffect);
             holder.create(SceneObj_DepthOfFieldBlur);
@@ -54,6 +55,7 @@ int main() {
     smgpc::resource::GameResourceRuntime process({96U << 20, 32U << 20, 4U << 20});
     Logger logger;
     smgpc::runtime::RuntimeContext runtime(logger, window, process);
+    smgpc::runtime::SceneSchedulerBinding scheduler_binding(runtime.scheduler());
     smgpc::compat::StageSessionState session("Game", "HeavensDoorGalaxy", 1, JMapIdInfo(0, 0));
     smgpc::compat::StageSessionBinding session_binding(session);
     // This independently published archive cache legitimately outlives scenes.
@@ -63,10 +65,14 @@ int main() {
     const auto scheduled = runtime.scheduler().snapshot().size();
     for (int cycle = 0; cycle < 2; ++cycle) {
         (void)renderer.begin_frame();
-        SceneObjHolder holder;
-        Failure failure{holder};
+        Failure failure;
         {
-            smgpc::scene::SceneObjHolderBinding binding(holder, Failure::factory, &failure);
+            smgpc::test::SceneExecutionFixture execution(
+                runtime.scheduler(), smgpc::compat::JkrAllocationDomain::create(runtime.host_heaps(), 8U << 20),
+                Failure::factory, &failure);
+            auto& binding = execution.objects();
+            auto& holder = *smgpc::scene::current_scene_obj_holder();
+            failure.holder = &holder;
             auto* areas = static_cast<AreaObjContainer*>(holder.create(SceneObj_AreaObjContainer));
             require(dynamic_cast<ImageEffectAreaMgr*>(areas->getManager("ImageEffectArea")), "exact image-effect manager exists with no areas");
             auto* system = static_cast<ImageEffectSystemHolder*>(holder.create(SceneObj_ImageEffectSystemHolder));
@@ -98,6 +104,7 @@ int main() {
             MR::setImageEffectControlAuto();
             require(system->mDirector->mIsAuto, "original auto control state is restored");
             binding.init_after_placement();
+            execution.complete_initialization();
             binding.complete_initialization();
         }
         renderer.end_frame();

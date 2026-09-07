@@ -3,7 +3,7 @@
 
 #include "Game/Screen/TitleSequenceProduct.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
+#include "compat/JkrAllocationDomain.hpp"
 #include "Game/Util/GamePadUtil.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "scene/FileSelectFarVisual.hpp"
@@ -19,6 +19,7 @@ namespace smgpc::scene {
     TitleFileSelectRoute::TitleFileSelectRoute(
         smgpc::runtime::RuntimeContext &runtime)
         : _runtime(&runtime) {
+        const smgpc::compat::JkrHostAllocationScope host;
         if (smgpc::runtime::RuntimeContext::try_instance() != &runtime) {
             aurora::throw_host_exception<std::logic_error>(
                 "The Title/File Select route requires its active RuntimeContext.");
@@ -28,23 +29,24 @@ namespace smgpc::scene {
         // title and far phases. Install that ordinary data context before any
         // visual child resolves stage-authored resources.
         runtime.set_current_stage_name("FileSelect");
-        _scene_obj_holder = std::make_unique<SceneObjHolder>();
-        _scene_binding = std::make_unique<SceneObjHolderBinding>(*_scene_obj_holder);
-        _scene_binding->initialize_effect_system(3072, 256);
         _title_visual = std::make_unique<TitleFileSelectVisual>(runtime, false);
+        _scene_ownership = _title_visual->scene_ownership();
         // FileSelector::init constructs its camera/items before title starts;
         // SceneNameObjListExecutor allocates every draw list only afterward.
         _far_visual = std::make_unique<FileSelectFarVisual>(runtime);
         _title_sequence =
-            _title_sequence_children.capture_construction_children([] {
+            _title_sequence_children.capture_construction_children([this] {
+                const smgpc::compat::JkrAllocationScope game(_scene_ownership->domain());
                 return std::make_unique<TitleSequenceProduct>();
             });
-        runtime.scheduler().allocate_draw_buffers();
+        _title_visual->complete_initialization();
         _title_sequence->appear();
-        _scene_binding->complete_initialization();
     }
 
-    TitleFileSelectRoute::~TitleFileSelectRoute() = default;
+    TitleFileSelectRoute::~TitleFileSelectRoute() {
+        // Clear connections while every original product is still alive.
+        if (_scene_ownership) _scene_ownership->prepare_retirement();
+    }
 
     void TitleFileSelectRoute::update() {
         if (smgpc::runtime::RuntimeContext::try_instance() != _runtime) {

@@ -22,6 +22,7 @@ namespace smgpc::runtime {
 
 namespace smgpc::compat {
     class DemoSceneRuntime;
+    class JkrAllocationDomain;
     class StageSessionBinding;
     class StageSessionState;
     class StageZoneMatrixBinding;
@@ -31,6 +32,8 @@ namespace smgpc::compat {
 namespace smgpc::scene {
 
     class SceneObjHolderBinding;
+    class SceneLifetimeBinding;
+    class SceneExecutionBinding;
     class StageLightSceneBinding;
     struct NameObjPlacementContext;
 
@@ -51,7 +54,8 @@ namespace smgpc::scene {
     class StageInitializationService final {
     public:
         StageInitializationService(smgpc::runtime::RuntimeContext &runtime,
-                                   Scene &scene, StageHostRequest request);
+                                   Scene &scene, StageHostRequest request,
+                                   std::shared_ptr<smgpc::compat::JkrAllocationDomain> domain);
         ~StageInitializationService();
 
         StageInitializationService(const StageInitializationService &) = delete;
@@ -73,6 +77,8 @@ namespace smgpc::scene {
         [[nodiscard]] s32 scenario_no() const;
 
     private:
+        void retire() noexcept;
+        void require_live() const;
         void construct_root_object(std::string_view object_name,
                                    const char *actor_name,
                                    const NameObjPlacementContext *placement,
@@ -95,7 +101,13 @@ namespace smgpc::scene {
 
         smgpc::runtime::RuntimeContext &_runtime;
         Scene &_scene;
+        // Retained independently by SceneLifecycleService through the final
+        // original Scene/base destructor and operator delete.
+        std::shared_ptr<smgpc::compat::JkrAllocationDomain> _scene_domain;
+        std::unique_ptr<SceneLifetimeBinding> _lifetime_binding;
+        std::unique_ptr<SceneExecutionBinding> _execution_binding;
         bool _initialized = false;
+        bool _retired = false;
         std::size_t _registration_scope_id = 0U;
         StageHostRequest _request;
         // State precedes its binding so normal reverse member destruction also

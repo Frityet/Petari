@@ -1,9 +1,11 @@
+#include "SceneExecutionFixture.hpp"
 #include "Game/NameObj/NameObjGroup.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Screen/LayoutActor.hpp"
 #include "Game/Screen/LayoutManager.hpp"
 #include "Game/Screen/LayoutPaneCtrl.hpp"
 #include "Game/Screen/SceneWipeHolder.hpp"
+#include "Game/Screen/CinemaFrame.hpp"
 #include "Game/Screen/WipeFade.hpp"
 #include "Game/Screen/WipeGameOver.hpp"
 #include "Game/Screen/WipeKoopa.hpp"
@@ -37,11 +39,12 @@ void tick(smgpc::runtime::RuntimeContext& runtime) {
     runtime.scheduler().execute_calc_anim();
 }
 void owner(smgpc::runtime::RuntimeContext& runtime) {
-    SceneObjHolder scene;
     const auto baseline = smgpc::compat::name_obj_runtime_state_count();
     std::weak_ptr<smgpc::compat::JkrAllocationDomain> domain;
     {
-        smgpc::scene::SceneObjHolderBinding binding(scene);
+        smgpc::test::SceneExecutionFixture execution(
+            runtime.scheduler(), smgpc::compat::JkrAllocationDomain::create(runtime.host_heaps(), 8U << 20));
+        auto& binding = execution.objects();
         domain = smgpc::scene::current_scene_allocation_domain();
         auto* group = dynamic_cast<NameObjGroup*>(MR::createSceneObj(SceneObj_NameObjGroup));
         auto* wipes = dynamic_cast<SceneWipeHolder*>(MR::createSceneObj(SceneObj_SceneWipeHolder));
@@ -76,6 +79,9 @@ void owner(smgpc::runtime::RuntimeContext& runtime) {
         try { (void)MR::isAnimStopped(black, 0); } catch (const std::invalid_argument&) { missing_owner = true; }
         require(invalid_layer && missing_owner, "default stopped state never substitutes for an absent owner or unavailable layer");
 
+        auto* cinema = dynamic_cast<CinemaFrame*>(MR::createSceneObj(SceneObj_CinemaFrame));
+        execution.complete_initialization();
+
         MR::closeWipeFade(3);
         require(wipes->getCurrent() == black && MR::isWipeActive() && !MR::isWipeBlank(), "black fade begins its actual original close transition");
         tick(runtime); tick(runtime);
@@ -108,6 +114,33 @@ void owner(smgpc::runtime::RuntimeContext& runtime) {
         require(game_over->isClose() && !game_over->isWipeOut(), "actual GameOver animation completion drives the original public state");
         MR::forceOpenWipeCircle();
         require(wipes->getCurrent() == ring && MR::isWipeOpen() && MR::isDead(ring), "circle force-open restores the exact initial owner");
+
+        require(cinema && MR::createSceneObj(SceneObj_CinemaFrame) == cinema && MR::isDead(cinema) && MR::isStopCinemaFrame(),
+                "the actual CinemaFrame factory retains one original initialized Screen owner");
+        require(smgpc::layout::layout_runtime(cinema)->getArchivePath() && cinema->getLayoutManager()->getPane(nullptr),
+                "CinemaFrame owns its genuine disc BRLYT and root pane");
+        auto complete_transition = [&] {
+            require(!MR::isStopCinemaFrame(), "each original CinemaFrame transition enters an active nerve");
+            tick(runtime);
+            const auto duration = MR::getAnimCtrl(cinema, 0)->getEnd();
+            require(duration > 0, "CinemaFrame starts its actual authored animation");
+            for (int frame = 0; frame <= duration + 2 && !MR::isStopCinemaFrame(); ++frame) tick(runtime);
+            require(MR::isStopCinemaFrame(), "real BRLAN completion drives the original stable CinemaFrame nerve");
+            tick(runtime);
+        };
+        MR::tryScreenToFrameCinemaFrame(); complete_transition();
+        require(!MR::isDead(cinema), "Screen-to-Frame leaves the actual cinema layout visible");
+        MR::tryFrameToBlankCinemaFrame(); complete_transition();
+        MR::tryBlankToFrameCinemaFrame(); complete_transition();
+        MR::tryFrameToScreenCinemaFrame(); complete_transition();
+        require(MR::isDead(cinema), "Frame-to-Screen reaches the original kill boundary");
+        MR::forceToFrameCinemaFrame(); tick(runtime);
+        require(MR::isStopCinemaFrame() && !MR::isDead(cinema), "forced Frame executes its original stable owner");
+        MR::forceToBlankCinemaFrame(); tick(runtime);
+        require(MR::isStopCinemaFrame() && MR::getAnimFrame(cinema, 0) == 0 && MR::isAnimStopped(cinema, 0),
+                "forced Blank holds the original Open animation at frame zero");
+        MR::forceToScreenCinemaFrame(); tick(runtime);
+        require(MR::isStopCinemaFrame() && MR::isDead(cinema), "forced Screen executes original final-frame kill");
     }
     require(domain.expired() && !MR::getSceneObjHolder() && smgpc::compat::name_obj_runtime_state_count() == baseline,
             "scene teardown retires all original wipe descendants, memberships, resource owners and Game allocation domain");

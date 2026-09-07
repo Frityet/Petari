@@ -2,8 +2,10 @@
 
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/Scene/Scene.hpp"
+#include "compat/JkrAllocationDomain.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "scene/StageHostScene.hpp"
+#include "scene/StageInitializationService.hpp"
 
 #include <string>
 
@@ -30,6 +32,8 @@ namespace smgpc::scene {
         const auto before_entry_count = _runtime.scheduler().snapshot().size();
 #endif
         _active_scene.reset();
+        _active_initialization.reset();
+        _active_scene_domain.reset();
         _active_scene_name.clear();
         _active_stage_name.clear();
         _active_scenario_no = 0;
@@ -105,18 +109,34 @@ namespace smgpc::scene {
         const auto object_name = !request.object_name.empty() ? request.object_name : request.stage_name;
 
         destroy_scene();
-        auto scene = std::make_unique<StageHostScene>(_runtime, request);
-        scene->init();
+        const auto host_allocations = smgpc::compat::JkrHostAllocationScope{};
+        auto domain = smgpc::compat::JkrAllocationDomain::create(_runtime.host_heaps(), 8U * 1024U * 1024U);
+        std::unique_ptr<StageInitializationService> initialization;
+        std::unique_ptr<StageHostScene> scene;
+        {
+            const smgpc::compat::JkrAllocationScope game(domain);
+            scene = std::make_unique<StageHostScene>(_runtime, request);
+        }
+        initialization = std::make_unique<StageInitializationService>(_runtime, *scene, request, domain);
+        scene->bind_initialization(*initialization);
+        _active_scene_domain = std::move(domain);
+        _active_initialization = std::move(initialization);
         _active_scene = std::move(scene);
-        _active_scene_name = request.scene_name;
-        _active_stage_name = request.stage_name;
-        _active_scenario_no = request.scenario_no;
+        try {
+            _active_scene_name = request.scene_name;
+            _active_stage_name = request.stage_name;
+            _active_scenario_no = request.scenario_no;
+            _active_scene->init();
 #ifndef NDEBUG
-        _runtime.emit_semantic_trace_event("sequence", "stage_host_started",
-                                           "stage host factory created " + object_name + " through scene lifecycle service");
-        _runtime.emit_sequence_state_trace_event("stage_host_started", "host=" + object_name + ";stage=" + request.stage_name);
+            _runtime.emit_semantic_trace_event("sequence", "stage_host_started",
+                                               "stage host factory created " + object_name + " through scene lifecycle service");
+            _runtime.emit_sequence_state_trace_event("stage_host_started", "host=" + object_name + ";stage=" + request.stage_name);
 #endif
-        start_scene();
+            start_scene();
+        } catch (...) {
+            destroy_scene();
+            throw;
+        }
     }
 
 }  // namespace smgpc::scene

@@ -294,7 +294,7 @@ namespace {
         auto title =
             std::make_unique<smgpc::scene::TitleFileSelectVisual>(runtime, false);
         auto far = std::make_unique<smgpc::scene::FileSelectFarVisual>(runtime);
-        runtime.scheduler().allocate_draw_buffers();
+        title->complete_initialization();
         // The title scene normally runs before this transition. Its original
         // controller publishes the previous watch point on each movement tick.
         render_frame(runtime, renderer, 0U);

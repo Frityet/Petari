@@ -32,6 +32,8 @@ namespace smgpc::compat {
 
         void camera_data(void** data, s32* size, s32 zone_id);
         [[nodiscard]] s32 start_count() const;
+        [[nodiscard]] s32 general_position_count() const;
+        [[nodiscard]] JMapInfoIter general_position_iter(int index) const;
         void start_camera_id(JMapIdInfo* output, int index) const;
         [[nodiscard]] s32 rail_count(s32 zone_id) const;
         void rail_by_id(JMapInfoIter* path, const JMapInfo** points, s32 rail_id, s32 zone_id) const;

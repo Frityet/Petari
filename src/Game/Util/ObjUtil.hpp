@@ -127,6 +127,7 @@ namespace MR {
     void declareStarPiece(const NameObj* pObj, s32 num);
     bool appearStarPiece(const NameObj*, const TVec3f&, s32, f32, f32, bool);
     void stopScene(s32);
+    void stopSceneForDefaultHit(s32);
     void listenNameObjStageSwitchOnAppear(const NameObj*, const StageSwitchCtrl*, const MR::FunctorBase&);
     void listenNameObjStageSwitchOnOffAppear(const NameObj*, const StageSwitchCtrl*, const MR::FunctorBase&, const MR::FunctorBase&);
     void listenNameObjStageSwitchOnA(const NameObj*, const StageSwitchCtrl*, const MR::FunctorBase&);
@@ -135,3 +136,14 @@ namespace MR {
     void listenNameObjStageSwitchOffB(const NameObj*, const StageSwitchCtrl*, const MR::FunctorBase&);
     void listenNameObjStageSwitchOnOffB(const NameObj*, const StageSwitchCtrl*, const MR::FunctorBase&, const MR::FunctorBase&);
 }  // namespace MR
+
+namespace MR {
+    bool tryRegisterNamePosLinkObj(const NameObj*, const JMapInfoIter&);
+    bool findNamePos(const char*, MtxPtr);
+    bool findNamePos(const char*, TVec3f*, TVec3f*);
+    bool tryFindNamePos(const char*, MtxPtr);
+    bool tryFindNamePos(const char*, TVec3f*, TVec3f*);
+    void findLinkNamePos(const NameObj*, const char*, MtxPtr);
+    bool tryFindLinkNamePos(const NameObj*, const char*, MtxPtr);
+    bool tryFindLinkNamePos(const NameObj*, const char*, TVec3f*, TVec3f*);
+}

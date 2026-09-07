@@ -1,5 +1,8 @@
 #include <aurora/exception.hpp>
 #include "scene/GatewayDemoScene.hpp"
+#include "scene/SceneExecutionBinding.hpp"
+#include "Game/Scene/SceneNameObjListExecutor.hpp"
+#include "compat/JkrAllocationDomain.hpp"
 
 #include "Game/Gravity/GravityInfo.hpp"
 #include "Game/Gravity/GlobalGravityObj.hpp"
@@ -190,8 +193,14 @@ namespace smgpc::scene {
             _runtime = smgpc::runtime::RuntimeContext::try_instance();
             require(_runtime != nullptr,
                     "Gateway placement construction requires the active RuntimeContext lifecycle");
-            _runtime->begin_scene_draw_buffer_registration();
             _scene_binding = std::make_unique<SceneObjHolderBinding>(_scene_obj_holder);
+            _scene_domain = current_scene_allocation_domain();
+            {
+                const smgpc::compat::JkrAllocationScope game(_scene_domain);
+                _executor = std::make_unique<SceneNameObjListExecutor>();
+                _executor->init();
+            }
+            _execution_binding = std::make_unique<SceneExecutionBinding>(_runtime->scheduler(), *_executor, _scene_domain);
             _scene_binding->initialize_effect_system(3072, 256);
             constexpr auto required_scene_objects = std::array{
                 SceneObj_NameObjGroup,
@@ -285,7 +294,7 @@ namespace smgpc::scene {
 
                 validate_planet_collision();
                 _collision.build();
-                _runtime->scheduler().allocate_draw_buffers();
+                _execution_binding->complete_initialization();
                 _state = GatewayDemoSceneState::Active;
 
 #ifndef NDEBUG
@@ -370,6 +379,7 @@ namespace smgpc::scene {
                 return;
             }
             _state = GatewayDemoSceneState::Retired;
+            if (_execution_binding) _execution_binding->prepare_retirement();
             _visual_views.clear();
             _sky_actor = nullptr;
             _planet_actor = nullptr;
@@ -395,7 +405,9 @@ namespace smgpc::scene {
             // The exact manager keeps non-owning pointers to authored gravity
             // instances and is retired after their actor wrappers.
             _scene_binding.reset();
-            _runtime->scheduler().retire_draw_buffers();
+            _execution_binding.reset();
+            _executor.reset();
+            _scene_domain.reset();
             _stage_light_binding.reset();
             _planet_map_catalog.reset();
         }
@@ -547,6 +559,9 @@ namespace smgpc::scene {
         const StagePlacementObject *_gravity_placement = nullptr;
         const StagePlacementObject *_sky_placement = nullptr;
         StageCollisionService _collision{};
+        std::shared_ptr<smgpc::compat::JkrAllocationDomain> _scene_domain;
+        std::unique_ptr<NameObjListExecutor> _executor;
+        std::unique_ptr<SceneExecutionBinding> _execution_binding;
         SceneObjHolder _scene_obj_holder{};
         std::unique_ptr<SceneObjHolderBinding> _scene_binding{};
         std::unique_ptr<StageLightSceneBinding> _stage_light_binding{};

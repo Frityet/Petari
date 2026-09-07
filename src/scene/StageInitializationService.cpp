@@ -6,6 +6,7 @@
 #include "Game/Map/SleepControllerHolder.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/Scene/SceneFunction.hpp"
+#include "Game/Scene/SceneNameObjListExecutor.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "compat/DemoSceneRuntime.hpp"
 #include "compat/JkrAllocationDomain.hpp"
@@ -16,6 +17,8 @@
 #include "runtime/RuntimeContext.hpp"
 #include "scene/AreaObjRuntime.hpp"
 #include "scene/NameObjLifecycleService.hpp"
+#include "scene/SceneExecutionBinding.hpp"
+#include "scene/SceneLifetimeBinding.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "scene/StageLightSceneBinding.hpp"
 #include "scene/StagePlacementResolver.hpp"
@@ -194,26 +197,47 @@ namespace smgpc::scene {
     }
 
     StageInitializationService::StageInitializationService(
-        smgpc::runtime::RuntimeContext &runtime, Scene &scene, StageHostRequest request)
-        : _runtime(runtime), _scene(scene),
-          _registration_scope_id(runtime.begin_scene_registration_scope()), _request(std::move(request)) {
+        smgpc::runtime::RuntimeContext &runtime, Scene &scene, StageHostRequest request,
+        std::shared_ptr<smgpc::compat::JkrAllocationDomain> domain)
+        : _runtime(runtime), _scene(scene), _scene_domain(std::move(domain)),
+          _request(std::move(request)) {
+        const auto host_allocations = smgpc::compat::JkrHostAllocationScope{};
+        if (!_scene_domain) {
+            aurora::throw_host_exception<std::invalid_argument>(
+                "Stage initialization requires the actual Scene allocation domain");
+        }
+        _lifetime_binding = std::make_unique<SceneLifetimeBinding>(
+            scene, [](void *context) noexcept {
+                static_cast<StageInitializationService *>(context)->retire();
+            },
+            this);
+        _registration_scope_id = runtime.begin_scene_registration_scope();
     }
 
     StageInitializationService::~StageInitializationService() {
+        retire();
+    }
+
+    void StageInitializationService::retire() noexcept {
+        if (_retired)
+            return;
+        _retired = true;
         const auto host_allocations = smgpc::compat::JkrHostAllocationScope{};
         // Scheduler registrations retain raw object pointers, so remove the scene
         // scope while its roots and child objects are still alive.
         (void)_runtime.end_scene_registration_scope(_registration_scope_id);
         _runtime.player_system().clear_stage_state();
         destroy_roots();
-        _runtime.scheduler().retire_draw_buffers();
         // Placement teardown releases cast memberships while the one
         // pre-placement DemoDirector counterpart is still available.
         _demo_scene_runtime.reset();
         // Exact actor destruction releases every owned KCL registration while
         // the stage collision service is still the active scene owner.
         _collision.deactivate();
+        if (_execution_binding)
+            _execution_binding->prepare_retirement();
         _scene_obj_holder_binding.reset();
+        _execution_binding.reset();
         _planet_map_catalog.reset();
         _stage_light_binding.reset();
         _zone_matrix_binding.reset();
@@ -225,10 +249,20 @@ namespace smgpc::scene {
         }
         _stage_session_binding.reset();
         _stage_session.reset();
+        _lifetime_binding.reset();
+    }
+
+    void StageInitializationService::require_live() const {
+        if (_retired) {
+            aurora::throw_host_exception<std::logic_error>("A retired stage has no active Scene owner");
+        }
     }
 
     void StageInitializationService::initialize_host_scene() {
         const auto host_allocations = smgpc::compat::JkrHostAllocationScope{};
+        if (_retired) {
+            aurora::throw_host_exception<std::logic_error>("A retired stage cannot be initialized again");
+        }
         if (_initialized) {
             return;
         }
@@ -254,6 +288,7 @@ namespace smgpc::scene {
     }
 
     void StageInitializationService::initialize_session() {
+        require_live();
         const auto host_allocations = smgpc::compat::JkrHostAllocationScope{};
         if (_stage_session_binding == nullptr) {
             const auto scenario_metadata = smgpc::compat::resolve_stage_scenario_metadata(
@@ -269,15 +304,22 @@ namespace smgpc::scene {
     }
 
     void StageInitializationService::bind_scene_objects() {
+        require_live();
         const auto host_allocations = smgpc::compat::JkrHostAllocationScope{};
         if (_stage_session_binding == nullptr || _scene_obj_holder_binding != nullptr ||
-            _scene.mSceneObjHolder != nullptr) {
+            _scene.mSceneObjHolder != nullptr || _scene.mListExecutor != nullptr) {
             aurora::throw_host_exception<std::logic_error>(
                 "Stage initialization requires one unbound SceneObjHolder owner.");
         }
-        _runtime.begin_scene_draw_buffer_registration();
-        _scene.initSceneObjHolder();
-        _scene_obj_holder_binding = std::make_unique<SceneObjHolderBinding>(*_scene.mSceneObjHolder);
+        {
+            const smgpc::compat::JkrAllocationScope game(_scene_domain);
+            _scene.initSceneObjHolder();
+            _scene.initNameObjListExecutor();
+        }
+        _scene_obj_holder_binding = std::make_unique<SceneObjHolderBinding>(
+            *_scene.mSceneObjHolder, nullptr, nullptr, _scene_domain);
+        _execution_binding = std::make_unique<SceneExecutionBinding>(
+            _runtime.scheduler(), *_scene.mListExecutor, _scene_domain);
     }
 
     void StageInitializationService::initialize_host_scene_objects() {
@@ -317,6 +359,7 @@ namespace smgpc::scene {
     }
 
     void StageInitializationService::finish_actor_placement() {
+        require_live();
         const auto host_allocations = smgpc::compat::JkrHostAllocationScope{};
         if (_scene_obj_holder_binding == nullptr || _authored_placements == nullptr ||
             _authored_placements->report().state != AuthoredPlacementRuntimeState::Instantiated) {
@@ -370,6 +413,7 @@ namespace smgpc::scene {
     }
 
     void StageInitializationService::complete_initialization() {
+        require_live();
         const auto host_allocations = smgpc::compat::JkrHostAllocationScope{};
         if (_initialized || _scene_obj_holder_binding == nullptr || _authored_placements == nullptr ||
             _authored_placements->report().state != AuthoredPlacementRuntimeState::InitializedAfterPlacement) {
@@ -377,7 +421,7 @@ namespace smgpc::scene {
                 "Stage completion requires its one completed post-placement pass.");
         }
         SleepControlFunc::initSyncSleepController();
-        _runtime.scheduler().allocate_draw_buffers();
+        _execution_binding->complete_initialization();
         appear_roots();
         _scene_obj_holder_binding->complete_initialization();
         _initialized = true;
@@ -432,6 +476,7 @@ namespace smgpc::scene {
     }
 
     void StageInitializationService::prepare_actor_files() {
+        require_live();
         const auto host_allocations = smgpc::compat::JkrHostAllocationScope{};
         if (_authored_data == nullptr || _stage_resource_binding == nullptr) {
             aurora::throw_host_exception<std::logic_error>(
@@ -458,6 +503,7 @@ namespace smgpc::scene {
     }
 
     void StageInitializationService::place_actors() {
+        require_live();
         const auto host_allocations = smgpc::compat::JkrHostAllocationScope{};
         if (_authored_placements == nullptr ||
             _authored_placements->report().state != AuthoredPlacementRuntimeState::Preloaded) {
@@ -593,6 +639,7 @@ namespace smgpc::scene {
     }
 
     void StageInitializationService::load_stage_files() {
+        require_live();
         const auto host_allocations = smgpc::compat::JkrHostAllocationScope{};
         if (_stage_session_binding == nullptr || _authored_data != nullptr ||
             _planet_map_catalog != nullptr) {
@@ -613,6 +660,7 @@ namespace smgpc::scene {
     }
 
     void StageInitializationService::initialize_scenario_resources() {
+        require_live();
         const auto host_allocations = smgpc::compat::JkrHostAllocationScope{};
         if (_scene_obj_holder_binding == nullptr || _authored_data == nullptr ||
             _stage_resource_binding != nullptr) {

@@ -20,7 +20,7 @@ class LayoutActor;
 class NameObj;
 namespace MR { class FunctorBase; }
 
-namespace smgpc::scene { class SceneDrawBufferService; }
+namespace smgpc::scene { class SceneDrawBufferService; class SceneExecutionBinding; }
 namespace smgpc::compat { class JkrAllocationDomain; }
 
 namespace smgpc::layout {
@@ -272,11 +272,11 @@ namespace smgpc::runtime {
         SceneScheduler();
         ~SceneScheduler();
         [[nodiscard]] const std::shared_ptr<smgpc::compat::JkrAllocationDomain>& allocation_domain() const noexcept;
-        void begin_draw_buffer_registration(std::shared_ptr<smgpc::compat::JkrAllocationDomain>);
         void allocate_draw_buffers();
         void retire_draw_buffers();
         void find_actor_light_info(LiveActor &actor);
         void connect_name_obj(NameObj &obj, s32 movement_type, s32 calc_anim_type, s32 draw_buffer_type, s32 draw_type);
+        void register_name_obj(NameObj&, s32, s32, s32, s32);
         void disconnect_name_obj(NameObj &obj);
         void connect_draw(NameObj &obj);
         void disconnect_draw(NameObj &obj);
@@ -293,6 +293,11 @@ namespace smgpc::runtime {
         // objects' movement flags; it does not disconnect animation or draw.
         void request_movement_on(s32 movement_type);
         void request_movement_off(s32 movement_type);
+        // Original requirement queues; flags are applied only at their named
+        // SceneExecutor boundary. Permanent retirement remains separate.
+        void request_scene_connection(NameObj&, bool connected);
+        void request_draw_connection(NameObj&, bool connected);
+        void apply_execution_requirements(bool connect, bool draw, bool delayed = false);
 
         void execute_movement();
         void execute_calc_anim();
@@ -371,6 +376,13 @@ namespace smgpc::runtime {
 
         void refresh_draw_buffer_activation();
         friend class SceneSchedulerAllocationBinding;
+        friend class smgpc::scene::SceneExecutionBinding;
+        void attach_execution(smgpc::scene::SceneExecutionBinding&);
+        void detach_execution(smgpc::scene::SceneExecutionBinding&);
+        void register_execution_entry(Entry&);
+        void retire_execution_entry(NameObj&);
+        [[nodiscard]] std::vector<Entry> category_entries(s32 category, bool animation) const;
+        smgpc::scene::SceneExecutionBinding* _execution = nullptr;
         std::shared_ptr<smgpc::compat::JkrAllocationDomain> _allocation_domain;
         std::unique_ptr<smgpc::scene::SceneDrawBufferService> _draw_buffers;
         std::vector<Entry> _entries;

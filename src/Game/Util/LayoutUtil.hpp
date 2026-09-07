@@ -83,7 +83,7 @@ namespace MR {
     void setPaneAnimRate(LayoutActor* pLayout, const char* pPaneName, f32 rate, u32 animLayer);
     f32 getPaneAnimFrame(LayoutActor* pLayout, const char* pPaneName, u32 animLayer);
     s16 getPaneAnimFrameMax(const LayoutActor* pLayout, const char* pPaneName, u32 animLayer);
-    bool isPaneAnimStopped(LayoutActor* pLayout, const char* pPaneName, u32 animLayer);
+    bool isPaneAnimStopped(const LayoutActor* pLayout, const char* pPaneName, u32 animLayer);
     bool isFirstStep(const LayoutActor* pActor);
     bool isStep(const LayoutActor* pActor, s32 step);
     bool isLessStep(const LayoutActor* pActor, s32 step);

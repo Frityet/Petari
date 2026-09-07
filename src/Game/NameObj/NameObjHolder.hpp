@@ -4,6 +4,7 @@
 #include <revolution.h>
 
 class NameObj;
+namespace smgpc::scene { class SceneNameObjRegistry; }
 
 typedef void (NameObj::*NameObjMethod)(void);
 typedef void (NameObj::*NameObjMethodConst)(void) const;
@@ -21,6 +22,7 @@ public:
     NameObj* find(const char*);
 
 private:
+    friend class smgpc::scene::SceneNameObjRegistry;
     /* 0x00 */ MR::Vector< MR::AssignableArray< NameObj* > > mObjArray1;
     /* 0x0C */ MR::Vector< MR::FixedArray< NameObj*, 16 > > mObjArray2;
 };

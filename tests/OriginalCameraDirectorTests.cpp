@@ -1,3 +1,4 @@
+#include "SceneExecutionFixture.hpp"
 #include "camera/CameraDirectorRuntime.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/CameraUtilCompat.hpp"
@@ -26,8 +27,10 @@
 #include "Game/Camera/CameraTargetMtx.hpp"
 #include "Game/LiveActor/ActorCameraInfo.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/LiveActor/ClippingDirector.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/CameraUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
@@ -93,7 +96,8 @@ namespace {
         }
     }
 
-    void camera_category_precedes_clipping(smgpc::runtime::RuntimeContext& runtime, CameraDirector& director) {
+    void camera_category_precedes_clipping(smgpc::runtime::RuntimeContext& runtime, CameraDirector& director,
+                                          smgpc::test::SceneExecutionFixture& execution) {
         auto& scheduler = runtime.scheduler();
         // This is a synthetic scheduler input into the actual CameraContext.
         // Full Director movement needs the separately owned Mario graph; its
@@ -119,10 +123,14 @@ namespace {
             u32 starts = 0, ends = 0;
         } actor;
         actor.mPosition.set(0, 0, 0);
-        actor.makeActorAppeared();
+        // The synthetic subject has no complete actor initializer; publish
+        // its explicit readiness and real clipping membership separately.
+        actor.mFlag.mIsDead = false;
         smgpc::compat::configure_actor_clipping_sphere(&actor, 10, nullptr);
         scheduler.connect_name_obj(actor, MR::MovementType_Player, -1, -1, -1);
+        MR::addToClippingTarget(&actor);
         scheduler.connect_name_obj(publisher, MR::MovementType_Camera, -1, -1, -1);
+        execution.complete_initialization();
         TPos3f far_view, near_view;
         far_view.setPositionFromLookAt(TVec3f(100000, 0, 1000), TVec3f(0, 1, 0), TVec3f(100000, 0, 0));
         near_view.setPositionFromLookAt(TVec3f(0, 0, 1000), TVec3f(0, 1, 0), TVec3f(0, 0, 0));
@@ -175,9 +183,11 @@ int main() {
         smgpc::compat::StageSessionState session("Game", stage, 1, JMapIdInfo(0, 0));
         smgpc::compat::StageSessionBinding session_binding(session);
         std::weak_ptr<smgpc::compat::JkrAllocationDomain> weak_domain;
-        SceneObjHolder holder;
         {
-            smgpc::scene::SceneObjHolderBinding binding(holder);
+            smgpc::test::SceneExecutionFixture execution(
+                scheduler, smgpc::compat::JkrAllocationDomain::create(process.host_heaps(), 8U << 20));
+            auto& binding = execution.objects();
+            auto& holder = *smgpc::scene::current_scene_obj_holder();
             holder.create(SceneObj_NameObjGroup);
             holder.create(SceneObj_AreaObjContainer);
             holder.create(SceneObj_PlanetGravityManager);
@@ -249,7 +259,7 @@ int main() {
             near(pose->near_clip, 75, "renderer receives original near clip");
             near(pose->fovy_degrees, 55, "renderer receives original fovy");
             near(pose->projection_offset_y, -0.02F, "renderer receives original shaker projection offset");
-            camera_category_precedes_clipping(runtime, director);
+            camera_category_precedes_clipping(runtime, director, execution);
         }
         require(weak_domain.expired() && !smgpc::camera::current_camera_director_runtime() &&
                 !smgpc::camera::current_original_camera_context(), "scene teardown retires camera publication and its entire Game domain");

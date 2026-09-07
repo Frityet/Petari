@@ -1,6 +1,13 @@
 #include "Game/Util/ScreenUtil.hpp"
 
 #include "Game/Screen/CaptureScreenDirector.hpp"
+#include "Game/Screen/CinemaFrame.hpp"
+#include "Game/Screen/BloomEffect.hpp"
+#include "Game/Screen/BloomEffectSimple.hpp"
+#include "Game/Screen/ScreenBlurEffect.hpp"
+#include "Game/Screen/DepthOfFieldBlur.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Screen/ImageEffectDirector.hpp"
 #include "Game/Screen/ImageEffectSystemHolder.hpp"
 #include "runtime/RuntimeContext.hpp"
@@ -134,6 +141,60 @@ namespace MR {
 
     void setImageEffectControlAuto() {
         getImageEffectDirector()->setAuto();
+    }
+
+    void tryScreenToFrameCinemaFrame() {
+        MR::getSceneObj<CinemaFrame>(SceneObj_CinemaFrame)->tryScreenToFrame();
+    }
+
+    void tryFrameToBlankCinemaFrame() {
+        MR::getSceneObj<CinemaFrame>(SceneObj_CinemaFrame)->tryFrameToBlank();
+    }
+
+    void tryBlankToFrameCinemaFrame() {
+        MR::getSceneObj<CinemaFrame>(SceneObj_CinemaFrame)->tryBlankToFrame();
+    }
+
+    void tryFrameToScreenCinemaFrame() {
+        MR::getSceneObj<CinemaFrame>(SceneObj_CinemaFrame)->tryFrameToScreen();
+    }
+
+    void forceToScreenCinemaFrame() {
+        MR::getSceneObj<CinemaFrame>(SceneObj_CinemaFrame)->forceToScreen();
+    }
+
+    void forceToFrameCinemaFrame() {
+        MR::getSceneObj<CinemaFrame>(SceneObj_CinemaFrame)->forceToFrame();
+    }
+
+    void forceToBlankCinemaFrame() {
+        MR::getSceneObj<CinemaFrame>(SceneObj_CinemaFrame)->forceToBlank();
+    }
+
+    bool isStopCinemaFrame() {
+        return MR::getSceneObj<CinemaFrame>(SceneObj_CinemaFrame)->isStop();
+    }
+
+    void requestMovementOnImageEffect() {
+        if (isExistSceneObj(SceneObj_ImageEffectSystemHolder)) {
+            getImageEffectSystemHolder()->pauseOff();
+        }
+
+        if (isExistSceneObj(SceneObj_BloomEffect)) {
+            requestMovementOn(getSceneObj<BloomEffect>(SceneObj_BloomEffect));
+        }
+
+        if (isExistSceneObj(SceneObj_BloomEffectSimple)) {
+            requestMovementOn(getSceneObj< BloomEffectSimple >(SceneObj_BloomEffectSimple));
+        }
+
+        if (isExistSceneObj(SceneObj_ScreenBlurEffect)) {
+            requestMovementOn(getSceneObj< ScreenBlurEffect >(SceneObj_ScreenBlurEffect));
+        }
+
+        if (isExistSceneObj(SceneObj_DepthOfFieldBlur)) {
+            requestMovementOn(getSceneObj< DepthOfFieldBlur >(SceneObj_DepthOfFieldBlur));
+        }
     }
 
 }  // namespace MR

@@ -225,6 +225,7 @@ namespace MR {
         LightType_Coin = 0x04,
     };
 
+    void connectToScene(LiveActor*, s32, s32, s32, s32);
     void connectToScene(NameObj* pObj, s32 movementType, s32 calcAnimType, s32 drawBufferType, s32 drawType);
     void disconnectToScene(NameObj* pObj);
     void connectToSceneSky(LiveActor* pActor);

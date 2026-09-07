@@ -1,0 +1,110 @@
+[
+  {
+    "path": "src/Game/Map/NamePosHolder.cpp",
+    "sha256": "7160c588742d7d842f3923c2d11bd4af3bbee2d3e868caac40e362d6a3b1f9ae"
+  },
+  {
+    "path": "src/Game/Map/NamePosHolder.hpp",
+    "sha256": "d08400743f73381803c6acf02b35563921a2bb00c052482448ac8ce4c98f204b"
+  },
+  {
+    "path": "src/Game/Screen/CinemaFrame.cpp",
+    "sha256": "f1233699835c93da80df48e1d479b78e8825e182204875c94a8b5f20ff3a9427"
+  },
+  {
+    "path": "src/Game/Screen/CinemaFrame.hpp",
+    "sha256": "1747997a5822213213dc97cb89ca138777ed71b006e4116edb74ee4f3933cfeb"
+  },
+  {
+    "path": "src/Game/Screen/GameStageClearSequence.cpp",
+    "sha256": "b5429c6311587f3dfdee870d9f068a934e81fddee9ac6c4cbf4316979b63ed12"
+  },
+  {
+    "path": "src/Game/Screen/GameStageClearSequence.hpp",
+    "sha256": "080398e3cfbadc7d1587a836fe7490165b0055d0d8537c9b90a64781e91a5fb8"
+  },
+  {
+    "path": "src/Game/Screen/ScenarioTitle.cpp",
+    "sha256": "9ebe7d7cf6a8005c4b3b510aaf2e8656126006753ec056a1161feb27c074083b"
+  },
+  {
+    "path": "src/Game/Screen/ScenarioTitle.hpp",
+    "sha256": "1494a78e478be064e4103308a64950f312f21cf03366e04bfe4883c32bc2bfdb"
+  },
+  {
+    "path": "src/Game/System/PauseButtonCheckerInGame.cpp",
+    "sha256": "ba6495ef670a927dd64685608b9646967ce1d7309d4e28c72eb5d6f9655e1716"
+  },
+  {
+    "path": "src/Game/System/PauseButtonCheckerInGame.hpp",
+    "sha256": "22947f9de2fd7318ffd3b1d1f3b8d3498735d36d87a32b4d22d66abc16f72891"
+  },
+  {
+    "path": "src/Game/Scene/GameScenePauseControl.hpp",
+    "sha256": "f5bd1c0bf384884d2c634d6daded231ac0d99915cf6910a43101d4fc2bf9d40c"
+  },
+  {
+    "path": "src/Game/Scene/GameSceneScenarioOpeningCameraState.hpp",
+    "sha256": "25b68c305ee83be8354edcac8dc7ea42e82c12e6186217491a3cd6f3b66ec799"
+  },
+  {
+    "path": "src/Game/Screen/GamePauseSequence.hpp",
+    "sha256": "15366c70cc9a0184fc0d16f6ac783d13b2fac7ace2a96dfbe40ebe09787c26d7"
+  },
+  {
+    "path": "src/compat/StageResourceBinding.hpp",
+    "sha256": "e6d26576d17ed114bfa40535969f240c8b9b6f78aca75e889b05dff248521b99"
+  },
+  {
+    "path": "src/compat/StageResourceBinding.cpp",
+    "sha256": "4bc481413b411e32d77ff92344f4c9a82751e2bb9d13bac721282cd001bdd3dc"
+  },
+  {
+    "path": "src/scene/StagePlacementResolver.hpp",
+    "sha256": "5ec68d5a238313bc999d3038f942f38e2e845c4bc1c7d2aba19a27cdaa3593d4"
+  },
+  {
+    "path": "src/scene/StagePlacementResolver.cpp",
+    "sha256": "5800baedc7b04374faee24d5bd930d3e3bb2c0f3426bd6e8bf98b9fce78b887b"
+  },
+  {
+    "path": "src/compat/OriginalNamePosUtil.cpp",
+    "sha256": "bb0d198f130d8094bfde020e481ed2a999670ba8fa8fe83df1daad4ad8aeba75"
+  },
+  {
+    "path": "src/compat/ScreenSystemAndCaptureCompat.cpp",
+    "sha256": "62e90f437608d1760ea5fc9ceb5b8dd3ce2751da81ebcf6c867c28a5f3bb6370"
+  },
+  {
+    "path": "src/compat/SceneObjHolderCompat.cpp",
+    "sha256": "9a40229c6afb0a96473af1898e06df12e10f0995b741cc09b0be92b832c2dcb9"
+  },
+  {
+    "path": "src/Game/Util/ObjUtil.hpp",
+    "sha256": "0ccf17654ab004f16d77b81770a2d33b261bdb108a05d6dfbf14a07a9a264b23"
+  },
+  {
+    "path": "src/Game/Util/LayoutUtil.hpp",
+    "sha256": "e2bd8a96336072990e28c4f78e19113df10c8efa9195dcff959d24e34d9efb8d"
+  },
+  {
+    "path": "src/layout/LayoutUtilCompat.cpp",
+    "sha256": "2bb388be7fc8bf9a5e37f7b39d9f33dd0b14703016206dde391ea7869c8ce22f"
+  },
+  {
+    "path": "tests/OriginalNamePosOwnerTests.cpp",
+    "sha256": "68403a3bcdd02cfc1d17dd6671eca9899d596e1b9c8bf2bbf40f226ae7594cea"
+  },
+  {
+    "path": "tests/OriginalSceneWipeOwnerTests.cpp",
+    "sha256": "f056bf4639e9a050bec6524d6baa3a656dae16bb3b5a6522417573b517e51b57"
+  },
+  {
+    "path": "tests/OriginalCameraDirectorTests.cpp",
+    "sha256": "df4de81bba123a6caa79287bbf027aca12a29f48093a2e5480e68fdcdea742bd"
+  },
+  {
+    "path": "tests/xmake.lua",
+    "sha256": "97c148fd163c311c59e8e5af696cd8872b96b9557cffeb7b4eef1ef13d9e4a33"
+  }
+]

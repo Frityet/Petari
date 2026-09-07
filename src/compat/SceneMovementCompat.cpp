@@ -18,16 +18,6 @@ namespace {
     }
 }  // namespace
 
-namespace MR {
-    void requestMovementOnWithCategory(int category) {
-        require_scheduler().request_movement_on(category);
-    }
-
-    void requestMovementOffWithCategory(int category) {
-        require_scheduler().request_movement_off(category);
-    }
-}  // namespace MR
-
 void CategoryList::requestMovementOn(MR::MovementType type) {
     MR::requestMovementOnWithCategory(type);
 }

@@ -1,0 +1,22 @@
+[
+  {
+    "path": "decomp/src/Game/Map/NamePosHolder.cpp",
+    "sha256": "7160c588742d7d842f3923c2d11bd4af3bbee2d3e868caac40e362d6a3b1f9ae"
+  },
+  {
+    "path": "decomp/include/Game/Scene/StageDataHolder.hpp",
+    "sha256": "aef68ebc92faccde0bdbe875ebf3489130b58e8aad5a5d2edad0b64716f44c38"
+  },
+  {
+    "path": "decomp/src/Game/Scene/StageDataHolder.cpp",
+    "sha256": "cdaffbba208b50497537d7d0d92ecd56a1d4449b6d232dcb6a3e8b380a6f8861"
+  },
+  {
+    "path": "decomp/src/Game/Util/SceneUtil.cpp",
+    "sha256": "c2d909dde147b346e19e4318fe7f1c6280d50d0e2b352cebdb2ede17cf4b8a5a"
+  },
+  {
+    "path": "decomp/src/Game/Util/ObjUtil.cpp",
+    "sha256": "931b6439c89c89403f0c7d285f6351564539192c1d7ea9617ed9650c07f83113"
+  }
+]

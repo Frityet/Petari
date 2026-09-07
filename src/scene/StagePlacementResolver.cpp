@@ -700,6 +700,10 @@ namespace smgpc::scene {
 
     }  // namespace
 
+    void apply_stage_zone_transform(JMapInfo& info, const StageZoneTransform& transform) {
+        apply_zone_transform(info, transform);
+    }
+
     std::vector<StageHolderOccurrence>
     discover_stage_holder_occurrences(
         std::string_view root_stage_name, s32 root_zone_id,

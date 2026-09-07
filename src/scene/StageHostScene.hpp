@@ -19,6 +19,7 @@ namespace smgpc::scene {
     public:
         StageHostScene(smgpc::runtime::RuntimeContext &runtime, StageHostRequest request);
         ~StageHostScene() override;
+        void bind_initialization(StageInitializationService &initialization);
         void init() override;
         void start() override;
         void update() override;
@@ -32,6 +33,6 @@ namespace smgpc::scene {
 
     private:
         smgpc::runtime::RuntimeContext &_runtime;
-        std::unique_ptr<StageInitializationService> _initialization;
+        StageInitializationService *_initialization = nullptr;
     };
 }  // namespace smgpc::scene

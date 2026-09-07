@@ -1,0 +1,30 @@
+[
+  {
+    "path": "src/scene/TitleFileSelectVisual.cpp",
+    "sha256": "8ecff3c9c4e9555dac244a8a05471e35613b2a5a3a2e36210fe7191f827052a2"
+  },
+  {
+    "path": "src/scene/TitleFileSelectRoute.cpp",
+    "sha256": "efd9bdb314f4e89c624c998adda353be02bbb801e53791bc2832e8a3c3e666d9"
+  },
+  {
+    "path": "src/scene/GatewayDemoScene.cpp",
+    "sha256": "0f2d1d83f3a88e0453e27f046aacf557040c680388dab126bb9093ab5a2b4ab9"
+  },
+  {
+    "path": "tests/TitleFileSelectVisualTests.cpp",
+    "sha256": "485d960c053b1b347b677d5f457f3ed581a0402106f1bd5a5231882b04c131ee"
+  },
+  {
+    "path": "tests/FileSelectFarVisualTests.cpp",
+    "sha256": "ed8f2865f4a3dd6de66dee2f307e587eece09c7f951c0eeb6702aa1577fa009f"
+  },
+  {
+    "path": "src/scene/TitleFileSelectVisual.hpp",
+    "sha256": "feeb449f73a2dd00bf345c7dbe69c11a4c31ee1bd26723b0b40495559cc97304"
+  },
+  {
+    "path": "src/scene/TitleFileSelectRoute.hpp",
+    "sha256": "6c38a8e4d263fb008f7bb128324ea9826c87673d7f41f7426027c518161cc463"
+  }
+]

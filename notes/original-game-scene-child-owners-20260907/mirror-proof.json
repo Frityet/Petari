@@ -1,0 +1,80 @@
+[
+  {
+    "native": "src/Game/Map/NamePosHolder.cpp",
+    "reference": "decomp/src/Game/Map/NamePosHolder.cpp",
+    "byte_identical": true,
+    "sha256": "7160c588742d7d842f3923c2d11bd4af3bbee2d3e868caac40e362d6a3b1f9ae"
+  },
+  {
+    "native": "src/Game/Map/NamePosHolder.hpp",
+    "reference": "decomp/include/Game/Map/NamePosHolder.hpp",
+    "byte_identical": true,
+    "sha256": "d08400743f73381803c6acf02b35563921a2bb00c052482448ac8ce4c98f204b"
+  },
+  {
+    "native": "src/Game/Screen/CinemaFrame.cpp",
+    "reference": "decomp/src/Game/Screen/CinemaFrame.cpp",
+    "byte_identical": true,
+    "sha256": "f1233699835c93da80df48e1d479b78e8825e182204875c94a8b5f20ff3a9427"
+  },
+  {
+    "native": "src/Game/Screen/CinemaFrame.hpp",
+    "reference": "decomp/include/Game/Screen/CinemaFrame.hpp",
+    "byte_identical": true,
+    "sha256": "1747997a5822213213dc97cb89ca138777ed71b006e4116edb74ee4f3933cfeb"
+  },
+  {
+    "native": "src/Game/Screen/GameStageClearSequence.cpp",
+    "reference": "decomp/src/Game/Screen/GameStageClearSequence.cpp",
+    "byte_identical": true,
+    "sha256": "b5429c6311587f3dfdee870d9f068a934e81fddee9ac6c4cbf4316979b63ed12"
+  },
+  {
+    "native": "src/Game/Screen/GameStageClearSequence.hpp",
+    "reference": "decomp/include/Game/Screen/GameStageClearSequence.hpp",
+    "byte_identical": true,
+    "sha256": "080398e3cfbadc7d1587a836fe7490165b0055d0d8537c9b90a64781e91a5fb8"
+  },
+  {
+    "native": "src/Game/Screen/ScenarioTitle.cpp",
+    "reference": "decomp/src/Game/Screen/ScenarioTitle.cpp",
+    "byte_identical": true,
+    "sha256": "9ebe7d7cf6a8005c4b3b510aaf2e8656126006753ec056a1161feb27c074083b"
+  },
+  {
+    "native": "src/Game/Screen/ScenarioTitle.hpp",
+    "reference": "decomp/include/Game/Screen/ScenarioTitle.hpp",
+    "byte_identical": true,
+    "sha256": "1494a78e478be064e4103308a64950f312f21cf03366e04bfe4883c32bc2bfdb"
+  },
+  {
+    "native": "src/Game/System/PauseButtonCheckerInGame.cpp",
+    "reference": "decomp/src/Game/System/PauseButtonCheckerInGame.cpp",
+    "byte_identical": true,
+    "sha256": "ba6495ef670a927dd64685608b9646967ce1d7309d4e28c72eb5d6f9655e1716"
+  },
+  {
+    "native": "src/Game/System/PauseButtonCheckerInGame.hpp",
+    "reference": "decomp/include/Game/System/PauseButtonCheckerInGame.hpp",
+    "byte_identical": true,
+    "sha256": "22947f9de2fd7318ffd3b1d1f3b8d3498735d36d87a32b4d22d66abc16f72891"
+  },
+  {
+    "native": "src/Game/Scene/GameScenePauseControl.hpp",
+    "reference": "decomp/include/Game/Scene/GameScenePauseControl.hpp",
+    "byte_identical": true,
+    "sha256": "f5bd1c0bf384884d2c634d6daded231ac0d99915cf6910a43101d4fc2bf9d40c"
+  },
+  {
+    "native": "src/Game/Scene/GameSceneScenarioOpeningCameraState.hpp",
+    "reference": "decomp/include/Game/Scene/GameSceneScenarioOpeningCameraState.hpp",
+    "byte_identical": true,
+    "sha256": "25b68c305ee83be8354edcac8dc7ea42e82c12e6186217491a3cd6f3b66ec799"
+  },
+  {
+    "native": "src/Game/Screen/GamePauseSequence.hpp",
+    "reference": "decomp/include/Game/Screen/GamePauseSequence.hpp",
+    "byte_identical": true,
+    "sha256": "15366c70cc9a0184fc0d16f6ac783d13b2fac7ace2a96dfbe40ebe09787c26d7"
+  }
+]

@@ -13,44 +13,6 @@
 
 #include <stdexcept>
 
-namespace {
-    smgpc::runtime::SceneScheduler &require_scheduler(NameObj *object) {
-        if (object == nullptr) {
-            aurora::throw_host_exception<std::invalid_argument>("Temporary draw connection requires a NameObj.");
-        }
-        if (auto *scheduler = smgpc::runtime::try_active_scene_scheduler(); scheduler != nullptr) {
-            return *scheduler;
-        }
-        if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr) {
-            return runtime->scheduler();
-        }
-        aurora::throw_host_exception<std::logic_error>("Temporary draw connection requires an active runtime scene.");
-    }
-}
-
-namespace MR {
-    void connectToDrawTemporarily(NameObj *object) {
-        require_scheduler(object).connect_draw(*object);
-    }
-
-    void disconnectToDrawTemporarily(NameObj *object) {
-        require_scheduler(object).disconnect_draw(*object);
-    }
-
-    bool isConnectToDrawTemporarily(const NameObj *object) {
-        auto &scheduler = require_scheduler(const_cast<NameObj *>(object));
-        return scheduler.is_draw_connected(*object);
-    }
-
-    void findActorLightInfo(const LiveActor *actor) {
-        if (actor == nullptr) {
-            aurora::throw_host_exception<std::invalid_argument>("Actor light lookup requires a LiveActor.");
-        }
-        auto &scheduler = require_scheduler(const_cast<LiveActor *>(actor));
-        scheduler.find_actor_light_info(*const_cast<LiveActor *>(actor));
-    }
-}
-
 NameObj* NameObjFinder::find(const char* name) {
     const smgpc::compat::JkrHostAllocationScope host;
     // The native registry is the active NameObjHolder. Its snapshot retains

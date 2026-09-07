@@ -1,0 +1,51 @@
+[
+  {
+    "command": [
+      "/opt/homebrew/opt/llvm/bin/clang++",
+      "-std=c++20",
+      "-g",
+      "-DAURORA",
+      "-DTARGET_PC",
+      "-Iaurora/include",
+      "-I/Users/frityet/Projects/petari/decomp/build/aurora-upstream-merge-tests/_deps/googletest-src/googletest/include",
+      "aurora/lib/dolphin/os/OSExecution.cpp",
+      "aurora/lib/dolphin/os/OSMutex.cpp",
+      "aurora/lib/dolphin/os/OSMessage.cpp",
+      "aurora/tests/os_execution_test.cpp",
+      "aurora/tests/os_mutex_test.cpp",
+      "aurora/tests/os_message_test.cpp",
+      "/Users/frityet/Projects/petari/decomp/build/aurora-upstream-merge-tests/lib/libgtest_main.a",
+      "/Users/frityet/Projects/petari/decomp/build/aurora-upstream-merge-tests/lib/libgtest.a",
+      "-pthread",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-os-message-20260907/native"
+    ],
+    "build_exit": 0,
+    "run_exit": 0
+  },
+  {
+    "command": [
+      "/opt/homebrew/opt/llvm/bin/clang++",
+      "-std=c++20",
+      "-g",
+      "-fsanitize=thread",
+      "-DAURORA",
+      "-DTARGET_PC",
+      "-Iaurora/include",
+      "-I/Users/frityet/Projects/petari/decomp/build/aurora-upstream-merge-tests/_deps/googletest-src/googletest/include",
+      "aurora/lib/dolphin/os/OSExecution.cpp",
+      "aurora/lib/dolphin/os/OSMutex.cpp",
+      "aurora/lib/dolphin/os/OSMessage.cpp",
+      "aurora/tests/os_execution_test.cpp",
+      "aurora/tests/os_mutex_test.cpp",
+      "aurora/tests/os_message_test.cpp",
+      "/Users/frityet/Projects/petari/decomp/build/aurora-upstream-merge-tests/lib/libgtest_main.a",
+      "/Users/frityet/Projects/petari/decomp/build/aurora-upstream-merge-tests/lib/libgtest.a",
+      "-pthread",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-os-message-20260907/tsan"
+    ],
+    "build_exit": 0,
+    "run_exit": 0
+  }
+]

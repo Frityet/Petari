@@ -21,8 +21,9 @@
 namespace MR {
 
     void validateClipping(LiveActor* pActor) {
-        if (pActor != nullptr) {
+        if (pActor != nullptr && pActor->mFlag.mIsInvalidClipping) {
             pActor->mFlag.mIsInvalidClipping = false;
+            smgpc::compat::set_actor_clipping_target(pActor, !pActor->mFlag.mIsDead);
         }
     }
 
@@ -30,10 +31,13 @@ namespace MR {
         if (pActor == nullptr) {
             return;
         }
+        if (!pActor->mFlag.mIsInvalidClipping) {
+            pActor->mFlag.mIsInvalidClipping = true;
+            smgpc::compat::set_actor_clipping_target(pActor, false);
+        }
         if (pActor->mFlag.mIsClipped) {
             pActor->endClipped();
         }
-        pActor->mFlag.mIsInvalidClipping = true;
     }
 
     void setClippingFarMax(LiveActor* pActor) {
