@@ -1,0 +1,18 @@
+{
+  "build": {
+    "command": [
+      "xmake",
+      "build",
+      "smg-pc-runtime-context-construction-tests"
+    ],
+    "exit_code": 0
+  },
+  "run": {
+    "command": [
+      "xmake",
+      "run",
+      "smg-pc-runtime-context-construction-tests"
+    ],
+    "exit_code": 0
+  }
+}

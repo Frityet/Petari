@@ -1,0 +1,10 @@
+{
+  "command": [
+    "./script/build_and_run.sh",
+    "gateway",
+    "--verify",
+    "--screenshot",
+    "/Users/frityet/Projects/petari/notes/fur-gateway-integration-20260907/gateway.png"
+  ],
+  "exit_code": 1
+}

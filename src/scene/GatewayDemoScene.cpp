@@ -184,6 +184,10 @@ namespace smgpc::scene {
             _collision.build();
             _collision.activate();
 
+            _runtime = smgpc::runtime::RuntimeContext::try_instance();
+            require(_runtime != nullptr,
+                    "Gateway placement construction requires the active RuntimeContext lifecycle");
+            _runtime->begin_scene_draw_buffer_registration();
             _scene_binding = std::make_unique<SceneObjHolderBinding>(_scene_obj_holder);
             _scene_binding->initialize_effect_system(3072, 256);
             constexpr auto required_scene_objects = std::array{
@@ -191,6 +195,7 @@ namespace smgpc::scene {
                 SceneObj_PlacementStateChecker,
                 SceneObj_ClippingDirector,
                 SceneObj_LightDirector,
+                SceneObj_FurDrawManager,
                 SceneObj_StageSwitchContainer,
                 SceneObj_SwitchWatcherHolder,
                 SceneObj_SleepControllerHolder,
@@ -211,9 +216,6 @@ namespace smgpc::scene {
                     "exact PlanetGravityManager SceneObj could not be created");
             LightFunction::initLightRegisterAll();
 
-            _runtime = smgpc::runtime::RuntimeContext::try_instance();
-            require(_runtime != nullptr,
-                    "Gateway placement construction requires the active RuntimeContext lifecycle");
             _event_camera_binding =
                 std::make_unique<StageEventCameraBinding>(
                     _runtime->camera_system(), _dvd,
@@ -281,6 +283,7 @@ namespace smgpc::scene {
 
                 validate_planet_collision();
                 _collision.build();
+                _runtime->scheduler().allocate_draw_buffers();
                 _state = GatewayDemoSceneState::Active;
 
 #ifndef NDEBUG
@@ -388,6 +391,7 @@ namespace smgpc::scene {
             // The exact manager keeps non-owning pointers to authored gravity
             // instances and is retired after their actor wrappers.
             _scene_binding.reset();
+            _runtime->scheduler().retire_draw_buffers();
             _stage_light_binding.reset();
             _event_camera_binding.reset();
             _planet_map_catalog.reset();

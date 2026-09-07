@@ -1,0 +1,18 @@
+[
+  {
+    "path": "tests/OriginalFurShaderTests.cpp",
+    "sha256": "09548189a3e082a400231f9abac4d60898c3991880ca8939aed989fcd3755fd9"
+  },
+  {
+    "path": "src/Game/Util/FurShader.cpp",
+    "sha256": "d7c4cf882eb37cabeb02a9449ae089be33c2ee0e87e18aaa00c05b7ad2597009"
+  },
+  {
+    "path": "src/Game/Util/FurShader.hpp",
+    "sha256": "2b4375cf56b00454cff791d5f706921b553e6672d6b617ab3603747f02c95802"
+  },
+  {
+    "path": "src/JSystem/J3DGraphAnimator/J3DModel.hpp",
+    "sha256": "b1975054ae60b2980ceab5898c5feb6ced63b3e3f4111b5bf410415e6bf78a41"
+  }
+]

@@ -69,6 +69,8 @@ namespace {
             if (!throw_after_registration || message != "Using SMG disc image through Aurora DVD") return;
             auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
             require(runtime && JUTVideo::getManager(), "registration must remain available while startup clients run");
+            require(smgpc::runtime::try_active_scene_scheduler() == &runtime->scheduler(),
+                    "startup clients must share the real runtime scheduler binding");
             const auto entries = runtime->scheduler().snapshot();
             require(entries.size() == 2, "failure fixture must reach both original CaptureScreenActor registrations");
             registered = smgpc::compat::snapshot_name_obj_runtime_objects();
@@ -93,6 +95,7 @@ int main() {
     FixtureLogger logger;
     auto require_retired = [&](std::size_t expected_capacity) {
         require(smgpc::runtime::RuntimeContext::try_instance() == nullptr, "failed/destroyed runtime remains published");
+        require(smgpc::runtime::try_active_scene_scheduler() == nullptr, "failed/destroyed runtime retains scheduler binding");
         require(JUTVideo::getManager() == nullptr, "failed/destroyed runtime retains its JUTVideo owner");
         require(smgpc::compat::ResourceHolderService::active() == nullptr, "failed/destroyed runtime retains archive service");
         require(smgpc::runtime::ScenarioCatalogOwnership::active() == nullptr, "failed/destroyed runtime retains scenario catalog publication");
@@ -138,6 +141,8 @@ int main() {
             smgpc::runtime::RuntimeContext runtime(logger, window, process);
             require(smgpc::runtime::RuntimeContext::try_instance() == &runtime && JUTVideo::getManager(), "reconstructed runtime is not registered");
             require(runtime.scheduler().snapshot().size() == 2, "reconstruction did not install the exact capture callbacks");
+            require(smgpc::runtime::try_active_scene_scheduler() == &runtime.scheduler(),
+                    "reconstructed runtime did not publish its scheduler");
             require(MR::getScreenAlphaTexture(0) != nullptr, "reconstruction lost its mapped screen-alpha texture");
             require(smgpc::runtime::SystemConfigService::active() && SCGetAspectRatio() == cycle,
                     "actual startup did not publish imported console settings");

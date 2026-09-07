@@ -1,0 +1,18 @@
+{
+  "build": {
+    "command": [
+      "xmake",
+      "build",
+      "smg-pc-original-fur-drawer-tests"
+    ],
+    "exit_code": 0
+  },
+  "run": {
+    "command": [
+      "xmake",
+      "run",
+      "smg-pc-original-fur-drawer-tests"
+    ],
+    "exit_code": 0
+  }
+}

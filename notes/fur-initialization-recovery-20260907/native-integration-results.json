@@ -1,0 +1,13 @@
+{
+  "showcase_build_exit": 0,
+  "log": "showcase-closure-build.log",
+  "exact_imports": [
+    "FurCtrl.hpp",
+    "FurMulti.hpp",
+    "FurParam.hpp",
+    "FurCtrl.cpp",
+    "FurMulti.cpp"
+  ],
+  "original_scan_helper_body_equality": true,
+  "runtime_status": "awaiting focused Shader and Drawer tests; no full game or actor fur runtime claim"
+}

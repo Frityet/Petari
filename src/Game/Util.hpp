@@ -18,6 +18,7 @@
 #include "Game/Util/GravityUtil.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/JointUtil.hpp"
+#include "Game/Util/LightUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/MtxUtil.hpp"

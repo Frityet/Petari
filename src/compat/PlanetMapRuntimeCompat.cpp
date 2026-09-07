@@ -121,11 +121,6 @@ namespace MR {
         return result;
     }
 
-    void initFurPlanet(LiveActor *) {
-        throw std::logic_error(
-            "Fur PlanetMap reached the ordinary zero-optional runtime tranche.");
-    }
-
     bool isExistSubModel(const char *model_name, const char *suffix) {
         if (model_name == nullptr || suffix == nullptr) {
             return false;

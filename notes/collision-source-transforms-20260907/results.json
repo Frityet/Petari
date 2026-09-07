@@ -1,0 +1,18 @@
+{
+  "build": {
+    "command": [
+      "xmake",
+      "build",
+      "smg-pc-stage-collision-registration-tests"
+    ],
+    "exit_code": 0
+  },
+  "run": {
+    "command": [
+      "xmake",
+      "run",
+      "smg-pc-stage-collision-registration-tests"
+    ],
+    "exit_code": 0
+  }
+}

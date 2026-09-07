@@ -3,13 +3,17 @@
 #include <revolution/types.h>
 
 class FurCtrl;
+class FurParam;
 class J3DModel;
 class LiveActor;
+class ResTIMG;
 
 class FurMulti {
 public:
     FurMulti(LiveActor*, u32);
 
+    void setLayerDirect(u32, u32, u32, u32, FurParam*, ResTIMG*, ResTIMG*, ResTIMG*, ResTIMG*);
+    void addToManager();
     void offDraw(u32);
     void onDraw(u32);
 

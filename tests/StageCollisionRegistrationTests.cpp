@@ -1,4 +1,5 @@
 #include "Game/Util/MapUtil.hpp"
+#include "compat/HitInfoCompat.hpp"
 #include "scene/StageCollisionService.hpp"
 
 #include <array>
@@ -148,6 +149,48 @@ namespace {
                 "only the explicitly registered exact KCL should become stage collision");
     }
 
+    void test_triangle_source_matrix_lifetime() {
+        auto collision = smgpc::scene::StageCollisionService{};
+        auto registration = std::make_shared<smgpc::scene::StageCollisionRegistrationState>();
+        const auto kcl = make_single_triangle_kcl();
+        const auto matrix = std::array<float, 12>{0, 0, 2, 10, 0, 3, 0, 20, -4, 0, 0, 30};
+        require(collision.register_kcl(kcl, matrix, "transformed source", registration).accepted,
+                "register exact rotated and scaled source");
+        collision.build();
+        collision.activate();
+        smgpc::scene::StageCollisionHit hit;
+        require(collision.line_cast(TVec3f(10.5F, 25.0F, 29.0F), TVec3f(0.0F, -10.0F, 0.0F), &hit),
+                "source geometry must actually produce the transformed hit");
+        const auto triangle = smgpc::compat::make_collision_triangle(collision, hit.triangle_index);
+        const auto copied = triangle;
+        auto* base = triangle.getBaseMtx();
+        auto* inverse = triangle.getBaseInvMtx();
+        auto* previous = triangle.getPrevBaseMtx();
+        TVec3f local;
+        PSMTXMultVec(*inverse, &hit.position, &local);
+        require(local.epsilonEquals(TVec3f(0.25F, 0.0F, 0.25F), 0.00001F),
+                "original ground recording must use the full inverse including scale");
+        TVec3f restored;
+        PSMTXMultVec(*base, &local, &restored);
+        require(restored.epsilonEquals(hit.position, 0.00001F), "recorded local point must return to its actual world hit");
+        PSMTXMultVec(*previous, &local, &restored);
+        require(restored.epsilonEquals(hit.position, 0.00001F), "static source retains its original previous matrix");
+        for (unsigned i = 0; i < 64; ++i) {
+            require(collision.add_kcl(kcl, cIdentity, "additional source"), "append source to grow registry");
+        }
+        collision.build();
+        require(copied.getBaseMtx() == base && copied.getBaseInvMtx() == inverse && copied.getPrevBaseMtx() == previous,
+                "copied triangle transforms must remain stable across source registry relocation");
+        registration->set_enabled(false);
+        require_unavailable([&] { (void)copied.getBaseInvMtx(); }, "disabled source must not expose retired ground transforms");
+        registration->set_enabled(true);
+        require(copied.getBaseMtx() == base, "re-enabled same source must preserve matrix identity");
+        registration->release_owner();
+        require_unavailable([&] { (void)copied.getBaseMtx(); }, "released source must not expose ground transforms");
+        collision.clear();
+        require_unavailable([&] { (void)copied.getPrevBaseMtx(); }, "cleared source cannot supply a fabricated identity matrix");
+    }
+
     struct TestCase {
         std::string_view name;
         void (*run)();
@@ -158,6 +201,7 @@ int main() {
     constexpr auto tests = std::array{
         TestCase{"collision absent without registration", test_collision_is_absent_without_explicit_registration},
         TestCase{"only explicit valid KCL registers", test_only_explicit_valid_kcl_registration_adds_collision},
+        TestCase{"triangle source matrix lifetime", test_triangle_source_matrix_lifetime},
     };
 
     auto failures = 0;

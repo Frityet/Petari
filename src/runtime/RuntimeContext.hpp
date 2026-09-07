@@ -329,6 +329,9 @@ namespace smgpc::runtime {
         // retire before the published runtime/video registration.
         std::unique_ptr<Registration> _registration;
         SceneScheduler _scheduler;
+        // Publish the real scheduler for scene construction, callbacks, and
+        // retirement; unwind the binding only after its client owners.
+        SceneSchedulerBinding _scheduler_binding{_scheduler};
         logging::ILogger &_logger;
         render::AuroraWindow &_window_service;
         std::filesystem::path _disc_files_root;

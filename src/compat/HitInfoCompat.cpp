@@ -30,6 +30,13 @@ namespace {
         auto* collision = smgpc::scene::StageCollisionService::active();
         return collision != nullptr ? collision->surface(triangle.mIdx) : std::nullopt;
     }
+    [[nodiscard]] smgpc::scene::StageCollisionMatrices& triangle_matrices(const Triangle& triangle) {
+        auto* collision = smgpc::scene::StageCollisionService::active();
+        if (collision == nullptr) {
+            throw std::logic_error("Triangle transforms require an active collision owner.");
+        }
+        return collision->matrices_for_triangle(triangle.mIdx);
+    }
 }  // namespace
 
 namespace smgpc::compat {
@@ -180,15 +187,16 @@ bool HitInfo::isCollisionAtCorner() const {
     return _88 == 5U || _88 == 6U || _88 == 7U;
 }
 
-// Original methods from Game/Map/HitInfo.cpp.
+// Original parts retain their own matrices; native KCL triangles borrow the
+// actual source transforms from their collision owner.
 TPos3f* Triangle::getBaseMtx() const {
-    return &mParts->mBaseMatrix;
+    return mParts != nullptr ? &mParts->mBaseMatrix : &triangle_matrices(*this).base;
 }
 
 TPos3f* Triangle::getBaseInvMtx() const {
-    return &mParts->mInvBaseMatrix;
+    return mParts != nullptr ? &mParts->mInvBaseMatrix : &triangle_matrices(*this).inverse;
 }
 
 TPos3f* Triangle::getPrevBaseMtx() const {
-    return &mParts->mPrevBaseMatrix;
+    return mParts != nullptr ? &mParts->mPrevBaseMatrix : &triangle_matrices(*this).previous;
 }

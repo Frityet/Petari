@@ -1,0 +1,30 @@
+[
+  {
+    "file": "aurora/lib/dolphin/gx/GXCull.cpp",
+    "exit": 0
+  },
+  {
+    "file": "aurora/lib/gx/gx.cpp",
+    "exit": 0
+  },
+  {
+    "file": "aurora/lib/gx/regs.cpp",
+    "exit": 0
+  },
+  {
+    "file": "aurora/lib/gx/shader.cpp",
+    "exit": 0
+  },
+  {
+    "file": "aurora/lib/gx/shader_info.cpp",
+    "exit": 0
+  },
+  {
+    "file": "aurora/lib/gx/command_processor.cpp",
+    "exit": 0
+  },
+  {
+    "file": "aurora/lib/gx/pipeline.cpp",
+    "exit": 0
+  }
+]

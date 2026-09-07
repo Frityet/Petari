@@ -1,0 +1,22 @@
+[
+  {
+    "path": "decomp/include/Game/Util/FurDrawer.hpp",
+    "sha256": "b78b46aae51ad762484fa6ec6a9b897729c86237ca4f21943b2f13dc34dfe86b"
+  },
+  {
+    "path": "decomp/src/Game/Util/FurDrawer.cpp",
+    "sha256": "e7056dcc772d05435965629fc2a0081c1a8748f6c5b6b433dd5404b268d54cb7"
+  },
+  {
+    "path": "src/Game/Util/FurDrawer.hpp",
+    "sha256": "b78b46aae51ad762484fa6ec6a9b897729c86237ca4f21943b2f13dc34dfe86b"
+  },
+  {
+    "path": "src/Game/Util/FurDrawer.cpp",
+    "sha256": "c8aeba7dbe03efe400d8ae19f560298bd151e2081ca4b9035e6c926452586a8f"
+  },
+  {
+    "path": "aurora/include/aurora/endian.hpp",
+    "sha256": "fd520181d394ed08dd87b402581fec12747e058fa01a72cb6e0afafc0d69a6ea"
+  }
+]

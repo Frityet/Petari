@@ -1,0 +1,32 @@
+{
+  "render_build_exit": 0,
+  "render_run_exit": 0,
+  "render_pass_cases": 73,
+  "render_backend": "Metal",
+  "cpu_results": {
+    "build_exit": 0,
+    "run_exit": 0
+  },
+  "source_sha256": {
+    "lib/dolphin/gx/GXCull.cpp": "6c4add229653418f6d849439098a7a16095b27380474f0b7a42738c809341e48",
+    "lib/gfx/recording.cpp": "7b5ad0c51ca815838d007e65d5aba64a9e358e1b63f1f0c20424ecfab438a6be",
+    "lib/gx/command_processor.cpp": "6222e0dceaac15d37f9c0075bbf25d5e5983fb7eb5e1cdba6ac4061e17213044",
+    "lib/gx/gx.cpp": "b3e41d65dd450b0a61c0ed8cac890120f22414dd7c01665342250ed79b3fb212",
+    "lib/gx/gx.hpp": "dd6cbb164616c314e2e62f0d1e0cfd2c0a254bf82f16a071afcd4dc06e8b2853",
+    "lib/gx/pipeline.cpp": "36a59d643631974cb9a2cb4bf72015efeeb82ee5a83af4c655176e225ae7d10a",
+    "lib/gx/pipeline.hpp": "eda5f186bb357433c890e148e67196fabdc14e096204e184385256c86fdc18e2",
+    "lib/gx/regs.cpp": "643e7be05ffbf0d3e82e30fa48192fa56f59abf8ddba7440459b4e5cc28a7802",
+    "lib/gx/shader.cpp": "7928ca8b39729f9f3060f321a300f361d1f867592480981ae18468a5d5303b71",
+    "lib/gx/shader_info.cpp": "0148546dabc51de7216d85b60f37ded2d7437d3eb0888ad2b7634f1edfccd308",
+    "tests/CMakeLists.txt": "db57bb8a370a79d110b2e9ae71972e030da14944775c8f89437f2b71bc7bd9b4",
+    "tests/gx_dl_test.cpp": "91b317f026c61dbed6476c3e8b7dda6c82bccbc8dea79b3a072e0a20bc2fedb6",
+    "tests/gx_fifo_test.cpp": "af40dae0eecc2c2157fb409dc6d75ec9ae9ae64e552a476c261b1f16be525000",
+    "tests/gx_test_stubs.cpp": "ae8c6dd96929eec40c99890b9c3c200695d1fd90314f87e8cc2b842071b81b6d",
+    "tests/gx_z_scale_offset_test.cpp": "136a217aff4fafee3552edf60f0eff034946e986d2ae14904d9aa1a59b07d034",
+    "tests/gx_clip_mode_render_test.cpp": "67c22b6270d2e72023e4c2a0e04c4a44a4eb37457792c8c59afb7935839df735"
+  },
+  "remaining_limits": [
+    "Exact Wii extreme guardband extent and the hardware eye-plane clipping trigger are not established by Dolphin software semantics.",
+    "Raw XF clip-control bits1/2 remain explicitly unsupported; GXSetClipMode emits only bit0."
+  ]
+}

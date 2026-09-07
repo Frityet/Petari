@@ -1,0 +1,83 @@
+{
+  "decomp_source_sha256": "c4015e85bad58df88ceab062790cba575ece9fd75928657ae4e4368b33d2b837",
+  "native_source_sha256": "d7c4cf882eb37cabeb02a9449ae089be33c2ee0e87e18aaa00c05b7ad2597009",
+  "symbols": [
+    {
+      "symbol": "__ct__7CShaderFPC12J3DModelDataPC7ResTIMG",
+      "retail_bytes": "280",
+      "score": 99.75714,
+      "baseline": 99.75714
+    },
+    {
+      "symbol": "__dt__7CShaderFv",
+      "retail_bytes": "100",
+      "score": 100.0,
+      "baseline": 100.0
+    },
+    {
+      "symbol": "calc__7CShaderFP8J3DModel",
+      "retail_bytes": "1180",
+      "score": 90.13559,
+      "baseline": null
+    },
+    {
+      "symbol": "setup__7CShaderFP12J3DModelData",
+      "retail_bytes": "4",
+      "score": 100.0,
+      "baseline": 100.0
+    },
+    {
+      "symbol": "makeIndexData__7CShaderCFP8J3DShape",
+      "retail_bytes": "392",
+      "score": 91.12245,
+      "baseline": null
+    },
+    {
+      "symbol": "checkBorderVtx__7CShaderFP12J3DModelDataUl",
+      "retail_bytes": "448",
+      "score": 95.53571,
+      "baseline": null
+    },
+    {
+      "symbol": "__ct__Q27CShader10CLengthMapFPC7ResTIMG",
+      "retail_bytes": "60",
+      "score": 100.0,
+      "baseline": 96.0
+    },
+    {
+      "symbol": "setLengthMap__Q27CShader10CLengthMapFPC7ResTIMG",
+      "retail_bytes": "68",
+      "score": 100.0,
+      "baseline": null
+    },
+    {
+      "symbol": "refer__Q27CShader10CLengthMapCFff",
+      "retail_bytes": "280",
+      "score": 84.64286,
+      "baseline": null
+    },
+    {
+      "symbol": "getTexelOrder__Q27CShader10CLengthMapCFUsf14_GXTexWrapMode",
+      "retail_bytes": "204",
+      "score": 99.31373,
+      "baseline": 99.31373
+    },
+    {
+      "symbol": "__ct__Q27CShader6CIndexFv",
+      "retail_bytes": "20",
+      "score": 100.0,
+      "baseline": 100.0
+    },
+    {
+      "symbol": "__vt__7CShader",
+      "retail_bytes": "20",
+      "score": 100.0,
+      "baseline": null
+    }
+  ],
+  "native_changes": [
+    "Include aurora/endian.hpp",
+    "Replace six unaligned Wii u16 display-list loads with aurora::endian::read_u16"
+  ],
+  "current_note": "Sampling narrowing now follows retail after both coordinate calls;84.64percent280byte method. Independent behavioral tests pending."
+}

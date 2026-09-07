@@ -1038,6 +1038,35 @@ namespace smgpc::scene {
         };
     }
 
+    StageCollisionMatrices& StageCollisionService::matrices_for_triangle(std::uint32_t triangle_index) const {
+        const aurora::allocation::HostAllocationScope host_allocations;
+        const auto hit = surface(triangle_index);
+        if (!hit) {
+            throw std::logic_error("Collision transforms require a live source triangle.");
+        }
+        const auto& source = _sources[hit->source_index];
+        if (!source.matrices) {
+            auto matrices = std::make_unique<StageCollisionMatrices>();
+            for (std::size_t row = 0; row < 3; ++row) {
+                for (std::size_t column = 0; column < 4; ++column) {
+                    const auto value = source.matrix[row * 4 + column];
+                    if (!std::isfinite(value)) {
+                        throw std::logic_error("Collision transforms require a finite source matrix.");
+                    }
+                    matrices->base.mMtx[row][column] = value;
+                }
+            }
+            // Original CollisionParts::resetAllMtxPrivate preserves the full
+            // affine matrix and uses the SDK inverse, including authored scale.
+            matrices->previous.set(matrices->base);
+            if (PSMTXInverse(matrices->base.toMtxPtr(), matrices->inverse.toMtxPtr()) == 0) {
+                throw std::logic_error("Collision transforms require an invertible source matrix.");
+            }
+            source.matrices = std::move(matrices);
+        }
+        return *source.matrices;
+    }
+
     std::uint64_t StageCollisionService::generation() const noexcept {
         return _generation;
     }

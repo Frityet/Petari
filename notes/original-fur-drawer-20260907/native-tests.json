@@ -4,5 +4,13 @@
   "endian_asan_ubsan_build_exit": 0,
   "endian_asan_ubsan_run_exit": 0,
   "endian_exhaustive_u16_cases": 65536,
-  "fur_rendering_tested": false
+  "fur_rendering_tested": false,
+  "original_fixed16_wii_functions": {
+    "floatToFixed16": 100.0,
+    "fixed16ToFloat": 100.0
+  },
+  "drawer_build_exit": 0,
+  "drawer_run_exit": 0,
+  "fur_shader_cases_passed": 5,
+  "fur_material_commands_tested": true
 }

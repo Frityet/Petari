@@ -1,0 +1,36 @@
+{
+  "reference": "decomp/build/original-j3d-joint-traversal-20260903/retail/asm/Game/Util/FurShader.s",
+  "reference_sha256": "524f6d5ec486efb9d401571e9ddf4d9fb737bafd2d90ef0a6f06da2cc9d3c5de",
+  "observations": [
+    {
+      "function": "CShader::CLengthMap::refer",
+      "address": "0x803D3604",
+      "finding": "Disabled flag or non-I8 returns 1. Width and height each call getTexelOrder, then narrow to u16. Tile = x/8 + (width/8)*(y/4), byte = tile*32 + (x%8) + (y%4)*8, unsigned sample /255."
+    },
+    {
+      "function": "CShader::CLengthMap::getTexelOrder",
+      "address": "0x803D371C",
+      "finding": "Initial coordinate <=1 bypasses all wrapping, including negative inputs. Clamp sets1 for >1; repeat and mirror both repeatedly subtract1 until <=1, then add1 while negative. Final fctiwz truncates (dimension-1)*coordinate."
+    },
+    {
+      "function": "CShader::makeIndexData",
+      "address": "0x803D323C",
+      "finding": "Descriptor types contribute [0,1,1,2] byte widths; requires position, normal, UV offsets. Reads raw16bit primitive count and indices; later vertices overwrite position mapping. CPU endian boundary must not treat retained DL bytes as host u16."
+    },
+    {
+      "function": "CShader::checkBorderVtx",
+      "address": "0x803D33C4",
+      "finding": "Skips selected shape and material names containing Fur. Other shapes with position descriptor set both index fields to FFFF for every referenced position."
+    },
+    {
+      "function": "CShader::calc",
+      "address": "0x803D2D9C",
+      "finding": "Swaps transformed buffer first. First UV pass ignores sentinel UV, gathers extrema starting0 and truncates range+0.45. S16 UV divides by its scale and integer span, then adds1 if negative; F32 samples directly. Mapped normals normalized; position converts independently. Mask==0 displaces -1 normal, else _1C*mask. Publishes actual output buffer after DCStoreRange."
+    },
+    {
+      "function": "CShader vtable",
+      "address": "0x805E12F0",
+      "finding": "After two ABI prefix words, original virtual slots are calc, setup, destructor; current shared J3DUnkCalc1 interface order agrees."
+    }
+  ]
+}

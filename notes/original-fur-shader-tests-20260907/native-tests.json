@@ -1,0 +1,14 @@
+{
+  "build_command": [
+    "xmake",
+    "build",
+    "smg-pc-original-fur-shader-tests"
+  ],
+  "build_exit_code": 0,
+  "run_command": [
+    "xmake",
+    "run",
+    "smg-pc-original-fur-shader-tests"
+  ],
+  "run_exit_code": 0
+}

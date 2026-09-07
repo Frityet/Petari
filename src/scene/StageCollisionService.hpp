@@ -12,6 +12,7 @@
 #include <unordered_map>
 #include <vector>
 
+#include <JSystem/JGeometry/TMatrix.hpp>
 #include <JSystem/JGeometry/TVec.hpp>
 
 class HitSensor;
@@ -40,6 +41,14 @@ namespace smgpc::scene {
         float penetration = 0.0F;
         std::uint16_t attribute = 0U;
         std::uint32_t triangle_index = 0U;
+    };
+
+    // Stable borrowed transforms for the lifetime of one registered KCL source.
+    // Static registrations retain the same base and previous matrices.
+    struct StageCollisionMatrices {
+        TPos3f base;
+        TPos3f inverse;
+        TPos3f previous;
     };
 
     struct StageCollisionSurface {
@@ -139,6 +148,7 @@ namespace smgpc::scene {
                                                            bool skip_initial_check = false,
                                                            const StageCollisionTriangleFilter& filter = {}) const;
         [[nodiscard]] std::optional<StageCollisionSurface> surface(std::uint32_t triangle_index) const;
+        [[nodiscard]] StageCollisionMatrices& matrices_for_triangle(std::uint32_t triangle_index) const;
         // CollisionCategorizedKeeper / CollisionParts area queries retain
         // authored zone, part and KCL octree encounter order. The supplied
         // points define an AABB independently in each collision part's space.
@@ -184,6 +194,7 @@ namespace smgpc::scene {
             std::optional<std::int32_t> placement_zone_id;
             std::vector<std::uint8_t> kcl_bytes{};
             std::array<float, 12U> matrix{};
+            mutable std::unique_ptr<StageCollisionMatrices> matrices{};
             std::shared_ptr<StageCollisionRegistrationState> registration{};
             std::vector<std::uint32_t> prism_triangles{};
             // Decoding is required by original octree queries. Earlier

@@ -749,6 +749,7 @@ namespace {
             const auto camera_owner = runtime.camera_system().set_authored_game_camera(
                 *resolved_camera.camera);
             runtime.set_freecam_enabled(false);
+            runtime.refresh_scene_camera_pose();
 
             if (NameObjFactory::getCreator("Mario") != nullptr ||
                 NameObjFactory::getCreator("MarioActor") != nullptr) {
@@ -767,7 +768,6 @@ namespace {
             {
                 const auto renderer_context =
                     smgpc::render::ScopedAuroraRendererContext(renderer);
-                runtime.begin_frame(setup_frame);
                 {
                     const auto phase = smgpc::scene::SceneInitializationScope(SceneInitializeState_PlacementPlayer);
                     mario_owner.actor().init(scene.player_start_iter());
@@ -793,6 +793,8 @@ namespace {
                         runtime.player_system(),
                         runtime.scene_wipe(), mario_owner.actor());
                 }
+                // Placement and draw-list allocation precede normal scene execution.
+                runtime.begin_frame(setup_frame);
                 runtime.game_layout().activate_game_scene_draw_3d();
             }
             renderer.end_frame(runtime.wii_video().render_mode());

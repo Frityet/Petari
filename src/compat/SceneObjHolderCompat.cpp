@@ -26,6 +26,7 @@
 #include "Game/Screen/InformationObserver.hpp"
 #include "Game/Screen/LensFlare.hpp"
 #include "Game/Util/BaseMatrixFollowTargetHolder.hpp"
+#include "Game/Util/FurCtrl.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "compat/CapturedFrameBlurService.hpp"
@@ -382,6 +383,8 @@ NameObj *SceneObjHolder::newEachObj(int id) {
         return new ClippingDirector();
     case SceneObj_LightDirector:
         return new LightDirector();
+    case SceneObj_FurDrawManager:
+        return new FurDrawManager(64);
     case SceneObj_PlanetGravityManager:
         return new PlanetGravityManager("重力");
     case SceneObj_BaseMatrixFollowTargetHolder:

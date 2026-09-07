@@ -22,7 +22,8 @@ enum J3DMdlFlag {
 };
 
 struct J3DUnkCalc1 {
-    virtual void calc(J3DModel* model);
+    virtual void calc(J3DModel* model) = 0;
+    virtual void setup(J3DModelData* modelData) = 0;
 };
 
 struct J3DUnkCalc2 {
