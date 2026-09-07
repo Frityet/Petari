@@ -100,10 +100,14 @@ namespace ImageEffectStateImpl {
             }
         }
 
-        static_cast< BloomEffect* >(StateBloomNormal::getEffect())->_14 = _10;
-        static_cast< BloomEffect* >(StateBloomNormal::getEffect())->_20 = _18;
-        static_cast< BloomEffect* >(StateBloomNormal::getEffect())->_18 / 255.0f;
-        static_cast< BloomEffect* >(StateBloomNormal::getEffect())->_1C / 255.0f;
+        u8 bloomIntensity = _10;
+        static_cast< BloomEffect* >(StateBloomNormal::getEffect())->_14 = bloomIntensity;
+        u8 threshold = _18;
+        static_cast< BloomEffect* >(StateBloomNormal::getEffect())->_20 = threshold;
+        u8 intensity1 = _20;
+        static_cast< BloomEffect* >(StateBloomNormal::getEffect())->_18 = intensity1 / 255.0f;
+        u8 intensity2 = _28;
+        static_cast< BloomEffect* >(StateBloomNormal::getEffect())->_1C = intensity2 / 255.0f;
 
         ImageEffectState::update();
     }

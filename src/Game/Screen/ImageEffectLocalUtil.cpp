@@ -7,17 +7,16 @@
 #include "Game/Util/Functor.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
+#include "Game/Util/SystemUtil.hpp"
 #include <JSystem/JUtility/JUTTexture.hpp>
+#include <math_types.hpp>
 
 namespace {
     void setTextureTrans(f32 x, f32 y) {
-        Mtx transMtx = {
-            {1.0f, 0.0f, 0.0f, x},
-            {0.0f, 1.0f, 0.0f, y},
-            {0.0f, 1.0f, 1.0f, 0.0f},
-        };
+        TPos3f transMtx;
+        transMtx.makeTrans(x, y, 0.0f);
 
-        GXLoadTexMtxImm(transMtx, GX_TEXMTX0, GX_MTX3x4);
+        GXLoadTexMtxImm(transMtx, GX_TEXMTX0, GX_MTX2x4);
     }
 };  // namespace
 
@@ -29,8 +28,9 @@ void MR::connectToSceneImageEffectMovement(NameObj* pObj) {
     MR::connectToScene(pObj, MovementType_ImageEffect, -1, -1, -1);
 }
 
-void ImageEffectLocalUtil::capture(JUTTexture* pTexture, s32 param2, s32 param3, GXTexFmt format, bool param5, u8 param6) {
-    pTexture->capture((param2 % MR::getFrameBufferWidth()) / param2, (param3 % MR::getFrameBufferHeight()) / param3, format, param5, param6);
+void ImageEffectLocalUtil::capture(JUTTexture* pTexture, s32 divide, s32 index, GXTexFmt format, bool mipmap, u8 clear) {
+    pTexture->capture((index % divide) * MR::getFrameBufferWidth() / divide, (index / divide) * MR::getFrameBufferHeight() / divide,
+                      format, mipmap, clear);
 }
 
 void ImageEffectLocalUtil::setupDrawTexture() {
@@ -130,18 +130,22 @@ void ImageEffectLocalUtil::sendTextureVertex(s32 divide, s32 index) {
     GXEnd();
 }
 
-/*
-void ImageEffectLocalUtil::blurTexture(JUTTexture* pTexture, s32 param2, s32 param3, u32 param4, f32 param5, f32 param6) {
-    f32 local1 = MR::isScreen16Per9() ? 1.333f : 1.0f;
+void ImageEffectLocalUtil::blurTexture(JUTTexture* pTexture, s32 divide, s32 index, u32 count, f32 radius, f32 intensity) {
+    f32 aspect = MR::isScreen16Per9() ? 1.333f : 1.0f;
+    f32 verticalRadius = radius * aspect;
+    u8 passIntensity = 255.0f * intensity / count;
 
-    for (s32 i = 0; i < param4; i++) {
-        ::setTextureTrans(MR::cos(...) * param5, MR::sin(...) * param6);
-        drawTexture(
+    for (u32 i = 0; i < count; i++) {
+        f32 angle = 2.0f * (i * PI) / count;
+        f32 cos = JMACosRadian(angle);
+        f32 sin = JMASinRadian(angle);
+        ::setTextureTrans(radius * cos, verticalRadius * sin);
+        drawTexture(pTexture, divide, index, passIntensity, i == 0 ? TexDrawType_0 : TexDrawType_1);
     }
 
     ::setTextureTrans(0.0f, 0.0f);
 }
-*/
+
 void MR::connectToSceneNormalBloom(BloomEffect* pBloomEffect) {
     MR::connectToScene(pBloomEffect, -1, CalcAnimType_Environment, -1, -1);
 
