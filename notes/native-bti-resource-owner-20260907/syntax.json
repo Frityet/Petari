@@ -1,0 +1,38 @@
+[
+  {
+    "file": "src/resource/NativeTextureImage.cpp",
+    "exit": 0
+  },
+  {
+    "file": "src/resource/BtiTextureData.cpp",
+    "exit": 0
+  },
+  {
+    "file": "src/resource/J3dTextureData.cpp",
+    "exit": 0
+  },
+  {
+    "file": "src/compat/ResourceHolderCompat.cpp",
+    "exit": 0
+  },
+  {
+    "file": "src/compat/OriginalArchiveResourceQueries.cpp",
+    "exit": 0
+  },
+  {
+    "file": "src/compat/OriginalSceneCounterQueries.cpp",
+    "exit": 0
+  },
+  {
+    "file": "src/compat/GameMathCompat.cpp",
+    "exit": 0
+  },
+  {
+    "file": "src/Game/MapObj/ChipGroup.cpp",
+    "exit": 0
+  },
+  {
+    "file": "tests/OriginalResourceHolderTests.cpp",
+    "exit": 0
+  }
+]

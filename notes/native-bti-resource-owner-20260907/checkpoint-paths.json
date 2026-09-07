@@ -1,0 +1,20 @@
+[
+  "src/JSystem/JKernel/JKRArchive.hpp",
+  "src/compat/ResourceHolderCompat.cpp",
+  "src/compat/OriginalArchiveResourceQueries.cpp",
+  "src/compat/GameMathCompat.cpp",
+  "src/compat/OriginalSceneCounterQueries.cpp",
+  "src/Game/MapObj/ChipGroup.cpp",
+  "src/resource/BtiTextureData.cpp",
+  "src/resource/BtiTextureData.hpp",
+  "src/resource/NativeTextureImage.cpp",
+  "src/resource/NativeTextureImage.hpp",
+  "src/resource/J3dTextureData.cpp",
+  "tests/OriginalResourceHolderTests.cpp",
+  "notes/native-bti-resource-owner-20260907/README.md",
+  "notes/native-bti-resource-owner-20260907/source-manifest.json",
+  "notes/native-bti-resource-owner-20260907/validation.json",
+  "notes/native-bti-resource-owner-20260907/syntax.json",
+  "notes/native-bti-resource-owner-20260907/resource-holder-final-run.log",
+  "notes/native-bti-resource-owner-20260907/j3d-texture-run.log"
+]

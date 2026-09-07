@@ -1,0 +1,50 @@
+[
+  {
+    "path": "src/JSystem/JKernel/JKRArchive.hpp",
+    "sha256": "5709af8e2b44d0af7b71ffefdd4142c8417dbf991e2ac4949a01815ad02448b6"
+  },
+  {
+    "path": "src/compat/ResourceHolderCompat.cpp",
+    "sha256": "0076e6b7a5a4242ea2956c5a1f5f3a55716ae2406fcb4d4407ba002f64538333"
+  },
+  {
+    "path": "src/compat/OriginalArchiveResourceQueries.cpp",
+    "sha256": "57c179d42bf29be25e0e4a69eb6d4a3714250109182b2569d2e07df93e7ea2b5"
+  },
+  {
+    "path": "src/compat/GameMathCompat.cpp",
+    "sha256": "5ddd9398c7a4b359a2bfd7032e04153e1a6b0ad4001572667f9fbfc92f4b50b6"
+  },
+  {
+    "path": "src/compat/OriginalSceneCounterQueries.cpp",
+    "sha256": "96127d5091423080ac201653a953e6f4759e98dfd7eb94460686cd7bb5cfbb01"
+  },
+  {
+    "path": "src/Game/MapObj/ChipGroup.cpp",
+    "sha256": "1ecca94d83f1004246549b5148e2462b57674dfe9743f8a61c48cd0a36454abc"
+  },
+  {
+    "path": "src/resource/BtiTextureData.cpp",
+    "sha256": "a50eef3f613a4bb9043dfe07449c4149caa5c04cc4f3ce12eef42828a6e26f59"
+  },
+  {
+    "path": "src/resource/BtiTextureData.hpp",
+    "sha256": "8463e7a08b2c105ba21cfdf0b0137c616be7adda44c66a244cf539f2e67b0a22"
+  },
+  {
+    "path": "src/resource/NativeTextureImage.cpp",
+    "sha256": "c6328b76a9ee7fe64108709a240d52313ac704db9fe00f4810156a61eb54e105"
+  },
+  {
+    "path": "src/resource/NativeTextureImage.hpp",
+    "sha256": "72f03dd2952d96129f32d8f394fb1bda0f4018f05b219ed0f91a78dc4d89c9b4"
+  },
+  {
+    "path": "src/resource/J3dTextureData.cpp",
+    "sha256": "dc721f78ca126b12151a3b37aa5d7fe13833327198656a07167e4640a7572173"
+  },
+  {
+    "path": "tests/OriginalResourceHolderTests.cpp",
+    "sha256": "659ad7419730229d702e63e99696815960b90500c1cafce556055da33f708e2a"
+  }
+]

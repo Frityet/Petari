@@ -52,6 +52,31 @@ f32 PSVECKillElement(const Vec* pSrc, const Vec* pKill, const Vec* pDst) {
 
 
 namespace MR {
+    void getRotatedAxisY(TVec3f* pDst, const TVec3f& pSrc) {
+        f32 var = pSrc.x;
+        f32 CosX = JMACosDegree(var);
+        var = pSrc.y;
+        f32 CosY = JMACosDegree(var);
+        var = pSrc.z;
+        f32 CosZ = JMACosDegree(var);
+        var = pSrc.x;
+        f32 SinX = JMASinDegree(var);
+        var = pSrc.y;
+        f32 SinY = JMASinDegree(var);
+        var = pSrc.z;
+        f32 SinZ = JMASinDegree(var);
+
+        pDst->set((SinX * (CosZ * SinY)) - (SinZ * CosX), (SinX * (SinZ * SinY)) + (CosZ * CosX), CosY * SinX);
+    }
+
+    f32 getFootPoint(const TVec3f& rPointA, const TVec3f& rPointB, const TVec3f& rPos, TVec3f* pDst) {
+        TVec3f segment = rPointB - rPointA;
+        f32 length = segment.length();
+        f32 proj = -(segment.x * (rPointA.x - rPos.x) + segment.y * (rPointA.y - rPos.y) + segment.z * (rPointA.z - rPos.z)) / (length * length);
+        *pDst = rPointA + segment * proj;
+        return proj;
+    }
+
     f32 diffAngleAbsFast(const TVec3f& rA, const TVec3f& rB) {
         return MR::acos(rA.dot(rB));
     }

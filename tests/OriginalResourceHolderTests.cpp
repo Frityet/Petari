@@ -4,6 +4,7 @@
 #include "resource/RarcArchive.hpp"
 #include "resource/BcsvTable.hpp"
 #include "resource/JMapResource.hpp"
+#include "resource/BtiTextureData.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "Game/Animation/MaterialAnmBuffer.hpp"
 #include "Game/Animation/BpkPlayer.hpp"
@@ -150,6 +151,51 @@ namespace {
             put32(b, 0x24 + c * 4, b.size()); p = b.size(); b.resize(p + 4); put16(b, p, 10 + c * 20);
         }
         put32(b, 4, b.size()); return file("bpk1", std::move(b));
+    }
+
+    void test_native_bti(GameResourceRuntime& process) {
+        Bytes bytes(0x2a0);
+        bytes[0] = GX_TF_C8; bytes[1] = 1;
+        put16(bytes, 2, 16); put16(bytes, 4, 8);
+        bytes[6] = GX_REPEAT; bytes[7] = GX_MIRROR;
+        bytes[8] = 1; bytes[9] = GX_TL_RGB5A3;
+        put16(bytes, 0xa, 256); put32(bytes, 0xc, 0xa0);
+        bytes[0x14] = GX_LINEAR; bytes[0x15] = GX_LINEAR; bytes[0x18] = 1;
+        put16(bytes, 0x1a, -75); put32(bytes, 0x1c, 0x20);
+        for (unsigned i = 0x20; i < bytes.size(); ++i) bytes[i] = i * 13;
+        const auto available = process.mem1_heap()->available_bytes();
+        auto source = archive({{"image.bti", bytes, true}});
+        auto owner = std::make_unique<ResourceArchiveOwner>(source, "/retained/Texture.arc", process.create_cohort(), process.mem1_heap());
+        const auto* entry = source->find_resource("image.bti");
+        auto& holder = owner->holder();
+        const auto* image = static_cast<const ResTIMG*>(holder.mFileInfoTable->getRes("image.bti"));
+        require(image && image->mWidth == 16 && image->mHeight == 8 && image->mPaletteNum == 256 &&
+                    image->mLodBias == -75 && image->mImageDataOffset == 0x20 && image->mPaletteDataOffset == 0xa0,
+                "BTI retains native scalar fields and original relative offsets");
+        require((reinterpret_cast<std::uintptr_t>(image) & 31U) == 0 &&
+                    std::memcmp(reinterpret_cast<const u8*>(image) + 32, bytes.data() + 32, bytes.size() - 32) == 0,
+                "BTI retains aligned, unchanged GX image and palette bytes");
+        require(holder.mArchive->getResource("image.bti") == image &&
+                    holder.mArchive->getResource(entry->file_id) == image &&
+                    holder.mArchive->getIdxResource(entry->file_entry_index) == image &&
+                    holder.mArchive->getResSize(image) == bytes.size(),
+                "original holder, path, file ID and index share one retained BTI identity and size");
+        source.reset();
+        {
+            JUTTexture texture(image, 0);
+            require(texture.getWidth() == 16 && texture.getHeight() == 8 && texture.mLodBias == -75 &&
+                        texture.mImage == reinterpret_cast<const u8*>(image) + 32,
+                    "JUTTexture consumes the native header after caller archive retirement");
+        }
+        owner.reset();
+        require(process.mem1_heap()->available_bytes() == available, "BTI cohort releases mapped texture storage");
+        auto invalid = bytes; invalid[0x10] = 2;
+        rejects([&] { BtiTextureData texture(invalid, process.mem1_heap()); }, "BTI rejects invalid native bool representations");
+        invalid = bytes; put32(invalid, 0x1c, 0x280);
+        rejects([&] { BtiTextureData texture(invalid, process.mem1_heap()); }, "BTI rejects truncated GX payloads before publication");
+        invalid = bytes; put32(invalid, 0xc, 0xa1);
+        rejects([&] { BtiTextureData texture(invalid, process.mem1_heap()); }, "BTI rejects unaligned palette data");
+        require(process.mem1_heap()->available_bytes() == available, "rejected BTI does not retain mapped allocations");
     }
 
     void test_original_csv_reader(GameResourceRuntime& process) {
@@ -335,6 +381,23 @@ namespace {
         struct Close { ~Close() { aurora_dvd_close(); } } close;
         smgpc::runtime::DvdFileSystemService dvd("/");
         ResourceHolderService service(dvd, process.create_cohort(), process.mem1_heap());
+        for (const auto& [archive_name, image_name] : std::array{
+                std::pair{"MarineSnow.arc", "MarineSnow.bti"}, std::pair{"StarPointerBlur.arc", "Blur.bti"}}) {
+            auto* h = service.create_and_add(archive_name);
+            const auto raw = service.backing(*h).archive().resource_data(image_name);
+            const auto* image = MR::loadTexFromArc(archive_name, image_name);
+            const auto u16_at = [&](unsigned offset) { return (unsigned(raw[offset]) << 8) | raw[offset + 1]; };
+            require(raw.size() >= 32 && image && image->mWidth == u16_at(2) && image->mHeight == u16_at(4) &&
+                        image->mPaletteNum == u16_at(0xa) &&
+                        std::memcmp(reinterpret_cast<const u8*>(image) + 32, raw.data() + 32, raw.size() - 32) == 0,
+                    "real BTI archive query retains original dimensions, palette and full payload");
+            if (std::string_view(archive_name) == "MarineSnow.arc")
+                require(MR::loadTexFromArc("MarineSnow") == image, "single-name original texture query shares holder identity");
+            JUTTexture texture(image, 0);
+            require(texture.getWidth() == u16_at(2) && texture.getHeight() == u16_at(4), "real BTI consumed by JUTTexture");
+            std::cout << "PASS real BTI " << archive_name << '/' << image_name << ' '
+                      << image->mWidth << 'x' << image->mHeight << '\n';
+        }
         auto* original = service.create_and_add("Mario.arc");
         auto* model = static_cast<J3DModelData*>(original->mModelResTable->getRes(original->getModelName()));
         require(model && model->getMaterialNum() == 9, "real Mario holder contains actual complete nine-material model");
@@ -398,6 +461,7 @@ int main() {
     try {
         aurora::g_config.mem1Size = 24U * 1024U * 1024U;
         GameResourceRuntime process;
+        test_native_bti(process); std::cout << "PASS retained BTI native header, all archive identities, GX payload and JUT consumer\n";
         test_original_constructor(process); std::cout << "PASS original holder, typed animation, control table and lifetime\n";
         test_original_csv_reader(process); std::cout << "PASS original CSV helpers and deferred archive tables\n";
         test_failure_scope(process); std::cout << "PASS original loader exception restoration\n";

@@ -1,6 +1,7 @@
 #include <aurora/exception.hpp>
 #include "compat/ResourceHolderCompat.hpp"
 #include "resource/BasResource.hpp"
+#include "resource/BtiTextureData.hpp"
 
 #include "Game/Animation/MaterialAnmBuffer.hpp"
 #include "Game/System/StationedFileInfo.hpp"
@@ -52,7 +53,7 @@ namespace smgpc::compat {
             s32 _count;
         };
 
-        enum class BackingKind { Raw, Animation, Model, Map, Bas };
+        enum class BackingKind { Raw, Animation, Model, Map, Bas, Texture };
         BackingKind backing_kind(std::string_view name) {
             // Same ordered, case-sensitive substring predicates as original
             // createAndRegisterObject. This selects storage, never table names.
@@ -63,6 +64,7 @@ namespace smgpc::compat {
             if (name.find(".bva") != name.npos) return BackingKind::Animation;
             if (name.find(".banmt") != name.npos) return BackingKind::Map;
             if (name.find(".bdl") != name.npos || name.find(".bmd") != name.npos) return BackingKind::Model;
+            if (name.ends_with(".bti")) return BackingKind::Texture;
             return BackingKind::Raw;
         }
     }
@@ -73,6 +75,7 @@ namespace smgpc::compat {
         std::filesystem::path path;
         std::unique_ptr<JKRMemArchive> archive;
         std::vector<resource::BasResource> bas_resources;
+        std::vector<resource::BtiTextureData> textures;
         std::vector<resource::JMapSourceRegistration> map_aliases;
         std::vector<resource::J3dAnimationResource> animations;
         std::vector<resource::J3dAnimationSourceRegistration> animation_aliases;
@@ -130,6 +133,15 @@ namespace smgpc::compat {
                 break;
             case BackingKind::Bas:
                 if (!bytes.empty()) state.bas_resources.emplace_back(bytes, state.source);
+                break;
+            case BackingKind::Texture:
+                if (bytes.empty()) break;
+                state.textures.emplace_back(bytes, mem1);
+                // Publish through the archive's original retained-file cache
+                // before ResourceHolder enumerates it. All lookup routes then
+                // share the same native record and unchanged resource size.
+                state.archive->mFiles[entry.file_entry_index].mFileData =
+                    const_cast<ResTIMG*>(state.textures.back().image());
                 break;
             case BackingKind::Raw:
                 if (!bytes.empty()) state.map_aliases.push_back(resource::register_jmap_source(bytes, state.source));

@@ -1,0 +1,9 @@
+PASS retained BTI native header, all archive identities, GX payload and JUT consumer
+PASS original holder, typed animation, control table and lifetime
+PASS original CSV helpers and deferred archive tables
+PASS original loader exception restoration
+PASS service/archive ownership and process reuse
+PASS real BTI MarineSnow.arc/MarineSnow.bti 16x16
+PASS real BTI StarPointerBlur.arc/Blur.bti 64x64
+resource cohort used=41296 MEM1 available=16649952
+PASS real model/material holder

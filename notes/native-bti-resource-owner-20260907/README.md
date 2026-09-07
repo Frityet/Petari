@@ -1,0 +1,7 @@
+# Retained native BTI resources
+
+Standalone BTI headers and J3D TEX1 now share the same endian decoder and GX payload validator. ResourceArchiveOwner retains aligned MEM1 BTI copies, changes only the native ResTIMG scalar header, and publishes through the original JKR archive file cache before the original ResourceHolder enumerates resources. Path, file ID, index, original table and resource-size queries share one pointer. Image, mip and palette bytes and offsets remain unchanged; ownership outlives caller archive references. MR texture archive helpers use the original lookup and name construction. Game texture consumers remain unchanged.
+
+Validation: nine affected translation units compile. OriginalResourceHolderTests builds and runs successfully against RMGK01, including synthetic native header/palette/offset/lifetime validation and malformed-resource rejection. The actual MarineSnow16x16 and StarPointerBlur64x64 textures pass original archive lookup plus JUTTexture construction. Existing original J3D texture-resource tests pass all five groups, including Mario's22textures (101440byte TEX1). This is resource/CPU verification, not new gameplay or GPU visual verification.
+
+The accompanying existing original getFootPoint/getRotatedAxisY helpers, ChipGroup completion callback TU and actual HUD one-up dispatch close restored Mario dependencies. The main executable still has unresolved owners and has not run with jumping/full camera.

@@ -9,6 +9,7 @@
 #include "Game/Util/GamePadUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
 
 #include <aurora/wpad.hpp>
 #include "compat/StageSessionState.hpp"
@@ -54,6 +55,11 @@ namespace GameDataFunction {
 }
 
 namespace MR {
+    void requestOneUp() {
+        startSystemSE("SE_SY_1UP");
+        getSceneObj<GameSceneLayoutHolder>(SceneObj_GameSceneLayoutHolder)->requestOneUp(1);
+    }
+
     void requestPowerUpHPMeter() {
         getSceneObj<GameSceneLayoutHolder>(SceneObj_GameSceneLayoutHolder)->requestPowerUpHPMeter();
     }

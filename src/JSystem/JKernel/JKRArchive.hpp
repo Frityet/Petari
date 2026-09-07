@@ -129,7 +129,7 @@ public:
             return nullptr;
         }
 
-        const auto data = mArchive->file_data(*entry);
+        const auto data = resource_data(*entry);
         return data.empty() ? nullptr : const_cast<std::uint8_t *>(data.data());
     }
 
@@ -139,7 +139,7 @@ public:
         }
 
         for (const auto &entry : mArchive->entries()) {
-            const auto data = mArchive->file_data(entry);
+            const auto data = resource_data(entry);
             if (!data.empty() && data.data() == pResource) {
                 return static_cast<std::uint32_t>(data.size());
             }
@@ -184,7 +184,7 @@ public:
             return 0U;
         }
 
-        const auto data = mArchive->file_data(*entry);
+        const auto data = resource_data(*entry);
         const auto copy_size = std::min<std::size_t>(bufferSize, data.size());
         std::memcpy(pBuffer, data.data(), copy_size);
         return static_cast<std::uint32_t>(copy_size);
@@ -208,7 +208,15 @@ protected:
             return {};
         }
 
-        return mArchive->file_data(*entry);
+        return resource_data(*entry);
+    }
+
+    [[nodiscard]] std::span<const std::uint8_t> resource_data(const smgpc::resource::RarcEntry& entry) const {
+        const auto& native = mNativeFiles.at(entry.file_entry_index);
+        if (native.mFileData != nullptr) {
+            return {static_cast<const std::uint8_t*>(native.mFileData), native.mDataSize};
+        }
+        return mArchive->file_data(entry);
     }
 
     const smgpc::resource::RarcArchive *mArchive = nullptr;
