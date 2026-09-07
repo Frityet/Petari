@@ -508,3 +508,49 @@ namespace MR {
         return getSceneObj< StageDataHolder >(SceneObj_StageDataHolder);
     }
 };  // namespace MR
+
+s32 StageDataHolder::getGeneralPosNum() const {
+    s32 cur = 0;
+    if (mGeneralPosObjs.size() > 0) {
+        for (const JMapInfo* i = mGeneralPosObjs.begin(); i != mGeneralPosObjs.end(); i++) {
+            cur += i->getNumEntries();
+        }
+    }
+
+    for (s32 i = 0; i < mStageDataHolderCount; i++) {
+        cur += mStageDataArray[i]->getGeneralPosNum();
+    }
+
+    return cur;
+}
+
+JMapInfoIter StageDataHolder::getGeneralPosInfoFromDataIndex(int idx_) const {
+    int idx = idx_;
+
+    for (JMapInfo* pInfo = mGeneralPosObjs.mArr; pInfo != mGeneralPosObjs.end(); pInfo++) {
+        const JMapData* curData = pInfo->mData;
+        bool isValid = curData;
+        int curIdx = isValid ? curData->mNumEntries : 0;
+
+        if (idx < curIdx) {
+            return JMapInfoIter(pInfo, idx);
+        }
+
+        curIdx = isValid ? curData->mNumEntries : 0;
+
+        idx -= curIdx;
+    }
+
+    for (s32 i = 0; i < mStageDataHolderCount; i++) {
+        StageDataHolder* pHolder = mStageDataArray[i];
+        int generalPosNum = pHolder->getGeneralPosNum();
+
+        if (idx < generalPosNum) {
+            return pHolder->getGeneralPosInfoFromDataIndex(idx);
+        }
+
+        idx -= generalPosNum;
+    }
+
+    return JMapInfoIter();
+}

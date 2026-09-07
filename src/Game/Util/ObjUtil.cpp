@@ -1,4 +1,5 @@
 #include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
 #include "Game/Camera/CameraDirector.hpp"
 #include "Game/Camera/CameraShaker.hpp"
 #include "Game/Effect/EffectSystemUtil.hpp"
@@ -892,7 +893,15 @@ namespace MR {
         tryFindLinkNamePos(pObj, pName, pMtx);
     }
 
-    // tryFindLinkNamePos
+    bool tryFindLinkNamePos(const NameObj* pObj, const char* pName, MtxPtr pMtx) {
+        TVec3f pos(0.0f, 0.0f, 0.0f);
+        TVec3f rot(0.0f, 0.0f, 0.0f);
+        if (getNamePosHolder()->find(pObj, pName, &pos, &rot)) {
+            makeMtxTR(pMtx, pos, rot);
+            return true;
+        }
+        return false;
+    }
 
     bool tryFindLinkNamePos(const NameObj* pObj, const char* pName, TVec3f* pParam3, TVec3f* pParam4) {
         return getNamePosHolder()->find(pObj, pName, pParam3, pParam4);

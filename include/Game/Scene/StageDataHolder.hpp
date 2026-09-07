@@ -25,6 +25,7 @@ public:
     s32 getCurrentStartCameraId() const;
     void getStartCameraIdInfoFromStartDataIndex(JMapIdInfo*, int) const;
     s32 getGeneralPosNum() const;
+    JMapInfoIter getGeneralPosInfoFromDataIndex(int) const;
 
     JMapInfoIter makeMarioJMapInfoIter(const JMapIdInfo&) const;
 

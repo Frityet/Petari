@@ -21,7 +21,22 @@ NamePosHolder::NamePosHolder() : NameObj("位置テーブル保持") {
 NamePosInfo::NamePosInfo() {
 }
 
-// bool NamePosHolder::tryRegisterLinkObj(const NameObj* pObj, const JMapInfoIter& rIter) {}
+bool NamePosHolder::tryRegisterLinkObj(const NameObj* pObj, const JMapInfoIter& rIter) {
+    JMapLinkInfo linkInfo(rIter, true);
+    for (s32 i = 0; i < mPosNum; i++) {
+        NamePosInfo* pInfo = &mInfos[i];
+        JMapLinkInfo* pLinkInfo = pInfo->mLinkInfo;
+        bool isEqual = false;
+        if (pLinkInfo->isValid() && linkInfo.isValid()) {
+            isEqual = pLinkInfo->_0 == linkInfo._0 && pLinkInfo->_4 == linkInfo._4 && pLinkInfo->_8 == linkInfo._8;
+        }
+        if (isEqual) {
+            pInfo->_20 = pObj;
+            return true;
+        }
+    }
+    return false;
+}
 
 bool NamePosHolder::find(const NameObj* pObj, const char* pName, TVec3f* pPos, TVec3f* pRot) const {
     for (s32 idx = 0; idx < mPosNum; idx++) {

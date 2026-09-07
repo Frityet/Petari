@@ -10,6 +10,7 @@
 #include "Game/System/GameSystemSceneController.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/Util/JMapIdInfo.hpp"
+#include "Game/Util/JMapLinkInfo.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/SequenceUtil.hpp"
 #include "Game/Util/SingletonHolder.hpp"
@@ -173,8 +174,17 @@ namespace MR {
         return cInitializeStartIdInfo;
     }
     // getStageArchive
-    // getGeneralPosNum
-    // getGeneralPosData
+    s32 getGeneralPosNum() {
+        return getStageDataHolder()->getGeneralPosNum();
+    }
+
+    void getGeneralPosData(const char** ppName, TVec3f* pPos, TVec3f* pRot, JMapLinkInfo** ppLinkInfo, int index) {
+        JMapInfoIter iter = getStageDataHolder()->getGeneralPosInfoFromDataIndex(index);
+        iter.getValue("PosName", ppName);
+        getJMapInfoTrans(iter, pPos);
+        getJMapInfoRotate(iter, pRot);
+        *ppLinkInfo = new JMapLinkInfo(iter, false);
+    }
     // getChildObjNum
     // getChildObjName
     // initChildObj
