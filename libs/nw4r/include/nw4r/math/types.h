@@ -77,6 +77,7 @@ namespace nw4r {
         }
 
         MTX34* MTX34Mult(MTX34* pOut, const MTX34* p, f32 f);
+        VEC3* VEC3TransformNormal(VEC3* pOut, const MTX34* pM, const VEC3* pV);
 
     };  // namespace math
 };  // namespace nw4r

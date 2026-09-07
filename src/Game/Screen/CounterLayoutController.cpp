@@ -108,14 +108,12 @@ void CounterLayoutController::hideAllLayout() {
     }
 }
 
-/*
 bool CounterLayoutController::isHiddenOrWaitAllLayout() const {
     return mCoinCounter->isHiddenOrWait()
         && mStarPieceCounter->isHiddenOrWait()
         && mPlayerLeft->isHiddenOrWait()
         && mStarCounter->isHiddenOrWait();
 }
-*/
 
 bool CounterLayoutController::isPlayerMoving() const {
     if (!MR::isPlayerElementModeHopper() && !MR::isPlayerElementModeTeresa() && !MR::isPlayerSwimming() && !MR::isOnGroundPlayer()) {

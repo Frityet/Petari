@@ -5,6 +5,7 @@
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/LayoutUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
+#include "Game/Util/SoundUtil.hpp"
 
 namespace {
     static const s32 sStepShowWait = 180;
@@ -43,6 +44,32 @@ void NoteCounter::declareNoteNumMaxAndMelody(LiveActor* pHost, s32 noteNum, s32 
     } else if (isNerve(&NrvNoteCounter::NoteCounterNrvShowWait::sInstance)) {
         setNerve(&NrvNoteCounter::NoteCounterNrvShow::sInstance);
     }
+}
+
+void NoteCounter::add() {
+    if (mMelodyNo == -2) {
+        s32 note = mNoteAddNum;
+        while (note >= 96) {
+            note -= 4;
+        }
+        MR::startSystemSE("SE_SY_FLOWER_GET_COMBO", note / 4 + note % 4, -1);
+    } else if (mMelodyNo == -1) {
+        s32 note = mNoteAddNum + 5;
+        while (note > 36) {
+            note -= 12;
+        }
+        MR::startSystemSE("SE_SY_FLOWER_GET_COMBO", note, -1);
+    } else if (mMelodyNo >= 0) {
+        MR::startRemixSound(mMelodyNo, mNoteAddNum, mRailLength);
+    }
+
+    mNoteAddNum++;
+    if (mNoteAddNum >= mNoteNum) {
+        HitSensor* pReceiver = MR::getMessageSensor();
+        HitSensor* pSender = MR::getMessageSensor();
+        mHost->receiveMessage(0x66, pSender, pReceiver);
+    }
+    tryEndDisp();
 }
 
 void NoteCounter::exeShow() {

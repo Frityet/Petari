@@ -1,6 +1,7 @@
 #include "Game/Util/LayoutUtil.hpp"
 #include "Game/Effect/MultiEmitter.hpp"
 #include "Game/Screen/IconAButton.hpp"
+#include "Game/Screen/LayoutCoreUtil.hpp"
 #include "Game/Screen/LayoutManager.hpp"
 #include "Game/Screen/LayoutPaneCtrl.hpp"
 #include "Game/Screen/PaneEffectKeeper.hpp"
@@ -163,6 +164,37 @@ namespace MR {
 
     void hidePaneRecursive(LayoutActor* pActor, const char* pPaneName) {
         ::hidePaneRecursive(getPane(pActor, pPaneName));
+    }
+
+    bool isHiddenPane(const LayoutActor* pActor, const char* pPaneName) {
+        return !pActor->getLayoutManager()->getPane(pPaneName)->IsVisible();
+    }
+
+    void copyPaneTrans(TVec2f* pTrans, const LayoutActor* pActor, const char* pPaneName) {
+        nw4r::lyt::Pane* pPane = pActor->getLayoutManager()->getPane(pPaneName);
+        pTrans->x = pPane->mGlbMtx._03;
+        pTrans->y = pPane->mGlbMtx._13;
+        convertLayoutPosToScreenPos(pTrans, *pTrans);
+    }
+
+    f32 getPaneTransX(const LayoutActor* pActor, const char* pPaneName) {
+        nw4r::lyt::Pane* pPane = pActor->getLayoutManager()->getPane(pPaneName);
+        TVec2f trans(pPane->mGlbMtx._03, pPane->mGlbMtx._13);
+        convertLayoutPosToScreenPos(&trans, trans);
+        return trans.x;
+    }
+
+    f32 getPaneTransY(const LayoutActor* pActor, const char* pPaneName) {
+        nw4r::lyt::Pane* pPane = pActor->getLayoutManager()->getPane(pPaneName);
+        TVec2f trans(pPane->mGlbMtx._03, pPane->mGlbMtx._13);
+        convertLayoutPosToScreenPos(&trans, trans);
+        return trans.y;
+    }
+
+    void setLayoutPosAtPaneTrans(LayoutActor* pActor, const LayoutActor* pSource, const char* pPaneName) {
+        TVec2f trans;
+        copyPaneTrans(&trans, pSource, pPaneName);
+        pActor->setTrans(trans);
     }
 
     void showScreen(LayoutActor* pActor) {

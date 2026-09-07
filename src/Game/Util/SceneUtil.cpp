@@ -3,6 +3,7 @@
 #include "Game/Scene/PlacementStateChecker.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Scene/ScenePlayingResult.hpp"
+#include "Game/Scene/StageDataHolder.hpp"
 #include "Game/System/GalaxyStatusAccessor.hpp"
 #include "Game/System/GameDataFunction.hpp"
 #include "Game/System/GameSystem.hpp"
@@ -188,7 +189,16 @@ namespace MR {
     // getPlacedRailNum
     // getCameraRailInfo
     // getCameraRailInfoFromRailDataIndex
-    // getStageCameraData
+    void getStageCameraData(void** pData, s32* pSize, s32 zoneID) {
+        if (!getStageDataHolder()->isPlacedZone(zoneID)) {
+            *pData = nullptr;
+            *pSize = 0;
+            return;
+        }
+        StageDataHolder* pHolder = getStageDataHolder()->getStageDataHolderFromZoneId(zoneID);
+        *pData = pHolder->getStageArchiveResource("CameraParam.bcam");
+        *pSize = pHolder->getStageArchiveResourceSize(*pData);
+    }
     // getCurrentScenarioStartAnimCameraData
 
     void incCoin(int term) {

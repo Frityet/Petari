@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Game/Screen/LayoutActor.hpp"
+#include "Game/Util/LayoutUtil.hpp"
 
 class CountUpPaneRumbler;
 class CounterLayoutAppearer;
@@ -16,6 +17,9 @@ public:
 
     void disappear();
     bool isWait() const;
+    bool isHiddenOrWait() const {
+        return MR::isDead(this) || MR::isHiddenLayout(this) || isWait();
+    }
     void exeAppear();
     void exeWait();
     void exeCountUp();

@@ -5,6 +5,12 @@
 #include "Game/AreaObj/WaterArea.hpp"
 #include "Game/Map/WaterAreaHolder.hpp"
 #include "Game/Map/WaterInfo.hpp"
+#include "Game/Map/OceanBowl.hpp"
+#include "Game/Map/OceanRing.hpp"
+#include "Game/Map/OceanSphere.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
+#include "JSystem/JMath/JMATrigonometric.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 
 namespace MR {
@@ -61,6 +67,126 @@ namespace MR {
         }
 
         return WaterAreaFunction::tryInOceanArea(rPos, pInfo);
+    }
+
+    bool getWaterAreaInfo(WaterInfo* pInfo, const TVec3f& rPos, const TVec3f& rGravity, bool isSecondArea) {
+        if (pInfo->mOceanBowl != nullptr) {
+            return pInfo->mOceanBowl->calcWaterInfo(rPos, rGravity, pInfo);
+        }
+        if (pInfo->mOceanRing != nullptr) {
+            return pInfo->mOceanRing->calcWaterInfo(rPos, rGravity, pInfo);
+        }
+        if (pInfo->mOceanSphere != nullptr) {
+            return pInfo->mOceanSphere->calcWaterInfo(rPos, rGravity, pInfo);
+        }
+
+        const WaterArea* area = pInfo->mWaterArea;
+        switch (area->mFormType) {
+        case AreaForm::Type_Cube1:
+        case AreaForm::Type_Cube2: {
+            AreaFormCube* form = static_cast< AreaFormCube* >(area->mForm);
+            TVec3f localPos;
+            form->calcLocalPos(&localPos, rPos);
+            TVec3f up;
+            up.set(0.0f, 1.0f, 0.0f);
+            TVec3f top(0.0f, form->mBounding.f.y, 0.0f);
+            TVec3f fromTop(localPos);
+            fromTop -= top;
+            TVec3f fromBottom(localPos);
+            pInfo->mCamWaterDepth = __fabsf(MR::vecKillElement(fromTop, up, &fromTop));
+            pInfo->_4 = __fabsf(MR::vecKillElement(fromBottom, up, &fromBottom));
+            pInfo->mSurfacePos.set(top + fromTop);
+            TPos3f matrix;
+            form->calcWorldMtx(&matrix);
+            PSMTXMultVec(matrix.toMtxPtr(), &pInfo->mSurfacePos, &pInfo->mSurfacePos);
+            TVec3f rotation;
+            form->calcWorldRotate(&rotation);
+            TPos3f rotationMatrix;
+            MR::makeMtxRotate(rotationMatrix.toMtxPtr(), rotation.x, rotation.y, rotation.z);
+            rotationMatrix.getYDir(up);
+            pInfo->mSurfaceNormal.set(up);
+            if (area->mObjArg0 > 0) {
+                TVec3f flow(0.0f, 0.0f, 1.0f);
+                MR::calcCubeAxisZ(area, &flow);
+                pInfo->mStreamVec.set(flow);
+                pInfo->mStreamVec.scale(area->mObjArg0);
+            }
+            break;
+        }
+        case AreaForm::Type_Sphere: {
+            AreaFormSphere* form = static_cast< AreaFormSphere* >(area->mForm);
+            TVec3f center(0.0f, 0.0f, 0.0f);
+            form->calcPos(&center);
+            f32 radius = form->_14;
+            TVec3f radial(rPos);
+            radial -= center;
+            f32 height = MR::vecKillElement(radial, -rGravity, &radial);
+            f32 halfHeight = radius * JMACosRadian((PSVECMag(&radial) / radius) * PI * 0.5f);
+            pInfo->mCamWaterDepth = halfHeight - height;
+            pInfo->_4 = halfHeight + height;
+            TVec3f normal(rPos);
+            normal -= center;
+            MR::normalizeOrZero(&normal);
+            pInfo->mSurfaceNormal.set(normal);
+            pInfo->mSurfacePos.set(center + normal * radius);
+            break;
+        }
+        case AreaForm::Type_Cylinder: {
+            AreaFormCylinder* form = static_cast< AreaFormCylinder* >(area->mForm);
+            TVec3f center(0.0f, 0.0f, 0.0f);
+            TVec3f up(0.0f, 0.0f, 1.0f);
+            form->calcPos(&center);
+            form->calcUpVec(&up);
+            if (__fabsf(up.dot(rGravity)) > 0.707f) {
+                TVec3f radial;
+                pInfo->_4 = MR::vecKillElement(rPos - center, up, &radial);
+                pInfo->mCamWaterDepth = form->_24 - pInfo->_4;
+                pInfo->mSurfacePos.set(rPos + up * pInfo->mCamWaterDepth);
+            } else {
+                TVec3f radial;
+                MR::vecKillElement(rPos - center, up, &radial);
+                f32 distance = PSVECMag(&radial);
+                pInfo->mCamWaterDepth = form->_20 - distance;
+                pInfo->_4 = form->_20 + distance;
+                pInfo->mSurfacePos.set(rPos - rGravity * pInfo->mCamWaterDepth);
+            }
+            pInfo->mSurfaceNormal.set(-rGravity);
+            if (area->mObjArg0 > 0) {
+                TVec3f flow(0.0f, 0.0f, 0.0f);
+                form->calcUpVec(&flow);
+                pInfo->mStreamVec.set(flow);
+                pInfo->mStreamVec.scale(area->mObjArg0);
+            }
+            break;
+        }
+        default:
+            break;
+        }
+
+        if (!isSecondArea) {
+            TVec3f checkPos(pInfo->mSurfacePos);
+            checkPos -= rGravity * 5.0f;
+            WaterInfo nextInfo;
+            MR::getWaterAreaObj(&nextInfo, checkPos);
+            if (nextInfo.isInWater()) {
+                MR::getWaterAreaInfo(&nextInfo, checkPos, rGravity, true);
+                pInfo->mCamWaterDepth += nextInfo.mCamWaterDepth;
+                pInfo->mSurfacePos -= rGravity * nextInfo.mCamWaterDepth;
+            }
+        }
+        return area->isInVolume(rPos);
+    }
+
+    bool calcWhirlPoolAccelInfo(const TVec3f& rPos, TVec3f* pVelocity) {
+        return WaterAreaFunction::tryInWhirlPoolAccelerator(rPos, pVelocity);
+    }
+
+    void calcCubePos(const AreaObj* pAreaObj, TVec3f* pPos) {
+        static_cast< AreaFormCube* >(pAreaObj->mForm)->calcWorldPos(pPos);
+    }
+
+    void calcCubeRotate(const AreaObj* pAreaObj, TVec3f* pRotate) {
+        static_cast< AreaFormCube* >(pAreaObj->mForm)->calcWorldRotate(pRotate);
     }
 
     void calcSpherePos(TVec3f* pPos, const AreaObj* pAreaObj) {

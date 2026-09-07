@@ -114,7 +114,47 @@ namespace MR {
     // getFirstPolyOnLineToMap
     // getFirstPolyOnLineToWaterSurface
     // getFirstPolyNormalOnLineToMap
-    // getNearPolyOnLineSort
+    u32 getNearPolyOnLineSort(const TVec3f& rReference, const TVec3f& rStart, const TVec3f& rOffset, const HitSensor* pExceptSensor) {
+        u32 hitCount = getCollisionDirector()->getCategoryKeeper(0)->checkStrikeLine(rStart, rOffset, 0, nullptr, nullptr);
+        if (hitCount == 0) {
+            return 0;
+        }
+
+        HitInfo* candidates[32];
+        u32 excludedCount = 0;
+        for (u32 i = 0; i < hitCount; i++) {
+            candidates[i] = getCollisionDirector()->getCategoryKeeper(0)->getStrikeInfo(i);
+            if (pExceptSensor != nullptr && candidates[i]->mParentTriangle.mSensor == pExceptSensor) {
+                candidates[i] = nullptr;
+                excludedCount++;
+            }
+        }
+
+        mSortCount = hitCount - excludedCount;
+        if (mSortCount >= 32) {
+            mSortCount = 32;
+        }
+        for (u32 i = 0; i < mSortCount; i++) {
+            f32 nearestDistance = 1000000.0f;
+            u32 nearestIndex = 0;
+            for (u32 j = 0; j < hitCount; j++) {
+                if (candidates[j] == nullptr) {
+                    continue;
+                }
+                HitInfo* info = getCollisionDirector()->getCategoryKeeper(0)->getStrikeInfo(j);
+                TVec3f offset(rReference);
+                offset.sub(info->mHitPos);
+                f32 distance = PSVECMag(&offset);
+                if (nearestDistance > distance) {
+                    nearestIndex = j;
+                    nearestDistance = distance;
+                }
+            }
+            mSortBuffer[i] = *getCollisionDirector()->getCategoryKeeper(0)->getStrikeInfo(nearestIndex);
+            candidates[nearestIndex] = nullptr;
+        }
+        return mSortCount;
+    }
 
     bool getSortedPoly(TVec3f* pDst, Triangle* pTriangle, u32 sortIndex) {
         if (mSortCount <= sortIndex) {
@@ -474,3 +514,10 @@ namespace MR {
     // getCameraPolyFast
     // getFirstPolyOnLineBFast
 };  // namespace MR
+
+namespace Collision {
+    s32 checkStrikeLineToMap(const TVec3f& rStart, const TVec3f& rOffset, s32 maxCount,
+                            const CollisionPartsFilterBase* pPartsFilter, const TriangleFilterBase* pTriangleFilter) {
+        return MR::getCollisionDirector()->getCategoryKeeper(0)->checkStrikeLine(rStart, rOffset, maxCount, pPartsFilter, pTriangleFilter);
+    }
+};  // namespace Collision

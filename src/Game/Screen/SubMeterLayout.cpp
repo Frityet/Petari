@@ -1,5 +1,8 @@
 #include "Game/Screen/SubMeterLayout.hpp"
 #include "Game/Util.hpp"
+#include "Game/Util/CameraUtil.hpp"
+#include "Game/Util/LayoutUtil.hpp"
+#include "Game/Util/PlayerUtil.hpp"
 
 namespace {
     static f32 sScreenOffsetX = 60.0f;
@@ -34,7 +37,7 @@ void SubMeterLayout::requestDeactivate() {
 
 void SubMeterLayout::requestAppear() {
     MR::showLayout(this);
-    MR::startAnim(this, "Appear", nullptr);
+    MR::startAnim(this, "Appear", 0);
     _20 = 1;
     control();
 }

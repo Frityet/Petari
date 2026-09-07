@@ -188,7 +188,10 @@ void CameraParamChunk::load(DotCamReader* pReader, CameraHolder* pHolder) {
     }
 
     pReader->getValueFloat("angleB", &mGeneralParam->mAngleB);
-    pReader->getValueInt("num1", &mGeneralParam->mNum1);
+    s32 num1;
+    if (pReader->getValueInt("num1", &num1)) {
+        mGeneralParam->mNum1 = num1;
+    }
     pReader->getValueInt("num2", &mGeneralParam->mNum2);
 
     const char* stringParam = nullptr;
