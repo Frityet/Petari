@@ -1,0 +1,357 @@
+[
+  {
+    "file": "aurora/lib/gx/fifo.cpp",
+    "function": "init",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gx/fifo.cpp",
+    "function": "shutdown",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gx/fifo.cpp",
+    "function": "write_data_grow",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gx/fifo.cpp",
+    "function": "publish",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gx/fifo.cpp",
+    "function": "drain",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gx/fifo.cpp",
+    "function": "end_frame",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gx/command_processor.cpp",
+    "function": "process",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gx/dl.cpp",
+    "function": "optimize",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gx/texture.cpp",
+    "function": "current_bind_generation",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gx/texture.cpp",
+    "function": "invalidate_replacement",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gx/texture.cpp",
+    "function": "resolve_static_texture",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gx/texture.cpp",
+    "function": "resolve_static_palette_texture",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gx/texture.cpp",
+    "function": "end_frame",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gx/texture.cpp",
+    "function": "shutdown",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gx/texture.cpp",
+    "function": "set_content_cache_budget_for_testing",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gx/texture.cpp",
+    "function": "evict_texture_object",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gx/texture.cpp",
+    "function": "evict_tlut_object",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gx/texture.cpp",
+    "function": "clear_copy_texture_cache",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gx/texture.cpp",
+    "function": "evict_copy_texture",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gx/texture.cpp",
+    "function": "resolve_sampled_textures",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/dolphin/gx/GXFrameBuffer.cpp",
+    "function": "read_display_copy_rgba8",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/dolphin/gx/GXFrameBuffer.cpp",
+    "function": "copy_tex",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/dolphin/gx/GXFrameBuffer.cpp",
+    "function": "GXCopyDisp",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/texture.cpp",
+    "function": "new_static_texture_2d",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/texture.cpp",
+    "function": "new_dynamic_texture_2d",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/texture.cpp",
+    "function": "new_render_texture",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/texture.cpp",
+    "function": "new_conv_texture",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/texture.cpp",
+    "function": "write_texture",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/resource_cache.cpp",
+    "function": "clear_bind_group_cache",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/resource_cache.cpp",
+    "function": "expire_cached_bind_groups",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/resource_cache.cpp",
+    "function": "shutdown_resource_cache",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/resource_cache.cpp",
+    "function": "bind_group_ref",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/resource_cache.cpp",
+    "function": "sampler_ref",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/depth_peek.cpp",
+    "function": "complete_slot",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/depth_peek.cpp",
+    "function": "initialize",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/depth_peek.cpp",
+    "function": "shutdown",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/depth_peek.cpp",
+    "function": "create_snapshot",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/depth_peek.cpp",
+    "function": "encode_frame_snapshot",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/depth_peek.cpp",
+    "function": "encode_tagged_snapshot",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/depth_peek.cpp",
+    "function": "after_submit",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/recording.cpp",
+    "function": "push",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/recording.cpp",
+    "function": "map",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/recording.cpp",
+    "function": "push_command",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/recording.cpp",
+    "function": "get_offscreen_textures",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/recording.cpp",
+    "function": "begin_recording",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/recording.cpp",
+    "function": "end_recording",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/recording.cpp",
+    "function": "shutdown_recording",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/recording.cpp",
+    "function": "queue_texture_upload",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/recording.cpp",
+    "function": "queue_texture_upload_data",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/recording.cpp",
+    "function": "queue_texture_copy",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/recording.cpp",
+    "function": "begin_color_pass",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/recording.cpp",
+    "function": "end_color_pass",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/recording.cpp",
+    "function": "resolve_pass_into",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/recording.cpp",
+    "function": "queue_palette_conv",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/recording.cpp",
+    "function": "begin_offscreen",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/recording.cpp",
+    "function": "end_offscreen",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/recording.cpp",
+    "function": "create_pass",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/recording.cpp",
+    "function": "resolve_pass",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/recording.cpp",
+    "function": "request_depth_snapshot",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/recording.cpp",
+    "function": "push_encoder_task",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/recording.cpp",
+    "function": "push_debug_group",
+    "count": 2
+  },
+  {
+    "file": "aurora/lib/gfx/recording.cpp",
+    "function": "insert_debug_marker",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/recording.cpp",
+    "function": "pipeline_ref",
+    "count": 3
+  },
+  {
+    "file": "aurora/lib/gfx/frame.cpp",
+    "function": "register_draw_type",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/frame.cpp",
+    "function": "unregister_draw_type",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/frame.cpp",
+    "function": "register_encoder_task_type",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/frame.cpp",
+    "function": "unregister_encoder_task_type",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/frame.cpp",
+    "function": "initialize",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/frame.cpp",
+    "function": "shutdown",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/frame.cpp",
+    "function": "begin_frame",
+    "count": 1
+  },
+  {
+    "file": "aurora/lib/gfx/frame.cpp",
+    "function": "end_frame",
+    "count": 1
+  }
+]

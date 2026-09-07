@@ -1,5 +1,7 @@
 #pragma once
 
+#include <aurora/allocation.hpp>
+
 #include <cstddef>
 #include <memory>
 
@@ -61,16 +63,7 @@ namespace smgpc::compat {
     // Keep native parsers, registries, caches, loggers and STL control blocks
     // independent from Game heap teardown. A nested JkrAllocationScope may
     // re-enter an explicit original domain while this escape remains alive.
-    class JkrHostAllocationScope final {
-    public:
-        JkrHostAllocationScope() noexcept;
-        ~JkrHostAllocationScope();
-        JkrHostAllocationScope(const JkrHostAllocationScope&) = delete;
-        JkrHostAllocationScope& operator=(const JkrHostAllocationScope&) = delete;
-
-    private:
-        bool _previous_routing;
-    };
+    using JkrHostAllocationScope = aurora::allocation::HostAllocationScope;
 
     // Observe the domain of the selected original heap within the current
     // Game scope, including inside a host-allocation escape. Returns null

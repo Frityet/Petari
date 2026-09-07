@@ -31,6 +31,20 @@ namespace smgpc::runtime {
 
     class SceneScheduler;
 
+    // Scene-owned Game heap selection. An executing callback retains its own
+    // lease, including when it removes the scene binding during its call.
+    class SceneSchedulerAllocationBinding final {
+    public:
+        SceneSchedulerAllocationBinding(SceneScheduler&, std::shared_ptr<smgpc::compat::JkrAllocationDomain>);
+        ~SceneSchedulerAllocationBinding();
+        SceneSchedulerAllocationBinding(const SceneSchedulerAllocationBinding&) = delete;
+        SceneSchedulerAllocationBinding& operator=(const SceneSchedulerAllocationBinding&) = delete;
+    private:
+        SceneScheduler* _scheduler;
+        std::shared_ptr<smgpc::compat::JkrAllocationDomain> _domain;
+        std::shared_ptr<smgpc::compat::JkrAllocationDomain> _previous;
+    };
+
     [[nodiscard]] SceneScheduler *try_active_scene_scheduler();
 
     class SceneSchedulerBinding final {
@@ -257,6 +271,7 @@ namespace smgpc::runtime {
     public:
         SceneScheduler();
         ~SceneScheduler();
+        [[nodiscard]] const std::shared_ptr<smgpc::compat::JkrAllocationDomain>& allocation_domain() const noexcept;
         void begin_draw_buffer_registration(std::shared_ptr<smgpc::compat::JkrAllocationDomain>);
         void allocate_draw_buffers();
         void retire_draw_buffers();
@@ -325,9 +340,11 @@ namespace smgpc::runtime {
     private:
         [[nodiscard]] Entry *find_entry(SceneEntryKind kind, const void *ptr);
         [[nodiscard]] const Entry *find_entry(SceneEntryKind kind, const void *ptr) const;
-        [[nodiscard]] std::vector<Entry *> sorted_entries_for_movement();
-        [[nodiscard]] std::vector<Entry *> sorted_entries_for_calc_anim();
-        [[nodiscard]] std::vector<Entry *> sorted_entries_for_calc_view_and_entry();
+        [[nodiscard]] std::optional<Entry> current_entry(const Entry&) const;
+        [[nodiscard]] std::vector<Entry> entries_snapshot() const;
+        [[nodiscard]] std::vector<Entry> sorted_entries_for_movement();
+        [[nodiscard]] std::vector<Entry> sorted_entries_for_calc_anim();
+        [[nodiscard]] std::vector<Entry> sorted_entries_for_calc_view_and_entry();
         [[nodiscard]] static bool entry_is_dead(const Entry &entry);
         [[nodiscard]] static bool entry_is_suspended(const Entry &entry);
         [[nodiscard]] static std::string entry_name(const Entry &entry);
@@ -342,6 +359,8 @@ namespace smgpc::runtime {
 #endif
 
         void refresh_draw_buffer_activation();
+        friend class SceneSchedulerAllocationBinding;
+        std::shared_ptr<smgpc::compat::JkrAllocationDomain> _allocation_domain;
         std::unique_ptr<smgpc::scene::SceneDrawBufferService> _draw_buffers;
         std::vector<Entry> _entries;
         std::unordered_map<smgpc::layout::LayoutRuntime*, std::unique_ptr<NameObj>> _layout_draw_adaptors;

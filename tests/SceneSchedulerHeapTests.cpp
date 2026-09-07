@@ -1,9 +1,11 @@
 #include "runtime/SceneScheduler.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
+#include "compat/ActorPhysicsRuntime.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
+#include "Game/Util/Functor.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include <memory>
@@ -13,6 +15,277 @@
 #include <array>
 #include <algorithm>
 #include <cstring>
+#include <functional>
+#include <aurora/allocation.hpp>
+
+namespace {
+void require(bool value, const char* message) {
+    if (!value) throw std::runtime_error(message);
+}
+
+struct CallbackAllocations {
+    explicit CallbackAllocations(smgpc::runtime::SceneScheduler& value) : scheduler(value) {}
+    ~CallbackAllocations() { release(); }
+    void record(unsigned slot) const {
+        delete[] values[slot];
+        values[slot] = new unsigned[8];
+        ++calls[slot];
+        require(scheduler.allocation_domain() &&
+                    JKRHeap::findFromRoot(values[slot]) == &scheduler.allocation_domain()->heap(),
+                "original callback allocation must belong to its explicit scene Game heap");
+    }
+    void release() const {
+        for (auto*& pointer : values) { delete[] pointer; pointer = nullptr; }
+    }
+    smgpc::runtime::SceneScheduler& scheduler;
+    mutable std::array<unsigned*, 8> values{};
+    mutable std::array<unsigned, 8> calls{};
+};
+
+struct CallbackObject final : NameObj {
+    explicit CallbackObject(smgpc::runtime::SceneScheduler& scheduler) : NameObj("scene callback ownership"), allocation(scheduler) {}
+    void movement() override { allocation.record(0); if (movement_hook) movement_hook(); }
+    void calcAnim() override { allocation.record(1); if (animation_hook) animation_hook(); }
+    void draw() const override { allocation.record(2); }
+    void pre_draw() const { allocation.record(3); }
+    CallbackAllocations allocation;
+    std::function<void()> movement_hook;
+    std::function<void()> animation_hook;
+};
+
+struct CallbackActor final : LiveActor {
+    explicit CallbackActor(smgpc::runtime::SceneScheduler& scheduler) : LiveActor("scene sensor callback ownership"), allocation(scheduler) {}
+    void movement() override { allocation.record(0); }
+    void calcAnim() override { allocation.record(1); }
+    void attackSensor(HitSensor*, HitSensor*) override { allocation.record(4); if (sensor_hook) sensor_hook(); }
+    bool receiveMessage(u32, HitSensor*, HitSensor*) override {
+        allocation.record(5);
+        if (message_hook) message_hook();
+        return true;
+    }
+    void startClipped() override { allocation.record(6); mFlag.mIsClipped = true; }
+    void endClipped() override { allocation.record(7); mFlag.mIsClipped = false; }
+    CallbackAllocations allocation;
+    std::function<void()> sensor_hook;
+    std::function<void()> message_hook;
+};
+
+void verify_backend_allocation_routing(const std::shared_ptr<smgpc::compat::JkrHeapRuntime>& heaps) {
+    using namespace smgpc::compat;
+    const auto before = heaps->root_heap().getFreeSize();
+    {
+        auto game = JkrAllocationDomain::create(heaps, 32U << 10);
+        auto nested = JkrAllocationDomain::create(heaps, 32U << 10);
+        const auto allocate_in = [](JKRHeap* expected) {
+            auto* allocation = new unsigned[8];
+            require(JKRHeap::findFromRoot(allocation) == expected, "native backend/client scope selects the wrong allocation owner");
+            delete[] allocation;
+        };
+        {
+            JkrAllocationScope outer(game);
+            allocate_in(&game->heap());
+            {
+                aurora::allocation::HostAllocationScope backend;
+                allocate_in(nullptr);
+                {
+                    aurora::allocation::HostAllocationScope nested_backend;
+                    allocate_in(nullptr);
+                    {
+                        aurora::allocation::ClientAllocationScope callback;
+                        allocate_in(&game->heap());
+                    }
+                    allocate_in(nullptr);
+                }
+                {
+                    JkrAllocationScope explicit_nested(nested);
+                    allocate_in(&nested->heap());
+                    aurora::allocation::HostAllocationScope inner_backend;
+                    allocate_in(nullptr);
+                    aurora::allocation::ClientAllocationScope inner_callback;
+                    allocate_in(&nested->heap());
+                }
+                allocate_in(nullptr);
+                require(current_jkr_allocation_domain() == game, "nested native calls restore the selected original heap");
+                try {
+                    aurora::allocation::ClientAllocationScope callback;
+                    allocate_in(&game->heap());
+                    throw 91;
+                } catch (int code) {
+                    require(code == 91, "native callback exception fixture failed");
+                }
+                allocate_in(nullptr);
+            }
+            allocate_in(&game->heap());
+        }
+        allocate_in(nullptr);
+    }
+    require(heaps->root_heap().getFreeSize() == before, "nested backend/client routing retains no retired Game domain");
+    std::cout << "backend_host_escape=pass nested_client_reentry=pass explicit_nested_domain=pass routing_exception_restore=pass\n";
+}
+
+void verify_explicit_scene_callbacks(const std::shared_ptr<smgpc::compat::JkrHeapRuntime>& heaps) {
+    using namespace smgpc::compat;
+    using namespace smgpc::runtime;
+    const auto free_before = heaps->root_heap().getFreeSize();
+    {
+        auto game = JkrAllocationDomain::create(heaps, 384U << 10);
+        auto caller = JkrAllocationDomain::create(heaps, 64U << 10);
+        SceneScheduler scheduler;
+        SceneSchedulerBinding active(scheduler);
+        SceneSchedulerAllocationBinding scene(scheduler, game);
+        CallbackObject object(scheduler);
+        scheduler.connect_name_obj(object, 34, 0, -1, 72);
+        scheduler.register_pre_draw_function(MR::Functor(static_cast<const CallbackObject*>(&object), &CallbackObject::pre_draw), 72);
+        {
+            JkrAllocationScope outer(caller);
+            scheduler.execute_movement();
+            scheduler.execute_calc_anim();
+            scheduler.execute_draw_type(72);
+            require(current_jkr_allocation_domain() == caller, "scene callbacks restore their caller's selected heap");
+            auto* after = new unsigned[8];
+            require(JKRHeap::findFromRoot(after) == &caller->heap(), "scene callbacks restore the caller's allocation routing");
+            delete[] after;
+        }
+        require(object.allocation.calls[0] == 1 && object.allocation.calls[1] == 1 &&
+                    object.allocation.calls[2] == 1 && object.allocation.calls[3] == 1,
+                "movement, animation, draw and pre-draw all invoke real allocating callbacks");
+        {
+            SceneSchedulerAllocationBinding nested(scheduler, caller);
+            scheduler.execute_calc_anim();
+            require(JKRHeap::findFromRoot(object.allocation.values[1]) == &caller->heap(), "nested scene bindings select their own domain");
+        }
+        require(scheduler.allocation_domain() == game, "leaving a nested binding restores the previous scene domain");
+        object.movement_hook = [&] { scheduler.execute_calc_anim(); throw 73; };
+        {
+            JkrAllocationScope outer(caller);
+            bool caught = false;
+            try { scheduler.execute_movement(); } catch (int code) { caught = code == 73; }
+            require(caught && current_jkr_allocation_domain() == caller,
+                    "nested callbacks and exceptions restore the caller's original heap");
+        }
+        object.movement_hook = {};
+        auto* host = new unsigned[8];
+        require(JKRHeap::findFromRoot(host) == nullptr, "callback exceptions restore host allocation after the outer scope ends");
+        delete[] host;
+        require(JKRHeap::findFromRoot(const_cast<SceneSchedulerEntryState*>(scheduler.last_execution_trace().data())) == nullptr,
+                "callback traces retain host backing while the scene is bound");
+        scheduler.clear();
+
+        CallbackObject mutator(scheduler), survivor(scheduler);
+        auto victim = std::make_unique<CallbackObject>(scheduler);
+        std::vector<std::unique_ptr<NameObj>> added;
+        bool mutated = false;
+        mutator.movement_hook = [&] {
+            if (mutated) return;
+            mutated = true;
+            for (unsigned i = 0; i < 512; ++i) {
+                auto* created = new NameObj("created from an original movement callback");
+                scheduler.connect_name_obj(*created, 34, 0, -1, -1);
+                JkrHostAllocationScope native;
+                added.emplace_back(created);
+            }
+            victim.reset();
+            scheduler.disconnect_name_obj(mutator);
+        };
+        scheduler.connect_name_obj(mutator, 34, 0, -1, -1);
+        scheduler.connect_name_obj(*victim, 34, 0, -1, -1);
+        scheduler.connect_name_obj(survivor, 34, 0, -1, -1);
+        scheduler.execute_movement();
+        require(victim == nullptr && added.size() == 512 && survivor.allocation.calls[0] == 1,
+                "movement survives host registration reallocation and removal of current and future entries");
+        require(JKRHeap::findFromRoot(added.back().get()) == &game->heap() && JKRHeap::findFromRoot(added.data()) == nullptr,
+                "new original objects use the scene heap while the fixture's registry remains host owned");
+        scheduler.clear();
+        added.clear();
+
+        auto animation_victim = std::make_unique<CallbackObject>(scheduler);
+        mutator.animation_hook = [&] { animation_victim.reset(); scheduler.disconnect_name_obj(mutator); };
+        scheduler.connect_name_obj(mutator, -1, 0, -1, -1);
+        scheduler.connect_name_obj(*animation_victim, -1, 0, -1, -1);
+        scheduler.connect_name_obj(survivor, -1, 0, -1, -1);
+        scheduler.execute_calc_anim();
+        require(animation_victim == nullptr && survivor.allocation.calls[1] == 1,
+                "animation revalidates registrations after callback removal");
+        scheduler.clear();
+
+        CallbackObject replacement(scheduler);
+        mutator.movement_hook = [&] { scheduler.clear(); scheduler.connect_name_obj(replacement, 34, -1, -1, -1); };
+        scheduler.connect_name_obj(mutator, 34, -1, -1, -1);
+        scheduler.connect_name_obj(survivor, 34, -1, -1, -1);
+        const auto marker = scheduler.registration_marker();
+        scheduler.execute_movement();
+        require(replacement.allocation.calls[0] == 0 && scheduler.registration_marker() > marker,
+                "clear and reconnect do not reuse a snapshot's registration identity");
+        scheduler.execute_movement();
+        require(replacement.allocation.calls[0] == 1, "new registrations run in the next movement snapshot");
+        scheduler.clear();
+
+        SceneObjHolder holder;
+        smgpc::scene::SceneObjHolderBinding helpers(holder);
+        (void)MR::createSceneObj(SceneObj_MessageSensorHolder);
+        CallbackActor first(scheduler);
+        auto second = std::make_unique<CallbackActor>(scheduler);
+        for (auto* actor : {&first, second.get()}) {
+            actor->initHitSensor(1);
+            (void)add_actor_hit_sensor(actor, "body", 1U, 4U, 10.0F, {});
+            actor->makeActorAppeared();
+            scheduler.connect_name_obj(*actor, 34, 0, -1, -1);
+        }
+        first.sensor_hook = [&] { second.reset(); };
+        scheduler.execute_movement();
+        require(second == nullptr && first.allocation.calls[4] == 1,
+                "sensor callbacks may retire the other actor without stale sensor dereferences");
+        scheduler.execute_calc_anim();
+        require(first.allocation.calls[1] == 1, "original actor animation receives the scene domain");
+        auto message_victim = std::make_unique<CallbackActor>(scheduler);
+        message_victim->makeActorAppeared();
+        scheduler.connect_name_obj(*message_victim, 34, -1, -1, -1);
+        first.message_hook = [&] { message_victim.reset(); };
+        require(scheduler.send_message_to_live_actors(0, nullptr) == 1 && !message_victim && first.allocation.calls[5] == 1,
+                "message callbacks may remove future recipients without invalidating iteration or trace names");
+
+        configure_actor_clipping_sphere(&first, 1.0F, nullptr);
+        CallbackObject clipping_driver(scheduler);
+        clipping_driver.movement_hook = [&] {
+            smgpc::camera::CameraPose camera{.eye = {0, 0, 1000}, .watch = {0, 0, 0}};
+            first.mPosition.x = 1000000;
+            update_actor_clipping(first, camera);
+            first.mPosition.x = 0;
+            update_actor_clipping(first, camera);
+        };
+        scheduler.connect_name_obj(clipping_driver, 34, -1, -1, -1);
+        scheduler.execute_movement();
+        require(first.allocation.calls[6] == 1 && first.allocation.calls[7] == 1,
+                "native clipping transitions preserve the Game callback allocation scope");
+        scheduler.clear();
+    }
+    require(heaps->root_heap().getFreeSize() == free_before, "all callback and scene domain allocations retire at scene teardown");
+    {
+        SceneScheduler scheduler;
+        SceneSchedulerBinding active(scheduler);
+        auto domain = JkrAllocationDomain::create(heaps, 64U << 10);
+        std::weak_ptr<JkrAllocationDomain> weak = domain;
+        auto scene = std::make_unique<SceneSchedulerAllocationBinding>(scheduler, domain);
+        domain.reset();
+        CallbackObject object(scheduler);
+        object.movement_hook = [&] {
+            object.allocation.release();
+            scene.reset();
+            require(!weak.expired(), "an executing callback retains the scene heap after its binding is removed");
+            auto* value = new unsigned[8];
+            require(JKRHeap::findFromRoot(value) == &weak.lock()->heap(), "remaining callback work still uses its retained domain");
+            delete[] value;
+        };
+        scheduler.connect_name_obj(object, 34, -1, -1, -1);
+        scheduler.execute_movement();
+        require(weak.expired() && !scheduler.allocation_domain(), "the callback's last scene lease is released on return");
+        scheduler.clear();
+    }
+    require(heaps->root_heap().getFreeSize() == free_before, "removal of an active scene binding leaves no retained heap");
+    std::cout << "explicit_scene_heap=pass nested_exception_restoration=pass stable_registration_mutation=pass "
+                 "sensor_message_retirement=pass clipping_transitions=pass predraw_draw=pass callback_lease=pass scene_heap_retirement=pass\n";
+}
+}
 
 class AllocatingNameObj final : public NameObj {
 public:
@@ -170,4 +443,6 @@ int main() {
     }
     std::cout << "NameObj registry and scheduler sorting/history/snapshots survive original heap retirement; "
                  "movement and animation callbacks retain original heap routing\n";
+    verify_explicit_scene_callbacks(heaps);
+    verify_backend_allocation_routing(heaps);
 }

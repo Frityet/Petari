@@ -17,35 +17,48 @@ public:
     virtual void executeOnEnd(Spine* pSpine) const;
 };
 
+// Native constant initialization keeps unused singleton vtables eligible for section GC.
+// Every macro constructor below is empty; retain the original constructor on Wii.
+// Define native inline storage beside its class so every consumer sees its definition.
+#if defined(TARGET_PC)
+#define NERVE_DEFAULT_CONSTRUCTOR(name) constexpr name() {}
+#define NERVE_NATIVE_INSTANCE(name) inline name name::sInstance;
+#else
+#define NERVE_DEFAULT_CONSTRUCTOR(name) name() NO_INLINE {}
+#define NERVE_NATIVE_INSTANCE(name)
+#endif
+
 /* Defines a basic nerve class */
 #define NERVE(name)                                                                                                                                  \
     class name : public Nerve {                                                                                                                      \
     public:                                                                                                                                          \
-        name() NO_INLINE{};                                                                                                                          \
+        NERVE_DEFAULT_CONSTRUCTOR(name);                                                                                                            \
         virtual void execute(Spine*) const;                                                                                                          \
         static name sInstance;                                                                                                                       \
-    };
+    };                                                                                                                                               \
+    NERVE_NATIVE_INSTANCE(name)
 
 /* Defines a basic nerve that overrides the executeOnEnd function */
 #define NERVE_EXECEND(name)                                                                                                                          \
     class name : public Nerve {                                                                                                                      \
     public:                                                                                                                                          \
-        name() NO_INLINE{};                                                                                                                          \
+        NERVE_DEFAULT_CONSTRUCTOR(name);                                                                                                            \
         virtual void execute(Spine*) const;                                                                                                          \
         virtual void executeOnEnd(Spine*) const;                                                                                                     \
         static name sInstance;                                                                                                                       \
-    };
+    };                                                                                                                                               \
+    NERVE_NATIVE_INSTANCE(name)
 
 /* Initializes the static instance of a nerve */
 #if defined(TARGET_PC)
-#define INIT_NERVE(name) inline name name::sInstance;
+#define INIT_NERVE(name)
 #else
 #define INIT_NERVE(name) name name::sInstance;
 #endif
 
 /* Initalizes the static instance of a nerve and also defines the body of said nerve's execute function */
 #define INIT_NERVE_NEW(name, parent_class, func)                                                                                                     \
-    name name::sInstance;                                                                                                                            \
+    INIT_NERVE(name)                                                                                                                                \
     void name::execute(Spine* pSpine) const {                                                                                                        \
         parent_class* actor = reinterpret_cast< parent_class* >(pSpine->mExecutor);                                                                  \
         actor->func();                                                                                                                               \
@@ -55,44 +68,47 @@ public:
 #define NERVE_DECL(name, parent_class, func)                                                                                                         \
     class name : public Nerve {                                                                                                                      \
     public:                                                                                                                                          \
-        name() NO_INLINE{};                                                                                                                          \
+        NERVE_DEFAULT_CONSTRUCTOR(name);                                                                                                            \
         virtual void execute(Spine* pSpine) const {                                                                                                  \
             parent_class* actor = reinterpret_cast< parent_class* >(pSpine->mExecutor);                                                              \
             actor->func();                                                                                                                           \
         };                                                                                                                                           \
         static name sInstance;                                                                                                                       \
-    };
+    };                                                                                                                                               \
+    NERVE_NATIVE_INSTANCE(name)
 
 /* Declares a nerve and also defines the body of the nerve's execution function, which calls a specified member function */
 #define NERVE_DECL_EXE(name, parent_class, executor_name)                                                                                            \
     class name : public Nerve {                                                                                                                      \
     public:                                                                                                                                          \
-        name() NO_INLINE{};                                                                                                                          \
+        NERVE_DEFAULT_CONSTRUCTOR(name);                                                                                                            \
         virtual void execute(Spine* pSpine) const {                                                                                                  \
             parent_class* actor = reinterpret_cast< parent_class* >(pSpine->mExecutor);                                                              \
             actor->exe##executor_name();                                                                                                             \
         };                                                                                                                                           \
         static name sInstance;                                                                                                                       \
-    };
+    };                                                                                                                                               \
+    NERVE_NATIVE_INSTANCE(name)
 
 #if defined(TARGET_PC)
 /* Declares a PC-unavailable nerve whose accidental execution fails explicitly. */
 #define NERVE_DECL_UNAVAILABLE(name, reason)                                                                                                        \
     class name : public Nerve {                                                                                                                      \
     public:                                                                                                                                          \
-        name() NO_INLINE{};                                                                                                                          \
+        NERVE_DEFAULT_CONSTRUCTOR(name);                                                                                                            \
         virtual void execute(Spine*) const {                                                                                                         \
             throw std::logic_error(reason);                                                                                                          \
         };                                                                                                                                           \
         static name sInstance;                                                                                                                       \
-    };
+    };                                                                                                                                               \
+    NERVE_NATIVE_INSTANCE(name)
 #endif
 
 /* Declares a nerve and also defines the body of the nerve's execution and executeOnEndfunctions, which calls a specified member function */
 #define NERVE_DECL_ONEND(name, parent_class, func, onEndFunc)                                                                                        \
     class name : public Nerve {                                                                                                                      \
     public:                                                                                                                                          \
-        name() NO_INLINE{};                                                                                                                          \
+        NERVE_DEFAULT_CONSTRUCTOR(name);                                                                                                            \
         virtual void execute(Spine* pSpine) const {                                                                                                  \
             parent_class* actor = reinterpret_cast< parent_class* >(pSpine->mExecutor);                                                              \
             actor->func();                                                                                                                           \
@@ -102,21 +118,22 @@ public:
             actor->onEndFunc();                                                                                                                      \
         };                                                                                                                                           \
         static name sInstance;                                                                                                                       \
-    };
+    };                                                                                                                                               \
+    NERVE_NATIVE_INSTANCE(name)
 
 /* Declares a nerve and also defines the nerve's execute function with an empty body */
 #define NERVE_DECL_NULL(name)                                                                                                                        \
     class name : public Nerve {                                                                                                                      \
     public:                                                                                                                                          \
-        name() NO_INLINE {                                                                                                                           \
-        }                                                                                                                                            \
+        NERVE_DEFAULT_CONSTRUCTOR(name)                                                                                                             \
         virtual void execute(Spine* pSpine) const {                                                                                                  \
         }                                                                                                                                            \
         inline static name* get() {                                                                                                                  \
             return &sInstance;                                                                                                                       \
         }                                                                                                                                            \
         static name sInstance;                                                                                                                       \
-    };
+    };                                                                                                                                               \
+    NERVE_NATIVE_INSTANCE(name)
 
 #define NEW_NERVE(name, parent_class, executor_name)                                                                                                 \
     class name : public Nerve {                                                                                                                      \

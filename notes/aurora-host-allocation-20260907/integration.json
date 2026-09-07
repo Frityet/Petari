@@ -1,0 +1,41 @@
+[
+  {
+    "target": "smg-pc-scene-scheduler-heap-tests",
+    "build_exit": 0,
+    "command": [
+      "xmake",
+      "build",
+      "-y",
+      "-j",
+      "12",
+      "smg-pc-scene-scheduler-heap-tests"
+    ],
+    "run_exit": 0
+  },
+  {
+    "target": "smg-pc-original-direct-draw-texture-tests",
+    "build_exit": 0,
+    "command": [
+      "xmake",
+      "build",
+      "-y",
+      "-j",
+      "12",
+      "smg-pc-original-direct-draw-texture-tests"
+    ],
+    "run_exit": 0
+  },
+  {
+    "target": "smg-pc-original-effect-ownership-tests",
+    "build_exit": 0,
+    "command": [
+      "xmake",
+      "build",
+      "-y",
+      "-j",
+      "12",
+      "smg-pc-original-effect-ownership-tests"
+    ],
+    "run_exit": 0
+  }
+]

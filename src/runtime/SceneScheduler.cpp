@@ -46,13 +46,27 @@ namespace smgpc::runtime {
 
         SceneScheduler *sActiveSceneScheduler = nullptr;
 
+        template <typename Callback>
+        decltype(auto) invoke_game_callback(const std::shared_ptr<smgpc::compat::JkrAllocationDomain>& domain,
+                                           Callback&& callback) {
+            // Standalone callers may supply an explicit current Game scope.
+            // Production scenes publish their own retained execution domain.
+            auto retained = domain ? domain : smgpc::compat::current_jkr_allocation_domain();
+            std::optional<smgpc::compat::JkrAllocationScope> heap;
+            if (retained) heap.emplace(std::move(retained));
+            return std::forward<Callback>(callback)();
+        }
+
         // LayoutRuntime is a native layout owner; its bridge is an actual
         // NameObj so the original category delegator handles mixed batches.
         class LayoutDrawAdaptor final : public NameObj {
         public:
             explicit LayoutDrawAdaptor(smgpc::layout::LayoutRuntime& layout)
                 : NameObj(layout.getName().c_str()), _layout(layout) {}
-            void draw() const override { _layout.draw(); }
+            void draw() const override {
+                smgpc::compat::JkrHostAllocationScope host;
+                _layout.draw();
+            }
         private:
             smgpc::layout::LayoutRuntime& _layout;
         };
@@ -497,6 +511,22 @@ namespace smgpc::runtime {
     }
     SceneScheduler::~SceneScheduler() { clear(); }
 
+    SceneSchedulerAllocationBinding::SceneSchedulerAllocationBinding(
+        SceneScheduler& scheduler, std::shared_ptr<smgpc::compat::JkrAllocationDomain> domain)
+        : _scheduler(&scheduler), _domain(std::move(domain)), _previous(scheduler._allocation_domain) {
+        if (!_domain) throw std::invalid_argument("Scene callback allocation requires a retained Game domain");
+        scheduler._allocation_domain = _domain;
+    }
+
+    SceneSchedulerAllocationBinding::~SceneSchedulerAllocationBinding() {
+        if (_scheduler->_allocation_domain != _domain) std::terminate();
+        _scheduler->_allocation_domain = std::move(_previous);
+    }
+
+    const std::shared_ptr<smgpc::compat::JkrAllocationDomain>& SceneScheduler::allocation_domain() const noexcept {
+        return _allocation_domain;
+    }
+
     void SceneScheduler::begin_draw_buffer_registration(std::shared_ptr<smgpc::compat::JkrAllocationDomain> domain) {
         smgpc::compat::JkrHostAllocationScope host;
         retire_draw_buffers();
@@ -744,6 +774,7 @@ namespace smgpc::runtime {
     }
 
     void SceneScheduler::execute_movement() {
+        smgpc::compat::JkrHostAllocationScope host;
         smgpc::compat::SceneJ3dScope j3d_scope;
 #ifndef NDEBUG
         _last_execution_trace.clear();
@@ -760,22 +791,27 @@ namespace smgpc::runtime {
         }
         if (clipping_camera.has_value()) {
             auto updated_actors = std::vector<LiveActor*>{};
-            for (auto& entry : _entries) {
-                auto* actor = entry_live_actor(entry);
+            for (const auto& registered : entries_snapshot()) {
+                auto entry = current_entry(registered);
+                if (!entry) continue;
+                auto* actor = entry_live_actor(*entry);
                 if (actor == nullptr || actor->mFlag.mIsDead ||
-                    draw_buffer_uses_model_3d_for_2d(entry.draw_buffer_type) ||
+                    draw_buffer_uses_model_3d_for_2d(entry->draw_buffer_type) ||
                     std::ranges::find(updated_actors, actor) != updated_actors.end()) {
                     continue;
                 }
-                smgpc::compat::update_actor_clipping(*actor, *clipping_camera);
+                invoke_game_callback(_allocation_domain, [&] {
+                    smgpc::compat::update_actor_clipping(*actor, *clipping_camera);
+                });
                 {
                     smgpc::compat::JkrHostAllocationScope host;
                     updated_actors.push_back(actor);
                 }
             }
         }
-        for (auto *entry : sorted_entries_for_movement()) {
-            if (entry->movement_type < 0 || entry_is_dead(*entry) || entry_is_suspended(*entry)) {
+        for (const auto& registered : sorted_entries_for_movement()) {
+            auto entry = current_entry(registered);
+            if (!entry || entry->movement_type < 0 || entry_is_dead(*entry) || entry_is_suspended(*entry)) {
                 continue;
             }
 
@@ -783,20 +819,29 @@ namespace smgpc::runtime {
                 continue;
             }
 
-            switch (entry->kind) {
-            case SceneEntryKind::NameObj:
-                entry->name_obj->executeMovement();
-                break;
-            case SceneEntryKind::Layout:
-                entry->layout->update();
-                break;
-            case SceneEntryKind::LayoutActor:
-                entry->layout_actor->executeMovement();
-                break;
-            case SceneEntryKind::LiveActorModel:
-                entry->live_actor->movement();
-                break;
-            }
+            invoke_game_callback(_allocation_domain, [&] {
+                switch (entry->kind) {
+                case SceneEntryKind::NameObj:
+                    entry->name_obj->executeMovement();
+                    break;
+                case SceneEntryKind::Layout: {
+                    smgpc::compat::JkrHostAllocationScope native;
+                    entry->layout->update();
+                    break;
+                }
+                case SceneEntryKind::LayoutActor:
+                    entry->layout_actor->executeMovement();
+                    break;
+                case SceneEntryKind::LiveActorModel:
+                    entry->live_actor->movement();
+                    break;
+                }
+            });
+
+            // Callback registration changes may reallocate the host vector or
+            // destroy this object. Resolve its never-reused registration order.
+            entry = current_entry(registered);
+            if (!entry) continue;
 
             if (auto *actor = entry_live_actor(*entry); actor != nullptr && !actor->mFlag.mIsDead) {
                 if (auto *runtime = RuntimeContext::try_instance();
@@ -813,39 +858,58 @@ namespace smgpc::runtime {
     }
 
     void SceneScheduler::execute_sensor_hit_check() {
+        smgpc::compat::JkrHostAllocationScope host;
+        struct RegisteredSensor { HitSensor* sensor; Entry owner; };
         auto actors = std::vector<LiveActor *>{};
-        auto sensors = std::vector<HitSensor *>{};
+        auto sensors = std::vector<RegisteredSensor>{};
 
-        for (auto &entry : _entries) {
-            auto *actor = entry_live_actor(entry);
-            if (actor == nullptr || entry_is_dead(entry) || entry_is_suspended(entry) ||
+        for (const auto& registered : entries_snapshot()) {
+            auto entry = current_entry(registered);
+            if (!entry) continue;
+            auto *actor = entry_live_actor(*entry);
+            if (actor == nullptr || entry_is_dead(*entry) || entry_is_suspended(*entry) ||
                 actor->mFlag.mIsClipped ||
                 std::ranges::find(actors, actor) != actors.end()) {
                 continue;
             }
 
-            smgpc::compat::update_actor_hit_sensors(actor);
+            invoke_game_callback(_allocation_domain, [&] { smgpc::compat::update_actor_hit_sensors(actor); });
+            entry = current_entry(registered);
+            if (!entry) continue;
             {
-                smgpc::compat::JkrHostAllocationScope host;
-                smgpc::compat::collect_actor_hit_sensors(actor, sensors);
+                std::vector<HitSensor*> collected;
+                smgpc::compat::collect_actor_hit_sensors(actor, collected);
+                for (auto* sensor : collected) sensors.push_back({sensor, *entry});
                 actors.push_back(actor);
             }
         }
 
-        for (auto *sensor : sensors) {
+        const auto current_sensor = [&](const RegisteredSensor& registered) -> HitSensor* {
+            const auto entry = current_entry(registered.owner);
+            if (!entry) return nullptr;
+            auto* actor = entry_live_actor(*entry);
+            // Registry lookup compares pointer identities without dereferencing
+            // a sensor that another actor's callback may have removed.
+            const auto* name = smgpc::compat::actor_hit_sensor_name(actor, registered.sensor);
+            return smgpc::compat::actor_hit_sensor(actor, name) == registered.sensor ? registered.sensor : nullptr;
+        };
+        for (const auto& registered : sensors) {
+            auto* sensor = current_sensor(registered);
             if (sensor != nullptr) {
                 sensor->mSensorCount = 0U;
             }
         }
 
         for (auto lhs_index = std::size_t{}; lhs_index < sensors.size(); ++lhs_index) {
-            auto *lhs = sensors[lhs_index];
+            auto *lhs = current_sensor(sensors[lhs_index]);
             if (lhs == nullptr || lhs->mHost == nullptr || !lhs->mValidByHost || !lhs->mValidBySystem || lhs->mHost->mFlag.mIsDead) {
                 continue;
             }
 
             for (auto rhs_index = lhs_index + 1U; rhs_index < sensors.size(); ++rhs_index) {
-                auto *rhs = sensors[rhs_index];
+                lhs = current_sensor(sensors[lhs_index]);
+                if (lhs == nullptr || !lhs->mValidByHost || !lhs->mValidBySystem || lhs->mHost->mFlag.mIsDead) break;
+                auto *rhs = current_sensor(sensors[rhs_index]);
                 if (rhs == nullptr || rhs->mHost == nullptr || rhs->mHost == lhs->mHost || !rhs->mValidByHost ||
                     !rhs->mValidBySystem || rhs->mHost->mFlag.mIsDead) {
                     continue;
@@ -860,59 +924,70 @@ namespace smgpc::runtime {
                     continue;
                 }
 
-                lhs->addHitSensor(rhs);
-                rhs->addHitSensor(lhs);
-
-                if (!lhs->mHost->mFlag.mIsDead) {
-                    lhs->mHost->attackSensor(lhs, rhs);
-                }
-                if (!rhs->mHost->mFlag.mIsDead) {
-                    rhs->mHost->attackSensor(rhs, lhs);
-                }
+                invoke_game_callback(_allocation_domain, [&] {
+                    lhs->addHitSensor(rhs);
+                    rhs->addHitSensor(lhs);
+                    if (!lhs->mHost->mFlag.mIsDead) lhs->mHost->attackSensor(lhs, rhs);
+                });
+                lhs = current_sensor(sensors[lhs_index]);
+                rhs = current_sensor(sensors[rhs_index]);
+                if (lhs != nullptr && rhs != nullptr && !rhs->mHost->mFlag.mIsDead)
+                    invoke_game_callback(_allocation_domain, [&] { rhs->mHost->attackSensor(rhs, lhs); });
             }
         }
     }
 
     void SceneScheduler::execute_calc_anim() {
+        smgpc::compat::JkrHostAllocationScope host;
         smgpc::compat::SceneJ3dScope j3d_scope;
         // SceneNameObjListExecutor calls NameObj::calcAnim directly. Only
         // its movement list uses executeMovement's movement-off flag.
-        for (auto *entry : sorted_entries_for_calc_anim()) {
-            if (entry->calc_anim_type < 0 || entry_is_dead(*entry)) {
+        for (const auto& registered : sorted_entries_for_calc_anim()) {
+            auto entry = current_entry(registered);
+            if (!entry || entry->calc_anim_type < 0 || entry_is_dead(*entry)) {
                 continue;
             }
             if (const auto* actor = entry_live_actor(*entry); actor != nullptr && actor->mFlag.mIsClipped) {
                 continue;
             }
 
-            switch (entry->kind) {
-            case SceneEntryKind::NameObj:
-                entry->name_obj->calcAnim();
-                break;
-            case SceneEntryKind::Layout:
-                break;
-            case SceneEntryKind::LayoutActor:
-                entry->layout_actor->calcAnim();
-                break;
-            case SceneEntryKind::LiveActorModel:
-                entry->live_actor->calcAnim();
-                break;
-            }
+            invoke_game_callback(_allocation_domain, [&] {
+                switch (entry->kind) {
+                case SceneEntryKind::NameObj:
+                    entry->name_obj->calcAnim();
+                    break;
+                case SceneEntryKind::Layout:
+                    break;
+                case SceneEntryKind::LayoutActor:
+                    entry->layout_actor->calcAnim();
+                    break;
+                case SceneEntryKind::LiveActorModel:
+                    entry->live_actor->calcAnim();
+                    break;
+                }
+            });
 #ifndef NDEBUG
-            push_trace(*entry, SceneSchedulerPhase::CalcAnim);
+            entry = current_entry(registered);
+            if (entry) push_trace(*entry, SceneSchedulerPhase::CalcAnim);
 #endif
         }
     }
 
     void SceneScheduler::execute_calc_view_and_entry() {
+        smgpc::compat::JkrHostAllocationScope host;
         if (!_draw_buffers->has_draw_buffers()) return;
         if (!_draw_buffers->is_allocated())
             throw std::logic_error("Scene construction must allocate draw lists before view entry");
         if (auto* runtime = RuntimeContext::try_instance(); runtime && runtime->scene_camera_pose()) {
-            for (auto& entry : _entries)
-                if (entry.has_draw_buffer_registration && !entry_is_dead(entry) &&
-                    !draw_buffer_uses_model_3d_for_2d(entry.draw_buffer_type))
-                    smgpc::compat::update_actor_clipping(*entry.live_actor, *runtime->scene_camera_pose());
+            const auto camera = *runtime->scene_camera_pose();
+            for (const auto& registered : entries_snapshot()) {
+                const auto entry = current_entry(registered);
+                if (entry && entry->has_draw_buffer_registration && !entry_is_dead(*entry) &&
+                    !draw_buffer_uses_model_3d_for_2d(entry->draw_buffer_type))
+                    invoke_game_callback(_allocation_domain, [&] {
+                        smgpc::compat::update_actor_clipping(*entry->live_actor, camera);
+                    });
+            }
         }
         refresh_draw_buffer_activation();
         smgpc::compat::SceneJ3dScope commands;
@@ -921,9 +996,11 @@ namespace smgpc::runtime {
         TMtx34f mtx;
         mtx.identity();
         PSMTXCopy(mtx, j3dSys.mViewMtx);
-        _draw_buffers->entry(1);
-        MR::loadViewMtx();
-        _draw_buffers->entry(0);
+        invoke_game_callback(_allocation_domain, [&] {
+            _draw_buffers->entry(1);
+            MR::loadViewMtx();
+            _draw_buffers->entry(0);
+        });
 #ifndef NDEBUG
         for (const auto& entry : _entries)
             if (entry.has_draw_buffer_registration && entry.draw_connected && !entry_is_dead(entry) &&
@@ -1063,11 +1140,15 @@ namespace smgpc::runtime {
     }
 
     std::size_t SceneScheduler::send_message_to_live_actors(u32 msg, LiveActor *exclude_actor) {
+        smgpc::compat::JkrHostAllocationScope host;
         auto seen_actors = std::vector<LiveActor *>{};
         auto accepted_count = std::size_t {};
-        auto *message_sensor = MR::getMessageSensor();
+        auto *message_sensor = invoke_game_callback(_allocation_domain, [] { return MR::getMessageSensor(); });
 
-        for (auto &entry : _entries) {
+        for (const auto& registered : entries_snapshot()) {
+            auto current = current_entry(registered);
+            if (!current) continue;
+            auto& entry = *current;
             auto *actor = entry_live_actor(entry);
             if (actor == nullptr || std::ranges::find(seen_actors, actor) != seen_actors.end()) {
                 continue;
@@ -1081,17 +1162,10 @@ namespace smgpc::runtime {
             const auto suspended = entry_is_suspended(entry);
             const auto excluded = actor == exclude_actor;
             const auto delivered = !dead && !suspended && !excluded;
-            auto accepted = false;
-            if (delivered) {
-                accepted = actor->receiveMessage(msg, message_sensor, message_sensor);
-                if (accepted) {
-                    ++accepted_count;
-                }
-            }
-
 #ifndef NDEBUG
-            smgpc::compat::JkrHostAllocationScope host;
-            push_message_trace(SceneSchedulerMessageTraceEntry {
+            // Capture borrowed names before the receiver can retire itself or
+            // other registrations. Post-callback tracing only touches copies.
+            auto trace = SceneSchedulerMessageTraceEntry {
                 .sequence = _next_message_sequence++,
                 .message = msg,
                 .target_name = entry_name(entry),
@@ -1105,14 +1179,22 @@ namespace smgpc::runtime {
                 .target_suspended = suspended,
                 .excluded = excluded,
                 .delivered = delivered,
-                .accepted = accepted,
+                .accepted = false,
                 .sender_sensor_present = message_sensor != nullptr,
                 .receiver_sensor_present = message_sensor != nullptr,
                 .sender_sensor_type = message_sensor != nullptr ? message_sensor->mType : 0U,
                 .receiver_sensor_type = message_sensor != nullptr ? message_sensor->mType : 0U,
                 .sender_sensor_host_name = sensor_host_name(message_sensor),
                 .receiver_sensor_host_name = sensor_host_name(message_sensor),
+            };
+#endif
+            const auto accepted = delivered && invoke_game_callback(_allocation_domain, [&] {
+                return actor->receiveMessage(msg, message_sensor, message_sensor);
             });
+            accepted_count += accepted;
+#ifndef NDEBUG
+            trace.accepted = accepted;
+            push_message_trace(std::move(trace));
 #endif
         }
 
@@ -1162,12 +1244,15 @@ namespace smgpc::runtime {
     }
 
     void SceneScheduler::execute_draw_buffer(const smgpc::camera::CameraPose &camera_pose, s32 draw_buffer_type, SceneDrawBufferPass pass) {
+        smgpc::compat::JkrHostAllocationScope host;
         if (!_draw_buffers->has_draw_buffers()) return;
         if (!_draw_buffers->is_allocated()) throw std::logic_error("Draw lists have not completed scene construction");
         refresh_draw_buffer_activation();
         smgpc::compat::SceneJ3dScope commands;
-        if (pass == SceneDrawBufferPass::Translucent) _draw_buffers->draw_translucent(draw_buffer_type);
-        else _draw_buffers->draw_opaque(draw_buffer_type);
+        invoke_game_callback(_allocation_domain, [&] {
+            if (pass == SceneDrawBufferPass::Translucent) _draw_buffers->draw_translucent(draw_buffer_type);
+            else _draw_buffers->draw_opaque(draw_buffer_type);
+        });
 #ifndef NDEBUG
         const auto phase = pass == SceneDrawBufferPass::Translucent ? SceneSchedulerPhase::DrawBufferXlu : SceneSchedulerPhase::DrawBufferOpa;
         for (const auto& entry : _entries)
@@ -1186,11 +1271,15 @@ namespace smgpc::runtime {
     }
 
     void SceneScheduler::register_pre_draw_function(const MR::FunctorBase& functor, s32 draw_type) {
-        _draw_buffers->register_pre_draw_function(functor, draw_type, _next_order);
+        smgpc::compat::JkrHostAllocationScope host;
+        invoke_game_callback(_allocation_domain, [&] {
+            _draw_buffers->register_pre_draw_function(functor, draw_type, _next_order);
+        });
         ++_next_order;
     }
 
     void SceneScheduler::execute_draw_type(s32 draw_type) {
+        smgpc::compat::JkrHostAllocationScope host;
         smgpc::compat::SceneJ3dScope j3d_scope;
         std::vector<Entry> draw_entries;
         std::vector<NameObj*> objects;
@@ -1206,7 +1295,9 @@ namespace smgpc::runtime {
                 else objects.push_back(entry.name_obj);
             }
         }
-        const auto drawn = _draw_buffers->execute_draw_category(draw_type, objects);
+        const auto drawn = invoke_game_callback(_allocation_domain, [&] {
+            return _draw_buffers->execute_draw_category(draw_type, objects);
+        });
 #ifndef NDEBUG
         {
             smgpc::compat::JkrHostAllocationScope host;
@@ -1478,7 +1569,8 @@ namespace smgpc::runtime {
         _message_trace.clear();
         _next_message_sequence = 0U;
 #endif
-        _next_order = 0U;
+        // Registration orders identify snapshots across callback-triggered
+        // clear/reconnect operations and must never be reused by this scheduler.
     }
 
     SceneScheduler::Entry *SceneScheduler::find_entry(SceneEntryKind kind, const void *ptr) {
@@ -1507,33 +1599,35 @@ namespace smgpc::runtime {
         return const_cast<SceneScheduler *>(this)->find_entry(kind, ptr);
     }
 
-    std::vector<SceneScheduler::Entry *> SceneScheduler::sorted_entries_for_movement() {
+    std::optional<SceneScheduler::Entry> SceneScheduler::current_entry(const Entry& registered) const {
+        const auto found = std::ranges::find(_entries, registered.order, &Entry::order);
+        if (found == _entries.end()) return std::nullopt;
+        return *found;
+    }
+
+    std::vector<SceneScheduler::Entry> SceneScheduler::entries_snapshot() const {
         smgpc::compat::JkrHostAllocationScope host;
-        auto entries = std::vector<Entry *>{};
-        for (auto &entry : _entries) {
-            entries.push_back(&entry);
-        }
-        std::ranges::stable_sort(entries, movement_category_less);
+        return _entries;
+    }
+
+    std::vector<SceneScheduler::Entry> SceneScheduler::sorted_entries_for_movement() {
+        smgpc::compat::JkrHostAllocationScope host;
+        auto entries = entries_snapshot();
+        std::ranges::stable_sort(entries, [](const Entry& a, const Entry& b) { return movement_category_less(&a, &b); });
         return entries;
     }
 
-    std::vector<SceneScheduler::Entry *> SceneScheduler::sorted_entries_for_calc_anim() {
+    std::vector<SceneScheduler::Entry> SceneScheduler::sorted_entries_for_calc_anim() {
         smgpc::compat::JkrHostAllocationScope host;
-        auto entries = std::vector<Entry *>{};
-        for (auto &entry : _entries) {
-            entries.push_back(&entry);
-        }
-        std::ranges::stable_sort(entries, calc_category_less);
+        auto entries = entries_snapshot();
+        std::ranges::stable_sort(entries, [](const Entry& a, const Entry& b) { return calc_category_less(&a, &b); });
         return entries;
     }
 
-    std::vector<SceneScheduler::Entry *> SceneScheduler::sorted_entries_for_calc_view_and_entry() {
+    std::vector<SceneScheduler::Entry> SceneScheduler::sorted_entries_for_calc_view_and_entry() {
         smgpc::compat::JkrHostAllocationScope host;
-        auto entries = std::vector<Entry *>{};
-        for (auto &entry : _entries) {
-            entries.push_back(&entry);
-        }
-        std::ranges::stable_sort(entries, calc_view_entry_less);
+        auto entries = entries_snapshot();
+        std::ranges::stable_sort(entries, [](const Entry& a, const Entry& b) { return calc_view_entry_less(&a, &b); });
         return entries;
     }
 

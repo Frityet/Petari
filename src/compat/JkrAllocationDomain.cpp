@@ -18,13 +18,14 @@
 
 namespace smgpc::compat {
     namespace {
-        thread_local bool allocation_routing;
+        using aurora::allocation::routing_state;
+        using aurora::allocation::RoutingState;
         thread_local unsigned allocation_scope_depth;
         thread_local unsigned heap_teardown_depth;
         struct OriginalHeapTeardown {
-            bool previous = allocation_routing;
-            OriginalHeapTeardown() { ++heap_teardown_depth; allocation_routing = true; }
-            ~OriginalHeapTeardown() { allocation_routing = previous; --heap_teardown_depth; }
+            RoutingState previous = routing_state;
+            OriginalHeapTeardown() { ++heap_teardown_depth; routing_state = {true, true}; }
+            ~OriginalHeapTeardown() { routing_state = previous; --heap_teardown_depth; }
         };
 
         // This lock is the original Game current-heap mutex. Holding it before
@@ -161,11 +162,11 @@ namespace smgpc::compat {
     struct JkrAllocationScope::Storage {
         std::shared_ptr<JkrAllocationDomain> domain;
         std::shared_ptr<JkrAllocationDomain> previous_domain;
-        bool previous_routing;
+        RoutingState previous_routing;
         HeapLock lock;
         std::optional<MR::CurrentHeapRestorer> restore;
 
-        Storage(std::shared_ptr<JkrAllocationDomain> owner, bool previous)
+        Storage(std::shared_ptr<JkrAllocationDomain> owner, RoutingState previous)
             : domain(std::move(owner)), previous_routing(previous) {
             if (!domain) throw std::invalid_argument("A JKR allocation scope requires a retained domain");
             for (auto* record = domains; record != nullptr; record = record->next) {
@@ -180,27 +181,22 @@ namespace smgpc::compat {
     };
 
     JkrAllocationScope::JkrAllocationScope(std::shared_ptr<JkrAllocationDomain> domain) {
-        const bool previous = allocation_routing;
+        const RoutingState previous = routing_state;
         {
             JkrHostAllocationScope host;
             _storage = std::make_unique<Storage>(std::move(domain), previous);
         }
         ++allocation_scope_depth;
-        allocation_routing = true;
+        routing_state = {true, true};
     }
 
     JkrAllocationScope::~JkrAllocationScope() {
-        const bool previous = _storage->previous_routing;
-        allocation_routing = false;
+        const RoutingState previous = _storage->previous_routing;
+        routing_state.guest = false;
         --allocation_scope_depth;
         _storage.reset();
-        allocation_routing = previous;
+        routing_state = previous;
     }
-
-    JkrHostAllocationScope::JkrHostAllocationScope() noexcept : _previous_routing(allocation_routing) {
-        allocation_routing = false;
-    }
-    JkrHostAllocationScope::~JkrHostAllocationScope() { allocation_routing = _previous_routing; }
 
     std::shared_ptr<JkrAllocationDomain> current_jkr_allocation_domain() noexcept {
         if (allocation_scope_depth == 0 && heap_teardown_depth == 0) return {};
@@ -222,7 +218,7 @@ namespace smgpc::compat {
         void* allocate_jkr_or_host(std::size_t size, std::size_t alignment,
                                   bool from_tail, JKRHeap* explicit_heap) {
             if (alignment == 0 || (alignment & (alignment - 1)) != 0) throw std::bad_alloc();
-            if (explicit_heap != nullptr || allocation_routing) {
+            if (explicit_heap != nullptr || routing_state.guest) {
                 if (size > heap_size_limit || alignment > heap_size_limit) return nullptr;
                 HeapLock lock;
                 JKRHeap* heap = explicit_heap != nullptr ? explicit_heap : JKRHeap::sCurrentHeap;
