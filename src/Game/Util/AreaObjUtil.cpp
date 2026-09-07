@@ -63,6 +63,14 @@ namespace MR {
         return WaterAreaFunction::tryInOceanArea(rPos, pInfo);
     }
 
+    void calcSpherePos(TVec3f* pPos, const AreaObj* pAreaObj) {
+        static_cast< AreaFormSphere* >(pAreaObj->mForm)->calcPos(pPos);
+    }
+
+    f32 getSphereRadius(const AreaObj* pAreaObj) {
+        return static_cast< AreaFormSphere* >(pAreaObj->mForm)->_14;
+    }
+
     void calcCylinderCenterPos(TVec3f* pPos, const AreaObj* pAreaObj) {
         static_cast< AreaFormCylinder* >(pAreaObj->mForm)->calcCenterPos(pPos);
     }

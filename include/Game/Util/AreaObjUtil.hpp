@@ -18,6 +18,9 @@ namespace MR {
 
     bool calcAreaMoveVelocity(TVec3f*, const TVec3f&);
 
+    void calcSpherePos(TVec3f*, const AreaObj*);
+    f32 getSphereRadius(const AreaObj*);
+
     void calcCylinderPos(TVec3f*, const AreaObj*);
     void calcCylinderCenterPos(TVec3f*, const AreaObj*);
 

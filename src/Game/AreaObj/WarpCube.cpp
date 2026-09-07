@@ -6,6 +6,7 @@
 #include "Game/Util/DirectDraw.hpp"
 #include "Game/Util/JMapIdInfo.hpp"
 #include "Game/Util/JMapUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include <cstdio>
@@ -14,7 +15,19 @@
 WarpCube::~WarpCube() {
 }
 
-// WarpCubeMgr::getPairCube
+WarpCube* WarpCubeMgr::getPairCube(const AreaObj* pAreaObj) {
+    const WarpCube* pSource = static_cast< const WarpCube* >(pAreaObj);
+    if (pSource->mMapIdInfo == nullptr) {
+        return nullptr;
+    }
+    for (AreaObj** pIter = mArray.begin(); pIter != mArray.end(); ++pIter) {
+        WarpCube* pCube = static_cast< WarpCube* >(*pIter);
+        if (pCube != pSource && pCube->mMapIdInfo != nullptr && *pCube->mMapIdInfo == *pSource->mMapIdInfo) {
+            return pCube;
+        }
+    }
+    return nullptr;
+}
 
 void WarpCubeMgr::setInvalidateTimer(AreaObj* pAreaObj, u16 a2) {
     WarpCube* pWarpCube = static_cast< WarpCube* >(pAreaObj);
@@ -55,7 +68,6 @@ void WarpCube::movement() {
     }
 }
 
-/*
 void WarpCube::draw() const {
     TDDraw::setup(0, 1, 0);
     GXSetCullMode(GX_CULL_NONE);
@@ -63,29 +75,21 @@ void WarpCube::draw() const {
 
     TVec3f rotate;
     TVec3f up;
-
     up.x = 0.0f;
     up.y = 1.0f;
     up.z = 0.0f;
-
     MR::calcCubeRotate(this, &rotate);
-
     Mtx matrix;
     MR::makeMtxTR(matrix, 0.0f, 0.0f, 0.0f, rotate.x, rotate.y, rotate.z);
     PSMTXMultVecSR(matrix, &up, &up);
-
     TVec3f pos;
     MR::calcCubePos(this, &pos);
-
-    u32 uVar2 = 0x1FFF080;
-
+    u32 color = 0x1FFF0080;
     if (!isValid()) {
-        uVar2 = 0x1FCF0010;
+        color = 0x1FCF0010;
     }
-
-    TDDraw::drawSphere(MR::createVecAndScaleByAndAdd(up, pos), 120.0f, uVar2, 16);
+    TDDraw::drawSphere(pos + up * 120.0f, 120.0f, color, 16);
 }
-*/
 
 void WarpCube::init(const JMapInfoIter& rIter) {
     AreaObj::init(rIter);

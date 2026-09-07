@@ -57,6 +57,7 @@ namespace MR {
     void initEnvelopeAndEnvMapOrProjMapModelData(J3DModelData*);
     ResTIMG* getResTIMG(const LiveActor*, int);
     ResTIMG* getResTIMG(const J3DModelData*, int);
+    ResTIMG* getTexture(ResourceHolder*, const char*);
     JUTTexture* getTextue(ResourceHolder*, const char*);
     const char* getTextureName(const LiveActor*, int);
     int findPosNrmMtxIndexFromModel(J3DModelData*, u16);
