@@ -20,30 +20,8 @@ u32 DotCamReaderInBin::getVersion() const {
     return mVersion;
 }
 
-// Stack issues
 bool DotCamReaderInBin::hasMoreChunk() const {
-    bool hasMore = false;
-
-    if (mMapIter.isValid()) {
-        const JMapData* mapData = mMapInfo.mData;
-        s32 iVar2 = mapData != nullptr ? mapData->mNumEntries : 0;
-
-        bool bVar1 = false;
-
-        const JMapInfo& mapInfo = mMapInfo;
-
-        if (mMapIter.mIndex == iVar2 && mMapIter.mInfo != nullptr && mapInfo.mData != nullptr) {
-            if (mMapIter.mInfo->mData == mapInfo.mData) {
-                bVar1 = true;
-            }
-        }
-
-        if (!bVar1) {
-            hasMore = true;
-        }
-    }
-
-    return hasMore;
+    return mMapIter.isValid() && mMapIter != mMapInfo.end();
 }
 
 void DotCamReaderInBin::nextToChunk() {
