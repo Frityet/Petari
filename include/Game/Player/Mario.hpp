@@ -75,7 +75,7 @@ public:
     void doExtraServices();
     bool isEnableCheckGround() NO_INLINE;
     void setGroundNorm(const TVec3f&);
-    bool checkForceGrounding();
+    void checkForceGrounding();
     void updateGroundInfo();
     void fixHeadFrontVecByGravity();
     bool isNonFixHeadVec() const;
@@ -119,7 +119,7 @@ public:
     void touchWater();
 
     bool isBlendWaitGround() const;
-    bool checkSpecialWaitAnimation();
+    void checkSpecialWaitAnimation();
     void resetSleepTimer();
 
     void connectToClimb();
@@ -158,9 +158,9 @@ public:
     bool checkBaseTransPoint();
     bool checkHeadPoint();
     const TVec3f* calcShadowPos();
-    void updateBinderInfo();
+    bool updateBinderInfo();
     bool isThroughWall(const Triangle*) const;
-    void checkGround();
+    bool checkGround();
     CubeCameraArea* getCameraCubeCode() const;
     void updateCubeCode();
 
@@ -169,8 +169,8 @@ public:
     void decDamageAfterTimer();
     bool checkDamage();
     u16 getDamageAfterTimer() const;
-    void damageFloorCheck();
-    void damageWallCheck();
+    bool damageFloorCheck();
+    bool damageWallCheck();
     void damagePolygonCheck(const Triangle*);
     bool flipLarge(const TVec3f&);
     bool isEnableAddDamage() const;
@@ -260,10 +260,10 @@ public:
     bool isEnableTurn();
     void recordTurnSlipAngle();
     f32 decideInertia(f32);
-    void decideInertiaOnIce(f32);
-    void decideInertiaOnSlip(f32);
+    f32 decideInertiaOnIce(f32);
+    f32 decideInertiaOnSlip(f32);
     void calcShadowDir(const TVec3f&, TVec3f*);
-    void retainMoveDir(f32, f32, TVec3f*);
+    bool retainMoveDir(f32, f32, TVec3f*);
     void calcMoveDir(f32, f32, TVec3f*, bool);
     bool checkLockOnHoming();
     void doLockOnHoming();
@@ -314,7 +314,7 @@ public:
     bool isNoWalkFallOnDossun() const;
     bool isNotReflectGlassGround() const;
     bool isUseAnotherMovingPolygon() const;
-    bool isUseFoolSpecialGravity(const TVec3f&, TVec3f*) const;
+    bool isUseFooSpecialGravity(const TVec3f&, TVec3f*) const;
     void updateOnimasu();
     bool isHeadPushEnableArea() const;
     bool isOnimasuBinderPressSkip() const;
@@ -326,7 +326,7 @@ public:
     void forceStopTornado();
     void startRotationTask(u32);
     void doSpinWallEffect();
-    void taskOnRotation(u32);
+    bool taskOnRotation(u32);
 
     void sendStateMsg(u32);
     bool updatePosture(MtxPtr);
@@ -344,23 +344,23 @@ public:
 
     bool isWalling() const;
     void checkWallStick();
-    void checkStickWallSide();
+    u8 checkStickWallSide();
     s32 checkStickFrontBack();
-    void fixWallingPosition(bool);
-    void fixWallingDir();
-    void fixWallingTop();
-    void checkWallFloorCode(u16) const;
+    bool fixWallingPosition(bool);
+    void fixWallingDir(bool);
+    bool fixWallingTop();
+    bool checkWallFloorCode(u16) const;
     bool checkWallCode(const char*, bool) const;
-    void checkWallCodeNorm(u16, TVec3f*, bool) const;
+    bool checkWallCodeNorm(u16, TVec3f*, bool) const;
     void setWallCancel();
     void keepDistFrontWall();
     bool isEnableStickWall();
-    void fixWallingDist();
+    bool fixWallingDist();
     bool isInhibitWall() const;
-    bool tryWallPunch();
+    void tryWallPunch();
 
     bool isHanging() const;
-    void fixHangDir(const TVec3f&, TVec3f*);
+    bool fixHangDir(const TVec3f&, TVec3f*);
     bool isEnableBackHang();
     bool isEnableSideHang();
     void checkHang();
@@ -455,7 +455,7 @@ public:
     void startJumpDropSlide(const HitSensor*);
 
     void startTeresaMode();
-    void getHitWallNorm(TVec3f*);
+    bool getHitWallNorm(TVec3f*);
     void resetTeresaMode();
     void doTeresaReflection(const TVec3f&, bool);
     void startTeresaDisappear();
@@ -823,10 +823,10 @@ public:
     // NOT FAKE
 
     /* 0x564 */ s32 _564;
-    /* 0x568 */ u32 _568;
+    /* 0x568 */ AreaObj* _568;
     /* 0x56C */ AreaObj* _56C;
     /* 0x570 */ u8 _570;
-    /* 0x574 */ u32 _574;
+    /* 0x574 */ void* _574;
     /* 0x578 */ u32 _578;
     /* 0x57C */ Triangle* _57C[0x20];
     /* 0x5FC */ u32 _5FC;
@@ -955,6 +955,7 @@ public:
 
     /* 0x8F4 */ f32 _8F4;
 
+    // FAKE
     /* 0x8F8 */ TVec3f _8F8;
     /* 0x904 */ TVec3f _904;
     // NOT FAKE
@@ -986,7 +987,7 @@ public:
     /* 0x984 */ Task _984[0xb];
     /* 0xA08 */ u32 _A08[11];
     /* 0xA34 */ u16 _A34;
-    /* 0xA38 */ u32 _A38;
+    /* 0xA38 */ HitSensor* _A38;
     /* 0xA3C */ u16 _A3C;
     /* 0xA40 */ TVec3f _A40;
     /* 0xA4C */ TVec3f _A4C;

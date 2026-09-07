@@ -232,7 +232,7 @@ void MarioActor::initMaterialEffect() {
     _BA4 = new HashSortTable(entryCount);
     entry = cMaterialEffectTable;
     for (int i = 0; i < entryCount; i++) {
-        _BA4->add(cMaterialEffectTable[i].mName, reinterpret_cast< u32 >(&cMaterialEffectTable[i]), false);
+        _BA4->add(cMaterialEffectTable[i].mName, reinterpret_cast< HashSortTable::Value >(&cMaterialEffectTable[i]), false);
     }
 
     _BA4->sort();
@@ -335,12 +335,12 @@ s32 MarioActor::getFloorMaterialIndex(u32 flags) const {
 }
 
 MultiEmitter* MarioActor::playMaterialEffect(const char* pName) {
-    u32 value = 0;
+    HashSortTable::Value value = 0;
 
     _BA4->search(pName, &value);
     MaterialEffectEntry* entry = reinterpret_cast< MaterialEffectEntry* >(value);
 
-    const u8 flag = entry->mFlag.mByte0;
+    const u8 flag = static_cast< u8 >(entry->mFlag.mWord >> 24);
     const s32 materialIndex = getFloorMaterialIndex(flag);
     if (materialIndex == -1) {
         return nullptr;
@@ -384,7 +384,7 @@ MultiEmitter* MarioActor::playMaterialEffect(const char* pName) {
 }
 
 void MarioActor::stopMaterialEffect(const char* pName) {
-    u32 value = 0;
+    HashSortTable::Value value = 0;
 
     _BA4->search(pName, &value);
     MaterialEffectEntry* entry = reinterpret_cast< MaterialEffectEntry* >(value);
@@ -415,7 +415,7 @@ void MarioActor::initCommonEffect() {
         s32 variant = 0;
         s32 useFollow = 0;
 
-        switch (entry->mType.mByte0) {
+        switch (static_cast< u8 >(entry->mType.mWord >> 24)) {
         case 0:
             variant = 0;
             break;
@@ -455,7 +455,7 @@ void MarioActor::initCommonEffect() {
         for (u32 materialIndex = 0; materialIndex < 7; materialIndex++) {
             sprintf(name, "%s", entry->mName);
 
-            const u8 flag2 = entry->mFlags.mByte2;
+            const u8 flag2 = static_cast< u8 >(entry->mFlags.mWord >> 8);
             if ((flag2 & 0x8) && materialIndex != 1) {
                 continue;
             }
@@ -490,7 +490,7 @@ void MarioActor::initCommonEffect() {
                 mEffectKeeper->registerEffectWithoutSRT(effectName, name + materialIndex);
             } else {
                 const char* effectName = effectList[variant];
-                const u8 flag0 = entry->mFlags.mByte0;
+                const u8 flag0 = static_cast< u8 >(entry->mFlags.mWord >> 24);
                 switch (flag0) {
                 case 0: {
                     mEffectKeeper->registerEffectWithoutSRT(effectName, name + materialIndex);
@@ -515,16 +515,16 @@ void MarioActor::initCommonEffect() {
                 }
             }
 
-            if ((entry->mFlags.mByte1 & 0x1) != 0) {
+            if ((static_cast< u8 >(entry->mFlags.mWord >> 16) & 0x1) != 0) {
                 MR::getEffect(this, name + materialIndex)->forceFollowOn();
             }
-            if ((entry->mFlags.mByte1 & 0x2) != 0) {
+            if ((static_cast< u8 >(entry->mFlags.mWord >> 16) & 0x2) != 0) {
                 MR::getEffect(this, name + materialIndex)->forceScaleOn();
             }
         }
 
         entry->mTimer = 0;
-        switch (entry->mType.mByte0) {
+        switch (static_cast< u8 >(entry->mType.mWord >> 24)) {
         case 2:
         case 5: {
             _BA0[_B9E] = entry;
@@ -562,11 +562,11 @@ MultiEmitter* MarioActor::playCommonEffect(const char* pName) {
                 return nullptr;
             }
 
-            if ((entry->mFlags.mByte2 & 0x8) && materialIndex != 1) {
+            if ((static_cast< u8 >(entry->mFlags.mWord >> 8) & 0x8) && materialIndex != 1) {
                 return nullptr;
             }
 
-            switch (entry->mType.mByte0) {
+            switch (static_cast< u8 >(entry->mType.mWord >> 24)) {
             case 1:
             case 2:
             case 4:
@@ -593,7 +593,7 @@ MultiEmitter* MarioActor::playCommonEffect(const char* pName) {
                 s32 needsSRT = 0;
 
                 if (materialIndex == 0) {
-                    if (entry->mType.mByte0 >= 6) {
+                    if (static_cast< u8 >(entry->mType.mWord >> 24) >= 6) {
                         const Triangle* tri = mMario->getGroundPolygon();
                         MtxPtr prevMtx = tri->getPrevBaseMtx()->toMtxPtr();
                         MtxPtr baseMtx = mMario->getGroundPolygon()->getBaseMtx()->toMtxPtr();
@@ -620,7 +620,7 @@ MultiEmitter* MarioActor::playCommonEffect(const char* pName) {
                     }
                 } else {
                     if (needsSRT) {
-                        const u8 hostFlag = entry->mFlags.mByte1;
+                        const u8 hostFlag = static_cast< u8 >(entry->mFlags.mWord >> 16);
                         const TVec3f* hostPos = nullptr;
                         const TVec3f* hostRot = nullptr;
                         const TVec3f* hostScale = nullptr;
@@ -644,7 +644,7 @@ MultiEmitter* MarioActor::playCommonEffect(const char* pName) {
                 }
             }
 
-            if (!(entry->mFlags.mByte1 & 0x2)) {
+            if (!(static_cast< u8 >(entry->mFlags.mWord >> 16) & 0x2)) {
                 if (emitter) {
                     emitter->setGlobalScale(entry->mScale, -1);
                 }
@@ -654,7 +654,7 @@ MultiEmitter* MarioActor::playCommonEffect(const char* pName) {
                 emitter->setRate(entry->mRate, -1);
             }
 
-            if (entry->mFlags.mByte2 & 0x1) {
+            if (static_cast< u8 >(entry->mFlags.mWord >> 8) & 0x1) {
                 TVec3f dir(mMario->getWallNorm());
                 TVec3f zero(0.0f, 0.0f, 0.0f);
                 TPos3f mtx;
@@ -687,7 +687,7 @@ MultiEmitter* MarioActor::playCommonEffect(const char* pName) {
                 }
             }
 
-            if (entry->mFlags.mByte2 & 0x2) {
+            if (static_cast< u8 >(entry->mFlags.mWord >> 8) & 0x2) {
                 TVec3f trans(mMario->_4E8);
                 if (emitter) {
                     emitter->setGlobalTranslation(trans, -1);
@@ -698,7 +698,7 @@ MultiEmitter* MarioActor::playCommonEffect(const char* pName) {
                 entry->mTimer = entry->mInterval;
             }
 
-            switch (entry->mType.mByte0) {
+            switch (static_cast< u8 >(entry->mType.mWord >> 24)) {
             case 1:
             case 2:
             case 4:
