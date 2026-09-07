@@ -1,12 +1,113 @@
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/MapObj/BlackHole.hpp"
+#include "Game/Player/MarioHang.hpp"
+#include "Game/Player/RushEndInfo.hpp"
 #include "Game/Player/MarioActor.hpp"
 #include "Game/Player/MarioAnimator.hpp"
 #include "Game/Player/MarioConst.hpp"
 #include "Game/Player/MarioState.hpp"
 #include "Game/Player/MarioSwim.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
+#include "Game/Util/ActorMovementUtil.hpp"
+#include "Game/Util/MapUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include <cstring>
 
-// bool MarioActor::receiveMsgEnemyAttack(u32, HitSensor*, HitSensor*);
+bool MarioActor::receiveMsgEnemyAttack(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
+    bool wasCarrying = getCarrySensor() != nullptr;
+    if (mPlayerMode == 6) {
+        if (msg == ACTMES_ENEMY_ATTACK_HEATBEAM) {
+            setPlayerMode(0, true);
+            return true;
+        }
+        return false;
+    }
+    if (mPlayerMode == 3 && msg == ACTMES_ENEMY_ATTACK_FREEZE) {
+        msg = ACTMES_ENEMY_ATTACK;
+    }
+    if (_934) {
+        if (!mMario->isEnableAddDamage()) {
+            return false;
+        }
+        if (cylinderHitCheck(pSender, nullptr)) {
+            return MR::sendArbitraryMsg(msg, _924, pSender);
+        }
+        return false;
+    }
+    if (!isNerve(&NrvMarioActor::MarioActorNrvWait::sInstance)) {
+        return false;
+    }
+    if (msg == ACTMES_ENEMY_ATTACK_EXTRA_DAMAGE) {
+        if (mPlayerMode == 1) {
+            return false;
+        }
+        decLife(0);
+        return true;
+    }
+    if (!_FCC && !_FCD) {
+        if (!cylinderHitCheck(pSender, nullptr)) {
+            if (msg == ACTMES_ENEMY_ATTACK_FLIP_ROT && _3E5) {
+                TVec3f direction(pReceiver->mPosition);
+                direction -= pSender->mPosition;
+                if (MR::isNearZero(direction)) {
+                    getFrontVec(&direction);
+                }
+                direction.setLength(15.0f);
+                return mMario->doFlipRot(direction);
+            }
+            return false;
+        }
+        if (!isDamaging()) {
+            TVec3f direction(pSender->mPosition);
+            direction -= pReceiver->mPosition;
+            if (checkAndTryTrampleAttack(pSender, direction.length(), true)) {
+                return false;
+            }
+        }
+    }
+    bool handled;
+    bool result = tryAttackMsg(msg, pSender, &handled);
+    if (handled) {
+        if (result && wasCarrying) {
+            tryCounterJetAttack(pSender);
+        }
+        return result;
+    }
+    switch (msg) {
+    case ACTMES_ENEMY_ATTACK_EXPLOSION: {
+        TVec3f direction(_2A0);
+        direction -= pSender->mPosition;
+        if (MR::isExistMapCollisionExceptActor(pSender->mPosition, direction, pSender->mHost)) {
+            return false;
+        }
+        break;
+    }
+    }
+    TVec3f direction(pReceiver->mPosition);
+    direction -= pSender->mPosition;
+    direction.length();
+    if (MR::isNearZero(direction)) {
+        getFrontVec(&direction);
+    }
+    direction.setLength(30.0f);
+    result = tryVectorAttackMsg(msg, direction);
+    if (!result) {
+        MR::sendArbitraryMsg(ACTMES_INVALID_HIT, pSender, getSensor("body"));
+    } else {
+        u8 mode;
+        selectAutoBind(pSender->mHost->mName, &mode);
+        if (mode == 2) {
+            setPlayerMode(0, true);
+        }
+        if (wasCarrying) {
+            tryCounterJetAttack(pSender);
+        }
+        if (msg == ACTMES_ENEMY_ATTACK_FLIP_MAXIMUM) {
+            printHitMark(pSender);
+        }
+    }
+    return result;
+}
 
 bool MarioActor::tryAttackMsg(u32 msg, const HitSensor* pSensor, bool* myBool) {
     if (myBool != nullptr) {
@@ -53,9 +154,248 @@ bool MarioActor::tryAttackMsg(u32 msg, const HitSensor* pSensor, bool* myBool) {
     }
 }
 
-// bool MarioActor::receiveMsgPush(HitSensor*, HitSensor*);
+bool MarioActor::receiveMsgPush(HitSensor* pSender, HitSensor* pReceiver) {
+    mMario->resetSleepTimer();
+    if (pSender == _424) {
+        return false;
+    }
+    if (pSender == getCarrySensor()) {
+        return false;
+    }
+    mMario->setNotSafetyTimer();
+    if (mMario->isStatusActive(MarioStatus_Stick)) {
+        return false;
+    }
+    if (mMario->isStatusActive(MarioStatus_Crush)) {
+        return false;
+    }
+    if (!isEnableMoveMario()) {
+        return false;
+    }
+    if (_934) {
+        return MR::sendMsgPush(_924, pSender);
+    }
+    TVec3f push;
+    if (!cylinderHitCheck(pSender, &push)) {
+        return false;
+    }
+    if (!MR::isNearZero(push)) {
+        if (!isDamaging()) {
+            TVec3f direction(pSender->mPosition);
+            direction -= pReceiver->mPosition;
+            if (checkAndTryTrampleAttack(pSender, direction.length(), true)) {
+                return false;
+            }
+            if (mMario->mMovementStates._B && mMario->mMovementStates.jumping && tryHipDropAttack(pSender)) {
+                return false;
+            }
+        }
+        if (mMario->isSwimming() && getCarrySensor() != nullptr &&
+            (pSender->isType(ATYPE_JET_TURTLE) || pSender->isType(ATYPE_JET_TURTLE_SLOW))) {
+            mMario->startPadVib(2);
+            sendMsgToSensor(pSender, ACTMES_ATTACKDROP);
+            return false;
+        }
+        if (strstr(pSender->mHost->mName, "ゴーストマリオ") != nullptr && (isJumping() || mMario->isHanging())) {
+            return false;
+        }
+        if (mMario->isActiveTaskID(0x200)) {
+            return false;
+        }
+        mMario->push(push * 1.1f);
+        if (mMario->isStatusActive(MarioStatus_Foo)) {
+            TVec3f direction(pReceiver->mPosition);
+            direction -= pSender->mPosition;
+            if (!MR::normalizeOrZero(&direction)) {
+                mMario->_97C->hitWall(direction, nullptr);
+            }
+        }
+        if (isJumping() && mMario->_3BC > 1) {
+            if (push.dot(mMario->mJumpVec) < 0.0f) {
+                MR::normalizeOrZero(&push);
+                mMario->cutVecElementFromJumpVec(push);
+            }
+            if (!mMario->isRising() && !MR::sendMsgPush(pSender, pReceiver)) {
+                if (mMario->getMovementStates()._B) {
+                    mMario->startHipDropSlide(pSender);
+                } else {
+                    mMario->startJumpDropSlide(pSender);
+                }
+            }
+        }
+        return true;
+    }
+    return false;
+}
 
-// bool MarioActor::receiveOtherMsg(u32, HitSensor*, HitSensor*);
+bool MarioActor::receiveOtherMsg(u32 msg, HitSensor* pSender, HitSensor* pReceiver) {
+    if (_934) {
+        if (msg == ACTMES_INHALE_BLACK_HOLE && _924->isType(ATYPE_MARIO_LAUNCHER_BIND)) {
+            if (!_924->receiveMessage(ACTMES_RUSH_CANCEL, getSensor("body")) || _934) {
+                RushEndInfo info(nullptr, 4, TVec3f(0.0f, 0.0f, 0.0f), false, 0);
+                endRush(&info);
+            }
+        } else {
+            return false;
+        }
+    }
+    switch (msg) {
+    case ACTMES_PUSH_FORCE:
+        if (mMario->isStatusActive(MarioStatus_Hang)) {
+            mMario->mHang->forceDrop();
+        }
+        return receiveMsgPush(pSender, pReceiver);
+    case ACTMES_START_DEMO:
+        mMario->invalidateRelativePosition();
+        break;
+    case ACTMES_INHALE_BLACK_HOLE:
+        if (mMario->_1C._8) {
+            return false;
+        }
+        mBlackHolePosition = pSender->mPosition;
+        mBlackHole = static_cast<BlackHole*>(pSender->mHost);
+        forceGameOverBlackHole();
+        return true;
+    case ACTMES_REFLECT_V:
+        if (mMario->getCurrentStatus() != MarioStatus_Damage && MR::isSensorPlayer(pReceiver)) {
+            mMario->mMovementStates._5 = false;
+            mMario->mMovementStates._2B = true;
+            mMario->_402 = 0;
+            mMario->cutGravityElementFromJumpVec(true);
+            return true;
+        }
+        break;
+    case ACTMES_JUMP:
+        if (mMario->getCurrentStatus() == MarioStatus_Damage) {
+            break;
+        }
+        if (MR::isSensorPlayer(pReceiver)) {
+            TVec3f jump(pReceiver->mPosition);
+            jump -= pSender->mPosition;
+            if (!isJumping()) {
+                MR::vecKillElement(jump, getGravityVector(), &jump);
+                jump.setLength(mConst->getTable()->mMsgJumpGroundPowerXZ);
+                f32 power = mConst->getTable()->mMsgJumpGroundPowerY;
+                jump.add(-getGravityVector() * power);
+            } else {
+                jump.setLength(mConst->getTable()->mMsgJumpAirPower);
+            }
+            mMario->tryForceFreeJump(jump);
+            mMario->mMovementStates._9 = false;
+            mMario->mMovementStates._6 = false;
+            return true;
+        }
+        // fall through
+    case ACTMES_TOUCHJUMP:
+        if (mMario->getCurrentStatus() != MarioStatus_Damage && MR::isSensorPlayer(pReceiver)) {
+            if (!cylinderHitCheck(pSender, nullptr)) {
+                return false;
+            }
+            TVec3f jump(pReceiver->mPosition);
+            jump -= pSender->mPosition;
+            if (!isJumping()) {
+                MR::vecKillElement(jump, getGravityVector(), &jump);
+                jump.setLength(mConst->getTable()->mMsgJumpGroundPowerXZ);
+                f32 power = mConst->getTable()->mMsgJumpGroundPowerY;
+                jump.add(-getGravityVector() * power);
+            } else {
+                jump.setLength(mConst->getTable()->mMsgJumpAirPower);
+            }
+            mMario->tryForcePowerJump(jump, false);
+            stopAnimation(nullptr);
+            mMario->mMovementStates._9 = false;
+            mMario->mMovementStates._6 = false;
+            playSound("声壁反射", -1);
+            return true;
+        }
+        break;
+    case ACTMES_BILLIARDJUMP: {
+        if (!isJumping()) {
+            return receiveMsgPush(pSender, pReceiver);
+        }
+        if (!cylinderHitCheck(pSender, nullptr)) {
+            return false;
+        }
+        TVec3f direction(pReceiver->mPosition);
+        direction -= pSender->mPosition;
+        MR::normalizeOrZero(&direction);
+        f32 power = mMario->cutVecElementFromJumpVec(direction);
+        if (power >= 0.0f) {
+            return false;
+        }
+        f32 reflectedPower = power - mConst->getTable()->mBilliardJumpExtra;
+        mMario->mJumpVec.add(-direction * reflectedPower);
+        mMario->_430 = 3;
+        return true;
+    }
+    case ACTMES_AWAYJUMP:
+        doTrampleJump(pSender);
+        mMario->startPadVib(3);
+        mMario->mJumpVec -= mMario->mFrontVec * 10.0f;
+        changeAnimation("飛びすさりジャンプ", nullptr);
+        break;
+    case ACTMES_REFLECT: {
+        TVec3f direction;
+        MR::calcDistance(pSender, pReceiver, &direction);
+        mMario->reflectWallOnSpinning(direction, 5);
+        if (mMario->mWalkSpeed > 0.5f) {
+            mMario->mWalkSpeed = 0.5f;
+        }
+        return true;
+    }
+    case ACTMES_KICK:
+        playSound("声ランニングキック", -1);
+        changeAnimation("ランニングキック", nullptr);
+        return true;
+    case ACTMES_PASS_RING:
+        if (mMario->_97C == nullptr) {
+            return false;
+        }
+        return mMario->_97C->passRing(pSender);
+    case ACTMES_FOUNTAINJUMP: {
+        mMario->touchWater();
+        TVec3f side;
+        MR::vecKillElement(pReceiver->mPosition - pSender->mPosition, getGravityVec(), &side);
+        if (side.length() >= pSender->mRadius) {
+            return receiveMsgPush(pSender, pReceiver);
+        }
+        bool result = mMario->doFlow();
+        if (result) {
+            playSound("水弾かれ", -1);
+            playSound("声噴水ジャンプ", -1);
+        }
+        return result;
+    }
+    case ACTMES_RUSHDROP:
+        tryReleaseDirect(pSender);
+        break;
+    case ACTMES_SHAKE_OFF_BEE:
+        _9F2 = 60;
+        break;
+    case ACTMES_PUDDLE_TOUCH_GROUND:
+        _3A8 = 3;
+        break;
+    case ACTMES_BOMB_TERESA_TONGUE_TOUCH:
+        if (_468 != 0) {
+            return false;
+        }
+        if (isDamaging()) {
+            return false;
+        }
+        if (mPlayerMode == 0 || mPlayerMode == 1) {
+            _B94 = 2;
+            changeAnimationUpper("ハンマー投げ回転中");
+            return true;
+        }
+        return false;
+    case ACTMES_WARP:
+        return mMario->doObjWarp(pSender->mHost);
+    case ACTMES_IS_BROKEN:
+    case ACTMES_REQUEST_CLAP:
+        break;
+    }
+    return false;
+}
 
 bool MarioActor::tryVectorAttackMsg(u32 msg, const TVec3f& rVec) {
     TVec3f newVec;
@@ -156,7 +496,66 @@ bool MarioActor::receiveMsgTaken(HitSensor* pSender, HitSensor* pReceiver) {
     return true;
 }
 
-// void MarioActor::cylinderHitCheck(const HitSensor*, TVec3f*);
+bool MarioActor::cylinderHitCheck(const HitSensor* pSensor, TVec3f* pOut) {
+    f32 sensorRadius = pSensor->mRadius;
+    TVec3f center = _2A0 + mMario->_350 + mMario->_35C + mVelocity;
+    TVec3f direction(pSensor->mPosition);
+    direction -= center;
+    TVec3f side;
+    f32 vertical = MR::vecKillElement(direction, _4C4, &side);
+    f32 sphereOverlap = 100.0f + sensorRadius - direction.length();
+    if (sphereOverlap < 0.0f) {
+        return false;
+    }
+
+    if (vertical > -sensorRadius) {
+        f32 sideOverlap = sensorRadius + _4B0 - side.length();
+        f32 heightOverlap = sensorRadius + _4B4 - vertical;
+        if (sideOverlap > 0.0f && heightOverlap > 0.0f) {
+            if (pOut != nullptr) {
+                MR::normalizeOrZero(&side);
+                pOut->zero();
+                if (sphereOverlap < sideOverlap && sphereOverlap < heightOverlap) {
+                    MR::normalizeOrZero(&direction);
+                    pOut->add(-direction * sphereOverlap);
+                } else if (sideOverlap < heightOverlap) {
+                    pOut->add(-side * sideOverlap);
+                } else {
+                    pOut->add(-_4C4 * heightOverlap);
+                    pOut->add(-side);
+                }
+            }
+            return true;
+        }
+    }
+
+    if (mMario->getMovementStates()._A && mMario->getMovementStates()._1) {
+        return false;
+    }
+    vertical = MR::vecKillElement(direction, _4B8, &side);
+    if (vertical < -sensorRadius) {
+        return false;
+    }
+    f32 sideOverlap = sensorRadius + _4B0 - side.length();
+    f32 heightOverlap = sensorRadius + _4B4 - vertical;
+    if (sideOverlap > 0.0f && heightOverlap > 0.0f) {
+        if (pOut != nullptr) {
+            MR::normalizeOrZero(&side);
+            pOut->zero();
+            if (sphereOverlap < sideOverlap && sphereOverlap < heightOverlap) {
+                MR::normalizeOrZero(&direction);
+                pOut->add(-direction * sphereOverlap);
+            } else if (sideOverlap < heightOverlap) {
+                pOut->add(-side * sideOverlap);
+            } else {
+                pOut->add(-_4B8 * heightOverlap);
+                pOut->add(-side);
+            }
+        }
+        return true;
+    }
+    return false;
+}
 
 void MarioState::hitWall(const TVec3f&, HitSensor*) {
 }

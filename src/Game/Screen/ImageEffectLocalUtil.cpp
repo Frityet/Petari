@@ -108,31 +108,29 @@ void ImageEffectLocalUtil::drawTexture(JUTTexture* pTexture, s32 param2, s32 par
 
     sendTextureVertex(param2, param3);
 }
-/*
-void ImageEffectLocalUtil::sendTextureVertex(s32 param1, s32 param2) {
-    f32 local1 = static_cast< f32 >(MR::getFrameBufferWidth()) / param1;
-    f32 local2 = static_cast< f32 >(MR::getFrameBufferHeight()) / param1;
-    f32 dVar9;
-    f32 dVar8;
-    f32 dVar7;
+void ImageEffectLocalUtil::sendTextureVertex(s32 divide, s32 index) {
+    s32 row = index / divide;
+    s32 column = index % divide;
+    f32 width = static_cast< f32 >(MR::getFrameBufferWidth()) / divide;
+    f32 height = static_cast< f32 >(MR::getFrameBufferHeight()) / divide;
+    f32 left = column * width;
+    f32 right = (column + 1) * width;
+    f32 bottom = (row + 1) * height;
+    f32 top = row * height;
 
     GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, 4);
-    {
-        GXPosition3f32(dVar8, dVar7, 0.0f);
-        GXTexCoord2f32(0.0f, 1.0f);
-
-        GXPosition3f32(dVar8, dVar9, 0.0f);
-        GXTexCoord2f32(0.0f, 0.0f);
-
-        GXPosition3f32(dVar10, dVar7, 0.0f);
-        GXTexCoord2f32(1.0f, 1.0f);
-
-        GXPosition3f32(dVar10, dVar9, 0.0f);
-        GXTexCoord2f32(1.0f, 0.0f);
-    }
+    GXPosition3f32(left, bottom, 0.0f);
+    GXTexCoord2f32(0.0f, 1.0f);
+    GXPosition3f32(left, top, 0.0f);
+    GXTexCoord2f32(0.0f, 0.0f);
+    GXPosition3f32(right, bottom, 0.0f);
+    GXTexCoord2f32(1.0f, 1.0f);
+    GXPosition3f32(right, top, 0.0f);
+    GXTexCoord2f32(1.0f, 0.0f);
     GXEnd();
 }
 
+/*
 void ImageEffectLocalUtil::blurTexture(JUTTexture* pTexture, s32 param2, s32 param3, u32 param4, f32 param5, f32 param6) {
     f32 local1 = MR::isScreen16Per9() ? 1.333f : 1.0f;
 

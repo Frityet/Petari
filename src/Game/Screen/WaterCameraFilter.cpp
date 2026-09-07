@@ -165,7 +165,7 @@ void WaterCameraFilter::loadMaterial() const {
     GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
     GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
     GXSetVtxDesc(GX_VA_TEX1, GX_DIRECT);
-    Mtx v21;
+    Mtx44 v21;
     s32 height = MR::getScreenHeight();
     C_MTXOrtho(v21, 0.0f, height, 0.0f, MR::getFrameBufferWidth(), -10000.0f, 10000.0f);
     GXSetProjection(v21, GX_ORTHOGRAPHIC);

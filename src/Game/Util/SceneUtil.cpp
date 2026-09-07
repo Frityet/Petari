@@ -9,11 +9,20 @@
 #include "Game/System/GameSystem.hpp"
 #include "Game/System/GameSystemSceneController.hpp"
 #include "Game/Util/PlayerUtil.hpp"
+#include "Game/Util/JMapIdInfo.hpp"
+#include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/SequenceUtil.hpp"
 #include "Game/Util/SingletonHolder.hpp"
 #include "Game/Util/StringUtil.hpp"
+#include <cstdio>
 
 namespace {
+    const JMapIdInfo cInitializeStartIdInfo(0, 0);
+
+    void getRailInfoFromRailId(JMapInfoIter* pIter, const JMapInfo** ppInfo, const StageDataHolder* pHolder, int railId) NO_INLINE {
+        *pIter = pHolder->getCommonPathPointInfo(ppInfo, railId);
+    }
+
     ScenePlayingResult* getScenePlayingResult() {
         return MR::getSceneObj< ScenePlayingResult >(SceneObj_ScenePlayingResult);
     }
@@ -150,10 +159,19 @@ namespace MR {
 
     // stopSceneForScenarioOpeningCamera
     // playSceneForScenarioOpeningCamera
-    // getCurrentMarioStartIdInfo
-    // getStartPosNum
-    // getCurrentStartZoneId
-    // getInitializeStartIdInfo
+    const JMapIdInfo& getCurrentMarioStartIdInfo() {
+        return *SingletonHolder< GameSystem >::get()->mSceneController->mCurrSceneControlInfo.mStartIdInfo;
+    }
+    s32 getStartPosNum() {
+        return getStageDataHolder()->getStartPosNum();
+    }
+    s32 getCurrentStartZoneId() {
+        return getStageDataHolder()->getCurrentStartZoneId();
+    }
+
+    const JMapIdInfo& getInitializeStartIdInfo() {
+        return cInitializeStartIdInfo;
+    }
     // getStageArchive
     // getGeneralPosNum
     // getGeneralPosData
@@ -184,11 +202,28 @@ namespace MR {
     // getPlacedHiddenStarScenarioNo
     // getRailInfo
     // getNextLinkRailInfo
-    // getCurrentStartCameraId
-    // getStartCameraIdInfoFromStartDataIndex
-    // getPlacedRailNum
-    // getCameraRailInfo
-    // getCameraRailInfoFromRailDataIndex
+    s32 getCurrentStartCameraId() {
+        return getStageDataHolder()->getCurrentStartCameraId();
+    }
+    void getStartCameraIdInfoFromStartDataIndex(JMapIdInfo* pInfo, int index) {
+        getStageDataHolder()->getStartCameraIdInfoFromStartDataIndex(pInfo, index);
+    }
+
+    s32 getPlacedRailNum(s32 zoneId) {
+        if (getStageDataHolder()->isPlacedZone(zoneId)) {
+            return getStageDataHolder()->getStageDataHolderFromZoneId(zoneId)->getCommonPathInfoElementNum();
+        }
+        return 0;
+    }
+
+    void getCameraRailInfo(JMapInfoIter* pIter, const JMapInfo** ppInfo, s32 railId, s32 zoneId) {
+        getRailInfoFromRailId(pIter, ppInfo, getStageDataHolder()->getStageDataHolderFromZoneId(zoneId), railId);
+    }
+
+    bool getCameraRailInfoFromRailDataIndex(JMapInfoIter* pIter, const JMapInfo** ppInfo, int index, s32 zoneId) {
+        *pIter = getStageDataHolder()->getStageDataHolderFromZoneId(zoneId)->getCommonPathPointInfoFromRailDataIndex(ppInfo, index);
+        return isEqualRailUsage(*pIter, "Camera");
+    }
     void getStageCameraData(void** pData, s32* pSize, s32 zoneID) {
         if (!getStageDataHolder()->isPlacedZone(zoneID)) {
             *pData = nullptr;
@@ -199,7 +234,17 @@ namespace MR {
         *pData = pHolder->getStageArchiveResource("CameraParam.bcam");
         *pSize = pHolder->getStageArchiveResourceSize(*pData);
     }
-    // getCurrentScenarioStartAnimCameraData
+    void getCurrentScenarioStartAnimCameraData(void** pData, s32* pSize) {
+        StageDataHolder* pHolder = getStageDataHolder();
+        char name[64];
+        snprintf(name, sizeof(name), "StartScenario%d.canm", getCurrentScenarioNo());
+        *pData = pHolder->getStageArchiveResource(name);
+        if (*pData != nullptr) {
+            *pSize = pHolder->getStageArchiveResourceSize(*pData);
+        } else {
+            *pSize = 0;
+        }
+    }
 
     void incCoin(int term) {
         ::getScenePlayingResult()->incCoin(term);

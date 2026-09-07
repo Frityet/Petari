@@ -6,6 +6,7 @@
 #include "Game/Map/CollisionDirector.hpp"
 #include "Game/Map/HitInfo.hpp"
 #include "Game/Util/MathUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
 
 static HitInfo mSortBuffer[32];
 static u32 mSortCount;
@@ -208,7 +209,18 @@ namespace MR {
     // isFallNextMove
     // isFallOrDangerNextMove
     // isFallOrDangerNextMove
-    // calcVelocityMovingPoint
+    void calcVelocityMovingPoint(const Triangle* pTriangle, const TVec3f& rPos, TVec3f* pVelocity) {
+        if (isSameMtx(pTriangle->getBaseMtx()->toMtxPtr(), pTriangle->getPrevBaseMtx()->toMtxPtr())) {
+            pVelocity->zero();
+            return;
+        }
+
+        TVec3f localPos;
+        PSMTXMultVec(pTriangle->getBaseInvMtx()->toMtxPtr(), &rPos, &localPos);
+        TVec3f prevPos;
+        PSMTXMultVec(pTriangle->getPrevBaseMtx()->toMtxPtr(), &localPos, &prevPos);
+        *pVelocity = rPos - prevPos;
+    }
 
     u32 createAreaPolygonList(Triangle* pTriangle, u32 param2, const TVec3f& rParam3, const TVec3f& rParam4) {
         return getCollisionDirector()->getCategoryKeeper(0)->createAreaPolygonList(pTriangle, param2, rParam3, rParam4);

@@ -54,6 +54,31 @@ namespace MR {
         }
     }
 
+    bool calcAreaMoveVelocity(TVec3f* pVelocity, const TVec3f& rPos) {
+        AreaObj* area = getAreaIn("AreaMoveSphere", rPos);
+        if (area == nullptr) {
+            pVelocity->zero();
+            return false;
+        }
+
+        AreaFormSphere* form = static_cast< AreaFormSphere* >(area->mForm);
+        TVec3f center;
+        form->calcPos(&center);
+        TVec3f up;
+        form->calcUpVec(&up);
+        TVec3f direction = center;
+        direction -= rPos;
+        normalizeOrZero(&direction);
+        vecKillElement(up, direction, &up);
+        normalizeOrZero(&up);
+        s32 speed = getAreaObjArg(area, 0);
+        if (speed == -1) {
+            speed = 10;
+        }
+        pVelocity->set(up * speed);
+        return true;
+    }
+
     AreaObj* getCurrentAstroOverlookAreaObj() {
         return getAreaIn("AstroOverlookArea", *MR::getPlayerPos());
     }

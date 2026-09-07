@@ -18,6 +18,7 @@
 #include "Game/Util/ScreenUtil.hpp"
 #include <JSystem/J3DGraphBase/J3DSys.hpp>
 #include <cstdio>
+#include <stdint.h>
 
 // TODO: mismatch in .data order likely due to a stripped function containing "CAM_TYPE_DPD"
 
@@ -336,7 +337,7 @@ namespace MR {
         if (chunk != nullptr) {
             chunk->setCameraType("CAM_TYPE_ANIM", getCameraDirector()->mHolder);
             CameraGeneralParam* param = chunk->mGeneralParam;
-            chunk->mGeneralParam->mNum1 = reinterpret_cast< s32 >(pAnimData);
+            chunk->mGeneralParam->mNum1 = reinterpret_cast< intptr_t >(pAnimData);
             chunk->mGeneralParam->mDist = 1.0f;
             chunk->getGeneralParam()->mNum2 = CameraAnim::getAnimFrame(reinterpret_cast< u8* >(pAnimData));
             chunk->_64 = true;

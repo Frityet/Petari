@@ -67,7 +67,13 @@ void CameraShaker::createSinglyHorizontalTask() {
     // the horizontal float table and will set infinity tasks for values out of range,
     // but it works because the infinity tasks are created afterwards and then set correctly.
 
+#if defined(TARGET_PC)
+    // Retail reads seven words from 0x80531944: the three intensities,
+    // then the two adjacent 0x4330000080000000 conversion doubles.
+    static const f32 cSinglyIntensity[] = {0.3f, 1.0f, 3.0f, 176.0f, -0.0f, 176.0f, -0.0f};
+#else
     static const f32 cSinglyIntensity[] = {0.3f, 1.0f, 3.0f};
+#endif
 
     // Should be i < NR_HORIZONTAL_TASKS
     for (u32 i = 0; i < NR_VERTICAL_TASKS; i++) {
@@ -77,7 +83,17 @@ void CameraShaker::createSinglyHorizontalTask() {
 
         CameraShakeTask* task = new CameraShakeTask(singly);
 
+#if defined(TARGET_PC)
+        // Preserve the retail writes into the following infinity slots
+        // without indexing beyond a native C++ array subobject.
+        if (i < NR_HORIZONTAL_TASKS) {
+            mHorizontalTasks[i] = task;
+        } else {
+            mInfinityTasks[i - NR_HORIZONTAL_TASKS] = task;
+        }
+#else
         mHorizontalTasks[i] = task;
+#endif
     }
 }
 

@@ -2,13 +2,55 @@
 #include "Game/Map/CollisionParts.hpp"
 #include "Game/Map/CollisionDirector.hpp"
 #include "Game/Util/MathUtil.hpp"
+#include "Game/Util/SceneUtil.hpp"
 #include <algorithm>
+
+CollisionCategorizedKeeper::CollisionCategorizedKeeper(s32 category)
+    : NameObj("地形コリジョンカテゴリキーパー"), mHitInfoArray(nullptr), _10(0), mZoneCount(0), mZoneNum(0), _9C(category), _A0(false), _A1(true) {
+    mHitInfoArray = new HitInfo[32];
+}
+
+CollisionCategorizedKeeper::~CollisionCategorizedKeeper() {
+}
+
+CollisionZone* CollisionCategorizedKeeper::getZone(int zoneID) {
+    if (!_A0) {
+        s32 zoneCount = MR::getZoneNum();
+        for (s32 i = 0; i < zoneCount; i++) {
+            CollisionZone* zone = new CollisionZone(i);
+            mZones[mZoneNum++] = zone;
+        }
+        _A0 = true;
+    }
+    return mZones[zoneID];
+}
 
 TVec3f CollisionParts::getTrans() {
     TVec3f translation;
     mBaseMatrix.getTrans(translation);
 
     return translation;
+}
+
+void CollisionCategorizedKeeper::movement() {
+    for (CollisionZone** zone = mZones; zone != mZones + mZoneNum; zone++) {
+        s32 partCount = (*zone)->mNumParts;
+        for (s32 i = 0; i < partCount; i++) {
+            CollisionParts* part = (*zone)->mPartsArray[i];
+            if (!part->_CC) {
+                continue;
+            }
+            if (_9C == part->mKeeperIndex) {
+                part->updateMtx();
+            }
+            if (_A1) {
+                (*zone)->calcMinMaxAndRadius();
+            } else if (part->_D4 == 0) {
+                (*zone)->calcMinMaxAndRadiusIfMoveOuter(part);
+            }
+        }
+    }
+    _A1 = false;
 }
 
 void CollisionCategorizedKeeper::addToZone(CollisionParts* pParts, s32 zone) {
@@ -70,6 +112,23 @@ void CollisionZone::calcMinMaxAndRadius() {
         }
     }
     mRadius = radius;
+}
+
+void CollisionZone::calcMinMaxAndRadiusIfMoveOuter(CollisionParts* pParts) {
+    f32 radius = pParts->_D8;
+    TVec3f position = pParts->getTrans();
+    TVec3f minimum = _818;
+    TVec3f maximum = _824;
+    minimum.x += radius;
+    minimum.y += radius;
+    minimum.z += radius;
+    maximum.x -= radius;
+    maximum.y -= radius;
+    maximum.z -= radius;
+    if (!MR::isInRange(position.x, minimum.x, maximum.x) || !MR::isInRange(position.y, minimum.y, maximum.y) ||
+        !MR::isInRange(position.z, minimum.z, maximum.z)) {
+        calcMinMaxAndRadius();
+    }
 }
 
 void CollisionZone::addAndUpdateMinMax(TVec3f minimum, TVec3f maximum) {

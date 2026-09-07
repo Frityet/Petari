@@ -1,6 +1,11 @@
 #include "Game/MapObj/CollectCounter.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Util.hpp"
+#include "Game/Util/CameraUtil.hpp"
+#include "Game/Util/LayoutUtil.hpp"
+#include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/PlayerUtil.hpp"
+#include "Game/Util/StarPointerUtil.hpp"
 
 namespace NrvCollectCounter {
     NEW_NERVE(CollectCounterNrvHide, CollectCounter, Hide);
