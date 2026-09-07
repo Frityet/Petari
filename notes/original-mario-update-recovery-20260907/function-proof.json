@@ -1,0 +1,1422 @@
+{
+  "symbol": "update__5MarioFv",
+  "retail_address": "0x802AD398",
+  "retail_bytes": "1412",
+  "compiled_bytes": "1408",
+  "match_percent": 99.52408,
+  "direct_call_count": 85,
+  "direct_calls_identical_in_order": true,
+  "retail_calls": [
+    "OSGetTime",
+    "updateAndClearStrideParameter__5MarioFv",
+    "checkKeyLock__5MarioFv",
+    "isAnimationRun__11MarioModuleCFPCc",
+    "updateCubeCode__5MarioFv",
+    "updateBinderInfo__5MarioFv",
+    "checkEnforceMove__5MarioFv",
+    "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+    "isStatusActive__5MarioCFUl",
+    "isStatusActive__5MarioCFUl",
+    "checkBaseTransPoint__5MarioFv",
+    "checkHeadPoint__5MarioFv",
+    "createAtField__5MarioFbf",
+    "createAtField__5MarioFbf",
+    "calcDistToCeil__5MarioFb",
+    "isValid__8TriangleCFv",
+    "damagePolygonCheck__5MarioFPC8Triangle",
+    "getKarikariClingNum__2MRFv",
+    "OSGetTime",
+    "isSwimming__5MarioCFv",
+    "checkAllWall__5MarioFRCQ29JGeometry8TVec3<f>f",
+    "OSGetTime",
+    "updateGroundInfo__5MarioFv",
+    "OSGetTime",
+    "damageFloorCheck__5MarioFv",
+    "writeBackPhyisicalVector__5MarioFv",
+    "saveLastSafetyTrans__5MarioFv",
+    "isCurrentShadowFloorDangerAction__5MarioCFv",
+    "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+    "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+    "isNearZero__2MRFRCQ29JGeometry8TVec3<f>f",
+    "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+    "dot__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>",
+    "setLength__Q29JGeometry8TVec3<f>Ff",
+    "damageWallCheck__5MarioFv",
+    "OSGetTime",
+    "checkPressDamage__5MarioFv",
+    "OSGetTime",
+    "checkSliderMode__5MarioCFv",
+    "startSlider__5MarioFv",
+    "checkAndTryForceJump__5MarioFv",
+    "checkStartSwim__5MarioFv",
+    "writeBackPhyisicalVector__5MarioFv",
+    "check2DMode__5MarioFv",
+    "testFpViewStartTrigger__2MRFv",
+    "isPossibleToShiftToFirstPersonCamera__2MRFv",
+    "tryFpViewMode__5MarioFv",
+    "isDemoActive__2MRFv",
+    "isEqualStageName__2MRFPCc",
+    "startSystemSE__2MRFPCcll",
+    "inputStick__5MarioFv",
+    "checkLockOnHoming__5MarioFv",
+    "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+    "actionMain__5MarioFv",
+    "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+    "calcFrontFloor__5MarioFv",
+    "isSlipPolygon__11MarioModuleCFPC8Triangle",
+    "getNormal__8TriangleCFi",
+    "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+    "getNormal__8TriangleCFi",
+    "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+    "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+    "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+    "scale__Q29JGeometry8TVec3<f>Ff",
+    "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+    "scale__Q29JGeometry8TVec3<f>Ff",
+    "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+    "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+    "tryPushToVelocity__5MarioFv",
+    "powerAreaMove__5MarioFv",
+    "powerRailMove__5MarioFv",
+    "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+    "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+    "checkForceGrounding__5MarioFv",
+    "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+    "checkStep__5MarioFv",
+    "checkBump__5MarioFv",
+    "doCubeWarp__5MarioFv",
+    "isSwimming__5MarioCFv",
+    "checkBaseTransBall__5MarioFv",
+    "doSpinPunchAroundPolygons__5MarioFv",
+    "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+    "writeBackPhyisicalVector__5MarioFv",
+    "updateTimers__5MarioFv",
+    "doExtraServices__5MarioFv"
+  ],
+  "compiled_calls": [
+    "OSGetTime",
+    "updateAndClearStrideParameter__5MarioFv",
+    "checkKeyLock__5MarioFv",
+    "isAnimationRun__11MarioModuleCFPCc",
+    "updateCubeCode__5MarioFv",
+    "updateBinderInfo__5MarioFv",
+    "checkEnforceMove__5MarioFv",
+    "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+    "isStatusActive__5MarioCFUl",
+    "isStatusActive__5MarioCFUl",
+    "checkBaseTransPoint__5MarioFv",
+    "checkHeadPoint__5MarioFv",
+    "createAtField__5MarioFbf",
+    "createAtField__5MarioFbf",
+    "calcDistToCeil__5MarioFb",
+    "isValid__8TriangleCFv",
+    "damagePolygonCheck__5MarioFPC8Triangle",
+    "getKarikariClingNum__2MRFv",
+    "OSGetTime",
+    "isSwimming__5MarioCFv",
+    "checkAllWall__5MarioFRCQ29JGeometry8TVec3<f>f",
+    "OSGetTime",
+    "updateGroundInfo__5MarioFv",
+    "OSGetTime",
+    "damageFloorCheck__5MarioFv",
+    "writeBackPhyisicalVector__5MarioFv",
+    "saveLastSafetyTrans__5MarioFv",
+    "isCurrentShadowFloorDangerAction__5MarioCFv",
+    "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+    "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+    "isNearZero__2MRFRCQ29JGeometry8TVec3<f>f",
+    "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+    "dot__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>",
+    "setLength__Q29JGeometry8TVec3<f>Ff",
+    "damageWallCheck__5MarioFv",
+    "OSGetTime",
+    "checkPressDamage__5MarioFv",
+    "OSGetTime",
+    "checkSliderMode__5MarioCFv",
+    "startSlider__5MarioFv",
+    "checkAndTryForceJump__5MarioFv",
+    "checkStartSwim__5MarioFv",
+    "writeBackPhyisicalVector__5MarioFv",
+    "check2DMode__5MarioFv",
+    "testFpViewStartTrigger__2MRFv",
+    "isPossibleToShiftToFirstPersonCamera__2MRFv",
+    "tryFpViewMode__5MarioFv",
+    "isDemoActive__2MRFv",
+    "isEqualStageName__2MRFPCc",
+    "startSystemSE__2MRFPCcll",
+    "inputStick__5MarioFv",
+    "checkLockOnHoming__5MarioFv",
+    "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+    "actionMain__5MarioFv",
+    "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+    "calcFrontFloor__5MarioFv",
+    "isSlipPolygon__11MarioModuleCFPC8Triangle",
+    "getNormal__8TriangleCFi",
+    "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+    "getNormal__8TriangleCFi",
+    "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+    "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+    "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+    "scale__Q29JGeometry8TVec3<f>Ff",
+    "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+    "scale__Q29JGeometry8TVec3<f>Ff",
+    "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+    "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+    "tryPushToVelocity__5MarioFv",
+    "powerAreaMove__5MarioFv",
+    "powerRailMove__5MarioFv",
+    "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+    "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+    "checkForceGrounding__5MarioFv",
+    "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+    "checkStep__5MarioFv",
+    "checkBump__5MarioFv",
+    "doCubeWarp__5MarioFv",
+    "isSwimming__5MarioCFv",
+    "checkBaseTransBall__5MarioFv",
+    "doSpinPunchAroundPolygons__5MarioFv",
+    "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+    "writeBackPhyisicalVector__5MarioFv",
+    "updateTimers__5MarioFv",
+    "doExtraServices__5MarioFv"
+  ],
+  "existing_symbol_regressions": [],
+  "elf_relocation_direct_calls_identical": true,
+  "constant_and_string_values_identical": true,
+  "external_data_relocations_identical": true,
+  "constant_and_string_values_hex": [
+    "00000000",
+    "3a83126f",
+    "3f000000",
+    "40a00000",
+    "42200000",
+    "42a00000",
+    "42b40000",
+    "43160000",
+    "43200000",
+    "4570696c6f67756544656d6f537461676500",
+    "53455f53595f43414d4552415f4e4700"
+  ],
+  "retail_relocations": [
+    {
+      "offset": "0x20",
+      "kind": 10,
+      "symbol": "OSGetTime",
+      "addend": 0
+    },
+    {
+      "offset": "0x28",
+      "kind": 10,
+      "symbol": "updateAndClearStrideParameter__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x30",
+      "kind": 10,
+      "symbol": "checkKeyLock__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x58",
+      "kind": 10,
+      "symbol": "isAnimationRun__11MarioModuleCFPCc",
+      "addend": 0
+    },
+    {
+      "offset": "0x74",
+      "kind": 10,
+      "symbol": "updateCubeCode__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x7c",
+      "kind": 10,
+      "symbol": "updateBinderInfo__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x90",
+      "kind": 10,
+      "symbol": "checkEnforceMove__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x9c",
+      "kind": 10,
+      "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "addend": 0
+    },
+    {
+      "offset": "0xa8",
+      "kind": 10,
+      "symbol": "isStatusActive__5MarioCFUl",
+      "addend": 0
+    },
+    {
+      "offset": "0xbc",
+      "kind": 10,
+      "symbol": "isStatusActive__5MarioCFUl",
+      "addend": 0
+    },
+    {
+      "offset": "0xcc",
+      "kind": 10,
+      "symbol": "checkBaseTransPoint__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0xd4",
+      "kind": 10,
+      "symbol": "checkHeadPoint__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0xf0",
+      "kind": 109,
+      "symbol": "@78370",
+      "addend": 0,
+      "value_hex": "43160000"
+    },
+    {
+      "offset": "0xfc",
+      "kind": 10,
+      "symbol": "createAtField__5MarioFbf",
+      "addend": 0
+    },
+    {
+      "offset": "0x104",
+      "kind": 109,
+      "symbol": "@78371",
+      "addend": 0,
+      "value_hex": "42200000"
+    },
+    {
+      "offset": "0x110",
+      "kind": 10,
+      "symbol": "createAtField__5MarioFbf",
+      "addend": 0
+    },
+    {
+      "offset": "0x11c",
+      "kind": 10,
+      "symbol": "calcDistToCeil__5MarioFb",
+      "addend": 0
+    },
+    {
+      "offset": "0x124",
+      "kind": 109,
+      "symbol": "@78372",
+      "addend": 0,
+      "value_hex": "43200000"
+    },
+    {
+      "offset": "0x14c",
+      "kind": 10,
+      "symbol": "isValid__8TriangleCFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x160",
+      "kind": 10,
+      "symbol": "damagePolygonCheck__5MarioFPC8Triangle",
+      "addend": 0
+    },
+    {
+      "offset": "0x164",
+      "kind": 10,
+      "symbol": "getKarikariClingNum__2MRFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x17c",
+      "kind": 10,
+      "symbol": "OSGetTime",
+      "addend": 0
+    },
+    {
+      "offset": "0x180",
+      "kind": 109,
+      "symbol": "@78373",
+      "addend": 0,
+      "value_hex": "42a00000"
+    },
+    {
+      "offset": "0x188",
+      "kind": 10,
+      "symbol": "isSwimming__5MarioCFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x194",
+      "kind": 109,
+      "symbol": "@78374",
+      "addend": 0,
+      "value_hex": "42b40000"
+    },
+    {
+      "offset": "0x1a8",
+      "kind": 10,
+      "symbol": "checkAllWall__5MarioFRCQ29JGeometry8TVec3<f>f",
+      "addend": 0
+    },
+    {
+      "offset": "0x1ac",
+      "kind": 10,
+      "symbol": "OSGetTime",
+      "addend": 0
+    },
+    {
+      "offset": "0x1b4",
+      "kind": 10,
+      "symbol": "updateGroundInfo__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x1b8",
+      "kind": 10,
+      "symbol": "OSGetTime",
+      "addend": 0
+    },
+    {
+      "offset": "0x1e0",
+      "kind": 10,
+      "symbol": "damageFloorCheck__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x1f0",
+      "kind": 10,
+      "symbol": "writeBackPhyisicalVector__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x1fc",
+      "kind": 10,
+      "symbol": "saveLastSafetyTrans__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x204",
+      "kind": 10,
+      "symbol": "isCurrentShadowFloorDangerAction__5MarioCFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x218",
+      "kind": 10,
+      "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "addend": 0
+    },
+    {
+      "offset": "0x224",
+      "kind": 10,
+      "symbol": "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "addend": 0
+    },
+    {
+      "offset": "0x228",
+      "kind": 109,
+      "symbol": "@78017",
+      "addend": 0,
+      "value_hex": "3a83126f"
+    },
+    {
+      "offset": "0x230",
+      "kind": 10,
+      "symbol": "isNearZero__2MRFRCQ29JGeometry8TVec3<f>f",
+      "addend": 0
+    },
+    {
+      "offset": "0x240",
+      "kind": 10,
+      "symbol": "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+      "addend": 0
+    },
+    {
+      "offset": "0x244",
+      "kind": 109,
+      "symbol": "@78375",
+      "addend": 0,
+      "value_hex": "40a00000"
+    },
+    {
+      "offset": "0x25c",
+      "kind": 10,
+      "symbol": "dot__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>",
+      "addend": 0
+    },
+    {
+      "offset": "0x260",
+      "kind": 109,
+      "symbol": "@76288",
+      "addend": 0,
+      "value_hex": "00000000"
+    },
+    {
+      "offset": "0x274",
+      "kind": 109,
+      "symbol": "@78375",
+      "addend": 0,
+      "value_hex": "40a00000"
+    },
+    {
+      "offset": "0x280",
+      "kind": 10,
+      "symbol": "setLength__Q29JGeometry8TVec3<f>Ff",
+      "addend": 0
+    },
+    {
+      "offset": "0x2ac",
+      "kind": 10,
+      "symbol": "damageWallCheck__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x2c4",
+      "kind": 10,
+      "symbol": "OSGetTime",
+      "addend": 0
+    },
+    {
+      "offset": "0x2cc",
+      "kind": 10,
+      "symbol": "checkPressDamage__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x2d8",
+      "kind": 10,
+      "symbol": "OSGetTime",
+      "addend": 0
+    },
+    {
+      "offset": "0x2e0",
+      "kind": 10,
+      "symbol": "checkSliderMode__5MarioCFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x2f0",
+      "kind": 10,
+      "symbol": "startSlider__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x2f8",
+      "kind": 10,
+      "symbol": "checkAndTryForceJump__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x30c",
+      "kind": 10,
+      "symbol": "checkStartSwim__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x31c",
+      "kind": 10,
+      "symbol": "writeBackPhyisicalVector__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x334",
+      "kind": 10,
+      "symbol": "check2DMode__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x34c",
+      "kind": 10,
+      "symbol": "testFpViewStartTrigger__2MRFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x358",
+      "kind": 10,
+      "symbol": "isPossibleToShiftToFirstPersonCamera__2MRFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x368",
+      "kind": 10,
+      "symbol": "tryFpViewMode__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x370",
+      "kind": 10,
+      "symbol": "isDemoActive__2MRFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x37e",
+      "kind": 6,
+      "symbol": "lbl_805B7921",
+      "addend": 0,
+      "value_hex": "4570696c6f67756544656d6f537461676500"
+    },
+    {
+      "offset": "0x382",
+      "kind": 4,
+      "symbol": "lbl_805B7921",
+      "addend": 0,
+      "value_hex": "4570696c6f67756544656d6f537461676500"
+    },
+    {
+      "offset": "0x384",
+      "kind": 10,
+      "symbol": "isEqualStageName__2MRFPCc",
+      "addend": 0
+    },
+    {
+      "offset": "0x392",
+      "kind": 6,
+      "symbol": "lbl_805B7933",
+      "addend": 0,
+      "value_hex": "53455f53595f43414d4552415f4e4700"
+    },
+    {
+      "offset": "0x39a",
+      "kind": 4,
+      "symbol": "lbl_805B7933",
+      "addend": 0,
+      "value_hex": "53455f53595f43414d4552415f4e4700"
+    },
+    {
+      "offset": "0x3a0",
+      "kind": 10,
+      "symbol": "startSystemSE__2MRFPCcll",
+      "addend": 0
+    },
+    {
+      "offset": "0x3b0",
+      "kind": 10,
+      "symbol": "inputStick__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x3b8",
+      "kind": 10,
+      "symbol": "checkLockOnHoming__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x3c4",
+      "kind": 10,
+      "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "addend": 0
+    },
+    {
+      "offset": "0x3cc",
+      "kind": 10,
+      "symbol": "actionMain__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x3d8",
+      "kind": 10,
+      "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "addend": 0
+    },
+    {
+      "offset": "0x3e0",
+      "kind": 10,
+      "symbol": "calcFrontFloor__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x40c",
+      "kind": 10,
+      "symbol": "isSlipPolygon__11MarioModuleCFPC8Triangle",
+      "addend": 0
+    },
+    {
+      "offset": "0x420",
+      "kind": 10,
+      "symbol": "getNormal__8TriangleCFi",
+      "addend": 0
+    },
+    {
+      "offset": "0x430",
+      "kind": 10,
+      "symbol": "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+      "addend": 0
+    },
+    {
+      "offset": "0x440",
+      "kind": 10,
+      "symbol": "getNormal__8TriangleCFi",
+      "addend": 0
+    },
+    {
+      "offset": "0x450",
+      "kind": 10,
+      "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "addend": 0
+    },
+    {
+      "offset": "0x45c",
+      "kind": 10,
+      "symbol": "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "addend": 0
+    },
+    {
+      "offset": "0x468",
+      "kind": 10,
+      "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "addend": 0
+    },
+    {
+      "offset": "0x46c",
+      "kind": 109,
+      "symbol": "@77324",
+      "addend": 0,
+      "value_hex": "3f000000"
+    },
+    {
+      "offset": "0x474",
+      "kind": 10,
+      "symbol": "scale__Q29JGeometry8TVec3<f>Ff",
+      "addend": 0
+    },
+    {
+      "offset": "0x484",
+      "kind": 10,
+      "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "addend": 0
+    },
+    {
+      "offset": "0x490",
+      "kind": 10,
+      "symbol": "scale__Q29JGeometry8TVec3<f>Ff",
+      "addend": 0
+    },
+    {
+      "offset": "0x49c",
+      "kind": 10,
+      "symbol": "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "addend": 0
+    },
+    {
+      "offset": "0x4a8",
+      "kind": 10,
+      "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "addend": 0
+    },
+    {
+      "offset": "0x4b0",
+      "kind": 10,
+      "symbol": "tryPushToVelocity__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x4b8",
+      "kind": 10,
+      "symbol": "powerAreaMove__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x4c0",
+      "kind": 10,
+      "symbol": "powerRailMove__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x4cc",
+      "kind": 10,
+      "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "addend": 0
+    },
+    {
+      "offset": "0x4f0",
+      "kind": 10,
+      "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "addend": 0
+    },
+    {
+      "offset": "0x4f8",
+      "kind": 10,
+      "symbol": "checkForceGrounding__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x504",
+      "kind": 10,
+      "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "addend": 0
+    },
+    {
+      "offset": "0x50c",
+      "kind": 10,
+      "symbol": "checkStep__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x514",
+      "kind": 10,
+      "symbol": "checkBump__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x51c",
+      "kind": 10,
+      "symbol": "doCubeWarp__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x524",
+      "kind": 10,
+      "symbol": "isSwimming__5MarioCFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x534",
+      "kind": 10,
+      "symbol": "checkBaseTransBall__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x53c",
+      "kind": 10,
+      "symbol": "doSpinPunchAroundPolygons__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x548",
+      "kind": 10,
+      "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "addend": 0
+    },
+    {
+      "offset": "0x550",
+      "kind": 10,
+      "symbol": "writeBackPhyisicalVector__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x558",
+      "kind": 10,
+      "symbol": "updateTimers__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x560",
+      "kind": 10,
+      "symbol": "doExtraServices__5MarioFv",
+      "addend": 0
+    }
+  ],
+  "compiled_relocations": [
+    {
+      "offset": "0x20",
+      "kind": 10,
+      "symbol": "OSGetTime",
+      "addend": 0
+    },
+    {
+      "offset": "0x28",
+      "kind": 10,
+      "symbol": "updateAndClearStrideParameter__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x30",
+      "kind": 10,
+      "symbol": "checkKeyLock__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x58",
+      "kind": 10,
+      "symbol": "isAnimationRun__11MarioModuleCFPCc",
+      "addend": 0
+    },
+    {
+      "offset": "0x74",
+      "kind": 10,
+      "symbol": "updateCubeCode__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x7c",
+      "kind": 10,
+      "symbol": "updateBinderInfo__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x90",
+      "kind": 10,
+      "symbol": "checkEnforceMove__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x9c",
+      "kind": 10,
+      "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "addend": 0
+    },
+    {
+      "offset": "0xa8",
+      "kind": 10,
+      "symbol": "isStatusActive__5MarioCFUl",
+      "addend": 0
+    },
+    {
+      "offset": "0xbc",
+      "kind": 10,
+      "symbol": "isStatusActive__5MarioCFUl",
+      "addend": 0
+    },
+    {
+      "offset": "0xcc",
+      "kind": 10,
+      "symbol": "checkBaseTransPoint__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0xd4",
+      "kind": 10,
+      "symbol": "checkHeadPoint__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0xf0",
+      "kind": 109,
+      "symbol": "@13390",
+      "addend": 0,
+      "value_hex": "43160000"
+    },
+    {
+      "offset": "0xfc",
+      "kind": 10,
+      "symbol": "createAtField__5MarioFbf",
+      "addend": 0
+    },
+    {
+      "offset": "0x104",
+      "kind": 109,
+      "symbol": "@13391",
+      "addend": 0,
+      "value_hex": "42200000"
+    },
+    {
+      "offset": "0x110",
+      "kind": 10,
+      "symbol": "createAtField__5MarioFbf",
+      "addend": 0
+    },
+    {
+      "offset": "0x11c",
+      "kind": 10,
+      "symbol": "calcDistToCeil__5MarioFb",
+      "addend": 0
+    },
+    {
+      "offset": "0x124",
+      "kind": 109,
+      "symbol": "@13392",
+      "addend": 0,
+      "value_hex": "43200000"
+    },
+    {
+      "offset": "0x14c",
+      "kind": 10,
+      "symbol": "isValid__8TriangleCFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x160",
+      "kind": 10,
+      "symbol": "damagePolygonCheck__5MarioFPC8Triangle",
+      "addend": 0
+    },
+    {
+      "offset": "0x164",
+      "kind": 10,
+      "symbol": "getKarikariClingNum__2MRFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x17c",
+      "kind": 10,
+      "symbol": "OSGetTime",
+      "addend": 0
+    },
+    {
+      "offset": "0x180",
+      "kind": 109,
+      "symbol": "@13393",
+      "addend": 0,
+      "value_hex": "42a00000"
+    },
+    {
+      "offset": "0x188",
+      "kind": 10,
+      "symbol": "isSwimming__5MarioCFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x194",
+      "kind": 109,
+      "symbol": "@13394",
+      "addend": 0,
+      "value_hex": "42b40000"
+    },
+    {
+      "offset": "0x1a8",
+      "kind": 10,
+      "symbol": "checkAllWall__5MarioFRCQ29JGeometry8TVec3<f>f",
+      "addend": 0
+    },
+    {
+      "offset": "0x1ac",
+      "kind": 10,
+      "symbol": "OSGetTime",
+      "addend": 0
+    },
+    {
+      "offset": "0x1b4",
+      "kind": 10,
+      "symbol": "updateGroundInfo__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x1b8",
+      "kind": 10,
+      "symbol": "OSGetTime",
+      "addend": 0
+    },
+    {
+      "offset": "0x1dc",
+      "kind": 10,
+      "symbol": "damageFloorCheck__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x1ec",
+      "kind": 10,
+      "symbol": "writeBackPhyisicalVector__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x1f8",
+      "kind": 10,
+      "symbol": "saveLastSafetyTrans__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x200",
+      "kind": 10,
+      "symbol": "isCurrentShadowFloorDangerAction__5MarioCFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x214",
+      "kind": 10,
+      "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "addend": 0
+    },
+    {
+      "offset": "0x220",
+      "kind": 10,
+      "symbol": "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "addend": 0
+    },
+    {
+      "offset": "0x224",
+      "kind": 109,
+      "symbol": "@12843",
+      "addend": 0,
+      "value_hex": "3a83126f"
+    },
+    {
+      "offset": "0x22c",
+      "kind": 10,
+      "symbol": "isNearZero__2MRFRCQ29JGeometry8TVec3<f>f",
+      "addend": 0
+    },
+    {
+      "offset": "0x23c",
+      "kind": 10,
+      "symbol": "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+      "addend": 0
+    },
+    {
+      "offset": "0x240",
+      "kind": 109,
+      "symbol": "@12964",
+      "addend": 0,
+      "value_hex": "40a00000"
+    },
+    {
+      "offset": "0x258",
+      "kind": 10,
+      "symbol": "dot__Q29JGeometry8TVec3<f>CFRCQ29JGeometry8TVec3<f>",
+      "addend": 0
+    },
+    {
+      "offset": "0x25c",
+      "kind": 109,
+      "symbol": "@12841",
+      "addend": 0,
+      "value_hex": "00000000"
+    },
+    {
+      "offset": "0x270",
+      "kind": 109,
+      "symbol": "@12964",
+      "addend": 0,
+      "value_hex": "40a00000"
+    },
+    {
+      "offset": "0x27c",
+      "kind": 10,
+      "symbol": "setLength__Q29JGeometry8TVec3<f>Ff",
+      "addend": 0
+    },
+    {
+      "offset": "0x2a8",
+      "kind": 10,
+      "symbol": "damageWallCheck__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x2c0",
+      "kind": 10,
+      "symbol": "OSGetTime",
+      "addend": 0
+    },
+    {
+      "offset": "0x2c8",
+      "kind": 10,
+      "symbol": "checkPressDamage__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x2d4",
+      "kind": 10,
+      "symbol": "OSGetTime",
+      "addend": 0
+    },
+    {
+      "offset": "0x2dc",
+      "kind": 10,
+      "symbol": "checkSliderMode__5MarioCFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x2ec",
+      "kind": 10,
+      "symbol": "startSlider__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x2f4",
+      "kind": 10,
+      "symbol": "checkAndTryForceJump__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x308",
+      "kind": 10,
+      "symbol": "checkStartSwim__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x318",
+      "kind": 10,
+      "symbol": "writeBackPhyisicalVector__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x330",
+      "kind": 10,
+      "symbol": "check2DMode__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x348",
+      "kind": 10,
+      "symbol": "testFpViewStartTrigger__2MRFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x354",
+      "kind": 10,
+      "symbol": "isPossibleToShiftToFirstPersonCamera__2MRFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x364",
+      "kind": 10,
+      "symbol": "tryFpViewMode__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x36c",
+      "kind": 10,
+      "symbol": "isDemoActive__2MRFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x37a",
+      "kind": 6,
+      "symbol": "@13395",
+      "addend": 0,
+      "value_hex": "4570696c6f67756544656d6f537461676500"
+    },
+    {
+      "offset": "0x37e",
+      "kind": 4,
+      "symbol": "@13395",
+      "addend": 0,
+      "value_hex": "4570696c6f67756544656d6f537461676500"
+    },
+    {
+      "offset": "0x380",
+      "kind": 10,
+      "symbol": "isEqualStageName__2MRFPCc",
+      "addend": 0
+    },
+    {
+      "offset": "0x38e",
+      "kind": 6,
+      "symbol": "@13396",
+      "addend": 0,
+      "value_hex": "53455f53595f43414d4552415f4e4700"
+    },
+    {
+      "offset": "0x396",
+      "kind": 4,
+      "symbol": "@13396",
+      "addend": 0,
+      "value_hex": "53455f53595f43414d4552415f4e4700"
+    },
+    {
+      "offset": "0x39c",
+      "kind": 10,
+      "symbol": "startSystemSE__2MRFPCcll",
+      "addend": 0
+    },
+    {
+      "offset": "0x3ac",
+      "kind": 10,
+      "symbol": "inputStick__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x3b4",
+      "kind": 10,
+      "symbol": "checkLockOnHoming__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x3c0",
+      "kind": 10,
+      "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "addend": 0
+    },
+    {
+      "offset": "0x3c8",
+      "kind": 10,
+      "symbol": "actionMain__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x3d4",
+      "kind": 10,
+      "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "addend": 0
+    },
+    {
+      "offset": "0x3dc",
+      "kind": 10,
+      "symbol": "calcFrontFloor__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x408",
+      "kind": 10,
+      "symbol": "isSlipPolygon__11MarioModuleCFPC8Triangle",
+      "addend": 0
+    },
+    {
+      "offset": "0x41c",
+      "kind": 10,
+      "symbol": "getNormal__8TriangleCFi",
+      "addend": 0
+    },
+    {
+      "offset": "0x42c",
+      "kind": 10,
+      "symbol": "vecKillElement__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+      "addend": 0
+    },
+    {
+      "offset": "0x43c",
+      "kind": 10,
+      "symbol": "getNormal__8TriangleCFi",
+      "addend": 0
+    },
+    {
+      "offset": "0x44c",
+      "kind": 10,
+      "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "addend": 0
+    },
+    {
+      "offset": "0x458",
+      "kind": 10,
+      "symbol": "__ami__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "addend": 0
+    },
+    {
+      "offset": "0x464",
+      "kind": 10,
+      "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "addend": 0
+    },
+    {
+      "offset": "0x468",
+      "kind": 109,
+      "symbol": "@13065",
+      "addend": 0,
+      "value_hex": "3f000000"
+    },
+    {
+      "offset": "0x470",
+      "kind": 10,
+      "symbol": "scale__Q29JGeometry8TVec3<f>Ff",
+      "addend": 0
+    },
+    {
+      "offset": "0x480",
+      "kind": 10,
+      "symbol": "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "addend": 0
+    },
+    {
+      "offset": "0x48c",
+      "kind": 10,
+      "symbol": "scale__Q29JGeometry8TVec3<f>Ff",
+      "addend": 0
+    },
+    {
+      "offset": "0x498",
+      "kind": 10,
+      "symbol": "__apl__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "addend": 0
+    },
+    {
+      "offset": "0x4a4",
+      "kind": 10,
+      "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "addend": 0
+    },
+    {
+      "offset": "0x4ac",
+      "kind": 10,
+      "symbol": "tryPushToVelocity__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x4b4",
+      "kind": 10,
+      "symbol": "powerAreaMove__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x4bc",
+      "kind": 10,
+      "symbol": "powerRailMove__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x4c8",
+      "kind": 10,
+      "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "addend": 0
+    },
+    {
+      "offset": "0x4ec",
+      "kind": 10,
+      "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "addend": 0
+    },
+    {
+      "offset": "0x4f4",
+      "kind": 10,
+      "symbol": "checkForceGrounding__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x500",
+      "kind": 10,
+      "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "addend": 0
+    },
+    {
+      "offset": "0x508",
+      "kind": 10,
+      "symbol": "checkStep__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x510",
+      "kind": 10,
+      "symbol": "checkBump__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x518",
+      "kind": 10,
+      "symbol": "doCubeWarp__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x520",
+      "kind": 10,
+      "symbol": "isSwimming__5MarioCFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x530",
+      "kind": 10,
+      "symbol": "checkBaseTransBall__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x538",
+      "kind": 10,
+      "symbol": "doSpinPunchAroundPolygons__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x544",
+      "kind": 10,
+      "symbol": "__as__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>",
+      "addend": 0
+    },
+    {
+      "offset": "0x54c",
+      "kind": 10,
+      "symbol": "writeBackPhyisicalVector__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x554",
+      "kind": 10,
+      "symbol": "updateTimers__5MarioFv",
+      "addend": 0
+    },
+    {
+      "offset": "0x55c",
+      "kind": 10,
+      "symbol": "doExtraServices__5MarioFv",
+      "addend": 0
+    }
+  ],
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "retail_function_sha256": "e1dfec32d31b921a251f531208db48d702378a4ca02dac3affe0d09a975a8ef9"
+}

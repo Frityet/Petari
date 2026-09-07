@@ -1,4 +1,5 @@
 #include "Game/Player/Mario.hpp"
+#include "Game/Enemy/KarikariDirector.hpp"
 #include "Game/LiveActor/Binder.hpp"
 #include "Game/Map/HitInfo.hpp"
 #include "Game/Player/MarioAbyssDamage.hpp"
@@ -1175,6 +1176,167 @@ void Mario::writeBackPhyisicalVector() {
     }
     mActor->mVelocity = mVelocity;
     mActor->mPosition = mPosition;
+}
+
+void Mario::update() {
+    OSGetTime();
+    updateAndClearStrideParameter();
+    checkKeyLock();
+
+    if (!(mMovementStates.jumping && mMovementStates._B) && _728 != nullptr && isAnimationRun(_728)) {
+        mMovementStates.jumping = 1;
+        mMovementStates._B = 1;
+    }
+
+    updateCubeCode();
+    mMovementStates._7 = updateBinderInfo();
+    checkEnforceMove();
+    _A8C[0] = mVelocity;
+
+    if (!isStatusActive(MarioStatus_Stick) && !isStatusActive(MarioStatus_Hang)) {
+        checkBaseTransPoint();
+        checkHeadPoint();
+    }
+
+    if (mMovementStates._F && _544 > 1) {
+        createAtField(true, 150.0f);
+    } else {
+        createAtField(false, 40.0f);
+    }
+
+    _72C = calcDistToCeil(true);
+    _1C._F = _72C < 160.0f;
+    if (_1C._F && _4C8->isValid()) {
+        damagePolygonCheck(_4C8);
+    }
+
+    if (MR::getKarikariClingNum() != 0) {
+        _1C_WORD |= 0x04000000;
+    }
+
+    OSGetTime();
+    f32 wallDistance = 80.0f;
+    if (isSwimming()) {
+        wallDistance = 90.0f;
+    }
+    checkAllWall(mActor->_2A0, wallDistance);
+
+    OSGetTime();
+    updateGroundInfo();
+    OSGetTime();
+
+    if (mMovementStates._1 && (!mMovementStates.jumping || mMovementStates._B)) {
+        if (damageFloorCheck()) {
+            writeBackPhyisicalVector();
+            return;
+        }
+
+        saveLastSafetyTrans();
+        if (isCurrentShadowFloorDangerAction()) {
+            TVec3f floorDelta(mShadowPos);
+            floorDelta -= mGroundPos;
+            MR::isNearZero(mAirGravityVec);
+
+            TVec3f horizontal;
+            f32 vertical = MR::vecKillElement(floorDelta, mAirGravityVec, &horizontal);
+            if (vertical >= 5.0f && floorDelta.dot(mFrontVec) > 0.0f) {
+                mDrawStates_WORD |= 0x00200000;
+                floorDelta.setLength(5.0f);
+                addVelocity(floorDelta);
+            }
+        }
+    }
+
+    mDrawStates_WORD |= 0x00008000;
+    if (damageWallCheck()) {
+        return;
+    }
+    mDrawStates_WORD &= ~0x00008000;
+
+    OSGetTime();
+    if (checkPressDamage()) {
+        return;
+    }
+
+    OSGetTime();
+    if (checkSliderMode()) {
+        startSlider();
+    }
+
+    checkAndTryForceJump();
+    if (mMovementStates._2E) {
+        return;
+    }
+
+    if (checkStartSwim()) {
+        writeBackPhyisicalVector();
+        return;
+    }
+
+    if (!mMovementStates._22) {
+        check2DMode();
+    }
+
+    _898 = 0;
+    if (!mMovementStates.debugMode && MR::testFpViewStartTrigger()) {
+        if (MR::isPossibleToShiftToFirstPersonCamera()) {
+            tryFpViewMode();
+        } else if (!MR::isDemoActive()) {
+            if (!MR::isEqualStageName("EpilogueDemoStage")) {
+                MR::startSystemSE("SE_SY_CAMERA_NG", -1, -1);
+            }
+            _898 = 1;
+        }
+    }
+
+    inputStick();
+    checkLockOnHoming();
+
+    _A8C[1] = mVelocity;
+    actionMain();
+    _A8C[3] = mVelocity;
+
+    calcFrontFloor();
+
+    if (mMovementStates._23 && mMovementStates._1 && mMovementStates._24 && isSlipPolygon(_460)) {
+        f32 removed = MR::vecKillElement(mVelocity, *_460->getNormal(0), &mVelocity);
+        const TVec3f& normal = *_460->getNormal(0);
+        TVec3f normalDelta(_368);
+        normalDelta -= normal;
+        TVec3f halfDelta(normalDelta);
+        halfDelta.scale(0.5f);
+        removed = __fabsf(removed);
+        TVec3f adjustment(halfDelta);
+        adjustment.scale(removed);
+        mVelocity += adjustment;
+    }
+
+    _A8C[4] = mVelocity;
+    tryPushToVelocity();
+    powerAreaMove();
+    powerRailMove();
+    _A8C[5] = mVelocity;
+
+    addVelocity(mVelocityAfter);
+    _A8C[6] = mVelocity;
+
+    checkForceGrounding();
+    _A8C[7] = mVelocity;
+
+    checkStep();
+    checkBump();
+    doCubeWarp();
+
+    if (isSwimming()) {
+        checkBaseTransBall();
+    }
+
+    doSpinPunchAroundPolygons();
+    _A8C[8] = mVelocity;
+
+    writeBackPhyisicalVector();
+    updateTimers();
+    doExtraServices();
 }
 
 void Mario::actionMain() {
