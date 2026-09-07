@@ -1,0 +1,50 @@
+[
+  {
+    "path": "src/Game/NPC/RunawayRabbitCollect.cpp",
+    "prior_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "current_lines": 41,
+    "restored_lines": 300,
+    "same": false,
+    "restored_sha256": "8bc4c6ea2dafb108bb1036ce44bdea5f80a180c74ccb8098d22eba51bb57375b"
+  },
+  {
+    "path": "src/Game/NPC/RunawayRabbit.cpp",
+    "prior_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "current_lines": 0,
+    "restored_lines": 503,
+    "same": false,
+    "restored_sha256": "492571a8bc993a1b7f4b90bd14c1d2330c878ca468aac34e860afa8c3c0a78f1"
+  },
+  {
+    "path": "src/Game/NPC/RunawayTico.cpp",
+    "prior_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "current_lines": 299,
+    "restored_lines": 299,
+    "same": true,
+    "restored_sha256": "9b9c13699ae9539cd4c1e55f6270ce3827696c32ac2fe532d2077dce693f2d39"
+  },
+  {
+    "path": "include/Game/NPC/RunawayRabbitCollect.hpp",
+    "prior_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "current_lines": 39,
+    "restored_lines": 40,
+    "same": false,
+    "restored_sha256": "6241916e50d1bcb1c1474cb7af7affe727cd755f04d8dfd4ee83d1715c128db8"
+  },
+  {
+    "path": "include/Game/NPC/RunawayRabbit.hpp",
+    "prior_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "current_lines": 75,
+    "restored_lines": 76,
+    "same": false,
+    "restored_sha256": "8f1bb6705e70da5a8c156fa513e7f52edaefd4a7f98e3e2f9b8d8adbeb429af1"
+  },
+  {
+    "path": "include/Game/NPC/RunawayTico.hpp",
+    "prior_commit": "e1985ac3a9736a9c432c1d7af6ce8bf96e3abed4",
+    "current_lines": 41,
+    "restored_lines": 41,
+    "same": true,
+    "restored_sha256": "0f3f0ffe4ad55e0ce467da93362a15a7f9762ee655847e2aa222f145025e1c21"
+  }
+]

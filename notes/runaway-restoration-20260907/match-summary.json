@@ -1,0 +1,218 @@
+[
+  {
+    "actor": "RunawayRabbitCollect",
+    "sections": [
+      {
+        "name": ".text",
+        "size": "2468",
+        "match_percent": 97.40519
+      },
+      {
+        "name": ".ctors",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".data",
+        "size": "296",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".sdata",
+        "size": "40",
+        "match_percent": 0.0
+      },
+      {
+        "name": ".sbss",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".rela.text",
+        "size": "1128"
+      },
+      {
+        "name": ".rela.ctors",
+        "size": "12"
+      },
+      {
+        "name": ".rela.data",
+        "size": "384"
+      },
+      {
+        "name": ".symtab",
+        "size": "1808"
+      },
+      {
+        "name": ".strtab",
+        "size": "4039"
+      },
+      {
+        "name": ".shstrtab",
+        "size": "95"
+      },
+      {
+        "name": ".comment",
+        "size": "948"
+      },
+      {
+        "name": ".note.split",
+        "size": "560"
+      }
+    ],
+    "code_symbols": 17,
+    "paired_symbols": 17,
+    "exact_symbols": 13,
+    "retail_object_sha256": "7c7b548f4159122021bbecdae2a3d4bb805f388e3f6a1c9f3411cff0978b578f",
+    "compiled_object_sha256": "74970b7303646d4596fd7993a219a3556c7e6bf73903519075e541602996a56d"
+  },
+  {
+    "actor": "RunawayRabbit",
+    "sections": [
+      {
+        "name": ".text",
+        "size": "5720",
+        "match_percent": 95.95944
+      },
+      {
+        "name": ".ctors",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".rodata",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".data",
+        "size": "752",
+        "match_percent": 45.856354
+      },
+      {
+        "name": ".bss",
+        "size": "88",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".sdata",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".sbss",
+        "size": "40",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".sdata2",
+        "size": "120",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".rela.text",
+        "size": "4536"
+      },
+      {
+        "name": ".rela.ctors",
+        "size": "12"
+      },
+      {
+        "name": ".rela.data",
+        "size": "636"
+      },
+      {
+        "name": ".symtab",
+        "size": "4368"
+      },
+      {
+        "name": ".strtab",
+        "size": "9908"
+      },
+      {
+        "name": ".shstrtab",
+        "size": "116"
+      },
+      {
+        "name": ".comment",
+        "size": "2228"
+      },
+      {
+        "name": ".note.split",
+        "size": "1200"
+      }
+    ],
+    "code_symbols": 61,
+    "paired_symbols": 61,
+    "exact_symbols": 42,
+    "retail_object_sha256": "db3ca4cea2664b638fa88f30b44ea44a7131b535c0e10b4bcb40e8c2f0e1ff9b",
+    "compiled_object_sha256": "051e313e428ba78e73906d48347c66c960397d8fa312f07add58b57e93ff398f"
+  },
+  {
+    "actor": "RunawayTico",
+    "sections": [
+      {
+        "name": ".text",
+        "size": "3784",
+        "match_percent": 98.82346
+      },
+      {
+        "name": ".ctors",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".data",
+        "size": "768",
+        "match_percent": 38.069706
+      },
+      {
+        "name": ".sbss",
+        "size": "32",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".sdata2",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".rela.text",
+        "size": "2676"
+      },
+      {
+        "name": ".rela.ctors",
+        "size": "12"
+      },
+      {
+        "name": ".rela.data",
+        "size": "564"
+      },
+      {
+        "name": ".symtab",
+        "size": "3056"
+      },
+      {
+        "name": ".strtab",
+        "size": "6799"
+      },
+      {
+        "name": ".shstrtab",
+        "size": "96"
+      },
+      {
+        "name": ".comment",
+        "size": "1572"
+      },
+      {
+        "name": ".note.split",
+        "size": "872"
+      }
+    ],
+    "code_symbols": 39,
+    "paired_symbols": 39,
+    "exact_symbols": 32,
+    "retail_object_sha256": "9f8208fe4b522d3cddb610479573c83e6efef2dbcbfd6ba456382a98259c8740",
+    "compiled_object_sha256": "6c7fa4afa7d3d28e6a2cfa2089b578aa965f6438f691001d3e5fb0445d0ef3dc"
+  }
+]

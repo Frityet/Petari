@@ -13,6 +13,7 @@ class RunawayRabbit : public LiveActor {
 public:
     RunawayRabbit(const char*, RunawayRabbitCollect*);
 
+    virtual ~RunawayRabbit();
     virtual void init(const JMapInfoIter& rIter);
     virtual void initAfterPlacement();
     virtual void appear();
