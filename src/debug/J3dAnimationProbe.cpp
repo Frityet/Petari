@@ -1,3 +1,4 @@
+#include "DebugPaths.hpp"
 #include "render/J3dAnimation.hpp"
 #include "resource/RarcArchive.hpp"
 
@@ -11,23 +12,6 @@
 
 namespace {
 
-    [[nodiscard]] std::filesystem::path disc_files_root() {
-        const auto cwd = std::filesystem::current_path();
-        const std::filesystem::path candidates[]{
-            cwd / "orig" / "RMGK01" / "files",
-            cwd.parent_path() / "orig" / "RMGK01" / "files",
-        };
-
-        for (const auto &candidate : candidates) {
-            std::error_code error {};
-            const auto canonical = std::filesystem::weakly_canonical(candidate, error);
-            if (!error && std::filesystem::is_directory(canonical, error)) {
-                return canonical;
-            }
-        }
-
-        throw std::runtime_error("could not locate orig/RMGK01/files from " + cwd.string());
-    }
 
     [[nodiscard]] std::filesystem::path output_directory(std::string_view object_name) {
         auto out = std::filesystem::current_path() / ".cache" / "j3d-animation-probes" / std::string(object_name);
@@ -127,7 +111,7 @@ namespace {
 
 int main(int argc, char **argv) try {
     const auto object_name = argc > 1 ? std::string_view(argv[1]) : std::string_view("CometNearOrbitSky");
-    const auto archive = smgpc::resource::RarcArchive::from_file(disc_files_root() / "ObjectData" / (std::string(object_name) + ".arc"));
+    const auto archive = smgpc::resource::RarcArchive::from_file(smgpc::debug::disc_files_root() / "ObjectData" / (std::string(object_name) + ".arc"));
     const auto out_dir = output_directory(object_name);
 
     for (const auto &entry : archive.entries()) {

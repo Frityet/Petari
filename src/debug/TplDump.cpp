@@ -1,3 +1,4 @@
+#include "DebugPaths.hpp"
 #include "resource/RarcArchive.hpp"
 #include "resource/TplTexture.hpp"
 
@@ -16,37 +17,8 @@
 
 namespace {
 
-    [[nodiscard]] std::filesystem::path disc_files_root() {
-        const auto cwd = std::filesystem::current_path();
-        const std::filesystem::path candidates[]{
-            cwd / "orig" / "RMGK01" / "files",
-            cwd.parent_path() / "orig" / "RMGK01" / "files",
-        };
 
-        for (const auto &candidate : candidates) {
-            std::error_code error {};
-            const auto canonical = std::filesystem::weakly_canonical(candidate, error);
-            if (!error && std::filesystem::is_directory(canonical, error)) {
-                return canonical;
-            }
-        }
 
-        throw std::runtime_error("could not locate orig/RMGK01/files from " + cwd.string());
-    }
-
-    [[nodiscard]] std::filesystem::path pc_port_root() {
-        auto error = std::error_code {};
-        for (auto root = std::filesystem::current_path(); !root.empty(); root = root.parent_path()) {
-            if (std::filesystem::is_directory(root / "src" / "Game", error) &&
-                std::filesystem::is_regular_file(root / "xmake.lua", error)) {
-                return root;
-            }
-            if (root == root.parent_path()) {
-                break;
-            }
-        }
-        throw std::runtime_error("could not locate the PC port repository root");
-    }
 
     [[nodiscard]] bool ends_with(std::string_view text, std::string_view suffix) {
         return text.size() >= suffix.size() && text.substr(text.size() - suffix.size()) == suffix;
@@ -128,16 +100,16 @@ int main(int argc, char **argv) try {
         return 0;
     }
 
-    const auto root = disc_files_root();
+    const auto root = smgpc::debug::disc_files_root();
     const auto title_logo_archive = smgpc::resource::RarcArchive::from_file(root / "KrKorean" / "LayoutData" / "TitleLogo.arc");
     const auto title_logo_texture = smgpc::resource::decode_tpl_texture(title_logo_archive.file_data("timg/mytitlelogokor.tpl"));
-    const auto output = pc_port_root() / ".cache" / "decoded-title-logo.ppm";
+    const auto output = smgpc::debug::pc_port_root() / ".cache" / "decoded-title-logo.ppm";
 
     write_texture_ppm(output, title_logo_texture);
     print_texture_stats("timg/mytitlelogokor.tpl", title_logo_texture);
     std::cout << output << '\n';
 
-    const auto texture_output_root = pc_port_root() / ".cache" / "title-logo-textures";
+    const auto texture_output_root = smgpc::debug::pc_port_root() / ".cache" / "title-logo-textures";
     for (const auto &entry : title_logo_archive.entries()) {
         if (!ends_with(entry.path, ".tpl")) {
             continue;

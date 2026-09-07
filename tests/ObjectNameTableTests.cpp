@@ -255,7 +255,7 @@ namespace {
              .conventional_path = "container/orig/RMGK01/files/StageData/ObjNameTable.arc",
              .label = "RMGK01"},
             {.environment = "SMGPC_RMGK02_OBJ_NAME_TABLE",
-             .conventional_path = "../orig/RMGK02/files/StageData/ObjNameTable.arc",
+             .conventional_path = "orig/RMGK02/files/StageData/ObjNameTable.arc",
              .label = "RMGK02"},
         };
 

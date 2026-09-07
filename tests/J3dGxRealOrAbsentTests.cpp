@@ -45,8 +45,6 @@ namespace {
     [[nodiscard]] std::optional<std::filesystem::path> find_object_archive(std::string_view archive_name) {
         for (auto root = std::filesystem::current_path(); !root.empty(); root = root.parent_path()) {
             const std::filesystem::path candidates[]{
-                root.parent_path() / "orig/RMGK02/files/ObjectData" / archive_name,
-                root.parent_path() / "orig/RMGK01/files/ObjectData" / archive_name,
                 root / "orig/RMGK02/files/ObjectData" / archive_name,
                 root / "orig/RMGK01/files/ObjectData" / archive_name,
                 root / "container/orig/RMGK02/files/ObjectData" / archive_name,

@@ -1,3 +1,4 @@
+#include "DebugPaths.hpp"
 #include "capture/ScreenshotService.hpp"
 #include "render/J3dTexture.hpp"
 #include "resource/RarcArchive.hpp"
@@ -20,37 +21,8 @@
 
 namespace {
 
-    [[nodiscard]] std::filesystem::path disc_files_root() {
-        const auto cwd = std::filesystem::current_path();
-        const std::filesystem::path candidates[]{
-            cwd / "orig" / "RMGK01" / "files",
-            cwd.parent_path() / "orig" / "RMGK01" / "files",
-        };
 
-        for (const auto &candidate : candidates) {
-            std::error_code error {};
-            const auto canonical = std::filesystem::weakly_canonical(candidate, error);
-            if (!error && std::filesystem::is_directory(canonical, error)) {
-                return canonical;
-            }
-        }
 
-        throw std::runtime_error("could not locate orig/RMGK01/files from " + cwd.string());
-    }
-
-    [[nodiscard]] std::filesystem::path pc_port_root() {
-        auto error = std::error_code {};
-        for (auto root = std::filesystem::current_path(); !root.empty(); root = root.parent_path()) {
-            if (std::filesystem::is_directory(root / "src" / "Game", error) &&
-                std::filesystem::is_regular_file(root / "xmake.lua", error)) {
-                return root;
-            }
-            if (root == root.parent_path()) {
-                break;
-            }
-        }
-        throw std::runtime_error("could not locate the PC port repository root");
-    }
 
     [[nodiscard]] std::string lowercase(std::string_view text) {
         auto lowered = std::string(text);
@@ -187,9 +159,9 @@ namespace {
 
 int main(int argc, char **argv) try {
     const auto object_name = argc > 1 ? std::string_view(argv[1]) : std::string_view("CometNearOrbitSky");
-    const auto archive_path = disc_files_root() / "ObjectData" / (std::string(object_name) + ".arc");
+    const auto archive_path = smgpc::debug::disc_files_root() / "ObjectData" / (std::string(object_name) + ".arc");
     const auto archive = smgpc::resource::RarcArchive::from_file(archive_path);
-    const auto output_root = pc_port_root() / ".cache" / "j3d-textures";
+    const auto output_root = smgpc::debug::pc_port_root() / ".cache" / "j3d-textures";
     const auto manifest_path = output_root / sanitize_filename(object_name) / "manifest.csv";
     std::filesystem::create_directories(manifest_path.parent_path());
 

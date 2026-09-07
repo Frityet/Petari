@@ -21,6 +21,7 @@
 #include <aurora/dvd.h>
 #include <dolphin/dvd.h>
 
+#include <cstdlib>
 #include <filesystem>
 #include <functional>
 #include <iostream>
@@ -57,7 +58,9 @@ int main() {
         ++passed;
     }
 
-    const auto disc_path = std::filesystem::path("../RMGK01.iso");
+    const auto *configured_disc = std::getenv("SMGPC_REAL_DISC");
+    const auto disc_path = std::filesystem::path(
+        configured_disc != nullptr && *configured_disc != '\0' ? configured_disc : "RMGK01.iso");
     require(std::filesystem::is_regular_file(disc_path), "the real RMGK01 disc image is required for this focused test");
     auto metadata = smgpc::compat::StageScenarioMetadata{};
     auto file_select_metadata = smgpc::compat::StageScenarioMetadata{};

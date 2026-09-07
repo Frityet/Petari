@@ -640,7 +640,7 @@ namespace {
 
     [[nodiscard]] std::optional< std::filesystem::path > find_rmgk02_object(std::string_view archive_name) {
         const auto relative = std::filesystem::path("ObjectData") / (std::string(archive_name) + ".arc");
-        for (const auto& root : {std::filesystem::path("../orig/RMGK02/files"), std::filesystem::path("orig/RMGK02/files"),
+        for (const auto& root : {std::filesystem::path("orig/RMGK02/files"),
                                  std::filesystem::path("container/orig/RMGK02/files")}) {
             const auto path = root / relative;
             if (std::filesystem::is_regular_file(path)) {

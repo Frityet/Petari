@@ -1,3 +1,4 @@
+#include "DebugPaths.hpp"
 #include <aurora/nw4r/brlan.hpp>
 #include "layout/BrlytLayout.hpp"
 #include "resource/RarcArchive.hpp"
@@ -38,41 +39,9 @@ namespace {
         float bottom = 0.0F;
     };
 
-    [[nodiscard]] std::filesystem::path disc_files_root() {
-        const auto cwd = std::filesystem::current_path();
-        const std::filesystem::path candidates[]{
-            cwd / "orig" / "RMGK01" / "files",
-            cwd / "orig" / "RMGK02" / "files",
-            cwd / "container" / "orig" / "RMGK01" / "files",
-            cwd / "container" / "orig" / "RMGK02" / "files",
-            cwd.parent_path() / "orig" / "RMGK01" / "files",
-            cwd.parent_path() / "orig" / "RMGK02" / "files",
-        };
 
-        for (const auto &candidate : candidates) {
-            std::error_code error {};
-            const auto canonical = std::filesystem::weakly_canonical(candidate, error);
-            if (!error && std::filesystem::is_directory(canonical, error)) {
-                return canonical;
-            }
-        }
 
-        throw std::runtime_error("could not locate orig/RMGK01/files from " + cwd.string());
-    }
 
-    [[nodiscard]] std::filesystem::path pc_port_root() {
-        auto error = std::error_code {};
-        for (auto root = std::filesystem::current_path(); !root.empty(); root = root.parent_path()) {
-            if (std::filesystem::is_directory(root / "src" / "Game", error) &&
-                std::filesystem::is_regular_file(root / "xmake.lua", error)) {
-                return root;
-            }
-            if (root == root.parent_path()) {
-                break;
-            }
-        }
-        throw std::runtime_error("could not locate the PC port repository root");
-    }
 
     [[nodiscard]] std::string lowercase(std::string_view text) {
         auto lowered = std::string(text);
@@ -433,9 +402,9 @@ namespace {
 
 int main(int argc, char **argv) try {
     const auto layout_name = argc > 1 ? std::string_view(argv[1]) : std::string_view("TitleLogo");
-    auto archive_path = disc_files_root() / "KrKorean" / "LayoutData" / archive_name_for(layout_name);
+    auto archive_path = smgpc::debug::disc_files_root() / "KrKorean" / "LayoutData" / archive_name_for(layout_name);
     if (!std::filesystem::is_regular_file(archive_path)) {
-        archive_path = disc_files_root() / "LayoutData" / archive_name_for(layout_name);
+        archive_path = smgpc::debug::disc_files_root() / "LayoutData" / archive_name_for(layout_name);
     }
     const auto archive = smgpc::resource::RarcArchive::from_file(archive_path);
     const auto brlyt = find_archive_file(archive, ".brlyt");
@@ -445,7 +414,7 @@ int main(int argc, char **argv) try {
 
     const auto layout = smgpc::layout::parse_brlyt_layout(*brlyt);
     const auto animations = load_animations(archive);
-    const auto output = pc_port_root() / ".cache" / "layout-probes" / (sanitize_filename(layout_name) + ".md");
+    const auto output = smgpc::debug::pc_port_root() / ".cache" / "layout-probes" / (sanitize_filename(layout_name) + ".md");
     write_layout_probe(output, layout_name, layout, animations);
     std::cout << "wrote " << output << '\n';
     return 0;

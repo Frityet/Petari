@@ -1,16 +1,30 @@
 {
-  // Use Ctrl+Shift+B to run build tasks.
-  // Or "Run Build Task" in the Command Palette.
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "ninja",
+      "label": "Build PC showcase",
       "type": "shell",
-      "command": "ninja",
+      "command": "xmake",
+      "args": [
+        "build",
+        "smg-pc-showcase"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "osx": {
+        "command": "./script/build_and_run.sh",
+        "args": [
+          "--build-only"
+        ]
+      },
       "group": {
         "kind": "build",
         "isDefault": true
-      }
-    },
+      },
+      "problemMatcher": [
+        "$gcc"
+      ]
+    }
   ]
 }

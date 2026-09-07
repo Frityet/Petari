@@ -53,8 +53,14 @@ namespace smgpc::debug {
         for (const auto &candidate : candidates) {
             auto error = std::error_code {};
             const auto canonical = std::filesystem::weakly_canonical(candidate, error);
-            if (!error && std::filesystem::is_directory(canonical / "ObjectData", error)) {
-                return canonical;
+            if (!error) {
+                // Probes also support partial extractions, such as fonts/layouts only.
+                for (const auto *directory : {"ObjectData", "LayoutData", "StageData", "SystemData"}) {
+                    if (std::filesystem::is_directory(canonical / directory, error)) {
+                        return canonical;
+                    }
+                    error.clear();
+                }
             }
         }
 

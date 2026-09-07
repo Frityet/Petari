@@ -1,3 +1,4 @@
+#include "DebugPaths.hpp"
 #include "resource/RarcArchive.hpp"
 
 #include <exception>
@@ -9,23 +10,6 @@
 
 namespace {
 
-    [[nodiscard]] std::filesystem::path disc_files_root() {
-        const auto cwd = std::filesystem::current_path();
-        const std::filesystem::path candidates[]{
-            cwd / "orig" / "RMGK01" / "files",
-            cwd.parent_path() / "orig" / "RMGK01" / "files",
-        };
-
-        for (const auto &candidate : candidates) {
-            std::error_code error {};
-            const auto canonical = std::filesystem::weakly_canonical(candidate, error);
-            if (!error && std::filesystem::is_directory(canonical, error)) {
-                return canonical;
-            }
-        }
-
-        throw std::runtime_error("could not locate orig/RMGK01/files from " + cwd.string());
-    }
 
     [[nodiscard]] std::filesystem::path resolve_archive_path(std::string_view archive_name) {
         const auto requested = std::filesystem::path(archive_name);
@@ -33,7 +17,7 @@ namespace {
             return requested;
         }
 
-        return disc_files_root() / "ObjectData" / (std::string(archive_name) + ".arc");
+        return smgpc::debug::disc_files_root() / "ObjectData" / (std::string(archive_name) + ".arc");
     }
 
 }  // namespace

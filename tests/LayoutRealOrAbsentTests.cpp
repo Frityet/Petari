@@ -34,8 +34,6 @@ void require_unavailable(const std::function<void()>& operation, std::string_vie
 [[nodiscard]] std::optional<std::filesystem::path> find_sys_info_window_mini_archive() {
     for (auto root = std::filesystem::current_path(); !root.empty(); root = root.parent_path()) {
         const std::filesystem::path candidates[]{
-            root.parent_path() / "orig/RMGK02/files/LayoutData/SysInfoWindowMini.arc",
-            root.parent_path() / "orig/RMGK01/files/LayoutData/SysInfoWindowMini.arc",
             root / "orig/RMGK02/files/LayoutData/SysInfoWindowMini.arc",
             root / "orig/RMGK01/files/LayoutData/SysInfoWindowMini.arc",
             root / "container/orig/RMGK02/files/LayoutData/SysInfoWindowMini.arc",

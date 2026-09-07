@@ -1,3 +1,11 @@
+target("smg-pc-debug-path-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/tools")
+    add_includedirs("../src")
+    add_files("DebugPathsTests.cpp", "../src/debug/DebugPaths.cpp")
+    add_tests("debug_paths", {group = "tools", rundir = os.projectdir()})
+
 target("smg-pc-game-source-mirror-tests")
     set_kind("binary")
     set_default(false)

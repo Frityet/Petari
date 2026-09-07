@@ -1,9 +1,14 @@
 # Running on Apple Silicon macOS
 
-The title/File Select and Gateway showcases run with Metal on the M5 Max.
-This was verified with macOS 26.6.2, Homebrew LLVM 23.1.0, and the Korean
-`Super Mario Wii - Galaxy Adventure (Korea).rvz` in the repository root.
-The port reads the RVZ directly; no extraction or ISO conversion is needed.
+The launcher targets Metal on Apple Silicon using Homebrew LLVM 23.
+It reads RVZ files directly; no extraction or ISO conversion is needed.
+
+Current clean builds are blocked by existing game-source issues: the showcase
+fails on two pointer-to-`u32` casts in `MarioTeresa.cpp`, while the full `smg-pc`
+target fails to link missing game methods. The layout and focused host tests
+have been validated, but a new application run has not. The title/File Select
+and Gateway runtime results described below are historical results from before
+this cleanup, not a claim that the current clean build succeeds.
 
 Install Xcode or its command line tools and these Homebrew dependencies, then
 run the following commands **from the repository root**:
@@ -46,10 +51,9 @@ The real-disc Mario movement test also passes: standing, 325.685 units of
 grounded walking, advancing Wait/Run animations, release to idle, and player
 recreation. The generic animation override regression passes as well.
 
-Both `smg-pc-showcase` and the full `smg-pc` target compile. The full target's
-runtime currently stops at an unsupported `FileSelector` placement, so use
-the showcase launcher for the working routes. These are limited portions of
-the game; full gameplay and progression are not implemented or validated.
+Earlier builds reached bounded title and Gateway showcase routes; the full
+target stopped at an unsupported `FileSelector` placement. Full gameplay and
+progression are not implemented or validated.
 To compile the full target without launching it:
 
 ```sh

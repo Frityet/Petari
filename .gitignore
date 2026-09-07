@@ -13,3 +13,10 @@ notes/
 compile_commands.json
 __pycache__/
 dist/
+orig/
+*.dol
+*.rel
+*.elf
+*.o
+*.map
+*.MAP

@@ -48,6 +48,7 @@ target("smg-pc-tpl-dump")
     set_default(false)
     add_files("TplDump.cpp")
     add_deps {
+        "smg-pc-debug-common",
         "smg-pc-game",
         "smg-pc-render"
     }
@@ -57,6 +58,7 @@ target("smg-pc-j3d-texture-dump")
     set_default(false)
     add_files("J3dTextureDump.cpp")
     add_deps {
+        "smg-pc-debug-common",
         "smg-pc-game",
         "smg-pc-render"
     }
@@ -112,6 +114,7 @@ target("smg-pc-j3d-animation-probe")
     set_default(false)
     add_files("J3dAnimationProbe.cpp")
     add_deps {
+        "smg-pc-debug-common",
         "smg-pc-game"
     }
 
@@ -120,6 +123,7 @@ target("smg-pc-layout-probe")
     set_default(false)
     add_files("LayoutProbe.cpp")
     add_deps {
+        "smg-pc-debug-common",
         "smg-pc-game"
     }
 
@@ -128,6 +132,7 @@ target("smg-pc-rarc-probe")
     set_default(false)
     add_files("RarcProbe.cpp")
     add_deps {
+        "smg-pc-debug-common",
         "smg-pc-game"
     }
 
@@ -136,6 +141,7 @@ target("smg-pc-brfnt-probe")
     set_default(false)
     add_files("BrfntProbe.cpp")
     add_deps {
+        "smg-pc-debug-common",
         "smg-pc-game",
         "smg-pc-render"
     }
