@@ -1,5 +1,7 @@
 #pragma once
 
+#include "scene/SceneInitializationState.hpp"
+
 #include <cstddef>
 #include <memory>
 #include <vector>
@@ -38,6 +40,7 @@ namespace smgpc::scene {
         void initialize_effect_system(unsigned particles = 3072, unsigned emitters = 256,
                                       std::size_t byte_budget = 8U * 1024U * 1024U);
         void init_after_placement();
+        void complete_initialization();
 
     private:
         friend class ::SceneObjHolder;
@@ -52,6 +55,7 @@ namespace smgpc::scene {
         friend void adopt_current_scene_obj_holder_descendant(
             NameObj *object);
 
+        SceneInitializationBinding _initialization_state;
         std::shared_ptr<smgpc::compat::JkrAllocationDomain> _game_allocation_domain;
         std::unique_ptr<smgpc::runtime::SceneSchedulerAllocationBinding> _game_allocation_binding;
         std::unique_ptr<smgpc::compat::EffectSystemOwnership> _effect_system_ownership;

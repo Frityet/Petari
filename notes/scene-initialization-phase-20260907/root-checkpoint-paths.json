@@ -1,0 +1,16 @@
+[
+  "src/scene/SceneInitializationState.hpp",
+  "src/scene/SceneInitializationState.cpp",
+  "src/compat/SceneInitializationStateCompat.cpp",
+  "src/scene/SceneObjHolderRuntime.hpp",
+  "src/compat/SceneObjHolderCompat.cpp",
+  "src/scene/AuthoredPlacementInstantiator.cpp",
+  "src/scene/StageHostScene.cpp",
+  "src/scene/GatewayDemoScene.cpp",
+  "src/scene/TitleFileSelectRoute.cpp",
+  "src/showcase/Showcase.cpp",
+  "tests/SceneInitializationStateTests.cpp",
+  "tests/AuthoredPlacementInstantiatorTests.cpp",
+  "tests/SceneObjHolderRealOrAbsentTests.cpp",
+  "tests/xmake.lua"
+]

@@ -759,6 +759,7 @@ namespace smgpc::scene {
                 "preload pass.");
         }
 
+        const auto placement_phase = SceneInitializationScope(SceneInitializeState_Placement);
         _owned_instances.reserve(_report.ready_count);
         _instance_views.reserve(_report.ready_count);
         AuthoredPlacementReportEntry *current_entry = nullptr;
@@ -767,6 +768,11 @@ namespace smgpc::scene {
             while (group_begin < _report.entries.size()) {
                 const auto pass =
                     _report.entries[group_begin].retail_pass;
+                const auto phase = SceneInitializationScope(
+                    pass == AuthoredPlacementRetailPass::CommonHighPriority ||
+                            pass == AuthoredPlacementRetailPass::ScenarioHighPriority
+                        ? SceneInitializeState_PlacementHighPriority
+                        : SceneInitializeState_Placement);
                 const auto group_index =
                     _report.entries[group_begin].retail_group_index;
                 auto group_end = group_begin + 1U;
@@ -1032,6 +1038,8 @@ namespace smgpc::scene {
                 "Authored initAfterPlacement requires a completed placement "
                 "construction pass.");
         }
+
+        const auto phase = SceneInitializationScope(SceneInitializeState_AfterPlacement);
 
         for (auto &instance : _owned_instances) {
             auto &entry = _report.entries[instance.report_index];

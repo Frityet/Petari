@@ -270,7 +270,10 @@ namespace smgpc::scene {
                 // initAfterPlacement callback can query it.
                 _collision.build();
                 _scene_binding->init_after_placement();
-                _runtime->name_obj_lifecycle().init_after_placement(player);
+                {
+                    const auto phase = SceneInitializationScope(SceneInitializeState_AfterPlacement);
+                    _runtime->name_obj_lifecycle().init_after_placement(player);
+                }
                 require(_runtime->player_system().attached_actor() == &player,
                         "the external player detached during initAfterPlacement");
                 _runtime->player_system().synchronize_attached_actor();
@@ -283,6 +286,7 @@ namespace smgpc::scene {
 #ifndef NDEBUG
                 emit_placement_report(report);
 #endif
+                _scene_binding->complete_initialization();
             } catch (...) {
                 retire();
                 throw;

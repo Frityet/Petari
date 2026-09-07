@@ -1,0 +1,34 @@
+[
+  {
+    "target": "smg-pc-area-polygon-query-tests",
+    "build_command": [
+      "xmake",
+      "build",
+      "-vD",
+      "smg-pc-area-polygon-query-tests"
+    ],
+    "build_exit_code": 0,
+    "run_command": [
+      "xmake",
+      "run",
+      "smg-pc-area-polygon-query-tests"
+    ],
+    "run_exit_code": 0
+  },
+  {
+    "target": "smg-pc-stage-collision-registration-tests",
+    "build_command": [
+      "xmake",
+      "build",
+      "-vD",
+      "smg-pc-stage-collision-registration-tests"
+    ],
+    "build_exit_code": 0,
+    "run_command": [
+      "xmake",
+      "run",
+      "smg-pc-stage-collision-registration-tests"
+    ],
+    "run_exit_code": 0
+  }
+]

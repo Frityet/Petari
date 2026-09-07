@@ -289,3 +289,15 @@ namespace MR {
         startCSSound2P("CS_DPD_JUMP_HIGH", nullptr);
     }
 }
+
+namespace MR {
+    void startDPDHitSound() {
+        if (hasME()) {
+            startSystemME("ME_DPD_HIT");
+        } else {
+            startSystemSE("SE_SY_DPD_HIT");
+        }
+
+        startCSSound2P("CS_DPD_HIT", nullptr);
+    }
+}  // namespace MR

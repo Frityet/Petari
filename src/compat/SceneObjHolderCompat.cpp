@@ -143,6 +143,7 @@ namespace smgpc::scene {
     }
 
     void SceneObjHolderBinding::init_after_placement() {
+        const auto phase = SceneInitializationScope(SceneInitializeState_AfterPlacement);
         // Advance by index so callback-time SceneObj creation can append to
         // the graph without invalidating this traversal. A failed callback
         // stays current for an explicit retry; completed and delegated
@@ -163,6 +164,10 @@ namespace smgpc::scene {
             ++_next_registration_postpass_index;
         }
         _area_obj_runtime->init_after_placement();
+    }
+
+    void SceneObjHolderBinding::complete_initialization() {
+        _initialization_state.complete();
     }
 
     SceneObjHolder *current_scene_obj_holder() noexcept {

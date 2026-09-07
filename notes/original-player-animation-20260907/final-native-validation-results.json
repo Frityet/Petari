@@ -1,0 +1,41 @@
+[
+  {
+    "target": "smg-pc-talk-real-or-absent-tests",
+    "build": 0,
+    "run": -6
+  },
+  {
+    "target": "smg-pc-nameobj-factory-placement-tests",
+    "build": 0,
+    "run": 0
+  },
+  {
+    "target": "smg-pc-star-pointer-real-or-absent-tests",
+    "build": 0,
+    "run": 0
+  },
+  {
+    "target": "smg-pc-scene-initialization-state-tests",
+    "build": 0,
+    "run": 0
+  },
+  {
+    "target": "smg-pc-authored-placement-instantiator-tests",
+    "build": 0,
+    "run": 1
+  },
+  {
+    "target": "smg-pc-sceneobj-holder-real-or-absent-tests",
+    "build": 0,
+    "run": 0
+  },
+  {
+    "target": "smg-pc-original-effect-ownership-tests",
+    "build": 0,
+    "run": 0
+  },
+  {
+    "target": "smg-pc-showcase",
+    "build": 255
+  }
+]

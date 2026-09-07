@@ -1,5 +1,6 @@
 #include "Game/Util/MathUtil.hpp"
 #include "JSystem/JMath/JMATrigonometric.hpp"
+#include <aurora/ppc_math.hpp>
 
 #include <algorithm>
 #include <array>
@@ -50,6 +51,26 @@ f32 PSVECKillElement(const Vec* pSrc, const Vec* pKill, const Vec* pDst) {
 
 
 namespace MR {
+    void floatToFixed16(TVec3s* pDst, const TVec3f& pSrc, u8 q) {
+        const f32 scale = static_cast<f32>(aurora::ppc::shift_left_s32(1, q));
+        const s16 x = aurora::ppc::truncate_s16(pSrc.x * scale);
+        const s16 y = aurora::ppc::truncate_s16(pSrc.y * scale);
+        const s16 z = aurora::ppc::truncate_s16(pSrc.z * scale);
+        pDst->x = x;
+        pDst->y = y;
+        pDst->z = z;
+    }
+
+    void fixed16ToFloat(TVec3f* pDst, const TVec3s& pSrc, u8 q) {
+        const f32 scale = 1.0f / static_cast<f32>(aurora::ppc::shift_left_s32(1, q));
+        const f32 x = pSrc.x * scale;
+        const f32 y = pSrc.y * scale;
+        const f32 z = pSrc.z * scale;
+        pDst->x = x;
+        pDst->y = y;
+        pDst->z = z;
+    }
+
     void normalize(TVec2f* pVec) {
         TVec3f temp(pVec->x, pVec->y, 0.0f);
         normalize(&temp);
@@ -693,3 +714,25 @@ namespace MR {
         return ratio;
     }
 } // namespace MR
+
+namespace MR {
+    bool isNearZero(const TVec2f& rVec, f32 tolerance) {
+        if (rVec.x > tolerance) {
+            return false;
+        }
+
+        if (rVec.x < -tolerance) {
+            return false;
+        }
+
+        if (rVec.y > tolerance) {
+            return false;
+        }
+
+        if (rVec.y < -tolerance) {
+            return false;
+        }
+
+        return true;
+    }
+}  // namespace MR

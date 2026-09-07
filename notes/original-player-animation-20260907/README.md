@@ -72,3 +72,62 @@ explicitly recorded rather than claiming complete original MarioActor behavior.
 Additional edited paths: src/compat/MarioCameraAccessCompat.cpp (duplicate
 method removal) and tests/NameObjFactoryPlacementTests.cpp (one required include).
 The second native link validation awaits the backend lane's focused depth test.
+
+## Expanded native validation
+
+The second complete-owner build removes all seven callback-owner links. Talk
+and factory now reach three further existing original-owner methods only:
+FloorCode::getCode (MarioMapCode.cpp), MarioActor::getModelData
+(MarioActorDraw.cpp), and Mario::getAirGravityVec (Mario.cpp). Their complete TU
+activation is held for the parent's coordinated checkpoint. StarPointer's
+existing disconnected-device boundary test builds/runs0. Its success covers
+those tested device states, not creation/lifetime of a full StarPointer target.
+
+Fresh showcase compiles but links with five utility dependencies:
+isNearZero(TVec2f,float), initFurPlayer, startDPDHitSound,
+createAreaPolygonListArray and isInitializeStatePlacementSomething. Parent owns
+that closure. Exact unresolved reports and build logs are retained with expanded
+in their filenames. No showcase execution or completed Gateway demo is claimed.
+
+## Final three source owners selected
+
+After checkpoint5bbd3c998, Mario.cpp, MarioActorDraw.cpp and MarioMapCode.cpp move
+from the showcase-only list into the normal Game archive. No extracted method
+definitions overlap these units. No Game body was modified for this activation.
+Fresh native syntax passes all three. Current Wii requested methods compare at
+99.64% getAirGravityVec,100% getModelData and100% FloorCode::getCode. Whole-source
+Mario .text60.93% and ActorDraw89.38% expose existing decomp incompleteness;
+MarioMapCode is100%. These source scores are not a full original gameplay claim.
+
+Existing TARGET_PC branch inventory is saved in
+existing-player-divergence-audit.json. Some branches are architecture/compiler
+repairs or previously recovered code; they must not all be removed blindly.
+Verified behavior replacements that require future owner activation include:
+Mario construction skips original sound-table initialization and leaves37 state
+owners null; initAfterConst skips Move/Foo/Swim initialization; the update loop
+uses a custom stand/walk and grounding/release path; MarioActor replaces its
+original movement/init2/initAfterPlacement/control paths. This activation does
+not repair these preexisting gameplay substitutions. The parent's next movement
+and camera work must restore original owner behavior through generalized native
+boundaries.
+
+## Coordinated native validation with all nine owners
+
+The final three owner activations resolve every Talk/factory Player link. All
+seven regression targets compile and link; factory placement, actual StarPointer
+target ownership, initialization phases, SceneObjHolder and the fresh two-scene
+original effect ownership test run successfully against the Korean RVZ. The
+latter again reports seven live particles, nine real GPU draws and 2,391,153
+changed RGBA bytes per scene, with callback, orphan retirement and heap checks.
+
+Two fixture failures remain in the first run and are recorded without hiding
+those results: the new type3 talk case incorrectly used a utility that retail
+explicitly rejects while a timekeeper is active; the LensFlare placement fixture
+omitted the now-required real resource service. Both fixture corrections now build and run successfully on the Korean RVZ
+without changing the production guards. Final-native-validation-results.json
+records that initial run; follow-up fixture results live beside the Talk query
+notes.
+
+The showcase compiles and now has only two unresolved functions: initFurPlayer
+and createAreaPolygonListArray. Both independent subsystem closures are assigned
+to other lanes. No showcase execution or complete Gateway progression is claimed.

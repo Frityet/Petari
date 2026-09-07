@@ -1,0 +1,46 @@
+[
+  {
+    "path": "decomp/src/Game/Map/CollisionCategorizedKeeper.cpp",
+    "sha256": "baab08b83caa055e0eaabc56c259c35b3350eb3fae29f6f1f42bbb3af5373d02"
+  },
+  {
+    "path": "decomp/src/Game/Map/CollisionParts.cpp",
+    "sha256": "602f529ba92b000f793922743007b5e4e2280a78cd5ab5598a8393718633a793"
+  },
+  {
+    "path": "decomp/include/Game/Map/CollisionCategorizedKeeper.hpp",
+    "sha256": "5b044d76e86920260adf5fe10c009616ec580517ab8ee4267f18b28332fccd1d"
+  },
+  {
+    "path": "decomp/include/Game/Map/CollisionParts.hpp",
+    "sha256": "59b8dc101306327bc19a4f7140eb049606b41e1fa78deee50cab0ae6c50627b7"
+  },
+  {
+    "path": "src/Game/Map/CollisionCategorizedKeeper.cpp",
+    "sha256": "baab08b83caa055e0eaabc56c259c35b3350eb3fae29f6f1f42bbb3af5373d02"
+  },
+  {
+    "path": "src/Game/Map/CollisionParts.cpp",
+    "sha256": "602f529ba92b000f793922743007b5e4e2280a78cd5ab5598a8393718633a793"
+  },
+  {
+    "path": "src/compat/OriginalKCollisionCompat.cpp",
+    "sha256": "39fafb64d9dd70e37335b64f95cc09cc21b799dc8fd0876b4dbee31d92b75b8a"
+  },
+  {
+    "path": "src/compat/GameMapCollisionCompat.cpp",
+    "sha256": "906e4f415e1e64bf14d656169b38865fea970299aea428ccf85fef83fa280b4f"
+  },
+  {
+    "path": "src/scene/StageCollisionService.hpp",
+    "sha256": "f160e987afc23700c25052d0e47cef60de746d46e13e2f7a64cd7dd5e69074be"
+  },
+  {
+    "path": "src/scene/StageCollisionService.cpp",
+    "sha256": "4f1dc34da6450fadc63115d7312d9b88ae8024363161c4a5ee082131f5e1f971"
+  },
+  {
+    "path": "tests/AreaPolygonQueryTests.cpp",
+    "sha256": "83b361fc257bfeaa91bc192924162ab023a1bc4168953dadafab12f417dbc288"
+  }
+]

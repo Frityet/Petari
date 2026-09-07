@@ -2634,3 +2634,32 @@ target("smg-pc-star-pointer-real-or-absent-tests")
     add_tests("star_pointer_real_or_absent", {
         group = "aurora", rundir = os.projectdir(), realtime_output = true
     })
+
+target("smg-pc-scene-initialization-state-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    set_rundir(os.projectdir())
+    add_files("SceneInitializationStateTests.cpp", "../aurora/lib/compat.cpp")
+    add_deps {
+        "smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
+        "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"
+    }
+    add_tests("scene_initialization_state", {
+        group = "aurora",
+        rundir = os.projectdir(),
+        realtime_output = true
+    })
+
+target("smg-pc-area-polygon-query-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    add_files("AreaPolygonQueryTests.cpp", "../aurora/lib/compat.cpp")
+    add_deps {
+        "smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
+        "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"
+    }
+    add_tests("area_polygon_query", {
+        group = "aurora", rundir = os.projectdir(), realtime_output = true
+    })

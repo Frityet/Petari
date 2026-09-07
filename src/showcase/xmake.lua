@@ -8,9 +8,7 @@ target("smg-pc-mario-gateway-walk-slice")
     add_cxxflags("-fno-builtin-sprintf", "-fno-builtin-snprintf", "-fno-builtin-vsprintf", "-fno-builtin-vsnprintf", {force = true})
     add_cxxflags("-ffunction-sections", "-fdata-sections", {force = true})
     add_files {
-        "../Game/Player/Mario.cpp",
         "../Game/Player/MarioActorCamera.cpp",
-        "../Game/Player/MarioActorDraw.cpp",
         "../Game/Player/MarioActorShadow.cpp",
         "../Game/Player/MarioActorWipe.cpp",
         "../Game/Player/MarioActorHand.cpp",
@@ -29,7 +27,6 @@ target("smg-pc-mario-gateway-walk-slice")
         "../Game/Player/MarioActorPad.cpp",
         "../Game/Player/MarioConst.cpp",
         "../Game/Player/MarioInit.cpp",
-        "../Game/Player/MarioMapCode.cpp",
         "../Game/Player/MarioMove.cpp",
         "../Game/Player/MarioMove2D.cpp",
         "../Game/Player/MarioSlip.cpp",

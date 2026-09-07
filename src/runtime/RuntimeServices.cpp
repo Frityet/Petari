@@ -1,3 +1,5 @@
+#include "Game/Screen/StarPointerTarget.hpp"
+#include "compat/JkrAllocationDomain.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "RuntimeServices.hpp"
 
@@ -255,10 +257,12 @@ namespace smgpc::runtime {
             }
 
             constexpr auto PI = 3.14159265358979323846F;
+            TVec3f position;
+            target.actor->mStarPointerTarget->calcPosition(&position);
             const auto world = smgpc::camera::CameraParamVec3{
-                .x = target.actor->mPosition.x + target.offset.x,
-                .y = target.actor->mPosition.y + target.offset.y,
-                .z = target.actor->mPosition.z + target.offset.z,
+                .x = position.x,
+                .y = position.y,
+                .z = position.z,
             };
             const auto camera = smgpc::camera::transform_world_to_camera(pose, world);
             if (check_z && camera.z <= pose.near_clip) {
@@ -280,7 +284,7 @@ namespace smgpc::runtime {
             return StarPointerProjection{
                 .x = (ndc_x * half_width) + half_width,
                 .y = (ndc_y * half_height) + half_height,
-                .radius = std::max((target.radius / depth) * focal_y * half_height, 1.0F),
+                .radius = std::max((target.actor->mStarPointerTarget->mRadius3d / depth) * focal_y * half_height, 1.0F),
             };
         }
 
@@ -2511,22 +2515,8 @@ namespace smgpc::runtime {
         _frame_index = frame_index;
     }
 
-    void StarPointerService::register_target(const LiveActor &actor, float radius, const smgpc::camera::CameraParamVec3 &offset) {
-        _targets[&actor] = StarPointerTargetState{
-            .actor = &actor,
-            .radius = radius,
-            .offset = offset,
-        };
-    }
-
     void StarPointerService::unregister_target(const LiveActor &actor) {
         _targets.erase(&actor);
-    }
-
-    void StarPointerService::set_target_radius(const LiveActor &actor, float radius) {
-        if (auto iter = _targets.find(&actor); iter != _targets.end()) {
-            iter->second.radius = radius;
-        }
     }
 
     void StarPointerService::start_mode(StarPointerMode mode) {
@@ -2641,21 +2631,21 @@ namespace smgpc::runtime {
     }
 
     bool StarPointerService::has_target(const LiveActor &actor) const {
-        return _targets.contains(&actor);
+        return actor.mStarPointerTarget != nullptr;
     }
 
     bool StarPointerService::is_pointing(const LiveActor &actor, const WpadService &wpad, const std::optional<smgpc::camera::CameraPose> &camera_pose, bool check_z) {
-        const auto iter = _targets.find(&actor);
-        if (iter == _targets.end()) {
+        smgpc::compat::JkrHostAllocationScope host;
+        if (actor.mStarPointerTarget == nullptr) {
             return false;
         }
-
+        auto [iter, inserted] = _targets.try_emplace(&actor, StarPointerTargetState{.actor = &actor});
         auto &target = iter->second;
         auto pointer = wpad.pointer(WPAD_CHAN0);
         auto projection = std::optional<StarPointerProjection>{};
         auto pointing = false;
 
-        if (!actor.mFlag.mIsDead && camera_pose.has_value() && pointer.valid) {
+        if (!actor.mFlag.mIsDead && camera_pose.has_value() && wpad.is_connected(WPAD_CHAN0) && pointer.valid) {
             projection = project_star_pointer_target(target, *camera_pose, check_z);
             if (projection.has_value()) {
                 const auto dx = pointer.x - projection->x;
@@ -2664,6 +2654,9 @@ namespace smgpc::runtime {
             }
         }
 
+        if (pointing) {
+            actor.mStarPointerTarget->mLastPointedChannel = WPAD_CHAN0;
+        }
 #ifndef NDEBUG
         record_target_pointing_sample(target, pointing, pointer, projection.has_value(), projection.has_value() ? projection->x : 0.0F,
                                       projection.has_value() ? projection->y : 0.0F, projection.has_value() ? projection->radius : 0.0F,

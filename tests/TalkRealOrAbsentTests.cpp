@@ -651,8 +651,11 @@ namespace {
 
                 MR::resetNode(controller);
                 set_wpad_buttons(runtime, 0U);
-                require(MR::tryTalkForceWithoutDemoMarioPuppetable(controller),
-                        "a no-demo talk must start alongside the active timekeeper");
+                require(!MR::tryTalkForceWithoutDemoMarioPuppetable(controller),
+                        "the no-demo utility must reject an active timekeeper");
+                require(controller->requestTalkForce() &&
+                            controller->startTalkForceWithoutDemoPuppetable(),
+                        "the controller's no-demo start must capture the active timekeeper");
                 require(talk->active_presentation()->demo_type == 3 &&
                             !talk->active_presentation()->time_keep_paused &&
                             !guide->sheet.is_paused() && MR::isSystemTalking() &&

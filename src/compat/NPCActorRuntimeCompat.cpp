@@ -128,10 +128,6 @@ const void* smgpcNPCActorModelPresence(const LiveActor* actor) {
     return actor != nullptr ? actor->mModelManager : nullptr;
 }
 
-const void* smgpcNPCActorStarPointerPresence(const LiveActor* actor) {
-    const auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
-    return runtime != nullptr && actor != nullptr && runtime->star_pointer().has_target(*actor) ? actor : nullptr;
-}
 
 namespace MR {
     JointControlDelegator<NPCActor>* createNPCActorJointDelegator(NPCActor*, const char*) {
@@ -252,10 +248,6 @@ namespace MR {
         const auto randomFrame = static_cast<s32>(
             static_cast<f32>(controller->getEnd()) * getRandom());
         setBckFrame(actor, static_cast<f32>(randomFrame));
-    }
-
-    void initStarPointerTargetAtJoint(LiveActor*, const char*, f32, const TVec3f&) {
-        throw std::logic_error("Joint-bound StarPointer targets are unavailable without real joint-matrix binding.");
     }
 
     bool getNPCItemData(NPCActorItem*, s32) {

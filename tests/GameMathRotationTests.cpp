@@ -395,6 +395,67 @@ namespace {
         require(JMath::sAsinAcosTable.acos_(0.5F) == acos_half && JGeometry::TUtil<float>::acos(0.5F) == acos_half,
                 "the shared acos paths must select the original truncated 1023.5-scaled table index");
     }
+    void test_vec2_near_zero_boundaries() {
+        constexpr auto tolerance = 0.25F;
+        const auto outside = std::nextafter(tolerance, 1.0F);
+        require(MR::isNearZero(TVec2f{tolerance, tolerance}, tolerance) &&
+                    MR::isNearZero(TVec2f{-tolerance, -tolerance}, tolerance),
+                "near-zero uses inclusive component bounds, including corners beyond the radial tolerance");
+        require(!MR::isNearZero(TVec2f{outside, 0.0F}, tolerance) &&
+                    !MR::isNearZero(TVec2f{-outside, 0.0F}, tolerance) &&
+                    !MR::isNearZero(TVec2f{0.0F, outside}, tolerance) &&
+                    !MR::isNearZero(TVec2f{0.0F, -outside}, tolerance),
+                "the next representable component outside either signed bound must fail");
+        require(MR::isNearZero(TVec2f{0.0F, -0.0F}, 0.0F) &&
+                    !MR::isNearZero(TVec2f{0.0F, 0.0F}, -tolerance),
+                "zero tolerance accepts signed zero while negative tolerance retains the original comparisons");
+        const auto unordered = std::nanf("");
+        require(MR::isNearZero(TVec2f{unordered, 0.0F}, tolerance) &&
+                    MR::isNearZero(TVec2f{0.0F, unordered}, tolerance) &&
+                    !MR::isNearZero(TVec2f{unordered, outside}, tolerance) &&
+                    MR::isNearZero(TVec2f{42.0F, -88.0F}, unordered),
+                "unordered comparisons preserve the retail component checks without adding finite-value rejection");
+    }
+    void test_fixed16_conversion_boundaries() {
+        auto fixed = TVec3s{};
+        MR::floatToFixed16(&fixed, TVec3f{1.999F, -1.999F, 0.0F}, 8);
+        require(fixed.x == 511 && fixed.y == -511 && fixed.z == 0,
+                "fixed-point conversion truncates scaled components toward zero");
+        MR::floatToFixed16(&fixed, TVec3f{32768.0F, -32769.0F, 65535.0F}, 0);
+        require(fixed.x == -32768 && fixed.y == 32767 && fixed.z == -1,
+                "the original halfword stores preserve the low 16 bits without saturation");
+        MR::floatToFixed16(&fixed, TVec3f{INFINITY, -INFINITY, NAN}, 0);
+        require(fixed.x == -1 && fixed.y == 0 && fixed.z == 0,
+                "out-of-range and unordered conversions retain the Gekko integer-word result");
+        MR::floatToFixed16(&fixed, TVec3f{-1.0F, 1.0F, 0.0F}, 31);
+        require(fixed.x == -1 && fixed.y == 0 && fixed.z == 0,
+                "shift 31 creates the original negative signed scale before conversion");
+        MR::floatToFixed16(&fixed, TVec3f{12.0F, -3.0F, 7.0F}, 32);
+        require(fixed.x == 0 && fixed.y == 0 && fixed.z == 0,
+                "Gekko word shifts with count bit 5 set produce zero");
+        MR::floatToFixed16(&fixed, TVec3f{12.0F, -3.0F, 7.0F}, 64);
+        require(fixed.x == 12 && fixed.y == -3 && fixed.z == 7,
+                "Gekko word shifts ignore count bits above bit 5");
+
+        constexpr s16 values[] = {-32768, -32767, -511, -1, 0, 1, 255, 32766, 32767};
+        for (u8 fraction = 0; fraction <= 15; ++fraction) {
+            for (const s16 value : values) {
+                const auto source = TVec3s{value, static_cast<s16>(-1), static_cast<s16>(32767)};
+                auto floating = TVec3f{};
+                MR::fixed16ToFloat(&floating, source, fraction);
+                require(floating.x == std::ldexp(static_cast<float>(value), -fraction),
+                        "signed fixed values decode at the authored binary precision");
+                MR::floatToFixed16(&fixed, floating, fraction);
+                require(fixed.x == source.x && fixed.y == source.y && fixed.z == source.z,
+                        "all boundary vectors round-trip exactly through supported fixed-point precisions");
+            }
+        }
+        auto floating = TVec3f{};
+        MR::fixed16ToFloat(&floating, TVec3s{1, -1, 0}, 32);
+        require(std::isinf(floating.x) && floating.x > 0.0F &&
+                    std::isinf(floating.y) && floating.y < 0.0F && std::isnan(floating.z),
+                "a zero fixed-point divisor preserves original IEEE infinities and unordered zero products");
+    }
 }  // namespace
 
 int main() {
@@ -410,6 +471,8 @@ int main() {
         test_near_parallel_angle_table();
         test_original_angle_boundaries();
         test_scaled_velocity_fused_rounding_and_aliasing();
+        test_vec2_near_zero_boundaries();
+        test_fixed16_conversion_boundaries();
         std::cout << "game math rotation tests passed\n";
         return 0;
     } catch (const std::exception& exception) {

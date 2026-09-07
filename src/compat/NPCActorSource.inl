@@ -50,7 +50,6 @@ namespace MR {
 }  // namespace MR
 
 const void* smgpcNPCActorModelPresence(const LiveActor*);
-const void* smgpcNPCActorStarPointerPresence(const LiveActor*);
 
 template <typename Tag, typename Tag::type Member>
 struct NPCActorPrivateMemberBridge {
@@ -71,11 +70,9 @@ inline Spine* smgpcNPCActorSpine(LiveActor* actor) {
 }
 
 #define mModelManager smgpcNPCActorModelPresence(this)
-#define mStarPointerTarget smgpcNPCActorStarPointerPresence(this)
 #define mSpine smgpcNPCActorSpine(this)
 #define createJointDelegatorWithNullChildFunc(host, function, name) createNPCActorJointDelegator(host, name)
 #include "Game/NPC/NPCActor.cpp"
 #undef createJointDelegatorWithNullChildFunc
 #undef mSpine
-#undef mStarPointerTarget
 #undef mModelManager

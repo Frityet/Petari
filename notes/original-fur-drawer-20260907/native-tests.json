@@ -1,0 +1,8 @@
+{
+  "math_build_exit": 0,
+  "math_run_exit": 0,
+  "endian_asan_ubsan_build_exit": 0,
+  "endian_asan_ubsan_run_exit": 0,
+  "endian_exhaustive_u16_cases": 65536,
+  "fur_rendering_tested": false
+}

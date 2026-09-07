@@ -140,3 +140,9 @@ at final shutdown. Five subsequent executions exited0. This intermittent backend
 shutdown issue is unresolved and the extended executable is not claimed reliably
 passing yet. See ../compat-final-validation-20260907/README.md and the sanitized
 native crash summary; the backend lane owns the fix.
+
+The backend follow-up now tracks/drains actual mapping futures before storage
+retirement and records20 consecutive effect-test exit0 processes, plus5 actual
+GPU READY-depth tests with clean shutdown. Evidence and precise remaining
+profiling coverage limits are in ../async-map-retirement-20260907/README.md.
+That source change addresses the observed intermittent teardown failure.

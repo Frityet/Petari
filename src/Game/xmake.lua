@@ -19,13 +19,11 @@ target("smg-pc-game")
         "Player/FireMarioBall.cpp",
         "Player/JetTurtleShadow.cpp",
         "Player/MarineSnow.cpp",
-        "Player/Mario.cpp",
         "Player/Mario2D.cpp",
         "Player/MarioAccess.cpp",
         "Player/MarioActorCamera.cpp",
         "Player/MarioActorClap.cpp",
         "Player/MarioActorDefensiveMsg.cpp",
-        "Player/MarioActorDraw.cpp",
         "Player/MarioActorGameOver.cpp",
         "Player/MarioActorGravity.cpp",
         "Player/MarioActorHand.cpp",
@@ -58,7 +56,6 @@ target("smg-pc-game")
         "Player/MarioHang.cpp",
         "Player/MarioInit.cpp",
         "Player/MarioMagic.cpp",
-        "Player/MarioMapCode.cpp",
         "Player/MarioMessenger.cpp",
         "Player/MarioMove.cpp",
         "Player/MarioMove25D.cpp",
@@ -116,6 +113,7 @@ target("smg-pc-game")
     remove_files("Screen/SimpleLayout.cpp")
     remove_files("Screen/FullScreenBlur.cpp")
     remove_files("Map/FileSelectEffect.cpp")
+    remove_files("Map/CollisionParts.cpp")
     remove_files("Map/FileSelectFunc.cpp")
     remove_files("Map/FileSelectItem.cpp")
     remove_files("Map/FileSelector.cpp")
@@ -151,6 +149,9 @@ target("smg-pc-game")
     remove_files("Util/SoundUtil.cpp")
     remove_files("Util/StringUtil.cpp")
     remove_files("Util/SystemUtil.cpp")
+    remove_files("Util/StarPointerUtil.cpp")
+    remove_files("Util/FurDrawer.cpp")
+    remove_files("Util/FurShader.cpp")
     remove_files("NPC/MiiFacePartsHolder.cpp")
     remove_files("NPC/MiiFaceParts.cpp")
     remove_files("NPC/MiiFaceRecipe.cpp")

@@ -7,3 +7,5 @@ A connected channel still explicitly rejects the query until original StarPointe
 The original StarPointerTarget header is copied byte-identically. MR::getStarPointerLastPointedPort copies the original body and returns the actual target member address; it does not fabricate a fallback channel or target.
 
 The focused regression uses Aurora's real WpadService: all three queries return false with channel1 disconnected, regardless of channel0 input; all three reject when channel1 is connected; disconnecting again restores the original absent-device result. Runtime validation is pending the coordinated build.
+
+The initial device-boundary target built and passed. The subsequent original-target ownership restoration also passes the expanded version of this test; see notes/original-star-pointer-target-20260907. It supplies the actual target needed by the last-channel accessor and removes the earlier parallel metadata-only target state.

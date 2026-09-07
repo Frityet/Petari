@@ -4,6 +4,7 @@
 #include "Game/Map/SwitchWatcherHolder.hpp"
 #include "Game/Player/MarioHolder.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
+#include "Game/Util/SceneUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "scene/nameobj/NameObjFactory.hpp"
@@ -48,7 +49,10 @@ namespace {
 
     void test_bound_holder_requires_explicit_real_creation() {
         auto holder = SceneObjHolder{};
-        const auto binding = smgpc::scene::SceneObjHolderBinding(holder);
+        auto binding = smgpc::scene::SceneObjHolderBinding(holder);
+        require(smgpc::scene::current_scene_initialization_state() == SceneInitializeState_Init &&
+                    !MR::isInitializeStatePlacementSomething() && !MR::isInitializeStateEnd(),
+                "a fresh scene holder did not own the retail Init phase");
 
         require(MR::getSceneObjHolder() == &holder,
                 "the active holder must be the holder owned by the bound scene");
@@ -80,6 +84,9 @@ namespace {
         require(MR::createSceneObj(SceneObj_MiiFacePartsHolder) == nullptr &&
                     !MR::isExistSceneObj(SceneObj_MiiFacePartsHolder),
                 "the Mii holder must remain absent until real character-model construction and drawing exist");
+        binding.complete_initialization();
+        require(MR::isInitializeStateEnd() && !MR::isInitializeStatePlacementSomething(),
+                "successful scene completion did not persist the retail End phase");
     }
 
     void test_mario_holder_precedes_real_actor_creation() {

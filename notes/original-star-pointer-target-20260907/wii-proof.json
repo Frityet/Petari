@@ -1,0 +1,206 @@
+{
+  "command": [
+    "build/tools/wibo",
+    "build/tools/sjiswrap.exe",
+    "build/compilers/GC/3.0a3/mwcceppc.exe",
+    "-nodefaults",
+    "-proc",
+    "gekko",
+    "-align",
+    "powerpc",
+    "-enum",
+    "int",
+    "-fp",
+    "hardware",
+    "-Cpp_exceptions",
+    "off",
+    "-O4,s",
+    "-inline",
+    "auto",
+    "-pragma",
+    "cats off",
+    "-pragma",
+    "warn_notinlined off",
+    "-maxerrors",
+    "1",
+    "-nosyspath",
+    "-RTTI",
+    "off",
+    "-str",
+    "reuse",
+    "-enc",
+    "SJIS",
+    "-sdata",
+    "4",
+    "-sdata2",
+    "4",
+    "-ipa",
+    "file",
+    "-sym",
+    "on",
+    "-i",
+    "include",
+    "-i",
+    "libs/JSystem/include",
+    "-i",
+    "libs/MSL_C++/include",
+    "-i",
+    "libs/MSL_C/include",
+    "-i",
+    "libs/MetroTRK/include",
+    "-i",
+    "libs/RVLFaceLib/include",
+    "-i",
+    "libs/RVL_SDK/include",
+    "-i",
+    "libs/Runtime/include",
+    "-i",
+    "libs/nw4r/include",
+    "-i",
+    "build/original-j3d-joint-traversal-20260903/retail/include",
+    "-DVERSION=0",
+    "-c",
+    "src/Game/Screen/StarPointerTarget.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-star-pointer-target-20260907/StarPointerTarget.o"
+  ],
+  "exit_code": 0,
+  "objdiff_exit_code": 0,
+  "methods": [
+    {
+      "name": "__ct__17StarPointerTargetFfPCQ29JGeometry8TVec3<f>PA4_fQ29JGeometry8TVec3<f>",
+      "demangled_name": "StarPointerTarget::StarPointerTarget(float, const JGeometry::TVec3<float>*, float(*)[4], JGeometry::TVec3<float>)",
+      "size": "40",
+      "match_percent": 100.0
+    },
+    {
+      "name": "calcScreenPosition__17StarPointerTargetCFPQ29JGeometry8TVec2<f>",
+      "demangled_name": "StarPointerTarget::calcScreenPosition(JGeometry::TVec2<float>*) const",
+      "size": "92",
+      "match_percent": 100.0
+    },
+    {
+      "name": "isPointing__17StarPointerTargetCFRCQ29JGeometry8TVec2<f>ff",
+      "demangled_name": "StarPointerTarget::isPointing(const JGeometry::TVec2<float>&, float, float) const",
+      "size": "256",
+      "match_percent": 99.84375
+    },
+    {
+      "name": "calcPosition__17StarPointerTargetCFPQ29JGeometry8TVec3<f>",
+      "demangled_name": "StarPointerTarget::calcPosition(JGeometry::TVec3<float>*) const",
+      "size": "332",
+      "match_percent": 100.0
+    },
+    {
+      "name": "calcRadius2d__17StarPointerTargetCFfff",
+      "demangled_name": "StarPointerTarget::calcRadius2d(float, float, float) const",
+      "size": "344",
+      "match_percent": 99.476746
+    },
+    {
+      "name": "calcScreenPositionFromView__17StarPointerTargetCFPQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec3<f>",
+      "demangled_name": "StarPointerTarget::calcScreenPositionFromView(JGeometry::TVec2<float>*, const JGeometry::TVec3<float>&) const",
+      "size": "448",
+      "match_percent": 99.50893
+    },
+    {
+      "name": "__ct__23StarPointerLayoutTargetFP11LayoutActorPCcPCc",
+      "demangled_name": "StarPointerLayoutTarget::StarPointerLayoutTarget(LayoutActor*, const char*, const char*)",
+      "size": "48",
+      "match_percent": 99.583336
+    },
+    {
+      "name": "isPointing__23StarPointerLayoutTargetCFRCQ29JGeometry8TVec2<f>",
+      "demangled_name": "StarPointerLayoutTarget::isPointing(const JGeometry::TVec2<float>&) const",
+      "size": "44",
+      "match_percent": 100.0
+    },
+    {
+      "name": "isPointingCircle__23StarPointerLayoutTargetCFRCQ29JGeometry8TVec2<f>",
+      "demangled_name": "StarPointerLayoutTarget::isPointingCircle(const JGeometry::TVec2<float>&) const",
+      "size": "108",
+      "match_percent": 99.44444
+    },
+    {
+      "name": "isPointingRectangle__23StarPointerLayoutTargetCFRCQ29JGeometry8TVec2<f>",
+      "demangled_name": "StarPointerLayoutTarget::isPointingRectangle(const JGeometry::TVec2<float>&) const",
+      "size": "156",
+      "match_percent": 97.948715
+    },
+    {
+      "name": "calcBasePos__23StarPointerLayoutTargetCFPQ29JGeometry8TVec2<f>",
+      "demangled_name": "StarPointerLayoutTarget::calcBasePos(JGeometry::TVec2<float>*) const",
+      "size": "152",
+      "match_percent": 99.73684
+    },
+    {
+      "name": "__ct__29StarPointerLayoutTargetKeeperFi",
+      "demangled_name": "StarPointerLayoutTargetKeeper::StarPointerLayoutTargetKeeper(int)",
+      "size": "88",
+      "match_percent": 100.0
+    },
+    {
+      "name": "addTargetCircle__29StarPointerLayoutTargetKeeperFP11LayoutActorPCcfRCQ29JGeometry8TVec2<f>PCc",
+      "demangled_name": "StarPointerLayoutTargetKeeper::addTargetCircle(LayoutActor*, const char*, float, const JGeometry::TVec2<float>&, const char*)",
+      "size": "168",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getTarget__29StarPointerLayoutTargetKeeperCFPCc",
+      "demangled_name": "StarPointerLayoutTargetKeeper::getTarget(const char*) const",
+      "size": "124",
+      "match_percent": 100.0
+    },
+    {
+      "name": "registerTarget__29StarPointerLayoutTargetKeeperFP23StarPointerLayoutTarget",
+      "demangled_name": "StarPointerLayoutTargetKeeper::registerTarget(StarPointerLayoutTarget*)",
+      "size": "32",
+      "match_percent": 100.0
+    },
+    {
+      "name": "@56069",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "@56070",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "@57106",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "@57285",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "@57327",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "@57328",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "@57329",
+      "size": "4",
+      "match_percent": 100.0
+    },
+    {
+      "name": "[.rodata-0]",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "[.sdata2-0]",
+      "size": "32",
+      "match_percent": 73.333336
+    }
+  ]
+}

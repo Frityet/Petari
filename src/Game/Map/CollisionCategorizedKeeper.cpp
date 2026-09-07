@@ -1,5 +1,7 @@
 #include "Game/Map/CollisionCategorizedKeeper.hpp"
 #include "Game/Map/CollisionParts.hpp"
+#include "Game/Map/CollisionDirector.hpp"
+#include "Game/Util/MathUtil.hpp"
 #include <algorithm>
 
 TVec3f CollisionParts::getTrans() {
@@ -106,4 +108,57 @@ void CollisionZone::eraseParts(CollisionParts* pParts) {
 
     mPartsArray[pFound - mPartsArray] = mPartsArray[mNumParts - 1];
     mNumParts--;
+}
+
+u32 CollisionCategorizedKeeper::createAreaPolygonListArray(Triangle* pTriangles, u32 maxCount, TVec3f* pPoints, u32 pointCount) {
+    MR::getCollisionDirector();
+
+    TVec3f boxMin;
+    TVec3f boxMax;
+    u32 foundCount = 0;
+    MR::createBoundingBox(pPoints, pointCount, &boxMin, &boxMax);
+
+    for (CollisionZone** zone = mZones; zone != mZones + mZoneNum; zone++) {
+        if (zone != mZones && !isSphereOverlappingWithBox(boxMin, boxMax, (*zone)->_808, (*zone)->mRadius)) {
+            continue;
+        }
+
+        s32 partCount = (*zone)->mNumParts;
+
+        for (s32 i = 0; i < partCount; i++) {
+            CollisionParts* part = (*zone)->mPartsArray[i];
+
+            if (!part->_CC) {
+                continue;
+            }
+
+            if (!isSphereOverlappingWithBox(boxMin, boxMax, part->getTrans(), part->_D8)) {
+                continue;
+            }
+
+            foundCount += part->createAreaPolygonListArray(pTriangles + foundCount, maxCount - foundCount, pPoints, pointCount);
+
+            if (maxCount <= foundCount) {
+                return foundCount;
+            }
+        }
+    }
+
+    return foundCount;
+}
+
+bool CollisionCategorizedKeeper::isSphereOverlappingWithBox(const TVec3f& rMin, const TVec3f& rMax, const TVec3f& rCenter, f32 radius) {
+    if (rCenter.x < rMin.x - radius || rMax.x + radius < rCenter.x) {
+        return false;
+    }
+
+    if (rCenter.y < rMin.y - radius || rMax.y + radius < rCenter.y) {
+        return false;
+    }
+
+    if (rCenter.z < rMin.z - radius || rMax.z + radius < rCenter.z) {
+        return false;
+    }
+
+    return true;
 }

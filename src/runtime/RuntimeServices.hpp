@@ -560,8 +560,6 @@ namespace smgpc::runtime {
 
     struct StarPointerTargetState {
         const LiveActor *actor = nullptr;
-        float radius = 0.0F;
-        smgpc::camera::CameraParamVec3 offset{};
 #ifndef NDEBUG
         bool was_pointing = false;
         std::optional<std::uint64_t> last_select_frame_index{};
@@ -571,9 +569,7 @@ namespace smgpc::runtime {
     class StarPointerService final {
     public:
         void begin_frame(std::uint64_t frame_index);
-        void register_target(const LiveActor &actor, float radius, const smgpc::camera::CameraParamVec3 &offset);
         void unregister_target(const LiveActor &actor);
-        void set_target_radius(const LiveActor &actor, float radius);
         void start_mode(StarPointerMode mode);
         void push_mode(const void *requester, StarPointerMode mode);
         void pop_mode(const void *requester);

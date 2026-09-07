@@ -1,0 +1,9 @@
+{
+  "symbol": "isInitializeStatePlacementSomething__2MRFv",
+  "retail_size": "144",
+  "fuzzy_match": 82.55556,
+  "source_sha256": "9ef85003f53833126b71141fef27b8a4d13971e41f6abe6d76152e1a8bf30c67",
+  "target": "decomp/build/original-j3d-joint-traversal-20260903/retail/obj/Game/Util/SceneUtil.o",
+  "header_identical": true,
+  "difference": "Ordinary short-circuit OR generates identical fuzzy score to explicit flag form; keep normal project convention."
+}

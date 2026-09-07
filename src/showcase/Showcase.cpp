@@ -22,6 +22,7 @@
 #include "compat/MarioCameraTarget.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "scene/GatewayDemoScene.hpp"
+#include "scene/SceneInitializationState.hpp"
 #include "scene/GatewaySpinCheckpoint.hpp"
 #include "scene/TitleFileSelectRoute.hpp"
 
@@ -754,7 +755,10 @@ namespace {
                 throw std::runtime_error(
                     "the production Mario factory was enabled before the Gateway slice was proven complete");
             }
-            auto mario_owner = GatewayMarioOwner{runtime.player_system()};
+            auto mario_owner = [&] {
+                const auto phase = smgpc::scene::SceneInitializationScope(SceneInitializeState_PlacementPlayer);
+                return GatewayMarioOwner{runtime.player_system()};
+            }();
             auto placement_lease =
                 smgpc::scene::GatewayDemoScene::PlacementLease{};
             auto spin_checkpoint =
@@ -764,7 +768,10 @@ namespace {
                 const auto renderer_context =
                     smgpc::render::ScopedAuroraRendererContext(renderer);
                 runtime.begin_frame(setup_frame);
-                mario_owner.actor().init(scene.player_start_iter());
+                {
+                    const auto phase = smgpc::scene::SceneInitializationScope(SceneInitializeState_PlacementPlayer);
+                    mario_owner.actor().init(scene.player_start_iter());
+                }
                 runtime.player_system().set_camera_target(
                     smgpc::compat::create_mario_camera_target(mario_owner.actor()));
                 runtime.camera_system().set_game_camera_target_player(

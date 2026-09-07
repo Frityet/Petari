@@ -1,0 +1,16 @@
+[
+  {
+    "source": "decomp/src/Game/Util/MathUtil.cpp",
+    "destination": "src/compat/GameMathCompat.cpp",
+    "signature": "bool isNearZero(const TVec2f& rVec, f32 tolerance)",
+    "body_sha256": "5ac555a9646c95db06cb0669abe2eb492a340fa5e058c293dde338160d48857c",
+    "body_exact": true
+  },
+  {
+    "source": "decomp/src/Game/Util/SoundUtil.cpp",
+    "destination": "src/compat/SoundUtilCompat.cpp",
+    "signature": "void startDPDHitSound()",
+    "body_sha256": "da06ff0e144c4ae38c08064fbd6d79bd2e69e5848ecd922672bb18f458de6936",
+    "body_exact": true
+  }
+]

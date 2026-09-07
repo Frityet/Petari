@@ -1,0 +1,15 @@
+{
+  "full_target_reference": "decomp/src/Game/Screen/StarPointerTarget.cpp",
+  "full_target_native": "src/Game/Screen/StarPointerTarget.cpp",
+  "sha256": "450cef14b8607a6e7c4838508caa980a128d987f29d1fc7d2855aec4e086328a",
+  "restored_game_util_reference": "decomp/src/Game/Util/StarPointerUtil.cpp",
+  "native_utility_owner": "src/compat/StarPointerServiceCompat.cpp",
+  "exact_forwarders": [
+    "void initStarPointerTarget(",
+    "bool isExistStarPointerTarget(",
+    "void setStarPointerTargetRadius3d(",
+    "void initStarPointerTargetAtPos(",
+    "void initStarPointerTargetAtMtx(",
+    "void initStarPointerTargetAtJoint("
+  ]
+}

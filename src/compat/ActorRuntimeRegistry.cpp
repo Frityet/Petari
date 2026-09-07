@@ -1,3 +1,4 @@
+#include "Game/Screen/StarPointerTarget.hpp"
 #include "compat/EffectSystemOwnership.hpp"
 #include "Game/AudioLib/AudAnmSoundObject.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
@@ -398,6 +399,9 @@ namespace smgpc::compat {
             runtime->unregister_effect_keeper(actor->getName(), actor);
             runtime->unregister_live_actor_model(*const_cast<LiveActor*>(actor));
         }
+
+        delete actor->mStarPointerTarget;
+        const_cast<LiveActor*>(actor)->mStarPointerTarget = nullptr;
 
         destroy_hit_sensors(found->second);
         actor_states().erase(found);

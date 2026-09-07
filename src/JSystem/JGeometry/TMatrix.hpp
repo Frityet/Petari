@@ -474,6 +474,18 @@ namespace JGeometry {
             set(source.mMtx);
         }
 
+        void setInline(const Mtx44Ptr source) {
+            JMath::gekko_ps_copy16(this, source);
+        }
+
+        void setInline(const SMatrix44C& source) {
+            JMath::gekko_ps_copy16(this, &source);
+        }
+
+        void setInline(const SMatrix44C* source) {
+            JMath::gekko_ps_copy16(this, source);
+        }
+
         [[nodiscard]] T get(int row, int column) const {
             return mMtx[row][column];
         }
@@ -483,6 +495,14 @@ namespace JGeometry {
 
     template <typename T>
     struct TMatrix44 : public T {
+        void mult(const TVec3f& source, TVec3f& destination) const {
+            const TVec3f position(source.x * this->mMtx[0][0] + source.z * this->mMtx[0][2],
+                            source.y * this->mMtx[1][1] + source.z * this->mMtx[1][2],
+                            source.z * this->mMtx[2][2] + this->mMtx[2][3]);
+            const f32 w = -source.z;
+            destination.scale(1.0F / w, position);
+        }
+
         void concat(const T& rA, const T& rB) {
             f32 m00, m01, m02, m03;
             f32 m10, m11, m12, m13;

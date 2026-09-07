@@ -11,6 +11,7 @@ class Nerve;
 
 namespace nw4r::lyt {
     class TexMap;
+    class Pane;
 }
 
 namespace nw4r::ut {
@@ -18,6 +19,7 @@ namespace nw4r::ut {
 }
 
 namespace MR {
+    nw4r::lyt::Pane* getPane(const LayoutActor*, const char*);
     bool isDead(const SimpleLayout* pLayout);
     bool isDead(const LayoutActor* pLayout);
     void startAnim(SimpleLayout* pLayout, const char* pAnimName, u32 animLayer);

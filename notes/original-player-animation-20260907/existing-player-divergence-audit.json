@@ -1,0 +1,1102 @@
+[
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 1,
+    "method": "file scope",
+    "native_lines": 6,
+    "retail_lines": 2,
+    "native_preview": [
+      "#include \"Game/Player/Mario.hpp\"",
+      "#include \"Game/Animation/XanimeCore.hpp\"",
+      "#include \"Game/Enemy/KarikariDirector.hpp\"",
+      "#include \"Game/LiveActor/Binder.hpp\"",
+      "#include \"Game/LiveActor/HitSensor.hpp\"",
+      "#include \"Game/LiveActor/Nerve.hpp\""
+    ],
+    "retail_preview": [
+      "#include \"Game/Player/Mario.hpp\"",
+      "#include \"Game/LiveActor/Binder.hpp\""
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 15,
+    "method": "file scope",
+    "native_lines": 1,
+    "retail_lines": 0,
+    "native_preview": [
+      "#include \"Game/Player/MarioAnimator.hpp\""
+    ],
+    "retail_preview": []
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 46,
+    "method": "file scope",
+    "native_lines": 1,
+    "retail_lines": 0,
+    "native_preview": [
+      "#include \"Game/Player/MarioState.hpp\""
+    ],
+    "retail_preview": []
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 60,
+    "method": "file scope",
+    "native_lines": 4,
+    "retail_lines": 5,
+    "native_preview": [
+      "#include \"Game/Util/DirectDraw.hpp\"",
+      "#include \"Game/Util.hpp\"",
+      "#include \"revolution/mtx.h\"",
+      "#include <stdexcept>"
+    ],
+    "retail_preview": [
+      "#include \"Game/Util.hpp\"",
+      "#include \"Game/Util/MapUtil.hpp\"",
+      "#include \"Game/Util/MathUtil.hpp\"",
+      "#include \"revolution/mtx.h\"",
+      "#include \"revolution/types.h\""
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 174,
+    "method": "Mario::Mario(MarioActor* actor) : MarioModule(actor) {",
+    "native_lines": 1,
+    "retail_lines": 1,
+    "native_preview": [
+      "    _73C = TVec3f(0.0f, 0.0f, 0.0f);"
+    ],
+    "retail_preview": [
+      "    _73C.set(0.0f, 1.0f, 0.0f);"
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 215,
+    "method": "Mario::Mario(MarioActor* actor) : MarioModule(actor) {",
+    "native_lines": 1,
+    "retail_lines": 1,
+    "native_preview": [
+      "    _458 = nullptr;"
+    ],
+    "retail_preview": [
+      "    _458 = MR::createTriangleFilterDelegator(this, &Mario::isIgnoreTriangle);"
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 295,
+    "method": "Mario::Mario(MarioActor* actor) : MarioModule(actor) {",
+    "native_lines": 1,
+    "retail_lines": 1,
+    "native_preview": [
+      "    _730 = 0;"
+    ],
+    "retail_preview": [
+      "    _730 = nullptr;"
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 334,
+    "method": "Mario::Mario(MarioActor* actor) : MarioModule(actor) {",
+    "native_lines": 42,
+    "retail_lines": 41,
+    "native_preview": [
+      "    _96C = nullptr;",
+      "    _970 = nullptr;",
+      "    _97C = nullptr;",
+      "    _980 = nullptr;",
+      "",
+      "    mFlow = nullptr;",
+      "    mWall = nullptr;",
+      "    mDamage = nullptr;"
+    ],
+    "retail_preview": [
+      "    initSound();",
+      "",
+      "    _97C = 0;",
+      "",
+      "    mFlow = new MarioFlow(mActor);"
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 430,
+    "method": "Mario::Mario(MarioActor* actor) : MarioModule(actor) {",
+    "native_lines": 1,
+    "retail_lines": 1,
+    "native_preview": [
+      "    _898 = 0;"
+    ],
+    "retail_preview": [
+      "    _898 = false;"
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 498,
+    "method": "void Mario::updateTimers() {",
+    "native_lines": 6,
+    "retail_lines": 2,
+    "native_preview": [
+      "    MarioHang* hang = mHang;",
+      "    u16 hangTimer = hang->mHangTimer;",
+      "    if (hangTimer == 0) {",
+      "        return;",
+      "    } else {",
+      "        hang->mHangTimer = hangTimer + -1;"
+    ],
+    "retail_preview": [
+      "    if (mHang->mHangTimer != 0) {",
+      "        mHang->mHangTimer--;"
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 556,
+    "method": "void Mario::doExtraServices() {",
+    "native_lines": 6,
+    "retail_lines": 3,
+    "native_preview": [
+      "    TVec3f killed;",
+      "    TVec3f horizontal;",
+      "    MarioConst* marioConst = mActor->mConst;",
+      "    MarioConstTable* table = marioConst->getTable();",
+      "",
+      "    if (MR::diffAngleAbs(_43C, mFrontVec) < table->mFrontAngleFixMargin) {"
+    ],
+    "retail_preview": [
+      "    TVec3f stack_2c;",
+      "    TVec3f stack_20;",
+      "    if (MR::diffAngleAbs(_43C, mFrontVec) < mActor->mConst->getTable()->mFrontAngleFixMargin) {"
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 570,
+    "method": "void Mario::doExtraServices() {",
+    "native_lines": 15,
+    "retail_lines": 11,
+    "native_preview": [
+      "",
+      "    if (!isPlayerModeBee() && !isPlayerModeTeresa() && mMovementStates.jumping && _3BC > 600 && !MR::isNearZero(*getGravityVec())) {",
+      "        f32 vertical = MR::vecKillElement(mJumpVec, *getGravityVec(), &killed);",
+      "        TVec3f gravity(*getGravityVec());",
+      "        gravity.scale(vertical);",
+      "        mJumpVec = gravity;",
+      "    }",
+      ""
+    ],
+    "retail_preview": [
+      "    if (!isPlayerModeBee() && !isPlayerModeTeresa() && mMovementStates.jumping && _3BC > 600 && !MR::isNearZero(*getGravityVec())) {",
+      "        TVec3f vec(*getGravityVec() * MR::vecKillElement(mJumpVec, *getGravityVec(), &stack_2c));",
+      "        mJumpVec = vec;",
+      "    }",
+      "    if (!isPlayerModeFoo() && !isPlayerModeTeresa() && mMovementStates.jumping && _3BC > 300) {"
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 604,
+    "method": "void Mario::doExtraServices() {",
+    "native_lines": 2,
+    "retail_lines": 1,
+    "native_preview": [
+      "",
+      "    if (getCurrentStatus() != MarioStatus_None || mActor->_3C0 || mActor->_EA4) {"
+    ],
+    "retail_preview": [
+      "    if (getCurrentStatus() != 0 || mActor->_3C0 != 0 || mActor->_EA4) {"
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 629,
+    "method": "void Mario::setGroundNorm(const TVec3f& rVec) {",
+    "native_lines": 263,
+    "retail_lines": 0,
+    "native_preview": [
+      "}",
+      "",
+      "void Mario::checkForceGrounding() {",
+      "    if ((mMovementStates._37 || _10._15) && mMovementStates._1) {",
+      "        if (MR::diffAngleAbs(_368, *_45C->getNormal(0)) < 0.7853982f) {",
+      "            mDrawStates._0 = 1;",
+      "        }",
+      "    }"
+    ],
+    "retail_preview": []
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 966,
+    "method": "bool Mario::isNonFixHeadVec() const {",
+    "native_lines": 98,
+    "retail_lines": 36,
+    "native_preview": [
+      "void Mario::createDirectionMtx(MtxPtr mtx) {",
+      "    TVec3f stack_20;",
+      "    TVec3f stack_14;",
+      "    TVec3f stack_8;",
+      "    stack_14 = _1FC;",
+      "    stack_20 = mSideVec;",
+      "    stack_8 = mFrontVec;",
+      "    if (mDrawStates._11) {"
+    ],
+    "retail_preview": [
+      "/* void Mario::createDirectionMtx(MtxPtr mtx) {",
+      "    TVec3f stack_20;",
+      "    TVec3f stack_14;",
+      "    TVec3f stack_8;",
+      "    stack_14 = _1FC;"
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 1194,
+    "method": "void Mario::setFrontVec(const TVec3f& rFront) {",
+    "native_lines": 1,
+    "retail_lines": 21,
+    "native_preview": [
+      "    mFrontVec = rFront;"
+    ],
+    "retail_preview": [
+      "    TVec3f plusMinus6A0;",
+      "    TVec3f frontWithout6A0;",
+      "    if (mMovementStates._37 && !isStatusActive(MarioStatus_Talk)) {",
+      "        if (getCamDirZ().dot(_6A0) > 0.0f) {",
+      "            plusMinus6A0 = _6A0;"
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 1342,
+    "method": "void Mario::forceSetHeadVecKeepSide(const TVec3f& rVec) {",
+    "native_lines": 1,
+    "retail_lines": 1,
+    "native_preview": [
+      "    if (MR::isSameDirection(rVec, mSideVec, 0.01f)) {"
+    ],
+    "retail_preview": [
+      "    if (MR::isSameDirection(rVec, mSideVec)) {"
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 1359,
+    "method": "void Mario::draw() const {",
+    "native_lines": 6,
+    "retail_lines": 2,
+    "native_preview": [
+      "        TVec3f* p_2A0 = &mActor->_2A0;",
+      "        TVec3f diff31C_2A0(mShadowPos);",
+      "        diff31C_2A0 -= *p_2A0;",
+      "        TDDraw::drawCylinder(mPosition, diff31C_2A0, 32.0f, 0xffff0010, 0xff000004, 8);",
+      "        TVec3f diff2A0_31C(mActor->_2A0);",
+      "        diff2A0_31C -= mShadowPos;"
+    ],
+    "retail_preview": [
+      "        TDDraw::drawCylinder(mPosition, mShadowPos - mActor->_2A0, 32.0f, 0xffff0010, 0xff000004, 8);",
+      "        TVec3f diff2A0_31C(mActor->_2A0 - mShadowPos);"
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 1373,
+    "method": "void Mario::draw() const {",
+    "native_lines": 2,
+    "retail_lines": 1,
+    "native_preview": [
+      "        f32 _37CMod10 = mActor->_37C % 0xa;",
+      "        _31CPlusStuff += diff2A0_31C * diffMag * 0.125f * _37CMod10 * 0.1f;"
+    ],
+    "retail_preview": [
+      "        _31CPlusStuff += diff2A0_31C * diffMag * 0.125f * (mActor->_37C % 0xa) * 0.1f;"
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 1382,
+    "method": "void Mario::draw() const {",
+    "native_lines": 1,
+    "retail_lines": 1,
+    "native_preview": [
+      "            _31CPlusStuff += diff2A0_31C * one_eighth * diffMag;"
+    ],
+    "retail_preview": [
+      "            _31CPlusStuff += diff2A0_31C * diffMag * one_eighth;"
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 1394,
+    "method": "void Mario::draw() const {",
+    "native_lines": 15,
+    "retail_lines": 0,
+    "native_preview": [
+      "/*",
+      "    r3 = mActor",
+      "    r0 = 0x4330",
+      "    r5 = 0x43300000",
+      "    r6 = 0xa",
+      "    r7 = mActor->_37C;",
+      "    r3 = stack_20",
+      "    stack_78 = 0x4330"
+    ],
+    "retail_preview": []
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 1446,
+    "method": "bool Mario::isEnableRush() const {",
+    "native_lines": 3,
+    "retail_lines": 9,
+    "native_preview": [
+      "    // Hanging, damage, Flow, and their state modules are structurally absent",
+      "    // from the stand/walk controller. Preserve the retail jumping denial that",
+      "    // is represented by the retained movement-state fields."
+    ],
+    "retail_preview": [
+      "    if (isHanging()) {",
+      "        return false;",
+      "    }",
+      "    if (isDamaging()) {",
+      "        return false;"
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 1478,
+    "method": "bool Mario::isInvincible() const {",
+    "native_lines": 89,
+    "retail_lines": 0,
+    "native_preview": [
+      "void Mario::inputStick() {",
+      "    mActor->getStickValue(&mStickPos.x, &mStickPos.y);",
+      "",
+      "    if (_10._28) {",
+      "        _10._28 = 0;",
+      "        mStickPos.x = 0.0f;",
+      "        mStickPos.y = 0.0f;",
+      "    }"
+    ],
+    "retail_preview": []
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 1579,
+    "method": "void Mario::setGravityVec(const TVec3f& rGravity) {",
+    "native_lines": 2,
+    "retail_lines": 2,
+    "native_preview": [
+      "    if (MR::isSameDirection(mAirGravityVec, rGravity, 0.01)) {",
+      "        if (MR::isOppositeDirection(mAirGravityVec, rGravity, 0.01)) {"
+    ],
+    "retail_preview": [
+      "    if (MR::isSameDirection(mAirGravityVec, rGravity)) {",
+      "        if (MR::isOppositeDirection(mAirGravityVec, rGravity)) {"
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 1629,
+    "method": "void Mario::updateSoundCode() {",
+    "native_lines": 38,
+    "retail_lines": 13,
+    "native_preview": [
+      "// nearly, last conditional doesn't want to cooperate",
+      "bool Mario::isForceStopRush() const {",
+      "    u16 temp = _960;",
+      "    if (mVerticalSpeed != 0.0f) {",
+      "        goto exit_false;",
+      "    }",
+      "    if (temp < (s16)0xf) {",
+      "        if (temp == (s16)4) {"
+    ],
+    "retail_preview": [
+      "bool Mario::isForceStopRush() const {",
+      "    if (mVerticalSpeed == 0.0f) {",
+      "        switch (_960) {",
+      "        case 1:",
+      "        case 4:"
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 1698,
+    "method": "const TVec3f Mario::getAirFrontVec() const {",
+    "native_lines": 8,
+    "retail_lines": 7,
+    "native_preview": [
+      "    TVec3f airFront;",
+      "    MR::vecKillElement(mFrontVec, mAirGravityVec, &airFront);",
+      "",
+      "    if (MR::normalizeOrZero(&airFront)) {",
+      "        return mFrontVec;",
+      "    }",
+      "",
+      "    return airFront;"
+    ],
+    "retail_preview": [
+      "    TVec3f stack_8;",
+      "    MR::vecKillElement(mFrontVec, mAirGravityVec, &stack_8);",
+      "    if (MR::normalizeOrZero(&stack_8)) {",
+      "        return mFrontVec;",
+      "    } else {"
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 1724,
+    "method": "void Mario::initAfterConst() {",
+    "native_lines": 0,
+    "retail_lines": 3,
+    "native_preview": [],
+    "retail_preview": [
+      "    mMove->initAfter();",
+      "    mFoo->init();",
+      "    mSwim->init();"
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 1734,
+    "method": "void Mario::initAfterConst() {",
+    "native_lines": 3,
+    "retail_lines": 3,
+    "native_preview": [
+      "    _720 = nullptr;",
+      "    _724 = nullptr;",
+      "    _728 = nullptr;"
+    ],
+    "retail_preview": [
+      "    _720 = getAnimationStringPointer(\"ヒップドロップ開始\");",
+      "    _724 = getAnimationStringPointer(\"ヒップドロップ\");",
+      "    _728 = getAnimationStringPointer(\"ヒップドロップ着地\");"
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 1754,
+    "method": "void Mario::writeBackPhyisicalVector() {",
+    "native_lines": 0,
+    "retail_lines": 2,
+    "native_preview": [],
+    "retail_preview": [
+      "    TVec3f stack_14;",
+      "    TVec3f stack_8;"
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 1770,
+    "method": "void Mario::writeBackPhyisicalVector() {",
+    "native_lines": 10,
+    "retail_lines": 5,
+    "native_preview": [
+      "        TVec3f stack_f8(mPosition);",
+      "        stack_f8 -= _688;",
+      "        MR::vecKillElement(stack_f8, _6A0, &stack_f8);",
+      "        TVec3f stack_80(_688);",
+      "        stack_80 += stack_f8;",
+      "        mPosition = stack_80;",
+      "        MR::vecKillElement(mVelocity, _6A0, &mVelocity);",
+      "        TVec3f stack_74(_694);"
+    ],
+    "retail_preview": [
+      "        TVec3f stack_f8(mPosition - _688);",
+      "        MR::vecKillElement(stack_f8, _6A0, &stack_f8);",
+      "        mPosition = _688 + stack_f8;",
+      "        MR::vecKillElement(mVelocity, _6A0, &mVelocity);",
+      "        f32 f29 = MR::vecKillElement(_694 - _688, _6A0, &stack_ec);"
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 1791,
+    "method": "void Mario::writeBackPhyisicalVector() {",
+    "native_lines": 1,
+    "retail_lines": 1,
+    "native_preview": [
+      "            f29 = -1.0f;"
+    ],
+    "retail_preview": [
+      "            f29 = 1.0f;"
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 1803,
+    "method": "void Mario::writeBackPhyisicalVector() {",
+    "native_lines": 1,
+    "retail_lines": 0,
+    "native_preview": [
+      ""
+    ],
+    "retail_preview": []
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 1812,
+    "method": "void Mario::writeBackPhyisicalVector() {",
+    "native_lines": 0,
+    "retail_lines": 1,
+    "native_preview": [],
+    "retail_preview": [
+      ""
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 1821,
+    "method": "void Mario::writeBackPhyisicalVector() {",
+    "native_lines": 20,
+    "retail_lines": 19,
+    "native_preview": [
+      "            for (u32 i = 0; i < _578; i++) {",
+      "                if (MR::vecKillElement(mVelocity, *_57C[i]->getNormal(0), &stack_e0) < 0.0f) {",
+      "                    mVelocity = stack_e0;",
+      "",
+      "                    if (!_1C._D) {",
+      "                        f32 f28 = MR::vecKillElement(mJumpVec, *_57C[i]->getNormal(0), &stack_d4);",
+      "                        if (f28 <= 0.0f) {",
+      "                            TVec3f stack_50(*_57C[i]->getNormal(0));"
+    ],
+    "retail_preview": [
+      "            f32 PI_30 = 0.10471976;",
+      "            f32 zero = 0.0f;",
+      "            f32 SQRT2_2 = 0.707f;",
+      "            for (u32 i = 0; i < _578; i++) {",
+      "                if (MR::vecKillElement(mVelocity, *_57C[i]->getNormal(0), &stack_e0) < zero) {"
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 1865,
+    "method": "void Mario::writeBackPhyisicalVector() {",
+    "native_lines": 17,
+    "retail_lines": 8,
+    "native_preview": [
+      "",
+      "                    if (rising && _57C[i]->getNormal(0)->dot(*getGravityVec()) > 0.707f) {",
+      "                        mActor->sendMsgUpperPunch(_57C[i]->mSensor);",
+      "                    }",
+      "",
+      "                    if (isPlayerModeBee() && !mActor->mBeeWallWalk) {",
+      "                        const char* pWallCode = MR::getWallCodeString(_57C[i]);",
+      "                        if (pWallCode != nullptr && strcmp(pWallCode, \"Fur\") == 0) {"
+    ],
+    "retail_preview": [
+      "                    if (isPlayerModeBee() && mActor->mBeeWallWalk == 0) {",
+      "                        const char* wallCodeString = MR::getWallCodeString(_57C[i]);",
+      "                        if (wallCodeString != nullptr && strcmp(wallCodeString, \"Fur\") == 0) {",
+      "                            Triangle stack_110 = Triangle();",
+      "                            MarioActor* pActor = mActor;"
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 1903,
+    "method": "void Mario::writeBackPhyisicalVector() {",
+    "native_lines": 0,
+    "retail_lines": 1,
+    "native_preview": [],
+    "retail_preview": [
+      "        f32 SQRT2_2 = 0.707f;"
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 1911,
+    "method": "void Mario::writeBackPhyisicalVector() {",
+    "native_lines": 5,
+    "retail_lines": 1,
+    "native_preview": [
+      "                TVec3f stack_20(*_57C[i]->getNormal(0));",
+      "                stack_20.scale(f28);",
+      "                TVec3f stack_2c(stack_20);",
+      "                stack_2c.scale(0.5f);",
+      "                mSwim->mKnockbackVel += stack_2c;"
+    ],
+    "retail_preview": [
+      "                mSwim->mKnockbackVel += *_57C[i]->getNormal(0) * f28 * 0.5f;"
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 1922,
+    "method": "void Mario::writeBackPhyisicalVector() {",
+    "native_lines": 1,
+    "retail_lines": 1,
+    "native_preview": [
+      "    } else if (!_1C._C && mActor->_288.dot(_368) < 0.707f && !MR::isNearZero(mActor->_288, 1.0f)) {"
+    ],
+    "retail_preview": [
+      "    } else if (!_1C._C && mActor->_288.dot(_368) < 0.707f && !MR::isNearZero(mActor->_288)) {"
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 1929,
+    "method": "void Mario::writeBackPhyisicalVector() {",
+    "native_lines": 2,
+    "retail_lines": 2,
+    "native_preview": [
+      "        f32 push = MR::vecKillElement(mVelocity, stack_a4, &stack_98);",
+      "        if (push < 0.0f) {"
+    ],
+    "retail_preview": [
+      "        f32 f2 = MR::vecKillElement(mVelocity, stack_a4, &stack_98);",
+      "        if (f2 < 0.0f) {"
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 1938,
+    "method": "void Mario::writeBackPhyisicalVector() {",
+    "native_lines": 17,
+    "retail_lines": 14,
+    "native_preview": [
+      "            f32 pushScale = 1.0f - MR::clamp((-stack_a4.dot(mFrontVec) - 0.3f) * 1.4285715f, 0.0f, 1.0f);",
+      "",
+      "            if (!mMovementStates._8 && pushScale < 0.1f) {",
+      "                if (mMovementStates._1A) {",
+      "                    TVec3f stack_14(getSideWallNorm());",
+      "                    stack_14.scale(-push);",
+      "                    mVelocity += stack_14;",
+      "                } else {"
+    ],
+    "retail_preview": [
+      "            f32 f1 = 1.0f - MR::clamp((-stack_a4.dot(mFrontVec) - 0.3f) * 1.4285715f, 0.0f, 1.0f);",
+      "            if (!mMovementStates._8 && f1 < 0.1f) {",
+      "                if (mMovementStates._1A) {",
+      "                    mVelocity += getSideWallNorm() * -f2;",
+      "                } else {"
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 1974,
+    "method": "void Mario::writeBackPhyisicalVector() {",
+    "native_lines": 5,
+    "retail_lines": 1,
+    "native_preview": [
+      "",
+      "                        TVec3f stack_8(mPosition);",
+      "                        const HitInfo* pInfo = reinterpret_cast< const HitInfo* >(mActor->mBinder->getPlane(index));",
+      "                        stack_8 -= pInfo->mHitPos;",
+      "                        MR::vecKillElement(stack_8, *getGravityVec(), &stack_8c);"
+    ],
+    "retail_preview": [
+      "                        MR::vecKillElement(mPosition - mActor->mBinder->getPlane(index)->mHitPos, *getGravityVec(), &stack_8c);"
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 1985,
+    "method": "void Mario::writeBackPhyisicalVector() {",
+    "native_lines": 1,
+    "retail_lines": 1,
+    "native_preview": [
+      "                            stack_8c.setLength(-push);"
+    ],
+    "retail_preview": [
+      "                            stack_8c.setLength(-f2);"
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 1992,
+    "method": "void Mario::writeBackPhyisicalVector() {",
+    "native_lines": 0,
+    "retail_lines": 2,
+    "native_preview": [],
+    "retail_preview": [
+      "                        mTargetWalkSpeedIndex = 0;",
+      "                        mWalkSpeed *= f1;"
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 2000,
+    "method": "void Mario::writeBackPhyisicalVector() {",
+    "native_lines": 3,
+    "retail_lines": 0,
+    "native_preview": [
+      "",
+      "            mTargetWalkSpeedIndex = 0;",
+      "            mWalkSpeed *= pushScale;"
+    ],
+    "retail_preview": []
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 2008,
+    "method": "void Mario::writeBackPhyisicalVector() {",
+    "native_lines": 1,
+    "retail_lines": 0,
+    "native_preview": [
+      ""
+    ],
+    "retail_preview": []
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 2016,
+    "method": "void Mario::writeBackPhyisicalVector() {",
+    "native_lines": 113,
+    "retail_lines": 52,
+    "native_preview": [
+      "#pragma dont_inline on",
+      "void Mario::update() {",
+      "    _43C = mFrontVec;",
+      "    _16C = mVelocity;",
+      "    mPosition = mActor->mPosition;",
+      "    mVelocityAfter.zero();",
+      "    mVelocity.zero();",
+      ""
+    ],
+    "retail_preview": [
+      "void Mario::actionMain() {",
+      "    if (!mMovementStates.debugMode) {",
+      "        if (checkDamage() == false) {",
+      "            if (_97C) {",
+      "                sendStateMsg(MarioStateMsg_Update);"
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 2189,
+    "method": "void Mario::updateGroundInfo() {",
+    "native_lines": 4,
+    "retail_lines": 5,
+    "native_preview": [
+      "",
+      "    if (isEnableCheckGround()) {",
+      "        bool wasAirborne = !mMovementStates.jumping && !mMovementStates._1;",
+      "        mMovementStates._1 = checkGround();"
+    ],
+    "retail_preview": [
+      "    if (isEnableCheckGround()) {",
+      "        bool b1 = !mMovementStates.jumping && !mMovementStates._1;",
+      "",
+      "        checkGround();",
+      "        mMovementStates._1 = mMovementStates._1F;"
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 2208,
+    "method": "void Mario::updateGroundInfo() {",
+    "native_lines": 1,
+    "retail_lines": 1,
+    "native_preview": [
+      "        if (wasAirborne && mMovementStates._1 && isDefaultAnimationRun(\"落下\")) {"
+    ],
+    "retail_preview": [
+      "        if (b1 && mMovementStates._1 && isDefaultAnimationRun(\"落下\")) {"
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 2217,
+    "method": "void Mario::updateGroundInfo() {",
+    "native_lines": 4,
+    "retail_lines": 3,
+    "native_preview": [
+      "            if (!isStatusActive(MarioStatus_13) && !mMovementStates._1 && mMovementStates._3E == 1 &&",
+      "                mJumpVec.dot(*getGravityVec()) > 0.0f && mJumpVec.dot(*_45C->getNormal(0)) < 0.0f &&",
+      "                _1FC.dot(*getGravityVec()) > 0.0f && mVerticalSpeed < 170.0f) {",
+      "                mMovementStates._1 = 1;"
+    ],
+    "retail_preview": [
+      "            if (!isStatusActive(MarioStatus_13) && !mMovementStates._1 && mMovementStates._3E == 1 && mJumpVec.dot(*getGravityVec()) > 0.0f &&",
+      "                mJumpVec.dot(*_45C->getNormal(0)) < 0.0f && _1FC.dot(*getGravityVec()) > 0.0f && mVerticalSpeed < 170.0f) {",
+      "                mMovementStates._1 = true;"
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 2234,
+    "method": "void Mario::updateGroundInfo() {",
+    "native_lines": 0,
+    "retail_lines": 1,
+    "native_preview": [],
+    "retail_preview": [
+      ""
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 2256,
+    "method": "void Mario::updateGroundInfo() {",
+    "native_lines": 150,
+    "retail_lines": 17,
+    "native_preview": [
+      "bool Mario::postureCtrl(MtxPtr mtx) {",
+      "    PSMTXIdentity(mtx);",
+      "    _1FC = mHeadVec;",
+      "    return false;",
+      "}",
+      "",
+      "void Mario::createAngleMtx(MtxPtr mtx, bool forceNoFix) {",
+      "    if (!isNonFixHeadVec() && !forceNoFix && !mMovementStates.debugMode) {"
+    ],
+    "retail_preview": [
+      "// conditionals won't behave",
+      "const TVec3f* Mario::getGravityVec() const {",
+      "    if (isStatusActive(MarioStatus_Bump) || isStatusActive(MarioStatus_Climb)) {",
+      "        return &_790;",
+      "    }"
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 2428,
+    "method": "const TVec3f* Mario::getGravityVec() const {",
+    "native_lines": 47,
+    "retail_lines": 19,
+    "native_preview": [
+      "",
+      "    TVec3f headOffset;",
+      "    headOffset.zero();",
+      "    if (mSinkTimer != 0) {",
+      "        f32 scale = static_cast< f32 >(mSinkTimer);",
+      "",
+      "        TVec3f gravity(*getGravityVec());",
+      "        gravity.scale(scale);"
+    ],
+    "retail_preview": [
+      "    if (isSwimming()) {",
+      "        if (mSwim->mWaterDepth >= -150.0f && mDrawStates._F && MR::isNearZero(_38C) == false) {",
+      "            return &_38C;",
+      "        }",
+      "        return &mAirGravityVec;"
+    ]
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 2505,
+    "method": "void Mario::touchWater() {",
+    "native_lines": 18,
+    "retail_lines": 0,
+    "native_preview": [
+      "",
+      "namespace NrvMarioActor {",
+      "    INIT_NERVE(MarioActorNrvWait);",
+      "    INIT_NERVE(MarioActorNrvGameOver);",
+      "    INIT_NERVE(MarioActorNrvGameOverAbyss);",
+      "    INIT_NERVE(MarioActorNrvGameOverAbyss2);",
+      "    INIT_NERVE(MarioActorNrvGameOverFire);",
+      "    INIT_NERVE(MarioActorNrvGameOverBlackHole);"
+    ],
+    "retail_preview": []
+  },
+  {
+    "file": "src/Game/Player/MarioActor.cpp",
+    "line": 16,
+    "method": "file scope",
+    "native_lines": 1,
+    "retail_lines": 0,
+    "native_preview": [
+      "#include \"Game/Player/MarioMapCode.hpp\""
+    ],
+    "retail_preview": []
+  },
+  {
+    "file": "src/Game/Player/MarioActor.cpp",
+    "line": 48,
+    "method": "file scope",
+    "native_lines": 3,
+    "retail_lines": 0,
+    "native_preview": [
+      "#include \"compat/ActorMotionCompat.hpp\"",
+      "#include \"compat/ActorRuntimeRegistry.hpp\"",
+      "#include <stdexcept>"
+    ],
+    "retail_preview": []
+  },
+  {
+    "file": "src/Game/Player/MarioActor.cpp",
+    "line": 64,
+    "method": "file scope",
+    "native_lines": 4,
+    "retail_lines": 14,
+    "native_preview": [
+      "template <>",
+      "bool TriangleFilterDelegator< MarioActor >::isInvalidTriangle(const Triangle* pTriangle) const {",
+      "    return (mParent->*mFunc)(pTriangle);",
+      "}"
+    ],
+    "retail_preview": [
+      "Triangle& Triangle::operator=(const Triangle& rOther) {",
+      "    mParts = rOther.mParts;",
+      "    mIdx = rOther.mIdx;",
+      "    mSensor = rOther.mSensor;",
+      "    mNormals[0] = rOther.mNormals[0];"
+    ]
+  },
+  {
+    "file": "src/Game/Player/MarioActor.cpp",
+    "line": 95,
+    "method": "MarioActor::MarioActor(const char* pName) : LiveActor(pName), _1B0(0xFFFFFFFF) {",
+    "native_lines": 0,
+    "retail_lines": 10,
+    "native_preview": [],
+    "retail_preview": [
+      "    if (MR::isPlayerLuigi()) {",
+      "        mMaxHealth = 3;",
+      "        mHealth = 3;",
+      "    }",
+      ""
+    ]
+  },
+  {
+    "file": "src/Game/Player/MarioActor.cpp",
+    "line": 304,
+    "method": "void MarioActor::init2(const TVec3f& a, const TVec3f& b, s32 initialAnimation) {",
+    "native_lines": 56,
+    "retail_lines": 128,
+    "native_preview": [
+      "    if (initialAnimation != -1) {",
+      "        throw std::logic_error(\"non-default Mario start animation is unavailable in the PC walk slice\");",
+      "    }",
+      "",
+      "    _8C = 1;",
+      "    gIsLuigi = false;",
+      "    mPosition.set(a);",
+      "    mRotation.set(b);"
+    ],
+    "retail_preview": [
+      "    _8C = 1;",
+      "    gIsLuigi = false;",
+      "    if (MR::isPlayerLuigi()) {",
+      "        gIsLuigi = true;",
+      "    }"
+    ]
+  },
+  {
+    "file": "src/Game/Player/MarioActor.cpp",
+    "line": 494,
+    "method": "void MarioActor::initAfterPlacement() {",
+    "native_lines": 48,
+    "retail_lines": 14,
+    "native_preview": [
+      "    smgpc::compat::update_live_actor_gravity(*this);",
+      "    if (MR::isNearZero(mGravity)) {",
+      "        throw std::logic_error(\"MarioActor requires a real gravity field before initAfterPlacement\");",
+      "    }",
+      "",
+      "    _240 = mGravity;",
+      "    MR::normalize(&_240);",
+      "    _24C = _240;"
+    ],
+    "retail_preview": [
+      "    updateGravityVec(true, true);",
+      "    mMario->mAirGravityVec = _240;",
+      "    mMario->mHeadVec = -_240;",
+      "    mMario->_1FC = -_240;",
+      "    _300 = mMario->mHeadVec;"
+    ]
+  },
+  {
+    "file": "src/Game/Player/MarioActor.cpp",
+    "line": 803,
+    "method": "void MarioActor::movement() {",
+    "native_lines": 35,
+    "retail_lines": 167,
+    "native_preview": [
+      "    const TVec3f previousPosition(mPosition);",
+      "    _378++;",
+      "    LiveActor::movement();",
+      "",
+      "    mLastMove = mPosition - previousPosition;",
+      "    _27C = mLastMove;",
+      "    _270 = mPosition;",
+      "    mMario->mPosition = mPosition;"
+    ],
+    "retail_preview": [
+      "    // FIXME: wrong stack",
+      "    _46C = nullptr;",
+      "    _378++;",
+      "    _1E1 = 0;",
+      "    PSMTXCopy(_AE0.toMtxPtr(), _AB0.toMtxPtr());"
+    ]
+  },
+  {
+    "file": "src/Game/Player/MarioActor.cpp",
+    "line": 1011,
+    "method": "void MarioActor::control() {",
+    "native_lines": 36,
+    "retail_lines": 26,
+    "native_preview": [
+      "    _294 = mPosition;",
+      "    _37C++;",
+      "",
+      "    _240 = mGravity;",
+      "    if (MR::normalizeOrZero(&_240)) {",
+      "        throw std::logic_error(\"MarioActor lost its real gravity vector during movement\");",
+      "    }",
+      "    _24C = _240;"
+    ],
+    "retail_preview": [
+      "    if (mSuperKinokoCollected) {",
+      "        if (MR::tryStartDemoWithoutCinemaFrame(this, \"マリオスーパー化\")) {  // 6-up camera",
+      "            mSuperKinokoCollected = false;",
+      "            changeMaxLife(6);",
+      "            MR::stopAnimFrame(this);"
+    ]
+  },
+  {
+    "file": "src/Game/Player/MarioActor.cpp",
+    "line": 1412,
+    "method": "void MarioActor::updateSwingAction() {",
+    "native_lines": 1,
+    "retail_lines": 1,
+    "native_preview": [
+      "    case 1: {"
+    ],
+    "retail_preview": [
+      "    case 1:"
+    ]
+  },
+  {
+    "file": "src/Game/Player/MarioActor.cpp",
+    "line": 1460,
+    "method": "void MarioActor::updateSwingAction() {",
+    "native_lines": 1,
+    "retail_lines": 0,
+    "native_preview": [
+      "    }"
+    ],
+    "retail_preview": []
+  },
+  {
+    "file": "src/Game/Player/MarioActor.cpp",
+    "line": 1475,
+    "method": "void MarioActor::updateSwingAction() {",
+    "native_lines": 9,
+    "retail_lines": 8,
+    "native_preview": [
+      "    case 4: {",
+      "        if (mMario->_418 != 0) {",
+      "            break;",
+      "        }",
+      "        mMario->startTeresaDisappear();",
+      "        const MarioConstTable* pConstants = mConst->getTable();",
+      "        _946 = pConstants->mTeresaWallThroughTime + pConstants->mSpinIntervalTime;",
+      "        break;"
+    ],
+    "retail_preview": [
+      "    case 4:",
+      "        if (mMario->_418 != 0) {",
+      "            break;",
+      "        }",
+      "        mMario->startTeresaDisappear();"
+    ]
+  }
+]

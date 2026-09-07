@@ -15,9 +15,14 @@
 #include <JSystem/JGeometry/TVec.hpp>
 
 class HitSensor;
+namespace smgpc::resource {
+    class OwnedKCollisionServer;
+}
 
 namespace smgpc::scene {
     struct StagePlacementObject;
+    struct StageCollisionAreaOrder;
+    struct StageCollisionAreaMembership;
 
     struct StageCollisionHit {
         TVec3f position{};
@@ -79,9 +84,11 @@ namespace smgpc::scene {
         [[nodiscard]] bool enabled() const noexcept;
 
     private:
+        friend class StageCollisionService;
         const bool *_inactive_flag;
         bool _enabled = true;
         bool _released = false;
+        std::vector<std::weak_ptr<StageCollisionAreaMembership>> _area_memberships{};
     };
 
     struct StageCollisionRegistrationResult {
@@ -132,6 +139,11 @@ namespace smgpc::scene {
                                                            bool skip_initial_check = false,
                                                            const StageCollisionTriangleFilter& filter = {}) const;
         [[nodiscard]] std::optional<StageCollisionSurface> surface(std::uint32_t triangle_index) const;
+        // CollisionCategorizedKeeper / CollisionParts area queries retain
+        // authored zone, part and KCL octree encounter order. The supplied
+        // points define an AABB independently in each collision part's space.
+        [[nodiscard]] std::vector<std::uint32_t> area_polygons(
+            std::span<const TVec3f> points, std::size_t maximum) const;
         // A new lifetime receives a distinct identity even when the allocator
         // reuses an address and the resource revision starts over.
         [[nodiscard]] std::uint64_t generation() const noexcept;
@@ -170,6 +182,15 @@ namespace smgpc::scene {
             std::vector<std::uint8_t> attributes{};
             HitSensor* sensor = nullptr;
             std::optional<std::int32_t> placement_zone_id;
+            std::vector<std::uint8_t> kcl_bytes{};
+            std::array<float, 12U> matrix{};
+            std::shared_ptr<StageCollisionRegistrationState> registration{};
+            std::vector<std::uint32_t> prism_triangles{};
+            // Decoding is required by original octree queries. Earlier
+            // geometry-only consumers do not require the octree to exist.
+            mutable std::unique_ptr<resource::OwnedKCollisionServer> area_server{};
+            mutable float area_bounding_radius = 0.0F;
+            std::shared_ptr<StageCollisionAreaMembership> area_membership{};
         };
 
         struct BvhNode {
@@ -191,6 +212,7 @@ namespace smgpc::scene {
         std::vector<std::uint32_t> _triangle_indices{};
         std::vector<BvhNode> _nodes{};
         std::vector<Source> _sources{};
+        std::shared_ptr<StageCollisionAreaOrder> _area_order{};
         StageCollisionStats _stats{};
         const std::uint64_t _generation;
         std::uint64_t _revision = 0U;

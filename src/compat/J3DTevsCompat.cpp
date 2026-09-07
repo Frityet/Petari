@@ -1,7 +1,7 @@
 #include "JSystem/J3DGraphBase/J3DTevs.hpp"
 #include "JSystem/J3DGraphBase/J3DSys.hpp"
 #include "JSystem/J3DGraphBase/J3DTexture.hpp"
-#include "compat/BigEndian.hpp"
+#include <aurora/endian.hpp>
 
 void J3DLightObj::load(u32 index) const {
     GDOverflowCheck(0x48);
@@ -67,7 +67,7 @@ bool isTexNoReg(void* pDL) {
 }
 
 u16 getTexNoReg(void* pDL) {
-    u32 var_r31 = smgpc::compat::read_be_u32((u8*)pDL + 1);
+    u32 var_r31 = aurora::endian::read_u32((u8*)pDL + 1);
     return var_r31 & 0xFFFFFF;
 }
 

@@ -40,6 +40,7 @@ namespace smgpc::scene {
             });
         runtime.scheduler().allocate_draw_buffers();
         _title_sequence->appear();
+        _scene_binding->complete_initialization();
     }
 
     TitleFileSelectRoute::~TitleFileSelectRoute() = default;

@@ -334,6 +334,7 @@ namespace smgpc::scene {
         SleepControlFunc::initSyncSleepController();
         _runtime.scheduler().allocate_draw_buffers();
         appear_roots();
+        _scene_obj_holder_binding->complete_initialization();
         _initialized = true;
     }
 
@@ -401,6 +402,7 @@ namespace smgpc::scene {
         preload_authored_placements();
         init_stage_audio();
         if (placement == nullptr) {
+            const auto phase = SceneInitializationScope(SceneInitializeState_Placement);
             const auto *actor_name = !_request.actor_name.empty() ?
                                          _request.actor_name.c_str() :
                                          nullptr;
@@ -446,6 +448,7 @@ namespace smgpc::scene {
     }
 
     void StageHostScene::construct_stage_start_root() {
+        const auto phase = SceneInitializationScope(SceneInitializeState_PlacementPlayer);
         const auto &start = *_authored_data->start_info();
         const auto context = _authored_data->start_context();
         // StageDataHolder::initPlacementMario passes this retail actor name
@@ -622,6 +625,7 @@ namespace smgpc::scene {
     }
 
     void StageHostScene::init_roots_after_placement() {
+        const auto phase = SceneInitializationScope(SceneInitializeState_AfterPlacement);
         for (auto &registration_graph : _root_registration_graphs) {
             registration_graph->init_registration_suffix_after_placement();
         }

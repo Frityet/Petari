@@ -5,16 +5,24 @@
 #include "Game/Map/SwitchWatcherHolder.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Screen/LensFlare.hpp"
+#include "Game/Util/SceneUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
+#include "compat/ResourceHolderCompat.hpp"
 #include "resource/BcsvTable.hpp"
+#include "resource/GameResourceRuntime.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "scene/AuthoredPlacementInstantiator.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
+
+#include <aurora/aurora.h>
+#include <aurora/dvd.h>
+#include <dolphin/dvd.h>
 
 #include <algorithm>
 #include <array>
 #include <cstdint>
 #include <cstdio>
+#include <cstdlib>
 #include <fstream>
 #include <functional>
 #include <iostream>
@@ -27,6 +35,8 @@
 #include <string_view>
 #include <utility>
 #include <vector>
+
+namespace aurora { extern AuroraConfig g_config; }
 
 namespace {
 
@@ -460,6 +470,9 @@ namespace {
         std::unique_ptr<NameObj> construct(
             std::string_view object_name, const char *actor_name,
             const smgpc::scene::NameObjPlacementContext &placement) override {
+            construction_phases.push_back(smgpc::scene::current_scene_initialization_state());
+            require(MR::isInitializeStatePlacementSomething(),
+                    "authored construction did not expose a retail placement phase");
             require(placement.iter.isValid(),
                     "construct received an invalid retained JMap iterator");
             events.push_back(
@@ -488,6 +501,9 @@ namespace {
             std::string_view object_name, s32 shape_model_no,
             const char *actor_name,
             const smgpc::scene::NameObjPlacementContext &placement) override {
+            construction_phases.push_back(smgpc::scene::current_scene_initialization_state());
+            require(MR::isInitializeStatePlacementSomething(),
+                    "model-changing construction did not expose a retail placement phase");
             require(placement.iter.isValid(),
                     "model-changing construct received an invalid JMap iterator");
             auto model_name = std::array<char, 128U>{};
@@ -513,6 +529,8 @@ namespace {
         void init(
             NameObj &object,
             const smgpc::scene::NameObjPlacementContext &) override {
+            require(MR::isInitializeStatePlacementSomething(),
+                    "authored init lost its construction placement phase");
             if (auto *root =
                     dynamic_cast<SyntheticDescendantRoot *>(&object);
                 root != nullptr) {
@@ -546,6 +564,9 @@ namespace {
         }
 
         void init_after_placement(NameObj &object) override {
+            require(smgpc::scene::current_scene_initialization_state() == SceneInitializeState_AfterPlacement &&
+                        !MR::isInitializeStatePlacementSomething(),
+                    "authored postpass still exposed an actor-placement phase");
             events.push_back("after:" + std::string(object.getName()));
             if (throw_after_actor_name.has_value() &&
                 std::string_view(object.getName()) ==
@@ -571,6 +592,7 @@ namespace {
         NameObj *lazy_scene_obj = nullptr;
         std::function<void(NameObj &)> init_hook{};
         std::vector<std::string> events{};
+        std::vector<SceneInitializeState> construction_phases{};
         std::vector<std::string> destructor_events{};
         std::vector<std::optional<std::string>> constructed_actor_names{};
         std::vector<std::pair<std::string, const char *>>
@@ -1334,6 +1356,11 @@ namespace {
             "construct:ScenarioNormal@2",
             "construct:Deferred@7",
         };
+        auto expected_phases = std::vector<SceneInitializeState>(5U, SceneInitializeState_PlacementHighPriority);
+        expected_phases.resize(16U, SceneInitializeState_Placement);
+        require(lifecycle.construction_phases == expected_phases &&
+                    smgpc::scene::current_scene_initialization_state() == SceneInitializeState_Init,
+                "shared placement groups lost high-priority/ordinary phases or failed to restore scene state");
         require(lifecycle.events.size() ==
                     expected_preloads.size() + expected_constructs.size() &&
                     std::ranges::equal(
@@ -1934,6 +1961,12 @@ namespace {
                             created.descendants[4U].object->getName()) ==
                             "synthetic-sun" &&
                         lens_flare != nullptr &&
+                        lens_flare->mRing != nullptr &&
+                        lens_flare->mGlow != nullptr &&
+                        lens_flare->mLine != nullptr &&
+                        lens_flare->mRing->mModelManager != nullptr &&
+                        lens_flare->mGlow->mModelManager != nullptr &&
+                        lens_flare->mLine->mModelManager != nullptr &&
                         created.descendants[0U].object == lens_flare &&
                         created.descendants[0U].construction_ordinal ==
                             1U &&
@@ -2549,23 +2582,45 @@ namespace {
 
 int main() {
     try {
-        test_synthetic_default_construction_scope_needs_no_holder();
-        test_nameobj_adapter_retains_strict_zone_scope_source();
-        test_model_changing_rows_require_their_exact_creator();
-        test_holder_occurrence_discovery_preserves_duplicates_and_bounds_cycles();
-        test_resolver_retains_missing_and_authored_empty_identifiers();
-        test_archive_metadata_is_independent_of_creator_support();
-        test_holder_provenance_and_attachment_ordinals();
-        test_strict_preflight_is_support_only_and_non_mutating();
-        test_five_pass_grouping_preload_and_lifecycle_order();
-        test_group_creator_recheck_and_shared_actor_name_fallback();
-        test_retail_shell_equal_key_permutation();
-        test_archive_failure_precedes_all_construction();
-        test_construction_failure_rolls_back_actual_actors_in_reverse();
-        test_authored_descendants_share_global_postpass_and_reverse_teardown();
-        test_authored_descendant_init_failure_rolls_back_exact_suffix();
-        test_scene_obj_created_inside_capture_keeps_independent_owner();
-        test_failed_authored_root_preserves_lazy_scene_obj_graph();
+        {
+            // Synthetic lifecycle tests own the initialization state explicitly;
+            // they still require no synthetic SceneObjHolder or runtime services.
+            const auto initialization = smgpc::scene::SceneInitializationBinding{};
+            test_synthetic_default_construction_scope_needs_no_holder();
+            test_nameobj_adapter_retains_strict_zone_scope_source();
+            test_model_changing_rows_require_their_exact_creator();
+            test_holder_occurrence_discovery_preserves_duplicates_and_bounds_cycles();
+            test_resolver_retains_missing_and_authored_empty_identifiers();
+            test_archive_metadata_is_independent_of_creator_support();
+            test_holder_provenance_and_attachment_ordinals();
+            test_strict_preflight_is_support_only_and_non_mutating();
+            test_five_pass_grouping_preload_and_lifecycle_order();
+            test_group_creator_recheck_and_shared_actor_name_fallback();
+            test_retail_shell_equal_key_permutation();
+            test_archive_failure_precedes_all_construction();
+            test_construction_failure_rolls_back_actual_actors_in_reverse();
+            test_authored_descendants_share_global_postpass_and_reverse_teardown();
+            test_authored_descendant_init_failure_rolls_back_exact_suffix();
+        }
+        if (const auto* disc = std::getenv("SMGPC_REAL_DISC");
+            disc != nullptr && *disc != '\0') {
+            require(aurora_dvd_open(disc),
+                    "SMGPC_REAL_DISC must open the real LensFlare model archives");
+            struct DiscCloseGuard {
+                ~DiscCloseGuard() { aurora_dvd_close(); }
+            } disc_close;
+            aurora::g_config.mem1Size = 24U * 1024U * 1024U;
+            auto process = smgpc::resource::GameResourceRuntime{};
+            DVDInit();
+            auto dvd = smgpc::runtime::DvdFileSystemService{"/"};
+            auto resources = smgpc::compat::ResourceHolderService{
+                dvd, process.create_cohort(), process.mem1_heap()};
+            test_scene_obj_created_inside_capture_keeps_independent_owner();
+            test_failed_authored_root_preserves_lazy_scene_obj_graph();
+            std::cout << "[ok] real LensFlare SceneObj capture and rollback ownership\n";
+        } else {
+            std::cout << "[skip] LensFlare SceneObj ownership requires SMGPC_REAL_DISC\n";
+        }
         test_cross_owner_postpass_stays_in_registration_order_once();
         test_postpass_delegation_cleans_up_on_early_clear();
         test_postpass_failure_releases_current_and_pending_delegates();

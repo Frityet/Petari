@@ -1,8 +1,11 @@
 #include "scene/StageCollisionService.hpp"
 
 #include "scene/StagePlacementResolver.hpp"
+#include "resource/KCollisionResource.hpp"
+#include "aurora/allocation.hpp"
 
 #include "Game/LiveActor/Binder.hpp"
+#include "Game/Util/MathUtil.hpp"
 
 #include <algorithm>
 #include <array>
@@ -11,10 +14,56 @@
 #include <cmath>
 #include <cstddef>
 #include <limits>
+#include <map>
 #include <optional>
 #include <stdexcept>
 
 namespace smgpc::scene {
+    // CollisionZone erases by swapping with its last part. Preserve that
+    // mutation at the registration boundary so capacity-limited queries see
+    // the same ordering even when a part toggles between two queries.
+    struct StageCollisionAreaOrder {
+        struct Zone {
+            std::size_t registered_count = 0U;
+            std::vector<std::uint32_t> parts{};
+        };
+        std::map<std::int32_t, Zone> zones{};
+    };
+
+    struct StageCollisionAreaMembership {
+        std::weak_ptr<StageCollisionAreaOrder> owner{};
+        std::int32_t zone = 0;
+        std::uint32_t source = 0U;
+        bool joined = false;
+
+        void set_enabled(bool enabled) noexcept {
+            if (joined == enabled) {
+                return;
+            }
+            const auto order = owner.lock();
+            if (order == nullptr) {
+                return;
+            }
+            const auto found = order->zones.find(zone);
+            if (found == order->zones.end()) {
+                return;
+            }
+            auto& parts = found->second.parts;
+            if (enabled) {
+                // Registration reserves one slot for every possible member,
+                // including disabled parts, so callbacks never allocate.
+                parts.push_back(source);
+            } else {
+                const auto part = std::find(parts.begin(), parts.end(), source);
+                if (part != parts.end()) {
+                    *part = parts.back();
+                    parts.pop_back();
+                }
+            }
+            joined = enabled;
+        }
+    };
+
     namespace {
         constexpr auto cPi = 3.14159265358979323846F;
         constexpr auto cLeafTriangleCount = std::uint32_t{8U};
@@ -274,10 +323,19 @@ namespace smgpc::scene {
     }
 
     void StageCollisionRegistrationState::set_enabled(bool enabled) noexcept {
+        if (_released || _enabled == enabled) {
+            return;
+        }
         _enabled = enabled;
+        for (const auto& weak : _area_memberships) {
+            if (const auto membership = weak.lock()) {
+                membership->set_enabled(enabled);
+            }
+        }
     }
 
     void StageCollisionRegistrationState::release_owner() noexcept {
+        set_enabled(false);
         _inactive_flag = nullptr;
         _released = true;
     }
@@ -287,6 +345,8 @@ namespace smgpc::scene {
     }
 
     StageCollisionService::StageCollisionService() : _generation(next_service_generation()) {
+        const aurora::allocation::HostAllocationScope host_allocations;
+        _area_order = std::make_shared<StageCollisionAreaOrder>();
     }
 
     StageCollisionService::~StageCollisionService() {
@@ -294,11 +354,13 @@ namespace smgpc::scene {
     }
 
     void StageCollisionService::clear() {
+        const aurora::allocation::HostAllocationScope host_allocations;
         _triangles.clear();
         _triangle_lookup.clear();
         _triangle_indices.clear();
         _nodes.clear();
         _sources.clear();
+        _area_order->zones.clear();
         _stats = {};
         ++_revision;
         _built = false;
@@ -314,6 +376,7 @@ namespace smgpc::scene {
         std::string source_name, std::shared_ptr<StageCollisionRegistrationState> registration,
         std::span<const std::uint8_t> attributes, HitSensor* sensor,
         std::optional<std::int32_t> placement_zone_id) {
+        const aurora::allocation::HostAllocationScope host_allocations;
         if (sensor != nullptr && registration == nullptr) {
             throw std::invalid_argument("Collision sensor ownership requires a retained registration lifetime.");
         }
@@ -346,10 +409,14 @@ namespace smgpc::scene {
 
         const auto source_index = static_cast<std::uint32_t>(_sources.size());
         _sources.push_back(Source{
-            .name = std::move(source_name),
+            .name = std::string(source_name),
             .attributes = std::vector<std::uint8_t>(attributes.begin(), attributes.end()),
             .sensor = sensor,
             .placement_zone_id = placement_zone_id,
+            .kcl_bytes = std::vector<std::uint8_t>(bytes.begin(), bytes.end()),
+            .matrix = matrix,
+            .registration = registration,
+            .prism_triangles = std::vector<std::uint32_t>(prism_count, std::numeric_limits<std::uint32_t>::max()),
         });
         const auto triangle_count_before = _triangles.size();
         auto local_bounding_radius_squared = 0.0F;
@@ -480,12 +547,27 @@ namespace smgpc::scene {
             _triangle_lookup.emplace(triangle.triangle_index,
                                      static_cast<std::uint32_t>(_triangles.size()));
             _triangles.push_back(triangle);
+            _sources.back().prism_triangles[prism_index] = triangle.triangle_index;
         }
 
         if (_triangles.size() == triangle_count_before) {
             _sources.pop_back();
             return {};
         }
+        auto& source = _sources.back();
+        auto& zone = _area_order->zones[source.placement_zone_id.value_or(0)];
+        zone.parts.reserve(++zone.registered_count);
+        auto membership = std::make_shared<StageCollisionAreaMembership>();
+        membership->owner = _area_order;
+        membership->zone = source.placement_zone_id.value_or(0);
+        membership->source = source_index;
+        if (registration != nullptr) {
+            auto& observers = registration->_area_memberships;
+            std::erase_if(observers, [](const auto& weak) { return weak.expired(); });
+            observers.push_back(membership);
+        }
+        membership->set_enabled(registration == nullptr || (!registration->_released && registration->_enabled));
+        source.area_membership = std::move(membership);
         ++_revision;
         ++_stats.mesh_count;
         _stats.triangle_count = _triangles.size();
@@ -497,6 +579,7 @@ namespace smgpc::scene {
     }
 
     void StageCollisionService::build() {
+        const aurora::allocation::HostAllocationScope host_allocations;
         _triangle_indices.resize(_triangles.size());
         for (auto index = std::size_t{}; index < _triangle_indices.size(); ++index) {
             _triangle_indices[index] = static_cast<std::uint32_t>(index);
@@ -508,6 +591,154 @@ namespace smgpc::scene {
         }
         _stats.triangle_count = _triangles.size();
         _built = true;
+    }
+
+    std::vector<std::uint32_t> StageCollisionService::area_polygons(
+        std::span<const TVec3f> points, std::size_t maximum) const {
+        const aurora::allocation::HostAllocationScope host_allocations;
+        auto result = std::vector<std::uint32_t>{};
+        if (maximum == 0U || points.empty()) {
+            return result;
+        }
+        // Retail CollisionParts has 32 point and 512 prism stack slots.
+        // Reject calls outside that contract instead of overrunning them.
+        if (points.size() > 32U || maximum > 512U) {
+            throw std::invalid_argument("Area polygon queries exceed the original point/prism capacity.");
+        }
+        for (const auto& point : points) {
+            if (!std::isfinite(point.x) || !std::isfinite(point.y) || !std::isfinite(point.z)) {
+                throw std::invalid_argument("Area polygon queries require finite points.");
+            }
+        }
+
+        TVec3f world_min, world_max;
+        MR::createBoundingBox(points.data(), static_cast<u32>(points.size()), &world_min, &world_max);
+        const auto overlaps = [](const TVec3f& minimum, const TVec3f& maximum,
+                                 const TVec3f& center, float radius) {
+            // Original isSphereOverlappingWithBox tests the expanded axes,
+            // including corner overlap; it does not measure sphere distance.
+            return !(center.x < minimum.x - radius || maximum.x + radius < center.x ||
+                     center.y < minimum.y - radius || maximum.y + radius < center.y ||
+                     center.z < minimum.z - radius || maximum.z + radius < center.z);
+        };
+        const auto center_of = [](const Source& source) {
+            return TVec3f(source.matrix[3], source.matrix[7], source.matrix[11]);
+        };
+        const auto zone_of = [](const Source& source) {
+            // Unauthored geometry belongs to the global query bucket; this
+            // never manufactures placement provenance for its surfaces.
+            return source.placement_zone_id.value_or(0);
+        };
+
+        auto sources = std::vector<const Source*>{};
+        sources.reserve(_sources.size());
+        for (const auto& [zone, membership] : _area_order->zones) {
+          for (const auto source_index : membership.parts) {
+            const auto& source = _sources[source_index];
+            if (source.registration != nullptr && !source.registration->enabled()) {
+                continue;
+            }
+            if (source.area_server == nullptr) {
+                auto owner = std::make_unique<resource::OwnedKCollisionServer>(
+                    resource::KCollisionResource(source.kcl_bytes, source.attributes));
+                auto& server = owner->server();
+                // Original calcFarthestVertexDistance marks parallel prisms
+                // inactive before building the part's bounding sphere.
+                auto farthest_squared = 0.0F;
+                for (auto i = 0; i < server.getTriangleNum(); ++i) {
+                    auto* prism = server.getPrismData(static_cast<u32>(i));
+                    if (server.isNearParallelNormal(prism)) {
+                        prism->mHeight = -std::abs(prism->mHeight);
+                    } else {
+                        for (auto vertex = 0; vertex < 3; ++vertex) {
+                            farthest_squared = std::max(farthest_squared, server.getPos(prism, vertex).squared());
+                        }
+                    }
+                }
+                server.mMaxVertexDistance = std::sqrt(farthest_squared);
+                const auto& matrix = source.matrix;
+                const auto scale = (std::sqrt(matrix[0] * matrix[0] + matrix[4] * matrix[4] + matrix[8] * matrix[8]) +
+                                    std::sqrt(matrix[1] * matrix[1] + matrix[5] * matrix[5] + matrix[9] * matrix[9]) +
+                                    std::sqrt(matrix[2] * matrix[2] + matrix[6] * matrix[6] + matrix[10] * matrix[10])) / 3.0F;
+                source.area_bounding_radius = scale * server.mMaxVertexDistance;
+                source.area_server = std::move(owner);
+            }
+            sources.push_back(&source);
+          }
+        }
+        result.reserve(std::min(maximum, _triangles.size()));
+
+        for (auto first = std::size_t{}; first < sources.size();) {
+            auto last = first + 1U;
+            const auto zone = zone_of(*sources[first]);
+            while (last < sources.size() && zone_of(*sources[last]) == zone) {
+                ++last;
+            }
+            if (zone != 0) {
+                // CollisionZone seeds its bounds from the first part, takes
+                // their midpoint, then encloses every part sphere.
+                const auto first_center = center_of(*sources[first]);
+                const auto first_radius = sources[first]->area_bounding_radius;
+                auto minimum = first_center - TVec3f(first_radius, first_radius, first_radius);
+                auto maximum = first_center + TVec3f(first_radius, first_radius, first_radius);
+                for (auto i = first; i < last; ++i) {
+                    const auto center = center_of(*sources[i]);
+                    const auto radius = sources[i]->area_bounding_radius;
+                    minimum.x = std::min(minimum.x, center.x - radius);
+                    minimum.y = std::min(minimum.y, center.y - radius);
+                    minimum.z = std::min(minimum.z, center.z - radius);
+                    maximum.x = std::max(maximum.x, center.x + radius);
+                    maximum.y = std::max(maximum.y, center.y + radius);
+                    maximum.z = std::max(maximum.z, center.z + radius);
+                }
+                const auto center = (minimum + maximum) * 0.5F;
+                auto radius = 0.0F;
+                for (auto i = first; i < last; ++i) {
+                    radius = std::max(radius, std::sqrt((center_of(*sources[i]) - center).squared()) +
+                                               sources[i]->area_bounding_radius);
+                }
+                if (!overlaps(world_min, world_max, center, radius)) {
+                    first = last;
+                    continue;
+                }
+            }
+            for (auto i = first; i < last; ++i) {
+                const auto& source = *sources[i];
+                if (!overlaps(world_min, world_max, center_of(source), source.area_bounding_radius)) {
+                    continue;
+                }
+                Mtx matrix, inverse;
+                std::copy(source.matrix.begin(), source.matrix.end(), &matrix[0][0]);
+                if (PSMTXInverse(matrix, inverse) == 0U) {
+                    throw std::logic_error("Area polygon queries require an invertible collision part matrix.");
+                }
+                auto local_points = std::array<TVec3f, 32U>{};
+                for (auto point = std::size_t{}; point < points.size(); ++point) {
+                    PSMTXMultVec(inverse, reinterpret_cast<const Vec*>(&points[point]),
+                                reinterpret_cast<Vec*>(&local_points[point]));
+                }
+                TVec3f local_min, local_max;
+                MR::createBoundingBox(local_points.data(), static_cast<u32>(points.size()), &local_min, &local_max);
+                auto prisms = std::array<KC_PrismData*, 512U>{};
+                auto& server = source.area_server->server();
+                const auto found = server.checkArea3D(reinterpret_cast<Fxyz*>(&local_min),
+                                                      reinterpret_cast<Fxyz*>(&local_max), prisms.data(),
+                                                      static_cast<u32>(maximum - result.size()));
+                for (auto prism = 0U; prism < found; ++prism) {
+                    const auto local_index = server.toIndex(prisms[prism]);
+                    const auto identity = source.prism_triangles.at(static_cast<std::size_t>(local_index));
+                    if (identity == std::numeric_limits<std::uint32_t>::max()) {
+                        throw std::logic_error("KCL area query selected a prism without a registered native surface.");
+                    }
+                    result.push_back(identity);
+                }
+                if (result.size() == maximum) {
+                    return result;
+                }
+            }
+            first = last;
+        }
+        return result;
     }
 
     std::uint32_t StageCollisionService::build_node(std::uint32_t first, std::uint32_t count) {

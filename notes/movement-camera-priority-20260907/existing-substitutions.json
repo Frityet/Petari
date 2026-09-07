@@ -1,0 +1,44 @@
+[
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 334,
+    "method": "Mario::Mario(MarioActor* actor) : MarioModule(actor) {",
+    "native_lines": 42,
+    "retail_lines": 41
+  },
+  {
+    "file": "src/Game/Player/Mario.cpp",
+    "line": 1194,
+    "method": "void Mario::setFrontVec(const TVec3f& rFront) {",
+    "native_lines": 1,
+    "retail_lines": 21
+  },
+  {
+    "file": "src/Game/Player/MarioActor.cpp",
+    "line": 304,
+    "method": "void MarioActor::init2(const TVec3f& a, const TVec3f& b, s32 initialAnimation) {",
+    "native_lines": 56,
+    "retail_lines": 128
+  },
+  {
+    "file": "src/Game/Player/MarioActor.cpp",
+    "line": 494,
+    "method": "void MarioActor::initAfterPlacement() {",
+    "native_lines": 48,
+    "retail_lines": 14
+  },
+  {
+    "file": "src/Game/Player/MarioActor.cpp",
+    "line": 803,
+    "method": "void MarioActor::movement() {",
+    "native_lines": 35,
+    "retail_lines": 167
+  },
+  {
+    "file": "src/Game/Player/MarioActor.cpp",
+    "line": 1011,
+    "method": "void MarioActor::control() {",
+    "native_lines": 36,
+    "retail_lines": 26
+  }
+]

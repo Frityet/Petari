@@ -101,6 +101,14 @@ namespace JGeometry {
             return x * x + y * y;
         }
 
+        [[nodiscard]] T squared(const TVec2& other) const {
+            const T dx = x - other.x;
+            const T dy = y - other.y;
+            const T xx = dx * dx;
+            const T yy = dy * dy;
+            return xx + yy;
+        }
+
         [[nodiscard]] T length() const {
             return TUtil<T>::sqrt(squared());
         }

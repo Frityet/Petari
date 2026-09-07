@@ -1,3 +1,4 @@
+#include "Game/Screen/StarPointerTarget.hpp"
 #include "Game/LiveActor/EffectKeeper.hpp"
 #include "compat/EffectSystemOwnership.hpp"
 #include "Game/AudioLib/AudAnmSoundObject.hpp"
@@ -313,14 +314,8 @@ void LiveActor::initStageSwitch(const JMapInfoIter& rIter) {
     smgpc::compat::adopt_actor_stage_switch(this, MR::createStageSwitchCtrl(this, rIter));
 }
 
-void LiveActor::initActorStarPointerTarget(f32 radius, const TVec3f* position, MtxPtr matrix, TVec3f offset) {
-    if (position != nullptr || matrix != nullptr) {
-        throw std::logic_error("Pointer- or matrix-bound StarPointerTarget requires the exact retail target provider.");
-    }
-    if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-        runtime->star_pointer().register_target(
-            *this, radius, smgpc::camera::CameraParamVec3{.x = offset.x, .y = offset.y, .z = offset.z});
-    }
+void LiveActor::initActorStarPointerTarget(f32 radius, const TVec3f* pTrans, MtxPtr pMtx, TVec3f offset) {
+    mStarPointerTarget = new StarPointerTarget(radius, pTrans, pMtx, offset);
 }
 
 HitSensor* LiveActor::getSensor(const char* pSensorName) const {
