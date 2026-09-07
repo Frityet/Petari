@@ -87,9 +87,10 @@ using shared path discovery compile, and the source audit reads the reference
 from `decomp/`. The relocated submodules initialize recursively.
 
 Clean application builds expose existing unfinished game code: the showcase
-fails on pointer-to-`u32` casts in `MarioTeresa.cpp`, and the main PC target
-fails to link missing game methods. The pointer-cast failures also reproduce
-with the original pre-flattening include paths. Source-mirror checks report
+now reaches incomplete effect APIs used by the original `MarioEffect.cpp`, and the main PC target
+fails to link missing game methods. The animation pointer fields now retain full native pointer width. The latest
+upstream and compatibility dependencies are integrated; eight focused tests,
+including exact Metal GX copy pixels, pass. Source-mirror checks report
 actual source differences and absent counterparts in the selected decompilation
 branch. These failures are retained rather than bypassed. Full gameplay remains
 incomplete. The Linux CI workflow has been linted, but has not been run here.

@@ -1,0 +1,49 @@
+[
+  {
+    "target": "smg-pc-gx-misc-state-tests",
+    "build": 0,
+    "run": 0
+  },
+  {
+    "target": "smg-pc-color8-byte-order-tests",
+    "build": 0,
+    "run": 0
+  },
+  {
+    "target": "smg-pc-text-encoding-tests",
+    "build": 0,
+    "run": 0
+  },
+  {
+    "target": "smg-pc-scene-scheduler-heap-tests",
+    "build": 0,
+    "run": 0
+  },
+  {
+    "target": "smg-pc-fixed-step-clock-tests",
+    "build": 0,
+    "run": 0
+  },
+  {
+    "target": "smg-pc-original-jmap-resource-tests",
+    "build": 0,
+    "run": 0
+  },
+  {
+    "target": "smg-pc-gx-copy-fifo-order-tests",
+    "build": 0,
+    "run": 0,
+    "note": "Pass after normal viewport event initialization; detailed rerun in sibling Aurora notes"
+  },
+  {
+    "target": "smg-pc-bright-visibility-batch-tests",
+    "build": 0,
+    "run": 0
+  },
+  {
+    "target": "smg-pc-aurora-native-tests",
+    "build": 255,
+    "run": null,
+    "note": "Stale API fixed; now reaches preexisting missing Game-method link failures"
+  }
+]

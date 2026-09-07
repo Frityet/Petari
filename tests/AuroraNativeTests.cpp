@@ -1005,14 +1005,23 @@ namespace {
                     zero_binder.mBinder->mPlaneNum == 1U && zero_binder.mBinder->mPlane == nullptr,
                 "a zero-radius Binder should remain explicit and resolve a strict-interior point-prism hit");
 
-        auto matrix_binder = LiveActor("matrix-binder-test");
+        struct MatrixBinderActor final : LiveActor {
+            MatrixBinderActor() : LiveActor("matrix-binder-test") {
+            }
+
+            MtxPtr getBaseMtx() const override {
+                return matrix;
+            }
+
+            mutable Mtx matrix{
+                {1.0F, 0.0F, 0.0F, 0.25F},
+                {0.0F, -2.0F, 0.0F, 4.25F},
+                {0.0F, 0.0F, -1.0F, 0.25F},
+            };
+        };
+        auto matrix_binder = MatrixBinderActor{};
         matrix_binder.makeActorAppeared();
         matrix_binder.mPosition.set(0.25F, 4.25F, 0.25F);
-        smgpc::compat::set_actor_base_matrix(&matrix_binder, smgpc::render::J3dMatrix3x4{{
-            1.0F, 0.0F, 0.0F, 0.25F,
-            0.0F, -2.0F, 0.0F, 4.25F,
-            0.0F, 0.0F, -1.0F, 0.25F,
-        }});
         matrix_binder.initBinder(0.5F, 2.0F, 1U);
         smgpc::compat::integrate_live_actor_velocity(matrix_binder);
         const auto* matrix_binder_contacts = smgpc::compat::actor_binder_contacts(&matrix_binder);

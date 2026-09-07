@@ -5,6 +5,7 @@
 [submodule "aurora"]
 	path = aurora
 	url = https://github.com/frityet/aurora
+	branch = codex/macos-compat
 [submodule "decomp"]
 	path = decomp
 	url = https://github.com/Frityet/Petari

@@ -1,11 +1,8 @@
 #include "Game/NameObj/NameObjGroup.hpp"
-#include "Game/Util.hpp"
+#include "Game/Util/ObjUtil.hpp"
 
-NameObjGroup::NameObjGroup(const char* pGroupName, int maxCount) : NameObj(pGroupName) {
-    _C = 0;
-    mObjectCount = 0;
-    mObjects = 0;
-    initObjArray(maxCount);
+NameObjGroup::NameObjGroup(const char* pName, int numMax) : NameObj(pName), mObjectNumMax(), mObjectCount(), mObjects() {
+    initObjArray(numMax);
 }
 
 NameObjGroup::~NameObjGroup() {
@@ -23,11 +20,11 @@ void NameObjGroup::pauseOffAll() const {
     }
 }
 
-void NameObjGroup::initObjArray(int maxCount) {
-    _C = maxCount;
-    mObjects = new NameObj*[maxCount];
+void NameObjGroup::initObjArray(int numMax) {
+    mObjectNumMax = numMax;
+    mObjects = new NameObj*[numMax];
 
-    for (s32 i = 0; i < _C; i++) {
-        mObjects[i] = 0;
+    for (s32 i = 0; i < mObjectNumMax; i++) {
+        mObjects[i] = nullptr;
     }
 }

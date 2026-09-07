@@ -1,0 +1,245 @@
+[
+  {
+    "upstream": "include/Game/AudioLib/AudBgm.hpp",
+    "port": "src/Game/AudioLib/AudBgm.hpp",
+    "conflicts": 1,
+    "changed": true,
+    "base_equals_port": false,
+    "port_equals_upstream": false,
+    "resolution": "retain native concrete backend handle ABI; upstream requires unported JAISound object API"
+  },
+  {
+    "upstream": "include/Game/AudioLib/AudBgmRhythmStrategy.hpp",
+    "port": "src/Game/AudioLib/AudBgmRhythmStrategy.hpp",
+    "conflicts": 0,
+    "changed": true,
+    "base_equals_port": true,
+    "port_equals_upstream": false,
+    "resolution": "three-way merge"
+  },
+  {
+    "upstream": "include/Game/AudioLib/AudBgmSetting.hpp",
+    "port": "src/Game/AudioLib/AudBgmSetting.hpp",
+    "conflicts": 0,
+    "changed": true,
+    "base_equals_port": true,
+    "port_equals_upstream": false,
+    "resolution": "three-way merge"
+  },
+  {
+    "upstream": "include/Game/AudioLib/AudFader.hpp",
+    "port": "src/Game/AudioLib/AudFader.hpp",
+    "conflicts": 0,
+    "changed": true,
+    "base_equals_port": true,
+    "port_equals_upstream": false,
+    "resolution": "three-way merge"
+  },
+  {
+    "upstream": "include/Game/AudioLib/AudWrap.hpp",
+    "port": "src/Game/AudioLib/AudWrap.hpp",
+    "conflicts": 0,
+    "changed": true,
+    "base_equals_port": true,
+    "port_equals_upstream": false,
+    "resolution": "three-way merge"
+  },
+  {
+    "upstream": "include/Game/LiveActor/LiveActorGroup.hpp",
+    "port": "src/Game/LiveActor/LiveActorGroup.hpp",
+    "conflicts": 0,
+    "changed": true,
+    "base_equals_port": true,
+    "port_equals_upstream": false,
+    "resolution": "three-way merge"
+  },
+  {
+    "upstream": "include/Game/Map/KCollision.hpp",
+    "port": "src/Game/Map/KCollision.hpp",
+    "conflicts": 0,
+    "changed": false,
+    "base_equals_port": false,
+    "port_equals_upstream": true,
+    "resolution": "already current"
+  },
+  {
+    "upstream": "include/Game/MapObj/PurpleCoinHolder.hpp",
+    "port": "src/Game/MapObj/PurpleCoinHolder.hpp",
+    "conflicts": 0,
+    "changed": true,
+    "base_equals_port": false,
+    "port_equals_upstream": false,
+    "resolution": "three-way merge"
+  },
+  {
+    "upstream": "include/Game/NameObj/NameObjGroup.hpp",
+    "port": "src/Game/NameObj/NameObjGroup.hpp",
+    "conflicts": 1,
+    "changed": true,
+    "base_equals_port": false,
+    "port_equals_upstream": false,
+    "resolution": "upstream member naming and getObj; preserve native getObjectCount"
+  },
+  {
+    "upstream": "include/Game/Player/Mario.hpp",
+    "port": "src/Game/Player/Mario.hpp",
+    "conflicts": 0,
+    "changed": true,
+    "base_equals_port": false,
+    "port_equals_upstream": false,
+    "resolution": "three-way merge"
+  },
+  {
+    "upstream": "include/Game/Player/MarioActor.hpp",
+    "port": "src/Game/Player/MarioActor.hpp",
+    "conflicts": 0,
+    "changed": true,
+    "base_equals_port": false,
+    "port_equals_upstream": false,
+    "resolution": "three-way merge"
+  },
+  {
+    "upstream": "include/Game/Player/MarioConst.hpp",
+    "port": "src/Game/Player/MarioConst.hpp",
+    "conflicts": 0,
+    "changed": false,
+    "base_equals_port": false,
+    "port_equals_upstream": true,
+    "resolution": "already current"
+  },
+  {
+    "upstream": "include/Game/Player/MarioSkate.hpp",
+    "port": "src/Game/Player/MarioSkate.hpp",
+    "conflicts": 1,
+    "changed": true,
+    "base_equals_port": false,
+    "port_equals_upstream": false,
+    "resolution": "retain fuller decompiled class; upstream exitJump already present"
+  },
+  {
+    "upstream": "libs/JSystem/include/JSystem/JKernel/JKRExpHeap.hpp",
+    "port": "src/JSystem/JKernel/JKRExpHeap.hpp",
+    "conflicts": 1,
+    "changed": true,
+    "base_equals_port": false,
+    "port_equals_upstream": false,
+    "resolution": "retain native heap ownership ABI; helpers already implemented; no shadowing inherited allocator fields"
+  },
+  {
+    "upstream": "src/Game/AreaObj/AreaObjContainer.cpp",
+    "port": "src/Game/AreaObj/AreaObjContainer.cpp",
+    "conflicts": 0,
+    "changed": true,
+    "base_equals_port": false,
+    "port_equals_upstream": false,
+    "resolution": "three-way merge"
+  },
+  {
+    "upstream": "src/Game/AudioLib/AudBgmMgr.cpp",
+    "port": "src/Game/AudioLib/AudBgmMgr.cpp",
+    "conflicts": 0,
+    "changed": true,
+    "base_equals_port": true,
+    "port_equals_upstream": false,
+    "resolution": "three-way merge"
+  },
+  {
+    "upstream": "src/Game/AudioLib/AudBgmRhythmStrategy.cpp",
+    "port": "src/Game/AudioLib/AudBgmRhythmStrategy.cpp",
+    "conflicts": 0,
+    "changed": true,
+    "base_equals_port": true,
+    "port_equals_upstream": false,
+    "resolution": "three-way merge"
+  },
+  {
+    "upstream": "src/Game/AudioLib/AudTrackController.cpp",
+    "port": "src/Game/AudioLib/AudTrackController.cpp",
+    "conflicts": 0,
+    "changed": true,
+    "base_equals_port": true,
+    "port_equals_upstream": false,
+    "resolution": "three-way merge"
+  },
+  {
+    "upstream": "src/Game/AudioLib/AudWrap.cpp",
+    "port": "src/Game/AudioLib/AudWrap.cpp",
+    "conflicts": 0,
+    "changed": true,
+    "base_equals_port": true,
+    "port_equals_upstream": false,
+    "resolution": "three-way merge"
+  },
+  {
+    "upstream": "src/Game/LiveActor/LiveActorGroup.cpp",
+    "port": "src/Game/LiveActor/LiveActorGroup.cpp",
+    "conflicts": 0,
+    "changed": true,
+    "base_equals_port": true,
+    "port_equals_upstream": false,
+    "resolution": "three-way merge"
+  },
+  {
+    "upstream": "src/Game/MapObj/BrightObj.cpp",
+    "port": "src/Game/MapObj/BrightObj.cpp",
+    "conflicts": 2,
+    "changed": true,
+    "base_equals_port": false,
+    "port_equals_upstream": false,
+    "resolution": "upstream early-return cleanup; preserve native screen projection/resource functions"
+  },
+  {
+    "upstream": "src/Game/MapObj/Coin.cpp",
+    "port": "src/Game/MapObj/Coin.cpp",
+    "conflicts": 0,
+    "changed": true,
+    "base_equals_port": true,
+    "port_equals_upstream": false,
+    "resolution": "three-way merge"
+  },
+  {
+    "upstream": "src/Game/MapObj/CoinHolder.cpp",
+    "port": "src/Game/MapObj/CoinHolder.cpp",
+    "conflicts": 0,
+    "changed": true,
+    "base_equals_port": false,
+    "port_equals_upstream": false,
+    "resolution": "three-way merge"
+  },
+  {
+    "upstream": "src/Game/MapObj/PurpleCoinHolder.cpp",
+    "port": "src/Game/MapObj/PurpleCoinHolder.cpp",
+    "conflicts": 1,
+    "changed": true,
+    "base_equals_port": false,
+    "port_equals_upstream": false,
+    "resolution": "upstream registration helper and implicit destructor consistent with updated header"
+  },
+  {
+    "upstream": "src/Game/NameObj/NameObjGroup.cpp",
+    "port": "src/Game/NameObj/NameObjGroup.cpp",
+    "conflicts": 0,
+    "changed": true,
+    "base_equals_port": false,
+    "port_equals_upstream": false,
+    "resolution": "three-way merge"
+  },
+  {
+    "upstream": "src/Game/Player/MarioMove.cpp",
+    "port": "src/Game/Player/MarioMove.cpp",
+    "conflicts": 18,
+    "changed": true,
+    "base_equals_port": false,
+    "port_equals_upstream": false,
+    "resolution": "latest upstream retail mainMove body; preserve existing native walk provider and additionally decompiled methods"
+  },
+  {
+    "upstream": "src/Game/Util/JMapUtil.cpp",
+    "port": "src/Game/Util/JMapUtil.cpp",
+    "conflicts": 5,
+    "changed": true,
+    "base_equals_port": false,
+    "port_equals_upstream": false,
+    "resolution": "retain native typed JMap provider; upstream change is source cleanup of original provider"
+  }
+]

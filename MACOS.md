@@ -4,9 +4,10 @@ The launcher targets Metal on Apple Silicon using Homebrew LLVM 23.
 It reads RVZ files directly; no extraction or ISO conversion is needed.
 
 Current clean builds are blocked by existing game-source issues: the showcase
-fails on two pointer-to-`u32` casts in `MarioTeresa.cpp`, while the full `smg-pc`
-target fails to link missing game methods. The layout and focused host tests
-have been validated, but a new application run has not. The title/File Select
+now reaches incomplete effect APIs in the original `MarioEffect.cpp`, while the full `smg-pc`
+target fails to link missing game methods. The pointer-width blocker is corrected; the latest dependencies, game library,
+and eight focused tests (including Metal GX copy pixels) pass. A new application
+run has not yet been completed. The title/File Select
 and Gateway runtime results described below are historical results from before
 this cleanup, not a claim that the current clean build succeeds.
 

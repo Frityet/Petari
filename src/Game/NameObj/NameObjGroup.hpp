@@ -5,19 +5,27 @@
 /// @brief Class that can contain multiple NameObj instances stored in a group.
 class NameObjGroup : public NameObj {
 public:
-    NameObjGroup(const char*, int);
+    /// @brief Creates a new `NameObjGroup`.
+    /// @param pName A pointer to the null-terminated name of the object.
+    /// @param numMax The maximum allowed number of `NameObj` instances in the group.
+    NameObjGroup(const char* pName, int numMax);
 
+    /// @brief Destroys the `NameObjGroup`.
     virtual ~NameObjGroup();
 
-    void registerObj(NameObj*);
-    void pauseOffAll() const;
-    void initObjArray(int);
+    NameObj* getObj(int index) const {
+        return mObjects[index];
+    }
 
     s32 getObjectCount() const {
         return mObjectCount;
     }
 
-    s32 _C;
-    s32 mObjectCount;    // 0x10
-    NameObj** mObjects;  // 0x14
+    void registerObj(NameObj*);
+    void pauseOffAll() const;
+    void initObjArray(int);
+
+    /* 0x0C */ s32 mObjectNumMax;
+    /* 0x10 */ s32 mObjectCount;
+    /* 0x14 */ NameObj** mObjects;
 };

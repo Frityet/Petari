@@ -131,6 +131,9 @@ namespace {
         require(std::equal(RetailVFilter.begin(), RetailVFilter.end(), render_mode.vfilter),
                 "the showcase WiiVideoService bootstrap must retain the retail SMG vertical filter");
         AuroraSetViewportPolicy(AURORA_VIEWPORT_NATIVE);
+        // Aurora applies pending viewport policy changes while pumping events,
+        // just as the application's normal frame loop does before rendering.
+        require(window.poll_events(), "the copy proof window must remain open while applying native viewport policy");
         require(renderer.copy_clear() == smgpc::render::CopyClearState{},
                 "the generalized renderer must default to GameSystemObjHolder's retail scene clear");
         // GXCopyDisp copies the current EFB and applies the configured clear

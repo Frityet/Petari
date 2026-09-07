@@ -1,0 +1,703 @@
+{
+  "base": "c600c594461f9626c1badd9d0ad9850d0333f7dc",
+  "head": "96062551672dffacd190bff81c4fddc7b2c84967",
+  "upstream": "151d5a53a3c5dd0ea295ddc66f2c8b958b4dff88",
+  "paths": [
+    {
+      "upstream": "config/RMGK01/splits.txt",
+      "port": null
+    },
+    {
+      "upstream": "config/RMGK01/symbols.txt",
+      "port": null
+    },
+    {
+      "upstream": "configure.py",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/AudioLib/AudBgm.hpp",
+      "port": "src/Game/AudioLib/AudBgm.hpp"
+    },
+    {
+      "upstream": "include/Game/AudioLib/AudBgmRhythmStrategy.hpp",
+      "port": "src/Game/AudioLib/AudBgmRhythmStrategy.hpp"
+    },
+    {
+      "upstream": "include/Game/AudioLib/AudBgmSetting.hpp",
+      "port": "src/Game/AudioLib/AudBgmSetting.hpp"
+    },
+    {
+      "upstream": "include/Game/AudioLib/AudFader.hpp",
+      "port": "src/Game/AudioLib/AudFader.hpp"
+    },
+    {
+      "upstream": "include/Game/AudioLib/AudSceneMgr.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/AudioLib/AudWrap.hpp",
+      "port": "src/Game/AudioLib/AudWrap.hpp"
+    },
+    {
+      "upstream": "include/Game/Boss/BossBegoman.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/Boss/BossBegomanHead.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/Boss/Polta.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/Boss/SkeletalFishBaby.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/Boss/SkeletalFishBossInfo.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/Boss/SkeletalFishBossRailHolder.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/Boss/TripodBoss.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/Boss/TripodBossAccesser.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/Boss/TripodBossBaseJointPosition.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/Boss/TripodBossBreakMovement.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/Boss/TripodBossCoin.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/Boss/TripodBossCore.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/Boss/TripodBossFixParts.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/Boss/TripodBossFixPartsBase.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/Boss/TripodBossGuardWall.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/Boss/TripodBossGuardWallPart.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/Boss/TripodBossKillerGenerater.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/Boss/TripodBossKillerGeneraterCircle.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/Boss/TripodBossKinokoOneUp.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/Boss/TripodBossLeg.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/Boss/TripodBossMovableArea.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/Boss/TripodBossRailMoveParts.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/Boss/TripodBossRotateParts.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/Boss/TripodBossShell.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/Boss/TripodBossStepPoint.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/Boss/TripodBossStepSequence.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/Boss/TripodBossStepStartArea.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/Demo/DemoCastGroupHolder.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/Effect/AutoEffectInfo.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/Enemy/BegomanBase.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/Enemy/Hanachan.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/Enemy/KameckBeam.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/Enemy/KameckBeamHolder.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/Enemy/KameckFireBall.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/LiveActor/LiveActorGroup.hpp",
+      "port": "src/Game/LiveActor/LiveActorGroup.hpp"
+    },
+    {
+      "upstream": "include/Game/LiveActor/LiveActorGroupArray.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/Map/KCollision.hpp",
+      "port": "src/Game/Map/KCollision.hpp"
+    },
+    {
+      "upstream": "include/Game/MapObj/AirBubbleHolder.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/MapObj/ClipAreaDropHolder.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/MapObj/CoconutTreeLeaf.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/MapObj/GCaptureTarget.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/MapObj/PurpleCoinHolder.hpp",
+      "port": "src/Game/MapObj/PurpleCoinHolder.hpp"
+    },
+    {
+      "upstream": "include/Game/NameObj/MovementOnOffGroupHolder.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/NameObj/NameObjGroup.hpp",
+      "port": "src/Game/NameObj/NameObjGroup.hpp"
+    },
+    {
+      "upstream": "include/Game/Player/Mario.hpp",
+      "port": "src/Game/Player/Mario.hpp"
+    },
+    {
+      "upstream": "include/Game/Player/MarioActor.hpp",
+      "port": "src/Game/Player/MarioActor.hpp"
+    },
+    {
+      "upstream": "include/Game/Player/MarioConst.hpp",
+      "port": "src/Game/Player/MarioConst.hpp"
+    },
+    {
+      "upstream": "include/Game/Player/MarioSkate.hpp",
+      "port": "src/Game/Player/MarioSkate.hpp"
+    },
+    {
+      "upstream": "include/Game/RhythmLib/AudMeHandles.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/RhythmLib/AudMeObject.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/RhythmLib/AudMePlayer.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/RhythmLib/AudMeSeqCtrl.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/RhythmLib/AudMeSeqParser.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/RhythmLib/AudMeSeqReader.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/RhythmLib/AudMeTrack.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/RhythmLib/AudRhythmMeSystem.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/RhythmLib/AudRhythmSeqParser.hpp",
+      "port": null
+    },
+    {
+      "upstream": "include/Game/RhythmLib/AudRhythmWrap.hpp",
+      "port": null
+    },
+    {
+      "upstream": "libs/JSystem/include/JSystem/JAudio2/JAIStream.hpp",
+      "port": null
+    },
+    {
+      "upstream": "libs/JSystem/include/JSystem/JAudio2/JASSeqReader.hpp",
+      "port": null
+    },
+    {
+      "upstream": "libs/JSystem/include/JSystem/JKernel/JKRExpHeap.hpp",
+      "port": "src/JSystem/JKernel/JKRExpHeap.hpp"
+    },
+    {
+      "upstream": "libs/JSystem/include/JSystem/JUtility/JUTConsole.hpp",
+      "port": null
+    },
+    {
+      "upstream": "libs/RVL_SDK/include/revolution/nwc24/NWC24MsgCommit.h",
+      "port": null
+    },
+    {
+      "upstream": "libs/RVL_SDK/include/revolution/vf/d_vf_sys.h",
+      "port": null
+    },
+    {
+      "upstream": "libs/RVL_SDK/include/revolution/vf/pdm_disk.h",
+      "port": null
+    },
+    {
+      "upstream": "libs/RVL_SDK/include/revolution/vf/pf_volume.h",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/AreaObj/AreaObjContainer.cpp",
+      "port": "src/Game/AreaObj/AreaObjContainer.cpp"
+    },
+    {
+      "upstream": "src/Game/AudioLib/AudBgm.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/AudioLib/AudBgmMgr.cpp",
+      "port": "src/Game/AudioLib/AudBgmMgr.cpp"
+    },
+    {
+      "upstream": "src/Game/AudioLib/AudBgmRhythmStrategy.cpp",
+      "port": "src/Game/AudioLib/AudBgmRhythmStrategy.cpp"
+    },
+    {
+      "upstream": "src/Game/AudioLib/AudMeNameConverter.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/AudioLib/AudSceneMgr.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/AudioLib/AudTrackController.cpp",
+      "port": "src/Game/AudioLib/AudTrackController.cpp"
+    },
+    {
+      "upstream": "src/Game/AudioLib/AudWrap.cpp",
+      "port": "src/Game/AudioLib/AudWrap.cpp"
+    },
+    {
+      "upstream": "src/Game/Boss/BossBegoman.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Boss/BossBegomanHead.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Boss/DinoPackunBattleVs2Lv1.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Boss/DinoPackunFire.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Boss/DinoPackunTrackFire.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Boss/Polta.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Boss/PoltaGroundRockHolder.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Boss/PoltaRockHolder.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Boss/SkeletalFishBaby.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Boss/SkeletalFishBossFunc.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Boss/SkeletalFishBossInfo.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Boss/SkeletalFishBossRailHolder.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Boss/TripodBoss.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Boss/TripodBossAccesser.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Boss/TripodBossBaseJointPosition.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Boss/TripodBossBreakMovement.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Boss/TripodBossCoin.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Boss/TripodBossCore.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Boss/TripodBossFixParts.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Boss/TripodBossFixPartsBase.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Boss/TripodBossGuardWall.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Boss/TripodBossGuardWallPart.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Boss/TripodBossKillerGenerater.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Boss/TripodBossKillerGeneraterCircle.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Boss/TripodBossKinokoOneUp.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Boss/TripodBossLeg.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Boss/TripodBossRailMoveParts.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Boss/TripodBossRotateParts.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Boss/TripodBossShell.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Boss/TripodBossStepPoint.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Boss/TripodBossStepSequence.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Boss/TripodBossStepStartArea.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Demo/DemoCastGroupHolder.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Effect/AutoEffectInfo.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Enemy/Hanachan.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Enemy/KabokuriFireHolder.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Enemy/KameckBeamHolder.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Enemy/KameckFireBall.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Enemy/TakoHeiInkHolder.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/LiveActor/LiveActorGroup.cpp",
+      "port": "src/Game/LiveActor/LiveActorGroup.cpp"
+    },
+    {
+      "upstream": "src/Game/Map/KCollision.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Map/KCollisionPlus.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/MapObj/AirBubbleHolder.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/MapObj/ArrowSwitchMultiHolder.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/MapObj/BigFanHolder.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/MapObj/BrightObj.cpp",
+      "port": "src/Game/MapObj/BrightObj.cpp"
+    },
+    {
+      "upstream": "src/Game/MapObj/ClipAreaDropHolder.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/MapObj/ClipAreaHolder.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/MapObj/CoconutTreeLeaf.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/MapObj/Coin.cpp",
+      "port": "src/Game/MapObj/Coin.cpp"
+    },
+    {
+      "upstream": "src/Game/MapObj/CoinHolder.cpp",
+      "port": "src/Game/MapObj/CoinHolder.cpp"
+    },
+    {
+      "upstream": "src/Game/MapObj/GCaptureTarget.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/MapObj/PurpleCoinHolder.cpp",
+      "port": "src/Game/MapObj/PurpleCoinHolder.cpp"
+    },
+    {
+      "upstream": "src/Game/MapObj/Sandstorm.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/MapObj/SpinDriverCamera.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/MapObj/SurprisedGalaxy.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/NameObj/MovementOnOffGroupHolder.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/NameObj/NameObjGroup.cpp",
+      "port": "src/Game/NameObj/NameObjGroup.cpp"
+    },
+    {
+      "upstream": "src/Game/Player/MarioMove.cpp",
+      "port": "src/Game/Player/MarioMove.cpp"
+    },
+    {
+      "upstream": "src/Game/RhythmLib/AudMeHandles.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/RhythmLib/AudMeObject.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/RhythmLib/AudMePlayer.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/RhythmLib/AudMeSeqParser.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/RhythmLib/AudMeSeqReader.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/RhythmLib/AudRhythmWrap.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Ride/Pole.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Ride/TamakoroTutorial.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Scene/StopSceneController.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Screen/HomeButtonLayout.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/Game/Util/JMapUtil.cpp",
+      "port": "src/Game/Util/JMapUtil.cpp"
+    },
+    {
+      "upstream": "src/JSystem/JAudio2/JASSeqReader.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/JSystem/JKernel/JKRAramArchive.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/JSystem/JKernel/JKRExpHeap.cpp",
+      "port": null
+    },
+    {
+      "upstream": "src/RVL_SDK/nwc24/NWC24MsgCommit.c",
+      "port": null
+    },
+    {
+      "upstream": "src/RVL_SDK/vf/d_common.c",
+      "port": null
+    },
+    {
+      "upstream": "src/RVL_SDK/vf/d_hash.c",
+      "port": null
+    },
+    {
+      "upstream": "src/RVL_SDK/vf/d_vf.c",
+      "port": null
+    },
+    {
+      "upstream": "src/RVL_SDK/vf/d_vf_sys.c",
+      "port": null
+    },
+    {
+      "upstream": "src/RVL_SDK/vf/nand_drv.c",
+      "port": null
+    },
+    {
+      "upstream": "src/RVL_SDK/vf/pdm_disk.c",
+      "port": null
+    },
+    {
+      "upstream": "src/RVL_SDK/vf/pdm_partition.c",
+      "port": null
+    },
+    {
+      "upstream": "src/RVL_SDK/vf/pf_cache.c",
+      "port": null
+    },
+    {
+      "upstream": "src/RVL_SDK/vf/pf_entry_iterator.c",
+      "port": null
+    },
+    {
+      "upstream": "src/RVL_SDK/vf/pf_fat.c",
+      "port": null
+    },
+    {
+      "upstream": "src/RVL_SDK/vf/pf_fat12.c",
+      "port": null
+    },
+    {
+      "upstream": "src/RVL_SDK/vf/pf_fat16.c",
+      "port": null
+    },
+    {
+      "upstream": "src/RVL_SDK/vf/pf_fat32.c",
+      "port": null
+    },
+    {
+      "upstream": "src/RVL_SDK/vf/pf_fatfs.c",
+      "port": null
+    },
+    {
+      "upstream": "src/RVL_SDK/vf/pf_file.c",
+      "port": null
+    },
+    {
+      "upstream": "src/RVL_SDK/vf/pf_path.c",
+      "port": null
+    },
+    {
+      "upstream": "src/RVL_SDK/vf/pf_volume.c",
+      "port": null
+    }
+  ]
+}

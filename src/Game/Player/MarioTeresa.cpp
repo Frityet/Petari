@@ -52,11 +52,11 @@ namespace {
     const char* const cTeresaFly = "fly";
 
     XanimePlayer* getTeresaXanimePlayer(const MarioActor* pActor) {
-        return reinterpret_cast< XanimePlayer* >(pActor->_9B8);
+        return pActor->_9B8;
     }
 
     XanimeResourceTable* getTeresaResourceTable(const MarioActor* pActor) {
-        return reinterpret_cast< XanimeResourceTable* >(pActor->_9BC);
+        return pActor->_9BC;
     }
 }
 
@@ -425,10 +425,10 @@ void MarioActor::initTeresaMarioAnimation() {
     XanimeResourceTable* pResourceTable =
         new XanimeResourceTable(MR::getResourceHolder(_9A4), reinterpret_cast< XanimeGroupInfo* >(teresaAnimeTable), nullptr, nullptr,
                                 nullptr, reinterpret_cast< XanimeBckTable2* >(teresaAnime2), nullptr, nullptr, nullptr);
-    _9BC = reinterpret_cast< u32 >(pResourceTable);
+    _9BC = pResourceTable;
 
     XanimePlayer* pPlayer = new XanimePlayer(MR::getJ3DModel(_9A4), pResourceTable);
-    _9B8 = reinterpret_cast< u32 >(pPlayer);
+    _9B8 = pPlayer;
     pPlayer->setDefaultAnimation(cTeresaBase);
     pPlayer->changeAnimation(cTeresaBase);
     _9A4->mModelManager->mXanimePlayer = pPlayer;

@@ -272,9 +272,11 @@ void BrightObj::control() {
 }
 
 void BrightObj::draw() const {
-    if (!MR::isDead(this) && !MR::isHiddenModel(this) && !MR::isClipped(this)) {
-        drawSphere(mPosition, mRadius);
+    if (MR::isDead(this) || MR::isHiddenModel(this) || MR::isClipped(this)) {
+        return;
     }
+
+    drawSphere(mPosition, mRadius);
 }
 
 void BrightObj::calcBrightInfo(u16 token, const BrightCamInfo& camera) {
@@ -329,9 +331,11 @@ void BrightSun::control() {
 }
 
 void BrightSun::draw() const {
-    if (!MR::isDead(this) && !MR::isHiddenModel(this) && !MR::isClipped(this)) {
-        drawSphere(mPosition, cSunRadius);
+    if (MR::isDead(this) || MR::isHiddenModel(this) || MR::isClipped(this)) {
+        return;
     }
+
+    drawSphere(mPosition, cSunRadius);
 }
 
 void BrightSun::calcBrightInfo(u16 token, const BrightCamInfo& camera) {

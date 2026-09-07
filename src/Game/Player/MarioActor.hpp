@@ -38,6 +38,7 @@ class RushEndInfo;
 class TornadoMario;
 class Triangle;
 class XanimeResourceTable;
+class XanimePlayer;
 class XjointTransform;
 struct DLholder;
 struct ResTIMG;
@@ -563,6 +564,10 @@ public:
         return mMario;
     }
 
+    inline bool isBeeWallWalk() const {
+        return mBeeWallWalk != 0;
+    }
+
     struct FBO {
         u32 _0;
         u32 _4;
@@ -769,8 +774,8 @@ public:
     /* 0x9AC */ f32 _9AC;
     /* 0x9B0 */ f32 _9B0;
     /* 0x9B4 */ u16 _9B4;
-    /* 0x9B8 */ u32 _9B8;
-    /* 0x9BC */ u32 _9BC;
+    /* 0x9B8 */ XanimePlayer* _9B8;
+    /* 0x9BC */ XanimeResourceTable* _9BC;
     /* 0x9C0 */ ModelHolder* _9C0;
     /* 0x9C4 */ MarioParts* _9C4;
     /* 0x9C8 */ ModelHolder* _9C8;
