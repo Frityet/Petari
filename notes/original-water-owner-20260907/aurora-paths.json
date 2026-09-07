@@ -1,0 +1,7 @@
+[
+  "include/dolphin/gx/GXTransform.h",
+  "lib/dolphin/gx/GXTransform.cpp",
+  "lib/gx/regs.cpp",
+  "tests/gx_fifo_test.cpp",
+  "notes/indexed-texture-matrix-20260907/README.md"
+]

@@ -404,11 +404,15 @@ namespace smgpc::layout {
             }
 
             return BrlytPane{
+                .resource_kind = {char(block[0]), char(block[1]), char(block[2]), char(block[3])},
                 .name = read_fixed_string(block, 12U, 16U),
                 .user_data = read_fixed_string(block, 28U, 8U),
                 .parent_index = parent_index,
                 .translate_x = read_be_float(block, 36U),
                 .translate_y = read_be_float(block, 40U),
+                .translate_z = read_be_float(block, 44U),
+                .rotate_x = read_be_float(block, 48U),
+                .rotate_y = read_be_float(block, 52U),
                 .rotate_z = read_be_float(block, 56U),
                 .scale_x = read_be_float(block, 60U),
                 .scale_y = read_be_float(block, 64U),

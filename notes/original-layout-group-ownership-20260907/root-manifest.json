@@ -1,0 +1,126 @@
+[
+  {
+    "path": "src/Game/Animation/LayoutAnmPlayer.cpp",
+    "sha256": "a89590dee9726e6e057c782d5c818d3ec32a45314aac538bbeb3488c44b43a20"
+  },
+  {
+    "path": "src/Game/Animation/LayoutAnmPlayer.hpp",
+    "sha256": "017dda970d6d6f4e8a27950adac94e711c011e299b7934ce8d3b7c1a75871e63"
+  },
+  {
+    "path": "src/Game/Screen/LayoutGroupCtrl.cpp",
+    "sha256": "2051be76e8cd86920cbaf45be57a537c5af3d58644ea2ade32fe2536e5fa3346"
+  },
+  {
+    "path": "src/Game/Screen/LayoutGroupCtrl.hpp",
+    "sha256": "458a3df75eb444e20b283539ca11fafd00f8dd01496e604b390a309dd44b544c"
+  },
+  {
+    "path": "src/Game/Screen/LayoutManager.hpp",
+    "sha256": "e358bf7d6aef55f2a691bb232aa9db83b140ae9e3873ce88a3816a2c8fb43b4e"
+  },
+  {
+    "path": "src/Game/Screen/MessageEditorMessageTag.hpp",
+    "sha256": "554ff6d71520e8658e757dbe7d96752a1163d52513dabe623211577621e968f1"
+  },
+  {
+    "path": "src/JSystem/JGeometry/TVec.hpp",
+    "sha256": "70bb4ba3cdf07360943d26931c84fb952aeadb8bf0c99be1a9cc6392b5c70b12"
+  },
+  {
+    "path": "src/compat/Nw4rLayoutRecordsCompat.cpp",
+    "sha256": "4e865c18dc0ac789c8d9da735c42a49b33216d957bcf401e17c9a71098e77472"
+  },
+  {
+    "path": "src/compat/Nw4rLinkListCompat.cpp",
+    "sha256": "c2576368f9c703eab1b4381e45b6be964d8e572f06600f61b11127dc5b2a3beb"
+  },
+  {
+    "path": "src/compat/OriginalLayoutPaneQueries.cpp",
+    "sha256": "e76bf17585afa0c1eb4ebcb88fe4d259168769489568c9d84582531da9a2e0ab"
+  },
+  {
+    "path": "src/compat/OriginalMessageLineQueries.cpp",
+    "sha256": "efc021e233facdc42efd9aa876bd8652a977143e054c53d75d418cd6993255fb"
+  },
+  {
+    "path": "src/layout/BrlytLayout.cpp",
+    "sha256": "06e5d1dac9014186a229099a12fba2d871f11f9f9467d8d33fd900c4bd4163e5"
+  },
+  {
+    "path": "src/layout/BrlytLayout.hpp",
+    "sha256": "0233bbf5bf3bfc9295a6d05cdbd0ffb47d2af0e0abe3bf1b6f5ab1e74880e016"
+  },
+  {
+    "path": "src/layout/LayoutManagerCompat.cpp",
+    "sha256": "81ba3b28f911ae7651cc3b389308e9f23c8a3167c8dc2befc7322abe083549c2"
+  },
+  {
+    "path": "src/layout/LayoutRuntime.cpp",
+    "sha256": "33c1745ddccdaea307430225b0fb5b16e52f931256bd1bd932fe0fdbee1968db"
+  },
+  {
+    "path": "src/layout/LayoutRuntime.hpp",
+    "sha256": "b5dbd219d96816b265210966cc7f732836fd4f314406262b3d0440a57b3905a0"
+  },
+  {
+    "path": "src/layout/Nw4rLayoutRecords.cpp",
+    "sha256": "d9d2103fac66ef6abd3a3fe0d2a3118d90a5133efa0dff195977ac9ac226a232"
+  },
+  {
+    "path": "src/layout/Nw4rLayoutRecords.hpp",
+    "sha256": "05b86ee54648c80fbde48dd2dd21c3e6273320a172ccff1fcfd97119ef68154b"
+  },
+  {
+    "path": "tests/OriginalLayoutGroupTests.cpp",
+    "sha256": "b6bfb1a933c824868804f9f45a82498ed481d9b9a144d631c01448966634662e"
+  },
+  {
+    "path": "tests/OriginalStarPointerOwnerTests.cpp",
+    "sha256": "12fa33dbf0e7ac1412eb4b93b7712099f66714636cef5ecd5cc6be9fb449b605"
+  },
+  {
+    "path": "tests/xmake.lua",
+    "sha256": "b5d918c74d37b64ad497c58b9644295db5d96b41015dceb7e001392e2796dea3"
+  },
+  {
+    "path": "src/nw4r/misc.h",
+    "sha256": "15063f66203357f6a7c1a96cee1b7fe9573802bf3a20bda801430465dc7584e6"
+  },
+  {
+    "path": "src/nw4r/ut/LinkList.h",
+    "sha256": "818ba3025a666f6b74e53aced95bc4fbc1727b14963f2cf899e587c8612bb47b"
+  },
+  {
+    "path": "src/nw4r/ut/inlines.h",
+    "sha256": "a74c922c09c84f813fb43af0d1f4affb3f8670f83303caf99ec2713677692a47"
+  },
+  {
+    "path": "src/nw4r/ut/Color.h",
+    "sha256": "6ef646f057449e5eff64316cc317ad59c6c03b7d7ede4f5c751ae9042f0be10e"
+  },
+  {
+    "path": "src/nw4r/ut/RuntimeTypeInfo.h",
+    "sha256": "51e9f7ebf09fe3cd2f5e3415b1c580bf49e2dbeae1d6812ae4a3f9a2fbbe5095"
+  },
+  {
+    "path": "src/nw4r/lyt/group.h",
+    "sha256": "22eb111b88ccc3ce7e8b12b2837964bd13e5d19a1c654215542e2dda095c3a18"
+  },
+  {
+    "path": "src/nw4r/lyt/pane.h",
+    "sha256": "4a12d55a42bb50d45b4dc715eb38f1a2b78f7935c7a83a17d87c78289b4df38e"
+  },
+  {
+    "path": "src/nw4r/lyt/resources.h",
+    "sha256": "4ae8960ca75cf719892d9fab85389ebfcaba98299c2c620532094822aad6d8bf"
+  },
+  {
+    "path": "src/nw4r/lyt/types.h",
+    "sha256": "a8cc3846b8bf7c9378e57252f215df18c58f82793e6381f3f3917de7c3b70a45"
+  },
+  {
+    "path": "src/nw4r/lyt/animation.h",
+    "sha256": "cdc9aa5288791b0bd8cb4e7fae1307e0f6aea5f2501d43079f781e47b6262c05"
+  }
+]

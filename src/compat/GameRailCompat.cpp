@@ -240,3 +240,15 @@ namespace MR {
         return ::getRailNextPointArgF32NoInit(pActor, 1, pArg);
     }
 }  // namespace MR
+
+namespace MR {
+    bool getCurrentRailPointArg0NoInit(const LiveActor* pActor, f32* pArg) {
+        return ::getRailCurrentPointArgF32NoInit(pActor, 0, pArg);
+    }
+}
+
+namespace MR {
+    bool getNextRailPointArg0NoInit(const LiveActor* pActor, f32* pArg) {
+        return ::getRailNextPointArgF32NoInit(pActor, 0, pArg);
+    }
+}

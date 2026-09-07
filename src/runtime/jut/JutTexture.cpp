@@ -2,6 +2,7 @@
 
 #include "compat/JutTextureAllocation.hpp"
 #include "compat/JkrHeapFinalizer.hpp"
+#include "compat/JutTextureConstruction.hpp"
 
 namespace {
     void retire_jut_texture(void* object) noexcept {
@@ -11,7 +12,13 @@ namespace {
 
 JUTTexture::JUTTexture() {
     setCaptureFlag(false);
-    smgpc::compat::register_jkr_heap_finalizer(this, retire_jut_texture);
+    try {
+        smgpc::compat::register_jkr_heap_finalizer(this, retire_jut_texture);
+        smgpc::compat::record_completed_jut_texture(*this);
+    } catch (...) {
+        smgpc::compat::unregister_jkr_heap_finalizer(this);
+        throw;
+    }
 }
 
 JUTTexture::JUTTexture(int width, int height, GXTexFmt format) {
@@ -47,22 +54,31 @@ JUTTexture::JUTTexture(int width, int height, GXTexFmt format) {
     // cast to u8 solves ambiguity
     storeTIMG(texBuf, static_cast< u8 >(0));
     DCFlushRange(mImage, bufSize);
-    smgpc::compat::register_jkr_heap_finalizer(this, retire_jut_texture);
+    try {
+        smgpc::compat::register_jkr_heap_finalizer(this, retire_jut_texture);
+        smgpc::compat::record_completed_jut_texture(*this);
+    } catch (...) {
+        smgpc::compat::unregister_jkr_heap_finalizer(this);
+        throw;
+    }
     allocation.commit();
 }
 
 JUTTexture::JUTTexture(const ResTIMG *p_timg, u8 param_1) {
-    storeTIMG(p_timg, param_1);
-    setCaptureFlag(false);
     try {
+        storeTIMG(p_timg, param_1);
+        setCaptureFlag(false);
         smgpc::compat::register_jkr_heap_finalizer(this, retire_jut_texture);
+        smgpc::compat::record_completed_jut_texture(*this);
     } catch (...) {
+        smgpc::compat::unregister_jkr_heap_finalizer(this);
         GXDestroyTexObj(&mObj);
         throw;
     }
 }
 
 JUTTexture::~JUTTexture() {
+    smgpc::compat::forget_completed_jut_texture(*this);
     smgpc::compat::unregister_jkr_heap_finalizer(this);
     GXDestroyTexObj(&mObj);
     if (getCaptureFlag()) {

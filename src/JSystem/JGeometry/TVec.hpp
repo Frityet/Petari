@@ -197,6 +197,10 @@ namespace JGeometry {
         constexpr TVec3(const Vec &value) : Vec{value.x, value.y, value.z} {
         }
 
+        template <typename T>
+        constexpr TVec3(const TVec2<T>& value) : Vec{static_cast<f32>(value.x), static_cast<f32>(value.y), 0.0F} {
+        }
+
         constexpr TVec3(f32 newX, f32 newY, f32 newZ) : Vec{newX, newY, newZ} {
         }
 

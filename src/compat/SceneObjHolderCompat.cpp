@@ -2,10 +2,12 @@
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Effect/EffectSystem.hpp"
 #include "compat/EffectSystemOwnership.hpp"
+#include "compat/ImageEffectOwnership.hpp"
 #include "compat/CollisionDirectorOwnership.hpp"
 #include "compat/CollisionPartsCompat.hpp"
 #include "Game/Map/CollisionDirector.hpp"
 #include "Game/Map/SunshadeMapHolder.hpp"
+#include "Game/LiveActor/ShadowController.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "Game/Scene/PlacementStateChecker.hpp"
@@ -83,6 +85,10 @@ namespace {
 
 namespace smgpc::scene {
 
+    std::shared_ptr<smgpc::compat::JkrAllocationDomain> current_scene_allocation_domain() noexcept {
+        return sCurrentSceneObjHolderBinding ? sCurrentSceneObjHolderBinding->_game_allocation_domain : nullptr;
+    }
+
     smgpc::compat::CollisionDirectorOwnership* current_collision_director_ownership() noexcept {
         return sCurrentSceneObjHolderBinding ? sCurrentSceneObjHolderBinding->_collision_director_ownership.get() : nullptr;
     }
@@ -98,6 +104,7 @@ namespace smgpc::scene {
         smgpc::compat::JkrHostAllocationScope host;
         _global_gravity_ownership = std::make_unique<smgpc::compat::GlobalGravityOwnership>(holder);
         _collision_director_ownership = std::make_unique<smgpc::compat::CollisionDirectorOwnership>();
+        _image_effect_ownership = std::make_unique<smgpc::compat::ImageEffectOwnership>(holder);
         _area_obj_runtime = std::make_unique<AreaObjRuntime>();
         _captured_frame_blur_service = std::make_unique<smgpc::compat::CapturedFrameBlurService>();
         if (sCurrentSceneObjHolder != nullptr) {
@@ -117,6 +124,7 @@ namespace smgpc::scene {
 
     SceneObjHolderBinding::~SceneObjHolderBinding() {
         _collision_director_ownership->prepare_retirement();
+        _image_effect_ownership->prepare_retirement();
         if (_camera_runtime) _camera_runtime->unpublish();
         if (_effect_scheduler) {
             (void)_effect_scheduler->remove_registrations_since(_effect_registration_marker);
@@ -135,6 +143,8 @@ namespace smgpc::scene {
         smgpc::compat::release_scene_collision_parts(_holder);
         _collision_director_ownership->reclaim();
         _collision_director_ownership.reset();
+        _image_effect_ownership->reclaim_prepared();
+        _image_effect_ownership.reset();
         _owned_registration_objects.clear();
         _camera_runtime.reset();
         // The external holder storage outlives this binding in test and scene
@@ -294,6 +304,8 @@ NameObj *SceneObjHolder::create(int id) {
     const auto outermost = binding->_construction_depth == 0U;
     ++binding->_construction_depth;
     auto object = std::unique_ptr<NameObj>{};
+    smgpc::compat::JutTextureConstructionScope textures(
+        smgpc::compat::ImageEffectOwnership::handles(id));
     try {
         std::optional<smgpc::compat::JkrAllocationScope> game_heap;
         if (binding->_game_allocation_domain) {
@@ -311,7 +323,9 @@ NameObj *SceneObjHolder::create(int id) {
             return nullptr;
         }
 
+        binding->_image_effect_ownership->capture(id, *object, textures);
         object->initWithoutIter();
+        binding->_image_effect_ownership->capture(id, *object, textures);
         smgpc::compat::JkrHostAllocationScope host_metadata;
         auto registrations =
             smgpc::compat::snapshot_name_obj_runtime_objects_since(
@@ -370,6 +384,8 @@ NameObj *SceneObjHolder::create(int id) {
         --binding->_construction_depth;
         return result;
     } catch (...) {
+        binding->_image_effect_ownership->capture_shared_textures(textures);
+        binding->_image_effect_ownership->prepare_rollback(marker);
         const bool collision_rollback = binding->_collision_director_ownership->prepare_rollback(marker);
         if (object != nullptr &&
             smgpc::compat::name_obj_runtime_object_was_registered_since(
@@ -384,6 +400,7 @@ NameObj *SceneObjHolder::create(int id) {
             }
         }
         rollback_scene_obj_registrations(marker);
+        binding->_image_effect_ownership->reclaim_prepared();
         if (collision_rollback) binding->_collision_director_ownership->reclaim();
         --binding->_construction_depth;
         if (outermost) {
@@ -413,6 +430,10 @@ NameObj *SceneObjHolder::newEachObj(int id) {
                     sCurrentSceneObjHolderBinding->_factory_context)) {
             return object;
         }
+    }
+
+    if (smgpc::compat::ImageEffectOwnership::handles(id)) {
+        return sCurrentSceneObjHolderBinding->_image_effect_ownership->construct(id);
     }
 
     switch (id) {
@@ -472,6 +493,8 @@ NameObj *SceneObjHolder::newEachObj(int id) {
         return new NameObjGroup("IgnorePauseNameObj", 16);
     case SceneObj_GameSceneLayoutHolder:
         return new GameSceneLayoutHolder();
+    case SceneObj_ShadowControllerHolder:
+        return new ShadowControllerHolder();
     case SceneObj_AudBgmConductor:
         return new AudBgmConductor();
     case SceneObj_EventSequencer:

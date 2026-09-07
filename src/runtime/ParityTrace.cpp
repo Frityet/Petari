@@ -15,6 +15,12 @@
 #include "TraceStore.hpp"
 #include "compat/GameActorSensorCompat.hpp"
 #include "runtime/RuntimeContext.hpp"
+#include "scene/SceneObjHolderRuntime.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
+#include "Game/Screen/ImageEffectSystemHolder.hpp"
+#include "Game/Screen/ImageEffectDirector.hpp"
+#include "Game/Screen/ImageEffectState.hpp"
+#include "Game/Screen/ImageEffectBase.hpp"
 
 namespace smgpc::runtime {
     namespace {
@@ -199,17 +205,6 @@ namespace smgpc::runtime {
                 return "Opening";
             case WipeState::Closing:
                 return "Closing";
-            }
-
-            return "Unknown";
-        }
-
-        [[nodiscard]] const char *image_effect_control_kind_name(ImageEffectControlKind kind) {
-            switch (kind) {
-            case ImageEffectControlKind::ForceOff:
-                return "ForceOff";
-            case ImageEffectControlKind::ControlAuto:
-                return "ControlAuto";
             }
 
             return "Unknown";
@@ -1299,25 +1294,27 @@ namespace smgpc::runtime {
             };
         }
 
-        [[nodiscard]] Json image_effect_events_json(std::span<const ImageEffectControlEvent> events) {
-            auto out = Json::array();
-            for (auto i = std::size_t{}; i < events.size(); ++i) {
-                const auto &event = events[i];
-                out.push_back(Json{
-                    {"index", i},
-                    {"kind", image_effect_control_kind_name(event.kind)},
-                    {"frame_index", event.frame_index},
-                });
+        [[nodiscard]] Json image_effect_state_json() {
+            auto* holder = smgpc::scene::current_scene_obj_holder();
+            if (!holder || !holder->isExist(SceneObj_ImageEffectSystemHolder)) return Json{{"available", false}};
+            auto* system = static_cast<ImageEffectSystemHolder*>(holder->getObj(SceneObj_ImageEffectSystemHolder));
+            if (!system->mDirector) return Json{{"available", false}};
+            const auto& director = *system->mDirector;
+            const char* state = "Unknown";
+            if (director.mState == director.mStateNull) state = "None";
+            else if (director.mState == director.mStateBloomNormal) state = "BloomNormal";
+            else if (director.mState == director.mStateBloomSimple) state = "BloomSimple";
+            else if (director.mState == director.mStateScreenBlur) state = "ScreenBlur";
+            else if (director.mState == director.mStateDepthOfField) state = "DepthOfField";
+            Json effect = nullptr;
+            if (const auto* current = director.mCurrentEffect) {
+                effect = Json{{"name", current->mName}, {"requested", current->_C},
+                              {"active", current->_D}, {"intensity", current->_10}};
             }
-            return out;
-        }
-
-        [[nodiscard]] Json image_effect_service_json(const ImageEffectService &image_effects) {
-            return Json{
-                {"forced_off", image_effects.is_forced_off()},
-                {"control_auto", image_effects.is_control_auto()},
-                {"events", image_effect_events_json(image_effects.events())},
-            };
+            return Json{{"available", true}, {"control_auto", director.mIsAuto},
+                        {"player_sync", director.mIsPlayerSync}, {"player_sync_intensity", director.mPlayerSyncIntensity},
+                        {"depth_of_field_intensity", director.mDepthOfFieldIntensity},
+                        {"state", state}, {"current_effect", std::move(effect)}};
         }
 
         [[nodiscard]] Json camera_shake_request_events_json(std::span<const CameraSystemService::ShakeRequestEvent> events) {
@@ -1577,7 +1574,7 @@ namespace smgpc::runtime {
                      {"scene", wipe_service_json(runtime.scene_wipe())},
                      {"system", wipe_service_json(runtime.system_wipe())},
                  }},
-                {"image_effects", image_effect_service_json(runtime.image_effects())},
+                {"image_effects", image_effect_state_json()},
                 {"camera",
                  Json{
                      {"game_camera_pose",

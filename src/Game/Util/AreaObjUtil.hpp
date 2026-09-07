@@ -42,6 +42,6 @@ namespace MR {
     AreaObj* getAreaIn(const char*, const TVec3f&);
 
     bool getWaterAreaObj(WaterInfo*, const TVec3f&);
-    AreaInfo* getWaterAreaInfo(WaterInfo*, const TVec3f&, const TVec3f&, bool);
+    bool getWaterAreaInfo(WaterInfo*, const TVec3f&, const TVec3f&, bool);
 
 };  // namespace MR

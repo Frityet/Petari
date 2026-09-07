@@ -721,7 +721,6 @@ namespace smgpc::runtime {
         refresh_effect_host_bindings();
         _scene_wipe.begin_frame(_frame_index);
         _system_wipe.begin_frame(_frame_index);
-        _image_effects.begin_frame(_frame_index);
         _star_pointer.begin_frame(_frame_index);
         _rumble.begin_frame(_frame_index);
         _sequence_requests.begin_frame(_frame_index);
@@ -1244,14 +1243,6 @@ namespace smgpc::runtime {
 
     const WipeService &RuntimeContext::system_wipe() const {
         return _system_wipe;
-    }
-
-    ImageEffectService &RuntimeContext::image_effects() {
-        return _image_effects;
-    }
-
-    const ImageEffectService &RuntimeContext::image_effects() const {
-        return _image_effects;
     }
 
     StarPointerService &RuntimeContext::star_pointer() {

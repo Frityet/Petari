@@ -1,0 +1,104 @@
+[
+  {
+    "object": "LayoutGroupCtrl",
+    "name": "__ct__15LayoutGroupCtrlFP13LayoutManagerPCcUl",
+    "retail_size": "176",
+    "match_percent": 100.0
+  },
+  {
+    "object": "LayoutGroupCtrl",
+    "name": "movement__15LayoutGroupCtrlFv",
+    "retail_size": "104",
+    "match_percent": 100.0
+  },
+  {
+    "object": "LayoutGroupCtrl",
+    "name": "calcAnim__15LayoutGroupCtrlFv",
+    "retail_size": "104",
+    "match_percent": 100.0
+  },
+  {
+    "object": "LayoutGroupCtrl",
+    "name": "getPaneNum__15LayoutGroupCtrlCFv",
+    "retail_size": "12",
+    "match_percent": 100.0
+  },
+  {
+    "object": "LayoutGroupCtrl",
+    "name": "getPane__15LayoutGroupCtrlCFUl",
+    "retail_size": "160",
+    "match_percent": 27.8
+  },
+  {
+    "object": "LayoutAnmPlayer",
+    "name": "__ct__15LayoutAnmPlayerFPC13LayoutManager",
+    "retail_size": "92",
+    "match_percent": 100.0
+  },
+  {
+    "object": "LayoutAnmPlayer",
+    "name": "movement__15LayoutAnmPlayerFv",
+    "retail_size": "24",
+    "match_percent": 100.0
+  },
+  {
+    "object": "LayoutAnmPlayer",
+    "name": "reflectFrame__15LayoutAnmPlayerFv",
+    "retail_size": "24",
+    "match_percent": 100.0
+  },
+  {
+    "object": "LayoutAnmPlayer",
+    "name": "start__15LayoutAnmPlayerFPCc",
+    "retail_size": "156",
+    "match_percent": 99.74359
+  },
+  {
+    "object": "LayoutAnmPlayer",
+    "name": "stop__15LayoutAnmPlayerFv",
+    "retail_size": "12",
+    "match_percent": 98.333336
+  },
+  {
+    "object": "MessageUtil",
+    "name": "countMessageLine__2MRFPCw",
+    "retail_size": "156",
+    "match_percent": 100.0
+  },
+  {
+    "object": "MessageUtil",
+    "name": "isGroupTagId__23MessageEditorMessageTagCFii",
+    "retail_size": "40",
+    "match_percent": 100.0
+  },
+  {
+    "object": "MessageTagSkipTagProcessor",
+    "name": "__ct__23MessageEditorMessageTagFPCw",
+    "retail_size": "8",
+    "match_percent": 100.0
+  },
+  {
+    "object": "MessageTagSkipTagProcessor",
+    "name": "getSkipLength__23MessageEditorMessageTagCFv",
+    "retail_size": "20",
+    "match_percent": 100.0
+  },
+  {
+    "object": "LayoutUtil",
+    "name": "getTextLineNumMaxRecursiveSub__24@unnamed@LayoutUtil_cpp@FPCQ34nw4r3lyt4Pane",
+    "retail_size": "232",
+    "match_percent": 36.844826
+  },
+  {
+    "object": "LayoutUtil",
+    "name": "copyPaneRotate__2MRFPQ29JGeometry8TVec3<f>PC11LayoutActorPCc",
+    "retail_size": "92",
+    "match_percent": 100.0
+  },
+  {
+    "object": "Screen/LayoutGroupCtrl retail vs Animation/LayoutAnmPlayer candidate",
+    "name": "isStop__15LayoutAnmPlayerCFv",
+    "retail_size": "76",
+    "match_percent": 94.210526
+  }
+]

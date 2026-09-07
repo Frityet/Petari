@@ -2513,41 +2513,6 @@ namespace smgpc::runtime {
         return frame_count < 0 ? 30 : frame_count;
     }
 
-    void ImageEffectService::begin_frame(std::uint64_t frame_index) {
-        _frame_index = frame_index;
-    }
-
-    void ImageEffectService::force_off() {
-        _forced_off = true;
-        _control_auto = false;
-        push_event(ImageEffectControlKind::ForceOff);
-    }
-
-    void ImageEffectService::set_control_auto() {
-        _forced_off = false;
-        _control_auto = true;
-        push_event(ImageEffectControlKind::ControlAuto);
-    }
-
-    bool ImageEffectService::is_forced_off() const {
-        return _forced_off;
-    }
-
-    bool ImageEffectService::is_control_auto() const {
-        return _control_auto;
-    }
-
-    std::span<const ImageEffectControlEvent> ImageEffectService::events() const {
-        return _events;
-    }
-
-    void ImageEffectService::push_event(ImageEffectControlKind kind) {
-        _events.push_back(ImageEffectControlEvent{
-            .kind = kind,
-            .frame_index = _frame_index,
-        });
-    }
-
     void StarPointerService::begin_frame(std::uint64_t frame_index) {
         _frame_index = frame_index;
     }

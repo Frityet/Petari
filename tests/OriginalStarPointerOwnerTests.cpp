@@ -2,6 +2,14 @@
 #include "compat/StageSessionState.hpp"
 #include "compat/StarPointerDepthOwnership.hpp"
 #include "runtime/RuntimeContext.hpp"
+#include "Game/Screen/LayoutGroupCtrl.hpp"
+#include "Game/Screen/LayoutManager.hpp"
+#include "Game/Animation/LayoutAnmPlayer.hpp"
+#include "layout/LayoutHost.hpp"
+#include "layout/LayoutRuntime.hpp"
+#include "layout/LayoutResourceResolver.hpp"
+#include "layout/BrlytLayout.hpp"
+#include <nw4r/lyt/group.h>
 #include "Game/Screen/StarPointerBlur.hpp"
 #include "Game/Screen/StarPointerController.hpp"
 #include "Game/Screen/StarPointerDirector.hpp"
@@ -18,6 +26,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <stdexcept>
+#include <vector>
 
 namespace {
 void require(bool value, const char* message) {
@@ -27,10 +36,63 @@ class Logger final : public smgpc::logging::ILogger {
     void write(std::FILE*, std::source_location, smgpc::logging::Level,
                smgpc::logging::Category, std::string_view) override {}
 };
+void group_resource_and_dispatch(StarPointerLayout& layout, smgpc::runtime::RuntimeContext& runtime) {
+    auto* manager = layout.getLayoutManager();
+    const auto* native = smgpc::layout::layout_runtime(&layout);
+    const auto& archive = runtime.dvd().archive_for_path(*native->getArchivePath());
+    const auto* entry = smgpc::layout::find_layout_brlyt(archive.entries(), native->getLayoutName());
+    require(entry, "actual pointer archive contains its named BRLYT");
+    const auto resource = smgpc::layout::parse_brlyt_layout(archive.file_data(*entry));
+    u32 catalog_index = 0;
+    for (const auto& group : resource.groups) {
+        if (group.root_group || group.nest_level != 1) continue;
+        auto* actual = manager->getGroup(group.name.c_str());
+        require(actual && manager->getIndexOfGroupCtrl(group.name.c_str()) == catalog_index++, "actual SDK groups preserve original resource catalog order");
+        auto& list = actual->GetPaneList(); auto iter = list.GetBeginIter();
+        for (auto pane_index : group.pane_indices) {
+            require(iter != list.GetEndIter() && iter++->mTarget == manager->getPane(resource.panes[pane_index].name.c_str()),
+                    "actual SDK group members are the exact live manager Pane identities");
+        }
+        require(iter == list.GetEndIter(), "actual group member capacity agrees with resource names and absence filtering");
+    }
+    require(!manager->getGroup("MissingGroup") && manager->getIndexOfGroupCtrl("MissingGroup") == catalog_index,
+            "manager preserves original missing group result and one-past-end index");
+    bool rejected = false;
+    try { manager->createAndAddGroupCtrl("MissingGroup", 1); } catch (const std::runtime_error&) { rejected = true; }
+    require(rejected, "absent group creation fails at actual resource ownership boundary");
+    auto* first = manager->createAndAddGroupCtrl("GroupRing", 1);
+    auto* second = manager->createAndAddGroupCtrl("GroupRing", 1);
+    require(first != second && first->mGroup == second->mGroup && first->getPaneNum() > 0 &&
+            !first->getPane(first->getPaneNum()) && first->mAnmPlayerArray[0]->isStop(),
+            "original duplicate controllers share actual group metadata and own fresh stopped players");
+    std::vector<int> calls;
+    struct Probe final : LayoutAnmPlayer {
+        Probe(LayoutManager* m, std::vector<int>& c, int id) : LayoutAnmPlayer(m), calls(c), id(id) {}
+        void movement() override { calls.push_back(id); }
+        void reflectFrame() override { calls.push_back(id + 10); }
+        std::vector<int>& calls; int id;
+    } a(manager, calls, 1), b(manager, calls, 2);
+    struct Restore {
+        LayoutGroupCtrl* a; LayoutGroupCtrl* b; LayoutAnmPlayer* old_a; LayoutAnmPlayer* old_b;
+        ~Restore() { a->mAnmPlayerArray[0] = old_a; b->mAnmPlayerArray[0] = old_b; }
+    } restore{first, second, first->mAnmPlayerArray[0], second->mAnmPlayerArray[0]};
+    first->mAnmPlayerArray[0] = &a; second->mAnmPlayerArray[0] = &b;
+    manager->movement(); require(calls == std::vector<int>{2}, "only latest registered group occupies the movement catalog slot");
+    calls.clear(); manager->calcAnim();
+    std::vector<int> expected;
+    for (const auto& pane : resource.panes) {
+        u32 count = 0;
+        for (u32 i = 0; i < first->getPaneNum(); ++i) if (first->getPane(i) == manager->getPane(pane.name.c_str())) ++count;
+        expected.insert(expected.end(), count, 12); expected.insert(expected.end(), count, 11);
+    }
+    require(calls == expected, "per-pane animation traversal preserves reverse registration links, duplicate membership and depth-first resource order");
+}
 void modes_and_resources(smgpc::runtime::RuntimeContext& runtime) {
     auto& owner = smgpc::compat::require_star_pointer_depth();
     auto& director = owner.director();
     auto& modes = owner.modes();
+    aurora::wpad_service().set_connected(0, false);
+    aurora::wpad_service().set_connected(1, false);
     require(director.mStarPointerLayouts == nullptr, "actual layouts are created at the process layout boundary, after resources exist");
     smgpc::compat::StageSessionState outer("Game", "HeavensDoorGalaxy", 1, JMapIdInfo(0, 0));
     {
@@ -49,12 +111,18 @@ void modes_and_resources(smgpc::runtime::RuntimeContext& runtime) {
             require(layout->mBlur->mTexture->getWidth() == 64 && layout->mBlur->mTexture->getHeight() == 64,
                     "both blur textures decode the actual 64x64 StarPointerBlur.arc/Blur.bti asset");
         }
+        group_resource_and_dispatch(*director.getStarPointerLayout(0), runtime);
         require(modes.mMode == StarPointerMode_Game && modes.mModeCounter[StarPointerMode_Game] == 1 &&
-                MR::isStarPointerValid(0) && MR::isStarPointerValid(1) && director.isEnableStarPointerShootStarPiece(),
+                director.getStarPointerLayout(0)->mIsPointerValid && director.getStarPointerLayout(1)->mIsPointerValid &&
+                director.isEnableStarPointerShootStarPiece(),
                 "actual Base-to-Game entry enables original layouts and shooting");
+        require(!MR::isStarPointerValid(0) && !MR::isStarPointerValid(1),
+                "original public validity requires a connected controller as well as the actual valid layout");
         require(!MR::isExistStarPointerGuidance() && !MR::isExistStarPointerGuidanceFrame1P(),
                 "initialized EndWait spines report no guidance or frame before requests");
         aurora::wpad_service().set_connected(0, true);
+        require(MR::isStarPointerValid(0) && !MR::isStarPointerValid(1),
+                "connecting a controller enables only its own valid original pointer query");
         runtime.messages().set_message("PointerOwnerRetained", u"First line\nSecond line");
         require(guidance->request1PGuidance("PointerOwnerRetained", true), "actual connected and valid layout accepts original guidance request");
         const auto* text = guidance->mGuidanceMessage;

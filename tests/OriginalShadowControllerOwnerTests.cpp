@@ -1,4 +1,11 @@
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/LiveActor/ShadowController.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
+#include "JSystem/JKernel/JKRHeap.hpp"
+#include "compat/JkrAllocationDomain.hpp"
+#include "compat/StageSessionState.hpp"
+#include "runtime/RuntimeContext.hpp"
+#include "scene/SceneObjHolderRuntime.hpp"
 #include "Game/Util/ActorShadowUtil.hpp"
 #include "Game/Util/JointUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
@@ -580,7 +587,8 @@ namespace {
         require(duplicate_cp932_name.name == *raw_line.line_start_name && duplicate_cp932_name.name == *raw_line.line_end_name &&
                     !raw_line.line_start_controller_index.has_value() && raw_line.line_end_controller_index == std::optional< std::size_t >{8U},
                 "line endpoints must compare raw CP932 bytes even when distinct encodings decode to the same UTF-8 name");
-        require(state->calculation_enabled && state->private_gravity, "aggregate observability must follow active collision/private gravity");
+        require(actor.mShadowControllerList->getController(5U)->isCalcShadowGravity(),
+                "original controller carries the authored private gravity mode");
     }
 
     void test_single_line_self_resolution() {
@@ -602,7 +610,7 @@ namespace {
         auto actor = ProbeActor{};
         MR::initShadowVolumeSphere(&actor, 20.0F);
         auto* state = smgpc::compat::actor_shadow_runtime_state(&actor);
-        require(state->calculation_enabled && state->controllers.front().calculation_mode == smgpc::compat::ActorShadowCalculationMode::Continuous &&
+        require(actor.mShadowControllerList->getController(0U)->isCalcCollision() && state->controllers.front().calculation_mode == smgpc::compat::ActorShadowCalculationMode::Continuous &&
                     state->controllers.front().drop_start_offset == 50.0F &&
                     state->controllers.front().fixed_drop_direction.epsilonEquals(TVec3f{0.0F, -1.0F, 0.0F}, 0.0F),
                 "generic ShadowController construction must use retail ctor defaults");
@@ -615,13 +623,10 @@ namespace {
                 "volume setters must preserve exact signed offsets and enable authored length clipping");
         MR::initShadowVolumeCylinder(&actor, 20.0F);
         state = smgpc::compat::actor_shadow_runtime_state(&actor);
-        require(!state->calculation_enabled && state->controllers.front().calculation_mode == smgpc::compat::ActorShadowCalculationMode::Disabled,
+        require(!actor.mShadowControllerList->getController(0U)->isCalcCollision() && state->controllers.front().calculation_mode == smgpc::compat::ActorShadowCalculationMode::Disabled,
                 "generic cylinder convenience must apply its retail collision override");
 
         auto candidate = smgpc::compat::ActorShadowRuntimeState{
-            .valid = true,
-            .calculation_enabled = true,
-            .private_gravity = false,
             .capacity = 3U,
             .controllers = {},
         };
@@ -634,6 +639,7 @@ namespace {
             auto controller = smgpc::compat::make_actor_shadow_controller_runtime_state(&actor, "binding",
                                                                                         smgpc::compat::ActorShadowControllerKind::VolumeSphere, 1.0F);
             controller.position_binding = binding;
+            controller.drop_position = nullptr;
             controller.drop_position_matrix = binding == smgpc::compat::ActorShadowPositionBinding::JointMatrix ? joint_matrix :
                                               binding == smgpc::compat::ActorShadowPositionBinding::BaseMatrix  ? base_matrix :
                                                                                                                   other_matrix;
@@ -677,23 +683,56 @@ namespace {
                 "actor retirement must release the real model owner and every shadow binding together");
     }
 
-    [[nodiscard]] std::optional< std::filesystem::path > find_rmgk02_object(std::string_view archive_name) {
-        const auto relative = std::filesystem::path("ObjectData") / (std::string(archive_name) + ".arc");
-        for (const auto& root : {std::filesystem::path("orig/RMGK02/files"),
-                                 std::filesystem::path("container/orig/RMGK02/files")}) {
-            const auto path = root / relative;
-            if (std::filesystem::is_regular_file(path)) {
-                return path;
-            }
+    void test_original_controller_graph() {
+        auto& holder = *MR::getSceneObj<ShadowControllerHolder>(SceneObj_ShadowControllerHolder);
+        const auto count = holder._C.size();
+        const auto queued = holder._18.size();
+        {
+            ProbeActor actor;
+            actor.initShadowControllerList(2);
+            smgpc::compat::add_actor_shadow_controller(&actor, "体", smgpc::compat::ActorShadowControllerKind::VolumeSphere, 10);
+            smgpc::compat::add_actor_shadow_controller(&actor, "other", smgpc::compat::ActorShadowControllerKind::VolumeSphere, 20);
+            auto* list = actor.mShadowControllerList;
+            auto* first = list->getController("体");
+            auto* second = list->getController("other");
+            const auto domain = smgpc::scene::current_scene_allocation_domain();
+            require(first && second && first != second && first->getHost() == &actor &&
+                    JKRHeap::findFromRoot(list) == &domain->heap() && JKRHeap::findFromRoot(first) == &domain->heap(),
+                    "real typed list and controllers use Game storage and preserve decoded names");
+            actor.mPosition.set(2, 3, 4);
+            TVec3f value;
+            first->getDropPos(&value);
+            require(value.epsilonEquals(actor.mPosition, 0), "original drop position follows the actor pointer");
+            MR::setShadowDropDirection(&actor, "体", TVec3f(1, 0, 0));
+            first->getDropDir(&value);
+            require(value.epsilonEquals(TVec3f(1, 0, 0), 0) && first->mDropDir == nullptr,
+                    "Game shadow setter changes the original controller direction");
+            MR::setShadowDropLength(&actor, "体", -3);
+            require(first->getDropLength() == -3, "drop length preserves the original signed setter");
+            first->onCalcCollisionOneTime();
+            require(first->isCalcCollision(), "one-shot collision starts pending");
+            first->_65 = 1;
+            require(!first->isCalcCollision(), "original counter consumes one-shot collision");
+            MR::requestCalcActorShadowAppear(&actor);
+            MR::requestCalcActorShadow(&actor);
+            require(first->_65 == 0 && holder._18.size() == queued + 2,
+                    "appearance resets original counters and repeated requests enqueue once");
+            auto invalid = *smgpc::compat::actor_shadow_runtime_state(&actor);
+            invalid.capacity = 0;
+            bool rejected = false;
+            try { smgpc::compat::replace_actor_shadow_runtime_state(&actor, std::move(invalid)); }
+            catch (const std::length_error&) { rejected = true; }
+            require(rejected && actor.mShadowControllerList == list && holder._C.size() == count + 2,
+                    "failed replacement preserves old original identities and registrations");
         }
-        return std::nullopt;
+        require(holder._C.size() == count && holder._18.size() == queued,
+                "actor retirement removes both original registered and requested controller pointers");
     }
 
     void test_real_tico_shadow() {
         auto* resources = smgpc::compat::ResourceHolderService::active();
         if (resources == nullptr) {
-            std::cout << "[skip] real Tico/TicoBaby model archives are absent\n";
-            return;
+            throw std::runtime_error("actual resource holder is required for Tico proof");
         }
         const auto& tico = resources->backing(*resources->create_and_add("Tico.arc")).archive();
         const auto& baby = resources->backing(*resources->create_and_add("TicoBaby.arc")).archive();
@@ -727,36 +766,32 @@ namespace {
 }  // namespace
 
 int main() try {
-    struct DiscCloseGuard {
-        bool opened = false;
-        ~DiscCloseGuard() { if (opened) aurora_dvd_close(); }
-    } disc_close;
-    std::string resource_root;
-    if (const auto* disc = std::getenv("SMGPC_REAL_DISC"); disc != nullptr && *disc != '\0') {
-        require(aurora_dvd_open(disc), "SMGPC_REAL_DISC must open the actual model fixture image");
-        disc_close.opened = true;
-        resource_root = "/";
-    } else if (const auto tico = find_rmgk02_object("Tico"); tico.has_value()) {
-        resource_root = tico->parent_path().parent_path().string();
-    }
-    std::unique_ptr<smgpc::resource::GameResourceRuntime> process;
-    std::unique_ptr<smgpc::runtime::DvdFileSystemService> dvd;
-    std::unique_ptr<smgpc::compat::ResourceHolderService> resources;
-    if (!resource_root.empty()) {
-        aurora::g_config.mem1Size = 24U * 1024U * 1024U;
-        process = std::make_unique<smgpc::resource::GameResourceRuntime>();
-        DVDInit();
-        dvd = std::make_unique<smgpc::runtime::DvdFileSystemService>(resource_root);
-        resources = std::make_unique<smgpc::compat::ResourceHolderService>(
-            *dvd, process->create_cohort(), process->mem1_heap());
-    }
-    const auto tests = std::array< std::pair< std::string_view, void (*)() >, 7U >{
+    const auto* disc = std::getenv("SMGPC_REAL_DISC");
+    require(disc && *disc, "SMGPC_REAL_DISC must name the real model fixture image");
+    smgpc::render::AuroraWindow window({.width = 640, .height = 456, .title = "Original shadow controller ownership"});
+    smgpc::render::AuroraRenderer renderer(window);
+    require(aurora_dvd_open(disc), "cannot open actual fixture image");
+    struct DiscCloseGuard { ~DiscCloseGuard() { aurora_dvd_close(); } } disc_close;
+    DVDInit();
+    smgpc::resource::GameResourceRuntime process({96U << 20, 32U << 20, 4U << 20});
+    class Logger final : public smgpc::logging::ILogger {
+        void write(std::FILE*, std::source_location, smgpc::logging::Level,
+                   smgpc::logging::Category, std::string_view) override {}
+    } logger;
+    smgpc::runtime::RuntimeContext runtime(logger, window, process);
+    auto& scheduler = runtime.scheduler();
+    smgpc::runtime::SceneSchedulerBinding scheduler_binding(scheduler);
+    smgpc::compat::StageSessionState session("Game", "HeavensDoorGalaxy", 1, JMapIdInfo(0, 0));
+    smgpc::compat::StageSessionBinding session_binding(session);
+    (void)renderer.begin_frame();
+    const auto tests = std::array< std::pair< std::string_view, void (*)() >, 8U >{
         std::pair{"missing CSV and transaction", test_missing_csv_and_strong_replacement},
         std::pair{"all types and defaults", test_all_types_and_exact_missing_defaults},
         std::pair{"authored bindings and modes", test_authored_bindings_modes_and_line_order},
         std::pair{"single line self lookup", test_single_line_self_resolution},
         std::pair{"model binding lifetime", test_generic_ctor_and_model_binding_lifetime},
         std::pair{"real Tico", test_real_tico_shadow},
+        std::pair{"original controller graph", test_original_controller_graph},
         std::pair{"registry teardown",
                   [] {
                       const auto baseline = smgpc::compat::actor_shadow_runtime_state_count();
@@ -767,13 +802,41 @@ int main() try {
                       require(smgpc::compat::actor_shadow_runtime_state_count() == baseline, "actor teardown must release shadow CSV state");
                   }},
     };
-    auto passed = std::size_t{};
-    for (const auto& [name, test] : tests) {
-        test();
-        ++passed;
-        std::cout << "[ok] " << name << '\n';
+    const auto baseline_objects = smgpc::compat::name_obj_runtime_state_count();
+    const auto baseline_entries = scheduler.snapshot().size();
+    for (int cycle = 0; cycle < 2; ++cycle) {
+        SceneObjHolder holder;
+        std::weak_ptr<smgpc::compat::JkrAllocationDomain> weak_domain;
+        auto survivor = std::make_unique<ProbeActor>();
+        {
+            smgpc::scene::SceneObjHolderBinding binding(holder);
+            weak_domain = smgpc::scene::current_scene_allocation_domain();
+            {
+                ProbeActor empty;
+                empty.initShadowControllerList(0);
+                require(empty.mShadowControllerList && empty.mShadowControllerList->getControllerCount() == 0 &&
+                        !holder.isExist(SceneObj_ShadowControllerHolder),
+                        "an empty original list must not create a global shadow holder");
+            }
+            for (const auto& [name, test] : tests) {
+                smgpc::compat::JkrAllocationScope game(smgpc::scene::current_scene_allocation_domain());
+                test();
+                std::cout << "[ok] cycle " << cycle << ": " << name << '\n';
+            }
+            {
+                smgpc::compat::JkrAllocationScope game(smgpc::scene::current_scene_allocation_domain());
+                MR::initShadowVolumeSphere(survivor.get(), 1.0F);
+                MR::requestCalcActorShadow(survivor.get());
+            }
+        }
+        require(!weak_domain.expired(), "an external actor retains its original controller allocation domain");
+        survivor.reset();
+        require(weak_domain.expired() && smgpc::compat::name_obj_runtime_state_count() == baseline_objects &&
+                scheduler.snapshot().size() == baseline_entries,
+                "holder-before-actor retirement must release the graph without dereferencing retired holder storage");
     }
-    std::cout << "Actor shadow CSV real-or-absent tests passed: " << passed << "/" << tests.size() << '\n';
+    renderer.end_frame();
+    std::cout << "Original shadow controller ownership and CSV tests passed in two scene generations\n";
     return 0;
 } catch (const std::exception& error) {
     std::cerr << "Actor shadow CSV test failed: " << error.what() << '\n';

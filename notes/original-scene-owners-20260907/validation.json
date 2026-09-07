@@ -1,0 +1,59 @@
+{
+  "shared_archive_build_exit": 0,
+  "shared_archive_build_log": "notes/movement-camera-integration-20260907/checkpoint-build.log",
+  "fixtures": [
+    {
+      "target": "smg-pc-original-layout-group-tests",
+      "build_exit": 0,
+      "build_log": "notes/movement-camera-integration-20260907/smg-pc-original-layout-group-tests-checkpoint-build.log",
+      "run_exit": 0,
+      "run_log": "notes/movement-camera-integration-20260907/smg-pc-original-layout-group-tests-checkpoint-run.log"
+    },
+    {
+      "target": "smg-pc-original-star-pointer-owner-tests",
+      "build_exit": 0,
+      "build_log": "notes/movement-camera-integration-20260907/smg-pc-original-star-pointer-owner-tests-checkpoint-build.log",
+      "run_exit": 0,
+      "run_log": "notes/movement-camera-integration-20260907/smg-pc-original-star-pointer-owner-tests-checkpoint-run.log"
+    },
+    {
+      "target": "smg-pc-original-j2d-projection-owner-tests",
+      "build_exit": 0,
+      "build_log": "notes/movement-camera-integration-20260907/smg-pc-original-j2d-projection-owner-tests-checkpoint-build.log",
+      "run_exit": 0,
+      "run_log": "notes/movement-camera-integration-20260907/smg-pc-original-j2d-projection-owner-tests-checkpoint-run.log"
+    },
+    {
+      "target": "smg-pc-j-audio-playback-tests",
+      "build_exit": 0,
+      "build_log": "notes/movement-camera-integration-20260907/smg-pc-j-audio-playback-tests-checkpoint-build.log",
+      "run_exit": 0,
+      "run_log": "notes/movement-camera-integration-20260907/smg-pc-j-audio-playback-tests-checkpoint-run.log"
+    }
+  ],
+  "main_final_build_exit": 255,
+  "main_final_build_log": "notes/movement-camera-integration-20260907/checkpoint-main-final-build.log",
+  "main_missing_symbols": [
+    "MR::startDownWipe()",
+    "MR::startGameOverWipe()",
+    "MR::requestEndMissDemo()",
+    "MR::requestEndGameOverDemo()",
+    "MR::requestStartGameOverDemo()"
+  ],
+  "additional_runtime_proof": {
+    "jut_texture_ownership": {
+      "exit": 0,
+      "log": "notes/movement-camera-integration-20260907/smg-pc-jut-texture-ownership-tests-run.log"
+    },
+    "aurora_fifo": {
+      "passed": 258,
+      "failed": 0
+    }
+  },
+  "not_runtime_verified": [
+    "original shadow/collision/image-effect ownership fixtures",
+    "complete original CameraDirector",
+    "Mario jump",
+    "playable Gateway demo"
+  ]
+}

@@ -65,7 +65,6 @@ namespace smgpc::app {
         di::SingletonService<smgpc::runtime::WpadService>,
         di::SingletonService<smgpc::runtime::AudioEventService>,
         di::SingletonService<smgpc::runtime::EffectService>,
-        di::SingletonService<smgpc::runtime::ImageEffectService>,
         di::SingletonService<smgpc::runtime::StarPointerService>,
         di::SingletonService<smgpc::runtime::CameraSystemService>,
         di::SingletonService<smgpc::runtime::PlayerSystemService>,

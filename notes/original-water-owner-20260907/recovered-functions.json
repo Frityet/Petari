@@ -1,0 +1,74 @@
+[
+  {
+    "source": "decomp/src/Game/Screen/BloomEffect.cpp",
+    "symbol": "postDraw__11BloomEffectCFv",
+    "size": 956,
+    "match_percent": 99.832634
+  },
+  {
+    "source": "decomp/src/Game/Screen/BloomEffect.cpp",
+    "symbol": "drawTexture__11BloomEffectCFP10JUTTexturellUcQ211BloomEffect19BLOOM_TEX_DRAW_TYPE",
+    "size": 660,
+    "match_percent": 99.63636
+  },
+  {
+    "source": "decomp/src/Game/Screen/BloomEffect.cpp",
+    "symbol": "initBlurMtx__11BloomEffectCFPA3_A4_fUlff",
+    "size": 560,
+    "match_percent": 94.39286
+  },
+  {
+    "source": "decomp/src/Game/Screen/BloomEffect.cpp",
+    "symbol": "drawBlur__11BloomEffectCFllPA3_A4_fUlUl",
+    "size": 644,
+    "match_percent": 99.62733
+  },
+  {
+    "source": "decomp/src/Game/Screen/ImageEffectLocalUtil.cpp",
+    "symbol": "setTextureTrans__34@unnamed@ImageEffectLocalUtil_cpp@Fff",
+    "size": 100,
+    "match_percent": 100.0
+  },
+  {
+    "source": "decomp/src/Game/Screen/ImageEffectLocalUtil.cpp",
+    "symbol": "capture__20ImageEffectLocalUtilFP10JUTTexturell9_GXTexFmtbUc",
+    "size": 132,
+    "match_percent": 100.0
+  },
+  {
+    "source": "decomp/src/Game/Screen/ImageEffectLocalUtil.cpp",
+    "symbol": "blurTexture__20ImageEffectLocalUtilFP10JUTTexturellUlff",
+    "size": 540,
+    "match_percent": 94.844444
+  },
+  {
+    "source": "decomp/src/Game/Screen/ImageEffectState.cpp",
+    "symbol": "update__Q220ImageEffectStateImpl16StateBloomNormalFv",
+    "size": 652,
+    "match_percent": 99.53988
+  },
+  {
+    "source": "decomp/src/Game/AreaObj/ImageEffectArea.cpp",
+    "symbol": "sort__18ImageEffectAreaMgrFv",
+    "size": "172",
+    "match_percent": 100.0
+  },
+  {
+    "source": "decomp/src/Game/Util/MapUtil.cpp",
+    "symbol": "getFirstPolyOnLineCategory__21@unnamed@MapUtil_cpp@FPQ29JGeometry8TVec3<f>P8TriangleRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PC18TriangleFilterBasePC24CollisionPartsFilterBasel",
+    "size": "344",
+    "match_percent": 98.66279
+  },
+  {
+    "source": "decomp/src/Game/Util/MapUtil.cpp",
+    "symbol": "getFirstPolyOnLineToWaterSurface__2MRFPQ29JGeometry8TVec3<f>P8TriangleRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+    "size": "16",
+    "match_percent": 100.0
+  },
+  {
+    "source": "decomp/src/Game/Util/MapUtil.cpp",
+    "symbol": "getFirstPolyOnLineToWaterSurface__2MRFPQ29JGeometry8TVec3<f>P8TriangleRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PC24CollisionPartsFilterBasePC18TriangleFilterBase",
+    "size": "20",
+    "match_percent": 100.0
+  }
+]

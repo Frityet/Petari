@@ -12,6 +12,8 @@
 #include "scene/PlacementZoneNameScope.hpp"
 #include "scene/StageCollisionService.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/LiveActor/ShadowController.hpp"
+#include "Game/Util/ActorShadowUtil.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/Map/CollisionDirector.hpp"
 #include "Game/Map/CollisionCategorizedKeeper.hpp"
@@ -133,6 +135,34 @@ int main() {
                 require(retained.mParts == parts && retained.mIdx == surface->prism_index &&
                         retained.getBaseMtx() == &parts->mBaseMatrix,
                         "native query retains exact original owner, local prism and matrix identity");
+                {
+                    MatrixActor caster;
+                    MR::initShadowVolumeSphere(&caster, 10);
+                    auto* shadow = caster.mShadowControllerList->getController(0U);
+                    const auto center = (surface->vertices[0] + surface->vertices[1] + surface->vertices[2]) * (1.0F / 3.0F);
+                    const auto normal = surface->normals[0];
+                    shadow->setDropPosFix(center + normal);
+                    shadow->setDropDirFix(normal * -1.0F);
+                    shadow->setDropStartOffset(0.25F);
+                    shadow->setDropLength(2.0F);
+                    shadow->onCalcCollisionOneTime();
+                    shadow->updateProjection();
+                    TVec3f projected, projected_normal;
+                    shadow->getProjectionPos(&projected);
+                    shadow->getProjectionNormal(&projected_normal);
+                    require(shadow->isProjected() && shadow->mProjectedSensor == sensor,
+                            "original shadow projects against the actual resource CollisionParts sensor");
+                    near(projected.x, center.x, "original projection reaches the archived KCL face X");
+                    near(projected.y, center.y, "original projection reaches the archived KCL face Y");
+                    near(projected.z, center.z, "original projection reaches the archived KCL face Z");
+                    near(shadow->getProjectionLength(), 1.0F, "original projection length starts at the drop position");
+                    require(projected_normal.epsilonEquals(normal, 0.01F) && shadow->_65 == 1 && !shadow->isCalcCollision(),
+                            "original projection retains the KCL normal and consumes one-shot collision");
+                    shadow->setDropPosFix(center + normal * 10.0F);
+                    shadow->updateProjection();
+                    shadow->getProjectionPos(&projected);
+                    require(projected.epsilonEquals(center, 0.01F), "consumed one-shot projection stays cached");
+                }
                 auto* base = retained.getBaseMtx();
                 actor.matrix.mMtx[0][3] = 30;
                 actor.calcAnim();

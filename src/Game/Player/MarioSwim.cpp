@@ -1943,8 +1943,8 @@ bool MarioSwim::checkWaterBottom() {
     return true;
 }
 
-AreaInfo* MarioSwim::getWaterAreaInfo(WaterInfo* pInfo, const TVec3f& rPos, TVec2f* pOutVec) {
-    AreaInfo* waterAreaInfo = MR::getWaterAreaInfo(pInfo, rPos, getPlayer()->getAirGravityVec(), false);
+bool MarioSwim::getWaterAreaInfo(WaterInfo* pInfo, const TVec3f& rPos, TVec2f* pOutVec) {
+    bool waterAreaInfo = MR::getWaterAreaInfo(pInfo, rPos, getPlayer()->getAirGravityVec(), false);
 
     if (pOutVec != nullptr) {
         pOutVec->x = -pInfo->mCamWaterDepth;

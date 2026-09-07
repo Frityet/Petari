@@ -13,6 +13,7 @@
 #include "compat/J3dCommandScope.hpp"
 #include "compat/ModelManagerOwner.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/LiveActor/ShadowController.hpp"
 
 #include "Game/LiveActor/ActorLightCtrl.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
@@ -83,6 +84,7 @@ void LiveActor::movement() {
         }
         smgpc::compat::update_actor_hit_sensors(this);
         MR::actorSoundMovement(this);
+        MR::requestCalcActorShadow(this);
     }
 }
 
@@ -304,8 +306,6 @@ void LiveActor::initRailRider(const JMapInfoIter& rIter) {
 }
 
 void LiveActor::initShadowControllerList(u32 controllerCount) {
-    // The native runtime owns the controller records without expanding the
-    // retail LiveActor layout or writing a host object into its Wii pointer.
     smgpc::compat::initialize_actor_shadow_controller_list(this, controllerCount);
 }
 

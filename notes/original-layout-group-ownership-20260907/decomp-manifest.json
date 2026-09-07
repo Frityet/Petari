@@ -1,0 +1,46 @@
+[
+  {
+    "path": "src/Game/Animation/LayoutAnmPlayer.cpp",
+    "sha256": "a89590dee9726e6e057c782d5c818d3ec32a45314aac538bbeb3488c44b43a20"
+  },
+  {
+    "path": "src/Game/Screen/LayoutGroupCtrl.cpp",
+    "sha256": "2051be76e8cd86920cbaf45be57a537c5af3d58644ea2ade32fe2536e5fa3346"
+  },
+  {
+    "path": "include/Game/Screen/LayoutGroupCtrl.hpp",
+    "sha256": "458a3df75eb444e20b283539ca11fafd00f8dd01496e604b390a309dd44b544c"
+  },
+  {
+    "path": "include/Game/Screen/LayoutManager.hpp",
+    "sha256": "e358bf7d6aef55f2a691bb232aa9db83b140ae9e3873ce88a3816a2c8fb43b4e"
+  },
+  {
+    "path": "include/Game/Screen/MessageEditorMessageTag.hpp",
+    "sha256": "554ff6d71520e8658e757dbe7d96752a1163d52513dabe623211577621e968f1"
+  },
+  {
+    "path": "include/Game/Screen/MessageTagSkipTagProcessor.hpp",
+    "sha256": "e96195b895e7dc5a94fdc8e4c16dcb2bfbbc8720addbb34dddb70168f8dbf878"
+  },
+  {
+    "path": "src/Game/Screen/MessageTagSkipTagProcessor.cpp",
+    "sha256": "41f8524e2b3f3bae335f1bf5b716e8133dbf0d1eeef2d55675a6ab989ebbc10b"
+  },
+  {
+    "path": "src/Game/Util/MessageUtil.cpp",
+    "sha256": "93c5af27bae269b20df90bbee121d5b3947fc242d738807c249546af4719df1a"
+  },
+  {
+    "path": "src/Game/Util/LayoutUtil.cpp",
+    "sha256": "6eb141c0041ae3ecef497a1b51be71195237b39810e4b57f10264c21eef27ffc"
+  },
+  {
+    "path": "libs/nw4r/include/nw4r/ut/LinkList.h",
+    "sha256": "818ba3025a666f6b74e53aced95bc4fbc1727b14963f2cf899e587c8612bb47b"
+  },
+  {
+    "path": "libs/nw4r/include/nw4r/ut/RuntimeTypeInfo.h",
+    "sha256": "51e9f7ebf09fe3cd2f5e3415b1c580bf49e2dbeae1d6812ae4a3f9a2fbbe5095"
+  }
+]

@@ -3,6 +3,7 @@
 #include "Game/LiveActor/LodCtrl.hpp"
 
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/LiveActor/ShadowController.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
@@ -31,20 +32,14 @@ namespace {
         return name;
     }
 
-    smgpc::compat::ActorShadowRuntimeState& requireShadowControllers(LiveActor* pActor) {
-        const auto* existing = smgpc::compat::actor_shadow_runtime_state(
-            static_cast<const LiveActor*>(pActor));
-        if (existing == nullptr || existing->controllers.empty()) {
-            aurora::throw_host_exception<std::logic_error>(
-                "LOD shadow visibility synchronization is unavailable without real ShadowController ownership.");
+    void setShadowVisibleSyncHostAll(LiveActor* actor, bool visible) {
+        if (!actor || !actor->mShadowControllerList) {
+            aurora::throw_host_exception<std::logic_error>("LOD shadow visibility requires original shadow controller ownership");
         }
-        return *smgpc::compat::actor_shadow_runtime_state(pActor);
-    }
-
-    void setShadowVisibleSyncHostAll(LiveActor* pActor, bool visibleSyncHost) {
-        auto& shadow = requireShadowControllers(pActor);
-        for (auto& controller : shadow.controllers) {
-            controller.visible_sync_host = visibleSyncHost;
+        for (u32 i = 0; i < actor->mShadowControllerList->getControllerCount(); ++i) {
+            auto* controller = actor->mShadowControllerList->getController(i);
+            if (visible) controller->onVisibleSyncHost();
+            else controller->offVisibleSyncHost();
         }
     }
 }  // namespace

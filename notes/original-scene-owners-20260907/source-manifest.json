@@ -1,0 +1,490 @@
+[
+  {
+    "path": "aurora",
+    "commit": "7d95ca19ac606a8bf0e116462edfb689c353289b"
+  },
+  {
+    "path": "decomp",
+    "commit": "34698da21ccf99d9b741ff8dc4feb80ffe851eae"
+  },
+  {
+    "path": "src/Game/Animation/LayoutAnmPlayer.cpp",
+    "sha256": "a89590dee9726e6e057c782d5c818d3ec32a45314aac538bbeb3488c44b43a20"
+  },
+  {
+    "path": "src/Game/Animation/LayoutAnmPlayer.hpp",
+    "sha256": "017dda970d6d6f4e8a27950adac94e711c011e299b7934ce8d3b7c1a75871e63"
+  },
+  {
+    "path": "src/Game/AreaObj/BloomArea.cpp",
+    "sha256": "e0dc4f9eb6d08984cbe1d104ab814777805cf18a2ec27333941cab440117906f"
+  },
+  {
+    "path": "src/Game/AreaObj/BloomArea.hpp",
+    "sha256": "e76b286e5e246f9f28b2b8a18080126303e5b482910278c2c810771bff137eb1"
+  },
+  {
+    "path": "src/Game/AreaObj/DepthOfFieldArea.cpp",
+    "sha256": "a0ab05ec9666f4cbcf765091a0d16ec99d080423f64d9449681f06cf74907ab0"
+  },
+  {
+    "path": "src/Game/AreaObj/DepthOfFieldArea.hpp",
+    "sha256": "d160685b61ab443f26dae11d8a09a41a198b4731a2a8067c941d177777804e30"
+  },
+  {
+    "path": "src/Game/AreaObj/ImageEffectArea.cpp",
+    "sha256": "7329566cae97da7a5a0e98b2d860493e0588bf00ca4988b57b9ac0514f2ab049"
+  },
+  {
+    "path": "src/Game/AreaObj/ImageEffectArea.hpp",
+    "sha256": "687a72cdd37cbab583d86a4401b9cf7a09f8b42d0538a1c22fa35f5a7202630f"
+  },
+  {
+    "path": "src/Game/AreaObj/ScreenBlurArea.cpp",
+    "sha256": "646294080cd8fa1d2044bcafcd4bdcf5746892b6c7ca179875985a2b57c4530e"
+  },
+  {
+    "path": "src/Game/AreaObj/ScreenBlurArea.hpp",
+    "sha256": "41bd0eb1e4995dd95ede6685eef7874de44152901c03dbddd4b9d2f0d63bc8d8"
+  },
+  {
+    "path": "src/Game/AreaObj/SimpleBloomArea.cpp",
+    "sha256": "e73b6e8c4b164a672eb047f81a2c5dd270b4c8bb918d2e82b3da38ad7666d552"
+  },
+  {
+    "path": "src/Game/AreaObj/SimpleBloomArea.hpp",
+    "sha256": "ea7595fd423c72b5d2fe776089b0337a51989dd86227cc01c108d23181e375d7"
+  },
+  {
+    "path": "src/Game/AreaObj/WaterArea.cpp",
+    "sha256": "a4b94ac4f8a835929b9c925888e4c0bd4b87755672405727ea0f100de7655817"
+  },
+  {
+    "path": "src/Game/AreaObj/WaterArea.hpp",
+    "sha256": "b6328e35735bf2703ac0d3a0066159ccde15bc492b0340e367f9d41784afe105"
+  },
+  {
+    "path": "src/Game/LiveActor/LiveActor.cpp",
+    "sha256": "34c4cc70d11919c102b37089a8c2e0e7d637fea1f658476440f4577d5a9c7807"
+  },
+  {
+    "path": "src/Game/LiveActor/ShadowController.cpp",
+    "sha256": "e0620452eb1d014cf4eebf18a3ea26f5d6ed77fbb99c2e59e684d227d2500bdb"
+  },
+  {
+    "path": "src/Game/LiveActor/ShadowController.hpp",
+    "sha256": "89d0678837f7511e58641b5041ef76f94e89bce83fc3ec93c42399b58c5ff56c"
+  },
+  {
+    "path": "src/Game/LiveActor/ShadowDrawer.cpp",
+    "sha256": "50dd300517590367b62340a5cb66f6121c7586d06f56c0ce37b30417691b7515"
+  },
+  {
+    "path": "src/Game/LiveActor/ShadowDrawer.hpp",
+    "sha256": "d900f8efb9e0d949928adfdd08ca616cc83ac71edc030809c7c771cc893ce53a"
+  },
+  {
+    "path": "src/Game/Map/OceanBowlPoint.cpp",
+    "sha256": "8e8f1b1b618fec60c21b6b2995a50ac4e079162b2f2803907260a41bb491c004"
+  },
+  {
+    "path": "src/Game/Map/OceanBowlPoint.hpp",
+    "sha256": "85c62fbb05219be98898b49cdb91f3e49b60001c1befc247c78d2d8824683dbf"
+  },
+  {
+    "path": "src/Game/Map/WaterAreaHolder.cpp",
+    "sha256": "91f39f781a9d77164a32f2160c4069483f8664f330e30d38f557194f9b3dd2b0"
+  },
+  {
+    "path": "src/Game/Map/WaterAreaHolder.hpp",
+    "sha256": "38409ea869564c4829f4ce039c5018c8c803a8236b36f4a2482c059c5171953b"
+  },
+  {
+    "path": "src/Game/Map/WaterPoint.cpp",
+    "sha256": "e9149f6c8189808bd73e19c21873c02bec2043a5a2853e789f1164c49d3baf14"
+  },
+  {
+    "path": "src/Game/Map/WaterPoint.hpp",
+    "sha256": "80500c1fff607a0159b571813b3103f6f5a789d2ad7993fc175a19197ba14e10"
+  },
+  {
+    "path": "src/Game/Map/WhirlPoolAccelerator.cpp",
+    "sha256": "dc8f5515ab4e23d6f1c6760b1eb0bcc78d9bf5cd335c26be973455a7f33ffa23"
+  },
+  {
+    "path": "src/Game/Map/WhirlPoolAccelerator.hpp",
+    "sha256": "894b2f398ff478b48604804cd5ee1a50400662ab4b2a868112c3040101f24575"
+  },
+  {
+    "path": "src/Game/Player/MarioSwim.cpp",
+    "sha256": "69ce21a2f45f1ec29f1f75a8f06dd71573206c6bc88ab72aa49e696a6ac60ba0"
+  },
+  {
+    "path": "src/Game/Player/MarioSwim.hpp",
+    "sha256": "940029c9f17147bb57b85d21659bfd4ae6ee6f3bd7d307015c5115dfa058d58d"
+  },
+  {
+    "path": "src/Game/Screen/BloomEffect.cpp",
+    "sha256": "2554d97530ee17cf525f7bd4156b19e394564e32b277cb664bbcdf57142b042e"
+  },
+  {
+    "path": "src/Game/Screen/BloomEffect.hpp",
+    "sha256": "17f98b8567d16b18706565ea2830d0fedf15fba1081a0ee85227626cc066017c"
+  },
+  {
+    "path": "src/Game/Screen/BloomEffectSimple.cpp",
+    "sha256": "1ab13cb5e756301f879c9fbf74127c7b0dcc01ab8b20bfa41607844887907e55"
+  },
+  {
+    "path": "src/Game/Screen/BloomEffectSimple.hpp",
+    "sha256": "9470b3eca29bbddf91246a8ce5012bbddc0eb2393e3d5d9427bdaea8fd2f7cd5"
+  },
+  {
+    "path": "src/Game/Screen/CopyFilterNegater.cpp",
+    "sha256": "4e61fc96369c4f4300c155a181709a10d225f73024c7c4c5fad9a284d9c9fc72"
+  },
+  {
+    "path": "src/Game/Screen/CopyFilterNegater.hpp",
+    "sha256": "94817eb3daae051569ea1520041007962242692f1b7660c36d7d7dcc2402a8d2"
+  },
+  {
+    "path": "src/Game/Screen/DepthOfFieldBlur.cpp",
+    "sha256": "461368b7d22f6580318bb1ad69e4bb6844b34884fd8344ff6b280ead86a30b0b"
+  },
+  {
+    "path": "src/Game/Screen/DepthOfFieldBlur.hpp",
+    "sha256": "05c2aa8219176f147d170db2a7777fa385cb77eb11339d6bc2d0065a9192bad3"
+  },
+  {
+    "path": "src/Game/Screen/ImageEffectBase.cpp",
+    "sha256": "1e70c567866e5f49cae52c4ec86a443eddd7e398d7d9e668493d13da8ea272be"
+  },
+  {
+    "path": "src/Game/Screen/ImageEffectBase.hpp",
+    "sha256": "640d19cc348888e5c7151e385093c66fc2dc142daba5dff064f85781be971b6b"
+  },
+  {
+    "path": "src/Game/Screen/ImageEffectDirector.cpp",
+    "sha256": "4807f677b027f27c05a5b38cddcd235e6ba6be7a7d4ed042f29f6f7dd5138231"
+  },
+  {
+    "path": "src/Game/Screen/ImageEffectDirector.hpp",
+    "sha256": "b2c86cbc077228949def5f7b64822964d641bc665f6cf6064e3e212626c93c53"
+  },
+  {
+    "path": "src/Game/Screen/ImageEffectLocalUtil.cpp",
+    "sha256": "8e334a351db52c1f1057d5f7210704fb117ae146c5db8dc4cefbf1b51a3add63"
+  },
+  {
+    "path": "src/Game/Screen/ImageEffectLocalUtil.hpp",
+    "sha256": "68ef69e48e9e86b0c6ce5037abaddbcf8e48571510a26282b671f9c8a49d1c2c"
+  },
+  {
+    "path": "src/Game/Screen/ImageEffectResource.cpp",
+    "sha256": "70a315c3ffb6c8d6be9ff4d949dae6392f376c0975bb88cb2269df721fa0d579"
+  },
+  {
+    "path": "src/Game/Screen/ImageEffectResource.hpp",
+    "sha256": "74720eb6a6f03d2525bd60a55d1380d00f8c2fb3e95b77287b19c66b5c189d24"
+  },
+  {
+    "path": "src/Game/Screen/ImageEffectState.cpp",
+    "sha256": "0a475bfe3f0eb8a34312966acededa5a90bd26995b8b50a8a3b7f5e08bf63b33"
+  },
+  {
+    "path": "src/Game/Screen/ImageEffectState.hpp",
+    "sha256": "40919bb3f68001f74899afbd0e06c280eb05384f28903d8f6be875e7a340becc"
+  },
+  {
+    "path": "src/Game/Screen/ImageEffectSystemHolder.cpp",
+    "sha256": "d4bcbc7fb0af850fc532c67dd319a539ac7b32412a20cbcffbeec954a7657163"
+  },
+  {
+    "path": "src/Game/Screen/ImageEffectSystemHolder.hpp",
+    "sha256": "af01c71a84e14eba3ce6e6ca936a7059d8803eec8a1837ae5b3f6abbd674bc01"
+  },
+  {
+    "path": "src/Game/Screen/LayoutGroupCtrl.cpp",
+    "sha256": "2051be76e8cd86920cbaf45be57a537c5af3d58644ea2ade32fe2536e5fa3346"
+  },
+  {
+    "path": "src/Game/Screen/LayoutGroupCtrl.hpp",
+    "sha256": "458a3df75eb444e20b283539ca11fafd00f8dd01496e604b390a309dd44b544c"
+  },
+  {
+    "path": "src/Game/Screen/LayoutManager.hpp",
+    "sha256": "e358bf7d6aef55f2a691bb232aa9db83b140ae9e3873ce88a3816a2c8fb43b4e"
+  },
+  {
+    "path": "src/Game/Screen/MessageEditorMessageTag.hpp",
+    "sha256": "554ff6d71520e8658e757dbe7d96752a1163d52513dabe623211577621e968f1"
+  },
+  {
+    "path": "src/Game/Screen/ScreenBlurEffect.cpp",
+    "sha256": "60233b7c992e02455f4ae22c67db88e03e745448e24da682fb58cab422b602d5"
+  },
+  {
+    "path": "src/Game/Screen/ScreenBlurEffect.hpp",
+    "sha256": "ecc17e81ad6c69fd7ed376e0d87036bef6484a752cce4f2ab5dd30434a65ccd7"
+  },
+  {
+    "path": "src/Game/Screen/WaterCameraFilter.cpp",
+    "sha256": "234a406eda0c0883d8518089f1ac235320c952cc60e2cb91a166fd51c8ff5c53"
+  },
+  {
+    "path": "src/Game/Screen/WaterCameraFilter.hpp",
+    "sha256": "420c532673cf3ac7ff615c013ea4688526c940bf01044be97b54dd6bc5bea1a5"
+  },
+  {
+    "path": "src/Game/Util/AreaObjUtil.cpp",
+    "sha256": "3f81a9605c248d23db9bd9d3302a62eebabba718a6c15b799648602ce1682d3c"
+  },
+  {
+    "path": "src/Game/Util/AreaObjUtil.hpp",
+    "sha256": "afcb3e076a93dde97d5ef325f17038a51c5087bffdd8d79a4da3694979fde0e4"
+  },
+  {
+    "path": "src/Game/Util/DrawUtil.hpp",
+    "sha256": "a15d051be06d8a3990d50435efa2e7b458b157546fe913e75b451d098bdc1f8a"
+  },
+  {
+    "path": "src/Game/Util/ScreenUtil.cpp",
+    "sha256": "c40a9f91a7f6e154ff730420ba1c7d7f674ac7d9d947da686705026d7568e5d2"
+  },
+  {
+    "path": "src/JSystem/JGeometry/TVec.hpp",
+    "sha256": "70bb4ba3cdf07360943d26931c84fb952aeadb8bf0c99be1a9cc6392b5c70b12"
+  },
+  {
+    "path": "src/app/Application.cpp",
+    "sha256": "b3b213cbdc966e1e749eb0a5d6db74d543edf85ce8dd0aa3959318b6ffb2671e"
+  },
+  {
+    "path": "src/app/Application.hpp",
+    "sha256": "d709a148d92da7fc428704884b8d5ac2c7db3ff4291606ab490a15691c375129"
+  },
+  {
+    "path": "src/compat/ActorRuntimeRegistry.cpp",
+    "sha256": "bc6634c0b27fd56c4943de0b32e505b0187bbe0372a2b4962d3491fcbd3438f7"
+  },
+  {
+    "path": "src/compat/ActorRuntimeRegistry.hpp",
+    "sha256": "527a02176859ff3ffadcc5a4aefd59d18a1c47951362a44e40e576eefae03465"
+  },
+  {
+    "path": "src/compat/ActorShadowCsvCompat.cpp",
+    "sha256": "fb5ca969e02de60b2a3011cb9c70b2df60ed9c151470fc832ad5417b2fd1c68a"
+  },
+  {
+    "path": "src/compat/GameActorPhysicsCompat.cpp",
+    "sha256": "86af2841a089ced661eb7bdffb9a0c2ce884e892eec7cc4e5d6bb15b5bb41ba2"
+  },
+  {
+    "path": "src/compat/GameMapCollisionCompat.cpp",
+    "sha256": "4dee662b842e541fcc862d4f7e3c77a280b19ad045faa93340a658833abe3fee"
+  },
+  {
+    "path": "src/compat/GameRailCompat.cpp",
+    "sha256": "2917d90f60530edb52b9b78d2ebd2490c9046c726f80c9457da16338079740e8"
+  },
+  {
+    "path": "src/compat/ImageEffectOwnership.cpp",
+    "sha256": "d9ef4565e826bc74cd736b8c4f53f3d4e9c36e280414092c06dc1c9e570e380d"
+  },
+  {
+    "path": "src/compat/ImageEffectOwnership.hpp",
+    "sha256": "836752116c93080e1b1c0d5869299278757a0fb1727571384242d81896bddbd3"
+  },
+  {
+    "path": "src/compat/JutTextureConstruction.cpp",
+    "sha256": "10760e1edd935de1ac45ce20803703376c23660269dab6991df0145e2982d85a"
+  },
+  {
+    "path": "src/compat/JutTextureConstruction.hpp",
+    "sha256": "f94d4d38d38d7662fa23b19beaeaa1925cbce37afea19289291fe667ae6f9b7f"
+  },
+  {
+    "path": "src/compat/LodCtrlRuntimeCompat.cpp",
+    "sha256": "c88ae20ac9a6a9266ca247a89bb3191a2ab92b6fe3d8168a15c6225abaa7a4d6"
+  },
+  {
+    "path": "src/compat/NPCActorRuntimeCompat.cpp",
+    "sha256": "10547d1be2c4a7bb4cc432fa874b09d8935d21a74ff7ee3fef10a8f2e383d7bc"
+  },
+  {
+    "path": "src/compat/Nw4rLayoutRecordsCompat.cpp",
+    "sha256": "4e865c18dc0ac789c8d9da735c42a49b33216d957bcf401e17c9a71098e77472"
+  },
+  {
+    "path": "src/compat/Nw4rLinkListCompat.cpp",
+    "sha256": "c2576368f9c703eab1b4381e45b6be964d8e572f06600f61b11127dc5b2a3beb"
+  },
+  {
+    "path": "src/compat/OriginalActorModelAccess.cpp",
+    "sha256": "a51be2da67504de7ab658d92c4a940165b8c31ff8d0a74c366986a94e72b947d"
+  },
+  {
+    "path": "src/compat/OriginalImageEffectOwnerQuery.cpp",
+    "sha256": null
+  },
+  {
+    "path": "src/compat/OriginalImageEffectUtil.cpp",
+    "sha256": "fd9504519e1e6a241eb3d52f39b7b8ab54a62de9057ae71a8bfe18e9ca52c1b2"
+  },
+  {
+    "path": "src/compat/OriginalLayoutPaneQueries.cpp",
+    "sha256": "e76bf17585afa0c1eb4ebcb88fe4d259168769489568c9d84582531da9a2e0ab"
+  },
+  {
+    "path": "src/compat/OriginalMessageLineQueries.cpp",
+    "sha256": "efc021e233facdc42efd9aa876bd8652a977143e054c53d75d418cd6993255fb"
+  },
+  {
+    "path": "src/compat/SceneObjHolderCompat.cpp",
+    "sha256": "39fba226cc7dedcfab3ce0c9b3aadb2b6cb8c35df33b49a1d65975ffaa86531c"
+  },
+  {
+    "path": "src/compat/ShadowControllerOwnership.cpp",
+    "sha256": "d8bf4a6245e27992444896818548273327600005b6370bb277dfb53313139122"
+  },
+  {
+    "path": "src/compat/ShadowControllerOwnership.hpp",
+    "sha256": "adbd4f66d74806d178bdb8c67af74cebcf82cfcc40067a268190db3bbfd55416"
+  },
+  {
+    "path": "src/layout/BrlytLayout.cpp",
+    "sha256": "06e5d1dac9014186a229099a12fba2d871f11f9f9467d8d33fd900c4bd4163e5"
+  },
+  {
+    "path": "src/layout/BrlytLayout.hpp",
+    "sha256": "0233bbf5bf3bfc9295a6d05cdbd0ffb47d2af0e0abe3bf1b6f5ab1e74880e016"
+  },
+  {
+    "path": "src/layout/LayoutManagerCompat.cpp",
+    "sha256": "81ba3b28f911ae7651cc3b389308e9f23c8a3167c8dc2befc7322abe083549c2"
+  },
+  {
+    "path": "src/layout/LayoutRuntime.cpp",
+    "sha256": "33c1745ddccdaea307430225b0fb5b16e52f931256bd1bd932fe0fdbee1968db"
+  },
+  {
+    "path": "src/layout/LayoutRuntime.hpp",
+    "sha256": "b5dbd219d96816b265210966cc7f732836fd4f314406262b3d0440a57b3905a0"
+  },
+  {
+    "path": "src/layout/Nw4rLayoutRecords.cpp",
+    "sha256": "d9d2103fac66ef6abd3a3fe0d2a3118d90a5133efa0dff195977ac9ac226a232"
+  },
+  {
+    "path": "src/layout/Nw4rLayoutRecords.hpp",
+    "sha256": "05b86ee54648c80fbde48dd2dd21c3e6273320a172ccff1fcfd97119ef68154b"
+  },
+  {
+    "path": "src/nw4r/lyt/animation.h",
+    "sha256": "cdc9aa5288791b0bd8cb4e7fae1307e0f6aea5f2501d43079f781e47b6262c05"
+  },
+  {
+    "path": "src/nw4r/lyt/group.h",
+    "sha256": "22eb111b88ccc3ce7e8b12b2837964bd13e5d19a1c654215542e2dda095c3a18"
+  },
+  {
+    "path": "src/nw4r/lyt/pane.h",
+    "sha256": "4a12d55a42bb50d45b4dc715eb38f1a2b78f7935c7a83a17d87c78289b4df38e"
+  },
+  {
+    "path": "src/nw4r/lyt/resources.h",
+    "sha256": "4ae8960ca75cf719892d9fab85389ebfcaba98299c2c620532094822aad6d8bf"
+  },
+  {
+    "path": "src/nw4r/lyt/types.h",
+    "sha256": "a8cc3846b8bf7c9378e57252f215df18c58f82793e6381f3f3917de7c3b70a45"
+  },
+  {
+    "path": "src/nw4r/misc.h",
+    "sha256": "15063f66203357f6a7c1a96cee1b7fe9573802bf3a20bda801430465dc7584e6"
+  },
+  {
+    "path": "src/nw4r/ut/Color.h",
+    "sha256": "6ef646f057449e5eff64316cc317ad59c6c03b7d7ede4f5c751ae9042f0be10e"
+  },
+  {
+    "path": "src/nw4r/ut/LinkList.h",
+    "sha256": "818ba3025a666f6b74e53aced95bc4fbc1727b14963f2cf899e587c8612bb47b"
+  },
+  {
+    "path": "src/nw4r/ut/RuntimeTypeInfo.h",
+    "sha256": "51e9f7ebf09fe3cd2f5e3415b1c580bf49e2dbeae1d6812ae4a3f9a2fbbe5095"
+  },
+  {
+    "path": "src/nw4r/ut/inlines.h",
+    "sha256": "a74c922c09c84f813fb43af0d1f4affb3f8670f83303caf99ec2713677692a47"
+  },
+  {
+    "path": "src/runtime/ParityTrace.cpp",
+    "sha256": "37d596dd147170f8868c70b000ae040de660f93552f3847bcf755f6d5e6cea7b"
+  },
+  {
+    "path": "src/runtime/RuntimeContext.cpp",
+    "sha256": "a4c86102f3877e1f6d752eabfd8ba9e7b0bfb4b7175332b486f8831aaaf32a68"
+  },
+  {
+    "path": "src/runtime/RuntimeContext.hpp",
+    "sha256": "818b08e5e082d5c9ca315e1a30363f4170b9cdbf59d65c043940ad54e4f06d76"
+  },
+  {
+    "path": "src/runtime/RuntimeServices.cpp",
+    "sha256": "f9cff5328a5b46a187cdd6e141c3bfef3bf0f9935ab399b78812dc5734b88461"
+  },
+  {
+    "path": "src/runtime/RuntimeServices.hpp",
+    "sha256": "1c1ee993d7c89a1121de8592ce1f59ac99099c9de9033e46d9c650ccfb4e7e4b"
+  },
+  {
+    "path": "src/runtime/jut/JutTexture.cpp",
+    "sha256": "e99ee24eb1cb0d38bbf85ca947d040f21927cc4577eebcd3dff564d835206baa"
+  },
+  {
+    "path": "src/scene/AreaObjRuntime.cpp",
+    "sha256": "a41ca7924b7f0ae6cb073220540f099e275b7912d804880b3ab0edde077ff9f3"
+  },
+  {
+    "path": "src/scene/SceneObjHolderRuntime.hpp",
+    "sha256": "d2a1f1154d25ba92f890ffde7e6e5943005272b6f72a37a7fd7a8dfec5d66f26"
+  },
+  {
+    "path": "tests/ActorShadowCsvRealOrAbsentTests.cpp",
+    "sha256": null
+  },
+  {
+    "path": "tests/JutTextureOwnershipTests.cpp",
+    "sha256": "b9828fbd6d54e99b80f81f623053bf227f190e50332662e9ce9f6b5ea1316fc0"
+  },
+  {
+    "path": "tests/LineCollisionQueryTests.cpp",
+    "sha256": "3d4fe22c099021ab7aeb0fa1cbeb101e5077072a77cde467c69504d423b085ce"
+  },
+  {
+    "path": "tests/OriginalCollisionPartsOwnerTests.cpp",
+    "sha256": "6da2e0453b30a483c6bcdc13e4aa0696ff8bf22d09f681646f557517fbc1bf4d"
+  },
+  {
+    "path": "tests/OriginalImageEffectOwnershipTests.cpp",
+    "sha256": "34048da263b9093759f596130d7f85733f193cd7ec55a7a854e2947c931747fb"
+  },
+  {
+    "path": "tests/OriginalLayoutGroupTests.cpp",
+    "sha256": "b6bfb1a933c824868804f9f45a82498ed481d9b9a144d631c01448966634662e"
+  },
+  {
+    "path": "tests/OriginalShadowControllerOwnerTests.cpp",
+    "sha256": "2a4b409c5c2bf95c9dd79ee7b5a3e03a03b08d8e5d68d94638dc347fe2d77a8d"
+  },
+  {
+    "path": "tests/OriginalStarPointerOwnerTests.cpp",
+    "sha256": "12fa33dbf0e7ac1412eb4b93b7712099f66714636cef5ecd5cc6be9fb449b605"
+  },
+  {
+    "path": "tests/xmake.lua",
+    "sha256": "b5d918c74d37b64ad497c58b9644295db5d96b41015dceb7e001392e2796dea3"
+  }
+]

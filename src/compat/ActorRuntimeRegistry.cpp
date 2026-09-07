@@ -20,6 +20,7 @@
 #include "compat/ModelManagerOwner.hpp"
 #include "compat/ResourceHolderCompat.hpp"
 #include "compat/JkrAllocationDomain.hpp"
+#include "compat/ShadowControllerOwnership.hpp"
 #include "Game/LiveActor/ActorAnimKeeper.hpp"
 #include "Game/LiveActor/ActorPadAndCameraCtrl.hpp"
 #include "Game/LiveActor/ModelManager.hpp"
@@ -68,6 +69,7 @@ namespace {
         smgpc::compat::ActorBinderContactState binder_contacts{};
         std::optional<smgpc::compat::ActorClippingRuntimeState> clipping{};
         std::optional<smgpc::compat::ActorShadowRuntimeState> shadow{};
+        std::unique_ptr<smgpc::compat::ShadowControllerOwnership> shadow_owner{};
         std::unique_ptr<Spine> spine{};
         std::unique_ptr<RailRider> rail_rider{};
         std::unique_ptr<StageSwitchCtrl> stage_switch{};
@@ -146,6 +148,7 @@ namespace {
     }
 
     void invalidate_shadow_joint_matrix_bindings(LiveActorRuntimeState& state) noexcept {
+        if (state.shadow_owner) state.shadow_owner->invalidate_joint_matrices();
         if (!state.shadow.has_value()) {
             return;
         }
@@ -723,13 +726,11 @@ namespace smgpc::compat {
     }
 
     void initialize_actor_shadow_controller_list(LiveActor* actor, std::uint32_t capacity) {
+        JkrHostAllocationScope host;
         if (actor == nullptr) {
             aurora::throw_host_exception<std::invalid_argument>("Actor shadow ownership requires a LiveActor.");
         }
         auto shadow = ActorShadowRuntimeState{
-            .valid = false,
-            .calculation_enabled = false,
-            .private_gravity = false,
             .capacity = capacity,
             .controllers = {},
         };
@@ -739,6 +740,7 @@ namespace smgpc::compat {
 
     ActorShadowControllerRuntimeState make_actor_shadow_controller_runtime_state(
         LiveActor* actor, std::string_view name, ActorShadowControllerKind kind, float radius) {
+        JkrHostAllocationScope host;
         if (actor == nullptr) {
             aurora::throw_host_exception<std::invalid_argument>("Actor shadow ownership requires a LiveActor.");
         }
@@ -784,6 +786,7 @@ namespace smgpc::compat {
     }
 
     void replace_actor_shadow_runtime_state(LiveActor* actor, ActorShadowRuntimeState state) {
+        JkrHostAllocationScope host;
         if (actor == nullptr) {
             aurora::throw_host_exception<std::invalid_argument>("Actor shadow ownership requires a LiveActor.");
         }
@@ -800,11 +803,17 @@ namespace smgpc::compat {
             }
         }
         state.controllers.reserve(state.capacity);
-        require_actor_state(actor).shadow = std::move(state);
+        auto owner = std::make_unique<ShadowControllerOwnership>(*actor, state);
+        auto& actor_state = require_actor_state(actor);
+        actor_state.shadow_owner.reset();
+        actor_state.shadow = std::move(state);
+        actor_state.shadow_owner = std::move(owner);
+        actor_state.shadow_owner->publish();
     }
 
     ActorShadowControllerRuntimeState& add_actor_shadow_controller(
         LiveActor* actor, std::string_view name, ActorShadowControllerKind kind, float radius) {
+        JkrHostAllocationScope host;
         if (actor == nullptr) {
             aurora::throw_host_exception<std::invalid_argument>("Actor shadow ownership requires a LiveActor.");
         }
@@ -815,9 +824,13 @@ namespace smgpc::compat {
         if (shadow->controllers.size() >= shadow->capacity) {
             aurora::throw_host_exception<std::length_error>("Actor shadow controller list has reached its retail capacity.");
         }
-        shadow->controllers.push_back(make_actor_shadow_controller_runtime_state(actor, name, kind, radius));
-        shadow->valid = true;
-        shadow->calculation_enabled = true;
+        auto definition = make_actor_shadow_controller_runtime_state(actor, name, kind, radius);
+        auto& actor_state = require_actor_state(actor);
+        if (!actor_state.shadow_owner) {
+            aurora::throw_host_exception<std::logic_error>("Adding a shadow requires its original controller list owner");
+        }
+        actor_state.shadow_owner->add(definition);
+        shadow->controllers.push_back(std::move(definition));
         return shadow->controllers.back();
     }
 
@@ -860,11 +873,9 @@ namespace smgpc::compat {
         if (actor == nullptr) {
             return nullptr;
         }
-        auto& shadow = require_actor_state(actor).shadow;
-        if (!shadow.has_value()) {
-            shadow.emplace();
-        }
-        return &*shadow;
+        const auto found = actor_states().find(actor);
+        if (found == actor_states().end() || !found->second.shadow) return nullptr;
+        return &*found->second.shadow;
     }
 
     const ActorShadowRuntimeState* actor_shadow_runtime_state(const LiveActor* actor) {

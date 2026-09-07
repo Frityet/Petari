@@ -32,7 +32,11 @@ namespace nw4r::ut {
 
 namespace smgpc::layout {
 
+class Nw4rLayoutRecords;
+
 class LayoutRuntime {
+    friend class Nw4rLayoutRecords;
+    void paneLocalMatrix(std::size_t pane_index, MtxPtr matrix) const;
 public:
     struct PaneBounds {
         f32 left = 0.0F;

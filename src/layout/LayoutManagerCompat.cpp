@@ -19,6 +19,10 @@
 #include "Game/Screen/LayoutActor.hpp"
 #include "Game/Screen/LayoutManager.hpp"
 #include "Game/Screen/LayoutPaneCtrl.hpp"
+#include "Game/Screen/LayoutGroupCtrl.hpp"
+#include "Game/Animation/LayoutAnmPlayer.hpp"
+#include "layout/Nw4rLayoutRecords.hpp"
+#include <nw4r/lyt/group.h>
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Util/LayoutUtil.hpp"
 #include "layout/LayoutRuntime.hpp"
@@ -40,6 +44,15 @@ struct PaneMatrixReference {
     bool valid = false;
 };
 
+struct GroupControlDeleter {
+    void operator()(LayoutGroupCtrl* group) const {
+        if (!group) return;
+        for (u32 i = 0; i < group->mAnmPlayerArray.size(); ++i) delete group->mAnmPlayerArray[i];
+        delete group;
+    }
+};
+using GroupControlOwner = std::unique_ptr<LayoutGroupCtrl, GroupControlDeleter>;
+
 struct ManagerState {
     std::string layout_name;
     bool convert_filename = true;
@@ -47,6 +60,10 @@ struct ManagerState {
     u32 text_box_buffer_length = 0U;
     LayoutActor* actor = nullptr;
     std::unique_ptr< smgpc::layout::LayoutRuntime > runtime;
+    std::unique_ptr<smgpc::layout::Nw4rLayoutRecords> records;
+    std::vector<GroupControlOwner> group_controls;
+    std::vector<LayoutGroupCtrl*> group_slots;
+    std::vector<std::vector<LayoutGroupCtrl*>> pane_groups;
     std::vector< std::unique_ptr< LayoutPaneCtrl > > pane_controls;
     std::vector< ButtonPaneController* > button_controllers;
     std::vector< PaneMatrixReference > pane_matrix_references;
@@ -105,6 +122,12 @@ std::unordered_map< const LayoutPaneCtrl*, PaneControlState > sPaneControlStates
         aurora::throw_host_exception<std::logic_error>(std::string(operation) + " requires an initialized retail layout resource");
     }
     return *state.runtime;
+}
+
+[[nodiscard]] smgpc::layout::Nw4rLayoutRecords& require_records(const LayoutManager* manager, std::string_view operation) {
+    auto& state = require_manager_state(manager, operation);
+    if (!state.records) aurora::throw_host_exception<std::logic_error>(std::string(operation) + " requires an initialized BRLYT pane/group owner");
+    return *state.records;
 }
 
 [[nodiscard]] u32 require_actor_layer(const ManagerState& manager, u32 layer, std::string_view operation) {
@@ -173,6 +196,9 @@ void bind_actor_manager(LayoutActor* actor, LayoutManager* manager) {
     manager_state.runtime->initWithoutIter();
     manager_state.runtime->kill();
     manager_state.runtime->setTrans(actor_state.translation.x, actor_state.translation.y);
+    manager_state.records = std::make_unique<smgpc::layout::Nw4rLayoutRecords>(*manager_state.runtime);
+    manager_state.group_slots.resize(manager_state.records->group_count());
+    manager_state.pane_groups.resize(manager_state.records->pane_count());
     manager->createAndAddRootPaneCtrl(manager_state.animation_layer_count);
 }
 
@@ -405,6 +431,7 @@ void LayoutManager::movement() {
     for (auto& control : state.pane_controls) {
         control->movement();
     }
+    for (auto* group : state.group_slots) if (group) group->movement();
     if (state.actor == nullptr || state.runtime == nullptr) {
         aurora::throw_host_exception<std::logic_error>("Moving a layout manager requires its initialized layout actor host");
     }
@@ -432,9 +459,8 @@ void LayoutManager::movement() {
 
 void LayoutManager::calcAnim() {
     auto& state = require_manager_state(this, "Calculating a layout manager");
-    for (auto& control : state.pane_controls) {
-        control->calcAnim();
-    }
+    u32 index = 0;
+    animateRecursive(index, state.records->pane(nullptr));
     auto& runtime = require_runtime(this, "Reflecting pane follow positions");
     runtime.clearPaneFollowPositions();
     for (auto& control : state.pane_controls) {
@@ -449,6 +475,7 @@ void LayoutManager::draw() const {
         aurora::throw_host_exception<std::logic_error>("Drawing a layout manager requires its initialized layout actor host");
     }
     if (!state.actor->mFlag.mIsDead && !state.actor->mFlag.mIsHidden) {
+        state.records->synchronize();
         state.runtime->draw();
     }
 }
@@ -490,29 +517,54 @@ LayoutPaneCtrl* LayoutManager::getPaneCtrl(const char* name) const {
 }
 
 s32 LayoutManager::getIndexOfPane(const char* name) const {
-    auto& runtime = require_runtime(this, "Finding a layout pane");
-    const auto index = runtime.paneIndex(pane_name(name));
-    return index.has_value() ? static_cast< s32 >(*index) : -1;
+    auto& records = require_records(this, "Finding a layout pane");
+    auto* pane = records.pane(name);
+    return pane ? static_cast<s32>(records.pane_index(pane)) : -1;
 }
 
 bool LayoutManager::isExistPaneCtrl(const char* name) const {
     return getPaneCtrl(name) != nullptr;
 }
 
-void LayoutManager::addGroupCtrl(LayoutGroupCtrl*) {
-    throw_retail_nw4r_unavailable("Adding a LayoutGroupCtrl");
+void LayoutManager::addGroupCtrl(LayoutGroupCtrl* group) {
+    const aurora::allocation::HostAllocationScope host;
+    auto& state = require_manager_state(this, "Adding a layout group control");
+    if (!group || group->mHost != this || !group->mGroup)
+        aurora::throw_host_exception<std::invalid_argument>("A layout group control requires its actual owning layout and group");
+    const auto slot = state.records->group_index(group->mGroup->GetName());
+    if (slot >= state.group_slots.size() || state.records->group(group->mGroup->GetName()) != group->mGroup)
+        aurora::throw_host_exception<std::invalid_argument>("A layout group control belongs to a different group resource");
+    if (std::ranges::any_of(state.group_controls, [group](const auto& owner) { return owner.get() == group; }))
+        aurora::throw_host_exception<std::logic_error>("A layout group control is already owned");
+    // Reserve all host storage before adopting the Game object. Repeated group
+    // registrations replace only the movement slot and prepend each pane link.
+    state.group_controls.reserve(state.group_controls.size() + 1);
+    for (u32 i = 0; i < group->getPaneNum(); ++i) {
+        auto& links = state.pane_groups.at(state.records->pane_index(group->getPane(i)));
+        links.reserve(links.size() + group->getPaneNum());
+    }
+    state.group_controls.emplace_back(group);
+    state.group_slots[slot] = group;
+    for (u32 i = 0; i < group->getPaneNum(); ++i) {
+        auto& links = state.pane_groups.at(state.records->pane_index(group->getPane(i)));
+        links.insert(links.begin(), group);
+    }
 }
 
 bool LayoutManager::isPointing(const nw4r::lyt::Pane*, const TVec2f&) const {
     throw_retail_nw4r_unavailable("Testing an NW4R pane pointer");
 }
 
-LayoutPaneCtrl* LayoutManager::createAndAddGroupCtrl(const char*, u32) {
-    throw_retail_nw4r_unavailable("Creating a LayoutGroupCtrl");
+LayoutGroupCtrl* LayoutManager::createAndAddGroupCtrl(const char* name, u32 layers) {
+    if (!getGroup(name))
+        aurora::throw_host_exception<std::runtime_error>("Creating a layout group control requires an existing resource group");
+    GroupControlOwner owner(new LayoutGroupCtrl(this, name, layers));
+    addGroupCtrl(owner.get());
+    return owner.release();
 }
 
-s32 LayoutManager::getIndexOfGroupCtrl(const char*) const {
-    throw_retail_nw4r_unavailable("Finding a LayoutGroupCtrl");
+s32 LayoutManager::getIndexOfGroupCtrl(const char* name) const {
+    return require_records(this, "Finding a layout group control").group_index(name);
 }
 
 void LayoutManager::createPaneMtxRef(const char* name) {
@@ -571,8 +623,8 @@ void LayoutManager::calcAnimWithoutLocationAdjust(const nw4r::lyt::DrawInfo&) {
     throw_retail_nw4r_unavailable("Calculating with an external NW4R DrawInfo");
 }
 
-nw4r::lyt::Group* LayoutManager::getGroup(const char*) const {
-    throw_retail_nw4r_unavailable("Exposing an NW4R layout group");
+nw4r::lyt::Group* LayoutManager::getGroup(const char* name) const {
+    return require_records(this, "Finding an NW4R group").group(name);
 }
 
 void LayoutManager::initArc(const char*, const char*) {
@@ -603,16 +655,23 @@ void LayoutManager::initTextBoxRecursive(nw4r::lyt::Pane*, nw4r::lyt::Pane*, con
     throw_retail_nw4r_unavailable("Initializing NW4R text boxes");
 }
 
-void LayoutManager::animateRecursive(u32&, nw4r::lyt::Pane*) {
-    throw_retail_nw4r_unavailable("Animating an NW4R pane subtree");
+void LayoutManager::animateRecursive(u32& index, nw4r::lyt::Pane* pane) {
+    auto& state = require_manager_state(this, "Animating an NW4R pane subtree");
+    const auto pane_index = state.records->pane_index(pane);
+    for (auto& control : state.pane_controls) if (control->mPane == pane) control->calcAnim();
+    for (auto* group : state.pane_groups.at(pane_index)) group->calcAnim();
+    pane->AnimateSelf(1);
+    ++index;
+    auto& children = pane->mChildList;
+    for (auto iter = children.GetBeginIter(); iter != children.GetEndIter(); ++iter) animateRecursive(index, &*iter);
 }
 
-nw4r::lyt::Pane* LayoutManager::getPane(const char*) const {
-    throw_retail_nw4r_unavailable("Exposing an NW4R Pane");
+nw4r::lyt::Pane* LayoutManager::getPane(const char* name) const {
+    return require_records(this, "Finding an NW4R pane").pane(name);
 }
 
-nw4r::lyt::Pane* LayoutManager::findPaneByName(const char*) const {
-    throw_retail_nw4r_unavailable("Exposing an NW4R Pane");
+nw4r::lyt::Pane* LayoutManager::findPaneByName(const char* name) const {
+    return getPane(name);
 }
 
 void LayoutManager::replaceIndDummyTexture() {
@@ -637,6 +696,8 @@ LayoutPaneCtrl::LayoutPaneCtrl(LayoutManager* host, const char* name, u32 layer_
     if (!runtime.hasPane(requested_name)) {
         aurora::throw_host_exception<std::runtime_error>("A pane control requires a real layout pane: " + requested_name);
     }
+    mPane = host->getPane(name);
+    mPaneIndex = host->getIndexOfPane(name);
     for (auto layer = u32{}; layer < layer_count; ++layer) {
         mAnmPlayerArray[layer] = nullptr;
     }
@@ -991,6 +1052,7 @@ void unregister_button_controller(LayoutManager* manager, ButtonPaneController* 
 
 void refresh_pane_matrices(LayoutManager* manager) {
     auto& state = require_manager_state(manager, "Refreshing pane matrices");
+    if (state.records) state.records->synchronize();
     for (auto& reference : state.pane_matrix_references) {
         refresh_pane_matrix(state, reference);
         if (!reference.valid) {
@@ -1056,3 +1118,9 @@ std::vector< ButtonControllerDebugState > debug_button_controllers(const LayoutM
 #endif
 
 }  // namespace smgpc::layout
+
+namespace MR {
+u32 getTextLineNumMaxRecursive(const LayoutActor* actor, const char* name) {
+    return require_records(actor->mLayoutManager, "Counting text lines in a pane subtree").text_line_count(name);
+}
+} // namespace MR

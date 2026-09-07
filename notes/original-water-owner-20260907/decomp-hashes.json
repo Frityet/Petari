@@ -1,0 +1,8 @@
+{
+  "src/Game/Screen/BloomEffect.cpp": "08a88bd64fd3a122e921a41c0103897ac3182a78ffc92fadf60e3e6a1f6cfd6e",
+  "src/Game/Screen/ImageEffectLocalUtil.cpp": "8e334a351db52c1f1057d5f7210704fb117ae146c5db8dc4cefbf1b51a3add63",
+  "src/Game/Screen/ImageEffectState.cpp": "0a475bfe3f0eb8a34312966acededa5a90bd26995b8b50a8a3b7f5e08bf63b33",
+  "include/Game/Screen/ImageEffectState.hpp": "40919bb3f68001f74899afbd0e06c280eb05384f28903d8f6be875e7a340becc",
+  "src/Game/AreaObj/ImageEffectArea.cpp": "7329566cae97da7a5a0e98b2d860493e0588bf00ca4988b57b9ac0514f2ab049",
+  "src/Game/Util/MapUtil.cpp": "a6237a62f68a02c860ec76838d7ee7ea69551c5277b526679480a64f9b1880eb"
+}

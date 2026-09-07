@@ -3593,14 +3593,12 @@ smgpc::layout::LayoutRuntime::PaneRenderState smgpc::layout::LayoutRuntime::pane
         local_scale_y *= adjust[1U];
     }
 
-    constexpr auto kDegToRad = 3.14159265358979323846F / 180.0F;
-    const auto rotation = local_rotate_z * kDegToRad;
-    const auto cos_r = std::cos(rotation);
-    const auto sin_r = std::sin(rotation);
-    const auto local_m00 = cos_r * local_scale_x;
-    const auto local_m01 = -sin_r * local_scale_y;
-    const auto local_m10 = sin_r * local_scale_x;
-    const auto local_m11 = cos_r * local_scale_y;
+    Mtx local_matrix;
+    paneLocalMatrix(pane_index, local_matrix);
+    const auto local_m00 = local_matrix[0][0];
+    const auto local_m01 = local_matrix[0][1];
+    const auto local_m10 = local_matrix[1][0];
+    const auto local_m11 = local_matrix[1][1];
 
     const auto apply_follow = [&](PaneRenderState result) {
         const auto it = mPaneFollowPositions.find(pane_index);
@@ -3880,4 +3878,25 @@ bool smgpc::layout::LayoutRuntime::isLoopingAnim(const char* pAnimName) const {
     }
 
     aurora::throw_host_exception<std::runtime_error>("Layout " + mLayoutName + " has no BRLAN " + std::string(pAnimName));
+}
+
+void smgpc::layout::LayoutRuntime::paneLocalMatrix(std::size_t index, MtxPtr matrix) const {
+    const auto& pane = mBrlytLayout.panes.at(index);
+    if (pane.rotate_x != 0.0F || pane.rotate_y != 0.0F || pane.translate_z != 0.0F)
+        aurora::throw_host_exception<std::logic_error>("NW4R 3D pane transforms require the 3D layout renderer");
+    const auto frame = animationFrameForPane(pane.name);
+    auto scale_x = frame.scale_x.value_or(pane.scale_x);
+    auto scale_y = frame.scale_y.value_or(pane.scale_y);
+    if (pane.location_adjust) {
+        const auto adjust = layout_location_adjust_scale();
+        scale_x *= adjust[0]; scale_y *= adjust[1];
+    }
+    constexpr auto radians = 3.14159265358979323846F / 180.0F;
+    const auto angle = frame.rotate_z.value_or(pane.rotate_z) * radians;
+    const auto c = std::cos(angle), s = std::sin(angle);
+    PSMTXIdentity(matrix);
+    matrix[0][0] = c * scale_x; matrix[0][1] = -s * scale_y;
+    matrix[1][0] = s * scale_x; matrix[1][1] = c * scale_y;
+    matrix[0][3] = frame.translate_x.value_or(pane.translate_x);
+    matrix[1][3] = frame.translate_y.value_or(pane.translate_y);
 }

@@ -1,4 +1,5 @@
 #include "compat/JutTextureAllocation.hpp"
+#include "compat/JutTextureConstruction.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include "resource/Mem1ResourceHeap.hpp"
@@ -45,6 +46,94 @@ int main() {
         require(retained->mTIMG->mFormat==GX_TF_RGB565 && retained->mTIMG->mMinType==GX_LINEAR);
         const auto allocated=heap->available_bytes();
         retained_capacity=allocated;
+        {
+            using namespace smgpc::compat;
+            // The same transaction may construct objects in distinct original
+            // heaps, while their image bytes use the separate mapped MEM1 heap.
+            auto game = JkrAllocationDomain::create(jkr, 128U * 1024U);
+            auto resource = JkrAllocationDomain::create(jkr, 128U * 1024U);
+            JutTextureOwnership independently_adopted;
+            JUTTexture* published = nullptr;
+            std::size_t published_capacity = 0;
+            {
+                JutTextureConstructionScope outer;
+                {
+                    JkrAllocationScope scope(game);
+                    new JUTTexture(16, 16, GX_TF_RGB565);
+                    new JUTTexture(retained->mTIMG, 0);
+                }
+                {
+                    JutTextureConstructionScope inner;
+                    JkrAllocationScope scope(resource);
+                    published = new JUTTexture(8, 8, GX_TF_I8);
+                    independently_adopted.adopt_all(inner);
+                }
+                // Simulate a published shared resource from the outer call.
+                JUTTexture* shared = nullptr;
+                {
+                    JkrAllocationScope scope(resource);
+                    shared = new JUTTexture(8, 8, GX_TF_RGB565);
+                }
+                independently_adopted.adopt(outer, shared);
+                published_capacity = heap->available_bytes();
+            }
+            require(heap->available_bytes() > published_capacity);
+            require(published->mTIMG->mFormat == GX_TF_I8);
+            require(get_owned_jut_texture(published->mTIMG) == published);
+            independently_adopted.clear();
+            require(heap->available_bytes() == allocated);
+
+            {
+                JutTextureConstructionScope outer;
+                std::unique_ptr<JUTTexture> independent;
+                {
+                    JutTextureConstructionScope unrelated(false);
+                    independent = std::make_unique<JUTTexture>(8, 8, GX_TF_I8);
+                }
+                const auto capacity = heap->available_bytes();
+                {
+                    JutTextureConstructionScope failed;
+                    new JUTTexture(16, 16, GX_TF_RGB565);
+                }
+                require(heap->available_bytes() == capacity);
+                require(independent->mTIMG->mFormat == GX_TF_I8);
+            }
+            require(heap->available_bytes() == allocated);
+
+            game->heap().freeAll();
+            JutTextureOwnership heap_retired_first;
+            JUTTexture* previous_address = nullptr;
+            {
+                JutTextureConstructionScope construction;
+                JkrAllocationScope scope(game);
+                previous_address = new JUTTexture(16, 16, GX_TF_RGB565);
+                heap_retired_first.adopt_all(construction);
+            }
+            game->heap().freeAll();
+            require(heap->available_bytes() == allocated);
+            {
+                JkrAllocationScope scope(game);
+                auto* reused = new JUTTexture(16, 16, GX_TF_RGB565);
+                require(reused == previous_address);
+                const auto capacity = heap->available_bytes();
+                heap_retired_first.clear();
+                require(heap->available_bytes() == capacity);
+                require(get_owned_jut_texture(reused->mTIMG) == reused);
+                delete reused;
+            }
+            require(heap->available_bytes() == allocated);
+            {
+                JutTextureConstructionScope failed;
+                JkrAllocationScope scope(resource);
+                new JUTTexture(8, 8, GX_TF_I8);
+                bool rejected = false;
+                try { new JUTTexture(2048, 2048, GX_TF_RGBA8); }
+                catch (const std::bad_alloc&) { rejected = true; }
+                require(rejected);
+            }
+            require(heap->available_bytes() == allocated);
+            std::cout << "JUTTexture: explicit cross-heap rollback, nested adoption, partial shared adoption, disabled capture, retired-object identity and failed construction pass\n";
+        }
         {
             using namespace smgpc::compat;
             auto domain=JkrAllocationDomain::create(jkr,256U*1024U);

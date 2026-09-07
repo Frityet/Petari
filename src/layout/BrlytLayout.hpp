@@ -13,11 +13,15 @@
 namespace smgpc::layout {
 
     struct BrlytPane {
+        std::array<char, 4> resource_kind{'p', 'a', 'n', '1'};
         std::string name;
         std::string user_data;
         std::int32_t parent_index = -1;
         float translate_x = 0.0F;
         float translate_y = 0.0F;
+        float translate_z = 0.0F;
+        float rotate_x = 0.0F;
+        float rotate_y = 0.0F;
         float rotate_z = 0.0F;
         float scale_x = 1.0F;
         float scale_y = 1.0F;

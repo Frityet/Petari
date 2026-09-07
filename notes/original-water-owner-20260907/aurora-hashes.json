@@ -1,0 +1,6 @@
+{
+  "include/dolphin/gx/GXTransform.h": "d4881bad7abfa4573535bd3f059375a70caa1f1d0412e8c36ed8522bd2c90a3c",
+  "lib/dolphin/gx/GXTransform.cpp": "cd8af7e87210b5610f6dc151ffd38ee6410859f26bed98c3a685daae2e99e560",
+  "lib/gx/regs.cpp": "969587b67e2641358c30ed65b1d249b9b474f51f36a9b89220e7b73ba0796712",
+  "tests/gx_fifo_test.cpp": "056174ecba305112c3a704d8860a943c741d65e82ec3f0aeb81b3df75a1a7981"
+}

@@ -9,6 +9,11 @@
 #include "compat/HitInfoCompat.hpp"
 #include "resource/KCollisionResource.hpp"
 #include "scene/StageCollisionService.hpp"
+#include "scene/SceneObjHolderRuntime.hpp"
+#include "compat/CollisionDirectorOwnership.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
+#include "Game/Util/CollisionPartsFilter.hpp"
+#include "runtime/SceneScheduler.hpp"
 
 #include <algorithm>
 #include <array>
@@ -314,9 +319,79 @@ namespace {
         }
         require(MR::getSortedPoly(0)->isValid() && retained.line_hits(start,offset).size()==4,"Query metadata must survive retired calling arena");
     }
+    void water_surface_category_nearest_and_filter_order() {
+        bool absent = false;
+        try { (void)MR::getFirstPolyOnLineToWaterSurface(nullptr, nullptr, TVec3f(1,1,5), TVec3f(0,0,-10)); }
+        catch (const std::logic_error&) { absent = true; }
+        require(absent, "Water queries must reject absent scene category ownership");
+
+        smgpc::runtime::SceneScheduler scheduler;
+        smgpc::runtime::SceneSchedulerBinding scheduler_binding(scheduler);
+        SceneObjHolder holder;
+        smgpc::scene::SceneObjHolderBinding binding(holder);
+        holder.create(SceneObj_CollisionDirector);
+        auto& water = smgpc::scene::current_collision_director_ownership()->category_service(2);
+        Collision map;
+        auto map_matrix=identity; map_matrix[11]=4;
+        require(map.add_kcl(kcl({1}), map_matrix, "ordinary map"), "Map control registration failed");
+        map.activate();
+        auto far=identity; far[11]=-2;
+        auto near=identity; near[11]=2;
+        require(water.add_kcl(kcl({1}),far,"far water"),"Far water registration failed");
+        require(water.add_kcl(kcl({3,1}),near,"near water"),"Near water registration failed");
+        const TVec3f start(1,1,5), offset(0,0,-10);
+        TVec3f position(7,8,9); Triangle triangle;
+        require(MR::getFirstPolyOnLineToWaterSurface(&position,&triangle,start,offset) && position.z==2.0F,
+                "Water surface query must select category2 nearest hit independently of map category0");
+        require(water.surface(triangle.mIdx)->prism_index==2,
+                "Equal-distance water hits must retain the first original leaf encounter");
+        require(MR::getFirstPolyOnLineToWaterSurface(nullptr,nullptr,start,offset),
+                "Both water outputs remain independently optional");
+        require(!MR::getFirstPolyOnLineToWaterSurface(&position,&triangle,start,TVec3f(0,0,10)) && position.z==2.0F,
+                "No-hit water query must preserve output storage");
+
+        water.clear();
+        auto marker_a=std::array<std::byte,8>{},marker_b=std::array<std::byte,8>{};
+        auto* sensor_a=reinterpret_cast<HitSensor*>(marker_a.data());
+        auto* sensor_b=reinterpret_cast<HitSensor*>(marker_b.data());
+        require(water.register_kcl(kcl(std::vector<unsigned>(32,1)),identity,"first32",std::make_shared<Registration>(),{},sensor_a,0).accepted,
+                "First32 water registration failed");
+        require(water.register_kcl(kcl({1}),near,"later",std::make_shared<Registration>(),{},sensor_b,0).accepted,
+                "Later water registration failed");
+        auto heap_runtime=smgpc::compat::JkrHeapRuntime::create(2U<<20);
+        auto domain=smgpc::compat::JkrAllocationDomain::create(heap_runtime,1U<<20);
+        struct Filter : TriangleFilterBase {
+            HitSensor* excluded; JKRHeap* heap; mutable unsigned calls=0;
+            Filter(HitSensor* sensor,JKRHeap* owner):excluded(sensor),heap(owner){}
+            bool isInvalidTriangle(const Triangle* candidate) const override {
+                ++calls;
+                auto* allocation=new int(4);
+                const bool client=JKRHeap::findFromRoot(allocation)==heap;
+                delete allocation;
+                require(client,"Water triangle callback must regain the original Game allocation domain");
+                return candidate->mSensor==excluded;
+            }
+        } filter(sensor_a,&domain->heap());
+        {
+            smgpc::compat::JkrAllocationScope game(domain);
+            require(!MR::getFirstPolyOnLineToWaterSurface(&position,&triangle,start,offset,nullptr,&filter) && filter.calls==32,
+                    "Triangle filtering must occur after the32-hit encounter limit, without admitting later water parts");
+            CollisionPartsFilterSensor parts_filter(sensor_a);
+            require(MR::getFirstPolyOnLineToWaterSurface(&position,&triangle,start,offset,&parts_filter,&filter) &&
+                        triangle.mSensor==sensor_b && position.z==2.0F && filter.calls==33,
+                    "Parts filtering must precede capacity and leave the real later water source available");
+        }
+        water.clear();
+        require(water.add_kcl(kcl({1}),identity,"distance bound"),"Distance-bound registration failed");
+        require(!MR::getFirstPolyOnLineToWaterSurface(nullptr,nullptr,TVec3f(1,1,1000000.0F),TVec3f(0,0,-2000000.0F)),
+                "Original water nearest selection must retain its strict one-million distance ceiling");
+        map.deactivate();
+    }
+
 }
 int main() {
     try {
+        water_surface_category_nearest_and_filter_order();
         dynamic_transform_refit_and_original_point_velocity();
         original_octree_and_boundary_contract();
         transforms_and_stable_sorted_results();

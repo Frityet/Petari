@@ -1,0 +1,38 @@
+[
+  {
+    "source": "decomp/src/Game/Map/OceanBowlPoint.cpp",
+    "symbol": "calcHeightStatic__14OceanBowlPointFffff",
+    "size": "148",
+    "match_percent": 100.0
+  },
+  {
+    "source": "decomp/src/Game/Map/WaterPoint.cpp",
+    "symbol": "calcHeight__10WaterPointCFffffff",
+    "size": "204",
+    "match_percent": 99.5098
+  },
+  {
+    "source": "decomp/src/Game/Util/RailUtil.cpp",
+    "symbol": "getCurrentRailPointArg0NoInit__2MRFPC9LiveActorPf",
+    "size": "12",
+    "match_percent": 100.0
+  },
+  {
+    "source": "decomp/src/Game/Util/RailUtil.cpp",
+    "symbol": "getNextRailPointArg0NoInit__2MRFPC9LiveActorPf",
+    "size": "12",
+    "match_percent": 100.0
+  },
+  {
+    "source": "decomp/src/Game/Util/MathUtil.cpp",
+    "symbol": "lerp__2MRFUcUcf",
+    "size": "120",
+    "match_percent": 100.0
+  },
+  {
+    "source": "decomp/src/Game/Util/MathUtil.cpp",
+    "symbol": "lerp__2MRF8_GXColor8_GXColorf",
+    "size": "168",
+    "match_percent": 100.0
+  }
+]

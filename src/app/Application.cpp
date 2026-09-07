@@ -442,7 +442,6 @@ namespace smgpc::app {
         register_runtime_service_reference<smgpc::runtime::WpadService, &smgpc::runtime::RuntimeContext::wpad>(graph);
         register_runtime_service_reference<smgpc::runtime::AudioEventService, &smgpc::runtime::RuntimeContext::audio>(graph);
         register_runtime_service_reference<smgpc::runtime::EffectService, &smgpc::runtime::RuntimeContext::effects>(graph);
-        register_runtime_service_reference<smgpc::runtime::ImageEffectService, &smgpc::runtime::RuntimeContext::image_effects>(graph);
         register_runtime_service_reference<smgpc::runtime::StarPointerService, &smgpc::runtime::RuntimeContext::star_pointer>(graph);
         register_runtime_service_reference<smgpc::runtime::CameraSystemService, &smgpc::runtime::RuntimeContext::camera_system>(graph);
         register_runtime_service_reference<smgpc::runtime::PlayerSystemService, &smgpc::runtime::RuntimeContext::player_system>(graph);

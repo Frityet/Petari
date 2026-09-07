@@ -3,6 +3,13 @@
 
 #include "Game/AreaObj/AreaForm.hpp"
 #include "Game/AreaObj/AreaObj.hpp"
+#include "Game/AreaObj/WaterArea.hpp"
+#include "Game/AreaObj/ImageEffectArea.hpp"
+#include "Game/AreaObj/BloomArea.hpp"
+#include "Game/AreaObj/SimpleBloomArea.hpp"
+#include "Game/AreaObj/ScreenBlurArea.hpp"
+#include "Game/AreaObj/DepthOfFieldArea.hpp"
+
 #include "Game/AreaObj/CameraRepulsiveArea.hpp"
 #include "Game/AreaObj/CubeCamera.hpp"
 #include "Game/AreaObj/LightArea.hpp"
@@ -42,6 +49,14 @@ namespace smgpc::scene {
 
         [[nodiscard]] AreaObjMgr *create_light_area_manager(s32 capacity, const char *name) {
             return new LightAreaHolder(capacity, name);
+        }
+
+        [[nodiscard]] AreaObjMgr *create_water_manager(s32 capacity, const char *name) {
+            return new WaterAreaMgr(capacity, name);
+        }
+
+        [[nodiscard]] AreaObjMgr *create_image_effect_manager(s32 capacity, const char *name) {
+            return new ImageEffectAreaMgr(capacity, name);
         }
 
         void finalize_cube_camera_manager(AreaObjMgr &manager) {
@@ -119,6 +134,30 @@ namespace smgpc::scene {
                     .manager_finalize = finalize_cube_camera_manager,
                 },
                 AreaObjPlacementDescriptor{
+                    .object_name = "WaterCube",
+                    .object_creator = create_area_obj<WaterArea, AreaForm::Type_Cube2>,
+                    .manager_name = "Water",
+                    .retail_manager_order = 10,
+                    .manager_capacity = 0x40,
+                    .manager_creator = create_water_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "WaterSphere",
+                    .object_creator = create_area_obj<WaterArea, AreaForm::Type_Sphere>,
+                    .manager_name = "Water",
+                    .retail_manager_order = 10,
+                    .manager_capacity = 0x40,
+                    .manager_creator = create_water_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "WaterCylinder",
+                    .object_creator = create_area_obj<WaterArea, AreaForm::Type_Cylinder>,
+                    .manager_name = "Water",
+                    .retail_manager_order = 10,
+                    .manager_capacity = 0x40,
+                    .manager_creator = create_water_manager,
+                },
+                AreaObjPlacementDescriptor{
                     .object_name = "PullBackCylinder",
                     .object_creator = create_area_obj<AreaObj, AreaForm::Type_Cylinder>,
                     .manager_name = "PullBackCylinder",
@@ -173,6 +212,102 @@ namespace smgpc::scene {
                     .retail_manager_order = 35,
                     .manager_capacity = 0x80,
                     .manager_creator = create_light_area_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "BloomCube",
+                    .object_creator = create_area_obj<BloomArea, AreaForm::Type_Cube1>,
+                    .manager_name = "ImageEffectArea",
+                    .retail_manager_order = 39,
+                    .manager_capacity = 0x20,
+                    .manager_creator = create_image_effect_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "BloomSphere",
+                    .object_creator = create_area_obj<BloomArea, AreaForm::Type_Sphere>,
+                    .manager_name = "ImageEffectArea",
+                    .retail_manager_order = 39,
+                    .manager_capacity = 0x20,
+                    .manager_creator = create_image_effect_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "BloomCylinder",
+                    .object_creator = create_area_obj<BloomArea, AreaForm::Type_Cylinder>,
+                    .manager_name = "ImageEffectArea",
+                    .retail_manager_order = 39,
+                    .manager_capacity = 0x20,
+                    .manager_creator = create_image_effect_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "SimpleBloomCube",
+                    .object_creator = create_area_obj<SimpleBloomArea, AreaForm::Type_Cube1>,
+                    .manager_name = "ImageEffectArea",
+                    .retail_manager_order = 39,
+                    .manager_capacity = 0x20,
+                    .manager_creator = create_image_effect_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "SimpleBloomSphere",
+                    .object_creator = create_area_obj<SimpleBloomArea, AreaForm::Type_Sphere>,
+                    .manager_name = "ImageEffectArea",
+                    .retail_manager_order = 39,
+                    .manager_capacity = 0x20,
+                    .manager_creator = create_image_effect_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "SimpleBloomCylinder",
+                    .object_creator = create_area_obj<SimpleBloomArea, AreaForm::Type_Cylinder>,
+                    .manager_name = "ImageEffectArea",
+                    .retail_manager_order = 39,
+                    .manager_capacity = 0x20,
+                    .manager_creator = create_image_effect_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "ScreenBlurCube",
+                    .object_creator = create_area_obj<ScreenBlurArea, AreaForm::Type_Cube1>,
+                    .manager_name = "ImageEffectArea",
+                    .retail_manager_order = 39,
+                    .manager_capacity = 0x20,
+                    .manager_creator = create_image_effect_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "ScreenBlurSphere",
+                    .object_creator = create_area_obj<ScreenBlurArea, AreaForm::Type_Sphere>,
+                    .manager_name = "ImageEffectArea",
+                    .retail_manager_order = 39,
+                    .manager_capacity = 0x20,
+                    .manager_creator = create_image_effect_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "ScreenBlurCylinder",
+                    .object_creator = create_area_obj<ScreenBlurArea, AreaForm::Type_Cylinder>,
+                    .manager_name = "ImageEffectArea",
+                    .retail_manager_order = 39,
+                    .manager_capacity = 0x20,
+                    .manager_creator = create_image_effect_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "DepthOfFieldCube",
+                    .object_creator = create_area_obj<DepthOfFieldArea, AreaForm::Type_Cube1>,
+                    .manager_name = "ImageEffectArea",
+                    .retail_manager_order = 39,
+                    .manager_capacity = 0x20,
+                    .manager_creator = create_image_effect_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "DepthOfFieldSphere",
+                    .object_creator = create_area_obj<DepthOfFieldArea, AreaForm::Type_Sphere>,
+                    .manager_name = "ImageEffectArea",
+                    .retail_manager_order = 39,
+                    .manager_capacity = 0x20,
+                    .manager_creator = create_image_effect_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "DepthOfFieldCylinder",
+                    .object_creator = create_area_obj<DepthOfFieldArea, AreaForm::Type_Cylinder>,
+                    .manager_name = "ImageEffectArea",
+                    .retail_manager_order = 39,
+                    .manager_capacity = 0x20,
+                    .manager_creator = create_image_effect_manager,
                 },
                 AreaObjPlacementDescriptor{
                     .object_name = "BlueStarGuidanceCube",

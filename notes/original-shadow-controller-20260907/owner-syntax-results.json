@@ -1,0 +1,32 @@
+[
+  {
+    "file": "src/compat/ShadowControllerOwnership.cpp",
+    "exit_code": 0,
+    "log": "notes/original-shadow-controller-20260907/ShadowControllerOwnership-owner-syntax.log"
+  },
+  {
+    "file": "src/compat/ActorRuntimeRegistry.cpp",
+    "exit_code": 0,
+    "log": "notes/original-shadow-controller-20260907/ActorRuntimeRegistry-owner-syntax.log"
+  },
+  {
+    "file": "src/compat/ActorShadowCsvCompat.cpp",
+    "exit_code": 0,
+    "log": "notes/original-shadow-controller-20260907/ActorShadowCsvCompat-owner-syntax.log"
+  },
+  {
+    "file": "src/compat/GameActorPhysicsCompat.cpp",
+    "exit_code": 0,
+    "log": "notes/original-shadow-controller-20260907/GameActorPhysicsCompat-owner-syntax.log"
+  },
+  {
+    "file": "tests/OriginalShadowControllerOwnerTests.cpp",
+    "exit_code": 0,
+    "log": "notes/original-shadow-controller-20260907/OriginalShadowControllerOwnerTests-owner-syntax.log"
+  },
+  {
+    "file": "tests/OriginalCollisionPartsOwnerTests.cpp",
+    "exit_code": 0,
+    "log": "notes/original-shadow-controller-20260907/OriginalCollisionPartsOwnerTests-owner-syntax.log"
+  }
+]

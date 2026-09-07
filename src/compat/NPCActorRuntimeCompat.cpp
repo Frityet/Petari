@@ -233,14 +233,12 @@ namespace MR {
         aurora::throw_host_exception<std::logic_error>("Player swing state is unavailable without the real MarioActor.");
     }
 
-    void calcGravity(LiveActor* actor) {
-        if (actor == nullptr) {
-            aurora::throw_host_exception<std::invalid_argument>("Gravity calculation requires a LiveActor.");
-        }
-        auto gravity = TVec3f{};
-        if (calcGravityVector(actor, &gravity, nullptr, 0U) && !isNearZero(gravity)) {
-            gravity = normalized(gravity, "Actor gravity");
-            actor->mGravity.set(gravity);
+    void calcGravity(LiveActor* pActor) {
+        TVec3f gravity;
+        calcGravityVector(pActor, pActor->mPosition, &gravity, nullptr, 0);
+
+        if (!isNearZero(gravity)) {
+            pActor->mGravity.set(gravity);
         }
     }
 

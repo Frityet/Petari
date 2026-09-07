@@ -122,6 +122,8 @@ namespace smgpc::compat {
         PrivateOneTime,
     };
 
+    // Parsed construction parameters and retained shape data. Live projection,
+    // gravity and visibility are owned by the original ShadowController.
     struct ActorShadowControllerRuntimeState {
         std::string name{};
         std::string name_raw{};
@@ -160,11 +162,7 @@ namespace smgpc::compat {
     };
 
     struct ActorShadowRuntimeState {
-        // Retain the original aggregate observability while the exact
-        // controller list carries the per-shadow state below.
-        bool valid = false;
-        bool calculation_enabled = false;
-        bool private_gravity = false;
+        // Resource definitions used to construct the separately owned original list.
         std::uint32_t capacity = 0U;
         std::vector<ActorShadowControllerRuntimeState> controllers{};
     };

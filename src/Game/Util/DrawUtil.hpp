@@ -39,3 +39,5 @@ namespace MR {
  void setMarioShadowTex(const JUTTexture*);
  void setMarioShadowVec(const TVec3f&);
 }
+
+namespace MR { void fillScreen(const GXColor&); }

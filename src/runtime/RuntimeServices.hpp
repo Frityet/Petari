@@ -489,35 +489,6 @@ namespace smgpc::runtime {
         std::vector<WipeEvent> _events;
     };
 
-    enum class ImageEffectControlKind {
-        ForceOff,
-        ControlAuto,
-    };
-
-    struct ImageEffectControlEvent {
-        ImageEffectControlKind kind = ImageEffectControlKind::ForceOff;
-        std::uint64_t frame_index = 0U;
-    };
-
-    class ImageEffectService final {
-    public:
-        void begin_frame(std::uint64_t frame_index);
-        void force_off();
-        void set_control_auto();
-
-        [[nodiscard]] bool is_forced_off() const;
-        [[nodiscard]] bool is_control_auto() const;
-        [[nodiscard]] std::span<const ImageEffectControlEvent> events() const;
-
-    private:
-        void push_event(ImageEffectControlKind kind);
-
-        std::uint64_t _frame_index = 0U;
-        bool _forced_off = false;
-        bool _control_auto = true;
-        std::vector<ImageEffectControlEvent> _events;
-    };
-
     enum class StarPointerMode {
         None,
         ScreenMenu,

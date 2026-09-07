@@ -1,0 +1,7 @@
+# Independent bounded native shadow ownership review
+
+Reviewed ShadowControllerOwnership, original controller/list/holder constructors and the ActorRuntimeRegistry publication/retirement path. No edits made.
+
+The active teardown ordering is sound in the inspected path: LiveActor calls registry retirement while its fields remain alive; the runtime state's shadow owner dies before its model owner. The shadow owner keeps the Game allocation domain alive, removes each controller from both holder arrays before destroying it, and checks the holder's registration generation before touching those arrays. Each Entry owns stable name strings until after its controller is destroyed. Constructor failure destroys the already built entries while owner fields, holder identity and list/domain are still alive. Capacity is checked before the original constructor registers the controller.
+
+One currently unreachable maintenance issue: `invalidate_shadow_joint_matrix_bindings` has only its definition and no call sites. Its native owner method clears `_18`/`_1C` for JointMatrix bindings but leaves the controller valid; original getDropPos then treats `_30` (the local joint offset) as a fixed world position. If model replacement/retirement is later allowed while shadows remain usable, it must explicitly retire/disable that query until a real replacement joint binding exists, rather than converting the local offset to world coordinates. Current initialize_actor_model rejects replacement, so this is not a demonstrated active path failure.

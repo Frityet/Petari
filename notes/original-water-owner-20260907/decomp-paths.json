@@ -1,0 +1,8 @@
+[
+  "src/Game/Screen/BloomEffect.cpp",
+  "src/Game/Screen/ImageEffectLocalUtil.cpp",
+  "src/Game/Screen/ImageEffectState.cpp",
+  "include/Game/Screen/ImageEffectState.hpp",
+  "src/Game/AreaObj/ImageEffectArea.cpp",
+  "src/Game/Util/MapUtil.cpp"
+]

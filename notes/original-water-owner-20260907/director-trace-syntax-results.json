@@ -1,0 +1,22 @@
+[
+  {
+    "file": "src/runtime/RuntimeServices.cpp",
+    "exit_code": 0,
+    "log": "notes/original-water-owner-20260907/RuntimeServices-director-trace-syntax.log"
+  },
+  {
+    "file": "src/runtime/RuntimeContext.cpp",
+    "exit_code": 0,
+    "log": "notes/original-water-owner-20260907/RuntimeContext-director-trace-syntax.log"
+  },
+  {
+    "file": "src/runtime/ParityTrace.cpp",
+    "exit_code": 0,
+    "log": "notes/original-water-owner-20260907/ParityTrace-director-trace-syntax.log"
+  },
+  {
+    "file": "src/app/Application.cpp",
+    "exit_code": 0,
+    "log": "notes/original-water-owner-20260907/Application-director-trace-syntax.log"
+  }
+]

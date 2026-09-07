@@ -348,6 +348,43 @@ namespace MR {
         return first_line_hit(position, triangle, start, offset, parts_filter, triangle_filter);
     }
 
+    bool getFirstPolyOnLineToWaterSurface(TVec3f* position, Triangle* triangle, const TVec3f& start,
+                                          const TVec3f& offset, const CollisionPartsFilterBase* parts_filter,
+                                          const TriangleFilterBase* triangle_filter) {
+        const aurora::allocation::HostAllocationScope host_allocations;
+        auto* owner = smgpc::scene::current_collision_director_ownership();
+        if (owner == nullptr) {
+            aurora::throw_host_exception<std::logic_error>("Water-surface collision queries require the scene category owner.");
+        }
+        // The original category helper admits at most 32 ordered hits after
+        // part filtering. Triangle filtering happens afterward, so rejected
+        // triangles still consume those original hit slots.
+        const auto count = store_line_hits(owner->category_service(2), start, offset, 0, parts_filter, nullptr);
+        auto distance = 1000000.0F;
+        auto nearest = s32{-1};
+        for (s32 i = 0; i < count; ++i) {
+            const auto& hit = strike_infos()[static_cast<std::size_t>(i)];
+            if (triangle_filter != nullptr) {
+                const aurora::allocation::ClientAllocationScope client_allocations;
+                if (triangle_filter->isInvalidTriangle(&hit.mParentTriangle)) continue;
+            }
+            if (distance > hit._60) {
+                nearest = i;
+                distance = hit._60;
+            }
+        }
+        if (nearest == -1) return false;
+        const auto& hit = strike_infos()[static_cast<std::size_t>(nearest)];
+        if (position != nullptr) *position = hit.mHitPos;
+        if (triangle != nullptr) *triangle = hit.mParentTriangle;
+        return true;
+    }
+
+    bool getFirstPolyOnLineToWaterSurface(TVec3f* position, Triangle* triangle, const TVec3f& start,
+                                          const TVec3f& offset) {
+        return getFirstPolyOnLineToWaterSurface(position, triangle, start, offset, nullptr, nullptr);
+    }
+
     bool getFirstPolyNormalOnLineToMap(TVec3f* normal, const TVec3f& start, const TVec3f& offset,
                                        TVec3f* position, const HitSensor* except_sensor) {
         auto triangle = Triangle{};

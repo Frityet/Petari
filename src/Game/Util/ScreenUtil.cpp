@@ -1,6 +1,8 @@
 #include "Game/Util/ScreenUtil.hpp"
 
 #include "Game/Screen/CaptureScreenDirector.hpp"
+#include "Game/Screen/ImageEffectDirector.hpp"
+#include "Game/Screen/ImageEffectSystemHolder.hpp"
 #include "runtime/RuntimeContext.hpp"
 
 namespace MR {
@@ -213,15 +215,11 @@ namespace MR {
     }
 
     void forceOffImageEffect() {
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->image_effects().force_off();
-        }
+        getImageEffectDirector()->forceOff();
     }
 
     void setImageEffectControlAuto() {
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->image_effects().set_control_auto();
-        }
+        getImageEffectDirector()->setAuto();
     }
 
     void openWipeCircle(s32 frameCount) {

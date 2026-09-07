@@ -2402,13 +2402,13 @@ target("smg-pc-actor-event-camera-tests")
         realtime_output = true
     })
 
-target("smg-pc-actor-shadow-csv-real-or-absent-tests")
+target("smg-pc-original-shadow-controller-owner-tests")
     set_kind("binary")
     set_default(false)
     set_group("tests/aurora")
     set_rundir(os.projectdir())
     add_files {
-        "ActorShadowCsvRealOrAbsentTests.cpp",
+        "OriginalShadowControllerOwnerTests.cpp",
         "../aurora/lib/compat.cpp"
     }
     add_deps {
@@ -2423,7 +2423,7 @@ target("smg-pc-actor-shadow-csv-real-or-absent-tests")
         "aurora-si",
         "aurora-vi"
     }
-    add_tests("actor_shadow_csv_real_or_absent", {
+    add_tests("original_shadow_controller_owner", {
         group = "aurora",
         rundir = os.projectdir(),
         realtime_output = true
@@ -2902,5 +2902,28 @@ target("smg-pc-original-audio-category-volume-tests")
     add_deps {"smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
               "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"}
     add_tests("original_audio_category_volume", {
+        group = "aurora", rundir = os.projectdir(), realtime_output = true
+    })
+
+
+target("smg-pc-original-layout-group-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    add_files("OriginalLayoutGroupTests.cpp", "../aurora/lib/compat.cpp")
+    add_deps {"smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
+              "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"}
+    add_tests("original_layout_group", {
+        group = "aurora", rundir = os.projectdir(), realtime_output = true
+    })
+
+target("smg-pc-original-image-effect-ownership-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    add_files("OriginalImageEffectOwnershipTests.cpp", "../aurora/lib/compat.cpp")
+    add_deps {"smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
+              "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"}
+    add_tests("original_image_effect_ownership", {
         group = "aurora", rundir = os.projectdir(), realtime_output = true
     })

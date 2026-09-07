@@ -1,5 +1,6 @@
 #include <aurora/exception.hpp>
 #include "compat/ActorShadowCsvCompat.hpp"
+#include "compat/JkrAllocationDomain.hpp"
 
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Util/JointUtil.hpp"
@@ -198,9 +199,6 @@ namespace smgpc::compat {
 
         [[nodiscard]] ActorShadowRuntimeState parse_shadow_table(LiveActor& actor, const smgpc::resource::BcsvTable& table) {
             auto result = ActorShadowRuntimeState{
-                .valid = false,
-                .calculation_enabled = false,
-                .private_gravity = false,
                 .capacity = table.entry_count(),
                 .controllers = {},
             };
@@ -291,20 +289,11 @@ namespace smgpc::compat {
                 }
             }
 
-            result.valid = !result.controllers.empty();
-            for (const auto& controller : result.controllers) {
-                result.calculation_enabled |= controller.calculation_mode != ActorShadowCalculationMode::Disabled;
-                result.private_gravity |= controller.gravity_mode == ActorShadowGravityMode::PrivateContinuous ||
-                                          controller.gravity_mode == ActorShadowGravityMode::PrivateOneTime;
-            }
             return result;
         }
 
         [[nodiscard]] ActorShadowRuntimeState empty_missing_csv_state() {
             auto result = ActorShadowRuntimeState{
-                .valid = false,
-                .calculation_enabled = false,
-                .private_gravity = false,
                 .capacity = 1U,
                 .controllers = {},
             };
@@ -314,6 +303,7 @@ namespace smgpc::compat {
     }  // namespace
 
     void initialize_actor_shadow_from_archive(LiveActor* actor, const smgpc::resource::RarcArchive& archive, std::string_view definition_name) {
+        JkrHostAllocationScope host;
         if (actor == nullptr) {
             aurora::throw_host_exception<std::invalid_argument>("Shadow CSV initialization requires a LiveActor.");
         }
@@ -325,6 +315,7 @@ namespace smgpc::compat {
     }
 
     void initialize_actor_shadow_from_model_archive(LiveActor* actor, std::string_view definition_name) {
+        JkrHostAllocationScope host;
         if (actor == nullptr) {
             aurora::throw_host_exception<std::invalid_argument>("Shadow CSV initialization requires a LiveActor.");
         }

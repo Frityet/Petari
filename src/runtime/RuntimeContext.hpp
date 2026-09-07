@@ -223,8 +223,6 @@ namespace smgpc::runtime {
         [[nodiscard]] const WipeService &scene_wipe() const;
         [[nodiscard]] WipeService &system_wipe();
         [[nodiscard]] const WipeService &system_wipe() const;
-        [[nodiscard]] ImageEffectService &image_effects();
-        [[nodiscard]] const ImageEffectService &image_effects() const;
         [[nodiscard]] StarPointerService &star_pointer();
         [[nodiscard]] const StarPointerService &star_pointer() const;
         [[nodiscard]] bool sample_star_pointer_target(const LiveActor &actor, bool check_z);
@@ -355,7 +353,6 @@ namespace smgpc::runtime {
         EffectService _effects;
         WipeService _scene_wipe;
         WipeService _system_wipe;
-        ImageEffectService _image_effects;
         StarPointerService _star_pointer;
         std::unique_ptr<compat::StarPointerDepthOwnership> _star_pointer_depth;
         CameraSystemService _camera_system;

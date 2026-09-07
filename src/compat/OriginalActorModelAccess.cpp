@@ -13,10 +13,22 @@ namespace {
 }
 
 namespace MR {
+    bool isCalcGravity(const LiveActor* pActor) {
+        return pActor->mFlag.mIsCalcGravity;
+    }
+
     void onCalcAnim(LiveActor* pActor) {
         pActor->mFlag.mIsNoCalcAnim = false;
     }
 
+
+    bool isValidDraw(const LiveActor* pActor) {
+        if (pActor->mFlag.mIsDead || pActor->mFlag.mIsClipped || pActor->mFlag.mIsHiddenModel) {
+            return false;
+        }
+
+        return true;
+    }
 
     void calcAnimDirect(LiveActor* pActor) {
         bool isNoCalcAnim = pActor->mFlag.mIsNoCalcAnim;
