@@ -368,4 +368,22 @@ void MarioActor::initMorphStringTable() {
     }
 }
 
-// const char* MarioActor::changeMorphString(const char* pName) const {}
+const char* MarioActor::changeMorphString(const char* pName) const {
+    u32 hash = MR::getHashCode(pName);
+    for (myStruct* item = cMorphStringTable;; item++) {
+        if (item->_0[0] == nullptr) {
+            break;
+        }
+        if (item->_24 == hash) {
+            if (item->_0[mPlayerMode] == nullptr || mPlayerMode == 0) {
+                if (gIsLuigi && item->_0[8] != nullptr) {
+                    return item->_0[8];
+                }
+                return item->_0[0];
+            } else {
+                return item->_0[mPlayerMode];
+            }
+        }
+    }
+    return pName;
+}

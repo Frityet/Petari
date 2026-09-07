@@ -501,7 +501,7 @@ public:
     void tryCoinPull();
     void tryCoinPullInRush();
     void flushCoinPull();
-    bool tryCoinPullOne(HitSensor*);
+    bool tryCoinPullOne(HitSensor*) NO_INLINE;
     void tryPullTrans(TVec3f*, const TVec3f&);
     bool releaseThrowMemoSensor();
     void tryReleaseWithMsg(u32);
@@ -721,7 +721,7 @@ public:
     /* 0x49C */ FixedPosition* _49C;
     /* 0x4A0 */ FixedPosition* mSearchLightThrowPos;
     /* 0x4A4 */ HitSensor* _4A4;  // used in calcAnimInMovement()
-    /* 0x4A8 */ u32 _4A8;
+    /* 0x4A8 */ HitSensor* _4A8;
     /* 0x4AC */ f32 _4AC;
     /* 0x4B0 */ f32 _4B0;
     /* 0x4B4 */ f32 _4B4;
