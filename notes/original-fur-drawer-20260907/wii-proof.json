@@ -1,0 +1,32 @@
+[
+  {
+    "symbol": "FurDrawer::FurDrawer(unsigned long, ResTIMG*, ResTIMG*)",
+    "size": "656",
+    "match_percent": 86.34146
+  },
+  {
+    "symbol": "FurDrawer::update()",
+    "size": "20",
+    "match_percent": 99.0
+  },
+  {
+    "symbol": "FurDrawer::CLayerParam::calcValue(long, long) const",
+    "size": "132",
+    "match_percent": 99.69697
+  },
+  {
+    "symbol": "FurDrawer::setupMaterial(DynamicFurParam*) const",
+    "size": "1916",
+    "match_percent": 97.60543
+  },
+  {
+    "symbol": "FurDrawer::setupLayerMaterial(long) const",
+    "size": "356",
+    "match_percent": 99.94382
+  },
+  {
+    "symbol": "FurDrawer::createFurMap()",
+    "size": "460",
+    "match_percent": 93.21739
+  }
+]

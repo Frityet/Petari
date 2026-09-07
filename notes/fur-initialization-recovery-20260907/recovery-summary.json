@@ -1,0 +1,187 @@
+{
+  "symbols": [
+    {
+      "object": "FurMulti",
+      "symbol": "__ct__8FurMultiFP9LiveActorUl",
+      "retail_size": "164",
+      "fuzzy_match": 100.0
+    },
+    {
+      "object": "FurMulti",
+      "symbol": "setLayerDirect__8FurMultiFUlUlUlUlP8FurParamP7ResTIMGP7ResTIMGP7ResTIMGP7ResTIMG",
+      "retail_size": "484",
+      "fuzzy_match": 95.1157
+    },
+    {
+      "object": "FurMulti",
+      "symbol": "addToManager__8FurMultiFv",
+      "retail_size": "108",
+      "fuzzy_match": 100.0
+    },
+    {
+      "object": "FurMulti",
+      "symbol": "offDraw__8FurMultiFUl",
+      "retail_size": "68",
+      "fuzzy_match": 100.0
+    },
+    {
+      "object": "FurMulti",
+      "symbol": "onDraw__8FurMultiFUl",
+      "retail_size": "64",
+      "fuzzy_match": 100.0
+    },
+    {
+      "object": "FurMulti",
+      "symbol": "initMultiFur__2MRFP9LiveActorl",
+      "retail_size": "1292",
+      "fuzzy_match": 98.48297
+    },
+    {
+      "object": "FurMulti",
+      "symbol": "regist__7FurBankFP8FurMultiUl",
+      "retail_size": "64",
+      "fuzzy_match": 100.0
+    },
+    {
+      "object": "FurMulti",
+      "symbol": "sFurParam__22@unnamed@FurMulti_cpp@",
+      "retail_size": "104",
+      "fuzzy_match": 100.0
+    },
+    {
+      "object": "FurCtrl",
+      "symbol": "check__7FurBankFP12J3DModelDataUl",
+      "retail_size": "88",
+      "fuzzy_match": 100.0
+    },
+    {
+      "object": "FurCtrl",
+      "symbol": "add__14FurDrawManagerFP7FurCtrlUc",
+      "retail_size": "56",
+      "fuzzy_match": 100.0
+    },
+    {
+      "object": "FurCtrl",
+      "symbol": "draw__14FurDrawManagerCFv",
+      "retail_size": "184",
+      "fuzzy_match": 100.0
+    },
+    {
+      "object": "FurCtrl",
+      "symbol": "__ct__7FurCtrlFP9LiveActorP8FurParambUc",
+      "retail_size": "176",
+      "fuzzy_match": 100.0
+    },
+    {
+      "object": "FurCtrl",
+      "symbol": "calcLayerForm__7FurCtrlFv",
+      "retail_size": "432",
+      "fuzzy_match": 93.046295
+    },
+    {
+      "object": "FurCtrl",
+      "symbol": "drawFur__7FurCtrlFv",
+      "retail_size": "724",
+      "fuzzy_match": 99.98895
+    },
+    {
+      "object": "FurCtrl",
+      "symbol": "createFurMap__7FurCtrlFv",
+      "retail_size": "124",
+      "fuzzy_match": 100.0
+    },
+    {
+      "object": "FurCtrl",
+      "symbol": "getFurDrawManager__2MRFv",
+      "retail_size": "40",
+      "fuzzy_match": 100.0
+    },
+    {
+      "object": "FurCtrl",
+      "symbol": "__ct__14FurDrawManagerFUc",
+      "retail_size": "204",
+      "fuzzy_match": 100.0
+    },
+    {
+      "object": "FurCtrl",
+      "symbol": "setupFur__7FurCtrlFP8J3DModelP7ResTIMGP7ResTIMGP7ResTIMGUsUc",
+      "retail_size": "548",
+      "fuzzy_match": 93.49635
+    },
+    {
+      "object": "FurCtrl",
+      "symbol": "setupFurClone__7FurCtrlFP8J3DModelP7FurCtrl",
+      "retail_size": "340",
+      "fuzzy_match": 96.882355
+    },
+    {
+      "object": "FurCtrl",
+      "symbol": "initFurParamFromDvd__2MRFP8FurParamP15DynamicFurParamPcUl",
+      "retail_size": "716",
+      "fuzzy_match": 93.65922
+    },
+    {
+      "object": "FurCtrl",
+      "symbol": "__ct__9J3DModel2FP8J3DModel",
+      "retail_size": "152",
+      "fuzzy_match": 100.0
+    },
+    {
+      "object": "FurCtrl",
+      "symbol": "__dt__9J3DModel2Fv",
+      "retail_size": "96",
+      "fuzzy_match": 88.958336
+    },
+    {
+      "object": "FurCtrl",
+      "symbol": "__dt__14FurDrawManagerFv",
+      "retail_size": "88",
+      "fuzzy_match": 100.0
+    }
+  ],
+  "source_paths": [
+    {
+      "path": "src/Game/Util/FurCtrl.cpp",
+      "sha256": "67ae673cb7dd2d6ba02b65777e80ff966979c9fa921eba16bb23c23227e10f3a"
+    },
+    {
+      "path": "src/Game/Util/FurMulti.cpp",
+      "sha256": "1b897409890b34239ed57f7a21dd980351d31e7f4ce54a2a19067853332301a6"
+    },
+    {
+      "path": "include/Game/Util/FurCtrl.hpp",
+      "sha256": "234b2ba42504bd18efae1f6e3a93ddb4124b5655dece566c2721adb82d4d0004"
+    },
+    {
+      "path": "include/Game/Util/FurMulti.hpp",
+      "sha256": "84c17da9d52a4cabcc0b3c24ef83f4e0ae9ee4c419922ca7adbd41b675aca838"
+    },
+    {
+      "path": "include/Game/Util/FurParam.hpp",
+      "sha256": "4f13a76a1d2eb7f299e625c08b42de37cfe2cbd9d56b2727e2a61188ee307460"
+    },
+    {
+      "path": "include/Game/Util/LiveActorUtil.hpp",
+      "sha256": "176d8458bd8b2c030fc6215bca05cebe9a6ee4fbba76ac681d9ecbdbe199e430"
+    },
+    {
+      "path": "src/Game/Util/LiveActorUtil.cpp",
+      "sha256": "da47d3eaca22a6fc481fd233011fb41618f104b02bb1de8bad09e37346038aa2"
+    },
+    {
+      "path": "include/Game/Player/MarioActor.hpp",
+      "sha256": "c16c2242b9d8ab3a35db10b61e48e23856d470993b10f1bc234935d17bfd6bb0"
+    },
+    {
+      "path": "libs/JSystem/include/JSystem/J3DGraphAnimator/J3DModel.hpp",
+      "sha256": "b677d80b9bd53cc7e3fe0bb9321d8355e864ef5897d909e44f6fe41c70265526"
+    }
+  ],
+  "layout_compile_exit": 0,
+  "dependent_original_compile_exit": {
+    "FurCtrl": 0,
+    "LiveActorUtil": 0,
+    "MarioActorDraw": 0
+  },
+  "reference_dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578"
+}

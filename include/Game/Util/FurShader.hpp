@@ -1,5 +1,6 @@
 #pragma once
 
+#include <JSystem/J3DGraphAnimator/J3DModel.hpp>
 #include "revolution/gx/GXEnum.h"
 #include <revolution.h>
 
@@ -8,18 +9,18 @@ class J3DModelData;
 class ResTIMG;
 class J3DShape;
 
-class CShader {
+class CShader : public J3DUnkCalc1 {
 public:
     class CLengthMap {
     public:
         CLengthMap(const ResTIMG*);
 
         void setLengthMap(const ResTIMG*);
-        void refer(f32, f32) const;
+        f32 refer(f32, f32) const;
         s32 getTexelOrder(u16, f32, GXTexWrapMode) const;
 
         const ResTIMG* _0;
-        u32 _4;
+        const u8* _4;
         u8 _8;
     };
 
