@@ -979,17 +979,9 @@ namespace smgpc::runtime {
         if (!_draw_buffers->has_draw_buffers()) return;
         if (!_draw_buffers->is_allocated())
             aurora::throw_host_exception<std::logic_error>("Scene construction must allocate draw lists before view entry");
-        if (auto* runtime = RuntimeContext::try_instance(); runtime && runtime->scene_camera_pose()) {
-            const auto camera = *runtime->scene_camera_pose();
-            for (const auto& registered : entries_snapshot()) {
-                const auto entry = current_entry(registered);
-                if (entry && entry->has_draw_buffer_registration && !entry_is_dead(*entry) &&
-                    !draw_buffer_uses_model_3d_for_2d(entry->draw_buffer_type))
-                    invoke_game_callback(_allocation_domain, [&] {
-                        smgpc::compat::update_actor_clipping(*entry->live_actor, camera);
-                    });
-            }
-        }
+        // Clipping belongs to the movement ClippingDirector category. View
+        // entry consumes the resulting original draw membership without
+        // reevaluating actor positions after their movement callbacks.
         refresh_draw_buffer_activation();
         smgpc::compat::SceneJ3dScope commands;
         // SceneFunction::executeCalcViewAndEntryList: the actual holder invokes

@@ -1,0 +1,13 @@
+{
+  "commit": "c29feb33ba57cdbfd5cea943bdc4312177490148",
+  "remote": "origin",
+  "branch": "pcp-decomp",
+  "verified_remote_sha": "c29feb33ba57cdbfd5cea943bdc4312177490148",
+  "author": "codex <codex@openai.com>",
+  "files": [
+    {
+      "path": "src/Game/NPC/TalkMessageCtrl.cpp",
+      "sha256": "a4e4fcf3571b82cff9d1ec17ae79ae09143f4fa92227da534e8b988bf21473c4"
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+__ZN12CategoryList7drawOpaEN2MR14DrawBufferTypeE
+__ZN2MR15isExistSceneObjEi
+__ZN2MR17getSceneObjHolderEv
+__ZNK14SceneObjHolder6getObjEi

@@ -232,6 +232,50 @@ namespace MR {
 
 }  // namespace MR
 
+class Scene;
+
+class SceneFunction {
+public:
+    static void startStageFileLoad();
+    static void waitDoneStageFileLoad();
+    static void startActorFileLoadCommon();
+    static void startActorFileLoadScenario();
+    static void startActorPlacement();
+    static void initAfterScenarioSelected();
+    static void initForNameObj();
+    static void initForLiveActor();
+    static void initEffectSystem(u32, u32);
+    static void allocateDrawBufferActorList();
+    static void createHioBasicNode(Scene*);
+
+    static void movementStopSceneController();
+    static void executeMovementList();
+
+    static void executeDrawList2DNormal();
+    static void executeDrawList2DMovie();
+
+    static void executeDrawBufferListNormalOpaBeforeVolumeShadow();
+    static void executeDrawSilhouetteAndFillShadow();
+    static void executeDrawAlphaShadow();
+    static void executeDrawBufferListNormalOpa();
+    static void executeDrawListOpa();
+    static void executeDrawBufferListNormalXlu();
+    static void executeDrawListXlu();
+    static void executeDrawAfterIndirect();
+    static void executeDrawImageEffect();
+    static void executeDrawBufferListNormalOpaBeforeSilhouette();
+
+    static void executeCalcAnimListOnPlayingMovie();
+
+    static void executeCalcAnimList();
+
+    static void executeCalcViewAndEntryList();
+
+    static void executeMovementListOnPlayingMovie();
+
+    static void executeCalcViewAndEntryList2D();
+};
+
 class CategoryList {
 public:
     static void execute(MR::MovementType);

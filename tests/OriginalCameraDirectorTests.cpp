@@ -9,6 +9,7 @@
 #include "compat/StageZoneMatrixRegistry.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
+#include "scene/SceneExecutionService.hpp"
 #include "scene/StagePlacementResolver.hpp"
 #include "Game/Camera/CameraAnim.hpp"
 #include "Game/Camera/CameraContext.hpp"
@@ -29,6 +30,8 @@
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/ClippingDirector.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
+#include "Game/Scene/SceneNameObjMovementController.hpp"
+#include "Game/Scene/StopSceneController.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
@@ -130,7 +133,30 @@ namespace {
         scheduler.connect_name_obj(actor, MR::MovementType_Player, -1, -1, -1);
         MR::addToClippingTarget(&actor);
         scheduler.connect_name_obj(publisher, MR::MovementType_Camera, -1, -1, -1);
+        struct PhaseProbe final : NameObj {
+            PhaseProbe(int value, std::vector<int>& sequence)
+                : NameObj("Original frame sequence probe"), value(value), sequence(sequence) {}
+            void movement() override { record(value); }
+            void calcAnim() override { record(value + 100); }
+            void record(int value) {
+                const smgpc::compat::JkrHostAllocationScope host;
+                sequence.push_back(value);
+            }
+            int value;
+            std::vector<int>& sequence;
+        };
+        std::vector<int> sequence;
+        PhaseProbe clipped(10, sequence), planet(11, sequence), map(12, sequence), enemy(13, sequence);
+        PhaseProbe collision(20, sequence), player(21, sequence), shadow(22, sequence);
+        scheduler.connect_name_obj(clipped, MR::MovementType_ClippedMapParts, MR::CalcAnimType_ClippedMapParts, -1, -1);
+        scheduler.connect_name_obj(planet, MR::MovementType_Planet, MR::CalcAnimType_Planet, -1, -1);
+        scheduler.connect_name_obj(map, MR::MovementType_CollisionMapObj, MR::CalcAnimType_CollisionMapObj, -1, -1);
+        scheduler.connect_name_obj(enemy, MR::MovementType_CollisionEnemy, MR::CalcAnimType_CollisionEnemy, -1, -1);
+        scheduler.connect_name_obj(collision, MR::MovementType_CollisionDirector, -1, -1, -1);
+        scheduler.connect_name_obj(player, MR::MovementType_Player, -1, -1, -1);
+        scheduler.connect_name_obj(shadow, MR::MovementType_ShadowControllerHolder, -1, -1, -1);
         execution.complete_initialization();
+        MR::getSceneNameObjMovementController()->movement();
         TPos3f far_view, near_view;
         far_view.setPositionFromLookAt(TVec3f(100000, 0, 1000), TVec3f(0, 1, 0), TVec3f(100000, 0, 0));
         near_view.setPositionFromLookAt(TVec3f(0, 0, 1000), TVec3f(0, 1, 0), TVec3f(0, 0, 0));
@@ -154,6 +180,29 @@ namespace {
         scheduler.execute_movement_category(MR::MovementType_ClippingDirector);
         require(actor.mFlag.mIsClipped && actor.starts == 2 && actor.ends == 1,
                 "next category4 evaluates the changed view exactly at its original boundary");
+
+        publisher.view.set(near_view);
+        runtime.scene_execution().execute_movement();
+        require(!actor.mFlag.mIsClipped && actor.ends == 2,
+                "the complete original movement list uses its camera before its clipping phase");
+        require(sequence == std::vector<int>({10, 11, 12, 13, 110, 111, 112, 113, 20, 21}),
+                "all four collision animations precede collision director and player movement in the original frame");
+        runtime.scene_execution().execute_calc_anim_and_view();
+        require(sequence == std::vector<int>({10, 11, 12, 13, 110, 111, 112, 113, 20, 21, 22}),
+                "the original later animation list runs shadow movement without repeating collision animations");
+
+        auto* stop = MR::getSceneObj<StopSceneController>(SceneObj_StopSceneController);
+        stop->requestStopScene(3);
+        sequence.clear();
+        const auto camera_calls = publisher.calls;
+        runtime.scene_execution().execute_movement();
+        runtime.scene_execution().execute_movement();
+        require(sequence.empty() && publisher.calls == camera_calls && stop->isSceneStopped(),
+                "original stopped frames skip the complete movement list, including the camera");
+        runtime.scene_execution().execute_movement();
+        require(!stop->isSceneStopped() && publisher.calls == camera_calls + 1 &&
+                sequence == std::vector<int>({10, 11, 12, 13, 110, 111, 112, 113, 20, 21}),
+                "the original decrement boundary resumes exactly one complete movement frame");
     }
 }
 

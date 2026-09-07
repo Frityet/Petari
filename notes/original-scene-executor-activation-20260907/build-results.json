@@ -1,0 +1,66 @@
+[
+  {
+    "target": "smg-pc-game",
+    "command": [
+      "xmake",
+      "build",
+      "-v",
+      "smg-pc-game"
+    ],
+    "exit": 0,
+    "seconds": 9.56,
+    "log": "notes/original-scene-executor-activation-20260907/smg-pc-game-build.log",
+    "unresolved": []
+  },
+  {
+    "target": "smg-pc-showcase",
+    "command": [
+      "xmake",
+      "build",
+      "-v",
+      "smg-pc-showcase"
+    ],
+    "exit": 255,
+    "seconds": 1.47,
+    "log": "notes/original-scene-executor-activation-20260907/smg-pc-showcase-build.log",
+    "unresolved": [
+      "MR::requestEndMissDemo()",
+      "MR::requestEndGameOverDemo()",
+      "MR::requestStartGameOverDemo()"
+    ]
+  },
+  {
+    "target": "smg-pc-original-camera-director-tests",
+    "command": [
+      "xmake",
+      "build",
+      "-v",
+      "smg-pc-original-camera-director-tests"
+    ],
+    "exit": 255,
+    "seconds": 2.16,
+    "log": "notes/original-scene-executor-activation-20260907/smg-pc-original-camera-director-tests-build.log",
+    "unresolved": [
+      "MR::requestEndMissDemo()",
+      "MR::requestEndGameOverDemo()",
+      "MR::requestStartGameOverDemo()"
+    ]
+  },
+  {
+    "target": "smg-pc-original-scene-execution-owner-tests",
+    "command": [
+      "xmake",
+      "build",
+      "-v",
+      "smg-pc-original-scene-execution-owner-tests"
+    ],
+    "exit": 255,
+    "seconds": 1.84,
+    "log": "notes/original-scene-executor-activation-20260907/smg-pc-original-scene-execution-owner-tests-build.log",
+    "unresolved": [
+      "MR::requestEndMissDemo()",
+      "MR::requestEndGameOverDemo()",
+      "MR::requestStartGameOverDemo()"
+    ]
+  }
+]

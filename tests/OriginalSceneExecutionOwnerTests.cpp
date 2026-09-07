@@ -1,6 +1,7 @@
 #include "SceneExecutionFixture.hpp"
 #include "Game/NameObj/NameObjCategoryList.hpp"
 #include "Game/NameObj/NameObjExecuteHolder.hpp"
+#include "Game/NameObj/NameObjFinder.hpp"
 #include "Game/Scene/SceneNameObjMovementController.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
@@ -40,6 +41,7 @@ int main() {
         using namespace smgpc;
         const auto heaps = compat::JkrHeapRuntime::create(16U << 20);
         const auto free = heaps->root_heap().getFreeSize();
+        NameObj outside("outside the scene NameObjHolder");
         const auto identities = compat::name_obj_runtime_state_count();
         runtime::SceneScheduler scheduler;
         runtime::SceneSchedulerBinding active(scheduler);
@@ -53,6 +55,9 @@ int main() {
                 require(scene.executor().mBufferHolder != nullptr, "the real executor owns one draw holder");
                 std::vector<int> log;
                 Object a(1, log), b(2, log), c(3, log);
+                a.setName("scene member a");
+                require(NameObjFinder::find("scene member a") == &a && !NameObjFinder::find(outside.getName()),
+                        "original lookup searches the active scene holder, excluding process-wide identities");
                 for (auto* object : {&a, &b, &c}) {
                     object->expected = &domain->heap();
                     MR::connectToScene(static_cast<NameObj*>(object), 34, 0, -1, 72);
@@ -116,6 +121,10 @@ int main() {
             require(heaps->root_heap().getFreeSize() == free, "all original executor and requirement allocations reclaim together");
             require(compat::name_obj_runtime_state_count() == identities, "scene controllers and late NameObjs retire their identities");
         }
+        bool rejected = false;
+        try { (void)NameObjFinder::find(outside.getName()); }
+        catch (const std::logic_error&) { rejected = true; }
+        require(rejected, "original name lookup requires the owning scene holder");
         std::cout << "original_queue=pass deferred_connections=pass category_swap_order=pass callback_retirement=pass sixteen_scene_domains=pass\n";
     } catch (const std::exception& error) { std::cerr << error.what() << '\n'; return 1; }
 }

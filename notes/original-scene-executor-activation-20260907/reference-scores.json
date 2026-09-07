@@ -1,0 +1,97 @@
+[
+  {
+    "name": "movementStopSceneController__13SceneFunctionFv",
+    "bytes": "56",
+    "match_percent": 100.0
+  },
+  {
+    "name": "executeMovementList__13SceneFunctionFv",
+    "bytes": "476",
+    "match_percent": 100.0
+  },
+  {
+    "name": "executeMovementListOnPlayingMovie__13SceneFunctionFv",
+    "bytes": "100",
+    "match_percent": 100.0
+  },
+  {
+    "name": "executeCalcAnimList__13SceneFunctionFv",
+    "bytes": "152",
+    "match_percent": 100.0
+  },
+  {
+    "name": "executeCalcAnimListOnPlayingMovie__13SceneFunctionFv",
+    "bytes": "8",
+    "match_percent": 100.0
+  },
+  {
+    "name": "executeCalcViewAndEntryList__13SceneFunctionFv",
+    "bytes": "64",
+    "match_percent": 100.0
+  },
+  {
+    "name": "executeCalcViewAndEntryList2D__13SceneFunctionFv",
+    "bytes": "56",
+    "match_percent": 100.0
+  },
+  {
+    "name": "executeDrawBufferListNormalOpaBeforeVolumeShadow__13SceneFunctionFv",
+    "bytes": "224",
+    "match_percent": 100.0
+  },
+  {
+    "name": "executeDrawBufferListNormalOpaBeforeSilhouette__13SceneFunctionFv",
+    "bytes": "44",
+    "match_percent": 100.0
+  },
+  {
+    "name": "executeDrawBufferListNormalOpa__13SceneFunctionFv",
+    "bytes": "152",
+    "match_percent": 100.0
+  },
+  {
+    "name": "executeDrawBufferListNormalXlu__13SceneFunctionFv",
+    "bytes": "172",
+    "match_percent": 100.0
+  },
+  {
+    "name": "executeDrawListOpa__13SceneFunctionFv",
+    "bytes": "264",
+    "match_percent": 100.0
+  },
+  {
+    "name": "executeDrawListXlu__13SceneFunctionFv",
+    "bytes": "96",
+    "match_percent": 100.0
+  },
+  {
+    "name": "executeDrawSilhouetteAndFillShadow__13SceneFunctionFv",
+    "bytes": "40",
+    "match_percent": 100.0
+  },
+  {
+    "name": "executeDrawAlphaShadow__13SceneFunctionFv",
+    "bytes": "40",
+    "match_percent": 100.0
+  },
+  {
+    "name": "executeDrawAfterIndirect__13SceneFunctionFv",
+    "bytes": "260",
+    "match_percent": 100.0
+  },
+  {
+    "name": "executeDrawImageEffect__13SceneFunctionFv",
+    "bytes": "124",
+    "match_percent": 100.0
+  },
+  {
+    "name": "executeDrawList2DNormal__13SceneFunctionFv",
+    "bytes": "140",
+    "match_percent": 100.0
+  },
+  {
+    "name": "executeDrawList2DMovie__13SceneFunctionFv",
+    "bytes": "48",
+    "match_percent": 100.0
+  }
+]

@@ -1,0 +1,7 @@
+# Scene lookup and clipping follow-up
+
+`NameObjFinder::find` now calls the actual scene registry's original `NameObjHolder::find`, replacing the old process-wide native snapshot scan. The original reference `decomp/src/Game/NameObj/NameObjFinder.cpp` is the one-line GameSystem scene-holder lookup; only that ownership lookup is replaced with the typed scene binding. An absent scene owner is rejected. The new fixture asserts that a process object created before the scene is excluded, that an actual scene member resolves, and that lookup after scene retirement rejects the missing owner.
+
+The aggregate `SceneScheduler::execute_calc_view_and_entry` no longer calls the clipping evaluator a second time after actor movement. The movement ClippingDirector category already owns camera-before-clipping and produces the original queued draw membership; view entry consumes it. This matches the ordering in original `decomp/src/Game/Scene/SceneExecutor.cpp`. Parent is separately importing that complete original SceneExecutor.
+
+All three changed translation units pass isolated native compilation, recorded in `native-syntax.json`. The previously checkpointed full production archive/main compilation passed; queue and heap fixture links were blocked only by the same three missing MR scene event functions. Runtime validation of this follow-up remains pending that owner closure. `paths.json` is the bounded follow-up manifest; prior root-paths.json refers to the earlier checkpoint and is intentionally not replaced.

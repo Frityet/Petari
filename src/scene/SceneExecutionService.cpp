@@ -5,6 +5,8 @@
 #include "runtime/RuntimeContext.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "compat/StarPointerDepthOwnership.hpp"
+#include "compat/JkrAllocationDomain.hpp"
+#include "compat/SceneJ3dScope.hpp"
 
 namespace smgpc::scene {
 
@@ -14,13 +16,20 @@ namespace smgpc::scene {
     SceneExecutionService::~SceneExecutionService() = default;
 
     void SceneExecutionService::execute_movement() {
-        _runtime.scheduler().execute_movement();
+        auto &scheduler = _runtime.scheduler();
+        const smgpc::compat::JkrAllocationScope game(scheduler.allocation_domain());
+        const smgpc::compat::SceneJ3dScope commands;
+        scheduler.begin_frame();
+        SceneFunction::movementStopSceneController();
+        SceneFunction::executeMovementList();
     }
 
     void SceneExecutionService::execute_calc_anim_and_view() {
-        auto &scheduler = _runtime.scheduler();
-        scheduler.execute_calc_anim();
-        scheduler.execute_calc_view_and_entry();
+        const smgpc::compat::JkrAllocationScope game(_runtime.scheduler().allocation_domain());
+        const smgpc::compat::SceneJ3dScope commands;
+        SceneFunction::executeCalcAnimList();
+        CategoryList::execute(MR::CalcAnimType_AnimParticleIgnorePause);
+        SceneFunction::executeCalcViewAndEntryList();
     }
 
     void SceneExecutionService::draw_3d_normal(const smgpc::camera::CameraPose &camera_pose) {

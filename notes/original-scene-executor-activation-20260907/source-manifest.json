@@ -1,0 +1,44 @@
+[
+  {
+    "path": "src/Game/Scene/SceneExecutor.cpp",
+    "sha256": "473eb6eb6692b2c7b5e53554b16557763f98cc707c6af60ea0f682c936fc58de",
+    "reference": "decomp/src/Game/Scene/SceneExecutor.cpp",
+    "byte_identical": true
+  },
+  {
+    "path": "src/Game/Scene/SceneFunction.hpp",
+    "sha256": "7cdd10f83efe476997d6f691f16cfc895b169053b7f7f77da625238b15c2a3da"
+  },
+  {
+    "path": "src/Game/MapObj/SpinDriverPathDrawer.hpp",
+    "sha256": "fd858859c5744c509f041163568043f18177514171b0f56e091c1f92ef455f14",
+    "reference": "decomp/include/Game/MapObj/SpinDriverPathDrawer.hpp",
+    "byte_identical": true
+  },
+  {
+    "path": "src/Game/MapObj/SpinDriverShootPath.hpp",
+    "sha256": "856441f490bc50b0ff15793cf2cdbc279040c5eb89e6101cad7bbf54f1630a87",
+    "reference": "decomp/include/Game/MapObj/SpinDriverShootPath.hpp",
+    "byte_identical": true
+  },
+  {
+    "path": "src/Game/MapObj/SpiderThread.hpp",
+    "sha256": "2788a9c21d00df0116bc4bc3f3904b1a1bd70a68bba43e864f349cc298a494ab",
+    "reference": "decomp/include/Game/MapObj/SpiderThread.hpp",
+    "byte_identical": true
+  },
+  {
+    "path": "src/Game/Util/ParabolicPath.hpp",
+    "sha256": "1b12383c304c0faaca4190f0cc03216cb06ece5c81ae1f7b25eba1311b8f7957",
+    "reference": "decomp/include/Game/Util/ParabolicPath.hpp",
+    "byte_identical": true
+  },
+  {
+    "path": "src/scene/SceneExecutionService.cpp",
+    "sha256": "a2fcad4a31a47323c0724550b87d93b005f602beaf4bab0fe046590e1f4610cb"
+  },
+  {
+    "path": "tests/OriginalCameraDirectorTests.cpp",
+    "sha256": "b6757bc02d8e6fd3e358fb6055c65550a52047ce1a7733ad9fde50594a2aef14"
+  }
+]
