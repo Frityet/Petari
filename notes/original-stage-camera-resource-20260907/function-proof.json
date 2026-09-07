@@ -1,0 +1,32 @@
+[
+  {
+    "unit": "StageDataHolder",
+    "name": "getStageDataHolderFromZoneId__15StageDataHolderCFi",
+    "match_percent": 100.0,
+    "retail_bytes": 72
+  },
+  {
+    "unit": "StageDataHolder",
+    "name": "getStageDataHolderFromZoneId__15StageDataHolderFi",
+    "match_percent": 100.0,
+    "retail_bytes": 4
+  },
+  {
+    "unit": "StageDataHolder",
+    "name": "isPlacedZone__15StageDataHolderCFi",
+    "match_percent": 100.0,
+    "retail_bytes": 80
+  },
+  {
+    "unit": "SceneUtil",
+    "name": "getZoneNum__2MRFv",
+    "match_percent": 100.0,
+    "retail_bytes": 44
+  },
+  {
+    "unit": "SceneUtil",
+    "name": "getStageCameraData__2MRFPPvPll",
+    "match_percent": 99.71429,
+    "retail_bytes": 140
+  }
+]

@@ -1,0 +1,1262 @@
+[
+  {
+    "source": "decomp/src/Game/Camera/CameraHolder.cpp",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/decomp/src/Game/Camera/CameraHolder.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-camera-holder-activation-20260907/CameraHolder.reference.o"
+    ],
+    "exit_code": 0,
+    "objdiff_command": [
+      "build/tools/objdiff-cli",
+      "diff",
+      "-1",
+      "/Users/frityet/Projects/petari/decomp/build/original-player-state-recovery-20260907/retail/obj/Game/Camera/CameraHolder.o",
+      "-2",
+      "/Users/frityet/Projects/petari/notes/original-camera-holder-activation-20260907/CameraHolder.reference.o",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-camera-holder-activation-20260907/CameraHolder.reference.objdiff.json",
+      "--format",
+      "json-pretty"
+    ],
+    "objdiff_exit_code": 0,
+    "functions": [
+      {
+        "name": "createCamera<14CameraParallel>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<11CameraTower>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<12CameraFollow>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<18CameraWonderPlanet>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<9CameraFix>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<16CameraFixedPoint>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<12CameraBehind>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<17CameraInwardTower>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<16CameraFixedThere>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<16CameraTripodBoss>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<14CameraTowerPos>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<18CameraTripodPlanet>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<10CameraDead>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<18CameraInwardSphere>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<14CameraRailDemo>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<16CameraRailFollow>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<21CameraTripodBossJoint>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<23CameraCharmedTripodBoss>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<17CameraObjParallel>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<16CameraCharmedFix>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<12CameraGround>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<13CameraTrundle>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<16CameraCubePlanet>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<19CameraInnerCylinder>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<12CameraSpiral>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<10CameraTalk>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<20CameraMtxRegParallel>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<19CameraCharmedVecReg>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<18CameraMedianPlanet>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<20CameraTwistedPassage>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<17CameraMedianTower>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<24CameraCharmedVecRegTower>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<18CameraFrontAndBack>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<16CameraRaceFollow>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<11CameraSlide>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<16CameraFooFighter>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<22CameraFooFighterPlanet>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<15CameraBlackHole>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<10CameraAnim>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<9CameraDPD>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<17CameraWaterFollow>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<17CameraWaterPlanet>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<21CameraWaterPlanetBoss>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<15CameraRailWatch>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "createCamera<16CameraSubjective>__26@unnamed@CameraHolder_cpp@Fv_P6Camera",
+        "score": 100.0,
+        "retail_bytes": 56,
+        "reference_bytes": 56
+      },
+      {
+        "name": "__ct__12CameraHolderFPCc",
+        "score": 100.0,
+        "retail_bytes": 100,
+        "reference_bytes": 100
+      },
+      {
+        "name": "getTranslator__12CameraHolderFl",
+        "score": 100.0,
+        "retail_bytes": 16,
+        "reference_bytes": 16
+      },
+      {
+        "name": "getIndexOf__12CameraHolderCFPCc",
+        "score": 100.0,
+        "retail_bytes": 112,
+        "reference_bytes": 112
+      },
+      {
+        "name": "getDefaultCamera__12CameraHolderFv",
+        "score": 100.0,
+        "retail_bytes": 20,
+        "reference_bytes": 20
+      },
+      {
+        "name": "getIndexOfDefault__12CameraHolderCFv",
+        "score": 100.0,
+        "retail_bytes": 8,
+        "reference_bytes": 8
+      },
+      {
+        "name": "getIndexOf__12CameraHolderCFP6Camera",
+        "score": 100.0,
+        "retail_bytes": 60,
+        "reference_bytes": 60
+      },
+      {
+        "name": "createCameras__12CameraHolderFv",
+        "score": 100.0,
+        "retail_bytes": 168,
+        "reference_bytes": 168
+      },
+      {
+        "name": "getCameraInner__12CameraHolderCFl",
+        "score": 100.0,
+        "retail_bytes": 16,
+        "reference_bytes": 16
+      },
+      {
+        "name": "__dt__12CameraHolderFv",
+        "score": 100.0,
+        "retail_bytes": 88,
+        "reference_bytes": 88
+      }
+    ]
+  },
+  {
+    "source": "decomp/src/Game/Camera/CameraParamChunk.cpp",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/decomp/src/Game/Camera/CameraParamChunk.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-camera-holder-activation-20260907/CameraParamChunk.reference.o"
+    ],
+    "exit_code": 0,
+    "objdiff_command": [
+      "build/tools/objdiff-cli",
+      "diff",
+      "-1",
+      "/Users/frityet/Projects/petari/decomp/build/original-player-state-recovery-20260907/retail/obj/Game/Camera/CameraParamChunk.o",
+      "-2",
+      "/Users/frityet/Projects/petari/notes/original-camera-holder-activation-20260907/CameraParamChunk.reference.o",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-camera-holder-activation-20260907/CameraParamChunk.reference.objdiff.json",
+      "--format",
+      "json-pretty"
+    ],
+    "objdiff_exit_code": 0,
+    "functions": [
+      {
+        "name": "__as__18CameraGeneralParamFRC18CameraGeneralParam",
+        "score": 100.0,
+        "retail_bytes": 144,
+        "reference_bytes": 144
+      },
+      {
+        "name": "__ct__16CameraParamChunkFP12CameraHolderRC18CameraParamChunkID",
+        "score": 100.0,
+        "retail_bytes": 152,
+        "reference_bytes": 152
+      },
+      {
+        "name": "getZoneID__16CameraParamChunkCFv",
+        "score": 100.0,
+        "retail_bytes": 16,
+        "reference_bytes": 16
+      },
+      {
+        "name": "isOnNoReset__16CameraParamChunkCFv",
+        "score": 100.0,
+        "retail_bytes": 12,
+        "reference_bytes": 12
+      },
+      {
+        "name": "isOnUseFovy__16CameraParamChunkCFv",
+        "score": 100.0,
+        "retail_bytes": 12,
+        "reference_bytes": 12
+      },
+      {
+        "name": "isLOfsErpOff__16CameraParamChunkCFv",
+        "score": 100.0,
+        "retail_bytes": 12,
+        "reference_bytes": 12
+      },
+      {
+        "name": "isAntiBlurOff__16CameraParamChunkCFv",
+        "score": 100.0,
+        "retail_bytes": 12,
+        "reference_bytes": 12
+      },
+      {
+        "name": "isCollisionOff__16CameraParamChunkCFv",
+        "score": 100.0,
+        "retail_bytes": 12,
+        "reference_bytes": 12
+      },
+      {
+        "name": "isSubjectiveCameraOff__16CameraParamChunkCFv",
+        "score": 100.0,
+        "retail_bytes": 12,
+        "reference_bytes": 12
+      },
+      {
+        "name": "getVPanAxis__16CameraParamChunkCFPQ29JGeometry8TVec3<f>",
+        "score": 100.0,
+        "retail_bytes": 112,
+        "reference_bytes": 112
+      },
+      {
+        "name": "setCameraType__16CameraParamChunkFPCcPC12CameraHolder",
+        "score": 100.0,
+        "retail_bytes": 52,
+        "reference_bytes": 52
+      },
+      {
+        "name": "setUseFovy__16CameraParamChunkFb",
+        "score": 100.0,
+        "retail_bytes": 36,
+        "reference_bytes": 36
+      },
+      {
+        "name": "setLOfsErpOff__16CameraParamChunkFb",
+        "score": 100.0,
+        "retail_bytes": 36,
+        "reference_bytes": 36
+      },
+      {
+        "name": "setCollisionOff__16CameraParamChunkFb",
+        "score": 100.0,
+        "retail_bytes": 36,
+        "reference_bytes": 36
+      },
+      {
+        "name": "copy__16CameraParamChunkFPC16CameraParamChunk",
+        "score": 100.0,
+        "retail_bytes": 216,
+        "reference_bytes": 216
+      },
+      {
+        "name": "load__16CameraParamChunkFP12DotCamReaderP12CameraHolder",
+        "score": 96.99254,
+        "retail_bytes": 1072,
+        "reference_bytes": 1088
+      },
+      {
+        "name": "initiate__16CameraParamChunkFv",
+        "score": 100.0,
+        "retail_bytes": 68,
+        "reference_bytes": 68
+      },
+      {
+        "name": "arrangeCamTypeName__16CameraParamChunkFUlPPCc",
+        "score": 100.0,
+        "retail_bytes": 256,
+        "reference_bytes": 256
+      },
+      {
+        "name": "__ct__20CameraParamChunkGameFP12CameraHolderRC18CameraParamChunkID",
+        "score": 100.0,
+        "retail_bytes": 84,
+        "reference_bytes": 84
+      },
+      {
+        "name": "load__20CameraParamChunkGameFP12DotCamReaderP12CameraHolder",
+        "score": 100.0,
+        "retail_bytes": 208,
+        "reference_bytes": 208
+      },
+      {
+        "name": "initiate__20CameraParamChunkGameFv",
+        "score": 100.0,
+        "retail_bytes": 80,
+        "reference_bytes": 80
+      },
+      {
+        "name": "copy__20CameraParamChunkGameFPC16CameraParamChunk",
+        "score": 100.0,
+        "retail_bytes": 4,
+        "reference_bytes": 4
+      },
+      {
+        "name": "__ct__21CameraParamChunkEventFP12CameraHolderRC18CameraParamChunkID",
+        "score": 100.0,
+        "retail_bytes": 92,
+        "reference_bytes": 92
+      },
+      {
+        "name": "load__21CameraParamChunkEventFP12DotCamReaderP12CameraHolder",
+        "score": 100.0,
+        "retail_bytes": 284,
+        "reference_bytes": 284
+      },
+      {
+        "name": "initiate__21CameraParamChunkEventFv",
+        "score": 100.0,
+        "retail_bytes": 88,
+        "reference_bytes": 88
+      },
+      {
+        "name": "copy__21CameraParamChunkEventFPC16CameraParamChunk",
+        "score": 100.0,
+        "retail_bytes": 4,
+        "reference_bytes": 4
+      },
+      {
+        "name": "__sinit_\\CameraParamChunk_cpp",
+        "score": 100.0,
+        "retail_bytes": 52,
+        "reference_bytes": 52
+      },
+      {
+        "name": "__ct__18CameraGeneralParamFv",
+        "score": 100.0,
+        "retail_bytes": 128,
+        "reference_bytes": 128
+      },
+      {
+        "name": "init__Q216CameraParamChunk7ExParamFv",
+        "score": 100.0,
+        "retail_bytes": 172,
+        "reference_bytes": 172
+      },
+      {
+        "name": "__ct__Q216CameraParamChunk7ExParamFv",
+        "score": 100.0,
+        "retail_bytes": 4,
+        "reference_bytes": 4
+      },
+      {
+        "name": "getClassName__21CameraParamChunkEventCFv",
+        "score": 100.0,
+        "retail_bytes": 12,
+        "reference_bytes": 12
+      },
+      {
+        "name": "getClassName__20CameraParamChunkGameCFv",
+        "score": 100.0,
+        "retail_bytes": 12,
+        "reference_bytes": 12
+      }
+    ]
+  },
+  {
+    "source": "decomp/src/Game/Camera/CameraParamChunkHolder.cpp",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/decomp/src/Game/Camera/CameraParamChunkHolder.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-camera-holder-activation-20260907/CameraParamChunkHolder.reference.o"
+    ],
+    "exit_code": 0,
+    "objdiff_command": [
+      "build/tools/objdiff-cli",
+      "diff",
+      "-1",
+      "/Users/frityet/Projects/petari/decomp/build/original-player-state-recovery-20260907/retail/obj/Game/Camera/CameraParamChunkHolder.o",
+      "-2",
+      "/Users/frityet/Projects/petari/notes/original-camera-holder-activation-20260907/CameraParamChunkHolder.reference.o",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-camera-holder-activation-20260907/CameraParamChunkHolder.reference.objdiff.json",
+      "--format",
+      "json-pretty"
+    ],
+    "objdiff_exit_code": 0,
+    "functions": [
+      {
+        "name": "__ct__22CameraParamChunkHolderFP12CameraHolderPCc",
+        "score": 100.0,
+        "retail_bytes": 112,
+        "reference_bytes": 112
+      },
+      {
+        "name": "__dt__22CameraParamChunkHolderFv",
+        "score": 100.0,
+        "retail_bytes": 88,
+        "reference_bytes": 88
+      },
+      {
+        "name": "createChunk__22CameraParamChunkHolderFRC18CameraParamChunkIDP7JKRHeap",
+        "score": 100.0,
+        "retail_bytes": 260,
+        "reference_bytes": 260
+      },
+      {
+        "name": "getChunk__22CameraParamChunkHolderFRC18CameraParamChunkID",
+        "score": 100.0,
+        "retail_bytes": 28,
+        "reference_bytes": 28
+      },
+      {
+        "name": "sort__22CameraParamChunkHolderFv",
+        "score": 100.0,
+        "retail_bytes": 204,
+        "reference_bytes": 204
+      },
+      {
+        "name": "loadCameraParameters__22CameraParamChunkHolderFv",
+        "score": 100.0,
+        "retail_bytes": 84,
+        "reference_bytes": 84
+      },
+      {
+        "name": "isNewAttribute__22CameraParamChunkHolderFRC18CameraParamChunkID",
+        "score": 100.0,
+        "retail_bytes": 124,
+        "reference_bytes": 124
+      },
+      {
+        "name": "findChunk__22CameraParamChunkHolderFRC18CameraParamChunkID",
+        "score": 100.0,
+        "retail_bytes": 268,
+        "reference_bytes": 268
+      },
+      {
+        "name": "findChunk__22CameraParamChunkHolderFlPCc",
+        "score": 100.0,
+        "retail_bytes": 136,
+        "reference_bytes": 136
+      },
+      {
+        "name": "loadFile__22CameraParamChunkHolderFl",
+        "score": 99.90909,
+        "retail_bytes": 264,
+        "reference_bytes": 264
+      },
+      {
+        "name": "arrangeChunk__22CameraParamChunkHolderFP16CameraParamChunk",
+        "score": 100.0,
+        "retail_bytes": 1088,
+        "reference_bytes": 1088
+      }
+    ]
+  },
+  {
+    "source": "decomp/src/Game/Camera/CameraManGame.cpp",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/decomp/src/Game/Camera/CameraManGame.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-camera-holder-activation-20260907/CameraManGame.reference.o"
+    ],
+    "exit_code": 0,
+    "objdiff_command": [
+      "build/tools/objdiff-cli",
+      "diff",
+      "-1",
+      "/Users/frityet/Projects/petari/decomp/build/original-player-state-recovery-20260907/retail/obj/Game/Camera/CameraManGame.o",
+      "-2",
+      "/Users/frityet/Projects/petari/notes/original-camera-holder-activation-20260907/CameraManGame.reference.o",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-camera-holder-activation-20260907/CameraManGame.reference.objdiff.json",
+      "--format",
+      "json-pretty"
+    ],
+    "objdiff_exit_code": 0,
+    "functions": [
+      {
+        "name": "__ct__13CameraManGameFP12CameraHolderP22CameraParamChunkHolderPCc",
+        "score": 100.0,
+        "retail_bytes": 216,
+        "reference_bytes": 216
+      },
+      {
+        "name": "init__13CameraManGameFRC12JMapInfoIter",
+        "score": 100.0,
+        "retail_bytes": 4,
+        "reference_bytes": 4
+      },
+      {
+        "name": "calc__13CameraManGameFv",
+        "score": 100.0,
+        "retail_bytes": 116,
+        "reference_bytes": 116
+      },
+      {
+        "name": "notifyActivate__13CameraManGameFv",
+        "score": 100.0,
+        "retail_bytes": 12,
+        "reference_bytes": 12
+      },
+      {
+        "name": "closeCreatingCameraChunk__13CameraManGameFv",
+        "score": 100.0,
+        "retail_bytes": 84,
+        "reference_bytes": 84
+      },
+      {
+        "name": "startStartPosCamera__13CameraManGameFb",
+        "score": 100.0,
+        "retail_bytes": 32,
+        "reference_bytes": 32
+      },
+      {
+        "name": "endStartPosCamera__13CameraManGameFv",
+        "score": 100.0,
+        "retail_bytes": 16,
+        "reference_bytes": 16
+      },
+      {
+        "name": "zoomIn__13CameraManGameFv",
+        "score": 100.0,
+        "retail_bytes": 188,
+        "reference_bytes": 188
+      },
+      {
+        "name": "zoomOut__13CameraManGameFv",
+        "score": 100.0,
+        "retail_bytes": 12,
+        "reference_bytes": 12
+      },
+      {
+        "name": "isInterpolationOff__13CameraManGameCFv",
+        "score": 100.0,
+        "retail_bytes": 124,
+        "reference_bytes": 124
+      },
+      {
+        "name": "isCollisionOff__13CameraManGameCFv",
+        "score": 100.0,
+        "retail_bytes": 124,
+        "reference_bytes": 124
+      },
+      {
+        "name": "isZeroFrameMoveOff__13CameraManGameCFv",
+        "score": 100.0,
+        "retail_bytes": 36,
+        "reference_bytes": 36
+      },
+      {
+        "name": "isSubjectiveCameraOff__13CameraManGameCFv",
+        "score": 100.0,
+        "retail_bytes": 124,
+        "reference_bytes": 124
+      },
+      {
+        "name": "isCorrectingErpPositionOff__13CameraManGameCFv",
+        "score": 100.0,
+        "retail_bytes": 84,
+        "reference_bytes": 84
+      },
+      {
+        "name": "isEnableToRoundLeft__13CameraManGameCFv",
+        "score": 100.0,
+        "retail_bytes": 36,
+        "reference_bytes": 36
+      },
+      {
+        "name": "isEnableToRoundRight__13CameraManGameCFv",
+        "score": 100.0,
+        "retail_bytes": 36,
+        "reference_bytes": 36
+      },
+      {
+        "name": "isEnableToReset__13CameraManGameCFv",
+        "score": 100.0,
+        "retail_bytes": 36,
+        "reference_bytes": 36
+      },
+      {
+        "name": "selectCameraChunk__13CameraManGameFv",
+        "score": 100.0,
+        "retail_bytes": 188,
+        "reference_bytes": 188
+      },
+      {
+        "name": "setChunk__13CameraManGameFRC18CameraParamChunkID",
+        "score": 100.0,
+        "retail_bytes": 124,
+        "reference_bytes": 124
+      },
+      {
+        "name": "setNullCamera__13CameraManGameFv",
+        "score": 100.0,
+        "retail_bytes": 212,
+        "reference_bytes": 212
+      },
+      {
+        "name": "tryToReplaceChunkToDefault__13CameraManGameFP16CameraParamChunk",
+        "score": 100.0,
+        "retail_bytes": 168,
+        "reference_bytes": 168
+      },
+      {
+        "name": "requestResetIfNecessary__13CameraManGameFP16CameraParamChunk",
+        "score": 100.0,
+        "retail_bytes": 156,
+        "reference_bytes": 156
+      },
+      {
+        "name": "isNecessaryToReset__13CameraManGameCFP16CameraParamChunk",
+        "score": 100.0,
+        "retail_bytes": 164,
+        "reference_bytes": 164
+      },
+      {
+        "name": "isCurrentChunkEnableEndInterp__13CameraManGameCFv",
+        "score": 100.0,
+        "retail_bytes": 136,
+        "reference_bytes": 136
+      },
+      {
+        "name": "replaceCurrentChunkAndCamera__13CameraManGameFP16CameraParamChunk",
+        "score": 100.0,
+        "retail_bytes": 72,
+        "reference_bytes": 72
+      },
+      {
+        "name": "applyParameter__13CameraManGameFv",
+        "score": 100.0,
+        "retail_bytes": 476,
+        "reference_bytes": 476
+      },
+      {
+        "name": "checkReset__13CameraManGameFv",
+        "score": 100.0,
+        "retail_bytes": 112,
+        "reference_bytes": 112
+      },
+      {
+        "name": "setSafePose__13CameraManGameFv",
+        "score": 100.0,
+        "retail_bytes": 316,
+        "reference_bytes": 316
+      },
+      {
+        "name": "keepAwayWatchPos__13CameraManGameFPQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+        "score": 100.0,
+        "retail_bytes": 264,
+        "reference_bytes": 264
+      },
+      {
+        "name": "calcSafeUpVec__13CameraManGameFPQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+        "score": 100.0,
+        "retail_bytes": 540,
+        "reference_bytes": 540
+      },
+      {
+        "name": "createDefaultCamera__13CameraManGameFv",
+        "score": 100.0,
+        "retail_bytes": 92,
+        "reference_bytes": 92
+      },
+      {
+        "name": "createDefaultWaterCamera__13CameraManGameFv",
+        "score": 100.0,
+        "retail_bytes": 204,
+        "reference_bytes": 204
+      },
+      {
+        "name": "createDefaultWaterSurfaceCamera__13CameraManGameFv",
+        "score": 100.0,
+        "retail_bytes": 240,
+        "reference_bytes": 240
+      },
+      {
+        "name": "createDefaultFooFighterCamera__13CameraManGameFv",
+        "score": 100.0,
+        "retail_bytes": 204,
+        "reference_bytes": 204
+      },
+      {
+        "name": "createStartAnimCamera__13CameraManGameFv",
+        "score": 100.0,
+        "retail_bytes": 164,
+        "reference_bytes": 164
+      },
+      {
+        "name": "createZoomCamera__13CameraManGameFv",
+        "score": 100.0,
+        "retail_bytes": 228,
+        "reference_bytes": 228
+      },
+      {
+        "name": "checkStateShift__13CameraManGameFv",
+        "score": 100.0,
+        "retail_bytes": 92,
+        "reference_bytes": 92
+      },
+      {
+        "name": "tryShiftToGCapture__13CameraManGameFv",
+        "score": 100.0,
+        "retail_bytes": 72,
+        "reference_bytes": 72
+      },
+      {
+        "name": "tryShiftToSwimOrWaterSurface__13CameraManGameFv",
+        "score": 100.0,
+        "retail_bytes": 132,
+        "reference_bytes": 132
+      },
+      {
+        "name": "tryShiftToFooFighter__13CameraManGameFv",
+        "score": 100.0,
+        "retail_bytes": 88,
+        "reference_bytes": 88
+      },
+      {
+        "name": "updateNormal__13CameraManGameFv",
+        "score": 100.0,
+        "retail_bytes": 260,
+        "reference_bytes": 260
+      },
+      {
+        "name": "updateSwim__13CameraManGameFv",
+        "score": 100.0,
+        "retail_bytes": 104,
+        "reference_bytes": 104
+      },
+      {
+        "name": "updateWaterSurface__13CameraManGameFv",
+        "score": 100.0,
+        "retail_bytes": 104,
+        "reference_bytes": 104
+      },
+      {
+        "name": "updateGCapture__13CameraManGameFv",
+        "score": 100.0,
+        "retail_bytes": 180,
+        "reference_bytes": 180
+      },
+      {
+        "name": "updateFooFighter__13CameraManGameFv",
+        "score": 100.0,
+        "retail_bytes": 104,
+        "reference_bytes": 104
+      },
+      {
+        "name": "setCubeChunk__13CameraManGameFQ214CubeCameraArea9ECategory",
+        "score": 100.0,
+        "retail_bytes": 156,
+        "reference_bytes": 156
+      },
+      {
+        "name": "tryStartPosCamera__13CameraManGameFv",
+        "score": 100.0,
+        "retail_bytes": 216,
+        "reference_bytes": 216
+      },
+      {
+        "name": "tryZoomCamera__13CameraManGameFv",
+        "score": 100.0,
+        "retail_bytes": 116,
+        "reference_bytes": 116
+      },
+      {
+        "name": "isZoomCamera__13CameraManGameCFv",
+        "score": 100.0,
+        "retail_bytes": 108,
+        "reference_bytes": 108
+      },
+      {
+        "name": "__dt__13CameraManGameFv",
+        "score": 100.0,
+        "retail_bytes": 92,
+        "reference_bytes": 92
+      },
+      {
+        "name": "getClassName__16CameraParamChunkCFv",
+        "score": 100.0,
+        "retail_bytes": 12,
+        "reference_bytes": 12
+      },
+      {
+        "name": "isWaterMode__15CameraTargetObjCFv",
+        "score": 100.0,
+        "retail_bytes": 8,
+        "reference_bytes": 8
+      },
+      {
+        "name": "isOnWaterSurface__15CameraTargetObjCFv",
+        "score": 100.0,
+        "retail_bytes": 8,
+        "reference_bytes": 8
+      },
+      {
+        "name": "isFooFighterMode__15CameraTargetObjCFv",
+        "score": 100.0,
+        "retail_bytes": 8,
+        "reference_bytes": 8
+      },
+      {
+        "name": "getGroundTriangle__15CameraTargetObjCFv",
+        "score": 100.0,
+        "retail_bytes": 8,
+        "reference_bytes": 8
+      },
+      {
+        "name": "getCubeCameraArea__15CameraTargetObjCFv",
+        "score": 100.0,
+        "retail_bytes": 8,
+        "reference_bytes": 8
+      },
+      {
+        "name": "notifyDeactivate__13CameraManGameFv",
+        "score": 100.0,
+        "retail_bytes": 4,
+        "reference_bytes": 4
+      }
+    ]
+  }
+]

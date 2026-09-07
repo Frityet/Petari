@@ -1,0 +1,37 @@
+{
+  "reference_sources": [
+    "decomp/src/Game/Util/MtxUtil.cpp",
+    "decomp/src/Game/Util/MathUtil.cpp"
+  ],
+  "native": "src/compat/OriginalMtxGeometry.cpp",
+  "spans": [
+    {
+      "declaration": "bool isSameMtxRot(MtxPtr a, MtxPtr b) {",
+      "sha256": "a1d1aaac5419beed5c413aeb1e03a56cf9796d4b89c551071fc2ade09541c3ea"
+    },
+    {
+      "declaration": "bool isRotAxisY(MtxPtr a, MtxPtr b) {",
+      "sha256": "c90c4a25af31ec7b6445100d1a791d878650b72420e2966cf2ec8692951d7365"
+    },
+    {
+      "declaration": "void calcMtxRotAxis(TVec3f* pOut, MtxPtr a, MtxPtr b) {",
+      "sha256": "4092736fb9a8ff969ada48cf67b8eb80210e419a38f81a4b1b9be0ab95a03c7c"
+    },
+    {
+      "declaration": "f32 diffAngleAbs(f32 angleA, f32 angleB) {",
+      "sha256": "2fc7a1c4b8db5b6de8b20b02795d238bb6f7c36fd08b24f4998f593009337199"
+    },
+    {
+      "declaration": "f32 diffAngleAbs(const TVec2f& rA, const TVec2f& rB) {",
+      "sha256": "b98cd793ef622efeb73e83ee2124c2dcd8b7f369a17b4a0e1779761f3f90ba02"
+    },
+    {
+      "declaration": "bool isNormalize(const TVec3f& rVec, f32 tolerance) {",
+      "sha256": "f007df560175c9da6a93e3e696e8e0e70fffe6f2c7fc356f34b08b3dac219acc"
+    },
+    {
+      "declaration": "void getRotatedAxisZ(TVec3f* pDst, const TVec3f& pSrc) {",
+      "sha256": "8c3bfae6a6c217954d27733f0f34736a47898c33ad578fc95265f75cac04c0b7"
+    }
+  ]
+}

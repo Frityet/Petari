@@ -1,0 +1,5693 @@
+[
+  {
+    "unit": "Screen/GameSceneLayoutHolder",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Screen/GameSceneLayoutHolder.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-game-layout-owner-20260907/wii/Screen_GameSceneLayoutHolder.final.o"
+    ],
+    "result": 0,
+    "diff_result": 0,
+    "symbols": [
+      {
+        "name": "__ct__21GameSceneLayoutHolderFv",
+        "percent": 99.77477,
+        "retail_bytes": 444
+      },
+      {
+        "name": "createPurpleCoinCounter__21GameSceneLayoutHolderFv",
+        "percent": 100.0,
+        "retail_bytes": 76
+      },
+      {
+        "name": "movement__21GameSceneLayoutHolderFv",
+        "percent": 100.0,
+        "retail_bytes": 64
+      },
+      {
+        "name": "initLifeCount__21GameSceneLayoutHolderFUl",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "setLifeCount__21GameSceneLayoutHolderFUl",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "setOxygenRatio__21GameSceneLayoutHolderFf",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "setBeePowerRatio__21GameSceneLayoutHolderFf",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "changeLifeMeterModeGround__21GameSceneLayoutHolderFv",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "changeLifeMeterModeWater__21GameSceneLayoutHolderFv",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "changeLifeMeterModeBee__21GameSceneLayoutHolderFv",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "requestOneUp__21GameSceneLayoutHolderFl",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "requestPowerUpHPMeter__21GameSceneLayoutHolderFv",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "requestForceAppearHPMeter__21GameSceneLayoutHolderFv",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "startMiss__21GameSceneLayoutHolderFv",
+        "percent": 100.0,
+        "retail_bytes": 64
+      },
+      {
+        "name": "isMissAnimEnd__21GameSceneLayoutHolderCFv",
+        "percent": 100.0,
+        "retail_bytes": 44
+      },
+      {
+        "name": "activateDefaultGameLayout__21GameSceneLayoutHolderFv",
+        "percent": 100.0,
+        "retail_bytes": 124
+      },
+      {
+        "name": "deactivateDefaultGameLayout__21GameSceneLayoutHolderFv",
+        "percent": 100.0,
+        "retail_bytes": 156
+      },
+      {
+        "name": "getPurpleCoinCounter__21GameSceneLayoutHolderCFv",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "invalidateStatusLayout__21GameSceneLayoutHolderFv",
+        "percent": 100.0,
+        "retail_bytes": 128
+      },
+      {
+        "name": "getGameSceneLayoutHolder__2MRFv",
+        "percent": 100.0,
+        "retail_bytes": 40
+      },
+      {
+        "name": "__dt__21GameSceneLayoutHolderFv",
+        "percent": 100.0,
+        "retail_bytes": 88
+      },
+      {
+        "name": "__vt__21GameSceneLayoutHolder",
+        "percent": 100.0,
+        "retail_bytes": 36
+      },
+      {
+        "name": "[.data-0]",
+        "percent": 99.00833,
+        "retail_bytes": 176
+      }
+    ]
+  },
+  {
+    "unit": "Screen/MarioMeter",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Screen/MarioMeter.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-game-layout-owner-20260907/wii/Screen_MarioMeter.final.o"
+    ],
+    "result": 0,
+    "diff_result": 0,
+    "symbols": [
+      {
+        "name": "__ct__10MarioMeterFPCc",
+        "percent": 100.0,
+        "retail_bytes": 76
+      },
+      {
+        "name": "initLifeCount__10MarioMeterFl",
+        "percent": 100.0,
+        "retail_bytes": 124
+      },
+      {
+        "name": "setLifeCount__10MarioMeterFl",
+        "percent": 100.0,
+        "retail_bytes": 28
+      },
+      {
+        "name": "powerUp__10MarioMeterFv",
+        "percent": 100.0,
+        "retail_bytes": 88
+      },
+      {
+        "name": "requestForceAppearHPMeter__10MarioMeterFv",
+        "percent": 100.0,
+        "retail_bytes": 28
+      },
+      {
+        "name": "requestPlayerMoving__10MarioMeterFv",
+        "percent": 100.0,
+        "retail_bytes": 28
+      },
+      {
+        "name": "requestPlayerStopped__10MarioMeterFv",
+        "percent": 100.0,
+        "retail_bytes": 28
+      },
+      {
+        "name": "activate__10MarioMeterFv",
+        "percent": 100.0,
+        "retail_bytes": 28
+      },
+      {
+        "name": "deactivate__10MarioMeterFv",
+        "percent": 100.0,
+        "retail_bytes": 28
+      },
+      {
+        "name": "__dt__10MarioMeterFv",
+        "percent": 100.0,
+        "retail_bytes": 88
+      },
+      {
+        "name": "init__10MarioMeterFRC12JMapInfoIter",
+        "percent": 99.53125,
+        "retail_bytes": 128
+      },
+      {
+        "name": "__vt__10MarioMeter",
+        "percent": 100.0,
+        "retail_bytes": 36
+      },
+      {
+        "name": "[.data-0]",
+        "percent": 100.0,
+        "retail_bytes": 104
+      }
+    ]
+  },
+  {
+    "unit": "Screen/MarioSubMeter",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Screen/MarioSubMeter.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-game-layout-owner-20260907/wii/Screen_MarioSubMeter.final.o"
+    ],
+    "result": 0,
+    "diff_result": 0,
+    "symbols": [
+      {
+        "name": "__ct__13MarioSubMeterFPCc",
+        "percent": 100.0,
+        "retail_bytes": 76
+      },
+      {
+        "name": "setBeeLifeRatio__13MarioSubMeterFf",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "setWaterLifeRatio__13MarioSubMeterFf",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "activeSubMeterBee__13MarioSubMeterFv",
+        "percent": 100.0,
+        "retail_bytes": 96
+      },
+      {
+        "name": "activeSubMeterWater__13MarioSubMeterFv",
+        "percent": 100.0,
+        "retail_bytes": 96
+      },
+      {
+        "name": "frameOutSubMeter__13MarioSubMeterFv",
+        "percent": 100.0,
+        "retail_bytes": 68
+      },
+      {
+        "name": "activate__13MarioSubMeterFv",
+        "percent": 100.0,
+        "retail_bytes": 20
+      },
+      {
+        "name": "deactivate__13MarioSubMeterFv",
+        "percent": 100.0,
+        "retail_bytes": 56
+      },
+      {
+        "name": "__dt__13MarioSubMeterFv",
+        "percent": 100.0,
+        "retail_bytes": 88
+      },
+      {
+        "name": "init__13MarioSubMeterFRC12JMapInfoIter",
+        "percent": 99.53125,
+        "retail_bytes": 128
+      },
+      {
+        "name": "__vt__13MarioSubMeter",
+        "percent": 100.0,
+        "retail_bytes": 36
+      },
+      {
+        "name": "[.data-0]",
+        "percent": 100.0,
+        "retail_bytes": 80
+      }
+    ]
+  },
+  {
+    "unit": "Screen/CameraInfo",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Screen/CameraInfo.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-game-layout-owner-20260907/wii/Screen_CameraInfo.final.o"
+    ],
+    "result": 0,
+    "diff_result": 0,
+    "symbols": [
+      {
+        "name": "__ct__10CameraInfoFPCc",
+        "percent": 100.0,
+        "retail_bytes": 80
+      },
+      {
+        "name": "init__10CameraInfoFRC12JMapInfoIter",
+        "percent": 100.0,
+        "retail_bytes": 136
+      },
+      {
+        "name": "control__10CameraInfoFv",
+        "percent": 100.0,
+        "retail_bytes": 64
+      },
+      {
+        "name": "movement__10CameraInfoFv",
+        "percent": 100.0,
+        "retail_bytes": 20
+      },
+      {
+        "name": "calcAnim__10CameraInfoFv",
+        "percent": 100.0,
+        "retail_bytes": 20
+      },
+      {
+        "name": "draw__10CameraInfoCFv",
+        "percent": 100.0,
+        "retail_bytes": 20
+      },
+      {
+        "name": "activate__10CameraInfoFv",
+        "percent": 100.0,
+        "retail_bytes": 12
+      },
+      {
+        "name": "deactivate__10CameraInfoFv",
+        "percent": 100.0,
+        "retail_bytes": 12
+      },
+      {
+        "name": "exeAppear__10CameraInfoFv",
+        "percent": 100.0,
+        "retail_bytes": 112
+      },
+      {
+        "name": "exeNormal__10CameraInfoFv",
+        "percent": 99.435486,
+        "retail_bytes": 248
+      },
+      {
+        "name": "exeFirstPerson__10CameraInfoFv",
+        "percent": 100.0,
+        "retail_bytes": 128
+      },
+      {
+        "name": "exeEnd__10CameraInfoFv",
+        "percent": 100.0,
+        "retail_bytes": 100
+      },
+      {
+        "name": "updateCameraNG__10CameraInfoFv",
+        "percent": 100.0,
+        "retail_bytes": 152
+      },
+      {
+        "name": "hideCrossLineAll__10CameraInfoFv",
+        "percent": 99.4,
+        "retail_bytes": 100
+      },
+      {
+        "name": "tryAnimShortCut__10CameraInfoFv",
+        "percent": 100.0,
+        "retail_bytes": 128
+      },
+      {
+        "name": "tryShow__10CameraInfoFv",
+        "percent": 100.0,
+        "retail_bytes": 232
+      },
+      {
+        "name": "tryHide__10CameraInfoFv",
+        "percent": 100.0,
+        "retail_bytes": 276
+      },
+      {
+        "name": "tryChangeCameraStateNerve__10CameraInfoFv",
+        "percent": 100.0,
+        "retail_bytes": 144
+      },
+      {
+        "name": "__dt__10CameraInfoFv",
+        "percent": 100.0,
+        "retail_bytes": 92
+      },
+      {
+        "name": "__sinit_\\CameraInfo_cpp",
+        "percent": 100.0,
+        "retail_bytes": 68
+      },
+      {
+        "name": "__ct__Q213NrvCameraInfo17CameraInfoNrvHideFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q213NrvCameraInfo19CameraInfoNrvAppearFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q213NrvCameraInfo19CameraInfoNrvNormalFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q213NrvCameraInfo24CameraInfoNrvFirstPersonFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q213NrvCameraInfo16CameraInfoNrvEndFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "execute__Q213NrvCameraInfo16CameraInfoNrvEndCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "execute__Q213NrvCameraInfo24CameraInfoNrvFirstPersonCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "execute__Q213NrvCameraInfo19CameraInfoNrvNormalCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "execute__Q213NrvCameraInfo19CameraInfoNrvAppearCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "execute__Q213NrvCameraInfo17CameraInfoNrvHideCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 64
+      },
+      {
+        "name": "__vt__10CameraInfo",
+        "percent": 100.0,
+        "retail_bytes": 48
+      },
+      {
+        "name": "__vt__Q213NrvCameraInfo16CameraInfoNrvEnd",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q213NrvCameraInfo24CameraInfoNrvFirstPerson",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q213NrvCameraInfo19CameraInfoNrvNormal",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q213NrvCameraInfo19CameraInfoNrvAppear",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q213NrvCameraInfo17CameraInfoNrvHide",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "sInstance__Q213NrvCameraInfo17CameraInfoNrvHide",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q213NrvCameraInfo19CameraInfoNrvAppear",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q213NrvCameraInfo19CameraInfoNrvNormal",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q213NrvCameraInfo24CameraInfoNrvFirstPerson",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q213NrvCameraInfo16CameraInfoNrvEnd",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "[.ctors-0]",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "[.rodata-0]",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "[.data-0]",
+        "percent": 99.278496,
+        "retail_bytes": 200
+      },
+      {
+        "name": "[.sdata-0]",
+        "percent": 66.66667,
+        "retail_bytes": 8
+      }
+    ]
+  },
+  {
+    "unit": "Screen/CounterLayoutController",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Screen/CounterLayoutController.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-game-layout-owner-20260907/wii/Screen_CounterLayoutController.final.o"
+    ],
+    "result": 0,
+    "diff_result": 0,
+    "symbols": [
+      {
+        "name": "__ct__23CounterLayoutControllerFv",
+        "percent": 100.0,
+        "retail_bytes": 104
+      },
+      {
+        "name": "init__23CounterLayoutControllerFRC12JMapInfoIter",
+        "percent": 99.72222,
+        "retail_bytes": 216
+      },
+      {
+        "name": "appear__23CounterLayoutControllerFv",
+        "percent": 100.0,
+        "retail_bytes": 100
+      },
+      {
+        "name": "kill__23CounterLayoutControllerFv",
+        "percent": 100.0,
+        "retail_bytes": 52
+      },
+      {
+        "name": "forceAppear__23CounterLayoutControllerFv",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "setHPMeter__23CounterLayoutControllerFP10MarioMeter",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "requestedTicoEat__23CounterLayoutControllerFb",
+        "percent": 100.0,
+        "retail_bytes": 140
+      },
+      {
+        "name": "isInvalidSystemStateShowCounter__23CounterLayoutControllerFv",
+        "percent": 100.0,
+        "retail_bytes": 84
+      },
+      {
+        "name": "isWaitToDisappearCounter__23CounterLayoutControllerFPC11LayoutActor",
+        "percent": 100.0,
+        "retail_bytes": 76
+      },
+      {
+        "name": "control__23CounterLayoutControllerFv",
+        "percent": 100.0,
+        "retail_bytes": 12
+      },
+      {
+        "name": "showAllLayout__23CounterLayoutControllerFv",
+        "percent": 100.0,
+        "retail_bytes": 100
+      },
+      {
+        "name": "hideAllLayout__23CounterLayoutControllerFv",
+        "percent": 100.0,
+        "retail_bytes": 88
+      },
+      {
+        "name": "isHiddenOrWaitAllLayout__23CounterLayoutControllerCFv",
+        "percent": 100.0,
+        "retail_bytes": 364
+      },
+      {
+        "name": "isPlayerMoving__23CounterLayoutControllerCFv",
+        "percent": 100.0,
+        "retail_bytes": 308
+      },
+      {
+        "name": "appearAllCounterWithoutStar__23CounterLayoutControllerFv",
+        "percent": 100.0,
+        "retail_bytes": 100
+      },
+      {
+        "name": "killAllCoounter__23CounterLayoutControllerFv",
+        "percent": 100.0,
+        "retail_bytes": 120
+      },
+      {
+        "name": "tryEndTicoEatStarPiece__23CounterLayoutControllerFv",
+        "percent": 100.0,
+        "retail_bytes": 136
+      },
+      {
+        "name": "exePlayerMoving__23CounterLayoutControllerFv",
+        "percent": 100.0,
+        "retail_bytes": 160
+      },
+      {
+        "name": "exePlayerNotMoving__23CounterLayoutControllerFv",
+        "percent": 100.0,
+        "retail_bytes": 192
+      },
+      {
+        "name": "__dt__23CounterLayoutControllerFv",
+        "percent": 100.0,
+        "retail_bytes": 92
+      },
+      {
+        "name": "__sinit_\\CounterLayoutController_cpp",
+        "percent": 100.0,
+        "retail_bytes": 44
+      },
+      {
+        "name": "__ct__Q226NrvCounterLayoutController38CounterLayoutControllerNrvPlayerMovingFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q226NrvCounterLayoutController41CounterLayoutControllerNrvPlayerNotMovingFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "execute__Q226NrvCounterLayoutController41CounterLayoutControllerNrvPlayerNotMovingCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "execute__Q226NrvCounterLayoutController38CounterLayoutControllerNrvPlayerMovingCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "__vt__23CounterLayoutController",
+        "percent": 100.0,
+        "retail_bytes": 48
+      },
+      {
+        "name": "__vt__Q226NrvCounterLayoutController41CounterLayoutControllerNrvPlayerNotMoving",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q226NrvCounterLayoutController38CounterLayoutControllerNrvPlayerMoving",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "sInstance__Q226NrvCounterLayoutController38CounterLayoutControllerNrvPlayerMoving",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q226NrvCounterLayoutController41CounterLayoutControllerNrvPlayerNotMoving",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@57889",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "[.ctors-0]",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "[.data-0]",
+        "percent": 100.0,
+        "retail_bytes": 160
+      },
+      {
+        "name": "[.sdata2-0]",
+        "percent": 66.66667,
+        "retail_bytes": 8
+      }
+    ]
+  },
+  {
+    "unit": "Screen/InformationMessage",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Screen/InformationMessage.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-game-layout-owner-20260907/wii/Screen_InformationMessage.final.o"
+    ],
+    "result": 0,
+    "diff_result": 0,
+    "symbols": [
+      {
+        "name": "__ct__18InformationMessageFv",
+        "percent": 100.0,
+        "retail_bytes": 84
+      },
+      {
+        "name": "init__18InformationMessageFRC12JMapInfoIter",
+        "percent": 99.893616,
+        "retail_bytes": 188
+      },
+      {
+        "name": "appear__18InformationMessageFv",
+        "percent": 99.18367,
+        "retail_bytes": 196
+      },
+      {
+        "name": "appearWithButtonLayout__18InformationMessageFv",
+        "percent": 100.0,
+        "retail_bytes": 112
+      },
+      {
+        "name": "disappear__18InformationMessageFv",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "setMessage__18InformationMessageFPCc",
+        "percent": 100.0,
+        "retail_bytes": 12
+      },
+      {
+        "name": "setMessage__18InformationMessageFPCw",
+        "percent": 100.0,
+        "retail_bytes": 12
+      },
+      {
+        "name": "setReplaceString__18InformationMessageFPCwl",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "exeDisappear__18InformationMessageFv",
+        "percent": 100.0,
+        "retail_bytes": 104
+      },
+      {
+        "name": "__dt__18InformationMessageFv",
+        "percent": 100.0,
+        "retail_bytes": 92
+      },
+      {
+        "name": "__sinit_\\InformationMessage_cpp",
+        "percent": 100.0,
+        "retail_bytes": 52
+      },
+      {
+        "name": "__ct__Q221NrvInformationMessage27InformationMessageNrvAppearFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q221NrvInformationMessage25InformationMessageNrvWaitFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q221NrvInformationMessage30InformationMessageNrvDisappearFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "execute__Q221NrvInformationMessage30InformationMessageNrvDisappearCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "execute__Q221NrvInformationMessage25InformationMessageNrvWaitCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 20
+      },
+      {
+        "name": "execute__Q221NrvInformationMessage27InformationMessageNrvAppearCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__18InformationMessage",
+        "percent": 100.0,
+        "retail_bytes": 48
+      },
+      {
+        "name": "__vt__Q221NrvInformationMessage30InformationMessageNrvDisappear",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q221NrvInformationMessage25InformationMessageNrvWait",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q221NrvInformationMessage27InformationMessageNrvAppear",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "sInstance__Q221NrvInformationMessage27InformationMessageNrvAppear",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q221NrvInformationMessage25InformationMessageNrvWait",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q221NrvInformationMessage30InformationMessageNrvDisappear",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "[.ctors-0]",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "[.data-0]",
+        "percent": 100.0,
+        "retail_bytes": 240
+      },
+      {
+        "name": "[.sdata-0]",
+        "percent": 66.66667,
+        "retail_bytes": 8
+      }
+    ]
+  },
+  {
+    "unit": "Screen/OneUpBoard",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Screen/OneUpBoard.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-game-layout-owner-20260907/wii/Screen_OneUpBoard.final.o"
+    ],
+    "result": 0,
+    "diff_result": 0,
+    "symbols": [
+      {
+        "name": "__ct__10OneUpBoardFv",
+        "percent": 100.0,
+        "retail_bytes": 72
+      },
+      {
+        "name": "init__10OneUpBoardFRC12JMapInfoIter",
+        "percent": 100.0,
+        "retail_bytes": 132
+      },
+      {
+        "name": "popup__10OneUpBoardFl",
+        "percent": 100.0,
+        "retail_bytes": 80
+      },
+      {
+        "name": "appear__10OneUpBoardFv",
+        "percent": 100.0,
+        "retail_bytes": 56
+      },
+      {
+        "name": "calcPos__10OneUpBoardFv",
+        "percent": 100.0,
+        "retail_bytes": 112
+      },
+      {
+        "name": "control__10OneUpBoardFv",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "exeAppear__10OneUpBoardFv",
+        "percent": 100.0,
+        "retail_bytes": 136
+      },
+      {
+        "name": "__dt__10OneUpBoardFv",
+        "percent": 100.0,
+        "retail_bytes": 92
+      },
+      {
+        "name": "__sinit_\\OneUpBoard_cpp",
+        "percent": 100.0,
+        "retail_bytes": 44
+      },
+      {
+        "name": "__ct__Q213NrvOneUpBoard12HostTypeWaitFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q213NrvOneUpBoard14HostTypeAppearFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "execute__Q213NrvOneUpBoard14HostTypeAppearCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "execute__Q213NrvOneUpBoard12HostTypeWaitCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "__vt__10OneUpBoard",
+        "percent": 100.0,
+        "retail_bytes": 48
+      },
+      {
+        "name": "__vt__Q213NrvOneUpBoard14HostTypeAppear",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q213NrvOneUpBoard12HostTypeWait",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "sInstance__Q213NrvOneUpBoard12HostTypeWait",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q213NrvOneUpBoard14HostTypeAppear",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@57423",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@57424",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "[.ctors-0]",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "[.data-0]",
+        "percent": 100.0,
+        "retail_bytes": 112
+      },
+      {
+        "name": "[.sdata2-0]",
+        "percent": 100.0,
+        "retail_bytes": 8
+      }
+    ]
+  },
+  {
+    "unit": "Screen/MissLayout",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Screen/MissLayout.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-game-layout-owner-20260907/wii/Screen_MissLayout.final.o"
+    ],
+    "result": 0,
+    "diff_result": 0,
+    "symbols": [
+      {
+        "name": "__ct__10MissLayoutFv",
+        "percent": 100.0,
+        "retail_bytes": 72
+      },
+      {
+        "name": "init__10MissLayoutFRC12JMapInfoIter",
+        "percent": 100.0,
+        "retail_bytes": 116
+      },
+      {
+        "name": "kill__10MissLayoutFv",
+        "percent": 100.0,
+        "retail_bytes": 56
+      },
+      {
+        "name": "isActive__10MissLayoutCFv",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "start__10MissLayoutFv",
+        "percent": 100.0,
+        "retail_bytes": 84
+      },
+      {
+        "name": "exeActive__10MissLayoutFv",
+        "percent": 100.0,
+        "retail_bytes": 148
+      },
+      {
+        "name": "__dt__10MissLayoutFv",
+        "percent": 100.0,
+        "retail_bytes": 92
+      },
+      {
+        "name": "__sinit_\\MissLayout_cpp",
+        "percent": 100.0,
+        "retail_bytes": 52
+      },
+      {
+        "name": "__ct__Q224@unnamed@MissLayout_cpp@17MissLayoutNrvWaitFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q224@unnamed@MissLayout_cpp@19MissLayoutNrvActiveFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q224@unnamed@MissLayout_cpp@16MissLayoutNrvEndFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "execute__Q224@unnamed@MissLayout_cpp@16MissLayoutNrvEndCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "execute__Q224@unnamed@MissLayout_cpp@19MissLayoutNrvActiveCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "execute__Q224@unnamed@MissLayout_cpp@17MissLayoutNrvWaitCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "__vt__10MissLayout",
+        "percent": 100.0,
+        "retail_bytes": 48
+      },
+      {
+        "name": "__vt__Q224@unnamed@MissLayout_cpp@16MissLayoutNrvEnd",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q224@unnamed@MissLayout_cpp@19MissLayoutNrvActive",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q224@unnamed@MissLayout_cpp@17MissLayoutNrvWait",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "sInstance__Q224@unnamed@MissLayout_cpp@17MissLayoutNrvWait",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q224@unnamed@MissLayout_cpp@19MissLayoutNrvActive",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q224@unnamed@MissLayout_cpp@16MissLayoutNrvEnd",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "[.ctors-0]",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "[.data-0]",
+        "percent": 98.894615,
+        "retail_bytes": 120
+      }
+    ]
+  },
+  {
+    "unit": "Screen/NoteCounter",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Screen/NoteCounter.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-game-layout-owner-20260907/wii/Screen_NoteCounter.final.o"
+    ],
+    "result": 0,
+    "diff_result": 0,
+    "symbols": [
+      {
+        "name": "__ct__11NoteCounterFPCc",
+        "percent": 99.8,
+        "retail_bytes": 100
+      },
+      {
+        "name": "init__11NoteCounterFRC12JMapInfoIter",
+        "percent": 100.0,
+        "retail_bytes": 68
+      },
+      {
+        "name": "declareNoteNumMaxAndMelody__11NoteCounterFP9LiveActorllf",
+        "percent": 100.0,
+        "retail_bytes": 152
+      },
+      {
+        "name": "add__11NoteCounterFv",
+        "percent": 94.0,
+        "retail_bytes": 300
+      },
+      {
+        "name": "exeShowToHide__11NoteCounterFv",
+        "percent": 99.583336,
+        "retail_bytes": 192
+      },
+      {
+        "name": "exeHideToShow__11NoteCounterFv",
+        "percent": 99.62963,
+        "retail_bytes": 216
+      },
+      {
+        "name": "tryEndDisp__11NoteCounterFv",
+        "percent": 100.0,
+        "retail_bytes": 36
+      },
+      {
+        "name": "declareNoteNumMaxAndMelodyToCounter__2MRFP9LiveActorllf",
+        "percent": 100.0,
+        "retail_bytes": 96
+      },
+      {
+        "name": "addNoteToCounter__2MRFv",
+        "percent": 100.0,
+        "retail_bytes": 40
+      },
+      {
+        "name": "failureNoteCollection__2MRFv",
+        "percent": 100.0,
+        "retail_bytes": 52
+      },
+      {
+        "name": "__dt__11NoteCounterFv",
+        "percent": 100.0,
+        "retail_bytes": 92
+      },
+      {
+        "name": "__sinit_\\NoteCounter_cpp",
+        "percent": 100.0,
+        "retail_bytes": 68
+      },
+      {
+        "name": "__ct__Q214NrvNoteCounter18NoteCounterNrvShowFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q214NrvNoteCounter22NoteCounterNrvShowWaitFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q214NrvNoteCounter24NoteCounterNrvShowToHideFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q214NrvNoteCounter24NoteCounterNrvHideToShowFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q214NrvNoteCounter18NoteCounterNrvHideFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "execute__Q214NrvNoteCounter18NoteCounterNrvHideCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 64
+      },
+      {
+        "name": "execute__Q214NrvNoteCounter24NoteCounterNrvHideToShowCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "execute__Q214NrvNoteCounter24NoteCounterNrvShowToHideCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "execute__Q214NrvNoteCounter22NoteCounterNrvShowWaitCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 72
+      },
+      {
+        "name": "execute__Q214NrvNoteCounter18NoteCounterNrvShowCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "__vt__11NoteCounter",
+        "percent": 100.0,
+        "retail_bytes": 48
+      },
+      {
+        "name": "__vt__Q214NrvNoteCounter18NoteCounterNrvHide",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q214NrvNoteCounter24NoteCounterNrvHideToShow",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q214NrvNoteCounter24NoteCounterNrvShowToHide",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q214NrvNoteCounter22NoteCounterNrvShowWait",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q214NrvNoteCounter18NoteCounterNrvShow",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "sInstance__Q214NrvNoteCounter18NoteCounterNrvShow",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q214NrvNoteCounter22NoteCounterNrvShowWait",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q214NrvNoteCounter24NoteCounterNrvShowToHide",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q214NrvNoteCounter24NoteCounterNrvHideToShow",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q214NrvNoteCounter18NoteCounterNrvHide",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@58411",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@58412",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@59653",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@59654",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "[.ctors-0]",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "[.rodata-0]",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "[.data-0]",
+        "percent": 100.0,
+        "retail_bytes": 152
+      },
+      {
+        "name": "[.sdata2-0]",
+        "percent": 75.0,
+        "retail_bytes": 16
+      }
+    ]
+  },
+  {
+    "unit": "Screen/YesNoLayout",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Screen/YesNoLayout.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-game-layout-owner-20260907/wii/Screen_YesNoLayout.final.o"
+    ],
+    "result": 0,
+    "diff_result": 0,
+    "symbols": [
+      {
+        "name": "__ct__11YesNoLayoutFv",
+        "percent": 100.0,
+        "retail_bytes": 96
+      },
+      {
+        "name": "init__11YesNoLayoutFRC12JMapInfoIter",
+        "percent": 100.0,
+        "retail_bytes": 144
+      },
+      {
+        "name": "appear__11YesNoLayoutFv",
+        "percent": 100.0,
+        "retail_bytes": 80
+      },
+      {
+        "name": "kill__11YesNoLayoutFv",
+        "percent": 100.0,
+        "retail_bytes": 52
+      },
+      {
+        "name": "setInformationMessage__11YesNoLayoutFPCc",
+        "percent": 100.0,
+        "retail_bytes": 20
+      },
+      {
+        "name": "setSelectMessage__11YesNoLayoutFPCcPCc",
+        "percent": 100.0,
+        "retail_bytes": 92
+      },
+      {
+        "name": "control__11YesNoLayoutFv",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "exeSelecting__11YesNoLayoutFv",
+        "percent": 100.0,
+        "retail_bytes": 108
+      },
+      {
+        "name": "__dt__11YesNoLayoutFv",
+        "percent": 100.0,
+        "retail_bytes": 88
+      },
+      {
+        "name": "__sinit_\\YesNoLayout_cpp",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "__ct__Q214NrvYesNoLayout23YesNoLayoutNrvSelectingFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "execute__Q214NrvYesNoLayout23YesNoLayoutNrvSelectingCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "__vt__11YesNoLayout",
+        "percent": 100.0,
+        "retail_bytes": 48
+      },
+      {
+        "name": "__vt__Q214NrvYesNoLayout23YesNoLayoutNrvSelecting",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "sInstance__Q214NrvYesNoLayout23YesNoLayoutNrvSelecting",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "[.ctors-0]",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "[.data-0]",
+        "percent": 98.72727,
+        "retail_bytes": 112
+      }
+    ]
+  },
+  {
+    "unit": "Screen/PurpleCoinCounter",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Screen/PurpleCoinCounter.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-game-layout-owner-20260907/wii/Screen_PurpleCoinCounter.final.o"
+    ],
+    "result": 0,
+    "diff_result": 0,
+    "symbols": [
+      {
+        "name": "__ct__17PurpleCoinCounterFPCc",
+        "percent": 100.0,
+        "retail_bytes": 92
+      },
+      {
+        "name": "init__17PurpleCoinCounterFRC12JMapInfoIter",
+        "percent": 99.8,
+        "retail_bytes": 200
+      },
+      {
+        "name": "appear__17PurpleCoinCounterFv",
+        "percent": 100.0,
+        "retail_bytes": 148
+      },
+      {
+        "name": "validate__17PurpleCoinCounterFv",
+        "percent": 100.0,
+        "retail_bytes": 24
+      },
+      {
+        "name": "control__17PurpleCoinCounterFv",
+        "percent": 100.0,
+        "retail_bytes": 60
+      },
+      {
+        "name": "updateCounter__17PurpleCoinCounterFv",
+        "percent": 99.850746,
+        "retail_bytes": 268
+      },
+      {
+        "name": "exeAppear__17PurpleCoinCounterFv",
+        "percent": 99.84849,
+        "retail_bytes": 132
+      },
+      {
+        "name": "__dt__17PurpleCoinCounterFv",
+        "percent": 100.0,
+        "retail_bytes": 92
+      },
+      {
+        "name": "__sinit_\\PurpleCoinCounter_cpp",
+        "percent": 100.0,
+        "retail_bytes": 44
+      },
+      {
+        "name": "__ct__Q220NrvPurpleCoinCounter26PurpleCoinCounterNrvAppearFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q220NrvPurpleCoinCounter24PurpleCoinCounterNrvWaitFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "execute__Q220NrvPurpleCoinCounter24PurpleCoinCounterNrvWaitCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "execute__Q220NrvPurpleCoinCounter26PurpleCoinCounterNrvAppearCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "__vt__17PurpleCoinCounter",
+        "percent": 100.0,
+        "retail_bytes": 48
+      },
+      {
+        "name": "__vt__Q220NrvPurpleCoinCounter24PurpleCoinCounterNrvWait",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q220NrvPurpleCoinCounter26PurpleCoinCounterNrvAppear",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "sInstance__Q220NrvPurpleCoinCounter26PurpleCoinCounterNrvAppear",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q220NrvPurpleCoinCounter24PurpleCoinCounterNrvWait",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@54408",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@55622",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "[.ctors-0]",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "[.data-0]",
+        "percent": 100.0,
+        "retail_bytes": 152
+      },
+      {
+        "name": "[.sdata2-0]",
+        "percent": 50.0,
+        "retail_bytes": 8
+      }
+    ]
+  },
+  {
+    "unit": "Screen/MeterLayout",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Screen/MeterLayout.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-game-layout-owner-20260907/wii/Screen_MeterLayout.final.o"
+    ],
+    "result": 0,
+    "diff_result": 0,
+    "symbols": [
+      {
+        "name": "__ct__11MeterLayoutFPCcPCc",
+        "percent": 99.74359,
+        "retail_bytes": 156
+      },
+      {
+        "name": "init__11MeterLayoutFRC12JMapInfoIter",
+        "percent": 99.476746,
+        "retail_bytes": 344
+      },
+      {
+        "name": "control__11MeterLayoutFv",
+        "percent": 99.32204,
+        "retail_bytes": 236
+      },
+      {
+        "name": "requestActive__11MeterLayoutFv",
+        "percent": 99.3,
+        "retail_bytes": 200
+      },
+      {
+        "name": "requestDeactivate__11MeterLayoutFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "requestPowerUp__11MeterLayoutFv",
+        "percent": 99.48276,
+        "retail_bytes": 116
+      },
+      {
+        "name": "requestForceAppear__11MeterLayoutFv",
+        "percent": 100.0,
+        "retail_bytes": 68
+      },
+      {
+        "name": "requestPlayerMoving__11MeterLayoutFv",
+        "percent": 99.46429,
+        "retail_bytes": 112
+      },
+      {
+        "name": "requestPlayerStopped__11MeterLayoutFv",
+        "percent": 99.46429,
+        "retail_bytes": 112
+      },
+      {
+        "name": "initCount__11MeterLayoutFl",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "setCount__11MeterLayoutFl",
+        "percent": 100.0,
+        "retail_bytes": 84
+      },
+      {
+        "name": "exeAppear__11MeterLayoutFv",
+        "percent": 99.51613,
+        "retail_bytes": 124
+      },
+      {
+        "name": "exeWaitStart__11MeterLayoutFv",
+        "percent": 99.666664,
+        "retail_bytes": 120
+      },
+      {
+        "name": "exeWait__11MeterLayoutFv",
+        "percent": 99.13793,
+        "retail_bytes": 116
+      },
+      {
+        "name": "exePowerUp__11MeterLayoutFv",
+        "percent": 86.57304,
+        "retail_bytes": 356
+      },
+      {
+        "name": "exeMeterMove__11MeterLayoutFv",
+        "percent": 99.77273,
+        "retail_bytes": 176
+      },
+      {
+        "name": "exeCounterMove__11MeterLayoutFv",
+        "percent": 99.913795,
+        "retail_bytes": 232
+      },
+      {
+        "name": "exeRecover__11MeterLayoutFv",
+        "percent": 99.756096,
+        "retail_bytes": 164
+      },
+      {
+        "name": "exeDamage__11MeterLayoutFv",
+        "percent": 99.77273,
+        "retail_bytes": 176
+      },
+      {
+        "name": "exeBreakMeter__11MeterLayoutFv",
+        "percent": 99.48276,
+        "retail_bytes": 232
+      },
+      {
+        "name": "exeZeroMeter__11MeterLayoutFv",
+        "percent": 99.71429,
+        "retail_bytes": 140
+      },
+      {
+        "name": "exeZeroMeterBreak__11MeterLayoutFv",
+        "percent": 99.82758,
+        "retail_bytes": 116
+      },
+      {
+        "name": "calcMarioHeadPosition__11MeterLayoutCFPQ29JGeometry8TVec2<f>",
+        "percent": 99.48276,
+        "retail_bytes": 116
+      },
+      {
+        "name": "calcPowerUpMeterBasePosition__11MeterLayoutCFPQ29JGeometry8TVec2<f>",
+        "percent": 99.28571,
+        "retail_bytes": 84
+      },
+      {
+        "name": "setAnimBase__11MeterLayoutFv",
+        "percent": 99.431816,
+        "retail_bytes": 176
+      },
+      {
+        "name": "setCountAnimFrame__11MeterLayoutFv",
+        "percent": 99.828575,
+        "retail_bytes": 140
+      },
+      {
+        "name": "setRecoveryCountAnimFrame__11MeterLayoutFv",
+        "percent": 99.828575,
+        "retail_bytes": 140
+      },
+      {
+        "name": "__dt__11MeterLayoutFv",
+        "percent": 100.0,
+        "retail_bytes": 92
+      },
+      {
+        "name": "__sinit_\\MeterLayout_cpp",
+        "percent": 100.0,
+        "retail_bytes": 124
+      },
+      {
+        "name": "__ct__Q214NrvMeterLayout18MeterLayoutNrvHideFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q214NrvMeterLayout20MeterLayoutNrvAppearFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q214NrvMeterLayout18MeterLayoutNrvWaitFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q214NrvMeterLayout23MeterLayoutNrvWaitStartFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q214NrvMeterLayout21MeterLayoutNrvPowerUpFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q214NrvMeterLayout23MeterLayoutNrvMeterMoveFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q214NrvMeterLayout25MeterLayoutNrvCounterMoveFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q214NrvMeterLayout21MeterLayoutNrvRecoverFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q214NrvMeterLayout20MeterLayoutNrvDamageFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q214NrvMeterLayout24MeterLayoutNrvBreakMeterFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q214NrvMeterLayout23MeterLayoutNrvZeroMeterFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q214NrvMeterLayout28MeterLayoutNrvZeroMeterBreakFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "execute__Q214NrvMeterLayout28MeterLayoutNrvZeroMeterBreakCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "execute__Q214NrvMeterLayout23MeterLayoutNrvZeroMeterCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "execute__Q214NrvMeterLayout24MeterLayoutNrvBreakMeterCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "execute__Q214NrvMeterLayout20MeterLayoutNrvDamageCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "execute__Q214NrvMeterLayout21MeterLayoutNrvRecoverCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "execute__Q214NrvMeterLayout25MeterLayoutNrvCounterMoveCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "execute__Q214NrvMeterLayout23MeterLayoutNrvMeterMoveCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "execute__Q214NrvMeterLayout21MeterLayoutNrvPowerUpCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "execute__Q214NrvMeterLayout23MeterLayoutNrvWaitStartCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "execute__Q214NrvMeterLayout18MeterLayoutNrvWaitCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "execute__Q214NrvMeterLayout20MeterLayoutNrvAppearCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "execute__Q214NrvMeterLayout18MeterLayoutNrvHideCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "__vt__11MeterLayout",
+        "percent": 100.0,
+        "retail_bytes": 48
+      },
+      {
+        "name": "__vt__Q214NrvMeterLayout28MeterLayoutNrvZeroMeterBreak",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q214NrvMeterLayout23MeterLayoutNrvZeroMeter",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q214NrvMeterLayout24MeterLayoutNrvBreakMeter",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q214NrvMeterLayout20MeterLayoutNrvDamage",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q214NrvMeterLayout21MeterLayoutNrvRecover",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q214NrvMeterLayout25MeterLayoutNrvCounterMove",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q214NrvMeterLayout23MeterLayoutNrvMeterMove",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q214NrvMeterLayout21MeterLayoutNrvPowerUp",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q214NrvMeterLayout23MeterLayoutNrvWaitStart",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q214NrvMeterLayout18MeterLayoutNrvWait",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q214NrvMeterLayout20MeterLayoutNrvAppear",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q214NrvMeterLayout18MeterLayoutNrvHide",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "sInstance__Q214NrvMeterLayout18MeterLayoutNrvHide",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q214NrvMeterLayout20MeterLayoutNrvAppear",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q214NrvMeterLayout18MeterLayoutNrvWait",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q214NrvMeterLayout23MeterLayoutNrvWaitStart",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q214NrvMeterLayout21MeterLayoutNrvPowerUp",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q214NrvMeterLayout23MeterLayoutNrvMeterMove",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q214NrvMeterLayout25MeterLayoutNrvCounterMove",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q214NrvMeterLayout21MeterLayoutNrvRecover",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q214NrvMeterLayout20MeterLayoutNrvDamage",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q214NrvMeterLayout24MeterLayoutNrvBreakMeter",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q214NrvMeterLayout23MeterLayoutNrvZeroMeter",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q214NrvMeterLayout28MeterLayoutNrvZeroMeterBreak",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@56676",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@56677",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@57848",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@57900",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@57911",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@57912",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@57913",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@57921",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@58030",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@58031",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@58032",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@58083",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "[.ctors-0]",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "[.rodata-0]",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "[.data-0]",
+        "percent": 69.06964,
+        "retail_bytes": 464
+      },
+      {
+        "name": "[.sdata2-0]",
+        "percent": 87.5,
+        "retail_bytes": 48
+      }
+    ]
+  },
+  {
+    "unit": "Screen/SuddenDeathMeter",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Screen/SuddenDeathMeter.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-game-layout-owner-20260907/wii/Screen_SuddenDeathMeter.final.o"
+    ],
+    "result": 0,
+    "diff_result": 0,
+    "symbols": [
+      {
+        "name": "__ct__16SuddenDeathMeterFPCcPCc",
+        "percent": 99.72973,
+        "retail_bytes": 148
+      },
+      {
+        "name": "init__16SuddenDeathMeterFRC12JMapInfoIter",
+        "percent": 99.57746,
+        "retail_bytes": 284
+      },
+      {
+        "name": "control__16SuddenDeathMeterFv",
+        "percent": 99.625,
+        "retail_bytes": 160
+      },
+      {
+        "name": "requestActive__16SuddenDeathMeterFv",
+        "percent": 100.0,
+        "retail_bytes": 100
+      },
+      {
+        "name": "requestDeactivate__16SuddenDeathMeterFv",
+        "percent": 100.0,
+        "retail_bytes": 72
+      },
+      {
+        "name": "requestPowerUp__16SuddenDeathMeterFv",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "requestForceAppear__16SuddenDeathMeterFv",
+        "percent": 100.0,
+        "retail_bytes": 56
+      },
+      {
+        "name": "requestPlayerMoving__16SuddenDeathMeterFv",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "exeAppear__16SuddenDeathMeterFv",
+        "percent": 99.80769,
+        "retail_bytes": 104
+      },
+      {
+        "name": "exeWait__16SuddenDeathMeterFv",
+        "percent": 99.72222,
+        "retail_bytes": 72
+      },
+      {
+        "name": "exePowerUp__16SuddenDeathMeterFv",
+        "percent": 99.85714,
+        "retail_bytes": 140
+      },
+      {
+        "name": "exeMeterMove__16SuddenDeathMeterFv",
+        "percent": 99.88095,
+        "retail_bytes": 168
+      },
+      {
+        "name": "exeCounterMove__16SuddenDeathMeterFv",
+        "percent": 100.0,
+        "retail_bytes": 124
+      },
+      {
+        "name": "exeBreakMeter__16SuddenDeathMeterFv",
+        "percent": 99.5098,
+        "retail_bytes": 204
+      },
+      {
+        "name": "exeZeroMeter__16SuddenDeathMeterFv",
+        "percent": 99.80769,
+        "retail_bytes": 104
+      },
+      {
+        "name": "exeZeroMeterBreak__16SuddenDeathMeterFv",
+        "percent": 99.78261,
+        "retail_bytes": 92
+      },
+      {
+        "name": "initCount__16SuddenDeathMeterFl",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "setCount__16SuddenDeathMeterFl",
+        "percent": 100.0,
+        "retail_bytes": 44
+      },
+      {
+        "name": "calcMarioHeadPosition__16SuddenDeathMeterCFPQ29JGeometry8TVec2<f>",
+        "percent": 100.0,
+        "retail_bytes": 116
+      },
+      {
+        "name": "calcPowerUpMeterBasePosition__16SuddenDeathMeterCFPQ29JGeometry8TVec2<f>",
+        "percent": 100.0,
+        "retail_bytes": 84
+      },
+      {
+        "name": "setPowerUpMeterPosition__16SuddenDeathMeterFRCQ29JGeometry8TVec2<f>",
+        "percent": 100.0,
+        "retail_bytes": 120
+      },
+      {
+        "name": "setCountAnimFrame__16SuddenDeathMeterFv",
+        "percent": 99.85714,
+        "retail_bytes": 140
+      },
+      {
+        "name": "setRecoveryCountAnimFrame__16SuddenDeathMeterFv",
+        "percent": 99.85714,
+        "retail_bytes": 140
+      },
+      {
+        "name": "__dt__16SuddenDeathMeterFv",
+        "percent": 100.0,
+        "retail_bytes": 92
+      },
+      {
+        "name": "__sinit_\\SuddenDeathMeter_cpp",
+        "percent": 100.0,
+        "retail_bytes": 92
+      },
+      {
+        "name": "__ct__Q219NrvSuddenDeathMeter25SuddenDeathMeterNrvAppearFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q219NrvSuddenDeathMeter23SuddenDeathMeterNrvWaitFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q219NrvSuddenDeathMeter26SuddenDeathMeterNrvPowerUpFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q219NrvSuddenDeathMeter28SuddenDeathMeterNrvMeterMoveFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q219NrvSuddenDeathMeter30SuddenDeathMeterNrvCounterMoveFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q219NrvSuddenDeathMeter29SuddenDeathMeterNrvBreakMeterFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q219NrvSuddenDeathMeter28SuddenDeathMeterNrvZeroMeterFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q219NrvSuddenDeathMeter33SuddenDeathMeterNrvZeroMeterBreakFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "execute__Q219NrvSuddenDeathMeter33SuddenDeathMeterNrvZeroMeterBreakCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "execute__Q219NrvSuddenDeathMeter28SuddenDeathMeterNrvZeroMeterCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "execute__Q219NrvSuddenDeathMeter29SuddenDeathMeterNrvBreakMeterCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "execute__Q219NrvSuddenDeathMeter30SuddenDeathMeterNrvCounterMoveCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "execute__Q219NrvSuddenDeathMeter28SuddenDeathMeterNrvMeterMoveCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "execute__Q219NrvSuddenDeathMeter26SuddenDeathMeterNrvPowerUpCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "execute__Q219NrvSuddenDeathMeter23SuddenDeathMeterNrvWaitCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "execute__Q219NrvSuddenDeathMeter25SuddenDeathMeterNrvAppearCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "__vt__16SuddenDeathMeter",
+        "percent": 100.0,
+        "retail_bytes": 48
+      },
+      {
+        "name": "__vt__Q219NrvSuddenDeathMeter33SuddenDeathMeterNrvZeroMeterBreak",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q219NrvSuddenDeathMeter28SuddenDeathMeterNrvZeroMeter",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q219NrvSuddenDeathMeter29SuddenDeathMeterNrvBreakMeter",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q219NrvSuddenDeathMeter30SuddenDeathMeterNrvCounterMove",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q219NrvSuddenDeathMeter28SuddenDeathMeterNrvMeterMove",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q219NrvSuddenDeathMeter26SuddenDeathMeterNrvPowerUp",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q219NrvSuddenDeathMeter23SuddenDeathMeterNrvWait",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q219NrvSuddenDeathMeter25SuddenDeathMeterNrvAppear",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "sInstance__Q219NrvSuddenDeathMeter25SuddenDeathMeterNrvAppear",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q219NrvSuddenDeathMeter23SuddenDeathMeterNrvWait",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q219NrvSuddenDeathMeter26SuddenDeathMeterNrvPowerUp",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q219NrvSuddenDeathMeter28SuddenDeathMeterNrvMeterMove",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q219NrvSuddenDeathMeter30SuddenDeathMeterNrvCounterMove",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q219NrvSuddenDeathMeter29SuddenDeathMeterNrvBreakMeter",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q219NrvSuddenDeathMeter28SuddenDeathMeterNrvZeroMeter",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q219NrvSuddenDeathMeter33SuddenDeathMeterNrvZeroMeterBreak",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@56283",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@56284",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@57502",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@57509",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@57510",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@57580",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@57581",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@57582",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "[.ctors-0]",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "[.rodata-0]",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "[.data-0]",
+        "percent": 99.54274,
+        "retail_bytes": 336
+      },
+      {
+        "name": "[.sdata2-0]",
+        "percent": 87.5,
+        "retail_bytes": 32
+      }
+    ]
+  },
+  {
+    "unit": "Screen/SubMeterLayout",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Screen/SubMeterLayout.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-game-layout-owner-20260907/wii/Screen_SubMeterLayout.final.o"
+    ],
+    "result": 0,
+    "diff_result": 0,
+    "symbols": [
+      {
+        "name": "__ct__14SubMeterLayoutFPCcPCc",
+        "percent": 100.0,
+        "retail_bytes": 120
+      },
+      {
+        "name": "init__14SubMeterLayoutFRC12JMapInfoIter",
+        "percent": 99.84375,
+        "retail_bytes": 128
+      },
+      {
+        "name": "setLifeRatio__14SubMeterLayoutFf",
+        "percent": 99.81481,
+        "retail_bytes": 108
+      },
+      {
+        "name": "requestDeactivate__14SubMeterLayoutFv",
+        "percent": 100.0,
+        "retail_bytes": 52
+      },
+      {
+        "name": "requestAppear__14SubMeterLayoutFv",
+        "percent": 100.0,
+        "retail_bytes": 92
+      },
+      {
+        "name": "requestFrameIn__14SubMeterLayoutFv",
+        "percent": 100.0,
+        "retail_bytes": 92
+      },
+      {
+        "name": "requestFrameOut__14SubMeterLayoutFv",
+        "percent": 100.0,
+        "retail_bytes": 60
+      },
+      {
+        "name": "control__14SubMeterLayoutFv",
+        "percent": 99.835526,
+        "retail_bytes": 608
+      },
+      {
+        "name": "__dt__14SubMeterLayoutFv",
+        "percent": 100.0,
+        "retail_bytes": 92
+      },
+      {
+        "name": "__vt__14SubMeterLayout",
+        "percent": 100.0,
+        "retail_bytes": 48
+      },
+      {
+        "name": "sScreenOffsetX__28@unnamed@SubMeterLayout_cpp@",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sScreenOffsetY__28@unnamed@SubMeterLayout_cpp@",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@61095",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@61096",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@62304",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@62341",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "[.rodata-0]",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "[.data-0]",
+        "percent": 98.290596,
+        "retail_bytes": 80
+      },
+      {
+        "name": "[.sdata-0]",
+        "percent": 85.71429,
+        "retail_bytes": 16
+      },
+      {
+        "name": "[.sdata2-0]",
+        "percent": 50.0,
+        "retail_bytes": 16
+      }
+    ]
+  },
+  {
+    "unit": "Screen/CoinCounter",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Screen/CoinCounter.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-game-layout-owner-20260907/wii/Screen_CoinCounter.final.o"
+    ],
+    "result": 0,
+    "diff_result": 0,
+    "symbols": [
+      {
+        "name": "__ct__11CoinCounterFPCc",
+        "percent": 100.0,
+        "retail_bytes": 104
+      },
+      {
+        "name": "init__11CoinCounterFRC12JMapInfoIter",
+        "percent": 100.0,
+        "retail_bytes": 260
+      },
+      {
+        "name": "appear__11CoinCounterFv",
+        "percent": 100.0,
+        "retail_bytes": 96
+      },
+      {
+        "name": "forceAppear__11CoinCounterFv",
+        "percent": 100.0,
+        "retail_bytes": 96
+      },
+      {
+        "name": "disappear__11CoinCounterFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "isWait__11CoinCounterCFv",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "control__11CoinCounterFv",
+        "percent": 100.0,
+        "retail_bytes": 60
+      },
+      {
+        "name": "updateCounter__11CoinCounterFv",
+        "percent": 99.67532,
+        "retail_bytes": 308
+      },
+      {
+        "name": "exeHide__11CoinCounterFv",
+        "percent": 100.0,
+        "retail_bytes": 68
+      },
+      {
+        "name": "exeAppear__11CoinCounterFv",
+        "percent": 100.0,
+        "retail_bytes": 176
+      },
+      {
+        "name": "exeWait__11CoinCounterFv",
+        "percent": 100.0,
+        "retail_bytes": 92
+      },
+      {
+        "name": "exeDisappear__11CoinCounterFv",
+        "percent": 100.0,
+        "retail_bytes": 88
+      },
+      {
+        "name": "__dt__11CoinCounterFv",
+        "percent": 100.0,
+        "retail_bytes": 92
+      },
+      {
+        "name": "__sinit_\\CoinCounter_cpp",
+        "percent": 100.0,
+        "retail_bytes": 60
+      },
+      {
+        "name": "__ct__Q214NrvCoinCounter18CoinCounterNrvHideFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q214NrvCoinCounter20CoinCounterNrvAppearFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q214NrvCoinCounter18CoinCounterNrvWaitFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q214NrvCoinCounter23CoinCounterNrvDisappearFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "execute__Q214NrvCoinCounter23CoinCounterNrvDisappearCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "execute__Q214NrvCoinCounter18CoinCounterNrvWaitCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "execute__Q214NrvCoinCounter20CoinCounterNrvAppearCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "execute__Q214NrvCoinCounter18CoinCounterNrvHideCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "__vt__11CoinCounter",
+        "percent": 100.0,
+        "retail_bytes": 48
+      },
+      {
+        "name": "__vt__Q214NrvCoinCounter23CoinCounterNrvDisappear",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q214NrvCoinCounter18CoinCounterNrvWait",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q214NrvCoinCounter20CoinCounterNrvAppear",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q214NrvCoinCounter18CoinCounterNrvHide",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "sInstance__Q214NrvCoinCounter18CoinCounterNrvHide",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q214NrvCoinCounter20CoinCounterNrvAppear",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q214NrvCoinCounter18CoinCounterNrvWait",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q214NrvCoinCounter23CoinCounterNrvDisappear",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@54548",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@55764",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@55810",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "[.ctors-0]",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "[.data-0]",
+        "percent": 99.25728,
+        "retail_bytes": 200
+      },
+      {
+        "name": "[.sdata2-0]",
+        "percent": 85.71429,
+        "retail_bytes": 16
+      }
+    ]
+  },
+  {
+    "unit": "Screen/StarPieceCounter",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Screen/StarPieceCounter.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-game-layout-owner-20260907/wii/Screen_StarPieceCounter.final.o"
+    ],
+    "result": 0,
+    "diff_result": 0,
+    "symbols": [
+      {
+        "name": "__ct__16StarPieceCounterFPCc",
+        "percent": 100.0,
+        "retail_bytes": 108
+      },
+      {
+        "name": "init__16StarPieceCounterFRC12JMapInfoIter",
+        "percent": 99.74359,
+        "retail_bytes": 312
+      },
+      {
+        "name": "appear__16StarPieceCounterFv",
+        "percent": 100.0,
+        "retail_bytes": 112
+      },
+      {
+        "name": "forceAppear__16StarPieceCounterFb",
+        "percent": 100.0,
+        "retail_bytes": 160
+      },
+      {
+        "name": "disappear__16StarPieceCounterFb",
+        "percent": 100.0,
+        "retail_bytes": 100
+      },
+      {
+        "name": "isWait__16StarPieceCounterCFv",
+        "percent": 100.0,
+        "retail_bytes": 92
+      },
+      {
+        "name": "forceSync__16StarPieceCounterFv",
+        "percent": 100.0,
+        "retail_bytes": 60
+      },
+      {
+        "name": "tryOnModeTicoEat__16StarPieceCounterFb",
+        "percent": 100.0,
+        "retail_bytes": 20
+      },
+      {
+        "name": "tryOffModeTicoEat__16StarPieceCounterFv",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "control__16StarPieceCounterFv",
+        "percent": 100.0,
+        "retail_bytes": 60
+      },
+      {
+        "name": "updateCounter__16StarPieceCounterFv",
+        "percent": 99.09091,
+        "retail_bytes": 220
+      },
+      {
+        "name": "updateCounterValue__16StarPieceCounterFv",
+        "percent": 99.82353,
+        "retail_bytes": 340
+      },
+      {
+        "name": "isValidAppearSituation__16StarPieceCounterCFv",
+        "percent": 100.0,
+        "retail_bytes": 104
+      },
+      {
+        "name": "isDispCenter__16StarPieceCounterCFv",
+        "percent": 100.0,
+        "retail_bytes": 96
+      },
+      {
+        "name": "tryChangeModeTicoEat__16StarPieceCounterFi",
+        "percent": 100.0,
+        "retail_bytes": 184
+      },
+      {
+        "name": "exeHide__16StarPieceCounterFv",
+        "percent": 100.0,
+        "retail_bytes": 132
+      },
+      {
+        "name": "exeAppear__16StarPieceCounterFv",
+        "percent": 99.62366,
+        "retail_bytes": 372
+      },
+      {
+        "name": "exeWait__16StarPieceCounterFv",
+        "percent": 100.0,
+        "retail_bytes": 120
+      },
+      {
+        "name": "exeDisappear__16StarPieceCounterFv",
+        "percent": 100.0,
+        "retail_bytes": 108
+      },
+      {
+        "name": "__dt__16StarPieceCounterFv",
+        "percent": 100.0,
+        "retail_bytes": 92
+      },
+      {
+        "name": "__sinit_\\StarPieceCounter_cpp",
+        "percent": 100.0,
+        "retail_bytes": 60
+      },
+      {
+        "name": "__ct__Q219NrvStarPieceCounter23StarPieceCounterNrvHideFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q219NrvStarPieceCounter25StarPieceCounterNrvAppearFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q219NrvStarPieceCounter23StarPieceCounterNrvWaitFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q219NrvStarPieceCounter28StarPieceCounterNrvDisappearFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "execute__Q219NrvStarPieceCounter28StarPieceCounterNrvDisappearCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "execute__Q219NrvStarPieceCounter23StarPieceCounterNrvWaitCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "execute__Q219NrvStarPieceCounter25StarPieceCounterNrvAppearCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "execute__Q219NrvStarPieceCounter23StarPieceCounterNrvHideCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "setAppearOffset__21CounterLayoutAppearerFRCQ29JGeometry8TVec2<f>",
+        "percent": 100.0,
+        "retail_bytes": 20
+      },
+      {
+        "name": "__vt__16StarPieceCounter",
+        "percent": 100.0,
+        "retail_bytes": 48
+      },
+      {
+        "name": "__vt__Q219NrvStarPieceCounter28StarPieceCounterNrvDisappear",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q219NrvStarPieceCounter23StarPieceCounterNrvWait",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q219NrvStarPieceCounter25StarPieceCounterNrvAppear",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q219NrvStarPieceCounter23StarPieceCounterNrvHide",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "sInstance__Q219NrvStarPieceCounter23StarPieceCounterNrvHide",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q219NrvStarPieceCounter25StarPieceCounterNrvAppear",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q219NrvStarPieceCounter23StarPieceCounterNrvWait",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q219NrvStarPieceCounter28StarPieceCounterNrvDisappear",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@55400",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@56618",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@56769",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@56770",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@56771",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "[.ctors-0]",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "[.data-0]",
+        "percent": 99.51642,
+        "retail_bytes": 344
+      },
+      {
+        "name": "[.sdata2-0]",
+        "percent": 90.909096,
+        "retail_bytes": 24
+      }
+    ]
+  },
+  {
+    "unit": "Screen/PlayerLeft",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Screen/PlayerLeft.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-game-layout-owner-20260907/wii/Screen_PlayerLeft.final.o"
+    ],
+    "result": 0,
+    "diff_result": 0,
+    "symbols": [
+      {
+        "name": "__ct__10PlayerLeftFPCc",
+        "percent": 100.0,
+        "retail_bytes": 84
+      },
+      {
+        "name": "init__10PlayerLeftFRC12JMapInfoIter",
+        "percent": 99.68254,
+        "retail_bytes": 252
+      },
+      {
+        "name": "appear__10PlayerLeftFv",
+        "percent": 100.0,
+        "retail_bytes": 92
+      },
+      {
+        "name": "forceAppear__10PlayerLeftFv",
+        "percent": 100.0,
+        "retail_bytes": 96
+      },
+      {
+        "name": "disappear__10PlayerLeftFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "isWait__10PlayerLeftCFv",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "control__10PlayerLeftFv",
+        "percent": 100.0,
+        "retail_bytes": 72
+      },
+      {
+        "name": "exeHide__10PlayerLeftFv",
+        "percent": 100.0,
+        "retail_bytes": 104
+      },
+      {
+        "name": "exeAppear__10PlayerLeftFv",
+        "percent": 99.84849,
+        "retail_bytes": 132
+      },
+      {
+        "name": "exeWait__10PlayerLeftFv",
+        "percent": 100.0,
+        "retail_bytes": 228
+      },
+      {
+        "name": "exeDisappear__10PlayerLeftFv",
+        "percent": 100.0,
+        "retail_bytes": 88
+      },
+      {
+        "name": "__dt__10PlayerLeftFv",
+        "percent": 100.0,
+        "retail_bytes": 92
+      },
+      {
+        "name": "__sinit_\\PlayerLeft_cpp",
+        "percent": 100.0,
+        "retail_bytes": 60
+      },
+      {
+        "name": "__ct__Q213NrvPlayerLeft17PlayerLeftNrvHideFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q213NrvPlayerLeft19PlayerLeftNrvAppearFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q213NrvPlayerLeft17PlayerLeftNrvWaitFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q213NrvPlayerLeft22PlayerLeftNrvDisappearFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "execute__Q213NrvPlayerLeft22PlayerLeftNrvDisappearCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "execute__Q213NrvPlayerLeft17PlayerLeftNrvWaitCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "execute__Q213NrvPlayerLeft19PlayerLeftNrvAppearCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "execute__Q213NrvPlayerLeft17PlayerLeftNrvHideCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "__vt__10PlayerLeft",
+        "percent": 100.0,
+        "retail_bytes": 48
+      },
+      {
+        "name": "__vt__Q213NrvPlayerLeft22PlayerLeftNrvDisappear",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q213NrvPlayerLeft17PlayerLeftNrvWait",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q213NrvPlayerLeft19PlayerLeftNrvAppear",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q213NrvPlayerLeft17PlayerLeftNrvHide",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "sInstance__Q213NrvPlayerLeft17PlayerLeftNrvHide",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q213NrvPlayerLeft19PlayerLeftNrvAppear",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q213NrvPlayerLeft17PlayerLeftNrvWait",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q213NrvPlayerLeft22PlayerLeftNrvDisappear",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@54402",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@55618",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "[.ctors-0]",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "[.data-0]",
+        "percent": 100.0,
+        "retail_bytes": 168
+      },
+      {
+        "name": "[.sdata2-0]",
+        "percent": 50.0,
+        "retail_bytes": 8
+      }
+    ]
+  },
+  {
+    "unit": "Screen/StarCounter",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Screen/StarCounter.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-game-layout-owner-20260907/wii/Screen_StarCounter.final.o"
+    ],
+    "result": 0,
+    "diff_result": 0,
+    "symbols": [
+      {
+        "name": "__ct__11StarCounterFv",
+        "percent": 100.0,
+        "retail_bytes": 88
+      },
+      {
+        "name": "init__11StarCounterFRC12JMapInfoIter",
+        "percent": 99.77778,
+        "retail_bytes": 180
+      },
+      {
+        "name": "appear__11StarCounterFv",
+        "percent": 99.86487,
+        "retail_bytes": 148
+      },
+      {
+        "name": "disappear__11StarCounterFv",
+        "percent": 100.0,
+        "retail_bytes": 56
+      },
+      {
+        "name": "isWait__11StarCounterCFv",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "control__11StarCounterFv",
+        "percent": 100.0,
+        "retail_bytes": 56
+      },
+      {
+        "name": "exeCountUp__11StarCounterFv",
+        "percent": 100.0,
+        "retail_bytes": 156
+      },
+      {
+        "name": "exeDisappear__11StarCounterFv",
+        "percent": 100.0,
+        "retail_bytes": 96
+      },
+      {
+        "name": "__dt__11StarCounterFv",
+        "percent": 100.0,
+        "retail_bytes": 92
+      },
+      {
+        "name": "__sinit_\\StarCounter_cpp",
+        "percent": 100.0,
+        "retail_bytes": 60
+      },
+      {
+        "name": "__ct__Q214NrvStarCounter20StarCounterNrvAppearFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q214NrvStarCounter18StarCounterNrvWaitFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q214NrvStarCounter21StarCounterNrvCountUpFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q214NrvStarCounter23StarCounterNrvDisappearFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "execute__Q214NrvStarCounter23StarCounterNrvDisappearCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "execute__Q214NrvStarCounter21StarCounterNrvCountUpCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "execute__Q214NrvStarCounter18StarCounterNrvWaitCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 68
+      },
+      {
+        "name": "execute__Q214NrvStarCounter20StarCounterNrvAppearCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 68
+      },
+      {
+        "name": "__vt__11StarCounter",
+        "percent": 100.0,
+        "retail_bytes": 48
+      },
+      {
+        "name": "__vt__Q214NrvStarCounter23StarCounterNrvDisappear",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q214NrvStarCounter21StarCounterNrvCountUp",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q214NrvStarCounter18StarCounterNrvWait",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q214NrvStarCounter20StarCounterNrvAppear",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "sInstance__Q214NrvStarCounter20StarCounterNrvAppear",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q214NrvStarCounter18StarCounterNrvWait",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q214NrvStarCounter21StarCounterNrvCountUp",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q214NrvStarCounter23StarCounterNrvDisappear",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@54125",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@55339",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "[.ctors-0]",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "[.data-0]",
+        "percent": 100.0,
+        "retail_bytes": 160
+      },
+      {
+        "name": "[.sdata2-0]",
+        "percent": 50.0,
+        "retail_bytes": 8
+      }
+    ]
+  },
+  {
+    "unit": "Screen/CounterLayoutAppearer",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Screen/CounterLayoutAppearer.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-game-layout-owner-20260907/wii/Screen_CounterLayoutAppearer.final.o"
+    ],
+    "result": 0,
+    "diff_result": 0,
+    "symbols": [
+      {
+        "name": "__ct__21CounterLayoutAppearerFP11LayoutActorRCQ29JGeometry8TVec2<f>",
+        "percent": 99.56,
+        "retail_bytes": 200
+      },
+      {
+        "name": "update__21CounterLayoutAppearerFv",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "appear__21CounterLayoutAppearerFRCQ29JGeometry8TVec2<f>",
+        "percent": 99.8,
+        "retail_bytes": 100
+      },
+      {
+        "name": "disappear__21CounterLayoutAppearerFv",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "isAppeared__21CounterLayoutAppearerCFv",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "isDisappeared__21CounterLayoutAppearerCFv",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "reset__21CounterLayoutAppearerFv",
+        "percent": 99.73684,
+        "retail_bytes": 76
+      },
+      {
+        "name": "updateLayoutOffset__21CounterLayoutAppearerFf",
+        "percent": 84.0,
+        "retail_bytes": 80
+      },
+      {
+        "name": "exeAppear__21CounterLayoutAppearerFv",
+        "percent": 100.0,
+        "retail_bytes": 104
+      },
+      {
+        "name": "exeDisappear__21CounterLayoutAppearerFv",
+        "percent": 99.85714,
+        "retail_bytes": 140
+      },
+      {
+        "name": "__dt__21CounterLayoutAppearerFv",
+        "percent": 100.0,
+        "retail_bytes": 88
+      },
+      {
+        "name": "__sinit_\\CounterLayoutAppearer_cpp",
+        "percent": 100.0,
+        "retail_bytes": 60
+      },
+      {
+        "name": "__ct__Q224NrvCounterLayoutAppearer28CounterLayoutAppearerNrvHideFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q224NrvCounterLayoutAppearer30CounterLayoutAppearerNrvAppearFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q224NrvCounterLayoutAppearer28CounterLayoutAppearerNrvShowFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__Q224NrvCounterLayoutAppearer33CounterLayoutAppearerNrvDisappearFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "execute__Q224NrvCounterLayoutAppearer33CounterLayoutAppearerNrvDisappearCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "execute__Q224NrvCounterLayoutAppearer28CounterLayoutAppearerNrvShowCFP5Spine",
+        "percent": 99.70588,
+        "retail_bytes": 68
+      },
+      {
+        "name": "execute__Q224NrvCounterLayoutAppearer30CounterLayoutAppearerNrvAppearCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "execute__Q224NrvCounterLayoutAppearer28CounterLayoutAppearerNrvHideCFP5Spine",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "__vt__21CounterLayoutAppearer",
+        "percent": 100.0,
+        "retail_bytes": 12
+      },
+      {
+        "name": "__vt__Q224NrvCounterLayoutAppearer33CounterLayoutAppearerNrvDisappear",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q224NrvCounterLayoutAppearer28CounterLayoutAppearerNrvShow",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q224NrvCounterLayoutAppearer30CounterLayoutAppearerNrvAppear",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__vt__Q224NrvCounterLayoutAppearer28CounterLayoutAppearerNrvHide",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "sInstance__Q224NrvCounterLayoutAppearer28CounterLayoutAppearerNrvHide",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q224NrvCounterLayoutAppearer30CounterLayoutAppearerNrvAppear",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q224NrvCounterLayoutAppearer28CounterLayoutAppearerNrvShow",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "sInstance__Q224NrvCounterLayoutAppearer33CounterLayoutAppearerNrvDisappear",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@54699",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@54700",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "[.ctors-0]",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "[.data-0]",
+        "percent": 98.54342,
+        "retail_bytes": 104
+      },
+      {
+        "name": "[.sdata-0]",
+        "percent": 66.66667,
+        "retail_bytes": 8
+      },
+      {
+        "name": "[.sdata2-0]",
+        "percent": 50.0,
+        "retail_bytes": 8
+      }
+    ]
+  },
+  {
+    "unit": "Screen/CountUpPaneRumbler",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Screen/CountUpPaneRumbler.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-game-layout-owner-20260907/wii/Screen_CountUpPaneRumbler.final.o"
+    ],
+    "result": 0,
+    "diff_result": 0,
+    "symbols": [
+      {
+        "name": "__ct__18CountUpPaneRumblerFP11LayoutActorPCc",
+        "percent": 99.756096,
+        "retail_bytes": 164
+      },
+      {
+        "name": "update__18CountUpPaneRumblerFv",
+        "percent": 100.0,
+        "retail_bytes": 68
+      },
+      {
+        "name": "start__18CountUpPaneRumblerFv",
+        "percent": 100.0,
+        "retail_bytes": 12
+      },
+      {
+        "name": "reset__18CountUpPaneRumblerFv",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "isRumbling__18CountUpPaneRumblerCFv",
+        "percent": 100.0,
+        "retail_bytes": 28
+      },
+      {
+        "name": "connectPane__18CountUpPaneRumblerFP11LayoutActorPCc",
+        "percent": 100.0,
+        "retail_bytes": 100
+      },
+      {
+        "name": "@54028",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@55171",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@55199",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@55230",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "[.sdata2-0]",
+        "percent": 75.0,
+        "retail_bytes": 16
+      }
+    ]
+  },
+  {
+    "unit": "Util/RumbleCalculator",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Util/RumbleCalculator.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-game-layout-owner-20260907/wii/Util_RumbleCalculator.final.o"
+    ],
+    "result": 0,
+    "diff_result": 0,
+    "symbols": [
+      {
+        "name": "__ct__16RumbleCalculatorFfffUl",
+        "percent": 99.61539,
+        "retail_bytes": 52
+      },
+      {
+        "name": "start__16RumbleCalculatorFUl",
+        "percent": 99.5,
+        "retail_bytes": 40
+      },
+      {
+        "name": "calc__16RumbleCalculatorFv",
+        "percent": 92.42029,
+        "retail_bytes": 276
+      },
+      {
+        "name": "reset__16RumbleCalculatorFv",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "__ct__29RumbleCalculatorCosMultLinearFfffUl",
+        "percent": 100.0,
+        "retail_bytes": 60
+      },
+      {
+        "name": "calcValues__29RumbleCalculatorCosMultLinearFPQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+        "percent": 91.15151,
+        "retail_bytes": 132
+      },
+      {
+        "name": "__vt__29RumbleCalculatorCosMultLinear",
+        "percent": 100.0,
+        "retail_bytes": 12
+      },
+      {
+        "name": "__vt__16RumbleCalculator",
+        "percent": 100.0,
+        "retail_bytes": 12
+      },
+      {
+        "name": "@52824",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@52825",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@54035",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "[.data-0]",
+        "percent": 100.0,
+        "retail_bytes": 24
+      },
+      {
+        "name": "[.sdata2-0]",
+        "percent": 50.0,
+        "retail_bytes": 16
+      }
+    ]
+  },
+  {
+    "unit": "Screen/LayoutPaneCtrl",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Screen/LayoutPaneCtrl.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-game-layout-owner-20260907/wii/Screen_LayoutPaneCtrl.final.o"
+    ],
+    "result": 0,
+    "diff_result": 0,
+    "symbols": [
+      {
+        "name": "__ct__14LayoutPaneCtrlFP13LayoutManagerPCcUl",
+        "percent": 75.60345,
+        "retail_bytes": 232
+      },
+      {
+        "name": "movement__14LayoutPaneCtrlFv",
+        "percent": 100.0,
+        "retail_bytes": 104
+      },
+      {
+        "name": "calcAnim__14LayoutPaneCtrlFv",
+        "percent": 100.0,
+        "retail_bytes": 104
+      },
+      {
+        "name": "start__14LayoutPaneCtrlFPCcUl",
+        "percent": 100.0,
+        "retail_bytes": 248
+      },
+      {
+        "name": "stop__14LayoutPaneCtrlFUl",
+        "percent": 100.0,
+        "retail_bytes": 28
+      },
+      {
+        "name": "isAnimStopped__14LayoutPaneCtrlCFUl",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "reflectFollowPos__14LayoutPaneCtrlFv",
+        "percent": 96.18519,
+        "retail_bytes": 540
+      },
+      {
+        "name": "getFrameCtrl__14LayoutPaneCtrlCFUl",
+        "percent": 100.0,
+        "retail_bytes": 20
+      },
+      {
+        "name": "recalcChildGlobalMtx__14LayoutPaneCtrlFPQ34nw4r3lyt4Pane",
+        "percent": 64.56604,
+        "retail_bytes": 212
+      },
+      {
+        "name": "@61176",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "[.sdata2-0]",
+        "percent": 66.66667,
+        "retail_bytes": 8
+      }
+    ]
+  },
+  {
+    "unit": "Util/LayoutUtil",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/Util/LayoutUtil.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-game-layout-owner-20260907/wii/Util_LayoutUtil.final.o"
+    ],
+    "result": 0,
+    "diff_result": 0,
+    "symbols": [
+      {
+        "name": "initFrameCtrlReverse__24@unnamed@LayoutUtil_cpp@FP12J3DFrameCtrl",
+        "percent": 100.0,
+        "retail_bytes": 72
+      },
+      {
+        "name": "createAndAddLayoutHolder__2MRFPCc",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "createAndAddLayoutHolderRawData__2MRFPCc",
+        "percent": 100.0,
+        "retail_bytes": 12
+      },
+      {
+        "name": "createAndAddPaneCtrl__2MRFP11LayoutActorPCcUl",
+        "percent": 100.0,
+        "retail_bytes": 68
+      },
+      {
+        "name": "createAndAddGroupCtrl__2MRFP11LayoutActorPCcUl",
+        "percent": 100.0,
+        "retail_bytes": 68
+      },
+      {
+        "name": "isExistPaneCtrl__2MRFP11LayoutActorPCc",
+        "percent": 100.0,
+        "retail_bytes": 52
+      },
+      {
+        "name": "setPaneAlphaFloat__2MRFPC11LayoutActorPCcf",
+        "percent": 99.51613,
+        "retail_bytes": 124
+      },
+      {
+        "name": "setTextBoxGameMessageRecursive__2MRFP11LayoutActorPCcPCc",
+        "percent": 100.0,
+        "retail_bytes": 76
+      },
+      {
+        "name": "setTextBoxLayoutMessageRecursive__2MRFP11LayoutActorPCcPCc",
+        "percent": 100.0,
+        "retail_bytes": 76
+      },
+      {
+        "name": "setTextBoxSystemMessageRecursive__2MRFP11LayoutActorPCcPCc",
+        "percent": 100.0,
+        "retail_bytes": 76
+      },
+      {
+        "name": "setTextBoxMessageRecursive__2MRFP11LayoutActorPCcPCw",
+        "percent": 100.0,
+        "retail_bytes": 52
+      },
+      {
+        "name": "__dt__26TextBoxRecursiveSetMessageFv",
+        "percent": 100.0,
+        "retail_bytes": 64
+      },
+      {
+        "name": "setTextBoxFormatRecursive__2MRFP11LayoutActorPCcPCwe",
+        "percent": 100.0,
+        "retail_bytes": 180
+      },
+      {
+        "name": "setTextBoxArgNumberRecursive__2MRFP11LayoutActorPCcll",
+        "percent": 100.0,
+        "retail_bytes": 56
+      },
+      {
+        "name": "__dt__28TextBoxRecursiveSetArgNumberFv",
+        "percent": 100.0,
+        "retail_bytes": 64
+      },
+      {
+        "name": "setTextBoxArgStringRecursive__2MRFP11LayoutActorPCcPCwl",
+        "percent": 100.0,
+        "retail_bytes": 56
+      },
+      {
+        "name": "__dt__28TextBoxRecursiveSetArgStringFv",
+        "percent": 100.0,
+        "retail_bytes": 64
+      },
+      {
+        "name": "setTextBoxArgGameMessageRecursive__2MRFP11LayoutActorPCcPCcl",
+        "percent": 100.0,
+        "retail_bytes": 84
+      },
+      {
+        "name": "setTextBoxVerticalPositionRecursive__FP11LayoutActorPCcUc",
+        "percent": 100.0,
+        "retail_bytes": 52
+      },
+      {
+        "name": "__dt__35TextBoxRecursiveSetVerticalPositionFv",
+        "percent": 100.0,
+        "retail_bytes": 64
+      },
+      {
+        "name": "setTextBoxVerticalPositionTopRecursive__2MRFP11LayoutActorPCc",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "setTextBoxVerticalPositionCenterRecursive__2MRFP11LayoutActorPCc",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "setTextBoxVerticalPositionBottomRecursive__2MRFP11LayoutActorPCc",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "setTextBoxHorizontalPositionRecursive__FP11LayoutActorPCcUc",
+        "percent": 100.0,
+        "retail_bytes": 52
+      },
+      {
+        "name": "__dt__37TextBoxRecursiveSetHorizontalPositionFv",
+        "percent": 100.0,
+        "retail_bytes": 64
+      },
+      {
+        "name": "setTextBoxHorizontalPositionLeftRecursive__2MRFP11LayoutActorPCc",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "setTextBoxHorizontalPositionCenterRecursive__2MRFP11LayoutActorPCc",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "updateClearTimeTextBox__2MRFP11LayoutActorPCcUl",
+        "percent": 100.0,
+        "retail_bytes": 80
+      },
+      {
+        "name": "updateMinuteAndSecondTextBox__2MRFP11LayoutActorPCcUl",
+        "percent": 100.0,
+        "retail_bytes": 80
+      },
+      {
+        "name": "setTextBoxFontRecursive__2MRFP11LayoutActorPCcPQ34nw4r2ut4Font",
+        "percent": 100.0,
+        "retail_bytes": 52
+      },
+      {
+        "name": "__dt__23TextBoxRecursiveSetFontFv",
+        "percent": 100.0,
+        "retail_bytes": 64
+      },
+      {
+        "name": "showPaneRecursive__2MRFP11LayoutActorPCc",
+        "percent": 100.0,
+        "retail_bytes": 56
+      },
+      {
+        "name": "hidePaneRecursive__2MRFP11LayoutActorPCc",
+        "percent": 100.0,
+        "retail_bytes": 56
+      },
+      {
+        "name": "isHiddenPane__2MRFPC11LayoutActorPCc",
+        "percent": 100.0,
+        "retail_bytes": 68
+      },
+      {
+        "name": "showScreen__2MRFP11LayoutActor",
+        "percent": 100.0,
+        "retail_bytes": 40
+      },
+      {
+        "name": "hideScreen__2MRFP11LayoutActor",
+        "percent": 100.0,
+        "retail_bytes": 40
+      },
+      {
+        "name": "setFollowPos__2MRFPCQ29JGeometry8TVec2<f>PC11LayoutActorPCc",
+        "percent": 100.0,
+        "retail_bytes": 72
+      },
+      {
+        "name": "setFollowTypeReplace__2MRFPC11LayoutActorPCc",
+        "percent": 71.933334,
+        "retail_bytes": 60
+      },
+      {
+        "name": "setFollowTypeAdd__2MRFPC11LayoutActorPCc",
+        "percent": 71.933334,
+        "retail_bytes": 60
+      },
+      {
+        "name": "copyPaneTrans__2MRFPQ29JGeometry8TVec2<f>PC11LayoutActorPCc",
+        "percent": 100.0,
+        "retail_bytes": 96
+      },
+      {
+        "name": "getPaneTransX__2MRFPC11LayoutActorPCc",
+        "percent": 100.0,
+        "retail_bytes": 88
+      },
+      {
+        "name": "getPaneTransY__2MRFPC11LayoutActorPCc",
+        "percent": 100.0,
+        "retail_bytes": 88
+      },
+      {
+        "name": "setLayoutPosAtPaneTrans__2MRFP11LayoutActorPC11LayoutActorPCc",
+        "percent": 100.0,
+        "retail_bytes": 60
+      },
+      {
+        "name": "startAnimAtFirstStep__2MRFP11LayoutActorPCcUl",
+        "percent": 100.0,
+        "retail_bytes": 88
+      },
+      {
+        "name": "startPaneAnim__2MRFP11LayoutActorPCcPCcUl",
+        "percent": 100.0,
+        "retail_bytes": 80
+      },
+      {
+        "name": "startPaneAnimAtStep__2MRFP11LayoutActorPCcPCclUl",
+        "percent": 100.0,
+        "retail_bytes": 104
+      },
+      {
+        "name": "startPaneAnimAtFirstStep__2MRFP11LayoutActorPCcPCcUl",
+        "percent": 100.0,
+        "retail_bytes": 104
+      },
+      {
+        "name": "startAnimReverseOneTime__2MRFP11LayoutActorPCcUl",
+        "percent": 100.0,
+        "retail_bytes": 96
+      },
+      {
+        "name": "startPaneAnimReverseOneTime__2MRFP11LayoutActorPCcPCcUl",
+        "percent": 100.0,
+        "retail_bytes": 100
+      },
+      {
+        "name": "startAnimAndSetFrameAndStop__2MRFP11LayoutActorPCcfUl",
+        "percent": 100.0,
+        "retail_bytes": 84
+      },
+      {
+        "name": "setAnimFrameAndStop__2MRFP11LayoutActorfUl",
+        "percent": 99.78261,
+        "retail_bytes": 92
+      },
+      {
+        "name": "setAnimFrameAndStopAtEnd__2MRFP11LayoutActorUl",
+        "percent": 100.0,
+        "retail_bytes": 120
+      },
+      {
+        "name": "setPaneAnimFrameAndStop__2MRFP11LayoutActorPCcfUl",
+        "percent": 99.80769,
+        "retail_bytes": 104
+      },
+      {
+        "name": "setPaneAnimFrameAndStopAtEnd__2MRFP11LayoutActorPCcUl",
+        "percent": 100.0,
+        "retail_bytes": 128
+      },
+      {
+        "name": "setAnimFrame__2MRFP11LayoutActorfUl",
+        "percent": 100.0,
+        "retail_bytes": 76
+      },
+      {
+        "name": "setPaneAnimFrame__2MRFP11LayoutActorPCcfUl",
+        "percent": 100.0,
+        "retail_bytes": 88
+      },
+      {
+        "name": "setAnimRate__2MRFP11LayoutActorfUl",
+        "percent": 100.0,
+        "retail_bytes": 76
+      },
+      {
+        "name": "setPaneAnimRate__2MRFP11LayoutActorPCcfUl",
+        "percent": 100.0,
+        "retail_bytes": 88
+      },
+      {
+        "name": "stopAnim__2MRFP11LayoutActorUl",
+        "percent": 100.0,
+        "retail_bytes": 60
+      },
+      {
+        "name": "stopPaneAnim__2MRFP11LayoutActorPCcUl",
+        "percent": 100.0,
+        "retail_bytes": 72
+      },
+      {
+        "name": "isAnimStopped__2MRFPC11LayoutActorUl",
+        "percent": 100.0,
+        "retail_bytes": 60
+      },
+      {
+        "name": "isPaneAnimStopped__2MRFPC11LayoutActorPCcUl",
+        "percent": 100.0,
+        "retail_bytes": 72
+      },
+      {
+        "name": "getAnimFrame__2MRFPC11LayoutActorUl",
+        "percent": 100.0,
+        "retail_bytes": 64
+      },
+      {
+        "name": "getPaneAnimFrame__2MRFPC11LayoutActorPCcUl",
+        "percent": 100.0,
+        "retail_bytes": 76
+      },
+      {
+        "name": "getAnimFrameMax__2MRFPC11LayoutActorUl",
+        "percent": 100.0,
+        "retail_bytes": 64
+      },
+      {
+        "name": "getPaneAnimFrameMax__2MRFPC11LayoutActorPCcUl",
+        "percent": 100.0,
+        "retail_bytes": 76
+      },
+      {
+        "name": "getAnimFrameMax__2MRFPC11LayoutActorPCc",
+        "percent": 100.0,
+        "retail_bytes": 60
+      },
+      {
+        "name": "getAnimCtrl__2MRFPC11LayoutActorUl",
+        "percent": 100.0,
+        "retail_bytes": 60
+      },
+      {
+        "name": "getPaneAnimCtrl__2MRFPC11LayoutActorPCcUl",
+        "percent": 100.0,
+        "retail_bytes": 72
+      },
+      {
+        "name": "setEffectHostMtx__2MRFP11LayoutActorPCcPA4_f",
+        "percent": 100.0,
+        "retail_bytes": 52
+      },
+      {
+        "name": "isRegisteredEffect__2MRFPC11LayoutActorPCc",
+        "percent": 100.0,
+        "retail_bytes": 68
+      },
+      {
+        "name": "calcAnimLayoutWithDrawInfo__2MRFPC11LayoutActorRCQ34nw4r3lyt8DrawInfo",
+        "percent": 100.0,
+        "retail_bytes": 80
+      },
+      {
+        "name": "drawLayoutWithDrawInfoWithoutProjectionSetup__2MRFPC11LayoutActorRCQ34nw4r3lyt8DrawInfo",
+        "percent": 100.0,
+        "retail_bytes": 120
+      },
+      {
+        "name": "isStep__2MRFPC11LayoutActorl",
+        "percent": 100.0,
+        "retail_bytes": 56
+      },
+      {
+        "name": "isFirstStep__2MRFPC11LayoutActor",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "isLessStep__2MRFPC11LayoutActorl",
+        "percent": 100.0,
+        "retail_bytes": 92
+      },
+      {
+        "name": "isGreaterStep__2MRFPC11LayoutActorl",
+        "percent": 100.0,
+        "retail_bytes": 64
+      },
+      {
+        "name": "isGreaterEqualStep__2MRFPC11LayoutActorl",
+        "percent": 100.0,
+        "retail_bytes": 60
+      },
+      {
+        "name": "isIntervalStep__2MRFPC11LayoutActorl",
+        "percent": 100.0,
+        "retail_bytes": 64
+      },
+      {
+        "name": "isNewNerve__2MRFPC11LayoutActor",
+        "percent": 100.0,
+        "retail_bytes": 36
+      },
+      {
+        "name": "calcNerveRate__2MRFPC11LayoutActorl",
+        "percent": 99.53125,
+        "retail_bytes": 128
+      },
+      {
+        "name": "calcNerveRate__2MRFPC11LayoutActorll",
+        "percent": 99.72222,
+        "retail_bytes": 144
+      },
+      {
+        "name": "calcNerveEaseInRate__2MRFPC11LayoutActorl",
+        "percent": 99.30556,
+        "retail_bytes": 144
+      },
+      {
+        "name": "calcNerveEaseInValue__2MRFPC11LayoutActorllff",
+        "percent": 99.7,
+        "retail_bytes": 200
+      },
+      {
+        "name": "setNerveAtStep__2MRFP11LayoutActorPC5Nervel",
+        "percent": 100.0,
+        "retail_bytes": 80
+      },
+      {
+        "name": "setNerveAtAnimStopped__2MRFP11LayoutActorPC5NerveUl",
+        "percent": 100.0,
+        "retail_bytes": 96
+      },
+      {
+        "name": "setNerveAtPaneAnimStopped__2MRFP11LayoutActorPCcPC5NerveUl",
+        "percent": 100.0,
+        "retail_bytes": 100
+      },
+      {
+        "name": "killAtAnimStopped__2MRFP11LayoutActorUl",
+        "percent": 100.0,
+        "retail_bytes": 100
+      },
+      {
+        "name": "isDead__2MRFPC11LayoutActor",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "isHiddenLayout__2MRFPC11LayoutActor",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "showLayout__2MRFP11LayoutActor",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "hideLayout__2MRFP11LayoutActor",
+        "percent": 100.0,
+        "retail_bytes": 16
+      },
+      {
+        "name": "isStopAnimFrame__2MRFPC11LayoutActor",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "stopAnimFrame__2MRFP11LayoutActor",
+        "percent": 100.0,
+        "retail_bytes": 12
+      },
+      {
+        "name": "releaseAnimFrame__2MRFP11LayoutActor",
+        "percent": 100.0,
+        "retail_bytes": 12
+      },
+      {
+        "name": "onCalcAnim__2MRFP11LayoutActor",
+        "percent": 100.0,
+        "retail_bytes": 12
+      },
+      {
+        "name": "offCalcAnim__2MRFP11LayoutActor",
+        "percent": 100.0,
+        "retail_bytes": 12
+      },
+      {
+        "name": "isExecuteCalcAnimLayout__2MRFPC11LayoutActor",
+        "percent": 100.0,
+        "retail_bytes": 56
+      },
+      {
+        "name": "isExecuteDrawLayout__2MRFPC11LayoutActor",
+        "percent": 100.0,
+        "retail_bytes": 56
+      },
+      {
+        "name": "createSimpleLayout__2MRFPCcPCcUl",
+        "percent": 100.0,
+        "retail_bytes": 112
+      },
+      {
+        "name": "createSimpleLayoutTalkParts__2MRFPCcPCcUl",
+        "percent": 100.0,
+        "retail_bytes": 112
+      },
+      {
+        "name": "getPane__2MRFPC11LayoutActorPCc",
+        "percent": 100.0,
+        "retail_bytes": 52
+      },
+      {
+        "name": "getRootPane__2MRFPC11LayoutActor",
+        "percent": 100.0,
+        "retail_bytes": 40
+      },
+      {
+        "name": "getTextLineNumMaxRecursive__2MRFPC11LayoutActorPCc",
+        "percent": 100.0,
+        "retail_bytes": 72
+      },
+      {
+        "name": "invalidateParentAnim__2MRFP11LayoutActor",
+        "percent": 100.0,
+        "retail_bytes": 40
+      },
+      {
+        "name": "getCometColorAnimFrameFromId__24@unnamed@LayoutUtil_cpp@Fl",
+        "percent": 63.57143,
+        "retail_bytes": 84
+      },
+      {
+        "name": "setCometPaneAnimFromId__2MRFP11LayoutActorPCciUl",
+        "percent": 99.48276,
+        "retail_bytes": 116
+      },
+      {
+        "name": "setTextBoxNumberRecursive__2MRFP11LayoutActorPCcl",
+        "percent": 98.0,
+        "retail_bytes": 20
+      },
+      {
+        "name": "clearTextBoxMessageRecursive__2MRFP11LayoutActorPCc",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "createAndSetupIconAButton__2MRFP11LayoutActorbb",
+        "percent": 99.67742,
+        "retail_bytes": 124
+      },
+      {
+        "name": "setCometAnimFromId__2MRFP11LayoutActoriUl",
+        "percent": 99.545456,
+        "retail_bytes": 88
+      },
+      {
+        "name": "@73284",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@73285",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@74329",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@74456",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@74965",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "@76293",
+        "percent": 100.0,
+        "retail_bytes": 4
+      },
+      {
+        "name": "[.rodata-0]",
+        "percent": 100.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "[.data-0]",
+        "percent": 16.04672,
+        "retail_bytes": 376
+      },
+      {
+        "name": "[.sdata-0]",
+        "percent": 40.0,
+        "retail_bytes": 8
+      },
+      {
+        "name": "[.sdata2-0]",
+        "percent": 57.14286,
+        "retail_bytes": 32
+      }
+    ]
+  }
+]

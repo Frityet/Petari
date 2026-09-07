@@ -1,0 +1,35 @@
+stwu r1, -0x20(r1)
+mflr r0
+stw r0, 0x24(r1)
+addi r11, r1, 0x20
+bl _savegpr_29
+mr r29, r3
+mr r30, r4
+mr r31, r5
+bl getStageDataHolder__2MRFv
+mr r4, r31
+bl isPlacedZone__15StageDataHolderCFi
+cmpwi r3, 0x0
+bne 0xb84
+li r0, 0x0
+stw r0, 0x0(r29)
+stw r0, 0x0(r30)
+b 0xbb4
+bl getStageDataHolder__2MRFv
+mr r4, r31
+bl getStageDataHolderFromZoneId__15StageDataHolderFi
+lis r4, lbl_805E1FCB@ha
+mr r31, r3
+addi r4, r4, lbl_805E1FCB@l
+bl getStageArchiveResource__15StageDataHolderFPCc
+stw r3, 0x0(r29)
+mr r4, r3
+mr r3, r31
+bl getStageArchiveResourceSize__15StageDataHolderFPv
+stw r3, 0x0(r30)
+addi r11, r1, 0x20
+bl _restgpr_29
+lwz r0, 0x24(r1)
+mtlr r0
+addi r1, r1, 0x20
+blr 

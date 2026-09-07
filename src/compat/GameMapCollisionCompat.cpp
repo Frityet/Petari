@@ -109,6 +109,17 @@ namespace {
         return infos;
     }
 
+    struct SortedLineHits {
+        std::array<Triangle, cMaximumStrikeInfos> triangles{};
+        std::array<TVec3f, cMaximumStrikeInfos> positions{};
+        u32 count = 0U;
+    };
+
+    [[nodiscard]] SortedLineHits& sorted_line_hits() {
+        static thread_local SortedLineHits hits;
+        return hits;
+    }
+
     [[nodiscard]] s32 store_sphere_contacts(const TVec3f& center, float radius,
                                             const CollisionPartsFilterBase* parts_filter,
                                             const TriangleFilterBase* triangle_filter,
@@ -172,6 +183,65 @@ namespace {
 }  // namespace
 
 namespace MR {
+    u32 getNearPolyOnLineSort(const TVec3f& reference, const TVec3f& start, const TVec3f& offset,
+                              const HitSensor* except_sensor) {
+        const aurora::allocation::HostAllocationScope host_allocations;
+        const auto hit_count = Collision::checkStrikeLineToMap(start, offset, 0, nullptr, nullptr);
+        const auto& hits = strike_infos();
+        // The original early return deliberately retains the previous sorted buffer.
+        if (hit_count == 0) {
+            return 0U;
+        }
+        auto candidates = std::array<bool, cMaximumStrikeInfos>{};
+        auto excluded = u32{};
+        for (std::size_t i = 0U; i < hits.size(); ++i) {
+            candidates[i] = except_sensor == nullptr || hits[i].mParentTriangle.mSensor != except_sensor;
+            excluded += !candidates[i];
+        }
+        auto& sorted = sorted_line_hits();
+        sorted.count = static_cast<u32>(hits.size()) - excluded;
+        for (u32 i = 0U; i < sorted.count; ++i) {
+            auto nearest_distance = 1000000.0F;
+            auto nearest_index = std::size_t{};
+            for (std::size_t j = 0U; j < hits.size(); ++j) {
+                if (!candidates[j]) {
+                    continue;
+                }
+                TVec3f difference = reference;
+                difference.sub(hits[j].mHitPos);
+                const auto distance = PSVECMag(&difference);
+                if (nearest_distance > distance) {
+                    nearest_distance = distance;
+                    nearest_index = j;
+                }
+            }
+            const auto& hit = hits[nearest_index];
+            sorted.triangles[i] = hit.mParentTriangle;
+            sorted.positions[i] = hit.mHitPos;
+            candidates[nearest_index] = false;
+        }
+        return sorted.count;
+    }
+
+    bool getSortedPoly(TVec3f* position, Triangle* triangle, u32 index) {
+        const auto& sorted = sorted_line_hits();
+        if (sorted.count <= index) {
+            return false;
+        }
+        if (triangle != nullptr) {
+            *triangle = sorted.triangles[index];
+        }
+        if (position != nullptr) {
+            *position = sorted.positions[index];
+        }
+        return true;
+    }
+
+    const Triangle* getSortedPoly(u32 index) {
+        const auto& sorted = sorted_line_hits();
+        return sorted.count <= index ? nullptr : &sorted.triangles[index];
+    }
+
     const TVec3f* getNormal(const Triangle* triangle) {
         return triangle != nullptr ? triangle->getNormal(0) : nullptr;
     }
@@ -361,6 +431,34 @@ namespace MR {
 }  // namespace MR
 
 namespace Collision {
+    s32 checkStrikeLineToMap(const TVec3f& start, const TVec3f& offset, s32 maximum,
+                              const CollisionPartsFilterBase* parts_filter,
+                              const TriangleFilterBase* triangle_filter) {
+        const aurora::allocation::HostAllocationScope host_allocations;
+        require_supported_parts_filter(parts_filter);
+        if (maximum < 0 || maximum > static_cast<s32>(cMaximumStrikeInfos)) {
+            aurora::throw_host_exception<std::invalid_argument>("Line strike queries exceed the original 32-hit storage.");
+        }
+        const auto& collision = require_stage_collision();
+        const auto filter = smgpc::compat::make_collision_triangle_filter(collision, triangle_filter);
+        const auto hits = collision.line_hits(start, offset,
+            maximum == 0 ? cMaximumStrikeInfos : static_cast<std::size_t>(maximum), filter);
+        auto& infos = strike_infos();
+        infos.clear();
+        infos.reserve(hits.size());
+        const auto length = PSVECMag(&offset);
+        for (const auto& hit : hits) {
+            auto& info = infos.emplace_back();
+            info.mParentTriangle = smgpc::compat::make_collision_triangle(collision, hit.triangle_index);
+            info._60 = length * hit.fraction;
+            info.mHitPos = hit.position;
+            // Retail checkArrow's all-hit branch does not write the flag
+            // array consumed by CollisionParts. Retain the native HitInfo
+            // constructor's initialized value for those unspecified bytes.
+        }
+        return static_cast<s32>(infos.size());
+    }
+
     s32 checkStrikePointToMap(const TVec3f& point, HitInfo* output) {
         const auto contacts = require_stage_collision().sphere_contacts(point, 0.0F, 1U);
         auto& infos = strike_infos();

@@ -36,11 +36,9 @@ target("smg-pc-game")
         "Player/MarioMove.cpp",
         "Player/MarioNullBck.cpp",
         "Player/MarioParts.cpp",
-        "Player/MarioPress.cpp",
         "Player/MarioSearchLight.cpp",
         "Player/MarioSound.cpp",
         "Player/MarioState.cpp",
-        "Player/MarioSwimDamage.cpp",
         "Player/MarioWalk.cpp",
         "Player/TornadoMario.cpp",
     }
@@ -103,6 +101,7 @@ target("smg-pc-game")
     remove_files("Util/ActorShadowUtil.cpp")
     remove_files("Util/LiveActorUtil.cpp")
     remove_files("Util/JointController.cpp")
+    remove_files("Util/LayoutUtil.cpp")
     remove_files("Util/MapUtil.cpp")
     remove_files("Util/MathUtil.cpp")
     remove_files("Util/MessageUtil.cpp")

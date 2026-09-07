@@ -24,6 +24,7 @@ namespace MR {
     bool isExistStarPointerTarget(const LiveActor* pActor);
     void setStarPointerTargetRadius3d(LiveActor* pActor, f32 radius);
     TVec2f* getStarPointerScreenPosition(s32 channel);
+    TVec3f* getStarPointerWorldPosUsingDepth(s32);
     TVec2f getStarPointerScreenPositionOrEdge(s32 channel);
     TVec2f* getStarPointerScreenVelocity(s32 channel);
     f32 getStarPointerScreenSpeed(s32 channel);
@@ -41,3 +42,11 @@ namespace MR {
     bool requestFileSelectGuidance();
     bool requestFileSelectCopyGuidance();
 }  // namespace MR
+
+namespace MR {
+    bool isExistStarPointerGuidance();
+    bool isExistStarPointerGuidanceFrame1P();
+    bool isStarPointerInScreenAnyPort(s32*);
+    void startStarPointerModeChooseYesNo(void*);
+    f32 calcPointRadius2D(const TVec3f&, f32);
+}

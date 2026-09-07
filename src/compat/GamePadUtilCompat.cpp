@@ -1,6 +1,7 @@
 #include "Game/Util/GamePadUtil.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
+#include "Game/Util/ScreenUtil.hpp"
 
 #include <aurora/wpad.hpp>
 
@@ -31,6 +32,23 @@ namespace {
 }  // namespace
 
 namespace MR {
+    void getCorePadPointingPos(TVec2f* pPos, s32 channel) {
+        const auto pointer = wpad_service().pointer(channel);
+        if (pointer.valid) {
+            // Host input stores framebuffer pixels. WPadPointer::getPointingPos
+            // exposes the original normalized coordinates before screen mapping.
+            pPos->x = (pointer.x / static_cast<f32>(getFrameBufferWidth())) * 2.0F - 1.0F;
+            pPos->y = (pointer.y / static_cast<f32>(getFrameBufferHeight())) * 2.0F - 1.0F;
+        } else {
+            pPos->x = 0.0F;
+            pPos->y = 0.0F;
+        }
+    }
+
+    f32 getCorePadDistanceToDisplay(s32 channel) {
+        return wpad_service().distance_to_display(channel);
+    }
+
     void getCorePadPointingPosBasedOnScreen(TVec2f* pPos, s32 channel) {
         const auto pointer = wpad_service().pointer(channel);
         pPos->x = pointer.x;

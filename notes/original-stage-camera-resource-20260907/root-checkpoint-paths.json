@@ -1,0 +1,26 @@
+[
+  {
+    "path": "src/compat/StageResourceBinding.hpp",
+    "sha256": "e27b6a86260e0f3427f21319abe2fc6fd7235ea692d795edb1e71e27c0f35846"
+  },
+  {
+    "path": "src/compat/StageResourceBinding.cpp",
+    "sha256": "630dfaf4c3273a6355f520aa28b99c7df231d3c432eab1d8e9e2513671de74b7"
+  },
+  {
+    "path": "src/scene/StageHostScene.hpp",
+    "sha256": "1f76813ffbc604020e82a1caae12aa025c820f71cd4e5a3c6dc5b25a4ef3aeef"
+  },
+  {
+    "path": "src/scene/StageHostScene.cpp",
+    "sha256": "84b05e0ef1b61624c4ad6bab075398047f1d874eda3e47edb8d08ed418ffe01e"
+  },
+  {
+    "path": "src/scene/GatewayDemoScene.cpp",
+    "sha256": "4de5a0a57cb96edb294892eab93b1425770f1a37d7606285a8c7962085ae11e3"
+  },
+  {
+    "path": "tests/StageCameraResourceTests.cpp",
+    "sha256": "e0638d1d0b3a40dfd28fec0c4eb41b475843489ac5864271cd5c8e19dfaa58cb"
+  }
+]

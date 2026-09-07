@@ -1,0 +1,30 @@
+[
+  {
+    "path": "src/Game/Util/MapUtil.cpp",
+    "sha256": "479a17c3d629448fa469b98199a7b407584b0301125fc974eb33456ee4ec617d"
+  },
+  {
+    "path": "src/Game/Util/AreaObjUtil.cpp",
+    "sha256": "07824e85322e1bd99833dbbebb0c1f4fb5178bf2cb7c83ff425532614f03c231"
+  },
+  {
+    "path": "include/Game/Util/AreaObjUtil.hpp",
+    "sha256": "7147473421434eb41d58f8e5d2e91f4946f67938fe615b26ec3da361f538c031"
+  },
+  {
+    "path": "src/Game/Player/MarioSwim.cpp",
+    "sha256": "69ce21a2f45f1ec29f1f75a8f06dd71573206c6bc88ab72aa49e696a6ac60ba0"
+  },
+  {
+    "path": "include/Game/Player/MarioSwim.hpp",
+    "sha256": "a08d8b6fed90049185bc976c9e9d85e8b3f3e5ab7ab1b061cd6f8d3cd3e28d44"
+  },
+  {
+    "path": "src/Game/Map/WhirlPoolAccelerator.cpp",
+    "sha256": "dc8f5515ab4e23d6f1c6760b1eb0bcc78d9bf5cd335c26be973455a7f33ffa23"
+  },
+  {
+    "path": "include/Game/Map/WhirlPoolAccelerator.hpp",
+    "sha256": "894b2f398ff478b48604804cd5ee1a50400662ab4b2a868112c3040101f24575"
+  }
+]

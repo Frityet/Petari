@@ -1,0 +1,241 @@
+[
+  {
+    "symbol": "__ZN11NoteCounter3addEv",
+    "name": "NoteCounter::add()",
+    "referenced_by": [
+      "Screen_NoteCounter"
+    ]
+  },
+  {
+    "symbol": "__ZN16RumbleCalculator4calcEv",
+    "name": "RumbleCalculator::calc()",
+    "referenced_by": [
+      "Screen_CountUpPaneRumbler"
+    ]
+  },
+  {
+    "symbol": "__ZN2MR10getCoinNumEv",
+    "name": "MR::getCoinNum()",
+    "referenced_by": [
+      "Screen_CoinCounter"
+    ]
+  },
+  {
+    "symbol": "__ZN2MR12isHiddenPaneEPK11LayoutActorPKc",
+    "name": "MR::isHiddenPane(LayoutActor const*, char const*)",
+    "referenced_by": [
+      "Screen_CameraInfo"
+    ]
+  },
+  {
+    "symbol": "__ZN2MR13getPaneTransXEPK11LayoutActorPKc",
+    "name": "MR::getPaneTransX(LayoutActor const*, char const*)",
+    "referenced_by": [
+      "Screen_MeterLayout",
+      "Screen_SuddenDeathMeter"
+    ]
+  },
+  {
+    "symbol": "__ZN2MR13getPaneTransYEPK11LayoutActorPKc",
+    "name": "MR::getPaneTransY(LayoutActor const*, char const*)",
+    "referenced_by": [
+      "Screen_MeterLayout",
+      "Screen_SuddenDeathMeter"
+    ]
+  },
+  {
+    "symbol": "__ZN2MR13getPlayerLeftEv",
+    "name": "MR::getPlayerLeft()",
+    "referenced_by": [
+      "Screen_PlayerLeft"
+    ]
+  },
+  {
+    "symbol": "__ZN2MR13isSubPadSwingEi",
+    "name": "MR::isSubPadSwing(int)",
+    "referenced_by": [
+      "Screen_CounterLayoutController"
+    ]
+  },
+  {
+    "symbol": "__ZN2MR14isHiddenLayoutEPK11LayoutActor",
+    "name": "MR::isHiddenLayout(LayoutActor const*)",
+    "referenced_by": [
+      "Screen_SubMeterLayout"
+    ]
+  },
+  {
+    "symbol": "__ZN2MR14isIntervalStepEPK11LayoutActori",
+    "name": "MR::isIntervalStep(LayoutActor const*, int)",
+    "referenced_by": [
+      "Screen_MeterLayout"
+    ]
+  },
+  {
+    "symbol": "__ZN2MR15getPowerStarNumEv",
+    "name": "MR::getPowerStarNum()",
+    "referenced_by": [
+      "Screen_StarCounter"
+    ]
+  },
+  {
+    "symbol": "__ZN2MR15getStarPieceNumEv",
+    "name": "MR::getStarPieceNum()",
+    "referenced_by": [
+      "Screen_StarPieceCounter"
+    ]
+  },
+  {
+    "symbol": "__ZN2MR16getPurpleCoinNumEv",
+    "name": "MR::getPurpleCoinNum()",
+    "referenced_by": [
+      "Screen_PurpleCoinCounter"
+    ]
+  },
+  {
+    "symbol": "__ZN2MR16isPlayerSwimmingEv",
+    "name": "MR::isPlayerSwimming()",
+    "referenced_by": [
+      "Screen_CounterLayoutController"
+    ]
+  },
+  {
+    "symbol": "__ZN2MR16setFollowTypeAddEPK11LayoutActorPKc",
+    "name": "MR::setFollowTypeAdd(LayoutActor const*, char const*)",
+    "referenced_by": [
+      "Screen_MeterLayout",
+      "Screen_CounterLayoutAppearer",
+      "Screen_SuddenDeathMeter",
+      "Screen_CountUpPaneRumbler"
+    ]
+  },
+  {
+    "symbol": "__ZN2MR17calcPointRadius2DERKN9JGeometry5TVec3IfEEf",
+    "name": "MR::calcPointRadius2D(JGeometry::TVec3<float> const&, float)",
+    "referenced_by": [
+      "Screen_MeterLayout",
+      "Screen_SuddenDeathMeter"
+    ]
+  },
+  {
+    "symbol": "__ZN2MR17isCameraControlNGEv",
+    "name": "MR::isCameraControlNG()",
+    "referenced_by": [
+      "Screen_CameraInfo"
+    ]
+  },
+  {
+    "symbol": "__ZN2MR18activateChipLayoutEv",
+    "name": "MR::activateChipLayout()",
+    "referenced_by": [
+      "Screen_GameSceneLayoutHolder"
+    ]
+  },
+  {
+    "symbol": "__ZN2MR18joinToNameObjGroupEP7NameObjPKc",
+    "name": "MR::joinToNameObjGroup(NameObj*, char const*)",
+    "referenced_by": [
+      "Screen_GameSceneLayoutHolder"
+    ]
+  },
+  {
+    "symbol": "__ZN2MR19calcNerveEaseInRateEPK11LayoutActori",
+    "name": "MR::calcNerveEaseInRate(LayoutActor const*, int)",
+    "referenced_by": [
+      "Screen_MeterLayout",
+      "Screen_SuddenDeathMeter"
+    ]
+  },
+  {
+    "symbol": "__ZN2MR20deactivateChipLayoutEv",
+    "name": "MR::deactivateChipLayout()",
+    "referenced_by": [
+      "Screen_GameSceneLayoutHolder"
+    ]
+  },
+  {
+    "symbol": "__ZN2MR20isStageAstroLocationEv",
+    "name": "MR::isStageAstroLocation()",
+    "referenced_by": [
+      "Screen_CoinCounter",
+      "Screen_StarPieceCounter"
+    ]
+  },
+  {
+    "symbol": "__ZN2MR25setTextBoxFormatRecursiveEP11LayoutActorPKcPKwz",
+    "name": "MR::setTextBoxFormatRecursive(LayoutActor*, char const*, wchar_t const*, ...)",
+    "referenced_by": [
+      "Screen_PurpleCoinCounter"
+    ]
+  },
+  {
+    "symbol": "__ZN2MR26isExistStarPointerGuidanceEv",
+    "name": "MR::isExistStarPointerGuidance()",
+    "referenced_by": [
+      "Screen_CounterLayoutController"
+    ]
+  },
+  {
+    "symbol": "__ZN2MR27isCameraPossibleToRoundLeftEv",
+    "name": "MR::isCameraPossibleToRoundLeft()",
+    "referenced_by": [
+      "Screen_CameraInfo"
+    ]
+  },
+  {
+    "symbol": "__ZN2MR27startAnimAndSetFrameAndStopEP11LayoutActorPKcfj",
+    "name": "MR::startAnimAndSetFrameAndStop(LayoutActor*, char const*, float, unsigned int)",
+    "referenced_by": [
+      "Screen_CounterLayoutAppearer"
+    ]
+  },
+  {
+    "symbol": "__ZN2MR28isCameraPossibleToRoundRightEv",
+    "name": "MR::isCameraPossibleToRoundRight()",
+    "referenced_by": [
+      "Screen_CameraInfo"
+    ]
+  },
+  {
+    "symbol": "__ZN2MR28isStarPointerInScreenAnyPortEPi",
+    "name": "MR::isStarPointerInScreenAnyPort(int*)",
+    "referenced_by": [
+      "Screen_StarPieceCounter"
+    ]
+  },
+  {
+    "symbol": "__ZN2MR31startStarPointerModeChooseYesNoEPv",
+    "name": "MR::startStarPointerModeChooseYesNo(void*)",
+    "referenced_by": [
+      "Screen_YesNoLayout"
+    ]
+  },
+  {
+    "symbol": "__ZN2MR33isExistStarPointerGuidanceFrame1PEv",
+    "name": "MR::isExistStarPointerGuidanceFrame1P()",
+    "referenced_by": [
+      "Screen_StarPieceCounter"
+    ]
+  },
+  {
+    "symbol": "__ZN2MR36isPossibleToShiftToFirstPersonCameraEv",
+    "name": "MR::isPossibleToShiftToFirstPersonCamera()",
+    "referenced_by": [
+      "Screen_CameraInfo"
+    ]
+  },
+  {
+    "symbol": "__ZNK23CounterLayoutController23isHiddenOrWaitAllLayoutEv",
+    "name": "CounterLayoutController::isHiddenOrWaitAllLayout() const",
+    "referenced_by": [
+      "Screen_CounterLayoutController"
+    ]
+  },
+  {
+    "symbol": "__ZTV29RumbleCalculatorCosMultLinear",
+    "name": "vtable for RumbleCalculatorCosMultLinear",
+    "referenced_by": [
+      "Util_RumbleCalculator"
+    ]
+  }
+]

@@ -1,0 +1,34 @@
+[
+  {
+    "path": "src/scene/StageCollisionService.cpp",
+    "sha256": "1db9558d41375c6b95ae9ae9de55d90dd0fe25a4498cc5801b92e09ffd974076"
+  },
+  {
+    "path": "src/scene/StageCollisionService.hpp",
+    "sha256": "2bc930ae07006598ae6103553ed3d81068dfa2eac76cdb22536bda7b5e8b3b2e"
+  },
+  {
+    "path": "src/compat/GameMapCollisionCompat.cpp",
+    "sha256": "37fd83030c18e43023310d8827da9cfc5e1e1b82e3705a52ec9006d4eba9cac8"
+  },
+  {
+    "path": "src/compat/OriginalKCollisionCompat.cpp",
+    "sha256": "7472be18c67be7a70ca51751a59623fd45a914d8ab60573e27a8eeacf57ce428"
+  },
+  {
+    "path": "src/compat/OriginalCollisionGeometry.cpp",
+    "sha256": "c1d955f840c8bb5381cd90d34b4b014126660b1cb64c4a8cbd6015a6ce21845e"
+  },
+  {
+    "path": "src/compat/OriginalStageWaterQuery.cpp",
+    "sha256": "839efeea8717113ac722943f7e04d300273f745997bdb72cdbede6b116757b76"
+  },
+  {
+    "path": "tests/LineCollisionQueryTests.cpp",
+    "sha256": "2a5fd8b1f34f5be191df11bf69acd5615cfbb4dcea59c529422add5719ff791a"
+  },
+  {
+    "path": "tests/xmake.lua",
+    "sha256": "6d041dfa9d290dcca5fff4db7952d471fbd813834f7624bd044bfff9895ef839"
+  }
+]

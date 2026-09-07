@@ -14,6 +14,14 @@ namespace MR {
         return static_cast< AreaFormSphere* >(pAreaObj->mForm)->_14;
     }
 
+    void calcCubePos(const AreaObj* pAreaObj, TVec3f* pPos) {
+        static_cast< AreaFormCube* >(pAreaObj->mForm)->calcWorldPos(pPos);
+    }
+
+    void calcCubeRotate(const AreaObj* pAreaObj, TVec3f* pRotate) {
+        static_cast< AreaFormCube* >(pAreaObj->mForm)->calcWorldRotate(pRotate);
+    }
+
     void calcSpherePos(TVec3f* pPos, const AreaObj* pAreaObj) {
         static_cast< AreaFormSphere* >(pAreaObj->mForm)->calcPos(pPos);
     }

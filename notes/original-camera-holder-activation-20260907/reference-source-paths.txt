@@ -1,0 +1,4 @@
+include/Game/Camera/CameraParamChunk.hpp
+src/Game/Camera/CamTranslatorSpiral.cpp
+src/Game/Camera/CameraManGame.cpp
+src/Game/Camera/CameraParamChunk.cpp

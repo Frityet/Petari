@@ -1,0 +1,23 @@
+[
+  "Screen/GameSceneLayoutHolder",
+  "Screen/MarioMeter",
+  "Screen/MarioSubMeter",
+  "Screen/CameraInfo",
+  "Screen/CounterLayoutController",
+  "Screen/InformationMessage",
+  "Screen/OneUpBoard",
+  "Screen/MissLayout",
+  "Screen/NoteCounter",
+  "Screen/YesNoLayout",
+  "Screen/PurpleCoinCounter",
+  "Screen/MeterLayout",
+  "Screen/SuddenDeathMeter",
+  "Screen/SubMeterLayout",
+  "Screen/CoinCounter",
+  "Screen/StarPieceCounter",
+  "Screen/PlayerLeft",
+  "Screen/StarCounter",
+  "Screen/CounterLayoutAppearer",
+  "Screen/CountUpPaneRumbler",
+  "Util/RumbleCalculator"
+]

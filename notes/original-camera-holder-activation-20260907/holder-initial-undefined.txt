@@ -1,0 +1,32 @@
+Undefined symbols for architecture arm64:
+  "MR::isCreatedTripodBoss()", referenced from:
+      CameraTripodBossJoint::calcIdealPose() in libsmg-pc-game.a[62](CameraTripodBossJoint.cpp.o)
+      CameraTripodBossJoint::calcIdealPose() in libsmg-pc-game.a[62](CameraTripodBossJoint.cpp.o)
+  "MR::getCorePadPointingPos(JGeometry::TVec2<float>*, int)", referenced from:
+      CameraDPD::reset() in libsmg-pc-game.a[71](CameraDPD.cpp.o)
+      CameraDPD::calc() in libsmg-pc-game.a[71](CameraDPD.cpp.o)
+  "MR::getTripodBossJointMatrix(JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>>*, int)", referenced from:
+      CameraTripodBossJoint::calcIdealPose() in libsmg-pc-game.a[62](CameraTripodBossJoint.cpp.o)
+      CameraTripodBossJoint::calcIdealPose() in libsmg-pc-game.a[62](CameraTripodBossJoint.cpp.o)
+      CameraCharmedTripodBoss::calc() in libsmg-pc-game.a[89](CameraCharmedTripodBoss.cpp.o)
+  "MR::startCameraInterpolation(unsigned int)", referenced from:
+      CameraMedianTower::updateReset(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&) in libsmg-pc-game.a[53](CameraMedianTower.cpp.o)
+      CameraWonderPlanet::checkReset() in libsmg-pc-game.a[93](CameraWonderPlanet.cpp.o)
+      CameraFrontAndBack::calc() in libsmg-pc-game.a[149](CameraFrontAndBack.cpp.o)
+  "MR::isPlayerNeedBrakingCamera()", referenced from:
+      CameraFooFighterPlanet::calc() in libsmg-pc-game.a[97](CameraFooFighterPlanet.cpp.o)
+      CameraFooFighter::calc() in libsmg-pc-game.a[108](CameraFooFighter.cpp.o)
+  "MR::getCorePadDistanceToDisplay(int)", referenced from:
+      CameraDPD::calc() in libsmg-pc-game.a[71](CameraDPD.cpp.o)
+      CameraDPD::calc() in libsmg-pc-game.a[71](CameraDPD.cpp.o)
+  "MR::getStarPointerWorldPosUsingDepth(int)", referenced from:
+      CameraDPD::reset() in libsmg-pc-game.a[71](CameraDPD.cpp.o)
+  "Collision::checkStrikeLineToMap(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, int, CollisionPartsFilterBase const*, TriangleFilterBase const*)", referenced from:
+      CameraFooFighter::calc() in libsmg-pc-game.a[108](CameraFooFighter.cpp.o)
+      CameraWaterFollow::calc() in libsmg-pc-game.a[112](CameraWaterFollow.cpp.o)
+      CameraFollow::checkValidityOfRound(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&) in libsmg-pc-game.a[117](CameraFollow.cpp.o)
+      CameraFollow::checkValidityOfRound(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&) in libsmg-pc-game.a[117](CameraFollow.cpp.o)
+      CameraFollow::isWallForward() const in libsmg-pc-game.a[117](CameraFollow.cpp.o)
+      CameraFollow::checkAscent(JGeometry::TVec3<float>*) const in libsmg-pc-game.a[117](CameraFollow.cpp.o)
+      CameraFollow::checkDescent(JGeometry::TVec3<float>*) const in libsmg-pc-game.a[117](CameraFollow.cpp.o)
+      ...

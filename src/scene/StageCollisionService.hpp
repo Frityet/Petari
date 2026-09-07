@@ -137,6 +137,12 @@ namespace smgpc::scene {
         [[nodiscard]] bool line_cast(const TVec3f& start, const TVec3f& offset,
                                      StageCollisionHit* hit = nullptr,
                                      const StageCollisionTriangleFilter& filter = {}) const;
+        // Original CollisionCategorizedKeeper all-hit order: zones, enabled
+        // parts and each part's KCL leaf traversal. Repeated leaf encounters
+        // are retained, and capacity applies before the MR sensor exclusion.
+        [[nodiscard]] std::vector<StageCollisionHit> line_hits(
+            const TVec3f& start, const TVec3f& offset, std::size_t maximum = 32U,
+            const StageCollisionTriangleFilter& filter = {}) const;
         [[nodiscard]] std::vector<StageCollisionContact> sphere_contacts(const TVec3f& center, float radius,
                                                                          std::size_t maximum = 32U,
                                                                          const StageCollisionTriangleFilter& filter = {}) const;
@@ -213,6 +219,7 @@ namespace smgpc::scene {
         };
 
         [[nodiscard]] std::uint32_t build_node(std::uint32_t first, std::uint32_t count);
+        void prepare_kcl_source(const Source& source) const;
         [[nodiscard]] std::vector<StageCollisionContact> sphere_contacts_impl(
             const TVec3f& center, float radius, std::size_t maximum,
             std::optional<float> thickness_override,

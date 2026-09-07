@@ -2189,6 +2189,41 @@ bool smgpc::layout::LayoutRuntime::isPaneVisible(std::string_view paneName) cons
     return false;
 }
 
+bool smgpc::layout::LayoutRuntime::isPaneLocallyVisible(std::string_view paneName) const {
+    const auto index = paneIndex(paneName);
+    if (!index)
+        aurora::throw_host_exception<std::runtime_error>("Reading visibility requires a real pane");
+    const auto& pane = mBrlytLayout.panes.at(*index);
+    auto visible = pane.visible;
+    if (const auto animated = animationFrameForPane(pane.name).visible)
+        visible = *animated;
+    if (const auto override = mPaneVisibilityOverrides.find(pane.name); override != mPaneVisibilityOverrides.end())
+        visible = override->second;
+    return visible;
+}
+
+void smgpc::layout::LayoutRuntime::clearPaneFollowPositions() {
+    mPaneFollowPositions.clear();
+}
+
+void smgpc::layout::LayoutRuntime::setPaneFollowPosition(std::string_view paneName, u32 type, const TVec2f& position) {
+    const auto index = paneIndex(paneName);
+    if (!index)
+        aurora::throw_host_exception<std::runtime_error>("Following a position requires a real pane");
+    // Original recalcChildGlobalMtx discards earlier child follow transforms
+    // when a parent control is processed later in the same calculation.
+    std::erase_if(mPaneFollowPositions, [&](const auto& entry) {
+        auto parent = mBrlytLayout.panes.at(entry.first).parent_index;
+        while (parent >= 0) {
+            if (static_cast<std::size_t>(parent) == *index)
+                return true;
+            parent = mBrlytLayout.panes.at(static_cast<std::size_t>(parent)).parent_index;
+        }
+        return false;
+    });
+    mPaneFollowPositions.insert_or_assign(*index, PaneFollowState{type, position});
+}
+
 bool smgpc::layout::LayoutRuntime::hasPane(std::string_view paneName) const {
     const_cast< LayoutRuntime* >(this)->loadRenderData();
     if (paneName.empty()) {
@@ -2314,12 +2349,7 @@ bool smgpc::layout::LayoutRuntime::copyPaneMatrix(std::string_view paneName, Mtx
         if (mBrlytLayout.panes.empty()) {
             return false;
         }
-        set_matrix(PaneRenderState{
-            .scale_x = mScaleX,
-            .scale_y = mScaleY,
-            .m00 = mScaleX,
-            .m11 = mScaleY,
-        });
+        set_matrix(paneRenderState(0U));
         return true;
     }
 
@@ -3550,9 +3580,46 @@ smgpc::layout::LayoutRuntime::PaneRenderState smgpc::layout::LayoutRuntime::pane
     const auto local_m10 = sin_r * local_scale_x;
     const auto local_m11 = cos_r * local_scale_y;
 
+    const auto apply_follow = [&](PaneRenderState result) {
+        const auto it = mPaneFollowPositions.find(pane_index);
+        if (it == mPaneFollowPositions.end())
+            return result;
+        const auto& follow = it->second;
+        switch (follow.type) {
+        case 0:
+            result.translate_x = follow.position.x - mTransX;
+            result.translate_y = follow.position.y - mTransY;
+            break;
+        case 1:
+            result.translate_x += follow.position.x;
+            result.translate_y += follow.position.y;
+            break;
+        case 2: {
+            // Original global * inverse(local) * local-with-replaced-translation.
+            const auto determinant = local_m00 * local_m11 - local_m01 * local_m10;
+            if (determinant == 0.0F)
+                aurora::throw_host_exception<std::logic_error>("Replacing a pane's local position requires an invertible matrix");
+            const auto p00 = (result.m00 * local_m11 - result.m01 * local_m10) / determinant;
+            const auto p01 = (result.m01 * local_m00 - result.m00 * local_m01) / determinant;
+            const auto p10 = (result.m10 * local_m11 - result.m11 * local_m10) / determinant;
+            const auto p11 = (result.m11 * local_m00 - result.m10 * local_m01) / determinant;
+            const auto dx = follow.position.x - local_translate_x;
+            const auto dy = follow.position.y - local_translate_y;
+            result.translate_x += p00 * dx + p01 * dy;
+            result.translate_y += p10 * dx + p11 * dy;
+            break;
+        }
+        case 3:
+            result.translate_x += local_m00 * follow.position.x + local_m01 * follow.position.y;
+            result.translate_y += local_m10 * follow.position.x + local_m11 * follow.position.y;
+            break;
+        }
+        return result;
+    };
+
     if (pane.parent_index < 0) {
         const auto modifies_child_alpha = pane.influenced_alpha && local_alpha != 255.0F;
-        return PaneRenderState{
+        return apply_follow(PaneRenderState{
             .translate_x = local_translate_x,
             .translate_y = local_translate_y,
             .scale_x = mScaleX * local_scale_x,
@@ -3567,14 +3634,14 @@ smgpc::layout::LayoutRuntime::PaneRenderState smgpc::layout::LayoutRuntime::pane
             .visible = local_visible,
             .location_adjust = local_location_adjust,
             .child_alpha_influenced = modifies_child_alpha,
-        };
+        });
     }
 
     const auto parent = paneRenderState(static_cast< std::size_t >(pane.parent_index));
     const auto effective_alpha = parent.child_alpha_influenced ? local_alpha * parent.child_alpha_scale : local_alpha;
     const auto modifies_child_alpha = pane.influenced_alpha && local_alpha != 255.0F;
     const auto child_alpha_scale = modifies_child_alpha ? parent.child_alpha_scale * (local_alpha / 255.0F) : parent.child_alpha_scale;
-    return PaneRenderState{
+    return apply_follow(PaneRenderState{
         .translate_x = parent.translate_x + parent.m00 * local_translate_x + parent.m01 * local_translate_y,
         .translate_y = parent.translate_y + parent.m10 * local_translate_x + parent.m11 * local_translate_y,
         .scale_x = parent.scale_x * local_scale_x,
@@ -3589,7 +3656,7 @@ smgpc::layout::LayoutRuntime::PaneRenderState smgpc::layout::LayoutRuntime::pane
         .visible = parent.visible && local_visible,
         .location_adjust = local_location_adjust,
         .child_alpha_influenced = parent.child_alpha_influenced || modifies_child_alpha,
-    };
+    });
 }
 
 aurora::nw4r::lyt::BrlanPaneFrame smgpc::layout::LayoutRuntime::animationFrameForPane(std::string_view pane_name) const {

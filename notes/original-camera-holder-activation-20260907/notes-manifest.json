@@ -1,0 +1,118 @@
+[
+  {
+    "path": "notes/original-camera-holder-activation-20260907/CamTranslatorSpiral.baseline.cpp",
+    "sha256": "16be51c6b8545d3e4d5c62ff9f355f06005a3d4599d9f2bd6256445f7325a106"
+  },
+  {
+    "path": "notes/original-camera-holder-activation-20260907/CamTranslatorSpiral.baseline.objdiff.json",
+    "sha256": "d7f819d5817cc6d4f0632223afdd3e15d0bf1a97685813f4e8788d262f07164d"
+  },
+  {
+    "path": "notes/original-camera-holder-activation-20260907/CamTranslatorSpiral.reference.objdiff.json",
+    "sha256": "f29ad23c210e49002895d9c7d67250e188c0e58b1ffa4be8e0949932a5b6c55a"
+  },
+  {
+    "path": "notes/original-camera-holder-activation-20260907/CamTranslatorSpiral.wii-proof.json",
+    "sha256": "d7db22d7f5671efeca3e23bd6e20a0e68f20b49b20ca1be2ee84bfb56cdb2205"
+  },
+  {
+    "path": "notes/original-camera-holder-activation-20260907/CameraHolder.reference.objdiff.json",
+    "sha256": "a621c0e16d300386a8431e777a6fab0d89e54367a741ff0c453039f48cfa8451"
+  },
+  {
+    "path": "notes/original-camera-holder-activation-20260907/CameraManGame.baseline.cpp",
+    "sha256": "042b4a541c841a433786e5d94c0f9a66da0d0c600616253644483260f5fd52f4"
+  },
+  {
+    "path": "notes/original-camera-holder-activation-20260907/CameraManGame.baseline.objdiff.json",
+    "sha256": "336beac302bbd88062669eceb96f5ab76b6816d7636685a910962a29d279b015"
+  },
+  {
+    "path": "notes/original-camera-holder-activation-20260907/CameraManGame.reference.objdiff.json",
+    "sha256": "d5e3db907f53ef3f8ada6f7fe5db0cedf54285a77f6ad609ce3755208da5e896"
+  },
+  {
+    "path": "notes/original-camera-holder-activation-20260907/CameraParamChunk.baseline.cpp",
+    "sha256": "fbf2e8621ec88d55671abd16d70274747e808f4b56b7db983bb93c2d92418498"
+  },
+  {
+    "path": "notes/original-camera-holder-activation-20260907/CameraParamChunk.baseline.objdiff.json",
+    "sha256": "7b3e7257fe88c8866af7e525d19ae09e3ebdb8333a4723b042f152ab7b609a9d"
+  },
+  {
+    "path": "notes/original-camera-holder-activation-20260907/CameraParamChunk.reference.objdiff.json",
+    "sha256": "18beeb64d2ff2d0cb07659d5423d89e0e3ea706d697498cfc0943e12e64d1812"
+  },
+  {
+    "path": "notes/original-camera-holder-activation-20260907/CameraParamChunkHolder.reference.objdiff.json",
+    "sha256": "c93d78bf3f9ea504e9acf130aa3cdc48d81f4226f73a57e442c97807ab04f390"
+  },
+  {
+    "path": "notes/original-camera-holder-activation-20260907/OriginalTripodBossQuery.cpp",
+    "sha256": "674c5aadcd5b5813b56f8df72f207875f74def9800f87256487bea45d9e35fe7"
+  },
+  {
+    "path": "notes/original-camera-holder-activation-20260907/README.md",
+    "sha256": "f8a24e7babe7b7da53060dfee802ec374c1dfef13d4bee5494f93d162f96aac8"
+  },
+  {
+    "path": "notes/original-camera-holder-activation-20260907/finalize-manifest.py",
+    "sha256": "7b03e867088349ed2d59d346eb94402b37a4aa6d5518160b0ed19daafd060212"
+  },
+  {
+    "path": "notes/original-camera-holder-activation-20260907/fixture-native-command.json",
+    "sha256": "35327a609432fd259e9bd41b81dfcc5bc4a27790d8b8f8621a3bf30f5a4c70c6"
+  },
+  {
+    "path": "notes/original-camera-holder-activation-20260907/holder-initial-undefined.txt",
+    "sha256": "ee93f714617c580697b8e76c84e5796ecb118a2b3768ed01f6552a420a1ffb2e"
+  },
+  {
+    "path": "notes/original-camera-holder-activation-20260907/import-manifest.json",
+    "sha256": "bb02d5555c0d49ec161b3b9a05aadc5133207defca88be8cbf9e0dafcb4fd353"
+  },
+  {
+    "path": "notes/original-camera-holder-activation-20260907/import.py",
+    "sha256": "9a14097334ea943db1789884e6d0c88153ce457a19025d0e52178f8581dcece1"
+  },
+  {
+    "path": "notes/original-camera-holder-activation-20260907/native-compile-results.json",
+    "sha256": "271cdba595e032e6fbcd41e7858260b7f239de7df1d73341d7195c6f9cd22ada"
+  },
+  {
+    "path": "notes/original-camera-holder-activation-20260907/original-helper-manifest.json",
+    "sha256": "5e3ffe87385aea5175c8c6bcb719e1f4976fef9948e026a5a751767a68d93bd0"
+  },
+  {
+    "path": "notes/original-camera-holder-activation-20260907/original-helpers-native-command.json",
+    "sha256": "7db1243cde9bfc80e7cc34388dd6f6215ec9f15084c01569a3f3227cb60774e8"
+  },
+  {
+    "path": "notes/original-camera-holder-activation-20260907/reference-source-paths.txt",
+    "sha256": "1969920a1eb72dbe0537845cf79bbd0491a98c78f88e205969308b025fdd50ed"
+  },
+  {
+    "path": "notes/original-camera-holder-activation-20260907/retained-helper-compile-results.json",
+    "sha256": "282a59a085fadc5e7d34d54168f74a0cc162efad3eda844b048ba6ed87762cd8"
+  },
+  {
+    "path": "notes/original-camera-holder-activation-20260907/root-source-paths.txt",
+    "sha256": "c8c5e3f9de4073c842e5d7eaf61d07e10a1ff65358ded542326a0b8058a00ab9"
+  },
+  {
+    "path": "notes/original-camera-holder-activation-20260907/source-manifest.json",
+    "sha256": "65f494fc251460d9fad80e18c2b06b2a5644a4eae0d39b8d69950a41649ccd78"
+  },
+  {
+    "path": "notes/original-camera-holder-activation-20260907/verify-boundaries.py",
+    "sha256": "82cb4b878587714783bc27a0b155f86873ce35427f13a9d92f9ca8aa74799356"
+  },
+  {
+    "path": "notes/original-camera-holder-activation-20260907/wii-baseline-comparison.json",
+    "sha256": "bc04ba8b51d37624a9e97db2fec0a34241aa277940c45b4ce2273af93d035e2f"
+  },
+  {
+    "path": "notes/original-camera-holder-activation-20260907/wii-compile-results.json",
+    "sha256": "1e770cc434794ad3a0efc0657963af79f036ebacd67baab5db91c40ae48a786d"
+  }
+]

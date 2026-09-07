@@ -25,6 +25,7 @@
 #include "Game/Player/MarioHolder.hpp"
 #include "Game/Screen/CenterScreenBlur.hpp"
 #include "Game/Screen/InformationObserver.hpp"
+#include "Game/Screen/GameSceneLayoutHolder.hpp"
 #include "Game/Screen/LensFlare.hpp"
 #include "Game/Util/BaseMatrixFollowTargetHolder.hpp"
 #include "Game/Util/FurCtrl.hpp"
@@ -416,6 +417,8 @@ NameObj *SceneObjHolder::newEachObj(int id) {
         return new CenterScreenBlur();
     case SceneObj_InformationObserver:
         return new InformationObserver();
+    case SceneObj_GameSceneLayoutHolder:
+        return new GameSceneLayoutHolder();
     case SceneObj_TalkDirector:
         return new smgpc::compat::TalkRuntime();
     case SceneObj_LensFlareDirector:

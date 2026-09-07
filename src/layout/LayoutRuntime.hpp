@@ -81,6 +81,9 @@ public:
     void setTextBoxHorizontalPosition(std::string_view paneName, u8 position);
     void setTextBoxVerticalPosition(std::string_view paneName, u8 position);
     [[nodiscard]] bool isPaneVisible(std::string_view paneName) const;
+    [[nodiscard]] bool isPaneLocallyVisible(std::string_view paneName) const;
+    void clearPaneFollowPositions();
+    void setPaneFollowPosition(std::string_view paneName, u32 type, const TVec2f& position);
     [[nodiscard]] bool hasPane(std::string_view paneName) const;
     [[nodiscard]] std::optional< std::size_t > paneIndex(std::string_view paneName) const;
     [[nodiscard]] std::optional< PaneBounds > paneBounds(std::string_view paneName) const;
@@ -256,6 +259,11 @@ private:
         bool child_alpha_influenced = false;
     };
 
+    struct PaneFollowState {
+        u32 type;
+        TVec2f position;
+    };
+
     struct PaneAnimationState {
         std::string pane_name;
         std::array< AnimationState, 4 > animations = {};
@@ -318,6 +326,7 @@ private:
     std::unordered_map< std::string, aurora::nw4r::lyt::BrlanPaneFrame > mCommittedPaneFrames = {};
     std::unordered_map< std::string, aurora::nw4r::lyt::BrlanMaterialFrame > mCommittedMaterialFrames = {};
     std::unordered_map< std::string, bool > mPaneVisibilityOverrides = {};
+    std::unordered_map< std::size_t, PaneFollowState > mPaneFollowPositions;
     std::unordered_map< std::string, f32 > mPaneAlphaOverrides = {};
     std::unordered_map< std::string, TextBoxTemplateState > mTextBoxTemplates = {};
     std::vector< PaneAnimationState > mPaneAnimations = {};

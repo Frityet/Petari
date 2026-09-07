@@ -1,0 +1,19 @@
+{
+  "math_rotation": {
+    "build": 0,
+    "run": 0
+  },
+  "area_polygon_query": {
+    "build": 0,
+    "run": 0
+  },
+  "line_collision_query": {
+    "build": 0,
+    "run": 0
+  },
+  "direct_line_collision_query_final": {
+    "build": 0,
+    "run": 0
+  },
+  "first_line_fixture_failure": "Missing retained registration for synthetic sensor; fixture corrected, production unchanged."
+}

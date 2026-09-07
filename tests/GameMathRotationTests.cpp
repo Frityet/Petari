@@ -488,6 +488,41 @@ namespace {
         MR::rotAxisVecRad(vector, axis_alias, &axis_alias, HALF_PI);
         require_vector(axis_alias, rotated, "axis rotation builds the rotation before overwriting an aliased axis");
     }
+    void test_original_matrix_comparisons_and_angles() {
+        Mtx identity, yaw, pitch;
+        PSMTXIdentity(identity);
+        PSMTXRotRad(yaw, 'y', HALF_PI);
+        PSMTXRotRad(pitch, 'x', HALF_PI);
+        yaw[0][3] = 37.0F;
+        yaw[1][3] = -24.0F;
+        require(MR::isRotAxisY(identity, yaw) && !MR::isRotAxisY(identity, pitch),
+                "matrix axis comparison recognizes yaw and ignores translation");
+        Mtx translated;
+        PSMTXCopy(identity, translated);
+        translated[0][3] = 100.0F;
+        translated[2][3] = -5.0F;
+        require(MR::isSameMtxRot(identity, translated) && !MR::isSameMtxRot(identity, yaw),
+                "exact rotation comparison ignores only translation components");
+        translated[2][2] = NAN;
+        require(!MR::isSameMtxRot(identity, translated), "unordered rotation entries remain unequal");
+        TVec3f axis;
+        MR::calcMtxRotAxis(&axis, identity, yaw);
+        require_vector(axis, TVec3f{0.0F, 1.0F, 0.0F}, "quarter yaw retains its world rotation axis");
+        MR::calcMtxRotAxis(&axis, identity, identity);
+        require_vector(axis, TVec3f{0.0F, 0.0F, 1.0F}, "coincident forward axes use the original local Z result");
+        require(MR::isNormalize(TVec3f{0.0F, 1.0F, 0.0F}) &&
+                    !MR::isNormalize(TVec3f{0.0F, 2.0F, 0.0F}) &&
+                    !MR::isNormalize(TVec3f{NAN, 0.0F, 0.0F}),
+                "unit-vector query preserves magnitude and unordered comparisons");
+        require(near(MR::diffAngleAbs(-HALF_PI, HALF_PI), PI) &&
+                    near(MR::diffAngleAbs(TWO_PI - 0.25F, 0.25F), 0.5F),
+                "scalar angular distance wraps across the original full-turn boundary");
+        require(near(MR::diffAngleAbs(TVec2f{3.0F, 0.0F}, TVec2f{0.0F, 4.0F}), HALF_PI) &&
+                    near(MR::diffAngleAbs(TVec2f{3.0F, 0.0F}, TVec2f{-4.0F, 0.0F}), PI),
+                "2D angular distance accepts scaled directions and opposite endpoints");
+        MR::getRotatedAxisZ(&axis, TVec3f{0.0F, 90.0F, 0.0F});
+        require_vector(axis, TVec3f{1.0F, 0.0F, 0.0F}, "authored Euler degrees rotate the local forward axis");
+    }
 }  // namespace
 
 int main() {
@@ -506,6 +541,7 @@ int main() {
         test_vec2_near_zero_boundaries();
         test_fixed16_conversion_boundaries();
         test_original_matrix_basis_and_axis_rotation();
+        test_original_matrix_comparisons_and_angles();
         std::cout << "game math rotation tests passed\n";
         return 0;
     } catch (const std::exception& exception) {

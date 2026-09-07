@@ -1,0 +1,7 @@
+# Original movement matrix and angle helpers — 2026-09-07
+
+Restored seven exact reference source bodies outside Game: isSameMtxRot, isRotAxisY, calcMtxRotAxis, both missing diffAngleAbs overloads, isNormalize, and getRotatedAxisZ. Whole reference MathUtil/MtxUtil compiles pass; all seven score 99.51–100% against retail, with matching symbol sizes. See function-proof.json. Original calcCubePos/calcCubeRotate were also recovered decomp-first, each an exact eight-byte tail call to the original AreaFormCube methods (100%).
+
+LLVM 23 native compilation passed. Extended smg-pc-game-math-rotation-tests passed: yaw/pitch distinction, translation-independent exact rotation equality including NaN, identity-axis fallback, normalization tolerance, scalar wrapping, nonunit 2D opposite vectors, and degree-based Euler Z-axis rotation. The ordered line and area polygon regression targets also passed after these changes; logs are under notes/original-water-line-query-20260907.
+
+Enabled original MarioPress/MarioSwimDamage in the ordinary Game archive. MarioPress now also exists in decomp first, retaining the previously recovered body with standard C++ goto lifetime scopes. The existing Wii inline substitution is restricted to the original toolchain because native forced headers already declare that inline. Native and Wii compiles pass; all paired Wii symbols are unchanged. Pressure original fuzzy scores and source proof are in notes/original-player-compiler-boundaries-20260907. These helper checks do not establish runnable original Mario movement yet.

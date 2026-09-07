@@ -26,6 +26,7 @@
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "scene/StageAuthoredData.hpp"
 #include "compat/StageZoneMatrixRegistry.hpp"
+#include "compat/StageResourceBinding.hpp"
 #include "scene/StageEventCameraBinding.hpp"
 #include "scene/StageLightSceneBinding.hpp"
 #include "scene/nameobj/NameObjFactory.hpp"
@@ -141,6 +142,8 @@ namespace smgpc::scene {
             // retained authored set only after publishing that shared catalog.
             _authored_data = std::make_unique<StageAuthoredData>(
                 StageAuthoredData::resolve(_dvd, cStageName, 1, 0, 0));
+            _stage_resource_binding = std::make_unique<smgpc::compat::StageResourceBinding>(
+                _dvd, _authored_data->holders());
             _zone_matrix_binding = std::make_unique<smgpc::compat::StageZoneMatrixBinding>(
                 _authored_data->holders(), _authored_data->tables());
             require(!_authored_data->tables().empty(),
@@ -537,6 +540,7 @@ namespace smgpc::scene {
         std::unique_ptr<smgpc::compat::StageSessionBinding>
             _stage_session_binding{};
         std::unique_ptr<StageAuthoredData> _authored_data{};
+        std::unique_ptr<smgpc::compat::StageResourceBinding> _stage_resource_binding{};
         std::unique_ptr<smgpc::compat::StageZoneMatrixBinding> _zone_matrix_binding{};
         std::unique_ptr<StageEventCameraBinding> _event_camera_binding{};
         const StageStartInfo *_start = nullptr;

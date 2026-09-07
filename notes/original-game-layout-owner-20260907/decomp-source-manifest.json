@@ -1,0 +1,46 @@
+[
+  {
+    "path": "src/Game/Screen/CounterLayoutController.cpp",
+    "sha256": "1abcede75a4e3bacd9881b1cd3963cabb3a4315a2c594040322e16c2a01f8637"
+  },
+  {
+    "path": "src/Game/Screen/NoteCounter.cpp",
+    "sha256": "50248b1e96e6da911c8f53b1ffb0ed80a6158023f5fd85dcdec528ead09b7954"
+  },
+  {
+    "path": "src/Game/Util/RumbleCalculator.cpp",
+    "sha256": "1fcefb18ae279483302be3a416f27213162aa8044a67acc60aee635ee5eb8ed4"
+  },
+  {
+    "path": "src/Game/Screen/LayoutPaneCtrl.cpp",
+    "sha256": "6264f345a10b0b73e8f9bca26c44bfb8fcb9befe4e91368f78f35500eceb1917"
+  },
+  {
+    "path": "src/Game/Screen/SubMeterLayout.cpp",
+    "sha256": "22df5fa428fcd4229c53d73227eabdb42b82886bfde49aabd0ec8c7e0510b374"
+  },
+  {
+    "path": "src/Game/Util/LayoutUtil.cpp",
+    "sha256": "d1281ab792f1c7f561a781acb711f9aff1e089dc95916c924803d9edbee2591e"
+  },
+  {
+    "path": "libs/nw4r/include/nw4r/math/types.h",
+    "sha256": "da6ecfa3db81b5ae2ae83f17b372f9000c7b6945cb07749a18f747e30e68285f"
+  },
+  {
+    "path": "include/Game/Screen/CoinCounter.hpp",
+    "sha256": "3c1b6ec6fa27090c7bb8af39ff9df8d36d533b14d7c6915720e8f37b26120e91"
+  },
+  {
+    "path": "include/Game/Screen/StarPieceCounter.hpp",
+    "sha256": "51b0ca682fb35327ba4737587d7468d1fdc1e6c69d1961935745754e519befe5"
+  },
+  {
+    "path": "include/Game/Screen/PlayerLeft.hpp",
+    "sha256": "936766fede289bf1fd301309acdce5af231141ecab52816307803ec147ad84ca"
+  },
+  {
+    "path": "include/Game/Screen/StarCounter.hpp",
+    "sha256": "c1eac70f3b89173daeb66ab8c75103e3a34e66e1c3e64eccad8515420f2733ab"
+  }
+]

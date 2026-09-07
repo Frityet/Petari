@@ -1,0 +1,68 @@
+[
+  {
+    "unit": "Screen/CounterLayoutController",
+    "name": "isHiddenOrWaitAllLayout__23CounterLayoutControllerCFv",
+    "percent": 100.0,
+    "retail_bytes": 364
+  },
+  {
+    "unit": "Screen/NoteCounter",
+    "name": "add__11NoteCounterFv",
+    "percent": 94.0,
+    "retail_bytes": 300
+  },
+  {
+    "unit": "Util/RumbleCalculator",
+    "name": "calc__16RumbleCalculatorFv",
+    "percent": 92.42029,
+    "retail_bytes": 276
+  },
+  {
+    "unit": "Util/RumbleCalculator",
+    "name": "calcValues__29RumbleCalculatorCosMultLinearFPQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+    "percent": 91.15151,
+    "retail_bytes": 132
+  },
+  {
+    "unit": "Screen/LayoutPaneCtrl",
+    "name": "reflectFollowPos__14LayoutPaneCtrlFv",
+    "percent": 96.18519,
+    "retail_bytes": 540
+  },
+  {
+    "unit": "Screen/LayoutPaneCtrl",
+    "name": "recalcChildGlobalMtx__14LayoutPaneCtrlFPQ34nw4r3lyt4Pane",
+    "percent": 64.56604,
+    "retail_bytes": 212
+  },
+  {
+    "unit": "Util/LayoutUtil",
+    "name": "isHiddenPane__2MRFPC11LayoutActorPCc",
+    "percent": 100.0,
+    "retail_bytes": 68
+  },
+  {
+    "unit": "Util/LayoutUtil",
+    "name": "copyPaneTrans__2MRFPQ29JGeometry8TVec2<f>PC11LayoutActorPCc",
+    "percent": 100.0,
+    "retail_bytes": 96
+  },
+  {
+    "unit": "Util/LayoutUtil",
+    "name": "getPaneTransX__2MRFPC11LayoutActorPCc",
+    "percent": 100.0,
+    "retail_bytes": 88
+  },
+  {
+    "unit": "Util/LayoutUtil",
+    "name": "getPaneTransY__2MRFPC11LayoutActorPCc",
+    "percent": 100.0,
+    "retail_bytes": 88
+  },
+  {
+    "unit": "Util/LayoutUtil",
+    "name": "setLayoutPosAtPaneTrans__2MRFP11LayoutActorPC11LayoutActorPCc",
+    "percent": 100.0,
+    "retail_bytes": 60
+  }
+]

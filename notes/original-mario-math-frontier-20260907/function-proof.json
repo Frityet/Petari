@@ -1,0 +1,65 @@
+[
+  {
+    "unit": "MtxUtil",
+    "name": "isSameMtxRot__2MRFPA4_fPA4_f",
+    "match_percent": 100.0,
+    "retail_bytes": 72,
+    "candidate_bytes": 72
+  },
+  {
+    "unit": "MtxUtil",
+    "name": "isRotAxisY__2MRFPA4_fPA4_f",
+    "match_percent": 99.583336,
+    "retail_bytes": 144,
+    "candidate_bytes": 144
+  },
+  {
+    "unit": "MtxUtil",
+    "name": "calcMtxRotAxis__2MRFPQ29JGeometry8TVec3<f>PA4_fPA4_f",
+    "match_percent": 99.51111,
+    "retail_bytes": 180,
+    "candidate_bytes": 180
+  },
+  {
+    "unit": "MathUtil",
+    "name": "diffAngleAbs__2MRFff",
+    "match_percent": 99.64286,
+    "retail_bytes": 56,
+    "candidate_bytes": 56
+  },
+  {
+    "unit": "MathUtil",
+    "name": "diffAngleAbs__2MRFRCQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec2<f>",
+    "match_percent": 100.0,
+    "retail_bytes": 192,
+    "candidate_bytes": 192
+  },
+  {
+    "unit": "MathUtil",
+    "name": "isNormalize__2MRFRCQ29JGeometry8TVec3<f>f",
+    "match_percent": 100.0,
+    "retail_bytes": 80,
+    "candidate_bytes": 80
+  },
+  {
+    "unit": "MathUtil",
+    "name": "getRotatedAxisZ__2MRFPQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+    "match_percent": 100.0,
+    "retail_bytes": 120,
+    "candidate_bytes": 120
+  },
+  {
+    "unit": "AreaObjUtil",
+    "name": "calcCubePos__2MRFPC7AreaObjPQ29JGeometry8TVec3<f>",
+    "match_percent": 100.0,
+    "retail_bytes": 8,
+    "candidate_bytes": 8
+  },
+  {
+    "unit": "AreaObjUtil",
+    "name": "calcCubeRotate__2MRFPC7AreaObjPQ29JGeometry8TVec3<f>",
+    "match_percent": 100.0,
+    "retail_bytes": 8,
+    "candidate_bytes": 8
+  }
+]

@@ -1,563 +1,573 @@
 #include "Game/Util/LayoutUtil.hpp"
-
-#include <algorithm>
-#include <cctype>
-#include <filesystem>
-#include <optional>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-
+#include "Game/Effect/MultiEmitter.hpp"
 #include "Game/Screen/IconAButton.hpp"
-#include "Game/Screen/LayoutActor.hpp"
-#include "Game/Screen/LayoutActorFlag.hpp"
+#include "Game/Screen/LayoutCoreUtil.hpp"
 #include "Game/Screen/LayoutManager.hpp"
 #include "Game/Screen/LayoutPaneCtrl.hpp"
+#include "Game/Screen/PaneEffectKeeper.hpp"
 #include "Game/Screen/SimpleLayout.hpp"
-#include "Game/Util/GamePadUtil.hpp"
-#include "Game/Util/NerveUtil.hpp"
-#include "core/RenderTypes.hpp"
-#include "layout/LayoutHost.hpp"
-#include "layout/LayoutRuntime.hpp"
-#include "layout/LytTexMap.hpp"
-#include "resource/RarcArchive.hpp"
-#include "resource/TplTexture.hpp"
-#include "runtime/RuntimeContext.hpp"
+#include "Game/System/ResourceHolderManager.hpp"
+#include "Game/Util/EffectUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/MessageUtil.hpp"
+#include "Game/Util/SingletonHolder.hpp"
+#include "Game/Util/StringUtil.hpp"
+#include <JSystem/J3DGraphAnimator/J3DAnimation.hpp>
+#include <nw4r/lyt/layout.h>
+
+extern "C" int vswprintf(wchar_t*, size_t, const wchar_t*, va_list);
+
+void setTextBoxVerticalPositionRecursive(LayoutActor* pActor, const char* pPaneName, u8 position) {
+    MR::executeTextBoxRecursive(pActor, pPaneName, TextBoxRecursiveSetVerticalPosition(position));
+}
+
+void setTextBoxHorizontalPositionRecursive(LayoutActor* pActor, const char* pPaneName, u8 position) {
+    MR::executeTextBoxRecursive(pActor, pPaneName, TextBoxRecursiveSetHorizontalPosition(position));
+}
 
 namespace {
-    [[nodiscard]] std::u16string utf16_from_wide(const wchar_t* pText) {
-        if (pText == nullptr) {
-            throw std::invalid_argument("Layout text conversion requires real source text");
-        }
-
-        auto text = std::u16string{};
-        while (*pText != L'\0') {
-            const auto code = static_cast< char32_t >(*pText++);
-            text.push_back(static_cast< char16_t >(std::min< char32_t >(code, 0xffffU)));
-        }
-
-        return text;
+    void showPaneRecursive(nw4r::lyt::Pane*);
+    void hidePaneRecursive(nw4r::lyt::Pane*);
+    void initFrameCtrlReverse(J3DFrameCtrl* pFrameCtrl) {
+        pFrameCtrl->setAttribute(pFrameCtrl->EMode_RESET);
+        pFrameCtrl->setRate(-pFrameCtrl->mRate);
+        pFrameCtrl->setFrame(pFrameCtrl->mEnd);
     }
+    bool getTextDrawRectRecursive(nw4r::ut::Rect*, const nw4r::lyt::Pane*, bool);
+    u32 getTextLineNumMaxRecursiveSub(const nw4r::lyt::Pane*);
 
-    [[nodiscard]] std::u16string runtime_message(const char* pMessageId) {
-        if (pMessageId == nullptr || *pMessageId == '\0') {
-            throw std::invalid_argument("Layout message lookup requires a real message tag");
+    f32 getCometColorAnimFrameFromId(s32 id) {
+        switch (id) {
+        case 0:
+            return 0.0f;
+        case 1:
+            return 4.0f;
+        case 2:
+            return 1.0f;
+        case 3:
+            return 2.0f;
+        case 4:
+            return 3.0f;
+        default:
+            return 0.0f;
         }
-        auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
-        if (runtime == nullptr) {
-            throw std::logic_error("Layout message lookup requires the active message archive");
-        }
-        const auto* message = runtime->messages().message_utf16(pMessageId);
-        if (message == nullptr) {
-            throw std::runtime_error("Layout message does not exist: " + std::string(pMessageId));
-        }
-        return *message;
     }
-
-    [[nodiscard]] std::u16string runtime_raw_message(const char* pMessageId) {
-        if (pMessageId == nullptr || *pMessageId == '\0') {
-            throw std::invalid_argument("Raw layout message lookup requires a real message tag");
-        }
-        auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
-        if (runtime == nullptr) {
-            throw std::logic_error("Raw layout message lookup requires the active message archive");
-        }
-        const auto* message = runtime->messages().message_raw_utf16(pMessageId);
-        if (message == nullptr) {
-            throw std::runtime_error("Raw layout message does not exist: " + std::string(pMessageId));
-        }
-        return *message;
-    }
-
-    [[nodiscard]] bool ends_with(std::string_view text, std::string_view suffix) {
-        return text.size() >= suffix.size() && text.substr(text.size() - suffix.size()) == suffix;
-    }
-
-    [[nodiscard]] std::string lower_copy(std::string_view value) {
-        auto lower = std::string(value);
-        std::ranges::transform(lower, lower.begin(), [](unsigned char character) { return static_cast< char >(std::tolower(character)); });
-        return lower;
-    }
-
-    [[nodiscard]] std::string base_name(std::string_view path) {
-        const auto slash = path.find_last_of('/');
-        if (slash == std::string_view::npos) {
-            return std::string(path);
-        }
-        return std::string(path.substr(slash + 1U));
-    }
-
-    [[nodiscard]] std::string archive_file_name(std::string_view archiveName) {
-        auto name = base_name(archiveName);
-        if (!ends_with(lower_copy(name), ".arc")) {
-            name.append(".arc");
-        }
-        return name;
-    }
-
-    [[nodiscard]] std::optional< std::filesystem::path > find_layout_texture_archive(smgpc::runtime::RuntimeContext& runtime,
-                                                                                     std::string_view archiveName) {
-        const auto archive = archive_file_name(archiveName);
-        return runtime.dvd().find_first({
-            std::filesystem::path(archiveName),
-            std::filesystem::path("KrKorean") / "LayoutData" / archive,
-            std::filesystem::path("LayoutData") / archive,
-            std::filesystem::path("ObjectData") / archive,
-        });
-    }
-
-    [[nodiscard]] LayoutManager& require_layout_manager(LayoutActor* layout, std::string_view operation) {
-        if (layout == nullptr || layout->getLayoutManager() == nullptr) {
-            throw std::logic_error(std::string(operation) + " requires an initialized layout manager");
-        }
-        return *layout->getLayoutManager();
-    }
-
-    [[nodiscard]] const LayoutManager& require_layout_manager(const LayoutActor* layout, std::string_view operation) {
-        if (layout == nullptr || layout->getLayoutManager() == nullptr) {
-            throw std::logic_error(std::string(operation) + " requires an initialized layout manager");
-        }
-        return *layout->getLayoutManager();
-    }
-
-    [[nodiscard]] LayoutPaneCtrl& require_pane_ctrl(LayoutActor* layout, const char* paneName, std::string_view operation) {
-        auto& manager = require_layout_manager(layout, operation);
-        auto* pane = manager.getPaneCtrl(paneName);
-        if (pane == nullptr) {
-            throw std::runtime_error(std::string(operation) + " requires a real pane control");
-        }
-        return *pane;
-    }
-}  // namespace
+};  // namespace
 
 namespace MR {
-
-    bool isDead(const SimpleLayout* pLayout) {
-        return smgpc::layout::is_layout_actor_dead(pLayout);
+    LayoutHolder* createAndAddLayoutHolder(const char* pArcName) {
+        return SingletonHolder< ResourceHolderManager >::get()->createAndAddLayoutHolder(pArcName, nullptr);
     }
 
-    bool isDead(const LayoutActor* pLayout) {
-        return smgpc::layout::is_layout_actor_dead(pLayout);
+    LayoutHolder* createAndAddLayoutHolderRawData(const char* pArcPath) {
+        return SingletonHolder< ResourceHolderManager >::get()->createAndAddLayoutHolderRawData(pArcPath);
     }
 
-    void startAnim(SimpleLayout* pLayout, const char* pAnimName, u32 animLayer) {
-        smgpc::layout::start_layout_anim(pLayout, pAnimName, animLayer);
+    void createAndAddPaneCtrl(LayoutActor* pActor, const char* pPaneName, u32 animLayerNum) {
+        pActor->getLayoutManager()->createAndAddPaneCtrl(pPaneName, animLayerNum);
     }
 
-    void startAnim(LayoutActor* pLayout, const char* pAnimName, u32 animLayer) {
-        smgpc::layout::start_layout_anim(pLayout, pAnimName, animLayer);
+    void createAndAddGroupCtrl(LayoutActor* pActor, const char* pGroupName, u32 animLayerNum) {
+        pActor->getLayoutManager()->createAndAddGroupCtrl(pGroupName, animLayerNum);
     }
 
-    bool isAnimStopped(SimpleLayout* pLayout, u32 animLayer) {
-        return smgpc::layout::is_layout_anim_stopped(pLayout, animLayer);
+    bool isExistPaneCtrl(LayoutActor* pActor, const char* pPaneName) {
+        return pActor->getLayoutManager()->isExistPaneCtrl(pPaneName);
     }
 
-    bool isAnimStopped(LayoutActor* pLayout, u32 animLayer) {
-        return smgpc::layout::is_layout_anim_stopped(pLayout, animLayer);
+    void setTextBoxGameMessageRecursive(LayoutActor* pActor, const char* pPaneName, const char* pMessageId) {
+        setTextBoxMessageRecursive(pActor, pPaneName, getGameMessageDirect(pMessageId));
     }
 
-    void setAnimFrameAndStop(SimpleLayout* pLayout, f32 frame, u32 animLayer) {
-        smgpc::layout::set_layout_anim_frame_and_stop(pLayout, frame, animLayer);
+    void setTextBoxLayoutMessageRecursive(LayoutActor* pActor, const char* pPaneName, const char* pMessageId) {
+        setTextBoxMessageRecursive(pActor, pPaneName, getLayoutMessageDirect(pMessageId));
     }
 
-    void setAnimFrameAndStop(LayoutActor* pLayout, f32 frame, u32 animLayer) {
-        smgpc::layout::set_layout_anim_frame_and_stop(pLayout, frame, animLayer);
+    void setTextBoxSystemMessageRecursive(LayoutActor* pActor, const char* pPaneName, const char* pMessageId) {
+        setTextBoxMessageRecursive(pActor, pPaneName, getSystemMessageDirect(pMessageId));
     }
 
-    void setAnimFrame(SimpleLayout* pLayout, f32 frame, u32 animLayer) {
-        smgpc::layout::set_layout_anim_frame(pLayout, frame, animLayer);
+    void setTextBoxMessageRecursive(LayoutActor* pActor, const char* pPaneName, const wchar_t* pMessage) {
+        executeTextBoxRecursive(pActor, pPaneName, TextBoxRecursiveSetMessage(pMessage));
     }
 
-    void setAnimFrame(LayoutActor* pLayout, f32 frame, u32 animLayer) {
-        smgpc::layout::set_layout_anim_frame(pLayout, frame, animLayer);
+    void setTextBoxFormatRecursive(LayoutActor* pActor, const char* pPaneName, const wchar_t* pFormat, ...) {
+        wchar_t message[256];
+        va_list list;
+
+        va_start(list, pFormat);
+        vswprintf(message, ARRAY_SIZE(message), pFormat, list);
+        va_end(list);
+
+        setTextBoxMessageRecursive(pActor, pPaneName, message);
     }
 
-    f32 getAnimFrame(SimpleLayout* pLayout, u32 animLayer) {
-        return smgpc::layout::layout_anim_frame(pLayout, animLayer);
+    void setTextBoxArgNumberRecursive(LayoutActor* pActor, const char* pPaneName, s32 number, s32 param4) {
+        executeTextBoxRecursive(pActor, pPaneName, TextBoxRecursiveSetArgNumber(number, param4));
     }
 
-    f32 getAnimFrame(LayoutActor* pLayout, u32 animLayer) {
-        return smgpc::layout::layout_anim_frame(pLayout, animLayer);
+    void setTextBoxArgStringRecursive(LayoutActor* pActor, const char* pPaneName, const wchar_t* pMessage, s32 param4) {
+        executeTextBoxRecursive(pActor, pPaneName, TextBoxRecursiveSetArgString(pMessage, param4));
     }
 
-    J3DFrameCtrl* getAnimCtrl(LayoutActor* pLayout, u32 animLayer) {
-        return smgpc::layout::layout_anim_ctrl(pLayout, animLayer);
+    void setPaneAlphaFloat(const LayoutActor* pActor, const char* pName, f32 f) {
+        f32 var = MR::clamp(f, 0.0f, 1.0f);
+        nw4r::lyt::Pane* pane = pActor->getLayoutManager()->getPane(pName);
+        pane->mAlpha = var * 255;
     }
 
-    void setAnimRate(SimpleLayout* pLayout, f32 rate, u32 animLayer) {
-        smgpc::layout::set_layout_anim_rate(pLayout, rate, animLayer);
+    void setTextBoxArgGameMessageRecursive(LayoutActor* pActor, const char* pPaneName, const char* pMessageId, s32 param4) {
+        setTextBoxArgStringRecursive(pActor, pPaneName, getGameMessageDirect(pMessageId), param4);
     }
 
-    void setAnimRate(LayoutActor* pLayout, f32 rate, u32 animLayer) {
-        smgpc::layout::set_layout_anim_rate(pLayout, rate, animLayer);
+    void setTextBoxVerticalPositionTopRecursive(LayoutActor* pActor, const char* pPaneName) {
+        setTextBoxVerticalPositionRecursive(pActor, pPaneName, 0);
     }
 
-    void stopAnim(LayoutActor* pLayout, u32 animLayer) {
-        smgpc::layout::set_layout_anim_rate(pLayout, 0.0F, animLayer);
+    void setTextBoxVerticalPositionCenterRecursive(LayoutActor* pActor, const char* pPaneName) {
+        setTextBoxVerticalPositionRecursive(pActor, pPaneName, 1);
     }
 
-    nw4r::lyt::TexMap* createLytTexMap(const char* pArchiveName, const char* pTextureName) {
-        if (pArchiveName == nullptr || pTextureName == nullptr) {
-            throw std::runtime_error("MR::createLytTexMap requires archive and texture names");
-        }
-
-        auto& runtime = smgpc::runtime::RuntimeContext::instance();
-        const auto archive_path = find_layout_texture_archive(runtime, pArchiveName);
-        if (!archive_path.has_value()) {
-            throw std::runtime_error("Layout texture archive does not exist: " + std::string(pArchiveName));
-        }
-
-        const auto& archive = runtime.dvd().archive_for_path(*archive_path);
-        const auto* entry = archive.find_by_basename(pTextureName);
-        if (entry == nullptr) {
-            throw std::runtime_error("Layout texture does not exist: " + std::string(pTextureName));
-        }
-
-        const auto entry_name = lower_copy(base_name(entry->path));
-        if (ends_with(entry_name, ".tpl")) {
-            return new nw4r::lyt::TexMap(entry_name, smgpc::resource::decode_tpl_texture(archive.file_data(*entry)), 0U, 0U, 0U, 0U);
-        }
-
-        const auto bti = smgpc::resource::decode_bti_texture(archive.file_data(*entry));
-        return new nw4r::lyt::TexMap(entry_name, bti.image, bti.wrap_s, bti.wrap_t, bti.min_filter, bti.mag_filter);
+    void setTextBoxVerticalPositionBottomRecursive(LayoutActor* pActor, const char* pPaneName) {
+        setTextBoxVerticalPositionRecursive(pActor, pPaneName, 2);
     }
 
-    void replacePaneTexture(LayoutActor* pLayout, const char* pPaneName, const nw4r::lyt::TexMap* pTexMap, u8 texMapIndex) {
-        if (pTexMap == nullptr) {
-            throw std::invalid_argument("Replacing a pane texture requires a real texture");
-        }
-        smgpc::layout::replace_pane_texture(&require_layout_manager(pLayout, "Replacing a pane texture"), pPaneName,
-                                            *pTexMap, texMapIndex);
+    void setTextBoxHorizontalPositionLeftRecursive(LayoutActor* pActor, const char* pPaneName) {
+        setTextBoxHorizontalPositionRecursive(pActor, pPaneName, 0);
     }
 
-    void startAnimAtFirstStep(LayoutActor* pLayout, const char* pAnimName, u32 animLayer) {
-        if (MR::isFirstStep(pLayout)) {
-            MR::startAnim(pLayout, pAnimName, animLayer);
-        }
+    void setTextBoxHorizontalPositionCenterRecursive(LayoutActor* pActor, const char* pPaneName) {
+        setTextBoxHorizontalPositionRecursive(pActor, pPaneName, 1);
     }
 
-    void setAnimFrameAndStopAdjustTextHeight(LayoutActor* pLayout, const char*, u32 animLayer) {
-        smgpc::layout::set_layout_anim_frame_and_stop(pLayout, smgpc::layout::layout_anim_frame(pLayout, animLayer), animLayer);
+    void updateClearTimeTextBox(LayoutActor* pActor, const char* pPaneName, u32 step) {
+        wchar_t clearTimeText[16];
+
+        makeClearTimeString(clearTimeText, step);
+        setTextBoxMessageRecursive(pActor, pPaneName, clearTimeText);
     }
 
-    void setTextBoxNumberRecursive(LayoutActor* pLayout, const char* pPaneName, s32 number) {
-        smgpc::layout::set_text_box_number(pLayout, pPaneName, number);
+    void updateMinuteAndSecondTextBox(LayoutActor* pActor, const char* pPaneName, u32 step) {
+        wchar_t minuteAndSecondText[16];
+
+        makeMinuteAndSecondString(minuteAndSecondText, step);
+        setTextBoxMessageRecursive(pActor, pPaneName, minuteAndSecondText);
     }
 
-    void setTextBoxGameMessageRecursive(LayoutActor* pLayout, const char* pPaneName, const char* pMessageId) {
-        smgpc::layout::set_text_box_tagged_string(&require_layout_manager(pLayout, "Setting a game message"), pPaneName,
-                                                  runtime_raw_message(pMessageId), runtime_message(pMessageId));
+    void setTextBoxFontRecursive(LayoutActor* pActor, const char* pPaneName, nw4r::ut::Font* pFont) {
+        executeTextBoxRecursive(pActor, pPaneName, TextBoxRecursiveSetFont(pFont));
     }
 
-    void setTextBoxLayoutMessageRecursive(LayoutActor* pLayout, const char* pPaneName, const char* pMessageId) {
-        setTextBoxGameMessageRecursive(pLayout, pPaneName, pMessageId);
+    void showPaneRecursive(LayoutActor* pActor, const char* pPaneName) {
+        ::showPaneRecursive(getPane(pActor, pPaneName));
     }
 
-    void setTextBoxSystemMessageRecursive(LayoutActor* pLayout, const char* pPaneName, const char* pMessageId) {
-        setTextBoxGameMessageRecursive(pLayout, pPaneName, pMessageId);
+    void hidePaneRecursive(LayoutActor* pActor, const char* pPaneName) {
+        ::hidePaneRecursive(getPane(pActor, pPaneName));
     }
 
-    void setTextBoxMessageRecursive(LayoutActor* pLayout, const char* pPaneName, const wchar_t* pMessage) {
-        smgpc::layout::set_text_box_string(pLayout, pPaneName, utf16_from_wide(pMessage));
+    bool isHiddenPane(const LayoutActor* pActor, const char* pPaneName) {
+        return !pActor->getLayoutManager()->getPane(pPaneName)->IsVisible();
     }
 
-    void clearTextBoxMessageRecursive(LayoutActor* pLayout, const char* pPaneName) {
-        smgpc::layout::set_text_box_string(pLayout, pPaneName, std::u16string_view{});
+    void copyPaneTrans(TVec2f* pTrans, const LayoutActor* pActor, const char* pPaneName) {
+        nw4r::lyt::Pane* pPane = pActor->getLayoutManager()->getPane(pPaneName);
+        pTrans->x = pPane->mGlbMtx._03;
+        pTrans->y = pPane->mGlbMtx._13;
+        convertLayoutPosToScreenPos(pTrans, *pTrans);
     }
 
-    void setTextBoxArgNumberRecursive(LayoutActor* pLayout, const char* pPaneName, s32 number, s32 argIndex) {
-        smgpc::layout::set_text_box_arg_number(&require_layout_manager(pLayout, "Setting a text-box argument"),
-                                               pPaneName, number, argIndex);
+    f32 getPaneTransX(const LayoutActor* pActor, const char* pPaneName) {
+        nw4r::lyt::Pane* pPane = pActor->getLayoutManager()->getPane(pPaneName);
+        TVec2f trans(pPane->mGlbMtx._03, pPane->mGlbMtx._13);
+        convertLayoutPosToScreenPos(&trans, trans);
+        return trans.x;
     }
 
-    void setTextBoxArgStringRecursive(LayoutActor* pLayout, const char* pPaneName, const wchar_t* pMessage, s32 argIndex) {
-        smgpc::layout::set_text_box_arg_string(&require_layout_manager(pLayout, "Setting a text-box argument"),
-                                               pPaneName, utf16_from_wide(pMessage), argIndex);
+    f32 getPaneTransY(const LayoutActor* pActor, const char* pPaneName) {
+        nw4r::lyt::Pane* pPane = pActor->getLayoutManager()->getPane(pPaneName);
+        TVec2f trans(pPane->mGlbMtx._03, pPane->mGlbMtx._13);
+        convertLayoutPosToScreenPos(&trans, trans);
+        return trans.y;
     }
 
-    void setTextBoxHorizontalPositionCenterRecursive(LayoutActor* pLayout, const char* pPaneName) {
-        smgpc::layout::set_text_box_horizontal_position(
-            &require_layout_manager(pLayout, "Setting text-box horizontal position"), pPaneName, 1U);
+    void setLayoutPosAtPaneTrans(LayoutActor* pActor, const LayoutActor* pSource, const char* pPaneName) {
+        TVec2f trans;
+        copyPaneTrans(&trans, pSource, pPaneName);
+        pActor->setTrans(trans);
     }
 
-    void setTextBoxHorizontalPositionLeftRecursive(LayoutActor* pLayout, const char* pPaneName) {
-        smgpc::layout::set_text_box_horizontal_position(
-            &require_layout_manager(pLayout, "Setting text-box horizontal position"), pPaneName, 0U);
+    void showScreen(LayoutActor* pActor) {
+        LayoutManager* pLayoutManager = pActor->getLayoutManager();
+
+        pLayoutManager->mIsScreenHidden = false;
     }
 
-    void setTextBoxVerticalPositionTopRecursive(LayoutActor* pLayout, const char* pPaneName) {
-        smgpc::layout::set_text_box_vertical_position(
-            &require_layout_manager(pLayout, "Setting text-box vertical position"), pPaneName, 0U);
+    void hideScreen(LayoutActor* pActor) {
+        LayoutManager* pLayoutManager = pActor->getLayoutManager();
+
+        pLayoutManager->mIsScreenHidden = true;
     }
 
-    void setTextBoxVerticalPositionCenterRecursive(LayoutActor* pLayout, const char* pPaneName) {
-        smgpc::layout::set_text_box_vertical_position(
-            &require_layout_manager(pLayout, "Setting text-box vertical position"), pPaneName, 1U);
+    void setFollowPos(const TVec2f* pFollowPos, const LayoutActor* pActor, const char* pPaneName) {
+        pActor->getLayoutManager()->getPaneCtrl(pPaneName)->mFollowPos = pFollowPos;
     }
 
-    void setTextBoxVerticalPositionBottomRecursive(LayoutActor* pLayout, const char* pPaneName) {
-        smgpc::layout::set_text_box_vertical_position(
-            &require_layout_manager(pLayout, "Setting text-box vertical position"), pPaneName, 2U);
+    void setFollowTypeReplace(const LayoutActor* pActor, const char* pPaneName) {
+        pActor->getLayoutManager()->getPaneCtrl(pPaneName)->mFollowType = 0;
     }
 
-    void createAndAddPaneCtrl(LayoutActor* pLayout, const char* pPaneName, u32 animLayerNum) {
-        require_layout_manager(pLayout, "Creating a pane control").createAndAddPaneCtrl(pPaneName, animLayerNum);
+    void setFollowTypeAdd(const LayoutActor* pActor, const char* pPaneName) {
+        pActor->getLayoutManager()->getPaneCtrl(pPaneName)->mFollowType = 1;
     }
 
-    bool isExistPaneCtrl(LayoutActor* pLayout, const char* pPaneName) {
-        return pLayout != nullptr && pLayout->getLayoutManager() != nullptr && pLayout->getLayoutManager()->isExistPaneCtrl(pPaneName);
-    }
-
-    void showPane(LayoutActor* pLayout, const char* pPaneName) {
-        smgpc::layout::set_pane_visible(&require_layout_manager(pLayout, "Showing a pane"), pPaneName, true, false);
-    }
-
-    void showPaneRecursive(LayoutActor* pLayout, const char* pPaneName) {
-        smgpc::layout::set_pane_visible(&require_layout_manager(pLayout, "Showing a pane tree"), pPaneName, true, true);
-    }
-
-    void hidePane(LayoutActor* pLayout, const char* pPaneName) {
-        smgpc::layout::set_pane_visible(&require_layout_manager(pLayout, "Hiding a pane"), pPaneName, false, false);
-    }
-
-    void hidePaneRecursive(LayoutActor* pLayout, const char* pPaneName) {
-        smgpc::layout::set_pane_visible(&require_layout_manager(pLayout, "Hiding a pane tree"), pPaneName, false, true);
-    }
-
-    void setPaneAlphaFloat(LayoutActor* pLayout, const char* pPaneName, f32 alpha) {
-        smgpc::layout::set_pane_alpha(&require_layout_manager(pLayout, "Setting pane alpha"), pPaneName, alpha);
-    }
-
-    void showLayout(LayoutActor* pLayout) {
-        if (pLayout != nullptr) {
-            pLayout->mFlag.mIsHidden = false;
+    void startAnimAtFirstStep(LayoutActor* pActor, const char* pAnimName, u32 animLayer) {
+        if (isFirstStep(pActor)) {
+            startAnim(pActor, pAnimName, animLayer);
         }
     }
 
-    void hideLayout(LayoutActor* pLayout) {
-        if (pLayout != nullptr) {
-            pLayout->mFlag.mIsHidden = true;
+    void startPaneAnim(LayoutActor* pActor, const char* pPaneName, const char* pAnimName, u32 animLayer) {
+        pActor->getLayoutManager()->getPaneCtrl(pPaneName)->start(pAnimName, animLayer);
+    }
+
+    void startPaneAnimAtStep(LayoutActor* pActor, const char* pPaneName, const char* pAnimName, s32 step, u32 animLayer) {
+        if (isStep(pActor, step)) {
+            startPaneAnim(pActor, pPaneName, pAnimName, animLayer);
         }
     }
 
-    void convertScreenPosToLayoutPos(TVec2f* pLayoutPos, const TVec2f& rScreenPos) {
-        if (pLayoutPos == nullptr) {
-            throw std::invalid_argument("Screen-to-layout conversion requires output storage");
+    void startPaneAnimAtFirstStep(LayoutActor* pActor, const char* pPaneName, const char* pAnimName, u32 animLayer) {
+        if (isFirstStep(pActor)) {
+            startPaneAnim(pActor, pPaneName, pAnimName, animLayer);
         }
-
-        const auto half_height = static_cast< f32 >(smgpc::render::core::kWiiLogicalFramebufferHeight) * 0.5F;
-        pLayoutPos->x = rScreenPos.x * static_cast< f32 >(smgpc::render::core::kWiiLayoutWidth) /
-                            static_cast< f32 >(smgpc::render::core::kWiiLogicalFramebufferWidth) -
-                        static_cast< f32 >(smgpc::render::core::kWiiLayoutWidth) * 0.5F;
-        pLayoutPos->y = -(rScreenPos.y - half_height);
     }
 
-    void convertLayoutPosToScreenPos(TVec2f* pScreenPos, const TVec2f& rLayoutPos) {
-        if (pScreenPos == nullptr) {
-            throw std::invalid_argument("Layout-to-screen conversion requires output storage");
+    void startAnimReverseOneTime(LayoutActor* pActor, const char* pAnimName, u32 animLayer) {
+        LayoutPaneCtrl* pPaneCtrl = pActor->getLayoutManager()->getPaneCtrl(nullptr);
+
+        pPaneCtrl->start(pAnimName, animLayer);
+        ::initFrameCtrlReverse(pPaneCtrl->getFrameCtrl(animLayer));
+    }
+
+    void startPaneAnimReverseOneTime(LayoutActor* pActor, const char* pPaneName, const char* pAnimName, u32 animLayer) {
+        LayoutPaneCtrl* pPaneCtrl = pActor->getLayoutManager()->getPaneCtrl(pPaneName);
+
+        pPaneCtrl->start(pAnimName, animLayer);
+        ::initFrameCtrlReverse(pPaneCtrl->getFrameCtrl(animLayer));
+    }
+
+    void startAnimAndSetFrameAndStop(LayoutActor* pActor, const char* pAnimName, f32 animFrame, u32 animLayer) {
+        startAnim(pActor, pAnimName, animLayer);
+        setAnimFrameAndStop(pActor, animFrame, animLayer);
+    }
+
+    void setAnimFrameAndStop(LayoutActor* pActor, f32 animFrame, u32 animLayer) {
+        J3DFrameCtrl* pFrameCtrl = getAnimCtrl(pActor, animLayer);
+
+        pFrameCtrl->setFrame(animFrame);
+        pFrameCtrl->setRate(0.0f);
+    }
+
+    void setAnimFrameAndStopAtEnd(LayoutActor* pActor, u32 animLayer) {
+        setAnimFrameAndStop(pActor, getAnimFrameMax(pActor, animLayer), animLayer);
+    }
+
+    void setPaneAnimFrameAndStop(LayoutActor* pActor, const char* pPaneName, f32 animFrame, u32 animLayer) {
+        J3DFrameCtrl* pFrameCtrl = getPaneAnimCtrl(pActor, pPaneName, animLayer);
+
+        pFrameCtrl->setFrame(animFrame);
+        pFrameCtrl->setRate(0.0f);
+    }
+
+    void setPaneAnimFrameAndStopAtEnd(LayoutActor* pActor, const char* pPaneName, u32 animLayer) {
+        setPaneAnimFrameAndStop(pActor, pPaneName, getPaneAnimFrameMax(pActor, pPaneName, animLayer), animLayer);
+    }
+
+    void setAnimFrame(LayoutActor* pActor, f32 animFrame, u32 animLayer) {
+        getAnimCtrl(pActor, animLayer)->setFrame(animFrame);
+    }
+
+    void setPaneAnimFrame(LayoutActor* pActor, const char* pPaneName, f32 animFrame, u32 animLayer) {
+        getPaneAnimCtrl(pActor, pPaneName, animLayer)->setFrame(animFrame);
+    }
+
+    void setAnimRate(LayoutActor* pActor, f32 animRate, u32 param3) {
+        getAnimCtrl(pActor, param3)->setRate(animRate);
+    }
+
+    void setPaneAnimRate(LayoutActor* pActor, const char* pPaneName, f32 animRate, u32 animLayer) {
+        getPaneAnimCtrl(pActor, pPaneName, animLayer)->setRate(animRate);
+    }
+
+    void stopAnim(LayoutActor* pActor, u32 animLayer) {
+        pActor->getLayoutManager()->getPaneCtrl(nullptr)->stop(animLayer);
+    }
+
+    void stopPaneAnim(LayoutActor* pActor, const char* pPaneName, u32 animLayer) {
+        pActor->getLayoutManager()->getPaneCtrl(pPaneName)->stop(animLayer);
+    }
+
+    bool isAnimStopped(const LayoutActor* pActor, u32 animLayer) {
+        return pActor->getLayoutManager()->getPaneCtrl(nullptr)->isAnimStopped(animLayer);
+    }
+
+    bool isPaneAnimStopped(const LayoutActor* pActor, const char* pPaneName, u32 animLayer) {
+        return pActor->getLayoutManager()->getPaneCtrl(pPaneName)->isAnimStopped(animLayer);
+    }
+
+    f32 getAnimFrame(const LayoutActor* pActor, u32 param2) {
+        return getAnimCtrl(pActor, param2)->getFrame();
+    }
+
+    f32 getPaneAnimFrame(const LayoutActor* pActor, const char* pPaneName, u32 animLayer) {
+        return getPaneAnimCtrl(pActor, pPaneName, animLayer)->getFrame();
+    }
+
+    s16 getAnimFrameMax(const LayoutActor* pActor, u32 param2) {
+        return getAnimCtrl(pActor, param2)->getEnd();
+    }
+
+    s16 getPaneAnimFrameMax(const LayoutActor* pActor, const char* pPaneName, u32 animLayer) {
+        return getPaneAnimCtrl(pActor, pPaneName, animLayer)->getEnd();
+    }
+
+    s16 getAnimFrameMax(const LayoutActor* pActor, const char* pAnimName) {
+        return pActor->getLayoutManager()->getAnimTransform(pAnimName)->GetFrameSize();
+    }
+
+    J3DFrameCtrl* getAnimCtrl(const LayoutActor* pActor, u32 animLayer) {
+        return pActor->getLayoutManager()->getPaneCtrl(nullptr)->getFrameCtrl(animLayer);
+    }
+
+    J3DFrameCtrl* getPaneAnimCtrl(const LayoutActor* pActor, const char* pPaneName, u32 animLayer) {
+        return pActor->getLayoutManager()->getPaneCtrl(pPaneName)->getFrameCtrl(animLayer);
+    }
+
+    void setEffectHostMtx(LayoutActor* pActor, const char* pParam2, MtxPtr pHostMtx) {
+        getEffect(pActor, pParam2)->setHostMtx(pHostMtx);
+    }
+
+    bool isRegisteredEffect(const LayoutActor* pActor, const char* pParam2) {
+        if (pParam2 != nullptr) {
+            return pActor->mEffectKeeper->getEmitter(pParam2) != nullptr;
+        } else {
+            return pActor->mEffectKeeper != nullptr;
         }
-
-        const auto half_width = static_cast< f32 >(smgpc::render::core::kWiiLogicalFramebufferWidth) * 0.5F;
-        const auto half_height = static_cast< f32 >(smgpc::render::core::kWiiLogicalFramebufferHeight) * 0.5F;
-        pScreenPos->x = rLayoutPos.x * static_cast< f32 >(smgpc::render::core::kWiiLogicalFramebufferWidth) /
-                            static_cast< f32 >(smgpc::render::core::kWiiLayoutWidth) +
-                        half_width;
-        pScreenPos->y = half_height - rLayoutPos.y;
     }
 
-    void setFollowPos(const TVec2f* pPos, LayoutActor* pLayout, const char*) {
-        if (pLayout == nullptr || pPos == nullptr) {
-            throw std::invalid_argument("Setting a layout follow position requires a layout and position");
+    void calcAnimLayoutWithDrawInfo(const LayoutActor* pActor, const nw4r::lyt::DrawInfo& rDrawInfo) {
+        if (isExecuteCalcAnimLayout(pActor)) {
+            pActor->getLayoutManager()->calcAnimWithoutLocationAdjust(rDrawInfo);
         }
-        auto screen_pos = TVec2f{};
-        convertLayoutPosToScreenPos(&screen_pos, *pPos);
-        pLayout->setTrans(screen_pos);
     }
 
-    void copyPaneTrans(TVec2f* pPos, const LayoutActor* pLayout, const char* pPaneName) {
-        if (pPos == nullptr) {
-            throw std::invalid_argument("Copying a pane translation requires output storage");
+    void drawLayoutWithDrawInfoWithoutProjectionSetup(const LayoutActor* pActor, const nw4r::lyt::DrawInfo& rDrawInfo) {
+        if (isExecuteDrawLayout(pActor)) {
+            GXSetCullMode(GX_CULL_NONE);
+            GXSetZMode(GX_FALSE, GX_NEVER, GX_FALSE);
+            pActor->getLayoutManager()->mLayout->Draw(rDrawInfo);
         }
-        const auto& layout = smgpc::layout::require_layout_runtime(pLayout, "Copying a pane translation");
-        const auto pane_name = pPaneName != nullptr ? std::string_view(pPaneName) : std::string_view{};
-        Mtx pane_matrix{};
-        if (!layout.copyPaneMatrix(pane_name, pane_matrix)) {
-            throw std::runtime_error("Layout " + layout.getLayoutName() + " has no pane " + std::string(pane_name));
-        }
-        pPos->x = pane_matrix[0][3];
-        pPos->y = pane_matrix[1][3];
     }
 
-    void copyPaneScale(TVec2f* pScale, const LayoutActor* pLayout, const char* pPaneName) {
-        if (pScale == nullptr) {
-            throw std::invalid_argument("Copying a pane scale requires output storage");
-        }
-
-        const auto& layout = smgpc::layout::require_layout_runtime(pLayout, "Copying a pane scale");
-        const auto scale = layout.paneScale(pPaneName != nullptr ? pPaneName : "");
-        if (!scale.has_value()) {
-            throw std::runtime_error("Cannot copy scale from an absent layout pane");
-        }
-        *pScale = *scale;
+    bool isStep(const LayoutActor* pActor, s32 step) {
+        return pActor->getNerveStep() == step;
     }
 
-    void setLayoutScaleAtPaneScale(LayoutActor* pDst, const LayoutActor* pSrc, const char* pPaneName) {
-        auto scale = TVec2f{};
-        copyPaneScale(&scale, pSrc, pPaneName);
-        smgpc::layout::set_layout_scale(pDst, scale.x, scale.y);
-    }
-
-    void setLayoutPosAtPaneTrans(LayoutActor* pDst, const LayoutActor* pSrc, const char* pPaneName) {
-        auto pos = TVec2f{};
-        copyPaneTrans(&pos, pSrc, pPaneName);
-        setFollowPos(&pos, pDst, nullptr);
-    }
-
-    void setLayoutScalePosAtPaneScaleTrans(LayoutActor* pDst, const LayoutActor* pSrc, const char* pPaneName) {
-        setLayoutPosAtPaneTrans(pDst, pSrc, pPaneName);
-        setLayoutScaleAtPaneScale(pDst, pSrc, pPaneName);
-    }
-
-    void setLayoutScalePosAtPaneScaleTransIfExecCalcAnim(LayoutActor* pDst, const LayoutActor* pSrc, const char* pPaneName) {
-        setLayoutPosAtPaneTrans(pDst, pSrc, pPaneName);
-        setLayoutScaleAtPaneScale(pDst, pSrc, pPaneName);
-    }
-
-    void startPaneAnim(LayoutActor* pLayout, const char* pPaneName, const char* pAnimName, u32 animLayer) {
-        require_pane_ctrl(pLayout, pPaneName, "Starting a pane animation").start(pAnimName, animLayer);
-    }
-
-    void stopPaneAnim(LayoutActor* pLayout, const char* pPaneName, u32 animLayer) {
-        require_pane_ctrl(pLayout, pPaneName, "Stopping a pane animation").stop(animLayer);
-    }
-
-    void setPaneAnimFrame(LayoutActor* pLayout, const char* pPaneName, f32 frame, u32 animLayer) {
-        smgpc::layout::set_pane_anim_frame(&require_pane_ctrl(pLayout, pPaneName, "Setting a pane animation frame"),
-                                           frame, animLayer);
-    }
-
-    void setPaneAnimFrameAndStop(LayoutActor* pLayout, const char* pPaneName, f32 frame, u32 animLayer) {
-        auto& pane_ctrl = require_pane_ctrl(pLayout, pPaneName, "Stopping at a pane animation frame");
-        smgpc::layout::set_pane_anim_frame(&pane_ctrl, frame, animLayer);
-        pane_ctrl.stop(animLayer);
-    }
-
-    void setPaneAnimRate(LayoutActor* pLayout, const char* pPaneName, f32 rate, u32 animLayer) {
-        smgpc::layout::set_pane_anim_rate(&require_pane_ctrl(pLayout, pPaneName, "Setting a pane animation rate"),
-                                          rate, animLayer);
-    }
-
-    f32 getPaneAnimFrame(LayoutActor* pLayout, const char* pPaneName, u32 animLayer) {
-        return smgpc::layout::pane_animation_frame(&require_layout_manager(pLayout, "Reading a pane animation frame"),
-                                                   pPaneName, animLayer);
-    }
-
-    s16 getPaneAnimFrameMax(const LayoutActor* pLayout, const char* pPaneName, u32 animLayer) {
-        return static_cast< s16 >(smgpc::layout::pane_animation_frame_max(
-            &require_layout_manager(pLayout, "Reading a pane animation duration"), pPaneName, animLayer));
-    }
-
-    bool isPaneAnimStopped(LayoutActor* pLayout, const char* pPaneName, u32 animLayer) {
-        return smgpc::layout::is_pane_animation_stopped(
-            &require_layout_manager(pLayout, "Reading a pane animation state"), pPaneName, animLayer);
+    bool isFirstStep(const LayoutActor* pActor) {
+        return isStep(pActor, 0);
     }
 
     bool isLessStep(const LayoutActor* pActor, s32 step) {
-        return pActor != nullptr && pActor->getNerveStep() >= 0 && pActor->getNerveStep() < step;
+        if (!isNewNerve(pActor) && pActor->getNerveStep() < step) {
+            return true;
+        }
+
+        return false;
+    }
+
+    bool isGreaterStep(const LayoutActor* pActor, s32 step) {
+        return pActor->getNerveStep() > step;
     }
 
     bool isGreaterEqualStep(const LayoutActor* pActor, s32 step) {
-        return pActor != nullptr && pActor->getNerveStep() >= step;
+        return pActor->getNerveStep() >= step;
+    }
+
+    bool isIntervalStep(const LayoutActor* pActor, s32 step) {
+        return pActor->getNerveStep() % step == 0;
+    }
+
+    bool isNewNerve(const LayoutActor* pActor) {
+        return pActor->getNerveStep() < 0;
     }
 
     f32 calcNerveRate(const LayoutActor* pActor, s32 stepMax) {
-        if (pActor == nullptr || stepMax <= 0) {
-            return 1.0F;
-        }
-
-        return std::clamp(static_cast< f32 >(pActor->getNerveStep()) / static_cast< f32 >(stepMax), 0.0F, 1.0F);
+        return stepMax <= 0 ? 1.0f : clamp(static_cast< f32 >(pActor->getNerveStep()) / stepMax, 0.0f, 1.0f);
     }
 
     f32 calcNerveRate(const LayoutActor* pActor, s32 stepMin, s32 stepMax) {
-        if (pActor == nullptr || stepMax <= stepMin) {
-            return 1.0F;
-        }
-
-        return std::clamp(static_cast< f32 >(pActor->getNerveStep() - stepMin) / static_cast< f32 >(stepMax - stepMin), 0.0F, 1.0F);
+        return clamp(normalize(pActor->getNerveStep(), stepMin, stepMax), 0.0f, 1.0f);
     }
 
-    void setNerveAtStep(LayoutActor* pLayout, const Nerve* pNerve, s32 step) {
-        if (pLayout != nullptr && pLayout->getNerveStep() == step) {
-            pLayout->setNerve(pNerve);
-        }
+    f32 calcNerveEaseInRate(const LayoutActor* pActor, s32 stepMax) {
+        return getEaseInValue(calcNerveRate(pActor, stepMax), 0.0f, 1.0f, 1.0f);
     }
 
-    void setNerveAtPaneAnimStopped(LayoutActor* pLayout, const char* pPaneName, const Nerve* pNerve, u32 animLayer) {
-        if (pLayout != nullptr && isPaneAnimStopped(pLayout, pPaneName, animLayer)) {
-            pLayout->setNerve(pNerve);
+    f32 calcNerveEaseInValue(const LayoutActor* pActor, s32 stepMin, s32 stepMax, f32 valueMin, f32 valueMax) {
+        return getEaseInValue(calcNerveRate(pActor, stepMin, stepMax), valueMin, valueMax, 1.0f);
+    }
+
+    void setNerveAtStep(LayoutActor* pActor, const Nerve* pNerve, s32 step) {
+        if (pActor->getNerveStep() == step) {
+            pActor->setNerve(pNerve);
         }
     }
 
-    void setNerveAtAnimStopped(LayoutActor* pLayout, const Nerve* pNerve, u32 animLayer) {
-        if (pLayout != nullptr && MR::isAnimStopped(pLayout, animLayer)) {
-            pLayout->setNerve(pNerve);
+    void setNerveAtAnimStopped(LayoutActor* pActor, const Nerve* pNerve, u32 animLayer) {
+        if (isAnimStopped(pActor, animLayer)) {
+            pActor->setNerve(pNerve);
         }
     }
 
-    void killAtAnimStopped(LayoutActor* pLayout, u32 animLayer) {
-        if (pLayout != nullptr && MR::isAnimStopped(pLayout, animLayer)) {
-            pLayout->kill();
+    void setNerveAtPaneAnimStopped(LayoutActor* pActor, const char* pPaneName, const Nerve* pNerve, u32 animLayer) {
+        if (isPaneAnimStopped(pActor, pPaneName, animLayer)) {
+            pActor->setNerve(pNerve);
         }
     }
 
-    s16 getAnimFrameMax(LayoutActor* pLayout, const char* pAnimName) {
-        return static_cast< s16 >(smgpc::layout::animation_duration(
-            &require_layout_manager(pLayout, "Reading layout animation metadata"), pAnimName));
-    }
-
-    s16 getAnimFrameMax(LayoutActor* pLayout, u32 animLayer) {
-        return static_cast< s16 >(smgpc::layout::layout_anim_frame_max(pLayout, animLayer));
-    }
-
-    void startAnimReverseOneTime(LayoutActor* pLayout, const char* pAnimName, u32 animLayer) {
-        MR::startAnim(pLayout, pAnimName, animLayer);
-        MR::setAnimFrame(pLayout, static_cast< f32 >(MR::getAnimFrameMax(pLayout, animLayer)), animLayer);
-        MR::setAnimRate(pLayout, -1.0F, animLayer);
-    }
-
-    void invalidateParentAnim(LayoutActor*) {
-        throw std::logic_error("Invalidating a parent NW4R layout animation is unavailable");
-    }
-
-    IconAButton* createAndSetupIconAButton(LayoutActor* pActor, bool connectToScene, bool connectToPause) {
-        auto* icon = new IconAButton(connectToScene, connectToPause);
-        icon->initWithoutIter();
-        icon->setFollowActorPane(pActor, "AButtonPosition");
-        return icon;
-    }
-
-    void emitEffect(SimpleLayout* pLayout, const char* pEffectName) {
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->emit_effect(pLayout->getName(), pEffectName, pLayout);
+    void killAtAnimStopped(LayoutActor* pActor, u32 animLayer) {
+        if (isAnimStopped(pActor, animLayer)) {
+            pActor->kill();
         }
     }
 
-    void emitEffect(LayoutActor* pLayout, const char* pEffectName) {
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->emit_effect(pLayout->getName(), pEffectName, pLayout);
+    bool isDead(const LayoutActor* pActor) {
+        return pActor->mFlag.mIsDead;
+    }
+
+    bool isHiddenLayout(const LayoutActor* pActor) {
+        return pActor->mFlag.mIsHidden;
+    }
+
+    void showLayout(LayoutActor* pActor) {
+        pActor->mFlag.mIsHidden = false;
+        pActor->mFlag.mIsOffCalcAnim = false;
+    }
+
+    void hideLayout(LayoutActor* pActor) {
+        pActor->mFlag.mIsHidden = true;
+        pActor->mFlag.mIsOffCalcAnim = true;
+    }
+
+    bool isStopAnimFrame(const LayoutActor* pActor) {
+        return pActor->mFlag.mIsStopAnimFrame;
+    }
+
+    void stopAnimFrame(LayoutActor* pActor) {
+        pActor->mFlag.mIsStopAnimFrame = true;
+    }
+
+    void releaseAnimFrame(LayoutActor* pActor) {
+        pActor->mFlag.mIsStopAnimFrame = false;
+    }
+
+    void onCalcAnim(LayoutActor* pActor) {
+        pActor->mFlag.mIsOffCalcAnim = false;
+    }
+
+    void offCalcAnim(LayoutActor* pActor) {
+        pActor->mFlag.mIsOffCalcAnim = true;
+    }
+
+    bool isExecuteCalcAnimLayout(const LayoutActor* pActor) {
+        if (pActor->mFlag.mIsDead) {
+            return false;
+        }
+
+        if (pActor->mLayoutManager == nullptr) {
+            return false;
+        }
+
+        return !pActor->mFlag.mIsOffCalcAnim;
+    }
+
+    bool isExecuteDrawLayout(const LayoutActor* pActor) {
+        if (pActor->mFlag.mIsDead) {
+            return false;
+        }
+
+        if (pActor->mLayoutManager == nullptr) {
+            return false;
+        }
+
+        return !pActor->mFlag.mIsHidden;
+    }
+
+    SimpleLayout* createSimpleLayout(const char* pName, const char* pArcName, u32 param3) {
+        SimpleLayout* pSimpleLayout = new SimpleLayout(pName, pArcName, param3, 60);
+
+        pSimpleLayout->initWithoutIter();
+
+        return pSimpleLayout;
+    }
+
+    SimpleLayout* createSimpleLayoutTalkParts(const char* pName, const char* pArcName, u32 param3) {
+        SimpleLayout* pSimpleLayout = new SimpleLayout(pName, pArcName, param3, 68);
+
+        pSimpleLayout->initWithoutIter();
+
+        return pSimpleLayout;
+    }
+
+    nw4r::lyt::Pane* getPane(const LayoutActor* pActor, const char* pPaneName) {
+        return pActor->getLayoutManager()->getPane(pPaneName);
+    }
+
+    nw4r::lyt::Pane* getRootPane(const LayoutActor* pActor) {
+        return pActor->getLayoutManager()->getPane(nullptr);
+    }
+
+    u32 getTextLineNumMaxRecursive(const LayoutActor* pActor, const char* pPaneName) {
+        nw4r::lyt::Pane* pPane = getPane(pActor, pPaneName);
+
+        if (pPane != nullptr) {
+            return ::getTextLineNumMaxRecursiveSub(pPane);
+        } else {
+            return 0;
         }
     }
 
-    void deleteEffectAll(SimpleLayout* pLayout) {
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->delete_effect_all(pLayout->getName(), pLayout);
-        }
+    void invalidateParentAnim(LayoutActor* pActor) {
+        LayoutManager* pLayoutManager = pActor->getLayoutManager();
+
+        pLayoutManager->_61 = 0;
     }
 
-    void deleteEffectAll(LayoutActor* pLayout) {
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
-            runtime->delete_effect_all(pLayout->getName(), pLayout);
-        }
+    void setCometPaneAnimFromId(LayoutActor* pActor, const char* pPaneName, int cometId, u32 animLayer) {
+        startPaneAnim(pActor, pPaneName, "Color", animLayer);
+        setPaneAnimFrameAndStop(pActor, pPaneName, ::getCometColorAnimFrameFromId(cometId), animLayer);
     }
 
-}  // namespace MR
+    void setTextBoxNumberRecursive(LayoutActor* pActor, const char* pPaneName, s32 number) {
+        setTextBoxFormatRecursive(pActor, pPaneName, L"%d", number);
+    }
+
+    void clearTextBoxMessageRecursive(LayoutActor* pActor, const char* pPaneName) {
+        setTextBoxMessageRecursive(pActor, pPaneName, L"");
+    }
+
+    IconAButton* createAndSetupIconAButton(LayoutActor* pActor, bool param2, bool param3) {
+        IconAButton* pIconAButton = new IconAButton(param2, param3);
+
+        pIconAButton->initWithoutIter();
+        pIconAButton->setFollowActorPane(pActor, "AButtonPosition");
+
+        return pIconAButton;
+    }
+
+    void setCometAnimFromId(LayoutActor* pActor, int cometId, u32 animLayer) {
+        startAnim(pActor, "Color", animLayer);
+        setAnimFrameAndStop(pActor, ::getCometColorAnimFrameFromId(cometId), animLayer);
+    }
+};  // namespace MR

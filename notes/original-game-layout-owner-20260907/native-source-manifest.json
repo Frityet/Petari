@@ -1,0 +1,214 @@
+[
+  {
+    "path": "src/Game/Screen/GameSceneLayoutHolder.cpp",
+    "sha256": "88726d69eb399de3abaa178209561340a3d7d22fc8fb4b11fd7be76beba46d30"
+  },
+  {
+    "path": "src/Game/Screen/GameSceneLayoutHolder.hpp",
+    "sha256": "098a73ea23eab6a48ac1e44b1a6dd4cb7c6f4787b03b77c39b1dd93cb3f98b55"
+  },
+  {
+    "path": "src/Game/Screen/MarioMeter.cpp",
+    "sha256": "4189524d36f1cc90e277eb137eaa41712bb4b0df99b18bc3d9ecf3b6068d53bf"
+  },
+  {
+    "path": "src/Game/Screen/MarioMeter.hpp",
+    "sha256": "ee3a111c7de529eb31157e3b0ea347d28f6fdb8ee4461a59530f48b127cb1b91"
+  },
+  {
+    "path": "src/Game/Screen/MarioSubMeter.cpp",
+    "sha256": "fe44c850870dabe502cad040c0fa3984935cec06e93ac8a29bfd9981fcf1dc8b"
+  },
+  {
+    "path": "src/Game/Screen/MarioSubMeter.hpp",
+    "sha256": "9269a63a577e669d54dcfd3201e37e08707a15bf831a2329dfd97e626f7dec63"
+  },
+  {
+    "path": "src/Game/Screen/CameraInfo.cpp",
+    "sha256": "d0fdde170fee0c341e59aa79135ee9c74a9a0a870c8ed88599cce5fb54d274b7"
+  },
+  {
+    "path": "src/Game/Screen/CameraInfo.hpp",
+    "sha256": "12cfbf1d2920eaf05488175604becba3a6b36f9375174cbf4f311aff4c954a35"
+  },
+  {
+    "path": "src/Game/Screen/CounterLayoutController.cpp",
+    "sha256": "1abcede75a4e3bacd9881b1cd3963cabb3a4315a2c594040322e16c2a01f8637"
+  },
+  {
+    "path": "src/Game/Screen/CounterLayoutController.hpp",
+    "sha256": "c61567bb383b6e3ae5b002b84f5c809e7938a5fbec5cff9f977a9936fcd3546e"
+  },
+  {
+    "path": "src/Game/Screen/InformationMessage.cpp",
+    "sha256": "e25681b6135066318dbde76411380e5aa3eb89e934f38564f2851ce4107c8cd3"
+  },
+  {
+    "path": "src/Game/Screen/InformationMessage.hpp",
+    "sha256": "244154bffda8e68331f338b5a8ac26eca0e8db17eab80f8f580318967dc3f40c"
+  },
+  {
+    "path": "src/Game/Screen/OneUpBoard.cpp",
+    "sha256": "bf0c93ed5e0e5b5aea24d53d8f80d0aa7bd58d810b5a7dc02eacb307c7ce83c4"
+  },
+  {
+    "path": "src/Game/Screen/OneUpBoard.hpp",
+    "sha256": "1ce2c6e7113d16765e49e1800bf6f935c884225cebd36ecf4f58bc60f92bc7f0"
+  },
+  {
+    "path": "src/Game/Screen/MissLayout.cpp",
+    "sha256": "11cc94a872485ae49d4876afa059cea040a2159b51e961be6ad68158834861df"
+  },
+  {
+    "path": "src/Game/Screen/MissLayout.hpp",
+    "sha256": "c66799c2670542be5d91d9e20f30cab3c4d2173f0e1637857114e5d890c9bd32"
+  },
+  {
+    "path": "src/Game/Screen/NoteCounter.cpp",
+    "sha256": "50248b1e96e6da911c8f53b1ffb0ed80a6158023f5fd85dcdec528ead09b7954"
+  },
+  {
+    "path": "src/Game/Screen/NoteCounter.hpp",
+    "sha256": "80d952aff31891de1bb2cbe3b871a4ca603a6d5eff05113e52ae788546e3a2bf"
+  },
+  {
+    "path": "src/Game/Screen/YesNoLayout.cpp",
+    "sha256": "a067947d5b6aab16d82f079775003a475e8e1ed455d942966559736a516bf8e3"
+  },
+  {
+    "path": "src/Game/Screen/YesNoLayout.hpp",
+    "sha256": "b6abf3bb8a52221072ee2fc25b59be77460ace2ccd24856fec8f3acd5a6979ea"
+  },
+  {
+    "path": "src/Game/Screen/PurpleCoinCounter.cpp",
+    "sha256": "80209323f7bbe4c7dd8d8396d7c732af6138accb43e1829afe90be8476c6ce86"
+  },
+  {
+    "path": "src/Game/Screen/PurpleCoinCounter.hpp",
+    "sha256": "a879db71374570d197f1c409d1b5fa76d8247e115805328eb531086ab3c1b89d"
+  },
+  {
+    "path": "src/Game/Screen/MeterLayout.cpp",
+    "sha256": "aaf978839b08e838af0d6b4eea89a85f577ca36056d25e99d6d6517ed0b493d7"
+  },
+  {
+    "path": "src/Game/Screen/MeterLayout.hpp",
+    "sha256": "60ca4e45312622ecb618a84996a388821ce1cc04e2ab146043bf0085025b81be"
+  },
+  {
+    "path": "src/Game/Screen/SuddenDeathMeter.cpp",
+    "sha256": "a314b628319945175baa8c8723c0cee20062b373f1daf24439d2622b4f3654e6"
+  },
+  {
+    "path": "src/Game/Screen/SuddenDeathMeter.hpp",
+    "sha256": "453a2aec5d03e1c6470702659f6580ed16aece86dc5adfb74653051cc011a78e"
+  },
+  {
+    "path": "src/Game/Screen/SubMeterLayout.cpp",
+    "sha256": "22df5fa428fcd4229c53d73227eabdb42b82886bfde49aabd0ec8c7e0510b374"
+  },
+  {
+    "path": "src/Game/Screen/SubMeterLayout.hpp",
+    "sha256": "88f1d04107542b2c827716d21ba0a53349798d1460a43c6f79c30fe510944828"
+  },
+  {
+    "path": "src/Game/Screen/CoinCounter.cpp",
+    "sha256": "869c8772bd2269cfe9800630f432b9d0d4b7aff6aeb41613b2df92cfe9afa29f"
+  },
+  {
+    "path": "src/Game/Screen/CoinCounter.hpp",
+    "sha256": "3c1b6ec6fa27090c7bb8af39ff9df8d36d533b14d7c6915720e8f37b26120e91"
+  },
+  {
+    "path": "src/Game/Screen/StarPieceCounter.cpp",
+    "sha256": "92b94584c1cc3051bb2418e67528b92f542ff2e948d450a5c608b74e08718249"
+  },
+  {
+    "path": "src/Game/Screen/StarPieceCounter.hpp",
+    "sha256": "51b0ca682fb35327ba4737587d7468d1fdc1e6c69d1961935745754e519befe5"
+  },
+  {
+    "path": "src/Game/Screen/PlayerLeft.cpp",
+    "sha256": "db3a53f619cdb1c9b4fc0cd4507f0c35feebbe7c5a11315207ee74b3368a31f7"
+  },
+  {
+    "path": "src/Game/Screen/PlayerLeft.hpp",
+    "sha256": "936766fede289bf1fd301309acdce5af231141ecab52816307803ec147ad84ca"
+  },
+  {
+    "path": "src/Game/Screen/StarCounter.cpp",
+    "sha256": "24bfda5a77a734c51906a7e909231a9166bb2cf88412d18340b5744b8bdd06b9"
+  },
+  {
+    "path": "src/Game/Screen/StarCounter.hpp",
+    "sha256": "c1eac70f3b89173daeb66ab8c75103e3a34e66e1c3e64eccad8515420f2733ab"
+  },
+  {
+    "path": "src/Game/Screen/CounterLayoutAppearer.cpp",
+    "sha256": "04e7e07a1288ffffeeb44c1ec3b7f12e40ed07a1c9b9f0ea57242798955b510d"
+  },
+  {
+    "path": "src/Game/Screen/CounterLayoutAppearer.hpp",
+    "sha256": "ac242de583cfe3b3746e50fa0ecebf8e322097236ccabb3293673714bf467263"
+  },
+  {
+    "path": "src/Game/Screen/CountUpPaneRumbler.cpp",
+    "sha256": "8e8b7595bfb9ed0df4b472fa47cf7648824cf16909ca05ef8b5ba8f5068d0276"
+  },
+  {
+    "path": "src/Game/Screen/CountUpPaneRumbler.hpp",
+    "sha256": "1db68202ede0241e96f7aad53edb0454616c58656327de42d44a1337e4f00a21"
+  },
+  {
+    "path": "src/Game/Util/RumbleCalculator.cpp",
+    "sha256": "1fcefb18ae279483302be3a416f27213162aa8044a67acc60aee635ee5eb8ed4"
+  },
+  {
+    "path": "src/Game/Util/RumbleCalculator.hpp",
+    "sha256": "b5101936b911786b2ac89ab1220e41ade51e9d94f05b66cc90ea3b9e498498ee"
+  },
+  {
+    "path": "src/Game/Screen/LayoutPaneCtrl.cpp",
+    "sha256": "6264f345a10b0b73e8f9bca26c44bfb8fcb9befe4e91368f78f35500eceb1917"
+  },
+  {
+    "path": "src/Game/Util/LayoutUtil.cpp",
+    "sha256": "d1281ab792f1c7f561a781acb711f9aff1e089dc95916c924803d9edbee2591e"
+  },
+  {
+    "path": "src/Game/Util/LayoutUtil.hpp",
+    "sha256": "2640b6b311e7d15c6525558b4e27a79c78f15d0f3a46ae0f7815eb81c802b215"
+  },
+  {
+    "path": "src/Game/Util/StarPointerUtil.hpp",
+    "sha256": "ca658596284f97e4f3c7f5f49b02c066a5a3c633d5b44d4d3392a0cedf46b517"
+  },
+  {
+    "path": "src/Game/MapObj/ChipHolder.hpp",
+    "sha256": "fa6e3f5b3d43d06f65d20d5fa4ab70d3344158fc7b9e4b36b7f8dd90793f0e0f"
+  },
+  {
+    "path": "src/layout/LayoutUtilCompat.cpp",
+    "sha256": "25e52ca9249ee48aa6fcbe88a9b3bdd73fd542f01382946ccf177c948761fdea"
+  },
+  {
+    "path": "src/layout/LayoutManagerCompat.cpp",
+    "sha256": "3fa7271c9f2a84784a75545e2f83418dbf599540ff3c111fe87ea624fc51d999"
+  },
+  {
+    "path": "src/layout/LayoutRuntime.cpp",
+    "sha256": "599c964ea1d39f4ad35f31b5d76c26b27672c915d1de0af09565bc88e1fe7366"
+  },
+  {
+    "path": "src/layout/LayoutRuntime.hpp",
+    "sha256": "9e01618654443bab0c2715cd68b8b058ca672a4e0505d4b4c75111c59f4726df"
+  },
+  {
+    "path": "src/nw4r/math/types.h",
+    "sha256": "2ad0c48c190f7870f03de858b0629068682e9b74bb36b91cb211fdab3bf20b5d"
+  },
+  {
+    "path": "src/compat/SceneObjHolderCompat.cpp",
+    "sha256": "5c1db11e6698a0b3e44388677c4c7f0bd8f5e16950b9dae730756022131da3a0"
+  }
+]

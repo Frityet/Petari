@@ -65,7 +65,7 @@ namespace MR {
     void hideLayout(LayoutActor* pLayout);
     void convertScreenPosToLayoutPos(TVec2f* pLayoutPos, const TVec2f& rScreenPos);
     void convertLayoutPosToScreenPos(TVec2f* pScreenPos, const TVec2f& rLayoutPos);
-    void setFollowPos(const TVec2f* pPos, LayoutActor* pLayout, const char* pPaneName);
+    void setFollowPos(const TVec2f* pPos, const LayoutActor* pLayout, const char* pPaneName);
     void copyPaneTrans(TVec2f* pPos, const LayoutActor* pLayout, const char* pPaneName);
     void copyPaneScale(TVec2f* pScale, const LayoutActor* pLayout, const char* pPaneName);
     void setLayoutPosAtPaneTrans(LayoutActor* pDst, const LayoutActor* pSrc, const char* pPaneName);
@@ -101,3 +101,18 @@ namespace MR {
     void deleteEffectAll(SimpleLayout* pLayout);
     void deleteEffectAll(LayoutActor* pLayout);
 }  // namespace MR
+
+namespace MR {
+    void setTextBoxFormatRecursive(LayoutActor*, const char*, const wchar_t*, ...);
+    bool isHiddenPane(const LayoutActor*, const char*);
+    bool isHiddenLayout(const LayoutActor*);
+    void setFollowTypeAdd(const LayoutActor*, const char*);
+    f32 getPaneTransX(const LayoutActor*, const char*);
+    f32 getPaneTransY(const LayoutActor*, const char*);
+    void startAnimAndSetFrameAndStop(LayoutActor*, const char*, f32, u32);
+    bool isIntervalStep(const LayoutActor*, s32);
+    f32 calcNerveEaseInRate(const LayoutActor*, s32);
+    bool isExecuteCalcAnimLayout(const LayoutActor*);
+    bool isExecuteDrawLayout(const LayoutActor*);
+    void setFollowTypeReplace(const LayoutActor*, const char*);
+}

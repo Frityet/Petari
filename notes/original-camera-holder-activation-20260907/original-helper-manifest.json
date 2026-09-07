@@ -1,0 +1,122 @@
+[
+  {
+    "namespace": "CameraLocalUtil",
+    "method": "getMtxReg",
+    "reference": "decomp/src/Game/Camera/CameraLocalUtil.cpp",
+    "body_sha256": "85ea2311e2f81440eeddde505a2b7b1e4743b97209e85602ed15aa85e2fb8d8c"
+  },
+  {
+    "namespace": "CameraLocalUtil",
+    "method": "getVecReg",
+    "reference": "decomp/src/Game/Camera/CameraLocalUtil.cpp",
+    "body_sha256": "3400e6acc00ab075fa2b215f76e8ae9564ed8a51ddeb36e566d8fd1ce088a090"
+  },
+  {
+    "namespace": "CameraLocalUtil",
+    "method": "getDummyVecRegName",
+    "reference": "decomp/src/Game/Camera/CameraLocalUtil.cpp",
+    "body_sha256": "4e3276f304df5a2f506c54e0034a593fb701006b465945c8b650b6d828a610fc"
+  },
+  {
+    "namespace": "CameraLocalUtil",
+    "method": "isForceCameraChange",
+    "reference": "decomp/src/Game/Camera/CameraLocalUtil.cpp",
+    "body_sha256": "263cff27f5ab880bf0396704cdd9afe7e0907b0cc17dedd9b319be6ac58fd1f6"
+  },
+  {
+    "namespace": "CameraLocalUtil",
+    "method": "getCameraDirector",
+    "reference": "decomp/src/Game/Camera/CameraLocalUtil.cpp",
+    "body_sha256": "a3418357580738553c54f915247a082761d192d4eb553ae9242615a5cd4f38ea"
+  },
+  {
+    "namespace": "CameraLocalUtil",
+    "method": "setUsedTarget",
+    "reference": "decomp/src/Game/Camera/CameraLocalUtil.cpp",
+    "body_sha256": "3b57d494eb53a30616f7695fb4766e35e2202034d7959472f4d80f523b8465a3"
+  },
+  {
+    "namespace": "CameraLocalUtil",
+    "method": "tryCameraReset",
+    "reference": "decomp/src/Game/Camera/CameraLocalUtil.cpp",
+    "body_sha256": "2964f9dd07bc8d30f5ac8cb5ffbc8ff08db591dfc6f052c39aa1f5a897bb64ea"
+  },
+  {
+    "namespace": "CameraLocalUtil",
+    "method": "tryCameraResetTrigger",
+    "reference": "decomp/src/Game/Camera/CameraLocalUtil.cpp",
+    "body_sha256": "42c9e736b0ee7ecdafc7bd41ddc09c9b1dad7c65b58c4a7c52b903b2a0c26660"
+  },
+  {
+    "namespace": "CameraLocalUtil",
+    "method": "makeTowerCameraMtx",
+    "reference": "decomp/src/Game/Camera/CameraLocalUtil.cpp",
+    "body_sha256": "ac886fc01d2075c79d06e360dd1579815180183166dd9543ea5588a3375002e7"
+  },
+  {
+    "namespace": "CameraLocalUtil",
+    "method": "arrangeDistanceByFovy",
+    "reference": "decomp/src/Game/Camera/CameraLocalUtil.cpp",
+    "body_sha256": "3fbf0837c96ebd532938bc0b3e7cfb40bed381dd8828e4919ef133608502a567"
+  },
+  {
+    "namespace": "CameraLocalUtil",
+    "method": "arrangeDistanceByPushAndPull",
+    "reference": "decomp/src/Game/Camera/CameraLocalUtil.cpp",
+    "body_sha256": "4b648358fe22e3a6704082d1e60018eba8a04a2519a5708299ae484048ea6e80"
+  },
+  {
+    "namespace": "MR",
+    "method": "startSubjectiveCamera",
+    "reference": "decomp/src/Game/Util/CameraUtil.cpp",
+    "body_sha256": "73b3bf781c8ae93d862b7adca1cb1f7f69110e994820e15b5d3c669dd844d79d"
+  },
+  {
+    "namespace": "MR",
+    "method": "endSubjectiveCamera",
+    "reference": "decomp/src/Game/Util/CameraUtil.cpp",
+    "body_sha256": "df9e387cffedf248bf1ea8dfe50fbb983dbe2fe782a2fff828621878f79cd242"
+  },
+  {
+    "namespace": "MR",
+    "method": "isFirstPersonCameraOK",
+    "reference": "decomp/src/Game/Util/CameraUtil.cpp",
+    "body_sha256": "e8e5074b2ec1abfd5e1e20ebe4e3c7d1e0a8418f3e1ff9a010da213e9ca59a12"
+  },
+  {
+    "namespace": "MR",
+    "method": "isPossibleToShiftToFirstPersonCamera",
+    "reference": "decomp/src/Game/Util/CameraUtil.cpp",
+    "body_sha256": "c79dce77e23667faa556ec403353d6ecbc6c1f6e3c453ff8527dc13cd060a8cc"
+  },
+  {
+    "namespace": "MR",
+    "method": "isCameraPossibleToRoundLeft",
+    "reference": "decomp/src/Game/Util/CameraUtil.cpp",
+    "body_sha256": "7fdaedfd9130bae6ad45df4f6677b2c6cf3526f7bfab47f2c97ee076ad568262"
+  },
+  {
+    "namespace": "MR",
+    "method": "isCameraPossibleToRoundRight",
+    "reference": "decomp/src/Game/Util/CameraUtil.cpp",
+    "body_sha256": "3caca1b36c45cce8729bf9f063625210e7383f4d60c57bc7877d040375492b7a"
+  },
+  {
+    "namespace": "MR",
+    "method": "isCameraControlNG",
+    "reference": "decomp/src/Game/Util/CameraUtil.cpp",
+    "body_sha256": "14f3b470ecce99d1ffbb7030eba3fb98c8d07fa3b1973571e415db88a3c64e0a"
+  },
+  {
+    "namespace": "MR",
+    "method": "startCameraInterpolation",
+    "reference": "decomp/src/Game/Util/CameraUtil.cpp",
+    "body_sha256": "241f13c76b62575675c78d4076c9a439305fa0e8ee56d32ad09215ae7e8510c6"
+  },
+  {
+    "namespace": "MR",
+    "method": "isPlayerNeedBrakingCamera",
+    "reference": "decomp/src/Game/Util/PlayerUtil.cpp",
+    "body_sha256": "66677c12a4607a3f48299a31d47a45ef09fbec20e07c22e33dddb312689a8b68"
+  }
+]

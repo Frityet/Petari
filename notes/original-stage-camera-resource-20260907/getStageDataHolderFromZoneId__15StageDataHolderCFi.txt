@@ -1,0 +1,18 @@
+cmpwi r4, 0x0
+beqlr 
+lwz r0, 0x40(r3)
+li r5, 0x0
+mtctr r0
+cmpwi r0, 0x0
+ble 0xef4
+add r6, r3, r5
+lwz r6, 0x44(r6)
+lwz r0, 0xdc(r6)
+cmpw r4, r0
+bne 0xeec
+mr r3, r6
+blr 
+addi r5, r5, 0x4
+bdnz 0xed0
+li r3, 0x0
+blr 

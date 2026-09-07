@@ -359,3 +359,335 @@ bool KCollisionServer::isNearParallelNormal(const KC_PrismData* pPrism) const {
 
     return isNear;
 }
+
+KC_PrismData* KCollisionServer::checkArrow(const TVec3f& rOrigin, const TVec3f& rDir, f32* pDists, u8* pFlags, u32* pCount, KC_PrismData** pOut,
+                                           u32 maxCount) const {
+    if (rDir.x == 0.0f && rDir.y == 0.0f && rDir.z == 0.0f) {
+        return 0;
+    }
+
+    f32 length;
+    TVec3f dir(rDir);
+    MR::separateScalarAndDirection(&length, &dir, dir);
+
+    if (MR::isNearZero(dir, 0.001f)) {
+        return 0;
+    }
+
+    TVec3f start(rOrigin);
+    start.x -= mFile->mMin.x;
+    start.y -= mFile->mMin.y;
+    start.z -= mFile->mMin.z;
+
+    V3u cell;
+    cell.setUsingCast(start);
+
+    TVec3f hitPoint;
+    f32 startT = 0.0f;
+
+    if (isInsideMinMaxInLocalSpace(cell)) {
+        hitPoint.set(start);
+    } else {
+        TVec3f boxMax;
+        boxMax.x = (f32)(u32)~mFile->mXMask;
+        boxMax.y = (f32)(u32)~mFile->mYMask;
+        boxMax.z = (f32)(u32)~mFile->mZMask;
+
+        bool entered = false;
+
+        if (dir.x != 0.0f) {
+            f32 edge = dir.x <= 0.0f ? boxMax.x : 0.0f;
+            startT = (edge - start.x) / dir.x;
+
+            if (startT >= 0.0f && startT <= length) {
+                TVec3f step(dir);
+                step.scale(startT);
+                hitPoint.set(step);
+                hitPoint += start;
+                cell.setUsingCast(hitPoint);
+                entered = isInsideMinMaxInLocalSpace(cell);
+            }
+        }
+
+        if (!entered && dir.y != 0.0f) {
+            f32 edge = dir.y <= 0.0f ? boxMax.y : 0.0f;
+            startT = (edge - start.y) / dir.y;
+
+            if (startT >= 0.0f && startT <= length) {
+                TVec3f step(dir);
+                step.scale(startT);
+                hitPoint.set(step);
+                hitPoint += start;
+                cell.setUsingCast(hitPoint);
+                entered = isInsideMinMaxInLocalSpace(cell);
+            }
+        }
+
+        if (!entered && dir.z != 0.0f) {
+            f32 edge = dir.z <= 0.0f ? boxMax.z : 0.0f;
+            startT = (edge - start.z) / dir.z;
+
+            if (startT >= 0.0f && startT <= length) {
+                TVec3f step(dir);
+                step.scale(startT);
+                hitPoint.set(step);
+                hitPoint += start;
+                cell.setUsingCast(hitPoint);
+                entered = isInsideMinMaxInLocalSpace(cell);
+            }
+        }
+
+        if (!entered) {
+            return 0;
+        }
+    }
+
+    u32 foundCount = 0;
+    KC_PrismData* bestPrism = nullptr;
+
+    s32 stepX = dir.x < 0.0f ? -1 : 1;
+    s32 stepY = dir.y < 0.0f ? -1 : 1;
+    s32 stepZ = dir.z < 0.0f ? -1 : 1;
+
+    f32 accumT = startT;
+    f32 bestFraction = 1.0f;
+
+    s32 shift;
+
+    do {
+        s32* list = searchBlock(&shift, cell.x, cell.y, cell.z);
+        u32 blockSize = 1 << shift;
+        u32 mask = blockSize - 1;
+
+        s32 deltaPosX = blockSize - (cell.x & mask);
+        s32 deltaPosY = blockSize - (cell.y & mask);
+        s32 deltaPosZ = blockSize - (cell.z & mask);
+        s32 deltaNegX = -(s32)(cell.x & mask);
+        s32 deltaNegY = -(s32)(cell.y & mask);
+        s32 deltaNegZ = -(s32)(cell.z & mask);
+
+        s32 deltaX = stepX < 0 ? deltaNegX : deltaPosX;
+        s32 deltaY = stepY < 0 ? deltaNegY : deltaPosY;
+        s32 deltaZ = stepZ < 0 ? deltaNegZ : deltaPosZ;
+
+        if (deltaX == 0) {
+            deltaX = stepX;
+        }
+
+        if (deltaY == 0) {
+            deltaY = stepY;
+        }
+
+        if (deltaZ == 0) {
+            deltaZ = stepZ;
+        }
+
+        u16* prismList = (u16*)list;
+
+        while (*++prismList != 0) {
+            KC_PrismData* prism = &mFile->mPrisms[*prismList];
+
+            if (prism->mHeight <= 0.0f) {
+                continue;
+            }
+
+            f32 dist;
+            u8 flag = 0;
+
+            if (!KCHitArrow(prism, rOrigin, rDir, &dist, &flag)) {
+                continue;
+            }
+
+            if (pOut != nullptr) {
+                foundCount++;
+                pDists[foundCount - 1] = dist;
+                pOut[foundCount - 1] = prism;
+
+                if (dist < bestFraction) {
+                    bestFraction = dist;
+                    bestPrism = prism;
+                }
+
+                if (foundCount == maxCount) {
+                    if (pCount != nullptr) {
+                        *pCount = foundCount;
+                    }
+                    return bestPrism;
+                }
+            } else {
+                if (dist >= bestFraction) {
+                    continue;
+                }
+
+                *pDists = dist;
+                bestFraction = dist;
+                bestPrism = prism;
+                *pFlags = flag;
+            }
+        }
+
+        if (pOut == nullptr && bestPrism != nullptr) {
+            break;
+        }
+
+        f32 tX = MR::isNearZero(dir.x, 0.001f) ? 1.0e9f : (f32)deltaX / dir.x;
+        f32 tY = MR::isNearZero(dir.y, 0.001f) ? 1.0e9f : (f32)deltaY / dir.y;
+        f32 tZ = MR::isNearZero(dir.z, 0.001f) ? 1.0e9f : (f32)deltaZ / dir.z;
+
+        f32 tMin = tX;
+
+        if (tY < tMin) {
+            tMin = tY;
+        }
+
+        if (tZ < tMin) {
+            tMin = tZ;
+        }
+
+        if (length - accumT <= tMin) {
+            break;
+        }
+
+        TVec3f step(dir);
+        step.scale(tMin);
+        hitPoint += step;
+        accumT += tMin;
+
+        cell.setUsingCast(hitPoint);
+
+        if (!isInsideMinMaxInLocalSpace(cell)) {
+            break;
+        }
+    } while (accumT < length);
+
+    if (pCount != nullptr) {
+        *pCount = foundCount;
+    }
+
+    return bestPrism;
+}
+
+bool KCollisionServer::KCHitArrow(KC_PrismData* pPrism, const TVec3f& rOrigin, const TVec3f& rDir, f32* pDist, u8* pFlag) const {
+    TVec3f* v0 = &mFile->mPos[pPrism->mPositionIndex];
+    TVec3f* faceNormal = &mFile->mNorms[pPrism->mNormalIndex];
+
+    TVec3f rel;
+    PSVECSubtract((const Vec*)&rOrigin, (const Vec*)v0, (Vec*)&rel);
+
+    f32 t = PSVECDotProduct((const Vec*)&rel, (const Vec*)faceNormal);
+
+    if (t <= 0.0f) {
+        *pFlag = 0;
+        return false;
+    }
+
+    f32 dirDotFace = PSVECDotProduct((const Vec*)faceNormal, (const Vec*)&rDir);
+
+    if (0.0f < t + dirDotFace) {
+        *pFlag = 0;
+        return false;
+    }
+
+    t = t / -dirDotFace;
+
+    TVec3f hit(rDir);
+    hit.scale(t);
+    hit += rel;
+
+    bool onEdge0 = false;
+    bool onEdge1 = false;
+    bool onEdge2 = false;
+
+    f32 e0 = PSVECDotProduct((const Vec*)&hit, (const Vec*)&mFile->mNorms[pPrism->mEdgeIndices[0]]);
+
+    if (0.01f < e0) {
+        *pFlag = 0;
+        return false;
+    }
+
+    if (0.0f <= e0 && e0 <= 0.01f) {
+        onEdge0 = true;
+    }
+
+    f32 e1 = PSVECDotProduct((const Vec*)&hit, (const Vec*)&mFile->mNorms[pPrism->mEdgeIndices[1]]);
+
+    if (0.01f < e1) {
+        *pFlag = 0;
+        return false;
+    }
+
+    if (0.0f <= e1 && e1 <= 0.01f) {
+        onEdge1 = true;
+    }
+
+    f32 e2 = PSVECDotProduct((const Vec*)&hit, (const Vec*)&mFile->mNorms[pPrism->mEdgeIndices[2]]);
+
+    if (0.01f + pPrism->mHeight < e2) {
+        *pFlag = 0;
+        return false;
+    }
+
+    if (0.0f <= e2 && e2 <= 0.01f) {
+        onEdge2 = true;
+    }
+
+    *pDist = t;
+
+    if (onEdge0) {
+        if (onEdge1) {
+            if (onEdge2) {
+                *pFlag = 1;
+            } else {
+                *pFlag = 5;
+            }
+        } else {
+            if (onEdge2) {
+                *pFlag = 7;
+            } else {
+                *pFlag = 2;
+            }
+        }
+    } else {
+        if (onEdge1) {
+            if (onEdge2) {
+                *pFlag = 6;
+            } else {
+                *pFlag = 3;
+            }
+        } else {
+            if (onEdge2) {
+                *pFlag = 4;
+            } else {
+                *pFlag = 1;
+            }
+        }
+    }
+
+    return true;
+}
+
+bool KCollisionServer::isInsideMinMaxInLocalSpace(const V3u& rPoint) const {
+    bool inside = false;
+    bool bVar1 = false;
+
+    if ((rPoint.x & mFile->mXMask) == 0 && (rPoint.y & mFile->mYMask) == 0) {
+        bVar1 = true;
+    }
+
+    if (!bVar1) {
+        return inside;
+    }
+
+    if ((rPoint.z & mFile->mZMask) != 0) {
+        return inside;
+    }
+
+    return true;
+}
+
+void KCollisionServer::V3u::setUsingCast(const TVec3f& rPos) {
+    // The original fctiwz conversion saturates outside the signed range.
+    x = aurora::ppc::truncate_s32(rPos.x);
+    y = aurora::ppc::truncate_s32(rPos.y);
+    z = aurora::ppc::truncate_s32(rPos.z);
+}

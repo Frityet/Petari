@@ -1,4 +1,5 @@
 #include <aurora/exception.hpp>
+#include <aurora/allocation.hpp>
 #include "layout/LayoutHost.hpp"
 
 #include <algorithm>
@@ -163,6 +164,7 @@ void sync_actor_control_from_runtime(LayoutActor* actor, u32 layer) {
 }
 
 void bind_actor_manager(LayoutActor* actor, LayoutManager* manager) {
+    const aurora::allocation::HostAllocationScope host_allocations;
     auto& actor_state = require_actor_state(actor, "Binding a layout manager");
     auto& manager_state = require_manager_state(manager, "Binding a layout manager");
     manager_state.actor = actor;
@@ -236,6 +238,7 @@ DrawInfo::~DrawInfo() = default;
 
 LayoutActor::LayoutActor(const char* name, bool)
     : NameObj(name), mLayoutManager(nullptr), mSpine(nullptr), mEffectKeeper(nullptr), mPointingTarget(nullptr) {
+    const aurora::allocation::HostAllocationScope host_allocations;
     sActorStates.insert_or_assign(this, ActorState{});
 }
 
@@ -254,28 +257,28 @@ void LayoutActor::movement() {
 }
 
 void LayoutActor::calcAnim() {
-    if (mFlag.mIsOffCalcAnim) {
-        return;
+    if (MR::isExecuteCalcAnimLayout(this)) {
+        mLayoutManager->calcAnim();
     }
-    if (mLayoutManager == nullptr) {
-        aurora::throw_host_exception<std::logic_error>("Layout animation calculation requires an initialized layout manager");
-    }
-    mLayoutManager->calcAnim();
 }
 
 void LayoutActor::draw() const {
-    smgpc::layout::draw_layout_actor(this);
+    if (MR::isExecuteDrawLayout(this)) {
+        smgpc::layout::draw_layout_actor(this);
+    }
 }
 
 void LayoutActor::appear() {
     mFlag.mIsDead = false;
-    smgpc::layout::require_layout_runtime(this, "Appearing a layout actor").appear();
+    if (mLayoutManager != nullptr)
+        smgpc::layout::require_layout_runtime(this, "Appearing a layout actor").appear();
     calcAnim();
 }
 
 void LayoutActor::kill() {
     mFlag.mIsDead = true;
-    smgpc::layout::require_layout_runtime(this, "Killing a layout actor").kill();
+    if (mLayoutManager != nullptr)
+        smgpc::layout::require_layout_runtime(this, "Killing a layout actor").kill();
     if (require_actor_state(this, "Killing a layout actor").effect_keeper_registered) {
         if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance()) {
             runtime->delete_effect_all(getName(), this);
@@ -385,6 +388,7 @@ LayoutManager::LayoutManager(const char* layout_name, bool convert_filename, u32
     if (animation_layer_count == 0U || animation_layer_count > 4U) {
         aurora::throw_host_exception<std::invalid_argument>("A layout manager requires between one and four animation layers");
     }
+    const aurora::allocation::HostAllocationScope host_allocations;
     auto [it, inserted] = sManagerStates.try_emplace(this);
     if (!inserted) {
         it->second = ManagerState{};
@@ -429,6 +433,11 @@ void LayoutManager::calcAnim() {
     auto& state = require_manager_state(this, "Calculating a layout manager");
     for (auto& control : state.pane_controls) {
         control->calcAnim();
+    }
+    auto& runtime = require_runtime(this, "Reflecting pane follow positions");
+    runtime.clearPaneFollowPositions();
+    for (auto& control : state.pane_controls) {
+        control->reflectFollowPos();
     }
     smgpc::layout::refresh_pane_matrices(this);
 }
@@ -630,6 +639,7 @@ LayoutPaneCtrl::LayoutPaneCtrl(LayoutManager* host, const char* name, u32 layer_
     for (auto layer = u32{}; layer < layer_count; ++layer) {
         mAnmPlayerArray[layer] = nullptr;
     }
+    const aurora::allocation::HostAllocationScope host_allocations;
     auto [it, inserted] = sPaneControlStates.try_emplace(this);
     if (!inserted) {
         it->second = PaneControlState{};
@@ -692,9 +702,20 @@ bool LayoutPaneCtrl::isAnimStopped(u32 layer) const {
 
 void LayoutPaneCtrl::reflectFollowPos() {
     if (mFollowPos == nullptr) {
-        aurora::throw_host_exception<std::logic_error>("Reflecting a pane follow position requires a real follow position");
+        return;
     }
-    throw_retail_nw4r_unavailable("Reflecting a pane follow position");
+    auto& state = require_pane_control_state(this, "Reflecting a pane follow position");
+    auto& runtime = require_runtime(mHost, "Reflecting a pane follow position");
+    auto position = *mFollowPos;
+    if (mFollowType == 0) {
+        MR::convertScreenPosToLayoutPos(&position, position);
+    } else if (mFollowType == 1) {
+        TVec2f origin;
+        MR::convertLayoutPosToScreenPos(&origin, TVec2f(0.0F, 0.0F));
+        position += origin;
+        MR::convertScreenPosToLayoutPos(&position, position);
+    }
+    runtime.setPaneFollowPosition(state.pane_name, mFollowType, position);
 }
 
 J3DFrameCtrl* LayoutPaneCtrl::getFrameCtrl(u32 layer) const {

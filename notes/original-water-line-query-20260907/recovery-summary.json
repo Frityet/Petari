@@ -1,0 +1,98 @@
+[
+  {
+    "source": "Game/Util/AreaObjUtil",
+    "symbol": "getWaterAreaInfo__2MRFP9WaterInfoRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>b",
+    "size": "1596",
+    "match_percent": 88.190475
+  },
+  {
+    "source": "Game/Util/AreaObjUtil",
+    "symbol": "calcWhirlPoolAccelInfo__2MRFRCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+    "size": "4",
+    "match_percent": 100.0
+  },
+  {
+    "source": "Game/Util/MapUtil",
+    "symbol": "getNearPolyOnLineSort__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PC9HitSensor",
+    "size": "520",
+    "match_percent": 74.292305
+  },
+  {
+    "source": "Game/Util/MapUtil",
+    "symbol": "getSortedPoly__2MRFPQ29JGeometry8TVec3<f>P8TriangleUl",
+    "size": "128",
+    "match_percent": 57.34375
+  },
+  {
+    "source": "Game/Util/MapUtil",
+    "symbol": "getSortedPoly__2MRFUl",
+    "size": "40",
+    "match_percent": 100.0
+  },
+  {
+    "source": "Game/Util/MapUtil",
+    "symbol": "checkStrikeLineToMap__9CollisionFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>lPC24CollisionPartsFilterBasePC18TriangleFilterBase",
+    "size": "100",
+    "match_percent": 100.0
+  },
+  {
+    "source": "Game/Map/WhirlPoolAccelerator",
+    "symbol": "__ct__20WhirlPoolAcceleratorFPCc",
+    "size": "152",
+    "match_percent": 99.73684
+  },
+  {
+    "source": "Game/Map/WhirlPoolAccelerator",
+    "symbol": "calcInfo__20WhirlPoolAcceleratorCFRCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>",
+    "size": "240",
+    "match_percent": 56.65
+  },
+  {
+    "source": "Game/Map/WhirlPoolAccelerator",
+    "symbol": "__dt__20WhirlPoolAcceleratorFv",
+    "size": "92",
+    "match_percent": 100.0
+  },
+  {
+    "source": "Game/Player/MarioSwim",
+    "symbol": "getWaterAreaInfo__9MarioSwimFP9WaterInfoRCQ29JGeometry8TVec3<f>PQ29JGeometry8TVec2<f>",
+    "size": "436",
+    "match_percent": 97.84404
+  },
+  {
+    "source": "Game/Map/KCollision",
+    "symbol": "checkArrow__16KCollisionServerCFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PfPUcPUlPP12KC_PrismDataUl",
+    "size": "1800",
+    "match_percent": 84.99333
+  },
+  {
+    "source": "Game/Map/KCollision",
+    "symbol": "KCHitArrow__16KCollisionServerCFP12KC_PrismDataRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PfPUc",
+    "size": "704",
+    "match_percent": 99.77273
+  },
+  {
+    "source": "Game/Map/KCollision",
+    "symbol": "setUsingCast__Q216KCollisionServer3V3uFRCQ29JGeometry8TVec3<f>",
+    "size": "72",
+    "match_percent": 100.0
+  },
+  {
+    "source": "Game/Map/KCollisionPlus",
+    "symbol": "isInsideMinMaxInLocalSpace__16KCollisionServerCFRCQ216KCollisionServer3V3u",
+    "size": "80",
+    "match_percent": 75.75
+  },
+  {
+    "source": "Game/Util/MathUtil",
+    "symbol": "checkHitSegmentSphere__2MRFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>fPQ29JGeometry8TVec3<f>",
+    "size": "500",
+    "match_percent": 100.0
+  },
+  {
+    "source": "Game/Util/SceneUtil",
+    "symbol": "isStageSwimAngleLimit__2MRFv",
+    "size": "12",
+    "match_percent": 100.0
+  }
+]

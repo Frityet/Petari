@@ -1,0 +1,39 @@
+# Original water and ordered line-query ownership, 2026-09-07
+
+The native line-query component is implemented and tested. Water geometry and WhirlPoolAccelerator reference recoveries are saved in `decomp/`; native water activation is still pending the real WaterAreaHolder/WaterCameraFilter owner graph. No Game movement/camera state substitute was added.
+
+## Native line-query closure
+
+`StageCollisionService::line_hits` now visits the actual scene's registered KCL resources through existing original zone/part membership order, including swap-with-last removal and append-on-reentry. It calls the completed original `KCollisionServer::checkArrow` and `KCHitArrow` bodies, not repeated nearest-hit queries. Native relocation and the existing KCL cache provide actual octree/prism storage. Local start/end transforms and local-hit-to-world transforms follow CollisionParts. Original expanded AABB and segment/sphere checks are applied to actual part/zone spheres. Original scalar-to-grid conversion uses Aurora's saturating Gekko `fctiwz` helper to avoid undefined host out-of-range casts.
+
+`Collision::checkStrikeLineToMap` updates the shared unsorted strike-info storage consumed by original camera/player methods. Its reference forwarding body is recovered at 100%. The native provider retains original post-KCL-capacity triangle filtering, and original filter callbacks regain the selected Game allocation state. Zero requested count selects the original capacity of 32; unsupported negative or greater capacities reject. Arbitrary CollisionParts filters still reject explicitly: the current scene registrations supply actual geometry, sensors and transforms but do not fabricate original CollisionParts objects.
+
+`MR::getNearPolyOnLineSort` now uses that shared strike buffer, removes an excluded sensor after the collision capacity limit, and performs the original strict-less-than distance selection. The reference is independent of the line origin. Equal distances retain encounter order. Its literal original initial comparison distance is 1,000,000. The two `getSortedPoly` overloads share persistent sorted results. Retail returns early without clearing prior sorted results when the underlying collision query has zero hits; this behavior is preserved. A nonempty raw query whose hits are all excluded does clear the sorted count.
+
+`checkArrow` retains repeated prism encounters, including repeated leaf entries; it does not deduplicate the all-hit path. Its all-hit path also never writes the flags array that CollisionParts subsequently reads. The native adapter leaves those unspecified fields at the already-existing native HitInfo constructor's initialized value; it does not invent edge classifications. Sorted getters expose the original triangle/position fields. See `check-arrow-retail.asm` around offsets 0x1438–0x1478 for this distinction.
+
+Original `MR::isStageSwimAngleLimit` is imported verbatim into a small native provider because the whole original SceneUtil TU is excluded. Its OceanRingGalaxy name check is the original game's behavior, not a new host policy.
+
+## Reference water recovery
+
+`MR::getWaterAreaInfo` (RMGK01 0x804001E0, 1596 bytes) is recovered in AreaObjUtil.cpp. It preserves ordered OceanBowl/Ring/Sphere delegation, original cube top/bottom distances and rotated surface normal, the original sphere cosine-table depth approximation and radial surface, both cylinder/gravity branches, authored stream velocity, and the one-level overlapping-water query at surface minus five units of gravity. The original boolean result comes from Ocean `calcWaterInfo` or WaterArea's `isInVolume`. The previous `AreaInfo*` declaration and MarioSwim wrapper type were incorrect; the reference headers/source now say `bool` without changing the wrapper's other operations.
+
+`calcWhirlPoolAccelInfo` is the exact four-byte tail call to the original WaterAreaFunction list query. WhirlPoolAccelerator's previously empty constructor is recovered, with typed original radius, height, up vector, point array/count, texture scroll and clipping fields. `calcInfo` zeros its output, checks the original finite cylinder, removes the axial component, crosses radial offset with up, normalizes, and scales by exactly three. Full WhirlPoolAccelerator init/point generation/movement/draw methods remain missing and are not silently replaced. Its full native factory is not enabled.
+
+Fresh Metrowerks builds pass for all eight checked complete TUs, including MarioSwim with the return correction. Full commands, source hashes and reports are in `reference-compile-results.json` and per-TU objdiff JSON. No inline assembly or compiler pragmas were introduced. Scores include water 88.19%, Whirl constructor 99.74%, Whirl calcInfo 56.65%, MarioSwim wrapper 97.84%, near-sort 74.29%, direct line wrapper 100%, segment/sphere 100%, original stage query 100%. The lower Whirl score reflects inlining of the vector copy and final scale in this still-partial TU; comparisons, radius/height offsets, call order between the geometric operations, cross direction and constant 3 match the retail disassembly. Near-sort differs in vector helper inlining and its current declared HitInfo assignment boundary. These scores are reported honestly rather than called exact matches.
+
+## Remaining native water owners
+
+- Install original WaterArea/WaterAreaMgr placement descriptors and the actual WaterAreaHolder scene-object factory together with complete child ownership. Current `isInWater` still reports the absent owner explicitly.
+- WaterAreaHolder's original constructor allocates its five eight-element registration arrays, schedules movement, and constructs/initializes the original WaterCameraFilter. The optional original bloom setup in HeavenlyBeachGalaxy/OceanRingGalaxy must remain connected to actual screen-effect ownership.
+- WaterCameraFilter has completed reference source but only its header is presently native. Its init loads WaterCameraFilter.arc/BTI, allocates the original screen capture texture from GDDR3, and registers original movement/draw. Its material/capture/draw and WaterAreaFunction camera query dependencies must compile and run before advertising working water.
+- OceanBowl/Ring/Sphere membership and water-info bodies are already imported. Their source-complete owner paths remain separate from simply adding a query symbol.
+- The now-typed WhirlPoolAccelerator query can be imported as its own verified provider when this shared graph is activated; full WhirlPoolAccelerator actor creation must wait for the rest of its original pipeline.
+
+## Validation
+
+`xmake build -y smg-pc-game-math-rotation-tests` and its binary pass. Existing `smg-pc-area-polygon-query-tests` build/run passes after shared KCL-cache preparation was factored out. New `smg-pc-line-collision-query-tests` builds/runs, and its final run with the direct Collision adapter also passes.
+
+The line test covers real KCL leaf order and repeated entries, exact endpoint/front-face behavior, affine transforms, reference-distance sorting and equal-distance order, zone order, sensor exclusion after 32-hit capacity, direct original strike storage and world distances, predicate filtering after each part's KCL capacity, original callback allocations in Game, registration removal/reentry/release, and query/cache retention after the caller's real JKR arena expires. The initial sensor fixture omitted its required retained registration; correcting that fixture resolved the rejection without production changes.
+
+Root and reference explicit path/hash lists are recorded separately for parent-coordinated commits. Root native source is frozen after the passing direct-line test. This is bounded subsystem validation, not a claim that Gateway movement, the chase, Rosalina, or the full game now work.

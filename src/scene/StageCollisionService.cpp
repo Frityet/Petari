@@ -594,6 +594,34 @@ namespace smgpc::scene {
         _built = true;
     }
 
+    void StageCollisionService::prepare_kcl_source(const Source& source) const {
+            if (source.area_server == nullptr) {
+                auto owner = std::make_unique<resource::OwnedKCollisionServer>(
+                    resource::KCollisionResource(source.kcl_bytes, source.attributes));
+                auto& server = owner->server();
+                // Original calcFarthestVertexDistance marks parallel prisms
+                // inactive before building the part's bounding sphere.
+                auto farthest_squared = 0.0F;
+                for (auto i = 0; i < server.getTriangleNum(); ++i) {
+                    auto* prism = server.getPrismData(static_cast<u32>(i));
+                    if (server.isNearParallelNormal(prism)) {
+                        prism->mHeight = -std::abs(prism->mHeight);
+                    } else {
+                        for (auto vertex = 0; vertex < 3; ++vertex) {
+                            farthest_squared = std::max(farthest_squared, server.getPos(prism, vertex).squared());
+                        }
+                    }
+                }
+                server.mMaxVertexDistance = std::sqrt(farthest_squared);
+                const auto& matrix = source.matrix;
+                const auto scale = (std::sqrt(matrix[0] * matrix[0] + matrix[4] * matrix[4] + matrix[8] * matrix[8]) +
+                                    std::sqrt(matrix[1] * matrix[1] + matrix[5] * matrix[5] + matrix[9] * matrix[9]) +
+                                    std::sqrt(matrix[2] * matrix[2] + matrix[6] * matrix[6] + matrix[10] * matrix[10])) / 3.0F;
+                source.area_bounding_radius = scale * server.mMaxVertexDistance;
+                source.area_server = std::move(owner);
+            }
+    }
+
     std::vector<std::uint32_t> StageCollisionService::area_polygons(
         std::span<const TVec3f> points, std::size_t maximum) const {
         const aurora::allocation::HostAllocationScope host_allocations;
@@ -639,31 +667,7 @@ namespace smgpc::scene {
             if (source.registration != nullptr && !source.registration->enabled()) {
                 continue;
             }
-            if (source.area_server == nullptr) {
-                auto owner = std::make_unique<resource::OwnedKCollisionServer>(
-                    resource::KCollisionResource(source.kcl_bytes, source.attributes));
-                auto& server = owner->server();
-                // Original calcFarthestVertexDistance marks parallel prisms
-                // inactive before building the part's bounding sphere.
-                auto farthest_squared = 0.0F;
-                for (auto i = 0; i < server.getTriangleNum(); ++i) {
-                    auto* prism = server.getPrismData(static_cast<u32>(i));
-                    if (server.isNearParallelNormal(prism)) {
-                        prism->mHeight = -std::abs(prism->mHeight);
-                    } else {
-                        for (auto vertex = 0; vertex < 3; ++vertex) {
-                            farthest_squared = std::max(farthest_squared, server.getPos(prism, vertex).squared());
-                        }
-                    }
-                }
-                server.mMaxVertexDistance = std::sqrt(farthest_squared);
-                const auto& matrix = source.matrix;
-                const auto scale = (std::sqrt(matrix[0] * matrix[0] + matrix[4] * matrix[4] + matrix[8] * matrix[8]) +
-                                    std::sqrt(matrix[1] * matrix[1] + matrix[5] * matrix[5] + matrix[9] * matrix[9]) +
-                                    std::sqrt(matrix[2] * matrix[2] + matrix[6] * matrix[6] + matrix[10] * matrix[10])) / 3.0F;
-                source.area_bounding_radius = scale * server.mMaxVertexDistance;
-                source.area_server = std::move(owner);
-            }
+            prepare_kcl_source(source);
             sources.push_back(&source);
           }
         }
@@ -738,6 +742,126 @@ namespace smgpc::scene {
                 }
             }
             first = last;
+        }
+        return result;
+    }
+
+    std::vector<StageCollisionHit> StageCollisionService::line_hits(
+        const TVec3f& start, const TVec3f& offset, std::size_t maximum,
+        const StageCollisionTriangleFilter& filter) const {
+        const aurora::allocation::HostAllocationScope host_allocations;
+        auto result = std::vector<StageCollisionHit>{};
+        if (maximum > 32U) {
+            aurora::throw_host_exception<std::invalid_argument>("All-hit line queries exceed the original 32-hit capacity.");
+        }
+        for (const auto* vector : {&start, &offset}) {
+            if (!std::isfinite(vector->x) || !std::isfinite(vector->y) || !std::isfinite(vector->z)) {
+                aurora::throw_host_exception<std::invalid_argument>("All-hit line queries require finite vectors.");
+            }
+        }
+        if (maximum == 0U || (offset.x == 0.0F && offset.y == 0.0F && offset.z == 0.0F)) {
+            return result;
+        }
+        const TVec3f end = start + offset;
+        const TVec3f minimum(std::min(start.x, end.x), std::min(start.y, end.y), std::min(start.z, end.z));
+        const TVec3f maximum_point(std::max(start.x, end.x), std::max(start.y, end.y), std::max(start.z, end.z));
+        const auto overlaps = [&](const TVec3f& center, float radius) {
+            if (center.x < minimum.x - radius || maximum_point.x + radius < center.x ||
+                center.y < minimum.y - radius || maximum_point.y + radius < center.y ||
+                center.z < minimum.z - radius || maximum_point.z + radius < center.z) {
+                return false;
+            }
+            return MR::checkHitSegmentSphere(center, start, end, radius, nullptr);
+        };
+        const auto center_of = [](const Source& source) {
+            return TVec3f(source.matrix[3], source.matrix[7], source.matrix[11]);
+        };
+        result.reserve(maximum);
+        for (const auto& [zone_id, zone] : _area_order->zones) {
+            auto sources = std::vector<const Source*>{};
+            sources.reserve(zone.parts.size());
+            for (const auto source_index : zone.parts) {
+                const auto& source = _sources[source_index];
+                if (source.registration != nullptr && !source.registration->enabled()) {
+                    continue;
+                }
+                prepare_kcl_source(source);
+                sources.push_back(&source);
+            }
+            if (sources.empty()) {
+                continue;
+            }
+            if (zone_id != 0) {
+                const auto first_center = center_of(*sources.front());
+                const auto first_radius = sources.front()->area_bounding_radius;
+                auto zone_min = first_center - TVec3f(first_radius, first_radius, first_radius);
+                auto zone_max = first_center + TVec3f(first_radius, first_radius, first_radius);
+                for (const auto* source : sources) {
+                    const auto center = center_of(*source);
+                    const auto radius = source->area_bounding_radius;
+                    zone_min.x = std::min(zone_min.x, center.x - radius);
+                    zone_min.y = std::min(zone_min.y, center.y - radius);
+                    zone_min.z = std::min(zone_min.z, center.z - radius);
+                    zone_max.x = std::max(zone_max.x, center.x + radius);
+                    zone_max.y = std::max(zone_max.y, center.y + radius);
+                    zone_max.z = std::max(zone_max.z, center.z + radius);
+                }
+                const auto center = (zone_min + zone_max) * 0.5F;
+                auto radius = 0.0F;
+                for (const auto* source : sources) {
+                    radius = std::max(radius, std::sqrt((center_of(*source) - center).squared()) + source->area_bounding_radius);
+                }
+                if (!overlaps(center, radius)) {
+                    continue;
+                }
+            }
+            for (const auto* source : sources) {
+                if (!overlaps(center_of(*source), source->area_bounding_radius)) {
+                    continue;
+                }
+                Mtx matrix, inverse;
+                std::copy(source->matrix.begin(), source->matrix.end(), &matrix[0][0]);
+                if (PSMTXInverse(matrix, inverse) == 0U) {
+                    aurora::throw_host_exception<std::logic_error>("All-hit line queries require an invertible collision part matrix.");
+                }
+                TVec3f local_start, local_end;
+                PSMTXMultVec(inverse, &start, &local_start);
+                PSMTXMultVec(inverse, &end, &local_end);
+                const TVec3f local_offset = local_end - local_start;
+                auto fractions = std::array<float, 32U>{};
+                auto flags = std::array<u8, 32U>{};
+                auto prisms = std::array<KC_PrismData*, 32U>{};
+                auto count = u32{};
+                auto& server = source->area_server->server();
+                server.checkArrow(local_start, local_offset, fractions.data(), flags.data(), &count,
+                                  prisms.data(), static_cast<u32>(maximum - result.size()));
+                for (auto i = 0U; i < count; ++i) {
+                    const auto prism_index = server.toIndex(prisms[i]);
+                    const auto identity = source->prism_triangles.at(static_cast<std::size_t>(prism_index));
+                    const auto surface_info = surface(identity);
+                    if (!surface_info.has_value()) {
+                        aurora::throw_host_exception<std::logic_error>("KCL line query selected a prism without a registered native surface.");
+                    }
+                    if (filter) {
+                        // CollisionParts applies its original predicate after
+                        // the per-part KCL capacity limit. Game callbacks must
+                        // regain their selected original allocation domain.
+                        const aurora::allocation::ClientAllocationScope client_allocations;
+                        if (!filter(identity)) {
+                            continue;
+                        }
+                    }
+                    TVec3f position = local_offset;
+                    position.scale(fractions[i]);
+                    position += local_start;
+                    PSMTXMultVec(matrix, &position, &position);
+                    result.push_back(StageCollisionHit{position, surface_info->normals[0], fractions[i],
+                                                       surface_info->attribute, identity});
+                }
+                if (result.size() == maximum) {
+                    return result;
+                }
+            }
         }
         return result;
     }

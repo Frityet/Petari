@@ -1,5 +1,7 @@
 // Retail calls the out-of-line JMA entry point; the current SDK header marks it inline.
+#if !defined(TARGET_PC)
 #define JMAAcosRadian JMAAcosRadianInline
+#endif
 
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/Map/HitInfo.hpp"
@@ -11,9 +13,11 @@
 #include "Game/Util/MapUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
 
+#if !defined(TARGET_PC)
 #undef JMAAcosRadian
 
 f32 JMAAcosRadian(f32);
+#endif
 
 bool Mario::checkPressDamage() {
     if (_5FC != 0) {
@@ -131,72 +135,74 @@ bool Mario::checkVerticalPress(bool recursive) {
         goto Failure;
     }
 
-    TVec3f secondBase;
-    if (useHitPos) {
-        secondBase = hitPos;
-    } else {
-        secondBase = basePos;
-    }
-
-    if (MR::getFirstPolyOnLineToMap(&hitPos, &secondTriangle, secondBase - *firstTriangle.getNormal(0) * 10.0f,
-                                    *firstTriangle.getNormal(0) * checkDistance)) {
-        if (firstTriangle.mSensor == secondTriangle.mSensor) {
-            goto Failure;
+    {
+        TVec3f secondBase;
+        if (useHitPos) {
+            secondBase = hitPos;
+        } else {
+            secondBase = basePos;
         }
 
-        if (!MR::isSensorPressObj(firstTriangle.mSensor) && !MR::isSensorPressObj(secondTriangle.mSensor)) {
-            goto Failure;
-        }
-
-        if (!recursive && mActor->_390 == 0) {
-            if (!checkVerticalPress(true)) {
-                mVelocity.zero();
-                return false;
-            }
-
-            return true;
-        }
-
-        mActor->_3B4 = _368;
-        return true;
-    }
-
-    if (recursive || !MR::isSensorPressObj(firstTriangle.mSensor)) {
-        goto Failure;
-    }
-
-    mDrawStates._1E = true;
-
-    TVec3f pushVec;
-    if (hitDistance < 0.0f) {
-        pushVec = hitPos - basePos;
-        pushVec.setLength(checkDistance - hitDistance);
-    } else {
-        pushVec = basePos - hitPos;
-        pushVec.setLength(150.0f - hitDistance);
-    }
-
-    TVec3f pushDir;
-    bool hasPushDir = MR::vecBlendSphere(*firstTriangle.getNormal(0), *secondTriangle.getNormal(0), &pushDir, 0.5f);
-
-    if (mActor->_390 != 0) {
-        goto Failure;
-    }
-
-    if (mMovementStates._1) {
-        if (mGroundPolygon->mSensor == firstTriangle.mSensor) {
-            if (!hasPushDir) {
+        if (MR::getFirstPolyOnLineToMap(&hitPos, &secondTriangle, secondBase - *firstTriangle.getNormal(0) * 10.0f,
+                                        *firstTriangle.getNormal(0) * checkDistance)) {
+            if (firstTriangle.mSensor == secondTriangle.mSensor) {
                 goto Failure;
             }
 
-            push(pushDir * pushVec.length());
-        } else {
-            mActor->_F48 = firstTriangle.mSensor;
+            if (!MR::isSensorPressObj(firstTriangle.mSensor) && !MR::isSensorPressObj(secondTriangle.mSensor)) {
+                goto Failure;
+            }
+
+            if (!recursive && mActor->_390 == 0) {
+                if (!checkVerticalPress(true)) {
+                    mVelocity.zero();
+                    return false;
+                }
+
+                return true;
+            }
+
             mActor->_3B4 = _368;
             return true;
         }
-    } else if (hasPushDir) {
-        push(pushDir * pushVec.length());
+
+        if (recursive || !MR::isSensorPressObj(firstTriangle.mSensor)) {
+            goto Failure;
+        }
+
+        mDrawStates._1E = true;
+
+        TVec3f pushVec;
+        if (hitDistance < 0.0f) {
+            pushVec = hitPos - basePos;
+            pushVec.setLength(checkDistance - hitDistance);
+        } else {
+            pushVec = basePos - hitPos;
+            pushVec.setLength(150.0f - hitDistance);
+        }
+
+        TVec3f pushDir;
+        bool hasPushDir = MR::vecBlendSphere(*firstTriangle.getNormal(0), *secondTriangle.getNormal(0), &pushDir, 0.5f);
+
+        if (mActor->_390 != 0) {
+            goto Failure;
+        }
+
+        if (mMovementStates._1) {
+            if (mGroundPolygon->mSensor == firstTriangle.mSensor) {
+                if (!hasPushDir) {
+                    goto Failure;
+                }
+
+                push(pushDir * pushVec.length());
+            } else {
+                mActor->_F48 = firstTriangle.mSensor;
+                mActor->_3B4 = _368;
+                return true;
+            }
+        } else if (hasPushDir) {
+            push(pushDir * pushVec.length());
+        }
     }
 
 Failure:

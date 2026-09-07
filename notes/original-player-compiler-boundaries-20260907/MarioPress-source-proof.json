@@ -1,0 +1,33 @@
+{
+  "change": "Scope initialized locals after failure branches; native header-rename workaround limited to Wii compilation. Original control flow and checks unchanged.",
+  "reference_recovery_source": "Existing original MarioPress.cpp recovery and notes/mario-press-rmgk02-20260809T032036Z/README.md; now placed into the reference tree before native activation",
+  "paired_symbols": 84,
+  "changed_symbols": [],
+  "retail_functions": [
+    {
+      "name": "checkPressDamage__5MarioFv",
+      "score": 99.77528,
+      "retail_bytes": 712
+    },
+    {
+      "name": "checkVerticalPress__5MarioFb",
+      "score": 99.83209,
+      "retail_bytes": 1072
+    },
+    {
+      "name": "checkSidePressPre__5MarioFv",
+      "score": 99.89286,
+      "retail_bytes": 560
+    },
+    {
+      "name": "checkSidePress__5MarioFv",
+      "score": 99.61367,
+      "retail_bytes": 2692
+    },
+    {
+      "name": "__sinit_\\MarioPress_cpp",
+      "score": 100.0,
+      "retail_bytes": 108
+    }
+  ]
+}

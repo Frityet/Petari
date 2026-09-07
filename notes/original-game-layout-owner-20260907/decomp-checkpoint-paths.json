@@ -1,0 +1,13 @@
+[
+  "src/Game/Screen/CounterLayoutController.cpp",
+  "src/Game/Screen/NoteCounter.cpp",
+  "src/Game/Util/RumbleCalculator.cpp",
+  "src/Game/Screen/LayoutPaneCtrl.cpp",
+  "src/Game/Screen/SubMeterLayout.cpp",
+  "src/Game/Util/LayoutUtil.cpp",
+  "libs/nw4r/include/nw4r/math/types.h",
+  "include/Game/Screen/CoinCounter.hpp",
+  "include/Game/Screen/StarPieceCounter.hpp",
+  "include/Game/Screen/PlayerLeft.hpp",
+  "include/Game/Screen/StarCounter.hpp"
+]
