@@ -409,7 +409,7 @@ void XanimePlayer::updateBeforeMovement() {
         return;
     }
 
-    if ((_20->getState() & 1) == 1 && !_7E && (_20->getAttribute() == 0 || _20->getAttribute() == 3)) {
+    if ((_20->getState() & 1) == 1 && _7E && (_20->getAttribute() == 0 || _20->getAttribute() == 3)) {
         runDefaultAnimation();
     }
 
