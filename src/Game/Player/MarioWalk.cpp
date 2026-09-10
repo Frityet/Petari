@@ -543,8 +543,8 @@ void Mario::updateWalkSpeed() {
     }
 
     if (_404 != 0) {
-        f2 = mActor->getConst().getTable()->mSlowStartTime;
-        f2 /= (mActor->getConst().getTable()->mSlowStartTime - _404);
+        f2 = mActor->getConst().getTable()->mSlowStartTime - _404;
+        f2 /= mActor->getConst().getTable()->mSlowStartTime;
         _404--;
     }
 
