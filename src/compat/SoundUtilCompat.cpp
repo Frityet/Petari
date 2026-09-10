@@ -362,3 +362,9 @@ namespace MR {
         startCSSound2P("CS_DPD_HIT", nullptr);
     }
 }  // namespace MR
+
+namespace MR {
+    void limitedStarPieceHitSound() {
+        limitedSound("SE_OJ_STAR_PIECE_HIT_ENEMY", 1);
+    }
+}

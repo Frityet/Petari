@@ -2,6 +2,7 @@
 #include "compat/ResourceHolderCompat.hpp"
 #include "resource/BasResource.hpp"
 #include "resource/BtiTextureData.hpp"
+#include "camera/CameraAnimation.hpp"
 
 #include "Game/Animation/MaterialAnmBuffer.hpp"
 #include "Game/System/StationedFileInfo.hpp"
@@ -53,7 +54,7 @@ namespace smgpc::compat {
             s32 _count;
         };
 
-        enum class BackingKind { Raw, Animation, Model, Map, Bas, Texture };
+        enum class BackingKind { Raw, Animation, Model, Map, Bas, Texture, CameraAnimation };
         BackingKind backing_kind(std::string_view name) {
             // Same ordered, case-sensitive substring predicates as original
             // createAndRegisterObject. This selects storage, never table names.
@@ -65,6 +66,7 @@ namespace smgpc::compat {
             if (name.find(".banmt") != name.npos) return BackingKind::Map;
             if (name.find(".bdl") != name.npos || name.find(".bmd") != name.npos) return BackingKind::Model;
             if (name.ends_with(".bti")) return BackingKind::Texture;
+            if (name.ends_with(".canm")) return BackingKind::CameraAnimation;
             return BackingKind::Raw;
         }
     }
@@ -76,6 +78,7 @@ namespace smgpc::compat {
         std::unique_ptr<JKRMemArchive> archive;
         std::vector<resource::BasResource> bas_resources;
         std::vector<resource::BtiTextureData> textures;
+        std::vector<camera::NativeCameraAnimationData> camera_animations;
         std::vector<resource::JMapSourceRegistration> map_aliases;
         std::vector<resource::J3dAnimationResource> animations;
         std::vector<resource::J3dAnimationSourceRegistration> animation_aliases;
@@ -142,6 +145,15 @@ namespace smgpc::compat {
                 // share the same native record and unchanged resource size.
                 state.archive->mFiles[entry.file_entry_index].mFileData =
                     const_cast<ResTIMG*>(state.textures.back().image());
+                break;
+            case BackingKind::CameraAnimation:
+                if (bytes.empty()) break;
+                state.camera_animations.push_back(camera::CameraAnimation::from_bytes(bytes).native_data());
+                // Original CameraAnim borrows native scalar records directly.
+                // Publish once through the archive so every original lookup,
+                // including ActorCameraUtil and loadResourceFromArc, shares it.
+                state.archive->mFiles[entry.file_entry_index].mFileData =
+                    const_cast<std::uint8_t*>(state.camera_animations.back().bytes().data());
                 break;
             case BackingKind::Raw:
                 if (!bytes.empty()) state.map_aliases.push_back(resource::register_jmap_source(bytes, state.source));

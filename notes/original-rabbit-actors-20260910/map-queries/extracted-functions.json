@@ -1,0 +1,87 @@
+[
+  {
+    "name": "getStrikeInfoNumCategory",
+    "reference_line": 17,
+    "body_sha256": "676a022713aeac416f591dd2e7b57440ab6ba14e2858415f51eaff811b59dc5b"
+  },
+  {
+    "name": "getFirstPolyOnLineCategory",
+    "reference_line": 20,
+    "body_sha256": "ee83fddb9f2b6258543bdee75356c10f97a808d30dbd5b80f243ab2271be3e48"
+  },
+  {
+    "name": "getFirstPolyOnLineToMap",
+    "reference_line": 145,
+    "body_sha256": "0863923fc769876edb2b15e7aba3b8c3bfacb3f2fde99c372d90560535183b1f"
+  },
+  {
+    "name": "getFirstPolyOnLineToMap",
+    "reference_line": 154,
+    "body_sha256": "b31a8e6f061ccbb2ac9410eff5922334fcaa8698243a38b200236f2531594196"
+  },
+  {
+    "name": "getFirstPolyOnLineToWaterSurface",
+    "reference_line": 149,
+    "body_sha256": "48bbe693dd07fd66c6dc8d70ff1c906c27a9cddcd6d442ff9e5e7b03b85ec5f1"
+  },
+  {
+    "name": "getFirstPolyOnLineToWaterSurface",
+    "reference_line": 158,
+    "body_sha256": "5fce2ad77d6f4dc6009b1494bd9c03c0b6a884f102860d8d3b1b56805a108f24"
+  },
+  {
+    "name": "getNearPolyOnLineSort",
+    "reference_line": 163,
+    "body_sha256": "a70db0f3246b9e417e71a203407916adb4b51808b42e7c4d4aee5f9528c79ddc"
+  },
+  {
+    "name": "getSortedPoly",
+    "reference_line": 205,
+    "body_sha256": "d50251de740ead961609f04e27c71ee74bcd594954ec7d1356c89e91904801fe"
+  },
+  {
+    "name": "getSortedPoly",
+    "reference_line": 221,
+    "body_sha256": "cc5acca6522a8820d403af092432041702e3def81cef4192aaf06adffe281299"
+  },
+  {
+    "name": "isExistMapCollision",
+    "reference_line": 229,
+    "body_sha256": "d65c7517991c8ae24e114e798525d7bd1129bdf46b27bf6cb5d220958afc9c64"
+  },
+  {
+    "name": "isExistMoveLimitCollision",
+    "reference_line": 233,
+    "body_sha256": "ca411970cd5852931256eb61d7f3f5254bef0ea2fd8a682b17be56813f2c789d"
+  },
+  {
+    "name": "isExistMapCollisionExceptActor",
+    "reference_line": 237,
+    "body_sha256": "16efbef2f38a404181cea0c72e7f5da50e0c1dd5c9eb2ef7fe304ba7fda25a2b"
+  },
+  {
+    "name": "trySetMoveLimitCollision",
+    "reference_line": 281,
+    "body_sha256": "c2293a5b0ce854b8b2544bcfe628c36ed1f76b982f5125b580051e3008a65e6f"
+  },
+  {
+    "name": "checkStrikeLineToMap",
+    "reference_line": 601,
+    "body_sha256": "094148dc68a90f12aec264a2b9a8ab975f79270bf2e68290ed5abb11ecaa1b53"
+  },
+  {
+    "name": "checkStrikeLineToSunshade",
+    "reference_line": 606,
+    "body_sha256": "0d1587a1acf9255a78f044b32f87a241185d67b6744dfbc1788a1703941ab40f"
+  },
+  {
+    "name": "getStrikeInfoMap",
+    "reference_line": 611,
+    "body_sha256": "cddf85fa5f782330bac1bbcf4f25d303695f95cb0b3c41610a02279a4ff853b9"
+  },
+  {
+    "name": "getStrikeInfoNumMap",
+    "reference_line": 615,
+    "body_sha256": "0e88157e00d7651f0ad2769e03243906031a6736088b5fde12f7549e3689b970"
+  }
+]

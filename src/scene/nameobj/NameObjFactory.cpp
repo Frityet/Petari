@@ -16,10 +16,14 @@
 #include "Game/NameObj/NameObjArchiveListCollector.hpp"
 #include "Game/NameObj/NameObjFactory.hpp"
 #include "Game/NPC/DemoRabbit.hpp"
+#include "Game/NPC/RunawayTico.hpp"
+#include "Game/NPC/Tico.hpp"
 #include "Game/Util/FileUtil.hpp"
 #include "Game/Util/JMapInfo.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "compat/GlobalGravityOwnership.hpp"
+#include "compat/ActorRuntimeRegistry.hpp"
+#include <aurora/allocation.hpp>
 #include "scene/AreaObjRuntime.hpp"
 #include "scene/nameobj/PlanetMapCatalog.hpp"
 
@@ -252,6 +256,16 @@ namespace {
             nullptr,
         },
         NameObjFactory::Name2CreateFunc{
+            "Tico",
+            create_supported_name_obj<Tico>,
+            nullptr,
+        },
+        NameObjFactory::Name2CreateFunc{
+            "TicoBaby",
+            create_supported_name_obj<Tico>,
+            nullptr,
+        },
+        NameObjFactory::Name2CreateFunc{
             "GlobalCubeGravity",
             MR::createGlobalCubeGravityObj,
             nullptr,
@@ -310,6 +324,10 @@ namespace {
 
     constexpr auto cUnavailableCreatorTable = std::array{
         UnavailableCreatorRecord{
+            "RunawayRabbitCollect",
+            "original_game_scene_demo_sequence_runtime_unavailable",
+        },
+        UnavailableCreatorRecord{
             "SummerSky",
             "exact_space_inner_child_and_switch_runtime_unavailable",
         },
@@ -353,6 +371,14 @@ namespace {
         NameObjFactory::Name2MakeArchiveListFunc{
             "DemoRabbit",
             DemoRabbit::makeArchiveList,
+        },
+        NameObjFactory::Name2MakeArchiveListFunc{
+            "RunawayTico",
+            RunawayTico::makeArchiveList,
+        },
+        NameObjFactory::Name2MakeArchiveListFunc{
+            "Tico",
+            Tico::makeArchiveList,
         },
     };
 
@@ -632,13 +658,13 @@ namespace NameObjFactory {
             }
             pArchiveList->addArchive(archive.archive_name.data());
         }
-        if (creator_entry != nullptr) {
-            for (const auto &callback : cSupportedMakeArchiveListFuncTable) {
-                if (callback.mName != object_name) {
-                    continue;
-                }
-                callback.mArchiveFunc(pArchiveList, rIter);
+        // Retail archive callbacks also cover children constructed directly by
+        // their parent, for which the placement creator table has no entry.
+        for (const auto &callback : cSupportedMakeArchiveListFuncTable) {
+            if (callback.mName != object_name) {
+                continue;
             }
+            callback.mArchiveFunc(pArchiveList, rIter);
         }
     }
 
@@ -766,9 +792,20 @@ namespace smgpc::scene::nameobj {
                                      " (" + support.reason + ")");
         }
 
-        auto result = std::unique_ptr<NameObj>(creator(actor_name));
+        // Game constructors borrow their names, including aliases retained by
+        // child objects. Host-generated labels need storage before construction.
+        auto retained_name = std::shared_ptr<const std::string>{};
+        if (actor_name != nullptr) {
+            const aurora::allocation::HostAllocationScope host;
+            retained_name = std::make_shared<const std::string>(actor_name);
+        }
+        auto result = std::unique_ptr<NameObj>(creator(
+            retained_name != nullptr ? retained_name->c_str() : nullptr));
         if (result == nullptr) {
             aurora::throw_host_exception<std::runtime_error>("Retail NameObj creator returned null: " + object);
+        }
+        if (retained_name != nullptr) {
+            smgpc::compat::retain_name_obj_host_name(result.get(), std::move(retained_name));
         }
         if (auto *gravity = dynamic_cast<GlobalGravityObj *>(result.get());
             gravity != nullptr) {

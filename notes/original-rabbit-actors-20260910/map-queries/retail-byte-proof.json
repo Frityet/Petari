@@ -1,0 +1,41 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "functions": [
+    {
+      "symbol": "getStrikeInfoNumCategory__21@unnamed@MapUtil_cpp@Fl",
+      "address": "0x803e19d0",
+      "bytes": 60,
+      "matches_main_dol": true
+    },
+    {
+      "symbol": "getFirstPolyOnLineToMap__2MRFPQ29JGeometry8TVec3<f>P8TriangleRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+      "address": "0x803e1f00",
+      "bytes": 16,
+      "matches_main_dol": true
+    },
+    {
+      "symbol": "getFirstPolyOnLineToMap__2MRFPQ29JGeometry8TVec3<f>P8TriangleRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PC24CollisionPartsFilterBasePC18TriangleFilterBase",
+      "address": "0x803e207c",
+      "bytes": 20,
+      "matches_main_dol": true
+    },
+    {
+      "symbol": "checkStrikeLineToSunshade__9CollisionFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>lPC24CollisionPartsFilterBasePC18TriangleFilterBase",
+      "address": "0x803e3dc8",
+      "bytes": 100,
+      "matches_main_dol": true
+    },
+    {
+      "symbol": "getStrikeInfoMap__9CollisionFUl",
+      "address": "0x803e3e2c",
+      "bytes": 60,
+      "matches_main_dol": true
+    },
+    {
+      "symbol": "getStrikeInfoNumMap__9CollisionFv",
+      "address": "0x803e3e68",
+      "bytes": 8,
+      "matches_main_dol": true
+    }
+  ]
+}

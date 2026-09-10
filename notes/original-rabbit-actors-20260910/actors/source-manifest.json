@@ -1,0 +1,190 @@
+{
+  "imports": [
+    {
+      "reference": "decomp/src/Game/NPC/RunawayRabbit.cpp",
+      "native": "src/Game/NPC/RunawayRabbit.cpp",
+      "reference_sha256": "492571a8bc993a1b7f4b90bd14c1d2330c878ca468aac34e860afa8c3c0a78f1",
+      "native_exists": false,
+      "native_sha256": "492571a8bc993a1b7f4b90bd14c1d2330c878ca468aac34e860afa8c3c0a78f1",
+      "matches_reference": true
+    },
+    {
+      "reference": "decomp/include/Game/NPC/RunawayRabbit.hpp",
+      "native": "src/Game/NPC/RunawayRabbit.hpp",
+      "reference_sha256": "8f1bb6705e70da5a8c156fa513e7f52edaefd4a7f98e3e2f9b8d8adbeb429af1",
+      "native_exists": false,
+      "native_sha256": "8f1bb6705e70da5a8c156fa513e7f52edaefd4a7f98e3e2f9b8d8adbeb429af1",
+      "matches_reference": true
+    },
+    {
+      "reference": "decomp/src/Game/NPC/RunawayRabbitCollect.cpp",
+      "native": "src/Game/NPC/RunawayRabbitCollect.cpp",
+      "reference_sha256": "8bc4c6ea2dafb108bb1036ce44bdea5f80a180c74ccb8098d22eba51bb57375b",
+      "native_exists": false,
+      "native_sha256": "8bc4c6ea2dafb108bb1036ce44bdea5f80a180c74ccb8098d22eba51bb57375b",
+      "matches_reference": true
+    },
+    {
+      "reference": "decomp/include/Game/NPC/RunawayRabbitCollect.hpp",
+      "native": "src/Game/NPC/RunawayRabbitCollect.hpp",
+      "reference_sha256": "6241916e50d1bcb1c1474cb7af7affe727cd755f04d8dfd4ee83d1715c128db8",
+      "native_exists": false,
+      "native_sha256": "6241916e50d1bcb1c1474cb7af7affe727cd755f04d8dfd4ee83d1715c128db8",
+      "matches_reference": true
+    },
+    {
+      "reference": "decomp/src/Game/NPC/RunawayTico.cpp",
+      "native": "src/Game/NPC/RunawayTico.cpp",
+      "reference_sha256": "9b9c13699ae9539cd4c1e55f6270ce3827696c32ac2fe532d2077dce693f2d39",
+      "native_exists": false,
+      "native_sha256": "9b9c13699ae9539cd4c1e55f6270ce3827696c32ac2fe532d2077dce693f2d39",
+      "matches_reference": true
+    },
+    {
+      "reference": "decomp/include/Game/NPC/RunawayTico.hpp",
+      "native": "src/Game/NPC/RunawayTico.hpp",
+      "reference_sha256": "0f3f0ffe4ad55e0ce467da93362a15a7f9762ee655847e2aa222f145025e1c21",
+      "native_exists": false,
+      "native_sha256": "0f3f0ffe4ad55e0ce467da93362a15a7f9762ee655847e2aa222f145025e1c21",
+      "matches_reference": true
+    },
+    {
+      "reference": "decomp/src/Game/NPC/Tico.cpp",
+      "native": "src/Game/NPC/Tico.cpp",
+      "reference_sha256": "65eb6d37145e538ef89f617896df99ac2b09aac06b9d3bdeec1c11f67e7977fd",
+      "native_exists": false,
+      "native_sha256": "65eb6d37145e538ef89f617896df99ac2b09aac06b9d3bdeec1c11f67e7977fd",
+      "matches_reference": true
+    },
+    {
+      "reference": "decomp/include/Game/NPC/Tico.hpp",
+      "native": "src/Game/NPC/Tico.hpp",
+      "reference_sha256": "513c6d6efb109de52f8bb4f56cad2e09b19a7016923d062ce59ba58a186b5fdd",
+      "native_exists": false,
+      "native_sha256": "513c6d6efb109de52f8bb4f56cad2e09b19a7016923d062ce59ba58a186b5fdd",
+      "matches_reference": true
+    },
+    {
+      "reference": "decomp/src/Game/NPC/TicoDemoGetPower.cpp",
+      "native": "src/Game/NPC/TicoDemoGetPower.cpp",
+      "reference_sha256": "4ed5231bd79f6d1a14d7cee58caa9fbadb39f26d4cc3d33349b4e5a8c9e12688",
+      "native_exists": false,
+      "native_sha256": "4ed5231bd79f6d1a14d7cee58caa9fbadb39f26d4cc3d33349b4e5a8c9e12688",
+      "matches_reference": true
+    },
+    {
+      "reference": "decomp/include/Game/NPC/TicoDemoGetPower.hpp",
+      "native": "src/Game/NPC/TicoDemoGetPower.hpp",
+      "reference_sha256": "2693af4b249b1fa5ada69934eb4b504037e632bec7c5e7e48b0cc431b4ca17e4",
+      "native_exists": false,
+      "native_sha256": "2693af4b249b1fa5ada69934eb4b504037e632bec7c5e7e48b0cc431b4ca17e4",
+      "matches_reference": true
+    },
+    {
+      "reference": "decomp/src/Game/NPC/TrickRabbitUtil.cpp",
+      "native": "src/Game/NPC/TrickRabbitUtil.cpp",
+      "reference_sha256": "bc0e6e6bdd97b85570dc6f668d49893bc2216023b98a77a1db8954010fff18c3",
+      "native_exists": false,
+      "native_sha256": "bc0e6e6bdd97b85570dc6f668d49893bc2216023b98a77a1db8954010fff18c3",
+      "matches_reference": true
+    },
+    {
+      "reference": "decomp/include/Game/NPC/TrickRabbitUtil.hpp",
+      "native": "src/Game/NPC/TrickRabbitUtil.hpp",
+      "reference_sha256": "416682f13df49af033f6dc6da893263de7efb01c66c5715769772746c0063b92",
+      "native_exists": false,
+      "native_sha256": "416682f13df49af033f6dc6da893263de7efb01c66c5715769772746c0063b92",
+      "matches_reference": true
+    },
+    {
+      "reference": "decomp/src/Game/Enemy/WalkerStateRunaway.cpp",
+      "native": "src/Game/Enemy/WalkerStateRunaway.cpp",
+      "reference_sha256": "b70dd985cf2e5c9b637b6f5c5dded77380606711dac1680b10590383aff936a7",
+      "native_exists": false,
+      "native_sha256": "b70dd985cf2e5c9b637b6f5c5dded77380606711dac1680b10590383aff936a7",
+      "matches_reference": true
+    },
+    {
+      "reference": "decomp/include/Game/Enemy/WalkerStateRunaway.hpp",
+      "native": "src/Game/Enemy/WalkerStateRunaway.hpp",
+      "reference_sha256": "541e892c513ad2e6370beee118dbceb9fd05ac1e3aebfbeded3a97eb48ff7e91",
+      "native_exists": false,
+      "native_sha256": "541e892c513ad2e6370beee118dbceb9fd05ac1e3aebfbeded3a97eb48ff7e91",
+      "matches_reference": true
+    },
+    {
+      "reference": "decomp/src/Game/Enemy/WalkerStateBlowDamage.cpp",
+      "native": "src/Game/Enemy/WalkerStateBlowDamage.cpp",
+      "reference_sha256": "4db6b65c64b4f1e3aa254f23396b0e65f8127b1cb7c059b40653e4509814ab99",
+      "native_exists": false,
+      "native_sha256": "4db6b65c64b4f1e3aa254f23396b0e65f8127b1cb7c059b40653e4509814ab99",
+      "matches_reference": true
+    },
+    {
+      "reference": "decomp/include/Game/Enemy/WalkerStateBlowDamage.hpp",
+      "native": "src/Game/Enemy/WalkerStateBlowDamage.hpp",
+      "reference_sha256": "d8b7f6f3dc200e737bc5c74a70681e865ff004c921d504434180dd992a2880bb",
+      "native_exists": false,
+      "native_sha256": "d8b7f6f3dc200e737bc5c74a70681e865ff004c921d504434180dd992a2880bb",
+      "matches_reference": true
+    },
+    {
+      "reference": "decomp/src/Game/LiveActor/SpotMarkLight.cpp",
+      "native": "src/Game/LiveActor/SpotMarkLight.cpp",
+      "reference_sha256": "62a5adfe3c7c463fde4722f058f6976140bde6f4dd77847e5147a0b1e4493587",
+      "native_exists": false,
+      "native_sha256": "62a5adfe3c7c463fde4722f058f6976140bde6f4dd77847e5147a0b1e4493587",
+      "matches_reference": true
+    },
+    {
+      "reference": "decomp/include/Game/LiveActor/SpotMarkLight.hpp",
+      "native": "src/Game/LiveActor/SpotMarkLight.hpp",
+      "reference_sha256": "faef155fe4a0a54f3588bbd94f55fb3546ffa390ff5e5a9477830c930624829e",
+      "native_exists": false,
+      "native_sha256": "faef155fe4a0a54f3588bbd94f55fb3546ffa390ff5e5a9477830c930624829e",
+      "matches_reference": true
+    },
+    {
+      "reference": "decomp/src/Game/Util/ActorStateUtil.cpp",
+      "native": "src/Game/Util/ActorStateUtil.cpp",
+      "reference_sha256": "0f3d43df1093f8d3c64fd81c183bc67d7e0dbf9ff77596ddfbc26098d78da2ec",
+      "native_exists": false,
+      "native_sha256": "0f3d43df1093f8d3c64fd81c183bc67d7e0dbf9ff77596ddfbc26098d78da2ec",
+      "matches_reference": true
+    },
+    {
+      "reference": "decomp/include/Game/Util/ActorStateUtil.hpp",
+      "native": "src/Game/Util/ActorStateUtil.hpp",
+      "reference_sha256": "e62284aa108611b0579ee23926501fd6251db4d553438d407cf7d38acfbb4e4c",
+      "native_exists": false,
+      "native_sha256": "e62284aa108611b0579ee23926501fd6251db4d553438d407cf7d38acfbb4e4c",
+      "matches_reference": true
+    },
+    {
+      "reference": "decomp/src/Game/Demo/AstroDemoFunction.cpp",
+      "native": "src/Game/Demo/AstroDemoFunction.cpp",
+      "reference_sha256": "596ebe5c6b56f77c8bdaa5bce233ea4a2ecf98e7033632cc10c50ccb20aae700",
+      "native_exists": false,
+      "native_sha256": "596ebe5c6b56f77c8bdaa5bce233ea4a2ecf98e7033632cc10c50ccb20aae700",
+      "matches_reference": true
+    },
+    {
+      "reference": "decomp/include/Game/Demo/AstroDemoFunction.hpp",
+      "native": "src/Game/Demo/AstroDemoFunction.hpp",
+      "reference_sha256": "18cff24decbdaf821822db849fd0b132a4c7df9f81b886ba23101b41262b078d",
+      "native_exists": false,
+      "native_sha256": "18cff24decbdaf821822db849fd0b132a4c7df9f81b886ba23101b41262b078d",
+      "matches_reference": true
+    }
+  ],
+  "shared_changes": [
+    {
+      "path": "src/Game/Util.hpp",
+      "sha256": "029db7f653a94625f2c3e663e91112f7accddf0c4812b63185a316784e0dd8c8"
+    },
+    {
+      "path": "src/Game/LiveActor/Nerve.hpp",
+      "sha256": "20698ac44be7d0cdc814186764470b4e2044a48abbc0d6b48fc04c08cb4748d7"
+    }
+  ]
+}

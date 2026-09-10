@@ -1,0 +1,19 @@
+# Original map line queries and shared hit storage
+
+The active query cohort is frozen. `OriginalMapQueries.cpp` now contains 17 exact reference bodies: two private category helpers; both Map and Water first-hit overloads; the near-sorted query and two sorted-result accessors; three boolean line checks; the existing movement-limit helper; and four Collision line/result forwards. `extracted-functions.json` records every source line and function-body hash.
+
+`GameMapCollisionCompat.cpp` no longer implements host line sorting, nearest-hit selection, or line-result publication. Its private first-line helper delegates to the original Map overload for the remaining unrecovered normal/fast query wrappers. Thirteen public duplicate providers and three obsolete private storage/query helpers were removed. The TLS vector and separate TLS sorted snapshot are gone; the original static HitInfo sort buffer and sorting behavior are restored, including retaining the prior sorted result on a query with no hits.
+
+Map lines, first/sorted queries, and remaining point/sphere queries now share the actual category-0 keeper's `mHitInfoArray` and `_10`. The existing native sphere/contact algorithms still compute contacts through StageCollisionService, then write those actual original fields. Collision result accessors read that owner. Sunshade line queries write only category 1; they no longer overwrite Map's result buffer. There is no shadow hit-count state or copied second line buffer. Water first-hit queries use category 2 and the original post-query triangle-filter order. Water-bound predicate methods were not added or changed.
+
+## Reference recovery and proof
+
+Six tiny missing reference entry points were needed: the two Map first-line forwards, the category count helper, and the Collision Sunshade/result/count forwards. Their retail assembly totals 264 bytes and was compared directly with main.dol (`retail-byte-proof.json`, `forwarders-retail.s`). Four public forwarding methods match 100% on the first Wii comparison. The compiler inlined the category count helper into getStrikeInfoNumMap, so the latter has a 0% instruction-shape score and the helper no standalone candidate symbol; the recovered expression still performs the exact category-0 `_10` load. No compiler-only tuning or repeated proof runs were performed for those two simple bodies. The full reference TU compiles successfully (`wii-proof.json`).
+
+Both active native compat TUs compile successfully (`native-compile.json`). Full `src/Game/Util/MapUtil.cpp` now mirrors the reference byte-for-byte, SHA256 `c0a8a6abb28048fdf69f21b1f2aae2233a5a7ac1c8a3d63b3241b4f0b6609a73`, but its build exclusion remains unchanged. Active providers are the selective exact source extraction, avoiding duplicated symbols. `source-manifest.json` records all four changed paths and hashes.
+
+Parent owns the combined link and gameplay validation. No Xmake, benchmark, new tests, or commits were run here. Any fixture that previously supplied only a synthetic StageCollisionService now also needs the actual scene CollisionDirector owner. The original result accessor assumes a valid hit index, and the original line capacity contract replaces the old host-only range exception; tests should respect original preconditions rather than call invalid original inputs.
+
+## Remaining original-source work
+
+The existing first-normal, fast-line, and camera-fast wrappers are still native compatibility because their original reference bodies remain missing; their underlying first-hit query now uses the original Map routine. Sphere/point collision algorithms remain native while publishing through original storage. Their complete original class methods are a separate future recovery, not claimed as part of this line-query migration. No change to the original sensor-exclusion semantics of those unrecovered wrappers was attempted in this bounded task.

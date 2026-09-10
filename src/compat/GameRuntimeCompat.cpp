@@ -83,22 +83,6 @@ namespace MR {
         }
     }
 
-    MsgSharedGroup* joinToGroupArray(LiveActor* pActor, const JMapInfoIter& rIter, const char*, s32) {
-        if (pActor == nullptr) {
-            aurora::throw_host_exception<std::invalid_argument>("LiveActorGroupArray registration requires a LiveActor.");
-        }
-        if (!rIter.isValid()) {
-            return nullptr;
-        }
-
-        auto group_id = s32{-1};
-        if (!MR::getJMapInfoGroupID(rIter, &group_id) || group_id < 0) {
-            return nullptr;
-        }
-        aurora::throw_host_exception<std::logic_error>(
-            "LiveActorGroupArray registration is unavailable without the real scene-owned group manager.");
-    }
-
     bool tryRumblePad(const void* pSource, const char* pPatternName, s32 channel) {
         if (pPatternName == nullptr) {
             return false;

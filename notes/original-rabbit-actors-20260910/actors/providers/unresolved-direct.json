@@ -1,0 +1,50 @@
+[
+  {
+    "mangled": "__ZN2MR22onCalcShadowOneTimeAllEP9LiveActor",
+    "name": "MR::onCalcShadowOneTimeAll(LiveActor*)"
+  },
+  {
+    "mangled": "__ZN2MR24createPowerStarDemoModelEPK7NameObjPKcPA4_f",
+    "name": "MR::createPowerStarDemoModel(NameObj const*, char const*, float (*) [4])"
+  },
+  {
+    "mangled": "__ZN2MR24isEndPowerStarAppearDemoEPK7NameObj",
+    "name": "MR::isEndPowerStarAppearDemo(NameObj const*)"
+  },
+  {
+    "mangled": "__ZN2MR34appearPowerStarContinueCurrentDemoEPK7NameObjRKN9JGeometry5TVec3IfEE",
+    "name": "MR::appearPowerStarContinueCurrentDemo(NameObj const*, JGeometry::TVec3<float> const&)"
+  },
+  {
+    "mangled": "__ZN2MR9isInWaterEPK9LiveActorRKN9JGeometry5TVec3IfEE",
+    "name": "MR::isInWater(LiveActor const*, JGeometry::TVec3<float> const&)"
+  },
+  {
+    "mangled": "__ZTISt11logic_error",
+    "name": "typeinfo for std::logic_error"
+  },
+  {
+    "mangled": "__ZTISt12length_error",
+    "name": "typeinfo for std::length_error"
+  },
+  {
+    "mangled": "__ZTISt12out_of_range",
+    "name": "typeinfo for std::out_of_range"
+  },
+  {
+    "mangled": "__ZTISt16invalid_argument",
+    "name": "typeinfo for std::invalid_argument"
+  },
+  {
+    "mangled": "__ZTVSt12length_error",
+    "name": "vtable for std::length_error"
+  },
+  {
+    "mangled": "__ZTVSt12out_of_range",
+    "name": "vtable for std::out_of_range"
+  },
+  {
+    "mangled": "__ZTVSt16invalid_argument",
+    "name": "vtable for std::invalid_argument"
+  }
+]

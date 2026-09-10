@@ -26,9 +26,13 @@ namespace {
         if (pActor == nullptr || pSubName == nullptr) {
             aurora::throw_host_exception<std::invalid_argument>("A LOD object name requires an actor and submodel name.");
         }
-        const auto length = std::strlen(pActor->getName()) + std::strlen(pSubName) + std::strlen("（）") + 1U;
+        // Actor and submodel names already carry Game's CP932 identity bytes.
+        // Keep the original fullwidth parentheses in that same encoding.
+        constexpr char brackets[] = "\x81\x69\x81\x6a";
+        constexpr char format[] = "%s\x81\x69%s\x81\x6a";
+        const auto length = std::strlen(pActor->getName()) + std::strlen(pSubName) + std::strlen(brackets) + 1U;
         auto* name = new char[length];
-        std::snprintf(name, length, "%s（%s）", pActor->getName(), pSubName);
+        std::snprintf(name, length, format, pActor->getName(), pSubName);
         return name;
     }
 

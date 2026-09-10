@@ -3,6 +3,8 @@
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/NPC/NPCActor.hpp"
 #include "Game/Util/ActorMovementUtil.hpp"
+#include "Game/Util/ActorShadowUtil.hpp"
+#include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/JointUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
@@ -16,6 +18,8 @@
 #include "Game/Util/ScreenUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
+#include "Game/Util/TalkUtil.hpp"
+#include <JSystem/JMath/JMATrigonometric.hpp>
 #include <JSystem/J3DGraphAnimator/J3DAnimation.hpp>
 
 namespace {
@@ -57,6 +61,16 @@ namespace MR {
         }
     }
 
+    void setNPCActorPos(NPCActor* pActor, const char* pName) {
+        TPos3f mtx;
+        mtx.identity();
+        findNamePos(pName, mtx.toMtxPtr());
+        pActor->setBaseMtx(mtx);
+        mtx.getTrans(pActor->mPosition);
+        resetPosition(pActor);
+        onCalcShadowOneTimeAll(pActor);
+    }
+
     void followRailPose(NPCActor* pActor, f32 frontRate, f32 positionRate) {
         const TVec3f& position = getRailPos(pActor);
         const TVec3f& front = getRailDirection(pActor);
@@ -80,6 +94,33 @@ namespace MR {
         decidePose(pActor, -gravity, front, position, 1.0f, frontRate, 1.0f);
     }
 #pragma dont_inline reset
+
+    void startNPCTalkCamera(const TalkMessageCtrl* pTalkCtrl, MtxPtr pActorMtx, f32 scale, s32 frame) {
+        startNPCTalkCamera(pTalkCtrl, pActorMtx, getPlayerBaseMtx(), scale, frame);
+    }
+
+    void startNPCTalkCamera(const TalkMessageCtrl* pTalkCtrl, MtxPtr pActorMtx, MtxPtr pPlayerMtx, f32 scale, s32 frame) {
+        TVec3f offset(getMessageBalloonFollowOffset(pTalkCtrl));
+        if (getMessageBalloonFollowMatrix(pTalkCtrl) != nullptr) {
+            pActorMtx = getMessageBalloonFollowMatrix(pTalkCtrl);
+        }
+
+        TVec3f up(pPlayerMtx[0][1], pPlayerMtx[1][1], pPlayerMtx[2][1]);
+        TVec3f position(pActorMtx[0][3], pActorMtx[1][3], pActorMtx[2][3]);
+        TVec3f playerPosition(pPlayerMtx[0][3], pPlayerMtx[1][3], pPlayerMtx[2][3]);
+        if (normalizeOrZero(&up)) {
+            up.set(0.0f, 1.0f, 0.0f);
+        }
+
+        f32 distance = PSVECDistance(&playerPosition, &position);
+        f32 angle = JMAATan2(1.0f, JMACosDegree(67.5f));
+        TVec3f horizontal;
+        f32 height = vecKillElement(position - playerPosition, up, &horizontal);
+        f32 distanceRate = max(((height + offset.y) / distance) / 0.75f, 1.0f);
+        f32 axisX = height / 6.0f + offset.y;
+        f32 axisY = max(2.0f * (distance * angle * distanceRate) * scale, 450.0f);
+        startTalkCamera(position, up, axisX, axisY, frame);
+    }
 
     bool isActionLoopedOrStopped(const LiveActor* pActor) {
         if (getBckCtrl(pActor)->getAttribute() == 0) {
@@ -198,6 +239,19 @@ namespace MR {
         return tryStartAction(pActor, pActionName);
     }
 
+    bool tryStartMoveTurnAction(NPCActor* pActor) {
+        if (!isExistRail(pActor)) {
+            return tryStartTurnAction(pActor);
+        }
+
+        startMoveAction(pActor);
+        if (isNullOrEmptyString(pActor->_11C)) {
+            return false;
+        }
+
+        return tryStartAction(pActor, pActor->_11C);
+    }
+
     bool tryStartReaction(NPCActor* pActor) {
         const char* pActionName = nullptr;
         bool started = false;
@@ -249,9 +303,19 @@ namespace MR {
         return tryTalkNearPlayer(pActor->mMsgCtrl);
     }
 
+    bool tryTalkNearPlayerAtEndAndStartTalkAction(NPCActor* pActor) {
+        tryStartTalkAction(pActor);
+        return tryTalkNearPlayerAtEnd(pActor->mMsgCtrl);
+    }
+
     bool tryTalkNearPlayerAtEndAndStartMoveTalkAction(NPCActor* pActor) {
         tryStartMoveTalkAction(pActor);
         return tryTalkNearPlayerAtEnd(pActor->mMsgCtrl);
+    }
+
+    bool tryTalkForceAndStartMoveTalkAction(NPCActor* pActor) {
+        tryStartMoveTalkAction(pActor);
+        return tryTalkForce(pActor->mMsgCtrl);
     }
 
     bool tryStartReactionAndPushNerve(NPCActor* pActor, const Nerve* pNerve) {

@@ -1,0 +1,5 @@
+breakpoint set --file TextEncoding.cpp --line 275
+run
+thread backtrace -c 22
+frame variable text
+quit

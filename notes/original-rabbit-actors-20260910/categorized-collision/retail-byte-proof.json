@@ -1,0 +1,8 @@
+{
+  "symbol": "checkStrikeLine__26CollisionCategorizedKeeperFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>lPC24CollisionPartsFilterBasePC18TriangleFilterBase",
+  "address": "0x8017446c",
+  "bytes": 700,
+  "matches_main_dol": true,
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "function_sha256": "517308bbcd46b3f9d7bfa789fbec489fec08edd4775cf70f2fe38c4868b5b789"
+}

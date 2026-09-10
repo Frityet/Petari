@@ -1,0 +1,20 @@
+{
+  "sources": {
+    "src/Game/NameObj/MovementOnOffGroupHolder.cpp": "35bc7859ae649eec09563e7148534b4e8aee200a0b9bba118b3b1370dd752b1c",
+    "src/Game/NameObj/MovementOnOffGroupHolder.hpp": "d6d08f08c7e1a76d4991cbd32cce4d6c2348ef4f2a044a7639bfafff802c8e7d",
+    "src/Game/NPC/NPCDirector.cpp": "a26859efb5b1c46924d4d49ab4eeceae08b411426b09d906a24451995ba2dbda",
+    "src/Game/NPC/NPCDirector.hpp": "ad4ab10c9cf0c8fb067362be1d50ec29fd239a83f7f54c25bb22e560161a4979",
+    "src/Game/NPC/NPCParameter.cpp": "9b75233059adee7c800ecae3da8251bd939b7a60f8e2d1106b9b36f6d0b2c764",
+    "src/Game/NPC/NPCParameter.hpp": "9bb23087adfeacb6146766775bc25e87c6a1fa969463355528a42811731a1128",
+    "src/compat/SceneInitializationCompat.cpp": "8c7842b1b9d196e71d06abbd4bbc43fd8f26909e5f2a484211ca6ba92908bccf",
+    "src/compat/SceneObjHolderCompat.cpp": "530ce71c43437e2afd8996687a5c648496c9b899d7d74b13315f180d5b6c5dc9"
+  },
+  "reference_equality": {
+    "src/Game/NameObj/MovementOnOffGroupHolder.cpp": true,
+    "src/Game/NameObj/MovementOnOffGroupHolder.hpp": true,
+    "src/Game/NPC/NPCDirector.cpp": true,
+    "src/Game/NPC/NPCDirector.hpp": true,
+    "src/Game/NPC/NPCParameter.cpp": true,
+    "src/Game/NPC/NPCParameter.hpp": true
+  }
+}

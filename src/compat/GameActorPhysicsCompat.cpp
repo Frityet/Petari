@@ -20,6 +20,7 @@
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/ShadowController.hpp"
 #include "Game/Util/MtxUtil.hpp"
+#include "Game/Util/JointUtil.hpp"
 #include "compat/ActorMotionCompat.hpp"
 #include "compat/ActorPhysicsRuntime.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
@@ -459,6 +460,12 @@ namespace MR {
         });
     }
 
+    void onCalcShadowOneTimeAll(LiveActor *actor) {
+        for_each_shadow_controller(actor, nullptr, [](auto &controller) {
+            controller.onCalcCollisionOneTime();
+        });
+    }
+
     void onCalcShadowOneTime(LiveActor *actor, const char *name) {
         for_each_shadow_controller(actor, name, [](auto &controller) {
             controller.onCalcCollisionOneTime();
@@ -518,3 +525,25 @@ namespace MR {
         throw_game_scene_layout_unavailable();
     }
 }  // namespace MR
+
+namespace MR {
+    void setShadowDropPositionMtxPtr(LiveActor* actor, const char* name, MtxPtr matrix, const TVec3f& position) {
+        require_shadow_controller(actor, name).setDropPosMtxPtr(matrix, position);
+    }
+
+    void setShadowDropPositionAtJoint(LiveActor* pActor, const char* pName1, const char* pName2, const TVec3f& rPos) {
+        setShadowDropPositionMtxPtr(pActor, pName1, getJointMtx(pActor, pName2), rPos);
+    }
+
+    bool isBindedGroundWater(const LiveActor* pActor) {
+        if (pActor->mBinder == nullptr) {
+            return false;
+        }
+
+        if (!pActor->mBinder->isBindedGround()) {
+            return false;
+        }
+
+        return isGroundCodeWaterIter(pActor->mBinder->mGroundInfo.mParentTriangle.getAttributes());
+    }
+}

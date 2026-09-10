@@ -7,8 +7,8 @@
 #include "Game/Util/TriangleFilter.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "compat/HitInfoCompat.hpp"
-#include "compat/CollisionDirectorOwnership.hpp"
-#include "scene/SceneObjHolderRuntime.hpp"
+#include "Game/Map/CollisionCategorizedKeeper.hpp"
+#include "Game/Map/CollisionDirector.hpp"
 #include "Game/Util/CollisionPartsFilter.hpp"
 #include "scene/StageCollisionService.hpp"
 #include "aurora/allocation.hpp"
@@ -19,7 +19,6 @@
 #include <cstring>
 #include <stdexcept>
 #include <string_view>
-#include <vector>
 
 namespace MR {
     u32 createAreaPolygonList(Triangle* triangles, u32 maximum, const TVec3f& point_a, const TVec3f& point_b) {
@@ -114,37 +113,7 @@ namespace {
     [[nodiscard]] bool first_line_hit(TVec3f* position, Triangle* triangle, const TVec3f& start,
                                       const TVec3f& offset, const CollisionPartsFilterBase* parts_filter,
                                       const TriangleFilterBase* triangle_filter) {
-        const auto& collision = require_stage_collision();
-        const auto filter = make_query_filter(collision, parts_filter, triangle_filter);
-        auto hit = smgpc::scene::StageCollisionHit{};
-        if (!collision.line_cast(start, offset, &hit, filter)) {
-            return false;
-        }
-
-        const auto candidate = smgpc::compat::make_collision_triangle(collision, hit.triangle_index);
-        if (position != nullptr) {
-            position->set(hit.position);
-        }
-        if (triangle != nullptr) {
-            *triangle = candidate;
-        }
-        return true;
-    }
-
-    [[nodiscard]] std::vector<HitInfo>& strike_infos() {
-        static thread_local auto infos = std::vector<HitInfo>{};
-        return infos;
-    }
-
-    struct SortedLineHits {
-        std::array<Triangle, cMaximumStrikeInfos> triangles{};
-        std::array<TVec3f, cMaximumStrikeInfos> positions{};
-        u32 count = 0U;
-    };
-
-    [[nodiscard]] SortedLineHits& sorted_line_hits() {
-        static thread_local SortedLineHits hits;
-        return hits;
+        return MR::getFirstPolyOnLineToMap(position, triangle, start, offset, parts_filter, triangle_filter);
     }
 
     [[nodiscard]] s32 store_sphere_contacts(const TVec3f& center, float radius,
@@ -159,38 +128,12 @@ namespace {
                             : collision.sphere_contacts_with_thickness(
                                   center, radius, *thickness, cMaximumStrikeInfos, filter);
 
-        auto& infos = strike_infos();
-        infos.clear();
-        infos.reserve(contacts.size());
+        auto* keeper = MR::getCollisionDirector()->getCategoryKeeper(0);
+        keeper->_10 = 0;
         for (const auto& contact : contacts) {
-            infos.push_back(make_hit_info(contact));
+            keeper->mHitInfoArray[keeper->_10++] = make_hit_info(contact);
         }
-        return static_cast<s32>(infos.size());
-    }
-
-    s32 store_line_hits(const smgpc::scene::StageCollisionService& collision, const TVec3f& start, const TVec3f& offset, s32 maximum,
-                        const CollisionPartsFilterBase* parts_filter, const TriangleFilterBase* triangle_filter) {
-        const aurora::allocation::HostAllocationScope host_allocations;
-        if (maximum < 0 || maximum > static_cast<s32>(cMaximumStrikeInfos)) {
-            aurora::throw_host_exception<std::invalid_argument>("Line strike queries exceed the original 32-hit storage.");
-        }
-        const auto filter = make_query_filter(collision, parts_filter, triangle_filter);
-        const auto hits = collision.line_hits(start, offset,
-            maximum == 0 ? cMaximumStrikeInfos : static_cast<std::size_t>(maximum), filter);
-        auto& infos = strike_infos();
-        infos.clear();
-        infos.reserve(hits.size());
-        const auto length = PSVECMag(&offset);
-        for (const auto& hit : hits) {
-            auto& info = infos.emplace_back();
-            info.mParentTriangle = smgpc::compat::make_collision_triangle(collision, hit.triangle_index);
-            info._60 = length * hit.fraction;
-            info.mHitPos = hit.position;
-            // Retail checkArrow's all-hit branch does not write the flag
-            // array consumed by CollisionParts. Retain the native HitInfo
-            // constructor's initialized value for those unspecified bytes.
-        }
-        return static_cast<s32>(infos.size());
+        return keeper->_10;
     }
 
     template <std::size_t Size>
@@ -235,64 +178,6 @@ namespace {
 }  // namespace
 
 namespace MR {
-    u32 getNearPolyOnLineSort(const TVec3f& reference, const TVec3f& start, const TVec3f& offset,
-                              const HitSensor* except_sensor) {
-        const aurora::allocation::HostAllocationScope host_allocations;
-        const auto hit_count = Collision::checkStrikeLineToMap(start, offset, 0, nullptr, nullptr);
-        const auto& hits = strike_infos();
-        // The original early return deliberately retains the previous sorted buffer.
-        if (hit_count == 0) {
-            return 0U;
-        }
-        auto candidates = std::array<bool, cMaximumStrikeInfos>{};
-        auto excluded = u32{};
-        for (std::size_t i = 0U; i < hits.size(); ++i) {
-            candidates[i] = except_sensor == nullptr || hits[i].mParentTriangle.mSensor != except_sensor;
-            excluded += !candidates[i];
-        }
-        auto& sorted = sorted_line_hits();
-        sorted.count = static_cast<u32>(hits.size()) - excluded;
-        for (u32 i = 0U; i < sorted.count; ++i) {
-            auto nearest_distance = 1000000.0F;
-            auto nearest_index = std::size_t{};
-            for (std::size_t j = 0U; j < hits.size(); ++j) {
-                if (!candidates[j]) {
-                    continue;
-                }
-                TVec3f difference = reference;
-                difference.sub(hits[j].mHitPos);
-                const auto distance = PSVECMag(&difference);
-                if (nearest_distance > distance) {
-                    nearest_distance = distance;
-                    nearest_index = j;
-                }
-            }
-            const auto& hit = hits[nearest_index];
-            sorted.triangles[i] = hit.mParentTriangle;
-            sorted.positions[i] = hit.mHitPos;
-            candidates[nearest_index] = false;
-        }
-        return sorted.count;
-    }
-
-    bool getSortedPoly(TVec3f* position, Triangle* triangle, u32 index) {
-        const auto& sorted = sorted_line_hits();
-        if (sorted.count <= index) {
-            return false;
-        }
-        if (triangle != nullptr) {
-            *triangle = sorted.triangles[index];
-        }
-        if (position != nullptr) {
-            *position = sorted.positions[index];
-        }
-        return true;
-    }
-
-    const Triangle* getSortedPoly(u32 index) {
-        const auto& sorted = sorted_line_hits();
-        return sorted.count <= index ? nullptr : &sorted.triangles[index];
-    }
 
     const TVec3f* getNormal(const Triangle* triangle) {
         return triangle != nullptr ? triangle->getNormal(0) : nullptr;
@@ -338,54 +223,6 @@ namespace MR {
         return !isWallPolygon(gravity_dot) && !isFloorPolygon(gravity_dot);
     }
 
-    bool getFirstPolyOnLineToMap(TVec3f* position, Triangle* triangle, const TVec3f& start,
-                                 const TVec3f& offset) {
-        return first_line_hit(position, triangle, start, offset, nullptr, nullptr);
-    }
-
-    bool getFirstPolyOnLineToMap(TVec3f* position, Triangle* triangle, const TVec3f& start,
-                                 const TVec3f& offset, const CollisionPartsFilterBase* parts_filter,
-                                 const TriangleFilterBase* triangle_filter) {
-        return first_line_hit(position, triangle, start, offset, parts_filter, triangle_filter);
-    }
-
-    bool getFirstPolyOnLineToWaterSurface(TVec3f* position, Triangle* triangle, const TVec3f& start,
-                                          const TVec3f& offset, const CollisionPartsFilterBase* parts_filter,
-                                          const TriangleFilterBase* triangle_filter) {
-        const aurora::allocation::HostAllocationScope host_allocations;
-        auto* owner = smgpc::scene::current_collision_director_ownership();
-        if (owner == nullptr) {
-            aurora::throw_host_exception<std::logic_error>("Water-surface collision queries require the scene category owner.");
-        }
-        // The original category helper admits at most 32 ordered hits after
-        // part filtering. Triangle filtering happens afterward, so rejected
-        // triangles still consume those original hit slots.
-        const auto count = store_line_hits(owner->category_service(2), start, offset, 0, parts_filter, nullptr);
-        auto distance = 1000000.0F;
-        auto nearest = s32{-1};
-        for (s32 i = 0; i < count; ++i) {
-            const auto& hit = strike_infos()[static_cast<std::size_t>(i)];
-            if (triangle_filter != nullptr) {
-                const aurora::allocation::ClientAllocationScope client_allocations;
-                if (triangle_filter->isInvalidTriangle(&hit.mParentTriangle)) continue;
-            }
-            if (distance > hit._60) {
-                nearest = i;
-                distance = hit._60;
-            }
-        }
-        if (nearest == -1) return false;
-        const auto& hit = strike_infos()[static_cast<std::size_t>(nearest)];
-        if (position != nullptr) *position = hit.mHitPos;
-        if (triangle != nullptr) *triangle = hit.mParentTriangle;
-        return true;
-    }
-
-    bool getFirstPolyOnLineToWaterSurface(TVec3f* position, Triangle* triangle, const TVec3f& start,
-                                          const TVec3f& offset) {
-        return getFirstPolyOnLineToWaterSurface(position, triangle, start, offset, nullptr, nullptr);
-    }
-
     bool getFirstPolyNormalOnLineToMap(TVec3f* normal, const TVec3f& start, const TVec3f& offset,
                                        TVec3f* position, const HitSensor* except_sensor) {
         auto triangle = Triangle{};
@@ -402,23 +239,6 @@ namespace MR {
     bool getFirstPolyOnLineBFast(const TVec3f& start, const TVec3f& offset, TVec3f* position,
                                  Triangle* triangle) {
         return first_line_hit(position, triangle, start, offset, nullptr, nullptr);
-    }
-
-    bool isExistMapCollision(const TVec3f& start, const TVec3f& offset) {
-        return require_stage_collision().line_cast(start, offset);
-    }
-
-    bool isExistMapCollisionExceptActor(const TVec3f& start, const TVec3f& offset,
-                                        const LiveActor* actor) {
-        const aurora::allocation::HostAllocationScope host_allocations;
-        const auto& collision = require_stage_collision();
-        // The original CollisionPartsFilterActor compares the owning sensor's
-        // host. Keep every other part eligible before the single-hit limit.
-        const auto filter = [&collision, actor](std::uint32_t index) {
-            const auto surface = collision.surface(index);
-            return surface && (surface->sensor == nullptr || surface->sensor->mHost != actor);
-        };
-        return !collision.line_hits(start, offset, 1U, filter).empty();
     }
 
     bool checkStrikePointToMap(const TVec3f& point, HitInfo* output) {
@@ -533,28 +353,19 @@ namespace MR {
 }  // namespace MR
 
 namespace Collision {
-    s32 checkStrikeLineToMap(const TVec3f& start, const TVec3f& offset, s32 maximum,
-                            const CollisionPartsFilterBase* parts_filter, const TriangleFilterBase* triangle_filter) {
-        return store_line_hits(require_stage_collision(), start, offset, maximum, parts_filter, triangle_filter);
-    }
-    s32 checkStrikeLineToSunshade(const TVec3f& start, const TVec3f& offset, s32 maximum,
-                                 const CollisionPartsFilterBase* parts_filter, const TriangleFilterBase* triangle_filter) {
-        auto* owner = smgpc::scene::current_collision_director_ownership();
-        if (!owner) aurora::throw_host_exception<std::logic_error>("Sunshade collision queries require the scene category owner.");
-        return store_line_hits(owner->category_service(1), start, offset, maximum, parts_filter, triangle_filter);
-    }
 
     s32 checkStrikePointToMap(const TVec3f& point, HitInfo* output) {
         const aurora::allocation::HostAllocationScope host_allocations;
         const auto contacts = require_stage_collision().sphere_contacts(point, 0.0F, 1U);
-        auto& infos = strike_infos();
-        infos.clear();
+        auto* keeper = MR::getCollisionDirector()->getCategoryKeeper(0);
+        keeper->_10 = 0;
         if (contacts.empty()) {
             return 0;
         }
-        infos.push_back(make_hit_info(contacts.front()));
+        keeper->mHitInfoArray[0] = make_hit_info(contacts.front());
+        keeper->_10 = 1;
         if (output != nullptr) {
-            *output = infos.front();
+            *output = keeper->mHitInfoArray[0];
         }
         return 1;
     }
@@ -577,12 +388,4 @@ namespace Collision {
         return store_sphere_contacts(center, radius, parts_filter, triangle_filter, &thickness);
     }
 
-    const HitInfo* getStrikeInfoMap(u32 index) {
-        const auto& infos = strike_infos();
-        return index < infos.size() ? &infos[index] : nullptr;
-    }
-
-    u32 getStrikeInfoNumMap() {
-        return static_cast<u32>(strike_infos().size());
-    }
 }  // namespace Collision

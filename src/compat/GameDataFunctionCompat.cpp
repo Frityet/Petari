@@ -200,3 +200,17 @@ void setSysConfigFileSentBytes(u32 bytes) {
 }
 
 }  // namespace GameDataFunction
+
+namespace GameDataFunction {
+    s32 calcGrandStarNum(const GameDataHolder* pGameDataHolder) {
+        s32 grandStarNum = 0;
+
+        for (int i = 1; i <= 7; i++) {
+            if (pGameDataHolder->hasGrandStar(i)) {
+                grandStarNum++;
+            }
+        }
+
+        return grandStarNum;
+    }
+}

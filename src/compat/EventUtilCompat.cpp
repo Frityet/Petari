@@ -3,6 +3,7 @@
 
 #include "Game/Screen/InformationObserver.hpp"
 #include "Game/System/GameDataFunction.hpp"
+#include "Game/System/GameSequenceFunction.hpp"
 #include "Game/Util/HashUtil.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
@@ -204,5 +205,29 @@ namespace MR {
         if (!GameDataFunction::isOnGameEventFlag("ライフアップキノコ解説")) {
             InformationObserverFunction::explainLifeUp();
         }
+    }
+}
+
+namespace MR {
+    bool isOnGameEventFlagRosettaTalkAboutTicoInTower() {
+        return GameDataFunction::isOnGameEventFlag("RosettaTalkAboutTico");
+    }
+}
+
+namespace MR {
+    s32 calcOpenedAstroDomeNum() {
+        s32 openedAstroDomeNum;
+
+        if (GameSequenceFunction::hasStageResultSequence()) {
+            openedAstroDomeNum = GameDataFunction::calcGrandStarNum(GameDataFunction::getSceneStartGameDataHolder());
+        } else {
+            openedAstroDomeNum = GameDataFunction::calcGrandStarNum(GameDataFunction::getCurrentGameDataHolder());
+        }
+
+        if (GameDataFunction::hasGrandStar(7)) {
+            openedAstroDomeNum -= 1;
+        }
+
+        return openedAstroDomeNum;
     }
 }

@@ -369,6 +369,10 @@ namespace smgpc::scene {
 
     void StageInitializationService::initialize_host_scene_objects() {
         const auto host_allocations = smgpc::compat::JkrHostAllocationScope{};
+        // Original scene setup publishes DemoDirector before layout and other
+        // early scene objects can register their simple casts.
+        if (!MR::createSceneObj(SceneObj_DemoDirector))
+            aurora::throw_host_exception<std::logic_error>("Scene setup requires the original DemoDirector");
         initialize_effect_system(3072, 256);
         constexpr auto required_scene_objects = std::array{
             SceneObj_NameObjGroup,
@@ -390,6 +394,7 @@ namespace smgpc::scene {
             SceneObj_PlacementStateChecker,
             SceneObj_BaseMatrixFollowTargetHolder,
             SceneObj_GroupCheckManager,
+            SceneObj_LiveActorGroupArray,
             SceneObj_TalkDirector,
             SceneObj_GameSceneLayoutHolder,
         };
@@ -781,10 +786,6 @@ namespace smgpc::scene {
             _authored_data->holders(), _authored_data->tables());
         _stage_light_binding = std::make_unique<StageLightSceneBinding>(
             _runtime.dvd(), _request.stage_name, _authored_data->tables());
-        // The original DemoDirector/executors exist before placement actors
-        // initialize and attempt to join their zone-scoped groups.
-        if (!MR::createSceneObj(SceneObj_DemoDirector))
-            aurora::throw_host_exception<std::logic_error>("Stage demo resources require the original DemoDirector");
         if (_request.object_name.empty()) _scene_obj_holder_binding->initialize_camera_system();
         // Collision remains absent until source Game code issues an exact
         // CollisionParts registration. Placement/archive discovery must not

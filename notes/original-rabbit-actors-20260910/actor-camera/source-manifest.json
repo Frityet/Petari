@@ -1,0 +1,18 @@
+[
+  {
+    "path": "src/Game/Util/ActorCameraUtil.cpp",
+    "sha256": "d7236a7f05126eb2abfd53cc06c6b6cd93d3fea18abd67ca015c21ac9bc7cfb6"
+  },
+  {
+    "path": "src/Game/Util/ActorCameraUtil.hpp",
+    "sha256": "fd8f28bba7c201dcd8b4da45786e0390289b527b5d51d9db16e06a5355b237c7"
+  },
+  {
+    "path": "src/Game/Util/ObjUtil.hpp",
+    "sha256": "3786d61311ca151a82971c806d71a48cb0cfdf80dadd0130ac7cd0eb21ffd0ba"
+  },
+  {
+    "path": "src/compat/ResourceHolderCompat.cpp",
+    "sha256": "e64145ff9879adee55b8ee551b2916d7f316dc4efdef0048215327dfd709cbae"
+  }
+]

@@ -6,9 +6,11 @@
 #include "Game/Map/CollisionCategorizedKeeper.hpp"
 #include "Game/Map/CollisionDirector.hpp"
 #include "Game/Map/KCollision.hpp"
+#include "Game/Map/HitInfo.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/MtxUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
+#include "Game/Util/TriangleFilter.hpp"
 
 void FORCE_SCALE() {
     TVec3f vec;
@@ -253,6 +255,40 @@ void CollisionParts::projectToPlane(TVec3f* pProjected, const TVec3f& rPos, cons
 
     projected.add(-rNormal * distance);
     pProjected->set(projected);
+}
+
+u32 CollisionParts::checkStrikeLine(HitInfo* pInfos, u32 maxCount, const TVec3f& rStart, const TVec3f& rOffset,
+                                  const TriangleFilterBase* pFilter) {
+    f32 length = PSVECMag(&rOffset);
+    TVec3f localStart;
+    TVec3f localOffset;
+    mInvBaseMatrix.mult(rStart, localStart);
+    mInvBaseMatrix.mult(rStart + rOffset, localOffset);
+    localOffset = localOffset - localStart;
+
+    f32 fractions[64];
+    KC_PrismData* prisms[64];
+    // Retail checkArrow leaves all-hit flags unwritten; define those stack bytes on PC.
+    u8 flags[64] = {};
+    u32 foundCount = 0;
+    mServer->checkArrow(localStart, localOffset, fractions, flags, &foundCount, prisms, maxCount);
+
+    u32 hitCount = 0;
+    for (u32 i = 0; i < foundCount; i++) {
+        HitInfo* pInfo = &pInfos[hitCount];
+        TVec3f hitPos = localStart + localOffset * fractions[i];
+        mBaseMatrix.mult(hitPos, hitPos);
+        pInfo->mParentTriangle.fillData(this, mServer->toIndex(prisms[i]), mHitSensor);
+        if (pFilter != nullptr && pFilter->isInvalidTriangle(&pInfo->mParentTriangle)) {
+            continue;
+        }
+
+        pInfo->_60 = length * fractions[i];
+        pInfo->mHitPos = hitPos;
+        pInfo->_88 = flags[i];
+        hitCount++;
+    }
+    return hitCount;
 }
 
 void CollisionParts::calcForceMovePower(TVec3f* a1, const TVec3f& a2) const {

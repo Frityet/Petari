@@ -11,6 +11,7 @@
 #include "Game/LiveActor/HitSensorInfo.hpp"
 #include "Game/LiveActor/HitSensorKeeper.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/LiveActor/LiveActorGroupArray.hpp"
 #include "Game/LiveActor/AllLiveActorGroup.hpp"
 #include "Game/LiveActor/LodCtrl.hpp"
 #include "Game/LiveActor/RailRider.hpp"
@@ -42,7 +43,7 @@
 
 namespace {
     struct NameObjRuntimeState {
-        std::string name{};
+        std::shared_ptr<const std::string> host_name{};
         std::uint64_t registration_order = 0U;
         const void* owner = nullptr;
         const void* postpass_delegate = nullptr;
@@ -141,6 +142,20 @@ namespace {
     void destroy_hit_sensors(LiveActorRuntimeState& state) {
         const auto* retiring = state.sensor_keeper.get();
         if (!retiring) return;
+        // Original message groups borrow the sender until their next movement.
+        // Cancel a pending message before its source sensor is destroyed.
+        for (const auto& [object, runtime_state] : name_obj_states()) {
+            auto* group = dynamic_cast<MsgSharedGroup*>(const_cast<NameObj*>(object));
+            if (!group || !group->mSensor) continue;
+            for (s32 i = 0; i < retiring->mSensorInfosSize; ++i) {
+                if (group->mSensor == retiring->mSensorInfos[i]->mSensor) {
+                    group->mMsg = static_cast<u32>(-1);
+                    group->mSensor = nullptr;
+                    group->mSensorName = nullptr;
+                    break;
+                }
+            }
+        }
         // Native teardown can happen from an original attack callback. Remove
         // borrowed contacts before releasing the original sensor storage.
         for (auto& [actor, other] : actor_states()) {
@@ -194,7 +209,7 @@ namespace smgpc::compat {
         return _marker;
     }
 
-    const char* register_name_obj_runtime_state(NameObj* object, const char* name) {
+    void register_name_obj_runtime_state(NameObj* object) {
         JkrHostAllocationScope host;
         if (object == nullptr) {
             aurora::throw_host_exception<std::invalid_argument>("NameObj runtime state requires a real object.");
@@ -202,16 +217,14 @@ namespace smgpc::compat {
         const auto registration_order = next_name_obj_registration_order()++;
         auto [found, inserted] = name_obj_states().try_emplace(
             object, NameObjRuntimeState{
-                        .name = name != nullptr ? name : "",
                         .registration_order = registration_order,
                     });
         if (!inserted) {
             aurora::throw_host_exception<std::logic_error>("NameObj runtime state is already registered.");
         }
-        return found->second.name.c_str();
     }
 
-    const char* update_name_obj_runtime_name(NameObj* object, const char* name) {
+    void retain_name_obj_host_name(NameObj* object, std::shared_ptr<const std::string> name) {
         JkrHostAllocationScope host;
         if (object == nullptr) {
             aurora::throw_host_exception<std::invalid_argument>("NameObj runtime state requires a real object.");
@@ -220,8 +233,7 @@ namespace smgpc::compat {
         if (found == name_obj_states().end()) {
             aurora::throw_host_exception<std::logic_error>("NameObj has no registered native runtime state.");
         }
-        found->second.name = name != nullptr ? name : "";
-        return found->second.name.c_str();
+        found->second.host_name = std::move(name);
     }
 
     void release_name_obj_runtime_state(const NameObj* object) {
@@ -231,6 +243,14 @@ namespace smgpc::compat {
         // Scan actual groups so direct original registerObj calls are covered.
         for (const auto& [registered, state] : name_obj_states()) {
             if (registered == object) continue;
+            if (auto* array = dynamic_cast<LiveActorGroupArray*>(const_cast<NameObj*>(registered))) {
+                auto& groups = array->mGroups;
+                auto* old_end = groups.end();
+                auto* new_end = std::remove_if(groups.begin(), old_end,
+                    [object](const MsgSharedGroup* group) { return group == object; });
+                std::fill(new_end, old_end, nullptr);
+                groups.mCount = static_cast<s32>(new_end - groups.begin());
+            }
             auto* group = dynamic_cast<NameObjGroup*>(const_cast<NameObj*>(registered));
             if (!group || group->mObjNum == 0) continue;
             auto* old_end = group->mObjArray + group->mObjNum;

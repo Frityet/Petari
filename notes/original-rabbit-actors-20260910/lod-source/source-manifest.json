@@ -1,0 +1,21 @@
+{
+  "files": [
+    {
+      "path": "src/compat/LodCtrlRuntimeCompat.cpp",
+      "sha256": "729a307e39f818d39ba8a3db5b5f30861209818388034d74f2615648f80ef1f4"
+    },
+    {
+      "path": "src/Game/LiveActor/LodCtrl.cpp",
+      "sha256": "1f12e13f604a0ad901e3058a9efa4918d5b81944ab282709d3546858e2be0287"
+    },
+    {
+      "path": "src/Game/LiveActor/LodCtrl.hpp",
+      "sha256": "4c5c22bcc5c7962d597468875a6168a1a4eafc367ce300d7886e2dfd980af01c"
+    }
+  ],
+  "deleted": [
+    "src/compat/LodCtrlSource.cpp"
+  ],
+  "native_game_sources_changed": false,
+  "verification": "Parent integrated build/smoke pending; no additional local build requested."
+}

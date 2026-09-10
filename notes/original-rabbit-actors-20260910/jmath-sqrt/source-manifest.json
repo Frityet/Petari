@@ -1,0 +1,14 @@
+[
+  {
+    "path": "decomp/src/Game/Util/MathUtil.cpp",
+    "sha256": "da88b5a2c96517089ca787ceb0fee19693189c2269acbe9b7e60e091015fded8"
+  },
+  {
+    "path": "src/Game/Util/MathUtil.cpp",
+    "sha256": "36449362a796582c1eacd8ea7272367a69880ede21957549121245c8cabdc3d9"
+  },
+  {
+    "path": "src/compat/OriginalJMathSqrt.cpp",
+    "sha256": "6aae8adf695e926aeab36cd0ddca54a6058611657bbd4ab1c962212cd3255227"
+  }
+]

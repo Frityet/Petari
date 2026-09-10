@@ -1,6 +1,8 @@
 #include "Game/Map/CollisionCategorizedKeeper.hpp"
+#include "Game/LiveActor/HitSensor.hpp"
 #include "Game/Map/CollisionParts.hpp"
 #include "Game/Map/CollisionDirector.hpp"
+#include "Game/Util/CollisionPartsFilter.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
 #include <algorithm>
@@ -71,6 +73,78 @@ void CollisionCategorizedKeeper::addToGlobal(CollisionParts* pParts) {
 void CollisionCategorizedKeeper::removeFromGlobal(CollisionParts* pParts) {
     mZones[0]->eraseParts(pParts);
     mZoneCount--;
+}
+
+s32 CollisionCategorizedKeeper::checkStrikeLine(const TVec3f& rStart, const TVec3f& rOffset, s32 maxCount,
+                                               const CollisionPartsFilterBase* pPartsFilter, const TriangleFilterBase* pTriangleFilter) {
+    MR::getCollisionDirector();
+
+    if (maxCount == 0) {
+        maxCount = 32;
+    }
+
+    _10 = 0;
+    s32 hitCount = 0;
+    TVec3f boxMin(rStart);
+    TVec3f boxMax(rStart);
+
+    if (rOffset.x < 0.0f) {
+        boxMin.x += rOffset.x;
+    } else {
+        boxMax.x += rOffset.x;
+    }
+    if (rOffset.y < 0.0f) {
+        boxMin.y += rOffset.y;
+    } else {
+        boxMax.y += rOffset.y;
+    }
+    if (rOffset.z < 0.0f) {
+        boxMin.z += rOffset.z;
+    } else {
+        boxMax.z += rOffset.z;
+    }
+
+    for (CollisionZone** zone = mZones; zone != mZones + mZoneNum; zone++) {
+        if (zone != mZones) {
+            TVec3f center((*zone)->_808);
+            f32 radius = (*zone)->mRadius;
+            if (!isSphereOverlappingWithBox(boxMin, boxMax, center, radius)) {
+                continue;
+            }
+            if (!MR::checkHitSegmentSphere(center, rStart, rStart + rOffset, radius, nullptr)) {
+                continue;
+            }
+        }
+
+        s32 partCount = (*zone)->mNumParts;
+        for (s32 i = 0; i < partCount; i++) {
+            CollisionParts* part = (*zone)->mPartsArray[i];
+            if (!part->_CC) {
+                continue;
+            }
+            if (pPartsFilter != nullptr && pPartsFilter->isInvalidParts(part)) {
+                continue;
+            }
+
+            TVec3f center(part->getTrans());
+            f32 radius = part->_D8;
+            if (!isSphereOverlappingWithBox(boxMin, boxMax, center, radius)) {
+                continue;
+            }
+            if (!MR::checkHitSegmentSphere(center, rStart, rStart + rOffset, radius, nullptr)) {
+                continue;
+            }
+
+            hitCount += part->checkStrikeLine(mHitInfoArray + hitCount, maxCount - hitCount, rStart, rOffset, pTriangleFilter);
+            if (maxCount <= hitCount) {
+                _10 = hitCount;
+                return hitCount;
+            }
+        }
+    }
+
+    _10 = hitCount;
+    return hitCount;
 }
 
 CollisionZone::CollisionZone(s32 zoneID) : mZoneID(zoneID), mNumParts(0), _808(0, 0, 0), mRadius(0.0f), _818(0, 0, 0), _824(0, 0, 0) {
@@ -220,4 +294,23 @@ bool CollisionCategorizedKeeper::isSphereOverlappingWithBox(const TVec3f& rMin, 
     }
 
     return true;
+}
+
+bool CollisionCategorizedKeeper::searchSameHostParts(CollisionParts** ppParts, CollisionParts* pParts) const {
+    for (CollisionZone* const* zone = mZones; zone != mZones + mZoneNum; zone++) {
+        s32 partCount = (*zone)->mNumParts;
+        for (s32 i = 0; i < partCount; i++) {
+            CollisionParts* part = (*zone)->mPartsArray[i];
+            if (part->mHitSensor->mHost == pParts->mHitSensor->mHost) {
+                *ppParts = part;
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+HitInfo* CollisionCategorizedKeeper::getStrikeInfo(u32 index) {
+    return &mHitInfoArray[index];
 }

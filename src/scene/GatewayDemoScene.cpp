@@ -227,6 +227,7 @@ namespace smgpc::scene {
                 SceneObj_PlanetGravityManager,
                 SceneObj_MarioHolder,
                 SceneObj_GroupCheckManager,
+                SceneObj_LiveActorGroupArray,
                 SceneObj_TalkDirector,
                 SceneObj_GameSceneLayoutHolder,
             };

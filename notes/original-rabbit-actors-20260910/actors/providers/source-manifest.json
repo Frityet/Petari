@@ -1,0 +1,26 @@
+[
+  {
+    "path": "decomp/src/Game/Util/NPCUtil.cpp",
+    "sha256": "2e8175170d2f88f906e0ce72e965993f2903a6837434db68fd83a427f93bcb1c"
+  },
+  {
+    "path": "src/Game/Util/NPCUtil.cpp",
+    "sha256": "2e8175170d2f88f906e0ce72e965993f2903a6837434db68fd83a427f93bcb1c"
+  },
+  {
+    "path": "src/Game/System/GameSequenceFunction.hpp",
+    "sha256": "646b9b7d7b6f970c47085c2afe371d1255d760a333fd047ae80aacfb4ab4e1a4"
+  },
+  {
+    "path": "src/compat/EventUtilCompat.cpp",
+    "sha256": "f210588e84e4b241bf95fe0af20dc033a292657c4c9a2080a172be40eb12f2ff"
+  },
+  {
+    "path": "src/compat/GameDataFunctionCompat.cpp",
+    "sha256": "edb602efc993433a061ed38b191fca85de3df6d16289a4e4d96242a6791b8d60"
+  },
+  {
+    "path": "src/compat/SoundUtilCompat.cpp",
+    "sha256": "d8ade41630b8fa408ba77be66e2333fd52ce1eccac3f52f9fe6e10442e6019a2"
+  }
+]

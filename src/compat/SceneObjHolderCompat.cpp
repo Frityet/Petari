@@ -57,6 +57,9 @@
 #include "Game/Map/NamePosHolder.hpp"
 #include "Game/Screen/LensFlare.hpp"
 #include "Game/Util/BaseMatrixFollowTargetHolder.hpp"
+#include "Game/LiveActor/LiveActorGroupArray.hpp"
+#include "Game/NameObj/MovementOnOffGroupHolder.hpp"
+#include "Game/NPC/NPCDirector.hpp"
 #include "Game/Util/FurCtrl.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/JkrAllocationDomain.hpp"
@@ -82,6 +85,8 @@ namespace {
     const std::string cCameraDirectorName = encode_owner_name("カメラ管理");
     const std::string cGravityManagerName = encode_owner_name("重力");
     const std::string cBaseMatrixFollowTargetHolderName = encode_owner_name("行列追随先リスト");
+    const std::string cLiveActorGroupArrayName = encode_owner_name("オブジェクトグループ");
+    const std::string cMovementOnOffGroupHolderName = encode_owner_name("Movementグループ管理");
     const std::string cMessageSensorHolderName = encode_owner_name("システム汎用センサー");
     const std::string cAreaObjContainerName = encode_owner_name("エリアオブジェクトコンテナ管理");
     const std::string cPlacementStateCheckerName = encode_owner_name("オブジェクト配置状態の監視");
@@ -547,6 +552,12 @@ NameObj *SceneObjHolder::newEachObj(int id) {
         return new FurDrawManager(64);
     case SceneObj_PlanetGravityManager:
         return new PlanetGravityManager(cGravityManagerName.c_str());
+    case SceneObj_MovementOnOffGroupHolder:
+        return new MovementOnOffGroupHolder(cMovementOnOffGroupHolderName.c_str());
+    case SceneObj_NPCDirector:
+        return new NPCDirector();
+    case SceneObj_LiveActorGroupArray:
+        return new LiveActorGroupArray(cLiveActorGroupArrayName.c_str());
     case SceneObj_BaseMatrixFollowTargetHolder:
         return new BaseMatrixFollowTargetHolder(cBaseMatrixFollowTargetHolderName.c_str(), 256, 256);
     case SceneObj_MessageSensorHolder:

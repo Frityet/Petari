@@ -12,7 +12,8 @@ namespace {
 }  // namespace
 
 NameObj::NameObj(const char *pName)
-    : mName(smgpc::compat::register_name_obj_runtime_state(this, pName)), mFlag(), mExecutorIdx(-1) {
+    : mName(pName), mFlag(), mExecutorIdx(-1) {
+    smgpc::compat::register_name_obj_runtime_state(this);
     try {
         smgpc::scene::register_scene_name_obj(*this);
     } catch (...) {
@@ -55,7 +56,7 @@ void NameObj::initWithoutIter() {
 }
 
 void NameObj::setName(const char *pName) {
-    mName = smgpc::compat::update_name_obj_runtime_name(this, pName);
+    mName = pName;
 }
 
 void NameObj::executeMovement() {

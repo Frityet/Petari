@@ -99,6 +99,7 @@ namespace MR {
     void getCsvDataBool(bool*, const JMapInfo*, const char*, s32);
     void getCsvDataVec(Vec*, const JMapInfo*, const char*, s32);
 
+    void* loadResourceFromArc(const char*, const char*);
     const ResTIMG* loadTexFromArc(const char*, const char*);
     const ResTIMG* loadTexFromArc(const char*);
     class FunctorBase;

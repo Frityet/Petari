@@ -45,6 +45,25 @@ void SceneFunction::initForNameObj() {
     MR::createSceneObj(SceneObj_SceneNameObjMovementController);
 }
 
+void SceneFunction::initForLiveActor() {
+    MR::createSceneObj(SceneObj_AllLiveActorGroup);
+    MR::createSceneObj(SceneObj_ClippingDirector);
+    MR::createSceneObj(SceneObj_DemoDirector);
+    MR::createSceneObj(SceneObj_SensorHitChecker);
+    MR::createSceneObj(SceneObj_CollisionDirector);
+    MR::createSceneObj(SceneObj_MessageSensorHolder);
+    MR::createSceneObj(SceneObj_LiveActorGroupArray);
+    MR::createSceneObj(SceneObj_MovementOnOffGroupHolder);
+    MR::createSceneObj(SceneObj_LightDirector);
+    MR::createSceneObj(SceneObj_AreaObjContainer);
+    MR::createSceneObj(SceneObj_CaptureScreenActor);
+    MR::createSceneObj(SceneObj_StageSwitchContainer);
+    MR::createSceneObj(SceneObj_SwitchWatcherHolder);
+    MR::createSceneObj(SceneObj_SleepControllerHolder);
+    MR::createSceneObj(SceneObj_TalkDirector);
+    MR::createSceneObj(SceneObj_NPCDirector);
+}
+
 void SceneFunction::createHioBasicNode(Scene*) {
 }
 

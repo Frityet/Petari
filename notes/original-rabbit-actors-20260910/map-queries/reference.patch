@@ -1,0 +1,55 @@
+diff --git a/src/Game/Util/MapUtil.cpp b/src/Game/Util/MapUtil.cpp
+index 900c3cd14..0ba528ea4 100644
+--- a/src/Game/Util/MapUtil.cpp
++++ b/src/Game/Util/MapUtil.cpp
+@@ -14,7 +14,9 @@ static HitInfo mSortBuffer[32];
+ static u32 mSortCount;
+ 
+ namespace {
+-    // getStrikeInfoNumCategory
++    u32 getStrikeInfoNumCategory(s32 category) {
++        return MR::getCollisionDirector()->getCategoryKeeper(category)->_10;
++    }
+     bool getFirstPolyOnLineCategory(TVec3f* pPos, Triangle* pTriangle, const TVec3f& rStart, const TVec3f& rOffset,
+                                    const TriangleFilterBase* pTriangleFilter, const CollisionPartsFilterBase* pPartsFilter, s32 category) {
+         u32 hitCount = MR::getCollisionDirector()->getCategoryKeeper(category)->checkStrikeLine(rStart, rOffset, 0, pPartsFilter, nullptr);
+@@ -140,14 +142,19 @@ namespace MR {
+         return false;
+     }
+ 
+-    // getFirstPolyOnLineToMap
++    bool getFirstPolyOnLineToMap(TVec3f* pPos, Triangle* pTriangle, const TVec3f& rStart, const TVec3f& rOffset) {
++        return ::getFirstPolyOnLineCategory(pPos, pTriangle, rStart, rOffset, nullptr, nullptr, 0);
++    }
+     // getFirstPolyOnLineToMapAndMoveLimit
+     bool getFirstPolyOnLineToWaterSurface(TVec3f* pPos, Triangle* pTriangle, const TVec3f& rStart, const TVec3f& rOffset) {
+         return ::getFirstPolyOnLineCategory(pPos, pTriangle, rStart, rOffset, nullptr, nullptr, 2);
+     }
+     // getFirstPolyOnLineToMapExceptSensor
+     // getFirstPolyOnLineToMapExceptActor
+-    // getFirstPolyOnLineToMap
++    bool getFirstPolyOnLineToMap(TVec3f* pPos, Triangle* pTriangle, const TVec3f& rStart, const TVec3f& rOffset,
++                                const CollisionPartsFilterBase* pPartsFilter, const TriangleFilterBase* pTriangleFilter) {
++        return ::getFirstPolyOnLineCategory(pPos, pTriangle, rStart, rOffset, pTriangleFilter, pPartsFilter, 0);
++    }
+     bool getFirstPolyOnLineToWaterSurface(TVec3f* pPos, Triangle* pTriangle, const TVec3f& rStart, const TVec3f& rOffset,
+                                          const CollisionPartsFilterBase* pPartsFilter, const TriangleFilterBase* pTriangleFilter) {
+         return ::getFirstPolyOnLineCategory(pPos, pTriangle, rStart, rOffset, pTriangleFilter, pPartsFilter, 2);
+@@ -595,4 +602,17 @@ namespace Collision {
+                             const CollisionPartsFilterBase* pPartsFilter, const TriangleFilterBase* pTriangleFilter) {
+         return MR::getCollisionDirector()->getCategoryKeeper(0)->checkStrikeLine(rStart, rOffset, maxCount, pPartsFilter, pTriangleFilter);
+     }
++
++    s32 checkStrikeLineToSunshade(const TVec3f& rStart, const TVec3f& rOffset, s32 maxCount,
++                                 const CollisionPartsFilterBase* pPartsFilter, const TriangleFilterBase* pTriangleFilter) {
++        return MR::getCollisionDirector()->getCategoryKeeper(1)->checkStrikeLine(rStart, rOffset, maxCount, pPartsFilter, pTriangleFilter);
++    }
++
++    const HitInfo* getStrikeInfoMap(u32 index) {
++        return MR::getCollisionDirector()->getCategoryKeeper(0)->getStrikeInfo(index);
++    }
++
++    u32 getStrikeInfoNumMap() {
++        return ::getStrikeInfoNumCategory(0);
++    }
+ };  // namespace Collision

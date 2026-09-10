@@ -8,6 +8,7 @@
 
 #include "Game/LiveActor/ActorLightCtrl.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/LiveActor/Binder.hpp"
 #include "Game/LiveActor/PartsModel.hpp"
 #include "Game/Map/LightFunction.hpp"
 #include "Game/Scene/SceneFunction.hpp"
@@ -324,3 +325,25 @@ namespace MR {
 
 
 }  // namespace MR
+
+namespace MR {
+    void calcWallNormalHorizontal(TVec3f* pVec, const LiveActor* pActor) {
+        const TVec3f* normal = getWallNormal(pActor);
+        const TVec3f* grav = &pActor->mGravity;
+        pVec->killElement(*normal, *grav);
+    }
+}
+
+namespace MR {
+    bool isBinded(const LiveActor* pActor) {
+        if (isBindedGround(pActor) || isBindedRoof(pActor) || isBindedWall(pActor)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    TVec3f* getBindedFixReactionVector(const LiveActor* pActor) {
+        return &pActor->mBinder->mFixReactionVector;
+    }
+}

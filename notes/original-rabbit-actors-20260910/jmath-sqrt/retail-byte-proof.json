@@ -1,0 +1,24 @@
+{
+  "symbol": "JMASqrt__Ff",
+  "address": "0x803e88ec",
+  "bytes": 56,
+  "matches_main_dol": true,
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "constants": [
+    {
+      "address": "0x806c1764",
+      "value": 0.0,
+      "bytes": "00000000"
+    },
+    {
+      "address": "0x806c176c",
+      "value": 0.5,
+      "bytes": "3f000000"
+    },
+    {
+      "address": "0x806c1770",
+      "value": 3.0,
+      "bytes": "40400000"
+    }
+  ]
+}

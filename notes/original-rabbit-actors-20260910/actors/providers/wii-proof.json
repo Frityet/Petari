@@ -1,0 +1,130 @@
+{
+  "command": [
+    "build/tools/wibo",
+    "build/tools/sjiswrap.exe",
+    "build/compilers/GC/3.0a3/mwcceppc.exe",
+    "-nodefaults",
+    "-proc",
+    "gekko",
+    "-align",
+    "powerpc",
+    "-enum",
+    "int",
+    "-fp",
+    "hardware",
+    "-Cpp_exceptions",
+    "off",
+    "-O4,s",
+    "-inline",
+    "auto",
+    "-pragma",
+    "cats off",
+    "-pragma",
+    "warn_notinlined off",
+    "-maxerrors",
+    "1",
+    "-nosyspath",
+    "-RTTI",
+    "off",
+    "-str",
+    "reuse",
+    "-enc",
+    "SJIS",
+    "-sdata",
+    "4",
+    "-sdata2",
+    "4",
+    "-ipa",
+    "file",
+    "-sym",
+    "on",
+    "-i",
+    "include",
+    "-i",
+    "libs/JSystem/include",
+    "-i",
+    "libs/MSL_C++/include",
+    "-i",
+    "libs/MSL_C/include",
+    "-i",
+    "libs/MetroTRK/include",
+    "-i",
+    "libs/RVLFaceLib/include",
+    "-i",
+    "libs/RVL_SDK/include",
+    "-i",
+    "libs/Runtime/include",
+    "-i",
+    "libs/nw4r/include",
+    "-i",
+    "build/original-j3d-joint-traversal-20260903/retail/include",
+    "-DVERSION=0",
+    "-c",
+    "src/Game/Util/NPCUtil.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-rabbit-actors-20260910/actors/providers/NPCUtil.o"
+  ],
+  "exit": 0,
+  "source_sha256": "2e8175170d2f88f906e0ce72e965993f2903a6837434db68fd83a427f93bcb1c",
+  "objdiff_command": [
+    "/Users/frityet/Projects/petari/decomp/build/tools/objdiff-cli",
+    "diff",
+    "-1",
+    "/Users/frityet/Projects/petari/notes/gateway-audit-20260907/restoration/retail/obj/Game/Util/NPCUtil.o",
+    "-2",
+    "/Users/frityet/Projects/petari/notes/original-rabbit-actors-20260910/actors/providers/NPCUtil.o",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-rabbit-actors-20260910/actors/providers/objdiff.json"
+  ],
+  "objdiff_exit": 0,
+  "symbols": [
+    {
+      "name": "setNPCActorPos__2MRFP8NPCActorPCc",
+      "demangled_name": "MR::setNPCActorPos(NPCActor*, const char*)",
+      "size": "112",
+      "match_percent": 90.32143
+    },
+    {
+      "name": "setNPCActorPos__2MRFP8NPCActorRCQ29JGeometry8TVec3<f>",
+      "demangled_name": "MR::setNPCActorPos(NPCActor*, const JGeometry::TVec3<float>&)",
+      "size": "64",
+      "match_percent": null
+    },
+    {
+      "name": "setNPCActorPose__2MRFP8NPCActorRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+      "demangled_name": "MR::setNPCActorPose(NPCActor*, const JGeometry::TVec3<float>&, const JGeometry::TVec3<float>&, const JGeometry::TVec3<float>&)",
+      "size": "112",
+      "match_percent": null
+    },
+    {
+      "name": "startNPCTalkCamera__2MRFPC15TalkMessageCtrlPA4_ffl",
+      "demangled_name": "MR::startNPCTalkCamera(const TalkMessageCtrl*, float(*)[4], float, long)",
+      "size": "96",
+      "match_percent": 100.0
+    },
+    {
+      "name": "startNPCTalkCamera__2MRFPC15TalkMessageCtrlPA4_fPA4_ffl",
+      "demangled_name": "MR::startNPCTalkCamera(const TalkMessageCtrl*, float(*)[4], float(*)[4], float, long)",
+      "size": "500",
+      "match_percent": 96.456
+    },
+    {
+      "name": "tryStartMoveTurnAction__2MRFP8NPCActor",
+      "demangled_name": "MR::tryStartMoveTurnAction(NPCActor*)",
+      "size": "108",
+      "match_percent": 100.0
+    },
+    {
+      "name": "tryTalkNearPlayerAtEndAndStartTalkAction__2MRFP8NPCActor",
+      "demangled_name": "MR::tryTalkNearPlayerAtEndAndStartTalkAction(NPCActor*)",
+      "size": "52",
+      "match_percent": 100.0
+    },
+    {
+      "name": "tryTalkForceAndStartMoveTalkAction__2MRFP8NPCActor",
+      "demangled_name": "MR::tryTalkForceAndStartMoveTalkAction(NPCActor*)",
+      "size": "52",
+      "match_percent": 100.0
+    }
+  ]
+}

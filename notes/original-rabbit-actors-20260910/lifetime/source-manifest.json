@@ -1,0 +1,12 @@
+{
+  "decomp/src/Game/LiveActor/LiveActorGroupArray.cpp": "cfbc4ed84907581a243686701887a851df6a780d362feb232b68122da9f2ee2c",
+  "decomp/include/Game/LiveActor/LiveActorGroupArray.hpp": "db69f327ea36f515002b575edc5dca0dca0c1571997546eb7b812fe0c439d42b",
+  "src/Game/LiveActor/LiveActorGroupArray.cpp": "cfbc4ed84907581a243686701887a851df6a780d362feb232b68122da9f2ee2c",
+  "src/Game/LiveActor/LiveActorGroupArray.hpp": "db69f327ea36f515002b575edc5dca0dca0c1571997546eb7b812fe0c439d42b",
+  "src/compat/OriginalLiveActorGroupUtil.cpp": "f3beb42b9b735407414130186cb879cf4cfe2b61640ef2d3f3c1f502ee0ba6e9",
+  "src/compat/GameRuntimeCompat.cpp": "e01ea102d2100da84d427fdc2e93878d54ab7429644f8e04767856edda946f4c",
+  "src/compat/SceneObjHolderCompat.cpp": "beeb7da14b96c413bf623d49af330524ec0bc6019a6d410c4fc5611b1441a690",
+  "src/compat/ActorRuntimeRegistry.cpp": "0a15c4f1fc2546b9b6b0bb494d0f256c7a14ccf8d4fd87d6966e9798d8a07cef",
+  "src/compat/ActorRuntimeRegistry.hpp": "770d87701616ff950b1aed0868a61653dc5c87128e400b25397786a01ce42177",
+  "src/compat/NameObjLifetimeCompat.cpp": "bf9ee2e4adb7ca2f04a7b084ba48fbb15d12de70e07a9d29cabeac3f006817b0"
+}

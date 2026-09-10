@@ -2,7 +2,9 @@
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/MtxUtil.hpp"
 #include "JSystem/JMath/JMATrigonometric.hpp"
+#include "JSystem/JMath/JMath.hpp"
 #include <aurora/ppc_math.hpp>
+#include <dolphin/ppc_math.h>
 
 #include <algorithm>
 #include <array>
@@ -634,11 +636,11 @@ namespace MR {
     }
 
     f32 frsqrte(f32 x) {
-        return x > 0.0F ? std::sqrt(x) : x;
+        return static_cast<f32>(::frsqrte(static_cast<double>(x)) * static_cast<double>(x));
     }
 
     f32 fastSqrtf(f32 x) {
-        return x > 0.0F ? std::sqrt(x) : x;
+        return JMASqrt(x);
     }
 
     void makeQuatUpFront(TQuat4f* pQuat, const TVec3f& rUp, const TVec3f& rFront) {
@@ -787,3 +789,65 @@ namespace MR {
         return true;
     }
 }  // namespace MR
+
+namespace MR {
+    bool isHalfProbability() {
+        return getRandom() < 0.5f;
+    }
+}
+
+namespace MR {
+    bool turnVecToVecCosOnPlane(TVec3f* pDst, const TVec3f& rFrom, const TVec3f& rTo, const TVec3f& rAxis, f32 cosAngle) {
+        TVec3f planarTo = rTo.killElement(rAxis);
+        normalizeOrZero(&planarTo);
+        if (!MR::isNearZero(planarTo)) {
+            if (cosAngle > -1.0f) {
+                return turnVecToVecCos(pDst, rFrom, planarTo, cosAngle, rAxis);
+            }
+
+            pDst->set(planarTo);
+            return true;
+        }
+        return false;
+    }
+}
+
+namespace MR {
+    bool turnVecToVecCosOnPlane(TVec3f* pVec, const TVec3f& rTo, const TVec3f& rAxis, f32 cosAngle) {
+        return turnVecToVecCosOnPlane(pVec, *pVec, rTo, rAxis, cosAngle);
+    }
+}
+
+namespace MR {
+    bool turnVecToVecCos(TVec3f* pDst, const TVec3f& rFrom, const TVec3f& rTo, f32 cosAngle, const TVec3f& rAxis, f32 fallbackLength) {
+        if (isNearZero(rFrom)) {
+            return false;
+        }
+
+        if (isNearZero(rTo)) {
+            return false;
+        }
+
+        if (rFrom.dot(rTo) > cosAngle) {
+            pDst->set(rTo);
+            normalize(pDst);
+            return true;
+        }
+
+        f32 sinAngle = JMASqrt(1.0f - cosAngle * cosAngle);
+        TVec3f rejectFrom = rTo.killElement(rFrom);
+
+        if (isNearZero(rejectFrom)) {
+            TVec3f fallback = rFrom.cross(rAxis);
+            normalize(&fallback);
+            pDst->set(rFrom + fallback * fallbackLength);
+            normalize(pDst);
+            return false;
+        }
+
+        normalize(&rejectFrom);
+        pDst->set(rFrom * cosAngle + rejectFrom * sinAngle);
+        normalize(pDst);
+        return false;
+    }
+}

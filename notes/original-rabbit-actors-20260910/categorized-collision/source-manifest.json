@@ -1,0 +1,12 @@
+[
+  {
+    "path": "decomp/src/Game/Map/CollisionCategorizedKeeper.cpp",
+    "sha256": "21b9a800ef44bc93e7a54fc4e46710b7fcab59fc37100ff7e7966168cbada5f5",
+    "bytes": 9455
+  },
+  {
+    "path": "src/Game/Map/CollisionCategorizedKeeper.cpp",
+    "sha256": "21b9a800ef44bc93e7a54fc4e46710b7fcab59fc37100ff7e7966168cbada5f5",
+    "bytes": 9455
+  }
+]

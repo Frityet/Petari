@@ -5,6 +5,7 @@
 class UserFile;
 
 namespace GameSequenceFunction {
+    bool hasStageResultSequence() NO_INLINE;
     bool isNeedMoviePlayerForStorySequenceEvent();
     void startPreLoadSaveDataSequence();
     void startTotalMailSizeSaveSequence();

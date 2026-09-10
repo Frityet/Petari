@@ -1,0 +1,118 @@
+{
+  "comparison": "direct unresolved symbols against current debug smg-pc archives and all 11 imported objects; not transitive link reachability",
+  "archives": [
+    "build/macosx/arm64/debug/libsmg-pc-app.a",
+    "build/macosx/arm64/debug/libsmg-pc-common.a",
+    "build/macosx/arm64/debug/libsmg-pc-game.a",
+    "build/macosx/arm64/debug/libsmg-pc-render.a"
+  ],
+  "game_missing": [
+    {
+      "mangled": "__ZN2MR14setNPCActorPosEP8NPCActorPKc",
+      "name": "MR::setNPCActorPos(NPCActor*, char const*)"
+    },
+    {
+      "mangled": "__ZN2MR17isHalfProbabilityEv",
+      "name": "MR::isHalfProbability()"
+    },
+    {
+      "mangled": "__ZN2MR18calcVecFromPlayerHEPN9JGeometry5TVec3IfEEPK9LiveActor",
+      "name": "MR::calcVecFromPlayerH(JGeometry::TVec3<float>*, LiveActor const*)"
+    },
+    {
+      "mangled": "__ZN2MR18startNPCTalkCameraEPK15TalkMessageCtrlPA4_ffi",
+      "name": "MR::startNPCTalkCamera(TalkMessageCtrl const*, float (*) [4], float, int)"
+    },
+    {
+      "mangled": "__ZN2MR19addVelocityFromPushEP9LiveActorfP9HitSensorS3_",
+      "name": "MR::addVelocityFromPush(LiveActor*, float, HitSensor*, HitSensor*)"
+    },
+    {
+      "mangled": "__ZN2MR19isBindedGroundWaterEPK9LiveActor",
+      "name": "MR::isBindedGroundWater(LiveActor const*)"
+    },
+    {
+      "mangled": "__ZN2MR20countHideGroupMemberEPK9LiveActor",
+      "name": "MR::countHideGroupMember(LiveActor const*)"
+    },
+    {
+      "mangled": "__ZN2MR20countShowGroupMemberEPK9LiveActor",
+      "name": "MR::countShowGroupMember(LiveActor const*)"
+    },
+    {
+      "mangled": "__ZN2MR21setVelocitySeparateHVEP9LiveActorP9HitSensorS3_ff",
+      "name": "MR::setVelocitySeparateHV(LiveActor*, HitSensor*, HitSensor*, float, float)"
+    },
+    {
+      "mangled": "__ZN2MR21setVelocitySeparateHVEP9LiveActorRKN9JGeometry5TVec3IfEEff",
+      "name": "MR::setVelocitySeparateHV(LiveActor*, JGeometry::TVec3<float> const&, float, float)"
+    },
+    {
+      "mangled": "__ZN2MR22calcOpenedAstroDomeNumEv",
+      "name": "MR::calcOpenedAstroDomeNum()"
+    },
+    {
+      "mangled": "__ZN2MR22isNearPlayerHorizontalEPK9LiveActorf",
+      "name": "MR::isNearPlayerHorizontal(LiveActor const*, float)"
+    },
+    {
+      "mangled": "__ZN2MR22tryStartMoveTurnActionEP8NPCActor",
+      "name": "MR::tryStartMoveTurnAction(NPCActor*)"
+    },
+    {
+      "mangled": "__ZN2MR24calcWallNormalHorizontalEPN9JGeometry5TVec3IfEEPK9LiveActor",
+      "name": "MR::calcWallNormalHorizontal(JGeometry::TVec3<float>*, LiveActor const*)"
+    },
+    {
+      "mangled": "__ZN2MR24limitedStarPieceHitSoundEv",
+      "name": "MR::limitedStarPieceHitSound()"
+    },
+    {
+      "mangled": "__ZN2MR24trySetMoveLimitCollisionEP9LiveActor",
+      "name": "MR::trySetMoveLimitCollision(LiveActor*)"
+    },
+    {
+      "mangled": "__ZN2MR26makeQuatAndFrontFromRotateEPN9JGeometry6TQuat4IfEEPNS0_5TVec3IfEEPK9LiveActor",
+      "name": "MR::makeQuatAndFrontFromRotate(JGeometry::TQuat4<float>*, JGeometry::TVec3<float>*, LiveActor const*)"
+    },
+    {
+      "mangled": "__ZN2MR28setShadowDropPositionAtJointEP9LiveActorPKcS3_RKN9JGeometry5TVec3IfEE",
+      "name": "MR::setShadowDropPositionAtJoint(LiveActor*, char const*, char const*, JGeometry::TVec3<float> const&)"
+    },
+    {
+      "mangled": "__ZN2MR29turnDirectionFromTargetDegreeEPK9LiveActorPN9JGeometry5TVec3IfEERKS5_f",
+      "name": "MR::turnDirectionFromTargetDegree(LiveActor const*, JGeometry::TVec3<float>*, JGeometry::TVec3<float> const&, float)"
+    },
+    {
+      "mangled": "__ZN2MR31addVelocityClockwiseToDirectionEP9LiveActorRKN9JGeometry5TVec3IfEEf",
+      "name": "MR::addVelocityClockwiseToDirection(LiveActor*, JGeometry::TVec3<float> const&, float)"
+    },
+    {
+      "mangled": "__ZN2MR32reboundVelocityFromEachCollisionEP9LiveActorffff",
+      "name": "MR::reboundVelocityFromEachCollision(LiveActor*, float, float, float, float)"
+    },
+    {
+      "mangled": "__ZN2MR34sendMsgPushAndKillVelocityToTargetEP9LiveActorP9HitSensorS3_",
+      "name": "MR::sendMsgPushAndKillVelocityToTarget(LiveActor*, HitSensor*, HitSensor*)"
+    },
+    {
+      "mangled": "__ZN2MR34tryTalkForceAndStartMoveTalkActionEP8NPCActor",
+      "name": "MR::tryTalkForceAndStartMoveTalkAction(NPCActor*)"
+    },
+    {
+      "mangled": "__ZN2MR40tryTalkNearPlayerAtEndAndStartTalkActionEP8NPCActor",
+      "name": "MR::tryTalkNearPlayerAtEndAndStartTalkAction(NPCActor*)"
+    },
+    {
+      "mangled": "__ZN2MR44isOnGameEventFlagRosettaTalkAboutTicoInTowerEv",
+      "name": "MR::isOnGameEventFlagRosettaTalkAboutTicoInTower()"
+    }
+  ],
+  "c_missing": [
+    "_PSVECMag",
+    "__Unwind_Resume",
+    "___gxx_personality_v0",
+    "___stack_chk_fail",
+    "___stack_chk_guard"
+  ]
+}

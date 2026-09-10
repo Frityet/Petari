@@ -1,0 +1,113 @@
+{
+  "command": [
+    "build/tools/wibo",
+    "build/tools/sjiswrap.exe",
+    "build/compilers/GC/3.0a3/mwcceppc.exe",
+    "-nodefaults",
+    "-proc",
+    "gekko",
+    "-align",
+    "powerpc",
+    "-enum",
+    "int",
+    "-fp",
+    "hardware",
+    "-Cpp_exceptions",
+    "off",
+    "-O4,s",
+    "-inline",
+    "auto",
+    "-pragma",
+    "cats off",
+    "-pragma",
+    "warn_notinlined off",
+    "-maxerrors",
+    "1",
+    "-nosyspath",
+    "-RTTI",
+    "off",
+    "-str",
+    "reuse",
+    "-enc",
+    "SJIS",
+    "-sdata",
+    "4",
+    "-sdata2",
+    "4",
+    "-ipa",
+    "file",
+    "-sym",
+    "on",
+    "-i",
+    "include",
+    "-i",
+    "libs/JSystem/include",
+    "-i",
+    "libs/MSL_C++/include",
+    "-i",
+    "libs/MSL_C/include",
+    "-i",
+    "libs/MetroTRK/include",
+    "-i",
+    "libs/RVLFaceLib/include",
+    "-i",
+    "libs/RVL_SDK/include",
+    "-i",
+    "libs/Runtime/include",
+    "-i",
+    "libs/nw4r/include",
+    "-i",
+    "build/original-j3d-joint-traversal-20260903/retail/include",
+    "-DVERSION=0",
+    "-c",
+    "/Users/frityet/Projects/petari/decomp/src/Game/Util/MapUtil.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-rabbit-actors-20260910/map-queries/MapUtil.o"
+  ],
+  "exit_code": 0,
+  "objdiff_command": [
+    "/Users/frityet/Projects/petari/decomp/build/tools/objdiff-cli",
+    "diff",
+    "-1",
+    "/Users/frityet/Projects/petari/notes/gateway-audit-20260907/restoration/retail/obj/Game/Util/MapUtil.o",
+    "-2",
+    "/Users/frityet/Projects/petari/notes/original-rabbit-actors-20260910/map-queries/MapUtil.o",
+    "--format",
+    "json-pretty",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-rabbit-actors-20260910/map-queries/objdiff.json"
+  ],
+  "objdiff_exit_code": 0,
+  "functions": [
+    {
+      "name": "getStrikeInfoNumCategory__21@unnamed@MapUtil_cpp@Fl",
+      "size": "60",
+      "match_percent": null
+    },
+    {
+      "name": "getFirstPolyOnLineToMap__2MRFPQ29JGeometry8TVec3<f>P8TriangleRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+      "size": "16",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getFirstPolyOnLineToMap__2MRFPQ29JGeometry8TVec3<f>P8TriangleRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>PC24CollisionPartsFilterBasePC18TriangleFilterBase",
+      "size": "20",
+      "match_percent": 100.0
+    },
+    {
+      "name": "checkStrikeLineToSunshade__9CollisionFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>lPC24CollisionPartsFilterBasePC18TriangleFilterBase",
+      "size": "100",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getStrikeInfoMap__9CollisionFUl",
+      "size": "60",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getStrikeInfoNumMap__9CollisionFv",
+      "size": "8",
+      "match_percent": 0.0
+    }
+  ]
+}

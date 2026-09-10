@@ -1,0 +1,22 @@
+[
+  {
+    "path": "decomp/src/Game/Util/MapUtil.cpp",
+    "sha256": "c0a8a6abb28048fdf69f21b1f2aae2233a5a7ac1c8a3d63b3241b4f0b6609a73",
+    "bytes": 21655
+  },
+  {
+    "path": "src/Game/Util/MapUtil.cpp",
+    "sha256": "c0a8a6abb28048fdf69f21b1f2aae2233a5a7ac1c8a3d63b3241b4f0b6609a73",
+    "bytes": 21655
+  },
+  {
+    "path": "src/compat/OriginalMapQueries.cpp",
+    "sha256": "33c778667aa3edd1ee9ebf81427a9a9effdfaf786b47d7d5cf2a329765d28a73",
+    "bytes": 8157
+  },
+  {
+    "path": "src/compat/GameMapCollisionCompat.cpp",
+    "sha256": "b52f80de9e14eed14932d77a7d79c673dad9880754bbe1412a919de9584d071f",
+    "bytes": 18285
+  }
+]

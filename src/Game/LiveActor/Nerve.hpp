@@ -132,8 +132,7 @@ public:
             return &sInstance;                                                                                                                       \
         }                                                                                                                                            \
         static name sInstance;                                                                                                                       \
-    };                                                                                                                                               \
-    NERVE_NATIVE_INSTANCE(name)
+    };
 
 #define NEW_NERVE(name, parent_class, executor_name)                                                                                                 \
     class name : public Nerve {                                                                                                                      \

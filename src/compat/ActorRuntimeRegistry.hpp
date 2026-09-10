@@ -171,10 +171,11 @@ namespace smgpc::compat {
         std::vector<ActorShadowControllerRuntimeState> controllers{};
     };
 
-    // NameObj keeps the retail const-char pointer. The host-owned copy lives
-    // here so names remain stable without expanding the Game object.
-    [[nodiscard]] const char* register_name_obj_runtime_state(NameObj* object, const char* name);
-    [[nodiscard]] const char* update_name_obj_runtime_name(NameObj* object, const char* name);
+    // Original names are borrowed, including member buffers filled after the
+    // NameObj base constructor. Registration must not inspect their bytes.
+    void register_name_obj_runtime_state(NameObj* object);
+    // Host factories retain their generated constructor names explicitly.
+    void retain_name_obj_host_name(NameObj* object, std::shared_ptr<const std::string> name);
     void release_name_obj_runtime_state(const NameObj* object);
     [[nodiscard]] bool has_name_obj_runtime_state(const NameObj* object);
     [[nodiscard]] std::uint64_t name_obj_runtime_generation(
