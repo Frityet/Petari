@@ -309,9 +309,6 @@ namespace MR {
         unavailable("title scene request");
     }
 
-    bool tryStartDemoWithoutCinemaFrameValidHandPointerFinger(NameObj *, const char *) {
-        unavailable("save demo without cinema frame");
-    }
 
     void startMovieEpilogueA() {
         unavailable("epilogue movie playback");

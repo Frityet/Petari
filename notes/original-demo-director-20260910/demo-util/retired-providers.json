@@ -1,0 +1,63 @@
+{
+  "DemoCompat.cpp": {
+    "removed": [
+      "registerDemoSimpleCastAll",
+      "registerDemoSimpleCastAll",
+      "registerDemoSimpleCastAll",
+      "tryRegisterDemoCast",
+      "tryRegisterDemoCast",
+      "registerDemoCast",
+      "tryRegisterDemoActionFunctor",
+      "tryRegisterDemoActionFunctorDirect",
+      "registerDemoActionFunctorDirect",
+      "tryRegisterDemoActionNerve",
+      "registerDemoActionNerve",
+      "isDemoCast",
+      "isRegisteredDemoActionAppear",
+      "tryStartDemoRegistered",
+      "tryStartDemoRegisteredMarioPuppetable",
+      "tryStartTimeKeepDemo",
+      "tryStartTimeKeepDemoMarioPuppetable",
+      "tryStartTimeKeepDemoMarioPuppetable",
+      "startTimeKeepDemo",
+      "startTimeKeepDemoMarioPuppetable",
+      "isDemoExist",
+      "isTimeKeepDemoActive",
+      "isDemoActiveRegistered",
+      "isDemoPartExist",
+      "isDemoLastStep",
+      "isDemoPartActive",
+      "isDemoPartStep",
+      "isDemoPartFirstStep",
+      "isDemoPartLastStep",
+      "isDemoPartLessEqualStep",
+      "isDemoPartGreaterStep",
+      "getDemoPartTotalStep",
+      "getDemoPartStep",
+      "calcDemoPartStepRate",
+      "pauseTimeKeepDemo",
+      "resumeTimeKeepDemo",
+      "getCurrentDemoPartNameMain",
+      "isDemoPartTalk"
+    ],
+    "retained": [
+      "timeKeepDemoFadeOut",
+      "timeKeepDemoFadeIn"
+    ]
+  },
+  "DemoUtilCompat.cpp": {
+    "removed": [
+      "registerDemoActionFunctor",
+      "tryStartDemoWithoutCinemaFrame",
+      "tryStartDemoMarioPuppetable",
+      "requestStartDemo",
+      "requestStartDemoWithoutCinemaFrame",
+      "endDemo",
+      "isDemoActive",
+      "isDemoActive"
+    ],
+    "retained": [
+      "isPowerStarGetDemoActive"
+    ]
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "src/compat/OriginalStarPieceSound.cpp": "9cc6c4418192e3d7bd63cbd0bedd04f5e20414e8d8568ed597d6d7d243271ee1",
+  "src/compat/SoundUtilCompat.cpp": "e66cf300db9a5c0e5b9fe4e2f0962aa6cd97311506704f822db77d0483719ca5",
+  "decomp/src/Game/MapObj/StarPieceDirector.cpp": "83396fc3d7968e35ecccc7566653f6b9ea0e6bd19ff5d6d78bbee609da9597fd",
+  "decomp/src/Game/Util/SoundUtil.cpp": "c4a096ec205e770ff499c66c252018e171ade7da1f8bd2b31ef2c0a76c7ad66c"
+}

@@ -9,6 +9,7 @@
 #include "Game/NPC/TalkMessageFunc.hpp"
 #include "Game/NPC/TalkMessageInfo.hpp"
 #include "Game/NPC/TalkNodeCtrl.hpp"
+#include "Game/System/MessageHolder.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Util/ActorMovementUtil.hpp"
@@ -39,15 +40,6 @@
 namespace {
 
     smgpc::compat::TalkRuntime* sCurrentTalkRuntime = nullptr;
-
-    [[nodiscard]] std::wstring to_wide(std::u16string_view value) {
-        auto result = std::wstring{};
-        result.reserve(value.size());
-        for (const auto code : value) {
-            result.push_back(static_cast<wchar_t>(code));
-        }
-        return result;
-    }
 
     [[nodiscard]] std::u16string to_utf16(const wchar_t* value) {
         auto result = std::u16string{};
@@ -107,12 +99,17 @@ namespace smgpc::compat {
             }
         };
 
+        struct NodeDeleter {
+            void operator()(TalkNodeCtrl* node) const noexcept {
+                if (!node) return;
+                delete[] node->_0;
+                delete node;
+            }
+        };
+
         struct ControllerState {
-            std::unique_ptr<TalkNodeCtrl> node_ctrl;
+            std::unique_ptr<TalkNodeCtrl, NodeDeleter> node_ctrl;
             std::unique_ptr<ActorCameraInfo> camera_info;
-            std::string flow_key;
-            std::wstring current_message;
-            std::optional<std::uint32_t> direct_message_index;
             std::uint64_t last_request_tick = 0U;
             bool start_latch = false;
             bool end_latch = false;
@@ -142,11 +139,8 @@ namespace smgpc::compat {
 
         TalkRuntime& owner;
         bool bound = false;
-        bool nodes_loaded = false;
         std::uint64_t tick = 0U;
-        std::vector<TalkNode> nodes;
         std::unordered_map<TalkMessageCtrl*, ControllerState> controllers;
-        std::unordered_map<const TalkNodeCtrl*, TalkMessageCtrl*> controller_by_node;
         std::unordered_map<const LiveActor*, OwnedControllerSet> owned_controllers;
         TalkMessageCtrl* pending = nullptr;
         TalkMessageCtrl* selected = nullptr;
@@ -184,157 +178,24 @@ namespace smgpc::compat {
             return found->second;
         }
 
-        [[nodiscard]] TalkMessageCtrl& controller(TalkNodeCtrl& node_ctrl) {
-            const auto found = controller_by_node.find(&node_ctrl);
-            if (found == controller_by_node.end()) {
-                aurora::throw_host_exception<std::logic_error>("TalkNodeCtrl is not registered with the active scene TalkRuntime.");
-            }
-            return *found->second;
-        }
-
-        [[nodiscard]] const TalkMessageCtrl& controller(const TalkNodeCtrl& node_ctrl) const {
-            const auto found = controller_by_node.find(&node_ctrl);
-            if (found == controller_by_node.end()) {
-                aurora::throw_host_exception<std::logic_error>("TalkNodeCtrl is not registered with the active scene TalkRuntime.");
-            }
-            return *found->second;
-        }
-
-        void ensure_nodes_loaded() {
-            if (nodes_loaded) {
-                return;
-            }
-            nodes_loaded = true;
-            const auto* flow = messages().flow_data();
-            if (flow == nullptr) {
-                return;
-            }
-            nodes.reserve(flow->nodes.size());
-            for (const auto& source : flow->nodes) {
-                auto node = TalkNode{};
-                node.mNodeType = source.node_type;
-                node.mGroupID = source.group_id;
-                node.mIndex = source.index;
-                node.mNextIdx = source.next_index;
-                node.mNextGroup = source.next_group;
-                nodes.push_back(node);
-            }
-        }
-
-        [[nodiscard]] TalkNode* node(std::uint32_t index) {
-            ensure_nodes_loaded();
-            return index < nodes.size() ? &nodes[index] : nullptr;
-        }
-
-        [[nodiscard]] const TalkNode* node(std::uint32_t index) const {
-            return index < nodes.size() ? &nodes[index] : nullptr;
-        }
-
         [[nodiscard]] std::optional<std::uint32_t> node_index(const TalkNode* wanted) const {
-            if (wanted == nullptr) {
-                return std::nullopt;
-            }
-            for (auto index = std::size_t{}; index < nodes.size(); ++index) {
-                if (&nodes[index] == wanted) {
-                    return static_cast<std::uint32_t>(index);
-                }
-            }
+            if (!wanted) return std::nullopt;
+            const auto* data = MessageSystem::getSceneMessageData();
+            if (!data || !data->mFlowBlock) return std::nullopt;
+            for (std::uint32_t i = 0; i < data->mFlowBlock->mNodeCount; ++i)
+                if (data->getNode(i) == wanted) return i;
             return std::nullopt;
         }
 
-        [[nodiscard]] TalkNode* branch_node(std::uint32_t branch_index) {
-            const auto target = messages().branch_flow_node(branch_index);
-            return target.has_value() ? node(*target) : nullptr;
-        }
-
-        [[nodiscard]] TalkNode* next_node(const TalkNodeCtrl& node_ctrl) {
-            const auto* current = node_ctrl.mCurrentNode;
-            if (current == nullptr) {
-                return nullptr;
-            }
-            if (current->mNodeType == 1U) {
-                if (current->mNextIdx == 0xffffU) {
-                    return nullptr;
-                }
-                auto* result = node(current->mNextIdx);
-                if (result == nullptr) {
-                    aurora::throw_host_exception<std::logic_error>("Talk message node points outside the retained FLW node table.");
-                }
-                return result;
-            }
-            if (current->mNodeType == 3U) {
-                const auto* flow = messages().flow_data();
-                if (flow == nullptr || current->mIndex >= flow->branch_node_indices.size()) {
-                    aurora::throw_host_exception<std::logic_error>("Talk event node points outside the retained FLW branch table.");
-                }
-                if (flow->branch_node_indices[current->mIndex] == 0xffffU) {
-                    return nullptr;
-                }
-                auto* result = branch_node(current->mIndex);
-                if (result == nullptr) {
-                    aurora::throw_host_exception<std::logic_error>("Talk event branch target is outside the retained FLW node table.");
-                }
-                return result;
-            }
-            if (current->mNodeType != 2U) {
-                aurora::throw_host_exception<std::logic_error>("Talk flow contains an unknown node type.");
-            }
-            return nullptr;
-        }
-
-        void set_message_info(TalkMessageCtrl& controller, std::uint32_t message_index) {
-            auto& controller_state = state(controller);
-            auto& node_ctrl = *controller_state.node_ctrl;
-            const auto* message_id = messages().message_id(message_index);
-            if (message_id == nullptr) {
-                aurora::throw_host_exception<std::logic_error>("Talk flow refers to a message index outside MessageId.tbl.");
-            }
-            const auto* raw_text = messages().message_raw_utf16(*message_id);
-            const auto* info = messages().message_info(*message_id);
-            if (raw_text == nullptr || info == nullptr) {
-                aurora::throw_host_exception<std::logic_error>("Talk flow message metadata is unavailable.");
-            }
-
-            controller_state.current_message = to_wide(*raw_text);
-            node_ctrl.mMessageInfo = TalkMessageInfo{};
-            node_ctrl.mMessageInfo._0 = reinterpret_cast<u8*>(controller_state.current_message.data());
-            node_ctrl.mMessageInfo.mCameraSetID = info->camera_set_id;
-            node_ctrl.mMessageInfo._6 = static_cast<s8>(info->unknown_06);
-            node_ctrl.mMessageInfo.mCameraType = info->camera_type;
-            node_ctrl.mMessageInfo.mTalkType = info->talk_type;
-            node_ctrl.mMessageInfo.mBalloonType = info->balloon_type;
-            node_ctrl.mMessageInfo._A = static_cast<s8>(info->unknown_0a);
-            node_ctrl.mMessageInfo._B = static_cast<s8>(info->unknown_0b);
-            node_ctrl.mCurrentNodeIdx = static_cast<s32>(message_index);
-
-            const auto* next = next_node(node_ctrl);
-            node_ctrl.mNodeData = next != nullptr && next->mNodeType == 2U
-                                      ? static_cast<s16>(next->mIndex)
-                                      : static_cast<s16>(-1);
-
-            if (node_ctrl.mMessageInfo.isEventTalk() &&
-                node_ctrl.mHistory.search(static_cast<u16>(message_index))) {
-                node_ctrl.mMessageInfo.mTalkType = 0U;
-            }
-            if (node_ctrl.mMessageInfo.isEventTalk() && node_ctrl.mMessageInfo._B != -1 &&
-                MR::isOnMessageAlreadyRead(node_ctrl.mMessageInfo._B)) {
-                node_ctrl.mMessageInfo.mTalkType = 0U;
-            }
-        }
-
-        void update_message(TalkNodeCtrl& node_ctrl) {
-            auto& talk_controller = controller(node_ctrl);
-            if (node_ctrl.mCurrentNode == nullptr) {
-                if (const auto direct = state(talk_controller).direct_message_index; direct.has_value()) {
-                    set_message_info(talk_controller, *direct);
-                }
-                return;
-            }
-            if (node_ctrl.mCurrentNode->mNodeType != 1U) {
-                node_ctrl.mMessageInfo._0 = nullptr;
-                return;
-            }
-            set_message_info(talk_controller, node_ctrl.mCurrentNode->mIndex);
+        [[nodiscard]] std::uint32_t presentation_message_index(const TalkMessageCtrl& controller) const {
+            const auto* node = controller.mNodeCtrl;
+            if (node->mCurrentNode || node->mCurrentNodeIdx >= 0) return controller.getMessageID();
+            // A direct non-flow message leaves the original node index at -1.
+            // Resolve only native presentation metadata; never mutate Game state.
+            const auto index = MessageSystem::getSceneMessageData()->findMessageIndex(node->_0);
+            if (index < 0)
+                aurora::throw_host_exception<std::logic_error>("Direct talk presentation has no authored message identifier.");
+            return static_cast<std::uint32_t>(index);
         }
 
         void register_controller(TalkMessageCtrl& controller) {
@@ -342,11 +203,10 @@ namespace smgpc::compat {
                 aurora::throw_host_exception<std::logic_error>("TalkMessageCtrl was registered twice with one TalkRuntime.");
             }
             auto controller_state = ControllerState{};
-            controller_state.node_ctrl = std::make_unique<TalkNodeCtrl>();
+            controller_state.node_ctrl.reset(new TalkNodeCtrl);
             auto [found, inserted] = controllers.emplace(&controller, std::move(controller_state));
             static_cast<void>(inserted);
             controller.mNodeCtrl = found->second.node_ctrl.get();
-            controller_by_node.emplace(controller.mNodeCtrl, &controller);
         }
 
         void resume_time_keep_if_needed() {
@@ -379,7 +239,6 @@ namespace smgpc::compat {
             if (selected == &controller) {
                 selected = nullptr;
             }
-            controller_by_node.erase(found->second.node_ctrl.get());
             controller.mNodeCtrl = nullptr;
             controller.mCameraInfo = nullptr;
             controller.mBranchFunc = nullptr;
@@ -387,56 +246,6 @@ namespace smgpc::compat {
             controller.mAnimeFunc = nullptr;
             controller.mKillFunc = nullptr;
             controllers.erase(found);
-        }
-
-        void create_message_direct(TalkMessageCtrl& controller, const JMapInfoIter& iter,
-                                   std::string_view flow_key, ActorCameraInfo** camera_info) {
-            if (flow_key.empty()) {
-                aurora::throw_host_exception<std::logic_error>("Talk flow keys must not be empty.");
-            }
-            auto& controller_state = state(controller);
-            auto& node_ctrl = *controller_state.node_ctrl;
-            controller_state.flow_key = std::string(flow_key);
-            controller_state.direct_message_index.reset();
-            node_ctrl._0 = controller_state.flow_key.data();
-
-            const auto message_index = messages().message_index(flow_key);
-            if (!message_index.has_value()) {
-                aurora::throw_host_exception<std::logic_error>("Talk flow key '" + std::string(flow_key) + "' is absent from MessageId.tbl.");
-            }
-
-            const auto root_index = messages().first_flow_node_for_message(*message_index);
-            if (root_index.has_value()) {
-                auto* root = node(*root_index);
-                if (root == nullptr) {
-                    aurora::throw_host_exception<std::logic_error>("Talk flow root is outside the retained FLW node table.");
-                }
-                node_ctrl._38 = root;
-                node_ctrl.mCurrentNode = root;
-                node_ctrl.mFlowNode = root;
-                update_message(node_ctrl);
-            } else {
-                node_ctrl._38 = nullptr;
-                node_ctrl.mCurrentNode = nullptr;
-                node_ctrl.mFlowNode = nullptr;
-                controller_state.direct_message_index = *message_index;
-                set_message_info(controller, *message_index);
-            }
-
-            if (node_ctrl.mMessageInfo.isFlowTalk()) {
-                node_ctrl.forwardFlowNode();
-                node_ctrl._38 = node_ctrl.mCurrentNode;
-                node_ctrl.mFlowNode = node_ctrl.mCurrentNode;
-            }
-
-            controller_state.camera_info = iter.isValid()
-                                               ? std::make_unique<ActorCameraInfo>(iter)
-                                               : std::make_unique<ActorCameraInfo>(0, 0);
-            controller.mCameraInfo = controller_state.camera_info.get();
-            if (camera_info != nullptr) {
-                *camera_info = controller.mCameraInfo;
-            }
-            node_ctrl.resetFlowNode();
         }
 
         [[nodiscard]] std::vector<smgpc::resource::BmgFormatArg>
@@ -453,7 +262,7 @@ namespace smgpc::compat {
         [[nodiscard]] TalkPresentation make_presentation(TalkMessageCtrl& controller,
                                                         std::int32_t demo_type) const {
             const auto& controller_state = state(controller);
-            const auto message_index = controller.getMessageID();
+            const auto message_index = presentation_message_index(controller);
             const auto* message_id = messages().message_id(message_index);
             if (message_id == nullptr) {
                 aurora::throw_host_exception<std::logic_error>("Current talk message is outside MessageId.tbl.");
@@ -471,7 +280,7 @@ namespace smgpc::compat {
             }
             return TalkPresentation{
                 .controller = &controller,
-                .flow_key = controller_state.flow_key,
+                .flow_key = controller.mNodeCtrl->_0,
                 .message_id = *message_id,
                 .message_index = message_index,
                 .node_index = node_index(controller.mNodeCtrl->mCurrentNode),
@@ -489,8 +298,8 @@ namespace smgpc::compat {
                           (controller.mHostActor != nullptr && controller.mHostActor->getName() != nullptr
                                ? controller.mHostActor->getName()
                                : "") +
-                          ";flow=" + std::string(state(controller).flow_key) +
-                          ";message_id=" + std::to_string(controller.getMessageID());
+                          ";flow=" + std::string(controller.mNodeCtrl->_0 ? controller.mNodeCtrl->_0 : "") +
+                          ";message_id=" + std::to_string(presentation_message_index(controller));
             runtime_context().emit_semantic_trace_event("talk", event, detail);
 #else
             static_cast<void>(controller);
@@ -551,7 +360,7 @@ namespace smgpc::compat {
 
             controller.rootNodePre(true);
             if (controller.mNodeCtrl->mCurrentNode == nullptr &&
-                !controller_state.direct_message_index.has_value()) {
+                controller.mNodeCtrl->mMessageInfo._0 == nullptr) {
                 aurora::throw_host_exception<std::logic_error>("Talk start reached no message node.");
             }
             if (controller.mNodeCtrl->isCurrentNodeEvent()) {
@@ -612,7 +421,7 @@ namespace smgpc::compat {
             resume_time_keep_if_needed();
             controller->readMessage();
             if (apply_root_progression && controller->mIsOnRootNodeAuto &&
-                (!presented_message.has_value() || controller->getMessageID() == *presented_message)) {
+                (!presented_message.has_value() || presentation_message_index(*controller) == *presented_message)) {
                 controller->rootNodePst();
             }
             controller->_18 = 4U;
@@ -678,7 +487,6 @@ namespace smgpc::compat {
                 controller->mAnimeFunc = nullptr;
                 controller->mKillFunc = nullptr;
             }
-            controller_by_node.clear();
             controllers.clear();
         }
     };
@@ -739,7 +547,8 @@ namespace smgpc::compat {
     }
 
     std::string_view TalkRuntime::flow_key(const TalkMessageCtrl& controller) const {
-        return _impl->state(controller).flow_key;
+        const auto* key = _impl->state(controller).node_ctrl->_0;
+        return key ? std::string_view(key) : std::string_view{};
     }
 
     TalkMessageCtrl* TalkRuntime::adopt_owned_controller(
@@ -870,185 +679,6 @@ bool TalkMessageInfo::isBalloonIcon() const { return mBalloonType == 6U; }
 bool TalkMessageInfo::isCameraNormal() const { return mCameraType == 0U; }
 bool TalkMessageInfo::isCameraEvent() const { return mCameraType == 1U; }
 
-void TalkMessageHistory::entry(u16 message_id) {
-    if (mCount < static_cast<s32>(std::size(mHistory))) {
-        mHistory[mCount++] = message_id;
-    }
-}
-
-bool TalkMessageHistory::search(u16 message_id) const {
-    for (auto index = s32{}; index < mCount; ++index) {
-        if (mHistory[index] == message_id) {
-            return true;
-        }
-    }
-    return false;
-}
-
-TalkNodeCtrl::TalkNodeCtrl()
-    : _0(nullptr), mCurrentNodeIdx(-1), mMessageInfo(), mHistory{}, _38(nullptr),
-      mCurrentNode(nullptr), mFlowNode(nullptr), mNodeData(-1) {
-    mHistory.mCount = 0;
-}
-
-void TalkNodeCtrl::resetFlowNode() {
-    if (mCurrentNode != _38) {
-        mCurrentNode = _38;
-        mFlowNode = _38;
-        updateMessage();
-    }
-}
-
-void TalkNodeCtrl::resetTempFlowNode() {
-    if (mCurrentNode != mFlowNode) {
-        mCurrentNode = mFlowNode;
-        updateMessage();
-    }
-}
-
-void TalkNodeCtrl::recordTempFlowNode() {
-    mFlowNode = mCurrentNode;
-}
-
-void TalkNodeCtrl::forwardFlowNode() {
-    auto& runtime = smgpc::compat::require_talk_runtime("Talk flow traversal");
-    if (mCurrentNode == nullptr) {
-        return;
-    }
-    if (mCurrentNode->mNodeType == 1U) {
-        if (mCurrentNode->mNextIdx == 0xffffU) {
-            mCurrentNode = nullptr;
-        } else {
-            auto* target = runtime._impl->node(mCurrentNode->mNextIdx);
-            if (target == nullptr) {
-                aurora::throw_host_exception<std::logic_error>("Talk message node points outside the retained FLW node table.");
-            }
-            mCurrentNode = target;
-        }
-    } else if (mCurrentNode->mNodeType == 3U) {
-        auto* target = runtime._impl->branch_node(mCurrentNode->mIndex);
-        if (target == nullptr) {
-            aurora::throw_host_exception<std::logic_error>("Talk event node points outside the retained FLW branch table.");
-        }
-        mCurrentNode = target;
-    } else if (mCurrentNode->mNodeType != 2U) {
-        aurora::throw_host_exception<std::logic_error>("Talk flow contains an unknown node type.");
-    }
-    updateMessage();
-}
-
-bool TalkNodeCtrl::isExistNextNode() const {
-    return getNextNode() != nullptr;
-}
-
-bool TalkNodeCtrl::isNextNodeMessage() const {
-    const auto* next = getNextNode();
-    return next != nullptr && next->mNodeType == 1U;
-}
-
-bool TalkNodeCtrl::isCurrentNodeEvent() const {
-    return getCurrentNodeEvent() != nullptr;
-}
-
-TalkNode* TalkNodeCtrl::getNextNode() const {
-    auto& runtime = smgpc::compat::require_talk_runtime("Talk next-node lookup");
-    return runtime._impl->next_node(*this);
-}
-
-TalkNode* TalkNodeCtrl::getNextNodeBranch() const {
-    auto* next = getNextNode();
-    return next != nullptr && next->mNodeType == 2U ? next : nullptr;
-}
-
-TalkNode* TalkNodeCtrl::getCurrentNodeBranch() const {
-    return mCurrentNode != nullptr && mCurrentNode->mNodeType == 2U ? mCurrentNode : nullptr;
-}
-
-TalkNode* TalkNodeCtrl::getCurrentNodeMessage() const {
-    return mCurrentNode != nullptr && mCurrentNode->mNodeType == 1U ? mCurrentNode : nullptr;
-}
-
-TalkNode* TalkNodeCtrl::getCurrentNodeEvent() const {
-    return mCurrentNode != nullptr && mCurrentNode->mNodeType == 3U ? mCurrentNode : nullptr;
-}
-
-TalkNode* TalkNodeCtrl::getNextNodeEvent() const {
-    auto* next = getNextNode();
-    return next != nullptr && next->mNodeType == 3U ? next : nullptr;
-}
-
-void TalkNodeCtrl::updateMessage() {
-    auto& runtime = smgpc::compat::require_talk_runtime("Talk message update");
-    runtime._impl->update_message(*this);
-}
-
-void TalkNodeCtrl::readMessage() {
-    if (mMessageInfo.isEventTalk() && !mHistory.search(static_cast<u16>(mCurrentNodeIdx))) {
-        mHistory.entry(static_cast<u16>(mCurrentNodeIdx));
-        mMessageInfo.mTalkType = 0U;
-    }
-    if (mMessageInfo._B != -1) {
-        MR::onMessageAlreadyRead(mMessageInfo._B);
-    }
-}
-
-void TalkNodeCtrl::forwardCurrentBranchNode(bool left) {
-    if (mCurrentNode == nullptr || mCurrentNode->mNodeType != 2U) {
-        aurora::throw_host_exception<std::logic_error>("Talk branch traversal requires a current branch node.");
-    }
-    auto& runtime = smgpc::compat::require_talk_runtime("Talk branch traversal");
-    mCurrentNode = runtime._impl->branch_node(
-        static_cast<std::uint32_t>(mCurrentNode->mNextGroup) + (left ? 0U : 1U));
-    if (mCurrentNode == nullptr) {
-        aurora::throw_host_exception<std::logic_error>("Talk branch target is absent from the retained FLW branch table.");
-    }
-    updateMessage();
-}
-
-void TalkNodeCtrl::createFlowNode(TalkMessageCtrl* controller, const JMapInfoIter& iter,
-                                  const char* name, ActorCameraInfo** camera_info) {
-    auto message_id = s32{-1};
-    if (!MR::getJMapInfoMessageID(iter, &message_id) || message_id < 0) {
-        aurora::throw_host_exception<std::logic_error>("Placement talk creation requires a non-negative MessageId.");
-    }
-    const auto* zone_name = MR::getCurrentPlacementZoneName();
-    if (zone_name == nullptr || name == nullptr) {
-        aurora::throw_host_exception<std::logic_error>("Placement talk creation requires a zone name and actor message name.");
-    }
-    char flow_key[0x100]{};
-    std::snprintf(flow_key, sizeof(flow_key), "%s_%s%03d", zone_name, name, message_id);
-    createFlowNodeDirect(controller, iter, flow_key, camera_info);
-}
-
-void TalkNodeCtrl::createFlowNodeDirect(TalkMessageCtrl* controller, const JMapInfoIter& iter,
-                                        const char* flow_key, ActorCameraInfo** camera_info) {
-    if (controller == nullptr || flow_key == nullptr) {
-        aurora::throw_host_exception<std::logic_error>("Direct talk creation requires a controller and flow key.");
-    }
-    auto& runtime = smgpc::compat::require_talk_runtime("Direct talk creation");
-    runtime._impl->create_message_direct(*controller, iter, flow_key, camera_info);
-}
-
-const wchar_t* TalkNodeCtrl::getSubMessage() const {
-    return nullptr;
-}
-
-void TalkNodeCtrl::initNodeRecursive(TalkMessageCtrl*, const JMapInfoIter&, ActorCameraInfo*,
-                                     RecursiveHelper*) {
-    // Camera rows remain represented by ActorCameraInfo. Recursive retail
-    // camera registration is intentionally deferred to the camera provider;
-    // flow traversal itself is complete and does not special-case a scene.
-}
-
-inline bool RecursiveHelper::hasNode(const TalkNode* node) const {
-    for (auto index = s32{}; index < mIndex; ++index) {
-        if (mStack[index] == node) {
-            return true;
-        }
-    }
-    return false;
-}
-
 TalkMessageCtrl::TalkMessageCtrl(LiveActor* host, const TVec3f& offset, MtxPtr matrix)
     : NameObj("会話制御"), mHostActor(host), mNodeCtrl(nullptr), mZoneID(-1), _18(0U),
       _1C(0.0F, 0.0F, 0.0F), mMtx(matrix), mMsgBalloonFollowOffs(offset), mTalkDistance(240.0F), _3C(0U),
@@ -1070,6 +700,12 @@ TalkMessageCtrl::~TalkMessageCtrl() {
 }
 
 void TalkMessageCtrl::createMessage(const JMapInfoIter& iter, const char* name) {
+    auto& state = smgpc::compat::require_talk_runtime("Original talk creation")._impl->state(*this);
+    struct CameraLifetime {
+        std::unique_ptr<ActorCameraInfo>& owner;
+        ActorCameraInfo*& camera;
+        ~CameraLifetime() { if (owner.get() != camera) owner.reset(camera); }
+    } lifetime{state.camera_info, mCameraInfo};
     mNodeCtrl->createFlowNode(this, iter, name, &mCameraInfo);
     if (mNodeCtrl->mCurrentNode != nullptr) {
         mAlreadyDoneFlags = MR::setupAlreadyDoneFlag(mNodeCtrl->_0, iter, &_3C);
@@ -1079,6 +715,12 @@ void TalkMessageCtrl::createMessage(const JMapInfoIter& iter, const char* name) 
 }
 
 void TalkMessageCtrl::createMessageDirect(const JMapInfoIter& iter, const char* name) {
+    auto& state = smgpc::compat::require_talk_runtime("Original talk creation")._impl->state(*this);
+    struct CameraLifetime {
+        std::unique_ptr<ActorCameraInfo>& owner;
+        ActorCameraInfo*& camera;
+        ~CameraLifetime() { if (owner.get() != camera) owner.reset(camera); }
+    } lifetime{state.camera_info, mCameraInfo};
     mNodeCtrl->createFlowNodeDirect(this, iter, name, &mCameraInfo);
     _3C = 1U;
 }

@@ -1,0 +1,137 @@
+{
+  "command": [
+    "build/tools/wibo",
+    "build/tools/sjiswrap.exe",
+    "build/compilers/GC/3.0a3/mwcceppc.exe",
+    "-nodefaults",
+    "-proc",
+    "gekko",
+    "-align",
+    "powerpc",
+    "-enum",
+    "int",
+    "-fp",
+    "hardware",
+    "-Cpp_exceptions",
+    "off",
+    "-O4,s",
+    "-inline",
+    "auto",
+    "-pragma",
+    "cats off",
+    "-pragma",
+    "warn_notinlined off",
+    "-maxerrors",
+    "1",
+    "-nosyspath",
+    "-RTTI",
+    "off",
+    "-str",
+    "reuse",
+    "-enc",
+    "SJIS",
+    "-sdata",
+    "4",
+    "-sdata2",
+    "4",
+    "-ipa",
+    "file",
+    "-sym",
+    "on",
+    "-i",
+    "include",
+    "-i",
+    "libs/JSystem/include",
+    "-i",
+    "libs/MSL_C++/include",
+    "-i",
+    "libs/MSL_C/include",
+    "-i",
+    "libs/MetroTRK/include",
+    "-i",
+    "libs/RVLFaceLib/include",
+    "-i",
+    "libs/RVL_SDK/include",
+    "-i",
+    "libs/Runtime/include",
+    "-i",
+    "libs/nw4r/include",
+    "-i",
+    "build/original-j3d-joint-traversal-20260903/retail/include",
+    "-DVERSION=0",
+    "-c",
+    "src/Game/Demo/DemoCastGroup.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-demo-director-20260910/cast-keepers/DemoCastGroup.DemoCastGroup-baseline.wii.o"
+  ],
+  "wii_exit": 0,
+  "objdiff_command": [
+    "/Users/frityet/Projects/petari/decomp/build/tools/objdiff-cli",
+    "diff",
+    "-1",
+    "/Users/frityet/Projects/petari/notes/gateway-audit-20260907/restoration/retail/obj/Game/Demo/DemoCastGroup.o",
+    "-2",
+    "/Users/frityet/Projects/petari/notes/original-demo-director-20260910/cast-keepers/DemoCastGroup.DemoCastGroup-baseline.wii.o",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-demo-director-20260910/cast-keepers/DemoCastGroup-baseline-objdiff.json"
+  ],
+  "objdiff_exit": 0,
+  "symbols": [
+    {
+      "name": "__ct__13DemoCastGroupFPCc",
+      "demangled_name": "DemoCastGroup::DemoCastGroup(const char*)",
+      "size": "72",
+      "match_percent": 100.0,
+      "target_symbol": 1
+    },
+    {
+      "name": "tryRegisterDemoActor__13DemoCastGroupFP9LiveActorRC12JMapInfoIterRC10JMapIdInfo",
+      "demangled_name": "DemoCastGroup::tryRegisterDemoActor(LiveActor*, const JMapInfoIter&, const JMapIdInfo&)",
+      "size": "120",
+      "match_percent": 18.7,
+      "target_symbol": 2
+    },
+    {
+      "name": "tryRegisterDemoActor__13DemoCastGroupFP9LiveActorPCcRC12JMapInfoIter",
+      "demangled_name": "DemoCastGroup::tryRegisterDemoActor(LiveActor*, const char*, const JMapInfoIter&)",
+      "size": "116",
+      "match_percent": 100.0,
+      "target_symbol": 3
+    },
+    {
+      "name": "registerDemoActor__13DemoCastGroupFP9LiveActorRC12JMapInfoIter",
+      "demangled_name": "DemoCastGroup::registerDemoActor(LiveActor*, const JMapInfoIter&)",
+      "size": "8",
+      "match_percent": 100.0,
+      "target_symbol": 4
+    },
+    {
+      "name": "__dt__13DemoCastGroupFv",
+      "demangled_name": "DemoCastGroup::~DemoCastGroup()",
+      "size": "88",
+      "match_percent": 100.0,
+      "target_symbol": 129
+    },
+    {
+      "name": "init__13DemoCastGroupFRC12JMapInfoIter",
+      "demangled_name": "DemoCastGroup::init(const JMapInfoIter&)",
+      "size": "164",
+      "match_percent": 100.0,
+      "target_symbol": 5
+    },
+    {
+      "name": "__vt__13DemoCastGroup",
+      "demangled_name": "DemoCastGroup::__vtable",
+      "size": "48",
+      "match_percent": 100.0,
+      "target_symbol": 8
+    }
+  ],
+  "sources": {
+    "decomp/src/Game/Demo/DemoCastGroup.cpp": "28c44ebfa18b691b68456b975a0704204015a3a68c89fe3f563b0341b0523d7f",
+    "decomp/include/Game/Demo/DemoCastGroup.hpp": "8fed6afc9a46e6353715a86282c80311c806b3f802b897ba5fefa612159ea1ae",
+    "decomp/include/Game/Demo/DemoExecutor.hpp": "c1c1b33bc15e4dd85f612d4041b4b4db0365e1e8757c0a4e42741c09514628c2"
+  }
+}
+
+

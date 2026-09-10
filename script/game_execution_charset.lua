@@ -57,7 +57,8 @@ rule("smgpc.game_execution_charset")
             for _, file in ipairs({
                 "src/compat/EventUtilCompat.cpp",
                 "src/compat/OriginalSceneWipeUtil.cpp",
-                "src/compat/OriginalMarioSound.cpp"
+                "src/compat/OriginalMarioSound.cpp",
+                "src/compat/OriginalDemoUtil.cpp"
             }) do
                 table.insert(args, "--game-file")
                 table.insert(args, path.join(root, file))

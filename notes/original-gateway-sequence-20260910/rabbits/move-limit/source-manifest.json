@@ -1,0 +1,14 @@
+[
+  {
+    "path": "decomp/src/Game/Util/MapUtil.cpp",
+    "sha256": "a505f4524da848e4a04eac325afc7bf63fb80bdb950e88a59fb6aa1049a94caa"
+  },
+  {
+    "path": "decomp/include/Game/LiveActor/Binder.hpp",
+    "sha256": "6acb169247d5dc3fc6c193c18f05747f75e21d435f1efc5cbed12c8a2434d04d"
+  },
+  {
+    "path": "decomp/src/Game/Map/CollisionCategorizedKeeper.cpp",
+    "sha256": "a5a22bb0f005256d167268e5b23a86e904fbb959f2e7cc9191e0704088f0f50a"
+  }
+]

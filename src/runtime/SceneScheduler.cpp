@@ -819,11 +819,9 @@ namespace smgpc::runtime {
         smgpc::compat::SceneJ3dScope j3d_scope;
         if (movement_type < 0)
             aurora::throw_host_exception<std::out_of_range>("Movement category must be nonnegative");
-        // ClippingDirectorCompat has no second movement evaluator, and the
-        // original SensorHitChecker is not registered by the native owner.
-        // Keep each current native subsystem at its original category boundary.
+        // ClippingDirectorCompat still executes at its original category boundary.
+        // Sensor collisions run through the registered original SensorHitChecker.
         if (movement_type == MR::MovementType_ClippingDirector) execute_actor_clipping();
-        if (movement_type == MR::MovementType_SensorHitChecker) execute_sensor_hit_check();
         for (const auto& registered : category_entries(movement_type, false))
             execute_movement_entry(registered, movement_type);
     }
@@ -850,76 +848,6 @@ namespace smgpc::runtime {
 #ifndef NDEBUG
         push_trace(*entry, SceneSchedulerPhase::Movement);
 #endif
-    }
-
-    void SceneScheduler::execute_sensor_hit_check() {
-        smgpc::compat::JkrHostAllocationScope host;
-        struct RegisteredSensor { HitSensor* sensor; Entry owner; };
-        auto actors = std::vector<LiveActor *>{};
-        auto sensors = std::vector<RegisteredSensor>{};
-
-        for (const auto& registered : entries_snapshot()) {
-            auto entry = current_entry(registered);
-            if (!entry) continue;
-            auto *actor = entry_live_actor(*entry);
-            if (actor == nullptr || entry_is_dead(*entry) || entry_is_suspended(*entry) ||
-                actor->mFlag.mIsClipped ||
-                std::ranges::find(actors, actor) != actors.end()) {
-                continue;
-            }
-
-            {
-                std::vector<HitSensor*> collected;
-                smgpc::compat::collect_actor_hit_sensors(actor, collected);
-                for (auto* sensor : collected) sensors.push_back({sensor, *entry});
-                actors.push_back(actor);
-            }
-        }
-
-        const auto current_sensor = [&](const RegisteredSensor& registered) -> HitSensor* {
-            const auto entry = current_entry(registered.owner);
-            if (!entry) return nullptr;
-            auto* actor = entry_live_actor(*entry);
-            // Registry lookup compares pointer identities without dereferencing
-            // a sensor that another actor's callback may have removed.
-            const auto* name = smgpc::compat::actor_hit_sensor_name(actor, registered.sensor);
-            return smgpc::compat::actor_hit_sensor(actor, name) == registered.sensor ? registered.sensor : nullptr;
-        };
-        for (const auto& registered : sensors) {
-            auto* sensor = current_sensor(registered);
-            if (sensor != nullptr) {
-                sensor->mSensorCount = 0U;
-            }
-        }
-
-        for (auto lhs_index = std::size_t{}; lhs_index < sensors.size(); ++lhs_index) {
-            auto *lhs = current_sensor(sensors[lhs_index]);
-            if (lhs == nullptr || lhs->mHost == nullptr || !lhs->mValidByHost || !lhs->mValidBySystem || lhs->mHost->mFlag.mIsDead) {
-                continue;
-            }
-
-            for (auto rhs_index = lhs_index + 1U; rhs_index < sensors.size(); ++rhs_index) {
-                lhs = current_sensor(sensors[lhs_index]);
-                if (lhs == nullptr || !lhs->mValidByHost || !lhs->mValidBySystem || lhs->mHost->mFlag.mIsDead) break;
-                auto *rhs = current_sensor(sensors[rhs_index]);
-                if (rhs == nullptr || rhs->mHost == nullptr || rhs->mHost == lhs->mHost || !rhs->mValidByHost ||
-                    !rhs->mValidBySystem || rhs->mHost->mFlag.mIsDead) {
-                    continue;
-                }
-
-                const auto dx = lhs->mPosition.x - rhs->mPosition.x;
-                const auto dy = lhs->mPosition.y - rhs->mPosition.y;
-                const auto dz = lhs->mPosition.z - rhs->mPosition.z;
-                const auto radius = lhs->mRadius + rhs->mRadius;
-                const auto distance_squared = (dx * dx) + (dy * dy) + (dz * dz);
-                if (distance_squared > (radius * radius)) {
-                    continue;
-                }
-
-                lhs->addHitSensor(rhs);
-                rhs->addHitSensor(lhs);
-            }
-        }
     }
 
     void SceneScheduler::execute_calc_anim() {

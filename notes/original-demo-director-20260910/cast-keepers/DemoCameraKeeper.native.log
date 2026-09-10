@@ -1,0 +1,49 @@
+In file included from /Users/frityet/Projects/petari/notes/original-demo-director-20260910/cast-keepers/native-staged/Game/Demo/DemoCameraKeeper.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from /Users/frityet/Projects/petari/notes/original-demo-director-20260910/cast-keepers/native-staged/Game/Demo/DemoCameraKeeper.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here
+   28 |                virtual void calcAnim();
+      |                             ^
+In file included from /Users/frityet/Projects/petari/notes/original-demo-director-20260910/cast-keepers/native-staged/Game/Demo/DemoCameraKeeper.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:43:29: warning: 'calcViewAndEntry' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   43 |                virtual void calcViewAndEntry();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:29:29: note: overridden virtual function is here
+   29 |                virtual void calcViewAndEntry();
+      |                             ^
+/Users/frityet/Projects/petari/notes/original-demo-director-20260910/cast-keepers/native-staged/Game/Demo/DemoCameraKeeper.cpp:125:9: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  125 |         map->getValue< const char* >(i, "PartName", &curInfo->mPartName);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/frityet/Projects/petari/notes/original-demo-director-20260910/cast-keepers/native-staged/Game/Demo/DemoCameraKeeper.cpp:126:9: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  126 |         map->getValue< const char* >(i, "CameraTargetName", &curInfo->mCameraTargetName);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/frityet/Projects/petari/notes/original-demo-director-20260910/cast-keepers/native-staged/Game/Demo/DemoCameraKeeper.cpp:127:9: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  127 |         map->getValue< s32 >(i, "CameraTargetCastID", &curInfo->mCameraTargetCastID);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/frityet/Projects/petari/notes/original-demo-director-20260910/cast-keepers/native-staged/Game/Demo/DemoCameraKeeper.cpp:128:9: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  128 |         map->getValue< const char* >(i, "AnimCameraName", &curInfo->mAnimCameraName);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/frityet/Projects/petari/notes/original-demo-director-20260910/cast-keepers/native-staged/Game/Demo/DemoCameraKeeper.cpp:129:9: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  129 |         map->getValue< s32 >(i, "AnimCameraStartFrame", &curInfo->mAnimCameraStartFrame);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/frityet/Projects/petari/notes/original-demo-director-20260910/cast-keepers/native-staged/Game/Demo/DemoCameraKeeper.cpp:130:9: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  130 |         map->getValue< s32 >(i, "AnimCameraEndFrame", &curInfo->mAnimCameraEndFrame);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/frityet/Projects/petari/notes/original-demo-director-20260910/cast-keepers/native-staged/Game/Demo/DemoCameraKeeper.cpp:132:9: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  132 |         map->getValue< s32 >(i, "IsContinuous", &continuous);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+10 warnings generated.

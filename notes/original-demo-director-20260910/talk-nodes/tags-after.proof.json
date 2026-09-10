@@ -1,0 +1,167 @@
+{
+  "command": [
+    "build/tools/wibo",
+    "build/tools/sjiswrap.exe",
+    "build/compilers/GC/3.0a3/mwcceppc.exe",
+    "-nodefaults",
+    "-proc",
+    "gekko",
+    "-align",
+    "powerpc",
+    "-enum",
+    "int",
+    "-fp",
+    "hardware",
+    "-Cpp_exceptions",
+    "off",
+    "-O4,s",
+    "-inline",
+    "auto",
+    "-pragma",
+    "cats off",
+    "-pragma",
+    "warn_notinlined off",
+    "-maxerrors",
+    "1",
+    "-nosyspath",
+    "-RTTI",
+    "off",
+    "-str",
+    "reuse",
+    "-enc",
+    "SJIS",
+    "-sdata",
+    "4",
+    "-sdata2",
+    "4",
+    "-ipa",
+    "file",
+    "-sym",
+    "on",
+    "-i",
+    "include",
+    "-i",
+    "libs/JSystem/include",
+    "-i",
+    "libs/MSL_C++/include",
+    "-i",
+    "libs/MSL_C/include",
+    "-i",
+    "libs/MetroTRK/include",
+    "-i",
+    "libs/RVLFaceLib/include",
+    "-i",
+    "libs/RVL_SDK/include",
+    "-i",
+    "libs/Runtime/include",
+    "-i",
+    "libs/nw4r/include",
+    "-i",
+    "build/original-j3d-joint-traversal-20260903/retail/include",
+    "-DVERSION=0",
+    "-c",
+    "src/Game/Screen/MessageTagSkipTagProcessor.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-demo-director-20260910/talk-nodes/tags-after.o"
+  ],
+  "exit": 0,
+  "source": "Game/Screen/MessageTagSkipTagProcessor.cpp",
+  "sha256": "79ebc9af9bdea2f07d2a11c843b4f4914e88f48a652dffd29e57ee81f28f375b",
+  "objdiff_command": [
+    "/Users/frityet/Projects/petari/decomp/build/tools/objdiff-cli",
+    "diff",
+    "-1",
+    "/Users/frityet/Projects/petari/notes/gateway-audit-20260907/restoration/retail/obj/Game/Screen/MessageTagSkipTagProcessor.o",
+    "-2",
+    "/Users/frityet/Projects/petari/notes/original-demo-director-20260910/talk-nodes/tags-after.o",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-demo-director-20260910/talk-nodes/tags-after.objdiff.json"
+  ],
+  "objdiff_exit": 0,
+  "symbols": [
+    {
+      "name": "__ct__23MessageEditorMessageTagFPCQ34nw4r2ut15PrintContext<w>",
+      "demangled_name": "MessageEditorMessageTag::MessageEditorMessageTag(const nw4r::ut::PrintContext<wchar_t>*)",
+      "size": "12",
+      "match_percent": null
+    },
+    {
+      "name": "__ct__23MessageEditorMessageTagFPCw",
+      "demangled_name": "MessageEditorMessageTag::MessageEditorMessageTag(const wchar_t*)",
+      "size": "8",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getTagLength__23MessageEditorMessageTagCFv",
+      "demangled_name": "MessageEditorMessageTag::getTagLength() const",
+      "size": "16",
+      "match_percent": null
+    },
+    {
+      "name": "getSkipLength__23MessageEditorMessageTagCFv",
+      "demangled_name": "MessageEditorMessageTag::getSkipLength() const",
+      "size": "20",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getParamLength__23MessageEditorMessageTagCFv",
+      "demangled_name": "MessageEditorMessageTag::getParamLength() const",
+      "size": "16",
+      "match_percent": null
+    },
+    {
+      "name": "getParam8__23MessageEditorMessageTagCFi",
+      "demangled_name": "MessageEditorMessageTag::getParam8(int) const",
+      "size": "16",
+      "match_percent": null
+    },
+    {
+      "name": "getParam16__23MessageEditorMessageTagCFi",
+      "demangled_name": "MessageEditorMessageTag::getParam16(int) const",
+      "size": "20",
+      "match_percent": null
+    },
+    {
+      "name": "getParam32__23MessageEditorMessageTagCFi",
+      "demangled_name": "MessageEditorMessageTag::getParam32(int) const",
+      "size": "20",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getParamPtr__23MessageEditorMessageTagCFi",
+      "demangled_name": "MessageEditorMessageTag::getParamPtr(int) const",
+      "size": "16",
+      "match_percent": null
+    },
+    {
+      "name": "__ct__26MessageTagSkipTagProcessorFv",
+      "demangled_name": "MessageTagSkipTagProcessor::MessageTagSkipTagProcessor()",
+      "size": "60",
+      "match_percent": 100.0
+    },
+    {
+      "name": "CalcRect__26MessageTagSkipTagProcessorFPQ34nw4r2ut4RectUsPQ34nw4r2ut15PrintContext<w>",
+      "demangled_name": "MessageTagSkipTagProcessor::CalcRect(nw4r::ut::Rect*, unsigned short, nw4r::ut::PrintContext<wchar_t>*)",
+      "size": "24",
+      "match_percent": 0.0
+    },
+    {
+      "name": "Process__26MessageTagSkipTagProcessorFUsPQ34nw4r2ut15PrintContext<w>",
+      "demangled_name": "MessageTagSkipTagProcessor::Process(unsigned short, nw4r::ut::PrintContext<wchar_t>*)",
+      "size": "24",
+      "match_percent": 0.0
+    },
+    {
+      "name": "skipTag__26MessageTagSkipTagProcessorFPQ34nw4r2ut4RectPQ34nw4r2ut15PrintContext<w>b",
+      "demangled_name": "MessageTagSkipTagProcessor::skipTag(nw4r::ut::Rect*, nw4r::ut::PrintContext<wchar_t>*, bool)",
+      "size": "36",
+      "match_percent": 87.77778
+    },
+    {
+      "name": "__vt__26MessageTagSkipTagProcessor",
+      "demangled_name": "MessageTagSkipTagProcessor::__vtable",
+      "size": "20",
+      "match_percent": 100.0
+    }
+  ]
+}

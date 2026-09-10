@@ -15,6 +15,7 @@ class StageSwitchCtrl;
 struct ResTIMG;
 
 namespace MR {
+    void initStarPieceGetCSSound();
     class FunctorBase;
     void registerPreDrawFunction(const MR::FunctorBase&, int);
     bool isStageStateScenarioOpeningCamera();
@@ -106,6 +107,8 @@ namespace MR {
     bool isInDeath(const TVec3f&);
     bool isInDarkMatter(const TVec3f&);
     void requestMovementOn(NameObj* pObj);
+    void requestMovementOn(LiveActor* pActor);
+    void requestMovementOn(LayoutActor* pActor);
     void requestMovementOff(NameObj* pObj);
     bool isExistResourceInArc(const char* pArcName, const char* pResourceName);
     bool tryRumblePad(const void*, const char*, s32);
@@ -139,12 +142,14 @@ namespace MR {
     void listenNameObjStageSwitchOnB(const NameObj*, const StageSwitchCtrl*, const MR::FunctorBase&);
     void listenNameObjStageSwitchOffB(const NameObj*, const StageSwitchCtrl*, const MR::FunctorBase&);
     void listenNameObjStageSwitchOnOffB(const NameObj*, const StageSwitchCtrl*, const MR::FunctorBase&, const MR::FunctorBase&);
+    bool isName(const NameObj*, const char*);
+    bool isSame(const NameObj*, const NameObj*);
 }  // namespace MR
 
 namespace MR {
     bool tryRegisterNamePosLinkObj(const NameObj*, const JMapInfoIter&);
     bool findNamePos(const char*, MtxPtr);
-    bool findNamePosOnGround(const char*, MtxPtr);
+    void findNamePosOnGround(const char*, MtxPtr);
     bool findNamePos(const char*, TVec3f*, TVec3f*);
     bool tryFindNamePos(const char*, MtxPtr);
     bool tryFindNamePos(const char*, TVec3f*, TVec3f*);

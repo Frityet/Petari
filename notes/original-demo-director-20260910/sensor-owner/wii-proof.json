@@ -1,0 +1,166 @@
+{
+  "command": [
+    "build/tools/wibo",
+    "build/tools/sjiswrap.exe",
+    "build/compilers/GC/3.0a3/mwcceppc.exe",
+    "-nodefaults",
+    "-proc",
+    "gekko",
+    "-align",
+    "powerpc",
+    "-enum",
+    "int",
+    "-fp",
+    "hardware",
+    "-Cpp_exceptions",
+    "off",
+    "-O4,s",
+    "-inline",
+    "auto",
+    "-pragma",
+    "cats off",
+    "-pragma",
+    "warn_notinlined off",
+    "-maxerrors",
+    "1",
+    "-nosyspath",
+    "-RTTI",
+    "off",
+    "-str",
+    "reuse",
+    "-enc",
+    "SJIS",
+    "-sdata",
+    "4",
+    "-sdata2",
+    "4",
+    "-ipa",
+    "file",
+    "-sym",
+    "on",
+    "-i",
+    "include",
+    "-i",
+    "libs/JSystem/include",
+    "-i",
+    "libs/MSL_C++/include",
+    "-i",
+    "libs/MSL_C/include",
+    "-i",
+    "libs/MetroTRK/include",
+    "-i",
+    "libs/RVLFaceLib/include",
+    "-i",
+    "libs/RVL_SDK/include",
+    "-i",
+    "libs/Runtime/include",
+    "-i",
+    "libs/nw4r/include",
+    "-i",
+    "build/original-j3d-joint-traversal-20260903/retail/include",
+    "-DVERSION=0",
+    "-c",
+    "src/Game/LiveActor/SensorHitChecker.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-demo-director-20260910/sensor-owner/SensorHitChecker.o"
+  ],
+  "exit": 0,
+  "source_sha256": "ed949dcc14e482201e160a69b279ffa8f108f181652a46a3927b6add2c42e182",
+  "objdiff_command": [
+    "/Users/frityet/Projects/petari/decomp/build/tools/objdiff-cli",
+    "diff",
+    "-1",
+    "/Users/frityet/Projects/petari/notes/gateway-audit-20260907/restoration/retail/obj/Game/LiveActor/SensorHitChecker.o",
+    "-2",
+    "/Users/frityet/Projects/petari/notes/original-demo-director-20260910/sensor-owner/SensorHitChecker.o",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-demo-director-20260910/sensor-owner/objdiff.json"
+  ],
+  "objdiff_exit": 0,
+  "symbols": [
+    {
+      "name": "__ct__11SensorGroupFiPCc",
+      "demangled_name": "SensorGroup::SensorGroup(int, const char*)",
+      "size": "120",
+      "match_percent": 100.0
+    },
+    {
+      "name": "add__11SensorGroupFP9HitSensor",
+      "demangled_name": "SensorGroup::add(HitSensor*)",
+      "size": "36",
+      "match_percent": 100.0
+    },
+    {
+      "name": "remove__11SensorGroupFP9HitSensor",
+      "demangled_name": "SensorGroup::remove(HitSensor*)",
+      "size": "80",
+      "match_percent": 100.0
+    },
+    {
+      "name": "clear__11SensorGroupCFv",
+      "demangled_name": "SensorGroup::clear() const",
+      "size": "52",
+      "match_percent": 100.0
+    },
+    {
+      "name": "init__16SensorHitCheckerFRC12JMapInfoIter",
+      "demangled_name": "SensorHitChecker::init(const JMapInfoIter&)",
+      "size": "20",
+      "match_percent": 100.0
+    },
+    {
+      "name": "initGroup__16SensorHitCheckerFP9HitSensor",
+      "demangled_name": "SensorHitChecker::initGroup(HitSensor*)",
+      "size": "320",
+      "match_percent": 100.0
+    },
+    {
+      "name": "movement__16SensorHitCheckerFv",
+      "demangled_name": "SensorHitChecker::movement()",
+      "size": "308",
+      "match_percent": 100.0
+    },
+    {
+      "name": "doObjColGroup__16SensorHitCheckerCFP11SensorGroupP11SensorGroup",
+      "demangled_name": "SensorHitChecker::doObjColGroup(SensorGroup*, SensorGroup*) const",
+      "size": "264",
+      "match_percent": 98.333336
+    },
+    {
+      "name": "doObjColInSameGroup__16SensorHitCheckerCFP11SensorGroup",
+      "demangled_name": "SensorHitChecker::doObjColInSameGroup(SensorGroup*) const",
+      "size": "256",
+      "match_percent": 98.203125
+    },
+    {
+      "name": "checkAttack__16SensorHitCheckerCFP9HitSensorP9HitSensor",
+      "demangled_name": "SensorHitChecker::checkAttack(HitSensor*, HitSensor*) const",
+      "size": "216",
+      "match_percent": 99.62963
+    },
+    {
+      "name": "initHitSensorGroup__2MRFP9HitSensor",
+      "demangled_name": "MR::initHitSensorGroup(HitSensor*)",
+      "size": "60",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__dt__16SensorHitCheckerFv",
+      "demangled_name": "SensorHitChecker::~SensorHitChecker()",
+      "size": "88",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__ct__16SensorHitCheckerFPCc",
+      "demangled_name": "SensorHitChecker::SensorHitChecker(const char*)",
+      "size": "296",
+      "match_percent": 99.72973
+    },
+    {
+      "name": "__vt__16SensorHitChecker",
+      "demangled_name": "SensorHitChecker::__vtable",
+      "size": "36",
+      "match_percent": 100.0
+    }
+  ]
+}

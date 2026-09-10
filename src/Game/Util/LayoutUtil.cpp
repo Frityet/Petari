@@ -348,6 +348,16 @@ namespace MR {
         getEffect(pActor, pParam2)->setHostMtx(pHostMtx);
     }
 
+    void pauseOffEffectAll(LayoutActor* pActor) {
+        PaneEffectKeeper* pKeeper = pActor->mEffectKeeper;
+        for (s32 i = 0; i < pKeeper->mEmitters.mCount; i++) {
+            MultiEmitter* pEmitter = pKeeper->mEmitters.mArray[i];
+            if (pEmitter != nullptr && pEmitter->isValid()) {
+                pEmitter->pauseOff(-1);
+            }
+        }
+    }
+
     bool isRegisteredEffect(const LayoutActor* pActor, const char* pParam2) {
         if (pParam2 != nullptr) {
             return pActor->mEffectKeeper->getEmitter(pParam2) != nullptr;

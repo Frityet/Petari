@@ -1,0 +1,116 @@
+[
+  {
+    "name": "startDemoSystem__20DemoStartRequestUtilFP7NameObjPCclQ213DemoStartInfo8DemoTypeQ213DemoStartInfo15CinemaFrameTypeQ213DemoStartInfo15StarPointerTypeQ213DemoStartInfo16DeleteEffectTypePCc",
+    "demangled_name": "DemoStartRequestUtil::startDemoSystem(NameObj*, const char*, long, DemoStartInfo::DemoType, DemoStartInfo::CinemaFrameType, DemoStartInfo::StarPointerType, DemoStartInfo::DeleteEffectType, const char*)",
+    "size": "312",
+    "match_percent": 96.21795
+  },
+  {
+    "name": "startDemoSystem__20DemoStartRequestUtilFP9LiveActorPCclQ213DemoStartInfo8DemoTypeQ213DemoStartInfo15CinemaFrameTypeQ213DemoStartInfo15StarPointerTypeQ213DemoStartInfo16DeleteEffectTypePCc",
+    "demangled_name": "DemoStartRequestUtil::startDemoSystem(LiveActor*, const char*, long, DemoStartInfo::DemoType, DemoStartInfo::CinemaFrameType, DemoStartInfo::StarPointerType, DemoStartInfo::DeleteEffectType, const char*)",
+    "size": "52",
+    "match_percent": 100.0
+  },
+  {
+    "name": "startDemoSystem__20DemoStartRequestUtilFP11LayoutActorPCclQ213DemoStartInfo8DemoTypeQ213DemoStartInfo15CinemaFrameTypeQ213DemoStartInfo15StarPointerTypeQ213DemoStartInfo16DeleteEffectTypePCc",
+    "demangled_name": "DemoStartRequestUtil::startDemoSystem(LayoutActor*, const char*, long, DemoStartInfo::DemoType, DemoStartInfo::CinemaFrameType, DemoStartInfo::StarPointerType, DemoStartInfo::DeleteEffectType, const char*)",
+    "size": "52",
+    "match_percent": 100.0
+  },
+  {
+    "name": "requestStartDemo__20DemoStartRequestUtilFP9LiveActorPCcPC5NervePC5NervelQ213DemoStartInfo8DemoTypeQ213DemoStartInfo15CinemaFrameTypeQ213DemoStartInfo15StarPointerTypeQ213DemoStartInfo16DeleteEffectType",
+    "demangled_name": "DemoStartRequestUtil::requestStartDemo(LiveActor*, const char*, const Nerve*, const Nerve*, long, DemoStartInfo::DemoType, DemoStartInfo::CinemaFrameType, DemoStartInfo::StarPointerType, DemoStartInfo::DeleteEffectType)",
+    "size": "304",
+    "match_percent": 100.0
+  },
+  {
+    "name": "requestStartDemo__20DemoStartRequestUtilFP11LayoutActorPCcPC5NervePC5NervelQ213DemoStartInfo8DemoTypeQ213DemoStartInfo15CinemaFrameTypeQ213DemoStartInfo15StarPointerTypeQ213DemoStartInfo16DeleteEffectType",
+    "demangled_name": "DemoStartRequestUtil::requestStartDemo(LayoutActor*, const char*, const Nerve*, const Nerve*, long, DemoStartInfo::DemoType, DemoStartInfo::CinemaFrameType, DemoStartInfo::StarPointerType, DemoStartInfo::DeleteEffectType)",
+    "size": "304",
+    "match_percent": 100.0
+  },
+  {
+    "name": "requestStartDemo__20DemoStartRequestUtilFP13NerveExecutorP9LiveActorPCcPC5NervePC5NervelQ213DemoStartInfo8DemoTypeQ213DemoStartInfo15CinemaFrameTypeQ213DemoStartInfo15StarPointerTypeQ213DemoStartInfo16DeleteEffectType",
+    "demangled_name": "DemoStartRequestUtil::requestStartDemo(NerveExecutor*, LiveActor*, const char*, const Nerve*, const Nerve*, long, DemoStartInfo::DemoType, DemoStartInfo::CinemaFrameType, DemoStartInfo::StarPointerType, DemoStartInfo::DeleteEffectType)",
+    "size": "284",
+    "match_percent": 100.0
+  },
+  {
+    "name": "requestStartTimeKeepDemo__20DemoStartRequestUtilFP9LiveActorPCcPCcPC5NervePC5NervelQ213DemoStartInfo8DemoTypeQ213DemoStartInfo15CinemaFrameTypeQ213DemoStartInfo15StarPointerTypeQ213DemoStartInfo16DeleteEffectType",
+    "demangled_name": "DemoStartRequestUtil::requestStartTimeKeepDemo(LiveActor*, const char*, const char*, const Nerve*, const Nerve*, long, DemoStartInfo::DemoType, DemoStartInfo::CinemaFrameType, DemoStartInfo::StarPointerType, DemoStartInfo::DeleteEffectType)",
+    "size": "280",
+    "match_percent": 100.0
+  },
+  {
+    "name": "requestStartTimeKeepDemo__20DemoStartRequestUtilFP13NerveExecutorP9LiveActorPCcPCcPC5NervePC5NervelQ213DemoStartInfo8DemoTypeQ213DemoStartInfo15CinemaFrameTypeQ213DemoStartInfo15StarPointerTypeQ213DemoStartInfo16DeleteEffectType",
+    "demangled_name": "DemoStartRequestUtil::requestStartTimeKeepDemo(NerveExecutor*, LiveActor*, const char*, const char*, const Nerve*, const Nerve*, long, DemoStartInfo::DemoType, DemoStartInfo::CinemaFrameType, DemoStartInfo::StarPointerType, DemoStartInfo::DeleteEffectType)",
+    "size": "288",
+    "match_percent": 100.0
+  },
+  {
+    "name": "requestStartTimeKeepDemo__20DemoStartRequestUtilFP7NameObjPCcPCclQ213DemoStartInfo8DemoTypeQ213DemoStartInfo15CinemaFrameTypeQ213DemoStartInfo15StarPointerTypeQ213DemoStartInfo16DeleteEffectType",
+    "demangled_name": "DemoStartRequestUtil::requestStartTimeKeepDemo(NameObj*, const char*, const char*, long, DemoStartInfo::DemoType, DemoStartInfo::CinemaFrameType, DemoStartInfo::StarPointerType, DemoStartInfo::DeleteEffectType)",
+    "size": "220",
+    "match_percent": 100.0
+  },
+  {
+    "name": "startDemo__20DemoStartRequestUtilFPC13DemoStartInfo",
+    "demangled_name": "DemoStartRequestUtil::startDemo(const DemoStartInfo*)",
+    "size": "396",
+    "match_percent": 97.37374
+  },
+  {
+    "name": "startDemo__20DemoStartRequestUtilFP22DemoStartRequestHolder",
+    "demangled_name": "DemoStartRequestUtil::startDemo(DemoStartRequestHolder*)",
+    "size": "64",
+    "match_percent": 100.0
+  },
+  {
+    "name": "popStartDemoRequest__20DemoStartRequestUtilFP22DemoStartRequestHolder",
+    "demangled_name": "DemoStartRequestUtil::popStartDemoRequest(DemoStartRequestHolder*)",
+    "size": "72",
+    "match_percent": 100.0
+  },
+  {
+    "name": "setDemoStartInfoCommon__34@unnamed@DemoStartRequestUtil_cpp@FP13DemoStartInfoPCcPCclQ213DemoStartInfo8DemoTypeQ213DemoStartInfo15CinemaFrameTypeQ213DemoStartInfo15StarPointerTypeQ213DemoStartInfo16DeleteEffectType",
+    "demangled_name": "@unnamed@DemoStartRequestUtil_cpp@::setDemoStartInfoCommon(DemoStartInfo*, const char*, const char*, long, DemoStartInfo::DemoType, DemoStartInfo::CinemaFrameType, DemoStartInfo::StarPointerType, DemoStartInfo::DeleteEffectType)",
+    "size": "92",
+    "match_percent": 100.0
+  },
+  {
+    "name": "isExistStartDemoRequest__20DemoStartRequestUtilFPC22DemoStartRequestHolder",
+    "demangled_name": "DemoStartRequestUtil::isExistStartDemoRequest(const DemoStartRequestHolder*)",
+    "size": "4",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getDemoStarter__20DemoStartRequestUtilFRC13DemoStartInfo",
+    "demangled_name": "DemoStartRequestUtil::getDemoStarter(const DemoStartInfo&)",
+    "size": "88",
+    "match_percent": 100.0
+  },
+  {
+    "name": "setNerveToStarter__20DemoStartRequestUtilFPC13DemoStartInfo",
+    "demangled_name": "DemoStartRequestUtil::setNerveToStarter(const DemoStartInfo*)",
+    "size": "76",
+    "match_percent": 100.0
+  },
+  {
+    "name": "requestMovementOn__20DemoStartRequestUtilFPC13DemoStartInfo",
+    "demangled_name": "DemoStartRequestUtil::requestMovementOn(const DemoStartInfo*)",
+    "size": "108",
+    "match_percent": 100.0
+  },
+  {
+    "name": "isEmpty__20DemoStartRequestUtilFPC13DemoStartInfo",
+    "demangled_name": "DemoStartRequestUtil::isEmpty(const DemoStartInfo*)",
+    "size": "76",
+    "match_percent": 100.0
+  },
+  {
+    "name": "startDemoExecutorIfExist__20DemoStartRequestUtilFRC13DemoStartInfo",
+    "demangled_name": "DemoStartRequestUtil::startDemoExecutorIfExist(const DemoStartInfo&)",
+    "size": "140",
+    "match_percent": 100.0
+  }
+]

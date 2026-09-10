@@ -1,0 +1,22 @@
+{
+  "commit": "86d8a4dfeb53ed8073ec5fe392bcd0b11f14fbc3",
+  "remote": "86d8a4dfeb53ed8073ec5fe392bcd0b11f14fbc3",
+  "author": "codex <codex@openai.com>",
+  "paths": [
+    "include/Game/LiveActor/Binder.hpp",
+    "include/Game/Screen/MessageTagSkipTagProcessor.hpp",
+    "include/Game/Util/ObjUtil.hpp",
+    "src/Game/Demo/DemoCameraFunction.cpp",
+    "src/Game/Demo/DemoCameraKeeper.cpp",
+    "src/Game/Demo/DemoSimpleCastHolder.cpp",
+    "src/Game/Demo/DemoStartRequestUtil.cpp",
+    "src/Game/LiveActor/SensorHitChecker.cpp",
+    "src/Game/Map/CollisionCategorizedKeeper.cpp",
+    "src/Game/Screen/MessageTagSkipTagProcessor.cpp",
+    "src/Game/Screen/PaneEffectKeeper.cpp",
+    "src/Game/Util/DemoUtil.cpp",
+    "src/Game/Util/LayoutUtil.cpp",
+    "src/Game/Util/MapUtil.cpp",
+    "src/Game/Util/ObjUtil.cpp"
+  ]
+}

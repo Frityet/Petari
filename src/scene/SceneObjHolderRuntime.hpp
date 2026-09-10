@@ -10,11 +10,12 @@
 class NameObj;
 class SceneObjHolder;
 
-namespace smgpc::runtime { class SceneScheduler; class SceneSchedulerAllocationBinding; }
+namespace smgpc::runtime { class SceneScheduler; class SceneSchedulerAllocationBinding; class SceneMessageBinding; }
 namespace smgpc::camera { class CameraDirectorRuntime; }
 
 namespace smgpc::compat {
     class CollisionDirectorOwnership;
+    class DemoDirectorOwnership;
     class EffectSystemOwnership;
     class ImageEffectOwnership;
     class JkrAllocationDomain;
@@ -65,7 +66,10 @@ namespace smgpc::scene {
         friend void adopt_current_scene_obj_holder_descendant(
             NameObj *object);
 
+        friend smgpc::compat::DemoDirectorOwnership* current_demo_director_ownership() noexcept;
+        std::unique_ptr<smgpc::compat::DemoDirectorOwnership> _demo_director_ownership;
         SceneInitializationBinding _initialization_state;
+        std::unique_ptr<smgpc::runtime::SceneMessageBinding> _scene_messages;
         std::shared_ptr<smgpc::compat::JkrAllocationDomain> _game_allocation_domain;
         std::unique_ptr<smgpc::runtime::SceneSchedulerAllocationBinding> _game_allocation_binding;
         std::unique_ptr<smgpc::camera::CameraDirectorRuntime> _camera_runtime;
@@ -96,6 +100,7 @@ namespace smgpc::scene {
     [[nodiscard]] smgpc::compat::CollisionDirectorOwnership* current_collision_director_ownership() noexcept;
     [[nodiscard]] smgpc::compat::EffectSystemOwnership* current_effect_system_ownership() noexcept;
     [[nodiscard]] SceneObjHolder *current_scene_obj_holder() noexcept;
+    [[nodiscard]] smgpc::compat::DemoDirectorOwnership* current_demo_director_ownership() noexcept;
     [[nodiscard]] std::shared_ptr<smgpc::compat::JkrAllocationDomain> current_scene_allocation_domain() noexcept;
     [[nodiscard]] bool current_scene_obj_holder_binding_owns(
         const NameObj *object) noexcept;

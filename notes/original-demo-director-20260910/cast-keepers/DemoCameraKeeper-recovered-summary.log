@@ -1,0 +1,165 @@
+{
+  "command": [
+    "build/tools/wibo",
+    "build/tools/sjiswrap.exe",
+    "build/compilers/GC/3.0a3/mwcceppc.exe",
+    "-nodefaults",
+    "-proc",
+    "gekko",
+    "-align",
+    "powerpc",
+    "-enum",
+    "int",
+    "-fp",
+    "hardware",
+    "-Cpp_exceptions",
+    "off",
+    "-O4,s",
+    "-inline",
+    "auto",
+    "-pragma",
+    "cats off",
+    "-pragma",
+    "warn_notinlined off",
+    "-maxerrors",
+    "1",
+    "-nosyspath",
+    "-RTTI",
+    "off",
+    "-str",
+    "reuse",
+    "-enc",
+    "SJIS",
+    "-sdata",
+    "4",
+    "-sdata2",
+    "4",
+    "-ipa",
+    "file",
+    "-sym",
+    "on",
+    "-i",
+    "include",
+    "-i",
+    "libs/JSystem/include",
+    "-i",
+    "libs/MSL_C++/include",
+    "-i",
+    "libs/MSL_C/include",
+    "-i",
+    "libs/MetroTRK/include",
+    "-i",
+    "libs/RVLFaceLib/include",
+    "-i",
+    "libs/RVL_SDK/include",
+    "-i",
+    "libs/Runtime/include",
+    "-i",
+    "libs/nw4r/include",
+    "-i",
+    "build/original-j3d-joint-traversal-20260903/retail/include",
+    "-DVERSION=0",
+    "-c",
+    "src/Game/Demo/DemoCameraKeeper.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-demo-director-20260910/cast-keepers/DemoCameraKeeper.DemoCameraKeeper-recovered.wii.o"
+  ],
+  "wii_exit": 0,
+  "objdiff_command": [
+    "/Users/frityet/Projects/petari/decomp/build/tools/objdiff-cli",
+    "diff",
+    "-1",
+    "/Users/frityet/Projects/petari/notes/gateway-audit-20260907/restoration/retail/obj/Game/Demo/DemoCameraKeeper.o",
+    "-2",
+    "/Users/frityet/Projects/petari/notes/original-demo-director-20260910/cast-keepers/DemoCameraKeeper.DemoCameraKeeper-recovered.wii.o",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-demo-director-20260910/cast-keepers/DemoCameraKeeper-recovered-objdiff.json"
+  ],
+  "objdiff_exit": 0,
+  "symbols": [
+    {
+      "name": "__ct__14DemoCameraInfoFv",
+      "demangled_name": "DemoCameraInfo::DemoCameraInfo()",
+      "size": "52",
+      "match_percent": 100.0,
+      "target_symbol": 1
+    },
+    {
+      "name": "initCast__16DemoCameraKeeperFP9LiveActorRC12JMapInfoIter",
+      "demangled_name": "DemoCameraKeeper::initCast(LiveActor*, const JMapInfoIter&)",
+      "size": "144",
+      "match_percent": 100.0,
+      "target_symbol": 2
+    },
+    {
+      "name": "start__16DemoCameraKeeperFv",
+      "demangled_name": "DemoCameraKeeper::start()",
+      "size": "12",
+      "match_percent": 100.0,
+      "target_symbol": 3
+    },
+    {
+      "name": "update__16DemoCameraKeeperFv",
+      "demangled_name": "DemoCameraKeeper::update()",
+      "size": "124",
+      "match_percent": 96.451614,
+      "target_symbol": 4
+    },
+    {
+      "name": "end__16DemoCameraKeeperFv",
+      "demangled_name": "DemoCameraKeeper::end()",
+      "size": "52",
+      "match_percent": 100.0,
+      "target_symbol": 5
+    },
+    {
+      "name": "initActorCamera__16DemoCameraKeeperFP14DemoCameraInfoRC12JMapInfoIter",
+      "demangled_name": "DemoCameraKeeper::initActorCamera(DemoCameraInfo*, const JMapInfoIter&)",
+      "size": "160",
+      "match_percent": 100.0,
+      "target_symbol": 6
+    },
+    {
+      "name": "executeType__16DemoCameraKeeperFPC14DemoCameraInfo",
+      "demangled_name": "DemoCameraKeeper::executeType(const DemoCameraInfo*)",
+      "size": "136",
+      "match_percent": 100.0,
+      "target_symbol": 7
+    },
+    {
+      "name": "executeFirst__16DemoCameraKeeperFPC14DemoCameraInfo",
+      "demangled_name": "DemoCameraKeeper::executeFirst(const DemoCameraInfo*)",
+      "size": "192",
+      "match_percent": 100.0,
+      "target_symbol": 8
+    },
+    {
+      "name": "executeLast__16DemoCameraKeeperFPC14DemoCameraInfo",
+      "demangled_name": "DemoCameraKeeper::executeLast(const DemoCameraInfo*)",
+      "size": "88",
+      "match_percent": 100.0,
+      "target_symbol": 9
+    },
+    {
+      "name": "endCurrentCamera__16DemoCameraKeeperFv",
+      "demangled_name": "DemoCameraKeeper::endCurrentCamera()",
+      "size": "88",
+      "match_percent": 100.0,
+      "target_symbol": 10
+    },
+    {
+      "name": "__ct__16DemoCameraKeeperFP12DemoExecutorRC12JMapInfoIter",
+      "demangled_name": "DemoCameraKeeper::DemoCameraKeeper(DemoExecutor*, const JMapInfoIter&)",
+      "size": "500",
+      "match_percent": 96.92,
+      "target_symbol": 329
+    }
+  ],
+  "sources": {
+    "decomp/src/Game/Demo/DemoCameraKeeper.cpp": "f104b9a0aabe771ef71cdfb9f74b59a7ae8bf3a96b0decc715f8f53690211f70",
+    "decomp/include/Game/Demo/DemoCameraKeeper.hpp": "9ff7f2ba0f441d1daa3c70793f6838ea73a507d460a6a7613b010b53e81b2f76",
+    "decomp/include/Game/Demo/DemoExecutor.hpp": "c1c1b33bc15e4dd85f612d4041b4b4db0365e1e8757c0a4e42741c09514628c2"
+  }
+}
+
+

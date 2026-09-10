@@ -92,6 +92,9 @@ target("smg-pc-game")
     remove_files("NPC/MiiFacePartsHolder.cpp")
     remove_files("NPC/MiiFaceParts.cpp")
     remove_files("NPC/MiiFaceRecipe.cpp")
+    add_files({"../nw4r/ut/ut_CharWriter.cpp", "../nw4r/ut/ut_TextWriterBase.cpp",
+               "../nw4r/ut/ut_TagProcessorBase.cpp", "../nw4r/ut/ut_CharStrmReader.cpp",
+               "../nw4r/ut/ut_Font.cpp"}, {cxxflags = "-ffp-contract=off"})
     add_files("../camera/**.cpp")
     add_files("../layout/**.cpp")
     add_files("../resource/**.cpp")

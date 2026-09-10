@@ -1,0 +1,20 @@
+[
+  {
+    "name": "getStarPieceDirector__2MRFv",
+    "demangled_name": "MR::getStarPieceDirector()",
+    "size": "40",
+    "match_percent": 100.0
+  },
+  {
+    "name": "initCSDelay__17StarPieceDirectorFv",
+    "demangled_name": "StarPieceDirector::initCSDelay()",
+    "size": "36",
+    "match_percent": 100.0
+  },
+  {
+    "name": "initCSSound__17StarPieceDirectorFv",
+    "demangled_name": "StarPieceDirector::initCSSound()",
+    "size": "64",
+    "match_percent": 100.0
+  }
+]

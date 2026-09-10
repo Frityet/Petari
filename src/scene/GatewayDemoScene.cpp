@@ -208,11 +208,7 @@ namespace smgpc::scene {
             // before SceneDataInitializer starts placement. Install the same
             // scene owner before any Gateway placement actor can register a
             // simple cast, DemoGroup cast, or demo action.
-            _demo_scene_runtime =
-                std::make_unique<smgpc::compat::DemoSceneRuntime>(
-                    _dvd, _authored_data->placements(),
-                    _authored_data->general_positions());
-            smgpc::compat::claim_name_obj_runtime_ownership(_demo_scene_runtime.get(), this);
+            require(MR::createSceneObj(SceneObj_DemoDirector) != nullptr, "original DemoDirector is required");
             _scene_binding->initialize_effect_system(3072, 256);
             constexpr auto required_scene_objects = std::array{
                 SceneObj_NameObjGroup,
@@ -288,6 +284,11 @@ namespace smgpc::scene {
                 require(StageCollisionService::active() == &_collision,
                         "Gateway collision service is no longer the active scene owner");
 
+                // Original programmable camera declarations borrow the real
+                // Mario target. Place the player before DemoGroup keepers and
+                // place other actors after their demo groups exist.
+                _demo_scene_runtime = std::make_unique<smgpc::compat::DemoSceneRuntime>(
+                    _dvd, _authored_data->placements(), _authored_data->general_positions());
                 const auto &report = _authored_placements->instantiate();
                 derive_authored_actors();
                 validate_gravity();

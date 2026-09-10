@@ -1,3 +1,4 @@
+#include "compat/DemoDirectorOwnership.hpp"
 #include <aurora/exception.hpp>
 #include "Game/Screen/StarPointerTarget.hpp"
 #include "compat/EffectSystemOwnership.hpp"
@@ -52,6 +53,8 @@ namespace {
             if (!keeper) return;
             for (s32 i = 0; i < keeper->mSensorInfosSize; ++i) {
                 auto* info = keeper->mSensorInfos[i];
+                // Original group membership must end before native sensor storage.
+                info->mSensor->invalidateBySystem();
                 delete[] info->mSensor->mSensors;
                 delete info->mSensor;
                 delete info;
@@ -222,6 +225,7 @@ namespace smgpc::compat {
     }
 
     void release_name_obj_runtime_state(const NameObj* object) {
+        if (auto* demo = smgpc::scene::current_demo_director_ownership()) demo->release_name_obj(object);
         // Groups borrow their members. Native factory rollback and object
         // retirement may leave the group alive after one member is deleted.
         // Scan actual groups so direct original registerObj calls are covered.

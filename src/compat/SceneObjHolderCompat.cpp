@@ -12,6 +12,7 @@
 #include "Game/LiveActor/ShadowController.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "runtime/RuntimeContext.hpp"
+#include "runtime/MessageHolderOwnership.hpp"
 #include "Game/Scene/PlacementStateChecker.hpp"
 #include "Game/Scene/ScenePlayingResult.hpp"
 
@@ -20,9 +21,12 @@
 #include "Game/Camera/CameraContext.hpp"
 #include "camera/CameraDirectorRuntime.hpp"
 #include "Game/Demo/PrologueDirector.hpp"
+#include "Game/Demo/DemoDirector.hpp"
+#include "compat/DemoDirectorOwnership.hpp"
 #include "Game/Gravity/PlanetGravityManager.hpp"
 #include "Game/LiveActor/ClippingDirector.hpp"
 #include "Game/LiveActor/AllLiveActorGroup.hpp"
+#include "Game/LiveActor/SensorHitChecker.hpp"
 #include "Game/LiveActor/MessageSensorHolder.hpp"
 #include "Game/Map/Air.hpp"
 #include "Game/Map/LightDirector.hpp"
@@ -135,6 +139,7 @@ namespace smgpc::scene {
         smgpc::compat::JkrHostAllocationScope host;
         _global_gravity_ownership = std::make_unique<smgpc::compat::GlobalGravityOwnership>(holder);
         _collision_director_ownership = std::make_unique<smgpc::compat::CollisionDirectorOwnership>();
+        _demo_director_ownership = std::make_unique<smgpc::compat::DemoDirectorOwnership>();
         _image_effect_ownership = std::make_unique<smgpc::compat::ImageEffectOwnership>(holder);
         _area_obj_runtime = std::make_unique<AreaObjRuntime>();
         _captured_frame_blur_service = std::make_unique<smgpc::compat::CapturedFrameBlurService>();
@@ -154,6 +159,8 @@ namespace smgpc::scene {
         sCurrentSceneObjHolder = _holder;
         sCurrentSceneObjHolderBinding = this;
         try {
+            if (auto* messages = smgpc::runtime::current_message_holder())
+                _scene_messages = std::make_unique<smgpc::runtime::SceneMessageBinding>(*messages);
             // Every original LiveActor joins this group during construction,
             // including actors with no movement or draw registration.
             if (dynamic_cast<AllLiveActorGroup*>(_holder->create(SceneObj_AllLiveActorGroup)) == nullptr) {
@@ -168,6 +175,7 @@ namespace smgpc::scene {
     }
 
     SceneObjHolderBinding::~SceneObjHolderBinding() {
+        _demo_director_ownership->prepare_retirement();
         _collision_director_ownership->prepare_retirement();
         _image_effect_ownership->prepare_retirement();
         if (_camera_runtime) _camera_runtime->unpublish();
@@ -185,6 +193,8 @@ namespace smgpc::scene {
         while (!_owned_objects.empty()) {
             _owned_objects.pop_back();
         }
+        _demo_director_ownership->reclaim();
+        _demo_director_ownership.reset();
         smgpc::compat::release_scene_collision_parts(_holder);
         _collision_director_ownership->reclaim();
         _collision_director_ownership.reset();
@@ -204,6 +214,7 @@ namespace smgpc::scene {
         _area_obj_runtime.reset();
         _captured_frame_blur_service.reset();
         _effect_system_ownership.reset();
+        _scene_messages.reset();
         _game_allocation_binding.reset();
         _game_allocation_domain.reset();
     }
@@ -277,6 +288,10 @@ namespace smgpc::scene {
 
     void SceneObjHolderBinding::complete_initialization() {
         _initialization_state.complete();
+    }
+
+    smgpc::compat::DemoDirectorOwnership* current_demo_director_ownership() noexcept {
+        return sCurrentSceneObjHolderBinding ? sCurrentSceneObjHolderBinding->_demo_director_ownership.get() : nullptr;
     }
 
     SceneObjHolder *current_scene_obj_holder() noexcept {
@@ -383,6 +398,7 @@ NameObj *SceneObjHolder::create(int id) {
         }
 
         binding->_image_effect_ownership->capture(id, *object, textures);
+        if (id == SceneObj_DemoDirector) binding->_demo_director_ownership->capture(static_cast<DemoDirector&>(*object));
         object->initWithoutIter();
         binding->_image_effect_ownership->capture(id, *object, textures);
         smgpc::compat::JkrHostAllocationScope host_metadata;
@@ -455,6 +471,7 @@ NameObj *SceneObjHolder::create(int id) {
                 &binding->_camera_runtime->director(), marker))
             binding->_camera_runtime.reset();
         binding->_image_effect_ownership->capture_shared_textures(textures);
+        binding->_demo_director_ownership->prepare_rollback(marker);
         binding->_image_effect_ownership->prepare_rollback(marker);
         const bool collision_rollback = binding->_collision_director_ownership->prepare_rollback(marker);
         if (object != nullptr &&
@@ -470,6 +487,7 @@ NameObj *SceneObjHolder::create(int id) {
             }
         }
         rollback_scene_obj_registrations(marker);
+        binding->_demo_director_ownership->reclaim();
         binding->_image_effect_ownership->reclaim_prepared();
         if (collision_rollback) binding->_collision_director_ownership->reclaim();
         --binding->_construction_depth;
@@ -555,6 +573,10 @@ NameObj *SceneObjHolder::newEachObj(int id) {
         return new PurpleCoinHolder();
     case SceneObj_CoinRotater:
         return new CoinRotater(cCoinRotaterName.c_str());
+    case SceneObj_SensorHitChecker:
+        return new SensorHitChecker("SensorHitChecker");
+    case SceneObj_DemoDirector:
+        return new DemoDirector("DemoDirector");
     case SceneObj_PrologueHolder:
         return new PrologueHolder(cPrologueHolderName.c_str());
     case SceneObj_CaptureScreenActor:

@@ -80,6 +80,13 @@ namespace MR {
     bool getJMapInfoCameraSetID(const JMapInfoIter& rIter, s32* pOut);
     bool getJMapInfoViewGroupID(const JMapInfoIter& rIter, s32* pOut);
     bool getJMapInfoMessageID(const JMapInfoIter& rIter, s32* pOut);
+
+    inline s32 getMessageID(const JMapInfoIter& rIter) {
+        s32 msgId;
+        getJMapInfoMessageID(rIter, &msgId);
+        return msgId;
+    }
+
     bool isConnectedWithRail(const JMapInfoIter& rIter);
     bool isEqualRailUsage(const JMapInfoIter& rIter, const char*);
     void getRailPointPos0(const JMapInfoIter& rIter, TVec3f* pOut);

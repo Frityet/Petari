@@ -10,8 +10,10 @@
 #include <string>
 #include <string_view>
 
+#include "Game/Effect/MultiEmitter.hpp"
 #include "Game/Screen/IconAButton.hpp"
 #include "Game/Screen/LayoutActor.hpp"
+#include "Game/Screen/PaneEffectKeeper.hpp"
 #include "Game/Screen/LayoutActorFlag.hpp"
 #include "Game/Screen/LayoutManager.hpp"
 #include "Game/Screen/LayoutPaneCtrl.hpp"
@@ -134,6 +136,25 @@ namespace {
 }  // namespace
 
 namespace MR {
+    void pauseOffEffectAll(LayoutActor* pActor) {
+        PaneEffectKeeper* pKeeper = pActor->mEffectKeeper;
+        for (s32 i = 0; i < pKeeper->mEmitters.mCount; i++) {
+            MultiEmitter* pEmitter = pKeeper->mEmitters.mArray[i];
+            if (pEmitter != nullptr && pEmitter->isValid()) {
+                pEmitter->pauseOff(-1);
+            }
+        }
+    }
+
+    bool isRegisteredEffect(const LayoutActor* pActor, const char* pParam2) {
+        if (pParam2 != nullptr) {
+            return pActor->mEffectKeeper->getEmitter(pParam2) != nullptr;
+        } else {
+            return pActor->mEffectKeeper != nullptr;
+        }
+    }
+
+
 
     bool isDead(const SimpleLayout* pLayout) {
         return smgpc::layout::is_layout_actor_dead(pLayout);

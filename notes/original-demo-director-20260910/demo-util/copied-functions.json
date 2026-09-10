@@ -1,0 +1,312 @@
+{
+  "original_function_count": 79,
+  "copied_function_count": 75,
+  "excluded": [
+    "getTalkingActor",
+    "isNormalTalking",
+    "isPowerStarGetDemoActive",
+    "isSystemTalking"
+  ],
+  "copied": [
+    {
+      "name": "tryRegisterDemoCast",
+      "sha256": "388062ce95a3e104aba4715468c7f8cf9852ef8b7de84cabdd72914d86b390ce"
+    },
+    {
+      "name": "registerDemoActionFunctor",
+      "sha256": "cd3d94ee5eb7d62a46fb169c5f6e3cd89caf62951c01375523f99606341d95e4"
+    },
+    {
+      "name": "registerDemoActionNerve",
+      "sha256": "7ff2c7b8a733df69f831fd4b3c68f4a570c2bd867210af2676317ad271d54e5d"
+    },
+    {
+      "name": "tryRegisterDemoActionFunctor",
+      "sha256": "eadfc94adb2d8a8b16de3f5745e6a0c73ca528b76f9dd1ed8d940f85b8f56416"
+    },
+    {
+      "name": "tryRegisterDemoActionNerve",
+      "sha256": "8e685f5532a701022bd48911c6671ed7b3b8f48748af0f1bca2a16853820a592"
+    },
+    {
+      "name": "tryRegisterDemoCast",
+      "sha256": "73f02173ec8351179142bc1b08a178ba2f0fdc207b05f0053afeda9279af33a6"
+    },
+    {
+      "name": "registerDemoCast",
+      "sha256": "08e0cf26121e0f01a4f65eedfd6e82b5a3fd8a0719a59786a65b6d8bd1a1131f"
+    },
+    {
+      "name": "initTalkAnimDemoCast",
+      "sha256": "6e62e815b532ec98e3b12a0647b4b6db8bc4f833b36b53e6205eb76d8faa83c0"
+    },
+    {
+      "name": "registerDemoActionFunctorDirect",
+      "sha256": "2350fdc0509e3c47f5b09a250886f257a058ed8936b03d5637fa07249a194307"
+    },
+    {
+      "name": "tryRegisterDemoActionFunctorDirect",
+      "sha256": "a123793445bea2d00b0c45522934ea8a0a635d8adc9b6c24cacfe94f2d13929b"
+    },
+    {
+      "name": "tryStartDemoRegistered",
+      "sha256": "4a62a0547ab99ded203382754523879a62378f7a9886b757abf97bbac328e89e"
+    },
+    {
+      "name": "tryStartDemoRegisteredMarioPuppetable",
+      "sha256": "42b90847d8467b33dc1acb569e09c9c6308ee8e20d5f4014d785fb48ad2d7256"
+    },
+    {
+      "name": "registerDemoSimpleCastAll",
+      "sha256": "293d540390498115d897be83cefcadc5e0172901ad2458afab00f7fecb7be10e"
+    },
+    {
+      "name": "registerDemoSimpleCastAll",
+      "sha256": "1b13d1c665327ca71c2b954666bfac0da31ff503ca11d3a302bdc8df59311d47"
+    },
+    {
+      "name": "registerDemoSimpleCastAll",
+      "sha256": "13a263e4663c88ddda78171d1ec99dc9bf4443b8669745e1a70c9ba812c068f4"
+    },
+    {
+      "name": "isDemoCast",
+      "sha256": "6d5d47b516c8ec726d90850d900d2b30b8ec9ad69f2ef827048ad642347e9dd6"
+    },
+    {
+      "name": "isRegisteredDemoActionAppear",
+      "sha256": "9b127c8865d6699bb32a3a9d04ba012de17347b8501b99643a696c24353281bc"
+    },
+    {
+      "name": "isRegisteredDemoActionNerve",
+      "sha256": "7f328eed5fe79fb0f19ebdeff65f1eef55c53c0014dd72bce39f559f0c47b3b7"
+    },
+    {
+      "name": "tryStartDemo",
+      "sha256": "c6351e08b29b3d0fbc76bb14e19234e43779fbfbbff092a1e616b6b198d97a50"
+    },
+    {
+      "name": "tryStartDemo",
+      "sha256": "7189e20e95bf04de811d8c88e4246966cdf92f14bfc09dc3ab66b2939ece23f6"
+    },
+    {
+      "name": "tryStartDemoWithoutCinemaFrame",
+      "sha256": "b48f2ce0cc448a0d46ce4b63c4ef2ad4d233776609e279a458d92a4f5f504a52"
+    },
+    {
+      "name": "tryStartDemoWithoutCinemaFrameValidStarPointer",
+      "sha256": "147757cbb506ea4cc2d3ee2d2d561f9777bac41b5e19e55f972848cedbe626a2"
+    },
+    {
+      "name": "tryStartDemoWithoutCinemaFrameValidHandPointerFinger",
+      "sha256": "8d6ea2535d069ebd332e37f69aca92c5c1b0f1b52d2837172527b92f977f34e4"
+    },
+    {
+      "name": "tryStartDemoWithoutCinemaFrameValidHandPointerFinger",
+      "sha256": "91ea49da5895fd5808a98aeebd0572ddde437b826c21e79fe20578a6dcdf34fe"
+    },
+    {
+      "name": "tryStartDemoMarioPuppetable",
+      "sha256": "fcab0fa9bd5ea3eeb4959e70da5fb86c4455f3800f03bf9ba84e9ed7f0345d61"
+    },
+    {
+      "name": "tryStartDemoMarioPuppetableWithoutCinemaFrame",
+      "sha256": "f5fd5a9c607d9df0a29bc4427e4d9e372be4ba0b6f48b893ed8898a4c3d950c2"
+    },
+    {
+      "name": "tryStartTimeKeepDemo",
+      "sha256": "7f064b4ef999a825e3fd48f54825b3fd62d4506bc4ffdbacc255f1e60d082ddc"
+    },
+    {
+      "name": "tryStartTimeKeepDemoMarioPuppetable",
+      "sha256": "a7f421d71ac3da55124567028c03facde2b00d6445637173b5bea7fed4a49494"
+    },
+    {
+      "name": "tryStartTimeKeepDemoMarioPuppetable",
+      "sha256": "9750273dfb60e8d83eef17ab6e9a3461ad0f2837becfb41b1bb86b76cf0a491b"
+    },
+    {
+      "name": "requestStartDemo",
+      "sha256": "ad8368f1a42ac54d117dc3e93bc73a662aa9d6270a6a37f02dfc9263462d5153"
+    },
+    {
+      "name": "requestStartDemoWithoutCinemaFrame",
+      "sha256": "bf08aaa6998827f33756224fc539d1839880d225fbd64cb1329bf1ff84622237"
+    },
+    {
+      "name": "requestStartDemoWithoutCinemaFrame",
+      "sha256": "62d84f328c2e4dbe449a7260adaa8ec12fedf2966e1028bd1f8198a5c2a0bf8d"
+    },
+    {
+      "name": "requestStartDemoMarioPuppetable",
+      "sha256": "23c3be5fc4276d4c8b52ee9c2910aa3a19fc278b45322b6da4c4347d5b4f9abc"
+    },
+    {
+      "name": "requestStartDemoMarioPuppetable",
+      "sha256": "60ef7fd86f9509ad7c188935d4011b7b7b595aecb3ae7d2dc467c9b0b86b22d8"
+    },
+    {
+      "name": "requestStartDemoMarioPuppetableWithoutCinemaFrame",
+      "sha256": "10411cae9c9ae8be2f0afc2fbabb18d5fac74a4a0793fa413f9575e3f6d7fa4c"
+    },
+    {
+      "name": "requestStartTimeKeepDemo",
+      "sha256": "5ca1a06337c7721f16ddc283151f466b5d407e40906c036b11f1a515d20313c0"
+    },
+    {
+      "name": "requestStartTimeKeepDemo",
+      "sha256": "174a9ca153b97bb302e7de679cd9585bddb6b0ba9edfa8bf56798b3c0f0fb4bd"
+    },
+    {
+      "name": "requestStartTimeKeepDemoMarioPuppetable",
+      "sha256": "294b055de9cdb8cbc2ce28bc787a0178c9f2f2a5867198fb8f63b55aa53dd27c"
+    },
+    {
+      "name": "requestStartTimeKeepDemoMarioPuppetable",
+      "sha256": "7021cfd3f9566b1523770520fd3d5c5e73e7b775f6701c92a220f886c34fc07e"
+    },
+    {
+      "name": "requestStartTimeKeepDemoMarioPuppetable",
+      "sha256": "b4e8078d23695929bba6105db4bc61caf91cfa2cc995e531278b71c1afbbb57c"
+    },
+    {
+      "name": "requestStartTimeKeepDemoWithoutCinemaFrame",
+      "sha256": "0a48da969c7bd33461f12020f3ea6b92686622aa4538e338122af1e4bdcc39a6"
+    },
+    {
+      "name": "requestStartDemoRegistered",
+      "sha256": "f9fa3fbf62ccb08b5872a55570700dabd8a4e8502423fbe5ea19d043c9f88e8f"
+    },
+    {
+      "name": "requestStartDemoRegisteredMarioPuppetable",
+      "sha256": "74add59462497ed94b2b5e18ca87d42d31c9efa5633397684334812108548fdd"
+    },
+    {
+      "name": "endDemo",
+      "sha256": "dd3be1277858e3efb5715b4c27ab4e5c8739ebce197f333413401b8e936afc01"
+    },
+    {
+      "name": "endDemoWaitCameraInterpolating",
+      "sha256": "d2eb0177ff7e9f3cf7a691dffcb4c5e595578ac59781b34bdd36f1c4fe9bed48"
+    },
+    {
+      "name": "initDemoSheetTalkAnim",
+      "sha256": "753e922807d80991554e7cd2fbf6c6c7352b4318466568d177dba00730aaf308"
+    },
+    {
+      "name": "initDemoSheetTalkAnimWithMessageName",
+      "sha256": "241d69f5caee39aa8be57cdbbf09d0aab8f282dd129fc8a4b44301b8eff561d6"
+    },
+    {
+      "name": "initDemoSheetTalkAnimFunctor",
+      "sha256": "86143485cad70a9d76182e42d2ac4d0388a17775cb46b8a72973e2edc2cba162"
+    },
+    {
+      "name": "tryInitDemoSheetTalkAnim",
+      "sha256": "56454ae32d4ccef94960068dc2ba938c7c475b58bff89ebfabb025793abbbb88"
+    },
+    {
+      "name": "startTimeKeepDemo",
+      "sha256": "000b71c23934da7c7ce1a1293f709d4a29beeadab1be0bae8f0cb0384a0163e7"
+    },
+    {
+      "name": "startTimeKeepDemoMarioPuppetable",
+      "sha256": "6553bd8d4a9c68ed377a4aad8752f83159348f8604ddc12af182e9de16273033"
+    },
+    {
+      "name": "isDemoExist",
+      "sha256": "ca43b1d00a53570e757eeb56345b09825ee94851a673aa04dd2111ef4fa3014e"
+    },
+    {
+      "name": "isDemoActive",
+      "sha256": "77390b767c4b407cde80e1df55c8ff5199fc540b691da584c6ab26ab33a14b57"
+    },
+    {
+      "name": "isDemoActive",
+      "sha256": "4afd5a04b7379beaf24a66feb1270d2b372c81c57a53cd01cbf5cf08872da2bb"
+    },
+    {
+      "name": "canStartDemo",
+      "sha256": "00ee5f8cd55a0763c80d2915094138a084f19d437f05338a0826997b73a51456"
+    },
+    {
+      "name": "isTimeKeepDemoActive",
+      "sha256": "095ac0ac0727decc8d7a5329caf23b4fa32ad9105ae78859d995526e4d6bb738"
+    },
+    {
+      "name": "isDemoActiveRegistered",
+      "sha256": "eb1052f47bff5ac12cbf8395321add1914bafae680a84918b081671e2eef92a1"
+    },
+    {
+      "name": "isDemoPartExist",
+      "sha256": "acf27bf69401d163454a7036cded01a65c14cb5ece9c5dcee528a9d693ae33a5"
+    },
+    {
+      "name": "isDemoLastStep",
+      "sha256": "af30f68d85cb9b19f25f7e560dac2fc8816231b645cedc2465a3cf830d3ba8ff"
+    },
+    {
+      "name": "isDemoPartActive",
+      "sha256": "54121b0ea00e0f912a2fcd93499e52fc094ff53d2bd8ae2ba5cbea7466f4c1dc"
+    },
+    {
+      "name": "isDemoPartStep",
+      "sha256": "8b6479906fd43c5fd8f2c94a18165dc2b8de84a8020365b7a4fa34fb0b6e69c0"
+    },
+    {
+      "name": "isDemoPartFirstStep",
+      "sha256": "5ac107cf43ac90ee042dd616ec162a9ce8b549c8ef49eec331183be31297b03f"
+    },
+    {
+      "name": "isDemoPartLastStep",
+      "sha256": "54a241f5792007cc84fc06dc9f2e8987f9072fde4f74f6ff88a5a0f9e29bee88"
+    },
+    {
+      "name": "isDemoPartLessEqualStep",
+      "sha256": "c12584bde4019697959c665cd69309706ff3c67fe6705548167b5b8785f98b38"
+    },
+    {
+      "name": "isDemoPartGreaterStep",
+      "sha256": "7f2340a990f67f2fe013beebafc5b73e1c78bc819656d52eaabf21ded1578a08"
+    },
+    {
+      "name": "getDemoPartTotalStep",
+      "sha256": "56f5ae2dbe77101e631891d12702502c3fef9a9520f2a536b1ce877e3af43d76"
+    },
+    {
+      "name": "calcDemoPartStepRate",
+      "sha256": "3f896eda6b1820d2a17f0608f47ed70866464d58143ba43afee739a076181768"
+    },
+    {
+      "name": "getDemoPartStep",
+      "sha256": "f4dcb21d72482366bab86faff9ef33025b58a532a5c446b692798939f761cf91"
+    },
+    {
+      "name": "pauseTimeKeepDemo",
+      "sha256": "e4f005c0b89c0a18f68a25190ff85ced94b4c23177fcf1878c776f10959399c6"
+    },
+    {
+      "name": "resumeTimeKeepDemo",
+      "sha256": "6309cca8fb7475a8c07651a938d895805169eaa8918e221d63b8000c5d3c071a"
+    },
+    {
+      "name": "getCurrentDemoPartNameMain",
+      "sha256": "5d6f021f0bd0a0d152087a5d7ed1fb580ee49c9c363a505bdc2146aa78e915d7"
+    },
+    {
+      "name": "startTalkingSequenceWithoutCinemaFrame",
+      "sha256": "b379e4d15bd954826449f42de3b95a2ad88461617ef19a0e5de680ce9fa3a0fe"
+    },
+    {
+      "name": "endTalkingSequence",
+      "sha256": "bb51910e073a6d077f4b5c198daa863679746d7a52cefd1f7cb1ffcc2d092da6"
+    },
+    {
+      "name": "isDemoPartTalk",
+      "sha256": "62962155828f83a50ffb2ada999a567662acb2b8ed6e1aa07e3f8fa73f678604"
+    },
+    {
+      "name": "startTalkingSequence",
+      "sha256": "f1bc6389cc45c3305f8efdc7d13e7ce6e3245d7a3266f1a87497e5b680d1bc3c"
+    }
+  ]
+}

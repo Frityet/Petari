@@ -1,0 +1,221 @@
+{
+  "command": [
+    "build/tools/wibo",
+    "build/tools/sjiswrap.exe",
+    "build/compilers/GC/3.0a3/mwcceppc.exe",
+    "-nodefaults",
+    "-proc",
+    "gekko",
+    "-align",
+    "powerpc",
+    "-enum",
+    "int",
+    "-fp",
+    "hardware",
+    "-Cpp_exceptions",
+    "off",
+    "-O4,s",
+    "-inline",
+    "auto",
+    "-pragma",
+    "cats off",
+    "-pragma",
+    "warn_notinlined off",
+    "-maxerrors",
+    "1",
+    "-nosyspath",
+    "-RTTI",
+    "off",
+    "-str",
+    "reuse",
+    "-enc",
+    "SJIS",
+    "-sdata",
+    "4",
+    "-sdata2",
+    "4",
+    "-ipa",
+    "file",
+    "-sym",
+    "on",
+    "-i",
+    "include",
+    "-i",
+    "libs/JSystem/include",
+    "-i",
+    "libs/MSL_C++/include",
+    "-i",
+    "libs/MSL_C/include",
+    "-i",
+    "libs/MetroTRK/include",
+    "-i",
+    "libs/RVLFaceLib/include",
+    "-i",
+    "libs/RVL_SDK/include",
+    "-i",
+    "libs/Runtime/include",
+    "-i",
+    "libs/nw4r/include",
+    "-i",
+    "build/original-j3d-joint-traversal-20260903/retail/include",
+    "-DVERSION=0",
+    "-c",
+    "src/Game/NPC/TalkNodeCtrl.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-demo-director-20260910/talk-nodes/nodes-reference.o"
+  ],
+  "exit": 0,
+  "source": "Game/NPC/TalkNodeCtrl.cpp",
+  "sha256": "1c7eee7b5b2792b5ca52d031900326be877a4785d149e261ce2cc10763d36ea8",
+  "objdiff_command": [
+    "/Users/frityet/Projects/petari/decomp/build/tools/objdiff-cli",
+    "diff",
+    "-1",
+    "/Users/frityet/Projects/petari/notes/gateway-audit-20260907/restoration/retail/obj/Game/NPC/TalkNodeCtrl.o",
+    "-2",
+    "/Users/frityet/Projects/petari/notes/original-demo-director-20260910/talk-nodes/nodes-reference.o",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-demo-director-20260910/talk-nodes/nodes-reference.objdiff.json"
+  ],
+  "objdiff_exit": 0,
+  "symbols": [
+    {
+      "name": "entry__18TalkMessageHistoryFUs",
+      "demangled_name": "TalkMessageHistory::entry(unsigned short)",
+      "size": "24",
+      "match_percent": 100.0
+    },
+    {
+      "name": "search__18TalkMessageHistoryCFUs",
+      "demangled_name": "TalkMessageHistory::search(unsigned short) const",
+      "size": "56",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__ct__12TalkNodeCtrlFv",
+      "demangled_name": "TalkNodeCtrl::TalkNodeCtrl()",
+      "size": "92",
+      "match_percent": 100.0
+    },
+    {
+      "name": "createFlowNodeDirect__12TalkNodeCtrlFP15TalkMessageCtrlRC12JMapInfoIterPCcPP15ActorCameraInfo",
+      "demangled_name": "TalkNodeCtrl::createFlowNodeDirect(TalkMessageCtrl*, const JMapInfoIter&, const char*, ActorCameraInfo**)",
+      "size": "340",
+      "match_percent": 100.0
+    },
+    {
+      "name": "resetFlowNode__12TalkNodeCtrlFv",
+      "demangled_name": "TalkNodeCtrl::resetFlowNode()",
+      "size": "32",
+      "match_percent": 100.0
+    },
+    {
+      "name": "resetTempFlowNode__12TalkNodeCtrlFv",
+      "demangled_name": "TalkNodeCtrl::resetTempFlowNode()",
+      "size": "28",
+      "match_percent": 100.0
+    },
+    {
+      "name": "recordTempFlowNode__12TalkNodeCtrlFv",
+      "demangled_name": "TalkNodeCtrl::recordTempFlowNode()",
+      "size": "12",
+      "match_percent": 100.0
+    },
+    {
+      "name": "forwardFlowNode__12TalkNodeCtrlFv",
+      "demangled_name": "TalkNodeCtrl::forwardFlowNode()",
+      "size": "132",
+      "match_percent": 100.0
+    },
+    {
+      "name": "isExistNextNode__12TalkNodeCtrlCFv",
+      "demangled_name": "TalkNodeCtrl::isExistNextNode() const",
+      "size": "40",
+      "match_percent": 100.0
+    },
+    {
+      "name": "isNextNodeMessage__12TalkNodeCtrlCFv",
+      "demangled_name": "TalkNodeCtrl::isNextNodeMessage() const",
+      "size": "64",
+      "match_percent": 100.0
+    },
+    {
+      "name": "isCurrentNodeEvent__12TalkNodeCtrlCFv",
+      "demangled_name": "TalkNodeCtrl::isCurrentNodeEvent() const",
+      "size": "40",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getNextNode__12TalkNodeCtrlCFv",
+      "demangled_name": "TalkNodeCtrl::getNextNode() const",
+      "size": "160",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getNextNodeBranch__12TalkNodeCtrlCFv",
+      "demangled_name": "TalkNodeCtrl::getNextNodeBranch() const",
+      "size": "64",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getCurrentNodeBranch__12TalkNodeCtrlCFv",
+      "demangled_name": "TalkNodeCtrl::getCurrentNodeBranch() const",
+      "size": "32",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getCurrentNodeMessage__12TalkNodeCtrlCFv",
+      "demangled_name": "TalkNodeCtrl::getCurrentNodeMessage() const",
+      "size": "32",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getCurrentNodeEvent__12TalkNodeCtrlCFv",
+      "demangled_name": "TalkNodeCtrl::getCurrentNodeEvent() const",
+      "size": "32",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getNextNodeEvent__12TalkNodeCtrlCFv",
+      "demangled_name": "TalkNodeCtrl::getNextNodeEvent() const",
+      "size": "64",
+      "match_percent": 100.0
+    },
+    {
+      "name": "updateMessage__12TalkNodeCtrlFv",
+      "demangled_name": "TalkNodeCtrl::updateMessage()",
+      "size": "240",
+      "match_percent": 100.0
+    },
+    {
+      "name": "readMessage__12TalkNodeCtrlFv",
+      "demangled_name": "TalkNodeCtrl::readMessage()",
+      "size": "124",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getSubMessage__12TalkNodeCtrlCFv",
+      "demangled_name": "TalkNodeCtrl::getSubMessage() const",
+      "size": "172",
+      "match_percent": 100.0
+    },
+    {
+      "name": "forwardCurrentBranchNode__12TalkNodeCtrlFb",
+      "demangled_name": "TalkNodeCtrl::forwardCurrentBranchNode(bool)",
+      "size": "112",
+      "match_percent": 100.0
+    },
+    {
+      "name": "createFlowNode__12TalkNodeCtrlFP15TalkMessageCtrlRC12JMapInfoIterPCcPP15ActorCameraInfo",
+      "demangled_name": "TalkNodeCtrl::createFlowNode(TalkMessageCtrl*, const JMapInfoIter&, const char*, ActorCameraInfo**)",
+      "size": "144",
+      "match_percent": 100.0
+    },
+    {
+      "name": "initNodeRecursive__12TalkNodeCtrlFP15TalkMessageCtrlRC12JMapInfoIterP15ActorCameraInfoP15RecursiveHelper",
+      "demangled_name": "TalkNodeCtrl::initNodeRecursive(TalkMessageCtrl*, const JMapInfoIter&, ActorCameraInfo*, RecursiveHelper*)",
+      "size": "532",
+      "match_percent": 100.0
+    }
+  ]
+}

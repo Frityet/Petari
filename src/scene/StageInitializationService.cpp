@@ -322,9 +322,6 @@ namespace smgpc::scene {
         initialize_host_scene_objects();
         load_stage_files();
         initialize_scenario_resources();
-        if (_request.object_name.empty()) {
-            _scene_obj_holder_binding->initialize_camera_system();
-        }
         prepare_actor_files();
         init_stage_audio();
         place_actors();
@@ -578,6 +575,10 @@ namespace smgpc::scene {
         }
         if (_request.object_name.empty()) {
             construct_stage_start_root();
+            _demo_scene_runtime = std::make_unique<smgpc::compat::DemoSceneRuntime>(
+                _runtime.dvd(), _authored_data->placements(),
+                _authored_data->general_positions());
+
         } else if (_explicit_placement_source == nullptr) {
             const auto phase = SceneInitializationScope(SceneInitializeState_Placement);
             const auto *actor_name = !_request.actor_name.empty() ?
@@ -782,10 +783,9 @@ namespace smgpc::scene {
             _runtime.dvd(), _request.stage_name, _authored_data->tables());
         // The original DemoDirector/executors exist before placement actors
         // initialize and attempt to join their zone-scoped groups.
-        _demo_scene_runtime = std::make_unique<smgpc::compat::DemoSceneRuntime>(
-            _runtime.dvd(), _authored_data->placements(),
-            _authored_data->general_positions());
-        smgpc::compat::claim_name_obj_runtime_ownership(_demo_scene_runtime.get(), this);
+        if (!MR::createSceneObj(SceneObj_DemoDirector))
+            aurora::throw_host_exception<std::logic_error>("Stage demo resources require the original DemoDirector");
+        if (_request.object_name.empty()) _scene_obj_holder_binding->initialize_camera_system();
         // Collision remains absent until source Game code issues an exact
         // CollisionParts registration. Placement/archive discovery must not
         // synthesize collision for actors that did not request it.

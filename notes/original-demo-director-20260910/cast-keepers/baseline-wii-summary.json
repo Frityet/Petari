@@ -1,0 +1,62 @@
+[
+  {
+    "name": "DemoCastGroup",
+    "exit": 0,
+    "below95": [
+      {
+        "method": "DemoCastGroup::tryRegisterDemoActor(LiveActor*, const JMapInfoIter&, const JMapIdInfo&)",
+        "match": 18.7
+      }
+    ]
+  },
+  {
+    "name": "DemoCastGroupHolder",
+    "exit": 0,
+    "below95": []
+  },
+  {
+    "name": "DemoCastSubGroup",
+    "exit": 0,
+    "below95": []
+  },
+  {
+    "name": "DemoSimpleCastHolder",
+    "exit": 0,
+    "below95": []
+  },
+  {
+    "name": "DemoSubPartKeeper",
+    "exit": 0,
+    "below95": []
+  },
+  {
+    "name": "DemoActionKeeper",
+    "exit": 0,
+    "below95": []
+  },
+  {
+    "name": "DemoPlayerKeeper",
+    "exit": 0,
+    "below95": []
+  },
+  {
+    "name": "DemoCameraKeeper",
+    "exit": 0,
+    "below95": []
+  },
+  {
+    "name": "DemoCameraFunction",
+    "exit": 0,
+    "below95": []
+  },
+  {
+    "name": "DemoTalkAnimCtrl",
+    "exit": 0,
+    "below95": []
+  },
+  {
+    "name": "DemoPositionController",
+    "exit": 0,
+    "below95": []
+  }
+]

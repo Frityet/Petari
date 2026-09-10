@@ -1,3 +1,4 @@
+#include "OriginalTalkNodeTests.hpp"
 #include "Game/System/MessageHolder.hpp"
 #include "Game/NPC/TalkMessageInfo.hpp"
 #include "Game/NPC/TalkNodeCtrl.hpp"
@@ -208,6 +209,7 @@ void original_holder(smgpc::resource::GameResourceRuntime& process, smgpc::runti
             const auto game_count = compare_data(*holder.mGameMessageData, mounts.retain("/MessageData/Message.arc")->source());
             holder.initSceneData(); require(MessageSystem::getSceneMessageData() == holder.mGameMessageData,
                                             "original scene initialization aliases the actual game message data");
+            verify_original_talk_nodes(holder);
             holder.destroySceneData(); require(!MessageSystem::getSceneMessageData() && holder.mGameMessageData,
                                                "original scene retirement clears the alias without deleting process messages");
             const char* id = nullptr;
@@ -249,6 +251,7 @@ int main() {
         smgpc::resource::GameResourceRuntime process;
         smgpc::runtime::DvdFileSystemService dvd({});
         smgpc::runtime::ArchiveMountService mounts(dvd);
+        verify_original_message_tag_processor();
         native_boundary(process, mounts);
         original_holder(process, mounts);
         std::cout << "[ok] original message owner, all authored records, shared getters and repeated teardown\n";

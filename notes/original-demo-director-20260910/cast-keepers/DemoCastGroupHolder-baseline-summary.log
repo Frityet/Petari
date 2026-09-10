@@ -1,0 +1,137 @@
+{
+  "command": [
+    "build/tools/wibo",
+    "build/tools/sjiswrap.exe",
+    "build/compilers/GC/3.0a3/mwcceppc.exe",
+    "-nodefaults",
+    "-proc",
+    "gekko",
+    "-align",
+    "powerpc",
+    "-enum",
+    "int",
+    "-fp",
+    "hardware",
+    "-Cpp_exceptions",
+    "off",
+    "-O4,s",
+    "-inline",
+    "auto",
+    "-pragma",
+    "cats off",
+    "-pragma",
+    "warn_notinlined off",
+    "-maxerrors",
+    "1",
+    "-nosyspath",
+    "-RTTI",
+    "off",
+    "-str",
+    "reuse",
+    "-enc",
+    "SJIS",
+    "-sdata",
+    "4",
+    "-sdata2",
+    "4",
+    "-ipa",
+    "file",
+    "-sym",
+    "on",
+    "-i",
+    "include",
+    "-i",
+    "libs/JSystem/include",
+    "-i",
+    "libs/MSL_C++/include",
+    "-i",
+    "libs/MSL_C/include",
+    "-i",
+    "libs/MetroTRK/include",
+    "-i",
+    "libs/RVLFaceLib/include",
+    "-i",
+    "libs/RVL_SDK/include",
+    "-i",
+    "libs/Runtime/include",
+    "-i",
+    "libs/nw4r/include",
+    "-i",
+    "build/original-j3d-joint-traversal-20260903/retail/include",
+    "-DVERSION=0",
+    "-c",
+    "src/Game/Demo/DemoCastGroupHolder.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-demo-director-20260910/cast-keepers/DemoCastGroupHolder.DemoCastGroupHolder-baseline.wii.o"
+  ],
+  "wii_exit": 0,
+  "objdiff_command": [
+    "/Users/frityet/Projects/petari/decomp/build/tools/objdiff-cli",
+    "diff",
+    "-1",
+    "/Users/frityet/Projects/petari/notes/gateway-audit-20260907/restoration/retail/obj/Game/Demo/DemoCastGroupHolder.o",
+    "-2",
+    "/Users/frityet/Projects/petari/notes/original-demo-director-20260910/cast-keepers/DemoCastGroupHolder.DemoCastGroupHolder-baseline.wii.o",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-demo-director-20260910/cast-keepers/DemoCastGroupHolder-baseline-objdiff.json"
+  ],
+  "objdiff_exit": 0,
+  "symbols": [
+    {
+      "name": "__ct__19DemoCastGroupHolderFv",
+      "demangled_name": "DemoCastGroupHolder::DemoCastGroupHolder()",
+      "size": "72",
+      "match_percent": 100.0,
+      "target_symbol": 1
+    },
+    {
+      "name": "tryRegisterDemoActor__19DemoCastGroupHolderCFP9LiveActorRC12JMapInfoIterRC10JMapIdInfo",
+      "demangled_name": "DemoCastGroupHolder::tryRegisterDemoActor(LiveActor*, const JMapInfoIter&, const JMapIdInfo&) const",
+      "size": "148",
+      "match_percent": 100.0,
+      "target_symbol": 2
+    },
+    {
+      "name": "tryRegisterDemoActor__19DemoCastGroupHolderCFP9LiveActorPCcRC12JMapInfoIter",
+      "demangled_name": "DemoCastGroupHolder::tryRegisterDemoActor(LiveActor*, const char*, const JMapInfoIter&) const",
+      "size": "148",
+      "match_percent": 100.0,
+      "target_symbol": 3
+    },
+    {
+      "name": "getCastGroup__19DemoCastGroupHolderCFi",
+      "demangled_name": "DemoCastGroupHolder::getCastGroup(int) const",
+      "size": "16",
+      "match_percent": 100.0,
+      "target_symbol": 4
+    },
+    {
+      "name": "findCastGroup__19DemoCastGroupHolderCFPCc",
+      "demangled_name": "DemoCastGroupHolder::findCastGroup(const char*) const",
+      "size": "124",
+      "match_percent": 100.0,
+      "target_symbol": 5
+    },
+    {
+      "name": "__dt__19DemoCastGroupHolderFv",
+      "demangled_name": "DemoCastGroupHolder::~DemoCastGroupHolder()",
+      "size": "88",
+      "match_percent": 100.0,
+      "target_symbol": 6
+    },
+    {
+      "name": "__vt__19DemoCastGroupHolder",
+      "demangled_name": "DemoCastGroupHolder::__vtable",
+      "size": "36",
+      "match_percent": 100.0,
+      "target_symbol": 9
+    }
+  ],
+  "sources": {
+    "decomp/src/Game/Demo/DemoCastGroupHolder.cpp": "74d9803d5ec0bc0a95a5f5d0b1fd50a6ce52a891864a0ceb60b59e4c7a198e17",
+    "decomp/include/Game/Demo/DemoCastGroupHolder.hpp": "50672dd2ced9554c74d33540488552ae6086a06acc965bbb2db05ee10e85ca82",
+    "decomp/include/Game/Demo/DemoExecutor.hpp": "c1c1b33bc15e4dd85f612d4041b4b4db0365e1e8757c0a4e42741c09514628c2"
+  }
+}
+
+

@@ -1,0 +1,77 @@
+{
+  "archives": [
+    {
+      "path": "build/macosx/arm64/debug/libsmg-pc-common.a",
+      "size": 6042872,
+      "mtime_ns": 1789057254748694067
+    },
+    {
+      "path": "build/macosx/arm64/debug/libsmg-pc-render.a",
+      "size": 1393464,
+      "mtime_ns": 1789059273983641534
+    },
+    {
+      "path": "build/macosx/arm64/debug/libsmg-pc-game.a",
+      "size": 424860256,
+      "mtime_ns": 1789063196517973764
+    },
+    {
+      "path": "build/macosx/arm64/debug/libsmg-pc-app.a",
+      "size": 17071472,
+      "mtime_ns": 1789063196626594544
+    }
+  ],
+  "missing_from_archives_and_15_tu_original_cohort": {
+    "MR::isName(NameObj const*, char const*)": [
+      "DemoCastGroupHolder"
+    ],
+    "DemoFunction::findDemoExecutor(char const*)": [
+      "DemoCastSubGroup",
+      "DemoTalkAnimCtrl"
+    ],
+    "DemoFunction::getDemoCastSubGroupHolder()": [
+      "DemoCastSubGroup"
+    ],
+    "DemoFunction::createSheetParser(DemoExecutor const*, char const*, JMapInfo**)": [
+      "DemoSubPartKeeper",
+      "DemoActionKeeper",
+      "DemoPlayerKeeper",
+      "DemoCameraKeeper"
+    ],
+    "_strcmp": [
+      "DemoSubPartKeeper"
+    ],
+    "DemoFunction::isTargetDemoCast(LiveActor*, JMapInfoIter const&, char const*, int)": [
+      "DemoActionKeeper",
+      "DemoCameraKeeper"
+    ],
+    "DemoFunction::findDemoExecutorActive(LiveActor const*)": [
+      "DemoActionKeeper"
+    ],
+    "MR::isSame(NameObj const*, NameObj const*)": [
+      "DemoActionKeeper"
+    ],
+    "_bzero": [
+      "DemoActionKeeper",
+      "DemoPlayerKeeper"
+    ],
+    "_strlen": [
+      "DemoCameraKeeper"
+    ],
+    "DemoFunction::pauseTimeKeepDemo(char const*)": [
+      "DemoTalkAnimCtrl"
+    ],
+    "DemoFunction::resumeTimeKeepDemo(char const*)": [
+      "DemoTalkAnimCtrl"
+    ],
+    "DemoFunction::isPauseTimeKeepDemo(char const*)": [
+      "DemoTalkAnimCtrl"
+    ],
+    "DemoFunction::isDemoSuspendOrLastPartLastStep()": [
+      "DemoTalkAnimCtrl"
+    ],
+    "MR::reflectBckCtrlData(LiveActor*, BckCtrlData const&)": [
+      "DemoTalkAnimCtrl"
+    ]
+  }
+}

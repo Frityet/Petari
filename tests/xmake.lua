@@ -1268,6 +1268,7 @@ for _, fixture in ipairs {
             end
         end
         add_files(fixture[2], "../aurora/lib/compat.cpp")
+        if fixture[1] == "message-holder" then add_files("OriginalTalkNodeTests.cpp") end
         add_deps {
             "smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
             "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"

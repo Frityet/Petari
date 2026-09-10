@@ -1,0 +1,11 @@
+{
+  "frozen": true,
+  "files": {
+    "src/compat/DemoDirectorOwnership.hpp": "0b9c8ccba21765c65390db3dc65ab65ec38a912a55a3710117ad11f7251536d0",
+    "src/compat/DemoDirectorOwnership.cpp": "22d91b112edb25d4d5b78ab075fcdf87d2b715fa8387e2db7a61d8d4c008a8cb",
+    "src/Game/Demo/DemoSimpleCastHolder.hpp": "d6a12c7da99c9076bff16d2acffd3d6e6d41defc71579fdd28aeb808dff024b8"
+  },
+  "native_compile_exit": 0,
+  "root_build_performed_by_this_agent": false,
+  "runtime_claim": false
+}

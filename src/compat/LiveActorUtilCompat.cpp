@@ -188,6 +188,10 @@ namespace MR {
         return pActor == nullptr || pActor->mFlag.mIsHiddenModel;
     }
 
+    bool isInvalidClipping(const LiveActor* pActor) {
+        return pActor->mFlag.mIsInvalidClipping;
+    }
+
     bool isClipped(const LiveActor* pActor) {
         return pActor != nullptr && pActor->mFlag.mIsClipped;
     }

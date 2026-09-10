@@ -74,13 +74,9 @@ namespace smgpc::compat {
         std::int32_t source_row = -1;
     };
 
-    // Name arguments, row fields and borrowed results are original CP932
-    // identities. No UTF-8 aliases are accepted; host presentation decodes.
-    // Scene-owned counterpart of the original DemoDirector/DemoExecutor
-    // collection. This class owns definitions, the Time/SubPart clocks, cast
-    // membership, registered callbacks, and the installed keeper row dispatch
-    // at their original per-executor granularity.
-    class DemoSceneRuntime final : public NameObj {
+    // Retains authored placement diagnostics and creates complete original
+    // Game owners. DemoDirector/Executor own scheduling, membership and clocks.
+    class DemoSceneRuntime final {
     public:
         DemoSceneRuntime(smgpc::runtime::DvdFileSystemService &dvd,
                          std::span<const smgpc::scene::StagePlacementObject> placements,
@@ -90,12 +86,12 @@ namespace smgpc::compat {
                          std::span<const smgpc::scene::StagePlacementObject> placements,
                          std::span<const smgpc::scene::StageGeneralPos> general_positions = {},
                          smgpc::runtime::WipeService *wipe_service = nullptr);
-        ~DemoSceneRuntime() override;
+        ~DemoSceneRuntime();
 
         DemoSceneRuntime(const DemoSceneRuntime &) = delete;
         DemoSceneRuntime &operator=(const DemoSceneRuntime &) = delete;
 
-        void movement() override;
+        void movement();
 
         [[nodiscard]] std::span<const DemoSceneDefinition> definitions() const;
         [[nodiscard]] std::span<const DemoSceneSubGroupDefinition> subgroups() const;
@@ -184,12 +180,6 @@ namespace smgpc::compat {
     [[nodiscard]] DemoSceneRuntime *active_demo_scene_runtime();
     [[nodiscard]] DemoSceneRuntime &require_active_demo_scene_runtime(
         std::string_view operation);
-    // Placement actors can initialize after SceneObjHolder is bound but just
-    // before the scene's DemoDirector runtime is installed. Preserve their
-    // exact simple-cast request and adopt it when that owner appears.
-    void register_or_defer_scene_simple_cast(LiveActor *actor);
-    void adopt_deferred_scene_simple_casts(DemoSceneRuntime &runtime);
-    void release_deferred_scene_simple_cast(const LiveActor *actor);
     void release_actor_from_all_demo_scenes(const LiveActor *actor);
     [[nodiscard]] bool has_any_demo_scene_cast(const LiveActor *actor);
     [[nodiscard]] std::size_t demo_scene_membership_count(const LiveActor *actor);

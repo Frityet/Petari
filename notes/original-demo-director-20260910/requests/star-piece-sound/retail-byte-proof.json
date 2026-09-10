@@ -1,0 +1,29 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "functions": [
+    {
+      "function": "getStarPieceDirector__2MRFv",
+      "address": "80240C8C",
+      "size": 40,
+      "mismatches": []
+    },
+    {
+      "function": "initCSDelay__17StarPieceDirectorFv",
+      "address": "80241544",
+      "size": 36,
+      "mismatches": []
+    },
+    {
+      "function": "initCSSound__17StarPieceDirectorFv",
+      "address": "80241568",
+      "size": 64,
+      "mismatches": []
+    },
+    {
+      "function": "startLastStageBGM__2MRFv",
+      "address": "803FAC1C",
+      "size": 4,
+      "mismatches": []
+    }
+  ]
+}

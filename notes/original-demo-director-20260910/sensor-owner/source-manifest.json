@@ -1,0 +1,30 @@
+[
+  {
+    "path": "decomp/src/Game/LiveActor/SensorHitChecker.cpp",
+    "sha256": "ed949dcc14e482201e160a69b279ffa8f108f181652a46a3927b6add2c42e182"
+  },
+  {
+    "path": "src/Game/LiveActor/SensorHitChecker.cpp",
+    "sha256": "cf1d47786ea4c1bb2b8813c5d59d694006b6bb162b8b8fb1fac7d7bd258aca9b"
+  },
+  {
+    "path": "src/Game/LiveActor/HitSensor.cpp",
+    "sha256": "4594101cfe35cbd4e2e2d382e8ed63d247578082b9bf53463b3bef6856288d3d"
+  },
+  {
+    "path": "src/compat/SensorHitCheckerOwnership.cpp",
+    "sha256": "881a4c46977ead91873860119f91983649141d59766a505e4bc32c9b69e3f82d"
+  },
+  {
+    "path": "src/compat/ActorRuntimeRegistry.cpp",
+    "sha256": "68edbdd56f66a7baae9abffdf40efaa76643e8c5dd8054a8762375a854522067"
+  },
+  {
+    "path": "src/runtime/SceneScheduler.cpp",
+    "sha256": "f4b2a9da984ade79cc9fcfd35e32b334082d65e99a1dc039fbf12ee294b295f2"
+  },
+  {
+    "path": "src/runtime/SceneScheduler.hpp",
+    "sha256": "47b76b22eedc614f936c4a29c19b59d25da7bfa7e7c135a5e78be85ae0ef39e5"
+  }
+]

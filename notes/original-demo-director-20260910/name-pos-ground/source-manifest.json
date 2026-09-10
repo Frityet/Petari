@@ -1,0 +1,18 @@
+[
+  {
+    "path": "decomp/src/Game/Util/ObjUtil.cpp",
+    "sha256": "5512550ef3c7a0bf8e77b6aa0f560e1fba8cd8fed2e5f05560787d42577b4fd9"
+  },
+  {
+    "path": "decomp/include/Game/Util/ObjUtil.hpp",
+    "sha256": "7b79cdfe90fc7c785ed579bb9b12bfa8114064fbac0fd6d26acf67cdf6a820af"
+  },
+  {
+    "path": "src/compat/OriginalNamePosUtil.cpp",
+    "sha256": "ca97a8ec19e59b70d954447112ba59eed717f9a36c30e84f7397cec197b64321"
+  },
+  {
+    "path": "src/Game/Util/ObjUtil.hpp",
+    "sha256": "fa8f3e73653cf7ae6719bf4c80ffb85561b429a050fbd2816799672c821a83d6"
+  }
+]

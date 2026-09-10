@@ -125,6 +125,7 @@ namespace nw4r::ut {
             mHostResourceState->font = std::move(parsed);
             mHostResourceState->source = pBuffer;
             mHostResourceState->source_size = declared_size;
+            InitReaderFunc(GetEncoding());
             ++mHostResourceState->generation;
             return true;
         } catch (const std::exception&) {

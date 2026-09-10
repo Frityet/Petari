@@ -1,0 +1,193 @@
+{
+  "command": [
+    "build/tools/wibo",
+    "build/tools/sjiswrap.exe",
+    "build/compilers/GC/3.0a3/mwcceppc.exe",
+    "-nodefaults",
+    "-proc",
+    "gekko",
+    "-align",
+    "powerpc",
+    "-enum",
+    "int",
+    "-fp",
+    "hardware",
+    "-Cpp_exceptions",
+    "off",
+    "-O4,s",
+    "-inline",
+    "auto",
+    "-pragma",
+    "cats off",
+    "-pragma",
+    "warn_notinlined off",
+    "-maxerrors",
+    "1",
+    "-nosyspath",
+    "-RTTI",
+    "off",
+    "-str",
+    "reuse",
+    "-enc",
+    "SJIS",
+    "-sdata",
+    "4",
+    "-sdata2",
+    "4",
+    "-ipa",
+    "file",
+    "-sym",
+    "on",
+    "-i",
+    "include",
+    "-i",
+    "libs/JSystem/include",
+    "-i",
+    "libs/MSL_C++/include",
+    "-i",
+    "libs/MSL_C/include",
+    "-i",
+    "libs/MetroTRK/include",
+    "-i",
+    "libs/RVLFaceLib/include",
+    "-i",
+    "libs/RVL_SDK/include",
+    "-i",
+    "libs/Runtime/include",
+    "-i",
+    "libs/nw4r/include",
+    "-i",
+    "build/original-j3d-joint-traversal-20260903/retail/include",
+    "-DVERSION=0",
+    "-c",
+    "src/Game/Demo/DemoTalkAnimCtrl.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-demo-director-20260910/cast-keepers/DemoTalkAnimCtrl.DemoTalkAnimCtrl-baseline.wii.o"
+  ],
+  "wii_exit": 0,
+  "objdiff_command": [
+    "/Users/frityet/Projects/petari/decomp/build/tools/objdiff-cli",
+    "diff",
+    "-1",
+    "/Users/frityet/Projects/petari/notes/gateway-audit-20260907/restoration/retail/obj/Game/Demo/DemoTalkAnimCtrl.o",
+    "-2",
+    "/Users/frityet/Projects/petari/notes/original-demo-director-20260910/cast-keepers/DemoTalkAnimCtrl.DemoTalkAnimCtrl-baseline.wii.o",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-demo-director-20260910/cast-keepers/DemoTalkAnimCtrl-baseline-objdiff.json"
+  ],
+  "objdiff_exit": 0,
+  "symbols": [
+    {
+      "name": "__ct__16DemoTalkAnimCtrlFP9LiveActorPCcPCc",
+      "demangled_name": "DemoTalkAnimCtrl::DemoTalkAnimCtrl(LiveActor*, const char*, const char*)",
+      "size": "200",
+      "match_percent": 100.0,
+      "target_symbol": 1
+    },
+    {
+      "name": "initForScene__16DemoTalkAnimCtrlFPCcPCcRC12JMapInfoIter",
+      "demangled_name": "DemoTalkAnimCtrl::initForScene(const char*, const char*, const JMapInfoIter&)",
+      "size": "208",
+      "match_percent": 100.0,
+      "target_symbol": 2
+    },
+    {
+      "name": "updateCamera__16DemoTalkAnimCtrlFv",
+      "demangled_name": "DemoTalkAnimCtrl::updateCamera()",
+      "size": "120",
+      "match_percent": 100.0,
+      "target_symbol": 3
+    },
+    {
+      "name": "createBckCtrlData__16DemoTalkAnimCtrlCFP11BckCtrlDatal",
+      "demangled_name": "DemoTalkAnimCtrl::createBckCtrlData(BckCtrlData*, long) const",
+      "size": "252",
+      "match_percent": 100.0,
+      "target_symbol": 4
+    },
+    {
+      "name": "initForActor__16DemoTalkAnimCtrlFPCc",
+      "demangled_name": "DemoTalkAnimCtrl::initForActor(const char*)",
+      "size": "196",
+      "match_percent": 100.0,
+      "target_symbol": 5
+    },
+    {
+      "name": "startDemo__16DemoTalkAnimCtrlFv",
+      "demangled_name": "DemoTalkAnimCtrl::startDemo()",
+      "size": "60",
+      "match_percent": 100.0,
+      "target_symbol": 6
+    },
+    {
+      "name": "updateDemo__16DemoTalkAnimCtrlFv",
+      "demangled_name": "DemoTalkAnimCtrl::updateDemo()",
+      "size": "456",
+      "match_percent": 100.0,
+      "target_symbol": 7
+    },
+    {
+      "name": "startAnim__16DemoTalkAnimCtrlFv",
+      "demangled_name": "DemoTalkAnimCtrl::startAnim()",
+      "size": "184",
+      "match_percent": 100.0,
+      "target_symbol": 8
+    },
+    {
+      "name": "startCamera__16DemoTalkAnimCtrlFv",
+      "demangled_name": "DemoTalkAnimCtrl::startCamera()",
+      "size": "28",
+      "match_percent": 100.0,
+      "target_symbol": 9
+    },
+    {
+      "name": "updateAnim__16DemoTalkAnimCtrlFRC11BckCtrlData",
+      "demangled_name": "DemoTalkAnimCtrl::updateAnim(const BckCtrlData&)",
+      "size": "384",
+      "match_percent": 100.0,
+      "target_symbol": 10
+    },
+    {
+      "name": "updatePause__16DemoTalkAnimCtrlFv",
+      "demangled_name": "DemoTalkAnimCtrl::updatePause()",
+      "size": "140",
+      "match_percent": 100.0,
+      "target_symbol": 11
+    },
+    {
+      "name": "endCamera__16DemoTalkAnimCtrlFv",
+      "demangled_name": "DemoTalkAnimCtrl::endCamera()",
+      "size": "28",
+      "match_percent": 100.0,
+      "target_symbol": 12
+    },
+    {
+      "name": "setupStartDemoPart__16DemoTalkAnimCtrlFPCc",
+      "demangled_name": "DemoTalkAnimCtrl::setupStartDemoPart(const char*)",
+      "size": "68",
+      "match_percent": 100.0,
+      "target_symbol": 13
+    },
+    {
+      "name": "__dt__16DemoTalkAnimCtrlFv",
+      "demangled_name": "DemoTalkAnimCtrl::~DemoTalkAnimCtrl()",
+      "size": "88",
+      "match_percent": 100.0,
+      "target_symbol": 14
+    },
+    {
+      "name": "__vt__16DemoTalkAnimCtrl",
+      "demangled_name": "DemoTalkAnimCtrl::__vtable",
+      "size": "12",
+      "match_percent": 100.0,
+      "target_symbol": 21
+    }
+  ],
+  "sources": {
+    "decomp/src/Game/Demo/DemoTalkAnimCtrl.cpp": "0f4c79eb6020e0ba5b63f9091b466d4572b34ae5a1b9c2fee49f5c7626ef25c6",
+    "decomp/include/Game/Demo/DemoTalkAnimCtrl.hpp": "14b7b3426bdeee6cdb0a8935871101fe803596e881b54d426abf3991def8a573",
+    "decomp/include/Game/Demo/DemoExecutor.hpp": "c1c1b33bc15e4dd85f612d4041b4b4db0365e1e8757c0a4e42741c09514628c2"
+  }
+}
+
+

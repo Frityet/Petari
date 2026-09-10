@@ -1,0 +1,120 @@
+{
+  "dol": "decomp/build/compat-math-oracle/main.dol",
+  "sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "functions": [
+    {
+      "name": "startDemoSystem__20DemoStartRequestUtilFP7NameObjPCclQ213DemoStartInfo8DemoTypeQ213DemoStartInfo15CinemaFrameTypeQ213DemoStartInfo15StarPointerTypeQ213DemoStartInfo16DeleteEffectTypePCc",
+      "address": "800BE3A4",
+      "bytes": 312,
+      "mismatches": []
+    },
+    {
+      "name": "startDemoSystem__20DemoStartRequestUtilFP9LiveActorPCclQ213DemoStartInfo8DemoTypeQ213DemoStartInfo15CinemaFrameTypeQ213DemoStartInfo15StarPointerTypeQ213DemoStartInfo16DeleteEffectTypePCc",
+      "address": "800BE4DC",
+      "bytes": 52,
+      "mismatches": []
+    },
+    {
+      "name": "startDemoSystem__20DemoStartRequestUtilFP11LayoutActorPCclQ213DemoStartInfo8DemoTypeQ213DemoStartInfo15CinemaFrameTypeQ213DemoStartInfo15StarPointerTypeQ213DemoStartInfo16DeleteEffectTypePCc",
+      "address": "800BE510",
+      "bytes": 52,
+      "mismatches": []
+    },
+    {
+      "name": "requestStartDemo__20DemoStartRequestUtilFP9LiveActorPCcPC5NervePC5NervelQ213DemoStartInfo8DemoTypeQ213DemoStartInfo15CinemaFrameTypeQ213DemoStartInfo15StarPointerTypeQ213DemoStartInfo16DeleteEffectType",
+      "address": "800BE544",
+      "bytes": 304,
+      "mismatches": []
+    },
+    {
+      "name": "requestStartDemo__20DemoStartRequestUtilFP11LayoutActorPCcPC5NervePC5NervelQ213DemoStartInfo8DemoTypeQ213DemoStartInfo15CinemaFrameTypeQ213DemoStartInfo15StarPointerTypeQ213DemoStartInfo16DeleteEffectType",
+      "address": "800BE674",
+      "bytes": 304,
+      "mismatches": []
+    },
+    {
+      "name": "requestStartDemo__20DemoStartRequestUtilFP13NerveExecutorP9LiveActorPCcPC5NervePC5NervelQ213DemoStartInfo8DemoTypeQ213DemoStartInfo15CinemaFrameTypeQ213DemoStartInfo15StarPointerTypeQ213DemoStartInfo16DeleteEffectType",
+      "address": "800BE7A4",
+      "bytes": 284,
+      "mismatches": []
+    },
+    {
+      "name": "requestStartTimeKeepDemo__20DemoStartRequestUtilFP9LiveActorPCcPCcPC5NervePC5NervelQ213DemoStartInfo8DemoTypeQ213DemoStartInfo15CinemaFrameTypeQ213DemoStartInfo15StarPointerTypeQ213DemoStartInfo16DeleteEffectType",
+      "address": "800BE8C0",
+      "bytes": 280,
+      "mismatches": []
+    },
+    {
+      "name": "requestStartTimeKeepDemo__20DemoStartRequestUtilFP13NerveExecutorP9LiveActorPCcPCcPC5NervePC5NervelQ213DemoStartInfo8DemoTypeQ213DemoStartInfo15CinemaFrameTypeQ213DemoStartInfo15StarPointerTypeQ213DemoStartInfo16DeleteEffectType",
+      "address": "800BE9D8",
+      "bytes": 288,
+      "mismatches": []
+    },
+    {
+      "name": "requestStartTimeKeepDemo__20DemoStartRequestUtilFP7NameObjPCcPCclQ213DemoStartInfo8DemoTypeQ213DemoStartInfo15CinemaFrameTypeQ213DemoStartInfo15StarPointerTypeQ213DemoStartInfo16DeleteEffectType",
+      "address": "800BEAF8",
+      "bytes": 220,
+      "mismatches": []
+    },
+    {
+      "name": "startDemo__20DemoStartRequestUtilFPC13DemoStartInfo",
+      "address": "800BEBD4",
+      "bytes": 396,
+      "mismatches": []
+    },
+    {
+      "name": "startDemo__20DemoStartRequestUtilFP22DemoStartRequestHolder",
+      "address": "800BED60",
+      "bytes": 64,
+      "mismatches": []
+    },
+    {
+      "name": "popStartDemoRequest__20DemoStartRequestUtilFP22DemoStartRequestHolder",
+      "address": "800BEDA0",
+      "bytes": 72,
+      "mismatches": []
+    },
+    {
+      "name": "setDemoStartInfoCommon__34@unnamed@DemoStartRequestUtil_cpp@FP13DemoStartInfoPCcPCclQ213DemoStartInfo8DemoTypeQ213DemoStartInfo15CinemaFrameTypeQ213DemoStartInfo15StarPointerTypeQ213DemoStartInfo16DeleteEffectType",
+      "address": "800BEDE8",
+      "bytes": 92,
+      "mismatches": []
+    },
+    {
+      "name": "isExistStartDemoRequest__20DemoStartRequestUtilFPC22DemoStartRequestHolder",
+      "address": "800BEE44",
+      "bytes": 4,
+      "mismatches": []
+    },
+    {
+      "name": "getDemoStarter__20DemoStartRequestUtilFRC13DemoStartInfo",
+      "address": "800BEE48",
+      "bytes": 88,
+      "mismatches": []
+    },
+    {
+      "name": "setNerveToStarter__20DemoStartRequestUtilFPC13DemoStartInfo",
+      "address": "800BEEA0",
+      "bytes": 76,
+      "mismatches": []
+    },
+    {
+      "name": "requestMovementOn__20DemoStartRequestUtilFPC13DemoStartInfo",
+      "address": "800BEEEC",
+      "bytes": 108,
+      "mismatches": []
+    },
+    {
+      "name": "isEmpty__20DemoStartRequestUtilFPC13DemoStartInfo",
+      "address": "800BEF58",
+      "bytes": 76,
+      "mismatches": []
+    },
+    {
+      "name": "startDemoExecutorIfExist__20DemoStartRequestUtilFRC13DemoStartInfo",
+      "address": "800BEFA4",
+      "bytes": 140,
+      "mismatches": []
+    }
+  ]
+}

@@ -1,0 +1,103 @@
+{
+  "native": [
+    {
+      "path": "src/Game/NPC/TalkNodeCtrl.cpp",
+      "sha256": "aa25a25a69f56b85549a6a4884a4238b69ac5919f0d4831a3ef83b97229e71ef"
+    },
+    {
+      "path": "src/Game/Screen/MessageTagSkipTagProcessor.cpp",
+      "sha256": "817cfda40a14dd8c6eb1710e4df8763c1c657a380cfdeead7c7491ef2cae1c34"
+    },
+    {
+      "path": "src/Game/Screen/MessageTagSkipTagProcessor.hpp",
+      "sha256": "aac1a63c7f4faf0803a2cfadab4ca40e8fb8751b0fd32dd3b3e0cde8356ff13c"
+    },
+    {
+      "path": "src/Game/Util/JMapUtil.hpp",
+      "sha256": "19db1ec22f2b1dde0451cbe162d68e8ace61220eb8e2e59640b32a463c653538"
+    },
+    {
+      "path": "src/compat/OriginalMessageLineQueries.cpp",
+      "sha256": "a0d1886b10b6619ae8a67a7810b48e9ae3988edb76101f6d0e52b46b7b8600ce"
+    },
+    {
+      "path": "src/compat/Nw4rFontCompat.cpp",
+      "sha256": "613f3269533babece94b89520ef077f1be0944ded52a4c0d0b1160e8299e27d9"
+    },
+    {
+      "path": "src/compat/TalkRuntime.cpp",
+      "sha256": "eb976bf24256cc2dee3d3bbd3ec2bf27ec9e9daeabc8b6506b3609d77cd7f92e"
+    },
+    {
+      "path": "src/nw4r/ut/Font.h",
+      "sha256": "8de6fb2d077f7ebbddc4d8a04274618ee59174c51d78ba8c3c00f8188b342a19"
+    },
+    {
+      "path": "src/nw4r/ut/Rect.h",
+      "sha256": "d53274af9abcb7f4bc7792a1e995a8f2f2577b555202c764bd38e15be1f7ac70"
+    },
+    {
+      "path": "src/nw4r/ut/CharStrmReader.h",
+      "sha256": "987cc260a7ed203fce0f6e3221c7e8c5959c07db17dd4b320ee031cc5db67eb0"
+    },
+    {
+      "path": "src/nw4r/ut/CharWriter.h",
+      "sha256": "6d9084087494e4ab292fd6cba35fd49405c7febb1055172ea024ba2694a86cdd"
+    },
+    {
+      "path": "src/nw4r/ut/TagProcessorBase.h",
+      "sha256": "60b02d950d621c178379220f3c86c82c6bb3a14c32b391518ecdeab69372cbfa"
+    },
+    {
+      "path": "src/nw4r/ut/TextWriterBase.h",
+      "sha256": "3b85a4b706dc1a60834913c09bac08c4a74e6982357b674ae29df149832c280e"
+    },
+    {
+      "path": "src/nw4r/math/constant.h",
+      "sha256": "8e509a5753155dfbdf8fb312973d4f05470e0c6fd8da96b8f982127b16c774bf"
+    },
+    {
+      "path": "src/nw4r/ut/ut_CharStrmReader.cpp",
+      "sha256": "4f953376efd6d8197d9fa8ff7a0abae11d025e8305177bba8592968c21c30f8f"
+    },
+    {
+      "path": "src/nw4r/ut/ut_CharWriter.cpp",
+      "sha256": "10637b344028233b3dd337612c73991b4afe2dea89294f82e77dd033a6343432"
+    },
+    {
+      "path": "src/nw4r/ut/ut_Font.cpp",
+      "sha256": "e7daa57340ad419f5cc019bc3523cb420959ecfba5f62321086db3c16b66d3c1"
+    },
+    {
+      "path": "src/nw4r/ut/ut_TagProcessorBase.cpp",
+      "sha256": "6bc0e6d045fac04f208835d1997eecdb4c54708f77664f9eba3815261d930152"
+    },
+    {
+      "path": "src/nw4r/ut/ut_TextWriterBase.cpp",
+      "sha256": "e0361d44441f78de502988fc607f7b9e2d2dd8868c55d400a5c13935173cd711"
+    },
+    {
+      "path": "tests/OriginalTalkNodeTests.cpp",
+      "sha256": "23a951c7db144fbcbfce3c74e36846a31855cb2c0c0daafbc78b5c8057b19d60"
+    },
+    {
+      "path": "tests/OriginalTalkNodeTests.hpp",
+      "sha256": "9ca5b5acc57637507688e18e62155a326182d15d4f0a051b181b665dd9eaefd2"
+    },
+    {
+      "path": "tests/OriginalMessageHolderTests.cpp",
+      "sha256": "3686048dee88fd94a8df690bbd23be361811790b7a23c16ca9ecbeae91585182"
+    }
+  ],
+  "reference_changed": [
+    {
+      "path": "decomp/src/Game/Screen/MessageTagSkipTagProcessor.cpp",
+      "sha256": "b2bb59299dec30503206e4141e605408abda96e18034c0c7ab6fb4c8f4c0b614"
+    },
+    {
+      "path": "decomp/include/Game/Screen/MessageTagSkipTagProcessor.hpp",
+      "sha256": "aac1a63c7f4faf0803a2cfadab4ca40e8fb8751b0fd32dd3b3e0cde8356ff13c"
+    }
+  ],
+  "runtime_status": "pending parent linked fixture/smoke; no runtime claim"
+}

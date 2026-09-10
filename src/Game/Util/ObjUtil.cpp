@@ -7,11 +7,14 @@
 #include <string_view>
 
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/Effect/EffectSystemUtil.hpp"
+#include "Game/MapObj/StarPieceDirector.hpp"
 #include "Game/Map/StageSwitch.hpp"
 #include "Game/Map/SwitchWatcherHolder.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/Screen/LayoutActor.hpp"
 #include "Game/Util/Functor.hpp"
+#include "Game/Util/EffectUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/SwitchEventFunctorListener.hpp"
 #include "runtime/RuntimeContext.hpp"
@@ -48,6 +51,18 @@ namespace {
 namespace MR {
     void requestMovementOn(NameObj* pObj) {
         NameObjFunction::requestMovementOn(pObj);
+    }
+
+    void requestMovementOn(LiveActor* pActor) {
+        NameObjFunction::requestMovementOn(pActor);
+
+        if (MR::isExistEffectKeeper(pActor)) {
+            MR::Effect::requestMovementOn(pActor->mEffectKeeper);
+        }
+    }
+
+    void requestMovementOn(LayoutActor* pActor) {
+        NameObjFunction::requestMovementOn(pActor);
     }
 
     void requestMovementOff(NameObj* pObj) {
@@ -138,4 +153,19 @@ namespace MR {
 
         MR::getSwitchWatcherHolder()->joinSwitchEventListenerB(pCtrl, pListener);
     }
+    bool isName(const NameObj* pObj, const char* pName) {
+        return strcmp(pObj->mName, pName) == 0;
+    }
+
+    bool isSame(const NameObj* pObj1, const NameObj* pObj2) {
+        return pObj1 == pObj2;
+    }
+    void initStarPieceGetCSSound() {
+        StarPieceDirector* director = getStarPieceDirector();
+
+        if (director != nullptr) {
+            director->initCSSound();
+        }
+    }
+
 }  // namespace MR

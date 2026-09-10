@@ -337,7 +337,6 @@ namespace smgpc::runtime {
         [[nodiscard]] static bool entry_is_dead(const Entry &entry);
         [[nodiscard]] static bool entry_is_suspended(const Entry &entry);
         [[nodiscard]] static std::string entry_name(const Entry &entry);
-        void execute_sensor_hit_check();
         void execute_actor_clipping();
         void execute_movement_entry(const Entry&, s32 movement_type);
         void execute_calc_anim_entry(const Entry&, s32 calc_anim_type);

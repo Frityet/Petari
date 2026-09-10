@@ -1,0 +1,576 @@
+#include "Game/Util/MapUtil.hpp"
+#include "Game/LiveActor/Binder.hpp"
+#include "Game/LiveActor/LiveActor.hpp"
+#include "Game/Map/CollisionCategorizedKeeper.hpp"
+#include "Game/Map/CollisionCode.hpp"
+#include "Game/Map/CollisionDirector.hpp"
+#include "Game/Map/HitInfo.hpp"
+#include "Game/Util/CollisionPartsFilter.hpp"
+#include "Game/Util/MathUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
+#include "Game/Util/TriangleFilter.hpp"
+
+static HitInfo mSortBuffer[32];
+static u32 mSortCount;
+
+namespace {
+    // getStrikeInfoNumCategory
+    bool getFirstPolyOnLineCategory(TVec3f* pPos, Triangle* pTriangle, const TVec3f& rStart, const TVec3f& rOffset,
+                                   const TriangleFilterBase* pTriangleFilter, const CollisionPartsFilterBase* pPartsFilter, s32 category) {
+        u32 hitCount = MR::getCollisionDirector()->getCategoryKeeper(category)->checkStrikeLine(rStart, rOffset, 0, pPartsFilter, nullptr);
+        if (hitCount == 0) {
+            return false;
+        }
+
+        f32 distance = 1000000.0f;
+        s32 nearest = -1;
+        for (u32 i = 0; i < hitCount; i++) {
+            HitInfo* pHit = MR::getCollisionDirector()->getCategoryKeeper(category)->getStrikeInfo(i);
+            if (pTriangleFilter != nullptr && pTriangleFilter->isInvalidTriangle(&pHit->mParentTriangle)) {
+                continue;
+            }
+            if (distance > pHit->_60) {
+                nearest = i;
+                distance = pHit->_60;
+            }
+        }
+        if (nearest == -1) {
+            return false;
+        }
+
+        HitInfo* pHit = MR::getCollisionDirector()->getCategoryKeeper(category)->getStrikeInfo(nearest);
+        if (pPos != nullptr) {
+            *pPos = pHit->mHitPos;
+        }
+        if (pTriangle != nullptr) {
+            *pTriangle = pHit->mParentTriangle;
+        }
+        return true;
+    }
+    // getFirstPolyOnLineCategoryExceptSensor
+    // getFirstPolyOnLineCategoryExceptActor
+};  // namespace
+
+namespace MR {
+    const TVec3f* getNormal(const Triangle* pTriangle) {
+        return pTriangle->getNormal(0);
+    }
+
+    bool isWallPolygon(const TVec3f& rParam1, const TVec3f& rParam2) {
+        if (isNearZero(rParam1)) {
+            return false;
+        }
+
+        return isWallPolygon(rParam1.dot(rParam2));
+    }
+
+    bool isFloorPolygon(const TVec3f& rParam1, const TVec3f& rParam2) {
+        if (isNearZero(rParam1)) {
+            return false;
+        }
+
+        return isFloorPolygon(rParam1.dot(rParam2));
+    }
+
+    bool isFloorPolygonCos(const TVec3f& rParam1, const TVec3f& rParam2, f32 param3) {
+        if (isNearZero(rParam1)) {
+            return false;
+        }
+
+        if (-rParam1.dot(rParam2) < param3) {
+            return false;
+        }
+
+        return isFloorPolygon(rParam1.dot(rParam2));
+    }
+
+    bool isWallPolygon(f32 param1) {
+        return MR::abs(param1) < 0.34202015f;
+    }
+
+    bool isFloorPolygon(f32 param1) {
+        if (isWallPolygon(param1)) {
+            return false;
+        }
+
+        return param1 < 0.0f;
+    }
+
+    bool isCeilingPolygon(f32 param1) {
+        if (isWallPolygon(param1) || isFloorPolygon(param1)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    bool isWaterPolygon(const Triangle* pTriangle) {
+        const char* pFloorCodeString = getFloorCodeString(pTriangle);
+
+        if (pFloorCodeString != nullptr) {
+            if (strcmp(pFloorCodeString, "Water") == 0) {
+                return true;
+            }
+
+            if (strcmp(pFloorCodeString, "Shallow") == 0) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    bool isThroughPolygon(const Triangle* pTriangle) {
+        const char* pFloorCodeString = getFloorCodeString(pTriangle);
+
+        if (pFloorCodeString != nullptr) {
+            if (strcmp(pFloorCodeString, "Water") == 0) {
+                return true;
+            }
+
+            if (strcmp(pFloorCodeString, "Shallow") == 0) {
+                return true;
+            }
+
+            if (strcmp(pFloorCodeString, "PullBack") == 0) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // getFirstPolyOnLineToMap
+    // getFirstPolyOnLineToMapAndMoveLimit
+    bool getFirstPolyOnLineToWaterSurface(TVec3f* pPos, Triangle* pTriangle, const TVec3f& rStart, const TVec3f& rOffset) {
+        return ::getFirstPolyOnLineCategory(pPos, pTriangle, rStart, rOffset, nullptr, nullptr, 2);
+    }
+    // getFirstPolyOnLineToMapExceptSensor
+    // getFirstPolyOnLineToMapExceptActor
+    // getFirstPolyOnLineToMap
+    bool getFirstPolyOnLineToWaterSurface(TVec3f* pPos, Triangle* pTriangle, const TVec3f& rStart, const TVec3f& rOffset,
+                                         const CollisionPartsFilterBase* pPartsFilter, const TriangleFilterBase* pTriangleFilter) {
+        return ::getFirstPolyOnLineCategory(pPos, pTriangle, rStart, rOffset, pTriangleFilter, pPartsFilter, 2);
+    }
+    // getFirstPolyNormalOnLineToMap
+    u32 getNearPolyOnLineSort(const TVec3f& rReference, const TVec3f& rStart, const TVec3f& rOffset, const HitSensor* pExceptSensor) {
+        u32 hitCount = getCollisionDirector()->getCategoryKeeper(0)->checkStrikeLine(rStart, rOffset, 0, nullptr, nullptr);
+        if (hitCount == 0) {
+            return 0;
+        }
+
+        HitInfo* candidates[32];
+        u32 excludedCount = 0;
+        for (u32 i = 0; i < hitCount; i++) {
+            candidates[i] = getCollisionDirector()->getCategoryKeeper(0)->getStrikeInfo(i);
+            if (pExceptSensor != nullptr && candidates[i]->mParentTriangle.mSensor == pExceptSensor) {
+                candidates[i] = nullptr;
+                excludedCount++;
+            }
+        }
+
+        mSortCount = hitCount - excludedCount;
+        if (mSortCount >= 32) {
+            mSortCount = 32;
+        }
+        for (u32 i = 0; i < mSortCount; i++) {
+            f32 nearestDistance = 1000000.0f;
+            u32 nearestIndex = 0;
+            for (u32 j = 0; j < hitCount; j++) {
+                if (candidates[j] == nullptr) {
+                    continue;
+                }
+                HitInfo* info = getCollisionDirector()->getCategoryKeeper(0)->getStrikeInfo(j);
+                TVec3f offset(rReference);
+                offset.sub(info->mHitPos);
+                f32 distance = PSVECMag(&offset);
+                if (nearestDistance > distance) {
+                    nearestIndex = j;
+                    nearestDistance = distance;
+                }
+            }
+            mSortBuffer[i] = *getCollisionDirector()->getCategoryKeeper(0)->getStrikeInfo(nearestIndex);
+            candidates[nearestIndex] = nullptr;
+        }
+        return mSortCount;
+    }
+
+    bool getSortedPoly(TVec3f* pDst, Triangle* pTriangle, u32 sortIndex) {
+        if (mSortCount <= sortIndex) {
+            return false;
+        }
+
+        if (pTriangle != nullptr) {
+            *pTriangle = mSortBuffer[sortIndex].mParentTriangle;
+        }
+
+        if (pDst != nullptr) {
+            *pDst = mSortBuffer[sortIndex].mHitPos;
+        }
+
+        return true;
+    }
+
+    const Triangle* getSortedPoly(u32 sortIndex) {
+        if (mSortCount <= sortIndex) {
+            return nullptr;
+        }
+
+        return &mSortBuffer[sortIndex].mParentTriangle;
+    }
+
+    bool isExistMapCollision(const TVec3f& rParam1, const TVec3f& rParam2) {
+        return getCollisionDirector()->getCategoryKeeper(0)->checkStrikeLine(rParam1, rParam2, 1, nullptr, nullptr) != 0;
+    }
+
+    bool isExistMoveLimitCollision(const TVec3f& rParam1, const TVec3f& rParam2) {
+        return getCollisionDirector()->getCategoryKeeper(3)->checkStrikeLine(rParam1, rParam2, 1, nullptr, nullptr) != 0;
+    }
+
+    bool isExistMapCollisionExceptActor(const TVec3f& rStart, const TVec3f& rOffset, const LiveActor* pActor) {
+        CollisionPartsFilterActor filter(pActor);
+        return getCollisionDirector()->getCategoryKeeper(0)->checkStrikeLine(rStart, rOffset, 1, &filter, nullptr) != 0;
+    }
+
+    bool checkStrikePointToMap(const TVec3f& rParam1, HitInfo* pParam2) {
+        return getCollisionDirector()->getCategoryKeeper(0)->checkStrikePoint(rParam1, pParam2) != 0;
+    }
+
+    bool checkStrikeBallToMap(const TVec3f& rParam1, f32 param2) {
+        return getCollisionDirector()->getCategoryKeeper(0)->checkStrikeBall(rParam1, param2, false, nullptr, nullptr) != 0;
+    }
+
+    // calcMapGround
+    // calcMapGroundUpper
+
+    bool isFallNextMove(const LiveActor* pActor, f32 param2, f32 param3, f32 param4, const TriangleFilterBase* pParam5) {
+        return isFallNextMove(pActor->mPosition, pActor->mVelocity, pActor->mGravity, param2, param3, param4, pParam5);
+    }
+
+    // isFallNextMove
+    // isFallOrDangerNextMove
+    // isFallOrDangerNextMove
+    void calcVelocityMovingPoint(const Triangle* pTriangle, const TVec3f& rPos, TVec3f* pVelocity) {
+        if (isSameMtx(pTriangle->getBaseMtx()->toMtxPtr(), pTriangle->getPrevBaseMtx()->toMtxPtr())) {
+            pVelocity->zero();
+            return;
+        }
+
+        TVec3f localPos;
+        PSMTXMultVec(pTriangle->getBaseInvMtx()->toMtxPtr(), &rPos, &localPos);
+        TVec3f prevPos;
+        PSMTXMultVec(pTriangle->getPrevBaseMtx()->toMtxPtr(), &localPos, &prevPos);
+        *pVelocity = rPos - prevPos;
+    }
+
+    u32 createAreaPolygonList(Triangle* pTriangle, u32 param2, const TVec3f& rParam3, const TVec3f& rParam4) {
+        return getCollisionDirector()->getCategoryKeeper(0)->createAreaPolygonList(pTriangle, param2, rParam3, rParam4);
+    }
+
+    u32 createAreaPolygonListArray(Triangle* pTriangle, u32 param2, TVec3f* pParam3, u32 param4) {
+        return getCollisionDirector()->getCategoryKeeper(0)->createAreaPolygonListArray(pTriangle, param2, pParam3, param4);
+    }
+
+    // trySetMoveLimitCollision
+
+    bool isBindedGroundIce(const LiveActor* pActor) {
+        if (pActor->mBinder == nullptr) {
+            return false;
+        }
+
+        if (!pActor->mBinder->isBindedGround()) {
+            return false;
+        }
+
+        return isGroundCodeIce(&pActor->mBinder->mGroundInfo.mParentTriangle);
+    }
+
+    bool isBindedGroundSand(const LiveActor* pActor) {
+        if (pActor->mBinder == nullptr) {
+            return false;
+        }
+
+        if (!pActor->mBinder->isBindedGround()) {
+            return false;
+        }
+
+        return isGroundCodeSand(&pActor->mBinder->mGroundInfo.mParentTriangle);
+    }
+
+    bool isBindedGroundDamageFire(const LiveActor* pActor) {
+        if (pActor->mBinder == nullptr) {
+            return false;
+        }
+
+        if (!pActor->mBinder->isBindedGround()) {
+            return false;
+        }
+
+        return isGroundCodeDamageFire(&pActor->mBinder->mGroundInfo.mParentTriangle);
+    }
+
+    bool isBindedGroundWaterBottomH(const LiveActor* pActor) {
+        if (pActor->mBinder == nullptr) {
+            return false;
+        }
+
+        if (!pActor->mBinder->isBindedGround()) {
+            return false;
+        }
+
+        return isGroundCodeWaterBottomH(&pActor->mBinder->mGroundInfo.mParentTriangle);
+    }
+
+    bool isBindedGroundWaterBottomM(const LiveActor* pActor) {
+        if (pActor->mBinder == nullptr) {
+            return false;
+        }
+
+        if (!pActor->mBinder->isBindedGround()) {
+            return false;
+        }
+
+        return isGroundCodeWaterBottomM(&pActor->mBinder->mGroundInfo.mParentTriangle);
+    }
+
+    bool isBindedGroundWater(const LiveActor* pActor) {
+        if (pActor->mBinder == nullptr) {
+            return false;
+        }
+
+        if (!pActor->mBinder->isBindedGround()) {
+            return false;
+        }
+
+        return isGroundCodeWaterIter(pActor->mBinder->mGroundInfo.mParentTriangle.getAttributes());
+    }
+
+    bool isBindedGroundSinkDeath(const LiveActor* pActor) {
+        if (pActor->mBinder == nullptr) {
+            return false;
+        }
+
+        if (!pActor->mBinder->isBindedGround()) {
+            return false;
+        }
+
+        return isGroundCodeSinkDeath(&pActor->mBinder->mGroundInfo.mParentTriangle);
+    }
+
+    bool isBindedGroundAreaMove(const LiveActor* pActor) {
+        if (pActor->mBinder == nullptr) {
+            return false;
+        }
+
+        if (!pActor->mBinder->isBindedGround()) {
+            return false;
+        }
+
+        return isGroundCodeAreaMove(&pActor->mBinder->mGroundInfo.mParentTriangle);
+    }
+
+    bool isBindedGroundRailMove(const LiveActor* pActor) {
+        if (pActor->mBinder == nullptr) {
+            return false;
+        }
+
+        if (!pActor->mBinder->isBindedGround()) {
+            return false;
+        }
+
+        return isGroundCodeRailMove(&pActor->mBinder->mGroundInfo.mParentTriangle);
+    }
+
+    bool isBindedGroundBrake(const LiveActor* pActor) {
+        if (pActor->mBinder == nullptr) {
+            return false;
+        }
+
+        if (!pActor->mBinder->isBindedGround()) {
+            return false;
+        }
+
+        return isGroundCodeBrake(&pActor->mBinder->mGroundInfo.mParentTriangle);
+    }
+
+    bool isBindedDamageFire(const LiveActor* pActor) {
+        if (pActor->mBinder == nullptr) {
+            return false;
+        }
+
+        if (pActor->mBinder->isBindedGround() && isGroundCodeDamageFire(&pActor->mBinder->mGroundInfo.mParentTriangle)) {
+            return true;
+        }
+
+        if (pActor->mBinder->isBindedWall() && isGroundCodeDamageFire(&pActor->mBinder->mWallInfo.mParentTriangle)) {
+            return true;
+        }
+
+        if (pActor->mBinder->isBindedRoof() && isGroundCodeDamageFire(&pActor->mBinder->mRoofInfo.mParentTriangle)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    bool isBindedDamageElectric(const LiveActor* pActor) {
+        if (pActor->mBinder == nullptr) {
+            return false;
+        }
+
+        if (pActor->mBinder->isBindedGround() && isGroundCodeDamageElectric(&pActor->mBinder->mGroundInfo.mParentTriangle)) {
+            return true;
+        }
+
+        if (pActor->mBinder->isBindedWall() && isGroundCodeDamageElectric(&pActor->mBinder->mWallInfo.mParentTriangle)) {
+            return true;
+        }
+
+        if (pActor->mBinder->isBindedRoof() && isGroundCodeDamageElectric(&pActor->mBinder->mRoofInfo.mParentTriangle)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    u32 getCameraID(const Triangle* pTriangle) {
+        return getCollisionDirector()->mCode->getCameraID(*pTriangle);
+    }
+
+    const char* getFloorCodeString(const Triangle* pTriangle) {
+        return getCollisionDirector()->mCode->getFloorCodeString(*pTriangle);
+    }
+
+    const char* getWallCodeString(const Triangle* pTriangle) {
+        return getCollisionDirector()->mCode->getWallCodeString(*pTriangle);
+    }
+
+    const char* getSoundCodeString(const Triangle* pTriangle) {
+        return getCollisionDirector()->mCode->getSoundCodeString(*pTriangle);
+    }
+
+    s32 getFloorCodeIndex(const JMapInfoIter& rIter) {
+        return getCollisionDirector()->mCode->getFloorCode(rIter);
+    }
+
+    s32 getSoundCodeIndex(const JMapInfoIter& rIter) {
+        return getCollisionDirector()->mCode->getSoundCode(rIter);
+    }
+
+    s32 getFloorCodeIndex(const Triangle* pTriangle) {
+        return getCollisionDirector()->mCode->getFloorCode(pTriangle->getAttributes());
+    }
+
+    s32 getWallCodeIndex(const Triangle* pTriangle) {
+        return getCollisionDirector()->mCode->getWallCode(pTriangle->getAttributes());
+    }
+
+    s32 getSoundCodeIndex(const Triangle* pTriangle) {
+        return getCollisionDirector()->mCode->getSoundCode(pTriangle->getAttributes());
+    }
+
+    s32 getCameraCodeIndex(const Triangle* pTriangle) {
+        return getCollisionDirector()->mCode->getCameraCode(pTriangle->getAttributes());
+    }
+
+    bool isGroundCodeWaterIter(const JMapInfoIter& rIter) {
+        s32 code = getFloorCodeIndex(rIter);
+
+        return code == CollisionFloorCode_WaterBottomH || code == CollisionFloorCode_WaterBottomM || code == CollisionFloorCode_WaterBottomL ||
+               code == CollisionFloorCode_Wet;
+    }
+
+    bool isGroundCodeDeath(const Triangle* pTriangle) {
+        return getFloorCodeIndex(pTriangle) == CollisionFloorCode_Death;
+    }
+
+    bool isGroundCodeDamage(const Triangle* pTriangle) {
+        return getFloorCodeIndex(pTriangle) == CollisionFloorCode_DamageNormal;
+    }
+
+    bool isGroundCodeIce(const Triangle* pTriangle) {
+        return getFloorCodeIndex(pTriangle) == CollisionFloorCode_Ice;
+    }
+
+    bool isGroundCodeDamageFire(const Triangle* pTriangle) {
+        return getFloorCodeIndex(pTriangle) == CollisionFloorCode_DamageFire;
+    }
+
+    bool isGroundCodeFireDance(const Triangle* pTriangle) {
+        return getFloorCodeIndex(pTriangle) == CollisionFloorCode_FireDance;
+    }
+
+    bool isGroundCodeSand(const Triangle* pTriangle) {
+        return getFloorCodeIndex(pTriangle) == CollisionFloorCode_Sand;
+    }
+
+    bool isGroundCodeDamageElectric(const Triangle* pTriangle) {
+        return getFloorCodeIndex(pTriangle) == CollisionFloorCode_DamageElectric;
+    }
+
+    bool isGroundCodeWaterBottomH(const Triangle* pTriangle) {
+        return getFloorCodeIndex(pTriangle) == CollisionFloorCode_WaterBottomH;
+    }
+
+    bool isGroundCodeWaterBottomM(const Triangle* pTriangle) {
+        return getFloorCodeIndex(pTriangle) == CollisionFloorCode_WaterBottomM;
+    }
+
+    bool isGroundCodeSinkDeath(const Triangle* pTriangle) {
+        return getFloorCodeIndex(pTriangle) == CollisionFloorCode_SinkDeath;
+    }
+
+    bool isGroundCodeRailMove(const Triangle* pTriangle) {
+        return getFloorCodeIndex(pTriangle) == CollisionFloorCode_RailMove;
+    }
+
+    bool isGroundCodeAreaMove(const Triangle* pTriangle) {
+        return getFloorCodeIndex(pTriangle) == CollisionFloorCode_AreaMove;
+    }
+
+    bool isGroundCodeNoStampSand(const Triangle* pTriangle) {
+        return getFloorCodeIndex(pTriangle) == CollisionFloorCode_NoStampSand;
+    }
+
+    bool isGroundCodeSinkDeathMud(const Triangle* pTriangle) {
+        return getFloorCodeIndex(pTriangle) == CollisionFloorCode_SinkDeathMud;
+    }
+
+    bool isGroundCodeBrake(const Triangle* pTriangle) {
+        return getFloorCodeIndex(pTriangle) == CollisionFloorCode_Brake;
+    }
+
+    bool isWallCodeGhostThrough(const Triangle* pTriangle) {
+        return getWallCodeIndex(pTriangle) == CollisionWallCode_GhostThroughCode;
+    }
+
+    bool isWallCodeRebound(const Triangle* pTriangle) {
+        return getWallCodeIndex(pTriangle) == CollisionWallCode_Rebound;
+    }
+
+    bool isWallCodeNoAction(const Triangle* pTriangle) {
+        return getWallCodeIndex(pTriangle) == CollisionWallCode_NoAction;
+    }
+
+    bool isSoundCodeSand(const Triangle* pTriangle) {
+        return getSoundCodeIndex(pTriangle) == CollisionSoundCode_Sand;
+    }
+
+    bool isCameraCodeThrough(const Triangle* pTriangle) {
+        return getCameraCodeIndex(pTriangle) == CollisionCameraCode_Through;
+    }
+
+    bool isCodeSand(const Triangle* pTriangle) {
+        return isSoundCodeSand(pTriangle) || isGroundCodeSand(pTriangle) || isGroundCodeNoStampSand(pTriangle);
+    }
+
+    // getCameraPolyFast
+    // getFirstPolyOnLineBFast
+};  // namespace MR
+
+namespace Collision {
+    s32 checkStrikeLineToMap(const TVec3f& rStart, const TVec3f& rOffset, s32 maxCount,
+                            const CollisionPartsFilterBase* pPartsFilter, const TriangleFilterBase* pTriangleFilter) {
+        return MR::getCollisionDirector()->getCategoryKeeper(0)->checkStrikeLine(rStart, rOffset, maxCount, pPartsFilter, pTriangleFilter);
+    }
+};  // namespace Collision

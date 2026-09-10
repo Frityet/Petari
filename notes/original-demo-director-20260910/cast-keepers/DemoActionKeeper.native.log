@@ -1,0 +1,46 @@
+In file included from /Users/frityet/Projects/petari/notes/original-demo-director-20260910/cast-keepers/native-staged/Game/Demo/DemoActionKeeper.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from /Users/frityet/Projects/petari/notes/original-demo-director-20260910/cast-keepers/native-staged/Game/Demo/DemoActionKeeper.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here
+   28 |                virtual void calcAnim();
+      |                             ^
+In file included from /Users/frityet/Projects/petari/notes/original-demo-director-20260910/cast-keepers/native-staged/Game/Demo/DemoActionKeeper.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:43:29: warning: 'calcViewAndEntry' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   43 |                virtual void calcViewAndEntry();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:29:29: note: overridden virtual function is here
+   29 |                virtual void calcViewAndEntry();
+      |                             ^
+/Users/frityet/Projects/petari/notes/original-demo-director-20260910/cast-keepers/native-staged/Game/Demo/DemoActionKeeper.cpp:229:9: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  229 |         jmap->getValue< const char* >(i, "PartName", &info->mPartName);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/frityet/Projects/petari/notes/original-demo-director-20260910/cast-keepers/native-staged/Game/Demo/DemoActionKeeper.cpp:230:9: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  230 |         jmap->getValue< const char* >(i, "CastName", &info->mCastName);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/frityet/Projects/petari/notes/original-demo-director-20260910/cast-keepers/native-staged/Game/Demo/DemoActionKeeper.cpp:231:9: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  231 |         jmap->getValue< s32 >(i, "CastID", &info->mCastID);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/frityet/Projects/petari/notes/original-demo-director-20260910/cast-keepers/native-staged/Game/Demo/DemoActionKeeper.cpp:232:9: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  232 |         jmap->getValue< s32 >(i, "ActionType", &info->mActionType);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/frityet/Projects/petari/notes/original-demo-director-20260910/cast-keepers/native-staged/Game/Demo/DemoActionKeeper.cpp:233:9: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  233 |         jmap->getValue< const char* >(i, "PosName", &info->mPosName);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/frityet/Projects/petari/notes/original-demo-director-20260910/cast-keepers/native-staged/Game/Demo/DemoActionKeeper.cpp:234:9: warning: ignoring return value of function declared with 'nodiscard' attribute [-Wunused-result]
+  234 |         jmap->getValue< const char* >(i, "AnimName", &info->mAnimName);
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+9 warnings generated.

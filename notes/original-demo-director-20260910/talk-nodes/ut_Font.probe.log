@@ -1,0 +1,55 @@
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |     /* 0x14 */ virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |     /* 0x14 */ virtual void movement();
+      |                             ^
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |     /* 0x1C */ virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here
+   28 |     /* 0x1C */ virtual void calcAnim();
+      |                             ^
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:43:29: warning: 'calcViewAndEntry' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   43 |     /* 0x20 */ virtual void calcViewAndEntry();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:29:29: note: overridden virtual function is here
+   29 |     /* 0x20 */ virtual void calcViewAndEntry();
+      |                             ^
+decomp/src/nw4r/ut/ut_Font.cpp:5:20: error: out-of-line definition of 'InitReaderFunc' does not match any declaration in 'nw4r::ut::Font'
+    5 |         void Font::InitReaderFunc(FontEncoding encode) {
+      |                    ^~~~~~~~~~~~~~
+src/nw4r/ut/Font.h:52:11: note: Font defined here
+   52 |     class Font {
+      |           ^~~~
+decomp/src/nw4r/ut/ut_Font.cpp:8:17: error: use of undeclared identifier 'mReadFunc'
+    8 |                 mReadFunc = &CharStrmReader::ReadNextCharUTF8;
+      |                 ^~~~~~~~~
+decomp/src/nw4r/ut/ut_Font.cpp:8:30: error: use of undeclared identifier 'CharStrmReader'
+    8 |                 mReadFunc = &CharStrmReader::ReadNextCharUTF8;
+      |                              ^
+decomp/src/nw4r/ut/ut_Font.cpp:13:17: error: use of undeclared identifier 'mReadFunc'
+   13 |                 mReadFunc = &CharStrmReader::ReadNextCharUTF16;
+      |                 ^~~~~~~~~
+decomp/src/nw4r/ut/ut_Font.cpp:13:30: error: use of undeclared identifier 'CharStrmReader'
+   13 |                 mReadFunc = &CharStrmReader::ReadNextCharUTF16;
+      |                              ^
+decomp/src/nw4r/ut/ut_Font.cpp:18:17: error: use of undeclared identifier 'mReadFunc'
+   18 |                 mReadFunc = &CharStrmReader::ReadNextCharSJIS;
+      |                 ^~~~~~~~~
+decomp/src/nw4r/ut/ut_Font.cpp:18:30: error: use of undeclared identifier 'CharStrmReader'
+   18 |                 mReadFunc = &CharStrmReader::ReadNextCharSJIS;
+      |                              ^
+decomp/src/nw4r/ut/ut_Font.cpp:24:17: error: use of undeclared identifier 'mReadFunc'
+   24 |                 mReadFunc = &CharStrmReader::ReadNextCharCP1252;
+      |                 ^~~~~~~~~
+decomp/src/nw4r/ut/ut_Font.cpp:24:30: error: use of undeclared identifier 'CharStrmReader'
+   24 |                 mReadFunc = &CharStrmReader::ReadNextCharCP1252;
+      |                              ^
+3 warnings and 9 errors generated.

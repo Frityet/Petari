@@ -1,0 +1,13 @@
+# Original DemoUtil provider adoption — 2026-09-10
+
+`src/compat/OriginalDemoUtil.cpp` copies75 complete methods from the current `decomp/src/Game/Util/DemoUtil.cpp` verbatim. The original file has79 methods. The four explicit exclusions are `isSystemTalking`, `isNormalTalking`, `getTalkingActor` (current actual talk ownership remains in TalkRuntime), and `isPowerStarGetDemoActive` (retains the stage-session owner until complete GameScene adoption). The unused private TalkDirector getter/include is excluded with its consumers. No Game or decomp source was changed in this step.
+
+The copied functions replace the previous MR demo algorithms in DemoCompat/DemoUtilCompat. `copied-functions.json` records every reference function-body hash; `retired-providers.json` lists removed and retained entries. Native simple-cast deferral, scene-child retirement, membership/action counts, and the two preexisting NPC timeKeepDemoFade wrappers remain. The latter are outside DemoUtil's reference source and were not promoted as original by this work. Puppetable teardown now calls actual `MarioAccess::endRemoteDemo(nullptr)`; its legacy force flag has no original counterpart and is ignored rather than used to override original control guards.
+
+The original `canStartDemo` checks the actual DemoDirector, original Mario death/confront-death state, and `GameSceneFunction::isExecStageClearDemo` in that order. Its GameScene ownership requirement is retained. No generic actor is treated as Mario and no missing GameScene is replaced by a constant false result.
+
+All three edited native TUs compile with the isolated LLVM command. The isolated compile checks C++ closure only; production compilation must use the existing pure-original CP932 execution-character-set rule for this new file because the original conversation name literal remains Japanese. Parent was notified to add `OriginalDemoUtil.cpp` to that rule before the combined build. The undeclared-overload risk identified in request utility was separately reported for original ObjUtil restoration.
+
+An additional duplicate was found in `StorySequencePlatformCompat.cpp`: `tryStartDemoWithoutCinemaFrameValidHandPointerFinger(NameObj*,const char*)`. Its existing body unconditionally reports unavailable. Parent owns removing that exact old provider. No other compat provider-name duplicates were found by this bounded scan. See `remaining-provider-name-hits.json` for the pre-removal inventory.
+
+Parent owns shared DemoSceneRuntime conversion to original director ownership, linked tests, and publication. No global Xmake, runtime, commit, or source outside this three-file provider scope was changed here.

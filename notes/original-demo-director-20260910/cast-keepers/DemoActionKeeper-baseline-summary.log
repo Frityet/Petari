@@ -1,0 +1,207 @@
+{
+  "command": [
+    "build/tools/wibo",
+    "build/tools/sjiswrap.exe",
+    "build/compilers/GC/3.0a3/mwcceppc.exe",
+    "-nodefaults",
+    "-proc",
+    "gekko",
+    "-align",
+    "powerpc",
+    "-enum",
+    "int",
+    "-fp",
+    "hardware",
+    "-Cpp_exceptions",
+    "off",
+    "-O4,s",
+    "-inline",
+    "auto",
+    "-pragma",
+    "cats off",
+    "-pragma",
+    "warn_notinlined off",
+    "-maxerrors",
+    "1",
+    "-nosyspath",
+    "-RTTI",
+    "off",
+    "-str",
+    "reuse",
+    "-enc",
+    "SJIS",
+    "-sdata",
+    "4",
+    "-sdata2",
+    "4",
+    "-ipa",
+    "file",
+    "-sym",
+    "on",
+    "-i",
+    "include",
+    "-i",
+    "libs/JSystem/include",
+    "-i",
+    "libs/MSL_C++/include",
+    "-i",
+    "libs/MSL_C/include",
+    "-i",
+    "libs/MetroTRK/include",
+    "-i",
+    "libs/RVLFaceLib/include",
+    "-i",
+    "libs/RVL_SDK/include",
+    "-i",
+    "libs/Runtime/include",
+    "-i",
+    "libs/nw4r/include",
+    "-i",
+    "build/original-j3d-joint-traversal-20260903/retail/include",
+    "-DVERSION=0",
+    "-c",
+    "src/Game/Demo/DemoActionKeeper.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-demo-director-20260910/cast-keepers/DemoActionKeeper.DemoActionKeeper-baseline.wii.o"
+  ],
+  "wii_exit": 0,
+  "objdiff_command": [
+    "/Users/frityet/Projects/petari/decomp/build/tools/objdiff-cli",
+    "diff",
+    "-1",
+    "/Users/frityet/Projects/petari/notes/gateway-audit-20260907/restoration/retail/obj/Game/Demo/DemoActionKeeper.o",
+    "-2",
+    "/Users/frityet/Projects/petari/notes/original-demo-director-20260910/cast-keepers/DemoActionKeeper.DemoActionKeeper-baseline.wii.o",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-demo-director-20260910/cast-keepers/DemoActionKeeper-baseline-objdiff.json"
+  ],
+  "objdiff_exit": 0,
+  "symbols": [
+    {
+      "name": "findTalkMessageCtrl__30@unnamed@DemoActionKeeper_cpp@FP9LiveActor",
+      "demangled_name": "@unnamed@DemoActionKeeper_cpp@::findTalkMessageCtrl(LiveActor*)",
+      "size": "68",
+      "match_percent": 100.0,
+      "target_symbol": 1
+    },
+    {
+      "name": "setTalkAnimCtrlInterpole__30@unnamed@DemoActionKeeper_cpp@FP9LiveActorl",
+      "demangled_name": "@unnamed@DemoActionKeeper_cpp@::setTalkAnimCtrlInterpole(LiveActor*, long)",
+      "size": "88",
+      "match_percent": 100.0,
+      "target_symbol": 2
+    },
+    {
+      "name": "__ct__14DemoActionInfoFv",
+      "demangled_name": "DemoActionInfo::DemoActionInfo()",
+      "size": "212",
+      "match_percent": 100.0,
+      "target_symbol": 3
+    },
+    {
+      "name": "registerCast__14DemoActionInfoFP9LiveActor",
+      "demangled_name": "DemoActionInfo::registerCast(LiveActor*)",
+      "size": "32",
+      "match_percent": 100.0,
+      "target_symbol": 4
+    },
+    {
+      "name": "registerFunctor__14DemoActionInfoFPC9LiveActorRCQ22MR11FunctorBase",
+      "demangled_name": "DemoActionInfo::registerFunctor(const LiveActor*, const MR::FunctorBase&)",
+      "size": "128",
+      "match_percent": 100.0,
+      "target_symbol": 5
+    },
+    {
+      "name": "registerNerve__14DemoActionInfoFPC9LiveActorPC5Nerve",
+      "demangled_name": "DemoActionInfo::registerNerve(const LiveActor*, const Nerve*)",
+      "size": "60",
+      "match_percent": 100.0,
+      "target_symbol": 6
+    },
+    {
+      "name": "executeActionFirst__14DemoActionInfoCFv",
+      "demangled_name": "DemoActionInfo::executeActionFirst() const",
+      "size": "504",
+      "match_percent": 99.111115,
+      "target_symbol": 7
+    },
+    {
+      "name": "executeActionLast__14DemoActionInfoCFv",
+      "demangled_name": "DemoActionInfo::executeActionLast() const",
+      "size": "136",
+      "match_percent": 100.0,
+      "target_symbol": 8
+    },
+    {
+      "name": "initCast__16DemoActionKeeperFP9LiveActorRC12JMapInfoIter",
+      "demangled_name": "DemoActionKeeper::initCast(LiveActor*, const JMapInfoIter&)",
+      "size": "152",
+      "match_percent": 100.0,
+      "target_symbol": 9
+    },
+    {
+      "name": "registerFunctor__16DemoActionKeeperFPC9LiveActorRCQ22MR11FunctorBasePCc",
+      "demangled_name": "DemoActionKeeper::registerFunctor(const LiveActor*, const MR::FunctorBase&, const char*)",
+      "size": "208",
+      "match_percent": 100.0,
+      "target_symbol": 10
+    },
+    {
+      "name": "registerNerve__16DemoActionKeeperFPC9LiveActorPC5NervePCc",
+      "demangled_name": "DemoActionKeeper::registerNerve(const LiveActor*, const Nerve*, const char*)",
+      "size": "208",
+      "match_percent": 100.0,
+      "target_symbol": 11
+    },
+    {
+      "name": "update__16DemoActionKeeperFv",
+      "demangled_name": "DemoActionKeeper::update()",
+      "size": "160",
+      "match_percent": 100.0,
+      "target_symbol": 12
+    },
+    {
+      "name": "isRegisteredDemoActionAppear__16DemoActionKeeperCFPC9LiveActor",
+      "demangled_name": "DemoActionKeeper::isRegisteredDemoActionAppear(const LiveActor*) const",
+      "size": "8",
+      "match_percent": 100.0,
+      "target_symbol": 14
+    },
+    {
+      "name": "isRegisteredDemoActionFunctor__16DemoActionKeeperCFPC9LiveActor",
+      "demangled_name": "DemoActionKeeper::isRegisteredDemoActionFunctor(const LiveActor*) const",
+      "size": "8",
+      "match_percent": 100.0,
+      "target_symbol": 15
+    },
+    {
+      "name": "isRegisteredDemoActionNerve__16DemoActionKeeperCFPC9LiveActor",
+      "demangled_name": "DemoActionKeeper::isRegisteredDemoActionNerve(const LiveActor*) const",
+      "size": "8",
+      "match_percent": 100.0,
+      "target_symbol": 16
+    },
+    {
+      "name": "isRegisteredDemoAction__16DemoActionKeeperCFPC9LiveActorl",
+      "demangled_name": "DemoActionKeeper::isRegisteredDemoAction(const LiveActor*, long) const",
+      "size": "112",
+      "match_percent": 98.21429,
+      "target_symbol": 13
+    },
+    {
+      "name": "__ct__16DemoActionKeeperFPC12DemoExecutor",
+      "demangled_name": "DemoActionKeeper::DemoActionKeeper(const DemoExecutor*)",
+      "size": "296",
+      "match_percent": 99.5946,
+      "target_symbol": 787
+    }
+  ],
+  "sources": {
+    "decomp/src/Game/Demo/DemoActionKeeper.cpp": "47d5d2e18859447bda959feddec7919a5d7d8b937069944b89fee3bd42c795a9",
+    "decomp/include/Game/Demo/DemoActionKeeper.hpp": "c17b52a54c00005ce0ebe935079300049fd90969bf7e67d0508a615b572e5326",
+    "decomp/include/Game/Demo/DemoExecutor.hpp": "c1c1b33bc15e4dd85f612d4041b4b4db0365e1e8757c0a4e42741c09514628c2"
+  }
+}
+
+

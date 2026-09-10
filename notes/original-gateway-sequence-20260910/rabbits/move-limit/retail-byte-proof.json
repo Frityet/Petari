@@ -1,0 +1,45 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "functions": [
+    {
+      "symbol": "trySetMoveLimitCollision__2MRFP9LiveActor",
+      "address": "0x803e2ad0",
+      "bytes": 332,
+      "matches_main_dol": true,
+      "sha256": "bf8e5a961a87ca26f125e1ad77abfa4c25aa41e2a592d99a4050cc03bb1f7d9b"
+    },
+    {
+      "symbol": "setExCollisionParts__6BinderFP14CollisionParts",
+      "address": "0x803e3e90",
+      "bytes": 44,
+      "matches_main_dol": true,
+      "sha256": "6518bbf454c3231997ad26cba1fd28751adf325fca8e7fd9ccd86404ab3e6403"
+    },
+    {
+      "symbol": "searchSameHostParts__26CollisionCategorizedKeeperCFPP14CollisionPartsP14CollisionParts",
+      "address": "0x80174acc",
+      "bytes": 120,
+      "matches_main_dol": true,
+      "sha256": "1c759431c124155cc1e8ff47568a2af5d75b7e1842e6d2221cccaccb196abbb4"
+    },
+    {
+      "symbol": "getStrikeInfo__26CollisionCategorizedKeeperFUl",
+      "address": "0x80174b44",
+      "bytes": 16,
+      "matches_main_dol": true,
+      "sha256": "77b70d7865d0049dfbfb18300857fad1cab42d2b48c92b3b7c26a9c526127f1f"
+    }
+  ],
+  "constants": [
+    {
+      "address": "0x806c1740",
+      "bytes": "447a0000",
+      "value": 1000.0
+    },
+    {
+      "address": "0x806c1744",
+      "bytes": "43160000",
+      "value": 150.0
+    }
+  ]
+}

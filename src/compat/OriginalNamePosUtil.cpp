@@ -1,6 +1,9 @@
 #include "Game/Map/NamePosHolder.hpp"
+#include "Game/Map/HitInfo.hpp"
 #include "Game/Util/JMapLinkInfo.hpp"
 #include "Game/Util/JMapUtil.hpp"
+#include "Game/Util/GravityUtil.hpp"
+#include "Game/Util/MapUtil.hpp"
 #include "Game/Util/MtxUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/SceneUtil.hpp"
@@ -29,6 +32,26 @@ namespace MR {
 
     bool findNamePos(const char* pName, TVec3f* a2, TVec3f* a3) {
         return getNamePosHolder()->find(nullptr, pName, a2, a3);
+    }
+
+    void findNamePosOnGround(const char* pName, MtxPtr pMtx) {
+        Triangle triangle;
+        TPos3f mtx;
+        findNamePos(pName, mtx.toMtxPtr());
+
+        TVec3f pos;
+        mtx.getTrans(pos);
+        TVec3f front;
+        mtx.getZDir(front);
+        TVec3f gravity;
+        calcGravityVector(nullptr, pos, &gravity, nullptr, 0);
+
+        TVec3f groundPos;
+        if (getFirstPolyOnLineToMap(&groundPos, &triangle, pos - gravity * 100.0f, gravity * 1000.0f)) {
+            makeMtxUpFrontPos(&mtx, -gravity, front, groundPos);
+        }
+
+        PSMTXCopy(mtx.toMtxPtr(), pMtx);
     }
 
     bool tryFindNamePos(const char* pName, MtxPtr pMtx) {

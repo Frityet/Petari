@@ -28,8 +28,9 @@ SceneExecutionBinding::SceneExecutionBinding(runtime::SceneScheduler& scheduler,
         if (!_requirements)
             aurora::throw_host_exception<std::logic_error>("Scene initialization did not create its original execution requirement holder");
         if (!MR::createSceneObj(SceneObj_StopSceneController) ||
-            !MR::createSceneObj(SceneObj_SceneNameObjMovementController))
-            aurora::throw_host_exception<std::logic_error>("Scene initialization requires its original stop and movement controllers");
+            !MR::createSceneObj(SceneObj_SceneNameObjMovementController) ||
+            !MR::createSceneObj(SceneObj_SensorHitChecker))
+            aurora::throw_host_exception<std::logic_error>("Scene initialization requires its original stop, movement and sensor controllers");
     } catch (...) {
         prepare_retirement();
         _scheduler->detach_execution(*this);

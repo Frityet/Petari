@@ -1,0 +1,7 @@
+# Original optional star-piece sound reset and last-stage BGM wrapper
+
+The exact original `MR::initStarPieceGetCSSound` wrapper null-checks the real StarPieceDirector before resetting its sound queue. Its three prerequisite bodies already existed coherently in reference, so no decomp rewrite was necessary: `MR::getStarPieceDirector` uses SceneObj0x3C, `initCSDelay` clears exactly the first16 of32 queue entries, and `initCSSound` clears the pending flag, calls that delay reset, then zeros the current index. Fresh whole StarPieceDirector Wii compile passes; the three functions match100% (40/36/64bytes). They are copied verbatim into `src/compat/OriginalStarPieceSound.cpp`; no constructor or substitute director was introduced. A real absent scene slot remains null, as the original caller expects.
+
+`MR::startLastStageBGM` now copies the original one-line SoundUtil wrapper into the existing SoundUtilCompat provider. It calls `AudWrap::startLastStageBgm`, whose existing facade uses the actual stored last-stage ID and returns null when no previous ID exists. No audio policy or synthetic handle was added. Original SoundUtil.cpp remains unchanged and is still outside whole-TU activation.
+
+Both edited native TUs compile with the isolated native LLVM command. The four retail routines' instruction bytes were compared directly against main.dol, including the tail call in the original SoundUtil wrapper. Parent owns linked real DemoDirector validation and publication. No root Xmake, commits, or runtime was performed here.

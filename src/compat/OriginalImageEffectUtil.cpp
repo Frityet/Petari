@@ -1,5 +1,6 @@
 // Original MR entry points, copied from the decomp reference.
 #include "Game/Screen/ImageEffectDirector.hpp"
+#include "Game/Screen/LensFlare.hpp"
 #include "Game/Screen/ImageEffectSystemHolder.hpp"
 #include "Game/Map/WaterAreaHolder.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
@@ -11,6 +12,15 @@
 
 namespace { s32 getScreenHeightInline() { return MR::getScreenHeight(); } }
 namespace MR {
+    void pauseOffLensFlare() {
+        if (!isExistSceneObj(SceneObj_LensFlareDirector)) {
+            return;
+        }
+
+        getSceneObj< LensFlareDirector >(SceneObj_LensFlareDirector)->pauseOff();
+    }
+
+
     void createNormalBloom() {
         createSceneObj(SceneObj_BloomEffect);
     }

@@ -1,0 +1,121 @@
+{
+  "archives": [
+    {
+      "path": "build/macosx/arm64/debug/libsmg-pc-common.a",
+      "size": 6042872,
+      "mtime_ns": 1789057254748694067
+    },
+    {
+      "path": "build/macosx/arm64/debug/libsmg-pc-render.a",
+      "size": 1393464,
+      "mtime_ns": 1789059273983641534
+    },
+    {
+      "path": "build/macosx/arm64/debug/libsmg-pc-game.a",
+      "size": 424860256,
+      "mtime_ns": 1789063196517973764
+    },
+    {
+      "path": "build/macosx/arm64/debug/libsmg-pc-app.a",
+      "size": 17071472,
+      "mtime_ns": 1789063196626594544
+    }
+  ],
+  "native_sources": {
+    "DemoCastGroup": "28c44ebfa18b691b68456b975a0704204015a3a68c89fe3f563b0341b0523d7f",
+    "DemoCastGroupHolder": "74d9803d5ec0bc0a95a5f5d0b1fd50a6ce52a891864a0ceb60b59e4c7a198e17",
+    "DemoCastSubGroup": "ddceb37271cb5527b886e5afdd81e06e3140873224b9b24cdcbceadc0fe48414",
+    "DemoSimpleCastHolder": "d68f07e05c05847838d82d037b754d1db01b665208b2a574948aff7ee5427bfb",
+    "DemoSubPartKeeper": "a41fa821dc9c578aadcf0d44a530bb377fb492584b843a564bad5f7a629cb922",
+    "DemoActionKeeper": "47d5d2e18859447bda959feddec7919a5d7d8b937069944b89fee3bd42c795a9",
+    "DemoPlayerKeeper": "fd0d952f34a7242872b2b42f3017d9ef2f4b2d0fc8d1aa53aeb0803d84226e1f",
+    "DemoCameraKeeper": "f104b9a0aabe771ef71cdfb9f74b59a7ae8bf3a96b0decc715f8f53690211f70",
+    "DemoCameraFunction": "2fef5474dee7f9f85c1bd60c59cc498a9ae5fe715ab817615d672a97c24575b2",
+    "DemoTalkAnimCtrl": "0f4c79eb6020e0ba5b63f9091b466d4572b34ae5a1b9c2fee49f5c7626ef25c6",
+    "DemoPositionController": "3efc1b911643e9216921dbe57d8ecfbf5410480823473cfdecbe1e3e5d510504"
+  },
+  "missing_game_imports_from_archives_and_15_tu_original_cohort": {
+    "MR::isName(NameObj const*, char const*)": [
+      "DemoCastGroupHolder"
+    ],
+    "DemoFunction::findDemoExecutor(char const*)": [
+      "DemoCastSubGroup",
+      "DemoTalkAnimCtrl"
+    ],
+    "DemoFunction::getDemoCastSubGroupHolder()": [
+      "DemoCastSubGroup"
+    ],
+    "DemoFunction::createSheetParser(DemoExecutor const*, char const*, JMapInfo**)": [
+      "DemoSubPartKeeper",
+      "DemoActionKeeper",
+      "DemoPlayerKeeper",
+      "DemoCameraKeeper"
+    ],
+    "DemoFunction::isTargetDemoCast(LiveActor*, JMapInfoIter const&, char const*, int)": [
+      "DemoActionKeeper",
+      "DemoCameraKeeper"
+    ],
+    "DemoFunction::findDemoExecutorActive(LiveActor const*)": [
+      "DemoActionKeeper"
+    ],
+    "MR::isSame(NameObj const*, NameObj const*)": [
+      "DemoActionKeeper"
+    ],
+    "DemoFunction::pauseTimeKeepDemo(char const*)": [
+      "DemoTalkAnimCtrl"
+    ],
+    "DemoFunction::resumeTimeKeepDemo(char const*)": [
+      "DemoTalkAnimCtrl"
+    ],
+    "DemoFunction::isPauseTimeKeepDemo(char const*)": [
+      "DemoTalkAnimCtrl"
+    ],
+    "DemoFunction::isDemoSuspendOrLastPartLastStep()": [
+      "DemoTalkAnimCtrl"
+    ],
+    "MR::reflectBckCtrlData(LiveActor*, BckCtrlData const&)": [
+      "DemoTalkAnimCtrl"
+    ]
+  },
+  "external_language_and_host_runtime_imports": {
+    "__Unwind_Resume": [
+      "DemoCastGroup",
+      "DemoSimpleCastHolder",
+      "DemoActionKeeper",
+      "DemoCameraKeeper",
+      "DemoPositionController"
+    ],
+    "vtable for __cxxabiv1::__si_class_type_info": [
+      "DemoCastGroup",
+      "DemoCastGroupHolder",
+      "DemoCastSubGroup",
+      "DemoTalkAnimCtrl",
+      "DemoPositionController"
+    ],
+    "___gxx_personality_v0": [
+      "DemoCastGroup",
+      "DemoSimpleCastHolder",
+      "DemoActionKeeper",
+      "DemoCameraKeeper",
+      "DemoPositionController"
+    ],
+    "_strcmp": [
+      "DemoSubPartKeeper"
+    ],
+    "_bzero": [
+      "DemoActionKeeper",
+      "DemoPlayerKeeper"
+    ],
+    "___stack_chk_fail": [
+      "DemoCameraKeeper",
+      "DemoTalkAnimCtrl"
+    ],
+    "___stack_chk_guard": [
+      "DemoCameraKeeper",
+      "DemoTalkAnimCtrl"
+    ],
+    "_strlen": [
+      "DemoCameraKeeper"
+    ]
+  }
+}

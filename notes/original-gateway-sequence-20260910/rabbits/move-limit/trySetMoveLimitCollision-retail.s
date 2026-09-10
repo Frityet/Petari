@@ -1,0 +1,86 @@
+/* 803E2AD0 003DE010  94 21 FF C0 */	stwu r1, -0x40(r1)
+/* 803E2AD4 003DE014  7C 08 02 A6 */	mflr r0
+/* 803E2AD8 003DE018  90 01 00 44 */	stw r0, 0x44(r1)
+/* 803E2ADC 003DE01C  93 E1 00 3C */	stw r31, 0x3c(r1)
+/* 803E2AE0 003DE020  93 C1 00 38 */	stw r30, 0x38(r1)
+/* 803E2AE4 003DE024  7C 7E 1B 78 */	mr r30, r3
+/* 803E2AE8 003DE028  38 61 00 24 */	addi r3, r1, 0x24
+/* 803E2AEC 003DE02C  38 9E 00 0C */	addi r4, r30, 0xc
+/* 803E2AF0 003DE030  4B C3 64 01 */	bl "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>"
+/* 803E2AF4 003DE034  38 61 00 18 */	addi r3, r1, 0x18
+/* 803E2AF8 003DE038  38 9E 00 3C */	addi r4, r30, 0x3c
+/* 803E2AFC 003DE03C  4B C3 63 F5 */	bl "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>"
+/* 803E2B00 003DE040  38 61 00 0C */	addi r3, r1, 0xc
+/* 803E2B04 003DE044  38 81 00 18 */	addi r4, r1, 0x18
+/* 803E2B08 003DE048  4B C3 63 E9 */	bl "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>"
+/* 803E2B0C 003DE04C  C0 22 1B 24 */	lfs f1, "@68712"@sda21(r0)
+/* 803E2B10 003DE050  38 61 00 0C */	addi r3, r1, 0xc
+/* 803E2B14 003DE054  4B C4 0C 55 */	bl "__amu__Q29JGeometry8TVec3<f>Ff"
+/* 803E2B18 003DE058  38 61 00 24 */	addi r3, r1, 0x24
+/* 803E2B1C 003DE05C  38 81 00 0C */	addi r4, r1, 0xc
+/* 803E2B20 003DE060  4B C3 DD 35 */	bl "sub__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>"
+/* 803E2B24 003DE064  C0 22 1B 20 */	lfs f1, "@68621"@sda21(r0)
+/* 803E2B28 003DE068  38 61 00 18 */	addi r3, r1, 0x18
+/* 803E2B2C 003DE06C  4B C4 0C 3D */	bl "__amu__Q29JGeometry8TVec3<f>Ff"
+/* 803E2B30 003DE070  4B D9 31 9D */	bl getCollisionDirector__2MRFv
+/* 803E2B34 003DE074  80 63 00 0C */	lwz r3, 0xc(r3)
+/* 803E2B38 003DE078  38 81 00 24 */	addi r4, r1, 0x24
+/* 803E2B3C 003DE07C  38 A1 00 18 */	addi r5, r1, 0x18
+/* 803E2B40 003DE080  38 C0 00 00 */	li r6, 0x0
+/* 803E2B44 003DE084  80 63 00 0C */	lwz r3, 0xc(r3)
+/* 803E2B48 003DE088  38 E0 00 00 */	li r7, 0x0
+/* 803E2B4C 003DE08C  39 00 00 00 */	li r8, 0x0
+/* 803E2B50 003DE090  4B D9 19 1D */	bl "checkStrikeLine__26CollisionCategorizedKeeperFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>lPC24CollisionPartsFilterBasePC18TriangleFilterBase"
+/* 803E2B54 003DE094  2C 03 00 00 */	cmpwi r3, 0x0
+/* 803E2B58 003DE098  41 82 00 30 */	beq .L_803E2B88
+/* 803E2B5C 003DE09C  4B D9 31 71 */	bl getCollisionDirector__2MRFv
+/* 803E2B60 003DE0A0  80 63 00 0C */	lwz r3, 0xc(r3)
+/* 803E2B64 003DE0A4  38 80 00 00 */	li r4, 0x0
+/* 803E2B68 003DE0A8  80 63 00 0C */	lwz r3, 0xc(r3)
+/* 803E2B6C 003DE0AC  4B D9 1F D9 */	bl getStrikeInfo__26CollisionCategorizedKeeperFUl
+/* 803E2B70 003DE0B0  7C 64 1B 78 */	mr r4, r3
+/* 803E2B74 003DE0B4  80 7E 00 58 */	lwz r3, 0x58(r30)
+/* 803E2B78 003DE0B8  80 84 00 00 */	lwz r4, 0x0(r4)
+/* 803E2B7C 003DE0BC  48 00 13 15 */	bl setExCollisionParts__6BinderFP14CollisionParts
+/* 803E2B80 003DE0C0  38 60 00 01 */	li r3, 0x1
+/* 803E2B84 003DE0C4  48 00 00 80 */	b .L_803E2C04
+.L_803E2B88:
+/* 803E2B88 003DE0C8  4B D9 31 45 */	bl getCollisionDirector__2MRFv
+/* 803E2B8C 003DE0CC  80 63 00 0C */	lwz r3, 0xc(r3)
+/* 803E2B90 003DE0D0  38 81 00 24 */	addi r4, r1, 0x24
+/* 803E2B94 003DE0D4  38 A1 00 18 */	addi r5, r1, 0x18
+/* 803E2B98 003DE0D8  38 C0 00 00 */	li r6, 0x0
+/* 803E2B9C 003DE0DC  80 63 00 00 */	lwz r3, 0x0(r3)
+/* 803E2BA0 003DE0E0  38 E0 00 00 */	li r7, 0x0
+/* 803E2BA4 003DE0E4  39 00 00 00 */	li r8, 0x0
+/* 803E2BA8 003DE0E8  4B D9 18 C5 */	bl "checkStrikeLine__26CollisionCategorizedKeeperFRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>lPC24CollisionPartsFilterBasePC18TriangleFilterBase"
+/* 803E2BAC 003DE0EC  2C 03 00 00 */	cmpwi r3, 0x0
+/* 803E2BB0 003DE0F0  41 82 00 50 */	beq .L_803E2C00
+/* 803E2BB4 003DE0F4  4B D9 31 19 */	bl getCollisionDirector__2MRFv
+/* 803E2BB8 003DE0F8  80 63 00 0C */	lwz r3, 0xc(r3)
+/* 803E2BBC 003DE0FC  38 80 00 00 */	li r4, 0x0
+/* 803E2BC0 003DE100  80 63 00 00 */	lwz r3, 0x0(r3)
+/* 803E2BC4 003DE104  4B D9 1F 81 */	bl getStrikeInfo__26CollisionCategorizedKeeperFUl
+/* 803E2BC8 003DE108  38 00 00 00 */	li r0, 0x0
+/* 803E2BCC 003DE10C  90 01 00 08 */	stw r0, 0x8(r1)
+/* 803E2BD0 003DE110  83 E3 00 00 */	lwz r31, 0x0(r3)
+/* 803E2BD4 003DE114  4B D9 30 F9 */	bl getCollisionDirector__2MRFv
+/* 803E2BD8 003DE118  80 63 00 0C */	lwz r3, 0xc(r3)
+/* 803E2BDC 003DE11C  7F E5 FB 78 */	mr r5, r31
+/* 803E2BE0 003DE120  38 81 00 08 */	addi r4, r1, 0x8
+/* 803E2BE4 003DE124  80 63 00 0C */	lwz r3, 0xc(r3)
+/* 803E2BE8 003DE128  4B D9 1E E5 */	bl searchSameHostParts__26CollisionCategorizedKeeperCFPP14CollisionPartsP14CollisionParts
+/* 803E2BEC 003DE12C  80 7E 00 58 */	lwz r3, 0x58(r30)
+/* 803E2BF0 003DE130  80 81 00 08 */	lwz r4, 0x8(r1)
+/* 803E2BF4 003DE134  48 00 12 9D */	bl setExCollisionParts__6BinderFP14CollisionParts
+/* 803E2BF8 003DE138  38 60 00 01 */	li r3, 0x1
+/* 803E2BFC 003DE13C  48 00 00 08 */	b .L_803E2C04
+.L_803E2C00:
+/* 803E2C00 003DE140  38 60 00 00 */	li r3, 0x0
+.L_803E2C04:
+/* 803E2C04 003DE144  80 01 00 44 */	lwz r0, 0x44(r1)
+/* 803E2C08 003DE148  83 E1 00 3C */	lwz r31, 0x3c(r1)
+/* 803E2C0C 003DE14C  83 C1 00 38 */	lwz r30, 0x38(r1)
+/* 803E2C10 003DE150  7C 08 03 A6 */	mtlr r0
+/* 803E2C14 003DE154  38 21 00 40 */	addi r1, r1, 0x40
+/* 803E2C18 003DE158  4E 80 00 20 */	blr

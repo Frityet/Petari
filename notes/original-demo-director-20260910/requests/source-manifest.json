@@ -1,0 +1,18 @@
+{
+  "decomp/src/Game/Demo/DemoStartRequestUtil.cpp": {
+    "sha256": "186d7a6b4cd5fe0b2d5471958e1ee795a96547bc56db218495984203f731e269",
+    "size": 16611
+  },
+  "src/Game/Demo/DemoStartRequestUtil.cpp": {
+    "sha256": "186d7a6b4cd5fe0b2d5471958e1ee795a96547bc56db218495984203f731e269",
+    "size": 16611
+  },
+  "decomp/include/Game/Demo/DemoStartRequestUtil.hpp": {
+    "sha256": "902a8ee9114378f8e75e40fd6ca0187598821ffd7865840b5edd9e2297465d37",
+    "size": 2740
+  },
+  "src/Game/Demo/DemoStartRequestUtil.hpp": {
+    "sha256": "902a8ee9114378f8e75e40fd6ca0187598821ffd7865840b5edd9e2297465d37",
+    "size": 2740
+  }
+}

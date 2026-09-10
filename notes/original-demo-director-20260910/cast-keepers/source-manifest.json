@@ -1,0 +1,171 @@
+{
+  "frozen": true,
+  "files": {
+    "decomp/src/Game/Demo/DemoCastGroup.cpp": "28c44ebfa18b691b68456b975a0704204015a3a68c89fe3f563b0341b0523d7f",
+    "src/Game/Demo/DemoCastGroup.cpp": "28c44ebfa18b691b68456b975a0704204015a3a68c89fe3f563b0341b0523d7f",
+    "decomp/include/Game/Demo/DemoCastGroup.hpp": "8fed6afc9a46e6353715a86282c80311c806b3f802b897ba5fefa612159ea1ae",
+    "src/Game/Demo/DemoCastGroup.hpp": "8fed6afc9a46e6353715a86282c80311c806b3f802b897ba5fefa612159ea1ae",
+    "decomp/src/Game/Demo/DemoCastGroupHolder.cpp": "74d9803d5ec0bc0a95a5f5d0b1fd50a6ce52a891864a0ceb60b59e4c7a198e17",
+    "src/Game/Demo/DemoCastGroupHolder.cpp": "74d9803d5ec0bc0a95a5f5d0b1fd50a6ce52a891864a0ceb60b59e4c7a198e17",
+    "decomp/include/Game/Demo/DemoCastGroupHolder.hpp": "50672dd2ced9554c74d33540488552ae6086a06acc965bbb2db05ee10e85ca82",
+    "src/Game/Demo/DemoCastGroupHolder.hpp": "50672dd2ced9554c74d33540488552ae6086a06acc965bbb2db05ee10e85ca82",
+    "decomp/src/Game/Demo/DemoCastSubGroup.cpp": "ddceb37271cb5527b886e5afdd81e06e3140873224b9b24cdcbceadc0fe48414",
+    "src/Game/Demo/DemoCastSubGroup.cpp": "ddceb37271cb5527b886e5afdd81e06e3140873224b9b24cdcbceadc0fe48414",
+    "decomp/include/Game/Demo/DemoCastSubGroup.hpp": "694085a5d4c1dda60a86dad3c5e89dbbb58f7cb431fa8a5ba9099c46046b12c2",
+    "src/Game/Demo/DemoCastSubGroup.hpp": "694085a5d4c1dda60a86dad3c5e89dbbb58f7cb431fa8a5ba9099c46046b12c2",
+    "decomp/src/Game/Demo/DemoSimpleCastHolder.cpp": "d68f07e05c05847838d82d037b754d1db01b665208b2a574948aff7ee5427bfb",
+    "src/Game/Demo/DemoSimpleCastHolder.cpp": "d68f07e05c05847838d82d037b754d1db01b665208b2a574948aff7ee5427bfb",
+    "decomp/include/Game/Demo/DemoSimpleCastHolder.hpp": "2bffdd03e3cd50186745720a9ae9152491381801488169470c307648914339ed",
+    "src/Game/Demo/DemoSimpleCastHolder.hpp": "2bffdd03e3cd50186745720a9ae9152491381801488169470c307648914339ed",
+    "decomp/src/Game/Demo/DemoSubPartKeeper.cpp": "a41fa821dc9c578aadcf0d44a530bb377fb492584b843a564bad5f7a629cb922",
+    "src/Game/Demo/DemoSubPartKeeper.cpp": "a41fa821dc9c578aadcf0d44a530bb377fb492584b843a564bad5f7a629cb922",
+    "decomp/include/Game/Demo/DemoSubPartKeeper.hpp": "f19218384cdb451f50747aa19a90b5ec4463fde7bfb64e18ae37230222b6137f",
+    "src/Game/Demo/DemoSubPartKeeper.hpp": "f19218384cdb451f50747aa19a90b5ec4463fde7bfb64e18ae37230222b6137f",
+    "decomp/src/Game/Demo/DemoActionKeeper.cpp": "47d5d2e18859447bda959feddec7919a5d7d8b937069944b89fee3bd42c795a9",
+    "src/Game/Demo/DemoActionKeeper.cpp": "47d5d2e18859447bda959feddec7919a5d7d8b937069944b89fee3bd42c795a9",
+    "decomp/include/Game/Demo/DemoActionKeeper.hpp": "c17b52a54c00005ce0ebe935079300049fd90969bf7e67d0508a615b572e5326",
+    "src/Game/Demo/DemoActionKeeper.hpp": "c17b52a54c00005ce0ebe935079300049fd90969bf7e67d0508a615b572e5326",
+    "decomp/src/Game/Demo/DemoPlayerKeeper.cpp": "fd0d952f34a7242872b2b42f3017d9ef2f4b2d0fc8d1aa53aeb0803d84226e1f",
+    "src/Game/Demo/DemoPlayerKeeper.cpp": "fd0d952f34a7242872b2b42f3017d9ef2f4b2d0fc8d1aa53aeb0803d84226e1f",
+    "decomp/include/Game/Demo/DemoPlayerKeeper.hpp": "a58700ccb680a7238c2a309da6054db8787949af32b1688c05dd1e515d4b1701",
+    "src/Game/Demo/DemoPlayerKeeper.hpp": "a58700ccb680a7238c2a309da6054db8787949af32b1688c05dd1e515d4b1701",
+    "decomp/src/Game/Demo/DemoCameraKeeper.cpp": "f104b9a0aabe771ef71cdfb9f74b59a7ae8bf3a96b0decc715f8f53690211f70",
+    "src/Game/Demo/DemoCameraKeeper.cpp": "f104b9a0aabe771ef71cdfb9f74b59a7ae8bf3a96b0decc715f8f53690211f70",
+    "decomp/include/Game/Demo/DemoCameraKeeper.hpp": "9ff7f2ba0f441d1daa3c70793f6838ea73a507d460a6a7613b010b53e81b2f76",
+    "src/Game/Demo/DemoCameraKeeper.hpp": "9ff7f2ba0f441d1daa3c70793f6838ea73a507d460a6a7613b010b53e81b2f76",
+    "decomp/src/Game/Demo/DemoCameraFunction.cpp": "2fef5474dee7f9f85c1bd60c59cc498a9ae5fe715ab817615d672a97c24575b2",
+    "src/Game/Demo/DemoCameraFunction.cpp": "2fef5474dee7f9f85c1bd60c59cc498a9ae5fe715ab817615d672a97c24575b2",
+    "decomp/include/Game/Demo/DemoCameraFunction.hpp": "a415404af471d17937b5f0eeb032d39bc66f6fb1a2b6506bc50d0805980a65c4",
+    "src/Game/Demo/DemoCameraFunction.hpp": "a415404af471d17937b5f0eeb032d39bc66f6fb1a2b6506bc50d0805980a65c4",
+    "decomp/src/Game/Demo/DemoTalkAnimCtrl.cpp": "0f4c79eb6020e0ba5b63f9091b466d4572b34ae5a1b9c2fee49f5c7626ef25c6",
+    "src/Game/Demo/DemoTalkAnimCtrl.cpp": "0f4c79eb6020e0ba5b63f9091b466d4572b34ae5a1b9c2fee49f5c7626ef25c6",
+    "decomp/include/Game/Demo/DemoTalkAnimCtrl.hpp": "14b7b3426bdeee6cdb0a8935871101fe803596e881b54d426abf3991def8a573",
+    "src/Game/Demo/DemoTalkAnimCtrl.hpp": "14b7b3426bdeee6cdb0a8935871101fe803596e881b54d426abf3991def8a573",
+    "decomp/src/Game/Demo/DemoPositionController.cpp": "3efc1b911643e9216921dbe57d8ecfbf5410480823473cfdecbe1e3e5d510504",
+    "src/Game/Demo/DemoPositionController.cpp": "3efc1b911643e9216921dbe57d8ecfbf5410480823473cfdecbe1e3e5d510504",
+    "decomp/include/Game/Demo/DemoPositionController.hpp": "6157ad56fd30fa17d905a30152cde8cf2698dfd5a7f695e2e2c4cbc3ab57cf7a",
+    "src/Game/Demo/DemoPositionController.hpp": "6157ad56fd30fa17d905a30152cde8cf2698dfd5a7f695e2e2c4cbc3ab57cf7a",
+    "src/Game/Util/ObjUtil.hpp": "2efd95e20ac1b792a6e9b45f827aac9bb93bd995c9e23e61302be88256d60fc4"
+  },
+  "copies": [
+    {
+      "reference": "decomp/src/Game/Demo/DemoCastGroup.cpp",
+      "native": "src/Game/Demo/DemoCastGroup.cpp",
+      "identical": true
+    },
+    {
+      "reference": "decomp/include/Game/Demo/DemoCastGroup.hpp",
+      "native": "src/Game/Demo/DemoCastGroup.hpp",
+      "identical": true
+    },
+    {
+      "reference": "decomp/src/Game/Demo/DemoCastGroupHolder.cpp",
+      "native": "src/Game/Demo/DemoCastGroupHolder.cpp",
+      "identical": true
+    },
+    {
+      "reference": "decomp/include/Game/Demo/DemoCastGroupHolder.hpp",
+      "native": "src/Game/Demo/DemoCastGroupHolder.hpp",
+      "identical": true
+    },
+    {
+      "reference": "decomp/src/Game/Demo/DemoCastSubGroup.cpp",
+      "native": "src/Game/Demo/DemoCastSubGroup.cpp",
+      "identical": true
+    },
+    {
+      "reference": "decomp/include/Game/Demo/DemoCastSubGroup.hpp",
+      "native": "src/Game/Demo/DemoCastSubGroup.hpp",
+      "identical": true
+    },
+    {
+      "reference": "decomp/src/Game/Demo/DemoSimpleCastHolder.cpp",
+      "native": "src/Game/Demo/DemoSimpleCastHolder.cpp",
+      "identical": true
+    },
+    {
+      "reference": "decomp/include/Game/Demo/DemoSimpleCastHolder.hpp",
+      "native": "src/Game/Demo/DemoSimpleCastHolder.hpp",
+      "identical": true
+    },
+    {
+      "reference": "decomp/src/Game/Demo/DemoSubPartKeeper.cpp",
+      "native": "src/Game/Demo/DemoSubPartKeeper.cpp",
+      "identical": true
+    },
+    {
+      "reference": "decomp/include/Game/Demo/DemoSubPartKeeper.hpp",
+      "native": "src/Game/Demo/DemoSubPartKeeper.hpp",
+      "identical": true
+    },
+    {
+      "reference": "decomp/src/Game/Demo/DemoActionKeeper.cpp",
+      "native": "src/Game/Demo/DemoActionKeeper.cpp",
+      "identical": true
+    },
+    {
+      "reference": "decomp/include/Game/Demo/DemoActionKeeper.hpp",
+      "native": "src/Game/Demo/DemoActionKeeper.hpp",
+      "identical": true
+    },
+    {
+      "reference": "decomp/src/Game/Demo/DemoPlayerKeeper.cpp",
+      "native": "src/Game/Demo/DemoPlayerKeeper.cpp",
+      "identical": true
+    },
+    {
+      "reference": "decomp/include/Game/Demo/DemoPlayerKeeper.hpp",
+      "native": "src/Game/Demo/DemoPlayerKeeper.hpp",
+      "identical": true
+    },
+    {
+      "reference": "decomp/src/Game/Demo/DemoCameraKeeper.cpp",
+      "native": "src/Game/Demo/DemoCameraKeeper.cpp",
+      "identical": true
+    },
+    {
+      "reference": "decomp/include/Game/Demo/DemoCameraKeeper.hpp",
+      "native": "src/Game/Demo/DemoCameraKeeper.hpp",
+      "identical": true
+    },
+    {
+      "reference": "decomp/src/Game/Demo/DemoCameraFunction.cpp",
+      "native": "src/Game/Demo/DemoCameraFunction.cpp",
+      "identical": true
+    },
+    {
+      "reference": "decomp/include/Game/Demo/DemoCameraFunction.hpp",
+      "native": "src/Game/Demo/DemoCameraFunction.hpp",
+      "identical": true
+    },
+    {
+      "reference": "decomp/src/Game/Demo/DemoTalkAnimCtrl.cpp",
+      "native": "src/Game/Demo/DemoTalkAnimCtrl.cpp",
+      "identical": true
+    },
+    {
+      "reference": "decomp/include/Game/Demo/DemoTalkAnimCtrl.hpp",
+      "native": "src/Game/Demo/DemoTalkAnimCtrl.hpp",
+      "identical": true
+    },
+    {
+      "reference": "decomp/src/Game/Demo/DemoPositionController.cpp",
+      "native": "src/Game/Demo/DemoPositionController.cpp",
+      "identical": true
+    },
+    {
+      "reference": "decomp/include/Game/Demo/DemoPositionController.hpp",
+      "native": "src/Game/Demo/DemoPositionController.hpp",
+      "identical": true
+    }
+  ],
+  "reference_changes": [
+    "decomp/src/Game/Demo/DemoCameraKeeper.cpp",
+    "decomp/src/Game/Demo/DemoCameraFunction.cpp",
+    "decomp/src/Game/Demo/DemoSimpleCastHolder.cpp"
+  ],
+  "native_only_change": "Two original isName/isSame declarations in ObjUtil.hpp; current MessageHolder.hpp preserved",
+  "native_tu_compile_count": 11,
+  "native_tu_compile_failures": 0,
+  "native_execution_claim": false
+}

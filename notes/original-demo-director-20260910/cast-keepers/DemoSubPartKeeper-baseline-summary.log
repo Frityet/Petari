@@ -1,0 +1,144 @@
+{
+  "command": [
+    "build/tools/wibo",
+    "build/tools/sjiswrap.exe",
+    "build/compilers/GC/3.0a3/mwcceppc.exe",
+    "-nodefaults",
+    "-proc",
+    "gekko",
+    "-align",
+    "powerpc",
+    "-enum",
+    "int",
+    "-fp",
+    "hardware",
+    "-Cpp_exceptions",
+    "off",
+    "-O4,s",
+    "-inline",
+    "auto",
+    "-pragma",
+    "cats off",
+    "-pragma",
+    "warn_notinlined off",
+    "-maxerrors",
+    "1",
+    "-nosyspath",
+    "-RTTI",
+    "off",
+    "-str",
+    "reuse",
+    "-enc",
+    "SJIS",
+    "-sdata",
+    "4",
+    "-sdata2",
+    "4",
+    "-ipa",
+    "file",
+    "-sym",
+    "on",
+    "-i",
+    "include",
+    "-i",
+    "libs/JSystem/include",
+    "-i",
+    "libs/MSL_C++/include",
+    "-i",
+    "libs/MSL_C/include",
+    "-i",
+    "libs/MetroTRK/include",
+    "-i",
+    "libs/RVLFaceLib/include",
+    "-i",
+    "libs/RVL_SDK/include",
+    "-i",
+    "libs/Runtime/include",
+    "-i",
+    "libs/nw4r/include",
+    "-i",
+    "build/original-j3d-joint-traversal-20260903/retail/include",
+    "-DVERSION=0",
+    "-c",
+    "src/Game/Demo/DemoSubPartKeeper.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-demo-director-20260910/cast-keepers/DemoSubPartKeeper.DemoSubPartKeeper-baseline.wii.o"
+  ],
+  "wii_exit": 0,
+  "objdiff_command": [
+    "/Users/frityet/Projects/petari/decomp/build/tools/objdiff-cli",
+    "diff",
+    "-1",
+    "/Users/frityet/Projects/petari/notes/gateway-audit-20260907/restoration/retail/obj/Game/Demo/DemoSubPartKeeper.o",
+    "-2",
+    "/Users/frityet/Projects/petari/notes/original-demo-director-20260910/cast-keepers/DemoSubPartKeeper.DemoSubPartKeeper-baseline.wii.o",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-demo-director-20260910/cast-keepers/DemoSubPartKeeper-baseline-objdiff.json"
+  ],
+  "objdiff_exit": 0,
+  "symbols": [
+    {
+      "name": "__ct__17DemoSubPartKeeperFPC12DemoExecutor",
+      "demangled_name": "DemoSubPartKeeper::DemoSubPartKeeper(const DemoExecutor*)",
+      "size": "260",
+      "match_percent": 99.69231,
+      "target_symbol": 1
+    },
+    {
+      "name": "__ct__15DemoSubPartInfoFv",
+      "demangled_name": "DemoSubPartInfo::DemoSubPartInfo()",
+      "size": "36",
+      "match_percent": 100.0,
+      "target_symbol": 2
+    },
+    {
+      "name": "update__17DemoSubPartKeeperFv",
+      "demangled_name": "DemoSubPartKeeper::update()",
+      "size": "148",
+      "match_percent": 100.0,
+      "target_symbol": 3
+    },
+    {
+      "name": "end__17DemoSubPartKeeperFv",
+      "demangled_name": "DemoSubPartKeeper::end()",
+      "size": "52",
+      "match_percent": 100.0,
+      "target_symbol": 4
+    },
+    {
+      "name": "isDemoPartActive__17DemoSubPartKeeperCFPCc",
+      "demangled_name": "DemoSubPartKeeper::isDemoPartActive(const char*) const",
+      "size": "64",
+      "match_percent": 100.0,
+      "target_symbol": 5
+    },
+    {
+      "name": "getDemoPartStep__17DemoSubPartKeeperCFPCc",
+      "demangled_name": "DemoSubPartKeeper::getDemoPartStep(const char*) const",
+      "size": "44",
+      "match_percent": 100.0,
+      "target_symbol": 6
+    },
+    {
+      "name": "getDemoPartTotalStep__17DemoSubPartKeeperCFPCc",
+      "demangled_name": "DemoSubPartKeeper::getDemoPartTotalStep(const char*) const",
+      "size": "36",
+      "match_percent": 100.0,
+      "target_symbol": 7
+    },
+    {
+      "name": "findSubPart__17DemoSubPartKeeperCFPCc",
+      "demangled_name": "DemoSubPartKeeper::findSubPart(const char*) const",
+      "size": "124",
+      "match_percent": 100.0,
+      "target_symbol": 8
+    }
+  ],
+  "sources": {
+    "decomp/src/Game/Demo/DemoSubPartKeeper.cpp": "a41fa821dc9c578aadcf0d44a530bb377fb492584b843a564bad5f7a629cb922",
+    "decomp/include/Game/Demo/DemoSubPartKeeper.hpp": "f19218384cdb451f50747aa19a90b5ec4463fde7bfb64e18ae37230222b6137f",
+    "decomp/include/Game/Demo/DemoExecutor.hpp": "c1c1b33bc15e4dd85f612d4041b4b4db0365e1e8757c0a4e42741c09514628c2"
+  }
+}
+
+

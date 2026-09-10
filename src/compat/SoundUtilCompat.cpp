@@ -157,6 +157,10 @@ namespace MR {
                 require_sound_name(pName, "Stage-BGM playback"), prepared);
     }
 
+    JAISoundHandle* startLastStageBGM() {
+        return AudWrap::startLastStageBgm();
+    }
+
     void limitedSound(const char *pName, s32 limit) {
         smgpc::compat::require_active_audio_event_service()
             .register_limited_sound(
