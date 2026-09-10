@@ -16,7 +16,7 @@
 #include <string_view>
 #include <vector>
 
-namespace smgpc::compat { class JAudioCategoryVolumeOwnership; }
+namespace smgpc::compat { class JAudioCategoryVolumeOwnership; class NativePcmSound; class JaiStreamPlayback; }
 
 namespace smgpc::runtime {
 
@@ -84,6 +84,9 @@ namespace smgpc::runtime {
         [[nodiscard]] JAISoundHandle *bgm_handle(BgmLane lane);
         [[nodiscard]] std::uint64_t bgm_backend_token(BgmLane lane) const;
         void set_bgm_bus_gain(BgmLane lane, float volume);
+        void bind_bgm_handle(BgmLane lane, JAISoundHandle& handle);
+        [[nodiscard]] std::uint64_t sound_backend_token(const JAISound*) const;
+        [[nodiscard]] bool owns_sound(const JAISound*) const;
         [[nodiscard]] bool has_me() const;
 
         void reset_scene();
@@ -96,30 +99,21 @@ namespace smgpc::runtime {
         struct LevelVoiceEntry {
             std::string name;
             aurora::audio::JAudioPersistentSoundRecipe recipe;
-            aurora::audio::VoiceToken token;
             JAISoundHandle handle;
-            bool refreshed = false;
-            bool releasing = false;
+            std::unique_ptr<compat::NativePcmSound> sound;
         };
-
         struct BgmVoiceEntry {
             std::string name;
             aurora::audio::JAudioSoundMetadata metadata;
-            aurora::audio::JAudioStreamRecipe recipe;
-            aurora::audio::VoiceToken token;
-            bool prepared = false;
-            bool unlocked = false;
-            bool host_paused = false;
-            bool stopping = false;
+            JAISound* sound = nullptr; // Observed only through the original manager's live list.
         };
-
         struct SoundEffectVoiceEntry {
             std::string name;
             std::uint32_t sound_id = 0U;
-            aurora::audio::VoiceToken token;
             JAISoundHandle handle;
+            std::unique_ptr<compat::NativePcmSound> sound;
         };
-
+        [[nodiscard]] JAISound* bgm_sound(BgmLane lane) const;
         void apply_category_gains();
         void ensure_archive();
         void require_working_output() const;
@@ -132,6 +126,7 @@ namespace smgpc::runtime {
         std::unique_ptr<aurora::audio::JAudioSoundArchive> _archive;
         std::unique_ptr<aurora::audio::PcmAudioMixer> _mixer;
         std::unique_ptr<compat::JAudioCategoryVolumeOwnership> _category_volume;
+        std::unique_ptr<compat::JaiStreamPlayback> _stream_playback;
         std::map<std::uint32_t, LevelVoiceEntry> _level_voices;
         std::map<std::uint32_t, aurora::audio::JAudioSoundEffectRecipe>
             _sound_effect_recipes;

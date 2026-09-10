@@ -1,0 +1,239 @@
+#include "runtime/JAudioPlaybackService.hpp"
+#include <JSystem/JAudio2/JAIStream.hpp>
+#include <resource/Yaz0.hpp>
+#include <aurora/audio.hpp>
+#include <array>
+#include <cassert>
+#include <cstdio>
+#include <cstdlib>
+#include <filesystem>
+#include <fstream>
+
+namespace {
+const std::filesystem::path fixture = std::getenv("SMGPC_RETAIL_FILES_ROOT") ? std::getenv("SMGPC_RETAIL_FILES_ROOT") : "notes/original-audio-category-volume-20260907/fixture";
+std::vector<u8> read(const std::filesystem::path& path) {
+    std::ifstream input(path, std::ios::binary);
+    assert(input.good());
+    return {std::istreambuf_iterator<char>(input), {}};
+}
+}
+#include "compat/NativePcmSound.hpp"
+#include "compat/JaiStreamPlayback.hpp"
+#include <JSystem/JAudio2/JAIStream.hpp>
+#include <aurora/j_audio_stream.hpp>
+#include <array>
+#include <cassert>
+#include <cstdio>
+#include <fstream>
+
+void test_native_and_stream_owners() {
+    static_assert(sizeof(JAISoundHandle) == sizeof(JAISound*));
+    JAISoundID id(2, 13, 0x1234);
+    assert(u32(id) == 0x020D1234 && id.getGroupID() == 13 && id.getWaveID() == 0x1234);
+    JAISoundStatus_ status;
+    status.init();
+    status.pause(true);
+    assert(status._0.value == 0x40);
+    status._0.value = 0x80;
+    assert(status.isMute() && !status.isPaused());
+    status.setAnimationState(3);
+    u8 flags = 0;
+    std::memcpy(&flags, &status.mState.flags, sizeof(flags));
+    assert(flags == 0x30 && status.getAnimationState() == 3);
+    status.init();
+    assert(status.lockWhenPrepared() == 1 && status.getState() == JAISoundStatus_::State_LOCK_PREPARE);
+    assert(status.unlockIfLocked() == 1 && status.getState() == JAISoundStatus_::State_PREPARE);
+    status.setReadyLocked();
+    assert(status.unlockIfLocked() == 1 && status.getState() == JAISoundStatus_::State_READY);
+    aurora::audio::PcmAudioMixer mixer;
+    aurora::audio::PcmVoiceSpec spec;
+    aurora::audio::PcmLayer layer;
+    layer.samples = std::make_shared<const std::vector<float>>(64, 0.25F);
+    layer.sample_rate = 48000;
+    layer.loop_end = 64;
+    spec.layers.push_back(layer);
+    JAISoundHandle handle;
+    {
+        smgpc::compat::NativePcmSound pcm(mixer, JAISoundID(0x00010001), spec);
+        pcm.attachHandle(&handle);
+        assert(handle.mSound == &pcm && pcm.mHandle == &handle);
+        assert(pcm.asSe() == nullptr && pcm.asSeq() == nullptr && pcm.asStream() == nullptr);
+        assert(pcm.getTrack() == nullptr && pcm.getTempoMgr() == nullptr);
+        assert(pcm.getChild(0) == pcm.getChild(0));
+        pcm.getAuxiliary().moveVolume(0.0F, 2);
+        pcm.advance();
+        assert(pcm.getAuxiliary().mParams.mVolume == 0.5F);
+        pcm.pause(true); pcm.advance();
+        assert(pcm.getAuxiliary().mParams.mVolume == 0.5F);
+        const auto before = mixer.voice_rendered_frames(pcm.token()).value();
+        std::array<float, 32> output;
+        mixer.render_interleaved(output);
+        assert(mixer.voice_rendered_frames(pcm.token()).value() == before);
+        pcm.pause(false); pcm.advance();
+        assert(pcm.getAuxiliary().mParams.mVolume == 0.0F);
+        mixer.render_interleaved(output);
+        for (float sample : output) assert(sample == 0.0F);
+        pcm.setLifeTime(1, false); pcm.advance();
+        assert(!pcm.isStopping() && pcm.mLifeTime == 0);
+        pcm.updateLifeTime(1); pcm.advance(); assert(!pcm.isStopping());
+        pcm.advance(); assert(pcm.isStopping() && pcm.releasing());
+        mixer.render_interleaved(output); pcm.reconcile_completion();
+        assert(pcm.isDead() && !handle.isSoundAttached());
+    }
+    {
+        smgpc::compat::NativePcmSound first(mixer, JAISoundID(0x00010001), spec);
+        smgpc::compat::NativePcmSound second(mixer, JAISoundID(0x00010001), spec);
+        JAISoundHandle owner;
+        first.attachHandle(&owner);
+        second.attachHandle(&owner);
+        assert(first.mHandle == nullptr && first.isStopping());
+        assert(owner.mSound == &second && second.mHandle == &owner && !second.isStopping());
+        {
+            JAISoundHandle temporary;
+            second.attachHandle(&temporary);
+            assert(owner.mSound == nullptr && second.mHandle == &temporary);
+        }
+        assert(second.mHandle == nullptr && !second.isStopping() && mixer.is_voice_active(second.token()));
+        second.attachHandle(&owner);
+        second.stop(3);
+        assert(owner.mSound == &second && !second.isStopping());
+        second.pause(true);
+        second.advance();
+        assert(second.mFader.mTransition.mRemainingSteps == 3);
+        second.pause(false);
+        second.advance();
+        assert(second.mFader.mTransition.mRemainingSteps == 2);
+        second.advance();
+        second.advance();
+        assert(second.isStopping() && second.mFader.isOut());
+        std::array<float, 32> output;
+        mixer.render_interleaved(output);
+        second.reconcile_completion();
+        assert(second.isDead() && !owner.isSoundAttached());
+    }
+    if (!std::filesystem::is_regular_file(fixture / "AudioRes/Stream/SMG_title_strm.ast")) {
+        std::puts("[skip] original stream owner retail fixture unavailable");
+        return;
+    }
+    auto load = [](std::string_view) {
+        std::ifstream file(fixture / "AudioRes/Stream/SMG_title_strm.ast", std::ios::binary);
+        assert(file.good());
+        return std::vector<u8>{std::istreambuf_iterator<char>(file), {}};
+    };
+    for (int generation = 0; generation < 3; ++generation) {
+        smgpc::compat::JaiStreamPlayback streams(mixer, load);
+        aurora::audio::JAudioSoundMetadata metadata;
+        metadata.sound_id = 0x02000001;
+        metadata.kind = aurora::audio::JAudioSoundKind::Stream;
+        metadata.stream_path = "actual-fixture";
+        metadata.volume = 255;
+        metadata.channel_control = 0xE;
+        JAISoundHandle a, b, c, rejected;
+        auto* first = streams.start(metadata, a, true);
+        assert(first && a.mSound == first);
+        assert(first->getChild(0)->mMove.mParams.mPan == 0.0F);
+        assert(first->getChild(1)->mMove.mParams.mPan == 1.0F);
+        assert(streams.start(metadata, b, false));
+        assert(streams.start(metadata, c, false));
+        assert(streams.start(metadata, rejected, false) == nullptr && !rejected.isSoundAttached());
+        for (int i = 0; i < 8; ++i) streams.advance();
+        assert(first->isPrepared() && !streams.token(first));
+        assert(streams.token(b.mSound) && streams.token(c.mSound));
+        first->unlockIfLocked(); streams.mix(); assert(streams.token(first));
+        JAISoundHandle canonical;
+        first->attachHandle(&canonical);
+        assert(!a.isSoundAttached() && first->mHandle == &canonical);
+        streams.reset();
+        assert(!canonical.isSoundAttached() && !b.isSoundAttached() && !c.isSoundAttached());
+        assert(streams.find(first) == nullptr);
+    }
+    std::puts("[pass] native PCM subclass retains real JAISound type, original params/lifetime and reciprocal handle semantics");
+    std::puts("[pass] original stream wrapper metadata, actual three-slot pool exhaustion, canonical handle transfer and three process owner generations");
+}
+
+void test_retail_service() {
+    if (!std::filesystem::is_regular_file(fixture / "KrKorean/AudioRes/SMR.szs")) {
+        std::puts("[skip] retail service fixture unavailable");
+        return;
+    }
+
+    setenv("SDL_AUDIODRIVER", "dummy", 1);
+    auto mixer = std::make_unique<aurora::audio::PcmAudioMixer>(48000,
+        aurora::audio::PlaybackDevicePolicy::AllowExplicitTestSink);
+    auto* pcm = mixer.get();
+    auto archive = [] {
+        auto baa = smgpc::resource::decompress_yaz0(read(fixture / "KrKorean/AudioRes/SMR.szs"));
+        return std::make_unique<aurora::audio::JAudioSoundArchive>(baa, [](std::string_view name) {
+            auto path = fixture / "KrKorean/AudioRes/Waves" / name;
+            if (!std::filesystem::is_regular_file(path)) path = fixture / "AudioRes/Waves" / name;
+            return read(path);
+        });
+    };
+    smgpc::runtime::JAudioPlaybackService service(archive, [](std::string_view path) {
+        return read(fixture / std::filesystem::path(path).relative_path());
+    }, std::move(mixer));
+    using Lane = smgpc::runtime::BgmLane;
+    auto* title = service.start_bgm(Lane::Stage, "STM_TITLE", true);
+    assert(title && title->mSound && title->mSound->asStream());
+    assert(service.owns_sound(title->mSound) && service.has_active_bgm(Lane::Stage));
+    auto* stream = title->mSound;
+    assert(!service.bgm_backend_token(Lane::Stage));
+    for (u64 frame = 0; frame < 8; ++frame) { service.begin_frame(frame); service.end_frame(); }
+    assert(service.is_bgm_prepared(Lane::Stage) && !stream->isPlaying());
+    assert(!service.bgm_backend_token(Lane::Stage) && service.active_voice_count() == 0);
+    JAISoundHandle canonical;
+    service.bind_bgm_handle(Lane::Stage, canonical);
+    assert(!title->isSoundAttached() && canonical.mSound == stream && stream->mHandle == &canonical);
+    assert(service.bgm_handle(Lane::Stage) == &canonical);
+    service.bind_bgm_handle(Lane::Stage, canonical);
+    assert(canonical.mSound == stream && !stream->isStopping());
+    service.unlock_bgm(Lane::Stage);
+    const auto token = aurora::audio::VoiceToken{service.bgm_backend_token(Lane::Stage)};
+    assert(token && pcm->is_voice_active(token) && stream->isPlaying());
+    assert(service.is_bgm_prepared(Lane::Stage)); // Original prepared predicate includes PLAYING.
+    service.pause_bgm(Lane::Stage, true);
+    assert(stream->isPaused() && pcm->voice_paused(token).value());
+    service.set_bgm_bus_gain(Lane::Stage, 0.25F);
+    assert(stream->getAuxiliary().mParams.mVolume == 0.25F);
+    service.pause_bgm(Lane::Stage, false);
+    auto* sub = service.start_bgm(Lane::Sub, "STM_PROLOGUE_01", true);
+    assert(sub && sub->mSound && sub->mSound != stream);
+    for (u64 frame = 8; frame < 16; ++frame) { service.begin_frame(frame); service.end_frame(); }
+    assert(service.is_bgm_prepared(Lane::Sub) && !service.bgm_backend_token(Lane::Sub));
+    service.unlock_bgm(Lane::Sub);
+    assert(service.bgm_backend_token(Lane::Sub) != token.value);
+    service.stop_bgm(Lane::Stage, 0);
+    assert(!canonical.isSoundAttached() && !service.has_active_bgm(Lane::Stage));
+    assert(sub->isSoundAttached());
+    service.reset_scene();
+    assert(!sub->isSoundAttached() && service.active_voice_count() == 0);
+    service.begin_frame(20);
+    auto* wind = service.start_level_sound("SE_AT_LV_ASTRO_DOME_WIND_1", 100, -1);
+    assert(wind && wind->mSound && !wind->mSound->asSe() && service.owns_sound(wind->mSound));
+    auto* native_sound = wind->mSound;
+    const auto wind_token = aurora::audio::VoiceToken{service.sound_backend_token(native_sound)};
+    assert(wind_token && pcm->voice_pitch_multiplier(wind_token).value() == 1.5F);
+    service.set_sound_volume_setting(1, 0);
+    assert(pcm->voice_bus_gain_multiplier(wind_token).value() == 0.3F);
+    service.end_frame();
+    service.begin_frame(21);
+    assert(service.start_level_sound("SE_AT_LV_ASTRO_DOME_WIND_1", 100, -1)->mSound == native_sound);
+    service.end_frame();
+    assert(native_sound->mLifeTime == 0 && !native_sound->isStopping());
+    service.begin_frame(22); service.end_frame();
+    assert(native_sound->isStopping());
+    auto* shot = service.start_sound_effect("SE_SY_GAME_START", -1, -1);
+    assert(shot && shot->mSound && !shot->mSound->asSe() && service.owns_sound(shot->mSound));
+    const auto shot_token = aurora::audio::VoiceToken{service.sound_backend_token(shot->mSound)};
+    assert(shot_token && pcm->is_voice_active(shot_token));
+    service.stop_sound_effect("SE_SY_GAME_START", 0);
+    assert(!shot->isSoundAttached());
+    service.begin_frame(23);
+    service.reset_scene();
+    assert(!wind->isSoundAttached() && service.active_voice_count() == 0);
+    service.end_frame();
+    std::puts("[pass] actual retail playback service uses original stream manager and canonical original sound/handle ABI");
+    std::puts("[pass] Stage/Sub prepare-unlock, original states, independent handles, native PCM level/SE params/lifetime and category control");
+}
+
+int main() { test_native_and_stream_owners(); test_retail_service(); }

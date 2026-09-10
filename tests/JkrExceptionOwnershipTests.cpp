@@ -183,8 +183,7 @@ namespace {
         };
         run.operator()<std::runtime_error>([] { (void)aurora::nw4r::lyt::parse_brlan_animation({}); });
         run.operator()<std::invalid_argument>([] { (void)aurora::SysConf::decode({}); });
-        run.operator()<std::invalid_argument>([] { JAISoundHandle handle; handle.attachBackend(nullptr, 0); });
-        std::puts("actual_aurora_brlan_sysconf_audio_handle_errors_after_scene_retirement=pass");
+        std::puts("actual_aurora_brlan_sysconf_errors_after_scene_retirement=pass");
     }
 }
 

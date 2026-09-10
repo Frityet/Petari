@@ -1,0 +1,230 @@
+[
+  {
+    "path": "src/JSystem/JAudio2/JAIAudible.hpp",
+    "sha256": "366222bcf603ac75d1132b597bb6e5f8c6f0e43f3768196642992baf823f4a10"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JAIAudience.hpp",
+    "sha256": "ccd64444450dcfda94ed2bfa549bc3d648d31d2ea1f122bde3b3608ee7257410"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JAISeqDataMgr.hpp",
+    "sha256": "15af7df18b1950b54630451de9d61412d06526eb238f3dc5922ddcf95c04d174"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JAISound.hpp",
+    "sha256": "b446731d9683e9be2ccabfe6e1d510677c1905d7be89e8adbc983cb84e71e5c0"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JAISoundChild.hpp",
+    "sha256": "d535e9faca36ffb81c533961cd47384ed7074c9abcb7d225966de638c8291dde"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JAISoundHandles.hpp",
+    "sha256": "adc48bf564ee45f0bb04375d7472f84759bd4e16f70e340c7b11a70be998cb5d"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JAISoundInfo.hpp",
+    "sha256": "1ff25135b253dcb4d00112633e370fa938079e81c926a8418879e0fa5d1c6a87"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JAISoundStarter.hpp",
+    "sha256": "92aa76ce7ee2f9ad26148d02ba6777996867c234ad2e410bb3e280594c3bda18"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JAIStream.hpp",
+    "sha256": "8dc1330c6afc8818d8a968f22c2c26659534a3fc5c272b070af185c8c53d8b99"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JAIStreamDataMgr.hpp",
+    "sha256": "a2f94ea2ad00cec96951fb7c13fd83ba7685a7093bcb76c53845e5b0f678444b"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JAIStreamMgr.hpp",
+    "sha256": "5c064c1d2334b578cc61139e06c9d634f7aa65b9cbc4978c8227c4a78814f0ca"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JASAramStream.hpp",
+    "sha256": "f8352970a369ba090ca54e96c0b599abb48daac81988e5016c0e9cfc2f26b716"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JASChannel.hpp",
+    "sha256": "ccf985553a01418060eb79c031a1d2305a2c6c1615b0abfcc5add3dcae6ab92c"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JASCriticalSection.hpp",
+    "sha256": "4e9585d7ca3841c4f24cad306dc71b765e129211e7ba2d4426353630b22e8d2b"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JASGlobal.hpp",
+    "sha256": "ec0525dfdb89335a45624698512204b1671a9acb0cd88429e5e5b1ebe40f51da"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JASHeapCtrl.hpp",
+    "sha256": "d53c1282d75bff979f82fe4cf9d0cad78cc362a3396d229178f3260794cf3f24"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JASLfo.hpp",
+    "sha256": "ead5c8ef9fa2233341631e34df8bc157d839bd5cf53b7c52ee295f87821ec84a"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JASOscillator.hpp",
+    "sha256": "14ff58096d6f988639c9a73dea6e5f882fa297cf6e98cc004fd8d33f39ecc920"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JASRegisterParam.hpp",
+    "sha256": "e3fc27ea2ca5be8beb725a522e3b143248d7871efb343bc45548a907482f1664"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JASReport.hpp",
+    "sha256": "e9f346f8e9ea338afa9fb1782351a3b4bf036e11b6cf14f71a5e04bb19cc3b7b"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JASSeqCtrl.hpp",
+    "sha256": "b277596771f88069ac41feb20b38daa5fed5d06eb1cb95e64212fcecf53d4634"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JASSeqParser.hpp",
+    "sha256": "32572de5db2a1d7a40a0c21576240df5d0a971cecd7e44f73ebec1b177cb2af7"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JASSeqReader.hpp",
+    "sha256": "68c67c9b5c615d23374cc5668d113d8d9e249e54078b03526017d1c993760814"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JASTaskThread.hpp",
+    "sha256": "53eaeb6a6059ab9e3a2ac33d64a7113cf0c7fd379ebbce19e32e1691ae9f0457"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JASTrack.hpp",
+    "sha256": "ec95328e6d4a039fb7da7bd52280f4b254f0ea59d3c44d9a5194a06b740d0404"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JASTrackPort.hpp",
+    "sha256": "91b37563099ef9bf760f92a991882b3c7dae012a1347bd7dbbf40dc078ba1534"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JASWaveInfo.hpp",
+    "sha256": "cfe5cc1342856a60c8576e3a56b567bc3ca3c9808f8479fab4992406151122ed"
+  },
+  {
+    "path": "src/JSystem/JGadget/linklist.hpp",
+    "sha256": "3ff4d1916f2a517762c6c632b1a368be99afc516b105aab162194f485f707b3b"
+  },
+  {
+    "path": "src/JSystem/JGadget/predicate.hpp",
+    "sha256": "173649cf4a2edf4323ed22bd55909f5ee419bcdfaeb793466b0bd5844ba04b34"
+  },
+  {
+    "path": "src/JSystem/JKernel/JKRThread.hpp",
+    "sha256": "ff3421231b2b504f1803bbd0de88d7721c5e0e8b2fa9a574a72d295b63318b61"
+  },
+  {
+    "path": "src/compat/jaudio/JAISoundHandles.cpp",
+    "sha256": "6f291c3d87915c1b0b4e4602f4b5ba8ef3d409b77b05b8a62cedeb31b80fd014"
+  },
+  {
+    "path": "src/compat/jaudio/JAISound.cpp",
+    "sha256": "6c05c4b9548ff3d60f029568783f372a0c70339dcf4ff94cecb99ee8770e2e4c"
+  },
+  {
+    "path": "src/compat/jaudio/JAIStream.cpp",
+    "sha256": "eaaa20a8554b7e8ee6722977519495d0e43e7c5e22da6bfa333deadac4511a41"
+  },
+  {
+    "path": "src/compat/jaudio/JAIStreamMgr.cpp",
+    "sha256": "3f9b9808196e95175f9a00577a787cebf5243681be3b6cf0ce78f50f5cce24a9"
+  },
+  {
+    "path": "src/compat/jaudio/JAISoundStarter.cpp",
+    "sha256": "9a9a03ec6abaf424748c26e051de64278efce1ca629dfe0078c5a3cfb998ffa5"
+  },
+  {
+    "path": "src/compat/jaudio/JAISoundChild.cpp",
+    "sha256": "50f6da2baee577670e21b4ac1108fc8a9cb0592aaf4ff8b8ce501fe03dccb946"
+  },
+  {
+    "path": "src/compat/jaudio/JAIAudible.cpp",
+    "sha256": "ee383b49cc26852a18d05581fd51f4895d90373aab10b0ea823b96167eb5956e"
+  },
+  {
+    "path": "src/compat/jaudio/JAIAudience.cpp",
+    "sha256": "8001914c66b2ef1c430dac4b9a20de19969e50e5187674757e035550396f3fc8"
+  },
+  {
+    "path": "src/compat/jaudio/JAIStreamDataMgr.cpp",
+    "sha256": "1d6d67988db7ac3884c17c6fe570cc7bde296d626dff3c673c49cf67e0b93b70"
+  },
+  {
+    "path": "src/compat/jaudio/JASSoundParams.cpp",
+    "sha256": "31355c6e1b4d33ae11c617b71e567587745a3cd22f8e96694313e01c6477f16f"
+  },
+  {
+    "path": "src/compat/jaudio/JasAramStreamPlatform.cpp",
+    "sha256": "04ed089b4eb77fc740210740c0ce825cd5413fc8af1c70997f5edff04fd46ae6"
+  },
+  {
+    "path": "src/compat/jaudio/JasGenericPoolPlatform.cpp",
+    "sha256": "c5b7deb2dbefa2aa03903b828e5cddec4150ae2241ac81fb1f02b8ffc7bf4ce7"
+  },
+  {
+    "path": "src/compat/jaudio/JasStreamPcmBackend.cpp",
+    "sha256": "10aef6df843440a5ddde67f57498bd21b9f90dc242883ebc9c9aa2abe00860b1"
+  },
+  {
+    "path": "src/compat/jaudio/JasStreamPcmBackend.hpp",
+    "sha256": "d79e5ada655cc40ca53ebc93026ae4b4f30901f8fa3b879a1040ccce1575d63f"
+  },
+  {
+    "path": "src/compat/NativePcmSound.hpp",
+    "sha256": "c1d2b6cab32e2b857635c62a94686ca5b2f901355af87ac8df5bfc8c5500a4b1"
+  },
+  {
+    "path": "src/compat/NativePcmSound.cpp",
+    "sha256": "85a8aa9a327ec8a27c904df6ee1a1fd5d5fc3b4f03b6c544718ec2413700c7d2"
+  },
+  {
+    "path": "src/compat/JaiStreamPlayback.hpp",
+    "sha256": "ee58a23e410b692715f559c3c34d150e5a10e408e58b007803d1b8b575952cfb"
+  },
+  {
+    "path": "src/compat/JaiStreamPlayback.cpp",
+    "sha256": "fec1e102108b8f9146a191d03d7cd9910cec3ae59a922293a041cfafcafe4ed6"
+  },
+  {
+    "path": "src/runtime/JAudioPlaybackService.hpp",
+    "sha256": "d2af38766efc2dd44f25c915fb01afb9d805d95a03d3c72030415a9c38f41177"
+  },
+  {
+    "path": "src/runtime/JAudioPlaybackService.cpp",
+    "sha256": "93f6b8eaf425e2d80690af013b65b5cfc62379a4d7e76fb7c35de516b12b53a7"
+  },
+  {
+    "path": "src/compat/AudioFacadeCompat.cpp",
+    "sha256": "13ca5a49652f05111fd528a9740f45c571a8c2a386e7b3af658487062c38f6b4"
+  },
+  {
+    "path": "src/compat/DisabledObjectAudio.cpp",
+    "sha256": "6abddbb6517180d30b29a7c7b3916998586f1e140a4e384a53323b3f39c6f2e1"
+  },
+  {
+    "path": "src/Game/AudioLib/AudBgm.hpp",
+    "sha256": "ad1a5d403b9667ce71c5d8674a8f00f1517615456fc8efb322541dd3857be1ba"
+  },
+  {
+    "path": "tests/JAudioPlaybackTests.cpp",
+    "sha256": "fae054781b777e4620d00849d84bf043b1dc5a183cf0d8c9e3ce350daecffe55"
+  },
+  {
+    "path": "tests/JkrExceptionOwnershipTests.cpp",
+    "sha256": "e98f72100c71bebfbff857662c5c86a3eeaeb6a00f3264f2924c35545c4034aa"
+  },
+  {
+    "path": "tests/OriginalJaiSoundOwnershipTests.cpp",
+    "sha256": "4eb339010a684ce3022c1cc57b0cc76a4ac8c93a9f651d24788ccd6521fd253e"
+  },
+  {
+    "path": "tests/xmake.lua",
+    "sha256": "d5e959dd07530d70ae856948a450c4b692d05a9b17f2ebd5c68218bb412e53a8"
+  }
+]

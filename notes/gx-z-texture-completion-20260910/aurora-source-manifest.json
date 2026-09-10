@@ -1,0 +1,42 @@
+[
+  {
+    "path": "aurora/lib/dolphin/gx/GXTev.cpp",
+    "sha256": "829701f0b87fb9f824c637e0e3e9c4e6da63798f528bd6ec14ef5535e42fd6b4"
+  },
+  {
+    "path": "aurora/lib/gfx/texture_convert.cpp",
+    "sha256": "0d0e37a4f7f9f5460fa0fdb00dc171d3f817354a5a133fc5da92b89aa0b78eea"
+  },
+  {
+    "path": "aurora/lib/gx/gx.cpp",
+    "sha256": "ea3f63ba27dbcac13801e2ebaeebc76f79ffc5a3a51759d5c2db93ef8c04d6b4"
+  },
+  {
+    "path": "aurora/lib/gx/gx.hpp",
+    "sha256": "3ecfc7f1b545e813b46824edcd2977921212ca832f889d26b08d5928d2455dbe"
+  },
+  {
+    "path": "aurora/lib/gx/regs.cpp",
+    "sha256": "6b7881c4e70c34abd4348e01bfb5187b1307c1f8ea62171cc5f69887e2e4143d"
+  },
+  {
+    "path": "aurora/lib/gx/shader.cpp",
+    "sha256": "027143284698ab8cd5937b65d7da8694d6469129616b37cf7c50f1d5c8b07ab2"
+  },
+  {
+    "path": "aurora/lib/gx/shader_info.cpp",
+    "sha256": "2aa3b76eaf3d878104fd8e80b72a488dc0fb4ad208455f549683f28a869d26f7"
+  },
+  {
+    "path": "aurora/lib/gx/texture.cpp",
+    "sha256": "b0de0e4819583833bb1380812c264e824d0bcf43c0ce1a3cbeb67ebe7bc909c1"
+  },
+  {
+    "path": "aurora/tests/CMakeLists.txt",
+    "sha256": "b44a7a92e114d6899e778d8c7164857d2f91b36b7ab0b9fa0d0d3c31a8a9fb01"
+  },
+  {
+    "path": "aurora/tests/gx_z_texture_render_test.cpp",
+    "sha256": "a83853647698c66f9b19a2bb2cbe109bddb0acdbff1130f8d4ebf7a2555e74db"
+  }
+]

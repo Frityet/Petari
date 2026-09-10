@@ -1,0 +1,25 @@
+[ok] Z8 tiled source
+[ok] Z16 tiled source and alpha high byte
+[ok] Z24X8 two-plane source
+[ok] Z8 selects RGBA alpha
+[ok] Z16 selects RGBA red and alpha
+[ok] Z24 selects RGBA RGB
+[ok] replacement bias
+[ok] bias masks to 24 bits
+[ok] replacement 24-bit overflow
+[ok] addition includes raster depth
+[ok] addition 24-bit overflow
+[ok] early Z comparison retains raster depth
+[ok] disabled Z texture retains raster depth
+[ok] no enabled texture samples zero
+[ok] no texture generators samples zero
+[ok] later disabled stage retains last raw texture
+[ok] last enabled stage is sampled despite unused TEV input
+[ok] last of two enabled textures supplies depth
+[ok] TEV swap does not swap Z channels
+[ok] raw BP display list has identical state
+[ok] FIFO boundaries retain each draw's bias and depth operation
+[ok] textured far-depth clear preserves color and allows later farther geometry
+[ok] late comparison uses textured depth for both rejection and acceptance
+[ok] fog uses texture depth with early and late depth comparison
+[aurora:aurora::gpu] Device lost: Device was destroyed.

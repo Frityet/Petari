@@ -1,0 +1,14 @@
+{
+  "binary": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-aurora-z-texture-render-tests",
+  "binary_sha256": "be35c8c7214a907466f82fd0f3fcebf305ce96aafd02b4df7a5aa24d974a8b2b",
+  "exit_code": 0,
+  "elapsed_seconds": 2.320312666997779,
+  "backend": "Metal required by test on Apple",
+  "log": "metal-run.log",
+  "host": {
+    "cpu": "Apple M5 Max",
+    "macos": "26.6.2",
+    "architecture": "arm64"
+  },
+  "passed_check_groups": 24
+}

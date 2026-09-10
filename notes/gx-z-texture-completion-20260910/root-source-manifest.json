@@ -1,0 +1,10 @@
+[
+  {
+    "path": "src/compat/OriginalClearZBuffer.cpp",
+    "sha256": "b1995be522d03c3005153b54ef3c035b39455f3582c93478fb4d15a0efed368e"
+  },
+  {
+    "path": "tests/xmake.lua",
+    "sha256": "d5e959dd07530d70ae856948a450c4b692d05a9b17f2ebd5c68218bb412e53a8"
+  }
+]

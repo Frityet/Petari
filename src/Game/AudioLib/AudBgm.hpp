@@ -58,13 +58,37 @@ public:
     virtual bool moveVolume(f32, u32);
     virtual bool moveVolumeForNoteFairy(f32, u32);
     virtual void changeTrackMuteState(s32, s32);
-    virtual JAISoundHandle* getHandle();
+    virtual JAISoundHandle* getHandle() {
+        return &mHandle;
+    }
     virtual JAISoundHandle* getRhythmHandle();
-    virtual bool isSoundAttached() const;
-    virtual void pause(bool pause);
-    virtual bool isStopping() const;
-    virtual bool isPaused() const;
-    virtual JAISoundID getSoundID() const;
+    virtual bool isSoundAttached() const {
+        return mHandle.isSoundAttached();
+    }
+    virtual void pause(bool pause) {
+        if (mHandle.isSoundAttached()) {
+            mHandle->pause(pause);
+        }
+    }
+    virtual bool isStopping() const {
+        if (mHandle.isSoundAttached()) {
+            return mHandle->isStopping();
+        }
+        return true;
+    }
+    virtual bool isPaused() const {
+        if (mHandle.isSoundAttached()) {
+            return mHandle->isPaused();
+        }
+        return false;
+    }
+    virtual JAISoundID getSoundID() const {
+        // FIXME: register again.
+        if (!mHandle.isSoundAttached()) {
+            return 0;
+        }
+        return mSoundID;
+    }
     virtual void sendToSyncStream() {
     }
     virtual void rejectFromSyncStream() {

@@ -25,7 +25,6 @@ namespace {
 
     AudBgmMgr s_bgm_manager;
     using BgmLane = smgpc::runtime::BgmLane;
-    std::array<u64, 2> s_bound_bgm_tokens{};
 
     [[noreturn]] void unavailable(const char *operation) {
         aurora::throw_host_exception<std::logic_error>(std::string("The concrete JAudio backend does not provide ") + operation + ".");
@@ -56,7 +55,6 @@ namespace {
     }
 
     void release_bgm_object(BgmLane lane) {
-        s_bound_bgm_tokens[static_cast<std::size_t>(lane)] = 0;
         auto &bgm = s_bgm_manager.mBgm[static_cast<std::size_t>(lane)];
         if (bgm != nullptr) {
             s_bgm_manager.mKeeper.release(bgm);
@@ -91,12 +89,8 @@ namespace {
 
     void synchronize_bgm_handle(AudSingleBgm &bgm, smgpc::runtime::JAudioPlaybackService &playback) {
         const auto lane = bound_lane(&bgm);
-        const auto token = lane.has_value() ? playback.bgm_backend_token(*lane) : 0;
-        if (token == 0) {
-            bgm.mHandle.releaseSound();
-        } else {
-            bgm.mHandle.attachBackend(&playback, token);
-        }
+        if (lane) playback.bind_bgm_handle(*lane, bgm.mHandle);
+        else bgm.mHandle.releaseSound();
     }
 
     AudBgm *reconcile_bgm(BgmLane lane, smgpc::runtime::JAudioPlaybackService &playback) {
@@ -120,10 +114,10 @@ namespace {
             object->setVolumeController(&s_bgm_manager.mVolumeController[index]);
             static_cast<AudSingleBgm *>(object)->mSoundID = *id;
         }
-        const auto token = playback.bgm_backend_token(lane);
-        if (s_bound_bgm_tokens[index] != token) {
+        auto* attached = playback.bgm_handle(lane);
+        auto* sound = attached ? attached->mSound : nullptr;
+        if (static_cast<AudSingleBgm*>(object)->mHandle.mSound != sound) {
             object->resetAuxVolume();
-            s_bound_bgm_tokens[index] = token;
         }
         s_bgm_manager.mCurrentBGM[index] = *id;
         synchronize_bgm_handle(*static_cast<AudSingleBgm *>(object), playback);
@@ -191,7 +185,8 @@ namespace smgpc::compat {
 
     void synchronize_audio_facade_state() {
         auto &audio = require_active_audio_event_service();
-        release_bgm_objects();
+        auto *runtime = try_concrete_audio_runtime();
+        if (runtime == nullptr) release_bgm_objects();
         for (std::size_t index = 0; index < 2; ++index) {
             s_bgm_manager.mNextBGM[index] = static_cast<u32>(-1);
             s_bgm_manager.mCurrentBGM[index] = static_cast<u32>(-1);
@@ -203,7 +198,6 @@ namespace smgpc::compat {
         if (audio.current_stage_bgm_id().has_value()) {
             s_bgm_manager.mCurrentBGM[0] = *audio.current_stage_bgm_id();
         }
-        auto *runtime = try_concrete_audio_runtime();
         if (runtime == nullptr) {
             if (audio.has_active_stage_bgm() || audio.has_active_sub_bgm()) {
                 aurora::throw_host_exception<std::logic_error>("Active BGM state has no concrete RuntimeContext backend");
@@ -343,11 +337,10 @@ JAISoundHandle *AudSingleBgm::start(u32 sound_id, bool prepared) {
     auto *handle = lane == BgmLane::Stage ? runtime.start_stage_bgm(sound_id, prepared)
                                          : runtime.start_sub_bgm(sound_id, prepared);
     synchronize_bgm_handle(*this, runtime.j_audio_playback());
-    s_bound_bgm_tokens[static_cast<std::size_t>(lane)] = mHandle.backendToken();
     if (handle != nullptr && mVolumeController != nullptr) {
         runtime.j_audio_playback().set_bgm_bus_gain(lane, mVolumeController->getVolume());
     }
-    return &mHandle;
+    return handle != nullptr ? &mHandle : nullptr;
 }
 
 void AudSingleBgm::stop(u32 fade_frames) {
@@ -407,41 +400,9 @@ void AudSingleBgm::changeTrackMuteState(s32, s32) {
     if (isSoundAttached()) unavailable("section-one JAS track-mute transitions");
 }
 
-JAISoundHandle *AudSingleBgm::getHandle() {
-    if (auto *runtime = try_concrete_audio_runtime()) {
-        synchronize_bgm_handle(*this, runtime->j_audio_playback());
-    } else {
-        mHandle.releaseSound();
-    }
-    return &mHandle;
-}
-
 JAISoundHandle *AudSingleBgm::getRhythmHandle() {
     if (isSoundAttached() && mSoundID.getSectionID() == 1) return &mHandle;
     return nullptr;
-}
-
-bool AudSingleBgm::isSoundAttached() const {
-    return const_cast<AudSingleBgm *>(this)->getHandle()->isSoundAttached();
-}
-
-void AudSingleBgm::pause(bool paused) {
-    if (isSoundAttached()) require_concrete_audio_runtime("BGM pause")
-        .j_audio_playback().pause_bgm(require_lane(this), paused);
-}
-
-bool AudSingleBgm::isStopping() const {
-    return !isSoundAttached() || require_concrete_audio_runtime("BGM stopping query")
-        .j_audio_playback().is_bgm_stopping(require_lane(this));
-}
-
-bool AudSingleBgm::isPaused() const {
-    return isSoundAttached() && require_concrete_audio_runtime("BGM pause query")
-        .j_audio_playback().is_bgm_paused(require_lane(this));
-}
-
-JAISoundID AudSingleBgm::getSoundID() const {
-    return isSoundAttached() ? mSoundID : JAISoundID(0);
 }
 
 void AudSingleBgm::initTrackController() {

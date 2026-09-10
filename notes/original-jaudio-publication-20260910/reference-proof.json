@@ -1,0 +1,179 @@
+[
+  {
+    "source": "decomp/src/JSystem/JAudio2/JAISound.cpp",
+    "sha256": "5655b25c596e7727c7d89a64f2c6ac8b628f276f33fbcdcf83d03f187638b740",
+    "matches_recorded_source": true,
+    "recorded_wii_compile_exit": 0,
+    "recorded_diff_exit": 0,
+    "symbols": {
+      "releaseSound__14JAISoundHandleFv": 100.0,
+      "releaseHandle__8JAISoundFv": 100.0,
+      "attachHandle__8JAISoundFP14JAISoundHandle": 100.0,
+      "lockWhenPrepared__15JAISoundStatus_Fv": 100.0,
+      "unlockIfLocked__15JAISoundStatus_Fv": 100.0,
+      "mixOutAll__14JAISoundParamsFRC14JASSoundParamsP14JASSoundParamsf": 100.0,
+      "__ct__8JAISoundFv": 100.0,
+      "start_JAISound___8JAISoundF10JAISoundIDPCQ29JGeometry8TVec3<f>P11JAIAudience": 100.0,
+      "stop__8JAISoundFUl": 100.0,
+      "stop__8JAISoundFv": 100.0,
+      "asSe__8JAISoundFv": 100.0,
+      "asSeq__8JAISoundFv": 100.0,
+      "asStream__8JAISoundFv": 100.0,
+      "die_JAISound___8JAISoundFv": 100.0,
+      "calc_JAISound___8JAISoundFv": 100.0,
+      "initTrack_JAISound___8JAISoundFP8JASTrack": 100.0,
+      "increasePrepareCount_JAISound___8JAISoundFv": 100.0,
+      "__vt__8JAISound": 100.0,
+      "@11781": 100.0,
+      "@11808": 100.0,
+      "@11809": 100.0,
+      "@11910": 100.0,
+      "[.rodata-0]": 100.0,
+      "[.data-0]": 98.35777,
+      "[.sdata2-0]": 100.0
+    }
+  },
+  {
+    "source": "decomp/src/JSystem/JAudio2/JAISoundHandles.cpp",
+    "sha256": "6f291c3d87915c1b0b4e4602f4b5ba8ef3d409b77b05b8a62cedeb31b80fd014",
+    "matches_recorded_source": true,
+    "recorded_wii_compile_exit": 0,
+    "recorded_diff_exit": 0,
+    "symbols": {
+      "getHandleSoundID__15JAISoundHandlesF10JAISoundID": 100.0,
+      "getHandleUserData__15JAISoundHandlesFUl": 100.0,
+      "setPos__15JAISoundHandlesFRCQ29JGeometry8TVec3<f>": 100.0
+    }
+  },
+  {
+    "source": "decomp/src/JSystem/JAudio2/JAIStream.cpp",
+    "sha256": "d6c7bb0d5bdd1bdf8d315433d658d9272da1b3236dda0796f01b2f3eff67e2d0",
+    "matches_recorded_source": true,
+    "recorded_wii_compile_exit": 0,
+    "recorded_diff_exit": 0,
+    "symbols": {
+      "JAIStream_JASAramStreamCallback___FUlP13JASAramStreamPv": 100.0,
+      "__ct__9JAIStreamFP12JAIStreamMgrP31JAISoundStrategyMgr<9JAIStream>": 94.73684,
+      "JAIStreamMgr_startID___9JAIStreamF10JAISoundIDlPCQ29JGeometry8TVec3<f>P11JAIAudiencei": 100.0,
+      "prepare_prepareStream___9JAIStreamFv": 100.0,
+      "prepare___9JAIStreamFv": 100.0,
+      "prepare_startStream___9JAIStreamFv": 100.0,
+      "JAIStreamMgr_mixOut___9JAIStreamFRC14JASSoundParams16JAISoundActivity": 100.0,
+      "die_JAIStream___9JAIStreamFv": 100.0,
+      "JAISound_tryDie___9JAIStreamFv": 100.0,
+      "JAIStreamMgr_calc___9JAIStreamFv": 100.0,
+      "getNumChild__9JAIStreamCFv": 100.0,
+      "getChild__9JAIStreamFi": 100.0,
+      "releaseChild__9JAIStreamFi": 100.0,
+      "getTrack__9JAIStreamFv": 100.0,
+      "getChildTrack__9JAIStreamFi": 100.0,
+      "asStream__9JAIStreamFv": 100.0,
+      "getTempoMgr__9JAIStreamFv": 100.0,
+      "__sinit_\\JAIStream_cpp": 100.0,
+      "__vt__9JAIStream": 100.0,
+      "@13450": 100.0,
+      "@13923": 100.0,
+      "@13924": 100.0,
+      "[.ctors-0]": 100.0,
+      "[.data-0]": 100.0,
+      "[.sdata2-0]": 80.0
+    }
+  },
+  {
+    "source": "decomp/src/JSystem/JAudio2/JAIStreamMgr.cpp",
+    "sha256": "a9652d625b527aac2be67c614602f8344cab14f7c9dc998dbf5eda60bc455105",
+    "matches_recorded_source": true,
+    "recorded_wii_compile_exit": 0,
+    "recorded_diff_exit": 0,
+    "symbols": {
+      "__ct__12JAIStreamMgrFb": 100.0,
+      "startSound__12JAIStreamMgrF10JAISoundIDP14JAISoundHandlePCQ29JGeometry8TVec3<f>": 100.0,
+      "freeDeadStream___12JAIStreamMgrFv": 100.0,
+      "calc__12JAIStreamMgrFv": 100.0,
+      "stop__12JAIStreamMgrFv": 100.0,
+      "stop__12JAIStreamMgrFUl": 100.0,
+      "stopSoundID__12JAIStreamMgrF10JAISoundID": 100.0,
+      "mixOut__12JAIStreamMgrFv": 100.0,
+      "newStream___12JAIStreamMgrFv": 100.0,
+      "__sinit_\\JAIStreamMgr_cpp": 100.0,
+      "__ct__22JASMemPool<9JAIStream>Fv": 100.0,
+      "__dt__22JASMemPool<9JAIStream>Fv": 100.0,
+      "@11870": 100.0,
+      "memPool___30JASPoolAllocObject<9JAIStream>": 100.0,
+      "@GUARD@memPool___30JASPoolAllocObject<9JAIStream>": 100.0,
+      "[.ctors-0]": 100.0
+    }
+  },
+  {
+    "source": "decomp/src/JSystem/JAudio2/JAISoundStarter.cpp",
+    "sha256": "9a9a03ec6abaf424748c26e051de64278efce1ca629dfe0078c5a3cfb998ffa5",
+    "matches_recorded_source": true,
+    "recorded_wii_compile_exit": 0,
+    "recorded_diff_exit": 0,
+    "symbols": {
+      "__ct__15JAISoundStarterFb": 100.0,
+      "__dt__15JAISoundStarterFv": 100.0,
+      "startLevelSound__15JAISoundStarterF10JAISoundIDP14JAISoundHandlePCQ29JGeometry8TVec3<f>": 100.0,
+      "__dt__36JASGlobalInstance<15JAISoundStarter>Fv": 100.0,
+      "__vt__15JAISoundStarter": 100.0,
+      "[.data-0]": 100.0
+    }
+  },
+  {
+    "source": "decomp/src/JSystem/JAudio2/JAISoundChild.cpp",
+    "sha256": "50f6da2baee577670e21b4ac1108fc8a9cb0592aaf4ff8b8ce501fe03dccb946",
+    "matches_recorded_source": true,
+    "recorded_wii_compile_exit": 0,
+    "recorded_diff_exit": 0,
+    "symbols": {
+      "init__13JAISoundChildFv": 100.0,
+      "mixOut__13JAISoundChildFP8JASTrack": 100.0,
+      "calc__13JAISoundChildFv": 100.0
+    }
+  },
+  {
+    "source": "decomp/src/JSystem/JAudio2/JAIAudible.cpp",
+    "sha256": "ee383b49cc26852a18d05581fd51f4895d90373aab10b0ea823b96167eb5956e",
+    "matches_recorded_source": true,
+    "recorded_wii_compile_exit": 0,
+    "recorded_diff_exit": 0,
+    "symbols": {
+      "__dt__10JAIAudibleFv": 100.0
+    }
+  },
+  {
+    "source": "decomp/src/JSystem/JAudio2/JAIAudience.cpp",
+    "sha256": "8001914c66b2ef1c430dac4b9a20de19969e50e5187674757e035550396f3fc8",
+    "matches_recorded_source": true,
+    "recorded_wii_compile_exit": 0,
+    "recorded_diff_exit": 0,
+    "symbols": {
+      "__dt__11JAIAudienceFv": 100.0
+    }
+  },
+  {
+    "source": "decomp/src/JSystem/JAudio2/JAIStreamDataMgr.cpp",
+    "sha256": "1d6d67988db7ac3884c17c6fe570cc7bde296d626dff3c673c49cf67e0b93b70",
+    "matches_recorded_source": true,
+    "recorded_wii_compile_exit": 0,
+    "recorded_diff_exit": 0,
+    "symbols": {
+      "__dt__16JAIStreamDataMgrFv": 100.0,
+      "__dt__16JAIStreamAramMgrFv": 100.0,
+      "__vt__16JAIStreamDataMgr": 100.0,
+      "[.data-0]": 35.164837
+    }
+  },
+  {
+    "source": "decomp/src/JSystem/JAudio2/JASSoundParams.cpp",
+    "sha256": "31355c6e1b4d33ae11c617b71e567587745a3cd22f8e96694313e01c6477f16f",
+    "matches_recorded_source": true,
+    "recorded_wii_compile_exit": 0,
+    "recorded_diff_exit": 0,
+    "symbols": {
+      "combine__14JASSoundParamsFRC14JASSoundParamsRC14JASSoundParams": 100.0,
+      "@2380": 100.0,
+      "[.sdata2-0]": 66.66667
+    }
+  }
+]

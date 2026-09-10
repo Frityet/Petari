@@ -1,0 +1,4 @@
+[pass] native PCM subclass retains real JAISound type, original params/lifetime and reciprocal handle semantics
+[pass] original stream wrapper metadata, actual three-slot pool exhaustion, canonical handle transfer and three process owner generations
+[pass] actual retail playback service uses original stream manager and canonical original sound/handle ABI
+[pass] Stage/Sub prepare-unlock, original states, independent handles, native PCM level/SE params/lifetime and category control

@@ -1,0 +1,74 @@
+[ok] near crossing mode=0 topology=128
+[ok] near crossing mode=1 topology=128
+[ok] near crossing mode=0 topology=144
+[ok] near crossing mode=1 topology=144
+[ok] near crossing mode=0 topology=152
+[ok] near crossing mode=1 topology=152
+[ok] near crossing mode=0 topology=160
+[ok] near crossing mode=1 topology=160
+[ok] near crossing mode=0 topology=255
+[ok] near crossing mode=1 topology=255
+[ok] far crossing mode=0 topology=128
+[ok] far crossing mode=1 topology=128
+[ok] far crossing mode=0 topology=144
+[ok] far crossing mode=1 topology=144
+[ok] far crossing mode=0 topology=152
+[ok] far crossing mode=1 topology=152
+[ok] far crossing mode=0 topology=160
+[ok] far crossing mode=1 topology=160
+[ok] far crossing mode=0 topology=255
+[ok] far crossing mode=1 topology=255
+[ok] near reject mode=0 topology=128
+[ok] near reject mode=1 topology=128
+[ok] near reject mode=0 topology=144
+[ok] near reject mode=1 topology=144
+[ok] near reject mode=0 topology=152
+[ok] near reject mode=1 topology=152
+[ok] near reject mode=0 topology=160
+[ok] near reject mode=1 topology=160
+[ok] near reject mode=0 topology=255
+[ok] near reject mode=1 topology=255
+[ok] far reject mode=0 topology=128
+[ok] far reject mode=1 topology=128
+[ok] far reject mode=0 topology=144
+[ok] far reject mode=1 topology=144
+[ok] far reject mode=0 topology=152
+[ok] far reject mode=1 topology=152
+[ok] far reject mode=0 topology=160
+[ok] far reject mode=1 topology=160
+[ok] far reject mode=0 topology=255
+[ok] far reject mode=1 topology=255
+[ok] viewport guardband mode=0 topology=128
+[ok] viewport guardband mode=1 topology=128
+[ok] viewport guardband mode=0 topology=144
+[ok] viewport guardband mode=1 topology=144
+[ok] viewport guardband mode=0 topology=152
+[ok] viewport guardband mode=1 topology=152
+[ok] viewport guardband mode=0 topology=160
+[ok] viewport guardband mode=1 topology=160
+[ok] viewport guardband mode=0 topology=255
+[ok] viewport guardband mode=1 topology=255
+[ok] indexed position matrix mode=0 topology=128
+[ok] indexed position matrix mode=1 topology=128
+[ok] indexed position matrix mode=0 topology=144
+[ok] indexed position matrix mode=1 topology=144
+[ok] indexed position matrix mode=0 topology=152
+[ok] indexed position matrix mode=1 topology=152
+[ok] indexed position matrix mode=0 topology=160
+[ok] indexed position matrix mode=1 topology=160
+[ok] indexed position matrix mode=0 topology=255
+[ok] indexed position matrix mode=1 topology=255
+[ok] indexed position array mode=0 topology=128
+[ok] indexed position array mode=1 topology=128
+[ok] indexed position array mode=0 topology=144
+[ok] indexed position array mode=1 topology=144
+[ok] indexed position array mode=0 topology=152
+[ok] indexed position array mode=1 topology=152
+[ok] indexed position array mode=0 topology=160
+[ok] indexed position array mode=1 topology=160
+[ok] indexed position array mode=0 topology=255
+[ok] indexed position array mode=1 topology=255
+[ok] top-only viewport change preserves separate draw transforms
+[ok] offscreen target transition restores authored EFB viewport and transform
+[ok] eye-plane crossing produces identical surviving polygon pixels
+[aurora:aurora::gpu] Device lost: Device was destroyed.

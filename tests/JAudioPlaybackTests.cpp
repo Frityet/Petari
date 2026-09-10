@@ -1020,173 +1020,111 @@ namespace {
             },
             std::move(mixer));
 
-        auto *title = service.start_bgm(smgpc::runtime::BgmLane::Stage, "STM_TITLE", true);
-        const auto prepared_stop_token = aurora::audio::VoiceToken{
-            service.bgm_backend_token(smgpc::runtime::BgmLane::Stage)};
-        require(title != nullptr && title->isSoundAttached() &&
-                    title->backendOwner() == &service &&
-                    prepared_stop_token &&
-                    service.bgm_id(smgpc::runtime::BgmLane::Stage) == 0x02000001U &&
-                    service.is_bgm_prepared(smgpc::runtime::BgmLane::Stage) &&
-                    service.is_bgm_paused(smgpc::runtime::BgmLane::Stage) &&
-                    service.active_voice_count() == 1U,
-                "prepared Title BGM must own a paused concrete retail stream token");
+        using Lane = smgpc::runtime::BgmLane;
+        std::uint64_t audio_frame = 0;
+        const auto tick = [&] {
+            service.begin_frame(audio_frame++);
+            service.end_frame();
+        };
+        const auto retire_pcm = [&] {
+            const auto deadline = std::chrono::steady_clock::now() + std::chrono::seconds(3);
+            do {
+                tick();
+                if (service.active_voice_count() == 0) return;
+                std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            } while (std::chrono::steady_clock::now() < deadline);
+            require(service.active_voice_count() == 0, "stopped original owners must retire their PCM release tails");
+        };
+        auto *title = service.start_bgm(Lane::Stage, "STM_TITLE", true);
+        require(title && title->mSound && title->mSound->asStream() &&
+                    service.owns_sound(title->mSound) && !service.is_bgm_prepared(Lane::Stage) &&
+                    !service.bgm_backend_token(Lane::Stage) && service.active_voice_count() == 0,
+                "original stream start must attach its owner before asynchronous preparation or PCM playback");
+        auto *sub = service.start_bgm(Lane::Sub, "STM_PROLOGUE_01", true);
+        require(sub && sub->mSound != title->mSound, "Stage and Sub must have separate original stream objects");
+        for (int i = 0; i < 8; ++i) tick();
+        require(service.is_bgm_prepared(Lane::Stage) && service.is_bgm_prepared(Lane::Sub) &&
+                    !title->mSound->isPlaying() && !sub->mSound->isPlaying() &&
+                    !service.is_bgm_paused(Lane::Stage) && service.active_voice_count() == 0,
+                "preparation locks must reach LOCK_READY without pretending to be paused playing voices");
         service.set_sound_volume_setting(5, 0);
-        require(mixer_observer->voice_bus_gain_multiplier(prepared_stop_token) == 1.0F,
-                "SE preset changes must not change the stage stream bus gain");
+        service.set_bgm_bus_gain(Lane::Sub, 0.25F);
+        require(sub->mSound->getAuxiliary().mParams.mVolume == 0.25F &&
+                    title->mSound->getAuxiliary().mParams.mVolume == 1.0F,
+                "SE categories and sub auxiliary volume must leave stage volume independent");
         service.recover_sound_volume_setting(0);
-        const auto stage_lane = smgpc::runtime::BgmLane::Stage;
-        const auto sub_lane = smgpc::runtime::BgmLane::Sub;
-        auto *sub = service.start_bgm(sub_lane, "STM_PROLOGUE_01", true);
-        auto sub_token = aurora::audio::VoiceToken{service.bgm_backend_token(sub_lane)};
-        require(sub != nullptr && sub != title && sub_token != prepared_stop_token &&
-                    service.active_voice_count() == 2 && service.bgm_id(sub_lane) == 0x0200001fU,
-                "stage and sub lanes must retain separate actual stream handles and tokens");
-        service.set_bgm_bus_gain(sub_lane, 0.25F);
-        require(mixer_observer->voice_bus_gain_multiplier(sub_token) == 0.25F &&
-                    mixer_observer->voice_bus_gain_multiplier(prepared_stop_token) == 1.0F,
-                "sub volume changes must not alter the stage voice");
-        service.unlock_bgm(sub_lane);
-        require(!service.is_bgm_prepared(sub_lane) && service.is_bgm_prepared(stage_lane),
-                "unlocking sub must preserve the independent stage preparation lock");
-        service.stop_bgm(sub_lane, 0);
-        require(!sub->isSoundAttached() && title->isSoundAttached(),
-                "stopping sub must detach only its concrete handle");
-        sub = service.start_bgm(sub_lane, "STM_PROLOGUE_02", true);
-        const auto replacement_token = service.bgm_backend_token(sub_lane);
-        require(replacement_token != sub_token.value, "a new sub stream must get a fresh backend token");
-        require(service.start_bgm(sub_lane, "BGM_PINCH_1", false) == nullptr &&
-                    !service.has_active_bgm(sub_lane) && !sub->isSoundAttached() &&
-                    service.bgm_backend_token(stage_lane) == prepared_stop_token.value,
-                "an unavailable JAS sequence must return no attached voice and leave the other lane untouched");
+        service.unlock_bgm(Lane::Sub);
+        auto sub_token = aurora::audio::VoiceToken{service.bgm_backend_token(Lane::Sub)};
+        require(sub_token && sub->mSound->isPlaying() && service.is_bgm_prepared(Lane::Sub) &&
+                    !service.bgm_backend_token(Lane::Stage),
+                "original prepared predicate includes playing while the other lane remains locked");
+        service.stop_bgm(Lane::Sub, 0);
+        require(!sub->isSoundAttached() && title->isSoundAttached(), "immediate stop must detach only the sub handle");
+        retire_pcm();
+        sub = service.start_bgm(Lane::Sub, "STM_PROLOGUE_02", true);
+        require(sub && sub->isSoundAttached(), "retired stream slots must accept a new original owner");
+        require(service.start_bgm(Lane::Sub, "BGM_PINCH_1", false) == nullptr &&
+                    !service.has_active_bgm(Lane::Sub) && !sub->isSoundAttached() && title->isSoundAttached(),
+                "an unavailable sequence must leave no attached sub voice and preserve the stage owner");
+        tick();
+        service.pause_bgm(Lane::Stage, true);
+        service.pause_bgm(Lane::Stage, false);
+        require(service.is_bgm_prepared(Lane::Stage) && !title->mSound->isPlaying() &&
+                    !service.bgm_backend_token(Lane::Stage),
+                "pause changes must preserve the independent preparation lock");
+        service.stop_bgm(Lane::Stage, 6);
+        require(title->isSoundAttached() && !service.is_bgm_stopping(Lane::Stage),
+                "original fade stop retains the handle and reaches stopping only after the frame fader expires");
+        for (int i = 0; i < 12; ++i) tick();
+        require(!title->isSoundAttached() && !service.has_active_bgm(Lane::Stage) &&
+                    service.active_voice_count() == 0,
+                "a locked prepared stream must cancel after its original frame fade without starting PCM");
 
-        const auto paused_callback_deadline =
-            std::chrono::steady_clock::now() + std::chrono::seconds(3);
-        while (service.playback_stats().device_callbacks == 0U &&
-               std::chrono::steady_clock::now() < paused_callback_deadline) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        }
-        require(service.playback_stats().device_callbacks != 0U &&
-                    mixer_observer->voice_rendered_frames(prepared_stop_token) ==
-                        0U,
-                "prepared stream callbacks must not advance the paused backend token");
-        service.pause_bgm(smgpc::runtime::BgmLane::Stage, true);
-        service.pause_bgm(smgpc::runtime::BgmLane::Stage, false);
-        require(service.is_bgm_prepared(smgpc::runtime::BgmLane::Stage) &&
-                    service.is_bgm_paused(smgpc::runtime::BgmLane::Stage) &&
-                    mixer_observer->voice_rendered_frames(prepared_stop_token) ==
-                        0U,
-                "clearing host pause must not bypass a prepared stream's unlock gate");
-
-        constexpr auto prepared_stop_fade_frames = 6U;
-        service.stop_bgm(smgpc::runtime::BgmLane::Stage, prepared_stop_fade_frames);
-        require(service.is_bgm_stopping(smgpc::runtime::BgmLane::Stage) &&
-                    !service.is_bgm_prepared(smgpc::runtime::BgmLane::Stage) &&
-                    !service.is_bgm_paused(smgpc::runtime::BgmLane::Stage) &&
-                    title->isSoundAttached(),
-                "stopping a prepared stream must release the host pause and retain its handle through the fade");
-        const auto prepared_stop_deadline =
-            std::chrono::steady_clock::now() + std::chrono::seconds(3);
-        while (mixer_observer->is_voice_active(prepared_stop_token) &&
-               std::chrono::steady_clock::now() < prepared_stop_deadline) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        }
-        require(!mixer_observer->is_voice_active(prepared_stop_token),
-                "a prepared stream stopped before unlock must retire its concrete token");
-        service.begin_frame(0U);
-        service.end_frame();
-        require(!title->isSoundAttached() &&
-                    !service.has_active_bgm(smgpc::runtime::BgmLane::Stage),
-                "a prepared stream stopped before unlock must detach after retirement");
-
-        title = service.start_bgm(smgpc::runtime::BgmLane::Stage, "STM_TITLE", true);
-        const auto title_token = aurora::audio::VoiceToken{
-            service.bgm_backend_token(smgpc::runtime::BgmLane::Stage)};
-        require(title != nullptr && title->isSoundAttached() && title_token &&
-                    title_token != prepared_stop_token &&
-                    service.is_bgm_prepared(smgpc::runtime::BgmLane::Stage) &&
-                    service.is_bgm_paused(smgpc::runtime::BgmLane::Stage),
-                "a new prepared stream must own a fresh paused backend token");
-        service.pause_bgm(smgpc::runtime::BgmLane::Stage, true);
-        service.unlock_bgm(smgpc::runtime::BgmLane::Stage);
-        require(!service.is_bgm_prepared(smgpc::runtime::BgmLane::Stage) &&
-                    service.is_bgm_paused(smgpc::runtime::BgmLane::Stage) &&
-                    mixer_observer->voice_rendered_frames(title_token) == 0U,
-                "Title unlock must preserve an independent host pause");
-        service.pause_bgm(smgpc::runtime::BgmLane::Stage, false);
-        require(!service.is_bgm_paused(smgpc::runtime::BgmLane::Stage),
-                "clearing host pause after unlock must resume the concrete stream");
-        const auto unlocked_deadline =
-            std::chrono::steady_clock::now() + std::chrono::seconds(3);
-        while (mixer_observer->voice_rendered_frames(title_token) == 0U &&
-               std::chrono::steady_clock::now() < unlocked_deadline) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        }
-        require(mixer_observer->voice_rendered_frames(title_token).value_or(0U) !=
-                    0U,
-                "unlock must advance the same prepared stream token");
-
-        constexpr auto title_fade_frames = 12U;
-        service.pause_bgm(smgpc::runtime::BgmLane::Stage, true);
-        require(service.is_bgm_paused(smgpc::runtime::BgmLane::Stage),
-                "explicit stage pause must freeze the active stream before stop");
-        service.stop_bgm(smgpc::runtime::BgmLane::Stage, title_fade_frames);
-        require(service.is_bgm_stopping(smgpc::runtime::BgmLane::Stage) && title->isSoundAttached() &&
-                    service.has_active_bgm(smgpc::runtime::BgmLane::Stage) &&
-                    !service.is_bgm_paused(smgpc::runtime::BgmLane::Stage),
-                "a nonzero Title fade must release an explicit host pause and remain attached while stopping");
-        const auto fade_deadline =
-            std::chrono::steady_clock::now() + std::chrono::seconds(3);
-        while (mixer_observer->is_voice_active(title_token) &&
-               std::chrono::steady_clock::now() < fade_deadline) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        }
-        require(!mixer_observer->is_voice_active(title_token),
-                "a nonzero stage-BGM fade must retire its mixer token");
-        service.begin_frame(1U);
-        service.end_frame();
-        require(!title->isSoundAttached() &&
-                    !service.has_active_bgm(smgpc::runtime::BgmLane::Stage) &&
-                    service.active_voice_count() == 0U,
-                "completed stage-BGM fade must detach its concrete stream handle");
+        title = service.start_bgm(Lane::Stage, "STM_TITLE", true);
+        for (int i = 0; i < 8; ++i) tick();
+        service.pause_bgm(Lane::Stage, true);
+        service.unlock_bgm(Lane::Stage);
+        const auto title_token = aurora::audio::VoiceToken{service.bgm_backend_token(Lane::Stage)};
+        require(title_token && service.is_bgm_prepared(Lane::Stage) && service.is_bgm_paused(Lane::Stage) &&
+                    mixer_observer->voice_rendered_frames(title_token) == 0,
+                "unlock must preserve original explicit pause on the real stream token");
+        service.stop_bgm(Lane::Stage, 12);
+        const auto intensity = title->mSound->getFader()->getIntensity();
+        for (int i = 0; i < 16; ++i) tick();
+        require(title->isSoundAttached() && service.is_bgm_paused(Lane::Stage) &&
+                    title->mSound->getFader()->getIntensity() == intensity &&
+                    mixer_observer->voice_rendered_frames(title_token) == 0,
+                "the original pause flag must freeze both sound fader and PCM instead of auto-unpausing a stop");
+        service.pause_bgm(Lane::Stage, false);
+        retire_pcm();
+        require(!title->isSoundAttached(), "unpaused frame fade must eventually release the original handle");
 
         for (const auto &prologue_stream : {
                  std::pair{"STM_PROLOGUE_01", 0x0200001fU},
                  std::pair{"STM_PROLOGUE_02", 0x02000020U},
              }) {
-            auto *prologue =
-                service.start_bgm(smgpc::runtime::BgmLane::Stage, prologue_stream.first, false);
-            const auto prologue_token = aurora::audio::VoiceToken{
-                service.bgm_backend_token(smgpc::runtime::BgmLane::Stage)};
-            require(prologue != nullptr && prologue->isSoundAttached() &&
-                        prologue->backendOwner() == &service &&
-                        prologue_token &&
-                        service.bgm_id(smgpc::runtime::BgmLane::Stage) == prologue_stream.second &&
-                        !service.is_bgm_prepared(smgpc::runtime::BgmLane::Stage) &&
-                        !service.is_bgm_paused(smgpc::runtime::BgmLane::Stage),
-                    std::string("Prologue route must decode and start its concrete retail stream: ") +
-                        prologue_stream.first);
-            const auto prologue_deadline =
-                std::chrono::steady_clock::now() + std::chrono::seconds(3);
-            while (mixer_observer->voice_rendered_frames(prologue_token) ==
-                       0U &&
-                   std::chrono::steady_clock::now() < prologue_deadline) {
+            auto *prologue = service.start_bgm(Lane::Stage, prologue_stream.first, false);
+            for (int i = 0; i < 8; ++i) tick();
+            const auto token = aurora::audio::VoiceToken{service.bgm_backend_token(Lane::Stage)};
+            require(prologue && prologue->mSound && service.owns_sound(prologue->mSound) && token &&
+                        service.bgm_id(Lane::Stage) == prologue_stream.second &&
+                        service.is_bgm_prepared(Lane::Stage) && prologue->mSound->isPlaying(),
+                    "unlocked Prologue stream must reach original PLAYING through its prepare callbacks");
+            const auto deadline = std::chrono::steady_clock::now() + std::chrono::seconds(3);
+            while (mixer_observer->voice_rendered_frames(token).value_or(0) == 0 &&
+                   std::chrono::steady_clock::now() < deadline) {
                 std::this_thread::sleep_for(std::chrono::milliseconds(10));
             }
-            require(mixer_observer->voice_rendered_frames(prologue_token)
-                            .value_or(0U) != 0U,
-                    std::string("Prologue route stream must advance on the concrete mixer: ") +
-                        prologue_stream.first);
-            service.stop_bgm(smgpc::runtime::BgmLane::Stage, 0U);
-            require(!prologue->isSoundAttached() &&
-                        !service.has_active_bgm(smgpc::runtime::BgmLane::Stage),
-                    std::string("Prologue route stream must detach on immediate teardown: ") +
-                        prologue_stream.first);
+            require(mixer_observer->voice_rendered_frames(token).value_or(0) != 0,
+                    "the actual Prologue stream must advance on the PCM callback");
+            service.stop_bgm(Lane::Stage, 0);
+            require(!prologue->isSoundAttached(), "original immediate stream stop must detach its handle");
+            retire_pcm();
         }
 
         service.set_sound_volume_setting(5, 0);
         auto *category_muted = service.start_sound_effect("SE_SY_GAME_START", -1, -1);
-        const auto category_token = aurora::audio::VoiceToken{category_muted->backendToken()};
+        const auto category_token = aurora::audio::VoiceToken{service.sound_backend_token(category_muted->mSound)};
         require(mixer_observer->voice_bus_gain_multiplier(category_token) == 0.0F,
                 "a new finite SE must inherit its original category's current gain");
         service.stop_sound_effect("SE_SY_GAME_START", 6);
@@ -1196,6 +1134,7 @@ namespace {
         const auto category_stop_deadline = std::chrono::steady_clock::now() + std::chrono::seconds(3);
         while (mixer_observer->is_voice_active(category_token) &&
                std::chrono::steady_clock::now() < category_stop_deadline) {
+            tick();
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
         require(!mixer_observer->is_voice_active(category_token),
@@ -1213,12 +1152,13 @@ namespace {
         for (const auto *name : prologue_effects) {
             auto *effect = service.start_sound_effect(name, -1, -1);
             require(effect != nullptr && effect->isSoundAttached() &&
-                        effect->backendOwner() == &service &&
-                        effect->backendToken() != 0U &&
+                        service.owns_sound(effect->mSound) &&
+                        service.sound_backend_token(effect->mSound) != 0U &&
                         service.active_voice_count() == 1U,
                     std::string("Prologue finite SE must start a concrete mixer voice: ") +
                         name);
             service.stop_sound_effect(name, 0U);
+            retire_pcm();
             require(!effect->isSoundAttached() &&
                         service.active_voice_count() == 0U,
                     std::string("Prologue finite SE must detach on teardown: ") +
@@ -1228,11 +1168,12 @@ namespace {
         auto *game_start = service.start_sound_effect(
             "SE_SY_GAME_START", -1, -1);
         require(game_start != nullptr && game_start->isSoundAttached() &&
-                    game_start->backendOwner() == &service &&
-                    game_start->backendToken() != 0U &&
+                    service.owns_sound(game_start->mSound) &&
+                    service.sound_backend_token(game_start->mSound) != 0U &&
                     service.active_voice_count() == 1U,
                 "Title confirm must return a handle attached to real finite PCM");
         service.stop_sound_effect("SE_SY_GAME_START", 0U);
+        retire_pcm();
         require(!game_start->isSoundAttached() &&
                     service.active_voice_count() == 0U,
                 "system-SE stop-by-name must retire every matching concrete token");
@@ -1259,6 +1200,7 @@ namespace {
         require(exempt_system != nullptr && exempt_system->isSoundAttached(),
                 "the original system sound group must remain playable while both permissions are submitted");
         service.stop_sound_effect("SE_SY_GAME_START", 0U);
+        retire_pcm();
         service.set_level_sound_permitted(true);
         require(service.is_level_sound_permitted() && !service.is_sound_permitted(),
                 "permitting levels must not also permit submitted trigger sounds");
@@ -1284,12 +1226,12 @@ namespace {
         auto *wind1 = service.start_level_sound(
             "SE_AT_LV_ASTRO_DOME_WIND_1", 100, -1);
         require(wind1 != nullptr && wind1->isSoundAttached() &&
-                    wind1->backendOwner() == &service &&
-                    wind1->backendToken() != 0U &&
+                    service.owns_sound(wind1->mSound) &&
+                    service.sound_backend_token(wind1->mSound) != 0U &&
                     service.active_voice_count() == 1U &&
                     service.is_device_open(),
                 "a level call must return a handle attached to a resumed SDL voice");
-        const auto first_wind1_token = wind1->backendToken();
+        const auto first_wind1_token = service.sound_backend_token(wind1->mSound);
         const auto wind1_backend = aurora::audio::VoiceToken{first_wind1_token};
         require(mixer_observer->voice_bus_gain_multiplier(wind1_backend) == 1.2F,
                 "new level voices must use their authored category volume");
@@ -1307,7 +1249,7 @@ namespace {
         auto *same_wind1 = service.start_level_sound(
             "SE_AT_LV_ASTRO_DOME_WIND_1", 0, -1);
         require(same_wind1 == wind1 &&
-                    same_wind1->backendToken() == first_wind1_token &&
+                    service.sound_backend_token(same_wind1->mSound) == first_wind1_token &&
                     service.active_voice_count() == 1U &&
                     mixer_observer->voice_pitch_multiplier(
                         aurora::audio::VoiceToken{first_wind1_token}) == 1.0F,
@@ -1316,7 +1258,7 @@ namespace {
         auto *wind2 = service.start_level_sound(
             "SE_AT_LV_ASTRO_DOME_WIND_2", -1, -1);
         require(wind2 != nullptr && wind2 != wind1 &&
-                    wind2->backendToken() != first_wind1_token &&
+                    service.sound_backend_token(wind2->mSound) != first_wind1_token &&
                     service.active_voice_count() == 2U,
                 "the second retail level sound must own a distinct backend voice");
         service.end_frame();
@@ -1343,7 +1285,7 @@ namespace {
 
         // Refresh wind 1, but omit wind 2. Its one-second direct release must
         // run to completion and detach only after the backend token is gone.
-        const auto dying_wind2_token = wind2->backendToken();
+        const auto dying_wind2_token = service.sound_backend_token(wind2->mSound);
         const auto attack_deadline =
             std::chrono::steady_clock::now() + std::chrono::seconds(3);
         while (mixer_observer->voice_rendered_frames(
@@ -1356,8 +1298,7 @@ namespace {
                     aurora::audio::VoiceToken{dying_wind2_token})
                     .value_or(0U) >= 24000U,
                 "release test must advance past the retail attack before synchronizing the callback");
-        mixer_observer->set_voice_paused(
-            aurora::audio::VoiceToken{dying_wind2_token}, true);
+
         service.begin_frame(3U);
         (void)service.start_level_sound(
             "SE_AT_LV_ASTRO_DOME_WIND_1", 40, -1);
@@ -1366,17 +1307,16 @@ namespace {
         auto *same_dying_wind2 = service.start_level_sound(
             "SE_AT_LV_ASTRO_DOME_WIND_2", -1, -1);
         if (!(same_dying_wind2 == wind2 &&
-              wind2->backendToken() == dying_wind2_token &&
+              service.sound_backend_token(wind2->mSound) == dying_wind2_token &&
               service.active_voice_count() == 2U)) {
             throw std::runtime_error(
                 "a retail level-sound call during release must return the same dying handle: same=" +
                 std::to_string(same_dying_wind2 == wind2) +
                 ";old-token=" + std::to_string(dying_wind2_token) +
-                ";new-token=" + std::to_string(wind2->backendToken()) +
+                ";new-token=" + std::to_string(service.sound_backend_token(wind2->mSound)) +
                 ";active=" + std::to_string(service.active_voice_count()));
         }
-        mixer_observer->set_voice_paused(
-            aurora::audio::VoiceToken{dying_wind2_token}, false);
+
         (void)service.start_level_sound(
             "SE_AT_LV_ASTRO_DOME_WIND_1", 40, -1);
         service.end_frame();
@@ -1402,12 +1342,12 @@ namespace {
         (void)service.start_level_sound(
             "SE_AT_LV_ASTRO_DOME_WIND_1", 40, -1);
         require(restarted_wind2 == wind2 &&
-                    restarted_wind2->backendToken() != 0U &&
-                    restarted_wind2->backendToken() != dying_wind2_token &&
+                    service.sound_backend_token(restarted_wind2->mSound) != 0U &&
+                    service.sound_backend_token(restarted_wind2->mSound) != dying_wind2_token &&
                     service.active_voice_count() == 2U,
                 "the stable handle must attach to a new token only after retail release ends");
-        const auto before_reset_wind1_token = wind1->backendToken();
-        const auto before_reset_wind2_token = wind2->backendToken();
+        const auto before_reset_wind1_token = service.sound_backend_token(wind1->mSound);
+        const auto before_reset_wind2_token = service.sound_backend_token(wind2->mSound);
 
         // Stage teardown can occur inside RuntimeContext::begin_frame. It must
         // clear voices without breaking the matching end_frame transaction.
@@ -1423,10 +1363,10 @@ namespace {
         auto *reentered_wind2 = service.start_level_sound(
             "SE_AT_LV_ASTRO_DOME_WIND_2", -1, -1);
         require(reentered_wind1 == wind1 && reentered_wind2 == wind2 &&
-                    wind1->backendToken() != 0U &&
-                    wind1->backendToken() != before_reset_wind1_token &&
-                    wind2->backendToken() != 0U &&
-                    wind2->backendToken() != before_reset_wind2_token &&
+                    service.sound_backend_token(wind1->mSound) != 0U &&
+                    service.sound_backend_token(wind1->mSound) != before_reset_wind1_token &&
+                    service.sound_backend_token(wind2->mSound) != 0U &&
+                    service.sound_backend_token(wind2->mSound) != before_reset_wind2_token &&
                     service.active_voice_count() == 2U,
                 "scene re-entry must reuse stable handles with fresh backend tokens");
         service.end_frame();
@@ -1480,8 +1420,8 @@ namespace {
         const auto system_event_count = runtime.audio().events().size();
         auto *game_start = MR::startSystemSE("SE_SY_GAME_START", -1, -1);
         require(game_start != nullptr && game_start->isSoundAttached() &&
-                    game_start->backendOwner() == playback_observer &&
-                    game_start->backendToken() != 0U &&
+                    playback_observer->owns_sound(game_start->mSound) &&
+                    playback_observer->sound_backend_token(game_start->mSound) != 0U &&
                     runtime.audio().events().size() == system_event_count + 1U &&
                     runtime.audio().events().back().kind ==
                         smgpc::runtime::AudioEventKind::SystemSoundStart,
@@ -1520,32 +1460,32 @@ namespace {
         auto *wind = MR::startSystemLevelSE(
             "SE_AT_LV_ASTRO_DOME_WIND_1", 0, -1);
         require(wind != nullptr && wind->isSoundAttached() &&
-                    wind->backendOwner() == playback_observer &&
+                    playback_observer->owns_sound(wind->mSound) &&
                     runtime.audio().events().back().kind ==
                         smgpc::runtime::AudioEventKind::SystemLevelSoundStart,
                 "SoundUtil permit must restore a concrete level-sound allocation and only then record the event");
 
+        std::uint64_t audio_frame = 0;
+        const auto tick = [&] {
+            playback_observer->begin_frame(audio_frame++);
+            playback_observer->end_frame();
+            smgpc::compat::advance_audio_facade_state();
+        };
         auto *title = MR::startStageBGM("STM_TITLE", true);
-        require(title != nullptr && title->isSoundAttached() &&
-                    title->backendOwner() == playback_observer &&
-                    runtime.audio().has_active_stage_bgm() &&
-                    playback_observer->has_active_bgm(smgpc::runtime::BgmLane::Stage) &&
-                    runtime.audio().current_stage_bgm_id() ==
-                        playback_observer->bgm_id(smgpc::runtime::BgmLane::Stage),
-                "SoundUtil stage start must keep logical identity and concrete backend token consistent");
+        require(title && title->isSoundAttached() && playback_observer->owns_sound(title->mSound),
+                "SoundUtil stage start must attach the real original stream before facade adoption");
+        auto *title_sound = title->mSound;
         smgpc::compat::synchronize_audio_facade_state();
         auto *stage_bgm = AudWrap::getStageBgm();
-        auto *facade_handle = stage_bgm != nullptr
-                                  ? stage_bgm->getHandle()
-                                  : nullptr;
-        require(facade_handle != nullptr && facade_handle->isSoundAttached() &&
-                    facade_handle->backendOwner() == playback_observer &&
-                    facade_handle->backendToken() == title->backendToken(),
-                "AudWrap must expose the same concrete RuntimeContext stage token");
         auto *single_stage = static_cast<AudSingleBgm *>(stage_bgm);
-        require(facade_handle == &single_stage->mHandle &&
-                    single_stage->mTrackController[0].mHandle == nullptr,
-                "original single BGM must own its handle and leave sequence track controllers detached for a stream");
+        auto *facade_handle = stage_bgm ? stage_bgm->getHandle() : nullptr;
+        require(facade_handle && facade_handle == &single_stage->mHandle &&
+                    facade_handle->mSound == title_sound && title_sound->mHandle == facade_handle &&
+                    !title->isSoundAttached() && single_stage->mTrackController[0].mHandle == nullptr,
+                "facade adoption must transfer the single reciprocal handle into the actual AudSingleBgm member");
+        smgpc::compat::synchronize_audio_facade_state();
+        require(facade_handle->mSound == title_sound && !title_sound->isStopping(),
+                "repeated facade synchronization must preserve its existing original sound and handle");
         single_stage->changeTrackMuteState(1, 0);
         AudWrap::setNextIdStageBgm(0x0200001fU);
         require(AudWrap::getBgmMgr()->mNextBGM[0] == 0x0200001fU,
@@ -1553,88 +1493,77 @@ namespace {
         AudWrap::getBgmMgr()->clearNextBGM(0);
 
         auto *sub_backend_handle = MR::startSubBGM("STM_PROLOGUE_01", true);
+        require(sub_backend_handle && sub_backend_handle->mSound, "sub start must attach an original stream");
+        auto *sub_sound = sub_backend_handle->mSound;
         auto *sub_bgm = AudWrap::getSubBgm();
         auto *single_sub = static_cast<AudSingleBgm *>(sub_bgm);
-        require(sub_backend_handle != nullptr && sub_bgm != nullptr && sub_bgm != stage_bgm &&
-                    sub_bgm->getHandle() == &single_sub->mHandle &&
-                    &single_sub->mHandle != &single_stage->mHandle &&
-                    sub_bgm->getHandle()->backendToken() == sub_backend_handle->backendToken() &&
+        require(sub_bgm && sub_bgm != stage_bgm && sub_bgm->getHandle() == &single_sub->mHandle &&
+                    sub_bgm->getHandle()->mSound == sub_sound && !sub_backend_handle->isSoundAttached() &&
                     sub_bgm->getSoundID() == 0x0200001fU && MR::isPlayingSubBgmID(0x0200001fU),
-                "original Stage/Sub BGM objects must retain distinct actual handle members and identities");
-        const auto sub_token = aurora::audio::VoiceToken{sub_backend_handle->backendToken()};
+                "Stage and Sub must have distinct actual BGM members with sole reciprocal sound handles");
+        for (int i = 0; i < 8; ++i) tick();
+        require(sub_sound->isPrepared() && !sub_sound->isPlaying() && title_sound->isPrepared(),
+                "the actual audio manager frames must prepare both independently locked streams");
         require(sub_bgm->mVolumeController == &AudWrap::getBgmMgr()->mVolumeController[1] &&
                     stage_bgm->mVolumeController == &AudWrap::getBgmMgr()->mVolumeController[0],
                 "each original BGM object must use its own manager volume controller");
-        require(sub_bgm->moveVolume(0.25F, 4), "attached sub music must accept the original auxiliary volume transition");
+        require(sub_bgm->moveVolume(0.25F, 4), "attached sub music must accept the original volume transition");
         smgpc::compat::advance_audio_facade_state();
-        require_near(*mixer_observer->voice_bus_gain_multiplier(sub_token), 0.8125F, 0.000001F,
-                     "the original first auxiliary-volume step must reach the real sub PCM bus");
-        require(sub_bgm->moveVolumeForNoteFairy(0.5F, 0), "attached sub music must accept the original NoteFairy volume");
+        require_near(sub_sound->getAuxiliary().mParams.mVolume, 0.8125F, 0.000001F,
+                     "the original first auxiliary-volume step must reach JAISound's actual mix parameters");
+        require(sub_bgm->moveVolumeForNoteFairy(0.5F, 0), "attached sub music must accept NoteFairy volume");
         smgpc::compat::advance_audio_facade_state();
-        require_near(*mixer_observer->voice_bus_gain_multiplier(sub_token), 0.3125F, 0.000001F,
-                     "original independent auxiliary and NoteFairy faders must multiply in the PCM bus");
+        require_near(sub_sound->getAuxiliary().mParams.mVolume, 0.3125F, 0.000001F,
+                     "original auxiliary and NoteFairy faders must multiply before the PCM mix");
         sub_bgm->playAfterPrepared();
+        const auto sub_token = aurora::audio::VoiceToken{playback_observer->sound_backend_token(sub_sound)};
+        require(static_cast<bool>(sub_token), "prepared sub playback must start its actual PCM token after unlocking");
         sub_bgm->stop(6);
-        require(!MR::isPlayingSubBgmID(0x0200001fU), "stopping actual sub music must no longer satisfy the Game playing query");
+        require(MR::isPlayingSubBgmID(0x0200001fU) && !sub_sound->isStopping(),
+                "the original playing query remains true during the frame fade until its fader reaches out");
         const auto sub_deadline = std::chrono::steady_clock::now() + std::chrono::seconds(3);
-        while (mixer_observer->is_voice_active(sub_token) && std::chrono::steady_clock::now() < sub_deadline) {
-            smgpc::compat::advance_audio_facade_state();
+        while (single_sub->mHandle.isSoundAttached() && std::chrono::steady_clock::now() < sub_deadline) {
+            tick();
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
-        smgpc::compat::advance_audio_facade_state();
+        tick();
         require(!single_sub->mHandle.isSoundAttached() && AudWrap::getSubBgm() == nullptr &&
                     facade_handle->isSoundAttached() && !single_sub->moveVolume(1.0F, 0),
-                "sub retirement must detach its original object handle and preserve the stage voice");
+                "sub retirement must release its actual BGM object while preserving the stage handle");
         auto *restarted_sub = MR::startSubBGM("STM_PROLOGUE_01", true);
         auto *restarted_object = AudWrap::getSubBgm();
-        require(restarted_sub != nullptr && restarted_object != nullptr &&
-                    restarted_object->mVolumeController->getVolume() == 1.0F,
-                "a newly adopted host stream must reset original auxiliary and NoteFairy volume state");
+        require(restarted_sub && restarted_object && restarted_object->mVolumeController->getVolume() == 1.0F,
+                "a new stream owner must reset original auxiliary and NoteFairy volume state");
         MR::stopSubBGM(0);
-        smgpc::compat::advance_audio_facade_state();
+        tick();
         const auto before_disabled = runtime.audio().events().size();
         require(MR::startSubBGM("BGM_PINCH_1", false) == nullptr &&
                     !MR::isPlayingSubBgmID(*playback_observer->find_sound_id("BGM_PINCH_1")) &&
                     std::ranges::none_of(runtime.audio().events().subspan(before_disabled), [](const auto &event) {
                         return event.kind == smgpc::runtime::AudioEventKind::SubBgmStart;
                     }),
-                "disabled sequence decoding must not fabricate a sub voice or record a successful start");
+                "disabled sequence decoding must not fabricate a voice or record a successful start");
 
         MR::unlockStageBGM();
-        runtime.begin_frame(smgpc::render::FrameContext{
-            .frame_index = 1U,
-            .frame_time_seconds = 1.0 / 60.0,
-            .frame_delta_seconds = 1.0 / 60.0,
-            .framebuffer = {.width = 320U, .height = 228U},
-        });
+        tick();
         require(playback_observer->has_active_bgm(smgpc::runtime::BgmLane::Stage) &&
-                    facade_handle->isSoundAttached(),
-                "a normal RuntimeContext frame must preserve an active default track controller and stage token");
-        constexpr auto fade_frames = 6U;
-        stage_bgm->stop(fade_frames);
-        require(!runtime.audio().has_active_stage_bgm() &&
-                    playback_observer->has_active_bgm(smgpc::runtime::BgmLane::Stage) &&
-                    playback_observer->is_bgm_stopping(smgpc::runtime::BgmLane::Stage),
-                "logical stop and concrete fade state must describe the same in-progress teardown");
-        const auto fade_deadline =
-            std::chrono::steady_clock::now() + std::chrono::seconds(3);
-        while (playback_observer->has_active_bgm(smgpc::runtime::BgmLane::Stage) &&
-               std::chrono::steady_clock::now() < fade_deadline) {
+                    facade_handle->isSoundAttached() && title_sound->isPlaying(),
+                "normal audio frames must preserve the actual stage BGM handle and playing stream");
+        stage_bgm->stop(6);
+        require(!runtime.audio().has_active_stage_bgm() && facade_handle->isSoundAttached() &&
+                    !playback_observer->is_bgm_stopping(smgpc::runtime::BgmLane::Stage),
+                "logical stop telemetry must leave the original handle attached through its frame-driven fade");
+        const auto deadline = std::chrono::steady_clock::now() + std::chrono::seconds(3);
+        while (facade_handle->isSoundAttached() && std::chrono::steady_clock::now() < deadline) {
+            tick();
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
-        require(!playback_observer->has_active_bgm(smgpc::runtime::BgmLane::Stage) &&
-                    !playback_observer->bgm_id(smgpc::runtime::BgmLane::Stage).has_value(),
-                "RuntimeContext stage fade must reach backend-token retirement");
+        tick();
         auto *manager = AudWrap::getBgmMgr();
-        runtime.begin_frame(smgpc::render::FrameContext{
-            .frame_index = 2U,
-            .frame_time_seconds = 2.0 / 60.0,
-            .frame_delta_seconds = 1.0 / 60.0,
-            .framebuffer = {.width = 320U, .height = 228U},
-        });
-        require(manager->mBgm[AudBgmMgr::BgmType_Stage] == nullptr &&
-                    manager->mKeeper.mSingleBgmActiveFlags == 0U,
-                "post-fade manager movement must release the detached BGM keeper object");
+        require(!facade_handle->isSoundAttached() && manager->mBgm[AudBgmMgr::BgmType_Stage] == nullptr &&
+                    manager->mKeeper.mSingleBgmActiveFlags == 0,
+                "original stream retirement must release the final stage handle and keeper object");
+
     }
 
     void test_runtime_sound_util_backend_binding_in_fresh_process(

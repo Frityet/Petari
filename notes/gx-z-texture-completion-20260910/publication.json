@@ -1,0 +1,19 @@
+{
+  "commit": "108f5253898350b970233dc257b06d27f2ddb71e",
+  "author": "codex <codex@openai.com>",
+  "committer": "codex <codex@openai.com>",
+  "files": [
+    "lib/dolphin/gx/GXTev.cpp",
+    "lib/gfx/texture_convert.cpp",
+    "lib/gx/gx.cpp",
+    "lib/gx/gx.hpp",
+    "lib/gx/regs.cpp",
+    "lib/gx/shader.cpp",
+    "lib/gx/shader_info.cpp",
+    "lib/gx/texture.cpp",
+    "tests/CMakeLists.txt",
+    "tests/gx_z_texture_render_test.cpp"
+  ],
+  "pushed_branch": "origin/codex/macos-compat",
+  "remote_exact_hash_verified_before_audio_publication": true
+}

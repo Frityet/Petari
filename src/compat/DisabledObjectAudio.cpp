@@ -18,18 +18,7 @@ std::size_t DisabledObjectAudio::declined_requests() noexcept {
 }
 }
 
-// These classes own ordinary detached Aurora handles, never a second handle
-// ABI or an invented SDK sound/track graph. No start entrypoint attaches them.
-JAISound* JAISoundHandles::getSound(int) { return nullptr; }
-JAISoundHandle* JAISoundHandles::getHandleSoundID(JAISoundID) { return nullptr; }
-JAISoundHandle* JAISoundHandles::getHandleUserData(u32) { return nullptr; }
-JAISoundHandle* JAISoundHandles::getFreeHandle() {
-    for (int i = 0; i < mNumHandles; ++i)
-        if (!mHandles[i].isSoundAttached()) return &mHandles[i];
-    return nullptr;
-}
-void JAISoundHandles::setPos(const TVec3f&) {}
-
+// Object audio remains deliberately disabled; the shared SDK handle queries are original.
 JAUSoundObject::JAUSoundObject() : JAUSoundObject(nullptr, 0, nullptr) {}
 JAUSoundObject::JAUSoundObject(TVec3f* position, u8 count, JKRHeap* heap)
     : JAISoundHandles(new (heap, 0) JAISoundHandle[count], count), mIsAllocated(true), _10(0), mPos(position) {}

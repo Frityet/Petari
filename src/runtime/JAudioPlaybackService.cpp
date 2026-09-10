@@ -4,6 +4,8 @@
 
 #include "compat/JAudioSoundParameterSemantics.hpp"
 #include "compat/JAudioCategoryVolumeOwnership.hpp"
+#include "compat/NativePcmSound.hpp"
+#include "compat/JaiStreamPlayback.hpp"
 #include "resource/Yaz0.hpp"
 #include "runtime/RuntimeServices.hpp"
 
@@ -102,6 +104,7 @@ namespace smgpc::runtime {
             aurora::throw_host_exception<std::invalid_argument>(
                 "JAudio playback requires a retail stream loader");
         }
+        _stream_playback = std::make_unique<compat::JaiStreamPlayback>(*_mixer, _stream_loader);
     }
 
     JAudioPlaybackService::~JAudioPlaybackService() {
@@ -109,38 +112,21 @@ namespace smgpc::runtime {
     }
 
     void JAudioPlaybackService::begin_frame(std::uint64_t frame_index) {
-        if (_frame_open) {
-            aurora::throw_host_exception<std::logic_error>(
-                "JAudio playback frame was begun before the previous frame ended");
-        }
-
+        if (_frame_open) aurora::throw_host_exception<std::logic_error>("JAudio frame is already open");
         _category_volume->update();
         apply_category_gains();
         _frame_index = frame_index;
         _frame_open = true;
         require_working_output();
         retire_finished_voices();
-        for (auto &[sound_id, voice] : _level_voices) {
-            (void)sound_id;
-            voice.refreshed = false;
-        }
     }
 
     void JAudioPlaybackService::end_frame() {
-        if (!_frame_open) {
-            aurora::throw_host_exception<std::logic_error>(
-                "JAudio playback frame ended without a matching begin");
-        }
-
+        if (!_frame_open) aurora::throw_host_exception<std::logic_error>("JAudio frame was not opened");
         require_working_output();
-        retire_finished_voices();
-        for (auto &[sound_id, voice] : _level_voices) {
-            (void)sound_id;
-            if (voice.token && !voice.refreshed && !voice.releasing) {
-                _mixer->release_voice(voice.token);
-                voice.releasing = true;
-            }
-        }
+        for (auto& [id, voice] : _level_voices) if (voice.sound) voice.sound->advance();
+        for (auto& [token, voice] : _sound_effect_voices) voice->sound->advance();
+        _stream_playback->advance();
         retire_finished_voices();
         _frame_open = false;
     }
@@ -179,61 +165,27 @@ namespace smgpc::runtime {
         retire_finished_voices();
 
         auto existing = _level_voices.find(*sound_id);
-        if (existing != _level_voices.end() && existing->second.token) {
-            auto &voice = existing->second;
-            if (!voice.handle.isBackendAttached(this, voice.token.value)) {
-                aurora::throw_host_exception<std::logic_error>(
-                    "JAudio level handle detached before its backend voice ended");
-            }
-            if (_mixer->try_update_voice(voice.token,
-                                         adjustment->gain_multiplier,
-                                         adjustment->pitch_multiplier)) {
-                voice.refreshed = true;
-                return &voice.handle;
-            }
-
-            // The audio callback can retire a release-complete voice after
-            // retire_finished_voices() but before this update. Treat that as
-            // the same detach boundary JAudio reaches at sound-handle release,
-            // then attach the stable logical handle to a fresh backend token.
-            voice.token = {};
-            voice.handle.releaseSound();
-            voice.refreshed = false;
-            voice.releasing = false;
-        }
-
         if (existing == _level_voices.end()) {
             const auto recipe = _archive->resolve_persistent_sound(name);
-            if (!recipe.has_value()) {
-                aurora::throw_host_exception<std::logic_error>(
-                    "JAudio sound disappeared between name lookup and recipe resolution");
-            }
-            existing = _level_voices.emplace(
-                                        *sound_id,
-                                        LevelVoiceEntry{
-                                            .name = std::string(name),
-                                            .recipe = *recipe,
-                                            .token = {},
-                                            .handle = {},
-                                            .refreshed = false,
-                                            .releasing = false,
-                                        })
-                           .first;
+            if (!recipe) aurora::throw_host_exception<std::logic_error>("Resolved level sound has no PCM recipe");
+            LevelVoiceEntry entry;
+            entry.name = name;
+            entry.recipe = *recipe;
+            existing = _level_voices.emplace(*sound_id, std::move(entry)).first;
         }
-
-        auto &voice = existing->second;
-        if (voice.name != name) {
-            aurora::throw_host_exception<std::logic_error>(
-                "Two JAudio names unexpectedly resolved to one level-sound ID");
+        auto& voice = existing->second;
+        if (!voice.sound || voice.sound->isDead()) {
+            auto spec = voice.recipe.voice;
+            spec.bus_gain_multiplier = sound_category_gain(*sound_id);
+            voice.sound = std::make_unique<compat::NativePcmSound>(*_mixer, JAISoundID(*sound_id), spec);
+            voice.sound->attachHandle(&voice.handle);
+            voice.sound->setLifeTime(1, false);
+        } else {
+            voice.sound->updateLifeTime(1);
         }
-        auto spec = voice.recipe.voice;
-        spec.gain_multiplier = adjustment->gain_multiplier;
-        spec.pitch_multiplier = adjustment->pitch_multiplier;
-        spec.bus_gain_multiplier = sound_category_gain(*sound_id);
-        voice.token = _mixer->start_voice(spec);
-        voice.handle.attachBackend(this, voice.token.value);
-        voice.refreshed = true;
-        voice.releasing = false;
+        voice.sound->getProperty().mVolume = adjustment->gain_multiplier;
+        voice.sound->getProperty().mPitch = adjustment->pitch_multiplier;
+        voice.sound->mix();
         return &voice.handle;
     }
 
@@ -279,21 +231,15 @@ namespace smgpc::runtime {
         retire_finished_voices();
         auto spec = recipe->second.voice;
         spec.bus_gain_multiplier = sound_category_gain(*sound_id);
-        const auto token = _mixer->start_voice(spec);
         auto voice = std::make_unique<SoundEffectVoiceEntry>();
-        voice->name = std::string(name);
+        voice->name = name;
         voice->sound_id = *sound_id;
-        voice->token = token;
-        voice->handle.attachBackend(this, token.value);
-        auto *handle = &voice->handle;
-        const auto [position, inserted] =
-            _sound_effect_voices.emplace(token.value, std::move(voice));
-        (void)position;
-        if (!inserted) {
-            _mixer->stop_voice(token);
-            aurora::throw_host_exception<std::logic_error>(
-                "JAudio mixer reused an active backend token");
-        }
+        voice->sound = std::make_unique<compat::NativePcmSound>(*_mixer, JAISoundID(*sound_id), spec);
+        voice->sound->attachHandle(&voice->handle);
+        const auto token = voice->sound->token();
+        auto* handle = &voice->handle;
+        const auto [position, inserted] = _sound_effect_voices.emplace(token.value, std::move(voice));
+        if (!inserted) aurora::throw_host_exception<std::logic_error>("PCM mixer reused a live token");
         return handle;
     }
 
@@ -316,13 +262,8 @@ namespace smgpc::runtime {
             if (voice->sound_id != *sound_id) {
                 continue;
             }
-            if (delay_frames == 0U) {
-                _mixer->stop_voice(voice->token);
-            } else {
-                _mixer->fade_out_voice(
-                    voice->token,
-                    static_cast<double>(delay_frames) / 60.0);
-            }
+            voice->sound->stop(delay_frames);
+            voice->sound->mix();
         }
         retire_finished_voices();
     }
@@ -387,12 +328,11 @@ namespace smgpc::runtime {
     }
 
     void JAudioPlaybackService::apply_category_gains() {
-        for (const auto &[sound_id, voice] : _level_voices) {
-            (void)_mixer->try_set_voice_bus_gain(voice.token, sound_category_gain(sound_id));
+        for (const auto& [id, voice] : _level_voices) if (voice.sound) {
+            (void)_mixer->try_set_voice_bus_gain(voice.sound->token(), sound_category_gain(id));
         }
-        for (const auto &[token, voice] : _sound_effect_voices) {
-            (void)token;
-            (void)_mixer->try_set_voice_bus_gain(voice->token, sound_category_gain(voice->sound_id));
+        for (const auto& [token, voice] : _sound_effect_voices) {
+            (void)_mixer->try_set_voice_bus_gain(voice->sound->token(), sound_category_gain(voice->sound_id));
         }
     }
 
@@ -437,122 +377,55 @@ namespace smgpc::runtime {
                 "The retail JAudio stream has no concrete disc path");
         }
 
-        auto recipe = aurora::audio::decode_jaudio_stream(
-            _stream_loader(metadata.stream_path), metadata.channel_control);
-        recipe.voice.gain_multiplier =
-            static_cast<float>(metadata.volume) / 255.0F;
-
         _mixer->open_default_playback();
         require_working_output();
-
-        if (_bgm_voices[static_cast<std::size_t>(lane)].has_value()) {
-            _mixer->stop_voice(_bgm_voices[static_cast<std::size_t>(lane)]->token);
-            _bgm_voices[static_cast<std::size_t>(lane)].reset();
-            _bgm_handles[static_cast<std::size_t>(lane)].releaseSound();
-        }
-
-        const auto token = _mixer->start_voice(recipe.voice);
-        try {
-            if (prepared) {
-                _mixer->set_voice_paused(token, true);
-            }
-            _bgm_handles[static_cast<std::size_t>(lane)].attachBackend(this, token.value);
-            _bgm_voices[static_cast<std::size_t>(lane)] = BgmVoiceEntry{
-                .name = std::string(name),
-                .metadata = std::move(metadata),
-                .recipe = std::move(recipe),
-                .token = token,
-                .prepared = prepared,
-                .unlocked = !prepared,
-                .host_paused = false,
-                .stopping = false,
-            };
-        } catch (...) {
-            _mixer->stop_voice(token);
-            _bgm_handles[static_cast<std::size_t>(lane)].releaseSound();
-            throw;
-        }
-        return &_bgm_handles[static_cast<std::size_t>(lane)];
+        stop_bgm(lane, 0);
+        const auto index = static_cast<std::size_t>(lane);
+        auto* sound = _stream_playback->start(metadata, _bgm_handles[index], prepared);
+        if (!sound) return nullptr;
+        _bgm_voices[index] = BgmVoiceEntry{std::string(name), std::move(metadata), sound};
+        return &_bgm_handles[index];
     }
 
     void JAudioPlaybackService::unlock_bgm(BgmLane lane) {
         retire_finished_voices();
-        if (!_bgm_voices[static_cast<std::size_t>(lane)].has_value()) {
-            aurora::throw_host_exception<std::logic_error>(
-                "Cannot unlock BGM without a concrete backend voice");
-        }
-        if (_bgm_voices[static_cast<std::size_t>(lane)]->prepared && !_bgm_voices[static_cast<std::size_t>(lane)]->unlocked) {
-            _bgm_voices[static_cast<std::size_t>(lane)]->unlocked = true;
-            _mixer->set_voice_paused(_bgm_voices[static_cast<std::size_t>(lane)]->token,
-                                     _bgm_voices[static_cast<std::size_t>(lane)]->host_paused);
-        }
+        auto* sound = bgm_sound(lane);
+        if (!sound) aurora::throw_host_exception<std::logic_error>("Cannot unlock an absent original stream");
+        sound->unlockIfLocked();
+        _stream_playback->mix();
     }
 
     void JAudioPlaybackService::stop_bgm(BgmLane lane, std::uint32_t fade_frames) {
         retire_finished_voices();
-        if (!_bgm_voices[static_cast<std::size_t>(lane)].has_value()) {
-            return;
-        }
-        if (fade_frames == 0U) {
-            _mixer->stop_voice(_bgm_voices[static_cast<std::size_t>(lane)]->token);
-            _bgm_voices[static_cast<std::size_t>(lane)].reset();
-            _bgm_handles[static_cast<std::size_t>(lane)].releaseSound();
-            return;
-        }
-        // A prepared or explicitly paused host voice cannot advance its gain
-        // ramp. Release the mixer pause as the host mechanism for preserving
-        // JAudio's stop/fade retirement lifecycle, including a stop issued
-        // before the first unlock.
-        _mixer->set_voice_paused(_bgm_voices[static_cast<std::size_t>(lane)]->token, false);
-        _bgm_voices[static_cast<std::size_t>(lane)]->unlocked = true;
-        _bgm_voices[static_cast<std::size_t>(lane)]->host_paused = false;
-        _mixer->fade_out_voice(
-            _bgm_voices[static_cast<std::size_t>(lane)]->token, static_cast<double>(fade_frames) / 60.0);
-        _bgm_voices[static_cast<std::size_t>(lane)]->stopping = true;
+        if (auto* sound = bgm_sound(lane)) sound->stop(fade_frames);
     }
 
     void JAudioPlaybackService::pause_bgm(BgmLane lane, bool paused) {
         retire_finished_voices();
-        if (!_bgm_voices[static_cast<std::size_t>(lane)].has_value()) {
-            aurora::throw_host_exception<std::logic_error>(
-                "Cannot change BGM pause state without a concrete backend voice");
-        }
-        if (_bgm_voices[static_cast<std::size_t>(lane)]->stopping) {
-            aurora::throw_host_exception<std::logic_error>(
-                "Cannot change BGM pause state while its concrete voice is stopping");
-        }
-        _bgm_voices[static_cast<std::size_t>(lane)]->host_paused = paused;
-        const auto preparation_locked =
-            _bgm_voices[static_cast<std::size_t>(lane)]->prepared && !_bgm_voices[static_cast<std::size_t>(lane)]->unlocked;
-        _mixer->set_voice_paused(_bgm_voices[static_cast<std::size_t>(lane)]->token,
-                                 paused || preparation_locked);
+        auto* sound = bgm_sound(lane);
+        if (!sound) aurora::throw_host_exception<std::logic_error>("Cannot pause an absent original stream");
+        sound->pause(paused);
+        _stream_playback->mix();
     }
 
     bool JAudioPlaybackService::is_bgm_prepared(BgmLane lane) const {
-        return _bgm_voices[static_cast<std::size_t>(lane)].has_value() && _bgm_voices[static_cast<std::size_t>(lane)]->prepared &&
-               !_bgm_voices[static_cast<std::size_t>(lane)]->unlocked &&
-               _mixer->is_voice_active(_bgm_voices[static_cast<std::size_t>(lane)]->token);
+        auto* sound = bgm_sound(lane);
+        return sound && sound->isPrepared();
     }
 
     bool JAudioPlaybackService::is_bgm_paused(BgmLane lane) const {
-        if (!has_active_bgm(lane)) {
-            return false;
-        }
-        const auto paused = _mixer->voice_paused(_bgm_voices[static_cast<std::size_t>(lane)]->token);
-        if (!paused.has_value()) {
-            aurora::throw_host_exception<std::logic_error>(
-                "Active BGM token disappeared during its pause query");
-        }
-        return *paused;
+        auto* sound = bgm_sound(lane);
+        return sound && sound->isPaused();
     }
 
     bool JAudioPlaybackService::is_bgm_stopping(BgmLane lane) const {
-        return has_active_bgm(lane) && _bgm_voices[static_cast<std::size_t>(lane)]->stopping;
+        auto* sound = bgm_sound(lane);
+        return sound && sound->isStopping();
     }
 
     bool JAudioPlaybackService::has_active_bgm(BgmLane lane) const {
-        return _bgm_voices[static_cast<std::size_t>(lane)].has_value() &&
-               _mixer->is_voice_active(_bgm_voices[static_cast<std::size_t>(lane)]->token);
+        auto* sound = bgm_sound(lane);
+        return sound && sound->mHandle && !sound->isDead();
     }
 
     std::optional<std::uint32_t> JAudioPlaybackService::bgm_id(BgmLane lane) const {
@@ -570,27 +443,18 @@ namespace smgpc::runtime {
     }
 
     JAISoundHandle *JAudioPlaybackService::bgm_handle(BgmLane lane) {
-        if (!has_active_bgm(lane)) {
-            return nullptr;
-        }
-        if (!_bgm_handles[static_cast<std::size_t>(lane)].isBackendAttached(this, _bgm_voices[static_cast<std::size_t>(lane)]->token.value)) {
-            aurora::throw_host_exception<std::logic_error>(
-                "BGM handle is detached from its concrete backend voice");
-        }
-        return &_bgm_handles[static_cast<std::size_t>(lane)];
+        auto* sound = bgm_sound(lane);
+        return sound && !sound->isDead() ? sound->mHandle : nullptr;
     }
 
     std::uint64_t JAudioPlaybackService::bgm_backend_token(BgmLane lane) const {
-        if (!has_active_bgm(lane)) {
-            return 0U;
-        }
-        return _bgm_voices[static_cast<std::size_t>(lane)]->token.value;
+        return _stream_playback->token(bgm_sound(lane)).value;
     }
 
     void JAudioPlaybackService::set_bgm_bus_gain(BgmLane lane, float volume) {
-        auto &voice = _bgm_voices[static_cast<std::size_t>(lane)];
-        if (voice.has_value()) {
-            (void)_mixer->try_set_voice_bus_gain(voice->token, volume);
+        if (auto* sound = bgm_sound(lane)) {
+            sound->getAuxiliary().moveVolume(volume, 0);
+            _stream_playback->mix();
         }
     }
 
@@ -599,28 +463,16 @@ namespace smgpc::runtime {
     }
 
     void JAudioPlaybackService::reset_scene() {
-        _mixer->stop_all_voices();
-        for (auto &[sound_id, voice] : _level_voices) {
-            (void)sound_id;
-            voice.token = {};
-            voice.handle.releaseSound();
-            voice.refreshed = false;
-            voice.releasing = false;
-        }
-        for (auto &[token, voice] : _sound_effect_voices) {
-            (void)token;
-            voice->token = {};
-            voice->handle.releaseSound();
-        }
+        if (_stream_playback) _stream_playback->reset();
+        for (auto& [id, voice] : _level_voices) voice.sound.reset();
         _sound_effect_voices.clear();
         _retired_sound_effect_voices.clear();
+        _mixer->stop_all_voices();
         _category_volume->reset();
         _trigger_sound_permitted = true;
         _level_sound_permitted = true;
-        for (std::size_t index = 0; index < _bgm_voices.size(); ++index) {
-            _bgm_voices[index].reset();
-            _bgm_handles[index].releaseSound();
-        }
+        for (auto& voice : _bgm_voices) voice.reset();
+        // Scene teardown may occur between begin_frame and end_frame.
     }
 
     bool JAudioPlaybackService::is_device_open() const {
@@ -628,25 +480,7 @@ namespace smgpc::runtime {
     }
 
     std::size_t JAudioPlaybackService::active_voice_count() const {
-        auto count = std::size_t{0};
-        for (const auto &[sound_id, voice] : _level_voices) {
-            (void)sound_id;
-            if (voice.token && _mixer->is_voice_active(voice.token)) {
-                ++count;
-            }
-        }
-        for (const auto &[token, voice] : _sound_effect_voices) {
-            (void)token;
-            if (voice->token && _mixer->is_voice_active(voice->token)) {
-                ++count;
-            }
-        }
-        for (const auto &voice : _bgm_voices) {
-            if (voice.has_value() && _mixer->is_voice_active(voice->token)) {
-                ++count;
-            }
-        }
-        return count;
+        return _mixer->active_voice_count();
     }
 
     aurora::audio::PlaybackStats
@@ -666,57 +500,47 @@ namespace smgpc::runtime {
     }
 
     void JAudioPlaybackService::require_working_output() const {
-        const auto has_backend_voice = std::ranges::any_of(
-            _level_voices, [this](const auto &entry) {
-                return entry.second.token &&
-                       _mixer->is_voice_active(entry.second.token);
-            });
-        const auto has_bgm_voice = std::ranges::any_of(_bgm_voices, [this](const auto &voice) {
-            return voice.has_value() && voice->token && _mixer->is_voice_active(voice->token);
-        });
-        const auto has_sound_effect_voice = std::ranges::any_of(
-            _sound_effect_voices, [this](const auto &entry) {
-                return entry.second->token &&
-                       _mixer->is_voice_active(entry.second->token);
-            });
-        if ((has_backend_voice || has_bgm_voice || has_sound_effect_voice) &&
-            !_mixer->is_device_open()) {
-            aurora::throw_host_exception<std::runtime_error>(
-                "SDL JAudio playback device stopped accepting mixed audio");
+        if (active_voice_count() && !_mixer->is_device_open()) {
+            aurora::throw_host_exception<std::runtime_error>("SDL JAudio device stopped accepting mixed audio");
         }
     }
 
     void JAudioPlaybackService::retire_finished_voices() {
-        const auto host_allocations = aurora::allocation::HostAllocationScope{};
-        for (auto &[sound_id, voice] : _level_voices) {
-            (void)sound_id;
-            if (voice.token && !_mixer->is_voice_active(voice.token)) {
-                voice.token = {};
-                voice.handle.releaseSound();
-                voice.refreshed = false;
-                voice.releasing = false;
-            }
+        const aurora::allocation::HostAllocationScope host;
+        for (auto& [id, voice] : _level_voices) if (voice.sound) voice.sound->reconcile_completion();
+        for (auto it = _sound_effect_voices.begin(); it != _sound_effect_voices.end();) {
+            it->second->sound->reconcile_completion();
+            if (!it->second->sound->isDead()) { ++it; continue; }
+            _retired_sound_effect_voices.push_back(std::move(it->second));
+            it = _sound_effect_voices.erase(it);
         }
-        for (auto voice = _sound_effect_voices.begin();
-             voice != _sound_effect_voices.end();) {
-            if (voice->second->token &&
-                _mixer->is_voice_active(voice->second->token)) {
-                ++voice;
-                continue;
-            }
-            voice->second->token = {};
-            voice->second->handle.releaseSound();
-            _retired_sound_effect_voices.push_back(
-                std::move(voice->second));
-            voice = _sound_effect_voices.erase(voice);
+        if (_stream_playback) _stream_playback->reconcile();
+        for (auto& voice : _bgm_voices) if (voice && !_stream_playback->find(voice->sound)) voice.reset();
+    }
+
+    JAISound* JAudioPlaybackService::bgm_sound(BgmLane lane) const {
+        const auto& voice = _bgm_voices[static_cast<std::size_t>(lane)];
+        return voice ? _stream_playback->find(voice->sound) : nullptr;
+    }
+    void JAudioPlaybackService::bind_bgm_handle(BgmLane lane, JAISoundHandle& handle) {
+        auto* sound = bgm_sound(lane);
+        if (sound && sound->mHandle) {
+            if (sound->mHandle != &handle) sound->attachHandle(&handle);
+        } else {
+            handle.releaseSound();
         }
-        for (std::size_t index = 0; index < _bgm_voices.size(); ++index) {
-            auto &voice = _bgm_voices[index];
-            if (voice.has_value() && voice->token && !_mixer->is_voice_active(voice->token)) {
-                voice.reset();
-                _bgm_handles[index].releaseSound();
-            }
-        }
+    }
+    std::uint64_t JAudioPlaybackService::sound_backend_token(const JAISound* sound) const {
+        if (!sound) return 0;
+        for (const auto& [id, voice] : _level_voices) if (voice.sound.get() == sound) return voice.sound->token().value;
+        for (const auto& [token, voice] : _sound_effect_voices) if (voice->sound.get() == sound) return voice->sound->token().value;
+        return _stream_playback->token(sound).value;
+    }
+    bool JAudioPlaybackService::owns_sound(const JAISound* sound) const {
+        if (!sound) return false;
+        for (const auto& [id, voice] : _level_voices) if (voice.sound.get() == sound) return true;
+        for (const auto& [token, voice] : _sound_effect_voices) if (voice->sound.get() == sound) return true;
+        return _stream_playback->find(sound) != nullptr;
     }
 
 }  // namespace smgpc::runtime

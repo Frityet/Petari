@@ -4,7 +4,6 @@
 #include "JSystem/JGeometry/TVec.hpp"
 
 class JAISeqDataUser;
-class JAISound;
 
 class JAISoundHandles {
 public:
@@ -21,7 +20,9 @@ public:
         return &mHandles[n];
     }
 
-    JAISound* getSound(int n);
+    JAISound* getSound(int n) {
+        return getHandle(n)->getSound();
+    }
 
     int getNumHandles() const {
         return mNumHandles;

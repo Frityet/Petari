@@ -1,0 +1,14 @@
+{
+  "native_body_matches_current_reference": true,
+  "native_sha256": "b1995be522d03c3005153b54ef3c035b39455f3582c93478fb4d15a0efed368e",
+  "reference_sha256": "54e02a2b3f8da844197436a6b0373027c057b85a07c5569b1055c63d1f984c1c",
+  "existing_wii_objdiff": {
+    "name": "clearZBuffer__2MRFv",
+    "demangled_name": "MR::clearZBuffer()",
+    "address": "836",
+    "size": "860",
+    "flags": 1,
+    "target_symbol": 9,
+    "match_percent": 99.93023
+  }
+}
