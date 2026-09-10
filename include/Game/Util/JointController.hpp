@@ -6,19 +6,11 @@
 class J3DJoint;
 class J3DModel;
 class LiveActor;
-
-struct UnkStruct {
-    u32 _0;
-    u32 _4;
-    u32 _8;
-    u32 _C;
-    u32 _10;
-    u16 _14;
-};
+class JointController;
 
 struct JointControllerInfo {
-    u32 _0;
-    UnkStruct* _4;
+    JointController* mController;
+    J3DJoint* mJoint;
 };
 
 class JointController {
@@ -80,6 +72,7 @@ public:
 
 namespace MR {
     void setJointControllerParam(JointController*, const LiveActor*, const char*);
+    void setJointControllerParam(JointController*, const LiveActor*, u16);
 
     template < class T >
     JointControlDelegator< T >* createJointDelegator(T* pHost, const LiveActor* pActor, bool (T::*calcFunc)(TPos3f*, const JointControllerInfo&),
