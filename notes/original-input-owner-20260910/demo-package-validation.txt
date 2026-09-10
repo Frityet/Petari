@@ -1,0 +1,5 @@
+Local movement demo, 2026-09-10.
+The exact packaged executable completed 960 simulation ticks at 1280x720, exit 0, approximately 59.94 FPS. All 13 synthetic SDL replay checks passed: finite movement/camera, idle grounding, W/A/S/D movement and release, and two jumps that took off and landed.
+The original game WPad controller update, processed stick/buttons and gesture detectors are now active. Five linked input/player ownership fixtures pass. The complete Gateway bunny/Rosalina sequence and complete unlocked Mario spin behavior are not established by these checks.
+Binary SHA256: 019f7be6e2f99ef7db96cb573f9334eba41f63739271f327d7266a68eb8f0f30
+Validation: notes/original-input-owner-20260910/demo-validation-final.json
