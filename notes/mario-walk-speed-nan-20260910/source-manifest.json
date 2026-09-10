@@ -1,0 +1,6 @@
+{
+  "src/Game/Player/MarioWalk.cpp": "1daebdf5951b7cc406fc02820f4507c54f11f2c8a9f161e385becac1954fee66",
+  "decomp/src/Game/Player/MarioWalk.cpp": "1daebdf5951b7cc406fc02820f4507c54f11f2c8a9f161e385becac1954fee66",
+  "decomp/build/original-player-state-recovery-20260907/retail/obj/Game/Player/MarioWalk.o": "fa17169131fe0436bee36ccf64ada6b36fc8464aa931d7f30d3d0da58e331196",
+  "baseline_source_sha256": "a6d0632b42790c836f1a883c94c41b85c97cdaa5bc67c8ab274ff210da1ca026"
+}

@@ -1,0 +1,65 @@
+[
+  {
+    "command": [
+      "git",
+      "diff",
+      "--check",
+      "--",
+      "src/Game/Player/MarioAnimator.cpp"
+    ],
+    "exit_code": 0,
+    "output": ""
+  },
+  {
+    "command": [
+      "git",
+      "commit",
+      "--only",
+      "-m",
+      "Recover original Mario animator update string operands",
+      "--",
+      "src/Game/Player/MarioAnimator.cpp"
+    ],
+    "exit_code": 0,
+    "output": "[pcp-decomp b2e28ab86] Recover original Mario animator update string operands\n 1 file changed, 17 insertions(+), 17 deletions(-)\n"
+  },
+  {
+    "command": [
+      "git",
+      "push",
+      "origin",
+      "HEAD:pcp-decomp"
+    ],
+    "exit_code": 0,
+    "output": "To https://github.com/Frityet/Petari\n   24136fc35..b2e28ab86  HEAD -> pcp-decomp\n"
+  },
+  {
+    "command": [
+      "git",
+      "rev-parse",
+      "HEAD"
+    ],
+    "exit_code": 0,
+    "output": "b2e28ab8691d9de9986d75e09ba068ff695bf03b\n"
+  },
+  {
+    "command": [
+      "git",
+      "ls-remote",
+      "origin",
+      "refs/heads/pcp-decomp"
+    ],
+    "exit_code": 0,
+    "output": "b2e28ab8691d9de9986d75e09ba068ff695bf03b\trefs/heads/pcp-decomp\n"
+  },
+  {
+    "command": [
+      "git",
+      "log",
+      "-1",
+      "--format=fuller"
+    ],
+    "exit_code": 0,
+    "output": "commit b2e28ab8691d9de9986d75e09ba068ff695bf03b\nAuthor:     codex <codex@openai.com>\nAuthorDate: Thu Sep 10 14:03:50 2026 +0100\nCommit:     codex <codex@openai.com>\nCommitDate: Thu Sep 10 14:03:50 2026 +0100\n\n    Recover original Mario animator update string operands\n"
+  }
+]

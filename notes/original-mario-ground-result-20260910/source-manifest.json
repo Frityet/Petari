@@ -1,0 +1,38 @@
+{
+  "decomp/src/Game/Player/Mario.cpp": {
+    "sha256": "1e4d5682147fc13038778ae69865404022f47af7085144906fd421c2df7e2f6b",
+    "bytes": 59794
+  },
+  "src/Game/Player/Mario.cpp": {
+    "sha256": "1e4d5682147fc13038778ae69865404022f47af7085144906fd421c2df7e2f6b",
+    "bytes": 59794
+  },
+  "decomp/AGENT_DECOMP_GUIDE.md": {
+    "sha256": "2c28c000015b9fb724cc0fdd1ffca2ac929386cf12f05a917b66a226b8a21c34",
+    "bytes": 3414
+  },
+  "notes/gateway-audit-20260907/restoration/retail/asm/Game/Player/Mario.s": {
+    "sha256": "4ec43c89f99bdf63d6c73fe777d097ef1cce9c2efa05463c694914812cd8cf34",
+    "bytes": 364630
+  },
+  "notes/gateway-audit-20260907/restoration/retail/obj/Game/Player/Mario.o": {
+    "sha256": "8a0f3fe7833d1f6ffd594bb0780f2f100d9b37b34cd6d946e478c92835008281",
+    "bytes": 62104
+  },
+  "notes/original-mario-ground-result-20260910/baseline.wii.o": {
+    "sha256": "1e1ec6e92e77432f32d34d4212ef873d51947f246da5f5820ced4d4cfb318ea0",
+    "bytes": 551264
+  },
+  "notes/original-mario-ground-result-20260910/fixed.wii.o": {
+    "sha256": "90b6c3fe25ff6e8a8686650e6517366e028a90e51dcee7ca520d4e5d342cacf8",
+    "bytes": 551264
+  },
+  "notes/original-mario-ground-result-20260910/native.Mario.o": {
+    "sha256": "c06d1181dc9ea3b944d2efd234a7daa6800c14b1b04929b1cfeace26bb70b0c5",
+    "bytes": 534328
+  },
+  "notes/wasd-live-trace-20260910/wasd-baseline-summary.json": {
+    "sha256": "cb8d9430f1fb5fb4578f0ebccb474c23070990519ee79037eaa5b84b39b1294e",
+    "bytes": 11381
+  }
+}

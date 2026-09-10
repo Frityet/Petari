@@ -1,0 +1,31 @@
+{
+  "status": "production frozen; Wii and native isolated compile 0; decomp committed/pushed and remote SHA verified",
+  "change_scope": "19 string literals inside MarioAnimator::update only",
+  "sources": [
+    {
+      "path": "decomp/src/Game/Player/MarioAnimator.cpp",
+      "sha256": "3a8243f133b595c371ffc713dae1c8bf8d28c39566748aae052f81f2b8d2c452"
+    },
+    {
+      "path": "src/Game/Player/MarioAnimator.cpp",
+      "sha256": "8604be309e88e86d839e09b0b3b86824aa0675427f825068220a77852e78dbdb"
+    },
+    {
+      "path": "decomp/AGENT_DECOMP_GUIDE.md",
+      "sha256": "2c28c000015b9fb724cc0fdd1ffca2ac929386cf12f05a917b66a226b8a21c34"
+    },
+    {
+      "path": "notes/gateway-audit-20260907/restoration/retail/asm/Game/Player/MarioAnimator.s",
+      "sha256": "83fff17ae1f4e0201480afa78a2270cfb0d7191f1b4df9e9d8ff9f04b9fcb88f"
+    },
+    {
+      "path": "notes/gateway-audit-20260907/restoration/retail/obj/Game/Player/MarioAnimator.o",
+      "sha256": "191c02d972d5b5b0d41393889b4cabe95969a98ff6c5ff8a4b2e9ef37a5c9acd"
+    },
+    {
+      "path": "notes/gateway-audit-20260907/restoration/retail/obj/Game/Player/MarioAnimationEfx.o",
+      "sha256": "f55c861a763cad469b21cca29ea7f15d693ea657b0e237a60104b1655700d73e"
+    }
+  ],
+  "decomp_commit": "b2e28ab8691d9de9986d75e09ba068ff695bf03b"
+}

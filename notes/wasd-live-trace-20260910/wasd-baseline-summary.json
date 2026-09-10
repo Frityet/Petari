@@ -1,0 +1,588 @@
+{
+  "log": "notes/preview-fps-crash-20260910/wasd-baseline.log",
+  "groups": [
+    {
+      "wasd": [],
+      "first_tick": 12.0,
+      "last_tick": 12.0,
+      "sample_count": 1,
+      "input_disabled_samples": 0,
+      "accepted_stick_samples": 0,
+      "jumping_samples": 1,
+      "mario_grounded_samples": 0,
+      "nonfinite_walk_speed_samples": 0,
+      "first": {
+        "tick": 12.0,
+        "jumping": 1.0,
+        "grounded": 0.0,
+        "position": [
+          14517.2061,
+          -12803.0996,
+          6073.35791
+        ],
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "eye": [
+          13433.4473,
+          -13421.1699,
+          5628.92871
+        ],
+        "watch": [
+          13434.3291,
+          -13420.8184,
+          5629.24365
+        ],
+        "up": [
+          0.424741894,
+          -0.8820436,
+          -0.20394595
+        ],
+        "present": 1.0,
+        "bck": "ステージインA",
+        "bck_frame": 12.0,
+        "bck_rate": 1.0,
+        "bck_end": 64.0
+      },
+      "last": {
+        "tick": 12.0,
+        "jumping": 1.0,
+        "grounded": 0.0,
+        "position": [
+          14517.2061,
+          -12803.0996,
+          6073.35791
+        ],
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "eye": [
+          13433.4473,
+          -13421.1699,
+          5628.92871
+        ],
+        "watch": [
+          13434.3291,
+          -13420.8184,
+          5629.24365
+        ],
+        "up": [
+          0.424741894,
+          -0.8820436,
+          -0.20394595
+        ],
+        "present": 1.0,
+        "bck": "ステージインA",
+        "bck_frame": 12.0,
+        "bck_rate": 1.0,
+        "bck_end": 64.0
+      },
+      "position_displacement": 0.0
+    },
+    {
+      "wasd": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "first_tick": 14.0,
+      "last_tick": 79.0,
+      "sample_count": 66,
+      "input_disabled_samples": 66,
+      "accepted_stick_samples": 0,
+      "jumping_samples": 66,
+      "mario_grounded_samples": 0,
+      "nonfinite_walk_speed_samples": 66,
+      "first": {
+        "tick": 14.0,
+        "present": 2.0,
+        "focus": 1.0,
+        "freecam": 0.0,
+        "wasd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "raw_stick": [
+          0.0,
+          0.0
+        ],
+        "consumed_stick": [
+          0.0,
+          0.0
+        ],
+        "stick_pos": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "movement_22": 1.0,
+        "mario_grounded": 0.0,
+        "jumping": 1.0,
+        "input_disable": 1.0,
+        "draw_7": 0.0,
+        "actor_37C": 14.0,
+        "actor_3C0": 0.0,
+        "nerve_change": 1.0,
+        "walk_speed": "nan",
+        "vertical_speed": 1.65998411,
+        "mario_velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "actor_velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "grounded": 0.0,
+        "position": [
+          14526.75,
+          -12804.9658,
+          6075.69043
+        ],
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "eye": [
+          13442.5166,
+          -13423.002,
+          5631.12793
+        ],
+        "watch": [
+          13443.3984,
+          -13422.6504,
+          5631.44287
+        ],
+        "up": [
+          0.424741924,
+          -0.88204366,
+          -0.20394592
+        ],
+        "bck": "ステージインA",
+        "bck_frame": 14.0,
+        "bck_rate": 1.0,
+        "bck_end": 64.0
+      },
+      "last": {
+        "tick": 79.0,
+        "present": 67.0,
+        "focus": 1.0,
+        "freecam": 0.0,
+        "wasd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "raw_stick": [
+          0.0,
+          0.0
+        ],
+        "consumed_stick": [
+          0.0,
+          0.0
+        ],
+        "stick_pos": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "movement_22": 1.0,
+        "mario_grounded": 0.0,
+        "jumping": 1.0,
+        "input_disable": 1.0,
+        "draw_7": 0.0,
+        "actor_37C": 79.0,
+        "actor_3C0": 0.0,
+        "nerve_change": 1.0,
+        "walk_speed": "nan",
+        "vertical_speed": 45.3836784,
+        "mario_velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "actor_velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "grounded": 0.0,
+        "position": [
+          14840.0342,
+          -12840.9404,
+          6153.09814
+        ],
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "eye": [
+          13522.2686,
+          -13703.7236,
+          5582.94336
+        ],
+        "watch": [
+          13523.0967,
+          -13703.2715,
+          5583.27393
+        ],
+        "up": [
+          0.522707462,
+          -0.836011112,
+          -0.166918337
+        ],
+        "bck": "落下",
+        "bck_frame": 15.0,
+        "bck_rate": 1.0,
+        "bck_end": 29.0
+      },
+      "position_displacement": 324.70465870117135
+    },
+    {
+      "wasd": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "first_tick": 80.0,
+      "last_tick": 95.0,
+      "sample_count": 16,
+      "input_disabled_samples": 16,
+      "accepted_stick_samples": 0,
+      "jumping_samples": 16,
+      "mario_grounded_samples": 0,
+      "nonfinite_walk_speed_samples": 16,
+      "first": {
+        "tick": 80.0,
+        "present": 68.0,
+        "focus": 1.0,
+        "freecam": 0.0,
+        "wasd": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "raw_stick": [
+          0.0,
+          1.0
+        ],
+        "consumed_stick": [
+          0.0,
+          0.0
+        ],
+        "stick_pos": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "movement_22": 1.0,
+        "mario_grounded": 0.0,
+        "jumping": 1.0,
+        "input_disable": 1.0,
+        "draw_7": 0.0,
+        "actor_37C": 80.0,
+        "actor_3C0": 0.0,
+        "nerve_change": 1.0,
+        "walk_speed": "nan",
+        "vertical_speed": 46.3233528,
+        "mario_velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "actor_velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "grounded": 0.0,
+        "position": [
+          14844.8662,
+          -12841.1357,
+          6154.36865
+        ],
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "eye": [
+          13524.6367,
+          -13711.3096,
+          5581.56592
+        ],
+        "watch": [
+          13525.4629,
+          -13710.8545,
+          5581.89697
+        ],
+        "up": [
+          0.526131332,
+          -0.834133863,
+          -0.165547937
+        ],
+        "bck": "落下",
+        "bck_frame": 16.0,
+        "bck_rate": 1.0,
+        "bck_end": 29.0
+      },
+      "last": {
+        "tick": 95.0,
+        "present": 83.0,
+        "focus": 1.0,
+        "freecam": 0.0,
+        "wasd": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "raw_stick": [
+          0.0,
+          1.0
+        ],
+        "consumed_stick": [
+          0.0,
+          0.0
+        ],
+        "stick_pos": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "movement_22": 1.0,
+        "mario_grounded": 0.0,
+        "jumping": 1.0,
+        "input_disable": 1.0,
+        "draw_7": 0.0,
+        "actor_37C": 95.0,
+        "actor_3C0": 0.0,
+        "nerve_change": 1.0,
+        "walk_speed": "nan",
+        "vertical_speed": 60.2201157,
+        "mario_velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "actor_velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "grounded": 0.0,
+        "position": [
+          14917.2256,
+          -12842.8457,
+          6173.99951
+        ],
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "eye": [
+          13599.6621,
+          -13780.3086,
+          5583.63135
+        ],
+        "watch": [
+          13600.4648,
+          -13779.8164,
+          5583.9668
+        ],
+        "up": [
+          0.561712146,
+          -0.813439727,
+          -0.150982425
+        ],
+        "bck": "落下",
+        "bck_frame": 0.0,
+        "bck_rate": 1.0,
+        "bck_end": 29.0
+      },
+      "position_displacement": 74.99451668421817
+    },
+    {
+      "wasd": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "first_tick": 96.0,
+      "last_tick": 100.0,
+      "sample_count": 5,
+      "input_disabled_samples": 5,
+      "accepted_stick_samples": 0,
+      "jumping_samples": 5,
+      "mario_grounded_samples": 0,
+      "nonfinite_walk_speed_samples": 5,
+      "first": {
+        "tick": 96.0,
+        "present": 84.0,
+        "focus": 1.0,
+        "freecam": 0.0,
+        "wasd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "raw_stick": [
+          0.0,
+          0.0
+        ],
+        "consumed_stick": [
+          0.0,
+          0.0
+        ],
+        "stick_pos": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "movement_22": 1.0,
+        "mario_grounded": 0.0,
+        "jumping": 1.0,
+        "input_disable": 1.0,
+        "draw_7": 0.0,
+        "actor_37C": 96.0,
+        "actor_3C0": 0.0,
+        "nerve_change": 1.0,
+        "walk_speed": "nan",
+        "vertical_speed": 61.2851334,
+        "mario_velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "actor_velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "grounded": 0.0,
+        "position": [
+          14922.0391,
+          -12842.8799,
+          6175.35059
+        ],
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "eye": [
+          13606.1357,
+          -13783.1621,
+          5584.62988
+        ],
+        "watch": [
+          13606.9375,
+          -13782.668,
+          5584.96582
+        ],
+        "up": [
+          0.563480675,
+          -0.812352419,
+          -0.150242686
+        ],
+        "bck": "落下",
+        "bck_frame": 0.0,
+        "bck_rate": 1.0,
+        "bck_end": 29.0
+      },
+      "last": {
+        "tick": 100.0,
+        "present": 88.0,
+        "focus": 1.0,
+        "freecam": 0.0,
+        "wasd": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "raw_stick": [
+          0.0,
+          0.0
+        ],
+        "consumed_stick": [
+          0.0,
+          0.0
+        ],
+        "stick_pos": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "movement_22": 1.0,
+        "mario_grounded": 0.0,
+        "jumping": 1.0,
+        "input_disable": 1.0,
+        "draw_7": 0.0,
+        "actor_37C": 100.0,
+        "actor_3C0": 0.0,
+        "nerve_change": 1.0,
+        "walk_speed": "nan",
+        "vertical_speed": 65.4270096,
+        "mario_velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "actor_velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "grounded": 0.0,
+        "position": [
+          14941.2871,
+          -12842.9092,
+          6180.78516
+        ],
+        "velocity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "eye": [
+          13633.0996,
+          -13794.6074,
+          5588.91602
+        ],
+        "watch": [
+          13633.8965,
+          -13794.1055,
+          5589.25244
+        ],
+        "up": [
+          0.5707376,
+          -0.807832599,
+          -0.147191435
+        ],
+        "bck": "落下",
+        "bck_frame": 0.0,
+        "bck_rate": 1.0,
+        "bck_end": 29.0
+      },
+      "position_displacement": 20.000522832538355
+    }
+  ]
+}

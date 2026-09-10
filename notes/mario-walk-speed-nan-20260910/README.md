@@ -1,0 +1,16 @@
+# First non-finite Mario walk speed
+
+A conditional hardware watchpoint on the exact baseline binary `93f82c340f122e3ef967a486684138bfc654939e945e7aaf411b76d54f090f11` captured the first write of a non-finite `Mario::mWalkSpeed`. It changes from zero to quiet NaN (`0x7fc00000`) in `Mario::updateWalkSpeed`, called by `Mario::actionMain`, on initialization simulation tick1 (actor `_37C == 1`). The target speed is already NaN while inertia is finite0.94. The actual selected constant table has `mSlowStartTime == 10`; the countdown has just decremented to9. No scripted or physical input was needed. The owned LLDB session and process86602 were stopped after capture.
+
+The decompiled slow-start fraction was reversed. A zero target speed first assigns the timer10, then evaluated `10 / (10 - 10)`, yielding infinity; scaling zero target speed by its square produces NaN. This contaminates the subsequently blended walk speed. It is independent of the separately recovered original ground-check predicate.
+
+Retail `updateWalkSpeed` is at0x8030829C. At0x80308340, `subf r3,r7,r4` computes duration minus timer. The conversion at0x80308360 places that signed difference in f2;0x80308358 places the duration in f0;0x80308364 divides `f2 / f0`. Thus the original fraction is `(duration - timer) / duration`. Only those two source arithmetic lines were corrected, first in decomp, then copied byte-identically into the native port. No guard, epsilon, input override, tuning value, or fallback was added.
+
+Fresh full Wii translation-unit builds and retail objdiff both succeed before and after. The1280-byte retail function score improves97.48125% to97.75938%. Native full translation-unit compile also succeeds. Raw commands, object diffs, extracted retail assembly, original source snapshot, source hashes, and the first-write stack are retained in this folder. Remaining fuzzy-match differences are outside this exact operand correction; this report does not claim a fully matched translation unit.
+
+The reference-only commit `5d1717ac2a29bde78004e4ae915769bf493a34a9` was authored and committed by codex, pushed to `origin/pcp-decomp`, and verified against the remote branch SHA. It contains only `src/Game/Player/MarioWalk.cpp`. Root build/run validation of the native mirror is parent-owned and remains pending as of this note. Source is frozen; no owned debugger/build remains active.
+
+
+## Remaining updateWalkSpeed audit
+
+A subsequent bounded read-only comparison covered the remaining arithmetic, branch predicates, member offsets, constants, and referenced strings of retail `updateWalkSpeed` (0x8030829C–0x80308798), including ordinary idle-to-walk and release. No further semantic differences were confirmed. The previously corrected slow-start division remains the only confirmed defect in this function. The final blend retains the original separate multiplication order and float constants; the check did not treat register allocation or instruction scheduling as gameplay differences. Exact retail strings were decoded from the split object and agree with the source. Audit scope excludes the implementations of called helpers such as `getTargetWalkSpeed` and `decideInertia`. No source edits, builds, or commits were made for this audit. See `remaining-updateWalkSpeed-audit.json`.

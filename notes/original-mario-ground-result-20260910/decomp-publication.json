@@ -1,0 +1,5 @@
+{
+  "commit": "24136fc354b01f3a8de694380067d43e34ef3afd",
+  "remote": "24136fc354b01f3a8de694380067d43e34ef3afd\trefs/heads/pcp-decomp",
+  "show": "commit 24136fc354b01f3a8de694380067d43e34ef3afd\nAuthor:     codex <codex@openai.com>\nAuthorDate: Thu Sep 10 14:03:04 2026 +0100\nCommit:     codex <codex@openai.com>\nCommitDate: Thu Sep 10 14:03:04 2026 +0100\n\n    Fix Mario grounding to preserve checkGround result\n\n src/Game/Player/Mario.cpp | 3 +--\n 1 file changed, 1 insertion(+), 2 deletions(-)\n"
+}

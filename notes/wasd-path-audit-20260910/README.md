@@ -1,0 +1,32 @@
+# Bounded read-only WASD path audit
+
+No production edits, Xmake runs, or new demo launch. This audit found no independently confirmed keyboard-to-Aurora mapping break. It does not claim the user's movement failure is resolved.
+
+## Active path and existing actual evidence
+
+1. `RendererService.cpp:345–370,810–818`: SDL KEY_DOWN/UP uses `event.key.key` and maps W/S/A/D to SUB_STICK_UP/DOWN/LEFT/RIGHT. These are SDL **keycodes**, not scancodes. The installed SDL3 3.4.10 headers define SDLK_W=0x77, A=0x61, S=0x73, D=0x64; SDL_KeyboardEvent documents `key` as the base keycode under current keyboard layout/default keycode options. There is no uppercase-identifier/value mismatch. Physical-layout-independent scancode mapping is not currently used, but no evidence indicates a keyboard-layout failure here.
+2. `aurora/lib/window.cpp:181–282`: events are passed to ImGui, then also appended to the Aurora SDL event list; this path does not filter them with WantCaptureKeyboard. `AuroraWindow::poll_events` forwards them to the host button state. Focus events update a bool but `is_input_pressed` does not zero/filter the state by that bool. SDL itself delivers actual keyboard events to the focused window. No logged evidence establishes that the user's particular keypress had focus.
+3. `RuntimeContext.cpp:769–784`: A/D set X=-1/+1; W/S set Y=+1/-1, diagonals normalize by sqrt(1/2). `:867–871` connects channel0 and publishes sub-stick before camera/player movement. `aurora/lib/wpad.cpp:158–171` stores these signed floats without another deadzone; `sub_stick()` returns them for a connected channel. The 0.2 threshold applies to directional edge flags only.
+4. `RuntimeContext.hpp:393` defaults freecam false; `Showcase.cpp:772` explicitly sets false for Gateway. Only the F9 edge enables it, and the enabled branch zeros stick/buttons at RuntimeContext:850–852. Arrow keys are core D-pad camera controls, independently mapped from WASD.
+5. `GamePadUtilCompat.cpp:182–187,230–235` directly returns channel0 Aurora sub-stick X/Y. Current compile_commands contains this provider and excludes original `Game/Util/GamePadUtil.cpp`; the active Mario query therefore does not depend on WPadStick record publication.
+6. Existing **actual combined preview** log `../preview-fps-crash-20260910/optimized-debug.log:2773` contains `input:wpad_sub_stick (channel=0;x=0.000000;y=1.000000)`. That proves the host published forward analog input during that earlier run, but not that Mario consumed it or that the later user's keypress did. The scripted WPAD `LEFT/RIGHT` fields in optimized-debug.json represent D-pad camera input, not analog WASD; the one-time analog event is separate.
+
+## Original Mario suppression points
+
+`MarioActor::getStickValue` (MarioActorPad.cpp:230; retail 802BBDF8 in the retained MarioActorPad.s:445–482) first zeros both outputs, returns for `MarioModule::isInputDisable`, returns for draw-state `_7`, otherwise calls MR getPlayerStickX/Y. These gates match the retail assembly.
+
+`MarioModule::isInputDisable` (MarioModule.cpp:596; retail 802E9E9C, MarioModule.s:1583–1649) checks movement flag `_22`, active FpView status, running animations `ハード着地`, `中ダメージ着地`, `中後ダメージ着地`, `ステージインB`, then actor `_3C0`. The animation predicates dispatch through the actual XanimePlayer(s); the parent's default-transition recovery may affect their state, but this audit did not infer which guard is currently true.
+
+`Mario::checkKeyLock` (Mario.cpp:387; retail 802A9F0C, Mario.s:958–1009) resets `_22` when not jumping, sets it while actor `_37C <75` or actor nerve cannot change, and clears it while swimming. The actor allows nerve changes only in actual Wait/NoRush (`MarioActor.cpp:2649`). C sets draw `_7`, but all draw flags reset at the start of every Mario update (`:367`), so this is not a permanently latched C flag.
+
+`Mario::inputStick` (:1534) can independently clear a single frame through `_10._28`; otherwise it scales X/Y by1.5, clamps each to±1, computes/clamps magnitude, then applies the original angle margin. The source calls checkKeyLock at update start before inputStick. `MarioMove.cpp:154` sets `_10._28` while `_420` decrements.
+
+## Precise next live trace
+
+Record an actual W key-down/up through `AuroraWindow::Impl::process_sdl_event`; inspect type, key, scancode and windowID. After publication record `_freecam_enabled`, window focus and `aurora::wpad_service().sub_stick(0)`. At `MarioActor::getStickValue` after75 ticks, inspect actor `_37C`, `_3C0`, current nerve, Mario movement `_22`, jumping, draw `_7`, FpView status, and each of the four named animation predicates; then inspect both output floats. At `Mario::inputStick` after its initial input/suppression block inspect `_10._28`, `_420`, mStickPos XYZ; after movement inspect actual actor position, Mario mWalkSpeed/mVelocity and current status. This distinguishes event loss, deliberate original input lock, and later movement suppression without changing flags or bypassing the original state machine. Existing `input:wpad_sub_stick` semantic event is emitted only once per RuntimeContext, so absence of another such line on a later keypress is not evidence of dropped input.
+
+## Existing focused tests and separate compatibility gap
+
+`tests/AuroraNativeTests.cpp:319–353` already asserts direct MR getPlayerStickX/Y matches actual Aurora signed floats, held-state behavior and reversed directional edges; `aurora/tests/wpad_test.cpp` covers0.2 edge thresholds. Neither proves actual Mario movement. `tests/MarioGatewayWalkTests.cpp:174` contains a real SDL_PushEvent key helper and its W test at811 distinguishes Nunchuk Y=1 from D-pad UP, but this old fixture depends on the earlier actor-model API and is not being presented as a current linked gameplay proof. No fixtures were run in this read-only task.
+
+A real **separate** original-Nunchuk-record gap exists: `KPADStatus` in aurora/include/revolution.h currently has no extension stick payload, KPADRead does not publish one, WPADProbe writes device type0, and `WPadOwnership::update_pointer_samples` updates pointer/button records but never mStick/mIsSubPadConnected. Original WPadStick records therefore remain unpopulated. This does not independently explain the current Mario failure because its active MR provider reads Aurora sub_stick directly, as verified above. Generalized extension/record support remains future compatibility work rather than a justified emergency WASD workaround.

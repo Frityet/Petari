@@ -1,0 +1,10 @@
+{
+  "commit": "5d1717ac2a29bde78004e4ae915769bf493a34a9",
+  "branch": "pcp-decomp",
+  "remote_sha_verified": true,
+  "author": "codex <codex@openai.com>",
+  "committer": "codex <codex@openai.com>",
+  "paths": [
+    "src/Game/Player/MarioWalk.cpp"
+  ]
+}

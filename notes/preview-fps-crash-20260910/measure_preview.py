@@ -29,6 +29,8 @@ with (note/(args.name+".log")).open("wb") as log:
      if match:frames.append({"wall_seconds":time.monotonic()-start,"tick":int(match[1]),"present":int(match[2])})
  code=proc.wait()
 result={"command":cmd,"binary_sha256":hashlib.sha256(binary.read_bytes()).hexdigest(),"exit":code,"timeout":timed_out,"wall_seconds":time.monotonic()-start,"frames":frames,"buttons":args.buttons}
+result["sdl_key_script"]=env.get("SMGPC_DEBUG_SDL_KEY_SCRIPT", "")
+result["window_activate_when_shown"]=env.get("SDL_WINDOW_ACTIVATE_WHEN_SHOWN", "default")
 if len(frames)>1:
  result["present_fps"]=(len(frames)-1)/(frames[-1]["wall_seconds"]-frames[0]["wall_seconds"])
  result["simulation_ticks_per_second"]=(frames[-1]["tick"]-frames[0]["tick"])/(frames[-1]["wall_seconds"]-frames[0]["wall_seconds"])

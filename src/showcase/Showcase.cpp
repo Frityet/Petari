@@ -1,6 +1,7 @@
 #include <aurora/exception.hpp>
 #include "Application.hpp"
 #include "app/SimulationClock.hpp"
+#include "app/DebugSdlKeyReplay.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/NameObj/NameObjFactory.hpp"
 #include "Game/Map/PlanetMap.hpp"
@@ -12,6 +13,7 @@
 #include "Game/Player/MarioHolder.hpp"
 #include "Game/System/GameDataFunction.hpp"
 #include "Game/Util/CameraUtil.hpp"
+#include "Game/Util/GamePadUtil.hpp"
 #include "Logger.hpp"
 #include "RendererService.hpp"
 #include "camera/CameraPose.hpp"
@@ -876,6 +878,10 @@ namespace {
             }
 
             auto simulation_clock = smgpc::app::SimulationClock{runtime.frame_index()};
+#ifndef NDEBUG
+            auto key_replay = smgpc::app::DebugSdlKeyReplay(
+                static_cast<SDL_Window*>(window.native_handle().window_handle));
+#endif
             while (window.poll_events()) {
                 if (!simulation_clock.poll()) {
                     std::this_thread::sleep_for(std::chrono::milliseconds{1});
@@ -889,6 +895,7 @@ namespace {
                     while (simulation_clock.advance_frame(frame_context)) {
                         frame_index = frame_context.frame_index;
 #ifndef NDEBUG
+                        if (key_replay.advance(frame_index) && !window.poll_events()) break;
                         if (options.smoke) {
                             runtime.set_j3d_packet_trace_frame(frame_context.frame_index);
                         }
@@ -985,7 +992,40 @@ namespace {
 
 #ifndef NDEBUG
                 if (log_simulation_timing) {
-                    const auto& actor = mario_owner.actor();
+                    auto& actor = mario_owner.actor();
+                    const auto& mario = *actor.mMario;
+                    auto consumed_stick_x = 0.0F;
+                    auto consumed_stick_y = 0.0F;
+                    // This original getter writes only its two output values;
+                    // observe the same gates used by movement without changing them.
+                    actor.getStickValue(&consumed_stick_x, &consumed_stick_y);
+                    std::fprintf(
+                        stderr,
+                        "[smgpc:control] tick=%llu present=%llu focus=%d freecam=%d "
+                        "wasd=(%d,%d,%d,%d) raw_stick=(%.9g,%.9g) "
+                        "consumed_stick=(%.9g,%.9g) stick_pos=(%.9g,%.9g,%.9g) "
+                        "movement_22=%d mario_grounded=%d jumping=%d input_disable=%d draw_7=%d "
+                        "actor_37C=%u actor_3C0=%d nerve_change=%d "
+                        "walk_speed=%.9g vertical_speed=%.9g "
+                        "mario_velocity=(%.9g,%.9g,%.9g) actor_velocity=(%.9g,%.9g,%.9g)\n",
+                        static_cast<unsigned long long>(frame_index),
+                        static_cast<unsigned long long>(rendered_frames),
+                        window.is_focused(), runtime.is_freecam_enabled(),
+                        window.is_input_pressed(smgpc::render::InputButton::SUB_STICK_UP),
+                        window.is_input_pressed(smgpc::render::InputButton::SUB_STICK_LEFT),
+                        window.is_input_pressed(smgpc::render::InputButton::SUB_STICK_DOWN),
+                        window.is_input_pressed(smgpc::render::InputButton::SUB_STICK_RIGHT),
+                        MR::getPlayerStickX(), MR::getPlayerStickY(),
+                        consumed_stick_x, consumed_stick_y,
+                        mario.mStickPos.x, mario.mStickPos.y, mario.mStickPos.z,
+                        static_cast<bool>(mario.mMovementStates._22),
+                        static_cast<bool>(mario.mMovementStates._1),
+                        static_cast<bool>(mario.mMovementStates.jumping),
+                        mario.isInputDisable(), static_cast<bool>(mario.mDrawStates._7),
+                        actor._37C, actor._3C0, actor.isEnableNerveChange(),
+                        mario.mWalkSpeed, mario.mVerticalSpeed,
+                        mario.mVelocity.x, mario.mVelocity.y, mario.mVelocity.z,
+                        actor.mVelocity.x, actor.mVelocity.y, actor.mVelocity.z);
                     const auto& camera = runtime.scene_camera_pose().value_or(initial_camera);
                     std::fprintf(
                         stderr,

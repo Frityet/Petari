@@ -1101,7 +1101,7 @@ void MarioAnimator::update() {
     player = getPlayer();
     player->_71D = prevWalkState;
 
-    if (isWalkOrWaitingMotion() || isAnimationRun("待機")) {
+    if (isWalkOrWaitingMotion() || isAnimationRun("しゃがみ基本")) {
         player = getPlayer();
         _14 = walkStateTable[player->mTargetWalkSpeedIndex];
     } else {
@@ -1121,25 +1121,25 @@ void MarioAnimator::update() {
                 if (player->mMovementStates._B) {
                     player->mMovementStates.jumping = false;
                     player->mMovementStates._B = false;
-                    stopAnimation(nullptr, "着地");
+                    stopAnimation(nullptr, "基本");
                 }
 
                 if (isAnimationStop()) {
-                    changeAnimation("基本", static_cast< const char* >(nullptr));
+                    changeAnimation("崖ふんばり", static_cast< const char* >(nullptr));
                 }
             }
         }
         goto afterBrake;
     }
 
-    if (isAnimationRun("基本")) {
+    if (isAnimationRun("崖ふんばり")) {
         player = getPlayer();
         if (!player->mMovementStates._1) {
-            stopAnimation("基本", "待機");
+            stopAnimation("崖ふんばり", "落下");
             player = getPlayer();
             player->_414 = 15;
         } else {
-            stopAnimation("基本", static_cast< const char* >(nullptr));
+            stopAnimation("崖ふんばり", static_cast< const char* >(nullptr));
         }
     }
 
@@ -1191,9 +1191,9 @@ squatWalk:
             player = getPlayer();
             player->startBas(nullptr, false, 0.0f, 0.0f);
         } else {
-            if (!isAnimationRun("しゃがみ歩き")) {
+            if (!isAnimationRun("幅とび")) {
                 player = getPlayer();
-                player->startBas("しゃがみ待機", false, 0.0f, 79.0f);
+                player->startBas("SquatWalk", false, 0.0f, 79.0f);
             } else {
                 player = getPlayer();
                 player->startBas(nullptr, false, 0.0f, 0.0f);
@@ -1224,19 +1224,19 @@ notSquat:
         player->decideWalkAnimation();
 
         if (mActor->mBeeWallWalk != 0) {
-            updateWalkBas("スケート待機", 59.0f);
+            updateWalkBas("BeeCreepWalk", 59.0f);
         } else {
-            updateWalkBas("走り待機", 59.0f);
+            updateWalkBas("Walk", 59.0f);
         }
         goto afterBrake;
     }
 
-    if (isAnimationRun("壁押し")) {
+    if (isAnimationRun("氷上慣性走行")) {
         stopAnimation(nullptr);
         goto doBrake;
     }
 
-    if (isAnimationRun("壁ずり", 0)) {
+    if (isAnimationRun("壁押し", 0)) {
         player = getPlayer();
         player->decideWalkSpeed();
         player = getPlayer();
@@ -1251,8 +1251,8 @@ notSquat:
         goto doBrake;
     }
 
-    if (!isAnimationRun("待機")) {
-        if (isAnimationRun("ターン")) {
+    if (!isAnimationRun("ハード着地")) {
+        if (isAnimationRun("がんばり走り")) {
             player = getPlayer();
             if (player->_8F0 < 1.0f) {
                 stopAnimation(nullptr);
@@ -1267,17 +1267,17 @@ doBrake:
     player->updateBrakeAnimation();
 
 afterBrake:
-    if (isAnimationRun("着地") || isAnimationRun("ターン")) {
+    if (isAnimationRun("基本") || isAnimationRun("がんばり走り")) {
         setTilt();
     } else {
         resetTilt();
     }
 
-    if (isAnimationRun("スライダー")) {
+    if (isAnimationRun("スライダー尻")) {
         setHipSliderTilt();
     }
 
-    if (isAnimationRun("すべり", 3)) {
+    if (isAnimationRun("坂すべり下向きあおむけ", 3)) {
         setHipSlipTilt();
     }
 

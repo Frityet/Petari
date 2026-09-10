@@ -1,0 +1,16 @@
+[
+  {
+    "kind": "baseline",
+    "symbol": "update__13MarioAnimatorFv",
+    "match_percent": 93.1153,
+    "retail_size": "1804",
+    "candidate_size": "1744"
+  },
+  {
+    "kind": "recovered",
+    "symbol": "update__13MarioAnimatorFv",
+    "match_percent": 93.1153,
+    "retail_size": "1804",
+    "candidate_size": "1744"
+  }
+]

@@ -1366,8 +1366,7 @@ void Mario::updateGroundInfo() {
     if (isEnableCheckGround()) {
         bool b1 = !mMovementStates.jumping && !mMovementStates._1;
 
-        checkGround();
-        mMovementStates._1 = mMovementStates._1F;
+        mMovementStates._1 = checkGround();
 
         if (mDrawStates._18) {
             _3C6++;

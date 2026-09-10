@@ -1,0 +1,34 @@
+{
+  "decomp/src/Game/Player/MarioActor.cpp": {
+    "sha256": "873d905f2501ba9686b969a97a4c28164b3ccd6f9851f6fd5c5da94f3b8ba65f",
+    "bytes": 75463
+  },
+  "src/Game/Player/MarioActor.cpp": {
+    "sha256": "ee01f96b3b59ce9be2856f3752f0b350ba467cd66bd3cc74a0a46a9692d41fb2",
+    "bytes": 75489
+  },
+  "src/Game/Player/MarioActorGravity.cpp": {
+    "sha256": "4f9f0e9959239b43d59400a1a227e7c7cb6440af8e8dfb5dd4e22a3f284b2ae9",
+    "bytes": 11583
+  },
+  "src/Game/Player/MarioJump.cpp": {
+    "sha256": "0f40b65ab2b07c36b6964c35235d170385ffdca36e1fbd1dbef586d882ad8212",
+    "bytes": 74630
+  },
+  "src/compat/GameGravityCompat.cpp": {
+    "sha256": "6044c5cad91fad0aed987f018317cb3e700827de57dee5e8adcee804019c3036",
+    "bytes": 10075
+  },
+  "notes/gateway-audit-20260907/restoration/retail/asm/Game/Player/MarioActor.s": {
+    "sha256": "bbd0aca354f9c547779206de693e8bcfd6b3946a0b946771d6ff738a3f5b6e31",
+    "bytes": 435391
+  },
+  "notes/gateway-audit-20260907/restoration/retail/asm/Game/Player/MarioJump.s": {
+    "sha256": "50843ef7fbd5c080dd51290808d6a8e72c5461919e0b998812bcb695747faf93",
+    "bytes": 439165
+  },
+  "notes/gateway-audit-20260907/restoration/retail/obj/Game/Player/MarioActor.o": {
+    "sha256": "9ab66bef5461e40a06fe9de1983e0f3982510f519b06ec3a839a7270f730322d",
+    "bytes": 81108
+  }
+}

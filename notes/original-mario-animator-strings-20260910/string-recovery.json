@@ -1,0 +1,154 @@
+[
+  {
+    "source_line": 1101,
+    "old": "待機",
+    "new": "しゃがみ基本",
+    "retail_instruction": "802CB6CC",
+    "retail_string_address": "0x805c3ef9",
+    "retail_shift_jis_hex": "82b582e182aa82dd8aee967b"
+  },
+  {
+    "source_line": 1121,
+    "old": "着地",
+    "new": "基本",
+    "retail_instruction": "802CB79C",
+    "retail_string_address": "0x805c3e50",
+    "retail_shift_jis_hex": "8aee967b"
+  },
+  {
+    "source_line": 1125,
+    "old": "基本",
+    "new": "崖ふんばり",
+    "retail_instruction": "802CB7C4",
+    "retail_string_address": "0x805c3f06",
+    "retail_shift_jis_hex": "8a5282d382f182ce82e8"
+  },
+  {
+    "source_line": 1132,
+    "old": "基本",
+    "new": "崖ふんばり",
+    "retail_instruction": "802CB7D8",
+    "retail_string_address": "0x805c3f06",
+    "retail_shift_jis_hex": "8a5282d382f182ce82e8"
+  },
+  {
+    "source_line": 1135,
+    "old": "基本",
+    "new": "崖ふんばり",
+    "retail_instruction": "802CB800",
+    "retail_string_address": "0x805c3f06",
+    "retail_shift_jis_hex": "8a5282d382f182ce82e8"
+  },
+  {
+    "source_line": 1135,
+    "old": "待機",
+    "new": "落下",
+    "retail_instruction": "802CB804",
+    "retail_string_address": "0x805c3f11",
+    "retail_shift_jis_hex": "978e89ba"
+  },
+  {
+    "source_line": 1139,
+    "old": "基本",
+    "new": "崖ふんばり",
+    "retail_instruction": "802CB824",
+    "retail_string_address": "0x805c3f06",
+    "retail_shift_jis_hex": "8a5282d382f182ce82e8"
+  },
+  {
+    "source_line": 1191,
+    "old": "しゃがみ歩き",
+    "new": "幅とび",
+    "retail_instruction": "802CB94C",
+    "retail_string_address": "0x805c3f16",
+    "retail_shift_jis_hex": "959d82c682d1"
+  },
+  {
+    "source_line": 1193,
+    "old": "しゃがみ待機",
+    "new": "SquatWalk",
+    "retail_instruction": "802CB968",
+    "retail_string_address": "0x805c3f1d",
+    "retail_shift_jis_hex": "537175617457616c6b"
+  },
+  {
+    "source_line": 1224,
+    "old": "スケート待機",
+    "new": "BeeCreepWalk",
+    "retail_instruction": "802CBA38",
+    "retail_string_address": "0x805c3f27",
+    "retail_shift_jis_hex": "426565437265657057616c6b"
+  },
+  {
+    "source_line": 1226,
+    "old": "走り待機",
+    "new": "Walk",
+    "retail_instruction": "802CBA4C",
+    "retail_string_address": "0x805c3f34",
+    "retail_shift_jis_hex": "57616c6b"
+  },
+  {
+    "source_line": 1231,
+    "old": "壁押し",
+    "new": "氷上慣性走行",
+    "retail_instruction": "802CBA5C",
+    "retail_string_address": "0x805c3f39",
+    "retail_shift_jis_hex": "95588fe38ab590ab91968d73"
+  },
+  {
+    "source_line": 1236,
+    "old": "壁ずり",
+    "new": "壁押し",
+    "retail_instruction": "802CBA84",
+    "retail_string_address": "0x805c3f46",
+    "retail_shift_jis_hex": "95c7899f82b5"
+  },
+  {
+    "source_line": 1251,
+    "old": "待機",
+    "new": "ハード着地",
+    "retail_instruction": "802CBAF0",
+    "retail_string_address": "0x805c3e87",
+    "retail_shift_jis_hex": "836e815b83689285926e"
+  },
+  {
+    "source_line": 1252,
+    "old": "ターン",
+    "new": "がんばり走り",
+    "retail_instruction": "802CBB04",
+    "retail_string_address": "0x805c3f4d",
+    "retail_shift_jis_hex": "82aa82f182ce82e8919682e8"
+  },
+  {
+    "source_line": 1267,
+    "old": "着地",
+    "new": "基本",
+    "retail_instruction": "802CBB58",
+    "retail_string_address": "0x805c3e50",
+    "retail_shift_jis_hex": "8aee967b"
+  },
+  {
+    "source_line": 1267,
+    "old": "ターン",
+    "new": "がんばり走り",
+    "retail_instruction": "802CBB6C",
+    "retail_string_address": "0x805c3f4d",
+    "retail_shift_jis_hex": "82aa82f182ce82e8919682e8"
+  },
+  {
+    "source_line": 1273,
+    "old": "スライダー",
+    "new": "スライダー尻",
+    "retail_instruction": "802CBB94",
+    "retail_string_address": "0x805c3f5a",
+    "retail_shift_jis_hex": "835883898343835f815b904b"
+  },
+  {
+    "source_line": 1277,
+    "old": "すべり",
+    "new": "坂すべり下向きあおむけ",
+    "retail_instruction": "802CBBB0",
+    "retail_string_address": "0x805c3f67",
+    "retail_shift_jis_hex": "8de282b782d782e889ba8cfc82ab82a082a882de82af"
+  }
+]
