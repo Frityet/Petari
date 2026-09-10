@@ -24,7 +24,7 @@ public:
     }
 
     void clearState(EIoState state) {
-        mState &= state;
+        mState &= ~state;
     }
 
     u8 getState(EIoState state) {

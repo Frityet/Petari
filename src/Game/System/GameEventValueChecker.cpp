@@ -83,9 +83,13 @@ s32 GameEventValueChecker::deserialize(const u8* pData, u32 maxBufferSize) {
     JSUMemoryInputStream stream(pData, maxBufferSize);
 
     s32 numEntries = static_cast< s32 >(maxBufferSize) / 2;
+    u16 readHash;
+    u16 readValue;
     for (s32 idx = 0; idx < numEntries; idx++) {
-        u16 hash = stream.readU16();
-        u16 value = stream.readU16();
+        stream.read(&readHash, sizeof(readHash));
+        u16 hash = readHash;
+        stream.read(&readValue, sizeof(readValue));
+        u16 value = readValue;
 
         s32 valueIndex = findIndexFromHashCode(hash);
         if (valueIndex >= 0) {
