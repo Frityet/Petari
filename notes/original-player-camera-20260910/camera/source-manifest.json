@@ -1,0 +1,15 @@
+{
+  "src/Game/Util/CameraUtil.cpp": "9a2f605f0568bf85cd21fb88ac6c706b2def153161d1204d7fd496ce03ba21e3",
+  "src/Game/LiveActor/MirrorCamera.hpp": "f59c6d80fced258b5c896ebeac0d893fc05c60acff074c658b2e91acb899b644",
+  "src/JSystem/JGeometry/TVec.hpp": "e05e53d956b8d89b231509f13e82ed545e361b540e3904b20b472656f21bdd0d",
+  "src/compat/CameraUtilCompat.cpp": "63c9f61813214aecc13330387813c9b582f19df840deb3eedcbcef84986b77d6",
+  "src/compat/OriginalCameraOwnerUtil.cpp": "344b27def7cdb0f92e67509b9a0f26f03944946355e1f6f632c72a2c67a10367",
+  "src/compat/CameraLocalUtilRuntime.cpp": "175aab2f433ec97cb56100db98ee349bd0f4d9d1e66410aa3e02e7c1686a56ac",
+  "src/compat/SceneInitializationCompat.cpp": "1dd1a0ab674a4c66a2bce778b5a18bd4ee98405d027f4663f44a4e392c41da0b",
+  "src/compat/OriginalImageEffectUtil.cpp": "0a9d584d68b115783f8daf0d1a51c1d06fd2c9e7742e62fbf4167b8740af1211",
+  "src/compat/OriginalGCaptureQueries.cpp": "bb54394c8d1f8930501510dac9f664a4bf2ed32f37df50aab58bcf4e96245bf3",
+  "src/camera/CameraDirectorRuntime.cpp": "2a45d5b1247d70b2e7a0b96399988874f09c04408b63e70dc75aa3f791c54322",
+  "src/camera/CameraDirectorRuntime.hpp": "70dd1622a3f285cd1522a236597cd435e2ab1655441f118429bbab5df67401ff",
+  "tests/OriginalCameraContextTests.cpp": "096c4fbd5fe9c34ba8894b28edd51a2f7d8691eec2dc71150e7715f8858293b4",
+  "tests/CameraUtilRealOrAbsentTests.cpp": "d62f92f0f07501fd9fd07f156684db93605fe899ba29e506d39e4ec35902a8b6"
+}

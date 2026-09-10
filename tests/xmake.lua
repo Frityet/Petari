@@ -324,6 +324,7 @@ target("smg-pc-mario-gateway-walk-tests")
         "MarioWalkParameterTests.cpp",
         "MarioCameraTargetTests.cpp",
         "OriginalMarioStateTests.cpp",
+        "OriginalPlayerUtilTests.cpp",
         "../aurora/lib/compat.cpp"
     }
     if is_plat("macosx", "iphoneos") then
@@ -1884,6 +1885,33 @@ target("smg-pc-player-actor-bridge-tests")
         "aurora-vi"
     }
     add_tests("player_actor_bridge", {
+        group = "aurora",
+        rundir = os.projectdir(),
+        realtime_output = true
+    })
+
+target("smg-pc-runtime-event-ownership-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    set_rundir(os.projectdir())
+    add_files {
+        "RuntimeEventOwnershipTests.cpp",
+        "../aurora/lib/compat.cpp"
+    }
+    add_deps {
+        "smg-pc-common",
+        "smg-pc-game",
+        "aurora-card",
+        "aurora-dvd",
+        "aurora-gd",
+        "aurora-gx",
+        "aurora-os",
+        "aurora-pad",
+        "aurora-si",
+        "aurora-vi"
+    }
+    add_tests("runtime_event_ownership", {
         group = "aurora",
         rundir = os.projectdir(),
         realtime_output = true

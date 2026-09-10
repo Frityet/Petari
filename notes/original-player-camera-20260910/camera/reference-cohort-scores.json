@@ -1,0 +1,152 @@
+[
+  {
+    "name": "calcScreenPosition__2MRFPQ29JGeometry8TVec2<f>RCQ29JGeometry8TVec3<f>",
+    "demangled_name": "MR::calcScreenPosition(JGeometry::TVec2<float>*, const JGeometry::TVec3<float>&)",
+    "size": "128",
+    "match_percent": 100.0
+  },
+  {
+    "name": "calcScreenPosition__2MRFPQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+    "demangled_name": "MR::calcScreenPosition(JGeometry::TVec3<float>*, const JGeometry::TVec3<float>&)",
+    "size": "112",
+    "match_percent": 100.0
+  },
+  {
+    "name": "calcNormalizedScreenPosition__2MRFPQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+    "demangled_name": "MR::calcNormalizedScreenPosition(JGeometry::TVec3<float>*, const JGeometry::TVec3<float>&)",
+    "size": "92",
+    "match_percent": 100.0
+  },
+  {
+    "name": "calcNormalizedScreenPositionFromView__2MRFPQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>",
+    "demangled_name": "MR::calcNormalizedScreenPositionFromView(JGeometry::TVec3<float>*, const JGeometry::TVec3<float>&)",
+    "size": "316",
+    "match_percent": 99.87342
+  },
+  {
+    "name": "calcWorldPositionFromScreen__2MRFPQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec2<f>f",
+    "demangled_name": "MR::calcWorldPositionFromScreen(JGeometry::TVec3<float>*, const JGeometry::TVec2<float>&, float)",
+    "size": "204",
+    "match_percent": 84.5098
+  },
+  {
+    "name": "calcWorldPositionFromCenterScreen__2MRFPQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec2<f>f",
+    "demangled_name": "MR::calcWorldPositionFromCenterScreen(JGeometry::TVec3<float>*, const JGeometry::TVec2<float>&, float)",
+    "size": "324",
+    "match_percent": 99.93827
+  },
+  {
+    "name": "calcWorldRayDirectionFromScreen__2MRFPQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec2<f>",
+    "demangled_name": "MR::calcWorldRayDirectionFromScreen(JGeometry::TVec3<float>*, const JGeometry::TVec2<float>&)",
+    "size": "84",
+    "match_percent": 100.0
+  },
+  {
+    "name": "calcCameraDistanceZ__2MRFRCQ29JGeometry8TVec3<f>",
+    "demangled_name": "MR::calcCameraDistanceZ(const JGeometry::TVec3<float>&)",
+    "size": "112",
+    "match_percent": 100.0
+  },
+  {
+    "name": "loadProjectionMtx__2MRFv",
+    "demangled_name": "MR::loadProjectionMtx()",
+    "size": "52",
+    "match_percent": 100.0
+  },
+  {
+    "name": "loadViewMtx__2MRFv",
+    "demangled_name": "MR::loadViewMtx()",
+    "size": "56",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getCameraViewMtx__2MRFv",
+    "demangled_name": "MR::getCameraViewMtx()",
+    "size": "44",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getCameraInvViewMtx__2MRFv",
+    "demangled_name": "MR::getCameraInvViewMtx()",
+    "size": "44",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getCameraProjectionMtx__2MRFv",
+    "demangled_name": "MR::getCameraProjectionMtx()",
+    "size": "44",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getAspect__2MRFv",
+    "demangled_name": "MR::getAspect()",
+    "size": "44",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getNearZ__2MRFv",
+    "demangled_name": "MR::getNearZ()",
+    "size": "44",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getFarZ__2MRFv",
+    "demangled_name": "MR::getFarZ()",
+    "size": "44",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getFovy__2MRFv",
+    "demangled_name": "MR::getFovy()",
+    "size": "44",
+    "match_percent": 100.0
+  },
+  {
+    "name": "setCameraViewMtx__2MRFRCQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>bbRCQ29JGeometry8TVec3<f>",
+    "demangled_name": "MR::setCameraViewMtx(const JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>>&, bool, bool, const JGeometry::TVec3<float>&)",
+    "size": "92",
+    "match_percent": 100.0
+  },
+  {
+    "name": "setNearZ__2MRFf",
+    "demangled_name": "MR::setNearZ(float)",
+    "size": "60",
+    "match_percent": 100.0
+  },
+  {
+    "name": "setFovy__2MRFf",
+    "demangled_name": "MR::setFovy(float)",
+    "size": "60",
+    "match_percent": 100.0
+  },
+  {
+    "name": "setShakeOffset__2MRFff",
+    "demangled_name": "MR::setShakeOffset(float, float)",
+    "size": "76",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getCamPos__2MRFv",
+    "demangled_name": "MR::getCamPos()",
+    "size": "104",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getCamXdir__2MRFv",
+    "demangled_name": "MR::getCamXdir()",
+    "size": "112",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getCamYdir__2MRFv",
+    "demangled_name": "MR::getCamYdir()",
+    "size": "112",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getCamZdir__2MRFv",
+    "demangled_name": "MR::getCamZdir()",
+    "size": "124",
+    "match_percent": 100.0
+  }
+]

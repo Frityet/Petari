@@ -1,0 +1,7 @@
+This larger legacy fixture suite is not green. These are the observed failures, not skipped checks. It stopped in the model-less FixedPosition/PartsModel case; the full local debugger log is aurora-native-backtrace.log.
+
+[fail] scene scheduler registration scope cleanup: Register objects only inside their active scene execution owner
+[fail] CollisionBlocker sensor lifecycle: Execution registration needs an active scheduler
+[fail] stage host preserves placement appearance state: Scene initialization state requires an active scene owner.
+[fail] KCL collision queries and binder resolution: a full Binder plane array should still detect and stop at a projected-retry face without storing it
+[fail] derived actor same-frame Binder ownership: Scene initialization state requires an active scene owner.

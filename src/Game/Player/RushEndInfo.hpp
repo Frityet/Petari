@@ -12,5 +12,5 @@ public:
     /* 0x14 */ bool mUseVec;
     /* 0x18 */ u32 mTimer;
     /* 0x1C */ LiveActor* mActor;
-    /* 0x20 */ u32 mFlags;
+    /* 0x20 */ u32 _20;
 };

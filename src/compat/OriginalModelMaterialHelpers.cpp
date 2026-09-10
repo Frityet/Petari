@@ -42,16 +42,9 @@ bool isNormalTexMtx(J3DMaterial* pMaterial) {
 
         return true;
     }
-TVec3f* getPlayerShadowRotate() {
-        return &MarioAccess::getPlayerActor()->_A18;
-    }
+
     ProjmapEffectMtxSetter* initDLMakerProjmapEffectMtxSetter(LiveActor* pActor) {
         return pActor->mModelManager->mDisplayListMaker->addProjmapEffectMtxSetter();
     }
-
-
-
-
-
 
 }

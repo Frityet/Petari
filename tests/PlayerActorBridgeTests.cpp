@@ -1,6 +1,4 @@
 #include "Game/LiveActor/LiveActor.hpp"
-#include "Game/Util/PlayerUtil.hpp"
-#include "compat/PlayerUtilCompat.hpp"
 #include "runtime/RuntimeServices.hpp"
 
 #include <iostream>
@@ -48,13 +46,12 @@ namespace {
 int main() {
     auto passed = 0;
     auto player = smgpc::runtime::PlayerSystemService{};
-    const auto player_context = smgpc::compat::ScopedPlayerSystemServiceOverride{player};
-    require(MR::getPlayerCenterPos() == nullptr,
+    require(player.actor_center_position() == nullptr,
             "an unattached player must not manufacture a center");
     auto center_actor = CenterPlayer{};
     center_actor.mPosition.set(1.0F, 2.0F, 3.0F);
     player.attach_actor(center_actor);
-    require(MR::getPlayerCenterPos() == nullptr,
+    require(player.actor_center_position() == nullptr,
             "an actor without center capability must not substitute its translation");
     const auto center_bridge = smgpc::runtime::PlayerActorBridge{
         .read_center_position = [](LiveActor& actor) {
@@ -62,25 +59,25 @@ int main() {
         },
     };
     player.attach_actor(center_actor, center_bridge);
-    auto* center = MR::getPlayerCenterPos();
+    auto* center = player.actor_center_position();
     require(center == &center_actor.center && center != &center_actor.mPosition,
             "the player center must preserve the owner's actual field address");
     center_actor.center.set(7.0F, 8.0F, 9.0F);
-    require(MR::getPlayerCenterPos() == center && center->x == 7.0F && center->y == 8.0F,
+    require(player.actor_center_position() == center && center->x == 7.0F && center->y == 8.0F,
             "the stable center pointer must expose owner updates without synchronization");
     center->z = 12.0F;
     require(center_actor.center.z == 12.0F,
-            "the original mutable pointer must write through to its owner");
+            "the bridge's mutable pointer must write through to its owner");
     auto replacement_actor = CenterPlayer{};
     player.attach_actor(replacement_actor, center_bridge);
-    require(MR::getPlayerCenterPos() == &replacement_actor.center,
+    require(player.actor_center_position() == &replacement_actor.center,
             "replacing the player must expose the new owner's center");
     player.detach_actor(&replacement_actor);
-    require(MR::getPlayerCenterPos() == nullptr,
+    require(player.actor_center_position() == nullptr,
             "detaching a player must not retain its center pointer");
     player.attach_actor(center_actor, center_bridge);
     player.clear_stage_state();
-    require(MR::getPlayerCenterPos() == nullptr,
+    require(player.actor_center_position() == nullptr,
             "clearing the stage must remove the center capability");
     ++passed;
 
@@ -102,7 +99,7 @@ int main() {
     player.synchronize_attached_actor();
     require(matrix_actor.matrix_updates == 1 && player.base_matrix()[3] == 10.0F &&
                 player.base_matrix()[7] == 20.0F && player.base_matrix()[11] == 30.0F,
-            "publishing after the original animation phase must retain its one matrix update");
+            "publishing after the fixture actor animation phase must retain its one matrix update");
     matrix_actor.mPosition.x = 40.0F;
     player.synchronize_attached_actor();
     require(matrix_actor.matrix_updates == 1 && player.position()[0] == 40.0F &&

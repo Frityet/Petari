@@ -2,6 +2,8 @@
 
 #include "Game/Camera/CameraContext.hpp"
 #include "Game/Camera/CameraDirector.hpp"
+#include "Game/Camera/CameraParamChunkHolder.hpp"
+#include "Game/Util/CameraUtil.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
@@ -37,8 +39,12 @@ namespace smgpc::camera {
         return const_cast<std::uint8_t *>(data.bytes().data());
     }
 
+    bool CameraDirectorRuntime::ready() const noexcept {
+        return _director->mChunkHolder && _director->mChunkHolder->mIsSorted;
+    }
+
     void CameraDirectorRuntime::close_creating_chunks() {
-        if (_ready) {
+        if (ready()) {
             aurora::throw_host_exception<std::logic_error>(
                 "Original camera chunks have already completed placement");
         }
@@ -46,8 +52,7 @@ namespace smgpc::camera {
             aurora::throw_host_exception<std::logic_error>(
                 "Original camera placement requires an actual camera target");
         }
-        _director->closeCreatingCameraChunk();
-        _ready = true;
+        MR::completeCameraParameters();
     }
 
     CameraPose CameraDirectorRuntime::pose() const {

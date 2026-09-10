@@ -1,0 +1,11 @@
+{
+  "native_source": "src/Game/Util/CameraUtil.cpp",
+  "reference_source": "decomp/src/Game/Util/CameraUtil.cpp",
+  "exact_with_documented_deltas": true,
+  "deltas": [
+    "Debug-only native header include",
+    "Debug-only required CameraContext owner diagnostic",
+    "Invalid nullptr-to-enum cast replaced by original GX_PERSPECTIVE value0"
+  ],
+  "MirrorCamera_header_exact": true
+}

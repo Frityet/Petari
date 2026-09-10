@@ -1,0 +1,9 @@
+Validated on 10 September 2026 with the local game disc at 1280 x 720.
+
+The demo completed a 960-tick replay at 59.98 FPS and exited normally. All 13 checks passed: Mario stayed still while idle; W, A, S and D moved him and released correctly; both jumps took off and landed; movement and camera values remained finite throughout.
+
+The replay sends keyboard events through SDL. It is automated input testing, not a fresh manual playthrough. The demo now uses the original PlayerUtil and CameraUtil source files, alongside the existing original Mario and camera code.
+
+This remains a movement demo. The full bunny chase through Rosalina's appearance is not complete. Audio and HUD polish are outside the current focus.
+
+Validated executable SHA256: 89b80b085aa6d0f9949e3db3e26b7c817e9bb182e12402ea1fceef2a586a2488

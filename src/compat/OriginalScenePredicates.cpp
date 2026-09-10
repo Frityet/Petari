@@ -3,9 +3,6 @@
 #include "Game/Util/SceneUtil.hpp"
 
 namespace MR {
-    bool isExistMario() {
-        return MR::isExistSceneObj(SceneObj_MarioHolder);
-    }
 
     bool isStageSuddenDeathDodoryu() {
         return isEqualStageName("CosmosGardenGalaxy") && getCurrentScenarioNo() == 4;

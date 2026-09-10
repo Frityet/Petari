@@ -123,7 +123,6 @@ namespace {
                 _player_system->attach_actor(
                     *_actor,
                     smgpc::runtime::PlayerActorBridge{
-                        .set_swing_permission = &GatewayMarioOwner::set_swing_permission,
                         .read_element_mode = &GatewayMarioOwner::read_element_mode,
                         .read_base_matrix = &GatewayMarioOwner::read_base_matrix,
                         .read_up_vector = &GatewayMarioOwner::read_up_vector,
@@ -174,15 +173,6 @@ namespace {
             _objects.clear();
             _actor = nullptr;
         }
-        static void set_swing_permission(LiveActor& actor, bool permitted) {
-            auto* mario = dynamic_cast<MarioActor*>(&actor);
-            if (mario == nullptr) {
-                aurora::throw_host_exception<std::logic_error>(
-                    "Gateway player entitlement bridge requires MarioActor");
-            }
-            mario->_EEB = permitted;
-        }
-
         static s32 read_element_mode(const LiveActor& actor) {
             const auto* mario = dynamic_cast<const MarioActor*>(&actor);
             if (mario == nullptr) {
@@ -1071,7 +1061,7 @@ namespace {
                     window.close();
                 }
                 if (is_spin_route && !spin_unlock_announced &&
-                    runtime.player_system().is_swing_permitted()) {
+                    mario_owner.actor()._EEB) {
                     spin_unlock_announced = true;
                     logger->info(
                         smgpc::logging::Category::APP,

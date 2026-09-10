@@ -9,6 +9,7 @@
 #include "Game/System/GameDataHolder.hpp"
 #include "Game/Util/EventUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/PlayerUtil.hpp"
 #include "compat/DemoSceneRuntime.hpp"
 #include "compat/GameDataHolderCompat.hpp"
 #include "compat/InformationMessageCompat.hpp"
@@ -328,7 +329,7 @@ namespace smgpc::scene {
                 cRosettaTriggerRadius * cRosettaTriggerRadius) {
                 return;
             }
-            _player.disable_control();
+            MR::offPlayerControl();
             _wipe.close(cFadeWipeName, cFadeWipeFrames);
             _state = GatewaySpinCheckpointState::FadeHandoff;
         }
@@ -340,7 +341,7 @@ namespace smgpc::scene {
             }
             require(_evidence.fade_handoff_frames == cFadeDurationFrames,
                     "fade handoff exceeded the retail 90-frame wait");
-            _player.enable_control(true);
+            MR::onPlayerControl(true);
             const auto result = _demo->start_demo(
                 _rosetta.get(), cGuideDemoName, cSpinPartFirst,
                 smgpc::compat::DemoPlayerMode::MarioPuppetable);

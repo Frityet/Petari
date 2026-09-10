@@ -754,14 +754,12 @@ namespace smgpc::runtime {
     };
 
     struct PlayerActorBridge {
-        using SwingPermissionWriter = void (*)(LiveActor &, bool);
         using ElementModeReader = s32 (*)(const LiveActor &);
         using BaseMatrixReader = MtxPtr (*)(const LiveActor &);
         using VectorReader = void (*)(const LiveActor &, TVec3f *);
         using NerveChangeReader = bool (*)(const LiveActor &);
         using CenterPositionReader = TVec3f *(*)(LiveActor &);
 
-        SwingPermissionWriter set_swing_permission = nullptr;
         // Concrete player owners install this capability only when their
         // attached object really exposes the retail MarioActor mode field.
         ElementModeReader read_element_mode = nullptr;
@@ -788,15 +786,8 @@ namespace smgpc::runtime {
         void set_camera_target(std::unique_ptr<CameraTargetObj> target);
         void advance_camera_target(std::uint64_t frame_index);
 
-        void show_player();
-        void hide_player();
         void set_base_matrix(MtxPtr matrix);
-        void set_swing_permission(bool permitted);
-        void disable_control();
-        void enable_control(bool reset_condition);
-        void finish_opening_demo();
 
-        [[nodiscard]] bool is_player_hidden() const;
         [[nodiscard]] bool has_base_matrix() const;
         [[nodiscard]] bool has_forced_base_matrix() const;
         [[nodiscard]] std::span<const f32, 12U> base_matrix() const;
@@ -813,23 +804,16 @@ namespace smgpc::runtime {
         [[nodiscard]] bool copy_actor_up_vector(TVec3f *out) const;
         [[nodiscard]] bool copy_actor_front_vector(TVec3f *out) const;
         [[nodiscard]] bool copy_actor_side_vector(TVec3f *out) const;
-        [[nodiscard]] bool is_swing_permitted() const;
-        [[nodiscard]] bool is_control_enabled() const;
         [[nodiscard]] std::uint64_t base_matrix_revision() const;
         [[nodiscard]] LiveActor *attached_actor() const;
-        bool consume_reset_condition_request();
 
     private:
         void copy_actor_state();
 
         LiveActor *_attached_actor = nullptr;
-        bool _player_hidden = false;
         bool _has_base_matrix = false;
         bool _has_forced_base_matrix = false;
         bool _on_ground = false;
-        bool _swing_permitted = false;
-        bool _control_enabled = true;
-        bool _reset_condition_requested = false;
         std::uint64_t _base_matrix_revision = 0U;
         std::array<f32, 12U> _base_matrix{};
         std::array<f32, 3U> _position{};

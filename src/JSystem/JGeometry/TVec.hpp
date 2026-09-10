@@ -518,6 +518,56 @@ namespace JGeometry {
         }
     };
 
+    template < typename T >
+    class TVec4 : public Quaternion {
+    public:
+        /* Constructors */
+        inline TVec4() {
+        }
+
+        template < typename A >
+        TVec4(A _x, A _y, A _z, A _h) {
+            x = _x;
+            y = _y;
+            z = _z;
+            w = _h;
+        }
+
+        /* General operations */
+        template < typename A >
+        void set(const JGeometry::TVec4< A >& rVec) NO_INLINE {
+            this->x = rVec.x;
+            this->y = rVec.y;
+            this->z = rVec.z;
+            this->w = rVec.w;
+        }
+
+        template < typename A >
+        void set(A _x, A _y, A _z, A _w) NO_INLINE {
+            x = _x;
+            y = _y;
+            z = _z;
+            w = _w;
+        }
+
+        void scale(T val);
+
+        inline TVec3< T >* toTVec3() {
+            return (TVec3< T >*)this;
+        }
+
+        operator Quaternion*() {
+            return (Quaternion*)&x;
+        }
+        operator const Quaternion*() const {
+            return (Quaternion*)&x;
+        }
+    };
+
+    static_assert(sizeof(TVec4<f32>) == sizeof(Quaternion));
+    static_assert(alignof(TVec4<f32>) == alignof(Quaternion));
+    static_assert(std::is_standard_layout_v<TVec4<f32>>);
+    static_assert(std::is_trivially_copyable_v<TVec4<f32>>);
     static_assert(sizeof(TVec3<f32>) == sizeof(Vec));
     static_assert(alignof(TVec3<f32>) == alignof(Vec));
     static_assert(std::is_standard_layout_v<TVec3<f32>>);
@@ -528,6 +578,7 @@ using TVec2s = JGeometry::TVec2<s16>;
 using TVec2f = JGeometry::TVec2<f32>;
 using TVec3s = JGeometry::TVec3<s16>;
 using TVec3f = JGeometry::TVec3<f32>;
+using TVec4f = JGeometry::TVec4<f32>;
 
 [[nodiscard]] constexpr TVec3f operator*(f32 scaleValue, const TVec3f &value) {
     return value * scaleValue;

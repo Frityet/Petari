@@ -1,0 +1,70 @@
+[
+  {
+    "label": "before",
+    "compile_command": [
+      "/opt/homebrew/opt/llvm/bin/clang++",
+      "-std=c++20",
+      "-g",
+      "-arch",
+      "arm64",
+      "-stdlib=libc++",
+      "-cxx-isystem/opt/homebrew/opt/llvm/include/c++/v1",
+      "-isysroot",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+      "-DAURORA",
+      "-DTARGET_PC",
+      "-I/Users/frityet/Projects/petari/aurora/include",
+      "-isystem",
+      "/Users/frityet/Projects/petari/decomp/build/aurora-upstream-merge-tests/_deps/googletest-src/googletest/include",
+      "/Users/frityet/Projects/petari/aurora/tests/wpad_test.cpp",
+      "/Users/frityet/Projects/petari/aurora/tests/wpad_test_stubs.cpp",
+      "/Users/frityet/Projects/petari/notes/original-player-camera-20260910/input-probe/wpad-before.cpp",
+      "/var/folders/4x/jzbfrvb10tq3ff4dwng8nzgm0000gn/T/petari-aurora-upstream-20260907-q3qrkgbx/lib/libgtest_main.a",
+      "/var/folders/4x/jzbfrvb10tq3ff4dwng8nzgm0000gn/T/petari-aurora-upstream-20260907-q3qrkgbx/lib/libgtest.a",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-player-camera-20260910/input-probe/wpad-tests-before"
+    ],
+    "compile_exit": 0,
+    "run_command": [
+      "/Users/frityet/Projects/petari/notes/original-player-camera-20260910/input-probe/wpad-tests-before",
+      "--gtest_color=no",
+      "--gtest_output=xml:/Users/frityet/Projects/petari/notes/original-player-camera-20260910/input-probe/before-tests.xml"
+    ],
+    "run_exit": 1,
+    "binary_sha256": "bee76387e61a8507966e07fdb3b7392d7da602039b584a88127de07beb6eabb0"
+  },
+  {
+    "label": "fixed",
+    "compile_command": [
+      "/opt/homebrew/opt/llvm/bin/clang++",
+      "-std=c++20",
+      "-g",
+      "-arch",
+      "arm64",
+      "-stdlib=libc++",
+      "-cxx-isystem/opt/homebrew/opt/llvm/include/c++/v1",
+      "-isysroot",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+      "-DAURORA",
+      "-DTARGET_PC",
+      "-I/Users/frityet/Projects/petari/aurora/include",
+      "-isystem",
+      "/Users/frityet/Projects/petari/decomp/build/aurora-upstream-merge-tests/_deps/googletest-src/googletest/include",
+      "/Users/frityet/Projects/petari/aurora/tests/wpad_test.cpp",
+      "/Users/frityet/Projects/petari/aurora/tests/wpad_test_stubs.cpp",
+      "/Users/frityet/Projects/petari/aurora/lib/wpad.cpp",
+      "/var/folders/4x/jzbfrvb10tq3ff4dwng8nzgm0000gn/T/petari-aurora-upstream-20260907-q3qrkgbx/lib/libgtest_main.a",
+      "/var/folders/4x/jzbfrvb10tq3ff4dwng8nzgm0000gn/T/petari-aurora-upstream-20260907-q3qrkgbx/lib/libgtest.a",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-player-camera-20260910/input-probe/wpad-tests-fixed"
+    ],
+    "compile_exit": 0,
+    "run_command": [
+      "/Users/frityet/Projects/petari/notes/original-player-camera-20260910/input-probe/wpad-tests-fixed",
+      "--gtest_color=no",
+      "--gtest_output=xml:/Users/frityet/Projects/petari/notes/original-player-camera-20260910/input-probe/fixed-tests.xml"
+    ],
+    "run_exit": 0,
+    "binary_sha256": "b77839146894fce47e6ea9b431ec298b123b5f11292cdd8b1617a1e5cd416023"
+  }
+]

@@ -30,37 +30,6 @@ namespace MR {
         GameDataFunction::incPlayerMissNum();
     }
 
-
-    void startPlayerEvent(const char* pName) {
-        EventSequencer* eventSequencer;
-
-        eventSequencer = MR::getSceneObj< EventSequencer >(SceneObj_EventSequencer);
-        eventSequencer->startEvent(pName);
-
-        requestMovementOn(eventSequencer);
-        requestMovementOnPlayer();
-    }
-
-    void requestMovementOnPlayer() {
-        requestMovementOn(MarioAccess::getPlayerActor());
-    }
-
-    void startBckPlayerJ(const char* pName) {
-        MarioAccess::changeAnimationJ(pName);
-    }
-
-    void startSoundPlayerJ(const char* pName) {
-        MarioAccess::getPlayerActor()->playSound(pName, -1);
-    }
-
-    void setPlayerSpot(f32 param1, u32 param2) {
-        MarioAccess::setSpot(param1, param2);
-    }
-
-    void startPlayerDownWipe() {
-        MarioAccess::startDownWipe();
-    }
-
     void startMissLayout() {
         getSceneObj< GameSceneLayoutHolder >(SceneObj_GameSceneLayoutHolder)->startMiss();
     }

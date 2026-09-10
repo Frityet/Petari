@@ -1,3 +1,4 @@
+#include "compat/JkrAllocationDomain.hpp"
 #include "Game/AudioLib/AudBgm.hpp"
 #include "Game/AudioLib/AudWrap.hpp"
 #include <aurora/exception.hpp>
@@ -1755,6 +1756,8 @@ namespace smgpc::runtime {
     }
 
     void RuntimeContext::emit_semantic_trace_event(std::string_view category, std::string_view name, std::string_view detail) {
+        // Trace history belongs to the process and outlives the emitting scene.
+        const compat::JkrHostAllocationScope host;
         if (_is_destroying) {
             return;
         }

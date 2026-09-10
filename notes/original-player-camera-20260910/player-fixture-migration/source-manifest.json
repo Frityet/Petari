@@ -1,0 +1,34 @@
+{
+  "root_head": "827bf39741f55c4c7952a425d54557fd94c57434",
+  "files": [
+    {
+      "path": "tests/PlayerActorBridgeTests.cpp",
+      "sha256": "8497a520eba679ea04d4bed08aae822d0bcad8fe7cceb3c43b3c75692f0f8081"
+    },
+    {
+      "path": "tests/PlayerUtilRealOrAbsentTests.cpp",
+      "sha256": "d0ab9bf12bd0fbdc5112dc852022a6f00ae941371597c56dafb36e225452bb7c"
+    },
+    {
+      "path": "tests/AuroraNativeTests.cpp",
+      "sha256": "b915e6ef8b4a20162f29d84575a18307747556b5c0529bc2ffd5557d6f22c416"
+    },
+    {
+      "path": "tests/InformationObserverTests.cpp",
+      "sha256": "8d015bd4e1202fd05d504a78403ab12727431021f5ae9879cde215823eb8578d"
+    },
+    {
+      "path": "tests/DemoSceneRuntimeTests.cpp",
+      "sha256": "aa2dd401df6d6d130eb44f9646ec41658aafe5219c414e253ba35e08d07e8b3e"
+    }
+  ],
+  "validation": "All five fixture TUs independently compiled. Final coordinated InformationObserver build 0 / linked run 0; DemoSceneRuntime linked 20/20; PlayerActorBridge linked 2/2; PlayerUtilRealOrAbsent linked 4/4. Exact parent proof sources retained below.",
+  "final_information_observer": {
+    "build_exit": 0,
+    "run_exit": 0,
+    "binary_sha256": "cd24c055d486a3611cc3b016c68187dae62e8bb72e01a35f69b22fe82f4368c7",
+    "result_source": "notes/original-player-camera-20260910/final-info-result.json",
+    "run_log": "notes/original-player-camera-20260910/smg-pc-information-observer-tests-run.log"
+  },
+  "source_hash_drift_since_previous_freeze": []
+}

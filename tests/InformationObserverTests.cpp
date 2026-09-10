@@ -1,4 +1,7 @@
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/NameObj/NameObjFactory.hpp"
+#include "Game/Player/MarioActor.hpp"
+#include "Game/Player/MarioHolder.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Screen/IconAButton.hpp"
 #include "Game/Screen/InformationMessage.hpp"
@@ -7,7 +10,11 @@
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/EventUtil.hpp"
 #include "Game/Util/MessageUtil.hpp"
+#include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/ModelUtil.hpp"
+#include "JSystem/J3DGraphAnimator/J3DModelData.hpp"
 #include "Game/Util/ObjUtil.hpp"
+#include "Game/Util/PlayerUtil.hpp"
 #include "Logger.hpp"
 #include "RendererService.hpp"
 #include "camera/StageStartCamera.hpp"
@@ -17,12 +24,16 @@
 #include "compat/GameDataHolderCompat.hpp"
 #include "compat/GameDataSession.hpp"
 #include "compat/InformationMessageCompat.hpp"
+#include "compat/JkrAllocationDomain.hpp"
+#include "compat/MarioCameraTarget.hpp"
+#include "compat/StarPointerDepthOwnership.hpp"
 #include "layout/LayoutHost.hpp"
 #include "layout/LayoutRuntime.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "scene/GatewayDemoScene.hpp"
+#include "scene/NameObjChildOwner.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 
 #include <aurora/dvd.h>
@@ -36,6 +47,7 @@
 #include <exception>
 #include <filesystem>
 #include <iostream>
+#include <memory>
 #include <stdexcept>
 #include <string>
 #include <string_view>
@@ -84,8 +96,11 @@ namespace {
     class SpinPromptTrigger final : public LiveActor {
     public:
         SpinPromptTrigger() : LiveActor("チコ") {
-            makeActorAppeared();
             MR::connectToSceneNpcMovement(this);
+            // This nonvisual stimulus must run independently of the camera,
+            // like the original InformationObserver it requests.
+            MR::invalidateClipping(this);
+            makeActorAppeared();
         }
 
         void movement() override {
@@ -103,72 +118,85 @@ namespace {
         bool _fired = false;
     };
 
-    class SwingEntitlementProbe final : public LiveActor {
+    class PromptMarioOwner final {
     public:
-        SwingEntitlementProbe()
-            : LiveActor("InformationObserver swing-entitlement probe") {}
-
-        static void set_swing_permission(LiveActor& actor, bool permitted) {
-            static_cast<SwingEntitlementProbe&>(actor)._permitted = permitted;
-        }
-
-        void init(const JMapInfoIter& iter) override {
-            if (!iter.isValid() || !iter.getValue("pos_x", &mPosition.x) ||
-                !iter.getValue("pos_y", &mPosition.y) ||
-                !iter.getValue("pos_z", &mPosition.z)) {
-                throw std::logic_error(
-                    "the entitlement probe requires Gateway's retained StartInfo");
+        explicit PromptMarioOwner(smgpc::runtime::PlayerSystemService& player_system)
+            : _player_system(player_system),
+              _domain(smgpc::scene::current_scene_allocation_domain()) {
+            require(_domain != nullptr,
+                    "the prompt's original Mario requires the active scene heap");
+            try {
+                _actor = static_cast<MarioActor*>(_objects.capture_construction_children([&] {
+                    const auto game = smgpc::compat::JkrAllocationScope{_domain};
+                    return createNameObj<MarioActor>("MarioActor");
+                }));
+                _player_system.attach_actor(*_actor, {
+                    .read_element_mode = [](const LiveActor& actor) -> s32 {
+                        return static_cast<const MarioActor&>(actor).mPlayerMode;
+                    },
+                    .read_base_matrix = [](const LiveActor& actor) {
+                        return smgpc::compat::mario_camera_base_matrix(
+                            static_cast<const MarioActor&>(actor));
+                    },
+                    .read_up_vector = [](const LiveActor& actor, TVec3f* out) {
+                        static_cast<const MarioActor&>(actor).getUpVec(out);
+                    },
+                    .read_front_vector = [](const LiveActor& actor, TVec3f* out) {
+                        static_cast<const MarioActor&>(actor).getFrontVec(out);
+                    },
+                    .read_side_vector = [](const LiveActor& actor, TVec3f* out) {
+                        static_cast<const MarioActor&>(actor).getSideVec(out);
+                    },
+                    .read_nerve_change_enabled = [](const LiveActor& actor) {
+                        return static_cast<const MarioActor&>(actor).isEnableNerveChange();
+                    },
+                    .read_center_position = [](LiveActor& actor) {
+                        return &static_cast<MarioActor&>(actor)._2A0;
+                    },
+                });
+            } catch (...) {
+                retire();
+                throw;
             }
-            calcAndSetBaseMtx();
-            MR::connectToScene(
-                this, MR::MovementType_Player, MR::CalcAnimType_Player,
-                MR::DrawBufferType_Player, MR::DrawType_Player);
-            _initialized = true;
         }
 
-        void initAfterPlacement() override {
-            if (!_initialized) {
-                throw std::logic_error(
-                    "the entitlement probe postpass preceded player init");
-            }
-            ++_post_placement_count;
+        ~PromptMarioOwner() {
+            retire();
         }
 
-        [[nodiscard]] bool is_permitted() const {
-            return _permitted;
+        void initialize(const JMapInfoIter& placement) {
+            _objects.capture_construction_children([&] {
+                const auto game = smgpc::compat::JkrAllocationScope{_domain};
+                _actor->init(placement);
+            });
         }
 
-        [[nodiscard]] std::size_t post_placement_count() const {
-            return _post_placement_count;
+        [[nodiscard]] MarioActor& actor() const {
+            return *_actor;
         }
 
     private:
-        bool _permitted = false;
-        bool _initialized = false;
-        std::size_t _post_placement_count = 0U;
-    };
-
-    class PlayerDetachGuard final {
-    public:
-        PlayerDetachGuard(smgpc::runtime::PlayerSystemService& service,
-                          const LiveActor& actor)
-            : _service(service), _actor(actor) {}
-
-        ~PlayerDetachGuard() {
-            _service.detach_actor(&_actor);
-            if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance();
-                runtime != nullptr) {
-                runtime->unregister_live_actor_model(
-                    const_cast<LiveActor&>(_actor));
+        void retire() noexcept {
+            const auto host = smgpc::compat::JkrHostAllocationScope{};
+            if (_actor != nullptr) {
+                _player_system.detach_actor(_actor);
+                if (auto* scene_holder = smgpc::scene::current_scene_obj_holder();
+                    scene_holder != nullptr) {
+                    auto* holder = static_cast<MarioHolder*>(
+                        scene_holder->getObj(SceneObj_MarioHolder));
+                    if (holder != nullptr && holder->getMarioActor() == _actor) {
+                        holder->setMarioActor(nullptr);
+                    }
+                }
             }
+            _objects.clear();
+            _actor = nullptr;
         }
 
-        PlayerDetachGuard(const PlayerDetachGuard&) = delete;
-        PlayerDetachGuard& operator=(const PlayerDetachGuard&) = delete;
-
-    private:
-        smgpc::runtime::PlayerSystemService& _service;
-        const LiveActor& _actor;
+        smgpc::runtime::PlayerSystemService& _player_system;
+        std::shared_ptr<smgpc::compat::JkrAllocationDomain> _domain;
+        smgpc::scene::NameObjChildOwner _objects;
+        MarioActor* _actor = nullptr;
     };
 
     void test_exact_timekeep_prompt_guard_and_fresh_a() {
@@ -193,6 +221,8 @@ namespace {
         auto renderer = smgpc::render::AuroraRenderer(window);
         auto resource_runtime = smgpc::resource::GameResourceRuntime{};
         auto runtime = smgpc::runtime::RuntimeContext(*logger, window, resource_runtime);
+        runtime.initialize_scenario_catalog(resource_runtime);
+        runtime.initialize_particle_resources(resource_runtime);
         runtime.set_current_stage_name("HeavensDoorGalaxy");
         const auto renderer_context =
             smgpc::render::ScopedAuroraRendererContext(renderer);
@@ -202,15 +232,29 @@ namespace {
         const auto audio_binding =
             smgpc::compat::ScopedAudioEventServiceOverride{logical_audio};
         auto game_data_session = smgpc::compat::GameDataSession{1U};
-        auto player = SwingEntitlementProbe{};
 
-        const auto baseline_name_objects =
-            smgpc::compat::name_obj_runtime_state_count();
+        const auto baseline_objects =
+            smgpc::compat::snapshot_name_obj_runtime_objects();
+        auto expected_runtime_objects = baseline_objects;
+        const auto* pointer_owner = smgpc::compat::try_star_pointer_depth();
+        require(pointer_owner != nullptr,
+                "the prompt fixture requires the actual runtime star-pointer owner");
 #ifndef NDEBUG
         const auto baseline_scheduler_entries = runtime.scheduler().snapshot().size();
 #endif
         {
             auto scene = smgpc::scene::GatewayDemoScene{runtime.dvd()};
+            // First-scene startup lazily creates pointer layouts retained by
+            // RuntimeContext. Capture only that owner's existing identities,
+            // before constructing any prompt or player fixture children.
+            require(pointer_owner->guidance() != nullptr,
+                    "Gateway scene startup must initialize the original pointer layouts");
+            for (auto* object : smgpc::compat::snapshot_name_obj_runtime_objects()) {
+                if (smgpc::compat::name_obj_runtime_owner(object) == pointer_owner &&
+                    std::ranges::find(expected_runtime_objects, object) == expected_runtime_objects.end()) {
+                    expected_runtime_objects.push_back(object);
+                }
+            }
             const auto camera = smgpc::camera::resolve_stage_start_camera(
                 runtime.dvd(), scene.start_info());
             require(camera.status ==
@@ -220,18 +264,13 @@ namespace {
             runtime.camera_system().set_game_camera_pose(
                 camera.camera->calculation.pose);
             runtime.set_scene_camera_pose(camera.camera->calculation.pose);
-            runtime.player_system().attach_actor(
-                player,
-                {.set_swing_permission =
-                     &SwingEntitlementProbe::set_swing_permission});
-            player.init(scene.player_start_iter());
-            const auto player_detach_guard =
-                PlayerDetachGuard{runtime.player_system(), player};
-            auto placement_lease = scene.finalize_placements(player);
-            require(runtime.player_system().attached_actor() == &player &&
-                        !player.is_permitted() &&
-                        player.post_placement_count() == 1U,
-                    "the prompt proof must finalize one initially-locked external player");
+            auto player_owner = PromptMarioOwner{runtime.player_system()};
+            auto& player = player_owner.actor();
+            auto placement_lease = smgpc::scene::GatewayDemoScene::PlacementLease{};
+            // Register every participant and request its initial connection
+            // before finalization allocates the original execution lists.
+            (void)renderer.begin_frame();
+            player_owner.initialize(scene.player_start_iter());
             const auto information_registration_marker =
                 smgpc::compat::mark_name_obj_runtime_registrations();
             auto information_message =
@@ -280,6 +319,22 @@ namespace {
                         &trigger,
                         JMapInfoIter(&tico->jmap_info, tico->jmap_entry_index)),
                     "the prompt trigger must be a real active-executor cast");
+            placement_lease = scene.finalize_placements(player);
+            renderer.end_frame();
+            require(!GameDataFunction::isPassedStoryEvent("スピン権利"),
+                    "the prompt fixture must begin before the saved spin entitlement");
+            // GameSequenceProgress::startScene applies this original API when
+            // the story flag is absent. This fixture has no full sequence
+            // startup owner, so establish its locked-spin precondition here.
+            MR::setPlayerSwingPermission(false);
+            require(runtime.player_system().attached_actor() == &player &&
+                        MR::getMarioHolder()->getMarioActor() == &player &&
+                        MR::getJ3DModel(&player) != nullptr &&
+                        MR::getJ3DModelData(&player)->getJointNum() != 0U &&
+                        !player._EEB && player._1C0 &&
+                        player.mMario->mAirGravityVec.epsilonEquals(player._240, 0.0001F) &&
+                        scene.state() == smgpc::scene::GatewayDemoSceneState::Active,
+                    "the prompt proof must retain original Mario and its model/gravity postpass with the explicit swing-lock precondition");
             require(smgpc::compat::game_data::holder_story_progress(
                         game_data_session.holder()) == 5U &&
                         GameDataFunction::getCurrentGameDataHolder() ==
@@ -312,18 +367,51 @@ namespace {
                 runtime.scheduler().execute_movement();
             };
 
-            // Carry a fresh A edge into the same frame that part 22 reaches
-            // step 0. The exact observer must show the prompt and consume no
-            // entitlement while its 30-frame guard is active.
+            const auto require_prompt = [&](bool condition, std::string_view message) {
+                if (!condition) {
+                    std::cerr << "spin-prompt state: frame=" << frame_index
+                              << ";trigger_fired=" << trigger.fired()
+                              << ";trigger_clipped=" << static_cast<bool>(trigger.mFlag.mIsClipped)
+                              << ";trigger_invalid_clipping=" << static_cast<bool>(trigger.mFlag.mIsInvalidClipping)
+                              << ";trigger_movement_off=" << smgpc::compat::name_obj_is_suspended(&trigger)
+                              << ";trigger_executor_index=" << trigger.mExecutorIdx
+                              << ";observer_dead=" << static_cast<bool>(observer->mFlag.mIsDead)
+                              << ";observer_nerve_step=" << observer->getNerveStep()
+                              << ";message_dead=" << static_cast<bool>(information_message.message().mFlag.mIsDead)
+                              << ";demo_step=" << guide->sheet.current_part_step().value_or(-999)
+                              << ";demo_paused=" << guide->sheet.is_paused()
+                              << ";trigger_a=" << runtime.wpad().is_button_triggered(WPAD_CHAN0, WPAD_BUTTON_A)
+                              << ";spin_story=" << GameDataFunction::isPassedStoryEvent("スピン権利")
+                              << ";mario_swing=" << static_cast<bool>(player._EEB) << '\n';
+                }
+                require(condition, message);
+            };
+
+            // The NPC requests the observer's connection after this frame's
+            // connect-requirement phase. Entry pauses the clock immediately;
+            // its pending Disp nerve does not execute until the next frame.
             run_frame(true);
-            require(trigger.fired() && !observer->mFlag.mIsDead &&
-                        !information_message.message().mFlag.mIsDead &&
+            require_prompt(trigger.fired() && !observer->mFlag.mIsDead &&
+                        information_message.message().mFlag.mIsDead &&
+                        observer->getNerveStep() == -1 &&
                         guide->sheet.current_part_step() == 0 &&
                         guide->sheet.is_paused() &&
                         !GameDataFunction::isPassedStoryEvent("スピン権利") &&
-                        !runtime.player_system().is_swing_permitted() &&
-                        !player.is_permitted(),
-                    "part 22 step 0 must pause the real timekeeper and reject a carried A edge");
+                        !player._EEB,
+                    "part 22 step 0 must pause and request the prompt without executing its pending display nerve");
+
+            // Display execution 1 starts the 30-frame guard. Carry the held A
+            // through this frame; the timekeeper performs its paused 0->1
+            // correction before the now-connected observer displays text.
+            run_frame(true);
+            require_prompt(!observer->mFlag.mIsDead &&
+                        !information_message.message().mFlag.mIsDead &&
+                        observer->getNerveStep() == 1 &&
+                        guide->sheet.current_part_step() == 1 &&
+                        guide->sheet.is_paused() &&
+                        !GameDataFunction::isPassedStoryEvent("スピン権利") &&
+                        !player._EEB,
+                    "the first scheduled display must show text while keeping the paused clock and swing lock");
             require(runtime.scheduler().registration_marker() ==
                         registrations_before_prompt,
                     "showing the pre-created prompt must not register objects during movement");
@@ -362,16 +450,18 @@ namespace {
                     "the real spin prompt must rasterize visible message text");
 #endif
 
-            // Retail DemoTimeKeeper performs its one paused 0->1 correction.
+            // Display execution 2 releases A while the corrected clock stays
+            // frozen. Counting starts at exeDisp, not the earlier entry call.
             run_frame(false);
-            require(guide->sheet.current_part_step() == 1 &&
+            require_prompt(observer->getNerveStep() == 2 &&
+                        guide->sheet.current_part_step() == 1 &&
                         guide->sheet.is_paused(),
-                    "a paused first-step timekeeper must correct once to step 1 and then freeze");
+                    "the paused timekeeper must remain at step 1 during the second display execution");
 
             // A second fresh edge well inside the guard is still rejected.
             run_frame(true);
-            require(!observer->mFlag.mIsDead &&
-                        !GameDataFunction::isPassedStoryEvent("スピン権利"),
+            require_prompt(!observer->mFlag.mIsDead && observer->getNerveStep() == 3 &&
+                        !GameDataFunction::isPassedStoryEvent("スピン権利") && !player._EEB,
                     "an early fresh A edge must not dismiss the spin prompt");
             run_frame(false);
 
@@ -381,23 +471,25 @@ namespace {
                 run_frame(false);
             }
             run_frame(true);
-            require(!observer->mFlag.mIsDead && guide->sheet.is_paused() &&
-                        !GameDataFunction::isPassedStoryEvent("スピン権利"),
+            require_prompt(!observer->mFlag.mIsDead && observer->getNerveStep() == 30 &&
+                        guide->sheet.is_paused() &&
+                        !GameDataFunction::isPassedStoryEvent("スピン権利") && !player._EEB,
                     "the 30th display execution must remain guarded at frame zero");
 
             // Execution 31 expires the guard while released. Only a new edge
             // on execution 32 may resume, persist the flag, and grant swing.
             run_frame(false);
-            require(!observer->mFlag.mIsDead && guide->sheet.is_paused(),
+            require_prompt(!observer->mFlag.mIsDead && observer->getNerveStep() == 31 &&
+                        guide->sheet.is_paused() && !player._EEB,
                     "guard expiry without a trigger must leave the prompt active");
             run_frame(true);
-            require(observer->mFlag.mIsDead && !guide->sheet.is_paused() &&
+            require_prompt(observer->mFlag.mIsDead && observer->getNerveStep() == 32 &&
+                        !guide->sheet.is_paused() &&
                         guide->sheet.current_part_step() == 1 &&
                         GameDataFunction::isPassedStoryEvent("スピン権利") &&
                         smgpc::compat::game_data::holder_story_progress(
                             game_data_session.holder()) == 15U &&
-                        runtime.player_system().is_swing_permitted() &&
-                        player.is_permitted(),
+                        player._EEB,
                     "the first post-guard fresh A edge must dismiss, resume, and grant spin entitlement");
             require(runtime.scheduler().registration_marker() ==
                         registrations_before_prompt,
@@ -418,24 +510,45 @@ namespace {
                     "the resumed timekeeper must advance on the next DemoDirector frame");
         }
 
+        const auto retained_objects = smgpc::compat::snapshot_name_obj_runtime_objects();
+        if (retained_objects != expected_runtime_objects) {
+            std::cerr << "spin-prompt retirement: before=" << baseline_objects.size()
+                      << ";expected_runtime=" << expected_runtime_objects.size()
+                      << ";after=" << retained_objects.size() << '\n';
+            for (const auto* object : retained_objects) {
+                if (std::ranges::find(expected_runtime_objects, object) == expected_runtime_objects.end()) {
+                    std::cerr << "  unexpected=" << object->getName()
+                              << ";object=" << object
+                              << ";owner=" << smgpc::compat::name_obj_runtime_owner(object) << '\n';
+                }
+            }
+            for (const auto* object : expected_runtime_objects) {
+                if (std::ranges::find(retained_objects, object) == retained_objects.end()) {
+                    std::cerr << "  missing_runtime_object=" << object << '\n';
+                }
+            }
+        }
         require(smgpc::compat::current_information_message() == nullptr &&
-                    smgpc::compat::name_obj_runtime_state_count() ==
-                        baseline_name_objects,
-                "scene teardown must release the observer, message, and raw-new IconAButton child");
+                    retained_objects == expected_runtime_objects,
+                "scene teardown must release all prompt/player/scene children and preserve exactly the runtime-owned pointer layouts");
 #ifndef NDEBUG
         require(runtime.scheduler().snapshot().size() ==
                     baseline_scheduler_entries,
                 "scene teardown must leave no scheduler entry pointing at released prompt objects");
 #endif
-        require(!player.is_permitted(),
-                "detaching the prompt proof player must revoke its entitlement bit");
+        require(runtime.player_system().attached_actor() == nullptr &&
+                    runtime.player_system().actor_center_position() == nullptr,
+                "scene teardown must detach the original Mario and release its host bridge");
     }
 
 }  // namespace
 
 int main() {
     try {
+        const auto process_baseline = smgpc::compat::snapshot_name_obj_runtime_objects();
         test_exact_timekeep_prompt_guard_and_fresh_a();
+        require(smgpc::compat::snapshot_name_obj_runtime_objects() == process_baseline,
+                "RuntimeContext teardown must also release every retained star-pointer layout identity");
         std::cout << "InformationObserver tests passed: exact timekeep/prompt/guard/lifecycle\n";
         return 0;
     } catch (const std::exception& error) {

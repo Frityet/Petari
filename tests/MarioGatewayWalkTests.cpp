@@ -1,30 +1,47 @@
 #include "Game/Gravity/PointGravity.hpp"
+#include "Game/Animation/XanimeCore.hpp"
+#include "Game/Animation/XanimePlayer.hpp"
+#include "Game/Animation/XanimeResource.hpp"
 #include "Game/LiveActor/ActorLightCtrl.hpp"
 #include "Game/LiveActor/Binder.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/LiveActor/ModelManager.hpp"
 #include "Game/Map/CollisionCode.hpp"
 #include "Game/Map/LightFunction.hpp"
 #include "Game/Map/PlanetMap.hpp"
 #include "Game/NameObj/NameObjFactory.hpp"
+#include "Game/NameObj/NameObjListExecutor.hpp"
+#include "Game/System/DrawBuffer.hpp"
+#include <JSystem/J3DGraphBase/J3DShape.hpp>
 #include "Game/Player/MarioActor.hpp"
 #include "Game/Player/MarioHolder.hpp"
 #include "Game/Player/MarioMapCode.hpp"
 #include "Game/Scene/SceneFunction.hpp"
+#include "Game/System/ResourceHolder.hpp"
 #include "Game/Util/MapUtil.hpp"
+#include "Game/Util/ModelUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "Logger.hpp"
 #include "MarioWalkParameterTests.hpp"
 #include "MarioCameraTargetTests.hpp"
 #include "OriginalMarioStateTests.hpp"
+#include "OriginalPlayerUtilTests.hpp"
 #include "RendererService.hpp"
 #include "camera/StageStartCamera.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/CollisionPartsCompat.hpp"
+#include "compat/CollisionDirectorOwnership.hpp"
 #include "compat/GameDataSession.hpp"
+#include "compat/JkrAllocationDomain.hpp"
 #include "compat/MarioCameraTarget.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "scene/GatewayDemoScene.hpp"
+#include "scene/AuthoredPlacementInstantiator.hpp"
+#include "scene/NameObjChildOwner.hpp"
+#include "scene/SceneObjHolderRuntime.hpp"
+#include "scene/SceneInitializationState.hpp"
+#include "scene/SceneExecutionBinding.hpp"
 #include "scene/nameobj/NameObjFactory.hpp"
 
 #include <aurora/dvd.h>
@@ -49,6 +66,8 @@
 #include <stdexcept>
 #include <string>
 #include <string_view>
+#include <utility>
+#include <vector>
 
 namespace {
     constexpr auto cPlanetCollisionSource =
@@ -60,6 +79,57 @@ namespace {
         }
     }
 
+    // Same raw-child and heap lifetime boundary used by Showcase's player
+    // owner, including failure unwinding and same-scene player replacement.
+    class MarioFixtureOwner final {
+    public:
+        explicit MarioFixtureOwner(smgpc::runtime::RuntimeContext& runtime)
+            : _runtime(runtime), _domain(smgpc::scene::current_scene_allocation_domain()) {
+            require(_domain != nullptr, "Mario fixture construction requires the actual scene heap");
+            create();
+        }
+
+        ~MarioFixtureOwner() { reset(); }
+
+        void create() {
+            require(_actor == nullptr, "Mario fixture must retire its old actor before replacement");
+            const auto phase = smgpc::scene::SceneInitializationScope(SceneInitializeState_PlacementPlayer);
+            _actor = static_cast<MarioActor*>(_objects.capture_construction_children([&] {
+                const auto game = smgpc::compat::JkrAllocationScope(_domain);
+                return createNameObj<MarioActor>("MarioActor");
+            }));
+            require(_actor != nullptr, "Mario fixture creator returned no actor");
+        }
+
+        void initialize(const JMapInfoIter& placement) {
+            const auto phase = smgpc::scene::SceneInitializationScope(SceneInitializeState_PlacementPlayer);
+            _objects.capture_construction_children([&] {
+                const auto game = smgpc::compat::JkrAllocationScope(_domain);
+                _actor->init(placement);
+            });
+        }
+
+        MarioActor* get() const { return _actor; }
+
+        void reset() noexcept {
+            const auto host = smgpc::compat::JkrHostAllocationScope{};
+            if (_actor != nullptr && _runtime.player_system().attached_actor() == _actor) {
+                _runtime.player_system().detach_actor(_actor);
+            }
+            if (auto* holder = MR::getMarioHolder(); holder != nullptr && holder->getMarioActor() == _actor) {
+                holder->setMarioActor(nullptr);
+            }
+            _objects.clear();
+            _actor = nullptr;
+        }
+
+    private:
+        smgpc::runtime::RuntimeContext& _runtime;
+        std::shared_ptr<smgpc::compat::JkrAllocationDomain> _domain;
+        smgpc::scene::NameObjChildOwner _objects;
+        MarioActor* _actor = nullptr;
+    };
+
     void require_near(float actual, float expected, float tolerance,
                       std::string_view message) {
         if (!std::isfinite(actual) || std::fabs(actual - expected) > tolerance) {
@@ -67,15 +137,6 @@ namespace {
                                      std::to_string(actual) + ";expected=" +
                                      std::to_string(expected));
         }
-    }
-
-    void set_mario_swing_permission(LiveActor& actor, bool permitted) {
-        auto* mario = dynamic_cast<MarioActor*>(&actor);
-        if (mario == nullptr) {
-            throw std::logic_error(
-                "the test player entitlement bridge requires MarioActor");
-        }
-        mario->_EEB = permitted;
     }
 
     void verify_mario_camera_target_accessors(MarioActor& actor) {
@@ -254,13 +315,39 @@ namespace {
                       left.x * right.y - left.y * right.x};
     }
 
+    std::size_t original_player_submitted_shapes(const MarioActor& actor) {
+        auto* holder = smgpc::scene::current_scene_name_obj_list_executor().mBufferHolder;
+        require(holder != nullptr, "original scene must own its allocated DrawBufferHolder");
+        const auto* model = actor.mModelManager->getJ3DModel();
+        auto submitted = std::size_t{};
+        for (const auto& group : holder->mBufferGroups) {
+            for (const auto* executor : group.mActiveExecutors) {
+                if (std::find(executor->mActors, executor->mActors + executor->mNumActors, &actor) ==
+                    executor->mActors + executor->mNumActors) continue;
+                require(executor->mDrawBuffer != nullptr && executor->mDrawBuffer->mNumActors > 0,
+                        "active original Mario draw executor must own its actor list and draw buffer");
+                for (auto drawer_index = 0; drawer_index < executor->mDrawBuffer->mNumShapeDrawers; ++drawer_index) {
+                    const auto* drawer = executor->mDrawBuffer->getShapeDrawerByIndex(drawer_index);
+                    for (auto packet_index = 0; packet_index < drawer->mNumPackets; ++packet_index) {
+                        const auto* packet = drawer->getShapePacket(packet_index);
+                        if (packet->getModel() != model || (packet->mpShape->mFlags & 1U) != 0U) continue;
+                        require(packet == model->getShapePacket(packet->mpShape->mIndex) &&
+                                    packet->mpMtxBuffer == model->mMtxBuffer &&
+                                    drawer->mMatPacket->mpDisplayListObj != nullptr &&
+                                    drawer->mMatPacket->mpDisplayListObj->mSize != 0U,
+                                "submitted original Mario shape must retain the model's actual packet, matrix buffer and material display list");
+                        ++submitted;
+                    }
+                }
+            }
+        }
+        return submitted;
+    }
+
     struct DrawProof {
         std::size_t packet_count = 0U;
         std::size_t source_triangles = 0U;
         std::size_t parsed_display_list_bytes = 0U;
-        std::size_t animated_joint_packets = 0U;
-        float bck_frame = 0.0F;
-        std::int16_t bck_frame_max = 0;
     };
 
 #ifndef NDEBUG
@@ -274,12 +361,6 @@ namespace {
             ++proof.packet_count;
             proof.source_triangles += packet.state.source_triangle_count;
             proof.parsed_display_list_bytes += packet.state.parsed_display_list_bytes;
-            proof.animated_joint_packets +=
-                packet.state.bck_active && packet.state.bck_joint_count != 0U;
-            if (packet.state.bck_active) {
-                proof.bck_frame = packet.state.bck_frame;
-                proof.bck_frame_max = packet.state.bck_frame_max;
-            }
         }
         return proof;
     }
@@ -343,7 +424,12 @@ namespace {
         std::uint32_t effective_hold_mask = 0U;
         bool grounded = false;
         bool debug_button_script_applied = false;
-        std::string bck_name{};
+        std::string animation_name{};
+        std::string dominant_bck{};
+        float animation_frame = 0.0F;
+        s16 animation_frame_max = 0;
+        float moving_track_weight = 0.0F;
+        std::size_t animated_joint_count = 0U;
     };
 
     void require_grounded_base_matrix(const FrameProof& proof,
@@ -377,7 +463,7 @@ namespace {
                 "grounded Mario's rendered up axis must follow the fresh Binder ground normal");
     }
 
-    void test_real_gateway_mario_stand_and_walk() {
+    void test_real_gateway_mario_stand_and_walk(bool focused_player_util) {
         const auto disc_path = require_real_disc();
         const auto scripted_input = ScopedEnvironmentVariable{
             "SMGPC_DEBUG_WPAD_BUTTON_SCRIPT", ""};
@@ -402,6 +488,8 @@ namespace {
         auto renderer = smgpc::render::AuroraRenderer(window);
         auto resource_runtime = smgpc::resource::GameResourceRuntime{};
         auto runtime = smgpc::runtime::RuntimeContext(*logger, window, resource_runtime);
+        runtime.initialize_scenario_catalog(resource_runtime);
+        runtime.initialize_particle_resources(resource_runtime);
         runtime.set_current_stage_name("HeavensDoorGalaxy");
 
         const auto scene_renderer_context =
@@ -438,13 +526,12 @@ namespace {
                     !smgpc::scene::nameobj::can_create_name_obj("MarioActor"),
                 "the production Mario factory must remain absent in the development slice");
 
-        auto created = std::unique_ptr<NameObj>{createNameObj<MarioActor>("MarioActor")};
+        auto created = MarioFixtureOwner(runtime);
         auto* actor = dynamic_cast<MarioActor*>(created.get());
         require(actor != nullptr,
                 "the typed development creator must construct the real MarioActor");
         const auto entitlement_bridge =
             smgpc::runtime::PlayerActorBridge{
-                .set_swing_permission = &set_mario_swing_permission,
                 .read_element_mode = +[](const LiveActor& value) -> s32 {
                     return static_cast<const MarioActor&>(value).mPlayerMode;
                 },
@@ -463,9 +550,8 @@ namespace {
                 },
             };
         runtime.player_system().attach_actor(*actor, entitlement_bridge);
-        require(runtime.player_system().attached_actor() == actor &&
-                    !runtime.player_system().is_swing_permitted() && !actor->_EEB,
-                "the real Gateway player owner must attach Mario with spin entitlement initially locked");
+        require(runtime.player_system().attached_actor() == actor && actor->_EEB,
+                "attaching Mario must preserve the original constructor state until actor init");
 
         auto placement_lease =
             smgpc::scene::GatewayDemoScene::PlacementLease{};
@@ -476,8 +562,10 @@ namespace {
             {
                 const auto renderer_context =
                     smgpc::render::ScopedAuroraRendererContext(renderer);
-                runtime.begin_frame(frame);
-                actor->init(scene.player_start_iter());
+                // Scene finalization allocates the original execution lists.
+                // As in Showcase, initialization has a renderer frame but no
+                // scene tick until those lists and Mario are ready.
+                created.initialize(scene.player_start_iter());
                 placement_lease = scene.finalize_placements(*actor);
                 smgpc::tests::verify_original_mario_walk_parameters(*actor);
                 verify_mario_camera_target_accessors(*actor);
@@ -485,22 +573,24 @@ namespace {
                 runtime.player_system().set_camera_target(
                     smgpc::compat::create_mario_camera_target(*actor));
                 wait_frame_max =
-                    smgpc::compat::require_actor_bck(actor, "Wait", nullptr);
+                    MR::getBckFrameMax(actor, "Wait");
                 runtime.game_layout().activate_game_scene_draw_3d();
             }
             renderer.end_frame();
         }
 
         auto *planet = scene.planet();
-        auto *planet_model = smgpc::compat::actor_model(planet);
-        require(planet != nullptr && planet_model != nullptr &&
-                    planet_model->model_arc_name() ==
-                        "HeavensDoorMysteriousPlanet",
+        require(planet != nullptr && planet->mModelManager != nullptr &&
+                    planet->mModelManager->getJ3DModel() != nullptr,
                 "the Mario proof must use the production-owned ordinary PlanetMap model");
-        planet_model->requireLoaded();
+        auto* planet_model = planet->mModelManager->getJ3DModelData();
+        auto* planet_resources_owner = planet->mModelManager->getModelResourceHolder();
+        require(planet_model != nullptr && planet_resources_owner != nullptr &&
+                    planet_resources_owner->mModelResTable->getRes("HeavensDoorMysteriousPlanet") == planet_model,
+                "the ordinary PlanetMap J3D model must borrow the actual authored ResourceHolder model");
         const auto planet_resources =
             smgpc::compat::actor_collision_parts_resources(planet);
-        require(planet_model->isLoaded() && planet_resources.size() == 2U &&
+        require(planet_model->getJointNum() != 0U && planet_resources.size() == 2U &&
                     planet_resources[0].resource_name ==
                         "HeavensDoorMysteriousPlanet" &&
                     planet_resources[0].kcl_size == 632430U &&
@@ -531,10 +621,35 @@ namespace {
                 "GatewayDemoScene must provide the retail MarioHolder SceneObj");
 
         auto& walk_collision = scene.collision();
+        // Original tryCreateCollisionMoveLimit registers category 3. The
+        // active map service counts only the four category-0 planet meshes.
         require(smgpc::scene::StageCollisionService::active() == &walk_collision &&
-                    walk_collision.stats().mesh_count == 6U &&
-                    walk_collision.stats().triangle_count >= 7789U,
-                "Mario and the executable must share GatewayDemoScene's exact active KCL service");
+                    walk_collision.stats().mesh_count == 4U &&
+                    walk_collision.stats().triangle_count == 14207U,
+                "Mario and the executable must share the four authored map meshes and 14207 category-0 triangles");
+        auto* collision_owner = smgpc::scene::current_collision_director_ownership();
+        require(collision_owner != nullptr && collision_owner->category_service(3).stats().mesh_count == 2U,
+                "both authored MoveLimit meshes must remain in the original separate collision category");
+        auto collision_sources = std::vector<std::pair<std::string, std::size_t>>{};
+        for (const auto& entry : scene.authored_placement_report().entries) {
+            if (const auto* placed_actor = dynamic_cast<const LiveActor*>(entry.actor)) {
+                for (const auto& resource : smgpc::compat::actor_collision_parts_resources(placed_actor)) {
+                    collision_sources.emplace_back(resource.kcl_source, resource.kcl_size);
+                }
+            }
+        }
+        auto expected_collision_sources = std::vector<std::pair<std::string, std::size_t>>{
+            {"/ObjectData/HeavensDoorMysteriousPlanet.arc:/heavensdoormysteriousplanet.kcl", 632430U},
+            {"/ObjectData/HeavensDoorMysteriousPlanet.arc:/movelimit.kcl", 25868U},
+            {"/ObjectData/HeavensDoorMiddlePlanet.arc:/heavensdoormiddleplanet.kcl", 67598U},
+            {"/ObjectData/HeavensDoorMiddlePlanet.arc:/movelimit.kcl", 2446U},
+            {"/ObjectData/HeavensDoorSmallPlanet.arc:/heavensdoorsmallplanet.kcl", 69376U},
+            {"/ObjectData/HeavensDoorBlackHolePlanet.arc:/heavensdoorblackholeplanet.kcl", 365324U},
+        };
+        std::ranges::sort(collision_sources);
+        std::ranges::sort(expected_collision_sources);
+        require(collision_sources == expected_collision_sources,
+                "all six exact authored planet/MoveLimit KCL resources must retain their original owners");
         const auto walk_triangle_count = walk_collision.stats().triangle_count;
 
         require(MR::getMarioHolder()->getMarioActor() == actor,
@@ -547,21 +662,29 @@ namespace {
                     runtime.scene_lights().player_light_ctrl() ==
                         actor->mActorLightCtrl,
                 "MarioActor PC init must install and register the exact player-light controller after scene connection");
-        require(smgpc::compat::actor_model(actor) != nullptr &&
-                    smgpc::compat::actor_model(actor)->isLoaded() &&
-                    smgpc::compat::actor_model_joint_count(actor) != 0U,
+        require(actor->mModelManager != nullptr &&
+                    actor->mModelManager->getJ3DModel() != nullptr &&
+                    actor->mModelManager->getJ3DModelData() != nullptr &&
+                    actor->mModelManager->getJ3DModelData()->getJointNum() != 0U,
                 "MarioActor init must load the real Mario model and joints");
-        require(smgpc::compat::actor_current_bck_name(actor) == "Wait" &&
-                    wait_frame_max == 180,
-                "MarioActor init must bind the real 180-frame Wait.bck");
+        auto* initial_animation = actor->mModelManager->mXanimePlayer;
+        require(initial_animation != nullptr && initial_animation->isRun("ステージインA") &&
+                    std::string_view(initial_animation->getCurrentBckName()) == "StageStartGround" &&
+                    initial_animation->mCurrentAnimation->_20[0] ==
+                        actor->mModelManager->getResourceHolder()->mMotionResTable->getRes("StageStartGround") &&
+                    MR::getBckFrameMax(actor, "StageStartGround") == 64 && wait_frame_max == 180,
+                "the authored initial-animation branch must select original StageStartGround while retaining the 180-frame Wait resource");
 
         auto expected_gravity = point_gravity->mTranslation - actor->mPosition;
         expected_gravity.scale(1.0F / expected_gravity.length());
-        require(actor->mFlag.mIsCalcGravity &&
-                    actor->mGravity.epsilonEquals(expected_gravity, 0.0001F) &&
+        // Original MarioActor::initAfterPlacement explicitly updates _240
+        // and Mario's gravity. It does not enable LiveActor's gravity phase.
+        require(MR::getPlayerGravity() == actor->mMario->getGravityVec() &&
+                    MR::getPlayerGravity() == &actor->getGravityVec() &&
+                    actor->getGravityVec().epsilonEquals(expected_gravity, 0.0001F) &&
                     actor->_240.epsilonEquals(expected_gravity, 0.0001F) &&
                     actor->mMario->mAirGravityVec.epsilonEquals(expected_gravity, 0.0001F),
-                "MarioActor init must enable and retain exact Gateway point gravity");
+                "original Mario post-placement must retain selected player gravity from the authored point-gravity owner");
 
 #ifndef NDEBUG
         require(std::ranges::count_if(runtime.scheduler().snapshot(), [](const auto& entry) {
@@ -570,6 +693,7 @@ namespace {
                 "RuntimeContext must own exactly one Mario registration");
 #endif
 
+        auto screenshot_frame = std::optional<std::uint64_t>{};
         const auto run_frame = [&](std::uint64_t frame_index) {
             auto proof = FrameProof{};
             auto frame = renderer.begin_frame();
@@ -592,11 +716,33 @@ namespace {
                         "repeated camera-phase requests must not advance the player target twice");
                 proof.position_after = actor->mPosition;
                 proof.last_move = actor->getLastMove();
-                proof.grounded =
-                    actor->mBinder != nullptr && actor->mBinder->isBindedGround();
-                proof.bck_name =
-                    std::string(smgpc::compat::actor_current_bck_name(actor));
-                proof.base_matrix = smgpc::compat::actor_base_matrix(actor).m;
+                proof.grounded = MR::isOnGroundPlayer();
+                auto& animation = *actor->mModelManager->mXanimePlayer;
+                auto& core = *animation.mCore;
+                require(animation.mCurrentAnimation != nullptr && core.mTrackCount != 0U,
+                        "scheduled Mario must retain its actual current Xanime group and tracks");
+                proof.animation_name = animation.getCurrentAnimationName();
+                proof.animated_joint_count = core.mJointCount;
+                auto dominant_track = 0U;
+                for (auto index = 0U; index < animation.mCurrentAnimation->mBckTableVariant; ++index) {
+                    require(core.mTrackList[index]._0 == animation.mCurrentAnimation->_20[index] &&
+                                std::isfinite(core.mTrackList[index].mWeight),
+                            "XanimeCore tracks must borrow the actual current-group BCK resources with finite weights");
+                    if (core.mTrackList[index].mWeight > core.mTrackList[dominant_track].mWeight) {
+                        dominant_track = index;
+                    }
+                    if (proof.animation_name == "基本" && index < 3U) {
+                        proof.moving_track_weight += core.mTrackList[index].mWeight;
+                    }
+                }
+                const auto* motion = core.mTrackList[dominant_track]._0;
+                require(motion != nullptr, "the dominant original animation track must have a BCK resource");
+                const auto* motion_name = actor->mModelManager->getResourceHolder()->mMotionResTable->findResName(motion);
+                require(motion_name != nullptr, "the dominant original animation resource must belong to Mario's ResourceHolder");
+                proof.dominant_bck = motion_name;
+                proof.animation_frame = motion->getFrame();
+                proof.animation_frame_max = motion->getFrameMax();
+                std::copy_n(&actor->getBaseMtx()[0][0], proof.base_matrix.size(), proof.base_matrix.begin());
 
                 require(runtime.scene_camera_pose().has_value(),
                         "the authored camera must remain active while Mario moves");
@@ -622,7 +768,7 @@ namespace {
 #endif
             }
             renderer.end_frame();
-            if (frame_index == 157U) {
+            if (screenshot_frame == frame_index) {
                 if (const auto* path = std::getenv("SMGPC_TEST_SCREENSHOT_PATH");
                     path != nullptr && path[0] != '\0') {
                     renderer.request_screenshot_png(path);
@@ -637,14 +783,75 @@ namespace {
             return proof;
         };
 
+        if (focused_player_util) {
+            auto frame_index = std::uint64_t{101U};
+            const auto wait_until_ready = [&] {
+                auto ready_frames = 0U;
+                auto submitted_shapes = std::size_t{};
+                for (auto attempt = 0U; attempt < 240U; ++attempt) {
+                    auto frame = renderer.begin_frame();
+                    frame.frame_index = frame_index++;
+                    {
+                        const auto renderer_context = smgpc::render::ScopedAuroraRendererContext(renderer);
+#ifndef NDEBUG
+                        runtime.set_j3d_packet_trace_frame(frame.frame_index);
+#endif
+                        runtime.begin_frame(frame);
+                        require(runtime.scene_camera_pose().has_value(),
+                                "focused original player fixture requires its live camera owner");
+                        runtime.draw_3d_normal(*runtime.scene_camera_pose());
+                        auto* model = actor->mModelManager->getJ3DModel();
+                        require(model != nullptr && model->mModelData->getJointNum() != 0U,
+                                "focused player fixture must retain the real animated J3D model");
+                        for (auto joint = 0U; joint < model->mModelData->getJointNum(); ++joint) {
+                            const auto* matrix = &model->getAnmMtx(joint)[0][0];
+                            require(std::all_of(matrix, matrix + 12U, [](float value) { return std::isfinite(value); }),
+                                    "original Mario joints must remain finite during focused entry progression");
+                        }
+                        submitted_shapes = std::max(submitted_shapes, original_player_submitted_shapes(*actor));
+                    }
+                    renderer.end_frame();
+                    if (!actor->mMario->isInputDisable() && !actor->mMario->mDrawStates._7 &&
+                        actor->mModelManager->mXanimePlayer->isRun("基本") && MR::isOnGroundPlayer()) {
+                        if (++ready_frames >= 3U) {
+                            require(submitted_shapes != 0U,
+                                    "focused original Mario must submit its own material/shape packets through the active draw buffer");
+                            return;
+                        }
+                    } else {
+                        ready_frames = 0U;
+                    }
+                }
+                throw std::runtime_error("focused original player fixture did not finish entry and reach controllable ground within 240 ticks");
+            };
+            wait_until_ready();
+            smgpc::tests::verify_original_player_util(*actor);
+            runtime.camera_system().clear_stage_start_camera(camera_owner);
+            placement_lease.reset();
+            require(scene.state() == smgpc::scene::GatewayDemoSceneState::Retired &&
+                        walk_collision.empty() && smgpc::scene::StageCollisionService::active() == nullptr,
+                    "focused original player fixture must retire authored collision before its player");
+            created.reset();
+            actor = nullptr;
+            require(runtime.player_system().attached_actor() == nullptr &&
+                        MR::getMarioHolder()->getMarioActor() == nullptr &&
+                        runtime.scene_lights().player_light_ctrl() == nullptr,
+                    "focused player retirement must clear every borrowed player owner");
+            std::cout << "[proof] focused actual PlayerUtil: original entry, finite joints, original draw buffers, utility checks and scene teardown passed\n";
+            return;
+        }
+
         auto wait_frame = FrameProof{};
         auto saw_ground = false;
-        for (auto frame_index = std::uint64_t{101U}; frame_index < 113U;
-             ++frame_index) {
+        auto entry_complete = false;
+        auto stable_entry_frames = 0U;
+        auto last_settle_frame = std::uint64_t{100U};
+        for (auto frame_index = std::uint64_t{101U}; frame_index < 341U; ++frame_index) {
             wait_frame = run_frame(frame_index);
             require(!wait_frame.debug_button_script_applied,
                     "neutral settle frames must use only real host input");
-            if (saw_ground && !wait_frame.grounded) {
+            const auto input_ready = !actor->mMario->isInputDisable() && !actor->mMario->mDrawStates._7;
+            if (input_ready && saw_ground && !wait_frame.grounded) {
                 const auto binder_center = actor->mPosition + actor->_2C4;
                 const auto support = walk_collision.move_sphere(
                     binder_center, TVec3f{}, actor->mBinder->mRadius, 32U, true);
@@ -663,15 +870,27 @@ namespace {
                     ";support_contacts=" + std::to_string(support.contacts.size()) +
                     ";support_move=" + std::to_string(support.displacement.length()));
             }
-            saw_ground = saw_ground || wait_frame.grounded;
+            saw_ground = saw_ground || (input_ready && wait_frame.grounded);
+            last_settle_frame = frame_index;
+            if (input_ready && wait_frame.grounded && wait_frame.animation_name == "基本" &&
+                wait_frame.dominant_bck == "Wait" && wait_frame.last_move.length() < 0.01F) {
+                if (++stable_entry_frames >= 3U) {
+                    entry_complete = true;
+                    break;
+                }
+            } else {
+                stable_entry_frames = 0U;
+            }
         }
-        require(saw_ground && wait_frame.grounded && wait_frame.last_move.length() < 0.01F,
-                "neutral Mario must settle to a stable stand on the real planet KCL");
+        require(entry_complete && saw_ground,
+                "original stage entry must finish, unlock input, and settle on authored KCL within 240 ticks;animation=" +
+                    wait_frame.animation_name + ";track=" + wait_frame.dominant_bck);
+        std::cout << "[entry] original entry completed at frame " << last_settle_frame << '\n';
         const auto* actor_light = actor->mActorLightCtrl->getActorLight();
         require(actor_light != nullptr,
                 "Mario's final neutral frame must retain its exact ActorLightInfo");
 #ifndef NDEBUG
-        require_mario_packet_lighting(runtime, 112U, *actor_light);
+        require_mario_packet_lighting(runtime, last_settle_frame, *actor_light);
 #else
         throw std::runtime_error(
             "the Mario packet-boundary lighting proof requires a debug build");
@@ -778,11 +997,11 @@ namespace {
         };
         assert_follow_camera_round_trip(actor_light->mInfo0);
         assert_follow_camera_round_trip(actor_light->mInfo1);
-        require(wait_frame.bck_name == "Wait" && wait_frame.draw.packet_count != 0U &&
+        require(wait_frame.dominant_bck == "Wait" && wait_frame.draw.packet_count != 0U &&
                     wait_frame.draw.source_triangles != 0U &&
                     wait_frame.draw.parsed_display_list_bytes != 0U &&
-                    wait_frame.draw.animated_joint_packets != 0U &&
-                    wait_frame.draw.bck_frame_max == 180,
+                    wait_frame.animated_joint_count != 0U &&
+                    wait_frame.animation_frame_max == 180,
                 "the stable stand frame must draw real Mario packets with Wait.bck");
 
         const auto& stand_triangle = actor->mBinder->mGroundInfo.mParentTriangle;
@@ -809,8 +1028,11 @@ namespace {
         auto animation_frame_advanced = false;
         auto previous_run_frame = std::optional<float>{};
         set_host_key(window, SDLK_W, true);
-        for (auto frame_index = std::uint64_t{113U}; frame_index < 158U;
-             ++frame_index) {
+        const auto walk_begin_frame = last_settle_frame + 1U;
+        const auto walk_end_frame = walk_begin_frame + 45U;
+        screenshot_frame = walk_end_frame - 1U;
+        auto last_walk_frame = FrameProof{};
+        for (auto frame_index = walk_begin_frame; frame_index < walk_end_frame; ++frame_index) {
             const auto walk_frame = run_frame(frame_index);
             const auto stick = aurora::wpad_service().sub_stick(WPAD_CHAN0);
             require(!walk_frame.debug_button_script_applied &&
@@ -819,15 +1041,16 @@ namespace {
                     "W must reach the Nunchuk stick without also pressing the camera D-pad");
             walked_every_frame_on_ground =
                 walked_every_frame_on_ground && walk_frame.grounded;
-            saw_run = saw_run || walk_frame.bck_name == "Run";
-            if (walk_frame.bck_name == "Run") {
+            saw_run = saw_run || walk_frame.dominant_bck == "Run";
+            if (walk_frame.dominant_bck == "Run") {
                 if (previous_run_frame.has_value() &&
-                    std::fabs(walk_frame.draw.bck_frame - *previous_run_frame) > 0.001F) {
+                    std::fabs(walk_frame.animation_frame - *previous_run_frame) > 0.001F) {
                     animation_frame_advanced = true;
                 }
-                previous_run_frame = walk_frame.draw.bck_frame;
+                previous_run_frame = walk_frame.animation_frame;
             }
             run_draw = walk_frame.draw;
+            last_walk_frame = walk_frame;
         }
         set_host_key(window, SDLK_W, false);
 
@@ -841,20 +1064,20 @@ namespace {
                 "the host W path must retain retail forward-stick orientation, direction, and speed");
         require(walked_every_frame_on_ground,
                 "stick-driven Mario must remain grounded across the real planet KCL seam");
-        require(saw_run && smgpc::compat::actor_current_bck_name(actor) == "Run" &&
+        require(saw_run && last_walk_frame.dominant_bck == "Run" &&
                     run_draw.packet_count != 0U && run_draw.source_triangles != 0U &&
                     run_draw.parsed_display_list_bytes != 0U &&
-                    run_draw.animated_joint_packets != 0U &&
-                    run_draw.bck_frame_max > 0 && animation_frame_advanced,
+                    last_walk_frame.animated_joint_count != 0U &&
+                    last_walk_frame.animation_frame_max > 0 && animation_frame_advanced,
                 "stick input must select, advance, and draw the real Run.bck model;saw_run=" +
                     std::to_string(saw_run) + ";current_bck=" +
-                    std::string(smgpc::compat::actor_current_bck_name(actor)) +
+                    last_walk_frame.dominant_bck +
                     ";packets=" + std::to_string(run_draw.packet_count) +
                     ";triangles=" + std::to_string(run_draw.source_triangles) +
                     ";display_list_bytes=" + std::to_string(run_draw.parsed_display_list_bytes) +
-                    ";animated_packets=" + std::to_string(run_draw.animated_joint_packets) +
-                    ";bck_frame=" + std::to_string(run_draw.bck_frame) +
-                    ";bck_frame_max=" + std::to_string(run_draw.bck_frame_max) +
+                    ";original_animated_joints=" + std::to_string(last_walk_frame.animated_joint_count) +
+                    ";bck_frame=" + std::to_string(last_walk_frame.animation_frame) +
+                    ";bck_frame_max=" + std::to_string(last_walk_frame.animation_frame_max) +
                     ";animation_advanced=" + std::to_string(animation_frame_advanced));
         require(walk_distance > 5.0F &&
                     std::fabs(dot(walk_displacement, stand_gravity)) <
@@ -895,17 +1118,18 @@ namespace {
                 "the walked-to real planet surface must remain NoSlip and Lawn");
         auto walk_matrix_proof = FrameProof{};
         walk_matrix_proof.position_after = actor->mPosition;
-        walk_matrix_proof.base_matrix = smgpc::compat::actor_base_matrix(actor).m;
+        std::copy_n(&actor->getBaseMtx()[0][0], walk_matrix_proof.base_matrix.size(),
+                    walk_matrix_proof.base_matrix.begin());
         require_grounded_base_matrix(walk_matrix_proof, *walk_triangle.getNormal(0));
 
         auto release_frame = FrameProof{};
-        auto release_end_frame = std::uint64_t{158U};
+        auto release_end_frame = walk_end_frame;
         auto saw_release_inertia = false;
         auto reached_wait_at_rest = false;
         auto stable_rest_frames = std::size_t{};
         auto last_release_tangent_move = 0.0F;
         auto last_release_normal_move = 0.0F;
-        for (; release_end_frame < 360U; ++release_end_frame) {
+        for (; release_end_frame < walk_end_frame + 202U; ++release_end_frame) {
             release_frame = run_frame(release_end_frame);
             require(!release_frame.debug_button_script_applied,
                     "release frames must use only real host input");
@@ -941,8 +1165,8 @@ namespace {
             const auto speed = actor->mMario->mWalkSpeed;
             if (actor->mMario->mTargetWalkSpeedIndex == 0 && speed >= 0.2F) {
                 saw_release_inertia = true;
-                require(release_frame.bck_name == "Run",
-                        "Mario must keep Run while release inertia still moves him");
+                require(release_frame.animation_name == "基本" && release_frame.moving_track_weight > 0.0F,
+                        "release inertia must retain the original locomotion group and its fading movement-track weights");
             }
             auto release_ground_normal =
                 *actor->mBinder->mGroundInfo.mParentTriangle.getNormal(0);
@@ -956,7 +1180,7 @@ namespace {
             last_release_tangent_move = release_tangent_move.length();
             if (actor->mMario->mTargetWalkSpeedIndex == 0 && speed == 0.0F &&
                 actor->mVelocity.length() < 0.001F &&
-                release_frame.bck_name == "Wait" &&
+                release_frame.dominant_bck == "Wait" &&
                 last_release_tangent_move < 0.01F &&
                 std::fabs(last_release_normal_move) <= 1.2001F) {
                 ++stable_rest_frames;
@@ -977,7 +1201,7 @@ namespace {
                 std::to_string(actor->mMario->mWalkSpeed) + ";stick=" +
                 std::to_string(actor->mMario->mStickPos.z) + ";band=" +
                 std::to_string(actor->mMario->mTargetWalkSpeedIndex) + ";bck=" +
-                release_frame.bck_name + ";last_move=" +
+                release_frame.dominant_bck + ";last_move=" +
                 std::to_string(release_frame.last_move.length()) +
                 ";tangent_move=" +
                 std::to_string(last_release_tangent_move) +
@@ -986,8 +1210,8 @@ namespace {
                 ";saw_inertia=" + std::to_string(saw_release_inertia));
         }
         require(release_frame.draw.packet_count != 0U &&
-                    release_frame.draw.animated_joint_packets != 0U &&
-                    release_frame.draw.bck_frame_max == 180,
+                    release_frame.animated_joint_count != 0U &&
+                    release_frame.animation_frame_max == 180,
                 "the released actor must remain visible with the real Wait.bck");
         require_grounded_base_matrix(
             release_frame, *actor->mBinder->mGroundInfo.mParentTriangle.getNormal(0));
@@ -1002,9 +1226,9 @@ namespace {
                         actor->mMario->mTargetWalkSpeedIndex == 0 &&
                         actor->mMario->mStickPos.z < 0.01F &&
                         actor->mVelocity.length() < 0.001F &&
-                        release_frame.bck_name == "Wait" &&
+                        release_frame.dominant_bck == "Wait" &&
                         release_frame.draw.packet_count != 0U &&
-                        release_frame.draw.animated_joint_packets != 0U,
+                        release_frame.animated_joint_count != 0U,
                     "zero-input Mario must remain grounded, still, animated, and visible throughout the idle proof");
             auto idle_ground_normal =
                 *actor->mBinder->mGroundInfo.mParentTriangle.getNormal(0);
@@ -1027,7 +1251,7 @@ namespace {
             require((camera_frame.effective_hold_mask & WPAD_BUTTON_RIGHT) != 0U &&
                         stick.x == 0.0F && stick.y == 0.0F &&
                         actor->mMario->mWalkSpeed == 0.0F &&
-                        camera_frame.bck_name == "Wait",
+                        camera_frame.dominant_bck == "Wait",
                     "the host right arrow must reach the camera D-pad without moving Mario");
         }
         set_host_key(window, SDLK_RIGHT, false);
@@ -1039,6 +1263,10 @@ namespace {
             (void)run_frame(++release_end_frame);
         }
 
+        // The complete GameSequenceProgress::startScene owns this story
+        // entitlement in retail. This focused fixture selects the locked
+        // precondition explicitly through the original utility.
+        MR::setPlayerSwingPermission(false);
         const auto entitlement_magic = actor->mMario->mMagic;
         const auto entitlement_action = actor->_1E1;
         const auto entitlement_cooldown = actor->_946;
@@ -1051,36 +1279,36 @@ namespace {
         if (!(aurora::wpad_service().is_core_swing(WPAD_CHAN0) &&
               aurora::wpad_service().is_core_swing_triggered(WPAD_CHAN0) &&
               actor->_F00 && !actor->_EEB && !actor->isRequestRush() &&
-              locked_swing_frame.bck_name == "Wait")) {
+              locked_swing_frame.dominant_bck == "Wait")) {
             std::cerr << "[swing diagnostic] held=" << aurora::wpad_service().is_core_swing(WPAD_CHAN0)
                       << " triggered=" << aurora::wpad_service().is_core_swing_triggered(WPAD_CHAN0)
                       << " actor_edge=" << static_cast<int>(actor->_F00)
                       << " permitted=" << static_cast<int>(actor->_EEB)
                       << " rush=" << actor->isRequestRush()
-                      << " bck=" << locked_swing_frame.bck_name << '\n';
+                      << " bck=" << locked_swing_frame.dominant_bck << '\n';
         }
         require(aurora::wpad_service().is_core_swing(WPAD_CHAN0) &&
                     aurora::wpad_service().is_core_swing_triggered(WPAD_CHAN0) &&
                     actor->_F00 && !actor->_EEB && !actor->isRequestRush() &&
-                    locked_swing_frame.bck_name == "Wait",
+                    locked_swing_frame.dominant_bck == "Wait",
                 "a real host swing edge must be sampled but denied before entitlement");
 
         const auto locked_held_frame = run_frame(++release_end_frame);
         require(aurora::wpad_service().is_core_swing(WPAD_CHAN0) &&
                     !aurora::wpad_service().is_core_swing_triggered(WPAD_CHAN0) &&
                     !actor->_F00 && !actor->isRequestRush() &&
-                    locked_held_frame.bck_name == "Wait",
+                    locked_held_frame.dominant_bck == "Wait",
                 "holding the locked swing key must not synthesize another controller edge");
 
         set_host_swing_key(window, false);
         const auto rearm_swing_frame = run_frame(++release_end_frame);
         require(!aurora::wpad_service().is_core_swing(WPAD_CHAN0) &&
                     !actor->_F20 && !actor->_F00 && !actor->isRequestRush() &&
-                    rearm_swing_frame.bck_name == "Wait",
+                    rearm_swing_frame.dominant_bck == "Wait",
                 "releasing the host swing key must rearm Mario's retail edge detector");
 
         MR::setPlayerSwingPermission(true);
-        require(runtime.player_system().is_swing_permitted() && actor->_EEB &&
+        require(actor->_EEB &&
                     actor->mMario->mMagic == entitlement_magic &&
                     actor->_1E1 == entitlement_action &&
                     actor->_946 == entitlement_cooldown,
@@ -1093,7 +1321,7 @@ namespace {
                     actor->mMario->mMagic == entitlement_magic &&
                     actor->_1E1 == entitlement_action &&
                     actor->_946 == entitlement_cooldown &&
-                    unlocked_swing_frame.bck_name == "Wait",
+                    unlocked_swing_frame.dominant_bck == "Wait",
                 "a fresh real host swing edge must request Rush after entitlement without starting the spin action");
 
         const auto unlocked_held_frame = run_frame(++release_end_frame);
@@ -1103,21 +1331,21 @@ namespace {
                     actor->mMario->mMagic == entitlement_magic &&
                     actor->_1E1 == entitlement_action &&
                     actor->_946 == entitlement_cooldown &&
-                    unlocked_held_frame.bck_name == "Wait",
+                    unlocked_held_frame.dominant_bck == "Wait",
                 "holding an entitled swing must remain debounced without entering spin action state");
 
         set_host_swing_key(window, false);
         const auto released_swing_frame = run_frame(++release_end_frame);
         require(!actor->_F00 && !actor->isRequestRush() &&
-                    released_swing_frame.bck_name == "Wait",
+                    released_swing_frame.dominant_bck == "Wait",
                 "Rush permission must remain edge-triggered after the host key is released");
 
         runtime.player_system().detach_actor(actor);
         require(!runtime.player_system().camera_target_state().has_value(),
                 "player detachment must retire its original camera target");
         require(runtime.player_system().attached_actor() == nullptr &&
-                    runtime.player_system().is_swing_permitted() && !actor->_EEB,
-                "Gateway owner detach must revoke the outgoing actor bit while retaining same-stage entitlement");
+                    actor->_EEB,
+                "Gateway owner detach must retire host references without changing original entitlement state");
         runtime.unregister_live_actor_model(*actor);
         MR::getMarioHolder()->setMarioActor(nullptr);
         created.reset();
@@ -1138,18 +1366,18 @@ namespace {
             {
                 const auto renderer_context =
                     smgpc::render::ScopedAuroraRendererContext(renderer);
-                created.reset(createNameObj<MarioActor>("MarioActor"));
+                created.create();
                 actor = dynamic_cast<MarioActor*>(created.get());
                 require(actor != nullptr,
                         "Mario must be constructible again while the Gateway placement lease remains active");
                 runtime.player_system().attach_actor(*actor, entitlement_bridge);
                 require(actor->_EEB,
-                        "same-stage Mario replacement must inherit the retained spin entitlement");
+                        "Mario replacement must preserve its own original constructor entitlement");
                 // Authored SwitchArea movement has the retail non-null player
                 // contract, so publish the replacement before advancing the
                 // next scene frame, then initialize it at that frame boundary.
                 runtime.begin_frame(frame);
-                actor->init(scene.player_start_iter());
+                created.initialize(scene.player_start_iter());
                 // Gateway finalization owns the one retail player postpass at
                 // scene start. A later same-scene replacement crosses its own
                 // ordinary actor postpass while the placement lease is active.
@@ -1160,14 +1388,18 @@ namespace {
             renderer.end_frame();
         }
         require(MR::getMarioHolder()->getMarioActor() == actor &&
-                    smgpc::compat::actor_model(actor) != nullptr &&
-                    smgpc::compat::actor_model(actor)->isLoaded() &&
+                    actor->mModelManager != nullptr &&
+                    actor->mModelManager->getJ3DModel() != nullptr &&
+                    actor->mModelManager->getJ3DModelData() != nullptr &&
+                    actor->mModelManager->getJ3DModelData()->getJointNum() != 0U &&
                     runtime.scene_lights().player_light_ctrl() ==
                         actor->mActorLightCtrl,
                 "recreated Mario must own the real model and replace the holder and player-light bindings");
         const auto recreated_frame = run_frame(release_end_frame + 2U);
         require(recreated_frame.draw.packet_count != 0U,
                 "recreated Mario must update and draw through RuntimeContext");
+
+        smgpc::tests::verify_original_player_util(*actor);
 
         runtime.camera_system().clear_stage_start_camera(camera_owner);
         placement_lease.reset();
@@ -1187,8 +1419,8 @@ namespace {
 
         runtime.player_system().detach_actor(actor);
         require(runtime.player_system().attached_actor() == nullptr &&
-                    !actor->_EEB,
-                "recreated Mario must detach and revoke its entitlement bit before destruction");
+                    actor->_EEB,
+                "recreated Mario detachment must preserve its original constructor entitlement");
         runtime.unregister_live_actor_model(*actor);
         MR::getMarioHolder()->setMarioActor(nullptr);
         created.reset();
@@ -1220,10 +1452,15 @@ namespace {
     }
 }  // namespace
 
-int main() {
+int main(int argc, char** argv) {
     try {
-        test_real_gateway_mario_stand_and_walk();
-        std::cout << "[ok] real Gateway Mario stand/walk/release proof\n";
+        const auto focused_player_util = argc == 2 && std::string_view(argv[1]) == "--player-util";
+        require(argc == 1 || focused_player_util, "usage: smg-pc-mario-gateway-walk-tests [--player-util]");
+        // The process OS allocator initializes once. Repeat this focused
+        // lifecycle in separate processes, each with a fresh original scene.
+        test_real_gateway_mario_stand_and_walk(focused_player_util);
+        std::cout << (focused_player_util ? "[ok] real original PlayerUtil ownership proof\n"
+                                        : "[ok] real Gateway Mario stand/walk/release proof\n");
         return 0;
     } catch (const std::exception& error) {
         std::cerr << "[fail] real Gateway Mario stand/walk proof: " << error.what()

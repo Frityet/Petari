@@ -2459,6 +2459,7 @@ namespace smgpc::runtime {
     }
 
     void WipeService::force_open(std::string_view name) {
+        const smgpc::compat::JkrHostAllocationScope host;
         _current_name = name;
         _state = WipeState::Open;
         _remaining_frames = 0;
@@ -2467,6 +2468,7 @@ namespace smgpc::runtime {
     }
 
     void WipeService::force_close(std::string_view name) {
+        const smgpc::compat::JkrHostAllocationScope host;
         _current_name = name;
         _state = WipeState::Closed;
         _remaining_frames = 0;
@@ -2507,6 +2509,7 @@ namespace smgpc::runtime {
     }
 
     void WipeService::start_transition(WipeEventKind kind, WipeState state, std::string_view name, s32 frame_count) {
+        const smgpc::compat::JkrHostAllocationScope host;
         _current_name = name;
         _duration_frames = normalized_frame_count(frame_count);
         _remaining_frames = _duration_frames;
@@ -2515,6 +2518,7 @@ namespace smgpc::runtime {
     }
 
     void WipeService::push_event(WipeEventKind kind, std::string_view name, s32 frame_count) {
+        const smgpc::compat::JkrHostAllocationScope host;
         _events.push_back(WipeEvent{
             .kind = kind,
             .name = std::string(name),
@@ -3501,20 +3505,11 @@ namespace smgpc::runtime {
     void PlayerSystemService::reset_stage_state() {
         _camera_target.reset();
         _camera_target_frame.reset();
-        if (_attached_actor != nullptr &&
-            _actor_bridge.set_swing_permission != nullptr) {
-            _actor_bridge.set_swing_permission(*_attached_actor, false);
-        }
         _attached_actor = nullptr;
         _actor_bridge = {};
-        _player_hidden = false;
         _has_base_matrix = false;
         _has_forced_base_matrix = false;
         _on_ground = false;
-        _swing_permitted = false;
-        // Control ownership can span scene boundaries (notably puppetable
-        // demos), so stage-local actor teardown must not release it.
-        _reset_condition_requested = false;
         ++_base_matrix_revision;
         _base_matrix = {};
         _position = {};
@@ -3532,27 +3527,16 @@ namespace smgpc::runtime {
         _camera_target_frame.reset();
         if (_attached_actor != nullptr && _attached_actor != &actor) {
             detach_actor(_attached_actor);
-        } else if (_attached_actor == &actor &&
-                   _actor_bridge.set_swing_permission != nullptr) {
-            _actor_bridge.set_swing_permission(*_attached_actor, false);
         }
         _attached_actor = &actor;
         _actor_bridge = actor_bridge;
         copy_actor_state();
-        actor.mFlag.mIsHiddenModel = _player_hidden;
-        if (_actor_bridge.set_swing_permission != nullptr) {
-            _actor_bridge.set_swing_permission(actor, _swing_permitted);
-        }
     }
 
     void PlayerSystemService::detach_actor(const LiveActor *actor) {
         if (actor == nullptr || _attached_actor == actor) {
             _camera_target.reset();
             _camera_target_frame.reset();
-            if (_attached_actor != nullptr &&
-                _actor_bridge.set_swing_permission != nullptr) {
-                _actor_bridge.set_swing_permission(*_attached_actor, false);
-            }
             _attached_actor = nullptr;
             _actor_bridge = {};
         }
@@ -3566,7 +3550,6 @@ namespace smgpc::runtime {
         // The actor's original calcAnim phase owns matrix updates and their
         // gameplay side effects. This publication only snapshots current state.
         copy_actor_state();
-        _attached_actor->mFlag.mIsHiddenModel = _player_hidden;
     }
 
     void PlayerSystemService::set_camera_target(std::unique_ptr<CameraTargetObj> target) {
@@ -3583,20 +3566,6 @@ namespace smgpc::runtime {
         }
         _camera_target->movement();
         _camera_target_frame = frame_index;
-    }
-
-    void PlayerSystemService::show_player() {
-        _player_hidden = false;
-        if (_attached_actor != nullptr) {
-            _attached_actor->mFlag.mIsHiddenModel = false;
-        }
-    }
-
-    void PlayerSystemService::hide_player() {
-        _player_hidden = true;
-        if (_attached_actor != nullptr) {
-            _attached_actor->mFlag.mIsHiddenModel = true;
-        }
     }
 
     void PlayerSystemService::set_base_matrix(MtxPtr matrix) {
@@ -3621,47 +3590,6 @@ namespace smgpc::runtime {
             MR::setBaseTRMtx(_attached_actor, matrix);
             _attached_actor->mPosition.set(_position[0U], _position[1U], _position[2U]);
         }
-    }
-
-    void PlayerSystemService::set_swing_permission(bool permitted) {
-        if (_attached_actor != nullptr &&
-            _actor_bridge.set_swing_permission == nullptr) {
-            aurora::throw_host_exception<std::logic_error>(
-                "The attached player actor does not expose swing entitlement state.");
-        }
-        _swing_permitted = permitted;
-        if (_attached_actor != nullptr) {
-            _actor_bridge.set_swing_permission(*_attached_actor, permitted);
-        }
-    }
-
-    void PlayerSystemService::disable_control() {
-        _control_enabled = false;
-    }
-
-    void PlayerSystemService::enable_control(bool reset_condition) {
-        _control_enabled = true;
-        _reset_condition_requested = _reset_condition_requested || reset_condition;
-    }
-
-    void PlayerSystemService::finish_opening_demo() {
-        _control_enabled = true;
-        _reset_condition_requested = false;
-        _has_forced_base_matrix = false;
-        ++_base_matrix_revision;
-
-        if (_attached_actor == nullptr) {
-            return;
-        }
-
-        _attached_actor->mVelocity.zero();
-        smgpc::compat::clear_actor_binder_contacts(_attached_actor);
-        _attached_actor->mFlag.mIsNoBind = false;
-        copy_actor_state();
-    }
-
-    bool PlayerSystemService::is_player_hidden() const {
-        return _player_hidden;
     }
 
     bool PlayerSystemService::has_base_matrix() const {
@@ -3768,24 +3696,12 @@ namespace smgpc::runtime {
         return _camera_target.get();
     }
 
-    bool PlayerSystemService::is_swing_permitted() const {
-        return _swing_permitted;
-    }
-
-    bool PlayerSystemService::is_control_enabled() const {
-        return _control_enabled;
-    }
-
     std::uint64_t PlayerSystemService::base_matrix_revision() const {
         return _base_matrix_revision;
     }
 
     LiveActor *PlayerSystemService::attached_actor() const {
         return _attached_actor;
-    }
-
-    bool PlayerSystemService::consume_reset_condition_request() {
-        return std::exchange(_reset_condition_requested, false);
     }
 
     void PlayerSystemService::copy_actor_state() {

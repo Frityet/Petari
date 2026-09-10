@@ -6,6 +6,8 @@
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/System/GameDataFunction.hpp"
 #include "Game/Util/DemoUtil.hpp"
+#include "Game/Util/GamePadUtil.hpp"
+#include "Game/Util/PlayerUtil.hpp"
 #include "Logger.hpp"
 #include "RendererService.hpp"
 #include "camera/StageStartCamera.hpp"
@@ -15,10 +17,13 @@
 #include "compat/GameDataHolderCompat.hpp"
 #include "compat/GameDataSession.hpp"
 #include "compat/InformationMessageCompat.hpp"
+#include "compat/JkrAllocationDomain.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "scene/AuthoredPlacementInstantiator.hpp"
 #include "scene/GatewayDemoScene.hpp"
 #include "scene/GatewaySpinCheckpoint.hpp"
+#include "scene/NameObjChildOwner.hpp"
+#include "scene/SceneObjHolderRuntime.hpp"
 
 #include <aurora/dvd.h>
 #include <dolphin/dvd.h>
@@ -116,13 +121,6 @@ namespace {
             "spin checkpoint proof requires real RMGK01.iso (or SMGPC_REAL_DISC)");
     }
 
-    void set_mario_swing_permission(LiveActor &actor, bool permitted) {
-        auto *mario = dynamic_cast<MarioActor *>(&actor);
-        require(mario != nullptr,
-                "spin entitlement bridge requires the real MarioActor");
-        mario->_EEB = permitted;
-    }
-
     [[nodiscard]] const smgpc::scene::StagePlacementObject &find_placement(
         std::span<const smgpc::scene::StagePlacementObject> placements,
         std::string_view name, int row) {
@@ -213,12 +211,115 @@ namespace {
                 message);
     }
 
+    class CheckpointMarioOwner final {
+    public:
+        explicit CheckpointMarioOwner(
+            smgpc::runtime::PlayerSystemService& player_system)
+            : _player_system(&player_system),
+              _domain(smgpc::scene::current_scene_allocation_domain()) {
+            if (!_domain) {
+                throw std::logic_error("Mario construction requires the actual scene allocation domain");
+            }
+            try {
+                _actor = dynamic_cast<MarioActor*>(_objects.capture_construction_children([&] {
+                    const smgpc::compat::JkrAllocationScope game(_domain);
+                    return createNameObj<MarioActor>("MarioActor");
+                }));
+                if (_actor == nullptr) {
+                    throw std::runtime_error("the typed Gateway MarioActor creator returned the wrong object");
+                }
+                _player_system->attach_actor(
+                    *_actor,
+                    smgpc::runtime::PlayerActorBridge{
+                        .read_element_mode = &CheckpointMarioOwner::read_element_mode,
+                        .read_base_matrix = &CheckpointMarioOwner::read_base_matrix,
+                        .read_up_vector = &CheckpointMarioOwner::read_up_vector,
+                        .read_front_vector = &CheckpointMarioOwner::read_front_vector,
+                        .read_side_vector = &CheckpointMarioOwner::read_side_vector,
+                        .read_nerve_change_enabled = [](const LiveActor& actor) {
+                            return static_cast<const MarioActor&>(actor).isEnableNerveChange();
+                        },
+                        .read_center_position = [](LiveActor& actor) {
+                            return &static_cast<MarioActor&>(actor)._2A0;
+                        },
+                    });
+            } catch (...) {
+                retire();
+                throw;
+            }
+        }
+
+        CheckpointMarioOwner(const CheckpointMarioOwner&) = delete;
+        CheckpointMarioOwner& operator=(const CheckpointMarioOwner&) = delete;
+
+        ~CheckpointMarioOwner() {
+            retire();
+        }
+
+        void initialize(const JMapInfoIter& placement) {
+            _objects.capture_construction_children([&] {
+                const smgpc::compat::JkrAllocationScope game(_domain);
+                _actor->init(placement);
+            });
+        }
+
+        [[nodiscard]] MarioActor& actor() const {
+            return *_actor;
+        }
+
+        void retire() noexcept {
+            const smgpc::compat::JkrHostAllocationScope host;
+            if (_actor != nullptr && _player_system != nullptr &&
+                _player_system->attached_actor() == _actor) {
+                _player_system->detach_actor(_actor);
+            }
+            if (auto* holder = MR::getMarioHolder();
+                holder != nullptr && holder->getMarioActor() == _actor) {
+                holder->setMarioActor(nullptr);
+            }
+            _objects.clear();
+            _actor = nullptr;
+        }
+    private:
+        static s32 read_element_mode(const LiveActor& actor) {
+            const auto* mario = dynamic_cast<const MarioActor*>(&actor);
+            if (mario == nullptr) {
+                throw std::logic_error(
+                    "Gateway player element-mode bridge requires MarioActor");
+            }
+            return mario->mPlayerMode;
+        }
+
+        static MtxPtr read_base_matrix(const LiveActor& actor) {
+            return smgpc::compat::mario_camera_base_matrix(static_cast<const MarioActor&>(actor));
+        }
+
+        static void read_up_vector(const LiveActor& actor, TVec3f* out) {
+            static_cast<const MarioActor&>(actor).getUpVec(out);
+        }
+
+        static void read_front_vector(const LiveActor& actor, TVec3f* out) {
+            static_cast<const MarioActor&>(actor).getFrontVec(out);
+        }
+
+        static void read_side_vector(const LiveActor& actor, TVec3f* out) {
+            static_cast<const MarioActor&>(actor).getSideVec(out);
+        }
+
+        smgpc::runtime::PlayerSystemService* _player_system = nullptr;
+        std::shared_ptr<smgpc::compat::JkrAllocationDomain> _domain;
+        smgpc::scene::NameObjChildOwner _objects;
+        MarioActor* _actor = nullptr;
+    };
+
     void test_real_gateway_spin_unlock_checkpoint() {
         constexpr auto cPromptFrame = std::uint64_t{1762U};
-        constexpr auto cAcceptFrame = std::uint64_t{1792U};
+        constexpr auto cLastGuardedFrame = cPromptFrame + 30U;
+        constexpr auto cAcceptFrame = cLastGuardedFrame + 2U;
         const auto scripted_input = ScopedEnvironmentVariable{
             "SMGPC_DEBUG_WPAD_BUTTON_SCRIPT",
-            std::to_string(cAcceptFrame) + ":A"};
+            std::to_string(cLastGuardedFrame) + ":A;" +
+                std::to_string(cAcceptFrame) + ":A"};
         const auto disc_path = require_real_disc();
 
         aurora_dvd_close();
@@ -241,6 +342,8 @@ namespace {
         auto renderer = smgpc::render::AuroraRenderer(window);
         auto resource_runtime = smgpc::resource::GameResourceRuntime{};
         auto runtime = smgpc::runtime::RuntimeContext(*logger, window, resource_runtime);
+        runtime.initialize_scenario_catalog(resource_runtime);
+        runtime.initialize_particle_resources(resource_runtime);
         runtime.set_current_stage_name("HeavensDoorGalaxy");
         const auto scene_renderer_context =
             smgpc::render::ScopedAuroraRendererContext(renderer);
@@ -263,32 +366,14 @@ namespace {
                         smgpc::camera::StageStartCameraResolveStatus::Resolved &&
                     camera.camera.has_value(),
                 "checkpoint must resolve exact Gateway StartInfo camera 78");
-        const auto camera_owner = runtime.camera_system().set_authored_game_camera(
-            *camera.camera);
-        runtime.set_scene_camera_pose(camera.camera->calculation.pose);
-        auto created = std::unique_ptr<NameObj>{
-            createNameObj<MarioActor>("MarioActor")};
-        auto *mario = dynamic_cast<MarioActor *>(created.get());
-        require(mario != nullptr, "typed creator must construct real MarioActor");
-        runtime.player_system().attach_actor(
-            *mario, smgpc::runtime::PlayerActorBridge{
-                        .set_swing_permission = &set_mario_swing_permission,
-                        .read_element_mode = +[](const LiveActor &actor) -> s32 {
-                            return static_cast<const MarioActor &>(actor).mPlayerMode;
-                        },
-                        .read_base_matrix = +[](const LiveActor &actor) {
-                            return smgpc::compat::mario_camera_base_matrix(static_cast<const MarioActor &>(actor));
-                        },
-                        .read_up_vector = +[](const LiveActor &actor, TVec3f *out) {
-                            static_cast<const MarioActor &>(actor).getUpVec(out);
-                        },
-                        .read_front_vector = +[](const LiveActor &actor, TVec3f *out) {
-                            static_cast<const MarioActor &>(actor).getFrontVec(out);
-                        },
-                        .read_side_vector = +[](const LiveActor &actor, TVec3f *out) {
-                            static_cast<const MarioActor &>(actor).getSideVec(out);
-                        },
-                    });
+        runtime.set_freecam_enabled(false);
+        runtime.refresh_scene_camera_pose();
+        auto mario_owner = [&] {
+            const auto phase = smgpc::scene::SceneInitializationScope(
+                SceneInitializeState_PlacementPlayer);
+            return CheckpointMarioOwner{runtime.player_system()};
+        }();
+        auto* mario = &mario_owner.actor();
 
         auto placement_lease =
             smgpc::scene::GatewayDemoScene::PlacementLease{};
@@ -296,17 +381,26 @@ namespace {
         auto placement_demo_rabbits = std::vector<const DemoRabbit *>{};
         auto placement_lod_baseline = std::size_t{};
         auto placement_lod_count = std::size_t{};
+        // Resource uploads need a renderer frame, but original scene execution
+        // starts only after the complete placement postpass allocates its lists.
+        (void)renderer.begin_frame();
         {
             const auto renderer_context =
                 smgpc::render::ScopedAuroraRendererContext(renderer);
-            mario->init(scene.player_start_iter());
-            runtime.player_system().set_camera_target(
-                smgpc::compat::create_mario_camera_target(*mario));
-            runtime.camera_system().set_game_camera_target_player(
-                camera_owner, runtime.player_system());
+            {
+                const auto phase = smgpc::scene::SceneInitializationScope(
+                    SceneInitializeState_PlacementPlayer);
+                mario_owner.initialize(scene.player_start_iter());
+            }
             placement_lod_baseline =
                 smgpc::compat::actor_lod_ctrl_runtime_state_count();
             placement_lease = scene.finalize_placements(*mario);
+            // Establish this fixture's locked precondition through the original
+            // API. Retail GameSequenceProgress::startScene does this before spin
+            // entitlement; this bounded scene does not yet own that sequence.
+            require(!GameDataFunction::isPassedStoryEvent("スピン権利"),
+                    "the spin fixture precondition requires an unearned entitlement");
+            MR::setPlayerSwingPermission(false);
             placement_demo_rabbits = require_authored_demo_rabbits(scene);
             placement_lod_count =
                 smgpc::compat::actor_lod_ctrl_runtime_state_count();
@@ -338,6 +432,8 @@ namespace {
                     "checkpoint construction must not duplicate placement-owned rabbit LOD controllers");
         }
 
+        renderer.end_frame(runtime.wii_video().render_mode());
+
         require(&checkpoint->demo_runtime() == &scene.demo_runtime(),
                 "Gateway spin checkpoint installed a nested DemoDirector instead of borrowing the scene owner");
 
@@ -345,7 +441,7 @@ namespace {
                     MR::isExistSceneObj(SceneObj_InformationObserver),
                 "checkpoint must eagerly construct InformationMessage and InformationObserver before frame one");
         require(runtime.player_system().attached_actor() == mario &&
-                    !runtime.player_system().is_swing_permitted() && !mario->_EEB,
+                    !mario->_EEB,
                 "real Mario must start attached with spin entitlement locked");
         require(&checkpoint->checkpoint_game_data() ==
                         &game_data_session.holder() &&
@@ -379,8 +475,8 @@ namespace {
         // Test-only stimulus for the state machine: production leaves Mario at
         // StartInfo and requires ordinary movement into this authored radius.
         const auto &rosetta = find_placement(scene.placements(), "Rosetta", 12);
-        mario->mPosition.set(rosetta.translation[0U], rosetta.translation[1U],
-                            rosetta.translation[2U]);
+        MR::setPlayerPos(TVec3f{rosetta.translation[0U], rosetta.translation[1U],
+                               rosetta.translation[2U]});
         mario->mVelocity.zero();
         runtime.player_system().synchronize_attached_actor();
 
@@ -399,7 +495,7 @@ namespace {
         run_frame(1U);
         require(checkpoint->state() ==
                         smgpc::scene::GatewaySpinCheckpointState::FadeHandoff &&
-                    !runtime.player_system().is_control_enabled() &&
+                    MR::isOffPlayerControl() &&
                     checkpoint->evidence().fade_handoff_frames == 0U &&
                     !runtime.scene_wipe().events().empty() &&
                     runtime.scene_wipe().events().back().frame_count == 60,
@@ -421,8 +517,7 @@ namespace {
                     checkpoint->demo_runtime().is_active("チコガイドデモ") &&
                     checkpoint->demo_runtime().part_step(
                         "スピンゲット[デモ1]") == -1 &&
-                    !runtime.player_system().is_control_enabled() &&
-                    runtime.player_system().consume_reset_condition_request(),
+                    MR::isOffPlayerControl(),
                 "fade frame 90 must hand control through exact part-15 MarioPuppetable start");
 
         for (auto frame = std::uint64_t{92U}; frame < cPromptFrame; ++frame) {
@@ -458,10 +553,10 @@ namespace {
                     guide_definition != nullptr &&
                     guide_definition->sheet.is_paused() &&
                     !GameDataFunction::isPassedStoryEvent("スピン権利") &&
-                    !runtime.player_system().is_swing_permitted() && !mario->_EEB,
+                    !mario->_EEB,
                 "part-22 first step must invoke exact spin explanation once and pause before granting entitlement");
 
-        for (auto frame = cPromptFrame + 1U; frame < cAcceptFrame; ++frame) {
+        for (auto frame = cPromptFrame + 1U; frame < cLastGuardedFrame; ++frame) {
             run_frame(frame);
         }
         require(guide_definition->sheet.is_paused() &&
@@ -469,13 +564,31 @@ namespace {
                     checkpoint->evidence().prompt_delegate_calls == 1U,
                 "InformationObserver must retain its 30-frame guard without duplicate explanation");
 
+        // The checkpoint appears the observer after the original executor's
+        // connection phase, so its first display execution is the next frame.
+        // Execution 30 reaches mDisplayFrame == 0 and rejects a fresh A edge.
+        run_frame(cLastGuardedFrame);
+        require(MR::testCorePadTriggerA(WPAD_CHAN0) &&
+                    guide_definition->sheet.is_paused() &&
+                    !GameDataFunction::isPassedStoryEvent("スピン権利") &&
+                    !mario->_EEB &&
+                    checkpoint->evidence().prompt_delegate_calls == 1U,
+                "the 30th display execution must reject fresh A at the final guarded frame");
+        run_frame(cLastGuardedFrame + 1U);
+        require(!MR::testCorePadTriggerA(WPAD_CHAN0) &&
+                    guide_definition->sheet.is_paused() &&
+                    !GameDataFunction::isPassedStoryEvent("スピン権利") &&
+                    !mario->_EEB,
+                "guard expiry without a fresh edge must keep the prompt and entitlement locked");
+
         run_frame(cAcceptFrame);
-        require(!guide_definition->sheet.is_paused() &&
+        require(MR::testCorePadTriggerA(WPAD_CHAN0) &&
+                    !guide_definition->sheet.is_paused() &&
                     checkpoint->demo_runtime().is_time_keep_active() &&
                     GameDataFunction::isPassedStoryEvent("スピン権利") &&
                     smgpc::compat::game_data::holder_story_progress(
                         checkpoint->checkpoint_game_data()) == 15U &&
-                    runtime.player_system().is_swing_permitted() && mario->_EEB &&
+                    mario->_EEB &&
                     checkpoint->evidence().prompt_delegate_calls == 1U,
                 "fresh A after the guard must let exact InformationObserver resume and grant spin access");
         require(std::ranges::count_if(
@@ -532,11 +645,10 @@ namespace {
                     smgpc::compat::game_data::holder_story_progress(
                         game_data_session.holder()) == 15U,
                 "placement retirement must leave the caller-owned selected-file holder active at progress 15");
-        runtime.camera_system().clear_stage_start_camera(camera_owner);
-        runtime.player_system().detach_actor(mario);
-        runtime.unregister_live_actor_model(*mario);
-        MR::getMarioHolder()->setMarioActor(nullptr);
-        created.reset();
+        mario_owner.retire();
+        require(runtime.player_system().attached_actor() == nullptr &&
+                    MR::getMarioHolder()->getMarioActor() == nullptr,
+                "the actual Mario owner must detach the player and clear its holder before scene teardown");
     }
 
 }  // namespace

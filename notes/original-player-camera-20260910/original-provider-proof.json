@@ -1,0 +1,1679 @@
+{
+  "source_identical_player_util": true,
+  "provider_count": 278,
+  "counts": {
+    "PlayerUtil.cpp.o": 173,
+    "CameraUtil.cpp.o": 105
+  },
+  "duplicate_or_nonstrong": {},
+  "providers": {
+    "MR::hidePlayer()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isOnPlayer(HitSensor const*)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::jumpPlayer(JGeometry::TVec3<float> const&)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::pushPlayer(JGeometry::TVec3<float> const&)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::showPlayer()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getPlayerPos()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isExistMario()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isPlayerDead()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::setPlayerPos(char const*)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::setPlayerPos(JGeometry::TVec3<float> const&)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::endPlayerTalk()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getCameraCube()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::incPlayerLife(unsigned int)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isPlayerSquat()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::setPlayerSpot(float, unsigned int)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::forceFlyPlayer(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, int)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getPlayerUpVec(JGeometry::TVec3<float>*)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isPlayerFlying()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isPlayerHidden()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isPlayerInBind()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isPlayerInRush()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::startBckPlayer(char const*, BckCtrlData const&)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::startBckPlayer(char const*, char const*)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::startBckPlayer(char const*, int)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::forceJumpPlayer(JGeometry::TVec3<float> const&)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getPlayerRotate()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::hidePlayerJoint(char const*)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::incPlayerOxygen(unsigned int)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isActorOnPlayer(LiveActor const*)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isPlayerOnPress()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isPlayerSkating()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::onPlayerControl(bool)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::readyPlayerDemo()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::setRasterScroll(int, int, int)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::showPlayerJoint(char const*)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::startBckPlayerJ(char const*)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::startPlayerTalk(LiveActor const*)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::stopSoundPlayer(char const*, unsigned int)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getPlayerBaseMtx()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getPlayerGravity()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getPlayerSideVec(JGeometry::TVec3<float>*)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getPlayerTakePos(JGeometry::TVec3<float>*)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isOnGroundPlayer()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isOnPlayerShadow(LiveActor const*)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isPlayerCarryAny()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isPlayerDamaging()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isPlayerSleeping()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isPlayerSwimming()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::offPlayerControl()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::setBckRatePlayer(float)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::setPlayerBaseMtx(float (*) [4])": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::setPlayerJumpVec(JGeometry::TVec3<float> const&)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::startPlayerEvent(char const*)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::startSoundPlayer(char const*, int)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::stopPlayerFpView()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getPlayerFrontVec(JGeometry::TVec3<float>*)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getPlayerLastMove()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getPlayerThrowVec(JGeometry::TVec3<float>*)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getPlayerVelocity()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isPlayerInAreaObj(char const*)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::preventPlayerRush()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::resetPlayerEffect()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::resetPlayerStatus()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::setBckBlendWeight(float, float)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::setBckBlendWeight(float, float, float)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::setBckBlendWeight(float, float, float, float)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::setPlayerFrontVec(JGeometry::TVec3<float> const&, int)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::startSoundPlayerJ(char const*)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::tornadoJumpPlayer()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::tryPlayerCoinPull()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::calcPlayerJointMtx(JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>>*, char const*)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getPlayerCenterPos()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getPlayerDemoActor()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getPlayerGroundPos(JGeometry::TVec3<float>*)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getPlayerHitRadius()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getStarPiecePlayer()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isBckStoppedPlayer()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isOffPlayerControl()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isPlayerJumpRising()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isPlayerParalyzing()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isPlayerRefuseTalk()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isPlayerStaggering()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::onFollowDemoEffect()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::pushPlayerFromArea(JGeometry::TVec3<float> const&)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::setPlayerStateWait()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::tryPlayerPullActor(HitSensor*)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getCurrentRushActor()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isPlayerElementMode(int)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isPlayerHipDropLand()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isPlayerInWaterMode()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isPlayerSwingAction()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isPlayerTakingActor(char const*)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::setPlayerPosAndWait(char const*)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::setPlayerPosAndWait(JGeometry::TVec3<float> const&)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::startPlayerDownWipe()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::calcDistanceToPlayer(JGeometry::TVec3<float> const&)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::endBindAndPlayerFlip(LiveActor*, JGeometry::TVec3<float> const&)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::endBindAndPlayerJump(LiveActor*, JGeometry::TVec3<float> const&, unsigned int)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::endBindAndPlayerWait(LiveActor*)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getBckFrameMaxPlayer(char const*)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getBckFrameMaxPlayer()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getCurrentRushSensor()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::setPlayerPosOnGround(char const*)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::validatePlayerSensor()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::calcPlayerWorldPadDir(JGeometry::TVec3<float>*, float, float)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::curePlayerElementMode()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getPlayerGroundNormal()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getPlayerShadowHeight()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getPlayerShadowRotate()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isPlayerConfrontDeath()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isPlayerDisableFpView()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::miniTornadoJumpPlayer()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::setPlayerUpperRotateY(float)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::startLevelSoundPlayer(char const*, int)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::unlockPlayerAnimation()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::changePlayerItemStatus(int)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::endBindAndPlayerDamage(LiveActor*, JGeometry::TVec3<float> const&)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::forceKillPlayerByAbyss()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getPlayerMovementTimer()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isPlayerElementModeBee()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isPlayerElementModeIce()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isPlayerHipDropFalling()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isPlayerOnWaterSurface()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::noticePlayerDashChance()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::scatterStarPiecePlayer(unsigned int)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::setPlayerWalkingResist(float)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::checkPlayerSwingTrigger()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getPlayerCurrentBckName()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getPlayerXanimeResource()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isFpViewChangingFailure()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isPlayerTeresaDisappear()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::requestMovementOnPlayer()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::setCameraTargetToPlayer(CameraTargetArg*)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::setPlayerFrontTargetVec(JGeometry::TVec3<float> const&, int)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::setPlayerLinkPosAndWait(NameObj const*, char const*)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::checkPlayerActionTrigger()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::endBindAndSpinDriverJump(LiveActor*, JGeometry::TVec3<float> const&)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getFullScreenBlurTexture()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::progressPlayerBckOnPause()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::setPlayerSwingPermission(bool)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::tryPlayerDropTakingActor()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::tryPlayerKillTakingActor()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::becomeContinuousBckPlayer()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::endBindAndPlayerDamageMsg(LiveActor*, unsigned int)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::endBindAndPlayerDamageMsg(LiveActor*, unsigned int, JGeometry::TVec3<float> const&)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::endBindAndPlayerForceJump(LiveActor*, JGeometry::TVec3<float> const&, unsigned int)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getPlayerGroundingPolygon()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isPlayerElementModeHopper()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isPlayerElementModeNormal()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isPlayerElementModeTeresa()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isPlayerNeedBrakingCamera()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::calcPlayerSpinPullVelocity(JGeometry::TVec3<float>*, JGeometry::TVec3<float> const&)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::endBindAndPlayerAcidDamage(LiveActor*)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::endBindAndPlayerFireDamage(LiveActor*)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::forceKillPlayerByGhostRace()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::forceKillPlayerByWaterRace()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::initPlayerAfterOpeningDemo()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isPlayerElementModeTornado()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::setPlayerSwingInhibitTimer(unsigned short)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::forceKillPlayerByGroundRace()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::setPlayerPosOnGroundAndWait(char const*)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::becomePlayerNormalJumpStatus()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::endBindAndPlayerFreezeDamage(LiveActor*)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isBckOneTimeAndStoppedPlayer()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isPlayerElementModeInvincible()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::endBindAndPlayerElectricDamage(LiveActor*)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::notifyDirectGetStarPiecePlayer()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::endBindAndPlayerWeakGravityJump(LiveActor*, JGeometry::TVec3<float> const&)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isPlayerPointedBy2POnTriggerButton()": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::endBindAndPlayerJumpWithRollLanding(LiveActor*, JGeometry::TVec3<float> const&, unsigned int)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::endBindAndPlayerForceWeakGravityJump(LiveActor*, JGeometry::TVec3<float> const&)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::endBindAndPlayerWeakGravityLimitJump(LiveActor*, JGeometry::TVec3<float> const&)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::endBindAndPlayerForceWeakGravityJumpInputOff(LiveActor*, JGeometry::TVec3<float> const&)": [
+      {
+        "object": "PlayerUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getCamXdir()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getCamYdir()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getCamZdir()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::loadViewMtx()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::endTalkCamera(bool, int)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::endEventCamera(ActorCameraInfo const*, char const*, bool, int)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::resetCameraMan()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::setShakeOffset(float, float)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getCameraHolder()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isAnimCameraEnd(ActorCameraInfo const*, char const*)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isCameraInWater()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::startTalkCamera(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, float, float, int)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getCameraViewMtx()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::setCameraViewMtx(JGeometry::TPosition3<JGeometry::TMatrix34<JGeometry::SMatrix34C<float>>> const&, bool, bool, JGeometry::TVec3<float> const&)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::startEventCamera(ActorCameraInfo const*, char const*, CameraTargetArg const&, int)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::endLauncherCamera()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::endStartPosCamera()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getCameraWatchPos()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isCameraControlNG()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::loadProjectionMtx()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::pauseOnAnimCamera(ActorCameraInfo const*, char const*)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::calcScreenPosition(JGeometry::TVec2<float>*, JGeometry::TVec3<float> const&)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::calcScreenPosition(JGeometry::TVec3<float>*, JGeometry::TVec3<float> const&)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::createMirrorCamera()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::declareEventCamera(ActorCameraInfo const*, char const*)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::endStartAnimCamera()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getAnimCameraFrame(ActorCameraInfo const*, char const*)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::hasStartAnimCamera()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::pauseOffAnimCamera(ActorCameraInfo const*, char const*)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::calcCameraDistanceZ(JGeometry::TVec3<float> const&)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::endSubjectiveCamera(int)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getCameraInvViewMtx()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isEventCameraActive(ActorCameraInfo const*, char const*)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isEventCameraActive()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isExistMirrorCamera()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isFirstPersonCamera()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isStartPosCameraEnd()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::setGameCameraTarget(CameraTargetArg const&)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::startLauncherCamera(CameraTargetArg const&)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::startStartPosCamera(bool)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::endGlobalEventCamera(char const*, int, bool)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getEventCameraFrames(ActorCameraInfo const*, char const*)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getMirrorModelTexMtx()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isStartAnimCameraEnd()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::startBlackHoleCamera(char const*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::startEventCameraAnim(ActorCameraInfo const*, char const*, CameraTargetArg const&, int, float)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::startStartAnimCamera()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::declareLauncherCamera()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isFirstPersonCameraOK()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::pauseOnCameraDirector()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::startSubjectiveCamera(int)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::declareBlackHoleCamera(char const*)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::declareEventCameraAnim(ActorCameraInfo const*, char const*, void*)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getCameraProjectionMtx()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getMirrorCameraViewMtx()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isActiveLauncherCamera()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::pauseOffCameraDirector()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::resetCameraLocalOffset()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::setLauncherCameraAngle(float, float, float, float)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::startGlobalEventCamera(char const*, CameraTargetArg const&, int)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::zoomInTargetGameCamera()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::changeEventCameraTarget(ActorCameraInfo const*, char const*, CameraTargetArg const&)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::endEventCameraAtLanding(ActorCameraInfo const*, char const*, int)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::endLauncherFlightCamera()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getStartAnimCameraFrame()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::zoomOutTargetGameCamera()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::completeCameraParameters()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::declareCameraRegisterMtx(NameObj const*, unsigned int, float (*) [4])": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::declareCameraRegisterVec(NameObj const*, unsigned int, JGeometry::TVec3<float>*)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::declareGlobalEventCamera(char const*)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::startCameraInterpolation(unsigned int)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::startEventCameraNoTarget(ActorCameraInfo const*, char const*, int)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isGlobalEventCameraActive(char const*)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::overlayWithPreviousScreen(unsigned int)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::startLauncherFlightCamera(int)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::setProgrammableCameraParam(char const*, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, bool)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::calcWorldPositionFromScreen(JGeometry::TVec3<float>*, JGeometry::TVec2<float> const&, float)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::declareLauncherFlightCamera()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isCameraPossibleToRoundLeft()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::setGameCameraTargetToPlayer()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::calcNormalizedScreenPosition(JGeometry::TVec3<float>*, JGeometry::TVec3<float> const&)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::declareGlobalEventCameraDead(char const*, float, int, int)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isActiveLauncherFlightCamera()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isCameraPossibleToRoundRight()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::startEventCameraTargetPlayer(ActorCameraInfo const*, char const*, int)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::declareGlobalEventCameraAbyss(char const*)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::declareEventCameraProgrammable(char const*)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isCameraInterpolatingNearlyEnd()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::setProgrammableCameraParamFovy(char const*, float)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::startGlobalEventCameraNoTarget(char const*, int)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::calcWorldRayDirectionFromScreen(JGeometry::TVec3<float>*, JGeometry::TVec2<float> const&)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::calcWorldPositionFromCenterScreen(JGeometry::TVec3<float>*, JGeometry::TVec2<float> const&, float)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::cleanEventCameraTarget_temporally()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::declareGlobalEventCameraFixedThere(char const*, bool, float)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isSubjectiveCameraOnForObjClipping()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::startGlobalEventCameraTargetPlayer(char const*, int)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::calcNormalizedScreenPositionFromView(JGeometry::TVec3<float>*, JGeometry::TVec3<float> const&)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::isPossibleToShiftToFirstPersonCamera()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getFarZ()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getFovy()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::setFovy(float)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getNearZ()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::setNearZ(float)": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getAspect()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ],
+    "MR::getCamPos()": [
+      {
+        "object": "CameraUtil.cpp.o",
+        "kind": "T"
+      }
+    ]
+  }
+}

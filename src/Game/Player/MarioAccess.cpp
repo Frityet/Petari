@@ -17,6 +17,10 @@
 #include "Game/Util.hpp"
 #include "Game/Util/FixedPosition.hpp"
 
+#if !defined(NDEBUG)
+#include "compat/OriginalGameDiagnostics.hpp"
+#endif
+
 namespace MarioAccess {
     void getTakePos(TVec3f* pOut) {
         if (getPlayerActor()->_494 != nullptr) {
@@ -633,6 +637,9 @@ namespace MarioAccess {
     }
 
     MarioActor* getPlayerActor() {
+#if !defined(NDEBUG)
+        smgpc::compat::validate_player_owner_for_debug();
+#endif
         return MR::getMarioHolder()->getMarioActor();
     }
 

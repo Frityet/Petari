@@ -1,4 +1,7 @@
 #include "Game/Util/CameraUtil.hpp"
+#if !defined(NDEBUG)
+#include "compat/OriginalGameDiagnostics.hpp"
+#endif
 #include "Game/Camera/CameraAnim.hpp"
 #include "Game/Camera/CameraCalc.hpp"
 #include "Game/Camera/CameraContext.hpp"
@@ -50,6 +53,9 @@ namespace {
     static const char* sLauncherFlightCameraName = "大砲飛行";
 
     CameraContext* getCameraContext() {
+#if !defined(NDEBUG)
+        smgpc::compat::require_scene_object_for_debug(SceneObj_CameraContext);
+#endif
         return MR::getSceneObj< CameraContext >(SceneObj_CameraContext);
     }
 
@@ -146,7 +152,7 @@ namespace MR {
     }
 
     void loadProjectionMtx() {
-        GXSetProjection(::getCameraContext()->mProjection, (GXProjectionType) nullptr);
+        GXSetProjection(::getCameraContext()->mProjection, GX_PERSPECTIVE);
     }
 
     void loadViewMtx() {

@@ -159,14 +159,13 @@ namespace MR {
         output.set(matrix[0][1], matrix[1][1], matrix[2][1]);
     }
 
-    bool isNearPlayer(const LiveActor *pActor, f32 distance) {
-        const auto &actor = require_actor(pActor);
-        auto *player = smgpc::compat::active_player_system_for_player_util();
-        if (player == nullptr || player->attached_actor() == nullptr) {
-            aurora::throw_host_exception<std::logic_error>("Player state is unavailable.");
-        }
-        return !player->is_player_hidden() &&
-               actor.mPosition.squareDistance(require_player_position()) < (distance * distance);
+    bool isNearPlayer(const LiveActor* pActor, f32 dist) {
+        return (MR::isPlayerHidden() ? false : MR::isNearPlayerAnyTime(pActor, dist));
+    }
+
+    bool isNearPlayerAnyTime(const LiveActor* pActor, f32 dist) {
+        f32 sqr = pActor->mPosition.squared(*MR::getPlayerPos());
+        return sqr < (dist * dist);
     }
 
     void calcVecToPlayerH(TVec3f *pOut, const LiveActor *pActor, const TVec3f *pUp) {

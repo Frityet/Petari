@@ -429,13 +429,3 @@ namespace CameraLocalUtil {
         setRoll(pCameraMan, getRoll(pCamera));
     }
 }  // namespace CameraLocalUtil
-
-namespace MR {
-    bool isFirstPersonCamera() {
-        if (auto* camera = smgpc::camera::current_camera_director_runtime()) return camera->director().isSubjectiveCamera();
-        if (sBoundCamera == nullptr || sBoundTarget == nullptr || !sBoundMode.has_value()) {
-            aurora::throw_host_exception<std::logic_error>("First-person camera state requires an active original camera owner and explicit mode.");
-        }
-        return *sBoundMode == smgpc::compat::OriginalCameraMode::Subjective;
-    }
-}  // namespace MR

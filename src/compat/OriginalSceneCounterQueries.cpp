@@ -95,10 +95,6 @@ namespace MR {
         return isEqualStageName("AstroGalaxy") || isEqualStageName("AstroDome") || isEqualStageName("LibraryRoom");
     }
 
-    bool isPlayerSwimming() {
-        return MarioAccess::isSwimming();
-    }
-
     bool isSubPadSwing(s32 channel) {
         return aurora::wpad_service().is_sub_swing(channel);
     }

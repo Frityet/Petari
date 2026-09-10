@@ -1,0 +1,23 @@
+[
+  {
+    "native": "src/Game/Util/PlayerUtil.cpp",
+    "reference": "decomp/src/Game/Util/PlayerUtil.cpp",
+    "raw_equal": true,
+    "documented_delta_equal": true,
+    "source_sha256": "fc4f5685c2ded2cf5304cb8475953a0f2d29f93147e4ad36fe9d6e1f526286be"
+  },
+  {
+    "native": "src/Game/Util/CameraUtil.cpp",
+    "reference": "decomp/src/Game/Util/CameraUtil.cpp",
+    "raw_equal": false,
+    "documented_delta_equal": true,
+    "source_sha256": "9a2f605f0568bf85cd21fb88ac6c706b2def153161d1204d7fd496ce03ba21e3"
+  },
+  {
+    "native": "src/Game/Player/MarioAccess.cpp",
+    "reference": "decomp/src/Game/Player/MarioAccess.cpp",
+    "raw_equal": false,
+    "documented_delta_equal": true,
+    "source_sha256": "306b3ac507c57b1d4a81692cd74fd278943b4840979c6a96afd24332b8283b49"
+  }
+]

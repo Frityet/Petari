@@ -123,7 +123,6 @@ namespace MR {
         fillScreenArea(TVec2s(0, 0), TVec2s(width, height));
     }
 
-    bool isCameraInWater() { return WaterAreaFunction::isCameraInWaterForCameraUtil(); }
 }
 
 namespace MR {

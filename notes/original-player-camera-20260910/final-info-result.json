@@ -1,0 +1,12 @@
+{
+  "target": "smg-pc-information-observer-tests",
+  "exit": 0,
+  "wall_seconds": 0.8894438749994151,
+  "binary_sha256": "cd24c055d486a3611cc3b016c68187dae62e8bb72e01a35f69b22fe82f4368c7",
+  "final_output": [
+    "[src/runtime/RuntimeContext.cpp:1776][APP - INFO] SMG semantic event name_obj_lifecycle:destroy (object=ViewGroupCtrlCube)",
+    "[src/runtime/RuntimeContext.cpp:1776][APP - INFO] SMG semantic event name_obj_lifecycle:destroy (object=ViewGroupCtrlCube)",
+    "[aurora:warning:aurora::gpu] Device lost: Device was destroyed.",
+    "InformationObserver tests passed: exact timekeep/prompt/guard/lifecycle"
+  ]
+}

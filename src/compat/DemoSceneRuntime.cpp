@@ -2,6 +2,9 @@
 #include "compat/DemoSceneRuntime.hpp"
 
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/Player/MarioActor.hpp"
+#include "Game/Player/MarioHolder.hpp"
+#include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Screen/LayoutActor.hpp"
@@ -910,11 +913,13 @@ namespace smgpc::compat {
             player_mode == DemoPlayerMode::MarioPuppetable
                 ? active_player_system_for_player_util()
                 : nullptr;
-        if (player_mode == DemoPlayerMode::MarioPuppetable &&
-            (puppetable_player == nullptr ||
-             puppetable_player->attached_actor() == nullptr)) {
-            aurora::throw_host_exception<std::logic_error>(
-                "A Mario-puppetable demo requires the real attached player owner.");
+        if (player_mode == DemoPlayerMode::MarioPuppetable) {
+            auto* holder = MR::isExistSceneObj(SceneObj_MarioHolder) ? MR::getMarioHolder() : nullptr;
+            auto* actor = holder != nullptr ? holder->getMarioActor() : nullptr;
+            if (actor == nullptr || puppetable_player == nullptr || puppetable_player->attached_actor() != actor) {
+                aurora::throw_host_exception<std::logic_error>(
+                    "A Mario-puppetable demo requires MarioHolder's actual attached MarioActor.");
+            }
         }
 
         if (_impl->active_definition.has_value()) {
@@ -933,8 +938,8 @@ namespace smgpc::compat {
             if (puppetable_player != nullptr) {
                 _impl->puppetable_player = puppetable_player;
                 _impl->control_was_enabled_before_puppet =
-                    puppetable_player->is_control_enabled();
-                puppetable_player->disable_control();
+                    !MR::isOffPlayerControl();
+                MR::offPlayerControl();
                 _impl->puppetable_control_owned = true;
             }
             const auto detail = part_name.has_value() ? "part=" + std::string(*part_name) : std::string{};
@@ -997,7 +1002,7 @@ namespace smgpc::compat {
         if (player != nullptr &&
             (force_enable || (_impl->puppetable_control_owned &&
                               _impl->control_was_enabled_before_puppet))) {
-            player->enable_control(false);
+            MR::onPlayerControl(false);
         }
         _impl->puppetable_player = nullptr;
         _impl->puppetable_control_owned = false;

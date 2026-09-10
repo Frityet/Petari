@@ -1,0 +1,22 @@
+{
+  "root_head": "827bf39741f55c4c7952a425d54557fd94c57434",
+  "aurora_head": "5825854e3c8e16fb0b3f4ffc019afc39627f9223",
+  "files": [
+    {
+      "path": "aurora/include/revolution.h",
+      "sha256": "606eabc4d14767f28aa9f0dcb555d7a45061a717ce435970c6ab39a7227a69fb"
+    },
+    {
+      "path": "aurora/lib/wpad.cpp",
+      "sha256": "01403f0abe8e90555acd76cfa3acccaa838b6f75337cf63526e7a8366ee3df83"
+    },
+    {
+      "path": "aurora/tests/wpad_test.cpp",
+      "sha256": "2781be84651c9c60ec57f9702961c7bbc690a568848cbc938e724dc678922ea9"
+    },
+    {
+      "path": "tests/AuroraNativeTests.cpp",
+      "sha256": "770becbbd7c9b489344e6df062041dedfe47fa6fa2d83dd6c7b80a77b947085b"
+    }
+  ]
+}

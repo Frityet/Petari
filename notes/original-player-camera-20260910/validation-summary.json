@@ -1,0 +1,281 @@
+{
+  "date": "2026-09-10",
+  "configuration": "macOS arm64 LLVM 23 optimized debug (-O2, assertions enabled)",
+  "showcase": {
+    "command": [
+      "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-showcase",
+      "gateway",
+      "--disc",
+      "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+      "--max-frames",
+      "960",
+      "--width",
+      "1280",
+      "--height",
+      "720"
+    ],
+    "binary_sha256": "89b80b085aa6d0f9949e3db3e26b7c817e9bb182e12402ea1fceef2a586a2488",
+    "exit": 0,
+    "timeout": false,
+    "wall_seconds": 16.81819916598033,
+    "buttons": "",
+    "sdl_key_script": "180-210:w;270-300:a;360-390:s;450-480:d;600-605:space;780-785:space",
+    "window_activate_when_shown": "default",
+    "present_fps": 59.98458184183163,
+    "simulation_ticks_per_second": 60.047923533322475
+  },
+  "movement_checks": {
+    "passed": true,
+    "synthetic_sdl_input": true,
+    "checks": [
+      {
+        "name": "completed replay",
+        "passed": true,
+        "last_tick": 960
+      },
+      {
+        "name": "finite movement and camera",
+        "passed": true,
+        "invalid_samples": []
+      },
+      {
+        "name": "idle remains still on ground",
+        "passed": true,
+        "observed_samples": 51,
+        "displacement": 0.0
+      },
+      {
+        "name": "W is accepted and moves Mario",
+        "passed": true,
+        "samples": 31,
+        "moving_on_ground_samples": 24,
+        "displacement": 126.61877501289318
+      },
+      {
+        "name": "W releases",
+        "passed": true,
+        "samples": 16
+      },
+      {
+        "name": "A is accepted and moves Mario",
+        "passed": true,
+        "samples": 31,
+        "moving_on_ground_samples": 23,
+        "displacement": 118.10277376508573
+      },
+      {
+        "name": "A releases",
+        "passed": true,
+        "samples": 16
+      },
+      {
+        "name": "S is accepted and moves Mario",
+        "passed": true,
+        "samples": 31,
+        "moving_on_ground_samples": 23,
+        "displacement": 118.24746841767595
+      },
+      {
+        "name": "S releases",
+        "passed": true,
+        "samples": 16
+      },
+      {
+        "name": "D is accepted and moves Mario",
+        "passed": true,
+        "samples": 31,
+        "moving_on_ground_samples": 23,
+        "displacement": 118.32065882875388
+      },
+      {
+        "name": "D releases",
+        "passed": true,
+        "samples": 16
+      },
+      {
+        "name": "jump at 600 takes off and lands",
+        "passed": true,
+        "takeoff_tick": 600,
+        "landing_tick": 635
+      },
+      {
+        "name": "jump at 780 takes off and lands",
+        "passed": true,
+        "takeoff_tick": 780,
+        "landing_tick": 815
+      }
+    ]
+  },
+  "original_owner_suites": [
+    {
+      "target": "smg-pc-original-camera-context-tests",
+      "build": 0,
+      "run": 0,
+      "binary_sha256": "0f6cf9c5b54271d6724ff15959180b6b0bc16dff1c9b6a3357dadc1778d0d53c"
+    },
+    {
+      "target": "smg-pc-camera-util-real-or-absent-tests",
+      "build": 0,
+      "run": 0,
+      "binary_sha256": "bd373d9c23b52e889200779d981c68493ca693bf38c40d663137511f6d8235cf"
+    },
+    {
+      "target": "smg-pc-player-util-real-or-absent-tests",
+      "build": 0,
+      "run": 0,
+      "binary_sha256": "495bceafc2ad105b55c13c327dd76da03e82bc27dbda83bdaed0354f49065ae2"
+    },
+    {
+      "target": "smg-pc-player-actor-bridge-tests",
+      "build": 0,
+      "run": 0,
+      "binary_sha256": "b88a87820afcd659eb76f3009e78f2e5a797614ac603feb6627cbd14d2605c0d"
+    },
+    {
+      "target": "smg-pc-original-camera-director-tests",
+      "build": 0,
+      "run": 0,
+      "binary_sha256": "5729a0068a8d55b5d39cba1a3f2fbdb6227eec5d3ac67e04a7280a760cb0a14e"
+    }
+  ],
+  "live_owner_suites": [
+    {
+      "target": "smg-pc-runtime-event-ownership-tests",
+      "run": 0,
+      "sha256": "2887db25bda9d9c869a5e6292427a8bb226565998b1611fa50a25cd68f4bd025"
+    },
+    {
+      "target": "smg-pc-gateway-spin-checkpoint-tests",
+      "run": 0,
+      "sha256": "e43bd77fe7327ad528d9429c0ad42db8d949c5d960191a8531a1bab850c8053e"
+    }
+  ],
+  "actual_player_fresh_processes": [
+    {
+      "target": "smg-pc-mario-gateway-walk-tests",
+      "args": [
+        "--player-util"
+      ],
+      "fresh_process": 1,
+      "exit": 0,
+      "wall_seconds": 1.4818283750209957,
+      "binary_sha256": "a8c0121878ba6c0bed0fd34d7e94c81426e5c55717a4c7c25f69fdafd4252b45",
+      "proof": [
+        "[proof] original PlayerUtil actual owners, translation, KCL rush grounding and synchronous control reset passed",
+        "[proof] focused actual PlayerUtil: original entry, finite joints, original draw buffers, utility checks and scene teardown passed",
+        "[ok] real original PlayerUtil ownership proof"
+      ]
+    },
+    {
+      "target": "smg-pc-mario-gateway-walk-tests",
+      "args": [
+        "--player-util"
+      ],
+      "fresh_process": 2,
+      "exit": 0,
+      "wall_seconds": 0.9699035829980858,
+      "binary_sha256": "a8c0121878ba6c0bed0fd34d7e94c81426e5c55717a4c7c25f69fdafd4252b45",
+      "proof": [
+        "[proof] original PlayerUtil actual owners, translation, KCL rush grounding and synchronous control reset passed",
+        "[proof] focused actual PlayerUtil: original entry, finite joints, original draw buffers, utility checks and scene teardown passed",
+        "[ok] real original PlayerUtil ownership proof"
+      ]
+    }
+  ],
+  "information_observer": {
+    "target": "smg-pc-information-observer-tests",
+    "exit": 0,
+    "wall_seconds": 0.8894438749994151,
+    "binary_sha256": "cd24c055d486a3611cc3b016c68187dae62e8bb72e01a35f69b22fe82f4368c7",
+    "final_output": [
+      "[src/runtime/RuntimeContext.cpp:1776][APP - INFO] SMG semantic event name_obj_lifecycle:destroy (object=ViewGroupCtrlCube)",
+      "[src/runtime/RuntimeContext.cpp:1776][APP - INFO] SMG semantic event name_obj_lifecycle:destroy (object=ViewGroupCtrlCube)",
+      "[aurora:warning:aurora::gpu] Device lost: Device was destroyed.",
+      "InformationObserver tests passed: exact timekeep/prompt/guard/lifecycle"
+    ]
+  },
+  "aurora_probe": [
+    {
+      "label": "before",
+      "compile_command": [
+        "/opt/homebrew/opt/llvm/bin/clang++",
+        "-std=c++20",
+        "-g",
+        "-arch",
+        "arm64",
+        "-stdlib=libc++",
+        "-cxx-isystem/opt/homebrew/opt/llvm/include/c++/v1",
+        "-isysroot",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+        "-DAURORA",
+        "-DTARGET_PC",
+        "-I/Users/frityet/Projects/petari/aurora/include",
+        "-isystem",
+        "/Users/frityet/Projects/petari/decomp/build/aurora-upstream-merge-tests/_deps/googletest-src/googletest/include",
+        "/Users/frityet/Projects/petari/aurora/tests/wpad_test.cpp",
+        "/Users/frityet/Projects/petari/aurora/tests/wpad_test_stubs.cpp",
+        "/Users/frityet/Projects/petari/notes/original-player-camera-20260910/input-probe/wpad-before.cpp",
+        "/var/folders/4x/jzbfrvb10tq3ff4dwng8nzgm0000gn/T/petari-aurora-upstream-20260907-q3qrkgbx/lib/libgtest_main.a",
+        "/var/folders/4x/jzbfrvb10tq3ff4dwng8nzgm0000gn/T/petari-aurora-upstream-20260907-q3qrkgbx/lib/libgtest.a",
+        "-o",
+        "/Users/frityet/Projects/petari/notes/original-player-camera-20260910/input-probe/wpad-tests-before"
+      ],
+      "compile_exit": 0,
+      "run_command": [
+        "/Users/frityet/Projects/petari/notes/original-player-camera-20260910/input-probe/wpad-tests-before",
+        "--gtest_color=no",
+        "--gtest_output=xml:/Users/frityet/Projects/petari/notes/original-player-camera-20260910/input-probe/before-tests.xml"
+      ],
+      "run_exit": 1,
+      "binary_sha256": "bee76387e61a8507966e07fdb3b7392d7da602039b584a88127de07beb6eabb0"
+    },
+    {
+      "label": "fixed",
+      "compile_command": [
+        "/opt/homebrew/opt/llvm/bin/clang++",
+        "-std=c++20",
+        "-g",
+        "-arch",
+        "arm64",
+        "-stdlib=libc++",
+        "-cxx-isystem/opt/homebrew/opt/llvm/include/c++/v1",
+        "-isysroot",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+        "-DAURORA",
+        "-DTARGET_PC",
+        "-I/Users/frityet/Projects/petari/aurora/include",
+        "-isystem",
+        "/Users/frityet/Projects/petari/decomp/build/aurora-upstream-merge-tests/_deps/googletest-src/googletest/include",
+        "/Users/frityet/Projects/petari/aurora/tests/wpad_test.cpp",
+        "/Users/frityet/Projects/petari/aurora/tests/wpad_test_stubs.cpp",
+        "/Users/frityet/Projects/petari/aurora/lib/wpad.cpp",
+        "/var/folders/4x/jzbfrvb10tq3ff4dwng8nzgm0000gn/T/petari-aurora-upstream-20260907-q3qrkgbx/lib/libgtest_main.a",
+        "/var/folders/4x/jzbfrvb10tq3ff4dwng8nzgm0000gn/T/petari-aurora-upstream-20260907-q3qrkgbx/lib/libgtest.a",
+        "-o",
+        "/Users/frityet/Projects/petari/notes/original-player-camera-20260910/input-probe/wpad-tests-fixed"
+      ],
+      "compile_exit": 0,
+      "run_command": [
+        "/Users/frityet/Projects/petari/notes/original-player-camera-20260910/input-probe/wpad-tests-fixed",
+        "--gtest_color=no",
+        "--gtest_output=xml:/Users/frityet/Projects/petari/notes/original-player-camera-20260910/input-probe/fixed-tests.xml"
+      ],
+      "run_exit": 0,
+      "binary_sha256": "b77839146894fce47e6ea9b431ec298b123b5f11292cdd8b1617a1e5cd416023"
+    }
+  ],
+  "boundaries": [
+    "Full Gateway bunny chase through Rosalina is incomplete.",
+    "The broad smg-pc-aurora-native-tests suite fails in legacy scene/model fixtures; see broader-native-suite-boundary.txt.",
+    "Default smg-pc-mario-gateway-walk-tests is not claimed green; only its --player-util mode passes. Current movement/camera proof is the separate real SDL replay.",
+    "Original GameSequenceProgress scene-start ownership and full WPad/KPAD adoption remain incomplete."
+  ],
+  "demo_runtime": {
+    "target": "smg-pc-demo-scene-runtime-tests",
+    "build": 0,
+    "run": 0,
+    "binary_sha256": "b4fa417a436416300b2e753df157f21731177cd0ea00a712a3df66b7c4bfc5a5",
+    "log": "smg-pc-demo-scene-runtime-tests-run.log",
+    "optional_real_disc_definition_check": "Skipped in this suite invocation; actual disc-backed prompt and spin ownership are covered by separate passing executables."
+  }
+}

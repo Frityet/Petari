@@ -1,0 +1,346 @@
+[
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraLocalUtilRuntime.cpp.o:",
+    "symbol": "__ZN2MR19isFirstPersonCameraEv"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:SceneInitializationCompat.cpp.o:",
+    "symbol": "__ZN2MR24completeCameraParametersEv"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR10getCamXdirEv"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR10getCamYdirEv"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR10getCamZdirEv"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR11loadViewMtxEv"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR14endEventCameraEPK15ActorCameraInfoPKcbi"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR14resetCameraManEv"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR14setShakeOffsetEff"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR15isAnimCameraEndEPK15ActorCameraInfoPKc"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR16getCameraViewMtxEv"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR16setCameraViewMtxERKN9JGeometry10TPosition3INS0_9TMatrix34INS0_10SMatrix34CIfEEEEEEbbRKNS0_5TVec3IfEE"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR16startEventCameraEPK15ActorCameraInfoPKcRK15CameraTargetArgi"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR17endStartPosCameraEv"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR17loadProjectionMtxEv"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR18calcScreenPositionEPN9JGeometry5TVec2IfEERKNS0_5TVec3IfEE"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR18calcScreenPositionEPN9JGeometry5TVec3IfEERKS2_"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR18declareEventCameraEPK15ActorCameraInfoPKc"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR18getAnimCameraFrameEPK15ActorCameraInfoPKc"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR19calcCameraDistanceZERKN9JGeometry5TVec3IfEE"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR19getCameraInvViewMtxEv"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR19isEventCameraActiveEPK15ActorCameraInfoPKc"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR19isEventCameraActiveEv"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR19isStartPosCameraEndEv"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR19startStartPosCameraEb"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR20endGlobalEventCameraEPKcib"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR20getEventCameraFramesEPK15ActorCameraInfoPKc"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR20isStartAnimCameraEndEv"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR20startEventCameraAnimEPK15ActorCameraInfoPKcRK15CameraTargetArgif"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR21pauseOnCameraDirectorEv"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR22declareEventCameraAnimEPK15ActorCameraInfoPKcPv"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR22getCameraProjectionMtxEv"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR22pauseOffCameraDirectorEv"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR23endEventCameraAtLandingEPK15ActorCameraInfoPKci"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR24startEventCameraNoTargetEPK15ActorCameraInfoPKci"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR26setProgrammableCameraParamEPKcRKN9JGeometry5TVec3IfEES6_S6_b"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR27calcWorldPositionFromScreenEPN9JGeometry5TVec3IfEERKNS0_5TVec2IfEEf"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR28calcNormalizedScreenPositionEPN9JGeometry5TVec3IfEERKS2_"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR28startEventCameraTargetPlayerEPK15ActorCameraInfoPKci"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR30declareEventCameraProgrammableEPKc"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR30setProgrammableCameraParamFovyEPKcf"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR30startGlobalEventCameraNoTargetEPKci"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR31calcWorldRayDirectionFromScreenEPN9JGeometry5TVec3IfEERKNS0_5TVec2IfEE"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR33calcWorldPositionFromCenterScreenEPN9JGeometry5TVec3IfEERKNS0_5TVec2IfEEf"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR36calcNormalizedScreenPositionFromViewEPN9JGeometry5TVec3IfEERKS2_"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR7getFarZEv"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR7getFovyEv"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR7setFovyEf"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR8getNearZEv"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR8setNearZEf"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR9getAspectEv"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtilCompat.cpp.o:",
+    "symbol": "__ZN2MR9getCamPosEv"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:OriginalImageEffectUtil.cpp.o:",
+    "symbol": "__ZN2MR15isCameraInWaterEv"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:OriginalCameraOwnerUtil.cpp.o:",
+    "symbol": "__ZN2MR13endTalkCameraEbi"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:OriginalCameraOwnerUtil.cpp.o:",
+    "symbol": "__ZN2MR15getCameraHolderEv"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:OriginalCameraOwnerUtil.cpp.o:",
+    "symbol": "__ZN2MR15startTalkCameraERKN9JGeometry5TVec3IfEES4_ffi"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:OriginalCameraOwnerUtil.cpp.o:",
+    "symbol": "__ZN2MR17getCameraWatchPosEv"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:OriginalCameraOwnerUtil.cpp.o:",
+    "symbol": "__ZN2MR17isCameraControlNGEv"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:OriginalCameraOwnerUtil.cpp.o:",
+    "symbol": "__ZN2MR17pauseOnAnimCameraEPK15ActorCameraInfoPKc"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:OriginalCameraOwnerUtil.cpp.o:",
+    "symbol": "__ZN2MR18endStartAnimCameraEv"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:OriginalCameraOwnerUtil.cpp.o:",
+    "symbol": "__ZN2MR18hasStartAnimCameraEv"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:OriginalCameraOwnerUtil.cpp.o:",
+    "symbol": "__ZN2MR18pauseOffAnimCameraEPK15ActorCameraInfoPKc"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:OriginalCameraOwnerUtil.cpp.o:",
+    "symbol": "__ZN2MR19endSubjectiveCameraEi"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:OriginalCameraOwnerUtil.cpp.o:",
+    "symbol": "__ZN2MR19setGameCameraTargetERK15CameraTargetArg"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:OriginalCameraOwnerUtil.cpp.o:",
+    "symbol": "__ZN2MR20startBlackHoleCameraEPKcRKN9JGeometry5TVec3IfEES6_"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:OriginalCameraOwnerUtil.cpp.o:",
+    "symbol": "__ZN2MR20startStartAnimCameraEv"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:OriginalCameraOwnerUtil.cpp.o:",
+    "symbol": "__ZN2MR21isFirstPersonCameraOKEv"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:OriginalCameraOwnerUtil.cpp.o:",
+    "symbol": "__ZN2MR21startSubjectiveCameraEi"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:OriginalCameraOwnerUtil.cpp.o:",
+    "symbol": "__ZN2MR22declareBlackHoleCameraEPKc"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:OriginalCameraOwnerUtil.cpp.o:",
+    "symbol": "__ZN2MR22resetCameraLocalOffsetEv"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:OriginalCameraOwnerUtil.cpp.o:",
+    "symbol": "__ZN2MR22startGlobalEventCameraEPKcRK15CameraTargetArgi"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:OriginalCameraOwnerUtil.cpp.o:",
+    "symbol": "__ZN2MR22zoomInTargetGameCameraEv"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:OriginalCameraOwnerUtil.cpp.o:",
+    "symbol": "__ZN2MR23getStartAnimCameraFrameEv"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:OriginalCameraOwnerUtil.cpp.o:",
+    "symbol": "__ZN2MR23zoomOutTargetGameCameraEv"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:OriginalCameraOwnerUtil.cpp.o:",
+    "symbol": "__ZN2MR24declareGlobalEventCameraEPKc"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:OriginalCameraOwnerUtil.cpp.o:",
+    "symbol": "__ZN2MR24startCameraInterpolationEj"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:OriginalCameraOwnerUtil.cpp.o:",
+    "symbol": "__ZN2MR25overlayWithPreviousScreenEj"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:OriginalCameraOwnerUtil.cpp.o:",
+    "symbol": "__ZN2MR27isCameraPossibleToRoundLeftEv"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:OriginalCameraOwnerUtil.cpp.o:",
+    "symbol": "__ZN2MR27setGameCameraTargetToPlayerEv"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:OriginalCameraOwnerUtil.cpp.o:",
+    "symbol": "__ZN2MR28declareGlobalEventCameraDeadEPKcfii"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:OriginalCameraOwnerUtil.cpp.o:",
+    "symbol": "__ZN2MR28isCameraPossibleToRoundRightEv"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:OriginalCameraOwnerUtil.cpp.o:",
+    "symbol": "__ZN2MR29declareGlobalEventCameraAbyssEPKc"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:OriginalCameraOwnerUtil.cpp.o:",
+    "symbol": "__ZN2MR30isCameraInterpolatingNearlyEndEv"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:OriginalCameraOwnerUtil.cpp.o:",
+    "symbol": "__ZN2MR33cleanEventCameraTarget_temporallyEv"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:OriginalCameraOwnerUtil.cpp.o:",
+    "symbol": "__ZN2MR34isSubjectiveCameraOnForObjClippingEv"
+  },
+  {
+    "provider": "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a:OriginalCameraOwnerUtil.cpp.o:",
+    "symbol": "__ZN2MR36isPossibleToShiftToFirstPersonCameraEv"
+  }
+]

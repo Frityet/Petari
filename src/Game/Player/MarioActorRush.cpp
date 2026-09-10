@@ -217,12 +217,12 @@ void MarioActor::endRush(const RushEndInfo* pInfo) {
         mMario->tryForceFreeJump(pInfo->mVec);
         mMario->mMovementStates._9 = true;
         mMario->_10._D = true;
-        if (pInfo->mFlags & 0x40000000) {
+        if (pInfo->_20 & 0x40000000) {
             mMario->mMovementStates._2F = true;
         } else {
             mMario->mMovementStates._2F = false;
         }
-        if (pInfo->mFlags & 0x80000000) {
+        if (pInfo->_20 & 0x80000000) {
             mMario->mMovementStates._22 = true;
         }
         break;
@@ -232,18 +232,18 @@ void MarioActor::endRush(const RushEndInfo* pInfo) {
             mMario->_774 = 60;
         }
         mMario->tryForcePowerJump(pInfo->mVec, false);
-        if (pInfo->mFlags & 0x40000000) {
+        if (pInfo->_20 & 0x40000000) {
             mMario->mMovementStates._2F = true;
         } else {
             mMario->mMovementStates._2F = false;
         }
-        if (pInfo->mFlags & 0x00800000) {
+        if (pInfo->_20 & 0x00800000) {
             mMario->mMovementStates._20 = false;
         }
-        if (pInfo->mFlags & 0x80000000) {
+        if (pInfo->_20 & 0x80000000) {
             mMario->mMovementStates._22 = true;
         }
-        switch ((pInfo->mFlags >> 24) & 0xF) {
+        switch ((pInfo->_20 >> 24) & 0xF) {
         case 1:
             mMario->mMovementStates._1B = true;
             mMario->mDamage->setVec(pInfo->mVec);
@@ -285,7 +285,7 @@ void MarioActor::endRush(const RushEndInfo* pInfo) {
         break;
     }
 
-    mMario->_10._8 = (pInfo->mFlags >> 22) & 1;
+    mMario->_10._8 = (pInfo->_20 >> 22) & 1;
     if (_3D0 == 0) {
         TMtx34f mtx;
         PSMTXConcat(getBaseMtx(), _E3C.toMtxPtr(), mtx.toMtxPtr());
@@ -339,7 +339,7 @@ void MarioActor::endRush(const RushEndInfo* pInfo) {
     }
     _EF8 = 0;
     _F04 = 0;
-    if (((pInfo->mFlags >> 24) & 0xF) == 0 && isLandEffectRushSensor(_924) && (pInfo->mFlags & 0x40000000)) {
+    if (((pInfo->_20 >> 24) & 0xF) == 0 && isLandEffectRushSensor(_924) && (pInfo->_20 & 0x40000000)) {
         mMario->mMovementStates._3E = 1;
         mMario->mMovementStates.jumping = true;
         mMario->mMovementStates._1 = false;

@@ -1,6 +1,5 @@
 #include "Game/Util/PlayerUtil.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
-#include "compat/PlayerUtilCompat.hpp"
 #include "runtime/RuntimeServices.hpp"
 
 #include <functional>
@@ -30,12 +29,12 @@ namespace {
 int main() {
     auto passed = 0;
 
-    require(MR::getPlayerPos() == nullptr, "missing player must not manufacture an origin position");
-    require(MR::getPlayerCenterPos() == nullptr, "missing player must not manufacture a center position");
-    require(MR::getPlayerRotate() == nullptr, "missing player must not manufacture a rotation");
-    require(MR::getPlayerVelocity() == nullptr, "missing player must not manufacture zero velocity");
-    require(MR::getPlayerGravity() == nullptr, "missing player must not manufacture world-down gravity");
-    require(MR::getPlayerBaseMtx() == nullptr, "missing player must not manufacture an identity base matrix");
+    require_unavailable([] { (void)MR::getPlayerPos(); }, "missing player must not manufacture an origin position");
+    require_unavailable([] { (void)MR::getPlayerCenterPos(); }, "missing player must not manufacture a center position");
+    require_unavailable([] { (void)MR::getPlayerRotate(); }, "missing player must not manufacture a rotation");
+    require_unavailable([] { (void)MR::getPlayerVelocity(); }, "missing player must not manufacture zero velocity");
+    require_unavailable([] { (void)MR::getPlayerGravity(); }, "missing player must not manufacture world-down gravity");
+    require_unavailable([] { (void)MR::getPlayerBaseMtx(); }, "missing player must not manufacture an identity base matrix");
     ++passed;
 
     auto output = TVec3f{2.0F, 3.0F, 4.0F};
@@ -69,12 +68,13 @@ int main() {
     ++passed;
 
     auto player = smgpc::runtime::PlayerSystemService{};
-    auto attached_actor = LiveActor("real-player-boundary-test");
+    auto attached_actor = LiveActor("host-player-snapshot-test");
     attached_actor.mPosition.set(10.0F, 20.0F, 30.0F);
-    attached_actor.calcAndSetBaseMtx();
     player.attach_actor(attached_actor);
-    require(player.attached_actor() == &attached_actor && player.has_base_matrix(),
-            "the player boundary should expose a genuinely attached actor");
+    require(player.attached_actor() == &attached_actor && !player.has_base_matrix() &&
+                player.position()[0] == 10.0F && player.position()[1] == 20.0F &&
+                player.position()[2] == 30.0F,
+            "the host snapshot must preserve the attached actor without manufacturing a model matrix");
 
     auto camera = smgpc::runtime::CameraSystemService{};
     const auto camera_pose = smgpc::camera::CameraPose{
@@ -84,12 +84,15 @@ int main() {
     };
     camera.set_game_camera_pose(camera_pose);
     player.clear_stage_state();
-    const auto player_context = smgpc::compat::ScopedPlayerSystemServiceOverride{player};
-    require(player.attached_actor() == nullptr && !player.has_base_matrix() && MR::getPlayerPos() == nullptr,
-            "clearing a stage must leave player state absent until a real actor attaches");
-    require(!player.is_swing_permitted() && player.gravity()[0] == 0.0F && player.gravity()[1] == 0.0F &&
-                player.gravity()[2] == 0.0F,
-            "clearing a stage must not retain a stand-in spin entitlement or world-down gravity");
+    require(player.attached_actor() == nullptr && !player.has_base_matrix() &&
+                player.actor_center_position() == nullptr,
+            "clearing a stage must leave host player state absent until an actor attaches");
+    require_unavailable([] { (void)MR::getPlayerPos(); },
+                        "a host snapshot must not substitute for the missing original Mario owner");
+    require(player.position()[0] == 0.0F && player.position()[1] == 0.0F &&
+                player.position()[2] == 0.0F && player.gravity()[0] == 0.0F &&
+                player.gravity()[1] == 0.0F && player.gravity()[2] == 0.0F,
+            "clearing a stage must discard the attached actor snapshot without inventing gravity");
     require(camera.game_camera_pose().has_value() && camera.game_camera_pose()->eye.x == camera_pose.eye.x,
             "a real stage camera must remain usable independently of absent player state");
     ++passed;

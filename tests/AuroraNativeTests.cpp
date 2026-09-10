@@ -50,7 +50,6 @@
 #include "compat/ActorMotionCompat.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/GameGravityCompat.hpp"
-#include "compat/PlayerUtilCompat.hpp"
 #include "compat/SaveDataHandleSequenceCompat.hpp"
 
 #include <RVLFaceLib.h>
@@ -292,8 +291,8 @@ namespace {
 
         aurora::wpad_service().clear();
         auto type = u32{0xFFFFFFFFU};
-        require(WPADProbe(0, &type) == FALSE, "WPADProbe should report disconnected before Aurora receives controller state");
-        require(type == 0U, "WPADProbe should zero the controller type when disconnected");
+        require(WPADProbe(0, &type) == WPAD_ERR_NO_CONTROLLER, "WPADProbe should report the SDK no-controller error before Aurora receives state");
+        require(type == WPAD_DEV_NOT_FOUND, "WPADProbe should report the SDK not-found device type when disconnected");
 
         auto status = KPADStatus{};
         require(KPADRead(0, &status, 1U) == 0, "KPADRead should not synthesize samples before Aurora receives controller state");
@@ -304,7 +303,8 @@ namespace {
         wpad.set_pointer_resolution(WPAD_CHAN0, 640.0F, 480.0F);
         wpad.set_pointer(WPAD_CHAN0, 123.0F, 234.0F, true);
         wpad.set_distance_to_display(WPAD_CHAN0, 1.0F);
-        require(WPADProbe(WPAD_CHAN0, &type) == TRUE, "WPADProbe should report Aurora-fed controller state");
+        require(WPADProbe(WPAD_CHAN0, &type) == WPAD_ERR_NONE && type == WPAD_DEV_CORE,
+                "WPADProbe should return zero and the core device type for Aurora-fed controller state");
         require(KPADRead(WPAD_CHAN0, &status, 1U) == 1, "KPADRead should expose Aurora-fed controller samples");
         require((status.hold & WPAD_BUTTON_A) != 0U && (status.hold & WPAD_BUTTON_UP) != 0U,
                 "KPADRead should preserve held WPAD buttons");
@@ -312,7 +312,7 @@ namespace {
                 status.pos.y == 234.0F * 2.0F / 480.0F - 1.0F && status.horizon.x == 1.0F && status.horizon.y == 0.0F,
                 "KPADRead should publish precise normalized pointing with the supplied upright horizon");
         WPADDisconnect(WPAD_CHAN0);
-        require(WPADProbe(WPAD_CHAN0, nullptr) == FALSE, "WPADDisconnect should clear Aurora controller state");
+        require(WPADProbe(WPAD_CHAN0, nullptr) == WPAD_ERR_NO_CONTROLLER, "WPADDisconnect should clear Aurora controller state");
     }
 
     void test_game_pad_compat_uses_aurora_without_runtime_context() {
@@ -561,13 +561,23 @@ namespace {
                 "NAND quota check should report free space");
     }
 
-    void test_player_visibility_can_be_restored() {
+    void test_player_snapshot_preserves_actor_visibility() {
         auto player = smgpc::runtime::PlayerSystemService{};
-        require(!player.is_player_hidden(), "player visibility should default to shown");
-        player.hide_player();
-        require(player.is_player_hidden(), "hide_player should mark the player hidden");
-        player.show_player();
-        require(!player.is_player_hidden(), "show_player should restore player visibility");
+        auto actor = LiveActor("host-player-visibility");
+        actor.mFlag.mIsHiddenModel = true;
+        player.attach_actor(actor);
+        player.synchronize_attached_actor();
+        require(actor.mFlag.mIsHiddenModel,
+                "host attachment and synchronization must preserve an actor's hidden model state");
+        actor.mFlag.mIsHiddenModel = false;
+        player.synchronize_attached_actor();
+        require(!actor.mFlag.mIsHiddenModel,
+                "host synchronization must preserve the actor's own return to shown state");
+        player.detach_actor(&actor);
+        player.attach_actor(actor);
+        require(!actor.mFlag.mIsHiddenModel,
+                "reattaching a shown actor must not restore stale host visibility");
+        player.detach_actor(&actor);
     }
 
     void test_scene_scheduler_registration_scope_cleanup() {
@@ -788,17 +798,14 @@ namespace {
     }
 
     void test_story_event_spin_entitlement_boundary() {
-        auto player = smgpc::runtime::PlayerSystemService{};
-        player.reset_stage_state();
-        auto actor = LiveActor("story-event-player");
-        player.attach_actor(actor);
-        const auto player_context = smgpc::compat::ScopedPlayerSystemServiceOverride{player};
+        require(smgpc::scene::current_scene_obj_holder() == nullptr,
+                "the absent story-owner proof must have no scene or original Mario owner");
 
         require_logic_error(
             [&] { MR::onGameEventFlagEnableToSpinAndStarPointer(); },
             "spin entitlement must be unavailable while no retail save sequence is backed");
-        require(!player.is_swing_permitted(),
-                "an unavailable story write must not grant swing permission as a partial side effect");
+        require(smgpc::scene::current_scene_obj_holder() == nullptr,
+                "an unavailable story write must not manufacture a scene or player owner");
         require_logic_error(
             [] { static_cast<void>(MR::isOnGameEventFlagEndTicoGuideDemo()); },
             "story-event queries must be unavailable while no retail save sequence is backed");
@@ -1500,7 +1507,7 @@ int main() {
         TestCase{"Aurora OS cache and GX copy smoke", test_aurora_os_cache_and_gx_copy_smoke},
         TestCase{"GX IA8 channel order", test_gx_ia8_channel_order},
         TestCase{"Aurora NAND storage smoke", test_aurora_nand_storage_smoke},
-        TestCase{"player visibility can be restored", test_player_visibility_can_be_restored},
+        TestCase{"player snapshot preserves actor visibility", test_player_snapshot_preserves_actor_visibility},
         TestCase{"scene scheduler registration scope cleanup", test_scene_scheduler_registration_scope_cleanup},
         TestCase{"stage switch zone identity and edges", test_stage_switch_zone_identity_and_edges},
         TestCase{"CollisionBlocker sensor lifecycle", test_collision_blocker_sensor_lifecycle},

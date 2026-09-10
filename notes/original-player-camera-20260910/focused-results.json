@@ -1,0 +1,27 @@
+[
+  {
+    "target": "smg-pc-original-camera-context-tests",
+    "build": 0,
+    "run": 0
+  },
+  {
+    "target": "smg-pc-camera-util-real-or-absent-tests",
+    "build": 0,
+    "run": 0
+  },
+  {
+    "target": "smg-pc-player-util-real-or-absent-tests",
+    "build": 0,
+    "run": 0
+  },
+  {
+    "target": "smg-pc-player-actor-bridge-tests",
+    "build": 0,
+    "run": 0
+  },
+  {
+    "target": "smg-pc-original-camera-director-tests",
+    "build": 0,
+    "run": 0
+  }
+]

@@ -30,12 +30,11 @@ namespace smgpc::camera {
         [[nodiscard]] CameraPose pose() const;
         [[nodiscard]] CameraContext &context() const { return *_context; }
         [[nodiscard]] CameraDirector &director() const { return *_director; }
-        [[nodiscard]] bool ready() const noexcept { return _ready; }
+        [[nodiscard]] bool ready() const noexcept;
 
     private:
         CameraContext *_context = nullptr;
         CameraDirector *_director = nullptr;
-        bool _ready = false;
         std::vector<NativeCameraAnimationData> _animations;
     };
 

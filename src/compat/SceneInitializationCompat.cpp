@@ -49,13 +49,6 @@ void SceneFunction::createHioBasicNode(Scene*) {
 }
 
 namespace MR {
-    void completeCameraParameters() {
-        auto *camera = smgpc::camera::current_camera_director_runtime();
-        if (!camera)
-            aurora::throw_host_exception<std::logic_error>("Camera parameter completion requires the actual scene CameraDirector");
-        camera->close_creating_chunks();
-    }
-
     bool isStageDisablePauseMenu() {
         return isStageFileSelect() || isStageEpilogueDemo();
     }

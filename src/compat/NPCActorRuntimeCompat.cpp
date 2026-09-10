@@ -129,7 +129,6 @@ const void* smgpcNPCActorModelPresence(const LiveActor* actor) {
     return actor != nullptr ? actor->mModelManager : nullptr;
 }
 
-
 namespace MR {
     JointControlDelegator<NPCActor>* createNPCActorJointDelegator(NPCActor*, const char*) {
         aurora::throw_host_exception<std::logic_error>("NPC joint controllers are unavailable without the real J3D joint-controller pipeline.");
@@ -227,10 +226,6 @@ namespace MR {
         quaternion->getZDir(current);
         return turnQuatAxis(quaternion, *quaternion, current, target,
                             maximumDegrees * (std::numbers::pi_v<float> / 180.0F));
-    }
-
-    bool checkPlayerSwingTrigger() {
-        aurora::throw_host_exception<std::logic_error>("Player swing state is unavailable without the real MarioActor.");
     }
 
     void calcGravity(LiveActor* pActor) {

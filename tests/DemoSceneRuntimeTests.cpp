@@ -1,4 +1,6 @@
+#include "SceneExecutionFixture.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/Scene/SceneNameObjMovementController.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Screen/LayoutActor.hpp"
 #include "Game/Util/DemoUtil.hpp"
@@ -639,7 +641,8 @@ namespace {
         return make_rarc(files);
     }
 
-    [[nodiscard]] smgpc::resource::RarcArchive make_clock_sheet_fixture() {
+    [[nodiscard]] smgpc::resource::RarcArchive make_clock_sheet_fixture(
+        bool include_player_rows = false) {
         const auto clock_time = std::array{
             TimeRow{.part_name = "intro", .total_step = 3},
             TimeRow{.part_name = "outro", .total_step = 2},
@@ -662,13 +665,11 @@ namespace {
         const auto runaway_time = std::array{
             TimeRow{.part_name = "one", .total_step = 1},
         };
-        const auto files = std::array{
+        auto files = std::vector<ArchiveFile>{
             ArchiveFile{.name = "DemoClockTime.bcsv",
                         .data = make_time_bcsv(clock_time)},
             ArchiveFile{.name = "DemoClockSubPart.bcsv",
                         .data = make_sub_part_bcsv(clock_sub_parts)},
-            ArchiveFile{.name = "DemoClockPlayer.bcsv",
-                        .data = make_player_bcsv("intro", "ClockStart", "Wait")},
             ArchiveFile{.name = "DemoOtherTime.bcsv",
                         .data = make_time_bcsv(other_time)},
             ArchiveFile{.name = "DemoSuspendTime.bcsv",
@@ -677,6 +678,12 @@ namespace {
                         .data = make_time_bcsv(runaway_time)},
             ArchiveFile{.name = "DemoEmptyClockTime.bcsv", .data = make_empty_bcsv()},
         };
+        if (include_player_rows) {
+            files.push_back(ArchiveFile{
+                .name = "DemoClockPlayer.bcsv",
+                .data = make_player_bcsv("intro", "ClockStart", "Wait"),
+            });
+        }
         return make_rarc(files);
     }
 
@@ -690,7 +697,7 @@ namespace {
             ActionRow{.part_name = "first", .cast_name = "Actor", .action_type = 2},
             ActionRow{.part_name = "first", .cast_name = "Actor", .action_type = 3},
             ActionRow{.part_name = "first", .cast_name = "Actor", .action_type = 7},
-            ActionRow{.part_name = "first", .cast_name = "Actor", .action_type = 99, .position_name = "Anchor", .animation_name = "Wave"},
+            ActionRow{.part_name = "first", .cast_name = "Actor", .action_type = 99, .position_name = "Anchor"},
             ActionRow{.part_name = "one", .cast_name = "Actor", .action_type = 1},
         };
         const auto wipes = std::array{
@@ -1176,21 +1183,9 @@ namespace {
     void test_timekeeper_queries_subparts_and_natural_end() {
         const auto archive = make_clock_sheet_fixture();
         const auto placements = make_clock_definition_fixture();
-        const auto positions = std::array{
-            smgpc::scene::StageGeneralPos{
-                .name = "ClockStart",
-                .world_position = {12.0F, 34.0F, 56.0F},
-                .world_rotation = {7.0F, 8.0F, 9.0F},
-            },
-        };
-        auto runtime = smgpc::compat::DemoSceneRuntime(archive, placements, positions);
+        auto runtime = smgpc::compat::DemoSceneRuntime(archive, placements);
         auto actor_info = make_actor_info(30, -1, 20);
         auto actor = LiveActor("ClockActor");
-        auto player = smgpc::runtime::PlayerSystemService{};
-        auto player_actor = LiveActor("PlayerActor");
-        player.attach_actor(player_actor);
-        const auto player_context =
-            smgpc::compat::ScopedPlayerSystemServiceOverride{player};
         require(MR::tryRegisterDemoCast(&actor, JMapInfoIter(&actor_info, 0)),
                 "the clock actor must register with its zone-scoped primary definition");
 
@@ -1320,48 +1315,23 @@ namespace {
     void test_registered_start_suspend_and_safe_rejections() {
         const auto archive = make_clock_sheet_fixture();
         const auto placements = make_clock_definition_fixture();
-        const auto positions = std::array{
-            smgpc::scene::StageGeneralPos{
-                .name = "ClockStart",
-                .world_position = {12.0F, 34.0F, 56.0F},
-                .world_rotation = {7.0F, 8.0F, 9.0F},
-            },
-        };
-        auto runtime = smgpc::compat::DemoSceneRuntime(archive, placements, positions);
+        auto runtime = smgpc::compat::DemoSceneRuntime(archive, placements);
         auto clock_info = make_actor_info(30, -1, 20);
         auto actor = LiveActor("ClockActor");
         auto wrong_actor = LiveActor("WrongActor");
-        auto player = smgpc::runtime::PlayerSystemService{};
-        auto player_actor = LiveActor("PlayerActor");
-        player.attach_actor(player_actor);
-        const auto player_context =
-            smgpc::compat::ScopedPlayerSystemServiceOverride{player};
         require(MR::tryRegisterDemoCast(&actor, JMapInfoIter(&clock_info, 0)) &&
                     MR::tryRegisterDemoCast(&actor, "Other", JMapInfoIter{}),
                 "the registered-start actor must retain ordered multi-membership");
-        require(MR::tryStartTimeKeepDemoMarioPuppetable(&actor, "Clock", "intro"),
-                "the Player-row fixture must start through the original puppetable boundary");
-        runtime.movement();
-        require(player_actor.mPosition.x == 12.0F && player_actor.mPosition.y == 34.0F &&
-                    player_actor.mPosition.z == 56.0F && player_actor.mRotation.x == 7.0F &&
-                    player_actor.mRotation.y == 8.0F && player_actor.mRotation.z == 9.0F &&
-                    player_actor.mVelocity.isZero() &&
-                    smgpc::compat::actor_current_bck_name(&player_actor) == "Wait" &&
-                    !player.is_control_enabled(),
-                "the original Player keeper order must apply GeneralPos/BCK before other keepers");
-        MR::endDemo(&actor, "Clock");
         require(MR::tryStartDemoRegistered(&actor, "outro") &&
                     MR::isDemoActiveRegistered(&actor) &&
-                    MR::getDemoPartStep("outro") == -1 &&
-                    !player.is_control_enabled(),
-                "registered start must choose the actor's first primary executor, exact part, and puppetable path for Player rows");
+                    MR::getDemoPartStep("outro") == -1,
+                "registered start must choose the actor's first primary executor and exact part without Player rows");
         require(!MR::tryStartTimeKeepDemo(&actor, "Other", nullptr) &&
                     MR::isDemoActive("Clock"),
                 "try-start must reject while the shared DemoDirector is already active");
         MR::endDemo(&wrong_actor, "WrongName");
-        require(player.is_control_enabled() && !MR::isDemoActive() &&
-                    !MR::isTimeKeepDemoActive(),
-                "explicit end must ignore its informational owner/name and release auto-puppetable control like DemoDirector");
+        require(!MR::isDemoActive() && !MR::isTimeKeepDemoActive(),
+                "explicit end must ignore its informational owner/name and release the active clock");
 
         require(MR::tryStartTimeKeepDemo(&actor, "Other", nullptr) &&
                     !MR::isDemoActiveRegistered(&actor),
@@ -1376,8 +1346,8 @@ namespace {
                     !MR::isDemoActive(),
                 "missing, empty, and unknown Time requests must fail safely without claiming director activity");
 
-        require(MR::tryStartTimeKeepDemoMarioPuppetable(&actor, "Suspend", nullptr),
-                "the LiveActor puppetable overload must use the same generalized clock");
+        require(MR::tryStartTimeKeepDemo(&actor, "Suspend", nullptr),
+                "the synthetic suspend fixture must use the ordinary clock without player ownership");
         runtime.movement();
         runtime.movement();
         require(MR::isDemoPartLastStep("hold") && !MR::isDemoLastStep(),
@@ -1386,6 +1356,61 @@ namespace {
         require(!MR::isDemoActive() && !MR::isTimeKeepDemoActive() &&
                     !MR::isDemoPartActive("unreachable"),
                 "a suspend boundary must end before the following part dispatches");
+    }
+
+    void test_player_rows_require_actual_mario_before_state_mutation() {
+        const auto archive = make_clock_sheet_fixture(true);
+        const auto placements = make_clock_definition_fixture();
+        auto runtime = smgpc::compat::DemoSceneRuntime(archive, placements);
+        auto actor_info = make_actor_info(30, -1, 20);
+        auto actor = LiveActor("ClockActor");
+        require(MR::tryRegisterDemoCast(&actor, JMapInfoIter(&actor_info, 0)) &&
+                    runtime.registered_demo_has_player_rows(&actor),
+                "the rejection fixture must retain actual parsed Player rows");
+        const auto* clock = runtime.definition(0U);
+        require(clock != nullptr && !clock->sheet.is_active() && !MR::isDemoActive(),
+                "the Player-row rejection must begin without active demo state");
+        const auto dormant_step = clock->sheet.current_part_step();
+        require_throws(
+            [&] { (void)MR::tryStartTimeKeepDemoMarioPuppetable(&actor, "Clock", "intro"); },
+            "MarioHolder's actual attached MarioActor",
+            "a puppetable clock must reject missing original Mario ownership");
+        require(!MR::isDemoActive() && !clock->sheet.is_active() &&
+                    clock->sheet.current_part_step() == dormant_step,
+                "missing Mario must not start or advance the target Time sheet");
+
+        // A generic host attachment is intentionally insufficient. It is used
+        // only to prove rejection; no Player keeper may run against this actor.
+        auto host_player = smgpc::runtime::PlayerSystemService{};
+        auto generic_actor = LiveActor("not-an-original-Mario-owner");
+        generic_actor.mPosition.set(90.0F, 80.0F, 70.0F);
+        host_player.attach_actor(generic_actor);
+        const auto player_context =
+            smgpc::compat::ScopedPlayerSystemServiceOverride{host_player};
+        require(MR::tryStartTimeKeepDemo(&actor, "Other", nullptr),
+                "an unrelated ordinary clock must remain available without Mario");
+        runtime.movement();
+        require(MR::isDemoActive("Other") && MR::getDemoPartStep("other") == 0,
+                "the active clock must reach its first step before the rejected replacement");
+        require_throws(
+            [&] { MR::startTimeKeepDemoMarioPuppetable(&actor, "Clock", "intro"); },
+            "MarioHolder's actual attached MarioActor",
+            "a generic host attachment must not replace the real Mario owner");
+        require(MR::isDemoActive("Other") && MR::getDemoPartStep("other") == 0 &&
+                    !clock->sheet.is_active() && clock->sheet.current_part_step() == dormant_step &&
+                    host_player.attached_actor() == &generic_actor &&
+                    generic_actor.mPosition.x == 90.0F && generic_actor.mPosition.y == 80.0F &&
+                    generic_actor.mPosition.z == 70.0F,
+                "a rejected puppetable replacement must preserve both the active clock and host actor");
+        MR::endDemo(&actor, "Other");
+        require_throws(
+            [&] { (void)MR::tryStartDemoRegistered(&actor, "intro"); },
+            "MarioHolder's actual attached MarioActor",
+            "registered Player rows must select the same actual-owner requirement");
+        require(!MR::isDemoActive() && !clock->sheet.is_active() &&
+                    clock->sheet.current_part_step() == dormant_step,
+                "rejected automatic Player-row routing must leave the director inactive");
+        host_player.detach_actor(&generic_actor);
     }
 
     void test_one_frame_final_pause_boundary_overshoot() {
@@ -1453,13 +1478,14 @@ namespace {
             smgpc::compat::update_actor_nerve(&actor);
             require(observer.calls == 1 && observer.saw_appeared &&
                         actor.isNerve(&action_nerve) && actor.mFlag.mIsHiddenModel &&
-                        smgpc::compat::actor_current_bck_name(&actor) == "Wave" && actor.mPosition.x == 12.0F &&
+                        actor.mModelManager == nullptr && actor.mAnimKeeper == nullptr &&
+                        actor.mPosition.x == 12.0F &&
                         actor.mPosition.y == 34.0F && actor.mPosition.z == 56.0F &&
                         actor.mRotation.x == 7.0F && actor.mRotation.y == 8.0F &&
                         actor.mRotation.z == 9.0F && wipe.events().size() == 1U &&
                         wipe.events()[0].name == "CustomWipe" &&
                         wipe.events()[0].frame_count == -1,
-                    "Action/Wipe rows must run against their real callback, GeneralPos, and scene wipe owners");
+                    "model-free Action/Wipe rows must use their actual callback, nerve, GeneralPos and wipe owners without creating animation state");
             runtime.movement();
             require(observer.calls == 1 && !actor.mFlag.mIsDead,
                     "a multi-frame Action row must not replay its first-step operation on the last step");
@@ -1658,9 +1684,10 @@ namespace {
         auto name_obj = NameObj("SimpleNameObj");
         auto runtime = smgpc::compat::DemoSceneRuntime(archive, placements);
 
-        live_actor.requestSuspend();
-        layout_actor.requestSuspend();
-        name_obj.requestSuspend();
+        NameObjFunction::requestMovementOff(&live_actor);
+        NameObjFunction::requestMovementOff(&layout_actor);
+        NameObjFunction::requestMovementOff(&name_obj);
+        MR::getSceneNameObjMovementController()->movement();
         MR::registerDemoSimpleCastAll(&live_actor);
         MR::registerDemoSimpleCastAll(&layout_actor);
         MR::registerDemoSimpleCastAll(&name_obj);
@@ -1671,8 +1698,14 @@ namespace {
                     runtime.simple_cast_registration_count(&name_obj) == 1U,
                 "simple casts must remain an append-only registry distinct from DemoGroup membership");
 
-        require(MR::tryStartTimeKeepDemo(&name_obj, "Alpha", nullptr) &&
-                    !smgpc::compat::name_obj_is_suspended(&live_actor) &&
+        require(MR::tryStartTimeKeepDemo(&name_obj, "Alpha", nullptr),
+                "the registered simple casts must have a startable ordinary Time sheet");
+        require(smgpc::compat::name_obj_is_suspended(&live_actor) &&
+                    smgpc::compat::name_obj_is_suspended(&layout_actor) &&
+                    smgpc::compat::name_obj_is_suspended(&name_obj),
+                "demo resume requests must wait for the original scene flag synchronization");
+        MR::getSceneNameObjMovementController()->movement();
+        require(!smgpc::compat::name_obj_is_suspended(&live_actor) &&
                     !smgpc::compat::name_obj_is_suspended(&layout_actor) &&
                     !smgpc::compat::name_obj_is_suspended(&name_obj),
                 "a real demo start must resume all three simple-cast lists");
@@ -1691,13 +1724,16 @@ namespace {
         require(runtime.simple_cast_registration_count(transient_identity) == 0U,
                 "LiveActor teardown must release every simple-cast entry for that identity");
 
-        live_actor.requestSuspend();
-        layout_actor.requestSuspend();
-        name_obj.requestSuspend();
+        NameObjFunction::requestMovementOff(&live_actor);
+        NameObjFunction::requestMovementOff(&layout_actor);
+        NameObjFunction::requestMovementOff(&name_obj);
+        MR::getSceneNameObjMovementController()->movement();
         smgpc::compat::release_demo_runtime_state(&live_actor);
         require(runtime.simple_cast_registration_count(&live_actor) == 0U &&
-                    MR::tryStartTimeKeepDemo(&name_obj, "Alpha", nullptr) &&
-                    smgpc::compat::name_obj_is_suspended(&live_actor) &&
+                    MR::tryStartTimeKeepDemo(&name_obj, "Alpha", nullptr),
+                "released simple casts must be absent before the next demo start");
+        MR::getSceneNameObjMovementController()->movement();
+        require(smgpc::compat::name_obj_is_suspended(&live_actor) &&
                     !smgpc::compat::name_obj_is_suspended(&layout_actor) &&
                     !smgpc::compat::name_obj_is_suspended(&name_obj),
                 "released LiveActor identities must not be resumed by a later demo start");
@@ -1914,6 +1950,7 @@ int main() {
         TestCase{"timekeeper queries, SubParts, and natural end", test_timekeeper_queries_subparts_and_natural_end},
         TestCase{"timekeeper pause, resume, and preserved pause", test_timekeeper_pause_resume_and_preserved_pause_flag},
         TestCase{"registered start, suspend, and safe rejections", test_registered_start_suspend_and_safe_rejections},
+        TestCase{"Player rows require actual Mario before state mutation", test_player_rows_require_actual_mario_before_state_mutation},
         TestCase{"one-frame final paused boundary overshoot", test_one_frame_final_pause_boundary_overshoot},
         TestCase{"ZoneList-only zone IDs", test_zone_ids_are_only_read_from_zone_list},
         TestCase{"GeneralPos table order and zone transform", test_general_pos_table_order_and_zone_transform},
@@ -1928,9 +1965,16 @@ int main() {
     };
 
     auto passed = std::size_t{};
+    const auto heaps = smgpc::compat::JkrHeapRuntime::create(16U * 1024U * 1024U);
     for (const auto &test : tests) {
         try {
+            auto scheduler = smgpc::runtime::SceneScheduler{};
+            const auto scheduler_binding = smgpc::runtime::SceneSchedulerBinding{scheduler};
+            auto scene = smgpc::test::SceneExecutionFixture{
+                scheduler, smgpc::compat::JkrAllocationDomain::create(heaps, 4U * 1024U * 1024U)};
             test.run();
+            scene.complete_initialization();
+            scene.objects().complete_initialization();
             ++passed;
             std::cout << "[pass] " << test.name << '\n';
         } catch (const std::exception &error) {

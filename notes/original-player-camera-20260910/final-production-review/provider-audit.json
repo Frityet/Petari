@@ -1,0 +1,92 @@
+{
+  "command": [
+    "/opt/homebrew/opt/llvm/bin/llvm-nm",
+    "-A",
+    "-C",
+    "--defined-only",
+    "--extern-only",
+    "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-app.a",
+    "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-common.a",
+    "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a",
+    "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-render.a"
+  ],
+  "exit_code": 0,
+  "providers": {
+    "MR::getPlayerPos()": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:PlayerUtil.cpp.o: 000000000000009c"
+    ],
+    "MR::isPlayerDead()": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:PlayerUtil.cpp.o: 0000000000000040"
+    ],
+    "MR::setPlayerPos(char const*)": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:PlayerUtil.cpp.o: 0000000000000550"
+    ],
+    "MR::setPlayerPos(JGeometry::TVec3<float> const&)": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:PlayerUtil.cpp.o: 00000000000000d0"
+    ],
+    "MR::onPlayerControl(bool)": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:PlayerUtil.cpp.o: 00000000000010e4"
+    ],
+    "MR::getPlayerBaseMtx()": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:PlayerUtil.cpp.o: 0000000000001138"
+    ],
+    "MR::getPlayerGravity()": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:PlayerUtil.cpp.o: 0000000000000170"
+    ],
+    "MR::isOnGroundPlayer()": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:PlayerUtil.cpp.o: 0000000000000000"
+    ],
+    "MR::offPlayerControl()": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:PlayerUtil.cpp.o: 00000000000010e0"
+    ],
+    "MR::setPlayerBaseMtx(float (*) [4])": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:PlayerUtil.cpp.o: 0000000000001134"
+    ],
+    "MR::getPlayerVelocity()": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:PlayerUtil.cpp.o: 0000000000000130"
+    ],
+    "MR::getPlayerCenterPos()": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:PlayerUtil.cpp.o: 00000000000000b4"
+    ],
+    "MR::isOffPlayerControl()": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:PlayerUtil.cpp.o: 00000000000010e8"
+    ],
+    "MR::setPlayerSwingPermission(bool)": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:PlayerUtil.cpp.o: 00000000000002f0"
+    ],
+    "MR::getCameraViewMtx()": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtil.cpp.o: 0000000000000600"
+    ],
+    "MR::calcScreenPosition(JGeometry::TVec2<float>*, JGeometry::TVec3<float> const&)": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtil.cpp.o: 0000000000000008"
+    ],
+    "MR::calcScreenPosition(JGeometry::TVec3<float>*, JGeometry::TVec3<float> const&)": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtil.cpp.o: 000000000000017c"
+    ],
+    "MR::getCameraInvViewMtx()": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtil.cpp.o: 0000000000000460"
+    ],
+    "MR::declareEventCameraAnim(ActorCameraInfo const*, char const*, void*)": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtil.cpp.o: 0000000000000d08"
+    ],
+    "MR::getCameraProjectionMtx()": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtil.cpp.o: 0000000000000680"
+    ],
+    "MR::completeCameraParameters()": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtil.cpp.o: 000000000000099c"
+    ],
+    "MR::calcWorldPositionFromScreen(JGeometry::TVec3<float>*, JGeometry::TVec2<float> const&, float)": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtil.cpp.o: 0000000000000288"
+    ],
+    "MR::calcNormalizedScreenPosition(JGeometry::TVec3<float>*, JGeometry::TVec3<float> const&)": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtil.cpp.o: 0000000000000070"
+    ],
+    "MR::calcNormalizedScreenPositionFromView(JGeometry::TVec3<float>*, JGeometry::TVec3<float> const&)": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:CameraUtil.cpp.o: 00000000000001ec"
+    ],
+    "MR::isPlayerGCaptured()": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:OriginalGCaptureQueries.cpp.o: 0000000000000000"
+    ]
+  },
+  "nonunique": {}
+}

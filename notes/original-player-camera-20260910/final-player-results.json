@@ -1,0 +1,32 @@
+[
+  {
+    "target": "smg-pc-mario-gateway-walk-tests",
+    "args": [
+      "--player-util"
+    ],
+    "fresh_process": 1,
+    "exit": 0,
+    "wall_seconds": 1.4818283750209957,
+    "binary_sha256": "a8c0121878ba6c0bed0fd34d7e94c81426e5c55717a4c7c25f69fdafd4252b45",
+    "proof": [
+      "[proof] original PlayerUtil actual owners, translation, KCL rush grounding and synchronous control reset passed",
+      "[proof] focused actual PlayerUtil: original entry, finite joints, original draw buffers, utility checks and scene teardown passed",
+      "[ok] real original PlayerUtil ownership proof"
+    ]
+  },
+  {
+    "target": "smg-pc-mario-gateway-walk-tests",
+    "args": [
+      "--player-util"
+    ],
+    "fresh_process": 2,
+    "exit": 0,
+    "wall_seconds": 0.9699035829980858,
+    "binary_sha256": "a8c0121878ba6c0bed0fd34d7e94c81426e5c55717a4c7c25f69fdafd4252b45",
+    "proof": [
+      "[proof] original PlayerUtil actual owners, translation, KCL rush grounding and synchronous control reset passed",
+      "[proof] focused actual PlayerUtil: original entry, finite joints, original draw buffers, utility checks and scene teardown passed",
+      "[ok] real original PlayerUtil ownership proof"
+    ]
+  }
+]
