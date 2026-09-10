@@ -1,0 +1,19 @@
+{
+  "root_commit": "a987f3c05deef716b2f9499c56bfbf565db6c71f",
+  "verified_remote": "a987f3c05deef716b2f9499c56bfbf565db6c71f",
+  "identity": "codex <codex@openai.com> | codex <codex@openai.com>",
+  "source_paths": [
+    "aurora",
+    "decomp",
+    "src/Game/System/WPadStick.cpp",
+    "src/compat/GamePadUtilCompat.cpp",
+    "src/compat/OriginalWPadRecords.cpp",
+    "src/compat/StarPointerDepthOwnership.cpp",
+    "src/compat/WPadOwnership.cpp",
+    "src/compat/WPadOwnership.hpp",
+    "src/runtime/RuntimeContext.cpp",
+    "tests/AuroraNativeTests.cpp",
+    "tests/OriginalPointerInputTests.cpp"
+  ],
+  "evidence_files": 51
+}
