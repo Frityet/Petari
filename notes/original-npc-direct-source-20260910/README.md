@@ -29,7 +29,9 @@ The packaged movement app was not replaced; this is source/runtime validation of
 
 ## Publication
 
-Decomp `8f8633065b1b0c73ae5d49f70b9a72dea64ffcb4` was committed and pushed to `origin/pcp-decomp`; the remote SHA and codex author/committer were verified. It includes the original joint-controller implementation/header and two typed boss consumer reconciliations that preserve every code/data section exactly. Root publication follows after the final independent review.
+Decomp `8f8633065b1b0c73ae5d49f70b9a72dea64ffcb4` was committed and pushed to `origin/pcp-decomp`; the remote SHA and codex author/committer were verified. It includes the original joint-controller implementation/header and two typed boss consumer reconciliations that preserve every code/data section exactly.
+
+Root implementation/evidence checkpoint `f2ed2ebc8f074aa1083d28d29f7e942fe1c5de71` was pushed to `origin/pcp-aurora`, with an exact remote SHA verification. Both author and committer are `codex <codex@openai.com>`. Independent review found no actionable defects in the scoped production/test change. The four protected user paths retain their original status, including both staged deletions; the untracked walking-demo script retains SHA256 `60f326015cf765503100cd142f386bde95b24be72ccc6bf94c85b8879fcf1ced`. Aurora and decomp working trees are clean. The Gateway/Rosalina goal remains active and incomplete.
 
 ## Preserved user work
 
