@@ -1142,6 +1142,10 @@ namespace MR {
     };
 };  // namespace MR
 
+f32 JMASqrt(f32 x) {
+    return MR::fastSqrtf(x);
+}
+
 f32 PSVECKillElement(__REGISTER const Vec* pSrc, __REGISTER const Vec* pKill, __REGISTER const Vec* pDst) {
     // FIXME: out of order instruction
 #ifdef __MWERKS__
