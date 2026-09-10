@@ -3,15 +3,23 @@
 
 MatrixControl::MatrixControl(const char* pName, MatrixMap* pMap, MatrixSelectList* pSelectList, s32 myInt)
     : NameObj(pName), _C(pMap), _10(pSelectList), _18(myInt), _1C(true), _1D(false) {
-    for (s32 idx = 0; _C->mName[0] != '\0'; idx++) {
-        if (_1C) {
-            continue;
+    for (u32 idx = 0; idx < myInt; idx++) {
+        if (_10[idx + 1].mCount > 2) {
+            _1C = false;
+            break;
         }
-
-        _C->_8 = 0;
     }
 
     s32 size;
+    for (size = 0; _C[size].mName[0] != '\0'; size++) {
+        if (!_1C) {
+            _C[size]._8 = new u8[8];
+            for (u32 idx = 0; idx < 8; idx++) {
+                _C[size]._8[idx] = (_C[size]._4 >> (4 * (7 - idx))) & 0xF;
+            }
+        }
+    }
+
     _14 = new HashSortTable(size);
 
     for (u32 idx = 0; idx < size; idx++) {
@@ -52,9 +60,8 @@ bool MatrixControl::isExist(const char* pName) const {
 }
 
 bool MatrixControl::getBitOrNone(const char* pName, u8 bit) const {
-    // FIXME: some black magickery going on here
     u32 index;
-    if (_14->search(pName, &index)) {
+    if (!_14->search(pName, &index)) {
         return _1D;
     }
 
