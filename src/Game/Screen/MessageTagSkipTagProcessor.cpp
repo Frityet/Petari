@@ -19,16 +19,19 @@ nw4r::ut::TagProcessorBase< wchar_t >::Operation MessageTagSkipTagProcessor::Pro
     }
 }
 
-/*
-nw4r::ut::TagProcessorBase<wchar_t>::Operation MessageTagSkipTagProcessor::skipTag(nw4r::ut::Rect *pRect, ContextType *pPrintContext, bool a3) {
-    pPrintContext->str += (*pPrintContext->str - 2) & 0xFFFFFFFE;
-    return (nw4r::ut::TagProcessorBase<wchar_t>::Operation)0;
+nw4r::ut::TagProcessorBase< wchar_t >::Operation MessageTagSkipTagProcessor::skipTag(nw4r::ut::Rect*, ContextType* pPrintContext, bool) {
+    MessageEditorMessageTag tag(pPrintContext->str);
+    pPrintContext->str += tag.getSkipLength();
+    return OPERATION_DEFAULT;
 }
-*/
 
 MessageEditorMessageTag::MessageEditorMessageTag(const wchar_t* pMessage) : mMessage(pMessage) {
 }
 
 u32 MessageEditorMessageTag::getSkipLength() const {
     return (reinterpret_cast< const u8* >(mMessage)[0] - 2U) >> 1;
+}
+
+u32 MessageEditorMessageTag::getParam32(int index) const {
+    return *reinterpret_cast< const u32* >(reinterpret_cast< const u8* >(mMessage) + index * 4 + 4);
 }

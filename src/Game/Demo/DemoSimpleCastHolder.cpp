@@ -1,5 +1,6 @@
 #include "Game/Demo/DemoSimpleCastHolder.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/Screen/LayoutActor.hpp"
 #include "Game/Util/ObjUtil.hpp"
 
 DemoSimpleCastHolder::DemoSimpleCastHolder(s32 liveActorCount, s32 layoutActorCount, s32 nameObjCount) {

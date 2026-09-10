@@ -82,7 +82,7 @@ void SensorHitChecker::doObjColInSameGroup(SensorGroup* pSensorGroup) const {
         bool isFirstSensorValid = pFirstSensor->mValidByHost && pFirstSensor->mValidBySystem;
 
         if (isFirstSensorValid && !MR::isClipped(pFirstSensor->mHost)) {
-            for (s32 x = 0; x < sensorGroupCount; x++) {
+            for (s32 x = i; x < sensorGroupCount; x++) {
                 HitSensor* pSecondSensor = pSensorGroup->mSensors[x];
                 bool isSecondSensorValid = pSecondSensor->mValidByHost && pSecondSensor->mValidBySystem;
 
@@ -100,9 +100,9 @@ void SensorHitChecker::checkAttack(HitSensor* pSensor1, HitSensor* pSensor2) con
         f32 xPos = pSensor1->mPosition.x - pSensor2->mPosition.x;
         f32 yPos = pSensor1->mPosition.y - pSensor2->mPosition.y;
         f32 zPos = pSensor1->mPosition.z - pSensor2->mPosition.z;
-        f32 totalSize = pSensor2->mRadius + pSensor1->mRadius;
+        f32 totalSize = pSensor1->mRadius + pSensor2->mRadius;
 
-        if (!((((yPos * yPos) + (xPos * xPos)) + (zPos * zPos)) >= (totalSize * totalSize))) {
+        if (!(((zPos * zPos) + ((xPos * xPos) + (yPos * yPos))) >= (totalSize * totalSize))) {
             if (!pSensor2->isType(ATYPE_EYE)) {
                 pSensor1->addHitSensor(pSensor2);
             }
@@ -169,6 +169,6 @@ void SensorGroup::remove(HitSensor* pSensor) {
 
 void SensorGroup::clear() const {
     for (s32 i = 0; i < mSensorCount; i++) {
-        mSensors[i]->mSensorCount = nullptr;
+        mSensors[i]->mSensorCount = 0;
     }
 }

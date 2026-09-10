@@ -36,7 +36,7 @@ void DemoCameraKeeper::update() {
     if (_C < 0) {
         return;
     }
-    if (_4 > _C) {
+    if (_4 <= _C) {
         return;
     }
 

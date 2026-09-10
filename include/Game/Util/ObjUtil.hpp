@@ -191,7 +191,7 @@ namespace MR {
     bool tryRegisterNamePosLinkObj(const NameObj*, const JMapInfoIter&);
     bool findNamePos(const char*, MtxPtr);
     bool findNamePos(const char*, TVec3f*, TVec3f*);
-    bool findNamePosOnGround(const char*, MtxPtr);
+    void findNamePosOnGround(const char*, MtxPtr);
     bool tryFindNamePos(const char*, MtxPtr);
     bool tryFindNamePos(const char*, TVec3f*, TVec3f*);
     void findLinkNamePos(const NameObj*, const char*, MtxPtr);

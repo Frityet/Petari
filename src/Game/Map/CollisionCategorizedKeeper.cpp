@@ -1,4 +1,5 @@
 #include "Game/Map/CollisionCategorizedKeeper.hpp"
+#include "Game/LiveActor/HitSensor.hpp"
 #include "Game/Map/CollisionParts.hpp"
 #include "Game/Map/CollisionDirector.hpp"
 #include "Game/Util/MathUtil.hpp"
@@ -220,4 +221,23 @@ bool CollisionCategorizedKeeper::isSphereOverlappingWithBox(const TVec3f& rMin, 
     }
 
     return true;
+}
+
+bool CollisionCategorizedKeeper::searchSameHostParts(CollisionParts** ppParts, CollisionParts* pParts) const {
+    for (CollisionZone* const* zone = mZones; zone != mZones + mZoneNum; zone++) {
+        s32 partCount = (*zone)->mNumParts;
+        for (s32 i = 0; i < partCount; i++) {
+            CollisionParts* part = (*zone)->mPartsArray[i];
+            if (part->mHitSensor->mHost == pParts->mHitSensor->mHost) {
+                *ppParts = part;
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+HitInfo* CollisionCategorizedKeeper::getStrikeInfo(u32 index) {
+    return &mHitInfoArray[index];
 }

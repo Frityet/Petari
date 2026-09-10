@@ -13,5 +13,5 @@ public:
     virtual nw4r::ut::TagProcessorBase< wchar_t >::Operation Process(u16, ContextType*);
     virtual nw4r::ut::TagProcessorBase< wchar_t >::Operation CalcRect(nw4r::ut::Rect*, u16, ContextType*);
 
-    nw4r::ut::TagProcessorBase< wchar_t >::Operation skipTag(nw4r::ut::Rect*, ContextType*, bool);
+    nw4r::ut::TagProcessorBase< wchar_t >::Operation skipTag(nw4r::ut::Rect*, ContextType*, bool) NO_INLINE;
 };

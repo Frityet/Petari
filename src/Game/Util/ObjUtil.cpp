@@ -6,6 +6,7 @@
 #include "Game/LiveActor/ClippingJudge.hpp"
 #include "Game/LiveActor/ModelObj.hpp"
 #include "Game/Map/NamePosHolder.hpp"
+#include "Game/Map/HitInfo.hpp"
 #include "Game/Map/SwitchWatcherHolder.hpp"
 #include "Game/Map/WaterInfo.hpp"
 #include "Game/MapObj/BenefitItemLifeUp.hpp"
@@ -35,6 +36,8 @@
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/EffectUtil.hpp"
 #include "Game/Util/GamePadUtil.hpp"
+#include "Game/Util/GravityUtil.hpp"
+#include "Game/Util/MapUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/SingletonHolder.hpp"
@@ -879,7 +882,25 @@ namespace MR {
         return getNamePosHolder()->find(nullptr, pName, a2, a3);
     }
 
-    // findNamePosOnGround
+    void findNamePosOnGround(const char* pName, MtxPtr pMtx) {
+        Triangle triangle;
+        TPos3f mtx;
+        findNamePos(pName, mtx.toMtxPtr());
+
+        TVec3f pos;
+        mtx.getTrans(pos);
+        TVec3f front;
+        mtx.getZDir(front);
+        TVec3f gravity;
+        calcGravityVector(nullptr, pos, &gravity, nullptr, 0);
+
+        TVec3f groundPos;
+        if (getFirstPolyOnLineToMap(&groundPos, &triangle, pos - gravity * 100.0f, gravity * 1000.0f)) {
+            makeMtxUpFrontPos(&mtx, -gravity, front, groundPos);
+        }
+
+        PSMTXCopy(mtx.toMtxPtr(), pMtx);
+    }
 
     bool tryFindNamePos(const char* pName, MtxPtr pMtx) {
         return tryFindLinkNamePos(nullptr, pName, pMtx);
