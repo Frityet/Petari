@@ -30,7 +30,7 @@ static bool byte_806B70B8;
 
 u32 JKRHeap::mMemorySize;
 
-u32 JKRHeap::ARALT_AramStartAddr = 0x90000000;
+u32 ARALT_AramStartAdr = 0x90000000;
 
 JKRHeap::JKRHeap(void* data, u32 size, JKRHeap* parent, bool error) : JKRDisposer(), mChildTree(this), mDisposerList() {
     OSInitMutex(&mMutex);
@@ -224,26 +224,25 @@ JKRHeap* JKRHeap::findAllHeap(void* ptr) const {
 }
 
 void JKRHeap::dispose_subroutine(uintptr_t start, uintptr_t end) {
+    JSUListIterator< JKRDisposer > it(mDisposerList.getFirst());
     JSUListIterator< JKRDisposer > last_it;
-    JSUListIterator< JKRDisposer > next_it;
-    JSUListIterator< JKRDisposer > it;
 
-    for (it = mDisposerList.getFirst(); it != mDisposerList.getEnd(); it = next_it) {
-        JKRDisposer* disp = it.getObject();
+    JSULink< JKRDisposer >* link;
+    while ((link = it.mLink) != nullptr) {
+        JKRDisposer* disp = link->getObject();
 
-        if ((void*)start <= disp && disp < (void*)end) {
+        if (reinterpret_cast< void* >(start) <= disp && disp < reinterpret_cast< void* >(end)) {
             disp->~JKRDisposer();
 
             if (last_it == nullptr) {
-                next_it = mDisposerList.getFirst();
+                it = mDisposerList.getFirst();
             } else {
-                next_it = last_it;
-                next_it++;
+                it = last_it;
+                it++;
             }
         } else {
             last_it = it;
-            next_it = it;
-            next_it++;
+            it++;
         }
     }
     smgpc::compat::detail::finalize_jkr_heap_objects(this, start, end);
@@ -314,11 +313,11 @@ void JKRHeap::state_dump(const TState&) const {
 }
 
 void JKRHeap::setAltAramStartAdr(u32 addr) {
-    ARALT_AramStartAddr = addr;
+    ARALT_AramStartAdr = addr;
 }
 
 u32 JKRHeap::getAltAramStartAdr() {
-    return ARALT_AramStartAddr;
+    return ARALT_AramStartAdr;
 }
 
 s32 JKRHeap::do_changeGroupID(u8) {

@@ -1,0 +1,53 @@
+{
+  "decomp_base": "499e1034d7f8aad6b1773c36cea8d2f9a9ac2e81",
+  "sources": [
+    {
+      "path": "decomp/src/Game/System/WPadRumble.cpp",
+      "sha256": "aaf26ce26b9188be8cd475ae20e1dc35605bc394240cdf3d7a1f34aa70470f55"
+    },
+    {
+      "path": "src/Game/System/WPadRumble.cpp",
+      "sha256": "aaf26ce26b9188be8cd475ae20e1dc35605bc394240cdf3d7a1f34aa70470f55"
+    },
+    {
+      "path": "decomp/include/Game/System/WPadRumble.hpp",
+      "sha256": "3cb4caba30a78c5aab79bd40cd0c610948af0a2922a3ff17e72b61ea72fd5e62"
+    },
+    {
+      "path": "src/Game/System/WPadRumble.hpp",
+      "sha256": "3cb4caba30a78c5aab79bd40cd0c610948af0a2922a3ff17e72b61ea72fd5e62"
+    },
+    {
+      "path": "notes/gateway-audit-20260907/restoration/retail/asm/Game/System/WPadRumble.s",
+      "sha256": "834c73332f5f04d93a95d7f39f16d5dd7cceb7e0e636e5e8efd87b1ca1f785f5"
+    },
+    {
+      "path": "notes/original-input-owner-20260910/rumble/README.md",
+      "sha256": "dc43512c37d8261db52fe744298bafd389cf7acbf3832f237ce85d76238ffab2"
+    },
+    {
+      "path": "notes/original-input-owner-20260910/rumble/baseline.cpp",
+      "sha256": "1e464553443f5e13cc133092fe372eec9e4f3d74d35df8c86697499fcd756f67"
+    },
+    {
+      "path": "notes/original-input-owner-20260910/rumble/recovered.cpp",
+      "sha256": "aaf26ce26b9188be8cd475ae20e1dc35605bc394240cdf3d7a1f34aa70470f55"
+    },
+    {
+      "path": "notes/original-input-owner-20260910/rumble/compile-original.py",
+      "sha256": "69ce5b611bf7176fd24316379ddfc8152d9e4b77c4c0eec2383a25bc573e91ca"
+    },
+    {
+      "path": "notes/original-input-owner-20260910/rumble/RumbleChannelProbe.cpp",
+      "sha256": "6cfe7794c3e9d135d6c29faf89e0f1aa2cc471b44f4f7452e03efd24df6f6f45"
+    }
+  ],
+  "mirror_equal": true,
+  "header_changed": false,
+  "evidence": [
+    "baseline-proof.json",
+    "recovered-proof.json",
+    "native-compile.json",
+    "native-channel-results.json"
+  ]
+}

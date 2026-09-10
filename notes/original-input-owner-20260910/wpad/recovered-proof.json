@@ -1,0 +1,148 @@
+{
+  "command": [
+    "build/tools/wibo",
+    "build/tools/sjiswrap.exe",
+    "build/compilers/GC/3.0a3/mwcceppc.exe",
+    "-nodefaults",
+    "-proc",
+    "gekko",
+    "-align",
+    "powerpc",
+    "-enum",
+    "int",
+    "-fp",
+    "hardware",
+    "-Cpp_exceptions",
+    "off",
+    "-O4,s",
+    "-inline",
+    "auto",
+    "-pragma",
+    "cats off",
+    "-pragma",
+    "warn_notinlined off",
+    "-maxerrors",
+    "1",
+    "-nosyspath",
+    "-RTTI",
+    "off",
+    "-str",
+    "reuse",
+    "-enc",
+    "SJIS",
+    "-sdata",
+    "4",
+    "-sdata2",
+    "4",
+    "-ipa",
+    "file",
+    "-sym",
+    "on",
+    "-i",
+    "include",
+    "-i",
+    "libs/JSystem/include",
+    "-i",
+    "libs/MSL_C++/include",
+    "-i",
+    "libs/MSL_C/include",
+    "-i",
+    "libs/MetroTRK/include",
+    "-i",
+    "libs/RVLFaceLib/include",
+    "-i",
+    "libs/RVL_SDK/include",
+    "-i",
+    "libs/Runtime/include",
+    "-i",
+    "libs/nw4r/include",
+    "-i",
+    "build/original-j3d-joint-traversal-20260903/retail/include",
+    "-DVERSION=0",
+    "-c",
+    "src/Game/System/WPadAcceleration.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-input-owner-20260910/wpad/WPadAcceleration.recovered.wii.o"
+  ],
+  "wii_exit": 0,
+  "objdiff_command": [
+    "/Users/frityet/Projects/petari/decomp/build/tools/objdiff-cli",
+    "diff",
+    "-1",
+    "/Users/frityet/Projects/petari/notes/gateway-audit-20260907/restoration/retail/obj/Game/System/WPadAcceleration.o",
+    "-2",
+    "/Users/frityet/Projects/petari/notes/original-input-owner-20260910/wpad/WPadAcceleration.recovered.wii.o",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-input-owner-20260910/wpad/recovered-objdiff.json"
+  ],
+  "objdiff_exit": 0,
+  "symbols": [
+    {
+      "name": "__ct__16WPadAccelerationFPC4WPadUl",
+      "demangled_name": "WPadAcceleration::WPadAcceleration(const WPad*, unsigned long)",
+      "size": "200",
+      "match_percent": 99.6,
+      "target_symbol": 1
+    },
+    {
+      "name": "getAcceleration__16WPadAccelerationCFPQ29JGeometry8TVec3<f>",
+      "demangled_name": "WPadAcceleration::getAcceleration(JGeometry::TVec3<float>*) const",
+      "size": "88",
+      "match_percent": 100.0,
+      "target_symbol": 2
+    },
+    {
+      "name": "getPastAcceleration__16WPadAccelerationCFPQ29JGeometry8TVec3<f>l",
+      "demangled_name": "WPadAcceleration::getPastAcceleration(JGeometry::TVec3<float>*, long) const",
+      "size": "100",
+      "match_percent": 100.0,
+      "target_symbol": 3
+    },
+    {
+      "name": "isStationary__16WPadAccelerationCFv",
+      "demangled_name": "WPadAcceleration::isStationary() const",
+      "size": "8",
+      "match_percent": 100.0,
+      "target_symbol": 4
+    },
+    {
+      "name": "isBalanced__16WPadAccelerationCFv",
+      "demangled_name": "WPadAcceleration::isBalanced() const",
+      "size": "24",
+      "match_percent": 99.166664,
+      "target_symbol": 5
+    },
+    {
+      "name": "update__16WPadAccelerationFv",
+      "demangled_name": "WPadAcceleration::update()",
+      "size": "572",
+      "match_percent": 98.25175,
+      "target_symbol": 6
+    },
+    {
+      "name": "updateRotate__16WPadAccelerationFv",
+      "demangled_name": "WPadAcceleration::updateRotate()",
+      "size": "504",
+      "match_percent": 94.89683,
+      "target_symbol": 7
+    },
+    {
+      "name": "updateAccAverage__16WPadAccelerationFv",
+      "demangled_name": "WPadAcceleration::updateAccAverage()",
+      "size": "272",
+      "match_percent": 99.26471,
+      "target_symbol": 8
+    },
+    {
+      "name": "updateIsStable__16WPadAccelerationFv",
+      "demangled_name": "WPadAcceleration::updateIsStable()",
+      "size": "148",
+      "match_percent": 93.64865,
+      "target_symbol": 9
+    }
+  ],
+  "sources": {
+    "decomp/src/Game/System/WPadAcceleration.cpp": "447ff70ec3db05a8342a09f00fc3aa10ec44746acd94251cc28974eb12a0494e",
+    "decomp/include/Game/System/WPadAcceleration.hpp": "d79ad722038ced758405206c9e80d2c0a216ce2d7146ebab7ccf250ba868c9e2"
+  }
+}

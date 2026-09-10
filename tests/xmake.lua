@@ -2923,6 +2923,39 @@ target("smg-pc-original-pointer-input-tests")
         group = "aurora", rundir = os.projectdir(), realtime_output = true
     })
 
+target("smg-pc-original-wpad-acceleration-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    add_files("OriginalWPadAccelerationTests.cpp", "../aurora/lib/compat.cpp")
+    add_deps {"smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
+              "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"}
+    add_tests("original_wpad_acceleration", {
+        group = "aurora", rundir = os.projectdir(), realtime_output = true
+    })
+
+target("smg-pc-original-wpad-ownership-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    add_files("OriginalWPadOwnershipTests.cpp", "../aurora/lib/compat.cpp")
+    add_deps {"smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
+              "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"}
+    add_tests("original_wpad_ownership", {
+        group = "aurora", rundir = os.projectdir(), realtime_output = true
+    })
+
+target("smg-pc-original-wpad-gesture-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    add_files("OriginalWPadGestureTests.cpp", "../aurora/lib/compat.cpp")
+    add_deps {"smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
+              "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"}
+    add_tests("original_wpad_gesture", {
+        group = "aurora", rundir = os.projectdir(), realtime_output = true
+    })
+
 target("smg-pc-original-star-pointer-owner-tests")
     set_kind("binary")
     set_default(false)

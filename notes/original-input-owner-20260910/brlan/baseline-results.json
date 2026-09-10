@@ -1,0 +1,38 @@
+{
+  "command": [
+    "/opt/homebrew/opt/llvm/bin/clang++",
+    "-std=c++23",
+    "-g",
+    "-O2",
+    "-pthread",
+    "-ffp-contract=off",
+    "-fsanitize=address,undefined",
+    "-fno-omit-frame-pointer",
+    "-Iaurora/include",
+    "-I/Users/frityet/Projects/petari/dolphin/Externals/gtest/googletest/include",
+    "-I/Users/frityet/Projects/petari/dolphin/Externals/gtest/googletest",
+    "aurora/tests/brlan_test.cpp",
+    "aurora/lib/nw4r/brlan.cpp",
+    "/Users/frityet/Projects/petari/dolphin/Externals/gtest/googletest/src/gtest-all.cc",
+    "/Users/frityet/Projects/petari/dolphin/Externals/gtest/googletest/src/gtest_main.cc",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-input-owner-20260910/brlan/baseline-brlan-tests"
+  ],
+  "build_exit": 0,
+  "sources": [
+    {
+      "path": "aurora/tests/brlan_test.cpp",
+      "sha256": "ddb9b2cbc993bce7396d2e635cbbee174a1ae4f7a06cc66d54cc0b4ba838b640"
+    },
+    {
+      "path": "aurora/lib/nw4r/brlan.cpp",
+      "sha256": "793f28fe9b1cd32fb6010282967b1b4a8b41e3de2872df24eb4072400a69bcbd"
+    }
+  ],
+  "runtime_command": [
+    "/Users/frityet/Projects/petari/notes/original-input-owner-20260910/brlan/baseline-brlan-tests",
+    "--gtest_output=xml:/Users/frityet/Projects/petari/notes/original-input-owner-20260910/brlan/baseline-tests.xml"
+  ],
+  "runtime_exit": 1,
+  "binary_sha256": "462e257bb4ea7f1fd05f2690e588c47ebeaae48a8f7da7d0738c8363f6bdd576"
+}

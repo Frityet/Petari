@@ -1,0 +1,41 @@
+{
+  "dol": "decomp/build/compat-math-oracle/main.dol",
+  "sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "functions": [
+    {
+      "symbol": "__ct__16WPadLeaveWatcherFP4WPad",
+      "address": "803AD0D8",
+      "bytes": 20,
+      "actual_dol_equal": true
+    },
+    {
+      "symbol": "update__16WPadLeaveWatcherFv",
+      "address": "803AD0EC",
+      "bytes": 240,
+      "actual_dol_equal": true
+    },
+    {
+      "symbol": "start__16WPadLeaveWatcherFv",
+      "address": "803AD1DC",
+      "bytes": 12,
+      "actual_dol_equal": true
+    },
+    {
+      "symbol": "stop__16WPadLeaveWatcherFv",
+      "address": "803AD1E8",
+      "bytes": 12,
+      "actual_dol_equal": true
+    },
+    {
+      "symbol": "restart__16WPadLeaveWatcherFv",
+      "address": "803AD1F4",
+      "bytes": 16,
+      "actual_dol_equal": true
+    }
+  ],
+  "activity_flags": {
+    "address": "0x806b25b0",
+    "bytes": "01010101",
+    "actual_dol_equal": true
+  }
+}

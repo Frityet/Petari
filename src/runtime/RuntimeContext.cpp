@@ -741,7 +741,7 @@ namespace smgpc::runtime {
         append_input_button(render::InputButton::CORE_PAD_HOME, WPAD_BUTTON_HOME);
         append_input_button(render::InputButton::CORE_PAD_C, WPAD_BUTTON_C);
         append_input_button(render::InputButton::CORE_PAD_Z, WPAD_BUTTON_Z);
-        auto core_swing = _window_service.is_input_pressed(render::InputButton::CORE_PAD_SWING);
+        auto core_gesture_pressed = _window_service.is_input_pressed(render::InputButton::CORE_PAD_SWING);
         auto hold_mask = raw_hold_mask;
         auto pointer = _window_service.input_pointer_state();
         const auto raw_pointer = pointer;
@@ -851,7 +851,7 @@ namespace smgpc::runtime {
             pointer = render::InputPointerState{};
             sub_stick_x = 0.0F;
             sub_stick_y = 0.0F;
-            core_swing = false;
+            core_gesture_pressed = false;
         }
 #ifndef NDEBUG
         _host_input_trace = HostInputTraceState{
@@ -871,7 +871,10 @@ namespace smgpc::runtime {
         wpad.set_pointer_resolution(WPAD_CHAN0, static_cast<f32>(MR::getFrameBufferWidth()), static_cast<f32>(MR::getFrameBufferHeight()));
         wpad.set_pointer(WPAD_CHAN0, pointer.x, pointer.y, pointer.valid, 1.0F, 0.0F);
         wpad.set_sub_stick(WPAD_CHAN0, sub_stick_x, sub_stick_y);
-        wpad.set_swing(WPAD_CHAN0, core_swing, false);
+        const auto core_acceleration = _core_pad_gesture.sample(core_gesture_pressed);
+        const auto sub_acceleration = _sub_pad_gesture.sample(false);
+        wpad.set_core_acceleration(WPAD_CHAN0, core_acceleration.x, core_acceleration.y, core_acceleration.z);
+        wpad.set_sub_acceleration(WPAD_CHAN0, sub_acceleration.x, sub_acceleration.y, sub_acceleration.z);
         wpad.set_distance_to_display(WPAD_CHAN0, pointer.valid ? 1.0F : 0.0F);
         // GameSystemObjHolder updates WPad, then original pointer controllers,
         // before the scene's camera and actor movement.

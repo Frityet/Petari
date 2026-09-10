@@ -1,0 +1,16 @@
+{
+  "command": [
+    "/opt/homebrew/opt/llvm/bin/clang++",
+    "-std=c++23",
+    "-DTARGET_PC",
+    "-DAURORA",
+    "-Iaurora/include",
+    "-fsanitize=address,undefined",
+    "notes/original-input-owner-20260910/keyboard-motion/adapter-probe.cpp",
+    "-o",
+    "notes/original-input-owner-20260910/keyboard-motion/adapter-probe"
+  ],
+  "build_exit": 0,
+  "run_exit": 0,
+  "sha256": "e6da4003919889751a5e1d17a43e40dcaf428f4373626c39834ca88347f99d0e"
+}

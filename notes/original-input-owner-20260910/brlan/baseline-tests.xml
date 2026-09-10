@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="10" failures="6" disabled="0" errors="0" time="0." timestamp="2026-09-10T17:32:54.546" name="AllTests">
+  <testsuite name="BrlanParser" tests="2" failures="0" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-09-10T17:32:54.547">
+    <testcase name="ParsesARealMinimalBigEndianAnimationBlock" file="aurora/tests/brlan_test.cpp" line="84" status="run" result="completed" time="0." timestamp="2026-09-10T17:32:54.547" classname="BrlanParser" />
+    <testcase name="RejectsMissingMagicWrongEndianAndTruncatedBlocks" file="aurora/tests/brlan_test.cpp" line="92" status="run" result="completed" time="0." timestamp="2026-09-10T17:32:54.547" classname="BrlanParser" />
+  </testsuite>
+  <testsuite name="BrlanEvaluator" tests="8" failures="6" disabled="0" skipped="0" errors="0" time="0." timestamp="2026-09-10T17:32:54.547">
+    <testcase name="SamplesGenericPaneCurvesWithoutSequenceKnowledge" file="aurora/tests/brlan_test.cpp" line="106" status="run" result="completed" time="0." timestamp="2026-09-10T17:32:54.547" classname="BrlanEvaluator" />
+    <testcase name="SamplesGenericTextureAndMaterialTargets" file="aurora/tests/brlan_test.cpp" line="161" status="run" result="completed" time="0." timestamp="2026-09-10T17:32:54.547" classname="BrlanEvaluator" />
+    <testcase name="StepCurveUsesStrictRightKeyFrameTolerance" file="aurora/tests/brlan_test.cpp" line="205" status="run" result="completed" time="0." timestamp="2026-09-10T17:32:54.547" classname="BrlanEvaluator">
+      <failure message="aurora/tests/brlan_test.cpp:214&#x0A;Value of: animation.pane_frame(&quot;Pane&quot;, inside).visible.value()&#x0A;  Actual: false&#x0A;Expected: true&#x0A;" type=""><![CDATA[aurora/tests/brlan_test.cpp:214
+Value of: animation.pane_frame("Pane", inside).visible.value()
+  Actual: false
+Expected: true
+]]></failure>
+      <failure message="aurora/tests/brlan_test.cpp:217&#x0A;Value of: animation.pane_frame(&quot;Pane&quot;, 0.9995F).visible.value()&#x0A;  Actual: true&#x0A;Expected: false&#x0A;" type=""><![CDATA[aurora/tests/brlan_test.cpp:217
+Value of: animation.pane_frame("Pane", 0.9995F).visible.value()
+  Actual: true
+Expected: false
+]]></failure>
+    </testcase>
+    <testcase name="StepCurveKeepsOriginalDuplicateKeySearch" file="aurora/tests/brlan_test.cpp" line="220" status="run" result="completed" time="0." timestamp="2026-09-10T17:32:54.547" classname="BrlanEvaluator">
+      <failure message="aurora/tests/brlan_test.cpp:227&#x0A;Expected equality of these values:&#x0A;  animation.pane_frame(&quot;Pane&quot;, 9.9995F).translate_x.value()&#x0A;    Which is: 1&#x0A;  2.0F&#x0A;    Which is: 2&#x0A;" type=""><![CDATA[aurora/tests/brlan_test.cpp:227
+Expected equality of these values:
+  animation.pane_frame("Pane", 9.9995F).translate_x.value()
+    Which is: 1
+  2.0F
+    Which is: 2
+]]></failure>
+    </testcase>
+    <testcase name="HermiteCurveUsesStrictRightKeyFrameTolerance" file="aurora/tests/brlan_test.cpp" line="232" status="run" result="completed" time="0." timestamp="2026-09-10T17:32:54.547" classname="BrlanEvaluator">
+      <failure message="aurora/tests/brlan_test.cpp:242&#x0A;Expected equality of these values:&#x0A;  animation.pane_frame(&quot;Pane&quot;, inside).translate_x.value()&#x0A;    Which is: 9.99000072&#x0A;  10.0F&#x0A;    Which is: 10&#x0A;" type=""><![CDATA[aurora/tests/brlan_test.cpp:242
+Expected equality of these values:
+  animation.pane_frame("Pane", inside).translate_x.value()
+    Which is: 9.99000072
+  10.0F
+    Which is: 10
+]]></failure>
+    </testcase>
+    <testcase name="HermiteCurveSelectsOnlyTheImmediatelyFollowingDuplicate" file="aurora/tests/brlan_test.cpp" line="247" status="run" result="completed" time="0." timestamp="2026-09-10T17:32:54.547" classname="BrlanEvaluator">
+      <failure message="aurora/tests/brlan_test.cpp:254&#x0A;Expected equality of these values:&#x0A;  animation.pane_frame(&quot;Pane&quot;, 9.9995F).translate_x.value()&#x0A;    Which is: 10&#x0A;  20.0F&#x0A;    Which is: 20&#x0A;" type=""><![CDATA[aurora/tests/brlan_test.cpp:254
+Expected equality of these values:
+  animation.pane_frame("Pane", 9.9995F).translate_x.value()
+    Which is: 10
+  20.0F
+    Which is: 20
+]]></failure>
+      <failure message="aurora/tests/brlan_test.cpp:255&#x0A;Expected equality of these values:&#x0A;  animation.pane_frame(&quot;Pane&quot;, 10.0F).translate_x.value()&#x0A;    Which is: 30&#x0A;  20.0F&#x0A;    Which is: 20&#x0A;" type=""><![CDATA[aurora/tests/brlan_test.cpp:255
+Expected equality of these values:
+  animation.pane_frame("Pane", 10.0F).translate_x.value()
+    Which is: 30
+  20.0F
+    Which is: 20
+]]></failure>
+    </testcase>
+    <testcase name="CurvesClampEndpointsBeforeDuplicateAndToleranceHandling" file="aurora/tests/brlan_test.cpp" line="259" status="run" result="completed" time="0." timestamp="2026-09-10T17:32:54.547" classname="BrlanEvaluator">
+      <failure message="aurora/tests/brlan_test.cpp:270&#x0A;Expected equality of these values:&#x0A;  state.translate_x.value()&#x0A;    Which is: 2&#x0A;  1.0F&#x0A;    Which is: 1&#x0A;" type=""><![CDATA[aurora/tests/brlan_test.cpp:270
+Expected equality of these values:
+  state.translate_x.value()
+    Which is: 2
+  1.0F
+    Which is: 1
+]]></failure>
+    </testcase>
+    <testcase name="HermiteCurvePreservesOriginalArithmeticAndSlopesAcrossPublicChannels" file="aurora/tests/brlan_test.cpp" line="284" status="run" result="completed" time="0." timestamp="2026-09-10T17:32:54.547" classname="BrlanEvaluator">
+      <failure message="aurora/tests/brlan_test.cpp:293&#x0A;Expected equality of these values:&#x0A;  std::bit_cast&lt;std::uint32_t&gt;(value)&#x0A;    Which is: 1092616191&#x0A;  0x411FFFFEU&#x0A;    Which is: 1092616190&#x0A;" type=""><![CDATA[aurora/tests/brlan_test.cpp:293
+Expected equality of these values:
+  std::bit_cast<std::uint32_t>(value)
+    Which is: 1092616191
+  0x411FFFFEU
+    Which is: 1092616190
+]]></failure>
+    </testcase>
+  </testsuite>
+</testsuites>

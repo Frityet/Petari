@@ -1,0 +1,8 @@
+In file included from src/runtime/RuntimeContext.cpp:7:
+In file included from src/compat/SceneJ3dScope.hpp:4:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:245:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  245 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.

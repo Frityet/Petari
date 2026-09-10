@@ -1,0 +1,6 @@
+{
+  "decomp/src/Game/System/WPadLeaveWatcher.cpp": "c1653f3beb73ef2a15454bee46b999c46389a7cd8c4ddc185527ce5df29e4602",
+  "decomp/include/Game/System/WPadLeaveWatcher.hpp": "314bfc2bf005ade320d1bad591b9edb45350a3cec9e39dde8a27e6b5b1b09363",
+  "src/Game/System/WPadLeaveWatcher.cpp": "c1653f3beb73ef2a15454bee46b999c46389a7cd8c4ddc185527ce5df29e4602",
+  "src/Game/System/WPadLeaveWatcher.hpp": "314bfc2bf005ade320d1bad591b9edb45350a3cec9e39dde8a27e6b5b1b09363"
+}

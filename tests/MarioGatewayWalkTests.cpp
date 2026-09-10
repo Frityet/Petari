@@ -13,6 +13,10 @@
 #include "Game/NameObj/NameObjFactory.hpp"
 #include "Game/NameObj/NameObjListExecutor.hpp"
 #include "Game/System/DrawBuffer.hpp"
+#include "Game/System/WPad.hpp"
+#include "Game/System/WPadAcceleration.hpp"
+#include "Game/Util/GamePadUtil.hpp"
+#include "Game/System/WPadHolder.hpp"
 #include <JSystem/J3DGraphBase/J3DShape.hpp>
 #include "Game/Player/MarioActor.hpp"
 #include "Game/Player/MarioHolder.hpp"
@@ -1277,38 +1281,46 @@ namespace {
                     entitlement_cooldown == 0U,
                 "the walk slice must begin without fabricated spin Magic/action state");
 
+        require(MR::getWPad(WPAD_CHAN0)->mCorePadAccel->_628 > 20,
+                "the walking frames must warm the original twenty-frame acceleration history");
         set_host_swing_key(window, true);
         const auto locked_swing_frame = run_frame(++release_end_frame);
-        if (!(aurora::wpad_service().is_core_swing(WPAD_CHAN0) &&
-              aurora::wpad_service().is_core_swing_triggered(WPAD_CHAN0) &&
+        if (!(MR::isCorePadSwing(WPAD_CHAN0) &&
+              MR::isCorePadSwingTrigger(WPAD_CHAN0) &&
               actor->_F00 && !actor->_EEB && !actor->isRequestRush() &&
               locked_swing_frame.dominant_bck == "Wait")) {
-            std::cerr << "[swing diagnostic] held=" << aurora::wpad_service().is_core_swing(WPAD_CHAN0)
-                      << " triggered=" << aurora::wpad_service().is_core_swing_triggered(WPAD_CHAN0)
+            std::cerr << "[swing diagnostic] held=" << MR::isCorePadSwing(WPAD_CHAN0)
+                      << " triggered=" << MR::isCorePadSwingTrigger(WPAD_CHAN0)
                       << " actor_edge=" << static_cast<int>(actor->_F00)
                       << " permitted=" << static_cast<int>(actor->_EEB)
                       << " rush=" << actor->isRequestRush()
                       << " bck=" << locked_swing_frame.dominant_bck << '\n';
         }
-        require(aurora::wpad_service().is_core_swing(WPAD_CHAN0) &&
-                    aurora::wpad_service().is_core_swing_triggered(WPAD_CHAN0) &&
+        require(MR::isCorePadSwing(WPAD_CHAN0) &&
+                    MR::isCorePadSwingTrigger(WPAD_CHAN0) &&
                     actor->_F00 && !actor->_EEB && !actor->isRequestRush() &&
                     locked_swing_frame.dominant_bck == "Wait",
-                "a real host swing edge must be sampled but denied before entitlement");
+                "host key acceleration must reach the original detector but be denied before entitlement");
 
         const auto locked_held_frame = run_frame(++release_end_frame);
-        require(aurora::wpad_service().is_core_swing(WPAD_CHAN0) &&
-                    !aurora::wpad_service().is_core_swing_triggered(WPAD_CHAN0) &&
+        require(MR::isCorePadSwing(WPAD_CHAN0) &&
+                    !MR::isCorePadSwingTrigger(WPAD_CHAN0) &&
                     !actor->_F00 && !actor->isRequestRush() &&
                     locked_held_frame.dominant_bck == "Wait",
-                "holding the locked swing key must not synthesize another controller edge");
+                "the next physical sample must preserve the original retained swing without another trigger");
 
         set_host_swing_key(window, false);
-        const auto rearm_swing_frame = run_frame(++release_end_frame);
-        require(!aurora::wpad_service().is_core_swing(WPAD_CHAN0) &&
-                    !actor->_F20 && !actor->_F00 && !actor->isRequestRush() &&
-                    rearm_swing_frame.dominant_bck == "Wait",
-                "releasing the host swing key must rearm Mario's retail edge detector");
+        // Releasing the key does not erase a physical gesture or the original
+        // delayed acceleration comparison. Let the complete history settle.
+        for (int sample = 0; sample < 64; ++sample) {
+            (void)run_frame(++release_end_frame);
+            require(!actor->isRequestRush(), "every physical gesture response remains denied while entitlement is locked");
+        }
+        const auto settled_acceleration = aurora::wpad_service().core_acceleration(WPAD_CHAN0);
+        require(settled_acceleration.x == 0 && settled_acceleration.y == 0 && settled_acceleration.z == 1 &&
+                    !MR::isCorePadSwing(WPAD_CHAN0) && !MR::isCorePadSwingTrigger(WPAD_CHAN0) &&
+                    !actor->_F20 && !actor->_F00 && !actor->isRequestRush(),
+                "completed physical motion and settled original history rearm Mario's retail edge detector");
 
         MR::setPlayerSwingPermission(true);
         require(actor->_EEB &&
@@ -1319,29 +1331,29 @@ namespace {
 
         set_host_swing_key(window, true);
         const auto unlocked_swing_frame = run_frame(++release_end_frame);
-        require(aurora::wpad_service().is_core_swing_triggered(WPAD_CHAN0) &&
+        require(MR::isCorePadSwingTrigger(WPAD_CHAN0) &&
                     actor->_F00 && actor->isRequestRush() &&
                     actor->mMario->mMagic == entitlement_magic &&
                     actor->_1E1 == entitlement_action &&
                     actor->_946 == entitlement_cooldown &&
                     unlocked_swing_frame.dominant_bck == "Wait",
-                "a fresh real host swing edge must request Rush after entitlement without starting the spin action");
+                "a fresh physical gesture must request Rush after entitlement without fabricating spin action state");
 
         const auto unlocked_held_frame = run_frame(++release_end_frame);
-        require(aurora::wpad_service().is_core_swing(WPAD_CHAN0) &&
-                    !aurora::wpad_service().is_core_swing_triggered(WPAD_CHAN0) &&
+        require(MR::isCorePadSwing(WPAD_CHAN0) &&
+                    !MR::isCorePadSwingTrigger(WPAD_CHAN0) &&
                     !actor->_F00 && !actor->isRequestRush() &&
                     actor->mMario->mMagic == entitlement_magic &&
                     actor->_1E1 == entitlement_action &&
                     actor->_946 == entitlement_cooldown &&
                     unlocked_held_frame.dominant_bck == "Wait",
-                "holding an entitled swing must remain debounced without entering spin action state");
+                "the next entitled acceleration sample must remain debounced without fabricating spin action state");
 
         set_host_swing_key(window, false);
-        const auto released_swing_frame = run_frame(++release_end_frame);
-        require(!actor->_F00 && !actor->isRequestRush() &&
-                    released_swing_frame.dominant_bck == "Wait",
-                "Rush permission must remain edge-triggered after the host key is released");
+        for (int sample = 0; sample < 64; ++sample) (void)run_frame(++release_end_frame);
+        require(!MR::isCorePadSwing(WPAD_CHAN0) && !MR::isCorePadSwingTrigger(WPAD_CHAN0) &&
+                    !actor->_F20 && !actor->_F00 && !actor->isRequestRush(),
+                "the completed pulse stops requesting Rush after the original history settles");
 
         runtime.player_system().detach_actor(actor);
         require(!runtime.player_system().camera_target_state().has_value(),

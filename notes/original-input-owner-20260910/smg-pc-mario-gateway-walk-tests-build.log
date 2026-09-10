@@ -1,0 +1,88 @@
+[0m[38;5;2;1m[  1%]:[0m [38;5;5;1m<smg-pc-mario-gateway-walk-tests>[0m compiling.debug tests/MarioGatewayWalkTests.cpp[0m
+[0m[38;5;2;1m[  1%]:[0m [38;5;5;1m<smg-pc-mario-gateway-walk-tests>[0m compiling.debug tests/MarioWalkParameterTests.cpp[0m
+[0m[38;5;2;1m[  1%]:[0m [38;5;5;1m<smg-pc-mario-gateway-walk-tests>[0m compiling.debug tests/MarioCameraTargetTests.cpp[0m
+[0m[38;5;2;1m[  1%]:[0m [38;5;5;1m<smg-pc-mario-gateway-walk-tests>[0m compiling.debug tests/OriginalMarioStateTests.cpp[0m
+[0m[38;5;2;1m[  1%]:[0m [38;5;5;1m<smg-pc-mario-gateway-walk-tests>[0m compiling.debug tests/OriginalPlayerUtilTests.cpp[0m
+[0m[38;5;3;1mIn file included from tests/MarioWalkParameterTests.cpp:3:
+In file included from src/Game/Player/MarioActor.hpp:4:
+In file included from src/Game/Player/Mario.hpp:5:
+In file included from src/Game/Player/MarioModule.hpp:3:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from tests/MarioWalkParameterTests.cpp:3:
+In file included from src/Game/Player/MarioActor.hpp:4:
+In file included from src/Game/Player/Mario.hpp:5:
+In file included from src/Game/Player/MarioModule.hpp:3:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();[0m
+[0m[38;5;3;1mIn file included from tests/OriginalMarioStateTests.cpp:3:
+In file included from src/Game/Player/Mario.hpp:5:
+In file included from src/Game/Player/MarioModule.hpp:3:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from tests/OriginalMarioStateTests.cpp:3:
+In file included from src/Game/Player/Mario.hpp:5:
+In file included from src/Game/Player/MarioModule.hpp:3:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;3;1mIn file included from tests/MarioCameraTargetTests.cpp:3:
+In file included from src/Game/Camera/CameraTargetObj.hpp:3:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from tests/MarioCameraTargetTests.cpp:3:
+In file included from src/Game/Camera/CameraTargetObj.hpp:3:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here
+   28 |                virtual void calcAnim();
+      |                             ^[0m
+[0m[38;5;3;1mIn file included from tests/OriginalPlayerUtilTests.cpp:7:
+In file included from src/Game/Player/Mario.hpp:5:
+In file included from src/Game/Player/MarioModule.hpp:3:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from tests/OriginalPlayerUtilTests.cpp:7:
+In file included from src/Game/Player/Mario.hpp:5:
+In file included from src/Game/Player/MarioModule.hpp:3:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;3;1mIn file included from tests/MarioGatewayWalkTests.cpp:3:
+In file included from src/Game/Animation/XanimeCore.hpp:3:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:245:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  245 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+In file included from tests/MarioGatewayWalkTests.cpp:6:
+In file included from src/Game/LiveActor/ActorLightCtrl.hpp:3:
+In file included from src/Game/Map/LightDataHolder.hpp:5:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc-mario-gateway-walk-tests>[0m [38;5;5;1mlinking.debug smg-pc-mario-gateway-walk-tests[0m
+[0m[38;5;2;1mcreate ok![0m
+[0m[38;5;2;1m[100%]:[0m [38;5;2;1mbuild ok, spent 4.872s[0m

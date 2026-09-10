@@ -1,0 +1,148 @@
+{
+  "command": [
+    "build/tools/wibo",
+    "build/tools/sjiswrap.exe",
+    "build/compilers/GC/3.0a3/mwcceppc.exe",
+    "-nodefaults",
+    "-proc",
+    "gekko",
+    "-align",
+    "powerpc",
+    "-enum",
+    "int",
+    "-fp",
+    "hardware",
+    "-Cpp_exceptions",
+    "off",
+    "-O4,s",
+    "-inline",
+    "auto",
+    "-pragma",
+    "cats off",
+    "-pragma",
+    "warn_notinlined off",
+    "-maxerrors",
+    "1",
+    "-nosyspath",
+    "-RTTI",
+    "off",
+    "-str",
+    "reuse",
+    "-enc",
+    "SJIS",
+    "-sdata",
+    "4",
+    "-sdata2",
+    "4",
+    "-ipa",
+    "file",
+    "-sym",
+    "on",
+    "-i",
+    "include",
+    "-i",
+    "libs/JSystem/include",
+    "-i",
+    "libs/MSL_C++/include",
+    "-i",
+    "libs/MSL_C/include",
+    "-i",
+    "libs/MetroTRK/include",
+    "-i",
+    "libs/RVLFaceLib/include",
+    "-i",
+    "libs/RVL_SDK/include",
+    "-i",
+    "libs/Runtime/include",
+    "-i",
+    "libs/nw4r/include",
+    "-i",
+    "build/original-j3d-joint-traversal-20260903/retail/include",
+    "-DVERSION=0",
+    "-c",
+    "src/Game/System/WPadAcceleration.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-input-owner-20260910/wpad/WPadAcceleration.baseline.wii.o"
+  ],
+  "wii_exit": 0,
+  "objdiff_command": [
+    "/Users/frityet/Projects/petari/decomp/build/tools/objdiff-cli",
+    "diff",
+    "-1",
+    "/Users/frityet/Projects/petari/notes/gateway-audit-20260907/restoration/retail/obj/Game/System/WPadAcceleration.o",
+    "-2",
+    "/Users/frityet/Projects/petari/notes/original-input-owner-20260910/wpad/WPadAcceleration.baseline.wii.o",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-input-owner-20260910/wpad/baseline-objdiff.json"
+  ],
+  "objdiff_exit": 0,
+  "symbols": [
+    {
+      "name": "__ct__16WPadAccelerationFPC4WPadUl",
+      "demangled_name": "WPadAcceleration::WPadAcceleration(const WPad*, unsigned long)",
+      "size": "200",
+      "match_percent": 99.6,
+      "target_symbol": 1
+    },
+    {
+      "name": "getAcceleration__16WPadAccelerationCFPQ29JGeometry8TVec3<f>",
+      "demangled_name": "WPadAcceleration::getAcceleration(JGeometry::TVec3<float>*) const",
+      "size": "88",
+      "match_percent": null,
+      "target_symbol": null
+    },
+    {
+      "name": "getPastAcceleration__16WPadAccelerationCFPQ29JGeometry8TVec3<f>l",
+      "demangled_name": "WPadAcceleration::getPastAcceleration(JGeometry::TVec3<float>*, long) const",
+      "size": "100",
+      "match_percent": 62.4,
+      "target_symbol": 2
+    },
+    {
+      "name": "isStationary__16WPadAccelerationCFv",
+      "demangled_name": "WPadAcceleration::isStationary() const",
+      "size": "8",
+      "match_percent": 100.0,
+      "target_symbol": 3
+    },
+    {
+      "name": "isBalanced__16WPadAccelerationCFv",
+      "demangled_name": "WPadAcceleration::isBalanced() const",
+      "size": "24",
+      "match_percent": 99.166664,
+      "target_symbol": 4
+    },
+    {
+      "name": "update__16WPadAccelerationFv",
+      "demangled_name": "WPadAcceleration::update()",
+      "size": "572",
+      "match_percent": 82.72028,
+      "target_symbol": 5
+    },
+    {
+      "name": "updateRotate__16WPadAccelerationFv",
+      "demangled_name": "WPadAcceleration::updateRotate()",
+      "size": "504",
+      "match_percent": null,
+      "target_symbol": null
+    },
+    {
+      "name": "updateAccAverage__16WPadAccelerationFv",
+      "demangled_name": "WPadAcceleration::updateAccAverage()",
+      "size": "272",
+      "match_percent": null,
+      "target_symbol": null
+    },
+    {
+      "name": "updateIsStable__16WPadAccelerationFv",
+      "demangled_name": "WPadAcceleration::updateIsStable()",
+      "size": "148",
+      "match_percent": 65.675674,
+      "target_symbol": 6
+    }
+  ],
+  "sources": {
+    "decomp/src/Game/System/WPadAcceleration.cpp": "1b72aa24864be2be7c2edbf7bac60f41c5724158a5e1f64e8a83e7f3311b4605",
+    "decomp/include/Game/System/WPadAcceleration.hpp": "cb84e74f46adf2a099c1541118da7dbc519ebe6aefc2bfc06dbe30d03854e8e4"
+  }
+}

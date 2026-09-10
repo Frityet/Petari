@@ -1,0 +1,37 @@
+{
+  "aurora_base": "30b06fd6f93229106a6a63220cd3f2062cd08ba1",
+  "source_manifest": [
+    {
+      "path": "aurora/lib/nw4r/brlan.cpp",
+      "sha256": "f4d2338ebda6b0d9430c8848a4db0526ca3c12a1c284f8be7ceee16a8b5c65b8"
+    },
+    {
+      "path": "aurora/tests/brlan_test.cpp",
+      "sha256": "ddb9b2cbc993bce7396d2e635cbbee174a1ae4f7a06cc66d54cc0b4ba838b640"
+    },
+    {
+      "path": "aurora/cmake/aurora_nw4r.cmake",
+      "sha256": "2724ec5e883665f94f9f21dd1aec6414b217a75b848bcbf084a8a8859dbe0a5f"
+    },
+    {
+      "path": "aurora/xmake.lua",
+      "sha256": "8aa27d6e3dea958f78127579a338da1984c573db7ba5a0ae10c4a55f8a0adc8b"
+    },
+    {
+      "path": "decomp/src/nw4r/lyt/lyt_animation.cpp",
+      "sha256": "0d40eab01c73902e1e72f23930c078d45585cd60afc6cd914b464a3a7eddb96f"
+    },
+    {
+      "path": "notes/original-save-owner-20260910/upstream/ReferenceCurveHelpers.hpp",
+      "sha256": "22cb328a9290a21bea7d6d6ed6e3f478e7723e5a2e8c2df5efb1700ec4a46ae0"
+    }
+  ],
+  "evidence": [
+    "baseline-results.json",
+    "fixed-results.json",
+    "cmake-build.json",
+    "cmake-run.json",
+    "verified-fp-command.json",
+    "original-comparison.json"
+  ]
+}

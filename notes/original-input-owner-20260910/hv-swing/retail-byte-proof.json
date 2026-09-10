@@ -1,0 +1,30 @@
+{
+  "dol": "decomp/build/compat-math-oracle/main.dol",
+  "sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "functions": [
+    {
+      "symbol": "__ct__11WPadHVSwingFPC4WPadUl",
+      "address": "803ACCA0",
+      "bytes": 68,
+      "actual_dol_equal": true
+    },
+    {
+      "symbol": "updateSwing__11WPadHVSwingFv",
+      "address": "803ACCE4",
+      "bytes": 264,
+      "actual_dol_equal": true
+    },
+    {
+      "symbol": "updateCentrifugal__11WPadHVSwingFv",
+      "address": "803ACDEC",
+      "bytes": 408,
+      "actual_dol_equal": true
+    },
+    {
+      "symbol": "update__11WPadHVSwingFv",
+      "address": "803ACF84",
+      "bytes": 140,
+      "actual_dol_equal": true
+    }
+  ]
+}

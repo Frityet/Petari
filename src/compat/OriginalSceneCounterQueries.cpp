@@ -11,7 +11,6 @@
 #include "Game/Util/SceneUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
 
-#include <aurora/wpad.hpp>
 #include "compat/StageSessionState.hpp"
 
 namespace {
@@ -95,7 +94,4 @@ namespace MR {
         return isEqualStageName("AstroGalaxy") || isEqualStageName("AstroDome") || isEqualStageName("LibraryRoom");
     }
 
-    bool isSubPadSwing(s32 channel) {
-        return aurora::wpad_service().is_sub_swing(channel);
-    }
 }

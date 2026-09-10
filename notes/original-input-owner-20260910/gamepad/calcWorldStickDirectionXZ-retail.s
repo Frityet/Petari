@@ -1,0 +1,78 @@
+/* 803D4700 003CFC40  94 21 FF 80 */	stwu r1, -0x80(r1)
+/* 803D4704 003CFC44  7C 08 02 A6 */	mflr r0
+/* 803D4708 003CFC48  90 01 00 84 */	stw r0, 0x84(r1)
+/* 803D470C 003CFC4C  DB E1 00 70 */	stfd f31, 0x70(r1)
+/* 803D4710 003CFC50  F3 E1 00 78 */	psq_st f31, 0x78(r1), 0, qr0
+/* 803D4714 003CFC54  39 61 00 70 */	addi r11, r1, 0x70
+/* 803D4718 003CFC58  48 14 42 F1 */	bl _savegpr_29
+/* 803D471C 003CFC5C  7C 7D 1B 78 */	mr r29, r3
+/* 803D4720 003CFC60  7C 9E 23 78 */	mr r30, r4
+/* 803D4724 003CFC64  7C BF 2B 78 */	mr r31, r5
+/* 803D4728 003CFC68  4B FF 43 15 */	bl getCameraInvViewMtx__2MRFv
+/* 803D472C 003CFC6C  E0 03 00 00 */	psq_l f0, 0x0(r3), 0, qr0
+/* 803D4730 003CFC70  E0 23 00 10 */	psq_l f1, 0x10(r3), 0, qr0
+/* 803D4734 003CFC74  E0 43 00 20 */	psq_l f2, 0x20(r3), 0, qr0
+/* 803D4738 003CFC78  F0 01 00 2C */	psq_st f0, 0x2c(r1), 0, qr0
+/* 803D473C 003CFC7C  E0 03 00 08 */	psq_l f0, 0x8(r3), 0, qr0
+/* 803D4740 003CFC80  F0 21 00 3C */	psq_st f1, 0x3c(r1), 0, qr0
+/* 803D4744 003CFC84  E0 83 00 18 */	psq_l f4, 0x18(r3), 0, qr0
+/* 803D4748 003CFC88  F0 41 00 4C */	psq_st f2, 0x4c(r1), 0, qr0
+/* 803D474C 003CFC8C  E0 A3 00 28 */	psq_l f5, 0x28(r3), 0, qr0
+/* 803D4750 003CFC90  38 61 00 20 */	addi r3, r1, 0x20
+/* 803D4754 003CFC94  C0 21 00 2C */	lfs f1, 0x2c(r1)
+/* 803D4758 003CFC98  C0 41 00 3C */	lfs f2, 0x3c(r1)
+/* 803D475C 003CFC9C  C0 61 00 4C */	lfs f3, 0x4c(r1)
+/* 803D4760 003CFCA0  F0 01 00 34 */	psq_st f0, 0x34(r1), 0, qr0
+/* 803D4764 003CFCA4  F0 81 00 44 */	psq_st f4, 0x44(r1), 0, qr0
+/* 803D4768 003CFCA8  F0 A1 00 54 */	psq_st f5, 0x54(r1), 0, qr0
+/* 803D476C 003CFCAC  4B C4 2B 79 */	bl "set<f>__Q29JGeometry8TVec3<f>Ffff_v"
+/* 803D4770 003CFCB0  C0 02 1A 84 */	lfs f0, "@57027"@sda21(r0)
+/* 803D4774 003CFCB4  38 61 00 20 */	addi r3, r1, 0x20
+/* 803D4778 003CFCB8  D0 01 00 24 */	stfs f0, 0x24(r1)
+/* 803D477C 003CFCBC  48 01 1D C1 */	bl "normalizeOrZero__2MRFPQ29JGeometry8TVec3<f>"
+/* 803D4780 003CFCC0  C0 61 00 54 */	lfs f3, 0x54(r1)
+/* 803D4784 003CFCC4  38 61 00 14 */	addi r3, r1, 0x14
+/* 803D4788 003CFCC8  C0 41 00 44 */	lfs f2, 0x44(r1)
+/* 803D478C 003CFCCC  C0 21 00 34 */	lfs f1, 0x34(r1)
+/* 803D4790 003CFCD0  4B C4 2B 55 */	bl "set<f>__Q29JGeometry8TVec3<f>Ffff_v"
+/* 803D4794 003CFCD4  C0 02 1A 84 */	lfs f0, "@57027"@sda21(r0)
+/* 803D4798 003CFCD8  38 61 00 14 */	addi r3, r1, 0x14
+/* 803D479C 003CFCDC  D0 01 00 18 */	stfs f0, 0x18(r1)
+/* 803D47A0 003CFCE0  48 01 1D 9D */	bl "normalizeOrZero__2MRFPQ29JGeometry8TVec3<f>"
+/* 803D47A4 003CFCE4  C0 22 1A 88 */	lfs f1, "@58167"@sda21(r0)
+/* 803D47A8 003CFCE8  38 61 00 14 */	addi r3, r1, 0x14
+/* 803D47AC 003CFCEC  4B C4 B9 25 */	bl "scale__Q29JGeometry8TVec3<f>Ff"
+/* 803D47B0 003CFCF0  7F E3 FB 78 */	mr r3, r31
+/* 803D47B4 003CFCF4  4B FD 83 95 */	bl getWPad__2MRFl
+/* 803D47B8 003CFCF8  80 83 00 20 */	lwz r4, 0x20(r3)
+/* 803D47BC 003CFCFC  7F E3 FB 78 */	mr r3, r31
+/* 803D47C0 003CFD00  C3 E4 00 04 */	lfs f31, 0x4(r4)
+/* 803D47C4 003CFD04  4B FD 83 85 */	bl getWPad__2MRFl
+/* 803D47C8 003CFD08  80 83 00 20 */	lwz r4, 0x20(r3)
+/* 803D47CC 003CFD0C  FC 20 F8 90 */	fmr f1, f31
+/* 803D47D0 003CFD10  38 61 00 20 */	addi r3, r1, 0x20
+/* 803D47D4 003CFD14  C3 E4 00 08 */	lfs f31, 0x8(r4)
+/* 803D47D8 003CFD18  4B C4 B8 F9 */	bl "scale__Q29JGeometry8TVec3<f>Ff"
+/* 803D47DC 003CFD1C  FC 20 F8 90 */	fmr f1, f31
+/* 803D47E0 003CFD20  38 61 00 14 */	addi r3, r1, 0x14
+/* 803D47E4 003CFD24  4B C4 B8 ED */	bl "scale__Q29JGeometry8TVec3<f>Ff"
+/* 803D47E8 003CFD28  38 61 00 08 */	addi r3, r1, 0x8
+/* 803D47EC 003CFD2C  38 81 00 20 */	addi r4, r1, 0x20
+/* 803D47F0 003CFD30  4B C4 47 01 */	bl "__ct__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>"
+/* 803D47F4 003CFD34  38 61 00 08 */	addi r3, r1, 0x8
+/* 803D47F8 003CFD38  38 81 00 14 */	addi r4, r1, 0x14
+/* 803D47FC 003CFD3C  4B C4 8A E9 */	bl "add__Q29JGeometry8TVec3<f>FRCQ29JGeometry8TVec3<f>"
+/* 803D4800 003CFD40  38 61 00 08 */	addi r3, r1, 0x8
+/* 803D4804 003CFD44  48 01 1D 39 */	bl "normalizeOrZero__2MRFPQ29JGeometry8TVec3<f>"
+/* 803D4808 003CFD48  C0 01 00 08 */	lfs f0, 0x8(r1)
+/* 803D480C 003CFD4C  D0 1D 00 00 */	stfs f0, 0x0(r29)
+/* 803D4810 003CFD50  C0 01 00 10 */	lfs f0, 0x10(r1)
+/* 803D4814 003CFD54  D0 1E 00 00 */	stfs f0, 0x0(r30)
+/* 803D4818 003CFD58  E3 E1 00 78 */	psq_l f31, 0x78(r1), 0, qr0
+/* 803D481C 003CFD5C  CB E1 00 70 */	lfd f31, 0x70(r1)
+/* 803D4820 003CFD60  39 61 00 70 */	addi r11, r1, 0x70
+/* 803D4824 003CFD64  48 14 42 31 */	bl _restgpr_29
+/* 803D4828 003CFD68  80 01 00 84 */	lwz r0, 0x84(r1)
+/* 803D482C 003CFD6C  7C 08 03 A6 */	mtlr r0
+/* 803D4830 003CFD70  38 21 00 80 */	addi r1, r1, 0x80
+/* 803D4834 003CFD74  4E 80 00 20 */	blr

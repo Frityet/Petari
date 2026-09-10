@@ -1,0 +1,464 @@
+diff --git a/config/RMGK01/splits.txt b/config/RMGK01/splits.txt
+index b775c05de..29bdec800 100644
+--- a/config/RMGK01/splits.txt
++++ b/config/RMGK01/splits.txt
+@@ -9628,13 +9628,13 @@ Game/NWC24/ReceiverTagMail.cpp:
+ 
+ JSystem/JKernel/JKRHeap.cpp:
+ 	.text       start:0x8040AB8C end:0x8040B528
+-	.data       start:0x805E7220 end:0x805E75E0
++	.data       start:0x805E71E8 end:0x805E7280
+ 	.sdata      start:0x806B26D8 end:0x806B26E8
+ 	.sbss       start:0x806B70A8 end:0x806B70D0
+ 
+ JSystem/JKernel/JKRExpHeap.cpp:
+ 	.text       start:0x8040B528 end:0x8040D08C
+-	.data       start:0x805E75E0 end:0x805E7798
++	.data       start:0x805E7280 end:0x805E7798
+ 	.sbss       start:0x806B70D0 end:0x806B70E8
+ 	.sdata2     start:0x806C19F0 end:0x806C19F8
+ 
+diff --git a/config/RMGK01/symbols.txt b/config/RMGK01/symbols.txt
+index c0c891ea4..f8c3be558 100644
+--- a/config/RMGK01/symbols.txt
++++ b/config/RMGK01/symbols.txt
+@@ -63574,7 +63574,7 @@ mMessageMax__15NWC24SendThread = .sdata:0x806B26C0; // type:object size:0x4 scop
+ sWorkSize__25@unnamed@NWC24System_cpp@ = .sdata:0x806B26C8; // type:object size:0x4 scope:global align:4 data:4byte
+ cLostMessageID__31@unnamed@LuigiMailDirector_cpp@ = .sdata:0x806B26D0; // type:object size:0x4 scope:global align:4 data:4byte
+ cFoundMessageID__31@unnamed@LuigiMailDirector_cpp@ = .sdata:0x806B26D4; // type:object size:0x4 scope:global align:4 data:4byte
+-lbl_806B26D8 = .sdata:0x806B26D8; // type:object size:0x1 data:byte
++byte_806B26D8 = .sdata:0x806B26D8; // type:object size:0x1 data:byte
+ ARALT_AramStartAdr = .sdata:0x806B26DC; // type:object size:0x4 scope:global align:4 data:4byte
+ lbl_806B26E0 = .sdata:0x806B26E0; // type:object size:0x3 data:string
+ sSZSBufferSize__7JKRAram = .sdata:0x806B26E8; // type:object size:0x4 scope:global align:4 data:4byte
+@@ -67791,7 +67791,7 @@ sSystemHeap__7JKRHeap = .sbss:0x806B70A8; // type:object size:0x4 scope:global a
+ sCurrentHeap__7JKRHeap = .sbss:0x806B70AC; // type:object size:0x4 scope:global align:4 data:4byte
+ sRootHeap__7JKRHeap = .sbss:0x806B70B0; // type:object size:0x4 scope:global align:4 data:4byte
+ mErrorHandler__7JKRHeap = .sbss:0x806B70B4; // type:object size:0x4 scope:global align:4 data:4byte
+-lbl_806B70B8 = .sbss:0x806B70B8; // type:object size:0x1 data:byte
++byte_806B70B8 = .sbss:0x806B70B8; // type:object size:0x1 data:byte
+ mCodeStart__7JKRHeap = .sbss:0x806B70BC; // type:object size:0x4 scope:global align:4 data:4byte
+ mCodeEnd__7JKRHeap = .sbss:0x806B70C0; // type:object size:0x4 scope:global align:4 data:4byte
+ mUserRamStart__7JKRHeap = .sbss:0x806B70C4; // type:object size:0x4 scope:global align:4 data:4byte
+diff --git a/configure.py b/configure.py
+index 7c3f4902e..b2baa243a 100644
+--- a/configure.py
++++ b/configure.py
+@@ -3254,7 +3254,7 @@ config.libs = [
+     JSysLib(
+         "JKernel",
+         [
+-            Object(NonMatching, "JSystem/JKernel/JKRHeap.cpp"),
++            Object(NonMatching, "JSystem/JKernel/JKRHeap.cpp", extra_cflags=["-ipa file"]),
+             Object(NonMatching, "JSystem/JKernel/JKRExpHeap.cpp"),
+             Object(NonMatching, "JSystem/JKernel/JKRSolidHeap.cpp"),
+             Object(NonMatching, "JSystem/JKernel/JKRUnitHeap.cpp"),
+diff --git a/libs/JSystem/include/JSystem/JKernel/JKRHeap.hpp b/libs/JSystem/include/JSystem/JKernel/JKRHeap.hpp
+index fd17b6410..c110d40fd 100644
+--- a/libs/JSystem/include/JSystem/JKernel/JKRHeap.hpp
++++ b/libs/JSystem/include/JSystem/JKernel/JKRHeap.hpp
+@@ -59,7 +59,7 @@ public:
+     virtual bool state_compare(const TState&, const TState&) const;
+     virtual void state_dump(const TState&) const;
+ 
+-    void* alloc(u32, int);
++    void* alloc(u32, int) NO_INLINE;
+     JKRHeap* becomeSystemHeap();
+     JKRHeap* becomeCurrentHeap();
+     void destroy();
+@@ -135,7 +135,7 @@ public:
+     static bool initArena(char** memory, u32* size, int maxHeaps);
+     static bool initArena2(char** memory, u32* size, int maxHeaps);
+     static void* alloc(u32 size, int alignment, JKRHeap* heap);
+-    static void free(void* ptr, JKRHeap* heap);
++    static void free(void* ptr, JKRHeap* heap) NO_INLINE;
+     static s32 resize(void* ptr, u32 size, JKRHeap* heap);
+     static s32 getSize(void* ptr, JKRHeap* heap);
+     static JKRHeap* findFromRoot(void* ptr);
+@@ -196,8 +196,6 @@ public:
+     static void* mUserRamEnd;
+     static u32 mMemorySize;
+ 
+-    static u32 ARALT_AramStartAddr;
+-
+     inline void* getStartAddr() const {
+         return (void*)mStart;
+     }
+diff --git a/src/JSystem/JKernel/JKRDvdAramRipper.cpp b/src/JSystem/JKernel/JKRDvdAramRipper.cpp
+index 2351fe239..b5aff5524 100644
+--- a/src/JSystem/JKernel/JKRDvdAramRipper.cpp
++++ b/src/JSystem/JKernel/JKRDvdAramRipper.cpp
+@@ -10,9 +10,7 @@
+ #include <cstring>
+ 
+ static int JKRDecompressFromDVDToAram(JKRDvdFile*, u32, u32, u32, u32, u32, u32*);
+-static int decompSZS_subroutine(u8*, u32);
+-static u8* firstSrcData();
+-static u8* nextSrcData(u8*);
++static inline u8* firstSrcData();
+ static u32 dmaBufferFlush(u32);
+ 
+ JKRAramBlock* JKRDvdAramRipper::loadToAram(s32 entryNumber, u32 address, JKRExpandSwitch expandSwitch, u32 param_3, u32 param_4, u32* param_5) {
+@@ -69,11 +67,10 @@ JSUList< JKRADCommand > JKRDvdAramRipper::sDvdAramAsyncList;
+ bool JKRDvdAramRipper::errorRetry = true;
+ 
+ JKRADCommand* JKRDvdAramRipper::callCommand_Async(JKRADCommand* command) {
+-    s32 compression;
+-    s32 uncompressedSize;
+     bool bVar1 = true;
+     JKRDvdFile* dvdFile = command->mDvdFile;
+-    compression = 0;
++    s32 compression = 0;
++    s32 uncompressedSize;
+     OSLockMutex(&dvdFile->mMutex2);
+     if (command->field_0x44) {
+         *command->field_0x44 = 0;
+@@ -108,9 +105,13 @@ JKRADCommand* JKRDvdAramRipper::callCommand_Async(JKRADCommand* command) {
+             }
+             DCInvalidateRange(bufPtr, 0x20);
+ 
+-            compression = JKRCheckCompressed_noASR(bufPtr);
++            JKRCompression detectedCompression = JKRDecomp::checkCompressed(bufPtr);
++            if (detectedCompression == COMPRESSION_ASR) {
++                detectedCompression = COMPRESSION_NONE;
++            }
++            compression = detectedCompression;
+ 
+-            u32 expandSize = JKRDecompExpandSize(bufPtr);
++            u32 expandSize = (bufPtr[4] << 24) | (bufPtr[5] << 16) | (bufPtr[6] << 8) | bufPtr[7];
+             uncompressedSize = expandSize;
+             if (command->field_0x40 && uncompressedSize > command->field_0x40) {
+                 uncompressedSize = command->field_0x40;
+@@ -279,70 +280,165 @@ int JKRDecompressFromDVDToAram(JKRDvdFile* dvdFile, u32 param_1, u32 fileSize, u
+     maxDest = uncompressedSize;
+     tsPtr = param_6 ? param_6 : &tsArea;
+     *tsPtr = 0;
+-    u8* first = firstSrcData();
+-    if (first) {
+-        result = decompSZS_subroutine(first, param_1);
+-    } else {
+-        result = -1;
+-    }
+-    JKRFree(szpBuf);
+-    JKRFree(refBuf);
+-    JKRFree(dmaBuf);
+-    OSUnlockMutex(&decompMutex);
+-    return result;
+-}
+-
+-static u8* firstSrcData() {
+     srcLimit = szpEnd - 0x19;
+-    u8* buffer = szpBuf;
+-    u32 bufSize = szpEnd - buffer;
+-    u32 length = transLeft < bufSize ? transLeft : bufSize;
++    u8* first = szpBuf;
++    u32 readSize = szpEnd - first;
++    if (transLeft < readSize) {
++        readSize = transLeft;
++    }
+     while (true) {
+-        int result = DVDReadPrio(srcFile->getFileInfo(), buffer, length, 0, 2);
+-        if (result >= 0) {
++        int readResult = DVDReadPrio(srcFile->getFileInfo(), first, readSize, 0, 2);
++        if (readResult >= 0) {
+             break;
+         }
+         if (!JKRDvdAramRipper::isErrorRetry()) {
+-            return NULL;
++            first = nullptr;
++            goto firstReadComplete;
+         }
+         VIWaitForRetrace();
+     }
+-    srcOffset += length;
+-    transLeft -= length;
+-    return buffer;
+-}
++    srcOffset += readSize;
++    transLeft -= readSize;
++firstReadComplete:
++    if (first) {
++        u8* src;
++        u32 dest = param_1;
++        u32 dmaAddress = dest;
++        u32 written;
++        s32 count;
++        u32 code;
++        s32 validBits;
++        u8* copySrc;
++        validBits = 0;
++        code = 0;
++        written = 0;
++
++        if (first[0] != 'Y' || first[1] != 'a' || first[2] != 'z' || first[3] != '0') {
++            result = -1;
++        } else {
++            u32 end = dest + (*reinterpret_cast< u32* >(first + 4) - fileOffset);
++            if (end > dest + maxDest) {
++                end = dest + maxDest;
++            }
+ 
+-static u8* nextSrcData(u8* src) {
+-    u32 size = szpEnd - src;
+-    u8* dest;
+-    if (IS_NOT_ALIGNED(size, 0x20)) {
+-        dest = szpBuf + 0x20 - (size & (0x20 - 1));
+-    } else {
+-        dest = szpBuf;
+-    }
++            src = first + 0x10;
++            do {
++                if (validBits == 0) {
++                    if (src > srcLimit && transLeft != 0) {
++                        u32 size = szpEnd - src;
++                        u8* buffer;
++                        if (IS_NOT_ALIGNED(size, 0x20)) {
++                            buffer = szpBuf + 0x20 - (size & (0x20 - 1));
++                        } else {
++                            buffer = szpBuf;
++                        }
++
++                        memcpy(buffer, src, size);
++                        u32 transferSize;
++                        u8* readBuffer = buffer + size;
++                        transferSize = szpEnd - readBuffer;
++                        if (transferSize > transLeft) {
++                            transferSize = transLeft;
++                        }
++
++                        while (true) {
++                            s32 readResult = DVDReadPrio(srcFile->getFileInfo(), readBuffer, transferSize, srcOffset, 2);
++                            if (readResult >= 0) {
++                                break;
++                            }
++                            if (!JKRDvdAramRipper::isErrorRetry()) {
++                                buffer = nullptr;
++                                goto refillComplete;
++                            }
++                            VIWaitForRetrace();
++                        }
++                        srcOffset += transferSize;
++                        transLeft -= transferSize;
++                        if (transLeft == 0) {
++                            srcLimit = readBuffer + transferSize;
++                        }
++                    refillComplete:
++                        src = buffer;
++                    }
++                    code = *src++;
++                    validBits = 8;
++                }
+ 
+-    memcpy(dest, src, size);
+-    u32 transSize = szpEnd - (dest + size);
+-    if (transSize > transLeft) {
+-        transSize = transLeft;
+-    }
++                if (code & 0x80) {
++                    if (readCount >= fileOffset) {
++                        *dmaCurrent++ = *src;
++                        dest++;
++                        written++;
++                        if (dmaCurrent == dmaEnd) {
++                            dmaAddress += dmaBufferFlush(dmaAddress);
++                        }
++                        if (dest == end) {
++                            break;
++                        }
++                    }
++
++                    *refCurrent++ = *src;
++                    if (refCurrent == refEnd) {
++                        refCurrent = refBuf;
++                    }
++                    readCount++;
++                    src++;
++                } else {
++                    s32 firstByte = *src++;
++                    u8 secondByte = *src++;
++                    copySrc = refCurrent - (((firstByte & 0xF) << 8) | secondByte) - 1;
++                    count = firstByte >> 4;
++                    if (copySrc < refBuf) {
++                        copySrc += refEnd - refBuf;
++                    }
++
++                    if (count == 0) {
++                        count = *src++ + 0x12;
++                    } else {
++                        count += 2;
++                    }
++
++                    do {
++                        if (readCount >= fileOffset) {
++                            *dmaCurrent++ = *copySrc;
++                            dest++;
++                            written++;
++                            if (dmaCurrent == dmaEnd) {
++                                dmaAddress += dmaBufferFlush(dmaAddress);
++                            }
++                            if (dest == end) {
++                                break;
++                            }
++                        }
++
++                        *refCurrent++ = *copySrc;
++                        if (refCurrent == refEnd) {
++                            refCurrent = refBuf;
++                        }
++                        copySrc++;
++                        if (copySrc == refEnd) {
++                            copySrc = refBuf;
++                        }
++                        readCount++;
++                    } while (--count != 0);
++                }
+ 
+-    while (true) {
+-        s32 result = DVDReadPrio(srcFile->getFileInfo(), dest + size, transSize, srcOffset, 2);
+-        if (result >= 0) {
+-            break;
+-        }
+-        if (!JKRDvdAramRipper::isErrorRetry()) {
+-            return NULL;
++                code <<= 1;
++                validBits--;
++            } while (dest < end);
++
++            dmaBufferFlush(dmaAddress);
++            *tsPtr = written;
++            result = 0;
+         }
+-        VIWaitForRetrace();
+-    }
+-    srcOffset += transSize;
+-    transLeft -= transSize;
+-    if (transLeft == 0) {
+-        srcLimit = dest + size + transSize;
++    } else {
++        result = -1;
+     }
+-    return dest;
++    JKRFree(szpBuf);
++    JKRFree(refBuf);
++    JKRFree(dmaBuf);
++    OSUnlockMutex(&decompMutex);
++    return result;
+ }
+ 
+ static u32 dmaBufferFlush(u32 param_1) {
+diff --git a/src/JSystem/JKernel/JKRHeap.cpp b/src/JSystem/JKernel/JKRHeap.cpp
+index b9a3661d1..da4e204ee 100644
+--- a/src/JSystem/JKernel/JKRHeap.cpp
++++ b/src/JSystem/JKernel/JKRHeap.cpp
+@@ -2,23 +2,21 @@
+ #include "JSystem/JUtility/JUTException.hpp"
+ #include <revolution/os/OSBootInfo.h>
+ 
++JKRHeap* JKRHeap::sSystemHeap;
+ JKRHeap* JKRHeap::sCurrentHeap;
+ JKRHeap* JKRHeap::sRootHeap;
+-JKRHeap* JKRHeap::sSystemHeap;
++JKRErrorHandler JKRHeap::mErrorHandler;
++
++static bool byte_806B70B8;
+ 
+ void* JKRHeap::mCodeStart;
+ void* JKRHeap::mCodeEnd;
+ void* JKRHeap::mUserRamStart;
+ void* JKRHeap::mUserRamEnd;
+-
+-JKRErrorHandler JKRHeap::mErrorHandler;
+-
+-static bool byte_806B26D8;
+-static bool byte_806B70B8;
+-
+ u32 JKRHeap::mMemorySize;
+ 
+-u32 JKRHeap::ARALT_AramStartAddr = 0x90000000;
++static bool byte_806B26D8 = true;
++u32 ARALT_AramStartAdr = 0x90000000;
+ 
+ JKRHeap::JKRHeap(void* data, u32 size, JKRHeap* parent, bool error) : JKRDisposer(), mChildTree(this), mDisposerList() {
+     OSInitMutex(&mMutex);
+@@ -186,7 +184,6 @@ JKRHeap* JKRHeap::findFromRoot(void* pData) {
+     return root->findAllHeap(pData);
+ }
+ 
+-/* functionally equiv but not matching */
+ JKRHeap* JKRHeap::find(void* pData) const {
+     if (mStart <= pData && pData < mEnd) {
+         const JSUTree< JKRHeap >& tree = mChildTree;
+@@ -201,14 +198,12 @@ JKRHeap* JKRHeap::find(void* pData) const {
+             }
+         }
+ 
+-        // this is to avoid returning a const JKRHeap ptr
+         return const_cast< JKRHeap* >(this);
+     }
+ 
+     return nullptr;
+ }
+ 
+-/* same here */
+ JKRHeap* JKRHeap::findAllHeap(void* ptr) const {
+     if (mChildTree.getNumChildren() != 0) {
+         for (JSUTreeIterator< JKRHeap > iterator(mChildTree.getFirstChild()); iterator != mChildTree.getEndChild(); ++iterator) {
+@@ -228,26 +223,25 @@ JKRHeap* JKRHeap::findAllHeap(void* ptr) const {
+ }
+ 
+ void JKRHeap::dispose_subroutine(u32 start, u32 end) {
++    JSUListIterator< JKRDisposer > it(mDisposerList.getFirst());
+     JSUListIterator< JKRDisposer > last_it;
+-    JSUListIterator< JKRDisposer > next_it;
+-    JSUListIterator< JKRDisposer > it;
+ 
+-    for (it = mDisposerList.getFirst(); it != mDisposerList.getEnd(); it = next_it) {
+-        JKRDisposer* disp = it.getObject();
++    JSULink< JKRDisposer >* link;
++    while ((link = it.mLink) != nullptr) {
++        JKRDisposer* disp = link->getObject();
+ 
+-        if ((void*)start <= disp && disp < (void*)end) {
++        if (reinterpret_cast< void* >(start) <= disp && disp < reinterpret_cast< void* >(end)) {
+             disp->~JKRDisposer();
+ 
+             if (last_it == nullptr) {
+-                next_it = mDisposerList.getFirst();
++                it = mDisposerList.getFirst();
+             } else {
+-                next_it = last_it;
+-                next_it++;
++                it = last_it;
++                it++;
+             }
+         } else {
+             last_it = it;
+-            next_it = it;
+-            next_it++;
++            it++;
+         }
+     }
+ }
+@@ -287,7 +281,7 @@ void JKRHeap::copyMemory(void* pDst, void* pSrc, u32 size) {
+ }
+ 
+ void JKRDefaultMemoryErrorRoutine(void* pHeap, u32 size, int alignment) {
+-    JUTException::panic_f(__FILE__, 0x355, "%s", "abort\n");
++    JUTException::panic(__FILE__, 0x355, "abort\n");
+ }
+ 
+ JKRErrorHandler JKRHeap::setErrorHandler(JKRErrorHandler errorHandler) {
+@@ -346,11 +340,11 @@ void JKRHeap::state_dump(const TState&) const {
+ }
+ 
+ void JKRHeap::setAltAramStartAdr(u32 addr) {
+-    ARALT_AramStartAddr = addr;
++    ARALT_AramStartAdr = addr;
+ }
+ 
+ u32 JKRHeap::getAltAramStartAdr() {
+-    return ARALT_AramStartAddr;
++    return ARALT_AramStartAdr;
+ }
+ 
+ s32 JKRHeap::do_changeGroupID(u8) {

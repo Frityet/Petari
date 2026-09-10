@@ -1,0 +1,56 @@
+=================================================================
+==54529==ERROR: AddressSanitizer: heap-use-after-free on address 0x603000005a70 at pc 0x000100f22700 bp 0x00016eede690 sp 0x00016eede688
+WRITE of size 4 at 0x603000005a70 thread T0
+    #0 0x000100f226fc in aurora::WpadService::dispatch_callbacks() wpad.cpp:130
+    #1 0x000100f2a3ac in main CallbackRetirementProbe.cpp:22
+    #2 0x0001886784e0 in start+0x1b4c (dyld:arm64e+0x204e0)
+
+0x603000005a70 is located 0 bytes inside of 24-byte region [0x603000005a70,0x603000005a88)
+freed by thread T0 here:
+    #0 0x000101441854 in _ZdlPv+0x6c (libclang_rt.asan_osx_dynamic.dylib:arm64+0x65854)
+    #1 0x000100f2a020 in std::__1::default_delete<WPADInfo>::operator()[abi:nqe230100](WPADInfo*) const unique_ptr.h:74
+    #2 0x000100f2a020 in std::__1::unique_ptr<WPADInfo, std::__1::default_delete<WPADInfo>>::reset[abi:nqe230100](WPADInfo*) unique_ptr.h:264
+    #3 0x000100f2a020 in retire_client(int, int) CallbackRetirementProbe.cpp:11
+    #4 0x000100f22170 in aurora::WpadService::dispatch_callbacks() wpad.cpp:115
+    #5 0x000100f2a3ac in main CallbackRetirementProbe.cpp:22
+    #6 0x0001886784e0 in start+0x1b4c (dyld:arm64e+0x204e0)
+
+previously allocated by thread T0 here:
+    #0 0x00010144145c in _Znwm+0x6c (libclang_rt.asan_osx_dynamic.dylib:arm64+0x6545c)
+    #1 0x000100f2a31c in std::__1::unique_ptr<WPADInfo, std::__1::default_delete<WPADInfo>> std::__1::make_unique[abi:nqe230100]<WPADInfo, 0>() unique_ptr.h:708
+    #2 0x000100f2a31c in main CallbackRetirementProbe.cpp:18
+    #3 0x0001886784e0 in start+0x1b4c (dyld:arm64e+0x204e0)
+
+SUMMARY: AddressSanitizer: heap-use-after-free wpad.cpp:130 in aurora::WpadService::dispatch_callbacks()
+Shadow bytes around the buggy address:
+  0x603000005780: 00 00 fa fa 00 00 00 00 fa fa 00 00 00 00 fa fa
+  0x603000005800: 00 00 00 00 fa fa 00 00 00 00 fa fa 00 00 00 00
+  0x603000005880: fa fa 00 00 00 00 fa fa 00 00 00 00 fa fa 00 00
+  0x603000005900: 00 00 fa fa 00 00 00 00 fa fa 00 00 00 00 fa fa
+  0x603000005980: 00 00 00 00 fa fa 00 00 00 00 fa fa 00 00 00 00
+=>0x603000005a00: fa fa 00 00 00 00 fa fa 00 00 00 00 fa fa[fd]fd
+  0x603000005a80: fd fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x603000005b00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x603000005b80: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x603000005c00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x603000005c80: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==54529==ABORTING

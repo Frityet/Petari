@@ -1,0 +1,36 @@
+{
+  "base": "73f5b40dc337376371572097f8c4f2d9f1686d4e",
+  "upstream": "d1ae0a05cc023d52ecdcbc7731c8c79f0cb84dc6",
+  "files": [
+    {
+      "path": "config/RMGK01/splits.txt",
+      "disposition": "reference only",
+      "reason": "Corrects retail JKRHeap/JKRExpHeap data boundaries; native linker does not use these Wii split addresses."
+    },
+    {
+      "path": "config/RMGK01/symbols.txt",
+      "disposition": "reference only",
+      "reason": "Renames two retail bool byte symbols; native already uses the new names and correct true/zero initialization."
+    },
+    {
+      "path": "configure.py",
+      "disposition": "reference only",
+      "reason": "Enables Metrowerks file IPA for JKRHeap matching; not a native Clang setting."
+    },
+    {
+      "path": "libs/JSystem/include/JSystem/JKernel/JKRHeap.hpp",
+      "disposition": "native aligned",
+      "reason": "Mirror two NO_INLINE annotations and remove the obsolete ARALT class-member declaration, retaining native-width bounds and host declaration differences."
+    },
+    {
+      "path": "src/JSystem/JKernel/JKRHeap.cpp",
+      "disposition": "selective native alignment",
+      "reason": "Use actual global ARALT_AramStartAdr storage and upstream disposer iteration. Correct true default already native. Preserve explicit native heap lifetime, provenance, locks, panic routing, finalizers and global new ownership."
+    },
+    {
+      "path": "src/JSystem/JKernel/JKRDvdAramRipper.cpp",
+      "disposition": "reference only; not activated",
+      "reason": "No native TU/header/provider for the original DVD-to-ARAM command graph. Native archive loading uses RarcArchive/decompress_yaz0 with explicit BE reads and native-sized indices; no direct change is needed."
+    }
+  ]
+}

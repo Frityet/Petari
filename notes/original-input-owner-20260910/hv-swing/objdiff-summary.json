@@ -1,0 +1,299 @@
+[
+  {
+    "side": "left",
+    "symbol": "__ct__11WPadHVSwingFPC4WPadUl",
+    "match_percent": 99.70588,
+    "bytes": "68",
+    "differences": [
+      {
+        "diff_kind": "DIFF_ARG_MISMATCH",
+        "instruction": {
+          "address": "8",
+          "size": 4,
+          "formatted": "lfs f0, @55776@sda21",
+          "parts": [
+            {
+              "opcode": {
+                "mnemonic": "lfs",
+                "opcode": 455
+              }
+            },
+            {
+              "arg": {
+                "opaque": "f0"
+              }
+            },
+            {
+              "separator": true
+            },
+            {
+              "arg": {
+                "reloc": true
+              }
+            },
+            {
+              "basic": "@sda21"
+            }
+          ],
+          "relocation": {
+            "type": 109,
+            "type_name": "R_PPC_EMB_SDA21",
+            "target_symbol": 8
+          }
+        },
+        "arg_diff": [
+          {},
+          {
+            "diff_index": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "side": "left",
+    "symbol": "updateSwing__11WPadHVSwingFv",
+    "match_percent": 100.0,
+    "bytes": "264",
+    "differences": []
+  },
+  {
+    "side": "left",
+    "symbol": "updateCentrifugal__11WPadHVSwingFv",
+    "match_percent": 99.95098,
+    "bytes": "408",
+    "differences": [
+      {
+        "diff_kind": "DIFF_ARG_MISMATCH",
+        "instruction": {
+          "address": "444",
+          "size": 4,
+          "formatted": "lfs f31, @54579@sda21",
+          "parts": [
+            {
+              "opcode": {
+                "mnemonic": "lfs",
+                "opcode": 455
+              }
+            },
+            {
+              "arg": {
+                "opaque": "f31"
+              }
+            },
+            {
+              "separator": true
+            },
+            {
+              "arg": {
+                "reloc": true
+              }
+            },
+            {
+              "basic": "@sda21"
+            }
+          ],
+          "relocation": {
+            "type": 109,
+            "type_name": "R_PPC_EMB_SDA21",
+            "target_symbol": 7
+          }
+        },
+        "arg_diff": [
+          {},
+          {
+            "diff_index": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "side": "left",
+    "symbol": "update__11WPadHVSwingFv",
+    "match_percent": 100.0,
+    "bytes": "140",
+    "differences": []
+  },
+  {
+    "side": "right",
+    "symbol": "__ct__11WPadHVSwingFPC4WPadUl",
+    "match_percent": 99.70588,
+    "bytes": "68",
+    "differences": [
+      {
+        "diff_kind": "DIFF_ARG_MISMATCH",
+        "instruction": {
+          "address": "8",
+          "size": 4,
+          "formatted": "lfs f0, @1926@sda21",
+          "parts": [
+            {
+              "opcode": {
+                "mnemonic": "lfs",
+                "opcode": 455
+              }
+            },
+            {
+              "arg": {
+                "opaque": "f0"
+              }
+            },
+            {
+              "separator": true
+            },
+            {
+              "arg": {
+                "reloc": true
+              }
+            },
+            {
+              "basic": "@sda21"
+            }
+          ],
+          "relocation": {
+            "type": 109,
+            "type_name": "R_PPC_EMB_SDA21",
+            "target_symbol": 7
+          },
+          "line_number": 5
+        },
+        "arg_diff": [
+          {},
+          {
+            "diff_index": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "side": "right",
+    "symbol": "updateSwing__11WPadHVSwingFv",
+    "match_percent": 100.0,
+    "bytes": "264",
+    "differences": []
+  },
+  {
+    "side": "right",
+    "symbol": "updateCentrifugal__11WPadHVSwingFv",
+    "match_percent": 99.95098,
+    "bytes": "408",
+    "differences": [
+      {
+        "diff_kind": "DIFF_ARG_MISMATCH",
+        "instruction": {
+          "address": "444",
+          "size": 4,
+          "formatted": "lfs f31, @1958@sda21",
+          "parts": [
+            {
+              "opcode": {
+                "mnemonic": "lfs",
+                "opcode": 455
+              }
+            },
+            {
+              "arg": {
+                "opaque": "f31"
+              }
+            },
+            {
+              "separator": true
+            },
+            {
+              "arg": {
+                "reloc": true
+              }
+            },
+            {
+              "basic": "@sda21"
+            }
+          ],
+          "relocation": {
+            "type": 109,
+            "type_name": "R_PPC_EMB_SDA21",
+            "target_symbol": 8
+          },
+          "line_number": 48
+        },
+        "arg_diff": [
+          {},
+          {
+            "diff_index": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "side": "right",
+    "symbol": "update__11WPadHVSwingFv",
+    "match_percent": 100.0,
+    "bytes": "140",
+    "differences": []
+  },
+  {
+    "side": "right",
+    "symbol": ".line.__ct__11WPadHVSwingFPC4WPadUl",
+    "match_percent": null,
+    "bytes": "20",
+    "differences": []
+  },
+  {
+    "side": "right",
+    "symbol": ".line.updateSwing__11WPadHVSwingFv",
+    "match_percent": null,
+    "bytes": "190",
+    "differences": []
+  },
+  {
+    "side": "right",
+    "symbol": ".line.updateCentrifugal__11WPadHVSwingFv",
+    "match_percent": null,
+    "bytes": "290",
+    "differences": []
+  },
+  {
+    "side": "right",
+    "symbol": ".line.update__11WPadHVSwingFv",
+    "match_percent": null,
+    "bytes": "80",
+    "differences": []
+  },
+  {
+    "side": "right",
+    "symbol": ".dwarf.0002.WPadHVSwing::WPadHVSwing",
+    "match_percent": null,
+    "bytes": "512",
+    "differences": []
+  },
+  {
+    "side": "right",
+    "symbol": ".dwarf.0006.__ct__11WPadHVSwingFPC4WPadUl",
+    "match_percent": null,
+    "bytes": "73",
+    "differences": []
+  },
+  {
+    "side": "right",
+    "symbol": ".dwarf.0006.updateSwing__11WPadHVSwingFv",
+    "match_percent": null,
+    "bytes": "217",
+    "differences": []
+  },
+  {
+    "side": "right",
+    "symbol": ".dwarf.0006.updateCentrifugal__11WPadHVSwingFv",
+    "match_percent": null,
+    "bytes": "427",
+    "differences": []
+  },
+  {
+    "side": "right",
+    "symbol": ".dwarf.0006.update__11WPadHVSwingFv",
+    "match_percent": null,
+    "bytes": "107",
+    "differences": []
+  }
+]

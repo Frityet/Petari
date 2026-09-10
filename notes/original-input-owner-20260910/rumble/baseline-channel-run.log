@@ -1,0 +1,4 @@
+FAIL: second zero byte stops motor bit
+FAIL: loop resumes at second byte
+FAIL: later nonzero turns on after leading zero
+Original RumbleChannel: 9/12 checks passed

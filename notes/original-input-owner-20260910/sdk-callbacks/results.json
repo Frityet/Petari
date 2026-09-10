@@ -1,0 +1,58 @@
+{
+  "command": [
+    "/opt/homebrew/opt/llvm/bin/clang++",
+    "-DAURORA",
+    "-DTARGET_PC",
+    "-std=c++23",
+    "-O2",
+    "-g",
+    "-pthread",
+    "-fsanitize=address,undefined",
+    "-fno-omit-frame-pointer",
+    "-Iaurora/include",
+    "-I/Users/frityet/Projects/petari/dolphin/Externals/gtest/googletest/include",
+    "-I/Users/frityet/Projects/petari/dolphin/Externals/gtest/googletest",
+    "aurora/tests/wpad_test.cpp",
+    "aurora/tests/wpad_test_stubs.cpp",
+    "aurora/lib/wpad.cpp",
+    "/Users/frityet/Projects/petari/dolphin/Externals/gtest/googletest/src/gtest-all.cc",
+    "/Users/frityet/Projects/petari/dolphin/Externals/gtest/googletest/src/gtest_main.cc",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-input-owner-20260910/sdk-callbacks/wpad-tests"
+  ],
+  "sources": [
+    {
+      "path": "aurora/tests/wpad_test.cpp",
+      "sha256": "4e4a6ba97785e0191d672fec93a414a5fddf61b6a0cbf8e7958712252d3ebf6e"
+    },
+    {
+      "path": "aurora/lib/wpad.cpp",
+      "sha256": "d3af4d51063fa9d9bedd61792152e8fb5978df9e1b8f32a48f8dcbc0f252075f"
+    },
+    {
+      "path": "aurora/include/aurora/wpad.hpp",
+      "sha256": "10ba15d42f1913d05da6122f52b12dab9c0041e9c9466fd707a279fab92888b3"
+    },
+    {
+      "path": "aurora/include/revolution.h",
+      "sha256": "50d65204ba9a181b7836f366821e42831bc822e61519096c1083a1927493a8a8"
+    }
+  ],
+  "build_exit": 0,
+  "runtime_command": [
+    "/Users/frityet/Projects/petari/notes/original-input-owner-20260910/sdk-callbacks/wpad-tests",
+    "--gtest_output=xml:/Users/frityet/Projects/petari/notes/original-input-owner-20260910/sdk-callbacks/tests.xml"
+  ],
+  "runtime_exit": 0,
+  "binary_sha256": "8e1e27e3d5f5db0b825a8f6410fc8b098f74eb8e93fedae7257957fbc1dd54a2",
+  "sources_unchanged_after_run": true,
+  "tests": {
+    "tests": "31",
+    "failures": "0",
+    "disabled": "0",
+    "errors": "0",
+    "time": "0.",
+    "timestamp": "2026-09-10T17:56:46.825",
+    "name": "AllTests"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "functions": [
+    {
+      "name": "getPlayerStickX",
+      "address": "0x803d43a4",
+      "size": 216,
+      "matches_dol": true,
+      "bytes_sha256": "700b78aea3262b991eff2303dfc96d7facd607023a193d425d8818260e15f6c5"
+    },
+    {
+      "name": "getPlayerStickY",
+      "address": "0x803d447c",
+      "size": 180,
+      "matches_dol": true,
+      "bytes_sha256": "c5eaabe62cf7cfb962834cda6aceb82ce3f1e930792f9b250411108dbf331d69"
+    },
+    {
+      "name": "calcWorldStickDirectionXZ",
+      "address": "0x803d4700",
+      "size": 312,
+      "matches_dol": true,
+      "bytes_sha256": "e1787ca11647ff75981d67f7bb47616432265480ee40edabeba40f3a4b23885e"
+    }
+  ]
+}

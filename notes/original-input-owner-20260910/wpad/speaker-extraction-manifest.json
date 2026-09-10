@@ -1,0 +1,62 @@
+{
+  "headers": {
+    "SpkSystem": "d4c91677d2de03861c47764a411e0f78503a5c1fffcf555051ac26ecab1ab474",
+    "SpkSpeakerCtrl": "2d1dec22e6a73bc787214c13ee85cbd5c822c70eaf3d62d75e7274c9b5bbb155",
+    "SpkData": "ffca630dc3613fc6e06a3a6e301b1ec9dcd3922a81c7cedbc2f9996c244c3acb",
+    "SpkMixingBuffer": "229b6b423c4ce4b5a4677a428d089187f41aa44f5f7449c6918f98b409794c5a",
+    "SpkSound": "16b6c294355a86fe267f2d3f7e807faa3f22eee75557855cba058229906072b5",
+    "SpkTable": "72fffa4fe660143364d61c51a782ed928d8f178f6faa632740e66fe7ac4a63fe",
+    "SpkWave": "c1e407a2a4311bca66c2edee3cfcd36b5eaf42ea33d4de69945459fdd38be57f"
+  },
+  "methods": {
+    "SpkSystem::connect": {
+      "reference": "decomp/src/Game/Speaker/SpkSystem.cpp",
+      "body_sha256": "1920230f6e27da1a84e329410aa829e77e9cbaef88fe55734321f17c434a69d5"
+    },
+    "SpkSystem::disconnect": {
+      "reference": "decomp/src/Game/Speaker/SpkSystem.cpp",
+      "body_sha256": "bf6c401f78a21d30a42d5ac4f2f75e7186ae19657df3379022b155f1d1c155fa"
+    },
+    "SpkSystem::extensionProcess": {
+      "reference": "decomp/src/Game/Speaker/SpkSystem.cpp",
+      "body_sha256": "52baf06d064517f1df3b4bb0db8957cdd49cd3d3d008b749b67dab22253c1b5d"
+    },
+    "SpkSpeakerCtrl::connect": {
+      "reference": "decomp/src/Game/Speaker/SpkSpeakerCtrl.cpp",
+      "body_sha256": "b616f2ab565958361a8323ac11511bc9a180ef733b1923790492c22411b86671"
+    },
+    "SpkSpeakerCtrl::disconnect": {
+      "reference": "decomp/src/Game/Speaker/SpkSpeakerCtrl.cpp",
+      "body_sha256": "fdab493962ae24cbfd25af8e08937c072e0ca3413bb36c11320dbaac0429ad8d"
+    },
+    "SpkSpeakerCtrl::setSpeakerOn": {
+      "reference": "decomp/src/Game/Speaker/SpkSpeakerCtrl.cpp",
+      "body_sha256": "a02950324f4db51b148d447552213f2c5b74d2143d3ce3e1dc179e9e4b0c9028"
+    },
+    "SpkSpeakerCtrl::setSpeakerOnCallback": {
+      "reference": "decomp/src/Game/Speaker/SpkSpeakerCtrl.cpp",
+      "body_sha256": "fd2dafd3117d6d92247cd3fefd34c66d3ef707a482d3e2b0a525385f818bd673"
+    },
+    "SpkSpeakerCtrl::setSpeakerPlay": {
+      "reference": "decomp/src/Game/Speaker/SpkSpeakerCtrl.cpp",
+      "body_sha256": "bbae8daee7fa2518e0f3c84160b175b3ed0c21a3b056e48d60354c06071225fe"
+    },
+    "SpkSpeakerCtrl::startPlayCallback": {
+      "reference": "decomp/src/Game/Speaker/SpkSpeakerCtrl.cpp",
+      "body_sha256": "0be6e8123ca7de6baceb5233b75261c0325b4decfef4c67ba26b225b6f1a596a"
+    },
+    "SpkSpeakerCtrl::setSpeakerOff": {
+      "reference": "decomp/src/Game/Speaker/SpkSpeakerCtrl.cpp",
+      "body_sha256": "6267ba3e53c1c172603e86664ed4451ed8804c2176994ec71a7ac042ed924a45"
+    },
+    "SpkSpeakerCtrl::initReconnect": {
+      "reference": "decomp/src/Game/Speaker/SpkSpeakerCtrl.cpp",
+      "body_sha256": "7737eea244220b2e8093ab98d75fd6fc030d2d23841a1723b475c7c64f3985ad"
+    },
+    "SpkSpeakerCtrl::extensionProcess": {
+      "reference": "decomp/src/Game/Speaker/SpkSpeakerCtrl.cpp",
+      "body_sha256": "3d997a8537610354ae90b5941366527cb2b7221443a6a18690451432558afb59"
+    }
+  },
+  "native_source_sha256": "be565ade0d2c716279d6593a6d6d729a22683cf955f33bd2703e5228c23febf9"
+}

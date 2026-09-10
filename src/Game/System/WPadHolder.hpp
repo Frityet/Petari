@@ -1,7 +1,6 @@
 #pragma once
 
-#include <revolution.h>
-struct HBMKPadData;
+#include <revolution/hbm.h>
 #include <revolution/types.h>
 
 class WPad;

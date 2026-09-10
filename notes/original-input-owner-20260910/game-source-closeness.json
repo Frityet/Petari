@@ -1,0 +1,110 @@
+[
+  {
+    "native": "src/Game/Speaker/SpkData.hpp",
+    "reference": "decomp/include/Game/Speaker/SpkData.hpp",
+    "identical": true,
+    "sha256": "ffca630dc3613fc6e06a3a6e301b1ec9dcd3922a81c7cedbc2f9996c244c3acb"
+  },
+  {
+    "native": "src/Game/Speaker/SpkMixingBuffer.hpp",
+    "reference": "decomp/include/Game/Speaker/SpkMixingBuffer.hpp",
+    "identical": true,
+    "sha256": "229b6b423c4ce4b5a4677a428d089187f41aa44f5f7449c6918f98b409794c5a"
+  },
+  {
+    "native": "src/Game/Speaker/SpkSound.hpp",
+    "reference": "decomp/include/Game/Speaker/SpkSound.hpp",
+    "identical": true,
+    "sha256": "16b6c294355a86fe267f2d3f7e807faa3f22eee75557855cba058229906072b5"
+  },
+  {
+    "native": "src/Game/Speaker/SpkSpeakerCtrl.hpp",
+    "reference": "decomp/include/Game/Speaker/SpkSpeakerCtrl.hpp",
+    "identical": true,
+    "sha256": "2d1dec22e6a73bc787214c13ee85cbd5c822c70eaf3d62d75e7274c9b5bbb155"
+  },
+  {
+    "native": "src/Game/Speaker/SpkSystem.hpp",
+    "reference": "decomp/include/Game/Speaker/SpkSystem.hpp",
+    "identical": true,
+    "sha256": "d4c91677d2de03861c47764a411e0f78503a5c1fffcf555051ac26ecab1ab474"
+  },
+  {
+    "native": "src/Game/Speaker/SpkTable.hpp",
+    "reference": "decomp/include/Game/Speaker/SpkTable.hpp",
+    "identical": true,
+    "sha256": "72fffa4fe660143364d61c51a782ed928d8f178f6faa632740e66fe7ac4a63fe"
+  },
+  {
+    "native": "src/Game/Speaker/SpkWave.hpp",
+    "reference": "decomp/include/Game/Speaker/SpkWave.hpp",
+    "identical": true,
+    "sha256": "c1e407a2a4311bca66c2edee3cfcd36b5eaf42ea33d4de69945459fdd38be57f"
+  },
+  {
+    "native": "src/Game/System/WPad.cpp",
+    "reference": "decomp/src/Game/System/WPad.cpp",
+    "identical": true,
+    "sha256": "d2d5f5c2b36f0cb2941d9489e0d2ddba638c5d98bdd036db3a300514c5afd24b"
+  },
+  {
+    "native": "src/Game/System/WPadAcceleration.cpp",
+    "reference": "decomp/src/Game/System/WPadAcceleration.cpp",
+    "identical": true,
+    "sha256": "447ff70ec3db05a8342a09f00fc3aa10ec44746acd94251cc28974eb12a0494e"
+  },
+  {
+    "native": "src/Game/System/WPadAcceleration.hpp",
+    "reference": "decomp/include/Game/System/WPadAcceleration.hpp",
+    "identical": true,
+    "sha256": "d79ad722038ced758405206c9e80d2c0a216ce2d7146ebab7ccf250ba868c9e2"
+  },
+  {
+    "native": "src/Game/System/WPadButton.cpp",
+    "reference": "decomp/src/Game/System/WPadButton.cpp",
+    "identical": true,
+    "sha256": "cb63973e0ead41eacb56c26ebe63275422bc86cdbac596eb2d84e8f8cedffc76"
+  },
+  {
+    "native": "src/Game/System/WPadHVSwing.cpp",
+    "reference": "decomp/src/Game/System/WPadHVSwing.cpp",
+    "identical": true,
+    "sha256": "41e2bf5d5a3bc5f4f692e7cbd3d54ce15347b686d1f40145bd12faa41a2b887a"
+  },
+  {
+    "native": "src/Game/System/WPadHVSwing.hpp",
+    "reference": "decomp/include/Game/System/WPadHVSwing.hpp",
+    "identical": true,
+    "sha256": "30f5203bf6eef94ab9d8382bd4e7dbcea6dd0c180ec64e67ebdedf1435cbcac0"
+  },
+  {
+    "native": "src/Game/System/WPadHolder.hpp",
+    "reference": "decomp/include/Game/System/WPadHolder.hpp",
+    "identical": true,
+    "sha256": "721476827c06c6393a49fa54362050f820f52cd9fe1ff59bbf8f179a7d69849c"
+  },
+  {
+    "native": "src/Game/System/WPadInfoChecker.cpp",
+    "reference": "decomp/src/Game/System/WPadInfoChecker.cpp",
+    "identical": true,
+    "sha256": "1073dc7b6d7012c676200c2e5609f8922228b274b3add7ca9f3332f98875646a"
+  },
+  {
+    "native": "src/Game/System/WPadLeaveWatcher.cpp",
+    "reference": "decomp/src/Game/System/WPadLeaveWatcher.cpp",
+    "identical": true,
+    "sha256": "c1653f3beb73ef2a15454bee46b999c46389a7cd8c4ddc185527ce5df29e4602"
+  },
+  {
+    "native": "src/Game/System/WPadRumble.cpp",
+    "reference": "decomp/src/Game/System/WPadRumble.cpp",
+    "identical": true,
+    "sha256": "aaf26ce26b9188be8cd475ae20e1dc35605bc394240cdf3d7a1f34aa70470f55"
+  },
+  {
+    "native": "src/Game/Util/GamePadUtil.cpp",
+    "reference": "decomp/src/Game/Util/GamePadUtil.cpp",
+    "identical": true,
+    "sha256": "83bff1b7229e8c75583793876283fce1e7c42f4bec9ccb322f8119c96f9ade86"
+  }
+]

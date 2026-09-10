@@ -1,0 +1,8 @@
+{
+  "command": [
+    "/var/folders/4x/jzbfrvb10tq3ff4dwng8nzgm0000gn/T/petari-aurora-upstream-20260907-q3qrkgbx/tests/brlan_tests",
+    "--gtest_output=xml:/Users/frityet/Projects/petari/notes/original-input-owner-20260910/brlan/cmake-tests.xml"
+  ],
+  "exit": 0,
+  "binary_sha256": "fce9362de8e9b9066a29ba91f17e9ccd0e19389340ee09b64edeb96353ff10a5"
+}

@@ -1,0 +1,67 @@
+Change Dir: '/var/folders/4x/jzbfrvb10tq3ff4dwng8nzgm0000gn/T/petari-aurora-upstream-20260907-q3qrkgbx'
+
+Run Build Command(s): /opt/homebrew/bin/ninja -v -j 4 brlan_tests
+[0/1] /opt/homebrew/bin/cmake --regenerate-during-build -S/Users/frityet/Projects/petari/aurora -B/var/folders/4x/jzbfrvb10tq3ff4dwng8nzgm0000gn/T/petari-aurora-upstream-20260907-q3qrkgbx
+-- aurora: Using system Dawn (provider=system)
+-- aurora: Using system/existing abseil
+-- aurora: Using system SDL3 (provider=system)
+-- aurora: Using static SDL3
+-- aurora: Fetching xxhash
+-- xxHash build type: Debug
+-- Architecture: arm64
+-- aurora: Using existing fmt
+-- aurora: Using existing libpng
+-- aurora: Fetching Freetype
+-- Could NOT find PkgConfig (missing: PKG_CONFIG_EXECUTABLE) 
+-- aurora: Fetching imgui
+-- aurora: Using existing sqlite3
+-- aurora: Using existing zstd
+-- aurora: Fetching Tracy
+-- Could NOT find rocprofiler-sdk (missing: rocprofiler-sdk_DIR)
+-- TRACY_ENABLE: OFF
+-- TRACY_ON_DEMAND: ON
+-- TRACY_CALLSTACK: (not set)
+-- TRACY_NO_CALLSTACK: OFF
+-- TRACY_NO_CALLSTACK_INLINES: OFF
+-- TRACY_ONLY_LOCALHOST: OFF
+-- TRACY_NO_BROADCAST: OFF
+-- TRACY_ONLY_IPV4: OFF
+-- TRACY_NO_CODE_TRANSFER: OFF
+-- TRACY_NO_CONTEXT_SWITCH: OFF
+-- TRACY_NO_EXIT: OFF
+-- TRACY_NO_SAMPLING: OFF
+-- TRACY_NO_VERIFY: OFF
+-- TRACY_NO_VSYNC_CAPTURE: OFF
+-- TRACY_NO_FRAME_IMAGE: OFF
+-- TRACY_NO_SYSTEM_TRACING: OFF
+-- TRACY_PATCHABLE_NOPSLEDS: OFF
+-- TRACY_DELAYED_INIT: OFF
+-- TRACY_MANUAL_LIFETIME: OFF
+-- TRACY_FIBERS: OFF
+-- TRACY_NO_CRASH_HANDLER: OFF
+-- TRACY_TIMER_FALLBACK: OFF
+-- TRACY_DISALLOW_HW_TIMER: OFF
+-- TRACY_LIBUNWIND_BACKTRACE: OFF
+-- TRACY_SYMBOL_OFFLINE_RESOLVE: OFF
+-- TRACY_LIBBACKTRACE_ELF_DYNLOAD_SUPPORT: OFF
+-- TRACY_DEBUGINFOD: OFF
+-- TRACY_IGNORE_MEMORY_FAULTS: OFF
+-- TRACY_VERBOSE: OFF
+-- TRACY_NO_INTERNAL_MESSAGE: OFF
+-- TRACY_DEMANGLE: OFF
+-- Configuring done (0.6s)
+-- Generating done (0.1s)
+-- Build files have been written to: /var/folders/4x/jzbfrvb10tq3ff4dwng8nzgm0000gn/T/petari-aurora-upstream-20260907-q3qrkgbx
+[1/5] /opt/homebrew/opt/llvm/bin/clang++  -I/Users/frityet/Projects/petari/aurora/include -g -std=gnu++20 -arch arm64 -fPIC -ffp-contract=off -MD -MT CMakeFiles/aurora_nw4r.dir/lib/nw4r/brlan.cpp.o -MF CMakeFiles/aurora_nw4r.dir/lib/nw4r/brlan.cpp.o.d -o CMakeFiles/aurora_nw4r.dir/lib/nw4r/brlan.cpp.o -c /Users/frityet/Projects/petari/aurora/lib/nw4r/brlan.cpp
+[2/5] : && /opt/homebrew/bin/cmake -E rm -f libaurora_nw4r.a && /usr/bin/ar qc libaurora_nw4r.a  CMakeFiles/aurora_nw4r.dir/lib/nw4r/brlan.cpp.o && /opt/homebrew/opt/llvm/bin/llvm-ranlib libaurora_nw4r.a && /opt/homebrew/bin/cmake -E touch libaurora_nw4r.a && :
+[3/5] /opt/homebrew/opt/llvm/bin/clang++  -I/Users/frityet/Projects/petari/aurora/include -isystem /Users/frityet/Projects/petari/decomp/build/aurora-upstream-merge-tests/_deps/googletest-src/googletest/include -isystem /Users/frityet/Projects/petari/decomp/build/aurora-upstream-merge-tests/_deps/googletest-src/googletest -g -std=gnu++20 -arch arm64 -fPIE -MD -MT tests/CMakeFiles/brlan_tests.dir/brlan_test.cpp.o -MF tests/CMakeFiles/brlan_tests.dir/brlan_test.cpp.o.d -o tests/CMakeFiles/brlan_tests.dir/brlan_test.cpp.o -c /Users/frityet/Projects/petari/aurora/tests/brlan_test.cpp
+[4/5] : && /opt/homebrew/opt/llvm/bin/clang++ -g -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names tests/CMakeFiles/brlan_tests.dir/brlan_test.cpp.o -o tests/brlan_tests  libaurora_nw4r.a  lib/libgtest.a  lib/libgtest_main.a  lib/libgtest.a && :
+ld: warning: ignoring duplicate libraries: 'lib/libgtest.a'
+
+Parsing public/common/TracyVersion.hpp file
+VERSION 0.13.3
+CMake Warning at tests/CMakeLists.txt:151 (message):
+  xvfb-run was not found; gx_z_scale_offset_render will run directly and
+  requires a usable display
+
+

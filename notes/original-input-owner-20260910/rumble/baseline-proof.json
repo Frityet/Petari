@@ -1,0 +1,97 @@
+{
+  "command": [
+    "/Users/frityet/Projects/petari/decomp/build/tools/objdiff-cli",
+    "diff",
+    "-1",
+    "/Users/frityet/Projects/petari/notes/gateway-audit-20260907/restoration/retail/obj/Game/System/WPadRumble.o",
+    "-2",
+    "/Users/frityet/Projects/petari/notes/original-input-owner-20260910/rumble/baseline.o",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-input-owner-20260910/rumble/baseline-diff.json",
+    "--format",
+    "json-pretty"
+  ],
+  "exit": 0,
+  "sections": [
+    {
+      "name": ".text",
+      "size": "1656",
+      "match_percent": 87.028984
+    },
+    {
+      "name": ".data",
+      "size": "16",
+      "match_percent": 100.0
+    },
+    {
+      "name": ".sbss",
+      "size": "8",
+      "match_percent": 100.0
+    }
+  ],
+  "symbols": {
+    "clear__13RumbleChannelFv": {
+      "size": "32",
+      "match_percent": 100.0
+    },
+    "update__13RumbleChannelFv": {
+      "size": "104",
+      "match_percent": 87.11539
+    },
+    "setPattern__13RumbleChannelFPCvRC13RumblePatternUlb": {
+      "size": "28",
+      "match_percent": 100.0
+    },
+    "__ct__10WPadRumbleFP4WPad": {
+      "size": "212",
+      "match_percent": 100.0
+    },
+    "__dt__10WPadRumbleFv": {
+      "size": "148",
+      "match_percent": 100.0
+    },
+    "registInstance__10WPadRumbleFv": {
+      "size": "48",
+      "match_percent": 100.0
+    },
+    "pause__10WPadRumbleFv": {
+      "size": "16",
+      "match_percent": 100.0
+    },
+    "stop__10WPadRumbleFv": {
+      "size": "108",
+      "match_percent": 100.0
+    },
+    "update__10WPadRumbleFv": {
+      "size": "60",
+      "match_percent": 100.0
+    },
+    "updateRumble__10WPadRumbleFv": {
+      "size": "372",
+      "match_percent": 98.655914
+    },
+    "getRumbleInstance__10WPadRumbleCFv": {
+      "size": "24",
+      "match_percent": 100.0
+    },
+    "vibratePatternIfNotExist__10WPadRumbleFPCvPCc": {
+      "size": "80",
+      "match_percent": 100.0
+    },
+    "setRumblePatternIfNotExist__10WPadRumbleFPCvRC13RumblePatternb": {
+      "size": "236",
+      "match_percent": 96.44068
+    },
+    "findRubmlePattern__10WPadRumbleFPCvPlPlPlRC13RumblePattern": {
+      "size": "188"
+    },
+    "__vt__10WPadRumble": {
+      "size": "12",
+      "match_percent": 100.0
+    },
+    "sInstanceForCallback__10WPadRumble": {
+      "size": "4",
+      "match_percent": 100.0
+    }
+  }
+}

@@ -1,0 +1,56 @@
+[
+  {
+    "name": "WPadAcceleration::WPadAcceleration(const WPad*, unsigned long)",
+    "retail_bytes": 200,
+    "baseline_match_percent": 99.6,
+    "recovered_match_percent": 99.6
+  },
+  {
+    "name": "WPadAcceleration::getAcceleration(JGeometry::TVec3<float>*) const",
+    "retail_bytes": 88,
+    "baseline_match_percent": null,
+    "recovered_match_percent": 100.0
+  },
+  {
+    "name": "WPadAcceleration::getPastAcceleration(JGeometry::TVec3<float>*, long) const",
+    "retail_bytes": 100,
+    "baseline_match_percent": 62.4,
+    "recovered_match_percent": 100.0
+  },
+  {
+    "name": "WPadAcceleration::isStationary() const",
+    "retail_bytes": 8,
+    "baseline_match_percent": 100.0,
+    "recovered_match_percent": 100.0
+  },
+  {
+    "name": "WPadAcceleration::isBalanced() const",
+    "retail_bytes": 24,
+    "baseline_match_percent": 99.166664,
+    "recovered_match_percent": 99.166664
+  },
+  {
+    "name": "WPadAcceleration::update()",
+    "retail_bytes": 572,
+    "baseline_match_percent": 82.72028,
+    "recovered_match_percent": 98.25175
+  },
+  {
+    "name": "WPadAcceleration::updateRotate()",
+    "retail_bytes": 504,
+    "baseline_match_percent": null,
+    "recovered_match_percent": 94.89683
+  },
+  {
+    "name": "WPadAcceleration::updateAccAverage()",
+    "retail_bytes": 272,
+    "baseline_match_percent": null,
+    "recovered_match_percent": 99.26471
+  },
+  {
+    "name": "WPadAcceleration::updateIsStable()",
+    "retail_bytes": 148,
+    "baseline_match_percent": 65.675674,
+    "recovered_match_percent": 93.64865
+  }
+]

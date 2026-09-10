@@ -1,0 +1,13 @@
+{
+  "command": [
+    "cmake",
+    "--build",
+    "/var/folders/4x/jzbfrvb10tq3ff4dwng8nzgm0000gn/T/petari-aurora-upstream-20260907-q3qrkgbx",
+    "--target",
+    "brlan_tests",
+    "--parallel",
+    "4",
+    "--verbose"
+  ],
+  "exit": 0
+}

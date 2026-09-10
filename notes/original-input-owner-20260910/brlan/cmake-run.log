@@ -1,0 +1,32 @@
+Running main() from /Users/frityet/Projects/petari/decomp/build/aurora-upstream-merge-tests/_deps/googletest-src/googletest/src/gtest_main.cc
+[==========] Running 10 tests from 2 test suites.
+[----------] Global test environment set-up.
+[----------] 2 tests from BrlanParser
+[ RUN      ] BrlanParser.ParsesARealMinimalBigEndianAnimationBlock
+[       OK ] BrlanParser.ParsesARealMinimalBigEndianAnimationBlock (0 ms)
+[ RUN      ] BrlanParser.RejectsMissingMagicWrongEndianAndTruncatedBlocks
+[       OK ] BrlanParser.RejectsMissingMagicWrongEndianAndTruncatedBlocks (0 ms)
+[----------] 2 tests from BrlanParser (0 ms total)
+
+[----------] 8 tests from BrlanEvaluator
+[ RUN      ] BrlanEvaluator.SamplesGenericPaneCurvesWithoutSequenceKnowledge
+[       OK ] BrlanEvaluator.SamplesGenericPaneCurvesWithoutSequenceKnowledge (0 ms)
+[ RUN      ] BrlanEvaluator.SamplesGenericTextureAndMaterialTargets
+[       OK ] BrlanEvaluator.SamplesGenericTextureAndMaterialTargets (0 ms)
+[ RUN      ] BrlanEvaluator.StepCurveUsesStrictRightKeyFrameTolerance
+[       OK ] BrlanEvaluator.StepCurveUsesStrictRightKeyFrameTolerance (0 ms)
+[ RUN      ] BrlanEvaluator.StepCurveKeepsOriginalDuplicateKeySearch
+[       OK ] BrlanEvaluator.StepCurveKeepsOriginalDuplicateKeySearch (0 ms)
+[ RUN      ] BrlanEvaluator.HermiteCurveUsesStrictRightKeyFrameTolerance
+[       OK ] BrlanEvaluator.HermiteCurveUsesStrictRightKeyFrameTolerance (0 ms)
+[ RUN      ] BrlanEvaluator.HermiteCurveSelectsOnlyTheImmediatelyFollowingDuplicate
+[       OK ] BrlanEvaluator.HermiteCurveSelectsOnlyTheImmediatelyFollowingDuplicate (0 ms)
+[ RUN      ] BrlanEvaluator.CurvesClampEndpointsBeforeDuplicateAndToleranceHandling
+[       OK ] BrlanEvaluator.CurvesClampEndpointsBeforeDuplicateAndToleranceHandling (0 ms)
+[ RUN      ] BrlanEvaluator.HermiteCurvePreservesOriginalArithmeticAndSlopesAcrossPublicChannels
+[       OK ] BrlanEvaluator.HermiteCurvePreservesOriginalArithmeticAndSlopesAcrossPublicChannels (0 ms)
+[----------] 8 tests from BrlanEvaluator (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 10 tests from 2 test suites ran. (0 ms total)
+[  PASSED  ] 10 tests.

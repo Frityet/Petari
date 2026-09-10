@@ -2,64 +2,76 @@
 #include "compat/JkrAllocationDomain.hpp"
 #include "Game/System/WPad.hpp"
 #include "Game/System/WPadHolder.hpp"
-#include "Game/System/WPadPointer.hpp"
-#include "Game/System/WPadAcceleration.hpp"
-#include "Game/System/WPadButton.hpp"
-#include "Game/System/WPadHVSwing.hpp"
 #include "Game/System/WPadRumble.hpp"
-#include "Game/System/WPadStick.hpp"
-#include "Game/System/WPadLeaveWatcher.hpp"
-#include "Game/System/WPadInfoChecker.hpp"
+#include "JSystem/JKernel/JKRHeap.hpp"
 #include <aurora/exception.hpp>
 #include <aurora/wpad.hpp>
-#include <array>
 #include <stdexcept>
 
 namespace smgpc::compat {
 void destroy_wpad_children(WPad&) noexcept;
 namespace {
 thread_local WPadOwnership* current_wpad_owner = nullptr;
+
+// Explicit instantiation supplies native lifetime access without changing the
+// original private Game declaration or depending on a Wii object layout.
+struct RumbleCallbackTable {
+    using type = WPadRumble***;
+    friend type input_static(RumbleCallbackTable);
+};
+template <typename Tag, typename Tag::type Member> struct InputStaticAccess {
+    friend typename Tag::type input_static(Tag) { return Member; }
+};
+template struct InputStaticAccess<RumbleCallbackTable, &WPadRumble::sInstanceForCallback>;
+
+WPadRumble** rumble_callbacks() { return *input_static(RumbleCallbackTable{}); }
+
+void initialize_input_statics() {
+    // The original constructor lazily allocates a process-wide callback table.
+    // Run it once on the host heap so no scene owns that table's storage. All
+    // scene input objects below still use their retained original JKR heap.
+    static const bool initialized = [] {
+        JkrHostAllocationScope host;
+        WPad pad(0);
+        destroy_wpad_children(pad);
+        return true;
+    }();
+    (void)initialized;
+}
 }
 
 struct WPadOwnership::State {
     explicit State(std::shared_ptr<JkrAllocationDomain> allocation_domain) : domain(std::move(allocation_domain)) {
         JkrAllocationScope game(domain);
-        try {
-            for (s32 channel = 0; channel < 2; ++channel) {
-                records[channel] = new WPadReadDataInfo;
-                pads[channel] = new WPad(channel);
-                pads[channel]->setReadInfo(records[channel]);
-            }
-        } catch (...) {
-            release();
-            throw;
-        }
+        holder = new WPadHolder;
     }
-    ~State() { release(); }
-    void release() noexcept {
-        for (auto* pad : pads) {
-            if (!pad) continue;
+    ~State() {
+        JkrAllocationScope game(domain);
+        for (auto* pad : holder->mPad) {
             destroy_wpad_children(*pad);
             delete pad;
         }
-        for (auto* record : records) {
-            if (!record) continue;
-            delete[] record->mStatusArray;
-            delete record;
-        }
+        for (s32 channel = 0; channel < WPAD_MAX_CONTROLLERS; ++channel)
+            delete[] holder->mReadDataInfoArray[channel].mStatusArray;
+        delete[] holder->mReadDataInfoArray;
+        delete holder;
     }
+    aurora::WpadClientScope callbacks;
     std::shared_ptr<JkrAllocationDomain> domain;
-    std::array<WPad*, 2> pads{};
-    std::array<WPadReadDataInfo*, 2> records{};
+    WPadHolder* holder = nullptr;
 };
 
 WPadOwnership::WPadOwnership(std::shared_ptr<JkrAllocationDomain> domain) {
     JkrHostAllocationScope host;
+    initialize_input_statics();
     _previous = current_wpad_owner;
+    for (std::size_t channel = 0; channel < _previous_rumble.size(); ++channel)
+        _previous_rumble[channel] = rumble_callbacks()[channel];
     try {
         _state = std::make_unique<State>(std::move(domain));
     } catch (...) {
-        if (_previous) for (auto* pad : _previous->_state->pads) pad->_18->registInstance();
+        for (std::size_t channel = 0; channel < _previous_rumble.size(); ++channel)
+            rumble_callbacks()[channel] = _previous_rumble[channel];
         throw;
     }
     current_wpad_owner = this;
@@ -67,36 +79,42 @@ WPadOwnership::WPadOwnership(std::shared_ptr<JkrAllocationDomain> domain) {
 WPadOwnership::~WPadOwnership() {
     _state.reset();
     current_wpad_owner = _previous;
-    if (_previous) for (auto* pad : _previous->_state->pads) pad->_18->registInstance();
+    for (std::size_t channel = 0; channel < _previous_rumble.size(); ++channel) {
+        rumble_callbacks()[channel] = _previous_rumble[channel];
+        if (_previous_rumble[channel]) _previous_rumble[channel]->registInstance();
+    }
 }
 void WPadOwnership::update_samples() {
     JkrAllocationScope game(_state->domain);
-    for (s32 channel = 0; channel < 2; ++channel) {
-        auto& pad = *_state->pads[channel];
-        auto& record = *_state->records[channel];
-        record.mValidStatusCount = KPADRead(channel, record.mStatusArray, 120);
-        pad.mIsConnected = aurora::wpad_service().is_connected(channel);
-        pad.mIsSubPadConnected = MR::isDeviceFreeStyle(pad.getKPadStatus(0));
-        pad.mButton->update();
-        pad.mPointer->update();
-        pad.mStick->update();
-    }
+    aurora::wpad_service().dispatch_callbacks();
+    _state->holder->update();
 }
 WPad& WPadOwnership::pad(int channel) {
-    if (channel < 0 || channel >= 2)
+    auto* pad = holder().getWPad(channel);
+    if (!pad)
         aurora::throw_host_exception<std::out_of_range>("WPad channel is outside the original two Game slots.");
-    return *_state->pads[channel];
+    return *pad;
+}
+WPadHolder& WPadOwnership::holder() { return *_state->holder; }
+JKRHeap& WPadOwnership::heap() { return _state->domain->heap(); }
+WPadHolder& require_wpad_holder() {
+    if (!current_wpad_owner)
+        aurora::throw_host_exception<std::logic_error>("Original WPad records require an active input owner.");
+    return current_wpad_owner->holder();
+}
+JKRHeap& require_wpad_heap() {
+    if (!current_wpad_owner)
+        aurora::throw_host_exception<std::logic_error>("WPad SDK allocation requires an active input owner.");
+    return current_wpad_owner->heap();
 }
 } // namespace smgpc::compat
 
 namespace MR {
-bool isDeviceFreeStyle(const KPADStatus* pStatus) {
-    return pStatus != nullptr && pStatus->wpad_err == WPAD_ERR_NONE && pStatus->dev_type == WPAD_DEV_FREESTYLE;
+void* allocFromWPadHeap(u32 size) {
+    return smgpc::compat::require_wpad_heap().alloc(size, 0);
 }
-
-WPad* getWPad(s32 channel) {
-    if (!smgpc::compat::current_wpad_owner)
-        aurora::throw_host_exception<std::logic_error>("Original WPad records require an active input owner.");
-    return &smgpc::compat::current_wpad_owner->pad(channel);
+u8 freeFromWPadHeap(void* allocation) {
+    smgpc::compat::require_wpad_heap().free(allocation);
+    return 1;
 }
-} // namespace MR
+}

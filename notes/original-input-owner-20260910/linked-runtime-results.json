@@ -1,0 +1,21 @@
+[
+  {
+    "command": [
+      "build/macosx/arm64/debug/smg-pc-original-wpad-acceleration-tests"
+    ],
+    "exit": 1
+  },
+  {
+    "command": [
+      "build/macosx/arm64/debug/smg-pc-original-wpad-gesture-tests"
+    ],
+    "exit": 1
+  },
+  {
+    "command": [
+      "build/macosx/arm64/debug/smg-pc-mario-gateway-walk-tests",
+      "--player-util"
+    ],
+    "exit": 0
+  }
+]

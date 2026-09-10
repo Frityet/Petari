@@ -1,0 +1,57 @@
+[
+  {
+    "original": "gamepad/objdiff-before.json",
+    "archive": "gamepad/objdiff-before.json.gz",
+    "sha256": "b9fe9cec2ae817a09dfa33d2d44bc4ee9080908cbcadba1b9990123e530ab796"
+  },
+  {
+    "original": "gamepad/objdiff-matrix-set.json",
+    "archive": "gamepad/objdiff-matrix-set.json.gz",
+    "sha256": "deb711cb917f4242cb476331372aa484ec848a9ff2fef27d110e66c8dcfa32d1"
+  },
+  {
+    "original": "gamepad/objdiff-recovered.json",
+    "archive": "gamepad/objdiff-recovered.json.gz",
+    "sha256": "5198857ba5795ab71cf864939e1e74616be45e33a4cd24786c47e9520e7c23ef"
+  },
+  {
+    "original": "hv-swing/objdiff-recovered.json",
+    "archive": "hv-swing/objdiff-recovered.json.gz",
+    "sha256": "b5093bd0ea1d4e2140a16fbf51104f4cf088f4eb8917149335cb67d573fd9038"
+  },
+  {
+    "original": "root-build-3.log",
+    "archive": "root-build-3.log.gz",
+    "sha256": "71e6f471842b19d060881243623091d0ea2f0bf622c8e240e766f78d740a9229"
+  },
+  {
+    "original": "root-build.log",
+    "archive": "root-build.log.gz",
+    "sha256": "f559d9164734aa19d09b84fa24f0f84c65d379057bab5083f4589f37cd557030"
+  },
+  {
+    "original": "rumble/baseline-diff.json",
+    "archive": "rumble/baseline-diff.json.gz",
+    "sha256": "1c1212987010c4d3db70167e414a0de6031abdac4d204b76995ea755d89c559c"
+  },
+  {
+    "original": "rumble/recovered-diff.json",
+    "archive": "rumble/recovered-diff.json.gz",
+    "sha256": "91c302fb301dcafc949447d6042b919209a2a1f2e6948fccc998661cfebbf0d7"
+  },
+  {
+    "original": "wpad/SpkSpeakerCtrl-objdiff.json",
+    "archive": "wpad/SpkSpeakerCtrl-objdiff.json.gz",
+    "sha256": "1e1b2f56e5f3678d0bb32ac9ff90fad9af07af9e6ffa810b699f94ee873402b2"
+  },
+  {
+    "original": "wpad/baseline-objdiff.json",
+    "archive": "wpad/baseline-objdiff.json.gz",
+    "sha256": "be74b64a3c60baf219c9ad12113dec046fb710f43ed1e38a9d7a110c474ddd02"
+  },
+  {
+    "original": "wpad/recovered-objdiff.json",
+    "archive": "wpad/recovered-objdiff.json.gz",
+    "sha256": "ed6a63178f064c780e78552d450ea84ab15a245d4aa742d0c14d93e59222533c"
+  }
+]

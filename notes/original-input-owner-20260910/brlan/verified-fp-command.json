@@ -1,0 +1,3 @@
+[
+  "[1/5] /opt/homebrew/opt/llvm/bin/clang++  -I/Users/frityet/Projects/petari/aurora/include -g -std=gnu++20 -arch arm64 -fPIC -ffp-contract=off -MD -MT CMakeFiles/aurora_nw4r.dir/lib/nw4r/brlan.cpp.o -MF CMakeFiles/aurora_nw4r.dir/lib/nw4r/brlan.cpp.o.d -o CMakeFiles/aurora_nw4r.dir/lib/nw4r/brlan.cpp.o -c /Users/frityet/Projects/petari/aurora/lib/nw4r/brlan.cpp"
+]

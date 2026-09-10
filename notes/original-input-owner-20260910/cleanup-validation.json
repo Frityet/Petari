@@ -1,0 +1,31 @@
+[
+  {
+    "target": "smg-pc-original-wpad-ownership-tests",
+    "build_exit": 0,
+    "runtime_exit": 0
+  },
+  {
+    "target": "smg-pc-original-pointer-input-tests",
+    "build_exit": 0,
+    "runtime_exit": 0
+  },
+  {
+    "target": "smg-pc-original-wpad-acceleration-tests",
+    "build_exit": 0,
+    "runtime_exit": 0
+  },
+  {
+    "target": "smg-pc-original-wpad-gesture-tests",
+    "build_exit": 0,
+    "runtime_exit": 0
+  },
+  {
+    "target": "smg-pc-mario-gateway-walk-tests",
+    "build_exit": 0,
+    "runtime_exit": 0
+  },
+  {
+    "target": "smg-pc-showcase",
+    "build_exit": 0
+  }
+]

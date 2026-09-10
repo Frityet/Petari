@@ -1,0 +1,10 @@
+{
+  "decomp/src/Game/System/WPadAcceleration.cpp": "447ff70ec3db05a8342a09f00fc3aa10ec44746acd94251cc28974eb12a0494e",
+  "decomp/include/Game/System/WPadAcceleration.hpp": "d79ad722038ced758405206c9e80d2c0a216ce2d7146ebab7ccf250ba868c9e2",
+  "src/Game/System/WPadAcceleration.cpp": "447ff70ec3db05a8342a09f00fc3aa10ec44746acd94251cc28974eb12a0494e",
+  "src/Game/System/WPadAcceleration.hpp": "d79ad722038ced758405206c9e80d2c0a216ce2d7146ebab7ccf250ba868c9e2",
+  "tests/OriginalWPadAccelerationTests.cpp": "c073fb0f95676c496eb9b4007227eddd1e5341d5a432e66db178afd60e9d441e",
+  "notes/gateway-audit-20260907/restoration/retail/asm/Game/System/WPadAcceleration.s": "7da21fe87eae03f8c767656294fcb189efa59b996642661aad8a19faf371708f",
+  "notes/gateway-audit-20260907/restoration/retail/obj/Game/System/WPadAcceleration.o": "c6301c6bf32f1e38b9a9b37db069a7fa750f082c28baf32652179e506f3f3311",
+  "decomp/AGENT_DECOMP_GUIDE.md": "2c28c000015b9fb724cc0fdd1ffca2ac929386cf12f05a917b66a226b8a21c34"
+}

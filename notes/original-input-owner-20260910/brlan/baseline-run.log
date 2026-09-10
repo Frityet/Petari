@@ -1,0 +1,93 @@
+Running main() from /Users/frityet/Projects/petari/dolphin/Externals/gtest/googletest/src/gtest_main.cc
+[==========] Running 10 tests from 2 test suites.
+[----------] Global test environment set-up.
+[----------] 2 tests from BrlanParser
+[ RUN      ] BrlanParser.ParsesARealMinimalBigEndianAnimationBlock
+[       OK ] BrlanParser.ParsesARealMinimalBigEndianAnimationBlock (0 ms)
+[ RUN      ] BrlanParser.RejectsMissingMagicWrongEndianAndTruncatedBlocks
+[       OK ] BrlanParser.RejectsMissingMagicWrongEndianAndTruncatedBlocks (0 ms)
+[----------] 2 tests from BrlanParser (0 ms total)
+
+[----------] 8 tests from BrlanEvaluator
+[ RUN      ] BrlanEvaluator.SamplesGenericPaneCurvesWithoutSequenceKnowledge
+[       OK ] BrlanEvaluator.SamplesGenericPaneCurvesWithoutSequenceKnowledge (0 ms)
+[ RUN      ] BrlanEvaluator.SamplesGenericTextureAndMaterialTargets
+[       OK ] BrlanEvaluator.SamplesGenericTextureAndMaterialTargets (0 ms)
+[ RUN      ] BrlanEvaluator.StepCurveUsesStrictRightKeyFrameTolerance
+aurora/tests/brlan_test.cpp:214: Failure
+Value of: animation.pane_frame("Pane", inside).visible.value()
+  Actual: false
+Expected: true
+
+aurora/tests/brlan_test.cpp:217: Failure
+Value of: animation.pane_frame("Pane", 0.9995F).visible.value()
+  Actual: true
+Expected: false
+
+[  FAILED  ] BrlanEvaluator.StepCurveUsesStrictRightKeyFrameTolerance (0 ms)
+[ RUN      ] BrlanEvaluator.StepCurveKeepsOriginalDuplicateKeySearch
+aurora/tests/brlan_test.cpp:227: Failure
+Expected equality of these values:
+  animation.pane_frame("Pane", 9.9995F).translate_x.value()
+    Which is: 1
+  2.0F
+    Which is: 2
+
+[  FAILED  ] BrlanEvaluator.StepCurveKeepsOriginalDuplicateKeySearch (0 ms)
+[ RUN      ] BrlanEvaluator.HermiteCurveUsesStrictRightKeyFrameTolerance
+aurora/tests/brlan_test.cpp:242: Failure
+Expected equality of these values:
+  animation.pane_frame("Pane", inside).translate_x.value()
+    Which is: 9.99000072
+  10.0F
+    Which is: 10
+
+[  FAILED  ] BrlanEvaluator.HermiteCurveUsesStrictRightKeyFrameTolerance (0 ms)
+[ RUN      ] BrlanEvaluator.HermiteCurveSelectsOnlyTheImmediatelyFollowingDuplicate
+aurora/tests/brlan_test.cpp:254: Failure
+Expected equality of these values:
+  animation.pane_frame("Pane", 9.9995F).translate_x.value()
+    Which is: 10
+  20.0F
+    Which is: 20
+
+aurora/tests/brlan_test.cpp:255: Failure
+Expected equality of these values:
+  animation.pane_frame("Pane", 10.0F).translate_x.value()
+    Which is: 30
+  20.0F
+    Which is: 20
+
+[  FAILED  ] BrlanEvaluator.HermiteCurveSelectsOnlyTheImmediatelyFollowingDuplicate (0 ms)
+[ RUN      ] BrlanEvaluator.CurvesClampEndpointsBeforeDuplicateAndToleranceHandling
+aurora/tests/brlan_test.cpp:270: Failure
+Expected equality of these values:
+  state.translate_x.value()
+    Which is: 2
+  1.0F
+    Which is: 1
+
+[  FAILED  ] BrlanEvaluator.CurvesClampEndpointsBeforeDuplicateAndToleranceHandling (0 ms)
+[ RUN      ] BrlanEvaluator.HermiteCurvePreservesOriginalArithmeticAndSlopesAcrossPublicChannels
+aurora/tests/brlan_test.cpp:293: Failure
+Expected equality of these values:
+  std::bit_cast<std::uint32_t>(value)
+    Which is: 1092616191
+  0x411FFFFEU
+    Which is: 1092616190
+
+[  FAILED  ] BrlanEvaluator.HermiteCurvePreservesOriginalArithmeticAndSlopesAcrossPublicChannels (0 ms)
+[----------] 8 tests from BrlanEvaluator (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 10 tests from 2 test suites ran. (0 ms total)
+[  PASSED  ] 4 tests.
+[  FAILED  ] 6 tests, listed below:
+[  FAILED  ] BrlanEvaluator.StepCurveUsesStrictRightKeyFrameTolerance
+[  FAILED  ] BrlanEvaluator.StepCurveKeepsOriginalDuplicateKeySearch
+[  FAILED  ] BrlanEvaluator.HermiteCurveUsesStrictRightKeyFrameTolerance
+[  FAILED  ] BrlanEvaluator.HermiteCurveSelectsOnlyTheImmediatelyFollowingDuplicate
+[  FAILED  ] BrlanEvaluator.CurvesClampEndpointsBeforeDuplicateAndToleranceHandling
+[  FAILED  ] BrlanEvaluator.HermiteCurvePreservesOriginalArithmeticAndSlopesAcrossPublicChannels
+
+ 6 FAILED TESTS

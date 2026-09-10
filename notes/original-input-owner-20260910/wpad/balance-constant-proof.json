@@ -1,0 +1,10 @@
+{
+  "constant": "isBalanced threshold",
+  "retail_address": "806C1494",
+  "retail_symbol": "@56241",
+  "candidate_symbol": "@3055",
+  "retail_hex": "3c9374bc",
+  "candidate_hex": "3c9374bc",
+  "equal": true,
+  "f32_value": 0.017999999225139618
+}

@@ -1,0 +1,7 @@
+{
+  "aurora/include/aurora/wpad_motion.hpp": "219edd80a78f15fc973873ea9c7fe7587536d1d31fc3f12856cedff5d64de55f",
+  "src/runtime/RuntimeContext.cpp": "8406bb9b5744b1e1252601187514a8830fad0a386a59017db59d248def4e76a5",
+  "src/runtime/RuntimeContext.hpp": "28b49b350d832d9ed12af7ace44ca2d000cd879c20114191892bba1266be4b5a",
+  "tests/OriginalWPadGestureTests.cpp": "9c69f82c1547aec1807c5fcb3dfea57182c61935470b91fab1ec758d30c5d429",
+  "tests/MarioGatewayWalkTests.cpp": "c784d2281c9e51c7da32d9e222952e99bd15ada10a15575498f29fa8f0254365"
+}

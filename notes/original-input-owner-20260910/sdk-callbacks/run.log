@@ -1,0 +1,77 @@
+Running main() from /Users/frityet/Projects/petari/dolphin/Externals/gtest/googletest/src/gtest_main.cc
+[==========] Running 31 tests from 3 test suites.
+[----------] Global test environment set-up.
+[----------] 16 tests from WpadProbeTest
+[ RUN      ] WpadProbeTest.DisconnectedChannelsReturnNoControllerAndNotFoundType
+[       OK ] WpadProbeTest.DisconnectedChannelsReturnNoControllerAndNotFoundType (0 ms)
+[ RUN      ] WpadProbeTest.ConnectedChannelsReturnZeroAndCoreType
+[       OK ] WpadProbeTest.ConnectedChannelsReturnZeroAndCoreType (0 ms)
+[ RUN      ] WpadProbeTest.DisconnectAndNativeInputReconnectionUpdateResult
+[       OK ] WpadProbeTest.DisconnectAndNativeInputReconnectionUpdateResult (0 ms)
+[ RUN      ] WpadProbeTest.ProbeDoesNotConsumeButtonsPointerOrStick
+[       OK ] WpadProbeTest.ProbeDoesNotConsumeButtonsPointerOrStick (0 ms)
+[ RUN      ] WpadProbeTest.InvalidNativeChannelsCannotAliasConnectedPorts
+[       OK ] WpadProbeTest.InvalidNativeChannelsCannotAliasConnectedPorts (0 ms)
+[ RUN      ] WpadProbeTest.CoreCapabilityDoesNotImplicitlyAcquireAnExtension
+[       OK ] WpadProbeTest.CoreCapabilityDoesNotImplicitlyAcquireAnExtension (0 ms)
+[ RUN      ] WpadProbeTest.CapabilitySelectionIsPerChannelAndDoesNotConnect
+[       OK ] WpadProbeTest.CapabilitySelectionIsPerChannelAndDoesNotConnect (0 ms)
+[ RUN      ] WpadProbeTest.FreestylePublishesSignedDiagonalAndNeutralStickSamples
+[       OK ] WpadProbeTest.FreestylePublishesSignedDiagonalAndNeutralStickSamples (0 ms)
+[ RUN      ] WpadProbeTest.CoreAndFreestyleAccelerationsHaveIndependentMagnitudesAndFrameDeltas
+[       OK ] WpadProbeTest.CoreAndFreestyleAccelerationsHaveIndependentMagnitudesAndFrameDeltas (0 ms)
+[ RUN      ] WpadProbeTest.ExtensionPublicationPreservesPointerAndButtonTransitions
+[       OK ] WpadProbeTest.ExtensionPublicationPreservesPointerAndButtonTransitions (0 ms)
+[ RUN      ] WpadProbeTest.RemovingExtensionImmediatelyChangesProbeAndSampleMetadata
+[       OK ] WpadProbeTest.RemovingExtensionImmediatelyChangesProbeAndSampleMetadata (0 ms)
+[ RUN      ] WpadProbeTest.CoreFiltersExtensionButtonEdgesWithoutChangingNativeState
+[       OK ] WpadProbeTest.CoreFiltersExtensionButtonEdgesWithoutChangingNativeState (0 ms)
+[ RUN      ] WpadProbeTest.ExtensionOnlyRepeatCannotAppearOnCore
+[       OK ] WpadProbeTest.ExtensionOnlyRepeatCannotAppearOnCore (0 ms)
+[ RUN      ] WpadProbeTest.DisconnectRetainsConfigurationButCannotRepublishStaleSamples
+[       OK ] WpadProbeTest.DisconnectRetainsConfigurationButCannotRepublishStaleSamples (0 ms)
+[ RUN      ] WpadProbeTest.BoundedReadsDoNotOverwriteFollowingRecords
+[       OK ] WpadProbeTest.BoundedReadsDoNotOverwriteFollowingRecords (0 ms)
+[ RUN      ] WpadProbeTest.SensorBarAndAutoSleepConfigurationRemainExplicitAcrossSamplingReset
+[       OK ] WpadProbeTest.SensorBarAndAutoSleepConfigurationRemainExplicitAcrossSamplingReset (0 ms)
+[----------] 16 tests from WpadProbeTest (0 ms total)
+
+[----------] 3 tests from WpadService
+[ RUN      ] WpadService.SubStickUsesRetailDirectionalThreshold
+[       OK ] WpadService.SubStickUsesRetailDirectionalThreshold (0 ms)
+[ RUN      ] WpadService.SubStickTriggerAndReleaseArePreviousFrameEdges
+[       OK ] WpadService.SubStickTriggerAndReleaseArePreviousFrameEdges (0 ms)
+[ RUN      ] WpadService.DisconnectionClearsSubStickAndDirectionalEdges
+[       OK ] WpadService.DisconnectionClearsSubStickAndDirectionalEdges (0 ms)
+[----------] 3 tests from WpadService (0 ms total)
+
+[----------] 12 tests from WpadCallbackTest
+[ RUN      ] WpadCallbackTest.ConnectionAndExtensionCallbacksObservePublishedInputAndOnlyTransitions
+[       OK ] WpadCallbackTest.ConnectionAndExtensionCallbacksObservePublishedInputAndOnlyTransitions (0 ms)
+[ RUN      ] WpadCallbackTest.ConnectCallbackCanDisconnectBeforeExtensionPublication
+[       OK ] WpadCallbackTest.ConnectCallbackCanDisconnectBeforeExtensionPublication (0 ms)
+[ RUN      ] WpadCallbackTest.InfoRequestsAreDeferredAndBoundedWithImmediateBusyRejection
+[       OK ] WpadCallbackTest.InfoRequestsAreDeferredAndBoundedWithImmediateBusyRejection (0 ms)
+[ RUN      ] WpadCallbackTest.InfoRequestsRemainIndependentAndDisconnectDoesNotWriteDestination
+[       OK ] WpadCallbackTest.InfoRequestsRemainIndependentAndDisconnectDoesNotWriteDestination (0 ms)
+[ RUN      ] WpadCallbackTest.InfoCompletionCanQueueTheNextRequestForALaterDispatch
+[       OK ] WpadCallbackTest.InfoCompletionCanQueueTheNextRequestForALaterDispatch (0 ms)
+[ RUN      ] WpadCallbackTest.ScopedClientSuspendsPendingWritesAndRestoresCallbacksWithoutRetiredDestinations
+[       OK ] WpadCallbackTest.ScopedClientSuspendsPendingWritesAndRestoresCallbacksWithoutRetiredDestinations (0 ms)
+[ RUN      ] WpadCallbackTest.CallbackClientRetirementCannotWriteThroughRetiredRequests
+[       OK ] WpadCallbackTest.CallbackClientRetirementCannotWriteThroughRetiredRequests (0 ms)
+[ RUN      ] WpadCallbackTest.TemporaryClientInsideCallbackDefersRestoredRequestToNextDispatch
+[       OK ] WpadCallbackTest.TemporaryClientInsideCallbackDefersRestoredRequestToNextDispatch (0 ms)
+[ RUN      ] WpadCallbackTest.InvalidRequestsReturnErrorsWithoutAliasingAnActiveChannel
+[       OK ] WpadCallbackTest.InvalidRequestsReturnErrorsWithoutAliasingAnActiveChannel (0 ms)
+[ RUN      ] WpadCallbackTest.SpeakerCapabilityErrorsCompleteSynchronouslyAndDisableSucceeds
+[       OK ] WpadCallbackTest.SpeakerCapabilityErrorsCompleteSynchronouslyAndDisableSucceeds (0 ms)
+[ RUN      ] WpadCallbackTest.SamplingResetPreservesDeviceConfigurationAndPendingClientCallbacks
+[       OK ] WpadCallbackTest.SamplingResetPreservesDeviceConfigurationAndPendingClientCallbacks (0 ms)
+[ RUN      ] WpadCallbackTest.SamplingInitializationRestoresParametersWithoutDisconnectingClient
+[       OK ] WpadCallbackTest.SamplingInitializationRestoresParametersWithoutDisconnectingClient (0 ms)
+[----------] 12 tests from WpadCallbackTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 31 tests from 3 test suites ran. (0 ms total)
+[  PASSED  ] 31 tests.

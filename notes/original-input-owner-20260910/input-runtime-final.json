@@ -1,0 +1,14 @@
+[
+  {
+    "target": "smg-pc-original-wpad-ownership-tests",
+    "exit": 0
+  },
+  {
+    "target": "smg-pc-original-wpad-acceleration-tests",
+    "exit": 0
+  },
+  {
+    "target": "smg-pc-original-wpad-gesture-tests",
+    "exit": 0
+  }
+]

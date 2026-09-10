@@ -1,0 +1,144 @@
+In file included from aurora/tests/wpad_test.cpp:1:
+In file included from aurora/include/aurora/wpad.hpp:3:
+In file included from aurora/include/revolution.h:5:
+aurora/include/dolphin/dvd.h:117:5: error: unknown type name 'BOOL'
+  117 |     BOOL isDir;
+      |     ^
+aurora/include/dolphin/dvd.h:169:1: error: unknown type name 'BOOL'
+  169 | BOOL DVDSetAutoInvalidation(BOOL autoInval);
+      | ^
+aurora/include/dolphin/dvd.h:169:29: error: unknown type name 'BOOL'
+  169 | BOOL DVDSetAutoInvalidation(BOOL autoInval);
+      |                             ^
+aurora/include/dolphin/dvd.h:177:1: error: unknown type name 'BOOL'
+  177 | BOOL DVDCheckDisk(void);
+      | ^
+aurora/include/dolphin/dvd.h:180:30: error: unknown type name 'BOOL'
+  180 | int DVDSetAutoFatalMessaging(BOOL enable);
+      |                              ^
+aurora/include/dolphin/dvd.h:184:1: error: unknown type name 'BOOL'
+  184 | BOOL DVDConvertEntrynumToPath(s32 entrynum, char* path, u32 maxlen);
+      | ^
+aurora/include/dolphin/dvd.h:185:1: error: unknown type name 'BOOL'
+  185 | BOOL DVDFastOpen(s32 entrynum, DVDFileInfo* fileInfo);
+      | ^
+aurora/include/dolphin/dvd.h:186:1: error: unknown type name 'BOOL'
+  186 | BOOL DVDOpen(const char* fileName, DVDFileInfo* fileInfo);
+      | ^
+aurora/include/dolphin/dvd.h:187:1: error: unknown type name 'BOOL'
+  187 | BOOL DVDClose(DVDFileInfo* fileInfo);
+      | ^
+aurora/include/dolphin/dvd.h:188:1: error: unknown type name 'BOOL'
+  188 | BOOL DVDGetCurrentDir(char* path, u32 maxlen);
+      | ^
+aurora/include/dolphin/dvd.h:189:1: error: unknown type name 'BOOL'
+  189 | BOOL DVDChangeDir(const char* dirName);
+      | ^
+aurora/include/dolphin/dvd.h:190:1: error: unknown type name 'BOOL'
+  190 | BOOL DVDReadAsyncPrio(DVDFileInfo* fileInfo, void* addr, s32 length, s32 offset,
+      | ^
+aurora/include/dolphin/dvd.h:196:1: error: unknown type name 'BOOL'
+  196 | BOOL DVDFastOpenDir(s32 entrynum, DVDDir* dir);
+      | ^
+aurora/include/dolphin/dvd.h:203:1: error: unknown type name 'BOOL'
+  203 | BOOL DVDPrepareStreamAsync(DVDFileInfo* fileInfo, u32 length, u32 offset, DVDCallback callback);
+      | ^
+aurora/include/dolphin/dvd.h:215:1: error: unknown type name 'BOOL'
+  215 | BOOL DVDLowRead(void* addr, u32 length, u32 offset, DVDLowCallback callback);
+      | ^
+aurora/include/dolphin/dvd.h:216:1: error: unknown type name 'BOOL'
+  216 | BOOL DVDLowSeek(u32 offset, DVDLowCallback callback);
+      | ^
+aurora/include/dolphin/dvd.h:217:1: error: unknown type name 'BOOL'
+  217 | BOOL DVDLowWaitCoverClose(DVDLowCallback callback);
+      | ^
+aurora/include/dolphin/dvd.h:218:1: error: unknown type name 'BOOL'
+  218 | BOOL DVDLowReadDiskID(DVDDiskID* diskID, DVDLowCallback callback);
+      | ^
+aurora/include/dolphin/dvd.h:219:1: error: unknown type name 'BOOL'
+  219 | BOOL DVDLowStopMotor(DVDLowCallback callback);
+      | ^
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+20 errors generated.
+In file included from aurora/tests/wpad_test_stubs.cpp:1:
+aurora/include/dolphin/pad.h:114:3: error: unknown type name 'int32_t'
+  114 |   int32_t nativeAxis;
+      |   ^
+aurora/include/dolphin/pad.h:120:1: error: unknown type name 'BOOL'
+  120 | BOOL PADInit();
+      | ^
+aurora/include/dolphin/pad.h:122:1: error: unknown type name 'BOOL'
+  122 | BOOL PADReset(u32 mask);
+      | ^
+aurora/include/dolphin/pad.h:123:1: error: unknown type name 'BOOL'
+  123 | BOOL PADRecalibrate(u32 mask);
+      | ^
+aurora/tests/wpad_test_stubs.cpp:5:12: error: unknown type name 'BOOL'
+    5 | extern "C" BOOL PADSupportsRumble(u32) { return FALSE; }
+      |            ^
+aurora/tests/wpad_test_stubs.cpp:5:49: error: use of undeclared identifier 'FALSE'
+    5 | extern "C" BOOL PADSupportsRumble(u32) { return FALSE; }
+      |                                                 ^~~~~
+6 errors generated.
+In file included from aurora/lib/wpad.cpp:1:
+In file included from aurora/include/aurora/wpad.hpp:3:
+In file included from aurora/include/revolution.h:5:
+aurora/include/dolphin/dvd.h:117:5: error: unknown type name 'BOOL'
+  117 |     BOOL isDir;
+      |     ^
+aurora/include/dolphin/dvd.h:169:1: error: unknown type name 'BOOL'
+  169 | BOOL DVDSetAutoInvalidation(BOOL autoInval);
+      | ^
+aurora/include/dolphin/dvd.h:169:29: error: unknown type name 'BOOL'
+  169 | BOOL DVDSetAutoInvalidation(BOOL autoInval);
+      |                             ^
+aurora/include/dolphin/dvd.h:177:1: error: unknown type name 'BOOL'
+  177 | BOOL DVDCheckDisk(void);
+      | ^
+aurora/include/dolphin/dvd.h:180:30: error: unknown type name 'BOOL'
+  180 | int DVDSetAutoFatalMessaging(BOOL enable);
+      |                              ^
+aurora/include/dolphin/dvd.h:184:1: error: unknown type name 'BOOL'
+  184 | BOOL DVDConvertEntrynumToPath(s32 entrynum, char* path, u32 maxlen);
+      | ^
+aurora/include/dolphin/dvd.h:185:1: error: unknown type name 'BOOL'
+  185 | BOOL DVDFastOpen(s32 entrynum, DVDFileInfo* fileInfo);
+      | ^
+aurora/include/dolphin/dvd.h:186:1: error: unknown type name 'BOOL'
+  186 | BOOL DVDOpen(const char* fileName, DVDFileInfo* fileInfo);
+      | ^
+aurora/include/dolphin/dvd.h:187:1: error: unknown type name 'BOOL'
+  187 | BOOL DVDClose(DVDFileInfo* fileInfo);
+      | ^
+aurora/include/dolphin/dvd.h:188:1: error: unknown type name 'BOOL'
+  188 | BOOL DVDGetCurrentDir(char* path, u32 maxlen);
+      | ^
+aurora/include/dolphin/dvd.h:189:1: error: unknown type name 'BOOL'
+  189 | BOOL DVDChangeDir(const char* dirName);
+      | ^
+aurora/include/dolphin/dvd.h:190:1: error: unknown type name 'BOOL'
+  190 | BOOL DVDReadAsyncPrio(DVDFileInfo* fileInfo, void* addr, s32 length, s32 offset,
+      | ^
+aurora/include/dolphin/dvd.h:196:1: error: unknown type name 'BOOL'
+  196 | BOOL DVDFastOpenDir(s32 entrynum, DVDDir* dir);
+      | ^
+aurora/include/dolphin/dvd.h:203:1: error: unknown type name 'BOOL'
+  203 | BOOL DVDPrepareStreamAsync(DVDFileInfo* fileInfo, u32 length, u32 offset, DVDCallback callback);
+      | ^
+aurora/include/dolphin/dvd.h:215:1: error: unknown type name 'BOOL'
+  215 | BOOL DVDLowRead(void* addr, u32 length, u32 offset, DVDLowCallback callback);
+      | ^
+aurora/include/dolphin/dvd.h:216:1: error: unknown type name 'BOOL'
+  216 | BOOL DVDLowSeek(u32 offset, DVDLowCallback callback);
+      | ^
+aurora/include/dolphin/dvd.h:217:1: error: unknown type name 'BOOL'
+  217 | BOOL DVDLowWaitCoverClose(DVDLowCallback callback);
+      | ^
+aurora/include/dolphin/dvd.h:218:1: error: unknown type name 'BOOL'
+  218 | BOOL DVDLowReadDiskID(DVDDiskID* diskID, DVDLowCallback callback);
+      | ^
+aurora/include/dolphin/dvd.h:219:1: error: unknown type name 'BOOL'
+  219 | BOOL DVDLowStopMotor(DVDLowCallback callback);
+      | ^
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+20 errors generated.

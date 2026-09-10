@@ -1,0 +1,20 @@
+{
+  "command": [
+    "/opt/homebrew/opt/llvm/bin/clang++",
+    "-std=c++23",
+    "-O2",
+    "-g",
+    "-ffp-contract=off",
+    "-fsanitize=address,undefined",
+    "-fno-omit-frame-pointer",
+    "-Iaurora/include",
+    "/Users/frityet/Projects/petari/notes/original-input-owner-20260910/brlan/OriginalCurveComparison.cpp",
+    "aurora/lib/nw4r/brlan.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-input-owner-20260910/brlan/OriginalCurveComparison"
+  ],
+  "build_exit": 0,
+  "runtime_exit": 0,
+  "output": "28672 original/public-native curve comparisons across 64 deterministic curves; mismatches=0\n",
+  "binary_sha256": "157875e24a3d1c71ae9a842b121ac07daf8066f87187b1602a079c92513a78dc"
+}

@@ -1,0 +1,9 @@
+{
+  "aurora/lib/wpad.cpp": "d3af4d51063fa9d9bedd61792152e8fb5978df9e1b8f32a48f8dcbc0f252075f",
+  "aurora/include/aurora/wpad.hpp": "10ba15d42f1913d05da6122f52b12dab9c0041e9c9466fd707a279fab92888b3",
+  "src/compat/WPadOwnership.cpp": "3d0d03dca8e32a2ec876a2cb5acb06fb738ce21a96a15fad7872442ec98bd1e3",
+  "src/compat/WPadOwnership.hpp": "af49d33c0615a343a4f0709f770f0ebc377a784d6e3b53821238a514e18d991d",
+  "src/compat/OriginalWPadHolder.cpp": "ce82b871be2ea41848f7482348546a5bc9ebcf35ba940d3b4ea9dc355117313e",
+  "tests/OriginalWPadOwnershipTests.cpp": "6da665c3e4cf388016f59f3fc35405baf9fd43eb7a907b30d903094a6042788d",
+  "tests/OriginalWPadAccelerationTests.cpp": "c073fb0f95676c496eb9b4007227eddd1e5341d5a432e66db178afd60e9d441e"
+}

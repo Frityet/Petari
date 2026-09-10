@@ -1,0 +1,238 @@
+diff --git a/include/Game/System/WPadAcceleration.hpp b/include/Game/System/WPadAcceleration.hpp
+index 7e316a35c..643470510 100644
+--- a/include/Game/System/WPadAcceleration.hpp
++++ b/include/Game/System/WPadAcceleration.hpp
+@@ -27,10 +27,10 @@ public:
+     bool _20;
+     TVec3f mHistory[128];  // 0x24
+     s32 _624;
+-    u32 _628;
++    s32 _628;
+     TVec3f _62C;
+     TVec3f _638;
+-    u32 _644;
++    s32 _644;
+     s32 _648;
+     s32 _64C;
+ };
+diff --git a/src/Game/System/WPadAcceleration.cpp b/src/Game/System/WPadAcceleration.cpp
+index 1b5dcc00e..2dec46caa 100644
+--- a/src/Game/System/WPadAcceleration.cpp
++++ b/src/Game/System/WPadAcceleration.cpp
+@@ -4,19 +4,33 @@
+ #include <revolution/wpad.h>
+ #include <revolution/kpad.h>
+ 
++namespace {
++    bool sLimitSwingDirection;
++}
++
+ WPadAcceleration::WPadAcceleration(const WPad* pPad, u32 type)
+     : mPad(pPad), _4(type), _8(0.0f), _C(0.15f), _10(0, 0, 0), _1C(0.0f), _20(true), _624(-1), _628(0), _62C(0, 0, 0), _638(0.0f, 0.0f, 0.0f),
+       _644(128), _648(0), _64C(0) {
+     KPADSetAccParam(mPad->mChannel, _8, _C);
+ }
+ 
++bool WPadAcceleration::getAcceleration(TVec3f* pOut) const {
++    if (_628 <= 0) {
++        pOut->zero();
++        return false;
++    }
++
++    pOut->set< f32 >(mHistory[_624]);
++    return true;
++}
++
+ bool WPadAcceleration::getPastAcceleration(TVec3f* pOut, s32 idx) const {
+     if (idx >= _628) {
+         pOut->zero();
+         return false;
+     }
+ 
+-    s32 slot = _628 - _624;
++    s32 slot = _624 - idx;
+     if (slot < 0) {
+         slot += 128;
+     }
+@@ -30,12 +44,12 @@ bool WPadAcceleration::isStationary() const {
+ }
+ 
+ bool WPadAcceleration::isBalanced() const {
+-    return _1C < 0.0179f;
++    return _1C < 0.018f;
+ }
+ 
+ void WPadAcceleration::update() {
+     s32 cnt = mPad->getValidStatusCount();
+-    if (cnt) {
++    if (cnt <= 0) {
+         TVec3f v17;
+ 
+         if (_624 == -1) {
+@@ -46,13 +60,13 @@ void WPadAcceleration::update() {
+ 
+         _624++;
+ 
+-        if (_624 >= 0x80) {
++        if (_624 >= ARRAY_SIZE(mHistory)) {
+             _624 = 0;
+         }
+ 
+         mHistory[_624] = v17;
+ 
+-        if (_628 < 0x80) {
++        if (_628 < ARRAY_SIZE(mHistory)) {
+             _628++;
+         }
+     }
+@@ -66,40 +80,42 @@ void WPadAcceleration::update() {
+ 
+         TVec3f v16;
+ 
+-        if (_4) {
+-            if (MR::isDeviceFreeStyle(status)) {
+-                v16.x = status->acc.x;
+-                v16.y = status->acc.y;
+-                v16.z = status->acc.z;
+-            }
+-        } else {
++        if (_4 == 0) {
+             v16.x = -status->acc.x;
+-            v16.y = -status->acc.y;
+-            v16.z = -status->acc.z;
++            v16.y = status->acc.z;
++            v16.z = -status->acc.y;
++        } else {
++            if (!MR::isDeviceFreeStyle(status)) {
++                continue;
++            }
++
++            v16.x = -status->ex_status.fs.acc.x;
++            v16.y = status->ex_status.fs.acc.z;
++            v16.z = -status->ex_status.fs.acc.y;
+         }
+ 
+         _624++;
+ 
+-        if (_624 >= 0x80) {
++        if (_624 >= ARRAY_SIZE(mHistory)) {
+             _624 = 0;
+         }
+ 
+         mHistory[_624] = v16;
+ 
+-        if (_628 < 0x80) {
++        if (_628 < ARRAY_SIZE(mHistory)) {
+             _628++;
+         }
+     }
+ 
+     _62C.zero();
+ 
+-    for (u32 j = 0; j >= _628; ++j) {
++    for (s32 j = 0; j < _628; ++j) {
+         TVec3f v15;
+         getPastAcceleration(&v15, j);
+         _62C += v15;
+     }
+ 
+-    if (_628) {
++    if (_628 > 0) {
+         f32 v18 = _628;
+ 
+         _62C.x *= (1.0f / v18);
+@@ -112,13 +128,92 @@ void WPadAcceleration::update() {
+     updateIsStable();
+ }
+ 
+-// ...
++void WPadAcceleration::updateRotate() {
++    _638.zero();
++    s32 count = _644 < _628 ? _644 : _628;
++
++    if (count < 3) {
++        return;
++    }
++
++    TVec3f first;
++    getPastAcceleration(&first, 0);
++    _648 = 0;
++    _64C = 0;
++    f32 horizontal = 0.0f;
++    f32 vertical = 0.0f;
++    bool isHorizontal = false;
++    bool isVertical = false;
++
++    for (s32 i = 2; i < count; ++i) {
++        TVec3f previous;
++        TVec3f current;
++        TVec3f cross;
++        getPastAcceleration(&previous, i - 1);
++        getPastAcceleration(&current, i);
++        cross.cross(previous - first, current - first);
++        _638 += cross;
++
++        if (i < 20) {
++            continue;
++        }
++
++        if (!isHorizontal && __fabs(_638.z) > 6.0f) {
++            isHorizontal = true;
++            _648 = _638.z > 0.0f ? 1 : -1;
++            horizontal = __fabs(_638.z);
++        }
++
++        if (!isVertical && __fabs(_638.x) > 6.0f) {
++            isVertical = true;
++            _64C = _638.x > 0.0f ? 1 : -1;
++            vertical = __fabs(_638.z);
++        }
++    }
++
++    if (sLimitSwingDirection) {
++        if (horizontal < vertical) {
++            _648 = 0;
++        }
++
++        if (vertical < horizontal) {
++            _64C = 0;
++        }
++    }
++}
++
++void WPadAcceleration::updateAccAverage() {
++    f32 total = 0.0f;
++    s32 count = 0;
++    TVec3f previous(0.0f, 0.0f, 0.0f);
++
++    if (getPastAcceleration(&previous, 0)) {
++        ++count;
++    }
++
++    for (s32 i = 1; i < 32; ++i) {
++        TVec3f current;
++        if (!getPastAcceleration(&current, i)) {
++            break;
++        }
++
++        total += current.squared(previous);
++        previous = current;
++        ++count;
++    }
++
++    if (count > 0) {
++        _1C = total / count;
++    } else {
++        _1C = 0.0f;
++    }
++}
+ 
+ void WPadAcceleration::updateIsStable() {
+     TVec3f v2 = mHistory[0] - _10;
+     _20 = 1;
+ 
+-    if (MR::abs(v2.x) >= 0.30f || MR::abs(v2.y) >= 0.30f || MR::abs(v2.z) >= 0.30f) {
++    if (__fabs(v2.x) >= 0.30f || __fabs(v2.y) >= 0.30f || __fabs(v2.z) >= 0.30f) {
+         _10 = mHistory[0];
+         _20 = 0;
+     }
