@@ -1182,6 +1182,10 @@ void MarioActor::emitEffectWaterColumn(const TVec3f& rDir, const TVec3f& rTrans)
 }
 
 bool MarioActor::isCommonEffect(const char* pName) const {
+    if (sizeof("共") != 3) {
+        return strncmp(pName, "共", sizeof("共") - 1) == 0;
+    }
+
     if (static_cast< u8 >(pName[0]) == 0x8B) {
         if (static_cast< u8 >(pName[1]) == 0xA4) {
             return true;
@@ -1192,6 +1196,10 @@ bool MarioActor::isCommonEffect(const char* pName) const {
 }
 
 bool MarioActor::isMaterialEffect(const char* pName) const {
+    if (sizeof("属") != 3) {
+        return strncmp(pName, "属", sizeof("属") - 1) == 0;
+    }
+
     if (static_cast< u8 >(pName[0]) == 0x91) {
         if (static_cast< u8 >(pName[1]) == 0xAE) {
             return true;
