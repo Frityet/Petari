@@ -4,6 +4,7 @@
 #include "Game/System/FindingLuigiEventScheduler.hpp"
 #include "Game/System/GalaxyCometScheduler.hpp"
 #include "Game/System/GalaxyMoveArgument.hpp"
+#include "Game/System/GalaxyStatusAccessor.hpp"
 #include "Game/System/GameDataFunction.hpp"
 #include "Game/System/GameEventFlagTable.hpp"
 #include "Game/System/GameSequenceFunction.hpp"
@@ -147,7 +148,65 @@ void GameSequenceProgress::requestChangeScene(const char* pName) {
     mStorySequenceExecutor->forceStop();
 }
 
-// GameSequenceProgress::requestGalaxyMove
+void GameSequenceProgress::requestGalaxyMove(const GalaxyMoveArgument& rArgument) {
+    updateGameDataGalaxyVisitedFlag();
+    GameSequenceFunction::storeSceneStartGameDataHolder();
+
+    if (rArgument.mMoveType == 4) {
+        GameSequenceFunction::updateGameDataAndSequenceAfterStageResultSequence();
+        mFindingLuigiEventScheduler->updateOnStageResult(GameSequenceFunction::getClearedStageName(), GameSequenceFunction::getClearedPowerStarId());
+        countDownGameEventValueFromNewPowerStar();
+    }
+
+    mFindingLuigiEventScheduler->update(rArgument);
+    GalaxyMoveArgument argument(rArgument);
+    mStorySequenceExecutor->moveGalaxy(&argument, isNerve(&::GameSequenceProgressResetProcessing::sInstance) || _25);
+    mGalaxyCometScheduler->syncWithFlags();
+    updateGameDataBeforeChangeScene();
+    setMinFrameBeforeStartNextStage(argument);
+
+    GameSystemSceneController* pSceneController = SingletonHolder< GameSystem >::get()->mSceneController;
+    pSceneController->mNextSceneControlInfo.setScene("Game");
+    pSceneController->mNextSceneControlInfo.setStage(argument.mStageName);
+    pSceneController->mNextSceneControlInfo.mScenarioNo = argument.mScenarioNo;
+    pSceneController->mNextSceneControlInfo.mSelectedScenarioNo = argument._C;
+    pSceneController->mNextSceneControlInfo.setStartIdInfo(argument.mIDInfo);
+    pSceneController->requestChangeScene();
+    resetGameDataAfterChangeScene(argument);
+
+    switch (argument.mMoveType) {
+    case 2:
+        SingletonHolder< GameSystem >::get()->mSceneController->startScenarioSelectScene();
+        MR::setStarPointerModeBase();
+        break;
+    case 7:
+        SingletonHolder< GameSystem >::get()->mSceneController->startScenarioSelectSceneBackground();
+        mStarPointerOnOffController->setStateToTitle(this);
+        break;
+    case 5:
+        if (mPlayerMissLeft != nullptr && !MR::makeGalaxyStatusAccessor(argument.mStageName).isCometStar(argument.mScenarioNo)) {
+            mPlayerMissLeft->appear();
+        }
+    case 0:
+    case 1:
+    case 3:
+    case 4:
+    case 6:
+        SingletonHolder< GameSystem >::get()->mSceneController->startScenarioSelectSceneBackground();
+        mStarPointerOnOffController->setStateToBase(this);
+        if (argument.mMoveType == 6) {
+            mLuigiLeftSupplier->syncWithFlags();
+        }
+        break;
+    }
+
+    _26 = true;
+    if (argument.mMoveType == 2 || MR::isEqualString(argument.mStageName, "EpilogueDemoStage")) {
+        _26 = false;
+    }
+
+    setNerve(&::GameSequenceProgressGalaxyMove::sInstance);
+}
 
 void GameSequenceProgress::requestCancelScenarioSelect() {
     _25 = true;
