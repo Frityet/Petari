@@ -1545,12 +1545,12 @@ bool Mario::isThroughWall(const Triangle* pTriangle) const {
 }
 
 bool Mario::checkGround() {
-    if (isStatusActive(0x13)) {
+    if (isStatusActive(0x13) || isStatusActive(0x13)) {
         return false;
     }
 
-    if (mMovementStates._B) {
-        if (_10_HIGH_WORD & 0x00000200) {
+    if (mMovementStates._14) {
+        if (mMovementStates_HIGH_WORD & 0x00000200) {
             if (!checkGroundOnSlope()) {
                 return false;
             }
@@ -1560,12 +1560,12 @@ bool Mario::checkGround() {
         }
     }
     else if (isUseSimpleGroundCheck()) {
-        if (!(_10_HIGH_WORD & 0x00000200)) {
+        if (!(mMovementStates_HIGH_WORD & 0x00000200)) {
             if (MR::isNearZero(getGravityVec()->y - 1.0f, 0.001f)) {
                 mActor->setBlendMtxTimer(4);
             }
 
-            _10_HIGH_WORD |= 0x00000200;
+            mMovementStates_HIGH_WORD |= 0x00000200;
         }
 
         if (!checkGroundOnSlope()) {
@@ -1575,20 +1575,20 @@ bool Mario::checkGround() {
         _1C_WORD |= 0x00001800;
         return true;
     }
-    else if (_10_HIGH_WORD & 0x00000200) {
+    else if (mMovementStates_HIGH_WORD & 0x00000200) {
         if (MR::isNearZero(getGravityVec()->y - 1.0f, 0.001f)) {
             mActor->setBlendMtxTimer(4);
         }
 
-        _10_HIGH_WORD &= ~0x00000200;
+        mMovementStates_HIGH_WORD &= ~0x00000200;
     }
 
     TVec3f groundBase;
-    if (_45C->isValid()) {
-        groundBase = triangleNormal(_45C);
+    if (isAnimationRun("崖ふんばり")) {
+        groundBase = -*getGravityVec();
     }
     else {
-        groundBase = -*getGravityVec();
+        groundBase = triangleNormal(_45C);
     }
 
     TVec3f probeStep;
@@ -1602,16 +1602,19 @@ bool Mario::checkGround() {
         return false;
     }
 
+    Mtx rot;
+    PSMTXRotAxisRad(rot, &groundBase, 2.0943952f);
+
     Triangle hitTriangles[4];
     TVec3f hitPositions[4];
     bool hitFlags[4] = { false, false, false, false };
     bool rejectedByLift[4] = { false, false, false, false };
 
-    mMovementStates_LOW_WORD &= ~0x00000400;
+    mMovementStates_LOW_WORD &= ~0x00000800;
 
-    f32 verticalLimit = 100.0f;
+    f32 verticalLimit = 30.0f;
     if (mMovementStates.jumping && isRising()) {
-        verticalLimit = 300.0f;
+        verticalLimit = 10.0f;
     }
     if (getCurrentStatus() == 7) {
         verticalLimit = 100.0f;
@@ -1624,26 +1627,27 @@ bool Mario::checkGround() {
     hitAverage.zero();
 
     u32 probeCount = 3;
-    if (!mTargetWalkSpeedIndex && mMovementStates._1 && !mMovementStates.jumping && !(_10_HIGH_WORD & 0x10000000)) {
+    if (!mTargetWalkSpeedIndex && mMovementStates._1 && !mMovementStates.jumping && !(mMovementStates_HIGH_WORD & 0x10000000)) {
         probeCount = 4;
     }
-    if (isAnimationRun("Run", 0)) {
+    if (isAnimationRun("壁押し", 0)) {
         probeCount = 4;
     }
 
+    TVec3f selectedGround;
     u32 hitCount = 0;
     bool shouldCommitGround = true;
     for (u32 i = 0; i < probeCount; i++) {
         TVec3f start = mPosition + probeStep;
         TVec3f gravityBack = *getGravityVec();
-        gravityBack.scale(100.0f);
+        gravityBack.scale(30.0f);
         start -= gravityBack;
         if (i == 3) {
             start = mPosition - gravityBack;
         }
 
         TVec3f ray = *getGravityVec();
-        ray.scale(500.0f);
+        ray.scale(100.0f);
 
         hitFlags[i] = MR::getFirstPolyOnLineBFast(start, ray, &hitPositions[i], &hitTriangles[i]);
         if (i == 3) {
@@ -1659,7 +1663,7 @@ bool Mario::checkGround() {
                 }
             }
 
-            if (hitFlags[i]) {
+            {
                 TVec3f toHit = mPosition - hitPositions[i];
                 if (__fabsf(toHit.dot(*getGravityVec())) > verticalLimit) {
                     hitFlags[i] = false;
@@ -1667,18 +1671,18 @@ bool Mario::checkGround() {
                 }
             }
 
-            if (hitFlags[i] && calcAngleD(triangleNormal(&hitTriangles[i])) >= 80.0f) {
+            if (calcAngleD(triangleNormal(&hitTriangles[i])) >= 80.0f) {
                 hitFlags[i] = false;
             }
 
-            if (hitFlags[i]) {
-                const f32 dot = triangleNormal(&hitTriangles[i]).dot(*getGravityVec());
+            {
+                const f32 dot = getGravityVec()->dot(triangleNormal(&hitTriangles[i]));
                 if (getCurrentStatus() != 7 && dot > _3C) {
                     hitFlags[i] = false;
                 }
             }
 
-            if (hitFlags[i] && isStatusActive(0x13) && MR::isThroughPolygon(&hitTriangles[i])) {
+            if (isStatusActive(0x13) && MR::isThroughPolygon(&hitTriangles[i])) {
                 hitFlags[i] = false;
             }
 
@@ -1686,10 +1690,10 @@ bool Mario::checkGround() {
                 hitAverage += hitPositions[i];
                 hitCount++;
 
-                if ((_10_HIGH_WORD & 0x10000000) && !shouldCommitGround) {
+                if ((mMovementStates_HIGH_WORD & 0x10000000) && !shouldCommitGround) {
                     TVec3f velDir(_16C);
                     MR::normalizeOrZero(&velDir);
-                    TVec3f oldToHit(mGroundPos - mPosition);
+                    TVec3f oldToHit(selectedGround - mPosition);
                     TVec3f newToHit(hitPositions[i] - mPosition);
                     if (newToHit.dot(velDir) > oldToHit.dot(velDir)) {
                         shouldCommitGround = true;
@@ -1699,133 +1703,272 @@ bool Mario::checkGround() {
                 if (shouldCommitGround) {
                     setGroundNorm(triangleNormal(&hitTriangles[i]));
                     *mGroundPolygon = hitTriangles[i];
-                    mGroundPos = hitPositions[i];
+                    selectedGround = hitPositions[i];
+                    mGroundPos = selectedGround;
                     recordLastGround();
                     shouldCommitGround = false;
                 }
 
                 const char* wallCode = MR::getWallCodeString(&hitTriangles[i]);
-                if (wallCode != nullptr && strcmp(wallCode, "Sand") == 0) {
+                if (wallCode != nullptr && strcmp(wallCode, "Fur") == 0) {
                     mDrawStates_WORD |= 0x00000040;
                 }
             }
         }
 
-        Mtx rot;
-        PSMTXRotAxisRad(rot, &groundBase, 2.0943952f);
         PSMTXMultVec(rot, &probeStep, &probeStep);
     }
 
-    if (hitCount == probeCount) {
+    u32 presentCount = 0;
+    while (presentCount < probeCount && hitFlags[presentCount]) {
+        presentCount++;
+    }
+    if (presentCount == probeCount) {
         _1C_WORD |= 0x00004000;
     }
 
-    if (!isNoWalkFallOnDossun() && !isStatusActive(3) && !isStatusActive(2) && !isStatusActive(0x22) && !isStatusActive(5)) {
-        if (!hitFlags[0] && !hitFlags[1] && !hitFlags[2]) {
-            return false;
-        }
-
-        if (!hitFlags[0]) {
-            bool moved = false;
-            if (!mMovementStates._8) {
-                TVec3f push = mFrontVec;
-                push.scale(-5.0f);
-                addTrans(push, "ground check");
-                moved = true;
+    if (!isNoWalkFallOnDossun() && !isStatusActive(3) && !isStatusActive(2) && !isStatusActive(0x22) && !isStatusActive(5)
+        && (!mMovementStates._18 || _10._10) && ((probeCount == 4 && !hitFlags[3]) || _960 == 0x13)) {
+        do {
+            if (!hitFlags[0] && !hitFlags[1] && !hitFlags[2]) {
+                return false;
             }
 
-            if (hitFlags[1] && hitFlags[2] && !moved) {
+            if (!hitFlags[0]) {
+                bool moved = false;
+                if (!mMovementStates._8) {
+                    TVec3f push = mFrontVec;
+                    push.scale(6.0f);
+                    addTrans(push, "前方WKFALL");
+                    moved = true;
+                }
+
+                if (hitFlags[1] && hitFlags[2]) {
+                    if (!moved) {
+                        break;
+                    }
+                }
+                else if (!hitFlags[1]) {
+                    if ((mMovementStates._1A || mMovementStates._8 || mMovementStates._19) && mSideVec.dot(getWallNorm()) < 0.0f) {
+                        if (moved) {
+                            TVec3f front = mFrontVec;
+                            front.scale(6.0f);
+                            TVec3f side = -mSideVec;
+                            side.scale(3.0f);
+                            addTrans(side - front, "+逆-左WKFALL");
+                        }
+                        break;
+                    }
+
+                    TVec3f push = mSideVec;
+                    push.scale(3.0f);
+                    addTrans(push, "+左WKFALL");
+                    moved = true;
+                }
+                else {
+                    if ((mMovementStates._1A || mMovementStates._8 || mMovementStates._19) && -mSideVec.dot(getWallNorm()) < 0.0f) {
+                        if (moved) {
+                            TVec3f front = mFrontVec;
+                            front.scale(6.0f);
+                            TVec3f side = mSideVec;
+                            side.scale(3.0f);
+                            addTrans(side - front, "+逆-右WKFALL");
+                        }
+                        break;
+                    }
+
+                    TVec3f push = -mSideVec;
+                    push.scale(3.0f);
+                    addTrans(push, "+右WKFALL");
+                    moved = true;
+                }
+
+                if (moved) {
+                    mDrawStates_WORD |= 0x00200000;
+                }
                 return true;
             }
+            else if (!hitFlags[1] && !hitFlags[2]) {
+                stopWalk();
+                if (_3CE < 24 && mJumpVec.dot(mFrontVec) >= 0.0f && _960 != 0x13) {
+                    if (!mMovementStates._8 && !mMovementStates._32) {
+                        TVec3f push = mFrontVec;
+                        push.scale(3.0f);
+                        addTrans(push, "+後ろ1WKFALL");
+                        mDrawStates_WORD |= 0x00200000;
+                    }
+                    break;
+                }
 
-            if (!hitFlags[1]) {
-                TVec3f push = mSideVec;
-                push.scale(3.0f);
-                addTrans(push, "ground check side");
-                moved = true;
-            }
-            else if (!hitFlags[2]) {
-                TVec3f push = mSideVec;
-                push.scale(-1.0f);
-                push.scale(3.0f);
-                addTrans(push, "ground check back");
-                moved = true;
-            }
+                if (!mMovementStates._19) {
+                    mDrawStates_WORD |= 0x00000080;
+                    TVec3f push = mFrontVec;
+                    push.scale(-6.0f);
+                    addTrans(push, "+後ろ2WKFALL");
+                    mDrawStates_WORD |= 0x00200000;
+                }
 
-            if (moved) {
-                mDrawStates_WORD |= 0x00200000;
+                if (_3C6 > 8) {
+                    TVec3f push = mSideVec;
+                    push.scale(5.0f);
+                    addTrans(push, "+SIDEFALL");
+                }
                 return true;
             }
-        }
-        else if (!hitFlags[1] && !hitFlags[2]) {
-            stopWalk();
-            if (_3CE < 24 && mJumpVec.dot(mFrontVec) >= 0.0f && _960 != 0x13 && !mMovementStates._8 && !(_10_HIGH_WORD & 0x00002000)) {
-                TVec3f push = mFrontVec;
-                push.scale(3.0f);
-                addTrans(push, "ground check front");
+            else if (_960 == 0x13) {
+                if (!hitFlags[2]) {
+                    TVec3f push = -mSideVec;
+                    push.scale(5.0f);
+                    addTrans(push, "-L-SIDEFALL");
+                }
+                else if (!hitFlags[1]) {
+                    TVec3f push = mSideVec;
+                    push.scale(5.0f);
+                    addTrans(push, "+R-SIDEFALL");
+                }
+                else {
+                    TVec3f push = mFrontVec;
+                    push.scale(5.0f);
+                    addTrans(push, "+F-SIDEFALL");
+                }
                 mDrawStates_WORD |= 0x00200000;
-                return true;
             }
-
-            if (!mMovementStates._19) {
-                mDrawStates_WORD |= 0x00000080;
-                TVec3f push = mFrontVec;
-                push.scale(-1.0f);
-                addTrans(push, "ground check stop");
-                mDrawStates_WORD |= 0x00200000;
-            }
-
-            if (_3C6 > 8) {
-                TVec3f push = mSideVec;
-                push.scale(5.0f);
-                addTrans(push, "ground check adjust");
-            }
-
-            return true;
-        }
+        } while (false);
     }
 
-    if (hitCount == 0) {
-        mMovementStates_HIGH_WORD |= 0x00000800;
-        return false;
+    bool noGround = hitCount == 0;
+
+    s32 sameSensorBalance = 0;
+    s32 agreeingNormals = 0;
+    TVec3f groundHorizontalNormal;
+    MR::vecKillElement(*mGroundPolygon->getNormal(0), getAirGravityVec(), &groundHorizontalNormal);
+    for (u32 i = 0; i < hitCount; ++i) {
+        if (hitFlags[i]) {
+            sameSensorBalance += hitTriangles[i].mSensor == mGroundPolygon->mSensor ? 1 : -1;
+            TVec3f horizontalNormal;
+            MR::vecKillElement(*hitTriangles[i].getNormal(0), getAirGravityVec(), &horizontalNormal);
+            if (horizontalNormal.dot(groundHorizontalNormal) >= 0.0f) {
+                ++agreeingNormals;
+            }
+        }
+    }
+    if (sameSensorBalance > 0) {
+        _1C_WORD |= 0x1000;
+    }
+    if (agreeingNormals >= 3) {
+        _1C_WORD |= 0x800;
+    }
+    _8EC = sameSensorBalance;
+
+    if (mMovementStates._D) {
+        mMovementStates._D = false;
+        TVec3f horizontal(mGroundPos - mPosition);
+        f32 height = MR::vecKillElement(horizontal, *getGravityVec(), &horizontal);
+        addTrans(*getGravityVec() * height, "force Trans");
+        return true;
     }
 
-    _8EC = hitCount;
+    if (hitCount != 0) {
+        f32 height = 0.0f;
+        TVec3f horizontal;
+        if (calcAngleD(*_45C->getNormal(0)) < 55.0f) {
+            height = MR::vecKillElement(mShadowPos - mPosition, *getGravityVec(), &horizontal);
+        }
+        if (__fabsf(height) > 30.0f) {
+            height = MR::vecKillElement(mGroundPos - mPosition, *getGravityVec(), &horizontal);
+        }
+        if (__fabsf(height) < 30.0f && __fabsf(height) > 1.0f && mMovementStates._1) {
+            f32 groundAlignment = getGravityVec()->dot(-_368);
+            if (groundAlignment > 0.99f) {
+                if (!mDrawStates._9 && !_4D8->isValid()) {
+                    if (!isStatusActive(0x22)) {
+                        addTrans(*getGravityVec() * height, "force Trs2");
+                    }
+                    return true;
+                }
+            }
+            else if (groundAlignment > 0.0f && !mDrawStates._9 && mMovementStates._23) {
+                addTrans(-_368 * height * groundAlignment, "force Trs3");
+                return true;
+            }
+        }
+    }
 
     if (mMovementStates.jumping && isRising()) {
         return false;
     }
 
-    if (!isStatusActive(0x1B) && probeCount == 4 && rejectedByLift[3]) {
-        TVec3f push = mFrontVec;
-        if (mMovementStates._8) {
-            push = -push;
+    if (!isStatusActive(0x1B) && probeCount == 4 && noGround) {
+        if (hitFlags[3]) {
+            TVec3f toHit = mPosition - hitPositions[3];
+            if (__fabsf(toHit.dot(*getGravityVec())) < verticalLimit) {
+                noGround = false;
+            }
         }
-        push.scale(5.0f);
-        addTrans(push, "ground check 4");
+
+        bool canForward = !mMovementStates._8;
+        bool canBackward = !mMovementStates._19;
+        if (mActor->_288.dot(mFrontVec) < 0.0f) {
+            if (canBackward) {
+                TVec3f push = -mFrontVec;
+                push.scale(6.0f);
+                addTrans(push, "no-g(back)");
+            }
+        }
+        else if (canForward) {
+            TVec3f push = mFrontVec;
+            push.scale(6.0f);
+            addTrans(push, "no-g");
+        }
     }
 
-    if (mActor->_EA4 || getCurrentStatus() == 5) {
-        return hitCount != 0 || mVerticalSpeed < 5.0f || (mDrawStates_WORD >> 31);
+    if (noGround) {
+        mMovementStates_LOW_WORD |= 0x00000800;
+        return false;
     }
 
-    if (hitCount != 0) {
-        TVec3f horizontalGround = mGroundPos - mPosition;
-        MR::vecKillElement(horizontalGround, *getGravityVec(), &horizontalGround);
+    if (!mActor->_EA4 && getCurrentStatus() != 5) {
+        if ((mMovementStates.jumping && hitCount != 0) || (mMovementStates._1 && mVerticalSpeed >= 5.0f)) {
+            TVec3f groundSeparation = mGroundPos - mShadowPos;
+            TVec3f horizontalGround;
+            f32 groundDistance = MR::vecKillElement(groundSeparation, _368, &horizontalGround);
+            f32 maxSlide = 5.0f;
+            horizontalGround = mShadowPos - mPosition;
 
-        f32 maxSlide = 5.0f;
-        if (mMovementStates._8 && getFrontWallNorm().dot(horizontalGround) < -0.1f) {
-            maxSlide = 0.0f;
-        }
-        if (mMovementStates._1A && getSideWallNorm().dot(horizontalGround) < -0.1f) {
-            maxSlide = 0.0f;
+            if (mMovementStates._8 && horizontalGround.dot(getFrontWallNorm()) < -0.01f) {
+                maxSlide = 0.0f;
+            }
+            if (mMovementStates._1A && horizontalGround.dot(getSideWallNorm()) < -0.01f) {
+                maxSlide = 0.0f;
+            }
+            if (mMovementStates._8 && horizontalGround.dot(getBackWallNorm()) < -0.01f) {
+                maxSlide = 0.0f;
+            }
+
+            if (maxSlide != 0.0f) {
+                if (PSVECMag(&horizontalGround) > maxSlide) {
+                    mShadowPos = mShadowPos - mPosition;
+                    mShadowPos.setLength(maxSlide);
+                    mShadowPos += mPosition;
+                }
+                if (groundDistance < verticalLimit) {
+                    setTrans(mShadowPos, nullptr);
+                }
+            }
         }
 
-        if (maxSlide != 0.0f && PSVECMag(&horizontalGround) > maxSlide) {
-            horizontalGround.setLength(maxSlide);
-            mShadowPos = mPosition + horizontalGround;
-            if (hitAverage.dot(*getGravityVec()) < verticalLimit) {
-                setTrans(mShadowPos, nullptr);
+        if (hitCount == 0) {
+            TVec3f toShadow = mShadowPos - mPosition;
+            if (__fabsf(toShadow.dot(*getGravityVec())) < verticalLimit) {
+                TVec3f horizontal = mShadowPos - mPosition;
+                f32 alongGravity = MR::vecKillElement(horizontal, *getGravityVec(), &horizontal);
+                if (!MR::isNearZero(alongGravity, 1.0f) || !mMovementStates._1) {
+                    TVec3f fix = *getGravityVec();
+                    fix.scale(alongGravity);
+                    mVelocity += fix;
+                    mDrawStates_WORD |= 0x80000000;
+                }
+                return true;
             }
         }
     }
@@ -1835,13 +1978,12 @@ bool Mario::checkGround() {
         if (__fabsf(toGround.dot(*getGravityVec())) < verticalLimit) {
             TVec3f horizontal = mGroundPos - mPosition;
             f32 alongGravity = MR::vecKillElement(horizontal, *getGravityVec(), &horizontal);
-            if (!MR::isNearZero(alongGravity, 1.0f) || !mMovementStates._1) {
+            if (!MR::isNearZero(alongGravity, 1.0f)) {
                 TVec3f fix = *getGravityVec();
                 fix.scale(alongGravity);
                 mVelocity += fix;
                 mDrawStates_WORD |= 0x80000000;
             }
-
             return true;
         }
     }
@@ -1854,7 +1996,7 @@ bool Mario::checkGround() {
         return true;
     }
 
-    return hitCount != 0;
+    return hitCount != 0 || (mDrawStates_WORD >> 31);
 }
 
 CubeCameraArea* Mario::getCameraCubeCode() const {
