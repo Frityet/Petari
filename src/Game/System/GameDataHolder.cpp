@@ -94,13 +94,13 @@ bool GameDataHolder::isOnGameEventValueForBit(const char* pName, int bit) const 
 
 void GameDataHolder::setGameEventValueForBit(const char* pName, int bit, bool reset) {
     u16 value = mEventValueChecker->getValue(pName);
-    u16 set = 1 << bit;
-    value = set & ~value;
+    s32 set = 1 << bit;
+    u16 newValue = value & ~set;
     if (reset) {
-        value = value | set;
+        newValue = value | set;
     }
 
-    setGameEventValue(pName, value);
+    setGameEventValue(pName, newValue);
 }
 
 s32 GameDataHolder::getPictureBookChapterCanRead() const {
@@ -284,7 +284,7 @@ bool GameDataHolder::isPassedStoryEvent(const char* pEventName) const {
 
     u32 progress = 0;
     iter.getValue("progress", &progress);
-    return progress >= mPlayerStatus->mStoryProgress;
+    return progress <= mPlayerStatus->mStoryProgress;
 }
 
 void GameDataHolder::followStoryEventByName(const char* pEventName) {

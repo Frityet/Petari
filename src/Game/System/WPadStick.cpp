@@ -28,6 +28,8 @@ void WPadStick::update() {
     TVec2f stickPrev = mStick;
     f32 deltaX = stickEx.x - stickPrev.x;
     f32 deltaY = stickEx.y - stickPrev.y;
+    mStick.x = stickEx.x;
+    mStick.y = stickEx.y;
     mSpeed = JGeometry::TUtil< f32 >::sqrt(deltaX * deltaX + deltaY * deltaY);
     u32 flagPrev = STICK_FLAG_NONE;
 
