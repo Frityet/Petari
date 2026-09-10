@@ -1,0 +1,198 @@
+[
+  {
+    "object_name": "EffectCylinder",
+    "form": "Type_Cylinder",
+    "manager_name": "EffectCylinder",
+    "retail_manager_order": 6,
+    "manager_capacity": "0x40"
+  },
+  {
+    "object_name": "BindEndCube",
+    "form": "Type_Cube1",
+    "manager_name": "BindEndCube",
+    "retail_manager_order": 5,
+    "manager_capacity": "0x40"
+  },
+  {
+    "object_name": "PullBackCube",
+    "form": "Type_Cube2",
+    "manager_name": "PullBackCube",
+    "retail_manager_order": 16,
+    "manager_capacity": "0x40"
+  },
+  {
+    "object_name": "FallsCube",
+    "form": "Type_Cube2",
+    "manager_name": "FallsCube",
+    "retail_manager_order": 36,
+    "manager_capacity": "0x20"
+  },
+  {
+    "object_name": "PlaneModeCube",
+    "form": "Type_Cube2",
+    "manager_name": "PlaneModeCube",
+    "retail_manager_order": 11,
+    "manager_capacity": "0x10"
+  },
+  {
+    "object_name": "PlaneCircularModeCube",
+    "form": "Type_Cube2",
+    "manager_name": "PlaneCircularModeCube",
+    "retail_manager_order": 12,
+    "manager_capacity": "0x10"
+  },
+  {
+    "object_name": "PipeModeCube",
+    "form": "Type_Cube2",
+    "manager_name": "PipeModeCube",
+    "retail_manager_order": 13,
+    "manager_capacity": "0x4"
+  },
+  {
+    "object_name": "TowerModeCylinder",
+    "form": "Type_Cylinder",
+    "manager_name": "TowerModeCylinder",
+    "retail_manager_order": 14,
+    "manager_capacity": "0x4"
+  },
+  {
+    "object_name": "PlaneCollisionCube",
+    "form": "Type_Cube2",
+    "manager_name": "PlaneCollisionCube",
+    "retail_manager_order": 23,
+    "manager_capacity": "0x10"
+  },
+  {
+    "object_name": "ForbidTriangleJumpCube",
+    "form": "Type_Cube2",
+    "manager_name": "ForbidTriangleJumpCube",
+    "retail_manager_order": 24,
+    "manager_capacity": "0x10"
+  },
+  {
+    "object_name": "ForbidWaterSearchCube",
+    "form": "Type_Cube2",
+    "manager_name": "ForbidWaterSearchCube",
+    "retail_manager_order": 25,
+    "manager_capacity": "0x10"
+  },
+  {
+    "object_name": "TicoSeedGuidanceCube",
+    "form": "Type_Cube2",
+    "manager_name": "TicoSeedGuidanceCube",
+    "retail_manager_order": 41,
+    "manager_capacity": "0x10"
+  },
+  {
+    "object_name": "SmokeEffectColorAreaCube",
+    "form": "Type_Cube2",
+    "manager_name": "SmokeEffectColorArea",
+    "retail_manager_order": 43,
+    "manager_capacity": "0x10"
+  },
+  {
+    "object_name": "BeeWallShortDistAreaCube",
+    "form": "Type_Cube2",
+    "manager_name": "BeeWallShortDistArea",
+    "retail_manager_order": 44,
+    "manager_capacity": "0x10"
+  },
+  {
+    "object_name": "ExtraWallCheckArea",
+    "form": "Type_Cube2",
+    "manager_name": "ExtraWallCheckArea",
+    "retail_manager_order": 45,
+    "manager_capacity": "0x10"
+  },
+  {
+    "object_name": "ExtraWallCheckCylinder",
+    "form": "Type_Cylinder",
+    "manager_name": "ExtraWallCheckCylinder",
+    "retail_manager_order": 46,
+    "manager_capacity": "0x10"
+  },
+  {
+    "object_name": "MirrorAreaCube",
+    "form": "Type_Cube2",
+    "manager_name": "MirrorArea",
+    "retail_manager_order": 64,
+    "manager_capacity": "0x10"
+  },
+  {
+    "object_name": "HeavySteeringCube",
+    "form": "Type_Cube2",
+    "manager_name": "HeavySteeringCube",
+    "retail_manager_order": 52,
+    "manager_capacity": "0x10"
+  },
+  {
+    "object_name": "NonSleepCube",
+    "form": "Type_Cube2",
+    "manager_name": "NonSleepCube",
+    "retail_manager_order": 53,
+    "manager_capacity": "0x10"
+  },
+  {
+    "object_name": "DodoryuClosedCylinder",
+    "form": "Type_Cylinder",
+    "manager_name": "DodoryuClosedCylinder",
+    "retail_manager_order": 55,
+    "manager_capacity": "0x8"
+  },
+  {
+    "object_name": "DashChargeCylinder",
+    "form": "Type_Cylinder",
+    "manager_name": "DashChargeCylinder",
+    "retail_manager_order": 56,
+    "manager_capacity": "0x8"
+  },
+  {
+    "object_name": "RasterScrollCube",
+    "form": "Type_Cube2",
+    "manager_name": "RasterScrollCube",
+    "retail_manager_order": 58,
+    "manager_capacity": "0x8"
+  },
+  {
+    "object_name": "OnimasuCube",
+    "form": "Type_Cube1",
+    "manager_name": "OnimasuCube",
+    "retail_manager_order": 59,
+    "manager_capacity": "0x20"
+  },
+  {
+    "object_name": "ForbidJumpCube",
+    "form": "Type_Cube2",
+    "manager_name": "ForbidJumpCube",
+    "retail_manager_order": 60,
+    "manager_capacity": "0x8"
+  },
+  {
+    "object_name": "AstroOverlookAreaCylinder",
+    "form": "Type_Cylinder",
+    "manager_name": "AstroOverlookArea",
+    "retail_manager_order": 62,
+    "manager_capacity": "0x8"
+  },
+  {
+    "object_name": "CelestrialSphere",
+    "form": "Type_Sphere",
+    "manager_name": "CelestrialSphere",
+    "retail_manager_order": 63,
+    "manager_capacity": "0x4"
+  },
+  {
+    "object_name": "DarkMatterCube",
+    "form": "Type_Cube2",
+    "manager_name": "DarkMatterCube",
+    "retail_manager_order": 65,
+    "manager_capacity": "0x40"
+  },
+  {
+    "object_name": "DarkMatterCylinder",
+    "form": "Type_Cylinder",
+    "manager_name": "DarkMatterCylinder",
+    "retail_manager_order": 66,
+    "manager_capacity": "0x20"
+  }
+]

@@ -1,0 +1,51 @@
+[
+  {
+    "command": [
+      "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-area-obj-real-or-absent-tests",
+      "generic effect"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 0.5678326659835875,
+    "binary_sha256": "0a4161703953cf5ad00d8e86d74e795ceed4612409cfc269dac8e2725a025106",
+    "log": "notes/original-generic-area-tests-20260910/generic-effect-run.log"
+  },
+  {
+    "command": [
+      "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-area-obj-real-or-absent-tests",
+      "manager readiness"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 0.04132758401101455,
+    "binary_sha256": "0a4161703953cf5ad00d8e86d74e795ceed4612409cfc269dac8e2725a025106",
+    "log": "notes/original-generic-area-tests-20260910/manager-readiness-run.log"
+  },
+  {
+    "command": [
+      "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-area-obj-real-or-absent-tests",
+      "scene holder owns"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 0.03820299997460097,
+    "binary_sha256": "0a4161703953cf5ad00d8e86d74e795ceed4612409cfc269dac8e2725a025106",
+    "log": "notes/original-generic-area-tests-20260910/scene-holder-owns-run.log"
+  },
+  {
+    "command": [
+      "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-area-obj-real-or-absent-tests",
+      "descriptor registry"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 0.036463791970163584,
+    "binary_sha256": "0a4161703953cf5ad00d8e86d74e795ceed4612409cfc269dac8e2725a025106",
+    "log": "notes/original-generic-area-tests-20260910/descriptor-registry-run.log"
+  },
+  {
+    "command": [
+      "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-jpc-billboard-tests"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 0.33880891604349017,
+    "binary_sha256": "b6ea1143b6ad14dbb34983352332dd907475b046f158f5146ecb227e1a972d68",
+    "log": "notes/original-generic-area-tests-20260910/jpc-billboard-run.log"
+  }
+]

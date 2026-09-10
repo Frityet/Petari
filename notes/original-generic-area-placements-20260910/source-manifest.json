@@ -1,0 +1,8 @@
+{
+  "src/scene/AreaObjRuntime.cpp": "5e5e929e13d47b39b18f36dbd0b02ebecdfff6c078681e483314d4ebbb2610cf",
+  "src/scene/AreaObjRuntime.hpp": "20f9ffcc0da9a45e6202a1073c3412387a2d311717b1b44a85c6e1511aee1b80",
+  "src/compat/AreaObjRuntimeCompat.cpp": "78fc41c4046f349a1df3e287d0c30ef1b3ed257169538d4b68fc8bfb97fef27d",
+  "tests/AreaObjRealOrAbsentTests.cpp": "12aae202eeaf0bae26b1e19e3fbaeb254af596f488458a366de531096bc648e8",
+  "decomp/src/Game/NameObj/NameObjFactory.cpp": "12966dfd43638790463f7c4afd70c933124c1d2cce61acd52662169cbcbfb110",
+  "decomp/src/Game/AreaObj/AreaObjContainer.cpp": "efdfc89623fa9e22badf724eaebd8b60ed521e7a4f0add3db10839dcf8e10126"
+}

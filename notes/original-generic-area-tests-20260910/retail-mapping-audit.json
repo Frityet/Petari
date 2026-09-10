@@ -1,0 +1,649 @@
+{
+  "manager_count": 67,
+  "generic_count": 33,
+  "retail_generic_rows": [
+    {
+      "object": "EffectCylinder",
+      "shape": "createBaseOriginCylinder",
+      "manager": "EffectCylinder",
+      "order": 6,
+      "capacity": 64
+    },
+    {
+      "object": "BindEndCube",
+      "shape": "createCenterOriginCube",
+      "manager": "BindEndCube",
+      "order": 5,
+      "capacity": 64
+    },
+    {
+      "object": "PullBackCube",
+      "shape": "createBaseOriginCube",
+      "manager": "PullBackCube",
+      "order": 16,
+      "capacity": 64
+    },
+    {
+      "object": "PullBackCylinder",
+      "shape": "createBaseOriginCylinder",
+      "manager": "PullBackCylinder",
+      "order": 17,
+      "capacity": 64
+    },
+    {
+      "object": "FallsCube",
+      "shape": "createBaseOriginCube",
+      "manager": "FallsCube",
+      "order": 36,
+      "capacity": 32
+    },
+    {
+      "object": "PlaneModeCube",
+      "shape": "createBaseOriginCube",
+      "manager": "PlaneModeCube",
+      "order": 11,
+      "capacity": 16
+    },
+    {
+      "object": "PlaneCircularModeCube",
+      "shape": "createBaseOriginCube",
+      "manager": "PlaneCircularModeCube",
+      "order": 12,
+      "capacity": 16
+    },
+    {
+      "object": "PipeModeCube",
+      "shape": "createBaseOriginCube",
+      "manager": "PipeModeCube",
+      "order": 13,
+      "capacity": 4
+    },
+    {
+      "object": "TowerModeCylinder",
+      "shape": "createBaseOriginCylinder",
+      "manager": "TowerModeCylinder",
+      "order": 14,
+      "capacity": 4
+    },
+    {
+      "object": "PlaneCollisionCube",
+      "shape": "createBaseOriginCube",
+      "manager": "PlaneCollisionCube",
+      "order": 23,
+      "capacity": 16
+    },
+    {
+      "object": "ForbidTriangleJumpCube",
+      "shape": "createBaseOriginCube",
+      "manager": "ForbidTriangleJumpCube",
+      "order": 24,
+      "capacity": 16
+    },
+    {
+      "object": "ForbidWaterSearchCube",
+      "shape": "createBaseOriginCube",
+      "manager": "ForbidWaterSearchCube",
+      "order": 25,
+      "capacity": 16
+    },
+    {
+      "object": "LensFlareArea",
+      "shape": "createBaseOriginCube",
+      "manager": "LensFlareArea",
+      "order": 33,
+      "capacity": 64
+    },
+    {
+      "object": "ViewGroupCtrlCube",
+      "shape": "createBaseOriginCube",
+      "manager": "ViewGroupCtrlCube",
+      "order": 32,
+      "capacity": 64
+    },
+    {
+      "object": "BlueStarGuidanceCube",
+      "shape": "createBaseOriginCube",
+      "manager": "BlueStarGuidanceCube",
+      "order": 40,
+      "capacity": 16
+    },
+    {
+      "object": "TicoSeedGuidanceCube",
+      "shape": "createBaseOriginCube",
+      "manager": "TicoSeedGuidanceCube",
+      "order": 41,
+      "capacity": 16
+    },
+    {
+      "object": "SmokeEffectColorAreaCube",
+      "shape": "createBaseOriginCube",
+      "manager": "SmokeEffectColorArea",
+      "order": 43,
+      "capacity": 16
+    },
+    {
+      "object": "BeeWallShortDistAreaCube",
+      "shape": "createBaseOriginCube",
+      "manager": "BeeWallShortDistArea",
+      "order": 44,
+      "capacity": 16
+    },
+    {
+      "object": "ExtraWallCheckArea",
+      "shape": "createBaseOriginCube",
+      "manager": "ExtraWallCheckArea",
+      "order": 45,
+      "capacity": 16
+    },
+    {
+      "object": "ExtraWallCheckCylinder",
+      "shape": "createBaseOriginCylinder",
+      "manager": "ExtraWallCheckCylinder",
+      "order": 46,
+      "capacity": 16
+    },
+    {
+      "object": "MirrorAreaCube",
+      "shape": "createBaseOriginCube",
+      "manager": "MirrorArea",
+      "order": 64,
+      "capacity": 16
+    },
+    {
+      "object": "HeavySteeringCube",
+      "shape": "createBaseOriginCube",
+      "manager": "HeavySteeringCube",
+      "order": 52,
+      "capacity": 16
+    },
+    {
+      "object": "NonSleepCube",
+      "shape": "createBaseOriginCube",
+      "manager": "NonSleepCube",
+      "order": 53,
+      "capacity": 16
+    },
+    {
+      "object": "AreaMoveSphere",
+      "shape": "createSphere",
+      "manager": "AreaMoveSphere",
+      "order": 54,
+      "capacity": 16
+    },
+    {
+      "object": "DodoryuClosedCylinder",
+      "shape": "createBaseOriginCylinder",
+      "manager": "DodoryuClosedCylinder",
+      "order": 55,
+      "capacity": 8
+    },
+    {
+      "object": "DashChargeCylinder",
+      "shape": "createBaseOriginCylinder",
+      "manager": "DashChargeCylinder",
+      "order": 56,
+      "capacity": 8
+    },
+    {
+      "object": "RasterScrollCube",
+      "shape": "createBaseOriginCube",
+      "manager": "RasterScrollCube",
+      "order": 58,
+      "capacity": 8
+    },
+    {
+      "object": "OnimasuCube",
+      "shape": "createCenterOriginCube",
+      "manager": "OnimasuCube",
+      "order": 59,
+      "capacity": 32
+    },
+    {
+      "object": "ForbidJumpCube",
+      "shape": "createBaseOriginCube",
+      "manager": "ForbidJumpCube",
+      "order": 60,
+      "capacity": 8
+    },
+    {
+      "object": "AstroOverlookAreaCylinder",
+      "shape": "createBaseOriginCylinder",
+      "manager": "AstroOverlookArea",
+      "order": 62,
+      "capacity": 8
+    },
+    {
+      "object": "CelestrialSphere",
+      "shape": "createSphere",
+      "manager": "CelestrialSphere",
+      "order": 63,
+      "capacity": 4
+    },
+    {
+      "object": "DarkMatterCube",
+      "shape": "createBaseOriginCube",
+      "manager": "DarkMatterCube",
+      "order": 65,
+      "capacity": 64
+    },
+    {
+      "object": "DarkMatterCylinder",
+      "shape": "createBaseOriginCylinder",
+      "manager": "DarkMatterCylinder",
+      "order": 66,
+      "capacity": 32
+    }
+  ],
+  "decomp_tables_match_retail": true,
+  "runtime_generic_rows_match_retail": true,
+  "runtime_complete_descriptor_count": 61,
+  "runtime_manager_catalog_count": 66,
+  "runtime_manager_catalog_matches_retail": true,
+  "unsupported_original_manager_types": [
+    "GlaringLightAreaMgr"
+  ],
+  "retail_manager_rows": [
+    {
+      "order": 0,
+      "name": "SwitchArea",
+      "capacity": 64,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 1,
+      "name": "RaceJudgeCube",
+      "capacity": 64,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 2,
+      "name": "NinForceWindCube",
+      "capacity": 64,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 3,
+      "name": "NinAbyssCube",
+      "capacity": 64,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 4,
+      "name": "CubeCamera",
+      "capacity": 160,
+      "creator": "\"createManager<13CubeCameraMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 5,
+      "name": "BindEndCube",
+      "capacity": 64,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 6,
+      "name": "EffectCylinder",
+      "capacity": 64,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 7,
+      "name": "DeathArea",
+      "capacity": 64,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 8,
+      "name": "WarpCube",
+      "capacity": 64,
+      "creator": "\"createManager<11WarpCubeMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 9,
+      "name": "TripodBossStepStart",
+      "capacity": 64,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 10,
+      "name": "Water",
+      "capacity": 64,
+      "creator": "\"createManager<12WaterAreaMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 11,
+      "name": "PlaneModeCube",
+      "capacity": 16,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 12,
+      "name": "PlaneCircularModeCube",
+      "capacity": 16,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 13,
+      "name": "PipeModeCube",
+      "capacity": 4,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 14,
+      "name": "TowerModeCylinder",
+      "capacity": 4,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 15,
+      "name": "ShadeCube",
+      "capacity": 64,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 16,
+      "name": "PullBackCube",
+      "capacity": 64,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 17,
+      "name": "PullBackCylinder",
+      "capacity": 64,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 18,
+      "name": "RestartCube",
+      "capacity": 64,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 19,
+      "name": "ChangeBgmCube",
+      "capacity": 32,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 20,
+      "name": "BgmProhibitArea",
+      "capacity": 4,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 21,
+      "name": "SoundEmitterCube",
+      "capacity": 16,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 22,
+      "name": "SoundEmitterSphere",
+      "capacity": 8,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 23,
+      "name": "PlaneCollisionCube",
+      "capacity": 16,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 24,
+      "name": "ForbidTriangleJumpCube",
+      "capacity": 16,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 25,
+      "name": "ForbidWaterSearchCube",
+      "capacity": 16,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 26,
+      "name": "QuakeEffectArea",
+      "capacity": 16,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 27,
+      "name": "HazeCube",
+      "capacity": 16,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 28,
+      "name": "AudioEffectArea",
+      "capacity": 16,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 29,
+      "name": "BigBubbleGoalArea",
+      "capacity": 16,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 30,
+      "name": "SunLightArea",
+      "capacity": 16,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 31,
+      "name": "GlaringLightArea",
+      "capacity": 64,
+      "creator": "\"createManager<19GlaringLightAreaMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 32,
+      "name": "ViewGroupCtrlCube",
+      "capacity": 64,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 33,
+      "name": "LensFlareArea",
+      "capacity": 64,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 34,
+      "name": "CameraRepulsiveArea",
+      "capacity": 128,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 35,
+      "name": "LightArea",
+      "capacity": 128,
+      "creator": "\"createManager<15LightAreaHolder>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 36,
+      "name": "FallsCube",
+      "capacity": 32,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 37,
+      "name": "MercatorCube",
+      "capacity": 1,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 38,
+      "name": "AstroChangeStageCube",
+      "capacity": 16,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 39,
+      "name": "ImageEffectArea",
+      "capacity": 32,
+      "creator": "\"createManager<18ImageEffectAreaMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 40,
+      "name": "BlueStarGuidanceCube",
+      "capacity": 16,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 41,
+      "name": "TicoSeedGuidanceCube",
+      "capacity": 16,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 42,
+      "name": "MessageArea",
+      "capacity": 16,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 43,
+      "name": "SmokeEffectColorArea",
+      "capacity": 16,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 44,
+      "name": "BeeWallShortDistArea",
+      "capacity": 16,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 45,
+      "name": "ExtraWallCheckArea",
+      "capacity": 16,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 46,
+      "name": "ExtraWallCheckCylinder",
+      "capacity": 16,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 47,
+      "name": "SpinGuidanceCube",
+      "capacity": 16,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 48,
+      "name": "HipDropGuidanceCube",
+      "capacity": 16,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 49,
+      "name": "TamakoroMoveGuidanceCube",
+      "capacity": 16,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 50,
+      "name": "TamakoroJumpGuidanceCube",
+      "capacity": 16,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 51,
+      "name": "BigBubbleGuidanceCube",
+      "capacity": 16,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 52,
+      "name": "HeavySteeringCube",
+      "capacity": 16,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 53,
+      "name": "NonSleepCube",
+      "capacity": 16,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 54,
+      "name": "AreaMoveSphere",
+      "capacity": 16,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 55,
+      "name": "DodoryuClosedCylinder",
+      "capacity": 8,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 56,
+      "name": "DashChargeCylinder",
+      "capacity": 8,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 57,
+      "name": "PlayerSeArea",
+      "capacity": 8,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 58,
+      "name": "RasterScrollCube",
+      "capacity": 8,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 59,
+      "name": "OnimasuCube",
+      "capacity": 32,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 60,
+      "name": "ForbidJumpCube",
+      "capacity": 8,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 61,
+      "name": "CollisionArea",
+      "capacity": 64,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 62,
+      "name": "AstroOverlookArea",
+      "capacity": 8,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 63,
+      "name": "CelestrialSphere",
+      "capacity": 4,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 64,
+      "name": "MirrorArea",
+      "capacity": 16,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 65,
+      "name": "DarkMatterCube",
+      "capacity": 64,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    },
+    {
+      "order": 66,
+      "name": "DarkMatterCylinder",
+      "capacity": 32,
+      "creator": "\"createManager<10AreaObjMgr>__30@unnamed@AreaObjContainer_cpp@FlPCc_P10AreaObjMgr\""
+    }
+  ]
+}

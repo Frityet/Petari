@@ -1,0 +1,464 @@
+[
+  {
+    "name": "SwitchArea",
+    "retail_order": 0,
+    "capacity": 64,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "RaceJudgeCube",
+    "retail_order": 1,
+    "capacity": 64,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "NinForceWindCube",
+    "retail_order": 2,
+    "capacity": 64,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "NinAbyssCube",
+    "retail_order": 3,
+    "capacity": 64,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "CubeCamera",
+    "retail_order": 4,
+    "capacity": 160,
+    "creator": "create_cube_camera_manager",
+    "finalizer": "finalize_cube_camera_manager"
+  },
+  {
+    "name": "BindEndCube",
+    "retail_order": 5,
+    "capacity": 64,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "EffectCylinder",
+    "retail_order": 6,
+    "capacity": 64,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "DeathArea",
+    "retail_order": 7,
+    "capacity": 64,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "WarpCube",
+    "retail_order": 8,
+    "capacity": 64,
+    "creator": "create_warp_cube_manager",
+    "finalizer": null
+  },
+  {
+    "name": "TripodBossStepStart",
+    "retail_order": 9,
+    "capacity": 64,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "Water",
+    "retail_order": 10,
+    "capacity": 64,
+    "creator": "create_water_manager",
+    "finalizer": null
+  },
+  {
+    "name": "PlaneModeCube",
+    "retail_order": 11,
+    "capacity": 16,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "PlaneCircularModeCube",
+    "retail_order": 12,
+    "capacity": 16,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "PipeModeCube",
+    "retail_order": 13,
+    "capacity": 4,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "TowerModeCylinder",
+    "retail_order": 14,
+    "capacity": 4,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "ShadeCube",
+    "retail_order": 15,
+    "capacity": 64,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "PullBackCube",
+    "retail_order": 16,
+    "capacity": 64,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "PullBackCylinder",
+    "retail_order": 17,
+    "capacity": 64,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "RestartCube",
+    "retail_order": 18,
+    "capacity": 64,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "ChangeBgmCube",
+    "retail_order": 19,
+    "capacity": 32,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "BgmProhibitArea",
+    "retail_order": 20,
+    "capacity": 4,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "SoundEmitterCube",
+    "retail_order": 21,
+    "capacity": 16,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "SoundEmitterSphere",
+    "retail_order": 22,
+    "capacity": 8,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "PlaneCollisionCube",
+    "retail_order": 23,
+    "capacity": 16,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "ForbidTriangleJumpCube",
+    "retail_order": 24,
+    "capacity": 16,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "ForbidWaterSearchCube",
+    "retail_order": 25,
+    "capacity": 16,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "QuakeEffectArea",
+    "retail_order": 26,
+    "capacity": 16,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "HazeCube",
+    "retail_order": 27,
+    "capacity": 16,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "AudioEffectArea",
+    "retail_order": 28,
+    "capacity": 16,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "BigBubbleGoalArea",
+    "retail_order": 29,
+    "capacity": 16,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "SunLightArea",
+    "retail_order": 30,
+    "capacity": 16,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "ViewGroupCtrlCube",
+    "retail_order": 32,
+    "capacity": 64,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "LensFlareArea",
+    "retail_order": 33,
+    "capacity": 64,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "CameraRepulsiveArea",
+    "retail_order": 34,
+    "capacity": 128,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "LightArea",
+    "retail_order": 35,
+    "capacity": 128,
+    "creator": "create_light_area_manager",
+    "finalizer": null
+  },
+  {
+    "name": "FallsCube",
+    "retail_order": 36,
+    "capacity": 32,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "MercatorCube",
+    "retail_order": 37,
+    "capacity": 1,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "AstroChangeStageCube",
+    "retail_order": 38,
+    "capacity": 16,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "ImageEffectArea",
+    "retail_order": 39,
+    "capacity": 32,
+    "creator": "create_image_effect_manager",
+    "finalizer": null
+  },
+  {
+    "name": "BlueStarGuidanceCube",
+    "retail_order": 40,
+    "capacity": 16,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "TicoSeedGuidanceCube",
+    "retail_order": 41,
+    "capacity": 16,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "MessageArea",
+    "retail_order": 42,
+    "capacity": 16,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "SmokeEffectColorArea",
+    "retail_order": 43,
+    "capacity": 16,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "BeeWallShortDistArea",
+    "retail_order": 44,
+    "capacity": 16,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "ExtraWallCheckArea",
+    "retail_order": 45,
+    "capacity": 16,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "ExtraWallCheckCylinder",
+    "retail_order": 46,
+    "capacity": 16,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "SpinGuidanceCube",
+    "retail_order": 47,
+    "capacity": 16,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "HipDropGuidanceCube",
+    "retail_order": 48,
+    "capacity": 16,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "TamakoroMoveGuidanceCube",
+    "retail_order": 49,
+    "capacity": 16,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "TamakoroJumpGuidanceCube",
+    "retail_order": 50,
+    "capacity": 16,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "BigBubbleGuidanceCube",
+    "retail_order": 51,
+    "capacity": 16,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "HeavySteeringCube",
+    "retail_order": 52,
+    "capacity": 16,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "NonSleepCube",
+    "retail_order": 53,
+    "capacity": 16,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "AreaMoveSphere",
+    "retail_order": 54,
+    "capacity": 16,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "DodoryuClosedCylinder",
+    "retail_order": 55,
+    "capacity": 8,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "DashChargeCylinder",
+    "retail_order": 56,
+    "capacity": 8,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "PlayerSeArea",
+    "retail_order": 57,
+    "capacity": 8,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "RasterScrollCube",
+    "retail_order": 58,
+    "capacity": 8,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "OnimasuCube",
+    "retail_order": 59,
+    "capacity": 32,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "ForbidJumpCube",
+    "retail_order": 60,
+    "capacity": 8,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "CollisionArea",
+    "retail_order": 61,
+    "capacity": 64,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "AstroOverlookArea",
+    "retail_order": 62,
+    "capacity": 8,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "CelestrialSphere",
+    "retail_order": 63,
+    "capacity": 4,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "MirrorArea",
+    "retail_order": 64,
+    "capacity": 16,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "DarkMatterCube",
+    "retail_order": 65,
+    "capacity": 64,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  },
+  {
+    "name": "DarkMatterCylinder",
+    "retail_order": 66,
+    "capacity": 32,
+    "creator": "create_area_obj_manager",
+    "finalizer": null
+  }
+]

@@ -38,53 +38,35 @@ void AreaObjContainer::init(const JMapInfoIter &) {
         aurora::throw_host_exception<std::logic_error>("AreaObjContainer cannot initialize its manager registry twice");
     }
 
-    struct InstalledManager {
-        std::string_view name;
-        s32 retail_order;
-        s32 capacity;
-        smgpc::scene::AreaObjManagerCreator creator;
-        smgpc::scene::AreaObjManagerFinalize finalize;
-    };
-    auto manager_specs = std::vector<InstalledManager>{};
+    const auto manager_specs = smgpc::scene::complete_area_obj_manager_descriptors();
+    if (manager_specs.size() > std::size(mManagerArray)) {
+        aurora::throw_host_exception<std::length_error>("AreaObj manager registry exceeds the retail container capacity");
+    }
     auto previous_retail_order = s32{-1};
-
-    for (const auto &descriptor : smgpc::scene::complete_area_obj_placement_descriptors()) {
-        if (descriptor.object_name.empty() || descriptor.object_creator == nullptr ||
-            descriptor.manager_name.empty() || descriptor.retail_manager_order < 0 ||
-            descriptor.manager_capacity <= 0 ||
-            descriptor.manager_creator == nullptr) {
-            aurora::throw_host_exception<std::logic_error>("AreaObj placement registry contains an incomplete descriptor");
+    for (const auto &manager : manager_specs) {
+        if (manager.name.empty() || manager.capacity <= 0 || manager.creator == nullptr ||
+            manager.retail_order <= previous_retail_order ||
+            std::ranges::count(manager_specs, manager.name, &smgpc::scene::AreaObjManagerDescriptor::name) != 1) {
+            aurora::throw_host_exception<std::logic_error>("AreaObj manager registry is incomplete or not in unique retail order");
         }
-        if (descriptor.retail_manager_order < previous_retail_order) {
-            aurora::throw_host_exception<std::logic_error>("AreaObj placement registry is not in retail manager-table order");
+        previous_retail_order = manager.retail_order;
+    }
+
+    // Manager ownership and placement support are separate original lifetimes.
+    // An available empty manager must not authorize an unavailable area actor.
+    previous_retail_order = -1;
+    for (const auto &descriptor : smgpc::scene::complete_area_obj_placement_descriptors()) {
+        const auto manager = std::ranges::find(manager_specs, descriptor.manager_name,
+                                              &smgpc::scene::AreaObjManagerDescriptor::name);
+        if (descriptor.object_name.empty() || descriptor.object_creator == nullptr ||
+            descriptor.retail_manager_order < previous_retail_order || manager == manager_specs.end() ||
+            manager->retail_order != descriptor.retail_manager_order ||
+            manager->capacity != descriptor.manager_capacity || manager->creator != descriptor.manager_creator ||
+            manager->finalize != descriptor.manager_finalize) {
+            aurora::throw_host_exception<std::logic_error>("AreaObj placement registry disagrees with its original manager: " +
+                                                           std::string(descriptor.object_name));
         }
         previous_retail_order = descriptor.retail_manager_order;
-
-        const auto existing = std::ranges::find_if(manager_specs, [&](const auto &manager) {
-            return manager.name == descriptor.manager_name;
-        });
-        if (existing != manager_specs.end()) {
-            if (existing->retail_order != descriptor.retail_manager_order ||
-                existing->capacity != descriptor.manager_capacity ||
-                existing->creator != descriptor.manager_creator ||
-                existing->finalize != descriptor.manager_finalize) {
-                aurora::throw_host_exception<std::logic_error>("AreaObj placement registry disagrees about manager construction for " +
-                                       std::string(descriptor.manager_name));
-            }
-            continue;
-        }
-
-        if (manager_specs.size() >= std::size(mManagerArray)) {
-            aurora::throw_host_exception<std::length_error>("AreaObj placement registry exceeds the retail container capacity");
-        }
-
-        manager_specs.push_back(InstalledManager{
-            .name = descriptor.manager_name,
-            .retail_order = descriptor.retail_manager_order,
-            .capacity = descriptor.manager_capacity,
-            .creator = descriptor.manager_creator,
-            .finalize = descriptor.manager_finalize,
-        });
     }
 
     auto constructed_managers = std::vector<std::unique_ptr<AreaObjMgr>>{};
@@ -92,12 +74,11 @@ void AreaObjContainer::init(const JMapInfoIter &) {
     constructed_managers.reserve(manager_specs.size());
     manager_finalizers.reserve(manager_specs.size());
     for (const auto &spec : manager_specs) {
-        const auto manager_name = std::string(spec.name);
         auto manager = std::unique_ptr<AreaObjMgr>(
-            spec.creator(spec.capacity, manager_name.c_str()));
+            spec.creator(spec.capacity, spec.name.data()));
         if (manager == nullptr) {
             aurora::throw_host_exception<std::runtime_error>("AreaObj manager creator returned null for " +
-                                     manager_name);
+                                     std::string(spec.name));
         }
         manager->init(JMapInfoIter{});
         constructed_managers.push_back(std::move(manager));

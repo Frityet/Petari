@@ -18,10 +18,17 @@ namespace smgpc::scene {
     using AreaObjManagerCreator = AreaObjMgr *(*)(s32, const char *);
     using AreaObjManagerFinalize = void (*)(AreaObjMgr &);
 
+    struct AreaObjManagerDescriptor {
+        std::string_view name;
+        s32 retail_order;
+        s32 capacity;
+        AreaObjManagerCreator creator;
+        AreaObjManagerFinalize finalize = nullptr;
+    };
+
     // A descriptor is complete only when both halves of the retail placement
     // route are linked: the actor creator and the manager it enters from
-    // AreaObj::init. Keep this as the single support registry consumed by the
-    // host NameObjFactory and AreaObjContainer compatibility boundary.
+    // AreaObj::init. Installing a manager alone does not enable its actors.
     struct AreaObjPlacementDescriptor {
         std::string_view object_name;
         AreaObjCreator object_creator = nullptr;
@@ -32,6 +39,7 @@ namespace smgpc::scene {
         AreaObjManagerFinalize manager_finalize = nullptr;
     };
 
+    [[nodiscard]] std::span<const AreaObjManagerDescriptor> complete_area_obj_manager_descriptors() noexcept;
     [[nodiscard]] std::span<const AreaObjPlacementDescriptor> complete_area_obj_placement_descriptors() noexcept;
     [[nodiscard]] const AreaObjPlacementDescriptor *find_complete_area_obj_placement_descriptor(
         std::string_view object_name) noexcept;

@@ -4,6 +4,7 @@
 #include "Game/AreaObj/AreaForm.hpp"
 #include "Game/AreaObj/AreaObj.hpp"
 #include "Game/AreaObj/WaterArea.hpp"
+#include "Game/AreaObj/WarpCube.hpp"
 #include "Game/AreaObj/ImageEffectArea.hpp"
 #include "Game/AreaObj/BloomArea.hpp"
 #include "Game/AreaObj/SimpleBloomArea.hpp"
@@ -55,6 +56,10 @@ namespace smgpc::scene {
             return new WaterAreaMgr(capacity, name);
         }
 
+        [[nodiscard]] AreaObjMgr *create_warp_cube_manager(s32 capacity, const char *name) {
+            return new WarpCubeMgr(capacity, name);
+        }
+
         [[nodiscard]] AreaObjMgr *create_image_effect_manager(s32 capacity, const char *name) {
             return new ImageEffectAreaMgr(capacity, name);
         }
@@ -67,6 +72,77 @@ namespace smgpc::scene {
             }
             camera_manager->initAfterLoad();
         }
+
+        // Retail constructs managers independently of placed area instances.
+        // GlaringLightAreaMgr remains unavailable until its original type is linked.
+        constexpr auto cCompleteAreaObjManagerDescriptors = std::array{
+            AreaObjManagerDescriptor{"SwitchArea", 0, 0x40, create_area_obj_manager},
+            AreaObjManagerDescriptor{"RaceJudgeCube", 1, 0x40, create_area_obj_manager},
+            AreaObjManagerDescriptor{"NinForceWindCube", 2, 0x40, create_area_obj_manager},
+            AreaObjManagerDescriptor{"NinAbyssCube", 3, 0x40, create_area_obj_manager},
+            AreaObjManagerDescriptor{"CubeCamera", 4, 0xA0, create_cube_camera_manager, finalize_cube_camera_manager},
+            AreaObjManagerDescriptor{"BindEndCube", 5, 0x40, create_area_obj_manager},
+            AreaObjManagerDescriptor{"EffectCylinder", 6, 0x40, create_area_obj_manager},
+            AreaObjManagerDescriptor{"DeathArea", 7, 0x40, create_area_obj_manager},
+            AreaObjManagerDescriptor{"WarpCube", 8, 0x40, create_warp_cube_manager},
+            AreaObjManagerDescriptor{"TripodBossStepStart", 9, 0x40, create_area_obj_manager},
+            AreaObjManagerDescriptor{"Water", 10, 0x40, create_water_manager},
+            AreaObjManagerDescriptor{"PlaneModeCube", 11, 0x10, create_area_obj_manager},
+            AreaObjManagerDescriptor{"PlaneCircularModeCube", 12, 0x10, create_area_obj_manager},
+            AreaObjManagerDescriptor{"PipeModeCube", 13, 0x4, create_area_obj_manager},
+            AreaObjManagerDescriptor{"TowerModeCylinder", 14, 0x4, create_area_obj_manager},
+            AreaObjManagerDescriptor{"ShadeCube", 15, 0x40, create_area_obj_manager},
+            AreaObjManagerDescriptor{"PullBackCube", 16, 0x40, create_area_obj_manager},
+            AreaObjManagerDescriptor{"PullBackCylinder", 17, 0x40, create_area_obj_manager},
+            AreaObjManagerDescriptor{"RestartCube", 18, 0x40, create_area_obj_manager},
+            AreaObjManagerDescriptor{"ChangeBgmCube", 19, 0x20, create_area_obj_manager},
+            AreaObjManagerDescriptor{"BgmProhibitArea", 20, 0x4, create_area_obj_manager},
+            AreaObjManagerDescriptor{"SoundEmitterCube", 21, 0x10, create_area_obj_manager},
+            AreaObjManagerDescriptor{"SoundEmitterSphere", 22, 0x8, create_area_obj_manager},
+            AreaObjManagerDescriptor{"PlaneCollisionCube", 23, 0x10, create_area_obj_manager},
+            AreaObjManagerDescriptor{"ForbidTriangleJumpCube", 24, 0x10, create_area_obj_manager},
+            AreaObjManagerDescriptor{"ForbidWaterSearchCube", 25, 0x10, create_area_obj_manager},
+            AreaObjManagerDescriptor{"QuakeEffectArea", 26, 0x10, create_area_obj_manager},
+            AreaObjManagerDescriptor{"HazeCube", 27, 0x10, create_area_obj_manager},
+            AreaObjManagerDescriptor{"AudioEffectArea", 28, 0x10, create_area_obj_manager},
+            AreaObjManagerDescriptor{"BigBubbleGoalArea", 29, 0x10, create_area_obj_manager},
+            AreaObjManagerDescriptor{"SunLightArea", 30, 0x10, create_area_obj_manager},
+            AreaObjManagerDescriptor{"ViewGroupCtrlCube", 32, 0x40, create_area_obj_manager},
+            AreaObjManagerDescriptor{"LensFlareArea", 33, 0x40, create_area_obj_manager},
+            AreaObjManagerDescriptor{"CameraRepulsiveArea", 34, 0x80, create_area_obj_manager},
+            AreaObjManagerDescriptor{"LightArea", 35, 0x80, create_light_area_manager},
+            AreaObjManagerDescriptor{"FallsCube", 36, 0x20, create_area_obj_manager},
+            AreaObjManagerDescriptor{"MercatorCube", 37, 0x1, create_area_obj_manager},
+            AreaObjManagerDescriptor{"AstroChangeStageCube", 38, 0x10, create_area_obj_manager},
+            AreaObjManagerDescriptor{"ImageEffectArea", 39, 0x20, create_image_effect_manager},
+            AreaObjManagerDescriptor{"BlueStarGuidanceCube", 40, 0x10, create_area_obj_manager},
+            AreaObjManagerDescriptor{"TicoSeedGuidanceCube", 41, 0x10, create_area_obj_manager},
+            AreaObjManagerDescriptor{"MessageArea", 42, 0x10, create_area_obj_manager},
+            AreaObjManagerDescriptor{"SmokeEffectColorArea", 43, 0x10, create_area_obj_manager},
+            AreaObjManagerDescriptor{"BeeWallShortDistArea", 44, 0x10, create_area_obj_manager},
+            AreaObjManagerDescriptor{"ExtraWallCheckArea", 45, 0x10, create_area_obj_manager},
+            AreaObjManagerDescriptor{"ExtraWallCheckCylinder", 46, 0x10, create_area_obj_manager},
+            AreaObjManagerDescriptor{"SpinGuidanceCube", 47, 0x10, create_area_obj_manager},
+            AreaObjManagerDescriptor{"HipDropGuidanceCube", 48, 0x10, create_area_obj_manager},
+            AreaObjManagerDescriptor{"TamakoroMoveGuidanceCube", 49, 0x10, create_area_obj_manager},
+            AreaObjManagerDescriptor{"TamakoroJumpGuidanceCube", 50, 0x10, create_area_obj_manager},
+            AreaObjManagerDescriptor{"BigBubbleGuidanceCube", 51, 0x10, create_area_obj_manager},
+            AreaObjManagerDescriptor{"HeavySteeringCube", 52, 0x10, create_area_obj_manager},
+            AreaObjManagerDescriptor{"NonSleepCube", 53, 0x10, create_area_obj_manager},
+            AreaObjManagerDescriptor{"AreaMoveSphere", 54, 0x10, create_area_obj_manager},
+            AreaObjManagerDescriptor{"DodoryuClosedCylinder", 55, 0x8, create_area_obj_manager},
+            AreaObjManagerDescriptor{"DashChargeCylinder", 56, 0x8, create_area_obj_manager},
+            AreaObjManagerDescriptor{"PlayerSeArea", 57, 0x8, create_area_obj_manager},
+            AreaObjManagerDescriptor{"RasterScrollCube", 58, 0x8, create_area_obj_manager},
+            AreaObjManagerDescriptor{"OnimasuCube", 59, 0x20, create_area_obj_manager},
+            AreaObjManagerDescriptor{"ForbidJumpCube", 60, 0x8, create_area_obj_manager},
+            AreaObjManagerDescriptor{"CollisionArea", 61, 0x40, create_area_obj_manager},
+            AreaObjManagerDescriptor{"AstroOverlookArea", 62, 0x8, create_area_obj_manager},
+            AreaObjManagerDescriptor{"CelestrialSphere", 63, 0x4, create_area_obj_manager},
+            AreaObjManagerDescriptor{"MirrorArea", 64, 0x10, create_area_obj_manager},
+            AreaObjManagerDescriptor{"DarkMatterCube", 65, 0x40, create_area_obj_manager},
+            AreaObjManagerDescriptor{"DarkMatterCylinder", 66, 0x20, create_area_obj_manager},
+        };
 
         // Add an entry only after its exact actor init path and every manager
         // dependency are linked. The host factory consumes this same table, so
@@ -134,6 +210,22 @@ namespace smgpc::scene {
                     .manager_finalize = finalize_cube_camera_manager,
                 },
                 AreaObjPlacementDescriptor{
+                    .object_name = "BindEndCube",
+                    .object_creator = create_area_obj<AreaObj, AreaForm::Type_Cube1>,
+                    .manager_name = "BindEndCube",
+                    .retail_manager_order = 5,
+                    .manager_capacity = 0x40,
+                    .manager_creator = create_area_obj_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "EffectCylinder",
+                    .object_creator = create_area_obj<AreaObj, AreaForm::Type_Cylinder>,
+                    .manager_name = "EffectCylinder",
+                    .retail_manager_order = 6,
+                    .manager_capacity = 0x40,
+                    .manager_creator = create_area_obj_manager,
+                },
+                AreaObjPlacementDescriptor{
                     .object_name = "WaterCube",
                     .object_creator = create_area_obj<WaterArea, AreaForm::Type_Cube2>,
                     .manager_name = "Water",
@@ -158,11 +250,75 @@ namespace smgpc::scene {
                     .manager_creator = create_water_manager,
                 },
                 AreaObjPlacementDescriptor{
+                    .object_name = "PlaneModeCube",
+                    .object_creator = create_area_obj<AreaObj, AreaForm::Type_Cube2>,
+                    .manager_name = "PlaneModeCube",
+                    .retail_manager_order = 11,
+                    .manager_capacity = 0x10,
+                    .manager_creator = create_area_obj_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "PlaneCircularModeCube",
+                    .object_creator = create_area_obj<AreaObj, AreaForm::Type_Cube2>,
+                    .manager_name = "PlaneCircularModeCube",
+                    .retail_manager_order = 12,
+                    .manager_capacity = 0x10,
+                    .manager_creator = create_area_obj_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "PipeModeCube",
+                    .object_creator = create_area_obj<AreaObj, AreaForm::Type_Cube2>,
+                    .manager_name = "PipeModeCube",
+                    .retail_manager_order = 13,
+                    .manager_capacity = 0x4,
+                    .manager_creator = create_area_obj_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "TowerModeCylinder",
+                    .object_creator = create_area_obj<AreaObj, AreaForm::Type_Cylinder>,
+                    .manager_name = "TowerModeCylinder",
+                    .retail_manager_order = 14,
+                    .manager_capacity = 0x4,
+                    .manager_creator = create_area_obj_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "PullBackCube",
+                    .object_creator = create_area_obj<AreaObj, AreaForm::Type_Cube2>,
+                    .manager_name = "PullBackCube",
+                    .retail_manager_order = 16,
+                    .manager_capacity = 0x40,
+                    .manager_creator = create_area_obj_manager,
+                },
+                AreaObjPlacementDescriptor{
                     .object_name = "PullBackCylinder",
                     .object_creator = create_area_obj<AreaObj, AreaForm::Type_Cylinder>,
                     .manager_name = "PullBackCylinder",
                     .retail_manager_order = 17,
                     .manager_capacity = 0x40,
+                    .manager_creator = create_area_obj_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "PlaneCollisionCube",
+                    .object_creator = create_area_obj<AreaObj, AreaForm::Type_Cube2>,
+                    .manager_name = "PlaneCollisionCube",
+                    .retail_manager_order = 23,
+                    .manager_capacity = 0x10,
+                    .manager_creator = create_area_obj_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "ForbidTriangleJumpCube",
+                    .object_creator = create_area_obj<AreaObj, AreaForm::Type_Cube2>,
+                    .manager_name = "ForbidTriangleJumpCube",
+                    .retail_manager_order = 24,
+                    .manager_capacity = 0x10,
+                    .manager_creator = create_area_obj_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "ForbidWaterSearchCube",
+                    .object_creator = create_area_obj<AreaObj, AreaForm::Type_Cube2>,
+                    .manager_name = "ForbidWaterSearchCube",
+                    .retail_manager_order = 25,
+                    .manager_capacity = 0x10,
                     .manager_creator = create_area_obj_manager,
                 },
                 AreaObjPlacementDescriptor{
@@ -212,6 +368,14 @@ namespace smgpc::scene {
                     .retail_manager_order = 35,
                     .manager_capacity = 0x80,
                     .manager_creator = create_light_area_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "FallsCube",
+                    .object_creator = create_area_obj<AreaObj, AreaForm::Type_Cube2>,
+                    .manager_name = "FallsCube",
+                    .retail_manager_order = 36,
+                    .manager_capacity = 0x20,
+                    .manager_creator = create_area_obj_manager,
                 },
                 AreaObjPlacementDescriptor{
                     .object_name = "BloomCube",
@@ -318,6 +482,14 @@ namespace smgpc::scene {
                     .manager_creator = create_area_obj_manager,
                 },
                 AreaObjPlacementDescriptor{
+                    .object_name = "TicoSeedGuidanceCube",
+                    .object_creator = create_area_obj<AreaObj, AreaForm::Type_Cube2>,
+                    .manager_name = "TicoSeedGuidanceCube",
+                    .retail_manager_order = 41,
+                    .manager_capacity = 0x10,
+                    .manager_creator = create_area_obj_manager,
+                },
+                AreaObjPlacementDescriptor{
                     .object_name = "MessageAreaCube",
                     .object_creator = create_area_obj<MessageArea, AreaForm::Type_Cube2>,
                     .manager_name = "MessageArea",
@@ -334,11 +506,139 @@ namespace smgpc::scene {
                     .manager_creator = create_area_obj_manager,
                 },
                 AreaObjPlacementDescriptor{
+                    .object_name = "SmokeEffectColorAreaCube",
+                    .object_creator = create_area_obj<AreaObj, AreaForm::Type_Cube2>,
+                    .manager_name = "SmokeEffectColorArea",
+                    .retail_manager_order = 43,
+                    .manager_capacity = 0x10,
+                    .manager_creator = create_area_obj_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "BeeWallShortDistAreaCube",
+                    .object_creator = create_area_obj<AreaObj, AreaForm::Type_Cube2>,
+                    .manager_name = "BeeWallShortDistArea",
+                    .retail_manager_order = 44,
+                    .manager_capacity = 0x10,
+                    .manager_creator = create_area_obj_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "ExtraWallCheckArea",
+                    .object_creator = create_area_obj<AreaObj, AreaForm::Type_Cube2>,
+                    .manager_name = "ExtraWallCheckArea",
+                    .retail_manager_order = 45,
+                    .manager_capacity = 0x10,
+                    .manager_creator = create_area_obj_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "ExtraWallCheckCylinder",
+                    .object_creator = create_area_obj<AreaObj, AreaForm::Type_Cylinder>,
+                    .manager_name = "ExtraWallCheckCylinder",
+                    .retail_manager_order = 46,
+                    .manager_capacity = 0x10,
+                    .manager_creator = create_area_obj_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "HeavySteeringCube",
+                    .object_creator = create_area_obj<AreaObj, AreaForm::Type_Cube2>,
+                    .manager_name = "HeavySteeringCube",
+                    .retail_manager_order = 52,
+                    .manager_capacity = 0x10,
+                    .manager_creator = create_area_obj_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "NonSleepCube",
+                    .object_creator = create_area_obj<AreaObj, AreaForm::Type_Cube2>,
+                    .manager_name = "NonSleepCube",
+                    .retail_manager_order = 53,
+                    .manager_capacity = 0x10,
+                    .manager_creator = create_area_obj_manager,
+                },
+                AreaObjPlacementDescriptor{
                     .object_name = "AreaMoveSphere",
                     .object_creator = create_area_obj<AreaObj, AreaForm::Type_Sphere>,
                     .manager_name = "AreaMoveSphere",
                     .retail_manager_order = 54,
                     .manager_capacity = 0x10,
+                    .manager_creator = create_area_obj_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "DodoryuClosedCylinder",
+                    .object_creator = create_area_obj<AreaObj, AreaForm::Type_Cylinder>,
+                    .manager_name = "DodoryuClosedCylinder",
+                    .retail_manager_order = 55,
+                    .manager_capacity = 0x8,
+                    .manager_creator = create_area_obj_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "DashChargeCylinder",
+                    .object_creator = create_area_obj<AreaObj, AreaForm::Type_Cylinder>,
+                    .manager_name = "DashChargeCylinder",
+                    .retail_manager_order = 56,
+                    .manager_capacity = 0x8,
+                    .manager_creator = create_area_obj_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "RasterScrollCube",
+                    .object_creator = create_area_obj<AreaObj, AreaForm::Type_Cube2>,
+                    .manager_name = "RasterScrollCube",
+                    .retail_manager_order = 58,
+                    .manager_capacity = 0x8,
+                    .manager_creator = create_area_obj_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "OnimasuCube",
+                    .object_creator = create_area_obj<AreaObj, AreaForm::Type_Cube1>,
+                    .manager_name = "OnimasuCube",
+                    .retail_manager_order = 59,
+                    .manager_capacity = 0x20,
+                    .manager_creator = create_area_obj_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "ForbidJumpCube",
+                    .object_creator = create_area_obj<AreaObj, AreaForm::Type_Cube2>,
+                    .manager_name = "ForbidJumpCube",
+                    .retail_manager_order = 60,
+                    .manager_capacity = 0x8,
+                    .manager_creator = create_area_obj_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "AstroOverlookAreaCylinder",
+                    .object_creator = create_area_obj<AreaObj, AreaForm::Type_Cylinder>,
+                    .manager_name = "AstroOverlookArea",
+                    .retail_manager_order = 62,
+                    .manager_capacity = 0x8,
+                    .manager_creator = create_area_obj_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "CelestrialSphere",
+                    .object_creator = create_area_obj<AreaObj, AreaForm::Type_Sphere>,
+                    .manager_name = "CelestrialSphere",
+                    .retail_manager_order = 63,
+                    .manager_capacity = 0x4,
+                    .manager_creator = create_area_obj_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "MirrorAreaCube",
+                    .object_creator = create_area_obj<AreaObj, AreaForm::Type_Cube2>,
+                    .manager_name = "MirrorArea",
+                    .retail_manager_order = 64,
+                    .manager_capacity = 0x10,
+                    .manager_creator = create_area_obj_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "DarkMatterCube",
+                    .object_creator = create_area_obj<AreaObj, AreaForm::Type_Cube2>,
+                    .manager_name = "DarkMatterCube",
+                    .retail_manager_order = 65,
+                    .manager_capacity = 0x40,
+                    .manager_creator = create_area_obj_manager,
+                },
+                AreaObjPlacementDescriptor{
+                    .object_name = "DarkMatterCylinder",
+                    .object_creator = create_area_obj<AreaObj, AreaForm::Type_Cylinder>,
+                    .manager_name = "DarkMatterCylinder",
+                    .retail_manager_order = 66,
+                    .manager_capacity = 0x20,
                     .manager_creator = create_area_obj_manager,
                 },
             };
@@ -358,6 +658,10 @@ namespace smgpc::scene {
 
     }  // namespace
 
+    std::span<const AreaObjManagerDescriptor> complete_area_obj_manager_descriptors() noexcept {
+        return cCompleteAreaObjManagerDescriptors;
+    }
+
     std::span<const AreaObjPlacementDescriptor> complete_area_obj_placement_descriptors() noexcept {
         return cCompleteAreaObjPlacementDescriptors;
     }
@@ -371,6 +675,13 @@ namespace smgpc::scene {
         if (found == descriptors.end() || found->object_creator == nullptr ||
             found->manager_creator == nullptr || found->manager_name.empty() ||
             found->retail_manager_order < 0 || found->manager_capacity <= 0) {
+            return nullptr;
+        }
+        const auto managers = complete_area_obj_manager_descriptors();
+        const auto manager = std::ranges::find(managers, found->manager_name, &AreaObjManagerDescriptor::name);
+        if (manager == managers.end() || manager->retail_order != found->retail_manager_order ||
+            manager->capacity != found->manager_capacity || manager->creator != found->manager_creator ||
+            manager->finalize != found->manager_finalize) {
             return nullptr;
         }
         return &*found;

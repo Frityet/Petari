@@ -1,3 +1,4 @@
+#include "SceneExecutionFixture.hpp"
 #include "Game/AreaObj/AreaForm.hpp"
 #include "Game/AreaObj/AreaObj.hpp"
 #include "Game/AreaObj/AreaObjContainer.hpp"
@@ -6,6 +7,7 @@
 #include "Game/AreaObj/LightAreaHolder.hpp"
 #include "Game/AreaObj/MessageArea.hpp"
 #include "Game/AreaObj/SwitchArea.hpp"
+#include "Game/AreaObj/WarpCube.hpp"
 #include "Game/LiveActor/ActorLightCtrl.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/AreaObj/MercatorTransformCube.hpp"
@@ -21,6 +23,7 @@
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "render/light/LightData.hpp"
+#include "resource/BcsvTable.hpp"
 #include "scene/AreaObjRuntime.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "scene/StageLightSceneBinding.hpp"
@@ -31,6 +34,7 @@
 
 #include <algorithm>
 #include <array>
+#include <bit>
 #include <cctype>
 #include <cstdlib>
 #include <exception>
@@ -158,29 +162,24 @@ namespace {
     }
 
     void verify_installed_descriptor_managers(AreaObjContainer &container) {
-        const auto descriptors = smgpc::scene::complete_area_obj_placement_descriptors();
+        const auto managers = smgpc::scene::complete_area_obj_manager_descriptors();
         auto installed_manager_names = std::vector<std::string_view>{};
-        for (const auto &descriptor : descriptors) {
-            require(!descriptor.object_name.empty() && descriptor.object_creator != nullptr &&
-                        !descriptor.manager_name.empty() && descriptor.retail_manager_order >= 0 &&
-                        descriptor.manager_capacity > 0 &&
-                        descriptor.manager_creator != nullptr,
-                    "the public AreaObj registry must expose complete descriptors only");
-            require(smgpc::scene::find_complete_area_obj_placement_descriptor(descriptor.object_name) ==
-                        &descriptor,
-                    "descriptor lookup must return the canonical registry entry");
-
-            const auto manager_name = std::string(descriptor.manager_name);
-            auto *manager = container.getManager(manager_name.c_str());
-            require(manager != nullptr && manager->_18 == descriptor.manager_capacity,
-                    "the container must construct each descriptor's real manager with retail capacity");
-
-            if (std::ranges::find(installed_manager_names, descriptor.manager_name) ==
-                installed_manager_names.end()) {
-                installed_manager_names.push_back(descriptor.manager_name);
-            }
-
-            const auto derived_name = manager_name + "PlacementVariant";
+        auto base_manager_count = std::size_t{};
+        auto previous_order = s32{-1};
+        for (const auto &descriptor : managers) {
+            require(!descriptor.name.empty() && descriptor.creator != nullptr &&
+                        descriptor.retail_order > previous_order && descriptor.capacity > 0,
+                    "the manager catalog must contain complete unique rows in strict retail order");
+            previous_order = descriptor.retail_order;
+            require(std::ranges::find(installed_manager_names, descriptor.name) == installed_manager_names.end(),
+                    "each original manager must have one canonical catalog row");
+            installed_manager_names.push_back(descriptor.name);
+            const auto name = std::string(descriptor.name);
+            auto *manager = container.getManager(name.c_str());
+            require(manager != nullptr && manager->_18 == descriptor.capacity,
+                    "every ready catalog manager must exist even without completed placements");
+            if (typeid(*manager) == typeid(AreaObjMgr)) ++base_manager_count;
+            const auto derived_name = name + "PlacementVariant";
             const auto expected = std::ranges::find_if(installed_manager_names, [&](const auto &installed_name) {
                 return starts_with(derived_name, installed_name);
             });
@@ -188,6 +187,45 @@ namespace {
                         std::string_view(container.getManager(derived_name.c_str())->mName) == *expected,
                     "manager lookup must preserve retail prefix and first-match ordering");
         }
+        require(base_manager_count == 61U,
+                "all 61 original base AreaObjMgr rows must exist independently of actor coverage");
+
+        for (const auto &descriptor : smgpc::scene::complete_area_obj_placement_descriptors()) {
+            require(!descriptor.object_name.empty() && descriptor.object_creator != nullptr,
+                    "the public AreaObj registry must expose complete placements only");
+            require(smgpc::scene::find_complete_area_obj_placement_descriptor(descriptor.object_name) == &descriptor,
+                    "placement lookup must return the canonical registry entry");
+            const auto manager = std::ranges::find(managers, descriptor.manager_name,
+                                                  &smgpc::scene::AreaObjManagerDescriptor::name);
+            require(manager != managers.end() && manager->retail_order == descriptor.retail_manager_order &&
+                        manager->capacity == descriptor.manager_capacity && manager->creator == descriptor.manager_creator &&
+                        manager->finalize == descriptor.manager_finalize,
+                    "a complete placement must resolve its exact canonical manager closure");
+        }
+    }
+
+    void test_manager_readiness_does_not_fabricate_placement_support() {
+        auto holder = SceneObjHolder{};
+        auto binding = smgpc::scene::SceneObjHolderBinding(holder);
+        auto *container = static_cast<AreaObjContainer *>(holder.create(SceneObj_AreaObjContainer));
+        auto *manager = container->getManager("RestartCube");
+        require(typeid(*manager) == typeid(AreaObjMgr) && manager->_18 == 0x40,
+                "RestartCube's original base manager exists independently of its specialized actor");
+        require(MR::getAreaObj("RestartCube", TVec3f{}) == nullptr,
+                "a real manager with no placed actor returns a real empty-volume miss");
+        require(smgpc::scene::find_complete_area_obj_placement_descriptor("RestartCube") == nullptr &&
+                    !smgpc::scene::placement_has_complete_area_obj_runtime(
+                        "RestartCube", "jmp/placement/common/areaobjinfo", true),
+                "a manager alone cannot claim completion of the specialized RestartCube placement");
+        auto *warp = dynamic_cast<WarpCubeMgr *>(container->getManager("WarpCube"));
+        require(warp != nullptr && warp->_18 == 0x40 && warp->mWarpCube == nullptr &&
+                    warp->find_in(TVec3f{}) == nullptr,
+                "the original empty WarpCubeMgr must retain its null active cube and real query behavior");
+        require(!smgpc::scene::placement_has_complete_area_obj_runtime(
+                    "WarpCube", "jmp/placement/common/areaobjinfo", true),
+                "installing WarpCubeMgr must not claim the specialized WarpCube placement is complete");
+        require_throws<std::logic_error>([&] { (void)container->getManager("GlaringLightArea"); },
+                                        "No complete retail AreaObj manager");
     }
 
     void test_retail_prefix_collision_uses_first_manager() {
@@ -503,12 +541,14 @@ namespace {
             std::tuple{"MessageAreaCylinder", "MessageArea", 42, 0x10, AreaForm::Type_Cylinder, false},
             std::tuple{"AreaMoveSphere", "AreaMoveSphere", 54, 0x10, AreaForm::Type_Sphere, false},
         };
-        require(descriptors.size() == expected_descriptors.size(),
-                "the registry must contain only the completed exact and passive AreaObj closures");
+        require(descriptors.size() >= expected_descriptors.size(),
+                "expanding completed areas must preserve all previously completed closures");
         for (auto index = std::size_t{}; index < expected_descriptors.size(); ++index) {
             const auto &[object_name, manager_name, retail_order, capacity, form_type, has_finalize] =
                 expected_descriptors[index];
-            const auto &descriptor = descriptors[index];
+            const auto *found = smgpc::scene::find_complete_area_obj_placement_descriptor(object_name);
+            require(found != nullptr, "every previously completed area must remain registered");
+            const auto &descriptor = *found;
             require(descriptor.object_name == object_name && descriptor.manager_name == manager_name &&
                         descriptor.retail_manager_order == retail_order &&
                         descriptor.manager_capacity == capacity &&
@@ -518,6 +558,11 @@ namespace {
             const auto *area = dynamic_cast<const AreaObj *>(actor.get());
             require(area != nullptr && area->mFormType == form_type,
                     "each descriptor must retain its exact retail AreaForm creator");
+        }
+        for (const auto &descriptor : descriptors) {
+            require(std::ranges::count(descriptors, descriptor.object_name,
+                                       &smgpc::scene::AreaObjPlacementDescriptor::object_name) == 1,
+                    "each completed placement must have exactly one canonical descriptor");
         }
         for (auto index = std::size_t{1U}; index < descriptors.size(); ++index) {
             require(descriptors[index - 1U].retail_manager_order <=
@@ -529,6 +574,124 @@ namespace {
                         descriptors.front().object_name, "jmp/placement/common/areaobjinfo", true),
                     "a descriptor-backed AreaObj creator must pass the shared stage preflight predicate");
         }
+    }
+
+    JMapInfo make_generic_effect_area_row(const char *name, const std::array<s32, 8> &args) {
+        constexpr auto fields = std::array{
+            "name", "pos_x", "pos_y", "pos_z", "dir_x", "dir_y", "dir_z",
+            "scale_x", "scale_y", "scale_z", "Obj_arg0", "Obj_arg1", "Obj_arg2",
+            "Obj_arg3", "Obj_arg4", "Obj_arg5", "Obj_arg6", "Obj_arg7",
+        };
+        constexpr auto data_offset = 16U + fields.size() * 12U;
+        constexpr auto row_size = fields.size() * 4U;
+        auto bytes = std::vector<u8>(data_offset + row_size);
+        const auto put32 = [&](std::size_t offset, u32 value) {
+            for (std::size_t byte = 0; byte < 4; ++byte)
+                bytes.at(offset + byte) = static_cast<u8>(value >> (24U - byte * 8U));
+        };
+        put32(0, 1);
+        put32(4, fields.size());
+        put32(8, data_offset);
+        put32(12, row_size);
+        constexpr auto placement = std::array{25.0F, -50.0F, 75.0F, 0.0F, 0.0F, 0.0F, 0.5F, 2.0F, 0.25F};
+        for (std::size_t field = 0; field < fields.size(); ++field) {
+            const auto header = 16U + field * 12U;
+            put32(header, smgpc::resource::jmap_hash(fields[field]));
+            put32(header + 4U, 0xffffffffU);
+            bytes[header + 8U] = static_cast<u8>((field * 4U) >> 8U);
+            bytes[header + 9U] = static_cast<u8>(field * 4U);
+            const auto type = field == 0U ? smgpc::resource::BcsvFieldType::StringOffset :
+                              field < 10U ? smgpc::resource::BcsvFieldType::Float :
+                                            smgpc::resource::BcsvFieldType::Int32;
+            bytes[header + 11U] = static_cast<u8>(type);
+            if (field > 0U && field < 10U)
+                put32(data_offset + field * 4U, std::bit_cast<u32>(placement[field - 1U]));
+            else if (field >= 10U)
+                put32(data_offset + field * 4U, static_cast<u32>(args[field - 10U]));
+        }
+        const auto text = std::string_view(name);
+        bytes.insert(bytes.end(), text.begin(), text.end());
+        bytes.push_back(0);
+        auto info = JMapInfo::from_bcsv(bytes);
+        info.setPlacedZoneId(0);
+        return info;
+    }
+
+    void test_generic_effect_areas_use_original_init_and_queries() {
+        const auto baseline = smgpc::compat::name_obj_runtime_state_count();
+        {
+            auto heaps = smgpc::compat::JkrHeapRuntime::create(16U << 20);
+            auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 8U << 20);
+            auto scheduler = smgpc::runtime::SceneScheduler{};
+            auto scheduler_binding = smgpc::runtime::SceneSchedulerBinding(scheduler);
+            auto execution = smgpc::test::SceneExecutionFixture(scheduler, domain);
+            auto &holder = execution.holder();
+            auto &binding = execution.objects();
+            {
+                const auto game = smgpc::compat::JkrAllocationScope(domain);
+                for (const auto id : {SceneObj_StageSwitchContainer, SceneObj_SwitchWatcherHolder,
+                                      SceneObj_SleepControllerHolder, SceneObj_AreaObjContainer})
+                    require(holder.create(id) != nullptr, "generic area init requires original scene services");
+            }
+
+            constexpr auto cases = std::array{
+                std::tuple{"EffectCylinder", "EffectCylinder", 6, 0x40, AreaForm::Type_Cylinder,
+                           TVec3f{274.0F, 949.0F, 75.0F}, TVec3f{275.0F, 50.0F, 75.0F},
+                           TVec3f{25.0F, 950.01F, 75.0F}},
+                std::tuple{"SmokeEffectColorAreaCube", "SmokeEffectColorArea", 43, 0x10, AreaForm::Type_Cube2,
+                           TVec3f{274.0F, 1949.0F, 199.0F}, TVec3f{25.0F, 50.0F, 200.0F},
+                           TVec3f{25.0F, 1950.0F, 75.0F}},
+            };
+            constexpr auto args = std::array<s32, 8>{17, 31, 63, 127, 191, 223, -1, -7};
+            auto rows = std::vector<JMapInfo>{};
+            rows.reserve(cases.size());
+            auto objects = std::vector<std::unique_ptr<NameObj>>{};
+            for (const auto &[name, manager_name, order, capacity, form, inside, outside_side, outside_top] : cases) {
+                const auto *descriptor = smgpc::scene::find_complete_area_obj_placement_descriptor(name);
+                require(descriptor != nullptr && descriptor->manager_name == manager_name &&
+                            descriptor->retail_manager_order == order && descriptor->manager_capacity == capacity,
+                        "effect areas must retain the exact retail manager identity, order and capacity");
+                auto *manager = MR::getAreaObjContainer()->getManager(manager_name);
+                require(typeid(*manager) == typeid(AreaObjMgr) && manager->_18 == capacity,
+                        "generic effects must use the original base AreaObjMgr");
+                require(MR::getAreaObj(manager_name, inside) == nullptr,
+                        "an installed empty effect manager must return a real miss");
+                rows.push_back(make_generic_effect_area_row(name, args));
+                auto object = std::unique_ptr<NameObj>{};
+                {
+                    const auto game = smgpc::compat::JkrAllocationScope(domain);
+                    object.reset(descriptor->object_creator(name));
+                }
+                auto *area = dynamic_cast<AreaObj *>(object.get());
+                require(area != nullptr && typeid(*area) == typeid(AreaObj) && area->mFormType == form,
+                        "effect descriptors must construct the original generic class and correct form");
+                {
+                    const auto game = smgpc::compat::JkrAllocationScope(domain);
+                    object->init(JMapInfoIter(&rows.back(), 0));
+                }
+                require(MR::getAreaObj(manager_name, inside) == area && manager->mArray.size() == 1U,
+                        "original init must register the real parsed volume with its manager");
+                require(MR::getAreaObj(manager_name, outside_side) == nullptr &&
+                            MR::getAreaObj(manager_name, outside_top) == nullptr &&
+                            MR::getAreaObj(manager_name, TVec3f{25.0F, -50.01F, 75.0F}) == nullptr,
+                        "effect volume queries must preserve scaled side and height bounds");
+                require(MR::getAreaObj(manager_name, TVec3f{25.0F, -50.0F, 75.0F}) == area,
+                        "both original base-origin forms include their lower face");
+                for (s32 arg = 0; arg < static_cast<s32>(args.size()); ++arg)
+                    require(MR::getAreaObjArg(area, arg) == args[arg],
+                            "Mario effect selectors and all color channels must retain authored arguments");
+                area->invalidate();
+                require(MR::getAreaObj(manager_name, inside) == nullptr,
+                        "disabled effect volumes must cease matching");
+                area->validate();
+                require(MR::getAreaObj(manager_name, inside) == area,
+                        "revalidated effect volumes must restore the same original area identity");
+                objects.push_back(std::move(object));
+            }
+            binding.init_after_placement();
+        }
+        require(smgpc::compat::name_obj_runtime_state_count() == baseline,
+                "generic effect areas and their scene managers must fully retire");
     }
 
     void test_rmgk01_cube_camera_rows_construct_exactly() {
@@ -1021,17 +1184,19 @@ namespace {
 
 }  // namespace
 
-int main() {
+int main(int argc, char **argv) {
     constexpr auto tests = std::array{
         TestCase{"AreaObj source boundaries are exact", test_area_obj_source_boundaries_are_exact},
         TestCase{"area queries reject missing scene owner", test_area_queries_reject_missing_scene_owner},
         TestCase{"scene holder owns real container and managers", test_scene_holder_owns_real_container_and_managers},
         TestCase{"retail prefix collision uses first manager", test_retail_prefix_collision_uses_first_manager},
+        TestCase{"manager readiness does not fabricate placement support", test_manager_readiness_does_not_fabricate_placement_support},
         TestCase{"manager lifecycle owned ordered and once", test_manager_lifecycle_is_owned_ordered_and_once},
         TestCase{"delegated manager postpass runs once", test_delegated_manager_postpass_runs_once},
         TestCase{"CubeCamera manager finalizes priority and reverse query", test_cube_camera_manager_finalizes_priority_and_reverse_query},
         TestCase{"LightArea priority and stable zone identity", test_light_area_priority_and_stable_zone_identity},
         TestCase{"descriptor registry and strict area preflight", test_descriptor_registry_and_strict_area_preflight},
+        TestCase{"generic effect areas use original init and queries", test_generic_effect_areas_use_original_init_and_queries},
         TestCase{"RMGK01 CubeCamera rows construct exactly", test_rmgk01_cube_camera_rows_construct_exactly},
         TestCase{"RMGK01 MessageArea rows construct exactly", test_rmgk01_message_area_rows_construct_exactly},
         TestCase{"RMGK01 SwitchArea rows drive authored switches", test_rmgk01_switch_area_rows_drive_authored_switches},
@@ -1041,7 +1206,10 @@ int main() {
     };
 
     auto failures = 0;
+    auto executed = std::size_t{};
     for (const auto &test : tests) {
+        if (argc > 1 && std::string_view(test.name).find(argv[1]) == std::string_view::npos) continue;
+        ++executed;
         try {
             test.run();
             std::cout << "[ok] " << test.name << '\n';
@@ -1051,11 +1219,15 @@ int main() {
         }
     }
 
+    if (executed == 0U) {
+        std::cerr << "No AreaObj runtime tests matched the supplied name filter\n";
+        return 1;
+    }
     if (failures != 0) {
         std::cerr << failures << " AreaObj runtime test(s) failed\n";
         return 1;
     }
 
-    std::cout << tests.size() << " AreaObj runtime test(s) passed\n";
+    std::cout << executed << " AreaObj runtime test(s) passed\n";
     return 0;
 }
