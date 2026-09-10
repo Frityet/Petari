@@ -117,7 +117,7 @@ bool RailRider::isReachedGoal() const {
     bool v4 = false;
 
     if (mIsNotReverse) {
-        if (MR::isNearZero(mCoord - mBezierRail->getTotalLength(), 0.0f)) {
+        if (MR::isNearZero(mCoord - mBezierRail->getTotalLength())) {
             v4 = true;
         }
     }
