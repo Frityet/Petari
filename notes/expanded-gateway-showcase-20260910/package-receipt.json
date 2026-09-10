@@ -1,0 +1,25 @@
+{
+  "app_name": "Super Mario Galaxy Gateway Showcase",
+  "packaged_at_utc": "2026-09-10T21:37:43.244539+00:00",
+  "binary_sha256": "fc91f414cd3fc44501eae46e69fc16fbeb6529b1056545e6ab8fa9ef790faa83",
+  "output_app": "/Users/frityet/Projects/petari/build/playable-demo-20260910-fc91f414/Super Mario Galaxy Gateway Showcase.app",
+  "launch_arguments": [
+    "gateway",
+    "--disc",
+    "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "--width",
+    "1280",
+    "--height",
+    "720"
+  ],
+  "frame_limit": null,
+  "bundled_game_assets": false,
+  "runtime_validation_report": {
+    "path": "/Users/frityet/Projects/petari/notes/expanded-gateway-showcase-20260910/runtime-validation.txt",
+    "sha256": "c913c2a21eccdcdbb7e1f911533707fb77fdc542b7427ad56f0903ba44dd80dc",
+    "description": "caller-supplied report; not independently executed by the packager"
+  },
+  "code_commit": "b4bf0c7cc62ff7ea90c45584caa8a6fe102b8ba4",
+  "aurora_commit": "6ca6981979ca6ab201b047b2309b84157fc63fb9",
+  "decomp_commit": "bc27e70dffce52c0e0398b8212d3de1d33c19382"
+}
