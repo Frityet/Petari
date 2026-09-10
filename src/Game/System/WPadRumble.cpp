@@ -2,6 +2,7 @@
 #include "Game/System/WPad.hpp"
 #include "Game/System/WPadRumbleData.hpp"
 #include "Game/Util/GamePadUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
 
 WPadRumble** WPadRumble::sInstanceForCallback;
 
@@ -27,7 +28,7 @@ void RumbleChannel::update() {
             clear();
         }
     } else {
-        _E = _0->mPattern[0];
+        _E = _0->mPattern[_C];
         _C++;
     }
 }
@@ -141,17 +142,7 @@ void WPadRumble::updateRumble() {
         if (b) {
             _B0 = 5;
         } else {
-            s32 temp = _B0 - 1;
-
-            if (temp < -9) {
-                temp = -9;
-            } else {
-                if (temp <= 5) {
-                    temp = _B0;
-                }
-            }
-
-            _B0 = temp;
+            _B0 = MR::clamp(_B0 - 1, -9, 5);
 
             if (_B0 < 0) {
                 _B4 = 0;
@@ -188,20 +179,50 @@ bool WPadRumble::setRumblePatternIfNotExist(const void* pParam1, const RumblePat
     }
 
     if (v2 != -1) {
-        // FIXME: Missing clrlwi instruction.
-        _C++;
+        _C = (_C + 1) & 0x7FFFFFFF;
 
         mChannel[v2].setPattern(pParam1, rParam2, _C, param3);
 
         return true;
     }
 
-    // FIXME: Missing clrlwi instruction.
-    _C++;
+    _C = (_C + 1) & 0x7FFFFFFF;
 
     mChannel[v3].setPattern(pParam1, rParam2, _C, param3);
 
     return true;
 }
 
-// WPadRumble::findRubmlePattern
+bool WPadRumble::findRubmlePattern(const void*, s32* pExisting, s32* pFree, s32* pOldest, const RumblePattern& rPattern) {
+    u32 oldestSequence = 0xFFFFFFFF;
+    u8 oldestChannel = 0xFF;
+    u8 freeChannel = 0xFF;
+
+    for (u8 i = 0; i < ARRAY_SIZE(mChannel); i++) {
+        const RumbleChannel& channel = mChannel[i];
+
+        if (channel._0 == nullptr) {
+            if (freeChannel == 0xFF) {
+                freeChannel = i;
+            }
+        } else {
+            if (channel._0->mHash == rPattern.mHash) {
+                *pExisting = i;
+                return true;
+            }
+
+            if (oldestSequence > channel._8) {
+                oldestSequence = channel._8;
+                oldestChannel = i;
+            }
+        }
+    }
+
+    if (freeChannel != 0xFF) {
+        *pFree = freeChannel;
+        return false;
+    }
+
+    *pOldest = oldestChannel;
+    return false;
+}

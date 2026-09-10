@@ -6,6 +6,7 @@
 #include "Game/System/WPadHolder.hpp"
 #include "Game/System/WPadPointer.hpp"
 #include "Game/System/WPadStick.hpp"
+#include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
 
 namespace MR {
@@ -221,8 +222,35 @@ namespace MR {
         return testCorePadTriggerDown(WPAD_CHAN0) || testCorePadTriggerA(WPAD_CHAN0);
     }
 
-    // getPlayerStickX
-    // getPlayerStickY
+    f32 getPlayerStickX() {
+        f32 stick = getSubPadStickX(WPAD_CHAN0);
+        f32 fallback = 0.0f;
+
+        if (stick != 0.0f) {
+            return stick;
+        }
+
+        if (fallback != 0.0f) {
+            fallback *= 1.0f + MR::abs(MR::sin(MR::atan2(0.0f, 0.0f)));
+        }
+
+        return fallback;
+    }
+
+    f32 getPlayerStickY() {
+        f32 stick = getSubPadStickY(WPAD_CHAN0);
+        f32 fallback = 0.0f;
+
+        if (stick != 0.0f) {
+            return stick;
+        }
+
+        if (fallback != 0.0f) {
+            fallback *= 1.0f + MR::abs(MR::cos(MR::atan2(0.0f, 0.0f)));
+        }
+
+        return fallback;
+    }
 
     bool getPlayerTriggerA() {
         return testCorePadTriggerA(WPAD_CHAN0);
@@ -263,7 +291,31 @@ namespace MR {
         return MR::abs(x) + MR::abs(y) > 0.0f;
     }
 
-    // calcWorldStickDirectionXZ
+    void calcWorldStickDirectionXZ(f32* pDirX, f32* pDirZ, s32 channel) {
+        TPos3f cameraMtx;
+        cameraMtx.set(MR::getCameraInvViewMtx());
+        TVec3f right;
+        cameraMtx.getXDir(right);
+        right.y = 0.0f;
+        MR::normalizeOrZero(&right);
+
+        TVec3f front;
+        cameraMtx.getZDir(front);
+        front.y = 0.0f;
+        MR::normalizeOrZero(&front);
+        front.scale(-1.0f);
+
+        f32 stickX = getSubPadStickX(channel);
+        f32 stickY = getSubPadStickY(channel);
+        right.scale(stickX);
+        front.scale(stickY);
+
+        TVec3f direction(right);
+        direction.add(front);
+        MR::normalizeOrZero(&direction);
+        *pDirX = direction.x;
+        *pDirZ = direction.z;
+    }
 
     void calcWorldStickDirectionXZ(TVec3f* pDir, s32 channel) {
         pDir->y = 0.0f;
