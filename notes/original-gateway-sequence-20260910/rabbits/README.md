@@ -47,3 +47,11 @@ The required general Nerve/umbrella boundary is reported to the parent. Deleting
 ## Pause at user steering
 
 The parent requested audit-only completion while the user's current priority is removing NPCActorSource.inl and retaining direct minimal edits in NPCActor.cpp. Further rabbit/helper imports are paused. No reference/native production sources were edited by this rabbit task, and there is no active build or debugger. The complete candidate sources remain in decomp; the exact overlay/proofs above are saved for a later coherent activation. Initialization's independent audit additionally identifies shared NPCUtil action/reaction throwers and missing or incomplete Mario-puppet demo ownership as dependencies of the Tico/catch route; those findings belong to its separate audit, not a rabbit-specific workaround.
+
+## Resumed import preparation
+
+The next exact import is 11 existing source/header pairs: NPC/{RunawayRabbit, RunawayRabbitCollect, RunawayTico, Tico, TicoDemoGetPower, TrickRabbitUtil}, Enemy/{WalkerStateRunaway, WalkerStateBlowDamage}, LiveActor/SpotMarkLight, Util/ActorStateUtil, and Demo/AstroDemoFunction. The latter two Tico dependencies are retained by its actual original base init/vtable. `next-import-manifest.json` records each reference hash and destination; all 22 native destinations were absent at preparation. RabbitStateCaught/WaitStart remain outside this graph.
+
+The four primary rabbit source/header hashes still match the earlier proof above. No repeat rabbit builds or new gameplay tests were run. The native umbrella still needs the original ActorStateUtil/BaseMatrixFollowTargetHolder/TalkUtil declarations, and native NERVE_DECL_NULL's automatic inline instance conflicts with the original rabbit's explicit instance definitions. These shared compiler contracts belong to the parent integration.
+
+The missing original `MR::trySetMoveLimitCollision` and its two small keeper helpers have now been recovered in reference, including the retail Binder enable flag that the old inline omitted. See [movement-limit evidence](move-limit/README.md). Native imports remain held for the coherent demo/talk checkpoint. NPC action/reaction throwers from the initial audit have since been retired through the original NPCUtil and RailUtil work; this note does not claim the full rabbit chase is active.
