@@ -1,0 +1,193 @@
+{
+  "files": [
+    {
+      "path": "src/Game/System/GameSequenceDirector.cpp",
+      "sha256": "1823b9a6e5c8f57906a38027a9c4ba31f0dc887d052f5a31a714dde6ce17e01e",
+      "matches_reference": true
+    },
+    {
+      "path": "src/Game/System/GameSequenceDirector.hpp",
+      "sha256": "10c2fad303d328712dfc989a7527df264df2fb6a8fb81c25b48fb7f842919898",
+      "matches_reference": true
+    },
+    {
+      "path": "src/Game/System/GameSequenceProgress.cpp",
+      "sha256": "dafc15ab29f4b7259597e8e8574f5ddb16a99d7b658c05b0119f47a6b0749c8c",
+      "matches_reference": true
+    },
+    {
+      "path": "src/Game/System/GameSequenceProgress.hpp",
+      "sha256": "2f8c1c849a537951bd05eee108b15657db834b3693ab4dfbd05abcd979f110f3",
+      "matches_reference": true
+    },
+    {
+      "path": "src/Game/System/GameSequenceFunction.cpp",
+      "sha256": "d4579518e56a56a32633b405209d949956b96a430929b7a71770931335945639",
+      "matches_reference": true
+    },
+    {
+      "path": "src/Game/System/GameSequenceFunction.hpp",
+      "sha256": "209c21a893ab63780a05d966d07c1982ddb8d34494e4987ce559a5592cc01540",
+      "matches_reference": true
+    },
+    {
+      "path": "src/Game/System/FindingLuigiEventScheduler.cpp",
+      "sha256": "7bcf2f5008cc2400c0b70e91376600b64a6110c40494e888f8ed6bc7d2aed81d",
+      "matches_reference": true
+    },
+    {
+      "path": "src/Game/System/FindingLuigiEventScheduler.hpp",
+      "sha256": "1dc1817d2f53a92785f0b1ece9a7382d18260906bce657dca1e4ef4bd8958421",
+      "matches_reference": true
+    },
+    {
+      "path": "src/Game/System/LuigiLeftSupplier.cpp",
+      "sha256": "def51912be32834846ea898af835ba5d7e52b658e4fc3414b67739a674ca985b",
+      "matches_reference": true
+    },
+    {
+      "path": "src/Game/System/LuigiLeftSupplier.hpp",
+      "sha256": "72de1cae2a288322857fc3261af535eb8d70bfbadf65ddc9cdbb0f8223ac0178",
+      "matches_reference": true
+    },
+    {
+      "path": "src/Game/System/GalaxyCometScheduler.cpp",
+      "sha256": "ffaa242145bfba207d5e76db8a66df29351b35e107d2887fbfdfaa6dbc5382a7",
+      "matches_reference": true
+    },
+    {
+      "path": "src/Game/System/GalaxyCometScheduler.hpp",
+      "sha256": "4420bf940c9c945d2eef73fd88bdaa37b869d525e80e1bb318a900cf3ffa0815",
+      "matches_reference": true
+    },
+    {
+      "path": "src/Game/System/GalaxyCometState.cpp",
+      "sha256": "5e36fef3584c20b26ddbdffabce29b281001094a0430f3dd1a1951947518c616",
+      "matches_reference": true
+    },
+    {
+      "path": "src/Game/System/GalaxyCometState.hpp",
+      "sha256": "d98cd8400bc6b0ddee54daa25ca467fac385c256faae814e5e2f31f0d11f328c",
+      "matches_reference": true
+    },
+    {
+      "path": "src/Game/Screen/PlayerMissLeft.cpp",
+      "sha256": "401b60ae8105302a7ca9c3d9e041ae76e20a5815e136ef910be7d684cfdb1f77",
+      "matches_reference": true
+    },
+    {
+      "path": "src/Game/Screen/PlayerMissLeft.hpp",
+      "sha256": "de468d7a2d009f8e751e2c5d328ffdc623ea6ee746248b993a830eeff92d5e46",
+      "matches_reference": true
+    },
+    {
+      "path": "src/Game/NWC24/NWC24Messenger.hpp",
+      "sha256": "2591d1d7043a0b09150edc1a5becebdfd2278581bedfa505f394f76e92286d88",
+      "matches_reference": true
+    },
+    {
+      "path": "src/Game/NWC24/LuigiMailDirector.hpp",
+      "sha256": "879d7b86fbf427f3b14db90e23e55f445ce841242e61886544ece9a372364cd9",
+      "matches_reference": true
+    },
+    {
+      "path": "src/revolution/nwc24.h",
+      "sha256": "3c9ff067a5174311c83a1acf1e6450ed17e640cc6a6315632af79363ec735cda"
+    },
+    {
+      "path": "src/revolution/nwc24/NWC24Config.h",
+      "sha256": "4834a9367d3980ec553d316bb0c6403acb7e0aad4d45441e4106b9fcc659a24b"
+    },
+    {
+      "path": "src/revolution/nwc24/NWC24Types.h",
+      "sha256": "2457c8b64f3173ef58bff37e3e8b1075dc630aa303f1d89330858f41fee52e43"
+    },
+    {
+      "path": "src/revolution/nand.h",
+      "sha256": "db2c6617e61ed141473095d48928cffa75dec2fbf0a15c743016e4c0b6d08362"
+    },
+    {
+      "path": "src/revolution/fs.h",
+      "sha256": "f3ffe62c9b1b2774a48307c094eda3d7ee59ce41e6e8a2196618ca222643b879"
+    },
+    {
+      "path": "src/revolution/fs/fs.h",
+      "sha256": "6dbd2975e662483e13cca7490851c5133787b721b03ac34af810c779f2f0f867"
+    },
+    {
+      "path": "src/private/iosrestypes.h",
+      "sha256": "2f296e7a37ca8e83346d7e1508c3c4273d4c3e71fefc3ec64c3b47fcf266fb0e"
+    },
+    {
+      "path": "src/private/iostypes.h",
+      "sha256": "bde40fbd8b1ff911bf5367035287e963dc76613f94a8b429fad69f96788dfa80"
+    },
+    {
+      "path": "src/revolution/nand/nandlogging.h",
+      "sha256": "f5f0cb98948ae64b27a2bd2276a6b83bb8a661098864f9c17aa0e3320f230f3b"
+    },
+    {
+      "path": "src/revolution/vf.h",
+      "sha256": "9fad43f9dbe295b0f63b64138da3b83c7fa9048fe1ca14d4edea369c0b133061"
+    },
+    {
+      "path": "src/revolution/vf/d_vf.h",
+      "sha256": "c7d8f07edfa72e656b4a5e06db4158b138e227485fb0f84a6ce31d4a08a8941b"
+    },
+    {
+      "path": "src/revolution/nwc24/NWC24Download.h",
+      "sha256": "f303aafea5b52ad53256bdc3c6d94ad00d26b6d55eaac8c76f8c84b9587b0531"
+    },
+    {
+      "path": "src/revolution/nwc24/NWC24FileApi.h",
+      "sha256": "c507498094fc68a49f0617889f927d59672f248915231eb043004b1f294b040a"
+    },
+    {
+      "path": "src/revolution/nwc24/NWC24Manage.h",
+      "sha256": "ef4ab5ef3cfd1abf39d6d58f553e73b4812624f7db6c0075313e669a8d5aa136"
+    },
+    {
+      "path": "src/revolution/nwc24/NWC24Mime.h",
+      "sha256": "ead4cbf5408ad15ed4408d8e79c03ba1a8c4a3dda4c85251290c369eee650de7"
+    },
+    {
+      "path": "src/revolution/nwc24/NWC24MsgCommit.h",
+      "sha256": "c60633503e3558519cdb835f4a7db8513dab25fad12ccea5b1789afe95cf84ab"
+    },
+    {
+      "path": "src/revolution/nwc24/NWC24MsgObj.h",
+      "sha256": "ce7478191e7b901e3135ab26ca44e4bc5f1c0a5b392e3c056713721f7d3d9ddc"
+    },
+    {
+      "path": "src/revolution/nwc24/NWC24Parser.h",
+      "sha256": "be8a140a7fad81ed17af23a5bf4a9a4fc613143e049dd4d17a9ed06fa0169986"
+    },
+    {
+      "path": "src/revolution/nwc24/NWC24Schedule.h",
+      "sha256": "0b469690017d2ecbe7a01899b88fa5a1c16c1d76e7caff81ad36720378996f7e"
+    },
+    {
+      "path": "src/revolution/nwc24/NWC24System.h",
+      "sha256": "5a110772f935f5216ab48bb793994e712234954cdd0f6a1dcef22415607c491c"
+    },
+    {
+      "path": "src/revolution/nwc24/NWC24Utils.h",
+      "sha256": "5189687b55bfcfcf3e32500269f3ca34f22085dd5be8a43070e746f899ab035d"
+    },
+    {
+      "path": "src/compat/StorySequencePlatformCompat.cpp",
+      "sha256": "227fb0c9018efa8b314b3d5497474c44a624c50c64cc8d93312398ff852aeda3"
+    },
+    {
+      "path": "src/compat/StorySequencePlatformCompat.hpp",
+      "sha256": "51def01dacbc9be36d9170e3ace7d3d100496535c10f306f5b3647ba290c5585"
+    },
+    {
+      "path": "decomp/src/Game/System/GameSequenceFunction.cpp",
+      "sha256": "d4579518e56a56a32633b405209d949956b96a430929b7a71770931335945639"
+    }
+  ],
+  "new_game_source_count": 8,
+  "native_object_compile": "8/8 exit 0",
+  "runtime": "Not run; real process owner and mandatory child closure remain parent integration work."
+}

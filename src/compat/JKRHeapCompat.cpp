@@ -30,7 +30,7 @@ static bool byte_806B70B8;
 
 u32 JKRHeap::mMemorySize;
 
-u32 ARALT_AramStartAdr = 0x90000000;
+uintptr_t ARALT_AramStartAdr = 0x90000000;
 
 JKRHeap::JKRHeap(void* data, u32 size, JKRHeap* parent, bool error) : JKRDisposer(), mChildTree(this), mDisposerList() {
     OSInitMutex(&mMutex);
@@ -312,11 +312,11 @@ void JKRHeap::state_dump(const TState&) const {
     return;
 }
 
-void JKRHeap::setAltAramStartAdr(u32 addr) {
+void JKRHeap::setAltAramStartAdr(uintptr_t addr) {
     ARALT_AramStartAdr = addr;
 }
 
-u32 JKRHeap::getAltAramStartAdr() {
+uintptr_t JKRHeap::getAltAramStartAdr() {
     return ARALT_AramStartAdr;
 }
 

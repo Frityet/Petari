@@ -1,0 +1,23 @@
+[
+  "src/revolution/nwc24.h",
+  "src/revolution/nwc24/NWC24Config.h",
+  "src/revolution/nwc24/NWC24Types.h",
+  "src/revolution/nand.h",
+  "src/revolution/fs.h",
+  "src/revolution/fs/fs.h",
+  "src/private/iosrestypes.h",
+  "src/private/iostypes.h",
+  "src/revolution/nand/nandlogging.h",
+  "src/revolution/vf.h",
+  "src/revolution/vf/d_vf.h",
+  "src/revolution/nwc24/NWC24Download.h",
+  "src/revolution/nwc24/NWC24FileApi.h",
+  "src/revolution/nwc24/NWC24Manage.h",
+  "src/revolution/nwc24/NWC24Mime.h",
+  "src/revolution/nwc24/NWC24MsgCommit.h",
+  "src/revolution/nwc24/NWC24MsgObj.h",
+  "src/revolution/nwc24/NWC24Parser.h",
+  "src/revolution/nwc24/NWC24Schedule.h",
+  "src/revolution/nwc24/NWC24System.h",
+  "src/revolution/nwc24/NWC24Utils.h"
+]

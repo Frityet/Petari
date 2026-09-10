@@ -1,0 +1,34 @@
+[
+  {
+    "path": "decomp/src/Game/System/DrawSyncManager.cpp",
+    "sha256": "5fd35171ff5c489e40f3fcf546907ac9a5f26ee38eaceafdc94fbf8b6b045a45"
+  },
+  {
+    "path": "decomp/include/Game/System/DrawSyncManager.hpp",
+    "sha256": "97706fdf9ef694df2af14d4876d3c52354ea11f988bcd1df99b63d8f984f0785"
+  },
+  {
+    "path": "decomp/libs/RVL_SDK/include/revolution/gx/GXFifo.h",
+    "sha256": "82be8b33acca848c0699526e2f2da8e02a97b1db2a27f6c1c649c601818cef7d"
+  },
+  {
+    "path": "src/Game/System/DrawSyncManager.cpp",
+    "sha256": "5fd35171ff5c489e40f3fcf546907ac9a5f26ee38eaceafdc94fbf8b6b045a45"
+  },
+  {
+    "path": "src/Game/System/DrawSyncManager.hpp",
+    "sha256": "97706fdf9ef694df2af14d4876d3c52354ea11f988bcd1df99b63d8f984f0785"
+  },
+  {
+    "path": "aurora/include/revolution/os.h",
+    "sha256": "4827eb5b012cd8226282bd85858c0013f52572b1672d10b65235b68f8150fedb"
+  },
+  {
+    "path": "aurora/include/dolphin/gx/GXFifo.h",
+    "sha256": "0c9cf096b4da06d381441357ffa65db232eaaf47180c5c2741698727895c632f"
+  },
+  {
+    "path": "aurora/lib/dolphin/gx/GXFifo.cpp",
+    "sha256": "1ca8c4ca8fefb668dc8b6b1f41311796c2ec65201ddc737812ed2c420c9368e7"
+  }
+]

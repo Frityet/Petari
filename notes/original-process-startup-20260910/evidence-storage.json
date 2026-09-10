@@ -1,0 +1,35 @@
+{
+  "compressed_evidence": [
+    {
+      "file": "draw-sync/objdiff.json.gz",
+      "raw_bytes": 715243,
+      "bytes": 22368
+    },
+    {
+      "file": "functors/GameSystemStationedArchiveLoader-objdiff.json.gz",
+      "raw_bytes": 827376,
+      "bytes": 24739
+    },
+    {
+      "file": "functors/ResourceHolderManager-objdiff.json.gz",
+      "raw_bytes": 566974,
+      "bytes": 17383
+    },
+    {
+      "file": "save-sequence/SaveDataHandler.objdiff.json.gz",
+      "raw_bytes": 534206,
+      "bytes": 33612
+    },
+    {
+      "file": "sequence/objdiff.json.gz",
+      "raw_bytes": 458220,
+      "bytes": 29044
+    }
+  ],
+  "excluded": [
+    "executables",
+    "Wii and native object files",
+    "debug bundles"
+  ],
+  "policy": "No additional validation runs. Large text evidence is compressed for publishing; local original copies remain."
+}

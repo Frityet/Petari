@@ -1,4 +1,5 @@
 #include "scene/GameSystemService.hpp"
+#include <aurora/guest_thread.hpp>
 
 #include "runtime/RuntimeContext.hpp"
 #include "scene/GameSystemSceneControllerService.hpp"
@@ -15,17 +16,20 @@ namespace smgpc::scene {
     GameSystemService::~GameSystemService() = default;
 
     void GameSystemService::begin_frame(const render::FrameContext &frame_context) {
+        const aurora::os::GuestThreadExecutionScope execution;
         ensure_initial_sequence_requested();
         _runtime.begin_frame(frame_context);
     }
 
     void GameSystemService::update() {
+        const aurora::os::GuestThreadExecutionScope execution;
         _scene_controller.check_request_and_change_scene();
         _sequence_boot.update_after_runtime_frame();
         _scene_controller.check_request_and_change_scene();
     }
 
     void GameSystemService::draw() {
+        const aurora::os::GuestThreadExecutionScope execution;
         _runtime.draw_scene();
     }
 

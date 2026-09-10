@@ -1,0 +1,26 @@
+{
+  "command": [
+    "/opt/homebrew/opt/llvm/bin/clang++",
+    "-std=c++20",
+    "-g",
+    "-DAURORA",
+    "-DTARGET_PC",
+    "-Iaurora/include",
+    "aurora/lib/dolphin/os/OSExecution.cpp",
+    "aurora/lib/dolphin/os/OSMutex.cpp",
+    "aurora/lib/dolphin/os/OSMessage.cpp",
+    "/Users/frityet/Projects/petari/notes/original-process-startup-20260910/async/probe/thread-lifecycle.cpp",
+    "-pthread",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-process-startup-20260910/async/probe/thread-lifecycle"
+  ],
+  "build_exit": 0,
+  "production_sources": {
+    "aurora/lib/dolphin/os/OSExecution.cpp": "e6c369d1aeb99870d86b17a33a60782c138d16271eaae9d7b9025c75443f20d8",
+    "aurora/lib/dolphin/os/OSMutex.cpp": "7b35a3e01ac6309be2ca340332e872ce4d0282319e72c23bb9ccf1003307129d",
+    "aurora/lib/dolphin/os/OSMessage.cpp": "aed2532d1ca5ef3bcc3126df9f1cefd51c1c39d6cad5984ffc5b752f27991b42"
+  },
+  "run_exit": 0,
+  "elapsed_seconds": 0.42875374999130145,
+  "binary_sha256": "fceb24fbc7026c110cf0307e5a9b63ae1c96a118de4a0543ae3a2ad0e26475e8"
+}

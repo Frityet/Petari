@@ -185,8 +185,8 @@ public:
         sCurrentHeap = heap;
     }
 
-    static void setAltAramStartAdr(u32);
-    static u32 getAltAramStartAdr();
+    static void setAltAramStartAdr(uintptr_t);
+    static uintptr_t getAltAramStartAdr();
 
     static JKRHeap* sGameHeap;     // 0x806B70A8
     static JKRHeap* sCurrentHeap;  // 0x806B70AC

@@ -920,6 +920,9 @@ namespace smgpc::runtime {
         [[nodiscard]] std::optional<std::vector<std::uint8_t>> read_file(std::string_view name) const;
         void write_nand_file(std::string_view name, std::span<const std::uint8_t> bytes);
         [[nodiscard]] std::optional<std::vector<std::uint8_t>> read_nand_file(std::string_view name) const;
+        s32 create_nand_file(std::string_view name, u8 permission, u8 attribute);
+        s32 move_nand_file(std::string_view source, std::string_view destination);
+        bool erase_nand_file(std::string_view name);
         [[nodiscard]] NandFileSystemService &nand();
         [[nodiscard]] const NandFileSystemService &nand() const;
         [[nodiscard]] bool exists(std::string_view name) const;
@@ -932,6 +935,7 @@ namespace smgpc::runtime {
         [[nodiscard]] bool has_valid_game_data_container() const;
 
     private:
+        [[nodiscard]] std::string nand_file_key(std::string_view name) const;
         [[nodiscard]] std::filesystem::path host_file_path(std::string_view name) const;
         void write_host_file(std::string_view name, std::span<const std::uint8_t> bytes) const;
         void erase_host_file(std::string_view name) const;

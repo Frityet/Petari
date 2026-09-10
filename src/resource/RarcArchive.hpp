@@ -25,10 +25,15 @@ namespace smgpc::resource {
     public:
         static RarcArchive from_file(const std::filesystem::path &path);
         static RarcArchive from_bytes(std::vector<std::uint8_t> bytes);
+        // Parse a decompressed archive without copying its resource bytes.
+        // Copies of this view borrow the same buffer; its caller owns lifetime.
+        static RarcArchive from_borrowed(std::span<const std::uint8_t> bytes);
 
         [[nodiscard]] const std::vector<RarcEntry> &entries() const;
-        [[nodiscard]] std::span<const std::uint8_t> bytes() const noexcept { return _bytes; }
-        [[nodiscard]] const std::uint8_t* file_data_start() const noexcept { return _bytes.data() + _file_data_start; }
+        [[nodiscard]] std::span<const std::uint8_t> bytes() const noexcept {
+            return _borrowed_bytes.data() == nullptr ? std::span<const std::uint8_t>(_bytes) : _borrowed_bytes;
+        }
+        [[nodiscard]] const std::uint8_t* file_data_start() const noexcept { return bytes().data() + _file_data_start; }
         [[nodiscard]] static std::uint16_t hash_name(std::string_view name);
         [[nodiscard]] bool contains(std::string_view path) const;
         [[nodiscard]] bool contains_normalized(std::string_view path) const;
@@ -48,6 +53,7 @@ namespace smgpc::resource {
 
     private:
         explicit RarcArchive(std::vector<std::uint8_t> bytes);
+        explicit RarcArchive(std::span<const std::uint8_t> bytes);
 
         void parse();
         void walk_directory(std::uint32_t dir_index, std::string path);
@@ -57,6 +63,7 @@ namespace smgpc::resource {
         [[nodiscard]] std::span<const std::uint8_t> dir_entry(std::uint32_t dir_index) const;
 
         std::vector<std::uint8_t> _bytes;
+        std::span<const std::uint8_t> _borrowed_bytes;
         std::vector<RarcEntry> _entries;
         std::uint32_t _dir_count = 0U;
         std::uint32_t _dir_offset = 0U;

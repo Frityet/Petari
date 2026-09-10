@@ -1,0 +1,20 @@
+[
+  "src/Game/System/GameSequenceDirector.cpp",
+  "src/Game/System/GameSequenceDirector.hpp",
+  "src/Game/System/GameSequenceProgress.cpp",
+  "src/Game/System/GameSequenceProgress.hpp",
+  "src/Game/System/GameSequenceFunction.cpp",
+  "src/Game/System/GameSequenceFunction.hpp",
+  "src/Game/System/FindingLuigiEventScheduler.cpp",
+  "src/Game/System/FindingLuigiEventScheduler.hpp",
+  "src/Game/System/LuigiLeftSupplier.cpp",
+  "src/Game/System/LuigiLeftSupplier.hpp",
+  "src/Game/System/GalaxyCometScheduler.cpp",
+  "src/Game/System/GalaxyCometScheduler.hpp",
+  "src/Game/System/GalaxyCometState.cpp",
+  "src/Game/System/GalaxyCometState.hpp",
+  "src/Game/Screen/PlayerMissLeft.cpp",
+  "src/Game/Screen/PlayerMissLeft.hpp",
+  "src/Game/NWC24/NWC24Messenger.hpp",
+  "src/Game/NWC24/LuigiMailDirector.hpp"
+]

@@ -237,6 +237,31 @@ namespace smgpc::runtime {
                                                           SaveDataByteOrder::BigEndian);
         }
 
+        [[nodiscard]] std::vector<std::uint8_t> convert_nand_banner_byte_order(
+            std::span<const std::uint8_t> bytes, SaveDataByteOrder source_byte_order,
+            SaveDataByteOrder destination_byte_order) {
+            constexpr std::size_t texture_offset = 0xa0;
+            constexpr std::size_t banner_texture_size = 192 * 64 * 2;
+            constexpr std::size_t icon_texture_size = 48 * 48 * 2;
+            constexpr std::size_t base_size = texture_offset + banner_texture_size;
+            if (bytes.size() < base_size || bytes.size() > base_size + 8 * icon_texture_size ||
+                (bytes.size() - base_size) % icon_texture_size != 0 ||
+                read_save_u32(bytes, 0, source_byte_order) != 0x5749424eU) {
+                aurora::throw_host_exception<std::invalid_argument>("NAND banner requires a valid WIBN header and complete texture records");
+            }
+            auto converted = std::vector<std::uint8_t>(bytes.begin(), bytes.end());
+            write_save_u32(converted, 0, read_save_u32(bytes, 0, source_byte_order), destination_byte_order);
+            write_save_u32(converted, 4, read_save_u32(bytes, 4, source_byte_order), destination_byte_order);
+            if (source_byte_order != destination_byte_order) {
+                std::swap(converted[8], converted[9]);
+                for (std::size_t offset = 0x20; offset < texture_offset; offset += 2) {
+                    std::swap(converted[offset], converted[offset + 1]);
+                }
+            }
+            // GX texture data is already encoded by the original BTI resource.
+            return converted;
+        }
+
         [[nodiscard]] std::optional<std::size_t> save_data_file_size(std::string_view name) {
             if (name.starts_with("mario") || name.starts_with("luigi")) {
                 return SAVE_DATA_GAME_FILE_SIZE;
@@ -3928,26 +3953,27 @@ namespace smgpc::runtime {
             aurora::throw_host_exception<std::logic_error>("NAND save persistence is unavailable without a configured host directory");
         }
         const auto file_name = NandFileSystemService::file_name(_nand.normalize_path(name));
-        const auto wii_bytes =
-            file_name == SAVE_DATA_CONTAINER_NAME ? host_save_data_container_for_retail(bytes) : std::vector<std::uint8_t>{};
-        const auto payload = file_name == SAVE_DATA_CONTAINER_NAME ? std::span<const std::uint8_t>(wii_bytes.data(), wii_bytes.size()) : bytes;
+        std::optional<std::vector<std::uint8_t>> wii_bytes;
+        if (file_name == SAVE_DATA_CONTAINER_NAME) {
+            wii_bytes = host_save_data_container_for_retail(bytes);
+        } else if (file_name == "banner.bin") {
+            constexpr auto native_order = std::endian::native == std::endian::little ?
+                SaveDataByteOrder::LittleEndian : SaveDataByteOrder::BigEndian;
+            wii_bytes = convert_nand_banner_byte_order(bytes, native_order, SaveDataByteOrder::BigEndian);
+        }
+        const auto payload = wii_bytes ? std::span<const std::uint8_t>(*wii_bytes) : bytes;
         if (file_name == SAVE_DATA_CONTAINER_NAME && !decode_game_data_container(payload).has_value()) {
             aurora::throw_host_exception<std::invalid_argument>("Translated GameData.bin does not match the retail container layout");
         }
         _nand.write_file(name, payload);
-        if (file_name == SAVE_DATA_CONTAINER_NAME) {
-            write_file(file_name, payload);
-            return;
-        }
-
-        write_file(file_name, bytes);
+        write_file(nand_file_key(name), payload);
     }
 
     std::optional<std::vector<std::uint8_t>> SaveDataService::read_nand_file(std::string_view name) const {
         const auto file_name = NandFileSystemService::file_name(_nand.normalize_path(name));
         auto bytes = _nand.read_file(name);
         if (!bytes.has_value()) {
-            bytes = read_file(file_name);
+            bytes = read_file(nand_file_key(name));
             if (!bytes.has_value()) {
                 return std::nullopt;
             }
@@ -3959,7 +3985,69 @@ namespace smgpc::runtime {
             }
             return retail_save_data_container_for_host(*bytes);
         }
+        if (file_name == "banner.bin") {
+            constexpr auto native_order = std::endian::native == std::endian::little ?
+                SaveDataByteOrder::LittleEndian : SaveDataByteOrder::BigEndian;
+            return convert_nand_banner_byte_order(*bytes, SaveDataByteOrder::BigEndian, native_order);
+        }
         return bytes;
+    }
+
+    std::string SaveDataService::nand_file_key(std::string_view name) const {
+        const auto path = _nand.normalize_path(name);
+        const auto title_prefix = NandFileSystemService::title_data_root() + "/";
+        if (path.starts_with(title_prefix)) return path.substr(title_prefix.size());
+        // Preserve absolute NAND namespaces outside this title's data directory.
+        return "nand/" + path.substr(1U);
+    }
+
+    s32 SaveDataService::create_nand_file(std::string_view name, u8 permission, u8 attribute) {
+        if (!_host_directory) {
+            aurora::throw_host_exception<std::logic_error>("NAND file creation requires a configured host directory");
+        }
+        const auto key = nand_file_key(name);
+        if (_nand.exists(name) || _files.contains(key)) return NAND_RESULT_EXISTS;
+        const auto capacity = _nand.check(0, 1);
+        if (capacity.result != NAND_RESULT_OK) return capacity.result;
+        write_host_file(key, {});
+        _nand.write_file(name, {}, permission, attribute);
+        _files[key] = {};
+        return NAND_RESULT_OK;
+    }
+
+    s32 SaveDataService::move_nand_file(std::string_view source, std::string_view destination) {
+        if (!_host_directory) {
+            aurora::throw_host_exception<std::logic_error>("NAND file movement requires a configured host directory");
+        }
+        const auto source_key = nand_file_key(source);
+        const auto destination_key = nand_file_key(destination);
+        auto bytes = _nand.read_file(source);
+        if (!bytes) bytes = read_file(source_key);
+        if (!bytes) return NAND_RESULT_NOEXISTS;
+        if (source_key == destination_key) return NAND_RESULT_OK;
+        // ISFS_Rename replaces an existing destination file of the same type.
+        const auto metadata = _nand.metadata(source);
+        write_host_file(destination_key, *bytes);
+        erase_host_file(source_key);
+        _nand.erase(source);
+        _nand.write_file(destination, *bytes, metadata ? metadata->permission : 0x3cU,
+                         metadata ? metadata->attribute : 0U);
+        _files.erase(source_key);
+        _files[destination_key] = std::move(*bytes);
+        return NAND_RESULT_OK;
+    }
+
+    bool SaveDataService::erase_nand_file(std::string_view name) {
+        if (!_host_directory) {
+            aurora::throw_host_exception<std::logic_error>("NAND file deletion requires a configured host directory");
+        }
+        const auto key = nand_file_key(name);
+        const auto existed = _nand.exists(name) || _files.contains(key);
+        erase_host_file(key);
+        _nand.erase(name);
+        _files.erase(key);
+        if (NandFileSystemService::file_name(key) == SAVE_DATA_CONTAINER_NAME) _has_valid_game_data_container = false;
+        return existed;
     }
 
     NandFileSystemService &SaveDataService::nand() {
@@ -4032,7 +4120,8 @@ namespace smgpc::runtime {
                 continue;
             }
             auto bytes = read_binary_file(entry.path());
-            _nand.write_file(relative_name, bytes);
+            const auto nand_path = relative_name.starts_with("nand/") ? "/" + relative_name.substr(5U) : relative_name;
+            _nand.write_file(nand_path, bytes);
             _files[relative_name] = std::move(bytes);
         }
 

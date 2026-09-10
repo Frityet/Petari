@@ -19,6 +19,9 @@ namespace smgpc::compat {
         JkrHeapRuntime(const JkrHeapRuntime&) = delete;
         JkrHeapRuntime& operator=(const JkrHeapRuntime&) = delete;
         [[nodiscard]] JKRHeap& root_heap() const noexcept;
+        // Call before original HeapMemoryWatcher::createRootHeap. The budget
+        // includes the original reserved MEM2 prefix and remains caller-owned.
+        void prepare_mem2_arena(std::size_t byte_budget);
 
     private:
         friend class JkrAllocationDomain;
@@ -34,6 +37,15 @@ namespace smgpc::compat {
     public:
         [[nodiscard]] static std::shared_ptr<JkrAllocationDomain>
         create(std::shared_ptr<JkrHeapRuntime> runtime, std::size_t byte_budget);
+        [[nodiscard]] static std::shared_ptr<JkrAllocationDomain>
+        create(std::shared_ptr<JkrAllocationDomain> parent, std::size_t byte_budget);
+        // Bind an actual Game-owned heap. The supplied owner must destroy that
+        // heap only after the final retained domain/resource has been released.
+        [[nodiscard]] static std::shared_ptr<JkrAllocationDomain>
+        retain_heap(std::shared_ptr<JkrHeapRuntime> runtime, JKRHeap& heap,
+                    std::shared_ptr<void> heap_owner);
+        [[nodiscard]] static std::shared_ptr<JkrAllocationDomain>
+        retain_heap(std::shared_ptr<JkrAllocationDomain> parent, JKRHeap& heap);
         ~JkrAllocationDomain();
         JkrAllocationDomain(const JkrAllocationDomain&) = delete;
         JkrAllocationDomain& operator=(const JkrAllocationDomain&) = delete;
@@ -41,6 +53,9 @@ namespace smgpc::compat {
 
     private:
         JkrAllocationDomain(std::shared_ptr<JkrHeapRuntime> runtime, std::size_t byte_budget);
+        JkrAllocationDomain(std::shared_ptr<JkrAllocationDomain> parent, std::size_t byte_budget);
+        JkrAllocationDomain(std::shared_ptr<JkrHeapRuntime>, JKRHeap&, std::shared_ptr<void>);
+        static void register_owner(const std::shared_ptr<JkrAllocationDomain>&);
         struct Storage;
         std::unique_ptr<Storage> _storage;
     };

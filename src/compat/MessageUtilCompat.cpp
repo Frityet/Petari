@@ -41,6 +41,16 @@ namespace MR {
         return reinterpret_cast<const u16*>(data->mNativeResource->message_utf16(index));
     }
 
+    const u16* getSystemMessageDirectUtf16(const char* message_id) {
+        if (message_id == nullptr) return nullptr;
+        auto* holder = smgpc::runtime::current_message_holder();
+        if (holder == nullptr) return nullptr;
+        const auto* data = holder->mSystemMessageData;
+        const auto index = data->findMessageIndex(message_id);
+        if (index < 0 || index >= data->mInfoBlock->mItemCount) return nullptr;
+        return reinterpret_cast<const u16*>(data->mNativeResource->message_utf16(index));
+    }
+
     const wchar_t* getSystemMessageDirect(const char* message_id) {
         return resolve_raw_message(message_id, MessageSystem::getSystemMessageDirect);
     }

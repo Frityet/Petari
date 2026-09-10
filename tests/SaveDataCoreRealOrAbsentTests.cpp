@@ -1,8 +1,8 @@
-#include "Game/System/SaveDataHandleSequence.hpp"
-#include "compat/SaveDataHandleSequenceCompat.hpp"
+#include "Game/System/GameDataFunction.hpp"
+#include "Game/System/GameSystem.hpp"
+#include "Game/Util/SingletonHolder.hpp"
 #include "runtime/RuntimeContext.hpp"
 
-#include <functional>
 #include <iostream>
 #include <stdexcept>
 #include <string>
@@ -15,12 +15,13 @@ void require(bool condition, std::string_view message) {
     }
 }
 
-void require_unavailable(const std::function<void()>& operation, std::string_view message) {
+template <typename Operation>
+void require_process_owner(Operation&& operation, std::string_view message) {
     auto unavailable = false;
     try {
         operation();
-    } catch (const std::logic_error&) {
-        unavailable = true;
+    } catch (const std::logic_error& error) {
+        unavailable = std::string_view(error.what()).find("original process save sequence") != std::string_view::npos;
     }
     require(unavailable, message);
 }
@@ -28,36 +29,25 @@ void require_unavailable(const std::function<void()>& operation, std::string_vie
 
 int main() {
     require(smgpc::runtime::RuntimeContext::try_instance() == nullptr,
-            "the regression fixture must not have a runtime or mounted save resources");
+            "the absence fixture must not have a runtime or mounted save resources");
+    require(SingletonHolder<GameSystem>::get() == nullptr,
+            "the absence fixture must not have an original process GameSystem");
 
-    auto local = SaveDataHandleSequence{};
-    require(local.mSysConfigFile == nullptr && local.mCurrentUserFile == nullptr && local.mBackupUserFile == nullptr &&
-                local.mSaveDataHandler == nullptr && local.mNANDErrorSequence == nullptr && local.mTempBuffer == nullptr,
-            "constructing the unavailable sequence must not allocate a synthetic save core");
-    require(!smgpc::compat::try_initialize_save_data_ui(local),
-            "the capability probe must report that retail save UI backing is absent");
-    require(local.mSysConfigFile == nullptr && local.mCurrentUserFile == nullptr && local.mSaveDataHandler == nullptr,
-            "the capability probe must not mutate the absent sequence into a partial implementation");
+    require_process_owner([] { static_cast<void>(GameDataFunction::getCurrentGameDataHolder()); },
+                          "current data requires the process sequence's actual current UserFile");
+    require_process_owner([] { static_cast<void>(GameDataFunction::getSceneStartGameDataHolder()); },
+                          "scene-start data requires the process sequence's actual backup UserFile");
+    require_process_owner([] { static_cast<void>(GameDataFunction::getUserName()); },
+                          "user-name access must not fabricate a current file without the process sequence");
+    require_process_owner([] { static_cast<void>(GameDataFunction::getSysConfigFileTimeAnnounced()); },
+                          "system configuration requires the process sequence's actual SysConfigFile");
 
-    require_unavailable([&] { smgpc::compat::ensure_save_data_core_initialized(local); },
-                        "partial save-core initialization must be explicitly unavailable");
-    require_unavailable([] { static_cast<void>(smgpc::game::save_data_handle_sequence()); },
-                        "the global sequence accessor must be unavailable without retail backing");
-    require_unavailable([&] { local.update(); }, "sequence update must not be a no-op fallback");
-    require_unavailable([&] { local.draw(); }, "sequence draw must not be a no-op fallback");
-    require_unavailable([&] { static_cast<void>(local.isActive()); },
-                        "active-state queries must not return a fabricated false");
-    require_unavailable([&] { static_cast<void>(local.isPermitToReset()); },
-                        "reset permission must not return a fabricated true");
-    require_unavailable([&] { static_cast<void>(local.getCurrentUserFile()); },
-                        "current-file access must not return a fabricated null");
-    require_unavailable([&] { static_cast<void>(local.getHolder()); },
-                        "holder access must not return a fabricated null");
-    require_unavailable([&] { local.exeNoOperation(); },
-                        "the no-operation nerve must not silently stand in for the retail state machine");
-    require_unavailable([&] { local.startPreLoad(); }, "preload must be explicitly unavailable");
-    require_unavailable([&] { local.startSave(false, false); }, "save must be explicitly unavailable");
+    require(SingletonHolder<GameSystem>::get() == nullptr && smgpc::runtime::RuntimeContext::try_instance() == nullptr,
+            "failed save-data queries must not manufacture a process or runtime owner");
 
-    std::cout << "Save-data core real-or-absent tests passed: 14/14\n";
+    // SaveDataHandleSequence now executes its complete original constructor and
+    // state machine. Resource loading, NAND completion and save UI transitions
+    // require the real process startup graph and are not exercised here.
+    std::cout << "Save-data process-owner absence checks passed\n";
     return 0;
 }

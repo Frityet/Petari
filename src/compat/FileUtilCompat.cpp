@@ -6,17 +6,29 @@
 #include <filesystem>
 #include <map>
 #include <memory>
+#include <mutex>
 #include <string>
 #include <vector>
 
 #include "runtime/RuntimeContext.hpp"
 #include "runtime/ArchiveMountService.hpp"
 #include "compat/JkrAllocationDomain.hpp"
+#include "compat/ResourceHolderCompat.hpp"
+#include "Game/Util/MemoryUtil.hpp"
+#include "JSystem/JKernel/JKRHeap.hpp"
+#include "resource/Yaz0.hpp"
+#include <aurora/exception.hpp>
+#include <stdexcept>
 
 namespace MR {
     namespace {
 
-        std::map< std::string, std::vector< u8 > > sLoadedFiles;
+        struct LoadedFile {
+            std::vector<u8> bytes;
+            JKRHeap* heap;
+        };
+        std::map<std::string, LoadedFile> sLoadedFiles;
+        std::mutex sLoadedFilesMutex;
 
         [[nodiscard]] smgpc::runtime::RuntimeContext* runtime() {
             return smgpc::runtime::RuntimeContext::try_instance();
@@ -135,7 +147,8 @@ namespace MR {
         return DVDConvertPathToEntrynum(path.c_str());
     }
 
-    void* loadToMainRAM(const char* pFilePath, u8* pDst, JKRHeap*, JKRDvdRipper::EAllocDirection) {
+    void* loadToMainRAM(const char* pFilePath, u8* pDst, JKRHeap* pHeap, JKRDvdRipper::EAllocDirection) {
+        smgpc::compat::JkrHostAllocationScope host;
         auto* context = runtime();
         if (context == nullptr || pFilePath == nullptr) {
             return nullptr;
@@ -143,14 +156,20 @@ namespace MR {
 
         const auto path = path_considering_language(pFilePath, true);
         try {
+            if (pDst == nullptr) {
+                const std::lock_guard lock(sLoadedFilesMutex);
+                if (const auto found = sLoadedFiles.find(path); found != sLoadedFiles.end())
+                    return found->second.bytes.empty() ? nullptr : found->second.bytes.data();
+            }
             auto bytes = context->dvd().read_file(path);
             if (pDst != nullptr) {
                 std::memcpy(pDst, bytes.data(), bytes.size());
                 return pDst;
             }
 
-            auto it = sLoadedFiles.insert_or_assign(path, std::move(bytes)).first;
-            return it->second.empty() ? nullptr : it->second.data();
+            const std::lock_guard lock(sLoadedFilesMutex);
+            auto it = sLoadedFiles.try_emplace(path, LoadedFile{std::move(bytes), pHeap ? pHeap : getCurrentHeap()}).first;
+            return it->second.bytes.empty() ? nullptr : it->second.bytes.data();
         } catch (const std::exception&) {
             return nullptr;
         }
@@ -181,9 +200,11 @@ namespace MR {
     }
 
     void* receiveFile(const char* pFilePath) {
+        smgpc::compat::JkrHostAllocationScope host;
         const auto path = path_considering_language(pFilePath, true);
+        const std::lock_guard lock(sLoadedFilesMutex);
         if (auto it = sLoadedFiles.find(path); it != sLoadedFiles.end()) {
-            return it->second.empty() ? nullptr : it->second.data();
+            return it->second.bytes.empty() ? nullptr : it->second.bytes.data();
         }
 
         return nullptr;
@@ -198,7 +219,19 @@ namespace MR {
     void receiveAllRequestedFile() {
     }
 
-    void createAndAddArchive(void*, JKRHeap*, const char*) {
+    void createAndAddArchive(void* pArcData, JKRHeap* pHeap, const char* pFilePath) {
+        auto* mounts = smgpc::runtime::ArchiveMountService::active();
+        if (mounts == nullptr)
+            aurora::throw_host_exception<std::logic_error>("Archive registration requires its native mount owner");
+        if (pArcData == nullptr || pFilePath == nullptr)
+            aurora::throw_host_exception<std::invalid_argument>("Archive registration requires source bytes and a name");
+        // Like the SDK's mountFixed(void*), the original API trusts its caller
+        // to provide the complete buffer described by this big-endian header.
+        const auto* bytes = static_cast<const u8*>(pArcData);
+        if (std::memcmp(bytes, "RARC", 4) != 0)
+            aurora::throw_host_exception<std::invalid_argument>("Fixed archive registration requires decompressed RARC bytes");
+        const u32 size = (u32(bytes[4]) << 24) | (u32(bytes[5]) << 16) | (u32(bytes[6]) << 8) | bytes[7];
+        (void)mounts->mount_memory_fixed(pFilePath, {bytes, size}, pHeap);
     }
 
     void getMountedArchiveAndHeap(const char* pFilePath, JKRArchive** ppArchive, JKRHeap** ppHeap) {
@@ -209,21 +242,44 @@ namespace MR {
     }
 
     void removeFileConsideringLanguage(const char* pFilePath) {
-        sLoadedFiles.erase(path_considering_language(pFilePath, true));
+        smgpc::compat::JkrHostAllocationScope host;
+        const auto path = path_considering_language(pFilePath, true);
+        const std::lock_guard lock(sLoadedFilesMutex);
+        sLoadedFiles.erase(path);
     }
 
     void removeResourceAndFileHolderIfIsEqualHeap(JKRHeap* heap) {
+        smgpc::compat::JkrHostAllocationScope host;
+        if (heap == nullptr) return;
+        if (auto* resources = smgpc::compat::ResourceHolderService::active()) resources->remove_for_heap(heap);
         if (auto* mounts = smgpc::runtime::ArchiveMountService::active()) mounts->remove_for_heap(heap);
+        const std::lock_guard lock(sLoadedFilesMutex);
+        std::erase_if(sLoadedFiles, [heap](const auto& entry) { return entry.second.heap == heap; });
     }
 
-    void* decompressFileFromArchive(JKRArchive* pArchive, const char* pFilePath, JKRHeap*, int) {
-        auto* mounts = smgpc::runtime::ArchiveMountService::active();
-        if (pArchive == nullptr || pFilePath == nullptr || mounts == nullptr) return nullptr;
-        return mounts->copy_archive_resource(*pArchive, pFilePath);
+    void* decompressFileFromArchive(JKRArchive* pArchive, const char* pFilePath, JKRHeap* pHeap, int align) {
+        if (pHeap == nullptr) pHeap = getCurrentHeap();
+        smgpc::compat::JkrHostAllocationScope host;
+        if (pArchive == nullptr || pFilePath == nullptr) return nullptr;
+        const auto* data = static_cast<const u8*>(pArchive->getResource(pFilePath));
+        if (data == nullptr) return nullptr;
+        const auto size = pArchive->getResSize(data);
+        if (size == 0 || size == UINT32_MAX) return nullptr;
+        if (size >= 4 && std::memcmp(data, "Yay0", 4) == 0)
+            aurora::throw_host_exception<std::logic_error>("Yay0 archive resource decoding is not implemented");
+        const auto bytes = smgpc::resource::decompress_yaz0({data, size});
+        // Preserve original caller ownership, heap choice and signed alignment.
+        // Returning a cached vector prevented ordinary delete[]/heap retirement.
+        auto* result = new (pHeap, align) u8[bytes.size()];
+        std::memcpy(result, bytes.data(), bytes.size());
+        return result;
     }
 
     bool isLoadedFile(const char* pFilePath) {
-        return sLoadedFiles.contains(path_considering_language(pFilePath, true));
+        smgpc::compat::JkrHostAllocationScope host;
+        const auto path = path_considering_language(pFilePath, true);
+        const std::lock_guard lock(sLoadedFilesMutex);
+        return sLoadedFiles.contains(path);
     }
 
     bool isMountedArchive(const char* pFilePath) {

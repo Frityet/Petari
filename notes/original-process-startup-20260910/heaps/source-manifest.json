@@ -1,0 +1,135 @@
+{
+  "files": [
+    {
+      "path": "src/Game/System/GameSystemStationedArchiveLoader.cpp",
+      "sha256": "80cacb89f9c1f5e0a60c7ad5bb437e3eb71d2cde30d285e8c7ec8373a5dcb0ab",
+      "reference": "decomp/src/Game/System/GameSystemStationedArchiveLoader.cpp",
+      "reference_sha256": "33c4160b983979826034b7c979e8278a89c0fe3536a360e7618924f3f0f0fd7e",
+      "exact_reference": false
+    },
+    {
+      "path": "src/Game/System/GameSystemStationedArchiveLoader.hpp",
+      "sha256": "5904a09f945f4a7a7a19beaa4a2fb9f1db548ddaea288630f746e0eac296f56e",
+      "reference": "decomp/include/Game/System/GameSystemStationedArchiveLoader.hpp",
+      "reference_sha256": "5904a09f945f4a7a7a19beaa4a2fb9f1db548ddaea288630f746e0eac296f56e",
+      "exact_reference": true
+    },
+    {
+      "path": "src/Game/System/HeapMemoryWatcher.cpp",
+      "sha256": "de0d9a24009a4c535b96d69af665c8576e84c9c827158010fa5fda5b02d07ff2",
+      "reference": "decomp/src/Game/System/HeapMemoryWatcher.cpp",
+      "reference_sha256": "a04135a4dec1ddbf676795d014eeb334ec0ab2fef7add3c59a8c18a2f3a4f3b3",
+      "exact_reference": false
+    },
+    {
+      "path": "src/Game/System/HeapMemoryWatcher.hpp",
+      "sha256": "b826908432c385e6be497ba9b2a5409faeb655fdb5e3dec9bef2716cb529d03a",
+      "reference": "decomp/include/Game/System/HeapMemoryWatcher.hpp",
+      "reference_sha256": "b826908432c385e6be497ba9b2a5409faeb655fdb5e3dec9bef2716cb529d03a",
+      "exact_reference": true
+    },
+    {
+      "path": "src/Game/System/StationedArchiveLoader.cpp",
+      "sha256": "b6d41e13ccda30b140479df54a2e095faf1c146e03502a9d5684765062afc43b",
+      "reference": "decomp/src/Game/System/StationedArchiveLoader.cpp",
+      "reference_sha256": "b6d41e13ccda30b140479df54a2e095faf1c146e03502a9d5684765062afc43b",
+      "exact_reference": true
+    },
+    {
+      "path": "src/Game/System/StationedArchiveLoader.hpp",
+      "sha256": "2453e25a38f3e25298ddb5be99cbf11e490f79527b31a1283dbf4a04390ab0d8",
+      "reference": "decomp/include/Game/System/StationedArchiveLoader.hpp",
+      "reference_sha256": "e984f6554e262a5d50e26704f18e6c13cb24feb2f3ac4216abec2325ad6cf288",
+      "exact_reference": false
+    },
+    {
+      "path": "src/Game/System/ResourceHolderManager.hpp",
+      "sha256": "bb88ec7a94bb3f3ada8c2ed6771df5a91a53207bf1bad20bf896b41dc706ce42",
+      "reference": "decomp/include/Game/System/ResourceHolderManager.hpp",
+      "reference_sha256": "bb88ec7a94bb3f3ada8c2ed6771df5a91a53207bf1bad20bf896b41dc706ce42",
+      "exact_reference": true
+    },
+    {
+      "path": "src/JSystem/JKernel/JKRUnitHeap.hpp",
+      "sha256": "93e8e6e486af327d385daa261fab9c2e4dcdfbd8121d58faeecd4cafa7db4e8c"
+    },
+    {
+      "path": "src/JSystem/JKernel/JKRHeap.hpp",
+      "sha256": "7793c2e3210377d1bf04ffa63abe513cac8c6ecbd16e449f7a77599d42ebca5e"
+    },
+    {
+      "path": "src/compat/JKRUnitHeapCompat.cpp",
+      "sha256": "3d038dbb8122bffda23c5fe7972542783a3db1e4a24f9cfef9285f4502f8f9dd"
+    },
+    {
+      "path": "src/compat/JKRHeapCompat.cpp",
+      "sha256": "e81a702c27969ee519dd9f0afe692f76d7cd31c951dec48c1c499ecc720a3daf"
+    },
+    {
+      "path": "src/compat/JKRExpHeapCompat.cpp",
+      "sha256": "e23462197be574603b82760e86db13038764d8d098c7cdad1f6f8789b4303412"
+    },
+    {
+      "path": "src/compat/JkrAllocationDomain.cpp",
+      "sha256": "9524b8f0d62803aa948063cdb724ccd8f73480478b3ecd61f91eca63413325b1"
+    },
+    {
+      "path": "src/compat/JkrAllocationDomain.hpp",
+      "sha256": "23d90e9979fada16accf0af75cd309d21ff8ac5035542ccd513c6984dc71c107"
+    },
+    {
+      "path": "src/compat/OriginalStationedArchiveUtil.cpp",
+      "sha256": "e609ababf310ad0ddf095abeedaf1e6d1f35df798f2af63d203702598bc75977"
+    },
+    {
+      "path": "src/compat/OriginalStationedResourceManager.cpp",
+      "sha256": "db1dd3fcf02bee98fe3d1b1239b7978cce39e0a4cb71a872dc0d9bac528a5fc6"
+    },
+    {
+      "path": "src/compat/ResourceHolderCompat.cpp",
+      "sha256": "67026dc3fc4bd71ae692193fb31a510c42e8c84a63111b5f1d7e4a29b905eb49"
+    },
+    {
+      "path": "src/compat/ResourceHolderCompat.hpp",
+      "sha256": "43b0f1aafb009b32a0fa73bf25ebb0977070465a54161e0001e4bf5d10573039"
+    },
+    {
+      "path": "src/compat/FileUtilCompat.cpp",
+      "sha256": "341d4633c517263ce9d05c5de5a516bbbd0cf2933e8608c3e89de06c07b4910c"
+    },
+    {
+      "path": "src/compat/SceneHeapAccess.cpp",
+      "sha256": "4a0884c57bae8a7b8a52e4439e579a1aa0ebd6a6c7aab4e82d6b088d6ba0aaa9"
+    },
+    {
+      "path": "src/runtime/ArchiveMountService.cpp",
+      "sha256": "60aceb113dd4444f799676cc6f04571fdea0976d3bac7ad2642eaafbef427d45"
+    },
+    {
+      "path": "aurora/include/aurora/mem2_arena.hpp",
+      "sha256": "c14fc4935cc015dc6287862386c606ba8efdd59cad3276bad8f4a7ee67799323"
+    },
+    {
+      "path": "aurora/include/dolphin/os/OSArena.h",
+      "sha256": "3964e86e6500663fa53015d58f73271591e26b5898ad93adbf32a0ef2f01a7fe"
+    },
+    {
+      "path": "aurora/include/revolution/os.h",
+      "sha256": "4827eb5b012cd8226282bd85858c0013f52572b1672d10b65235b68f8150fedb"
+    },
+    {
+      "path": "aurora/include/revolution.h",
+      "sha256": "fedff12ce1f996431350fd36312ccab4323dff5a8723ec6b6198cbbdd22a5a33"
+    },
+    {
+      "path": "aurora/lib/dolphin/os/OSArena.cpp",
+      "sha256": "544e19ce4b72195deb5fbef1e4c601ac72a962b62ccf4147a939906273a1cd13"
+    },
+    {
+      "path": "aurora/lib/wpad.cpp",
+      "sha256": "8aadfcb2768e9dec5643bb6362fca4c052a40d42e144d1bfaa63fdd3c0feccfa"
+    }
+  ],
+  "removed_duplicate_provider": "src/compat/OriginalScenarioPreload.cpp",
+  "verification": "No subagent compiler/Xmake run; parent owns the single combined native build. Retail assembly checked for stated SDK contracts; no new Wii match claim."
+}

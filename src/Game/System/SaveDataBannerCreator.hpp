@@ -1,20 +1,19 @@
 #pragma once
 
-#include <revolution.h>
-
 #include "Game/System/NerveExecutor.hpp"
+#include <revolution/nand.h>
 
 class NANDRequestInfo;
 class NANDResultCode;
-struct NANDBanner;
 
 class SaveDataBannerCreator : public NerveExecutor {
 public:
+    /// @brief Creates a new `SaveDataBannerCreator`.
     SaveDataBannerCreator();
 
     void execute();
-    [[nodiscard]] bool isDone() const;
-    [[nodiscard]] NANDResultCode getResultCode() const;
+    bool isDone() const;
+    NANDResultCode getResultCode() const;
     void exeNoOperation();
     void exeCreateOnTemporary();
     void exeMoveToHomeDir();

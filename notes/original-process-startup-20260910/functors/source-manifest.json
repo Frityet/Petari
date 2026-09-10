@@ -1,0 +1,10 @@
+[
+  {
+    "path": "decomp/include/Game/Util/Functor.hpp",
+    "sha256": "77e9583e534068be3716c2882e1fac004a0686f4a95f55b2813353baac649b80"
+  },
+  {
+    "path": "src/Game/Util/Functor.hpp",
+    "sha256": "7061707def2dd214f8d6f4e47b44bee79c5f2d912df8a843d21d2cb47b4afa85"
+  }
+]

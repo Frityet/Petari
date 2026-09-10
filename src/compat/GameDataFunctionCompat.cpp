@@ -8,7 +8,12 @@
 
 #include "Game/System/GameDataHolder.hpp"
 #include "Game/System/GameDataGalaxyStorage.hpp"
+#include "Game/System/GameEventFlagTable.hpp"
+#include <cstdio>
 #include "Game/System/SaveDataHandleSequence.hpp"
+#include "Game/System/GameSystem.hpp"
+#include "Game/System/GameSequenceDirector.hpp"
+#include "Game/Util/SingletonHolder.hpp"
 #include "Game/System/SysConfigFile.hpp"
 #include "Game/System/UserFile.hpp"
 #include "compat/GameDataFunctionCompat.hpp"
@@ -21,8 +26,17 @@ thread_local GameDataHolder* sSceneStartGameDataOverride = nullptr;
     aurora::throw_host_exception<std::logic_error>("GameDataFunction operation is unavailable: " + std::string(operation));
 }
 
+SaveDataHandleSequence& require_save_sequence() {
+    auto* system = SingletonHolder<GameSystem>::get();
+    if (system == nullptr || system->mSequenceDirector == nullptr ||
+        system->mSequenceDirector->mSaveDataHandleSequence == nullptr) {
+        unavailable("original process save sequence");
+    }
+    return *system->mSequenceDirector->mSaveDataHandleSequence;
+}
+
 UserFile& require_current_user_file() {
-    auto* file = smgpc::game::save_data_handle_sequence().getCurrentUserFile();
+    auto* file = require_save_sequence().getCurrentUserFile();
     if (file == nullptr || file->mGameDataHolder == nullptr) {
         unavailable("current user file");
     }
@@ -30,7 +44,7 @@ UserFile& require_current_user_file() {
 }
 
 UserFile& require_backup_user_file() {
-    auto* file = smgpc::game::save_data_handle_sequence().getBackupUserFile();
+    auto* file = require_save_sequence().getBackupUserFile();
     if (file == nullptr || file->mGameDataHolder == nullptr) {
         unavailable("scene-start user file");
     }
@@ -38,7 +52,7 @@ UserFile& require_backup_user_file() {
 }
 
 SysConfigFile& require_sys_config_file() {
-    auto* file = smgpc::game::save_data_handle_sequence().getSysConfigFile();
+    auto* file = require_save_sequence().getSysConfigFile();
     if (file == nullptr) {
         unavailable("system configuration file");
     }
@@ -212,5 +226,39 @@ namespace GameDataFunction {
         }
 
         return grandStarNum;
+    }
+}
+
+namespace GameDataFunction {
+    s32 calcTicoGalaxyNum(const GameDataHolder* pGameDataHolder) {
+        s32 ticoGalaxyNum = 0;
+        s32 exclamationGalaxyNum = GameEventFlagTable::calcExclamationGalaxyNum();
+
+        for (s32 i = 0; i < exclamationGalaxyNum; i++) {
+            const char* pExclamationGalaxyName = GameEventFlagTable::getExclamationGalaxyNameFromIndex(i);
+
+            if (pGameDataHolder->isAppearGalaxy(pExclamationGalaxyName)) {
+                ticoGalaxyNum++;
+            }
+        }
+
+        return ticoGalaxyNum;
+    }
+}
+
+namespace GameDataFunction {
+    s32 calcGreenStarNum(const GameDataHolder* pGameDataHolder) {
+        s32 greenStarNum = 0;
+        char eventFlagName[32];
+
+        for (int i = 1; i <= 3; i++) {
+            snprintf(eventFlagName, sizeof(eventFlagName), "SpecialStarGreen%1d", i);
+
+            if (pGameDataHolder->isOnGameEventFlag(eventFlagName)) {
+                greenStarNum++;
+            }
+        }
+
+        return greenStarNum;
     }
 }

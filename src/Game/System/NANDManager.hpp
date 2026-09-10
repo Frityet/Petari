@@ -1,22 +1,24 @@
 #pragma once
 
 #include <revolution.h>
+#include <revolution/nand.h>
 
+class NANDManagerThread;
 class NANDRequestInfo;
 
-using NANDReqFunc = void(NANDRequestInfo*);
+typedef void(NANDReqFunc)(NANDRequestInfo*);
 
 class NANDRequestInfo {
 public:
     NANDRequestInfo();
 
     void init();
-    [[nodiscard]] bool isDone() const;
-    const char* setMove(const char* pPath, const char* pDestDir);
-    const char* setWriteSeq(const char* pName, const void* pBuf, u32 fsBlock, u8 permission, u8 attr);
-    const char* setReadSeq(const char* pName, void* pBuf, u32 fsBlock, u32* pLength);
-    const char* setCheck(u32 fsBlock, u32 inode, u32* pAnswer);
-    const char* setDelete(const char* pName);
+    bool isDone() const;
+    const char* setMove(const char*, const char*);
+    const char* setWriteSeq(const char*, const void*, u32, u8, u8);
+    const char* setReadSeq(const char*, void*, u32, u32*);
+    const char* setCheck(u32, u32, u32*);
+    const char* setDelete(const char*);
 
     /* 0x00 */ char mPath[NAND_MAX_PATH];
     /* 0x40 */ u32 _40;
@@ -42,23 +44,31 @@ public:
 class NANDManager {
 public:
     NANDManager();
+#ifdef TARGET_PC
+    ~NANDManager();
+#endif
 
-    bool addRequest(NANDRequestInfo* pRequestInfo);
+    bool addRequest(NANDRequestInfo*);
+
+private:
+    /* 0x00 */ OSMutex mMutex;
+    /* 0x18 */ NANDManagerThread* mManagerThread;
 };
 
 class NANDResultCode {
 public:
-    explicit NANDResultCode(s32 code) : mCode(code) {}
+    NANDResultCode(s32 code) : mCode(code) {
+    }
 
-    [[nodiscard]] s32 getCode() const;
-    [[nodiscard]] bool isSuccess() const;
-    [[nodiscard]] bool isSaveDataCorrupted() const;
-    [[nodiscard]] bool isNANDCorrupted() const;
-    [[nodiscard]] bool isMaxBlocks() const;
-    [[nodiscard]] bool isMaxFiles() const;
-    [[nodiscard]] bool isNoExistFile() const;
-    [[nodiscard]] bool isBusyOrAllocFailed() const;
-    [[nodiscard]] bool isUnknown() const;
+    s32 getCode() const;
+    bool isSuccess() const;
+    bool isSaveDataCorrupted() const;
+    bool isNANDCorrupted() const;
+    bool isMaxBlocks() const;
+    bool isMaxFiles() const;
+    bool isNoExistFile() const;
+    bool isBusyOrAllocFailed() const;
+    bool isUnknown() const;
 
 private:
     /* 0x0 */ s32 mCode;
@@ -66,4 +76,4 @@ private:
 
 namespace MR {
     void addRequestToNANDManager(NANDRequestInfo*);
-}
+};  // namespace MR

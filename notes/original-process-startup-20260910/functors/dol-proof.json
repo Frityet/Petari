@@ -1,0 +1,17 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "instructions": [
+    {
+      "address": "0x8039df80",
+      "actual_instruction": "38a00000",
+      "expected_li_r5_zero": "38a00000",
+      "match": true
+    },
+    {
+      "address": "0x803a87fc",
+      "actual_instruction": "38a00000",
+      "expected_li_r5_zero": "38a00000",
+      "match": true
+    }
+  ]
+}

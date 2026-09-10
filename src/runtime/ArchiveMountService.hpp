@@ -47,11 +47,13 @@ namespace smgpc::runtime {
         // Copies a bounded embedded archive into an independent decoded owner.
         // Existing names keep their published identity, just like file mounts.
         [[nodiscard]] JKRMemArchive* mount_memory(std::string_view, std::span<const unsigned char>, JKRHeap*);
+        // The original fixed mount borrows bytes owned by a static resource or
+        // the supplied heap. Retire its users and mount before freeing that heap.
+        [[nodiscard]] JKRMemArchive* mount_memory_fixed(std::string_view, std::span<const unsigned char>, JKRHeap*);
         [[nodiscard]] JKRMemArchive* receive(std::string_view) const;
         [[nodiscard]] std::shared_ptr<const MountedArchive> retain(std::string_view) const;
         [[nodiscard]] std::size_t size() const;
         void remove_for_heap(JKRHeap*);
-        [[nodiscard]] void* copy_archive_resource(JKRArchive&, const char*);
         [[nodiscard]] DvdFileSystemService& dvd() const noexcept;
         [[nodiscard]] static ArchiveMountService* active() noexcept;
     private:
@@ -59,6 +61,5 @@ namespace smgpc::runtime {
         DvdFileSystemService* _dvd;
         mutable std::mutex _mutex;
         std::map<std::filesystem::path, std::shared_ptr<MountedArchive>> _mounts;
-        std::map<std::pair<const JKRArchive*, std::string>, std::vector<unsigned char>> _resource_copies;
     };
 }

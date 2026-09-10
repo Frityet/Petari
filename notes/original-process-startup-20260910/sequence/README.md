@@ -1,0 +1,26 @@
+# Original process sequence graph
+
+## Implemented
+
+Imported the complete original GameSequenceDirector, GameSequenceProgress, GameSequenceFunction, FindingLuigiEventScheduler, LuigiLeftSupplier, GalaxyCometScheduler/GalaxyCometState and PlayerMissLeft sources and paired headers. Full NWC24Messenger and LuigiMailDirector declaration headers accompany the direct caller closure. The 21 missing SDK headers are byte-identical original NWC24/NAND/VF/FS declarations; they add no network or storage implementation. `import-paths.json`, `sdk-declarations.json` and `source-manifest.json` list exact files.
+
+GameSequenceFunction now routes movie/demo queries to the original Progress-owned StorySequenceExecutor, retry and stage results to Director-owned GameDataTemporaryInGalaxy, save requests to Director-owned SaveDataHandleSequence, and comet/Luigi queries to their actual original children. Removed the seven duplicate GameSequenceFunction providers in StorySequencePlatformCompat, including the host comet-enabled boolean and its unused accessor/reset APIs. No process owner was fabricated or per-scene temporary pointer aliased.
+
+Recovered the one missing original GameSequenceFunction body, reflectStageResultSequenceCoin, in decomp first. Retail 0x803B62F4–0x803B636C captures the result coin count before fetching the real current holder, creates its real scenario accessor, then calls updateMaxCoinNum. The declared GameDataSomeScenarioAccessor now exists; the obsolete commented placeholder was removed and its genuine header included. Complete Wii TU compilation succeeds; the bounded 124-byte routine matches 93.29032%. The exact recovered TU was then copied into native Game. No other imported Game body was changed.
+
+## Verification boundary
+
+All eight imported native TUs compiled to objects successfully in one bounded compile batch. No linked or runtime result is claimed. `direct-missing-symbols.json` compares emitted direct references with this cohort plus the previous debug Game archive; it is a direct inventory, not an entire transitive closure or prediction of dead-stripped live imports. Common-library/platform symbols may resolve outside that Game archive. Parent owns the combined build and runtime.
+
+## Mandatory integration still required
+
+- Original Director construction immediately calls SaveDataHandleSequence::registerFunctorOnSaveSuccess/JustBeforeSave. The old native SaveDataHandleSequenceCompat constructor is partial and these methods throw. Full original SaveDataHandleSequence activation is required; a no-op callback would not complete this graph. Its original constructor needs the real SaveDataHandler buffer size, while resource initialization needs actual UserFile/SysConfigFile, SaveDataHandler, SysInfoWindow, SaveIcon and NANDErrorSequence/NAND owners. Actual six-chunk UserFile is already available; prior native facade is not a substitute.
+- Director also constructs NWC24Messenger. Actual Messenger -> SendTask/SendState -> NWC24System and its send worker are absent implementations. The new SDK declarations do not create them. FindingLuigiEventScheduler resource initialization requires the real LuigiMailDirector and messages. These are mandatory original child owners even when no mail is sent.
+- Progress directly reads GameSystem::mSceneController and its genuine current/next SceneControlInfo. Root owns actual GameSystem and scene-controller lifetime; no partial GameSystem has been introduced here.
+- SceneTransitionRequestService currently constructs a second StorySequenceExecutor. Its caller migration must use the actual Progress-owned instance and let original Progress own update/start ordering, rather than updating both.
+- StageSessionState currently constructs its own GameDataTemporaryInGalaxy; OriginalSceneCounterQueries uses that object. Root must migrate the temporary/restart/already-done/counter users to the process Director owner, whose lifetime spans scene transitions. The original resetGameDataGoToGalaxyFirst/Retry calls define resets. Do not point the process Director at one transient stage's object.
+- GameDataSession currently owns separate current/backup actual UserFiles; save owner integration must consolidate these with the actual SaveDataHandleSequence pair.
+- Direct remaining providers include GameDataFunction's first/retry reset, visited flag, stocked Star Piece and comet state methods; MR's normal/100-coin comet eligibility; SceneControlInfo setters/scene-controller operations; GameSystem permission/reset/archive operations; MR::requestChangeSceneAfterBoot and original empty startGlobalTimer. Sources for each exist in decomp. The previous failing GameSystemFunction permission stub and title-change stub also remain outside this cohort.
+- StorySequenceExecutorSource is still an old include wrapper for two bool/nullptr compiler errors, and StageResultSequenceChecker still has three throwing native providers. The actual complete StageResultSequenceChecker source is available for the next bounded activation. This work does not claim those follow-on boundaries complete.
+
+Production frozen after the successful eight-object compile. No Xmake, process-lifetime mutation, replay or commit was performed by this subtask.

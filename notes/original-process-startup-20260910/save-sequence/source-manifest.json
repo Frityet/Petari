@@ -1,0 +1,109 @@
+{
+  "files": [
+    {
+      "path": "src/Game/System/SaveDataHandleSequence.cpp",
+      "sha256": "8827336b8ae41f2611510c1e94eec67f663ae87f56f36cf2db5b843c0d72e19f"
+    },
+    {
+      "path": "src/Game/System/SaveDataHandleSequence.hpp",
+      "sha256": "7b61b50593f658de4dbc8a82f657590b162ad098b7898f8fefcaef1abf304864"
+    },
+    {
+      "path": "src/Game/System/NANDErrorSequence.cpp",
+      "sha256": "38a92f5dd51b8529445fa7c403def5c4fa015df72e125278b1f70c001ccd66eb"
+    },
+    {
+      "path": "src/Game/System/NANDErrorSequence.hpp",
+      "sha256": "86a968818f7c3ae8d1c1ca39660fe20c8bcc65c6aec4d288180e6a72adf8d0e1"
+    },
+    {
+      "path": "src/Game/System/NANDManager.cpp",
+      "sha256": "d95ba81ed593edff8ad9056371784de17e161a200b13e52b1ef4e1a4a2a7ad23"
+    },
+    {
+      "path": "src/Game/System/NANDManager.hpp",
+      "sha256": "34e9f4138a2639b9cb5a53f78d001ba23194e11dc6674433009395f389a868e8"
+    },
+    {
+      "path": "src/Game/System/NANDManagerThread.cpp",
+      "sha256": "e99e052d69eb57289f4c20dba6461efcbaaa7d5cb00fdeb2bea20a0cf51d0f40"
+    },
+    {
+      "path": "src/Game/System/NANDManagerThread.hpp",
+      "sha256": "033bc45f858546cf36aadbc86c9539ef916b8595275d5a64dd6acfc98d6c8103"
+    },
+    {
+      "path": "src/Game/System/SaveDataHandler.cpp",
+      "sha256": "b8a96f3e13d64d256c5f8e844592ea8f13a8129388d01aa327bfc576900d1347"
+    },
+    {
+      "path": "src/Game/System/SaveDataHandler.hpp",
+      "sha256": "6c32afda30a2f84ba9545dba9f2dae6c0637618d944d0e6e330ddfcae202f03a"
+    },
+    {
+      "path": "src/Game/System/SaveDataFileAccessor.cpp",
+      "sha256": "1a9116bd47d550004f229244a82a93bb73f3570a0a6ed547900ff83a76589af7"
+    },
+    {
+      "path": "src/Game/System/SaveDataFileAccessor.hpp",
+      "sha256": "5d91d01e0998bb2a681d44a599a4eff47806b06068deccdb83d48e97a9f82941"
+    },
+    {
+      "path": "src/compat/GameDataFunctionCompat.cpp",
+      "sha256": "049a32c9a5e2af49f1ce4ad0bb9ba2cd2269c16c37d20ef05dc87d6943aee493"
+    },
+    {
+      "path": "src/compat/MetrowerksStdCompat.hpp",
+      "sha256": "278bcbb5ab705d0e21356e94994b388d0169af04a1e2840508ffc159bc1e6833"
+    },
+    {
+      "path": "src/compat/NandSdkCompat.cpp",
+      "sha256": "473debd48520793ec717b7dad28c9ca24a50062ed91e204b60644dfb847180aa"
+    },
+    {
+      "path": "src/runtime/RuntimeServices.cpp",
+      "sha256": "d791c27b2dab6bff803578f6ec6f0b7a027bfdef6ee5ac2575b2911b8a9ec196"
+    },
+    {
+      "path": "src/runtime/RuntimeServices.hpp",
+      "sha256": "fc4838093a8b681fa1c7d88c4334f03054114eb4e63d084987614b371fdd81e3"
+    },
+    {
+      "path": "aurora/include/aurora/nand.hpp",
+      "sha256": "0b864c2ffd70f4d556ef47ca10dffcbc6d49775e16c85ec78e3b400d44ad34f3"
+    },
+    {
+      "path": "aurora/lib/nand.cpp",
+      "sha256": "8a25f9786dcbfde300ecdf50fe240eb3992a6506d6c22dbd69f24f0235ecfade"
+    },
+    {
+      "path": "decomp/src/Game/System/SaveDataHandler.cpp",
+      "sha256": "b8a96f3e13d64d256c5f8e844592ea8f13a8129388d01aa327bfc576900d1347"
+    },
+    {
+      "path": "decomp/src/Game/System/SaveDataFileAccessor.cpp",
+      "sha256": "1a9116bd47d550004f229244a82a93bb73f3570a0a6ed547900ff83a76589af7"
+    },
+    {
+      "path": "src/Game/System/SaveDataBannerCreator.cpp",
+      "sha256": "63205f5f74aacbbf50f97c7a9d594b940d8e25fcab487f7e49dd47ab8837a466"
+    },
+    {
+      "path": "src/Game/System/SaveDataBannerCreator.hpp",
+      "sha256": "3b868c3f8ec9300962ef9248f4e1ec278de77fceceeaddf5c197b8e041bd4a97"
+    },
+    {
+      "path": "src/compat/MessageUtilCompat.cpp",
+      "sha256": "e9d9e25f1ad33c1f21875f2318d642a57580801e2b8f113a73bb0a72ff64e2c7"
+    },
+    {
+      "path": "src/compat/MessageUtilCompat.hpp",
+      "sha256": "f4179fd90f99e5e138e0b955eb8a73e667067ec3d1d5920d9a74d3cb4e65e9cc"
+    }
+  ],
+  "deleted": [
+    "src/compat/SaveDataHandleSequenceCompat.cpp",
+    "src/compat/SaveDataHandleSequenceCompat.hpp"
+  ],
+  "root_build_required": "Remove original SaveDataHandleSequence exclusion; normal source globs discover the added files. Aurora NAND source already part of build."
+}

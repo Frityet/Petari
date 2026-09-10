@@ -1,0 +1,1165 @@
+{
+  "command": [
+    "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-showcase",
+    "gateway",
+    "--disc",
+    "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "--max-frames",
+    "240",
+    "--width",
+    "1280",
+    "--height",
+    "720"
+  ],
+  "binary_sha256": "fc91f414cd3fc44501eae46e69fc16fbeb6529b1056545e6ab8fa9ef790faa83",
+  "exit": 0,
+  "timeout": false,
+  "wall_seconds": 4.926065208041109,
+  "frames": [
+    {
+      "wall_seconds": 1.0918662500334904,
+      "tick": 12,
+      "present": 1
+    },
+    {
+      "wall_seconds": 1.139846000005491,
+      "tick": 16,
+      "present": 2
+    },
+    {
+      "wall_seconds": 1.1511741660069674,
+      "tick": 17,
+      "present": 3
+    },
+    {
+      "wall_seconds": 1.1675837500370108,
+      "tick": 18,
+      "present": 4
+    },
+    {
+      "wall_seconds": 1.1837454159976915,
+      "tick": 19,
+      "present": 5
+    },
+    {
+      "wall_seconds": 1.2014837079914287,
+      "tick": 20,
+      "present": 6
+    },
+    {
+      "wall_seconds": 1.21771770803025,
+      "tick": 21,
+      "present": 7
+    },
+    {
+      "wall_seconds": 1.234115625033155,
+      "tick": 22,
+      "present": 8
+    },
+    {
+      "wall_seconds": 1.2504840409965254,
+      "tick": 23,
+      "present": 9
+    },
+    {
+      "wall_seconds": 1.2677867080201395,
+      "tick": 24,
+      "present": 10
+    },
+    {
+      "wall_seconds": 1.2838441249914467,
+      "tick": 25,
+      "present": 11
+    },
+    {
+      "wall_seconds": 1.3010313750128262,
+      "tick": 26,
+      "present": 12
+    },
+    {
+      "wall_seconds": 1.3171068750089034,
+      "tick": 27,
+      "present": 13
+    },
+    {
+      "wall_seconds": 1.3343595410115086,
+      "tick": 28,
+      "present": 14
+    },
+    {
+      "wall_seconds": 1.3505261660320684,
+      "tick": 29,
+      "present": 15
+    },
+    {
+      "wall_seconds": 1.3679504159954377,
+      "tick": 30,
+      "present": 16
+    },
+    {
+      "wall_seconds": 1.3885448329965584,
+      "tick": 31,
+      "present": 17
+    },
+    {
+      "wall_seconds": 1.400874125014525,
+      "tick": 32,
+      "present": 18
+    },
+    {
+      "wall_seconds": 1.4167901250184514,
+      "tick": 33,
+      "present": 19
+    },
+    {
+      "wall_seconds": 1.4346123749855906,
+      "tick": 34,
+      "present": 20
+    },
+    {
+      "wall_seconds": 1.4505670000216924,
+      "tick": 35,
+      "present": 21
+    },
+    {
+      "wall_seconds": 1.4674087910098024,
+      "tick": 36,
+      "present": 22
+    },
+    {
+      "wall_seconds": 1.4842619160190225,
+      "tick": 37,
+      "present": 23
+    },
+    {
+      "wall_seconds": 1.501599790994078,
+      "tick": 38,
+      "present": 24
+    },
+    {
+      "wall_seconds": 1.5172275000368245,
+      "tick": 39,
+      "present": 25
+    },
+    {
+      "wall_seconds": 1.5340877079870552,
+      "tick": 40,
+      "present": 26
+    },
+    {
+      "wall_seconds": 1.5511587500222959,
+      "tick": 41,
+      "present": 27
+    },
+    {
+      "wall_seconds": 1.5681887079845183,
+      "tick": 42,
+      "present": 28
+    },
+    {
+      "wall_seconds": 1.5842568330117501,
+      "tick": 43,
+      "present": 29
+    },
+    {
+      "wall_seconds": 1.6014601250062697,
+      "tick": 44,
+      "present": 30
+    },
+    {
+      "wall_seconds": 1.6174614580231719,
+      "tick": 45,
+      "present": 31
+    },
+    {
+      "wall_seconds": 1.6350123329903,
+      "tick": 46,
+      "present": 32
+    },
+    {
+      "wall_seconds": 1.6511739160050638,
+      "tick": 47,
+      "present": 33
+    },
+    {
+      "wall_seconds": 1.6675515410024673,
+      "tick": 48,
+      "present": 34
+    },
+    {
+      "wall_seconds": 1.6838886250043288,
+      "tick": 49,
+      "present": 35
+    },
+    {
+      "wall_seconds": 1.7014208750333637,
+      "tick": 50,
+      "present": 36
+    },
+    {
+      "wall_seconds": 1.7179365830379538,
+      "tick": 51,
+      "present": 37
+    },
+    {
+      "wall_seconds": 1.7352077080286108,
+      "tick": 52,
+      "present": 38
+    },
+    {
+      "wall_seconds": 1.7518537910073064,
+      "tick": 53,
+      "present": 39
+    },
+    {
+      "wall_seconds": 1.7685347080114298,
+      "tick": 54,
+      "present": 40
+    },
+    {
+      "wall_seconds": 1.7851462500402704,
+      "tick": 55,
+      "present": 41
+    },
+    {
+      "wall_seconds": 1.8019090000307187,
+      "tick": 56,
+      "present": 42
+    },
+    {
+      "wall_seconds": 1.8185064159915783,
+      "tick": 57,
+      "present": 43
+    },
+    {
+      "wall_seconds": 1.835290666029323,
+      "tick": 58,
+      "present": 44
+    },
+    {
+      "wall_seconds": 1.8520985830109566,
+      "tick": 59,
+      "present": 45
+    },
+    {
+      "wall_seconds": 1.867955083027482,
+      "tick": 60,
+      "present": 46
+    },
+    {
+      "wall_seconds": 1.884566624998115,
+      "tick": 61,
+      "present": 47
+    },
+    {
+      "wall_seconds": 1.9012999160331674,
+      "tick": 62,
+      "present": 48
+    },
+    {
+      "wall_seconds": 1.917990332993213,
+      "tick": 63,
+      "present": 49
+    },
+    {
+      "wall_seconds": 1.9350065410253592,
+      "tick": 64,
+      "present": 50
+    },
+    {
+      "wall_seconds": 1.9517745000193827,
+      "tick": 65,
+      "present": 51
+    },
+    {
+      "wall_seconds": 1.9686057500075549,
+      "tick": 66,
+      "present": 52
+    },
+    {
+      "wall_seconds": 1.9851880830246955,
+      "tick": 67,
+      "present": 53
+    },
+    {
+      "wall_seconds": 2.0017881660023704,
+      "tick": 68,
+      "present": 54
+    },
+    {
+      "wall_seconds": 2.018300125026144,
+      "tick": 69,
+      "present": 55
+    },
+    {
+      "wall_seconds": 2.034730750019662,
+      "tick": 70,
+      "present": 56
+    },
+    {
+      "wall_seconds": 2.0514296250185,
+      "tick": 71,
+      "present": 57
+    },
+    {
+      "wall_seconds": 2.0680300000240095,
+      "tick": 72,
+      "present": 58
+    },
+    {
+      "wall_seconds": 2.084675582998898,
+      "tick": 73,
+      "present": 59
+    },
+    {
+      "wall_seconds": 2.1013738330220804,
+      "tick": 74,
+      "present": 60
+    },
+    {
+      "wall_seconds": 2.118189083004836,
+      "tick": 75,
+      "present": 61
+    },
+    {
+      "wall_seconds": 2.1348928750376217,
+      "tick": 76,
+      "present": 62
+    },
+    {
+      "wall_seconds": 2.1514583750395104,
+      "tick": 77,
+      "present": 63
+    },
+    {
+      "wall_seconds": 2.1681702909991145,
+      "tick": 78,
+      "present": 64
+    },
+    {
+      "wall_seconds": 2.184914832992945,
+      "tick": 79,
+      "present": 65
+    },
+    {
+      "wall_seconds": 2.201657416007947,
+      "tick": 80,
+      "present": 66
+    },
+    {
+      "wall_seconds": 2.2186309579992667,
+      "tick": 81,
+      "present": 67
+    },
+    {
+      "wall_seconds": 2.235427083040122,
+      "tick": 82,
+      "present": 68
+    },
+    {
+      "wall_seconds": 2.2519842910114676,
+      "tick": 83,
+      "present": 69
+    },
+    {
+      "wall_seconds": 2.2686871250043623,
+      "tick": 84,
+      "present": 70
+    },
+    {
+      "wall_seconds": 2.2852542499895208,
+      "tick": 85,
+      "present": 71
+    },
+    {
+      "wall_seconds": 2.3019275830010884,
+      "tick": 86,
+      "present": 72
+    },
+    {
+      "wall_seconds": 2.318383708014153,
+      "tick": 87,
+      "present": 73
+    },
+    {
+      "wall_seconds": 2.3347998750396073,
+      "tick": 88,
+      "present": 74
+    },
+    {
+      "wall_seconds": 2.3511849159840494,
+      "tick": 89,
+      "present": 75
+    },
+    {
+      "wall_seconds": 2.3673877909895964,
+      "tick": 90,
+      "present": 76
+    },
+    {
+      "wall_seconds": 2.38498700002674,
+      "tick": 91,
+      "present": 77
+    },
+    {
+      "wall_seconds": 2.4013992910040542,
+      "tick": 92,
+      "present": 78
+    },
+    {
+      "wall_seconds": 2.4175693329889327,
+      "tick": 93,
+      "present": 79
+    },
+    {
+      "wall_seconds": 2.434901291038841,
+      "tick": 94,
+      "present": 80
+    },
+    {
+      "wall_seconds": 2.4510489579988644,
+      "tick": 95,
+      "present": 81
+    },
+    {
+      "wall_seconds": 2.4673682909924537,
+      "tick": 96,
+      "present": 82
+    },
+    {
+      "wall_seconds": 2.4848005829844624,
+      "tick": 97,
+      "present": 83
+    },
+    {
+      "wall_seconds": 2.5010692910291255,
+      "tick": 98,
+      "present": 84
+    },
+    {
+      "wall_seconds": 2.518397083040327,
+      "tick": 99,
+      "present": 85
+    },
+    {
+      "wall_seconds": 2.5348863750114106,
+      "tick": 100,
+      "present": 86
+    },
+    {
+      "wall_seconds": 2.551226833020337,
+      "tick": 101,
+      "present": 87
+    },
+    {
+      "wall_seconds": 2.567583916010335,
+      "tick": 102,
+      "present": 88
+    },
+    {
+      "wall_seconds": 2.585234083002433,
+      "tick": 103,
+      "present": 89
+    },
+    {
+      "wall_seconds": 2.601689125003759,
+      "tick": 104,
+      "present": 90
+    },
+    {
+      "wall_seconds": 2.618074833007995,
+      "tick": 105,
+      "present": 91
+    },
+    {
+      "wall_seconds": 2.6343016250175424,
+      "tick": 106,
+      "present": 92
+    },
+    {
+      "wall_seconds": 2.6508699579862878,
+      "tick": 107,
+      "present": 93
+    },
+    {
+      "wall_seconds": 2.6677437080070376,
+      "tick": 108,
+      "present": 94
+    },
+    {
+      "wall_seconds": 2.684408875007648,
+      "tick": 109,
+      "present": 95
+    },
+    {
+      "wall_seconds": 2.7008242500014603,
+      "tick": 110,
+      "present": 96
+    },
+    {
+      "wall_seconds": 2.718405082996469,
+      "tick": 111,
+      "present": 97
+    },
+    {
+      "wall_seconds": 2.7348053330206312,
+      "tick": 112,
+      "present": 98
+    },
+    {
+      "wall_seconds": 2.7514991250354797,
+      "tick": 113,
+      "present": 99
+    },
+    {
+      "wall_seconds": 2.767933208029717,
+      "tick": 114,
+      "present": 100
+    },
+    {
+      "wall_seconds": 2.7843076250283048,
+      "tick": 115,
+      "present": 101
+    },
+    {
+      "wall_seconds": 2.8019533330225386,
+      "tick": 116,
+      "present": 102
+    },
+    {
+      "wall_seconds": 2.818410375039093,
+      "tick": 117,
+      "present": 103
+    },
+    {
+      "wall_seconds": 2.8347368750255555,
+      "tick": 118,
+      "present": 104
+    },
+    {
+      "wall_seconds": 2.851263625023421,
+      "tick": 119,
+      "present": 105
+    },
+    {
+      "wall_seconds": 2.867769416014198,
+      "tick": 120,
+      "present": 106
+    },
+    {
+      "wall_seconds": 2.88439612503862,
+      "tick": 121,
+      "present": 107
+    },
+    {
+      "wall_seconds": 2.901963666023221,
+      "tick": 122,
+      "present": 108
+    },
+    {
+      "wall_seconds": 2.918407874996774,
+      "tick": 123,
+      "present": 109
+    },
+    {
+      "wall_seconds": 2.9348868330125697,
+      "tick": 124,
+      "present": 110
+    },
+    {
+      "wall_seconds": 2.9511783749912865,
+      "tick": 125,
+      "present": 111
+    },
+    {
+      "wall_seconds": 2.967428290983662,
+      "tick": 126,
+      "present": 112
+    },
+    {
+      "wall_seconds": 2.9847562499926426,
+      "tick": 127,
+      "present": 113
+    },
+    {
+      "wall_seconds": 3.0011341249919496,
+      "tick": 128,
+      "present": 114
+    },
+    {
+      "wall_seconds": 3.017354957992211,
+      "tick": 129,
+      "present": 115
+    },
+    {
+      "wall_seconds": 3.034869625000283,
+      "tick": 130,
+      "present": 116
+    },
+    {
+      "wall_seconds": 3.051092541019898,
+      "tick": 131,
+      "present": 117
+    },
+    {
+      "wall_seconds": 3.067367165989708,
+      "tick": 132,
+      "present": 118
+    },
+    {
+      "wall_seconds": 3.084766041021794,
+      "tick": 133,
+      "present": 119
+    },
+    {
+      "wall_seconds": 3.100922957994044,
+      "tick": 134,
+      "present": 120
+    },
+    {
+      "wall_seconds": 3.1183692500344478,
+      "tick": 135,
+      "present": 121
+    },
+    {
+      "wall_seconds": 3.1347137080156244,
+      "tick": 136,
+      "present": 122
+    },
+    {
+      "wall_seconds": 3.1510778330266476,
+      "tick": 137,
+      "present": 123
+    },
+    {
+      "wall_seconds": 3.1675469580222853,
+      "tick": 138,
+      "present": 124
+    },
+    {
+      "wall_seconds": 3.1852575829834677,
+      "tick": 139,
+      "present": 125
+    },
+    {
+      "wall_seconds": 3.201818958041258,
+      "tick": 140,
+      "present": 126
+    },
+    {
+      "wall_seconds": 3.2181105830240995,
+      "tick": 141,
+      "present": 127
+    },
+    {
+      "wall_seconds": 3.234649582998827,
+      "tick": 142,
+      "present": 128
+    },
+    {
+      "wall_seconds": 3.2512857079855166,
+      "tick": 143,
+      "present": 129
+    },
+    {
+      "wall_seconds": 3.2677867080201395,
+      "tick": 144,
+      "present": 130
+    },
+    {
+      "wall_seconds": 3.2844938749913126,
+      "tick": 145,
+      "present": 131
+    },
+    {
+      "wall_seconds": 3.3010675000259653,
+      "tick": 146,
+      "present": 132
+    },
+    {
+      "wall_seconds": 3.3185507910093293,
+      "tick": 147,
+      "present": 133
+    },
+    {
+      "wall_seconds": 3.33519370801514,
+      "tick": 148,
+      "present": 134
+    },
+    {
+      "wall_seconds": 3.351811708009336,
+      "tick": 149,
+      "present": 135
+    },
+    {
+      "wall_seconds": 3.3682985409977846,
+      "tick": 150,
+      "present": 136
+    },
+    {
+      "wall_seconds": 3.3850343330414034,
+      "tick": 151,
+      "present": 137
+    },
+    {
+      "wall_seconds": 3.4017692080233246,
+      "tick": 152,
+      "present": 138
+    },
+    {
+      "wall_seconds": 3.418476750026457,
+      "tick": 153,
+      "present": 139
+    },
+    {
+      "wall_seconds": 3.4351599999936298,
+      "tick": 154,
+      "present": 140
+    },
+    {
+      "wall_seconds": 3.4519744160352275,
+      "tick": 155,
+      "present": 141
+    },
+    {
+      "wall_seconds": 3.4684205829980783,
+      "tick": 156,
+      "present": 142
+    },
+    {
+      "wall_seconds": 3.485061041021254,
+      "tick": 157,
+      "present": 143
+    },
+    {
+      "wall_seconds": 3.50205058301799,
+      "tick": 158,
+      "present": 144
+    },
+    {
+      "wall_seconds": 3.518613208027091,
+      "tick": 159,
+      "present": 145
+    },
+    {
+      "wall_seconds": 3.5351532910135575,
+      "tick": 160,
+      "present": 146
+    },
+    {
+      "wall_seconds": 3.5516977080260403,
+      "tick": 161,
+      "present": 147
+    },
+    {
+      "wall_seconds": 3.5684257079847157,
+      "tick": 162,
+      "present": 148
+    },
+    {
+      "wall_seconds": 3.5849272499908693,
+      "tick": 163,
+      "present": 149
+    },
+    {
+      "wall_seconds": 3.601468291017227,
+      "tick": 164,
+      "present": 150
+    },
+    {
+      "wall_seconds": 3.618191374989692,
+      "tick": 165,
+      "present": 151
+    },
+    {
+      "wall_seconds": 3.6350366250262596,
+      "tick": 166,
+      "present": 152
+    },
+    {
+      "wall_seconds": 3.6516576660214923,
+      "tick": 167,
+      "present": 153
+    },
+    {
+      "wall_seconds": 3.6684520409908146,
+      "tick": 168,
+      "present": 154
+    },
+    {
+      "wall_seconds": 3.6852995000081137,
+      "tick": 169,
+      "present": 155
+    },
+    {
+      "wall_seconds": 3.7019051660317928,
+      "tick": 170,
+      "present": 156
+    },
+    {
+      "wall_seconds": 3.718527625023853,
+      "tick": 171,
+      "present": 157
+    },
+    {
+      "wall_seconds": 3.735213541018311,
+      "tick": 172,
+      "present": 158
+    },
+    {
+      "wall_seconds": 3.75134070799686,
+      "tick": 173,
+      "present": 159
+    },
+    {
+      "wall_seconds": 3.7673227500054054,
+      "tick": 174,
+      "present": 160
+    },
+    {
+      "wall_seconds": 3.7843231660081074,
+      "tick": 175,
+      "present": 161
+    },
+    {
+      "wall_seconds": 3.8017963750171475,
+      "tick": 176,
+      "present": 162
+    },
+    {
+      "wall_seconds": 3.817830874992069,
+      "tick": 177,
+      "present": 163
+    },
+    {
+      "wall_seconds": 3.833972041029483,
+      "tick": 178,
+      "present": 164
+    },
+    {
+      "wall_seconds": 3.851105874986388,
+      "tick": 179,
+      "present": 165
+    },
+    {
+      "wall_seconds": 3.867016958014574,
+      "tick": 180,
+      "present": 166
+    },
+    {
+      "wall_seconds": 3.8842924580094405,
+      "tick": 181,
+      "present": 167
+    },
+    {
+      "wall_seconds": 3.901601958030369,
+      "tick": 182,
+      "present": 168
+    },
+    {
+      "wall_seconds": 3.9184491659980267,
+      "tick": 183,
+      "present": 169
+    },
+    {
+      "wall_seconds": 3.9349036660278216,
+      "tick": 184,
+      "present": 170
+    },
+    {
+      "wall_seconds": 3.9512065410381183,
+      "tick": 185,
+      "present": 171
+    },
+    {
+      "wall_seconds": 3.967500208003912,
+      "tick": 186,
+      "present": 172
+    },
+    {
+      "wall_seconds": 3.985051250027027,
+      "tick": 187,
+      "present": 173
+    },
+    {
+      "wall_seconds": 4.001422916015144,
+      "tick": 188,
+      "present": 174
+    },
+    {
+      "wall_seconds": 4.017598625039682,
+      "tick": 189,
+      "present": 175
+    },
+    {
+      "wall_seconds": 4.035109999997076,
+      "tick": 190,
+      "present": 176
+    },
+    {
+      "wall_seconds": 4.051481875008903,
+      "tick": 191,
+      "present": 177
+    },
+    {
+      "wall_seconds": 4.0677516250289045,
+      "tick": 192,
+      "present": 178
+    },
+    {
+      "wall_seconds": 4.08511012501549,
+      "tick": 193,
+      "present": 179
+    },
+    {
+      "wall_seconds": 4.101394541037735,
+      "tick": 194,
+      "present": 180
+    },
+    {
+      "wall_seconds": 4.117527166032232,
+      "tick": 195,
+      "present": 181
+    },
+    {
+      "wall_seconds": 4.134856666030828,
+      "tick": 196,
+      "present": 182
+    },
+    {
+      "wall_seconds": 4.151087875012308,
+      "tick": 197,
+      "present": 183
+    },
+    {
+      "wall_seconds": 4.16835070803063,
+      "tick": 198,
+      "present": 184
+    },
+    {
+      "wall_seconds": 4.184612166020088,
+      "tick": 199,
+      "present": 185
+    },
+    {
+      "wall_seconds": 4.200786083005369,
+      "tick": 200,
+      "present": 186
+    },
+    {
+      "wall_seconds": 4.218421416007914,
+      "tick": 201,
+      "present": 187
+    },
+    {
+      "wall_seconds": 4.234916458022781,
+      "tick": 202,
+      "present": 188
+    },
+    {
+      "wall_seconds": 4.251460750005208,
+      "tick": 203,
+      "present": 189
+    },
+    {
+      "wall_seconds": 4.267822333029471,
+      "tick": 204,
+      "present": 190
+    },
+    {
+      "wall_seconds": 4.284289625007659,
+      "tick": 205,
+      "present": 191
+    },
+    {
+      "wall_seconds": 4.30197341600433,
+      "tick": 206,
+      "present": 192
+    },
+    {
+      "wall_seconds": 4.3186568330274895,
+      "tick": 207,
+      "present": 193
+    },
+    {
+      "wall_seconds": 4.3353531250031665,
+      "tick": 208,
+      "present": 194
+    },
+    {
+      "wall_seconds": 4.351917457999662,
+      "tick": 209,
+      "present": 195
+    },
+    {
+      "wall_seconds": 4.368669541028794,
+      "tick": 210,
+      "present": 196
+    },
+    {
+      "wall_seconds": 4.384880791010801,
+      "tick": 211,
+      "present": 197
+    },
+    {
+      "wall_seconds": 4.401157041022088,
+      "tick": 212,
+      "present": 198
+    },
+    {
+      "wall_seconds": 4.417407791013829,
+      "tick": 213,
+      "present": 199
+    },
+    {
+      "wall_seconds": 4.43491350003751,
+      "tick": 214,
+      "present": 200
+    },
+    {
+      "wall_seconds": 4.451194207998924,
+      "tick": 215,
+      "present": 201
+    },
+    {
+      "wall_seconds": 4.468090999987908,
+      "tick": 216,
+      "present": 202
+    },
+    {
+      "wall_seconds": 4.484834083006717,
+      "tick": 217,
+      "present": 203
+    },
+    {
+      "wall_seconds": 4.501906166027766,
+      "tick": 218,
+      "present": 204
+    },
+    {
+      "wall_seconds": 4.518597541027702,
+      "tick": 219,
+      "present": 205
+    },
+    {
+      "wall_seconds": 4.535230208013672,
+      "tick": 220,
+      "present": 206
+    },
+    {
+      "wall_seconds": 4.551933250040747,
+      "tick": 221,
+      "present": 207
+    },
+    {
+      "wall_seconds": 4.5686887910123914,
+      "tick": 222,
+      "present": 208
+    },
+    {
+      "wall_seconds": 4.5854865000001155,
+      "tick": 223,
+      "present": 209
+    },
+    {
+      "wall_seconds": 4.602079541014973,
+      "tick": 224,
+      "present": 210
+    },
+    {
+      "wall_seconds": 4.617774749989621,
+      "tick": 225,
+      "present": 211
+    },
+    {
+      "wall_seconds": 4.635608915996272,
+      "tick": 226,
+      "present": 212
+    },
+    {
+      "wall_seconds": 4.6512543330318294,
+      "tick": 227,
+      "present": 213
+    },
+    {
+      "wall_seconds": 4.668118458008394,
+      "tick": 228,
+      "present": 214
+    },
+    {
+      "wall_seconds": 4.685198208026122,
+      "tick": 229,
+      "present": 215
+    },
+    {
+      "wall_seconds": 4.7028744160197675,
+      "tick": 230,
+      "present": 216
+    },
+    {
+      "wall_seconds": 4.719306249986403,
+      "tick": 231,
+      "present": 217
+    },
+    {
+      "wall_seconds": 4.735368791036308,
+      "tick": 232,
+      "present": 218
+    },
+    {
+      "wall_seconds": 4.751214499992784,
+      "tick": 233,
+      "present": 219
+    },
+    {
+      "wall_seconds": 4.767857208033092,
+      "tick": 234,
+      "present": 220
+    },
+    {
+      "wall_seconds": 4.784427665988915,
+      "tick": 235,
+      "present": 221
+    },
+    {
+      "wall_seconds": 4.801100208016578,
+      "tick": 236,
+      "present": 222
+    },
+    {
+      "wall_seconds": 4.817649915989023,
+      "tick": 237,
+      "present": 223
+    },
+    {
+      "wall_seconds": 4.835451874998398,
+      "tick": 238,
+      "present": 224
+    },
+    {
+      "wall_seconds": 4.852288666006643,
+      "tick": 239,
+      "present": 225
+    },
+    {
+      "wall_seconds": 4.867738166009076,
+      "tick": 240,
+      "present": 226
+    }
+  ],
+  "buttons": "",
+  "sdl_key_script": "60-100:w;120-125:space",
+  "window_activate_when_shown": "default",
+  "present_fps": 59.58888569499211,
+  "simulation_ticks_per_second": 60.38340417092533,
+  "placement_summary": {
+    "stage": "HeavensDoorGalaxy",
+    "scenario": "1",
+    "objects": "242",
+    "ready": "78",
+    "ignored": "8",
+    "blocked": "156",
+    "created": "78",
+    "mode": "supported_subset_for_development"
+  }
+}

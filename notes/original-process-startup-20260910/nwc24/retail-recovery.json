@@ -1,0 +1,22 @@
+{
+  "command": [
+    "/Users/frityet/Projects/petari/decomp/build/tools/objdiff-cli",
+    "diff",
+    "-1",
+    "/Users/frityet/Projects/petari/notes/gateway-audit-20260907/restoration/retail/obj/Game/NWC24/NWC24Function.o",
+    "-2",
+    "/Users/frityet/Projects/petari/notes/original-process-startup-20260910/nwc24/NWC24Function.o",
+    "--format",
+    "json",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-process-startup-20260910/nwc24/objdiff.json"
+  ],
+  "exit": 0,
+  "result": [
+    {
+      "name": "calcWiiMailSize__2MRFPCUsPCUsUlUl",
+      "size": "244",
+      "match_percent": 92.78689
+    }
+  ]
+}

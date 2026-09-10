@@ -22,7 +22,6 @@
 #include "Game/System/GameDataFunction.hpp"
 #include "Game/System/GameDataHolder.hpp"
 #include "Game/System/NerveExecutor.hpp"
-#include "Game/System/SaveDataHandleSequence.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/EventUtil.hpp"
@@ -50,7 +49,6 @@
 #include "compat/ActorMotionCompat.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/GameGravityCompat.hpp"
-#include "compat/SaveDataHandleSequenceCompat.hpp"
 
 #include <RVLFaceLib.h>
 #include <aurora/dvd.h>

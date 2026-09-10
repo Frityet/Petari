@@ -1,0 +1,54 @@
+[
+  {
+    "path": "aurora/lib/dolphin/os/OSExecution.cpp",
+    "sha256": "e6c369d1aeb99870d86b17a33a60782c138d16271eaae9d7b9025c75443f20d8"
+  },
+  {
+    "path": "aurora/include/aurora/guest_thread.hpp",
+    "sha256": "fecacc762d9820bb66f48713aec691fb72064a3f2031826f70b8e9a6285191ae"
+  },
+  {
+    "path": "src/compat/OriginalFunctionAsyncUtil.cpp",
+    "sha256": "8475ebe4713ca815fbf910f9e6f82c5030e2ff25607a04eea31715b393d40d62"
+  },
+  {
+    "path": "src/compat/FunctionAsyncExecutorOwnership.hpp",
+    "sha256": "f5f98c3ca0518d7f80f19278de0dd55c57e971aea1e3055e70e9cf4f8a5bfc61"
+  },
+  {
+    "path": "src/compat/FunctionAsyncExecutorOwnership.cpp",
+    "sha256": "1f1dbe32cda3cf321ae75796ed0c6aa45ece588f35e9bec7dba2114e137ddd1b"
+  },
+  {
+    "path": "src/Game/System/FunctionAsyncExecutor.cpp",
+    "sha256": "4a9edb40830e107291d0d46d79404be5ae28934439f904facd8f480d3be236f1"
+  },
+  {
+    "path": "src/Game/System/FunctionAsyncExecutor.hpp",
+    "sha256": "0b39e43708166d3ac514358e0bf8f9de6122070a9e729901e4e0764fc2d629be"
+  },
+  {
+    "path": "src/Game/System/OSThreadWrapper.cpp",
+    "sha256": "362913178a3aed56ee16725eaeb5db23876802505818929440e11586ae8ea758"
+  },
+  {
+    "path": "src/Game/System/OSThreadWrapper.hpp",
+    "sha256": "0be19431b034e59686778965313b9df25855fc4feba9104a54d671693b666d6c"
+  },
+  {
+    "path": "src/revolution/os/OSMessage.h",
+    "sha256": "4b6970ef484e687ffc6f8ae19d5aa0344613c1162fd3f8237c4bf330ebcc2d2b"
+  },
+  {
+    "path": "src/revolution/os/OSThread.h",
+    "sha256": "c6f1bda3b6a43efff26337122cc89ad14ef52b9767cc8ea4a11f36f6b3e4f209"
+  },
+  {
+    "path": "src/revolution/os/OSContext.h",
+    "sha256": "af98abda53e49d79d62ae1973acd7aefb5079ce98aa4dedd2cefee202262a565"
+  },
+  {
+    "path": "src/revolution/os/OSTime.h",
+    "sha256": "22727a8ab8fec822a04cafe03f3901cf2d95600e13ae36be52b87f5d22632ad2"
+  }
+]

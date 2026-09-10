@@ -1,0 +1,7 @@
+# Original parameterized functors
+
+Restored native `MR::FunctorV1M` and `FunctorV2M`, their one-/two-argument `Functor` factories, the one-argument `Functor_Inline` factory, and the missing const `Functor_InlineC` factory from the complete reference header. The imported blocks are exact reference code. Existing native zero-argument and free-function support, including `FunctorBase`'s virtual destructor, is retained. Heap clone allocation uses native `sizeof` and native member-function pointers; no Wii-size packing or pointer truncation is introduced.
+
+The reference header incorrectly used placement-new alignment `0x16` in both parameterized clones. Actual retail instructions load **r5 = 0** at **0x8039DF80** (GameSystemStationedArchiveLoader V1M<bool>) and **0x803A87FC** (ResourceHolderManager V2M<const char*, CreateResourceHolderArgs*>). The later r3 loads 0x18 and 0x1C are object byte sizes. Both alignment constants were corrected in `decomp/include/Game/Util/Functor.hpp` first, then copied with the missing templates to native.
+
+One small Wii translation unit explicitly instantiates these actual template specializations, without compiling Game source. It compiles with exit 0; comparison against both emitted retail clones is **100%** (112 and 120 bytes). The two raw alignment instructions were also verified against actual main.dol. See `wii-proof.json`, `dol-proof.json`, and `source-manifest.json`. No native compile, Xmake run, broad suite, or commit was performed here; the parent owns the integrated build.

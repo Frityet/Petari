@@ -1,0 +1,9 @@
+### mwcceppc.exe Compiler:
+#    File: src\Game\System\DrawSyncManager.cpp
+# --------------------------------------------
+#      89:                 GXEnableBreakPt(message); 
+#   Error:                                        ^
+#   undefined identifier 'GXEnableBreakPt'
+#   Too many errors printed, aborting program
+
+User break, cancelled...

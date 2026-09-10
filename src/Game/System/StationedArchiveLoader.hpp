@@ -11,7 +11,7 @@ public:
     class Condition {
     public:
         virtual ~Condition();
-        virtual bool isExecute(const MR::StationedFileInfo*) const;
+        virtual bool isExecute(const MR::StationedFileInfo*) const = 0;
         virtual JKRHeap* getProperHeap(const MR::StationedFileInfo*) const;
     };
 

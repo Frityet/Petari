@@ -16,16 +16,16 @@ public:
     void requestCheckEnableToCreate();
     void requestLoadSaveData();
     bool requestVerifyAfterLoadGameDataFile();
-    void initializeUserFileMemory(int index, const UserFile* pUserFile);
-    void copyUserFileMemory(int indexDst, int indexSrc);
-    void restoreGameDataFile(const char* pName, void* pBuffer, u32 size);
-    void storeUserFile(const UserFile* pUserFile);
-    void storeSysConfigFile(const SysConfigFile* pSysConfigFile);
+    void initializeUserFileMemory(int, const UserFile*);
+    void copyUserFileMemory(int, int);
+    void restoreGameDataFile(const char*, void*, u32);
+    void storeUserFile(const UserFile*);
+    void storeSysConfigFile(const SysConfigFile*);
     void requestSaveSaveData();
     void requestRemoveSaveData();
     static u32 getEnoughtTempBufferSize();
-    [[nodiscard]] bool isDone() const;
-    [[nodiscard]] NANDResultCode getLastResultCode() const;
+    bool isDone() const;
+    NANDResultCode getLastResultCode() const;
     void exeWait();
     void exeProcessing();
     void exeSaveProcessingGameData();
@@ -37,8 +37,8 @@ public:
     static bool isCorrectFileHeader(const u8*);
     static void copySaveDataEachFile(u8*, const u8*);
     void createCommunicationBuffer();
-    bool tryRemoveFile(const char* pName, bool* pIsDone);
-    bool trySave(bool* pIsDone, bool isNoSave);
+    bool tryRemoveFile(const char*, bool*);
+    bool trySave(bool*, bool);
 
     /* 0x08 */ NANDRequestInfo* mNANDRequestInfo;
     /* 0x0C */ u32 _C;
@@ -46,5 +46,4 @@ public:
     /* 0x14 */ u8* _14;
     /* 0x18 */ u8* _18;
     /* 0x1C */ SaveDataBannerCreator* mBannerCreator;
-    bool mSaveDataDirty = false;
 };

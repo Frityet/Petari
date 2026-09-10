@@ -1,204 +1,68 @@
 #include "Game/System/SaveDataHandler.hpp"
-
-#include <algorithm>
-#include <cstdio>
-#include <cstring>
-
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/System/NANDManager.hpp"
 #include "Game/System/SaveDataBannerCreator.hpp"
+#include "Game/System/SaveDataFileAccessor.hpp"
 #include "Game/System/SysConfigFile.hpp"
 #include "Game/System/UserFile.hpp"
+#include "Game/Util/MemoryUtil.hpp"
 #include "Game/Util/NerveUtil.hpp"
-
-struct SaveDataFileSpec {
-    const char* mPrefix;
-    u32 mSize;
-};
-
-struct SaveDataFileHeader {
-    u32 mCheckSum;
-    u32 mVersion;
-    u32 mFileCount;
-    u32 mDataSize;
-};
-
-struct SaveDataFileInfo {
-    char mName[12];
-    u32 mDataOffset;
-};
-
-struct SaveDataUserFileInfo {
-    u8* mData;
-    u32 mSize;
-    u8 mType;
-};
-
-enum SaveDataFileType {
-    SaveDataFileType_Game = 0,
-    SaveDataFileType_Config = 1,
-    SaveDataFileType_System = 2,
-};
+#include <JSystem/JKernel/JKRExpHeap.hpp>
+#include <cstdio>
 
 namespace {
-    constexpr auto cSaveDataBufferSize = u32{0x10000U};
-    constexpr auto cSaveDataVersion = u32{2U};
-    constexpr auto cSaveDataFileCount = u32{19U};
-    constexpr auto cSaveDataGameFileSize = u32{0xF80U};
-    constexpr auto cSaveDataConfigFileSize = u32{0x60U};
-    constexpr auto cSaveDataSystemFileSize = u32{0x80U};
-    constexpr char cSaveDataFileName[] = "GameData.bin";
-    constexpr char cBannerFileName[] = "banner.bin";
-    constexpr char cSaveDataSystemFileName[] = "sysconf";
-}
+    struct SaveFileSpec {
+        /* 0x00 */ const char* mName;
+        /* 0x04 */ u32 mBufferSize;
+    };
 
-class SaveDataFileAccessor {
-public:
-    explicit SaveDataFileAccessor(u8* pSaveData) : mSaveData(pSaveData) {
-    }
-
-    SaveDataFileHeader* getHeader() const {
-        return reinterpret_cast<SaveDataFileHeader*>(mSaveData);
-    }
-
-    SaveDataFileInfo* getFileInfo(int index) const {
-        return reinterpret_cast<SaveDataFileInfo*>(mSaveData + sizeof(SaveDataFileHeader)) + index;
-    }
-
-    void makeUserFileInfo(SaveDataUserFileInfo* pInfo, const char* pName) const {
-        if (pInfo == nullptr) {
-            return;
-        }
-
-        pInfo->mData = nullptr;
-        pInfo->mSize = 0U;
-        pInfo->mType = SaveDataFileType_System;
-        if (mSaveData == nullptr || pName == nullptr) {
-            return;
-        }
-
-        const auto* header = getHeader();
-        if (header->mVersion != cSaveDataVersion || header->mFileCount >= 24U) {
-            return;
-        }
-
-        for (auto i = u32{}; i < header->mFileCount; ++i) {
-            const auto* file_info = getFileInfo(static_cast<int>(i));
-            if (std::strncmp(file_info->mName, pName, sizeof(file_info->mName)) != 0) {
-                continue;
-            }
-
-            pInfo->mData = mSaveData + file_info->mDataOffset;
-            if (std::strncmp(pName, "mario", 5U) == 0 || std::strncmp(pName, "luigi", 5U) == 0) {
-                pInfo->mType = SaveDataFileType_Game;
-                pInfo->mSize = cSaveDataGameFileSize;
-            } else if (std::strncmp(pName, "config", 6U) == 0) {
-                pInfo->mType = SaveDataFileType_Config;
-                pInfo->mSize = cSaveDataConfigFileSize;
-            } else if (std::strcmp(pName, cSaveDataSystemFileName) == 0) {
-                pInfo->mType = SaveDataFileType_System;
-                pInfo->mSize = cSaveDataSystemFileSize;
-            }
-            return;
-        }
-    }
-
-private:
-    u8* mSaveData;
-};
+    const char cSaveFileName[] = "GameData.bin";
+    const char cBannerFileName[] = "banner.bin";
+    const SaveFileSpec cSaveFileSpecTable[] = {{"mario", 0xF80}, {"luigi", 0xF80}, {"config", 0x60}};
+    const SaveFileSpec cSaveFileSpecSystem = {"sysconf", 0x80};
+};  // namespace
 
 namespace {
-    constexpr SaveDataFileSpec cSaveFileSpecTable[] = {
-        {"mario", cSaveDataGameFileSize},
-        {"luigi", cSaveDataGameFileSize},
-        {"config", cSaveDataConfigFileSize},
-    };
-
-    constexpr SaveDataFileSpec cSaveFileSpecSystem = {
-        cSaveDataSystemFileName,
-        cSaveDataSystemFileSize,
-    };
-
-    [[nodiscard]] u32 alignSaveDataSize(u32 size) {
-        return (size + 0x1FU) & ~0x1FU;
-    }
-
-    [[nodiscard]] u32 calcSaveDataCheckSum(const void* pPtr, u32 size) {
-        auto sum = u16{};
-        auto inv_sum = u16{};
-        const auto* bytes = static_cast<const u8*>(pPtr);
-        for (auto offset = u32{}; offset + sizeof(u16) <= size; offset += sizeof(u16)) {
-            auto word = u16{};
-            std::memcpy(&word, bytes + offset, sizeof(word));
-            sum = static_cast<u16>(sum + word);
-            inv_sum = static_cast<u16>(inv_sum + static_cast<u16>(~word));
-        }
-        return (static_cast<u32>(sum) << 16U) | inv_sum;
-    }
-
-    void copyMemory(void* pDst, const void* pSrc, u32 size) {
-        if (pDst != nullptr && pSrc != nullptr && size != 0U) {
-            std::memcpy(pDst, pSrc, size);
-        }
-    }
-
-    void zeroMemory(void* pDst, u32 size) {
-        if (pDst != nullptr && size != 0U) {
-            std::memset(pDst, 0, size);
-        }
-    }
-
-    void fillMemory(void* pDst, u8 value, u32 size) {
-        if (pDst != nullptr && size != 0U) {
-            std::memset(pDst, value, size);
-        }
-    }
-
     NEW_NERVE(SaveDataHandlerWait, SaveDataHandler, Wait);
     NEW_NERVE(SaveDataHandlerProcessing, SaveDataHandler, Processing);
     NEW_NERVE(SaveDataHandlerSaveProcessingGameData, SaveDataHandler, SaveProcessingGameData);
     NEW_NERVE(SaveDataHandlerSaveProcessingBanner, SaveDataHandler, SaveProcessingBanner);
     NEW_NERVE(SaveDataHandlerRemoveProcessingBanner, SaveDataHandler, RemoveProcessingBanner);
     NEW_NERVE(SaveDataHandlerRemoveProcessingGameData, SaveDataHandler, RemoveProcessingGameData);
-}  // namespace
+};  // namespace
 
 SaveDataHandler::SaveDataHandler(const SysConfigFile* pSysConfigFile, const UserFile* pUserFile)
     : NerveExecutor("SaveDataHandler"), mNANDRequestInfo(nullptr), _C(0), _10(0), _14(nullptr), _18(nullptr), mBannerCreator(nullptr) {
     mNANDRequestInfo = new NANDRequestInfo();
+
     createCommunicationBuffer();
     resetSaveData(_18);
     initializeAllFileInSaveData(_18, pSysConfigFile, pUserFile);
+
     mBannerCreator = new SaveDataBannerCreator();
-    mNANDRequestInfo->setReadSeq(cSaveDataFileName, _14, cSaveDataBufferSize, &_C);
-    MR::addRequestToNANDManager(mNANDRequestInfo);
-    if (mNANDRequestInfo->mResult == NAND_RESULT_OK) {
-        mSaveDataDirty = !requestVerifyAfterLoadGameDataFile();
-    }
-    mNANDRequestInfo->init();
-    initNerve(&SaveDataHandlerWait::sInstance);
+
+    initNerve(&::SaveDataHandlerWait::sInstance);
 }
 
 void SaveDataHandler::update() {
     updateNerve();
-    if (mBannerCreator != nullptr) {
-        mBannerCreator->updateNerve();
-    }
+    mBannerCreator->updateNerve();
 }
 
+// FIXME: Function isn't fetching `mNANDRequestInfo` again before call to `MR::addRequestToNANDManager`.
 void SaveDataHandler::requestCheckEnableToCreate() {
     mNANDRequestInfo->setCheck(5, 2, &_10);
     MR::addRequestToNANDManager(mNANDRequestInfo);
-    setNerve(&SaveDataHandlerProcessing::sInstance);
+
+    setNerve(&::SaveDataHandlerProcessing::sInstance);
 }
 
 void SaveDataHandler::requestLoadSaveData() {
-    zeroMemory(_14, cSaveDataBufferSize);
-    mNANDRequestInfo->setReadSeq(cSaveDataFileName, _14, cSaveDataBufferSize, &_C);
+    MR::zeroMemory(_14, 0x10000);
+    mNANDRequestInfo->setReadSeq(::cSaveFileName, _14, 0x10000, &_C);
     MR::addRequestToNANDManager(mNANDRequestInfo);
-    if (mNANDRequestInfo->mResult == NAND_RESULT_OK) {
-        mSaveDataDirty = !requestVerifyAfterLoadGameDataFile();
-    }
-    setNerve(&SaveDataHandlerProcessing::sInstance);
+
+    setNerve(&::SaveDataHandlerProcessing::sInstance);
 }
 
 bool SaveDataHandler::requestVerifyAfterLoadGameDataFile() {
@@ -206,156 +70,115 @@ bool SaveDataHandler::requestVerifyAfterLoadGameDataFile() {
         return false;
     }
 
-    const auto* header = reinterpret_cast<const SaveDataFileHeader*>(_14);
-    if (_C != alignSaveDataSize(header->mDataSize)) {
+    SaveDataFileHeader* pFileHeader = reinterpret_cast< SaveDataFileHeader* >(_14);
+
+    if (_C != OSRoundUp32B(pFileHeader->mFileSize)) {
         return false;
     }
 
-    if (header->mCheckSum != calcSaveDataCheckSum(_14 + sizeof(u32), header->mDataSize - sizeof(u32))) {
+    if (pFileHeader->mCheckSum != MR::calcCheckSum(_14 + sizeof(u32), pFileHeader->mFileSize - sizeof(u32))) {
         return false;
     }
 
     copySaveDataEachFile(_18, _14);
+
     return true;
 }
 
 void SaveDataHandler::initializeUserFileMemory(int index, const UserFile* pUserFile) {
-    if (pUserFile == nullptr) {
-        mNANDRequestInfo->mResult = NAND_RESULT_INVALID;
-        return;
-    }
+    SaveDataFileAccessor fileAccessor = SaveDataFileAccessor(_18);
 
-    auto accessor = SaveDataFileAccessor(_18);
-    for (u32 i = 0; i < 3; ++i) {
-        char name[16]{};
-        auto info = SaveDataUserFileInfo{};
-        std::snprintf(name, sizeof(name), "%s%1d", cSaveFileSpecTable[i].mPrefix, index);
-        accessor.makeUserFileInfo(&info, name);
-        if (info.mData == nullptr) {
-            continue;
-        }
+    for (u32 i = 0; i < sizeof(::cSaveFileSpecTable) / sizeof(*::cSaveFileSpecTable); i++) {
+        char fileName[16];
+        snprintf(fileName, sizeof(fileName), "%s%1d", ::cSaveFileSpecTable[i].mName, index);
 
-        if (info.mType == SaveDataFileType_Game) {
-            pUserFile->makeGameDataBinary(info.mData, info.mSize);
-        } else if (info.mType == SaveDataFileType_Config) {
-            pUserFile->makeConfigDataBinary(info.mData, info.mSize);
+        SaveDataUserFileInfo userFileInfo;
+        fileAccessor.makeUserFileInfo(&userFileInfo, fileName);
+
+        if (userFileInfo.mKind == 0) {
+            pUserFile->makeGameDataBinary(userFileInfo.mData, userFileInfo.mDataSize);
+        } else if (userFileInfo.mKind == 1) {
+            pUserFile->makeConfigDataBinary(userFileInfo.mData, userFileInfo.mDataSize);
         }
     }
-    mNANDRequestInfo->mResult = NAND_RESULT_OK;
-    mSaveDataDirty = true;
 }
 
 void SaveDataHandler::copyUserFileMemory(int indexDst, int indexSrc) {
-    auto accessor = SaveDataFileAccessor(_18);
-    for (u32 i = 0; i < 3; ++i) {
-        char src_name[16]{};
-        char dst_name[16]{};
-        auto src_info = SaveDataUserFileInfo{};
-        auto dst_info = SaveDataUserFileInfo{};
-        std::snprintf(src_name, sizeof(src_name), "%s%1d", cSaveFileSpecTable[i].mPrefix, indexSrc);
-        accessor.makeUserFileInfo(&src_info, src_name);
-        std::snprintf(dst_name, sizeof(dst_name), "%s%1d", cSaveFileSpecTable[i].mPrefix, indexDst);
-        accessor.makeUserFileInfo(&dst_info, dst_name);
-        if (src_info.mData != nullptr && dst_info.mData != nullptr) {
-            copyMemory(dst_info.mData, src_info.mData, dst_info.mSize);
-        }
+    SaveDataFileAccessor fileAccessor = SaveDataFileAccessor(_18);
+
+    for (u32 i = 0; i < sizeof(::cSaveFileSpecTable) / sizeof(*::cSaveFileSpecTable); i++) {
+        char srcFileName[16];
+        snprintf(srcFileName, sizeof(srcFileName), "%s%1d", ::cSaveFileSpecTable[i].mName, indexSrc);
+
+        SaveDataUserFileInfo srcUserFileInfo;
+        fileAccessor.makeUserFileInfo(&srcUserFileInfo, srcFileName);
+
+        char dstFileName[16];
+        snprintf(dstFileName, sizeof(dstFileName), "%s%1d", ::cSaveFileSpecTable[i].mName, indexDst);
+
+        SaveDataUserFileInfo dstUserFileInfo;
+        fileAccessor.makeUserFileInfo(&dstUserFileInfo, dstFileName);
+
+        MR::copyMemory(dstUserFileInfo.mData, srcUserFileInfo.mData, dstUserFileInfo.mDataSize);
     }
-    mNANDRequestInfo->mResult = NAND_RESULT_OK;
-    mSaveDataDirty = true;
 }
 
-void SaveDataHandler::restoreGameDataFile(const char* pName, void* pBuffer, u32 size) {
-    if (pBuffer == nullptr || size == 0U) {
-        mNANDRequestInfo->mResult = NAND_RESULT_INVALID;
-        return;
-    }
+void SaveDataHandler::restoreGameDataFile(const char* pUserFileName, void* pParam2, u32 param3) {
+    SaveDataFileAccessor fileAccessor = SaveDataFileAccessor(_18);
 
-    if (!mSaveDataDirty) {
-        mNANDRequestInfo->setReadSeq(cSaveDataFileName, _14, cSaveDataBufferSize, &_C);
-        MR::addRequestToNANDManager(mNANDRequestInfo);
-        if (mNANDRequestInfo->mResult == NAND_RESULT_OK) {
-            mSaveDataDirty = !requestVerifyAfterLoadGameDataFile();
-        }
-        mNANDRequestInfo->init();
-    }
+    SaveDataUserFileInfo userFileInfo;
+    fileAccessor.makeUserFileInfo(&userFileInfo, pUserFileName);
 
-    auto accessor = SaveDataFileAccessor(_18);
-    auto info = SaveDataUserFileInfo{};
-    accessor.makeUserFileInfo(&info, pName);
-    zeroMemory(pBuffer, size);
-    if (info.mData == nullptr) {
-        mNANDRequestInfo->mResult = NAND_RESULT_NOEXISTS;
-        return;
-    }
-
-    copyMemory(pBuffer, info.mData, std::min(size, info.mSize));
-    mNANDRequestInfo->mResult = NAND_RESULT_OK;
+    MR::copyMemory(pParam2, userFileInfo.mData, userFileInfo.mDataSize);
 }
 
 void SaveDataHandler::storeUserFile(const UserFile* pUserFile) {
-    if (pUserFile == nullptr) {
-        mNANDRequestInfo->mResult = NAND_RESULT_INVALID;
-        return;
-    }
+    SaveDataFileAccessor fileAccessor = SaveDataFileAccessor(_18);
 
-    auto accessor = SaveDataFileAccessor(_18);
-    auto info = SaveDataUserFileInfo{};
-    accessor.makeUserFileInfo(&info, pUserFile->getGameDataName());
-    if (info.mData != nullptr) {
-        pUserFile->makeGameDataBinary(info.mData, info.mSize);
-    }
-    accessor.makeUserFileInfo(&info, pUserFile->getConfigDataName());
-    if (info.mData != nullptr) {
-        pUserFile->makeConfigDataBinary(info.mData, info.mSize);
-    }
-    mNANDRequestInfo->mResult = NAND_RESULT_OK;
-    mSaveDataDirty = true;
+    SaveDataUserFileInfo gameFileInfo;
+    fileAccessor.makeUserFileInfo(&gameFileInfo, pUserFile->getGameDataName());
+    pUserFile->makeGameDataBinary(gameFileInfo.mData, gameFileInfo.mDataSize);
+
+    SaveDataUserFileInfo configFileInfo;
+    fileAccessor.makeUserFileInfo(&configFileInfo, pUserFile->getConfigDataName());
+    pUserFile->makeConfigDataBinary(configFileInfo.mData, configFileInfo.mDataSize);
 }
 
 void SaveDataHandler::storeSysConfigFile(const SysConfigFile* pSysConfigFile) {
-    if (pSysConfigFile == nullptr) {
-        mNANDRequestInfo->mResult = NAND_RESULT_INVALID;
-        return;
-    }
+    SaveDataFileAccessor fileAccessor = SaveDataFileAccessor(_18);
 
-    auto accessor = SaveDataFileAccessor(_18);
-    auto info = SaveDataUserFileInfo{};
-    accessor.makeUserFileInfo(&info, cSaveFileSpecSystem.mPrefix);
-    if (info.mData != nullptr) {
-        pSysConfigFile->makeDataBinary(info.mData, info.mSize);
-    }
-    mNANDRequestInfo->mResult = NAND_RESULT_OK;
-    mSaveDataDirty = true;
+    SaveDataUserFileInfo userFileInfo;
+    fileAccessor.makeUserFileInfo(&userFileInfo, ::cSaveFileSpecSystem.mName);
+    pSysConfigFile->makeDataBinary(userFileInfo.mData, userFileInfo.mDataSize);
 }
 
 void SaveDataHandler::requestSaveSaveData() {
-    auto work_accessor = SaveDataFileAccessor(_18);
-    auto save_accessor = SaveDataFileAccessor(_14);
-    copyMemory(_14, _18, work_accessor.getHeader()->mDataSize);
-    const auto aligned_size = alignSaveDataSize(work_accessor.getHeader()->mDataSize);
-    fillMemory(_14 + work_accessor.getHeader()->mDataSize, 0, aligned_size - work_accessor.getHeader()->mDataSize);
-    save_accessor.getHeader()->mCheckSum = calcSaveDataCheckSum(_14 + sizeof(u32), save_accessor.getHeader()->mDataSize - sizeof(u32));
-    mNANDRequestInfo->setWriteSeq(cSaveDataFileName, _14, aligned_size, 0x3c, 0);
+    SaveDataFileAccessor fileAccessorA = SaveDataFileAccessor(_18);
+    SaveDataFileAccessor fileAccessorB = SaveDataFileAccessor(_14);
+
+    MR::copyMemory(_14, _18, fileAccessorA.getHeader()->mFileSize);
+    MR::fillMemory(_14 + fileAccessorA.getHeader()->mFileSize, 0,
+                   OSRoundUp32B(fileAccessorA.getHeader()->mFileSize) - fileAccessorA.getHeader()->mFileSize);
+    fileAccessorB.getHeader()->mCheckSum = MR::calcCheckSum(_14 + sizeof(u32), reinterpret_cast< SaveDataFileHeader* >(_14)->mFileSize - sizeof(u32));
+
+    mNANDRequestInfo->setWriteSeq(::cSaveFileName, _14, OSRoundUp32B(fileAccessorB.getHeader()->mFileSize), 60, 0);
     MR::addRequestToNANDManager(mNANDRequestInfo);
-    if (mNANDRequestInfo->mResult == NAND_RESULT_OK) {
-        mSaveDataDirty = false;
-    }
-    setNerve(&SaveDataHandlerSaveProcessingGameData::sInstance);
+
+    setNerve(&::SaveDataHandlerSaveProcessingGameData::sInstance);
 }
 
 void SaveDataHandler::requestRemoveSaveData() {
-    setNerve(&SaveDataHandlerRemoveProcessingBanner::sInstance);
+    setNerve(&::SaveDataHandlerRemoveProcessingBanner::sInstance);
 }
 
 u32 SaveDataHandler::getEnoughtTempBufferSize() {
-    return cSaveDataGameFileSize;
+    return 0xF80;
 }
 
 bool SaveDataHandler::isDone() const {
-    if (isNerve(&SaveDataHandlerWait::sInstance)) {
-        static_cast<void>(mNANDRequestInfo->isDone());
-    }
-    return isNerve(&SaveDataHandlerWait::sInstance);
+    bool result = isNerve(&::SaveDataHandlerWait::sInstance) && mNANDRequestInfo->isDone();
+
+    return isNerve(&::SaveDataHandlerWait::sInstance);
 }
 
 NANDResultCode SaveDataHandler::getLastResultCode() const {
@@ -366,168 +189,199 @@ void SaveDataHandler::exeWait() {
 }
 
 void SaveDataHandler::exeProcessing() {
-    if (mNANDRequestInfo->isDone()) {
-        setNerve(&SaveDataHandlerWait::sInstance);
+    if (!mNANDRequestInfo->isDone()) {
+        return;
     }
+
+    setNerve(&::SaveDataHandlerWait::sInstance);
 }
 
 void SaveDataHandler::exeSaveProcessingGameData() {
-    auto is_error = false;
-    if (trySave(&is_error, mNANDRequestInfo->isDone())) {
-        setNerve(is_error ? static_cast<const Nerve*>(&SaveDataHandlerWait::sInstance) :
-                            static_cast<const Nerve*>(&SaveDataHandlerSaveProcessingBanner::sInstance));
+    bool isErr = false;
+
+    if (!trySave(&isErr, mNANDRequestInfo->isDone())) {
+        return;
+    }
+
+    if (!isErr) {
+        setNerve(&::SaveDataHandlerSaveProcessingBanner::sInstance);
+    } else {
+        setNerve(&::SaveDataHandlerWait::sInstance);
     }
 }
 
 void SaveDataHandler::exeSaveProcessingBanner() {
     if (MR::isFirstStep(this)) {
         mBannerCreator->execute();
-        return;
-    }
+    } else if (mBannerCreator->isDone()) {
+        NANDResultCode resultCode = mBannerCreator->getResultCode();
+        mNANDRequestInfo->mResult = resultCode.getCode();
 
-    if (!mBannerCreator->isDone()) {
-        return;
-    }
-
-    const auto result_code = mBannerCreator->getResultCode();
-    mNANDRequestInfo->mResult = result_code.getCode();
-    setNerve(&SaveDataHandlerWait::sInstance);
-}
-
-void SaveDataHandler::exeRemoveProcessingBanner() {
-    auto is_done = false;
-    if (tryRemoveFile(cBannerFileName, &is_done)) {
-        setNerve(is_done ? static_cast<const Nerve*>(&SaveDataHandlerRemoveProcessingGameData::sInstance) :
-                           static_cast<const Nerve*>(&SaveDataHandlerWait::sInstance));
+        if (resultCode.isSuccess()) {
+            setNerve(&::SaveDataHandlerWait::sInstance);
+            return;
+        } else {
+            setNerve(&::SaveDataHandlerWait::sInstance);
+        }
     }
 }
 
 void SaveDataHandler::exeRemoveProcessingGameData() {
-    auto is_done = false;
-    if (tryRemoveFile(cSaveDataFileName, &is_done)) {
-        setNerve(&SaveDataHandlerWait::sInstance);
+    bool isRemoved = false;
+
+    if (!tryRemoveFile(::cSaveFileName, &isRemoved)) {
+        return;
+    }
+
+    setNerve(&::SaveDataHandlerWait::sInstance);
+}
+
+void SaveDataHandler::exeRemoveProcessingBanner() {
+    bool isRemoved = false;
+
+    if (!tryRemoveFile(::cBannerFileName, &isRemoved)) {
+        return;
+    }
+
+    if (isRemoved) {
+        setNerve(&::SaveDataHandlerRemoveProcessingGameData::sInstance);
+    } else {
+        setNerve(&::SaveDataHandlerWait::sInstance);
     }
 }
 
-void SaveDataHandler::resetSaveData(u8* pSaveData) {
-    auto* header = reinterpret_cast<SaveDataFileHeader*>(pSaveData);
-    auto* file_infos = reinterpret_cast<SaveDataFileInfo*>(pSaveData + sizeof(SaveDataFileHeader));
-    auto data_offset = static_cast<u32>(sizeof(SaveDataFileHeader) + cSaveDataFileCount * sizeof(SaveDataFileInfo));
-    auto file_index = u32{};
+void SaveDataHandler::resetSaveData(u8* pBuffer) {
+    SaveDataFile* pFile = reinterpret_cast< SaveDataFile* >(pBuffer);
+    u32 offset = 0x140;
+    u32 fileIndex = 0;
 
-    header->mCheckSum = 0U;
-    header->mVersion = cSaveDataVersion;
-    header->mFileCount = cSaveDataFileCount;
-    header->mDataSize = 0U;
+    pFile->mHeader.mCheckSum = 0;
+    pFile->mHeader.mVersion = 2;
+    pFile->mHeader.mUserFileInfoNum = 19;
+    pFile->mHeader.mFileSize = 0;
 
-    for (s32 slot_index = 1; slot_index < 7; ++slot_index) {
-        for (u32 i = 0; i < 3; ++i) {
-            auto* file_info = &file_infos[file_index];
-            zeroMemory(file_info->mName, sizeof(file_info->mName));
-            std::snprintf(file_info->mName, sizeof(file_info->mName), "%s%1d", cSaveFileSpecTable[i].mPrefix, slot_index);
-            file_info->mDataOffset = data_offset;
-            zeroMemory(pSaveData + data_offset, cSaveFileSpecTable[i].mSize);
-            data_offset += cSaveFileSpecTable[i].mSize;
-            ++file_index;
+    for (int i = 0; i < 6; i++) {
+        for (u32 j = 0; j < sizeof(::cSaveFileSpecTable) / sizeof(*::cSaveFileSpecTable); j++) {
+            SaveDataFileInfo* pFileInfo = &pFile->mInfo[fileIndex];
+            MR::zeroMemory(pFileInfo->mName, sizeof(pFileInfo->mName));
+
+            char fileName[32];
+            snprintf(fileName, sizeof(fileName), "%s%1d", ::cSaveFileSpecTable[j].mName, i + 1);
+            snprintf(pFileInfo->mName, sizeof(pFileInfo->mName), "%s", fileName);
+            pFileInfo->mOffset = offset;
+            offset += ::cSaveFileSpecTable[j].mBufferSize;
+            MR::zeroMemory(pBuffer + pFileInfo->mOffset, ::cSaveFileSpecTable[j].mBufferSize);
+            fileIndex++;
         }
     }
 
-    auto* file_info = &file_infos[file_index];
-    zeroMemory(file_info->mName, sizeof(file_info->mName));
-    std::snprintf(file_info->mName, sizeof(file_info->mName), "%s", cSaveFileSpecSystem.mPrefix);
-    file_info->mDataOffset = data_offset;
-    zeroMemory(pSaveData + data_offset, cSaveFileSpecSystem.mSize);
-    header->mDataSize = data_offset + cSaveFileSpecSystem.mSize;
-    fillMemory(pSaveData + header->mDataSize, 0, alignSaveDataSize(header->mDataSize) - header->mDataSize);
+    SaveDataFileInfo* pFileInfo = &pFile->mInfo[fileIndex];
+    MR::zeroMemory(pFileInfo->mName, sizeof(pFileInfo->mName));
+    snprintf(pFileInfo->mName, sizeof(pFileInfo->mName), "%s", ::cSaveFileSpecSystem.mName);
+    pFileInfo->mOffset = offset;
+    MR::zeroMemory(pBuffer + pFileInfo->mOffset, ::cSaveFileSpecSystem.mBufferSize);
+    pFile->mHeader.mFileSize = offset + ::cSaveFileSpecSystem.mBufferSize;
+
+    u8* pEnd = pBuffer + pFile->mHeader.mFileSize;
+    u32 padding = OSRoundUp32B(pFile->mHeader.mFileSize) - pFile->mHeader.mFileSize;
+    for (u32 i = 0; i < padding; i++) {
+        *pEnd++ = 0;
+    }
 }
 
-void SaveDataHandler::initializeAllFileInSaveData(u8* pSaveData, const SysConfigFile* pSysConfigFile, const UserFile* pUserFile) {
-    auto accessor = SaveDataFileAccessor(pSaveData);
-    auto* header = accessor.getHeader();
-    for (u32 i = 0; i < header->mFileCount; ++i) {
-        auto info = SaveDataUserFileInfo{};
-        accessor.makeUserFileInfo(&info, accessor.getFileInfo(static_cast<int>(i))->mName);
-        if (info.mData == nullptr) {
-            continue;
-        }
+void SaveDataHandler::initializeAllFileInSaveData(u8* pParam1, const SysConfigFile* pSysConfigFile, const UserFile* pUserFile) {
+    SaveDataFileAccessor fileAccessor = SaveDataFileAccessor(pParam1);
 
-        if (info.mType == SaveDataFileType_Game) {
-            if (pUserFile != nullptr) {
-                pUserFile->makeGameDataBinary(info.mData, info.mSize);
-            }
-        } else if (info.mType == SaveDataFileType_Config) {
-            if (pUserFile != nullptr) {
-                pUserFile->makeConfigDataBinary(info.mData, info.mSize);
-            }
-        } else if (pSysConfigFile != nullptr) {
-            pSysConfigFile->makeDataBinary(info.mData, info.mSize);
+    for (int i = 0; i < fileAccessor.getHeader()->mUserFileInfoNum; i++) {
+        SaveDataUserFileInfo userFileInfo;
+        fileAccessor.makeUserFileInfo(&userFileInfo, fileAccessor.getFileInfo(i)->mName);
+
+        if (userFileInfo.mKind == 0) {
+            pUserFile->makeGameDataBinary(userFileInfo.mData, userFileInfo.mDataSize);
+        } else if (userFileInfo.mKind == 1) {
+            pUserFile->makeConfigDataBinary(userFileInfo.mData, userFileInfo.mDataSize);
+        } else {
+            pSysConfigFile->makeDataBinary(userFileInfo.mData, userFileInfo.mDataSize);
         }
     }
 }
 
-bool SaveDataHandler::isCorrectFileHeader(const u8* pSaveData) {
-    if (pSaveData == nullptr) {
+bool SaveDataHandler::isCorrectFileHeader(const u8* pBuffer) {
+    SaveDataFileHeader* pFileHeader = SaveDataFileAccessor(const_cast< u8* >(pBuffer)).getHeader();
+
+    if (pFileHeader->mVersion != 2) {
         return false;
     }
 
-    const auto* header = reinterpret_cast<const SaveDataFileHeader*>(pSaveData);
-    return header->mVersion == cSaveDataVersion && header->mDataSize < cSaveDataBufferSize && header->mFileCount < 24U;
+    if (pFileHeader->mFileSize >= 0x10000) {
+        return false;
+    }
+
+    return pFileHeader->mUserFileInfoNum < 24;
 }
 
-void SaveDataHandler::copySaveDataEachFile(u8* pDst, const u8* pSrc) {
-    auto src_accessor = SaveDataFileAccessor(const_cast<u8*>(pSrc));
-    auto dst_accessor = SaveDataFileAccessor(pDst);
-    const auto* src_header = src_accessor.getHeader();
-    for (u32 i = 0; i < src_header->mFileCount; ++i) {
-        auto src_info = SaveDataUserFileInfo{};
-        auto dst_info = SaveDataUserFileInfo{};
-        const auto* name = src_accessor.getFileInfo(static_cast<int>(i))->mName;
-        src_accessor.makeUserFileInfo(&src_info, name);
-        dst_accessor.makeUserFileInfo(&dst_info, name);
-        if (src_info.mData != nullptr && dst_info.mData != nullptr) {
-            copyMemory(dst_info.mData, src_info.mData, std::min(src_info.mSize, dst_info.mSize));
-            if (dst_info.mSize > src_info.mSize) {
-                fillMemory(dst_info.mData + src_info.mSize, 0, dst_info.mSize - src_info.mSize);
+void SaveDataHandler::copySaveDataEachFile(u8* pFileDst, const u8* pFileSrc) {
+    SaveDataFileAccessor srcFileAccessor = SaveDataFileAccessor(const_cast< u8* >(pFileSrc));
+    SaveDataFileAccessor dstFileAccessor = SaveDataFileAccessor(pFileDst);
+
+    for (int i = 0; i < srcFileAccessor.getHeader()->mUserFileInfoNum; i++) {
+        const char* pFileName = srcFileAccessor.getFileInfo(i)->mName;
+
+        SaveDataUserFileInfo srcUserFileInfo;
+        srcFileAccessor.makeUserFileInfo(&srcUserFileInfo, pFileName);
+
+        SaveDataUserFileInfo dstUserFileInfo;
+        dstFileAccessor.makeUserFileInfo(&dstUserFileInfo, pFileName);
+
+        if (dstUserFileInfo.mData != nullptr) {
+            int deltaSize = dstUserFileInfo.mDataSize - srcUserFileInfo.mDataSize;
+
+            MR::copyMemory(dstUserFileInfo.mData, srcUserFileInfo.mData, dstUserFileInfo.mDataSize);
+
+            if (deltaSize > 0) {
+                MR::fillMemory(dstUserFileInfo.mData + dstUserFileInfo.mDataSize, 0, deltaSize);
             }
         }
     }
 }
 
 void SaveDataHandler::createCommunicationBuffer() {
-    _14 = new u8[cSaveDataBufferSize]{};
-    _18 = new u8[cSaveDataBufferSize]{};
+    _14 = new (MR::getStationedHeapGDDR3(), 32) u8[0x10000];
+    _18 = new (MR::getStationedHeapGDDR3(), 32) u8[0x10000];
 }
 
-bool SaveDataHandler::tryRemoveFile(const char* pName, bool* pIsDone) {
-    const auto* name = pName != nullptr ? pName : "";
-    const auto needs_request = mNANDRequestInfo->mType != 1 || std::strcmp(mNANDRequestInfo->mPath, name) != 0;
-    if (MR::isFirstStep(this) || needs_request) {
-        mNANDRequestInfo->setDelete(pName);
+// FIXME: Function isn't fetching `mNANDRequestInfo` again before call to `MR::addRequestToNANDManager`.
+bool SaveDataHandler::tryRemoveFile(const char* pFileName, bool* pIsRemoved) {
+    if (MR::isFirstStep(this)) {
+        mNANDRequestInfo->setDelete(pFileName);
         MR::addRequestToNANDManager(mNANDRequestInfo);
-        if (!mNANDRequestInfo->isDone()) {
-            return false;
+    } else if (mNANDRequestInfo->isDone()) {
+        NANDResultCode resultCode = NANDResultCode(mNANDRequestInfo->mResult);
+
+        if (resultCode.isSuccess() || resultCode.isNoExistFile()) {
+            *pIsRemoved = true;
+            return true;
+        } else {
+            *pIsRemoved = false;
+            return true;
         }
     }
 
-    if (!mNANDRequestInfo->isDone()) {
-        return false;
-    }
-
-    const auto result_code = NANDResultCode(mNANDRequestInfo->mResult);
-    if (pIsDone != nullptr) {
-        *pIsDone = result_code.isSuccess() || result_code.isNoExistFile();
-    }
-    return true;
+    return false;
 }
 
-bool SaveDataHandler::trySave(bool* pIsDone, bool isRequestDone) {
-    if (!isRequestDone) {
+bool SaveDataHandler::trySave(bool* pIsErr, bool isDone) {
+    if (!isDone) {
         return false;
     }
 
-    const auto result_code = NANDResultCode(mNANDRequestInfo->mResult);
-    if (pIsDone != nullptr) {
-        *pIsDone = !result_code.isSuccess();
+    NANDResultCode resultCode = NANDResultCode(mNANDRequestInfo->mResult);
+
+    if (resultCode.isSuccess()) {
+        *pIsErr = false;
+        return true;
+    } else {
+        *pIsErr = true;
+        return true;
     }
-    return true;
 }

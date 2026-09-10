@@ -65,9 +65,7 @@ target("smg-pc-game")
     remove_files("Scene/SceneFunction.cpp")
     remove_files("Scene/GameSceneFunction.cpp")
     remove_files("Scene/SceneObjHolder.cpp")
-    remove_files("System/StorySequenceExecutor.cpp")
     remove_files("System/GameDataFunction.cpp")
-    remove_files("System/SaveDataHandleSequence.cpp")
     remove_files("System/BinaryDataChunkHolder.cpp")
     remove_files("System/ConfigDataMisc.cpp")
     remove_files("System/SysConfigFile.cpp")
@@ -126,6 +124,7 @@ target("smg-pc-game")
         "../render/JMathTrig.cpp",
         "../JSystem/JGeometry/TQuat.cpp",
         "../JSystem/JMath/JMATrigonometricTable.cpp",
+        "../JSystem/JMath/random.cpp",
         "../render/light/LightData.cpp",
     }
     add_files("../JSystem/JGeometry/TMatrix.cpp", {cxxflags = "-ffp-contract=off"})

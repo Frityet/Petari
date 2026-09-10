@@ -1,0 +1,6 @@
+{
+  "aurora/lib/dolphin/gx/GXFifo.cpp": "bf136df7116b0a062bc757b40519cc9325b8a49d387b2bb457475f93eb5f3192",
+  "aurora/lib/gx/fifo.cpp": "0a6e563705ec161d0c27a86e304766131893c41448d714d7d886da2c76aab7d7",
+  "aurora/lib/gx/fifo.hpp": "f038e1a7501c83833d3f830df2650203a1f55bf67dfc9513221c898aeb6243f1",
+  "aurora/include/dolphin/gx/GXFifo.h": "6036b34ab398e9f627ec3043854b176d285a31745d64cde5c248332ac7adc122"
+}

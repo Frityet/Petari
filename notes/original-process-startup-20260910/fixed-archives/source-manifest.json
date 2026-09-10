@@ -1,0 +1,29 @@
+{
+  "files": [
+    {
+      "path": "src/JSystem/JKernel/JKRFileLoader.hpp",
+      "sha256": "670096a28326da5988122540d30d877e7280983c81e92d626b028ce815608e44"
+    },
+    {
+      "path": "src/JSystem/JKernel/JKRArchive.hpp",
+      "sha256": "7872177cc072843069cd30c28526c9e6e8b5a9c6f1a50b292e073592b0ecc4d5"
+    },
+    {
+      "path": "src/JSystem/JKernel/JKRMemArchive.hpp",
+      "sha256": "2db531de9354a30c986b56a6e873e62c05bc5bfb702cb46d30f04e0ef979d786"
+    },
+    {
+      "path": "src/compat/JKRArchiveCompat.cpp",
+      "sha256": "a1b523b8de64afb8351d24af835a652c563c7cb01340fe28c22b8ae1af1d4dc4"
+    },
+    {
+      "path": "src/resource/RarcArchive.hpp",
+      "sha256": "16352a1bb3e47affd3402f6e8249c92839b42dfe0394126c99e8bdf3c440f8bc"
+    },
+    {
+      "path": "src/resource/RarcArchive.cpp",
+      "sha256": "5322dbcabf99ab2464e511628bed1d59b753f9d7cdf4e591bac847968cfa6fb1"
+    }
+  ],
+  "verification": "Source inspection only; parent owns combined compile/runtime. No subagent tests or compiler run."
+}

@@ -1,0 +1,3 @@
+PASS: suspended startup, message handoff, nested suspend/resume, join result
+PASS: cancellation while blocked owning a recursive mutex
+All 38 thread lifecycle checks passed

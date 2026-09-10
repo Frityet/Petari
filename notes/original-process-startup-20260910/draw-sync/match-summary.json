@@ -1,0 +1,92 @@
+[
+  {
+    "name": "start__15DrawSyncManagerFUll",
+    "size": "100",
+    "match_percent": 100.0
+  },
+  {
+    "name": "prepareReset__15DrawSyncManagerFv",
+    "size": "24",
+    "match_percent": 89.166664
+  },
+  {
+    "name": "resetIfAborted__15DrawSyncManagerFv",
+    "size": "24",
+    "match_percent": 100.0
+  },
+  {
+    "name": "clearFifo__15DrawSyncManagerFv",
+    "size": "68",
+    "match_percent": 100.0
+  },
+  {
+    "name": "pop__4FifoFv",
+    "size": "80",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getLoopIdx__4FifoFUl",
+    "size": "28",
+    "match_percent": 100.0
+  },
+  {
+    "name": "getCount__4FifoFv",
+    "size": "44",
+    "match_percent": 100.0
+  },
+  {
+    "name": "end__15DrawSyncManagerFv",
+    "size": "56",
+    "match_percent": 100.0
+  },
+  {
+    "name": "drawSyncCallback__15DrawSyncManagerFUs",
+    "size": "28",
+    "match_percent": 100.0
+  },
+  {
+    "name": "threadFunc__15DrawSyncManagerFPv",
+    "size": "260",
+    "match_percent": 100.0
+  },
+  {
+    "name": "__ct__15DrawSyncManagerFUll",
+    "size": "284",
+    "match_percent": 97.169014
+  },
+  {
+    "name": "__dt__15DrawSyncManagerFv",
+    "size": "120",
+    "match_percent": 100.0
+  },
+  {
+    "name": "setCallback__15DrawSyncManagerFUlUsP16DrawSyncCallback",
+    "size": "196",
+    "match_percent": 100.0
+  },
+  {
+    "name": "__as__Q215DrawSyncManager19TDrawSyncTokenRangeFRCQ215DrawSyncManager19TDrawSyncTokenRange",
+    "size": "28",
+    "match_percent": 100.0
+  },
+  {
+    "name": "reset__15DrawSyncManagerFb",
+    "size": "96",
+    "match_percent": 100.0
+  },
+  {
+    "name": "drawSyncCallbackSub__15DrawSyncManagerFUs",
+    "size": "208",
+    "match_percent": 95.65385
+  },
+  {
+    "name": "pushBreakPoint__15DrawSyncManagerFv",
+    "size": "96",
+    "match_percent": 100.0
+  },
+  {
+    "name": "sInstance__15DrawSyncManager",
+    "size": "4",
+    "match_percent": 100.0
+  }
+]

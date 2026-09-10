@@ -11,7 +11,14 @@ static JKRExpHeap::CMemBlock* DBfoundBlock;
 static JKRExpHeap::CMemBlock* DBnewFreeBlock;
 static JKRExpHeap::CMemBlock* DBnewUsedBlock;
 
-// Wii boot-arena createRoot is replaced by explicit JkrHeapRuntime ownership.
+JKRExpHeap* JKRExpHeap::createRoot(int, bool) {
+    // The native application owns and budgets the boot arena before entering
+    // Game. Bind that actual root; never allocate an unowned second root.
+    if (sRootHeap == nullptr || sRootHeap->getParent() != nullptr || sRootHeap->getHeapType() != 0x45585048) {
+        smgpc::compat::jkr_panic(__FILE__, __LINE__, "JKR boot requires a retained native expandable root heap");
+    }
+    return static_cast<JKRExpHeap*>(sRootHeap);
+}
 
 JKRExpHeap* JKRExpHeap::create(u32 size, JKRHeap* pParent, bool errorFlag) {
     if (!pParent) {

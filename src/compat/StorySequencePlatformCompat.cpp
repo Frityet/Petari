@@ -32,7 +32,6 @@ struct JMapData;
 #include <string_view>
 
 namespace {
-    bool s_comet_scheduler_active = false;
     thread_local smgpc::compat::story_sequence::SceneStateBinding *s_scene_state = nullptr;
 
     [[noreturn]] void unavailable(std::string_view operation) {
@@ -146,13 +145,6 @@ namespace smgpc::compat::story_sequence {
         return *s_scene_state;
     }
 
-    bool is_comet_scheduler_active() {
-        return s_comet_scheduler_active;
-    }
-
-    void reset_comet_scheduler_state_for_test() {
-        s_comet_scheduler_active = false;
-    }
 }  // namespace smgpc::compat::story_sequence
 
 namespace GameDataFunction {
@@ -183,53 +175,12 @@ namespace GameDataFunction {
     }
 }  // namespace GameDataFunction
 
-namespace GameSequenceFunction {
-    void activateGalaxyCometScheduler() {
-        s_comet_scheduler_active = true;
-    }
-
-    void deactivateGalaxyCometScheduler() {
-        s_comet_scheduler_active = false;
-    }
-
-    bool hasStageResultSequence() {
-        unavailable("stage-result sequence state");
-    }
-
-    const char *getClearedStageName() {
-        unavailable("cleared stage name");
-    }
-
-    s32 getClearedPowerStarId() {
-        unavailable("cleared Power Star ID");
-    }
-
-    bool hasPowerStarYetAtResultSequence() {
-        unavailable("stage-result Power Star state");
-    }
-
-    bool isLuigiDisappearFromAstroGalaxy() {
-        unavailable("Luigi hide-and-seek sequence state");
-    }
-}  // namespace GameSequenceFunction
 
 namespace GameSystemFunction {
     bool setPermissionToCheckWiiRemoteConnectAndScreenDimming(bool) {
         unavailable("Wii Remote connection and screen-dimming permission");
     }
 }  // namespace GameSystemFunction
-
-StageResultSequenceChecker::StageResultSequenceChecker() {
-    unavailable("stage-result sequence checker");
-}
-
-void StageResultSequenceChecker::check() {
-    unavailable("stage-result sequence checker");
-}
-
-bool StageResultSequenceChecker::isJustGetGreenStarFirst() const {
-    unavailable("stage-result green-star snapshot");
-}
 
 const StorySequenceExecutorType::DemoSequenceInfo *StorySequenceExecutor::addDynamicDemoSequenceInfo(u16, u16, const char *) {
     unavailable("dynamic story demo sequence construction");

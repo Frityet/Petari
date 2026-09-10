@@ -143,12 +143,12 @@ exec "$demo_bin_dir/smg-pc-showcase" gateway --disc "$demo_disc" --width 1280 --
 """
 
 
-def readme_text(disc, minimum_macos, validation_note):
+def readme_text(disc, minimum_macos, validation_note, app_name=APP_NAME):
     checked = validation_note.strip() if validation_note else (
         "No gameplay validation report was supplied with this package. Packaging checks alone do not establish working movement, jumping or camera behavior.")
-    return f"""{APP_NAME}
+    return f"""{app_name}
 
-Open {APP_NAME}.app and click the game window.
+Open {app_name}.app and click the game window.
 Requires an Apple Silicon Mac running macOS {minimum_macos} or later.
 The game reads your existing disc at:
 {disc}
@@ -189,6 +189,7 @@ def main():
     parser.add_argument("--disc", required=True, type=Path)
     parser.add_argument("--expected-sha256", required=True, help="SHA256 of the exact runtime-tested executable")
     parser.add_argument("--output", type=Path, default=ROOT / "build/playable-demo" / f"{APP_NAME}.app")
+    parser.add_argument("--name", default=APP_NAME, help="display name for this local showcase bundle")
     parser.add_argument("--validation-note", type=Path, help="plain-text description of the runtime checks and known limitations")
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
@@ -196,6 +197,9 @@ def main():
         binary = args.binary.expanduser().resolve(strict=True)
         disc = args.disc.expanduser().resolve(strict=True)
         output = args.output.expanduser().absolute()
+        app_name = args.name.strip()
+        if not app_name or any(character in app_name for character in "/\\\n\r\0"):
+            raise ValueError("--name must be a nonempty single-line application name without path separators")
         expected_hash = args.expected_sha256.lower()
         if not re.fullmatch(r"[0-9a-f]{64}", expected_hash):
             raise ValueError("--expected-sha256 must contain exactly 64 hexadecimal digits")
@@ -220,6 +224,7 @@ def main():
                           "description": "caller-supplied report; not independently executed by the packager"}
         provenance = {
             "schema_version": 1,
+            "app_name": app_name,
             "packaged_at_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(),
             "source_binary": str(binary), "binary_sha256": expected_hash,
             "binary_size": binary.stat().st_size, "binary_mtime_ns": binary.stat().st_mtime_ns,
@@ -247,15 +252,16 @@ def main():
             launcher.write_text(launcher_text(disc), encoding="utf-8")
             launcher.chmod(0o755)
             run("/bin/sh", "-n", str(launcher))
-            readme = readme_text(disc, requirements["minimum_macos"], validation_note)
+            readme = readme_text(disc, requirements["minimum_macos"], validation_note, app_name)
             (resources / "README.txt").write_text(readme, encoding="utf-8")
             if validation_note is not None:
                 (resources / "runtime-validation.txt").write_text(validation_note, encoding="utf-8")
             (resources / "provenance.json").write_text(json.dumps(provenance, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
             info = {
                 "CFBundleInfoDictionaryVersion": "6.0", "CFBundleExecutable": launcher.name,
-                "CFBundleIdentifier": "org.petari.smg-pc.movement-demo", "CFBundleName": APP_NAME,
-                "CFBundleDisplayName": APP_NAME, "CFBundlePackageType": "APPL",
+                "CFBundleIdentifier": "org.petari.smg-pc." + re.sub(r"[^a-z0-9-]", "-", app_name.lower()).strip("-"),
+                "CFBundleName": app_name,
+                "CFBundleDisplayName": app_name, "CFBundlePackageType": "APPL",
                 "CFBundleShortVersionString": "0.1.0", "CFBundleVersion": "1",
                 "LSMinimumSystemVersion": requirements["minimum_macos"],
                 "NSPrincipalClass": "NSApplication", "NSHighResolutionCapable": True,

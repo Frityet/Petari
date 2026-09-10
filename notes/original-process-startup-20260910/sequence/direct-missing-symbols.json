@@ -1,0 +1,320 @@
+{
+  "archive": "build/macosx/arm64/debug/libsmg-pc-game.a",
+  "archive_sha256": "a7a108380fd2092850154a4e8b7fea7c4949f30bdfbf21f8a6eb4e0c3ff162e2",
+  "symbols": [
+    {
+      "symbol": "__Unwind_Resume",
+      "name": "__Unwind_Resume",
+      "objects": [
+        "GameSequenceProgress.o",
+        "FindingLuigiEventScheduler.o",
+        "GalaxyCometScheduler.o",
+        "GalaxyCometState.o",
+        "PlayerMissLeft.o",
+        "GameSequenceDirector.native.o"
+      ]
+    },
+    {
+      "symbol": "__ZN16GameDataFunction19addStockedStarPieceEi",
+      "name": "GameDataFunction::addStockedStarPiece(int)",
+      "objects": [
+        "GameSequenceProgress.o"
+      ]
+    },
+    {
+      "symbol": "__ZN16GameDataFunction28resetGameDataGoToGalaxyFirstEv",
+      "name": "GameDataFunction::resetGameDataGoToGalaxyFirst()",
+      "objects": [
+        "GameSequenceProgress.o"
+      ]
+    },
+    {
+      "symbol": "__ZN16GameDataFunction28resetGameDataGoToGalaxyRetryEv",
+      "name": "GameDataFunction::resetGameDataGoToGalaxyRetry()",
+      "objects": [
+        "GameSequenceProgress.o"
+      ]
+    },
+    {
+      "symbol": "__ZN16GameDataFunction34onGalaxyScenarioFlagAlreadyVisitedEPKci",
+      "name": "GameDataFunction::onGalaxyScenarioFlagAlreadyVisited(char const*, int)",
+      "objects": [
+        "GameSequenceProgress.o"
+      ]
+    },
+    {
+      "symbol": "__ZN16SceneControlInfo14setStartIdInfoERK10JMapIdInfo",
+      "name": "SceneControlInfo::setStartIdInfo(JMapIdInfo const&)",
+      "objects": [
+        "GameSequenceProgress.o"
+      ]
+    },
+    {
+      "symbol": "__ZN16SceneControlInfo8setSceneEPKc",
+      "name": "SceneControlInfo::setScene(char const*)",
+      "objects": [
+        "GameSequenceProgress.o"
+      ]
+    },
+    {
+      "symbol": "__ZN16SceneControlInfo8setStageEPKc",
+      "name": "SceneControlInfo::setStage(char const*)",
+      "objects": [
+        "GameSequenceProgress.o"
+      ]
+    },
+    {
+      "symbol": "__ZN18GameSystemFunction17isResetProcessingEv",
+      "name": "GameSystemFunction::isResetProcessing()",
+      "objects": [
+        "GameSequenceProgress.o"
+      ]
+    },
+    {
+      "symbol": "__ZN18GameSystemFunction22tryToLoadSystemArchiveEv",
+      "name": "GameSystemFunction::tryToLoadSystemArchive()",
+      "objects": [
+        "GameSequenceProgress.o"
+      ]
+    },
+    {
+      "symbol": "__ZN18GameSystemFunction25setAutoSleepTimeWiiRemoteEb",
+      "name": "GameSystemFunction::setAutoSleepTimeWiiRemote(bool)",
+      "objects": [
+        "GameSequenceProgress.o"
+      ]
+    },
+    {
+      "symbol": "__ZN18GameSystemFunction33setResetOperationApplicationResetEv",
+      "name": "GameSystemFunction::setResetOperationApplicationReset()",
+      "objects": [
+        "GameSequenceProgress.o"
+      ]
+    },
+    {
+      "symbol": "__ZN25GameSystemSceneController18requestChangeSceneEv",
+      "name": "GameSystemSceneController::requestChangeScene()",
+      "objects": [
+        "GameSequenceProgress.o"
+      ]
+    },
+    {
+      "symbol": "__ZN25GameSystemSceneController24startScenarioSelectSceneEv",
+      "name": "GameSystemSceneController::startScenarioSelectScene()",
+      "objects": [
+        "GameSequenceProgress.o"
+      ]
+    },
+    {
+      "symbol": "__ZN25GameSystemSceneController34startScenarioSelectSceneBackgroundEv",
+      "name": "GameSystemSceneController::startScenarioSelectSceneBackground()",
+      "objects": [
+        "GameSequenceProgress.o"
+      ]
+    },
+    {
+      "symbol": "__ZN2MR16startGlobalTimerEv",
+      "name": "MR::startGlobalTimer()",
+      "objects": [
+        "GameSequenceProgress.o"
+      ]
+    },
+    {
+      "symbol": "__ZN2MR27requestChangeSceneAfterBootEv",
+      "name": "MR::requestChangeSceneAfterBoot()",
+      "objects": [
+        "GameSequenceProgress.o"
+      ]
+    },
+    {
+      "symbol": "__ZTVN10__cxxabiv120__si_class_type_infoE",
+      "name": "vtable for __cxxabiv1::__si_class_type_info",
+      "objects": [
+        "GameSequenceProgress.o",
+        "GalaxyCometState.o",
+        "PlayerMissLeft.o",
+        "GameSequenceDirector.native.o"
+      ]
+    },
+    {
+      "symbol": "___gxx_personality_v0",
+      "name": "___gxx_personality_v0",
+      "objects": [
+        "GameSequenceProgress.o",
+        "FindingLuigiEventScheduler.o",
+        "GalaxyCometScheduler.o",
+        "GalaxyCometState.o",
+        "PlayerMissLeft.o",
+        "GameSequenceDirector.native.o"
+      ]
+    },
+    {
+      "symbol": "__ZN17LuigiMailDirector13writeSendSizeEv",
+      "name": "LuigiMailDirector::writeSendSize()",
+      "objects": [
+        "FindingLuigiEventScheduler.o"
+      ]
+    },
+    {
+      "symbol": "__ZN17LuigiMailDirector23initAfterResourceLoadedEv",
+      "name": "LuigiMailDirector::initAfterResourceLoaded()",
+      "objects": [
+        "FindingLuigiEventScheduler.o"
+      ]
+    },
+    {
+      "symbol": "__ZN17LuigiMailDirector4lostEv",
+      "name": "LuigiMailDirector::lost()",
+      "objects": [
+        "FindingLuigiEventScheduler.o"
+      ]
+    },
+    {
+      "symbol": "__ZN17LuigiMailDirector5foundEv",
+      "name": "LuigiMailDirector::found()",
+      "objects": [
+        "FindingLuigiEventScheduler.o"
+      ]
+    },
+    {
+      "symbol": "__ZN17LuigiMailDirector5resetEv",
+      "name": "LuigiMailDirector::reset()",
+      "objects": [
+        "FindingLuigiEventScheduler.o"
+      ]
+    },
+    {
+      "symbol": "__ZN17LuigiMailDirector8sendMailEv",
+      "name": "LuigiMailDirector::sendMail()",
+      "objects": [
+        "FindingLuigiEventScheduler.o"
+      ]
+    },
+    {
+      "symbol": "__ZN17LuigiMailDirectorC1Ev",
+      "name": "LuigiMailDirector::LuigiMailDirector()",
+      "objects": [
+        "FindingLuigiEventScheduler.o"
+      ]
+    },
+    {
+      "symbol": "___stack_chk_fail",
+      "name": "___stack_chk_fail",
+      "objects": [
+        "FindingLuigiEventScheduler.o"
+      ]
+    },
+    {
+      "symbol": "___stack_chk_guard",
+      "name": "___stack_chk_guard",
+      "objects": [
+        "FindingLuigiEventScheduler.o"
+      ]
+    },
+    {
+      "symbol": "_smgpc_msl_snprintf",
+      "name": "_smgpc_msl_snprintf",
+      "objects": [
+        "FindingLuigiEventScheduler.o"
+      ]
+    },
+    {
+      "symbol": "__ZN16GameDataFunction23updateGalaxyCometStatusEitt",
+      "name": "GameDataFunction::updateGalaxyCometStatus(int, unsigned short, unsigned short)",
+      "objects": [
+        "GalaxyCometScheduler.o"
+      ]
+    },
+    {
+      "symbol": "__ZN16GameDataFunction24restoreGalaxyCometStatusEiPtS0_",
+      "name": "GameDataFunction::restoreGalaxyCometStatus(int, unsigned short*, unsigned short*)",
+      "objects": [
+        "GalaxyCometScheduler.o"
+      ]
+    },
+    {
+      "symbol": "__ZN16GameDataFunction26isPowerStarLeftInCometOnlyEv",
+      "name": "GameDataFunction::isPowerStarLeftInCometOnly()",
+      "objects": [
+        "GalaxyCometScheduler.o"
+      ]
+    },
+    {
+      "symbol": "__ZN2MR20canAppearNormalCometEPKc",
+      "name": "MR::canAppearNormalComet(char const*)",
+      "objects": [
+        "GalaxyCometScheduler.o"
+      ]
+    },
+    {
+      "symbol": "__ZN2MR21canAppearCoin100CometEPKc",
+      "name": "MR::canAppearCoin100Comet(char const*)",
+      "objects": [
+        "GalaxyCometScheduler.o"
+      ]
+    },
+    {
+      "symbol": "__ZTVN10__cxxabiv121__vmi_class_type_infoE",
+      "name": "vtable for __cxxabiv1::__vmi_class_type_info",
+      "objects": [
+        "GalaxyCometState.o"
+      ]
+    },
+    {
+      "symbol": "__ZN14NWC24Messenger23initAfterResourceLoadedEv",
+      "name": "NWC24Messenger::initAfterResourceLoaded()",
+      "objects": [
+        "GameSequenceDirector.native.o"
+      ]
+    },
+    {
+      "symbol": "__ZN14NWC24MessengerC1EPKc",
+      "name": "NWC24Messenger::NWC24Messenger(char const*)",
+      "objects": [
+        "GameSequenceDirector.native.o"
+      ]
+    },
+    {
+      "symbol": "__ZTVN10__cxxabiv117__class_type_infoE",
+      "name": "vtable for __cxxabiv1::__class_type_info",
+      "objects": [
+        "GameSequenceDirector.native.o"
+      ]
+    },
+    {
+      "symbol": "__ZN14NWC24Messenger12prepareResetEv",
+      "name": "NWC24Messenger::prepareReset()",
+      "objects": [
+        "GameSequenceFunction.native.o"
+      ]
+    },
+    {
+      "symbol": "__ZN14NWC24Messenger5resetEv",
+      "name": "NWC24Messenger::reset()",
+      "objects": [
+        "GameSequenceFunction.native.o"
+      ]
+    },
+    {
+      "symbol": "__ZN25GameSystemSceneController10startSceneEv",
+      "name": "GameSystemSceneController::startScene()",
+      "objects": [
+        "GameSequenceFunction.native.o"
+      ]
+    },
+    {
+      "symbol": "__ZNK14NWC24Messenger9isRunningEv",
+      "name": "NWC24Messenger::isRunning() const",
+      "objects": [
+        "GameSequenceFunction.native.o"
+      ]
+    },
+    {
+      "symbol": "__ZNK25GameSystemSceneController19isReadyToStartSceneEv",
+      "name": "GameSystemSceneController::isReadyToStartScene() const",
+      "objects": [
+        "GameSequenceFunction.native.o"
+      ]
+    }
+  ]
+}

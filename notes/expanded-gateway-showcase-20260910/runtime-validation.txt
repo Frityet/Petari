@@ -1,0 +1,11 @@
+Gateway Showcase — 10 September 2026
+
+Includes the latest Mario movement/jump and original camera work, original Lumas, stage visuals, gravity/collision, pointer and supported particle effects. The ordinary Gateway route creates every supported active authored placement automatically: this run created all 78 ready stage objects plus the separately owned Mario. No optional actor filter is applied.
+
+This build completed one short 240-frame launch at 1280x720, with scripted walk and jump inputs, exit 0, no timeout, and about 59.6 displayed FPS. This is a startup smoke check, not a complete gameplay test. The packaged app runs without a frame limit.
+
+The complete bunny chase/Rosalina sequence and original full-process startup are not ready. Other unsupported stage actors remain unavailable. The separate spin checkpoint uses stand-ins and is not enabled in this ordinary Gateway package.
+
+Controls: WASD move, Space jump, arrow keys request the game camera, C reset camera when allowed, mouse game pointer, F9 development free camera. The native macOS cursor remains hidden while the game has focus; the game pointer stays visible.
+
+Binary SHA256: fc91f414cd3fc44501eae46e69fc16fbeb6529b1056545e6ab8fa9ef790faa83

@@ -26,6 +26,4 @@ namespace smgpc::compat::story_sequence {
     };
 
     [[nodiscard]] const SceneStateBinding& require_scene_state();
-    [[nodiscard]] bool is_comet_scheduler_active();
-    void reset_comet_scheduler_state_for_test();
 }  // namespace smgpc::compat::story_sequence

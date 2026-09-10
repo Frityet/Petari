@@ -5,6 +5,8 @@
 
 extern const u8 GalaxyIDBCSV[];
 
+struct JMapData;
+
 namespace GameDataConst {
     s32 getPowerStarNumToOpenGalaxy(const char*);
     bool isPowerStarGreen(const char*, s32);

@@ -35,7 +35,7 @@ namespace smgpc::compat {
         std::unique_ptr<Storage> _storage;
     };
 
-    class ResourceHolderService final {
+class ResourceHolderService final {
     public:
         ResourceHolderService(runtime::DvdFileSystemService&, std::shared_ptr<JkrAllocationDomain>,
                               std::shared_ptr<resource::Mem1ResourceHeap>);
@@ -43,6 +43,8 @@ namespace smgpc::compat {
         ResourceHolderService(const ResourceHolderService&) = delete;
         ResourceHolderService& operator=(const ResourceHolderService&) = delete;
         [[nodiscard]] ResourceHolder* create_and_add(std::string_view archive_name);
+        [[nodiscard]] ResourceHolder* create_and_add(std::string_view archive_name, JKRHeap* heap);
+        void remove_for_heap(JKRHeap* heap);
         [[nodiscard]] std::vector<ResourceHolder*> create_and_add_stationed(std::int32_t load_type);
         [[nodiscard]] std::shared_ptr<const ResourceArchiveOwner> retain(const ResourceHolder&) const;
         [[nodiscard]] const ResourceArchiveOwner& backing(const ResourceHolder&) const;

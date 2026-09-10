@@ -1,0 +1,7 @@
+aurora/lib/dolphin/os/OSMutex.cpp:6:9: warning: 'ASSERT' macro redefined [-Wmacro-redefined]
+    6 | #define ASSERT(condition) assert(condition)
+      |         ^
+aurora/include/dolphin/os.h:332:9: note: previous definition is here
+  332 | #define ASSERT(cond) ASSERTLINE(__LINE__, cond)
+      |         ^
+1 warning generated.

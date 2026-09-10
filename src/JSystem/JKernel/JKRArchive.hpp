@@ -15,11 +15,14 @@
 #include <revolution/types.h>
 
 #include "resource/RarcArchive.hpp"
+#include "JSystem/JKernel/JKRFileLoader.hpp"
 
 class JKRArcFinder;
 
-class JKRArchive {
+class JKRArchive : public JKRFileLoader {
 public:
+    enum EMountDirection { MOUNT_DIRECTION_1 = 1 };
+    enum EMountMode { MOUNT_MODE_0 = 0, MOUNT_MODE_MEM = 1, MOUNT_MODE_ARAM = 2, MOUNT_MODE_DVD = 3, MOUNT_MODE_COMP = 4 };
     enum EFileFlag {
         FILE_FLAG_FILE_SHIFT = 0,
         FILE_FLAG_FOLDER_SHIFT = 1,
@@ -111,7 +114,7 @@ public:
         /* 0x4 */ char mName[256];
     };
 
-    virtual ~JKRArchive() = default;
+    ~JKRArchive() override = default;
 
     JKRArchive(const JKRArchive&) = delete;
     JKRArchive& operator=(const JKRArchive&) = delete;
@@ -163,7 +166,12 @@ public:
     [[nodiscard]] SDIFileEntry* findIdxResource(u32) const;
 
     static u32 sCurrentDirID;
-    char* mLoaderName = nullptr;
+    static JKRArchive* check_mount_already(std::uintptr_t);
+    // Distinct from JKRDisposer::mHeap: this owns archive bytes, while the
+    // disposer heap owns the loader object itself.
+    JKRHeap* mHeap = nullptr;
+    u8 mMountMode = MOUNT_MODE_0;
+    std::uintptr_t mEntryNum = 0;
     RarcInfoBlock* mInfoBlock = nullptr;
     SDIDirEntry* mDirs = nullptr;
     SDIFileEntry* mFiles = nullptr;
@@ -230,21 +238,24 @@ private:
     std::vector<char> mNativeStrings;
 };
 
+enum JKRMemBreakFlag { JKR_MEM_BREAK_FLAG_0 = 0, JKR_MEM_BREAK_FLAG_1 = 1 };
+
 class JKRMemArchive final : public JKRArchive {
 public:
-    explicit JKRMemArchive(const smgpc::resource::RarcArchive &archive)
-        : JKRArchive(&archive), mFileDataStart(const_cast<u8*>(archive.file_data_start())) {
-    }
-
-    explicit JKRMemArchive(smgpc::resource::RarcArchive &&archive)
-        : JKRArchive(nullptr), mOwnedArchive(std::make_unique<smgpc::resource::RarcArchive>(std::move(archive))) {
-        attach_archive(mOwnedArchive.get());
-        mFileDataStart = const_cast<u8*>(mOwnedArchive->file_data_start());
-    }
+    JKRMemArchive();
+    ~JKRMemArchive() override;
+    explicit JKRMemArchive(const smgpc::resource::RarcArchive& archive);
+    explicit JKRMemArchive(smgpc::resource::RarcArchive&& archive);
+    bool mountFixed(void*, JKRMemBreakFlag);
+    bool mountFixed(std::span<const u8>, JKRMemBreakFlag);
 
     void* fetchResource(SDIFileEntry*, u32*) override;
 
-private:
+    RarcHeader* mHeader = nullptr;
     u8* mFileDataStart = nullptr;
+    bool _6C = false;
+
+private:
+    void publish_mount(const void* identity);
     std::unique_ptr<smgpc::resource::RarcArchive> mOwnedArchive;
 };

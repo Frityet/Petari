@@ -1,0 +1,14 @@
+[
+  "src/Game/NWC24/NWC24Messenger.cpp",
+  "src/Game/NWC24/NWC24Messenger.hpp",
+  "src/Game/NWC24/NWC24System.cpp",
+  "src/Game/NWC24/NWC24System.hpp",
+  "src/Game/NWC24/NWC24SendThread.cpp",
+  "src/Game/NWC24/NWC24SendThread.hpp",
+  "src/Game/NWC24/NWC24Function.cpp",
+  "src/Game/NWC24/NWC24Function.hpp",
+  "src/Game/NWC24/UTF16Util.cpp",
+  "src/Game/NWC24/UTF16Util.hpp",
+  "src/Game/NWC24/LuigiMailDirector.cpp",
+  "src/Game/NWC24/LuigiMailDirector.hpp"
+]

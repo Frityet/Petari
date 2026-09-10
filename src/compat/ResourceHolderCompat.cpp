@@ -189,6 +189,10 @@ namespace smgpc::compat {
     }
 
     ResourceHolder* ResourceHolderService::create_and_add(std::string_view archive_name) {
+        return create_and_add(archive_name, nullptr);
+    }
+
+    ResourceHolder* ResourceHolderService::create_and_add(std::string_view archive_name, JKRHeap* heap) {
         JkrHostAllocationScope host;
         const auto requested = normalize_archive_request(archive_name);
         if (requested.empty() || requested == "." || requested.filename().empty())
@@ -198,10 +202,28 @@ namespace smgpc::compat {
         if (!resolved) aurora::throw_host_exception<std::runtime_error>("Required ResourceHolder archive is unavailable: " + requested.generic_string());
         const auto key = _dvd->resolve(resolved->generic_string());
         if (const auto found = _holders.find(key); found != _holders.end()) return &found->second->holder();
-        auto owner = std::make_shared<ResourceArchiveOwner>(_dvd->retain_archive_for_path(*resolved), key, _domain, _mem1);
+        auto domain = _domain;
+        if (heap != nullptr && heap != &domain->heap()) {
+            auto process = current_jkr_allocation_domain();
+            if (!process)
+                aurora::throw_host_exception<std::logic_error>("Original resource heap has no retained process owner");
+            domain = JkrAllocationDomain::retain_heap(std::move(process), *heap);
+        }
+        auto owner = std::make_shared<ResourceArchiveOwner>(_dvd->retain_archive_for_path(*resolved), key, std::move(domain), _mem1);
         auto* result = &owner->holder();
         _holders.emplace(key, std::move(owner));
         return result;
+    }
+
+    void ResourceHolderService::remove_for_heap(JKRHeap* heap) {
+        JkrHostAllocationScope host;
+        if (heap == nullptr) return;
+        // A player archive cannot be reset while an actual model still borrows
+        // its native backing. Check the whole operation before removing any.
+        for (const auto& [path, owner] : _holders)
+            if (owner->holder().mHeap == heap && owner.use_count() != 1)
+                aurora::throw_host_exception<std::logic_error>("Cannot unload an original resource heap with live model owners");
+        std::erase_if(_holders, [heap](const auto& entry) { return entry.second->holder().mHeap == heap; });
     }
 
     std::vector<ResourceHolder*> ResourceHolderService::create_and_add_stationed(std::int32_t load_type) {

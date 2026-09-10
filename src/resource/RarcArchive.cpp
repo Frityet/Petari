@@ -101,6 +101,10 @@ namespace smgpc::resource {
         return RarcArchive(decompress_yaz0(bytes));
     }
 
+    RarcArchive RarcArchive::from_borrowed(std::span<const std::uint8_t> bytes) {
+        return RarcArchive(bytes);
+    }
+
     const std::vector<RarcEntry> &RarcArchive::entries() const {
         return _entries;
     }
@@ -201,11 +205,12 @@ namespace smgpc::resource {
     }
 
     std::span<const std::uint8_t> RarcArchive::file_data(const RarcEntry &entry) const {
-        if (entry.data_offset + entry.data_size > _bytes.size()) {
+        const auto source = bytes();
+        if (entry.data_offset > source.size() || entry.data_size > source.size() - entry.data_offset) {
             aurora::throw_host_exception<std::runtime_error>("RARC file data is outside archive");
         }
 
-        return std::span<const std::uint8_t>(_bytes).subspan(entry.data_offset, entry.data_size);
+        return source.subspan(entry.data_offset, entry.data_size);
     }
 
     std::span<const std::uint8_t> RarcArchive::file_data(std::string_view path) const {
@@ -249,17 +254,22 @@ namespace smgpc::resource {
         parse();
     }
 
+    RarcArchive::RarcArchive(std::span<const std::uint8_t> bytes) : _borrowed_bytes(bytes) {
+        parse();
+    }
+
     void RarcArchive::parse() {
-        const auto bytes = std::span<const std::uint8_t>(_bytes);
+        const auto bytes = this->bytes();
         if (bytes.size() < 0x40U || read_be32(bytes, 0U) != RARC_MAGIC) {
             aurora::throw_host_exception<std::runtime_error>("Archive is not a decompressed RARC file");
         }
 
         _header_size = read_be32(bytes, 0x08U);
-        _file_data_start = _header_size + read_be32(bytes, 0x0CU);
-        if (_header_size + 0x20U > bytes.size()) {
+        const std::uint64_t file_data_start = std::uint64_t(_header_size) + read_be32(bytes, 0x0CU);
+        if (_header_size > bytes.size() || 0x20U > bytes.size() - _header_size || file_data_start > bytes.size()) {
             aurora::throw_host_exception<std::runtime_error>("RARC info block is outside archive");
         }
+        _file_data_start = static_cast<std::uint32_t>(file_data_start);
 
         const auto info_offset = _header_size;
         _dir_count = read_be32(bytes, info_offset + 0x00U);
@@ -314,20 +324,21 @@ namespace smgpc::resource {
     }
 
     std::string RarcArchive::file_name(std::uint32_t name_offset) const {
-        const auto start = _string_table_offset + name_offset;
-        if (start >= _bytes.size()) {
+        const auto source = bytes();
+        const auto start = std::size_t(_string_table_offset) + name_offset;
+        if (start >= source.size()) {
             aurora::throw_host_exception<std::runtime_error>("RARC string offset is outside archive");
         }
 
         auto end = start;
-        while (end < _bytes.size() && _bytes[end] != 0U) {
+        while (end < source.size() && source[end] != 0U) {
             ++end;
         }
-        if (end == _bytes.size()) {
+        if (end == source.size()) {
             aurora::throw_host_exception<std::runtime_error>("RARC string is not null terminated");
         }
 
-        return std::string(reinterpret_cast<const char *>(_bytes.data() + start), end - start);
+        return std::string(reinterpret_cast<const char *>(source.data() + start), end - start);
     }
 
     std::span<const std::uint8_t> RarcArchive::file_entry(std::uint32_t file_index) const {
@@ -335,7 +346,7 @@ namespace smgpc::resource {
             aurora::throw_host_exception<std::runtime_error>("RARC file index is outside table");
         }
 
-        return std::span<const std::uint8_t>(_bytes).subspan(_file_offset + file_index * 0x14U, 0x14U);
+        return bytes().subspan(_file_offset + std::size_t(file_index) * 0x14U, 0x14U);
     }
 
     std::span<const std::uint8_t> RarcArchive::dir_entry(std::uint32_t dir_index) const {
@@ -343,7 +354,7 @@ namespace smgpc::resource {
             aurora::throw_host_exception<std::runtime_error>("RARC directory index is outside table");
         }
 
-        return std::span<const std::uint8_t>(_bytes).subspan(_dir_offset + dir_index * 0x10U, 0x10U);
+        return bytes().subspan(_dir_offset + std::size_t(dir_index) * 0x10U, 0x10U);
     }
 
 }  // namespace smgpc::resource

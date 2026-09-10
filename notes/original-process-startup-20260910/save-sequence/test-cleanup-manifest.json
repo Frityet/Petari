@@ -1,0 +1,14 @@
+{
+  "files": [
+    {
+      "path": "tests/AuroraNativeTests.cpp",
+      "sha256": "d16bde5d382fd18e011c3106c8b7686a942277021e221c29f2be9467494d302b"
+    },
+    {
+      "path": "tests/SaveDataCoreRealOrAbsentTests.cpp",
+      "sha256": "ec2cbe2548828b651d92938210184a367e3f613e3cfb0c8be7386c33f2cb5556"
+    }
+  ],
+  "build_run": false,
+  "test_run": false
+}

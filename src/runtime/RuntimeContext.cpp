@@ -1,4 +1,5 @@
 #include "compat/JkrAllocationDomain.hpp"
+#include <aurora/guest_thread.hpp>
 #include "Game/AudioLib/AudBgm.hpp"
 #include "Game/AudioLib/AudWrap.hpp"
 #include <aurora/exception.hpp>
@@ -610,6 +611,7 @@ namespace smgpc::runtime {
     }
 
     void RuntimeContext::retire_owned_runtime_objects() {
+        const aurora::os::GuestThreadExecutionScope execution;
 #ifndef NDEBUG
         _is_destroying = true;
 #endif
@@ -648,6 +650,7 @@ namespace smgpc::runtime {
     }
 
     void RuntimeContext::begin_frame(const render::FrameContext &frame_context) {
+        const aurora::os::GuestThreadExecutionScope execution;
         _frame_index = frame_context.frame_index;
         _dvd.begin_frame(_frame_index);
         _ios.begin_frame(_frame_index);
@@ -938,6 +941,7 @@ namespace smgpc::runtime {
     }
 
     void RuntimeContext::draw_scene() {
+        const aurora::os::GuestThreadExecutionScope execution;
         auto &lifecycle = scene_lifecycle();
         if (!lifecycle.active_scene()) {
             draw_3d_normal();

@@ -123,7 +123,7 @@ namespace smgpc::scene {
                 std::string(model_name.data()));
         }
         (void)MR::loadToMainRAM(
-            disc_path.data(), nullptr, nullptr, JKRDvdRipper::ALLOC_DIR_TOP);
+            disc_path.data(), nullptr, nullptr, JKRDvdRipper::ALLOC_DIRECTION_FORWARD);
         MR::mountAsyncArchiveByObjectOrLayoutName(model_name.data(), nullptr);
         auto requests =
             std::vector<smgpc::scene::nameobj::NameObjArchiveRequest>{

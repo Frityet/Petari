@@ -1,0 +1,13 @@
+{
+  "native_banner_matches_original_except_explicit_utf16_width_seam": true,
+  "paired_header_exact_original": true,
+  "sdk_reference": "notes/gateway-audit-20260907/restoration/retail/asm/RVL_SDK/nand/NANDCore.s: NANDInitBanner 804CF94C-804CFA24",
+  "move_reference": "notes/gateway-audit-20260907/restoration/retail/asm/RVL_SDK/nand/nand.s: nandMove 804CD734-804CD790; dolphin/Source/Core/Core/IOS/FS/HostBackend/FS.cpp:477-529",
+  "full_banner_allocation_bytes": 61600,
+  "serialized_one_icon_bytes": 29344,
+  "texture_data_offset": 160,
+  "native_compile_run": false,
+  "runtime_run": false,
+  "validation_scope": "Source comparison and bounded SDK oracle review only; parent owns combined build and runtime.",
+  "diff_check_exit": 0
+}
