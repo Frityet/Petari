@@ -245,7 +245,7 @@ private:
         f32 end = 0.0f;
         f32 rate = 1.0f;
         bool stopped = true;
-        bool looping = false;
+        bool looping = true;
     };
 
     struct PaneRenderState {
@@ -281,6 +281,8 @@ private:
 
     [[nodiscard]] AnimationState& animation(u32 animLayer);
     [[nodiscard]] const AnimationState& animation(u32 animLayer) const;
+    [[nodiscard]] AnimationState& animationControl(u32 animLayer);
+    [[nodiscard]] const AnimationState& animationControl(u32 animLayer) const;
     [[nodiscard]] PaneAnimationState& paneAnimation(std::string_view paneName);
     [[nodiscard]] const PaneAnimationState* findPaneAnimation(std::string_view paneName) const;
     void commitAnimationState(const AnimationState& anim);

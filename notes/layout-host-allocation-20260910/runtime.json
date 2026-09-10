@@ -1,0 +1,11 @@
+{
+  "command": [
+    "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-layout-group-tests"
+  ],
+  "env": {
+    "SMGPC_REAL_DISC": "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz"
+  },
+  "exit": 0,
+  "seconds": 1.1752279999782331,
+  "binary_sha256": "fb731157c387ae0b110a6d507a71db48ceeac336794f814fa29768f82223792d"
+}

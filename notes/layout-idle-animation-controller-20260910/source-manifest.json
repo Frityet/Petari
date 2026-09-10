@@ -1,0 +1,31 @@
+{
+  "sources": [
+    {
+      "path": "src/layout/LayoutRuntime.cpp",
+      "sha256": "09a6bb10f7e760697ed49c62d5f3c45a4602421fd3c6dc1aaf833acee4a9f03b"
+    },
+    {
+      "path": "src/layout/LayoutRuntime.hpp",
+      "sha256": "af9a42c893abfd8e8ece94a09eadc1cbac8ade191b2ef75fd8975651b08276e3"
+    },
+    {
+      "path": "src/layout/LayoutManagerCompat.cpp",
+      "sha256": "bb8b3a5fb8d8e54fadf959f0e92384e268c2643998206a073c86ee119de03c42"
+    },
+    {
+      "path": "tests/OriginalSceneWipeOwnerTests.cpp",
+      "sha256": "154a62ced159a110518a9bb0378580bb4840f9b45e73ec823f833c5f0c68a23b"
+    }
+  ],
+  "production_compile_exits": [
+    0,
+    0
+  ],
+  "fixture_compile_exit": 0,
+  "runtime_target": "smg-pc-original-scene-wipe-owner-tests",
+  "runtime_status": "passed on real RMGK01 RVZ",
+  "root_xmake_used": false,
+  "runtime_build_exit": 0,
+  "runtime_exit": 0,
+  "delegated_validation_agent": "audio_completion"
+}

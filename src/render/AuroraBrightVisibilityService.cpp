@@ -1,5 +1,6 @@
 #include "render/AuroraBrightVisibilityService.hpp"
 
+#include <aurora/allocation.hpp>
 #include <dolphin/gx/GXAurora.h>
 
 #include <algorithm>
@@ -342,23 +343,30 @@ namespace smgpc::render {
         std::vector< Capture > pending_captures;
     };
 
-    AuroraBrightVisibilityService::AuroraBrightVisibilityService()
-        : _impl(std::make_unique< Impl >()) {
+    AuroraBrightVisibilityService::AuroraBrightVisibilityService() {
+        const auto host_allocations = aurora::allocation::HostAllocationScope{};
+        _impl = std::make_unique< Impl >();
     }
 
     AuroraBrightVisibilityService::AuroraBrightVisibilityService(
-        BrightDepthSnapshotBackend& backend)
-        : _impl(std::make_unique< Impl >(backend)) {
+        BrightDepthSnapshotBackend& backend) {
+        const auto host_allocations = aurora::allocation::HostAllocationScope{};
+        _impl = std::make_unique< Impl >(backend);
     }
 
-    AuroraBrightVisibilityService::~AuroraBrightVisibilityService() = default;
+    AuroraBrightVisibilityService::~AuroraBrightVisibilityService() {
+        const auto host_allocations = aurora::allocation::HostAllocationScope{};
+        _impl.reset();
+    }
 
     void AuroraBrightVisibilityService::reset() noexcept {
+        const auto host_allocations = aurora::allocation::HostAllocationScope{};
         _impl->reset();
     }
 
     void AuroraBrightVisibilityService::begin_draw_pass(
         std::uint16_t draw_token) {
+        const auto host_allocations = aurora::allocation::HostAllocationScope{};
         ++_impl->draw_generation;
         _impl->prepared_draw_pass = Impl::DrawPass{
             .generation = _impl->draw_generation,
@@ -367,6 +375,7 @@ namespace smgpc::render {
     }
 
     void AuroraBrightVisibilityService::begin_capture(std::uint16_t draw_token) {
+        const auto host_allocations = aurora::allocation::HostAllocationScope{};
         _impl->poll();
         ++_impl->capture_sequence;
         _impl->age_results();
@@ -400,6 +409,7 @@ namespace smgpc::render {
 
     void AuroraBrightVisibilityService::submit_batch(
         const BrightVisibilityBatch& batch) {
+        const auto host_allocations = aurora::allocation::HostAllocationScope{};
         if (!_impl->active_capture.has_value() ||
             batch.source == kInvalidBrightVisibilitySourceId ||
             batch.draw_token != _impl->active_capture->draw_token) {
@@ -422,6 +432,7 @@ namespace smgpc::render {
     }
 
     void AuroraBrightVisibilityService::end_capture() {
+        const auto host_allocations = aurora::allocation::HostAllocationScope{};
         if (!_impl->active_capture.has_value()) {
             return;
         }
@@ -435,6 +446,9 @@ namespace smgpc::render {
 
     void AuroraBrightVisibilityService::submit_sphere(
         BrightVisibilitySourceId source, const BrightVisibilitySphere& sphere) {
+        // Draw-sync callers use original Game heaps; retained GPU capture
+        // metadata belongs to this native service and outlives those callers.
+        const auto host_allocations = aurora::allocation::HostAllocationScope{};
         if (source == kInvalidBrightVisibilitySourceId) {
             return;
         }
@@ -455,6 +469,7 @@ namespace smgpc::render {
 
     bool AuroraBrightVisibilityService::take_result(
         BrightVisibilitySourceId source, BrightVisibilityResult& result) {
+        const auto host_allocations = aurora::allocation::HostAllocationScope{};
         if (source == kInvalidBrightVisibilitySourceId) {
             return false;
         }
@@ -478,6 +493,7 @@ namespace smgpc::render {
 
     void AuroraBrightVisibilityService::forget_source(
         BrightVisibilitySourceId source) noexcept {
+        const auto host_allocations = aurora::allocation::HostAllocationScope{};
         if (source == kInvalidBrightVisibilitySourceId) {
             return;
         }

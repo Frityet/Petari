@@ -155,7 +155,7 @@ std::unordered_map< const LayoutPaneCtrl*, PaneControlState > sPaneControlStates
 void sync_actor_control_to_runtime(LayoutActor* actor, u32 layer) {
     auto& manager = require_manager_state(actor->mLayoutManager, "Synchronizing layout animation");
     (void)require_actor_layer(manager, layer, "Synchronizing layout animation");
-    if (manager.runtime == nullptr || !manager.runtime->hasActiveAnimation(layer)) {
+    if (manager.runtime == nullptr) {
         return;
     }
 
@@ -172,7 +172,7 @@ void sync_actor_control_to_runtime(LayoutActor* actor, u32 layer) {
 void sync_actor_control_from_runtime(LayoutActor* actor, u32 layer) {
     auto& manager = require_manager_state(actor->mLayoutManager, "Synchronizing layout animation");
     (void)require_actor_layer(manager, layer, "Synchronizing layout animation");
-    if (manager.runtime == nullptr || !manager.runtime->hasActiveAnimation(layer)) {
+    if (manager.runtime == nullptr) {
         return;
     }
 
@@ -744,6 +744,11 @@ void LayoutPaneCtrl::calcAnim() {
 void LayoutPaneCtrl::start(const char* animation_name, u32 layer) {
     auto& state = require_pane_control_state(this, "Starting a pane animation");
     (void)require_pane_layer(state, layer, "Starting a pane animation");
+    if (state.pane_name.empty()) {
+        auto* actor = require_manager_state(mHost, "Controlling a root animation").actor;
+        smgpc::layout::start_layout_anim(actor, animation_name, layer);
+        return;
+    }
     auto& runtime = require_runtime(mHost, "Starting a pane animation");
     runtime.startPaneAnim(state.pane_name, animation_name, layer);
     state.animation_names[layer] = animation_name != nullptr ? animation_name : "";
@@ -757,6 +762,11 @@ void LayoutPaneCtrl::start(const char* animation_name, u32 layer) {
 void LayoutPaneCtrl::stop(u32 layer) {
     auto& state = require_pane_control_state(this, "Stopping a pane animation");
     (void)require_pane_layer(state, layer, "Stopping a pane animation");
+    if (state.pane_name.empty()) {
+        auto* actor = require_manager_state(mHost, "Controlling a root animation").actor;
+        smgpc::layout::set_layout_anim_rate(actor, 0.0F, layer);
+        return;
+    }
     require_runtime(mHost, "Stopping a pane animation").stopPaneAnim(state.pane_name, layer);
     state.animation_controls[layer].mRate = 0.0F;
 }
@@ -794,7 +804,11 @@ void LayoutPaneCtrl::reflectFollowPos() {
 
 J3DFrameCtrl* LayoutPaneCtrl::getFrameCtrl(u32 layer) const {
     auto& state = require_pane_control_state(this, "Reading a pane animation control");
-    return &state.animation_controls[require_pane_layer(state, layer, "Reading a pane animation control")];
+    (void)require_pane_layer(state, layer, "Reading a pane animation control");
+    if (state.pane_name.empty()) {
+        return smgpc::layout::layout_anim_ctrl(require_manager_state(mHost, "Reading a root animation control").actor, layer);
+    }
+    return &state.animation_controls[layer];
 }
 
 void LayoutPaneCtrl::recalcChildGlobalMtx(nw4r::lyt::Pane*) {
@@ -877,12 +891,15 @@ void start_layout_anim(LayoutActor* actor, const char* animation_name, u32 layer
     auto& manager = require_manager_state(actor != nullptr ? actor->mLayoutManager : nullptr, "Starting a layout animation");
     (void)require_actor_layer(manager, layer, "Starting a layout animation");
     require_layout_runtime(actor, "Starting a layout animation").startAnim(animation_name, layer);
+    require_actor_state(actor, "Starting a layout animation").animation_controls[layer].init(
+        static_cast<s16>(manager.runtime->getAnimFrameMax(layer)));
     sync_actor_control_from_runtime(actor, layer);
 }
 
 void set_layout_anim_frame(LayoutActor* actor, f32 frame, u32 layer) {
     auto& manager = require_manager_state(actor != nullptr ? actor->mLayoutManager : nullptr, "Setting a layout animation frame");
     (void)require_actor_layer(manager, layer, "Setting a layout animation frame");
+    sync_actor_control_to_runtime(actor, layer);
     require_layout_runtime(actor, "Setting a layout animation frame").setAnimFrame(frame, layer);
     sync_actor_control_from_runtime(actor, layer);
 }
@@ -890,6 +907,7 @@ void set_layout_anim_frame(LayoutActor* actor, f32 frame, u32 layer) {
 void set_layout_anim_frame_and_stop(LayoutActor* actor, f32 frame, u32 layer) {
     auto& manager = require_manager_state(actor != nullptr ? actor->mLayoutManager : nullptr, "Stopping a layout animation at a frame");
     (void)require_actor_layer(manager, layer, "Stopping a layout animation at a frame");
+    sync_actor_control_to_runtime(actor, layer);
     require_layout_runtime(actor, "Stopping a layout animation at a frame").setAnimFrameAndStop(frame, layer);
     sync_actor_control_from_runtime(actor, layer);
 }
@@ -897,16 +915,17 @@ void set_layout_anim_frame_and_stop(LayoutActor* actor, f32 frame, u32 layer) {
 void set_layout_anim_rate(LayoutActor* actor, f32 rate, u32 layer) {
     auto& manager = require_manager_state(actor != nullptr ? actor->mLayoutManager : nullptr, "Setting a layout animation rate");
     (void)require_actor_layer(manager, layer, "Setting a layout animation rate");
+    sync_actor_control_to_runtime(actor, layer);
     require_layout_runtime(actor, "Setting a layout animation rate").setAnimRate(rate, layer);
     sync_actor_control_from_runtime(actor, layer);
 }
 
 f32 layout_anim_frame(const LayoutActor* actor, u32 layer) {
-    return require_layout_runtime(actor, "Reading a layout animation frame").getAnimFrame(layer);
+    return layout_anim_ctrl(const_cast<LayoutActor*>(actor), layer)->getFrame();
 }
 
 f32 layout_anim_frame_max(const LayoutActor* actor, u32 layer) {
-    return require_layout_runtime(actor, "Reading a layout animation duration").getAnimFrameMax(layer);
+    return layout_anim_ctrl(const_cast<LayoutActor*>(actor), layer)->getEnd();
 }
 
 bool is_layout_anim_stopped(const LayoutActor* actor, u32 layer) {
@@ -916,7 +935,6 @@ bool is_layout_anim_stopped(const LayoutActor* actor, u32 layer) {
     if (!find_pane_control(manager, {})) {
         aurora::throw_host_exception<std::logic_error>("Reading a layout animation state requires the initialized root pane control");
     }
-    if (!runtime.hasActiveAnimation(layer)) return true;
     auto* mutable_actor = const_cast<LayoutActor*>(actor);
     sync_actor_control_to_runtime(mutable_actor, layer);
     const auto stopped = runtime.isAnimStopped(layer);
@@ -927,8 +945,9 @@ bool is_layout_anim_stopped(const LayoutActor* actor, u32 layer) {
 J3DFrameCtrl* layout_anim_ctrl(LayoutActor* actor, u32 layer) {
     auto& manager = require_manager_state(actor != nullptr ? actor->mLayoutManager : nullptr, "Reading a layout animation control");
     (void)require_actor_layer(manager, layer, "Reading a layout animation control");
-    if (!require_layout_runtime(actor, "Reading a layout animation control").hasActiveAnimation(layer)) {
-        aurora::throw_host_exception<std::logic_error>("Reading a layout animation control requires an active retail BRLAN");
+    (void)require_layout_runtime(actor, "Reading a layout animation control");
+    if (!find_pane_control(manager, {})) {
+        aurora::throw_host_exception<std::logic_error>("Reading a layout animation control requires the initialized root pane control");
     }
     sync_actor_control_to_runtime(actor, layer);
     sync_actor_control_from_runtime(actor, layer);
@@ -996,6 +1015,11 @@ void set_text_box_vertical_position(LayoutManager* manager, const char* name, u8
 void set_pane_anim_frame(LayoutPaneCtrl* pane_control, f32 frame, u32 layer) {
     auto& state = require_pane_control_state(pane_control, "Setting a pane animation frame");
     (void)require_pane_layer(state, layer, "Setting a pane animation frame");
+    if (state.pane_name.empty()) {
+        auto* actor = require_manager_state(pane_control->mHost, "Controlling a root animation").actor;
+        set_layout_anim_frame(actor, frame, layer);
+        return;
+    }
     require_runtime(pane_control->mHost, "Setting a pane animation frame").setPaneAnimFrame(state.pane_name, frame, layer);
     state.animation_controls[layer].mFrame = frame;
 }
@@ -1003,6 +1027,11 @@ void set_pane_anim_frame(LayoutPaneCtrl* pane_control, f32 frame, u32 layer) {
 void set_pane_anim_rate(LayoutPaneCtrl* pane_control, f32 rate, u32 layer) {
     auto& state = require_pane_control_state(pane_control, "Setting a pane animation rate");
     (void)require_pane_layer(state, layer, "Setting a pane animation rate");
+    if (state.pane_name.empty()) {
+        auto* actor = require_manager_state(pane_control->mHost, "Controlling a root animation").actor;
+        set_layout_anim_rate(actor, rate, layer);
+        return;
+    }
     require_runtime(pane_control->mHost, "Setting a pane animation rate").setPaneAnimRate(state.pane_name, rate, layer);
     state.animation_controls[layer].mRate = rate;
 }
@@ -1010,17 +1039,13 @@ void set_pane_anim_rate(LayoutPaneCtrl* pane_control, f32 rate, u32 layer) {
 f32 pane_anim_frame(const LayoutPaneCtrl* pane_control, u32 layer) {
     const auto& state = require_pane_control_state(pane_control, "Reading a pane animation frame");
     (void)require_pane_layer(state, layer, "Reading a pane animation frame");
-    return require_runtime(pane_control->mHost, "Reading a pane animation frame").getPaneAnimFrame(state.pane_name, layer);
+    return pane_control->getFrameCtrl(layer)->getFrame();
 }
 
 f32 pane_anim_frame_max(const LayoutPaneCtrl* pane_control, u32 layer) {
     const auto& state = require_pane_control_state(pane_control, "Reading a pane animation duration");
     (void)require_pane_layer(state, layer, "Reading a pane animation duration");
-    if (state.animation_names[layer].empty()) {
-        aurora::throw_host_exception<std::logic_error>("Reading a pane animation duration requires an active retail BRLAN");
-    }
-    return require_runtime(pane_control->mHost, "Reading a pane animation duration")
-        .getAnimDuration(state.animation_names[layer].c_str());
+    return pane_control->getFrameCtrl(layer)->getEnd();
 }
 
 f32 animation_duration(const LayoutManager* manager, const char* animation_name) {

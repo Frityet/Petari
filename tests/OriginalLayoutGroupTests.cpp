@@ -9,6 +9,7 @@
 #include "SceneExecutionFixture.hpp"
 #include "layout/LayoutHost.hpp"
 #include "runtime/RuntimeContext.hpp"
+#include <JSystem/JKernel/JKRHeap.hpp>
 #include <nw4r/lyt/group.h>
 #include <aurora/exception.hpp>
 #include <aurora/dvd.h>
@@ -60,6 +61,43 @@ Bytes archive(const Bytes& data) {
     put16(b, entries, 0xFFFF); b[entries + 4] = 2; put32(b, entries + 8, 1); put32(b, entries + 12, 0x10);
     put16(b, entries + 20, 0); b[entries + 24] = 1; b[entries + 27] = 5; put32(b, entries + 32, data.size());
     std::copy(data.begin(), data.end(), b.begin() + payload); return b;
+}
+void host_heap_boundary(const std::filesystem::path& path) {
+    auto heaps = smgpc::compat::JkrHeapRuntime::create(1U << 20);
+    auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 64U << 10);
+    const auto retired = std::weak_ptr(domain);
+    auto archive_path = path;
+    std::optional<smgpc::layout::LayoutRuntime> layout;
+    std::vector<smgpc::layout::LayoutRuntime::DebugPaneState> published;
+    {
+        const smgpc::compat::JkrAllocationScope game(domain);
+        const auto free_before = domain->heap().getFreeSize();
+        layout.emplace("Native layout owner whose name exceeds string inline storage", "Fixture", 1, 0, std::move(archive_path));
+        require(JKRHeap::findFromRoot(const_cast<char*>(layout->getName().data())) == nullptr,
+                "layout constructor retains native strings outside the original caller heap");
+        require(layout->hasPane("Child"), "native layout parser loads the real synthetic archive under a Game caller");
+        layout->setPaneAlpha("Child", 0.5F);
+        layout->setPaneVisibleRecursive("Root", true);
+        layout->setPaneFollowPosition("Child", 2, TVec2f(4, 6));
+        layout->setPaneRotation("Child", 10, 20, 30);
+        published = layout->debugPanes();
+        require(published.size() == 3 && JKRHeap::findFromRoot(published.data()) == nullptr,
+                "native pane snapshots use host storage even when requested from original Game code");
+        require(domain->heap().getFreeSize() == free_before,
+                "native layout construction, parsing, metadata mutations and snapshots do not consume the caller Game heap");
+        auto* original = new u8[16];
+        require(JKRHeap::findFromRoot(original) == &domain->heap(),
+                "layout host boundaries restore original caller allocation routing on return");
+        delete[] original;
+    }
+    domain.reset();
+    require(retired.expired(), "native layout metadata does not retain its caller Game heap");
+    Mtx matrix;
+    require(layout->copyPaneMatrix("Child", matrix) && published[1].name == "Child",
+            "native layout state and returned snapshots survive caller Game heap retirement");
+    layout->setPaneVisible("Sibling", false);
+    require(!layout->isPaneVisible("Sibling"), "retained native pane maps remain mutable after caller retirement");
+    layout.reset();
 }
 void records() {
     const auto path = std::filesystem::temp_directory_path() / ("smgpc-layout-group-" + std::to_string(getpid()) + ".arc");
@@ -129,6 +167,7 @@ void records() {
                 std::fabs(child->mGlbMtx.m[2][3] - 5) < 0.0001F,
                 "original local-offset follow adds transformed XY while retaining global Z");
     }
+    host_heap_boundary(path);
 }
 
 class Logger final : public smgpc::logging::ILogger {
@@ -173,11 +212,16 @@ void fly_meter() {
         MR::showLayout(meter.get());
         MR::startAnim(meter.get(), "Wait", 0);
         for (const auto ratio : {1.0F, 0.5F, 0.125F}) {
-            meter->setLifeRatio(ratio);
             (void)renderer.begin_frame();
             {
                 const smgpc::render::ScopedAuroraRendererContext context(renderer);
+                const auto domain = smgpc::scene::current_scene_allocation_domain();
+                const smgpc::compat::JkrAllocationScope game(domain);
+                const auto free_before = domain->heap().getFreeSize();
+                meter->setLifeRatio(ratio);
                 meter->draw();
+                require(domain->heap().getFreeSize() == free_before,
+                        "original layout animation and first texture/text draw keep all native work outside its Game heap");
             }
             renderer.end_frame();
         }

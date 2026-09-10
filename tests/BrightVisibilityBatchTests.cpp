@@ -1,10 +1,14 @@
 #include "render/AuroraBrightVisibilityService.hpp"
+#include "compat/JkrAllocationDomain.hpp"
+
+#include <JSystem/JKernel/JKRHeap.hpp>
 
 #include <array>
 #include <cmath>
 #include <cstdint>
 #include <iostream>
 #include <limits>
+#include <optional>
 #include <stdexcept>
 #include <string>
 #include <string_view>
@@ -629,6 +633,49 @@ namespace {
                 "a non-finite sphere manufactured draw eligibility or depth reads");
     }
 
+    void test_native_capture_storage_survives_game_heap_retirement() {
+        auto backend = FakeDepthBackend{};
+        auto heaps = smgpc::compat::JkrHeapRuntime::create(1U << 20);
+        auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 64U << 10);
+        const auto retired = std::weak_ptr(domain);
+        std::optional<smgpc::render::AuroraBrightVisibilityService> service;
+        const auto source = smgpc::render::allocate_bright_visibility_source_id();
+        const auto batch = make_batch(source, -0.5F);
+        {
+            const smgpc::compat::JkrAllocationScope game(domain);
+            const auto free_before = domain->heap().getFreeSize();
+            {
+                // The production constructor owns its native depth backend.
+                smgpc::render::AuroraBrightVisibilityService production;
+            }
+            service.emplace(backend);
+            submit_capture(*service, batch, 0U);
+            submit_capture(*service, batch, 1U);
+            require(domain->heap().getFreeSize() == free_before,
+                    "native visibility owners, source maps and pending captures consumed the caller Game heap");
+            auto* original = new std::uint8_t[16];
+            require(JKRHeap::findFromRoot(original) == &domain->heap(),
+                    "visibility host boundaries failed to restore original caller allocation routing");
+            delete[] original;
+        }
+        domain.reset();
+        require(retired.expired(),
+                "native visibility captures retained the original Game heap");
+        heaps.reset();
+
+        // Resolve one capture after the whole arena retires, and leave the
+        // second pending to exercise the actual first-frame exit destructor.
+        backend.at(1U).status = smgpc::render::BrightDepthSnapshotStatus::Ready;
+        auto result = smgpc::render::BrightVisibilityResult{};
+        require(service->take_result(source, result) && result.capture_id == 1U &&
+                    result.visible_count == smgpc::render::kBrightVisibilityProbeCount,
+                "retained native captures lost their draw/probe data after Game heap retirement");
+        service.reset();
+        require(backend.release_counts[1U] == 1U &&
+                    backend.release_counts[2U] == 1U,
+                "post-retirement resolution and destruction did not release each snapshot exactly once");
+    }
+
 }  // namespace
 
 int main() {
@@ -642,6 +689,7 @@ int main() {
         test_terminal_snapshot_failures_retain_then_expire_visibility();
         test_pending_timeout_reset_and_release_are_idempotent();
         test_probe_bounds_and_non_finite_values_are_ignored();
+        test_native_capture_storage_survives_game_heap_retirement();
         std::cout << "[ok] tagged Bright visibility batch contract passed\n";
         return 0;
     } catch (const std::exception& error) {

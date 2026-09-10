@@ -1,0 +1,7 @@
+Local preview requested for user testing, 10 September 2026.
+
+This exact executable was built successfully and ran the actual Gateway scene through simulation tick 90. A captured frame visibly shows Mario and the planet with the original CameraDirector view. Original Game movement and input paths are enabled; no replacement jump or follow-camera behavior was added.
+
+Keyboard movement, a user-triggered jump and landing, and camera control accuracy have not been independently verified in this preview. Mario begins in his original stage-in animation. Graphics and gameplay defects remain possible. The bounded capture run produced its screenshot, then aborted during shutdown (exit -6); closing the demo may report a crash. No audio or HUD polish is claimed, and the full bunny chase is not complete.
+
+The user asked to try the current build and report what needs fixing. This is an early preview, not a completed gameplay milestone.

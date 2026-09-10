@@ -1,0 +1,4 @@
+{
+  "src/render/AuroraBrightVisibilityService.cpp": "b717de27e5dcb2be5da09c1d36d213bb39d22f502bc541ad3cc2c7d6dcc9eec0",
+  "tests/BrightVisibilityBatchTests.cpp": "925525823d886378bb6cf3323fd47412c36b7c2fdaf94d62679b2aa4c28fc728"
+}

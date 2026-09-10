@@ -1,4 +1,6 @@
 #include "RendererService.hpp"
+#include "compat/JkrAllocationDomain.hpp"
+#include "JSystem/JKernel/JKRHeap.hpp"
 #include "runtime/WiiVideoService.hpp"
 
 #include <dolphin/gx.h>
@@ -108,6 +110,110 @@ namespace {
         return count;
     }
 
+    void test_texture_storage_outlives_game_heap(smgpc::render::AuroraRenderer &renderer,
+                                                const GXRenderModeObj &render_mode) {
+        constexpr auto TextureSide = std::uint16_t{64};
+        constexpr std::array expected_colors{
+            std::array<std::uint8_t, 3>{240, 16, 32},
+            std::array<std::uint8_t, 3>{24, 224, 48},
+            std::array<std::uint8_t, 3>{128, 128, 128},
+        };
+        std::array<std::array<std::uint8_t, TextureSide * TextureSide * 4U>, 2> rgba{};
+        for (std::size_t image = 0; image < rgba.size(); ++image) {
+            for (std::size_t offset = 0; offset < rgba[image].size(); offset += 4) {
+                std::copy(expected_colors[image].begin(), expected_colors[image].end(), rgba[image].begin() + offset);
+                rgba[image][offset + 3] = 255;
+            }
+        }
+        std::array<std::uint8_t, 64> intensity{};
+        intensity.fill(128);
+        std::array<smgpc::render::TextureHandle, 3> textures;
+        std::array<bool, 3> host_storage{}, unchanged_capacity{}, restored_routing{}, guest_probe{};
+        const auto heaps = smgpc::compat::JkrHeapRuntime::create(4U << 20);
+        const auto root_free = heaps->root_heap().getFreeSize();
+        std::weak_ptr<smgpc::compat::JkrAllocationDomain> retired;
+        const auto outer_routing = aurora::allocation::routing_state;
+        auto *const outer_heap = JKRHeap::getCurrentHeap();
+
+        static_cast<void>(renderer.begin_frame());
+        const smgpc::render::ScopedAuroraRendererContext context(renderer);
+        {
+            const auto game = smgpc::compat::JkrAllocationDomain::create(heaps, 128U << 10);
+            retired = game;
+            const smgpc::compat::JkrAllocationScope selected(game);
+            for (std::size_t api = 0; api < textures.size(); ++api) {
+                const auto before = game->heap().getFreeSize();
+                const auto routing = aurora::allocation::routing_state;
+                switch (api) {
+                case 0:
+                    textures[api] = renderer.create_rgba8_texture(TextureSide, TextureSide, rgba[0]);
+                    break;
+                case 1:
+                    textures[api] = renderer.create_rgba8_mip_texture(
+                        TextureSide, TextureSide, rgba[1], 0.0F, 2.0F, 0.0F, false, false, GX_ANISO_1, GX_NEAR_MIP_NEAR, GX_NEAR);
+                    break;
+                case 2:
+                    textures[api] = renderer.create_gx_texture(
+                        8, 8, GX_TF_I8, intensity, false, 0.0F, 0.0F, 0.0F, false, false, GX_ANISO_1, GX_NEAR, GX_NEAR);
+                    break;
+                }
+                const auto &texture = textures[api];
+                host_storage[api] = texture.is_valid() && JKRHeap::findFromRoot(texture.texture.get()) == nullptr &&
+                                    JKRHeap::findFromRoot(texture.texture->rgba.data()) == nullptr;
+                unchanged_capacity[api] = game->heap().getFreeSize() == before;
+                restored_routing[api] = aurora::allocation::routing_state.guest == routing.guest &&
+                                        aurora::allocation::routing_state.callbackGuest == routing.callbackGuest &&
+                                        JKRHeap::getCurrentHeap() == &game->heap() &&
+                                        smgpc::compat::current_jkr_allocation_domain() == game;
+                auto *const probe = new std::uint32_t{0x12345678};
+                guest_probe[api] = JKRHeap::findFromRoot(probe) == &game->heap();
+                delete probe;
+            }
+        }
+        require(retired.expired() && heaps->root_heap().getFreeSize() == root_free,
+                "texture owners must not retain the selected Game heap after it retires");
+        require(JKRHeap::getCurrentHeap() == outer_heap &&
+                    aurora::allocation::routing_state.guest == outer_routing.guest &&
+                    aurora::allocation::routing_state.callbackGuest == outer_routing.callbackGuest,
+                "the texture allocation proof must restore its outer heap and routing");
+        for (std::size_t api = 0; api < textures.size(); ++api) {
+            require(host_storage[api] && unchanged_capacity[api],
+                    "each texture API must allocate its retained record and bytes outside the selected Game heap");
+            require(restored_routing[api] && guest_probe[api],
+                    "each texture API must restore the caller's selected Game heap and global-new routing");
+        }
+        require(textures[1].texture->mipmap && textures[1].texture->rgba.size() > rgba[1].size(),
+                "the mip texture proof must exercise generated mip storage rather than its single-level fallback");
+
+        // Reuse the retired arena before the first GPU sample, so surviving GPU
+        // pixels also depend on retained native source bytes remaining valid.
+        {
+            const auto replacement = smgpc::compat::JkrAllocationDomain::create(heaps, 128U << 10);
+            const smgpc::compat::JkrAllocationScope selected(replacement);
+            auto *const overwrite = new std::array<std::uint8_t, 64U << 10>;
+            overwrite->fill(0xcd);
+            delete overwrite;
+        }
+        require(heaps->root_heap().getFreeSize() == root_free, "replacement Game heap must retire completely");
+        for (std::size_t api = 0; api < textures.size(); ++api) {
+            if (api != 0) static_cast<void>(renderer.begin_frame());
+            auto quad = full_frame_quad({255, 255, 255, 255}, false);
+            quad.blend_mode = smgpc::render::BlendMode::Opaque;
+            renderer.submit_textured_quad(textures[api], quad);
+            renderer.end_frame(render_mode);
+            const auto pixels = read_display_copy();
+            const auto matching = matching_pixels(pixels, expected_colors[api]);
+            const auto center = pixel(pixels, CopyWidth / 2U, CopyHeight / 2U);
+            std::cout << "[info] retained texture api=" << api << " matching pixels=" << matching
+                      << " center=" << static_cast<unsigned>(center[0]) << ',' << static_cast<unsigned>(center[1])
+                      << ',' << static_cast<unsigned>(center[2]) << '\n';
+            require(matching > 250000U,
+                    "every retained native texture must render its original pixels after Game heap retirement and reuse");
+        }
+        textures = {};
+        std::cout << "[info] texture host ownership: 3 APIs, caller routing restored, retired heap reused, GPU colors preserved\n";
+    }
+
     void test_copy_boundaries() {
         auto window = smgpc::render::AuroraWindow({
             .width = CopyWidth,
@@ -159,6 +265,7 @@ namespace {
             .color = {0U, 0U, 0U, 255U},
             .depth = GX_MAX_Z24,
         });
+        test_texture_storage_outlives_game_heap(renderer, render_mode);
         const auto source_pixels = quadrant_texture();
         auto source_texture = smgpc::render::TextureHandle{};
         auto white_texture = smgpc::render::TextureHandle{};

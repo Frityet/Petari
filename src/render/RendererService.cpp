@@ -1,3 +1,4 @@
+#include <aurora/allocation.hpp>
 #include <aurora/exception.hpp>
 #include "RendererService.hpp"
 #include "render/AuroraBrightVisibilityService.hpp"
@@ -1241,6 +1242,7 @@ namespace smgpc::render {
     }
 
     void AuroraRenderer::request_screenshot_png(const std::filesystem::path &path) {
+        const auto host_allocations = aurora::allocation::HostAllocationScope {};
         auto width = 0U;
         auto height = 0U;
         if (path.empty() || AuroraGetDisplayCopySize(&width, &height) == GX_FALSE || width == 0U || height == 0U) {
@@ -1259,6 +1261,7 @@ namespace smgpc::render {
     }
 
     TextureHandle AuroraRenderer::create_rgba8_texture(std::uint16_t width, std::uint16_t height, std::span<const std::uint8_t> rgba) {
+        const auto host_allocations = aurora::allocation::HostAllocationScope {};
         if (width == 0U || height == 0U || rgba.size() < static_cast<std::size_t>(width) * height * 4U) {
             return invalid_texture();
         }
@@ -1289,6 +1292,7 @@ namespace smgpc::render {
                                                            float max_lod, float lod_bias, bool bias_clamp,
                                                            bool edge_lod, GXAnisotropy max_anisotropy,
                                                            std::uint8_t min_filter, std::uint8_t mag_filter) {
+        const auto host_allocations = aurora::allocation::HostAllocationScope {};
         if (width == 0U || height == 0U || rgba.size() < static_cast<std::size_t>(width) * height * 4U) {
             return invalid_texture();
         }
@@ -1326,6 +1330,7 @@ namespace smgpc::render {
                                                     float min_lod, float max_lod, float lod_bias, bool bias_clamp,
                                                     bool edge_lod, GXAnisotropy max_anisotropy,
                                                     std::uint8_t min_filter, std::uint8_t mag_filter) {
+        const auto host_allocations = aurora::allocation::HostAllocationScope {};
         if (width == 0U || height == 0U || image_data.empty()) {
             return invalid_texture();
         }

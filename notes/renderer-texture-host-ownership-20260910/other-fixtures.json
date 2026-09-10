@@ -1,0 +1,40 @@
+[
+  {
+    "target": "smg-pc-bright-visibility-batch-tests",
+    "build_command": [
+      "/opt/homebrew/bin/xmake",
+      "build",
+      "-y",
+      "-j",
+      "12",
+      "smg-pc-bright-visibility-batch-tests"
+    ],
+    "build_exit": 0,
+    "build_seconds": 1.9471272089867853,
+    "runtime_command": [
+      "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-bright-visibility-batch-tests"
+    ],
+    "runtime_exit": 0,
+    "runtime_seconds": 0.39352041599340737,
+    "binary_sha256": "84ede466c00a3a74c3216a090089e372a38a404bd9b0e81ce5a9cdc29b9b34c1"
+  },
+  {
+    "target": "smg-pc-original-scene-wipe-owner-tests",
+    "build_command": [
+      "/opt/homebrew/bin/xmake",
+      "build",
+      "-y",
+      "-j",
+      "12",
+      "smg-pc-original-scene-wipe-owner-tests"
+    ],
+    "build_exit": 0,
+    "build_seconds": 2.613100124988705,
+    "runtime_command": [
+      "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-scene-wipe-owner-tests"
+    ],
+    "runtime_exit": 0,
+    "runtime_seconds": 1.5256683329935186,
+    "binary_sha256": "83c9e86095b56bcdd99bcda61e96e95f015065f87bb21fd1c75218dae803ce49"
+  }
+]

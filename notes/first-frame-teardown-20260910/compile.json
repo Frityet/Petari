@@ -1,0 +1,14 @@
+[
+  {
+    "source": "src/render/AuroraBrightVisibilityService.cpp",
+    "sha256": "b717de27e5dcb2be5da09c1d36d213bb39d22f502bc541ad3cc2c7d6dcc9eec0",
+    "exit_code": 0,
+    "log": "/Users/frityet/Projects/petari/notes/first-frame-teardown-20260910/AuroraBrightVisibilityService-compile.log"
+  },
+  {
+    "source": "tests/BrightVisibilityBatchTests.cpp",
+    "sha256": "925525823d886378bb6cf3323fd47412c36b7c2fdaf94d62679b2aa4c28fc728",
+    "exit_code": 0,
+    "log": "/Users/frityet/Projects/petari/notes/first-frame-teardown-20260910/BrightVisibilityBatchTests-compile.log"
+  }
+]

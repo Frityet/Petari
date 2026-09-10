@@ -1,0 +1,9 @@
+{
+  "src/compat/J3dSystemCompat.cpp": "850bf6e0fb1931856333ca0c56186ce66b00faf59d50eb3cee59f5188f99ec7f",
+  "src/compat/J3dSystemCompat.hpp": "32752684cf5f4ac58a246721c5553c883c4ff38b3080bf5f46860b1f55ec68fe",
+  "src/layout/LayoutManagerCompat.cpp": "bb8b3a5fb8d8e54fadf959f0e92384e268c2643998206a073c86ee119de03c42",
+  "src/layout/LayoutRuntime.cpp": "09a6bb10f7e760697ed49c62d5f3c45a4602421fd3c6dc1aaf833acee4a9f03b",
+  "src/layout/LayoutRuntime.hpp": "af9a42c893abfd8e8ece94a09eadc1cbac8ade191b2ef75fd8975651b08276e3",
+  "src/render/AuroraBrightVisibilityService.cpp": "b717de27e5dcb2be5da09c1d36d213bb39d22f502bc541ad3cc2c7d6dcc9eec0",
+  "src/render/RendererService.cpp": "5e641a19ef78e20472746b971f7d929350fcec675128697b4da24e8adbb5c07f"
+}

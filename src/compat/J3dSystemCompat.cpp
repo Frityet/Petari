@@ -1,21 +1,14 @@
 #include "compat/J3dSystemCompat.hpp"
+#include "JSystem/J3DGraphBase/J3DSys.hpp"
 
 #include <dolphin/mtx.h>
 
-namespace {
-    Mtx sViewMatrix = {
-        {1.0F, 0.0F, 0.0F, 0.0F},
-        {0.0F, 1.0F, 0.0F, 0.0F},
-        {0.0F, 0.0F, 1.0F, 0.0F},
-    };
-}
-
 namespace smgpc::compat {
     void load_j3d_view_matrix(const f32 (*view_matrix)[4]) {
-        PSMTXCopy(view_matrix, sViewMatrix);
+        PSMTXCopy(view_matrix, j3dSys.mViewMtx);
     }
 
     const MtxPtr j3d_view_matrix() {
-        return sViewMatrix;
+        return j3dSys.mViewMtx;
     }
 }

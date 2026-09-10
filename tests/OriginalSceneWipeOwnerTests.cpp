@@ -163,6 +163,39 @@ void owner(smgpc::runtime::RuntimeContext& runtime) {
         }
         require(ring->getLayoutManager()->getPaneCtrl("Ring")->isAnimStopped(0),
                 "a separately initialized named pane player has the same real unstarted state");
+        auto* idle_control = MR::getAnimCtrl(game_over, 0);
+        require(idle_control == game_over->getLayoutManager()->getPaneCtrl(nullptr)->getFrameCtrl(0) &&
+                idle_control->getFrame() == 0.0F && idle_control->getEnd() == 0 &&
+                idle_control->getRate() == 1.0F && idle_control->getAttribute() == J3DFrameCtrl::EMode_LOOP,
+                "an initialized idle root exposes the same original default frame controller through both APIs");
+        MR::setAnimFrame(game_over, 7.25F, 0);
+        MR::setAnimRate(game_over, 2.5F, 0);
+        game_over->getLayoutManager()->movement();
+        require(MR::getAnimFrame(game_over, 0) == 7.25F && MR::getAnimFrameMax(game_over, 0U) == 0 &&
+                idle_control->getRate() == 2.5F && MR::isAnimStopped(game_over, 0) &&
+                !smgpc::layout::layout_runtime(game_over)->hasActiveAnimation(0),
+                "idle frame and rate edits persist without advancing or inventing an animation binding");
+        MR::setAnimFrameAndStop(game_over, 9.0F, 0);
+        require(idle_control->getFrame() == 9.0F && idle_control->getRate() == 0.0F,
+                "stopping at a frame works before the original animation player starts");
+        idle_control->setFrame(13.0F);
+        idle_control->setRate(-2.0F);
+        MR::setAnimRate(game_over, 3.0F, 0);
+        require(MR::getAnimFrame(game_over, 0) == 13.0F && idle_control->getRate() == 3.0F,
+                "direct original controller writes survive a later native setter on another field");
+        idle_control->mStart = 8;
+        idle_control->mLoop = 5;
+        idle_control->mState = 1;
+
+        auto* idle_pane = ring->getLayoutManager()->getPaneCtrl("Ring");
+        MR::setPaneAnimFrame(ring, "Ring", 12.0F, 0);
+        MR::setPaneAnimRate(ring, "Ring", 2.0F, 0);
+        require(MR::getPaneAnimFrame(ring, "Ring", 0) == 12.0F && MR::getPaneAnimFrameMax(ring, "Ring", 0) == 0 &&
+                idle_pane->getFrameCtrl(0)->getRate() == 2.0F && idle_pane->isAnimStopped(0),
+                "an initialized named pane has writable idle controls and remains stopped without a transform");
+        idle_pane->stop(0);
+        require(idle_pane->getFrameCtrl(0)->getRate() == 0.0F && idle_pane->isAnimStopped(0),
+                "stopping an initialized idle pane does not require an animation resource binding");
         bool invalid_layer = false, missing_owner = false;
         try { (void)MR::isAnimStopped(game_over, 1); } catch (const std::out_of_range&) { invalid_layer = true; }
         try { (void)MR::isAnimStopped(black, 0); } catch (const std::invalid_argument&) { missing_owner = true; }
@@ -198,6 +231,9 @@ void owner(smgpc::runtime::RuntimeContext& runtime) {
         tick(runtime);
         require(!game_over->isClose() && game_over->isWipeOut() && MR::getAnimFrame(game_over, 0) > 0,
                 "the first original GameOver step starts its actual BRLAN and changes the stop predicate");
+        require(idle_control->getRate() == 1.0F && idle_control->getStart() == 0 && idle_control->getLoop() == 0 &&
+                idle_control->getState() == 0 && idle_control->getEnd() > 0,
+                "starting the real animation resets prior idle frame-controller state with the original defaults");
         const auto end = MR::getAnimCtrl(game_over, 0)->getEnd();
         for (int frame = 0; frame <= end + 1 && !game_over->isClose(); ++frame) tick(runtime);
         require(game_over->isClose() && !game_over->isWipeOut(), "actual GameOver animation completion drives the original public state");
