@@ -1,0 +1,25 @@
+{
+  "candidate_defined_external_count": 104,
+  "distinct_undefined_count": 87,
+  "combined_unresolved_from_four_root_archives": [
+    "__Unwind_Resume",
+    "__ZN18GameSystemFunction16requestGoWiiMenuEb",
+    "__ZN18GameSystemFunction29setResetOperationReturnToMenuEv",
+    "__ZTVN10__cxxabiv120__si_class_type_infoE",
+    "___gxx_personality_v0",
+    "___stack_chk_fail",
+    "___stack_chk_guard"
+  ],
+  "absent_game_symbols": [
+    "GameSystemFunction::requestGoWiiMenu(bool)",
+    "GameSystemFunction::setResetOperationReturnToMenu()"
+  ],
+  "system_symbols_excluded_from_game_missing_claim": [
+    "__Unwind_Resume",
+    "__ZTVN10__cxxabiv120__si_class_type_infoE",
+    "___gxx_personality_v0",
+    "___stack_chk_fail",
+    "___stack_chk_guard"
+  ],
+  "not_a_link_or_runtime_test": true
+}

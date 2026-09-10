@@ -13,7 +13,6 @@
 #include "Game/Util/MemoryUtil.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 
-#define STICK_FLAG_NONE 0
 #define KPAD_STATUS_ARRAY_SIZE 120
 
 WPadRumble** WPadRumble::sInstanceForCallback = nullptr;
@@ -177,11 +176,6 @@ void WPadRumble::registInstance() {
     }
 }
 
-WPadStick::WPadStick(const WPad* pPad)
-    : mPad(pPad), mStick(0.0f, 0.0f), mSpeed(0.0f), mHold(STICK_FLAG_NONE), mTrigger(STICK_FLAG_NONE), mRelease(STICK_FLAG_NONE), mIsTriggerUp(false),
-      mIsTriggerDown(false), mIsHoldUp(false), mIsHoldDown(false) {
-}
-
 WPadLeaveWatcher::WPadLeaveWatcher(WPad* pPad) : mPad(pPad), mStep(0), mIsSuspend(false) {
 }
 
@@ -193,4 +187,3 @@ void WPadInfoChecker::reset() {
     mCheckInfoFrame = 0;
     mBattery = -1;
 }
-

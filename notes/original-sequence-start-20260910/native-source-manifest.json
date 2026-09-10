@@ -1,0 +1,38 @@
+{
+  "root_before": "9b6a1741219bf4b195fa18cad3af438a31613e0b",
+  "sources": {
+    "src/Game/System/WPadStick.cpp": "26b5f3cbd3bb7e5f39dee19814f888b6be895008ed9dd04405ca44ecfb531174",
+    "src/compat/OriginalWPadRecords.cpp": "5e2f870e2e3b3da603ebe9d644d708258c21aa7355a421b39936faf7692f4bcd",
+    "src/compat/WPadOwnership.hpp": "319b46e29010bc6bff27691c21c0e850f7be84e3e7d826452e466fa0a828d899",
+    "src/compat/WPadOwnership.cpp": "d1de4fd7fd230da3dc74dc5e7e590e8dd6b12ad96cd791182e49d38d574a6be1",
+    "src/compat/StarPointerDepthOwnership.cpp": "4878a9f6ddbec80399834e25a99b09e8be0172f32cc4cea13cda40065fb84463",
+    "src/compat/GamePadUtilCompat.cpp": "9392b1d8618ece2fc29c6c32810d9759fa89e2e3b14bdf61fe00ea3de21486a0",
+    "src/runtime/RuntimeContext.cpp": "77cb240049d50e68ea4c556feb4a66cf46477e36f7d93466dfe7344a8d9ee6d4",
+    "tests/OriginalPointerInputTests.cpp": "98f563fe2ab0b1596031c0dfb8283232aed00954833570f46236b054bbdcbe5c",
+    "tests/AuroraNativeTests.cpp": "b7ed6e32369cc08182f06e9675ad2f7040b4847b8cfa015e6e12d9787b4dd2b2"
+  },
+  "decomp_stick_identical": true,
+  "review": {
+    "agent": "initialization_completion",
+    "material_findings": [],
+    "follow_up": "Added and passed nonzero stick retention on disconnect, preserving the original unsupported-device early return."
+  },
+  "validation": {
+    "build_exit": 0,
+    "build_targets": [
+      "smg-pc-showcase",
+      "smg-pc-original-pointer-input-tests",
+      "smg-pc-original-wpad-pause-tests",
+      "smg-pc-original-camera-director-tests"
+    ],
+    "fixture_build_exit": 0,
+    "fixture_build_targets": [
+      "smg-pc-original-pointer-input-tests",
+      "smg-pc-aurora-native-tests"
+    ],
+    "legacy_native_suite": "Compiled and linked only in this cohort. Its previously documented scene/model/scheduler failures are not fixed or claimed passing.",
+    "tests": "native-input-results.json",
+    "demo": "demo-measurement.json",
+    "demo_checks": "demo-validation.json"
+  }
+}

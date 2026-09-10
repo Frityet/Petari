@@ -1,0 +1,239 @@
+left update__9WPadStickFv
+stwu r1, -0x20(r1)
+mflr r0
+li r4, 0x0
+stw r0, 0x24(r1)
+stw r31, 0x1c(r1)
+stw r30, 0x18(r1)
+mr r30, r3
+lwz r3, 0x0(r3)
+bl getKPadStatus__4WPadCFUl
+mr r31, r3
+bl isDeviceFreeStyle__2MRFPC10KPADStatus
+cmpwi r3, 0x0
+beq 0x1f8
+lfs f1, 0x4(r30)
+lfs f2, 0x8(r30)
+lfs f4, 0x64(r31)
+lfs f3, 0x60(r31)
+fsubs f0, f4, f2
+stfs f1, 0x8(r1)
+fsubs f1, f3, f1
+stfs f2, 0xc(r1)
+fmuls f0, f0, f0
+fmuls f1, f1, f1
+stfs f3, 0x4(r30)
+stfs f4, 0x8(r30)
+fadds f1, f1, f0
+bl sqrt__Q29JGeometry8TUtil<f>Ff
+lfs f2, 0x8(r1)
+li r0, 0x0
+lfs f0, @55753@sda21
+stfs f1, 0xc(r30)
+fcmpo cr0, f2, f0
+ble 0xc0
+ori r0, r0, 0x4
+lfs f1, 0x8(r1)
+lfs f0, @55754@sda21
+fcmpo cr0, f1, f0
+bge 0xd4
+ori r0, r0, 0x8
+lfs f1, 0xc(r1)
+lfs f0, @55753@sda21
+fcmpo cr0, f1, f0
+ble 0xe8
+ori r0, r0, 0x1
+lfs f1, 0xc(r1)
+lfs f0, @55754@sda21
+fcmpo cr0, f1, f0
+bge 0xfc
+ori r0, r0, 0x2
+lfs f1, 0x4(r30)
+li r4, 0x0
+lfs f0, @55753@sda21
+fcmpo cr0, f1, f0
+ble 0x114
+ori r4, r4, 0x4
+lfs f1, 0x4(r30)
+lfs f0, @55754@sda21
+fcmpo cr0, f1, f0
+bge 0x128
+ori r4, r4, 0x8
+lfs f1, 0x8(r30)
+lfs f0, @55753@sda21
+fcmpo cr0, f1, f0
+ble 0x13c
+ori r4, r4, 0x1
+lfs f1, 0x8(r30)
+lfs f0, @55754@sda21
+fcmpo cr0, f1, f0
+bge 0x150
+ori r4, r4, 0x2
+lfs f1, @54527@sda21
+andc r3, r4, r0
+lfs f0, 0x8(r30)
+andc r0, r0, r4
+stw r4, 0x10(r30)
+fcmpu cr0, f1, f0
+stw r3, 0x14(r30)
+stw r0, 0x18(r30)
+bne 0x18c
+li r0, 0x0
+stb r0, 0x1c(r30)
+stb r0, 0x1d(r30)
+stb r0, 0x1e(r30)
+stb r0, 0x1f(r30)
+b 0x1f8
+fcmpo cr0, f0, f1
+ble 0x1c8
+lbz r0, 0x1e(r30)
+cmpwi r0, 0x0
+beq 0x1ac
+li r0, 0x0
+stb r0, 0x1c(r30)
+b 0x1b4
+li r0, 0x1
+stb r0, 0x1c(r30)
+li r3, 0x1
+li r0, 0x0
+stb r3, 0x1e(r30)
+stb r0, 0x1f(r30)
+b 0x1f8
+lbz r0, 0x1f(r30)
+cmpwi r0, 0x0
+beq 0x1e0
+li r0, 0x0
+stb r0, 0x1d(r30)
+b 0x1e8
+li r0, 0x1
+stb r0, 0x1d(r30)
+li r3, 0x1
+li r0, 0x0
+stb r3, 0x1f(r30)
+stb r0, 0x1e(r30)
+lwz r0, 0x24(r1)
+lwz r31, 0x1c(r1)
+lwz r30, 0x18(r1)
+mtlr r0
+addi r1, r1, 0x20
+blr 
+
+right update__9WPadStickFv
+stwu r1, -0x20(r1)
+mflr r0
+li r4, 0x0
+stw r0, 0x24(r1)
+stw r31, 0x1c(r1)
+stw r30, 0x18(r1)
+mr r30, r3
+lwz r3, 0x0(r3)
+bl getKPadStatus__4WPadCFUl
+mr r31, r3
+bl isDeviceFreeStyle__2MRFPC10KPADStatus
+cmpwi r3, 0x0
+beq 0x1f8
+lfs f1, 0x64(r31)
+lfs f2, 0x8(r30)
+lfs f0, 0x60(r31)
+lfs f3, 0x4(r30)
+fsubs f5, f1, f2
+stfs f0, 0x10(r1)
+fsubs f4, f0, f3
+stfs f1, 0x14(r1)
+fmuls f0, f5, f5
+fmuls f1, f4, f4
+stfs f3, 0x8(r1)
+stfs f2, 0xc(r1)
+fadds f1, f1, f0
+bl sqrt__Q29JGeometry8TUtil<f>Ff
+lfs f2, 0x8(r1)
+li r0, 0x0
+lfs f0, @1930@sda21
+stfs f1, 0xc(r30)
+fcmpo cr0, f2, f0
+ble 0xc0
+ori r0, r0, 0x4
+lfs f1, 0x8(r1)
+lfs f0, @1931@sda21
+fcmpo cr0, f1, f0
+bge 0xd4
+ori r0, r0, 0x8
+lfs f1, 0xc(r1)
+lfs f0, @1930@sda21
+fcmpo cr0, f1, f0
+ble 0xe8
+ori r0, r0, 0x1
+lfs f1, 0xc(r1)
+lfs f0, @1931@sda21
+fcmpo cr0, f1, f0
+bge 0xfc
+ori r0, r0, 0x2
+lfs f1, 0x4(r30)
+li r4, 0x0
+lfs f0, @1930@sda21
+fcmpo cr0, f1, f0
+ble 0x114
+ori r4, r4, 0x4
+lfs f1, 0x4(r30)
+lfs f0, @1931@sda21
+fcmpo cr0, f1, f0
+bge 0x128
+ori r4, r4, 0x8
+lfs f1, 0x8(r30)
+lfs f0, @1930@sda21
+fcmpo cr0, f1, f0
+ble 0x13c
+ori r4, r4, 0x1
+lfs f1, 0x8(r30)
+lfs f0, @1931@sda21
+fcmpo cr0, f1, f0
+bge 0x150
+ori r4, r4, 0x2
+lfs f1, @1908@sda21
+andc r3, r4, r0
+lfs f0, 0x8(r30)
+andc r0, r0, r4
+stw r4, 0x10(r30)
+fcmpu cr0, f1, f0
+stw r3, 0x14(r30)
+stw r0, 0x18(r30)
+bne 0x18c
+li r0, 0x0
+stb r0, 0x1c(r30)
+stb r0, 0x1d(r30)
+stb r0, 0x1e(r30)
+stb r0, 0x1f(r30)
+b 0x1f8
+fcmpo cr0, f0, f1
+ble 0x1c8
+lbz r0, 0x1e(r30)
+cmpwi r0, 0x0
+beq 0x1ac
+li r0, 0x0
+stb r0, 0x1c(r30)
+b 0x1b4
+li r0, 0x1
+stb r0, 0x1c(r30)
+li r3, 0x1
+li r0, 0x0
+stb r3, 0x1e(r30)
+stb r0, 0x1f(r30)
+b 0x1f8
+lbz r0, 0x1f(r30)
+cmpwi r0, 0x0
+beq 0x1e0
+li r0, 0x0
+stb r0, 0x1d(r30)
+b 0x1e8
+li r0, 0x1
+stb r0, 0x1d(r30)
+li r3, 0x1
+li r0, 0x0
+stb r3, 0x1f(r30)
+stb r0, 0x1e(r30)
+lwz r0, 0x24(r1)
+lwz r31, 0x1c(r1)
+lwz r30, 0x18(r1)
+mtlr r0
+addi r1, r1, 0x20
+blr 

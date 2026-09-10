@@ -1,0 +1,3 @@
+Validated the exact packaged executable with a 960-tick real-disc replay at 1280x720 using synthetic SDL keyboard input. All 13 checks passed: stable idle, W/A/S/D movement and releases, two jumps with landings, and finite Mario/camera state. Measured presentation rate was 59.93 FPS; the process exited normally.
+
+This version uses original WPadStick processing behind Aurora KPAD, plus the previously restored original player and camera utilities. It is still a movement demo: the full bunny chase, Rosalina sequence, persistent saves, audio, and complete original Wii controller filtering are not established by these checks.

@@ -1,0 +1,22 @@
+{
+  "decomp/src/Game/System/SaveDataHandleSequence.cpp": "8827336b8ae41f2611510c1e94eec67f663ae87f56f36cf2db5b843c0d72e19f",
+  "decomp/include/Game/System/SaveDataHandleSequence.hpp": "7b61b50593f658de4dbc8a82f657590b162ad098b7898f8fefcaef1abf304864",
+  "decomp/src/Game/System/NANDErrorSequence.cpp": "38a92f5dd51b8529445fa7c403def5c4fa015df72e125278b1f70c001ccd66eb",
+  "decomp/include/Game/System/NANDErrorSequence.hpp": "86a968818f7c3ae8d1c1ca39660fe20c8bcc65c6aec4d288180e6a72adf8d0e1",
+  "decomp/libs/RVL_SDK/include/revolution/nand.h": "db2c6617e61ed141473095d48928cffa75dec2fbf0a15c743016e4c0b6d08362",
+  "src/Game/System/SaveDataHandleSequence.cpp": "8827336b8ae41f2611510c1e94eec67f663ae87f56f36cf2db5b843c0d72e19f",
+  "src/Game/System/SaveDataHandleSequence.hpp": "7b61b50593f658de4dbc8a82f657590b162ad098b7898f8fefcaef1abf304864",
+  "src/compat/SaveDataHandleSequenceCompat.cpp": "22ae92987b3a9f89282583f4b42e4355106fe74c1b5b758d66c56297ac07b018",
+  "src/Game/System/SaveDataHandler.cpp": "b87bf28fc3d1ca83f39fb78516c435afd4a7ce4b440f44dc8fcb4ae2b9bbafc1",
+  "decomp/src/Game/System/SaveDataHandler.cpp": "3110b0217417e39442b99ca34eaeb664cf6b5ea9f120ad78369ddb7273ae009d",
+  "src/compat/GameDataHolderCompat.cpp": "5e848645ad2d28e17d8bdeea57d88a002660616401c35aa221575c624250da8b",
+  "decomp/src/Game/System/GameDataHolder.cpp": "279b184ba6b4d8c8652106e40561afb3dbdaeb8db815b87413b2646810ac0fc3",
+  "src/compat/BinaryDataChunkHolderCompat.cpp": "66cc110ad62128349748d0d4d60ace835f3c3a6e38601cd38acec8332679d818",
+  "src/Game/System/NANDManager.cpp": "d052fd477ea66131862dbe7a44aef89abaff30d421e34e3b4267bf53d23ab5cd",
+  "decomp/src/Game/System/GameSystemFunction.cpp": "442b2cc89c7c14ab7dad30b25a17590682588e368b68fecc695e7e48a317335c",
+  "decomp/src/Game/System/GameSystemResetAndPowerProcess.cpp": "e7416615ad1f771e6f9d84c712592d7449972ba9eb8f9fb87b1c0b699a1a230e",
+  "build/macosx/arm64/debug/libsmg-pc-common.a": "27c26b5e9852104287e3489aad712fae58647a191f114000bc549df415bf343d",
+  "build/macosx/arm64/debug/libsmg-pc-render.a": "f9c674ac06e12bffb13ad462afc27a6aa45ac40c00a626dd757022b91b40111d",
+  "build/macosx/arm64/debug/libsmg-pc-game.a": "b4ab205b111a561408ef8df1b0c60d79ebb8d0dc86e30c08ef4999cd9bca1203",
+  "build/macosx/arm64/debug/libsmg-pc-app.a": "93bd12756e6ea1755428de962eb2d9a049efab8a10c55e293eba0b45c47f0266"
+}

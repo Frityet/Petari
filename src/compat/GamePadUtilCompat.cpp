@@ -2,6 +2,7 @@
 #include "Game/System/WPadHolder.hpp"
 #include "Game/System/WPad.hpp"
 #include "Game/System/WPadPointer.hpp"
+#include "Game/System/WPadStick.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
@@ -180,27 +181,27 @@ namespace MR {
     }
 
     f32 getSubPadStickX(s32 channel) {
-        return wpad_service().sub_stick(channel).x;
+        return MR::getWPad(channel)->mStick->mStick.x;
     }
 
     f32 getSubPadStickY(s32 channel) {
-        return wpad_service().sub_stick(channel).y;
+        return MR::getWPad(channel)->mStick->mStick.y;
     }
 
     bool testSubPadStickTriggerUp(s32 channel) {
-        return (wpad_service().sub_stick_trigger(channel) & aurora::WpadStickUp) != 0U;
+        return (MR::getWPad(channel)->mStick->mTrigger & 1) != 0;
     }
 
     bool testSubPadStickTriggerDown(s32 channel) {
-        return (wpad_service().sub_stick_trigger(channel) & aurora::WpadStickDown) != 0U;
+        return (MR::getWPad(channel)->mStick->mTrigger & 2) != 0;
     }
 
     bool testSubPadStickTriggerLeft(s32 channel) {
-        return (wpad_service().sub_stick_trigger(channel) & aurora::WpadStickLeft) != 0U;
+        return (MR::getWPad(channel)->mStick->mTrigger & 8) != 0;
     }
 
     bool testSubPadStickTriggerRight(s32 channel) {
-        return (wpad_service().sub_stick_trigger(channel) & aurora::WpadStickRight) != 0U;
+        return (MR::getWPad(channel)->mStick->mTrigger & 4) != 0;
     }
 
     bool testSystemPadTriggerDecide() {

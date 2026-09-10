@@ -1,0 +1,10 @@
+{
+  "archive_sha256": "0877bf0f58fcf92945b13fa5711dec97de797af5043b0de69fb6c79a579de2e8",
+  "definitions": [
+    "build/macosx/arm64/debug/libsmg-pc-game.a:WPadStick.cpp.o: 0000000000000020 T WPadStick::update()",
+    "build/macosx/arm64/debug/libsmg-pc-game.a:WPadStick.cpp.o: 0000000000000010 T WPadStick::WPadStick(WPad const*)",
+    "build/macosx/arm64/debug/libsmg-pc-game.a:WPadStick.cpp.o: 0000000000000000 T WPadStick::WPadStick(WPad const*)",
+    "build/macosx/arm64/debug/libsmg-pc-game.a:WPadStick.cpp.o: 0000000000000128 T WPadStick::isChanged() const"
+  ],
+  "only_original_TU_providers": true
+}

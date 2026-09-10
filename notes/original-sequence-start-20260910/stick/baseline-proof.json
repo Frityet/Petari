@@ -1,0 +1,30 @@
+{
+  "command": [
+    "/Users/frityet/Projects/petari/decomp/build/tools/objdiff-cli",
+    "diff",
+    "-1",
+    "/Users/frityet/Projects/petari/decomp/build/original-player-state-recovery-20260907/retail/obj/Game/System/WPadStick.o",
+    "-2",
+    "/Users/frityet/Projects/petari/notes/original-sequence-start-20260910/stick/baseline.o",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-sequence-start-20260910/stick/baseline-diff.json",
+    "--format",
+    "json-pretty"
+  ],
+  "exit": 0,
+  "retail_sha256": "b967235362ffd9e15661954817db1d70ab7787caad84dfb5ab5aea4171984e18",
+  "symbols": {
+    "__ct__9WPadStickFPC4WPad": {
+      "match_percent": 100.0,
+      "size": "56"
+    },
+    "update__9WPadStickFv": {
+      "match_percent": 99.22034,
+      "size": "472"
+    },
+    "isChanged__9WPadStickCFv": {
+      "match_percent": 99.166664,
+      "size": "24"
+    }
+  }
+}

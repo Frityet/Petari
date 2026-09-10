@@ -1,0 +1,62 @@
+[
+  {
+    "symbol": "__ct__20StarPieceAlmsStorageFv",
+    "match": 100.0,
+    "bytes": "120"
+  },
+  {
+    "symbol": "getValue__20StarPieceAlmsStorageCFi",
+    "match": 100.0,
+    "bytes": "16"
+  },
+  {
+    "symbol": "getMaxValue__20StarPieceAlmsStorageCFi",
+    "match": 100.0,
+    "bytes": "20"
+  },
+  {
+    "symbol": "addValue__20StarPieceAlmsStorageFii",
+    "match": 100.0,
+    "bytes": "64"
+  },
+  {
+    "symbol": "makeHeaderHashCode__20StarPieceAlmsStorageCFv",
+    "match": 100.0,
+    "bytes": "44"
+  },
+  {
+    "symbol": "getSignature__20StarPieceAlmsStorageCFv",
+    "match": 100.0,
+    "bytes": "12"
+  },
+  {
+    "symbol": "serialize__20StarPieceAlmsStorageCFPUcUl",
+    "match": 100.0,
+    "bytes": "52"
+  },
+  {
+    "symbol": "deserialize__20StarPieceAlmsStorageFPCUcUl",
+    "match": 100.0,
+    "bytes": "44"
+  },
+  {
+    "symbol": "initializeData__20StarPieceAlmsStorageFv",
+    "match": 100.0,
+    "bytes": "36"
+  },
+  {
+    "symbol": "sMaxValueArray__34@unnamed@StarPieceAlmsStorage_cpp@",
+    "match": 100.0,
+    "bytes": "64"
+  },
+  {
+    "symbol": "[.rodata-0]",
+    "match": 100.0,
+    "bytes": "64"
+  },
+  {
+    "symbol": "[.data-0]",
+    "match": 52.525253,
+    "bytes": "80"
+  }
+]

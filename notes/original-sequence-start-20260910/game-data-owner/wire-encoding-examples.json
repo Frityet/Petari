@@ -1,0 +1,29 @@
+[
+  {
+    "name": "ハチマリオ初変身",
+    "utf8_hash": "0xd2a85d3c",
+    "cp932_hash": "0xdb4fb5ba",
+    "utf8_flg1_id": "0x5d3c",
+    "cp932_flg1_id": "0x35ba",
+    "utf8_vle1_id": "0x5d3c",
+    "cp932_vle1_id": "0xb5ba"
+  },
+  {
+    "name": "絵本既読章",
+    "utf8_hash": "0xba504313",
+    "cp932_hash": "0x1097f8c3",
+    "utf8_flg1_id": "0x4313",
+    "cp932_flg1_id": "0x78c3",
+    "utf8_vle1_id": "0x4313",
+    "cp932_vle1_id": "0xf8c3"
+  },
+  {
+    "name": "MissNum",
+    "utf8_hash": "0xa2f6b4ca",
+    "cp932_hash": "0xa2f6b4ca",
+    "utf8_flg1_id": "0x34ca",
+    "cp932_flg1_id": "0x34ca",
+    "utf8_vle1_id": "0xb4ca",
+    "cp932_vle1_id": "0xb4ca"
+  }
+]

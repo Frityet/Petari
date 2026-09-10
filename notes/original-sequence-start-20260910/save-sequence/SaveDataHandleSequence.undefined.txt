@@ -1,0 +1,76 @@
+__Unwind_Resume
+NerveExecutor::updateNerve()
+NerveExecutor::setNerve(Nerve const*)
+NerveExecutor::initNerve(Nerve const*)
+NerveExecutor::NerveExecutor(char const*)
+NerveExecutor::~NerveExecutor()
+SysConfigFile::loadFromDataBinary(unsigned char const*, unsigned int)
+SysConfigFile::SysConfigFile()
+SysInfoWindow::appear(char const*, SysInfoWindow::SysInfoType, SysInfoWindow::SysInfoTextPos, SysInfoWindow::SysInfoMessageType)
+SysInfoWindow::disappear()
+SysInfoWindow::forceKill()
+SaveDataHandler::storeUserFile(UserFile const*)
+SaveDataHandler::copyUserFileMemory(int, int)
+SaveDataHandler::storeSysConfigFile(SysConfigFile const*)
+SaveDataHandler::requestLoadSaveData()
+SaveDataHandler::requestSaveSaveData()
+SaveDataHandler::restoreGameDataFile(char const*, void*, unsigned int)
+SaveDataHandler::getEnoughtTempBufferSize()
+SaveDataHandler::initializeUserFileMemory(int, UserFile const*)
+SaveDataHandler::requestVerifyAfterLoadGameDataFile()
+SaveDataHandler::update()
+SaveDataHandler::SaveDataHandler(SysConfigFile const*, UserFile const*)
+NANDErrorSequence::prepareReset()
+NANDErrorSequence::startRemoveFile()
+NANDErrorSequence::restoreFromReset()
+NANDErrorSequence::startErrorToWiiMenu(char const*)
+NANDErrorSequence::startCheckEnableToCreate()
+NANDErrorSequence::tryNoRecoverErroSequence(int)
+NANDErrorSequence::NANDErrorSequence(SaveDataHandleSequence*, SysInfoWindow*, SysInfoWindow*)
+MR::isFirstStep(NerveExecutor const*)
+MR::isGreaterStep(NerveExecutor const*, int)
+MR::startSystemSE(char const*, int, int)
+MR::startSystemLevelSE(char const*, int, int)
+MR::requestStarPointerModeSaveLoad(void*)
+MR::createSysInfoWindowExecuteWithChildren()
+MR::createSysInfoWindowMiniExecuteWithChildren()
+MR::isDead(LayoutActor const*)
+SaveIcon::SaveIcon(LayoutActor const*)
+UserFile::setCreated()
+UserFile::resetAllData()
+UserFile::setMiiOrIconId(void const*, unsigned int const*)
+UserFile::setLastLoadedMario(bool)
+UserFile::updateLastModified()
+UserFile::loadFromGameDataBinary(char const*, unsigned char const*, unsigned int)
+UserFile::loadFromConfigDataBinary(char const*, unsigned char const*, unsigned int)
+UserFile::UserFile()
+NerveExecutor::isNerve(Nerve const*) const
+SysInfoWindow::isSelectedYes() const
+SysInfoWindow::isWait() const
+NANDResultCode::isNoExistFile() const
+NANDResultCode::isSaveDataCorrupted() const
+NANDResultCode::getCode() const
+NANDResultCode::isSuccess() const
+SaveDataHandler::getLastResultCode() const
+SaveDataHandler::isDone() const
+NANDErrorSequence::isResultNoSave() const
+NANDErrorSequence::isEnablePointer() const
+NANDErrorSequence::isPermitToReset() const
+NANDErrorSequence::isPreparedReset() const
+NANDErrorSequence::isResultFileCorrupted() const
+Nerve::executeOnEnd(Spine*) const
+UserFile::getGameDataName() const
+UserFile::getConfigDataName() const
+UserFile::isLastLoadedMario() const
+UserFile::makeGameDataBinary(unsigned char*, unsigned int) const
+UserFile::makeConfigDataBinary(unsigned char*, unsigned int) const
+typeinfo for NerveExecutor
+typeinfo for Nerve
+vtable for __cxxabiv1::__si_class_type_info
+operator delete(void*, unsigned long)
+operator new[](unsigned long, int)
+operator new(unsigned long)
+___gxx_personality_v0
+___stack_chk_fail
+___stack_chk_guard
+_smgpc_msl_snprintf

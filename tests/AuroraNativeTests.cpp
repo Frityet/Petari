@@ -315,7 +315,7 @@ namespace {
         require(WPADProbe(WPAD_CHAN0, nullptr) == WPAD_ERR_NO_CONTROLLER, "WPADDisconnect should clear Aurora controller state");
     }
 
-    void test_game_pad_compat_uses_aurora_without_runtime_context() {
+    void test_game_pad_buttons_use_aurora_without_runtime_context() {
         require(smgpc::runtime::RuntimeContext::try_instance() == nullptr,
                 "the Aurora GamePad bridge test runs without an active title runtime");
         auto& wpad = aurora::wpad_service();
@@ -327,26 +327,21 @@ namespace {
         wpad.clear();
         wpad.begin_frame();
         wpad.set_button_mask(WPAD_CHAN0, WPAD_BUTTON_A | WPAD_BUTTON_Z);
-        wpad.set_sub_stick(WPAD_CHAN0, 0.75F, -0.5F);
         require(MR::testCorePadButtonA(WPAD_CHAN0) && MR::getPlayerTriggerA() &&
                     MR::getPlayerLevelZ() && MR::getPlayerTriggerZ(),
                 "GamePad button queries expose actual Aurora hold and trigger state without a title runtime");
-        require(MR::getPlayerStickX() == 0.75F && MR::getPlayerStickY() == -0.5F &&
-                    MR::testSubPadStickTriggerRight(WPAD_CHAN0) && MR::testSubPadStickTriggerDown(WPAD_CHAN0),
-                "GamePad stick values and directional edges use the actual Aurora channel");
+        // The original stick processing and all four direction edges are
+        // covered with a real WPad owner by OriginalPointerInputTests.
+        require_logic_error([] { (void)MR::getPlayerStickX(); },
+                            "original Game stick queries require their actual WPad owner");
         wpad.begin_frame();
         wpad.set_button_mask(WPAD_CHAN0, WPAD_BUTTON_A | WPAD_BUTTON_Z);
-        wpad.set_sub_stick(WPAD_CHAN0, 0.5F, -0.75F);
-        require(MR::getPlayerLevelA() && !MR::getPlayerTriggerA() && !MR::getPlayerTriggerZ() &&
-                    !MR::testSubPadStickTriggerRight(WPAD_CHAN0) && !MR::testSubPadStickTriggerDown(WPAD_CHAN0),
-                "held Aurora input does not retrigger GamePad button or stick edges on the next frame");
+        require(MR::getPlayerLevelA() && !MR::getPlayerTriggerA() && !MR::getPlayerTriggerZ(),
+                "held Aurora input does not retrigger GamePad button edges on the next frame");
         wpad.begin_frame();
         wpad.set_button_mask(WPAD_CHAN0, 0);
-        wpad.set_sub_stick(WPAD_CHAN0, -0.75F, 0.5F);
-        require(!MR::getPlayerLevelA() && !MR::getPlayerLevelZ() && MR::testSubPadReleaseZ(WPAD_CHAN0) &&
-                    MR::testSubPadStickTriggerLeft(WPAD_CHAN0) && MR::testSubPadStickTriggerUp(WPAD_CHAN0) &&
-                    MR::getPlayerStickX() == -0.75F && MR::getPlayerStickY() == 0.5F,
-                "Aurora releases and reversed stick edges propagate through GamePad compatibility");
+        require(!MR::getPlayerLevelA() && !MR::getPlayerLevelZ() && MR::testSubPadReleaseZ(WPAD_CHAN0),
+                "Aurora button releases propagate through GamePad compatibility");
         require_logic_error(
             [] {
                 auto direction = TVec3f{};
@@ -1499,7 +1494,7 @@ namespace {
 int main() {
     const auto tests = std::array{
         TestCase{"revolution headers and input defaults", test_revolution_headers_and_input_defaults},
-        TestCase{"GamePad compatibility uses Aurora without runtime context", test_game_pad_compat_uses_aurora_without_runtime_context},
+        TestCase{"GamePad buttons use Aurora without runtime context", test_game_pad_buttons_use_aurora_without_runtime_context},
         TestCase{"Aurora WPAD sub-stick edges", test_aurora_wpad_sub_stick_edges},
         TestCase{"JGeometry host layout and math", test_jgeometry_host_layout_and_math},
         TestCase{"Aurora VI retrace/framebuffer state", test_aurora_vi_retrace_and_framebuffer_state},

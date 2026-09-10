@@ -1,0 +1,37 @@
+{
+  "compile_command": [
+    "/opt/homebrew/opt/llvm/bin/clang++",
+    "-std=c++20",
+    "-g",
+    "-arch",
+    "arm64",
+    "-stdlib=libc++",
+    "-cxx-isystem/opt/homebrew/opt/llvm/include/c++/v1",
+    "-isysroot",
+    "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+    "-DAURORA",
+    "-DTARGET_PC",
+    "-I/Users/frityet/Projects/petari/aurora/include",
+    "-isystem",
+    "/Users/frityet/Projects/petari/decomp/build/aurora-upstream-merge-tests/_deps/googletest-src/googletest/include",
+    "/Users/frityet/Projects/petari/aurora/tests/wpad_test.cpp",
+    "/Users/frityet/Projects/petari/aurora/tests/wpad_test_stubs.cpp",
+    "/Users/frityet/Projects/petari/aurora/lib/wpad.cpp",
+    "/var/folders/4x/jzbfrvb10tq3ff4dwng8nzgm0000gn/T/petari-aurora-upstream-20260907-q3qrkgbx/lib/libgtest_main.a",
+    "/var/folders/4x/jzbfrvb10tq3ff4dwng8nzgm0000gn/T/petari-aurora-upstream-20260907-q3qrkgbx/lib/libgtest.a",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-sequence-start-20260910/input-sdk/wpad-tests"
+  ],
+  "compile_exit": 0,
+  "run_command": [
+    "/Users/frityet/Projects/petari/notes/original-sequence-start-20260910/input-sdk/wpad-tests",
+    "--gtest_color=no",
+    "--gtest_output=xml:/Users/frityet/Projects/petari/notes/original-sequence-start-20260910/input-sdk/tests.xml"
+  ],
+  "run_exit": 0,
+  "binary_sha256": "53f000213c1b1ac98d25ecc9d42bd5efed77f825d0913a8b9c49a05d1238efa2",
+  "tests": 18,
+  "failures": 0,
+  "errors": 0,
+  "source_manifest": "source-manifest.json"
+}

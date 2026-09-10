@@ -1,0 +1,34 @@
+[
+  {
+    "phase": "01-own-header",
+    "overlay_headers": [
+      "Game/System/GameSequenceProgress.hpp"
+    ],
+    "exit": 1
+  },
+  {
+    "phase": "02-missing-headers",
+    "overlay_headers": [
+      "Game/System/GameSequenceProgress.hpp",
+      "Game/Screen/PlayerMissLeft.hpp",
+      "Game/System/FindingLuigiEventScheduler.hpp",
+      "Game/System/GalaxyCometScheduler.hpp",
+      "Game/System/GameSystem.hpp",
+      "Game/System/LuigiLeftSupplier.hpp"
+    ],
+    "exit": 1
+  },
+  {
+    "phase": "03-original-sequence-function-header",
+    "overlay_headers": [
+      "Game/Screen/PlayerMissLeft.hpp",
+      "Game/System/FindingLuigiEventScheduler.hpp",
+      "Game/System/GalaxyCometScheduler.hpp",
+      "Game/System/GameSequenceFunction.hpp",
+      "Game/System/GameSequenceProgress.hpp",
+      "Game/System/GameSystem.hpp",
+      "Game/System/LuigiLeftSupplier.hpp"
+    ],
+    "exit": 0
+  }
+]

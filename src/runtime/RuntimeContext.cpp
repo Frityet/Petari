@@ -865,6 +865,7 @@ namespace smgpc::runtime {
         };
 #endif
         auto &wpad = aurora::wpad_service();
+        wpad.set_device_type(WPAD_CHAN0, aurora::WpadDeviceType::Freestyle);
         wpad.set_connected(WPAD_CHAN0, true);
         wpad.set_button_mask(WPAD_CHAN0, hold_mask);
         wpad.set_pointer_resolution(WPAD_CHAN0, static_cast<f32>(MR::getFrameBufferWidth()), static_cast<f32>(MR::getFrameBufferHeight()));

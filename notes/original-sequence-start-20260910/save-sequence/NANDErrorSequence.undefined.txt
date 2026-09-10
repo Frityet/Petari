@@ -1,0 +1,33 @@
+__Unwind_Resume
+NerveExecutor::setNerve(Nerve const*)
+NerveExecutor::initNerve(Nerve const*)
+NerveExecutor::NerveExecutor(char const*)
+NerveExecutor::~NerveExecutor()
+SysInfoWindow::appear(char const*, SysInfoWindow::SysInfoType, SysInfoWindow::SysInfoTextPos, SysInfoWindow::SysInfoMessageType)
+SaveDataHandler::requestRemoveSaveData()
+SaveDataHandler::requestCheckEnableToCreate()
+GameSystemFunction::requestGoWiiMenu(bool)
+GameSystemFunction::setResetOperationReturnToMenu()
+ActorStateBaseInterface::update()
+MR::isFirstStep(NerveExecutor const*)
+MR::startSystemSE(char const*, int, int)
+MR::isDead(LayoutActor const*)
+NerveExecutor::isNerve(Nerve const*) const
+SysInfoWindow::isSelectedYes() const
+SysInfoWindow::isWait() const
+NANDResultCode::isMaxFiles() const
+NANDResultCode::isMaxBlocks() const
+NANDResultCode::isNoExistFile() const
+NANDResultCode::isNANDCorrupted() const
+NANDResultCode::isBusyOrAllocFailed() const
+NANDResultCode::getCode() const
+NANDResultCode::isSuccess() const
+NANDResultCode::isUnknown() const
+SaveDataHandler::getLastResultCode() const
+SaveDataHandler::isDone() const
+Nerve::executeOnEnd(Spine*) const
+typeinfo for ActorStateBaseInterface
+typeinfo for Nerve
+vtable for __cxxabiv1::__si_class_type_info
+operator delete(void*, unsigned long)
+___gxx_personality_v0

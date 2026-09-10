@@ -158,7 +158,7 @@ void StarPointerDepthOwnership::capture() {
 
 void StarPointerDepthOwnership::update() {
     JkrHostAllocationScope host;
-    _state->input->update_pointer_samples();
+    _state->input->update_samples();
     // A pending image cannot borrow a later image's camera or pointer position.
     // Consume at most the newest completed prefix, once per original movement.
     State::Capture completed;

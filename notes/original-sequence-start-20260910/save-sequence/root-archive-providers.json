@@ -1,0 +1,624 @@
+[
+  {
+    "object": "notes/original-sequence-start-20260910/save-sequence/SaveDataHandleSequence.o",
+    "object_sha256": "61fac75694955432a57133679c29889c527312a79a8798b14f0f96e71c96a3b7",
+    "undefined": [
+      {
+        "symbol": "__Unwind_Resume",
+        "providers": []
+      },
+      {
+        "symbol": "__ZN13NerveExecutor11updateNerveEv",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[NerveExecutor.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN13NerveExecutor8setNerveEPK5Nerve",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[NerveExecutor.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN13NerveExecutor9initNerveEPK5Nerve",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[NerveExecutor.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN13NerveExecutorC2EPKc",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[NerveExecutor.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN13NerveExecutorD2Ev",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[NerveExecutor.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN13SysConfigFile18loadFromDataBinaryEPKhj",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[SysConfigFileCompat.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN13SysConfigFileC1Ev",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[SysConfigFileCompat.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN13SysInfoWindow6appearEPKcNS_11SysInfoTypeENS_14SysInfoTextPosENS_18SysInfoMessageTypeE",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[SysInfoWindow.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN13SysInfoWindow9disappearEv",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[SysInfoWindow.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN13SysInfoWindow9forceKillEv",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[SysInfoWindow.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN15SaveDataHandler13storeUserFileEPK8UserFile",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[SaveDataHandler.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN15SaveDataHandler18copyUserFileMemoryEii",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[SaveDataHandler.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN15SaveDataHandler18storeSysConfigFileEPK13SysConfigFile",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[SaveDataHandler.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN15SaveDataHandler19requestLoadSaveDataEv",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[SaveDataHandler.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN15SaveDataHandler19requestSaveSaveDataEv",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[SaveDataHandler.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN15SaveDataHandler19restoreGameDataFileEPKcPvj",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[SaveDataHandler.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN15SaveDataHandler24getEnoughtTempBufferSizeEv",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[SaveDataHandler.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN15SaveDataHandler24initializeUserFileMemoryEiPK8UserFile",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[SaveDataHandler.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN15SaveDataHandler34requestVerifyAfterLoadGameDataFileEv",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[SaveDataHandler.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN15SaveDataHandler6updateEv",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[SaveDataHandler.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN15SaveDataHandlerC1EPK13SysConfigFilePK8UserFile",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[SaveDataHandler.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN17NANDErrorSequence12prepareResetEv",
+        "providers": []
+      },
+      {
+        "symbol": "__ZN17NANDErrorSequence15startRemoveFileEv",
+        "providers": []
+      },
+      {
+        "symbol": "__ZN17NANDErrorSequence16restoreFromResetEv",
+        "providers": []
+      },
+      {
+        "symbol": "__ZN17NANDErrorSequence19startErrorToWiiMenuEPKc",
+        "providers": []
+      },
+      {
+        "symbol": "__ZN17NANDErrorSequence24startCheckEnableToCreateEv",
+        "providers": []
+      },
+      {
+        "symbol": "__ZN17NANDErrorSequence24tryNoRecoverErroSequenceEi",
+        "providers": []
+      },
+      {
+        "symbol": "__ZN17NANDErrorSequenceC1EP22SaveDataHandleSequenceP13SysInfoWindowS3_",
+        "providers": []
+      },
+      {
+        "symbol": "__ZN2MR11isFirstStepEPK13NerveExecutor",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[NerveUtil.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR13isGreaterStepEPK13NerveExecutori",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[NerveUtil.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR13startSystemSEEPKcii",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[SoundUtilCompat.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR18startSystemLevelSEEPKcii",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[SoundUtilCompat.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR30requestStarPointerModeSaveLoadEPv",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[OriginalStarPointerOwnerQueries.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR38createSysInfoWindowExecuteWithChildrenEv",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[SysInfoWindow.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR42createSysInfoWindowMiniExecuteWithChildrenEv",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[SysInfoWindow.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR6isDeadEPK11LayoutActor",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[LayoutUtilCompat.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN8SaveIconC1EPK11LayoutActor",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[SaveIcon.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN8UserFile10setCreatedEv",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[UserFile.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN8UserFile12resetAllDataEv",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[UserFile.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN8UserFile14setMiiOrIconIdEPKvPKj",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[UserFile.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN8UserFile18setLastLoadedMarioEb",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[UserFile.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN8UserFile18updateLastModifiedEv",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[UserFile.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN8UserFile22loadFromGameDataBinaryEPKcPKhj",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[UserFile.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN8UserFile24loadFromConfigDataBinaryEPKcPKhj",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[UserFile.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN8UserFileC1Ev",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[UserFile.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZNK13NerveExecutor7isNerveEPK5Nerve",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[NerveExecutor.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZNK13SysInfoWindow13isSelectedYesEv",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[SysInfoWindow.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZNK13SysInfoWindow6isWaitEv",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[SysInfoWindow.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZNK14NANDResultCode13isNoExistFileEv",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[NANDManager.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZNK14NANDResultCode19isSaveDataCorruptedEv",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[NANDManager.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZNK14NANDResultCode7getCodeEv",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[NANDManager.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZNK14NANDResultCode9isSuccessEv",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[NANDManager.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZNK15SaveDataHandler17getLastResultCodeEv",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[SaveDataHandler.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZNK15SaveDataHandler6isDoneEv",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[SaveDataHandler.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZNK17NANDErrorSequence14isResultNoSaveEv",
+        "providers": []
+      },
+      {
+        "symbol": "__ZNK17NANDErrorSequence15isEnablePointerEv",
+        "providers": []
+      },
+      {
+        "symbol": "__ZNK17NANDErrorSequence15isPermitToResetEv",
+        "providers": []
+      },
+      {
+        "symbol": "__ZNK17NANDErrorSequence15isPreparedResetEv",
+        "providers": []
+      },
+      {
+        "symbol": "__ZNK17NANDErrorSequence21isResultFileCorruptedEv",
+        "providers": []
+      },
+      {
+        "symbol": "__ZNK5Nerve12executeOnEndEP5Spine",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[Nerve.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZNK8UserFile15getGameDataNameEv",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[UserFile.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZNK8UserFile17getConfigDataNameEv",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[UserFile.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZNK8UserFile17isLastLoadedMarioEv",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[UserFile.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZNK8UserFile18makeGameDataBinaryEPhj",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[UserFile.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZNK8UserFile20makeConfigDataBinaryEPhj",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[UserFile.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZTI13NerveExecutor",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[NerveExecutor.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZTI5Nerve",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[Nerve.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZTVN10__cxxabiv120__si_class_type_infoE",
+        "providers": []
+      },
+      {
+        "symbol": "__ZdlPvm",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[MetrowerksAlignedNew.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__Znami",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[MetrowerksAlignedNew.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__Znwm",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[MetrowerksAlignedNew.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "___gxx_personality_v0",
+        "providers": []
+      },
+      {
+        "symbol": "___stack_chk_fail",
+        "providers": []
+      },
+      {
+        "symbol": "___stack_chk_guard",
+        "providers": []
+      },
+      {
+        "symbol": "_smgpc_msl_snprintf",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-common.a[MslPrintfCompat.cpp.o]:"
+        ]
+      }
+    ]
+  },
+  {
+    "object": "notes/original-sequence-start-20260910/save-sequence/NANDErrorSequence.o",
+    "object_sha256": "e8c50461b716f57d94b8940adfe76b8cd66ef828d8be7bdd17b624d96826a195",
+    "undefined": [
+      {
+        "symbol": "__Unwind_Resume",
+        "providers": []
+      },
+      {
+        "symbol": "__ZN13NerveExecutor8setNerveEPK5Nerve",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[NerveExecutor.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN13NerveExecutor9initNerveEPK5Nerve",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[NerveExecutor.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN13NerveExecutorC2EPKc",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[NerveExecutor.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN13NerveExecutorD2Ev",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[NerveExecutor.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN13SysInfoWindow6appearEPKcNS_11SysInfoTypeENS_14SysInfoTextPosENS_18SysInfoMessageTypeE",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[SysInfoWindow.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN15SaveDataHandler21requestRemoveSaveDataEv",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[SaveDataHandler.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN15SaveDataHandler26requestCheckEnableToCreateEv",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[SaveDataHandler.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN18GameSystemFunction16requestGoWiiMenuEb",
+        "providers": []
+      },
+      {
+        "symbol": "__ZN18GameSystemFunction29setResetOperationReturnToMenuEv",
+        "providers": []
+      },
+      {
+        "symbol": "__ZN23ActorStateBaseInterface6updateEv",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[ActorStateBase.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR11isFirstStepEPK13NerveExecutor",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[NerveUtil.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR13startSystemSEEPKcii",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[SoundUtilCompat.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZN2MR6isDeadEPK11LayoutActor",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[LayoutUtilCompat.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZNK13NerveExecutor7isNerveEPK5Nerve",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[NerveExecutor.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZNK13SysInfoWindow13isSelectedYesEv",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[SysInfoWindow.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZNK13SysInfoWindow6isWaitEv",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[SysInfoWindow.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZNK14NANDResultCode10isMaxFilesEv",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[NANDManager.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZNK14NANDResultCode11isMaxBlocksEv",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[NANDManager.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZNK14NANDResultCode13isNoExistFileEv",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[NANDManager.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZNK14NANDResultCode15isNANDCorruptedEv",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[NANDManager.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZNK14NANDResultCode19isBusyOrAllocFailedEv",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[NANDManager.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZNK14NANDResultCode7getCodeEv",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[NANDManager.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZNK14NANDResultCode9isSuccessEv",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[NANDManager.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZNK14NANDResultCode9isUnknownEv",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[NANDManager.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZNK15SaveDataHandler17getLastResultCodeEv",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[SaveDataHandler.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZNK15SaveDataHandler6isDoneEv",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[SaveDataHandler.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZNK5Nerve12executeOnEndEP5Spine",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[Nerve.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZTI23ActorStateBaseInterface",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[ActorStateBase.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZTI5Nerve",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[Nerve.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "__ZTVN10__cxxabiv120__si_class_type_infoE",
+        "providers": []
+      },
+      {
+        "symbol": "__ZdlPvm",
+        "providers": [
+          "build/macosx/arm64/debug/libsmg-pc-game.a[MetrowerksAlignedNew.cpp.o]:"
+        ]
+      },
+      {
+        "symbol": "___gxx_personality_v0",
+        "providers": []
+      }
+    ]
+  }
+]

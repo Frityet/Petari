@@ -15,7 +15,7 @@ public:
     ~WPadOwnership();
     WPadOwnership(const WPadOwnership&) = delete;
     WPadOwnership& operator=(const WPadOwnership&) = delete;
-    void update_pointer_samples();
+    void update_samples();
     [[nodiscard]] WPad& pad(int channel);
 private:
     struct State;

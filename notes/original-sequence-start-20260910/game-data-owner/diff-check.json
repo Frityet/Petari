@@ -1,0 +1,11 @@
+{
+  "command": [
+    "git",
+    "-C",
+    "decomp",
+    "diff",
+    "--check"
+  ],
+  "exit": 0,
+  "output": ""
+}

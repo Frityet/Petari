@@ -1,0 +1,85 @@
+[
+  {
+    "phase": "baseline",
+    "symbol": "setGameEventValueForBit__14GameDataHolderFPCcib",
+    "retail_bytes": 116,
+    "candidate_bytes": 120,
+    "match_percent": 91.89655,
+    "remaining_differences": [
+      {
+        "kind": "DIFF_REPLACE",
+        "retail": "clrlwi r4, r3, 16"
+      },
+      {
+        "kind": "DIFF_ARG_MISMATCH",
+        "retail": "slw r3, r0, r30"
+      },
+      {
+        "kind": "DIFF_REPLACE",
+        "retail": "cmpwi r31, 0x0"
+      },
+      {
+        "kind": "DIFF_INSERT",
+        "retail": null
+      },
+      {
+        "kind": "DIFF_ARG_MISMATCH",
+        "retail": "or r0, r4, r3"
+      }
+    ]
+  },
+  {
+    "phase": "baseline",
+    "symbol": "isPassedStoryEvent__14GameDataHolderCFPCc",
+    "retail_bytes": 132,
+    "candidate_bytes": 132,
+    "match_percent": 99.69697,
+    "remaining_differences": [
+      {
+        "kind": "DIFF_ARG_MISMATCH",
+        "retail": "subfc r0, r5, r0"
+      }
+    ]
+  },
+  {
+    "phase": "recovered",
+    "symbol": "setGameEventValueForBit__14GameDataHolderFPCcib",
+    "retail_bytes": 116,
+    "candidate_bytes": 116,
+    "match_percent": 92.06896,
+    "remaining_differences": [
+      {
+        "kind": "DIFF_INSERT",
+        "retail": null
+      },
+      {
+        "kind": "DIFF_ARG_MISMATCH",
+        "retail": "clrlwi r4, r3, 16"
+      },
+      {
+        "kind": "DIFF_ARG_MISMATCH",
+        "retail": "slw r3, r0, r30"
+      },
+      {
+        "kind": "DIFF_DELETE",
+        "retail": "cmpwi r31, 0x0"
+      },
+      {
+        "kind": "DIFF_ARG_MISMATCH",
+        "retail": "andc r0, r4, r3"
+      },
+      {
+        "kind": "DIFF_ARG_MISMATCH",
+        "retail": "or r0, r4, r3"
+      }
+    ]
+  },
+  {
+    "phase": "recovered",
+    "symbol": "isPassedStoryEvent__14GameDataHolderCFPCc",
+    "retail_bytes": 132,
+    "candidate_bytes": 132,
+    "match_percent": 100.0,
+    "remaining_differences": []
+  }
+]

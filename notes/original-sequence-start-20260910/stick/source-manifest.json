@@ -1,0 +1,39 @@
+{
+  "scope": "Two missing current-stick stores recovered in original WPadStick::update; complete TU mirrored into native. No compatibility records/input routing changes, no root Xmake, no link/runtime proof, no commits.",
+  "guide": "decomp/AGENT_DECOMP_GUIDE.md",
+  "retail_stores": [
+    {
+      "address": "0x803ADEA0",
+      "instruction": "stfs f3, 0x4(r30)",
+      "field": "mStick.x",
+      "source": "KPADStatus::ex_status.fs.stick.x"
+    },
+    {
+      "address": "0x803ADEA4",
+      "instruction": "stfs f4, 0x8(r30)",
+      "field": "mStick.y",
+      "source": "KPADStatus::ex_status.fs.stick.y"
+    }
+  ],
+  "source_sha256": "26b5f3cbd3bb7e5f39dee19814f888b6be895008ed9dd04405ca44ecfb531174",
+  "native_equals_reference": true,
+  "sources": [
+    "decomp/src/Game/System/WPadStick.cpp",
+    "src/Game/System/WPadStick.cpp"
+  ],
+  "native_compile_exit": 0,
+  "proof": {
+    "baseline": {
+      "compile_exit": 0,
+      "match_percent": 99.22034,
+      "retail_size_bytes": 472,
+      "compiled_size_bytes": 472
+    },
+    "fixed": {
+      "compile_exit": 0,
+      "match_percent": 96.08475,
+      "retail_size_bytes": 472,
+      "compiled_size_bytes": 480
+    }
+  }
+}

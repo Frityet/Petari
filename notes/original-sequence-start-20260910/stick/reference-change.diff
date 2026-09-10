@@ -1,0 +1,13 @@
+diff --git a/src/Game/System/WPadStick.cpp b/src/Game/System/WPadStick.cpp
+index 99bd4511b..980f0285f 100644
+--- a/src/Game/System/WPadStick.cpp
++++ b/src/Game/System/WPadStick.cpp
+@@ -28,6 +28,8 @@ void WPadStick::update() {
+     TVec2f stickPrev = mStick;
+     f32 deltaX = stickEx.x - stickPrev.x;
+     f32 deltaY = stickEx.y - stickPrev.y;
++    mStick.x = stickEx.x;
++    mStick.y = stickEx.y;
+     mSpeed = JGeometry::TUtil< f32 >::sqrt(deltaX * deltaX + deltaY * deltaY);
+     u32 flagPrev = STICK_FLAG_NONE;
+ 

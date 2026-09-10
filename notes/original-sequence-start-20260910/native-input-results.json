@@ -1,0 +1,18 @@
+[
+  {
+    "test": "original-pointer-input",
+    "exit": 0,
+    "sha256": "d40077f15d94a711bc9ea15bb56e4b65799437feb2ab195fc2882dae8d5da945",
+    "includes_nonzero_disconnect_retention": true
+  },
+  {
+    "test": "original-wpad-pause",
+    "exit": 0,
+    "sha256": "eaf28da480ec001b2b1dbb3cdf4cb7197960bb6bc064055132d5c4e286fce7b3"
+  },
+  {
+    "test": "original-camera-director",
+    "exit": 0,
+    "sha256": "4a27fdcc37f92626da1a46ee2ddf7c77a38904efb39d59236c497ddac8870e91"
+  }
+]

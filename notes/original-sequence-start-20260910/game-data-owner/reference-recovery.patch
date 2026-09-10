@@ -1,0 +1,49 @@
+diff --git a/include/Game/System/StarPieceAlmsStorage.hpp b/include/Game/System/StarPieceAlmsStorage.hpp
+index 11ac6e83e..4b37f6213 100644
+--- a/include/Game/System/StarPieceAlmsStorage.hpp
++++ b/include/Game/System/StarPieceAlmsStorage.hpp
+@@ -14,12 +14,11 @@ class StarPieceAlmsStorage : public Dummy2, public BinaryDataChunkBase {
+ public:
+     StarPieceAlmsStorage();
+ 
+-    virtual ~StarPieceAlmsStorage();
+     virtual u32 makeHeaderHashCode() const;
+     virtual u32 getSignature() const;
+     virtual s32 serialize(u8*, u32) const;
+-    virtual void initializeData();
+     virtual s32 deserialize(const u8*, u32);
++    virtual void initializeData();
+ 
+     s32 getValue(int) const;
+     s32 getMaxValue(int) const;
+diff --git a/src/Game/System/GameDataHolder.cpp b/src/Game/System/GameDataHolder.cpp
+index 1ddd489f0..157233122 100644
+--- a/src/Game/System/GameDataHolder.cpp
++++ b/src/Game/System/GameDataHolder.cpp
+@@ -94,13 +94,13 @@ bool GameDataHolder::isOnGameEventValueForBit(const char* pName, int bit) const
+ 
+ void GameDataHolder::setGameEventValueForBit(const char* pName, int bit, bool reset) {
+     u16 value = mEventValueChecker->getValue(pName);
+-    u16 set = 1 << bit;
+-    value = set & ~value;
++    s32 set = 1 << bit;
++    u16 newValue = value & ~set;
+     if (reset) {
+-        value = value | set;
++        newValue = value | set;
+     }
+ 
+-    setGameEventValue(pName, value);
++    setGameEventValue(pName, newValue);
+ }
+ 
+ s32 GameDataHolder::getPictureBookChapterCanRead() const {
+@@ -284,7 +284,7 @@ bool GameDataHolder::isPassedStoryEvent(const char* pEventName) const {
+ 
+     u32 progress = 0;
+     iter.getValue("progress", &progress);
+-    return progress >= mPlayerStatus->mStoryProgress;
++    return progress <= mPlayerStatus->mStoryProgress;
+ }
+ 
+ void GameDataHolder::followStoryEventByName(const char* pEventName) {

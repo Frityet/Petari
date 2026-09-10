@@ -1,0 +1,952 @@
+{
+  "scope": "Direct undefined references emitted by unchanged original GameSequenceProgress.cpp at -O2 only. No transitive closure or dead-strip live reachability claim.",
+  "inputs": {
+    "object": {
+      "path": "notes/original-sequence-start-20260910/probe/GameSequenceProgress.native.o",
+      "sha256": "7e2783ae4b28e5d53440155a686537118f054c4af61654881767c6f8867277d7",
+      "mtime_ns": 1789052912201892033
+    },
+    "game_archive": {
+      "path": "build/macosx/arm64/debug/libsmg-pc-game.a",
+      "sha256": "b4ab205b111a561408ef8df1b0c60d79ebb8d0dc86e30c08ef4999cd9bca1203",
+      "mtime_ns": 1789051624327427597
+    },
+    "showcase": {
+      "path": "build/macosx/arm64/debug/smg-pc-showcase",
+      "sha256": "89b80b085aa6d0f9949e3db3e26b7c817e9bb182e12402ea1fceef2a586a2488",
+      "mtime_ns": 1789051624725024657
+    }
+  },
+  "undefined_count": 106,
+  "absent_game_archive_count": 39,
+  "absent_both_count": 39,
+  "symbols": [
+    {
+      "symbol": "__Unwind_Resume",
+      "demangled": "__Unwind_Resume",
+      "defined_in_game_archive": false,
+      "defined_in_showcase": false,
+      "classification": "system C++ runtime"
+    },
+    {
+      "symbol": "__ZN13NerveExecutor11updateNerveEv",
+      "demangled": "NerveExecutor::updateNerve()",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": true
+    },
+    {
+      "symbol": "__ZN13NerveExecutor8setNerveEPK5Nerve",
+      "demangled": "NerveExecutor::setNerve(Nerve const*)",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": true
+    },
+    {
+      "symbol": "__ZN13NerveExecutor9initNerveEPK5Nerve",
+      "demangled": "NerveExecutor::initNerve(Nerve const*)",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": true
+    },
+    {
+      "symbol": "__ZN13NerveExecutorC2EPKc",
+      "demangled": "NerveExecutor::NerveExecutor(char const*)",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": true
+    },
+    {
+      "symbol": "__ZN13NerveExecutorD2Ev",
+      "demangled": "NerveExecutor::~NerveExecutor()",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": true
+    },
+    {
+      "symbol": "__ZN14PlayerMissLeftC1EPKc",
+      "demangled": "PlayerMissLeft::PlayerMissLeft(char const*)",
+      "defined_in_game_archive": false,
+      "defined_in_showcase": false,
+      "classification": "missing project definition",
+      "reference_file": "decomp/src/Game/Screen/PlayerMissLeft.cpp",
+      "reference_candidates": [
+        {
+          "line": 21,
+          "text": "PlayerMissLeft::PlayerMissLeft(const char* pName) : LayoutActor(pName, true), mLayoutAppearer(nullptr), mPaneRumbler(nullptr) {"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN16GameDataFunction12addStarPieceEi",
+      "demangled": "GameDataFunction::addStarPiece(int)",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": false
+    },
+    {
+      "symbol": "__ZN16GameDataFunction15getStarPieceNumEv",
+      "demangled": "GameDataFunction::getStarPieceNum()",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": true
+    },
+    {
+      "symbol": "__ZN16GameDataFunction17getGameEventValueEPKc",
+      "demangled": "GameDataFunction::getGameEventValue(char const*)",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": true
+    },
+    {
+      "symbol": "__ZN16GameDataFunction17isOnGameEventFlagEPKc",
+      "demangled": "GameDataFunction::isOnGameEventFlag(char const*)",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": true
+    },
+    {
+      "symbol": "__ZN16GameDataFunction17setGameEventValueEPKct",
+      "demangled": "GameDataFunction::setGameEventValue(char const*, unsigned short)",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": true
+    },
+    {
+      "symbol": "__ZN16GameDataFunction18canOnGameEventFlagEPKc",
+      "demangled": "GameDataFunction::canOnGameEventFlag(char const*)",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": false
+    },
+    {
+      "symbol": "__ZN16GameDataFunction18isPassedStoryEventEPKc",
+      "demangled": "GameDataFunction::isPassedStoryEvent(char const*)",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": true
+    },
+    {
+      "symbol": "__ZN16GameDataFunction19addStockedStarPieceEi",
+      "demangled": "GameDataFunction::addStockedStarPiece(int)",
+      "defined_in_game_archive": false,
+      "defined_in_showcase": false,
+      "classification": "missing project definition",
+      "reference_file": "decomp/src/Game/System/GameDataFunction.cpp",
+      "reference_candidates": [
+        {
+          "line": 384,
+          "text": "void addStockedStarPiece(int num) {"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN16GameDataFunction21isOnJustGameEventFlagEPKc",
+      "demangled": "GameDataFunction::isOnJustGameEventFlag(char const*)",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": false
+    },
+    {
+      "symbol": "__ZN16GameDataFunction22getLast1upStarPieceNumEv",
+      "demangled": "GameDataFunction::getLast1upStarPieceNum()",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": false
+    },
+    {
+      "symbol": "__ZN16GameDataFunction22setLast1upStarPieceNumEi",
+      "demangled": "GameDataFunction::setLast1upStarPieceNum(int)",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": false
+    },
+    {
+      "symbol": "__ZN16GameDataFunction28resetGameDataGoToGalaxyFirstEv",
+      "demangled": "GameDataFunction::resetGameDataGoToGalaxyFirst()",
+      "defined_in_game_archive": false,
+      "defined_in_showcase": false,
+      "classification": "missing project definition",
+      "reference_file": "decomp/src/Game/System/GameDataFunction.cpp",
+      "reference_candidates": [
+        {
+          "line": 306,
+          "text": "void resetGameDataGoToGalaxyFirst() {"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN16GameDataFunction28resetGameDataGoToGalaxyRetryEv",
+      "demangled": "GameDataFunction::resetGameDataGoToGalaxyRetry()",
+      "defined_in_game_archive": false,
+      "defined_in_showcase": false,
+      "classification": "missing project definition",
+      "reference_file": "decomp/src/Game/System/GameDataFunction.cpp",
+      "reference_candidates": [
+        {
+          "line": 315,
+          "text": "void resetGameDataGoToGalaxyRetry() {"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN16GameDataFunction34onGalaxyScenarioFlagAlreadyVisitedEPKci",
+      "demangled": "GameDataFunction::onGalaxyScenarioFlagAlreadyVisited(char const*, int)",
+      "defined_in_game_archive": false,
+      "defined_in_showcase": false,
+      "classification": "missing project definition",
+      "reference_file": "decomp/src/Game/System/GameDataFunction.cpp",
+      "reference_candidates": [
+        {
+          "line": 56,
+          "text": "void onGalaxyScenarioFlagAlreadyVisited(const char* pGalaxyName, s32 scenarioNo) {"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN16SceneControlInfo14setStartIdInfoERK10JMapIdInfo",
+      "demangled": "SceneControlInfo::setStartIdInfo(JMapIdInfo const&)",
+      "defined_in_game_archive": false,
+      "defined_in_showcase": false,
+      "classification": "missing project definition",
+      "reference_file": "decomp/src/Game/System/GameSystemSceneController.cpp",
+      "reference_candidates": [
+        {
+          "line": 65,
+          "text": "void SceneControlInfo::setStartIdInfo(const JMapIdInfo& rInfo) {"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN16SceneControlInfo8setSceneEPKc",
+      "demangled": "SceneControlInfo::setScene(char const*)",
+      "defined_in_game_archive": false,
+      "defined_in_showcase": false,
+      "classification": "missing project definition",
+      "reference_file": "decomp/src/Game/System/GameSystemSceneController.cpp",
+      "reference_candidates": [
+        {
+          "line": 57,
+          "text": "void SceneControlInfo::setScene(const char* pSceneName) {"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN16SceneControlInfo8setStageEPKc",
+      "demangled": "SceneControlInfo::setStage(char const*)",
+      "defined_in_game_archive": false,
+      "defined_in_showcase": false,
+      "classification": "missing project definition",
+      "reference_file": "decomp/src/Game/System/GameSystemSceneController.cpp",
+      "reference_candidates": [
+        {
+          "line": 61,
+          "text": "void SceneControlInfo::setStage(const char* pStageName) {"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN17GameEventFlagIter6goNextEv",
+      "demangled": "GameEventFlagIter::goNext()",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": false
+    },
+    {
+      "symbol": "__ZN17LuigiLeftSupplier13syncWithFlagsEv",
+      "demangled": "LuigiLeftSupplier::syncWithFlags()",
+      "defined_in_game_archive": false,
+      "defined_in_showcase": false,
+      "classification": "missing project definition",
+      "reference_file": "decomp/src/Game/System/LuigiLeftSupplier.cpp",
+      "reference_candidates": [
+        {
+          "line": 7,
+          "text": "void LuigiLeftSupplier::syncWithFlags() {"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN17LuigiLeftSupplierC1Ev",
+      "demangled": "LuigiLeftSupplier::LuigiLeftSupplier()",
+      "defined_in_game_archive": false,
+      "defined_in_showcase": false,
+      "classification": "missing project definition",
+      "reference_file": "decomp/src/Game/System/LuigiLeftSupplier.cpp",
+      "reference_candidates": [
+        {
+          "line": 4,
+          "text": "LuigiLeftSupplier::LuigiLeftSupplier() : _0(false) {"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN18GalaxyMoveArgumentC1EjPKciPK10JMapIdInfo",
+      "demangled": "GalaxyMoveArgument::GalaxyMoveArgument(unsigned int, char const*, int, JMapIdInfo const*)",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": false
+    },
+    {
+      "symbol": "__ZN18GameEventFlagTable12getBeginIterEv",
+      "demangled": "GameEventFlagTable::getBeginIter()",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": false
+    },
+    {
+      "symbol": "__ZN18GameSystemFunction17isResetProcessingEv",
+      "demangled": "GameSystemFunction::isResetProcessing()",
+      "defined_in_game_archive": false,
+      "defined_in_showcase": false,
+      "classification": "missing project definition",
+      "reference_file": "decomp/src/Game/System/GameSystemFunction.cpp",
+      "reference_candidates": [
+        {
+          "line": 102,
+          "text": "bool isResetProcessing() {"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN18GameSystemFunction22tryToLoadSystemArchiveEv",
+      "demangled": "GameSystemFunction::tryToLoadSystemArchive()",
+      "defined_in_game_archive": false,
+      "defined_in_showcase": false,
+      "classification": "missing project definition",
+      "reference_file": "decomp/src/Game/System/GameSystemFunction.cpp",
+      "reference_candidates": [
+        {
+          "line": 72,
+          "text": "bool tryToLoadSystemArchive() {"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN18GameSystemFunction25setAutoSleepTimeWiiRemoteEb",
+      "demangled": "GameSystemFunction::setAutoSleepTimeWiiRemote(bool)",
+      "defined_in_game_archive": false,
+      "defined_in_showcase": false,
+      "classification": "missing project definition",
+      "reference_file": "decomp/src/Game/System/GameSystemFunction.cpp",
+      "reference_candidates": [
+        {
+          "line": 211,
+          "text": "void setAutoSleepTimeWiiRemote(bool isLongAutoSleep) {"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN18GameSystemFunction33setResetOperationApplicationResetEv",
+      "demangled": "GameSystemFunction::setResetOperationApplicationReset()",
+      "defined_in_game_archive": false,
+      "defined_in_showcase": false,
+      "classification": "missing project definition",
+      "reference_file": "decomp/src/Game/System/GameSystemFunction.cpp",
+      "reference_candidates": [
+        {
+          "line": 106,
+          "text": "void setResetOperationApplicationReset() {"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN18GameSystemFunction52setPermissionToCheckWiiRemoteConnectAndScreenDimmingEb",
+      "demangled": "GameSystemFunction::setPermissionToCheckWiiRemoteConnectAndScreenDimming(bool)",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": false
+    },
+    {
+      "symbol": "__ZN20GalaxyCometScheduler13syncWithFlagsEv",
+      "demangled": "GalaxyCometScheduler::syncWithFlags()",
+      "defined_in_game_archive": false,
+      "defined_in_showcase": false,
+      "classification": "missing project definition",
+      "reference_file": "decomp/src/Game/System/GalaxyCometScheduler.cpp",
+      "reference_candidates": [
+        {
+          "line": 320,
+          "text": "void GalaxyCometScheduler::syncWithFlags() {"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN20GalaxyCometScheduler24restoreStateFromGameDataEv",
+      "demangled": "GalaxyCometScheduler::restoreStateFromGameData()",
+      "defined_in_game_archive": false,
+      "defined_in_showcase": false,
+      "classification": "missing project definition",
+      "reference_file": "decomp/src/Game/System/GalaxyCometScheduler.cpp",
+      "reference_candidates": [
+        {
+          "line": 338,
+          "text": "void GalaxyCometScheduler::restoreStateFromGameData() {"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN20GalaxyCometScheduler6updateEv",
+      "demangled": "GalaxyCometScheduler::update()",
+      "defined_in_game_archive": false,
+      "defined_in_showcase": false,
+      "classification": "missing project definition",
+      "reference_file": "decomp/src/Game/System/GalaxyCometScheduler.cpp",
+      "reference_candidates": [
+        {
+          "line": 294,
+          "text": "void GalaxyCometScheduler::update() {"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN20GalaxyCometSchedulerC1Ev",
+      "demangled": "GalaxyCometScheduler::GalaxyCometScheduler()",
+      "defined_in_game_archive": false,
+      "defined_in_showcase": false,
+      "classification": "missing project definition",
+      "reference_file": "decomp/src/Game/System/GalaxyCometScheduler.cpp",
+      "reference_candidates": [
+        {
+          "line": 287,
+          "text": "GalaxyCometScheduler::GalaxyCometScheduler() : mTimeTables(), mEnabled(true) {"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN20GameSequenceFunction10startSceneEv",
+      "demangled": "GameSequenceFunction::startScene()",
+      "defined_in_game_archive": false,
+      "defined_in_showcase": false,
+      "classification": "missing project definition",
+      "reference_file": "decomp/src/Game/System/GameSequenceFunction.cpp",
+      "reference_candidates": [
+        {
+          "line": 106,
+          "text": "void startScene() {"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN20GameSequenceFunction19getClearedStageNameEv",
+      "demangled": "GameSequenceFunction::getClearedStageName()",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": false
+    },
+    {
+      "symbol": "__ZN20GameSequenceFunction19isReadyToStartSceneEv",
+      "demangled": "GameSequenceFunction::isReadyToStartScene()",
+      "defined_in_game_archive": false,
+      "defined_in_showcase": false,
+      "classification": "missing project definition",
+      "reference_file": "decomp/src/Game/System/GameSequenceFunction.cpp",
+      "reference_candidates": [
+        {
+          "line": 102,
+          "text": "bool isReadyToStartScene() {"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN20GameSequenceFunction21getClearedPowerStarIdEv",
+      "demangled": "GameSequenceFunction::getClearedPowerStarId()",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": false
+    },
+    {
+      "symbol": "__ZN20GameSequenceFunction22getClearedStarPieceNumEv",
+      "demangled": "GameSequenceFunction::getClearedStarPieceNum()",
+      "defined_in_game_archive": false,
+      "defined_in_showcase": false,
+      "classification": "missing project definition",
+      "reference_file": "decomp/src/Game/System/GameSequenceFunction.cpp",
+      "reference_candidates": [
+        {
+          "line": 142,
+          "text": "int getClearedStarPieceNum() {"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN20GameSequenceFunction22hasStageResultSequenceEv",
+      "demangled": "GameSequenceFunction::hasStageResultSequence()",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": false
+    },
+    {
+      "symbol": "__ZN20GameSequenceFunction27isPowerStarAtResultSequenceEPKci",
+      "demangled": "GameSequenceFunction::isPowerStarAtResultSequence(char const*, int)",
+      "defined_in_game_archive": false,
+      "defined_in_showcase": false,
+      "classification": "missing project definition",
+      "reference_file": "decomp/src/Game/System/GameSequenceFunction.cpp",
+      "reference_candidates": [
+        {
+          "line": 160,
+          "text": "bool isPowerStarAtResultSequence(const char* pClearedStageName, s32 clearedPowerStarId) {"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN20GameSequenceFunction29resetStageResultSequenceParamEv",
+      "demangled": "GameSequenceFunction::resetStageResultSequenceParam()",
+      "defined_in_game_archive": false,
+      "defined_in_showcase": false,
+      "classification": "missing project definition",
+      "reference_file": "decomp/src/Game/System/GameSequenceFunction.cpp",
+      "reference_candidates": [
+        {
+          "line": 199,
+          "text": "void resetStageResultSequenceParam() {"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN20GameSequenceFunction29storeSceneStartGameDataHolderEv",
+      "demangled": "GameSequenceFunction::storeSceneStartGameDataHolder()",
+      "defined_in_game_archive": false,
+      "defined_in_showcase": false,
+      "classification": "missing project definition",
+      "reference_file": "decomp/src/Game/System/GameSequenceFunction.cpp",
+      "reference_candidates": [
+        {
+          "line": 281,
+          "text": "void storeSceneStartGameDataHolder() {"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN20GameSequenceFunction30reflectStageResultSequenceCoinEv",
+      "demangled": "GameSequenceFunction::reflectStageResultSequenceCoin()",
+      "defined_in_game_archive": false,
+      "defined_in_showcase": false,
+      "classification": "missing project definition",
+      "reference_file": "decomp/src/Game/System/GameSequenceFunction.cpp",
+      "reference_candidates": [
+        {
+          "line": 190,
+          "text": "void reflectStageResultSequenceCoin() {"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN20GameSequenceFunction31hasPowerStarYetAtResultSequenceEv",
+      "demangled": "GameSequenceFunction::hasPowerStarYetAtResultSequence()",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": false
+    },
+    {
+      "symbol": "__ZN20GameSequenceFunction49updateGameDataAndSequenceAfterStageResultSequenceEv",
+      "demangled": "GameSequenceFunction::updateGameDataAndSequenceAfterStageResultSequence()",
+      "defined_in_game_archive": false,
+      "defined_in_showcase": false,
+      "classification": "missing project definition",
+      "reference_file": "decomp/src/Game/System/GameSequenceFunction.cpp",
+      "reference_candidates": [
+        {
+          "line": 287,
+          "text": "void updateGameDataAndSequenceAfterStageResultSequence() {"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN21GameEventFlagAccessorC1EPK13GameEventFlag",
+      "demangled": "GameEventFlagAccessor::GameEventFlagAccessor(GameEventFlag const*)",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": false
+    },
+    {
+      "symbol": "__ZN21StorySequenceExecutor10moveGalaxyEP18GalaxyMoveArgumentb",
+      "demangled": "StorySequenceExecutor::moveGalaxy(GalaxyMoveArgument*, bool)",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": false
+    },
+    {
+      "symbol": "__ZN21StorySequenceExecutor18setNerveSceneStartEv",
+      "demangled": "StorySequenceExecutor::setNerveSceneStart()",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": false
+    },
+    {
+      "symbol": "__ZN21StorySequenceExecutor6updateEv",
+      "demangled": "StorySequenceExecutor::update()",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": false
+    },
+    {
+      "symbol": "__ZN21StorySequenceExecutor9forceStopEv",
+      "demangled": "StorySequenceExecutor::forceStop()",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": false
+    },
+    {
+      "symbol": "__ZN21StorySequenceExecutorC1Ev",
+      "demangled": "StorySequenceExecutor::StorySequenceExecutor()",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": false
+    },
+    {
+      "symbol": "__ZN25GameSystemSceneController18requestChangeSceneEv",
+      "demangled": "GameSystemSceneController::requestChangeScene()",
+      "defined_in_game_archive": false,
+      "defined_in_showcase": false,
+      "classification": "missing project definition",
+      "reference_file": "decomp/src/Game/System/GameSystemSceneController.cpp",
+      "reference_candidates": [
+        {
+          "line": 87,
+          "text": "void GameSystemSceneController::requestChangeScene() {"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN25GameSystemSceneController24startScenarioSelectSceneEv",
+      "demangled": "GameSystemSceneController::startScenarioSelectScene()",
+      "defined_in_game_archive": false,
+      "defined_in_showcase": false,
+      "classification": "missing project definition",
+      "reference_file": "decomp/src/Game/System/GameSystemSceneController.cpp",
+      "reference_candidates": [
+        {
+          "line": 279,
+          "text": "void GameSystemSceneController::startScenarioSelectScene() {"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN25GameSystemSceneController34startScenarioSelectSceneBackgroundEv",
+      "demangled": "GameSystemSceneController::startScenarioSelectSceneBackground()",
+      "defined_in_game_archive": false,
+      "defined_in_showcase": false,
+      "classification": "missing project definition",
+      "reference_file": "decomp/src/Game/System/GameSystemSceneController.cpp",
+      "reference_candidates": [
+        {
+          "line": 283,
+          "text": "void GameSystemSceneController::startScenarioSelectSceneBackground() {"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN26FindingLuigiEventScheduler19updateOnStageResultEPKci",
+      "demangled": "FindingLuigiEventScheduler::updateOnStageResult(char const*, int)",
+      "defined_in_game_archive": false,
+      "defined_in_showcase": false,
+      "classification": "missing project definition",
+      "reference_file": "decomp/src/Game/System/FindingLuigiEventScheduler.cpp",
+      "reference_candidates": [
+        {
+          "line": 48,
+          "text": "void FindingLuigiEventScheduler::updateOnStageResult(const char* pClearedStageName, s32 clearedStarID) {"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN26FindingLuigiEventScheduler22clearLostAndFoundCountEv",
+      "demangled": "FindingLuigiEventScheduler::clearLostAndFoundCount()",
+      "defined_in_game_archive": false,
+      "defined_in_showcase": false,
+      "classification": "missing project definition",
+      "reference_file": "decomp/src/Game/System/FindingLuigiEventScheduler.cpp",
+      "reference_candidates": [
+        {
+          "line": 156,
+          "text": "void FindingLuigiEventScheduler::clearLostAndFoundCount() {"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN26FindingLuigiEventScheduler23initAfterResourceLoadedEv",
+      "demangled": "FindingLuigiEventScheduler::initAfterResourceLoaded()",
+      "defined_in_game_archive": false,
+      "defined_in_showcase": false,
+      "classification": "missing project definition",
+      "reference_file": "decomp/src/Game/System/FindingLuigiEventScheduler.cpp",
+      "reference_candidates": [
+        {
+          "line": 20,
+          "text": "void FindingLuigiEventScheduler::initAfterResourceLoaded() {"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN26FindingLuigiEventScheduler6updateERK18GalaxyMoveArgument",
+      "demangled": "FindingLuigiEventScheduler::update(GalaxyMoveArgument const&)",
+      "defined_in_game_archive": false,
+      "defined_in_showcase": false,
+      "classification": "missing project definition",
+      "reference_file": "decomp/src/Game/System/FindingLuigiEventScheduler.cpp",
+      "reference_candidates": [
+        {
+          "line": 25,
+          "text": "void FindingLuigiEventScheduler::update(const GalaxyMoveArgument& rMoveArg) {"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN26FindingLuigiEventSchedulerC1Ev",
+      "demangled": "FindingLuigiEventScheduler::FindingLuigiEventScheduler()",
+      "defined_in_game_archive": false,
+      "defined_in_showcase": false,
+      "classification": "missing project definition",
+      "reference_file": "decomp/src/Game/System/FindingLuigiEventScheduler.cpp",
+      "reference_candidates": [
+        {
+          "line": 17,
+          "text": "FindingLuigiEventScheduler::FindingLuigiEventScheduler() : mLuigiLostStageName(nullptr), mLuigiLostStarID(-1), mLuigiMailDirector(nullptr) {"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN26StarPointerOnOffController14setStateToBaseEPv",
+      "demangled": "StarPointerOnOffController::setStateToBase(void*)",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": true
+    },
+    {
+      "symbol": "__ZN26StarPointerOnOffController15setStateToTitleEPv",
+      "demangled": "StarPointerOnOffController::setStateToTitle(void*)",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": false
+    },
+    {
+      "symbol": "__ZN26StarPointerOnOffController6updateEv",
+      "demangled": "StarPointerOnOffController::update()",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": true
+    },
+    {
+      "symbol": "__ZN26StarPointerOnOffControllerC1Ev",
+      "demangled": "StarPointerOnOffController::StarPointerOnOffController()",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": true
+    },
+    {
+      "symbol": "__ZN2MR11isFirstStepEPK13NerveExecutor",
+      "demangled": "MR::isFirstStep(NerveExecutor const*)",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": true
+    },
+    {
+      "symbol": "__ZN2MR13isEqualStringEPKcS1_",
+      "demangled": "MR::isEqualString(char const*, char const*)",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": true
+    },
+    {
+      "symbol": "__ZN2MR13isGreaterStepEPK13NerveExecutori",
+      "demangled": "MR::isGreaterStep(NerveExecutor const*, int)",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": false
+    },
+    {
+      "symbol": "__ZN2MR13startSystemSEEPKcii",
+      "demangled": "MR::startSystemSE(char const*, int, int)",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": true
+    },
+    {
+      "symbol": "__ZN2MR16isEqualSceneNameEPKc",
+      "demangled": "MR::isEqualSceneName(char const*)",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": false
+    },
+    {
+      "symbol": "__ZN2MR16isEqualStageNameEPKc",
+      "demangled": "MR::isEqualStageName(char const*)",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": true
+    },
+    {
+      "symbol": "__ZN2MR16startGlobalTimerEv",
+      "demangled": "MR::startGlobalTimer()",
+      "defined_in_game_archive": false,
+      "defined_in_showcase": false,
+      "classification": "missing project definition",
+      "reference_file": "decomp/src/Game/Util/ScreenUtil.cpp",
+      "reference_candidates": [
+        {
+          "line": 357,
+          "text": "void startGlobalTimer() {"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN2MR17forceOpenWipeFadeEv",
+      "demangled": "MR::forceOpenWipeFade()",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": false
+    },
+    {
+      "symbol": "__ZN2MR17isStageFileSelectEv",
+      "demangled": "MR::isStageFileSelect()",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": false
+    },
+    {
+      "symbol": "__ZN2MR19getCurrentStageNameEv",
+      "demangled": "MR::getCurrentStageName()",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": true
+    },
+    {
+      "symbol": "__ZN2MR20getCurrentScenarioNoEv",
+      "demangled": "MR::getCurrentScenarioNo()",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": true
+    },
+    {
+      "symbol": "__ZN2MR22setStarPointerModeBaseEv",
+      "demangled": "MR::setStarPointerModeBase()",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": false
+    },
+    {
+      "symbol": "__ZN2MR23forceOpenSystemWipeFadeEv",
+      "demangled": "MR::forceOpenSystemWipeFade()",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": false
+    },
+    {
+      "symbol": "__ZN2MR23requestChangeSceneTitleEv",
+      "demangled": "MR::requestChangeSceneTitle()",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": false
+    },
+    {
+      "symbol": "__ZN2MR24makeGalaxyStatusAccessorEPKc",
+      "demangled": "MR::makeGalaxyStatusAccessor(char const*)",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": false
+    },
+    {
+      "symbol": "__ZN2MR24setPlayerSwingPermissionEb",
+      "demangled": "MR::setPlayerSwingPermission(bool)",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": true
+    },
+    {
+      "symbol": "__ZN2MR24startStarPointerModeGameEPv",
+      "demangled": "MR::startStarPointerModeGame(void*)",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": false
+    },
+    {
+      "symbol": "__ZN2MR27requestChangeSceneAfterBootEv",
+      "demangled": "MR::requestChangeSceneAfterBoot()",
+      "defined_in_game_archive": false,
+      "defined_in_showcase": false,
+      "classification": "missing project definition",
+      "reference_file": "decomp/src/Game/Util/SequenceUtil.cpp",
+      "reference_candidates": [
+        {
+          "line": 59,
+          "text": "void requestChangeSceneAfterBoot() {"
+        }
+      ]
+    },
+    {
+      "symbol": "__ZN2MR6isDeadEPK11LayoutActor",
+      "demangled": "MR::isDead(LayoutActor const*)",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": true
+    },
+    {
+      "symbol": "__ZN2MR6isStepEPK13NerveExecutori",
+      "demangled": "MR::isStep(NerveExecutor const*, int)",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": true
+    },
+    {
+      "symbol": "__ZN7NameObj15initWithoutIterEv",
+      "demangled": "NameObj::initWithoutIter()",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": true
+    },
+    {
+      "symbol": "__ZNK13NerveExecutor7isNerveEPK5Nerve",
+      "demangled": "NerveExecutor::isNerve(Nerve const*) const",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": true
+    },
+    {
+      "symbol": "__ZNK17GameEventFlagIter5isEndEv",
+      "demangled": "GameEventFlagIter::isEnd() const",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": false
+    },
+    {
+      "symbol": "__ZNK17GameEventFlagIter7getFlagEv",
+      "demangled": "GameEventFlagIter::getFlag() const",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": false
+    },
+    {
+      "symbol": "__ZNK18GalaxyMoveArgument20isEqualStageScenarioEPKci",
+      "demangled": "GalaxyMoveArgument::isEqualStageScenario(char const*, int) const",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": false
+    },
+    {
+      "symbol": "__ZNK20GalaxyStatusAccessor11isCometStarEi",
+      "demangled": "GalaxyStatusAccessor::isCometStar(int) const",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": false
+    },
+    {
+      "symbol": "__ZNK21GameEventFlagAccessor14getRequirementEv",
+      "demangled": "GameEventFlagAccessor::getRequirement() const",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": false
+    },
+    {
+      "symbol": "__ZNK21GameEventFlagAccessor17getEventValueNameEv",
+      "demangled": "GameEventFlagAccessor::getEventValueName() const",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": false
+    },
+    {
+      "symbol": "__ZNK21GameEventFlagAccessor22isTypeEventValueIsZeroEv",
+      "demangled": "GameEventFlagAccessor::isTypeEventValueIsZero() const",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": false
+    },
+    {
+      "symbol": "__ZNK21GameEventFlagAccessor7getNameEv",
+      "demangled": "GameEventFlagAccessor::getName() const",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": false
+    },
+    {
+      "symbol": "__ZNK21StorySequenceExecutor26isEqualStageScenarioBeforeEPKci",
+      "demangled": "StorySequenceExecutor::isEqualStageScenarioBefore(char const*, int) const",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": false
+    },
+    {
+      "symbol": "__ZNK5Nerve12executeOnEndEP5Spine",
+      "demangled": "Nerve::executeOnEnd(Spine*) const",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": true
+    },
+    {
+      "symbol": "__ZTI13NerveExecutor",
+      "demangled": "typeinfo for NerveExecutor",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": true
+    },
+    {
+      "symbol": "__ZTI5Nerve",
+      "demangled": "typeinfo for Nerve",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": true
+    },
+    {
+      "symbol": "__ZTVN10__cxxabiv120__si_class_type_infoE",
+      "demangled": "vtable for __cxxabiv1::__si_class_type_info",
+      "defined_in_game_archive": false,
+      "defined_in_showcase": false,
+      "classification": "system C++ runtime"
+    },
+    {
+      "symbol": "__ZdlPvm",
+      "demangled": "operator delete(void*, unsigned long)",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": true
+    },
+    {
+      "symbol": "__Znwm",
+      "demangled": "operator new(unsigned long)",
+      "defined_in_game_archive": true,
+      "defined_in_showcase": true
+    },
+    {
+      "symbol": "___gxx_personality_v0",
+      "demangled": "___gxx_personality_v0",
+      "defined_in_game_archive": false,
+      "defined_in_showcase": false,
+      "classification": "system C++ runtime"
+    }
+  ]
+}

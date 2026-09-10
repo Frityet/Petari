@@ -1,0 +1,49 @@
+{
+  "scope": "Aurora SDK input records and sample publication only",
+  "root_head": "9b6a1741219bf4b195fa18cad3af438a31613e0b",
+  "aurora_base_head": "7f93df56a1053deb9b2572a1af8fd4044c963078",
+  "files": [
+    {
+      "path": "aurora/include/revolution.h",
+      "sha256": "3491bf430169cc21228d1c597c9b891cd04a5014623bcb6fac15ee1678a6772d"
+    },
+    {
+      "path": "aurora/include/revolution/kpad.h",
+      "sha256": "79c5be4a580f5654333d29789b672b42e47586aa963ea6648d6a58fc85927abf"
+    },
+    {
+      "path": "aurora/include/aurora/wpad.hpp",
+      "sha256": "2afc2d942fa374d81e529212cad3e442b19abdee2cf39a194f5aebaaca9850ff"
+    },
+    {
+      "path": "aurora/lib/wpad.cpp",
+      "sha256": "97369d78d53de27996e97a5ccb34c21d5c4dea41ec6b3b66f174ae12e797ec35"
+    },
+    {
+      "path": "aurora/tests/wpad_test.cpp",
+      "sha256": "4eb99cf8a5c49687f9f73a503fbd22d5fa772309339436229b8032f620ed6465"
+    }
+  ],
+  "references": [
+    {
+      "path": "decomp/libs/RVL_SDK/include/revolution/kpad.h",
+      "sha256": "e9a2ecc05efc733b96ab7d8dfae1c5bdff8a0a6f6046c93f5684ba35941b0ab4"
+    },
+    {
+      "path": "decomp/libs/RVL_SDK/include/revolution/wpad.h",
+      "sha256": "ff3b22b2925f685e9a954ecf2ba54f9f35a112af35ab5d1cead144478e8ffec8"
+    },
+    {
+      "path": "decomp/src/RVL_SDK/kpad/KPAD.c",
+      "sha256": "f609a2546e27b12fa2409c46abebd923e4b8fd46903969354af49ca1ade5b8b5"
+    },
+    {
+      "path": "decomp/src/Game/System/WPad.cpp",
+      "sha256": "d2d5f5c2b36f0cb2941d9489e0d2ddba638c5d98bdd036db3a300514c5afd24b"
+    },
+    {
+      "path": "decomp/src/Game/System/WPadStick.cpp",
+      "sha256": "26b5f3cbd3bb7e5f39dee19814f888b6be895008ed9dd04405ca44ecfb531174"
+    }
+  ]
+}

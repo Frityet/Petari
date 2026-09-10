@@ -1,0 +1,82 @@
+[
+  {
+    "reference": "decomp/include/Game/System/GameEventFlagChecker.hpp",
+    "scratch": "notes/original-sequence-start-20260910/game-data-owner/include/Game/System/GameEventFlagChecker.hpp",
+    "sha256": "df5caecd9bb2a98b2969910ee89a1cd3c8de64c7b27302c3a0d9b646e0fb5977"
+  },
+  {
+    "reference": "decomp/include/Game/System/GameEventFlagStorage.hpp",
+    "scratch": "notes/original-sequence-start-20260910/game-data-owner/include/Game/System/GameEventFlagStorage.hpp",
+    "sha256": "d8ed627d4d3f38e161f14951d22cd3d81d9b06c37c8aa0007351dc4373f42933"
+  },
+  {
+    "reference": "decomp/include/Game/System/GameEventValueChecker.hpp",
+    "scratch": "notes/original-sequence-start-20260910/game-data-owner/include/Game/System/GameEventValueChecker.hpp",
+    "sha256": "df3dded8a682e61da4c889b9bd607e4d1c4f3dd0b2c65b5a51d5792369eaacb6"
+  },
+  {
+    "reference": "decomp/include/Game/System/ScenarioProgressTestRun.hpp",
+    "scratch": "notes/original-sequence-start-20260910/game-data-owner/include/Game/System/ScenarioProgressTestRun.hpp",
+    "sha256": "74ac161e119a3e73e8e86411753bc7c0b490adf2a80c724c0e1829e043146b30"
+  },
+  {
+    "reference": "decomp/include/Game/System/SpinDriverPathStorage.hpp",
+    "scratch": "notes/original-sequence-start-20260910/game-data-owner/include/Game/System/SpinDriverPathStorage.hpp",
+    "sha256": "2fcd10c8d71ea4dbd990cc621df53adf1b109f9990cbcc04566ac630b77de682"
+  },
+  {
+    "reference": "decomp/include/Game/System/StarPieceAlmsStorage.hpp",
+    "scratch": "notes/original-sequence-start-20260910/game-data-owner/include/Game/System/StarPieceAlmsStorage.hpp",
+    "sha256": "82c9b023d9d980de219d87c72ff34d48c838e55f5f61081f2cf401b1c7a9d30a"
+  },
+  {
+    "reference": "decomp/include/Game/System/GameEventFlagChecker.hpp",
+    "scratch": "notes/original-sequence-start-20260910/game-data-owner/include/Game/System/GameEventFlagChecker.hpp",
+    "sha256": "df5caecd9bb2a98b2969910ee89a1cd3c8de64c7b27302c3a0d9b646e0fb5977"
+  },
+  {
+    "reference": "decomp/include/Game/System/GameEventFlagStorage.hpp",
+    "scratch": "notes/original-sequence-start-20260910/game-data-owner/include/Game/System/GameEventFlagStorage.hpp",
+    "sha256": "d8ed627d4d3f38e161f14951d22cd3d81d9b06c37c8aa0007351dc4373f42933"
+  },
+  {
+    "reference": "decomp/include/Game/System/GameEventFlagStorage.hpp",
+    "scratch": "notes/original-sequence-start-20260910/game-data-owner/include/Game/System/GameEventFlagStorage.hpp",
+    "sha256": "d8ed627d4d3f38e161f14951d22cd3d81d9b06c37c8aa0007351dc4373f42933"
+  },
+  {
+    "reference": "decomp/include/Game/Util/BitArray.hpp",
+    "scratch": "notes/original-sequence-start-20260910/game-data-owner/include/Game/Util/BitArray.hpp",
+    "sha256": "1175887d1f6eaf5c8ea54d9875e22d0b10c1b8588d0e0944798034a775f33c0b"
+  },
+  {
+    "reference": "decomp/include/Game/System/GameEventValueChecker.hpp",
+    "scratch": "notes/original-sequence-start-20260910/game-data-owner/include/Game/System/GameEventValueChecker.hpp",
+    "sha256": "df3dded8a682e61da4c889b9bd607e4d1c4f3dd0b2c65b5a51d5792369eaacb6"
+  },
+  {
+    "reference": "decomp/include/Game/System/FindingLuigiEventScheduler.hpp",
+    "scratch": "notes/original-sequence-start-20260910/game-data-owner/include/Game/System/FindingLuigiEventScheduler.hpp",
+    "sha256": "1dc1817d2f53a92785f0b1ece9a7382d18260906bce657dca1e4ef4bd8958421"
+  },
+  {
+    "reference": "decomp/include/Game/System/SpinDriverPathStorage.hpp",
+    "scratch": "notes/original-sequence-start-20260910/game-data-owner/include/Game/System/SpinDriverPathStorage.hpp",
+    "sha256": "2fcd10c8d71ea4dbd990cc621df53adf1b109f9990cbcc04566ac630b77de682"
+  },
+  {
+    "reference": "decomp/include/Game/System/StarPieceAlmsStorage.hpp",
+    "scratch": "notes/original-sequence-start-20260910/game-data-owner/include/Game/System/StarPieceAlmsStorage.hpp",
+    "sha256": "82c9b023d9d980de219d87c72ff34d48c838e55f5f61081f2cf401b1c7a9d30a"
+  },
+  {
+    "reference": "decomp/include/Game/System/ScenarioProgressTestRun.hpp",
+    "scratch": "notes/original-sequence-start-20260910/game-data-owner/include/Game/System/ScenarioProgressTestRun.hpp",
+    "sha256": "74ac161e119a3e73e8e86411753bc7c0b490adf2a80c724c0e1829e043146b30"
+  },
+  {
+    "reference": "decomp/include/Game/Util/BitArray.hpp",
+    "scratch": "notes/original-sequence-start-20260910/game-data-owner/include/Game/Util/BitArray.hpp",
+    "sha256": "1175887d1f6eaf5c8ea54d9875e22d0b10c1b8588d0e0944798034a775f33c0b"
+  }
+]

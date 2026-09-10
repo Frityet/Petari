@@ -69,15 +69,17 @@ WPadOwnership::~WPadOwnership() {
     current_wpad_owner = _previous;
     if (_previous) for (auto* pad : _previous->_state->pads) pad->_18->registInstance();
 }
-void WPadOwnership::update_pointer_samples() {
+void WPadOwnership::update_samples() {
     JkrAllocationScope game(_state->domain);
     for (s32 channel = 0; channel < 2; ++channel) {
         auto& pad = *_state->pads[channel];
         auto& record = *_state->records[channel];
         record.mValidStatusCount = KPADRead(channel, record.mStatusArray, 120);
         pad.mIsConnected = aurora::wpad_service().is_connected(channel);
-        pad.mPointer->update();
+        pad.mIsSubPadConnected = MR::isDeviceFreeStyle(pad.getKPadStatus(0));
         pad.mButton->update();
+        pad.mPointer->update();
+        pad.mStick->update();
     }
 }
 WPad& WPadOwnership::pad(int channel) {
@@ -88,6 +90,10 @@ WPad& WPadOwnership::pad(int channel) {
 } // namespace smgpc::compat
 
 namespace MR {
+bool isDeviceFreeStyle(const KPADStatus* pStatus) {
+    return pStatus != nullptr && pStatus->wpad_err == WPAD_ERR_NONE && pStatus->dev_type == WPAD_DEV_FREESTYLE;
+}
+
 WPad* getWPad(s32 channel) {
     if (!smgpc::compat::current_wpad_owner)
         aurora::throw_host_exception<std::logic_error>("Original WPad records require an active input owner.");

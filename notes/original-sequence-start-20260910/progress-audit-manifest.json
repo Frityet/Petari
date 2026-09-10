@@ -1,0 +1,58 @@
+{
+  "scope": "Unmodified original GameSequenceProgress translation unit isolated native compilation and direct symbol inventory only; no production edits, linked fixture, runtime proof, or complete transitive closure.",
+  "root_head": "9b6a1741219bf4b195fa18cad3af438a31613e0b",
+  "decomp_head": "ef44fad5dbc7def9d25cf149b823e1cf512bd3e2",
+  "compiler": "Homebrew clang version 23.1.0\nTarget: arm64-apple-darwin25.6.0\nThread model: posix\nInstalledDir: /opt/homebrew/Cellar/llvm/23.1.0/bin\nConfiguration file: /opt/homebrew/Cellar/llvm/23.1.0/etc/clang/arm64-apple-darwin25.cfg\n",
+  "original_source_sha256": "dafc15ab29f4b7259597e8e8574f5ddb16a99d7b658c05b0119f47a6b0749c8c",
+  "original_function_definitions": 25,
+  "overlay_headers": [
+    {
+      "path": "Game/Screen/PlayerMissLeft.hpp",
+      "sha256": "de468d7a2d009f8e751e2c5d328ffdc623ea6ee746248b993a830eeff92d5e46",
+      "native_exists": false
+    },
+    {
+      "path": "Game/System/FindingLuigiEventScheduler.hpp",
+      "sha256": "1dc1817d2f53a92785f0b1ece9a7382d18260906bce657dca1e4ef4bd8958421",
+      "native_exists": false
+    },
+    {
+      "path": "Game/System/GalaxyCometScheduler.hpp",
+      "sha256": "4420bf940c9c945d2eef73fd88bdaa37b869d525e80e1bb318a900cf3ffa0815",
+      "native_exists": false
+    },
+    {
+      "path": "Game/System/GameSequenceFunction.hpp",
+      "sha256": "209c21a893ab63780a05d966d07c1982ddb8d34494e4987ce559a5592cc01540",
+      "native_exists": true
+    },
+    {
+      "path": "Game/System/GameSequenceProgress.hpp",
+      "sha256": "2f8c1c849a537951bd05eee108b15657db834b3693ab4dfbd05abcd979f110f3",
+      "native_exists": false
+    },
+    {
+      "path": "Game/System/GameSystem.hpp",
+      "sha256": "faaaf8667d1ab1db15f4c9a75ce608ce763c436c1e85c86c033e31aabf94c722",
+      "native_exists": false
+    },
+    {
+      "path": "Game/System/LuigiLeftSupplier.hpp",
+      "sha256": "72de1cae2a288322857fc3261af535eb8d70bfbadf65ddc9cdbb0f8223ac0178",
+      "native_exists": false
+    }
+  ],
+  "compile_exit": 0,
+  "direct_undefined_count": 106,
+  "missing_project_symbols": 36,
+  "missing_system_runtime_symbols": 3,
+  "present_symbols_with_unavailable_provider": 6,
+  "artifacts": [
+    "probe-command.json",
+    "probe-history.json",
+    "direct-symbols.json",
+    "probe-01-own-header.log",
+    "probe-02-missing-headers.log",
+    "probe-03-original-sequence-function-header.log"
+  ]
+}
