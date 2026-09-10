@@ -14,6 +14,7 @@
 #include "compat/ResourceHolderCompat.hpp"
 #include "render/effects/EffectResource.hpp"
 #include "resource/RarcArchive.hpp"
+#include "resource/TextEncoding.hpp"
 #include "runtime/RuntimeContext.hpp"
 
 #include <memory>
@@ -100,7 +101,8 @@ namespace OceanHomeMapFunction {
             return;
         }
         const auto name = std::string_view(planet->mName);
-        if (name == "海洋ホーム惑星" || name == "オーシャンリング惑星") {
+        if (name == smgpc::resource::encode_cp932("海洋ホーム惑星") ||
+            name == smgpc::resource::encode_cp932("オーシャンリング惑星")) {
             aurora::throw_host_exception<std::logic_error>(
                 "OceanHome PlanetMap control is unavailable in the ordinary planet tranche.");
         }

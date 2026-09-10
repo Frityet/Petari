@@ -1,0 +1,148 @@
+[
+  {
+    "name": "original-save-owner",
+    "arguments": [
+      "build/macosx/arm64/debug/smg-pc-original-save-owner-tests"
+    ],
+    "exit": 0,
+    "seconds": 0.3416929244995117,
+    "sha256": "faa54b1d1e67129f15b054cb140454a4f30b7dc4eb3f141c373cf2fde958e62f"
+  },
+  {
+    "name": "original-jsu-stream",
+    "arguments": [
+      "build/macosx/arm64/debug/smg-pc-original-jsu-stream-tests"
+    ],
+    "exit": 0,
+    "seconds": 0.2900431156158447,
+    "sha256": "f5e69a10bbe4d6584518c91a794a9e5e51b9daa27664a89ba2b8dc01809c9c72"
+  },
+  {
+    "name": "original-player-status-storage",
+    "arguments": [
+      "build/macosx/arm64/debug/smg-pc-original-player-status-storage-tests"
+    ],
+    "exit": 0,
+    "seconds": 0.29096508026123047,
+    "sha256": "1aec20947ca4f9ff3fb7fd52e99ef5e396a194f5a266f04f1df39803993785dd"
+  },
+  {
+    "name": "game-data-star-storage",
+    "arguments": [
+      "build/macosx/arm64/debug/smg-pc-game-data-star-storage-tests"
+    ],
+    "exit": 0,
+    "seconds": 0.34842610359191895,
+    "sha256": "07f911115c0053de866dfe6a61048481035e63499fb391220a91ba76fad4c66e"
+  },
+  {
+    "name": "game-data-real-or-absent",
+    "arguments": [
+      "build/macosx/arm64/debug/smg-pc-game-data-real-or-absent-tests"
+    ],
+    "exit": 0,
+    "seconds": 0.3405790328979492,
+    "sha256": "1ac07fd8adb1767e9962c41cac979a94537c2b17ab3d0a89cfc0572d9f3959a4"
+  },
+  {
+    "name": "text-encoding",
+    "arguments": [
+      "build/macosx/arm64/debug/smg-pc-text-encoding-tests"
+    ],
+    "exit": 0,
+    "seconds": 0.291240930557251,
+    "sha256": "53e4d9cd75a12b1d01a12f72381756aec619dcd8f6970c8b38a43be4e268b585"
+  },
+  {
+    "name": "demo-sheet-runtime",
+    "arguments": [
+      "build/macosx/arm64/debug/smg-pc-demo-sheet-runtime-tests"
+    ],
+    "exit": 0,
+    "seconds": 0.2930488586425781,
+    "sha256": "2592d21b5692705441a9de41690dc12562e999053a5612a0d0b166d5c97e8342"
+  },
+  {
+    "name": "demo-scene-runtime",
+    "arguments": [
+      "build/macosx/arm64/debug/smg-pc-demo-scene-runtime-tests"
+    ],
+    "exit": 0,
+    "seconds": 0.3459298610687256,
+    "sha256": "b6eee3f237f9c3b1ddc790582679a5772e6f16e715157ea5c7595c83b644018f",
+    "note": "Corrected fixture expectation to the explicit CP932 identity contract; rerun20/20"
+  },
+  {
+    "name": "object-name-table",
+    "arguments": [
+      "build/macosx/arm64/debug/smg-pc-object-name-table-tests"
+    ],
+    "exit": 0,
+    "seconds": 0.3971419334411621,
+    "sha256": "85d48ef6cf188f35b5c6e67a71987190a8b9ca4c3970ae8db6ab8536751c9283"
+  },
+  {
+    "name": "point-light-runtime",
+    "arguments": [
+      "build/macosx/arm64/debug/smg-pc-point-light-runtime-tests"
+    ],
+    "exit": -11,
+    "seconds": 0.8320159912109375,
+    "sha256": "99e4bf0349837fb0f18a4f370f7e4a05e560799ec22a1665b970426155db5188"
+  },
+  {
+    "name": "actor-event-camera",
+    "arguments": [
+      "build/macosx/arm64/debug/smg-pc-actor-event-camera-tests"
+    ],
+    "exit": -11,
+    "seconds": 0.4512181282043457,
+    "sha256": "0a36b2791038049a01a046cfbbe64d77fbb653bf59653298d991f544f2b5cdc3"
+  },
+  {
+    "name": "stage-start-camera",
+    "arguments": [
+      "build/macosx/arm64/debug/smg-pc-stage-start-camera-tests"
+    ],
+    "exit": -11,
+    "seconds": 0.44798803329467773,
+    "sha256": "526980de7525a3ea0efd6e99d5f1ecb88d87176c37f05108f3ebd4b2dd77838f"
+  },
+  {
+    "name": "original-shadow-controller-owner",
+    "arguments": [
+      "build/macosx/arm64/debug/smg-pc-original-shadow-controller-owner-tests"
+    ],
+    "exit": 1,
+    "seconds": 0.6572730541229248,
+    "sha256": "c633ed52d68ebb74d281fdd6b103b304680e37a81e25b2f721782230e82b20e0"
+  },
+  {
+    "name": "feedback-real-or-absent",
+    "arguments": [
+      "build/macosx/arm64/debug/smg-pc-feedback-real-or-absent-tests"
+    ],
+    "exit": -11,
+    "seconds": 0.4425787925720215,
+    "sha256": "95acd77752417812e4e57e3d74bc2d6426ee9c3e8cacc6c4009fbd14252dde5a"
+  },
+  {
+    "name": "original-scene-wipe-owner",
+    "arguments": [
+      "build/macosx/arm64/debug/smg-pc-original-scene-wipe-owner-tests"
+    ],
+    "exit": 0,
+    "seconds": 0.7163691520690918,
+    "sha256": "37f9a6994d6f0c61b95fc993e6e75670e4f07a8ff2c9c6a02f89f75bd8bd1939"
+  },
+  {
+    "name": "mario-gateway-walk",
+    "arguments": [
+      "build/macosx/arm64/debug/smg-pc-mario-gateway-walk-tests",
+      "--player-util"
+    ],
+    "exit": 0,
+    "seconds": 1.4075231552124023,
+    "sha256": "b8b17ae5d2b46ac4bc2c3f375c8ad2694d63da4d8ee67c4e227123826fe3745b"
+  }
+]

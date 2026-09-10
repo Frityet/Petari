@@ -108,8 +108,7 @@ namespace smgpc::compat {
                 auto group_link_id = placement.l_id;
                 (void)iter.getValue("l_id", &group_link_id);
 
-                const auto demo_name = smgpc::resource::decode_cp932(
-                    raw_demo_name != nullptr ? std::string_view(raw_demo_name) : std::string_view{});
+                const auto demo_name = raw_demo_name != nullptr ? std::string(raw_demo_name) : std::string{};
                 if (placement.object_name == cSubDemoObjectName) {
                     collected.subgroups.push_back(SubGroupSeed{
                         .zone_id = placement.zone_id,
@@ -322,7 +321,7 @@ namespace smgpc::compat {
                 } catch (const std::exception &error) {
                     aurora::throw_host_exception<std::runtime_error>("Cannot load DemoGroup at " + seed.source_table_path +
                                              " row " + std::to_string(seed.source_row) +
-                                             " (TimeSheetName='" + seed.time_sheet_name + "'): " +
+                                             " (TimeSheetName='" + resource::decode_cp932(seed.time_sheet_name) + "'): " +
                                              error.what());
                 }
             }
@@ -382,8 +381,8 @@ namespace smgpc::compat {
             const Cast &cast, std::string_view callback_kind) const {
             aurora::throw_host_exception<std::runtime_error>(
                 "Demo Action row is missing its registered " +
-                std::string(callback_kind) + ": demo='" + definition.demo_name +
-                "' part='" + row.part_name + "' cast='" + cast.name + "'");
+                std::string(callback_kind) + ": demo='" + resource::decode_cp932(definition.demo_name) +
+                "' part='" + resource::decode_cp932(row.part_name) + "' cast='" + resource::decode_cp932(cast.name) + "'");
         }
 
         [[nodiscard]] TalkMessageCtrl *require_action_talk_ctrl(
@@ -464,8 +463,8 @@ namespace smgpc::compat {
                 if (found == general_positions.end()) {
                     aurora::throw_host_exception<std::runtime_error>(
                         "Demo Action PosName is absent from the active scene GeneralPos data: demo='" +
-                        definition.demo_name + "' part='" + row.part_name +
-                        "' position='" + row.position_name + "'");
+                        resource::decode_cp932(definition.demo_name) + "' part='" + resource::decode_cp932(row.part_name) +
+                        "' position='" + resource::decode_cp932(row.position_name) + "'");
                 }
                 actor->mPosition.set(found->world_position[0U], found->world_position[1U],
                                      found->world_position[2U]);
@@ -517,8 +516,8 @@ namespace smgpc::compat {
                     if (found == general_positions.end()) {
                         aurora::throw_host_exception<std::runtime_error>(
                             "Demo Player PosName is absent from the active scene GeneralPos data: demo='" +
-                            definition.demo_name + "' part='" + row.part_name +
-                            "' position='" + row.position_name + "'");
+                            resource::decode_cp932(definition.demo_name) + "' part='" + resource::decode_cp932(row.part_name) +
+                            "' position='" + resource::decode_cp932(row.position_name) + "'");
                     }
                     actor->mPosition.set(found->world_position[0U],
                                          found->world_position[1U],
@@ -583,11 +582,11 @@ namespace smgpc::compat {
             if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr) {
                 runtime->emit_semantic_trace_event(
                     "demo", event,
-                    "actor=" + actor_name(cast.actor) + ";demo=" + definition.demo_name +
+                    "actor=" + resource::decode_cp932(actor_name(cast.actor)) + ";demo=" + resource::decode_cp932(definition.demo_name) +
                         ";zone=" + std::to_string(definition.zone_id) +
                         ";group=" + std::to_string(definition.group_link_id) +
                         ";cast=" + std::to_string(cast.cast_id) +
-                        (!action_name.empty() ? ";action=" + std::string(action_name) : std::string{}));
+                        (!action_name.empty() ? ";action=" + resource::decode_cp932(action_name) : std::string{}));
             }
 #else
             static_cast<void>(event);
@@ -603,7 +602,7 @@ namespace smgpc::compat {
             if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr) {
                 runtime->emit_semantic_trace_event(
                     "demo", event,
-                    "demo=" + definition.demo_name +
+                    "demo=" + resource::decode_cp932(definition.demo_name) +
                         ";zone=" + std::to_string(definition.zone_id) +
                         ";group=" + std::to_string(definition.group_link_id) +
                         (!detail.empty() ? ";" + std::string(detail) : std::string{}));
@@ -620,9 +619,9 @@ namespace smgpc::compat {
 #ifndef NDEBUG
             if (auto *runtime = smgpc::runtime::RuntimeContext::try_instance();
                 runtime != nullptr) {
-                auto detail = "name=" + std::string(demo_name);
+                auto detail = "name=" + resource::decode_cp932(demo_name);
                 if (owner != nullptr && owner->getName() != nullptr) {
-                    detail += ";owner=" + std::string(owner->getName());
+                    detail += ";owner=" + resource::decode_cp932(owner->getName());
                 }
                 runtime->emit_semantic_trace_event("demo", event, detail);
             }
@@ -729,18 +728,20 @@ namespace smgpc::compat {
 
     void dispatch_demo_wipe_row(const DemoWipeRow &row,
                                 smgpc::runtime::WipeService &wipe) {
+        // WipeService owns host-facing event text, unlike the Game sheet.
+        const auto display_name = resource::decode_cp932(row.wipe_name);
         switch (row.wipe_type) {
         case 0:
-            wipe.open(row.wipe_name, row.wipe_frame);
+            wipe.open(display_name, row.wipe_frame);
             break;
         case 1:
-            wipe.close(row.wipe_name, row.wipe_frame);
+            wipe.close(display_name, row.wipe_frame);
             break;
         case 2:
-            wipe.force_open(row.wipe_name);
+            wipe.force_open(display_name);
             break;
         case 3:
-            wipe.force_close(row.wipe_name);
+            wipe.force_close(display_name);
             break;
         default:
             break;
@@ -942,7 +943,7 @@ namespace smgpc::compat {
                 MR::offPlayerControl();
                 _impl->puppetable_control_owned = true;
             }
-            const auto detail = part_name.has_value() ? "part=" + std::string(*part_name) : std::string{};
+            const auto detail = part_name.has_value() ? "part=" + resource::decode_cp932(*part_name) : std::string{};
             trace_time_event("timekeeper_started", definition, detail);
             trace_demo_state_event("demo_started", definition.demo_name, starter);
         } else {

@@ -1,3 +1,4 @@
+#include "resource/TextEncoding.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/LiveActor/ShadowController.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
@@ -535,6 +536,16 @@ namespace {
                     state->controllers[0U].drop_direction == &actor.mGravity &&
                     state->controllers[0U].fixed_drop_direction.epsilonEquals(TVec3f{0.0F, -1.0F, 0.0F}, 0.0F),
                 "authored CP932 strings and surface radius must be owned as UTF-8");
+        const auto raw_body = smgpc::resource::encode_cp932("体");
+        const auto raw_group = smgpc::resource::encode_cp932("チコ");
+        const auto* original_body = actor.mShadowControllerList->getController(raw_body.c_str());
+        require(original_body && std::string_view(original_body->mName) == raw_body &&
+                    std::string_view(original_body->mGroupName) == raw_group &&
+                    state->controllers[0U].name_raw == raw_body &&
+                    state->controllers[0U].group_name_raw == raw_group &&
+                    smgpc::compat::actor_shadow_controller_runtime_state(&actor, raw_body.c_str()) ==
+                        &state->controllers[0U],
+                "original shadow names and groups retain CP932 while native display metadata remains UTF-8");
         const auto& base = state->controllers[1U];
         require(base.position_binding == smgpc::compat::ActorShadowPositionBinding::BaseMatrix && base.drop_position_matrix == actor.getBaseMtx() &&
                     base.drop_offset.epsilonEquals(TVec3f{1.0F, 2.0F, 3.0F}, 0.0F) && base.size.epsilonEquals(TVec3f{4.0F, 5.0F, 6.0F}, 0.0F),
@@ -690,24 +701,24 @@ namespace {
         {
             ProbeActor actor;
             actor.initShadowControllerList(2);
-            smgpc::compat::add_actor_shadow_controller(&actor, "体", smgpc::compat::ActorShadowControllerKind::VolumeSphere, 10);
+            smgpc::compat::add_actor_shadow_controller(&actor, smgpc::resource::encode_cp932("体"), smgpc::compat::ActorShadowControllerKind::VolumeSphere, 10);
             smgpc::compat::add_actor_shadow_controller(&actor, "other", smgpc::compat::ActorShadowControllerKind::VolumeSphere, 20);
             auto* list = actor.mShadowControllerList;
-            auto* first = list->getController("体");
+            auto* first = list->getController(smgpc::resource::encode_cp932("体").c_str());
             auto* second = list->getController("other");
             const auto domain = smgpc::scene::current_scene_allocation_domain();
             require(first && second && first != second && first->getHost() == &actor &&
                     JKRHeap::findFromRoot(list) == &domain->heap() && JKRHeap::findFromRoot(first) == &domain->heap(),
-                    "real typed list and controllers use Game storage and preserve decoded names");
+                    "real typed list and controllers use Game storage and preserve original CP932 controller identities");
             actor.mPosition.set(2, 3, 4);
             TVec3f value;
             first->getDropPos(&value);
             require(value.epsilonEquals(actor.mPosition, 0), "original drop position follows the actor pointer");
-            MR::setShadowDropDirection(&actor, "体", TVec3f(1, 0, 0));
+            MR::setShadowDropDirection(&actor, smgpc::resource::encode_cp932("体").c_str(), TVec3f(1, 0, 0));
             first->getDropDir(&value);
             require(value.epsilonEquals(TVec3f(1, 0, 0), 0) && first->mDropDir == nullptr,
                     "Game shadow setter changes the original controller direction");
-            MR::setShadowDropLength(&actor, "体", -3);
+            MR::setShadowDropLength(&actor, smgpc::resource::encode_cp932("体").c_str(), -3);
             require(first->getDropLength() == -3, "drop length preserves the original signed setter");
             first->onCalcCollisionOneTime();
             require(first->isCalcCollision(), "one-shot collision starts pending");

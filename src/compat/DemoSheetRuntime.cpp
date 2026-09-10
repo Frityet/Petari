@@ -64,13 +64,13 @@ namespace smgpc::compat {
             if (!value.has_value()) {
                 aurora::throw_host_exception<std::runtime_error>("cannot read string field '" + std::string(name) + "' at row " + std::to_string(row));
             }
-            return smgpc::resource::decode_cp932(*value);
+            return *value;
         }
 
         [[nodiscard]] std::string read_string_or(const smgpc::resource::BcsvTable &table, std::size_t row, std::string_view name,
                                                  std::string default_value) {
             const auto value = table.get_string(row, name);
-            return value.has_value() ? smgpc::resource::decode_cp932(*value) : std::move(default_value);
+            return value.has_value() ? *value : std::move(default_value);
         }
 
         void parse_time(const smgpc::resource::BcsvTable &table, std::vector<DemoTimeRow> &rows) {
@@ -186,7 +186,7 @@ namespace smgpc::compat {
             for (auto row = std::size_t{}; row < table.entry_count(); ++row) {
                 rows.push_back({
                     .part_name = read_string(table, row, "PartName"),
-                    .wipe_name = read_string_or(table, row, "WipeName", "フェードワイプ"),
+                    .wipe_name = read_string_or(table, row, "WipeName", DemoWipeRow{}.wipe_name),
                     .wipe_type = read_integer_or(table, row, "WipeType", 0),
                     .wipe_frame = read_integer_or(table, row, "WipeFrame", -1),
                 });
@@ -248,7 +248,7 @@ namespace smgpc::compat {
                 parse(table);
             } catch (const std::exception &error) {
                 const aurora::allocation::HostAllocationScope exception_storage;
-                throw DemoSheetParseError(file_name + ": " + error.what());
+                throw DemoSheetParseError(smgpc::resource::decode_cp932(file_name) + ": " + error.what());
             }
         };
 

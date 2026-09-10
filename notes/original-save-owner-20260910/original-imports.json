@@ -1,0 +1,10 @@
+{
+  "src/Game/System/GameDataConst.cpp": "fd39e0a3078c2ee74eb6ff67ee1a790a00501083546aba64a31fd6b3938471cb",
+  "src/Game/System/GameDataGalaxyStorage.cpp": "5ab64c2a0586453d02ce194c03cec63fd83cb0f4ad6d1b76d5179a439706e35d",
+  "src/Game/System/GameEventFlagChecker.cpp": "fb9fa9d386b8604b4100e82613a034638e506d85b5df40926b4039a54fc7e5da",
+  "src/Game/System/GameEventFlagStorage.cpp": "10e82dcbbf0618aafcf4bb56336fb1a292ea7e6e7ef8c57395abe6b160aa3a15",
+  "src/Game/System/SpinDriverPathStorage.cpp": "cae16b1a3eb53d5c5f5ef6c5ae764c0f3ace2af70ff9a36ac2a5d8926a62696a",
+  "src/Game/System/StarPieceAlmsStorage.cpp": "96f9bafd36676c37689a8984563ca3b6edd61a82026a757bec4a330a9775f610",
+  "src/Game/System/ScenarioProgressTestRun.cpp": "a6e2b9c58e8fe0d1e94fde8d7d96471b1dec526fcebd8e364fe23d6464dd1b9f",
+  "src/Game/Util/BitArray.cpp": "128994d1f77d7cd61162982e7c493750f2f54a85589134a9133a0899ecb672ec"
+}

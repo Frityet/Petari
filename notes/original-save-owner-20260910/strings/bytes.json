@@ -1,0 +1,19 @@
+{
+  "source": "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/fixture/Game/Bytes.cpp",
+  "source_sha256": "14b211b3a6d9fe49cbaac99dc5c15f1f7d88c9b80a6192762be930b12fc0fed6",
+  "arguments": [
+    "-std=c++23",
+    "-O2",
+    "-g",
+    "-MMD",
+    "-MF",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/bytes.d",
+    "-c",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/fixture/Game/Bytes.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/bytes.o"
+  ],
+  "exit": 0,
+  "converted_literals": 6,
+  "literal_tokens": 61
+}

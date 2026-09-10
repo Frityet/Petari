@@ -1,3 +1,4 @@
+#include "resource/TextEncoding.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "resource/BcsvTable.hpp"
 #include "resource/RarcArchive.hpp"
@@ -171,8 +172,8 @@ namespace {
 
         require(table.size() == 3U, "duplicate English keys should retain only their first row");
         const auto *fixture_name = table.lookup("FixtureActor");
-        require(fixture_name != nullptr && *fixture_name == "チコ",
-                "the first CP932 Japanese value should decode to UTF-8");
+        require(fixture_name != nullptr && *fixture_name == rows[0].japanese_cp932,
+                "the first authored CP932 value must be retained byte-for-byte");
         require(table.lookup("FixtureActor") == fixture_name,
                 "lookup should return a stable pointer owned by the table");
         const auto *ascii_name = table.lookup("AsciiActor");
@@ -227,7 +228,7 @@ namespace {
         const auto table = smgpc::scene::nameobj::ObjectNameTable(archive);
         const auto require_mapping = [&](std::string_view english_name, std::string_view japanese_name) {
             const auto *mapped = table.lookup(english_name);
-            require(mapped != nullptr && *mapped == japanese_name,
+            require(mapped != nullptr && smgpc::resource::decode_cp932(*mapped) == japanese_name,
                     std::string(label) + " should map " + std::string(english_name));
         };
         require(table.size() == 1691U, std::string(label) + " should contain all 1691 first-row mappings");
@@ -294,8 +295,8 @@ namespace {
         auto dvd = smgpc::runtime::DvdFileSystemService{"/"};
         const auto table = smgpc::scene::nameobj::ObjectNameTable(dvd);
         const auto *rosetta_name = table.lookup("Rosetta");
-        require(table.size() == 1691U && rosetta_name != nullptr && *rosetta_name == "ロゼッタ",
-                "the DVD-backed table should load and decode through DvdFileSystemService");
+        require(table.size() == 1691U && rosetta_name != nullptr && smgpc::resource::decode_cp932(*rosetta_name) == "ロゼッタ",
+                "the DVD-backed table should retain authored bytes through DvdFileSystemService");
         require(dvd.archive_load_count("/StageData/ObjNameTable.arc") == 1U,
                 "the DVD service should load ObjNameTable.arc once");
     }

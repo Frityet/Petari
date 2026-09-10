@@ -1,0 +1,25 @@
+{
+  "command": [
+    "/opt/homebrew/opt/llvm/bin/clang++",
+    "-target",
+    "arm64-apple-macos26.5",
+    "-isysroot",
+    "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+    "-fsanitize=address,undefined",
+    "-Wl,-dead_strip",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/chunk-encoding/SaveChunkEncoding.final-sanitized.o",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/chunk-encoding/TextEncoding.final-sanitized.o",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/chunk-encoding/JSUStreamCompat.final-sanitized.o",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/chunk-encoding/GameDataPlayerStatus.final-sanitized.o",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/chunk-encoding/GameEventValueChecker.final-sanitized.o",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/chunk-encoding/GameEventFlag.final-sanitized.o",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/chunk-encoding/GameEventFlagTable.final-sanitized.o",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/chunk-encoding/StringUtilCompat.final-sanitized.o",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/chunk-encoding/StorySequencePlatformCompat.final-sanitized.o",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/chunk-encoding/SaveChunkEncodingProbe.final-sanitized.o",
+    "-liconv",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/chunk-encoding/chunk-encoding-final-sanitized"
+  ],
+  "exit": 0
+}

@@ -1,3 +1,4 @@
+#include "resource/TextEncoding.hpp"
 #include "SceneExecutionFixture.hpp"
 #include "Game/Gravity/PlanetGravityManager.hpp"
 #include "Game/Map/CollisionDirector.hpp"
@@ -84,7 +85,7 @@ namespace {
         require(gravity_manager != nullptr &&
                     MR::getSceneObj<PlanetGravityManager>(
                         SceneObj_PlanetGravityManager) == gravity_manager &&
-                    std::string_view(gravity_manager->getName()) == "重力",
+                    smgpc::resource::decode_cp932(gravity_manager->getName()) == "重力",
                 "SceneObj 0x32 must be the exact scene-owned PlanetGravityManager");
         require(MR::createSceneObj(SceneObj_PlanetGravityManager) == gravity_manager,
                 "repeated gravity-manager creation must return the scene singleton");
@@ -120,7 +121,7 @@ namespace {
         require(MR::getMarioHolder() == mario_holder &&
                     holder.getObj(SceneObj_MarioHolder) == mario_holder,
                 "the retail MarioHolder accessor must return the active scene-owned object");
-        require(std::string_view(mario_holder->getName()) == "マリオ保持" &&
+        require(smgpc::resource::decode_cp932(mario_holder->getName()) == "マリオ保持" &&
                     mario_holder->getMarioActor() == nullptr,
                 "MarioHolder must exist with its exact name and a null actor before real MarioActor init2");
         require(MR::createSceneObj(SceneObj_MarioHolder) == mario_holder &&

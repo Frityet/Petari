@@ -1,0 +1,19 @@
+{
+  "source": "notes/original-save-owner-20260910/strings/fixture/main.cpp",
+  "source_sha256": "281419e41d3d373a0ff56fa555d61992b756bfeb3772a876643941722802eea2",
+  "arguments": [
+    "-std=c++23",
+    "-g",
+    "-O2",
+    "-MMD",
+    "-MF",
+    "notes/original-save-owner-20260910/strings/fixture.d",
+    "-c",
+    "notes/original-save-owner-20260910/strings/fixture/main.cpp",
+    "-o",
+    "notes/original-save-owner-20260910/strings/fixture.o"
+  ],
+  "exit": 0,
+  "converted_literals": 5,
+  "literal_tokens": 128
+}

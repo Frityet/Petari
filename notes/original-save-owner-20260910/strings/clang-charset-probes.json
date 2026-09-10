@@ -1,0 +1,46 @@
+[
+  {
+    "command": [
+      "/opt/homebrew/opt/llvm/bin/clang++",
+      "-std=c++23",
+      "-fsyntax-only",
+      "-fexec-charset=CP932",
+      "notes/original-save-owner-20260910/strings/execution-charset-probe.cpp"
+    ],
+    "exit": 1,
+    "output": "clang++: error: invalid value 'CP932' in '-fexec-charset=CP932'\n"
+  },
+  {
+    "command": [
+      "/opt/homebrew/opt/llvm/bin/clang++",
+      "-std=c++23",
+      "-fsyntax-only",
+      "-fexec-charset=SHIFT-JIS",
+      "notes/original-save-owner-20260910/strings/execution-charset-probe.cpp"
+    ],
+    "exit": 1,
+    "output": "clang++: error: invalid value 'SHIFT-JIS' in '-fexec-charset=SHIFT-JIS'\n"
+  },
+  {
+    "command": [
+      "/opt/homebrew/opt/llvm/bin/clang++",
+      "-std=c++23",
+      "-fsyntax-only",
+      "-finput-charset=CP932",
+      "notes/original-save-owner-20260910/strings/execution-charset-probe.cpp"
+    ],
+    "exit": 1,
+    "output": "clang++: error: invalid value 'CP932' in '-finput-charset=CP932'\n"
+  },
+  {
+    "command": [
+      "/opt/homebrew/opt/llvm/bin/clang++",
+      "-std=c++23",
+      "-fsyntax-only",
+      "-fexec-charset=UTF-8",
+      "notes/original-save-owner-20260910/strings/execution-charset-probe.cpp"
+    ],
+    "exit": 0,
+    "output": ""
+  }
+]

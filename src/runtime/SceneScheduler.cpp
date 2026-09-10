@@ -1,3 +1,4 @@
+#include "resource/TextEncoding.hpp"
 #include <aurora/exception.hpp>
 #include "SceneScheduler.hpp"
 #include "scene/SceneDrawBufferService.hpp"
@@ -65,10 +66,17 @@ namespace smgpc::runtime {
 
         // LayoutRuntime is a native layout owner; its bridge is an actual
         // NameObj so the original category delegator handles mixed batches.
-        class LayoutDrawAdaptor final : public NameObj {
+        // This base owns the Game name before NameObj construction and until
+        // after NameObj retirement; native layout presentation remains UTF-8.
+        struct LayoutDrawAdaptorName {
+            std::string game_name;
+        };
+
+        class LayoutDrawAdaptor final : private LayoutDrawAdaptorName, public NameObj {
         public:
             explicit LayoutDrawAdaptor(smgpc::layout::LayoutRuntime& layout)
-                : NameObj(layout.getName().c_str()), _layout(layout) {}
+                : LayoutDrawAdaptorName{resource::encode_cp932(layout.getName())},
+                  NameObj(game_name.c_str()), _layout(layout) {}
             void movement() override {
                 smgpc::compat::JkrHostAllocationScope host;
                 _layout.update();
@@ -481,7 +489,7 @@ namespace smgpc::runtime {
             if (auto *runtime = RuntimeContext::try_instance()) {
                 runtime->emit_semantic_trace_event(
                     "name_obj_lifecycle", "connect_to_scene",
-                    "object=" + std::string(name) + ";kind=" + std::string(scene_entry_kind_name(kind)) +
+                    "object=" + resource::decode_cp932(name) + ";kind=" + std::string(scene_entry_kind_name(kind)) +
                         ";movement=" + std::to_string(movement_type) + ";calc_anim=" + std::to_string(calc_anim_type) +
                         ";draw_buffer=" + std::to_string(draw_buffer_type) + ";draw_type=" + std::to_string(draw_type));
             }
@@ -489,7 +497,7 @@ namespace smgpc::runtime {
 
         [[nodiscard]] std::string sensor_host_name(const HitSensor *sensor) {
             const auto *host = MR::getSensorHost(sensor);
-            return host != nullptr ? host->getName() : "";
+            return host != nullptr ? resource::decode_cp932(host->getName()) : "";
         }
 
         [[nodiscard]] std::array<float, 3U> vec3_state(const TVec3f &value) {
@@ -1663,13 +1671,13 @@ namespace smgpc::runtime {
     std::string SceneScheduler::entry_name(const Entry &entry) {
         switch (entry.kind) {
         case SceneEntryKind::NameObj:
-            return entry.name_obj == nullptr ? std::string {} : std::string(entry.name_obj->getName());
+            return entry.name_obj == nullptr ? std::string {} : resource::decode_cp932(entry.name_obj->getName());
         case SceneEntryKind::Layout:
             return entry.layout == nullptr ? std::string {} : entry.layout->getName();
         case SceneEntryKind::LayoutActor:
-            return entry.layout_actor == nullptr ? std::string {} : std::string(entry.layout_actor->getName());
+            return entry.layout_actor == nullptr ? std::string {} : resource::decode_cp932(entry.layout_actor->getName());
         case SceneEntryKind::LiveActorModel:
-            return entry.live_actor == nullptr ? std::string {} : std::string(entry.live_actor->getName());
+            return entry.live_actor == nullptr ? std::string {} : resource::decode_cp932(entry.live_actor->getName());
         }
 
         return {};
@@ -1679,7 +1687,7 @@ namespace smgpc::runtime {
         [[nodiscard]] std::string material_animation_name(const AnmPlayerBase* player) {
             if (!player || !player->mAnmRes || !player->mResTable) return {};
             const auto* name = player->mResTable->findResName(player->mAnmRes);
-            return name ? name : "";
+            return name ? resource::decode_cp932(name) : "";
         }
 
         void fill_actor_model_debug_state(SceneSchedulerEntryState& state, const LiveActor* actor) {
@@ -1687,7 +1695,7 @@ namespace smgpc::runtime {
                 std::copy_n(&matrix[0][0], 12, state.live_actor_base_matrix.begin());
             if (const auto* manager = actor->mModelManager) {
                 const auto* name = manager->getPlayingBckName();
-                state.live_actor_bck_name = name ? name : "";
+                state.live_actor_bck_name = name ? resource::decode_cp932(name) : "";
                 state.live_actor_brk_name = material_animation_name(manager->mBrkPlayer);
                 state.live_actor_btk_name = material_animation_name(manager->mBtkPlayer);
             }

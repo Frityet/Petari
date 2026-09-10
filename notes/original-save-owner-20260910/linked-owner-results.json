@@ -1,0 +1,27 @@
+[
+  {
+    "name": "original-save-owner",
+    "exit": 0,
+    "sha256": "5bbaeb9754e4ea408147c9dfdc4f93a331377d1abf521f6df7a288a4de67edbd"
+  },
+  {
+    "name": "original-jsu-stream",
+    "exit": 0,
+    "sha256": "dc9ffc6749d6f3918c86bc96ead6b590e371e61e66f6804ef889b00ef2df75d5"
+  },
+  {
+    "name": "original-player-status-storage",
+    "exit": 0,
+    "sha256": "7a3996990d668008766a0687efa46ad4b4bd28656d0d6222c8d4430557ee7ddf"
+  },
+  {
+    "name": "game-data-star-storage",
+    "exit": 0,
+    "sha256": "59f143ba49160b4cd335bfa6096227f5625259c47b2e587003edfa5f9d0776f1"
+  },
+  {
+    "name": "game-data-real-or-absent",
+    "exit": 0,
+    "sha256": "5bf68a9b027bf108c3c51f11ea8cf223fe0073acdfb85348a271492bd688500f"
+  }
+]

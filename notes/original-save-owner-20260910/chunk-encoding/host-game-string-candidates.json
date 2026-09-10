@@ -1,0 +1,2561 @@
+{
+  "purpose": "Read-only candidate inventory; string/comment/wide-literal rows require call-domain review, not automatic conversion.",
+  "files": [
+    {
+      "path": "src/compat/DemoSheetRuntime.hpp",
+      "candidate_lines": [
+        {
+          "line": 70,
+          "text": "std::string wipe_name = \"フェードワイプ\";"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/GameDataRegistry.cpp",
+      "candidate_lines": [
+        {
+          "line": 14,
+          "text": "StoryEventEntry{\"ゲーム開始直後\", 0},"
+        },
+        {
+          "line": 15,
+          "text": "StoryEventEntry{\"クッパ襲来後\", 2},"
+        },
+        {
+          "line": 16,
+          "text": "StoryEventEntry{\"ピーチ城浮上後\", 5},"
+        },
+        {
+          "line": 17,
+          "text": "StoryEventEntry{\"チコガイドデモ終了\", 10},"
+        },
+        {
+          "line": 18,
+          "text": "StoryEventEntry{\"スピン権利\", 15},"
+        },
+        {
+          "line": 19,
+          "text": "StoryEventEntry{\"バトラー情報Ａ\", 25},"
+        },
+        {
+          "line": 20,
+          "text": "StoryEventEntry{\"天球儀レクチャー\", 30},"
+        },
+        {
+          "line": 21,
+          "text": "StoryEventEntry{\"ギャラクシー移動レクチャー\", 35},"
+        },
+        {
+          "line": 22,
+          "text": "StoryEventEntry{\"スターピースレクチャー\", 40},"
+        },
+        {
+          "line": 23,
+          "text": "StoryEventEntry{\"クッパＪｒロボプラント発見\", 42},"
+        },
+        {
+          "line": 24,
+          "text": "StoryEventEntry{\"クッパスタープラント発見\", 45},"
+        },
+        {
+          "line": 25,
+          "text": "StoryEventEntry{\"クッパＪｒシッププラント発見\", 50},"
+        },
+        {
+          "line": 26,
+          "text": "StoryEventEntry{\"クッパダークマタープラント発見\", 55},"
+        },
+        {
+          "line": 27,
+          "text": "StoryEventEntry{\"クッパＪｒクリーチャープラント発見\", 60},"
+        },
+        {
+          "line": 31,
+          "text": "EventValueEntry{\"ペンギンレース[オーシャンリング]/hi\", 0},"
+        },
+        {
+          "line": 32,
+          "text": "EventValueEntry{\"ペンギンレース[オーシャンリング]/lo\", 90 * 60},"
+        },
+        {
+          "line": 33,
+          "text": "EventValueEntry{\"テレサレース[ファントム]/hi\", 0},"
+        },
+        {
+          "line": 34,
+          "text": "EventValueEntry{\"テレサレース[ファントム]/lo\", 90 * 60},"
+        },
+        {
+          "line": 35,
+          "text": "EventValueEntry{\"テレサレース[デスプロムナード]/hi\", 0},"
+        },
+        {
+          "line": 36,
+          "text": "EventValueEntry{\"テレサレース[デスプロムナード]/lo\", 90 * 60},"
+        },
+        {
+          "line": 37,
+          "text": "EventValueEntry{\"サーフィン[トライアル]/hi\", 0},"
+        },
+        {
+          "line": 38,
+          "text": "EventValueEntry{\"サーフィン[トライアル]/lo\", 90 * 60},"
+        },
+        {
+          "line": 39,
+          "text": "EventValueEntry{\"サーフィン[チャレンジ]/hi\", 0},"
+        },
+        {
+          "line": 40,
+          "text": "EventValueEntry{\"サーフィン[チャレンジ]/lo\", 90 * 60},"
+        },
+        {
+          "line": 42,
+          "text": "EventValueEntry{\"絵本既読章\", 0},"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/EventUtilCompat.cpp",
+      "candidate_lines": [
+        {
+          "line": 32,
+          "text": "GameDataFunction::onGameEventFlag(\"ハチマリオ初変身\");"
+        },
+        {
+          "line": 36,
+          "text": "GameDataFunction::onGameEventFlag(\"テレサマリオ初変身\");"
+        },
+        {
+          "line": 40,
+          "text": "GameDataFunction::onGameEventFlag(\"ホッパーマリオ初変身\");"
+        },
+        {
+          "line": 44,
+          "text": "GameDataFunction::onGameEventFlag(\"ファイアマリオ初変身\");"
+        },
+        {
+          "line": 48,
+          "text": "GameDataFunction::onGameEventFlag(\"アイスマリオ初変身\");"
+        },
+        {
+          "line": 52,
+          "text": "GameDataFunction::onGameEventFlag(\"フライングマリオ初変身\");"
+        },
+        {
+          "line": 56,
+          "text": "GameDataFunction::onGameEventFlag(\"無敵マリオ初変身\");"
+        },
+        {
+          "line": 60,
+          "text": "GameDataFunction::onGameEventFlag(\"ライフアップキノコ解説\");"
+        },
+        {
+          "line": 64,
+          "text": "GameDataFunction::onGameEventFlag(\"１ＵＰキノコ解説\");"
+        },
+        {
+          "line": 80,
+          "text": "return GameDataFunction::isPassedStoryEvent(\"チコガイドデモ終了\");"
+        },
+        {
+          "line": 84,
+          "text": "GameDataFunction::followStoryEventByName(\"チコガイドデモ終了\");"
+        },
+        {
+          "line": 88,
+          "text": "GameDataFunction::followStoryEventByName(\"スピン権利\");"
+        },
+        {
+          "line": 138,
+          "text": "return GameDataFunction::isOnGameEventFlag(\"ハチマリオ初変身\");"
+        },
+        {
+          "line": 142,
+          "text": "return GameDataFunction::isOnGameEventFlag(\"テレサマリオ初変身\");"
+        },
+        {
+          "line": 146,
+          "text": "return GameDataFunction::isOnGameEventFlag(\"ホッパーマリオ初変身\");"
+        },
+        {
+          "line": 150,
+          "text": "return GameDataFunction::isOnGameEventFlag(\"ファイアマリオ初変身\");"
+        },
+        {
+          "line": 154,
+          "text": "return GameDataFunction::isOnGameEventFlag(\"アイスマリオ初変身\");"
+        },
+        {
+          "line": 158,
+          "text": "return GameDataFunction::isOnGameEventFlag(\"フライングマリオ初変身\");"
+        },
+        {
+          "line": 162,
+          "text": "if (!GameDataFunction::isOnGameEventFlag(\"ハチマリオ初変身\")) {"
+        },
+        {
+          "line": 168,
+          "text": "if (!GameDataFunction::isOnGameEventFlag(\"テレサマリオ初変身\")) {"
+        },
+        {
+          "line": 174,
+          "text": "if (!GameDataFunction::isOnGameEventFlag(\"ホッパーマリオ初変身\")) {"
+        },
+        {
+          "line": 180,
+          "text": "if (!GameDataFunction::isOnGameEventFlag(\"ファイアマリオ初変身\")) {"
+        },
+        {
+          "line": 186,
+          "text": "if (!GameDataFunction::isOnGameEventFlag(\"アイスマリオ初変身\")) {"
+        },
+        {
+          "line": 192,
+          "text": "if (!GameDataFunction::isOnGameEventFlag(\"フライングマリオ初変身\")) {"
+        },
+        {
+          "line": 198,
+          "text": "if (!GameDataFunction::isOnGameEventFlag(\"無敵マリオ初変身\")) {"
+        },
+        {
+          "line": 204,
+          "text": "if (!GameDataFunction::isOnGameEventFlag(\"ライフアップキノコ解説\")) {"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/DemoCompat.cpp",
+      "candidate_lines": [
+        {
+          "line": 431,
+          "text": "return std::string_view(pPartName).find(\"会話\") !="
+        }
+      ]
+    },
+    {
+      "path": "src/compat/OriginalNameObjExecuteHolder.cpp",
+      "candidate_lines": [
+        {
+          "line": 430,
+          "text": ": NameObj(\"connectToScene情報保持\"), mExecuteArray(nullptr), mExecuteArrayMaxSize(size), mExecuteArraySize(0), _18(false), _19(false), _1A(false),"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/OriginalMarioSound.cpp",
+      "candidate_lines": [
+        {
+          "line": 31,
+          "text": "\"声小ジャンプ\",  // name"
+        },
+        {
+          "line": 39,
+          "text": "\"声中ジャンプ\",  // name"
+        },
+        {
+          "line": 47,
+          "text": "\"声大ジャンプ\",  // name"
+        },
+        {
+          "line": 55,
+          "text": "\"声後ジャンプ\",   // name"
+        },
+        {
+          "line": 63,
+          "text": "\"声幅ジャンプ\",   // name"
+        },
+        {
+          "line": 71,
+          "text": "\"声物ジャンプ\",  // name"
+        },
+        {
+          "line": 79,
+          "text": "\"声高飛び込み\",   // name"
+        },
+        {
+          "line": 87,
+          "text": "\"声尻ドロップ\",  // name"
+        },
+        {
+          "line": 95,
+          "text": "\"声尻ドロップ着地\",   // name"
+        },
+        {
+          "line": 103,
+          "text": "\"声着地停止\",  // name"
+        },
+        {
+          "line": 111,
+          "text": "\"声ステージイン着地\",  // name"
+        },
+        {
+          "line": 119,
+          "text": "\"声小ダメージ\",  // name"
+        },
+        {
+          "line": 127,
+          "text": "\"声大ダメージ\",  // name"
+        },
+        {
+          "line": 135,
+          "text": "\"声最終ダメージ\",   // name"
+        },
+        {
+          "line": 143,
+          "text": "\"声炎ダメージ\",  // name"
+        },
+        {
+          "line": 151,
+          "text": "\"声電気ダメージ\",   // name"
+        },
+        {
+          "line": 159,
+          "text": "\"声電気ダメージ終了\",       // name"
+        },
+        {
+          "line": 167,
+          "text": "\"声倒れ\",    // name"
+        },
+        {
+          "line": 175,
+          "text": "\"声落下死亡\",    // name"
+        },
+        {
+          "line": 183,
+          "text": "\"声しびれ\",      // name"
+        },
+        {
+          "line": 191,
+          "text": "\"声氷ダメージ\",  // name"
+        },
+        {
+          "line": 199,
+          "text": "\"声つぶれダメージ\",    // name"
+        },
+        {
+          "line": 207,
+          "text": "\"声スピン\",  // name"
+        },
+        {
+          "line": 215,
+          "text": "\"声スピンキャンセル\",  // name"
+        },
+        {
+          "line": 223,
+          "text": "\"声パンチ\",   // name"
+        },
+        {
+          "line": 231,
+          "text": "\"声踏み\",     // name"
+        },
+        {
+          "line": 239,
+          "text": "\"声蹴り\",    // name"
+        },
+        {
+          "line": 247,
+          "text": "\"声トルネード\",     // name"
+        },
+        {
+          "line": 255,
+          "text": "\"声壁反射\",   // name"
+        },
+        {
+          "line": 263,
+          "text": "\"声投げ\",     // name"
+        },
+        {
+          "line": 271,
+          "text": "\"声壁押し\",     // name"
+        },
+        {
+          "line": 279,
+          "text": "\"声壁体当たり\",       // name"
+        },
+        {
+          "line": 287,
+          "text": "\"声スピン尻ドロップ\",  // name"
+        },
+        {
+          "line": 295,
+          "text": "\"声軽い力み\",  // name"
+        },
+        {
+          "line": 303,
+          "text": "\"声崖つかまり\",         // name"
+        },
+        {
+          "line": 311,
+          "text": "\"声崖つかまり終了\",  // name"
+        },
+        {
+          "line": 319,
+          "text": "\"声炎ダメージ中\",  // name"
+        },
+        {
+          "line": 327,
+          "text": "\"声炎ダメージ終了\",  // name"
+        },
+        {
+          "line": 335,
+          "text": "\"声氷ダメージ終了\",    // name"
+        },
+        {
+          "line": 343,
+          "text": "\"声針ダメージ\",       // name"
+        },
+        {
+          "line": 351,
+          "text": "\"声針ダメージ中\",         // name"
+        },
+        {
+          "line": 359,
+          "text": "\"声針ダメージ終了\",           // name"
+        },
+        {
+          "line": 367,
+          "text": "\"声水中ダメージ\",      // name"
+        },
+        {
+          "line": 375,
+          "text": "\"声水中最終ダメージ\",     // name"
+        },
+        {
+          "line": 383,
+          "text": "\"声冷水ダメージ\",         // name"
+        },
+        {
+          "line": 391,
+          "text": "\"声スケキヨ開始\",  // name"
+        },
+        {
+          "line": 399,
+          "text": "\"声スケキヨ終了\",         // name"
+        },
+        {
+          "line": 407,
+          "text": "\"声足埋まり開始\",  // name"
+        },
+        {
+          "line": 415,
+          "text": "\"声足埋まり終了\",         // name"
+        },
+        {
+          "line": 423,
+          "text": "\"声あくび\",  // name"
+        },
+        {
+          "line": 431,
+          "text": "\"声いびき１\",   // name"
+        },
+        {
+          "line": 439,
+          "text": "\"声いびき２\",   // name"
+        },
+        {
+          "line": 447,
+          "text": "\"声噴水ジャンプ\",  // name"
+        },
+        {
+          "line": 455,
+          "text": "\"声ランニングキック\",  // name"
+        },
+        {
+          "line": 463,
+          "text": "\"声砂脱出\",     // name"
+        },
+        {
+          "line": 471,
+          "text": "\"声投げられ\",  // name"
+        },
+        {
+          "line": 479,
+          "text": "\"声慌て\",     // name"
+        },
+        {
+          "line": 487,
+          "text": "\"声しゃがむ\",  // name"
+        },
+        {
+          "line": 495,
+          "text": "\"声砂沈み\",     // name"
+        },
+        {
+          "line": 503,
+          "text": "\"声砂沈み死亡\",  // name"
+        },
+        {
+          "line": 511,
+          "text": "\"声沼沈み\",     // name"
+        },
+        {
+          "line": 519,
+          "text": "\"声沼沈み死亡\",  // name"
+        },
+        {
+          "line": 527,
+          "text": "\"足音左\",          // name"
+        },
+        {
+          "line": 535,
+          "text": "\"足音右\",          // name"
+        },
+        {
+          "line": 543,
+          "text": "\"ジャンプ踏切\",    // name"
+        },
+        {
+          "line": 546,
+          "text": "\"水跳ねジャンプ\",  // 0xC"
+        },
+        {
+          "line": 551,
+          "text": "\"着地\",        // name"
+        },
+        {
+          "line": 554,
+          "text": "\"水跳ね着地\",  // 0xC"
+        },
+        {
+          "line": 559,
+          "text": "\"重い着地\",        // name"
+        },
+        {
+          "line": 567,
+          "text": "\"掴み\",          // name"
+        },
+        {
+          "line": 575,
+          "text": "\"ぶらさがり\",  // name"
+        },
+        {
+          "line": 583,
+          "text": "\"尻ドロップ回転\",   // name"
+        },
+        {
+          "line": 591,
+          "text": "\"尻ドロップ着地\",  // name"
+        },
+        {
+          "line": 594,
+          "text": "\"水跳ね着地\",      // 0xC"
+        },
+        {
+          "line": 599,
+          "text": "\"スピン尻ドロップ回転\",    // name"
+        },
+        {
+          "line": 607,
+          "text": "\"スピン尻ドロップ落下\",       // name"
+        },
+        {
+          "line": 615,
+          "text": "\"中ジャンプ\",  // name"
+        },
+        {
+          "line": 623,
+          "text": "\"大ジャンプ\",  // name"
+        },
+        {
+          "line": 631,
+          "text": "\"後ジャンプ\",     // name"
+        },
+        {
+          "line": 639,
+          "text": "\"幅ジャンプ\",     // name"
+        },
+        {
+          "line": 647,
+          "text": "\"トルネードジャンプ\",  // name"
+        },
+        {
+          "line": 655,
+          "text": "\"スピンジャンプ\",   // name"
+        },
+        {
+          "line": 658,
+          "text": "\"水跳ねジャンプ\",   // 0xC"
+        },
+        {
+          "line": 663,
+          "text": "\"トランポリンジャンプ小\",  // name"
+        },
+        {
+          "line": 671,
+          "text": "\"トランポリンジャンプ大\",  // name"
+        },
+        {
+          "line": 679,
+          "text": "\"スリップアップ\",  // name"
+        },
+        {
+          "line": 687,
+          "text": "\"ダメージ\",      // name"
+        },
+        {
+          "line": 695,
+          "text": "\"炎ダメージ\",  // name"
+        },
+        {
+          "line": 703,
+          "text": "\"針ダメージ\",         // name"
+        },
+        {
+          "line": 711,
+          "text": "\"電気ダメージ\",     // name"
+        },
+        {
+          "line": 719,
+          "text": "\"壁反射\",             // name"
+        },
+        {
+          "line": 727,
+          "text": "\"プレスダメージ\",      // name"
+        },
+        {
+          "line": 735,
+          "text": "\"氷ダメージ\",      // name"
+        },
+        {
+          "line": 743,
+          "text": "\"倒れ\",            // name"
+        },
+        {
+          "line": 746,
+          "text": "\"水跳ね左足\",      // 0xC"
+        },
+        {
+          "line": 751,
+          "text": "\"吹っ飛び倒れ\",    // name"
+        },
+        {
+          "line": 754,
+          "text": "\"水跳ね着地\",      // 0xC"
+        },
+        {
+          "line": 759,
+          "text": "\"坂滑り\",                 // name"
+        },
+        {
+          "line": 762,
+          "text": "\"水面滑り\",               // 0xC"
+        },
+        {
+          "line": 767,
+          "text": "\"ルイージ滑り\",            // name"
+        },
+        {
+          "line": 770,
+          "text": "\"水面滑り\",                // 0xC"
+        },
+        {
+          "line": 775,
+          "text": "\"パンチ風切り\",     // name"
+        },
+        {
+          "line": 783,
+          "text": "\"炎ダメージ復帰バウンド\",  // name"
+        },
+        {
+          "line": 791,
+          "text": "\"炎ダメージ炎上中\",  // name"
+        },
+        {
+          "line": 799,
+          "text": "\"氷ダメージ終了\",          // name"
+        },
+        {
+          "line": 807,
+          "text": "\"引き戻し基本\",           // name"
+        },
+        {
+          "line": 815,
+          "text": "\"引き戻し浮遊\",          // name"
+        },
+        {
+          "line": 823,
+          "text": "\"引き戻し泡破裂\",        // name"
+        },
+        {
+          "line": 831,
+          "text": "\"はねとばされ\",             // name"
+        },
+        {
+          "line": 839,
+          "text": "\"結界ヒット\",                // name"
+        },
+        {
+          "line": 847,
+          "text": "\"壁衝突\",             // name"
+        },
+        {
+          "line": 855,
+          "text": "\"投げられ\",       // name"
+        },
+        {
+          "line": 863,
+          "text": "\"ヘリコプタージャンプ\",  // name"
+        },
+        {
+          "line": 871,
+          "text": "\"滞空開始\",                 // name"
+        },
+        {
+          "line": 879,
+          "text": "\"滞空中\",                // name"
+        },
+        {
+          "line": 887,
+          "text": "\"ホッパー跳ね返り\",  // name"
+        },
+        {
+          "line": 895,
+          "text": "\"ホッパージャンプ溜め\",    // name"
+        },
+        {
+          "line": 903,
+          "text": "\"ホッパージャンプ\",  // name"
+        },
+        {
+          "line": 911,
+          "text": "\"テレサ浮遊\",               // name"
+        },
+        {
+          "line": 919,
+          "text": "\"テレサ踏ん張り\",   // name"
+        },
+        {
+          "line": 927,
+          "text": "\"テレサ壁反射\",            // name"
+        },
+        {
+          "line": 935,
+          "text": "\"テレサ消える\",             // name"
+        },
+        {
+          "line": 943,
+          "text": "\"テレサ現れる\",             // name"
+        },
+        {
+          "line": 951,
+          "text": "\"テレサ風に乗る\",            // name"
+        },
+        {
+          "line": 959,
+          "text": "\"ハチ飛行中\",            // name"
+        },
+        {
+          "line": 967,
+          "text": "\"スケキヨ開始\",    // name"
+        },
+        {
+          "line": 975,
+          "text": "\"スケキヨ終了\",  // name"
+        },
+        {
+          "line": 983,
+          "text": "\"スケキヨ終了スピン\",  // name"
+        },
+        {
+          "line": 991,
+          "text": "\"スケート足\",  // name"
+        },
+        {
+          "line": 999,
+          "text": "\"スケート滑り\",       // name"
+        },
+        {
+          "line": 1007,
+          "text": "\"スケートジャンプ\",  // name"
+        },
+        {
+          "line": 1015,
+          "text": "\"スケート着地\",    // name"
+        },
+        {
+          "line": 1023,
+          "text": "\"スケートスピン\",  // name"
+        },
+        {
+          "line": 1031,
+          "text": "\"ハチ壁くっつき\",     // name"
+        },
+        {
+          "line": 1039,
+          "text": "\"ハチ壁歩き左\",         // name"
+        },
+        {
+          "line": 1047,
+          "text": "\"ハチ壁歩き右\",         // name"
+        },
+        {
+          "line": 1055,
+          "text": "\"ハチ壁ジャンプ\",     // name"
+        },
+        {
+          "line": 1063,
+          "text": "\"砂沈み\",            // name"
+        },
+        {
+          "line": 1071,
+          "text": "\"砂脱出\",        // name"
+        },
+        {
+          "line": 1079,
+          "text": "\"砂強制沈み\",              // name"
+        },
+        {
+          "line": 1087,
+          "text": "\"砂死亡\",           // name"
+        },
+        {
+          "line": 1095,
+          "text": "\"沼強制沈み\",             // name"
+        },
+        {
+          "line": 1103,
+          "text": "\"沼死亡\",          // name"
+        },
+        {
+          "line": 1111,
+          "text": "\"毒沼脱出\",            // name"
+        },
+        {
+          "line": 1119,
+          "text": "\"毒沼ダメージ\",           // name"
+        },
+        {
+          "line": 1127,
+          "text": "\"ダークマター沈み\",       // name"
+        },
+        {
+          "line": 1135,
+          "text": "\"惑星貫通中\",            // name"
+        },
+        {
+          "line": 1143,
+          "text": "\"惑星貫通終了\",           // name"
+        },
+        {
+          "line": 1151,
+          "text": "\"フー滞空中\",           // name"
+        },
+        {
+          "line": 1159,
+          "text": "\"フー加速\",       // name"
+        },
+        {
+          "line": 1167,
+          "text": "\"フー飛行中\",         // name"
+        },
+        {
+          "line": 1175,
+          "text": "\"フーブレーキ\",   // name"
+        },
+        {
+          "line": 1183,
+          "text": "\"ワープポッド入り\",  // name"
+        },
+        {
+          "line": 1191,
+          "text": "\"ワープポッド出\",    // name"
+        },
+        {
+          "line": 1199,
+          "text": "\"ワープポッド移動\",      // name"
+        },
+        {
+          "line": 1207,
+          "text": "\"スペシャルダッシュ強\",   // name"
+        },
+        {
+          "line": 1215,
+          "text": "\"スペシャルダッシュ弱\",   // name"
+        },
+        {
+          "line": 1223,
+          "text": "\"ダッシュ加速強成功\",  // name"
+        },
+        {
+          "line": 1231,
+          "text": "\"ブラックホール吸い込まれ\",  // name"
+        },
+        {
+          "line": 1239,
+          "text": "\"水歩行突入\",        // name"
+        },
+        {
+          "line": 1247,
+          "text": "\"水歩行脱出\",        // name"
+        },
+        {
+          "line": 1255,
+          "text": "\"水面ウエイト\",       // name"
+        },
+        {
+          "line": 1263,
+          "text": "\"水中ウエイト\",          // name"
+        },
+        {
+          "line": 1271,
+          "text": "\"水落下突入\",         // name"
+        },
+        {
+          "line": 1279,
+          "text": "\"水ジャンプ脱出\",       // name"
+        },
+        {
+          "line": 1287,
+          "text": "\"水面一掻き\",               // name"
+        },
+        {
+          "line": 1295,
+          "text": "\"水中一掻き\",               // name"
+        },
+        {
+          "line": 1303,
+          "text": "\"水面バタ足\",            // name"
+        },
+        {
+          "line": 1311,
+          "text": "\"水中バタ足\",            // name"
+        },
+        {
+          "line": 1319,
+          "text": "\"水面潜り\",                // name"
+        },
+        {
+          "line": 1327,
+          "text": "\"水中潜り\",                // name"
+        },
+        {
+          "line": 1335,
+          "text": "\"水面スピン開始\",           // name"
+        },
+        {
+          "line": 1343,
+          "text": "\"水面スピン\",               // name"
+        },
+        {
+          "line": 1351,
+          "text": "\"水中スピン開始\",           // name"
+        },
+        {
+          "line": 1359,
+          "text": "\"水中スピン\",               // name"
+        },
+        {
+          "line": 1367,
+          "text": "\"水面ダメージ\",         // name"
+        },
+        {
+          "line": 1375,
+          "text": "\"水中ダメージ\",         // name"
+        },
+        {
+          "line": 1383,
+          "text": "\"亀ジェット泳ぎ\",          // name"
+        },
+        {
+          "line": 1391,
+          "text": "\"水底接触\",                 // name"
+        },
+        {
+          "line": 1399,
+          "text": "\"亀壁ヒット\",              // name"
+        },
+        {
+          "line": 1407,
+          "text": "\"亀ブレーキ\",        // name"
+        },
+        {
+          "line": 1415,
+          "text": "\"亀加速\",            // name"
+        },
+        {
+          "line": 1423,
+          "text": "\"水跳ね左足\",        // name"
+        },
+        {
+          "line": 1431,
+          "text": "\"水跳ね右足\",        // name"
+        },
+        {
+          "line": 1439,
+          "text": "\"水跳ね左足小\",          // name"
+        },
+        {
+          "line": 1447,
+          "text": "\"水跳ね右足小\",          // name"
+        },
+        {
+          "line": 1455,
+          "text": "\"水跳ねジャンプ\",  // name"
+        },
+        {
+          "line": 1463,
+          "text": "\"水跳ね着地\",  // name"
+        },
+        {
+          "line": 1471,
+          "text": "\"水跳ね手\",    // name"
+        },
+        {
+          "line": 1479,
+          "text": "\"水弾かれ\",         // name"
+        },
+        {
+          "line": 1487,
+          "text": "\"水面滑り\",           // name"
+        },
+        {
+          "line": 1495,
+          "text": "\"トルネード風\",       // name"
+        },
+        {
+          "line": 1503,
+          "text": "\"スリップ\",     // name"
+        },
+        {
+          "line": 1506,
+          "text": "\"水面滑り\",     // 0xC"
+        },
+        {
+          "line": 1511,
+          "text": "\"最後の一撃\",       // name"
+        },
+        {
+          "line": 1519,
+          "text": "\"空中ふんばり\",     // name"
+        },
+        {
+          "line": 1527,
+          "text": "\"スピン許可\",       // name"
+        },
+        {
+          "line": 1535,
+          "text": "\"スピン回復終了\",        // name"
+        },
+        {
+          "line": 1543,
+          "text": "\"トルネード飛行\",         // name"
+        },
+        {
+          "line": 1551,
+          "text": "\"ライフ警告\",         // name"
+        },
+        {
+          "line": 1559,
+          "text": "\"ライフ回復\",        // name"
+        },
+        {
+          "line": 1567,
+          "text": "\"水中ライフ減少\",      // name"
+        },
+        {
+          "line": 1575,
+          "text": "\"酸素減少警告\",      // name"
+        },
+        {
+          "line": 1583,
+          "text": "\"無酸素警告\",             // name"
+        },
+        {
+          "line": 1591,
+          "text": "\"酸素回復\",            // name"
+        },
+        {
+          "line": 1599,
+          "text": "\"酸素完全回復\",         // name"
+        },
+        {
+          "line": 1607,
+          "text": "\"水面酸素回復\",           // name"
+        },
+        {
+          "line": 1615,
+          "text": "\"水面酸素完全回復\",         // name"
+        },
+        {
+          "line": 1623,
+          "text": "\"無酸素ダメージ\",  // name"
+        },
+        {
+          "line": 1631,
+          "text": "\"ハチ体力回復\",               // name"
+        },
+        {
+          "line": 1639,
+          "text": "\"ハチ体力完全回復\",          // name"
+        },
+        {
+          "line": 1647,
+          "text": "\"ハチ体力切れ\",           // name"
+        },
+        {
+          "line": 1655,
+          "text": "\"変身解除\",       // name"
+        },
+        {
+          "line": 1663,
+          "text": "\"呪い解除\",             // name"
+        },
+        {
+          "line": 1768,
+          "text": "bool isFound = _96C->search(\"声\", pSoundName, &index);"
+        },
+        {
+          "line": 1794,
+          "text": "if (_96C->search(\"声\", pSoundName, &index)) {"
+        },
+        {
+          "line": 1852,
+          "text": "playSound(\"テレサ浮遊\", timing);"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/SaveDataHandleSequenceCompat.cpp",
+      "candidate_lines": [
+        {
+          "line": 19,
+          "text": ": NerveExecutor(\"セーブ/ロード\"), mSysConfigFile(nullptr), mCurrentUserFile(nullptr), mBackupUserFile(nullptr),"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/ClippingDirectorCompat.cpp",
+      "candidate_lines": [
+        {
+          "line": 14,
+          "text": ": NameObj(\"クリッピング指揮\"), mJudge(nullptr), mActorHolder(nullptr), mGroupHolder(nullptr) {"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/OriginalStarPointerDirector.cpp",
+      "candidate_lines": [
+        {
+          "line": 128,
+          "text": "mGuidance = new StarPointerGuidance(\"スターポインタガイダンス\");"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/GameActorPhysicsCompat.cpp",
+      "candidate_lines": [
+        {
+          "line": 401,
+          "text": "initialize_single_shadow(actor, \"水面丸影\", smgpc::compat::ActorShadowControllerKind::SurfaceCircle, radius);"
+        },
+        {
+          "line": 405,
+          "text": "initialize_single_shadow(actor, \"ボリューム影(球)\", smgpc::compat::ActorShadowControllerKind::VolumeSphere, radius);"
+        },
+        {
+          "line": 409,
+          "text": "initialize_single_shadow(actor, \"ボリューム影(円柱)\", smgpc::compat::ActorShadowControllerKind::VolumeCylinder, radius);"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/PlanetMapRuntimeCompat.cpp",
+      "candidate_lines": [
+        {
+          "line": 103,
+          "text": "if (name == \"海洋ホーム惑星\" || name == \"オーシャンリング惑星\") {"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/TalkRuntime.cpp",
+      "candidate_lines": [
+        {
+          "line": 687,
+          "text": ": NameObj(\"会話統括\"), _impl(std::make_unique<Impl>(*this)) {"
+        },
+        {
+          "line": 1053,
+          "text": ": NameObj(\"会話制御\"), mHostActor(host), mNodeCtrl(nullptr), mZoneID(-1), _18(0U),"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/OriginalSceneWipeUtil.cpp",
+      "candidate_lines": [
+        {
+          "line": 6,
+          "text": "SceneWipeHolderFunction::closeWipe(\"円ワイプ\", frame);"
+        },
+        {
+          "line": 10,
+          "text": "SceneWipeHolderFunction::forceOpenWipe(\"円ワイプ\");"
+        },
+        {
+          "line": 14,
+          "text": "SceneWipeHolderFunction::forceCloseWipe(\"円ワイプ\");"
+        },
+        {
+          "line": 18,
+          "text": "SceneWipeHolderFunction::closeWipe(\"フェードワイプ\", frame);"
+        },
+        {
+          "line": 22,
+          "text": "SceneWipeHolderFunction::forceOpenWipe(\"フェードワイプ\");"
+        },
+        {
+          "line": 26,
+          "text": "SceneWipeHolderFunction::forceCloseWipe(\"フェードワイプ\");"
+        },
+        {
+          "line": 30,
+          "text": "SceneWipeHolderFunction::closeWipe(\"白フェードワイプ\", frame);"
+        },
+        {
+          "line": 34,
+          "text": "SceneWipeHolderFunction::forceOpenWipe(\"白フェードワイプ\");"
+        },
+        {
+          "line": 38,
+          "text": "SceneWipeHolderFunction::forceCloseWipe(\"白フェードワイプ\");"
+        },
+        {
+          "line": 54,
+          "text": "SceneWipeHolderFunction::openWipe(\"円ワイプ\", frame);"
+        },
+        {
+          "line": 58,
+          "text": "SceneWipeHolderFunction::openWipe(\"フェードワイプ\", frame);"
+        },
+        {
+          "line": 62,
+          "text": "SceneWipeHolderFunction::openWipe(\"白フェードワイプ\", frame);"
+        },
+        {
+          "line": 66,
+          "text": "SceneWipeHolderFunction::getSceneWipeHolder()->wipe(\"ゲームオーバー\", -1);"
+        },
+        {
+          "line": 70,
+          "text": "SceneWipeHolderFunction::getSceneWipeHolder()->wipe(\"クッパ\", -1);"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/DemoSheetRuntime.cpp",
+      "candidate_lines": [
+        {
+          "line": 189,
+          "text": ".wipe_name = read_string_or(table, row, \"WipeName\", \"フェードワイプ\"),"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/ImageEffectOwnership.cpp",
+      "candidate_lines": [
+        {
+          "line": 68,
+          "text": "case SceneObj_BloomEffect: return new BloomEffect(\"ブルーム\");"
+        },
+        {
+          "line": 70,
+          "text": "case SceneObj_ScreenBlurEffect: return new ScreenBlurEffect(\"画面ブラー\");"
+        },
+        {
+          "line": 71,
+          "text": "case SceneObj_DepthOfFieldBlur: return new DepthOfFieldBlur(\"被写界深度ブラー\");"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/LodCtrlRuntimeCompat.cpp",
+      "candidate_lines": [
+        {
+          "line": 29,
+          "text": "const auto length = std::strlen(pActor->getName()) + std::strlen(pSubName) + std::strlen(\"（）\") + 1U;"
+        },
+        {
+          "line": 31,
+          "text": "std::snprintf(name, length, \"%s（%s）\", pActor->getName(), pSubName);"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/ScreenSystemAndCaptureCompat.cpp",
+      "candidate_lines": [
+        {
+          "line": 17,
+          "text": "constexpr auto cCircleWipeName = \"円ワイプ\";"
+        },
+        {
+          "line": 18,
+          "text": "constexpr auto cFadeWipeName = \"フェードワイプ\";"
+        },
+        {
+          "line": 19,
+          "text": "constexpr auto cWhiteFadeWipeName = \"白フェードワイプ\";"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/SceneObjHolderCompat.cpp",
+      "candidate_lines": [
+        {
+          "line": 482,
+          "text": "return new CameraDirector(\"カメラ管理\");"
+        },
+        {
+          "line": 494,
+          "text": "return new PlanetGravityManager(\"重力\");"
+        },
+        {
+          "line": 496,
+          "text": "return new BaseMatrixFollowTargetHolder(\"行列追随先リスト\", 256, 256);"
+        },
+        {
+          "line": 498,
+          "text": "return new MessageSensorHolder(\"システム汎用センサー\");"
+        },
+        {
+          "line": 506,
+          "text": "return new AreaObjContainer(\"エリアオブジェクトコンテナ管理\");"
+        },
+        {
+          "line": 508,
+          "text": "return new PlacementStateChecker(\"オブジェクト配置状態の監視\");"
+        },
+        {
+          "line": 514,
+          "text": "return new WarpPodMgr(\"ワープポッド管理局\");"
+        },
+        {
+          "line": 516,
+          "text": "return new CoinHolder(\"コイン管理\");"
+        },
+        {
+          "line": 520,
+          "text": "return new CoinRotater(\"コイン回転管理\");"
+        },
+        {
+          "line": 522,
+          "text": "return new PrologueHolder(\"プロローグ保持\");"
+        },
+        {
+          "line": 560,
+          "text": "return new GroupCheckManager(\"属性グループマネージャー\");"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/EffectSystemOwnership.cpp",
+      "candidate_lines": [
+        {
+          "line": 120,
+          "text": "auto *system = new EffectSystem(\"エフェクトシステム\", true);"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/GameRuntimeCompat.cpp",
+      "candidate_lines": [
+        {
+          "line": 100,
+          "text": "return tryRumblePad(pSource, \"最強【長】\", channel);"
+        },
+        {
+          "line": 104,
+          "text": "return tryRumblePad(pSource, \"最強【長】\", channel);"
+        },
+        {
+          "line": 108,
+          "text": "return tryRumblePad(pSource, \"最強\", channel);"
+        },
+        {
+          "line": 112,
+          "text": "return tryRumblePad(pSource, \"最強\", channel);"
+        },
+        {
+          "line": 116,
+          "text": "return tryRumblePad(pSource, \"微弱\", channel);"
+        },
+        {
+          "line": 120,
+          "text": "return tryRumblePad(pSource, \"微弱\", channel);"
+        },
+        {
+          "line": 124,
+          "text": "return tryRumblePad(pSource, \"強\", channel);"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/MarioCameraTarget.cpp",
+      "candidate_lines": [
+        {
+          "line": 8,
+          "text": "auto target = std::make_unique<CameraTargetPlayer>(\"マリオ注目\");"
+        }
+      ]
+    },
+    {
+      "path": "src/compat/GroupCheckManagerCompat.cpp",
+      "candidate_lines": [
+        {
+          "line": 134,
+          "text": "state.groups[0] = std::make_unique<GroupChecker>(\"カメサーチ対象物グループ\", 0x20U);"
+        },
+        {
+          "line": 137,
+          "text": "state.groups[1] = std::make_unique<GroupChecker>(\"スピニングボックス反射グループ\", 0x8U);"
+        }
+      ]
+    },
+    {
+      "path": "src/showcase/Showcase.cpp",
+      "candidate_lines": [
+        {
+          "line": 735,
+          "text": "game_data_session.holder().followStoryEventByName(\"ピーチ城浮上後\");"
+        },
+        {
+          "line": 785,
+          "text": "\"チコガイドデモ終了\");"
+        }
+      ]
+    },
+    {
+      "path": "src/scene/StageInitializationService.cpp",
+      "candidate_lines": [
+        {
+          "line": 620,
+          "text": "construct_root_object(start.object_name, \"マリオアクター\", &context, false);"
+        }
+      ]
+    },
+    {
+      "path": "src/scene/GatewaySpinCheckpoint.cpp",
+      "candidate_lines": [
+        {
+          "line": 31,
+          "text": "constexpr auto cGuideDemoName = std::string_view{\"チコガイドデモ\"};"
+        },
+        {
+          "line": 33,
+          "text": "constexpr auto cSpinPartFirst = std::string_view{\"スピンゲット[デモ1]\"};"
+        },
+        {
+          "line": 34,
+          "text": "constexpr auto cSpinPromptPart = std::string_view{\"スピンゲット[デモ5]\"};"
+        },
+        {
+          "line": 39,
+          "text": "constexpr auto cFadeWipeName = std::string_view{\"フェードワイプ\"};"
+        },
+        {
+          "line": 129,
+          "text": ": LiveActor(\"チコ\") {"
+        },
+        {
+          "line": 140,
+          "text": ": LiveActor(\"ロゼッタ\") {"
+        },
+        {
+          "line": 192,
+          "text": "GameDataFunction::isPassedStoryEvent(\"チコガイドデモ終了\") &&"
+        },
+        {
+          "line": 193,
+          "text": "!GameDataFunction::isPassedStoryEvent(\"スピン権利\"),"
+        },
+        {
+          "line": 202,
+          "text": "\"typed チコ route cast could not register from TicoBaby row 13\");"
+        },
+        {
+          "line": 206,
+          "text": "_demo->cast_name(_tico.get(), *guide_index) == \"チコ\" &&"
+        },
+        {
+          "line": 208,
+          "text": "\"typed チコ route cast lost its exact zone/link/CastId membership\");"
+        },
+        {
+          "line": 245,
+          "text": "std::pair{std::string_view{\"スピンゲット[デモ1]\"}, 420},"
+        },
+        {
+          "line": 246,
+          "text": "std::pair{std::string_view{\"スピンゲット[会話1]\"}, 120},"
+        },
+        {
+          "line": 247,
+          "text": "std::pair{std::string_view{\"スピンゲット[デモ2]\"}, 150},"
+        },
+        {
+          "line": 248,
+          "text": "std::pair{std::string_view{\"スピンゲット[会話2]\"}, 120},"
+        },
+        {
+          "line": 249,
+          "text": "std::pair{std::string_view{\"スピンゲット[デモ3]\"}, 240},"
+        },
+        {
+          "line": 250,
+          "text": "std::pair{std::string_view{\"スピンゲット[会話3]\"}, 120},"
+        },
+        {
+          "line": 251,
+          "text": "std::pair{std::string_view{\"スピンゲット[デモ4]\"}, 500},"
+        },
+        {
+          "line": 252,
+          "text": "std::pair{std::string_view{\"スピンゲット[デモ5]\"}, 60},"
+        },
+        {
+          "line": 272,
+          "text": "row.cast_name == \"ロゼッタ\" && row.cast_id == -1 &&"
+        },
+        {
+          "line": 279,
+          "text": "row.cast_name == \"ベビチコ\" && row.cast_id == 0 &&"
+        },
+        {
+          "line": 302,
+          "text": "row.part_name.starts_with(\"スピンゲット[\");"
+        }
+      ]
+    },
+    {
+      "path": "src/scene/TitleFileSelectVisual.cpp",
+      "candidate_lines": [
+        {
+          "line": 111,
+          "text": "_sky = std::make_unique<FileSelectSky>(\"ファイルセレクト画面の空\");"
+        }
+      ]
+    },
+    {
+      "path": "src/scene/FileSelectFarVisual.cpp",
+      "candidate_lines": [
+        {
+          "line": 58,
+          "text": ": LiveActor(\"ファイルセレクトアイテム\"),"
+        },
+        {
+          "line": 94,
+          "text": ": NameObj(\"ファイルセレクト遠景表示制御\"), _owner(&owner) {"
+        },
+        {
+          "line": 133,
+          "text": "\"ファイルセレクトカメラ制御\");"
+        },
+        {
+          "line": 155,
+          "text": "host_identity, \"ニューフェイス\", \"FileSelectDataPlanet\","
+        },
+        {
+          "line": 161,
+          "text": "auto number = std::make_unique<FileSelectNumber>(\"ファイル番号\");"
+        }
+      ]
+    },
+    {
+      "path": "src/runtime/ScenarioCatalogOwnership.cpp",
+      "candidate_lines": [
+        {
+          "line": 69,
+          "text": "storage->parser = std::make_unique<ScenarioDataParser>(\"シナリオデータ解析\");"
+        }
+      ]
+    },
+    {
+      "path": "tests/MarioGatewayWalkTests.cpp",
+      "candidate_lines": [
+        {
+          "line": 498,
+          "text": "game_data_session.holder().followStoryEventByName(\"ピーチ城浮上後\");"
+        },
+        {
+          "line": 673,
+          "text": "require(initial_animation != nullptr && initial_animation->isRun(\"ステージインA\") &&"
+        },
+        {
+          "line": 736,
+          "text": "if (proof.animation_name == \"基本\" && index < 3U) {"
+        },
+        {
+          "line": 817,
+          "text": "actor->mModelManager->mXanimePlayer->isRun(\"基本\") && MR::isOnGroundPlayer()) {"
+        },
+        {
+          "line": 877,
+          "text": "if (input_ready && wait_frame.grounded && wait_frame.animation_name == \"基本\" &&"
+        },
+        {
+          "line": 1170,
+          "text": "require(release_frame.animation_name == \"基本\" && release_frame.moving_track_weight > 0.0F,"
+        }
+      ]
+    },
+    {
+      "path": "tests/FeedbackRealOrAbsentTests.cpp",
+      "candidate_lines": [
+        {
+          "line": 62,
+          "text": "require(!service.try_request_pattern(&source, \"最強\", 1),"
+        },
+        {
+          "line": 67,
+          "text": "require(service.try_request_pattern(&source, \"最強\", 0),"
+        },
+        {
+          "line": 69,
+          "text": "require(!service.try_request_pattern(&source, \"最強\", 0),"
+        },
+        {
+          "line": 71,
+          "text": "require(service.events().size() == 1U && service.events().front().pattern_name == \"最強\" &&"
+        },
+        {
+          "line": 204,
+          "text": "require(!MR::tryRumblePad(&source, \"最強\", WPAD_CHAN0) &&"
+        }
+      ]
+    },
+    {
+      "path": "tests/DemoSceneRuntimeTests.cpp",
+      "candidate_lines": [
+        {
+          "line": 1004,
+          "text": "require(missing != nullptr && missing->demo_name == \"チコ\" &&"
+        },
+        {
+          "line": 1758,
+          "text": "[&] { (void)MR::tryStartDemoWithoutCinemaFrame(&actor, \"プロローグデモ\"); },"
+        },
+        {
+          "line": 1762,
+          "text": "[&] { (void)MR::tryStartDemoMarioPuppetable(&actor, \"主人公ピーチ城に到着\"); },"
+        }
+      ]
+    },
+    {
+      "path": "tests/ActorEventCameraTests.cpp",
+      "candidate_lines": [
+        {
+          "line": 533,
+          "text": "auto rabbit = LiveActor(\"逃げウサギ集め\");"
+        },
+        {
+          "line": 534,
+          "text": "auto pipe = LiveActor(\"土管\");"
+        },
+        {
+          "line": 537,
+          "text": "5, \"逃げウサギ集め固有016\"),"
+        },
+        {
+          "line": 538,
+          "text": "\"unique actor-camera identity must include actor, 固有, and three-digit ID\");"
+        },
+        {
+          "line": 539,
+          "text": "require(MR::initMultiActorCameraNoInit(&pipe, first, \"出現\") &&"
+        },
+        {
+          "line": 540,
+          "text": "camera.is_event_camera_declared(5, \"土管固有出現016\"),"
+        },
+        {
+          "line": 543,
+          "text": "require(MR::initMultiActorCameraNoInit(&pipe, &common, \"出現\") &&"
+        },
+        {
+          "line": 544,
+          "text": "camera.is_event_camera_declared(7, \"土管共通出現003\"),"
+        },
+        {
+          "line": 581,
+          "text": "camera.declare_event_camera_animation(5, \"逃げチコDemoMeetTico\","
+        },
+        {
+          "line": 584,
+          "text": "5, \"逃げチコDemoMeetTico\","
+        },
+        {
+          "line": 600,
+          "text": "5, \"逃げチコDemoMeetTico\") == 2 &&"
+        },
+        {
+          "line": 603,
+          "text": "camera.end_event_camera(5, \"逃げチコDemoMeetTico\", true, -1);"
+        },
+        {
+          "line": 1491,
+          "text": "catalog.find(0, \"土管固有出現054\"));"
+        },
+        {
+          "line": 1524,
+          "text": "requested.declare_event_camera(0, \"土管固有出現054\");"
+        },
+        {
+          "line": 1525,
+          "text": "uninterrupted.declare_event_camera(0, \"土管固有出現054\");"
+        },
+        {
+          "line": 1526,
+          "text": "requested.start_event_camera(0, \"土管固有出現054\", target, 0);"
+        },
+        {
+          "line": 1527,
+          "text": "uninterrupted.start_event_camera(0, \"土管固有出現054\", target, 0);"
+        },
+        {
+          "line": 1544,
+          "text": "requested.start_event_camera(0, \"土管固有出現054\", target, 30);"
+        },
+        {
+          "line": 1551,
+          "text": "requested.start_event_camera(0, \"土管固有出現054\","
+        },
+        {
+          "line": 1558,
+          "text": "requested.start_event_camera(0, \"土管固有出現054\","
+        },
+        {
+          "line": 1572,
+          "text": "constexpr auto first_name = \"逃げウサギ集め固有016\";"
+        },
+        {
+          "line": 1573,
+          "text": "constexpr auto next_name = \"土管固有出現017\";"
+        },
+        {
+          "line": 1667,
+          "text": "constexpr auto name = \"逃げウサギ集め固有016\";"
+        },
+        {
+          "line": 1737,
+          "text": "const auto *rabbit = catalog.find(5, \"逃げウサギ集め固有016\");"
+        },
+        {
+          "line": 1738,
+          "text": "const auto *child_pipe = catalog.find(5, \"土管固有出現017\");"
+        },
+        {
+          "line": 1739,
+          "text": "const auto *root_pipe = catalog.find(0, \"土管固有出現054\");"
+        },
+        {
+          "line": 1742,
+          "text": "\"e:逃げウサギ集め固有016\" &&"
+        },
+        {
+          "line": 1747,
+          "text": "\"e:土管固有出現017\" &&"
+        },
+        {
+          "line": 1752,
+          "text": "\"e:土管固有出現054\" &&"
+        },
+        {
+          "line": 1756,
+          "text": "require(catalog.find(0, \"逃げウサギ集め固有016\") == nullptr &&"
+        },
+        {
+          "line": 1757,
+          "text": "catalog.find(5, \"土管固有出現054\") == nullptr,"
+        },
+        {
+          "line": 1835,
+          "text": "camera.declare_event_camera(5, \"逃げウサギ集め固有016\");"
+        },
+        {
+          "line": 1837,
+          "text": "5, \"逃げウサギ集め固有016\","
+        },
+        {
+          "line": 1844,
+          "text": "camera.declare_event_camera(5, \"土管固有出現017\");"
+        },
+        {
+          "line": 1846,
+          "text": "5, \"土管固有出現017\","
+        },
+        {
+          "line": 1853,
+          "text": "camera.declare_event_camera_animation(5, \"逃げチコDemoMeetTico\","
+        },
+        {
+          "line": 1856,
+          "text": "5, \"逃げチコDemoMeetTico\","
+        },
+        {
+          "line": 1862,
+          "text": "\"逃げチコDemoMeetTico\" &&"
+        }
+      ]
+    },
+    {
+      "path": "tests/PlanetMapActorRouteTests.cpp",
+      "candidate_lines": [
+        {
+          "line": 81,
+          "text": "\"HeavensDoorMysteriousPlanet\", \"ヘブンズドアミステリアス惑星\","
+        },
+        {
+          "line": 84,
+          "text": "\"HeavensDoorSmallPlanet\", \"ヘブンズドア惑星（小）\", 1U,"
+        },
+        {
+          "line": 87,
+          "text": "\"HeavensDoorMiddlePlanet\", \"ヘブンズドア惑星（中）\", 2U,"
+        },
+        {
+          "line": 90,
+          "text": "\"HeavensDoorBlackHolePlanet\", \"ヘブンズドアブラックホール惑星\","
+        },
+        {
+          "line": 140,
+          "text": "game_data_session.holder().followStoryEventByName(\"ピーチ城浮上後\");"
+        }
+      ]
+    },
+    {
+      "path": "tests/GameDataRealOrAbsentTests.cpp",
+      "candidate_lines": [
+        {
+          "line": 42,
+          "text": "require_throws<std::logic_error>([] { GameDataFunction::onGameEventFlag(\"ハチマリオ初変身\"); },"
+        },
+        {
+          "line": 87,
+          "text": "current.isPassedStoryEvent(\"ゲーム開始直後\") &&"
+        },
+        {
+          "line": 88,
+          "text": "!current.isPassedStoryEvent(\"ピーチ城浮上後\") && !current.isPassedStoryEvent(\"スピン権利\"),"
+        },
+        {
+          "line": 97,
+          "text": "require(!current.isOnGameEventFlag(\"ハチマリオ初変身\"), \"fresh original flag storage must be clear\");"
+        },
+        {
+          "line": 98,
+          "text": "current.tryOnGameEventFlag(\"ハチマリオ初変身\");"
+        },
+        {
+          "line": 99,
+          "text": "require(current.isOnGameEventFlag(\"ハチマリオ初変身\") && !backup.isOnGameEventFlag(\"ハチマリオ初変身\"),"
+        },
+        {
+          "line": 106,
+          "text": "GameDataFunction::followStoryEventByName(\"ピーチ城浮上後\");"
+        },
+        {
+          "line": 108,
+          "text": "!backup.isPassedStoryEvent(\"ピーチ城浮上後\"),"
+        },
+        {
+          "line": 114,
+          "text": "backup.getPictureBookChapterAlreadyRead() == 3 && backup.isOnGameEventFlag(\"ハチマリオ初変身\"),"
+        },
+        {
+          "line": 120,
+          "text": "!current.isOnGameEventFlag(\"ハチマリオ初変身\") && current.getPictureBookChapterAlreadyRead() == 0 &&"
+        },
+        {
+          "line": 139,
+          "text": "GameDataFunction::followStoryEventByName(\"チコガイドデモ終了\");"
+        },
+        {
+          "line": 141,
+          "text": "GameDataFunction::followStoryEventByName(\"スピン権利\");"
+        },
+        {
+          "line": 150,
+          "text": "GameDataFunction::followStoryEventByName(\"ピーチ城浮上後\");"
+        },
+        {
+          "line": 152,
+          "text": "GameDataFunction::followStoryEventByName(\"チコガイドデモ終了\");"
+        }
+      ]
+    },
+    {
+      "path": "tests/TextEncodingTests.cpp",
+      "candidate_lines": [
+        {
+          "line": 29,
+          "text": "std::pair<std::string_view, std::string_view>{\"共通着地普通\", \"\\x8b\\xa4\\x92\\xca\\x92\\x85\\x92\\x6e\\x95\\x81\\x92\\xca\"},"
+        },
+        {
+          "line": 30,
+          "text": "std::pair<std::string_view, std::string_view>{\"属性\", \"\\x91\\xae\\x90\\xab\"},"
+        },
+        {
+          "line": 31,
+          "text": "std::pair<std::string_view, std::string_view>{\"フェードワイプ\", \"\\x83\\x74\\x83\\x46\\x81\\x5b\\x83\\x68\\x83\\x8f\\x83\\x43\\x83\\x76\"},"
+        },
+        {
+          "line": 32,
+          "text": "std::pair<std::string_view, std::string_view>{\"ｱｲｳｴｵ\", \"\\xb1\\xb2\\xb3\\xb4\\xb5\"},"
+        },
+        {
+          "line": 33,
+          "text": "std::pair<std::string_view, std::string_view>{\"①\", \"\\x87\\x40\"},"
+        },
+        {
+          "line": 34,
+          "text": "std::pair<std::string_view, std::string_view>{\"名前\\\\後半\", \"\\x96\\xbc\\x91\\x4f\\x5c\\x8c\\xe3\\x94\\xbc\"},"
+        },
+        {
+          "line": 45,
+          "text": "const auto embedded = std::string(\"前\\0後\", 7);"
+        },
+        {
+          "line": 64,
+          "text": "std::string_view(\"\\xf5\\x80\\x80\\x80\"), std::string_view(\"😀\"),"
+        },
+        {
+          "line": 65,
+          "text": "std::string_view(\"é\"), std::string_view(\"a\\0😀\", 6),"
+        },
+        {
+          "line": 70,
+          "text": "rejects(\"😀\");"
+        }
+      ]
+    },
+    {
+      "path": "tests/FileSelectFarVisualTests.cpp",
+      "candidate_lines": [
+        {
+          "line": 211,
+          "text": "require(count(\"ファイルセレクト画面の空\") == 1 &&"
+        },
+        {
+          "line": 212,
+          "text": "count(\"ファイルセレクトカメラ制御\") == 1 &&"
+        },
+        {
+          "line": 213,
+          "text": "count(\"ニューフェイス\") == 6 &&"
+        },
+        {
+          "line": 214,
+          "text": "count(\"ファイル番号\") == 6 &&"
+        },
+        {
+          "line": 215,
+          "text": "count(\"ファイルセレクト遠景表示制御\") == 1,"
+        },
+        {
+          "line": 219,
+          "text": "return entry.name == \"ニューフェイス\" &&"
+        },
+        {
+          "line": 230,
+          "text": "return entry.name == \"ファイル番号\" &&"
+        },
+        {
+          "line": 246,
+          "text": "if (layout.name == \"ファイル番号\" &&"
+        }
+      ]
+    },
+    {
+      "path": "tests/OriginalShadowControllerOwnerTests.cpp",
+      "candidate_lines": [
+        {
+          "line": 534,
+          "text": "require(state->controllers[0U].name == \"体\" && state->controllers[0U].group_name == \"チコ\" && state->controllers[0U].radius == 12.0F &&"
+        },
+        {
+          "line": 693,
+          "text": "smgpc::compat::add_actor_shadow_controller(&actor, \"体\", smgpc::compat::ActorShadowControllerKind::VolumeSphere, 10);"
+        },
+        {
+          "line": 696,
+          "text": "auto* first = list->getController(\"体\");"
+        },
+        {
+          "line": 706,
+          "text": "MR::setShadowDropDirection(&actor, \"体\", TVec3f(1, 0, 0));"
+        },
+        {
+          "line": 710,
+          "text": "MR::setShadowDropLength(&actor, \"体\", -3);"
+        },
+        {
+          "line": 754,
+          "text": "require(controller.name == \"体\" && controller.joint_name == \"Body\" &&"
+        }
+      ]
+    },
+    {
+      "path": "tests/ObjectNameTableTests.cpp",
+      "candidate_lines": [
+        {
+          "line": 174,
+          "text": "require(fixture_name != nullptr && *fixture_name == \"チコ\","
+        },
+        {
+          "line": 234,
+          "text": "require_mapping(\"DemoRabbit\", \"デモウサギ\");"
+        },
+        {
+          "line": 235,
+          "text": "require_mapping(\"Rosetta\", \"ロゼッタ\");"
+        },
+        {
+          "line": 236,
+          "text": "require_mapping(\"RunawayTico\", \"逃げチコ\");"
+        },
+        {
+          "line": 237,
+          "text": "require_mapping(\"Tico\", \"チコ\");"
+        },
+        {
+          "line": 238,
+          "text": "require_mapping(\"TicoBaby\", \"ベビチコ\");"
+        },
+        {
+          "line": 239,
+          "text": "require_mapping(\"HeavensDoorAppearStepA\", \"ヘブンズドアミステリアス惑星階段（デモ中）\");"
+        },
+        {
+          "line": 240,
+          "text": "require_mapping(\"HeavensDoorAppearStepAAfter\", \"ヘブンズドアミステリアス惑星階段（デモ後）\");"
+        },
+        {
+          "line": 297,
+          "text": "require(table.size() == 1691U && rosetta_name != nullptr && *rosetta_name == \"ロゼッタ\","
+        }
+      ]
+    },
+    {
+      "path": "tests/OriginalSceneWipeOwnerTests.cpp",
+      "candidate_lines": [
+        {
+          "line": 143,
+          "text": "const std::array names{\"円ワイプ\", \"フェードワイプ\", \"白フェードワイプ\", \"ゲームオーバー\", \"クッパ\"};"
+        }
+      ]
+    },
+    {
+      "path": "tests/TitleFileSelectRouteTests.cpp",
+      "candidate_lines": [
+        {
+          "line": 264,
+          "text": "return has_wait_animation(\"ロゴ\", \"TitleLogo\") &&"
+        },
+        {
+          "line": 332,
+          "text": "require(scheduler_name_count(runtime, \"ファイルセレクト画面の空\") == 1U &&"
+        },
+        {
+          "line": 333,
+          "text": "scheduler_name_count(runtime, \"ロゴ\") == 1U &&"
+        },
+        {
+          "line": 335,
+          "text": "scheduler_name_count(runtime, \"PAL60案内\") == 1U,"
+        },
+        {
+          "line": 396,
+          "text": "require(scheduler_name_count(runtime, \"ファイルセレクト画面の空\") == 1U,"
+        },
+        {
+          "line": 498,
+          "text": "game_data_session.holder().followStoryEventByName(\"ピーチ城浮上後\");"
+        },
+        {
+          "line": 517,
+          "text": "\"ロゴ\","
+        },
+        {
+          "line": 519,
+          "text": "\"PAL60案内\","
+        },
+        {
+          "line": 520,
+          "text": "\"ファイルセレクト画面の空\","
+        },
+        {
+          "line": 521,
+          "text": "\"ファイルセレクトカメラ制御\","
+        },
+        {
+          "line": 522,
+          "text": "\"ニューフェイス\","
+        },
+        {
+          "line": 523,
+          "text": "\"ファイル番号\","
+        },
+        {
+          "line": 524,
+          "text": "\"ファイルセレクト遠景表示制御\","
+        }
+      ]
+    },
+    {
+      "path": "tests/AirActorRouteTests.cpp",
+      "candidate_lines": [
+        {
+          "line": 168,
+          "text": "game_data_session.holder().followStoryEventByName(\"ピーチ城浮上後\");"
+        },
+        {
+          "line": 229,
+          "text": "std::string_view(air->getName()) == \"球状青空\","
+        }
+      ]
+    },
+    {
+      "path": "tests/PointLightRuntimeTests.cpp",
+      "candidate_lines": [
+        {
+          "line": 441,
+          "text": "require(std::string_view(director->getName()) == \"ライト管理\" &&"
+        }
+      ]
+    },
+    {
+      "path": "tests/AuroraNativeTests.cpp",
+      "candidate_lines": [
+        {
+          "line": 361,
+          "text": "\"the retail ±0.2 Nunchuk threshold must remain exclusive\");"
+        }
+      ]
+    },
+    {
+      "path": "tests/InformationObserverTests.cpp",
+      "candidate_lines": [
+        {
+          "line": 57,
+          "text": "constexpr auto cPromptPart = \"スピンゲット[デモ5]\";"
+        },
+        {
+          "line": 98,
+          "text": "SpinPromptTrigger() : LiveActor(\"チコ\") {"
+        },
+        {
+          "line": 235,
+          "text": "game_data_session.holder().followStoryEventByName(\"ピーチ城浮上後\");"
+        },
+        {
+          "line": 326,
+          "text": "require(!GameDataFunction::isPassedStoryEvent(\"スピン権利\"),"
+        },
+        {
+          "line": 347,
+          "text": "GameDataFunction::followStoryEventByName(\"チコガイドデモ終了\");"
+        },
+        {
+          "line": 351,
+          "text": "MR::startTimeKeepDemo(&trigger, \"チコガイドデモ\", cPromptPart);"
+        },
+        {
+          "line": 353,
+          "text": "const auto guide_index = demo.find_definition(\"チコガイドデモ\");"
+        },
+        {
+          "line": 386,
+          "text": "<< \";spin_story=\" << GameDataFunction::isPassedStoryEvent(\"スピン権利\")"
+        },
+        {
+          "line": 401,
+          "text": "!GameDataFunction::isPassedStoryEvent(\"スピン権利\") &&"
+        },
+        {
+          "line": 414,
+          "text": "!GameDataFunction::isPassedStoryEvent(\"スピン権利\") &&"
+        },
+        {
+          "line": 466,
+          "text": "!GameDataFunction::isPassedStoryEvent(\"スピン権利\") && !player._EEB,"
+        },
+        {
+          "line": 478,
+          "text": "!GameDataFunction::isPassedStoryEvent(\"スピン権利\") && !player._EEB,"
+        },
+        {
+          "line": 491,
+          "text": "GameDataFunction::isPassedStoryEvent(\"スピン権利\") &&"
+        }
+      ]
+    },
+    {
+      "path": "tests/UpstreamComponentTests.cpp",
+      "candidate_lines": [
+        {
+          "line": 98,
+          "text": "const auto* rumble = RumbleData::getPattern(\"最強\");"
+        }
+      ]
+    },
+    {
+      "path": "tests/TalkRealOrAbsentTests.cpp",
+      "candidate_lines": [
+        {
+          "line": 244,
+          "text": "auto generic_player = LiveActor(\"マリオアクター\");"
+        },
+        {
+          "line": 640,
+          "text": "&actor, \"チコガイドデモ\", std::nullopt,"
+        },
+        {
+          "line": 645,
+          "text": "const auto guide_index = demo.find_definition(\"チコガイドデモ\");"
+        },
+        {
+          "line": 702,
+          "text": "std::optional<std::string_view>{\"チコガイドデモ\"}),"
+        }
+      ]
+    },
+    {
+      "path": "tests/GatewayDemoSceneTests.cpp",
+      "candidate_lines": [
+        {
+          "line": 185,
+          "text": "require(guide != nullptr && guide->demo_name == \"チコガイドデモ\" &&"
+        },
+        {
+          "line": 231,
+          "text": "std::optional<std::string>{\"デモウサギ\"} &&"
+        },
+        {
+          "line": 233,
+          "text": "std::string_view(rabbit->getName()) == \"デモウサギ\","
+        },
+        {
+          "line": 266,
+          "text": "\"デモウサギ\" &&"
+        },
+        {
+          "line": 269,
+          "text": "demo.action_count(rabbit, \"チコガイドデモ\") =="
+        },
+        {
+          "line": 303,
+          "text": "\"ボリューム影(球)\" &&"
+        },
+        {
+          "line": 369,
+          "text": "game_data_session.holder().followStoryEventByName(\"ピーチ城浮上後\");"
+        },
+        {
+          "line": 378,
+          "text": "\"チコガイドデモ終了\") &&"
+        },
+        {
+          "line": 379,
+          "text": "!GameDataFunction::isPassedStoryEvent(\"スピン権利\"),"
+        },
+        {
+          "line": 531,
+          "text": "std::pair{std::string_view{\"スピンゲット[デモ1]\"}, 420},"
+        },
+        {
+          "line": 532,
+          "text": "std::pair{std::string_view{\"スピンゲット[会話1]\"}, 120},"
+        },
+        {
+          "line": 533,
+          "text": "std::pair{std::string_view{\"スピンゲット[デモ2]\"}, 150},"
+        },
+        {
+          "line": 534,
+          "text": "std::pair{std::string_view{\"スピンゲット[会話2]\"}, 120},"
+        },
+        {
+          "line": 535,
+          "text": "std::pair{std::string_view{\"スピンゲット[デモ3]\"}, 240},"
+        },
+        {
+          "line": 536,
+          "text": "std::pair{std::string_view{\"スピンゲット[会話3]\"}, 120},"
+        },
+        {
+          "line": 537,
+          "text": "std::pair{std::string_view{\"スピンゲット[デモ4]\"}, 500},"
+        },
+        {
+          "line": 538,
+          "text": "std::pair{std::string_view{\"スピンゲット[デモ5]\"}, 60},"
+        },
+        {
+          "line": 562,
+          "text": "return row.part_name == \"スピンゲット[デモ1]\" &&"
+        },
+        {
+          "line": 696,
+          "text": "bright_report->actor_name == \"レンズフレア用太陽\" &&"
+        },
+        {
+          "line": 731,
+          "text": "has_scheduler_entry(\"太陽\", MR::MovementType_Sky,"
+        },
+        {
+          "line": 734,
+          "text": "has_scheduler_entry(\"レンズフレアリング\","
+        },
+        {
+          "line": 738,
+          "text": "has_scheduler_entry(\"グレア（円形）\","
+        },
+        {
+          "line": 742,
+          "text": "has_scheduler_entry(\"グレア（ライン）\","
+        }
+      ]
+    },
+    {
+      "path": "tests/AreaObjRealOrAbsentTests.cpp",
+      "candidate_lines": [
+        {
+          "line": 1126,
+          "text": "std::string_view(root->mAreaLightName) == \"[共通]宇宙の星\" &&"
+        },
+        {
+          "line": 1127,
+          "text": "std::string_view(light_data.default_area_light_name()) == \"[共通]宇宙の星\","
+        },
+        {
+          "line": 1135,
+          "text": "std::string_view(child->mAreaLightName) == \"ロゼッタ出会い\" &&"
+        },
+        {
+          "line": 1150,
+          "text": "std::string_view(observatory->mAreaLightName) == \"天文台（ロゼッタ）\","
+        },
+        {
+          "line": 1187,
+          "text": "\"[共通]宇宙の星\","
+        }
+      ]
+    },
+    {
+      "path": "tests/SkyActorRouteTests.cpp",
+      "candidate_lines": [
+        {
+          "line": 173,
+          "text": "game_data_session.holder().followStoryEventByName(\"ピーチ城浮上後\");"
+        },
+        {
+          "line": 207,
+          "text": "std::string_view(sky->getName()) == \"VR軌道\","
+        }
+      ]
+    },
+    {
+      "path": "tests/GatewaySpinCheckpointTests.cpp",
+      "candidate_lines": [
+        {
+          "line": 184,
+          "text": "found->actor_name == std::optional<std::string>{\"デモウサギ\"} &&"
+        },
+        {
+          "line": 186,
+          "text": "std::string_view(rabbit->getName()) == \"デモウサギ\","
+        },
+        {
+          "line": 355,
+          "text": "game_data_session.holder().followStoryEventByName(\"ピーチ城浮上後\");"
+        },
+        {
+          "line": 403,
+          "text": "require(!GameDataFunction::isPassedStoryEvent(\"スピン権利\"),"
+        },
+        {
+          "line": 417,
+          "text": "GameDataFunction::followStoryEventByName(\"チコガイドデモ終了\");"
+        },
+        {
+          "line": 454,
+          "text": "GameDataFunction::isPassedStoryEvent(\"チコガイドデモ終了\") &&"
+        },
+        {
+          "line": 455,
+          "text": "!GameDataFunction::isPassedStoryEvent(\"スピン権利\") &&"
+        },
+        {
+          "line": 470,
+          "text": "std::string_view(checkpoint->tico_cast().getName()) == \"チコ\" &&"
+        },
+        {
+          "line": 475,
+          "text": "\"typed チコ cast must retain TicoBaby row-13 membership and CastId 0\");"
+        },
+        {
+          "line": 519,
+          "text": "checkpoint->demo_runtime().is_active(\"チコガイドデモ\") &&"
+        },
+        {
+          "line": 521,
+          "text": "\"スピンゲット[デモ1]\") == -1 &&"
+        },
+        {
+          "line": 535,
+          "text": "\"スピンゲット[デモ4]\") == 499,"
+        },
+        {
+          "line": 540,
+          "text": "event.name == \"フェードワイプ\" &&"
+        },
+        {
+          "line": 552,
+          "text": "\"スピンゲット[デモ5]\") &&"
+        },
+        {
+          "line": 554,
+          "text": "\"スピンゲット[デモ5]\") == 0 &&"
+        },
+        {
+          "line": 557,
+          "text": "!GameDataFunction::isPassedStoryEvent(\"スピン権利\") &&"
+        },
+        {
+          "line": 565,
+          "text": "!GameDataFunction::isPassedStoryEvent(\"スピン権利\") &&"
+        },
+        {
+          "line": 575,
+          "text": "!GameDataFunction::isPassedStoryEvent(\"スピン権利\") &&"
+        },
+        {
+          "line": 582,
+          "text": "!GameDataFunction::isPassedStoryEvent(\"スピン権利\") &&"
+        },
+        {
+          "line": 590,
+          "text": "GameDataFunction::isPassedStoryEvent(\"スピン権利\") &&"
+        }
+      ]
+    },
+    {
+      "path": "tests/BrightSunRouteTests.cpp",
+      "candidate_lines": [
+        {
+          "line": 219,
+          "text": "has_entry(\"太陽\","
+        },
+        {
+          "line": 223,
+          "text": "has_entry(\"レンズフレアリング\","
+        },
+        {
+          "line": 227,
+          "text": "has_entry(\"グレア（円形）\","
+        },
+        {
+          "line": 231,
+          "text": "has_entry(\"グレア（ライン）\","
+        },
+        {
+          "line": 289,
+          "text": "game_data_session.holder().followStoryEventByName(\"ピーチ城浮上後\");"
+        },
+        {
+          "line": 341,
+          "text": "\"レンズフレア用太陽\","
+        },
+        {
+          "line": 357,
+          "text": "require_model(director->mRing, \"レンズフレアリング\", \"LensFlare\");"
+        },
+        {
+          "line": 358,
+          "text": "require_model(director->mGlow, \"グレア（円形）\", \"GlareGlow\");"
+        },
+        {
+          "line": 359,
+          "text": "require_model(director->mLine, \"グレア（ライン）\", \"GlareLine\");"
+        }
+      ]
+    },
+    {
+      "path": "tests/GameActorPhysicsRealOrAbsentTests.cpp",
+      "candidate_lines": [
+        {
+          "line": 178,
+          "text": "require(controller != nullptr && controller->name == \"ボリューム影(球)\" &&"
+        }
+      ]
+    },
+    {
+      "path": "tests/TitleFileSelectVisualTests.cpp",
+      "candidate_lines": [
+        {
+          "line": 86,
+          "text": "return entry.name == \"ファイルセレクト画面の空\";"
+        },
+        {
+          "line": 220,
+          "text": "return entry.name == \"ファイルセレクト画面の空\";"
+        }
+      ]
+    },
+    {
+      "path": "tests/DemoSheetRuntimeTests.cpp",
+      "candidate_lines": [
+        {
+          "line": 273,
+          "text": "require(runtime.time_rows()[15U].part_name == \"スピンゲット[デモ1]\" &&"
+        },
+        {
+          "line": 355,
+          "text": "runtime.time_rows()[0U].part_name == \"スピンゲット[デモ1]\" &&"
+        },
+        {
+          "line": 358,
+          "text": "require(runtime.start_at_part(\"スピンゲット[デモ1]\") =="
+        },
+        {
+          "line": 387,
+          "text": "require(wipe.wipe_rows().size() == 1U && wipe.wipe_rows()[0U].wipe_name == \"フェードワイプ\" &&"
+        }
+      ]
+    },
+    {
+      "path": "tests/SceneObjHolderRealOrAbsentTests.cpp",
+      "candidate_lines": [
+        {
+          "line": 87,
+          "text": "std::string_view(gravity_manager->getName()) == \"重力\","
+        },
+        {
+          "line": 123,
+          "text": "require(std::string_view(mario_holder->getName()) == \"マリオ保持\" &&"
+        }
+      ]
+    },
+    {
+      "path": "tests/StageStartCameraTests.cpp",
+      "candidate_lines": [
+        {
+          "line": 1250,
+          "text": "const auto *pipe_camera = event_catalog.find(0, \"土管固有出現054\");"
+        },
+        {
+          "line": 1254,
+          "text": "camera.declare_event_camera(0, \"土管固有出現054\");"
+        },
+        {
+          "line": 1259,
+          "text": "camera.start_event_camera(0, \"土管固有出現054\","
+        },
+        {
+          "line": 1278,
+          "text": "camera.end_event_camera(0, \"土管固有出現054\", true, -1);"
+        }
+      ]
+    }
+  ]
+}

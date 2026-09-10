@@ -1,3 +1,5 @@
+#include <aurora/allocation.hpp>
+#include "resource/TextEncoding.hpp"
 #include "Game/Screen/StarPointerDirector.hpp"
 #include "Game/Screen/LayoutCoreUtil.hpp"
 #include "Game/Screen/StarPointerController.hpp"
@@ -8,6 +10,16 @@
 #include "Game/Util/ScreenUtil.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
 #include "compat/StarPointerDepthOwnership.hpp"
+
+namespace {
+    // These stable Game names outlive every owner that borrows their bytes.
+    std::string encode_owner_name(std::string_view name) {
+        aurora::allocation::HostAllocationScope host;
+        return smgpc::resource::encode_cp932(name);
+    }
+
+    const std::string cStarPointerGuidanceName = encode_owner_name("スターポインタガイダンス");
+}  // namespace
 
 StarPointerDirector::StarPointerDirector()
     : mIsUpdateTransHolder(false), mIsAllowP1StarPieceShot(false), mIsAllowP2StarPieceShot(false), mControllers(nullptr),
@@ -125,7 +137,7 @@ void StarPointerDirector::createLayout() {
         mStarPointerLayouts[channel].mDirector = this;
     }
 
-    mGuidance = new StarPointerGuidance("スターポインタガイダンス");
+    mGuidance = new StarPointerGuidance(cStarPointerGuidanceName.c_str());
     mGuidance->initWithoutIter();
 }
 

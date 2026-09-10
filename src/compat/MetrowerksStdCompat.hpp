@@ -19,6 +19,7 @@ namespace smgpc::game {
 #include <revolution/types.h>
 
 #include <cmath>
+#include <concepts>
 #include <cstddef>
 #include <functional.hpp>
 
@@ -42,6 +43,17 @@ void operator delete[](void* memory, JKRHeap* heap, int alignment) noexcept;
 // changing the recovered Game translation units.
 namespace MR {
     s32 getRandom(long min, long max);
+
+    inline s32 clamp(s32 value, s32 min, s32 max);
+
+    // Integer literals with an L suffix are still 32-bit values on Wii.
+    // Resolve mixed integral calls before the float/integer Game overloads
+    // become ambiguous on LP64, then use the original integer operation.
+    template <std::integral Value, std::integral Minimum, std::integral Maximum>
+        requires (std::same_as<Value, long> || std::same_as<Minimum, long> || std::same_as<Maximum, long>)
+    inline s32 clamp(Value value, Minimum min, Maximum max) {
+        return clamp(static_cast<s32>(value), static_cast<s32>(min), static_cast<s32>(max));
+    }
 }
 
 #ifndef NO_INLINE

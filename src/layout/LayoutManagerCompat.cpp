@@ -1,3 +1,4 @@
+#include "resource/TextEncoding.hpp"
 #include <aurora/exception.hpp>
 #include <aurora/allocation.hpp>
 #include "layout/LayoutHost.hpp"
@@ -192,7 +193,7 @@ void bind_actor_manager(LayoutActor* actor, LayoutManager* manager) {
     auto& manager_state = require_manager_state(manager, "Binding a layout manager");
     manager_state.actor = actor;
     manager_state.runtime = std::make_unique< smgpc::layout::LayoutRuntime >(
-        actor->getName(), manager_state.layout_name.c_str(), manager_state.animation_layer_count, MR::DrawType_Layout);
+        smgpc::resource::decode_cp932(actor->getName()).c_str(), manager_state.layout_name.c_str(), manager_state.animation_layer_count, MR::DrawType_Layout);
     manager_state.runtime->initWithoutIter();
     manager_state.runtime->kill();
     manager_state.runtime->setTrans(actor_state.translation.x, actor_state.translation.y);

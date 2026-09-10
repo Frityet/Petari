@@ -1,0 +1,20 @@
+{
+  "command": [
+    "/opt/homebrew/opt/llvm/bin/clang++",
+    "-std=c++23",
+    "-O1",
+    "-g",
+    "-ffp-contract=off",
+    "-fsanitize=address,undefined",
+    "-fno-omit-frame-pointer",
+    "-Iaurora/include",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/upstream/BrlanCurveDeltaProbe.cpp",
+    "aurora/lib/nw4r/brlan.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/upstream/BrlanCurveDeltaProbe"
+  ],
+  "build_exit": 0,
+  "runtime_exit": 0,
+  "output": "frame=0 step(reference=0 native=0) hermite(reference=0 native=0) gaps=0\nframe=5 step(reference=0 native=0) hermite(reference=5 native=5) gaps=0\nframe=9.998 step(reference=0 native=0) hermite(reference=9.99999809 native=9.99999905) gaps=1\nframe=9.9995 step(reference=1 native=0) hermite(reference=20 native=10) gaps=2\nframe=10 step(reference=1 native=1) hermite(reference=20 native=20) gaps=0\nframe=10.0005 step(reference=1 native=1) hermite(reference=20 native=20) gaps=0\nframe=15 step(reference=1 native=1) hermite(reference=25 native=25) gaps=0\nframe=20 step(reference=0 native=0) hermite(reference=30 native=30) gaps=0\n16 curve comparisons completed; 3 currently differing outputs (audit, not compatibility pass)\n",
+  "binary_sha256": "c6446659d333467b41c95b82122697b5a1a3b5f3212ffef13bfb69c1b0366ee9"
+}

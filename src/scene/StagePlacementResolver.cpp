@@ -1,7 +1,6 @@
 #include "scene/StagePlacementResolver.hpp"
 
 #include "resource/RarcArchive.hpp"
-#include "resource/TextEncoding.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "scene/nameobj/NameObjFactory.hpp"
 #include "Game/Util/JMapUtil.hpp"
@@ -1027,7 +1026,7 @@ namespace smgpc::scene {
                     StageZoneTransform::from_translation_rotation(
                         {0.0F, 0.0F, 0.0F}, local_rotation));
                 positions.push_back(StageGeneralPos{
-                    .name = smgpc::resource::decode_cp932(raw_name),
+                    .name = raw_name,
                     .stage_name = table->stage_name,
                     .zone_name = table->zone_name,
                     .layer_name = table->layer_name,

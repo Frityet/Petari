@@ -428,7 +428,7 @@ namespace MR {
             aurora::throw_host_exception<std::invalid_argument>(
                 "A demo-part talk query requires a real part name.");
         }
-        return std::string_view(pPartName).find("会話") !=
+        return std::string_view(pPartName).find("\x89\xef\x98\x62") !=
                std::string_view::npos;
     }
 

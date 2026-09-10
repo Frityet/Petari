@@ -1,5 +1,6 @@
 #include <aurora/exception.hpp>
 #include "Game/System/BinaryDataChunkHolder.hpp"
+#include "compat/SaveChunkEncoding.hpp"
 
 #include <cstring>
 #include <limits>
@@ -86,6 +87,9 @@ bool BinaryDataChunkHolder::loadFromFileBinary(const u8* pData, u32 dataSize) {
             if (hash != chunk->makeHeaderHashCode() || chunkSize == cChunkHeaderSize) {
                 return false;
             }
+            if (!smgpc::compat::validate_save_chunk_payload(signature, pData + offset + cChunkHeaderSize,
+                                                           chunkSize - cChunkHeaderSize))
+                return false;
         }
         offset += chunkSize;
     }
@@ -95,7 +99,8 @@ bool BinaryDataChunkHolder::loadFromFileBinary(const u8* pData, u32 dataSize) {
         const auto signature = read_be32(pData + offset);
         const auto chunkSize = read_be32(pData + offset + 8U);
         if (auto* chunk = findFromSignature(signature); chunk != nullptr) {
-            const auto status = chunk->deserialize(pData + offset + cChunkHeaderSize, chunkSize - cChunkHeaderSize);
+            const auto status = smgpc::compat::deserialize_save_chunk(*chunk, pData + offset + cChunkHeaderSize,
+                                                                     chunkSize - cChunkHeaderSize);
             if (status != 0 && status != 1) {
                 return false;
             }
@@ -112,7 +117,7 @@ void BinaryDataChunkHolder::makeChunkData(BinaryDataChunkHolderChunkData* pData,
     }
 
     auto* bytes = reinterpret_cast<u8*>(pData);
-    const auto serialized = pChunk->serialize(bytes + cChunkHeaderSize, bufferSize - cChunkHeaderSize);
+    const auto serialized = smgpc::compat::serialize_save_chunk(*pChunk, bytes + cChunkHeaderSize, bufferSize - cChunkHeaderSize);
     if (serialized < 0 || static_cast<u32>(serialized) > bufferSize - cChunkHeaderSize) {
         aurora::throw_host_exception<std::length_error>("Retail binary chunk serializer exceeded its buffer");
     }

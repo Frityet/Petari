@@ -1,33 +1,24 @@
 #pragma once
 
-#include <algorithm>
-#include <cstring>
+#include "JSystem/JSupport/JSURandomOutputStream.hpp"
 
-#include <revolution/types.h>
-
-// See JSUMemoryInputStream.hpp. This stream deliberately copies bytes only;
-// PPC scalar byte order is handled at the serialization compatibility boundary.
-class JSUMemoryOutputStream {
+class JSUMemoryOutputStream : public JSURandomOutputStream {
 public:
-    JSUMemoryOutputStream(void* pBuffer, s32 size)
-        : mBuffer(static_cast<u8*>(pBuffer)), mLength(std::max(size, 0)), mPosition(0) {
+    JSUMemoryOutputStream(void* pBuffer, s32 size) : JSURandomOutputStream() {
+        setBuffer(pBuffer, size);
     }
 
-    s32 write(const void* pSource, s32 size) {
-        if (pSource == nullptr || size <= 0 || mBuffer == nullptr) {
-            return 0;
-        }
-
-        const auto available = std::max(mLength - mPosition, 0);
-        const auto copied = std::min(size, available);
-        if (copied > 0) {
-            std::memcpy(mBuffer + mPosition, pSource, static_cast<std::size_t>(copied));
-            mPosition += copied;
-        }
-        return copied;
+    virtual ~JSUMemoryOutputStream() {};
+    virtual s32 writeData(const void*, s32);
+    virtual s32 getLength() const;
+    virtual s32 getPosition() const {
+        return mPosition;
     }
+    virtual s32 seekPos(s32, JSUStreamSeekFrom);
 
-    u8* mBuffer;
-    s32 mLength;
-    s32 mPosition;
+    void setBuffer(void*, s32);
+
+    void* mBuffer;  // 0x8
+    s32 mLength;    // 0xC
+    s32 mPosition;  // 0x10
 };

@@ -1,176 +1,174 @@
+#include "resource/TextEncoding.hpp"
 #include "Game/System/GameDataFunction.hpp"
 #include "Game/System/GameDataHolder.hpp"
 #include "Game/System/UserFile.hpp"
-#include "compat/GameDataHolderCompat.hpp"
-#include "compat/GameDataFunctionCompat.hpp"
+#include "JSystem/JKernel/JKRHeap.hpp"
+#include "compat/GameDataOwnership.hpp"
 #include "compat/GameDataSession.hpp"
+#include "resource/GameResourceRuntime.hpp"
+#include "runtime/ArchiveMountService.hpp"
+#include "runtime/RuntimeServices.hpp"
+#include "runtime/ScenarioCatalogOwnership.hpp"
 
-#include <functional>
+#include <aurora/aurora.h>
+#include <aurora/dvd.h>
+#include <array>
+#include <cstdlib>
 #include <iostream>
+#include <memory>
 #include <stdexcept>
 #include <string>
 #include <string_view>
 
+namespace aurora { extern AuroraConfig g_config; }
 namespace {
 void require(bool condition, std::string_view message) {
-    if (!condition) {
-        throw std::runtime_error(std::string(message));
-    }
+    if (!condition) throw std::runtime_error(std::string(message));
 }
 
-template <typename Exception = std::exception>
-void require_throws(const std::function<void()>& operation, std::string_view message) {
-    auto threw = false;
-    try {
-        operation();
-    } catch (const Exception&) {
-        threw = true;
-    }
+template <typename Exception = std::exception, typename F>
+void require_throws(F&& operation, std::string_view message) {
+    bool threw = false;
+    try { operation(); } catch (const Exception&) { threw = true; }
     require(threw, message);
 }
-}  // namespace
+
+void require_absent_bindings() {
+    require_throws<std::logic_error>([] { GameDataFunction::getCurrentGameDataHolder(); },
+                                    "current holder query requires actual selected-file ownership");
+    require_throws<std::logic_error>([] { GameDataFunction::getSceneStartGameDataHolder(); },
+                                    "scene-start holder query requires actual backup ownership");
+    require_throws<std::logic_error>([] { GameDataFunction::getPictureBookChapterCanRead(); },
+                                    "global picture-book state requires actual holder backing");
+    require_throws<std::logic_error>([] { GameDataFunction::onGameEventFlag(smgpc::resource::encode_cp932("ハチマリオ初変身").c_str()); },
+                                    "global event writes must not create a synthetic file");
+}
+}
 
 int main() {
-    auto current = UserFile{};
-    require(current.mGameDataHolder != nullptr && current.mConfigDataHolder != nullptr,
-            "a directly constructed retail UserFile must own its actual holder objects");
-    current.resetAllData();
-    current.setUserName(L"Rosalina");
-    smgpc::compat::game_data::set_holder_name(*current.mGameDataHolder, "mario1");
-    require(std::wstring_view(current.mUserName) == L"Rosalina" &&
-                std::string_view(current.getGameDataName()) == "mario1",
-            "direct UserFile state must retain the retail name and data-file identity");
+    try {
+        require_absent_bindings();
+        require_throws<std::logic_error>([] { GameDataFunction::getUserName(); },
+                                        "user-name routing requires the actual save-sequence owner");
+        require_throws<std::logic_error>([] { GameDataFunction::getSysConfigFileTimeAnnounced(); },
+                                        "system configuration requires its actual save-sequence owner");
 
-    auto* holder = current.mGameDataHolder;
-    require(holder->isPassedStoryEvent("ゲーム開始直後"),
-            "retail story progress zero must include the first StoryEvent BCSV row");
-    require(!holder->isPassedStoryEvent("スピン権利"),
-            "retail story progress zero must precede the spin entitlement row");
-    holder->followStoryEventByName("スピン権利");
-    require(holder->isPassedStoryEvent("スピン権利"),
-            "following a retail story event must advance numeric story progress");
-    require_throws<std::invalid_argument>(
-        [&] { holder->followStoryEventByName("invented-story-event"); },
-        "an invented story event must not become a boolean alias");
+        const char* disc = std::getenv("SMGPC_REAL_DISC");
+        require(disc && aurora_dvd_open(disc), "actual UserFile construction requires the authored scenario catalog");
+        struct DiscGuard { ~DiscGuard() { aurora_dvd_close(); } } disc_guard;
+        DVDInit();
+        aurora::g_config.mem1Size = 24U * 1024U * 1024U;
+        smgpc::resource::GameResourceRuntime resources;
+        smgpc::runtime::DvdFileSystemService dvd({});
+        smgpc::runtime::ArchiveMountService mounts(dvd);
+        auto catalog = std::make_shared<smgpc::runtime::ScenarioCatalogOwnership>(
+            resources.host_heaps(), resources.budget().scenario_catalog_bytes, mounts);
+        smgpc::compat::game_data::initialize_event_table();
+        const auto free_before = resources.host_heaps()->root_heap().getTotalFreeSize();
 
-    require(!holder->isOnGameEventFlag("ハチマリオ初変身"),
-            "a fresh storable retail flag must be off");
-    holder->tryOnGameEventFlag("ハチマリオ初変身");
-    require(holder->isOnGameEventFlag("ハチマリオ初変身"),
-            "a Type_0 retail flag must use stored flag state");
-    require_throws<std::invalid_argument>(
-        [&] { static_cast<void>(holder->isOnGameEventFlag("invented-flag")); },
-        "an invented game-event query must be rejected by the retail table");
-    require_throws<std::invalid_argument>(
-        [&] { holder->tryOnGameEventFlag("invented-flag"); },
-        "an invented game-event write must be rejected by the retail table");
+        for (u16 selected_file = 1; selected_file <= 6; ++selected_file) {
+            {
+                smgpc::compat::GameDataSession session(selected_file, resources, catalog);
+                auto& file = session.user_file();
+                auto& current = session.holder();
+                const auto& backup = session.scene_start_holder();
+                const auto expected_name = std::string("mario") + std::to_string(selected_file);
+                require(file.mGameDataHolder == &current && file.mConfigDataHolder != nullptr &&
+                            current.mUserFile == &file && backup.mUserFile != &file && backup.mUserFile != nullptr,
+                        "session must own two real UserFiles and their associated original holders");
+                require(session.selected_file() == selected_file &&
+                            std::string_view(file.getGameDataName()) == expected_name &&
+                            std::string_view(backup.mName) == expected_name,
+                        "each selected slot must retain its exact current and backup marioN identity");
+                require(GameDataFunction::getCurrentGameDataHolder() == &current &&
+                            GameDataFunction::getSceneStartGameDataHolder() == &backup && &current != &backup,
+                        "current and scene-start bindings must address separate original holders");
+                require(smgpc::compat::game_data::holder_story_progress(current) == 0 &&
+                            smgpc::compat::game_data::holder_story_progress(backup) == 0 &&
+                            current.isPassedStoryEvent(smgpc::resource::encode_cp932("ゲーム開始直後").c_str()) &&
+                            !current.isPassedStoryEvent(smgpc::resource::encode_cp932("ピーチ城浮上後").c_str()) && !current.isPassedStoryEvent(smgpc::resource::encode_cp932("スピン権利").c_str()),
+                        "fresh files must preserve original progress zero, without a seeded demo checkpoint");
 
-    holder->setPictureBookChapterAlreadyRead(3);
-    require(holder->getPictureBookChapterAlreadyRead() == 3,
-            "picture-book progress must use the retail 絵本既読章 value");
-    require_throws<std::invalid_argument>(
-        [&] { smgpc::compat::game_data::set_holder_event_state(*holder, {{"invented-flag", true}}, {}); },
-        "host state binding must reject invented game-event names");
+                // Original setUserName copies the entire eleven-element buffer.
+                constexpr wchar_t name[11] = L"Rosalina";
+                file.setUserName(name);
+                require(std::wstring_view(file.mUserName) == L"Rosalina", "actual UserFile must retain its user name");
+                require_throws<std::logic_error>([] { GameDataFunction::getUserName(); },
+                                                "a holder binding must not pretend a SaveDataHandleSequence exists");
+                require(!current.isOnGameEventFlag(smgpc::resource::encode_cp932("ハチマリオ初変身").c_str()), "fresh original flag storage must be clear");
+                current.tryOnGameEventFlag(smgpc::resource::encode_cp932("ハチマリオ初変身").c_str());
+                require(current.isOnGameEventFlag(smgpc::resource::encode_cp932("ハチマリオ初変身").c_str()) && !backup.isOnGameEventFlag(smgpc::resource::encode_cp932("ハチマリオ初変身").c_str()),
+                        "actual Type_0 flag writes must leave the independent backup unchanged");
+                current.setPictureBookChapterAlreadyRead(3);
+                require(current.getPictureBookChapterAlreadyRead() == 3 && backup.getPictureBookChapterAlreadyRead() == 0,
+                        "actual VLE1 picture-book values must be isolated between holders");
 
-    require_throws<std::logic_error>([&] { holder->makeFileBinary(nullptr, 0U); },
-                                     "fabricated game-data serialization must remain absent");
-    require_throws<std::logic_error>([&] { static_cast<void>(holder->loadFromFileBinary("mario1", nullptr, 0U)); },
-                                     "fabricated game-data deserialization must remain absent");
-
-    require_throws<std::logic_error>([] { static_cast<void>(GameDataFunction::getUserName()); },
-                                     "global user state must be unavailable without the retail save sequence");
-    require_throws<std::logic_error>([] { static_cast<void>(GameDataFunction::getPictureBookChapterCanRead()); },
-                                     "global picture-book state must be unavailable without retail backing");
-    require_throws<std::logic_error>([] { GameDataFunction::onGameEventFlag("ハチマリオ初変身"); },
-                                     "global event writes must not target a synthetic user file");
-    require_throws<std::logic_error>([] { static_cast<void>(GameDataFunction::getSysConfigFileTimeAnnounced()); },
-                                     "global system state must be unavailable without retail backing");
-
-    auto checkpoint = GameDataHolder{nullptr};
-    smgpc::compat::game_data::set_holder_story_progress(checkpoint, 10U);
-    {
-        const auto binding = smgpc::compat::ScopedGameDataHolderOverride{checkpoint};
-        require(GameDataFunction::getCurrentGameDataHolder() == &checkpoint &&
-                    GameDataFunction::getSceneStartGameDataHolder() == &checkpoint &&
-                    GameDataFunction::isPassedStoryEvent("チコガイドデモ終了") &&
-                    !GameDataFunction::isPassedStoryEvent("スピン権利"),
-                "an authored checkpoint must expose its real holder without fabricating save-data ownership");
-        GameDataFunction::followStoryEventByName("スピン権利");
-        require(GameDataFunction::isPassedStoryEvent("スピン権利") &&
-                    smgpc::compat::game_data::holder_story_progress(checkpoint) == 15U,
-                "the original story-event API must advance the bound checkpoint holder");
-    }
-    require_throws<std::logic_error>([] { static_cast<void>(GameDataFunction::getCurrentGameDataHolder()); },
-                                     "checkpoint holder binding must restore global save-data absence");
-
-    const auto session_state_baseline = smgpc::compat::game_data::holder_state_count();
-    for (auto selected_file = u16{1U}; selected_file <= 6U; ++selected_file) {
-        {
-            auto session = smgpc::compat::GameDataSession{selected_file};
-            const auto expected_name = std::string("mario") + std::to_string(selected_file);
-            require(session.selected_file() == selected_file &&
-                        std::string_view(session.holder().mName) == expected_name,
-                    "a selected-file session must retain the exact marioN identity for all six files");
-            require(GameDataFunction::getCurrentGameDataHolder() == &session.holder() &&
-                        GameDataFunction::getSceneStartGameDataHolder() == &session.holder(),
-                    "a selected-file session must bind one owned holder as current and scene-start data");
-            require(smgpc::compat::game_data::holder_story_progress(session.holder()) == 5U &&
-                        GameDataFunction::isPassedStoryEvent("ゲーム開始直後") &&
-                        GameDataFunction::isPassedStoryEvent("クッパ襲来後") &&
-                        GameDataFunction::isPassedStoryEvent("ピーチ城浮上後") &&
-                        !GameDataFunction::isPassedStoryEvent("チコガイドデモ終了") &&
-                        !GameDataFunction::isPassedStoryEvent("スピン権利"),
-                    "a selected-file session must begin at the exact post-castle-rise story boundary");
-        }
-        require(smgpc::compat::game_data::holder_state_count() == session_state_baseline,
-                "destroying each selected-file session must reclaim its holder state");
-    }
-
-    require_throws<std::out_of_range>(
-        [] { static_cast<void>(smgpc::compat::GameDataSession{0U}); },
-        "selected-file zero must be rejected");
-    require_throws<std::out_of_range>(
-        [] { static_cast<void>(smgpc::compat::GameDataSession{7U}); },
-        "selected files above the retail six slots must be rejected");
-    require(smgpc::compat::game_data::holder_state_count() == session_state_baseline,
-            "rejected selected-file sessions must not leak holder state");
-
-    {
-        auto outer = smgpc::compat::GameDataSession{2U};
-        auto* const outer_holder = &outer.holder();
-        require(smgpc::compat::game_data::holder_story_progress(*outer_holder) == 5U,
-                "the outer selected-file holder must begin at story progress 5");
-
-        GameDataFunction::followStoryEventByName("チコガイドデモ終了");
-        require(GameDataFunction::getCurrentGameDataHolder() == outer_holder &&
-                    smgpc::compat::game_data::holder_story_progress(*outer_holder) == 10U &&
-                    GameDataFunction::isPassedStoryEvent("チコガイドデモ終了") &&
-                    !GameDataFunction::isPassedStoryEvent("スピン権利"),
-                "the bound selected-file holder must advance in place from progress 5 to 10");
-
-        {
-            auto inner = smgpc::compat::GameDataSession{6U};
-            require(GameDataFunction::getCurrentGameDataHolder() == &inner.holder() &&
-                        GameDataFunction::getSceneStartGameDataHolder() == &inner.holder() &&
-                        smgpc::compat::game_data::holder_story_progress(inner.holder()) == 5U,
-                    "a nested selected-file session must replace both bindings with its own seeded holder");
+                // The bounded demo checkpoint is an explicit fixture action.
+                GameDataFunction::followStoryEventByName(smgpc::resource::encode_cp932("ピーチ城浮上後").c_str());
+                require(smgpc::compat::game_data::holder_story_progress(current) == 5 &&
+                            !backup.isPassedStoryEvent(smgpc::resource::encode_cp932("ピーチ城浮上後").c_str()),
+                        "original event lookup must explicitly advance only the current holder to progress five");
+                current.addPlayerLeft(20);
+                current.addStockedStarPiece(456);
+                session.store_scene_start();
+                require(smgpc::compat::game_data::holder_story_progress(backup) == 5 &&
+                            backup.getPictureBookChapterAlreadyRead() == 3 && backup.isOnGameEventFlag(smgpc::resource::encode_cp932("ハチマリオ初変身").c_str()),
+                        "store_scene_start must serialize actual story, value and flag chunks into the backup");
+                require(current.getPlayerLeft() == 24 && backup.getPlayerLeft() == 4 && backup.getStockedStarPieceNum() == 456,
+                        "original PLAY deserialization resets backup lives to four and preserves stored star bits");
+                file.resetAllData();
+                require(smgpc::compat::game_data::holder_story_progress(current) == 0 &&
+                            !current.isOnGameEventFlag(smgpc::resource::encode_cp932("ハチマリオ初変身").c_str()) && current.getPictureBookChapterAlreadyRead() == 0 &&
+                            smgpc::compat::game_data::holder_story_progress(backup) == 5,
+                        "reset acts on the actual current chunks and leaves the scene-start snapshot intact");
+            }
+            require_absent_bindings();
+            require(resources.host_heaps()->root_heap().getTotalFreeSize() == free_before,
+                    "each selected-file owner must return its complete profile heap on teardown");
         }
 
-        require(GameDataFunction::getCurrentGameDataHolder() == outer_holder &&
-                    GameDataFunction::getSceneStartGameDataHolder() == outer_holder &&
-                    smgpc::compat::game_data::holder_story_progress(*outer_holder) == 10U,
-                "destroying a nested selected-file session must restore the unchanged outer holder");
-        GameDataFunction::followStoryEventByName("スピン権利");
-        require(GameDataFunction::getCurrentGameDataHolder() == outer_holder &&
-                    smgpc::compat::game_data::holder_story_progress(*outer_holder) == 15U &&
-                    GameDataFunction::isPassedStoryEvent("スピン権利"),
-                "the same selected-file holder must advance in place from progress 10 to 15");
-    }
-    require(smgpc::compat::game_data::holder_state_count() == session_state_baseline,
-            "nested selected-file session teardown must reclaim both owned holder states");
-    require_throws<std::logic_error>([] { static_cast<void>(GameDataFunction::getCurrentGameDataHolder()); },
-                                     "selected-file session teardown must restore global save-data absence");
+        require_throws<std::out_of_range>([&] { smgpc::compat::GameDataSession invalid(0, resources, catalog); },
+                                          "native selected-file owner must reject slot zero");
+        require_throws<std::out_of_range>([&] { smgpc::compat::GameDataSession invalid(7, resources, catalog); },
+                                          "native selected-file owner must reject slots beyond six");
+        require_absent_bindings();
+        require(resources.host_heaps()->root_heap().getTotalFreeSize() == free_before,
+                "rejected native owner construction must not allocate a profile heap");
 
-    std::cout << "Game-data real-or-absent tests passed: selected-file session contract included\n";
-    return 0;
+        {
+            smgpc::compat::GameDataSession outer(2, resources, catalog);
+            GameDataFunction::followStoryEventByName(smgpc::resource::encode_cp932("チコガイドデモ終了").c_str());
+            outer.store_scene_start();
+            GameDataFunction::followStoryEventByName(smgpc::resource::encode_cp932("スピン権利").c_str());
+            require(smgpc::compat::game_data::holder_story_progress(outer.holder()) == 15 &&
+                        smgpc::compat::game_data::holder_story_progress(outer.scene_start_holder()) == 10,
+                    "current story may advance beyond its separate authored scene-start snapshot");
+            {
+                smgpc::compat::GameDataSession inner(6, resources, catalog);
+                require(GameDataFunction::getCurrentGameDataHolder() == &inner.holder() &&
+                            GameDataFunction::getSceneStartGameDataHolder() == &inner.scene_start_holder(),
+                        "nested actual session must replace both current and backup bindings");
+                GameDataFunction::followStoryEventByName(smgpc::resource::encode_cp932("ピーチ城浮上後").c_str());
+                inner.store_scene_start();
+                GameDataFunction::followStoryEventByName(smgpc::resource::encode_cp932("チコガイドデモ終了").c_str());
+                require(smgpc::compat::game_data::holder_story_progress(inner.holder()) == 10 &&
+                            smgpc::compat::game_data::holder_story_progress(inner.scene_start_holder()) == 5 &&
+                            smgpc::compat::game_data::holder_story_progress(outer.holder()) == 15,
+                        "nested session current/backup changes must not mutate the outer actual holder");
+            }
+            require(GameDataFunction::getCurrentGameDataHolder() == &outer.holder() &&
+                        GameDataFunction::getSceneStartGameDataHolder() == &outer.scene_start_holder() &&
+                        smgpc::compat::game_data::holder_story_progress(outer.holder()) == 15 &&
+                        smgpc::compat::game_data::holder_story_progress(outer.scene_start_holder()) == 10,
+                    "nested session destruction must restore both unchanged outer owners");
+        }
+        require_absent_bindings();
+        require(resources.host_heaps()->root_heap().getTotalFreeSize() == free_before,
+                "nested sessions must reclaim both original profile heaps");
+        std::cout << "Game-data real-or-absent tests passed: original UserFiles, distinct snapshots, six slots and nested ownership\n";
+        return 0;
+    } catch (const std::exception& error) {
+        std::cerr << "Game-data real-or-absent tests failed: " << error.what() << '\n';
+        return 1;
+    }
 }

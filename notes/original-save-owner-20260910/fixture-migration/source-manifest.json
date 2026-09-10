@@ -1,0 +1,15 @@
+{
+  "scope": "Two fixture migrations only; root owns linked validation",
+  "files": [
+    {
+      "path": "tests/GameDataStarStorageTests.cpp",
+      "sha256": "acebd56cb4ad2a792d1fffb19f57fdc5fe97a5025d646460b565c60525c6d7e1"
+    },
+    {
+      "path": "tests/GameDataRealOrAbsentTests.cpp",
+      "sha256": "a5b1acef2b0f98d2c811f56677faac8da0577466b81e26623684f939ff787440"
+    }
+  ],
+  "compile_results": "compile-results.json",
+  "linked_runtime": "pending root lane"
+}

@@ -1,0 +1,19 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "symbols": [
+    {
+      "name": "makeAttibuteEffectBaseName",
+      "address": "0x801621c0",
+      "size": 124,
+      "asm_matches_dol": true,
+      "bytes_sha256": "494a35fae9369abdc2921f30de661d286f2f52a14bad38bff5ddffab7dea0cf0"
+    },
+    {
+      "name": "extractString",
+      "address": "0x803fead4",
+      "size": 64,
+      "asm_matches_dol": true,
+      "bytes_sha256": "ee3c6559864cd12e3e364ec9bf1de7706c88372787a4e90bdf5522398bb73711"
+    }
+  ]
+}

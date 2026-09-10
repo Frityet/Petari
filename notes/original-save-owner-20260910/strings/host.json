@@ -1,0 +1,19 @@
+{
+  "source": "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/fixture/Host.cpp",
+  "source_sha256": "280b65a746b09020d6686e19211949d124382f8ab882ea96aca384e5e5a31ea7",
+  "arguments": [
+    "-std=c++23",
+    "-O2",
+    "-g",
+    "-MMD",
+    "-MF",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/host.d",
+    "-c",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/fixture/Host.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/host.o"
+  ],
+  "exit": 0,
+  "converted_literals": 0,
+  "literal_tokens": 2
+}

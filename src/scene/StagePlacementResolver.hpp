@@ -161,6 +161,7 @@ namespace smgpc::scene {
     };
 
     struct StageGeneralPos {
+        // Original CP932 PosName identity; decode only for host presentation.
         std::string name;
         std::string stage_name;
         std::string zone_name;

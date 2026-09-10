@@ -1,0 +1,297 @@
+{
+  "stored_names": 57,
+  "utf8_collisions": {
+    "0x389a": [
+      "テレサマリオ初変身",
+      "CocoonExGalaxy"
+    ]
+  },
+  "cp932_collisions": {},
+  "rows": [
+    {
+      "name": "ハチマリオ初変身",
+      "utf8_id": 23868,
+      "cp932_id": 13754
+    },
+    {
+      "name": "テレサマリオ初変身",
+      "utf8_id": 14490,
+      "cp932_id": 10126
+    },
+    {
+      "name": "ホッパーマリオ初変身",
+      "utf8_id": 14333,
+      "cp932_id": 20815
+    },
+    {
+      "name": "ファイアマリオ初変身",
+      "utf8_id": 15189,
+      "cp932_id": 18270
+    },
+    {
+      "name": "アイスマリオ初変身",
+      "utf8_id": 27234,
+      "cp932_id": 15589
+    },
+    {
+      "name": "フライングマリオ初変身",
+      "utf8_id": 2233,
+      "cp932_id": 13157
+    },
+    {
+      "name": "無敵マリオ初変身",
+      "utf8_id": 8076,
+      "cp932_id": 18467
+    },
+    {
+      "name": "ライフアップキノコ解説",
+      "utf8_id": 30396,
+      "cp932_id": 28800
+    },
+    {
+      "name": "１ＵＰキノコ解説",
+      "utf8_id": 18395,
+      "cp932_id": 30566
+    },
+    {
+      "name": "サーフィンチュートリアル",
+      "utf8_id": 32388,
+      "cp932_id": 9429
+    },
+    {
+      "name": "タマコロチュートリアル",
+      "utf8_id": 17387,
+      "cp932_id": 26488
+    },
+    {
+      "name": "EggStarGalaxy",
+      "utf8_id": 8647,
+      "cp932_id": 8647
+    },
+    {
+      "name": "HoneyBeeKingdomGalaxy",
+      "utf8_id": 30996,
+      "cp932_id": 30996
+    },
+    {
+      "name": "FlipPanelExGalaxy",
+      "utf8_id": 31802,
+      "cp932_id": 31802
+    },
+    {
+      "name": "SurfingLv1Galaxy",
+      "utf8_id": 3915,
+      "cp932_id": 3915
+    },
+    {
+      "name": "BeltConveyerExGalaxy",
+      "utf8_id": 20899,
+      "cp932_id": 20899
+    },
+    {
+      "name": "TriLegLv1Galaxy",
+      "utf8_id": 31892,
+      "cp932_id": 31892
+    },
+    {
+      "name": "StarDustGalaxy",
+      "utf8_id": 27764,
+      "cp932_id": 27764
+    },
+    {
+      "name": "TamakoroExLv1Galaxy",
+      "utf8_id": 1538,
+      "cp932_id": 1538
+    },
+    {
+      "name": "BattleShipGalaxy",
+      "utf8_id": 14180,
+      "cp932_id": 14180
+    },
+    {
+      "name": "BreakDownPlanetGalaxy",
+      "utf8_id": 5001,
+      "cp932_id": 5001
+    },
+    {
+      "name": "CocoonExGalaxy",
+      "utf8_id": 14490,
+      "cp932_id": 14490
+    },
+    {
+      "name": "KoopaBattleVs1Galaxy",
+      "utf8_id": 32048,
+      "cp932_id": 32048
+    },
+    {
+      "name": "HeavenlyBeachGalaxy",
+      "utf8_id": 20523,
+      "cp932_id": 20523
+    },
+    {
+      "name": "CubeBubbleExLv1Galaxy",
+      "utf8_id": 5731,
+      "cp932_id": 5731
+    },
+    {
+      "name": "PhantomGalaxy",
+      "utf8_id": 6237,
+      "cp932_id": 6237
+    },
+    {
+      "name": "OceanFloaterLandGalaxy",
+      "utf8_id": 134,
+      "cp932_id": 134
+    },
+    {
+      "name": "TearDropGalaxy",
+      "utf8_id": 26369,
+      "cp932_id": 26369
+    },
+    {
+      "name": "TeresaMario2DGalaxy",
+      "utf8_id": 7764,
+      "cp932_id": 7764
+    },
+    {
+      "name": "KoopaJrShipLv1Galaxy",
+      "utf8_id": 4183,
+      "cp932_id": 4183
+    },
+    {
+      "name": "CosmosGardenGalaxy",
+      "utf8_id": 16143,
+      "cp932_id": 16143
+    },
+    {
+      "name": "IceVolcanoGalaxy",
+      "utf8_id": 2807,
+      "cp932_id": 2807
+    },
+    {
+      "name": "HoneyBeeExGalaxy",
+      "utf8_id": 17962,
+      "cp932_id": 17962
+    },
+    {
+      "name": "SandClockGalaxy",
+      "utf8_id": 3450,
+      "cp932_id": 3450
+    },
+    {
+      "name": "SnowCapsuleGalaxy",
+      "utf8_id": 5818,
+      "cp932_id": 5818
+    },
+    {
+      "name": "KoopaBattleVs2Galaxy",
+      "utf8_id": 14449,
+      "cp932_id": 14449
+    },
+    {
+      "name": "ReverseKingdomGalaxy",
+      "utf8_id": 18841,
+      "cp932_id": 18841
+    },
+    {
+      "name": "OceanRingGalaxy",
+      "utf8_id": 15582,
+      "cp932_id": 15582
+    },
+    {
+      "name": "SkullSharkGalaxy",
+      "utf8_id": 18392,
+      "cp932_id": 18392
+    },
+    {
+      "name": "FactoryGalaxy",
+      "utf8_id": 154,
+      "cp932_id": 154
+    },
+    {
+      "name": "TransformationExGalaxy",
+      "utf8_id": 5100,
+      "cp932_id": 5100
+    },
+    {
+      "name": "FloaterOtaKingGalaxy",
+      "utf8_id": 18522,
+      "cp932_id": 18522
+    },
+    {
+      "name": "OceanPhantomCaveGalaxy",
+      "utf8_id": 17068,
+      "cp932_id": 17068
+    },
+    {
+      "name": "CannonFleetGalaxy",
+      "utf8_id": 22689,
+      "cp932_id": 22689
+    },
+    {
+      "name": "DarkRoomGalaxy",
+      "utf8_id": 31745,
+      "cp932_id": 31745
+    },
+    {
+      "name": "HellProminenceGalaxy",
+      "utf8_id": 381,
+      "cp932_id": 381
+    },
+    {
+      "name": "FishTunnelGalaxy",
+      "utf8_id": 31792,
+      "cp932_id": 31792
+    },
+    {
+      "name": "KoopaBattleVs3Galaxy",
+      "utf8_id": 29618,
+      "cp932_id": 29618
+    },
+    {
+      "name": "TamakoroExLv2Galaxy",
+      "utf8_id": 16707,
+      "cp932_id": 16707
+    },
+    {
+      "name": "SurfingLv2Galaxy",
+      "utf8_id": 19084,
+      "cp932_id": 19084
+    },
+    {
+      "name": "CubeBubbleExLv2Galaxy",
+      "utf8_id": 20900,
+      "cp932_id": 20900
+    },
+    {
+      "name": "PeachCastleFinalGalaxy",
+      "utf8_id": 22973,
+      "cp932_id": 22973
+    },
+    {
+      "name": "LuigiTalkAfterRescued",
+      "utf8_id": 22371,
+      "cp932_id": 22371
+    },
+    {
+      "name": "RosettaTalkAboutTico",
+      "utf8_id": 17040,
+      "cp932_id": 17040
+    },
+    {
+      "name": "RosettaTalkAfterNormalEnding",
+      "utf8_id": 12972,
+      "cp932_id": 12972
+    },
+    {
+      "name": "ViewCompleteEnding",
+      "utf8_id": 27109,
+      "cp932_id": 27109
+    },
+    {
+      "name": "StarPieceCounterStop",
+      "utf8_id": 10978,
+      "cp932_id": 10978
+    }
+  ]
+}

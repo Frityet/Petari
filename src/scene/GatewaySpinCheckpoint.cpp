@@ -11,7 +11,7 @@
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "compat/DemoSceneRuntime.hpp"
-#include "compat/GameDataHolderCompat.hpp"
+#include "compat/GameDataOwnership.hpp"
 #include "compat/InformationMessageCompat.hpp"
 #include "compat/PlayerUtilCompat.hpp"
 #include "runtime/RuntimeServices.hpp"

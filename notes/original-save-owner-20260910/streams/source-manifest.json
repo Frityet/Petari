@@ -1,0 +1,47 @@
+{
+  "scope": "JSU interfaces and portable memory streams; no Game changes",
+  "root_head": "419b4fd6b9b532e144d68e07afb2e8eaf19303f9",
+  "decomp_base_head": "11157e7c391da10ad2713dd3738e98c84d47f7ca",
+  "files": [
+    {
+      "path": "src/JSystem/JSupport/JSUIosBase.hpp",
+      "sha256": "0a5c2ab87f7ceaf026d7e9b3304f99d039c7091eaf8b37bc73a9d99bcf1272cf"
+    },
+    {
+      "path": "src/JSystem/JSupport/JSUInputStream.hpp",
+      "sha256": "6cdd0af6eb4d7a39f45f6204d72c6a88fc57648c6386b80723647d78d8181b5b"
+    },
+    {
+      "path": "src/JSystem/JSupport/JSUOutputStream.hpp",
+      "sha256": "115e87666ae225f678523de4531921592769967f11cb835b411046d685ecfb7d"
+    },
+    {
+      "path": "src/JSystem/JSupport/JSURandomInputStream.hpp",
+      "sha256": "3b58d5ae26e3f84f6b9acd28fa7829e5b0676662477768f237bddb5bcb60f45b"
+    },
+    {
+      "path": "src/JSystem/JSupport/JSURandomOutputStream.hpp",
+      "sha256": "2e5740a4cc874a69ea27635c9b14c874727a50d95b69d3ce3095d805e3905c54"
+    },
+    {
+      "path": "src/JSystem/JSupport/JSUMemoryInputStream.hpp",
+      "sha256": "8e7d4888d6eb253e77dc2f8ccfe10aa03b61845b26dd199583481717857833f1"
+    },
+    {
+      "path": "src/JSystem/JSupport/JSUMemoryOutputStream.hpp",
+      "sha256": "20621735fe475824fd8351453420ab1551700e2b8e470b99293e46c0cf727313"
+    },
+    {
+      "path": "src/compat/JSUStreamCompat.cpp",
+      "sha256": "8b03e1ef615551446396534338ca4201742f402dcf27a7110ef09fa14d617796"
+    },
+    {
+      "path": "tests/OriginalJSUStreamTests.cpp",
+      "sha256": "e8ccdedde385febd0234fc96f49b30efeb72535184be0bf8e72b5ed5a248393a"
+    },
+    {
+      "path": "decomp/libs/JSystem/include/JSystem/JSupport/JSUIosBase.hpp",
+      "sha256": "0a5c2ab87f7ceaf026d7e9b3304f99d039c7091eaf8b37bc73a9d99bcf1272cf"
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+#include "resource/TextEncoding.hpp"
 #include <aurora/exception.hpp>
 #include <aurora/allocation.hpp>
 #include "compat/GroupCheckManagerCompat.hpp"
@@ -13,6 +14,17 @@
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
+
+namespace {
+    // These stable Game names outlive every owner that borrows their bytes.
+    std::string encode_owner_name(std::string_view name) {
+        aurora::allocation::HostAllocationScope host;
+        return smgpc::resource::encode_cp932(name);
+    }
+
+    const std::string cTurtleSearchGroupName = encode_owner_name("カメサーチ対象物グループ");
+    const std::string cSpinningBoxGroupName = encode_owner_name("スピニングボックス反射グループ");
+}  // namespace
 
 namespace {
     struct GroupCheckerRuntimeState {
@@ -131,10 +143,10 @@ namespace smgpc::compat {
         }
 
         auto state = GroupCheckManagerRuntimeState{};
-        state.groups[0] = std::make_unique<GroupChecker>("カメサーチ対象物グループ", 0x20U);
+        state.groups[0] = std::make_unique<GroupChecker>(cTurtleSearchGroupName.c_str(), 0x20U);
         smgpc::compat::claim_name_obj_runtime_ownership(
             state.groups[0].get(), manager);
-        state.groups[1] = std::make_unique<GroupChecker>("スピニングボックス反射グループ", 0x8U);
+        state.groups[1] = std::make_unique<GroupChecker>(cSpinningBoxGroupName.c_str(), 0x8U);
         smgpc::compat::claim_name_obj_runtime_ownership(
             state.groups[1].get(), manager);
         auto *shell_search_group = state.groups[0].get();

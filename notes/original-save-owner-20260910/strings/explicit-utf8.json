@@ -1,0 +1,19 @@
+{
+  "source": "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/fixture/Game/Utf8.cpp",
+  "source_sha256": "230f842f9f76cb8cb627a62c1ec4670c0f4e114964857d0d7b5b13510d243551",
+  "arguments": [
+    "-std=c++23",
+    "-O2",
+    "-g",
+    "-MMD",
+    "-MF",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/explicit-utf8.d",
+    "-c",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/fixture/Game/Utf8.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/explicit-utf8.o"
+  ],
+  "exit": 0,
+  "converted_literals": 0,
+  "literal_tokens": 1
+}

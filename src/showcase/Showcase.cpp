@@ -1,3 +1,4 @@
+#include "resource/TextEncoding.hpp"
 #include <aurora/exception.hpp>
 #include "Application.hpp"
 #include "app/SimulationClock.hpp"
@@ -21,7 +22,7 @@
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/AudioFacadeCompat.hpp"
 #include "compat/CollisionPartsCompat.hpp"
-#include "compat/GameDataHolderCompat.hpp"
+#include "compat/GameDataOwnership.hpp"
 #include "compat/GameDataSession.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "compat/MarioCameraTarget.hpp"
@@ -90,7 +91,6 @@ namespace {
             TitleShowcaseDisposition::Exit;
         std::optional<smgpc::scene::TitleFileSelectRouteSelection>
             selection{};
-        std::unique_ptr<smgpc::compat::GameDataSession> game_data_session{};
     };
 
     class DvdCloseGuard final {
@@ -469,9 +469,6 @@ namespace {
                             .disposition =
                                 TitleShowcaseDisposition::LaunchGateway,
                             .selection = launch,
-                            .game_data_session = std::make_unique<
-                                smgpc::compat::GameDataSession>(
-                                static_cast<u16>(launch->file_number)),
                         };
                         logger->info(
                             smgpc::logging::Category::APP,
@@ -688,18 +685,9 @@ namespace {
     [[nodiscard]] int run_gateway_showcase(
         const ShowcaseOptions& options,
         const smgpc::app::BootstrapConfiguration& configuration,
-        smgpc::compat::GameDataSession& game_data_session) {
+        u16 selected_file) {
         const auto is_spin_route =
             options.route == ShowcaseRoute::GatewaySpin;
-        if (GameDataFunction::getCurrentGameDataHolder() !=
-                &game_data_session.holder() ||
-            GameDataFunction::getSceneStartGameDataHolder() !=
-                &game_data_session.holder() ||
-            smgpc::compat::game_data::holder_story_progress(
-                game_data_session.holder()) != 5U) {
-            aurora::throw_host_exception<std::logic_error>(
-                "Gateway requires one active selected-file session at exact story progress 5");
-        }
 #ifdef NDEBUG
         if (options.smoke) {
             aurora::throw_host_exception<std::runtime_error>(
@@ -741,6 +729,12 @@ namespace {
             auto runtime = smgpc::runtime::RuntimeContext(*logger, window, resource_runtime);
             runtime.initialize_scenario_catalog(resource_runtime);
             runtime.initialize_particle_resources(resource_runtime);
+            auto game_data_session = smgpc::compat::GameDataSession{
+                selected_file, resource_runtime, runtime.retain_scenario_catalog()};
+            // This bounded demo explicitly selects the authored post-castle
+            // checkpoint. General save owners retain original reset defaults.
+            game_data_session.holder().followStoryEventByName(smgpc::resource::encode_cp932("ピーチ城浮上後").c_str());
+            game_data_session.store_scene_start();
             runtime.set_current_stage_name("HeavensDoorGalaxy");
             // Authored scene visuals initialize and retire native model state
             // inside the Gateway scene lifetime. Keep the renderer binding
@@ -788,8 +782,7 @@ namespace {
                 placement_lease =
                     scene.finalize_placements(mario_owner.actor());
                 if (is_spin_route) {
-                    GameDataFunction::followStoryEventByName(
-                        "チコガイドデモ終了");
+                    GameDataFunction::followStoryEventByName(smgpc::resource::encode_cp932("チコガイドデモ終了").c_str());
                     if (smgpc::compat::game_data::holder_story_progress(
                             game_data_session.holder()) != 10U) {
                         aurora::throw_host_exception<std::logic_error>(
@@ -1032,7 +1025,7 @@ namespace {
                         camera.up.x, camera.up.y, camera.up.z);
                     const auto* player = actor.mModelManager ? actor.mModelManager->mXanimePlayer : nullptr;
                     const auto* animation = player ? player->_20 : nullptr;
-                    const auto animation_name = std::string_view{player && player->getCurrentAnimationName() ? player->getCurrentAnimationName() : ""};
+                    const auto animation_name = smgpc::resource::decode_cp932(player && player->getCurrentAnimationName() ? player->getCurrentAnimationName() : "");
                     if (animation != nullptr) {
                         std::fprintf(
                             stderr,
@@ -1128,25 +1121,17 @@ int main(int argc, char* argv[]) try {
     prepare_screenshot_path(options);
     const auto configuration = bootstrap_configuration(options, arguments);
     if (options.route != ShowcaseRoute::Title) {
-        auto game_data_session = smgpc::compat::GameDataSession{1U};
-        return run_gateway_showcase(options, configuration, game_data_session);
+        return run_gateway_showcase(options, configuration, 1U);
     }
 
     const auto title_outcome = run_title_showcase(options, configuration);
     if (title_outcome.disposition == TitleShowcaseDisposition::Exit) {
         return 0;
     }
-    if (!title_outcome.selection.has_value() ||
-        title_outcome.game_data_session == nullptr) {
+    if (!title_outcome.selection.has_value()) {
         aurora::throw_host_exception<std::logic_error>(
             "the title showcase requested Gateway without a blank-file selection");
     }
-    if (title_outcome.game_data_session->selected_file() !=
-        static_cast<u16>(title_outcome.selection->file_number)) {
-        aurora::throw_host_exception<std::logic_error>(
-            "the title showcase lost the selected file's game-data session identity");
-    }
-
     // The title call has returned, so its route, RuntimeContext, renderer,
     // window and DVD guard are all gone. Start the bounded destination in a
     // completely fresh host session. Title capture/termination controls are
@@ -1161,7 +1146,7 @@ int main(int argc, char* argv[]) try {
     const auto gateway_configuration =
         bootstrap_configuration(gateway_options, arguments);
     return run_gateway_showcase(gateway_options, gateway_configuration,
-                                *title_outcome.game_data_session);
+                                static_cast<u16>(title_outcome.selection->file_number));
 } catch (const std::exception& error) {
     auto logger = smgpc::logging::create_default_logger();
     logger->fatal(smgpc::logging::Category::APP,

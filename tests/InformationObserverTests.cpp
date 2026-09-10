@@ -1,3 +1,4 @@
+#include "resource/TextEncoding.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/NameObj/NameObjFactory.hpp"
 #include "Game/Player/MarioActor.hpp"
@@ -21,7 +22,7 @@
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/AudioFacadeCompat.hpp"
 #include "compat/DemoSceneRuntime.hpp"
-#include "compat/GameDataHolderCompat.hpp"
+#include "compat/GameDataOwnership.hpp"
 #include "compat/GameDataSession.hpp"
 #include "compat/InformationMessageCompat.hpp"
 #include "compat/JkrAllocationDomain.hpp"
@@ -54,7 +55,8 @@
 
 namespace {
 
-    constexpr auto cPromptPart = "スピンゲット[デモ5]";
+    const auto cPromptPart = smgpc::resource::encode_cp932("スピンゲット[デモ5]");
+    const auto cTriggerName = smgpc::resource::encode_cp932("チコ");
 
     void require(bool condition, std::string_view message) {
         if (!condition) {
@@ -95,7 +97,7 @@ namespace {
 
     class SpinPromptTrigger final : public LiveActor {
     public:
-        SpinPromptTrigger() : LiveActor("チコ") {
+        SpinPromptTrigger() : LiveActor(cTriggerName.c_str()) {
             MR::connectToSceneNpcMovement(this);
             // This nonvisual stimulus must run independently of the camera,
             // like the original InformationObserver it requests.
@@ -104,7 +106,7 @@ namespace {
         }
 
         void movement() override {
-            if (!_fired && MR::isDemoPartFirstStep(cPromptPart)) {
+            if (!_fired && MR::isDemoPartFirstStep(cPromptPart.c_str())) {
                 _fired = true;
                 MR::explainEnableToSpin(this);
             }
@@ -231,7 +233,9 @@ namespace {
         auto logical_audio = smgpc::runtime::AudioEventService{};
         const auto audio_binding =
             smgpc::compat::ScopedAudioEventServiceOverride{logical_audio};
-        auto game_data_session = smgpc::compat::GameDataSession{1U};
+        auto game_data_session = smgpc::compat::GameDataSession{1U, resource_runtime, runtime.retain_scenario_catalog()};
+        game_data_session.holder().followStoryEventByName(smgpc::resource::encode_cp932("ピーチ城浮上後").c_str());
+        game_data_session.store_scene_start();
 
         const auto baseline_objects =
             smgpc::compat::snapshot_name_obj_runtime_objects();
@@ -321,7 +325,7 @@ namespace {
                     "the prompt trigger must be a real active-executor cast");
             placement_lease = scene.finalize_placements(player);
             renderer.end_frame();
-            require(!GameDataFunction::isPassedStoryEvent("スピン権利"),
+            require(!GameDataFunction::isPassedStoryEvent(smgpc::resource::encode_cp932("スピン権利").c_str()),
                     "the prompt fixture must begin before the saved spin entitlement");
             // GameSequenceProgress::startScene applies this original API when
             // the story flag is absent. This fixture has no full sequence
@@ -340,15 +344,15 @@ namespace {
                         GameDataFunction::getCurrentGameDataHolder() ==
                             &game_data_session.holder() &&
                         GameDataFunction::getSceneStartGameDataHolder() ==
-                            &game_data_session.holder(),
+                            &game_data_session.scene_start_holder(),
                     "the explicit prompt proof must retain its selected-file progress-5 holder");
-            GameDataFunction::followStoryEventByName("チコガイドデモ終了");
+            GameDataFunction::followStoryEventByName(smgpc::resource::encode_cp932("チコガイドデモ終了").c_str());
             require(smgpc::compat::game_data::holder_story_progress(
                         game_data_session.holder()) == 10U,
                     "the explicit part-22 proof must advance the same selected-file holder from progress 5 to 10");
-            MR::startTimeKeepDemo(&trigger, "チコガイドデモ", cPromptPart);
+            MR::startTimeKeepDemo(&trigger, smgpc::resource::encode_cp932("チコガイドデモ").c_str(), cPromptPart.c_str());
 
-            const auto guide_index = demo.find_definition("チコガイドデモ");
+            const auto guide_index = demo.find_definition(smgpc::resource::encode_cp932("チコガイドデモ"));
             require(guide_index.has_value(),
                     "the real TicoGuideDemo executor must exist");
             const auto* guide = demo.definition(*guide_index);
@@ -381,7 +385,7 @@ namespace {
                               << ";demo_step=" << guide->sheet.current_part_step().value_or(-999)
                               << ";demo_paused=" << guide->sheet.is_paused()
                               << ";trigger_a=" << runtime.wpad().is_button_triggered(WPAD_CHAN0, WPAD_BUTTON_A)
-                              << ";spin_story=" << GameDataFunction::isPassedStoryEvent("スピン権利")
+                              << ";spin_story=" << GameDataFunction::isPassedStoryEvent(smgpc::resource::encode_cp932("スピン権利").c_str())
                               << ";mario_swing=" << static_cast<bool>(player._EEB) << '\n';
                 }
                 require(condition, message);
@@ -396,7 +400,7 @@ namespace {
                         observer->getNerveStep() == -1 &&
                         guide->sheet.current_part_step() == 0 &&
                         guide->sheet.is_paused() &&
-                        !GameDataFunction::isPassedStoryEvent("スピン権利") &&
+                        !GameDataFunction::isPassedStoryEvent(smgpc::resource::encode_cp932("スピン権利").c_str()) &&
                         !player._EEB,
                     "part 22 step 0 must pause and request the prompt without executing its pending display nerve");
 
@@ -409,7 +413,7 @@ namespace {
                         observer->getNerveStep() == 1 &&
                         guide->sheet.current_part_step() == 1 &&
                         guide->sheet.is_paused() &&
-                        !GameDataFunction::isPassedStoryEvent("スピン権利") &&
+                        !GameDataFunction::isPassedStoryEvent(smgpc::resource::encode_cp932("スピン権利").c_str()) &&
                         !player._EEB,
                     "the first scheduled display must show text while keeping the paused clock and swing lock");
             require(runtime.scheduler().registration_marker() ==
@@ -461,7 +465,7 @@ namespace {
             // A second fresh edge well inside the guard is still rejected.
             run_frame(true);
             require_prompt(!observer->mFlag.mIsDead && observer->getNerveStep() == 3 &&
-                        !GameDataFunction::isPassedStoryEvent("スピン権利") && !player._EEB,
+                        !GameDataFunction::isPassedStoryEvent(smgpc::resource::encode_cp932("スピン権利").c_str()) && !player._EEB,
                     "an early fresh A edge must not dismiss the spin prompt");
             run_frame(false);
 
@@ -473,7 +477,7 @@ namespace {
             run_frame(true);
             require_prompt(!observer->mFlag.mIsDead && observer->getNerveStep() == 30 &&
                         guide->sheet.is_paused() &&
-                        !GameDataFunction::isPassedStoryEvent("スピン権利") && !player._EEB,
+                        !GameDataFunction::isPassedStoryEvent(smgpc::resource::encode_cp932("スピン権利").c_str()) && !player._EEB,
                     "the 30th display execution must remain guarded at frame zero");
 
             // Execution 31 expires the guard while released. Only a new edge
@@ -486,7 +490,7 @@ namespace {
             require_prompt(observer->mFlag.mIsDead && observer->getNerveStep() == 32 &&
                         !guide->sheet.is_paused() &&
                         guide->sheet.current_part_step() == 1 &&
-                        GameDataFunction::isPassedStoryEvent("スピン権利") &&
+                        GameDataFunction::isPassedStoryEvent(smgpc::resource::encode_cp932("スピン権利").c_str()) &&
                         smgpc::compat::game_data::holder_story_progress(
                             game_data_session.holder()) == 15U &&
                         player._EEB,

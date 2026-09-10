@@ -35,6 +35,7 @@ namespace smgpc::camera {
 
     struct EventCameraKey {
         std::int32_t zone_id = 0;
+        // Original Game identity bytes; decode only when presenting to users.
         std::string name{};
 
         auto operator<=>(const EventCameraKey &) const = default;

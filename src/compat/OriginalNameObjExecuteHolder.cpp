@@ -1,3 +1,5 @@
+#include <aurora/allocation.hpp>
+#include "resource/TextEncoding.hpp"
 #include "Game/NameObj/NameObjExecuteHolder.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/NameObj/NameObjListExecutor.hpp"
@@ -10,6 +12,16 @@
 #include <aurora/exception.hpp>
 #include <algorithm>
 #include <stdexcept>
+
+namespace {
+    // These stable Game names outlive every owner that borrows their bytes.
+    std::string encode_owner_name(std::string_view name) {
+        aurora::allocation::HostAllocationScope host;
+        return smgpc::resource::encode_cp932(name);
+    }
+
+    const std::string cNameObjExecuteHolderName = encode_owner_name("connectToScene情報保持");
+}  // namespace
 
 namespace {
     NameObjExecuteHolder* getNameObjExecuteHolder() {
@@ -427,7 +439,7 @@ namespace MR {
 };  // namespace MR
 
 NameObjExecuteHolder::NameObjExecuteHolder(int size)
-    : NameObj("connectToScene情報保持"), mExecuteArray(nullptr), mExecuteArrayMaxSize(size), mExecuteArraySize(0), _18(false), _19(false), _1A(false),
+    : NameObj(cNameObjExecuteHolderName.c_str()), mExecuteArray(nullptr), mExecuteArrayMaxSize(size), mExecuteArraySize(0), _18(false), _19(false), _1A(false),
       _1B(false), _1C(false) {
     mExecuteArray = new NameObjExecuteInfo[mExecuteArrayMaxSize];
 }

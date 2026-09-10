@@ -1,0 +1,19 @@
+{
+  "source": "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/fixture/Game/Diagnostic.cpp",
+  "source_sha256": "65e0126c32947e53fb8ea804306a3304264318fc294629842590e7c938f18f88",
+  "arguments": [
+    "-std=c++23",
+    "-O2",
+    "-g",
+    "-MMD",
+    "-MF",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/diagnostic.d",
+    "-c",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/fixture/Game/Diagnostic.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/diagnostic.o"
+  ],
+  "exit": 1,
+  "converted_literals": 1,
+  "literal_tokens": 1
+}

@@ -57,7 +57,8 @@ namespace {
             return false;
         }
 
-        MR::extractString(pDst, pSrc, strlen(tag) - strlen(pSrc), size);
+        u32 tagLength = strlen(tag);
+        MR::extractString(pDst, pSrc, strlen(pSrc) - tagLength, size);
 
         return true;
     }

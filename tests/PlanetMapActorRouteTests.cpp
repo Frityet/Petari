@@ -1,3 +1,4 @@
+#include "resource/TextEncoding.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Map/PlanetMap.hpp"
 #include "Game/Map/LightFunction.hpp"
@@ -135,7 +136,10 @@ namespace {
 #ifndef NDEBUG
             runtime.set_j3d_packet_trace_frame(frame.frame_index);
 #endif
-            auto game_data_session = smgpc::compat::GameDataSession{1U};
+            runtime.initialize_scenario_catalog(resource_runtime);
+        auto game_data_session = smgpc::compat::GameDataSession{1U, resource_runtime, runtime.retain_scenario_catalog()};
+        game_data_session.holder().followStoryEventByName(smgpc::resource::encode_cp932("ピーチ城浮上後").c_str());
+        game_data_session.store_scene_start();
             {
                 auto scene = smgpc::scene::GatewayDemoScene(runtime.dvd());
                 auto gateway_player =
@@ -181,7 +185,7 @@ namespace {
                     require(expected_planet != nullptr &&
                                 expected_planet->getName() != nullptr,
                             "Gateway ordinary PlanetMap has no runtime actor identity");
-                    retired_planet_runtime_names[i] = expected_planet->getName();
+                    retired_planet_runtime_names[i] = smgpc::resource::decode_cp932(expected_planet->getName());
                     auto *expected_model = smgpc::compat::actor_model(expected_planet);
                     const auto expected_resources =
                         smgpc::compat::actor_collision_parts_resources(expected_planet);

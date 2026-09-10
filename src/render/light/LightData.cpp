@@ -14,7 +14,6 @@
 
 #include "resource/BcsvTable.hpp"
 #include "resource/RarcArchive.hpp"
-#include "resource/TextEncoding.hpp"
 #include "runtime/RuntimeContext.hpp"
 
 namespace smgpc::render::light {
@@ -299,8 +298,8 @@ namespace smgpc::render::light {
         _area_lights.reserve(light_table.entry_count());
         for (auto row = std::size_t {}; row < light_table.entry_count(); ++row) {
             auto info = AreaLightInfo {};
-            _area_light_names.push_back(smgpc::resource::decode_cp932(
-                light_table.get_string(row, "AreaLightName").value_or(std::string {})));
+            _area_light_names.push_back(
+                light_table.get_string(row, "AreaLightName").value_or(std::string {}));
             info.mAreaLightName = _area_light_names.back().c_str();
             info.mInterpolate = get_s32_or(light_table, row, "Interpolate", -1);
             read_actor_light_info(light_table, row, info.mPlayerLight, "Player");
@@ -328,8 +327,7 @@ namespace smgpc::render::light {
                 _zone_area_lights.push_back(ZoneAreaLight {
                     .zone_id = zone.zone_id,
                     .light_id = get_s32_or(zone_table, row, "LightID", -1),
-                    .area_light_name = smgpc::resource::decode_cp932(
-                        zone_table.get_string(row, "AreaLightName").value_or(std::string {})),
+                    .area_light_name = zone_table.get_string(row, "AreaLightName").value_or(std::string {}),
                 });
             }
         }

@@ -21,6 +21,8 @@ namespace smgpc::scene::nameobj {
         explicit ObjectNameTable(smgpc::runtime::DvdFileSystemService &dvd);
         explicit ObjectNameTable(const smgpc::resource::RarcArchive &archive);
 
+        // Retained original CP932 bytes for Game actor names. Decode only
+        // when displaying the result; the pointer lives with this table.
         [[nodiscard]] const std::string *lookup(std::string_view english_name) const;
         [[nodiscard]] std::size_t size() const;
 

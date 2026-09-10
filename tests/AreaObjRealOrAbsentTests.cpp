@@ -1,3 +1,4 @@
+#include "resource/TextEncoding.hpp"
 #include "SceneExecutionFixture.hpp"
 #include "Game/AreaObj/AreaForm.hpp"
 #include "Game/AreaObj/AreaObj.hpp"
@@ -1123,8 +1124,8 @@ namespace {
         auto root_id = ZoneLightID{};
         auto *root = light_data.area_light_info(root_id);
         require(root != nullptr && root->mAreaLightName != nullptr &&
-                    std::string_view(root->mAreaLightName) == "[共通]宇宙の星" &&
-                    std::string_view(light_data.default_area_light_name()) == "[共通]宇宙の星",
+                    smgpc::resource::decode_cp932(root->mAreaLightName) == "[共通]宇宙の星" &&
+                    smgpc::resource::decode_cp932(light_data.default_area_light_name()) == "[共通]宇宙の星",
                 "the clear ZoneLightID must resolve the exact root-zone default row");
 
         auto child_id = ZoneLightID{};
@@ -1132,7 +1133,7 @@ namespace {
         child_id.mLightID = 0;
         auto *child = light_data.area_light_info(child_id);
         require(child != nullptr && child != root && child->mAreaLightName != nullptr &&
-                    std::string_view(child->mAreaLightName) == "ロゼッタ出会い" &&
+                    smgpc::resource::decode_cp932(child->mAreaLightName) == "ロゼッタ出会い" &&
                     child->mPlayerLight.mInfo0.mColor.r == 90U &&
                     child->mPlayerLight.mInfo0.mColor.g == 90U &&
                     child->mPlayerLight.mInfo0.mColor.b == 90U &&
@@ -1147,7 +1148,7 @@ namespace {
         child_id.mLightID = 1;
         auto *observatory = light_data.area_light_info(child_id);
         require(observatory != nullptr && observatory->mAreaLightName != nullptr &&
-                    std::string_view(observatory->mAreaLightName) == "天文台（ロゼッタ）",
+                    smgpc::resource::decode_cp932(observatory->mAreaLightName) == "天文台（ロゼッタ）",
                 "zone 5/light 1 must resolve the second exact child-zone light row");
 
         child_id.mLightID = 999;
@@ -1183,7 +1184,7 @@ namespace {
             const auto* next_scene_light = light_data.area_light_info(stale_child);
             require(light_data.stage_zones().size() == 1U &&
                         next_scene_light != nullptr &&
-                        std::string_view(next_scene_light->mAreaLightName) ==
+                        smgpc::resource::decode_cp932(next_scene_light->mAreaLightName) ==
                             "[共通]宇宙の星",
                     "a recreated scene without child metadata must not inherit the previous scene's child light table");
         }

@@ -1,3 +1,4 @@
+#include "resource/TextEncoding.hpp"
 #include "Game/AudioLib/AudBgmVolumeController.hpp"
 #include "Game/Enemy/AnimScaleController.hpp"
 #include "Game/Map/CollisionCode.hpp"
@@ -95,7 +96,7 @@ int main() {
 
     RumbleData::initHashValue();
     require(RumbleData::getPattern("missing rumble pattern") == nullptr, "Unknown rumble names remain absent");
-    const auto* rumble = RumbleData::getPattern("最強");
+    const auto* rumble = RumbleData::getPattern(smgpc::resource::encode_cp932("最強").c_str());
     require(rumble != nullptr && rumble->mFrame == 30, "Rumble names resolve to upstream frame patterns");
     std::cout << "Upstream component tests passed\n";
 }

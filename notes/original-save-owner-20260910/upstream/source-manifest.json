@@ -1,0 +1,104 @@
+{
+  "decomp_head": "499e1034d7f8aad6b1773c36cea8d2f9a9ac2e81",
+  "merge_parents": [
+    "6c6cdb24d3f688b2f805c40676c577b233266ff1",
+    "73f5b40dc337376371572097f8c4f2d9f1686d4e"
+  ],
+  "upstream_commits": [
+    "73f5b40dc337376371572097f8c4f2d9f1686d4e `JKRDecomp` at 99%",
+    "3cc98f96b4a5af6b839893a9b037dc93ace98bfd Merge branch 'master' of https://github.com/SMGCommunity/Petari",
+    "0bfa6b46dfa14dbb6073d4540100971b68df2746 `nw4r` 100%"
+  ],
+  "changed_files": [
+    "config/RMGK01/config.yml",
+    "config/RMGK01/splits.txt",
+    "config/RMGK01/symbols.txt",
+    "configure.py",
+    "libs/RVL_SDK/include/revolution/os/OSFastCast.h",
+    "libs/nw4r/include/nw4r/lyt/animation.h",
+    "libs/nw4r/include/nw4r/lyt/material.h",
+    "libs/nw4r/include/nw4r/lyt/pane.h",
+    "libs/nw4r/include/nw4r/lyt/picture.h",
+    "libs/nw4r/include/nw4r/lyt/resourceAccessor.h",
+    "libs/nw4r/include/nw4r/lyt/resources.h",
+    "libs/nw4r/include/nw4r/lyt/texMap.h",
+    "libs/nw4r/include/nw4r/lyt/textBox.h",
+    "libs/nw4r/include/nw4r/lyt/types.h",
+    "libs/nw4r/include/nw4r/lyt/window.h",
+    "libs/nw4r/include/nw4r/math/types.h",
+    "libs/nw4r/include/nw4r/ut/CharWriter.h",
+    "libs/nw4r/include/nw4r/ut/Color.h",
+    "libs/nw4r/include/nw4r/ut/Rect.h",
+    "libs/nw4r/include/nw4r/ut/ResFontBase.h",
+    "libs/nw4r/include/nw4r/ut/RomFont.h",
+    "libs/nw4r/include/nw4r/ut/RuntimeTypeInfo.h",
+    "libs/nw4r/include/nw4r/ut/TextWriterBase.h",
+    "src/JSystem/JKernel/JKRDecomp.cpp",
+    "src/nw4r/lyt/lyt_animation.cpp",
+    "src/nw4r/lyt/lyt_common.cpp",
+    "src/nw4r/lyt/lyt_group.cpp",
+    "src/nw4r/lyt/lyt_layout.cpp",
+    "src/nw4r/lyt/lyt_material.cpp",
+    "src/nw4r/lyt/lyt_pane.cpp",
+    "src/nw4r/lyt/lyt_picture.cpp",
+    "src/nw4r/lyt/lyt_textBox.cpp",
+    "src/nw4r/lyt/lyt_window.cpp",
+    "src/nw4r/ut/ut_CharWriter.cpp",
+    "src/nw4r/ut/ut_RomFont.cpp",
+    "src/nw4r/ut/ut_TextWriterBase.cpp"
+  ],
+  "working_tree": "",
+  "production_edits": false,
+  "sources": [
+    {
+      "path": "decomp/libs/nw4r/include/nw4r/ut/RuntimeTypeInfo.h",
+      "sha256": "afd132561bbb8307658868fcada62256f98dc995773ff9affe886f9e9b5619ef"
+    },
+    {
+      "path": "src/nw4r/ut/RuntimeTypeInfo.h",
+      "sha256": "51e9f7ebf09fe3cd2f5e3415b1c580bf49e2dbeae1d6812ae4a3f9a2fbbe5095"
+    },
+    {
+      "path": "decomp/src/JSystem/JKernel/JKRDecomp.cpp",
+      "sha256": "173c2985baef288590a7d22a71cfb5623a2250289c62ae8c77ac61060c57d135"
+    },
+    {
+      "path": "decomp/src/nw4r/lyt/lyt_animation.cpp",
+      "sha256": "0d40eab01c73902e1e72f23930c078d45585cd60afc6cd914b464a3a7eddb96f"
+    },
+    {
+      "path": "aurora/lib/nw4r/brlan.cpp",
+      "sha256": "793f28fe9b1cd32fb6010282967b1b4a8b41e3de2872df24eb4072400a69bcbd"
+    },
+    {
+      "path": "aurora/include/aurora/nw4r/brlan.hpp",
+      "sha256": "3ea80c0ec8ce9e9f5e03c7acd0998fecfb746857bedab556731e626079bee3a4"
+    },
+    {
+      "path": "src/resource/Yaz0.cpp",
+      "sha256": "26a26707aa47a26c069f4a80d8db2cd5b0edda96c1fb2771189000a794082cfa"
+    },
+    {
+      "path": "notes/original-save-owner-20260910/upstream/ReferenceCurveHelpers.hpp",
+      "sha256": "22cb328a9290a21bea7d6d6ed6e3f478e7723e5a2e8c2df5efb1700ec4a46ae0"
+    },
+    {
+      "path": "notes/original-save-owner-20260910/upstream/BrlanCurveDeltaProbe.cpp",
+      "sha256": "4953fb022a22db9ab67accdd1e4453bb0e782cb00c49ff72e5a47dbc5c3b6469"
+    },
+    {
+      "path": "notes/original-save-owner-20260910/upstream/README.md",
+      "sha256": "7aae8cc699b102b5395048ca18bfedc7e55832312c430bd76a582bd0b40960f0"
+    },
+    {
+      "path": "notes/original-save-owner-20260910/upstream/RuntimeTypeInfoProbe.cpp",
+      "sha256": "43cebdb50d39d00fb438d3f786a731f56a3f03a146f13f35045adb5995421cf1"
+    }
+  ],
+  "evidence": [
+    "wii-compile.json",
+    "rtti-probe.json",
+    "reference-extract.json",
+    "brlan-curve-probe.json"
+  ]
+}

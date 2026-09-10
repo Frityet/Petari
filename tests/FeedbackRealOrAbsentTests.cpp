@@ -1,3 +1,4 @@
+#include "resource/TextEncoding.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Util/EffectUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
@@ -59,16 +60,16 @@ namespace {
         auto source = 1;
         require(!service.try_request_pattern(&source, "not-a-retail-pattern", 0),
                 "an unknown pattern must remain absent instead of becoming a strong rumble");
-        require(!service.try_request_pattern(&source, "最強", 1),
+        require(!service.try_request_pattern(&source, smgpc::resource::encode_cp932("最強"), 1),
                 "a retail pattern must fail honestly when its channel has no actuator");
         require(service.events().empty() && actuator.calls.empty(),
                 "rejected rumble requests must not fabricate actuator calls or success events");
 
-        require(service.try_request_pattern(&source, "最強", 0),
+        require(service.try_request_pattern(&source, smgpc::resource::encode_cp932("最強"), 0),
                 "an exact retail pattern should start when a real actuator is available");
-        require(!service.try_request_pattern(&source, "最強", 0),
+        require(!service.try_request_pattern(&source, smgpc::resource::encode_cp932("最強"), 0),
                 "the same source and active pattern must retain retail duplicate suppression");
-        require(service.events().size() == 1U && service.events().front().pattern_name == "最強" &&
+        require(service.events().size() == 1U && service.events().front().pattern_name == smgpc::resource::encode_cp932("最強") &&
                     service.events().front().frame_index == 7U,
                 "only an accepted physical-rumble request should be traced");
         require(actuator.calls.size() == 1U && actuator.calls.front().enabled,
@@ -201,7 +202,7 @@ namespace {
 
     void test_game_feedback_boundary_reports_absence() {
         auto source = 0;
-        require(!MR::tryRumblePad(&source, "最強", WPAD_CHAN0) &&
+        require(!MR::tryRumblePad(&source, smgpc::resource::encode_cp932("最強").c_str(), WPAD_CHAN0) &&
                     !MR::tryRumblePad(&source, "unknown", WPAD_CHAN0),
                 "Game try-rumble APIs must return false without an active host runtime");
         require_throws<std::logic_error>([] { MR::shakeCameraNormal(); },

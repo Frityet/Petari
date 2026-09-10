@@ -42,11 +42,6 @@ namespace smgpc::compat {
             return std::string(definition_name) + ".bcsv";
         }
 
-        [[nodiscard]] std::optional< std::string > decoded_string(const smgpc::resource::BcsvTable& table, std::size_t row, std::string_view field) {
-            const auto value = table.get_string(row, field);
-            return value.has_value() ? std::optional< std::string >{smgpc::resource::decode_cp932(*value)} : std::nullopt;
-        }
-
         [[nodiscard]] std::optional< ActorShadowControllerKind > shadow_kind(const smgpc::resource::BcsvTable& table, std::size_t row) {
             const auto type = table.get_string(row, "Type");
             if (!type.has_value()) {
@@ -211,9 +206,9 @@ namespace smgpc::compat {
                 }
 
                 const auto raw_name = table.get_string(row, "Name").value_or("");
-                auto controller = make_actor_shadow_controller_runtime_state(&actor, smgpc::resource::decode_cp932(raw_name), *kind, 100.0F);
-                controller.name_raw = raw_name;
-                controller.group_name = decoded_string(table, row, "GroupName").value_or("");
+                auto controller = make_actor_shadow_controller_runtime_state(&actor, raw_name, *kind, 100.0F);
+                controller.group_name_raw = table.get_string(row, "GroupName").value_or("");
+                controller.group_name = smgpc::resource::decode_cp932(controller.group_name_raw);
                 controller.joint_name_raw = table.get_string(row, "Joint").value_or("");
                 controller.joint_name = smgpc::resource::decode_cp932(controller.joint_name_raw);
                 controller.drop_offset = drop_offset(table, row);
@@ -261,7 +256,10 @@ namespace smgpc::compat {
                     controller.size = shadow_size(table, row);
                     break;
                 case ActorShadowControllerKind::VolumeFlatModel:
-                    controller.model_name = decoded_string(table, row, "Model");
+                    controller.model_name_raw = table.get_string(row, "Model");
+                    if (controller.model_name_raw.has_value()) {
+                        controller.model_name = smgpc::resource::decode_cp932(*controller.model_name_raw);
+                    }
                     break;
                 case ActorShadowControllerKind::VolumeLine:
                     controller.line_start_name_raw = table.get_string(row, "LineStart");

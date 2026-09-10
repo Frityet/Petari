@@ -1,3 +1,4 @@
+#include "resource/TextEncoding.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Map/Air.hpp"
 #include "Game/Map/PlanetMap.hpp"
@@ -163,7 +164,10 @@ namespace {
         runtime.set_j3d_packet_trace_frame(frame.frame_index);
 #endif
 
-        auto game_data_session = smgpc::compat::GameDataSession{1U};
+        runtime.initialize_scenario_catalog(resource_runtime);
+        auto game_data_session = smgpc::compat::GameDataSession{1U, resource_runtime, runtime.retain_scenario_catalog()};
+        game_data_session.holder().followStoryEventByName(smgpc::resource::encode_cp932("ピーチ城浮上後").c_str());
+        game_data_session.store_scene_start();
         {
             auto scene = smgpc::scene::GatewayDemoScene{runtime.dvd()};
             const auto found = std::ranges::find_if(
@@ -223,7 +227,7 @@ namespace {
                         MR::isExistSceneObj(SceneObj_PriorDrawAirHolder),
                     "SphereAir did not construct exact PriorDrawAir and its scene holder");
             require(air->getName() != nullptr &&
-                        std::string_view(air->getName()) == "球状青空",
+                        smgpc::resource::decode_cp932(air->getName()) == "球状青空",
                     "SphereAir did not retain its exact ObjNameTable actor identity");
             const auto air_runtime_name = std::string(air->getName());
             air_model->requireLoaded();

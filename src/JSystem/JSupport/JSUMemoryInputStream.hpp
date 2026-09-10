@@ -1,38 +1,22 @@
 #pragma once
 
-#include <algorithm>
-#include <cstring>
+#include "JSystem/JSupport/JSURandomInputStream.hpp"
 
-#include <revolution/types.h>
-
-// Host implementation of the byte-oriented JSU memory stream used by the
-// decompiled save chunks. Multi-byte file endianness remains the responsibility
-// of the platform compatibility implementation for each serialized field.
-class JSUMemoryInputStream {
+class JSUMemoryInputStream : public JSURandomInputStream {
 public:
-    JSUMemoryInputStream(const void* pBuffer, s32 size)
-        : mBuffer(static_cast<const u8*>(pBuffer)), mLength(std::max(size, 0)), mPosition(0) {
+    JSUMemoryInputStream(const void* pBuffer, s32 size) : JSURandomInputStream() {
+        setBuffer(pBuffer, size);
     }
 
-    s32 read(void* pDestination, s32 size) {
-        if (pDestination == nullptr || size <= 0 || mBuffer == nullptr) {
-            return 0;
-        }
+    virtual ~JSUMemoryInputStream() {};
+    virtual u32 readData(void*, s32);
+    virtual s32 getLength() const;
+    virtual s32 getPosition() const;
+    virtual s32 seekPos(s32, JSUStreamSeekFrom);
 
-        const auto available = getAvailable();
-        const auto copied = std::min(size, available);
-        if (copied > 0) {
-            std::memcpy(pDestination, mBuffer + mPosition, static_cast<std::size_t>(copied));
-            mPosition += copied;
-        }
-        return copied;
-    }
+    void setBuffer(const void*, s32);
 
-    [[nodiscard]] s32 getAvailable() const {
-        return std::max(mLength - mPosition, 0);
-    }
-
-    const u8* mBuffer;
-    s32 mLength;
-    s32 mPosition;
+    const void* mBuffer;  // 0x8
+    s32 mLength;          // 0xC
+    s32 mPosition;        // 0x10
 };

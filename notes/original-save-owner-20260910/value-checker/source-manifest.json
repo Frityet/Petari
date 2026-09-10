@@ -1,0 +1,12 @@
+{
+  "decomp/src/Game/System/GameEventValueChecker.cpp": "0a31a476a7b2c9d4a3c32bb94c734cb1793fadd6135f3b5bc581f1793f111c93",
+  "src/Game/System/GameEventValueChecker.cpp": "0a31a476a7b2c9d4a3c32bb94c734cb1793fadd6135f3b5bc581f1793f111c93",
+  "decomp/include/Game/System/GameEventValueChecker.hpp": "df3dded8a682e61da4c889b9bd607e4d1c4f3dd0b2c65b5a51d5792369eaacb6",
+  "src/Game/System/GameEventValueChecker.hpp": "df3dded8a682e61da4c889b9bd607e4d1c4f3dd0b2c65b5a51d5792369eaacb6",
+  "decomp/libs/JSystem/include/JSystem/JSupport/JSUIosBase.hpp": "0a5c2ab87f7ceaf026d7e9b3304f99d039c7091eaf8b37bc73a9d99bcf1272cf",
+  "src/JSystem/JSupport/JSUIosBase.hpp": "0a5c2ab87f7ceaf026d7e9b3304f99d039c7091eaf8b37bc73a9d99bcf1272cf",
+  "src/JSystem/JSupport/JSUMemoryInputStream.hpp": "8e7d4888d6eb253e77dc2f8ccfe10aa03b61845b26dd199583481717857833f1",
+  "src/JSystem/JSupport/JSUInputStream.hpp": "6cdd0af6eb4d7a39f45f6204d72c6a88fc57648c6386b80723647d78d8181b5b",
+  "notes/gateway-audit-20260907/restoration/retail/obj/Game/System/GameEventValueChecker.o": "8f7210992833561743af253eedf497d2202b5a71bad3ac5fd75e6db09e2d5839",
+  "notes/original-save-owner-20260910/value-checker/GameEventValueChecker.recovered.wii.o": "f9d2c05bf082e9dca73095c3d35c53d1e3e43f790d87e02a636b45b65b5248c9"
+}

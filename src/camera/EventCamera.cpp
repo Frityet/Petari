@@ -128,24 +128,21 @@ namespace smgpc::camera {
                 smgpc::resource::BcsvTable::from_bytes(
                     archive.resource_data(table.table_path)));
             for (const auto &chunk : chunks) {
-                auto normalized_chunk = chunk;
-                normalized_chunk.id =
-                    smgpc::resource::decode_cp932(chunk.id);
-                if (!normalized_chunk.id.starts_with("e:") ||
-                    normalized_chunk.id.size() == 2U) {
+                if (!chunk.id.starts_with("e:") ||
+                    chunk.id.size() == 2U) {
                     continue;
                 }
                 auto key = EventCameraKey{.zone_id = table.zone_id,
-                                          .name = normalized_chunk.id.substr(2U)};
+                                          .name = chunk.id.substr(2U)};
                 const auto [found, inserted] = result._definitions.try_emplace(
                     key,
                     StaticEventCameraDefinition{
-                        .camera_param = normalized_chunk,
+                        .camera_param = chunk,
                         .zone_transform = table.zone_transform,
                         .archive_path = table.archive_path,
                         .holder_instance_id = table.holder_instance_id});
                 if (!inserted &&
-                    (found->second.camera_param.id != normalized_chunk.id ||
+                    (found->second.camera_param.id != chunk.id ||
                      found->second.archive_path != table.archive_path ||
                      found->second.holder_instance_id !=
                          table.holder_instance_id ||
@@ -153,7 +150,7 @@ namespace smgpc::camera {
                          table.zone_transform.matrix)) {
                     aurora::throw_host_exception<std::runtime_error>(
                         "Event-camera catalog contains conflicting holder occurrences for zone-qualified identity " +
-                        std::to_string(key.zone_id) + ":" + key.name + ".");
+                        std::to_string(key.zone_id) + ":" + smgpc::resource::decode_cp932(key.name) + ".");
                 }
             }
         }

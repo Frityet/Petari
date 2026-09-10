@@ -1,3 +1,4 @@
+#include "resource/TextEncoding.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/NPC/NPCActor.hpp"
 #include "Game/NPC/TalkMessageCtrl.hpp"
@@ -241,7 +242,8 @@ namespace {
             [] { static_cast<void>(MR::isPlayerElementModeNormal()); },
             "player element mode must fail without an attached player");
 
-        auto generic_player = LiveActor("マリオアクター");
+        const auto player_name = smgpc::resource::encode_cp932("マリオアクター");
+        auto generic_player = LiveActor(player_name.c_str());
         generic_player.mPosition.set(3.0F, 4.0F, 0.0F);
         runtime.player_system().attach_actor(generic_player);
         require(MR::isNearPlayerAnyTime(&host, 6.0F) &&
@@ -637,12 +639,12 @@ namespace {
                                          rabbit_placement.jmap_entry_index)),
                         "the proof actor must register to the exact DemoRabbit executor");
                 const auto start = demo.start_demo(
-                    &actor, "チコガイドデモ", std::nullopt,
+                    &actor, smgpc::resource::encode_cp932("チコガイドデモ"), std::nullopt,
                     smgpc::compat::DemoPlayerMode::Normal);
                 require(start == std::optional<smgpc::compat::DemoSheetStartResult>{
                                      smgpc::compat::DemoSheetStartResult::Started},
                         "the real TicoGuide timekeeper must start");
-                const auto guide_index = demo.find_definition("チコガイドデモ");
+                const auto guide_index = demo.find_definition(smgpc::resource::encode_cp932("チコガイドデモ"));
                 require(guide_index.has_value(),
                         "the real DemoSheet archive must contain TicoGuideDemo");
                 const auto* guide = demo.definition(*guide_index);
@@ -699,7 +701,7 @@ namespace {
                         "ending type2 must leave no talking actor");
                 require(demo.stop_active_demo(
                             &actor,
-                            std::optional<std::string_view>{"チコガイドデモ"}),
+                            std::optional<std::string_view>{smgpc::resource::encode_cp932("チコガイドデモ")}),
                         "the focused proof must stop its exact timekeeper cleanly");
             }
 

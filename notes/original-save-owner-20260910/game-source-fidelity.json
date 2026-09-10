@@ -1,0 +1,116 @@
+[
+  {
+    "path": "src/Game/LiveActor/EffectKeeper.cpp",
+    "reference": "decomp/src/Game/LiveActor/EffectKeeper.cpp",
+    "byte_equal": true,
+    "sha256": "9aef3253a9d16e0e82fe7c68ebbc3d5cd2a81c243bf24af4d192cb0734a3f2d5"
+  },
+  {
+    "path": "src/Game/System/GameDataHolder.cpp",
+    "reference": "decomp/src/Game/System/GameDataHolder.cpp",
+    "byte_equal": true,
+    "sha256": "57fae13e42f4bac2ac6f1f2237a5adc34d7260fdb80c312906cf491d3391667c"
+  },
+  {
+    "path": "src/Game/System/FindingLuigiEventScheduler.hpp",
+    "reference": "decomp/include/Game/System/FindingLuigiEventScheduler.hpp",
+    "byte_equal": true,
+    "sha256": "1dc1817d2f53a92785f0b1ece9a7382d18260906bce657dca1e4ef4bd8958421"
+  },
+  {
+    "path": "src/Game/System/GameDataConst.cpp",
+    "reference": "decomp/src/Game/System/GameDataConst.cpp",
+    "byte_equal": true,
+    "sha256": "fd39e0a3078c2ee74eb6ff67ee1a790a00501083546aba64a31fd6b3938471cb"
+  },
+  {
+    "path": "src/Game/System/GameDataGalaxyStorage.cpp",
+    "reference": "decomp/src/Game/System/GameDataGalaxyStorage.cpp",
+    "byte_equal": true,
+    "sha256": "5ab64c2a0586453d02ce194c03cec63fd83cb0f4ad6d1b76d5179a439706e35d"
+  },
+  {
+    "path": "src/Game/System/GameEventFlagChecker.cpp",
+    "reference": "decomp/src/Game/System/GameEventFlagChecker.cpp",
+    "byte_equal": false,
+    "sha256": "85a641b5d6622fde9ec47dedd326b6ce17ba52a1747c7384f390ae7042ad183c"
+  },
+  {
+    "path": "src/Game/System/GameEventFlagChecker.hpp",
+    "reference": "decomp/include/Game/System/GameEventFlagChecker.hpp",
+    "byte_equal": true,
+    "sha256": "df5caecd9bb2a98b2969910ee89a1cd3c8de64c7b27302c3a0d9b646e0fb5977"
+  },
+  {
+    "path": "src/Game/System/GameEventFlagStorage.cpp",
+    "reference": "decomp/src/Game/System/GameEventFlagStorage.cpp",
+    "byte_equal": true,
+    "sha256": "10e82dcbbf0618aafcf4bb56336fb1a292ea7e6e7ef8c57395abe6b160aa3a15"
+  },
+  {
+    "path": "src/Game/System/GameEventFlagStorage.hpp",
+    "reference": "decomp/include/Game/System/GameEventFlagStorage.hpp",
+    "byte_equal": true,
+    "sha256": "d8ed627d4d3f38e161f14951d22cd3d81d9b06c37c8aa0007351dc4373f42933"
+  },
+  {
+    "path": "src/Game/System/GameEventValueChecker.cpp",
+    "reference": "decomp/src/Game/System/GameEventValueChecker.cpp",
+    "byte_equal": true,
+    "sha256": "0a31a476a7b2c9d4a3c32bb94c734cb1793fadd6135f3b5bc581f1793f111c93"
+  },
+  {
+    "path": "src/Game/System/GameEventValueChecker.hpp",
+    "reference": "decomp/include/Game/System/GameEventValueChecker.hpp",
+    "byte_equal": true,
+    "sha256": "df3dded8a682e61da4c889b9bd607e4d1c4f3dd0b2c65b5a51d5792369eaacb6"
+  },
+  {
+    "path": "src/Game/System/ScenarioProgressTestRun.cpp",
+    "reference": "decomp/src/Game/System/ScenarioProgressTestRun.cpp",
+    "byte_equal": true,
+    "sha256": "a6e2b9c58e8fe0d1e94fde8d7d96471b1dec526fcebd8e364fe23d6464dd1b9f"
+  },
+  {
+    "path": "src/Game/System/ScenarioProgressTestRun.hpp",
+    "reference": "decomp/include/Game/System/ScenarioProgressTestRun.hpp",
+    "byte_equal": true,
+    "sha256": "74ac161e119a3e73e8e86411753bc7c0b490adf2a80c724c0e1829e043146b30"
+  },
+  {
+    "path": "src/Game/System/SpinDriverPathStorage.cpp",
+    "reference": "decomp/src/Game/System/SpinDriverPathStorage.cpp",
+    "byte_equal": true,
+    "sha256": "cae16b1a3eb53d5c5f5ef6c5ae764c0f3ace2af70ff9a36ac2a5d8926a62696a"
+  },
+  {
+    "path": "src/Game/System/SpinDriverPathStorage.hpp",
+    "reference": "decomp/include/Game/System/SpinDriverPathStorage.hpp",
+    "byte_equal": true,
+    "sha256": "2fcd10c8d71ea4dbd990cc621df53adf1b109f9990cbcc04566ac630b77de682"
+  },
+  {
+    "path": "src/Game/System/StarPieceAlmsStorage.cpp",
+    "reference": "decomp/src/Game/System/StarPieceAlmsStorage.cpp",
+    "byte_equal": true,
+    "sha256": "96f9bafd36676c37689a8984563ca3b6edd61a82026a757bec4a330a9775f610"
+  },
+  {
+    "path": "src/Game/System/StarPieceAlmsStorage.hpp",
+    "reference": "decomp/include/Game/System/StarPieceAlmsStorage.hpp",
+    "byte_equal": true,
+    "sha256": "631e875225ebacbe6fb5974d77fa2b6771d732f2a51908b4a44f3f3aeb7a7159"
+  },
+  {
+    "path": "src/Game/Util/BitArray.cpp",
+    "reference": "decomp/src/Game/Util/BitArray.cpp",
+    "byte_equal": true,
+    "sha256": "128994d1f77d7cd61162982e7c493750f2f54a85589134a9133a0899ecb672ec"
+  },
+  {
+    "path": "src/Game/Util/BitArray.hpp",
+    "reference": "decomp/include/Game/Util/BitArray.hpp",
+    "byte_equal": true,
+    "sha256": "1175887d1f6eaf5c8ea54d9875e22d0b10c1b8588d0e0944798034a775f33c0b"
+  }
+]

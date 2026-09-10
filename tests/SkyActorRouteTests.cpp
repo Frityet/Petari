@@ -1,3 +1,4 @@
+#include "resource/TextEncoding.hpp"
 #include "Game/Map/FileSelectSky.hpp"
 #include "Game/Map/Sky.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
@@ -168,7 +169,10 @@ namespace {
             runtime.set_j3d_packet_trace_frame(frame.frame_index);
 #endif
             auto gateway_sky_runtime_name = std::string{};
-            auto game_data_session = smgpc::compat::GameDataSession{1U};
+            runtime.initialize_scenario_catalog(resource_runtime);
+        auto game_data_session = smgpc::compat::GameDataSession{1U, resource_runtime, runtime.retain_scenario_catalog()};
+        game_data_session.holder().followStoryEventByName(smgpc::resource::encode_cp932("ピーチ城浮上後").c_str());
+        game_data_session.store_scene_start();
             {
                 auto scene = smgpc::scene::GatewayDemoScene{runtime.dvd()};
                 const auto &placement = scene.sky_placement();
@@ -201,7 +205,7 @@ namespace {
                             !sky->mFlag.mIsDead,
                         "Gateway did not construct the exact live ProjectionMapSky model");
                 require(sky->getName() != nullptr &&
-                            std::string_view(sky->getName()) == "VR軌道",
+                            smgpc::resource::decode_cp932(sky->getName()) == "VR軌道",
                         "Gateway sky did not retain its exact ObjNameTable actor identity");
                 gateway_sky_runtime_name = sky->getName();
                 model->requireLoaded();

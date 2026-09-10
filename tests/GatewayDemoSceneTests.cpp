@@ -1,3 +1,4 @@
+#include "resource/TextEncoding.hpp"
 #include "Game/AreaObj/AreaObjContainer.hpp"
 #include "Game/AreaObj/LightArea.hpp"
 #include "Game/AreaObj/LightAreaHolder.hpp"
@@ -21,7 +22,7 @@
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/CollisionPartsCompat.hpp"
 #include "compat/DemoSceneRuntime.hpp"
-#include "compat/GameDataHolderCompat.hpp"
+#include "compat/GameDataOwnership.hpp"
 #include "compat/GameDataSession.hpp"
 #include "compat/StageSessionState.hpp"
 #include "compat/TalkRuntime.hpp"
@@ -182,7 +183,7 @@ namespace {
         const auto *guide = guide_index.has_value()
                                 ? demo.definition(*guide_index)
                                 : nullptr;
-        require(guide != nullptr && guide->demo_name == "チコガイドデモ" &&
+        require(guide != nullptr && guide->demo_name == smgpc::resource::encode_cp932("チコガイドデモ") &&
                     guide->time_sheet_name == "TicoGuideDemo",
                 "the three DemoRabbit actors must join the exact guide demo");
 
@@ -228,9 +229,9 @@ namespace {
                             smgpc::scene::AuthoredPlacementOutcome::
                                 InitializedAfterPlacement &&
                         found->actor_name ==
-                            std::optional<std::string>{"デモウサギ"} &&
+                            std::optional<std::string>{smgpc::resource::encode_cp932("デモウサギ")} &&
                         rabbit != nullptr && rabbit->getName() != nullptr &&
-                        std::string_view(rabbit->getName()) == "デモウサギ",
+                        smgpc::resource::decode_cp932(rabbit->getName()) == "デモウサギ",
                     "a DemoRabbit lost its exact row, cast, message, path, or actor identity");
 
             require(found->archives.size() == 1U &&
@@ -263,10 +264,10 @@ namespace {
                         demo.cast_id(rabbit, *guide_index) ==
                             std::optional<std::int32_t>{expected.cast_id} &&
                         demo.cast_name(rabbit, *guide_index) ==
-                            "デモウサギ" &&
+                            smgpc::resource::encode_cp932("デモウサギ") &&
                         demo.action_count(rabbit) ==
                             expected.action_count &&
-                        demo.action_count(rabbit, "チコガイドデモ") ==
+                        demo.action_count(rabbit, smgpc::resource::encode_cp932("チコガイドデモ")) ==
                             expected.action_count &&
                         smgpc::compat::registered_demo_membership_count(
                             rabbit) == 1U &&
@@ -364,16 +365,18 @@ namespace {
             smgpc::compat::try_active_stage_session();
         require(previous_stage_session == &outer_stage_session,
                 "Gateway session-shadow proof did not install a real outer owner");
-        auto game_data_session = smgpc::compat::GameDataSession{1U};
+        runtime.initialize_scenario_catalog(resource_runtime);
+        auto game_data_session = smgpc::compat::GameDataSession{1U, resource_runtime, runtime.retain_scenario_catalog()};
+        game_data_session.holder().followStoryEventByName(smgpc::resource::encode_cp932("ピーチ城浮上後").c_str());
+        game_data_session.store_scene_start();
         require(smgpc::compat::game_data::holder_story_progress(
                     game_data_session.holder()) == 5U &&
                     GameDataFunction::getCurrentGameDataHolder() ==
                         &game_data_session.holder() &&
                     GameDataFunction::getSceneStartGameDataHolder() ==
-                        &game_data_session.holder() &&
-                    !GameDataFunction::isPassedStoryEvent(
-                        "チコガイドデモ終了") &&
-                    !GameDataFunction::isPassedStoryEvent("スピン権利"),
+                        &game_data_session.scene_start_holder() &&
+                    !GameDataFunction::isPassedStoryEvent(smgpc::resource::encode_cp932("チコガイドデモ終了").c_str()) &&
+                    !GameDataFunction::isPassedStoryEvent(smgpc::resource::encode_cp932("スピン権利").c_str()),
                 "the Gateway actor proof must begin on one exact progress-5 selected-file holder");
         auto scene_owner =
             std::make_unique<smgpc::scene::GatewayDemoScene>(dvd);
@@ -524,15 +527,15 @@ namespace {
                     guide->source_row == 0 &&
                     guide->source_table_path == "jmp/placement/layera/demoobjinfo",
                 "the guide DemoGroup must select the retail TicoGuideDemo sheet");
-        constexpr auto spin_parts = std::array{
-            std::pair{std::string_view{"スピンゲット[デモ1]"}, 420},
-            std::pair{std::string_view{"スピンゲット[会話1]"}, 120},
-            std::pair{std::string_view{"スピンゲット[デモ2]"}, 150},
-            std::pair{std::string_view{"スピンゲット[会話2]"}, 120},
-            std::pair{std::string_view{"スピンゲット[デモ3]"}, 240},
-            std::pair{std::string_view{"スピンゲット[会話3]"}, 120},
-            std::pair{std::string_view{"スピンゲット[デモ4]"}, 500},
-            std::pair{std::string_view{"スピンゲット[デモ5]"}, 60},
+        const auto spin_parts = std::array{
+            std::pair{smgpc::resource::encode_cp932("スピンゲット[デモ1]"), 420},
+            std::pair{smgpc::resource::encode_cp932("スピンゲット[会話1]"), 120},
+            std::pair{smgpc::resource::encode_cp932("スピンゲット[デモ2]"), 150},
+            std::pair{smgpc::resource::encode_cp932("スピンゲット[会話2]"), 120},
+            std::pair{smgpc::resource::encode_cp932("スピンゲット[デモ3]"), 240},
+            std::pair{smgpc::resource::encode_cp932("スピンゲット[会話3]"), 120},
+            std::pair{smgpc::resource::encode_cp932("スピンゲット[デモ4]"), 500},
+            std::pair{smgpc::resource::encode_cp932("スピンゲット[デモ5]"), 60},
         };
         require(guide->sheet.time_rows().size() == 27U,
                 "the guide checkpoint requires the complete retail Time sheet");
@@ -556,7 +559,7 @@ namespace {
                     }),
                 "the spin checkpoint must not invent sound or camera work absent from parts 15-22");
         require(std::ranges::any_of(guide->sheet.player_rows(), [](const auto& row) {
-                    return row.part_name == "スピンゲット[デモ1]" &&
+                    return row.part_name == smgpc::resource::encode_cp932("スピンゲット[デモ1]") &&
                            row.position_name == "MarioDemoPos4";
                 }),
                 "part 15 must retain the retail MarioDemoPos4 Player row");
@@ -692,7 +695,7 @@ namespace {
                     bright_report->actor == bright_visual->actor &&
                     bright_report->actor_name == "レンズフレア用太陽" &&
                     bright_visual->actor->getName() != nullptr &&
-                    std::string_view(bright_visual->actor->getName()) ==
+                    smgpc::resource::decode_cp932(bright_visual->actor->getName()) ==
                         *bright_report->actor_name,
                 "BrightSun did not retain its exact ObjNameTable actor identity");
         const auto bright_runtime_name = *bright_report->actor_name;

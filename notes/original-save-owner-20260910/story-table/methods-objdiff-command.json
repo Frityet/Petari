@@ -1,0 +1,13 @@
+{
+  "command": [
+    "/Users/frityet/Projects/petari/decomp/build/tools/objdiff-cli",
+    "diff",
+    "-1",
+    "/Users/frityet/Projects/petari/notes/gateway-audit-20260907/restoration/retail/obj/Game/System/GameDataHolder.o",
+    "-2",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/story-table/GameDataHolder.wii.o",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/story-table/methods-objdiff.json"
+  ],
+  "exit": 0
+}

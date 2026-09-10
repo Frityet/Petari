@@ -1,3 +1,4 @@
+#include "resource/TextEncoding.hpp"
 #include "compat/DemoSheetRuntime.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
@@ -270,7 +271,7 @@ namespace {
         require(runtime.wipe_rows().size() == 3U, "the real Tico guide Wipe table must have three rows");
         require(runtime.sound_rows().empty(), "the real Tico guide Sound table must be present and empty");
 
-        require(runtime.time_rows()[15U].part_name == "スピンゲット[デモ1]" &&
+        require(runtime.time_rows()[15U].part_name == smgpc::resource::encode_cp932("スピンゲット[デモ1]") &&
                     runtime.time_rows()[15U].total_step == 420 && !runtime.time_rows()[15U].suspend,
                 "Time fields must be decoded by hash despite their descriptor offsets");
         require(runtime.action_rows()[12U].cast_id == -1 && runtime.action_rows()[12U].action_type == 2 &&
@@ -352,10 +353,10 @@ namespace {
             "DemoEncodedTime.bcsv", make_single_string_field_bcsv("PartName", encoded_part));
         auto runtime = smgpc::compat::DemoSheetRuntime::load(archive, "Encoded");
         require(runtime.time_rows().size() == 1U &&
-                    runtime.time_rows()[0U].part_name == "スピンゲット[デモ1]" &&
+                    runtime.time_rows()[0U].part_name == smgpc::resource::encode_cp932("スピンゲット[デモ1]") &&
                     runtime.time_rows()[0U].total_step == 1 && !runtime.time_rows()[0U].suspend,
                 "a PartName-only Time row must decode CP932 and retain source numeric defaults");
-        require(runtime.start_at_part("スピンゲット[デモ1]") ==
+        require(runtime.start_at_part(smgpc::resource::encode_cp932("スピンゲット[デモ1]")) ==
                         smgpc::compat::DemoSheetStartResult::Started &&
                     runtime.advance() && runtime.is_demo_last_step() && !runtime.advance(),
                 "the decoded Japanese part name must be an exact executable one-frame part");
@@ -384,7 +385,7 @@ namespace {
         const auto wipe_archive = make_single_file_rarc(
             "DemoSparseWipe.bcsv", make_single_string_field_bcsv("PartName", part_name));
         const auto wipe = smgpc::compat::DemoSheetRuntime::load(wipe_archive, "Sparse");
-        require(wipe.wipe_rows().size() == 1U && wipe.wipe_rows()[0U].wipe_name == "フェードワイプ" &&
+        require(wipe.wipe_rows().size() == 1U && wipe.wipe_rows()[0U].wipe_name == smgpc::resource::encode_cp932("フェードワイプ") &&
                     wipe.wipe_rows()[0U].wipe_type == 0 && wipe.wipe_rows()[0U].wipe_frame == -1,
                 "a PartName-only Wipe row must preserve the original fade-wipe defaults");
 

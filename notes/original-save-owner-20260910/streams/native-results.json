@@ -1,0 +1,29 @@
+{
+  "compile_command": [
+    "/opt/homebrew/opt/llvm/bin/clang++",
+    "-std=c++20",
+    "-g",
+    "-arch",
+    "arm64",
+    "-stdlib=libc++",
+    "-cxx-isystem/opt/homebrew/opt/llvm/include/c++/v1",
+    "-isysroot",
+    "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+    "-DAURORA",
+    "-DTARGET_PC",
+    "-I/Users/frityet/Projects/petari/src",
+    "-I/Users/frityet/Projects/petari/aurora/include",
+    "-O1",
+    "-fsanitize=address,undefined",
+    "/Users/frityet/Projects/petari/tests/OriginalJSUStreamTests.cpp",
+    "/Users/frityet/Projects/petari/src/compat/JSUStreamCompat.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/streams/jsu-stream-tests"
+  ],
+  "compile_exit": 0,
+  "run_command": [
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/streams/jsu-stream-tests"
+  ],
+  "run_exit": 0,
+  "binary_sha256": "aa7b3619b8f41b88182b0dd635771068ab5858faae4bc1f0feb5d5472b9a37ca"
+}

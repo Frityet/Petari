@@ -3,7 +3,6 @@
 
 #include "resource/BcsvTable.hpp"
 #include "resource/RarcArchive.hpp"
-#include "resource/TextEncoding.hpp"
 #include "runtime/RuntimeServices.hpp"
 
 #include <stdexcept>
@@ -65,7 +64,7 @@ namespace smgpc::scene::nameobj {
             const auto index = _entries.size();
             _entries.push_back(Entry{
                 .english_name = *english_name,
-                .japanese_name = smgpc::resource::decode_cp932(*japanese_name),
+                .japanese_name = *japanese_name,
             });
             _indices.emplace(_entries.back().english_name, index);
         }

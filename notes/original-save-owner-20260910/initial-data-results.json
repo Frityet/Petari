@@ -1,0 +1,17 @@
+[
+  {
+    "name": "original-player-status-storage",
+    "exit": 0,
+    "sha256": "64b62ecf8d9f3cf846b4055b237f53ffa1493f80a76940ce7a0a4a2e50fc1c7f"
+  },
+  {
+    "name": "game-data-star-storage",
+    "exit": 0,
+    "sha256": "0126495e19b322a937dd17556dc7ee247c2eeaf0371e19f08604a1f16a2c14df"
+  },
+  {
+    "name": "game-data-real-or-absent",
+    "exit": 1,
+    "sha256": "9b28178e7d9306207fa4df5253230b0cad7337ba17ed936406fce14f5e3a75c0"
+  }
+]

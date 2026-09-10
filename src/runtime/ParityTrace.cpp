@@ -15,6 +15,7 @@
 #include "TraceStore.hpp"
 #include "compat/GameActorSensorCompat.hpp"
 #include "runtime/RuntimeContext.hpp"
+#include "resource/TextEncoding.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Screen/ImageEffectSystemHolder.hpp"
@@ -1308,7 +1309,7 @@ namespace smgpc::runtime {
             else if (director.mState == director.mStateDepthOfField) state = "DepthOfField";
             Json effect = nullptr;
             if (const auto* current = director.mCurrentEffect) {
-                effect = Json{{"name", current->mName}, {"requested", current->_C},
+                effect = Json{{"name", smgpc::resource::decode_cp932(current->mName)}, {"requested", current->_C},
                               {"active", current->_D}, {"intensity", current->_10}};
             }
             return Json{{"available", true}, {"control_auto", director.mIsAuto},
@@ -1337,7 +1338,7 @@ namespace smgpc::runtime {
                 out.push_back(Json{
                     {"index", i},
                     {"kind", rumble_request_kind_name(event.kind)},
-                    {"pattern_name", event.pattern_name},
+                    {"pattern_name", smgpc::resource::decode_cp932(event.pattern_name)},
                     {"channel", event.channel},
                     {"frame_index", event.frame_index},
                 });
@@ -1582,7 +1583,7 @@ namespace smgpc::runtime {
                      {"effective_camera_pose",
                       runtime.camera_system().effective_camera_pose().has_value() ? camera_pose_json(*runtime.camera_system().effective_camera_pose()) : Json(nullptr)},
                      {"active_programmable_camera",
-                      runtime.camera_system().active_programmable_camera_name().has_value() ? Json(std::string(*runtime.camera_system().active_programmable_camera_name())) : Json(nullptr)},
+                      runtime.camera_system().active_programmable_camera_name().has_value() ? Json(smgpc::resource::decode_cp932(*runtime.camera_system().active_programmable_camera_name())) : Json(nullptr)},
                      {"reset_camera_man_count", runtime.camera_system().reset_camera_man_count()},
                      {"camera_director_pause_count", runtime.camera_system().camera_director_pause_count()},
                      {"programmable_camera_declare_count", runtime.camera_system().programmable_camera_declare_count()},

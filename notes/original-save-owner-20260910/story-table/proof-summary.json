@@ -1,0 +1,24 @@
+{
+  "table_symbol": "StoryEventBCSV",
+  "retail_address": "0x8053DC20",
+  "table_size": 480,
+  "table_sha256": "8f508f1cafc925ff60fb774e043a6e89cb4ba4cc136e591dde29399efad404ea",
+  "source_bytes_equal_extracted_retail": true,
+  "data_objdiff_match_percent": 100.0,
+  "constructor_match_percent": 100.0,
+  "changed_comparison_scores_vs_published_two_method_recovery": [
+    {
+      "symbol": "getPictureBookChapterCanRead__14GameDataHolderCFv",
+      "before": 100.0,
+      "after": 99.42857
+    },
+    {
+      "symbol": "[.rodata-0]",
+      "before": 76.92308,
+      "after": 3.9525692
+    }
+  ],
+  "native_source_equals_reference": true,
+  "full_native_holder_still_excluded": true,
+  "runtime_not_run": true
+}

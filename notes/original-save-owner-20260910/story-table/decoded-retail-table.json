@@ -1,0 +1,65 @@
+{
+  "retail_address": "0x8053dc20",
+  "size": 480,
+  "sha256": "8f508f1cafc925ff60fb774e043a6e89cb4ba4cc136e591dde29399efad404ea",
+  "rows": [
+    {
+      "name": "ゲーム開始直後",
+      "progress": 0
+    },
+    {
+      "name": "クッパ襲来後",
+      "progress": 2
+    },
+    {
+      "name": "ピーチ城浮上後",
+      "progress": 5
+    },
+    {
+      "name": "チコガイドデモ終了",
+      "progress": 10
+    },
+    {
+      "name": "スピン権利",
+      "progress": 15
+    },
+    {
+      "name": "バトラー情報Ａ",
+      "progress": 25
+    },
+    {
+      "name": "天球儀レクチャー",
+      "progress": 30
+    },
+    {
+      "name": "ギャラクシー移動レクチャー",
+      "progress": 35
+    },
+    {
+      "name": "スターピースレクチャー",
+      "progress": 40
+    },
+    {
+      "name": "クッパＪｒロボプラント発見",
+      "progress": 42
+    },
+    {
+      "name": "クッパスタープラント発見",
+      "progress": 45
+    },
+    {
+      "name": "クッパＪｒシッププラント発見",
+      "progress": 50
+    },
+    {
+      "name": "クッパダークマタープラント発見",
+      "progress": 55
+    },
+    {
+      "name": "クッパＪｒクリーチャープラント発見",
+      "progress": 60
+    }
+  ],
+  "matches_current_native_registry": true,
+  "asm_sha256": "476ec2fbc3645072d2626fbc2614f1e1f073f903d2caf1c37e65af5c81c19bd7"
+}

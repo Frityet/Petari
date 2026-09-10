@@ -10,5 +10,7 @@ namespace smgpc::resource {
     private:
         JMapResource _galaxy_id;
         JMapSourceRegistration _galaxy_id_alias;
+        JMapResource _story_event;
+        JMapSourceRegistration _story_event_alias;
     };
 }

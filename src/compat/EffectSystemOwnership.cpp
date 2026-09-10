@@ -1,3 +1,5 @@
+#include <aurora/allocation.hpp>
+#include "resource/TextEncoding.hpp"
 #include <aurora/exception.hpp>
 #include "compat/EffectSystemOwnership.hpp"
 
@@ -26,6 +28,16 @@
 
 #include <map>
 #include <stdexcept>
+
+namespace {
+    // These stable Game names outlive every owner that borrows their bytes.
+    std::string encode_owner_name(std::string_view name) {
+        aurora::allocation::HostAllocationScope host;
+        return smgpc::resource::encode_cp932(name);
+    }
+
+    const std::string cEffectSystemName = encode_owner_name("エフェクトシステム");
+}  // namespace
 
 namespace smgpc::compat {
     namespace {
@@ -117,7 +129,7 @@ namespace smgpc::compat {
         if (_storage->system)
             aurora::throw_host_exception<std::logic_error>("EffectSystem already constructed");
         JkrAllocationScope heap(_storage->domain);
-        auto *system = new EffectSystem("エフェクトシステム", true);
+        auto *system = new EffectSystem(cEffectSystemName.c_str(), true);
         _storage->system = system;
         _storage->draw = system->mDrawExec;
         _storage->calc = system->mCalcExec;

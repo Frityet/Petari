@@ -1,3 +1,4 @@
+#include "resource/TextEncoding.hpp"
 #include "SceneExecutionFixture.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/NameObj/NameObjGroup.hpp"
@@ -140,15 +141,15 @@ void owner(smgpc::runtime::RuntimeContext& runtime) {
         require(group && wipes && SceneWipeHolderFunction::getSceneWipeHolder() == wipes &&
                 MR::createSceneObj(SceneObj_SceneWipeHolder) == wipes,
                 "the real scene creates and retains exactly one original wipe holder");
-        const std::array names{"円ワイプ", "フェードワイプ", "白フェードワイプ", "ゲームオーバー", "クッパ"};
+        const std::array names{smgpc::resource::encode_cp932("円ワイプ"), smgpc::resource::encode_cp932("フェードワイプ"), smgpc::resource::encode_cp932("白フェードワイプ"), smgpc::resource::encode_cp932("ゲームオーバー"), smgpc::resource::encode_cp932("クッパ")};
         require(group->getObjNum() == 5, "all five original wipe descendants join the actual pause group");
         for (std::size_t i = 0; i < names.size(); ++i)
-            require(group->getObj(i) == wipes->findWipe(names[i]), "wipe catalog and pause membership preserve original identity and order");
-        auto* ring = dynamic_cast<WipeRing*>(wipes->findWipe(names[0]));
-        auto* black = dynamic_cast<WipeFade*>(wipes->findWipe(names[1]));
-        auto* white = dynamic_cast<WipeFade*>(wipes->findWipe(names[2]));
-        auto* game_over = dynamic_cast<WipeGameOver*>(wipes->findWipe(names[3]));
-        auto* koopa = dynamic_cast<WipeKoopa*>(wipes->findWipe(names[4]));
+            require(group->getObj(i) == wipes->findWipe(names[i].c_str()), "wipe catalog and pause membership preserve original identity and order");
+        auto* ring = dynamic_cast<WipeRing*>(wipes->findWipe(names[0].c_str()));
+        auto* black = dynamic_cast<WipeFade*>(wipes->findWipe(names[1].c_str()));
+        auto* white = dynamic_cast<WipeFade*>(wipes->findWipe(names[2].c_str()));
+        auto* game_over = dynamic_cast<WipeGameOver*>(wipes->findWipe(names[3].c_str()));
+        auto* koopa = dynamic_cast<WipeKoopa*>(wipes->findWipe(names[4].c_str()));
         require(ring && black && white && black != white && game_over && koopa && !wipes->findWipe("AbsentWipe"),
                 "all original wipe kinds are actual distinct typed owners and missing names remain absent");
         require(std::abs(ring->calcMaxRadius() - std::sqrt(900160.0F)) < 0.001F,

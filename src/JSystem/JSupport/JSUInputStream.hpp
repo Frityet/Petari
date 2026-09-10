@@ -1,0 +1,38 @@
+#pragma once
+
+#include "JSystem/JSupport/JSUIosBase.hpp"
+
+class JSUInputStream : public JSUIosBase {
+public:
+    JSUInputStream() : JSUIosBase() {
+    }
+
+    virtual ~JSUInputStream();
+    virtual s32 getAvailable() const = 0;
+    virtual s32 skip(s32);
+    virtual u32 readData(void*, s32) = 0;
+
+    s32 read(void*, s32);
+
+    // The native stream defines otherwise-indeterminate unread scalar bytes.
+    // Raw read() still leaves the caller's unread bytes untouched.
+    inline u8 readU8() {
+        u8 ret = 0;
+        read(&ret, sizeof(u8));
+        return ret;
+    }
+
+    inline u16 readU16() {
+        u16 ret = 0;
+        read(&ret, sizeof(u16));
+        return ret;
+    }
+
+    inline u32 readU32() {
+        u32 ret = 0;
+        read(&ret, sizeof(u32));
+        return ret;
+    }
+
+    // TODO: probably a lot of other helpers for different types
+};

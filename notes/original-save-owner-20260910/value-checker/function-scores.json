@@ -1,0 +1,75 @@
+[
+  {
+    "phase": "baseline",
+    "symbol": "deserialize__21GameEventValueCheckerFPCUcUl",
+    "match_percent": 100.0,
+    "retail_bytes": 240,
+    "candidate_bytes": 240,
+    "remaining_differences": []
+  },
+  {
+    "phase": "recovered",
+    "symbol": "deserialize__21GameEventValueCheckerFPCUcUl",
+    "match_percent": 98.583336,
+    "retail_bytes": 240,
+    "candidate_bytes": 240,
+    "remaining_differences": [
+      {
+        "kind": "DIFF_ARG_MISMATCH",
+        "retail": "li r29, 0x0"
+      },
+      {
+        "kind": "DIFF_ARG_MISMATCH",
+        "retail": "stb r29, 0x10(r1)"
+      },
+      {
+        "kind": "DIFF_ARG_MISMATCH",
+        "retail": "li r27, 0x0"
+      },
+      {
+        "kind": "DIFF_ARG_MISMATCH",
+        "retail": "addze r28, r0"
+      },
+      {
+        "kind": "DIFF_ARG_MISMATCH",
+        "retail": "lhz r31, 0xa(r1)"
+      },
+      {
+        "kind": "DIFF_ARG_MISMATCH",
+        "retail": "lhz r30, 0x8(r1)"
+      },
+      {
+        "kind": "DIFF_ARG_MISMATCH",
+        "retail": "mr r4, r31"
+      },
+      {
+        "kind": "DIFF_ARG_MISMATCH",
+        "retail": "sthx r30, r4, r0"
+      },
+      {
+        "kind": "DIFF_ARG_MISMATCH",
+        "retail": "li r29, 0x1"
+      },
+      {
+        "kind": "DIFF_ARG_MISMATCH",
+        "retail": "addi r27, r27, 0x1"
+      },
+      {
+        "kind": "DIFF_ARG_MISMATCH",
+        "retail": "cmpw r27, r28"
+      },
+      {
+        "kind": "DIFF_ARG_MISMATCH",
+        "retail": "subic r0, r29, 0x1"
+      },
+      {
+        "kind": "DIFF_ARG_MISMATCH",
+        "retail": "subfe r30, r0, r29"
+      },
+      {
+        "kind": "DIFF_ARG_MISMATCH",
+        "retail": "mr r3, r30"
+      }
+    ]
+  }
+]

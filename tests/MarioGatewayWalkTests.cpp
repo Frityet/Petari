@@ -1,3 +1,4 @@
+#include "resource/TextEncoding.hpp"
 #include "Game/Gravity/PointGravity.hpp"
 #include "Game/Animation/XanimeCore.hpp"
 #include "Game/Animation/XanimePlayer.hpp"
@@ -494,7 +495,9 @@ namespace {
 
         const auto scene_renderer_context =
             smgpc::render::ScopedAuroraRendererContext(renderer);
-        auto game_data_session = smgpc::compat::GameDataSession{1U};
+        auto game_data_session = smgpc::compat::GameDataSession{1U, resource_runtime, runtime.retain_scenario_catalog()};
+        game_data_session.holder().followStoryEventByName(smgpc::resource::encode_cp932("ピーチ城浮上後").c_str());
+        game_data_session.store_scene_start();
         auto scene = smgpc::scene::GatewayDemoScene(runtime.dvd());
         const auto& start = scene.start_info();
         require(start.object_name == "Mario" && start.start_id == 0 && start.zone_id == 0 &&
@@ -668,7 +671,7 @@ namespace {
                     actor->mModelManager->getJ3DModelData()->getJointNum() != 0U,
                 "MarioActor init must load the real Mario model and joints");
         auto* initial_animation = actor->mModelManager->mXanimePlayer;
-        require(initial_animation != nullptr && initial_animation->isRun("ステージインA") &&
+        require(initial_animation != nullptr && initial_animation->isRun(smgpc::resource::encode_cp932("ステージインA").c_str()) &&
                     std::string_view(initial_animation->getCurrentBckName()) == "StageStartGround" &&
                     initial_animation->mCurrentAnimation->_20[0] ==
                         actor->mModelManager->getResourceHolder()->mMotionResTable->getRes("StageStartGround") &&
@@ -721,7 +724,7 @@ namespace {
                 auto& core = *animation.mCore;
                 require(animation.mCurrentAnimation != nullptr && core.mTrackCount != 0U,
                         "scheduled Mario must retain its actual current Xanime group and tracks");
-                proof.animation_name = animation.getCurrentAnimationName();
+                proof.animation_name = smgpc::resource::decode_cp932(animation.getCurrentAnimationName());
                 proof.animated_joint_count = core.mJointCount;
                 auto dominant_track = 0U;
                 for (auto index = 0U; index < animation.mCurrentAnimation->mBckTableVariant; ++index) {
@@ -812,7 +815,7 @@ namespace {
                     }
                     renderer.end_frame();
                     if (!actor->mMario->isInputDisable() && !actor->mMario->mDrawStates._7 &&
-                        actor->mModelManager->mXanimePlayer->isRun("基本") && MR::isOnGroundPlayer()) {
+                        actor->mModelManager->mXanimePlayer->isRun(smgpc::resource::encode_cp932("基本").c_str()) && MR::isOnGroundPlayer()) {
                         if (++ready_frames >= 3U) {
                             require(submitted_shapes != 0U,
                                     "focused original Mario must submit its own material/shape packets through the active draw buffer");

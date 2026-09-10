@@ -16,8 +16,8 @@
 namespace smgpc::compat {
     struct ShadowControllerOwnership::Entry {
         ShadowControllerOwnership* owner;
-        std::string name;
-        std::string group_name;
+        std::string name_raw;
+        std::string group_name_raw;
         ActorShadowPositionBinding position_binding;
         std::unique_ptr<ShadowController> controller;
 
@@ -77,15 +77,15 @@ namespace smgpc::compat {
         }
         auto entry = std::make_unique<Entry>();
         entry->owner = this;
-        entry->name = definition.name;
-        entry->group_name = definition.group_name;
+        entry->name_raw = definition.name_raw;
+        entry->group_name_raw = definition.group_name_raw;
         entry->position_binding = definition.position_binding;
         {
             JkrAllocationScope game(_domain);
-            entry->controller = std::make_unique<ShadowController>(_actor, entry->name.c_str());
+            entry->controller = std::make_unique<ShadowController>(_actor, entry->name_raw.c_str());
         }
         auto& controller = *entry->controller;
-        controller.setGroupName(entry->group_name.c_str());
+        controller.setGroupName(entry->group_name_raw.c_str());
         if (definition.drop_position) {
             controller.setDropPosPtr(definition.drop_position);
         } else if (definition.drop_position_matrix) {

@@ -1,3 +1,5 @@
+#include <aurora/allocation.hpp>
+#include "resource/TextEncoding.hpp"
 #include <aurora/exception.hpp>
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
@@ -12,6 +14,19 @@
 #include "runtime/RuntimeContext.hpp"
 
 #include <stdexcept>
+
+namespace {
+    // These stable Game names outlive every owner that borrows their bytes.
+    std::string encode_owner_name(std::string_view name) {
+        aurora::allocation::HostAllocationScope host;
+        return smgpc::resource::encode_cp932(name);
+    }
+
+    const std::string cVeryStrongLongRumbleName = encode_owner_name("最強【長】");
+    const std::string cStrongRumbleName = encode_owner_name("最強");
+    const std::string cWeakRumbleName = encode_owner_name("微弱");
+    const std::string cDefaultHitRumbleName = encode_owner_name("強");
+}  // namespace
 
 namespace MR {
     void setClippingFar50m(LiveActor* pActor) {
@@ -97,31 +112,31 @@ namespace MR {
     }
 
     bool tryRumblePadVeryStrongLong(const void* pSource, s32 channel) {
-        return tryRumblePad(pSource, "最強【長】", channel);
+        return tryRumblePad(pSource, cVeryStrongLongRumbleName.c_str(), channel);
     }
 
     bool tryRumblePadVeryStrong(const void* pSource, s32 channel) {
-        return tryRumblePad(pSource, "最強【長】", channel);
+        return tryRumblePad(pSource, cVeryStrongLongRumbleName.c_str(), channel);
     }
 
     bool tryRumblePadStrong(const void* pSource, s32 channel) {
-        return tryRumblePad(pSource, "最強", channel);
+        return tryRumblePad(pSource, cStrongRumbleName.c_str(), channel);
     }
 
     bool tryRumblePadMiddle(const void* pSource, s32 channel) {
-        return tryRumblePad(pSource, "最強", channel);
+        return tryRumblePad(pSource, cStrongRumbleName.c_str(), channel);
     }
 
     bool tryRumblePadWeak(const void* pSource, s32 channel) {
-        return tryRumblePad(pSource, "微弱", channel);
+        return tryRumblePad(pSource, cWeakRumbleName.c_str(), channel);
     }
 
     bool tryRumblePadVeryWeak(const void* pSource, s32 channel) {
-        return tryRumblePad(pSource, "微弱", channel);
+        return tryRumblePad(pSource, cWeakRumbleName.c_str(), channel);
     }
 
     bool tryRumbleDefaultHit(const void* pSource, s32 channel) {
-        return tryRumblePad(pSource, "強", channel);
+        return tryRumblePad(pSource, cDefaultHitRumbleName.c_str(), channel);
     }
 
     namespace {

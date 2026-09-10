@@ -1,0 +1,355 @@
+{
+  "results": [
+    {
+      "label": "fixture-final",
+      "command": [
+        "python3",
+        "/Users/frityet/Projects/petari/script/game_execution_charset.py",
+        "--compiler",
+        "/opt/homebrew/opt/llvm/bin/clang++",
+        "--helper",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/game-literal-preprocessor",
+        "--game-root",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/fixture/Game",
+        "--report",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/fixture-final.json",
+        "--",
+        "-std=c++23",
+        "-O2",
+        "-g",
+        "-MMD",
+        "-MF",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/fixture-final.d",
+        "-c",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/fixture/main.cpp",
+        "-o",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/fixture-final.o"
+      ],
+      "exit": 0,
+      "seconds": 0.5510095420177095
+    },
+    {
+      "label": "fixture-final-link",
+      "command": [
+        "/opt/homebrew/opt/llvm/bin/clang++",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/fixture-final.o",
+        "-o",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/fixture-final"
+      ],
+      "exit": 0,
+      "seconds": 0.07702766597503796
+    },
+    {
+      "label": "fixture-final-runtime",
+      "command": [
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/fixture-final"
+      ],
+      "exit": 0,
+      "seconds": 0.2492550000315532
+    },
+    {
+      "label": "fixture-dwarf",
+      "command": [
+        "/opt/homebrew/opt/llvm/bin/llvm-dwarfdump",
+        "--debug-info",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/fixture-final.o"
+      ],
+      "exit": 0,
+      "seconds": 0.011277124984189868
+    },
+    {
+      "label": "bytes",
+      "command": [
+        "python3",
+        "/Users/frityet/Projects/petari/script/game_execution_charset.py",
+        "--compiler",
+        "/opt/homebrew/opt/llvm/bin/clang++",
+        "--helper",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/game-literal-preprocessor",
+        "--game-root",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/fixture/Game",
+        "--report",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/bytes.json",
+        "--",
+        "-std=c++23",
+        "-O2",
+        "-g",
+        "-MMD",
+        "-MF",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/bytes.d",
+        "-c",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/fixture/Game/Bytes.cpp",
+        "-o",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/bytes.o"
+      ],
+      "exit": 0,
+      "seconds": 0.1783724999986589
+    },
+    {
+      "label": "bytes-link",
+      "command": [
+        "/opt/homebrew/opt/llvm/bin/clang++",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/bytes.o",
+        "-o",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/bytes"
+      ],
+      "exit": 0,
+      "seconds": 0.07166179199703038
+    },
+    {
+      "label": "bytes-runtime",
+      "command": [
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/bytes"
+      ],
+      "exit": 0,
+      "seconds": 0.25765749998390675
+    },
+    {
+      "label": "host",
+      "command": [
+        "python3",
+        "/Users/frityet/Projects/petari/script/game_execution_charset.py",
+        "--compiler",
+        "/opt/homebrew/opt/llvm/bin/clang++",
+        "--helper",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/game-literal-preprocessor",
+        "--game-root",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/fixture/Game",
+        "--report",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/host.json",
+        "--",
+        "-std=c++23",
+        "-O2",
+        "-g",
+        "-MMD",
+        "-MF",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/host.d",
+        "-c",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/fixture/Host.cpp",
+        "-o",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/host.o"
+      ],
+      "exit": 0,
+      "seconds": 0.11255758302286267
+    },
+    {
+      "label": "explicit-provider",
+      "command": [
+        "python3",
+        "/Users/frityet/Projects/petari/script/game_execution_charset.py",
+        "--compiler",
+        "/opt/homebrew/opt/llvm/bin/clang++",
+        "--helper",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/game-literal-preprocessor",
+        "--game-file",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/fixture/OriginalProvider.cpp",
+        "--report",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/explicit-provider.json",
+        "--",
+        "-std=c++23",
+        "-O2",
+        "-g",
+        "-MMD",
+        "-MF",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/explicit-provider.d",
+        "-c",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/fixture/OriginalProvider.cpp",
+        "-o",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/explicit-provider.o"
+      ],
+      "exit": 0,
+      "seconds": 0.11887050000950694
+    },
+    {
+      "label": "invalid-codepoint",
+      "command": [
+        "python3",
+        "/Users/frityet/Projects/petari/script/game_execution_charset.py",
+        "--compiler",
+        "/opt/homebrew/opt/llvm/bin/clang++",
+        "--helper",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/game-literal-preprocessor",
+        "--game-root",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/fixture/Game",
+        "--report",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/invalid-codepoint.json",
+        "--",
+        "-std=c++23",
+        "-O2",
+        "-g",
+        "-MMD",
+        "-MF",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/invalid-codepoint.d",
+        "-c",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/fixture/Game/Invalid.cpp",
+        "-o",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/invalid-codepoint.o"
+      ],
+      "exit": 1,
+      "seconds": 0.08796500001335517
+    },
+    {
+      "label": "explicit-utf8",
+      "command": [
+        "python3",
+        "/Users/frityet/Projects/petari/script/game_execution_charset.py",
+        "--compiler",
+        "/opt/homebrew/opt/llvm/bin/clang++",
+        "--helper",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/game-literal-preprocessor",
+        "--game-root",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/fixture/Game",
+        "--report",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/explicit-utf8.json",
+        "--",
+        "-std=c++23",
+        "-O2",
+        "-g",
+        "-MMD",
+        "-MF",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/explicit-utf8.d",
+        "-c",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/fixture/Game/Utf8.cpp",
+        "-o",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/explicit-utf8.o"
+      ],
+      "exit": 0,
+      "seconds": 0.11856924998573959
+    },
+    {
+      "label": "mixed-domains",
+      "command": [
+        "python3",
+        "/Users/frityet/Projects/petari/script/game_execution_charset.py",
+        "--compiler",
+        "/opt/homebrew/opt/llvm/bin/clang++",
+        "--helper",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/game-literal-preprocessor",
+        "--game-root",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/fixture/Game",
+        "--report",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/mixed-domains.json",
+        "--",
+        "-std=c++23",
+        "-O2",
+        "-g",
+        "-MMD",
+        "-MF",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/mixed-domains.d",
+        "-c",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/fixture/Mixed.cpp",
+        "-o",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/mixed-domains.o"
+      ],
+      "exit": 1,
+      "seconds": 0.08725587499793619
+    },
+    {
+      "label": "diagnostic",
+      "command": [
+        "python3",
+        "/Users/frityet/Projects/petari/script/game_execution_charset.py",
+        "--compiler",
+        "/opt/homebrew/opt/llvm/bin/clang++",
+        "--helper",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/game-literal-preprocessor",
+        "--game-root",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/fixture/Game",
+        "--report",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/diagnostic.json",
+        "--",
+        "-std=c++23",
+        "-O2",
+        "-g",
+        "-MMD",
+        "-MF",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/diagnostic.d",
+        "-c",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/fixture/Game/Diagnostic.cpp",
+        "-o",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/diagnostic.o"
+      ],
+      "exit": 1,
+      "seconds": 0.11614570900565013
+    },
+    {
+      "label": "conditional-character",
+      "command": [
+        "python3",
+        "/Users/frityet/Projects/petari/script/game_execution_charset.py",
+        "--compiler",
+        "/opt/homebrew/opt/llvm/bin/clang++",
+        "--helper",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/game-literal-preprocessor",
+        "--game-root",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/fixture/Game",
+        "--report",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/conditional-character.json",
+        "--",
+        "-std=c++23",
+        "-O2",
+        "-g",
+        "-MMD",
+        "-MF",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/conditional-character.d",
+        "-c",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/fixture/Game/Conditional.cpp",
+        "-o",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/conditional-character.o"
+      ],
+      "exit": 1,
+      "seconds": 0.08711891697021201
+    },
+    {
+      "label": "conditional-macro-character",
+      "command": [
+        "python3",
+        "/Users/frityet/Projects/petari/script/game_execution_charset.py",
+        "--compiler",
+        "/opt/homebrew/opt/llvm/bin/clang++",
+        "--helper",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/game-literal-preprocessor",
+        "--game-root",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/fixture/Game",
+        "--report",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/conditional-macro-character.json",
+        "--",
+        "-std=c++23",
+        "-O2",
+        "-g",
+        "-MMD",
+        "-MF",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/conditional-macro-character.d",
+        "-c",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/fixture/Game/ConditionalMacro.cpp",
+        "-o",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/conditional-macro-character.o"
+      ],
+      "exit": 1,
+      "seconds": 0.08689341699937358
+    },
+    {
+      "label": "version-delegation",
+      "command": [
+        "python3",
+        "/Users/frityet/Projects/petari/script/game_execution_charset.py",
+        "--compiler",
+        "/opt/homebrew/opt/llvm/bin/clang++",
+        "--helper",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/game-literal-preprocessor",
+        "--game-root",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/fixture/Game",
+        "--",
+        "--version"
+      ],
+      "exit": 0,
+      "seconds": 0.08433529100148007
+    }
+  ],
+  "source_hashes": {
+    "/Users/frityet/Projects/petari/src/Game/System/GameEventFlagTable.cpp": "6ea148dfb97d7a9fa7db3523453aa03072bc5bedab0c843ed25a14348056956b",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/fixture/Game/Literals.hpp": "b341a5b37d5f83bdafb8b3e191c605269569cc971aecbfe4554f1559e5689865",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/fixture/main.cpp": "281419e41d3d373a0ff56fa555d61992b756bfeb3772a876643941722802eea2"
+  },
+  "temporary_files_remaining": 0
+}

@@ -1,0 +1,148 @@
+{
+  "commands": [
+    {
+      "label": "rule-config",
+      "command": [
+        "xmake",
+        "f",
+        "-P",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/isolated-xmake",
+        "-y",
+        "-m",
+        "debug"
+      ],
+      "cwd": "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/isolated-xmake",
+      "exit": 0,
+      "seconds": 4.042083207983524
+    },
+    {
+      "label": "rule-first",
+      "command": [
+        "xmake",
+        "-P",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/isolated-xmake",
+        "-y",
+        "-v",
+        "smg-pc-literal-proof"
+      ],
+      "cwd": "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/isolated-xmake",
+      "exit": 0,
+      "seconds": 1.1699328329996206
+    },
+    {
+      "label": "rule-first-runtime",
+      "command": [
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/isolated-xmake/build/macosx/arm64/debug/smg-pc-literal-proof"
+      ],
+      "cwd": "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/isolated-xmake",
+      "exit": 0,
+      "seconds": 0.245079500018619
+    },
+    {
+      "label": "rule-no-op",
+      "command": [
+        "xmake",
+        "-P",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/isolated-xmake",
+        "-y",
+        "-v",
+        "smg-pc-literal-proof"
+      ],
+      "cwd": "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/isolated-xmake",
+      "exit": 0,
+      "seconds": 0.16298308299155906
+    },
+    {
+      "label": "rule-header-change",
+      "command": [
+        "xmake",
+        "-P",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/isolated-xmake",
+        "-y",
+        "-v",
+        "smg-pc-literal-proof"
+      ],
+      "cwd": "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/isolated-xmake",
+      "exit": 0,
+      "seconds": 0.35383962496416643
+    },
+    {
+      "label": "rule-header-runtime",
+      "command": [
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/isolated-xmake/build/macosx/arm64/debug/smg-pc-literal-proof"
+      ],
+      "cwd": "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/isolated-xmake",
+      "exit": 0,
+      "seconds": 0.25099087500711903
+    },
+    {
+      "label": "rule-tool-change-py",
+      "command": [
+        "xmake",
+        "-P",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/isolated-xmake",
+        "-y",
+        "-v",
+        "smg-pc-literal-proof"
+      ],
+      "cwd": "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/isolated-xmake",
+      "exit": 0,
+      "seconds": 3.3865943330456503
+    },
+    {
+      "label": "rule-tool-change-cpp",
+      "command": [
+        "xmake",
+        "-P",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/isolated-xmake",
+        "-y",
+        "-v",
+        "smg-pc-literal-proof"
+      ],
+      "cwd": "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/isolated-xmake",
+      "exit": 0,
+      "seconds": 3.0677592079737224
+    },
+    {
+      "label": "rule-tool-change-lua",
+      "command": [
+        "xmake",
+        "-P",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/isolated-xmake",
+        "-y",
+        "-v",
+        "smg-pc-literal-proof"
+      ],
+      "cwd": "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/isolated-xmake",
+      "exit": 0,
+      "seconds": 3.034574791963678
+    },
+    {
+      "label": "rule-final-runtime",
+      "command": [
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/isolated-xmake/build/macosx/arm64/debug/smg-pc-literal-proof"
+      ],
+      "cwd": "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/isolated-xmake",
+      "exit": 0,
+      "seconds": 0.2658109169569798
+    },
+    {
+      "label": "rule-debug-lines",
+      "command": [
+        "/opt/homebrew/opt/llvm/bin/llvm-dwarfdump",
+        "--debug-line",
+        "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/isolated-xmake/build/.objs/smg-pc-literal-lib/macosx/arm64/debug/library.cpp.o"
+      ],
+      "cwd": "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/isolated-xmake",
+      "exit": 0,
+      "seconds": 0.016347332973964512
+    }
+  ],
+  "initial_output": "game=8ba4 host=e6 sdk=e6 path=./src/Game/Literal.hpp\n",
+  "changed_header_output": "game=91ae host=e6 sdk=e6 path=./src/Game/Literal.hpp\n",
+  "no_op_reuses_objects_archive_and_binary": true,
+  "header_dependency_rebuilds_and_relinks": true,
+  "same_mtime_python_cpp_lua_edits_rebuild": true,
+  "aurora_compiler_cache_and_objects_unchanged": true,
+  "source_paths_preserved": true
+}

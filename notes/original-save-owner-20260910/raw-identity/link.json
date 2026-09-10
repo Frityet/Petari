@@ -1,0 +1,23 @@
+{
+  "command": [
+    "/opt/homebrew/opt/llvm/bin/clang++",
+    "-target",
+    "arm64-apple-macos26.5",
+    "-isysroot",
+    "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+    "-fsanitize=address,undefined",
+    "-Wl,-dead_strip",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/raw-identity/RawGameIdentityProbe.o",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/raw-identity/ObjectNameTable.o",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/raw-identity/DemoSheetRuntime.o",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/raw-identity/DemoCompat.o",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/raw-identity/RarcArchive.o",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/raw-identity/BcsvTable.o",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/raw-identity/Yaz0.o",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/raw-identity/TextEncoding.o",
+    "-liconv",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/raw-identity/raw-game-identity-probe"
+  ],
+  "exit": 0
+}

@@ -1,3 +1,5 @@
+#include <aurora/allocation.hpp>
+#include "resource/TextEncoding.hpp"
 #include <aurora/exception.hpp>
 #include "Game/Util/ActorMovementUtil.hpp"
 #include "Game/Util/ActorShadowUtil.hpp"
@@ -30,6 +32,18 @@
 #include <string_view>
 #include <utility>
 #include <vector>
+
+namespace {
+    // These stable Game names outlive every owner that borrows their bytes.
+    std::string encode_owner_name(std::string_view name) {
+        aurora::allocation::HostAllocationScope host;
+        return smgpc::resource::encode_cp932(name);
+    }
+
+    const std::string cSurfaceCircleShadowName = encode_owner_name("水面丸影");
+    const std::string cVolumeSphereShadowName = encode_owner_name("ボリューム影(球)");
+    const std::string cVolumeCylinderShadowName = encode_owner_name("ボリューム影(円柱)");
+}  // namespace
 
 namespace {
     [[noreturn]] void throw_scene_playing_result_unavailable() {
@@ -398,15 +412,15 @@ namespace MR {
     }
 
     void initShadowSurfaceCircle(LiveActor *actor, f32 radius) {
-        initialize_single_shadow(actor, "水面丸影", smgpc::compat::ActorShadowControllerKind::SurfaceCircle, radius);
+        initialize_single_shadow(actor, cSurfaceCircleShadowName.c_str(), smgpc::compat::ActorShadowControllerKind::SurfaceCircle, radius);
     }
 
     void initShadowVolumeSphere(LiveActor *actor, f32 radius) {
-        initialize_single_shadow(actor, "ボリューム影(球)", smgpc::compat::ActorShadowControllerKind::VolumeSphere, radius);
+        initialize_single_shadow(actor, cVolumeSphereShadowName.c_str(), smgpc::compat::ActorShadowControllerKind::VolumeSphere, radius);
     }
 
     void initShadowVolumeCylinder(LiveActor *actor, f32 radius) {
-        initialize_single_shadow(actor, "ボリューム影(円柱)", smgpc::compat::ActorShadowControllerKind::VolumeCylinder, radius);
+        initialize_single_shadow(actor, cVolumeCylinderShadowName.c_str(), smgpc::compat::ActorShadowControllerKind::VolumeCylinder, radius);
     }
 
     void setShadowDropDirection(LiveActor* actor, const char* name, const TVec3f& direction) {

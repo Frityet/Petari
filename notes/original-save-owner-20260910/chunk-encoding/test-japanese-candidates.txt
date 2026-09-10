@@ -1,0 +1,207 @@
+tests/StageStartCameraTests.cpp:1250:        const auto *pipe_camera = event_catalog.find(0, "土管固有出現054");
+tests/StageStartCameraTests.cpp:1254:        camera.declare_event_camera(0, "土管固有出現054");
+tests/StageStartCameraTests.cpp:1259:        camera.start_event_camera(0, "土管固有出現054",
+tests/StageStartCameraTests.cpp:1278:        camera.end_event_camera(0, "土管固有出現054", true, -1);
+tests/SceneObjHolderRealOrAbsentTests.cpp:87:                    std::string_view(gravity_manager->getName()) == "重力",
+tests/SceneObjHolderRealOrAbsentTests.cpp:123:        require(std::string_view(mario_holder->getName()) == "マリオ保持" &&
+tests/DemoSheetRuntimeTests.cpp:273:        require(runtime.time_rows()[15U].part_name == "スピンゲット[デモ1]" &&
+tests/DemoSheetRuntimeTests.cpp:355:                    runtime.time_rows()[0U].part_name == "スピンゲット[デモ1]" &&
+tests/DemoSheetRuntimeTests.cpp:358:        require(runtime.start_at_part("スピンゲット[デモ1]") ==
+tests/DemoSheetRuntimeTests.cpp:387:        require(wipe.wipe_rows().size() == 1U && wipe.wipe_rows()[0U].wipe_name == "フェードワイプ" &&
+tests/TitleFileSelectVisualTests.cpp:86:            return entry.name == "ファイルセレクト画面の空";
+tests/TitleFileSelectVisualTests.cpp:220:                    return entry.name == "ファイルセレクト画面の空";
+tests/GameActorPhysicsRealOrAbsentTests.cpp:178:            require(controller != nullptr && controller->name == "ボリューム影(球)" &&
+tests/BrightSunRouteTests.cpp:219:                has_entry("太陽",
+tests/BrightSunRouteTests.cpp:223:                has_entry("レンズフレアリング",
+tests/BrightSunRouteTests.cpp:227:                has_entry("グレア（円形）",
+tests/BrightSunRouteTests.cpp:231:                has_entry("グレア（ライン）",
+tests/BrightSunRouteTests.cpp:289:        game_data_session.holder().followStoryEventByName("ピーチ城浮上後");
+tests/BrightSunRouteTests.cpp:341:                            "レンズフレア用太陽",
+tests/BrightSunRouteTests.cpp:357:            require_model(director->mRing, "レンズフレアリング", "LensFlare");
+tests/BrightSunRouteTests.cpp:358:            require_model(director->mGlow, "グレア（円形）", "GlareGlow");
+tests/BrightSunRouteTests.cpp:359:            require_model(director->mLine, "グレア（ライン）", "GlareLine");
+tests/GatewaySpinCheckpointTests.cpp:184:                        found->actor_name == std::optional<std::string>{"デモウサギ"} &&
+tests/GatewaySpinCheckpointTests.cpp:186:                        std::string_view(rabbit->getName()) == "デモウサギ",
+tests/GatewaySpinCheckpointTests.cpp:355:        game_data_session.holder().followStoryEventByName("ピーチ城浮上後");
+tests/GatewaySpinCheckpointTests.cpp:403:            require(!GameDataFunction::isPassedStoryEvent("スピン権利"),
+tests/GatewaySpinCheckpointTests.cpp:417:            GameDataFunction::followStoryEventByName("チコガイドデモ終了");
+tests/GatewaySpinCheckpointTests.cpp:454:                    GameDataFunction::isPassedStoryEvent("チコガイドデモ終了") &&
+tests/GatewaySpinCheckpointTests.cpp:455:                    !GameDataFunction::isPassedStoryEvent("スピン権利") &&
+tests/GatewaySpinCheckpointTests.cpp:470:                    std::string_view(checkpoint->tico_cast().getName()) == "チコ" &&
+tests/GatewaySpinCheckpointTests.cpp:475:                    "typed チコ cast must retain TicoBaby row-13 membership and CastId 0");
+tests/GatewaySpinCheckpointTests.cpp:519:                    checkpoint->demo_runtime().is_active("チコガイドデモ") &&
+tests/GatewaySpinCheckpointTests.cpp:521:                        "スピンゲット[デモ1]") == -1 &&
+tests/GatewaySpinCheckpointTests.cpp:535:                        "スピンゲット[デモ4]") == 499,
+tests/GatewaySpinCheckpointTests.cpp:540:                               event.name == "フェードワイプ" &&
+tests/GatewaySpinCheckpointTests.cpp:552:                        "スピンゲット[デモ5]") &&
+tests/GatewaySpinCheckpointTests.cpp:554:                        "スピンゲット[デモ5]") == 0 &&
+tests/GatewaySpinCheckpointTests.cpp:557:                    !GameDataFunction::isPassedStoryEvent("スピン権利") &&
+tests/GatewaySpinCheckpointTests.cpp:565:                    !GameDataFunction::isPassedStoryEvent("スピン権利") &&
+tests/GatewaySpinCheckpointTests.cpp:575:                    !GameDataFunction::isPassedStoryEvent("スピン権利") &&
+tests/GatewaySpinCheckpointTests.cpp:582:                    !GameDataFunction::isPassedStoryEvent("スピン権利") &&
+tests/GatewaySpinCheckpointTests.cpp:590:                    GameDataFunction::isPassedStoryEvent("スピン権利") &&
+tests/TextEncodingTests.cpp:29:        std::pair<std::string_view, std::string_view>{"共通着地普通", "\x8b\xa4\x92\xca\x92\x85\x92\x6e\x95\x81\x92\xca"},
+tests/TextEncodingTests.cpp:30:        std::pair<std::string_view, std::string_view>{"属性", "\x91\xae\x90\xab"},
+tests/TextEncodingTests.cpp:31:        std::pair<std::string_view, std::string_view>{"フェードワイプ", "\x83\x74\x83\x46\x81\x5b\x83\x68\x83\x8f\x83\x43\x83\x76"},
+tests/TextEncodingTests.cpp:32:        std::pair<std::string_view, std::string_view>{"ｱｲｳｴｵ", "\xb1\xb2\xb3\xb4\xb5"},
+tests/TextEncodingTests.cpp:34:        std::pair<std::string_view, std::string_view>{"名前\\後半", "\x96\xbc\x91\x4f\x5c\x8c\xe3\x94\xbc"},
+tests/TextEncodingTests.cpp:45:    const auto embedded = std::string("前\0後", 7);
+tests/SkyActorRouteTests.cpp:173:        game_data_session.holder().followStoryEventByName("ピーチ城浮上後");
+tests/SkyActorRouteTests.cpp:207:                            std::string_view(sky->getName()) == "VR軌道",
+tests/UpstreamComponentTests.cpp:98:    const auto* rumble = RumbleData::getPattern("最強");
+tests/AreaObjRealOrAbsentTests.cpp:1126:                    std::string_view(root->mAreaLightName) == "[共通]宇宙の星" &&
+tests/AreaObjRealOrAbsentTests.cpp:1127:                    std::string_view(light_data.default_area_light_name()) == "[共通]宇宙の星",
+tests/AreaObjRealOrAbsentTests.cpp:1135:                    std::string_view(child->mAreaLightName) == "ロゼッタ出会い" &&
+tests/AreaObjRealOrAbsentTests.cpp:1150:                    std::string_view(observatory->mAreaLightName) == "天文台（ロゼッタ）",
+tests/AreaObjRealOrAbsentTests.cpp:1187:                            "[共通]宇宙の星",
+tests/FileSelectFarVisualTests.cpp:211:        require(count("ファイルセレクト画面の空") == 1 &&
+tests/FileSelectFarVisualTests.cpp:212:                    count("ファイルセレクトカメラ制御") == 1 &&
+tests/FileSelectFarVisualTests.cpp:213:                    count("ニューフェイス") == 6 &&
+tests/FileSelectFarVisualTests.cpp:214:                    count("ファイル番号") == 6 &&
+tests/FileSelectFarVisualTests.cpp:215:                    count("ファイルセレクト遠景表示制御") == 1,
+tests/FileSelectFarVisualTests.cpp:219:                    return entry.name == "ニューフェイス" &&
+tests/FileSelectFarVisualTests.cpp:230:                    return entry.name == "ファイル番号" &&
+tests/FileSelectFarVisualTests.cpp:246:            if (layout.name == "ファイル番号" &&
+tests/AirActorRouteTests.cpp:168:        game_data_session.holder().followStoryEventByName("ピーチ城浮上後");
+tests/AirActorRouteTests.cpp:229:                        std::string_view(air->getName()) == "球状青空",
+tests/GameDataRealOrAbsentTests.cpp:42:    require_throws<std::logic_error>([] { GameDataFunction::onGameEventFlag("ハチマリオ初変身"); },
+tests/GameDataRealOrAbsentTests.cpp:87:                            current.isPassedStoryEvent("ゲーム開始直後") &&
+tests/GameDataRealOrAbsentTests.cpp:88:                            !current.isPassedStoryEvent("ピーチ城浮上後") && !current.isPassedStoryEvent("スピン権利"),
+tests/GameDataRealOrAbsentTests.cpp:97:                require(!current.isOnGameEventFlag("ハチマリオ初変身"), "fresh original flag storage must be clear");
+tests/GameDataRealOrAbsentTests.cpp:98:                current.tryOnGameEventFlag("ハチマリオ初変身");
+tests/GameDataRealOrAbsentTests.cpp:99:                require(current.isOnGameEventFlag("ハチマリオ初変身") && !backup.isOnGameEventFlag("ハチマリオ初変身"),
+tests/GameDataRealOrAbsentTests.cpp:106:                GameDataFunction::followStoryEventByName("ピーチ城浮上後");
+tests/GameDataRealOrAbsentTests.cpp:108:                            !backup.isPassedStoryEvent("ピーチ城浮上後"),
+tests/GameDataRealOrAbsentTests.cpp:114:                            backup.getPictureBookChapterAlreadyRead() == 3 && backup.isOnGameEventFlag("ハチマリオ初変身"),
+tests/GameDataRealOrAbsentTests.cpp:120:                            !current.isOnGameEventFlag("ハチマリオ初変身") && current.getPictureBookChapterAlreadyRead() == 0 &&
+tests/GameDataRealOrAbsentTests.cpp:139:            GameDataFunction::followStoryEventByName("チコガイドデモ終了");
+tests/GameDataRealOrAbsentTests.cpp:141:            GameDataFunction::followStoryEventByName("スピン権利");
+tests/GameDataRealOrAbsentTests.cpp:150:                GameDataFunction::followStoryEventByName("ピーチ城浮上後");
+tests/GameDataRealOrAbsentTests.cpp:152:                GameDataFunction::followStoryEventByName("チコガイドデモ終了");
+tests/DemoSceneRuntimeTests.cpp:1004:        require(missing != nullptr && missing->demo_name == "チコ" &&
+tests/DemoSceneRuntimeTests.cpp:1758:            [&] { (void)MR::tryStartDemoWithoutCinemaFrame(&actor, "プロローグデモ"); },
+tests/DemoSceneRuntimeTests.cpp:1762:            [&] { (void)MR::tryStartDemoMarioPuppetable(&actor, "主人公ピーチ城に到着"); },
+tests/GatewayDemoSceneTests.cpp:185:        require(guide != nullptr && guide->demo_name == "チコガイドデモ" &&
+tests/GatewayDemoSceneTests.cpp:231:                            std::optional<std::string>{"デモウサギ"} &&
+tests/GatewayDemoSceneTests.cpp:233:                        std::string_view(rabbit->getName()) == "デモウサギ",
+tests/GatewayDemoSceneTests.cpp:266:                            "デモウサギ" &&
+tests/GatewayDemoSceneTests.cpp:269:                        demo.action_count(rabbit, "チコガイドデモ") ==
+tests/GatewayDemoSceneTests.cpp:303:                            "ボリューム影(球)" &&
+tests/GatewayDemoSceneTests.cpp:369:        game_data_session.holder().followStoryEventByName("ピーチ城浮上後");
+tests/GatewayDemoSceneTests.cpp:378:                        "チコガイドデモ終了") &&
+tests/GatewayDemoSceneTests.cpp:379:                    !GameDataFunction::isPassedStoryEvent("スピン権利"),
+tests/GatewayDemoSceneTests.cpp:531:            std::pair{std::string_view{"スピンゲット[デモ1]"}, 420},
+tests/GatewayDemoSceneTests.cpp:532:            std::pair{std::string_view{"スピンゲット[会話1]"}, 120},
+tests/GatewayDemoSceneTests.cpp:533:            std::pair{std::string_view{"スピンゲット[デモ2]"}, 150},
+tests/GatewayDemoSceneTests.cpp:534:            std::pair{std::string_view{"スピンゲット[会話2]"}, 120},
+tests/GatewayDemoSceneTests.cpp:535:            std::pair{std::string_view{"スピンゲット[デモ3]"}, 240},
+tests/GatewayDemoSceneTests.cpp:536:            std::pair{std::string_view{"スピンゲット[会話3]"}, 120},
+tests/GatewayDemoSceneTests.cpp:537:            std::pair{std::string_view{"スピンゲット[デモ4]"}, 500},
+tests/GatewayDemoSceneTests.cpp:538:            std::pair{std::string_view{"スピンゲット[デモ5]"}, 60},
+tests/GatewayDemoSceneTests.cpp:562:                    return row.part_name == "スピンゲット[デモ1]" &&
+tests/GatewayDemoSceneTests.cpp:696:                    bright_report->actor_name == "レンズフレア用太陽" &&
+tests/GatewayDemoSceneTests.cpp:731:                    has_scheduler_entry("太陽", MR::MovementType_Sky,
+tests/GatewayDemoSceneTests.cpp:734:                    has_scheduler_entry("レンズフレアリング",
+tests/GatewayDemoSceneTests.cpp:738:                    has_scheduler_entry("グレア（円形）",
+tests/GatewayDemoSceneTests.cpp:742:                    has_scheduler_entry("グレア（ライン）",
+tests/MarioGatewayWalkTests.cpp:498:        game_data_session.holder().followStoryEventByName("ピーチ城浮上後");
+tests/MarioGatewayWalkTests.cpp:673:        require(initial_animation != nullptr && initial_animation->isRun("ステージインA") &&
+tests/MarioGatewayWalkTests.cpp:736:                    if (proof.animation_name == "基本" && index < 3U) {
+tests/MarioGatewayWalkTests.cpp:817:                        actor->mModelManager->mXanimePlayer->isRun("基本") && MR::isOnGroundPlayer()) {
+tests/MarioGatewayWalkTests.cpp:877:            if (input_ready && wait_frame.grounded && wait_frame.animation_name == "基本" &&
+tests/MarioGatewayWalkTests.cpp:1170:                require(release_frame.animation_name == "基本" && release_frame.moving_track_weight > 0.0F,
+tests/PlanetMapActorRouteTests.cpp:81:            "HeavensDoorMysteriousPlanet", "ヘブンズドアミステリアス惑星",
+tests/PlanetMapActorRouteTests.cpp:84:            "HeavensDoorSmallPlanet", "ヘブンズドア惑星（小）", 1U,
+tests/PlanetMapActorRouteTests.cpp:87:            "HeavensDoorMiddlePlanet", "ヘブンズドア惑星（中）", 2U,
+tests/PlanetMapActorRouteTests.cpp:90:            "HeavensDoorBlackHolePlanet", "ヘブンズドアブラックホール惑星",
+tests/PlanetMapActorRouteTests.cpp:140:        game_data_session.holder().followStoryEventByName("ピーチ城浮上後");
+tests/InformationObserverTests.cpp:57:    constexpr auto cPromptPart = "スピンゲット[デモ5]";
+tests/InformationObserverTests.cpp:98:        SpinPromptTrigger() : LiveActor("チコ") {
+tests/InformationObserverTests.cpp:235:        game_data_session.holder().followStoryEventByName("ピーチ城浮上後");
+tests/InformationObserverTests.cpp:326:            require(!GameDataFunction::isPassedStoryEvent("スピン権利"),
+tests/InformationObserverTests.cpp:347:            GameDataFunction::followStoryEventByName("チコガイドデモ終了");
+tests/InformationObserverTests.cpp:351:            MR::startTimeKeepDemo(&trigger, "チコガイドデモ", cPromptPart);
+tests/InformationObserverTests.cpp:353:            const auto guide_index = demo.find_definition("チコガイドデモ");
+tests/InformationObserverTests.cpp:386:                              << ";spin_story=" << GameDataFunction::isPassedStoryEvent("スピン権利")
+tests/InformationObserverTests.cpp:401:                        !GameDataFunction::isPassedStoryEvent("スピン権利") &&
+tests/InformationObserverTests.cpp:414:                        !GameDataFunction::isPassedStoryEvent("スピン権利") &&
+tests/InformationObserverTests.cpp:466:                        !GameDataFunction::isPassedStoryEvent("スピン権利") && !player._EEB,
+tests/InformationObserverTests.cpp:478:                        !GameDataFunction::isPassedStoryEvent("スピン権利") && !player._EEB,
+tests/InformationObserverTests.cpp:491:                        GameDataFunction::isPassedStoryEvent("スピン権利") &&
+tests/TalkRealOrAbsentTests.cpp:244:        auto generic_player = LiveActor("マリオアクター");
+tests/TalkRealOrAbsentTests.cpp:640:                    &actor, "チコガイドデモ", std::nullopt,
+tests/TalkRealOrAbsentTests.cpp:645:                const auto guide_index = demo.find_definition("チコガイドデモ");
+tests/TalkRealOrAbsentTests.cpp:702:                            std::optional<std::string_view>{"チコガイドデモ"}),
+tests/ActorEventCameraTests.cpp:533:            auto rabbit = LiveActor("逃げウサギ集め");
+tests/ActorEventCameraTests.cpp:534:            auto pipe = LiveActor("土管");
+tests/ActorEventCameraTests.cpp:537:                            5, "逃げウサギ集め固有016"),
+tests/ActorEventCameraTests.cpp:538:                    "unique actor-camera identity must include actor, 固有, and three-digit ID");
+tests/ActorEventCameraTests.cpp:539:            require(MR::initMultiActorCameraNoInit(&pipe, first, "出現") &&
+tests/ActorEventCameraTests.cpp:540:                        camera.is_event_camera_declared(5, "土管固有出現016"),
+tests/ActorEventCameraTests.cpp:543:            require(MR::initMultiActorCameraNoInit(&pipe, &common, "出現") &&
+tests/ActorEventCameraTests.cpp:544:                        camera.is_event_camera_declared(7, "土管共通出現003"),
+tests/ActorEventCameraTests.cpp:581:        camera.declare_event_camera_animation(5, "逃げチコDemoMeetTico",
+tests/ActorEventCameraTests.cpp:584:            5, "逃げチコDemoMeetTico",
+tests/ActorEventCameraTests.cpp:600:                        5, "逃げチコDemoMeetTico") == 2 &&
+tests/ActorEventCameraTests.cpp:603:        camera.end_event_camera(5, "逃げチコDemoMeetTico", true, -1);
+tests/ActorEventCameraTests.cpp:1491:            catalog.find(0, "土管固有出現054"));
+tests/ActorEventCameraTests.cpp:1524:        requested.declare_event_camera(0, "土管固有出現054");
+tests/ActorEventCameraTests.cpp:1525:        uninterrupted.declare_event_camera(0, "土管固有出現054");
+tests/ActorEventCameraTests.cpp:1526:        requested.start_event_camera(0, "土管固有出現054", target, 0);
+tests/ActorEventCameraTests.cpp:1527:        uninterrupted.start_event_camera(0, "土管固有出現054", target, 0);
+tests/ActorEventCameraTests.cpp:1544:        requested.start_event_camera(0, "土管固有出現054", target, 30);
+tests/ActorEventCameraTests.cpp:1551:            requested.start_event_camera(0, "土管固有出現054",
+tests/ActorEventCameraTests.cpp:1558:        requested.start_event_camera(0, "土管固有出現054",
+tests/ActorEventCameraTests.cpp:1572:        constexpr auto first_name = "逃げウサギ集め固有016";
+tests/ActorEventCameraTests.cpp:1573:        constexpr auto next_name = "土管固有出現017";
+tests/ActorEventCameraTests.cpp:1667:        constexpr auto name = "逃げウサギ集め固有016";
+tests/ActorEventCameraTests.cpp:1737:        const auto *rabbit = catalog.find(5, "逃げウサギ集め固有016");
+tests/ActorEventCameraTests.cpp:1738:        const auto *child_pipe = catalog.find(5, "土管固有出現017");
+tests/ActorEventCameraTests.cpp:1739:        const auto *root_pipe = catalog.find(0, "土管固有出現054");
+tests/ActorEventCameraTests.cpp:1742:                        "e:逃げウサギ集め固有016" &&
+tests/ActorEventCameraTests.cpp:1747:                        "e:土管固有出現017" &&
+tests/ActorEventCameraTests.cpp:1752:                        "e:土管固有出現054" &&
+tests/ActorEventCameraTests.cpp:1756:        require(catalog.find(0, "逃げウサギ集め固有016") == nullptr &&
+tests/ActorEventCameraTests.cpp:1757:                    catalog.find(5, "土管固有出現054") == nullptr,
+tests/ActorEventCameraTests.cpp:1835:        camera.declare_event_camera(5, "逃げウサギ集め固有016");
+tests/ActorEventCameraTests.cpp:1837:            5, "逃げウサギ集め固有016",
+tests/ActorEventCameraTests.cpp:1844:        camera.declare_event_camera(5, "土管固有出現017");
+tests/ActorEventCameraTests.cpp:1846:            5, "土管固有出現017",
+tests/ActorEventCameraTests.cpp:1853:        camera.declare_event_camera_animation(5, "逃げチコDemoMeetTico",
+tests/ActorEventCameraTests.cpp:1856:            5, "逃げチコDemoMeetTico",
+tests/ActorEventCameraTests.cpp:1862:                        "逃げチコDemoMeetTico" &&
+tests/TitleFileSelectRouteTests.cpp:264:        return has_wait_animation("ロゴ", "TitleLogo") &&
+tests/TitleFileSelectRouteTests.cpp:332:        require(scheduler_name_count(runtime, "ファイルセレクト画面の空") == 1U &&
+tests/TitleFileSelectRouteTests.cpp:333:                    scheduler_name_count(runtime, "ロゴ") == 1U &&
+tests/TitleFileSelectRouteTests.cpp:335:                    scheduler_name_count(runtime, "PAL60案内") == 1U,
+tests/TitleFileSelectRouteTests.cpp:396:        require(scheduler_name_count(runtime, "ファイルセレクト画面の空") == 1U,
+tests/TitleFileSelectRouteTests.cpp:498:        game_data_session.holder().followStoryEventByName("ピーチ城浮上後");
+tests/TitleFileSelectRouteTests.cpp:517:                 "ロゴ",
+tests/TitleFileSelectRouteTests.cpp:519:                 "PAL60案内",
+tests/TitleFileSelectRouteTests.cpp:520:                 "ファイルセレクト画面の空",
+tests/TitleFileSelectRouteTests.cpp:521:                 "ファイルセレクトカメラ制御",
+tests/TitleFileSelectRouteTests.cpp:522:                 "ニューフェイス",
+tests/TitleFileSelectRouteTests.cpp:523:                 "ファイル番号",
+tests/TitleFileSelectRouteTests.cpp:524:                 "ファイルセレクト遠景表示制御",
+tests/PointLightRuntimeTests.cpp:441:            require(std::string_view(director->getName()) == "ライト管理" &&
+tests/FeedbackRealOrAbsentTests.cpp:62:        require(!service.try_request_pattern(&source, "最強", 1),
+tests/FeedbackRealOrAbsentTests.cpp:67:        require(service.try_request_pattern(&source, "最強", 0),
+tests/FeedbackRealOrAbsentTests.cpp:69:        require(!service.try_request_pattern(&source, "最強", 0),
+tests/FeedbackRealOrAbsentTests.cpp:71:        require(service.events().size() == 1U && service.events().front().pattern_name == "最強" &&
+tests/FeedbackRealOrAbsentTests.cpp:204:        require(!MR::tryRumblePad(&source, "最強", WPAD_CHAN0) &&
+tests/ObjectNameTableTests.cpp:174:        require(fixture_name != nullptr && *fixture_name == "チコ",
+tests/ObjectNameTableTests.cpp:234:        require_mapping("DemoRabbit", "デモウサギ");
+tests/ObjectNameTableTests.cpp:235:        require_mapping("Rosetta", "ロゼッタ");
+tests/ObjectNameTableTests.cpp:236:        require_mapping("RunawayTico", "逃げチコ");
+tests/ObjectNameTableTests.cpp:237:        require_mapping("Tico", "チコ");
+tests/ObjectNameTableTests.cpp:238:        require_mapping("TicoBaby", "ベビチコ");
+tests/ObjectNameTableTests.cpp:239:        require_mapping("HeavensDoorAppearStepA", "ヘブンズドアミステリアス惑星階段（デモ中）");
+tests/ObjectNameTableTests.cpp:240:        require_mapping("HeavensDoorAppearStepAAfter", "ヘブンズドアミステリアス惑星階段（デモ後）");
+tests/ObjectNameTableTests.cpp:297:        require(table.size() == 1691U && rosetta_name != nullptr && *rosetta_name == "ロゼッタ",
+tests/OriginalSceneWipeOwnerTests.cpp:143:        const std::array names{"円ワイプ", "フェードワイプ", "白フェードワイプ", "ゲームオーバー", "クッパ"};
+tests/OriginalShadowControllerOwnerTests.cpp:534:        require(state->controllers[0U].name == "体" && state->controllers[0U].group_name == "チコ" && state->controllers[0U].radius == 12.0F &&
+tests/OriginalShadowControllerOwnerTests.cpp:693:            smgpc::compat::add_actor_shadow_controller(&actor, "体", smgpc::compat::ActorShadowControllerKind::VolumeSphere, 10);
+tests/OriginalShadowControllerOwnerTests.cpp:696:            auto* first = list->getController("体");
+tests/OriginalShadowControllerOwnerTests.cpp:706:            MR::setShadowDropDirection(&actor, "体", TVec3f(1, 0, 0));
+tests/OriginalShadowControllerOwnerTests.cpp:710:            MR::setShadowDropLength(&actor, "体", -3);
+tests/OriginalShadowControllerOwnerTests.cpp:754:        require(controller.name == "体" && controller.joint_name == "Body" &&

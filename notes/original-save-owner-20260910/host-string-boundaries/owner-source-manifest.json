@@ -1,0 +1,46 @@
+[
+  {
+    "path": "src/compat/GroupCheckManagerCompat.cpp",
+    "sha256": "8c97db2cc14a4fbe890bac5fb4a071fdf3f33e2b237c098b8223e008df6bd3ee"
+  },
+  {
+    "path": "src/compat/MarioCameraTarget.cpp",
+    "sha256": "476035ff92e8a795c0194274379756c68aa97ba886d5c3807632de7a517afd23"
+  },
+  {
+    "path": "src/compat/GameRuntimeCompat.cpp",
+    "sha256": "cbb42803a1787df13f002ce5a341f22c45c8a92c4a8eb9bb0bbc5538fa5579a7"
+  },
+  {
+    "path": "src/compat/EffectSystemOwnership.cpp",
+    "sha256": "cfcffd2953a139e7829fe78c04ce0b44d448b4591277ea8997c6b27867c2bdee"
+  },
+  {
+    "path": "src/compat/SceneObjHolderCompat.cpp",
+    "sha256": "744675a14a08a89019aaab4dc9a6215899cc7dd002df5efdadfff6f5f8468c1f"
+  },
+  {
+    "path": "src/compat/OriginalNameObjExecuteHolder.cpp",
+    "sha256": "343ca94a801427ba808a4732b29169713c7ad7c43d82f507bcd6b9f4d5331e38"
+  },
+  {
+    "path": "src/compat/ImageEffectOwnership.cpp",
+    "sha256": "dcbf22cb09bee6335a9abb315c2602836017d4f45dfbc23a018ade7d0b78f0cb"
+  },
+  {
+    "path": "src/compat/OriginalStarPointerDirector.cpp",
+    "sha256": "b0c32fc988450bece4fe320da833a9406979588af43f7745f6cf6a46d71bb5c9"
+  },
+  {
+    "path": "src/compat/ClippingDirectorCompat.cpp",
+    "sha256": "9e882e46aefebcc47c55000d4adde2b5b2ea5d4f3eaca8075155fc3f71c2db4b"
+  },
+  {
+    "path": "src/compat/SaveDataHandleSequenceCompat.cpp",
+    "sha256": "499f2df37d74419ca5da9f66ee0e2c7fdb707d0dc7b89df7223df2028e99deb4"
+  },
+  {
+    "path": "src/compat/GameActorPhysicsCompat.cpp",
+    "sha256": "8c06ad113c2ac06a688a8c708b02615718cbcf879ce71c706e7e2f36eb6969cd"
+  }
+]

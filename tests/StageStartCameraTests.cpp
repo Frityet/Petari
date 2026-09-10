@@ -1,3 +1,4 @@
+#include "resource/TextEncoding.hpp"
 #include "CameraTargetTestSupport.hpp"
 #include "Game/Util/CameraUtil.hpp"
 #include "Game/Camera/CameraTargetMtx.hpp"
@@ -346,7 +347,7 @@ namespace {
         require(selected_iter.isValid() && selected_iter.getValue("name", &selected_name) &&
                     selected_name != nullptr && std::string_view(selected_name) == "Mario" &&
                     selected_iter.getValue("MarioNo", &selected_mario_no) && selected_mario_no == 0 &&
-                    std::string_view(selected_iter.mInfo->getName()) == "startinfo" &&
+                    smgpc::resource::decode_cp932(selected_iter.mInfo->getName()) == "startinfo" &&
                     selected_iter.mInfo->getPlacedZoneId() == 5,
                 "selected StartInfo must own its exact JMap row and zone metadata after source tables die");
         require_near(selected->world_position[0], 13.0F, 0.0001F, "child-zone transform should rotate StartInfo X");
@@ -1247,16 +1248,16 @@ namespace {
             },
         };
         const auto event_catalog = smgpc::camera::EventCameraCatalog::from_stage_tables(dvd, event_tables);
-        const auto *pipe_camera = event_catalog.find(0, "土管固有出現054");
+        const auto *pipe_camera = event_catalog.find(0, smgpc::resource::encode_cp932("土管固有出現054"));
         require(pipe_camera != nullptr && pipe_camera->camera_param.camera_type == "CAM_TYPE_XZ_PARA",
                 "the real root pipe event must supply an authored XZ_PARA controller");
         camera.attach_event_camera_catalog(event_catalog);
-        camera.declare_event_camera(0, "土管固有出現054");
+        camera.declare_event_camera(0, smgpc::resource::encode_cp932("土管固有出現054"));
         auto event_target = CameraTargetMtx("PersistentEventPauseTarget");
         event_target.mMatrix.mMtx[0][3] = 100.0F;
         event_target.mMatrix.mMtx[1][3] = 200.0F;
         event_target.mMatrix.mMtx[2][3] = 300.0F;
-        camera.start_event_camera(0, "土管固有出現054",
+        camera.start_event_camera(0, smgpc::resource::encode_cp932("土管固有出現054"),
                                  smgpc::camera::EventCameraTarget::target_matrix(event_target), 0);
         camera.begin_frame(99U);
         const auto event_before_pause = *camera.active_event_camera_pose();
@@ -1275,7 +1276,7 @@ namespace {
                      "unpaused original XZ event must consume the newest target translation");
         require_near(event_after_pause.eye.x, event_before_pause.eye.x + 75.0F, 0.001F,
                      "persistent original XZ event eye must resume with the same target translation");
-        camera.end_event_camera(0, "土管固有出現054", true, -1);
+        camera.end_event_camera(0, smgpc::resource::encode_cp932("土管固有出現054"), true, -1);
         camera.detach_event_camera_catalog(event_catalog);
 
         const auto child = smgpc::scene::resolve_stage_start_info(dvd, "HeavensDoorGalaxy", 1, 0, 5);

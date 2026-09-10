@@ -183,12 +183,6 @@ namespace GameDataFunction {
     }
 }  // namespace GameDataFunction
 
-namespace GameDataConst {
-    u32 getIncludedGrandGalaxyId(const char *) {
-        unavailable("GalaxyID included Grand Galaxy lookup");
-    }
-}  // namespace GameDataConst
-
 namespace GameSequenceFunction {
     void activateGalaxyCometScheduler() {
         s_comet_scheduler_active = true;

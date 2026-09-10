@@ -1,0 +1,16 @@
+{
+  "command": [
+    "/opt/homebrew/opt/llvm/bin/clang++",
+    "-std=c++23",
+    "-O2",
+    "/Users/frityet/Projects/petari/script/game_literal_preprocessor.cpp",
+    "-I/opt/homebrew/Cellar/llvm/23.1.0/include",
+    "-L/opt/homebrew/Cellar/llvm/23.1.0/lib",
+    "-Wl,-rpath,/opt/homebrew/Cellar/llvm/23.1.0/lib",
+    "-lclang-cpp",
+    "-lLLVM",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/game-literal-preprocessor"
+  ],
+  "exit": 0
+}

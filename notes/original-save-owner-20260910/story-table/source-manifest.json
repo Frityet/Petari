@@ -1,0 +1,9 @@
+{
+  "decomp/src/Game/System/GameDataHolder.cpp": "57fae13e42f4bac2ac6f1f2237a5adc34d7260fdb80c312906cf491d3391667c",
+  "src/Game/System/GameDataHolder.cpp": "57fae13e42f4bac2ac6f1f2237a5adc34d7260fdb80c312906cf491d3391667c",
+  "src/resource/EmbeddedGameTables.cpp": "35c6c6d4674c9e747a727058cf384573fd62f55ca3d946dc5f33bb393b0f7e5c",
+  "src/resource/EmbeddedGameTables.hpp": "32382de66ccfb3181b8e18634feda0d3133ed300465ef217e9d96358251e3302",
+  "notes/gateway-audit-20260907/restoration/retail/obj/Game/System/GameDataHolder.o": "3a6a4b429a8ddc5752dd96eb954453b64fa2764c8e28c2fbc7a86cbaf21220d5",
+  "notes/gateway-audit-20260907/restoration/retail/obj/auto_06_8053DC20_rodata.o": "aa6453263a7c0119984ecadc8e46562bff0b2ad32a86762f07c8885701aaaefe",
+  "notes/original-save-owner-20260910/story-table/GameDataHolder.wii.o": "04d64bfcdde3d722fdd04cc320543918aa05b46aad9c1c3f4cf6264fa316d2fd"
+}

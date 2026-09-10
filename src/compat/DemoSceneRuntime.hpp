@@ -74,6 +74,8 @@ namespace smgpc::compat {
         std::int32_t source_row = -1;
     };
 
+    // Name arguments, row fields and borrowed results are original CP932
+    // identities. No UTF-8 aliases are accepted; host presentation decodes.
     // Scene-owned counterpart of the original DemoDirector/DemoExecutor
     // collection. This class owns definitions, the Time/SubPart clocks, cast
     // membership, registered callbacks, and the installed keeper row dispatch

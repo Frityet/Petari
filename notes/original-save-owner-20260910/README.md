@@ -1,0 +1,34 @@
+# Original save ownership and execution encoding — 2026-09-10
+
+This is a **progress checkpoint**, not completion of the Gateway bunny/Rosalina goal. The prior published movement checkpoint was root419b4fd6b / decomp11157e7c3 / Aurora30b06fd6. This change keeps the working movement route while removing substitute save state and correcting the execution character set used by original Game source.
+
+## What changed
+
+- Enabled the complete original GameDataHolder, GameDataConst, galaxy/event/path/donation storage, scenario-progress and BitArray sources. Deleted GameDataHolderCompat, GameDataGalaxyStorageCompat, PlayerStatusStorage and the unused duplicate GameDataRegistry tables.
+- GameDataSession now owns actual current and backup UserFiles, retaining their actual process scenario catalog and a dedicated original JKR profile heap. Original serialization creates a distinct scene-start snapshot. Six selected slots, nested bindings, complete profile heap reclamation and retained catalog lifetime are checked. New files start at original story progress0. The bounded showcase explicitly selects progress5 outside Game.
+- Restored general JSU stream behavior and adapted the six original save payloads at the binary-format boundary: PLAY, FLG1, PCE1, SPN1, VLE1 and GALA. Original virtual methods own the game state. Scalars cross the host/Wii byte-order boundary; malformed payloads are checked before applying any recognized chunk. Existing config formats retain their own byte order.
+- Original ordinary narrow Game literals now compile as CP932 through Clang's expanded-token provenance, preserving UTF-8 editable files, Unicode/wide literals, macros, original dependency paths and debugging locations. The temporary preprocessed files are removed. Host strings cross explicit encode/decode boundaries; raw resource identity is retained without decode/re-encode aliasing. MR hashing remains the original byte recurrence. Temporary save-only hash scopes were retired.
+- Migrated host/game string boundaries for demo/actor/light/shadow/camera identities, constructor name lifetimes and presentation. Source editor compilation commands identify real Clang rather than the build wrapper.
+
+## Decompilation and upstream
+
+New source corrections were made in reference first and then mirrored: actual embedded StoryEvent BCSV, retained VLE1 EOF destinations, original JSUIosBase state clearing, and EffectKeeper's reversed subtraction. Wii evidence: StoryEvent table and constructor100%; VLE1 deserialize98.583336%; effect-name helper100%; stream behavior documented from retail instructions. Of19 Game files imported/changed,18 are byte-identical to the reference; GameEventFlagChecker differs only by four required case-local declaration scopes. See game-source-fidelity.json and the source-specific evidence folders.
+
+Decomp6c6cdb24d contains the recoveries. Merge499e1034d incorporates latest upstream SMGCommunity/Petari73f5b40dc (NW4R and JKRDecomp). One duplicate RTTI implementation conflict was resolved to upstream's header. Eight representative Wii translation units compile; mixed upstream/native RTTI probes each pass12 sanitizer checks. Decomp499e1034d was pushed and its remote SHA verified. No Game source changed in those new upstream commits. Native NW4R owners remain compatibility implementations; newly available reference source is not blindly substituted for their host layouts. The upstream/ audit identifies two precise BRLAN interpolation differences for a subsequent Aurora change.
+
+## Verified outcomes
+
+- All17 selected native targets build/link. Final linked results: **11/16 suite invocations pass**, with the five failures described below; there is no claim that the full test suite is green.
+- Actual six-chunk save-owner test:188 cached flag lookups,14 story thresholds, all chunk signatures/order, PLAY Wii bytes, donations, paths, distinct snapshots and malformed-file rejection pass. Original star test covers42 galaxies,121 stars,18 hidden stars and7 Grand Stars. Original UserFile ownership tests cover all six slots and nested teardown. Original JSU tests pass12/12.
+- Final current-source ASan/UBSan save adapter fixture:554 checks, including actual PLAY/VLE1 and original sorted/linear flag lookups. Format-only byte fixtures are explicitly distinguished from actual Game owners. Raw resource-identity fixture:32 checks, including distinct CP932 encodings sharing the same Unicode presentation.
+- Linked DemoSheet11/11, DemoScene20/20, object-name4/4, text encoding and original wipe-owner tests pass. Optional extracted-resource tests report their own skips. Actual PlayerUtil route passes via smg-pc-mario-gateway-walk-tests --player-util.
+- Clang wrapper16 isolated checks and Xmake rule11 integration steps pass, including no-op reuse, source/header/tool invalidation and unchanged Aurora compilation. Editor compilation database is normalized and clangd's GameDataHolder parse/check passes with refactoring tweaks disabled. An LLVM23 ExtractFunction self-test error in the default check is retained in the earlier log; it is not a C++ diagnostic.
+- **Movement replay:** exact showcase SHA2561e56a4758808b9b7c14ae84c6f7e62f12f26852488ec4d85327115665e84b5f4;960 ticks at1280x720; **13/13 synthetic SDL input checks;59.906 FPS; exit0**. All WASD directions and releases, two jumps/landings, stationary idle and finite camera/movement pass. This is a bounded recorded-input movement test, not full bunny-chase or manual playthrough proof. See movement-proof.json.
+
+## Remaining review findings
+
+Five broad fixtures still exercise retired setup/behavior: actor-event-camera lacks CameraDirector; stage-start-camera lacks CameraContext; shadow lacks active scene execution ownership; point-light calls base-matrix calculation on a model-less LiveActor; feedback expects a removed null-actor exception from original EffectUtil. The full logs and triage evidence remain available. Six other older route fixture source checks reference removed model/shadow APIs. These require fixture owner migration, not production stubs or altered Game behavior.
+
+Original walking/jumping, MarioActor and PlayerUtil/CameraUtil are active. The next concrete input cleanup is complete original WPad/GamePadUtil ownership: some button/swing/raw-stick queries still bypass processed original children. Whole MarioState and camera-local/target source consolidation also remain. Details: host-string-boundaries/movement-camera-priorities.md. The original GameSequenceProgress/SaveDataHandleSequence owner graph and complete bunny/Rosalina sequence are still unfinished. This checkpoint supplies real save owners/serialization; it does not activate persistent storage or a full title-to-game sequence.
+
+All new commits use codex as author and committer. User-staged documentation deletions, the unrelated existing note edit and the untracked walking packager are preserved.

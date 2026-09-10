@@ -1,3 +1,4 @@
+#include "resource/TextEncoding.hpp"
 #include "CameraTargetTestSupport.hpp"
 #include "Game/Camera/CameraAnim.hpp"
 #include "Game/Camera/CameraPoseParam.hpp"
@@ -530,18 +531,20 @@ namespace {
                         camera.actor_camera_info_count() == baseline + 1U,
                     "IfExist -1 must preserve the caller output and allocate nothing");
 
-            auto rabbit = LiveActor("逃げウサギ集め");
-            auto pipe = LiveActor("土管");
+            const auto rabbit_name = smgpc::resource::encode_cp932("逃げウサギ集め");
+            const auto pipe_name = smgpc::resource::encode_cp932("土管");
+            auto rabbit = LiveActor(rabbit_name.c_str());
+            auto pipe = LiveActor(pipe_name.c_str());
             require(MR::initMultiActorCameraNoInit(&rabbit, first, nullptr) &&
                         camera.is_event_camera_declared(
-                            5, "逃げウサギ集め固有016"),
+                            5, smgpc::resource::encode_cp932("逃げウサギ集め固有016")),
                     "unique actor-camera identity must include actor, 固有, and three-digit ID");
-            require(MR::initMultiActorCameraNoInit(&pipe, first, "出現") &&
-                        camera.is_event_camera_declared(5, "土管固有出現016"),
+            require(MR::initMultiActorCameraNoInit(&pipe, first, smgpc::resource::encode_cp932("出現").c_str()) &&
+                        camera.is_event_camera_declared(5, smgpc::resource::encode_cp932("土管固有出現016")),
                     "multi-camera identity must preserve its authored suffix");
             auto common = ActorCameraInfo(0x8003, 7);
-            require(MR::initMultiActorCameraNoInit(&pipe, &common, "出現") &&
-                        camera.is_event_camera_declared(7, "土管共通出現003"),
+            require(MR::initMultiActorCameraNoInit(&pipe, &common, smgpc::resource::encode_cp932("出現").c_str()) &&
+                        camera.is_event_camera_declared(7, smgpc::resource::encode_cp932("土管共通出現003")),
                     "common camera identity must remove the 0x8000 flag before formatting");
         }
         camera.detach_event_camera_catalog(first_catalog);
@@ -578,10 +581,10 @@ namespace {
         auto player_actor = CameraPlayerFixture(player);
         set_player_matrix(player, 100.0F, 0.0F, 0.0F);
         auto camera = smgpc::runtime::CameraSystemService{};
-        camera.declare_event_camera_animation(5, "逃げチコDemoMeetTico",
+        camera.declare_event_camera_animation(5, smgpc::resource::encode_cp932("逃げチコDemoMeetTico"),
                                               animation);
         camera.start_event_camera(
-            5, "逃げチコDemoMeetTico",
+            5, smgpc::resource::encode_cp932("逃げチコDemoMeetTico"),
             smgpc::camera::EventCameraTarget::target_player(player), 0, 1.0F);
         require(!camera.active_event_camera_pose().has_value(),
                 "an event request must defer its first pose until camera movement");
@@ -597,10 +600,10 @@ namespace {
         const auto second = camera.active_event_camera_pose();
         require(second.has_value() &&
                     camera.event_camera_animation_frame(
-                        5, "逃げチコDemoMeetTico") == 2 &&
+                        5, smgpc::resource::encode_cp932("逃げチコDemoMeetTico")) == 2 &&
                     second->eye.x > first->eye.x + 100.0F,
                 "CANM must advance and continue following the player target");
-        camera.end_event_camera(5, "逃げチコDemoMeetTico", true, -1);
+        camera.end_event_camera(5, smgpc::resource::encode_cp932("逃げチコDemoMeetTico"), true, -1);
         require(!camera.active_event_camera_key().has_value(),
                 "ending the exact zone-qualified CANM must restore base-camera ownership");
 
@@ -1488,7 +1491,7 @@ namespace {
         // catalog. The original catalog and its retail resource remain intact.
         auto catalog = retail_catalog;
         auto *definition = const_cast<smgpc::camera::StaticEventCameraDefinition *>(
-            catalog.find(0, "土管固有出現054"));
+            catalog.find(0, smgpc::resource::encode_cp932("土管固有出現054")));
         require(definition != nullptr, "the controlled XZ fixture needs a catalog entry");
         definition->zone_transform = {};
         definition->camera_param = {};
@@ -1521,10 +1524,10 @@ namespace {
         auto uninterrupted = smgpc::runtime::CameraSystemService{};
         requested.attach_event_camera_catalog(catalog);
         uninterrupted.attach_event_camera_catalog(catalog);
-        requested.declare_event_camera(0, "土管固有出現054");
-        uninterrupted.declare_event_camera(0, "土管固有出現054");
-        requested.start_event_camera(0, "土管固有出現054", target, 0);
-        uninterrupted.start_event_camera(0, "土管固有出現054", target, 0);
+        requested.declare_event_camera(0, smgpc::resource::encode_cp932("土管固有出現054"));
+        uninterrupted.declare_event_camera(0, smgpc::resource::encode_cp932("土管固有出現054"));
+        requested.start_event_camera(0, smgpc::resource::encode_cp932("土管固有出現054"), target, 0);
+        uninterrupted.start_event_camera(0, smgpc::resource::encode_cp932("土管固有出現054"), target, 0);
         requested.begin_frame(0U);
         uninterrupted.begin_frame(0U);
         const auto initial_pose = *requested.active_event_camera_pose();
@@ -1541,21 +1544,21 @@ namespace {
                     std::fabs((before.eye.z - before.watch.z) -
                               (initial_pose.eye.z - initial_pose.watch.z)) > 20.0F,
                 "the fixture must have nontrivial original height chase and round state");
-        requested.start_event_camera(0, "土管固有出現054", target, 30);
+        requested.start_event_camera(0, smgpc::resource::encode_cp932("土管固有出現054"), target, 30);
         require(same_pose(before, *requested.active_event_camera_pose()),
                 "same-XZ re-request must preserve the current pose until movement");
 
         auto unavailable = smgpc::runtime::PlayerSystemService{};
         auto rejected = false;
         try {
-            requested.start_event_camera(0, "土管固有出現054",
+            requested.start_event_camera(0, smgpc::resource::encode_cp932("土管固有出現054"),
                 smgpc::camera::EventCameraTarget::target_player(unavailable), 0);
         } catch (const std::logic_error &) {
             rejected = true;
         }
         require(rejected && same_pose(before, *requested.active_event_camera_pose()),
                 "failed same-XZ request must preserve the controller and prior target");
-        requested.start_event_camera(0, "土管固有出現054",
+        requested.start_event_camera(0, smgpc::resource::encode_cp932("土管固有出現054"),
             smgpc::camera::EventCameraTarget::retain(), 0);
         for (auto frame = 5U; frame <= 8U; ++frame) {
             wpad.begin_frame();
@@ -1569,9 +1572,9 @@ namespace {
     }
 
     void test_fixed_point_event_lifecycle(smgpc::camera::EventCameraCatalog catalog) {
-        constexpr auto first_name = "逃げウサギ集め固有016";
-        constexpr auto next_name = "土管固有出現017";
-        for (const auto* name : {first_name, next_name}) {
+        const auto first_name = smgpc::resource::encode_cp932("逃げウサギ集め固有016");
+        const auto next_name = smgpc::resource::encode_cp932("土管固有出現017");
+        for (const auto& name : {first_name, next_name}) {
             auto* definition = const_cast<smgpc::camera::StaticEventCameraDefinition*>(catalog.find(5, name));
             require(definition != nullptr, "the FixedPoint lifecycle fixture needs retained real catalog identities");
             definition->zone_transform = {};
@@ -1633,7 +1636,7 @@ namespace {
                 "ending FixedPoint must release the active event camera ownership");
         camera.detach_event_camera_catalog(catalog);
 
-        for (const auto* name : {first_name, next_name}) {
+        for (const auto& name : {first_name, next_name}) {
             auto* definition = const_cast<smgpc::camera::StaticEventCameraDefinition*>(catalog.find(5, name));
             definition->camera_param.extra.roll = 0.2F;
         }
@@ -1664,7 +1667,7 @@ namespace {
     }
 
     void test_fixed_point_event_interpolation_precedence(smgpc::camera::EventCameraCatalog catalog) {
-        constexpr auto name = "逃げウサギ集め固有016";
+        const auto name = smgpc::resource::encode_cp932("逃げウサギ集め固有016");
         auto* definition = const_cast<smgpc::camera::StaticEventCameraDefinition*>(catalog.find(5, name));
         require(definition != nullptr, "the interpolation fixture needs a retained real catalog identity");
         definition->zone_transform = {};
@@ -1734,27 +1737,27 @@ namespace {
             dvd, "HeavensDoorGalaxy", 1, 0, 0);
         auto catalog = smgpc::camera::EventCameraCatalog::from_stage_tables(
             dvd, authored.tables());
-        const auto *rabbit = catalog.find(5, "逃げウサギ集め固有016");
-        const auto *child_pipe = catalog.find(5, "土管固有出現017");
-        const auto *root_pipe = catalog.find(0, "土管固有出現054");
+        const auto *rabbit = catalog.find(5, smgpc::resource::encode_cp932("逃げウサギ集め固有016"));
+        const auto *child_pipe = catalog.find(5, smgpc::resource::encode_cp932("土管固有出現017"));
+        const auto *root_pipe = catalog.find(0, smgpc::resource::encode_cp932("土管固有出現054"));
         require(rabbit != nullptr &&
                     rabbit->camera_param.id ==
-                        "e:逃げウサギ集め固有016" &&
+                        smgpc::resource::encode_cp932("e:逃げウサギ集め固有016") &&
                     rabbit->camera_param.camera_type ==
                         "CAM_TYPE_EYEPOS_FIX" &&
                     child_pipe != nullptr &&
                     child_pipe->camera_param.id ==
-                        "e:土管固有出現017" &&
+                        smgpc::resource::encode_cp932("e:土管固有出現017") &&
                     child_pipe->camera_param.camera_type ==
                         "CAM_TYPE_XZ_PARA" &&
                     root_pipe != nullptr &&
                     root_pipe->camera_param.id ==
-                        "e:土管固有出現054" &&
+                        smgpc::resource::encode_cp932("e:土管固有出現054") &&
                     root_pipe->camera_param.camera_type ==
                         "CAM_TYPE_XZ_PARA",
                 "real catalog must contain rabbit and root/child pipe event chunks");
-        require(catalog.find(0, "逃げウサギ集め固有016") == nullptr &&
-                    catalog.find(5, "土管固有出現054") == nullptr,
+        require(catalog.find(0, smgpc::resource::encode_cp932("逃げウサギ集め固有016")) == nullptr &&
+                    catalog.find(5, smgpc::resource::encode_cp932("土管固有出現054")) == nullptr,
                 "event-camera lookup must not cross a zone boundary");
 
         test_same_xz_request_preserves_original_state(catalog, dvd);
@@ -1832,34 +1835,34 @@ namespace {
         auto player = smgpc::runtime::PlayerSystemService{};
         auto player_actor = CameraPlayerFixture(player);
         set_player_matrix(player, 13000.0F, -10000.0F, 6000.0F);
-        camera.declare_event_camera(5, "逃げウサギ集め固有016");
+        camera.declare_event_camera(5, smgpc::resource::encode_cp932("逃げウサギ集め固有016"));
         camera.start_event_camera(
-            5, "逃げウサギ集め固有016",
+            5, smgpc::resource::encode_cp932("逃げウサギ集め固有016"),
             smgpc::camera::EventCameraTarget::target_player(player), 0);
         camera.begin_frame(1U);
         const auto rabbit_pose = camera.active_event_camera_pose();
         require(rabbit_pose.has_value() && finite_pose(*rabbit_pose),
                 "real EYEPOS_FIX collector camera must calculate a pose");
 
-        camera.declare_event_camera(5, "土管固有出現017");
+        camera.declare_event_camera(5, smgpc::resource::encode_cp932("土管固有出現017"));
         camera.start_event_camera(
-            5, "土管固有出現017",
+            5, smgpc::resource::encode_cp932("土管固有出現017"),
             smgpc::camera::EventCameraTarget::target_player(player), 0);
         camera.begin_frame(2U);
         require(camera.active_event_camera_pose().has_value() &&
                     finite_pose(*camera.active_event_camera_pose()),
                 "real XZ_PARA pipe camera must calculate a pose");
 
-        camera.declare_event_camera_animation(5, "逃げチコDemoMeetTico",
+        camera.declare_event_camera_animation(5, smgpc::resource::encode_cp932("逃げチコDemoMeetTico"),
                                               animation);
         camera.start_event_camera(
-            5, "逃げチコDemoMeetTico",
+            5, smgpc::resource::encode_cp932("逃げチコDemoMeetTico"),
             smgpc::camera::EventCameraTarget::target_player(player), 0, 1.0F);
         camera.begin_frame(3U);
         require(camera.active_event_camera_key().has_value() &&
                     camera.active_event_camera_key()->zone_id == 5 &&
                     camera.active_event_camera_key()->name ==
-                        "逃げチコDemoMeetTico" &&
+                        smgpc::resource::encode_cp932("逃げチコDemoMeetTico") &&
                     camera.active_event_camera_pose().has_value() &&
                     finite_pose(*camera.active_event_camera_pose()),
                 "real DemoMeetTico CKAN must preserve zone identity and target-player pose");

@@ -1,0 +1,19 @@
+{
+  "source": "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/fixture/OriginalProvider.cpp",
+  "source_sha256": "ba685ec041b80eb9f9cc558cd5e6c7e84ca819067796e3f579a51a921c5995ef",
+  "arguments": [
+    "-std=c++23",
+    "-O2",
+    "-g",
+    "-MMD",
+    "-MF",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/explicit-provider.d",
+    "-c",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/fixture/OriginalProvider.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/strings/explicit-provider.o"
+  ],
+  "exit": 0,
+  "converted_literals": 2,
+  "literal_tokens": 2
+}

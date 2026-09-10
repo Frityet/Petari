@@ -1,3 +1,5 @@
+#include <aurora/allocation.hpp>
+#include "resource/TextEncoding.hpp"
 #include "compat/ImageEffectOwnership.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
@@ -15,6 +17,18 @@
 
 #include <array>
 #include <stdexcept>
+
+namespace {
+    // These stable Game names outlive every owner that borrows their bytes.
+    std::string encode_owner_name(std::string_view name) {
+        aurora::allocation::HostAllocationScope host;
+        return smgpc::resource::encode_cp932(name);
+    }
+
+    const std::string cBloomEffectName = encode_owner_name("ブルーム");
+    const std::string cScreenBlurEffectName = encode_owner_name("画面ブラー");
+    const std::string cDepthOfFieldBlurName = encode_owner_name("被写界深度ブラー");
+}  // namespace
 
 namespace smgpc::compat {
     namespace {
@@ -65,10 +79,10 @@ namespace smgpc::compat {
             aurora::throw_host_exception<std::logic_error>("Original image effects require the scene's actual Game allocation domain");
         switch (id) {
         case SceneObj_ImageEffectSystemHolder: return new ImageEffectSystemHolder();
-        case SceneObj_BloomEffect: return new BloomEffect("ブルーム");
+        case SceneObj_BloomEffect: return new BloomEffect(cBloomEffectName.c_str());
         case SceneObj_BloomEffectSimple: return new BloomEffectSimple();
-        case SceneObj_ScreenBlurEffect: return new ScreenBlurEffect("画面ブラー");
-        case SceneObj_DepthOfFieldBlur: return new DepthOfFieldBlur("被写界深度ブラー");
+        case SceneObj_ScreenBlurEffect: return new ScreenBlurEffect(cScreenBlurEffectName.c_str());
+        case SceneObj_DepthOfFieldBlur: return new DepthOfFieldBlur(cDepthOfFieldBlurName.c_str());
         case SceneObj_WaterAreaHolder: return new WaterAreaHolder();
         default: aurora::throw_host_exception<std::invalid_argument>("SceneObj is not an original image-effect owner");
         }

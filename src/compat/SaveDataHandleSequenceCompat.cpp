@@ -1,3 +1,5 @@
+#include <aurora/allocation.hpp>
+#include "resource/TextEncoding.hpp"
 #include <aurora/exception.hpp>
 #include "compat/SaveDataHandleSequenceCompat.hpp"
 
@@ -9,6 +11,16 @@
 #include "Game/System/UserFile.hpp"
 
 namespace {
+    // These stable Game names outlive every owner that borrows their bytes.
+    std::string encode_owner_name(std::string_view name) {
+        aurora::allocation::HostAllocationScope host;
+        return smgpc::resource::encode_cp932(name);
+    }
+
+    const std::string cSaveDataHandleSequenceName = encode_owner_name("セーブ/ロード");
+}  // namespace
+
+namespace {
 [[noreturn]] void unavailable(std::string_view operation) {
     aurora::throw_host_exception<std::logic_error>("SaveDataHandleSequence operation is unavailable without retail GameData/NAND backing: " +
                            std::string(operation));
@@ -16,7 +28,7 @@ namespace {
 }  // namespace
 
 SaveDataHandleSequence::SaveDataHandleSequence()
-    : NerveExecutor("セーブ/ロード"), mSysConfigFile(nullptr), mCurrentUserFile(nullptr), mBackupUserFile(nullptr),
+    : NerveExecutor(cSaveDataHandleSequenceName.c_str()), mSysConfigFile(nullptr), mCurrentUserFile(nullptr), mBackupUserFile(nullptr),
       mSaveDataHandler(nullptr), mNANDErrorSequence(nullptr), mSysInfoWindowConfirm(nullptr), mSysInfoWindowSave(nullptr),
       _24(0), mIsConfirmRemind(false), mIsSaveAndQuitMsg(false), _2A(false), _2B(false), _2C(false),
       mWorkUserFile(nullptr), mNerveForError(nullptr), mTempBuffer(nullptr), mOnSaveSuccessFunc(nullptr),

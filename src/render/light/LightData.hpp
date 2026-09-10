@@ -30,6 +30,7 @@ namespace smgpc::render::light {
         void load_stage(smgpc::runtime::DvdFileSystemService &dvd, std::string_view stage_name);
         [[nodiscard]] std::span<const StageLightZone> stage_zones() const;
         [[nodiscard]] AreaLightInfo *area_light_info(const ZoneLightID &zone_id);
+        // Retained authored CP932 identity, shared with original light records.
         [[nodiscard]] const char *default_area_light_name();
 
     private:

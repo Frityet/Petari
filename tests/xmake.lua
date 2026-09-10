@@ -2589,7 +2589,7 @@ target("smg-pc-text-encoding-tests")
     set_kind("binary")
     set_default(false)
     set_group("tests/resource")
-    add_includedirs("../src")
+    add_includedirs("../src", "../aurora/include")
     add_files("TextEncodingTests.cpp", "../src/resource/TextEncoding.cpp")
     if is_plat("macosx") then
         add_syslinks("iconv")
@@ -3152,4 +3152,27 @@ target("smg-pc-original-wpad-pause-tests")
         group = "aurora",
         rundir = os.projectdir(),
         realtime_output = true
+    })
+
+
+target("smg-pc-original-jsu-stream-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    add_files("OriginalJSUStreamTests.cpp", "../aurora/lib/compat.cpp")
+    add_deps {"smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
+              "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"}
+    add_tests("original_jsu_streams", {
+        group = "aurora", rundir = os.projectdir(), realtime_output = true
+    })
+
+target("smg-pc-original-save-owner-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    add_files("OriginalSaveOwnerTests.cpp", "../aurora/lib/compat.cpp")
+    add_deps {"smg-pc-common", "smg-pc-game", "aurora-card", "aurora-dvd",
+              "aurora-gd", "aurora-gx", "aurora-os", "aurora-pad", "aurora-si", "aurora-vi"}
+    add_tests("original_save_owner", {
+        group = "aurora", rundir = os.projectdir(), realtime_output = true
     })

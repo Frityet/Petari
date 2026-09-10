@@ -1,0 +1,18 @@
+{
+  "command": [
+    "/opt/homebrew/opt/llvm/bin/clang++",
+    "-std=c++23",
+    "-g",
+    "-O1",
+    "-fsanitize=address,undefined",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/effect-string/exact-helper-regression.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/effect-string/exact-helper-regression"
+  ],
+  "compile_exit": 0,
+  "helper_matches_native_and_reference": true,
+  "note": "Function bodies extracted byte-identically from production; this is not a full linked EffectKeeper fixture.",
+  "run_exit": 0,
+  "output": "Exact extracted effect helper: 6 cases passed\n",
+  "binary_sha256": "028e0362fe7fc6898a21e54117ca8e18d9614c9e6e1f2021aebb80d6a5f92c63"
+}

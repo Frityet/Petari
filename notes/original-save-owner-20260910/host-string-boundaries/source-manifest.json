@@ -1,0 +1,102 @@
+[
+  {
+    "path": "src/runtime/SceneScheduler.cpp",
+    "sha256": "b05b1c7b2d7a5d211996ac9b5e9796f84f629199cae134981b94e4453b6b2d65"
+  },
+  {
+    "path": "src/showcase/Showcase.cpp",
+    "sha256": "c9a5ba92a1e183dd81184518f453930bac73af33a70cd98edee210c045f90487"
+  },
+  {
+    "path": "tests/ActorEventCameraTests.cpp",
+    "sha256": "b4ff09ca0fc4e82d63d05190aa0f3c332b1584e4c706ccc8ec1ce3e4938e2755"
+  },
+  {
+    "path": "tests/AirActorRouteTests.cpp",
+    "sha256": "b54bbc27b3e4cfbd7edcbf5362bc6a85c560271b6a6981c76608c90a1e90ed75"
+  },
+  {
+    "path": "tests/AreaObjRealOrAbsentTests.cpp",
+    "sha256": "8ae9d892e5db92d9c40c68490ff20ed236adc5fa8a7e9755e13bcc035a13c045"
+  },
+  {
+    "path": "tests/BrightSunRouteTests.cpp",
+    "sha256": "4be518548b408defec6ae1b0de43cc550c26b1ebbb874719cf52a2e8d1791016"
+  },
+  {
+    "path": "tests/DemoSceneRuntimeTests.cpp",
+    "sha256": "c2896a58b4360d1c8dcb53cf774b637e2e696330be8e2ca7c90e306710fadec5"
+  },
+  {
+    "path": "tests/DemoSheetRuntimeTests.cpp",
+    "sha256": "b8f73e4093ac952290dc38ca62981da587efbd506aac2fb34247a707cf2f1a28"
+  },
+  {
+    "path": "tests/FeedbackRealOrAbsentTests.cpp",
+    "sha256": "5ab7662a61b3183e8f047206b5e27674fbe901c85ffe48a26adfd9ca33126883"
+  },
+  {
+    "path": "tests/GameDataRealOrAbsentTests.cpp",
+    "sha256": "65c1e91fa1584c5385281a4d7b9c577e1f1ae89297f04cfe087a45769deddba8"
+  },
+  {
+    "path": "tests/GatewayDemoSceneTests.cpp",
+    "sha256": "d35d20581f9b6e24de762cf8436594da861e56e6198b3b794ffcac94af3c229a"
+  },
+  {
+    "path": "tests/GatewaySpinCheckpointTests.cpp",
+    "sha256": "b64599d7d1170d8009897f2e45698ec6336931eb2fb5e4d73cf4b050a4042741"
+  },
+  {
+    "path": "tests/InformationObserverTests.cpp",
+    "sha256": "2f3b2bb53750259763e5c7b5d6132315a24ad18c38c1ed927b45e859bca14387"
+  },
+  {
+    "path": "tests/MarioGatewayWalkTests.cpp",
+    "sha256": "5143b353b713317e62a93027c216c65c5e61d8c8acd0e2f6fc50eea00f3b0d77"
+  },
+  {
+    "path": "tests/ObjectNameTableTests.cpp",
+    "sha256": "939903dcec32dbd8161bcb118f437e410356009b9814b5627a86700eb39cfc80"
+  },
+  {
+    "path": "tests/OriginalSceneWipeOwnerTests.cpp",
+    "sha256": "ad7720eb9c40cdebc29da47408d93b1dd3ed5aed979e7a3e4c9df183f449c92b"
+  },
+  {
+    "path": "tests/OriginalShadowControllerOwnerTests.cpp",
+    "sha256": "bf06a11343c570e7cfd8882d4e598f32df299dc2d932a006ba08f74065071742"
+  },
+  {
+    "path": "tests/PlanetMapActorRouteTests.cpp",
+    "sha256": "cd05a4be2fecc7c041bf58a91e0dadcf25452063373b1caac87f06a8ed43dfa4"
+  },
+  {
+    "path": "tests/PointLightRuntimeTests.cpp",
+    "sha256": "ed5b0f90ef9afe5e4bb7fc0d724e761c6176c1a767ba654024c8f9a361895c7a"
+  },
+  {
+    "path": "tests/SceneObjHolderRealOrAbsentTests.cpp",
+    "sha256": "52bfc9687933703208bf8c253199eb8de69aa9bbdcb664908d82cbf6e7d1839d"
+  },
+  {
+    "path": "tests/SkyActorRouteTests.cpp",
+    "sha256": "e964afd1d91423bba433aa6c96deb84956fb0b76b8dae8c9847838e1008547be"
+  },
+  {
+    "path": "tests/StageStartCameraTests.cpp",
+    "sha256": "e55aaaf1497356f211e8d3a8ca01108335270d42fb36890449a6c66a2c6f245e"
+  },
+  {
+    "path": "tests/TalkRealOrAbsentTests.cpp",
+    "sha256": "d7919912a839b5c145bbb195745fa661351ced421776efbdf2214a7426c0a5c3"
+  },
+  {
+    "path": "tests/TitleFileSelectRouteTests.cpp",
+    "sha256": "d91923b31b71a9951ef70c3062cecfcac4f9801656846e0adadc827cde86cbdf"
+  },
+  {
+    "path": "tests/UpstreamComponentTests.cpp",
+    "sha256": "d3ed40d6e2efc6abad78671bf23546e7c0e239d54c2a120c9bc55bd8441e3f4c"
+  }
+]

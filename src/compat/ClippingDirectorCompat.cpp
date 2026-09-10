@@ -1,3 +1,5 @@
+#include <aurora/allocation.hpp>
+#include "resource/TextEncoding.hpp"
 #include <aurora/exception.hpp>
 #include "Game/LiveActor/ClippingDirector.hpp"
 
@@ -10,8 +12,18 @@
 
 #include <stdexcept>
 
+namespace {
+    // These stable Game names outlive every owner that borrows their bytes.
+    std::string encode_owner_name(std::string_view name) {
+        aurora::allocation::HostAllocationScope host;
+        return smgpc::resource::encode_cp932(name);
+    }
+
+    const std::string cClippingDirectorName = encode_owner_name("クリッピング指揮");
+}  // namespace
+
 ClippingDirector::ClippingDirector()
-    : NameObj("クリッピング指揮"), mJudge(nullptr), mActorHolder(nullptr), mGroupHolder(nullptr) {
+    : NameObj(cClippingDirectorName.c_str()), mJudge(nullptr), mActorHolder(nullptr), mGroupHolder(nullptr) {
     MR::connectToScene(this, MR::MovementType_ClippingDirector, -1, -1, -1);
 }
 

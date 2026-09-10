@@ -1,3 +1,4 @@
+#include "resource/TextEncoding.hpp"
 #include "SceneExecutionFixture.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Scene/SceneNameObjMovementController.hpp"
@@ -1001,9 +1002,9 @@ namespace {
         const auto *missing = runtime.definition(4U);
         const auto *empty = runtime.definition(5U);
         const auto *no_sheet = runtime.definition(6U);
-        require(missing != nullptr && missing->demo_name == "チコ" &&
+        require(missing != nullptr && missing->demo_name == smgpc::resource::encode_cp932("チコ") &&
                     !missing->sheet.has_table(smgpc::compat::DemoSheetTable::Time),
-                "CP932 demo names should be owned as UTF-8 while missing Time remains dormant");
+                "CP932 demo names must retain original bytes while missing Time remains dormant");
         require(empty != nullptr && empty->sheet.has_table(smgpc::compat::DemoSheetTable::Time) &&
                     empty->sheet.time_rows().empty(),
                 "an empty Time table should remain distinct from a missing Time table");
@@ -1012,9 +1013,11 @@ namespace {
                 "a missing TimeSheetName field should retain a dormant, unaliased definition");
         require(runtime.find_definition("Duplicate") == std::optional<std::size_t>(2U),
                 "duplicate exact names should retain stable first-match lookup");
-        require(!runtime.find_definition("Missing").has_value() &&
-                    !runtime.find_definition(raw_bytes({0x83U, 0x60U, 0x83U, 0x52U})).has_value(),
-                "localized names must not gain TimeSheetName or raw-CP932 aliases");
+        require(runtime.find_definition(raw_bytes({0x83U, 0x60U, 0x83U, 0x52U})) ==
+                    std::optional<std::size_t>(4U) &&
+                    !runtime.find_definition("Missing").has_value() &&
+                    !runtime.find_definition("チコ").has_value(),
+                "raw CP932 identity must resolve without TimeSheetName or UTF-8 aliases");
     }
 
     void test_zone_scoping_cast_id_and_duplicate_choice() {
@@ -1755,11 +1758,11 @@ namespace {
         auto actor = LiveActor("ClockActor");
 
         require_throws(
-            [&] { (void)MR::tryStartDemoWithoutCinemaFrame(&actor, "プロローグデモ"); },
+            [&] { (void)MR::tryStartDemoWithoutCinemaFrame(&actor, smgpc::resource::encode_cp932("プロローグデモ").c_str()); },
             "programmable DemoDirector movement/cinema-frame closure",
             "the prologue programmable start must not be redirected to DemoSheet data");
         require_throws(
-            [&] { (void)MR::tryStartDemoMarioPuppetable(&actor, "主人公ピーチ城に到着"); },
+            [&] { (void)MR::tryStartDemoMarioPuppetable(&actor, smgpc::resource::encode_cp932("主人公ピーチ城に到着").c_str()); },
             "programmable DemoDirector movement/cinema-frame closure",
             "a programmable Mario start must remain absent without its real director closure");
         require_throws(

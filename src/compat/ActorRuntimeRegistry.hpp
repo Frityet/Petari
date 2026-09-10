@@ -124,15 +124,19 @@ namespace smgpc::compat {
 
     // Parsed construction parameters and retained shape data. Live projection,
     // gravity and visibility are owned by the original ShadowController.
+    // *_raw fields retain CP932 Game identity; other name fields are UTF-8
+    // presentation only and must never be used to resolve original resources.
     struct ActorShadowControllerRuntimeState {
         std::string name{};
         std::string name_raw{};
         std::string group_name{};
+        std::string group_name_raw{};
         ActorShadowControllerKind kind = ActorShadowControllerKind::VolumeSphere;
         ActorShadowPositionBinding position_binding = ActorShadowPositionBinding::ActorTranslation;
         std::string joint_name{};
         std::string joint_name_raw{};
         std::optional<std::string> model_name{};
+        std::optional<std::string> model_name_raw{};
         std::optional<std::string> line_start_name{};
         std::optional<std::string> line_end_name{};
         std::optional<std::string> line_start_name_raw{};
@@ -283,6 +287,7 @@ namespace smgpc::compat {
     void release_actor_clipping_state(const LiveActor* actor);
 
     void initialize_actor_shadow_controller_list(LiveActor* actor, std::uint32_t capacity);
+    // Name inputs and lookups below use raw CP932 bytes, including host callers.
     [[nodiscard]] ActorShadowControllerRuntimeState make_actor_shadow_controller_runtime_state(
         LiveActor* actor, std::string_view name, ActorShadowControllerKind kind, float radius);
     void replace_actor_shadow_runtime_state(LiveActor* actor, ActorShadowRuntimeState state);

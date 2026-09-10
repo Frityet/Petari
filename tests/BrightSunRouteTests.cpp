@@ -1,3 +1,4 @@
+#include "resource/TextEncoding.hpp"
 #include "Game/AreaObj/AreaForm.hpp"
 #include "Game/AreaObj/AreaObj.hpp"
 #include "Game/AreaObj/AreaObjContainer.hpp"
@@ -284,7 +285,10 @@ namespace {
         runtime.begin_frame(initial_frame);
         runtime.set_scene_camera_pose(seed_camera);
 
-        auto game_data_session = smgpc::compat::GameDataSession{1U};
+        runtime.initialize_scenario_catalog(resource_runtime);
+        auto game_data_session = smgpc::compat::GameDataSession{1U, resource_runtime, runtime.retain_scenario_catalog()};
+        game_data_session.holder().followStoryEventByName(smgpc::resource::encode_cp932("ピーチ城浮上後").c_str());
+        game_data_session.store_scene_start();
         {
             auto scene = smgpc::scene::GatewayDemoScene(runtime.dvd());
             auto player = smgpc::test::GatewayPlayerSentinel{runtime, scene};
@@ -334,16 +338,16 @@ namespace {
                         director->mLine != nullptr,
                     "the authored BrightSun did not create its exact director and three children");
             require(bright->getName() != nullptr &&
-                        std::string_view(bright->getName()) ==
+                        smgpc::resource::decode_cp932(bright->getName()) ==
                             "レンズフレア用太陽",
                     "BrightSun did not retain its exact ObjNameTable actor identity");
-            const auto bright_runtime_name = std::string(bright->getName());
+            const auto bright_runtime_name = smgpc::resource::decode_cp932(bright->getName());
 
             const auto require_model = [](LiveActor* actor,
                                           std::string_view actor_name,
                                           std::string_view archive_name) {
                 auto* model = smgpc::compat::actor_model(actor);
-                require(actor != nullptr && actor->getName() == actor_name &&
+                require(actor != nullptr && smgpc::resource::decode_cp932(actor->getName()) == actor_name &&
                             model != nullptr &&
                             model->model_arc_name() == archive_name,
                         "a LensFlareDirector child has the wrong actor or model identity");

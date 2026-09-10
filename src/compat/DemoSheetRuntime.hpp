@@ -27,6 +27,8 @@ namespace smgpc::compat {
         Count,
     };
 
+    // All sheet names retain authored CP932 bytes for exact Game identity.
+    // Host callers encode UTF-8 inputs; presentation decodes returned names.
     struct DemoTimeRow {
         std::string part_name;
         std::int32_t total_step = 1;
@@ -67,7 +69,7 @@ namespace smgpc::compat {
 
     struct DemoWipeRow {
         std::string part_name;
-        std::string wipe_name = "フェードワイプ";
+        std::string wipe_name = "\x83\x74\x83\x46\x81\x5b\x83\x68\x83\x8f\x83\x43\x83\x76"; // フェードワイプ (CP932)
         std::int32_t wipe_type = 0;
         std::int32_t wipe_frame = -1;
     };

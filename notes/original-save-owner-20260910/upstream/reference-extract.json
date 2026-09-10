@@ -1,0 +1,7 @@
+{
+  "source": "decomp/src/nw4r/lyt/lyt_animation.cpp",
+  "source_sha256": "0d40eab01c73902e1e72f23930c078d45585cd60afc6cd914b464a3a7eddb96f",
+  "start_line": 20,
+  "end_line": 93,
+  "extracted_body_sha256": "92fce8c58a1fd7cd834977464aebbd724f1acb4d81414ba3f3c6ab749c8c1572"
+}

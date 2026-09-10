@@ -1,3 +1,5 @@
+#include <aurora/allocation.hpp>
+#include "resource/TextEncoding.hpp"
 #include <aurora/exception.hpp>
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Effect/EffectSystem.hpp"
@@ -64,6 +66,26 @@
 #include <optional>
 #include <stdexcept>
 #include <utility>
+
+namespace {
+    // These stable Game names outlive every owner that borrows their bytes.
+    std::string encode_owner_name(std::string_view name) {
+        aurora::allocation::HostAllocationScope host;
+        return smgpc::resource::encode_cp932(name);
+    }
+
+    const std::string cCameraDirectorName = encode_owner_name("カメラ管理");
+    const std::string cGravityManagerName = encode_owner_name("重力");
+    const std::string cBaseMatrixFollowTargetHolderName = encode_owner_name("行列追随先リスト");
+    const std::string cMessageSensorHolderName = encode_owner_name("システム汎用センサー");
+    const std::string cAreaObjContainerName = encode_owner_name("エリアオブジェクトコンテナ管理");
+    const std::string cPlacementStateCheckerName = encode_owner_name("オブジェクト配置状態の監視");
+    const std::string cWarpPodManagerName = encode_owner_name("ワープポッド管理局");
+    const std::string cCoinHolderName = encode_owner_name("コイン管理");
+    const std::string cCoinRotaterName = encode_owner_name("コイン回転管理");
+    const std::string cPrologueHolderName = encode_owner_name("プロローグ保持");
+    const std::string cGroupCheckManagerName = encode_owner_name("属性グループマネージャー");
+}  // namespace
 
 namespace {
 
@@ -479,7 +501,7 @@ NameObj *SceneObjHolder::newEachObj(int id) {
     case SceneObj_CameraContext:
         return new CameraContext();
     case SceneObj_CameraDirector:
-        return new CameraDirector("カメラ管理");
+        return new CameraDirector(cCameraDirectorName.c_str());
     case SceneObj_EffectSystem:
         if (!sCurrentSceneObjHolderBinding->_effect_system_ownership)
             aurora::throw_host_exception<std::logic_error>("EffectSystem requires scene heap initialization");
@@ -491,11 +513,11 @@ NameObj *SceneObjHolder::newEachObj(int id) {
     case SceneObj_FurDrawManager:
         return new FurDrawManager(64);
     case SceneObj_PlanetGravityManager:
-        return new PlanetGravityManager("重力");
+        return new PlanetGravityManager(cGravityManagerName.c_str());
     case SceneObj_BaseMatrixFollowTargetHolder:
-        return new BaseMatrixFollowTargetHolder("行列追随先リスト", 256, 256);
+        return new BaseMatrixFollowTargetHolder(cBaseMatrixFollowTargetHolderName.c_str(), 256, 256);
     case SceneObj_MessageSensorHolder:
-        return new MessageSensorHolder("システム汎用センサー");
+        return new MessageSensorHolder(cMessageSensorHolderName.c_str());
     case SceneObj_StageSwitchContainer:
         return new StageSwitchContainer();
     case SceneObj_SwitchWatcherHolder:
@@ -503,23 +525,23 @@ NameObj *SceneObjHolder::newEachObj(int id) {
     case SceneObj_SleepControllerHolder:
         return new SleepControllerHolder();
     case SceneObj_AreaObjContainer:
-        return new AreaObjContainer("エリアオブジェクトコンテナ管理");
+        return new AreaObjContainer(cAreaObjContainerName.c_str());
     case SceneObj_PlacementStateChecker:
-        return new PlacementStateChecker("オブジェクト配置状態の監視");
+        return new PlacementStateChecker(cPlacementStateCheckerName.c_str());
     case SceneObj_MarioHolder:
         return new MarioHolder();
     case SceneObj_BigFanHolder:
         return new BigFanHolder();
     case SceneObj_WarpPodMgr:
-        return new WarpPodMgr("ワープポッド管理局");
+        return new WarpPodMgr(cWarpPodManagerName.c_str());
     case SceneObj_CoinHolder:
-        return new CoinHolder("コイン管理");
+        return new CoinHolder(cCoinHolderName.c_str());
     case SceneObj_PurpleCoinHolder:
         return new PurpleCoinHolder();
     case SceneObj_CoinRotater:
-        return new CoinRotater("コイン回転管理");
+        return new CoinRotater(cCoinRotaterName.c_str());
     case SceneObj_PrologueHolder:
-        return new PrologueHolder("プロローグ保持");
+        return new PrologueHolder(cPrologueHolderName.c_str());
     case SceneObj_CaptureScreenActor:
         return new CaptureScreenActor(MR::DrawType_CaptureScreenIndirect, "Indirect");
     case SceneObj_CenterScreenBlur:
@@ -557,7 +579,7 @@ NameObj *SceneObjHolder::newEachObj(int id) {
     case SceneObj_SphereSelector:
         return new SphereSelector();
     case SceneObj_GroupCheckManager:
-        return new GroupCheckManager("属性グループマネージャー");
+        return new GroupCheckManager(cGroupCheckManagerName.c_str());
     case SceneObj_PriorDrawAirHolder:
         return new PriorDrawAirHolder();
     default:

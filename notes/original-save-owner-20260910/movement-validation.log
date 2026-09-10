@@ -1,0 +1,82 @@
+{
+  "passed": true,
+  "synthetic_sdl_input": true,
+  "checks": [
+    {
+      "name": "completed replay",
+      "passed": true,
+      "last_tick": 960
+    },
+    {
+      "name": "finite movement and camera",
+      "passed": true,
+      "invalid_samples": []
+    },
+    {
+      "name": "idle remains still on ground",
+      "passed": true,
+      "observed_samples": 51,
+      "displacement": 0.0
+    },
+    {
+      "name": "W is accepted and moves Mario",
+      "passed": true,
+      "samples": 31,
+      "moving_on_ground_samples": 24,
+      "displacement": 126.61877501289318
+    },
+    {
+      "name": "W releases",
+      "passed": true,
+      "samples": 16
+    },
+    {
+      "name": "A is accepted and moves Mario",
+      "passed": true,
+      "samples": 31,
+      "moving_on_ground_samples": 23,
+      "displacement": 118.10277376508573
+    },
+    {
+      "name": "A releases",
+      "passed": true,
+      "samples": 16
+    },
+    {
+      "name": "S is accepted and moves Mario",
+      "passed": true,
+      "samples": 31,
+      "moving_on_ground_samples": 23,
+      "displacement": 118.24746841767595
+    },
+    {
+      "name": "S releases",
+      "passed": true,
+      "samples": 16
+    },
+    {
+      "name": "D is accepted and moves Mario",
+      "passed": true,
+      "samples": 31,
+      "moving_on_ground_samples": 23,
+      "displacement": 118.32065882875388
+    },
+    {
+      "name": "D releases",
+      "passed": true,
+      "samples": 16
+    },
+    {
+      "name": "jump at 600 takes off and lands",
+      "passed": true,
+      "takeoff_tick": 600,
+      "landing_tick": 635
+    },
+    {
+      "name": "jump at 780 takes off and lands",
+      "passed": true,
+      "takeoff_tick": 780,
+      "landing_tick": 815
+    }
+  ]
+}

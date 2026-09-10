@@ -1,0 +1,18 @@
+{
+  "command": [
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/chunk-encoding/chunk-encoding-final-sanitized"
+  ],
+  "exit": 0,
+  "seconds": 0.35089870798401535,
+  "environment": {
+    "ASAN_OPTIONS": "halt_on_error=1:detect_leaks=0",
+    "UBSAN_OPTIONS": "halt_on_error=1:print_stacktrace=1"
+  },
+  "binary_sha256": "9f36a13e27e2ed0dfa710ec71338a9293d450df212644c010815f73a0541a09e",
+  "tool_sha256": {
+    "script/game_execution_charset.py": "3b7236b285af6ce1f8f1508e4dd72f9da66a72731a819ee6b019e09ea909f31f",
+    "script/game_literal_preprocessor.cpp": "d484355690b84a2454a456040968916f08b0b05807c34c57673c7325b218e0a3",
+    "notes/original-save-owner-20260910/strings/game-literal-preprocessor": "b4ef51e79b2f3bcd315b6ba1a96f7a31719fb3348a5a5755c9cc0813fb473567"
+  },
+  "output": "[ok] 554 checks: actual PLAY/VLE1, all original FLG1 sorted identities, six-format bytes and malformed boundaries\n"
+}

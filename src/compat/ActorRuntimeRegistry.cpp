@@ -27,6 +27,7 @@
 #include "Game/LiveActor/ModelManager.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "runtime/RuntimeContext.hpp"
+#include "resource/TextEncoding.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -774,14 +775,16 @@ namespace smgpc::compat {
             aurora::throw_host_exception<std::invalid_argument>("Actor shadow radius must be finite and non-negative.");
         }
         return ActorShadowControllerRuntimeState{
-            .name = std::string{name},
+            .name = resource::decode_cp932(name),
             .name_raw = std::string{name},
             .group_name = {},
+            .group_name_raw = {},
             .kind = kind,
             .position_binding = ActorShadowPositionBinding::ActorTranslation,
             .joint_name = {},
             .joint_name_raw = {},
             .model_name = {},
+            .model_name_raw = {},
             .line_start_name = {},
             .line_end_name = {},
             .line_start_name_raw = {},
@@ -872,7 +875,7 @@ namespace smgpc::compat {
             return nullptr;
         }
         const auto found = std::ranges::find_if(shadow->controllers, [name](const auto& controller) {
-            return controller.name == name;
+            return controller.name_raw == name;
         });
         return found != shadow->controllers.end() ? &*found : nullptr;
     }
@@ -890,7 +893,7 @@ namespace smgpc::compat {
             return nullptr;
         }
         const auto found = std::ranges::find_if(shadow->controllers, [name](const auto& controller) {
-            return controller.name == name;
+            return controller.name_raw == name;
         });
         return found != shadow->controllers.end() ? &*found : nullptr;
     }

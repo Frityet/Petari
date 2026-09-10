@@ -1,3 +1,4 @@
+#include "resource/TextEncoding.hpp"
 #include "compat/MarioCameraTarget.hpp"
 #include "Game/NameObj/NameObjFactory.hpp"
 #include "Game/NPC/DemoRabbit.hpp"
@@ -14,7 +15,7 @@
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/AudioFacadeCompat.hpp"
 #include "compat/DemoSceneRuntime.hpp"
-#include "compat/GameDataHolderCompat.hpp"
+#include "compat/GameDataOwnership.hpp"
 #include "compat/GameDataSession.hpp"
 #include "compat/InformationMessageCompat.hpp"
 #include "compat/JkrAllocationDomain.hpp"
@@ -181,9 +182,9 @@ namespace {
             require(rabbit != nullptr &&
                         found->outcome == smgpc::scene::AuthoredPlacementOutcome::
                                               InitializedAfterPlacement &&
-                        found->actor_name == std::optional<std::string>{"デモウサギ"} &&
+                        found->actor_name == std::optional<std::string>{smgpc::resource::encode_cp932("デモウサギ")} &&
                         rabbit->getName() != nullptr &&
-                        std::string_view(rabbit->getName()) == "デモウサギ",
+                        smgpc::resource::decode_cp932(rabbit->getName()) == "デモウサギ",
                     "an exact placement-owned DemoRabbit identity is absent");
             identities.push_back(rabbit);
         }
@@ -351,13 +352,15 @@ namespace {
         const auto audio_binding =
             smgpc::compat::ScopedAudioEventServiceOverride{logical_audio};
 
-        auto game_data_session = smgpc::compat::GameDataSession{1U};
+        auto game_data_session = smgpc::compat::GameDataSession{1U, resource_runtime, runtime.retain_scenario_catalog()};
+        game_data_session.holder().followStoryEventByName(smgpc::resource::encode_cp932("ピーチ城浮上後").c_str());
+        game_data_session.store_scene_start();
         require(smgpc::compat::game_data::holder_story_progress(
                     game_data_session.holder()) == 5U &&
                     GameDataFunction::getCurrentGameDataHolder() ==
                         &game_data_session.holder() &&
                     GameDataFunction::getSceneStartGameDataHolder() ==
-                        &game_data_session.holder(),
+                        &game_data_session.scene_start_holder(),
                 "the spin proof must begin with one active selected-file progress-5 holder");
         auto scene = smgpc::scene::GatewayDemoScene(runtime.dvd());
         const auto camera = smgpc::camera::resolve_stage_start_camera(
@@ -398,7 +401,7 @@ namespace {
             // Establish this fixture's locked precondition through the original
             // API. Retail GameSequenceProgress::startScene does this before spin
             // entitlement; this bounded scene does not yet own that sequence.
-            require(!GameDataFunction::isPassedStoryEvent("スピン権利"),
+            require(!GameDataFunction::isPassedStoryEvent(smgpc::resource::encode_cp932("スピン権利").c_str()),
                     "the spin fixture precondition requires an unearned entitlement");
             MR::setPlayerSwingPermission(false);
             placement_demo_rabbits = require_authored_demo_rabbits(scene);
@@ -412,7 +415,7 @@ namespace {
                 snapshot_demo_rabbits(), placement_demo_rabbits,
                 "Gateway placement finalization must publish exactly its three authored DemoRabbit actors");
             const auto mario_position_before_checkpoint = mario->mPosition;
-            GameDataFunction::followStoryEventByName("チコガイドデモ終了");
+            GameDataFunction::followStoryEventByName(smgpc::resource::encode_cp932("チコガイドデモ終了").c_str());
             require(smgpc::compat::game_data::holder_story_progress(
                         game_data_session.holder()) == 10U,
                     "the dev spin caller must advance its selected-file holder from progress 5 to 10");
@@ -448,9 +451,9 @@ namespace {
                     GameDataFunction::getCurrentGameDataHolder() ==
                         &game_data_session.holder() &&
                     GameDataFunction::getSceneStartGameDataHolder() ==
-                        &game_data_session.holder() &&
-                    GameDataFunction::isPassedStoryEvent("チコガイドデモ終了") &&
-                    !GameDataFunction::isPassedStoryEvent("スピン権利") &&
+                        &game_data_session.scene_start_holder() &&
+                    GameDataFunction::isPassedStoryEvent(smgpc::resource::encode_cp932("チコガイドデモ終了").c_str()) &&
+                    !GameDataFunction::isPassedStoryEvent(smgpc::resource::encode_cp932("スピン権利").c_str()) &&
                     smgpc::compat::game_data::holder_story_progress(
                         checkpoint->checkpoint_game_data()) == 10U,
                 "checkpoint must borrow the caller's exact post-high-tower story progress 10");
@@ -514,9 +517,9 @@ namespace {
         require(checkpoint->state() ==
                         smgpc::scene::GatewaySpinCheckpointState::SpinDemo &&
                     checkpoint->evidence().fade_handoff_frames == 90U &&
-                    checkpoint->demo_runtime().is_active("チコガイドデモ") &&
+                    checkpoint->demo_runtime().is_active(smgpc::resource::encode_cp932("チコガイドデモ")) &&
                     checkpoint->demo_runtime().part_step(
-                        "スピンゲット[デモ1]") == -1 &&
+                        smgpc::resource::encode_cp932("スピンゲット[デモ1]")) == -1 &&
                     MR::isOffPlayerControl(),
                 "fade frame 90 must hand control through exact part-15 MarioPuppetable start");
 
@@ -530,7 +533,7 @@ namespace {
                     checkpoint->evidence()
                         .player_row_dispatched_to_mario_demo_pos4 &&
                     checkpoint->demo_runtime().part_step(
-                        "スピンゲット[デモ4]") == 499,
+                        smgpc::resource::encode_cp932("スピンゲット[デモ4]")) == 499,
                 "real Player/Wipe keepers must complete exactly 1670 pre-prompt demo ticks");
         require(std::ranges::count_if(
                     runtime.scene_wipe().events(), [](const auto &event) {
@@ -547,12 +550,12 @@ namespace {
                         smgpc::scene::GatewaySpinCheckpointState::PromptDelegated &&
                     checkpoint->evidence().prompt_delegate_calls == 1U &&
                     checkpoint->demo_runtime().is_part_active(
-                        "スピンゲット[デモ5]") &&
+                        smgpc::resource::encode_cp932("スピンゲット[デモ5]")) &&
                     checkpoint->demo_runtime().part_step(
-                        "スピンゲット[デモ5]") == 0 &&
+                        smgpc::resource::encode_cp932("スピンゲット[デモ5]")) == 0 &&
                     guide_definition != nullptr &&
                     guide_definition->sheet.is_paused() &&
-                    !GameDataFunction::isPassedStoryEvent("スピン権利") &&
+                    !GameDataFunction::isPassedStoryEvent(smgpc::resource::encode_cp932("スピン権利").c_str()) &&
                     !mario->_EEB,
                 "part-22 first step must invoke exact spin explanation once and pause before granting entitlement");
 
@@ -560,7 +563,7 @@ namespace {
             run_frame(frame);
         }
         require(guide_definition->sheet.is_paused() &&
-                    !GameDataFunction::isPassedStoryEvent("スピン権利") &&
+                    !GameDataFunction::isPassedStoryEvent(smgpc::resource::encode_cp932("スピン権利").c_str()) &&
                     checkpoint->evidence().prompt_delegate_calls == 1U,
                 "InformationObserver must retain its 30-frame guard without duplicate explanation");
 
@@ -570,14 +573,14 @@ namespace {
         run_frame(cLastGuardedFrame);
         require(MR::testCorePadTriggerA(WPAD_CHAN0) &&
                     guide_definition->sheet.is_paused() &&
-                    !GameDataFunction::isPassedStoryEvent("スピン権利") &&
+                    !GameDataFunction::isPassedStoryEvent(smgpc::resource::encode_cp932("スピン権利").c_str()) &&
                     !mario->_EEB &&
                     checkpoint->evidence().prompt_delegate_calls == 1U,
                 "the 30th display execution must reject fresh A at the final guarded frame");
         run_frame(cLastGuardedFrame + 1U);
         require(!MR::testCorePadTriggerA(WPAD_CHAN0) &&
                     guide_definition->sheet.is_paused() &&
-                    !GameDataFunction::isPassedStoryEvent("スピン権利") &&
+                    !GameDataFunction::isPassedStoryEvent(smgpc::resource::encode_cp932("スピン権利").c_str()) &&
                     !mario->_EEB,
                 "guard expiry without a fresh edge must keep the prompt and entitlement locked");
 
@@ -585,7 +588,7 @@ namespace {
         require(MR::testCorePadTriggerA(WPAD_CHAN0) &&
                     !guide_definition->sheet.is_paused() &&
                     checkpoint->demo_runtime().is_time_keep_active() &&
-                    GameDataFunction::isPassedStoryEvent("スピン権利") &&
+                    GameDataFunction::isPassedStoryEvent(smgpc::resource::encode_cp932("スピン権利").c_str()) &&
                     smgpc::compat::game_data::holder_story_progress(
                         checkpoint->checkpoint_game_data()) == 15U &&
                     mario->_EEB &&
@@ -641,7 +644,7 @@ namespace {
         require(GameDataFunction::getCurrentGameDataHolder() ==
                         &game_data_session.holder() &&
                     GameDataFunction::getSceneStartGameDataHolder() ==
-                        &game_data_session.holder() &&
+                        &game_data_session.scene_start_holder() &&
                     smgpc::compat::game_data::holder_story_progress(
                         game_data_session.holder()) == 15U,
                 "placement retirement must leave the caller-owned selected-file holder active at progress 15");

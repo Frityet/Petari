@@ -1,0 +1,13 @@
+[
+  "src/compat/GroupCheckManagerCompat.cpp",
+  "src/compat/MarioCameraTarget.cpp",
+  "src/compat/GameRuntimeCompat.cpp",
+  "src/compat/EffectSystemOwnership.cpp",
+  "src/compat/SceneObjHolderCompat.cpp",
+  "src/compat/OriginalNameObjExecuteHolder.cpp",
+  "src/compat/ImageEffectOwnership.cpp",
+  "src/compat/OriginalStarPointerDirector.cpp",
+  "src/compat/ClippingDirectorCompat.cpp",
+  "src/compat/SaveDataHandleSequenceCompat.cpp",
+  "src/compat/GameActorPhysicsCompat.cpp"
+]

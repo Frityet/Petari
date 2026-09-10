@@ -1,0 +1,14 @@
+[
+  "src/showcase/Showcase.cpp",
+  "tests/AirActorRouteTests.cpp",
+  "tests/BrightSunRouteTests.cpp",
+  "tests/GameDataRealOrAbsentTests.cpp",
+  "tests/GatewayDemoSceneTests.cpp",
+  "tests/GatewaySpinCheckpointTests.cpp",
+  "tests/InformationObserverTests.cpp",
+  "tests/MarioGatewayWalkTests.cpp",
+  "tests/PlanetMapActorRouteTests.cpp",
+  "tests/SkyActorRouteTests.cpp",
+  "tests/TitleFileSelectRouteTests.cpp",
+  "src/runtime/SceneScheduler.cpp"
+]

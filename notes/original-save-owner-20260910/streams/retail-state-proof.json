@@ -1,0 +1,28 @@
+{
+  "dol": "decomp/build/compat-math-oracle/main.dol",
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "dol_sha256": "69f93fcc0fa34837347b5ac05168bc783adcacb3c02697cfda087a3b63abc9e0",
+  "checks": [
+    {
+      "address": "0x8041741c",
+      "size": 24,
+      "hex": "880300047c0423783004ffff7c002110980300044e800020",
+      "matches_saved_retail_assembly": true,
+      "assembly": "notes/gateway-audit-20260907/restoration/retail/asm/JSystem/JSupport/JSUInputStream.s"
+    },
+    {
+      "address": "0x804173f4",
+      "size": 20,
+      "hex": "881f00045404003c3004ffff7c002110981f0004",
+      "matches_saved_retail_assembly": true,
+      "assembly": "notes/gateway-audit-20260907/restoration/retail/asm/JSystem/JSupport/JSUInputStream.s"
+    },
+    {
+      "address": "0x8041753c",
+      "size": 20,
+      "hex": "881f00045404003c3004ffff7c002110981f0004",
+      "matches_saved_retail_assembly": true,
+      "assembly": "notes/gateway-audit-20260907/restoration/retail/asm/JSystem/JSupport/JSUOutputStream.s"
+    }
+  ]
+}

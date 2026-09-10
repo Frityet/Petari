@@ -1,0 +1,90 @@
+[
+  {
+    "name": "feedback-real-or-absent",
+    "command": [
+      "/usr/bin/lldb",
+      "--batch",
+      "-o",
+      "settings set auto-confirm true",
+      "-o",
+      "run",
+      "-k",
+      "thread backtrace -c 18",
+      "-k",
+      "process kill",
+      "-k",
+      "quit",
+      "--",
+      "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-feedback-real-or-absent-tests"
+    ],
+    "exit_code": 0,
+    "binary_sha256": "95acd77752417812e4e57e3d74bc2d6426ee9c3e8cacc6c4009fbd14252dde5a",
+    "log": "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/fixture-triage/feedback-real-or-absent-backtrace.log"
+  },
+  {
+    "name": "actor-event-camera",
+    "command": [
+      "/usr/bin/lldb",
+      "--batch",
+      "-o",
+      "settings set auto-confirm true",
+      "-o",
+      "run",
+      "-k",
+      "thread backtrace -c 18",
+      "-k",
+      "process kill",
+      "-k",
+      "quit",
+      "--",
+      "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-actor-event-camera-tests"
+    ],
+    "exit_code": 0,
+    "binary_sha256": "0a36b2791038049a01a046cfbbe64d77fbb653bf59653298d991f544f2b5cdc3",
+    "log": "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/fixture-triage/actor-event-camera-backtrace.log"
+  },
+  {
+    "name": "point-light-runtime",
+    "command": [
+      "/usr/bin/lldb",
+      "--batch",
+      "-o",
+      "settings set auto-confirm true",
+      "-o",
+      "run",
+      "-k",
+      "thread backtrace -c 18",
+      "-k",
+      "process kill",
+      "-k",
+      "quit",
+      "--",
+      "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-point-light-runtime-tests"
+    ],
+    "exit_code": 0,
+    "binary_sha256": "99e4bf0349837fb0f18a4f370f7e4a05e560799ec22a1665b970426155db5188",
+    "log": "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/fixture-triage/point-light-runtime-backtrace.log"
+  },
+  {
+    "name": "stage-start-camera",
+    "command": [
+      "/usr/bin/lldb",
+      "--batch",
+      "-o",
+      "settings set auto-confirm true",
+      "-o",
+      "run",
+      "-k",
+      "thread backtrace -c 18",
+      "-k",
+      "process kill",
+      "-k",
+      "quit",
+      "--",
+      "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-stage-start-camera-tests"
+    ],
+    "exit_code": 0,
+    "binary_sha256": "526980de7525a3ea0efd6e99d5f1ecb88d87176c37f05108f3ebd4b2dd77838f",
+    "log": "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/fixture-triage/stage-start-camera-backtrace.log"
+  }
+]

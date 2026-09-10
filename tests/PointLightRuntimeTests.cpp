@@ -1,3 +1,4 @@
+#include "resource/TextEncoding.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Map/LightDirector.hpp"
 #include "Game/Map/LightFunction.hpp"
@@ -438,7 +439,7 @@ namespace {
                         MR::createSceneObj(SceneObj_LightDirector) == director &&
                         holder.getObj(SceneObj_LightDirector) == director,
                     "SceneObj 0x06 must own one reusable real LightDirector");
-            require(std::string_view(director->getName()) == "ライト管理" &&
+            require(smgpc::resource::decode_cp932(director->getName()) == "ライト管理" &&
                         smgpc::compat::name_obj_runtime_state_count() ==
                             nameBaseline + 1U,
                     "LightDirector must retain its retail identity in the scene owner");

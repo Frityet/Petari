@@ -1,3 +1,4 @@
+#include "resource/TextEncoding.hpp"
 #include "Game/Map/FileSelectSky.hpp"
 #include "Logger.hpp"
 #include "RendererService.hpp"
@@ -493,7 +494,10 @@ namespace {
                         },
                 "fresh A did not publish the selected blank-slot launch request");
 
-        auto game_data_session = smgpc::compat::GameDataSession{2U};
+        runtime.initialize_scenario_catalog(resource_runtime);
+        auto game_data_session = smgpc::compat::GameDataSession{2U, resource_runtime, runtime.retain_scenario_catalog()};
+        game_data_session.holder().followStoryEventByName(smgpc::resource::encode_cp932("ピーチ城浮上後").c_str());
+        game_data_session.store_scene_start();
         route.reset();
         require(!runtime.game_layout().is_game_scene_draw_3d_active() &&
                     smgpc::compat::name_obj_runtime_state_count() ==
