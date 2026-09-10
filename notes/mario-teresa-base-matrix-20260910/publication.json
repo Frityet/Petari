@@ -1,0 +1,11 @@
+{
+  "commit": "c63d7018a69575ff0bf69ec62bd66ebb04b0f2bd",
+  "author": "codex <codex@openai.com>",
+  "committer": "codex <codex@openai.com>",
+  "remote": "origin",
+  "branch": "pcp-decomp",
+  "remote_sha_verified": "c63d7018a69575ff0bf69ec62bd66ebb04b0f2bd",
+  "paths": [
+    "src/Game/Player/MarioActorParts.cpp"
+  ]
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "path": "decomp/src/Game/Player/MarioActor.cpp",
+    "sha256": "8f91bd9c909967e003998ce51e48f6ea0991c8bbcabb235ab40446c631a666c9",
+    "function_sha256": "ad7e8234780d9afb4340d90370d5debd801572a5cfbb4bf02403677e1d3da885",
+    "outside_function_unchanged": true
+  },
+  {
+    "path": "src/Game/Player/MarioActor.cpp",
+    "sha256": "894d7d9587b10f56eb2319d6616f22321361dac155c641251f5ae4629cb623a1",
+    "function_sha256": "ad7e8234780d9afb4340d90370d5debd801572a5cfbb4bf02403677e1d3da885",
+    "outside_function_unchanged": true
+  }
+]

@@ -1,0 +1,15 @@
+# Original Mario Teresa base matrix helper
+
+Recovered `MarioActor::updateBaseMtxTeresa` in the regular decomp source first, following `decomp/AGENT_DECOMP_GUIDE.md`, then copied the complete unchanged file to the port. This fills the comment-only dependency called by the concurrently recovered `MarioActor::calcAndSetBaseMtx` in player mode6. No Game-specific host substitute was introduced.
+
+The authoritative function is RMGK01 `0x802BD994`, size304, in `notes/gateway-audit-20260907/restoration/retail/asm/Game/Player/MarioActorParts.s:1653`. It projects velocity against the gravity vector, clamps the gravity component divided by10 to[-1,1], suppresses the target tilt when nonzero world-pad input diverges from front by more than pi/8 horizontally, smooths the retained tilt as0.98*old+0.02*target, selects the actual current MarioConst Teresa up/down angle, and concatenates the resulting local X rotation into the supplied matrix. The actual SDK PSMTXConcat already supports aliased output.
+
+Full-TU Metrowerks Wii compilation and isolated current-toolchain ARM64 compilation both return0. Original objdiff returns0 and reports92.76316% for the recovered helper:304 retail bytes versus300 candidate bytes. Remaining differences are constant-pool symbol pairing and frontend ordering/caching of getter/reference arguments; the clamp, comparisons, math sequence, field offsets and final matrix operation agree. This meets the guide's functional/high-fuzzy objective; it is not an exact machine-code match.
+
+No declarations were missing. Existing generalized vecKillElement, diffAngleAbsHorizontal, tmpMtxRotXRad and PSMTXConcat implementations provide the call closure. `function-proof.json`, compile command JSON/logs, source hashes and full object comparison are retained here. The parent owns global build and live demo validation. No Wii execution or live transformed-player runtime success is claimed from this bounded recovery.
+
+## Earlier model initialization audit
+
+Read-only inspection found the generic model setup initializes complete state: J3DModel construction invokes initialize (identity base and internal-view matrices); MR::newJ3DModel performs initial model/joint calculation; LiveActor::initModelManagerWithAnm explicitly runs the LiveActor base-matrix implementation and model calculation. Both matrix-building branches fill all12 scalars. MarioAnimator initializes its own matrices, then original calc installs the actual Xanime calculators and runs its two-phase model calculation before MarioActor extracts hand/root matrices for CollisionShadow. No additional missing generic initialization step was established. Parent debugger evidence places garbage base values before the first scheduled Mario calcAnim; an earlier call to the previously incomplete calcAndSetBaseMtx remains the leading overwrite path, under separate recovery by the audio/runtime agent.
+
+The exact decomp-only helper was committed and pushed as codex in `c63d7018a69575ff0bf69ec62bd66ebb04b0f2bd`; `origin/pcp-decomp` remote SHA was verified equal after push. The native mirror and root notes remain for the parent checkpoint.

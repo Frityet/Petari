@@ -1,0 +1,86 @@
+{
+  "function": "updateBaseMtxTeresa__10MarioActorFPA4_f",
+  "address": "0x802BD994",
+  "retail_size": 304,
+  "candidate_size": 300,
+  "match_percent": 92.76316,
+  "guide": "decomp/AGENT_DECOMP_GUIDE.md",
+  "source_sha256": "5fce708222e0a7ab3c358c6f311e1359735870970eb860a537331393b8b829d7",
+  "remaining_differences": [
+    {
+      "kind": "DIFF_ARG_MISMATCH",
+      "retail": "lfs f31, @65331@sda21",
+      "candidate": "lfs f31, @12381@sda21"
+    },
+    {
+      "kind": "DIFF_ARG_MISMATCH",
+      "retail": "lfs f31, @64190@sda21",
+      "candidate": "lfs f31, @12088@sda21"
+    },
+    {
+      "kind": "DIFF_ARG_MISMATCH",
+      "retail": "lfs f1, @65877@sda21",
+      "candidate": "lfs f1, @12300@sda21"
+    },
+    {
+      "kind": "DIFF_ARG_MISMATCH",
+      "retail": "lwz r4, 0x230(r28)",
+      "candidate": "lwz r30, 0x230(r28)"
+    },
+    {
+      "kind": "DIFF_DELETE",
+      "retail": "addi r30, r4, 0x208",
+      "candidate": null
+    },
+    {
+      "kind": "DIFF_DELETE",
+      "retail": "lwz r3, 0x230(r28)",
+      "candidate": null
+    },
+    {
+      "kind": "DIFF_DELETE",
+      "retail": "bl getWorldPadDir__11MarioModuleCFv",
+      "candidate": null
+    },
+    {
+      "kind": "DIFF_ARG_MISMATCH",
+      "retail": "mr r4, r30",
+      "candidate": "mr r3, r30"
+    },
+    {
+      "kind": "DIFF_INSERT",
+      "retail": null,
+      "candidate": "bl getWorldPadDir__11MarioModuleCFv"
+    },
+    {
+      "kind": "DIFF_INSERT",
+      "retail": null,
+      "candidate": "addi r4, r30, 0x208"
+    },
+    {
+      "kind": "DIFF_ARG_MISMATCH",
+      "retail": "lfs f0, @65878@sda21",
+      "candidate": "lfs f0, @12424@sda21"
+    },
+    {
+      "kind": "DIFF_ARG_MISMATCH",
+      "retail": "lfs f31, @64191@sda21",
+      "candidate": "lfs f31, @12059@sda21"
+    },
+    {
+      "kind": "DIFF_ARG_MISMATCH",
+      "retail": "lfs f0, @65880@sda21",
+      "candidate": "lfs f0, @12426@sda21"
+    },
+    {
+      "kind": "DIFF_ARG_MISMATCH",
+      "retail": "lfs f3, @65879@sda21",
+      "candidate": "lfs f3, @12425@sda21"
+    },
+    {
+      "kind": "DIFF_ARG_MISMATCH",
+      "retail": "lfs f0, @64191@sda21",
+      "candidate": "lfs f0, @12059@sda21"
+    }
+  ]
+}

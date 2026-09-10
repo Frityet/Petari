@@ -1,0 +1,32 @@
+{
+  "symbol": "calcAndSetBaseMtx__10MarioActorFv",
+  "retail_address": "0x802B3800",
+  "baseline_match_percent": 58.933773,
+  "recovered_match_percent": 94.456955,
+  "retail_size": 4228,
+  "recovered_size": 4208,
+  "reference_object": "decomp/build/original-player-state-recovery-20260907/retail/obj/Game/Player/MarioActor.o",
+  "reference_sha256": "9ab66bef5461e40a06fe9de1983e0f3982510f519b06ec3a839a7270f730322d",
+  "published_wii_compile_exit": 0,
+  "published_native_compile_exit": 0,
+  "objdiff_exit": 0,
+  "objdiff_command": [
+    "decomp/build/tools/objdiff-cli",
+    "diff",
+    "-1",
+    "decomp/build/original-player-state-recovery-20260907/retail/obj/Game/Player/MarioActor.o",
+    "-2",
+    "notes/original-mario-base-matrix-20260910/published-wii.o",
+    "-o",
+    "notes/original-mario-base-matrix-20260910/published-objdiff.json",
+    "--format",
+    "json-pretty"
+  ],
+  "decomp_commit": "5ad8d92829d200146869744b29056146b60f04b3",
+  "author": "codex <codex@openai.com>",
+  "remote_ref": "origin/pcp-decomp",
+  "remote_verified_sha": "5ad8d92829d200146869744b29056146b60f04b3",
+  "function_scope_only": true,
+  "mirrored_function_byte_identical": true,
+  "runtime_evidence_scope": "Earlier complete draft passes initial movement and animation but app exits -6 before first presentation; final candidate runtime remains parent-owned."
+}

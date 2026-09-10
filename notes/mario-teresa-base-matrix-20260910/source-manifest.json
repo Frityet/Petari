@@ -1,0 +1,10 @@
+[
+  {
+    "path": "decomp/src/Game/Player/MarioActorParts.cpp",
+    "sha256": "5fce708222e0a7ab3c358c6f311e1359735870970eb860a537331393b8b829d7"
+  },
+  {
+    "path": "src/Game/Player/MarioActorParts.cpp",
+    "sha256": "5fce708222e0a7ab3c358c6f311e1359735870970eb860a537331393b8b829d7"
+  }
+]

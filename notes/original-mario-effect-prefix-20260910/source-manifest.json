@@ -1,0 +1,5 @@
+{
+  "src/Game/Player/MarioEffect.cpp": "3732ffe819fc7a569e734b8cfd152191106dad84514df8c0ddbc6484f4270646",
+  "decomp/src/Game/Player/MarioEffect.cpp": "69d26bf4b239ddce6178e1bcb52e8a3da334f4cdef22e0758f4acb27c2b84931",
+  "tests/MarioGatewayWalkTests.cpp": "124483183a310b55500339d9df14ae096d557272a73d302dd4a0c5b1240eff1d"
+}
