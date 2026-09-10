@@ -1,0 +1,23 @@
+{
+  "build_command": [
+    "cmake",
+    "--build",
+    "/var/folders/4x/jzbfrvb10tq3ff4dwng8nzgm0000gn/T/petari-aurora-upstream-20260907-q3qrkgbx",
+    "--target",
+    "gx_fifo_tests",
+    "-j",
+    "8"
+  ],
+  "build_exit": 0,
+  "test_command": [
+    "/var/folders/4x/jzbfrvb10tq3ff4dwng8nzgm0000gn/T/petari-aurora-upstream-20260907-q3qrkgbx/tests/gx_fifo_tests",
+    "--gtest_output=xml:/Users/frityet/Projects/petari/notes/original-gx-fixed-count-draws-20260910/tests.xml"
+  ],
+  "test_exit": 0,
+  "tests": 274,
+  "failures": 0,
+  "skipped": 0,
+  "new_fixed_count_tests": 5,
+  "root_xmake_used": false,
+  "aurora_commit": "1eb3b5fff45d1bba580482f94ef9a74e444576d7"
+}

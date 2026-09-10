@@ -1,0 +1,14 @@
+[
+  {
+    "path": "aurora/lib/dolphin/gx/GXVert.cpp",
+    "sha256": "e8227d8351b460a33857e1d98c9bd9f417c9d35947656d55f92ec690de0ade46"
+  },
+  {
+    "path": "aurora/tests/gx_fifo_test.cpp",
+    "sha256": "5ffb75b076712440036c8bbdbea15750d573e58feff2a3a7b80027222455ad32"
+  },
+  {
+    "path": "decomp/libs/RVL_SDK/include/revolution/gx/GXGeometry.h",
+    "sha256": "2efd53979c0bd8b139e3680b5b197d990822e8591e38a4171be6e6e1b382b137"
+  }
+]
