@@ -1,0 +1,16 @@
+{
+  "root_commit": "036aae7c2e516429ecaceaed0f05ca65ef7cbf74",
+  "app": "/Users/frityet/Projects/petari/build/playable-demo/Super Mario Galaxy Movement Demo.app",
+  "binary_sha256": "1e56a4758808b9b7c14ae84c6f7e62f12f26852488ec4d85327115665e84b5f4",
+  "previous_demo_backup": "/Users/frityet/Projects/petari/build/demo-history/before-original-save-owner-20260910-172738/Super Mario Galaxy Movement Demo.app",
+  "package_command": [
+    "python3",
+    "script/package_movement_demo.py",
+    "--disc",
+    "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "--expected-sha256",
+    "1e56a4758808b9b7c14ae84c6f7e62f12f26852488ec4d85327115665e84b5f4",
+    "--validation-note",
+    "/Users/frityet/Projects/petari/notes/original-save-owner-20260910/demo-validation.txt"
+  ]
+}
