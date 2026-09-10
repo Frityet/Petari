@@ -69,11 +69,7 @@ void DemoExecutor::movement() {
             std::for_each(mSheetKeeper.begin(), mSheetKeeper.end(), std::mem_func(&DemoSheetKeeperBase::update));
         }
 
-        /*
-        for (DemoTalkAnimCtrl** it = mTalkAnimCtrl.begin(); it != mTalkAnimCtrl.end(); it++) {
-
-        }
-        */
+        std::for_each(mTalkAnimCtrl.begin(), mTalkAnimCtrl.end(), std::mem_func(&DemoTalkAnimCtrl::updateDemo));
     }
 }
 
@@ -86,11 +82,7 @@ void DemoExecutor::start(NameObj* pParam1, const char* pParam2, s32 param3) {
     mCameraKeeper->start();
     std::for_each(mSheetKeeper.begin(), mSheetKeeper.end(), std::mem_func(&DemoSheetKeeperBase::start));
 
-    /*
-    for (DemoTalkAnimCtrl** it = mTalkAnimCtrl.begin(); it != mTalkAnimCtrl.end(); it++) {
-
-    }
-    */
+    std::for_each(mTalkAnimCtrl.begin(), mTalkAnimCtrl.end(), std::mem_func(&DemoTalkAnimCtrl::startDemo));
 
     mActor.clear();
 
@@ -109,7 +101,8 @@ void DemoExecutor::start(NameObj* pParam1, const char* pParam2, s32 param3) {
 }
 
 void DemoExecutor::startPart(NameObj* pParam1, const char* pParam2, const char* pParam3, s32 param4) {
-    // std::for_each(mTalkAnimCtrl.begin(), mTalkAnimCtrl.end(), std::mem_func(&DemoTalkAnimCtrl::setupStartDemoPart));
+    std::for_each(mTalkAnimCtrl.begin(), mTalkAnimCtrl.end(),
+                  std::bind2nd(std::mem_func(&DemoTalkAnimCtrl::setupStartDemoPart), pParam3));
     start(pParam1, pParam2, param4);
     mTimeKeeper->setStartPart(pParam3);
 }
@@ -123,7 +116,8 @@ void DemoExecutor::startProperDemoSystem() {
 }
 
 void DemoExecutor::startDemoSystemPart(const char* pParam1, s32 param2) {
-    // std::for_each(mTalkAnimCtrl.begin(), mTalkAnimCtrl.end(), std::mem_func(&DemoTalkAnimCtrl::setupStartDemoPart));
+    std::for_each(mTalkAnimCtrl.begin(), mTalkAnimCtrl.end(),
+                  std::bind2nd(std::mem_func(&DemoTalkAnimCtrl::setupStartDemoPart), pParam1));
 
     switch (param2) {
     case 1:
@@ -146,7 +140,8 @@ bool DemoExecutor::tryStartProperDemoSystem() {
 }
 
 bool DemoExecutor::tryStartDemoSystemPart(const char* pParam1, s32 param2) {
-    // std::for_each(mTalkAnimCtrl.begin(), mTalkAnimCtrl.end(), std::mem_func(&DemoTalkAnimCtrl::setupStartDemoPart));
+    std::for_each(mTalkAnimCtrl.begin(), mTalkAnimCtrl.end(),
+                  std::bind2nd(std::mem_func(&DemoTalkAnimCtrl::setupStartDemoPart), pParam1));
 
     bool result = false;
 

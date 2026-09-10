@@ -6,13 +6,17 @@
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/JointUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/MapUtil.hpp"
+#include "Game/Util/MathUtil.hpp"
 #include "Game/Util/MtxUtil.hpp"
 #include "Game/Util/NerveUtil.hpp"
 #include "Game/Util/ObjUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
+#include "Game/Util/RailUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StringUtil.hpp"
+#include <JSystem/J3DGraphAnimator/J3DAnimation.hpp>
 
 namespace {
     static s32 sStarAppearSeStep = 103;
@@ -20,7 +24,263 @@ namespace {
     static s32 sStarAppearSeStepPenguinCoach = 95;
     static s32 sStarAppearSeStepTeresaRacer = 89;
     static s32 sStarAppearSeStepTrickRabbit = 22;
+
+    inline bool isTrampleReactionTrigger(const NPCActor* pActor) {
+        return !pActor->_DD && pActor->_E2;
+    }
+
+    inline bool isSpinReactionTrigger(const NPCActor* pActor) {
+        return !pActor->_DE && pActor->_E3;
+    }
+
+    inline bool isPointingReactionTrigger(const NPCActor* pActor) {
+        return !pActor->_DF && pActor->_E4;
+    }
+
+    inline bool isHitReactionTrigger(const NPCActor* pActor) {
+        return !pActor->_E0 && pActor->_E5;
+    }
+
+    inline bool hasScaleController(const NPCActor* pActor) {
+        return pActor->mScaleController != nullptr && pActor->mDelegator != nullptr;
+    }
 };  // namespace
+
+namespace MR {
+    void decidePose(NPCActor* pActor, const TVec3f& rUp, const TVec3f& rFront, const TVec3f& rPosition, f32 upRate, f32 frontRate, f32 positionRate) {
+        blendVec(&pActor->mPosition, pActor->mPosition, rPosition, positionRate);
+
+        if (upRate == 1.0f && frontRate == 1.0f) {
+            makeQuatUpFront(&pActor->_A0, rUp, rFront);
+        } else {
+            blendQuatUpFront(&pActor->_A0, rUp, rFront, upRate, frontRate);
+        }
+    }
+
+    void followRailPose(NPCActor* pActor, f32 frontRate, f32 positionRate) {
+        const TVec3f& position = getRailPos(pActor);
+        const TVec3f& front = getRailDirection(pActor);
+        decidePose(pActor, -pActor->mGravity, front, position, 1.0f, frontRate, positionRate);
+    }
+
+    void followRailPoseOnGround(NPCActor* pActor, f32 frontRate) {
+        followRailPoseOnGround(pActor, pActor, frontRate);
+    }
+
+#pragma dont_inline on
+    void followRailPoseOnGround(NPCActor* pActor, const LiveActor* pRailActor, f32 frontRate) {
+        TVec3f position(getRailPos(pRailActor));
+        TVec3f gravity(pActor->mGravity);
+        TVec3f ray(gravity);
+        ray.scale(1000.0f);
+        TVec3f offset(gravity);
+        offset.scale(10.0f);
+        getFirstPolyOnLineToMap(&position, nullptr, getRailPos(pRailActor) - offset, ray);
+        const TVec3f& front = getRailDirection(pRailActor);
+        decidePose(pActor, -gravity, front, position, 1.0f, frontRate, 1.0f);
+    }
+#pragma dont_inline reset
+
+    bool isActionLoopedOrStopped(const LiveActor* pActor) {
+        if (getBckCtrl(pActor)->getAttribute() == 0) {
+            return isBckStopped(pActor);
+        }
+
+        return isBckLooped(pActor);
+    }
+
+    void startMoveAction(NPCActor* pActor) {
+        if (isExistRail(pActor)) {
+            adjustmentRailCoordSpeed(pActor, pActor->_10C, pActor->_110);
+            moveRailRider(pActor);
+
+            if (pActor->_124) {
+                followRailPoseOnGround(pActor, pActor, pActor->_114);
+            } else {
+                followRailPose(pActor, pActor->_114, pActor->_114);
+            }
+
+            if (isRailReachedGoal(pActor)) {
+                reverseRailDirection(pActor);
+            }
+        }
+    }
+
+    bool tryStartTalkAction(NPCActor* pActor) {
+        const char* pActionName;
+
+        if (isTalkTalking(pActor->mMsgCtrl)) {
+            if (pActor->mParam._1 && !pActor->turnToPlayer(pActor->mParam._8, pActor->mParam._C, pActor->mParam._10)) {
+                pActionName = pActor->mParam._20;
+            } else {
+                pActionName = pActor->mParam._1C;
+            }
+        } else {
+            return tryStartTurnAction(pActor);
+        }
+
+        if (!isNullOrEmptyString(pActionName)) {
+            return tryStartAction(pActor, pActionName);
+        }
+
+        return false;
+    }
+
+    bool tryStartMoveTalkAction(NPCActor* pActor) {
+        TalkMessageCtrl* pTalkCtrl = pActor->mMsgCtrl;
+        if (!isExistRail(pActor)) {
+            return tryStartTalkAction(pActor);
+        }
+
+        bool isMoveTalk = false;
+        const char* pActionName;
+        if (isTalkTalking(pTalkCtrl) && !isShortTalk(pTalkCtrl)) {
+            if (pActor->mParam._1 && !pActor->turnToPlayer(pActor->mParam._8, pActor->mParam._C, pActor->mParam._10)) {
+                pActionName = pActor->mParam._20;
+            } else {
+                pActionName = pActor->mParam._1C;
+            }
+        } else {
+            if (isNearZero(pActor->_10C) && isNearZero(getRailCoordSpeed(pActor))) {
+                return tryStartTalkAction(pActor);
+            }
+
+            startMoveAction(pActor);
+
+            if (isTalkTalking(pTalkCtrl)) {
+                pActionName = pActor->_120;
+                isMoveTalk = true;
+            } else {
+                pActionName = pActor->_11C;
+            }
+        }
+
+        if (!isNullOrEmptyString(pActionName)) {
+            bool started = tryStartAction(pActor, pActionName);
+            if (isMoveTalk) {
+                setBckRate(pActor, pActor->_118);
+            } else {
+                setBckRate(pActor, 1.0f);
+            }
+            return started;
+        }
+
+        return false;
+    }
+
+    bool tryStartTurnAction(NPCActor* pActor) {
+        const char* pActionName;
+
+        if (isNearPlayer(pActor, pActor->mParam._4)) {
+            if (pActor->mParam._0) {
+                if (pActor->turnToPlayer(pActor->mParam._8, pActor->mParam._C, pActor->mParam._10)) {
+                    pActionName = pActor->mParam._14;
+                } else {
+                    pActionName = pActor->mParam._18;
+                }
+            } else {
+                pActionName = pActor->mParam._14;
+            }
+        } else if (pActor->mParam._0 || pActor->mParam._1) {
+            if (pActor->turnToDefault(pActor->mParam._8)) {
+                pActionName = pActor->mParam._14;
+            } else {
+                pActionName = pActor->mParam._18;
+            }
+        } else {
+            pActionName = pActor->mParam._14;
+        }
+
+        if (isNullOrEmptyString(pActionName)) {
+            return false;
+        }
+
+        return tryStartAction(pActor, pActionName);
+    }
+
+    bool tryStartReaction(NPCActor* pActor) {
+        const char* pActionName = nullptr;
+        bool started = false;
+
+        if (pActor->_128) {
+            if (isTrampleReactionTrigger(pActor)) {
+                pActionName = pActor->_134;
+            } else if (isHitReactionTrigger(pActor)) {
+                pActionName = pActor->_13C;
+            } else if (isSpinReactionTrigger(pActor)) {
+                pActionName = pActor->_130;
+            } else if (pActor->_E4) {
+                pActionName = pActor->_138;
+            }
+        }
+
+        if (!isNullOrEmptyString(pActionName)) {
+            if (isTrampleReactionTrigger(pActor) || isHitReactionTrigger(pActor)) {
+                stopBck(pActor);
+                startAction(pActor, pActionName);
+                started = true;
+            } else if (isSpinReactionTrigger(pActor)) {
+                started = tryStartAction(pActor, pActionName);
+            } else if (pActor->_E4) {
+                if ((pActor->_134 != nullptr && isActionStart(pActor, pActor->_134)) ||
+                    (pActor->_13C != nullptr && isActionStart(pActor, pActor->_13C)) ||
+                    (pActor->_130 != nullptr && isActionStart(pActor, pActor->_130))) {
+                    return started;
+                }
+
+                if (isPointingReactionTrigger(pActor)) {
+                    started = tryStartAction(pActor, pActionName);
+                } else if (isActionLoopedOrStopped(pActor)) {
+                    startAction(pActor, pActionName);
+                }
+            }
+        } else if (hasScaleController(pActor)) {
+            if (isPointingReactionTrigger(pActor) || isSpinReactionTrigger(pActor) || isTrampleReactionTrigger(pActor) ||
+                isHitReactionTrigger(pActor)) {
+                started = true;
+            }
+        }
+
+        return started;
+    }
+
+    bool tryTalkNearPlayerAndStartTalkAction(NPCActor* pActor) {
+        tryStartTalkAction(pActor);
+        return tryTalkNearPlayer(pActor->mMsgCtrl);
+    }
+
+    bool tryTalkNearPlayerAtEndAndStartMoveTalkAction(NPCActor* pActor) {
+        tryStartMoveTalkAction(pActor);
+        return tryTalkNearPlayerAtEnd(pActor->mMsgCtrl);
+    }
+
+    bool tryStartReactionAndPushNerve(NPCActor* pActor, const Nerve* pNerve) {
+        if (tryStartReaction(pActor)) {
+            pActor->pushNerve(pNerve);
+            return true;
+        }
+
+        return false;
+    }
+
+    bool tryStartReactionAndPopNerve(NPCActor* pActor) {
+        if (tryStartReaction(pActor)) {
+            pActor->pushNerve(pActor->popNerve());
+            return false;
+        }
+
+        if (pActor->isScaleAnim()) {
+            return false;
+        }
+
+        if (isActionLoopedOrStopped(pActor)) {
+            pActor->popNerve();
+            return true;
+        }
+
+        return false;
+    }
+};  // namespace MR
 
 namespace NrvTakeOutStar {
     NEW_NERVE(TakeOutStarNrvAnim, TakeOutStar, Anim);

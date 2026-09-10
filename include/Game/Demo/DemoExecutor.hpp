@@ -18,8 +18,10 @@ class TalkMessageCtrl;
 
 class DemoSheetKeeperBase {
 public:
-    virtual const char* getName() = 0;
-    virtual const char* getTypeString() = 0;
+    DemoSheetKeeperBase(DemoExecutor* pExecutor) : mExecutor(pExecutor) {}
+
+    virtual const char* getName() const = 0;
+    virtual const char* getTypeString() const = 0;
     virtual void initCast(LiveActor*, const JMapInfoIter&) {};
     virtual void start() {};
     virtual void end() {};
@@ -31,7 +33,13 @@ public:
 template < class T >
 class DemoSheetKeeperInfoHolder {
 public:
-    virtual void executeType(T*);
+    virtual void executeType(const T*) {}
+
+    void update() {
+        for (T* info = mInfo.begin(); info != mInfo.end(); info++) {
+            executeType(info);
+        }
+    }
 
     /* 0x00 */ MR::Vector< MR::AssignableArray< T > > mInfo;
 };

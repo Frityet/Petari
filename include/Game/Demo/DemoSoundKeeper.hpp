@@ -10,7 +10,7 @@ public:
     /* 0x00 */ const char* mPartName;
     /* 0x04 */ const char* mBgm;
     /* 0x08 */ const char* mSystemSe;
-    /* 0x0C */ s32 mReturnBgm;
+    /* 0x0C */ u8 mReturnBgm;
     /* 0x10 */ s32 mBgmWipeoutFrame;
 };
 
@@ -18,15 +18,14 @@ class DemoSoundKeeper : public DemoSheetKeeperBase, public DemoSheetKeeperInfoHo
 public:
     DemoSoundKeeper(DemoExecutor*);
 
-    virtual const char* getName() {
+    virtual const char* getName() const {
         return "サウンド";
     }
 
-    virtual const char* getTypeString() {
+    virtual const char* getTypeString() const {
         return "Sound";
     }
 
-    virtual void start();
     virtual void update();
 
     virtual void executeType(const DemoSoundInfo*);
