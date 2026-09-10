@@ -448,7 +448,8 @@ void Syati::initRings(const JMapInfoIter& rIter) {
     }
 }
 
-PlayerPoseSetterInWater::PlayerPoseSetterInWater(const TVec3f& rVec, Syati* pSyati) : _0(rVec), _C(pSyati->_8C), _1C(0), _20(&pSyati->mMarioMoveLocalOffsetVec) {
+PlayerPoseSetterInWater::PlayerPoseSetterInWater(const TVec3f& rVec, Syati* pSyati)
+    : _0(rVec), _C(pSyati->_8C), _1C(0), _20(&pSyati->mMarioMoveLocalOffsetVec) {
 }
 
 void Syati::initPose() {
@@ -533,7 +534,7 @@ void Syati::updatePoseByRail() {
 
 void Syati::updateNumRingPassed() {
     bool isRingPassed = 0;
-    for (int i = 0; i < mPrizeRingGroup->mObjectCount; i++) {
+    for (int i = 0; i < mPrizeRingGroup->getObjNum(); i++) {
         PrizeRing* pPrizeRing = (PrizeRing*)mPrizeRingGroup->getActor(i);
 
         if (MR::isDead(pPrizeRing))
@@ -685,7 +686,7 @@ bool Syati::calcHeadJoint(TPos3f* pPos, const JointControllerInfo& rInfo) {
     MR::normalize(&stack_18);
     TQuat4f stack_8;
     stack_8.set(0.0f, 0.0f, 0.0f, 1.0f);
-    MR::turnQuat(&stack_8, stack_8, stack_18, stack_24, PI/6);
+    MR::turnQuat(&stack_8, stack_8, stack_18, stack_24, PI / 6);
     stack_3C.setQuat(stack_8);
     stack_3C.zeroTrans();
     pPos->concat(*pPos, stack_3C);

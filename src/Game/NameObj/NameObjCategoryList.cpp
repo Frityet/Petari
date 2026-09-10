@@ -22,6 +22,10 @@ NameObjCategoryList::NameObjCategoryList(u32 count, const CategoryListInitialTab
     initTable(count, pTable);
 }
 
+NameObjCategoryList::~NameObjCategoryList() {
+    delete mDelegator;
+}
+
 void NameObjCategoryList::execute(int idx) {
     CategoryInfo* pCategoryInfo = &mCategoryInfo[idx];
 
@@ -98,8 +102,4 @@ NameObjCategoryList::CategoryInfo::CategoryInfo() : mNameObjArr() {
 }
 
 NameObjCategoryList::CategoryInfo::~CategoryInfo() {
-}
-
-NameObjCategoryList::~NameObjCategoryList() {
-    delete mDelegator;
 }

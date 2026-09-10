@@ -17,6 +17,16 @@ public:
     s32 getLivingActorNum() const;
     void appearAll();
     void killAll();
+
+    bool hasActor(const LiveActor* pActor) const {
+        for (int i = 0; i < getObjNum(); i++) {
+            if (getActor(i) == pActor) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 };
 
 template < typename T >

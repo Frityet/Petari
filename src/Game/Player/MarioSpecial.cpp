@@ -13,7 +13,7 @@ void Mario::checkOnimasu(const HitSensor* pSensor) {
     }
 
     if (_5FC == nullptr) {
-        _5FC = const_cast< HitSensor* >(pSensor);
+        _5FC = pSensor;
         _60C = true;
         return;
     }
@@ -22,7 +22,7 @@ void Mario::checkOnimasu(const HitSensor* pSensor) {
         f32 oldDistance = (_5FC->mPosition - mPosition).length();
         f32 newDistance = (pSensor->mPosition - mPosition).length();
         if (newDistance < oldDistance) {
-            _5FC = const_cast< HitSensor* >(pSensor);
+            _5FC = pSensor;
             _60C = true;
         }
     }
@@ -121,7 +121,7 @@ void Mario::updateOnimasu() {
 
     TVec3f currentLocal;
     TVec3f previousLocal;
-    HitSensor* sensor = _5FC;
+    const HitSensor* sensor = _5FC;
     TPos3f* inverseMtx = &sensor->mHost->mCollisionParts->mInvBaseMatrix;
     previousLocal = _600;
     PSMTXMultVec(inverseMtx->toMtxPtr(), &mActor->mPosition, &currentLocal);

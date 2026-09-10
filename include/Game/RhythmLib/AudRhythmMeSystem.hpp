@@ -3,6 +3,7 @@
 #include "Game/RhythmLib/AudChordInfo.hpp"
 #include "Game/RhythmLib/AudRhythmHolder.hpp"
 #include "Game/RhythmLib/AudRhythmSeqParser.hpp"
+#include "Game/RhythmLib/AudRhythmWrap.hpp"
 #include <JSystem/JAudio2/JASGlobal.hpp>
 
 class JAISoundHandle;
@@ -15,7 +16,7 @@ public:
 
     AudRhythmMeSystem();
 
-    void setSeq(JAISoundHandle&, s32);
+    bool setSeq(JAISoundHandle&, s32);
     void rejectSeq(s32);
     void rhythmProc();
     void update();

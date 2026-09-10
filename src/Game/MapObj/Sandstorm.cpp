@@ -2,22 +2,8 @@
 #include "Game/LiveActor/HitSensor.hpp"
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/NameObj/NameObjArchiveListCollector.hpp"
+#include "Game/Util.hpp"
 #include "Game/Util/ActorCameraUtil.hpp"
-#include "Game/Util/ActorMovementUtil.hpp"
-#include "Game/Util/ActorSensorUtil.hpp"
-#include "Game/Util/ActorShadowUtil.hpp"
-#include "Game/Util/ActorSwitchUtil.hpp"
-#include "Game/Util/EffectUtil.hpp"
-#include "Game/Util/GamePadUtil.hpp"
-#include "Game/Util/JMapUtil.hpp"
-#include "Game/Util/LiveActorUtil.hpp"
-#include "Game/Util/MathUtil.hpp"
-#include "Game/Util/ModelUtil.hpp"
-#include "Game/Util/ObjUtil.hpp"
-#include "Game/Util/PlayerUtil.hpp"
-#include "Game/Util/RailUtil.hpp"
-#include "Game/Util/SoundUtil.hpp"
-#include "Game/Util/StringUtil.hpp"
 
 namespace {
     static const f32 sRailSpeed = 3.0f;
@@ -94,12 +80,12 @@ Sandstorm::Sandstorm(const char* pName)
       mTrapModel() {
 }
 
-void Sandstorm::makeArchiveList(NameObjArchiveListCollector* pArchiveList, const JMapInfoIter& rIter) {
+void Sandstorm::makeArchiveList(NameObjArchiveListCollector* pCollector, const JMapInfoIter& rIter) {
     bool useTrapModel = false;
     MR::getJMapInfoArg0NoInit(rIter, &useTrapModel);
 
     if (useTrapModel) {
-        pArchiveList->addArchive("SunakazeKunTrap");
+        pCollector->addArchive("SunakazeKunTrap");
     }
 }
 
@@ -141,7 +127,7 @@ void Sandstorm::init(const JMapInfoIter& rIter) {
     initRailRider(rIter);
     MR::moveCoordAndTransToNearestRailPos(this);
 
-    _94 = *MR::getRailDirection(this);
+    _94 = MR::getRailDirection(this);
 
     f32 boundingRadius;
     MR::calcModelBoundingRadius(&boundingRadius, this);

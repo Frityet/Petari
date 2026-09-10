@@ -77,7 +77,7 @@ Mario::Mario(MarioActor* actor) : MarioModule(actor) {
     _938 = mHeadVec;
     _944 = mFrontVec;
     _950 = mSideVec;
-    _60D = 0;
+    _60D = false;
     mTargetWalkSpeedIndex = 0;
     mWalkSpeed = 0.0f;
     _2D0 = 0.0f;
@@ -386,19 +386,19 @@ void Mario::updateAndClearStrideParameter() {
 
 void Mario::checkKeyLock() {
     if (!mMovementStates.jumping) {
-        mMovementStates._22 = 0;
+        mMovementStates._22 = false;
     }
     if (mActor->_37C < 0x4b) {
-        mMovementStates._22 = 1;
+        mMovementStates._22 = true;
     }
     if (mActor->isEnableNerveChange() == false) {
-        mMovementStates._22 = 1;
+        mMovementStates._22 = true;
     }
     if (isSwimming()) {
-        mMovementStates._22 = 0;
+        mMovementStates._22 = false;
     }
     if (MR::testSubPadButtonC(WPAD_CHAN0)) {
-        mDrawStates._7 = 1;
+        mDrawStates._7 = true;
     }
 }
 
@@ -496,9 +496,7 @@ void Mario::setGroundNorm(const TVec3f& rVec) {
     if (MR::isNearZero(mAirGravityVec)) {
     }
 
-    TVec3f negRVec = -rVec;
-
-    if (MR::diffAngleAbs(negRVec, mAirGravityVec) > 1.4959966f) {
+    if (MR::diffAngleAbs(-rVec, mAirGravityVec) > 1.4959966f) {
     } else {
         _368 = rVec;
         _374 = -rVec;
@@ -1010,16 +1008,6 @@ void Mario::initAfterConst() {
 }
 
 void Mario::writeBackPhyisicalVector() {
-    TVec3f stack_ec;
-    TVec3f stack_e0;
-    TVec3f stack_d4;
-    TVec3f stack_c8;
-    TVec3f stack_bc;
-    TVec3f stack_b0;
-    TVec3f stack_98;
-    TVec3f stack_8c;
-    TVec3f stack_14;
-    TVec3f stack_8;
     if (_1C._10) {
         TVec3f stack_104(mPosition);
         addTrans(mVelocity, nullptr);
@@ -1035,6 +1023,7 @@ void Mario::writeBackPhyisicalVector() {
         MR::vecKillElement(stack_f8, _6A0, &stack_f8);
         mPosition = _688 + stack_f8;
         MR::vecKillElement(mVelocity, _6A0, &mVelocity);
+        TVec3f stack_ec;
         f32 f29 = MR::vecKillElement(_694 - _688, _6A0, &stack_ec);
         if (f29 > 1.0f) {
             f29 = 1.0f;
@@ -1058,38 +1047,46 @@ void Mario::writeBackPhyisicalVector() {
         }
 
         if (!mMovementStates._22) {
-            f32 PI_30 = 0.10471976;
-            f32 zero = 0.0f;
-            f32 SQRT2_2 = 0.707f;
             for (u32 i = 0; i < _578; i++) {
-                if (MR::vecKillElement(mVelocity, *_57C[i]->getNormal(0), &stack_e0) < zero) {
-                    mVelocity = stack_e0;
+                TVec3f stack_e0;
+                if (!(MR::vecKillElement(mVelocity, *_57C[i]->getNormal(0), &stack_e0) < 0.0f)) {
+                    continue;
+                }
+
+                mVelocity = stack_e0;
+
+                if (!_1C._D) {
+                    TVec3f stack_d4;
                     f32 f28 = MR::vecKillElement(mJumpVec, *_57C[i]->getNormal(0), &stack_d4);
                     if (f28 <= 0.0f) {
                         mJumpVec = stack_d4 + *_57C[i]->getNormal(0) * f28 * 0.5f;
-                    } else if (MR::diffAngleAbs(*getGravityVec(), mJumpVec) < PI_30) {
-                        MR::vecKillElement(*_57C[i]->getNormal(0), *getGravityVec(), &stack_c8);
-                        f32 _2D4Mag = mJumpVec.length();
-                        MR::normalizeOrZero(&stack_c8);
-                        mJumpVec += stack_c8;
-                        mJumpVec.setLength(_2D4Mag);
                     }
-                    if (rising) {
-                        if (_57C[i]->getNormal(0)->dot(*getGravityVec()) > SQRT2_2) {
-                            mActor->sendMsgUpperPunch(_57C[i]->mSensor);
-                        }
+                } else if (MR::diffAngleAbs(*getGravityVec(), mJumpVec) < MR::toRadian(6.0f)) {
+                    TVec3f stack_c8;
+                    MR::vecKillElement(*_57C[i]->getNormal(0), *getGravityVec(), &stack_c8);
+                    f32 _2D4Mag = mJumpVec.length();
+                    MR::normalizeOrZero(&stack_c8);
+                    mJumpVec += stack_c8;
+                    mJumpVec.setLength(_2D4Mag);
+                }
+
+                if (rising) {
+                    if (_57C[i]->getNormal(0)->dot(*getGravityVec()) > 0.707f) {
+                        mActor->sendMsgUpperPunch(_57C[i]->mSensor);
                     }
-                    if (isPlayerModeBee() && mActor->mBeeWallWalk == 0) {
-                        const char* wallCodeString = MR::getWallCodeString(_57C[i]);
-                        if (wallCodeString != nullptr && strcmp(wallCodeString, "Fur") == 0) {
-                            Triangle stack_110 = Triangle();
-                            MarioActor* pActor = mActor;
-                            if (MR::getFirstPolyOnLineToMap(&stack_bc, &stack_110, pActor->_2A0, -(*_57C[i]->getNormal(0)) * 300.0f)) {
-                                wallCodeString = MR::getWallCodeString(&stack_110);
-                                if (wallCodeString != nullptr && strcmp(wallCodeString, "Fur") == 0) {
-                                    MarioActor* pActor2 = mActor;
-                                    pActor2->entryWallWalkMode(stack_bc, *stack_110.getNormal(0));
-                                }
+                }
+
+                if (isPlayerModeBee() && mActor->mBeeWallWalk == 0) {
+                    const char* wallCodeString = MR::getWallCodeString(_57C[i]);
+                    if (wallCodeString != nullptr && strcmp(wallCodeString, "Fur") == 0) {
+                        Triangle stack_110 = Triangle();
+                        MarioActor* pActor = mActor;
+                        TVec3f stack_bc;
+                        if (MR::getFirstPolyOnLineToMap(&stack_bc, &stack_110, pActor->_2A0, -(*_57C[i]->getNormal(0)) * 300.0f)) {
+                            wallCodeString = MR::getWallCodeString(&stack_110);
+                            if (wallCodeString != nullptr && strcmp(wallCodeString, "Fur") == 0) {
+                                MarioActor* pActor2 = mActor;
+                                pActor2->entryWallWalkMode(stack_bc, *stack_110.getNormal(0));
                             }
                         }
                     }
@@ -1097,8 +1094,8 @@ void Mario::writeBackPhyisicalVector() {
             }
         }
     } else if (isSwimming() && !mMovementStates._22) {
-        f32 SQRT2_2 = 0.707f;
         for (u32 i = 0; i < _578; i++) {
+            TVec3f stack_b0;
             if (MR::vecKillElement(mVelocity, *_57C[i]->getNormal(0), &stack_b0) < 0.0f) {
                 mVelocity = stack_b0;
                 f32 f28 = MR::vecKillElement(mSwim->mKnockbackVel, *_57C[i]->getNormal(0), &mSwim->mKnockbackVel);
@@ -1108,6 +1105,7 @@ void Mario::writeBackPhyisicalVector() {
     } else if (!_1C._C && mActor->_288.dot(_368) < 0.707f && !MR::isNearZero(mActor->_288)) {
         TVec3f stack_a4(mActor->_288);
         MR::normalizeOrZero(&stack_a4);
+        TVec3f stack_98;
         f32 f2 = MR::vecKillElement(mVelocity, stack_a4, &stack_98);
         if (f2 < 0.0f) {
             mVelocity = stack_98;
@@ -1128,6 +1126,7 @@ void Mario::writeBackPhyisicalVector() {
                                 f28 = dot;
                             }
                         }
+                        TVec3f stack_8c;
                         MR::vecKillElement(mPosition - mActor->mBinder->getPlane(index)->mHitPos, *getGravityVec(), &stack_8c);
                         MR::vecKillElement(stack_8c, stack_a4, &stack_8c);
                         if (!MR::isNearZero(stack_8c)) {

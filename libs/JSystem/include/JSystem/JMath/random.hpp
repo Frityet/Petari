@@ -25,6 +25,10 @@ namespace JMath {
             return out.f - 1;
         }
 
+        inline u32 getRand(u32 range) {
+            return (rand() >> 9) % range;
+        }
+
         u32 mSeed;
     };
 

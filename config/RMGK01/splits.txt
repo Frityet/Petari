@@ -91,13 +91,14 @@ nw4r/lyt/lyt_group.cpp:
 
 nw4r/lyt/lyt_layout.cpp:
 	.text       start:0x8000CDD4 end:0x8000DA6C
-	.data       start:0x805646F0 end:0x80564798
+	.data       start:0x805646F0 end:0x80564730
 	.sbss       start:0x806B2E88 end:0x806B2E90
 	.sdata2     start:0x806B7C88 end:0x806B7C90
 
 nw4r/lyt/lyt_picture.cpp:
 	.text       start:0x8000DA6C end:0x8000DF94
 	.ctors      start:0x8052E80C end:0x8052E810
+	.data       start:0x80564730 end:0x80564798
 	.sbss       start:0x806B2E90 end:0x806B2E98
 	.sdata2     start:0x806B7C90 end:0x806B7C98
 
@@ -2453,11 +2454,11 @@ Game/Effect/ParticleEmitter.cpp:
 	.text       start:0x800C9FB4 end:0x800CA05C
 
 Game/Effect/ParticleEmitterHolder.cpp:
-	.text       start:0x800CA05C end:0x800CA47C
+	.text       start:0x800CA05C end:0x800CA448
 	.data       start:0x805787C8 end:0x805787D8
 
 Game/Effect/ParticleResourceHolder.cpp:
-	.text       start:0x800CA47C end:0x800CA934
+	.text       start:0x800CA448 end:0x800CA934
 	.data       start:0x805787D8 end:0x80578820
 	.sdata      start:0x806B18A0 end:0x806B18A8
 
@@ -6491,6 +6492,7 @@ Game/NPC/MiiFacePartsHolder.cpp:
 	.text       start:0x802783AC end:0x80279118
 	.rodata     start:0x80539750 end:0x80539760
 	.data       start:0x805B0AD0 end:0x805B0BE0
+	.sdata2     start:0x806BEBF0 end:0x806BEC00
 
 Game/NPC/MiiFaceRecipe.cpp:
 	.text       start:0x80279118 end:0x80279260
@@ -7240,7 +7242,7 @@ Game/Player/MarioMoveSphere.cpp:
 
 Game/Player/MarioParts.cpp:
 	.text       start:0x802EDF18 end:0x802EE148
-	.data       start:0x805C8F38 end:0x805C90D0
+	.data       start:0x805C8F38 end:0x805C8FB0
 	.sdata2     start:0x806BFE68 end:0x806BFE70
 
 Game/Player/MarioPress.cpp:
@@ -7251,7 +7253,7 @@ Game/Player/MarioPress.cpp:
 Game/Player/MarioRabbit.cpp:
 	.text       start:0x802EF560 end:0x802F0404
 	.ctors      start:0x8052F114 end:0x8052F118
-	.data       start:0x805C90D0 end:0x805C91D8
+	.data       start:0x805C8FB0 end:0x805C91D8
 	.sdata2     start:0x806BFED8 end:0x806BFF08
 
 Game/Player/MarioSearchLight.cpp:
@@ -7359,7 +7361,7 @@ Game/Player/MarioWalk.cpp:
 
 Game/Player/MarioNullBck.cpp:
 	.text       start:0x80308E04 end:0x803090AC
-	.rodata     start:0x80539C58 end:0x80539CE8
+	.rodata     start:0x80539C58 end:0x80539CD0
 	.data       start:0x805CC8B8 end:0x805CC960
 	.sdata2     start:0x806C0370 end:0x806C0378
 
@@ -7498,7 +7500,7 @@ Game/Player/PlayerEventGhostRaceDown.cpp:
 Game/RhythmLib/AudRhythmSeqParser.cpp:
 	.text       start:0x80316D30 end:0x80317C08
 	.data       start:0x805CDF70 end:0x805CDF90
-	.sbss       start:0x806B62B0 end:0x806B62D0
+	.sbss       start:0x806B62B0 end:0x806B62C0
 	.sdata2     start:0x806C0630 end:0x806C0638
 
 Game/RhythmLib/AudBgmTempoAdjuster.cpp:
@@ -7508,9 +7510,9 @@ Game/RhythmLib/AudBgmTempoAdjuster.cpp:
 Game/RhythmLib/AudMeTrack.cpp:
 	.text       start:0x80317F70 end:0x80319C98
 	.ctors      start:0x8052F1A4 end:0x8052F1A8
-	.rodata     start:0x80539CE8 end:0x80539D20
+	.rodata     start:0x80539CD0 end:0x80539D20
 	.bss        start:0x8060AF38 end:0x8060AFB0
-	.sbss       start:0x806B62D0 end:0x806B62D0
+	.sbss       start:0x806B62C0 end:0x806B62D0
 	.sdata2     start:0x806C0648 end:0x806C0658
 
 Game/RhythmLib/AudMeChannelMgr.cpp:
@@ -9945,7 +9947,7 @@ JSystem/J3DGraphAnimator/J3DModelData.cpp:
 JSystem/J3DGraphAnimator/J3DMtxBuffer.cpp:
 	.text       start:0x80431CA0 end:0x804329D8
 	.data       start:0x805E9A60 end:0x805E9A68
-	.bss        start:0x8060FC28 end:0x80638CE0
+	.bss        start:0x8060FC28 end:0x80631CC0
 	.sdata      start:0x806B2750 end:0x806B2758
 	.sdata2     start:0x806C1B30 end:0x806C1B38
 
@@ -10110,6 +10112,7 @@ RVL_SDK/gd/GDTransform.c:
 RVL_SDK/kpad/KPAD.c:
 	.text       start:0x8044FC10 end:0x80452EDC
 	.data       start:0x805EA578 end:0x805EA5D0
+	.bss        start:0x80631CC0 end:0x80638CE0
 	.sdata      start:0x806B2788 end:0x806B27F8
 	.sbss       start:0x806B72C0 end:0x806B72E0
 	.sdata2     start:0x806C1CA0 end:0x806C1D08
@@ -10138,15 +10141,16 @@ RVL_SDK/wenc/wenc.c:
 
 RVL_SDK/rso/RSOLink.c:
 	.text       start:0x80456B4C end:0x80457EBC
-	.data       start:0x805EA648 end:0x805EA7A8
+	.data       start:0x805EA648 end:0x805EA760
 
 RVLFaceLib/RFL_System.c:
 	extab       start:0x800064E0 end:0x80006500
 	extabindex  start:0x800069A0 end:0x800069D0
 	.text       start:0x80457EBC end:0x80458878
 	.rodata     start:0x8055C4C8 end:0x8055C4D8
+	.data       start:0x805EA760 end:0x805EA7A8
 	.sdata      start:0x806B2808 end:0x806B2810
-	.sbss       start:0x806B7408 end:0x806B7420
+	.sbss       start:0x806B7408 end:0x806B7418
 
 RVLFaceLib/RFL_NANDLoader.c:
 	extab       start:0x80006500 end:0x80006580
@@ -10222,6 +10226,7 @@ RVLFaceLib/RFL_Format.c:
 
 RVL_SDK/net/nettime.c:
 	.text       start:0x80461FC0 end:0x804620A4
+	.sbss       start:0x806B7418 end:0x806B7420
 
 RVL_SDK/net/NETVersion.c:
 	.text       start:0x804620A4 end:0x804620AC
@@ -10257,7 +10262,7 @@ RVL_SDK/nwc24/NWC24Manage.c:
 	.text       start:0x80464CE4 end:0x80465074
 	.data       start:0x805EA980 end:0x805EAA90
 	.sdata      start:0x806B2848 end:0x806B2850
-	.sbss       start:0x806B7438 end:0x806B7458
+	.sbss       start:0x806B7438 end:0x806B7450
 
 RVL_SDK/nwc24/NWC24MsgObj.c:
 	.text       start:0x80465074 end:0x804659CC
@@ -10266,6 +10271,7 @@ RVL_SDK/nwc24/NWC24MBoxCtrl.c:
 	.text       start:0x804659CC end:0x80467304
 	.data       start:0x805EAA90 end:0x805EAB38
 	.sdata      start:0x806B2850 end:0x806B2860
+	.sbss       start:0x806B7450 end:0x806B7458
 
 RVL_SDK/nwc24/NWC24Mime.c:
 	.text       start:0x80467304 end:0x80467A68
@@ -10292,7 +10298,7 @@ RVL_SDK/nwc24/NWC24Schedule.c:
 
 RVL_SDK/nwc24/NWC24DateParser.c:
 	.text       start:0x8046A794 end:0x8046AF64
-	.rodata     start:0x8055C948 end:0x8055C9E0
+	.rodata     start:0x8055C948 end:0x8055C970
 
 RVL_SDK/nwc24/NWC24FriendList.c:
 	.text       start:0x8046AF64 end:0x8046B080
@@ -10301,15 +10307,17 @@ RVL_SDK/nwc24/NWC24FriendList.c:
 
 RVL_SDK/nwc24/NWC24SecretFList.c:
 	.text       start:0x8046B080 end:0x8046B19C
-	.data       start:0x805EB158 end:0x805EB190
+	.data       start:0x805EB158 end:0x805EB178
 	.sdata      start:0x806B2948 end:0x806B2950
 
 RVL_SDK/nwc24/NWC24UserId.c:
 	.text       start:0x8046B19C end:0x8046B4B8
+	.rodata     start:0x8055C970 end:0x8055C980
 
 RVL_SDK/nwc24/NWC24Time.c:
 	.text       start:0x8046B4B8 end:0x8046B9A0
-	.data       start:0x805EB190 end:0x805EB1B8
+	.data       start:0x805EB178 end:0x805EB1B8
+	.bss        start:0x80638FE0 end:0x806390C0
 	.sbss       start:0x806B7470 end:0x806B7488
 
 RVL_SDK/nwc24/NWC24Ipc.c:
@@ -10324,6 +10332,7 @@ RVL_SDK/nwc24/NWC24Download.c:
 RVL_SDK/nwc24/NWC24System.c:
 	.text       start:0x8046C388 end:0x8046C518
 	.data       start:0x805EB1D8 end:0x805EB220
+	.bss        start:0x806390C0 end:0x80639120
 	.sdata      start:0x806B2958 end:0x806B2960
 	.sbss       start:0x806B7490 end:0x806B74A0
 
@@ -10332,6 +10341,7 @@ RVL_SDK/vf/pf_clib.c:
 
 RVL_SDK/vf/pf_code.c:
 	.text       start:0x8046C818 end:0x8046C834
+	.rodata     start:0x8055C980 end:0x8055C9E0
 
 RVL_SDK/vf/pf_service.c:
 	.text       start:0x8046C834 end:0x8046C94C
@@ -10359,7 +10369,7 @@ RVL_SDK/vf/pdm_mbr.c:
 
 RVL_SDK/vf/pdm_dskmng.c:
 	.text       start:0x804715F4 end:0x80471818
-	.bss        start:0x80639120 end:0x80661BA0
+	.bss        start:0x80639120 end:0x80639CF0
 
 RVL_SDK/vf/pf_cache.c:
 	.text       start:0x80471818 end:0x8047341C
@@ -10372,7 +10382,7 @@ RVL_SDK/vf/pf_dir.c:
 
 RVL_SDK/vf/pf_entry.c:
 	.text       start:0x80473948 end:0x8047549C
-	.data       start:0x805EB220 end:0x805EB2E0
+	.data       start:0x805EB220 end:0x805EB230
 	.sdata2     start:0x806C1E78 end:0x806C1E80
 
 RVL_SDK/vf/pf_entry_iterator.c:
@@ -10400,7 +10410,7 @@ RVL_SDK/vf/pf_file.c:
 
 RVL_SDK/vf/pf_path.c:
 	.text       start:0x8047F0EC end:0x8048195C
-	.sdata      start:0x806B2988 end:0x806B29C0
+	.sdata      start:0x806B2988 end:0x806B29B8
 	.sdata2     start:0x806C1E80 end:0x806C1E90
 
 RVL_SDK/vf/pf_sector.c:
@@ -10408,13 +10418,15 @@ RVL_SDK/vf/pf_sector.c:
 
 RVL_SDK/vf/pf_volume.c:
 	.text       start:0x80482204 end:0x804839DC
+	.bss        start:0x80639CF0 end:0x80661A40
 
 RVL_SDK/vf/pf_cp932.c:
 	.text       start:0x804839DC end:0x80483EC0
-	.rodata     start:0x8055CA20 end:0x80560CB8
+	.rodata     start:0x8055CA20 end:0x80560C98
 
 RVL_SDK/vf/pf_api_util.c:
 	.text       start:0x80483EC0 end:0x8048401C
+	.data       start:0x805EB230 end:0x805EB2D0
 
 RVL_SDK/vf/pf_attach.c:
 	.text       start:0x8048401C end:0x804840B0
@@ -10464,24 +10476,31 @@ RVL_SDK/vf/pf_system.c:
 
 RVL_SDK/vf/d_vf.c:
 	.text       start:0x804843D8 end:0x80484E9C
+	.bss        start:0x80661A40 end:0x80661A58 align:32
 	.sbss       start:0x806B74A8 end:0x806B74B0
 
 RVL_SDK/vf/d_vf_sys.c:
 	.text       start:0x80484E9C end:0x80486990
+	.data       start:0x805EB2D0 end:0x805EB2E0
+	.bss        start:0x80661A58 end:0x80661B90
+	.sdata      start:0x806B29B8 end:0x806B29C0
 	.sbss       start:0x806B74B0 end:0x806B74C8
 
 RVL_SDK/vf/d_hash.c:
 	.text       start:0x80486990 end:0x80487010
-	.bss        start:0x80661BA0 end:0x80662178
+	.bss        start:0x80661B90 end:0x80661DD0
 
 RVL_SDK/vf/d_time.c:
 	.text       start:0x80487010 end:0x804870F0
 
 RVL_SDK/vf/d_common.c:
 	.text       start:0x804870F0 end:0x80487C38
+	.bss        start:0x80661DD0 end:0x80661FD8
 
 RVL_SDK/vf/nand_drv.c:
 	.text       start:0x80487C38 end:0x80489AFC
+	.rodata     start:0x80560C98 end:0x80560CB8
+	.bss        start:0x80661FD8 end:0x80662178
 	.sbss       start:0x806B74C8 end:0x806B74D0
 
 RVL_SDK/vf/sd_drv.c:
@@ -10913,12 +10932,13 @@ RVL_SDK/os/OSContext.c:
 RVL_SDK/os/OSError.c:
 	.text       start:0x804A60D4 end:0x804A6808
 	.data       start:0x805EFC00 end:0x805EFF20
-	.bss        start:0x80664E50 end:0x80664EC0
+	.bss        start:0x80664E50 end:0x80664EA0
 	.sdata      start:0x806B2A50 end:0x806B2A58
 
 RVL_SDK/os/OSExec.c:
 	.text       start:0x804A6808 end:0x804A7E78
 	.data       start:0x805EFF20 end:0x805EFF90
+	.bss        start:0x80664EA0 end:0x80664EC0
 	.sdata      start:0x806B2A58 end:0x806B2A68
 	.sbss       start:0x806B7690 end:0x806B76A8
 	.sdata2     start:0x806C2080 end:0x806C2088
@@ -10993,17 +11013,24 @@ RVL_SDK/os/OSIpc.c:
 RVL_SDK/os/OSStateTM.c:
 	.text       start:0x804AE070 end:0x804AE728
 	.data       start:0x805FCC08 end:0x805FCCD0
-	.sbss       start:0x806B7700 end:0x806B7728
+	.bss        start:0x80665C00 end:0x80665CC0
+	.sbss       start:0x806B7700 end:0x806B7720
+
+RVL_SDK/os/init/__start.c:
+	.init       start:0x80004000 end:0x800042E0
+	.sbss       start:0x806B7720 end:0x806B7728
 
 RVL_SDK/os/OSPlayRecord.c:
 	.text       start:0x804AE728 end:0x804AEE20
-	.data       start:0x805FCCD0 end:0x805FCD40
-	.bss        start:0x80665D70 end:0x806661F0
-	.sdata      start:0x806B2A90 end:0x806B2AA8
+	.data       start:0x805FCCD0 end:0x805FCD18
+	.bss        start:0x80665CC0 end:0x80665EC0
+	.sdata      start:0x806B2A90 end:0x806B2A98
 	.sbss       start:0x806B7728 end:0x806B7748
 
 RVL_SDK/os/OSStateFlags.c:
 	.text       start:0x804AEE20 end:0x804AF02C
+	.data       start:0x805FCD18 end:0x805FCD40
+	.bss        start:0x80665EC0 end:0x80665EE0
 
 RVL_SDK/os/OSNet.c:
 	.text       start:0x804AF02C end:0x804AF0E0
@@ -11016,12 +11043,15 @@ RVL_SDK/os/OSNandbootInfo.c:
 RVL_SDK/os/OSPlayTime.c:
 	.text       start:0x804AF2E8 end:0x804AFB80
 	.data       start:0x805FCEC8 end:0x805FCF08
+	.bss        start:0x80665EE0 end:0x80665F10
+	.sdata      start:0x806B2A98 end:0x806B2AA0
 	.sbss       start:0x806B7748 end:0x806B7760
 	.sdata2     start:0x806C20D0 end:0x806C20E0
 
 RVL_SDK/os/OSLaunch.c:
 	.text       start:0x804AFB80 end:0x804B0940
 	.data       start:0x805FCF08 end:0x805FD0F8
+	.sdata      start:0x806B2AA0 end:0x806B2AA8
 	.sbss       start:0x806B7760 end:0x806B7768
 
 RVL_SDK/os/__ppc_eabi_init.c:
@@ -11030,6 +11060,7 @@ RVL_SDK/os/__ppc_eabi_init.c:
 RVL_SDK/exi/EXIBios.c:
 	.text       start:0x804B09F4 end:0x804B2288
 	.data       start:0x805FD0F8 end:0x805FD140
+	.bss        start:0x80665F10 end:0x80665FD0
 	.sdata      start:0x806B2AA8 end:0x806B2AB0
 	.sbss       start:0x806B7768 end:0x806B7770
 
@@ -11044,6 +11075,7 @@ RVL_SDK/exi/EXICommon.c:
 RVL_SDK/si/SIBios.c:
 	.text       start:0x804B2748 end:0x804B3750
 	.data       start:0x805FD140 end:0x805FD210
+	.bss        start:0x80665FD0 end:0x806661F0
 	.sdata      start:0x806B2AB0 end:0x806B2AB8
 	.sbss       start:0x806B7780 end:0x806B7790
 
@@ -11364,18 +11396,18 @@ RVL_SDK/pad/Pad.c:
 RVL_SDK/wpad/WPAD.c:
 	.text       start:0x804D6B84 end:0x804DE36C
 	.rodata     start:0x80561D38 end:0x80561D78
-	.data       start:0x80600B38 end:0x80600EF0
-	.bss        start:0x80674AC0 end:0x80678238
+	.data       start:0x80600B38 end:0x80600E70
+	.bss        start:0x80674AC0 end:0x806781E8
 	.sdata      start:0x806B2D60 end:0x806B2D78
 	.sbss       start:0x806B7AD8 end:0x806B7B10
-	.sdata2     start:0x806C2290 end:0x806C22A8
+	.sdata2     start:0x806C2290 end:0x806C2298
 
 RVL_SDK/wpad/WPADHIDParser.c:
 	.text       start:0x804DE36C end:0x804E380C
-	.data       start:0x80600EF0 end:0x80601410
-	.bss        start:0x80678238 end:0x80678250
-	.sbss       start:0x806B7B10 end:0x806B7B30
-	.sdata2     start:0x806C22A8 end:0x806C22F8
+	.data       start:0x80600E70 end:0x80601410
+	.bss        start:0x806781E8 end:0x80678250
+	.sbss       start:0x806B7B10 end:0x806B7B28
+	.sdata2     start:0x806C2298 end:0x806C22F8
 
 RVL_SDK/wpad/WPADMem.c:
 	.bss        start:0x80678250 end:0x806782A0
@@ -11383,6 +11415,7 @@ RVL_SDK/wpad/WPADMem.c:
 RVL_SDK/wpad/WPADEncrypt.c:
 	.text       start:0x804E380C end:0x804E48B4
 	.data       start:0x80601410 end:0x80602738
+	.sbss       start:0x806B7B28 end:0x806B7B30
 
 RVL_SDK/wpad/debug_msg.c:
 	.text       start:0x804E48B4 end:0x804E4904
@@ -11400,7 +11433,7 @@ RVL_SDK/usb/usb.c:
 RVL_SDK/wud/WUD.c:
 	.text       start:0x804E5DA0 end:0x804EA758
 	.data       start:0x80602DC8 end:0x80603CE0
-	.bss        start:0x806789F0 end:0x806A2D28
+	.bss        start:0x806782A0 end:0x8067A248
 	.sdata      start:0x806B2D88 end:0x806B2D90
 	.sbss       start:0x806B7B50 end:0x806B7B78
 	.sdata2     start:0x806C22F8 end:0x806C2300
@@ -11421,6 +11454,7 @@ RVL_SDK/bte/gki_time.c:
 
 RVL_SDK/bte/gki_ppc.c:
 	.text       start:0x804EC740 end:0x804EC9D0
+	.bss        start:0x8067A248 end:0x806A2D28
 
 RVL_SDK/bte/hcisu_h2.c:
 	.text       start:0x804EC9D0 end:0x804ED06C
@@ -11431,7 +11465,7 @@ RVL_SDK/bte/hcisu_h2.c:
 
 RVL_SDK/bte/uusb_ppc.c:
 	.text       start:0x804ED06C end:0x804EDC70
-	.bss        start:0x806A2D60 end:0x806A65D0
+	.bss        start:0x806A2D60 end:0x806A4DC0
 	.sdata      start:0x806B2D90 end:0x806B2DA0
 	.sbss       start:0x806B7B78 end:0x806B7B90
 
@@ -11457,10 +11491,12 @@ RVL_SDK/bte/bte_init.c:
 
 RVL_SDK/bte/bte_logmsg.c:
 	.text       start:0x804EDD54 end:0x804EDEB8
+	.bss        start:0x806A4DC0 end:0x806A55A0
 	.sdata      start:0x806B2DD0 end:0x806B2DD8
 
 RVL_SDK/bte/bte_main.c:
 	.text       start:0x804EDEB8 end:0x804EE010
+	.bss        start:0x806A55A0 end:0x806A65D0
 	.sdata      start:0x806B2DD8 end:0x806B2DE0
 	.sbss       start:0x806B7B98 end:0x806B7BA0
 
@@ -11468,7 +11504,7 @@ RVL_SDK/bte/btu_task1.c:
 	.text       start:0x804EE010 end:0x804EE460
 	.bss        start:0x806A65D0 end:0x806A6658
 	.sdata      start:0x806B2DE0 end:0x806B2DE8
-	.sbss       start:0x806B7BA0 end:0x806B7BB0
+	.sbss       start:0x806B7BA0 end:0x806B7BA8
 
 RVL_SDK/bte/bd.c:
 	.text       start:0x804EE460 end:0x804EE534
@@ -11481,6 +11517,7 @@ RVL_SDK/bte/bta_sys_main.c:
 	.text       start:0x804EE788 end:0x804EE9CC
 	.data       start:0x80604118 end:0x80604150
 	.bss        start:0x806A6658 end:0x806A66E8
+	.sbss       start:0x806B7BA8 end:0x806B7BB0
 
 RVL_SDK/bte/ptim.c:
 	.text       start:0x804EE9CC end:0x804EEBAC
@@ -11696,9 +11733,6 @@ RVL_SDK/bte/sdp_server.c:
 RVL_SDK/bte/sdp_utils.c:
 	.text       start:0x80517310 end:0x80518350
 	.data       start:0x80609630 end:0x80609868
-
-RVL_SDK/os/init/__start.c:
-	.init       start:0x80004000 end:0x800042E0
 
 RVL_SDK/os/init/__ppc_eabi_init.cpp:
 	.init       start:0x800042E0 end:0x80004338

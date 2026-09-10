@@ -135,17 +135,16 @@ void Polta::appearStarPiece(s32 appearNum) {
 }
 
 void BombTeresaHolder::disperseAll() {
-    s32 objectCount = mObjectCount;
+    s32 memberNum = getObjNum();
 
-    for (s32 i = 0; i < objectCount; i++) {
+    for (s32 i = 0; i < memberNum; i++) {
         getMember(i)->requestDisperse();
     }
 }
 
 Polta::Polta(const char* pName)
-    : LiveActor(pName), mSensorCtrl(), mLeftArm(), mRightArm(), mSequencer(), mBombTeresaHolder(),
-      mRockHolder(), mGroundRockHolder(), mCameraInfo(), mBreakModel(), mFormationModel(), _B4(0, 0, 0, 1),
-      _C4(0, 0, 1), _D0(0, 0, 0, 1), _E0(0, 0, 0), _EC() {
+    : LiveActor(pName), mSensorCtrl(), mLeftArm(), mRightArm(), mSequencer(), mBombTeresaHolder(), mRockHolder(), mGroundRockHolder(), mCameraInfo(),
+      mBreakModel(), mFormationModel(), _B4(0, 0, 0, 1), _C4(0, 0, 1), _D0(0, 0, 0, 1), _E0(0, 0, 0), _EC() {
 }
 
 void Polta::initSensor() {

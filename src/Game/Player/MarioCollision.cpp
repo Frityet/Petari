@@ -119,7 +119,7 @@ void Mario::createAtField(bool useFloorRadius, f32 radius) {
     }
 
     for (u32 pass = 0; pass < passCount && _578 < 0x20; pass++) {
-        TVec3f gravityStep = *getAirGravityVec();
+        TVec3f gravityStep = getAirGravityVec();
         gravityStep.scale(gravityOffset * static_cast< f32 >(pass + 1));
         TVec3f center = mPosition - gravityStep;
         s32 hitNum;
@@ -144,14 +144,14 @@ void Mario::createAtField(bool useFloorRadius, f32 radius) {
 
                 TVec3f fromHit = pInfo->mHitPos - center;
                 TVec3f horizontal;
-                if (__fabsf(MR::vecKillElement(fromHit, *getAirGravityVec(), &horizontal)) > 1.0f) {
+                if (__fabsf(MR::vecKillElement(fromHit, getAirGravityVec(), &horizontal)) > 1.0f) {
                     continue;
                 }
 
                 if (pInfo->isCollisionAtEdge()) {
                     TVec3f negNormal = normal;
                     negNormal.scale(-1.0f);
-                    if (MR::diffAngleAbsHorizontal(mJumpVec, negNormal, *getAirGravityVec()) < 0.7853982f) {
+                    if (MR::diffAngleAbsHorizontal(mJumpVec, negNormal, getAirGravityVec()) < 0.7853982f) {
                         continue;
                     }
                 }
@@ -286,10 +286,10 @@ f32 Mario::calcDistToCeil(bool resetTimer) {
     TVec3f hitPos;
 
     for (u32 i = 0; i < 2; i++) {
-        TVec3f startStep = *getAirGravityVec();
+        TVec3f startStep = getAirGravityVec();
         startStep.scale(startOffset);
         TVec3f start = mPosition + startStep;
-        TVec3f offset = *getAirGravityVec();
+        TVec3f offset = getAirGravityVec();
         offset.scale(-1.0f);
         offset.scale(cCeilProbe + startOffset);
 
@@ -301,7 +301,7 @@ f32 Mario::calcDistToCeil(bool resetTimer) {
         if (hit) {
             const bool oldGroundPress = isPressSensor(mGroundPolygon);
             if (!isPressSensor(&triangle) && _95C->getCode(&triangle) != 0x1D && !oldGroundPress && _960 != 0x1D) {
-                f32 dist = MR::vecKillElement(hitPos - start, *getAirGravityVec(), &offset);
+                f32 dist = MR::vecKillElement(hitPos - start, getAirGravityVec(), &offset);
                 if (dist < 0.0f) {
                     dist = -dist;
                 }
@@ -705,7 +705,7 @@ void Mario::calcFrontFloor() {
     _4E4 = frontDelta.dot(mFrontVec);
 
     const TVec3f& frontNormal = triangleNormal(&frontTriangle);
-    f32 gravityDot = frontNormal.dot(*getAirGravityVec());
+    f32 gravityDot = frontNormal.dot(getAirGravityVec());
     if (__fabsf(gravityDot) >= 0.1f) {
         if (mMovementStates._1 && calcAngleD(_368) >= 25.0f) {
             mMovementStates._32 = false;
@@ -716,17 +716,17 @@ void Mario::calcFrontFloor() {
 
     f32 angle = marioAcos(-gravityDot);
 
-    TVec3f airGravityStep = *getAirGravityVec();
+    TVec3f airGravityStep = getAirGravityVec();
     airGravityStep.scale(200.0f);
     TVec3f probeStart = hitPos - airGravityStep;
     probeStart += mFrontVec * 20.0f;
 
-    TVec3f probeOffset = *getAirGravityVec();
+    TVec3f probeOffset = getAirGravityVec();
     probeOffset.scale(210.0f);
 
     TVec3f floorPos;
     bool hitFloor = MR::getFirstPolyOnLineBFast(probeStart, probeOffset, &floorPos, &floorTriangle);
-    if (hitFloor && triangleNormal(&floorTriangle).dot(*getAirGravityVec()) > -0.9f) {
+    if (hitFloor && triangleNormal(&floorTriangle).dot(getAirGravityVec()) > -0.9f) {
         hitFloor = false;
     }
 
@@ -735,7 +735,7 @@ void Mario::calcFrontFloor() {
     }
     else {
         TVec3f heightDelta = hitPos - floorPos;
-        _4E0 = heightDelta.dot(*getAirGravityVec());
+        _4E0 = heightDelta.dot(getAirGravityVec());
 
         if (_4E0 > 0.0f) {
             mMovementStates._A = true;
@@ -752,7 +752,7 @@ void Mario::calcFrontFloor() {
         TVec3f oldFloorPos = floorPos;
         floorPos -= mFrontVec * (10.0f + adjustedHeight);
 
-        TVec3f existStep = *getAirGravityVec();
+        TVec3f existStep = getAirGravityVec();
         existStep.scale(2.0f);
         TVec3f existStart = floorPos - existStep;
         TVec3f existOffset = *getGravityVec();
@@ -1001,7 +1001,7 @@ void Mario::setNotSafetyTimer() {
 
 TVec3f* Mario::getLastSafetyTrans(TVec3f* pOut) const {
     if (pOut != nullptr) {
-        *pOut = *getAirGravityVec();
+        *pOut = getAirGravityVec();
         pOut->scale(-1.0f);
     }
 

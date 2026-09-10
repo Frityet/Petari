@@ -2,6 +2,7 @@
 #include "Game/AreaObj/AreaObj.hpp"
 #include "Game/AreaObj/AreaForm.hpp"
 #include "Game/AreaObj/AreaObjContainer.hpp"
+#include "Game/AreaObj/RestartCube.hpp"
 #include "Game/AreaObj/WaterArea.hpp"
 #include "Game/Map/WaterAreaHolder.hpp"
 #include "Game/Map/WaterInfo.hpp"
@@ -142,7 +143,7 @@ namespace MR {
             AreaFormSphere* form = static_cast< AreaFormSphere* >(area->mForm);
             TVec3f center(0.0f, 0.0f, 0.0f);
             form->calcPos(&center);
-            f32 radius = form->_14;
+            f32 radius = form->mRadius;
             TVec3f radial(rPos);
             radial -= center;
             f32 height = MR::vecKillElement(radial, -rGravity, &radial);
@@ -165,14 +166,14 @@ namespace MR {
             if (__fabsf(up.dot(rGravity)) > 0.707f) {
                 TVec3f radial;
                 pInfo->_4 = MR::vecKillElement(rPos - center, up, &radial);
-                pInfo->mCamWaterDepth = form->_24 - pInfo->_4;
+                pInfo->mCamWaterDepth = form->mHeight - pInfo->_4;
                 pInfo->mSurfacePos.set(rPos + up * pInfo->mCamWaterDepth);
             } else {
                 TVec3f radial;
                 MR::vecKillElement(rPos - center, up, &radial);
                 f32 distance = PSVECMag(&radial);
-                pInfo->mCamWaterDepth = form->_20 - distance;
-                pInfo->_4 = form->_20 + distance;
+                pInfo->mCamWaterDepth = form->mRadius - distance;
+                pInfo->_4 = form->mRadius + distance;
                 pInfo->mSurfacePos.set(rPos - rGravity * pInfo->mCamWaterDepth);
             }
             pInfo->mSurfaceNormal.set(-rGravity);
@@ -219,11 +220,50 @@ namespace MR {
     }
 
     f32 getSphereRadius(const AreaObj* pAreaObj) {
-        return static_cast< AreaFormSphere* >(pAreaObj->mForm)->_14;
+        return static_cast< AreaFormSphere* >(pAreaObj->mForm)->mRadius;
     }
 
     void calcCylinderCenterPos(TVec3f* pPos, const AreaObj* pAreaObj) {
         static_cast< AreaFormCylinder* >(pAreaObj->mForm)->calcCenterPos(pPos);
+    }
+
+    void calcCubeAxisZ(const AreaObj* pArea, TVec3f* pPos) {
+        TVec3f rotate;
+        pArea->getForm< AreaFormCube >()->calcWorldRotate(&rotate);
+        TRot3f rotation;
+        MR::makeMtxRotate(rotation, rotate.x, rotate.y, rotate.z);
+        rotation.getZDir2(*pPos);
+    }
+
+    void calcCubeWorldBox(TDirBox3f* pBox, const AreaObj* pArea) {
+        pArea->getForm< AreaFormCube >()->calcWorldBox(pBox);
+    }
+
+    TBox3f* getCubeLocalBox(const AreaObj* pArea) {
+        return &pArea->getForm< AreaFormCube >()->mBounding;
+    }
+
+    void calcCubeLocalPos(TVec3f* pVec, const AreaObj* pArea, const TVec3f& rVec) {
+        pArea->getForm< AreaFormCube >()->calcLocalPos(pVec, rVec);
+    }
+
+    void calcCylinderPos(TVec3f* pVec, const AreaObj* pArea) {
+        pArea->getForm< AreaFormCylinder >()->calcPos(pVec);
+    }
+
+    void calcCylinderUpVec(TVec3f* pVec, const AreaObj* pArea) {
+        pArea->getForm< AreaFormCylinder >()->calcUpVec(pVec);
+    }
+
+    f32 getCylinderRadius(const AreaObj* pArea) {
+        return pArea->getForm< AreaFormCylinder >()->mRadius;
+    }
+
+    void tryToUpdatePlayerRestartIdInfo(const TVec3f& rVec) {
+        RestartCube* pCube = MR::getAreaObj< RestartCube >("RestartCube", rVec);
+        if (pCube != nullptr) {
+            pCube->updatePlayerRestartIdInfo();
+        }
     }
 
 };  // namespace MR

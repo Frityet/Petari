@@ -2,7 +2,6 @@
 #include "Game/LiveActor/Nerve.hpp"
 #include "Game/Screen/IconAButton.hpp"
 #include "Game/Screen/PictureBookLayout.hpp"
-#include "Game/Util.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/DemoUtil.hpp"
 #include "Game/Util/EventUtil.hpp"
@@ -27,8 +26,7 @@ namespace NrvRosettaPictureBook {
     NEW_NERVE(HostTypeNrvFadeIn, RosettaPictureBook, FadeIn);
 };  // namespace NrvRosettaPictureBook
 
-RosettaPictureBook::RosettaPictureBook(const char* pName)
-    : LiveActor(pName), mLayout(nullptr), mIconAButton(nullptr), mIsValidOpenIconAButton(false) {
+RosettaPictureBook::RosettaPictureBook(const char* pName) : LiveActor(pName), mLayout(), mIconAButton(), mIsValidOpenIconAButton() {
 }
 
 void RosettaPictureBook::init(const JMapInfoIter& rIter) {
