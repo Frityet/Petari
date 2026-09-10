@@ -1,0 +1,22 @@
+Validated movement preview, 2026-09-10.
+
+Exact executable SHA256:
+e86ab9830fcb1a53347b8311c9fad4f5e98f302b67c4c28d4838f80b23856017
+
+The real-disc Gateway scene ran 960 simulation ticks at the packaged 1280x720
+window size, averaged 59.93 presents/second, and exited normally. A repeatable
+SDL event test passed all 13 checks: finite movement/camera state, no idle drift,
+W/A/S/D movement on ground, key release, and two Space-triggered jumps with
+landings 35 ticks later. This is synthetic keyboard-event validation through
+the ordinary input layer, not a physical-keyboard test. A captured frame
+visually confirms Mario's jump above the actual planet through the original
+game camera. The same 13 checks also passed at 960x720.
+
+The movement fixes recover original animation, grounding, acceleration, and
+gravity behavior from the Wii code, first in decomp/ and then in the port.
+No replacement movement controller or forced-grounding shortcut was added.
+The ground-check function's Wii comparison improved 51.25% to 87.43%; this is
+not a claim of complete instruction identity or fully verified game behavior.
+
+This remains a development movement preview. The full Gateway bunny chase
+through Rosalina is still unfinished. HUD and audio were not acceptance criteria.

@@ -4,11 +4,13 @@ parser.add_argument("--name",required=True)
 parser.add_argument("--frames",type=int,default=600)
 parser.add_argument("--seconds",type=float,default=40)
 parser.add_argument("--buttons",default="")
+parser.add_argument("--width",type=int,default=960)
+parser.add_argument("--height",type=int,default=720)
 args=parser.parse_args()
 root=pathlib.Path(__file__).resolve().parents[2]
 note=pathlib.Path(__file__).resolve().parent
 binary=root/"build/macosx/arm64/debug/smg-pc-showcase"
-cmd=[str(binary),"gateway","--disc",str(root/"Super Mario Wii - Galaxy Adventure (Korea).rvz"),"--max-frames",str(args.frames)]
+cmd=[str(binary),"gateway","--disc",str(root/"Super Mario Wii - Galaxy Adventure (Korea).rvz"),"--max-frames",str(args.frames),"--width",str(args.width),"--height",str(args.height)]
 env={**os.environ,"SMGPC_DEBUG_SIMULATION_TIMING":"1"}
 if args.buttons: env["SMGPC_DEBUG_WPAD_BUTTON_SCRIPT"]=args.buttons
 start=time.monotonic(); frames=[]; data=b""; timed_out=False

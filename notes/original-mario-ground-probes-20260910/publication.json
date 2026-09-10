@@ -1,0 +1,48 @@
+[
+  {
+    "command": [
+      "git",
+      "commit",
+      "--only",
+      "-m",
+      "Recover Mario ground probe and contact control flow",
+      "--",
+      "src/Game/Player/MarioCollision.cpp"
+    ],
+    "exit": 0,
+    "stdout": "[pcp-decomp db38bcbac] Recover Mario ground probe and contact control flow\n 1 file changed, 249 insertions(+), 107 deletions(-)\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "push",
+      "origin",
+      "HEAD:pcp-decomp"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": "To https://github.com/Frityet/Petari\n   91bf46ce4..db38bcbac  HEAD -> pcp-decomp\n"
+  },
+  {
+    "command": [
+      "git",
+      "rev-parse",
+      "HEAD"
+    ],
+    "exit": 0,
+    "stdout": "db38bcbac05d051fa9b319306a7ba43cb84f37ae\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "ls-remote",
+      "origin",
+      "refs/heads/pcp-decomp"
+    ],
+    "exit": 0,
+    "stdout": "db38bcbac05d051fa9b319306a7ba43cb84f37ae\trefs/heads/pcp-decomp\n",
+    "stderr": ""
+  }
+]

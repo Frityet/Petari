@@ -1,0 +1,26 @@
+{
+  "baseline": {
+    "left": {
+      "name": "checkGround__5MarioFv",
+      "size": "5176",
+      "match_percent": 51.25193
+    },
+    "right": {
+      "name": "checkGround__5MarioFv",
+      "size": "3284",
+      "match_percent": 51.25193
+    }
+  },
+  "fixed": {
+    "left": {
+      "name": "checkGround__5MarioFv",
+      "size": "5176",
+      "match_percent": 87.42658
+    },
+    "right": {
+      "name": "checkGround__5MarioFv",
+      "size": "5108",
+      "match_percent": 87.42658
+    }
+  }
+}
