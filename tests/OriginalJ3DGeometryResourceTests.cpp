@@ -9,6 +9,7 @@
 #include "runtime/RuntimeServices.hpp"
 
 #include <aurora/dvd.h>
+#include <aurora/gx_array.hpp>
 #include <dolphin/dvd.h>
 
 #include <algorithm>
@@ -23,6 +24,7 @@
 #include <stdexcept>
 #include <string>
 #include <string_view>
+#include <utility>
 #include <vector>
 
 namespace {
@@ -183,6 +185,9 @@ namespace {
             J3dGeometryData owner(bytes, flags);
             J3DModelData model;
             owner.attach_to(model);
+            const auto* registered_position = model.getVertexData().mVtxPosArray;
+            require(aurora::gx::find_registered_array(registered_position).has_value(),
+                    "native vertex storage publishes its actual extent before original shape finalization");
             require(model.getShapeNum() == 4 && model.getMaterialNum() == 0 && model.getJointNum() == 0 && model.mpRawData == nullptr,
                     "the construction component does not publish invented model tables or raw data");
             J3DShapeFactory factory(owner.shape_block());
@@ -224,6 +229,8 @@ namespace {
             std::fill(bytes.begin(), bytes.end(), 0xcc);
             bytes.clear(); bytes.shrink_to_fit();
             auto moved = std::make_unique<J3dGeometryData>(std::move(owner));
+            require(aurora::gx::find_registered_array(registered_position).has_value(),
+                    "native array registration follows geometry ownership across source retirement and move");
             require(logical0->mRadius == 13.5F && logical0->getShapeMtx(0)->getUseMtxIndex(2) == 7 &&
                         logical0->getShapeDraw(0)->countVertex(7) == 2 && std::strcmp(names.getName(0), "One") == 0,
                     "all actual shape objects and relative data survive source retirement and owner move");
@@ -232,6 +239,8 @@ namespace {
             require(rejected && model.getShapeNodePointer(0) == logical0, "reattachment cannot replace a live shape table");
             J3DShape::sOldVcdVatCmd = logical0->getVcdVatCmd();
             moved.reset();
+            require(!aurora::gx::find_registered_array(registered_position).has_value(),
+                    "retiring native geometry removes its borrowed GX array extent");
             require(J3DShape::sOldVcdVatCmd == nullptr, "retiring a command allocation invalidates its original shared cache");
         }
     }
@@ -242,6 +251,25 @@ namespace {
         J3DModelData model;
         owner.attach_to(model);
         auto& vertices = model.getVertexData();
+        const std::array<std::pair<const void*, std::uint32_t>, 5> native_arrays{{
+            {vertices.mVtxPosArray, 16}, {vertices.mVtxNrmArray, 18},
+            {vertices.mVtxNBTArray, 32}, {vertices.mVtxColorArray[0], 20},
+            {vertices.mVtxTexCoordArray[0], 56},
+        }};
+        for (const auto& [data, size] : native_arrays) {
+            const auto extent = aurora::gx::find_registered_array(data);
+            require(extent && extent->size == size &&
+                        extent->littleEndian == (std::endian::native == std::endian::little),
+                    "GX receives the exact materialized array, including source-backed CPU lookahead");
+            const auto* last_byte = static_cast<const std::uint8_t*>(data) + size - 1;
+            const auto tail = aurora::gx::find_registered_array(last_byte);
+            require(tail && tail->size == 1,
+                    "array extents bound interior addresses to the remaining actual bytes");
+            if (size % 32 != 0) {
+                require(!aurora::gx::find_registered_array(last_byte + 1),
+                        "array extents never expose the native alignment padding after a table");
+            }
+        }
         require(vertices.mVtxNum == 2 && vertices.mPacketNum == 4 && vertices.mNrmNum == 3 &&
                     vertices.mColNum == 5 && vertices.mTexCoordNum == 7,
                 "original INF counts and retail readVertex successor/+1 rules are retained");

@@ -1,0 +1,74 @@
+{
+  "owned_sources": [
+    {
+      "path": "aurora/lib/gx/command_processor.cpp",
+      "sha256": "7e64d418a66935fc951403583ebebe4c17c3645b61005cbfafdd42510624fdef",
+      "bytes": 35257
+    },
+    {
+      "path": "aurora/lib/gx/fifo.cpp",
+      "sha256": "67f493e254817232864d2631565f87a2cf280ec26e6d1f41a57b3e6d2a1f654a",
+      "bytes": 9490
+    },
+    {
+      "path": "aurora/tests/gx_fifo_test.cpp",
+      "sha256": "887f84ef98d077636548f0743b2aac2c2ac9da0a6d31f1cbbe5736a2b499a884",
+      "bytes": 147934
+    },
+    {
+      "path": "aurora/tests/gx_test_common.hpp",
+      "sha256": "db75e693cf3e2bd7efac7631b6e022a74bb71287abafa170248cf0471b90c7a8",
+      "bytes": 1670
+    },
+    {
+      "path": "aurora/tests/gx_test_stubs.cpp",
+      "sha256": "6d76bde186bb6cf468ee52be6e5f3738d3631e83d25a42937f048422bab43e6d",
+      "bytes": 15360
+    }
+  ],
+  "separately_owned_sources_in_combined_validation": [
+    {
+      "path": "aurora/include/aurora/gx_array.hpp",
+      "sha256": "e053cf3e6f94cf1f246fae149742b9163fac4254a4786d87e1d69150a6643106",
+      "bytes": 1342
+    },
+    {
+      "path": "aurora/lib/gx/array_registry.cpp",
+      "sha256": "fda02066a630afaba60262f45fa96fff4d87f26393640ee1c7af43f8b0faa16e",
+      "bytes": 3333
+    },
+    {
+      "path": "aurora/tests/gx_array_registry_test.cpp",
+      "sha256": "5bf80bb7addc1a71aefc438bec768d2cdce1e07d521d53d553344fcce4c25afa",
+      "bytes": 7032
+    },
+    {
+      "path": "aurora/tests/CMakeLists.txt",
+      "sha256": "e692c322678332719932159a7d63ebeb60aba47617813cf94405c4515b2d1f94",
+      "bytes": 16136
+    },
+    {
+      "path": "aurora/CMakeLists.txt",
+      "sha256": "7d0b162a14f106869e23326ce7f9fbb75df3f46169f9e1bffebe76d9e42f722e",
+      "bytes": 3096
+    },
+    {
+      "path": "aurora/xmake.lua",
+      "sha256": "ddcfd07e8cce002b13ddd68bcfc129e9ea0bd0c806d534c64b7ffdcfaa393d07",
+      "bytes": 15536
+    }
+  ],
+  "command_processor_shared_hunks": "Cache owns snapshot helper, push_gx_draw upload, clear_draw_cache; registry owns header include and handle_aurora LOAD_ARRAYBASE promotion",
+  "build_exit": 0,
+  "runtime_exit": 0,
+  "test_result": {
+    "tests": "269",
+    "failures": "0",
+    "disabled": "0",
+    "errors": "0",
+    "time": "0.422",
+    "timestamp": "2026-09-10T11:46:05.291",
+    "name": "AllTests"
+  },
+  "aurora_base": "f14bed4e8ef79b3d41541ea2e339e7d203122426"
+}

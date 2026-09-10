@@ -1,4 +1,5 @@
 #include <aurora/exception.hpp>
+#include <aurora/gx_array.hpp>
 #include "J3dGeometryData.hpp"
 
 #include "J3dNameData.hpp"
@@ -17,6 +18,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <stdexcept>
+#include <utility>
 #include <vector>
 
 namespace smgpc::resource {
@@ -154,6 +156,7 @@ namespace smgpc::resource {
         using VertexBlock = J3dNativeBlock<J3DVertexBlock>;
         using ShapeBlock = J3dNativeBlock<J3DShapeBlock>;
         std::unique_ptr<VertexBlock> vertex;
+        std::vector<aurora::gx::ArrayRegistration> vertex_arrays;
         std::unique_ptr<ShapeBlock> shape;
         std::unique_ptr<JUTNameTab> names;
         std::unique_ptr<u8, AlignedDelete> commands;
@@ -189,6 +192,7 @@ namespace smgpc::resource {
             const auto block = blocks.vertex;
             checked(block, 0, 0x40);
             VertexBlock::Builder builder;
+            std::vector<std::pair<std::size_t, std::size_t>> native_arrays;
             builder.header.mBlockType = u32_at(block, 0);
             builder.header.mBlockSize = u32_at(block, 4);
             std::array<std::size_t, 14> offsets{};
@@ -275,6 +279,9 @@ namespace smgpc::resource {
                     }
                     native_offset = builder.append_bytes(values, 32);
                 }
+                if (aligned_size != 0) {
+                    native_arrays.emplace_back(native_offset, aligned_size);
+                }
                 return VertexBlock::Builder::pointer_offset(native_offset);
             };
             const auto pos_size = find_format(GX_VA_POS).type == GX_F32 ? 12U : 6U;
@@ -289,6 +296,15 @@ namespace smgpc::resource {
                 builder.header.mpVtxTexCoordArray[i] = array(6 + i, static_cast<GXAttr>(GX_VA_TEX0 + i), i == 0 ? std::size_t{texcoord_count} * 8 : 0);
             }
             vertex = std::move(builder).finish();
+            // Original GX/GD array-base commands do not carry a byte count.
+            // Publish each actual native table's extent while its owner lives;
+            // Aurora can then snapshot it once without repeatedly copying a
+            // larger prefix as later primitives reference higher indices.
+            vertex_arrays.reserve(native_arrays.size());
+            for (const auto& [offset, size] : native_arrays) {
+                vertex_arrays.emplace_back(vertex->bytes().data() + offset, size,
+                                           std::endian::native == std::endian::little);
+            }
         }
 
         void load_shapes(Bytes block, Bytes info, std::uint32_t flags) {

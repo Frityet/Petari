@@ -1,0 +1,21 @@
+{
+  "aurora_commit": "220b873e6478de033682ed79bd2b4a2a4ef2b1ed",
+  "remote_ref": "origin/codex/macos-compat",
+  "verified_remote_sha": "220b873e6478de033682ed79bd2b4a2a4ef2b1ed",
+  "author": "codex <codex@openai.com>",
+  "committer": "codex <codex@openai.com>",
+  "changed_paths": 11,
+  "combined_build_exit": 0,
+  "combined_test_exit": 0,
+  "tests_passed": 269,
+  "tests_failed": 0,
+  "tests_skipped": 0,
+  "new_registry_tests": 8,
+  "growth_fixture_registered_uploads": 1,
+  "growth_fixture_unknown_uploads": 16,
+  "combined_build_log": "notes/gx-array-snapshot-cache-20260910/combined-build.log",
+  "combined_test_log": "notes/gx-array-snapshot-cache-20260910/combined-tests.log",
+  "game_sources_changed": false,
+  "staging_limits_changed": false,
+  "runtime_validation": "Parent owns J3D resource-owner fixture and real Gateway smoke run; these CPU fixtures do not prove presented gameplay."
+}

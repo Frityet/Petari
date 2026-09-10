@@ -1,0 +1,22 @@
+[
+  {
+    "mode": "build",
+    "exit": 0,
+    "command": [
+      "/opt/homebrew/bin/xmake",
+      "build",
+      "-y",
+      "-j",
+      "12",
+      "smg-pc-original-j3d-geometry-resource-tests"
+    ]
+  },
+  {
+    "mode": "run",
+    "exit": 0,
+    "command": [
+      "build/macosx/arm64/debug/smg-pc-original-j3d-geometry-resource-tests"
+    ],
+    "binary_sha256": "27102b0d41a6e13e7b371c778ec175cf7556a951e57ff389e4409dbac05e1767"
+  }
+]
