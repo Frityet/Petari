@@ -1,0 +1,12 @@
+Movement demo with the Mac cursor hidden inside the active game window.
+The game's star pointer and absolute mouse input are preserved. The Mac cursor
+returns when the pointer or focus leaves the window, and on normal exit.
+
+Exact executable SHA256:
+a0b52e48fc22f70c895b24eff29c3c5d93d0baf02fe96cdd518b156608036cdc
+
+This cursor update ran the real-disc scene for 180 ticks at 1280x720 and exited
+normally. The live SDL cursor-visible query confirmed hidden and restored states.
+Game movement code is unchanged from the previous build, which passed all 13
+idle, WASD, key-release, jump/landing, and finite-camera checks near 60 FPS.
+The full Gateway bunny chase remains unfinished.

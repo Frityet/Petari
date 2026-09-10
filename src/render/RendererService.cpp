@@ -780,6 +780,7 @@ namespace smgpc::render {
             config.vsync = environment_flag_enabled("SMGPC_ENABLE_VSYNC", true);
             config.pauseOnFocusLost = false;
             config.allowJoystickBackgroundEvents = true;
+            config.hideSystemCursor = true;
             config.allowTextureDumps = environment_flag_enabled("SMGPC_AURORA_TEXTURE_DUMPS", false);
             config.mem1Size = 24U * 1024U * 1024U;
             config.mem2Size = 64U * 1024U * 1024U;

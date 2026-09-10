@@ -1,0 +1,11 @@
+{
+  "binary_sha256": "a0b52e48fc22f70c895b24eff29c3c5d93d0baf02fe96cdd518b156608036cdc",
+  "linked_build_exit": 0,
+  "real_disc_simulation_ticks": 180,
+  "window_size": [1280, 720],
+  "process_exit": 0,
+  "cursor_visible_observations": [false, true, false, true],
+  "visibility_query_errors": 0,
+  "game_input_or_pointer_code_changed": false,
+  "lateral_movement_report_withdrawn_by_user": true
+}
