@@ -1,0 +1,20 @@
+{
+  "app": "/Users/frityet/Projects/petari/build/playable-demo/Super Mario Galaxy Movement Demo.app",
+  "backup_app": "/Users/frityet/Projects/petari/build/demo-history/original-player-camera-20260910-150323/Super Mario Galaxy Movement Demo.app",
+  "binary_sha256": "89b80b085aa6d0f9949e3db3e26b7c817e9bb182e12402ea1fceef2a586a2488",
+  "code_commit": "60df3871d0a6a70e160863ccfdbd3c6853460cdf",
+  "packaged_at_utc": "2026-09-10T15:03:23.827817+00:00",
+  "rebuild_performed": false,
+  "runtime_tested_binary_identical": true,
+  "automatically_launched": false,
+  "command": [
+    "python3",
+    "script/package_movement_demo.py",
+    "--disc",
+    "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "--expected-sha256",
+    "89b80b085aa6d0f9949e3db3e26b7c817e9bb182e12402ea1fceef2a586a2488",
+    "--validation-note",
+    "notes/original-player-camera-20260910/demo-validation.txt"
+  ]
+}
