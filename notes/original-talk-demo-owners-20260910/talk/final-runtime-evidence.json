@@ -1,0 +1,32 @@
+{
+  "runner": "Root agent shared native build lane",
+  "final_message_holder_exit": 0,
+  "message_counts": {
+    "system": 6,
+    "game": 1994,
+    "owner_generations": 2
+  },
+  "duplicate_typed_block_regression": "passed",
+  "jkr_archive_exit": 0,
+  "jkr_archive_groups_passed": 6,
+  "files": [
+    {
+      "path": "notes/original-talk-demo-owners-20260910/run-jkr-archive-tests.log",
+      "sha256": "95584b7a44da02227f8ff75da25387b42a5ae3978596a18f091d1a16b9391cce"
+    },
+    {
+      "path": "notes/original-talk-demo-owners-20260910/run-message-holder-tests.log",
+      "sha256": "01ff70461a31dd5cd63adbe7857b784fac8e6a897a188ac05f0e26007d4fc62a"
+    }
+  ],
+  "binaries": [
+    {
+      "path": "build/macosx/arm64/debug/smg-pc-original-message-holder-tests",
+      "sha256": "a6e19d87166925b10d0ae8d40ff5a4021f12dbab1a871bf1d1a2ca77b34453d1"
+    },
+    {
+      "path": "build/macosx/arm64/debug/smg-pc-original-jkr-archive-tests",
+      "sha256": "b6c383db12e5db2f94f0f9e012673460bcc567a6840641137d31f6bf08e2d91f"
+    }
+  ]
+}

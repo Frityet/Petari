@@ -495,11 +495,6 @@ namespace smgpc::runtime {
             }
         }
 
-        [[nodiscard]] std::string sensor_host_name(const HitSensor *sensor) {
-            const auto *host = MR::getSensorHost(sensor);
-            return host != nullptr ? resource::decode_cp932(host->getName()) : "";
-        }
-
         [[nodiscard]] std::array<float, 3U> vec3_state(const TVec3f &value) {
             return {value.x, value.y, value.z};
         }
@@ -1150,68 +1145,6 @@ namespace smgpc::runtime {
         }
     }
 
-    std::size_t SceneScheduler::send_message_to_live_actors(u32 msg, LiveActor *exclude_actor) {
-        smgpc::compat::JkrHostAllocationScope host;
-        auto seen_actors = std::vector<LiveActor *>{};
-        auto accepted_count = std::size_t {};
-        auto *message_sensor = invoke_game_callback(_allocation_domain, [] { return MR::getMessageSensor(); });
-
-        for (const auto& registered : entries_snapshot()) {
-            auto current = current_entry(registered);
-            if (!current) continue;
-            auto& entry = *current;
-            auto *actor = entry_live_actor(entry);
-            if (actor == nullptr || std::ranges::find(seen_actors, actor) != seen_actors.end()) {
-                continue;
-            }
-            {
-                smgpc::compat::JkrHostAllocationScope host;
-                seen_actors.push_back(actor);
-            }
-
-            const auto dead = entry_is_dead(entry);
-            const auto suspended = entry_is_suspended(entry);
-            const auto excluded = actor == exclude_actor;
-            const auto delivered = !dead && !suspended && !excluded;
-#ifndef NDEBUG
-            // Capture borrowed names before the receiver can retire itself or
-            // other registrations. Post-callback tracing only touches copies.
-            auto trace = SceneSchedulerMessageTraceEntry {
-                .sequence = _next_message_sequence++,
-                .message = msg,
-                .target_name = entry_name(entry),
-                .target_kind = entry.kind,
-                .target_movement_type = entry.movement_type,
-                .target_calc_anim_type = entry.calc_anim_type,
-                .target_draw_buffer_type = entry.draw_buffer_type,
-                .target_draw_type = entry.draw_type,
-                .target_order = entry.order,
-                .target_dead = dead,
-                .target_suspended = suspended,
-                .excluded = excluded,
-                .delivered = delivered,
-                .accepted = false,
-                .sender_sensor_present = message_sensor != nullptr,
-                .receiver_sensor_present = message_sensor != nullptr,
-                .sender_sensor_type = message_sensor != nullptr ? message_sensor->mType : 0U,
-                .receiver_sensor_type = message_sensor != nullptr ? message_sensor->mType : 0U,
-                .sender_sensor_host_name = sensor_host_name(message_sensor),
-                .receiver_sensor_host_name = sensor_host_name(message_sensor),
-            };
-#endif
-            const auto accepted = delivered && invoke_game_callback(_allocation_domain, [&] {
-                return actor->receiveMessage(msg, message_sensor, message_sensor);
-            });
-            accepted_count += accepted;
-#ifndef NDEBUG
-            trace.accepted = accepted;
-            push_message_trace(std::move(trace));
-#endif
-        }
-
-        return accepted_count;
-    }
-
     std::size_t SceneScheduler::registration_marker() const {
         return _next_order;
     }
@@ -1367,10 +1300,6 @@ namespace smgpc::runtime {
 
     std::span<const SceneSchedulerEntryState> SceneScheduler::last_execution_trace() const {
         return _last_execution_trace;
-    }
-
-    std::span<const SceneSchedulerMessageTraceEntry> SceneScheduler::message_trace() const {
-        return _message_trace;
     }
 
     std::vector<SceneLayoutRuntimeDebugState> SceneScheduler::debug_layout_runtime_snapshot() const {
@@ -1565,8 +1494,6 @@ namespace smgpc::runtime {
         _layout_draw_adaptors.clear();
 #ifndef NDEBUG
         _last_execution_trace.clear();
-        _message_trace.clear();
-        _next_message_sequence = 0U;
 #endif
         // Registration orders identify snapshots across callback-triggered
         // clear/reconnect operations and must never be reused by this scheduler.
@@ -1739,14 +1666,6 @@ namespace smgpc::runtime {
         _last_execution_trace.push_back(std::move(state));
     }
 
-    void SceneScheduler::push_message_trace(SceneSchedulerMessageTraceEntry trace) {
-        smgpc::compat::JkrHostAllocationScope host;
-        constexpr auto max_message_trace_entries = std::size_t {512U};
-        if (_message_trace.size() >= max_message_trace_entries) {
-            _message_trace.erase(_message_trace.begin());
-        }
-        _message_trace.push_back(std::move(trace));
-    }
 #endif
 
 }  // namespace smgpc::runtime

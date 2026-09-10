@@ -1,0 +1,802 @@
+{
+  "Util/RailUtil": {
+    "source_sha256": "1c47c0dd323bf40623260d2cf34e5aa9665d1c913f31f99f53f37632dd634582",
+    "native_reference_equal": true,
+    "sections": [
+      {
+        "name": ".text",
+        "size": "8176",
+        "match_percent": 99.19178
+      },
+      {
+        "name": ".rodata",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".data",
+        "size": "168",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".sdata2",
+        "size": "16",
+        "match_percent": 100.0
+      }
+    ],
+    "functions": [
+      {
+        "name": "moveTransToOtherActorRailPos__2MRFP9LiveActorPC9LiveActor",
+        "demangled_name": "MR::moveTransToOtherActorRailPos(LiveActor*, const LiveActor*)",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "moveTransToCurrentRailPos__2MRFP9LiveActor",
+        "demangled_name": "MR::moveTransToCurrentRailPos(LiveActor*)",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "moveCoord__2MRFP9LiveActorf",
+        "demangled_name": "MR::moveCoord(LiveActor*, float)",
+        "size": "60",
+        "match_percent": 100.0
+      },
+      {
+        "name": "moveCoordAndTransToRailPoint__2MRFP9LiveActorl",
+        "demangled_name": "MR::moveCoordAndTransToRailPoint(LiveActor*, long)",
+        "size": "84",
+        "match_percent": 100.0
+      },
+      {
+        "name": "moveCoordAndCheckPassPointNo__2MRFP9LiveActorf",
+        "demangled_name": "MR::moveCoordAndCheckPassPointNo(LiveActor*, float)",
+        "size": "124",
+        "match_percent": 100.0
+      },
+      {
+        "name": "moveCoordAndFollowTransAndCheckPassPointNo__2MRFP9LiveActor",
+        "demangled_name": "MR::moveCoordAndFollowTransAndCheckPassPointNo(LiveActor*)",
+        "size": "92",
+        "match_percent": 100.0
+      },
+      {
+        "name": "moveCoordToRailPoint__2MRFP9LiveActorl",
+        "demangled_name": "MR::moveCoordToRailPoint(LiveActor*, long)",
+        "size": "56",
+        "match_percent": 100.0
+      },
+      {
+        "name": "moveCoordToNearestPos__2MRFP9LiveActorRCQ29JGeometry8TVec3<f>",
+        "demangled_name": "MR::moveCoordToNearestPos(LiveActor*, const JGeometry::TVec3<float>&)",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "moveCoordAndFollowTrans__2MRFP9LiveActorf",
+        "demangled_name": "MR::moveCoordAndFollowTrans(LiveActor*, float)",
+        "size": "60",
+        "match_percent": 100.0
+      },
+      {
+        "name": "moveCoordAndFollowTrans__2MRFP9LiveActor",
+        "demangled_name": "MR::moveCoordAndFollowTrans(LiveActor*)",
+        "size": "64",
+        "match_percent": 100.0
+      },
+      {
+        "name": "moveCoordToStartPos__2MRFP9LiveActor",
+        "demangled_name": "MR::moveCoordToStartPos(LiveActor*)",
+        "size": "12",
+        "match_percent": 98.333336
+      },
+      {
+        "name": "moveCoordToEndPos__2MRFP9LiveActor",
+        "demangled_name": "MR::moveCoordToEndPos(LiveActor*)",
+        "size": "56",
+        "match_percent": 100.0
+      },
+      {
+        "name": "moveCoordAndTransToNearestRailPos__2MRFP9LiveActor",
+        "demangled_name": "MR::moveCoordAndTransToNearestRailPos(LiveActor*)",
+        "size": "68",
+        "match_percent": 100.0
+      },
+      {
+        "name": "moveCoordAndTransToNearestRailPos__2MRFP9LiveActorRCQ29JGeometry8TVec3<f>",
+        "demangled_name": "MR::moveCoordAndTransToNearestRailPos(LiveActor*, const JGeometry::TVec3<float>&)",
+        "size": "64",
+        "match_percent": 100.0
+      },
+      {
+        "name": "moveCoordAndTransToNearestRailPoint__2MRFP9LiveActor",
+        "demangled_name": "MR::moveCoordAndTransToNearestRailPoint(LiveActor*)",
+        "size": "68",
+        "match_percent": 100.0
+      },
+      {
+        "name": "moveCoordAndTransToNextPoint__2MRFP9LiveActor",
+        "demangled_name": "MR::moveCoordAndTransToNextPoint(LiveActor*)",
+        "size": "64",
+        "match_percent": 100.0
+      },
+      {
+        "name": "moveCoordAndTransToRailStartPoint__2MRFP9LiveActor",
+        "demangled_name": "MR::moveCoordAndTransToRailStartPoint(LiveActor*)",
+        "size": "68",
+        "match_percent": 99.70588
+      },
+      {
+        "name": "setRailDirectionToStart__2MRFP9LiveActor",
+        "demangled_name": "MR::setRailDirectionToStart(LiveActor*)",
+        "size": "24",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setRailDirectionToEnd__2MRFP9LiveActor",
+        "demangled_name": "MR::setRailDirectionToEnd(LiveActor*)",
+        "size": "24",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setRailDirectionCloseToCoord__2MRFP9LiveActorf",
+        "demangled_name": "MR::setRailDirectionCloseToCoord(LiveActor*, float)",
+        "size": "204",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setRailDirectionCloseToNearestPos__2MRFP9LiveActorRCQ29JGeometry8TVec3<f>",
+        "demangled_name": "MR::setRailDirectionCloseToNearestPos(LiveActor*, const JGeometry::TVec3<float>&)",
+        "size": "56",
+        "match_percent": 100.0
+      },
+      {
+        "name": "reverseRailDirection__2MRFP9LiveActor",
+        "demangled_name": "MR::reverseRailDirection(LiveActor*)",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "calcMovingDirectionAlongRail__2MRFP9LiveActorPQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>fbPb",
+        "demangled_name": "MR::calcMovingDirectionAlongRail(LiveActor*, JGeometry::TVec3<float>*, const JGeometry::TVec3<float>&, float, bool, bool*)",
+        "size": "412",
+        "match_percent": 95.368935
+      },
+      {
+        "name": "calcMovingDirectionAlongRailH__2MRFP9LiveActorPQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>fPb",
+        "demangled_name": "MR::calcMovingDirectionAlongRailH(LiveActor*, JGeometry::TVec3<float>*, const JGeometry::TVec3<float>&, float, bool*)",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "calcRailClippingInfo__2MRFPQ29JGeometry8TVec3<f>PfPC9LiveActorff",
+        "demangled_name": "MR::calcRailClippingInfo(JGeometry::TVec3<float>*, float*, const LiveActor*, float, float)",
+        "size": "640",
+        "match_percent": 99.64375
+      },
+      {
+        "name": "initAndSetRailClipping__2MRFPQ29JGeometry8TVec3<f>P9LiveActorff",
+        "demangled_name": "MR::initAndSetRailClipping(JGeometry::TVec3<float>*, LiveActor*, float, float)",
+        "size": "88",
+        "match_percent": 99.77273
+      },
+      {
+        "name": "calcNearestRailCoord__2MRFPC9LiveActorRCQ29JGeometry8TVec3<f>",
+        "demangled_name": "MR::calcNearestRailCoord(const LiveActor*, const JGeometry::TVec3<float>&)",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "calcNearestRailPos__2MRFPQ29JGeometry8TVec3<f>PC9LiveActorRCQ29JGeometry8TVec3<f>",
+        "demangled_name": "MR::calcNearestRailPos(JGeometry::TVec3<float>*, const LiveActor*, const JGeometry::TVec3<float>&)",
+        "size": "92",
+        "match_percent": 100.0
+      },
+      {
+        "name": "calcNearestRailDirection__2MRFPQ29JGeometry8TVec3<f>PC9LiveActorRCQ29JGeometry8TVec3<f>",
+        "demangled_name": "MR::calcNearestRailDirection(JGeometry::TVec3<float>*, const LiveActor*, const JGeometry::TVec3<float>&)",
+        "size": "92",
+        "match_percent": 100.0
+      },
+      {
+        "name": "calcNearestRailPosAndDirection__2MRFPQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>PC9LiveActorRCQ29JGeometry8TVec3<f>",
+        "demangled_name": "MR::calcNearestRailPosAndDirection(JGeometry::TVec3<float>*, JGeometry::TVec3<float>*, const LiveActor*, const JGeometry::TVec3<float>&)",
+        "size": "112",
+        "match_percent": 100.0
+      },
+      {
+        "name": "calcRailPosNearestPlayer__2MRFPQ29JGeometry8TVec3<f>PC9LiveActor",
+        "demangled_name": "MR::calcRailPosNearestPlayer(JGeometry::TVec3<float>*, const LiveActor*)",
+        "size": "72",
+        "match_percent": 100.0
+      },
+      {
+        "name": "updateBoundingBox__22@unnamed@RailUtil_cpp@FPC9RailRiderPQ29JGeometry8TBox3<f>",
+        "demangled_name": "@unnamed@RailUtil_cpp@::updateBoundingBox(const RailRider*, JGeometry::TBox3<float>*)",
+        "size": "184",
+        "match_percent": 100.0
+      },
+      {
+        "name": "calcBoundingBox__2MRFP9RailRiderPQ29JGeometry8TBox3<f>f",
+        "demangled_name": "MR::calcBoundingBox(RailRider*, JGeometry::TBox3<float>*, float)",
+        "size": "280",
+        "match_percent": 99.92857
+      },
+      {
+        "name": "calcBoundingBox__2MRFPC9LiveActorPQ29JGeometry8TBox3<f>f",
+        "demangled_name": "MR::calcBoundingBox(const LiveActor*, JGeometry::TBox3<float>*, float)",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "calcDifferenceRailCoord__2MRFPC9LiveActorff",
+        "demangled_name": "MR::calcDifferenceRailCoord(const LiveActor*, float, float)",
+        "size": "156",
+        "match_percent": 100.0
+      },
+      {
+        "name": "calcDifferenceRailCoord__2MRFPC9LiveActorf",
+        "demangled_name": "MR::calcDifferenceRailCoord(const LiveActor*, float)",
+        "size": "20",
+        "match_percent": 100.0
+      },
+      {
+        "name": "calcDistanceHorizonToCurrentPos__2MRFPC9LiveActor",
+        "demangled_name": "MR::calcDistanceHorizonToCurrentPos(const LiveActor*)",
+        "size": "116",
+        "match_percent": 100.0
+      },
+      {
+        "name": "calcRailPosAtCoord__2MRFPQ29JGeometry8TVec3<f>PC9LiveActorf",
+        "demangled_name": "MR::calcRailPosAtCoord(JGeometry::TVec3<float>*, const LiveActor*, float)",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "calcRailPosFrontCoord__2MRFPQ29JGeometry8TVec3<f>PC9LiveActorf",
+        "demangled_name": "MR::calcRailPosFrontCoord(JGeometry::TVec3<float>*, const LiveActor*, float)",
+        "size": "220",
+        "match_percent": 99.72727
+      },
+      {
+        "name": "calcRailDirectionAtCoord__2MRFPQ29JGeometry8TVec3<f>PC9LiveActorf",
+        "demangled_name": "MR::calcRailDirectionAtCoord(JGeometry::TVec3<float>*, const LiveActor*, float)",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "calcRailPosAndDirectionAtCoord__2MRFPQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>PC9LiveActorf",
+        "demangled_name": "MR::calcRailPosAndDirectionAtCoord(JGeometry::TVec3<float>*, JGeometry::TVec3<float>*, const LiveActor*, float)",
+        "size": "96",
+        "match_percent": 100.0
+      },
+      {
+        "name": "calcRailStartPos__2MRFPQ29JGeometry8TVec3<f>PC9LiveActor",
+        "demangled_name": "MR::calcRailStartPos(JGeometry::TVec3<float>*, const LiveActor*)",
+        "size": "20",
+        "match_percent": 99.0
+      },
+      {
+        "name": "calcRailEndPos__2MRFPQ29JGeometry8TVec3<f>PC9LiveActor",
+        "demangled_name": "MR::calcRailEndPos(JGeometry::TVec3<float>*, const LiveActor*)",
+        "size": "72",
+        "match_percent": 100.0
+      },
+      {
+        "name": "calcRailPointPos__2MRFPQ29JGeometry8TVec3<f>PC9LiveActori",
+        "demangled_name": "MR::calcRailPointPos(JGeometry::TVec3<float>*, const LiveActor*, int)",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "calcRailStartPointPos__2MRFPQ29JGeometry8TVec3<f>PC9LiveActor",
+        "demangled_name": "MR::calcRailStartPointPos(JGeometry::TVec3<float>*, const LiveActor*)",
+        "size": "20",
+        "match_percent": 100.0
+      },
+      {
+        "name": "calcRailEndPointPos__2MRFPQ29JGeometry8TVec3<f>PC9LiveActor",
+        "demangled_name": "MR::calcRailEndPointPos(JGeometry::TVec3<float>*, const LiveActor*)",
+        "size": "80",
+        "match_percent": 100.0
+      },
+      {
+        "name": "calcRailStartPointDirection__2MRFPQ29JGeometry8TVec3<f>PC9LiveActor",
+        "demangled_name": "MR::calcRailStartPointDirection(JGeometry::TVec3<float>*, const LiveActor*)",
+        "size": "20",
+        "match_percent": 99.0
+      },
+      {
+        "name": "calcRailEndPointDirection__2MRFPQ29JGeometry8TVec3<f>PC9LiveActor",
+        "demangled_name": "MR::calcRailEndPointDirection(JGeometry::TVec3<float>*, const LiveActor*)",
+        "size": "72",
+        "match_percent": 100.0
+      },
+      {
+        "name": "calcRailStartPointPosAndDirection__2MRFPQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>PC9LiveActor",
+        "demangled_name": "MR::calcRailStartPointPosAndDirection(JGeometry::TVec3<float>*, JGeometry::TVec3<float>*, const LiveActor*)",
+        "size": "88",
+        "match_percent": 99.77273
+      },
+      {
+        "name": "calcRailEndPointPosAndDirection__2MRFPQ29JGeometry8TVec3<f>PQ29JGeometry8TVec3<f>PC9LiveActor",
+        "demangled_name": "MR::calcRailEndPointPosAndDirection(JGeometry::TVec3<float>*, JGeometry::TVec3<float>*, const LiveActor*)",
+        "size": "96",
+        "match_percent": 100.0
+      },
+      {
+        "name": "calcDistanceToNextRailPoint__2MRFPC9LiveActorPf",
+        "demangled_name": "MR::calcDistanceToNextRailPoint(const LiveActor*, float*)",
+        "size": "164",
+        "match_percent": 85.53658
+      },
+      {
+        "name": "calcDistanceToCurrentAndNextRailPoint__2MRFPC9LiveActorPfPf",
+        "demangled_name": "MR::calcDistanceToCurrentAndNextRailPoint(const LiveActor*, float*, float*)",
+        "size": "288",
+        "match_percent": 93.541664
+      },
+      {
+        "name": "calcRailRateToNextPoint__2MRFPfPC9LiveActor",
+        "demangled_name": "MR::calcRailRateToNextPoint(float*, const LiveActor*)",
+        "size": "128",
+        "match_percent": 99.84375
+      },
+      {
+        "name": "isExistRail__2MRFPC9LiveActor",
+        "demangled_name": "MR::isExistRail(const LiveActor*)",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getRailPointNum__2MRFPC9LiveActor",
+        "demangled_name": "MR::getRailPointNum(const LiveActor*)",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getCurrentRailPointNo__2MRFPC9LiveActor",
+        "demangled_name": "MR::getCurrentRailPointNo(const LiveActor*)",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getNextRailPointNo__2MRFPC9LiveActor",
+        "demangled_name": "MR::getNextRailPointNo(const LiveActor*)",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getRailTotalLength__2MRFPC9LiveActor",
+        "demangled_name": "MR::getRailTotalLength(const LiveActor*)",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getRailPartLength__2MRFPC9LiveActori",
+        "demangled_name": "MR::getRailPartLength(const LiveActor*, int)",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getRailPointCoord__2MRFPC9LiveActori",
+        "demangled_name": "MR::getRailPointCoord(const LiveActor*, int)",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getRailPos__2MRFPC9LiveActor",
+        "demangled_name": "MR::getRailPos(const LiveActor*)",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getRailPointPosStart__2MRFPC9LiveActor",
+        "demangled_name": "MR::getRailPointPosStart(const LiveActor*)",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getRailPointPosEnd__2MRFPC9LiveActor",
+        "demangled_name": "MR::getRailPointPosEnd(const LiveActor*)",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getRailDirection__2MRFPC9LiveActor",
+        "demangled_name": "MR::getRailDirection(const LiveActor*)",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getRailCoord__2MRFPC9LiveActor",
+        "demangled_name": "MR::getRailCoord(const LiveActor*)",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getRailCoordSpeed__2MRFPC9LiveActor",
+        "demangled_name": "MR::getRailCoordSpeed(const LiveActor*)",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setRailCoord__2MRFP9LiveActorf",
+        "demangled_name": "MR::setRailCoord(LiveActor*, float)",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "setRailCoordSpeed__2MRFP9LiveActorf",
+        "demangled_name": "MR::setRailCoordSpeed(LiveActor*, float)",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "accelerateRailCoordSpeed__2MRFP9LiveActorf",
+        "demangled_name": "MR::accelerateRailCoordSpeed(LiveActor*, float)",
+        "size": "104",
+        "match_percent": 99.80769
+      },
+      {
+        "name": "adjustmentRailCoordSpeed__2MRFP9LiveActorff",
+        "demangled_name": "MR::adjustmentRailCoordSpeed(LiveActor*, float, float)",
+        "size": "64",
+        "match_percent": 100.0
+      },
+      {
+        "name": "slowDownRailCoordSpeed__2MRFP9LiveActorf",
+        "demangled_name": "MR::slowDownRailCoordSpeed(LiveActor*, float)",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "moveRailRider__2MRFP9LiveActor",
+        "demangled_name": "MR::moveRailRider(LiveActor*)",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isLoopRail__2MRFPC9LiveActor",
+        "demangled_name": "MR::isLoopRail(const LiveActor*)",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isRailReachedGoal__2MRFPC9LiveActor",
+        "demangled_name": "MR::isRailReachedGoal(const LiveActor*)",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isRailReachedNearGoal__2MRFPC9LiveActorf",
+        "demangled_name": "MR::isRailReachedNearGoal(const LiveActor*, float)",
+        "size": "140",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isRailReachedEdge__2MRFPC9LiveActor",
+        "demangled_name": "MR::isRailReachedEdge(const LiveActor*)",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isRailGoingToEnd__2MRFPC9LiveActor",
+        "demangled_name": "MR::isRailGoingToEnd(const LiveActor*)",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isRailReachedNearNextPoint__2MRFPC9LiveActorf",
+        "demangled_name": "MR::isRailReachedNearNextPoint(const LiveActor*, float)",
+        "size": "140",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isRailReachedHorizonCurrentPos__2MRFPC9LiveActorf",
+        "demangled_name": "MR::isRailReachedHorizonCurrentPos(const LiveActor*, float)",
+        "size": "56",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getRailArg0NoInit__2MRFPC9LiveActorPl",
+        "demangled_name": "MR::getRailArg0NoInit(const LiveActor*, long*)",
+        "size": "20",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getRailArg1NoInit__2MRFPC9LiveActorPl",
+        "demangled_name": "MR::getRailArg1NoInit(const LiveActor*, long*)",
+        "size": "20",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getRailArg2NoInit__2MRFPC9LiveActorPl",
+        "demangled_name": "MR::getRailArg2NoInit(const LiveActor*, long*)",
+        "size": "20",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getRailArg3NoInit__2MRFPC9LiveActorPl",
+        "demangled_name": "MR::getRailArg3NoInit(const LiveActor*, long*)",
+        "size": "20",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getRailArg4NoInit__2MRFPC9LiveActorPl",
+        "demangled_name": "MR::getRailArg4NoInit(const LiveActor*, long*)",
+        "size": "20",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getRailArg1WithInit__2MRFPC9RailRiderPl",
+        "demangled_name": "MR::getRailArg1WithInit(const RailRider*, long*)",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getRailPointArgF32WithInit__22@unnamed@RailUtil_cpp@FPC9LiveActorllPf",
+        "demangled_name": "@unnamed@RailUtil_cpp@::getRailPointArgF32WithInit(const LiveActor*, long, long, float*)",
+        "size": "144",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getRailPointArgF32NoInit__22@unnamed@RailUtil_cpp@FPC9LiveActorllPf",
+        "demangled_name": "@unnamed@RailUtil_cpp@::getRailPointArgF32NoInit(const LiveActor*, long, long, float*)",
+        "size": "144",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getRailCurrentPointArgF32WithInit__22@unnamed@RailUtil_cpp@FPC9LiveActorlPf",
+        "demangled_name": "@unnamed@RailUtil_cpp@::getRailCurrentPointArgF32WithInit(const LiveActor*, long, float*)",
+        "size": "136",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getRailCurrentPointArgF32NoInit__22@unnamed@RailUtil_cpp@FPC9LiveActorlPf",
+        "demangled_name": "@unnamed@RailUtil_cpp@::getRailCurrentPointArgF32NoInit(const LiveActor*, long, float*)",
+        "size": "136",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getRailNextPointArgF32NoInit__22@unnamed@RailUtil_cpp@FPC9LiveActorlPf",
+        "demangled_name": "@unnamed@RailUtil_cpp@::getRailNextPointArgF32NoInit(const LiveActor*, long, float*)",
+        "size": "136",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getRailNextPointArgBoolNoInit__22@unnamed@RailUtil_cpp@FPC9LiveActorlPb",
+        "demangled_name": "@unnamed@RailUtil_cpp@::getRailNextPointArgBoolNoInit(const LiveActor*, long, bool*)",
+        "size": "140",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getRailPointArg0WithInit__2MRFPC9LiveActorlPl",
+        "demangled_name": "MR::getRailPointArg0WithInit(const LiveActor*, long, long*)",
+        "size": "84",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getRailPointArg2WithInit__2MRFPC9LiveActorlPl",
+        "demangled_name": "MR::getRailPointArg2WithInit(const LiveActor*, long, long*)",
+        "size": "84",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getRailPointArg0NoInit__2MRFPC9LiveActorlPl",
+        "demangled_name": "MR::getRailPointArg0NoInit(const LiveActor*, long, long*)",
+        "size": "84",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getRailPointArg1NoInit__2MRFPC9LiveActorlPl",
+        "demangled_name": "MR::getRailPointArg1NoInit(const LiveActor*, long, long*)",
+        "size": "84",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getRailPointArg4NoInit__2MRFPC9LiveActorlPl",
+        "demangled_name": "MR::getRailPointArg4NoInit(const LiveActor*, long, long*)",
+        "size": "84",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getRailPointArg6NoInit__2MRFPC9LiveActorlPl",
+        "demangled_name": "MR::getRailPointArg6NoInit(const LiveActor*, long, long*)",
+        "size": "84",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getRailPointArg7NoInit__2MRFPC9LiveActorlPl",
+        "demangled_name": "MR::getRailPointArg7NoInit(const LiveActor*, long, long*)",
+        "size": "84",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getRailPointArg2WithInit__2MRFPC9LiveActorlPf",
+        "demangled_name": "MR::getRailPointArg2WithInit(const LiveActor*, long, float*)",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getRailPointArg3WithInit__2MRFPC9LiveActorlPf",
+        "demangled_name": "MR::getRailPointArg3WithInit(const LiveActor*, long, float*)",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getRailPointArg0NoInit__2MRFPC9LiveActorlPf",
+        "demangled_name": "MR::getRailPointArg0NoInit(const LiveActor*, long, float*)",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getRailPointArg1NoInit__2MRFPC9LiveActorlPf",
+        "demangled_name": "MR::getRailPointArg1NoInit(const LiveActor*, long, float*)",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getCurrentRailPointArg0WithInit__2MRFPC9LiveActorPl",
+        "demangled_name": "MR::getCurrentRailPointArg0WithInit(const LiveActor*, long*)",
+        "size": "76",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getCurrentRailPointArg1WithInit__2MRFPC9LiveActorPl",
+        "demangled_name": "MR::getCurrentRailPointArg1WithInit(const LiveActor*, long*)",
+        "size": "76",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getCurrentRailPointArg0NoInit__2MRFPC9LiveActorPl",
+        "demangled_name": "MR::getCurrentRailPointArg0NoInit(const LiveActor*, long*)",
+        "size": "76",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getCurrentRailPointArg1NoInit__2MRFPC9LiveActorPl",
+        "demangled_name": "MR::getCurrentRailPointArg1NoInit(const LiveActor*, long*)",
+        "size": "76",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getCurrentRailPointArg5NoInit__2MRFPC9LiveActorPl",
+        "demangled_name": "MR::getCurrentRailPointArg5NoInit(const LiveActor*, long*)",
+        "size": "76",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getCurrentRailPointArg7NoInit__2MRFPC9LiveActorPl",
+        "demangled_name": "MR::getCurrentRailPointArg7NoInit(const LiveActor*, long*)",
+        "size": "76",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getCurrentRailPointArg0WithInit__2MRFPC9LiveActorPf",
+        "demangled_name": "MR::getCurrentRailPointArg0WithInit(const LiveActor*, float*)",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getCurrentRailPointArg0NoInit__2MRFPC9LiveActorPf",
+        "demangled_name": "MR::getCurrentRailPointArg0NoInit(const LiveActor*, float*)",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getCurrentRailPointArg1NoInit__2MRFPC9LiveActorPf",
+        "demangled_name": "MR::getCurrentRailPointArg1NoInit(const LiveActor*, float*)",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getNextRailPointArg0WithInit__2MRFPC9LiveActorPl",
+        "demangled_name": "MR::getNextRailPointArg0WithInit(const LiveActor*, long*)",
+        "size": "76",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getNextRailPointArg1NoInit__2MRFPC9LiveActorPl",
+        "demangled_name": "MR::getNextRailPointArg1NoInit(const LiveActor*, long*)",
+        "size": "76",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getNextRailPointArg0NoInit__2MRFPC9LiveActorPf",
+        "demangled_name": "MR::getNextRailPointArg0NoInit(const LiveActor*, float*)",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getNextRailPointArg1NoInit__2MRFPC9LiveActorPf",
+        "demangled_name": "MR::getNextRailPointArg1NoInit(const LiveActor*, float*)",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getNextRailPointArg2WithInit__2MRFPC9LiveActorPb",
+        "demangled_name": "MR::getNextRailPointArg2WithInit(const LiveActor*, bool*)",
+        "size": "20",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getRailArg0WithInit__2MRFPC9LiveActorPl",
+        "demangled_name": "MR::getRailArg0WithInit(const LiveActor*, long*)",
+        "size": "20",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getRailPointArgName__22@unnamed@RailUtil_cpp@Fl",
+        "demangled_name": "@unnamed@RailUtil_cpp@::getRailPointArgName(long)",
+        "size": "140",
+        "match_percent": 100.0
+      }
+    ]
+  },
+  "LiveActor/AllLiveActorGroup": {
+    "source_sha256": "065e40859acea03774767c198e30cbb8a22b97c599aa2565aa21a455c1b57c67",
+    "native_reference_equal": true,
+    "sections": [
+      {
+        "name": ".text",
+        "size": "512",
+        "match_percent": 100.0
+      },
+      {
+        "name": ".data",
+        "size": "56",
+        "match_percent": 100.0
+      }
+    ],
+    "functions": [
+      {
+        "name": "__ct__17AllLiveActorGroupFv",
+        "demangled_name": "AllLiveActorGroup::AllLiveActorGroup()",
+        "size": "80",
+        "match_percent": 100.0
+      },
+      {
+        "name": "initActorSystemInfo__17AllLiveActorGroupFRC12JMapInfoIter",
+        "demangled_name": "AllLiveActorGroup::initActorSystemInfo(const JMapInfoIter&)",
+        "size": "144",
+        "match_percent": 100.0
+      },
+      {
+        "name": "getAllLiveActorGroup__2MRFv",
+        "demangled_name": "MR::getAllLiveActorGroup()",
+        "size": "40",
+        "match_percent": 100.0
+      },
+      {
+        "name": "startInitLiveActorSystemInfo__2MRFv",
+        "demangled_name": "MR::startInitLiveActorSystemInfo()",
+        "size": "48",
+        "match_percent": 100.0
+      },
+      {
+        "name": "initLiveActorSystemInfo__2MRFRC12JMapInfoIter",
+        "demangled_name": "MR::initLiveActorSystemInfo(const JMapInfoIter&)",
+        "size": "60",
+        "match_percent": 100.0
+      },
+      {
+        "name": "endInitLiveActorSystemInfo__2MRFv",
+        "demangled_name": "MR::endInitLiveActorSystemInfo()",
+        "size": "48",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__dt__17AllLiveActorGroupFv",
+        "demangled_name": "AllLiveActorGroup::~AllLiveActorGroup()",
+        "size": "92",
+        "match_percent": 100.0
+      }
+    ]
+  },
+  "broadcast": {
+    "reference_body_exact": true,
+    "body_sha256": "11f1cc6dc5d284ec828e6ef1334470e999519b7c115c1b9b6c580ac99d885c31"
+  }
+}

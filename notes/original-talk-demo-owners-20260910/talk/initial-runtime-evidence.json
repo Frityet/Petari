@@ -1,0 +1,52 @@
+{
+  "scope": "Root executed integration; before final duplicate typed-block validation",
+  "message_counts": {
+    "system": 6,
+    "game": 1994,
+    "owner_generations": 2
+  },
+  "message_holder_exit": 0,
+  "star_pointer_exit": 0,
+  "demo": {
+    "command": [
+      "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-showcase",
+      "gateway",
+      "--disc",
+      "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+      "--max-frames",
+      "960",
+      "--width",
+      "1280",
+      "--height",
+      "720"
+    ],
+    "binary_sha256": "7b437fcf57eabc737234a3ebc4f03a873066067752d85e340141721dc7a73cc0",
+    "exit": 0,
+    "timeout": false,
+    "wall_seconds": 16.763903000042774,
+    "buttons": "",
+    "sdl_key_script": "180-210:w;270-300:a;360-390:s;450-480:d;600-605:space;780-785:space",
+    "window_activate_when_shown": "default",
+    "present_fps": 60.00684308542914,
+    "simulation_ticks_per_second": 60.070074743053404
+  },
+  "demo_checks_passed": true,
+  "files": [
+    {
+      "path": "notes/original-talk-demo-owners-20260910/run-message-holder-tests.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "notes/original-talk-demo-owners-20260910/run-star-pointer-owner-tests.log",
+      "sha256": "7fa88bb1d69a4f7237b0208c038a2ce2f7aeb33b9df901e6976e8f7f8fcc4c44"
+    },
+    {
+      "path": "notes/original-talk-demo-owners-20260910/replay-summary.json",
+      "sha256": "0b8c2cecf8d762f26f4faf8afa802872df5a7b20f7f96281949ad44665ef77cb"
+    },
+    {
+      "path": "notes/original-talk-demo-owners-20260910/replay-validation.json",
+      "sha256": "be786ffd6a8b27cee897a93aaeec544cb68a9b28c4bf49539966b8a55aa3a087"
+    }
+  ]
+}

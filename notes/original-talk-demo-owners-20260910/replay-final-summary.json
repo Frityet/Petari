@@ -1,0 +1,23 @@
+{
+  "command": [
+    "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-showcase",
+    "gateway",
+    "--disc",
+    "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "--max-frames",
+    "960",
+    "--width",
+    "1280",
+    "--height",
+    "720"
+  ],
+  "binary_sha256": "bfc02eef07c9e5707a2b7e486d6e24511ce1161eb4cf57e821cc6976bee7b6df",
+  "exit": 0,
+  "timeout": false,
+  "wall_seconds": 16.725810249976348,
+  "buttons": "",
+  "sdl_key_script": "180-210:w;270-300:a;360-390:s;450-480:d;600-605:space;780-785:space",
+  "window_activate_when_shown": "default",
+  "present_fps": 60.07703678418771,
+  "simulation_ticks_per_second": 60.07703678418771
+}

@@ -1,5 +1,6 @@
 #include <aurora/exception.hpp>
 #include "Game/Util/MathUtil.hpp"
+#include "Game/Util/MtxUtil.hpp"
 #include "JSystem/JMath/JMATrigonometric.hpp"
 #include <aurora/ppc_math.hpp>
 
@@ -638,6 +639,18 @@ namespace MR {
 
     f32 fastSqrtf(f32 x) {
         return x > 0.0F ? std::sqrt(x) : x;
+    }
+
+    void makeQuatUpFront(TQuat4f* pQuat, const TVec3f& rUp, const TVec3f& rFront) {
+        TPos3f mtx;
+        makeMtxUpFront(&mtx, rUp, rFront);
+        mtx.getQuat(*pQuat);
+    }
+
+    void blendVec(Vec* pDst, const Vec& rStart, const Vec& rEnd, f32 t) {
+        pDst->x = getInterpolateValue(t, rStart.x, rEnd.x);
+        pDst->y = getInterpolateValue(t, rStart.y, rEnd.y);
+        pDst->z = getInterpolateValue(t, rStart.z, rEnd.z);
     }
 
     void blendQuatUpFront(TQuat4f *pQuat, const TVec3f &rUp, const TVec3f &rFront, f32 upRate, f32 frontRate) {

@@ -627,15 +627,6 @@ namespace MR {
         return sendSimpleMsgToActor(ACTMES_START_DEMO, actor);
     }
 
-    void sendMsgToAllLiveActor(u32 message, LiveActor* actor) {
-        if (getMessageSensor() == nullptr) {
-            return;
-        }
-        if (auto* runtime = smgpc::runtime::RuntimeContext::try_instance(); runtime != nullptr) {
-            runtime->scheduler().send_message_to_live_actors(message, actor);
-        }
-    }
-
     bool receiveItemShowMsg(u32 message, HitSensor*, HitSensor* receiver) {
         auto* host = getSensorHost(receiver);
         if (message != ACTMES_ITEM_SHOW || host == nullptr || !host->mFlag.mIsDead) {

@@ -561,6 +561,9 @@ namespace smgpc::runtime {
                     std::filesystem::path("KrKorean") / "MessageData" / "Message.arc",
                     std::filesystem::path("MessageData") / "Message.arc",
                 })) {
+                _message_holder = std::make_unique<MessageHolderOwnership>(
+                    _host_heaps, resources.budget().message_resource_bytes, _archive_mounts,
+                    message_archive->string(), "KrKorean");
                 try {
                     const auto count = _messages.load_message_archive(_dvd.archive_for_path(*message_archive));
                     _logger.info(logging::Category::APP, logging::Message{"Loaded {} messages from {}"}, count, message_archive->string());

@@ -678,41 +678,6 @@ namespace smgpc::runtime {
             return out;
         }
 
-        [[nodiscard]] Json scene_message_json(const SceneSchedulerMessageTraceEntry &entry, std::size_t index) {
-            return Json{
-                {"index", index},
-                {"sequence", entry.sequence},
-                {"message", entry.message},
-                {"message_name", smgpc::compat::actor_message_name(entry.message)},
-                {"target_name", entry.target_name},
-                {"target_kind", entry_kind_name(entry.target_kind)},
-                {"target_movement_type", entry.target_movement_type},
-                {"target_calc_anim_type", entry.target_calc_anim_type},
-                {"target_draw_buffer_type", entry.target_draw_buffer_type},
-                {"target_draw_type", entry.target_draw_type},
-                {"target_order", entry.target_order},
-                {"target_dead", entry.target_dead},
-                {"target_suspended", entry.target_suspended},
-                {"excluded", entry.excluded},
-                {"delivered", entry.delivered},
-                {"accepted", entry.accepted},
-                {"sender_sensor_present", entry.sender_sensor_present},
-                {"receiver_sensor_present", entry.receiver_sensor_present},
-                {"sender_sensor_type", entry.sender_sensor_type},
-                {"receiver_sensor_type", entry.receiver_sensor_type},
-                {"sender_sensor_host_name", entry.sender_sensor_host_name},
-                {"receiver_sensor_host_name", entry.receiver_sensor_host_name},
-            };
-        }
-
-        [[nodiscard]] Json scene_messages_json(std::span<const SceneSchedulerMessageTraceEntry> entries) {
-            auto out = Json::array();
-            for (auto i = std::size_t{}; i < entries.size(); ++i) {
-                out.push_back(scene_message_json(entries[i], i));
-            }
-            return out;
-        }
-
         [[nodiscard]] Json layout_animation_json(const SceneLayoutAnimationDebugState &animation) {
             auto out = Json{
                 {"layer_index", animation.layer_index},
@@ -2335,7 +2300,6 @@ namespace smgpc::runtime {
             {"runtime_services", runtime_services_json(runtime)},
             {"scene_snapshot", scene_entries_json(runtime.scheduler().snapshot())},
             {"scene_trace", scene_entries_json(runtime.scheduler().last_execution_trace())},
-            {"scene_messages", scene_messages_json(runtime.scheduler().message_trace())},
             {"semantic_events", semantic_trace_events_json(runtime)},
             {"layout_runtime", layout_runtime_entries_json(runtime.scheduler().debug_layout_runtime_snapshot())},
             {"render_packets", runtime_render_packets_json(runtime)},

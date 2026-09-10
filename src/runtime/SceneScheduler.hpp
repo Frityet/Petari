@@ -243,28 +243,6 @@ namespace smgpc::runtime {
         std::vector<SceneLayoutTextureDebugState> textures;
     };
 
-    struct SceneSchedulerMessageTraceEntry {
-        std::uint64_t sequence = 0U;
-        u32 message = 0U;
-        std::string target_name;
-        SceneEntryKind target_kind = SceneEntryKind::NameObj;
-        s32 target_movement_type = -1;
-        s32 target_calc_anim_type = -1;
-        s32 target_draw_buffer_type = -1;
-        s32 target_draw_type = -1;
-        std::size_t target_order = 0U;
-        bool target_dead = false;
-        bool target_suspended = false;
-        bool excluded = false;
-        bool delivered = false;
-        bool accepted = false;
-        bool sender_sensor_present = false;
-        bool receiver_sensor_present = false;
-        u32 sender_sensor_type = 0U;
-        u32 receiver_sensor_type = 0U;
-        std::string sender_sensor_host_name;
-        std::string receiver_sensor_host_name;
-    };
 #endif
 
     class SceneScheduler final {
@@ -322,7 +300,6 @@ namespace smgpc::runtime {
         void execute_draw_type(s32 draw_type);
         void register_pre_draw_function(const MR::FunctorBase&, s32 draw_type);
         void execute_draw_list_2d_normal();
-        std::size_t send_message_to_live_actors(u32 msg, LiveActor *exclude_actor);
 
         [[nodiscard]] std::size_t registration_marker() const;
         [[nodiscard]] std::vector<SceneSchedulerRegistration> remove_registrations_since(std::size_t marker);
@@ -330,7 +307,6 @@ namespace smgpc::runtime {
 #ifndef NDEBUG
         [[nodiscard]] std::vector<SceneSchedulerEntryState> snapshot() const;
         [[nodiscard]] std::span<const SceneSchedulerEntryState> last_execution_trace() const;
-        [[nodiscard]] std::span<const SceneSchedulerMessageTraceEntry> message_trace() const;
         [[nodiscard]] std::vector<SceneLayoutRuntimeDebugState> debug_layout_runtime_snapshot() const;
 #endif
         void clear();
@@ -371,7 +347,6 @@ namespace smgpc::runtime {
             s32 draw_buffer_type, SceneDrawBufferPass pass);
 #ifndef NDEBUG
         void push_trace(const Entry &entry, SceneSchedulerPhase phase, SceneDrawBufferPass pass = SceneDrawBufferPass::None);
-        void push_message_trace(SceneSchedulerMessageTraceEntry trace);
 #endif
 
         void refresh_draw_buffer_activation();
@@ -389,11 +364,9 @@ namespace smgpc::runtime {
         std::unordered_map<smgpc::layout::LayoutRuntime*, std::unique_ptr<NameObj>> _layout_draw_adaptors;
 #ifndef NDEBUG
         std::vector<SceneSchedulerEntryState> _last_execution_trace;
-        std::vector<SceneSchedulerMessageTraceEntry> _message_trace;
 #endif
         std::size_t _next_order = 0U;
 #ifndef NDEBUG
-        std::uint64_t _next_message_sequence = 0U;
 #endif
     };
 

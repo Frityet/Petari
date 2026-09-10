@@ -1,0 +1,14 @@
+{
+  "file": "src/compat/NPCActorRuntimeCompat.cpp",
+  "remove_definitions": [
+    "MR::tryStartTurnAction(NPCActor*)",
+    "MR::tryStartReactionAndPushNerve(NPCActor*,const Nerve*)",
+    "MR::tryStartReactionAndPopNerve(NPCActor*)",
+    "MR::tryTalkNearPlayerAndStartTalkAction(NPCActor*)",
+    "MR::tryTalkNearPlayerAtEndAndStartMoveTalkAction(NPCActor*)"
+  ],
+  "unused_after_removal": [
+    "anonymous::throwNPCBehaviorUnavailable()"
+  ],
+  "other_duplicate_providers": []
+}

@@ -1,0 +1,425 @@
+[
+  {
+    "symbol": "decidePose__2MRFP8NPCActorRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>fff",
+    "demangled": "MR::decidePose(NPCActor*, const JGeometry::TVec3<float>&, const JGeometry::TVec3<float>&, const JGeometry::TVec3<float>&, float, float, float)",
+    "before": null,
+    "after": 100.0,
+    "retail_size": 180,
+    "candidate_size": 180,
+    "new": true
+  },
+  {
+    "symbol": "followRailPose__2MRFP8NPCActorff",
+    "demangled": "MR::followRailPose(NPCActor*, float, float)",
+    "before": null,
+    "after": 99.47369,
+    "retail_size": 152,
+    "candidate_size": 152,
+    "new": true
+  },
+  {
+    "symbol": "followRailPoseOnGround__2MRFP8NPCActorf",
+    "demangled": "MR::followRailPoseOnGround(NPCActor*, float)",
+    "before": null,
+    "after": 100.0,
+    "retail_size": 8,
+    "candidate_size": 8,
+    "new": true
+  },
+  {
+    "symbol": "followRailPoseOnGround__2MRFP8NPCActorPC9LiveActorf",
+    "demangled": "MR::followRailPoseOnGround(NPCActor*, const LiveActor*, float)",
+    "before": null,
+    "after": 99.7619,
+    "retail_size": 252,
+    "candidate_size": 252,
+    "new": true
+  },
+  {
+    "symbol": "isActionLoopedOrStopped__2MRFPC9LiveActor",
+    "demangled": "MR::isActionLoopedOrStopped(const LiveActor*)",
+    "before": null,
+    "after": 100.0,
+    "retail_size": 76,
+    "candidate_size": 76,
+    "new": true
+  },
+  {
+    "symbol": "startMoveAction__2MRFP8NPCActor",
+    "demangled": "MR::startMoveAction(NPCActor*)",
+    "before": null,
+    "after": 100.0,
+    "retail_size": 148,
+    "candidate_size": 148,
+    "new": true
+  },
+  {
+    "symbol": "tryStartTalkAction__2MRFP8NPCActor",
+    "demangled": "MR::tryStartTalkAction(NPCActor*)",
+    "before": null,
+    "after": 100.0,
+    "retail_size": 168,
+    "candidate_size": 168,
+    "new": true
+  },
+  {
+    "symbol": "tryStartMoveTalkAction__2MRFP8NPCActor",
+    "demangled": "MR::tryStartMoveTalkAction(NPCActor*)",
+    "before": null,
+    "after": 99.88372,
+    "retail_size": 344,
+    "candidate_size": 344,
+    "new": true
+  },
+  {
+    "symbol": "tryStartTurnAction__2MRFP8NPCActor",
+    "demangled": "MR::tryStartTurnAction(NPCActor*)",
+    "before": null,
+    "after": 100.0,
+    "retail_size": 228,
+    "candidate_size": 228,
+    "new": true
+  },
+  {
+    "symbol": "tryStartReaction__2MRFP8NPCActor",
+    "demangled": "MR::tryStartReaction(NPCActor*)",
+    "before": null,
+    "after": 97.846535,
+    "retail_size": 808,
+    "candidate_size": 816,
+    "new": true
+  },
+  {
+    "symbol": "tryTalkNearPlayerAndStartTalkAction__2MRFP8NPCActor",
+    "demangled": "MR::tryTalkNearPlayerAndStartTalkAction(NPCActor*)",
+    "before": null,
+    "after": 100.0,
+    "retail_size": 52,
+    "candidate_size": 52,
+    "new": true
+  },
+  {
+    "symbol": "tryTalkNearPlayerAtEndAndStartMoveTalkAction__2MRFP8NPCActor",
+    "demangled": "MR::tryTalkNearPlayerAtEndAndStartMoveTalkAction(NPCActor*)",
+    "before": null,
+    "after": 100.0,
+    "retail_size": 52,
+    "candidate_size": 52,
+    "new": true
+  },
+  {
+    "symbol": "tryStartReactionAndPushNerve__2MRFP8NPCActorPC5Nerve",
+    "demangled": "MR::tryStartReactionAndPushNerve(NPCActor*, const Nerve*)",
+    "before": null,
+    "after": 100.0,
+    "retail_size": 88,
+    "candidate_size": 88,
+    "new": true
+  },
+  {
+    "symbol": "tryStartReactionAndPopNerve__2MRFP8NPCActor",
+    "demangled": "MR::tryStartReactionAndPopNerve(NPCActor*)",
+    "before": null,
+    "after": 100.0,
+    "retail_size": 140,
+    "candidate_size": 140,
+    "new": true
+  },
+  {
+    "symbol": "__ct__11TakeOutStarFP8NPCActorPCcPCcPC5Nerve",
+    "demangled": "TakeOutStar::TakeOutStar(NPCActor*, const char*, const char*, const Nerve*)",
+    "before": 99.55556,
+    "after": 99.55556,
+    "retail_size": 180,
+    "candidate_size": 180,
+    "new": false
+  },
+  {
+    "symbol": "takeOut__11TakeOutStarFv",
+    "demangled": "TakeOutStar::takeOut()",
+    "before": 100.0,
+    "after": 100.0,
+    "retail_size": 76,
+    "candidate_size": 76,
+    "new": false
+  },
+  {
+    "symbol": "isFirstStep__11TakeOutStarFv",
+    "demangled": "TakeOutStar::isFirstStep()",
+    "before": 100.0,
+    "after": 100.0,
+    "retail_size": 92,
+    "candidate_size": 92,
+    "new": false
+  },
+  {
+    "symbol": "isLastStep__11TakeOutStarFv",
+    "demangled": "TakeOutStar::isLastStep()",
+    "before": 100.0,
+    "after": 100.0,
+    "retail_size": 8,
+    "candidate_size": 8,
+    "new": false
+  },
+  {
+    "symbol": "exeAnim__11TakeOutStarFv",
+    "demangled": "TakeOutStar::exeAnim()",
+    "before": 99.60577,
+    "after": 99.60577,
+    "retail_size": 416,
+    "candidate_size": 416,
+    "new": false
+  },
+  {
+    "symbol": "exeDemo__11TakeOutStarFv",
+    "demangled": "TakeOutStar::exeDemo()",
+    "before": 99.73684,
+    "after": 99.73684,
+    "retail_size": 152,
+    "candidate_size": 152,
+    "new": false
+  },
+  {
+    "symbol": "__ct__11FadeStarterFP8NPCActorl",
+    "demangled": "FadeStarter::FadeStarter(NPCActor*, long)",
+    "before": 99.64286,
+    "after": 99.64286,
+    "retail_size": 112,
+    "candidate_size": 112,
+    "new": false
+  },
+  {
+    "symbol": "update__11FadeStarterFv",
+    "demangled": "FadeStarter::update()",
+    "before": 100.0,
+    "after": 100.0,
+    "retail_size": 76,
+    "candidate_size": 76,
+    "new": false
+  },
+  {
+    "symbol": "exeFade__11FadeStarterFv",
+    "demangled": "FadeStarter::exeFade()",
+    "before": 100.0,
+    "after": 100.0,
+    "retail_size": 164,
+    "candidate_size": 164,
+    "new": false
+  },
+  {
+    "symbol": "__ct__11DemoStarterFP8NPCActor",
+    "demangled": "DemoStarter::DemoStarter(NPCActor*)",
+    "before": 99.583336,
+    "after": 99.583336,
+    "retail_size": 96,
+    "candidate_size": 96,
+    "new": false
+  },
+  {
+    "symbol": "update__11DemoStarterFv",
+    "demangled": "DemoStarter::update()",
+    "before": 100.0,
+    "after": 100.0,
+    "retail_size": 56,
+    "candidate_size": 56,
+    "new": false
+  },
+  {
+    "symbol": "start__11DemoStarterFv",
+    "demangled": "DemoStarter::start()",
+    "before": 100.0,
+    "after": 100.0,
+    "retail_size": 68,
+    "candidate_size": 68,
+    "new": false
+  },
+  {
+    "symbol": "exeFade__11DemoStarterFv",
+    "demangled": "DemoStarter::exeFade()",
+    "before": 100.0,
+    "after": 100.0,
+    "retail_size": 96,
+    "candidate_size": 96,
+    "new": false
+  },
+  {
+    "symbol": "__dt__11TakeOutStarFv",
+    "demangled": "TakeOutStar::~TakeOutStar()",
+    "before": 100.0,
+    "after": 100.0,
+    "retail_size": 88,
+    "candidate_size": 88,
+    "new": false
+  },
+  {
+    "symbol": "__sinit_\\NPCUtil_cpp",
+    "demangled": null,
+    "before": null,
+    "after": 100.0,
+    "retail_size": 100,
+    "candidate_size": 100,
+    "new": true
+  },
+  {
+    "symbol": "__ct__Q214NrvTakeOutStar18TakeOutStarNrvAnimFv",
+    "demangled": "NrvTakeOutStar::TakeOutStarNrvAnim::TakeOutStarNrvAnim()",
+    "before": 100.0,
+    "after": 100.0,
+    "retail_size": 16,
+    "candidate_size": 16,
+    "new": false
+  },
+  {
+    "symbol": "__ct__Q214NrvTakeOutStar18TakeOutStarNrvDemoFv",
+    "demangled": "NrvTakeOutStar::TakeOutStarNrvDemo::TakeOutStarNrvDemo()",
+    "before": 100.0,
+    "after": 100.0,
+    "retail_size": 16,
+    "candidate_size": 16,
+    "new": false
+  },
+  {
+    "symbol": "__ct__Q214NrvTakeOutStar18TakeOutStarNrvTermFv",
+    "demangled": "NrvTakeOutStar::TakeOutStarNrvTerm::TakeOutStarNrvTerm()",
+    "before": 100.0,
+    "after": 100.0,
+    "retail_size": 16,
+    "candidate_size": 16,
+    "new": false
+  },
+  {
+    "symbol": "__ct__Q214NrvFadeStarter18FadeStarterNrvFadeFv",
+    "demangled": "NrvFadeStarter::FadeStarterNrvFade::FadeStarterNrvFade()",
+    "before": 100.0,
+    "after": 100.0,
+    "retail_size": 16,
+    "candidate_size": 16,
+    "new": false
+  },
+  {
+    "symbol": "__ct__Q214NrvFadeStarter18FadeStarterNrvTermFv",
+    "demangled": "NrvFadeStarter::FadeStarterNrvTerm::FadeStarterNrvTerm()",
+    "before": 100.0,
+    "after": 100.0,
+    "retail_size": 16,
+    "candidate_size": 16,
+    "new": false
+  },
+  {
+    "symbol": "__ct__Q214NrvDemoStarter18DemoStarterNrvInitFv",
+    "demangled": "NrvDemoStarter::DemoStarterNrvInit::DemoStarterNrvInit()",
+    "before": 100.0,
+    "after": 100.0,
+    "retail_size": 16,
+    "candidate_size": 16,
+    "new": false
+  },
+  {
+    "symbol": "__ct__Q214NrvDemoStarter18DemoStarterNrvFadeFv",
+    "demangled": "NrvDemoStarter::DemoStarterNrvFade::DemoStarterNrvFade()",
+    "before": 100.0,
+    "after": 100.0,
+    "retail_size": 16,
+    "candidate_size": 16,
+    "new": false
+  },
+  {
+    "symbol": "__ct__Q214NrvDemoStarter18DemoStarterNrvWaitFv",
+    "demangled": "NrvDemoStarter::DemoStarterNrvWait::DemoStarterNrvWait()",
+    "before": 100.0,
+    "after": 100.0,
+    "retail_size": 16,
+    "candidate_size": 16,
+    "new": false
+  },
+  {
+    "symbol": "__ct__Q214NrvDemoStarter18DemoStarterNrvTermFv",
+    "demangled": "NrvDemoStarter::DemoStarterNrvTerm::DemoStarterNrvTerm()",
+    "before": 100.0,
+    "after": 100.0,
+    "retail_size": 16,
+    "candidate_size": 16,
+    "new": false
+  },
+  {
+    "symbol": "execute__Q214NrvDemoStarter18DemoStarterNrvTermCFP5Spine",
+    "demangled": "NrvDemoStarter::DemoStarterNrvTerm::execute(Spine*) const",
+    "before": 100.0,
+    "after": 100.0,
+    "retail_size": 4,
+    "candidate_size": 4,
+    "new": false
+  },
+  {
+    "symbol": "execute__Q214NrvDemoStarter18DemoStarterNrvWaitCFP5Spine",
+    "demangled": "NrvDemoStarter::DemoStarterNrvWait::execute(Spine*) const",
+    "before": 100.0,
+    "after": 100.0,
+    "retail_size": 84,
+    "candidate_size": 84,
+    "new": false
+  },
+  {
+    "symbol": "execute__Q214NrvDemoStarter18DemoStarterNrvFadeCFP5Spine",
+    "demangled": "NrvDemoStarter::DemoStarterNrvFade::execute(Spine*) const",
+    "before": 100.0,
+    "after": 100.0,
+    "retail_size": 8,
+    "candidate_size": 8,
+    "new": false
+  },
+  {
+    "symbol": "execute__Q214NrvDemoStarter18DemoStarterNrvInitCFP5Spine",
+    "demangled": "NrvDemoStarter::DemoStarterNrvInit::execute(Spine*) const",
+    "before": 100.0,
+    "after": 100.0,
+    "retail_size": 4,
+    "candidate_size": 4,
+    "new": false
+  },
+  {
+    "symbol": "execute__Q214NrvFadeStarter18FadeStarterNrvTermCFP5Spine",
+    "demangled": "NrvFadeStarter::FadeStarterNrvTerm::execute(Spine*) const",
+    "before": 100.0,
+    "after": 100.0,
+    "retail_size": 4,
+    "candidate_size": 4,
+    "new": false
+  },
+  {
+    "symbol": "execute__Q214NrvFadeStarter18FadeStarterNrvFadeCFP5Spine",
+    "demangled": "NrvFadeStarter::FadeStarterNrvFade::execute(Spine*) const",
+    "before": 100.0,
+    "after": 100.0,
+    "retail_size": 8,
+    "candidate_size": 8,
+    "new": false
+  },
+  {
+    "symbol": "execute__Q214NrvTakeOutStar18TakeOutStarNrvTermCFP5Spine",
+    "demangled": "NrvTakeOutStar::TakeOutStarNrvTerm::execute(Spine*) const",
+    "before": 100.0,
+    "after": 100.0,
+    "retail_size": 4,
+    "candidate_size": 4,
+    "new": false
+  },
+  {
+    "symbol": "execute__Q214NrvTakeOutStar18TakeOutStarNrvDemoCFP5Spine",
+    "demangled": "NrvTakeOutStar::TakeOutStarNrvDemo::execute(Spine*) const",
+    "before": 100.0,
+    "after": 100.0,
+    "retail_size": 8,
+    "candidate_size": 8,
+    "new": false
+  },
+  {
+    "symbol": "execute__Q214NrvTakeOutStar18TakeOutStarNrvAnimCFP5Spine",
+    "demangled": "NrvTakeOutStar::TakeOutStarNrvAnim::execute(Spine*) const",
+    "before": 100.0,
+    "after": 100.0,
+    "retail_size": 8,
+    "candidate_size": 8,
+    "new": false
+  }
+]

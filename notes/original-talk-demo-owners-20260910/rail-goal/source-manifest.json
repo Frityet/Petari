@@ -1,0 +1,10 @@
+{
+  "decomp/src/Game/LiveActor/RailRider.cpp": {
+    "sha256": "f16e1fb50f1e6737003c4b368a5085b1c10f5340e2fe9f4504fdd4c8c81c6721",
+    "function_sha256": "ca1f0fb867bddeb64e29a6ade16841ebcb81fd45d5fbfb346d25f91c1d5d9bd4"
+  },
+  "src/Game/LiveActor/RailRider.cpp": {
+    "sha256": "2582ad495cfba758964c971146177ba919d6b5d961c80111b5ce5634444ddbd2",
+    "function_sha256": "ca1f0fb867bddeb64e29a6ade16841ebcb81fd45d5fbfb346d25f91c1d5d9bd4"
+  }
+}

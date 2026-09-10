@@ -1,0 +1,14 @@
+{
+  "reference_branch": "pcp-decomp",
+  "reference_commit": "ec3fa56e7714dc2757824e673b06dcca72de1e34",
+  "reference_remote_verified": "ec3fa56e7714dc2757824e673b06dcca72de1e34",
+  "prior_reference_recovery": "c3dfe83e0df2b8a70a2c366c51dc371bf305bb06",
+  "upstream_commit": "d1ae0a05cc023d52ecdcbc7731c8c79f0cb84dc6",
+  "root_branch": "pcp-aurora",
+  "root_parent": "49c9a5e0ff18e8cfecf4c637420139d90154ec20",
+  "author_and_committer": "codex <codex@openai.com>",
+  "final_movement_binary_sha256": "bfc02eef07c9e5707a2b7e486d6e24511ce1161eb4cf57e821cc6976bee7b6df",
+  "final_movement_replay_checks": 13,
+  "final_movement_replay_fps": 60.07703678418771,
+  "goal_complete": false
+}

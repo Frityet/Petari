@@ -11,6 +11,7 @@
 #include "Game/Scene/SceneFunction.hpp"
 #include "JSystem/J3DGraphBase/J3DSys.hpp"
 #include "Game/Util/Functor.hpp"
+#include "Game/Util/ActorSensorUtil.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include <memory>
@@ -232,6 +233,7 @@ void verify_explicit_scene_callbacks(const std::shared_ptr<smgpc::compat::JkrHea
         CallbackActor first(scheduler);
         auto second = std::make_unique<CallbackActor>(scheduler);
         for (auto* actor : {&first, second.get()}) {
+            JkrAllocationScope initialization_heap(game);
             actor->initHitSensor(1);
             (void)add_actor_hit_sensor(actor, "body", 1U, 4U, 10.0F, {});
             actor->makeActorAppeared();
@@ -241,14 +243,22 @@ void verify_explicit_scene_callbacks(const std::shared_ptr<smgpc::compat::JkrHea
         scheduler.execute_movement();
         require(second == nullptr && first.allocation.calls[4] == 1,
                 "sensor callbacks may retire the other actor without stale sensor dereferences");
+        const auto initial_animation_calls = first.allocation.calls[1];
         scheduler.execute_calc_anim();
-        require(first.allocation.calls[1] == 1, "original actor animation receives the scene domain");
+        require(first.allocation.calls[1] == initial_animation_calls + 1, "original actor animation receives the scene domain");
         auto message_victim = std::make_unique<CallbackActor>(scheduler);
-        message_victim->makeActorAppeared();
+        {
+            JkrAllocationScope initialization_heap(game);
+            message_victim->makeActorAppeared();
+        }
         scheduler.connect_name_obj(*message_victim, 34, -1, -1, -1);
         first.message_hook = [&] { message_victim.reset(); };
-        require(scheduler.send_message_to_live_actors(0, nullptr) == 1 && !message_victim && first.allocation.calls[5] == 1,
-                "message callbacks may remove future recipients without invalidating iteration or trace names");
+        {
+            JkrAllocationScope callback_heap(game);
+            MR::sendMsgToAllLiveActor(0, nullptr);
+        }
+        require(!message_victim && first.allocation.calls[5] == 1,
+                "original group broadcasts may remove future recipients without invalidating live traversal");
 
         configure_actor_clipping_sphere(&first, 1.0F, nullptr);
         CallbackObject clipping_driver(scheduler);
@@ -393,6 +403,7 @@ void verify_category_execution(const std::shared_ptr<smgpc::compat::JkrHeapRunti
 
         CallbackActor first(scheduler), second(scheduler);
         for (auto* actor : {&first, &second}) {
+            JkrAllocationScope initialization_heap(domain);
             actor->initHitSensor(1);
             (void)add_actor_hit_sensor(actor, "body", 1U, 4U, 10.0F, {});
             actor->makeActorAppeared();
@@ -540,8 +551,7 @@ int main() {
             const auto free_before = invocation->heap().getTotalFreeSize();
             for (unsigned i = 0; i < 32; ++i) {
                 scheduler.execute_movement();
-                if (scheduler.send_message_to_live_actors(0, nullptr) != 2)
-                    throw std::runtime_error("metadata fixture message did not reach both real actors");
+                MR::sendMsgToAllLiveActor(0, nullptr);
             }
             if (invocation->heap().getTotalFreeSize() != free_before)
                 throw std::runtime_error("actor/sensor/message scratch metadata consumed the Game arena");
@@ -551,11 +561,6 @@ int main() {
         scheduler.disconnect_name_obj(first);
         scheduler.disconnect_name_obj(second);
         invocation.reset();
-        if (scheduler.message_trace().size() != 64)
-            throw std::runtime_error("message trace did not survive scene arena retirement");
-        for (const auto& state : scheduler.message_trace())
-            if (state.target_name != "live actor metadata heap lifetime")
-                throw std::runtime_error("message target name changed after scene arena retirement");
         scheduler.clear();
     }
     {

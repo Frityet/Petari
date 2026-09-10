@@ -1,5 +1,7 @@
 #pragma once
 
+#define QUESTIONMARK_MAGIC 0x3F3F3F3F
+
 #include <algorithm>
 #include <cstddef>
 #include <cstdint>

@@ -1,0 +1,599 @@
+{
+  "RailUtil": {
+    "missing_in_game_archive": [
+      "_PSVECDotProduct",
+      "_PSVECMag",
+      "_fmodf"
+    ],
+    "existing_providers": {
+      "__ZN2MR10getRailPosEPK9LiveActor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameRailCompat.cpp.o]:"
+      ],
+      "__ZN2MR10isLoopRailEPK9LiveActor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameRailCompat.cpp.o]:"
+      ],
+      "__ZN2MR12getRailCoordEPK9LiveActor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameRailCompat.cpp.o]:"
+      ],
+      "__ZN2MR12setRailCoordEP9LiveActorf": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameRailCompat.cpp.o]:"
+      ],
+      "__ZN2MR13moveRailRiderEP9LiveActor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameRailCompat.cpp.o]:"
+      ],
+      "__ZN2MR14calcRailEndPosEPN9JGeometry5TVec3IfEEPK9LiveActor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameRailCompat.cpp.o]:"
+      ],
+      "__ZN2MR15getRailPointNumEPK9LiveActor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameRailCompat.cpp.o]:"
+      ],
+      "__ZN2MR16calcRailPointPosEPN9JGeometry5TVec3IfEEPK9LiveActori": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameRailCompat.cpp.o]:"
+      ],
+      "__ZN2MR16getRailDirectionEPK9LiveActor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameRailCompat.cpp.o]:"
+      ],
+      "__ZN2MR16isRailGoingToEndEPK9LiveActor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameRailCompat.cpp.o]:"
+      ],
+      "__ZN2MR17getRailArg3NoInitEPK9LiveActorPi": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameRailCompat.cpp.o]:"
+      ],
+      "__ZN2MR17setRailCoordSpeedEP9LiveActorf": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameRailCompat.cpp.o]:"
+      ],
+      "__ZN2MR18calcRailPosAtCoordEPN9JGeometry5TVec3IfEEPK9LiveActorf": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameRailCompat.cpp.o]:"
+      ],
+      "__ZN2MR18getRailTotalLengthEPK9LiveActor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameRailCompat.cpp.o]:"
+      ],
+      "__ZN2MR19moveCoordToStartPosEP9LiveActor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameRailCompat.cpp.o]:"
+      ],
+      "__ZN2MR20calcNearestRailCoordEPK9LiveActorRKN9JGeometry5TVec3IfEE": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameRailCompat.cpp.o]:"
+      ],
+      "__ZN2MR21calcRailPosFrontCoordEPN9JGeometry5TVec3IfEEPK9LiveActorf": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameRailCompat.cpp.o]:"
+      ],
+      "__ZN2MR21isRailReachedNearGoalEPK9LiveActorf": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameRailCompat.cpp.o]:"
+      ],
+      "__ZN2MR21moveCoordToNearestPosEP9LiveActorRKN9JGeometry5TVec3IfEE": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameRailCompat.cpp.o]:"
+      ],
+      "__ZN2MR22initAndSetRailClippingEPN9JGeometry5TVec3IfEEP9LiveActorff": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameRailCompat.cpp.o]:"
+      ],
+      "__ZN2MR24calcNearestRailDirectionEPN9JGeometry5TVec3IfEEPK9LiveActorRKS2_": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameRailCompat.cpp.o]:"
+      ],
+      "__ZN2MR24calcRailDirectionAtCoordEPN9JGeometry5TVec3IfEEPK9LiveActorf": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameRailCompat.cpp.o]:"
+      ],
+      "__ZN2MR26getNextRailPointArg0NoInitEPK9LiveActorPf": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameRailCompat.cpp.o]:"
+      ],
+      "__ZN2MR26getNextRailPointArg1NoInitEPK9LiveActorPf": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameRailCompat.cpp.o]:"
+      ],
+      "__ZN2MR29getCurrentRailPointArg0NoInitEPK9LiveActorPf": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameRailCompat.cpp.o]:"
+      ],
+      "__ZN2MR29getCurrentRailPointArg1NoInitEPK9LiveActorPf": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameRailCompat.cpp.o]:"
+      ],
+      "__ZN2MR30calcRailPosAndDirectionAtCoordEPN9JGeometry5TVec3IfEES3_PK9LiveActorf": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameRailCompat.cpp.o]:"
+      ],
+      "__ZN2MR37calcDistanceToCurrentAndNextRailPointEPK9LiveActorPfS3_": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameRailCompat.cpp.o]:"
+      ]
+    }
+  },
+  "ActorSensorUtil": {
+    "missing_in_game_archive": [
+      "_PSVECDotProduct",
+      "__ZN14MsgSharedGroup20sendMsgToGroupMemberEjP9HitSensorPKc",
+      "__ZN2MR17getGroupFromArrayEPK9LiveActor",
+      "__ZN2MR6isNearEPK9HitSensorS2_f",
+      "___stack_chk_fail",
+      "___stack_chk_guard"
+    ],
+    "existing_providers": {
+      "__ZN2MR10tryGetItemEP9HitSensorS1_": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR11isSensorEyeEPK9HitSensor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR11isSensorNpcEPK9HitSensor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR11sendMsgJumpEP9HitSensorS1_": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR11sendMsgKickEP9HitSensorS1_": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR11sendMsgPushEP9HitSensorS1_": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR12addHitSensorEP9LiveActorPKcjtfRKN9JGeometry5TVec3IfEE": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR12getSensorPosEPK9HitSensor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR12isMsgItemGetEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR12isSensorItemEPK9HitSensor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR12isSensorPushEPK9HitSensor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR12isSensorRideEPK9HitSensor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR12isSensorRushEPK9HitSensor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR12isSensorTypeEPK9HitSensorj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR12sendMsgTakenEP9HitSensorS1_": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR12setSensorPosEP9HitSensorRKN9JGeometry5TVec3IfEE": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR13getRoofSensorEPK9LiveActor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR13getSensorHostEPK9HitSensor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR13getWallSensorEPK9LiveActor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR13isMsgItemHideEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR13isMsgItemPullEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR13isMsgItemShowEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR13isSensorEnemyEPK9HitSensor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR14isMsgCeilTouchEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR14isMsgRaceReadyEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR14isMsgRaceResetEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR14isMsgRaceStartEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR14isMsgRushBeginEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR14isMsgWallTouchEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR14isSensorBinderEPK9HitSensor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR14isSensorMapObjEPK9HitSensor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR14isSensorPlayerEPK9HitSensor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR15addHitSensorEyeEP9LiveActorPKctfRKN9JGeometry5TVec3IfEE": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR15addHitSensorMtxEP9LiveActorPKcjtfPA4_fRKN9JGeometry5TVec3IfEE": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR15addHitSensorNpcEP9LiveActorPKctfRKN9JGeometry5TVec3IfEE": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR15clearHitSensorsEP9LiveActor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR15getGroundSensorEPK9LiveActor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR15isMsgFloorTouchEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR15isMsgInvalidHitEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR15isMsgPlayerKickEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR15isMsgRushCancelEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR15sendMsgAwayJumpEP9HitSensorS1_": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR15setSensorOffsetEP9LiveActorPKcRKN9JGeometry5TVec3IfEE": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR15setSensorRadiusEP9LiveActorPKcf": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR16addHitSensorPushEP9LiveActorPKctfRKN9JGeometry5TVec3IfEE": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR16addHitSensorRideEP9LiveActorPKctfRKN9JGeometry5TVec3IfEE": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR16getMessageSensorEv": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR16isMsgEnemyAttackEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR16isMsgHitmarkEmitEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR16isMsgItemEndMoveEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR16isSensorAutoRushEPK9HitSensor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR16isSensorPressObjEPK9HitSensor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR16isValidHitSensorEP9LiveActorPKc": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR16sendArbitraryMsgEjP9HitSensorS1_": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR16sendMsgStartDemoEP9LiveActor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR16sendMsgTouchJumpEP9HitSensorS1_": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR17addHitSensorEnemyEP9LiveActorPKctfRKN9JGeometry5TVec3IfEE": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR17isMsgBallDashWallEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR17isMsgFreezeAttackEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR17isMsgPlayerHitAllEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR17isMsgTutorialNextEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR17isMsgTutorialOmitEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR17isMsgTutorialPassEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR17isMsgTutorialPrevEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR17setHitSensorApartEP9HitSensorS1_": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR17validateHitSensorEP9LiveActorPKc": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR18addHitSensorBinderEP9LiveActorPKctfRKN9JGeometry5TVec3IfEE": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR18addHitSensorMapObjEP9LiveActorPKctfRKN9JGeometry5TVec3IfEE": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR18addHitSensorMtxNpcEP9LiveActorPKctfPA4_fRKN9JGeometry5TVec3IfEE": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR18addHitSensorPosEyeEP9LiveActorPKctfPKN9JGeometry5TVec3IfEERS7_": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR18getSensorWithIndexEP9LiveActori": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR18isMsgAutoRushBeginEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR18isMsgItemStartMoveEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR18isMsgPlayerHipDropEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR18isMsgPlayerTrampleEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR18isMsgStarPieceGiftEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR18isMsgTutorialStartEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR18isMsgUpdateBaseMtxEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR18receiveItemHideMsgEjP9HitSensorS1_": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR18receiveItemShowMsgEjP9HitSensorS1_": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR18sendMsgPlayerPunchEP9HitSensorS1_": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR18validateHitSensorsEP9LiveActor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR19addHitSensorAtJointEP9LiveActorPKcS3_jtfRKN9JGeometry5TVec3IfEE": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR19addHitSensorMtxRideEP9LiveActorPKctfPA4_fRKN9JGeometry5TVec3IfEE": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR19addHitSensorPosRideEP9LiveActorPKctfPKN9JGeometry5TVec3IfEERS7_": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR19calcSensorDirectionEPN9JGeometry5TVec3IfEEPK9HitSensorS6_": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR19invalidateHitSensorEP9LiveActorPKc": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR19isMsgBallDashGroundEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR19isMsgFireBallAttackEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR19isMsgIsRushTakeOverEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR19isMsgSpinStormRangeEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR19isMsgTouchPlantItemEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR19isSensorEnemyAttackEPK9HitSensor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR19updateHitSensorsAllEP9LiveActor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR20addBodyMessageSensorEP9LiveActorj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR20addHitSensorCallbackEP9LiveActorPKcjtf": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR20addHitSensorMtxEnemyEP9LiveActorPKctfPA4_fRKN9JGeometry5TVec3IfEE": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR20invalidateHitSensorsEP9LiveActor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR20isMsgEnemyAttackFireEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR20isMsgExplosionAttackEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR20isMsgInhaleBlackHoleEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR20isMsgJetTurtleAttackEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR20isMsgStarPieceAttackEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR20isSensorPlayerOrRideEPK9HitSensor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR20sendMsgPlayerTrampleEP9HitSensorS1_": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR20sendSimpleMsgToActorEjP9LiveActor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR21addHitSensorMtxAnimalEP9LiveActorPKctfPA4_fRKN9JGeometry5TVec3IfEE": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR21addHitSensorMtxMapObjEP9LiveActorPKctfPA4_fRKN9JGeometry5TVec3IfEE": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR21addHitSensorPosBinderEP9LiveActorPKctfPKN9JGeometry5TVec3IfEERS7_": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR21addHitSensorPosMapObjEP9LiveActorPKctfPKN9JGeometry5TVec3IfEERS7_": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR21addMessageSensorEnemyEP9LiveActorPKc": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR21isMsgInvincibleAttackEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR21isMsgPlayerSpinAttackEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR21isMsgPlayerUpperPunchEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR21isMsgStarPieceReflectEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR21sendMsgToAllLiveActorEjP9LiveActor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[OriginalActorBroadcast.cpp.o]:"
+      ],
+      "__ZN2MR22addHitSensorAtJointEyeEP9LiveActorPKcS3_tfRKN9JGeometry5TVec3IfEE": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR22addHitSensorAtJointNpcEP9LiveActorPKcS3_tfRKN9JGeometry5TVec3IfEE": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR22addMessageSensorMapObjEP9LiveActorPKc": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR22isMsgSearchlightAttackEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR22isMsgStartPowerStarGetEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR22isMsgToEnemyAttackBlowEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR22tryUpdateHitSensorsAllEP9LiveActor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR23addHitSensorAtJointRideEP9LiveActorPKcS3_tfRKN9JGeometry5TVec3IfEE": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR23addHitSensorCallbackEyeEP9LiveActorPKctf": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR23addHitSensorEnemyAttackEP9LiveActorPKctfRKN9JGeometry5TVec3IfEE": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR23addHitSensorEnemySimpleEP9LiveActorPKctfRKN9JGeometry5TVec3IfEE": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR23addHitSensorMapObjPressEP9LiveActorPKctfRKN9JGeometry5TVec3IfEE": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR23addHitSensorPriorBinderEP9LiveActorPKctfRKN9JGeometry5TVec3IfEE": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR23isMsgPlayerHipDropFloorEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR24addHitSensorAtJointEnemyEP9LiveActorPKcS3_tfRKN9JGeometry5TVec3IfEE": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR24addHitSensorCallbackRideEP9LiveActorPKctf": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR24addHitSensorMapObjSimpleEP9LiveActorPKctfRKN9JGeometry5TVec3IfEE": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR24addMessageSensorReceiverEP9LiveActorPKc": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR24isMsgEnemyAttackElectricEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR25addBodyMessageSensorEnemyEP9LiveActor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR25addHitSensorAtJointMapObjEP9LiveActorPKcS3_tfRKN9JGeometry5TVec3IfEE": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR25addHitSensorCallbackEnemyEP9LiveActorPKctf": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR25isMsgLockOnStarPieceShootEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR25isMsgToEnemyAttackTrampleEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR26addBodyMessageSensorMapObjEP9LiveActor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR26addHitSensorCallbackBinderEP9LiveActorPKctf": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR26addHitSensorCallbackMapObjEP9LiveActorPKctf": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR26addHitSensorMtxEnemyAttackEP9LiveActorPKctfPA4_fRKN9JGeometry5TVec3IfEE": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR26calcSensorHorizonNormalizeEPN9JGeometry5TVec3IfEERKS2_PK9HitSensorS8_": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR26isMsgEnemyAttackFireStrongEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR27isMsgToEnemyAttackShockWaveEj": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR28addBodyMessageSensorReceiverEP9LiveActor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR28calcSensorDirectionNormalizeEPN9JGeometry5TVec3IfEEPK9HitSensorS6_": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR30addHitSensorAtJointEnemyAttackEP9LiveActorPKcS3_tfRKN9JGeometry5TVec3IfEE": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR30addHitSensorAtJointEnemySimpleEP9LiveActorPKcS3_tfRKN9JGeometry5TVec3IfEE": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR30addHitSensorTransferableBinderEP9LiveActorPKctfRKN9JGeometry5TVec3IfEE": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR31addBodyMessageSensorMapObjPressEP9LiveActor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR31addHitSensorAtJointMapObjSimpleEP9LiveActorPKcS3_tfRKN9JGeometry5TVec3IfEE": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR31addHitSensorCallbackEnemyAttackEP9LiveActorPKctf": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR31addHitSensorCallbackPriorBinderEP9LiveActorPKctf": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR31addHitSensorMapObjMoveCollisionEP9LiveActorPKctfRKN9JGeometry5TVec3IfEE": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR32addHitSensorCallbackMapObjSimpleEP9LiveActorPKctf": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR35addMessageSensorMapObjMoveCollisionEP9LiveActorPKc": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR39addBodyMessageSensorMapObjMoveCollisionEP9LiveActor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR8getTakenEPK9LiveActor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR8isSensorEPK9HitSensorPKc": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR9getSensorEP9LiveActori": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ],
+      "__ZN2MR9getTakingEPK9LiveActor": [
+        "build/macosx/arm64/debug/libsmg-pc-game.a[GameActorSensorCompat.cpp.o]:"
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+_PSVECDotProduct
+_PSVECMag
+MR::isNearZero(float, float)
+MR::getPlayerPos()
+MR::vecKillElement(JGeometry::TVec3<float> const&, JGeometry::TVec3<float> const&, JGeometry::TVec3<float>*)
+MR::normalizeOrZero(JGeometry::TVec3<float>*)
+MR::setClippingTypeSphere(LiveActor*, float, JGeometry::TVec3<float> const*)
+RailRider::moveToNextPoint()
+RailRider::moveToNearestPos(JGeometry::TVec3<float> const&)
+RailRider::moveToNearestPoint(JGeometry::TVec3<float> const&)
+RailRider::move()
+RailRider::reverse()
+RailRider::setCoord(float)
+RailRider::setSpeed(float)
+RailRider::getPointNum() const
+RailRider::copyPointPos(JGeometry::TVec3<float>*, int) const
+RailRider::getPartLength(int) const
+RailRider::getPointCoord(int) const
+RailRider::isReachedEdge() const
+RailRider::isReachedGoal() const
+RailRider::calcNearestPos(JGeometry::TVec3<float> const&) const
+RailRider::calcPosAtCoord(JGeometry::TVec3<float>*, float) const
+RailRider::getNextPointNo() const
+RailRider::getTotalLength() const
+RailRider::getRailArgNoInit(char const*, int*) const
+RailRider::getNextPointCoord() const
+RailRider::getRailArgWithInit(char const*, int*) const
+RailRider::calcDirectionAtCoord(JGeometry::TVec3<float>*, float) const
+RailRider::getCurrentPointCoord() const
+RailRider::getPointArgS32NoInit(char const*, int*, int) const
+RailRider::getPointArgS32WithInit(char const*, int*, int) const
+RailRider::getNextPointArgS32NoInit(char const*, int*) const
+RailRider::getNextPointArgS32WithInit(char const*, int*) const
+RailRider::getCurrentPointArgS32NoInit(char const*, int*) const
+RailRider::getCurrentPointArgS32WithInit(char const*, int*) const
+RailRider::isLoop() const
+_fmodf

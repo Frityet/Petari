@@ -1,0 +1,170 @@
+{
+  "command": [
+    "build/tools/wibo",
+    "build/tools/sjiswrap.exe",
+    "build/compilers/GC/3.0a3/mwcceppc.exe",
+    "-nodefaults",
+    "-proc",
+    "gekko",
+    "-align",
+    "powerpc",
+    "-enum",
+    "int",
+    "-fp",
+    "hardware",
+    "-Cpp_exceptions",
+    "off",
+    "-O4,s",
+    "-inline",
+    "auto",
+    "-pragma",
+    "cats off",
+    "-pragma",
+    "warn_notinlined off",
+    "-maxerrors",
+    "1",
+    "-nosyspath",
+    "-RTTI",
+    "off",
+    "-str",
+    "reuse",
+    "-enc",
+    "SJIS",
+    "-sdata",
+    "4",
+    "-sdata2",
+    "4",
+    "-ipa",
+    "file",
+    "-sym",
+    "on",
+    "-i",
+    "include",
+    "-i",
+    "libs/JSystem/include",
+    "-i",
+    "libs/MSL_C++/include",
+    "-i",
+    "libs/MSL_C/include",
+    "-i",
+    "libs/MetroTRK/include",
+    "-i",
+    "libs/RVLFaceLib/include",
+    "-i",
+    "libs/RVL_SDK/include",
+    "-i",
+    "libs/Runtime/include",
+    "-i",
+    "libs/nw4r/include",
+    "-i",
+    "build/original-j3d-joint-traversal-20260903/retail/include",
+    "-DVERSION=0",
+    "-c",
+    "src/Game/Demo/DemoWipeKeeper.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-talk-demo-owners-20260910/demo/DemoWipeKeeper.wipe-recovered.wii.o"
+  ],
+  "wii_exit": 0,
+  "objdiff_command": [
+    "/Users/frityet/Projects/petari/decomp/build/tools/objdiff-cli",
+    "diff",
+    "-1",
+    "/Users/frityet/Projects/petari/notes/gateway-audit-20260907/restoration/retail/obj/Game/Demo/DemoWipeKeeper.o",
+    "-2",
+    "/Users/frityet/Projects/petari/notes/original-talk-demo-owners-20260910/demo/DemoWipeKeeper.wipe-recovered.wii.o",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-talk-demo-owners-20260910/demo/wipe-recovered-objdiff.json"
+  ],
+  "objdiff_exit": 0,
+  "symbols": [
+    {
+      "name": "__ct__12DemoWipeInfoFv",
+      "demangled_name": "DemoWipeInfo::DemoWipeInfo()",
+      "size": "36",
+      "match_percent": 100.0,
+      "target_symbol": 1
+    },
+    {
+      "name": "__ct__14DemoWipeKeeperFP12DemoExecutor",
+      "demangled_name": "DemoWipeKeeper::DemoWipeKeeper(DemoExecutor*)",
+      "size": "308",
+      "match_percent": 81.402596,
+      "target_symbol": 2
+    },
+    {
+      "name": "start__14DemoWipeKeeperFv",
+      "demangled_name": "DemoWipeKeeper::start()",
+      "size": "4",
+      "match_percent": 100.0,
+      "target_symbol": 3
+    },
+    {
+      "name": "update__14DemoWipeKeeperFv",
+      "demangled_name": "DemoWipeKeeper::update()",
+      "size": "108",
+      "match_percent": 66.666664,
+      "target_symbol": 4
+    },
+    {
+      "name": "executeType__14DemoWipeKeeperFPC12DemoWipeInfo",
+      "demangled_name": "DemoWipeKeeper::executeType(const DemoWipeInfo*)",
+      "size": "144",
+      "match_percent": 100.0,
+      "target_symbol": 5
+    },
+    {
+      "name": "getTypeString__14DemoWipeKeeperCFv",
+      "demangled_name": "DemoWipeKeeper::getTypeString() const",
+      "size": "12",
+      "match_percent": 100.0,
+      "target_symbol": 378
+    },
+    {
+      "name": "getName__14DemoWipeKeeperCFv",
+      "demangled_name": "DemoWipeKeeper::getName() const",
+      "size": "12",
+      "match_percent": 100.0,
+      "target_symbol": 379
+    },
+    {
+      "name": "executeType__41DemoSheetKeeperInfoHolder<12DemoWipeInfo>FPC12DemoWipeInfo",
+      "demangled_name": "DemoSheetKeeperInfoHolder<DemoWipeInfo>::executeType(const DemoWipeInfo*)",
+      "size": "4",
+      "match_percent": 100.0,
+      "target_symbol": 385
+    },
+    {
+      "name": "push_back__Q22MR46Vector<Q22MR31AssignableArray<12DemoWipeInfo>>FRC12DemoWipeInfo",
+      "demangled_name": "MR::Vector<MR::AssignableArray<DemoWipeInfo>>::push_back(const DemoWipeInfo&)",
+      "size": "60",
+      "match_percent": null,
+      "target_symbol": null
+    },
+    {
+      "name": "@8@executeType__14DemoWipeKeeperFPC12DemoWipeInfo",
+      "demangled_name": "DemoWipeKeeper::@8@executeType(const DemoWipeInfo*)",
+      "size": "8",
+      "match_percent": 100.0,
+      "target_symbol": 6
+    },
+    {
+      "name": "__vt__14DemoWipeKeeper",
+      "demangled_name": "DemoWipeKeeper::__vtable",
+      "size": "48",
+      "match_percent": 100.0,
+      "target_symbol": 14
+    },
+    {
+      "name": "__vt__41DemoSheetKeeperInfoHolder<12DemoWipeInfo>",
+      "demangled_name": "DemoSheetKeeperInfoHolder<DemoWipeInfo>::__vtable",
+      "size": "12",
+      "match_percent": 100.0,
+      "target_symbol": 15
+    }
+  ],
+  "sources": {
+    "decomp/src/Game/Demo/DemoWipeKeeper.cpp": "77eda8312b4ada06420d33f9c59dda45ca695e14b34193b7722167dbdd67f192",
+    "decomp/include/Game/Demo/DemoWipeKeeper.hpp": "4298b118b7b77708a75b74722b99a8fed4ded14677fdfb6e598bbdd641b8e8aa",
+    "decomp/include/Game/Demo/DemoExecutor.hpp": "dea45a0829be695b4a8d0dbc14b28889de05705761996afd3b1577bda995c11b"
+  }
+}

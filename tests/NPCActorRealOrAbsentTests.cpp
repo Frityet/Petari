@@ -4,17 +4,23 @@
 #include "Game/NPC/NPCActor.hpp"
 #include "Game/NPC/NPCActorItem.hpp"
 #include "Game/LiveActor/ModelManager.hpp"
+#include "Game/LiveActor/RailRider.hpp"
+#include "Game/NPC/TalkMessageCtrl.hpp"
+#include "Game/NPC/TalkNodeCtrl.hpp"
 #include "Game/Player/GroupChecker.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/System/ResourceHolder.hpp"
 #include "Game/Util/ActorSensorUtil.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/NPCUtil.hpp"
+#include "Game/Util/JointController.hpp"
+#include "Game/Util/RailUtil.hpp"
 #include "Logger.hpp"
 #include "RendererService.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/GroupCheckManagerCompat.hpp"
 #include "runtime/RuntimeContext.hpp"
+#include "resource/BcsvTable.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "SceneExecutionFixture.hpp"
 
@@ -22,13 +28,17 @@
 #include <dolphin/dvd.h>
 
 #include <cmath>
+#include <array>
+#include <bit>
 #include <cstdlib>
 #include <functional>
 #include <iostream>
 #include <limits>
+#include <memory>
 #include <stdexcept>
 #include <string>
 #include <string_view>
+#include <vector>
 
 namespace MR {
     bool getNPCItemData(NPCActorItem*, s32);
@@ -38,6 +48,7 @@ namespace MR {
 namespace {
     void require(bool condition, std::string_view message) {
         if (!condition) {
+            const auto host_allocations = smgpc::compat::JkrHostAllocationScope{};
             throw std::runtime_error(std::string(message));
         }
     }
@@ -151,6 +162,281 @@ namespace {
                 "the same owned Spine must resume the base after the null nerve");
     }
 
+    void write_be32(std::vector<std::uint8_t> &bytes, std::size_t offset, std::uint32_t value) {
+        bytes[offset] = static_cast<std::uint8_t>(value >> 24U);
+        bytes[offset + 1U] = static_cast<std::uint8_t>(value >> 16U);
+        bytes[offset + 2U] = static_cast<std::uint8_t>(value >> 8U);
+        bytes[offset + 3U] = static_cast<std::uint8_t>(value);
+    }
+
+    void write_be16(std::vector<std::uint8_t> &bytes, std::size_t offset, std::uint16_t value) {
+        bytes[offset] = static_cast<std::uint8_t>(value >> 8U);
+        bytes[offset + 1U] = static_cast<std::uint8_t>(value);
+    }
+
+    void write_be_float(std::vector<std::uint8_t> &bytes, std::size_t offset, float value) {
+        write_be32(bytes, offset, std::bit_cast<std::uint32_t>(value));
+    }
+
+    void write_bcsv_field(std::vector<std::uint8_t> &bytes, std::size_t index, std::string_view name, std::uint16_t offset,
+                          smgpc::resource::BcsvFieldType type) {
+        const auto field_offset = 0x10U + index * 0x0cU;
+        write_be32(bytes, field_offset, smgpc::resource::jmap_hash(name));
+        write_be32(bytes, field_offset + 0x04U, 0xffffffffU);
+        write_be16(bytes, field_offset + 0x08U, offset);
+        bytes[field_offset + 0x0aU] = 0U;
+        bytes[field_offset + 0x0bU] = static_cast<std::uint8_t>(type);
+    }
+
+    JMapInfo make_fieldless_jmap(std::uint32_t entry_count) {
+        auto bytes = std::vector<std::uint8_t>(0x10U, 0U);
+        write_be32(bytes, 0x00U, entry_count);
+        write_be32(bytes, 0x08U, 0x10U);
+        return JMapInfo::from_bcsv(bytes);
+    }
+
+    JMapInfo make_open_rail_path_info() {
+        constexpr auto data_offset = 0x1cU;
+        constexpr auto entry_size = 8U;
+        auto bytes = std::vector<std::uint8_t>(data_offset + entry_size, 0U);
+        write_be32(bytes, 0x00U, 1U);
+        write_be32(bytes, 0x04U, 1U);
+        write_be32(bytes, 0x08U, data_offset);
+        write_be32(bytes, 0x0cU, entry_size);
+        write_bcsv_field(bytes, 0U, "closed", 0U, smgpc::resource::BcsvFieldType::InlineString);
+        bytes[data_offset + 0U] = 'O';
+        bytes[data_offset + 1U] = 'P';
+        bytes[data_offset + 2U] = 'E';
+        bytes[data_offset + 3U] = 'N';
+        return JMapInfo::from_bcsv(bytes);
+    }
+
+    JMapInfo make_linear_rail_point_info(std::uint32_t entry_count = 3U) {
+        constexpr auto field_count = 10U;
+        constexpr auto entry_size = field_count * 4U;
+        constexpr auto data_offset = 0x10U + field_count * 0x0cU;
+        constexpr auto field_names = std::array<std::string_view, field_count>{
+            "pnt0_x", "pnt0_y", "pnt0_z", "pnt1_x", "pnt1_y", "pnt1_z", "pnt2_x", "pnt2_y", "pnt2_z", "id",
+        };
+
+        auto bytes = std::vector<std::uint8_t>(data_offset + entry_count * entry_size, 0U);
+        write_be32(bytes, 0x00U, entry_count);
+        write_be32(bytes, 0x04U, field_count);
+        write_be32(bytes, 0x08U, data_offset);
+        write_be32(bytes, 0x0cU, entry_size);
+        for (auto field = 0U; field < field_count; ++field) {
+            const auto type = field + 1U == field_count ? smgpc::resource::BcsvFieldType::Int32 : smgpc::resource::BcsvFieldType::Float;
+            write_bcsv_field(bytes, field, field_names[field], static_cast<std::uint16_t>(field * 4U), type);
+        }
+
+        for (auto entry = 0U; entry < entry_count; ++entry) {
+            const auto entry_offset = data_offset + entry * entry_size;
+            const auto x = static_cast<float>(entry * 10U);
+            write_be_float(bytes, entry_offset + 0U * 4U, x);
+            write_be_float(bytes, entry_offset + 3U * 4U, x);
+            write_be_float(bytes, entry_offset + 6U * 4U, x);
+            write_be32(bytes, entry_offset + 9U * 4U, entry);
+        }
+        return JMapInfo::from_bcsv(bytes);
+    }
+
+    std::array<const char*, 4> npcMotionNames(const NPCActor& actor) {
+        const auto* table = actor.mModelManager->mModelResourceHolder->mMotionResTable;
+        require(table != nullptr && table->mCount >= 4,
+                "action decisions require four distinct authored Tico BCK resources");
+        std::array<const char*, 4> names{};
+        for (std::size_t index = 0; index < names.size(); ++index) {
+            names[index] = table->getResName(static_cast<u32>(index));
+            require(names[index] != nullptr && MR::isExistBck(&actor, names[index]),
+                    "every selected action must be backed by the real Tico animation archive");
+        }
+        return names;
+    }
+
+    void clearReactionEdges(NPCActor& actor) {
+        actor._DD = actor._DE = actor._DF = actor._E0 = 0;
+        actor._E2 = actor._E3 = actor._E4 = actor._E5 = 0;
+    }
+
+    void testOriginalReactionActions(NPCActor& actor) {
+        const auto names = npcMotionNames(actor);
+        const auto base = NerveProbe{};
+        const auto reaction = NerveProbe{};
+        auto scale = AnimScaleController(nullptr);
+        auto delegator = std::unique_ptr<JointControlDelegator<NPCActor>>(
+            MR::createJointDelegatorWithNullChildFunc(&actor, &NPCActor::calcJointScale, "Body"));
+        struct RestoreLinks {
+            NPCActor& actor;
+            ~RestoreLinks() {
+                actor.mScaleController = nullptr;
+                actor.mDelegator = nullptr;
+                actor.setNerve(actor.mWaitNerve);
+                actor.mCurNerve = nullptr;
+            }
+        } restore{actor};
+        actor.initNerve(&base);
+        actor.mSpine->update();
+        actor._128 = 1;
+        actor._134 = names[0];
+        actor._13C = names[1];
+        actor._130 = names[2];
+        actor._138 = names[3];
+        clearReactionEdges(actor);
+        MR::startAction(&actor, names[3]);
+
+        actor._E2 = actor._E3 = actor._E4 = actor._E5 = 1;
+        require(MR::tryStartReaction(&actor) && MR::isActionStart(&actor, names[0]),
+                "new trample must win over hit, spin and pointing using the actual animation player");
+        actor._E2 = 0;
+        require(MR::tryStartReaction(&actor) && MR::isActionStart(&actor, names[1]),
+                "new hit must win over spin and pointing");
+        actor._E5 = 0;
+        require(MR::tryStartReaction(&actor) && MR::isActionStart(&actor, names[2]),
+                "new spin must win over pointing");
+        actor._E3 = 0;
+        require(!MR::tryStartReaction(&actor) && MR::isActionStart(&actor, names[2]),
+                "pointing must not interrupt an active spin action");
+
+        // Use a valid different animation while excluding the three higher-priority names.
+        actor._134 = actor._13C = actor._130 = nullptr;
+        require(MR::tryStartReaction(&actor) && MR::isActionStart(&actor, names[3]),
+                "a fresh pointing edge must start its real action when no higher-priority action is active");
+        actor._DF = 1;
+        auto* control = MR::getBckCtrl(&actor);
+        require(control == &actor.mModelManager->mXanimePlayer->_24[actor.mModelManager->mXanimePlayer->_54],
+                "completion predicates must inspect the actual active Xanime frame controller");
+        control->setAttribute(0);
+        control->mState = 0;
+        require(!MR::tryStartReaction(&actor), "ongoing pointing must not report a fresh edge");
+        control->mState = 1;
+        require(!MR::tryStartReaction(&actor) && MR::isActionStart(&actor, names[3]),
+                "restarting completed pointing retains the original false new-reaction result");
+
+        clearReactionEdges(actor);
+        actor._128 = 0;
+        actor._E2 = 1;
+        require(!MR::tryStartReaction(&actor),
+                "disabled animation reactions need both actual scale objects before accepting an edge");
+        actor.mScaleController = &scale;
+        require(!MR::tryStartReaction(&actor), "a scale controller alone must not fabricate a joint delegator");
+        actor.mDelegator = delegator.get();
+        require(MR::tryStartReaction(&actor) && MR::isActionStart(&actor, names[3]),
+                "the actual scale-controller/delegator pair accepts the edge without changing animation");
+
+        require(MR::tryStartReactionAndPushNerve(&actor, &reaction) && actor.mCurNerve == &base &&
+                    actor.isNerve(&reaction) && base.end_calls == 1,
+                "a real reaction must push the exact nerve while preserving the base Spine state");
+        actor.mSpine->update();
+        require(reaction.executions == 1 && actor.getNerveStep() == 1,
+                "the original Spine executes the pushed reaction");
+        require(!MR::tryStartReactionAndPopNerve(&actor) && actor.isNerve(&reaction) &&
+                    actor.mCurNerve == &base && actor.getNerveStep() == -1,
+                "another edge must restart the reaction through pop-and-push without leaving it");
+        actor.mSpine->update();
+        require(reaction.executions == 2 && actor.getNerveStep() == 1,
+                "restarted reaction executes at step zero again");
+        clearReactionEdges(actor);
+        scale._C.set(1.5F, 1.0F, 1.0F);
+        require(!MR::tryStartReactionAndPopNerve(&actor) && actor.isNerve(&reaction),
+                "actual scale deformation must keep the reaction nerve active");
+        scale.resetScale();
+        control = MR::getBckCtrl(&actor);
+        control->setAttribute(0);
+        control->mState = 2;
+        require(!MR::isActionLoopedOrStopped(&actor) && !MR::tryStartReactionAndPopNerve(&actor),
+                "one-time mode must ignore the loop bit and wait for stop");
+        control->setAttribute(2);
+        control->mState = 1;
+        require(!MR::isActionLoopedOrStopped(&actor) && !MR::tryStartReactionAndPopNerve(&actor),
+                "loop mode must ignore the stop bit and wait for loop completion");
+        control->mState = 2;
+        require(MR::isActionLoopedOrStopped(&actor) && MR::tryStartReactionAndPopNerve(&actor) &&
+                    actor.isNerve(&base) && actor.isEmptyNerve(),
+                "loop completion must restore the exact saved base nerve");
+        actor.mSpine->update();
+        require(base.executions == 2, "the restored base resumes through the same original Spine");
+        std::cout << "[proof] original NPC reaction priority, actual BCK state, scale ownership and push/pop outcomes\n";
+    }
+
+    void testOriginalMoveAndTalkActions(NPCActor& actor) {
+        const auto names = npcMotionNames(actor);
+        requireUnavailable([&] { (void)MR::tryStartTurnAction(&actor); },
+                           "turn-to-player must reject the absent real Mario owner instead of inventing a player");
+        auto talk = TalkMessageCtrl(&actor, TVec3f{}, nullptr);
+        struct RestoreTalk {
+            NPCActor& actor;
+            ~RestoreTalk() { actor.mMsgCtrl = nullptr; }
+        } restore{actor};
+        actor.mMsgCtrl = &talk;
+        require(talk.mNodeCtrl != nullptr, "talk action selection needs its actual registered TalkNodeCtrl");
+        talk._18 = 3;
+        talk.mNodeCtrl->mMessageInfo.mTalkType = 0;
+        actor.mParam._1 = 0;
+        actor.mParam._1C = names[0];
+        actor.mParam._20 = names[1];
+        MR::startAction(&actor, names[2]);
+        require(MR::tryStartTalkAction(&actor) && MR::isActionStart(&actor, names[0]) &&
+                    !MR::tryStartTalkAction(&actor),
+                "active non-turning talk starts its authored action once");
+        actor.mParam._1C = "";
+        require(!MR::tryStartTalkAction(&actor) && MR::isActionStart(&actor, names[0]),
+                "an empty talk action must leave the actual animation unchanged");
+        actor.mParam._1C = names[1];
+        require(!MR::isExistRail(&actor) && MR::tryStartMoveTalkAction(&actor) &&
+                    MR::isActionStart(&actor, names[1]),
+                "without a rail, move-talk must delegate to the original stationary talk decision");
+
+        auto placement = make_fieldless_jmap(1);
+        placement.setRailInfo(0, make_open_rail_path_info(), make_linear_rail_point_info(), 0);
+        actor.initRailRider(JMapInfoIter(&placement, 0));
+        require(actor.mRailRider != nullptr && actor.mRailRider->mBezierRail != nullptr,
+                "movement actions require the actual original RailRider and BezierRail");
+        actor.mPosition.zero();
+        actor.mGravity.set(0.0F, -1.0F, 0.0F);
+        actor._A0.set(0.0F, 0.0F, 0.0F, 1.0F);
+        actor._10C = 2.0F;
+        actor._110 = 0.5F;
+        actor._114 = 1.0F;
+        actor._124 = 0;
+        MR::setRailCoordSpeed(&actor, 0.0F);
+        MR::startMoveAction(&actor);
+        requireNear(MR::getRailCoordSpeed(&actor), 0.5F, "original rail speed approaches its target by the configured rate");
+        requireNear(MR::getRailCoord(&actor), 0.5F, "rail advancement must use the adjusted speed in the same call");
+        requireNear(actor.mPosition.x, 0.5F, "the original pose helper follows the advanced rail position");
+        auto front = TVec3f{};
+        actor._A0.getZDir(front);
+        require(front.epsilonEquals(TVec3f{1.0F, 0.0F, 0.0F}, 0.0001F),
+                "rail pose must orient the actual NPC quaternion along the path");
+        MR::setRailCoord(&actor, 19.75F);
+        MR::setRailCoordSpeed(&actor, 2.0F);
+        MR::startMoveAction(&actor);
+        requireNear(MR::getRailCoord(&actor), 20.0F, "open-rail motion must reach its original end coordinate");
+        require(!MR::isRailGoingToEnd(&actor), "reaching the original goal reverses the real RailRider direction");
+
+        actor._11C = names[2];
+        actor._120 = names[3];
+        actor._118 = 0.375F;
+        const auto before_long_talk = MR::getRailCoord(&actor);
+        actor.mParam._1C = names[0];
+        require(MR::tryStartMoveTalkAction(&actor) && MR::isActionStart(&actor, names[0]),
+                "long talk selects the stationary talk action even when a rail exists");
+        requireNear(MR::getRailCoord(&actor), before_long_talk, "long talk must not advance the rail");
+        requireNear(MR::getBckCtrl(&actor)->getRate(), 1.0F, "stationary talk restores the normal animation rate");
+        talk.mNodeCtrl->mMessageInfo.mTalkType = 1;
+        require(MR::tryStartMoveTalkAction(&actor) && MR::isActionStart(&actor, names[3]),
+                "short talk must retain movement and select its move-talk action");
+        require(MR::getRailCoord(&actor) < before_long_talk, "short talk continues along the reversed rail");
+        requireNear(MR::getBckCtrl(&actor)->getRate(), 0.375F, "short moving talk applies the configured animation rate");
+        MR::setBckRate(&actor, 1.0F);
+        require(!MR::tryStartMoveTalkAction(&actor), "retaining the same moving-talk action is not a new start");
+        requireNear(MR::getBckCtrl(&actor)->getRate(), 0.375F, "moving-talk rate is reapplied even when its action did not change");
+        talk._18 = 0;
+        require(MR::tryStartMoveTalkAction(&actor) && MR::isActionStart(&actor, names[2]),
+                "ending talk restores the original rail move action");
+        requireNear(MR::getBckCtrl(&actor)->getRate(), 1.0F, "ordinary moving action restores the normal animation rate");
+        std::cout << "[proof] original NPC stationary/long/short talk decisions and real rail speed, pose and reversal\n";
+    }
+
     void testFloatOffsetAndBaseMatrix() {
         const auto* disc_path = std::getenv("SMGPC_REAL_DISC");
         require(disc_path != nullptr && *disc_path != '\0',
@@ -231,6 +517,8 @@ namespace {
                        "a null NPC must fail the float-base host contract explicitly");
 
         std::cout << "[proof] original Tico ModelManager owns NPC base and float transforms; talk-height cases use actual Mario fixture\n";
+        testOriginalReactionActions(actor);
+        testOriginalMoveAndTalkActions(actor);
     }
 }  // namespace
 

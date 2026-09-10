@@ -1,0 +1,82 @@
+{
+  "kind": "Arithmetic model of retail big-endian s32 store followed by leading-byte lbz, not in-game execution",
+  "retail_evidence": {
+    "byte_init": "800BD950",
+    "s32_getter_call": "800BDA58",
+    "actual_getValue_s32_template": "800B8BE8, DemoActionKeeper.s",
+    "copy_lbz": "800BDC7C",
+    "execute_lbz": "800BDBC0"
+  },
+  "missing_or_rejected_field_default": 0,
+  "signed8_and_signed16_all_65536_cases_pass": true,
+  "seed": 20260910,
+  "additional_u32_samples_pass": 10000,
+  "representative_cases": [
+    {
+      "input_s32": 0,
+      "retail_leading_byte": 0,
+      "portable_leading_byte": 0
+    },
+    {
+      "input_s32": 1,
+      "retail_leading_byte": 0,
+      "portable_leading_byte": 0
+    },
+    {
+      "input_s32": -1,
+      "retail_leading_byte": 255,
+      "portable_leading_byte": 255
+    },
+    {
+      "input_s32": 127,
+      "retail_leading_byte": 0,
+      "portable_leading_byte": 0
+    },
+    {
+      "input_s32": 128,
+      "retail_leading_byte": 0,
+      "portable_leading_byte": 0
+    },
+    {
+      "input_s32": 255,
+      "retail_leading_byte": 0,
+      "portable_leading_byte": 0
+    },
+    {
+      "input_s32": 256,
+      "retail_leading_byte": 0,
+      "portable_leading_byte": 0
+    },
+    {
+      "input_s32": 65535,
+      "retail_leading_byte": 0,
+      "portable_leading_byte": 0
+    },
+    {
+      "input_s32": 65536,
+      "retail_leading_byte": 0,
+      "portable_leading_byte": 0
+    },
+    {
+      "input_s32": 16777215,
+      "retail_leading_byte": 0,
+      "portable_leading_byte": 0
+    },
+    {
+      "input_s32": 16777216,
+      "retail_leading_byte": 1,
+      "portable_leading_byte": 1
+    },
+    {
+      "input_s32": 2147483647,
+      "retail_leading_byte": 127,
+      "portable_leading_byte": 127
+    },
+    {
+      "input_s32": -2147483648,
+      "retail_leading_byte": 128,
+      "portable_leading_byte": 128
+    }
+  ],
+  "source_sha256": "5651adc0104a9915f2c8bb350ae6ca3a196f43b14849c48f33b416781eab52aa"
+}

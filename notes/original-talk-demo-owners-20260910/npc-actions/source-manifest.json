@@ -1,0 +1,22 @@
+[
+  {
+    "path": "decomp/src/Game/Util/NPCUtil.cpp",
+    "sha256": "aa6c2d530325336bc5ef739fab2dc35e838d3749a6c988f2917b98cd9ed32d43",
+    "bytes": 14838
+  },
+  {
+    "path": "decomp/include/Game/Util/NPCUtil.hpp",
+    "sha256": "9390c9401c5ba50f443d8eb2417887374aa3974ecf615c068f97ea2b096786d1",
+    "bytes": 3528
+  },
+  {
+    "path": "src/Game/Util/NPCUtil.cpp",
+    "sha256": "aa6c2d530325336bc5ef739fab2dc35e838d3749a6c988f2917b98cd9ed32d43",
+    "bytes": 14838
+  },
+  {
+    "path": "src/Game/Util/NPCUtil.hpp",
+    "sha256": "9390c9401c5ba50f443d8eb2417887374aa3974ecf615c068f97ea2b096786d1",
+    "bytes": 3528
+  }
+]

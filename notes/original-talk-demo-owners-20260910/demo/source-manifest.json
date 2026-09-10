@@ -1,0 +1,28 @@
+{
+  "frozen": true,
+  "files": {
+    "decomp/src/Game/Demo/DemoTimeKeeper.cpp": "2795bf48a6d47350cdd1e8f5c9156498385d1818bf31a72e73dffdcb7328967d",
+    "decomp/src/Game/Demo/DemoWipeKeeper.cpp": "a6a25382add6fd85e19586fccbbe2c9073a60dcbbd947cee060e9099b02dfb56",
+    "decomp/src/Game/Demo/DemoSoundKeeper.cpp": "5651adc0104a9915f2c8bb350ae6ca3a196f43b14849c48f33b416781eab52aa",
+    "decomp/src/Game/Demo/DemoExecutor.cpp": "9b75407c5059c8ae5d189e113b80ee1c8e7f3ce920bf1be9352d938c67cbe6a1",
+    "decomp/include/Game/Demo/DemoExecutor.hpp": "c1c1b33bc15e4dd85f612d4041b4b4db0365e1e8757c0a4e42741c09514628c2",
+    "decomp/include/Game/Demo/DemoSoundKeeper.hpp": "75b0653de9467272ef8e5e890d133937becc654c21ed872a66259f33de12eedf",
+    "decomp/include/Game/Demo/DemoWipeKeeper.hpp": "4298b118b7b77708a75b74722b99a8fed4ded14677fdfb6e598bbdd641b8e8aa",
+    "src/Game/Demo/DemoTimeKeeper.cpp": "2795bf48a6d47350cdd1e8f5c9156498385d1818bf31a72e73dffdcb7328967d",
+    "src/Game/Demo/DemoWipeKeeper.cpp": "a6a25382add6fd85e19586fccbbe2c9073a60dcbbd947cee060e9099b02dfb56",
+    "src/Game/Demo/DemoSoundKeeper.cpp": "5651adc0104a9915f2c8bb350ae6ca3a196f43b14849c48f33b416781eab52aa",
+    "src/Game/Demo/DemoExecutor.cpp": "9b75407c5059c8ae5d189e113b80ee1c8e7f3ce920bf1be9352d938c67cbe6a1",
+    "src/Game/Demo/DemoCastGroup.hpp": "8fed6afc9a46e6353715a86282c80311c806b3f802b897ba5fefa612159ea1ae",
+    "src/Game/Demo/DemoExecutor.hpp": "c1c1b33bc15e4dd85f612d4041b4b4db0365e1e8757c0a4e42741c09514628c2",
+    "src/Game/Demo/DemoTimeKeeper.hpp": "69e81da9ffd68bff876aa3d7f6d5d15b3ff0ae0cc39049982d3b1f767bbdcd44",
+    "src/Game/Demo/DemoWipeKeeper.hpp": "4298b118b7b77708a75b74722b99a8fed4ded14677fdfb6e598bbdd641b8e8aa",
+    "src/Game/Demo/DemoSoundKeeper.hpp": "75b0653de9467272ef8e5e890d133937becc654c21ed872a66259f33de12eedf",
+    "src/Game/Demo/DemoActionKeeper.hpp": "c17b52a54c00005ce0ebe935079300049fd90969bf7e67d0508a615b572e5326",
+    "src/Game/Demo/DemoCameraKeeper.hpp": "9ff7f2ba0f441d1daa3c70793f6838ea73a507d460a6a7613b010b53e81b2f76",
+    "src/Game/Demo/DemoPlayerKeeper.hpp": "a58700ccb680a7238c2a309da6054db8787949af32b1688c05dd1e515d4b1701",
+    "src/Game/Demo/DemoSubPartKeeper.hpp": "f19218384cdb451f50747aa19a90b5ec4463fde7bfb64e18ae37230222b6137f",
+    "src/Game/Demo/DemoTalkAnimCtrl.hpp": "14b7b3426bdeee6cdb0a8935871101fe803596e881b54d426abf3991def8a573"
+  },
+  "whole_native_cpp_copies_equal_reference": true,
+  "root_build_or_runtime_claim": false
+}

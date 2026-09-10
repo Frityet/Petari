@@ -1,0 +1,295 @@
+{
+  "command": [
+    "build/tools/wibo",
+    "build/tools/sjiswrap.exe",
+    "build/compilers/GC/3.0a3/mwcceppc.exe",
+    "-nodefaults",
+    "-proc",
+    "gekko",
+    "-align",
+    "powerpc",
+    "-enum",
+    "int",
+    "-fp",
+    "hardware",
+    "-Cpp_exceptions",
+    "off",
+    "-O4,s",
+    "-inline",
+    "auto",
+    "-pragma",
+    "cats off",
+    "-pragma",
+    "warn_notinlined off",
+    "-maxerrors",
+    "1",
+    "-nosyspath",
+    "-RTTI",
+    "off",
+    "-str",
+    "reuse",
+    "-enc",
+    "SJIS",
+    "-sdata",
+    "4",
+    "-sdata2",
+    "4",
+    "-ipa",
+    "file",
+    "-sym",
+    "on",
+    "-i",
+    "include",
+    "-i",
+    "libs/JSystem/include",
+    "-i",
+    "libs/MSL_C++/include",
+    "-i",
+    "libs/MSL_C/include",
+    "-i",
+    "libs/MetroTRK/include",
+    "-i",
+    "libs/RVLFaceLib/include",
+    "-i",
+    "libs/RVL_SDK/include",
+    "-i",
+    "libs/Runtime/include",
+    "-i",
+    "libs/nw4r/include",
+    "-i",
+    "build/original-j3d-joint-traversal-20260903/retail/include",
+    "-DVERSION=0",
+    "-c",
+    "src/Game/Demo/DemoExecutor.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-talk-demo-owners-20260910/demo/DemoExecutor.executor-talk-loops.wii.o"
+  ],
+  "wii_exit": 0,
+  "objdiff_command": [
+    "/Users/frityet/Projects/petari/decomp/build/tools/objdiff-cli",
+    "diff",
+    "-1",
+    "/Users/frityet/Projects/petari/notes/gateway-audit-20260907/restoration/retail/obj/Game/Demo/DemoExecutor.o",
+    "-2",
+    "/Users/frityet/Projects/petari/notes/original-talk-demo-owners-20260910/demo/DemoExecutor.executor-talk-loops.wii.o",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-talk-demo-owners-20260910/demo/executor-talk-loops-objdiff.json"
+  ],
+  "objdiff_exit": 0,
+  "symbols": [
+    {
+      "name": "__ct__12DemoExecutorFPCc",
+      "demangled_name": "DemoExecutor::DemoExecutor(const char*)",
+      "size": "136",
+      "match_percent": 100.0,
+      "target_symbol": 1
+    },
+    {
+      "name": "init__12DemoExecutorFRC12JMapInfoIter",
+      "demangled_name": "DemoExecutor::init(const JMapInfoIter&)",
+      "size": "388",
+      "match_percent": 100.0,
+      "target_symbol": 2
+    },
+    {
+      "name": "registerDemoActor__12DemoExecutorFP9LiveActorRC12JMapInfoIter",
+      "demangled_name": "DemoExecutor::registerDemoActor(LiveActor*, const JMapInfoIter&)",
+      "size": "156",
+      "match_percent": 100.0,
+      "target_symbol": 3
+    },
+    {
+      "name": "movement__12DemoExecutorFv",
+      "demangled_name": "DemoExecutor::movement()",
+      "size": "296",
+      "match_percent": 100.0,
+      "target_symbol": 4
+    },
+    {
+      "name": "start__12DemoExecutorFP7NameObjPCcl",
+      "demangled_name": "DemoExecutor::start(NameObj*, const char*, long)",
+      "size": "348",
+      "match_percent": 97.70115,
+      "target_symbol": 5
+    },
+    {
+      "name": "startPart__12DemoExecutorFP7NameObjPCcPCcl",
+      "demangled_name": "DemoExecutor::startPart(NameObj*, const char*, const char*, long)",
+      "size": "176",
+      "match_percent": 100.0,
+      "target_symbol": 6
+    },
+    {
+      "name": "startProperDemoSystem__12DemoExecutorFv",
+      "demangled_name": "DemoExecutor::startProperDemoSystem()",
+      "size": "40",
+      "match_percent": 100.0,
+      "target_symbol": 7
+    },
+    {
+      "name": "startDemoSystemPart__12DemoExecutorFPCcl",
+      "demangled_name": "DemoExecutor::startDemoSystemPart(const char*, long)",
+      "size": "208",
+      "match_percent": 100.0,
+      "target_symbol": 8
+    },
+    {
+      "name": "tryStartProperDemoSystem__12DemoExecutorFv",
+      "demangled_name": "DemoExecutor::tryStartProperDemoSystem()",
+      "size": "40",
+      "match_percent": 100.0,
+      "target_symbol": 9
+    },
+    {
+      "name": "tryStartDemoSystemPart__12DemoExecutorFPCcl",
+      "demangled_name": "DemoExecutor::tryStartDemoSystemPart(const char*, long)",
+      "size": "232",
+      "match_percent": 92.93104,
+      "target_symbol": 10
+    },
+    {
+      "name": "tryStartProperDemoSystemPart__12DemoExecutorFPCc",
+      "demangled_name": "DemoExecutor::tryStartProperDemoSystemPart(const char*)",
+      "size": "36",
+      "match_percent": 100.0,
+      "target_symbol": 11
+    },
+    {
+      "name": "pause__12DemoExecutorFv",
+      "demangled_name": "DemoExecutor::pause()",
+      "size": "16",
+      "match_percent": 100.0,
+      "target_symbol": 12
+    },
+    {
+      "name": "resume__12DemoExecutorFv",
+      "demangled_name": "DemoExecutor::resume()",
+      "size": "16",
+      "match_percent": 100.0,
+      "target_symbol": 13
+    },
+    {
+      "name": "addTalkAnimCtrl__12DemoExecutorFP16DemoTalkAnimCtrl",
+      "demangled_name": "DemoExecutor::addTalkAnimCtrl(DemoTalkAnimCtrl*)",
+      "size": "28",
+      "match_percent": 100.0,
+      "target_symbol": 14
+    },
+    {
+      "name": "addTalkMessageCtrl__12DemoExecutorFP9LiveActorP15TalkMessageCtrl",
+      "demangled_name": "DemoExecutor::addTalkMessageCtrl(LiveActor*, TalkMessageCtrl*)",
+      "size": "32",
+      "match_percent": 100.0,
+      "target_symbol": 15
+    },
+    {
+      "name": "findTalkMessageCtrl__12DemoExecutorCFPC9LiveActor",
+      "demangled_name": "DemoExecutor::findTalkMessageCtrl(const LiveActor*) const",
+      "size": "64",
+      "match_percent": 100.0,
+      "target_symbol": 16
+    },
+    {
+      "name": "setTalkMessageCtrl__12DemoExecutorFPC9LiveActorP15TalkMessageCtrl",
+      "demangled_name": "DemoExecutor::setTalkMessageCtrl(const LiveActor*, TalkMessageCtrl*)",
+      "size": "60",
+      "match_percent": 100.0,
+      "target_symbol": 17
+    },
+    {
+      "name": "end__12DemoExecutorFv",
+      "demangled_name": "DemoExecutor::end()",
+      "size": "312",
+      "match_percent": 76.89744,
+      "target_symbol": 18
+    },
+    {
+      "name": "initCast__19DemoSheetKeeperBaseFP9LiveActorRC12JMapInfoIter",
+      "demangled_name": "DemoSheetKeeperBase::initCast(LiveActor*, const JMapInfoIter&)",
+      "size": "4",
+      "match_percent": 100.0,
+      "target_symbol": 885
+    },
+    {
+      "name": "update__19DemoSheetKeeperBaseFv",
+      "demangled_name": "DemoSheetKeeperBase::update()",
+      "size": "4",
+      "match_percent": null,
+      "target_symbol": null
+    },
+    {
+      "name": "start__19DemoSheetKeeperBaseFv",
+      "demangled_name": "DemoSheetKeeperBase::start()",
+      "size": "4",
+      "match_percent": null,
+      "target_symbol": null
+    },
+    {
+      "name": "end__19DemoSheetKeeperBaseFv",
+      "demangled_name": "DemoSheetKeeperBase::end()",
+      "size": "4",
+      "match_percent": null,
+      "target_symbol": null
+    },
+    {
+      "name": "for_each<PP19DemoSheetKeeperBase,Q23std34mem_fun_t<v,19DemoSheetKeeperBase>>__3stdFPP19DemoSheetKeeperBasePP19DemoSheetKeeperBaseQ23std34mem_fun_t<v,19DemoSheetKeeperBase>_Q23std34mem_fun_t<v,19DemoSheetKeeperBase>",
+      "demangled_name": "std::mem_fun_t<void, DemoSheetKeeperBase> std::for_each<DemoSheetKeeperBase**, std::mem_fun_t<void, DemoSheetKeeperBase>>(DemoSheetKeeperBase**, DemoSheetKeeperBase**, std::mem_fun_t<void, DemoSheetKeeperBase>)",
+      "size": "116",
+      "match_percent": 100.0,
+      "target_symbol": 887
+    },
+    {
+      "name": "for_each<PP16DemoTalkAnimCtrl,Q23std59binder2nd<Q23std36mem_fun1_t<v,16DemoTalkAnimCtrl,PCc>,PCc>>__3stdFPP16DemoTalkAnimCtrlPP16DemoTalkAnimCtrlQ23std59binder2nd<Q23std36mem_fun1_t<v,16DemoTalkAnimCtrl,PCc>,PCc>_Q23std59binder2nd<Q23std36mem_fun1_t<v,16DemoTalkAnimCtrl,PCc>,PCc>",
+      "demangled_name": "std::binder2nd<std::mem_fun1_t<void, DemoTalkAnimCtrl, const char*>, const char*> std::for_each<DemoTalkAnimCtrl**, std::binder2nd<std::mem_fun1_t<void, DemoTalkAnimCtrl, const char*>, const char*>>(DemoTalkAnimCtrl**, DemoTalkAnimCtrl**, std::binder2nd<std::mem_fun1_t<void, DemoTalkAnimCtrl, const char*>, const char*>)",
+      "size": "128",
+      "match_percent": 100.0,
+      "target_symbol": 888
+    },
+    {
+      "name": "push_back__Q22MR51Vector<Q22MR36FixedArray<P19DemoSheetKeeperBase,2>>FRCP19DemoSheetKeeperBase",
+      "demangled_name": "MR::Vector<MR::FixedArray<DemoSheetKeeperBase*, 2>>::push_back(DemoSheetKeeperBase* const&)",
+      "size": "28",
+      "match_percent": 100.0,
+      "target_symbol": 883
+    },
+    {
+      "name": "__cl__Q22MR51FunctorV0M<P12DemoExecutor,M12DemoExecutorFPCvPv_v>CFv",
+      "demangled_name": "MR::FunctorV0M<DemoExecutor*, void (DemoExecutor::*)()>::operator()() const",
+      "size": "48",
+      "match_percent": 100.0,
+      "target_symbol": 890
+    },
+    {
+      "name": "clone__Q22MR51FunctorV0M<P12DemoExecutor,M12DemoExecutorFPCvPv_v>CFP7JKRHeap",
+      "demangled_name": "MR::FunctorV0M<DemoExecutor*, void (DemoExecutor::*)()>::clone(JKRHeap*) const",
+      "size": "104",
+      "match_percent": 100.0,
+      "target_symbol": 891
+    },
+    {
+      "name": "__dt__12DemoExecutorFv",
+      "demangled_name": "DemoExecutor::~DemoExecutor()",
+      "size": "92",
+      "match_percent": 100.0,
+      "target_symbol": 892
+    },
+    {
+      "name": "__vt__Q22MR51FunctorV0M<P12DemoExecutor,M12DemoExecutorFPCvPv_v>",
+      "demangled_name": "MR::FunctorV0M<DemoExecutor*, void (DemoExecutor::*)()>::__vtable",
+      "size": "16",
+      "match_percent": 100.0,
+      "target_symbol": 29
+    },
+    {
+      "name": "__vt__12DemoExecutor",
+      "demangled_name": "DemoExecutor::__vtable",
+      "size": "48",
+      "match_percent": 100.0,
+      "target_symbol": 31
+    }
+  ],
+  "sources": {
+    "decomp/src/Game/Demo/DemoExecutor.cpp": "9b75407c5059c8ae5d189e113b80ee1c8e7f3ce920bf1be9352d938c67cbe6a1",
+    "decomp/include/Game/Demo/DemoExecutor.hpp": "c1c1b33bc15e4dd85f612d4041b4b4db0365e1e8757c0a4e42741c09514628c2"
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "files": [
+    {
+      "path": "src/Game/System/MessageHolder.cpp",
+      "sha256": "15718429de8dbed29d6f5e179129372ba7457b53824a3bc0f6ed91ae2a742373"
+    },
+    {
+      "path": "src/Game/System/MessageHolder.hpp",
+      "sha256": "2fc7722aa2ff88b96d32306367cfb4e2ec96d7b8ea85ab636d6dff0996819daf"
+    },
+    {
+      "path": "src/Game/System/ErrorArchive.hpp",
+      "sha256": "e599734b43ffb964b41085c3b12455cc045c33a64b7106df3c421bfbffe4609c"
+    },
+    {
+      "path": "src/JSystem/JKernel/JKRArchive.hpp",
+      "sha256": "4114abf6f1e3fba9f39312b7368dfe0d6c5c4f841403656f3f2d7222eb0acbba"
+    },
+    {
+      "path": "src/resource/NativeBmgResource.cpp",
+      "sha256": "9f37b9e30f8be6af8d5d4fd6110a416ee2efebede11f6e5bab21fdce7f367be2"
+    },
+    {
+      "path": "src/resource/NativeBmgResource.hpp",
+      "sha256": "cd236ef1e1631bd79ff4dc33aca318db755aaf5f9d06947c1d9d536de8ae88fb"
+    },
+    {
+      "path": "src/resource/RarcArchive.cpp",
+      "sha256": "025c7d2fd87f9df4e3415aafcedbd9520f12d87d7fee7e17e6ce576979c35d52"
+    },
+    {
+      "path": "src/resource/GameResourceRuntime.hpp",
+      "sha256": "48f9bfdc2505682ee87e38716133f7ff5eb3cd0f26955f7608a289b5020e8d00"
+    },
+    {
+      "path": "src/runtime/MessageHolderOwnership.cpp",
+      "sha256": "c46afe08fda65693d34dc19269b0885062581c13b316f4be085bb1ccab05da53"
+    },
+    {
+      "path": "src/runtime/MessageHolderOwnership.hpp",
+      "sha256": "7f1bf1c8acb62023f29451afe7cbf566c3d2276f4ca18d877a8c06b2d7be42e8"
+    },
+    {
+      "path": "src/runtime/RuntimeContext.cpp",
+      "sha256": "9c197ed363888559c302b8e74ad09178bf18a5a9f2c8ea4f3ff8e2aabcd0d58d"
+    },
+    {
+      "path": "src/runtime/RuntimeContext.hpp",
+      "sha256": "0e3c88bdfe7dc9194247e0355661fffa8edc5d0a872f17a31797eb7efd562a6f"
+    },
+    {
+      "path": "src/compat/MessageUtilCompat.cpp",
+      "sha256": "5c9752e2255a8c549ca20f7d324708eaf2f6ed89c1fa97e45f3102a3d89d192d"
+    },
+    {
+      "path": "src/compat/MessageUtilCompat.hpp",
+      "sha256": "1851633e51c2a7e0218ef9da894d8c1cc2a6d33b19cd5a2f755a9f6697689640"
+    },
+    {
+      "path": "tests/OriginalMessageHolderTests.cpp",
+      "sha256": "bf2aa9ec20478b81ee888171239e893565a88ae88c72e177e213f2bfb19a4911"
+    },
+    {
+      "path": "tests/OriginalStarPointerOwnerTests.cpp",
+      "sha256": "ab780700e6f92b84dabdd59c4381afc93ac0a1e16b53f75d113197184213ce06"
+    }
+  ],
+  "reference": [
+    {
+      "path": "decomp/src/Game/System/MessageHolder.cpp",
+      "sha256": "2e10df99c50e6e7ca3c28bd9c48294f6c13af3fabfb6c9ebf6d3997cbdc93bdc"
+    },
+    {
+      "path": "decomp/include/Game/System/MessageHolder.hpp",
+      "sha256": "83a58349c9c52302540a7590b5fb4df0d0503dcaffe4e36d8c017f01ae9256be"
+    },
+    {
+      "path": "decomp/include/Game/System/ErrorArchive.hpp",
+      "sha256": "e599734b43ffb964b41085c3b12455cc045c33a64b7106df3c421bfbffe4609c"
+    }
+  ]
+}

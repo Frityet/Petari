@@ -178,7 +178,17 @@ namespace smgpc::resource {
         if (const auto *entry = find_normalized(path); entry != nullptr) {
             return entry;
         }
-
+        const auto normalized = normalized_archive_path(path);
+        const auto fold = [](unsigned char c) { return c >= 'A' && c <= 'Z' ? c + ('a' - 'A') : c; };
+        const auto found = std::ranges::find_if(_entries, [&](const auto& entry) {
+            return entry.path.size() == normalized.size() &&
+                std::equal(entry.path.begin(), entry.path.end(), normalized.begin(),
+                           [&](unsigned char a, unsigned char b) { return fold(a) == fold(b); });
+        });
+        if (found != _entries.end()) return &*found;
+        // A qualified JKR path names its directory. A missing locale or
+        // subdirectory must not silently resolve a same-named sibling file.
+        if (normalized.find('/') != std::string::npos) return nullptr;
         return find_by_basename(path);
     }
 

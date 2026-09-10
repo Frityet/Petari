@@ -4,6 +4,7 @@
 #include "JSystem/JGeometry/TVec.hpp"
 
 class LiveActor;
+class ModelObj;
 class LayoutActor;
 class NameObj;
 class NameObjGroup;
@@ -123,6 +124,9 @@ namespace MR {
     void shakeCameraWeak();
     void shakeCameraVeryWeak();
     void declarePowerStarCoin100();
+    void appearPowerStarContinueCurrentDemo(const NameObj*, const TVec3f&);
+    bool isEndPowerStarAppearDemo(const NameObj*);
+    ModelObj* createPowerStarDemoModel(const NameObj*, const char*, MtxPtr);
     void requestAppearPowerStarCoin100();
     void declareStarPiece(const NameObj* pObj, s32 num);
     bool appearStarPiece(const NameObj*, const TVec3f&, s32, f32, f32, bool);

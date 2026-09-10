@@ -1,0 +1,91 @@
+{
+  "dol": "decomp/build/compat-math-oracle/main.dol",
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "asm": "notes/gateway-audit-20260907/restoration/retail/asm/Game/Util/NPCUtil.s",
+  "functions": [
+    {
+      "symbol": "decidePose__2MRFP8NPCActorRCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>RCQ29JGeometry8TVec3<f>fff",
+      "address": "803EE4E0",
+      "bytes": 180,
+      "mismatches": []
+    },
+    {
+      "symbol": "followRailPose__2MRFP8NPCActorff",
+      "address": "803EE6B4",
+      "bytes": 152,
+      "mismatches": []
+    },
+    {
+      "symbol": "followRailPoseOnGround__2MRFP8NPCActorf",
+      "address": "803EE74C",
+      "bytes": 8,
+      "mismatches": []
+    },
+    {
+      "symbol": "followRailPoseOnGround__2MRFP8NPCActorPC9LiveActorf",
+      "address": "803EE754",
+      "bytes": 252,
+      "mismatches": []
+    },
+    {
+      "symbol": "isActionLoopedOrStopped__2MRFPC9LiveActor",
+      "address": "803EEF5C",
+      "bytes": 76,
+      "mismatches": []
+    },
+    {
+      "symbol": "startMoveAction__2MRFP8NPCActor",
+      "address": "803EEFB0",
+      "bytes": 148,
+      "mismatches": []
+    },
+    {
+      "symbol": "tryStartTalkAction__2MRFP8NPCActor",
+      "address": "803EF044",
+      "bytes": 168,
+      "mismatches": []
+    },
+    {
+      "symbol": "tryStartMoveTalkAction__2MRFP8NPCActor",
+      "address": "803EF0EC",
+      "bytes": 344,
+      "mismatches": []
+    },
+    {
+      "symbol": "tryStartTurnAction__2MRFP8NPCActor",
+      "address": "803EF244",
+      "bytes": 228,
+      "mismatches": []
+    },
+    {
+      "symbol": "tryStartReaction__2MRFP8NPCActor",
+      "address": "803EF394",
+      "bytes": 808,
+      "mismatches": []
+    },
+    {
+      "symbol": "tryTalkNearPlayerAndStartTalkAction__2MRFP8NPCActor",
+      "address": "803EF6BC",
+      "bytes": 52,
+      "mismatches": []
+    },
+    {
+      "symbol": "tryTalkNearPlayerAtEndAndStartMoveTalkAction__2MRFP8NPCActor",
+      "address": "803EF758",
+      "bytes": 52,
+      "mismatches": []
+    },
+    {
+      "symbol": "tryStartReactionAndPushNerve__2MRFP8NPCActorPC5Nerve",
+      "address": "803EF7F4",
+      "bytes": 88,
+      "mismatches": []
+    },
+    {
+      "symbol": "tryStartReactionAndPopNerve__2MRFP8NPCActor",
+      "address": "803EF84C",
+      "bytes": 140,
+      "mismatches": []
+    }
+  ]
+}

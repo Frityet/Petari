@@ -1,0 +1,30 @@
+{
+  "before": [
+    {
+      "function_offset": 80,
+      "symbol": "@3503",
+      "bytes": "00000000",
+      "float": 0.0
+    },
+    {
+      "function_offset": 132,
+      "symbol": "@3555",
+      "bytes": "3a83126f",
+      "float": 0.0010000000474974513
+    }
+  ],
+  "fixed": [
+    {
+      "function_offset": 80,
+      "symbol": "@3555",
+      "bytes": "3a83126f",
+      "float": 0.0010000000474974513
+    },
+    {
+      "function_offset": 132,
+      "symbol": "@3555",
+      "bytes": "3a83126f",
+      "float": 0.0010000000474974513
+    }
+  ]
+}

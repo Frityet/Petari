@@ -1,0 +1,17 @@
+{
+  "dol": "decomp/build/compat-math-oracle/main.dol",
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "function": {
+    "address": "0x8016ADA0",
+    "bytes": 192,
+    "mismatches": []
+  },
+  "tolerance": {
+    "symbol": "@56212",
+    "address": "0x806BBCE8",
+    "bytes": "3a83126f",
+    "float": 0.0010000000474974513
+  },
+  "before_score": 98.854164,
+  "fixed_score": 98.854164
+}

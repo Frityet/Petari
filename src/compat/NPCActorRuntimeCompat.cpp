@@ -28,10 +28,6 @@
 #include <string>
 
 namespace {
-    [[noreturn]] void throwNPCBehaviorUnavailable() {
-        aurora::throw_host_exception<std::logic_error>("NPC behavior utilities are unavailable without their real NPCUtil implementation.");
-    }
-
     TVec3f normalized(const TVec3f& value, const char* context) {
         auto result = value;
         const auto length = result.length();
@@ -316,12 +312,6 @@ namespace MR {
         }
         actor->mPosition.set(position);
     }
-
-    bool tryStartTurnAction(NPCActor*) { throwNPCBehaviorUnavailable(); }
-    bool tryStartReactionAndPushNerve(NPCActor*, const Nerve*) { throwNPCBehaviorUnavailable(); }
-    bool tryStartReactionAndPopNerve(NPCActor*) { throwNPCBehaviorUnavailable(); }
-    bool tryTalkNearPlayerAndStartTalkAction(NPCActor*) { throwNPCBehaviorUnavailable(); }
-    bool tryTalkNearPlayerAtEndAndStartMoveTalkAction(NPCActor*) { throwNPCBehaviorUnavailable(); }
 
     void initShadowFromCSV(LiveActor* actor, const char* definitionName) {
         if (definitionName == nullptr) {

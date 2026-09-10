@@ -22,6 +22,7 @@
 #include "Game/Demo/PrologueDirector.hpp"
 #include "Game/Gravity/PlanetGravityManager.hpp"
 #include "Game/LiveActor/ClippingDirector.hpp"
+#include "Game/LiveActor/AllLiveActorGroup.hpp"
 #include "Game/LiveActor/MessageSensorHolder.hpp"
 #include "Game/Map/Air.hpp"
 #include "Game/Map/LightDirector.hpp"
@@ -152,6 +153,18 @@ namespace smgpc::scene {
 
         sCurrentSceneObjHolder = _holder;
         sCurrentSceneObjHolderBinding = this;
+        try {
+            // Every original LiveActor joins this group during construction,
+            // including actors with no movement or draw registration.
+            if (dynamic_cast<AllLiveActorGroup*>(_holder->create(SceneObj_AllLiveActorGroup)) == nullptr) {
+                aurora::throw_host_exception<std::logic_error>("Scene initialization requires the original AllLiveActorGroup");
+            }
+        } catch (...) {
+            sCurrentSceneObjHolder = nullptr;
+            sCurrentSceneObjHolderBinding = nullptr;
+            *_holder = SceneObjHolder{};
+            throw;
+        }
     }
 
     SceneObjHolderBinding::~SceneObjHolderBinding() {
@@ -494,6 +507,8 @@ NameObj *SceneObjHolder::newEachObj(int id) {
     }
 
     switch (id) {
+    case SceneObj_AllLiveActorGroup:
+        return new AllLiveActorGroup();
     case SceneObj_SunshadeMapHolder:
         return new SunshadeMapHolder();
     case SceneObj_CollisionDirector:

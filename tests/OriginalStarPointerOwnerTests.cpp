@@ -2,6 +2,8 @@
 #include "compat/StageSessionState.hpp"
 #include "compat/StarPointerDepthOwnership.hpp"
 #include "runtime/RuntimeContext.hpp"
+#include "resource/BmgMessageArchive.hpp"
+#include "resource/RarcArchive.hpp"
 #include "Game/Screen/LayoutGroupCtrl.hpp"
 #include "Game/Screen/LayoutManager.hpp"
 #include "Game/Animation/LayoutAnmPlayer.hpp"
@@ -16,6 +18,8 @@
 #include "Game/Screen/StarPointerGuidance.hpp"
 #include "Game/Screen/StarPointerLayout.hpp"
 #include "Game/System/StarPointerOnOffController.hpp"
+#include "Game/System/WPad.hpp"
+#include "Game/System/WPadHolder.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
 #include "Game/Util/MessageUtil.hpp"
 #include "JSystem/JUtility/JUTTexture.hpp"
@@ -23,6 +27,7 @@
 #include <aurora/exception.hpp>
 #include <aurora/wpad.hpp>
 #include <array>
+#include <algorithm>
 #include <cstdlib>
 #include <iostream>
 #include <stdexcept>
@@ -93,6 +98,8 @@ void modes_and_resources(smgpc::runtime::RuntimeContext& runtime) {
     auto& modes = owner.modes();
     aurora::wpad_service().set_connected(0, false);
     aurora::wpad_service().set_connected(1, false);
+    aurora::wpad_service().begin_frame();
+    owner.update();
     require(director.mStarPointerLayouts == nullptr, "actual layouts are created at the process layout boundary, after resources exist");
     smgpc::compat::StageSessionState outer("Game", "HeavensDoorGalaxy", 1, JMapIdInfo(0, 0));
     {
@@ -121,15 +128,25 @@ void modes_and_resources(smgpc::runtime::RuntimeContext& runtime) {
         require(!MR::isExistStarPointerGuidance() && !MR::isExistStarPointerGuidanceFrame1P(),
                 "initialized EndWait spines report no guidance or frame before requests");
         aurora::wpad_service().set_connected(0, true);
+        aurora::wpad_service().begin_frame();
+        owner.update();
+        require(MR::getWPad(0)->mIsConnected && !MR::getWPad(1)->mIsConnected &&
+                    MR::getWPad(0)->mReadInfo->getValidStatusCount() == 1 &&
+                    MR::getWPad(1)->mReadInfo->getValidStatusCount() == 0,
+                "SDK callback dispatch and original WPadHolder sampling publish the connected channel's actual record");
         require(MR::isStarPointerValid(0) && !MR::isStarPointerValid(1),
                 "connecting a controller enables only its own valid original pointer query");
-        runtime.messages().set_message("PointerOwnerRetained", u"First line\nSecond line");
-        require(guidance->request1PGuidance("PointerOwnerRetained", true), "actual connected and valid layout accepts original guidance request");
+        const auto original_messages = smgpc::resource::BmgMessageArchive::from_message_archive(
+            runtime.archive_mounts().retain("/MessageData/Message.arc")->source());
+        const auto* expected_message = original_messages.find("System_Date000");
+        require(expected_message && original_messages.find("System_Time002"), "the retained-pointer proof uses two actual authored messages");
+        require(guidance->request1PGuidance("System_Date000", true), "actual connected and valid layout accepts original guidance request");
         const auto* text = guidance->mGuidanceMessage;
-        runtime.messages().set_message("PointerOwnerOther", u"Another message");
-        (void)MR::getLayoutMessageDirect("PointerOwnerOther");
-        require(text && text == MR::getLayoutMessageDirect("PointerOwnerRetained") && std::wstring(text) == L"First line\nSecond line",
-                "guidance borrows per-message retained wide storage across independent lookups");
+        (void)MR::getLayoutMessageDirect("System_Time002");
+        require(text && text == MR::getLayoutMessageDirect("System_Date000") &&
+                    std::equal(expected_message->raw_text.begin(), expected_message->raw_text.end(), text) &&
+                    text[expected_message->raw_text.size()] == 0,
+                "guidance borrows original MessageData wide storage including tag parameters across independent lookups");
         require(!MR::isExistStarPointerGuidance(), "a request alone does not fabricate visible guidance before the original spine advances");
 
         int yes_no_request;

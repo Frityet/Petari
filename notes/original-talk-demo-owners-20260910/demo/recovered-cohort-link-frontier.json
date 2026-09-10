@@ -1,0 +1,115 @@
+{
+  "archives": [
+    {
+      "path": "build/macosx/arm64/debug/libsmg-pc-game.a",
+      "size": 424799792,
+      "mtime_ns": 1789062470995699942
+    },
+    {
+      "path": "build/macosx/arm64/debug/libsmg-pc-common.a",
+      "size": 6042872,
+      "mtime_ns": 1789057254748694067
+    },
+    {
+      "path": "build/macosx/arm64/debug/libsmg-pc-render.a",
+      "size": 1393464,
+      "mtime_ns": 1789059273983641534
+    },
+    {
+      "path": "build/macosx/arm64/debug/libsmg-pc-app.a",
+      "size": 17085912,
+      "mtime_ns": 1789060886239764011
+    }
+  ],
+  "missing_from_current_native_archives_and_recovered_cohort": {
+    "DemoFunction::createSheetParser(DemoExecutor const*, char const*, JMapInfo**)": [
+      "DemoTimeKeeper",
+      "DemoWipeKeeper",
+      "DemoSoundKeeper"
+    ],
+    "MR::startLastStageBGM()": [
+      "DemoSoundKeeper"
+    ],
+    "DemoFunction::registerDemoExecutor(DemoExecutor*)": [
+      "DemoExecutor"
+    ],
+    "DemoFunction::requestDemoCastMovementOn(LiveActor*)": [
+      "DemoExecutor"
+    ],
+    "DemoCastGroup::registerDemoActor(LiveActor*, JMapInfoIter const&)": [
+      "DemoExecutor"
+    ],
+    "DemoCastGroup::tryRegisterDemoActor(LiveActor*, char const*, JMapInfoIter const&)": [
+      "DemoExecutor"
+    ],
+    "DemoCastGroup::tryRegisterDemoActor(LiveActor*, JMapInfoIter const&, JMapIdInfo const&)": [
+      "DemoExecutor"
+    ],
+    "DemoCastGroup::init(JMapInfoIter const&)": [
+      "DemoExecutor"
+    ],
+    "DemoCastGroup::DemoCastGroup(char const*)": [
+      "DemoExecutor"
+    ],
+    "DemoActionKeeper::update()": [
+      "DemoExecutor"
+    ],
+    "DemoActionKeeper::initCast(LiveActor*, JMapInfoIter const&)": [
+      "DemoExecutor"
+    ],
+    "DemoActionKeeper::DemoActionKeeper(DemoExecutor const*)": [
+      "DemoExecutor"
+    ],
+    "DemoCameraKeeper::end()": [
+      "DemoExecutor"
+    ],
+    "DemoCameraKeeper::start()": [
+      "DemoExecutor"
+    ],
+    "DemoCameraKeeper::update()": [
+      "DemoExecutor"
+    ],
+    "DemoCameraKeeper::initCast(LiveActor*, JMapInfoIter const&)": [
+      "DemoExecutor"
+    ],
+    "DemoCameraKeeper::DemoCameraKeeper(DemoExecutor*, JMapInfoIter const&)": [
+      "DemoExecutor"
+    ],
+    "DemoPlayerKeeper::update()": [
+      "DemoExecutor"
+    ],
+    "DemoPlayerKeeper::DemoPlayerKeeper(DemoExecutor const*)": [
+      "DemoExecutor"
+    ],
+    "DemoTalkAnimCtrl::updateDemo()": [
+      "DemoExecutor"
+    ],
+    "DemoTalkAnimCtrl::setupStartDemoPart(char const*)": [
+      "DemoExecutor"
+    ],
+    "DemoTalkAnimCtrl::startDemo()": [
+      "DemoExecutor"
+    ],
+    "DemoSubPartKeeper::end()": [
+      "DemoExecutor"
+    ],
+    "DemoSubPartKeeper::update()": [
+      "DemoExecutor"
+    ],
+    "DemoSubPartKeeper::DemoSubPartKeeper(DemoExecutor const*)": [
+      "DemoExecutor"
+    ],
+    "MR::isInvalidClipping(LiveActor const*)": [
+      "DemoExecutor"
+    ],
+    "MR::requestStartTimeKeepDemo(NameObj*, char const*, char const*)": [
+      "DemoExecutor"
+    ],
+    "MR::requestStartTimeKeepDemoMarioPuppetable(NameObj*, char const*, char const*)": [
+      "DemoExecutor"
+    ],
+    "typeinfo for DemoCastGroup": [
+      "DemoExecutor"
+    ]
+  }
+}

@@ -17,6 +17,7 @@
 #include "runtime/ArchiveMountService.hpp"
 #include "runtime/ScenarioCatalogOwnership.hpp"
 #include "runtime/ParticleResourceOwnership.hpp"
+#include "runtime/MessageHolderOwnership.hpp"
 #include "RendererService.hpp"
 #include "camera/CameraPose.hpp"
 #include "compat/ResourceHolderCompat.hpp"
@@ -364,6 +365,7 @@ namespace smgpc::runtime {
         SaveDataService _save_data;
         std::unique_ptr<SystemConfigService> _system_config;
         MessageService _messages;
+        std::unique_ptr<MessageHolderOwnership> _message_holder;
         SceneLightService _scene_lights;
         RflService _rfl;
         aurora::WpadShakeGesture _core_pad_gesture;

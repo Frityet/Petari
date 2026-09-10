@@ -1,0 +1,162 @@
+{
+  "command": [
+    "build/tools/wibo",
+    "build/tools/sjiswrap.exe",
+    "build/compilers/GC/3.0a3/mwcceppc.exe",
+    "-nodefaults",
+    "-proc",
+    "gekko",
+    "-align",
+    "powerpc",
+    "-enum",
+    "int",
+    "-fp",
+    "hardware",
+    "-Cpp_exceptions",
+    "off",
+    "-O4,s",
+    "-inline",
+    "auto",
+    "-pragma",
+    "cats off",
+    "-pragma",
+    "warn_notinlined off",
+    "-maxerrors",
+    "1",
+    "-nosyspath",
+    "-RTTI",
+    "off",
+    "-str",
+    "reuse",
+    "-enc",
+    "SJIS",
+    "-sdata",
+    "4",
+    "-sdata2",
+    "4",
+    "-ipa",
+    "file",
+    "-sym",
+    "on",
+    "-i",
+    "include",
+    "-i",
+    "libs/JSystem/include",
+    "-i",
+    "libs/MSL_C++/include",
+    "-i",
+    "libs/MSL_C/include",
+    "-i",
+    "libs/MetroTRK/include",
+    "-i",
+    "libs/RVLFaceLib/include",
+    "-i",
+    "libs/RVL_SDK/include",
+    "-i",
+    "libs/Runtime/include",
+    "-i",
+    "libs/nw4r/include",
+    "-i",
+    "build/original-j3d-joint-traversal-20260903/retail/include",
+    "-DVERSION=0",
+    "-c",
+    "src/Game/Demo/DemoTimeKeeper.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-talk-demo-owners-20260910/demo/DemoTimeKeeper.recovered.wii.o"
+  ],
+  "wii_exit": 0,
+  "objdiff_command": [
+    "/Users/frityet/Projects/petari/decomp/build/tools/objdiff-cli",
+    "diff",
+    "-1",
+    "/Users/frityet/Projects/petari/notes/gateway-audit-20260907/restoration/retail/obj/Game/Demo/DemoTimeKeeper.o",
+    "-2",
+    "/Users/frityet/Projects/petari/notes/original-talk-demo-owners-20260910/demo/DemoTimeKeeper.recovered.wii.o",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-talk-demo-owners-20260910/demo/recovered-objdiff.json"
+  ],
+  "objdiff_exit": 0,
+  "symbols": [
+    {
+      "name": "__ct__14DemoTimeKeeperFPC12DemoExecutor",
+      "demangled_name": "DemoTimeKeeper::DemoTimeKeeper(const DemoExecutor*)",
+      "size": "288",
+      "match_percent": 99.791664,
+      "target_symbol": 1
+    },
+    {
+      "name": "__ct__16DemoTimePartInfoFv",
+      "demangled_name": "DemoTimePartInfo::DemoTimePartInfo()",
+      "size": "24",
+      "match_percent": 100.0,
+      "target_symbol": 2
+    },
+    {
+      "name": "start__14DemoTimeKeeperFv",
+      "demangled_name": "DemoTimeKeeper::start()",
+      "size": "28",
+      "match_percent": 100.0,
+      "target_symbol": 3
+    },
+    {
+      "name": "update__14DemoTimeKeeperFv",
+      "demangled_name": "DemoTimeKeeper::update()",
+      "size": "160",
+      "match_percent": 93.625,
+      "target_symbol": 4
+    },
+    {
+      "name": "end__14DemoTimeKeeperFv",
+      "demangled_name": "DemoTimeKeeper::end()",
+      "size": "28",
+      "match_percent": 100.0,
+      "target_symbol": 5
+    },
+    {
+      "name": "isDemoEnd__14DemoTimeKeeperCFv",
+      "demangled_name": "DemoTimeKeeper::isDemoEnd() const",
+      "size": "108",
+      "match_percent": 100.0,
+      "target_symbol": 6
+    },
+    {
+      "name": "setStartPart__14DemoTimeKeeperFPCc",
+      "demangled_name": "DemoTimeKeeper::setStartPart(const char*)",
+      "size": "4",
+      "match_percent": 100.0,
+      "target_symbol": 7
+    },
+    {
+      "name": "isExistSuspendFlagCurrentPart__14DemoTimeKeeperCFv",
+      "demangled_name": "DemoTimeKeeper::isExistSuspendFlagCurrentPart() const",
+      "size": "12",
+      "match_percent": 100.0,
+      "target_symbol": 8
+    },
+    {
+      "name": "isPartLast__14DemoTimeKeeperCFv",
+      "demangled_name": "DemoTimeKeeper::isPartLast() const",
+      "size": "48",
+      "match_percent": 99.166664,
+      "target_symbol": 9
+    },
+    {
+      "name": "setCurrentPart__14DemoTimeKeeperFPCc",
+      "demangled_name": "DemoTimeKeeper::setCurrentPart(const char*)",
+      "size": "136",
+      "match_percent": 87.94118,
+      "target_symbol": 10
+    },
+    {
+      "name": "isCurrentDemoPartLastStep__14DemoTimeKeeperCFv",
+      "demangled_name": "DemoTimeKeeper::isCurrentDemoPartLastStep() const",
+      "size": "36",
+      "match_percent": 96.666664,
+      "target_symbol": 11
+    }
+  ],
+  "sources": {
+    "decomp/src/Game/Demo/DemoTimeKeeper.cpp": "9b35ca226c81cd0a005ad20fab668fbef3861bb43669c99c8f4c03d44b64d6a5",
+    "decomp/include/Game/Demo/DemoTimeKeeper.hpp": "69e81da9ffd68bff876aa3d7f6d5d15b3ff0ae0cc39049982d3b1f767bbdcd44"
+  }
+}

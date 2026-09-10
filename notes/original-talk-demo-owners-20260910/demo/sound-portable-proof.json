@@ -1,0 +1,177 @@
+{
+  "command": [
+    "build/tools/wibo",
+    "build/tools/sjiswrap.exe",
+    "build/compilers/GC/3.0a3/mwcceppc.exe",
+    "-nodefaults",
+    "-proc",
+    "gekko",
+    "-align",
+    "powerpc",
+    "-enum",
+    "int",
+    "-fp",
+    "hardware",
+    "-Cpp_exceptions",
+    "off",
+    "-O4,s",
+    "-inline",
+    "auto",
+    "-pragma",
+    "cats off",
+    "-pragma",
+    "warn_notinlined off",
+    "-maxerrors",
+    "1",
+    "-nosyspath",
+    "-RTTI",
+    "off",
+    "-str",
+    "reuse",
+    "-enc",
+    "SJIS",
+    "-sdata",
+    "4",
+    "-sdata2",
+    "4",
+    "-ipa",
+    "file",
+    "-sym",
+    "on",
+    "-i",
+    "include",
+    "-i",
+    "libs/JSystem/include",
+    "-i",
+    "libs/MSL_C++/include",
+    "-i",
+    "libs/MSL_C/include",
+    "-i",
+    "libs/MetroTRK/include",
+    "-i",
+    "libs/RVLFaceLib/include",
+    "-i",
+    "libs/RVL_SDK/include",
+    "-i",
+    "libs/Runtime/include",
+    "-i",
+    "libs/nw4r/include",
+    "-i",
+    "build/original-j3d-joint-traversal-20260903/retail/include",
+    "-DVERSION=0",
+    "-c",
+    "src/Game/Demo/DemoSoundKeeper.cpp",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-talk-demo-owners-20260910/demo/DemoSoundKeeper.sound-portable.wii.o"
+  ],
+  "wii_exit": 0,
+  "objdiff_command": [
+    "/Users/frityet/Projects/petari/decomp/build/tools/objdiff-cli",
+    "diff",
+    "-1",
+    "/Users/frityet/Projects/petari/notes/gateway-audit-20260907/restoration/retail/obj/Game/Demo/DemoSoundKeeper.o",
+    "-2",
+    "/Users/frityet/Projects/petari/notes/original-talk-demo-owners-20260910/demo/DemoSoundKeeper.sound-portable.wii.o",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-talk-demo-owners-20260910/demo/sound-portable-objdiff.json"
+  ],
+  "objdiff_exit": 0,
+  "symbols": [
+    {
+      "name": "__ct__13DemoSoundInfoFv",
+      "demangled_name": "DemoSoundInfo::DemoSoundInfo()",
+      "size": "36",
+      "match_percent": 100.0,
+      "target_symbol": 1
+    },
+    {
+      "name": "__ct__15DemoSoundKeeperFP12DemoExecutor",
+      "demangled_name": "DemoSoundKeeper::DemoSoundKeeper(DemoExecutor*)",
+      "size": "328",
+      "match_percent": 87.63415,
+      "target_symbol": 2
+    },
+    {
+      "name": "update__15DemoSoundKeeperFv",
+      "demangled_name": "DemoSoundKeeper::update()",
+      "size": "108",
+      "match_percent": 100.0,
+      "target_symbol": 3
+    },
+    {
+      "name": "executeType__15DemoSoundKeeperFPC13DemoSoundInfo",
+      "demangled_name": "DemoSoundKeeper::executeType(const DemoSoundInfo*)",
+      "size": "232",
+      "match_percent": 100.0,
+      "target_symbol": 4
+    },
+    {
+      "name": "isPermitBgmChange__15DemoSoundKeeperFv",
+      "demangled_name": "DemoSoundKeeper::isPermitBgmChange()",
+      "size": "64",
+      "match_percent": 100.0,
+      "target_symbol": 5
+    },
+    {
+      "name": "getTypeString__15DemoSoundKeeperCFv",
+      "demangled_name": "DemoSoundKeeper::getTypeString() const",
+      "size": "12",
+      "match_percent": 100.0,
+      "target_symbol": 393
+    },
+    {
+      "name": "getName__15DemoSoundKeeperCFv",
+      "demangled_name": "DemoSoundKeeper::getName() const",
+      "size": "12",
+      "match_percent": 100.0,
+      "target_symbol": 394
+    },
+    {
+      "name": "executeType__42DemoSheetKeeperInfoHolder<13DemoSoundInfo>FPC13DemoSoundInfo",
+      "demangled_name": "DemoSheetKeeperInfoHolder<DemoSoundInfo>::executeType(const DemoSoundInfo*)",
+      "size": "4",
+      "match_percent": 100.0,
+      "target_symbol": 404
+    },
+    {
+      "name": "push_back__Q22MR47Vector<Q22MR32AssignableArray<13DemoSoundInfo>>FRC13DemoSoundInfo",
+      "demangled_name": "MR::Vector<MR::AssignableArray<DemoSoundInfo>>::push_back(const DemoSoundInfo&)",
+      "size": "64",
+      "match_percent": 100.0,
+      "target_symbol": 396
+    },
+    {
+      "name": "@8@executeType__15DemoSoundKeeperFPC13DemoSoundInfo",
+      "demangled_name": "DemoSoundKeeper::@8@executeType(const DemoSoundInfo*)",
+      "size": "8",
+      "match_percent": 100.0,
+      "target_symbol": 6
+    },
+    {
+      "name": "__vt__15DemoSoundKeeper",
+      "demangled_name": "DemoSoundKeeper::__vtable",
+      "size": "48",
+      "match_percent": 100.0,
+      "target_symbol": 13
+    },
+    {
+      "name": "__vt__42DemoSheetKeeperInfoHolder<13DemoSoundInfo>",
+      "demangled_name": "DemoSheetKeeperInfoHolder<DemoSoundInfo>::__vtable",
+      "size": "12",
+      "match_percent": 100.0,
+      "target_symbol": 14
+    },
+    {
+      "name": "__vt__19DemoSheetKeeperBase",
+      "demangled_name": "DemoSheetKeeperBase::__vtable",
+      "size": "32",
+      "match_percent": 100.0,
+      "target_symbol": 15
+    }
+  ],
+  "sources": {
+    "decomp/src/Game/Demo/DemoSoundKeeper.cpp": "5651adc0104a9915f2c8bb350ae6ca3a196f43b14849c48f33b416781eab52aa",
+    "decomp/include/Game/Demo/DemoSoundKeeper.hpp": "75b0653de9467272ef8e5e890d133937becc654c21ed872a66259f33de12eedf",
+    "decomp/include/Game/Demo/DemoExecutor.hpp": "c1c1b33bc15e4dd85f612d4041b4b4db0365e1e8757c0a4e42741c09514628c2"
+  }
+}

@@ -10,6 +10,7 @@
 #include "Game/LiveActor/HitSensorInfo.hpp"
 #include "Game/LiveActor/HitSensorKeeper.hpp"
 #include "Game/LiveActor/LiveActor.hpp"
+#include "Game/LiveActor/AllLiveActorGroup.hpp"
 #include "Game/LiveActor/LodCtrl.hpp"
 #include "Game/LiveActor/RailRider.hpp"
 #include "Game/LiveActor/Spine.hpp"
@@ -28,6 +29,7 @@
 #include "Game/Util/LiveActorUtil.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "resource/TextEncoding.hpp"
+#include "scene/SceneObjHolderRuntime.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -410,6 +412,9 @@ namespace smgpc::compat {
         }
         if (!actor_states().try_emplace(actor).second) {
             aurora::throw_host_exception<std::logic_error>("LiveActor runtime state is already registered.");
+        }
+        if (smgpc::scene::current_scene_obj_holder() != nullptr) {
+            MR::getAllLiveActorGroup()->registerActor(actor);
         }
     }
 
