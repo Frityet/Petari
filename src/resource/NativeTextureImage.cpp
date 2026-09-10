@@ -43,6 +43,11 @@ namespace smgpc::resource {
     }
 
     void validate_texture_image(Bytes block, std::size_t source, const ResTIMG& image) {
+        // File offsets are forward unsigned words. Negative displacements
+        // arise only after native J3DTexture::setResTIMG relocation.
+        if (image.mImageDataOffset < 0 || image.mPaletteDataOffset < 0) {
+            aurora::throw_host_exception<std::runtime_error>("Texture source offsets exceed the mapped graphics heap range");
+        }
         if (image.mWidth == 0 || image.mWidth > 1024 || image.mHeight == 0 || image.mHeight > 1024 ||
             image.mWrapS > GX_MIRROR || image.mWrapT > GX_MIRROR || image.mMaxAnisotropy > GX_ANISO_4 ||
             image.mMinType > GX_LIN_MIP_LIN || image.mMagType > GX_LINEAR) {

@@ -126,6 +126,17 @@ namespace smgpc::scene {
     public:
         explicit Impl(smgpc::runtime::DvdFileSystemService &dvd)
             : _dvd(dvd) {
+            try {
+                initialize();
+            } catch (...) {
+                // Constructor failure does not run ~Impl. Retire execution
+                // while its original requirement holder is still alive.
+                destroy_scene();
+                throw;
+            }
+        }
+
+        void initialize() {
             const auto scenario_metadata =
                 smgpc::compat::resolve_stage_scenario_metadata(
                     _dvd, cStageName, 1);
@@ -221,6 +232,7 @@ namespace smgpc::scene {
                 SceneObj_MarioHolder,
                 SceneObj_GroupCheckManager,
                 SceneObj_TalkDirector,
+                SceneObj_GameSceneLayoutHolder,
             };
             for (const auto id : required_scene_objects) {
                 require(MR::createSceneObj(id) != nullptr,
@@ -403,8 +415,11 @@ namespace smgpc::scene {
             _collision.deactivate();
         }
 
-        ~Impl() {
+        void destroy_scene() noexcept {
             retire();
+            // DemoDirector disconnects from the executor on destruction and
+            // can release camera/player demo state owned by the scene graph.
+            _demo_scene_runtime.reset();
             // The exact manager keeps non-owning pointers to authored gravity
             // instances and is retired after their actor wrappers.
             _scene_binding.reset();
@@ -413,6 +428,10 @@ namespace smgpc::scene {
             _scene_domain.reset();
             _stage_light_binding.reset();
             _planet_map_catalog.reset();
+        }
+
+        ~Impl() {
+            destroy_scene();
         }
 
 #ifndef NDEBUG

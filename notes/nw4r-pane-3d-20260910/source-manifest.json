@@ -1,0 +1,36 @@
+{
+  "files": [
+    {
+      "path": "src/layout/LayoutRuntime.cpp",
+      "sha256": "759634e7412a41126a69e5e7b12655e002566948313bffb2d2ce32263a06b4a8"
+    },
+    {
+      "path": "src/layout/LayoutRuntime.hpp",
+      "sha256": "224c7f45d898194b7fd69d9de046d1b1ff53633d56308bfc020110cec9ccab91"
+    },
+    {
+      "path": "src/layout/Nw4rLayoutRecords.cpp",
+      "sha256": "a653a5dea6b72987b11b453950f627da1bac0dd4be4276d0ecc96b29a207d20b"
+    },
+    {
+      "path": "src/render/RendererService.cpp",
+      "sha256": "1039e3a9c66224fc821ef52fa8b1bb2da1d17c50d53a979ec2d9614542532891"
+    },
+    {
+      "path": "tests/OriginalLayoutGroupTests.cpp",
+      "sha256": "2b5f11737b957f23aedb66b0d3534e99f5fa2024daa9d0fa56108f69491aea4a"
+    },
+    {
+      "path": "aurora/include/aurora/nw4r/brlan.hpp",
+      "sha256": "3ea80c0ec8ce9e9f5e03c7acd0998fecfb746857bedab556731e626079bee3a4"
+    },
+    {
+      "path": "aurora/lib/nw4r/brlan.cpp",
+      "sha256": "793f28fe9b1cd32fb6010282967b1b4a8b41e3de2872df24eb4072400a69bcbd"
+    },
+    {
+      "path": "aurora/tests/brlan_test.cpp",
+      "sha256": "d45c75d55d3cbb08a2ca8208cde0f978da612e37c3d4bf3d5a5445d5fbbd0253"
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "all_tables_and_method_bodies_equal_except_named_byte_member_access": true,
+  "field_read_sites": 15,
+  "table_layout_unchanged": true
+}

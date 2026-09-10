@@ -6,6 +6,7 @@
 #include "Game/Map/PlanetMap.hpp"
 #include "Game/Player/MarioActor.hpp"
 #include "Game/LiveActor/ModelManager.hpp"
+#include "Game/LiveActor/Binder.hpp"
 #include "Game/Animation/XanimePlayer.hpp"
 #include "Game/Util/ModelUtil.hpp"
 #include "Game/Player/MarioHolder.hpp"
@@ -953,6 +954,20 @@ namespace {
 #ifndef NDEBUG
                 if (log_simulation_timing) {
                     const auto& actor = mario_owner.actor();
+                    const auto& camera = runtime.scene_camera_pose().value_or(initial_camera);
+                    std::fprintf(
+                        stderr,
+                        "[smgpc:gameplay] tick=%llu jumping=%d grounded=%d "
+                        "position=(%.9g,%.9g,%.9g) velocity=(%.9g,%.9g,%.9g) "
+                        "eye=(%.9g,%.9g,%.9g) watch=(%.9g,%.9g,%.9g) "
+                        "up=(%.9g,%.9g,%.9g)\n",
+                        static_cast<unsigned long long>(frame_index),
+                        actor.isJumping(), actor.mBinder && actor.mBinder->isBindedGround(),
+                        actor.mPosition.x, actor.mPosition.y, actor.mPosition.z,
+                        actor.mVelocity.x, actor.mVelocity.y, actor.mVelocity.z,
+                        camera.eye.x, camera.eye.y, camera.eye.z,
+                        camera.watch.x, camera.watch.y, camera.watch.z,
+                        camera.up.x, camera.up.y, camera.up.z);
                     const auto* player = actor.mModelManager ? actor.mModelManager->mXanimePlayer : nullptr;
                     const auto* animation = player ? player->_20 : nullptr;
                     const auto animation_name = std::string_view{player && player->getCurrentAnimationName() ? player->getCurrentAnimationName() : ""};

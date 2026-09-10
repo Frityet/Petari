@@ -1,0 +1,70 @@
+[
+  {
+    "path": "aurora",
+    "git_head": "f14bed4e8ef79b3d41541ea2e339e7d203122426"
+  },
+  {
+    "path": "decomp",
+    "git_head": "dcf713d88e1dfe689bdc9e1a8ca8a500fcad22ff"
+  },
+  {
+    "path": "src/Game/Player/MatrixControl.cpp",
+    "sha256": "d579f871e0523602c83d426a7602e6cc3ec3ea1e248082ba451d09d795f988de"
+  },
+  {
+    "path": "src/Game/Player/MarioEffect.cpp",
+    "sha256": "443f67629d9f43995bd5ac24aaf622ead481384ffda65046865a47843d1a5cd6"
+  },
+  {
+    "path": "src/JSystem/JUtility/JUTTexture.hpp",
+    "sha256": "9c6104120d84488410dd68efbeb07a969e9c55ddfbcfbe7f9ebce97faf7deea3"
+  },
+  {
+    "path": "src/resource/NativeTextureImage.cpp",
+    "sha256": "c692b274f8edde06b97704f2953227467f1cf10cf04c95121d8afb6227eef4ec"
+  },
+  {
+    "path": "src/runtime/jut/JutTexture.cpp",
+    "sha256": "8707488191901d2558622e9fb2e26787e420688518b237bc8b048d96cde7d798"
+  },
+  {
+    "path": "src/layout/LayoutRuntime.cpp",
+    "sha256": "759634e7412a41126a69e5e7b12655e002566948313bffb2d2ce32263a06b4a8"
+  },
+  {
+    "path": "src/layout/LayoutRuntime.hpp",
+    "sha256": "224c7f45d898194b7fd69d9de046d1b1ff53633d56308bfc020110cec9ccab91"
+  },
+  {
+    "path": "src/layout/Nw4rLayoutRecords.cpp",
+    "sha256": "a653a5dea6b72987b11b453950f627da1bac0dd4be4276d0ecc96b29a207d20b"
+  },
+  {
+    "path": "src/render/RendererService.cpp",
+    "sha256": "1039e3a9c66224fc821ef52fa8b1bb2da1d17c50d53a979ec2d9614542532891"
+  },
+  {
+    "path": "src/scene/GatewayDemoScene.cpp",
+    "sha256": "53edb5e3dfc9d22b634be4efe490fdcf44b0cfbe83d3d788fbafe080e30bdc95"
+  },
+  {
+    "path": "src/scene/StageInitializationService.cpp",
+    "sha256": "4f6b4cdeb842f5615baa9a70341ac0474d6089de7de8fa0edf6f86f45ed6b2ab"
+  },
+  {
+    "path": "src/showcase/Showcase.cpp",
+    "sha256": "470e24f45d9c8a7b203f3149bdb78cc995f6f7c365e1ae4dc033da14d0b2be84"
+  },
+  {
+    "path": "tests/OriginalJ3DTextureResourceTests.cpp",
+    "sha256": "86e32566fdb8a72be7cf7aa433d1bc6b2e7d37965824e5694e729fd4c07fc52c"
+  },
+  {
+    "path": "tests/OriginalLayoutGroupTests.cpp",
+    "sha256": "2b5f11737b957f23aedb66b0d3534e99f5fa2024daa9d0fa56108f69491aea4a"
+  },
+  {
+    "path": "script/package_movement_demo.py",
+    "sha256": "2291144bcc412b8f00653d9a963077f45c1943a3321c6c4650c5340a7cc750ac"
+  }
+]

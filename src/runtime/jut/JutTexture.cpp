@@ -92,7 +92,8 @@ void JUTTexture::storeTIMG(const ResTIMG *timg, u8 tlut_name) {
     }
 
     mTIMG = timg;
-    mImage = const_cast<u8 *>(reinterpret_cast<const u8 *>(timg) + (timg->mImageDataOffset != 0U ? timg->mImageDataOffset : sizeof(ResTIMG)));
+    const auto offset = timg->mImageDataOffset != 0 ? timg->mImageDataOffset : static_cast<s32>(sizeof(ResTIMG));
+    mImage = const_cast<u8 *>(reinterpret_cast<const u8 *>(timg) + offset);
     mPalette = nullptr;
     mTlutName = tlut_name;
     mWrapS = timg->mWrapS;

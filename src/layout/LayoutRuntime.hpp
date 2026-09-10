@@ -249,15 +249,9 @@ private:
     };
 
     struct PaneRenderState {
-        float translate_x = 0.0F;
-        float translate_y = 0.0F;
-        float scale_x = 1.0F;
-        float scale_y = 1.0F;
-        float rotate_z = 0.0F;
-        float m00 = 1.0F;
-        float m01 = 0.0F;
-        float m10 = 0.0F;
-        float m11 = 1.0F;
+        Mtx matrix = {{1.0F, 0.0F, 0.0F, 0.0F},
+                      {0.0F, 1.0F, 0.0F, 0.0F},
+                      {0.0F, 0.0F, 1.0F, 0.0F}};
         float alpha = 255.0F;
         float child_alpha_scale = 1.0F;
         bool visible = true;
@@ -306,7 +300,7 @@ private:
     void drawTextBoxes(smgpc::render::AuroraRenderer& renderer, float alpha);
     void drawTextBox(smgpc::render::AuroraRenderer& renderer, float alpha, std::size_t text_box_index);
     [[nodiscard]] PaneRenderState paneRenderState(std::size_t pane_index) const;
-    [[nodiscard]] std::array< float, 2U > panePointForAurora(const PaneRenderState& pane_state, float local_x, float local_y) const;
+    [[nodiscard]] std::array< float, 3U > panePointForAurora(const PaneRenderState& pane_state, float local_x, float local_y) const;
     [[nodiscard]] aurora::nw4r::lyt::BrlanPaneFrame animationFrameForPane(std::string_view pane_name) const;
     [[nodiscard]] aurora::nw4r::lyt::BrlanTextureFrame textureFrameForContent(std::string_view content_name) const;
     [[nodiscard]] aurora::nw4r::lyt::BrlanMaterialFrame materialFrameForContent(std::string_view content_name) const;

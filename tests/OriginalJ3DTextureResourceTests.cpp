@@ -154,6 +154,49 @@ namespace {
                 "original writer emits the real mapped payload address without extra metadata");
     }
 
+    void test_relocated_texture_commands(const std::shared_ptr<Mem1ResourceHeap>& heap) {
+        auto storage = heap->allocate(512);
+        auto* bytes = reinterpret_cast<u8*>(storage.bytes().data());
+        auto* low = std::construct_at(reinterpret_cast<ResTIMG*>(bytes));
+        auto* high = std::construct_at(reinterpret_cast<ResTIMG*>(bytes + 256));
+        for (bool backward : {true, false}) {
+            auto* source = backward ? low : high;
+            auto* target = backward ? high : low;
+            *source = ResTIMG{};
+            source->mFormat = GX_TF_C4;
+            source->mWidth = source->mHeight = 8;
+            source->mPaletteName = 1;
+            source->mPaletteNum = 16;
+            source->mPaletteDataOffset = 32;
+            source->mImageDataOffset = 64;
+            const auto* image = reinterpret_cast<const u8*>(source) + 64;
+            const auto* palette = reinterpret_cast<const u8*>(source) + 32;
+            J3DTexture texture(1, target);
+            texture.setResTIMG(0, *source);
+            texture.setResTIMG(0, *target); // Self replacement retains the alias.
+            require(reinterpret_cast<const u8*>(target) + target->mImageDataOffset == image &&
+                        reinterpret_cast<const u8*>(target) + target->mPaletteDataOffset == palette,
+                    "forward and backward texture replacement preserve both payload identities");
+            require((target->mImageDataOffset < 0) == backward,
+                    "native texture displacement retains its address direction");
+
+            alignas(32) std::array<u8, 128> commands{};
+            GDLObj dl;
+            GDInitGDLObj(&dl, commands.data(), commands.size());
+            auto* previous_dl = __GDCurrentDL;
+            auto* previous_texture = j3dSys.getTexture();
+            GDSetCurrent(&dl); j3dSys.setTexture(&texture);
+            const u16 index = 0;
+            loadTexNo(3, index);
+            GDSetCurrent(previous_dl); j3dSys.setTexture(previous_texture);
+            require((be32(commands, 1) & 0xFFFFFFU) == (OSCachedToPhysical(const_cast<u8*>(image)) >> 5),
+                    "relocated original GD texture commands use the existing mapped image");
+            require(commands[31] == 0x64 &&
+                        (be32(commands, 31) & 0xFFFFFFU) == (OSCachedToPhysical(const_cast<u8*>(palette)) >> 5),
+                    "relocated original GD palette commands use the existing mapped palette");
+        }
+    }
+
     void test_rejection_and_reuse(const std::shared_ptr<Mem1ResourceHeap>& heap) {
         const auto available = heap->available_bytes();
         rejects([&] { (void)Mem1ResourceHeap::create(1024); });
@@ -216,6 +259,7 @@ int main() {
         require(__OSCurrHeap == previous_current_heap, "mapped resource setup does not select a global current heap");
         test_formats(heap);
         test_aliases_and_commands(heap);
+        test_relocated_texture_commands(heap);
         test_rejection_and_reuse(heap);
         test_optional_disc(heap);
         std::weak_ptr<Mem1ResourceHeap> weak = heap;
@@ -224,7 +268,7 @@ int main() {
         require(!weak.expired(), "texture allocation retains its actual heap owner");
         retained.reset();
         require(weak.expired() && AuroraOSIsAllocatorInitialized(), "last allocation retires heap but preserves process OS descriptor reservation");
-        std::cout << "[pass] 5 original J3D texture-resource groups\n";
+        std::cout << "[pass] 6 original J3D texture-resource groups\n";
         return 0;
     } catch (const std::exception& e) {
         std::cerr << "[fail] original J3D texture resource: " << e.what() << '\n';

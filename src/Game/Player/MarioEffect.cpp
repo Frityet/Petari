@@ -18,6 +18,7 @@
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/MtxUtil.hpp"
 #include "Game/Util/SoundUtil.hpp"
+#include <aurora/ppc_bitfield.hpp>
 #include <JSystem/JParticle/JPAEmitter.hpp>
 #include <JSystem/JParticle/JPAMath.hpp>
 #include <cstdio>
@@ -25,13 +26,17 @@
 
 struct MaterialEffectEntry {
     union FlagWord {
-        u32 mWord;
-        struct {
-            u8 mByte0;
-            u8 mByte1;
-            u8 mByte2;
-            u8 mByte3;
+        struct Bytes {
+            AURORA_PPC_BITFIELD_GROUP(u32,
+                (mByte0, 8),
+                (mByte1, 8),
+                (mByte2, 8),
+                (mByte3, 8)
+            )
         };
+
+        u32 mWord;
+        Bytes mBytes;
     };
 
     /* 0x00 */ const char* mName;
@@ -43,13 +48,17 @@ struct MaterialEffectEntry {
 
 struct SmokeEffectEntry {
     union FlagWord {
-        u32 mWord;
-        struct {
-            u8 mByte0;
-            u8 mByte1;
-            u8 mByte2;
-            u8 mByte3;
+        struct Bytes {
+            AURORA_PPC_BITFIELD_GROUP(u32,
+                (mByte0, 8),
+                (mByte1, 8),
+                (mByte2, 8),
+                (mByte3, 8)
+            )
         };
+
+        u32 mWord;
+        Bytes mBytes;
     };
 
     /* 0x00 */ const char* mName;
@@ -340,7 +349,7 @@ MultiEmitter* MarioActor::playMaterialEffect(const char* pName) {
     _BA4->search(pName, &value);
     MaterialEffectEntry* entry = reinterpret_cast< MaterialEffectEntry* >(value);
 
-    const u8 flag = entry->mFlag.mByte0;
+    const u8 flag = entry->mFlag.mBytes.mByte0;
     const s32 materialIndex = getFloorMaterialIndex(flag);
     if (materialIndex == -1) {
         return nullptr;
@@ -415,7 +424,7 @@ void MarioActor::initCommonEffect() {
         s32 variant = 0;
         s32 useFollow = 0;
 
-        switch (entry->mType.mByte0) {
+        switch (entry->mType.mBytes.mByte0) {
         case 0:
             variant = 0;
             break;
@@ -455,7 +464,7 @@ void MarioActor::initCommonEffect() {
         for (u32 materialIndex = 0; materialIndex < 7; materialIndex++) {
             sprintf(name, "%s", entry->mName);
 
-            const u8 flag2 = entry->mFlags.mByte2;
+            const u8 flag2 = entry->mFlags.mBytes.mByte2;
             if ((flag2 & 0x8) && materialIndex != 1) {
                 continue;
             }
@@ -490,7 +499,7 @@ void MarioActor::initCommonEffect() {
                 mEffectKeeper->registerEffectWithoutSRT(effectName, name + materialIndex);
             } else {
                 const char* effectName = effectList[variant];
-                const u8 flag0 = entry->mFlags.mByte0;
+                const u8 flag0 = entry->mFlags.mBytes.mByte0;
                 switch (flag0) {
                 case 0: {
                     mEffectKeeper->registerEffectWithoutSRT(effectName, name + materialIndex);
@@ -515,16 +524,16 @@ void MarioActor::initCommonEffect() {
                 }
             }
 
-            if ((entry->mFlags.mByte1 & 0x1) != 0) {
+            if ((entry->mFlags.mBytes.mByte1 & 0x1) != 0) {
                 MR::getEffect(this, name + materialIndex)->forceFollowOn();
             }
-            if ((entry->mFlags.mByte1 & 0x2) != 0) {
+            if ((entry->mFlags.mBytes.mByte1 & 0x2) != 0) {
                 MR::getEffect(this, name + materialIndex)->forceScaleOn();
             }
         }
 
         entry->mTimer = 0;
-        switch (entry->mType.mByte0) {
+        switch (entry->mType.mBytes.mByte0) {
         case 2:
         case 5: {
             _BA0[_B9E] = entry;
@@ -562,11 +571,11 @@ MultiEmitter* MarioActor::playCommonEffect(const char* pName) {
                 return nullptr;
             }
 
-            if ((entry->mFlags.mByte2 & 0x8) && materialIndex != 1) {
+            if ((entry->mFlags.mBytes.mByte2 & 0x8) && materialIndex != 1) {
                 return nullptr;
             }
 
-            switch (entry->mType.mByte0) {
+            switch (entry->mType.mBytes.mByte0) {
             case 1:
             case 2:
             case 4:
@@ -593,7 +602,7 @@ MultiEmitter* MarioActor::playCommonEffect(const char* pName) {
                 s32 needsSRT = 0;
 
                 if (materialIndex == 0) {
-                    if (entry->mType.mByte0 >= 6) {
+                    if (entry->mType.mBytes.mByte0 >= 6) {
                         const Triangle* tri = mMario->getGroundPolygon();
                         MtxPtr prevMtx = tri->getPrevBaseMtx()->toMtxPtr();
                         MtxPtr baseMtx = mMario->getGroundPolygon()->getBaseMtx()->toMtxPtr();
@@ -620,7 +629,7 @@ MultiEmitter* MarioActor::playCommonEffect(const char* pName) {
                     }
                 } else {
                     if (needsSRT) {
-                        const u8 hostFlag = entry->mFlags.mByte1;
+                        const u8 hostFlag = entry->mFlags.mBytes.mByte1;
                         const TVec3f* hostPos = nullptr;
                         const TVec3f* hostRot = nullptr;
                         const TVec3f* hostScale = nullptr;
@@ -644,7 +653,7 @@ MultiEmitter* MarioActor::playCommonEffect(const char* pName) {
                 }
             }
 
-            if (!(entry->mFlags.mByte1 & 0x2)) {
+            if (!(entry->mFlags.mBytes.mByte1 & 0x2)) {
                 if (emitter) {
                     emitter->setGlobalScale(entry->mScale, -1);
                 }
@@ -654,7 +663,7 @@ MultiEmitter* MarioActor::playCommonEffect(const char* pName) {
                 emitter->setRate(entry->mRate, -1);
             }
 
-            if (entry->mFlags.mByte2 & 0x1) {
+            if (entry->mFlags.mBytes.mByte2 & 0x1) {
                 TVec3f dir(mMario->getWallNorm());
                 TVec3f zero(0.0f, 0.0f, 0.0f);
                 TPos3f mtx;
@@ -687,7 +696,7 @@ MultiEmitter* MarioActor::playCommonEffect(const char* pName) {
                 }
             }
 
-            if (entry->mFlags.mByte2 & 0x2) {
+            if (entry->mFlags.mBytes.mByte2 & 0x2) {
                 TVec3f trans(mMario->_4E8);
                 if (emitter) {
                     emitter->setGlobalTranslation(trans, -1);
@@ -698,7 +707,7 @@ MultiEmitter* MarioActor::playCommonEffect(const char* pName) {
                 entry->mTimer = entry->mInterval;
             }
 
-            switch (entry->mType.mByte0) {
+            switch (entry->mType.mBytes.mByte0) {
             case 1:
             case 2:
             case 4:

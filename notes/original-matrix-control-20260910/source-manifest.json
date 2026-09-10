@@ -1,0 +1,15 @@
+{
+  "files": [
+    {
+      "path": "decomp/src/Game/Player/MatrixControl.cpp",
+      "sha256": "14b3ab9d4a7bd65edd5b56c5e2af8780921b9441fa18bed64c3bb3d71775c720"
+    },
+    {
+      "path": "src/Game/Player/MatrixControl.cpp",
+      "sha256": "d579f871e0523602c83d426a7602e6cc3ec3ea1e248082ba451d09d795f988de"
+    }
+  ],
+  "native_difference": "Six u32 lookup output locals use HashSortTable::Value for native pointer width",
+  "native_correspondence_verified": true,
+  "reference_asm": "notes/gateway-audit-20260907/restoration/retail/asm/Game/Player/MatrixControl.s"
+}

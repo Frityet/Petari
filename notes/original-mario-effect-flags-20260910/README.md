@@ -1,0 +1,17 @@
+# Portable MarioEffect packed flags — 2026-09-10
+
+Published one production CPP, src/Game/Player/MarioEffect.cpp. Both existing FlagWord unions now store their four numeric byte fields through the established Aurora PowerPC bitfield macro, inside a named Bytes member required by Clang. All twenty smoke entries and four material entries are unchanged. All Game method operations are unchanged except the additional mBytes member qualifier. There is no effect ownership, encoding, model, scene, or runtime scheduling change. This is a native architecture correction; no missing original Game method was reconstructed.
+
+The retail type byte is the numeric high byte. Existing native anonymous u8 fields selected host memory byte order, causing all smoke types to read zero. The original common-effect initializer consequently selected incorrect resources/follow behavior and omitted all four timed-effect entries. The patch restores numeric PowerPC field positions through Aurora's existing general compatibility mechanism.
+
+Evidence:
+
+- compile-results.json: both complete before/after CPPs compile with the original Wii compiler; the complete prepared production CPP is also compiled natively as part of the actual-table probe. All final exits zero. No root Xmake build was run.
+- runtime-proof.json / run.log: native full-TU probe links against current actual Game/Aurora libraries and runs zero. It uses the actual two FlagWord types and actual production table initializers, checking 2048 byte-position cases with numeric write preservation, all twenty smoke records, four timed records, the jump/wall/follow/host flags, and the material flag. It does not fabricate a MarioActor or emitter owner and does not claim initCommonEffect has run in a live scene.
+- before-after.objdiff.json / wii-proof.json: 63 of 66 function instruction streams unchanged. The three affected functions (playMaterialEffect, initCommonEffect, playCommonEffect) change byte loads into equivalent word/bit selections; before/after matches are 98.18%, 96.83%, and 96.59%. These percentages compare the current implementation before/after, not fresh retail matching percentages. Both actual tables match 100%, preserving sizes 220 and 756 bytes on Wii.
+- compiled-field-proof.json: 17 changed PPC bit-selection instructions extracted from those three compiled Game functions are evaluated for 1023 word patterns each against retail big-endian byte access. The eight distinct instruction forms cover byte 0/1/2 reads and every tested follow/scale/host flag. All results equal. This checks actual compiler output, not a reimplementation of the Game initializer.
+- source-operation-proof.json: all table data and method text remain identical after removing only the added mBytes access qualifier. Retail byte positions were checked directly at 0x802DCD50, 0x802DCDE0, 0x802DCEA4, 0x802DCEC4, and 0x802DCEF8 in notes/gateway-audit-20260907/restoration/retail/asm/Game/Player/MarioEffect.s.
+
+The first isolated draft put the macro into anonymous structs; native Clang rejected its typedef there. That failed draft is recorded under anonymous-struct-compile-results.json and anonymous-struct-native.log. Naming the nested Bytes structs resolved it before publication. No failing draft was written into production.
+
+The independently identified UTF-8 versus Shift-JIS effect category predicates remain a separate issue, documented in notes/original-mario-startup-audit-20260910. No broad effect rewrite was included here.

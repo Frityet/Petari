@@ -1,0 +1,12 @@
+{
+  "commit": "f14bed4e8ef79b3d41541ea2e339e7d203122426",
+  "remote_ref": "origin/codex/macos-compat",
+  "remote_sha_verified": "f14bed4e8ef79b3d41541ea2e339e7d203122426",
+  "author": "codex <codex@openai.com>",
+  "committer": "codex <codex@openai.com>",
+  "paths": [
+    "aurora/include/aurora/nw4r/brlan.hpp",
+    "aurora/lib/nw4r/brlan.cpp",
+    "aurora/tests/brlan_test.cpp"
+  ]
+}

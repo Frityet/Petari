@@ -394,6 +394,7 @@ namespace smgpc::scene {
             SceneObj_BaseMatrixFollowTargetHolder,
             SceneObj_GroupCheckManager,
             SceneObj_TalkDirector,
+            SceneObj_GameSceneLayoutHolder,
         };
         for (const auto id : required_scene_objects) {
             if (MR::createSceneObj(id) == nullptr) {

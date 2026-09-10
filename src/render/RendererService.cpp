@@ -600,10 +600,14 @@ namespace smgpc::render {
             const auto half_width = width * 0.5F;
             const auto half_height = height * 0.5F;
             const auto y_scale = space == RenderSpace2D::Layout ? 1.0F : -1.0F;
+            // MR::setupDrawForNW4RLayout uses C_MTXOrtho(-1000, 1000).
+            // Keep pane Z through UI projection, including out-of-plane rotations.
+            const auto z_scale = space == RenderSpace2D::Layout ? -1.0F / 2000.0F : 1.0F;
+            const auto z_offset = space == RenderSpace2D::Layout ? -0.5F : 0.0F;
             const float projection[4][4] = {
                 {1.0F / half_width, 0.0F, 0.0F, 0.0F},
                 {0.0F, y_scale / half_height, 0.0F, 0.0F},
-                {0.0F, 0.0F, 1.0F, 0.0F},
+                {0.0F, 0.0F, z_scale, z_offset},
                 {0.0F, 0.0F, 0.0F, 1.0F},
             };
             const auto viewport_width = static_cast<float>(kLogicalFramebuffer.width);

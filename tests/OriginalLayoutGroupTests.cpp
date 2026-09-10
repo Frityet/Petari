@@ -3,10 +3,18 @@
 #include "layout/Nw4rLayoutRecords.hpp"
 #include "resource/RarcArchive.hpp"
 #include "Game/Util/MessageUtil.hpp"
+#include "Game/Screen/SubMeterLayout.hpp"
+#include "Game/Screen/LayoutManager.hpp"
+#include "Game/Util/LayoutUtil.hpp"
+#include "SceneExecutionFixture.hpp"
+#include "layout/LayoutHost.hpp"
+#include "runtime/RuntimeContext.hpp"
 #include <nw4r/lyt/group.h>
 #include <aurora/exception.hpp>
+#include <aurora/dvd.h>
 #include <bit>
 #include <cmath>
+#include <cstdlib>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -94,7 +102,87 @@ void records() {
         }
         runtime.setPaneRotation("Child", 0, 0, 45); records.synchronize();
         require(child->mRotate.z == 45, "host animation/property changes publish back to the same SDK pane");
+
+        runtime.setScale(1, 1); runtime.setTrans(0, 0);
+        root->mTranslate.z = 7; root->mRotate.y = 90;
+        child->mTranslate.x = 2; child->mTranslate.y = 3; child->mTranslate.z = 5;
+        child->mScale.x = child->mScale.y = 1;
+        child->mRotate.x = 90; child->mRotate.y = child->mRotate.z = 0;
+        records.synchronize();
+        require(runtime.copyPaneMatrix("Child", expected), "3D child matrix remains available");
+        const float composed[3][4] = {{0, 1, 0, 15}, {0, 0, -1, 23}, {-1, 0, 0, 5}};
+        for (auto row = 0; row < 3; ++row) for (auto column = 0; column < 4; ++column) {
+            require(std::fabs(expected[row][column] - composed[row][column]) < 0.0001F,
+                    "parent Y rotation composes child X rotation and Z translation without flattening");
+            require(expected[row][column] == child->mGlbMtx.m[row][column],
+                    "SDK and renderer publish all twelve components of the same global matrix");
+        }
+        runtime.setPaneFollowPosition("Child", 2, TVec2f(4, 6)); records.synchronize();
+        require(std::fabs(child->mGlbMtx.m[0][3] - 15) < 0.0001F &&
+                std::fabs(child->mGlbMtx.m[1][3] - 26) < 0.0001F &&
+                std::fabs(child->mGlbMtx.m[2][3] - 3) < 0.0001F,
+                "local follow replacement uses the invertible 3D matrix even when its XY projection is singular");
+        runtime.clearPaneFollowPositions();
+        runtime.setPaneFollowPosition("Child", 3, TVec2f(4, 6)); records.synchronize();
+        require(std::fabs(child->mGlbMtx.m[0][3] - 19) < 0.0001F &&
+                std::fabs(child->mGlbMtx.m[1][3] - 23) < 0.0001F &&
+                std::fabs(child->mGlbMtx.m[2][3] - 5) < 0.0001F,
+                "original local-offset follow adds transformed XY while retaining global Z");
     }
+}
+
+class Logger final : public smgpc::logging::ILogger {
+    void write(std::FILE*, std::source_location, smgpc::logging::Level,
+               smgpc::logging::Category, std::string_view) override {}
+};
+void fly_meter() {
+    const auto* disc = std::getenv("SMGPC_REAL_DISC");
+    if (!disc) return;
+    smgpc::render::AuroraWindow window({.width = 640, .height = 456, .title = "Original 3D layout regression"});
+    smgpc::render::AuroraRenderer renderer(window);
+    require(aurora_dvd_open(disc), "real FlyMeter regression requires the supplied disc");
+    struct Disc { ~Disc() { aurora_dvd_close(); } } close_disc;
+    DVDInit();
+    smgpc::resource::GameResourceRuntime resources({96U << 20, 32U << 20, 4U << 20});
+    Logger logger;
+    smgpc::runtime::RuntimeContext runtime(logger, window, resources);
+    smgpc::runtime::SceneSchedulerBinding scheduler_binding(runtime.scheduler());
+    {
+        smgpc::test::SceneExecutionFixture execution(runtime.scheduler(),
+            smgpc::compat::JkrAllocationDomain::create(runtime.host_heaps(), 8U << 20));
+        std::unique_ptr<SubMeterLayout> meter;
+        {
+            const smgpc::compat::JkrAllocationScope game(smgpc::scene::current_scene_allocation_domain());
+            meter = std::make_unique<SubMeterLayout>("Original FlyMeter regression", "FlyMeter");
+            meter->initWithoutIter();
+        }
+        auto* layout = smgpc::layout::layout_runtime(meter.get());
+        require(layout && layout->getArchivePath() && meter->getLayoutManager()->getPane("Count"),
+                "actual SubMeterLayout initializes its real FlyMeter archive and Count controller");
+#ifndef NDEBUG
+        auto three_dimensional = 0U;
+        for (const auto& state : layout->debugPanes()) {
+            const auto* pane = meter->getLayoutManager()->getPane(state.name.c_str());
+            require(pane, "every actual FlyMeter pane has its SDK record");
+            if (pane->mRotate.x != 0 || pane->mRotate.y != 0 || pane->mTranslate.z != 0) ++three_dimensional;
+            for (const auto& row : pane->mGlbMtx.m) for (const auto value : row)
+                require(std::isfinite(value), "actual FlyMeter 3D matrices remain finite");
+        }
+        require(three_dimensional > 0, "the actual archive exercises authored out-of-plane pane transforms");
+#endif
+        MR::showLayout(meter.get());
+        MR::startAnim(meter.get(), "Wait", 0);
+        for (const auto ratio : {1.0F, 0.5F, 0.125F}) {
+            meter->setLifeRatio(ratio);
+            (void)renderer.begin_frame();
+            {
+                const smgpc::render::ScopedAuroraRendererContext context(renderer);
+                meter->draw();
+            }
+            renderer.end_frame();
+        }
+    }
+    std::cout << "Actual FlyMeter SubMeterLayout initialization and three rendered life ratios passed\n";
 }
 void unbound_panes() {
     nw4r::lyt::res::Pane resource{};
@@ -116,6 +204,6 @@ void tags() {
 }
 }
 int main() {
-    try { tags(); unbound_panes(); records(); std::cout << "Original typed layout groups, transforms, tag lines and repeated teardown passed\n"; }
+    try { tags(); unbound_panes(); records(); fly_meter(); std::cout << "Original typed layout groups, transforms, tag lines and repeated teardown passed\n"; }
     catch (const std::exception& e) { std::cerr << e.what() << '\n'; return 1; }
 }

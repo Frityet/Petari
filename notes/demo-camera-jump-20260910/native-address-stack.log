@@ -1,0 +1,212 @@
+(lldb) target create "build/macosx/arm64/debug/smg-pc-showcase"
+Current executable set to '/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-showcase' (arm64).
+(lldb) settings set -- target.run-args  "gateway" "--disc" "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz" "--max-frames" "120"
+(lldb) breakpoint set -n __assert_rtn
+Breakpoint 1: where = libsystem_c.dylib`__assert_rtn, address = 0x0000000180404ab8
+(lldb) run
+[aurora:info:aurora] Aurora initializing
+[aurora:info:aurora::system_info] CPU model: Apple M5 Max
+[aurora:info:aurora::system_info] Memory: 131072 MiB
+[aurora:info:aurora::system_info] Architecture: aarch64
+[aurora:info:aurora::system_info] OS: macOS Version 26.6.2 (Build 25G83)
+2026-09-10 10:56:49.748078+0100 smg-pc-showcase[44272:11495147] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-10 10:56:49.748281+0100 smg-pc-showcase[44272:11495147] [Application] Error registering app with intents framework: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-10 10:56:49.748444+0100 smg-pc-showcase[44272:11495146] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-10 10:56:49.748485+0100 smg-pc-showcase[44272:11495146] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-10 10:56:49.754130+0100 smg-pc-showcase[44272:11495161] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-10 10:56:49.754149+0100 smg-pc-showcase[44272:11495161] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-10 10:56:49.754447+0100 smg-pc-showcase[44272:11495161] [Connection] Will NOT re-try to establish the connection
+2026-09-10 10:56:49.754466+0100 smg-pc-showcase[44272:11495146] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-10 10:56:49.754475+0100 smg-pc-showcase[44272:11495146] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-09-10 10:56:50.755952+0100 smg-pc-showcase[44272:11495023] [WindowTab] Cannot index window tabs due to missing main bundle identifier
+[aurora:info:aurora::gpu] Creating WebGPU instance
+[aurora:info:aurora::gpu] Attempting to initialize Metal
+[aurora:info:aurora::gpu] Requesting adapter
+  Feature level: Compatibility
+  Power preference: HighPerformance
+  Backend: Metal
+  Compatible surface: true
+[aurora:info:aurora::gpu] Graphics adapter information
+  API: Metal
+  Device: Apple M5 Max (IntegratedGPU)
+  Driver: Metal driver on macOS Version 26.6.2 (Build 25G83)
+[aurora:info:aurora::gpu] Using limits:
+  maxTextureDimension1D: 16384
+  maxTextureDimension2D: 16384
+  maxTextureDimension3D: 2048
+  maxTextureArrayLayers: 2048
+  maxStorageBuffersPerShaderStage: 2
+  minUniformBufferOffsetAlignment: 256
+  minStorageBufferOffsetAlignment: 256
+  maxImmediateSize: 64
+[aurora:info:aurora::gpu] Enabling features: 
+  CoreFeaturesAndLimits
+  DepthClipControl
+  TextureCompressionBC
+  TextureCompressionASTC
+  ClipDistances
+  TextureComponentSwizzle
+[aurora:info:aurora::gpu] Using surface format BGRA8Unorm, present mode Fifo
+[aurora:info:aurora::gfx::pipeline_cache] No bundled initial pipeline cache found at '/Users/frityet/Projects/petari/build/macosx/arm64/debug/initial_pipeline_cache.db'
+[aurora:info:aurora] Using framebuffer size 1920x1440 scale 2
+[aurora:info:aurora::gpu::cache] Pruned 4 stale Dawn cache entries
+[src/runtime/RuntimeContext.cpp:558][APP - INFO] Using SMG disc image through Aurora DVD
+[src/runtime/RuntimeContext.cpp:565][APP - INFO] Loaded 1994 messages from /KrKorean/MessageData/Message.arc
+[src/runtime/RuntimeContext.cpp:577][APP - INFO] Loaded 3327 particle names, 3327 particle resources, and 225 particle textures from /ParticleData/Effect.arc
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event runtime:runtime_context_created (disc=aurora-dvd)
+[src/runtime/RuntimeContext.cpp:1728][APP - INFO] Resolved original layout archive DPDPointer -> /LayoutData/DPDPointer.arc
+[src/runtime/RuntimeContext.cpp:1728][APP - INFO] Resolved original layout archive CommandStream -> /LayoutData/CommandStream.arc
+[src/runtime/RuntimeContext.cpp:1728][APP - INFO] Resolved original layout archive DPDPointerNumber -> /LayoutData/DPDPointerNumber.arc
+[src/runtime/RuntimeContext.cpp:1728][APP - INFO] Resolved original layout archive DPDPointerSub -> /LayoutData/DPDPointerSub.arc
+[src/runtime/RuntimeContext.cpp:1728][APP - INFO] Resolved original layout archive CommandStream -> /LayoutData/CommandStream.arc
+[src/runtime/RuntimeContext.cpp:1728][APP - INFO] Resolved original layout archive DPDPointerNumber -> /LayoutData/DPDPointerNumber.arc
+[src/runtime/RuntimeContext.cpp:1728][APP - INFO] Resolved original layout archive PointerGuidance -> /LayoutData/PointerGuidance.arc
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=シーン硬直遅延発行;kind=name_obj;movement=1;calc_anim=-1;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=シーン硬直遅延発行;kind=name_obj;movement=1;calc_anim=-1;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=シーン硬直遅延発行;kind=name_obj;movement=1;calc_anim=-1;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=シーン硬直遅延発行;kind=name_obj;movement=1;calc_anim=-1;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=シーン硬直遅延発行;kind=name_obj;movement=1;calc_anim=-1;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=シーン硬直遅延発行;kind=name_obj;movement=1;calc_anim=-1;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=シーン硬直遅延発行;kind=name_obj;movement=1;calc_anim=-1;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=シーン硬直遅延発行;kind=name_obj;movement=1;calc_anim=-1;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=シーン硬直遅延発行;kind=name_obj;movement=1;calc_anim=-1;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=シーン硬直遅延発行;kind=name_obj;movement=1;calc_anim=-1;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=シーン硬直遅延発行;kind=name_obj;movement=1;calc_anim=-1;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=シーン硬直遅延発行;kind=name_obj;movement=1;calc_anim=-1;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=シーン硬直遅延発行;kind=name_obj;movement=1;calc_anim=-1;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=シーン硬直遅延発行;kind=name_obj;movement=1;calc_anim=-1;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=シーン硬直遅延発行;kind=name_obj;movement=1;calc_anim=-1;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=シーン硬直遅延発行;kind=name_obj;movement=1;calc_anim=-1;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=DemoDirector;kind=name_obj;movement=11;calc_anim=-1;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=3Dパーティクル;kind=name_obj;movement=-1;calc_anim=-1;draw_buffer=-1;draw_type=71)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=2Dパーティクル;kind=name_obj;movement=-1;calc_anim=-1;draw_buffer=-1;draw_type=74)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=インダイレクトパーティクル;kind=name_obj;movement=-1;calc_anim=-1;draw_buffer=-1;draw_type=72)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=インダイレクト後パーティクル;kind=name_obj;movement=-1;calc_anim=-1;draw_buffer=-1;draw_type=73)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=2Dモデル用パーティクル;kind=name_obj;movement=-1;calc_anim=-1;draw_buffer=-1;draw_type=75)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ブルーム用パーティクル;kind=name_obj;movement=-1;calc_anim=-1;draw_buffer=-1;draw_type=76)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=イメージエフェクト後パーティクル;kind=name_obj;movement=-1;calc_anim=-1;draw_buffer=-1;draw_type=77)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=パーティクル;kind=name_obj;movement=-1;calc_anim=19;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ポーズ無効3Dパーティクル;kind=name_obj;movement=-1;calc_anim=20;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ポーズ無効2Dパーティクル;kind=name_obj;movement=-1;calc_anim=20;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=更新チェック;kind=name_obj;movement=20;calc_anim=-1;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=クリッピング指揮;kind=name_obj;movement=4;calc_anim=-1;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ライト管理;kind=name_obj;movement=34;calc_anim=-1;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=画面キャプチャ;kind=name_obj;movement=-1;calc_anim=-1;draw_buffer=-1;draw_type=45)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ファー描画マネージャ;kind=name_obj;movement=-1;calc_anim=-1;draw_buffer=-1;draw_type=49)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=SwitchWatcherHolder;kind=name_obj;movement=27;calc_anim=-1;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=オブジェスリープ管理;kind=name_obj;movement=34;calc_anim=-1;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=行列追随先リスト;kind=name_obj;movement=34;calc_anim=-1;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=会話統括;kind=name_obj;movement=10;calc_anim=-1;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ゲームシーンのレイアウト保持;kind=name_obj;movement=14;calc_anim=-1;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=通常HPメーター;kind=layout_actor;movement=14;calc_anim=13;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1728][APP - INFO] Resolved original layout archive HitPointMeter -> /LayoutData/HitPointMeter.arc
+[src/runtime/RuntimeContext.cpp:1680][APP - INFO] Registered effect keeper 通常HPメーター group HitPointMeter capacity 0
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=サドンデスHPメーター;kind=layout_actor;movement=14;calc_anim=13;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1728][APP - INFO] Resolved original layout archive SuddenDeathMeter -> /LayoutData/SuddenDeathMeter.arc
+[src/runtime/RuntimeContext.cpp:1680][APP - INFO] Registered effect keeper サドンデスHPメーター group SuddenDeathMeter capacity 0
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=カウンタ系レイアウト制御;kind=layout_actor;movement=14;calc_anim=13;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1728][APP - INFO] Resolved original layout archive CoinCounter -> /LayoutData/CoinCounter.arc
+[src/runtime/RuntimeContext.cpp:1680][APP - INFO] Registered effect keeper コインカウンタ group CoinCounter capacity 0
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=コインカウンタ;kind=layout_actor;movement=14;calc_anim=13;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1728][APP - INFO] Resolved original layout archive StarPieceCounter -> /LayoutData/StarPieceCounter.arc
+[src/runtime/RuntimeContext.cpp:1680][APP - INFO] Registered effect keeper スターピースカウンタ group StarPieceCounter capacity 0
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=スターピースカウンタ;kind=layout_actor;movement=14;calc_anim=13;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1728][APP - INFO] Resolved original layout archive PlayerLeft -> /LayoutData/PlayerLeft.arc
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=プレイヤー残機表示;kind=layout_actor;movement=14;calc_anim=13;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1728][APP - INFO] Resolved original layout archive StarCounter -> /LayoutData/StarCounter.arc
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=スターカウンタ;kind=layout_actor;movement=14;calc_anim=13;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1728][APP - INFO] Resolved original layout archive CameraInfo -> /LayoutData/CameraInfo.arc
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=カメラ情報表示;kind=layout_actor;movement=14;calc_anim=13;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1728][APP - INFO] Resolved original layout archive InformationWindow -> /LayoutData/InformationWindow.arc
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=インフォメーションメッセージ;kind=layout_actor;movement=15;calc_anim=14;draw_buffer=-1;draw_type=61)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=Aボタンアイコン;kind=layout_actor;movement=14;calc_anim=13;draw_buffer=-1;draw_type=67)
+[src/runtime/RuntimeContext.cpp:1728][APP - INFO] Resolved original layout archive IconAButton -> /LayoutData/IconAButton.arc
+[src/runtime/RuntimeContext.cpp:1728][APP - INFO] Resolved original layout archive OneUp -> /LayoutData/OneUp.arc
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=1UPボード;kind=layout_actor;movement=14;calc_anim=13;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1680][APP - INFO] Registered effect keeper 1UPボード group OneUp capacity 1
+[src/runtime/RuntimeContext.cpp:1724][APP - INFO] 1UPボード deleted all effects
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ミス!;kind=layout_actor;movement=14;calc_anim=13;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1728][APP - INFO] Resolved original layout archive TooBad -> /LayoutData/TooBad.arc
+[src/runtime/RuntimeContext.cpp:1680][APP - INFO] Registered effect keeper ミス! group TooBad capacity 0
+[src/runtime/RuntimeContext.cpp:1724][APP - INFO] ミス! deleted all effects
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ハチメーター;kind=layout_actor;movement=14;calc_anim=13;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1728][APP - INFO] Resolved original layout archive FlyMeter -> /LayoutData/FlyMeter.arc
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=水中メーター;kind=layout_actor;movement=14;calc_anim=13;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1728][APP - INFO] Resolved original layout archive AirMeter -> /LayoutData/AirMeter.arc
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=Yes/Noレイアウト;kind=layout_actor;movement=14;calc_anim=13;draw_buffer=-1;draw_type=68)
+[src/runtime/RuntimeContext.cpp:1728][APP - INFO] Resolved original layout archive SelectButton -> /LayoutData/SelectButton.arc
+[src/runtime/RuntimeContext.cpp:1680][APP - INFO] Registered effect keeper Yes/Noレイアウト group SelectButton capacity 0
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=画面キャプチャ;kind=name_obj;movement=-1;calc_anim=-1;draw_buffer=-1;draw_type=46)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=CameraCover;kind=name_obj;movement=26;calc_anim=-1;draw_buffer=-1;draw_type=81)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=カメラ管理;kind=name_obj;movement=2;calc_anim=-1;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=画面中心ブラー;kind=live_actor_model;movement=23;calc_anim=-1;draw_buffer=-1;draw_type=47)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:archive_request (object=VROrbit;archive=VROrbit;kind=object;loaded=true;disc_path=../../../../../ObjectData/VROrbit.arc)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:archive_request (object=BrightSun;archive=LensFlare;kind=object;loaded=true;disc_path=../../../../../ObjectData/LensFlare.arc)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:archive_request (object=BrightSun;archive=GlareGlow;kind=object;loaded=true;disc_path=../../../../../ObjectData/GlareGlow.arc)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:archive_request (object=BrightSun;archive=GlareLine;kind=object;loaded=true;disc_path=../../../../../ObjectData/GlareLine.arc)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:archive_request (object=BrightSun;archive=Sun;kind=object;loaded=true;disc_path=../../../../../ObjectData/Sun.arc)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:archive_request (object=SphereAir;archive=SphereAir;kind=object;loaded=true;disc_path=../../../../../ObjectData/SphereAir.arc)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:archive_request (object=HeavensDoorMysteriousPlanet;archive=HeavensDoorMysteriousPlanet;kind=object;loaded=true;disc_path=../../../../../ObjectData/HeavensDoorMysteriousPlanet.arc)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:archive_request (object=DemoRabbit;archive=TrickRabbitBaby;kind=object;loaded=true;disc_path=../../../../../ObjectData/TrickRabbitBaby.arc)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:archive_request (object=DemoRabbit;archive=TrickRabbit;kind=object;loaded=true;disc_path=../../../../../ObjectData/TrickRabbit.arc)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:archive_request (object=DemoRabbit;archive=TrickRabbit;kind=object;loaded=true;disc_path=../../../../../ObjectData/TrickRabbit.arc)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:archive_request (object=HeavensDoorMiddlePlanet;archive=HeavensDoorMiddlePlanet;kind=object;loaded=true;disc_path=../../../../../ObjectData/HeavensDoorMiddlePlanet.arc)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:archive_request (object=HeavensDoorSmallPlanet;archive=HeavensDoorSmallPlanet;kind=object;loaded=true;disc_path=../../../../../ObjectData/HeavensDoorSmallPlanet.arc)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:archive_request (object=HeavensDoorBlackHolePlanet;archive=HeavensDoorBlackHolePlanet;kind=object;loaded=true;disc_path=../../../../../ObjectData/HeavensDoorBlackHolePlanet.arc)
+[src/runtime/RuntimeContext.cpp:1724][APP - INFO] サドンデスHPメーター deleted all effects
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=マリオ連続踏み;kind=layout_actor;movement=14;calc_anim=13;draw_buffer=-1;draw_type=60)
+[src/runtime/RuntimeContext.cpp:1728][APP - INFO] Resolved original layout archive CollectCounter -> /LayoutData/CollectCounter.arc
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ドロー2D;kind=name_obj;movement=-1;calc_anim=-1;draw_buffer=-1;draw_type=41)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ドロー2D;kind=name_obj;movement=-1;calc_anim=-1;draw_buffer=-1;draw_type=40)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ドロー2D;kind=name_obj;movement=-1;calc_anim=-1;draw_buffer=-1;draw_type=65)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ドロー2D;kind=name_obj;movement=-1;calc_anim=-1;draw_buffer=-1;draw_type=47)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ドロー2D;kind=name_obj;movement=-1;calc_anim=-1;draw_buffer=-1;draw_type=36)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=マリオ炎球;kind=live_actor_model;movement=43;calc_anim=11;draw_buffer=19;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=影管理;kind=name_obj;movement=45;calc_anim=-1;draw_buffer=-1;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=マリオ炎球;kind=live_actor_model;movement=43;calc_anim=11;draw_buffer=19;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=マリオ炎球;kind=live_actor_model;movement=43;calc_anim=11;draw_buffer=19;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=MarioActor;kind=live_actor_model;movement=37;calc_anim=9;draw_buffer=20;draw_type=34)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=WaterColumn;kind=live_actor_model;movement=35;calc_anim=11;draw_buffer=8;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=サーチライト;kind=live_actor_model;movement=43;calc_anim=11;draw_buffer=8;draw_type=-1)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=ドロー2D;kind=name_obj;movement=-1;calc_anim=-1;draw_buffer=-1;draw_type=51)
+[src/runtime/RuntimeContext.cpp:1773][APP - INFO] SMG semantic event name_obj_lifecycle:connect_to_scene (object=氷結モデル;kind=live_actor_model;movement=38;calc_anim=10;draw_buffer=22;draw_type=-1)
+Process 44272 launched: '/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-showcase' (arm64)
+Process 44272 stopped
+* thread #1, name = 'Main thread', queue = 'com.apple.main-thread', stop reason = breakpoint 1.1
+    frame #0: 0x0000000188948ab8 libsystem_c.dylib`__assert_rtn
+libsystem_c.dylib`__assert_rtn:
+->  0x188948ab8 <+0>:  pacibsp 
+    0x188948abc <+4>:  sub    sp, sp, #0x60
+    0x188948ac0 <+8>:  stp    x24, x23, [sp, #0x20]
+    0x188948ac4 <+12>: stp    x22, x21, [sp, #0x30]
+Target 0: (smg-pc-showcase) stopped.
+(lldb) bt 30
+* thread #1, name = 'Main thread', queue = 'com.apple.main-thread', stop reason = breakpoint 1.1
+  * frame #0: 0x0000000188948ab8 libsystem_c.dylib`__assert_rtn
+    frame #1: 0x0000000100954f9c smg-pc-showcase`OSCachedToPhysical(caddr=0x00000006e2000080) at OSAddress.cpp:25:69
+    frame #2: 0x00000001005bc6d4 smg-pc-showcase`J3DGDSetTexImgPtr(id=GX_TEXMAP0, image_ptr=0x00000006e2000080) at J3DGDCompat.cpp:342:29
+    frame #3: 0x00000001005ed10c smg-pc-showcase`loadTexNo(param_0=0, texNo=0x00000005e3447f7c) at J3DTevsCompat.cpp:80:5
+    frame #4: 0x00000001005b18d4 smg-pc-showcase`J3DTevBlock16::diffTexNo(this=0x00000005e3447f70) at J3DMatBlockCompat.cpp:1202:13
+    frame #5: 0x00000001005b0d70 smg-pc-showcase`J3DTevBlock::diff(this=0x00000005e3447f70, diffFlags=335675904) at J3DMatBlockCompat.cpp:1027:9
+    frame #6: 0x00000001005fc648 smg-pc-showcase`J3DMaterial::diff(this=0x00000005e3447dd0, diffFlags=335675904) at J3DMaterialHelpersCompat.cpp:82:20
+    frame #7: 0x0000000100099bb4 smg-pc-showcase`DisplayListMaker::diff(this=0x00000005e3452440) at DisplayListMaker.cpp:32:23
+    frame #8: 0x00000001000a27f0 smg-pc-showcase`ModelManager::updateDL(this=0x00000005e3447730, isDiffDL=true) at ModelManager.cpp:105:32
+    frame #9: 0x00000001000a25f0 smg-pc-showcase`ModelManager::calcAnim(this=0x00000005e3447730) at ModelManager.cpp:61:5
+    frame #10: 0x00000001000a0b1c smg-pc-showcase`LiveActor::calcAnmMtx(this=0x0000000a1fd31400) at LiveActor.cpp:111:20
+    frame #11: 0x00000001000a0a9c smg-pc-showcase`LiveActor::calcAnim(this=0x0000000a1fd31400) at LiveActor.cpp:98:5
+    frame #12: 0x00000001000a2164 smg-pc-showcase`PartsModel::calcAnim(this=0x0000000a1fd31400) at PartsModel.cpp:96:16
+    frame #13: 0x0000000100604bf0 smg-pc-showcase`MR::calcAnimDirect(pActor=0x0000000a1fd31400) at OriginalActorModelAccess.cpp:37:17
+    frame #14: 0x00000001005c6f80 smg-pc-showcase`MR::resetPosition(pActor=0x0000000a1fd31400) at GameActorPhysicsCompat.cpp:134:9
+    frame #15: 0x00000001000a0ca4 smg-pc-showcase`LiveActor::makeActorAppeared(this=0x0000000a1fd31400) at LiveActor.cpp:153:5
+    frame #16: 0x00000001000a1f0c smg-pc-showcase`PartsModel::makeActorAppeared(this=0x0000000a1fd31400) at PartsModel.cpp:48:16
+    frame #17: 0x0000000100159d8c smg-pc-showcase`MarioParts::init(this=0x0000000a1fd31400, (null)=0x000000016fdfb5d8) at MarioParts.cpp:36:5
+    frame #18: 0x00000001005910bc smg-pc-showcase`NameObj::initWithoutIter(this=0x0000000a1fd31400) at NameObjLifetimeCompat.cpp:54:5
+    frame #19: 0x000000010018bfd4 smg-pc-showcase`MarioActor::initParts(this=0x0000000a272a9800) at MarioActorParts.cpp:47:11
+    frame #20: 0x0000000100150078 smg-pc-showcase`MarioActor::init2(this=0x0000000a272a9800, a=0x000000016fdfb880, b=0x000000016fdfb874, initialAnimation=-1) at MarioActor.cpp:341:5
+    frame #21: 0x000000010014fc24 smg-pc-showcase`MarioActor::init(this=0x0000000a272a9800, rInfo=0x000000016fdfc600) at MarioActor.cpp:276:5
+    frame #22: 0x0000000100002bd8 smg-pc-showcase`(anonymous namespace)::run_gateway_showcase(options=0x000000016fdfe7a0, configuration=0x000000016fdfe710, game_data_session=0x000000016fdfe828) at Showcase.cpp:762:41
+    frame #23: 0x00000001000016ac smg-pc-showcase`aurora_main(argc=6, argv=0x000000016fdfef68) at Showcase.cpp:1070:16
+    frame #24: 0x0000000100f39f74 smg-pc-showcase`main(argc=6, argv=0x000000016fdfef68) at main.cpp:6:42
+    frame #25: 0x00000001886784e4 dyld`start + 6992
+(lldb) kill
+Process 44272 exited with status = 9 (0x00000009) killed

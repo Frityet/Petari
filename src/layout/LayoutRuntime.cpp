@@ -1532,7 +1532,7 @@ void smgpc::layout::LayoutRuntime::submitLayoutQuad(smgpc::render::AuroraRendere
         return smgpc::render::GxMaterialVertex2D{
             .x = position[0U],
             .y = position[1U],
-            .z = 0.0F,
+            .z = position[2U],
             .clip_w = 1.0F,
             .tex_coords = tex_coords,
             .color = vertex_color(index),
@@ -2075,13 +2075,14 @@ void smgpc::layout::LayoutRuntime::setPaneScale(std::string_view paneName, f32 x
 
 void smgpc::layout::LayoutRuntime::setPaneRotation(std::string_view paneName, f32 x, f32 y, f32 z) {
     smgpc::compat::JkrHostAllocationScope host;
-    if (x != 0.0F || y != 0.0F)
-        aurora::throw_host_exception<std::logic_error>("Native layout matrices require the remaining three-dimensional pane rotation boundary");
     loadRenderData();
     const auto index = paneName.empty() ? std::optional<std::size_t>(0) : find_preferred_pane_index(mBrlytLayout, paneName);
     if (!index || *index >= mBrlytLayout.panes.size())
         aurora::throw_host_exception<std::runtime_error>("Setting rotation requires an existing layout pane");
-    mCommittedPaneFrames[mBrlytLayout.panes[*index].name].rotate_z = z;
+    auto& frame = mCommittedPaneFrames[mBrlytLayout.panes[*index].name];
+    frame.rotate_x = x;
+    frame.rotate_y = y;
+    frame.rotate_z = z;
 }
 
 void smgpc::layout::LayoutRuntime::setPaneAlpha(std::string_view paneName, f32 alpha) {
@@ -2303,7 +2304,7 @@ std::optional< smgpc::layout::LayoutRuntime::PaneBounds > smgpc::layout::LayoutR
 
     const auto local_left = base_position_x(pane.base_position, pane.width);
     const auto local_top = base_position_y(pane.base_position, pane.height);
-    const auto corners = std::array< std::array< float, 2U >, 4U >{
+    const auto corners = std::array< std::array< float, 3U >, 4U >{
         panePointForAurora(pane_state, local_left, local_top),
         panePointForAurora(pane_state, local_left + pane.width, local_top),
         panePointForAurora(pane_state, local_left + pane.width, local_top + pane.height),
@@ -2342,7 +2343,9 @@ std::optional< TVec2f > smgpc::layout::LayoutRuntime::paneScale(std::string_view
     }
 
     const auto pane_state = paneRenderState(*pane_index);
-    return TVec2f{hypot2(pane_state.m00, pane_state.m10), hypot2(pane_state.m01, pane_state.m11)};
+    const auto& matrix = pane_state.matrix;
+    return TVec2f{std::hypot(matrix[0][0], matrix[1][0], matrix[2][0]),
+                  std::hypot(matrix[0][1], matrix[1][1], matrix[2][1])};
 }
 
 bool smgpc::layout::LayoutRuntime::copyPaneMatrix(std::string_view paneName, Mtx matrix) const {
@@ -2353,18 +2356,9 @@ bool smgpc::layout::LayoutRuntime::copyPaneMatrix(std::string_view paneName, Mtx
     const_cast< LayoutRuntime* >(this)->loadRenderData();
 
     auto set_matrix = [&](const PaneRenderState& pane_state) {
-        matrix[0][0] = pane_state.m00;
-        matrix[0][1] = pane_state.m01;
-        matrix[0][2] = 0.0F;
-        matrix[0][3] = mTransX + pane_state.translate_x;
-        matrix[1][0] = pane_state.m10;
-        matrix[1][1] = pane_state.m11;
-        matrix[1][2] = 0.0F;
-        matrix[1][3] = mTransY + pane_state.translate_y;
-        matrix[2][0] = 0.0F;
-        matrix[2][1] = 0.0F;
-        matrix[2][2] = 1.0F;
-        matrix[2][3] = 0.0F;
+        PSMTXCopy(pane_state.matrix, matrix);
+        matrix[0][3] += mTransX;
+        matrix[1][3] += mTransY;
     };
 
     if (paneName.empty()) {
@@ -2629,10 +2623,10 @@ std::vector< smgpc::layout::LayoutRuntime::DebugPaneState > smgpc::layout::Layou
             .parent_index = pane.parent_index,
             .base_visible = pane.visible,
             .effective_visible = render_state.visible,
-            .translate_x = render_state.translate_x,
-            .translate_y = render_state.translate_y,
-            .scale_x = render_state.scale_x,
-            .scale_y = render_state.scale_y,
+            .translate_x = render_state.matrix[0][3],
+            .translate_y = render_state.matrix[1][3],
+            .scale_x = std::hypot(render_state.matrix[0][0], render_state.matrix[1][0], render_state.matrix[2][0]),
+            .scale_y = std::hypot(render_state.matrix[0][1], render_state.matrix[1][1], render_state.matrix[2][1]),
             .alpha = render_state.alpha,
             .width = pane.width,
             .height = pane.height,
@@ -2937,11 +2931,20 @@ void smgpc::layout::LayoutRuntime::commitAnimationState(const AnimationState& an
         if (pane_frame.translate_y.has_value()) {
             committed.translate_y = pane_frame.translate_y;
         }
+        if (pane_frame.translate_z.has_value()) {
+            committed.translate_z = pane_frame.translate_z;
+        }
         if (pane_frame.scale_x.has_value()) {
             committed.scale_x = pane_frame.scale_x;
         }
         if (pane_frame.scale_y.has_value()) {
             committed.scale_y = pane_frame.scale_y;
+        }
+        if (pane_frame.rotate_x.has_value()) {
+            committed.rotate_x = pane_frame.rotate_x;
+        }
+        if (pane_frame.rotate_y.has_value()) {
+            committed.rotate_y = pane_frame.rotate_y;
         }
         if (pane_frame.rotate_z.has_value()) {
             committed.rotate_z = pane_frame.rotate_z;
@@ -3513,170 +3516,103 @@ void smgpc::layout::LayoutRuntime::drawTextBox(smgpc::render::AuroraRenderer& re
         smgpc::render::TexturedQuad2D{
             .vertices =
                 {
-                    smgpc::render::TexturedVertex2D{.x = top_left[0U], .y = top_left[1U], .z = 0.0F, .u = 0.0F, .v = top_v, .color = color},
-                    smgpc::render::TexturedVertex2D{.x = top_right[0U], .y = top_right[1U], .z = 0.0F, .u = 1.0F, .v = top_v, .color = color},
+                    smgpc::render::TexturedVertex2D{.x = top_left[0U], .y = top_left[1U], .z = top_left[2U], .u = 0.0F, .v = top_v, .color = color},
+                    smgpc::render::TexturedVertex2D{.x = top_right[0U], .y = top_right[1U], .z = top_right[2U], .u = 1.0F, .v = top_v, .color = color},
                     smgpc::render::TexturedVertex2D{
-                        .x = bottom_right[0U], .y = bottom_right[1U], .z = 0.0F, .u = 1.0F, .v = bottom_v, .color = color},
-                    smgpc::render::TexturedVertex2D{.x = bottom_left[0U], .y = bottom_left[1U], .z = 0.0F, .u = 0.0F, .v = bottom_v, .color = color},
+                        .x = bottom_right[0U], .y = bottom_right[1U], .z = bottom_right[2U], .u = 1.0F, .v = bottom_v, .color = color},
+                    smgpc::render::TexturedVertex2D{.x = bottom_left[0U], .y = bottom_left[1U], .z = bottom_left[2U], .u = 0.0F, .v = bottom_v, .color = color},
                 },
         });
 }
 
-std::array< float, 2U > smgpc::layout::LayoutRuntime::panePointForAurora(const PaneRenderState& pane_state, float local_x, float local_y) const {
-    const auto translate_x = mTransX + pane_state.translate_x;
-    const auto translate_y = mTransY + pane_state.translate_y;
-
-    if (mBrlytLayout.origin_type == 1U) {
-        return std::array< float, 2U >{
-            translate_x + pane_state.m00 * local_x - pane_state.m01 * local_y,
-            translate_y + pane_state.m10 * local_x - pane_state.m11 * local_y,
-        };
-    }
-
-    const auto top_left_x = translate_x + pane_state.m00 * local_x + pane_state.m01 * local_y;
-    const auto top_left_y = translate_y + pane_state.m10 * local_x + pane_state.m11 * local_y;
-    return std::array< float, 2U >{
-        top_left_x - mBrlytLayout.width * 0.5F,
-        mBrlytLayout.height * 0.5F - top_left_y,
+std::array< float, 3U > smgpc::layout::LayoutRuntime::panePointForAurora(const PaneRenderState& pane_state, float local_x, float local_y) const {
+    // NW4R flips the local Y column for its centered, upward-facing layout
+    // rectangle. Keep that operation in local space, before the 3D matrix.
+    const auto y = mBrlytLayout.origin_type == 1U ? -local_y : local_y;
+    const auto& matrix = pane_state.matrix;
+    auto result = std::array<float, 3U>{
+        mTransX + matrix[0][3] + matrix[0][0] * local_x + matrix[0][1] * y,
+        mTransY + matrix[1][3] + matrix[1][0] * local_x + matrix[1][1] * y,
+        matrix[2][3] + matrix[2][0] * local_x + matrix[2][1] * y,
     };
+    if (mBrlytLayout.origin_type != 1U) {
+        result[0] -= mBrlytLayout.width * 0.5F;
+        result[1] = mBrlytLayout.height * 0.5F - result[1];
+    }
+    return result;
 }
 
 smgpc::layout::LayoutRuntime::PaneRenderState smgpc::layout::LayoutRuntime::paneRenderState(std::size_t pane_index) const {
     const auto& pane = mBrlytLayout.panes.at(pane_index);
-    auto local_translate_x = pane.translate_x;
-    auto local_translate_y = pane.translate_y;
-    auto local_scale_x = pane.scale_x;
-    auto local_scale_y = pane.scale_y;
-    auto local_rotate_z = pane.rotate_z;
-    auto local_alpha = static_cast< float >(pane.alpha);
-    auto local_visible = pane.visible;
-    const auto local_location_adjust = pane.location_adjust;
-
     const auto anim = animationFrameForPane(pane.name);
-    if (anim.translate_x.has_value()) {
-        local_translate_x = *anim.translate_x;
-    }
-    if (anim.translate_y.has_value()) {
-        local_translate_y = *anim.translate_y;
-    }
-    if (anim.scale_x.has_value()) {
-        local_scale_x = *anim.scale_x;
-    }
-    if (anim.scale_y.has_value()) {
-        local_scale_y = *anim.scale_y;
-    }
-    if (anim.rotate_z.has_value()) {
-        local_rotate_z = *anim.rotate_z;
-    }
-    if (anim.alpha.has_value()) {
-        local_alpha = *anim.alpha;
-    }
-    if (anim.visible.has_value()) {
-        local_visible = *anim.visible;
-    }
+    auto local_alpha = anim.alpha.value_or(static_cast<float>(pane.alpha));
+    auto local_visible = anim.visible.value_or(pane.visible);
     if (const auto override = mPaneVisibilityOverrides.find(pane.name); override != mPaneVisibilityOverrides.end()) {
         local_visible = override->second;
     }
     if (const auto override = mPaneAlphaOverrides.find(pane.name); override != mPaneAlphaOverrides.end()) {
         local_alpha = override->second;
     }
-    if (pane_name_has_inactive_locale_suffix(pane.name)) {
+    if (pane_name_has_inactive_locale_suffix(pane.name) || pane_name_has_active_locale_variant(mBrlytLayout, pane.name)) {
         local_visible = false;
-    }
-    if (pane_name_has_active_locale_variant(mBrlytLayout, pane.name)) {
-        local_visible = false;
-    }
-
-    if (local_location_adjust) {
-        const auto adjust = layout_location_adjust_scale();
-        local_scale_x *= adjust[0U];
-        local_scale_y *= adjust[1U];
     }
 
     Mtx local_matrix;
     paneLocalMatrix(pane_index, local_matrix);
-    const auto local_m00 = local_matrix[0][0];
-    const auto local_m01 = local_matrix[0][1];
-    const auto local_m10 = local_matrix[1][0];
-    const auto local_m11 = local_matrix[1][1];
-
-    const auto apply_follow = [&](PaneRenderState result) {
-        const auto it = mPaneFollowPositions.find(pane_index);
-        if (it == mPaneFollowPositions.end())
-            return result;
-        const auto& follow = it->second;
-        switch (follow.type) {
-        case 0:
-            result.translate_x = follow.position.x - mTransX;
-            result.translate_y = follow.position.y - mTransY;
-            break;
-        case 1:
-            result.translate_x += follow.position.x;
-            result.translate_y += follow.position.y;
-            break;
-        case 2: {
-            // Original global * inverse(local) * local-with-replaced-translation.
-            const auto determinant = local_m00 * local_m11 - local_m01 * local_m10;
-            if (determinant == 0.0F)
-                aurora::throw_host_exception<std::logic_error>("Replacing a pane's local position requires an invertible matrix");
-            const auto p00 = (result.m00 * local_m11 - result.m01 * local_m10) / determinant;
-            const auto p01 = (result.m01 * local_m00 - result.m00 * local_m01) / determinant;
-            const auto p10 = (result.m10 * local_m11 - result.m11 * local_m10) / determinant;
-            const auto p11 = (result.m11 * local_m00 - result.m10 * local_m01) / determinant;
-            const auto dx = follow.position.x - local_translate_x;
-            const auto dy = follow.position.y - local_translate_y;
-            result.translate_x += p00 * dx + p01 * dy;
-            result.translate_y += p10 * dx + p11 * dy;
-            break;
-        }
-        case 3:
-            result.translate_x += local_m00 * follow.position.x + local_m01 * follow.position.y;
-            result.translate_y += local_m10 * follow.position.x + local_m11 * follow.position.y;
-            break;
-        }
-        return result;
-    };
-
+    PaneRenderState result;
+    const auto modifies_child_alpha = pane.influenced_alpha && local_alpha != 255.0F;
+    result.alpha = local_alpha;
+    result.child_alpha_scale = modifies_child_alpha ? local_alpha / 255.0F : 1.0F;
+    result.visible = local_visible;
+    result.location_adjust = pane.location_adjust;
+    result.child_alpha_influenced = modifies_child_alpha;
     if (pane.parent_index < 0) {
-        const auto modifies_child_alpha = pane.influenced_alpha && local_alpha != 255.0F;
-        return apply_follow(PaneRenderState{
-            .translate_x = local_translate_x,
-            .translate_y = local_translate_y,
-            .scale_x = mScaleX * local_scale_x,
-            .scale_y = mScaleY * local_scale_y,
-            .rotate_z = local_rotate_z,
-            .m00 = mScaleX * local_m00,
-            .m01 = mScaleX * local_m01,
-            .m10 = mScaleY * local_m10,
-            .m11 = mScaleY * local_m11,
-            .alpha = local_alpha,
-            .child_alpha_scale = modifies_child_alpha ? (local_alpha / 255.0F) : 1.0F,
-            .visible = local_visible,
-            .location_adjust = local_location_adjust,
-            .child_alpha_influenced = modifies_child_alpha,
-        });
+        PSMTXCopy(local_matrix, result.matrix);
+        for (auto column = 0U; column < 3U; ++column) {
+            result.matrix[0][column] *= mScaleX;
+            result.matrix[1][column] *= mScaleY;
+        }
+    } else {
+        const auto parent = paneRenderState(static_cast<std::size_t>(pane.parent_index));
+        PSMTXConcat(parent.matrix, local_matrix, result.matrix);
+        result.alpha = parent.child_alpha_influenced ? local_alpha * parent.child_alpha_scale : local_alpha;
+        result.child_alpha_scale *= parent.child_alpha_scale;
+        result.visible = parent.visible && local_visible;
+        result.child_alpha_influenced = parent.child_alpha_influenced || modifies_child_alpha;
     }
 
-    const auto parent = paneRenderState(static_cast< std::size_t >(pane.parent_index));
-    const auto effective_alpha = parent.child_alpha_influenced ? local_alpha * parent.child_alpha_scale : local_alpha;
-    const auto modifies_child_alpha = pane.influenced_alpha && local_alpha != 255.0F;
-    const auto child_alpha_scale = modifies_child_alpha ? parent.child_alpha_scale * (local_alpha / 255.0F) : parent.child_alpha_scale;
-    return apply_follow(PaneRenderState{
-        .translate_x = parent.translate_x + parent.m00 * local_translate_x + parent.m01 * local_translate_y,
-        .translate_y = parent.translate_y + parent.m10 * local_translate_x + parent.m11 * local_translate_y,
-        .scale_x = parent.scale_x * local_scale_x,
-        .scale_y = parent.scale_y * local_scale_y,
-        .rotate_z = parent.rotate_z + local_rotate_z,
-        .m00 = parent.m00 * local_m00 + parent.m01 * local_m10,
-        .m01 = parent.m00 * local_m01 + parent.m01 * local_m11,
-        .m10 = parent.m10 * local_m00 + parent.m11 * local_m10,
-        .m11 = parent.m10 * local_m01 + parent.m11 * local_m11,
-        .alpha = effective_alpha,
-        .child_alpha_scale = child_alpha_scale,
-        .visible = parent.visible && local_visible,
-        .location_adjust = local_location_adjust,
-        .child_alpha_influenced = parent.child_alpha_influenced || modifies_child_alpha,
-    });
+    const auto it = mPaneFollowPositions.find(pane_index);
+    if (it == mPaneFollowPositions.end()) return result;
+    const auto& follow = it->second;
+    switch (follow.type) {
+    case 0:
+        result.matrix[0][3] = follow.position.x - mTransX;
+        result.matrix[1][3] = follow.position.y - mTransY;
+        break;
+    case 1:
+        result.matrix[0][3] += follow.position.x;
+        result.matrix[1][3] += follow.position.y;
+        break;
+    case 2: {
+        // PaneCtrl replaces local XY through global * inverse(local).
+        // Inverting only the XY projection loses rotations out of the plane.
+        Mtx inverse_local, parent;
+        if (!PSMTXInverse(local_matrix, inverse_local))
+            aurora::throw_host_exception<std::logic_error>("Replacing a pane's local position requires an invertible matrix");
+        PSMTXConcat(result.matrix, inverse_local, parent);
+        const auto dx = follow.position.x - local_matrix[0][3];
+        const auto dy = follow.position.y - local_matrix[1][3];
+        for (auto row = 0U; row < 3U; ++row)
+            result.matrix[row][3] += parent[row][0] * dx + parent[row][1] * dy;
+        break;
+    }
+    case 3:
+        // The original control adds the transformed XY offset only.
+        for (auto row = 0U; row < 2U; ++row)
+            result.matrix[row][3] += local_matrix[row][0] * follow.position.x + local_matrix[row][1] * follow.position.y;
+        break;
+    }
+    return result;
 }
 
 aurora::nw4r::lyt::BrlanPaneFrame smgpc::layout::LayoutRuntime::animationFrameForPane(std::string_view pane_name) const {
@@ -3707,11 +3643,20 @@ aurora::nw4r::lyt::BrlanPaneFrame smgpc::layout::LayoutRuntime::animationFrameFo
         if (layer_frame.translate_y.has_value()) {
             result.translate_y = layer_frame.translate_y;
         }
+        if (layer_frame.translate_z.has_value()) {
+            result.translate_z = layer_frame.translate_z;
+        }
         if (layer_frame.scale_x.has_value()) {
             result.scale_x = layer_frame.scale_x;
         }
         if (layer_frame.scale_y.has_value()) {
             result.scale_y = layer_frame.scale_y;
+        }
+        if (layer_frame.rotate_x.has_value()) {
+            result.rotate_x = layer_frame.rotate_x;
+        }
+        if (layer_frame.rotate_y.has_value()) {
+            result.rotate_y = layer_frame.rotate_y;
         }
         if (layer_frame.rotate_z.has_value()) {
             result.rotate_z = layer_frame.rotate_z;
@@ -3746,11 +3691,20 @@ aurora::nw4r::lyt::BrlanPaneFrame smgpc::layout::LayoutRuntime::animationFrameFo
             if (layer_frame.translate_y.has_value()) {
                 result.translate_y = layer_frame.translate_y;
             }
+            if (layer_frame.translate_z.has_value()) {
+                result.translate_z = layer_frame.translate_z;
+            }
             if (layer_frame.scale_x.has_value()) {
                 result.scale_x = layer_frame.scale_x;
             }
             if (layer_frame.scale_y.has_value()) {
                 result.scale_y = layer_frame.scale_y;
+            }
+            if (layer_frame.rotate_x.has_value()) {
+                result.rotate_x = layer_frame.rotate_x;
+            }
+            if (layer_frame.rotate_y.has_value()) {
+                result.rotate_y = layer_frame.rotate_y;
             }
             if (layer_frame.rotate_z.has_value()) {
                 result.rotate_z = layer_frame.rotate_z;
@@ -3882,21 +3836,24 @@ bool smgpc::layout::LayoutRuntime::isLoopingAnim(const char* pAnimName) const {
 
 void smgpc::layout::LayoutRuntime::paneLocalMatrix(std::size_t index, MtxPtr matrix) const {
     const auto& pane = mBrlytLayout.panes.at(index);
-    if (pane.rotate_x != 0.0F || pane.rotate_y != 0.0F || pane.translate_z != 0.0F)
-        aurora::throw_host_exception<std::logic_error>("NW4R 3D pane transforms require the 3D layout renderer");
     const auto frame = animationFrameForPane(pane.name);
     auto scale_x = frame.scale_x.value_or(pane.scale_x);
     auto scale_y = frame.scale_y.value_or(pane.scale_y);
     if (pane.location_adjust) {
         const auto adjust = layout_location_adjust_scale();
-        scale_x *= adjust[0]; scale_y *= adjust[1];
+        scale_x *= adjust[0];
+        scale_y *= adjust[1];
     }
+    // nw4r::lyt::Pane::CalculateMtx: T * Rz * Ry * Rx * S.
     constexpr auto radians = 3.14159265358979323846F / 180.0F;
-    const auto angle = frame.rotate_z.value_or(pane.rotate_z) * radians;
-    const auto c = std::cos(angle), s = std::sin(angle);
-    PSMTXIdentity(matrix);
-    matrix[0][0] = c * scale_x; matrix[0][1] = -s * scale_y;
-    matrix[1][0] = s * scale_x; matrix[1][1] = c * scale_y;
-    matrix[0][3] = frame.translate_x.value_or(pane.translate_x);
-    matrix[1][3] = frame.translate_y.value_or(pane.translate_y);
+    Mtx rotation, intermediate;
+    PSMTXScale(matrix, scale_x, scale_y, 1.0F);
+    PSMTXRotRad(rotation, 'x', frame.rotate_x.value_or(pane.rotate_x) * radians);
+    PSMTXConcat(rotation, matrix, intermediate);
+    PSMTXRotRad(rotation, 'y', frame.rotate_y.value_or(pane.rotate_y) * radians);
+    PSMTXConcat(rotation, intermediate, matrix);
+    PSMTXRotRad(rotation, 'z', frame.rotate_z.value_or(pane.rotate_z) * radians);
+    PSMTXConcat(rotation, matrix, intermediate);
+    PSMTXTransApply(intermediate, matrix, frame.translate_x.value_or(pane.translate_x),
+                   frame.translate_y.value_or(pane.translate_y), frame.translate_z.value_or(pane.translate_z));
 }

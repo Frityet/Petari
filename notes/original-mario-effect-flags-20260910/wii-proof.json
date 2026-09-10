@@ -1,0 +1,21 @@
+{
+  "diff_exit": 0,
+  "function_count": 66,
+  "changed_functions": [
+    {
+      "name": "playMaterialEffect__10MarioActorFPCc",
+      "score": 98.181816,
+      "size": "352"
+    },
+    {
+      "name": "initCommonEffect__10MarioActorFv",
+      "score": 96.833336,
+      "size": "1200"
+    },
+    {
+      "name": "playCommonEffect__10MarioActorFPCc",
+      "score": 96.593956,
+      "size": "1192"
+    }
+  ]
+}

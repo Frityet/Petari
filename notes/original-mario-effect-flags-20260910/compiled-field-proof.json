@@ -1,0 +1,143 @@
+{
+  "actual_changed_field_instructions": [
+    {
+      "symbol": "playMaterialEffect__10MarioActorFPCc",
+      "instruction_address": "1768",
+      "instruction": "srwi r29, r0, 24",
+      "retail_byte": 0,
+      "mask": 255,
+      "tested_words": 1023
+    },
+    {
+      "symbol": "initCommonEffect__10MarioActorFv",
+      "instruction_address": "2520",
+      "instruction": "srwi r0, r0, 24",
+      "retail_byte": 0,
+      "mask": 255,
+      "tested_words": 1023
+    },
+    {
+      "symbol": "initCommonEffect__10MarioActorFv",
+      "instruction_address": "2820",
+      "instruction": "rlwinm. r0, r3, 24, 28, 28",
+      "retail_byte": 2,
+      "mask": 8,
+      "tested_words": 1023
+    },
+    {
+      "symbol": "initCommonEffect__10MarioActorFv",
+      "instruction_address": "2824",
+      "instruction": "extrwi r0, r3, 8, 16",
+      "retail_byte": 2,
+      "mask": 255,
+      "tested_words": 1023
+    },
+    {
+      "symbol": "initCommonEffect__10MarioActorFv",
+      "instruction_address": "2972",
+      "instruction": "srwi r0, r0, 24",
+      "retail_byte": 0,
+      "mask": 255,
+      "tested_words": 1023
+    },
+    {
+      "symbol": "initCommonEffect__10MarioActorFv",
+      "instruction_address": "3164",
+      "instruction": "extrwi. r0, r0, 1, 15",
+      "retail_byte": 1,
+      "mask": 1,
+      "tested_words": 1023
+    },
+    {
+      "symbol": "initCommonEffect__10MarioActorFv",
+      "instruction_address": "3196",
+      "instruction": "rlwinm. r0, r0, 16, 30, 30",
+      "retail_byte": 1,
+      "mask": 2,
+      "tested_words": 1023
+    },
+    {
+      "symbol": "initCommonEffect__10MarioActorFv",
+      "instruction_address": "3248",
+      "instruction": "srwi r0, r0, 24",
+      "retail_byte": 0,
+      "mask": 255,
+      "tested_words": 1023
+    },
+    {
+      "symbol": "playCommonEffect__10MarioActorFPCc",
+      "instruction_address": "3516",
+      "instruction": "rlwinm. r0, r0, 24, 28, 28",
+      "retail_byte": 2,
+      "mask": 8,
+      "tested_words": 1023
+    },
+    {
+      "symbol": "playCommonEffect__10MarioActorFPCc",
+      "instruction_address": "3544",
+      "instruction": "srwi r0, r0, 24",
+      "retail_byte": 0,
+      "mask": 255,
+      "tested_words": 1023
+    },
+    {
+      "symbol": "playCommonEffect__10MarioActorFPCc",
+      "instruction_address": "3660",
+      "instruction": "srwi r0, r0, 24",
+      "retail_byte": 0,
+      "mask": 255,
+      "tested_words": 1023
+    },
+    {
+      "symbol": "playCommonEffect__10MarioActorFPCc",
+      "instruction_address": "3860",
+      "instruction": "extrwi. r0, r3, 1, 15",
+      "retail_byte": 1,
+      "mask": 1,
+      "tested_words": 1023
+    },
+    {
+      "symbol": "playCommonEffect__10MarioActorFPCc",
+      "instruction_address": "3864",
+      "instruction": "extrwi r3, r3, 8, 8",
+      "retail_byte": 1,
+      "mask": 255,
+      "tested_words": 1023
+    },
+    {
+      "symbol": "playCommonEffect__10MarioActorFPCc",
+      "instruction_address": "3932",
+      "instruction": "rlwinm. r0, r0, 16, 30, 30",
+      "retail_byte": 1,
+      "mask": 2,
+      "tested_words": 1023
+    },
+    {
+      "symbol": "playCommonEffect__10MarioActorFPCc",
+      "instruction_address": "3992",
+      "instruction": "extrwi. r0, r0, 1, 23",
+      "retail_byte": 2,
+      "mask": 1,
+      "tested_words": 1023
+    },
+    {
+      "symbol": "playCommonEffect__10MarioActorFPCc",
+      "instruction_address": "4268",
+      "instruction": "rlwinm. r0, r0, 24, 30, 30",
+      "retail_byte": 2,
+      "mask": 2,
+      "tested_words": 1023
+    },
+    {
+      "symbol": "playCommonEffect__10MarioActorFPCc",
+      "instruction_address": "4336",
+      "instruction": "srwi r0, r0, 24",
+      "retail_byte": 0,
+      "mask": 255,
+      "tested_words": 1023
+    }
+  ],
+  "distinct_patterns": 8,
+  "words_per_instruction": 1023,
+  "all_equal": true
+}

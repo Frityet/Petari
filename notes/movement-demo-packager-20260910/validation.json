@@ -1,0 +1,24 @@
+{
+  "python_syntax": 0,
+  "shell_syntax_and_literal_path_cases": 2,
+  "disc_override_cases": 2,
+  "dry_run_exit": 0,
+  "dry_run_command": [
+    "python3",
+    "/Users/frityet/Projects/petari/script/package_movement_demo.py",
+    "--disc",
+    "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "--expected-sha256",
+    "8b423a8a0b1276c5fcd8f6f9ed73722bdd4f2bccdf4a46bb48c8e1c029a498e2",
+    "--dry-run"
+  ],
+  "created_app": false,
+  "packaging_script_sha256": "2291144bcc412b8f00653d9a963077f45c1943a3321c6c4650c5340a7cc750ac",
+  "preserved_user_script_sha256": "60f326015cf765503100cd142f386bde95b24be72ccc6bf94c85b8879fcf1ced",
+  "inspected_binary_sha256": "8b423a8a0b1276c5fcd8f6f9ed73722bdd4f2bccdf4a46bb48c8e1c029a498e2",
+  "minimum_macos": "26.5",
+  "system_library_count": 25,
+  "root_commit_at_inspection": "38bbbb093034782a84289139c430a1f88c2e4aab",
+  "scoped_dirty_paths": 22,
+  "mismatched_binary_rejected": true
+}

@@ -5,6 +5,9 @@
 class JUTPalette;
 
 struct ResTIMG {
+    // Rebased texture records can point backward within the mapped graphics
+    // heap. Sign extension preserves Wii's wrapping 32-bit address addition
+    // on a 64-bit host; that heap already has a signed 32-bit size limit.
     /* 0x00 */ u8 mFormat = 0U;
     /* 0x01 */ u8 mTransparency = 0U;
     /* 0x02 */ u16 mWidth = 0U;
@@ -14,7 +17,7 @@ struct ResTIMG {
     /* 0x08 */ u8 mPaletteName = GX_TLUT0;
     /* 0x09 */ u8 mPaletteFormat = GX_TL_IA8;
     /* 0x0A */ u16 mPaletteNum = 0U;
-    /* 0x0C */ u32 mPaletteDataOffset = 0U;
+    /* 0x0C */ s32 mPaletteDataOffset = 0;
     /* 0x10 */ bool mMipmap = false;
     /* 0x11 */ bool mDoEdgeLod = false;
     /* 0x12 */ bool mBiasClamp = false;
@@ -26,7 +29,7 @@ struct ResTIMG {
     /* 0x18 */ u8 mImageNum = 1U;
     /* 0x19 */ u8 _19 = 0U;
     /* 0x1A */ s16 mLodBias = 0;
-    /* 0x1C */ u32 mImageDataOffset = sizeof(ResTIMG);
+    /* 0x1C */ s32 mImageDataOffset = sizeof(ResTIMG);
 };
 
 class JUTTexture {

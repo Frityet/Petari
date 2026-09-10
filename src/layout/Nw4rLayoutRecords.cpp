@@ -134,13 +134,14 @@ void Nw4rLayoutRecords::synchronize() {
         const auto* expected_parent = source.parent_index < 0 ? nullptr : state.panes.at(source.parent_index).get();
         if (std::strncmp(pane.mName, source.name.c_str(), 16) != 0 || pane.mpParent != expected_parent)
             aurora::throw_host_exception<std::logic_error>("Changing a published NW4R resource name/hierarchy requires matching renderer topology support");
-        if (pane.mRotate.x != old.rotate.x || pane.mRotate.y != old.rotate.y || pane.mTranslate.z != old.translate.z)
-            aurora::throw_host_exception<std::logic_error>("Changing NW4R pane X/Y rotation or Z translation requires the 3D layout renderer");
         if (pane.mSize.width != old.size.width || pane.mSize.height != old.size.height)
             aurora::throw_host_exception<std::logic_error>("Changing SDK pane size requires the derived geometry owner");
         auto& frame = runtime.mCommittedPaneFrames[source.name];
         if (pane.mTranslate.x != old.translate.x) frame.translate_x = pane.mTranslate.x;
         if (pane.mTranslate.y != old.translate.y) frame.translate_y = pane.mTranslate.y;
+        if (pane.mTranslate.z != old.translate.z) frame.translate_z = pane.mTranslate.z;
+        if (pane.mRotate.x != old.rotate.x) frame.rotate_x = pane.mRotate.x;
+        if (pane.mRotate.y != old.rotate.y) frame.rotate_y = pane.mRotate.y;
         if (pane.mScale.x != old.scale.x) frame.scale_x = pane.mScale.x;
         if (pane.mScale.y != old.scale.y) frame.scale_y = pane.mScale.y;
         if (pane.mRotate.z != old.rotate.z) frame.rotate_z = pane.mRotate.z;
@@ -155,8 +156,9 @@ void Nw4rLayoutRecords::synchronize() {
         const auto anim = runtime.animationFrameForPane(source.name);
         pane.mTranslate.x = anim.translate_x.value_or(source.translate_x);
         pane.mTranslate.y = anim.translate_y.value_or(source.translate_y);
-        pane.mTranslate.z = source.translate_z;
-        pane.mRotate.x = source.rotate_x; pane.mRotate.y = source.rotate_y;
+        pane.mTranslate.z = anim.translate_z.value_or(source.translate_z);
+        pane.mRotate.x = anim.rotate_x.value_or(source.rotate_x);
+        pane.mRotate.y = anim.rotate_y.value_or(source.rotate_y);
         pane.mRotate.z = anim.rotate_z.value_or(source.rotate_z);
         pane.mScale.x = anim.scale_x.value_or(source.scale_x);
         pane.mScale.y = anim.scale_y.value_or(source.scale_y);
@@ -167,11 +169,9 @@ void Nw4rLayoutRecords::synchronize() {
         // Use the very same active BRLAN, pane follow and actor transforms as
         // the renderer. These are live SDK matrices, not resource-only copies.
         const auto global = runtime.paneRenderState(i);
-        PSMTXIdentity(pane.mGlbMtx.m);
-        pane.mGlbMtx.m[0][0] = global.m00; pane.mGlbMtx.m[0][1] = global.m01;
-        pane.mGlbMtx.m[1][0] = global.m10; pane.mGlbMtx.m[1][1] = global.m11;
-        pane.mGlbMtx.m[0][3] = runtime.mTransX + global.translate_x;
-        pane.mGlbMtx.m[1][3] = runtime.mTransY + global.translate_y;
+        PSMTXCopy(global.matrix, pane.mGlbMtx.m);
+        pane.mGlbMtx.m[0][3] += runtime.mTransX;
+        pane.mGlbMtx.m[1][3] += runtime.mTransY;
         pane.mGlbAlpha = static_cast<u8>(std::clamp(global.alpha, 0.0F, 255.0F));
         runtime.paneLocalMatrix(i, pane.mMtx.m);
         state.previous[i] = published(pane);

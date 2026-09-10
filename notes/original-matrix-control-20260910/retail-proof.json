@@ -1,0 +1,73 @@
+{
+  "wii_compile_exit_code": 0,
+  "objdiff_exit_code": 0,
+  "objdiff_command": [
+    "/Users/frityet/Projects/petari/decomp/build/tools/objdiff-cli",
+    "diff",
+    "-1",
+    "/Users/frityet/Projects/petari/notes/gateway-audit-20260907/restoration/retail/obj/Game/Player/MatrixControl.o",
+    "-2",
+    "/Users/frityet/Projects/petari/notes/original-matrix-control-20260910/MatrixControl.o",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-matrix-control-20260910/objdiff.json"
+  ],
+  "symbols": [
+    {
+      "name": "__ct__13MatrixControlFPCcP9MatrixMapP16MatrixSelectListl",
+      "size": "376",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getValue__13MatrixControlCFPCcUc",
+      "size": "88",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getValueOrNone__13MatrixControlCFPCcUcPUc",
+      "size": "124",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getBit__13MatrixControlCFPCcUc",
+      "size": "108",
+      "match_percent": 100.0
+    },
+    {
+      "name": "isExist__13MatrixControlCFPCc",
+      "size": "40",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getBitOrNone__13MatrixControlCFPCcUc",
+      "size": "124",
+      "match_percent": 86.77419
+    },
+    {
+      "name": "__ct__17MatrixValueGetterFPCcP16MatrixValueTable",
+      "size": "200",
+      "match_percent": 100.0
+    },
+    {
+      "name": "getValue__17MatrixValueGetterCFPCcPf",
+      "size": "116",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__dt__13MatrixControlFv",
+      "size": "88",
+      "match_percent": 100.0
+    },
+    {
+      "name": "__dt__17MatrixValueGetterFv",
+      "size": "88",
+      "match_percent": 100.0
+    }
+  ],
+  "retail_object_sha256": "0caa2e9a5b33a156491963474541f372f01da3ddaeed6eaa8e58102f69f68050",
+  "candidate_object_sha256": "014f9fd2a5397cb8a079728ef94d404240d5a3299e54a4ef557451c7b54bcca9",
+  "changed_function": {
+    "constructor_match_percent": 100.0,
+    "getBitOrNone_match_percent": 86.77419
+  },
+  "remaining_difference": "getBitOrNone missing-name return block reordered; equal code size and equivalent conditions, stores and calls"
+}

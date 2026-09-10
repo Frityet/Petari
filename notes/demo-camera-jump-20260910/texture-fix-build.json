@@ -1,0 +1,27 @@
+[
+  {
+    "target": "smg-pc-showcase",
+    "returncode": 0,
+    "elapsed": 6.949973821640015
+  },
+  {
+    "target": "smg-pc-original-j3d-texture-resource-tests",
+    "returncode": 0,
+    "elapsed": 2.2076308727264404
+  },
+  {
+    "target": "smg-pc-original-layout-group-tests",
+    "returncode": 0,
+    "elapsed": 2.4634408950805664
+  },
+  {
+    "target": "smg-pc-authored-placement-instantiator-tests",
+    "returncode": 0,
+    "elapsed": 2.8703560829162598
+  },
+  {
+    "target": "smg-pc-original-camera-director-tests",
+    "returncode": 0,
+    "elapsed": 1.7079579830169678
+  }
+]
