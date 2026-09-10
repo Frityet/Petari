@@ -1,0 +1,39 @@
+{
+  "root_head_at_inventory": "59898710821fbfd8eeb037ea9db43860cff674bf",
+  "decomp_head": "db38bcbac05d051fa9b319306a7ba43cb84f37ae",
+  "upstream_head": "16906807c69697fdea5d7efbb4642313c1b14204",
+  "common_base": "151d5a53a3c5dd0ea295ddc66f2c8b958b4dff88",
+  "incoming_commits": 104,
+  "local_decomp_commits": 43,
+  "path_count": 386,
+  "categories": {
+    "config/RMGK01": 3,
+    "configure.py": 1,
+    "include/Game": 79,
+    "libs/JSystem": 10,
+    "libs/MSL_C++": 2,
+    "libs/MSL_C": 1,
+    "libs/RVL_SDK": 45,
+    "libs/nw4r": 2,
+    "src/Game": 166,
+    "src/JSystem": 1,
+    "src/RVL_SDK": 69,
+    "src/Runtime": 1,
+    "src/nw4r": 6
+  },
+  "native_existing_candidates": 101,
+  "decomp_overlap_count": 21,
+  "decomp_preview_conflicts": [
+    "include/Game/Effect/ParticleEmitterHolder.hpp",
+    "include/Game/Player/Mario.hpp",
+    "include/Game/Player/MarioParalyze.hpp",
+    "include/Game/Util/AreaObjUtil.hpp",
+    "src/Game/Effect/ParticleEmitterHolder.cpp",
+    "src/Game/Player/Mario.cpp",
+    "src/Game/Player/MarioActorSensor.cpp",
+    "src/Game/Player/MarioDamageParalyze.cpp",
+    "src/Game/Player/MarioMove.cpp",
+    "src/Game/Player/MarioSpecial.cpp",
+    "src/Game/Util/AreaObjUtil.cpp"
+  ]
+}

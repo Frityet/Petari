@@ -19,7 +19,7 @@ void FORCE_INLINE() {
     vec.setLength(1.0f);
 }
 
-//required (for now) to match the inlined isBeeWallWalk calls
+// required (for now) to match the inlined isBeeWallWalk calls
 #pragma opt_propagation off
 
 void Mario::mainMove() {

@@ -1,0 +1,102 @@
+[
+  {
+    "reference": "decomp/include/Game/AreaObj/AreaForm.hpp",
+    "native": "src/Game/AreaObj/AreaForm.hpp",
+    "equal_with_exact_decl_fix": true
+  },
+  {
+    "reference": "decomp/src/Game/AreaObj/AreaForm.cpp",
+    "native": "src/Game/AreaObj/AreaForm.cpp",
+    "equal_with_exact_decl_fix": true
+  },
+  {
+    "reference": "decomp/include/Game/AreaObj/AreaObj.hpp",
+    "native": "src/Game/AreaObj/AreaObj.hpp",
+    "equal_with_exact_decl_fix": true
+  },
+  {
+    "reference": "decomp/src/Game/AreaObj/AreaObj.cpp",
+    "native": "src/Game/AreaObj/AreaObj.cpp",
+    "equal_with_exact_decl_fix": true
+  },
+  {
+    "reference": "decomp/include/Game/AreaObj/AreaObjFollower.hpp",
+    "native": "src/Game/AreaObj/AreaObjFollower.hpp",
+    "equal_with_exact_decl_fix": true
+  },
+  {
+    "reference": "decomp/src/Game/AreaObj/AreaObjFollower.cpp",
+    "native": "src/Game/AreaObj/AreaObjFollower.cpp",
+    "equal_with_exact_decl_fix": true
+  },
+  {
+    "reference": "decomp/include/Game/Util/AreaObjUtil.hpp",
+    "native": "src/Game/Util/AreaObjUtil.hpp",
+    "equal_with_exact_decl_fix": true
+  },
+  {
+    "reference": "decomp/src/Game/Util/AreaObjUtil.cpp",
+    "native": "src/Game/Util/AreaObjUtil.cpp",
+    "equal_with_exact_decl_fix": true
+  },
+  {
+    "reference": "decomp/include/Game/Map/SleepControllerHolder.hpp",
+    "native": "src/Game/Map/SleepControllerHolder.hpp",
+    "equal_with_exact_decl_fix": true
+  },
+  {
+    "reference": "decomp/src/Game/Map/SleepControllerHolder.cpp",
+    "native": "src/Game/Map/SleepControllerHolder.cpp",
+    "equal_with_exact_decl_fix": true
+  },
+  {
+    "reference": "decomp/include/Game/AreaObj/SwitchArea.hpp",
+    "native": "src/Game/AreaObj/SwitchArea.hpp",
+    "byte_identical": true
+  },
+  {
+    "reference": "decomp/src/Game/AreaObj/SwitchArea.cpp",
+    "native": "src/Game/AreaObj/SwitchArea.cpp",
+    "byte_identical": true
+  },
+  {
+    "reference": "decomp/include/Game/AreaObj/CubeCamera.hpp",
+    "native": "src/Game/AreaObj/CubeCamera.hpp",
+    "byte_identical": true
+  },
+  {
+    "reference": "decomp/src/Game/AreaObj/CubeCamera.cpp",
+    "native": "src/Game/AreaObj/CubeCamera.cpp",
+    "byte_identical": true
+  },
+  {
+    "reference": "decomp/include/Game/AreaObj/MessageArea.hpp",
+    "native": "src/Game/AreaObj/MessageArea.hpp",
+    "byte_identical": true
+  },
+  {
+    "reference": "decomp/src/Game/AreaObj/MessageArea.cpp",
+    "native": "src/Game/AreaObj/MessageArea.cpp",
+    "byte_identical": true
+  },
+  {
+    "reference": "decomp/include/Game/AreaObj/LightArea.hpp",
+    "native": "src/Game/AreaObj/LightArea.hpp",
+    "byte_identical": true
+  },
+  {
+    "reference": "decomp/src/Game/AreaObj/LightArea.cpp",
+    "native": "src/Game/AreaObj/LightArea.cpp",
+    "byte_identical": true
+  },
+  {
+    "reference": "decomp/include/Game/AreaObj/LightAreaHolder.hpp",
+    "native": "src/Game/AreaObj/LightAreaHolder.hpp",
+    "byte_identical": true
+  },
+  {
+    "reference": "decomp/src/Game/AreaObj/LightAreaHolder.cpp",
+    "native": "src/Game/AreaObj/LightAreaHolder.cpp",
+    "byte_identical": true
+  }
+]

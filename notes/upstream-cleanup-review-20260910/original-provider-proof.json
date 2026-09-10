@@ -1,0 +1,128 @@
+[
+  {
+    "symbol": "MarioAccess::isOnGround(unsigned int)",
+    "providers": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:MarioAccess.cpp.o: 0000000000000124 T MarioAccess::isOnGround(unsigned int)"
+    ],
+    "passed": true
+  },
+  {
+    "symbol": "MarioAccess::isInRush()",
+    "providers": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:MarioAccess.cpp.o: 0000000000000264 T MarioAccess::isInRush()"
+    ],
+    "passed": true
+  },
+  {
+    "symbol": "MarioAccess::isFlying()",
+    "providers": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:MarioAccess.cpp.o: 000000000000034c T MarioAccess::isFlying()"
+    ],
+    "passed": true
+  },
+  {
+    "symbol": "MarioAccess::getCameraCubeCode()",
+    "providers": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:MarioAccess.cpp.o: 00000000000003b8 T MarioAccess::getCameraCubeCode()"
+    ],
+    "passed": true
+  },
+  {
+    "symbol": "MarioAccess::isSwimming()",
+    "providers": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:MarioAccess.cpp.o: 00000000000003d4 T MarioAccess::isSwimming()"
+    ],
+    "passed": true
+  },
+  {
+    "symbol": "MarioAccess::getGroundingPolygon(unsigned int)",
+    "providers": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:MarioAccess.cpp.o: 0000000000000410 T MarioAccess::getGroundingPolygon(unsigned int)"
+    ],
+    "passed": true
+  },
+  {
+    "symbol": "MarioAccess::getLastMove()",
+    "providers": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:MarioAccess.cpp.o: 0000000000000de0 T MarioAccess::getLastMove()"
+    ],
+    "passed": true
+  },
+  {
+    "symbol": "MarioAccess::getBaseMtx()",
+    "providers": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:MarioAccess.cpp.o: 0000000000001674 T MarioAccess::getBaseMtx()"
+    ],
+    "passed": true
+  },
+  {
+    "symbol": "MarioAccess::isOnWaterSurface()",
+    "providers": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:MarioAccess.cpp.o: 00000000000018b8 T MarioAccess::isOnWaterSurface()"
+    ],
+    "passed": true
+  },
+  {
+    "symbol": "MarioAccess::getPlayerActor()",
+    "providers": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:MarioAccess.cpp.o: 000000000000005c T MarioAccess::getPlayerActor()"
+    ],
+    "passed": true
+  },
+  {
+    "symbol": "MarioAccess::isInWaterMode()",
+    "providers": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:MarioAccess.cpp.o: 0000000000001d2c T MarioAccess::isInWaterMode()"
+    ],
+    "passed": true
+  },
+  {
+    "symbol": "MarioAccess::isOnActor(LiveActor const*)",
+    "providers": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:MarioAccess.cpp.o: 0000000000000070 T MarioAccess::isOnActor(LiveActor const*)"
+    ],
+    "passed": true
+  },
+  {
+    "symbol": "MarioActor::getGravityInfo() const",
+    "providers": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:MarioActorGravity.cpp.o: 0000000000000054 T MarioActor::getGravityInfo() const"
+    ],
+    "passed": true
+  },
+  {
+    "symbol": "MarioActor::getGravityVec() const",
+    "providers": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:MarioActorGravity.cpp.o: 0000000000000000 T MarioActor::getGravityVec() const"
+    ],
+    "passed": true
+  },
+  {
+    "symbol": "MarioActor::getGravityVector(JGeometry::TVec3<float>*) const",
+    "providers": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:MarioActorGravity.cpp.o: 0000000000000018 T MarioActor::getGravityVector(JGeometry::TVec3<float>*) const"
+    ],
+    "passed": true
+  },
+  {
+    "symbol": "MR::calcAreaMoveVelocity(JGeometry::TVec3<float>*, JGeometry::TVec3<float> const&)",
+    "providers": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:AreaObjUtil.cpp.o: 0000000000000124 T MR::calcAreaMoveVelocity(JGeometry::TVec3<float>*, JGeometry::TVec3<float> const&)"
+    ],
+    "passed": true
+  },
+  {
+    "symbol": "MR::calcCylinderUpVec(JGeometry::TVec3<float>*, AreaObj const*)",
+    "providers": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:AreaObjUtil.cpp.o: 00000000000009c4 T MR::calcCylinderUpVec(JGeometry::TVec3<float>*, AreaObj const*)"
+    ],
+    "passed": true
+  },
+  {
+    "symbol": "MR::getCylinderRadius(AreaObj const*)",
+    "providers": [
+      "build/macosx/arm64/debug/libsmg-pc-game.a:AreaObjUtil.cpp.o: 00000000000009d4 T MR::getCylinderRadius(AreaObj const*)"
+    ],
+    "passed": true
+  }
+]

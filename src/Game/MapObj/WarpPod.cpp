@@ -52,7 +52,7 @@ WarpPod* WarpPodMgr::getPairPod(const LiveActor* pParam1) {
         return nullptr;
     }
 
-    for (u32 i = 0; i < _10->getObjectCount(); i++) {
+    for (u32 i = 0; i < _10->getObjNum(); i++) {
         WarpPod* pWarpPod = static_cast< WarpPod* >(_10->getActor(i));
 
         if (pWarpPod == pParam1) {
@@ -110,7 +110,7 @@ void WarpPodMgr::notifyWarpEnd(WarpPod* pWarpPod) {
 }
 
 void WarpPodMgr::draw() const {
-    for (u32 i = 0; i < _10->getObjectCount(); i++) {
+    for (u32 i = 0; i < _10->getObjNum(); i++) {
         static_cast< WarpPod* >(_10->getActor(i))->drawCylinder(MR::mDrawTimer);
     }
 

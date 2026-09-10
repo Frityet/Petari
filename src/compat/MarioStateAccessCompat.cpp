@@ -1,17 +1,8 @@
 #include "Game/Player/Mario.hpp"
-#include "Game/Player/MarioActor.hpp"
 #include "Game/Player/MarioState.hpp"
 
-// Original accessor bodies from MarioActorGravity.cpp and MarioState.cpp.
-// The collision and wall queries live in their complete original source units.
-const TVec3f& MarioActor::getGravityVec() const {
-    return *mMario->getGravityVec();
-}
-
-void MarioActor::getGravityVector(TVec3f* pVec) const {
-    pVec->set(mMario->getAirGravityVec());
-}
-
+// Original accessor bodies from MarioState.cpp, which remains excluded from
+// the Game archive. Gravity queries live in the complete MarioActorGravity TU.
 u32 Mario::getCurrentStatus() const {
     MarioState* pState = _97C;
 

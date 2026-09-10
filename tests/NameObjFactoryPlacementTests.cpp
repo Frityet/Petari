@@ -1,3 +1,11 @@
+#include "compat/DemoSceneRuntime.hpp"
+#include "compat/StageResourceBinding.hpp"
+#include "compat/StageZoneMatrixRegistry.hpp"
+#include "runtime/SystemConfigService.hpp"
+#include "compat/StageSessionState.hpp"
+#include "SceneExecutionFixture.hpp"
+#include "runtime/ArchiveMountService.hpp"
+#include "runtime/ScenarioCatalogOwnership.hpp"
 #include "Game/AreaObj/AreaObjContainer.hpp"
 #include "Game/Map/FileSelector.hpp"
 #include "Game/MapObj/InvisiblePolygonObj.hpp"
@@ -309,7 +317,7 @@ namespace {
             "PrologueDemo",
             "DemoPeachCastleGate",
         };
-        require(fixed_then_aliases.mCount ==
+        require(fixed_then_aliases.getArchiveNum() ==
                     static_cast<s32>(cExpectedFixedThenAliases.size()),
                 "retail archive collection must retain the fixed archive followed by every exact original alias");
         for (auto index = 0U; index < cExpectedFixedThenAliases.size(); ++index) {
@@ -329,7 +337,7 @@ namespace {
             auto collector = NameObjArchiveListCollector{};
             NameObjFactory::getMountObjectArchiveList(
                 &collector, "DemoRabbit", iter);
-            require(collector.mCount == 1 &&
+            require(collector.getArchiveNum() == 1 &&
                         std::string_view(collector.getArchive(0)) ==
                             cExpectedArchives[static_cast<std::size_t>(row)],
                     "DemoRabbit CastId 0/1/2 must select baby/adult/adult through the real placement iterator");
@@ -531,6 +539,17 @@ namespace {
         DVDInit();
 
         auto dvd = smgpc::runtime::DvdFileSystemService{"/"};
+        aurora::g_config.mem1Size = 24U * 1024U * 1024U;
+        auto resource_runtime = smgpc::resource::GameResourceRuntime{};
+        auto mounts = smgpc::runtime::ArchiveMountService{dvd};
+        auto catalog = smgpc::runtime::ScenarioCatalogOwnership{
+            resource_runtime.host_heaps(), resource_runtime.budget().scenario_catalog_bytes, mounts};
+        auto session = smgpc::compat::StageSessionState{"FileSelect", "FileSelect", 1, JMapIdInfo(0, 0)};
+        const auto session_binding = smgpc::compat::StageSessionBinding{session};
+        std::vector<smgpc::scene::StageHolderOccurrence> stage_holders;
+        const auto stage_tables = smgpc::scene::resolve_stage_placement_tables(dvd, "FileSelect", 1, &stage_holders);
+        smgpc::compat::StageResourceBinding stage_resources(dvd, stage_holders, stage_tables);
+        smgpc::compat::StageZoneMatrixBinding stage_zones(stage_holders, stage_tables);
         const auto placements =
             smgpc::scene::resolve_stage_placement_objects(dvd, "FileSelect", 1);
         require(placements.size() == 4U,
@@ -573,8 +592,6 @@ namespace {
                 "strict preflight must report the exact 2-blocker closure without fabricating roots");
 #endif
 
-        aurora::g_config.mem1Size = 24U * 1024U * 1024U;
-        auto resource_runtime = smgpc::resource::GameResourceRuntime{};
         auto resource_holders = smgpc::compat::ResourceHolderService{dvd, resource_runtime.create_cohort(), resource_runtime.mem1_heap()};
         auto *wall_resources =
             resource_holders.create_and_add("InvisibleWall10x10.arc");
@@ -590,8 +607,19 @@ namespace {
         require(collision.empty(),
                 "strict preflight must not synthesize collision before exact actor construction");
 
-        auto scene_objects = SceneObjHolder{};
-        auto scene_binding = smgpc::scene::SceneObjHolderBinding(scene_objects);
+        auto scheduler = smgpc::runtime::SceneScheduler{};
+        const auto scheduler_binding = smgpc::runtime::SceneSchedulerBinding{scheduler};
+        auto execution = smgpc::test::SceneExecutionFixture{
+            scheduler, smgpc::compat::JkrAllocationDomain::create(resource_runtime.host_heaps(), 8U << 20)};
+        aurora::NandFileSystem nand;
+        smgpc::runtime::SystemConfigService settings(nand);
+        auto& scene_objects = execution.holder();
+        scene_objects.create(SceneObj_NameObjGroup);
+        scene_objects.create(SceneObj_AreaObjContainer);
+        scene_objects.create(SceneObj_PlanetGravityManager);
+        scene_objects.create(SceneObj_CameraContext);
+        auto demo = smgpc::compat::DemoSceneRuntime{dvd, placements};
+        scene_objects.create(SceneObj_CameraDirector);
         require(scene_objects.create(SceneObj_PlacementStateChecker) != nullptr,
                 "collision construction requires the original placement-zone state owner");
         auto object = smgpc::scene::nameobj::create_name_obj(
@@ -641,10 +669,14 @@ namespace {
         MR::invalidateCollisionParts(actor);
         require(!line_query_hits_registered_wall(collision),
                 "explicit invalidation must remove an already-built KCL from map queries");
+        auto* retained_parts = actor->mCollisionParts;
         actor->makeActorDead();
         actor->makeActorAppeared();
+        require(actor->mCollisionParts == retained_parts && line_query_hits_registered_wall(collision),
+                "original actor appearance revalidates its retained CollisionParts");
+        MR::invalidateCollisionParts(actor);
         require(!line_query_hits_registered_wall(collision),
-                "actor appearance must not undo explicit CollisionParts invalidation");
+                "explicit invalidation removes collision again after original reappearance");
         object.reset();
         require(!line_query_hits_registered_wall(collision) &&
                     !triangle.isValid() && triangle.getHostName() == nullptr,

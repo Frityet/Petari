@@ -1,0 +1,9 @@
+# LightAreaHolder::sort reference recovery
+
+Read decomp/AGENT_DECOMP_GUIDE.md before editing. Added only the missing sort definition to decomp/src/Game/AreaObj/LightAreaHolder.cpp. The resolved native file already contained exactly this function, so the resulting two complete translation units are byte-identical without changing native behavior. No index, commit, or push operations were performed by this agent.
+
+Retail RMGK01 sort__15LightAreaHolderFv starts at 0x80023670 and occupies 0xA0 bytes. Full translation-unit Wii compilation succeeded both before and after recovery. The baseline did not define this function; it has no baseline percentage. The recovered function measures 96.375% objdiff, 160 candidate bytes against 160 retail bytes. Differing registers and the equivalent swapped equality comparison account for the visible differences; all branch and load/store structure is retained. This is a function-level score, not a claim for the entire translation unit.
+
+The outer signed counter runs while i < count-1 (800236F4–80023700), so empty and singleton arrays do no work. Each inner scan starts at i+1, tracks the lowest signed Obj_arg1 priority, and changes its candidate only on strict greater-than (800236AC–800236C4). A final pointer swap moves that minimum into slot i (800236D4–800236E8). This is the original selection sort; equal elements can reorder through later swaps, and no stable-sort behavior was substituted. The preserved native priority fixture exercises the original manager finalizer, priority ordering, reverse query, and stable zone identity.
+
+retail-sort.s is the exact bounded retail assembly. baseline/recovered-compile.json contain exact compiler commands and exit status. baseline/recovered-objdiff.json contain the object comparison. proof.json records source and reference object hashes. Parent owns linked native fixture/runtime validation.

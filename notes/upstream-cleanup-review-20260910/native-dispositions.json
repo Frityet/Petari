@@ -1,0 +1,410 @@
+[
+  {
+    "path": "src/Game/AreaObj/AreaForm.hpp",
+    "disposition": "Clean three-way merge preserving native additions"
+  },
+  {
+    "path": "src/Game/AudioLib/AudAudible.hpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/AudioLib/AudAudience.hpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/AudioLib/AudBgmMgr.hpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/AudioLib/AudBgmRhythmStrategy.hpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/AudioLib/AudBgmVolumeController.hpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/AudioLib/AudFader.hpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/AudioLib/AudSystem.hpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/Camera/Camera.hpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/Camera/CameraManGame.hpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/Camera/CameraTargetObj.hpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/LiveActor/AllLiveActorGroup.hpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/LiveActor/EffectKeeper.hpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/LiveActor/LiveActorGroup.hpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/LiveActor/PartsModel.hpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/Map/FileSelectEffect.hpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/Map/Sky.hpp",
+    "disposition": "Retain matching native header until exact SpaceInner/MirrorReflectionModel providers available"
+  },
+  {
+    "path": "src/Game/Map/SleepController.hpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/Map/SunshadeMapHolder.hpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/Map/SwitchSynchronizer.hpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/Map/SwitchWatcher.hpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/Map/SwitchWatcherHolder.hpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/NameObj/NameObjGroup.hpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/Player/MarioAccess.hpp",
+    "disposition": "Clean three-way merge preserving native additions"
+  },
+  {
+    "path": "src/Game/Player/MarioCrush.hpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/Player/MarioFlip.hpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/Player/MarioMapCode.hpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/Player/MarioModule.hpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/Player/MarioParts.hpp",
+    "disposition": "Clean three-way merge preserving native additions"
+  },
+  {
+    "path": "src/Game/Util/FixedPosition.hpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JAISound.hpp",
+    "disposition": "Clean three-way merge preserving native additions"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JASSoundParams.hpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JAUSoundInfo.hpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JAUStdSoundInfo.hpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/JSystem/JGadget/linklist.hpp",
+    "disposition": "Clean three-way merge preserving native additions"
+  },
+  {
+    "path": "src/JSystem/JSupport/JSUList.hpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/revolution/sc.h",
+    "disposition": "Clean three-way merge preserving native additions"
+  },
+  {
+    "path": "src/nw4r/lyt/types.h",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/nw4r/ut/inlines.h",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/AreaObj/AreaForm.cpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/AreaObj/AreaObj.cpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/AudioLib/AudBgm.cpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/AudioLib/AudBgmRhythmStrategy.cpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/Camera/CameraRotChecker.cpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/Enemy/AnimScaleController.cpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/LiveActor/LiveActorGroup.cpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/LiveActor/PartsModel.cpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/Map/FileSelectCameraController.cpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/Map/FileSelector.cpp",
+    "disposition": "Clean three-way merge preserving native additions"
+  },
+  {
+    "path": "src/Game/Map/SleepController.cpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/Map/SphereSelector.cpp",
+    "disposition": "Clean three-way merge preserving native additions"
+  },
+  {
+    "path": "src/Game/Map/SunshadeMapHolder.cpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/Map/SwitchSynchronizer.cpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/Map/SwitchWatcher.cpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/MapObj/BigFanHolder.cpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/MapObj/Coin.cpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/MapObj/InvisiblePolygonObj.cpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/NPC/DemoRabbit.cpp",
+    "disposition": "Clean three-way merge preserving native additions"
+  },
+  {
+    "path": "src/Game/NPC/NPCActor.cpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/NameObj/NameObjFactory.cpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/NameObj/NameObjGroup.cpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/NameObj/NameObjListExecutor.cpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/Screen/SuddenDeathMeter.cpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/Util/ActorSensorUtil.cpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/Util/EffectUtil.cpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/Util/FixedPosition.cpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/Util/GravityUtil.cpp",
+    "disposition": "Import upstream; native matched common base"
+  },
+  {
+    "path": "src/Game/LiveActor/Nerve.hpp",
+    "disposition": "Retain native compile/ownership declarations; upstream change is whitespace only"
+  },
+  {
+    "path": "src/Game/Map/LightPointCtrl.hpp",
+    "disposition": "Retain native compile/ownership declarations; upstream change is whitespace only"
+  },
+  {
+    "path": "src/Game/MapObj/BrightObj.hpp",
+    "disposition": "Retain native compile/ownership declarations; upstream change is whitespace only"
+  },
+  {
+    "path": "src/Game/Player/RushEndInfo.hpp",
+    "disposition": "Retain native compile/ownership declarations; upstream change is whitespace only"
+  },
+  {
+    "path": "src/Game/NameObj/NameObjArchiveListCollector.hpp",
+    "disposition": "Restore exact upstream original collector and public count accessor"
+  },
+  {
+    "path": "src/Game/NameObj/NameObjArchiveListCollector.cpp",
+    "disposition": "Restore exact upstream original collector and public count accessor"
+  },
+  {
+    "path": "src/JSystem/JGeometry/TMatrix.hpp",
+    "disposition": "Import upstream getZDir2; preserve generalized host math/PPC rounding implementation"
+  },
+  {
+    "path": "src/JSystem/JGeometry/TVec.hpp",
+    "disposition": "Retain native Vec pointer conversions; incoming implicit float pointer aliases make original vector comparison ambiguous on Clang. No imported native caller requires aliases; audit original comparison separately."
+  },
+  {
+    "path": "src/Game/Map/FileSelectEffect.cpp",
+    "disposition": "Restore upstream original body; matching native header merged"
+  },
+  {
+    "path": "src/Game/Player/MarioParts.cpp",
+    "disposition": "Restore upstream original body; matching native header merged"
+  },
+  {
+    "path": "src/Game/Map/LightDirector.cpp",
+    "disposition": "Import original constructor/name; retain existing native resource ownership pending wider light migration"
+  },
+  {
+    "path": "src/Game/Map/Sky.cpp",
+    "disposition": "Retain fail-loud native child boundary; upstream refactors original unsupported child calls. Flagged for original-source follow-up"
+  },
+  {
+    "path": "src/Game/Map/SwitchWatcherHolder.cpp",
+    "disposition": "Copy corrected original cached active-range iteration (100% Wii), vector/count fields; retain existing native scene-descendant ownership"
+  },
+  {
+    "path": "src/Game/NPC/MiiFacePartsHolder.cpp",
+    "disposition": "Merge upstream naming/cleanup preserving portable typed GX arguments"
+  },
+  {
+    "path": "src/Game/Effect/ParticleEmitterHolder.hpp",
+    "disposition": "Copy complete resolved original reference"
+  },
+  {
+    "path": "src/Game/Player/Mario.hpp",
+    "disposition": "Merge resolved original reference, retaining native PPC bitfield storage ordering"
+  },
+  {
+    "path": "src/Game/Player/MarioParalyze.hpp",
+    "disposition": "Copy complete resolved original reference"
+  },
+  {
+    "path": "src/Game/Player/MarioWait.hpp",
+    "disposition": "Copy complete resolved original reference"
+  },
+  {
+    "path": "src/Game/Util/AreaObjUtil.hpp",
+    "disposition": "Merge resolved original reference; preserve existing native ABI deltas"
+  },
+  {
+    "path": "src/Game/Effect/ParticleEmitterHolder.cpp",
+    "disposition": "Copy complete resolved original reference"
+  },
+  {
+    "path": "src/Game/LiveActor/EffectKeeper.cpp",
+    "disposition": "Copy complete resolved original reference"
+  },
+  {
+    "path": "src/Game/Map/CollisionParts.cpp",
+    "disposition": "Merge resolved original reference; preserve existing native ABI deltas"
+  },
+  {
+    "path": "src/Game/MapObj/WarpPod.cpp",
+    "disposition": "Merge resolved original reference; preserve existing native ABI deltas"
+  },
+  {
+    "path": "src/Game/NameObj/NameObjCategoryList.cpp",
+    "disposition": "Copy complete resolved original reference"
+  },
+  {
+    "path": "src/Game/Player/Mario.cpp",
+    "disposition": "Copy complete resolved original reference"
+  },
+  {
+    "path": "src/Game/Player/MarioActorSensor.cpp",
+    "disposition": "Merge resolved original reference; preserve existing native ABI deltas"
+  },
+  {
+    "path": "src/Game/Player/MarioDamageParalyze.cpp",
+    "disposition": "Copy complete resolved original reference"
+  },
+  {
+    "path": "src/Game/Player/MarioJump.cpp",
+    "disposition": "Copy complete resolved original reference"
+  },
+  {
+    "path": "src/Game/Player/MarioMove.cpp",
+    "disposition": "Copy complete resolved original reference"
+  },
+  {
+    "path": "src/Game/Player/MarioSpecial.cpp",
+    "disposition": "Copy complete resolved original reference"
+  },
+  {
+    "path": "src/Game/Player/MarioWalk.cpp",
+    "disposition": "Copy complete resolved original reference"
+  },
+  {
+    "path": "src/Game/Scene/StopSceneController.cpp",
+    "disposition": "Copy complete resolved original reference"
+  },
+  {
+    "path": "src/Game/Util/AreaObjUtil.cpp",
+    "disposition": "Restore exact complete merged original AreaObjUtil; remove obsolete split compat providers"
+  },
+  {
+    "path": "src/Game/Util/LiveActorUtil.cpp",
+    "disposition": "Copy complete resolved original reference"
+  },
+  {
+    "path": "src/Game/Player/MarioCollision.cpp",
+    "disposition": "Reference-first removal of 13 redundant dereferences of a vector reference after upstream pointer conversion changes; four functions improve Wii match; checkGround unchanged"
+  }
+]

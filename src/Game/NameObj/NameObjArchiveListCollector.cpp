@@ -1,23 +1,15 @@
 #include "Game/NameObj/NameObjArchiveListCollector.hpp"
+#include "Game/Util/StringUtil.hpp"
 
-#include <algorithm>
-#include <cstring>
-
-NameObjArchiveListCollector::NameObjArchiveListCollector() {
-    mCount = 0;
+NameObjArchiveListCollector::NameObjArchiveListCollector() : mArchiveNum() {
 }
 
-void NameObjArchiveListCollector::addArchive(const char* pArchive) {
-    char* dst = mArchiveNames[mCount];
-    std::fill_n(dst, 0x40, '\0');
+void NameObjArchiveListCollector::addArchive(const char* pName) {
+    MR::copyString(mArchive[mArchiveNum], pName, ARRAY_SIZE(*mArchive));
 
-    if (pArchive != nullptr) {
-        std::strncpy(dst, pArchive, 0x3F);
-    }
-
-    mCount++;
+    mArchiveNum++;
 }
 
-const char* NameObjArchiveListCollector::getArchive(s32 idx) const {
-    return mArchiveNames[idx];
+const char* NameObjArchiveListCollector::getArchive(s32 index) const {
+    return mArchive[index];
 }

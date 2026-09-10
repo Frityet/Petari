@@ -1,0 +1,257 @@
+[
+  {
+    "symbol": "Mario(MarioActor*)",
+    "category": "upstream-only-edit",
+    "resolution": "adopt upstream"
+  },
+  {
+    "symbol": "updateAndClearStrideParameter()",
+    "category": "same",
+    "resolution": "identical source"
+  },
+  {
+    "symbol": "checkKeyLock()",
+    "category": "upstream-only-edit",
+    "resolution": "adopt upstream"
+  },
+  {
+    "symbol": "updateTimers()",
+    "category": "same",
+    "resolution": "identical source"
+  },
+  {
+    "symbol": "updateMorphResetTimer()",
+    "category": "same",
+    "resolution": "identical source"
+  },
+  {
+    "symbol": "doExtraServices()",
+    "category": "same",
+    "resolution": "identical source"
+  },
+  {
+    "symbol": "isEnableCheckGround()",
+    "category": "same",
+    "resolution": "identical source"
+  },
+  {
+    "symbol": "setGroundNorm(constTVec3f&)",
+    "category": "upstream-only-edit",
+    "resolution": "adopt upstream"
+  },
+  {
+    "symbol": "createMtxDir(MtxPtr,constTVec3f&,constTVec3f&,constTVec3f&)",
+    "category": "same",
+    "resolution": "identical source"
+  },
+  {
+    "symbol": "isNonFixHeadVec()",
+    "category": "same",
+    "resolution": "identical source"
+  },
+  {
+    "symbol": "slopeTiltHead(TVec3f*)",
+    "category": "same",
+    "resolution": "identical source"
+  },
+  {
+    "symbol": "fixFrontVecByGravity()",
+    "category": "ours-only-edit",
+    "resolution": "retained local recovery"
+  },
+  {
+    "symbol": "fixFrontVecFromUpSide()",
+    "category": "same",
+    "resolution": "identical source"
+  },
+  {
+    "symbol": "fixSideVecFromFrontUp()",
+    "category": "same",
+    "resolution": "identical source"
+  },
+  {
+    "symbol": "setSideVec(constTVec3f&)",
+    "category": "same",
+    "resolution": "identical source"
+  },
+  {
+    "symbol": "setHeadVec(constTVec3f&)",
+    "category": "same",
+    "resolution": "identical source"
+  },
+  {
+    "symbol": "setFrontVec(constTVec3f&)",
+    "category": "same",
+    "resolution": "identical source"
+  },
+  {
+    "symbol": "setFrontVecKeepUp(constTVec3f&,f32)",
+    "category": "same",
+    "resolution": "identical source"
+  },
+  {
+    "symbol": "setFrontVecKeepUpAngle(constTVec3f&,f32)",
+    "category": "same",
+    "resolution": "identical source"
+  },
+  {
+    "symbol": "setFrontVecKeepUp(constTVec3f&,u32)",
+    "category": "same",
+    "resolution": "identical source"
+  },
+  {
+    "symbol": "setFrontVecKeepUp(constTVec3f&)",
+    "category": "same",
+    "resolution": "identical source"
+  },
+  {
+    "symbol": "setFrontVecKeepSide(constTVec3f&)",
+    "category": "ours-only-edit",
+    "resolution": "retained local recovery"
+  },
+  {
+    "symbol": "setHeadAndFrontVecFromRotate(constTVec3f&)",
+    "category": "same",
+    "resolution": "identical source"
+  },
+  {
+    "symbol": "forceSetHeadVecKeepSide(constTVec3f&)",
+    "category": "same",
+    "resolution": "identical source"
+  },
+  {
+    "symbol": "draw()",
+    "category": "same",
+    "resolution": "identical source"
+  },
+  {
+    "symbol": "addTrans(constTVec3f&,constchar*)",
+    "category": "same",
+    "resolution": "identical source"
+  },
+  {
+    "symbol": "setTrans(constTVec3f&,constchar*)",
+    "category": "same",
+    "resolution": "identical source"
+  },
+  {
+    "symbol": "isEnableRush()",
+    "category": "same",
+    "resolution": "identical source"
+  },
+  {
+    "symbol": "isInvincible()",
+    "category": "same",
+    "resolution": "identical source"
+  },
+  {
+    "symbol": "isCeiling()",
+    "category": "same",
+    "resolution": "identical source"
+  },
+  {
+    "symbol": "setGravityVec(constTVec3f&)",
+    "category": "same",
+    "resolution": "identical source"
+  },
+  {
+    "symbol": "updateSoundCode()",
+    "category": "same",
+    "resolution": "identical source"
+  },
+  {
+    "symbol": "isForceStopRush()",
+    "category": "same",
+    "resolution": "identical source"
+  },
+  {
+    "symbol": "getShadowNorm()",
+    "category": "same",
+    "resolution": "identical source"
+  },
+  {
+    "symbol": "getAirGravityVec()",
+    "category": "same",
+    "resolution": "identical source"
+  },
+  {
+    "symbol": "getAirFrontVec()",
+    "category": "same",
+    "resolution": "identical source"
+  },
+  {
+    "symbol": "initAfterConst()",
+    "category": "same",
+    "resolution": "identical source"
+  },
+  {
+    "symbol": "writeBackPhyisicalVector()",
+    "category": "upstream-only-edit",
+    "resolution": "adopt upstream"
+  },
+  {
+    "symbol": "update()",
+    "category": "both-edited",
+    "resolution": "retained local recovery"
+  },
+  {
+    "symbol": "actionMain()",
+    "category": "same",
+    "resolution": "identical source"
+  },
+  {
+    "symbol": "updateGroundInfo()",
+    "category": "ours-only-edit",
+    "resolution": "retained local recovery"
+  },
+  {
+    "symbol": "getGravityVec()",
+    "category": "same",
+    "resolution": "identical source"
+  },
+  {
+    "symbol": "touchWater()",
+    "category": "same",
+    "resolution": "identical source"
+  },
+  {
+    "symbol": "checkForceGrounding()",
+    "category": "both-edited",
+    "resolution": "retained local recovery"
+  },
+  {
+    "symbol": "inputStick()",
+    "category": "both-edited",
+    "resolution": "retained local recovery"
+  },
+  {
+    "symbol": "createDirectionMtx(MtxPtr)",
+    "category": "both-edited",
+    "resolution": "retained local recovery"
+  },
+  {
+    "symbol": "createCorrectionMtx(MtxPtr,TVec3f*)",
+    "category": "both-edited",
+    "resolution": "retained local recovery"
+  },
+  {
+    "symbol": "createAngleMtx(MtxPtr,bool)",
+    "category": "both-edited",
+    "resolution": "retained local recovery"
+  },
+  {
+    "symbol": "fixHeadFrontVecByGravity()",
+    "category": "both-edited",
+    "resolution": "retained local recovery"
+  },
+  {
+    "symbol": "postureCtrl(MtxPtr)",
+    "category": "both-edited",
+    "resolution": "retained local recovery"
+  },
+  {
+    "symbol": "updateLookOfs()",
+    "category": "both-edited",
+    "resolution": "retained local recovery"
+  }
+]

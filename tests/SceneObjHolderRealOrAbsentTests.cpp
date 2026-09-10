@@ -1,4 +1,6 @@
+#include "SceneExecutionFixture.hpp"
 #include "Game/Gravity/PlanetGravityManager.hpp"
+#include "Game/Map/CollisionDirector.hpp"
 #include "Game/Map/StageSwitch.hpp"
 #include "Game/Map/SwitchWatcher.hpp"
 #include "Game/Map/SwitchWatcherHolder.hpp"
@@ -19,6 +21,14 @@
 #include <string_view>
 
 namespace {
+
+    struct SceneFixture {
+        std::shared_ptr<smgpc::compat::JkrHeapRuntime> heaps = smgpc::compat::JkrHeapRuntime::create(16U << 20);
+        smgpc::runtime::SceneScheduler scheduler;
+        smgpc::runtime::SceneSchedulerBinding scheduler_binding{scheduler};
+        smgpc::test::SceneExecutionFixture scene{
+            scheduler, smgpc::compat::JkrAllocationDomain::create(heaps, 8U << 20)};
+    };
 
     void require(bool condition, std::string_view message) {
         if (!condition) {
@@ -48,8 +58,9 @@ namespace {
     }
 
     void test_bound_holder_requires_explicit_real_creation() {
-        auto holder = SceneObjHolder{};
-        auto binding = smgpc::scene::SceneObjHolderBinding(holder);
+        SceneFixture fixture;
+        auto& holder = fixture.scene.holder();
+        auto& binding = fixture.scene.objects();
         require(smgpc::scene::current_scene_initialization_state() == SceneInitializeState_Init &&
                     !MR::isInitializeStatePlacementSomething() && !MR::isInitializeStateEnd(),
                 "a fresh scene holder did not own the retail Init phase");
@@ -78,20 +89,25 @@ namespace {
         require(MR::createSceneObj(SceneObj_PlanetGravityManager) == gravity_manager,
                 "repeated gravity-manager creation must return the scene singleton");
 
-        require(MR::createSceneObj(SceneObj_CollisionDirector) == nullptr &&
-                    !MR::isExistSceneObj(SceneObj_CollisionDirector),
+        auto* collision = dynamic_cast<CollisionDirector*>(MR::createSceneObj(SceneObj_CollisionDirector));
+        require(collision && MR::getCollisionDirector() == collision &&
+                    MR::createSceneObj(SceneObj_CollisionDirector) == collision,
+                "the active original CollisionDirector must be the scene's exact singleton");
+        require(MR::createSceneObj(SceneObj_EventDirector) == nullptr &&
+                    !MR::isExistSceneObj(SceneObj_EventDirector),
                 "an unsupported SceneObj factory entry must remain absent");
         require(MR::createSceneObj(SceneObj_MiiFacePartsHolder) == nullptr &&
                     !MR::isExistSceneObj(SceneObj_MiiFacePartsHolder),
                 "the Mii holder must remain absent until real character-model construction and drawing exist");
+        fixture.scene.complete_initialization();
         binding.complete_initialization();
         require(MR::isInitializeStateEnd() && !MR::isInitializeStatePlacementSomething(),
                 "successful scene completion did not persist the retail End phase");
     }
 
     void test_mario_holder_precedes_real_actor_creation() {
-        auto holder = SceneObjHolder{};
-        const auto binding = smgpc::scene::SceneObjHolderBinding(holder);
+        SceneFixture fixture;
+        auto& holder = fixture.scene.holder();
 
         require(!MR::isExistSceneObj(SceneObj_MarioHolder) &&
                     holder.getObj(SceneObj_MarioHolder) == nullptr,
@@ -239,9 +255,9 @@ namespace {
     }
 
     void test_bindings_are_single_scene_and_isolated() {
-        auto first_holder = SceneObjHolder{};
         {
-            const auto first_binding = smgpc::scene::SceneObjHolderBinding(first_holder);
+            SceneFixture first;
+            auto& first_holder = first.scene.holder();
             require(MR::createSceneObj(SceneObj_StageSwitchContainer) != nullptr,
                     "the first scene should create its own supported object");
             require(MR::createSceneObj(SceneObj_PlanetGravityManager) != nullptr,
@@ -264,8 +280,7 @@ namespace {
         require(MR::getSceneObjHolder() == nullptr,
                 "destroying the scene binding must leave no process-global holder behind");
 
-        auto second_holder = SceneObjHolder{};
-        const auto second_binding = smgpc::scene::SceneObjHolderBinding(second_holder);
+        SceneFixture second;
         require(!MR::isExistSceneObj(SceneObj_StageSwitchContainer) &&
                     MR::getSceneObj<StageSwitchContainer>(SceneObj_StageSwitchContainer) == nullptr,
                 "a later scene must not inherit objects from the previous holder");
@@ -281,9 +296,8 @@ namespace {
 
         for (auto generation = 0; generation < 2; ++generation) {
             {
-                auto holder = SceneObjHolder{};
-                const auto binding =
-                    smgpc::scene::SceneObjHolderBinding(holder);
+                SceneFixture fixture;
+                const auto scene_baseline = smgpc::compat::name_obj_runtime_state_count();
                 auto *watcher_holder = dynamic_cast<SwitchWatcherHolder *>(
                     MR::createSceneObj(SceneObj_SwitchWatcherHolder));
                 require(watcher_holder != nullptr,
@@ -292,8 +306,10 @@ namespace {
                 watcher_holder->addSwitchWatcher(new SwitchWatcher(nullptr));
                 watcher_holder->addSwitchWatcher(new SwitchWatcher(nullptr));
                 require(smgpc::compat::name_obj_runtime_state_count() ==
-                            baseline + 3U,
+                            scene_baseline + 3U,
                         "SwitchWatcherHolder did not retain exactly its two registered children");
+                fixture.scene.complete_initialization();
+                fixture.scene.objects().complete_initialization();
             }
 
             require(smgpc::compat::name_obj_runtime_state_count() == baseline,
@@ -305,15 +321,23 @@ namespace {
         const auto baseline =
             smgpc::compat::name_obj_runtime_state_count();
         {
+            SceneFixture fixture;
             auto watcher_holder = SwitchWatcherHolder{};
+            fixture.scene.complete_initialization();
+            fixture.scene.objects().complete_initialization();
+            fixture.scene.retire();
+            require(!MR::getSceneObjHolder() && watcher_holder.mExecutorIdx == -1 &&
+                        smgpc::compat::name_obj_runtime_state_count() == baseline + 1U,
+                    "scene retirement must detach the externally owned watcher before testing absent-owner adoption");
             auto rejected_without_scene_owner = false;
             try {
                 watcher_holder.addSwitchWatcher(new SwitchWatcher(nullptr));
-            } catch (const std::logic_error&) {
-                rejected_without_scene_owner = true;
+            } catch (const std::logic_error& error) {
+                rejected_without_scene_owner = std::string_view(error.what()).find(
+                    "without an active SceneObjHolder binding") != std::string_view::npos;
             }
             require(rejected_without_scene_owner &&
-                        watcher_holder.mWatcherCount == 0 &&
+                        watcher_holder.mSwitchWatcher.size() == 0 &&
                         smgpc::compat::name_obj_runtime_state_count() ==
                             baseline + 1U,
                     "failed SwitchWatcher adoption leaked its raw-new child registration");

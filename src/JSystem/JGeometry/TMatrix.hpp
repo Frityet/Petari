@@ -188,6 +188,10 @@ namespace JGeometry {
             this->mMtx[2][2] = source.z;
         }
 
+        inline void getZDir2(TVec3f& rDest) const {
+            rDest.set< f32 >(this->mMtx[0][2], this->mMtx[1][2], this->mMtx[2][2]);
+        }
+
         void getXDir(TVec3f &destination) const {
             destination.set(this->mMtx[0][0], this->mMtx[1][0], this->mMtx[2][0]);
         }

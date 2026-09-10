@@ -20,6 +20,8 @@
 #include "Game/Util/AreaObjUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/PlayerUtilCompat.hpp"
+#include "compat/ResourceHolderCompat.hpp"
+#include "resource/GameResourceRuntime.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "render/light/LightData.hpp"
@@ -29,6 +31,7 @@
 #include "scene/StageLightSceneBinding.hpp"
 #include "scene/StagePlacementResolver.hpp"
 
+#include <aurora/aurora.h>
 #include <aurora/dvd.h>
 #include <dolphin/dvd.h>
 
@@ -49,6 +52,8 @@
 #include <string_view>
 #include <tuple>
 #include <vector>
+
+namespace aurora { extern AuroraConfig g_config; }
 
 namespace {
 
@@ -157,7 +162,7 @@ namespace {
         };
         for (const auto &[retail_source, host_source] : source_pairs) {
             require(read_file(decomp_root / retail_source) == read_file(*pc_port_root / host_source),
-                    "completed PC AreaObj sources must remain byte-identical to the decompiled source");
+                    std::string("completed PC AreaObj sources must remain byte-identical to the decompiled source: ") + host_source);
         }
     }
 
@@ -395,8 +400,26 @@ namespace {
     }
 
     void test_light_area_priority_and_stable_zone_identity() {
-        auto holder = SceneObjHolder{};
-        auto binding = smgpc::scene::SceneObjHolderBinding(holder);
+        const auto disc_path = find_real_disc();
+        require(disc_path.has_value(), "the real actor light-owner fixture requires SMGPC_REAL_DISC");
+        smgpc::render::AuroraWindow window({.width = 640, .height = 456, .title = "Original area light ownership"});
+        smgpc::render::AuroraRenderer renderer(window);
+        aurora_dvd_close();
+        require(aurora_dvd_open(disc_path->string().c_str()), "the actor light fixture must open the real model archive");
+        struct DiscCloseGuard {
+            ~DiscCloseGuard() { aurora_dvd_close(); }
+        } close_guard;
+        DVDInit();
+        aurora::g_config.mem1Size = 24U << 20;
+        auto process = smgpc::resource::GameResourceRuntime{};
+        auto domain = process.create_cohort();
+        auto dvd = smgpc::runtime::DvdFileSystemService{"/"};
+        auto resources = smgpc::compat::ResourceHolderService{dvd, domain, process.mem1_heap()};
+        auto scheduler = smgpc::runtime::SceneScheduler{};
+        auto scheduler_binding = smgpc::runtime::SceneSchedulerBinding(scheduler);
+        auto execution = smgpc::test::SceneExecutionFixture(scheduler, domain);
+        auto &holder = execution.holder();
+        auto &binding = execution.objects();
         auto *container = dynamic_cast<AreaObjContainer *>(holder.create(SceneObj_AreaObjContainer));
         require(container != nullptr, "the LightArea fixture requires the real scene-owned container");
         auto *manager = dynamic_cast<LightAreaHolder *>(container->getManager("LightArea"));
@@ -426,8 +449,9 @@ namespace {
                 "remaining outside every LightCtrl volume must not retrigger a light transition");
 
         auto moving_actor = LiveActor{"moving LightArea fixture"};
-        auto scheduler = smgpc::runtime::SceneScheduler{};
-        const auto scheduler_binding = smgpc::runtime::SceneSchedulerBinding{scheduler};
+        moving_actor.initModelManagerWithAnm("Tico", nullptr, false);
+        require(moving_actor.mModelManager != nullptr && smgpc::compat::retain_actor_model_owner(&moving_actor),
+                "draw registration requires the actor's actual resource-backed ModelManager owner");
         scheduler.register_live_actor_model(
             moving_actor, MR::MovementType_NPC, MR::CalcAnimType_NPC,
             MR::DrawBufferType_NPC, -1);
@@ -436,6 +460,7 @@ namespace {
         light_ctrl->init(-1, false);
         require(light_ctrl->_4 == MR::LightType_Strong,
                 "a controller created after connectToScene must inherit the draw-buffer's retained retail light type");
+        execution.complete_initialization();
         moving_actor.makeActorAppeared();
         moving_actor.mPosition.set(0.0F, 100.0F, 0.0F);
         moving_actor.movement();
@@ -758,10 +783,16 @@ namespace {
                     }),
                 "the exact RMGK01 CubeCamera switch frontier must remain three appear and two A-switch rows");
 
-        auto holder = SceneObjHolder{};
-        auto binding = smgpc::scene::SceneObjHolderBinding(holder);
+        auto heaps = smgpc::compat::JkrHeapRuntime::create(16U << 20);
+        auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 8U << 20);
+        auto scheduler = smgpc::runtime::SceneScheduler{};
+        auto scheduler_binding = smgpc::runtime::SceneSchedulerBinding(scheduler);
+        auto execution = smgpc::test::SceneExecutionFixture(scheduler, domain);
+        auto &holder = execution.holder();
+        auto &binding = execution.objects();
         for (const auto scene_obj : {SceneObj_StageSwitchContainer, SceneObj_SwitchWatcherHolder,
                                      SceneObj_SleepControllerHolder, SceneObj_AreaObjContainer}) {
+            const auto game = smgpc::compat::JkrAllocationScope(domain);
             require(holder.create(scene_obj) != nullptr,
                     "real CubeCamera placement init requires each retail scene service");
         }
@@ -774,11 +805,18 @@ namespace {
             const auto *descriptor = smgpc::scene::find_complete_area_obj_placement_descriptor(
                 placement->object_name);
             require(descriptor != nullptr, "each real CubeCamera row must have one complete descriptor");
-            auto object = std::unique_ptr<NameObj>(descriptor->object_creator(placement->object_name.c_str()));
+            auto object = std::unique_ptr<NameObj>{};
+            {
+                const auto game = smgpc::compat::JkrAllocationScope(domain);
+                object.reset(descriptor->object_creator(placement->object_name.c_str()));
+            }
             auto *camera = dynamic_cast<CubeCameraArea *>(object.get());
             require(camera != nullptr, "each CubeCamera descriptor must construct the exact retail actor");
             const auto iter = JMapInfoIter(&placement->jmap_info, placement->jmap_entry_index);
-            object->init(iter);
+            {
+                const auto game = smgpc::compat::JkrAllocationScope(domain);
+                object->init(iter);
+            }
 
             const auto has_appear = placement->switch_appear_id >= 0;
             const auto has_a = placement->switch_a_id >= 0;
@@ -794,6 +832,7 @@ namespace {
         }
 
         binding.init_after_placement();
+        execution.complete_initialization();
         require(manager->mArray.size() == camera_rows.size(),
                 "all 16 real rows must enter the one scene-owned CubeCamera manager");
         constexpr auto expected_priorities = std::array<s32, 16U>{
@@ -833,10 +872,16 @@ namespace {
                        AreaForm::Type_Cylinder},
         };
 
-        auto holder = SceneObjHolder{};
-        auto binding = smgpc::scene::SceneObjHolderBinding(holder);
+        auto heaps = smgpc::compat::JkrHeapRuntime::create(16U << 20);
+        auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 8U << 20);
+        auto scheduler = smgpc::runtime::SceneScheduler{};
+        auto scheduler_binding = smgpc::runtime::SceneSchedulerBinding(scheduler);
+        auto execution = smgpc::test::SceneExecutionFixture(scheduler, domain);
+        auto &holder = execution.holder();
+        auto &binding = execution.objects();
         for (const auto scene_obj : {SceneObj_StageSwitchContainer, SceneObj_SwitchWatcherHolder,
                                      SceneObj_SleepControllerHolder, SceneObj_AreaObjContainer}) {
+            const auto game = smgpc::compat::JkrAllocationScope(domain);
             require(holder.create(scene_obj) != nullptr,
                     "real MessageArea placement init requires each retail scene service");
         }
@@ -873,11 +918,18 @@ namespace {
                 placement->object_name);
             require(descriptor != nullptr,
                     "each real MessageArea row must have one complete creator-manager descriptor");
-            auto object = std::unique_ptr<NameObj>(descriptor->object_creator(object_name));
+            auto object = std::unique_ptr<NameObj>{};
+            {
+                const auto game = smgpc::compat::JkrAllocationScope(domain);
+                object.reset(descriptor->object_creator(object_name));
+            }
             auto *message_area = dynamic_cast<MessageArea *>(object.get());
             require(message_area != nullptr && message_area->mFormType == form_type,
                     "each MessageArea descriptor must construct the exact retail actor and form");
-            object->init(JMapInfoIter(&placement->jmap_info, placement->jmap_entry_index));
+            {
+                const auto game = smgpc::compat::JkrAllocationScope(domain);
+                object->init(JMapInfoIter(&placement->jmap_info, placement->jmap_entry_index));
+            }
             require(message_area->mZoneID == placement->zone_id && message_area->mObjArg0 == arg0 &&
                         message_area->mObjArg1 == -1 && message_area->mObjArg2 == -1 &&
                         message_area->mObjArg3 == -1 && message_area->mObjArg4 == -1 &&
@@ -890,6 +942,7 @@ namespace {
         }
 
         binding.init_after_placement();
+        execution.complete_initialization();
         require(manager->mArray.size() == expected_rows.size(),
                 "both real MessageArea rows must enter their one scene-owned manager");
         for (const auto &object : objects) {
@@ -949,10 +1002,16 @@ namespace {
                 }),
                 "the exact rabbit SwitchCube rows must remain standalone latching volumes");
 
-        auto holder = SceneObjHolder{};
-        auto binding = smgpc::scene::SceneObjHolderBinding(holder);
+        auto heaps = smgpc::compat::JkrHeapRuntime::create(16U << 20);
+        auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 8U << 20);
+        auto scheduler = smgpc::runtime::SceneScheduler{};
+        auto scheduler_binding = smgpc::runtime::SceneSchedulerBinding(scheduler);
+        auto execution = smgpc::test::SceneExecutionFixture(scheduler, domain);
+        auto &holder = execution.holder();
+        auto &binding = execution.objects();
         for (const auto scene_obj : {SceneObj_StageSwitchContainer, SceneObj_SwitchWatcherHolder,
                                      SceneObj_SleepControllerHolder, SceneObj_AreaObjContainer}) {
+            const auto game = smgpc::compat::JkrAllocationScope(domain);
             require(holder.create(scene_obj) != nullptr,
                     "real SwitchArea placement init requires each retail scene service");
         }
@@ -962,7 +1021,7 @@ namespace {
 
         auto player_service = smgpc::runtime::PlayerSystemService{};
         auto player = LiveActor{"SwitchArea player fixture"};
-        player.calcAndSetBaseMtx();
+        // This fixture supplies position only; it does not own or update a rendered player model.
         player_service.attach_actor(player);
         const auto player_binding = smgpc::compat::ScopedPlayerSystemServiceOverride{player_service};
         auto objects = std::vector<std::unique_ptr<NameObj>>{};
@@ -971,11 +1030,18 @@ namespace {
                 placement->object_name);
             require(descriptor != nullptr,
                     "each real SwitchCube row must have one complete creator-manager descriptor");
-            auto object = std::unique_ptr<NameObj>(descriptor->object_creator(placement->object_name.c_str()));
+            auto object = std::unique_ptr<NameObj>{};
+            {
+                const auto game = smgpc::compat::JkrAllocationScope(domain);
+                object.reset(descriptor->object_creator(placement->object_name.c_str()));
+            }
             auto *switch_area = dynamic_cast<SwitchArea *>(object.get());
             require(switch_area != nullptr && switch_area->mFormType == AreaForm::Type_Cube2,
                     "SwitchCube must construct the exact retail actor and base-origin cube form");
-            object->init(JMapInfoIter(&placement->jmap_info, placement->jmap_entry_index));
+            {
+                const auto game = smgpc::compat::JkrAllocationScope(domain);
+                object->init(JMapInfoIter(&placement->jmap_info, placement->jmap_entry_index));
+            }
             require(switch_area->isValidSwitchA() && switch_area->isValidSwitchB() &&
                         !switch_area->isOnSwitchA() && !switch_area->isOnSwitchB() &&
                         switch_area->mObjArg0 == -1 && switch_area->mObjArg1 == -1 &&
@@ -1002,6 +1068,7 @@ namespace {
         }
 
         binding.init_after_placement();
+        execution.complete_initialization();
         require(manager->mArray.size() == switch_rows.size(),
                 "both exact rabbit SwitchCube rows must enter the one scene-owned SwitchArea manager");
     }
@@ -1161,7 +1228,7 @@ namespace {
         auto area = AreaObj(AreaForm::Type_Sphere, "AreaMoveSphere");
         auto* sphere = static_cast<AreaFormSphere*>(area.mForm);
         sphere->mTranslation.set(0,0,0);
-        sphere->_14 = 100;
+        sphere->mRadius = 100;
         sphere->mUp.set(0,1,0);
         manager->entry(&area);
         require(MR::calcAreaMoveVelocity(&velocity, TVec3f(10,0,0)) && velocity.epsilonEquals(TVec3f(0,10,0), 1e-5F),

@@ -1,0 +1,1393 @@
+{
+  "compiler": "Original RMGK01 mwcceppc.exe (GC/3.0a3) via wibo/sjiswrap",
+  "units": [
+    {
+      "source": "src/Game/Animation/LayoutAnmPlayer.cpp",
+      "exit": 0,
+      "source_sha256": "a89590dee9726e6e057c782d5c818d3ec32a45314aac538bbeb3488c44b43a20"
+    },
+    {
+      "source": "src/Game/Animation/XanimePlayer.cpp",
+      "exit": 0,
+      "source_sha256": "4792bf4ace0d8432786279813d946a7192fa89adeb36257b790f80b4f02c9795"
+    },
+    {
+      "source": "src/Game/AreaObj/AreaForm.cpp",
+      "exit": 0,
+      "source_sha256": "cdb2e9b301efefc0c0f299f697af9b5194798dcc4df3e2e673fc2cad26768465"
+    },
+    {
+      "source": "src/Game/AreaObj/AreaObj.cpp",
+      "exit": 0,
+      "source_sha256": "7558f9aea116697e0e17ba9b4e27d5f12bc9fea1526be21fff532b12268d58be"
+    },
+    {
+      "source": "src/Game/AreaObj/ImageEffectArea.cpp",
+      "exit": 0,
+      "source_sha256": "7329566cae97da7a5a0e98b2d860493e0588bf00ca4988b57b9ac0514f2ab049"
+    },
+    {
+      "source": "src/Game/AreaObj/WarpCube.cpp",
+      "exit": 0,
+      "source_sha256": "c1d333c940573f65c9d90f3d52c72787ddaacb279469513d611f2552bb7acce7"
+    },
+    {
+      "source": "src/Game/AudioLib/AudBgm.cpp",
+      "exit": 0,
+      "source_sha256": "7a7fba6fca4bf5cc181350ed681f50c25813bd3b86e90ccd02464479f958c2a3"
+    },
+    {
+      "source": "src/Game/AudioLib/AudBgmRhythmStrategy.cpp",
+      "exit": 0,
+      "source_sha256": "2777f2ece4625819e9f5ba5e7d0de9bb6e25f7e5236a302d7723677d3157ddfd"
+    },
+    {
+      "source": "src/Game/AudioLib/AudMeNameConverter.cpp",
+      "exit": 0,
+      "source_sha256": "379c9f57fc14b77145abbeea9dac52dd8ddc2005c80454229bd76c323714471f"
+    },
+    {
+      "source": "src/Game/AudioLib/AudSeStrategy.cpp",
+      "exit": 0,
+      "source_sha256": "a6a082981656d507b91dc8d920e0a52f7d1a336be2d59836762305c431514bc0"
+    },
+    {
+      "source": "src/Game/AudioLib/AudSystem.cpp",
+      "exit": 0,
+      "source_sha256": "dfe7f0f957a6988c073fb69e19c9acf2b912eddf12492f4c6f48ec83be928c81"
+    },
+    {
+      "source": "src/Game/Boss/DinoPackunBall.cpp",
+      "exit": 0,
+      "source_sha256": "c8cc26a1265af8a88c01ee6afb6a6fe131ba968aa89302f32dae3d46646dd314"
+    },
+    {
+      "source": "src/Game/Boss/KoopaBattleStairsBase.cpp",
+      "exit": 0,
+      "source_sha256": "d5c35eb9360ab240f5f6ad391d2a63a5e71e8a68e8b838fa8cbcc73b557d1bdd"
+    },
+    {
+      "source": "src/Game/Boss/KoopaBattleStairsVs1.cpp",
+      "exit": 0,
+      "source_sha256": "80f63316342d535882c1be4d2e2f00c0581c2b4eac2c3499bd6a53ae255f24ad"
+    },
+    {
+      "source": "src/Game/Boss/KoopaBattleStairsVs3.cpp",
+      "exit": 0,
+      "source_sha256": "0e399e217d46a950af1a0a8e9e3a1682eb16bca720e563c6c69812949661dcf6"
+    },
+    {
+      "source": "src/Game/Boss/KoopaStateChaseRoll.cpp",
+      "exit": 0,
+      "source_sha256": "d8e24bf6145bdf1eacba5ebd6f09e74a7b799715be3810c65d86b824474411b4"
+    },
+    {
+      "source": "src/Game/Boss/OtaKing.cpp",
+      "exit": 0,
+      "source_sha256": "ddebc253c6f521469d5e20efed4793ae3aeddf39767cc36804b8246af66f7202"
+    },
+    {
+      "source": "src/Game/Boss/Polta.cpp",
+      "exit": 0,
+      "source_sha256": "677f614ab39ee522e6d73560134f6adff948175e8ae16d0bcb0c0fe49c957e3b"
+    },
+    {
+      "source": "src/Game/Boss/PoltaFunction.cpp",
+      "exit": 0,
+      "source_sha256": "d07e63571ea04af0adcc7777ae572748e86f0ab661ad6455955f9dc7b96cdc49"
+    },
+    {
+      "source": "src/Game/Boss/PoltaGroundRockHolder.cpp",
+      "exit": 0,
+      "source_sha256": "00db31ebdb0dc026e2dcbc56d691c69eda23eb451a678879dc1f150a980976c1"
+    },
+    {
+      "source": "src/Game/Boss/SkeletalFishBossBattleDirector.cpp",
+      "exit": 0,
+      "source_sha256": "46022e314aedf892636054ee88c5cf9d63976d5e814794d9d20d429e29747d74"
+    },
+    {
+      "source": "src/Game/Boss/TripodBoss.cpp",
+      "exit": 0,
+      "source_sha256": "7538e82204e454901fdfcb012e8169c083224bde9219964e7b8c59669b40778a"
+    },
+    {
+      "source": "src/Game/Camera/CamTranslatorSpiral.cpp",
+      "exit": 0,
+      "source_sha256": "17d0b8abddc3329b4d0e753dbd144111bc325293b4d3ec8e740f5cf6a3f02911"
+    },
+    {
+      "source": "src/Game/Camera/CameraManGame.cpp",
+      "exit": 0,
+      "source_sha256": "ebf8e61958d9d85f0cf554d9a112f6a8f3217803b9ec2569ec1c93982e004f5b"
+    },
+    {
+      "source": "src/Game/Camera/CameraParamChunk.cpp",
+      "exit": 0,
+      "source_sha256": "f88e1405130c56ecf563248277380b7e14242193116ddcfab3f3c63ec3cc4032"
+    },
+    {
+      "source": "src/Game/Camera/CameraRotChecker.cpp",
+      "exit": 0,
+      "source_sha256": "e9602b6639524947e4f8786db368da8dce2cfcf971967c0d38fd0768c3ade45d"
+    },
+    {
+      "source": "src/Game/Camera/CameraShaker.cpp",
+      "exit": 0,
+      "source_sha256": "4666538eea15e709efbc2461a46d328c5d84650dec80118fc7dbf333df1ce367"
+    },
+    {
+      "source": "src/Game/Camera/DotCamParams.cpp",
+      "exit": 0,
+      "source_sha256": "002bea268b8841385707b82f66482c13309e58d38f2dbe9eb7ddf64ef7159a22"
+    },
+    {
+      "source": "src/Game/Demo/DemoCastGroupHolder.cpp",
+      "exit": 0,
+      "source_sha256": "74d9803d5ec0bc0a95a5f5d0b1fd50a6ce52a891864a0ceb60b59e4c7a198e17"
+    },
+    {
+      "source": "src/Game/Demo/DemoDirector.cpp",
+      "exit": 0,
+      "source_sha256": "19e3afcb1447bbc38048df02d3c9d5b1983a6ba189da9e20c53c6bee908dc7d5"
+    },
+    {
+      "source": "src/Game/Demo/DemoExecutor.cpp",
+      "exit": 0,
+      "source_sha256": "5b90a34b70440c32cbe6577494e676b3fab8311c1ca5beff779a3000acc59327"
+    },
+    {
+      "source": "src/Game/Demo/DemoExecutorFunction.cpp",
+      "exit": 0,
+      "source_sha256": "35efa2cf09dac179609e5c70f6de968aaeaeeecabd0978bcd0fd6bcafc64c089"
+    },
+    {
+      "source": "src/Game/Demo/DemoFunction.cpp",
+      "exit": 0,
+      "source_sha256": "2bafc9b72482493fadaf55f9f17f737ed4b3ed29769c047cd199bec691bdf7fa"
+    },
+    {
+      "source": "src/Game/Demo/DemoStartRequestHolder.cpp",
+      "exit": 0,
+      "source_sha256": "15cf42245a694549319389b3b8f6d517039c39d595bddf278e986a2f1752cdaa"
+    },
+    {
+      "source": "src/Game/Demo/DemoStartRequestUtil.cpp",
+      "exit": 0,
+      "source_sha256": "c5da40d6fcc2b0057879dc4a8f76b68991294a2667ca1a40284d92245b065f35"
+    },
+    {
+      "source": "src/Game/Demo/ScenarioStarter.cpp",
+      "exit": 0,
+      "source_sha256": "f7c350dfc561beec7325ca57c10027210ecdded017e3af59bcf0daa8f63c429c"
+    },
+    {
+      "source": "src/Game/Demo/StarReturnDemoStarter.cpp",
+      "exit": 0,
+      "source_sha256": "1f2dee46083cf20245fd1f62ac14d8a211b2cead5836a6fca3f5882764b861f3"
+    },
+    {
+      "source": "src/Game/Effect/AutoEffectGroup.cpp",
+      "exit": 0,
+      "source_sha256": "20641858c7a008a5b81700c1d537def6275ced5a773bf6c29d992168fbc640a9"
+    },
+    {
+      "source": "src/Game/Effect/AutoEffectGroupHolder.cpp",
+      "exit": 0,
+      "source_sha256": "b30eaa5d5c22af22c23537ae14673b0b6493db4f6c3ade189471e183308dbf41"
+    },
+    {
+      "source": "src/Game/Effect/AutoEffectInfo.cpp",
+      "exit": 0,
+      "source_sha256": "534ca3b92af4854ccf4862e53b94dc8f3418d8901e227e79425122a8f7f368d5"
+    },
+    {
+      "source": "src/Game/Effect/EffectSystem.cpp",
+      "exit": 0,
+      "source_sha256": "8e0ad3b52ee8b3e0409993b26c753ddf2171cdc7453b3fdaa855bca70ae2eaf3"
+    },
+    {
+      "source": "src/Game/Effect/EffectSystemUtil.cpp",
+      "exit": 0,
+      "source_sha256": "36b2dc5c8da588c80760ed78b9e37b62b86b79526bae0c4b8e5b6f3aabdd6bf9"
+    },
+    {
+      "source": "src/Game/Effect/MultiEmitter.cpp",
+      "exit": 0,
+      "source_sha256": "053cb9158d739b0c2096f83cf4422031568575d5cecee6ab9aa4d2cf8d054999"
+    },
+    {
+      "source": "src/Game/Effect/MultiEmitterAccess.cpp",
+      "exit": 0,
+      "source_sha256": "414e2cc9faeb021f5467a588524e2f32d6adc2524ba2604b419dd2e3bde2f0d4"
+    },
+    {
+      "source": "src/Game/Effect/MultiEmitterCallBack.cpp",
+      "exit": 0,
+      "source_sha256": "23870a6a89871c6577ce505863d63df0a2af6d57a291389364dba0b122848127"
+    },
+    {
+      "source": "src/Game/Effect/ParticleCalcExecutor.cpp",
+      "exit": 0,
+      "source_sha256": "4764ec5073a4c401866a237a493d99d68878e2599607c5bfca4cdce9f077a486"
+    },
+    {
+      "source": "src/Game/Effect/ParticleDrawExecutor.cpp",
+      "exit": 0,
+      "source_sha256": "ab930a200255aeed18918b44ddfa79a1c2ca39ca38b05ce897e31f6b51a59fc1"
+    },
+    {
+      "source": "src/Game/Effect/ParticleEmitterHolder.cpp",
+      "exit": 0,
+      "source_sha256": "0936947a99975fe94ae3677a92b45b26594ccf67a777ceac7e60d7adf07704aa"
+    },
+    {
+      "source": "src/Game/Effect/SyncBckEffectChecker.cpp",
+      "exit": 0,
+      "source_sha256": "c550ffd191d991349c94751e21b3c9ff28b134551f8f11d3b8e7b5ba1b6f3563"
+    },
+    {
+      "source": "src/Game/Effect/SyncBckEffectInfo.cpp",
+      "exit": 0,
+      "source_sha256": "9a54ee00dce57c6769f67169da425fa75f83f4f4b8c9696afdf25c999814ef01"
+    },
+    {
+      "source": "src/Game/Enemy/AnimScaleController.cpp",
+      "exit": 0,
+      "source_sha256": "825850d5192972b329cf49b782de59fb58800cb9eaf68c8f3973116c9ae19fa6"
+    },
+    {
+      "source": "src/Game/Enemy/CocoSambo.cpp",
+      "exit": 0,
+      "source_sha256": "ae397b8c84c23748dff3dcdaf6b9584652f0cba01d02ad63afb07e40bc75216c"
+    },
+    {
+      "source": "src/Game/Enemy/IceMerameraKing.cpp",
+      "exit": 0,
+      "source_sha256": "88c2d855f014ccf0a29337b9f16ed5768d1b147a1b99cbfb657125c0ad4d294e"
+    },
+    {
+      "source": "src/Game/Enemy/JumpGuarder.cpp",
+      "exit": 0,
+      "source_sha256": "0b47412e74c7248e9d1aba4210250597b04c334bb9ae316cce2afa38b76d9c64"
+    },
+    {
+      "source": "src/Game/Enemy/KabokuriFireHolder.cpp",
+      "exit": 0,
+      "source_sha256": "8423047f42b38658d51da5667b4634d0c6401f37d67a64a02fcb23eccb279def"
+    },
+    {
+      "source": "src/Game/Enemy/KoopaJrShip.cpp",
+      "exit": 0,
+      "source_sha256": "dcc427d9c9eed71abe9a00a91a2f0837a11cd99c2ae52b8f4b801fa5d9628699"
+    },
+    {
+      "source": "src/Game/Enemy/KuriboChief.cpp",
+      "exit": 0,
+      "source_sha256": "2727fcf2248bd874602e8b62d608f318ec516b5c973326f2ca3e1384528c24e1"
+    },
+    {
+      "source": "src/Game/Enemy/MogucchiShooter.cpp",
+      "exit": 0,
+      "source_sha256": "3b3be6fc851a8952a8741255826641162a06df1c1bd2c3af823c619ef0efdaa8"
+    },
+    {
+      "source": "src/Game/Enemy/OtaRock.cpp",
+      "exit": 0,
+      "source_sha256": "b90e449e2a8261f54a55d4f5a6ef5d1dc470bd2949aae79bd75ec5d71ccb70f6"
+    },
+    {
+      "source": "src/Game/Enemy/SamboFunction.cpp",
+      "exit": 0,
+      "source_sha256": "51da218d5bc80015f1a104c9444875cc82448a872976b9c1ced9bca712c4ff53"
+    },
+    {
+      "source": "src/Game/Enemy/TakoHei.cpp",
+      "exit": 0,
+      "source_sha256": "7ef5fdcb98934b0e9dbf76fbc33e256a3558f9e9967f31cfdf726b4710baacbc"
+    },
+    {
+      "source": "src/Game/Enemy/TakoHeiInk.cpp",
+      "exit": 0,
+      "source_sha256": "dfdb7723965fd8e548e508e378d1eaa2587b496f8aaf48891b4631ed03e9202e"
+    },
+    {
+      "source": "src/Game/LiveActor/AllLiveActorGroup.cpp",
+      "exit": 0,
+      "source_sha256": "065e40859acea03774767c198e30cbb8a22b97c599aa2565aa21a455c1b57c67"
+    },
+    {
+      "source": "src/Game/LiveActor/EffectKeeper.cpp",
+      "exit": 0,
+      "source_sha256": "842f35d578779e7f4e1f54b27496f99335f6ab62ffd7fd95bb2dc2f9f6e08047"
+    },
+    {
+      "source": "src/Game/LiveActor/HitSensorInfo.cpp",
+      "exit": 0,
+      "source_sha256": "d46dffbe7f7c4e905defe66a919b444283ca9c423285c923130156cc60ed8545"
+    },
+    {
+      "source": "src/Game/LiveActor/LiveActorGroup.cpp",
+      "exit": 0,
+      "source_sha256": "f4930420813cad5a6491659a98c7d0fda64c06b8a9f0bb6347e83038102411f9"
+    },
+    {
+      "source": "src/Game/LiveActor/LiveActorGroupArray.cpp",
+      "exit": 0,
+      "source_sha256": "67fd4c840bec1e7aa4069aada63acc9d2d04a44c02dbaf5f892b2440fe936b9e"
+    },
+    {
+      "source": "src/Game/LiveActor/PartsModel.cpp",
+      "exit": 0,
+      "source_sha256": "472236dd1a340d4ad50622610e3ec8223635c3f64f78a956084b17fa1ab9dd43"
+    },
+    {
+      "source": "src/Game/LiveActor/ShadowController.cpp",
+      "exit": 0,
+      "source_sha256": "e0620452eb1d014cf4eebf18a3ea26f5d6ed77fbb99c2e59e684d227d2500bdb"
+    },
+    {
+      "source": "src/Game/Map/CollisionCategorizedKeeper.cpp",
+      "exit": 0,
+      "source_sha256": "8a3fa981d7cef9ce73fb674e4aa34e3890a31764d1ce7a20be9a546bff58d61e"
+    },
+    {
+      "source": "src/Game/Map/CollisionParts.cpp",
+      "exit": 0,
+      "source_sha256": "80188e9a76360aa5bd7ebe11f368c7fe5b7b0a7436d18a3898e9d829422e4a8d"
+    },
+    {
+      "source": "src/Game/Map/FileSelectCameraController.cpp",
+      "exit": 0,
+      "source_sha256": "da4bfa6addff27cada98e4b2721c04ecdd3f7678f42ce6d180d3f6f5376f88b1"
+    },
+    {
+      "source": "src/Game/Map/FileSelectEffect.cpp",
+      "exit": 0,
+      "source_sha256": "5fd1ac60a1ee704cfeb18b1661348b921fc7dc8aa1e1da15faa80cec4693ede5"
+    },
+    {
+      "source": "src/Game/Map/FileSelector.cpp",
+      "exit": 0,
+      "source_sha256": "0312cd806669274fc65ff4ad6e7d73a3305ad9c166ecce075f03ed0f55dea577"
+    },
+    {
+      "source": "src/Game/Map/KoopaBattleMapDamagePlate.cpp",
+      "exit": 0,
+      "source_sha256": "7b2b477fb010b1b5952f1b3a949f362f3e0f2e272c19d1f8a8b81aff4645d672"
+    },
+    {
+      "source": "src/Game/Map/KoopaBattleMapPlanet.cpp",
+      "exit": 0,
+      "source_sha256": "5e613df650a8582a8fd84537426c4e950404972143def45ad4265940ed2417d7"
+    },
+    {
+      "source": "src/Game/Map/LavaShellTower.cpp",
+      "exit": 0,
+      "source_sha256": "1696c0e1c0b28873765b0e0595f1b0942cb7c00261b17124b75a1fece5f0e4b2"
+    },
+    {
+      "source": "src/Game/Map/LavaSunPlanet.cpp",
+      "exit": 0,
+      "source_sha256": "a41091a5a02b3f72289fa75198e0ce61ea0e8ff9e83195b296d7e42c5c82d71d"
+    },
+    {
+      "source": "src/Game/Map/LightDirector.cpp",
+      "exit": 0,
+      "source_sha256": "381bafeb2b187577fa9b6b757f7394deaeae28eb735592ad2b37af1bbde42810"
+    },
+    {
+      "source": "src/Game/Map/NamePosHolder.cpp",
+      "exit": 0,
+      "source_sha256": "7160c588742d7d842f3923c2d11bd4af3bbee2d3e868caac40e362d6a3b1f9ae"
+    },
+    {
+      "source": "src/Game/Map/PlanetMapCreator.cpp",
+      "exit": 0,
+      "source_sha256": "1e0293dd875698bfb64993655ed3352b8d262e3d3515f297b77a9b4e5ed8fd5b"
+    },
+    {
+      "source": "src/Game/Map/Sky.cpp",
+      "exit": 0,
+      "source_sha256": "42b1928a6e5473d63bb730c4aaf0a18cec03f3a91077168a5b94df5c8c1f7c73"
+    },
+    {
+      "source": "src/Game/Map/SleepController.cpp",
+      "exit": 0,
+      "source_sha256": "35003defce004e023872144152d14c0a02d812caffc383d8aeda8b0b595f8219"
+    },
+    {
+      "source": "src/Game/Map/SpaceInner.cpp",
+      "exit": 0,
+      "source_sha256": "68af97382b7243c691117f9e46fdf6db23062bb7ce1a1b96ac0e781e82a105a3"
+    },
+    {
+      "source": "src/Game/Map/SphereSelector.cpp",
+      "exit": 0,
+      "source_sha256": "90209d59df9be3134545f6b6c70d2015404f75bb7f3a9eb15a981e941124d604"
+    },
+    {
+      "source": "src/Game/Map/SunshadeMapHolder.cpp",
+      "exit": 0,
+      "source_sha256": "021bda425af1229256d15fdc21c1efabeb2067dc32b75970234c1a3c9f8d8d59"
+    },
+    {
+      "source": "src/Game/Map/SwitchSynchronizer.cpp",
+      "exit": 0,
+      "source_sha256": "3789f06fb63577ae727da97cfc7d063df51e6c09dcec1ad5a7f4ddc00a66f4a9"
+    },
+    {
+      "source": "src/Game/Map/SwitchWatcher.cpp",
+      "exit": 0,
+      "source_sha256": "c01b5f71df08e4c5ac8023d9166402c5da6f299d04c31db207bf19b44c6ced0c"
+    },
+    {
+      "source": "src/Game/Map/SwitchWatcherHolder.cpp",
+      "exit": 0,
+      "source_sha256": "735bdebec16f56de739a283be6b74604f016058e2329bd060347b318c6ad6e74"
+    },
+    {
+      "source": "src/Game/Map/TimerSwitch.cpp",
+      "exit": 0,
+      "source_sha256": "71fd79817dbfeff884877656dbb26ad10d7b8e387015572d3fde064e03caa7d8"
+    },
+    {
+      "source": "src/Game/Map/WhirlPoolAccelerator.cpp",
+      "exit": 0,
+      "source_sha256": "dc8f5515ab4e23d6f1c6760b1eb0bcc78d9bf5cd335c26be973455a7f33ffa23"
+    },
+    {
+      "source": "src/Game/MapObj/ArrowSwitchMultiHolder.cpp",
+      "exit": 0,
+      "source_sha256": "d896bc4eb16baffa8cc869637115e3d62a9d2f59801480b7f77ef93a5374f9f8"
+    },
+    {
+      "source": "src/Game/MapObj/AstroDomeCameraController.cpp",
+      "exit": 0,
+      "source_sha256": "a3ac978e54595e0d68497e1c9204ee2e3b3bf0eda811af38bc293daa699b3a73"
+    },
+    {
+      "source": "src/Game/MapObj/BenefitItemLifeUp.cpp",
+      "exit": 0,
+      "source_sha256": "448e4b69d5e2ef3f9a8ab3b66a1b15453f719965b0a75b95ce49651a29300ceb"
+    },
+    {
+      "source": "src/Game/MapObj/BenefitItemObj.cpp",
+      "exit": 0,
+      "source_sha256": "6e29b1bbe7c85e6c01528046afeb841e1c2811a3f1852e6ed75ff1f41f7d5f7f"
+    },
+    {
+      "source": "src/Game/MapObj/BigFanHolder.cpp",
+      "exit": 0,
+      "source_sha256": "b22be5f2cc717ddd709cdda1f2a57ddf02a30cc5aff75a511448a98f804f77c6"
+    },
+    {
+      "source": "src/Game/MapObj/ChipBase.cpp",
+      "exit": 0,
+      "source_sha256": "11cdfac1c489573c249b406b2cfc2197e478e98780bc25dde0a9a53bf937239c"
+    },
+    {
+      "source": "src/Game/MapObj/ChipCounter.cpp",
+      "exit": 0,
+      "source_sha256": "0d96cd0a14330ad81484f5c254d9557dd8442e30d487893d4a7efa182f52c6c0"
+    },
+    {
+      "source": "src/Game/MapObj/ChipHolder.cpp",
+      "exit": 0,
+      "source_sha256": "fa781496f27e0e4c758556922f1caff4c7106bdf7a3d0bc7a06c9c4f446d6f35"
+    },
+    {
+      "source": "src/Game/MapObj/ClipAreaHolder.cpp",
+      "exit": 0,
+      "source_sha256": "cb17ec6c5ebff9e30aa29962f114f7079b779037aa47be6322ef2cc07c9e0940"
+    },
+    {
+      "source": "src/Game/MapObj/ClipAreaShape.cpp",
+      "exit": 0,
+      "source_sha256": "b69246c85ff6952c7d001902940b46f15ddde0e868ac69a58ee1e76a7157d693"
+    },
+    {
+      "source": "src/Game/MapObj/CocoNut.cpp",
+      "exit": 0,
+      "source_sha256": "839beec3fee71c2454920878ffd30b27c5614c2d9c76a84d6e3c67a920c4a569"
+    },
+    {
+      "source": "src/Game/MapObj/Coin.cpp",
+      "exit": 0,
+      "source_sha256": "a57b9aaf9609a2506003929c6f01bd89a80b17004ab32144b6edb6c5cfc9fa89"
+    },
+    {
+      "source": "src/Game/MapObj/CollectCounter.cpp",
+      "exit": 0,
+      "source_sha256": "ed3ae9a5f65a234d7a2a26ffe9d4397d5f108a6ed6fa3c01b77f2d31e9b56c65"
+    },
+    {
+      "source": "src/Game/MapObj/DashRing.cpp",
+      "exit": 0,
+      "source_sha256": "1f56738a6cb6ec05d867d494b536a0fd4b4d7eac5f180ef95a8fc27c16573ef0"
+    },
+    {
+      "source": "src/Game/MapObj/DesertMovingLand.cpp",
+      "exit": 0,
+      "source_sha256": "9f9bab2b5f92d40e8ca32f1b0159c8e212b0610b6b3bd708f75fe88952a7d91d"
+    },
+    {
+      "source": "src/Game/MapObj/EarthenPipe.cpp",
+      "exit": 0,
+      "source_sha256": "8d320c9fbe1a529019c0bd6224385f9fcb881124a5a00ff25324c6ae57fb9946"
+    },
+    {
+      "source": "src/Game/MapObj/ElectricBall.cpp",
+      "exit": 0,
+      "source_sha256": "fc7a6b3fe90254e5f7a238185249f6daba591b6012afd01768f69c998b800c81"
+    },
+    {
+      "source": "src/Game/MapObj/ElectricRail.cpp",
+      "exit": 0,
+      "source_sha256": "3f71517e8e27cb94ccaab1407d5c596584c2440dd120a4c35560ef7961e89cb4"
+    },
+    {
+      "source": "src/Game/MapObj/ElectricRailHolder.cpp",
+      "exit": 0,
+      "source_sha256": "2d543143f24217e1d69a3de0ae377d99fcf732be924e2138b034e4c914eeb9d0"
+    },
+    {
+      "source": "src/Game/MapObj/ExterminationChecker.cpp",
+      "exit": 0,
+      "source_sha256": "bcb69d9d16db86fbdfeeb9f9094bede93325f0356c507c0fdc543fdf40736401"
+    },
+    {
+      "source": "src/Game/MapObj/FirePressureRadiate.cpp",
+      "exit": 0,
+      "source_sha256": "d124a50385f4f427e6ded0010b60b108db165e7adf70f6463e322cd45c6f5c85"
+    },
+    {
+      "source": "src/Game/MapObj/FlipPanel.cpp",
+      "exit": 0,
+      "source_sha256": "da94fe3edba77a962ab918b9ec2e7a536957e2de554a05cb0c43a2be8a7acef0"
+    },
+    {
+      "source": "src/Game/MapObj/GCaptureRibbon.cpp",
+      "exit": 0,
+      "source_sha256": "de2f2c13a205a107e1de4c849866e4d7e231b9a2674e388d63c2d268a979cd11"
+    },
+    {
+      "source": "src/Game/MapObj/InvisiblePolygonObj.cpp",
+      "exit": 0,
+      "source_sha256": "a3d8b0f8da0c8da166713319a5d962885904f3e6eb9c7b9fe740bb67b66bb2c4"
+    },
+    {
+      "source": "src/Game/MapObj/LavaProminence.cpp",
+      "exit": 0,
+      "source_sha256": "a9aae010cbbce2ef918c82f565976b891560595d2d4701999c44416fba6982a4"
+    },
+    {
+      "source": "src/Game/MapObj/LavaStrangeRock.cpp",
+      "exit": 0,
+      "source_sha256": "c289031d992d6ecd08d41246f91627ff22f02791c1798a83303102feafc03d2b"
+    },
+    {
+      "source": "src/Game/MapObj/LotusLeaf.cpp",
+      "exit": 0,
+      "source_sha256": "fec3874be3735d85227a42abd75907a27a31bdbc43fcaac8f3707e95b8421488"
+    },
+    {
+      "source": "src/Game/MapObj/MechaKoopaPartsArm.cpp",
+      "exit": 0,
+      "source_sha256": "33896279719b1ff9940c7feefae30f73012580280878cc66c5926dc62aba82b2"
+    },
+    {
+      "source": "src/Game/MapObj/MechaKoopaPartsHead.cpp",
+      "exit": 0,
+      "source_sha256": "30dba6a54058e70dd399c025b27fc0f714a214f953a61273673ead1f4dc99afa"
+    },
+    {
+      "source": "src/Game/MapObj/MercatorFixParts.cpp",
+      "exit": 0,
+      "source_sha256": "11dd476bb7e705fbd6691d037577dd0c0e809a6e2fc39d60e48eb5a9432a9434"
+    },
+    {
+      "source": "src/Game/MapObj/MiniatureGalaxy.cpp",
+      "exit": 0,
+      "source_sha256": "0ac68774c250e234eb67cdaadecf49c6e6c281e117e519bfc24fb650d3e6e00d"
+    },
+    {
+      "source": "src/Game/MapObj/MiniatureGalaxyHolder.cpp",
+      "exit": 0,
+      "source_sha256": "a74f814e1d1017178c27e5b8ef3736f12897dba7a617a590443efa1fed72201f"
+    },
+    {
+      "source": "src/Game/MapObj/MorphItemObjNeo.cpp",
+      "exit": 0,
+      "source_sha256": "092592b94dc8ec8dfeabaa11770898e7f836de28e5679bdb6e22e74f6fb9e311"
+    },
+    {
+      "source": "src/Game/MapObj/NeedlePlant.cpp",
+      "exit": 0,
+      "source_sha256": "964f7a4b04eaf57d1488ed641d311655f349d8e98fbe7e7080468fdc2974fab1"
+    },
+    {
+      "source": "src/Game/MapObj/PhantomTorch.cpp",
+      "exit": 0,
+      "source_sha256": "9d52b9f7b838b1afe3cce67cd91fdb1b29f9bc879515d90eb32eafca176fab9e"
+    },
+    {
+      "source": "src/Game/MapObj/PowerStar.cpp",
+      "exit": 0,
+      "source_sha256": "dbf732f26cb184a4a76533c01fa8ec1dfdfd2db14391a995f7463665ea078526"
+    },
+    {
+      "source": "src/Game/MapObj/PressureBase.cpp",
+      "exit": 0,
+      "source_sha256": "761ca5e5aba8922136e7904fe612cc6f23962fc3ebdb243d8d95a8304bb42497"
+    },
+    {
+      "source": "src/Game/MapObj/RainCloud.cpp",
+      "exit": 0,
+      "source_sha256": "6f84063a7a06bbb9d9c1d0b7c41f9bfd75f0b0320c03790b3bbfd1f92b1dce1a"
+    },
+    {
+      "source": "src/Game/MapObj/RosettaPictureBook.cpp",
+      "exit": 0,
+      "source_sha256": "5a753cd0f7dfd364e9358b606b5a346eb7cbe5919461e99c112b9d05773c2014"
+    },
+    {
+      "source": "src/Game/MapObj/SandCapsulePressGround.cpp",
+      "exit": 0,
+      "source_sha256": "22fd4b5208c138ae7e64354da2d9418f138794e0eb4ddc55213fb161ff8cdf12"
+    },
+    {
+      "source": "src/Game/MapObj/SandUpDownTriRock.cpp",
+      "exit": 0,
+      "source_sha256": "6aa5cd1a11eb11cba31ff57019278e967670aebfec8f9c4246931bd15422626e"
+    },
+    {
+      "source": "src/Game/MapObj/Sandstorm.cpp",
+      "exit": 0,
+      "source_sha256": "0c62e2cfca4c75f187e4b986a1afcd0ef9498d2f0473de87154170aa229eda77"
+    },
+    {
+      "source": "src/Game/MapObj/SimpleMapObj.cpp",
+      "exit": 0,
+      "source_sha256": "2edf5978cbc0d86efdcaf4abf9249082638e64a9b0323d4c625dceabc3e0c2c1"
+    },
+    {
+      "source": "src/Game/MapObj/SpinLeverSwitch.cpp",
+      "exit": 0,
+      "source_sha256": "78a379081375efce812523e8e8be12d6225caee8a8968ba4194608c9ee54d04c"
+    },
+    {
+      "source": "src/Game/MapObj/TrampleStar.cpp",
+      "exit": 0,
+      "source_sha256": "081fde9a115906e669769dcaadb1d4e6fb20cc82a6e68ad0fe04f683e4e13dbb"
+    },
+    {
+      "source": "src/Game/MapObj/UFOKinoko.cpp",
+      "exit": 0,
+      "source_sha256": "130f0d103dfb09034e5c8ee7f1f6883715db1cacf00037f07eedd699ae1a0df0"
+    },
+    {
+      "source": "src/Game/MapObj/WarpPod.cpp",
+      "exit": 0,
+      "source_sha256": "8a3ab031445cea6e8c95af6591e09306c7b1383eb00bf9afd00a8bbfae3ccb9f"
+    },
+    {
+      "source": "src/Game/MapObj/WatchTowerRotateStep.cpp",
+      "exit": 0,
+      "source_sha256": "2ac1df296969fd455917331d1fcb0e92cd71743978162e126d4cfe07a50f3a01"
+    },
+    {
+      "source": "src/Game/MapObj/WaterfallCaveCover.cpp",
+      "exit": 0,
+      "source_sha256": "4de4a34e77cb772af0b61e2789401ab2c2697889e669c180f0512b105c626c61"
+    },
+    {
+      "source": "src/Game/NPC/DemoRabbit.cpp",
+      "exit": 0,
+      "source_sha256": "24aedebba59e44b8a0019652a8bd92617ff1c624d022c101ebd3440aeb9c80f8"
+    },
+    {
+      "source": "src/Game/NPC/EventDirector.cpp",
+      "exit": 0,
+      "source_sha256": "164763e1ad1e66cbacf7a70b252dd68df65227634e0f9a57097d5188a86344d3"
+    },
+    {
+      "source": "src/Game/NPC/HoneyBee.cpp",
+      "exit": 0,
+      "source_sha256": "45985f8508ad476e1d4955658536416483af21947234589dd794236f153f60d6"
+    },
+    {
+      "source": "src/Game/NPC/KinopioAstro.cpp",
+      "exit": 0,
+      "source_sha256": "7e410d74762f01ee2f2ff1cf9adef5d8e826fe80932a49bb489e76a6fa204098"
+    },
+    {
+      "source": "src/Game/NPC/LuigiNPC.cpp",
+      "exit": 0,
+      "source_sha256": "1dfe741f95a90aaa3e95421113270b2dc2010ab2f3cc9daca0223ad9988c91ed"
+    },
+    {
+      "source": "src/Game/NPC/MiiFacePartsHolder.cpp",
+      "exit": 0,
+      "source_sha256": "a149bc456183e77919f4b2879bd55fafde8ddec0e64be4cda7d0e998f718e577"
+    },
+    {
+      "source": "src/Game/NPC/NPCActor.cpp",
+      "exit": 0,
+      "source_sha256": "4f8dc5c0591fe33865086e29fec3d222af2797708ed8c4b7f6528875097d79a4"
+    },
+    {
+      "source": "src/Game/NPC/PenguinSkater.cpp",
+      "exit": 0,
+      "source_sha256": "821a5da0dc960fa651461ca894d11eb356f1dda6769851f368692fb7c524d833"
+    },
+    {
+      "source": "src/Game/NPC/PenguinStudent.cpp",
+      "exit": 0,
+      "source_sha256": "915c6ff8a0e7cde63244cd6b8e1450f3349651b79c6360fab3cfc62310435996"
+    },
+    {
+      "source": "src/Game/NPC/Rabbit.cpp",
+      "exit": 0,
+      "source_sha256": "b44e42de4adba5dad8e2f592c026d1f5b1b9fccc8a2da7c0736aa645793b2120"
+    },
+    {
+      "source": "src/Game/NPC/RabbitStateWaitStart.cpp",
+      "exit": 0,
+      "source_sha256": "e7710cf1a3aa74965857eff703810d80058a5b17edf3d4a29329dd295c339324"
+    },
+    {
+      "source": "src/Game/NPC/Rosetta.cpp",
+      "exit": 0,
+      "source_sha256": "08fdfcb11e964d04ac39bf2805c1ceeb2e8cbb4874fe58f22245be21f3846c23"
+    },
+    {
+      "source": "src/Game/NPC/RosettaDemoHeavensDoor.cpp",
+      "exit": 0,
+      "source_sha256": "2801a234c0906016331c63aad2cda6b721ffac5c2aa6371444a7898489ee96a1"
+    },
+    {
+      "source": "src/Game/NPC/RunawayRabbit.cpp",
+      "exit": 0,
+      "source_sha256": "492571a8bc993a1b7f4b90bd14c1d2330c878ca468aac34e860afa8c3c0a78f1"
+    },
+    {
+      "source": "src/Game/NPC/RunawayRabbitCollect.cpp",
+      "exit": 0,
+      "source_sha256": "8bc4c6ea2dafb108bb1036ce44bdea5f80a180c74ccb8098d22eba51bb57375b"
+    },
+    {
+      "source": "src/Game/NPC/Syati.cpp",
+      "exit": 0,
+      "source_sha256": "9984a311534d273966c6b89811872ba7ca57fd0210bb08088292e0a891b8b841"
+    },
+    {
+      "source": "src/Game/NPC/TalkMessageCtrl.cpp",
+      "exit": 0,
+      "source_sha256": "a4e4fcf3571b82cff9d1ec17ae79ae09143f4fa92227da534e8b988bf21473c4"
+    },
+    {
+      "source": "src/Game/NPC/TrickRabbitSnow.cpp",
+      "exit": 0,
+      "source_sha256": "b5dc4f2b0260352e99df54f85f39bd27d4d91eff6848d44ac21e199b070e3431"
+    },
+    {
+      "source": "src/Game/NWC24/NWC24Messenger.cpp",
+      "exit": 0,
+      "source_sha256": "98a2e1155589d321aa65742ecd0d71b1c3fa5314e603a15b17134b3092bb7d76"
+    },
+    {
+      "source": "src/Game/NWC24/NWC24SendThread.cpp",
+      "exit": 0,
+      "source_sha256": "697d8798a3c6d3b99c37a2f58e115f14c42cebf9c09ceee7a7411d20e52bf6a5"
+    },
+    {
+      "source": "src/Game/NameObj/MovementOnOffGroupHolder.cpp",
+      "exit": 0,
+      "source_sha256": "35bc7859ae649eec09563e7148534b4e8aee200a0b9bba118b3b1370dd752b1c"
+    },
+    {
+      "source": "src/Game/NameObj/NameObjArchiveListCollector.cpp",
+      "exit": 0,
+      "source_sha256": "37dc0fb8b2fe8a69e967dcf3bc041607041489dcf7427f8f3995fe98d3c0b38f"
+    },
+    {
+      "source": "src/Game/NameObj/NameObjCategoryList.cpp",
+      "exit": 0,
+      "source_sha256": "ec55f4e87b0570f12287e3682ffdcf548d9c42087758b694cf0d4ac1ca3e8758"
+    },
+    {
+      "source": "src/Game/NameObj/NameObjExecuteHolder.cpp",
+      "exit": 0,
+      "source_sha256": "f09a3054bfdfe195116f22e0ea10dff11a9bb86ab0f8b57678869e41ad7655d8"
+    },
+    {
+      "source": "src/Game/NameObj/NameObjFactory.cpp",
+      "exit": 0,
+      "source_sha256": "8ea39fc6e387e718d7beed4b59f800b836aff6bf921f97c10645c56b180ab013"
+    },
+    {
+      "source": "src/Game/NameObj/NameObjGroup.cpp",
+      "exit": 0,
+      "source_sha256": "1928aeb44663b3d1360e44e8c922ee6c6e8703ae34ef315e6c58f98900edf72f"
+    },
+    {
+      "source": "src/Game/NameObj/NameObjHolder.cpp",
+      "exit": 0,
+      "source_sha256": "5467387df4f47c8f70f16f2cd474b08da6a6a63184ed775daea8e000abadecd9"
+    },
+    {
+      "source": "src/Game/NameObj/NameObjListExecutor.cpp",
+      "exit": 0,
+      "source_sha256": "4a9a1c8dd516897d46487f817da22d763a816a21097823616bd990fb802f24b4"
+    },
+    {
+      "source": "src/Game/NameObj/NameObjRegister.cpp",
+      "exit": 0,
+      "source_sha256": "1230f57a30231601dcb5753736bf3198a8c3c524a769594c43737e7250b41b5c"
+    },
+    {
+      "source": "src/Game/Player/GhostPlayer.cpp",
+      "exit": 0,
+      "source_sha256": "9435b411501eb8805945a67158ef83dbf36d5aba672c5bbdd88f085a5e1175b1"
+    },
+    {
+      "source": "src/Game/Player/Mario.cpp",
+      "exit": 0,
+      "source_sha256": "58aae4f574829798e8d63e336c16ac8b462aa4b0a1ee5718494951fb3a75e704"
+    },
+    {
+      "source": "src/Game/Player/MarioAccess.cpp",
+      "exit": 0,
+      "source_sha256": "6a779fa60e444bbb7f0fa43c02e6b003da6d6e5a586ba465c6bcc96c158d2a1d"
+    },
+    {
+      "source": "src/Game/Player/MarioActor.cpp",
+      "exit": 0,
+      "source_sha256": "873d905f2501ba9686b969a97a4c28164b3ccd6f9851f6fd5c5da94f3b8ba65f"
+    },
+    {
+      "source": "src/Game/Player/MarioActorBlackHole.cpp",
+      "exit": 0,
+      "source_sha256": "dc505d36415eac5d7350db2a9f58a47ce239f262152a906fea77af7fa09ea730"
+    },
+    {
+      "source": "src/Game/Player/MarioActorDefensiveMsg.cpp",
+      "exit": 0,
+      "source_sha256": "9a736e7dee49530295d00e3a3389f2cdece20c5f114f40c94e073ea78dccc1e1"
+    },
+    {
+      "source": "src/Game/Player/MarioActorDraw.cpp",
+      "exit": 0,
+      "source_sha256": "ece3a8cf9e09054b050e884ac089fb802273aa1f8d7d1af96df157f8f56b5e73"
+    },
+    {
+      "source": "src/Game/Player/MarioActorGravity.cpp",
+      "exit": 0,
+      "source_sha256": "654a84ffe014e681796cb575eb0c24afe16b853fa03780562b9ba7b99f26c42a"
+    },
+    {
+      "source": "src/Game/Player/MarioActorInit.cpp",
+      "exit": 0,
+      "source_sha256": "9590436349fa8cb07d6acce3b41880036b2323db6fe67b3d0a2d40d8406ac0f3"
+    },
+    {
+      "source": "src/Game/Player/MarioActorMorph.cpp",
+      "exit": 0,
+      "source_sha256": "9bf52e05454e4036ec4dc943fc613d15d591fb5dcfe2aa9350f4173bc65bb535"
+    },
+    {
+      "source": "src/Game/Player/MarioActorOffensiveMsg.cpp",
+      "exit": 0,
+      "source_sha256": "1a59bd02c6f39b4d7fd2d0eacc7b455f273195c58a318d48c8443deb2ef6bfa6"
+    },
+    {
+      "source": "src/Game/Player/MarioActorParts.cpp",
+      "exit": 0,
+      "source_sha256": "5fce708222e0a7ab3c358c6f311e1359735870970eb860a537331393b8b829d7"
+    },
+    {
+      "source": "src/Game/Player/MarioActorRush.cpp",
+      "exit": 0,
+      "source_sha256": "9274c6db532ed05b51deebf7a7eceec67080e2ae50c0b714c8baf10e49435d15"
+    },
+    {
+      "source": "src/Game/Player/MarioActorRushMsg.cpp",
+      "exit": 0,
+      "source_sha256": "4a0fbc3d072c6c2d10eb46fb8254e3b3c566e1f43cb3d81ac39eab8cc566ed0c"
+    },
+    {
+      "source": "src/Game/Player/MarioActorSensor.cpp",
+      "exit": 0,
+      "source_sha256": "6ae91b7a9209ba4ae49f8e317d045dad7dd373c99ea4503add0f05ddc653f014"
+    },
+    {
+      "source": "src/Game/Player/MarioActorSpecialDraw.cpp",
+      "exit": 0,
+      "source_sha256": "77e42972e46999735f23fddeb37c42375244d317ffbd7f4ba411a46d4d1056c4"
+    },
+    {
+      "source": "src/Game/Player/MarioActorTakeMsg.cpp",
+      "exit": 0,
+      "source_sha256": "9eb4c5b3b1586e5b0ae69619542f37e86453cbf7e9d25c3e3b19d3340c7d122e"
+    },
+    {
+      "source": "src/Game/Player/MarioAnimationEfx.cpp",
+      "exit": 0,
+      "source_sha256": "2f68d47c3bde7c0fc249dea47186447bd9026209a35c1204de6f1c8ae069e6e7"
+    },
+    {
+      "source": "src/Game/Player/MarioAnimator.cpp",
+      "exit": 0,
+      "source_sha256": "3a8243f133b595c371ffc713dae1c8bf8d28c39566748aae052f81f2b8d2c452"
+    },
+    {
+      "source": "src/Game/Player/MarioBee.cpp",
+      "exit": 0,
+      "source_sha256": "e8ed414085d379b33d0302f1fa646b1091c90d50ad83c422327dbebb348d4721"
+    },
+    {
+      "source": "src/Game/Player/MarioBlown.cpp",
+      "exit": 0,
+      "source_sha256": "9536da6e6845f3560fe428faa96b5217eeb411a9dcd4aa862568051c6351782d"
+    },
+    {
+      "source": "src/Game/Player/MarioCollision.cpp",
+      "exit": 0,
+      "source_sha256": "960b1c2056d4f0be2c8918fdfe0a3ac5b8063d9aeec876d9143b163b4038ac64"
+    },
+    {
+      "source": "src/Game/Player/MarioDamage.cpp",
+      "exit": 0,
+      "source_sha256": "0782b8ed440e87441e9fbd49c32903bb8bf5066edad936e3b13ce0ea53a2656b"
+    },
+    {
+      "source": "src/Game/Player/MarioDamageParalyze.cpp",
+      "exit": 0,
+      "source_sha256": "5ca73156f42207bb8eb8cd240911a2d7feea8249996acda7b203d89882e2885a"
+    },
+    {
+      "source": "src/Game/Player/MarioEffect.cpp",
+      "exit": 0,
+      "source_sha256": "69d26bf4b239ddce6178e1bcb52e8a3da334f4cdef22e0758f4acb27c2b84931"
+    },
+    {
+      "source": "src/Game/Player/MarioFaint.cpp",
+      "exit": 0,
+      "source_sha256": "9474d0a19df0b1454dbbf2c0d637640297b8b9c3c5be5e68968e05fde4b808ae"
+    },
+    {
+      "source": "src/Game/Player/MarioFlip.cpp",
+      "exit": 0,
+      "source_sha256": "8721c93b15b0b6f1b3f5a4a9e2f14b26c29efba1f0f917e7c8851f2e01380040"
+    },
+    {
+      "source": "src/Game/Player/MarioFoo.cpp",
+      "exit": 0,
+      "source_sha256": "b1ef73ba9f9c3d252a8dc67fc14a85ee61e2a1fe3b98b1a3a094d31027c803b0"
+    },
+    {
+      "source": "src/Game/Player/MarioFpView.cpp",
+      "exit": 0,
+      "source_sha256": "8f4a40aee08adc283c893c820885bfdfba5c443bb7432d61713e945a1f87e2b0"
+    },
+    {
+      "source": "src/Game/Player/MarioHang.cpp",
+      "exit": 0,
+      "source_sha256": "bb927a64e9195413a950fc9331b458330ee7eb04264e416a1e247d46eb0b9c8e"
+    },
+    {
+      "source": "src/Game/Player/MarioJump.cpp",
+      "exit": 0,
+      "source_sha256": "ff383f358fe374eaaea24b38928b38ddd247e606a26ca36f431b12238c2c6ce1"
+    },
+    {
+      "source": "src/Game/Player/MarioModule.cpp",
+      "exit": 0,
+      "source_sha256": "7d31ae32295210260e01c43261abfeb53e186823aebc86302b0036a65cd66792"
+    },
+    {
+      "source": "src/Game/Player/MarioMove.cpp",
+      "exit": 0,
+      "source_sha256": "aa8425e16d7023dcb6753906a37b56875c9106d4c9e3e1ad655cfa6b01920e8a"
+    },
+    {
+      "source": "src/Game/Player/MarioParts.cpp",
+      "exit": 0,
+      "source_sha256": "215c8feb659e6f0f395e715bee913f23e81d729bb88f9ed351d256f14527d8e4"
+    },
+    {
+      "source": "src/Game/Player/MarioPress.cpp",
+      "exit": 0,
+      "source_sha256": "6be4658b3cbbbd3570b636828f6d7b2c6f2c602ebe9d7e4b0478ecfa76df8437"
+    },
+    {
+      "source": "src/Game/Player/MarioRabbit.cpp",
+      "exit": 0,
+      "source_sha256": "3a036aef584943a747985a81121d83a9849815a1cc9635066b4c46a220abf6ca"
+    },
+    {
+      "source": "src/Game/Player/MarioRecovery.cpp",
+      "exit": 0,
+      "source_sha256": "0b00affb67c88c9b592b017ecccdb368aa916359c0b2c1d49883ece980aa10f7"
+    },
+    {
+      "source": "src/Game/Player/MarioSideStep.cpp",
+      "exit": 0,
+      "source_sha256": "7b9d5c8680e6ef9c40c2cac24e9f7b293669502ce82e449dcbfbfe388482f8fb"
+    },
+    {
+      "source": "src/Game/Player/MarioSkate.cpp",
+      "exit": 0,
+      "source_sha256": "822eaca49580a27c543c10fe3defa35824bb1236143896f4ef0d8858ca97613e"
+    },
+    {
+      "source": "src/Game/Player/MarioSlope.cpp",
+      "exit": 0,
+      "source_sha256": "19f64c2542b3a5e0b283683ecd9b7598c801fae47329b4aaa873263059cff092"
+    },
+    {
+      "source": "src/Game/Player/MarioSpecial.cpp",
+      "exit": 0,
+      "source_sha256": "65d8bb485bcd9efe7571e5881a262544ddd5f09e589f7e872ded3dfd630df054"
+    },
+    {
+      "source": "src/Game/Player/MarioSpin.cpp",
+      "exit": 0,
+      "source_sha256": "a8021453aba28f654e9af7be42c694c795a3728b82e2e9cc83bf94e15c014bf2"
+    },
+    {
+      "source": "src/Game/Player/MarioStick.cpp",
+      "exit": 0,
+      "source_sha256": "fdc36e24282200c19954d1fc1375206116e1e78180afdebb4786ea39803fa7c9"
+    },
+    {
+      "source": "src/Game/Player/MarioSwim.cpp",
+      "exit": 0,
+      "source_sha256": "69ce21a2f45f1ec29f1f75a8f06dd71573206c6bc88ab72aa49e696a6ac60ba0"
+    },
+    {
+      "source": "src/Game/Player/MarioTeresa.cpp",
+      "exit": 0,
+      "source_sha256": "e762851a79e3d0e7cde966001e6999c11990b7109bd3a6208db3dbb9851556c8"
+    },
+    {
+      "source": "src/Game/Player/MarioWait.cpp",
+      "exit": 0,
+      "source_sha256": "cb286e999e536fd0aee291f9cf04a0b86ace7d432309bf8f41914f70290aab4f"
+    },
+    {
+      "source": "src/Game/Player/MarioWalk.cpp",
+      "exit": 0,
+      "source_sha256": "3be05aef659297a8206552b9da5675387ec51ccd70478851976d2d79fb2d32e4"
+    },
+    {
+      "source": "src/Game/Player/MarioWall.cpp",
+      "exit": 0,
+      "source_sha256": "b4fba54fff4a0e5db941ee407d6755c58182773aa5b865a2070b2dd3835eb463"
+    },
+    {
+      "source": "src/Game/Player/MarioWarp.cpp",
+      "exit": 0,
+      "source_sha256": "dfe47617d7448957876aed63940dcb710f55bd22b90b1bd2388842c81a00d5c6"
+    },
+    {
+      "source": "src/Game/Player/MatrixControl.cpp",
+      "exit": 0,
+      "source_sha256": "14b3ab9d4a7bd65edd5b56c5e2af8780921b9441fa18bed64c3bb3d71775c720"
+    },
+    {
+      "source": "src/Game/Player/PlayerEvent.cpp",
+      "exit": 0,
+      "source_sha256": "862e42d3a48cd609e24daa76dd20660547f75659906d2599a9f0f97914d1d9d3"
+    },
+    {
+      "source": "src/Game/RhythmLib/AudMeChannelMgr.cpp",
+      "exit": 0,
+      "source_sha256": "bb7061dbf9e3edca034c79d75d704127b93bd0681f8cf92b684ea49a30e49be9"
+    },
+    {
+      "source": "src/Game/RhythmLib/AudMeObject.cpp",
+      "exit": 0,
+      "source_sha256": "5ab5aef561320893da33e04bb78fb092efe71c91d9b69aa5f4da8058e44e09c3"
+    },
+    {
+      "source": "src/Game/RhythmLib/AudMePlayer.cpp",
+      "exit": 0,
+      "source_sha256": "7a1445fe61d736aa4da2f57812737437f4fe8020d9862a3c565f6e9a3cb7d401"
+    },
+    {
+      "source": "src/Game/RhythmLib/AudMeSeqCtrl.cpp",
+      "exit": 0,
+      "source_sha256": "484b981a26034cdff33263014b86c4acdd6f67cdbc5e88cad80cbd56e4a94d47"
+    },
+    {
+      "source": "src/Game/RhythmLib/AudMeSeqParser.cpp",
+      "exit": 0,
+      "source_sha256": "be73d7a9efe02f81c373e38f0197cd141c7dd85c57e3d94ff6e37fc74c160d4e"
+    },
+    {
+      "source": "src/Game/RhythmLib/AudMeTrack.cpp",
+      "exit": 0,
+      "source_sha256": "4b10ed01d85bbb4dbf03a6dc4346fd16d0f945171e42b2fafbff79a502c0773d"
+    },
+    {
+      "source": "src/Game/RhythmLib/AudMeTrackCallback.cpp",
+      "exit": 0,
+      "source_sha256": "e13831ff4b741f535426279b9f589aad6dff7d5c5fba800ac7207c53e2637c2a"
+    },
+    {
+      "source": "src/Game/RhythmLib/AudRhythmHolder.cpp",
+      "exit": 0,
+      "source_sha256": "c5ddaed660b91828d0170a63c1de6dd52d92392afe743d75052518888bdb0fc4"
+    },
+    {
+      "source": "src/Game/RhythmLib/AudRhythmMeSystem.cpp",
+      "exit": 0,
+      "source_sha256": "76f7afb244d97074f72a3639e44df73714136103e050e9f329439785d50a243b"
+    },
+    {
+      "source": "src/Game/Ride/FluffWind.cpp",
+      "exit": 0,
+      "source_sha256": "be4bc9c064b065b6b3ba401465f96ce2dff466a62976fa987ebab135da2e4e44"
+    },
+    {
+      "source": "src/Game/Ride/SurfRayTutorial.cpp",
+      "exit": 0,
+      "source_sha256": "461a4e8351c6037a921777cb839f555a0dc2f0e114f69355fe914ab6a400a0ea"
+    },
+    {
+      "source": "src/Game/Scene/SceneDataInitializer.cpp",
+      "exit": 0,
+      "source_sha256": "63028486ad91748d8c1fe159af8f50cc1570504d347b9fe8ac230751ec105797"
+    },
+    {
+      "source": "src/Game/Scene/StageDataHolder.cpp",
+      "exit": 0,
+      "source_sha256": "cdaffbba208b50497537d7d0d92ecd56a1d4449b6d232dcb6a3e8b380a6f8861"
+    },
+    {
+      "source": "src/Game/Scene/StopSceneController.cpp",
+      "exit": 0,
+      "source_sha256": "c761ec785fd7497c842da9d38a633d9f7bef59add3968cde7746a0d3a4f494a0"
+    },
+    {
+      "source": "src/Game/Screen/BloomEffect.cpp",
+      "exit": 0,
+      "source_sha256": "08a88bd64fd3a122e921a41c0103897ac3182a78ffc92fadf60e3e6a1f6cfd6e"
+    },
+    {
+      "source": "src/Game/Screen/CounterLayoutController.cpp",
+      "exit": 0,
+      "source_sha256": "1abcede75a4e3bacd9881b1cd3963cabb3a4315a2c594040322e16c2a01f8637"
+    },
+    {
+      "source": "src/Game/Screen/ImageEffectLocalUtil.cpp",
+      "exit": 0,
+      "source_sha256": "8e334a351db52c1f1057d5f7210704fb117ae146c5db8dc4cefbf1b51a3add63"
+    },
+    {
+      "source": "src/Game/Screen/ImageEffectState.cpp",
+      "exit": 0,
+      "source_sha256": "0a475bfe3f0eb8a34312966acededa5a90bd26995b8b50a8a3b7f5e08bf63b33"
+    },
+    {
+      "source": "src/Game/Screen/LayoutGroupCtrl.cpp",
+      "exit": 0,
+      "source_sha256": "2051be76e8cd86920cbaf45be57a537c5af3d58644ea2ade32fe2536e5fa3346"
+    },
+    {
+      "source": "src/Game/Screen/LayoutPaneCtrl.cpp",
+      "exit": 0,
+      "source_sha256": "6264f345a10b0b73e8f9bca26c44bfb8fcb9befe4e91368f78f35500eceb1917"
+    },
+    {
+      "source": "src/Game/Screen/LuigiLetter.cpp",
+      "exit": 0,
+      "source_sha256": "2ef24c50a807c3e666323557c5a0af413b6a4302695a899bd5169098ec663b08"
+    },
+    {
+      "source": "src/Game/Screen/MessageTagSkipTagProcessor.cpp",
+      "exit": 0,
+      "source_sha256": "41f8524e2b3f3bae335f1bf5b716e8133dbf0d1eeef2d55675a6ab989ebbc10b"
+    },
+    {
+      "source": "src/Game/Screen/NoteCounter.cpp",
+      "exit": 0,
+      "source_sha256": "50248b1e96e6da911c8f53b1ffb0ed80a6158023f5fd85dcdec528ead09b7954"
+    },
+    {
+      "source": "src/Game/Screen/PauseMenu.cpp",
+      "exit": 0,
+      "source_sha256": "02dafe34935052dfd0d2e00fe0032eb22142c91c018d9cd0b1b2b3808b7064a6"
+    },
+    {
+      "source": "src/Game/Screen/SceneWipeHolder.cpp",
+      "exit": 0,
+      "source_sha256": "93df73978978d9a34fe2bc1e382d1c3591da916bdea71859ea622f0097f2acbd"
+    },
+    {
+      "source": "src/Game/Screen/SubMeterLayout.cpp",
+      "exit": 0,
+      "source_sha256": "22df5fa428fcd4229c53d73227eabdb42b82886bfde49aabd0ec8c7e0510b374"
+    },
+    {
+      "source": "src/Game/Screen/SuddenDeathMeter.cpp",
+      "exit": 0,
+      "source_sha256": "846e18fc03cea79fd9f99705c01b4388861d8af9b0c03e76c850a4def3321626"
+    },
+    {
+      "source": "src/Game/Screen/WaterCameraFilter.cpp",
+      "exit": 0,
+      "source_sha256": "e945cf6c60644e49c48640170539ec0ba69c1279a1ca3f7d63698d4310187f73"
+    },
+    {
+      "source": "src/Game/Screen/WipeRing.cpp",
+      "exit": 0,
+      "source_sha256": "d1e3b18a678ccdb4308fe2b6e1d64ea3c126b7b80e9d964b887b7e49bd9dc95e"
+    },
+    {
+      "source": "src/Game/System/GameSequenceProgress.cpp",
+      "exit": 0,
+      "source_sha256": "dafc15ab29f4b7259597e8e8574f5ddb16a99d7b658c05b0119f47a6b0749c8c"
+    },
+    {
+      "source": "src/Game/System/GameSystemObjHolder.cpp",
+      "exit": 0,
+      "source_sha256": "2fa5eb0c350c9a36ea729504d2f28447dad8736b92c4a91361f85dc770776b3f"
+    },
+    {
+      "source": "src/Game/System/GameSystemSceneController.cpp",
+      "exit": 0,
+      "source_sha256": "a8c6bc4a1972f00f801a383874cae7c14811022c203d90018c6af7675d71fa6d"
+    },
+    {
+      "source": "src/Game/System/WPadAcceleration.cpp",
+      "exit": 0,
+      "source_sha256": "1b72aa24864be2be7c2edbf7bac60f41c5724158a5e1f64e8a83e7f3311b4605"
+    },
+    {
+      "source": "src/Game/System/WPadHVSwing.cpp",
+      "exit": 0,
+      "source_sha256": "76fb49a449cb1c4dc911d34f9e8fae6cd47bd80de27d676fb0b0f2eeca383af9"
+    },
+    {
+      "source": "src/Game/System/WPadPointer.cpp",
+      "exit": 0,
+      "source_sha256": "5eb140a50a293046af6ca22eee81fc32f3c688b5bef43dce9209b6e89e182bf5"
+    },
+    {
+      "source": "src/Game/Util/ActorSensorUtil.cpp",
+      "exit": 0,
+      "source_sha256": "2c5a4a3f6d13ca02e56b1f90473f5c177a2f4d16017966108917d7799cbf7385"
+    },
+    {
+      "source": "src/Game/Util/AreaObjUtil.cpp",
+      "exit": 0,
+      "source_sha256": "317909026601baff7ed63a4d161c64e8c64a0eb6e174ae4dc61382b2b1e26971"
+    },
+    {
+      "source": "src/Game/Util/CameraUtil.cpp",
+      "exit": 0,
+      "source_sha256": "ffd714534115af145cc3aa7b22e15f2fd51cc82f12a81be79b05c327f13baff6"
+    },
+    {
+      "source": "src/Game/Util/DirectDraw.cpp",
+      "exit": 0,
+      "source_sha256": "8bd3de308bedd71e4b0736c16109d1669fe34021bf63714f1ce97d8d1cbbbdd8"
+    },
+    {
+      "source": "src/Game/Util/DrawUtil.cpp",
+      "exit": 0,
+      "source_sha256": "54e02a2b3f8da844197436a6b0373027c057b85a07c5569b1055c63d1f984c1c"
+    },
+    {
+      "source": "src/Game/Util/EffectUtil.cpp",
+      "exit": 0,
+      "source_sha256": "71e75aada9682377790ca004e7a31f054df88cdebf852a4256afedecdf139145"
+    },
+    {
+      "source": "src/Game/Util/FixedPosition.cpp",
+      "exit": 0,
+      "source_sha256": "340b6c35219a9bc3066ecacc9b3ba3b34fbbd09b43d650c5e006986177e53974"
+    },
+    {
+      "source": "src/Game/Util/FurCtrl.cpp",
+      "exit": 0,
+      "source_sha256": "67ae673cb7dd2d6ba02b65777e80ff966979c9fa921eba16bb23c23227e10f3a"
+    },
+    {
+      "source": "src/Game/Util/FurDrawer.cpp",
+      "exit": 0,
+      "source_sha256": "e7056dcc772d05435965629fc2a0081c1a8748f6c5b6b433dd5404b268d54cb7"
+    },
+    {
+      "source": "src/Game/Util/FurMulti.cpp",
+      "exit": 0,
+      "source_sha256": "1b897409890b34239ed57f7a21dd980351d31e7f4ce54a2a19067853332301a6"
+    },
+    {
+      "source": "src/Game/Util/FurShader.cpp",
+      "exit": 0,
+      "source_sha256": "c4015e85bad58df88ceab062790cba575ece9fd75928657ae4e4368b33d2b837"
+    },
+    {
+      "source": "src/Game/Util/GravityUtil.cpp",
+      "exit": 0,
+      "source_sha256": "e289101d7677410c13afdef953825e4a715195dde8ed7fbc029e42cc611f129e"
+    },
+    {
+      "source": "src/Game/Util/HashUtil.cpp",
+      "exit": 0,
+      "source_sha256": "cf19ed3c5e05d5184f5b621eeee269b99e7e8cffdbdac8c95107cbd84e410f41"
+    },
+    {
+      "source": "src/Game/Util/LayoutUtil.cpp",
+      "exit": 0,
+      "source_sha256": "6eb141c0041ae3ecef497a1b51be71195237b39810e4b57f10264c21eef27ffc"
+    },
+    {
+      "source": "src/Game/Util/LiveActorUtil.cpp",
+      "exit": 0,
+      "source_sha256": "dc4ed37d8f2bd73181bc37970a84e245e2d2610b6f8b95a6c7ab8cbce98d1359"
+    },
+    {
+      "source": "src/Game/Util/MapUtil.cpp",
+      "exit": 0,
+      "source_sha256": "a6237a62f68a02c860ec76838d7ee7ea69551c5277b526679480a64f9b1880eb"
+    },
+    {
+      "source": "src/Game/Util/MessageUtil.cpp",
+      "exit": 0,
+      "source_sha256": "93c5af27bae269b20df90bbee121d5b3947fc242d738807c249546af4719df1a"
+    },
+    {
+      "source": "src/Game/Util/ModelUtil.cpp",
+      "exit": 0,
+      "source_sha256": "f262be54cad441ac8ffcef67ee2008c95e1961b520894fa728b6bb87727f9e90"
+    },
+    {
+      "source": "src/Game/Util/ObjUtil.cpp",
+      "exit": 0,
+      "source_sha256": "931b6439c89c89403f0c7d285f6351564539192c1d7ea9617ed9650c07f83113"
+    },
+    {
+      "source": "src/Game/Util/RumbleCalculator.cpp",
+      "exit": 0,
+      "source_sha256": "1fcefb18ae279483302be3a416f27213162aa8044a67acc60aee635ee5eb8ed4"
+    },
+    {
+      "source": "src/Game/Util/SceneUtil.cpp",
+      "exit": 0,
+      "source_sha256": "aed2ce8530ccc976994e4a96695ba6f1be37b27d1a76e5399b0f5a2ddc290fd1"
+    },
+    {
+      "source": "src/Game/AreaObj/LightAreaHolder.cpp",
+      "exit": 0,
+      "source_sha256": "59b8eb73b209a43d8b091076c57ed17b3eb34d76545936d4d5162d719a537f4b",
+      "evidence": "light-area-sort/recovered-compile.json"
+    }
+  ],
+  "passed": 277,
+  "full_game_link_claimed": false
+}

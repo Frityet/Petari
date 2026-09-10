@@ -7,7 +7,8 @@
 
 #include <memory>
 
-LightDirector::LightDirector() : NameObj("ライト管理") {
+LightDirector::LightDirector()
+    : NameObj("ライト指揮"), _C(), mDataHolder(), mZoneDataHolder(), mDefaultAreaLight(), _1C(), mPointCtrl(), mResourceHolder() {
 }
 
 LightDirector::~LightDirector() {

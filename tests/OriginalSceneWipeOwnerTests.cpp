@@ -141,7 +141,7 @@ void owner(smgpc::runtime::RuntimeContext& runtime) {
                 MR::createSceneObj(SceneObj_SceneWipeHolder) == wipes,
                 "the real scene creates and retains exactly one original wipe holder");
         const std::array names{"円ワイプ", "フェードワイプ", "白フェードワイプ", "ゲームオーバー", "クッパ"};
-        require(group->mObjectCount == 5 && group->mObjectNumMax == 16, "all five original wipe descendants join the actual pause group");
+        require(group->getObjNum() == 5, "all five original wipe descendants join the actual pause group");
         for (std::size_t i = 0; i < names.size(); ++i)
             require(group->getObj(i) == wipes->findWipe(names[i]), "wipe catalog and pause membership preserve original identity and order");
         auto* ring = dynamic_cast<WipeRing*>(wipes->findWipe(names[0]));

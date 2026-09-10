@@ -1,3 +1,4 @@
+#include "SceneExecutionFixture.hpp"
 #include "Game/LiveActor/LiveActorGroup.hpp"
 #include "Game/Map/SphereSelector.hpp"
 #include "Game/Map/SphereSelectorHandle.hpp"
@@ -10,6 +11,8 @@
 #include "Game/Util/SoundUtil.hpp"
 #include "Game/Util/StarPointerUtil.hpp"
 #include "compat/DemoSceneRuntime.hpp"
+#include "compat/StarPointerDepthOwnership.hpp"
+#include "camera/CameraDirectorRuntime.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "runtime/SceneScheduler.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
@@ -87,14 +90,17 @@ namespace {
         require(MR::createSceneObj(SceneObj_SphereSelector) == nullptr,
                 "SceneObj 0x6F must remain absent without a scene-owned holder");
 
-        auto holder = SceneObjHolder{};
-        const auto binding = smgpc::scene::SceneObjHolderBinding(holder);
+        const auto heaps = smgpc::compat::JkrHeapRuntime::create(16U << 20);
+        auto scheduler = smgpc::runtime::SceneScheduler{};
+        const auto active_scheduler = smgpc::runtime::SceneSchedulerBinding(scheduler);
+        auto scene = smgpc::test::SceneExecutionFixture(
+            scheduler, smgpc::compat::JkrAllocationDomain::create(heaps, 4U << 20));
         auto *created = MR::createSceneObj(SceneObj_SphereSelector);
         auto *selector = dynamic_cast<SphereSelector *>(created);
         require(selector != nullptr && MR::isDead(selector),
                 "SceneObj 0x6F must synchronously initialize the exact dead SphereSelector");
         require(selector->mSphereGroup != nullptr &&
-                    selector->mSphereGroup->mObjectCount == 0 &&
+                    selector->mSphereGroup->getObjNum() == 0 &&
                     selector->mHandle == nullptr,
                 "synchronous SphereSelector init must create its real empty retail target group");
         require(MR::createSceneObj(SceneObj_SphereSelector) == selector,
@@ -140,10 +146,14 @@ namespace {
         require(layouts.is_default_game_layout_active(),
                 "Sphere teardown must restore the default layout through the inverse operation");
 
+        require(smgpc::compat::try_star_pointer_depth() == nullptr,
+                "the absent-pointer query must have no original controller owner");
         require_logic_error(
             [] { (void)MR::getStarPointerScreenPositionOrEdge(WPAD_CHAN0); },
-            "active game runtime",
-            "a pointer-edge query must not manufacture input without the active runtime");
+            "Original pointer controllers require their runtime owner",
+            "a pointer-edge query must require its original controller owner");
+        require(smgpc::camera::current_original_camera_context() == nullptr,
+                "the absent-camera query must have no original CameraContext owner");
         require_logic_error(
             [] { (void)MR::getCameraViewMtx(); }, "Camera state is unavailable",
             "the Sphere camera dependency must not manufacture a view matrix");
@@ -210,20 +220,27 @@ namespace {
                         "me_and_multi_stage_bgm_playback_runtime_unavailable",
                 "the test must use the real RMGK01 FileSelect handle row and retain its precise blocker");
 
-        auto holder = SceneObjHolder{};
-        const auto binding = smgpc::scene::SceneObjHolderBinding(holder);
+        const auto heaps = smgpc::compat::JkrHeapRuntime::create(16U << 20);
+        auto scheduler = smgpc::runtime::SceneScheduler{};
+        const auto active_scheduler = smgpc::runtime::SceneSchedulerBinding(scheduler);
+        auto scene = smgpc::test::SceneExecutionFixture(
+            scheduler, smgpc::compat::JkrAllocationDomain::create(heaps, 4U << 20));
         require(MR::createSceneObj(SceneObj_MessageSensorHolder) != nullptr,
                 "the exact message contract requires the retail scene message sensor");
         auto demo_runtime = smgpc::compat::DemoSceneRuntime{dvd, placements};
         auto handle = SphereSelectorHandle{"FileSelect SphereSelectorHandle"};
         const auto iter = JMapInfoIter(&row->jmap_info, row->jmap_entry_index);
-        handle.init(iter);
+        const auto marker = scheduler.registration_marker();
+        {
+            const smgpc::compat::JkrAllocationScope game(scheduler.allocation_domain());
+            handle.init(iter);
+        }
 
         auto *selector =
             MR::getSceneObj<SphereSelector>(SceneObj_SphereSelector);
         require(MR::isDead(&handle) && !handle.mIsFileSelectMode && selector != nullptr &&
                     MR::isDead(selector) && selector->mHandle == &handle &&
-                    selector->mSphereGroup->mObjectCount == 1 &&
+                    selector->mSphereGroup->getObjNum() == 1 &&
                     selector->mSphereGroup->getActor(0) == &handle,
                 "exact placement init must synchronously bind the real handle into SceneObj 0x6F");
         require(demo_runtime.simple_cast_registration_count(&handle) == 1U,
@@ -261,17 +278,19 @@ namespace {
                     !MR::sendSimpleMsgToActor(0xFFFFFFFFU, &handle),
                 "confirm-cancel/select-end must be accepted and an unknown message rejected");
 
-        auto scheduler = smgpc::runtime::SceneScheduler{};
-        const auto marker = scheduler.registration_marker();
-        scheduler.connect_name_obj(handle, MR::MovementType_Environment,
-                                   MR::CalcAnimType_MapObj, -1, -1);
         const auto registrations = scheduler.remove_registrations_since(marker);
-        require(registrations.size() == 1U &&
-                    registrations.front().kind ==
-                        smgpc::runtime::SceneEntryKind::NameObj &&
-                    registrations.front().name_obj == &handle &&
-                    registrations.front().live_actor == &handle,
-                "the generalized scheduler must retain the exact handle's LiveActor identity");
+        const auto handle_registration = std::ranges::find_if(
+            registrations, [&handle](const auto& registration) {
+                return registration.name_obj == &handle;
+            });
+        require(handle_registration != registrations.end() &&
+                    handle_registration->kind ==
+                        smgpc::runtime::SceneEntryKind::LiveActorModel &&
+                    handle_registration->live_actor == &handle &&
+                    std::ranges::count_if(registrations, [&handle](const auto& registration) {
+                        return registration.name_obj == &handle;
+                    }) == 1,
+                "original placement init must register the exact handle once with its LiveActor identity");
 
         handle.mRotateSpeed = 1.0F;
         require_logic_error(

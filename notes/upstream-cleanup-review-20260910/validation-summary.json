@@ -1,0 +1,191 @@
+{
+  "upstream": "16906807c69697fdea5d7efbb4642313c1b14204",
+  "decomp": "ef44fad5dbc7def9d25cf149b823e1cf512bd3e2",
+  "native_build_exit": 0,
+  "focused_test_suites": [
+    {
+      "target": "smg-pc-name-obj-group-lifetime-tests",
+      "build_exit": 0,
+      "binary_sha256": "5764bb32029d0e6e6beb1d028178e0820faa097821f87673d3b93d0335718ae5",
+      "run_exit": 0,
+      "seconds": 1.4249378750100732
+    },
+    {
+      "target": "smg-pc-sceneobj-holder-real-or-absent-tests",
+      "build_exit": 0,
+      "binary_sha256": "2fc2156762bf2513da38528c95bb01525bcbad477bc2d0b46e8d172520c6529f",
+      "run_exit": 0,
+      "seconds": 1.3758597919950262
+    },
+    {
+      "target": "smg-pc-nameobj-factory-placement-tests",
+      "build_exit": 0,
+      "binary_sha256": "9127e3bff53e3a907311d922e53f4b60503e1dcf8e1262951821598c48fe11b9",
+      "run_exit": 0,
+      "seconds": 1.5021231669816189
+    },
+    {
+      "target": "smg-pc-authored-placement-instantiator-tests",
+      "build_exit": 0,
+      "binary_sha256": "a4dc281d5f4cbb0a22bc527097307b94ad8978ffaf7d77d9634a901a82c002b1",
+      "run_exit": 0,
+      "seconds": 2.3068859170307405
+    },
+    {
+      "target": "smg-pc-area-obj-core-tests",
+      "build_exit": 0,
+      "binary_sha256": "4745fc5bff69f9c4c5663384a210634e8fc3073e641e1e9f20508062f3fdec6e",
+      "run_exit": 0,
+      "seconds": 1.4250136670307256
+    },
+    {
+      "target": "smg-pc-area-obj-real-or-absent-tests",
+      "build_exit": 0,
+      "binary_sha256": "cb527890c346eddd8548e31e425f8bc4e7f1382abc60b408807f74b94dfbe77f",
+      "run_exit": 0,
+      "seconds": 1.7091944169951603
+    },
+    {
+      "target": "smg-pc-sphere-selector-real-or-absent-tests",
+      "build_exit": 0,
+      "binary_sha256": "283385ecccdc12b97d6f1778f7955daae9da523a7de7517ce1fcc43609f29624",
+      "run_exit": 0,
+      "seconds": 1.4822335839853622
+    },
+    {
+      "target": "smg-pc-original-scene-wipe-owner-tests",
+      "build_exit": 0,
+      "binary_sha256": "1d1c3d57ed7c129317f0a2db8d94e130c8496f92b92901e96021c5a0eee3ce77",
+      "run_exit": 0,
+      "seconds": 2.2927434999728575
+    },
+    {
+      "target": "smg-pc-original-camera-context-tests",
+      "build_exit": 0,
+      "binary_sha256": "0df5c842f57ba14d1eedb94c83d6e8656336e50f681a128f6947f99c59a1e497",
+      "run_exit": 0,
+      "seconds": 1.9442105420166627
+    },
+    {
+      "target": "smg-pc-original-camera-director-tests",
+      "build_exit": 0,
+      "binary_sha256": "0877e37ead5e80f9b549f01000a161dcd893b8d1bf04e5af30751d95759247c2",
+      "run_exit": 0,
+      "seconds": 2.2355632500257343
+    },
+    {
+      "target": "smg-pc-original-xanime-player-tests",
+      "build_exit": 0,
+      "binary_sha256": "4878a84a3bb52444e68e4931bf2d076836453dfd459e5daf57afef624ce47411",
+      "run_exit": 0,
+      "seconds": 1.8805587500100955
+    }
+  ],
+  "demo": {
+    "command": [
+      "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-showcase",
+      "gateway",
+      "--disc",
+      "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+      "--max-frames",
+      "960",
+      "--width",
+      "1280",
+      "--height",
+      "720"
+    ],
+    "binary_sha256": "4ab87cc3db710b2c83d13a7b753c5f2df8e1105bd44c03f388b70f8c69ba12d1",
+    "exit": 0,
+    "timeout": false,
+    "wall_seconds": 16.796544625016395,
+    "buttons": "",
+    "sdl_key_script": "180-210:w;270-300:a;360-390:s;450-480:d;600-605:space;780-785:space",
+    "window_activate_when_shown": "default",
+    "present_fps": 59.918007062828565,
+    "simulation_ticks_per_second": 60.044951993046425
+  },
+  "demo_checks": {
+    "passed": true,
+    "synthetic_sdl_input": true,
+    "checks": [
+      {
+        "name": "completed replay",
+        "passed": true,
+        "last_tick": 960
+      },
+      {
+        "name": "finite movement and camera",
+        "passed": true,
+        "invalid_samples": []
+      },
+      {
+        "name": "idle remains still on ground",
+        "passed": true,
+        "observed_samples": 51,
+        "displacement": 0.0
+      },
+      {
+        "name": "W is accepted and moves Mario",
+        "passed": true,
+        "samples": 31,
+        "moving_on_ground_samples": 24,
+        "displacement": 126.61877501289318
+      },
+      {
+        "name": "W releases",
+        "passed": true,
+        "samples": 16
+      },
+      {
+        "name": "A is accepted and moves Mario",
+        "passed": true,
+        "samples": 31,
+        "moving_on_ground_samples": 23,
+        "displacement": 118.10277376508573
+      },
+      {
+        "name": "A releases",
+        "passed": true,
+        "samples": 16
+      },
+      {
+        "name": "S is accepted and moves Mario",
+        "passed": true,
+        "samples": 31,
+        "moving_on_ground_samples": 23,
+        "displacement": 118.24746841767595
+      },
+      {
+        "name": "S releases",
+        "passed": true,
+        "samples": 16
+      },
+      {
+        "name": "D is accepted and moves Mario",
+        "passed": true,
+        "samples": 31,
+        "moving_on_ground_samples": 23,
+        "displacement": 118.32065882875388
+      },
+      {
+        "name": "D releases",
+        "passed": true,
+        "samples": 16
+      },
+      {
+        "name": "jump at 600 takes off and lands",
+        "passed": true,
+        "takeoff_tick": 600,
+        "landing_tick": 635
+      },
+      {
+        "name": "jump at 780 takes off and lands",
+        "passed": true,
+        "takeoff_tick": 780,
+        "landing_tick": 815
+      }
+    ]
+  },
+  "original_provider_checks": 18,
+  "gameplay_scope": "bounded Gateway movement and original camera; full bunny chase/Rosalina not complete"
+}

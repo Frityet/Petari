@@ -11,8 +11,7 @@ namespace {
     NEW_NERVE(FileSelectEffectNrvDisappear, FileSelectEffect, Disappear);
 };  // namespace
 
-FileSelectEffect::FileSelectEffect(const char* pName) : LiveActor(pName) {
-    mEffectFrame = 0.0f;
+FileSelectEffect::FileSelectEffect(const char* pName) : LiveActor(pName), mEffectFrame() {
 }
 
 void FileSelectEffect::init(const JMapInfoIter& rIter) {
@@ -29,22 +28,22 @@ void FileSelectEffect::appear() {
 }
 
 void FileSelectEffect::disappear() {
-    if (MR::isDead(this) || isNerve(&FileSelectEffectNrvDisappear::sInstance)) {
+    if (MR::isDead(this) || isNerve(&::FileSelectEffectNrvDisappear::sInstance)) {
         return;
     }
 
-    if (isNerve(&FileSelectEffectNrvAppear::sInstance)) {
+    if (isNerve(&::FileSelectEffectNrvAppear::sInstance)) {
         if (MR::isNewNerve(this)) {
             kill();
             return;
         }
 
         mEffectFrame = MR::getBrkCtrl(this)->getFrame();
-    } else if (isNerve(&FileSelectEffectNrvWait::sInstance)) {
+    } else if (isNerve(&::FileSelectEffectNrvWait::sInstance)) {
         mEffectFrame = MR::getBrkCtrl(this)->getEnd();
     }
 
-    setNerve(&FileSelectEffectNrvDisappear::sInstance);
+    setNerve(&::FileSelectEffectNrvDisappear::sInstance);
 }
 
 void FileSelectEffect::exeAppear() {
@@ -73,29 +72,29 @@ void FileSelectEffect::exeDisappear() {
 }
 
 void FileSelectEffect::calcAndSetBaseMtx() {
-    TVec3f zDir = MR::getCamPos() - mPosition;
+    TVec3f dirZ = MR::getCamPos() - mPosition;
 
-    if (MR::isNearZero(zDir, 0.001f)) {
+    if (MR::isNearZero(dirZ)) {
         return;
     }
 
-    MR::normalize(&zDir);
+    MR::normalize(&dirZ);
 
-    TVec3f yDir(MR::getCamYdir());
-    TVec3f xDir(yDir.cross(zDir));
+    TVec3f dirY = MR::getCamYdir();
 
-    if (MR::isNearZero(xDir, 0.001f)) {
+    TVec3f dirX;
+    dirX.cross(dirY, dirZ);
+
+    if (MR::isNearZero(dirX)) {
         return;
     }
 
-    MR::normalize(&xDir);
-    yDir.cross(zDir, xDir);
+    MR::normalize(&dirX);
+    dirY.cross(dirZ, dirX);
 
-    TPos3f baseMtx;
-    baseMtx.setXYZDir(xDir, yDir, zDir);
-    baseMtx.setTrans(mPosition);
-    MR::setBaseTRMtx(this, baseMtx);
-}
+    TPos3f mtx;
+    mtx.setXYZDir(dirX, dirY, dirZ);
+    mtx.setTrans(mPosition);
 
-FileSelectEffect::~FileSelectEffect() {
+    MR::setBaseTRMtx(this, mtx);
 }

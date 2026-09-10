@@ -7,7 +7,7 @@ class EffectSystem;
 
 class ParticleEmitterHolder {
 public:
-    ParticleEmitterHolder(EffectSystem const*, int);
+    ParticleEmitterHolder(const EffectSystem*, int);
 
     void update(bool);
     void forceDeleteAllOneTimeEmitters();
@@ -16,6 +16,6 @@ public:
     ParticleEmitter* findAvailableParticleEmitter();
     void requestMovementOffAllLoopEmitters();
 
-    EffectSystem const* mEffectSystem;                 // 0x0
-    MR::AssignableArray< ParticleEmitter > mEmitters;  // 0x4
+    /* 0x0 */ const EffectSystem* mEffectSystem;
+    /* 0x4 */ MR::AssignableArray< ParticleEmitter > mEmitters;
 };

@@ -839,7 +839,7 @@ namespace {
             "DinoPackun", "DinoPackunDemoPosition",
             "DinoPackunEggShell", "DinoPackunEggShellBreak",
             "DinoPackunTailBall"};
-        require(collector.mCount == static_cast<s32>(expected.size()),
+        require(collector.getArchiveNum() == static_cast<s32>(expected.size()),
                 "unsupported static archive metadata was erased by creator policy");
         for (auto index = std::size_t{}; index < expected.size(); ++index) {
             require(collector.getArchive(static_cast<s32>(index)) ==

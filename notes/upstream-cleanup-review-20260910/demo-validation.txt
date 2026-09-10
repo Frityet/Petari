@@ -1,0 +1,7 @@
+Validated cleanup/upstream demo on 2026-09-10.
+
+Binary SHA256: 4ab87cc3db710b2c83d13a7b753c5f2df8e1105bd44c03f388b70f8c69ba12d1
+Real RMGK01 disc; package size 1280x720; 960 simulation ticks.
+All 13 scripted SDL-input checks pass: idle stability, W/A/S/D accepted, each released, two jumps with successful landings, and finite movement/camera values.
+Clean exit 0, no timeout. Measured presentation rate: 59.918 FPS.
+The original Mario and camera controllers remain active. This test is synthetic SDL input, not a new physical-keyboard playthrough or full Gateway bunny chase proof.

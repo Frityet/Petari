@@ -10,6 +10,7 @@
 #include <stdexcept>
 #include <string>
 #include <string_view>
+#include <type_traits>
 
 namespace {
 
@@ -44,9 +45,25 @@ namespace {
             SourcePair{"decomp/src/Game/Map/SleepControllerHolder.cpp", "src/Game/Map/SleepControllerHolder.cpp"},
         };
 
+        static_assert(std::is_abstract_v<AreaForm>);
+        static_assert(!std::is_abstract_v<AreaFormCube> && !std::is_abstract_v<AreaFormSphere> &&
+                      !std::is_abstract_v<AreaFormCylinder> && !std::is_abstract_v<AreaFormBowl>);
         for (const auto &pair : source_pairs) {
-            require(read_file(pair.decomp) == read_file(pair.port),
-                    std::string("pc-port Game file must remain byte-identical to the decomp: ") +
+            auto expected = read_file(pair.decomp);
+            if (pair.port == "src/Game/AreaObj/AreaForm.hpp") {
+                // The reference has no definitions for these base virtuals. Native
+                // linking requires abstract declarations; all concrete forms override both.
+                for (const auto declaration : {
+                         std::string_view("    virtual void init(const JMapInfoIter&);"),
+                         std::string_view("    virtual bool isInVolume(const TVec3f&) const;")}) {
+                    const auto offset = expected.find(declaration);
+                    require(offset != std::string::npos && offset < expected.find("class AreaFormCube"),
+                            "only the two verified AreaForm base declarations may receive native pure-virtual markers");
+                    expected.insert(offset + declaration.size() - 1, " = 0");
+                }
+            }
+            require(expected == read_file(pair.port),
+                    std::string("pc-port Game file must match the decomp with only the verified base declaration fixes: ") +
                         std::string(pair.port));
         }
     }
@@ -105,8 +122,8 @@ namespace {
         auto cylinder = AreaFormCylinder{};
         cylinder.mTranslation.set(20.0F, -40.0F, 10.0F);
         cylinder.mRotation.set(0.0F, 1.0F, 0.0F);
-        cylinder._20 = 250.0F;
-        cylinder._24 = 800.0F;
+        cylinder.mRadius = 250.0F;
+        cylinder.mHeight = 800.0F;
 
         auto follow = TPos3f{};
         MR::makeMtxRotate(follow, TVec3f{0.0F, 0.0F, 90.0F});

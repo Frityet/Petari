@@ -1,0 +1,16 @@
+{
+  "function": "sort__15LightAreaHolderFv",
+  "retail_address": "0x80023670",
+  "retail_size_bytes": 160,
+  "baseline_definition_present": false,
+  "recovered_wii_compile_exit": 0,
+  "recovered_match_percent": 96.375,
+  "recovered_size_bytes": 160,
+  "native_mirror_byte_identical": true,
+  "native_source_changed": false,
+  "files": {
+    "decomp/src/Game/AreaObj/LightAreaHolder.cpp": "59b8eb73b209a43d8b091076c57ed17b3eb34d76545936d4d5162d719a537f4b",
+    "src/Game/AreaObj/LightAreaHolder.cpp": "59b8eb73b209a43d8b091076c57ed17b3eb34d76545936d4d5162d719a537f4b",
+    "notes/gateway-audit-20260907/restoration/retail/obj/Game/AreaObj/LightAreaHolder.o": "4917c0ed84377487df7783a9dbb1c716733b2b65e043ff129e9cdaf32c166116"
+  }
+}

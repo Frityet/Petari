@@ -1,8 +1,7 @@
 #pragma once
 
 #include "Game/Map/LightZoneDataHolder.hpp"
-#include "JSystem/JGeometry/TBox.hpp"
-#include "JSystem/JGeometry/TVec.hpp"
+#include <JSystem/JGeometry/TBox.hpp>
 
 class AreaObj;
 class AreaObjContainer;
@@ -27,11 +26,12 @@ namespace MR {
     void calcCylinderUpVec(TVec3f*, const AreaObj*);
     f32 getCylinderRadius(const AreaObj*);
 
+    void calcCubeAxisZ(const AreaObj*, TVec3f*);
     void calcCubePos(const AreaObj*, TVec3f*);
+    void calcCubeWorldBox(TDirBox3f*, const AreaObj*);
     void calcCubeLocalPos(TVec3f*, const AreaObj*, const TVec3f&);
 
     void calcCubeRotate(const AreaObj*, TVec3f*);
-    void calcCubeAxisZ(const AreaObj*, TVec3f*);
 
     bool calcWhirlPoolAccelInfo(const TVec3f&, TVec3f*);
 
@@ -40,6 +40,8 @@ namespace MR {
     AreaObj* getCurrentAstroOverlookAreaObj();
 
     AreaObj* getAreaIn(const char*, const TVec3f&);
+
+    void tryToUpdatePlayerRestartIdInfo(const TVec3f&);
 
     bool getWaterAreaObj(WaterInfo*, const TVec3f&);
     bool getWaterAreaInfo(WaterInfo*, const TVec3f&, const TVec3f&, bool);

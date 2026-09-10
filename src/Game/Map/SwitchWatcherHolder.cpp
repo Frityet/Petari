@@ -7,15 +7,15 @@
 #include "Game/Util/ObjUtil.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include <algorithm>
+#include <functional.hpp>
 #include <memory>
 
-SwitchWatcherHolder::SwitchWatcherHolder() : NameObj("SwitchWatcherHolder") {
-    mWatcherCount = 0;
+SwitchWatcherHolder::SwitchWatcherHolder() : NameObj("SwitchWatcherHolder"), mSwitchWatcher() {
     MR::connectToScene(this, MR::MovementType_SwitchWatcherHolder, -1, -1, -1);
 }
 
 void SwitchWatcherHolder::movement() {
-    std::for_each(mWatchers.begin(), &mWatchers[mWatcherCount], std::mem_func(&SwitchWatcher::movement));
+    std::for_each(mSwitchWatcher.begin(), mSwitchWatcher.end(), std::mem_func(&SwitchWatcher::movement));
 }
 
 void SwitchWatcherHolder::joinSwitchEventListenerA(const StageSwitchCtrl* pCtrl, SwitchEventListener* pListener) {
@@ -31,7 +31,7 @@ void SwitchWatcherHolder::joinSwitchEventListenerAppear(const StageSwitchCtrl* p
 }
 
 SwitchWatcher* SwitchWatcherHolder::findSwitchWatcher(const StageSwitchCtrl* pCtrl) {
-    for (SwitchWatcher** it = mWatchers.begin(); it != &mWatchers[mWatcherCount]; it++) {
+    for (SwitchWatcher** it = mSwitchWatcher.begin(); it != mSwitchWatcher.end(); it++) {
         if ((*it)->isSameSwitch(pCtrl)) {
             return *it;
         }
@@ -41,18 +41,20 @@ SwitchWatcher* SwitchWatcherHolder::findSwitchWatcher(const StageSwitchCtrl* pCt
 }
 
 void SwitchWatcherHolder::joinSwitchEventListener(const StageSwitchCtrl* pCtrl, u32 type, SwitchEventListener* pListener) {
-    SwitchWatcher* watcher = findSwitchWatcher(pCtrl);
-    if (watcher == nullptr) {
-        watcher = new SwitchWatcher(pCtrl);
-        addSwitchWatcher(watcher);
+    SwitchWatcher* pSwitchWatcher = findSwitchWatcher(pCtrl);
+
+    if (pSwitchWatcher == nullptr) {
+        pSwitchWatcher = new SwitchWatcher(pCtrl);
+        addSwitchWatcher(pSwitchWatcher);
     }
-    watcher->addSwitchListener(pListener, type);
+
+    pSwitchWatcher->addSwitchListener(pListener, type);
 }
 
-void SwitchWatcherHolder::addSwitchWatcher(SwitchWatcher* pWatcher) {
-    auto guard = std::unique_ptr<SwitchWatcher>{pWatcher};
-    smgpc::scene::adopt_current_scene_obj_holder_descendant(pWatcher);
-    mWatchers[mWatcherCount++] = pWatcher;
+void SwitchWatcherHolder::addSwitchWatcher(SwitchWatcher* pSwitchWatcher) {
+    auto guard = std::unique_ptr<SwitchWatcher>{pSwitchWatcher};
+    smgpc::scene::adopt_current_scene_obj_holder_descendant(pSwitchWatcher);
+    mSwitchWatcher.push_back(pSwitchWatcher);
     (void)guard.release();
 }
 
@@ -65,6 +67,3 @@ namespace MR {
         MR::requestMovementOn(getSwitchWatcherHolder());
     }
 };  // namespace MR
-
-SwitchWatcherHolder::~SwitchWatcherHolder() {
-}

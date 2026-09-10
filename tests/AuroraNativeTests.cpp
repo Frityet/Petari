@@ -763,7 +763,7 @@ namespace {
         for (auto row = 0; row < placement.getNumEntries(); ++row) {
             auto archives = NameObjArchiveListCollector{};
             NameObjFactory::getMountObjectArchiveList(&archives, "DemoRabbit", JMapInfoIter(&placement, row));
-            require(archives.mCount == 1 &&
+            require(archives.getArchiveNum() == 1 &&
                         std::string_view(archives.getArchive(0)) ==
                             expected[static_cast<std::size_t>(row)],
                     "the active DemoRabbit factory must select baby/adult/adult from CastId 0/1/2");
@@ -813,7 +813,7 @@ namespace {
 
         auto archives = NameObjArchiveListCollector{};
         NameObjFactory::getMountObjectArchiveList(&archives, "StarPieceGroup", JMapInfoIter());
-        require(archives.mCount == 0,
+        require(archives.getArchiveNum() == 0,
                 "an absent StarPiece group factory must not synthesize archive requests");
     }
 
@@ -1241,8 +1241,8 @@ namespace {
         require(!part->mIsDead && scheduler.is_draw_connected(*part) && !MR::isClipped(part),
                 "PartsModel should reconnect to draw without changing clipping when its host returns");
 
-        auto* ownedFixedPosition = part->mFixedPos;
-        part->mFixedPos = nullptr;
+        auto* ownedFixedPosition = part->mFixedPosition;
+        part->mFixedPosition = nullptr;
         delete ownedFixedPosition;
         delete part;
     }

@@ -200,6 +200,8 @@ u8 SCGetWpadSpeakerVolume(void);
 BOOL SCGetBtCmpDevInfoArray(SCBtCmpDevInfoArray*);
 BOOL SCSetBtCmpDevInfoArray(const SCBtCmpDevInfoArray*);
 BOOL SCGetBtDeviceInfoArray(SCBtDeviceInfoArray* info);
+BOOL SCGetBtCmpDevInfoArray(SCBtCmpDevInfoArray* array);
+BOOL SCSetBtCmpDevInfoArray(const SCBtCmpDevInfoArray* array);
 BOOL SCSetBtDeviceInfoArray(const SCBtDeviceInfoArray*);
 void SCFlushAsync(SCFlushCallback);
 

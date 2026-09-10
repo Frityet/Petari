@@ -1,0 +1,5 @@
+# Factory collision fixture refresh
+
+The previously standalone FileSelect wall fixture now publishes the real scenario catalog, stage session/resources/zone tables, original scene executor/holder, system settings and camera owner. It creates the existing scene demo runtime before camera/actor construction, matching production lifetime order. The exact four authored rows and the two unsupported rows remain asserted. All collision geometry, query, provenance, dead/appeared and destruction assertions remain.
+
+One old assertion encoded superseded host behavior: it expected explicit collision invalidation to survive actor reappearance. Retail LiveActor::makeActorAppeared at 801657BC–801657D4 always calls MR::validateCollisionParts for a non-null mCollisionParts. makeActorDead at 801658A0–801658B0 invalidates but retains that pointer. Original validation at 803DFD78–803DFDA0 re-adds the zone and sets the valid flag. The fixture now checks that the same retained CollisionParts reappears, then that another explicit invalidation removes it again. Independent assembly review corroborated this; production logic was not changed.

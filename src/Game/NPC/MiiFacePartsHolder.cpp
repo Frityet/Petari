@@ -17,8 +17,7 @@
 #include <JSystem/JKernel/JKRMemArchive.hpp>
 #include <JSystem/JKernel/JKRSolidHeap.hpp>
 
-MiiFacePartsHolder::MiiFacePartsHolder(int numParts)
-    : LiveActorGroup("Mii顔モデル保持", numParts), JKRDisposer(), mRFLWorkBuffer(), _34() {
+MiiFacePartsHolder::MiiFacePartsHolder(int partsNumMax) : LiveActorGroup("Mii顔モデル保持", partsNumMax), JKRDisposer(), mRFLWorkBuffer(), _34() {
 }
 
 MiiFacePartsHolder::~MiiFacePartsHolder() {
@@ -40,7 +39,7 @@ void MiiFacePartsHolder::init(const JMapInfoIter& rIter) {
 }
 
 void MiiFacePartsHolder::calcAnim() {
-    for (int i = 0; i < getObjectCount(); i++) {
+    for (int i = 0; i < getObjNum(); i++) {
         LiveActor* pActor = getActor(i);
 
         if (pActor == nullptr) {
@@ -58,7 +57,7 @@ void MiiFacePartsHolder::calcAnim() {
 }
 
 void MiiFacePartsHolder::calcViewAndEntry() {
-    for (int i = 0; i < getObjectCount(); i++) {
+    for (int i = 0; i < getObjNum(); i++) {
         LiveActor* pActor = getActor(i);
 
         if (pActor == nullptr) {
@@ -97,7 +96,7 @@ void MiiFacePartsHolder::reinitCharModel() {
     }
 
     if (_38 == RFLErrcode_Success) {
-        for (int i = 0; i < getObjectCount(); i++) {
+        for (int i = 0; i < getObjNum(); i++) {
             pParts = static_cast< MiiFaceParts* >(getActor(i));
 
             if (pParts->_D0 || pParts->_D1) {
@@ -114,7 +113,7 @@ bool MiiFacePartsHolder::isInitEnd() const {
         return true;
     }
 
-    for (int i = 0; i < getObjectCount(); i++) {
+    for (int i = 0; i < getObjNum(); i++) {
         pParts = static_cast< MiiFaceParts* >(getActor(i));
 
         if (pParts->_D1) {
@@ -148,7 +147,7 @@ MiiFaceParts* MiiFacePartsHolder::createPartsFromDefault(const char* pName, u16 
 void MiiFacePartsHolder::drawEachActor(DrawPartsFuncPtr pDrawFunc, const RFLDrawCoreSetting* pSetting) const {
     MiiFaceParts* pParts;
 
-    for (int i = 0; i < getObjectCount(); i++) {
+    for (int i = 0; i < getObjNum(); i++) {
         pParts = static_cast< MiiFaceParts* >(getActor(i));
 
         if (MR::isDead(pParts)) {
@@ -186,7 +185,6 @@ void MiiFacePartsHolder::drawExtra() const {
     drawEachActor(&MiiFaceParts::drawXlu, &setting);
 }
 
-// FIXME: Enumerated GX types might be defined incorrectly?
 void MiiFacePartsHolder::setTevOpa() const {
     GXColorS10 color1 = {0, 0, 0, -89};
     GXSetTevColorS10(GX_TEVREG0, color1);
@@ -221,7 +219,6 @@ void MiiFacePartsHolder::setTevOpa() const {
     GXSetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
 }
 
-// FIXME: Enumerated GX types might be defined incorrectly?
 void MiiFacePartsHolder::setTevXlu() const {
     GXColorS10 color1 = {0, 0, 0, -89};
     GXSetTevColorS10(GX_TEVREG0, color1);

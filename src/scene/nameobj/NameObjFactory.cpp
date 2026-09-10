@@ -561,7 +561,7 @@ namespace NameObjFactory {
     void requestMountObjectArchives(const char *pName, const JMapInfoIter &rIter) {
         auto archive_list = NameObjArchiveListCollector{};
         getMountObjectArchiveList(&archive_list, pName, rIter);
-        for (auto index = s32{}; index < archive_list.mCount; ++index) {
+        for (auto index = s32{}; index < archive_list.getArchiveNum(); ++index) {
             MR::mountAsyncArchiveByObjectOrLayoutName(archive_list.getArchive(index), nullptr);
         }
     }
@@ -569,7 +569,7 @@ namespace NameObjFactory {
     bool isReadResourceFromDVD(const char *pName, const JMapInfoIter &rIter) {
         auto archive_list = NameObjArchiveListCollector{};
         getMountObjectArchiveList(&archive_list, pName, rIter);
-        for (auto index = s32{}; index < archive_list.mCount; ++index) {
+        for (auto index = s32{}; index < archive_list.getArchiveNum(); ++index) {
             if (!MR::isLoadedObjectOrLayoutArchive(archive_list.getArchive(index))) {
                 return true;
             }
@@ -723,7 +723,7 @@ namespace smgpc::scene::nameobj {
         const auto object = std::string(object_name);
         NameObjFactory::getMountObjectArchiveList(
             &collector, object.c_str(), placement_iter != nullptr ? *placement_iter : invalid_iter);
-        for (auto index = s32{}; index < collector.mCount; ++index) {
+        for (auto index = s32{}; index < collector.getArchiveNum(); ++index) {
             add_archive_request(requests, describe_archive(dvd, collector.getArchive(index)));
         }
         return requests;

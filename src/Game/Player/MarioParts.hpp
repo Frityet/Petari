@@ -7,8 +7,7 @@ public:
     MarioParts(LiveActor*, const char*, const char*, MtxPtr);
     MarioParts(LiveActor*, const char*, const char*, bool, MtxPtr, MtxPtr);
 
-    virtual ~MarioParts();
-    virtual void init(const JMapInfoIter&) override;
+    virtual void init(const JMapInfoIter&);
 
     /* 0x9C */ const char* _9C;
 };
