@@ -1763,10 +1763,12 @@ namespace smgpc::runtime {
     }
 
     void EffectService::load_resources(const smgpc::resource::RarcArchive &archive) {
+        const smgpc::compat::JkrHostAllocationScope host;
         _resource_library = smgpc::render::effects::EffectResourceLibrary::from_archive(archive);
     }
 
     void EffectService::begin_frame(std::uint64_t frame_index) {
+        const smgpc::compat::JkrHostAllocationScope host;
         _frame_index = frame_index;
         advance_effects_to_frame(frame_index);
 #ifndef NDEBUG
@@ -1776,6 +1778,9 @@ namespace smgpc::runtime {
 
     void EffectService::register_keeper(EffectKeeperHostKind host_kind, std::string_view host_name, s32 requested_capacity,
                                         std::string_view resource_group_name, bool sort_enabled, const void *host_identity) {
+        // The process service retains metadata after the original actor's
+        // scene heap retires, including copies stored in event history.
+        const smgpc::compat::JkrHostAllocationScope host;
         if (host_name.empty()) {
             return;
         }
@@ -1819,6 +1824,7 @@ namespace smgpc::runtime {
 
     void EffectService::bind_host_transform(EffectKeeperHostKind host_kind, std::string_view host_name, EffectHostBindingSource source,
                                             const std::array<float, 12U> &matrix, bool host_dead, const void *host_identity) {
+        const smgpc::compat::JkrHostAllocationScope host;
         if (host_name.empty()) {
             return;
         }
@@ -1859,6 +1865,7 @@ namespace smgpc::runtime {
     }
 
     void EffectService::emit(std::string_view actor_name, std::string_view effect_name, const void *host_identity) {
+        const smgpc::compat::JkrHostAllocationScope host;
         const auto keeper = registered_keeper(actor_name, host_identity);
         const auto binding = host_binding(actor_name, host_identity);
         auto resolved = resolve(actor_name, effect_name, host_identity);
@@ -1904,6 +1911,7 @@ namespace smgpc::runtime {
     }
 
     void EffectService::delete_effect(std::string_view actor_name, std::string_view effect_name, const void *host_identity) {
+        const smgpc::compat::JkrHostAllocationScope host;
         const auto keeper = registered_keeper(actor_name, host_identity);
         if (!keeper.has_value()) {
             aurora::throw_host_exception<std::logic_error>("Effect deletion requires a registered effect keeper.");
@@ -1924,6 +1932,7 @@ namespace smgpc::runtime {
     }
 
     void EffectService::delete_all(std::string_view actor_name, const void *host_identity) {
+        const smgpc::compat::JkrHostAllocationScope host;
         const auto keeper = registered_keeper(actor_name, host_identity);
         if (!keeper.has_value()) {
             aurora::throw_host_exception<std::logic_error>("Effect deletion requires a registered effect keeper.");
@@ -1943,6 +1952,7 @@ namespace smgpc::runtime {
     }
 
     void EffectService::draw(s32 draw_type, const smgpc::camera::CameraPose *camera_pose) {
+        const smgpc::compat::JkrHostAllocationScope host;
         auto &renderer = render::current_aurora_renderer();
         const auto world_draw = effect_draw_type_uses_world_camera(draw_type) && camera_pose != nullptr;
         for (const auto &active : _active_effects) {
@@ -2152,6 +2162,7 @@ namespace smgpc::runtime {
     }
 
     std::vector<EffectKeeperRegistration> EffectService::registered_keepers() const {
+        const smgpc::compat::JkrHostAllocationScope host;
         auto out = std::vector<EffectKeeperRegistration>{};
         out.reserve(_registered_keepers.size() + _registered_keeper_instances.size());
         for (const auto &[_, keeper] : _registered_keepers) {
@@ -2165,6 +2176,7 @@ namespace smgpc::runtime {
 
     std::optional<EffectKeeperRegistration> EffectService::registered_keeper(std::string_view host_name,
                                                                              const void *host_identity) const {
+        const smgpc::compat::JkrHostAllocationScope host;
         if (host_identity != nullptr) {
             if (const auto it = _registered_keeper_instances.find(host_identity); it != _registered_keeper_instances.end()) {
                 return it->second;
@@ -2180,6 +2192,7 @@ namespace smgpc::runtime {
 
     std::optional<EffectHostBinding> EffectService::host_binding(std::string_view host_name,
                                                                  const void *host_identity) const {
+        const smgpc::compat::JkrHostAllocationScope host;
         if (host_identity != nullptr) {
             if (const auto it = _host_binding_instances.find(host_identity); it != _host_binding_instances.end()) {
                 return it->second;
@@ -2194,6 +2207,7 @@ namespace smgpc::runtime {
     }
 
     std::vector<std::string> EffectService::active_effects(std::string_view actor_name, const void *host_identity) const {
+        const smgpc::compat::JkrHostAllocationScope host;
         auto out = std::vector<std::string>{};
         for (const auto &active : _active_effects) {
             if (effect_host_matches(active, actor_name, host_identity)) {
@@ -3497,7 +3511,6 @@ namespace smgpc::runtime {
         _has_base_matrix = false;
         _has_forced_base_matrix = false;
         _on_ground = false;
-        _player_dead_state.reset();
         _swing_permitted = false;
         // Control ownership can span scene boundaries (notably puppetable
         // demos), so stage-local actor teardown must not release it.
@@ -3525,7 +3538,6 @@ namespace smgpc::runtime {
         }
         _attached_actor = &actor;
         _actor_bridge = actor_bridge;
-        _player_dead_state.reset();
         copy_actor_state();
         actor.mFlag.mIsHiddenModel = _player_hidden;
         if (_actor_bridge.set_swing_permission != nullptr) {
@@ -3543,7 +3555,6 @@ namespace smgpc::runtime {
             }
             _attached_actor = nullptr;
             _actor_bridge = {};
-            _player_dead_state.reset();
         }
     }
 
@@ -3552,7 +3563,8 @@ namespace smgpc::runtime {
             return;
         }
 
-        _attached_actor->calcAndSetBaseMtx();
+        // The actor's original calcAnim phase owns matrix updates and their
+        // gameplay side effects. This publication only snapshots current state.
         copy_actor_state();
         _attached_actor->mFlag.mIsHiddenModel = _player_hidden;
     }
@@ -3623,17 +3635,6 @@ namespace smgpc::runtime {
         }
     }
 
-    void PlayerSystemService::set_player_dead_state(bool dead) {
-        if (_attached_actor == nullptr) {
-            aurora::throw_host_exception<std::logic_error>("Cannot resolve player-death state without an attached player actor.");
-        }
-        _player_dead_state = dead;
-    }
-
-    void PlayerSystemService::clear_player_dead_state() {
-        _player_dead_state.reset();
-    }
-
     void PlayerSystemService::disable_control() {
         _control_enabled = false;
     }
@@ -3692,7 +3693,18 @@ namespace smgpc::runtime {
     }
 
     std::optional<bool> PlayerSystemService::player_dead_state() const {
-        return _player_dead_state;
+        if (_attached_actor == nullptr ||
+            _actor_bridge.read_nerve_change_enabled == nullptr) {
+            return std::nullopt;
+        }
+        return !_actor_bridge.read_nerve_change_enabled(*_attached_actor);
+    }
+
+    TVec3f *PlayerSystemService::actor_center_position() const {
+        if (_attached_actor == nullptr || _actor_bridge.read_center_position == nullptr) {
+            return nullptr;
+        }
+        return _actor_bridge.read_center_position(*_attached_actor);
     }
 
     std::optional<s32> PlayerSystemService::player_element_mode() const {

@@ -1,4 +1,6 @@
 #include "camera/CameraPose.hpp"
+#include "compat/JkrAllocationDomain.hpp"
+#include "JSystem/JKernel/JKRHeap.hpp"
 #include "render/effects/JpcBillboard.hpp"
 #include "runtime/RuntimeServices.hpp"
 
@@ -223,6 +225,67 @@ namespace {
                 "per-actor effect teardown must target identity rather than name");
     }
 
+    void test_effect_metadata_outlives_original_scene_heap() {
+        using namespace smgpc::runtime;
+        using namespace smgpc::compat;
+        constexpr auto name = std::string_view{"Original actor with a non-SSO effect keeper name"};
+        constexpr auto group = std::string_view{"Original actor resource group retained in native history"};
+        constexpr auto effect = std::string_view{"Long native effect request retained beyond scene teardown"};
+        constexpr auto matrix = std::array<float, 12U>{
+            1, 0, 0, 10, 0, 1, 0, 20, 0, 0, 1, 30,
+        };
+        auto service = EffectService{};
+        auto keeper_copies = std::vector<EffectKeeperRegistration>{};
+        auto binding_copy = std::optional<EffectHostBinding>{};
+        auto active_names = std::vector<std::string>{};
+        auto identity = 0;
+        {
+            auto runtime = JkrHeapRuntime::create(1U << 20U);
+            const auto root_free = runtime->root_heap().getTotalFreeSize();
+            auto domain = JkrAllocationDomain::create(runtime, 64U << 10U);
+            const auto retired = std::weak_ptr<JkrAllocationDomain>{domain};
+            {
+                const JkrAllocationScope game(domain);
+                const auto free_before = domain->heap().getFreeSize();
+                for (const auto *host : {static_cast<const void *>(nullptr), static_cast<const void *>(&identity)}) {
+                    service.register_keeper(EffectKeeperHostKind::LiveActor, name, 1, group, false, host);
+                    service.bind_host_transform(EffectKeeperHostKind::LiveActor, name,
+                                                EffectHostBindingSource::LiveActorBaseMatrix, matrix, false, host);
+                    service.emit(name, effect, host);
+                    service.begin_frame(1U);
+                    active_names = service.active_effects(name, host);
+                    binding_copy = service.host_binding(name, host);
+                    service.delete_effect(name, effect, host);
+                    service.emit(name, effect, host);
+                    service.delete_all(name, host);
+                }
+                keeper_copies = service.registered_keepers();
+                require(domain->heap().getFreeSize() == free_before,
+                        "native effect records and returned copies must not consume the caller's scene heap");
+                auto *original = new unsigned char[37U];
+                require(JKRHeap::findFromRoot(original) == &domain->heap(),
+                        "effect service calls must restore the original allocation scope");
+                delete[] original;
+            }
+            domain.reset();
+            require(retired.expired() && runtime->root_heap().getTotalFreeSize() == root_free,
+                    "native effect history must not retain the original scene heap");
+        }
+        require(JKRHeap::sRootHeap == nullptr, "the process heap must retire before inspecting native effect records");
+        require(service.events().size() == 8U && keeper_copies.size() == 2U &&
+                    binding_copy->host_name == name && binding_copy->translation[2] == 30.0F &&
+                    active_names.size() == 1U && active_names.front() == effect,
+                "native effect records must survive original scene and root heap teardown");
+        for (const auto &event : service.events()) {
+            require(event.actor_name == name && event.keeper && event.keeper->resource_group_name == group,
+                    "effect history must preserve its owned strings after original heap retirement");
+        }
+        service.release_host_state(name, &identity);
+        service.release_host_state(name);
+        require(service.registered_keepers().empty() && service.active_effect_instances().empty(),
+                "native keeper and binding retirement must remain safe after scene heap retirement");
+    }
+
 }  // namespace
 
 int main() {
@@ -234,6 +297,7 @@ int main() {
             std::pair{"packet path only selects implemented billboards", &test_packet_path_only_selects_implemented_billboards},
             std::pair{"degenerate camera basis is absent", &test_degenerate_camera_basis_is_absent},
             std::pair{"duplicate names keep distinct effect hosts", &test_duplicate_names_keep_distinct_effect_hosts},
+            std::pair{"effect metadata outlives original scene heap", &test_effect_metadata_outlives_original_scene_heap},
         };
         for (const auto &[name, test] : tests) {
             test();

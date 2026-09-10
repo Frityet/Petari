@@ -101,7 +101,8 @@ namespace MR {
     }
 
     TVec3f* getPlayerCenterPos() {
-        return nullptr;
+        auto* player = smgpc::compat::active_player_system_for_player_util();
+        return player != nullptr ? player->actor_center_position() : nullptr;
     }
 
     void setPlayerPos(const TVec3f& position) {

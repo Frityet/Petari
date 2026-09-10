@@ -1,0 +1,11 @@
+{
+  "src/runtime/RuntimeServices.hpp": "36d3183ef726ef3a2b6ea9ec7fee38ed80d7af0d19dfee0d32249bc50ff57539",
+  "src/runtime/RuntimeServices.cpp": "f77daf1bce6e9156353b4738f26115599d0afabf39f415af09c8cfd4ddc6c43b",
+  "src/compat/PlayerStateCompat.cpp": "d7b74e172956830b09654cbf75905761dadda94fe266fa42a00f0ffea48a7ccc",
+  "src/compat/PlayerUtilCompat.cpp": "4e67582d85d440cb22894acba6b499ce6ac91c232d9fbae0557ee51603fe7b6e",
+  "src/showcase/Showcase.cpp": "41925a6821d4ecfe60aaeb8e893576fc4edf96ae07763060ea77c422a2978df4",
+  "tests/PlayerActorBridgeTests.cpp": "e649e9518e052a900c0164585f44490e983b6a8fb18d15e0f910ff5fdb4d7486",
+  "tests/JpcBillboardTests.cpp": "93456816900e193b63f1e67b313462cdda2fd0ea6fcae8b7cb0c20c796bfe891",
+  "tests/RestartStageSessionTests.cpp": "371e80085d2685b62d559e32d4740b548c672edbddc5602881a8e9e4ee052e21",
+  "tests/xmake.lua": "ce27e5aed01bcdfe00bc7dfedad50588271a91b2c92afc0579ddf3fc76fe90d6"
+}

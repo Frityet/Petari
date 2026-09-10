@@ -30,6 +30,12 @@
 #include <string_view>
 
 namespace {
+    class StatePlayer final : public LiveActor {
+    public:
+        StatePlayer() : LiveActor("restart-player-state") {}
+        bool nerve_change_enabled = true;
+    };
+
     void require(bool condition, std::string_view message) {
         if (!condition) {
             throw std::runtime_error(std::string(message));
@@ -153,13 +159,21 @@ int main() {
     ++passed;
 
     auto player = smgpc::runtime::PlayerSystemService{};
-    auto player_actor = LiveActor("restart-player-state");
+    auto player_actor = StatePlayer{};
     player.attach_actor(player_actor);
     const auto player_binding = smgpc::compat::ScopedPlayerSystemServiceOverride(player);
     require_unavailable([] { (void)MR::isPlayerDead(); },
                         "generic LiveActor death must not substitute for Mario nerve-change/death state");
-    player.set_player_dead_state(false);
-    require(!MR::isPlayerDead(), "an explicitly supplied live-player nerve state must be observable");
+    player.attach_actor(player_actor, {
+        .read_nerve_change_enabled = +[](const LiveActor& actor) {
+            return static_cast<const StatePlayer&>(actor).nerve_change_enabled;
+        },
+    });
+    require(!MR::isPlayerDead(), "the attached player nerve-change capability must be queried");
+    player_actor.nerve_change_enabled = false;
+    require(MR::isPlayerDead(), "a nerve change must be visible immediately without frame synchronization");
+    player_actor.nerve_change_enabled = true;
+    require(!MR::isPlayerDead(), "returning to a changeable nerve must clear the death query");
 
     auto restart_cube = RestartCube(0, "RestartCube");
     restart_cube._40 = 1;

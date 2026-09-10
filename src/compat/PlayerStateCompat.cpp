@@ -14,8 +14,8 @@ namespace {
     }
 }  // namespace
 
-// Original MR player-state entry points whose host implementation belongs to
-// the compatibility boundary while MarioActor is not part of the PC build.
+// Original MR player-state entry points read the attached player owner.
+// Unsupported actor capabilities remain unresolved.
 namespace MR {
 
     bool isOnGroundPlayer() {

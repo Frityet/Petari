@@ -1,0 +1,46 @@
+[
+  {
+    "target": "smg-pc-player-actor-bridge-tests",
+    "mode": "build",
+    "exit": 0,
+    "command": [
+      "/opt/homebrew/bin/xmake",
+      "build",
+      "-y",
+      "-j",
+      "12",
+      "smg-pc-player-actor-bridge-tests"
+    ]
+  },
+  {
+    "target": "smg-pc-player-actor-bridge-tests",
+    "mode": "run",
+    "exit": 0,
+    "command": [
+      "build/macosx/arm64/debug/smg-pc-player-actor-bridge-tests"
+    ],
+    "binary_sha256": "ddeff680eac71726164385bc0df75323939da493e51178c3dffb797b5a5803c1"
+  },
+  {
+    "target": "smg-pc-restart-stage-session-tests",
+    "mode": "build",
+    "exit": 0,
+    "command": [
+      "/opt/homebrew/bin/xmake",
+      "build",
+      "-y",
+      "-j",
+      "12",
+      "smg-pc-restart-stage-session-tests"
+    ]
+  },
+  {
+    "target": "smg-pc-restart-stage-session-tests",
+    "mode": "run",
+    "exit": 0,
+    "command": [
+      "build/macosx/arm64/debug/smg-pc-restart-stage-session-tests"
+    ],
+    "binary_sha256": "bbbe58133df7e859c8f7b1dfbd0ca862cdbcf555e2ae90beaa0ce5ce7afd4c77"
+  }
+]

@@ -758,6 +758,8 @@ namespace smgpc::runtime {
         using ElementModeReader = s32 (*)(const LiveActor &);
         using BaseMatrixReader = MtxPtr (*)(const LiveActor &);
         using VectorReader = void (*)(const LiveActor &, TVec3f *);
+        using NerveChangeReader = bool (*)(const LiveActor &);
+        using CenterPositionReader = TVec3f *(*)(LiveActor &);
 
         SwingPermissionWriter set_swing_permission = nullptr;
         // Concrete player owners install this capability only when their
@@ -767,6 +769,9 @@ namespace smgpc::runtime {
         VectorReader read_up_vector = nullptr;
         VectorReader read_front_vector = nullptr;
         VectorReader read_side_vector = nullptr;
+        // Original MR::isPlayerDead is the inverse of this live actor query.
+        NerveChangeReader read_nerve_change_enabled = nullptr;
+        CenterPositionReader read_center_position = nullptr;
     };
 
     class PlayerSystemService final {
@@ -787,8 +792,6 @@ namespace smgpc::runtime {
         void hide_player();
         void set_base_matrix(MtxPtr matrix);
         void set_swing_permission(bool permitted);
-        void set_player_dead_state(bool dead);
-        void clear_player_dead_state();
         void disable_control();
         void enable_control(bool reset_condition);
         void finish_opening_demo();
@@ -806,6 +809,7 @@ namespace smgpc::runtime {
         [[nodiscard]] std::optional<smgpc::camera::StageCameraTargetState> camera_target_state() const;
         [[nodiscard]] CameraTargetObj *camera_target() const;
         [[nodiscard]] MtxPtr actor_base_matrix() const;
+        [[nodiscard]] TVec3f *actor_center_position() const;
         [[nodiscard]] bool copy_actor_up_vector(TVec3f *out) const;
         [[nodiscard]] bool copy_actor_front_vector(TVec3f *out) const;
         [[nodiscard]] bool copy_actor_side_vector(TVec3f *out) const;
@@ -823,7 +827,6 @@ namespace smgpc::runtime {
         bool _has_base_matrix = false;
         bool _has_forced_base_matrix = false;
         bool _on_ground = false;
-        std::optional<bool> _player_dead_state;
         bool _swing_permitted = false;
         bool _control_enabled = true;
         bool _reset_condition_requested = false;

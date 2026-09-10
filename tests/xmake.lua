@@ -1862,6 +1862,33 @@ target("smg-pc-j3d-gx-real-or-absent-tests")
         realtime_output = true
     })
 
+target("smg-pc-player-actor-bridge-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    set_rundir(os.projectdir())
+    add_files {
+        "PlayerActorBridgeTests.cpp",
+        "../aurora/lib/compat.cpp"
+    }
+    add_deps {
+        "smg-pc-common",
+        "smg-pc-game",
+        "aurora-card",
+        "aurora-dvd",
+        "aurora-gd",
+        "aurora-gx",
+        "aurora-os",
+        "aurora-pad",
+        "aurora-si",
+        "aurora-vi"
+    }
+    add_tests("player_actor_bridge", {
+        group = "aurora",
+        rundir = os.projectdir(),
+        realtime_output = true
+    })
+
 target("smg-pc-restart-stage-session-tests")
     set_kind("binary")
     set_default(false)
@@ -3098,4 +3125,3 @@ target("smg-pc-original-wpad-pause-tests")
         rundir = os.projectdir(),
         realtime_output = true
     })
-

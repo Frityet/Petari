@@ -21,9 +21,12 @@
 #include "compat/CollisionPartsCompat.hpp"
 #include "compat/GameDataHolderCompat.hpp"
 #include "compat/GameDataSession.hpp"
+#include "compat/JkrAllocationDomain.hpp"
 #include "compat/MarioCameraTarget.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "scene/GatewayDemoScene.hpp"
+#include "scene/NameObjChildOwner.hpp"
+#include "scene/SceneObjHolderRuntime.hpp"
 #include "scene/SceneInitializationState.hpp"
 #include "scene/GatewaySpinCheckpoint.hpp"
 #include "scene/TitleFileSelectRoute.hpp"
@@ -103,37 +106,52 @@ namespace {
         explicit GatewayMarioOwner(
             smgpc::runtime::PlayerSystemService& player_system)
             : _player_system(&player_system),
-              _owned(createNameObj<MarioActor>("MarioActor")) {
-            _actor = dynamic_cast<MarioActor*>(_owned.get());
-            if (_actor == nullptr) {
-                aurora::throw_host_exception<std::runtime_error>("the typed Gateway MarioActor creator returned the wrong object");
+              _domain(smgpc::scene::current_scene_allocation_domain()) {
+            if (!_domain) {
+                aurora::throw_host_exception<std::logic_error>("Mario construction requires the actual scene allocation domain");
             }
-            _player_system->attach_actor(
-                *_actor,
-                smgpc::runtime::PlayerActorBridge{
-                    .set_swing_permission = &GatewayMarioOwner::set_swing_permission,
-                    .read_element_mode = &GatewayMarioOwner::read_element_mode,
-                    .read_base_matrix = &GatewayMarioOwner::read_base_matrix,
-                    .read_up_vector = &GatewayMarioOwner::read_up_vector,
-                    .read_front_vector = &GatewayMarioOwner::read_front_vector,
-                    .read_side_vector = &GatewayMarioOwner::read_side_vector,
-                });
+            try {
+                _actor = dynamic_cast<MarioActor*>(_objects.capture_construction_children([&] {
+                    const smgpc::compat::JkrAllocationScope game(_domain);
+                    return createNameObj<MarioActor>("MarioActor");
+                }));
+                if (_actor == nullptr) {
+                    aurora::throw_host_exception<std::runtime_error>("the typed Gateway MarioActor creator returned the wrong object");
+                }
+                _player_system->attach_actor(
+                    *_actor,
+                    smgpc::runtime::PlayerActorBridge{
+                        .set_swing_permission = &GatewayMarioOwner::set_swing_permission,
+                        .read_element_mode = &GatewayMarioOwner::read_element_mode,
+                        .read_base_matrix = &GatewayMarioOwner::read_base_matrix,
+                        .read_up_vector = &GatewayMarioOwner::read_up_vector,
+                        .read_front_vector = &GatewayMarioOwner::read_front_vector,
+                        .read_side_vector = &GatewayMarioOwner::read_side_vector,
+                        .read_nerve_change_enabled = [](const LiveActor& actor) {
+                            return static_cast<const MarioActor&>(actor).isEnableNerveChange();
+                        },
+                        .read_center_position = [](LiveActor& actor) {
+                            return &static_cast<MarioActor&>(actor)._2A0;
+                        },
+                    });
+            } catch (...) {
+                retire();
+                throw;
+            }
         }
 
         GatewayMarioOwner(const GatewayMarioOwner&) = delete;
         GatewayMarioOwner& operator=(const GatewayMarioOwner&) = delete;
 
         ~GatewayMarioOwner() {
-            if (_player_system != nullptr &&
-                _player_system->attached_actor() == _actor) {
-                _player_system->detach_actor(_actor);
-            }
-            if (auto* holder = MR::getMarioHolder();
-                holder != nullptr && holder->getMarioActor() == _actor) {
-                holder->setMarioActor(nullptr);
-            }
-            _owned.reset();
-            _actor = nullptr;
+            retire();
+        }
+
+        void initialize(const JMapInfoIter& placement) {
+            _objects.capture_construction_children([&] {
+                const smgpc::compat::JkrAllocationScope game(_domain);
+                _actor->init(placement);
+            });
         }
 
         [[nodiscard]] MarioActor& actor() const {
@@ -141,6 +159,19 @@ namespace {
         }
 
     private:
+        void retire() noexcept {
+            const smgpc::compat::JkrHostAllocationScope host;
+            if (_actor != nullptr && _player_system != nullptr &&
+                _player_system->attached_actor() == _actor) {
+                _player_system->detach_actor(_actor);
+            }
+            if (auto* holder = MR::getMarioHolder();
+                holder != nullptr && holder->getMarioActor() == _actor) {
+                holder->setMarioActor(nullptr);
+            }
+            _objects.clear();
+            _actor = nullptr;
+        }
         static void set_swing_permission(LiveActor& actor, bool permitted) {
             auto* mario = dynamic_cast<MarioActor*>(&actor);
             if (mario == nullptr) {
@@ -176,7 +207,8 @@ namespace {
         }
 
         smgpc::runtime::PlayerSystemService* _player_system = nullptr;
-        std::unique_ptr<NameObj> _owned;
+        std::shared_ptr<smgpc::compat::JkrAllocationDomain> _domain;
+        smgpc::scene::NameObjChildOwner _objects;
         MarioActor* _actor = nullptr;
     };
 
@@ -759,7 +791,7 @@ namespace {
                     smgpc::render::ScopedAuroraRendererContext(renderer);
                 {
                     const auto phase = smgpc::scene::SceneInitializationScope(SceneInitializeState_PlacementPlayer);
-                    mario_owner.actor().init(scene.player_start_iter());
+                    mario_owner.initialize(scene.player_start_iter());
                 }
                 placement_lease =
                     scene.finalize_placements(mario_owner.actor());

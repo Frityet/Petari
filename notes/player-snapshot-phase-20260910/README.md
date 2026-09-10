@@ -1,0 +1,11 @@
+# Original player ownership and animation phase — 2026-09-10
+
+Player state publication previously invoked virtual calcAndSetBaseMtx outside the original animation phase, both after placement and after every player movement. MarioActor::calcAndSetBaseMtx consumes _1C0 and controls _1C1; calling it early changes the following original calcAnim path. The host service now copies the actual actor state without triggering that gameplay callback. Original MarioActor::calcAnim retains ownership of the matrix update. No Game code changed in this checkpoint.
+
+The same service cohort removes the stale manually supplied death-state cache in favor of original MarioActor::isEnableNerveChange, and exposes the exact mutable MarioActor::_2A0 center pointer through an explicit owner capability. Missing actors or capabilities retain existing unresolved behavior. GatewayMarioOwner installs these actual original callbacks.
+
+Original Mario construction and init now run within the existing NameObjChildOwner graph and scene allocation domain. Descendants retire before their parent, and native ownership metadata remains on the host. Process-owned EffectService metadata allocations and returned copies also enter the existing host allocation scope; this prevents event strings from outliving the original scene heap that previously held them.
+
+Validation: the official smg-pc-player-actor-bridge-tests target now exists and passes 2/2 groups (live center ownership and side-effectful animation phase separation). Fresh smg-pc-restart-stage-session-tests build and actual RMGK01 runtime pass 8/8 groups. Exact commands, exits and binary hashes are in official-runtime.json. The JPC billboard fixture passes all7 groups including the actual heap-retirement regression; its exact result is in ../original-generic-area-tests-20260910/bounded-runtime.json. Source hashes freeze this checkpoint.
+
+The earlier showcase rebuilt with the ownership and live-query changes and reached original camera/player movement, then the original pose calculation failed with nonfinite joint positions. Its failure now unwinds past the former effect-string heap-provenance and static model-registry mutex failures. This is bounded startup evidence, not a playable demo or a completed normal shutdown. Original matrix recovery and the next exact showcase build are ongoing separately.
