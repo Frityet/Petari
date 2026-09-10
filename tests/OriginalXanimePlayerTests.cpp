@@ -127,7 +127,7 @@ namespace {
         std::array<XanimeGroupInfo, 3> groups;
         std::unique_ptr<HashSortTable> sort;
         std::unique_ptr<u32[]> hashes;
-        std::unique_ptr<u32[]> indices;
+        std::unique_ptr<HashSortTable::Value[]> indices;
         std::unique_ptr<u16[]> starts;
         std::unique_ptr<u16[]> counts;
 
@@ -307,12 +307,23 @@ namespace {
                 "Original player must retain the authored rate when its frame controller reports termination");
         fixture.calculate();
         near(fixture.model.object->getAnmMtx(0)[0][3], 40, "Terminated animation must sample the exact authored end frame");
-        player.updateBeforeMovement();
-        require(player.mCurrentAnimation == &fixture.groups.groups[2], "Default hold policy must retain the terminated group");
-        player._7E = false;
+        require(player._7E, "Original construction enables automatic return to the default animation");
         player.updateBeforeMovement();
         require(player.isRun("Cycle") && !player.isTerminate() && player.mPrevAnimation == &fixture.groups.groups[2],
-                "Clearing original hold policy must transition a completed one-shot to its actual default");
+                "A completed one-shot must return to its actual default under the original constructor policy");
+
+        player.changeAnimation("Once");
+        fixture.calculate();
+        player.updateAfterMovement();
+        require(player.isTerminate(), "The second one-shot must reach its real frame-controller terminal state");
+        player._7E = false;
+        player.updateBeforeMovement();
+        require(player.mCurrentAnimation == &fixture.groups.groups[2] && player.isTerminate(),
+                "Disabling automatic return must hold the terminated group for an actor-controlled transition");
+        player._7E = true;
+        player.updateBeforeMovement();
+        require(player.isRun("Cycle") && !player.isTerminate() && player.mPrevAnimation == &fixture.groups.groups[2],
+                "Re-enabling automatic return must release a completed one-shot to its actual default");
         player.changeAnimation("Blend");
         player.stopAnimation("Once");
         require(player.isRun("Blend"), "Stopping a different named group must preserve current playback");

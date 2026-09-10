@@ -1,0 +1,44 @@
+[
+  {
+    "kind": "baseline",
+    "symbol": "updateBeforeMovement__12XanimePlayerFv",
+    "match_percent": 99.861115,
+    "retail_size": "144",
+    "candidate_size": "144",
+    "different_retail_instructions": [
+      {
+        "diff_kind": "DIFF_OP_MISMATCH",
+        "instruction": {
+          "address": "3048",
+          "size": 4,
+          "formatted": "beq 0xc08",
+          "parts": [
+            {
+              "opcode": {
+                "mnemonic": "beq",
+                "opcode": 265
+              }
+            },
+            {
+              "arg": {
+                "branch_dest": "3080"
+              }
+            }
+          ],
+          "branch_dest": "3080"
+        },
+        "arg_diff": [
+          {}
+        ]
+      }
+    ]
+  },
+  {
+    "kind": "recovered",
+    "symbol": "updateBeforeMovement__12XanimePlayerFv",
+    "match_percent": 100.0,
+    "retail_size": "144",
+    "candidate_size": "144",
+    "different_retail_instructions": []
+  }
+]

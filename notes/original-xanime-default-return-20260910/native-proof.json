@@ -1,0 +1,13 @@
+{
+  "baseline_build_exit": 0,
+  "baseline_test_exit": 1,
+  "baseline_failure": "A completed one-shot must return to its actual default under the original constructor policy",
+  "corrected_build_exit": 0,
+  "corrected_test_exit": 0,
+  "corrected_result": "6/6 original XanimePlayer lifecycle groups passed",
+  "real_disc_intermediate_binary_sha256": "b1faf11e7e8d105825d855933b7ebbc02530fda08e646f0db05c9d73d87b539f",
+  "real_disc_exit": -11,
+  "real_disc_last_tick": 122,
+  "real_disc_observation": "StageInA now terminates. A later incorrect original animation name exposes null current/default animation; separate recovery required.",
+  "packaged_demo_updated": false
+}
