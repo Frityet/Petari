@@ -17,7 +17,7 @@ namespace {
 class NativePaneRecord final : public nw4r::lyt::Pane {
 public:
     NativePaneRecord(const nw4r::lyt::res::Pane& resource, Nw4rLayoutRecords& owner,
-                     std::array<char, 4> kind) : Pane(&resource), owner(owner), kind(kind) {
+                     std::array<char, 4> kind, u32 index) : Pane(&resource), owner(owner), kind(kind), index(index) {
         mbUserAllocated = true;
     }
     const nw4r::ut::detail::RuntimeTypeInfo* GetRuntimeTypeInfo() const override {
@@ -31,6 +31,7 @@ public:
     }
     Nw4rLayoutRecords& owner;
     std::array<char, 4> kind;
+    u32 index;
 };
 class NativeGroupRecord final : public nw4r::lyt::Group {
 public:
@@ -96,7 +97,7 @@ Nw4rLayoutRecords::Nw4rLayoutRecords(LayoutRuntime& runtime) {
         resource.rotate.x = source.rotate_x; resource.rotate.y = source.rotate_y; resource.rotate.z = source.rotate_z;
         resource.scale.x = source.scale_x; resource.scale.y = source.scale_y;
         resource.size.width = source.width; resource.size.height = source.height;
-        _state->panes.push_back(std::make_unique<NativePaneRecord>(resource, *this, source.resource_kind));
+        _state->panes.push_back(std::make_unique<NativePaneRecord>(resource, *this, source.resource_kind, static_cast<u32>(_state->panes.size())));
     }
     for (std::size_t i = 0; i < layout.panes.size(); ++i) {
         const auto parent = layout.panes[i].parent_index;
@@ -126,46 +127,59 @@ void Nw4rLayoutRecords::synchronize() {
     if (state.synchronizing) return;
     state.synchronizing = true;
     struct Restore { bool& value; ~Restore() { value = false; } } restore{state.synchronizing};
+    if (state.published) for (u32 i = 0; i < state.panes.size(); ++i) import_pane(i);
+    for (u32 i = 0; i < state.panes.size(); ++i) publish_pane(i, true);
+    state.published = true;
+}
+
+void Nw4rLayoutRecords::import_pane(u32 i) {
+    auto& state = *_state;
     auto& runtime = state.runtime;
-    if (state.published) for (std::size_t i = 0; i < state.panes.size(); ++i) {
-        auto& pane = *state.panes[i];
-        const auto& old = state.previous[i];
-        auto& source = runtime.mBrlytLayout.panes[i];
-        const auto* expected_parent = source.parent_index < 0 ? nullptr : state.panes.at(source.parent_index).get();
-        if (std::strncmp(pane.mName, source.name.c_str(), 16) != 0 || pane.mpParent != expected_parent)
-            aurora::throw_host_exception<std::logic_error>("Changing a published NW4R resource name/hierarchy requires matching renderer topology support");
-        if (pane.mSize.width != old.size.width || pane.mSize.height != old.size.height)
-            aurora::throw_host_exception<std::logic_error>("Changing SDK pane size requires the derived geometry owner");
-        auto& frame = runtime.mCommittedPaneFrames[source.name];
-        if (pane.mTranslate.x != old.translate.x) frame.translate_x = pane.mTranslate.x;
-        if (pane.mTranslate.y != old.translate.y) frame.translate_y = pane.mTranslate.y;
-        if (pane.mTranslate.z != old.translate.z) frame.translate_z = pane.mTranslate.z;
-        if (pane.mRotate.x != old.rotate.x) frame.rotate_x = pane.mRotate.x;
-        if (pane.mRotate.y != old.rotate.y) frame.rotate_y = pane.mRotate.y;
-        if (pane.mScale.x != old.scale.x) frame.scale_x = pane.mScale.x;
-        if (pane.mScale.y != old.scale.y) frame.scale_y = pane.mScale.y;
-        if (pane.mRotate.z != old.rotate.z) frame.rotate_z = pane.mRotate.z;
-        if (pane.mAlpha != old.alpha) runtime.mPaneAlphaOverrides[source.name] = pane.mAlpha;
-        if ((pane.mFlag & 1) != (old.flags & 1)) runtime.setPaneVisible(source.name, pane.IsVisible());
-        if ((pane.mFlag & 2) != (old.flags & 2)) source.influenced_alpha = pane.IsInfluencedAlpha();
-        if ((pane.mFlag & 4) != (old.flags & 4)) source.location_adjust = pane.IsLocationAdjust();
-    }
-    for (std::size_t i = 0; i < state.panes.size(); ++i) {
-        auto& pane = *state.panes[i];
-        const auto& source = runtime.mBrlytLayout.panes[i];
-        const auto anim = runtime.animationFrameForPane(source.name);
-        pane.mTranslate.x = anim.translate_x.value_or(source.translate_x);
-        pane.mTranslate.y = anim.translate_y.value_or(source.translate_y);
-        pane.mTranslate.z = anim.translate_z.value_or(source.translate_z);
-        pane.mRotate.x = anim.rotate_x.value_or(source.rotate_x);
-        pane.mRotate.y = anim.rotate_y.value_or(source.rotate_y);
-        pane.mRotate.z = anim.rotate_z.value_or(source.rotate_z);
-        pane.mScale.x = anim.scale_x.value_or(source.scale_x);
-        pane.mScale.y = anim.scale_y.value_or(source.scale_y);
-        pane.mAlpha = static_cast<u8>(std::clamp(anim.alpha.value_or(float(source.alpha)), 0.0F, 255.0F));
-        if (const auto override = runtime.mPaneAlphaOverrides.find(source.name); override != runtime.mPaneAlphaOverrides.end())
-            pane.mAlpha = static_cast<u8>(std::clamp(override->second, 0.0F, 255.0F));
-        pane.mFlag = (runtime.isPaneLocallyVisible(source.name) ? 1 : 0) | (source.influenced_alpha ? 2 : 0) | (source.location_adjust ? 4 : 0);
+    auto& pane = *state.panes[i];
+    const auto& old = state.previous[i];
+    auto& source = runtime.mBrlytLayout.panes[i];
+    const auto* expected_parent = source.parent_index < 0 ? nullptr : state.panes.at(source.parent_index).get();
+    if (std::strncmp(pane.mName, source.name.c_str(), 16) != 0 || pane.mpParent != expected_parent)
+        aurora::throw_host_exception<std::logic_error>("Changing a published NW4R resource name/hierarchy requires matching renderer topology support");
+    if (pane.mSize.width != old.size.width || pane.mSize.height != old.size.height)
+        aurora::throw_host_exception<std::logic_error>("Changing SDK pane size requires the derived geometry owner");
+    auto& frame = runtime.mCommittedPaneFrames[source.name];
+    if (pane.mTranslate.x != old.translate.x) frame.translate_x = pane.mTranslate.x;
+    if (pane.mTranslate.y != old.translate.y) frame.translate_y = pane.mTranslate.y;
+    if (pane.mTranslate.z != old.translate.z) frame.translate_z = pane.mTranslate.z;
+    if (pane.mRotate.x != old.rotate.x) frame.rotate_x = pane.mRotate.x;
+    if (pane.mRotate.y != old.rotate.y) frame.rotate_y = pane.mRotate.y;
+    if (pane.mScale.x != old.scale.x) frame.scale_x = pane.mScale.x;
+    if (pane.mScale.y != old.scale.y) frame.scale_y = pane.mScale.y;
+    if (pane.mRotate.z != old.rotate.z) frame.rotate_z = pane.mRotate.z;
+    if (pane.mAlpha != old.alpha) runtime.mPaneAlphaOverrides[source.name] = pane.mAlpha;
+    if ((pane.mFlag & 1) != (old.flags & 1)) runtime.setPaneVisible(source.name, pane.IsVisible());
+    if ((pane.mFlag & 2) != (old.flags & 2)) source.influenced_alpha = pane.IsInfluencedAlpha();
+    if ((pane.mFlag & 4) != (old.flags & 4)) source.location_adjust = pane.IsLocationAdjust();
+}
+
+void Nw4rLayoutRecords::publish_pane(u32 i, bool matrices) {
+    auto& state = *_state;
+    auto& runtime = state.runtime;
+    auto& pane = *state.panes[i];
+    const auto& source = runtime.mBrlytLayout.panes[i];
+    const auto anim = runtime.animationFrameForPane(source.name);
+    pane.mTranslate.x = anim.translate_x.value_or(source.translate_x);
+    pane.mTranslate.y = anim.translate_y.value_or(source.translate_y);
+    pane.mTranslate.z = anim.translate_z.value_or(source.translate_z);
+    pane.mRotate.x = anim.rotate_x.value_or(source.rotate_x);
+    pane.mRotate.y = anim.rotate_y.value_or(source.rotate_y);
+    pane.mRotate.z = anim.rotate_z.value_or(source.rotate_z);
+    pane.mScale.x = anim.scale_x.value_or(source.scale_x);
+    pane.mScale.y = anim.scale_y.value_or(source.scale_y);
+    pane.mAlpha = static_cast<u8>(std::clamp(anim.alpha.value_or(float(source.alpha)), 0.0F, 255.0F));
+    if (const auto override = runtime.mPaneAlphaOverrides.find(source.name); override != runtime.mPaneAlphaOverrides.end())
+        pane.mAlpha = static_cast<u8>(std::clamp(override->second, 0.0F, 255.0F));
+    auto visible = anim.visible.value_or(source.visible);
+    if (const auto override = runtime.mPaneVisibilityOverrides.find(source.name); override != runtime.mPaneVisibilityOverrides.end())
+        visible = override->second;
+    pane.mFlag = (visible ? 1 : 0) | (source.influenced_alpha ? 2 : 0) | (source.location_adjust ? 4 : 0);
+    if (matrices) {
         // Use the very same active BRLAN, pane follow and actor transforms as
         // the renderer. These are live SDK matrices, not resource-only copies.
         const auto global = runtime.paneRenderState(i);
@@ -174,9 +188,16 @@ void Nw4rLayoutRecords::synchronize() {
         pane.mGlbMtx.m[1][3] += runtime.mTransY;
         pane.mGlbAlpha = static_cast<u8>(std::clamp(global.alpha, 0.0F, 255.0F));
         runtime.paneLocalMatrix(i, pane.mMtx.m);
-        state.previous[i] = published(pane);
     }
-    state.published = true;
+    state.previous[i] = published(pane);
+}
+
+void Nw4rLayoutRecords::animate_pane(u32 index) {
+    const aurora::allocation::HostAllocationScope host;
+    // Original AnimateSelf applies this pane's local animation only. Global
+    // matrices are published by the later layout matrix/follow phase.
+    if (_state->published) import_pane(index);
+    publish_pane(index, false);
 }
 
 nw4r::lyt::Pane* Nw4rLayoutRecords::pane(const char* name) {
@@ -198,7 +219,7 @@ u32 Nw4rLayoutRecords::group_index(const char* name) const {
 u32 Nw4rLayoutRecords::pane_count() const { return static_cast<u32>(_state->panes.size()); }
 u32 Nw4rLayoutRecords::group_count() const { return static_cast<u32>(_state->groups.size()); }
 u32 Nw4rLayoutRecords::pane_index(const nw4r::lyt::Pane* pane) const {
-    for (u32 i = 0; i < _state->panes.size(); ++i) if (_state->panes[i].get() == pane) return i;
+    if (const auto* record = dynamic_cast<const NativePaneRecord*>(pane); record && &record->owner == this) return record->index;
     aurora::throw_host_exception<std::logic_error>("The NW4R pane belongs to a different layout resource owner");
 }
 u32 Nw4rLayoutRecords::text_line_count(const char* pane_name) const {
@@ -218,6 +239,10 @@ u32 Nw4rLayoutRecords::text_line_count(const char* pane_name) const {
         maximum = std::max(maximum, static_cast<u32>(MR::countMessageLine(wide.c_str())));
     }
     return maximum;
+}
+void animate_native_pane(const nw4r::lyt::Pane* pane) {
+    if (const auto* record = dynamic_cast<const NativePaneRecord*>(pane)) record->owner.animate_pane(record->index);
+    else aurora::throw_host_exception<std::logic_error>("The pane has no native layout resource owner");
 }
 void synchronize_native_pane(const nw4r::lyt::Pane* pane) {
     if (const auto* record = dynamic_cast<const NativePaneRecord*>(pane)) record->owner.synchronize();

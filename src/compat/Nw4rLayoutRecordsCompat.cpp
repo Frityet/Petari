@@ -58,7 +58,7 @@ void Pane::Animate(u32 option) {
     AnimateSelf(option);
     for (auto iter = mChildList.GetBeginIter(); iter != mChildList.GetEndIter(); ++iter) iter->Animate(option);
 }
-void Pane::AnimateSelf(u32) { smgpc::layout::synchronize_native_pane(this); }
+void Pane::AnimateSelf(u32) { smgpc::layout::animate_native_pane(this); }
 void Pane::Draw(const DrawInfo&) { unavailable("Direct NW4R pane drawing"); }
 void Pane::DrawSelf(const DrawInfo&) { smgpc::layout::require_native_base_pane(this, "Derived pane DrawSelf"); }
 const ut::Color Pane::GetVtxColor(u32) const { smgpc::layout::require_native_base_pane(this, "Derived vertex colors"); return 0xFFFFFFFF; }

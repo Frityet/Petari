@@ -1,0 +1,43 @@
+{
+  "src/showcase/Showcase.cpp": {
+    "compiler": "/opt/homebrew/opt/llvm/bin/clang++",
+    "flags": [
+      "-g",
+      "-O2",
+      "-DSMGPC_DEBUG_BUILD"
+    ]
+  },
+  "aurora/lib/dolphin/gx/GXVert.cpp": {
+    "compiler": "/opt/homebrew/opt/llvm/bin/clang++",
+    "flags": [
+      "-g",
+      "-O2",
+      "-DSMGPC_DEBUG_BUILD"
+    ]
+  },
+  "src/Game/LiveActor/Binder.cpp": {
+    "compiler": "/opt/homebrew/opt/llvm/bin/clang++",
+    "flags": [
+      "-g",
+      "-O2",
+      "-DSMGPC_DEBUG_BUILD",
+      "-ffp-contract=off"
+    ]
+  },
+  "src/Game/Player/MarioActor.cpp": {
+    "compiler": "/opt/homebrew/opt/llvm/bin/clang++",
+    "flags": [
+      "-g",
+      "-O2",
+      "-DSMGPC_DEBUG_BUILD"
+    ]
+  },
+  "src/layout/Nw4rLayoutRecords.cpp": {
+    "compiler": "/opt/homebrew/opt/llvm/bin/clang++",
+    "flags": [
+      "-g",
+      "-O2",
+      "-DSMGPC_DEBUG_BUILD"
+    ]
+  }
+}

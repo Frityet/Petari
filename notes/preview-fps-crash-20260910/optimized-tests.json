@@ -1,0 +1,32 @@
+[
+  {
+    "target": "smg-pc-scene-name-obj-registry-tests",
+    "build_exit": 0,
+    "runtime_exit": 0,
+    "args": [],
+    "binary_sha256": "1fe222cdbffd1ae34fda48f91743e073bada754a1f42fbc4ede06538eae47713"
+  },
+  {
+    "target": "smg-pc-original-layout-group-tests",
+    "build_exit": 0,
+    "runtime_exit": 0,
+    "args": [],
+    "binary_sha256": "9ca390243b48a25dae8248629f253aea6f1dfc4de421c1d95f212d7bf051944c"
+  },
+  {
+    "target": "smg-pc-stage-collision-registration-tests",
+    "build_exit": 0,
+    "runtime_exit": 0,
+    "args": [],
+    "binary_sha256": "3496d217b82ded9d58b3341d0d70c524ceb81b679e7132b1d7aa765b55626afa"
+  },
+  {
+    "target": "smg-pc-line-collision-query-tests",
+    "build_exit": 0,
+    "runtime_exit": 0,
+    "args": [
+      "--strike-heap-lifetime"
+    ],
+    "binary_sha256": "4db36fd89407006cefc394858eacd6a79a9477dbf58358176e8a800f2f0dcf64"
+  }
+]

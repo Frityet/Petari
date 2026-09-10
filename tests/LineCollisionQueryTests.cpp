@@ -24,6 +24,7 @@
 #include <memory>
 #include <stdexcept>
 #include <string>
+#include <string_view>
 #include <vector>
 
 namespace {
@@ -68,6 +69,59 @@ namespace {
         std::vector<std::uint32_t> result;
         for (auto& hit:hits) result.push_back(collision.surface(hit.triangle_index)->prism_index);
         return result;
+    }
+    void sphere_and_point_strike_storage_heap_lifetime() {
+        Collision collision;
+        require(collision.add_kcl(kcl(),identity,"native strike storage"),"Strike storage fixture KCL registration failed");
+        collision.build();
+        collision.activate();
+        auto runtime=smgpc::compat::JkrHeapRuntime::create(1U<<20);
+        auto domain=smgpc::compat::JkrAllocationDomain::create(runtime,64U<<10);
+        const auto retired=std::weak_ptr(domain);
+        struct Filter : TriangleFilterBase {
+            JKRHeap* heap;
+            mutable unsigned calls=0;
+            explicit Filter(JKRHeap* value):heap(value){}
+            bool isInvalidTriangle(const Triangle*) const override {
+                ++calls;
+                auto* allocation=new int(7);
+                const bool original=JKRHeap::findFromRoot(allocation)==heap;
+                delete allocation;
+                require(original,"Sphere triangle callback must regain its original Game allocation domain");
+                return false;
+            }
+        } filter(&domain->heap());
+        {
+            const smgpc::compat::JkrAllocationScope game(domain);
+            // Run before all other fixture queries, so point and then sphere
+            // each grow the actual thread-local strike buffer from scratch.
+            const auto free_before=domain->heap().getFreeSize();
+            HitInfo point;
+            require(::Collision::checkStrikePointToMap(TVec3f(1,1,0),&point)==1,
+                    "Actual point strike must find the source plane");
+            require(JKRHeap::findFromRoot(const_cast<HitInfo*>(::Collision::getStrikeInfoMap(0)))==nullptr,
+                    "Point strike storage must belong to the host");
+            require(::Collision::checkStrikeBallToMap(TVec3f(1,1,0.5F),1,nullptr,nullptr)==3,
+                    "Actual sphere strike must grow storage for all three source prisms");
+            require(JKRHeap::findFromRoot(const_cast<HitInfo*>(::Collision::getStrikeInfoMap(0)))==nullptr &&
+                        domain->heap().getFreeSize()==free_before,
+                    "Native sphere and point strike buffers must not consume the caller Game heap");
+            require(::Collision::checkStrikeBallToMapWithThickness(TVec3f(1,1,0.5F),1,2,nullptr,&filter)==3 && filter.calls!=0,
+                    "Host strike storage must preserve actual filtered contact results");
+            auto* original=new int(9);
+            require(JKRHeap::findFromRoot(original)==&domain->heap(),
+                    "Strike queries must restore the caller allocation routing");
+            delete original;
+        }
+        domain.reset();
+        require(retired.expired(),"Native strike metadata must not retain the Game heap");
+        runtime.reset();
+        require(::Collision::getStrikeInfoNumMap()==3 &&
+                    std::fabs(::Collision::getStrikeInfoMap(0)->mHitPos.z)<0.00001F,
+                "Retained strike results must remain readable after original arena retirement");
+        require(::Collision::checkStrikeBallToMap(TVec3f(50,50,50),1,nullptr,nullptr)==0 &&
+                    ::Collision::getStrikeInfoNumMap()==0,
+                "Post-retirement queries must clear the retained native strike buffer normally");
     }
     void original_octree_and_boundary_contract() {
         Collision collision;
@@ -389,8 +443,13 @@ namespace {
     }
 
 }
-int main() {
+int main(int argc, char** argv) {
     try {
+        sphere_and_point_strike_storage_heap_lifetime();
+        if (argc == 2 && std::string_view(argv[1]) == "--strike-heap-lifetime") {
+            std::cout << "PASS: native point/sphere strike storage, original callback routing and Game arena retirement\n";
+            return 0;
+        }
         water_surface_category_nearest_and_filter_order();
         dynamic_transform_refit_and_original_point_velocity();
         original_octree_and_boundary_contract();

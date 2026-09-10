@@ -1,4 +1,5 @@
 #include <aurora/exception.hpp>
+#include <aurora/allocation.hpp>
 #include "compat/GroupCheckManagerCompat.hpp"
 
 #include "Game/LiveActor/LiveActor.hpp"
@@ -95,6 +96,7 @@ namespace {
 
 namespace smgpc::compat {
     void register_group_checker(GroupChecker *checker) {
+        const aurora::allocation::HostAllocationScope host_allocations;
         if (checker == nullptr) {
             aurora::throw_host_exception<std::invalid_argument>("GroupChecker runtime state requires a real checker.");
         }
@@ -108,10 +110,12 @@ namespace smgpc::compat {
     }
 
     void add_group_checker_member(GroupChecker *checker, const NameObj *object) {
+        const aurora::allocation::HostAllocationScope host_allocations;
         require_group_checker_state(checker).member_names.emplace(require_attribute_group_name(object));
     }
 
     bool group_checker_contains(const GroupChecker *checker, const NameObj *object) {
+        const aurora::allocation::HostAllocationScope host_allocations;
         if (object == nullptr) {
             return false;
         }
@@ -136,11 +140,16 @@ namespace smgpc::compat {
         auto *shell_search_group = state.groups[0].get();
         auto *spinning_box_search_group = state.groups[1].get();
 
-        const auto [found, inserted] = group_check_manager_states().try_emplace(manager, std::move(state));
-        if (!inserted) {
-            aurora::throw_host_exception<std::logic_error>("GroupCheckManager runtime state is already registered.");
+        {
+            // The typed children above belong to the original Game owner;
+            // retained registry nodes and bucket arrays belong to the host.
+            const aurora::allocation::HostAllocationScope host_allocations;
+            const auto [found, inserted] = group_check_manager_states().try_emplace(manager, std::move(state));
+            if (!inserted) {
+                aurora::throw_host_exception<std::logic_error>("GroupCheckManager runtime state is already registered.");
+            }
+            (void)found;
         }
-        (void)found;
         manager->mShellSearchGroup = shell_search_group;
         manager->mSpinningBoxSearchGroup = spinning_box_search_group;
     }

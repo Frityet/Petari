@@ -1,0 +1,5 @@
+{
+  "src/compat/GameMapCollisionCompat.cpp": "851179485537821e71f9949bfdda56ceb2604512c2479358d9b2a33b8869d5d6",
+  "src/compat/HitInfoCompat.cpp": "c28798f6a0dfc2c9649378c67c2c2777292b1a90bc798790ea87f1d2e6832e7a",
+  "tests/LineCollisionQueryTests.cpp": "8e22c76d39415b56b79c0fde754007c50a28a73f9523e49dedfe485602bd7992"
+}

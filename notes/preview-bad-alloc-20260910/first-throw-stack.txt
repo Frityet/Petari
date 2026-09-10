@@ -1,0 +1,95 @@
+thread backtrace -c 40
+* thread #1, name = 'Main thread', queue = 'com.apple.main-thread', stop reason = breakpoint 1.1
+  * frame #0: 0x00000001889e6040 libc++abi.dylib`__cxa_throw
+    frame #1: 0x0000000100624588 smg-pc-showcase`(anonymous namespace)::allocate(size=1664, alignment=16, from_tail=false, heap=0x0000000000000000) at MetrowerksAlignedNew.cpp:14:37
+    frame #2: 0x00000001006244e0 smg-pc-showcase`operator new(size=1664) at MetrowerksAlignedNew.cpp:29:47
+    frame #4: 0x00000001004f7098 smg-pc-showcase`std::__1::allocator<smgpc::scene::StageCollisionService::sphere_contacts_impl(JGeometry::TVec3<float> const&, float, unsigned long, std::__1::optional<float>, std::__1::function<bool (unsigned int)> const&) const::IndexedContact>::allocate[abi:nqe230100](this=0x000000016fdf8bd8, __n=32) at allocator.h:92:14
+    frame #5: 0x00000001004f7034 smg-pc-showcase`std::__1::allocator<smgpc::scene::StageCollisionService::sphere_contacts_impl(JGeometry::TVec3<float> const&, float, unsigned long, std::__1::optional<float>, std::__1::function<bool (unsigned int)> const&) const::IndexedContact>::allocate_at_least[abi:nqe230100](this=0x000000016fdf8bd8, __n=32) at allocator.h:99:13
+    frame #6: 0x00000001004f6fbc smg-pc-showcase`std::__1::allocation_result<smgpc::scene::StageCollisionService::sphere_contacts_impl(JGeometry::TVec3<float> const&, float, unsigned long, std::__1::optional<float>, std::__1::function<bool (unsigned int)> const&) const::IndexedContact*, unsigned long> std::__1::allocator_traits<std::__1::allocator<smgpc::scene::StageCollisionService::sphere_contacts_impl(JGeometry::TVec3<float> const&, float, unsigned long, std::__1::optional<float>, std::__1::function<bool (unsigned int)> const&) const::IndexedContact>>::allocate_at_least[abi:nqe230100]<std::__1::allocator<smgpc::scene::StageCollisionService::sphere_contacts_impl(JGeometry::TVec3<float> const&, float, unsigned long, std::__1::optional<float>, std::__1::function<bool (unsigned int)> const&) const::IndexedContact>>(__alloc=0x000000016fdf8bd8, __n=32) at allocator_traits.h:340:22
+    frame #10: 0x00000001004e3c14 smg-pc-showcase`std::__1::vector<smgpc::scene::StageCollisionService::sphere_contacts_impl(JGeometry::TVec3<float> const&, float, unsigned long, std::__1::optional<float>, std::__1::function<bool (unsigned int)> const&) const::IndexedContact, std::__1::allocator<smgpc::scene::StageCollisionService::sphere_contacts_impl(JGeometry::TVec3<float> const&, float, unsigned long, std::__1::optional<float>, std::__1::function<bool (unsigned int)> const&) const::IndexedContact>>::reserve[abi:nqe230100](this=size=error: Failed to determine start/end of vector data., __n=32) at vector.h:1020:18
+    frame #11: 0x00000001004e3404 smg-pc-showcase`smgpc::scene::StageCollisionService::sphere_contacts_impl(this=0x000000099058de80, center=0x000000016fdf91f8, radius=60, maximum=32, thickness_override= Has Value=false , filter=0x000000016fdf9008) const at StageCollisionService.cpp:1068:26
+    frame #12: 0x00000001004e32c8 smg-pc-showcase`smgpc::scene::StageCollisionService::sphere_contacts(this=0x000000099058de80, center=0x000000016fdf91f8, radius=60, maximum=32, filter=0x000000016fdf9008) const at StageCollisionService.cpp:1040:16
+    frame #13: 0x0000000100671320 smg-pc-showcase`(anonymous namespace)::store_sphere_contacts(center=0x000000016fdf91f8, radius=60, parts_filter=0x0000000000000000, triangle_filter=0x000000052bf8a660, thickness=0x0000000000000000) at GameMapCollisionCompat.cpp:157:41
+    frame #14: 0x00000001006714c4 smg-pc-showcase`Collision::checkStrikeBallToMapWithMovingReaction(center=0x000000016fdf91f8, radius=60, parts_filter=0x0000000000000000, triangle_filter=0x000000052bf8a660) at GameMapCollisionCompat.cpp:569:16
+    frame #15: 0x0000000100097944 smg-pc-showcase`Binder::findBindedPos(this=0x000000052bf89f00, pPosition=0x000000016fdf91f8, pMovement=0x000000016fdf91e8, pCanMoveMore=0x000000016fdf91c7, pPlane=0x000000052bf8a160, capacity=8, skipInitial=false, noMargin=false) at Binder.cpp:217:24
+    frame #16: 0x0000000100097534 smg-pc-showcase`Binder::bind(this=0x000000052bf89f00, rMovement=0x000000052bf378f8) at Binder.cpp:137:25
+    frame #17: 0x0000000100579888 smg-pc-showcase`smgpc::compat::integrate_live_actor_velocity(actor=0x000000052bf378c0) at ActorMotionCompat.cpp:54:44
+    frame #18: 0x00000001000a1540 smg-pc-showcase`LiveActor::updateBinder(this=0x000000052bf378c0) at LiveActor.cpp:420:5
+    frame #19: 0x00000001000a14a4 smg-pc-showcase`LiveActor::movement(this=0x000000052bf378c0) at LiveActor.cpp:78:9
+    frame #20: 0x0000000100152554 smg-pc-showcase`MarioActor::movement(this=0x000000052bf378c0) at MarioActor.cpp:682:16
+    frame #21: 0x0000000100594e30 smg-pc-showcase`NameObj::executeMovement(this=0x000000052bf378c0) at NameObjLifetimeCompat.cpp:66:5
+    frame #22: 0x0000000100428fe4 smg-pc-showcase`smgpc::runtime::SceneScheduler::execute_movement_entry(smgpc::runtime::SceneScheduler::Entry const&, int)::$_0::operator()(this=0x000000016fdfabf0) const at SceneScheduler.cpp:835:30
+    frame #23: 0x000000010041f0b4 smg-pc-showcase`decltype(auto) smgpc::runtime::(anonymous namespace)::invoke_game_callback<smgpc::runtime::SceneScheduler::execute_movement_entry(smgpc::runtime::SceneScheduler::Entry const&, int)::$_0>(domain=std::__1::shared_ptr<smgpc::compat::JkrAllocationDomain>::element_type @ 0x0000000991b28d10 strong=24 weak=1, callback=0x000000016fdfabf0) at SceneScheduler.cpp:63:20
+    frame #24: 0x000000010041edbc smg-pc-showcase`smgpc::runtime::SceneScheduler::execute_movement_entry(this=0x000000016fdfc898, registered=0x000000098db94eb0, movement_type=37) at SceneScheduler.cpp:834:9
+    frame #25: 0x000000010041e1e8 smg-pc-showcase`smgpc::runtime::SceneScheduler::execute_movement_category(this=0x000000016fdfc898, movement_type=37) at SceneScheduler.cpp:825:13
+    frame #26: 0x00000001005cf5d4 smg-pc-showcase`CategoryList::execute(type=MovementType_Player) at SceneMovementCompat.cpp:36:25
+    frame #27: 0x00000001001017a0 smg-pc-showcase`SceneFunction::executeMovementList() at SceneExecutor.cpp:59:5
+    frame #28: 0x00000001004bcba4 smg-pc-showcase`smgpc::scene::SceneExecutionService::execute_movement(this=0x000000099069d8a0) at SceneExecutionService.cpp:24:9
+    frame #29: 0x00000001004540b0 smg-pc-showcase`smgpc::runtime::RuntimeContext::begin_frame(this=0x000000016fdfc890, frame_context=0x000000016fdfc1d8) at RuntimeContext.cpp:901:23
+    frame #30: 0x000000010000343c smg-pc-showcase`(anonymous namespace)::run_gateway_showcase(options=0x000000016fdfe770, configuration=0x000000016fdfe6e0, game_data_session=0x000000016fdfe7f8) at Showcase.cpp:896:33
+    frame #31: 0x00000001000016ac smg-pc-showcase`aurora_main(argc=6, argv=0x000000016fdfef30) at Showcase.cpp:1102:16
+    frame #32: 0x0000000100f46674 smg-pc-showcase`main(argc=6, argv=0x000000016fdfef30) at main.cpp:6:42
+    frame #33: 0x00000001886784e4 dyld`start + 6992
+(lldb) register read x0 x1
+      x0 = 0x000000098db5a240
+      x1 = 0x00000001f6b10b68  libc++abi.dylib`typeinfo for std::bad_alloc
+(lldb) frame select 29
+frame #29: 0x00000001004540b0 smg-pc-showcase`smgpc::runtime::RuntimeContext::begin_frame(this=0x000000016fdfc890, frame_context=0x000000016fdfc1d8) at RuntimeContext.cpp:901:23
+   898 	            lifecycle.calc_anim_scene();
+   899 	        } else {
+   900 	            auto &execution = scene_execution();
+-> 901 	            execution.execute_movement();
+    	                      ^
+   902 	            execution.execute_calc_anim_and_view();
+   903 	        }
+   904 	        _j_audio_playback->end_frame();
+(lldb) frame variable frame_context
+(const smgpc::render::FrameContext &) frame_context = 0x000000016fdfc1d8: {
+  frame_index = 412
+  frame_time_seconds = 6.8499999999999996
+  frame_delta_seconds = 0.016666666666666666
+  framebuffer = (width = 1920, height = 1440)
+  has_focus = false
+  is_minimized = false
+}
+(lldb) frame select 11
+frame #11: 0x00000001004e3404 smg-pc-showcase`smgpc::scene::StageCollisionService::sphere_contacts_impl(this=0x000000099058de80, center=0x000000016fdf91f8, radius=60, maximum=32, thickness_override= Has Value=false , filter=0x000000016fdf9008) const at StageCollisionService.cpp:1068:26
+   1065	            StageCollisionContact contact{};
+   1066	        };
+   1067	        auto indexed_contacts = std::vector<IndexedContact>{};
+-> 1068	        indexed_contacts.reserve(std::min(maximum, std::size_t{32U}));
+    	                         ^
+   1069	        auto stack = std::vector<std::uint32_t>{0U};
+   1070	        while (!stack.empty()) {
+   1071	            const auto node_index = stack.back();
+(lldb) frame variable this center radius maximum
+(const smgpc::scene::StageCollisionService *) this = 0x000000099058de80
+(const TVec3f &) center = 0x000000016fdf91f8: {
+  Vec = (x = 15256.0195, y = -12837.5596, z = 6266.75)
+}
+(float) radius = 60
+(std::size_t) maximum = 32
+(lldb) expression -- smgpc::compat::current_jkr_heap()
+                                    ˄
+                                    ╰─ error: no member named 'current_jkr_heap' in namespace 'smgpc::compat'
+note: Ran expression as 'C++14'.
+(lldb) expression -- JKRHeap::sCurrentHeap
+(JKRSolidHeap *) $0 = 0x000000052bf001d0
+(lldb) expression -- JKRHeap::sCurrentHeap->getFreeSize()
+(s32) $1 = 1232
+(lldb) expression -- JKRHeap::sCurrentHeap->getTotalFreeSize()
+(s32) $2 = 1232
+(lldb) expression -- aurora::allocation::routing_state()
+                                         ˄
+                                         ╰─ error: no member named 'routing_state' in namespace 'aurora::allocation'
+note: Ran expression as 'C++14'.
+(lldb) frame variable JKRHeap::sCurrentHeap
+(JKRSolidHeap *) JKRHeap::sCurrentHeap = 0x000000052bf001d0
+(lldb) expression -- JKRHeap::sCurrentHeap->getSize()
+                                                    ˄
+                                                    ╰─ error: too few arguments to function call, expected 2, have 0
+note: Ran expression as 'C++14'.
+note: note: 'getSize' declared here
+(lldb) process kill
+Process 71717 exited with status = 9 (0x00000009) killed
+(lldb) quit

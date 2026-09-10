@@ -1,8 +1,10 @@
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/NameObj/NameObjHolder.hpp"
+#include "Game/Player/GroupChecker.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/JkrAllocationDomain.hpp"
+#include "compat/GroupCheckManagerCompat.hpp"
 #include "scene/SceneNameObjRegistry.hpp"
 #include <aurora/exception.hpp>
 
@@ -32,10 +34,57 @@ namespace {
         std::vector<std::string> &_calls;
         std::unique_ptr<PostpassObject> *_append;
     };
+
+    void attribute_group_native_registry_lifetime() {
+        const auto checkers = smgpc::compat::group_checker_runtime_state_count();
+        const auto managers = smgpc::compat::group_check_manager_runtime_state_count();
+        const auto members = smgpc::compat::attribute_group_membership_count();
+        // The second complete arena exercises reuse of static bucket storage
+        // after the first arena and every original group object are gone.
+        for (int cycle = 0; cycle < 2; ++cycle) {
+            auto heaps = smgpc::compat::JkrHeapRuntime::create(1U << 20);
+            auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 128U << 10);
+            const auto retired = std::weak_ptr(domain);
+            {
+                smgpc::scene::SceneNameObjRegistry registry(domain);
+                const smgpc::compat::JkrAllocationScope game(domain);
+                GroupCheckManager manager("Original group owner");
+                NameObj member("Attribute member name exceeding native string inline storage");
+                NameObj same_name("Attribute member name exceeding native string inline storage");
+                NameObj absent("Absent attribute member with another long name");
+                require(JKRHeap::findFromRoot(manager.mShellSearchGroup) == &domain->heap() &&
+                            JKRHeap::findFromRoot(manager.mSpinningBoxSearchGroup) == &domain->heap() &&
+                            smgpc::compat::name_obj_runtime_owner(manager.mShellSearchGroup) == &manager &&
+                            smgpc::compat::name_obj_runtime_owner(manager.mSpinningBoxSearchGroup) == &manager,
+                        "native attribute registries must preserve actual Game child allocation and ownership");
+                const auto free_before = domain->heap().getFreeSize();
+                manager.add(&member, 0);
+                manager.add(&same_name, 0);
+                require(manager.isExist(&same_name, 0) && !manager.isExist(&absent, 0) &&
+                            !manager.isExist(&member, 1) &&
+                            smgpc::compat::attribute_group_membership_count() == members + 1,
+                        "native attribute metadata must preserve original name identity, duplicates and group isolation");
+                require(domain->heap().getFreeSize() == free_before,
+                        "native member strings, lookup temporaries and hash storage must not consume the Game heap");
+                auto* original = new int(7);
+                require(JKRHeap::findFromRoot(original) == &domain->heap(),
+                        "native group operations must restore original caller allocation routing");
+                delete original;
+            }
+            domain.reset();
+            require(retired.expired() &&
+                        smgpc::compat::group_checker_runtime_state_count() == checkers &&
+                        smgpc::compat::group_check_manager_runtime_state_count() == managers &&
+                        smgpc::compat::attribute_group_membership_count() == members,
+                    "actual group destruction must release all native entries before Game arena retirement");
+            heaps.reset();
+        }
+    }
 }  // namespace
 
 int main() {
     try {
+        attribute_group_native_registry_lifetime();
         auto heaps = smgpc::compat::JkrHeapRuntime::create(16U << 20);
         const auto root_free = heaps->root_heap().getFreeSize();
         const auto registered = smgpc::compat::name_obj_runtime_state_count();

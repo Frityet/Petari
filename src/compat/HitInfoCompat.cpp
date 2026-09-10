@@ -79,6 +79,7 @@ namespace smgpc::compat {
         }
         return [&collision, filter](std::uint32_t triangle_index) {
             const auto triangle = make_collision_triangle(collision, triangle_index);
+            const aurora::allocation::ClientAllocationScope client_allocations;
             return !filter->isInvalidTriangle(&triangle);
         };
     }

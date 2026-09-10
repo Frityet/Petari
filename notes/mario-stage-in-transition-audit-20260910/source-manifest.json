@@ -1,0 +1,45 @@
+{
+  "scope": "Read-only audit. No production/test/decomp changes or builds performed.",
+  "sources": [
+    {
+      "path": "src/Game/Animation/XanimePlayer.cpp",
+      "sha256": "688f39197a8c48ea1f9eea5012b4625a7e5cc4531c52b27f8398903e3239895a"
+    },
+    {
+      "path": "decomp/src/Game/Animation/XanimePlayer.cpp",
+      "sha256": "688f39197a8c48ea1f9eea5012b4625a7e5cc4531c52b27f8398903e3239895a"
+    },
+    {
+      "path": "src/compat/J3DFrameCtrlCompat.cpp",
+      "sha256": "8da334cfc7d0ccb32a46429bd27680c564d46bee612e63f802356d6b265e8983"
+    },
+    {
+      "path": "src/Game/Player/MarioActor.cpp",
+      "sha256": "894d7d9587b10f56eb2319d6616f22321361dac155c641251f5ae4629cb623a1"
+    },
+    {
+      "path": "src/Game/Player/MarioAnimator.cpp",
+      "sha256": "652dd35cbd62b2cbc25a4b7cf901fe3fa1785b4e106b70002ea5222d8c4dd3ed"
+    },
+    {
+      "path": "src/Game/Player/MarioAnimationEfx.cpp",
+      "sha256": "2f68d47c3bde7c0fc249dea47186447bd9026209a35c1204de6f1c8ae069e6e7"
+    },
+    {
+      "path": "src/Game/Player/MarioActorRush.cpp",
+      "sha256": "fa1467bc2b4e03e4215ed9fc931182c613a2fa564aa03cb939567c898087a695"
+    },
+    {
+      "path": "tests/OriginalXanimePlayerTests.cpp",
+      "sha256": "788b9792d573a5ea1cec2b7f4286538a9356ef47f0dc168737220ffa7f4dca7f"
+    },
+    {
+      "path": "notes/gateway-audit-20260907/restoration/retail/asm/Game/Animation/XanimePlayer.s",
+      "sha256": "68866451350f2d5223b15d33cb9ccc42fe30cfc25c7d153e43347404c2d7b0db"
+    },
+    {
+      "path": "notes/preview-fps-crash-20260910/after-layout-phase.log",
+      "sha256": "d8f4c3d349d49b3926cf0e839058e60aadff23f12cac4a3b9ea44cab931b81c8"
+    }
+  ]
+}

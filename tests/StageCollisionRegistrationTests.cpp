@@ -1,5 +1,7 @@
 #include "Game/Util/MapUtil.hpp"
+#include "JSystem/JKernel/JKRHeap.hpp"
 #include "compat/HitInfoCompat.hpp"
+#include "compat/JkrAllocationDomain.hpp"
 #include "scene/StageCollisionService.hpp"
 
 #include <array>
@@ -191,6 +193,40 @@ namespace {
         require_unavailable([&] { (void)copied.getPrevBaseMtx(); }, "cleared source cannot supply a fabricated identity matrix");
     }
 
+    void test_repeated_line_queries_preserve_game_heap() {
+        auto collision = smgpc::scene::StageCollisionService{};
+        require(collision.add_kcl(make_single_triangle_kcl(), cIdentity, "line allocation ownership"),
+                "line allocation fixture must register actual source geometry");
+        collision.build();
+        collision.activate();
+        auto runtime = smgpc::compat::JkrHeapRuntime::create(1U << 20U);
+        auto domain = smgpc::compat::JkrAllocationDomain::create(runtime, 64U << 10U);
+        const auto retired = std::weak_ptr(domain);
+        const auto start = TVec3f(0.25F, 1.0F, 0.25F);
+        const auto offset = TVec3f(0.0F, -2.0F, 0.0F);
+        {
+            const smgpc::compat::JkrAllocationScope game(domain);
+            const auto free_before = domain->heap().getFreeSize();
+            for (unsigned query = 0; query < 2048U; ++query) {
+                require(MR::isExistMapCollision(start, offset),
+                        "repeated original line queries must retain actual hits");
+                require(!MR::isExistMapCollision(TVec3f(2.0F, 1.0F, 2.0F), offset),
+                        "repeated original line queries must retain actual misses");
+                require(domain->heap().getFreeSize() == free_before,
+                        "native line traversal storage must not consume the selected Game heap");
+            }
+            auto* original = new int(9);
+            require(JKRHeap::findFromRoot(original) == &domain->heap(),
+                    "line queries must restore original allocation routing");
+            delete original;
+        }
+        domain.reset();
+        require(retired.expired(), "native line queries must not retain the original heap");
+        runtime.reset();
+        require(MR::isExistMapCollision(start, offset),
+                "native collision geometry must remain valid after unrelated Game heap retirement");
+    }
+
     struct TestCase {
         std::string_view name;
         void (*run)();
@@ -202,6 +238,7 @@ int main() {
         TestCase{"collision absent without registration", test_collision_is_absent_without_explicit_registration},
         TestCase{"only explicit valid KCL registers", test_only_explicit_valid_kcl_registration_adds_collision},
         TestCase{"triangle source matrix lifetime", test_triangle_source_matrix_lifetime},
+        TestCase{"line traversal Game heap ownership", test_repeated_line_queries_preserve_game_heap},
     };
 
     auto failures = 0;

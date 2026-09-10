@@ -1,0 +1,7 @@
+{
+  "src/layout/Nw4rLayoutRecords.cpp": "e83486b90a09b0d1bb94807478a101d3dfc089f0b82c3119923b0f367f66a3d9",
+  "src/layout/Nw4rLayoutRecords.hpp": "2f2cadec0e8f9d392a106f66c36f414b2d716b85ae555e012fa80d2c8a17ffe1",
+  "src/compat/Nw4rLayoutRecordsCompat.cpp": "9741bb2d60472e46d43aa96b448120a286ad7e99bb75af4d47667cd9f389df1e",
+  "tests/OriginalLayoutGroupTests.cpp": "624e8c1b4ceb3ada188a58acb40dae938113d22480d255811a3974398ebb5c7e",
+  "decomp/src/nw4r/lyt/lyt_pane.cpp": "62509482454049eb855539b2e7db7b362569aa9943518a256d22b882fc3c5f3d"
+}

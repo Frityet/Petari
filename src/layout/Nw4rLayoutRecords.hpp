@@ -28,14 +28,18 @@ public:
     [[nodiscard]] u32 pane_count() const;
     [[nodiscard]] u32 pane_index(const nw4r::lyt::Pane* pane) const;
     void synchronize();
+    void animate_pane(u32 index);
     void require_mutable_resource_graph(std::string_view operation) const;
     [[nodiscard]] u32 text_line_count(const char* pane_name) const;
 
 private:
+    void import_pane(u32 index);
+    void publish_pane(u32 index, bool matrices);
     struct State;
     std::unique_ptr<State> _state;
 };
 
+void animate_native_pane(const nw4r::lyt::Pane* pane);
 void synchronize_native_pane(const nw4r::lyt::Pane* pane);
 void validate_native_pane_hierarchy_change(const nw4r::lyt::Pane* parent, const nw4r::lyt::Pane* child);
 void validate_native_pane_rename(const nw4r::lyt::Pane* pane, const char* name);

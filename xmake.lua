@@ -3,6 +3,18 @@ set_xmakever("3.0.0")
 
 add_repositories("local-repo $(projectdir)")
 
+option("optimize_debug")
+    set_default(false)
+    set_showmenu(true)
+    set_description("Optimize debug builds while retaining symbols and runtime checks")
+option_end()
+
+-- Apply before including Aurora so native and Game targets use the same
+-- optimization policy. Keep debug guards and per-file floating-point rules.
+if is_mode("debug") and has_config("optimize_debug") then
+    set_optimize("faster")
+end
+
 includes("aurora")
 set_project("smg-pc")
 

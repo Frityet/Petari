@@ -111,6 +111,27 @@ void records() {
         auto* root = records.pane(nullptr); auto* child = records.pane("Child"); auto* sibling = records.pane("Sibling");
         require(records.pane_count() == 3 && root->mChildList.GetSize() == 2 && child->mpParent == root && sibling->mpParent == root,
                 "actual intrusive Pane nodes preserve resource hierarchy and stable identity");
+        const auto sibling_local = sibling->mMtx;
+        const auto sibling_global = sibling->mGlbMtx;
+        runtime.setPaneRotation("Sibling", 0, 0, 45);
+        root->AnimateSelf(1);
+        require(sibling->mRotate.z == 0,
+                "AnimateSelf evaluates only its own pane, without publishing a sibling's pending animation properties");
+        child->mTranslate.x = 9;
+        sibling->AnimateSelf(1);
+        require(sibling->mRotate.z == 45 && child->mTranslate.x == 9,
+                "the next pane's local animation publishes without overwriting another pane's direct SDK edit");
+        for (int row = 0; row < 3; ++row) for (int column = 0; column < 4; ++column) {
+            require(sibling->mMtx.m[row][column] == sibling_local.m[row][column] &&
+                    sibling->mGlbMtx.m[row][column] == sibling_global.m[row][column],
+                    "AnimateSelf leaves local/global matrix propagation to the original later matrix phase");
+        }
+        records.synchronize();
+        require(child->mTranslate.x == 9 && std::fabs(sibling->mMtx.m[0][0] - std::sqrt(0.5F)) < 0.0001F,
+                "the matrix phase retains deferred direct edits and publishes the newly animated local transform");
+        runtime.setPaneRotation("Sibling", 0, 0, 0);
+        child->mTranslate.x = 2;
+        records.synchronize();
         require(records.group_count() == 2 && records.group_index("Ordered") == 0 && records.group_index("Second") == 1 &&
                 records.group_index("Missing") == 2 && !records.group("Missing") && !records.group("RootGroup") && !records.group("NestedIgnored"),
                 "only immediate root groups exist; absent index is original one-past-end sentinel");

@@ -151,6 +151,7 @@ namespace {
                                             const CollisionPartsFilterBase* parts_filter,
                                             const TriangleFilterBase* triangle_filter,
                                             const float* thickness) {
+        const aurora::allocation::HostAllocationScope host_allocations;
         const auto& collision = require_stage_collision();
         const auto filter = make_query_filter(collision, parts_filter, triangle_filter);
         auto contacts = thickness == nullptr
@@ -544,6 +545,7 @@ namespace Collision {
     }
 
     s32 checkStrikePointToMap(const TVec3f& point, HitInfo* output) {
+        const aurora::allocation::HostAllocationScope host_allocations;
         const auto contacts = require_stage_collision().sphere_contacts(point, 0.0F, 1U);
         auto& infos = strike_infos();
         infos.clear();

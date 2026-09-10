@@ -980,6 +980,7 @@ namespace smgpc::scene {
 
     bool StageCollisionService::line_cast(const TVec3f& start, const TVec3f& offset, StageCollisionHit* hit,
                                           const StageCollisionTriangleFilter& filter) const {
+        const aurora::allocation::HostAllocationScope host_allocations;
         if (!_built || _nodes.empty() || length_squared(offset) <= 1.0e-12F) {
             return false;
         }

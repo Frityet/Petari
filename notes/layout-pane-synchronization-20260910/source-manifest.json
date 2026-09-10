@@ -1,0 +1,31 @@
+{
+  "sources": [
+    {
+      "path": "src/layout/Nw4rLayoutRecords.cpp",
+      "sha256": "e83486b90a09b0d1bb94807478a101d3dfc089f0b82c3119923b0f367f66a3d9"
+    },
+    {
+      "path": "src/layout/Nw4rLayoutRecords.hpp",
+      "sha256": "2f2cadec0e8f9d392a106f66c36f414b2d716b85ae555e012fa80d2c8a17ffe1"
+    },
+    {
+      "path": "src/compat/Nw4rLayoutRecordsCompat.cpp",
+      "sha256": "9741bb2d60472e46d43aa96b448120a286ad7e99bb75af4d47667cd9f389df1e"
+    },
+    {
+      "path": "tests/OriginalLayoutGroupTests.cpp",
+      "sha256": "624e8c1b4ceb3ada188a58acb40dae938113d22480d255811a3974398ebb5c7e"
+    }
+  ],
+  "compile_exits": [
+    0,
+    0,
+    0
+  ],
+  "runtime_target": "smg-pc-original-layout-group-tests",
+  "runtime_status": "passed real RMGK01 RVZ",
+  "root_xmake_used": false,
+  "runtime_build_exit": 0,
+  "runtime_exit": 0,
+  "binary_sha256": "d909a1a75f8d96fead969acf9d7203206136f820351e71ac80fd7d8d3f60efbd"
+}

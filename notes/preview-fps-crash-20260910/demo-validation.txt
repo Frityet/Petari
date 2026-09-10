@@ -1,0 +1,5 @@
+Updated local preview,10 September2026.
+
+Measured the actual Gateway disc scene for1200simulationticks: approximately54FPS average, simulation60updates/second,20.99seconds wall time, clean process exit0. Fixed repeated full-layout synchronization, collision scratch memory ownership, and registry shutdown ownership. Built with optimization while retaining debug checks and original floating-point constraints. Four focused compatibility fixtures also passed.
+
+Mario and the planet render through the original game camera. Jumping is not verified: Mario remains in the stage-entry animation, with a specific original animation-transition recovery identified for the next change. Full Gateway bunny gameplay is incomplete. Please report visible movement/camera problems. Audio/HUD polish not included.

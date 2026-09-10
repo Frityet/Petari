@@ -1,0 +1,56 @@
+{
+  "before-layout-phase": {
+    "command": [
+      "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-showcase",
+      "gateway",
+      "--disc",
+      "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+      "--max-frames",
+      "180"
+    ],
+    "binary_sha256": "05028c3a289d505f68c885ff711b35de5b67f3e6e4a69ea76be40325ca3dd753",
+    "exit": -6,
+    "timeout": false,
+    "wall_seconds": 17.19471720897127,
+    "buttons": "",
+    "present_fps": 0.13651733121762114,
+    "simulation_ticks_per_second": 11.399197156671363,
+    "present_count": 3
+  },
+  "after-layout-phase": {
+    "command": [
+      "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-showcase",
+      "gateway",
+      "--disc",
+      "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+      "--max-frames",
+      "600"
+    ],
+    "binary_sha256": "5e2271d90b6efc97ac1c027c5d7b4a9d1b47c85bcabfe02e197a6ca8e405f4b3",
+    "exit": -6,
+    "timeout": false,
+    "wall_seconds": 12.58577433298342,
+    "buttons": "150-155:A;240-270:LEFT;360-365:A",
+    "present_fps": 19.155308759386138,
+    "simulation_ticks_per_second": 60.33410085175633,
+    "present_count": 188
+  },
+  "optimized-debug": {
+    "command": [
+      "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-showcase",
+      "gateway",
+      "--disc",
+      "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+      "--max-frames",
+      "1200"
+    ],
+    "binary_sha256": "d1ad339684fdf16bff8125591f658c66b046c3db9a80d1f7de3c7ea5d6139240",
+    "exit": 0,
+    "timeout": false,
+    "wall_seconds": 20.990072083019186,
+    "buttons": "150-155:A;240-270:LEFT;360-365:A;600-630:RIGHT;900-905:A",
+    "present_fps": 53.96802450369563,
+    "simulation_ticks_per_second": 60.03753053972513,
+    "present_count": 1068
+  }
+}

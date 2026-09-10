@@ -1,0 +1,4 @@
+{
+  "src/scene/StageCollisionService.cpp": "01cfb799953a49327d7e2835f5ae409fd655070c2cdd168ebaa80c2674ace9f7",
+  "tests/StageCollisionRegistrationTests.cpp": "d94dcd640ab4c44f8328b6316b92ab84917fe7ad58d1b196f70fc057a6cc3eaa"
+}

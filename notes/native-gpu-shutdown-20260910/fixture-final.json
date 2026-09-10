@@ -1,0 +1,22 @@
+{
+  "build": {
+    "command": [
+      "/opt/homebrew/bin/xmake",
+      "build",
+      "-y",
+      "-j",
+      "12",
+      "smg-pc-line-collision-query-tests"
+    ],
+    "exit_code": 0,
+    "seconds": 2.466284916969016
+  },
+  "runtime": {
+    "command": [
+      "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-line-collision-query-tests"
+    ],
+    "exit_code": 1,
+    "seconds": 0.5511781250243075
+  },
+  "binary_sha256": "9e1fedcb2c7e097d9a98b700de8ff031cdaad281ee9e3882f3178b10518abbcb"
+}

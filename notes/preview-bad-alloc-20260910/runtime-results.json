@@ -1,0 +1,16 @@
+[
+  {
+    "target": "smg-pc-stage-collision-registration-tests",
+    "build_exit": 0,
+    "binary_sha256": "008a229267fbf1c53d9943812181099b1f301d8fb10483240dd40ddd99ea07f1",
+    "runtime_exit": 0,
+    "elapsed_seconds": 2.3079929999657907
+  },
+  {
+    "target": "smg-pc-original-layout-group-tests",
+    "build_exit": 0,
+    "binary_sha256": "d909a1a75f8d96fead969acf9d7203206136f820351e71ac80fd7d8d3f60efbd",
+    "runtime_exit": 0,
+    "elapsed_seconds": 3.4044422499719076
+  }
+]

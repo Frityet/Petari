@@ -1,0 +1,34 @@
+{
+  "baseline_binary": "build/macosx/arm64/debug/smg-pc-showcase",
+  "baseline_sha256": "05028c3a289d505f68c885ff711b35de5b67f3e6e4a69ea76be40325ca3dd753",
+  "packaged_binary_sha256_identical": true,
+  "first_throw_type": "std::bad_alloc",
+  "frame_index": 412,
+  "allocation_size": 1664,
+  "heap_type": "JKRSolidHeap",
+  "heap_remaining": 1232,
+  "failed_native_allocation": "StageCollisionService::sphere_contacts_impl IndexedContact vector reserve(32)",
+  "game_caller": "MarioActor::movement -> Binder::bind -> Collision::checkStrikeBallToMapWithMovingReaction",
+  "owned_process_id": 71717,
+  "owned_process_terminated": true,
+  "fix": "Depth peer guards store_sphere_contacts and point strike cache; this cohort guards native StageCollisionService::line_cast reached directly from original MR line queries.",
+  "isolated_compile_exit": 0,
+  "runtime_regression_status": "passed",
+  "target": "smg-pc-stage-collision-registration-tests",
+  "runtime_results": [
+    {
+      "target": "smg-pc-stage-collision-registration-tests",
+      "build_exit": 0,
+      "binary_sha256": "008a229267fbf1c53d9943812181099b1f301d8fb10483240dd40ddd99ea07f1",
+      "runtime_exit": 0,
+      "elapsed_seconds": 2.3079929999657907
+    },
+    {
+      "target": "smg-pc-original-layout-group-tests",
+      "build_exit": 0,
+      "binary_sha256": "d909a1a75f8d96fead969acf9d7203206136f820351e71ac80fd7d8d3f60efbd",
+      "runtime_exit": 0,
+      "elapsed_seconds": 3.4044422499719076
+    }
+  ]
+}
