@@ -1,0 +1,8 @@
+{
+  "decomp/src/Game/Util/JointController.cpp": "05b5ed6d600b9fdbf257aa5d203c0d5b71136cfa4658b6ac204dec088d797606",
+  "src/Game/Util/JointController.cpp": "05b5ed6d600b9fdbf257aa5d203c0d5b71136cfa4658b6ac204dec088d797606",
+  "decomp/include/Game/Util/JointController.hpp": "f487610a3fb88f23c88295c937238ed7d11d237edc2c37303923e9d1cbd688eb",
+  "src/Game/Util/JointController.hpp": "f487610a3fb88f23c88295c937238ed7d11d237edc2c37303923e9d1cbd688eb",
+  "decomp/src/Game/Boss/SkeletalFishBaby.cpp": "73596203e86da4542949a6749840f964a743a47b122b83da920267a8ee1dd768",
+  "decomp/src/Game/Boss/SkeletalFishBoss.cpp": "6cdb6ce67587c002c5d3406792035d55f068faeb6e962e34c8bce5e125a5ded8"
+}

@@ -1,0 +1,4 @@
+decomp/src/Game/NPC/RabbitStateCaught.cpp:50:31: error: no member named 'createPowerStarDemoModel' in namespace 'MR'
+   50 |         mPowerStarModel = MR::createPowerStarDemoModel(mHost, "パワースターデモモデル", mCaughtLandMarioBaseMtx);
+      |                               ^~~~~~~~~~~~~~~~~~~~~~~~
+1 error generated.

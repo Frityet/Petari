@@ -1,0 +1,21 @@
+{
+  "status": "Final parent validation passed: NPC target build/runtime with 6/6 groups; Gateway --player-util runtime with every relocated NPC float assertion and complete scene teardown. No source changes after final tested freeze.",
+  "sha256": {
+    "tests/NPCActorRealOrAbsentTests.cpp": "de497636ac062cadbc71df4ee2cac01c497b5dd0270068eead56a9ea047064d2",
+    "tests/OriginalPlayerUtilTests.cpp": "a96422aa68c5b0db3c19f1adbf2c650d1bacb2f0af20a8ebfeb6a8a10efc2f04"
+  },
+  "targets": [
+    "smg-pc-npc-actor-real-or-absent-tests",
+    "smg-pc-mario-gateway-walk-tests --player-util"
+  ],
+  "parent_evidence": {
+    "gateway": "notes/original-npc-direct-source-20260910/run-player.log",
+    "npc_initial": "notes/original-npc-direct-source-20260910/run-npc.log",
+    "npc_final": "notes/original-npc-direct-source-20260910/run-npc-final.log",
+    "gateway_proof_lines": [
+      715,
+      788,
+      790
+    ]
+  }
+}

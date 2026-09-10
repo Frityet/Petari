@@ -1,0 +1,1230 @@
+[
+  {
+    "name": "RunawayRabbitCollect",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/NPC/RunawayRabbitCollect.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-gateway-sequence-20260910/rabbits/RunawayRabbitCollect-reference.o"
+    ],
+    "exit_code": 0,
+    "objdiff_exit": 0,
+    "symbols": [
+      {
+        "name": "__ct__20RunawayRabbitCollectFPCc",
+        "match_percent": 100.0,
+        "size": "88"
+      },
+      {
+        "name": "init__20RunawayRabbitCollectFRC12JMapInfoIter",
+        "match_percent": 99.87261,
+        "size": "628"
+      },
+      {
+        "name": "initAfterPlacement__20RunawayRabbitCollectFv",
+        "match_percent": 100.0,
+        "size": "12"
+      },
+      {
+        "name": "calcCompleteRabbitCount__20RunawayRabbitCollectCFv",
+        "match_percent": 97.05882,
+        "size": "136"
+      },
+      {
+        "name": "linkMsgCtrl__20RunawayRabbitCollectFv",
+        "match_percent": 100.0,
+        "size": "160"
+      },
+      {
+        "name": "noticeAppearRabbit__20RunawayRabbitCollectFP13RunawayRabbit",
+        "match_percent": 100.0,
+        "size": "84"
+      },
+      {
+        "name": "noticeCaughtRabbit__20RunawayRabbitCollectFP13RunawayRabbit",
+        "match_percent": 98.958336,
+        "size": "288"
+      },
+      {
+        "name": "control__20RunawayRabbitCollectFv",
+        "match_percent": 100.0,
+        "size": "4"
+      },
+      {
+        "name": "exeWait__20RunawayRabbitCollectFv",
+        "match_percent": 100.0,
+        "size": "172"
+      },
+      {
+        "name": "appearTico__20RunawayRabbitCollectFP11RunawayTicoRCQ29JGeometry8TVec3<f>",
+        "match_percent": 100.0,
+        "size": "144"
+      },
+      {
+        "name": "exeActive__20RunawayRabbitCollectFv",
+        "match_percent": 90.098595,
+        "size": "568"
+      },
+      {
+        "name": "__dt__20RunawayRabbitCollectFv",
+        "match_percent": 100.0,
+        "size": "92"
+      },
+      {
+        "name": "__sinit_\\RunawayRabbitCollect_cpp",
+        "match_percent": 100.0,
+        "size": "44"
+      },
+      {
+        "name": "__ct__Q223NrvRunawayRabbitCollect27RunawayRabbitCollectNrvWaitFv",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "__ct__Q223NrvRunawayRabbitCollect29RunawayRabbitCollectNrvActiveFv",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "execute__Q223NrvRunawayRabbitCollect29RunawayRabbitCollectNrvActiveCFP5Spine",
+        "match_percent": 100.0,
+        "size": "8"
+      },
+      {
+        "name": "execute__Q223NrvRunawayRabbitCollect27RunawayRabbitCollectNrvWaitCFP5Spine",
+        "match_percent": 100.0,
+        "size": "8"
+      },
+      {
+        "name": "__vt__20RunawayRabbitCollect",
+        "match_percent": 100.0,
+        "size": "120"
+      },
+      {
+        "name": "__vt__Q223NrvRunawayRabbitCollect29RunawayRabbitCollectNrvActive",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "__vt__Q223NrvRunawayRabbitCollect27RunawayRabbitCollectNrvWait",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "sInstance__Q223NrvRunawayRabbitCollect27RunawayRabbitCollectNrvWait",
+        "match_percent": 100.0,
+        "size": "4"
+      },
+      {
+        "name": "sInstance__Q223NrvRunawayRabbitCollect29RunawayRabbitCollectNrvActive",
+        "match_percent": 100.0,
+        "size": "4"
+      }
+    ]
+  },
+  {
+    "name": "RunawayRabbit",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/NPC/RunawayRabbit.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-gateway-sequence-20260910/rabbits/RunawayRabbit-reference.o"
+    ],
+    "exit_code": 0,
+    "objdiff_exit": 0,
+    "symbols": [
+      {
+        "name": "__ct__13RunawayRabbitFPCcP20RunawayRabbitCollect",
+        "match_percent": 99.913795,
+        "size": "232"
+      },
+      {
+        "name": "init__13RunawayRabbitFRC12JMapInfoIter",
+        "match_percent": 85.62766,
+        "size": "752"
+      },
+      {
+        "name": "initAfterPlacement__13RunawayRabbitFv",
+        "match_percent": 100.0,
+        "size": "4"
+      },
+      {
+        "name": "initSensor__13RunawayRabbitFv",
+        "match_percent": 99.3,
+        "size": "200"
+      },
+      {
+        "name": "appear__13RunawayRabbitFv",
+        "match_percent": 100.0,
+        "size": "60"
+      },
+      {
+        "name": "control__13RunawayRabbitFv",
+        "match_percent": 100.0,
+        "size": "108"
+      },
+      {
+        "name": "calcAndSetBaseMtx__13RunawayRabbitFv",
+        "match_percent": 100.0,
+        "size": "8"
+      },
+      {
+        "name": "updatePose__13RunawayRabbitFv",
+        "match_percent": 99.47369,
+        "size": "76"
+      },
+      {
+        "name": "updateBindActorMatrix__13RunawayRabbitFv",
+        "match_percent": 85.14815,
+        "size": "216"
+      },
+      {
+        "name": "activate__13RunawayRabbitFv",
+        "match_percent": 100.0,
+        "size": "68"
+      },
+      {
+        "name": "startRunnaway__13RunawayRabbitFv",
+        "match_percent": 100.0,
+        "size": "96"
+      },
+      {
+        "name": "incrementRunawayLevel__13RunawayRabbitFv",
+        "match_percent": 100.0,
+        "size": "24"
+      },
+      {
+        "name": "setLastMessage__13RunawayRabbitFv",
+        "match_percent": 100.0,
+        "size": "8"
+      },
+      {
+        "name": "setMessage__13RunawayRabbitFv",
+        "match_percent": 100.0,
+        "size": "8"
+      },
+      {
+        "name": "setNotCaughtable__13RunawayRabbitFv",
+        "match_percent": 100.0,
+        "size": "12"
+      },
+      {
+        "name": "startJumpSound__13RunawayRabbitFv",
+        "match_percent": 100.0,
+        "size": "104"
+      },
+      {
+        "name": "setMsgCtrl__13RunawayRabbitFP15TalkMessageCtrl",
+        "match_percent": 100.0,
+        "size": "8"
+      },
+      {
+        "name": "attackSensor__13RunawayRabbitFP9HitSensorP9HitSensor",
+        "match_percent": 97.9,
+        "size": "200"
+      },
+      {
+        "name": "receiveMsgPlayerAttack__13RunawayRabbitFUlP9HitSensorP9HitSensor",
+        "match_percent": 96.640625,
+        "size": "256"
+      },
+      {
+        "name": "receiveMsgEnemyAttack__13RunawayRabbitFUlP9HitSensorP9HitSensor",
+        "match_percent": 96.617645,
+        "size": "136"
+      },
+      {
+        "name": "receiveMsgPush__13RunawayRabbitFP9HitSensorP9HitSensor",
+        "match_percent": 96.333336,
+        "size": "120"
+      },
+      {
+        "name": "receiveOtherMsg__13RunawayRabbitFUlP9HitSensorP9HitSensor",
+        "match_percent": 100.0,
+        "size": "8"
+      },
+      {
+        "name": "exeHide__13RunawayRabbitFv",
+        "match_percent": 95.65,
+        "size": "240"
+      },
+      {
+        "name": "exeAppear__13RunawayRabbitFv",
+        "match_percent": 98.02469,
+        "size": "324"
+      },
+      {
+        "name": "exeRunaway__13RunawayRabbitFv",
+        "match_percent": 99.80769,
+        "size": "416"
+      },
+      {
+        "name": "exeCaught__13RunawayRabbitFv",
+        "match_percent": 99.66292,
+        "size": "356"
+      },
+      {
+        "name": "exeCaughtTalk__13RunawayRabbitFv",
+        "match_percent": 100.0,
+        "size": "180"
+      },
+      {
+        "name": "exeCaughtEnd__13RunawayRabbitFv",
+        "match_percent": 99.666664,
+        "size": "180"
+      },
+      {
+        "name": "exeStop__13RunawayRabbitFv",
+        "match_percent": 99.583336,
+        "size": "144"
+      },
+      {
+        "name": "isCaught__13RunawayRabbitCFv",
+        "match_percent": 100.0,
+        "size": "8"
+      },
+      {
+        "name": "isCaughtable__13RunawayRabbitCFv",
+        "match_percent": 100.0,
+        "size": "76"
+      },
+      {
+        "name": "isRunnaway__13RunawayRabbitCFv",
+        "match_percent": 90.40476,
+        "size": "168"
+      },
+      {
+        "name": "isChasing__13RunawayRabbitCFv",
+        "match_percent": 86.77778,
+        "size": "108"
+      },
+      {
+        "name": "isEnableBlow__13RunawayRabbitCFv",
+        "match_percent": 100.0,
+        "size": "8"
+      },
+      {
+        "name": "isValidFollow__13RunawayRabbitCFl",
+        "match_percent": 86.18519,
+        "size": "108"
+      },
+      {
+        "name": "__sinit_\\RunawayRabbit_cpp",
+        "match_percent": 98.5,
+        "size": "120"
+      },
+      {
+        "name": "__ct__Q227@unnamed@RunawayRabbit_cpp@18RunawayRabbitParamFv",
+        "match_percent": 100.0,
+        "size": "48"
+      },
+      {
+        "name": "__ct__Q216NrvRunawayRabbit24RunawayRabbitNrvNoActiveFv",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "__ct__Q216NrvRunawayRabbit20RunawayRabbitNrvHideFv",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "__ct__Q216NrvRunawayRabbit22RunawayRabbitNrvAppearFv",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "__ct__Q216NrvRunawayRabbit23RunawayRabbitNrvRunawayFv",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "__ct__Q216NrvRunawayRabbit29RunawayRabbitNrvTryCaughtDemoFv",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "__ct__Q216NrvRunawayRabbit22RunawayRabbitNrvCaughtFv",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "__ct__Q216NrvRunawayRabbit26RunawayRabbitNrvCaughtTalkFv",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "__ct__Q216NrvRunawayRabbit25RunawayRabbitNrvCaughtEndFv",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "__ct__Q216NrvRunawayRabbit20RunawayRabbitNrvStopFv",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "__ct__Q216NrvRunawayRabbit26RunawayRabbitNrvBlowDamageFv",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "execute__Q216NrvRunawayRabbit26RunawayRabbitNrvBlowDamageCFP5Spine",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "execute__Q216NrvRunawayRabbit20RunawayRabbitNrvStopCFP5Spine",
+        "match_percent": 100.0,
+        "size": "8"
+      },
+      {
+        "name": "execute__Q216NrvRunawayRabbit25RunawayRabbitNrvCaughtEndCFP5Spine",
+        "match_percent": 100.0,
+        "size": "8"
+      },
+      {
+        "name": "execute__Q216NrvRunawayRabbit26RunawayRabbitNrvCaughtTalkCFP5Spine",
+        "match_percent": 100.0,
+        "size": "8"
+      },
+      {
+        "name": "execute__Q216NrvRunawayRabbit22RunawayRabbitNrvCaughtCFP5Spine",
+        "match_percent": 100.0,
+        "size": "8"
+      },
+      {
+        "name": "execute__Q216NrvRunawayRabbit29RunawayRabbitNrvTryCaughtDemoCFP5Spine",
+        "match_percent": 100.0,
+        "size": "4"
+      },
+      {
+        "name": "execute__Q216NrvRunawayRabbit23RunawayRabbitNrvRunawayCFP5Spine",
+        "match_percent": 100.0,
+        "size": "8"
+      },
+      {
+        "name": "execute__Q216NrvRunawayRabbit22RunawayRabbitNrvAppearCFP5Spine",
+        "match_percent": 100.0,
+        "size": "8"
+      },
+      {
+        "name": "execute__Q216NrvRunawayRabbit20RunawayRabbitNrvHideCFP5Spine",
+        "match_percent": 100.0,
+        "size": "8"
+      },
+      {
+        "name": "execute__Q216NrvRunawayRabbit24RunawayRabbitNrvNoActiveCFP5Spine",
+        "match_percent": 100.0,
+        "size": "4"
+      },
+      {
+        "name": "isValid__50BaseMatrixFollowValidateDelegator<13RunawayRabbit>CFl",
+        "match_percent": 100.0,
+        "size": "48"
+      },
+      {
+        "name": "__cl__Q22MR53FunctorV0M<P13RunawayRabbit,M13RunawayRabbitFPCvPv_v>CFv",
+        "match_percent": 100.0,
+        "size": "48"
+      },
+      {
+        "name": "clone__Q22MR53FunctorV0M<P13RunawayRabbit,M13RunawayRabbitFPCvPv_v>CFP7JKRHeap",
+        "match_percent": 100.0,
+        "size": "104"
+      },
+      {
+        "name": "__dt__13RunawayRabbitFv",
+        "match_percent": 100.0,
+        "size": "92"
+      },
+      {
+        "name": "__vt__50BaseMatrixFollowValidateDelegator<13RunawayRabbit>",
+        "match_percent": 100.0,
+        "size": "12"
+      },
+      {
+        "name": "__vt__Q22MR53FunctorV0M<P13RunawayRabbit,M13RunawayRabbitFPCvPv_v>",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "__vt__13RunawayRabbit",
+        "match_percent": 100.0,
+        "size": "120"
+      },
+      {
+        "name": "__vt__Q216NrvRunawayRabbit26RunawayRabbitNrvBlowDamage",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "__vt__Q216NrvRunawayRabbit20RunawayRabbitNrvStop",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "__vt__Q216NrvRunawayRabbit25RunawayRabbitNrvCaughtEnd",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "__vt__Q216NrvRunawayRabbit26RunawayRabbitNrvCaughtTalk",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "__vt__Q216NrvRunawayRabbit22RunawayRabbitNrvCaught",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "__vt__Q216NrvRunawayRabbit29RunawayRabbitNrvTryCaughtDemo",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "__vt__Q216NrvRunawayRabbit23RunawayRabbitNrvRunaway",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "__vt__Q216NrvRunawayRabbit22RunawayRabbitNrvAppear",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "__vt__Q216NrvRunawayRabbit20RunawayRabbitNrvHide",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "__vt__Q216NrvRunawayRabbit24RunawayRabbitNrvNoActive",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "sParam__27@unnamed@RunawayRabbit_cpp@",
+        "match_percent": 100.0,
+        "size": "88"
+      },
+      {
+        "name": "sInstance__Q216NrvRunawayRabbit24RunawayRabbitNrvNoActive",
+        "match_percent": 100.0,
+        "size": "4"
+      },
+      {
+        "name": "sInstance__Q216NrvRunawayRabbit20RunawayRabbitNrvHide",
+        "match_percent": 100.0,
+        "size": "4"
+      },
+      {
+        "name": "sInstance__Q216NrvRunawayRabbit22RunawayRabbitNrvAppear",
+        "match_percent": 100.0,
+        "size": "4"
+      },
+      {
+        "name": "sInstance__Q216NrvRunawayRabbit23RunawayRabbitNrvRunaway",
+        "match_percent": 100.0,
+        "size": "4"
+      },
+      {
+        "name": "sInstance__Q216NrvRunawayRabbit29RunawayRabbitNrvTryCaughtDemo",
+        "match_percent": 100.0,
+        "size": "4"
+      },
+      {
+        "name": "sInstance__Q216NrvRunawayRabbit22RunawayRabbitNrvCaught",
+        "match_percent": 100.0,
+        "size": "4"
+      },
+      {
+        "name": "sInstance__Q216NrvRunawayRabbit26RunawayRabbitNrvCaughtTalk",
+        "match_percent": 100.0,
+        "size": "4"
+      },
+      {
+        "name": "sInstance__Q216NrvRunawayRabbit25RunawayRabbitNrvCaughtEnd",
+        "match_percent": 100.0,
+        "size": "4"
+      },
+      {
+        "name": "sInstance__Q216NrvRunawayRabbit20RunawayRabbitNrvStop",
+        "match_percent": 100.0,
+        "size": "4"
+      },
+      {
+        "name": "sInstance__Q216NrvRunawayRabbit26RunawayRabbitNrvBlowDamage",
+        "match_percent": 100.0,
+        "size": "4"
+      }
+    ]
+  },
+  {
+    "name": "RabbitStateCaught",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/NPC/RabbitStateCaught.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-gateway-sequence-20260910/rabbits/RabbitStateCaught-reference.o"
+    ],
+    "exit_code": 0,
+    "objdiff_exit": 0,
+    "symbols": [
+      {
+        "name": "__ct__17RabbitStateCaughtFP9LiveActorP15TalkMessageCtrl",
+        "match_percent": 100.0,
+        "size": "152"
+      },
+      {
+        "name": "unusePowerStarModel__17RabbitStateCaughtFv",
+        "match_percent": 100.0,
+        "size": "12"
+      },
+      {
+        "name": "init__17RabbitStateCaughtFv",
+        "match_percent": 100.0,
+        "size": "116"
+      },
+      {
+        "name": "appear__17RabbitStateCaughtFv",
+        "match_percent": 100.0,
+        "size": "32"
+      },
+      {
+        "name": "control__17RabbitStateCaughtFv",
+        "match_percent": 100.0,
+        "size": "4"
+      },
+      {
+        "name": "exeCaught__17RabbitStateCaughtFv",
+        "match_percent": 99.78261,
+        "size": "276"
+      },
+      {
+        "name": "exeCaughtLand__17RabbitStateCaughtFv",
+        "match_percent": 99.71429,
+        "size": "280"
+      },
+      {
+        "name": "exeCaughtEvent__17RabbitStateCaughtFv",
+        "match_percent": 99.61539,
+        "size": "208"
+      },
+      {
+        "name": "setCaughtStartMarioPose__17RabbitStateCaughtFv",
+        "match_percent": 100.0,
+        "size": "104"
+      },
+      {
+        "name": "blendBaseMatrixToMario__17RabbitStateCaughtCFf",
+        "match_percent": 100.0,
+        "size": "180"
+      },
+      {
+        "name": "__dt__17RabbitStateCaughtFv",
+        "match_percent": 100.0,
+        "size": "88"
+      },
+      {
+        "name": "__sinit_\\RabbitStateCaught_cpp",
+        "match_percent": 100.0,
+        "size": "60"
+      },
+      {
+        "name": "__ct__Q220NrvRabbitStateCaught32RabbitStateCaughtNrvTryStartDemoFv",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "__ct__Q220NrvRabbitStateCaught26RabbitStateCaughtNrvCaughtFv",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "__ct__Q220NrvRabbitStateCaught30RabbitStateCaughtNrvCaughtLandFv",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "__ct__Q220NrvRabbitStateCaught31RabbitStateCaughtNrvCaughtEventFv",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "execute__Q220NrvRabbitStateCaught31RabbitStateCaughtNrvCaughtEventCFP5Spine",
+        "match_percent": 100.0,
+        "size": "8"
+      },
+      {
+        "name": "execute__Q220NrvRabbitStateCaught30RabbitStateCaughtNrvCaughtLandCFP5Spine",
+        "match_percent": 100.0,
+        "size": "8"
+      },
+      {
+        "name": "execute__Q220NrvRabbitStateCaught26RabbitStateCaughtNrvCaughtCFP5Spine",
+        "match_percent": 100.0,
+        "size": "8"
+      },
+      {
+        "name": "execute__Q220NrvRabbitStateCaught32RabbitStateCaughtNrvTryStartDemoCFP5Spine",
+        "match_percent": 100.0,
+        "size": "4"
+      },
+      {
+        "name": "__vt__17RabbitStateCaught",
+        "match_percent": 100.0,
+        "size": "32"
+      },
+      {
+        "name": "__vt__Q220NrvRabbitStateCaught31RabbitStateCaughtNrvCaughtEvent",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "__vt__Q220NrvRabbitStateCaught30RabbitStateCaughtNrvCaughtLand",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "__vt__Q220NrvRabbitStateCaught26RabbitStateCaughtNrvCaught",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "__vt__Q220NrvRabbitStateCaught32RabbitStateCaughtNrvTryStartDemo",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "sInstance__Q220NrvRabbitStateCaught32RabbitStateCaughtNrvTryStartDemo",
+        "match_percent": 100.0,
+        "size": "4"
+      },
+      {
+        "name": "sInstance__Q220NrvRabbitStateCaught26RabbitStateCaughtNrvCaught",
+        "match_percent": 100.0,
+        "size": "4"
+      },
+      {
+        "name": "sInstance__Q220NrvRabbitStateCaught30RabbitStateCaughtNrvCaughtLand",
+        "match_percent": 100.0,
+        "size": "4"
+      },
+      {
+        "name": "sInstance__Q220NrvRabbitStateCaught31RabbitStateCaughtNrvCaughtEvent",
+        "match_percent": 100.0,
+        "size": "4"
+      }
+    ]
+  },
+  {
+    "name": "RabbitStateWaitStart",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "src/Game/NPC/RabbitStateWaitStart.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-gateway-sequence-20260910/rabbits/RabbitStateWaitStart-reference.o"
+    ],
+    "exit_code": 0,
+    "objdiff_exit": 0,
+    "symbols": [
+      {
+        "name": "__ct__20RabbitStateWaitStartFP9LiveActorPQ29JGeometry8TVec3<f>P15TalkMessageCtrl",
+        "match_percent": 100.0,
+        "size": "128"
+      },
+      {
+        "name": "setTalkActionName__20RabbitStateWaitStartFPCc",
+        "match_percent": 100.0,
+        "size": "8"
+      },
+      {
+        "name": "init__20RabbitStateWaitStartFv",
+        "match_percent": 100.0,
+        "size": "8"
+      },
+      {
+        "name": "appear__20RabbitStateWaitStartFv",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "control__20RabbitStateWaitStartFv",
+        "match_percent": 100.0,
+        "size": "4"
+      },
+      {
+        "name": "receiveMsgPlayerAttack__20RabbitStateWaitStartFUlP9HitSensorP9HitSensor",
+        "match_percent": 100.0,
+        "size": "176"
+      },
+      {
+        "name": "receiveOtherMsg__20RabbitStateWaitStartFUlP9HitSensorP9HitSensor",
+        "match_percent": 100.0,
+        "size": "72"
+      },
+      {
+        "name": "requestTrample__20RabbitStateWaitStartFv",
+        "match_percent": 100.0,
+        "size": "76"
+      },
+      {
+        "name": "requestSpin__20RabbitStateWaitStartFv",
+        "match_percent": 100.0,
+        "size": "76"
+      },
+      {
+        "name": "requestHitReaction__20RabbitStateWaitStartFv",
+        "match_percent": 100.0,
+        "size": "76"
+      },
+      {
+        "name": "isEnableReaction__20RabbitStateWaitStartCFv",
+        "match_percent": 100.0,
+        "size": "144"
+      },
+      {
+        "name": "trySmallTurn__20RabbitStateWaitStartFv",
+        "match_percent": 100.0,
+        "size": "104"
+      },
+      {
+        "name": "tryTalk__20RabbitStateWaitStartFv",
+        "match_percent": 100.0,
+        "size": "100"
+      },
+      {
+        "name": "tryPointing__20RabbitStateWaitStartFv",
+        "match_percent": 100.0,
+        "size": "140"
+      },
+      {
+        "name": "exeWait__20RabbitStateWaitStartFv",
+        "match_percent": 100.0,
+        "size": "180"
+      },
+      {
+        "name": "exeSmallTurn__20RabbitStateWaitStartFv",
+        "match_percent": 100.0,
+        "size": "140"
+      },
+      {
+        "name": "exeHitReaction__20RabbitStateWaitStartFv",
+        "match_percent": 99.625,
+        "size": "160"
+      },
+      {
+        "name": "exeTrample__20RabbitStateWaitStartFv",
+        "match_percent": 99.61539,
+        "size": "156"
+      },
+      {
+        "name": "exeSpin__20RabbitStateWaitStartFv",
+        "match_percent": 99.65116,
+        "size": "172"
+      },
+      {
+        "name": "exePointing__20RabbitStateWaitStartFv",
+        "match_percent": 100.0,
+        "size": "168"
+      },
+      {
+        "name": "exeTalk__20RabbitStateWaitStartFv",
+        "match_percent": 100.0,
+        "size": "160"
+      },
+      {
+        "name": "__dt__20RabbitStateWaitStartFv",
+        "match_percent": 100.0,
+        "size": "88"
+      },
+      {
+        "name": "__sinit_\\RabbitStateWaitStart_cpp",
+        "match_percent": 100.0,
+        "size": "84"
+      },
+      {
+        "name": "__ct__Q223NrvRabbitStateWaitStart27RabbitStateWaitStartNrvWaitFv",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "__ct__Q223NrvRabbitStateWaitStart32RabbitStateWaitStartNrvSmallTurnFv",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "__ct__Q223NrvRabbitStateWaitStart34RabbitStateWaitStartNrvHitReactionFv",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "__ct__Q223NrvRabbitStateWaitStart30RabbitStateWaitStartNrvTrampleFv",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "__ct__Q223NrvRabbitStateWaitStart27RabbitStateWaitStartNrvSpinFv",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "__ct__Q223NrvRabbitStateWaitStart31RabbitStateWaitStartNrvPointingFv",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "__ct__Q223NrvRabbitStateWaitStart27RabbitStateWaitStartNrvTalkFv",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "execute__Q223NrvRabbitStateWaitStart27RabbitStateWaitStartNrvTalkCFP5Spine",
+        "match_percent": 100.0,
+        "size": "8"
+      },
+      {
+        "name": "execute__Q223NrvRabbitStateWaitStart31RabbitStateWaitStartNrvPointingCFP5Spine",
+        "match_percent": 100.0,
+        "size": "8"
+      },
+      {
+        "name": "execute__Q223NrvRabbitStateWaitStart27RabbitStateWaitStartNrvSpinCFP5Spine",
+        "match_percent": 100.0,
+        "size": "8"
+      },
+      {
+        "name": "execute__Q223NrvRabbitStateWaitStart30RabbitStateWaitStartNrvTrampleCFP5Spine",
+        "match_percent": 100.0,
+        "size": "8"
+      },
+      {
+        "name": "execute__Q223NrvRabbitStateWaitStart34RabbitStateWaitStartNrvHitReactionCFP5Spine",
+        "match_percent": 100.0,
+        "size": "8"
+      },
+      {
+        "name": "execute__Q223NrvRabbitStateWaitStart32RabbitStateWaitStartNrvSmallTurnCFP5Spine",
+        "match_percent": 100.0,
+        "size": "8"
+      },
+      {
+        "name": "execute__Q223NrvRabbitStateWaitStart27RabbitStateWaitStartNrvWaitCFP5Spine",
+        "match_percent": 100.0,
+        "size": "8"
+      },
+      {
+        "name": "__vt__20RabbitStateWaitStart",
+        "match_percent": 100.0,
+        "size": "40"
+      },
+      {
+        "name": "__vt__Q223NrvRabbitStateWaitStart27RabbitStateWaitStartNrvTalk",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "__vt__Q223NrvRabbitStateWaitStart31RabbitStateWaitStartNrvPointing",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "__vt__Q223NrvRabbitStateWaitStart27RabbitStateWaitStartNrvSpin",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "__vt__Q223NrvRabbitStateWaitStart30RabbitStateWaitStartNrvTrample",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "__vt__Q223NrvRabbitStateWaitStart34RabbitStateWaitStartNrvHitReaction",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "__vt__Q223NrvRabbitStateWaitStart32RabbitStateWaitStartNrvSmallTurn",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "__vt__Q223NrvRabbitStateWaitStart27RabbitStateWaitStartNrvWait",
+        "match_percent": 100.0,
+        "size": "16"
+      },
+      {
+        "name": "sInstance__Q223NrvRabbitStateWaitStart27RabbitStateWaitStartNrvWait",
+        "match_percent": 100.0,
+        "size": "4"
+      },
+      {
+        "name": "sInstance__Q223NrvRabbitStateWaitStart32RabbitStateWaitStartNrvSmallTurn",
+        "match_percent": 100.0,
+        "size": "4"
+      },
+      {
+        "name": "sInstance__Q223NrvRabbitStateWaitStart34RabbitStateWaitStartNrvHitReaction",
+        "match_percent": 100.0,
+        "size": "4"
+      },
+      {
+        "name": "sInstance__Q223NrvRabbitStateWaitStart30RabbitStateWaitStartNrvTrample",
+        "match_percent": 100.0,
+        "size": "4"
+      },
+      {
+        "name": "sInstance__Q223NrvRabbitStateWaitStart27RabbitStateWaitStartNrvSpin",
+        "match_percent": 100.0,
+        "size": "4"
+      },
+      {
+        "name": "sInstance__Q223NrvRabbitStateWaitStart31RabbitStateWaitStartNrvPointing",
+        "match_percent": 100.0,
+        "size": "4"
+      },
+      {
+        "name": "sInstance__Q223NrvRabbitStateWaitStart27RabbitStateWaitStartNrvTalk",
+        "match_percent": 100.0,
+        "size": "4"
+      }
+    ]
+  }
+]

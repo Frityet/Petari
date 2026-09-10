@@ -1,0 +1,14 @@
+{
+  "src/debug/StageConstructionProbe.cpp": "a0b06af4210ebc79f922461d440b12c535dcc34cc3d7301e7f7c389be18d9ca3",
+  "src/scene/StageInitializationService.cpp": "4f6b4cdeb842f5615baa9a70341ac0474d6089de7de8fa0edf6f86f45ed6b2ab",
+  "src/scene/SceneLifecycleService.cpp": "fdab114d9935e1087533942438c3f82f20402f7c66bcafa485710c4b3ced42d6",
+  "src/scene/GatewayDemoScene.cpp": "53edb5e3dfc9d22b634be4efe490fdcf44b0cfbe83d3d788fbafe080e30bdc95",
+  "src/scene/SceneTransitionRequestService.cpp": "d1885303f0cc803bed835e692ec3a81e0ded4c37d5534930ac864ed83751066a",
+  "src/Game/Scene/GameScene.cpp": "dd8ddcdcdde6830cfd2242ed7eb46140ad924bfe4f69cdcc09fe4eda57d389f8",
+  "src/compat/SceneObjHolderCompat.cpp": "744675a14a08a89019aaab4dc9a6215899cc7dd002df5efdadfff6f5f8468c1f",
+  "decomp/src/Game/System/GameSequenceProgress.cpp": "dafc15ab29f4b7259597e8e8574f5ddb16a99d7b658c05b0119f47a6b0749c8c",
+  "decomp/src/Game/System/GameSystemSceneController.cpp": "a8c6bc4a1972f00f801a383874cae7c14811022c203d90018c6af7675d71fa6d",
+  "decomp/src/Game/System/StorySequenceExecutor.cpp": "39f09995744e5b56830f332944e40e328f66f370b5b97f7e5a562f1187f41387",
+  "tests/StageInitializationResourceTests.cpp": "24f42e1aa51ee05f46ff506ea3ca093f49c6ecc316be774d15a29f2ae6ab909d",
+  "tests/NameObjFactoryPlacementTests.cpp": "61cebe89f79c547d8a5b87b11687d93ad06e81a865d24122e0a03140a4621b87"
+}

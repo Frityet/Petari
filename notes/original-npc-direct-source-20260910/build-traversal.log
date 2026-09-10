@@ -1,0 +1,14 @@
+[0m[38;5;2;1m[  1%]:[0m [38;5;5;1m<smg-pc-original-j3d-joint-traversal-tests>[0m compiling.debug tests/OriginalJ3DJointTraversalTests.cpp[0m
+[0m[38;5;2;1m[  1%]:[0m [38;5;5;1m<smg-pc-original-j3d-joint-traversal-tests>[0m compiling.debug aurora/lib/compat.cpp[0m
+[0m[38;5;3;1mIn file included from tests/OriginalJ3DJointTraversalTests.cpp:1:
+In file included from src/Game/Animation/XanimeCore.hpp:3:
+In file included from src/JSystem/J3DGraphAnimator/J3DJoint.hpp:4:
+In file included from src/JSystem/J3DGraphBase/J3DMaterial.hpp:3:
+src/JSystem/J3DGraphBase/J3DMatBlock.hpp:245:35: warning: result of comparison of constant 65535 with expression of type 'const u8' (aka 'const unsigned char') is always false [-Wtautological-constant-out-of-range-compare]
+  245 |         u32 ambSrc = info.mAmbSrc == 0xFFFF ? 0 : info.mAmbSrc;
+      |                      ~~~~~~~~~~~~ ^  ~~~~~~
+1 warning generated.[0m
+[0m[38;5;2;1m[ 94%]:[0m [38;5;5;1m<smg-pc-original-j3d-joint-traversal-tests>[0m [38;5;5;1mlinking.debug smg-pc-original-j3d-joint-traversal-tests[0m
+[0m[38;5;2;1mcreate ok![0m
+[0m[38;5;2;1m[100%]:[0m [38;5;2;1mbuild ok, spent 3.982s[0m
+[0m[1;38;5;3;1mwarning: [38;5;3;1m./tests/xmake.lua:1268[0m: cannot match add_files("tests/OriginalJointControllerTests.cpp") in target(smg-pc-original-joint-controller-tests)[0m

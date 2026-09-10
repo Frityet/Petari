@@ -1,0 +1,22 @@
+{
+  "npc_only_standard_cpp_member_qualification": true,
+  "npc_native_sha256": "a7133299992076eff0c3d0fa72cc0446767d49fbb6d92f1da52b5a24494cca2e",
+  "npc_reference_sha256": "4f8dc5c0591fe33865086e29fec3d222af2797708ed8c4b7f6528875097d79a4",
+  "identical_pairs": [
+    {
+      "native": "src/Game/NPC/NPCActor.hpp",
+      "reference": "decomp/include/Game/NPC/NPCActor.hpp",
+      "sha256": "3b320db0ce8420b6bd0a5322c0805298904eefd84da9fbfd9fe2e6899331c55b"
+    },
+    {
+      "native": "src/Game/Util/JointController.hpp",
+      "reference": "decomp/include/Game/Util/JointController.hpp",
+      "sha256": "f487610a3fb88f23c88295c937238ed7d11d237edc2c37303923e9d1cbd688eb"
+    },
+    {
+      "native": "src/Game/Util/JointController.cpp",
+      "reference": "decomp/src/Game/Util/JointController.cpp",
+      "sha256": "05b5ed6d600b9fdbf257aa5d203c0d5b71136cfa4658b6ac204dec088d797606"
+    }
+  ]
+}

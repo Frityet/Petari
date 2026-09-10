@@ -1,0 +1,61 @@
+{
+  "command": [
+    "/opt/homebrew/opt/llvm/bin/llvm-nm",
+    "--demangle",
+    "/Users/frityet/Projects/petari/build/macosx/arm64/debug/libsmg-pc-game.a"
+  ],
+  "exit_code": 0,
+  "archive_sha256": "6952be6c3047d8d6b73be723df3ee796f8601e694871eed82ed3f1e3fd20189f",
+  "symbols": {
+    "MR::requestChangeArchivePlayer(bool)": [
+      {
+        "member": "GameScene.cpp.o:",
+        "line": "U MR::requestChangeArchivePlayer(bool)"
+      }
+    ],
+    "MR::waitEndChangeArchivePlayer()": [
+      {
+        "member": "GameScene.cpp.o:",
+        "line": "U MR::waitEndChangeArchivePlayer()"
+      }
+    ],
+    "SceneFunction::initForLiveActor()": [
+      {
+        "member": "GameScene.cpp.o:",
+        "line": "U SceneFunction::initForLiveActor()"
+      }
+    ],
+    "GameSequenceFunction::isNeedMoviePlayerForStorySequenceEvent()": [
+      {
+        "member": "GameScene.cpp.o:",
+        "line": "U GameSequenceFunction::isNeedMoviePlayerForStorySequenceEvent()"
+      }
+    ],
+    "MR::hasRetryGalaxySequence()": [
+      {
+        "member": "GameScene.cpp.o:",
+        "line": "U MR::hasRetryGalaxySequence()"
+      }
+    ],
+    "GameScene::init()": [
+      {
+        "member": "GameScene.cpp.o:",
+        "line": "0000000000000144 T GameScene::init()"
+      }
+    ]
+  },
+  "other_native_archives": {
+    "build/macosx/arm64/debug/libsmg-pc-app.a": {
+      "exit_code": 0,
+      "symbols": {}
+    },
+    "build/macosx/arm64/debug/libsmg-pc-common.a": {
+      "exit_code": 0,
+      "symbols": {}
+    },
+    "build/macosx/arm64/debug/libsmg-pc-render.a": {
+      "exit_code": 0,
+      "symbols": {}
+    }
+  }
+}

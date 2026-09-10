@@ -1,0 +1,26 @@
+[
+  {
+    "original": "rabbits/RabbitStateCaught-objdiff.json",
+    "compressed": "rabbits/RabbitStateCaught-objdiff.json.gz",
+    "bytes": 822277,
+    "sha256": "a70b078ae4856b44a566ea9f2d4ab1b47d9efb3bcb261a7de7120609088bd724"
+  },
+  {
+    "original": "rabbits/RabbitStateWaitStart-objdiff.json",
+    "compressed": "rabbits/RabbitStateWaitStart-objdiff.json.gz",
+    "bytes": 1182296,
+    "sha256": "ac20d73e459ac278f8cd47aa81ae5cf30bca9332d335c2b7146acac27a67db7c"
+  },
+  {
+    "original": "rabbits/RunawayRabbit-objdiff.json",
+    "compressed": "rabbits/RunawayRabbit-objdiff.json.gz",
+    "bytes": 2712737,
+    "sha256": "43a2f4d79db4811a87f4aab80b09fbf19f6a1a51b9f02fdf2a67b6bf7913de67"
+  },
+  {
+    "original": "rabbits/RunawayRabbitCollect-objdiff.json",
+    "compressed": "rabbits/RunawayRabbitCollect-objdiff.json.gz",
+    "bytes": 1107604,
+    "sha256": "c5b52a6c34663dab062e2e4ea7a6746bd723a02e9121a81ce1663b9914361161"
+  }
+]

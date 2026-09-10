@@ -4,12 +4,16 @@
 #include <JSystem/JKernel/JKRHeap.hpp>
 #include "Game/LiveActor/Binder.hpp"
 #include "Game/LiveActor/HitSensor.hpp"
+#include "Game/NPC/NPCActor.hpp"
+#include "Game/NPC/TalkMessageCtrl.hpp"
+#include "Game/NPC/TalkNodeCtrl.hpp"
 #include "Game/Player/Mario.hpp"
 #include "Game/Player/MarioActor.hpp"
 #include "Game/Player/MarioAnimator.hpp"
 #include "Game/Player/MarioHolder.hpp"
 #include "Game/Player/MarioSwim.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
+#include "Game/Util/NPCUtil.hpp"
 #include "Game/Util/PlayerUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/JkrAllocationDomain.hpp"
@@ -41,6 +45,50 @@ namespace smgpc::tests {
             F action;
             ~Restore() { action(); }
         };
+
+        void verify_npc_float_uses_actual_player(MarioActor& player) {
+            const auto position = player.mPosition;
+            const auto up = player.mUpVec;
+            const auto restore = Restore{[&] {
+                player.mPosition = position;
+                player.mUpVec = up;
+            }};
+            auto npc = NPCActor("NPC float-height owner proof");
+            auto controller = TalkMessageCtrl(&npc, TVec3f{}, nullptr);
+            require(controller.mNodeCtrl != nullptr,
+                    "NPC float-height checks require the scene-owned talk controller node state");
+            npc.mMsgCtrl = &controller;
+            const auto clear_borrow = Restore{[&] { npc.mMsgCtrl = nullptr; }};
+            controller._18 = 3U;
+            controller.mNodeCtrl->mMessageInfo.mTalkType = 0U;
+            npc.mPosition.zero();
+            player.mPosition.set(0.0F, 100.0F, 0.0F);
+            player.mUpVec.set(0.0F, 1.0F, 0.0F);
+            TVec3f actual_up;
+            MR::getPlayerUpVec(&actual_up);
+            require(MR::getPlayerPos() == &player.mPosition && near(actual_up, player.mUpVec),
+                    "NPC float-height inputs must come from the actual MarioActor fields");
+            const auto require_offset = [&](float current, float expected, std::string_view message) {
+                require(std::fabs(MR::calcFloatOffset(&npc, current, 150.0F) - expected) < 0.00001F,
+                        message);
+            };
+            require_offset(0.0F, 5.5F, "first talk-near rise must retain the retail 5.5 cap");
+            require_offset(20.0F, 25.0F, "later talk-near rise must retain the decayed-plus-5.5 cap");
+            player.mPosition.y = 200.0F;
+            require_offset(20.0F, 19.5F, "talk-near rise must exclude the strict 200-unit boundary");
+            player.mPosition.y = -50.0F;
+            require_offset(20.0F, 19.5F, "talk-near rise must require positive separation along actual Mario up");
+            player.mPosition.y = 100.0F;
+            player.mUpVec.set(0.0F, -1.0F, 0.0F);
+            require_offset(20.0F, 19.5F, "changing actual Mario up must immediately change the NPC height predicate");
+            player.mUpVec.set(0.0F, 1.0F, 0.0F);
+            controller.mNodeCtrl->mMessageInfo.mTalkType = 1U;
+            require_offset(20.0F, 19.5F, "short talk must retain decay without the talk-height rise");
+            controller.mNodeCtrl->mMessageInfo.mTalkType = 0U;
+            controller._18 = 0U;
+            require_offset(20.0F, 19.5F, "non-talking state must retain decay without the talk-height rise");
+            std::cout << "[proof] NPC talk-height rise, strict distance, player-up and short-talk cases use actual MarioActor ownership\n";
+        }
 
         void verify_live_vectors(MarioActor& actor) {
             auto& mario = *actor.mMario;
@@ -254,6 +302,7 @@ namespace smgpc::tests {
         verify_process_trace_ownership();
 #endif
         verify_live_vectors(actor);
+        verify_npc_float_uses_actual_player(actor);
         verify_translation(actor);
         verify_ground_owner(actor);
         verify_control_reset(actor);

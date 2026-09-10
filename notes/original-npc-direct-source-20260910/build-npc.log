@@ -1,0 +1,44 @@
+[0mchecking for Xcode SDK ... [38;5;2;1m/Applications/Xcode.app (sdk: 26.5, arm64-apple-macos26.5)[0m
+[0m[38;5;2;1m[  1%]:[0m [38;5;5;1m<smg-pc-npc-actor-real-or-absent-tests>[0m compiling.debug tests/NPCActorRealOrAbsentTests.cpp[0m
+[0m[38;5;2;1m[  1%]:[0m [38;5;5;1m<smg-pc-npc-actor-real-or-absent-tests>[0m compiling.debug aurora/lib/compat.cpp[0m
+[0m[38;5;2;1m[  3%]:[0m [38;5;5;1m<smg-pc-game>[0m compiling.debug src/Game/Util/JointController.cpp[0m
+[0m[38;5;2;1m[ 36%]:[0m [38;5;5;1m<smg-pc-game>[0m compiling.debug src/Game/NPC/NPCActor.cpp[0m
+[0m[38;5;2;1m[ 59%]:[0m [38;5;5;1m<smg-pc-game>[0m compiling.debug src/compat/NPCActorRuntimeCompat.cpp[0m
+[0m[38;5;3;1mIn file included from src/Game/Util/JointController.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/Game/Util/JointController.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;3;1mIn file included from src/Game/NPC/NPCActor.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:41:29: warning: 'movement' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   41 |                virtual void movement();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:23:29: note: overridden virtual function is here
+   23 |                virtual void movement();
+      |                             ^
+In file included from src/Game/NPC/NPCActor.cpp:1:
+In file included from <built-in>:1:
+In file included from /Users/frityet/Projects/petari/src/compat/MetrowerksStdCompat.hpp:11:
+src/Game/LiveActor/LiveActor.hpp:42:29: warning: 'calcAnim' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   42 |                virtual void calcAnim();
+      |                             ^
+src/Game/NameObj/NameObj.hpp:28:29: note: overridden virtual function is here[0m
+[0m[38;5;2;1mcreate ok![0m
+[0m[1;38;5;1;1merror: [0mtests/NPCActorRealOrAbsentTests.cpp:96:45: error: no member named 'actor_base_matrix' in namespace 'smgpc::compat'
+   96 |         const auto& matrix = smgpc::compat::actor_base_matrix(&actor);
+      |                                             ^~~~~~~~~~~~~~~~~
+3 warnings and 1 error generated.
+  [38;5;3m> in [1mtests/NPCActorRealOrAbsentTests.cpp[0m

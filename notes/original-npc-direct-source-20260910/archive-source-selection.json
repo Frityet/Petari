@@ -1,0 +1,11 @@
+{
+  "archive": "build/macosx/arm64/debug/libsmg-pc-game.a",
+  "selected_members": [
+    "JointController.cpp.o",
+    "NPCActor.cpp.o",
+    "NPCActorRuntimeCompat.cpp.o"
+  ],
+  "direct_npc_exactly_once": true,
+  "direct_joint_controller_exactly_once": true,
+  "removed_wrapper_absent": true
+}

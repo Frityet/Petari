@@ -1,0 +1,823 @@
+{
+  "dol_sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "translation_units": [
+    {
+      "tu": "RunawayRabbitCollect",
+      "functions": [
+        {
+          "symbol": "__ct__20RunawayRabbitCollectFPCc",
+          "address": "80286634",
+          "bytes": 88,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "init__20RunawayRabbitCollectFRC12JMapInfoIter",
+          "address": "8028668C",
+          "bytes": 628,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "initAfterPlacement__20RunawayRabbitCollectFv",
+          "address": "80286900",
+          "bytes": 12,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "calcCompleteRabbitCount__20RunawayRabbitCollectCFv",
+          "address": "8028690C",
+          "bytes": 136,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "linkMsgCtrl__20RunawayRabbitCollectFv",
+          "address": "80286994",
+          "bytes": 160,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "noticeAppearRabbit__20RunawayRabbitCollectFP13RunawayRabbit",
+          "address": "80286A34",
+          "bytes": 84,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "noticeCaughtRabbit__20RunawayRabbitCollectFP13RunawayRabbit",
+          "address": "80286A88",
+          "bytes": 288,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "control__20RunawayRabbitCollectFv",
+          "address": "80286BA8",
+          "bytes": 4,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "exeWait__20RunawayRabbitCollectFv",
+          "address": "80286BAC",
+          "bytes": 172,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "\"appearTico__20RunawayRabbitCollectFP11RunawayTicoRCQ29JGeometry8TVec3<f>\"",
+          "address": "80286C58",
+          "bytes": 144,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "exeActive__20RunawayRabbitCollectFv",
+          "address": "80286CE8",
+          "bytes": 568,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "__dt__20RunawayRabbitCollectFv",
+          "address": "80286F20",
+          "bytes": 92,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "__ct__Q223NrvRunawayRabbitCollect27RunawayRabbitCollectNrvWaitFv",
+          "address": "80286FA8",
+          "bytes": 16,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "__ct__Q223NrvRunawayRabbitCollect29RunawayRabbitCollectNrvActiveFv",
+          "address": "80286FB8",
+          "bytes": 16,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "execute__Q223NrvRunawayRabbitCollect29RunawayRabbitCollectNrvActiveCFP5Spine",
+          "address": "80286FC8",
+          "bytes": 8,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "execute__Q223NrvRunawayRabbitCollect27RunawayRabbitCollectNrvWaitCFP5Spine",
+          "address": "80286FD0",
+          "bytes": 8,
+          "actual_dol_equal": true
+        }
+      ],
+      "text_summary": {
+        "name": ".text",
+        "kind": "SECTION_CODE",
+        "size": "2468",
+        "match_percent": 97.40519
+      }
+    },
+    {
+      "tu": "RunawayRabbit",
+      "functions": [
+        {
+          "symbol": "__ct__13RunawayRabbitFPCcP20RunawayRabbitCollect",
+          "address": "80284FDC",
+          "bytes": 232,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "init__13RunawayRabbitFRC12JMapInfoIter",
+          "address": "802850C4",
+          "bytes": 752,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "initAfterPlacement__13RunawayRabbitFv",
+          "address": "802853B4",
+          "bytes": 4,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "initSensor__13RunawayRabbitFv",
+          "address": "802853B8",
+          "bytes": 200,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "appear__13RunawayRabbitFv",
+          "address": "80285480",
+          "bytes": 60,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "control__13RunawayRabbitFv",
+          "address": "802854BC",
+          "bytes": 108,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "calcAndSetBaseMtx__13RunawayRabbitFv",
+          "address": "80285528",
+          "bytes": 8,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "updatePose__13RunawayRabbitFv",
+          "address": "80285530",
+          "bytes": 76,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "updateBindActorMatrix__13RunawayRabbitFv",
+          "address": "8028557C",
+          "bytes": 216,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "activate__13RunawayRabbitFv",
+          "address": "80285654",
+          "bytes": 68,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "startRunnaway__13RunawayRabbitFv",
+          "address": "80285698",
+          "bytes": 96,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "incrementRunawayLevel__13RunawayRabbitFv",
+          "address": "802856F8",
+          "bytes": 24,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "setLastMessage__13RunawayRabbitFv",
+          "address": "80285710",
+          "bytes": 8,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "setMessage__13RunawayRabbitFv",
+          "address": "80285718",
+          "bytes": 8,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "setNotCaughtable__13RunawayRabbitFv",
+          "address": "80285720",
+          "bytes": 12,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "startJumpSound__13RunawayRabbitFv",
+          "address": "8028572C",
+          "bytes": 104,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "setMsgCtrl__13RunawayRabbitFP15TalkMessageCtrl",
+          "address": "80285794",
+          "bytes": 8,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "attackSensor__13RunawayRabbitFP9HitSensorP9HitSensor",
+          "address": "8028579C",
+          "bytes": 200,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "receiveMsgPlayerAttack__13RunawayRabbitFUlP9HitSensorP9HitSensor",
+          "address": "80285864",
+          "bytes": 256,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "receiveMsgEnemyAttack__13RunawayRabbitFUlP9HitSensorP9HitSensor",
+          "address": "80285964",
+          "bytes": 136,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "receiveMsgPush__13RunawayRabbitFP9HitSensorP9HitSensor",
+          "address": "802859EC",
+          "bytes": 120,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "receiveOtherMsg__13RunawayRabbitFUlP9HitSensorP9HitSensor",
+          "address": "80285A64",
+          "bytes": 8,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "exeHide__13RunawayRabbitFv",
+          "address": "80285A6C",
+          "bytes": 240,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "exeAppear__13RunawayRabbitFv",
+          "address": "80285B5C",
+          "bytes": 324,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "exeRunaway__13RunawayRabbitFv",
+          "address": "80285CA0",
+          "bytes": 416,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "exeCaught__13RunawayRabbitFv",
+          "address": "80285E40",
+          "bytes": 356,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "exeCaughtTalk__13RunawayRabbitFv",
+          "address": "80285FA4",
+          "bytes": 180,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "exeCaughtEnd__13RunawayRabbitFv",
+          "address": "80286058",
+          "bytes": 180,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "exeStop__13RunawayRabbitFv",
+          "address": "8028610C",
+          "bytes": 144,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "isCaught__13RunawayRabbitCFv",
+          "address": "8028619C",
+          "bytes": 8,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "isCaughtable__13RunawayRabbitCFv",
+          "address": "802861A4",
+          "bytes": 76,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "isRunnaway__13RunawayRabbitCFv",
+          "address": "802861F0",
+          "bytes": 168,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "isChasing__13RunawayRabbitCFv",
+          "address": "80286298",
+          "bytes": 108,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "isEnableBlow__13RunawayRabbitCFv",
+          "address": "80286304",
+          "bytes": 8,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "isValidFollow__13RunawayRabbitCFl",
+          "address": "8028630C",
+          "bytes": 108,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "\"__ct__Q227@unnamed@RunawayRabbit_cpp@18RunawayRabbitParamFv\"",
+          "address": "802863F0",
+          "bytes": 48,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "__ct__Q216NrvRunawayRabbit24RunawayRabbitNrvNoActiveFv",
+          "address": "80286420",
+          "bytes": 16,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "__ct__Q216NrvRunawayRabbit20RunawayRabbitNrvHideFv",
+          "address": "80286430",
+          "bytes": 16,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "__ct__Q216NrvRunawayRabbit22RunawayRabbitNrvAppearFv",
+          "address": "80286440",
+          "bytes": 16,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "__ct__Q216NrvRunawayRabbit23RunawayRabbitNrvRunawayFv",
+          "address": "80286450",
+          "bytes": 16,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "__ct__Q216NrvRunawayRabbit29RunawayRabbitNrvTryCaughtDemoFv",
+          "address": "80286460",
+          "bytes": 16,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "__ct__Q216NrvRunawayRabbit22RunawayRabbitNrvCaughtFv",
+          "address": "80286470",
+          "bytes": 16,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "__ct__Q216NrvRunawayRabbit26RunawayRabbitNrvCaughtTalkFv",
+          "address": "80286480",
+          "bytes": 16,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "__ct__Q216NrvRunawayRabbit25RunawayRabbitNrvCaughtEndFv",
+          "address": "80286490",
+          "bytes": 16,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "__ct__Q216NrvRunawayRabbit20RunawayRabbitNrvStopFv",
+          "address": "802864A0",
+          "bytes": 16,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "__ct__Q216NrvRunawayRabbit26RunawayRabbitNrvBlowDamageFv",
+          "address": "802864B0",
+          "bytes": 16,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "execute__Q216NrvRunawayRabbit26RunawayRabbitNrvBlowDamageCFP5Spine",
+          "address": "802864C0",
+          "bytes": 16,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "execute__Q216NrvRunawayRabbit20RunawayRabbitNrvStopCFP5Spine",
+          "address": "802864D0",
+          "bytes": 8,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "execute__Q216NrvRunawayRabbit25RunawayRabbitNrvCaughtEndCFP5Spine",
+          "address": "802864D8",
+          "bytes": 8,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "execute__Q216NrvRunawayRabbit26RunawayRabbitNrvCaughtTalkCFP5Spine",
+          "address": "802864E0",
+          "bytes": 8,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "execute__Q216NrvRunawayRabbit22RunawayRabbitNrvCaughtCFP5Spine",
+          "address": "802864E8",
+          "bytes": 8,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "execute__Q216NrvRunawayRabbit29RunawayRabbitNrvTryCaughtDemoCFP5Spine",
+          "address": "802864F0",
+          "bytes": 4,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "execute__Q216NrvRunawayRabbit23RunawayRabbitNrvRunawayCFP5Spine",
+          "address": "802864F4",
+          "bytes": 8,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "execute__Q216NrvRunawayRabbit22RunawayRabbitNrvAppearCFP5Spine",
+          "address": "802864FC",
+          "bytes": 8,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "execute__Q216NrvRunawayRabbit20RunawayRabbitNrvHideCFP5Spine",
+          "address": "80286504",
+          "bytes": 8,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "execute__Q216NrvRunawayRabbit24RunawayRabbitNrvNoActiveCFP5Spine",
+          "address": "8028650C",
+          "bytes": 4,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "\"isValid__50BaseMatrixFollowValidateDelegator<13RunawayRabbit>CFl\"",
+          "address": "80286510",
+          "bytes": 48,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "__dt__13RunawayRabbitFv",
+          "address": "802865D8",
+          "bytes": 92,
+          "actual_dol_equal": true
+        }
+      ],
+      "text_summary": {
+        "name": ".text",
+        "kind": "SECTION_CODE",
+        "size": "5720",
+        "match_percent": 95.95944
+      }
+    },
+    {
+      "tu": "RabbitStateCaught",
+      "functions": [
+        {
+          "symbol": "__ct__17RabbitStateCaughtFP9LiveActorP15TalkMessageCtrl",
+          "address": "8028110C",
+          "bytes": 152,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "unusePowerStarModel__17RabbitStateCaughtFv",
+          "address": "802811A4",
+          "bytes": 12,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "init__17RabbitStateCaughtFv",
+          "address": "802811B0",
+          "bytes": 116,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "appear__17RabbitStateCaughtFv",
+          "address": "80281224",
+          "bytes": 32,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "control__17RabbitStateCaughtFv",
+          "address": "80281244",
+          "bytes": 4,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "exeCaught__17RabbitStateCaughtFv",
+          "address": "80281248",
+          "bytes": 276,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "exeCaughtLand__17RabbitStateCaughtFv",
+          "address": "8028135C",
+          "bytes": 280,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "exeCaughtEvent__17RabbitStateCaughtFv",
+          "address": "80281474",
+          "bytes": 208,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "setCaughtStartMarioPose__17RabbitStateCaughtFv",
+          "address": "80281544",
+          "bytes": 104,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "blendBaseMatrixToMario__17RabbitStateCaughtCFf",
+          "address": "802815AC",
+          "bytes": 180,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "__dt__17RabbitStateCaughtFv",
+          "address": "80281660",
+          "bytes": 88,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "__ct__Q220NrvRabbitStateCaught32RabbitStateCaughtNrvTryStartDemoFv",
+          "address": "802816F4",
+          "bytes": 16,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "__ct__Q220NrvRabbitStateCaught26RabbitStateCaughtNrvCaughtFv",
+          "address": "80281704",
+          "bytes": 16,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "__ct__Q220NrvRabbitStateCaught30RabbitStateCaughtNrvCaughtLandFv",
+          "address": "80281714",
+          "bytes": 16,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "__ct__Q220NrvRabbitStateCaught31RabbitStateCaughtNrvCaughtEventFv",
+          "address": "80281724",
+          "bytes": 16,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "execute__Q220NrvRabbitStateCaught31RabbitStateCaughtNrvCaughtEventCFP5Spine",
+          "address": "80281734",
+          "bytes": 8,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "execute__Q220NrvRabbitStateCaught30RabbitStateCaughtNrvCaughtLandCFP5Spine",
+          "address": "8028173C",
+          "bytes": 8,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "execute__Q220NrvRabbitStateCaught26RabbitStateCaughtNrvCaughtCFP5Spine",
+          "address": "80281744",
+          "bytes": 8,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "execute__Q220NrvRabbitStateCaught32RabbitStateCaughtNrvTryStartDemoCFP5Spine",
+          "address": "8028174C",
+          "bytes": 4,
+          "actual_dol_equal": true
+        }
+      ],
+      "text_summary": {
+        "name": ".text",
+        "kind": "SECTION_CODE",
+        "size": "1604",
+        "match_percent": 99.86285
+      }
+    },
+    {
+      "tu": "RabbitStateWaitStart",
+      "functions": [
+        {
+          "symbol": "\"__ct__20RabbitStateWaitStartFP9LiveActorPQ29JGeometry8TVec3<f>P15TalkMessageCtrl\"",
+          "address": "80281750",
+          "bytes": 128,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "setTalkActionName__20RabbitStateWaitStartFPCc",
+          "address": "802817D0",
+          "bytes": 8,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "init__20RabbitStateWaitStartFv",
+          "address": "802817D8",
+          "bytes": 8,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "appear__20RabbitStateWaitStartFv",
+          "address": "802817E0",
+          "bytes": 16,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "control__20RabbitStateWaitStartFv",
+          "address": "802817F0",
+          "bytes": 4,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "receiveMsgPlayerAttack__20RabbitStateWaitStartFUlP9HitSensorP9HitSensor",
+          "address": "802817F4",
+          "bytes": 176,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "receiveOtherMsg__20RabbitStateWaitStartFUlP9HitSensorP9HitSensor",
+          "address": "802818A4",
+          "bytes": 72,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "requestTrample__20RabbitStateWaitStartFv",
+          "address": "802818EC",
+          "bytes": 76,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "requestSpin__20RabbitStateWaitStartFv",
+          "address": "80281938",
+          "bytes": 76,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "requestHitReaction__20RabbitStateWaitStartFv",
+          "address": "80281984",
+          "bytes": 76,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "isEnableReaction__20RabbitStateWaitStartCFv",
+          "address": "802819D0",
+          "bytes": 144,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "trySmallTurn__20RabbitStateWaitStartFv",
+          "address": "80281A60",
+          "bytes": 104,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "tryTalk__20RabbitStateWaitStartFv",
+          "address": "80281AC8",
+          "bytes": 100,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "tryPointing__20RabbitStateWaitStartFv",
+          "address": "80281B2C",
+          "bytes": 140,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "exeWait__20RabbitStateWaitStartFv",
+          "address": "80281BB8",
+          "bytes": 180,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "exeSmallTurn__20RabbitStateWaitStartFv",
+          "address": "80281C6C",
+          "bytes": 140,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "exeHitReaction__20RabbitStateWaitStartFv",
+          "address": "80281CF8",
+          "bytes": 160,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "exeTrample__20RabbitStateWaitStartFv",
+          "address": "80281D98",
+          "bytes": 156,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "exeSpin__20RabbitStateWaitStartFv",
+          "address": "80281E34",
+          "bytes": 172,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "exePointing__20RabbitStateWaitStartFv",
+          "address": "80281EE0",
+          "bytes": 168,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "exeTalk__20RabbitStateWaitStartFv",
+          "address": "80281F88",
+          "bytes": 160,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "__dt__20RabbitStateWaitStartFv",
+          "address": "80282028",
+          "bytes": 88,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "__ct__Q223NrvRabbitStateWaitStart27RabbitStateWaitStartNrvWaitFv",
+          "address": "802820D4",
+          "bytes": 16,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "__ct__Q223NrvRabbitStateWaitStart32RabbitStateWaitStartNrvSmallTurnFv",
+          "address": "802820E4",
+          "bytes": 16,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "__ct__Q223NrvRabbitStateWaitStart34RabbitStateWaitStartNrvHitReactionFv",
+          "address": "802820F4",
+          "bytes": 16,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "__ct__Q223NrvRabbitStateWaitStart30RabbitStateWaitStartNrvTrampleFv",
+          "address": "80282104",
+          "bytes": 16,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "__ct__Q223NrvRabbitStateWaitStart27RabbitStateWaitStartNrvSpinFv",
+          "address": "80282114",
+          "bytes": 16,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "__ct__Q223NrvRabbitStateWaitStart31RabbitStateWaitStartNrvPointingFv",
+          "address": "80282124",
+          "bytes": 16,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "__ct__Q223NrvRabbitStateWaitStart27RabbitStateWaitStartNrvTalkFv",
+          "address": "80282134",
+          "bytes": 16,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "execute__Q223NrvRabbitStateWaitStart27RabbitStateWaitStartNrvTalkCFP5Spine",
+          "address": "80282144",
+          "bytes": 8,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "execute__Q223NrvRabbitStateWaitStart31RabbitStateWaitStartNrvPointingCFP5Spine",
+          "address": "8028214C",
+          "bytes": 8,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "execute__Q223NrvRabbitStateWaitStart27RabbitStateWaitStartNrvSpinCFP5Spine",
+          "address": "80282154",
+          "bytes": 8,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "execute__Q223NrvRabbitStateWaitStart30RabbitStateWaitStartNrvTrampleCFP5Spine",
+          "address": "8028215C",
+          "bytes": 8,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "execute__Q223NrvRabbitStateWaitStart34RabbitStateWaitStartNrvHitReactionCFP5Spine",
+          "address": "80282164",
+          "bytes": 8,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "execute__Q223NrvRabbitStateWaitStart32RabbitStateWaitStartNrvSmallTurnCFP5Spine",
+          "address": "8028216C",
+          "bytes": 8,
+          "actual_dol_equal": true
+        },
+        {
+          "symbol": "execute__Q223NrvRabbitStateWaitStart27RabbitStateWaitStartNrvWaitCFP5Spine",
+          "address": "80282174",
+          "bytes": 8,
+          "actual_dol_equal": true
+        }
+      ],
+      "text_summary": {
+        "name": ".text",
+        "kind": "SECTION_CODE",
+        "size": "2604",
+        "match_percent": 99.93088
+      }
+    }
+  ]
+}

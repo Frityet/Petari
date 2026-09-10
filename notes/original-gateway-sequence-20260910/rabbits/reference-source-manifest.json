@@ -1,0 +1,10 @@
+{
+  "decomp/src/Game/NPC/RunawayRabbitCollect.cpp": "8bc4c6ea2dafb108bb1036ce44bdea5f80a180c74ccb8098d22eba51bb57375b",
+  "decomp/include/Game/NPC/RunawayRabbitCollect.hpp": "6241916e50d1bcb1c1474cb7af7affe727cd755f04d8dfd4ee83d1715c128db8",
+  "decomp/src/Game/NPC/RunawayRabbit.cpp": "492571a8bc993a1b7f4b90bd14c1d2330c878ca468aac34e860afa8c3c0a78f1",
+  "decomp/include/Game/NPC/RunawayRabbit.hpp": "8f1bb6705e70da5a8c156fa513e7f52edaefd4a7f98e3e2f9b8d8adbeb429af1",
+  "decomp/src/Game/NPC/RabbitStateCaught.cpp": "e581f33b55960e04010f66ace4271406a23e4270db095737b714f09cd4df2cd5",
+  "decomp/include/Game/NPC/RabbitStateCaught.hpp": "3b8c5d80c4fcd1311f138eba2600f6ec2af03ffa73590090f7a9961e5d6f4190",
+  "decomp/src/Game/NPC/RabbitStateWaitStart.cpp": "e7710cf1a3aa74965857eff703810d80058a5b17edf3d4a29329dd295c339324",
+  "decomp/include/Game/NPC/RabbitStateWaitStart.hpp": "6d24fddc7f4f074fa17a9b28b8822da534919c471aec9236b57ec64a4c04cb1c"
+}

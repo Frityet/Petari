@@ -1,0 +1,66 @@
+{
+  "dol": "decomp/build/compat-math-oracle/main.dol",
+  "sha1": "25c5959534b3c21246c6c7e42021b916b41fb578",
+  "functions": [
+    {
+      "symbol": "__ct__15JointControllerFv",
+      "address": "8040679C",
+      "bytes": 28,
+      "actual_dol_equal": true
+    },
+    {
+      "symbol": "\"calcJointMatrix__15JointControllerFPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RC19JointControllerInfo\"",
+      "address": "804067B8",
+      "bytes": 8,
+      "actual_dol_equal": true
+    },
+    {
+      "symbol": "\"calcJointMatrixAfterChild__15JointControllerFPQ29JGeometry64TPosition3<Q29JGeometry38TMatrix34<Q29JGeometry13SMatrix34C<f>>>RC19JointControllerInfo\"",
+      "address": "804067C0",
+      "bytes": 8,
+      "actual_dol_equal": true
+    },
+    {
+      "symbol": "registerCallBack__15JointControllerFv",
+      "address": "804067C8",
+      "bytes": 28,
+      "actual_dol_equal": true
+    },
+    {
+      "symbol": "calcJointMatrixAndSetSystem__15JointControllerFP8J3DJoint",
+      "address": "804067E4",
+      "bytes": 148,
+      "actual_dol_equal": true
+    },
+    {
+      "symbol": "calcJointMatrixAfterChildAndSetSystem__15JointControllerFP8J3DJoint",
+      "address": "80406878",
+      "bytes": 132,
+      "actual_dol_equal": true
+    },
+    {
+      "symbol": "staticCallBack__15JointControllerFP8J3DJointi",
+      "address": "804068FC",
+      "bytes": 144,
+      "actual_dol_equal": true
+    },
+    {
+      "symbol": "setJointControllerParam__2MRFP15JointControllerPC9LiveActorPCc",
+      "address": "8040698C",
+      "bytes": 84,
+      "actual_dol_equal": true
+    },
+    {
+      "symbol": "setJointControllerParam__2MRFP15JointControllerPC9LiveActorUs",
+      "address": "804069E0",
+      "bytes": 84,
+      "actual_dol_equal": true
+    },
+    {
+      "symbol": "getAnmMtx__8J3DModelFi",
+      "address": "80406A34",
+      "bytes": 20,
+      "actual_dol_equal": true
+    }
+  ]
+}

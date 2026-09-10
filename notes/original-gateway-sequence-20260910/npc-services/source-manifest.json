@@ -1,0 +1,33 @@
+{
+  "scope": "read-only audit snapshot; parent concurrently removing NPCActor include wrapper, so absent wrapper paths may reflect that later edit",
+  "root_commit": "4515491610e5ccea842508a74ef66d4981fdd11e",
+  "decomp_commit": "ec3406dfcca2dc829d2261483a77692d86067a20",
+  "sha256": {
+    "src/Game/xmake.lua": "e4fa7d2794492c124fae8b0c9563090eaa4bdbd123d84da6832da712bf95ec43",
+    "src/Game/NPC/NPCActor.cpp": "4f8dc5c0591fe33865086e29fec3d222af2797708ed8c4b7f6528875097d79a4",
+    "src/Game/NPC/NPCActor.hpp": "3b320db0ce8420b6bd0a5322c0805298904eefd84da9fbfd9fe2e6899331c55b",
+    "src/compat/NPCActorSource.inl": "e62ca45732c7b450bcac45b4139ef1da7d2d9963af745a0a934691b3e35e8284",
+    "src/compat/NPCActorCompat.cpp": "5c3af7485a7dbccdfe4638c5e615b2e523ceb91f4c56d8534bc6ceebc35f0bfd",
+    "src/compat/NPCActorRuntimeCompat.cpp": "3ffc069bcfa18b7c80c1b8ff7536ca9600d39b1ccdb3e03107361f0d475af88c",
+    "src/compat/TalkRuntime.cpp": "4afc0e5de94adb2a767c014ec32abd2e6e9693679b0f8c4e8262662d1be1e890",
+    "src/compat/TalkCompat.cpp": "abfd8fd36dbf2aafd31b4e33572470fa2353bf10d3fa3bae7989bc8caa7fbc2e",
+    "src/compat/SceneObjHolderCompat.cpp": "744675a14a08a89019aaab4dc9a6215899cc7dd002df5efdadfff6f5f8468c1f",
+    "src/compat/DemoUtilCompat.cpp": "81c9547cb1531a042a7c5859ddfc08b45c21087191ee45688d9753cbcc29a01a",
+    "src/compat/GameActorSensorCompat.cpp": "644a716a3c284bfebecc4051177debb49a9f9b5c55eeef5099a76cf68ced5b64",
+    "src/runtime/SceneScheduler.cpp": "b05b1c7b2d7a5d211996ac9b5e9796f84f629199cae134981b94e4453b6b2d65",
+    "src/compat/StarPointerServiceCompat.cpp": "ff96586c5b881d966bcdff163fe19effd0db5d08257a1a8d5954cfee87e2add3",
+    "decomp/src/Game/Util/NPCUtil.cpp": "8144fc7be29366d2921e3cd57fc18563eb0a810a3bd977910f7a841c43e7ce6e",
+    "decomp/src/Game/Util/ActorSensorUtil.cpp": "2c5a4a3f6d13ca02e56b1f90473f5c177a2f4d16017966108917d7799cbf7385",
+    "decomp/src/Game/Util/DemoUtil.cpp": "227721a154983d5ad93ebe3f22ca338c7c408aaca94c32c81e576c6e4eb7a13e",
+    "decomp/src/Game/NPC/TalkDirector.cpp": "2d9a59cac9ef27b66a6fd512b619f53f90590851cccf1874fc6ec52d0b6a7548",
+    "decomp/src/Game/NPC/TalkMessageCtrl.cpp": "a4e4fcf3571b82cff9d1ec17ae79ae09143f4fa92227da534e8b988bf21473c4",
+    "decomp/src/Game/NPC/RunawayRabbit.cpp": "492571a8bc993a1b7f4b90bd14c1d2330c878ca468aac34e860afa8c3c0a78f1",
+    "decomp/src/Game/NPC/RunawayRabbitCollect.cpp": "8bc4c6ea2dafb108bb1036ce44bdea5f80a180c74ccb8098d22eba51bb57375b",
+    "decomp/src/Game/NPC/RunawayTico.cpp": "9b9c13699ae9539cd4c1e55f6270ce3827696c32ac2fe532d2077dce693f2d39",
+    "decomp/src/Game/NPC/Tico.cpp": "65eb6d37145e538ef89f617896df99ac2b09aac06b9d3bdeec1c11f67e7977fd",
+    "tests/NPCActorRealOrAbsentTests.cpp": "c4cd4236566f499916c55d9480b7325ee622e8e9ed4e74270af6394ddcdc68f2",
+    "tests/TalkRealOrAbsentTests.cpp": "d7919912a839b5c145bbb195745fa661351ced421776efbdf2214a7426c0a5c3",
+    "tests/xmake.lua": "5774182f986cb2c22448d6b33ab5172054f1cdf59459409e33edcec1af88be45",
+    "notes/gateway-audit-20260907/restoration/retail/asm/Game/Util/NPCUtil.s": "c7d44b895f0969a5895049500bc3ff74e59e8269434879dc4807cb272d1ec7fe"
+  }
+}

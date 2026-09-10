@@ -1,0 +1,151 @@
+{
+  "scope": "Read-only first-hop dependency inventory, not a complete closed link set. startMoveAction also needs absent followRailPose and followRailPoseOnGround; no compilation or runtime claim.",
+  "retail_source": "notes/gateway-audit-20260907/restoration/retail/asm/Game/Util/NPCUtil.s",
+  "functions": [
+    {
+      "name": "MR::isActionLoopedOrStopped",
+      "retail": ".text:0xD54 | 0x803EEF5C | size: 0x4C",
+      "assembly_line": 1005,
+      "direct_calls": [
+        "getBckCtrl__2MRFPC9LiveActor",
+        "isBckStopped__2MRFPC9LiveActor",
+        "isBckLooped__2MRFPC9LiveActor"
+      ],
+      "reference_definition": "absent",
+      "native_definition": "absent"
+    },
+    {
+      "name": "MR::startMoveAction",
+      "retail": ".text:0xDA8 | 0x803EEFB0 | size: 0x94",
+      "assembly_line": 1038,
+      "direct_calls": [
+        "isExistRail__2MRFPC9LiveActor",
+        "adjustmentRailCoordSpeed__2MRFP9LiveActorff",
+        "moveRailRider__2MRFP9LiveActor",
+        "followRailPoseOnGround__2MRFP8NPCActorPC9LiveActorf",
+        "followRailPose__2MRFP8NPCActorff",
+        "isRailReachedGoal__2MRFPC9LiveActor",
+        "reverseRailDirection__2MRFP9LiveActor"
+      ],
+      "reference_definition": "absent",
+      "native_definition": "absent"
+    },
+    {
+      "name": "MR::tryStartTalkAction",
+      "retail": ".text:0xE3C | 0x803EF044 | size: 0xA8",
+      "assembly_line": 1083,
+      "direct_calls": [
+        "isTalkTalking__2MRFPC15TalkMessageCtrl",
+        "turnToPlayer__8NPCActorFfff",
+        "tryStartTurnAction__2MRFP8NPCActor",
+        "isNullOrEmptyString__2MRFPCc",
+        "tryStartAction__2MRFPC9LiveActorPCc"
+      ],
+      "reference_definition": "absent",
+      "native_definition": "absent"
+    },
+    {
+      "name": "MR::tryStartMoveTalkAction",
+      "retail": ".text:0xEE4 | 0x803EF0EC | size: 0x158",
+      "assembly_line": 1135,
+      "direct_calls": [
+        "isExistRail__2MRFPC9LiveActor",
+        "tryStartTalkAction__2MRFP8NPCActor",
+        "isTalkTalking__2MRFPC15TalkMessageCtrl",
+        "isShortTalk__2MRFPC15TalkMessageCtrl",
+        "turnToPlayer__8NPCActorFfff",
+        "isNearZero__2MRFff",
+        "getRailCoordSpeed__2MRFPC9LiveActor",
+        "startMoveAction__2MRFP8NPCActor",
+        "isNullOrEmptyString__2MRFPCc",
+        "tryStartAction__2MRFPC9LiveActorPCc",
+        "setBckRate__2MRFPC9LiveActorf"
+      ],
+      "reference_definition": "absent",
+      "native_definition": "absent"
+    },
+    {
+      "name": "MR::tryStartTurnAction",
+      "retail": ".text:0x103C | 0x803EF244 | size: 0xE4",
+      "assembly_line": 1236,
+      "direct_calls": [
+        "isNearPlayer__2MRFPC9LiveActorf",
+        "turnToPlayer__8NPCActorFfff",
+        "turnToDefault__8NPCActorFf",
+        "isNullOrEmptyString__2MRFPCc",
+        "tryStartAction__2MRFPC9LiveActorPCc"
+      ],
+      "reference_definition": "absent",
+      "native_definition": "unconditional throw"
+    },
+    {
+      "name": "MR::tryStartReaction",
+      "retail": ".text:0x118C | 0x803EF394 | size: 0x328",
+      "assembly_line": 1342,
+      "direct_calls": [
+        "isNullOrEmptyString__2MRFPCc",
+        "stopBck__2MRFPC9LiveActor",
+        "startAction__2MRFPC9LiveActorPCc",
+        "tryStartAction__2MRFPC9LiveActorPCc",
+        "isActionStart__2MRFPC9LiveActorPCc",
+        "isActionLoopedOrStopped__2MRFPC9LiveActor"
+      ],
+      "reference_definition": "absent",
+      "native_definition": "absent"
+    },
+    {
+      "name": "MR::tryTalkNearPlayerAndStartTalkAction",
+      "retail": ".text:0x14B4 | 0x803EF6BC | size: 0x34",
+      "assembly_line": 1575,
+      "direct_calls": [
+        "tryStartTalkAction__2MRFP8NPCActor",
+        "tryTalkNearPlayer__2MRFP15TalkMessageCtrl"
+      ],
+      "reference_definition": "absent",
+      "native_definition": "unconditional throw"
+    },
+    {
+      "name": "MR::tryTalkNearPlayerAtEndAndStartMoveTalkAction",
+      "retail": ".text:0x1550 | 0x803EF758 | size: 0x34",
+      "assembly_line": 1629,
+      "direct_calls": [
+        "tryStartMoveTalkAction__2MRFP8NPCActor",
+        "tryTalkNearPlayerAtEnd__2MRFP15TalkMessageCtrl"
+      ],
+      "reference_definition": "absent",
+      "native_definition": "unconditional throw"
+    },
+    {
+      "name": "MR::tryStartReactionAndPushNerve",
+      "retail": ".text:0x15EC | 0x803EF7F4 | size: 0x58",
+      "assembly_line": 1683,
+      "direct_calls": [
+        "tryStartReaction__2MRFP8NPCActor",
+        "pushNerve__8NPCActorFPC5Nerve"
+      ],
+      "reference_definition": "absent",
+      "native_definition": "unconditional throw"
+    },
+    {
+      "name": "MR::tryStartReactionAndPopNerve",
+      "retail": ".text:0x1644 | 0x803EF84C | size: 0x8C",
+      "assembly_line": 1712,
+      "direct_calls": [
+        "tryStartReaction__2MRFP8NPCActor",
+        "popNerve__8NPCActorFv",
+        "pushNerve__8NPCActorFPC5Nerve",
+        "isScaleAnim__8NPCActorCFv",
+        "isActionLoopedOrStopped__2MRFPC9LiveActor"
+      ],
+      "reference_definition": "absent",
+      "native_definition": "unconditional throw"
+    }
+  ],
+  "bounded_non_rail_candidate": [
+    "isActionLoopedOrStopped",
+    "tryStartTurnAction",
+    "tryStartReaction",
+    "tryStartReactionAndPushNerve",
+    "tryStartReactionAndPopNerve"
+  ]
+}

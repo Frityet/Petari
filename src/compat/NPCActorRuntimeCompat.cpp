@@ -8,7 +8,6 @@
 #include "Game/Util/GravityUtil.hpp"
 #include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/JointUtil.hpp"
-#include "Game/Util/JointController.hpp"
 #include "Game/Util/LiveActorUtil.hpp"
 #include "Game/Util/MathUtil.hpp"
 #include "Game/Util/MtxUtil.hpp"
@@ -121,19 +120,7 @@ namespace {
     }
 }  // namespace
 
-void JointController::registerCallBack() {
-    aurora::throw_host_exception<std::logic_error>("J3D joint callbacks are unavailable without the real joint-controller pipeline.");
-}
-
-const void* smgpcNPCActorModelPresence(const LiveActor* actor) {
-    return actor != nullptr ? actor->mModelManager : nullptr;
-}
-
 namespace MR {
-    JointControlDelegator<NPCActor>* createNPCActorJointDelegator(NPCActor*, const char*) {
-        aurora::throw_host_exception<std::logic_error>("NPC joint controllers are unavailable without the real J3D joint-controller pipeline.");
-    }
-
     void makeQuatRotateRadian(TQuat4f* destination, const TVec3f& rotation) {
         if (destination == nullptr) {
             aurora::throw_host_exception<std::invalid_argument>("Quaternion rotation requires an output.");

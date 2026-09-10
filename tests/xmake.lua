@@ -1244,6 +1244,7 @@ end
 
 for _, fixture in ipairs {
     {"jkr-heap", "OriginalJkrHeapTests.cpp"},
+    {"joint-controller", "OriginalJointControllerTests.cpp"},
     {"jkr-heap-finalizer", "JkrHeapFinalizerTests.cpp"},
     {"jkr-allocation-domain", "JkrAllocationDomainTests.cpp"},
     {"jkr-archive", "OriginalJkrArchiveTests.cpp"},

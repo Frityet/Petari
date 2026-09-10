@@ -1,0 +1,39 @@
+{
+  "gateway_primary": [
+    "RunawayRabbitCollect",
+    "RunawayRabbit"
+  ],
+  "direct_missing_native_types": [
+    "RunawayTico",
+    "Tico",
+    "WalkerStateRunaway",
+    "WalkerStateRunawayParam",
+    "WalkerStateBlowDamage",
+    "SpotMarkLight"
+  ],
+  "missing_original_utility_providers": [
+    "ActorStateUtil",
+    "TrickRabbitUtil"
+  ],
+  "present_native_dependencies": [
+    "FootPrint",
+    "PartsModel",
+    "ActorStateBase",
+    "BaseMatrixFollowTargetHolder",
+    "TalkMessageCtrl"
+  ],
+  "not_used_by_Gateway_RunawayRabbit": [
+    "RabbitStateCaught",
+    "RabbitStateWaitStart"
+  ],
+  "native_compile_gaps": {
+    "RunawayRabbit": [
+      "Game/Util.hpp omits ActorStateUtil, BaseMatrixFollowTargetHolder, TalkUtil",
+      "NERVE_DECL_NULL auto-defines sInstance contrary to declaration-only reference macro"
+    ],
+    "RabbitStateCaught": [
+      "createPowerStarDemoModel declaration absent"
+    ]
+  },
+  "native_production_imported": false
+}

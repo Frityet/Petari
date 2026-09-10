@@ -1,0 +1,68 @@
+[
+  {
+    "original": "joint-reference/SkeletalFishBaby-before-vs-typed.json",
+    "compressed": "joint-reference/SkeletalFishBaby-before-vs-typed.json.gz",
+    "bytes": 2086661,
+    "sha256": "b708849c552216cf7e666b1f9c75349b6a300e16108be2c9b3a7b7ebfdcdbd12"
+  },
+  {
+    "original": "joint-reference/SkeletalFishBaby-retail-vs-typed.json",
+    "compressed": "joint-reference/SkeletalFishBaby-retail-vs-typed.json.gz",
+    "bytes": 1912549,
+    "sha256": "0d23a6b96532965dca9f184c4ac14d5f225a609fd9e94b4672a9d5b8ecd2e17f"
+  },
+  {
+    "original": "joint-reference/SkeletalFishBoss-before-vs-typed.json",
+    "compressed": "joint-reference/SkeletalFishBoss-before-vs-typed.json.gz",
+    "bytes": 6223040,
+    "sha256": "d581a42c49bba101bf02aaad2f07675e8446701b6b4b643caf5a36e8cc180d83"
+  },
+  {
+    "original": "joint-reference/SkeletalFishBoss-retail-vs-typed.json",
+    "compressed": "joint-reference/SkeletalFishBoss-retail-vs-typed.json.gz",
+    "bytes": 6177131,
+    "sha256": "d6f04af327c8f7413647f67a2d99e34bd047af1713aac8725cce3372309f4f8d"
+  },
+  {
+    "original": "joint-reference/objdiff-before.json",
+    "compressed": "joint-reference/objdiff-before.json.gz",
+    "bytes": 238689,
+    "sha256": "a657ab3494d867a3cd6577997d28b504256a89f115f7aa9d9a4ab041a4e77d07"
+  },
+  {
+    "original": "joint-reference/objdiff-recovered.json",
+    "compressed": "joint-reference/objdiff-recovered.json.gz",
+    "bytes": 447995,
+    "sha256": "fae8b3a38e26226f19c157cd866d5585195f14b901ca81ab9597539af7d3511a"
+  },
+  {
+    "original": "notes/preview-fps-crash-20260910/original-npc-direct-source-final.log",
+    "compressed": "movement-replay.log.gz",
+    "bytes": 833941,
+    "sha256": "cd895f287b13e90d516579f44a4b79d27b80863c2416d02ac7947713c0da0690"
+  },
+  {
+    "original": "joint-reference/reference.patch",
+    "compressed": "joint-reference/reference.patch.gz",
+    "bytes": 5033,
+    "sha256": "69e2fafe8345ec3bb9a6309ec0ba48e21937f359c9916daf3f15371e0894cf0e"
+  },
+  {
+    "original": "run-npc-final.log",
+    "compressed": "run-npc-final.log.gz",
+    "bytes": 5522,
+    "sha256": "cd64f4908da59d63b52fc7c3e04b11ea5ea5f162a11afacf1499c64f6eac5b6c"
+  },
+  {
+    "original": "run-npc.log",
+    "compressed": "run-npc.log.gz",
+    "bytes": 5459,
+    "sha256": "7f0d0ce53d7733d83eec9f58d1314f574b669f0c04cb079bb83617c0824a20e4"
+  },
+  {
+    "original": "run-player.log",
+    "compressed": "run-player.log.gz",
+    "bytes": 151271,
+    "sha256": "b0b13805cc51cf0eae3c2470d97f894da606accb9635ecb81fa5bb556356bb30"
+  }
+]

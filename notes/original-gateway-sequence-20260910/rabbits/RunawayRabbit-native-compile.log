@@ -1,0 +1,46 @@
+decomp/src/Game/NPC/RunawayRabbit.cpp:12:50: error: expected class name
+   12 | class BaseMatrixFollowValidateDelegator : public BaseMatrixFollowValidater {
+      |                                                  ^
+decomp/src/Game/NPC/RunawayRabbit.cpp:52:56: error: redefinition of 'sInstance'
+   52 |     RunawayRabbitNrvNoActive RunawayRabbitNrvNoActive::sInstance;
+      |                                                        ^
+decomp/src/Game/NPC/RunawayRabbit.cpp:36:5: note: previous definition is here
+   36 |     NERVE_DECL_NULL(RunawayRabbitNrvNoActive);
+      |     ^
+src/Game/LiveActor/Nerve.hpp:136:5: note: expanded from macro 'NERVE_DECL_NULL'
+  136 |     NERVE_NATIVE_INSTANCE(name)
+      |     ^
+src/Game/LiveActor/Nerve.hpp:25:55: note: expanded from macro 'NERVE_NATIVE_INSTANCE'
+   25 | #define NERVE_NATIVE_INSTANCE(name) inline name name::sInstance;
+      |                                                       ^
+decomp/src/Game/NPC/RunawayRabbit.cpp:53:66: error: redefinition of 'sInstance'
+   53 |     RunawayRabbitNrvTryCaughtDemo RunawayRabbitNrvTryCaughtDemo::sInstance;
+      |                                                                  ^
+decomp/src/Game/NPC/RunawayRabbit.cpp:40:5: note: previous definition is here
+   40 |     NERVE_DECL_NULL(RunawayRabbitNrvTryCaughtDemo);
+      |     ^
+src/Game/LiveActor/Nerve.hpp:136:5: note: expanded from macro 'NERVE_DECL_NULL'
+  136 |     NERVE_NATIVE_INSTANCE(name)
+      |     ^
+src/Game/LiveActor/Nerve.hpp:25:55: note: expanded from macro 'NERVE_NATIVE_INSTANCE'
+   25 | #define NERVE_NATIVE_INSTANCE(name) inline name name::sInstance;
+      |                                                       ^
+decomp/src/Game/NPC/RunawayRabbit.cpp:58:13: error: no member named 'updateActorStateAndNextNerve' in namespace 'MR'
+   58 |         MR::updateActorStateAndNextNerve(actor, actor->mStateBlowDamage, &RunawayRabbitNrvRunaway::sInstance);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+decomp/src/Game/NPC/RunawayRabbit.cpp:79:9: error: no member named 'addBaseMatrixFollowTarget' in namespace 'MR'
+   79 |     MR::addBaseMatrixFollowTarget(this, rIter, nullptr, new BaseMatrixFollowValidateDelegator< RunawayRabbit >(this, &RunawayRabbit::isValidFollow));
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+decomp/src/Game/NPC/RunawayRabbit.cpp:193:9: error: no type named 'forwardNodeCurrentBranchLeft' in namespace 'MR'
+  193 |     MR::forwardNodeCurrentBranchLeft(mMsgCtrl);
+      |     ~~~~^
+decomp/src/Game/NPC/RunawayRabbit.cpp:197:9: error: no type named 'forwardNodeCurrentBranchRight' in namespace 'MR'
+  197 |     MR::forwardNodeCurrentBranchRight(mMsgCtrl);
+      |     ~~~~^
+decomp/src/Game/NPC/RunawayRabbit.cpp:330:9: error: no member named 'updateActorState' in namespace 'MR'
+  330 |     MR::updateActorState(this, mStateRunaway);
+      |         ^~~~~~~~~~~~~~~~
+decomp/src/Game/NPC/RunawayRabbit.cpp:426:36: error: no member named 'tryTalkForceWithoutDemoMarioPuppetableAtEnd' in namespace 'MR'
+  426 |     if (mMsgCtrl == nullptr || MR::tryTalkForceWithoutDemoMarioPuppetableAtEnd(mMsgCtrl)) {
+      |                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+9 errors generated.
