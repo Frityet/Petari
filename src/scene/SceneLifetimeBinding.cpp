@@ -11,8 +11,8 @@ namespace smgpc::scene {
             aurora::throw_host_exception<std::invalid_argument>("Scene lifetime binding requires a concrete retirement owner");
         }
         for (auto *binding = sBindings; binding; binding = binding->_next) {
-            if (binding->_scene == &scene) {
-                aurora::throw_host_exception<std::logic_error>("Scene already has a native lifetime owner");
+            if (binding->_scene == &scene && binding->_context == context) {
+                aurora::throw_host_exception<std::logic_error>("The same native lifetime owner is already bound to this Scene");
             }
         }
         _next = sBindings;
@@ -37,16 +37,20 @@ namespace smgpc::scene {
     }
 
     void retire_scene_services(Scene &scene) noexcept {
-        for (auto *binding = SceneLifetimeBinding::sBindings; binding; binding = binding->_next) {
-            if (binding->_scene != &scene)
-                continue;
+        for (;;) {
+            auto *binding = SceneLifetimeBinding::sBindings;
+            while (binding && binding->_scene != &scene)
+                binding = binding->_next;
+            if (!binding)
+                return;
             const auto retirement = binding->_retirement;
             auto *context = binding->_context;
             // Retirement may destroy the native binding itself. Unpublish it
             // before invoking its owner and never touch it after the callback.
             binding->unlink();
             retirement(context);
-            return;
+            // The callback may also remove another service. Resolve the next
+            // live binding again instead of keeping a pointer into that owner.
         }
     }
 }  // namespace smgpc::scene

@@ -59,7 +59,7 @@ namespace smgpc::scene {
     // lease which keeps all placement actors active. Declaring the lease after
     // the external player makes reverse local destruction retire placements
     // and collision first.
-    // Production placement policy remains Strict in StageHostScene.
+    // Production placement policy remains Strict in StageInitializationService.
     class GatewayDemoScene final {
         class Impl;
 

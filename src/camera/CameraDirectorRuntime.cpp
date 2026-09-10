@@ -15,30 +15,11 @@ namespace smgpc::camera {
         CameraDirectorRuntime *sCamera = nullptr;
     }
 
-    CameraDirectorRuntime::CameraDirectorRuntime(
-        SceneObjHolder &holder,
-        const std::shared_ptr<compat::JkrAllocationDomain> &domain) {
-        if (sCamera != nullptr || !domain) {
-            aurora::throw_host_exception<std::logic_error>(
-                "Original camera ownership requires one bound scene Game heap");
-        }
-        compat::JkrAllocationScope game(domain);
-        _context = static_cast<CameraContext *>(holder.create(SceneObj_CameraContext));
-        if (_context == nullptr) {
-            aurora::throw_host_exception<std::logic_error>(
-                "Original CameraContext SceneObj factory is unavailable");
-        }
+    CameraDirectorRuntime::CameraDirectorRuntime(CameraContext &context, CameraDirector &director)
+        : _context(&context), _director(&director) {
+        if (sCamera != nullptr)
+            aurora::throw_host_exception<std::logic_error>("Original camera ownership requires one bound scene camera");
         sCamera = this;
-        try {
-            _director = static_cast<CameraDirector *>(holder.create(SceneObj_CameraDirector));
-            if (_director == nullptr) {
-                aurora::throw_host_exception<std::logic_error>(
-                    "Original CameraDirector SceneObj factory is unavailable");
-            }
-        } catch (...) {
-            sCamera = nullptr;
-            throw;
-        }
     }
 
     CameraDirectorRuntime::~CameraDirectorRuntime() {

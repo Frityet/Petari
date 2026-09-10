@@ -1,0 +1,17 @@
+{
+  "decomp_revision_before_change": "0c4ebc9cc08e0889a1c6ba91858fbbb6d3949605",
+  "files": [
+    {
+      "path": "decomp/src/Game/System/GameSequenceProgress.cpp",
+      "sha256": "dafc15ab29f4b7259597e8e8574f5ddb16a99d7b658c05b0119f47a6b0749c8c"
+    }
+  ],
+  "reference_asm": {
+    "path": "notes/gateway-audit-20260907/restoration/retail/asm/Game/System/GameSequenceProgress.s",
+    "lines": [
+      334,
+      516
+    ]
+  },
+  "native_source_modified": false
+}

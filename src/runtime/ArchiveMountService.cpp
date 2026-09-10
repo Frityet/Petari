@@ -73,6 +73,20 @@ namespace smgpc::runtime {
         _mounts.emplace(resolved, std::move(mounted));
         return result;
     }
+    JKRMemArchive* ArchiveMountService::mount_memory(std::string_view name, std::span<const unsigned char> bytes, JKRHeap* heap) {
+        compat::JkrHostAllocationScope host;
+        if (name.empty() || bytes.empty())
+            aurora::throw_host_exception<std::invalid_argument>("Embedded archive mounting requires a name and bounded source bytes");
+        const auto resolved = key(name);
+        const std::lock_guard lock(_mutex);
+        if (const auto found = _mounts.find(resolved); found != _mounts.end()) return &found->second->archive();
+        auto source = std::make_shared<resource::RarcArchive>(resource::RarcArchive::from_bytes(
+            std::vector<unsigned char>(bytes.begin(), bytes.end())));
+        auto mounted = std::shared_ptr<MountedArchive>(new MountedArchive(std::move(source), resolved, heap));
+        auto* result = &mounted->archive();
+        _mounts.emplace(resolved, std::move(mounted));
+        return result;
+    }
     std::shared_ptr<const MountedArchive> ArchiveMountService::retain(std::string_view path) const {
         compat::JkrHostAllocationScope host;
         const auto resolved = key(path);

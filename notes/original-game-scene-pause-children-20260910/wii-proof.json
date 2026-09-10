@@ -1,0 +1,501 @@
+[
+  {
+    "source": "decomp/src/Game/Scene/GameScenePauseControl.cpp",
+    "sha256": "bbd3c4bad8d5675bbbfcef030a2513c194db5dd36825f998fc56b7813a96c015",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/decomp/src/Game/Scene/GameScenePauseControl.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-game-scene-pause-children-20260910/GameScenePauseControl.wii.o"
+    ],
+    "exit": 0,
+    "diff_exit": 0,
+    "symbols": [
+      {
+        "name": "__ct__21GameScenePauseControlFP9GameScene",
+        "size": "136",
+        "match_percent": 100.0
+      },
+      {
+        "name": "registerNervePauseMenu__21GameScenePauseControlFPC5Nerve",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "requestPauseMenuOff__21GameScenePauseControlFv",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeNormal__21GameScenePauseControlFv",
+        "size": "92",
+        "match_percent": 100.0
+      },
+      {
+        "name": "tryStartPauseMenu__21GameScenePauseControlFv",
+        "size": "172",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__dt__21GameScenePauseControlFv",
+        "size": "88",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__sinit_\\GameScenePauseControl_cpp",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q235@unnamed@GameScenePauseControl_cpp@27GameScenePauseControlNormalFv",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q235@unnamed@GameScenePauseControl_cpp@27GameScenePauseControlNormalCFP5Spine",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__21GameScenePauseControl",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q235@unnamed@GameScenePauseControl_cpp@27GameScenePauseControlNormal",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q235@unnamed@GameScenePauseControl_cpp@27GameScenePauseControlNormal",
+        "size": "4",
+        "match_percent": 100.0
+      }
+    ]
+  },
+  {
+    "source": "decomp/src/Game/Scene/GameSceneScenarioOpeningCameraState.cpp",
+    "sha256": "f941be042d028ff27c8853a4636597733d47158135b97f8508f4ae5c06ef9720",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/decomp/src/Game/Scene/GameSceneScenarioOpeningCameraState.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-game-scene-pause-children-20260910/GameSceneScenarioOpeningCameraState.wii.o"
+    ],
+    "exit": 0,
+    "diff_exit": 0,
+    "symbols": [
+      {
+        "name": "__ct__35GameSceneScenarioOpeningCameraStateFv",
+        "size": "136",
+        "match_percent": 100.0
+      },
+      {
+        "name": "update__35GameSceneScenarioOpeningCameraStateFv",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "isDone__35GameSceneScenarioOpeningCameraStateCFv",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "start__35GameSceneScenarioOpeningCameraStateFv",
+        "size": "132",
+        "match_percent": 100.0
+      },
+      {
+        "name": "end__35GameSceneScenarioOpeningCameraStateFv",
+        "size": "96",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exePlay__35GameSceneScenarioOpeningCameraStateFv",
+        "size": "240",
+        "match_percent": 100.0
+      },
+      {
+        "name": "trySkipTrigger__35GameSceneScenarioOpeningCameraStateCFv",
+        "size": "72",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__dt__35GameSceneScenarioOpeningCameraStateFv",
+        "size": "88",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__sinit_\\GameSceneScenarioOpeningCameraState_cpp",
+        "size": "44",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q249@unnamed@GameSceneScenarioOpeningCameraState_cpp@39GameSceneScenarioOpeningCameraStateWaitFv",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q249@unnamed@GameSceneScenarioOpeningCameraState_cpp@39GameSceneScenarioOpeningCameraStatePlayFv",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q249@unnamed@GameSceneScenarioOpeningCameraState_cpp@39GameSceneScenarioOpeningCameraStatePlayCFP5Spine",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q249@unnamed@GameSceneScenarioOpeningCameraState_cpp@39GameSceneScenarioOpeningCameraStateWaitCFP5Spine",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__35GameSceneScenarioOpeningCameraState",
+        "size": "12",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q249@unnamed@GameSceneScenarioOpeningCameraState_cpp@39GameSceneScenarioOpeningCameraStatePlay",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q249@unnamed@GameSceneScenarioOpeningCameraState_cpp@39GameSceneScenarioOpeningCameraStateWait",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q249@unnamed@GameSceneScenarioOpeningCameraState_cpp@39GameSceneScenarioOpeningCameraStateWait",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q249@unnamed@GameSceneScenarioOpeningCameraState_cpp@39GameSceneScenarioOpeningCameraStatePlay",
+        "size": "4",
+        "match_percent": 100.0
+      }
+    ]
+  },
+  {
+    "source": "decomp/src/Game/Screen/GamePauseSequence.cpp",
+    "sha256": "7504119808cd8f47e073c2e719b5349019ba09a8c95a85c45e7161046c5f3620",
+    "command": [
+      "build/tools/wibo",
+      "build/tools/sjiswrap.exe",
+      "build/compilers/GC/3.0a3/mwcceppc.exe",
+      "-nodefaults",
+      "-proc",
+      "gekko",
+      "-align",
+      "powerpc",
+      "-enum",
+      "int",
+      "-fp",
+      "hardware",
+      "-Cpp_exceptions",
+      "off",
+      "-O4,s",
+      "-inline",
+      "auto",
+      "-pragma",
+      "cats off",
+      "-pragma",
+      "warn_notinlined off",
+      "-maxerrors",
+      "1",
+      "-nosyspath",
+      "-RTTI",
+      "off",
+      "-str",
+      "reuse",
+      "-enc",
+      "SJIS",
+      "-sdata",
+      "4",
+      "-sdata2",
+      "4",
+      "-ipa",
+      "file",
+      "-sym",
+      "on",
+      "-i",
+      "include",
+      "-i",
+      "libs/JSystem/include",
+      "-i",
+      "libs/MSL_C++/include",
+      "-i",
+      "libs/MSL_C/include",
+      "-i",
+      "libs/MetroTRK/include",
+      "-i",
+      "libs/RVLFaceLib/include",
+      "-i",
+      "libs/RVL_SDK/include",
+      "-i",
+      "libs/Runtime/include",
+      "-i",
+      "libs/nw4r/include",
+      "-i",
+      "build/original-j3d-joint-traversal-20260903/retail/include",
+      "-DVERSION=0",
+      "-c",
+      "/Users/frityet/Projects/petari/decomp/src/Game/Screen/GamePauseSequence.cpp",
+      "-o",
+      "/Users/frityet/Projects/petari/notes/original-game-scene-pause-children-20260910/GamePauseSequence.wii.o"
+    ],
+    "exit": 0,
+    "diff_exit": 0,
+    "symbols": [
+      {
+        "name": "__ct__17GamePauseSequenceFv",
+        "size": "88",
+        "match_percent": 100.0
+      },
+      {
+        "name": "init__17GamePauseSequenceFRC12JMapInfoIter",
+        "size": "92",
+        "match_percent": 100.0
+      },
+      {
+        "name": "initWindowMenu__17GamePauseSequenceFRCQ22MR11FunctorBase",
+        "size": "68",
+        "match_percent": 100.0
+      },
+      {
+        "name": "startPause__17GamePauseSequenceFQ217GamePauseSequence8MenuType",
+        "size": "212",
+        "match_percent": 100.0
+      },
+      {
+        "name": "deactivate__17GamePauseSequenceFv",
+        "size": "80",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeActivePauseMenu__17GamePauseSequenceFv",
+        "size": "76",
+        "match_percent": 100.0
+      },
+      {
+        "name": "exeActivePowerStarList__17GamePauseSequenceFv",
+        "size": "76",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__dt__17GamePauseSequenceFv",
+        "size": "92",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__sinit_\\GamePauseSequence_cpp",
+        "size": "60",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q231@unnamed@GamePauseSequence_cpp@25GamePauseSequenceDeactiveFv",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q231@unnamed@GamePauseSequence_cpp@32GamePauseSequenceActivePauseMenuFv",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q231@unnamed@GamePauseSequence_cpp@36GamePauseSequenceActivePowerStarListFv",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__ct__Q231@unnamed@GamePauseSequence_cpp@33GamePauseSequenceSceneInformationFv",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q231@unnamed@GamePauseSequence_cpp@33GamePauseSequenceSceneInformationCFP5Spine",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q231@unnamed@GamePauseSequence_cpp@36GamePauseSequenceActivePowerStarListCFP5Spine",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q231@unnamed@GamePauseSequence_cpp@32GamePauseSequenceActivePauseMenuCFP5Spine",
+        "size": "8",
+        "match_percent": 100.0
+      },
+      {
+        "name": "execute__Q231@unnamed@GamePauseSequence_cpp@25GamePauseSequenceDeactiveCFP5Spine",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__17GamePauseSequence",
+        "size": "48",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q231@unnamed@GamePauseSequence_cpp@33GamePauseSequenceSceneInformation",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q231@unnamed@GamePauseSequence_cpp@36GamePauseSequenceActivePowerStarList",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q231@unnamed@GamePauseSequence_cpp@32GamePauseSequenceActivePauseMenu",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "__vt__Q231@unnamed@GamePauseSequence_cpp@25GamePauseSequenceDeactive",
+        "size": "16",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q231@unnamed@GamePauseSequence_cpp@25GamePauseSequenceDeactive",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q231@unnamed@GamePauseSequence_cpp@32GamePauseSequenceActivePauseMenu",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q231@unnamed@GamePauseSequence_cpp@36GamePauseSequenceActivePowerStarList",
+        "size": "4",
+        "match_percent": 100.0
+      },
+      {
+        "name": "sInstance__Q231@unnamed@GamePauseSequence_cpp@33GamePauseSequenceSceneInformation",
+        "size": "4",
+        "match_percent": 100.0
+      }
+    ]
+  }
+]

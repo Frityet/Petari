@@ -219,12 +219,6 @@ namespace GameSequenceFunction {
     }
 }  // namespace GameSequenceFunction
 
-namespace GameSceneFunction {
-    void requestStaffRoll() {
-        unavailable("staff-roll scene request");
-    }
-}  // namespace GameSceneFunction
-
 namespace GameSystemFunction {
     bool setPermissionToCheckWiiRemoteConnectAndScreenDimming(bool) {
         unavailable("Wii Remote connection and screen-dimming permission");

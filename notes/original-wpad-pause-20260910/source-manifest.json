@@ -1,0 +1,14 @@
+[
+  {
+    "path": "src/compat/OriginalWPadRumblePause.cpp",
+    "sha256": "fa5ab85da1cec651840b8c2f232f88e1743c1dfb581319b7544b8185064aa482"
+  },
+  {
+    "path": "src/compat/GameSystemFunctionCompat.cpp",
+    "sha256": "d85ae5b860c0d1c714911f07ec322eddf8ea11dc5162e62749f77b634b75e357"
+  },
+  {
+    "path": "tests/OriginalWPadPauseTests.cpp",
+    "sha256": "edf1ca18520f35fd31dbda58404e097baf94db4350599018493c2870ac02bd0e"
+  }
+]

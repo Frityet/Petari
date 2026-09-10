@@ -158,14 +158,6 @@ namespace smgpc::scene {
             _start = &*_authored_data->start_info();
             validate_start();
 
-            // GameScene creates its one DemoDirector from initForLiveActor
-            // before SceneDataInitializer starts placement. Install the same
-            // scene owner before any Gateway placement actor can register a
-            // simple cast, DemoGroup cast, or demo action.
-            _demo_scene_runtime =
-                std::make_unique<smgpc::compat::DemoSceneRuntime>(
-                    _dvd, _authored_data->placements(),
-                    _authored_data->general_positions());
             _planet_placement = &require_unique_placement(
                 _authored_data->placements(), cPlanetName, cPlanetZoneName,
                 "jmp/placement/common/objinfo");
@@ -201,6 +193,15 @@ namespace smgpc::scene {
                 _executor->init();
             }
             _execution_binding = std::make_unique<SceneExecutionBinding>(_runtime->scheduler(), *_executor, _scene_domain);
+            // GameScene creates its one DemoDirector from initForLiveActor
+            // before SceneDataInitializer starts placement. Install the same
+            // scene owner before any Gateway placement actor can register a
+            // simple cast, DemoGroup cast, or demo action.
+            _demo_scene_runtime =
+                std::make_unique<smgpc::compat::DemoSceneRuntime>(
+                    _dvd, _authored_data->placements(),
+                    _authored_data->general_positions());
+            smgpc::compat::claim_name_obj_runtime_ownership(_demo_scene_runtime.get(), this);
             _scene_binding->initialize_effect_system(3072, 256);
             constexpr auto required_scene_objects = std::array{
                 SceneObj_NameObjGroup,
@@ -209,6 +210,7 @@ namespace smgpc::scene {
                 SceneObj_PlacementStateChecker,
                 SceneObj_ClippingDirector,
                 SceneObj_LightDirector,
+                SceneObj_CaptureScreenActor,
                 SceneObj_FurDrawManager,
                 SceneObj_StageSwitchContainer,
                 SceneObj_SwitchWatcherHolder,
@@ -300,6 +302,7 @@ namespace smgpc::scene {
 #ifndef NDEBUG
                 emit_placement_report(report);
 #endif
+                _scene_binding->complete_camera_parameters();
                 _scene_binding->complete_initialization();
                 _stage_session->set_execution_phase(
                     smgpc::compat::StageSessionState::ExecutionPhase::Gameplay);

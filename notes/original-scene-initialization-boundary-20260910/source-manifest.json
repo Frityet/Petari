@@ -1,0 +1,102 @@
+[
+  {
+    "path": "src/runtime/ArchiveMountService.cpp",
+    "sha256": "54cf8ef7907931cc85df8c269d4651672794f900f069f29a695cad742e2c96a7"
+  },
+  {
+    "path": "src/runtime/ArchiveMountService.hpp",
+    "sha256": "721d4d7d452c958c4a300b4c3cdf089e3d859c3d00abd679cc4dcf5903381e8b"
+  },
+  {
+    "path": "src/scene/StagePlacementResolver.cpp",
+    "sha256": "1fd591e275385f995fae495300e744998278579588aa5ffef5b783235f9cd24e"
+  },
+  {
+    "path": "src/scene/StagePlacementResolver.hpp",
+    "sha256": "be66100944e8cf3af6f4bd65771d1621871ddf6f677d7c2e0a459419a8a29459"
+  },
+  {
+    "path": "src/scene/AuthoredPlacementInstantiator.cpp",
+    "sha256": "9475a50a4d8c54d19e7a9e63342bdf052a18a648cff4ce2e0767576261562e23"
+  },
+  {
+    "path": "src/scene/AuthoredPlacementInstantiator.hpp",
+    "sha256": "769ccbf7240ee980874af499633091672f60c83163864a9531833d005280e7b5"
+  },
+  {
+    "path": "src/scene/NameObjChildOwner.cpp",
+    "sha256": "4bf4897162e9c75b4100dce47aeaac4ffd85fda629b8ed68bb6831539d2bd070"
+  },
+  {
+    "path": "src/scene/NameObjChildOwner.hpp",
+    "sha256": "922223edd7ba7626ff0691ba810dec418f2ba9135245430f8d554f37cb6509a0"
+  },
+  {
+    "path": "src/scene/SceneNameObjRegistry.cpp",
+    "sha256": "9dd37e7fcca6cea760c9f57cc9d8ddac0a2fdc29c60ec34d6b490a22b0156287"
+  },
+  {
+    "path": "src/scene/SceneNameObjRegistry.hpp",
+    "sha256": "27551e26d7c69030c33846c2ff86af593303ab4168af819bbb046227e65b769e"
+  },
+  {
+    "path": "src/scene/StageInitializationService.cpp",
+    "sha256": "ec52e00639b91a0e44e438e9795c9e6866816f05b78e9a8ccb94f1034f37c795"
+  },
+  {
+    "path": "src/scene/StageInitializationService.hpp",
+    "sha256": "dcb8a65827bb489d257de1908469d8fee3a2e8ee3256ee78a8b3f3d4abdc9111"
+  },
+  {
+    "path": "src/scene/AreaObjRuntime.cpp",
+    "sha256": "4973ece50e8ff07485e2fd7ebd8cdd73784d347d1c082b3e26b5d306b484c4f6"
+  },
+  {
+    "path": "src/scene/AreaObjRuntime.hpp",
+    "sha256": "0b7d8f2b9746adb30ae30751e00ba64dff1a1facbf86b57b940a20f49ab22c12"
+  },
+  {
+    "path": "src/camera/CameraDirectorRuntime.cpp",
+    "sha256": "d73c150583fa66c9971b9c20a077aa1a66ece4b32d68a1f60414c92c5d8537c4"
+  },
+  {
+    "path": "src/camera/CameraDirectorRuntime.hpp",
+    "sha256": "e58f9e3047d634948a3b4d60d39f72bb73313404a7f7ae5f040926da0ff843e9"
+  },
+  {
+    "path": "src/compat/SceneObjHolderCompat.cpp",
+    "sha256": "c108b990c2f66f493b8c251f425e1a759e4ede39cf3736604420b28809d52117"
+  },
+  {
+    "path": "src/scene/SceneObjHolderRuntime.hpp",
+    "sha256": "f6a7cb13441963e4d85b26cc0371f146980a42d97892b9b4f5a556e9df670597"
+  },
+  {
+    "path": "src/compat/SceneNameObjUtilCompat.cpp",
+    "sha256": "19e9eb57d5132f03cbfc0978a963cc8798de59bd465d3ab554f8e307302f17d4"
+  },
+  {
+    "path": "src/compat/SceneInitializationCompat.cpp",
+    "sha256": "b3e718e2d0ae0ad2e9d332d0aa3587a26e6c921c6d8d8e5ec9d933710d0629b5"
+  },
+  {
+    "path": "src/scene/GatewayDemoScene.cpp",
+    "sha256": "4f0220a539db0afece0506426b355d042eb6b0457c0ff83e6aae11e82b480bfc"
+  },
+  {
+    "path": "tests/OriginalCameraDirectorTests.cpp",
+    "sha256": "f3aafe12befd71d0fb996277221fe66b49eac2c701bbf500735fc998c5f4ffbd"
+  },
+  {
+    "path": "tests/AuthoredPlacementInstantiatorTests.cpp",
+    "sha256": "4da1e663d2b00b73885fe7fafb30df174637cf34a30da224e4008f0238bdfde5"
+  },
+  {
+    "path": "tests/StageInitializationResourceTests.cpp",
+    "sha256": "608c8dd258843fa7444b23ca979444c3a8034845a7b76a6480ceaa24a67483bf"
+  },
+  {
+    "path": "tests/SceneNameObjRegistryTests.cpp",
+    "sha256": "3a73e257a1e4637d1758692e0314df9303b0cce908852e4be5e50c37f9a03130"
+  }
+]

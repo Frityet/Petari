@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 
 class NameObj;
 class NameObjHolder;
@@ -19,6 +20,7 @@ namespace smgpc::scene {
         SceneNameObjRegistry &operator=(const SceneNameObjRegistry &) = delete;
 
         [[nodiscard]] NameObjHolder &holder() const noexcept;
+        [[nodiscard]] std::vector<NameObj *> snapshot() const;
         void add(NameObj &object);
         void remove(NameObj &object) noexcept;
 

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -99,6 +100,13 @@ void unregister_button_controller(LayoutManager* manager, ButtonPaneController* 
 void refresh_pane_matrices(LayoutManager* manager);
 
 #ifndef NDEBUG
+struct LayoutLifetimeDebugState {
+    std::size_t actors = 0U;
+    std::size_t managers = 0U;
+    std::size_t pane_controls = 0U;
+    bool operator==(const LayoutLifetimeDebugState&) const = default;
+};
+[[nodiscard]] LayoutLifetimeDebugState debug_layout_lifetime_state() noexcept;
 [[nodiscard]] std::vector< PaneControlDebugState > debug_pane_controls(const LayoutManager* manager);
 [[nodiscard]] std::vector< ButtonControllerDebugState > debug_button_controllers(const LayoutManager* manager);
 #endif

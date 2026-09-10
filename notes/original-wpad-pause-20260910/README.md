@@ -1,0 +1,9 @@
+# Original WPad pause rumble ownership — 2026-09-10
+
+Added the existing original GameSystemFunction::onPauseBeginAllRumble/onPauseEndAllRumble bodies, original WPadRumble::pause/stop/getRumbleInstance, and WPad::getRumbleInstance in two native compatibility translation units. No Game source changed and no missing original function was guessed.
+
+The existing WPadOwnership already constructs both actual WPadRumble objects for both original controller channels. Pause entry stops/clears gameplay rumble, selects the menu rumble instance, and stops/clears that instance. Pause exit selects the original gameplay instance and stops/clears menu rumble. A pause command stops the motor without erasing pattern state; stop clears all eight original RumbleChannels. WPADControlMotor remains the existing Aurora/PAD device boundary.
+
+Fresh reference Wii compilation passed for WPad, WPadRumble, and GameSystemFunction. All six imported methods match the verified retail object at100% (wii-proof.json). Fresh three-TU native compilation, isolated linking against the current actual Game/Aurora archives, and execution passed (result.json/run.log). The test checks both channels, actual callback-instance selection, pause preservation, full channel stop clearing, and16 complete Game allocation generations returning their root heap bytes.
+
+This bounded import does not claim complete original rumble pattern playback. Native RumbleService still has its own optional actuator queue; migrating that entire path requires the original WPadRumble pattern allocation/update implementation, including recovery of findRubmlePattern and a review of low-quality existing channel-update decompilation. Keyboard/mouse has no physical rumble actuator. No fake motor availability or pause-specific native shortcut was added.

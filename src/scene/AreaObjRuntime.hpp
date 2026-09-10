@@ -60,6 +60,7 @@ namespace smgpc::scene {
             std::vector<std::unique_ptr<AreaObjMgr>> managers,
             std::vector<AreaObjManagerFinalize> finalizers = {});
         void init_after_placement();
+        void acknowledge_scene_postpass(std::span<NameObj *const> objects);
 
     private:
         struct OwnedManager {

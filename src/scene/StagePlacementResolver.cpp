@@ -13,6 +13,8 @@
 #include <limits>
 #include <set>
 #include <utility>
+#include <stdexcept>
+#include <aurora/exception.hpp>
 
 namespace smgpc::scene {
     namespace {
@@ -1040,6 +1042,21 @@ namespace smgpc::scene {
             }
         }
         return positions;
+    }
+
+    std::vector<std::string> resolve_stage_archive_names(
+        smgpc::runtime::DvdFileSystemService &dvd, std::string_view stage_name) {
+        const auto zones = load_zone_list(dvd, stage_name);
+        if (!zones)
+            aurora::throw_host_exception<std::runtime_error>("Stage loading requires the actual scenario ZoneList");
+        auto names = std::vector<std::string>{};
+        for (s32 row = 0; row < zones->getNumEntries(); ++row) {
+            const char *name = nullptr;
+            if (!zones->getValue(row, "ZoneName", &name) || !name || !*name)
+                aurora::throw_host_exception<std::runtime_error>("Stage ZoneList has no zone name at its original row");
+            names.emplace_back("/StageData/" + std::string(name) + ".arc");
+        }
+        return names;
     }
 
     std::vector<StagePlacementTable> resolve_stage_placement_tables(smgpc::runtime::DvdFileSystemService &dvd, std::string_view stage_name, s32 scenario_no,

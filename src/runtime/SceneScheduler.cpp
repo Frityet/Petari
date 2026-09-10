@@ -668,7 +668,6 @@ namespace smgpc::runtime {
         if (found != _entries.end()) {
             retire_execution_entry(object);
             if (found->has_draw_buffer_registration) _draw_buffers->remove_actor(*found->live_actor);
-            smgpc::layout::release_layout_actor_if_registered(&object);
             std::erase_if(_entries, [&](const auto& entry) { return entry.name_obj == &object; });
         }
         if (_execution) _execution->notify_object_retired(&object);
@@ -712,6 +711,9 @@ namespace smgpc::runtime {
         if (find_entry(SceneEntryKind::Layout, &layout)) return;
         auto adaptor = std::make_unique<LayoutDrawAdaptor>(layout);
         auto* object = adaptor.get();
+        // Scene-wide raw-child cleanup must not adopt an object retained by
+        // this scheduler. NameObj destruction removes this ownership record.
+        smgpc::compat::claim_name_obj_runtime_ownership(object, this);
         _layout_draw_adaptors.emplace(&layout, std::move(adaptor));
         try {
             connect_name_obj(*object, movement, animation, -1, draw);

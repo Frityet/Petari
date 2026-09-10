@@ -43,6 +43,7 @@ namespace smgpc::scene {
 
     enum class AuthoredPlacementRuntimeState {
         Prepared,
+        CommonPreloaded,
         Preloaded,
         Instantiated,
         InitializedAfterPlacement,
@@ -243,10 +244,13 @@ namespace smgpc::scene {
         // request without constructing an actor. Retail inserts Mario between
         // this phase and instantiate().
         const AuthoredPlacementInstantiationReport &preload();
+        const AuthoredPlacementInstantiationReport &preload_common();
+        const AuthoredPlacementInstantiationReport &preload_scenario();
         // Constructs the already-preloaded plan. This never ranks or requests
         // archives and therefore requires a successful preload() first.
         const AuthoredPlacementInstantiationReport &instantiate();
         const AuthoredPlacementInstantiationReport &init_after_placement();
+        void acknowledge_scene_postpass(std::span<NameObj *const> objects);
         void clear();
 
         [[nodiscard]] const AuthoredPlacementInstantiationReport &report() const
@@ -271,6 +275,8 @@ namespace smgpc::scene {
             std::vector<OwnedObject> objects{};
         };
 
+        struct PreloadPlan;
+        const AuthoredPlacementInstantiationReport &preload_phase(bool scenario);
         void build_report();
         void preflight_or_throw();
         void clear_impl(bool propagate_errors);
@@ -280,6 +286,7 @@ namespace smgpc::scene {
         AuthoredPlacementLifecycle *_lifecycle = nullptr;
         AuthoredPlacementInstantiationOptions _options{};
         AuthoredPlacementInstantiationReport _report{};
+        std::unique_ptr<PreloadPlan> _preload_plan;
         std::vector<OwnedInstance> _owned_instances{};
         std::vector<AuthoredPlacementInstance> _instance_views{};
     };

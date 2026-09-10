@@ -146,6 +146,20 @@ namespace smgpc::scene {
         }
     }
 
+    void NameObjChildOwner::acknowledge_scene_postpass(std::span<NameObj *const> objects) {
+        for (auto &registration : _registrations) {
+            if (std::ranges::find(objects, registration.object) == objects.end())
+                aurora::throw_host_exception<std::logic_error>("The scene postpass did not contain the complete root registration graph");
+        }
+        for (auto &registration : _registrations) {
+            if (registration.delegated_postpass) {
+                compat::release_name_obj_runtime_postpass_delegation(registration.object, this);
+                registration.delegated_postpass = false;
+            }
+        }
+        _next_registration_postpass_index = _registrations.size();
+    }
+
     void NameObjChildOwner::rollback_registration_suffix(
         smgpc::compat::NameObjRuntimeRegistrationMarker marker) noexcept {
         rollback_unowned_registered_since(marker);

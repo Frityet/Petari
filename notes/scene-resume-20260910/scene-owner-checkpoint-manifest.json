@@ -1,0 +1,534 @@
+[
+  {
+    "path": "decomp",
+    "gitlink": "3a9313ea69986c5f69425c78750ecf8d44cea4d6"
+  },
+  {
+    "path": "notes/demo-camera-jump-20260910/README.md",
+    "sha256": "c539abae556f3ce6baa80ef20187d86350c3c3b1596a67e035c8a4762a7adc52"
+  },
+  {
+    "path": "notes/demo-camera-jump-20260910/capture-owner-run.json",
+    "sha256": "f2720cb8a88c2f0c37d08d0a98303dfda5590f7240b11700db7e435a03984120"
+  },
+  {
+    "path": "notes/demo-camera-jump-20260910/demo-order-run.json",
+    "sha256": "42ebff8d0cb97d88bcc0206f7993e5cf2bcf185fe737dbb203211e19caa80a11"
+  },
+  {
+    "path": "notes/demo-camera-jump-20260910/initial-run.json",
+    "sha256": "bc475ef43c2fa977195b516ef82125240b1833cd31aeb0b11a326853fb7fb140"
+  },
+  {
+    "path": "notes/layout-actor-teardown-20260910/README.md",
+    "sha256": "b153f5a37c44e2c0011c5ebd338ec71999d878289639273753a7ab9ac0dd8bc5"
+  },
+  {
+    "path": "notes/layout-actor-teardown-20260910/source-manifest.json",
+    "sha256": "641a0de0a42160c6ae1fc2737816694486af9552322f84d1d6096d587d07a0bc"
+  },
+  {
+    "path": "notes/original-aud-system-headers-20260910/README.md",
+    "sha256": "13a85d899475b5fe4d5822c6e5f963645d0442692b8ffba0333ec62b67d8676f"
+  },
+  {
+    "path": "notes/original-aud-system-headers-20260910/source-manifest.json",
+    "sha256": "0a1b7236aade9f14509ebe0ad08ea9fdd5b28f9d887ae3e3f443b6ed53a3682c"
+  },
+  {
+    "path": "notes/original-game-scene-pause-children-20260910/README.md",
+    "sha256": "1f5b7079ea6c65940912f98ab085f7f0aabb67a12d2b7a8d6dc2b2355da8128c"
+  },
+  {
+    "path": "notes/original-game-scene-pause-children-20260910/mirror-proof.json",
+    "sha256": "fda383a2bba989db68b279b64ed79d9727ed8b3138072f4573583465a991a956"
+  },
+  {
+    "path": "notes/original-game-scene-pause-children-20260910/native-proof.json",
+    "sha256": "f4107dd752ba30b5cb67dd7922de8285d7f3003a1d24589316ba37b18a2421d7"
+  },
+  {
+    "path": "notes/original-game-scene-pause-children-20260910/scene-control-proof.json",
+    "sha256": "3586f79b670232adaffe80a449393fb02b54fe61a5bec3e6cb66da398eddcf82"
+  },
+  {
+    "path": "notes/original-game-scene-pause-children-20260910/source-manifest.json",
+    "sha256": "a6f48741f67de6f72ec8e1b4f04d9fb0ec61bd5ddc621348e0679d3137d4caee"
+  },
+  {
+    "path": "notes/original-game-scene-pause-children-20260910/wii-proof.json",
+    "sha256": "e68c18f32ba924baf185c9d8a9cbc1fd7611575f057c9ffb18ce433747c5a156"
+  },
+  {
+    "path": "notes/original-scene-initialization-boundary-20260910/README.md",
+    "sha256": "c306388e53371eee89963c0815bf0a4b028354c1321a71f4c29b3e56b2652c96"
+  },
+  {
+    "path": "notes/original-scene-initialization-boundary-20260910/native-syntax.json",
+    "sha256": "bc89d9a9bafe0617f8b3927ebf9c9cfc4c915af080c5248878cfe9fa466c1908"
+  },
+  {
+    "path": "notes/original-scene-initialization-boundary-20260910/source-manifest.json",
+    "sha256": "267d22b9f321530cade5cb9f347439502c73b1e13bcf5d557b2bf31500cc0708"
+  },
+  {
+    "path": "notes/original-sequence-galaxy-move-20260910/README.md",
+    "sha256": "f54972db14c7463c78c4b876f7831951b6d664b476a6d2660d74a7770b446b82"
+  },
+  {
+    "path": "notes/original-sequence-galaxy-move-20260910/retail-proof.json",
+    "sha256": "9e0d68d05a4598ca86976fa49a4338d3b2e1536ec070f62df1dde83dcd644335"
+  },
+  {
+    "path": "notes/original-sequence-galaxy-move-20260910/source-manifest.json",
+    "sha256": "dae47596a7723134716135c9f119e2e0daefa982b12c7dbc27e9132567c3066b"
+  },
+  {
+    "path": "notes/original-wpad-pause-20260910/README.md",
+    "sha256": "204df3ca2ec0a0356a3e8602051076972bee0ad474c60e3391f71f9d70313e3d"
+  },
+  {
+    "path": "notes/original-wpad-pause-20260910/result.json",
+    "sha256": "5c537cd26a3ee785c3353cf6ffb7cd79df02244150d984eb3b63a09d0aade6bf"
+  },
+  {
+    "path": "notes/original-wpad-pause-20260910/run.log",
+    "sha256": "3701b5b0b842272626455a44d64c83880c0da97ac2c1c767051d954f6edc7a32"
+  },
+  {
+    "path": "notes/original-wpad-pause-20260910/source-manifest.json",
+    "sha256": "e252bdb23024a536bb83de6e2d4b6bd1b65b7f3eb7b593b28123fa1900f731eb"
+  },
+  {
+    "path": "notes/original-wpad-pause-20260910/wii-proof.json",
+    "sha256": "d97e068b15de0d32b4f365494f6e0aac0a1c2db39065ea9f60e6dd7a46f87c11"
+  },
+  {
+    "path": "notes/scene-resume-20260910/README.md",
+    "sha256": "8470bba0d088e64cc277d79ce2a925f9c9ef4e099d7b76ea9ebd244fc26a67e9"
+  },
+  {
+    "path": "notes/scene-resume-20260910/audio-depth-publication.json",
+    "sha256": "fd14ce89342a582716f41b757ec89f3a66118e0196d895106573b37e86b87dde"
+  },
+  {
+    "path": "notes/scene-resume-20260910/game-build.json",
+    "sha256": "03703e85b49fab54c8a2deca7c623ae3f66ef2c66c68da0778ff8a9eaecd71bd"
+  },
+  {
+    "path": "notes/scene-resume-20260910/original-scene-execution-owner-tests-delegate-run.log",
+    "sha256": "c932816cd5f40e36a2843bbd4e0e5bcfea3335ad1dae52922b8f2c05c2f9c374"
+  },
+  {
+    "path": "notes/scene-resume-20260910/parent-native-compile.json",
+    "sha256": "427d8f7d9782159f7aa2d3463bfdac7083eacbb9a047c0ec4a65c1c1405d3edc"
+  },
+  {
+    "path": "notes/scene-resume-20260910/scene-delegate-fixtures.json",
+    "sha256": "230e5c3a9b70f166843c0288bee1e54b682e643f849eabb3596b0cc3448f350e"
+  },
+  {
+    "path": "notes/scene-resume-20260910/scene-fixtures.json",
+    "sha256": "09c589604687a6e268855013a7ab2aad38707642798020cdd69161896a5b1899"
+  },
+  {
+    "path": "notes/scene-resume-20260910/scene-lifetime-binding-tests-run.log",
+    "sha256": "080a1b803ab851d5e72a852fdfe6687b79d7cd9787be9b441d92d5b7d4b138e2"
+  },
+  {
+    "path": "notes/scene-resume-20260910/scene-name-obj-registry-tests-run.log",
+    "sha256": "7ec117ea06e2a76117aeab23430d4620c0bd3ef379b6185a6a2d04f50776e7da"
+  },
+  {
+    "path": "notes/scene-resume-20260910/showcase-build.json",
+    "sha256": "5e3abc895f0f57afe5e4662cddb05c0538de63d8df57114d4e65334c40e7ca2c"
+  },
+  {
+    "path": "notes/scene-resume-20260910/showcase-delegate-build-final.json",
+    "sha256": "3a5a721c41955dffe0de75f77bf9048ec381e0b65df904f5328cb2f4339a322a"
+  },
+  {
+    "path": "notes/scene-resume-20260910/showcase-undefined.json",
+    "sha256": "09a2f73ea94f3daefda6e285bc4330e9c067041d15049546cdb29d61eae84df8"
+  },
+  {
+    "path": "notes/scene-teardown-review-20260910/README.md",
+    "sha256": "23c741fbcef59ba453622e4ddd0d5a9b828acce58e6f4e7566e2758210bb67b0"
+  },
+  {
+    "path": "notes/scene-teardown-review-20260910/source-manifest.json",
+    "sha256": "4a09c8ce10fabc28945527da4b560297f64417da28a32bc4b592bd252db7c087"
+  },
+  {
+    "path": "src/Game/AudioLib/AudAudible.hpp",
+    "sha256": "f0069d084e9dc45a36bae4c50450520adf9d5711e0f54f70349e706419c35c87"
+  },
+  {
+    "path": "src/Game/AudioLib/AudAudience.hpp",
+    "sha256": "aa85d6d98347a0cb78d821c5631f24a50f845c922ef6d04dbf25bbc75de4e8a1"
+  },
+  {
+    "path": "src/Game/AudioLib/AudLimitedSound.hpp",
+    "sha256": "dd4d52699915fa415516c5a5654248192cd917957c1a5ae78b43168dcac9ac5a"
+  },
+  {
+    "path": "src/Game/AudioLib/AudSceneMgr.hpp",
+    "sha256": "9ad7f4ff014b772de46bbe654b8066baa7e77fe5e5f5384b0942111dce8fa8fc"
+  },
+  {
+    "path": "src/Game/AudioLib/AudSystem.hpp",
+    "sha256": "52beb92100fb40b4e37543ae834cb1062bc855c923b9d0bcb77ac5bd4ddfba93"
+  },
+  {
+    "path": "src/Game/LiveActor/AllLiveActorGroup.hpp",
+    "sha256": "90eb80b5bdac2b95ad4c66ba8f6c51a3b7906a3c8f73fea141668a4f1d06edcc"
+  },
+  {
+    "path": "src/Game/NPC/EventDirector.hpp",
+    "sha256": "8e15888a589a8a3d00087fd0aae71193e0a6bbecd8b671b15b7b32d6f56d8849"
+  },
+  {
+    "path": "src/Game/NPC/NPCFunction.hpp",
+    "sha256": "ac541e0412597a646e7c180179fc46445cc76d71e5bca78785e052d9c875026e"
+  },
+  {
+    "path": "src/Game/Scene/GameScene.cpp",
+    "sha256": "dd8ddcdcdde6830cfd2242ed7eb46140ad924bfe4f69cdcc09fe4eda57d389f8"
+  },
+  {
+    "path": "src/Game/Scene/GameScene.hpp",
+    "sha256": "dc7456b02494135d6f63b777e3fc748bd46517f271ec5dbab6a96aab9c43bb6c"
+  },
+  {
+    "path": "src/Game/Scene/GameSceneFunction.cpp",
+    "sha256": "62a78476c0510ed244b75080db02fa4166800b2ab75031026f0497ee6875c789"
+  },
+  {
+    "path": "src/Game/Scene/GameScenePauseControl.cpp",
+    "sha256": "bbd3c4bad8d5675bbbfcef030a2513c194db5dd36825f998fc56b7813a96c015"
+  },
+  {
+    "path": "src/Game/Scene/GameSceneScenarioOpeningCameraState.cpp",
+    "sha256": "f941be042d028ff27c8853a4636597733d47158135b97f8508f4ae5c06ef9720"
+  },
+  {
+    "path": "src/Game/Scene/Scene.hpp",
+    "sha256": "85079cfa7c53b62c0bbdb076061d370833961f2a6c04e5ca012d2351757bebf0"
+  },
+  {
+    "path": "src/Game/Screen/CometRetryButton.hpp",
+    "sha256": "91289a63e4384a22d71cc102c5b1ade573ab7d900898382f5945f506e332ccd4"
+  },
+  {
+    "path": "src/Game/Screen/GamePauseSequence.cpp",
+    "sha256": "7504119808cd8f47e073c2e719b5349019ba09a8c95a85c45e7161046c5f3620"
+  },
+  {
+    "path": "src/Game/Screen/LayoutActor.hpp",
+    "sha256": "5db08f177910050a46da6a178667ed3752a4cd5c0625a97e7185e6c471da3ab9"
+  },
+  {
+    "path": "src/Game/Screen/OdhConverter.hpp",
+    "sha256": "f9fb7ef3ae9f96491e75972acd588b44bc4be747e68ffc9e1ff6687ad169eac8"
+  },
+  {
+    "path": "src/Game/Screen/PauseMenu.hpp",
+    "sha256": "ffd134656ea03863c9307bbf78d957589711d253fa9060ba380d42a83f20108a"
+  },
+  {
+    "path": "src/Game/System/GalaxyMapController.hpp",
+    "sha256": "076acb98daa8fd015b95fde863dd0e68c60cfd307071cea5b662057d8506b462"
+  },
+  {
+    "path": "src/Game/System/GameSequenceFunction.hpp",
+    "sha256": "fb85718d8aca17b94307b711794c10b00db191b9cd444876b59b9729d85f889b"
+  },
+  {
+    "path": "src/Game/Util/DrawUtil.hpp",
+    "sha256": "9325bf5cfc224545744b32de6a8ad3a14c701ed4f9590a5fe7354a3bc1c53929"
+  },
+  {
+    "path": "src/Game/Util/SceneUtil.cpp",
+    "sha256": "aed2ce8530ccc976994e4a96695ba6f1be37b27d1a76e5399b0f5a2ddc290fd1"
+  },
+  {
+    "path": "src/Game/xmake.lua",
+    "sha256": "8dc55117239123b86c215a4df11e3b22368664af81a2ee449ed7c4b9fe181e37"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JAISe.hpp",
+    "sha256": "9234e54c044c56bfb9a5d9773749391d0b0106f1397a1886e810a27e484ed884"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JAISeMgr.hpp",
+    "sha256": "f23872edcf6ce7c149543d8f00766edf6e16a1ecd43ef3bb9b662369eb4f1348"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JAISeqMgr.hpp",
+    "sha256": "c80b2e20e2625fc4c52bda2b05e816ed4eabec8c8a46a2ff1d9726b9e902dc25"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JASAudioReseter.hpp",
+    "sha256": "17e5c8552265f258b689f018d82122d36f677894b673041015aa1189077e4792"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JASBank.hpp",
+    "sha256": "5a193e49eeba44bb698c2c01e445249dd6650d0d9f84411231c86cd2736e2e75"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JASGadget.hpp",
+    "sha256": "e0b7c9a31ff8db94d46a9a3ce02b7885a94fbb51a9cac511bbcb936cd29c4423"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JAUAudible.hpp",
+    "sha256": "8967fb56b900c85ae25671e6a6dad1ae1f7306964c1a12e5ce872960e0f98f8b"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JAUAudience.hpp",
+    "sha256": "ab7e03dfc6e6a809d1c6bed61d1cb8588701f7a292768e52b014617081ad3787"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JAUBankTable.hpp",
+    "sha256": "36c54e16ad5a607b3700ff7f87647b540c3dcbfd2ec28730c863626a8ab68a99"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JAUDoppler.hpp",
+    "sha256": "e0523c28f1763cdc4bf50e1ee683eba10dd712d3eac73f80207cbdfd10fe2562"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JAUSectionHeap.hpp",
+    "sha256": "99aa974f68fff2f98ed0fb0a169b2b1275177cc077de386248783504060e232e"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JAUSeqDataBlockMgr.hpp",
+    "sha256": "45e4299a86f146ff34a70d46337833e90d201e86286902d8081b5fe3958a4aeb"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JAUSoundInfo.hpp",
+    "sha256": "4292fd65720a83dcc3d0115ec7bd0f7c179a2f600b72d3ada174d17a8c2489e9"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JAUSoundMgr.hpp",
+    "sha256": "4eb50ffb1ddcd8ba83b1a1bf8fc3bd2123ba2c14d8747036d59c0c74752ea8f7"
+  },
+  {
+    "path": "src/JSystem/JAudio2/JAUStdSoundInfo.hpp",
+    "sha256": "25de6d94d51812b968f7232c9f8afe1a67ca71e0bab93a628b903c476741e8c5"
+  },
+  {
+    "path": "src/JSystem/JGeometry/TMatrix.hpp",
+    "sha256": "e2d6a379362edf1ee46aa0603963216c1aaa721f113963a66d2b4116c6f73189"
+  },
+  {
+    "path": "src/JSystem/JKernel/JKRDvdRipper.hpp",
+    "sha256": "fe1d9dff4758e35f4eda2f06d4f49d507211b44af1f16ca5e6a5e73e3e0df64b"
+  },
+  {
+    "path": "src/app/Application.cpp",
+    "sha256": "e4cfba62b9b73d9cf061f35cae7435bc3c0e9c42dfa814093eab05b822d7e30b"
+  },
+  {
+    "path": "src/camera/CameraDirectorRuntime.cpp",
+    "sha256": "d73c150583fa66c9971b9c20a077aa1a66ece4b32d68a1f60414c92c5d8537c4"
+  },
+  {
+    "path": "src/camera/CameraDirectorRuntime.hpp",
+    "sha256": "e58f9e3047d634948a3b4d60d39f72bb73313404a7f7ae5f040926da0ff843e9"
+  },
+  {
+    "path": "src/compat/GameSystemFunctionCompat.cpp",
+    "sha256": "d85ae5b860c0d1c714911f07ec322eddf8ea11dc5162e62749f77b634b75e357"
+  },
+  {
+    "path": "src/compat/OriginalGameSceneFunction.cpp",
+    "sha256": "01f7d6d4e32326e803d913a35ba4f99376ac5aa13ee2539fc46b59cdff2edbac"
+  },
+  {
+    "path": "src/compat/OriginalScenarioOpeningSceneControl.cpp",
+    "sha256": "6d72a99df43952aa83c7d5fd1174e0676fbf20cde2fc93381108982390730304"
+  },
+  {
+    "path": "src/compat/OriginalWPadRumblePause.cpp",
+    "sha256": "fa5ab85da1cec651840b8c2f232f88e1743c1dfb581319b7544b8185064aa482"
+  },
+  {
+    "path": "src/compat/SceneInitializationCompat.cpp",
+    "sha256": "b3e718e2d0ae0ad2e9d332d0aa3587a26e6c921c6d8d8e5ec9d933710d0629b5"
+  },
+  {
+    "path": "src/compat/SceneNameObjUtilCompat.cpp",
+    "sha256": "19e9eb57d5132f03cbfc0978a963cc8798de59bd465d3ab554f8e307302f17d4"
+  },
+  {
+    "path": "src/compat/SceneObjHolderCompat.cpp",
+    "sha256": "242320c0409dcdce60dafa23b7e4435d259ec85d1877ae0f59552c03b70d3edc"
+  },
+  {
+    "path": "src/compat/StorySequencePlatformCompat.cpp",
+    "sha256": "14301d996ba7ba50cd4c011e030f9da993a71b73894a95e2476727f94b017a87"
+  },
+  {
+    "path": "src/layout/LayoutHost.hpp",
+    "sha256": "75dc3991b7ebc13eef8e02243b716d82eaf7ebba1803d64e75188c3458ef708a"
+  },
+  {
+    "path": "src/layout/LayoutManagerCompat.cpp",
+    "sha256": "f9b1a199f8422a322e5b4af4f6b027890762436e4fb663c046f0dd47079b1ad3"
+  },
+  {
+    "path": "src/runtime/ArchiveMountService.cpp",
+    "sha256": "54cf8ef7907931cc85df8c269d4651672794f900f069f29a695cad742e2c96a7"
+  },
+  {
+    "path": "src/runtime/ArchiveMountService.hpp",
+    "sha256": "721d4d7d452c958c4a300b4c3cdf089e3d859c3d00abd679cc4dcf5903381e8b"
+  },
+  {
+    "path": "src/runtime/RuntimeContext.cpp",
+    "sha256": "c089b95100609bc1dcfa3ce11164421869b7e37ac4b2bb00f82bedd92e5a5d04"
+  },
+  {
+    "path": "src/runtime/RuntimeContext.hpp",
+    "sha256": "350d79e728e1015358b5a91bdd0dd50254b5f95bc54ed22d95825f813bf03a1a"
+  },
+  {
+    "path": "src/runtime/SceneScheduler.cpp",
+    "sha256": "14959bcdd5c66fe84d398b72702f6889c6531826111f1f349970e17119b66d1b"
+  },
+  {
+    "path": "src/scene/AreaObjRuntime.cpp",
+    "sha256": "4973ece50e8ff07485e2fd7ebd8cdd73784d347d1c082b3e26b5d306b484c4f6"
+  },
+  {
+    "path": "src/scene/AreaObjRuntime.hpp",
+    "sha256": "0b7d8f2b9746adb30ae30751e00ba64dff1a1facbf86b57b940a20f49ab22c12"
+  },
+  {
+    "path": "src/scene/AuthoredPlacementInstantiator.cpp",
+    "sha256": "9475a50a4d8c54d19e7a9e63342bdf052a18a648cff4ce2e0767576261562e23"
+  },
+  {
+    "path": "src/scene/AuthoredPlacementInstantiator.hpp",
+    "sha256": "769ccbf7240ee980874af499633091672f60c83163864a9531833d005280e7b5"
+  },
+  {
+    "path": "src/scene/GameSceneBinding.cpp",
+    "sha256": "504afcd86f652a16ecc5fc77ca1335be10e76b2e77019c0c9a5110b581d62471"
+  },
+  {
+    "path": "src/scene/GameSceneBinding.hpp",
+    "sha256": "0a17010e696fdadbdc345877e114a2d143bbd6d5ae3629001fc4e492634cdf58"
+  },
+  {
+    "path": "src/scene/GameSystemSceneControllerService.cpp",
+    "sha256": "d2e2ac69379ed2e9d1176eece8067bf658609c787ac779324dac21f045b85bbe"
+  },
+  {
+    "path": "src/scene/GameSystemService.cpp",
+    "sha256": "312893569f21ca250b6410c1feace11e7b3a32c4cf62be3018bedd18f3793227"
+  },
+  {
+    "path": "src/scene/GameSystemService.hpp",
+    "sha256": "4b52860dab12bc092c34374f51919e342d773753bf4f05d67330f1f9a3048eec"
+  },
+  {
+    "path": "src/scene/GatewayDemoScene.cpp",
+    "sha256": "3178e99267e0c93a04d8ca35453ac0b0114a68771e7417d93476f3436b7bd0e4"
+  },
+  {
+    "path": "src/scene/GatewayDemoScene.hpp",
+    "sha256": "737d42f9596a47558cbaf3d43dc1aea6d0757fea4f82bf815a4a85cc638fc49e"
+  },
+  {
+    "path": "src/scene/NameObjChildOwner.cpp",
+    "sha256": "4bf4897162e9c75b4100dce47aeaac4ffd85fda629b8ed68bb6831539d2bd070"
+  },
+  {
+    "path": "src/scene/NameObjChildOwner.hpp",
+    "sha256": "922223edd7ba7626ff0691ba810dec418f2ba9135245430f8d554f37cb6509a0"
+  },
+  {
+    "path": "src/scene/SceneLifecycleService.cpp",
+    "sha256": "fdab114d9935e1087533942438c3f82f20402f7c66bcafa485710c4b3ced42d6"
+  },
+  {
+    "path": "src/scene/SceneLifecycleService.hpp",
+    "sha256": "6221b6bd437c7e1106f7cec10a69d6d56fb8aa5f597347dd112006476c518109"
+  },
+  {
+    "path": "src/scene/SceneLifetimeBinding.cpp",
+    "sha256": "c52a86f1f1625b34a54010891a75ecb86960b4edcd396f184b5bb5f1c0130a81"
+  },
+  {
+    "path": "src/scene/SceneLifetimeBinding.hpp",
+    "sha256": "ee18e33092982f6293b27c42a9c5111ecf1ce4d4ee636933ae74e65866706e68"
+  },
+  {
+    "path": "src/scene/SceneNameObjRegistry.cpp",
+    "sha256": "9dd37e7fcca6cea760c9f57cc9d8ddac0a2fdc29c60ec34d6b490a22b0156287"
+  },
+  {
+    "path": "src/scene/SceneNameObjRegistry.hpp",
+    "sha256": "27551e26d7c69030c33846c2ff86af593303ab4168af819bbb046227e65b769e"
+  },
+  {
+    "path": "src/scene/SceneObjHolderRuntime.hpp",
+    "sha256": "f6a7cb13441963e4d85b26cc0371f146980a42d97892b9b4f5a556e9df670597"
+  },
+  {
+    "path": "src/scene/StageHostScene.cpp",
+    "deleted": true
+  },
+  {
+    "path": "src/scene/StageHostScene.hpp",
+    "deleted": true
+  },
+  {
+    "path": "src/scene/StageInitializationService.cpp",
+    "sha256": "4494b2bfb517948d2a2c9d54b919dd2b041889fb3a0d90a8b1ae9c0491aa8e10"
+  },
+  {
+    "path": "src/scene/StageInitializationService.hpp",
+    "sha256": "dcb8a65827bb489d257de1908469d8fee3a2e8ee3256ee78a8b3f3d4abdc9111"
+  },
+  {
+    "path": "src/scene/StagePlacementResolver.cpp",
+    "sha256": "1fd591e275385f995fae495300e744998278579588aa5ffef5b783235f9cd24e"
+  },
+  {
+    "path": "src/scene/StagePlacementResolver.hpp",
+    "sha256": "be66100944e8cf3af6f4bd65771d1621871ddf6f677d7c2e0a459419a8a29459"
+  },
+  {
+    "path": "src/showcase/Showcase.cpp",
+    "sha256": "0f4a8e1c429a06a660a412b52feb4a022d7a7690ccb8917c99c20f2c7fc07167"
+  },
+  {
+    "path": "tests/OriginalSceneExecutionOwnerTests.cpp",
+    "sha256": "c2c3849a62a83fad05da889f234d192f18b8ed07bf858863a63951949dbfeb49"
+  },
+  {
+    "path": "tests/OriginalSceneWipeOwnerTests.cpp",
+    "sha256": "2d0f34613b20341929b7db0db2224c2644dde7f851cffefed2ed818e9f84f62e"
+  },
+  {
+    "path": "tests/OriginalWPadPauseTests.cpp",
+    "sha256": "edf1ca18520f35fd31dbda58404e097baf94db4350599018493c2870ac02bd0e"
+  },
+  {
+    "path": "tests/SceneExecutionFixture.hpp",
+    "sha256": "7436918fd9c56e9790b8325ebc30ae256109511fa5c9009a8c215522f8d06fa0"
+  },
+  {
+    "path": "tests/SceneLifetimeBindingTests.cpp",
+    "sha256": "d3d6705f2abc862d6893f6c1717af282a250f31e09a7c69b353965ece6c481a6"
+  },
+  {
+    "path": "tests/SceneNameObjRegistryTests.cpp",
+    "sha256": "3a73e257a1e4637d1758692e0314df9303b0cce908852e4be5e50c37f9a03130"
+  },
+  {
+    "path": "tests/xmake.lua",
+    "sha256": "3d74268e63cf0067e27a32d6bd4a7e618077924990ca699f885d63e086360cfc"
+  }
+]

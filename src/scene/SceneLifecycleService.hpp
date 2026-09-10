@@ -12,6 +12,7 @@
 
 class NameObj;
 class Scene;
+class GameScene;
 
 namespace smgpc::runtime {
     class RuntimeContext;
@@ -23,7 +24,7 @@ namespace smgpc::compat {
 
 namespace smgpc::scene {
 
-    class StageHostScene;
+    class GameSceneBinding;
     class StageInitializationService;
 
     class SceneLifecycleService final {
@@ -40,8 +41,7 @@ namespace smgpc::scene {
         void start_scene();
         void update_scene();
         void calc_anim_scene();
-        void draw_3d_normal(const smgpc::camera::CameraPose &camera_pose);
-        void draw_2d_normal();
+        void draw_scene();
 
         [[nodiscard]] Scene *active_scene() const;
         [[nodiscard]] NameObj *active_root() const;
@@ -61,7 +61,8 @@ namespace smgpc::scene {
         // initialization services, then the retained original Game heap.
         std::shared_ptr<smgpc::compat::JkrAllocationDomain> _active_scene_domain;
         std::unique_ptr<StageInitializationService> _active_initialization;
-        std::unique_ptr<StageHostScene> _active_scene;
+        std::unique_ptr<GameSceneBinding> _active_game_scene_binding;
+        std::unique_ptr<GameScene> _active_scene;
     };
 
 }  // namespace smgpc::scene

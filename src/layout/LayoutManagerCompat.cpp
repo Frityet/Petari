@@ -269,6 +269,11 @@ LayoutActor::LayoutActor(const char* name, bool)
     sActorStates.insert_or_assign(this, ActorState{});
 }
 
+LayoutActor::~LayoutActor() {
+    smgpc::layout::release_layout_actor_if_registered(this);
+    delete mSpine;
+}
+
 void LayoutActor::movement() {
     if (mFlag.mIsDead) {
         return;
@@ -1077,6 +1082,10 @@ void refresh_pane_matrices(LayoutManager* manager) {
 }
 
 #ifndef NDEBUG
+LayoutLifetimeDebugState debug_layout_lifetime_state() noexcept {
+    return {sActorStates.size(), sManagerStates.size(), sPaneControlStates.size()};
+}
+
 std::vector< PaneControlDebugState > debug_pane_controls(const LayoutManager* manager) {
     const auto& state = require_manager_state(manager, "Inspecting pane controls");
     auto output = std::vector< PaneControlDebugState >{};

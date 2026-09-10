@@ -19,8 +19,7 @@ namespace smgpc::camera {
     // native renderer without selecting or calculating a camera itself.
     class CameraDirectorRuntime final {
     public:
-        CameraDirectorRuntime(SceneObjHolder &holder,
-                              const std::shared_ptr<compat::JkrAllocationDomain> &domain);
+        CameraDirectorRuntime(CameraContext &context, CameraDirector &director);
         ~CameraDirectorRuntime();
         CameraDirectorRuntime(const CameraDirectorRuntime &) = delete;
         CameraDirectorRuntime &operator=(const CameraDirectorRuntime &) = delete;

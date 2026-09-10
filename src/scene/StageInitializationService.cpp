@@ -5,9 +5,12 @@
 #include "Game/Map/LightFunction.hpp"
 #include "Game/Map/SleepControllerHolder.hpp"
 #include "Game/NameObj/NameObj.hpp"
+#include "Game/NameObj/NameObjHolder.hpp"
+#include "scene/SceneNameObjRegistry.hpp"
 #include "Game/Scene/SceneFunction.hpp"
 #include "Game/Scene/SceneNameObjListExecutor.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
+#include "Game/Util/SceneUtil.hpp"
 #include "compat/DemoSceneRuntime.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "compat/StageResourceBinding.hpp"
@@ -15,6 +18,8 @@
 #include "compat/StageSessionState.hpp"
 #include "compat/StageZoneMatrixRegistry.hpp"
 #include "runtime/RuntimeContext.hpp"
+#include "runtime/ArchiveMountService.hpp"
+#include "resource/RarcArchive.hpp"
 #include "scene/AreaObjRuntime.hpp"
 #include "scene/NameObjLifecycleService.hpp"
 #include "scene/SceneExecutionBinding.hpp"
@@ -36,6 +41,7 @@
 
 namespace smgpc::scene {
     namespace {
+        thread_local StageInitializationService *sInitializer = nullptr;
 
         [[nodiscard]] bool placement_has_complete_runtime(const StagePlacementObject &placement) {
             return classify_authored_placement(placement).kind ==
@@ -212,6 +218,8 @@ namespace smgpc::scene {
             },
             this);
         _registration_scope_id = runtime.begin_scene_registration_scope();
+        _previous = sInitializer;
+        sInitializer = this;
     }
 
     StageInitializationService::~StageInitializationService() {
@@ -249,7 +257,47 @@ namespace smgpc::scene {
         }
         _stage_session_binding.reset();
         _stage_session.reset();
+        _runtime.archive_mounts().remove_for_heap(&_scene_domain->heap());
+        _stage_archive_names.clear();
         _lifetime_binding.reset();
+        if (sInitializer != this) std::terminate();
+        sInitializer = _previous;
+    }
+
+    StageInitializationService *current_stage_initialization_service() noexcept { return sInitializer; }
+
+    StageInitializationService &require_stage_initialization_service() {
+        if (!sInitializer)
+            aurora::throw_host_exception<std::logic_error>("Original stage initialization requires its actual Scene service");
+        return *sInitializer;
+    }
+
+    Scene &StageInitializationService::scene() const noexcept { return _scene; }
+
+    void StageInitializationService::pre_scene_init() {
+        initialize_session();
+        bind_scene_objects();
+    }
+
+    void StageInitializationService::initialize_effect_system(unsigned particles, unsigned emitters) {
+        require_live();
+        if (!_scene_obj_holder_binding)
+            aurora::throw_host_exception<std::logic_error>("Effect initialization requires the bound SceneObjHolder");
+        _scene_obj_holder_binding->initialize_effect_system(particles, emitters);
+    }
+
+    void StageInitializationService::allocate_draw_buffer_actor_list() {
+        require_live();
+        if (!_execution_binding)
+            aurora::throw_host_exception<std::logic_error>("Scene list allocation requires the original scene executor");
+        _execution_binding->complete_initialization();
+    }
+
+    void StageInitializationService::complete_camera_parameters() {
+        require_live();
+        if (!_scene_obj_holder_binding)
+            aurora::throw_host_exception<std::logic_error>("Camera parameter completion requires its actual Scene binding");
+        _scene_obj_holder_binding->complete_camera_parameters();
     }
 
     void StageInitializationService::require_live() const {
@@ -270,8 +318,7 @@ namespace smgpc::scene {
             aurora::throw_host_exception<std::logic_error>(
                 "A partially initialized stage must be destroyed before another initialization attempt.");
         }
-        initialize_session();
-        bind_scene_objects();
+        pre_scene_init();
         initialize_host_scene_objects();
         load_stage_files();
         initialize_scenario_resources();
@@ -281,6 +328,7 @@ namespace smgpc::scene {
         prepare_actor_files();
         init_stage_audio();
         place_actors();
+        complete_camera_parameters();
         finish_actor_placement();
         complete_initialization();
         _stage_session->set_execution_phase(
@@ -324,7 +372,7 @@ namespace smgpc::scene {
 
     void StageInitializationService::initialize_host_scene_objects() {
         const auto host_allocations = smgpc::compat::JkrHostAllocationScope{};
-        _scene_obj_holder_binding->initialize_effect_system(3072, 256);
+        initialize_effect_system(3072, 256);
         constexpr auto required_scene_objects = std::array{
             SceneObj_NameObjGroup,
             SceneObj_SceneWipeHolder,
@@ -332,6 +380,7 @@ namespace smgpc::scene {
             SceneObj_MessageSensorHolder,
             SceneObj_ClippingDirector,
             SceneObj_LightDirector,
+            SceneObj_CaptureScreenActor,
             SceneObj_FurDrawManager,
             SceneObj_PlanetGravityManager,
             SceneObj_MarioHolder,
@@ -361,7 +410,7 @@ namespace smgpc::scene {
     void StageInitializationService::finish_actor_placement() {
         require_live();
         const auto host_allocations = smgpc::compat::JkrHostAllocationScope{};
-        if (_scene_obj_holder_binding == nullptr || _authored_placements == nullptr ||
+        if (_postpass_started || _scene_obj_holder_binding == nullptr || _authored_placements == nullptr ||
             _authored_placements->report().state != AuthoredPlacementRuntimeState::Instantiated) {
             aurora::throw_host_exception<std::logic_error>(
                 "The stage post-placement pass requires completed actor construction.");
@@ -370,8 +419,20 @@ namespace smgpc::scene {
         // initAfterPlacement callbacks may immediately query those parts, so
         // publish the first complete registry before dispatching callbacks.
         _collision.build();
-        _scene_obj_holder_binding->init_after_placement();
-        init_roots_after_placement();
+        auto *registry = current_scene_name_obj_registry();
+        if (!registry)
+            aurora::throw_host_exception<std::logic_error>("The stage postpass requires its actual NameObjHolder");
+        const auto objects = registry->snapshot();
+        _postpass_started = true;
+        {
+            const SceneInitializationScope phase(SceneInitializeState_AfterPlacement);
+            const smgpc::compat::JkrAllocationScope game(_scene_domain);
+            registry->holder().callMethodAllObj(&NameObj::initAfterPlacement);
+        }
+        for (auto &graph : _root_registration_graphs)
+            graph->acknowledge_scene_postpass(objects);
+        _authored_placements->acknowledge_scene_postpass(objects);
+        _scene_obj_holder_binding->acknowledge_scene_postpass(objects);
         // Exact Game actors register CollisionParts while they initialize.
         // Rebuild the generalized query structure only after every actor and
         // SceneObj has completed the retail post-placement pass.
@@ -421,8 +482,15 @@ namespace smgpc::scene {
                 "Stage completion requires its one completed post-placement pass.");
         }
         SleepControlFunc::initSyncSleepController();
-        _execution_binding->complete_initialization();
+        allocate_draw_buffer_actor_list();
         appear_roots();
+        finalize_scene_initialization();
+    }
+
+    void StageInitializationService::finalize_scene_initialization() {
+        require_live();
+        if (_initialized || !_scene_obj_holder_binding || !_execution_binding || !_execution_binding->initialized())
+            aurora::throw_host_exception<std::logic_error>("Scene initialization End requires completed original list allocation");
         _scene_obj_holder_binding->complete_initialization();
         _initialized = true;
     }
@@ -475,12 +543,12 @@ namespace smgpc::scene {
         _root_host_appear.push_back(apply_host_appear);
     }
 
-    void StageInitializationService::prepare_actor_files() {
+    void StageInitializationService::prepare_actor_plan() {
         require_live();
         const auto host_allocations = smgpc::compat::JkrHostAllocationScope{};
-        if (_authored_data == nullptr || _stage_resource_binding == nullptr) {
+        if (_authored_data == nullptr) {
             aurora::throw_host_exception<std::logic_error>(
-                "Actor file preparation requires initialized scenario resources.");
+                "Actor file preparation requires completed stage loading.");
         }
         if (_request.object_name.empty()) {
             prepare_authored_placements();
@@ -497,9 +565,6 @@ namespace smgpc::scene {
                                             &*explicit_placement :
                                             nullptr);
         }
-        // Every holder is ranked and preloaded before StartInfo or other
-        // original actor constructors run.
-        preload_authored_placements();
     }
 
     void StageInitializationService::place_actors() {
@@ -599,12 +664,24 @@ namespace smgpc::scene {
         }
     }
 
-    void StageInitializationService::preload_authored_placements() {
-        if (_authored_placements == nullptr) {
-            aurora::throw_host_exception<std::logic_error>(
-                "Authored stage placements were not prepared before preload.");
-        }
-        (void)_authored_placements->preload();
+    void StageInitializationService::prepare_actor_files() {
+        start_actor_file_load_common();
+        start_actor_file_load_scenario();
+    }
+
+    void StageInitializationService::start_actor_file_load_common() {
+        require_live();
+        const compat::JkrHostAllocationScope host;
+        prepare_actor_plan();
+        _authored_placements->preload_common();
+    }
+
+    void StageInitializationService::start_actor_file_load_scenario() {
+        require_live();
+        const compat::JkrHostAllocationScope host;
+        if (!_stage_resource_binding || !_authored_placements)
+            aurora::throw_host_exception<std::logic_error>("Scenario actor loading requires selected scenario resources and the common archive pass");
+        _authored_placements->preload_scenario();
     }
 
     void StageInitializationService::construct_authored_placements() {
@@ -639,12 +716,41 @@ namespace smgpc::scene {
     }
 
     void StageInitializationService::load_stage_files() {
+        start_stage_file_load();
+        wait_done_stage_file_load();
+    }
+
+    void StageInitializationService::start_stage_file_load() {
         require_live();
-        const auto host_allocations = smgpc::compat::JkrHostAllocationScope{};
-        if (_stage_session_binding == nullptr || _authored_data != nullptr ||
-            _planet_map_catalog != nullptr) {
-            aurora::throw_host_exception<std::logic_error>(
-                "Stage files must be resolved once per initialization owner.");
+        const compat::JkrHostAllocationScope host;
+        if (!_stage_session_binding || _stage_file_load_started)
+            aurora::throw_host_exception<std::logic_error>("Start stage file loading once within the actual stage session");
+        _stage_file_load_started = true;
+        _stage_archive_names = resolve_stage_archive_names(_runtime.dvd(), _request.stage_name);
+        for (const auto &name : _stage_archive_names)
+            (void)_runtime.archive_mounts().mount(name, &_scene_domain->heap());
+        if (!MR::isStageDisablePauseMenu())
+            (void)_runtime.archive_mounts().mount("/LayoutData/PauseMenu.arc", &_scene_domain->heap());
+        _stage_files_mounted = true;
+    }
+
+    void StageInitializationService::wait_done_stage_file_load() {
+        require_live();
+        const compat::JkrHostAllocationScope host;
+        if (!_stage_files_mounted || _authored_data || _planet_map_catalog)
+            aurora::throw_host_exception<std::logic_error>("Wait for stage files once after starting their load");
+        // File loading currently completes synchronously. The original wait
+        // boundary still controls nested archive publication and authored rows.
+        for (const auto &name : _stage_archive_names) {
+            const auto archive = _runtime.archive_mounts().retain(name);
+            if (!archive)
+                aurora::throw_host_exception<std::logic_error>("A requested stage archive did not finish mounting");
+            for (const auto &entry : archive->source().entries()) {
+                if (entry.directory != "/arc" && entry.directory != "arc") continue;
+                if (!_runtime.archive_mounts().receive(entry.name))
+                    (void)_runtime.archive_mounts().mount_memory(
+                        entry.name, archive->source().file_data(entry), archive->heap());
+            }
         }
         if (_object_name_table == nullptr) {
             _object_name_table = std::make_unique<smgpc::scene::nameobj::ObjectNameTable>(_runtime.dvd());
@@ -678,6 +784,7 @@ namespace smgpc::scene {
         _demo_scene_runtime = std::make_unique<smgpc::compat::DemoSceneRuntime>(
             _runtime.dvd(), _authored_data->placements(),
             _authored_data->general_positions());
+        smgpc::compat::claim_name_obj_runtime_ownership(_demo_scene_runtime.get(), this);
         // Collision remains absent until source Game code issues an exact
         // CollisionParts registration. Placement/archive discovery must not
         // synthesize collision for actors that did not request it.
@@ -737,16 +844,6 @@ namespace smgpc::scene {
 #else
         (void)placement;
 #endif
-    }
-
-    void StageInitializationService::init_roots_after_placement() {
-        const auto phase = SceneInitializationScope(SceneInitializeState_AfterPlacement);
-        for (auto &registration_graph : _root_registration_graphs) {
-            registration_graph->init_registration_suffix_after_placement();
-        }
-        if (_authored_placements != nullptr) {
-            (void)_authored_placements->init_after_placement();
-        }
     }
 
     void StageInitializationService::appear_roots() {

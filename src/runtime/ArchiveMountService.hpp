@@ -44,6 +44,9 @@ namespace smgpc::runtime {
         ArchiveMountService(const ArchiveMountService&) = delete;
         ArchiveMountService& operator=(const ArchiveMountService&) = delete;
         [[nodiscard]] JKRMemArchive* mount(std::string_view, JKRHeap*);
+        // Copies a bounded embedded archive into an independent decoded owner.
+        // Existing names keep their published identity, just like file mounts.
+        [[nodiscard]] JKRMemArchive* mount_memory(std::string_view, std::span<const unsigned char>, JKRHeap*);
         [[nodiscard]] JKRMemArchive* receive(std::string_view) const;
         [[nodiscard]] std::shared_ptr<const MountedArchive> retain(std::string_view) const;
         [[nodiscard]] std::size_t size() const;

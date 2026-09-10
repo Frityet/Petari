@@ -11,10 +11,12 @@
 #include <cstdint>
 #include <memory>
 #include <span>
+#include <string>
 #include <string_view>
 #include <vector>
 
 class NameObj;
+class NameObjHolder;
 
 namespace smgpc::runtime {
     class RuntimeContext;
@@ -62,6 +64,15 @@ namespace smgpc::scene {
         StageInitializationService &operator=(const StageInitializationService &) = delete;
 
         void initialize_host_scene();
+        void pre_scene_init();
+        void start_stage_file_load();
+        void wait_done_stage_file_load();
+        void start_actor_file_load_common();
+        void start_actor_file_load_scenario();
+        void initialize_effect_system(unsigned particles, unsigned emitters);
+        void allocate_draw_buffer_actor_list();
+        void complete_camera_parameters();
+        [[nodiscard]] Scene &scene() const noexcept;
         void initialize_session();
         void bind_scene_objects();
         void load_stage_files();
@@ -70,6 +81,7 @@ namespace smgpc::scene {
         void place_actors();
         void finish_actor_placement();
         void complete_initialization();
+        void finalize_scene_initialization();
 
         [[nodiscard]] NameObj *root() const;
         [[nodiscard]] std::string_view scene_name() const;
@@ -88,11 +100,10 @@ namespace smgpc::scene {
         void construct_stage_start_root();
         void prepare_authored_placements(
             const StagePlacementObject *explicit_placement = nullptr);
-        void preload_authored_placements();
+        void prepare_actor_plan();
         void construct_authored_placements();
         void init_stage_audio();
         void trace_placement_object(const StagePlacementObject &placement) const;
-        void init_roots_after_placement();
         void appear_roots();
         void destroy_roots();
         [[nodiscard]] const char *resolve_actor_name(
@@ -106,7 +117,12 @@ namespace smgpc::scene {
         std::shared_ptr<smgpc::compat::JkrAllocationDomain> _scene_domain;
         std::unique_ptr<SceneLifetimeBinding> _lifetime_binding;
         std::unique_ptr<SceneExecutionBinding> _execution_binding;
+        StageInitializationService *_previous = nullptr;
+        bool _stage_file_load_started = false;
+        bool _stage_files_mounted = false;
+        std::vector<std::string> _stage_archive_names;
         bool _initialized = false;
+        bool _postpass_started = false;
         bool _retired = false;
         std::size_t _registration_scope_id = 0U;
         StageHostRequest _request;
@@ -132,5 +148,8 @@ namespace smgpc::scene {
         const StagePlacementObject *_explicit_placement_source = nullptr;
         NameObj *_explicit_placement_root = nullptr;
     };
+
+    [[nodiscard]] StageInitializationService *current_stage_initialization_service() noexcept;
+    [[nodiscard]] StageInitializationService &require_stage_initialization_service();
 
 }  // namespace smgpc::scene

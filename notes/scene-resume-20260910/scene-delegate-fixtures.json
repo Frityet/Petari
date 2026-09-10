@@ -1,0 +1,22 @@
+[
+  {
+    "target": "smg-pc-original-scene-execution-owner-tests",
+    "build": 0,
+    "run": 0
+  },
+  {
+    "target": "smg-pc-authored-placement-instantiator-tests",
+    "build": 0,
+    "run": 1
+  },
+  {
+    "target": "smg-pc-stage-initialization-resource-tests",
+    "build": 0,
+    "run": 1
+  },
+  {
+    "target": "smg-pc-original-camera-director-tests",
+    "build": 0,
+    "run": -6
+  }
+]

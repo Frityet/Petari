@@ -8,6 +8,7 @@
 #include <exception>
 #include <functional>
 #include <memory>
+#include <span>
 #include <type_traits>
 #include <utility>
 #include <vector>
@@ -97,6 +98,11 @@ namespace smgpc::scene {
             }
         }
 
+        // Adopt only still-unclaimed descendants after an original constructor
+        // has returned; independent SceneObj/service owners retain their objects.
+        void adopt_registered_since(
+            smgpc::compat::NameObjRuntimeRegistrationMarker marker);
+
         void clear() noexcept;
 
         // Captures the complete registration suffix for an externally-owned
@@ -107,6 +113,7 @@ namespace smgpc::scene {
             smgpc::compat::NameObjRuntimeRegistrationMarker marker,
             NameObj &root, const void *root_owner);
         void init_registration_suffix_after_placement();
+        void acknowledge_scene_postpass(std::span<NameObj *const> objects);
         static void rollback_registration_suffix(
             smgpc::compat::NameObjRuntimeRegistrationMarker marker) noexcept;
 
@@ -115,8 +122,6 @@ namespace smgpc::scene {
 
     private:
         void validate_candidate(const NameObj *child) const;
-        void adopt_registered_since(
-            smgpc::compat::NameObjRuntimeRegistrationMarker marker);
         static void rollback_unowned_registered_since(
             smgpc::compat::NameObjRuntimeRegistrationMarker marker) noexcept;
 

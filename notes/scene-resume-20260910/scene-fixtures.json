@@ -1,0 +1,34 @@
+[
+  {
+    "target": "smg-pc-scene-lifetime-binding-tests",
+    "build": 0,
+    "seconds": 1.8880670419894159,
+    "run": 0
+  },
+  {
+    "target": "smg-pc-original-scene-execution-owner-tests",
+    "build": 255,
+    "seconds": 2.1814346670289524
+  },
+  {
+    "target": "smg-pc-scene-name-obj-registry-tests",
+    "build": 0,
+    "seconds": 2.061742791964207,
+    "run": 0
+  },
+  {
+    "target": "smg-pc-authored-placement-instantiator-tests",
+    "build": 255,
+    "seconds": 2.8008914579986595
+  },
+  {
+    "target": "smg-pc-stage-initialization-resource-tests",
+    "build": 255,
+    "seconds": 2.4160506670014
+  },
+  {
+    "target": "smg-pc-original-camera-director-tests",
+    "build": 255,
+    "seconds": 2.358875583973713
+  }
+]

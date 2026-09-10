@@ -1,0 +1,47 @@
+[
+  {
+    "path": "src/Game/Scene/GameScenePauseControl.cpp",
+    "reference": "decomp/src/Game/Scene/GameScenePauseControl.cpp",
+    "byte_identical": true
+  },
+  {
+    "path": "src/Game/Scene/GameSceneScenarioOpeningCameraState.cpp",
+    "reference": "decomp/src/Game/Scene/GameSceneScenarioOpeningCameraState.cpp",
+    "byte_identical": true
+  },
+  {
+    "path": "src/Game/Screen/GamePauseSequence.cpp",
+    "reference": "decomp/src/Game/Screen/GamePauseSequence.cpp",
+    "byte_identical": true
+  },
+  {
+    "path": "src/Game/AudioLib/AudSystem.hpp",
+    "reference": "decomp/include/Game/AudioLib/AudSystem.hpp",
+    "byte_identical": true
+  },
+  {
+    "path": "src/Game/AudioLib/AudAudience.hpp",
+    "reference": "decomp/include/Game/AudioLib/AudAudience.hpp",
+    "byte_identical": true
+  },
+  {
+    "path": "src/Game/AudioLib/AudAudible.hpp",
+    "reference": "decomp/include/Game/AudioLib/AudAudible.hpp",
+    "byte_identical": true
+  },
+  {
+    "path": "src/Game/AudioLib/AudLimitedSound.hpp",
+    "reference": "decomp/include/Game/AudioLib/AudLimitedSound.hpp",
+    "byte_identical": true
+  },
+  {
+    "path": "src/Game/Screen/PauseMenu.hpp",
+    "reference": "decomp/include/Game/Screen/PauseMenu.hpp",
+    "byte_identical": true
+  },
+  {
+    "path": "src/Game/Util/SceneUtil.cpp",
+    "reference": "decomp/src/Game/Util/SceneUtil.cpp",
+    "byte_identical": true
+  }
+]

@@ -464,6 +464,20 @@ namespace smgpc::scene {
         }
     }
 
+    void AreaObjRuntime::acknowledge_scene_postpass(std::span<NameObj *const> objects) {
+        for (auto &owned : _owned_managers) {
+            if (std::ranges::find(objects, owned.manager.get()) == objects.end())
+                continue;
+            owned.did_init_after_placement = true;
+            if (!owned.did_finalize) {
+                if (owned.finalize)
+                    owned.finalize(*owned.manager);
+                owned.did_finalize = true;
+            }
+        }
+        _did_init_after_placement = true;
+    }
+
     void AreaObjRuntime::init_after_placement() {
         if (_did_init_after_placement) {
             return;

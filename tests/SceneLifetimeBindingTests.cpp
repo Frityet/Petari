@@ -44,6 +44,15 @@ namespace {
         void execute(Spine *) const override {
         }
     };
+    struct ChildOwner {
+        Observer &observer;
+        std::unique_ptr<smgpc::scene::SceneLifetimeBinding> binding;
+        static void retire(void *context) noexcept {
+            auto &owner = *static_cast<ChildOwner *>(context);
+            owner.observer.order.push_back(3);
+            owner.binding.reset();
+        }
+    };
 }  // namespace
 
 int main() {
@@ -53,7 +62,7 @@ int main() {
         const IdleNerve nerve;
         for (int generation = 0; generation < 32; ++generation) {
             Observer observer;
-            observer.order.reserve(2);
+            observer.order.reserve(3);
             auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 256U << 10);
             std::weak_ptr<smgpc::compat::JkrAllocationDomain> retired = domain;
             std::unique_ptr<DerivedScene> scene;
@@ -74,9 +83,13 @@ int main() {
                 rejected = true;
             }
             require(rejected, "duplicate scene lifetime ownership must be rejected");
+            ChildOwner children{observer};
+            children.binding = std::make_unique<smgpc::scene::SceneLifetimeBinding>(
+                *scene, &ChildOwner::retire, &children);
             scene.reset();
-            require(observer.original_owners_live && observer.order == std::vector<int>{1, 2} && !observer.binding,
-                    "derived destructor must precede native retirement while original holder and Spine remain alive");
+            require(observer.original_owners_live && observer.order == std::vector<int>{1, 3, 2} &&
+                        !observer.binding && !children.binding,
+                    "derived destruction must precede child retirement and service retirement while original owners remain alive");
             require(!retired.expired(), "the external Scene owner must retain the Game heap through final base destruction and delete");
             domain.reset();
             require(retired.expired() && heaps->root_heap().getFreeSize() == root_free,
@@ -97,7 +110,7 @@ int main() {
         }
         require(outer.order == std::vector<int>{1} && inner.order == std::vector<int>{1, 2},
                 "out-of-order unbinding must preserve other actual scene identities");
-        std::cout << "Scene derived/base retirement ordering, self-removal, duplicate rejection and 32 original Game heap lifetimes passed\n";
+        std::cout << "Scene derived/base and dependent-service retirement ordering, self-removal, duplicate rejection and 32 original Game heap lifetimes passed\n";
     } catch (const std::exception &error) {
         std::cerr << error.what() << '\n';
         return 1;

@@ -7,6 +7,7 @@
 #include "Game/Util/SystemUtil.hpp"
 #include "compat/TalkRuntime.hpp"
 #include "scene/SceneNameObjRegistry.hpp"
+#include "scene/StageInitializationService.hpp"
 #include <aurora/exception.hpp>
 #include <stdexcept>
 
@@ -20,6 +21,12 @@ namespace {
 
 namespace MR {
     void callMethodAllSceneNameObj(NameObjMethod method) {
+        if (method == &NameObj::initAfterPlacement) {
+            if (auto *initialization = smgpc::scene::current_stage_initialization_service()) {
+                initialization->finish_actor_placement();
+                return;
+            }
+        }
         scene_objects().callMethodAllObj(method);
     }
 

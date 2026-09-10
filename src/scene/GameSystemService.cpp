@@ -25,16 +25,8 @@ namespace smgpc::scene {
         _scene_controller.check_request_and_change_scene();
     }
 
-    void GameSystemService::draw_3d_normal() {
-        _runtime.draw_3d_normal();
-    }
-
-    void GameSystemService::draw_3d_normal(const smgpc::camera::CameraPose &camera_pose) {
-        _runtime.draw_3d_normal(camera_pose);
-    }
-
-    void GameSystemService::draw_2d_normal() {
-        _runtime.draw_2d_normal();
+    void GameSystemService::draw() {
+        _runtime.draw_scene();
     }
 
     bool GameSystemService::has_boot_requested_initial_stage() const {

@@ -7,6 +7,7 @@
 #include <aurora/exception.hpp>
 
 #include <array>
+#include <algorithm>
 #include <iostream>
 #include <memory>
 #include <stdexcept>
@@ -17,6 +18,20 @@ namespace {
         if (!value)
             aurora::throw_host_exception<std::runtime_error>(message);
     }
+    class PostpassObject final : public NameObj {
+    public:
+        PostpassObject(const char *name, std::vector<std::string> &calls,
+                       std::unique_ptr<PostpassObject> *append = nullptr)
+            : NameObj(name), _calls(calls), _append(append) {}
+        void initAfterPlacement() override {
+            _calls.emplace_back(getName());
+            if (_append && !*_append)
+                *_append = std::make_unique<PostpassObject>("Appended during postpass", _calls);
+        }
+    private:
+        std::vector<std::string> &_calls;
+        std::unique_ptr<PostpassObject> *_append;
+    };
 }  // namespace
 
 int main() {
@@ -77,6 +92,19 @@ int main() {
                 }
                 require(smgpc::scene::current_scene_name_obj_registry() == &registry,
                         "nested scope retirement must restore the prior actual scene holder");
+                {
+                    std::vector<std::string> calls;
+                    std::unique_ptr<PostpassObject> appended;
+                    PostpassObject first("First postpass", calls, &appended);
+                    PostpassObject second("Second postpass", calls);
+                    const auto captured = registry.snapshot();
+                    registry.holder().callMethodAllObj(&NameObj::initAfterPlacement);
+                    require(calls == std::vector<std::string>{"First postpass", "Second postpass"} &&
+                                appended && std::ranges::find(captured, appended.get()) == captured.end() &&
+                                registry.holder().find("Appended during postpass") == appended.get() &&
+                                registry.snapshot().size() == captured.size() + 1,
+                            "the original global postpass must preserve registration order and its captured end while callbacks append");
+                }
             }
             domain.reset();
             require(!smgpc::scene::current_scene_name_obj_registry() && heaps->root_heap().getFreeSize() == root_free &&

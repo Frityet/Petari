@@ -6,6 +6,8 @@
 #include "Game/Util/ObjUtil.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
+#include "layout/LayoutRuntime.hpp"
+#include "scene/NameObjChildOwner.hpp"
 #include <aurora/exception.hpp>
 #include <algorithm>
 #include <functional>
@@ -121,10 +123,38 @@ int main() {
             require(heaps->root_heap().getFreeSize() == free, "all original executor and requirement allocations reclaim together");
             require(compat::name_obj_runtime_state_count() == identities, "scene controllers and late NameObjs retire their identities");
         }
+        {
+            auto domain = compat::JkrAllocationDomain::create(heaps, 1U << 20);
+            test::SceneExecutionFixture scene(scheduler, domain);
+            layout::LayoutRuntime native_layout("scheduler-owned layout adaptor", "ownership fixture", 1, 72);
+            const auto before = compat::name_obj_runtime_state_count();
+            const auto marker = compat::mark_name_obj_runtime_registrations();
+            scheduler.register_layout(native_layout, 34, -1, 72);
+            auto* adaptor = NameObjFinder::find(native_layout.getName().c_str());
+            require(adaptor && compat::name_obj_runtime_owner(adaptor) == &scheduler,
+                    "the actual layout adaptor must declare the scheduler that retains its unique_ptr");
+            scene.complete_initialization();
+            scene::NameObjChildOwner::rollback_registration_suffix(marker);
+            require(NameObjFinder::find(native_layout.getName().c_str()) == adaptor &&
+                        compat::name_obj_runtime_state_count() == before + 1,
+                    "unclaimed scene-child retirement must leave a scheduler-owned layout adaptor alive");
+            scheduler.unregister_layout(native_layout);
+            require(!NameObjFinder::find(native_layout.getName().c_str()) &&
+                        compat::name_obj_runtime_state_count() == before,
+                    "explicit layout unregistration destroys its adaptor and ownership record exactly once");
+            scheduler.register_layout(native_layout, 34, -1, 72);
+            scene::NameObjChildOwner::rollback_registration_suffix(marker);
+            scheduler.clear();
+            require(!NameObjFinder::find(native_layout.getName().c_str()) &&
+                        compat::name_obj_runtime_state_count() == before,
+                    "scheduler clear also retires a protected layout adaptor without stale ownership");
+        }
+        require(heaps->root_heap().getFreeSize() == free && compat::name_obj_runtime_state_count() == identities,
+                "layout adaptor teardown retains no scene domain or runtime identities");
         bool rejected = false;
         try { (void)NameObjFinder::find(outside.getName()); }
         catch (const std::logic_error&) { rejected = true; }
         require(rejected, "original name lookup requires the owning scene holder");
-        std::cout << "original_queue=pass deferred_connections=pass category_swap_order=pass callback_retirement=pass sixteen_scene_domains=pass\n";
+        std::cout << "original_queue=pass deferred_connections=pass category_swap_order=pass callback_retirement=pass sixteen_scene_domains=pass layout_adaptor_ownership=pass\n";
     } catch (const std::exception& error) { std::cerr << error.what() << '\n'; return 1; }
 }

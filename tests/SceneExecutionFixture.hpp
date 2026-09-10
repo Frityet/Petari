@@ -46,6 +46,7 @@ public:
         _domain.reset();
     }
     SceneNameObjListExecutor& executor() { return *_executor; }
+    SceneObjHolder& holder() { return *_holder; }
     scene::SceneExecutionBinding& execution() { return *_execution; }
     scene::SceneObjHolderBinding& objects() { return *_objects; }
 private:

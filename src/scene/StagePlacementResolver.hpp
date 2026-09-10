@@ -19,6 +19,10 @@ namespace smgpc::runtime {
 
 namespace smgpc::scene {
 
+    // Complete ZoneList order, including zones inactive in the selected scenario.
+    [[nodiscard]] std::vector<std::string> resolve_stage_archive_names(
+        smgpc::runtime::DvdFileSystemService &dvd, std::string_view stage_name);
+
     // StageDataHolder retains common-layer tables loaded during its initial
     // bootstrap separately from every table discovered after scenario
     // selection. A common-layer table in a scenario-discovered child zone is

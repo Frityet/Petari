@@ -3071,3 +3071,31 @@ target("smg-pc-aurora-z-texture-render-tests")
     add_tests("aurora_z_texture_render", {
         group = "aurora", rundir = os.projectdir(), realtime_output = true
     })
+
+target("smg-pc-original-wpad-pause-tests")
+    set_kind("binary")
+    set_default(false)
+    set_group("tests/aurora")
+    set_rundir(os.projectdir())
+    add_files {
+        "OriginalWPadPauseTests.cpp",
+        "../aurora/lib/compat.cpp"
+    }
+    add_deps {
+        "smg-pc-common",
+        "smg-pc-game",
+        "aurora-card",
+        "aurora-dvd",
+        "aurora-gd",
+        "aurora-gx",
+        "aurora-os",
+        "aurora-pad",
+        "aurora-si",
+        "aurora-vi"
+    }
+    add_tests("original_wpad_pause", {
+        group = "aurora",
+        rundir = os.projectdir(),
+        realtime_output = true
+    })
+

@@ -1,0 +1,185 @@
+{
+  "function": "requestGalaxyMove__20GameSequenceProgressFRC18GalaxyMoveArgument",
+  "wii_compile_exit_code": 0,
+  "objdiff_exit_code": 0,
+  "objdiff_command": [
+    "/Users/frityet/Projects/petari/decomp/build/tools/objdiff-cli",
+    "diff",
+    "-1",
+    "/Users/frityet/Projects/petari/notes/gateway-audit-20260907/restoration/retail/obj/Game/System/GameSequenceProgress.o",
+    "-2",
+    "/Users/frityet/Projects/petari/notes/original-sequence-galaxy-move-20260910/GameSequenceProgress.o",
+    "-o",
+    "/Users/frityet/Projects/petari/notes/original-sequence-galaxy-move-20260910/objdiff.json"
+  ],
+  "match_percent": 94.47305,
+  "retail_function_bytes": 668,
+  "candidate_function_bytes": 632,
+  "retail_object_sha256": "9fbb623dd416016861f0b89dc4d12c49a67481ae064711dfbbef128fd9fb95c6",
+  "candidate_object_sha256": "cf2801dcc60cab7a7a56bace2b30a380eb71dec8dc6aaa7019d797388fc8109d",
+  "source_sha256": "dafc15ab29f4b7259597e8e8574f5ddb16a99d7b658c05b0119f47a6b0749c8c",
+  "remaining_differences": [
+    {
+      "kind": "DIFF_ARG_MISMATCH",
+      "retail": "stwu r1, -0x50(r1)",
+      "candidate": "stwu r1, -0x40(r1)"
+    },
+    {
+      "kind": "DIFF_ARG_MISMATCH",
+      "retail": "stw r0, 0x54(r1)",
+      "candidate": "stw r0, 0x44(r1)"
+    },
+    {
+      "kind": "DIFF_ARG_MISMATCH",
+      "retail": "addi r11, r1, 0x50",
+      "candidate": "addi r11, r1, 0x40"
+    },
+    {
+      "kind": "DIFF_ARG_MISMATCH",
+      "retail": "stw r9, 0x24(r1)",
+      "candidate": "stw r9, 0xc(r1)"
+    },
+    {
+      "kind": "DIFF_ARG_MISMATCH",
+      "retail": "stw r8, 0x28(r1)",
+      "candidate": "stw r8, 0x10(r1)"
+    },
+    {
+      "kind": "DIFF_ARG_MISMATCH",
+      "retail": "stw r7, 0x2c(r1)",
+      "candidate": "stw r7, 0x14(r1)"
+    },
+    {
+      "kind": "DIFF_ARG_MISMATCH",
+      "retail": "stw r6, 0x30(r1)",
+      "candidate": "stw r6, 0x18(r1)"
+    },
+    {
+      "kind": "DIFF_ARG_MISMATCH",
+      "retail": "stw r5, 0x34(r1)",
+      "candidate": "stw r5, 0x1c(r1)"
+    },
+    {
+      "kind": "DIFF_ARG_MISMATCH",
+      "retail": "stw r0, 0x38(r1)",
+      "candidate": "stw r0, 0x20(r1)"
+    },
+    {
+      "kind": "DIFF_ARG_MISMATCH",
+      "retail": "addi r4, r1, 0x24",
+      "candidate": "addi r4, r1, 0xc"
+    },
+    {
+      "kind": "DIFF_ARG_MISMATCH",
+      "retail": "addi r4, r1, 0x24",
+      "candidate": "addi r4, r1, 0xc"
+    },
+    {
+      "kind": "DIFF_ARG_MISMATCH",
+      "retail": "lwz r4, 0x28(r1)",
+      "candidate": "lwz r4, 0x10(r1)"
+    },
+    {
+      "kind": "DIFF_ARG_MISMATCH",
+      "retail": "lwz r0, 0x2c(r1)",
+      "candidate": "lwz r0, 0x14(r1)"
+    },
+    {
+      "kind": "DIFF_ARG_MISMATCH",
+      "retail": "addi r4, r1, 0x34",
+      "candidate": "addi r4, r1, 0x1c"
+    },
+    {
+      "kind": "DIFF_ARG_MISMATCH",
+      "retail": "lwz r0, 0x30(r1)",
+      "candidate": "lwz r0, 0x18(r1)"
+    },
+    {
+      "kind": "DIFF_ARG_MISMATCH",
+      "retail": "addi r4, r1, 0x24",
+      "candidate": "addi r4, r1, 0xc"
+    },
+    {
+      "kind": "DIFF_ARG_MISMATCH",
+      "retail": "lwz r0, 0x24(r1)",
+      "candidate": "lwz r0, 0xc(r1)"
+    },
+    {
+      "kind": "DIFF_DELETE",
+      "retail": "li r0, 0x3",
+      "candidate": null
+    },
+    {
+      "kind": "DIFF_DELETE",
+      "retail": "addi r5, r1, 0x8",
+      "candidate": null
+    },
+    {
+      "kind": "DIFF_DELETE",
+      "retail": "addi r4, r1, 0x20",
+      "candidate": null
+    },
+    {
+      "kind": "DIFF_DELETE",
+      "retail": "mtctr r0",
+      "candidate": null
+    },
+    {
+      "kind": "DIFF_DELETE",
+      "retail": "lwz r3, 0x4(r4)",
+      "candidate": null
+    },
+    {
+      "kind": "DIFF_DELETE",
+      "retail": "lwzu r0, 0x8(r4)",
+      "candidate": null
+    },
+    {
+      "kind": "DIFF_DELETE",
+      "retail": "stw r3, 0x4(r5)",
+      "candidate": null
+    },
+    {
+      "kind": "DIFF_DELETE",
+      "retail": "stwu r0, 0x8(r5)",
+      "candidate": null
+    },
+    {
+      "kind": "DIFF_DELETE",
+      "retail": "bdnz 0x5fc",
+      "candidate": null
+    },
+    {
+      "kind": "DIFF_ARG_MISMATCH",
+      "retail": "lwz r0, 0x24(r1)",
+      "candidate": "lwz r0, 0xc(r1)"
+    },
+    {
+      "kind": "DIFF_ARG_MISMATCH",
+      "retail": "lwz r0, 0x24(r1)",
+      "candidate": "lwz r0, 0xc(r1)"
+    },
+    {
+      "kind": "DIFF_ARG_MISMATCH",
+      "retail": "lwz r3, 0x28(r1)",
+      "candidate": "lwz r3, 0x10(r1)"
+    },
+    {
+      "kind": "DIFF_ARG_MISMATCH",
+      "retail": "addi r11, r1, 0x50",
+      "candidate": "addi r11, r1, 0x40"
+    },
+    {
+      "kind": "DIFF_ARG_MISMATCH",
+      "retail": "lwz r0, 0x54(r1)",
+      "candidate": "lwz r0, 0x44(r1)"
+    },
+    {
+      "kind": "DIFF_ARG_MISMATCH",
+      "retail": "addi r1, r1, 0x50",
+      "candidate": "addi r1, r1, 0x40"
+    }
+  ],
+  "native_integrated": false,
+  "runtime_tested": false
+}

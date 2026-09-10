@@ -555,8 +555,6 @@ namespace smgpc::runtime {
             _capture_screen_director = std::make_unique<CaptureScreenDirector>();
             _capture_screen_texture.reset(smgpc::compat::get_owned_jut_texture(_capture_screen_director->getResTIMG()));
             MR::createScreenAlphaSceneObj(0, 1.0F);
-            _capture_screen_indirect_actor = std::make_unique<CaptureScreenActor>(MR::DrawType_CaptureScreenIndirect, "Indirect");
-            _capture_screen_camera_actor = std::make_unique<CaptureScreenActor>(MR::DrawType_CaptureScreenCamera, "Camera");
             _logger.info(logging::Category::APP, logging::Message{"Using SMG disc image through Aurora DVD"});
             if (const auto message_archive = _dvd.find_first({
                     std::filesystem::path("KrKorean") / "MessageData" / "Message.arc",
@@ -627,8 +625,6 @@ namespace smgpc::runtime {
         smgpc::compat::retire_audio_facade_state();
         _star_pointer_depth.reset();
         _scheduler.clear();
-        _capture_screen_camera_actor.reset();
-        _capture_screen_indirect_actor.reset();
         _capture_screen_director.reset();
         _capture_screen_texture.reset();
         _screen_alpha_capture.reset();
@@ -933,6 +929,20 @@ namespace smgpc::runtime {
         _copy_events.push_back(std::move(event));
     }
 
+    void RuntimeContext::draw_scene() {
+        auto &lifecycle = scene_lifecycle();
+        if (!lifecycle.active_scene()) {
+            draw_3d_normal();
+            draw_2d_normal();
+            return;
+        }
+        _last_camera_pose = _scene_camera_pose;
+        _star_pointer_depth->set_camera(MR::getCameraViewMtx(), MR::getCameraProjectionMtx(), MR::getFovy());
+        lifecycle.draw_scene();
+        // Original GameSystem draws its pointer after the complete Scene draw.
+        _star_pointer_depth->draw();
+    }
+
     void RuntimeContext::draw_3d_normal(const smgpc::camera::CameraPose &camera_pose) {
         _last_camera_pose = camera_pose;
         if (!_game_layout.is_game_scene_draw_3d_active()) {
@@ -949,12 +959,6 @@ namespace smgpc::runtime {
             emit_sequence_state_trace_event("draw_3d_normal", {}, "3d_normal");
         }
 #endif
-        auto &lifecycle = scene_lifecycle();
-        if (lifecycle.active_scene() != nullptr) {
-            lifecycle.draw_3d_normal(camera_pose);
-            return;
-        }
-
         scene_execution().draw_3d_normal(camera_pose);
     }
 
@@ -980,12 +984,7 @@ namespace smgpc::runtime {
             emit_sequence_state_trace_event("draw_2d_normal", {}, "2d_normal");
         }
 #endif
-        auto &lifecycle = scene_lifecycle();
-        if (lifecycle.active_scene() != nullptr) {
-            lifecycle.draw_2d_normal();
-        } else {
-            scene_execution().draw_2d_normal();
-        }
+        scene_execution().draw_2d_normal();
         // GameSystem draws its pointer/guidance after the scene layouts.
         _star_pointer_depth->draw();
     }

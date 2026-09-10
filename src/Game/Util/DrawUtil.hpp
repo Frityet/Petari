@@ -15,6 +15,7 @@ public:
 
 
 namespace MR {
+    void clearZBuffer();
     void loadProjectionMtxFor2D();
     void reinitGX();
     void resetTextureCacheSize();

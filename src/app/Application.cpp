@@ -311,8 +311,7 @@ namespace smgpc::app {
 
                     const auto should_draw_frame = !skip_render_until_frame.has_value() || frame_context.frame_index >= *skip_render_until_frame;
                     if (should_draw_frame) {
-                        game_system.draw_3d_normal();
-                        game_system.draw_2d_normal();
+                        game_system.draw();
                     }
 
 #ifndef NDEBUG

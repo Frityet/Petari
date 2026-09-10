@@ -15,8 +15,7 @@ class LayoutActor : public NameObj {
 public:
     LayoutActor(const char*, bool);
 
-    virtual ~LayoutActor() {
-    }
+    virtual ~LayoutActor();
 
     virtual void movement();
     virtual void draw() const;

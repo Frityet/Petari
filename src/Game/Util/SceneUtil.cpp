@@ -2,6 +2,7 @@
 #include "Game/NameObj/NameObjFinder.hpp"
 #include "Game/Scene/PlacementStateChecker.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
+#include "Game/Scene/SceneNameObjMovementController.hpp"
 #include "Game/Scene/ScenePlayingResult.hpp"
 #include "Game/Scene/StageDataHolder.hpp"
 #include "Game/System/GalaxyStatusAccessor.hpp"
@@ -9,11 +10,21 @@
 #include "Game/System/GameSystem.hpp"
 #include "Game/System/GameSystemSceneController.hpp"
 #include "Game/Util/PlayerUtil.hpp"
+#include "Game/Util/JMapIdInfo.hpp"
+#include "Game/Util/JMapLinkInfo.hpp"
+#include "Game/Util/JMapUtil.hpp"
 #include "Game/Util/SequenceUtil.hpp"
 #include "Game/Util/SingletonHolder.hpp"
 #include "Game/Util/StringUtil.hpp"
+#include <cstdio>
 
 namespace {
+    const JMapIdInfo cInitializeStartIdInfo(0, 0);
+
+    void getRailInfoFromRailId(JMapInfoIter* pIter, const JMapInfo** ppInfo, const StageDataHolder* pHolder, int railId) NO_INLINE {
+        *pIter = pHolder->getCommonPathPointInfo(ppInfo, railId);
+    }
+
     ScenePlayingResult* getScenePlayingResult() {
         return MR::getSceneObj< ScenePlayingResult >(SceneObj_ScenePlayingResult);
     }
@@ -142,16 +153,45 @@ namespace MR {
         return SingletonHolder< GameSystem >::get()->mSceneController->isSceneInitializeState(SceneInitializeState_End);
     }
 
-    // isInitializeStatePlacementSomething
-    // stopSceneForScenarioOpeningCamera
-    // playSceneForScenarioOpeningCamera
-    // getCurrentMarioStartIdInfo
-    // getStartPosNum
-    // getCurrentStartZoneId
-    // getInitializeStartIdInfo
+    bool isInitializeStatePlacementSomething() {
+        return SingletonHolder< GameSystem >::get()->mSceneController->isSceneInitializeState(SceneInitializeState_PlacementPlayer) ||
+               SingletonHolder< GameSystem >::get()->mSceneController->isSceneInitializeState(SceneInitializeState_PlacementHighPriority) ||
+               SingletonHolder< GameSystem >::get()->mSceneController->isSceneInitializeState(SceneInitializeState_Placement);
+    }
+
+    void stopSceneForScenarioOpeningCamera() {
+        getSceneNameObjMovementController()->requestStopSceneFor(MovementControlType_4, nullptr);
+    }
+
+    void playSceneForScenarioOpeningCamera() {
+        getSceneNameObjMovementController()->requestPlaySceneFor(MovementControlType_4, nullptr);
+    }
+
+    const JMapIdInfo& getCurrentMarioStartIdInfo() {
+        return *SingletonHolder< GameSystem >::get()->mSceneController->mCurrSceneControlInfo.mStartIdInfo;
+    }
+    s32 getStartPosNum() {
+        return getStageDataHolder()->getStartPosNum();
+    }
+    s32 getCurrentStartZoneId() {
+        return getStageDataHolder()->getCurrentStartZoneId();
+    }
+
+    const JMapIdInfo& getInitializeStartIdInfo() {
+        return cInitializeStartIdInfo;
+    }
     // getStageArchive
-    // getGeneralPosNum
-    // getGeneralPosData
+    s32 getGeneralPosNum() {
+        return getStageDataHolder()->getGeneralPosNum();
+    }
+
+    void getGeneralPosData(const char** ppName, TVec3f* pPos, TVec3f* pRot, JMapLinkInfo** ppLinkInfo, int index) {
+        JMapInfoIter iter = getStageDataHolder()->getGeneralPosInfoFromDataIndex(index);
+        iter.getValue("PosName", ppName);
+        getJMapInfoTrans(iter, pPos);
+        getJMapInfoRotate(iter, pRot);
+        *ppLinkInfo = new JMapLinkInfo(iter, false);
+    }
     // getChildObjNum
     // getChildObjName
     // initChildObj
@@ -179,13 +219,49 @@ namespace MR {
     // getPlacedHiddenStarScenarioNo
     // getRailInfo
     // getNextLinkRailInfo
-    // getCurrentStartCameraId
-    // getStartCameraIdInfoFromStartDataIndex
-    // getPlacedRailNum
-    // getCameraRailInfo
-    // getCameraRailInfoFromRailDataIndex
-    // getStageCameraData
-    // getCurrentScenarioStartAnimCameraData
+    s32 getCurrentStartCameraId() {
+        return getStageDataHolder()->getCurrentStartCameraId();
+    }
+    void getStartCameraIdInfoFromStartDataIndex(JMapIdInfo* pInfo, int index) {
+        getStageDataHolder()->getStartCameraIdInfoFromStartDataIndex(pInfo, index);
+    }
+
+    s32 getPlacedRailNum(s32 zoneId) {
+        if (getStageDataHolder()->isPlacedZone(zoneId)) {
+            return getStageDataHolder()->getStageDataHolderFromZoneId(zoneId)->getCommonPathInfoElementNum();
+        }
+        return 0;
+    }
+
+    void getCameraRailInfo(JMapInfoIter* pIter, const JMapInfo** ppInfo, s32 railId, s32 zoneId) {
+        getRailInfoFromRailId(pIter, ppInfo, getStageDataHolder()->getStageDataHolderFromZoneId(zoneId), railId);
+    }
+
+    bool getCameraRailInfoFromRailDataIndex(JMapInfoIter* pIter, const JMapInfo** ppInfo, int index, s32 zoneId) {
+        *pIter = getStageDataHolder()->getStageDataHolderFromZoneId(zoneId)->getCommonPathPointInfoFromRailDataIndex(ppInfo, index);
+        return isEqualRailUsage(*pIter, "Camera");
+    }
+    void getStageCameraData(void** pData, s32* pSize, s32 zoneID) {
+        if (!getStageDataHolder()->isPlacedZone(zoneID)) {
+            *pData = nullptr;
+            *pSize = 0;
+            return;
+        }
+        StageDataHolder* pHolder = getStageDataHolder()->getStageDataHolderFromZoneId(zoneID);
+        *pData = pHolder->getStageArchiveResource("CameraParam.bcam");
+        *pSize = pHolder->getStageArchiveResourceSize(*pData);
+    }
+    void getCurrentScenarioStartAnimCameraData(void** pData, s32* pSize) {
+        StageDataHolder* pHolder = getStageDataHolder();
+        char name[64];
+        snprintf(name, sizeof(name), "StartScenario%d.canm", getCurrentScenarioNo());
+        *pData = pHolder->getStageArchiveResource(name);
+        if (*pData != nullptr) {
+            *pSize = pHolder->getStageArchiveResourceSize(*pData);
+        } else {
+            *pSize = 0;
+        }
+    }
 
     void incCoin(int term) {
         ::getScenePlayingResult()->incCoin(term);
@@ -210,16 +286,8 @@ namespace MR {
 
     // isPlacementLocalStage
     // getPlacedZoneId
-    TPos3f* getZonePlacementMtx(const JMapInfoIter& rIter) {
-        const StageDataHolder* holder = getStageDataHolder()->findPlacedStageDataHolder(rIter);
-        return (TPos3f*)holder->mPlacementMtx;
-    }
-
-    TPos3f* getZonePlacementMtx(s32 zoneId) {
-        const StageDataHolder* holder = getStageDataHolder()->getStageDataHolderFromZoneId(zoneId);
-        return (TPos3f*)holder->mPlacementMtx;
-    }
-
+    // getZonePlacementMtx
+    // getZonePlacementMtx
     // getJapaneseObjectName
 
     void setCurrentPlacementZoneId(s32 zoneId) {

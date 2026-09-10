@@ -63,13 +63,6 @@ namespace smgpc::scene {
             return;
         }
 
-        if (_scene_lifecycle.has_active_stage(_pending_scene->stage_name) &&
-            _scene_lifecycle.active_scenario_no() == _pending_scene->scenario_no) {
-            _pending_scene.reset();
-            set_phase(SceneControllerPhase::Normal);
-            return;
-        }
-
         apply_pending_scene();
     }
 

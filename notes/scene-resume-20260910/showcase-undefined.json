@@ -1,0 +1,5 @@
+[
+  "\"MR::incPlayerGameOverNum()\", referenced from:",
+  "\"MR::requestChangeStageAfterMiss()\", referenced from:",
+  "\"MR::requestChangeSceneAfterGameOver()\", referenced from:"
+]

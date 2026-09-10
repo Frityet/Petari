@@ -5,6 +5,7 @@
 class UserFile;
 
 namespace GameSequenceFunction {
+    bool isNeedMoviePlayerForStorySequenceEvent();
     void startPreLoadSaveDataSequence();
     void startTotalMailSizeSaveSequence();
     void startGameDataLoadSequence(int userFileIndex, bool isPlayerMario);

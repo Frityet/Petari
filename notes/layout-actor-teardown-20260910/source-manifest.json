@@ -1,0 +1,22 @@
+[
+  {
+    "path": "src/layout/LayoutHost.hpp",
+    "sha256": "75dc3991b7ebc13eef8e02243b716d82eaf7ebba1803d64e75188c3458ef708a"
+  },
+  {
+    "path": "src/layout/LayoutManagerCompat.cpp",
+    "sha256": "f9b1a199f8422a322e5b4af4f6b027890762436e4fb663c046f0dd47079b1ad3"
+  },
+  {
+    "path": "tests/OriginalSceneWipeOwnerTests.cpp",
+    "sha256": "2d0f34613b20341929b7db0db2224c2644dde7f851cffefed2ed818e9f84f62e"
+  },
+  {
+    "path": "tests/SceneExecutionFixture.hpp",
+    "sha256": "7436918fd9c56e9790b8325ebc30ae256109511fa5c9009a8c215522f8d06fa0"
+  },
+  {
+    "path": "tests/AuthoredPlacementInstantiatorTests.cpp",
+    "sha256": "a579ebbcbb1b7c45eac68b8895432dfdf750aec2533fb4272f745035a62faa06"
+  }
+]

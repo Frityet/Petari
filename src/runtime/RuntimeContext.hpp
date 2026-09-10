@@ -157,6 +157,7 @@ namespace smgpc::runtime {
         void set_scene_camera_pose(const smgpc::camera::CameraPose &camera_pose);
         void refresh_scene_camera_pose();
         void record_copy_event(render::CopyEvent event);
+        void draw_scene();
         void draw_3d_normal(const smgpc::camera::CameraPose &camera_pose);
         void draw_3d_normal();
         void draw_2d_normal();
@@ -367,8 +368,6 @@ namespace smgpc::runtime {
         std::unique_ptr<ScreenAlphaCaptureService> _screen_alpha_capture;
         std::unique_ptr<JUTTexture> _capture_screen_texture;
         std::unique_ptr<CaptureScreenDirector> _capture_screen_director;
-        std::unique_ptr<CaptureScreenActor> _capture_screen_indirect_actor;
-        std::unique_ptr<CaptureScreenActor> _capture_screen_camera_actor;
         std::unique_ptr<smgpc::scene::NameObjLifecycleService> _owned_name_obj_lifecycle;
         std::unique_ptr<smgpc::scene::SceneExecutionService> _owned_scene_execution;
         std::unique_ptr<smgpc::scene::SceneLifecycleService> _owned_scene_lifecycle;

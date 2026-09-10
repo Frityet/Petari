@@ -395,8 +395,7 @@ namespace {
                             break;
                         }
                     }
-                    runtime.draw_3d_normal();
-                    runtime.draw_2d_normal();
+                    runtime.draw_scene();
 #ifndef NDEBUG
                     if (options.smoke) {
                         sky_packet_submission_seen =

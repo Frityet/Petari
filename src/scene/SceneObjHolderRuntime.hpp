@@ -4,6 +4,7 @@
 
 #include <cstddef>
 #include <memory>
+#include <span>
 #include <vector>
 
 class NameObj;
@@ -45,6 +46,8 @@ namespace smgpc::scene {
                                       std::size_t byte_budget = 8U * 1024U * 1024U);
         void initialize_camera_system();
         void init_after_placement();
+        void acknowledge_scene_postpass(std::span<NameObj *const> objects);
+        void complete_camera_parameters();
         void complete_initialization();
 
     private:

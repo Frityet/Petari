@@ -1,5 +1,7 @@
 #include "SceneExecutionFixture.hpp"
+#include "Game/LiveActor/Nerve.hpp"
 #include "Game/NameObj/NameObjGroup.hpp"
+#include "Game/Scene/SceneFunction.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
 #include "Game/Screen/LayoutActor.hpp"
 #include "Game/Screen/LayoutManager.hpp"
@@ -11,7 +13,9 @@
 #include "Game/Screen/WipeKoopa.hpp"
 #include "Game/Screen/WipeRing.hpp"
 #include "Game/Util/LayoutUtil.hpp"
+#include "Game/Util/MemoryUtil.hpp"
 #include "Game/Util/ScreenUtil.hpp"
+#include "JSystem/JKernel/JKRHeap.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "layout/LayoutHost.hpp"
 #include "layout/LayoutRuntime.hpp"
@@ -38,6 +42,91 @@ void tick(smgpc::runtime::RuntimeContext& runtime) {
     runtime.scheduler().execute_movement();
     runtime.scheduler().execute_calc_anim();
 }
+#ifndef NDEBUG
+class LayoutLifetimeNerve final : public Nerve {
+public:
+    void execute(Spine* spine) const override {
+        require(spine->mExecutor == actor, "the original Spine executes its real LayoutActor");
+        ++calls;
+    }
+    LayoutActor* actor = nullptr;
+    mutable unsigned calls = 0;
+};
+
+void layout_actor_lifetime(smgpc::runtime::RuntimeContext& runtime) {
+    auto& root_heap = runtime.host_heaps()->root_heap();
+    const auto free_before = root_heap.getTotalFreeSize();
+    const auto identities_before = smgpc::compat::name_obj_runtime_state_count();
+    const auto layouts_before = smgpc::layout::debug_layout_lifetime_state();
+    const auto scheduled_before = runtime.scheduler().snapshot().size();
+    for (int cycle = 0; cycle < 2; ++cycle) {
+        for (const bool scheduled : {false, true}) {
+            {
+                smgpc::test::SceneExecutionFixture execution(
+                    runtime.scheduler(), smgpc::compat::JkrAllocationDomain::create(runtime.host_heaps(), 8U << 20));
+                const auto domain = smgpc::scene::current_scene_allocation_domain();
+                const auto identities = smgpc::compat::name_obj_runtime_state_count();
+                const auto layouts = smgpc::layout::debug_layout_lifetime_state();
+                const auto scheduled_count = runtime.scheduler().snapshot().size();
+                std::unique_ptr<LayoutActor> actor;
+                {
+                    const smgpc::compat::JkrAllocationScope game(domain);
+                    actor = std::make_unique<LayoutActor>("Layout lifetime regression", false);
+                    actor->initLayoutManager("SysInfoWindowMini", 1);
+                    actor->getLayoutManager()->createAndAddPaneCtrl("SaveIconPosition", 1);
+                }
+                auto* resource = smgpc::layout::layout_runtime(actor.get());
+                require(resource && resource->getArchivePath() &&
+                        actor->getLayoutManager()->getPane("SaveIconPosition"),
+                        "the lifetime regression retains the real disc layout and authored pane");
+                const auto populated = smgpc::layout::debug_layout_lifetime_state();
+                require(populated.actors == layouts.actors + 1 && populated.managers == layouts.managers + 1 &&
+                        populated.pane_controls >= layouts.pane_controls + 2 &&
+                        smgpc::compat::name_obj_runtime_state_count() == identities + 1,
+                        "one actual LayoutActor creates one manager and real root and named pane controls");
+
+                LayoutLifetimeNerve nerve;
+                nerve.actor = actor.get();
+                const auto free_before_spine = root_heap.getTotalFreeSize();
+                {
+                    const smgpc::compat::JkrAllocationScope game(domain);
+                    // Use the original reclaiming heap to observe Spine deletion before scene-arena disposal.
+                    const MR::CurrentHeapRestorer root(&root_heap);
+                    actor->initNerve(&nerve);
+                }
+                require(JKRHeap::findFromRoot(actor->mSpine) == &root_heap &&
+                        root_heap.getTotalFreeSize() < free_before_spine,
+                        "the original Spine has a real individually reclaimable Game allocation");
+                if (scheduled)
+                    runtime.register_layout_actor(*actor, MR::MovementType_Layout, MR::CalcAnimType_Layout, MR::DrawType_Layout);
+                execution.complete_initialization();
+                actor->appear();
+                require(runtime.scheduler().snapshot().size() == scheduled_count + (scheduled ? 1 : 0),
+                        "scheduled and unscheduled layout lifetimes have distinct executor membership");
+                if (scheduled) runtime.scheduler().execute_movement_category(MR::MovementType_Layout);
+                else actor->movement();
+                require(nerve.calls == 1 && actor->getNerveStep() == 1,
+                        "the original Spine advances through the selected real execution path");
+                actor.reset();
+                require(root_heap.getTotalFreeSize() == free_before_spine,
+                        "LayoutActor destruction individually frees its original Spine");
+                require(smgpc::layout::debug_layout_lifetime_state() == layouts &&
+                        smgpc::compat::name_obj_runtime_state_count() == identities &&
+                        runtime.scheduler().snapshot().size() == scheduled_count,
+                        "destruction retires the layout, manager, panes, identity and scheduling without recursive unregister");
+                runtime.scheduler().execute_movement_category(MR::MovementType_Layout);
+                require(nerve.calls == 1, "retired layout nerves cannot receive another scheduled movement");
+            }
+            require(root_heap.getTotalFreeSize() == free_before &&
+                    smgpc::compat::name_obj_runtime_state_count() == identities_before &&
+                    smgpc::layout::debug_layout_lifetime_state() == layouts_before &&
+                    runtime.scheduler().snapshot().size() == scheduled_before,
+                    "repeated layout teardown releases the whole scene domain and retains no native identities");
+        }
+    }
+}
+#endif
+
 void owner(smgpc::runtime::RuntimeContext& runtime) {
     const auto baseline = smgpc::compat::name_obj_runtime_state_count();
     std::weak_ptr<smgpc::compat::JkrAllocationDomain> domain;
@@ -160,6 +249,9 @@ int main() {
         smgpc::runtime::RuntimeContext runtime(logger, window, resources);
         smgpc::runtime::SceneSchedulerBinding scheduler_binding(runtime.scheduler());
         (void)renderer.begin_frame();
+#ifndef NDEBUG
+        layout_actor_lifetime(runtime);
+#endif
         for (int cycle = 0; cycle < 2; ++cycle) owner(runtime);
         renderer.end_frame();
         std::cout << "Original scene wipe resources, animation predicates, transitions and repeated ownership passed\n";

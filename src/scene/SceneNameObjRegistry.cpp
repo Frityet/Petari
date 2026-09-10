@@ -36,6 +36,11 @@ namespace smgpc::scene {
         return *_holder;
     }
 
+    std::vector<NameObj *> SceneNameObjRegistry::snapshot() const {
+        const compat::JkrHostAllocationScope host;
+        return {_holder->mObjArray1.begin(), _holder->mObjArray1.end()};
+    }
+
     void SceneNameObjRegistry::add(NameObj &object) {
         auto &objects = _holder->mObjArray1;
         if (objects.size() >= objects.capacity())

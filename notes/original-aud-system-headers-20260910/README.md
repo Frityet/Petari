@@ -1,0 +1,9 @@
+# Complete AudSystem declaration dependencies — 2026-09-10
+
+Published15 whole original SDK headers for the actual JAISe/JAISeMgr/JAISeqMgr/JAUSoundMgr, audience, sound info, bank/section/sequence data, and reseter graph. Replaced the earlier category-only JAISeMgr declaration. These classes retain their complete original members and inheritance; AudSystem can embed the actual manager objects. This does not construct AudSystem or expose a proxy through AudWrap::getSystem.
+
+Two additional shared declarations close real compile dependencies: the original JKRExpandSwitch enum in JKRDvdRipper.hpp and the existing original matrix-taking TPosition3::setPositionFromLookAt overload. Native-only fixes are standard dependent-base spelling, explicit original sequence-data inclusion, weak declaration syntax, and this-> on dependent matrix accessors. reference-comparison.json records source equality/differences.
+
+All three original GamePauseSequence/GameScenePauseControl/GameSceneScenarioOpeningCameraState translation units compiled to objects in the complete overlay (probe-results.json). The subsequent official original JAI ownership target rebuilt the published debug Game archive successfully and linked/ran its retail fixture0; evidence is in ../original-jaudio-publication-20260910/xmake-result.json. The associated Game headers/child sources are owned by the initialization agent and excluded from this17-path manifest.
+
+Actual AudSystem runtime construction remains unfinished: original JAUSoundMgr embedded SE/sequence managers, section heap and initializer/ARAM ownership, audience/sound info, scene/sound-object/strategy/rhythm/remix/effector/speaker children, and the original frameWork menu/timer lifecycle must be live before publishing msBasic. Existing native playback/category/BGM owners must migrate to those actual members in the same ownership change.

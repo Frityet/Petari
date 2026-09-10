@@ -514,6 +514,10 @@ namespace smgpc::scene {
         };
     }
 
+    struct AuthoredPlacementInstantiator::PreloadPlan {
+        RetailPlacementGroupsByPass groups;
+    };
+
     AuthoredPlacementInstantiator::AuthoredPlacementInstantiator(
         const StageAuthoredData &data,
         AuthoredPlacementLifecycle &lifecycle,
@@ -606,7 +610,26 @@ namespace smgpc::scene {
 
     const AuthoredPlacementInstantiationReport &
     AuthoredPlacementInstantiator::preload() {
-        if (_report.state != AuthoredPlacementRuntimeState::Prepared) {
+        preload_common();
+        return preload_scenario();
+    }
+
+    const AuthoredPlacementInstantiationReport &
+    AuthoredPlacementInstantiator::preload_common() {
+        return preload_phase(false);
+    }
+
+    const AuthoredPlacementInstantiationReport &
+    AuthoredPlacementInstantiator::preload_scenario() {
+        return preload_phase(true);
+    }
+
+    const AuthoredPlacementInstantiationReport &
+    AuthoredPlacementInstantiator::preload_phase(bool scenario) {
+        const auto required_state = scenario
+            ? AuthoredPlacementRuntimeState::CommonPreloaded
+            : AuthoredPlacementRuntimeState::Prepared;
+        if (_report.state != required_state) {
             aurora::throw_host_exception<std::logic_error>(
                 "Authored placements can only be preloaded once.");
         }
@@ -615,8 +638,11 @@ namespace smgpc::scene {
         AuthoredPlacementReportEntry *current_entry = nullptr;
         try {
             const auto placements = _data.placements();
-            auto pass_groups =
-                collect_retail_placement_groups(placements, _options);
+            if (!scenario) {
+                _preload_plan = std::make_unique<PreloadPlan>(PreloadPlan{
+                    collect_retail_placement_groups(placements, _options)});
+            }
+            auto &pass_groups = _preload_plan->groups;
 
             const auto preload_entry = [&](std::size_t source_index,
                                            s32 shape_model_no) {
@@ -693,14 +719,18 @@ namespace smgpc::scene {
                 }
             };
 
-            // Retail ranks both common holders from the same initial archive
-            // state before either holder requests files.
-            rank_and_sort_pass(
-                AuthoredPlacementRetailPass::CommonHighPriority);
-            rank_and_sort_pass(
-                AuthoredPlacementRetailPass::CommonNormal);
-            preload_pass(AuthoredPlacementRetailPass::CommonHighPriority);
-            preload_pass(AuthoredPlacementRetailPass::CommonNormal);
+            if (!scenario) {
+                // Retail ranks both common holders from the same initial archive
+                // state before either holder requests files.
+                rank_and_sort_pass(
+                    AuthoredPlacementRetailPass::CommonHighPriority);
+                rank_and_sort_pass(
+                    AuthoredPlacementRetailPass::CommonNormal);
+                preload_pass(AuthoredPlacementRetailPass::CommonHighPriority);
+                preload_pass(AuthoredPlacementRetailPass::CommonNormal);
+                _report.state = AuthoredPlacementRuntimeState::CommonPreloaded;
+                return _report;
+            }
 
             // All three post-scenario holders then snapshot the state left by
             // the complete common preload, before any of the three begins its
@@ -731,6 +761,7 @@ namespace smgpc::scene {
             }
             current_entry = nullptr;
 
+            _preload_plan.reset();
             _report.state = AuthoredPlacementRuntimeState::Preloaded;
             return _report;
         } catch (const std::exception &error) {
@@ -1102,6 +1133,28 @@ namespace smgpc::scene {
         _report.state =
             AuthoredPlacementRuntimeState::InitializedAfterPlacement;
         return _report;
+    }
+
+    void AuthoredPlacementInstantiator::acknowledge_scene_postpass(std::span<NameObj *const> objects) {
+        if (_report.state != AuthoredPlacementRuntimeState::Instantiated)
+            aurora::throw_host_exception<std::logic_error>("Scene postpass acknowledgement requires completed authored construction");
+        for (const auto &instance : _owned_instances)
+            for (const auto &owned : instance.objects)
+                if (std::ranges::find(objects, owned.object) == objects.end())
+                    aurora::throw_host_exception<std::logic_error>("The scene postpass did not contain the complete authored registration graph");
+        for (auto &instance : _owned_instances) {
+            for (auto &owned : instance.objects) {
+                if (owned.delegated_postpass) {
+                    smgpc::compat::release_name_obj_runtime_postpass_delegation(owned.object, this);
+                    owned.delegated_postpass = false;
+                }
+                if (owned.descendant_report_index)
+                    _report.descendants[*owned.descendant_report_index].outcome = AuthoredPlacementOutcome::InitializedAfterPlacement;
+            }
+            _report.entries[instance.report_index].outcome = AuthoredPlacementOutcome::InitializedAfterPlacement;
+            ++_report.initialized_after_placement_count;
+        }
+        _report.state = AuthoredPlacementRuntimeState::InitializedAfterPlacement;
     }
 
     void AuthoredPlacementInstantiator::clear_impl(bool propagate_errors) {

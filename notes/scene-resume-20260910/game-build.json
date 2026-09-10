@@ -1,0 +1,11 @@
+{
+  "command": [
+    "xmake",
+    "build",
+    "-y",
+    "-v",
+    "smg-pc-game"
+  ],
+  "exit": 0,
+  "seconds": 36.60374083399074
+}

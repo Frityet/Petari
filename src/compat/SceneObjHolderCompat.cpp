@@ -46,6 +46,7 @@
 #include "Game/Screen/GameSceneLayoutHolder.hpp"
 #include "Game/Screen/SceneWipeHolder.hpp"
 #include "Game/Screen/CinemaFrame.hpp"
+#include "Game/Screen/CaptureScreenDirector.hpp"
 #include "Game/Map/NamePosHolder.hpp"
 #include "Game/Screen/LensFlare.hpp"
 #include "Game/Util/BaseMatrixFollowTargetHolder.hpp"
@@ -193,8 +194,10 @@ namespace smgpc::scene {
         if (_camera_runtime) {
             aurora::throw_host_exception<std::logic_error>("scene camera system already initialized");
         }
-        _camera_runtime = std::make_unique<smgpc::camera::CameraDirectorRuntime>(
-            *_holder, _game_allocation_domain);
+        _holder->create(SceneObj_CameraContext);
+        _holder->create(SceneObj_CameraDirector);
+        if (!_camera_runtime)
+            aurora::throw_host_exception<std::logic_error>("Camera initialization requires the actual camera SceneObjs");
     }
 
     void SceneObjHolderBinding::init_after_placement() {
@@ -221,11 +224,23 @@ namespace smgpc::scene {
         _area_obj_runtime->init_after_placement();
     }
 
-    void SceneObjHolderBinding::complete_initialization() {
+    void SceneObjHolderBinding::acknowledge_scene_postpass(std::span<NameObj *const> objects) {
+        // Original NameObjHolder captures its end pointer before dispatch.
+        // Objects appended by a callback do not belong to that completed pass.
+        while (_next_registration_postpass_index < _owned_registration_objects.size() &&
+               std::ranges::find(objects, _owned_registration_objects[_next_registration_postpass_index]) != objects.end())
+            ++_next_registration_postpass_index;
+        _area_obj_runtime->acknowledge_scene_postpass(objects);
+    }
+
+    void SceneObjHolderBinding::complete_camera_parameters() {
         if (_camera_runtime) {
             smgpc::compat::JkrAllocationScope heap(_game_allocation_domain);
             _camera_runtime->close_creating_chunks();
         }
+    }
+
+    void SceneObjHolderBinding::complete_initialization() {
         _initialization_state.complete();
     }
 
@@ -353,6 +368,14 @@ NameObj *SceneObjHolder::create(int id) {
         mObj[id] = result;
         (void)object.release();
 
+        if (id == SceneObj_CameraDirector) {
+            auto *context = dynamic_cast<CameraContext *>(mObj[SceneObj_CameraContext]);
+            auto *director = dynamic_cast<CameraDirector *>(result);
+            if (!context || !director)
+                aurora::throw_host_exception<std::logic_error>("Camera publication requires the actual CameraContext and CameraDirector");
+            binding->_camera_runtime = std::make_unique<smgpc::camera::CameraDirectorRuntime>(*context, *director);
+        }
+
         if (outermost) {
             registrations =
                 smgpc::compat::snapshot_name_obj_runtime_objects_since(
@@ -393,6 +416,9 @@ NameObj *SceneObjHolder::create(int id) {
         --binding->_construction_depth;
         return result;
     } catch (...) {
+        if (binding->_camera_runtime && smgpc::compat::name_obj_runtime_object_was_registered_since(
+                &binding->_camera_runtime->director(), marker))
+            binding->_camera_runtime.reset();
         binding->_image_effect_ownership->capture_shared_textures(textures);
         binding->_image_effect_ownership->prepare_rollback(marker);
         const bool collision_rollback = binding->_collision_director_ownership->prepare_rollback(marker);
@@ -494,6 +520,8 @@ NameObj *SceneObjHolder::newEachObj(int id) {
         return new CoinRotater("コイン回転管理");
     case SceneObj_PrologueHolder:
         return new PrologueHolder("プロローグ保持");
+    case SceneObj_CaptureScreenActor:
+        return new CaptureScreenActor(MR::DrawType_CaptureScreenIndirect, "Indirect");
     case SceneObj_CenterScreenBlur:
         return new CenterScreenBlur();
     case SceneObj_InformationObserver:

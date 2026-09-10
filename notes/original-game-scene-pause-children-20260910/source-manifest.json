@@ -1,0 +1,52 @@
+[
+  {
+    "path": "src/Game/Scene/GameScenePauseControl.cpp",
+    "sha256": "bbd3c4bad8d5675bbbfcef030a2513c194db5dd36825f998fc56b7813a96c015",
+    "reference": "decomp/src/Game/Scene/GameScenePauseControl.cpp"
+  },
+  {
+    "path": "src/Game/Scene/GameSceneScenarioOpeningCameraState.cpp",
+    "sha256": "f941be042d028ff27c8853a4636597733d47158135b97f8508f4ae5c06ef9720",
+    "reference": "decomp/src/Game/Scene/GameSceneScenarioOpeningCameraState.cpp"
+  },
+  {
+    "path": "src/Game/Screen/GamePauseSequence.cpp",
+    "sha256": "7504119808cd8f47e073c2e719b5349019ba09a8c95a85c45e7161046c5f3620",
+    "reference": "decomp/src/Game/Screen/GamePauseSequence.cpp"
+  },
+  {
+    "path": "src/Game/AudioLib/AudSystem.hpp",
+    "sha256": "52beb92100fb40b4e37543ae834cb1062bc855c923b9d0bcb77ac5bd4ddfba93",
+    "reference": "decomp/include/Game/AudioLib/AudSystem.hpp"
+  },
+  {
+    "path": "src/Game/AudioLib/AudAudience.hpp",
+    "sha256": "aa85d6d98347a0cb78d821c5631f24a50f845c922ef6d04dbf25bbc75de4e8a1",
+    "reference": "decomp/include/Game/AudioLib/AudAudience.hpp"
+  },
+  {
+    "path": "src/Game/AudioLib/AudAudible.hpp",
+    "sha256": "f0069d084e9dc45a36bae4c50450520adf9d5711e0f54f70349e706419c35c87",
+    "reference": "decomp/include/Game/AudioLib/AudAudible.hpp"
+  },
+  {
+    "path": "src/Game/AudioLib/AudLimitedSound.hpp",
+    "sha256": "dd4d52699915fa415516c5a5654248192cd917957c1a5ae78b43168dcac9ac5a",
+    "reference": "decomp/include/Game/AudioLib/AudLimitedSound.hpp"
+  },
+  {
+    "path": "src/Game/Screen/PauseMenu.hpp",
+    "sha256": "ffd134656ea03863c9307bbf78d957589711d253fa9060ba380d42a83f20108a",
+    "reference": "decomp/include/Game/Screen/PauseMenu.hpp"
+  },
+  {
+    "path": "src/Game/Util/SceneUtil.cpp",
+    "sha256": "aed2ce8530ccc976994e4a96695ba6f1be37b27d1a76e5399b0f5a2ddc290fd1",
+    "reference": "decomp/src/Game/Util/SceneUtil.cpp"
+  },
+  {
+    "path": "src/compat/OriginalScenarioOpeningSceneControl.cpp",
+    "sha256": "6d72a99df43952aa83c7d5fd1174e0676fbf20cde2fc93381108982390730304",
+    "reference": "decomp/src/Game/Util/SceneUtil.cpp"
+  }
+]

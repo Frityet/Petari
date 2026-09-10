@@ -6,6 +6,8 @@ namespace smgpc::scene {
     // Native services retire after an original derived Scene destructor has
     // run, but before its base destroys the actual holder and executor.
     // The external scene owner retains their allocation domain through delete.
+    // Distinct services retire in reverse binding order, so children can be
+    // released before the initialization and execution services they borrow.
     class SceneLifetimeBinding final {
     public:
         using Retirement = void (*)(void *) noexcept;
