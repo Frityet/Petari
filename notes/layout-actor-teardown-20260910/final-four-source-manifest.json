@@ -1,0 +1,18 @@
+[
+  {
+    "path": "src/compat/DemoCompat.cpp",
+    "sha256": "34ed4c7d3ecdd027057497afff5ef6894a6cb525024f8fb75ea7661b88e7a61a"
+  },
+  {
+    "path": "tests/AuthoredPlacementInstantiatorTests.cpp",
+    "sha256": "ef6f6120bd6abf05e99b60d37042fc37b07d98704ab238a1600c6ae1710ca8d9"
+  },
+  {
+    "path": "tests/StageInitializationResourceTests.cpp",
+    "sha256": "24f42e1aa51ee05f46ff506ea3ca093f49c6ecc316be774d15a29f2ae6ab909d"
+  },
+  {
+    "path": "tests/OriginalCameraDirectorTests.cpp",
+    "sha256": "f6440bcb1c3da1a9ba920f53dcd7aef96d6780a9c12c79262cc3917ac3719074"
+  }
+]

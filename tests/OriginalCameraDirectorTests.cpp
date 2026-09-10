@@ -86,8 +86,10 @@ namespace {
             auto* task = i < 3 ? shaker.mHorizontalTasks[i] : shaker.mInfinityTasks[i - 3];
             auto* pattern = static_cast<CameraShakePatternSingly*>(task->mPattern);
             require(std::bit_cast<u32>(pattern->mIntensity) == words[i], "horizontal allocation preserves every adjacent retail word including signed zero");
-            require(pattern->mDirection.x == 1 && pattern->mDirection.y == 0,
-                    "all seven original transient patterns receive horizontal direction");
+            // Original PSVECNormalize refines frsqrte and rounds an axis to the float below one.
+            require(std::bit_cast<u32>(pattern->mDirection.x) == 0x3f7fffff &&
+                    std::bit_cast<u32>(pattern->mDirection.y) == 0,
+                    "all seven original transient patterns preserve exact retail horizontal normalization");
             require(JKRHeap::findFromRoot(task) == &domain->heap() &&
                     JKRHeap::findFromRoot(pattern) == &domain->heap(), "transient shaker allocations belong to actual scene Game storage");
         }
@@ -217,6 +219,7 @@ int main() {
     smgpc::resource::GameResourceRuntime process({96U << 20, 32U << 20, 4U << 20});
     Logger logger;
     smgpc::runtime::RuntimeContext runtime(logger, window, process);
+    runtime.initialize_scenario_catalog(process);
     auto& scheduler = runtime.scheduler();
     smgpc::runtime::SceneSchedulerBinding scheduler_binding(scheduler);
     (void)renderer.begin_frame();
@@ -240,7 +243,8 @@ int main() {
             holder.create(SceneObj_NameObjGroup);
             holder.create(SceneObj_AreaObjContainer);
             holder.create(SceneObj_PlanetGravityManager);
-            binding.initialize_camera_system();
+            holder.create(SceneObj_CameraContext);
+            holder.create(SceneObj_CameraDirector);
             auto* owner = smgpc::camera::current_camera_director_runtime();
             require(owner && &owner->director() == MR::getCameraDirector(), "native publication references the exact SceneObj CameraDirector");
             auto& director = owner->director();
@@ -273,6 +277,11 @@ int main() {
             require(CameraAnim::getAnimFrame(data) == 2 && JKRHeap::findFromRoot(data) == nullptr,
                     "actor camera chunk borrows retained host-endian CANM data after raw source destruction");
             binding.init_after_placement();
+            {
+                const smgpc::compat::JkrAllocationScope game(domain);
+                MR::completeCameraParameters();
+            }
+            require(!MR::isInitializeStateEnd(), "camera readiness must not advance the scene to initialization End");
             binding.complete_initialization();
             require(owner->ready() && director.mCameraManGame->mIsStartPosActive,
                     "original close-creation scan, start/event creation, archive load and sort finish before gameplay");

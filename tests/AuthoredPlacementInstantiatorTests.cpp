@@ -1,3 +1,4 @@
+#include "SceneExecutionFixture.hpp"
 #include "Game/NameObj/NameObj.hpp"
 #include "Game/NameObj/NameObjArchiveListCollector.hpp"
 #include "Game/NameObj/NameObjFactory.hpp"
@@ -10,6 +11,7 @@
 #include "compat/ResourceHolderCompat.hpp"
 #include "resource/BcsvTable.hpp"
 #include "resource/GameResourceRuntime.hpp"
+#include "render/RendererService.hpp"
 #include "runtime/RuntimeServices.hpp"
 #include "scene/AuthoredPlacementInstantiator.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
@@ -355,14 +357,17 @@ namespace {
         explicit SyntheticSwitchWatcherHolder(
             SyntheticSceneObjContext &context)
             : _context(&context) {
+            const smgpc::compat::JkrHostAllocationScope host;
             _context->events.push_back("construct:watcher-holder");
         }
 
         ~SyntheticSwitchWatcherHolder() override {
+            const smgpc::compat::JkrHostAllocationScope host;
             _context->events.push_back("delete:watcher-holder");
         }
 
         void initAfterPlacement() override {
+            const smgpc::compat::JkrHostAllocationScope host;
             _context->events.push_back("after:watcher-holder");
         }
 
@@ -375,14 +380,17 @@ namespace {
         explicit SyntheticSwitchWatcher(
             SyntheticSceneObjContext &context)
             : SwitchWatcher(nullptr), _context(&context) {
+            const smgpc::compat::JkrHostAllocationScope host;
             _context->events.push_back("construct:watcher");
         }
 
         ~SyntheticSwitchWatcher() override {
+            const smgpc::compat::JkrHostAllocationScope host;
             _context->events.push_back("delete:watcher");
         }
 
         void initAfterPlacement() override {
+            const smgpc::compat::JkrHostAllocationScope host;
             _context->events.push_back("after:watcher");
         }
 
@@ -1271,7 +1279,22 @@ namespace {
                     preflight.state ==
                         smgpc::scene::AuthoredPlacementRuntimeState::Prepared,
                 "development preflight consulted retail order or touched lifecycle state");
-        const auto &preloaded = instantiator.preload();
+        bool scenario_before_common_rejected = false;
+        try { (void)instantiator.preload_scenario(); }
+        catch (const std::logic_error &) { scenario_before_common_rejected = true; }
+        require(scenario_before_common_rejected && lifecycle.events.empty(),
+                "scenario loading must reject an absent common pass without requesting archives");
+        const auto &common = instantiator.preload_common();
+        require(common.state == smgpc::scene::AuthoredPlacementRuntimeState::CommonPreloaded &&
+                    lifecycle.events.size() == 13U && scenario_rank_count == 0U &&
+                    instantiator.instances().empty(),
+                "the common hook must stop before scenario ranking and actor construction");
+        bool partial_construct_rejected = false;
+        try { (void)instantiator.instantiate(); }
+        catch (const std::logic_error &) { partial_construct_rejected = true; }
+        require(partial_construct_rejected && lifecycle.events.size() == 13U,
+                "a completed common pass cannot construct actors before scenario loading");
+        const auto &preloaded = instantiator.preload_scenario();
         require(preloaded.state ==
                         smgpc::scene::AuthoredPlacementRuntimeState::Preloaded &&
                     preloaded.created_count == 0U &&
@@ -1765,6 +1788,43 @@ namespace {
                 "construction rollback lifecycle hooks were not reverse ordered");
     }
 
+    void test_global_postpass_acknowledges_without_replaying_lifecycle() {
+        auto data = make_data({make_placement("Nested", StagePlacementLoadBatch::CommonBootstrap,
+                                             "ObjInfo", true, 0U, 0)});
+        RecordingLifecycle lifecycle;
+        lifecycle.descendant_object = "Nested";
+        smgpc::scene::AuthoredPlacementInstantiator instantiator(data, lifecycle, synthetic_ready_options());
+        const auto marker = smgpc::compat::mark_name_obj_runtime_registrations();
+        instantiator.preload();
+        instantiator.instantiate();
+        const auto objects = smgpc::compat::snapshot_name_obj_runtime_objects_since(marker);
+        bool rejected = false;
+        try {
+            instantiator.acknowledge_scene_postpass(std::span<NameObj *const>(objects).first(1));
+        } catch (const std::logic_error &) {
+            rejected = true;
+        }
+        require(rejected && instantiator.report().state == smgpc::scene::AuthoredPlacementRuntimeState::Instantiated &&
+                    instantiator.report().initialized_after_placement_count == 0,
+                "an incomplete global range must not consume root or descendant completion state");
+        for (auto *object : objects)
+            object->initAfterPlacement();
+        const auto event_count = lifecycle.events.size();
+        instantiator.acknowledge_scene_postpass(objects);
+        require(lifecycle.events.size() == event_count && instantiator.report().initialized_after_placement_count == 1 &&
+                    std::ranges::all_of(instantiator.descendants(), [](const auto &entry) {
+                        return entry.outcome == smgpc::scene::AuthoredPlacementOutcome::InitializedAfterPlacement;
+                    }),
+                "global callback acknowledgement must update complete descendant accounting without replaying lifecycle hooks");
+        rejected = false;
+        try {
+            instantiator.init_after_placement();
+        } catch (const std::logic_error &) {
+            rejected = true;
+        }
+        require(rejected, "the placement owner must not replay callbacks already completed by the global scene pass");
+    }
+
     void test_authored_descendants_share_global_postpass_and_reverse_teardown() {
         const auto baseline =
             smgpc::compat::name_obj_runtime_state_count();
@@ -1923,18 +1983,21 @@ namespace {
                 "init failure did not preserve its exception and reverse-roll back the complete live suffix");
     }
 
-    void test_scene_obj_created_inside_capture_keeps_independent_owner() {
+    void test_scene_obj_created_inside_capture_keeps_independent_owner(
+        smgpc::runtime::SceneScheduler& scheduler,
+        const std::shared_ptr<smgpc::compat::JkrHeapRuntime>& heaps) {
         const auto baseline =
             smgpc::compat::name_obj_runtime_state_count();
         auto data = make_data({make_placement(
             "Lazy", StagePlacementLoadBatch::CommonBootstrap,
             "ObjInfo", true, 0U, 0)});
-        auto holder = SceneObjHolder{};
 
         const auto run_generation = [&] {
-            require(!holder.isExist(SceneObj_LensFlareDirector),
-                    "SceneObj holder retained a stale prior generation");
-            auto binding = smgpc::scene::SceneObjHolderBinding(holder);
+            smgpc::test::SceneExecutionFixture execution(
+                scheduler, smgpc::compat::JkrAllocationDomain::create(heaps, 4U << 20));
+            auto& holder = execution.holder();
+            auto& binding = execution.objects();
+            const auto execution_baseline = smgpc::compat::name_obj_runtime_state_count();
             auto lifecycle = RecordingLifecycle{};
             lifecycle.lazy_scene_obj_object = "actor:Lazy@0";
             lifecycle.lazy_scene_obj_id = SceneObj_LensFlareDirector;
@@ -2034,30 +2097,35 @@ namespace {
                         smgpc::compat::has_name_obj_runtime_state(
                             lifecycle.lazy_scene_obj) &&
                         smgpc::compat::name_obj_runtime_state_count() ==
-                            baseline + 4U,
+                            execution_baseline + 4U,
                     "placement teardown deleted the independently-owned lazy SceneObj graph");
         };
 
         run_generation();
         require(smgpc::compat::name_obj_runtime_state_count() == baseline &&
-                    !holder.isExist(SceneObj_LensFlareDirector),
+                    !MR::getSceneObjHolder(),
                 "SceneObj owner did not retire and reset its first generation");
         run_generation();
         require(smgpc::compat::name_obj_runtime_state_count() == baseline &&
-                    !holder.isExist(SceneObj_LensFlareDirector),
+                    !MR::getSceneObjHolder(),
                 "lazy SceneObj exclusion did not support clean recreation");
     }
 
-    void test_failed_authored_root_preserves_lazy_scene_obj_graph() {
+    void test_failed_authored_root_preserves_lazy_scene_obj_graph(
+        smgpc::runtime::SceneScheduler& scheduler,
+        const std::shared_ptr<smgpc::compat::JkrHeapRuntime>& heaps) {
         const auto baseline =
             smgpc::compat::name_obj_runtime_state_count();
         auto data = make_data({make_placement(
             "LazyFail", StagePlacementLoadBatch::CommonBootstrap,
             "ObjInfo", true, 0U, 0)});
-        auto holder = SceneObjHolder{};
 
         const auto run_generation = [&] {
-            auto binding = smgpc::scene::SceneObjHolderBinding(holder);
+            smgpc::test::SceneExecutionFixture execution(
+                scheduler, smgpc::compat::JkrAllocationDomain::create(heaps, 4U << 20));
+            auto& holder = execution.holder();
+            auto& binding = execution.objects();
+            const auto execution_baseline = smgpc::compat::name_obj_runtime_state_count();
             auto lifecycle = RecordingLifecycle{};
             lifecycle.lazy_scene_obj_object = "actor:LazyFail@0";
             lifecycle.lazy_scene_obj_id = SceneObj_LensFlareDirector;
@@ -2092,17 +2160,17 @@ namespace {
                             current_scene_obj_holder_binding_owns(
                                 lens_flare->mLine) &&
                         smgpc::compat::name_obj_runtime_state_count() ==
-                            baseline + 4U,
+                            execution_baseline + 4U,
                     "authored root rollback deleted or detached the lazy SceneObj synchronous graph");
         };
 
         run_generation();
         require(smgpc::compat::name_obj_runtime_state_count() == baseline &&
-                    !holder.isExist(SceneObj_LensFlareDirector),
+                    !MR::getSceneObjHolder(),
                 "failed-root SceneObj graph did not retire after its first holder generation");
         run_generation();
         require(smgpc::compat::name_obj_runtime_state_count() == baseline &&
-                    !holder.isExist(SceneObj_LensFlareDirector),
+                    !MR::getSceneObjHolder(),
                 "failed-root SceneObj graph could not recreate and retire cleanly");
     }
 
@@ -2481,19 +2549,23 @@ namespace {
                 "recreated null-factory SceneObj graph did not retire cleanly");
     }
 
-    void test_scene_obj_holder_adopts_switch_watchers_without_parent_delete() {
+    void test_scene_obj_holder_adopts_switch_watchers_without_parent_delete(
+        smgpc::runtime::SceneScheduler& scheduler,
+        const std::shared_ptr<smgpc::compat::JkrHeapRuntime>& heaps) {
         const auto baseline =
             smgpc::compat::name_obj_runtime_state_count();
         auto data = make_data({make_placement(
             "SwitchRoot", StagePlacementLoadBatch::CommonBootstrap,
             "ObjInfo", true, 0U, 0)});
-        auto holder = SceneObjHolder{};
 
         const auto run_generation = [&] {
             auto context = SyntheticSceneObjContext{};
             {
-                auto binding = smgpc::scene::SceneObjHolderBinding(
-                    holder, synthetic_scene_obj_factory, &context);
+                smgpc::test::SceneExecutionFixture execution(
+                    scheduler, smgpc::compat::JkrAllocationDomain::create(heaps, 4U << 20),
+                    synthetic_scene_obj_factory, &context);
+                auto& holder = execution.holder();
+                auto& binding = execution.objects();
                 auto *watcher_holder =
                     dynamic_cast<SyntheticSwitchWatcherHolder *>(
                         holder.create(SceneObj_SwitchWatcherHolder));
@@ -2568,7 +2640,7 @@ namespace {
                             "after:watcher",
                             "delete:watcher",
                             "delete:watcher-holder"} &&
-                        !holder.isExist(SceneObj_SwitchWatcherHolder) &&
+                        !MR::getSceneObjHolder() &&
                         smgpc::compat::name_obj_runtime_state_count() ==
                             baseline,
                     "SwitchWatcher was not retired before its retail-empty holder or was double-owned");
@@ -2600,8 +2672,16 @@ int main() {
             test_archive_failure_precedes_all_construction();
             test_construction_failure_rolls_back_actual_actors_in_reverse();
             test_authored_descendants_share_global_postpass_and_reverse_teardown();
+            test_global_postpass_acknowledges_without_replaying_lifecycle();
             test_authored_descendant_init_failure_rolls_back_exact_suffix();
         }
+        smgpc::render::AuroraWindow window({.width = 640, .height = 456, .title = "Authored placement ownership"});
+        smgpc::render::AuroraRenderer renderer(window);
+        aurora::g_config.mem1Size = 24U * 1024U * 1024U;
+        auto process = smgpc::resource::GameResourceRuntime{};
+        const auto& heaps = process.host_heaps();
+        smgpc::runtime::SceneScheduler scheduler;
+        smgpc::runtime::SceneSchedulerBinding active_scheduler(scheduler);
         if (const auto* disc = std::getenv("SMGPC_REAL_DISC");
             disc != nullptr && *disc != '\0') {
             require(aurora_dvd_open(disc),
@@ -2609,14 +2689,12 @@ int main() {
             struct DiscCloseGuard {
                 ~DiscCloseGuard() { aurora_dvd_close(); }
             } disc_close;
-            aurora::g_config.mem1Size = 24U * 1024U * 1024U;
-            auto process = smgpc::resource::GameResourceRuntime{};
             DVDInit();
             auto dvd = smgpc::runtime::DvdFileSystemService{"/"};
             auto resources = smgpc::compat::ResourceHolderService{
                 dvd, process.create_cohort(), process.mem1_heap()};
-            test_scene_obj_created_inside_capture_keeps_independent_owner();
-            test_failed_authored_root_preserves_lazy_scene_obj_graph();
+            test_scene_obj_created_inside_capture_keeps_independent_owner(scheduler, heaps);
+            test_failed_authored_root_preserves_lazy_scene_obj_graph(scheduler, heaps);
             std::cout << "[ok] real LensFlare SceneObj capture and rollback ownership\n";
         } else {
             std::cout << "[skip] LensFlare SceneObj ownership requires SMGPC_REAL_DISC\n";
@@ -2628,7 +2706,7 @@ int main() {
         test_scene_obj_postpass_consumes_callback_appends_once();
         test_recursive_scene_obj_failure_rolls_back_slots_and_recreates();
         test_recursive_scene_obj_null_factory_rolls_back_side_effects();
-        test_scene_obj_holder_adopts_switch_watchers_without_parent_delete();
+        test_scene_obj_holder_adopts_switch_watchers_without_parent_delete(scheduler, heaps);
         std::cout << "[ok] shared authored placement instantiator contract passed\n";
         return 0;
     } catch (const std::exception &error) {

@@ -6,7 +6,10 @@
 #include "compat/StageResourceBinding.hpp"
 #include "compat/StageSessionState.hpp"
 #include "compat/StageZoneMatrixRegistry.hpp"
+#include "compat/StarPointerDepthOwnership.hpp"
 #include "runtime/RuntimeContext.hpp"
+#include "runtime/ArchiveMountService.hpp"
+#include "resource/RarcArchive.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 #include "scene/StageInitializationService.hpp"
 #include <aurora/dvd.h>
@@ -51,13 +54,18 @@ namespace {
                 {
                     smgpc::scene::StageInitializationService initialization(
                         runtime, scene,
-                        {.scene_name = "Game", .stage_name = "GatewayGalaxy", .scenario_no = 1}, domain);
+                        {.scene_name = "Game", .stage_name = "HeavensDoorGalaxy", .scenario_no = 1}, domain);
                     require_logic_error([&] { initialization.place_actors(); },
                                         "construction before archive preload must be rejected");
                     require_logic_error([&] { initialization.finish_actor_placement(); },
                                         "post-placement before construction must be rejected");
+                    require(smgpc::scene::current_stage_initialization_service() == &initialization &&
+                                &initialization.scene() == &scene,
+                            "original scene hooks must resolve their exact retained typed initializer");
+                    require_logic_error([&] { initialization.wait_done_stage_file_load(); },
+                                        "wait cannot manufacture a start-stage request");
                     initialization.initialize_session();
-                    require(smgpc::compat::require_active_stage_session().stage_name() == "GatewayGalaxy",
+                    require(smgpc::compat::require_active_stage_session().stage_name() == "HeavensDoorGalaxy",
                             "stage metadata must be published before authored resource resolution");
                     initialization.bind_scene_objects();
                     require(smgpc::scene::current_scene_allocation_domain() == domain,
@@ -73,13 +81,30 @@ namespace {
                         // original GameScene::init. Native retained data must escape
                         // the selected Game heap without changing the caller heap.
                         const smgpc::compat::JkrAllocationScope game(domain);
-                        initialization.load_stage_files();
+                        initialization.start_stage_file_load();
+                        require_logic_error([] { (void)smgpc::compat::require_stage_resources(); },
+                                            "start-stage loading must not publish selected scenario resources");
+                        const auto stage = runtime.archive_mounts().retain("/StageData/HeavensDoorGalaxy.arc");
+                        require(stage && stage->heap() == &domain->heap(),
+                                "start-stage loading must mount the authored ZoneList archive in the scene ownership domain");
+                        require_logic_error([&] { initialization.start_stage_file_load(); },
+                                            "duplicate start cannot replace published archive identities");
+                        auto bytes = std::vector<unsigned char>(stage->source().bytes().begin(), stage->source().bytes().end());
+                        auto *embedded = runtime.archive_mounts().mount_memory("FixtureEmbeddedStage.arc", bytes, &domain->heap());
+                        auto retained = runtime.archive_mounts().retain("FixtureEmbeddedStage.arc");
+                        std::fill(bytes.begin(), bytes.end(), 0);
+                        require(embedded && retained && retained->source().bytes()[0] == 'R',
+                                "embedded archive must retain its own decoded bytes after caller storage changes");
+                        require(runtime.archive_mounts().mount_memory("FixtureEmbeddedStage.arc", bytes, nullptr) == embedded &&
+                                    retained->heap() == &domain->heap(),
+                                "repeated embedded names preserve the first actual archive and owning heap");
+                        initialization.wait_done_stage_file_load();
                         initialization.initialize_scenario_resources();
                         require(smgpc::compat::current_jkr_allocation_domain() == domain,
                                 "native resource initialization must restore the original caller allocation domain");
                     }
                     auto &resources = smgpc::compat::require_stage_resources();
-                    require(resources.start_count() > 0, "the real Gateway archive must retain authored StartInfo rows");
+                    require(resources.start_count() > 0, "the real HeavensDoor archive must retain authored StartInfo rows");
                     JMapIdInfo first_camera;
                     resources.start_camera_id(&first_camera, 0);
                     void *camera_data = nullptr;
@@ -108,7 +133,9 @@ namespace {
                 }
             }
             require(retired_domain.expired() && !smgpc::scene::current_scene_obj_holder() &&
-                        !smgpc::compat::try_active_stage_session(),
+                        !smgpc::compat::try_active_stage_session() &&
+                        !smgpc::scene::current_stage_initialization_service() &&
+                        !runtime.archive_mounts().receive("FixtureEmbeddedStage.arc"),
                     "partial initialization retirement must release bindings and the actual Game heap");
             require(smgpc::compat::name_obj_runtime_state_count() == registrations &&
                         runtime.scheduler().snapshot().size() == scheduled,
@@ -135,8 +162,17 @@ int main() {
         smgpc::resource::GameResourceRuntime process({96U << 20, 32U << 20, 4U << 20});
         Logger logger;
         smgpc::runtime::RuntimeContext runtime(logger, window, process);
+        runtime.initialize_scenario_catalog(process);
         smgpc::runtime::SceneSchedulerBinding scheduler_binding(runtime.scheduler());
         (void)renderer.begin_frame();
+        auto& pointer = smgpc::compat::require_star_pointer_depth();
+        const auto pointer_marker = smgpc::compat::mark_name_obj_runtime_registrations();
+        pointer.initialize_layouts();
+        const auto pointer_objects = smgpc::compat::snapshot_name_obj_runtime_objects_since(pointer_marker);
+        require(!pointer_objects.empty(), "the real process pointer owner must construct its retained layouts");
+        for (const auto* object : pointer_objects)
+            require(smgpc::compat::name_obj_runtime_owner(object) == &pointer,
+                    "every pre-scene pointer layout must be claimed by the actual process owner");
         resources_and_retirement(runtime);
         renderer.end_frame();
         std::cout << "Real-disc stage resource boundaries and three partial-initialization retirement generations passed\n";

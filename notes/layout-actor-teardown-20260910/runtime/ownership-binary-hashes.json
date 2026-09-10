@@ -1,0 +1,10 @@
+[
+  {
+    "path": "build/macosx/arm64/debug/smg-pc-authored-placement-instantiator-tests",
+    "sha256": "c6087199e3239b0f73c7ac3d219e1b7c3ab85e53c7b189e77721f4a116f3018b"
+  },
+  {
+    "path": "build/macosx/arm64/debug/smg-pc-original-camera-director-tests",
+    "sha256": "262317f0e638b0d0d2dd021f2d84f3e9471251cfe78b19934d51b92f5292a9b8"
+  }
+]

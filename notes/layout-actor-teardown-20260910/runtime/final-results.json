@@ -1,0 +1,17 @@
+[
+  {
+    "target": "smg-pc-authored-placement-instantiator-tests",
+    "build_exit": 0,
+    "run_exit": 255
+  },
+  {
+    "target": "smg-pc-stage-initialization-resource-tests",
+    "build_exit": 0,
+    "run_exit": 0
+  },
+  {
+    "target": "smg-pc-original-camera-director-tests",
+    "build_exit": 0,
+    "run_exit": 255
+  }
+]

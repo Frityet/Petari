@@ -1,0 +1,18 @@
+[
+  {
+    "target": "smg-pc-authored-placement-instantiator-tests",
+    "command": [
+      "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-authored-placement-instantiator-tests"
+    ],
+    "SMGPC_REAL_DISC": "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "run_exit": 0
+  },
+  {
+    "target": "smg-pc-original-camera-director-tests",
+    "command": [
+      "/Users/frityet/Projects/petari/build/macosx/arm64/debug/smg-pc-original-camera-director-tests"
+    ],
+    "SMGPC_REAL_DISC": "/Users/frityet/Projects/petari/Super Mario Wii - Galaxy Adventure (Korea).rvz",
+    "run_exit": 0
+  }
+]

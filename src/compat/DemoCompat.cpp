@@ -9,6 +9,7 @@
 #include "Game/Util/ScreenUtil.hpp"
 #include "compat/ActorRuntimeRegistry.hpp"
 #include "compat/DemoSceneRuntime.hpp"
+#include "compat/JkrAllocationDomain.hpp"
 #include "runtime/RuntimeContext.hpp"
 #include "scene/SceneObjHolderRuntime.hpp"
 
@@ -87,6 +88,7 @@ namespace smgpc::compat {
     }  // namespace
 
     void register_or_defer_scene_simple_cast(LiveActor *actor) {
+        const JkrHostAllocationScope host;
         if (actor == nullptr) {
             aurora::throw_host_exception<std::invalid_argument>(
                 "Simple-cast registration requires a real LiveActor.");
@@ -107,6 +109,7 @@ namespace smgpc::compat {
     }
 
     void adopt_deferred_scene_simple_casts(DemoSceneRuntime &runtime) {
+        const JkrHostAllocationScope host;
         auto &casts = deferred_scene_simple_casts();
         for (auto *actor : casts) {
             runtime.register_simple_cast(actor);
@@ -115,6 +118,7 @@ namespace smgpc::compat {
     }
 
     void release_deferred_scene_simple_cast(const LiveActor *actor) {
+        const JkrHostAllocationScope host;
         std::erase(deferred_scene_simple_casts(), actor);
     }
 
