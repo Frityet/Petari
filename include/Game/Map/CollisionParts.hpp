@@ -41,7 +41,7 @@ public:
     void checkStrikeBallWithThickness(HitInfo*, u32, const TVec3f&, f32, f32, const TriangleFilterBase*);
     void calcCollidePosition(TVec3f*, const KC_PrismData&, u8);
     void projectToPlane(TVec3f*, const TVec3f&, const TVec3f&, const TVec3f&);
-    void checkStrikeLine(HitInfo*, u32, const TVec3f&, const TVec3f&, const TriangleFilterBase*);
+    u32 checkStrikeLine(HitInfo*, u32, const TVec3f&, const TVec3f&, const TriangleFilterBase*);
     void createAreaPolygonList(Triangle*, u32, const TVec3f&, const TVec3f&);
     u32 createAreaPolygonListArray(Triangle*, u32, TVec3f*, u32);
     void calcForceMovePower(TVec3f*, const TVec3f&) const;

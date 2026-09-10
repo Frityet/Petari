@@ -104,9 +104,9 @@ LiveActorGroup* LiveActorGroupArray::findGroup(const JMapInfoIter& rIter) const 
 LiveActorGroup* LiveActorGroupArray::entry(LiveActor* pActor, const JMapInfoIter& rIter, const char* pName, s32 numMax) {
     s32 groupID = -1;
     MR::getJMapInfoGroupID(rIter, &groupID);
+    char defaultName[32];
 
     if (pName == nullptr) {
-        char defaultName[32];
         snprintf(defaultName, sizeof(defaultName), "group%02d", groupID);
 
         pName = defaultName;
