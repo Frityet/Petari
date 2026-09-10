@@ -483,7 +483,23 @@ void MarioActor::createIceWall(const TVec3f& rVec1, const TVec3f& rVec2) {
     }
 }
 
-// void MarioActor::updateBaseMtxTeresa(MtxPtr) {}
+void MarioActor::updateBaseMtxTeresa(MtxPtr mtx) {
+    TVec3f horizontalVelocity;
+    f32 tilt = MR::clamp(MR::vecKillElement(mVelocity, getGravityVec(), &horizontalVelocity) / 10.0f, -1.0f, 1.0f);
+
+    if (!MR::isNearZero(mMario->getWorldPadDir()) &&
+        MR::diffAngleAbsHorizontal(mMario->getWorldPadDir(), mMario->mFrontVec, getGravityVec()) > PI / 8.0f) {
+        tilt = 0.0f;
+    }
+
+    _9AC = 0.98f * _9AC + 0.02f * tilt;
+    f32 angle = mConst->getTable()->mTeresaAngleDown;
+    if (_9AC > 0.0f) {
+        angle = mConst->getTable()->mTeresaAngleUp;
+    }
+
+    PSMTXConcat(mtx, MR::tmpMtxRotXRad(_9AC * angle), mtx);
+}
 
 bool MarioActor::finalizeFreezeModel() {
     if (MR::isBckStopped(_9C4)) {
