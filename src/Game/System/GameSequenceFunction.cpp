@@ -4,6 +4,7 @@
 #include "Game/System/GalaxyCometScheduler.hpp"
 #include "Game/System/GameDataConst.hpp"
 #include "Game/System/GameDataFunction.hpp"
+#include "Game/System/GameDataGalaxyStorage.hpp"
 #include "Game/System/GameDataHolder.hpp"
 #include "Game/System/GameDataTemporaryInGalaxy.hpp"
 #include "Game/System/GameSequenceDirector.hpp"
@@ -185,16 +186,11 @@ namespace GameSequenceFunction {
         return getClearedStarPieceNum() != 0;
     }
 
-    /*
-    // TODO: GameDataSomeScenarioAccessor has not yet been declared.
     void reflectStageResultSequenceCoin() {
-        SingletonHolder<GameSystem>::get()
-            ->mSequenceDirector
-            ->getGameDataHolder()
-            ->makeGalaxyScenarioAccessor(getClearedStageName(), getClearedPowerStarId())
-            ->updateMaxCoinNum(getClearedCoinNum());
+        s32 coinNum = getClearedCoinNum();
+        GameDataHolder* pGameDataHolder = SingletonHolder< GameSystem >::get()->mSequenceDirector->getGameDataHolder();
+        pGameDataHolder->makeGalaxyScenarioAccessor(getClearedStageName(), getClearedPowerStarId()).updateMaxCoinNum(coinNum);
     }
-    */
 
     void resetStageResultSequenceParam() {
         ::getGameDataTemporaryInGalaxy()->resetStageResultParam();

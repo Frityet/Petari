@@ -34,6 +34,7 @@ GXBool GXGetGPFifo(GXFifoObj *);
 
 void GXGetFifoPtrs(const GXFifoObj *, void **, void **);
 
+void GXEnableBreakPt(void*);
 void GXDisableBreakPt(void);
 
 GXBool __GXIsGPFifoReady(void);

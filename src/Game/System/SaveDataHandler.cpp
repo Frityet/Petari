@@ -157,8 +157,9 @@ void SaveDataHandler::requestSaveSaveData() {
     SaveDataFileAccessor fileAccessorB = SaveDataFileAccessor(_14);
 
     MR::copyMemory(_14, _18, fileAccessorA.getHeader()->mFileSize);
-    MR::fillMemory(_14 + fileAccessorA.getHeader()->mFileSize, 0, OSRoundUp32B(fileAccessorA.getHeader()->mFileSize));
-    fileAccessorB.getHeader()->mCheckSum = MR::calcCheckSum(_14 + sizeof(u32), *(_14 + 0xC) - sizeof(u32));
+    MR::fillMemory(_14 + fileAccessorA.getHeader()->mFileSize, 0,
+                   OSRoundUp32B(fileAccessorA.getHeader()->mFileSize) - fileAccessorA.getHeader()->mFileSize);
+    fileAccessorB.getHeader()->mCheckSum = MR::calcCheckSum(_14 + sizeof(u32), reinterpret_cast< SaveDataFileHeader* >(_14)->mFileSize - sizeof(u32));
 
     mNANDRequestInfo->setWriteSeq(::cSaveFileName, _14, OSRoundUp32B(fileAccessorB.getHeader()->mFileSize), 60, 0);
     MR::addRequestToNANDManager(mNANDRequestInfo);
@@ -250,42 +251,42 @@ void SaveDataHandler::exeRemoveProcessingBanner() {
 }
 
 void SaveDataHandler::resetSaveData(u8* pBuffer) {
-    int i;
-    int j;
     SaveDataFile* pFile = reinterpret_cast< SaveDataFile* >(pBuffer);
     u32 offset = 0x140;
+    u32 fileIndex = 0;
 
     pFile->mHeader.mCheckSum = 0;
     pFile->mHeader.mVersion = 2;
     pFile->mHeader.mUserFileInfoNum = 19;
     pFile->mHeader.mFileSize = 0;
 
-    for (i = 0; i < 6; i++) {
-        for (j = 0; j < sizeof(::cSaveFileSpecTable) / sizeof(*::cSaveFileSpecTable); j++) {
-            SaveDataFileInfo* pFileInfo = &pFile->mInfo[i * j];
-
+    for (int i = 0; i < 6; i++) {
+        for (u32 j = 0; j < sizeof(::cSaveFileSpecTable) / sizeof(*::cSaveFileSpecTable); j++) {
+            SaveDataFileInfo* pFileInfo = &pFile->mInfo[fileIndex];
             MR::zeroMemory(pFileInfo->mName, sizeof(pFileInfo->mName));
 
             char fileName[32];
-            snprintf(fileName, sizeof(fileName), "%s%1d", ::cSaveFileSpecTable[j].mName);
-
+            snprintf(fileName, sizeof(fileName), "%s%1d", ::cSaveFileSpecTable[j].mName, i + 1);
             snprintf(pFileInfo->mName, sizeof(pFileInfo->mName), "%s", fileName);
             pFileInfo->mOffset = offset;
-
+            offset += ::cSaveFileSpecTable[j].mBufferSize;
             MR::zeroMemory(pBuffer + pFileInfo->mOffset, ::cSaveFileSpecTable[j].mBufferSize);
+            fileIndex++;
         }
     }
 
-    SaveDataFileInfo* pFileInfo = &pFile->mInfo[i * j];
-
+    SaveDataFileInfo* pFileInfo = &pFile->mInfo[fileIndex];
     MR::zeroMemory(pFileInfo->mName, sizeof(pFileInfo->mName));
-
     snprintf(pFileInfo->mName, sizeof(pFileInfo->mName), "%s", ::cSaveFileSpecSystem.mName);
     pFileInfo->mOffset = offset;
-
     MR::zeroMemory(pBuffer + pFileInfo->mOffset, ::cSaveFileSpecSystem.mBufferSize);
-
     pFile->mHeader.mFileSize = offset + ::cSaveFileSpecSystem.mBufferSize;
+
+    u8* pEnd = pBuffer + pFile->mHeader.mFileSize;
+    u32 padding = OSRoundUp32B(pFile->mHeader.mFileSize) - pFile->mHeader.mFileSize;
+    for (u32 i = 0; i < padding; i++) {
+        *pEnd++ = 0;
+    }
 }
 
 void SaveDataHandler::initializeAllFileInSaveData(u8* pParam1, const SysConfigFile* pSysConfigFile, const UserFile* pUserFile) {
