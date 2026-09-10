@@ -2,6 +2,7 @@
 #include "Game/NameObj/NameObjFinder.hpp"
 #include "Game/Scene/PlacementStateChecker.hpp"
 #include "Game/Scene/SceneObjHolder.hpp"
+#include "Game/Scene/SceneNameObjMovementController.hpp"
 #include "Game/Scene/ScenePlayingResult.hpp"
 #include "Game/Scene/StageDataHolder.hpp"
 #include "Game/System/GalaxyStatusAccessor.hpp"
@@ -158,8 +159,14 @@ namespace MR {
                SingletonHolder< GameSystem >::get()->mSceneController->isSceneInitializeState(SceneInitializeState_Placement);
     }
 
-    // stopSceneForScenarioOpeningCamera
-    // playSceneForScenarioOpeningCamera
+    void stopSceneForScenarioOpeningCamera() {
+        getSceneNameObjMovementController()->requestStopSceneFor(MovementControlType_4, nullptr);
+    }
+
+    void playSceneForScenarioOpeningCamera() {
+        getSceneNameObjMovementController()->requestPlaySceneFor(MovementControlType_4, nullptr);
+    }
+
     const JMapIdInfo& getCurrentMarioStartIdInfo() {
         return *SingletonHolder< GameSystem >::get()->mSceneController->mCurrSceneControlInfo.mStartIdInfo;
     }
