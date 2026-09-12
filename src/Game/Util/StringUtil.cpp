@@ -5,6 +5,7 @@
 #include <cctype>
 // #include <cstdarg>
 #include <cstdio>
+#include <stdint.h>
 #include <va_list.h>
 
 #define CENTISEC_PER_SEC 100
@@ -18,7 +19,7 @@
 extern "C" {
 int strcasecmp(const char*, const char*);
 // extern int vswprintf(wchar_t*, size_t, const wchar_t*, va_list);
-int wcsncpy(wchar_t*, const wchar_t*, size_t);
+wchar_t* wcsncpy(wchar_t*, const wchar_t*, size_t);
 };
 #endif
 
@@ -99,7 +100,8 @@ namespace MR {
         char* pExtSeparator = strrchr(pDst, '.');
         char* pDirSeparator = strrchr(pDst, '/');
 
-        if (pExtSeparator < pDirSeparator || pDirSeparator + 1 == pExtSeparator) {
+        if (reinterpret_cast< uintptr_t >(pExtSeparator) < reinterpret_cast< uintptr_t >(pDirSeparator) ||
+            reinterpret_cast< uintptr_t >(pDirSeparator) + 1 == reinterpret_cast< uintptr_t >(pExtSeparator)) {
             return pDirSeparator;
         }
 
@@ -125,7 +127,7 @@ namespace MR {
     }
 
     wchar_t* addPictureFontCode(wchar_t* pDst, int code) {
-        pDst[0] = code;
+        pDst[0] = static_cast< u16 >(code);
         pDst[1] = '\0';
 
         return &pDst[1];
@@ -174,15 +176,14 @@ namespace MR {
     }
     */
 
-    // FIXME: Missing stack accesses.
     const char* getBasename(const char* pPath) {
         const char* pBasename = strrchr(pPath, '/');
 
-        if (pBasename == nullptr) {
-            return pBasename;
+        if (pBasename != nullptr) {
+            pPath = pBasename + 1;
         }
 
-        return pBasename + 1;
+        return pPath;
     }
 
     void extractString(char* pDst, const char* pSrc, u32 num, u32) {
@@ -278,8 +279,7 @@ namespace MR {
 
                 u16 dataSize = reinterpret_cast< const Tag* >(pMessage)->mDataSize;
 
-                // FIXME: r3-r4 used instead of r30-r31, and slwi used instead of clrrwi.
-                pMessage = (pMessage + dataSize) - 1;
+                pMessage = (pMessage + dataSize / sizeof(u16)) - 1;
                 length += (dataSize / sizeof(u16)) - 1;
             }
 

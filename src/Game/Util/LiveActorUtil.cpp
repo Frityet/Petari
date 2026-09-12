@@ -485,18 +485,20 @@ namespace MR {
             }
         }
 
-        const Binder* binder = pActor->mBinder;
-        const HitInfo* pRoofInfo = &binder->mRoofInfo;
-        const HitInfo* pGroundInfo = &binder->mGroundInfo;
-        TVec3f roofPower;
-        TVec3f groundPower;
-        pRoofInfo->mParentTriangle.calcForceMovePower(&roofPower, pRoofInfo->mHitPos);
-        pGroundInfo->mParentTriangle.calcForceMovePower(&groundPower, pGroundInfo->mHitPos);
+        {
+            const Binder* binder = pActor->mBinder;
+            const HitInfo* pRoofInfo = &binder->mRoofInfo;
+            const HitInfo* pGroundInfo = &binder->mGroundInfo;
+            TVec3f roofPower;
+            TVec3f groundPower;
+            pRoofInfo->mParentTriangle.calcForceMovePower(&roofPower, pRoofInfo->mHitPos);
+            pGroundInfo->mParentTriangle.calcForceMovePower(&groundPower, pGroundInfo->mHitPos);
 
-        TVec3f diff(roofPower);
-        diff.sub(groundPower);
-        if (0.0f < diff.dot(pActor->mGravity)) {
-            return true;
+            TVec3f diff(roofPower);
+            diff.sub(groundPower);
+            if (0.0f < diff.dot(pActor->mGravity)) {
+                return true;
+            }
         }
 
     LABEL_FALSE:

@@ -57,7 +57,7 @@ namespace MR {
         TalkMessageInfo messageInfo = TalkMessageInfo();
 
         return MessageSystem::getGameMessageDirect(&messageInfo, pMessageId) &&
-               getStringLengthWithMessageTag(reinterpret_cast< wchar_t* >(messageInfo._0)) != nullptr;
+               getStringLengthWithMessageTag(reinterpret_cast< wchar_t* >(messageInfo._0)) != 0;
     }
 
     // getMessageLine
