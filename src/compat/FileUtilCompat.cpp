@@ -1,182 +1,69 @@
 #include "Game/Util/FileUtil.hpp"
-
-#include <algorithm>
-#include <cstring>
-#include <exception>
-#include <filesystem>
-#include <map>
-#include <memory>
-#include <mutex>
-#include <string>
-#include <vector>
-
-#include "runtime/RuntimeContext.hpp"
-#include "runtime/ArchiveMountService.hpp"
+#include "Game/System/FileLoader.hpp"
+#include "Game/System/Language.hpp"
+#include "Game/Util/MemoryUtil.hpp"
+#include "Game/Util/SingletonHolder.hpp"
+#include "Game/Util/StringUtil.hpp"
+#include "Game/Util/SystemUtil.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "compat/ResourceHolderCompat.hpp"
-#include "Game/Util/MemoryUtil.hpp"
+#include "runtime/ArchiveMountService.hpp"
 #include "JSystem/JKernel/JKRHeap.hpp"
 #include "resource/Yaz0.hpp"
 #include <aurora/exception.hpp>
+#include <cstdio>
+#include <cstring>
+#include <exception>
 #include <stdexcept>
 
 namespace MR {
-    namespace {
-
-        struct LoadedFile {
-            std::vector<u8> bytes;
-            JKRHeap* heap;
-        };
-        std::map<std::string, LoadedFile> sLoadedFiles;
-        std::mutex sLoadedFilesMutex;
-
-        [[nodiscard]] smgpc::runtime::RuntimeContext* runtime() {
-            return smgpc::runtime::RuntimeContext::try_instance();
-        }
-
-        [[nodiscard]] std::string normalize_disc_string(const char* path) {
-            if (path == nullptr) {
-                return {};
-            }
-
-            auto text = std::string(path);
-            std::ranges::replace(text, '\\', '/');
-            if (text.empty()) {
-                return {};
-            }
-            if (text.front() != '/') {
-                text.insert(text.begin(), '/');
-            }
-            return text;
-        }
-
-        [[nodiscard]] bool dvd_exists(std::string_view path) {
-            auto* mounts = smgpc::runtime::ArchiveMountService::active();
-            if (mounts == nullptr || path.empty()) {
-                return false;
-            }
-
-            try {
-                return mounts->dvd().exists(path);
-            } catch (const std::exception&) {
-                return false;
-            }
-        }
-
-        [[nodiscard]] std::string language_path_for(std::string_view path) {
-            auto text = std::string(path);
-            std::ranges::replace(text, '\\', '/');
-            while (!text.empty() && text.front() == '/') {
-                text.erase(text.begin());
-            }
-
-            if (text.starts_with("LayoutData/")) {
-                return "/KrKorean/" + text;
-            }
-
-            return "/" + text;
-        }
-
-        [[nodiscard]] std::string path_considering_language(const char* path, bool consider_language) {
-            const auto normalized = normalize_disc_string(path);
-            if (normalized.empty() || !consider_language) {
-                return normalized;
-            }
-
-            const auto localized = language_path_for(normalized);
-            return dvd_exists(localized) ? localized : normalized;
-        }
-
-        void copy_path(char* dst, u32 size, std::string_view path) {
-            if (dst == nullptr || size == 0U) {
-                return;
-            }
-
-            const auto count = std::min< std::size_t >(path.size(), static_cast< std::size_t >(size - 1U));
-            std::memcpy(dst, path.data(), count);
-            dst[count] = '\0';
-        }
-
-        [[nodiscard]] std::string with_arc_extension(const char* prefix) {
-            auto text = std::string(prefix == nullptr ? "" : prefix);
-            if (!text.ends_with(".arc")) {
-                text += ".arc";
-            }
-            return text;
-        }
-
-        [[nodiscard]] bool copy_first_existing(char* dst, u32 size, std::initializer_list< std::string_view > candidates) {
-            for (const auto candidate : candidates) {
-                if (dvd_exists(candidate)) {
-                    copy_path(dst, size, candidate);
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-    }  // namespace
-
     bool isFileExist(const char* pFilePath, bool considerLanguage) {
-        return dvd_exists(path_considering_language(pFilePath, considerLanguage));
+        s32 entryNum;
+
+        if (considerLanguage) {
+            entryNum = convertPathToEntrynumConsideringLanguage(pFilePath);
+        } else {
+            entryNum = DVDConvertPathToEntrynum(pFilePath);
+        }
+
+        return entryNum >= 0;
     }
 
     u32 getFileSize(const char* pFilePath, bool considerLanguage) {
-        auto* context = runtime();
-        if (context == nullptr) {
-            return 0U;
+        s32 entryNum;
+
+        if (considerLanguage) {
+            entryNum = convertPathToEntrynumConsideringLanguage(pFilePath);
+        } else {
+            entryNum = DVDConvertPathToEntrynum(pFilePath);
         }
 
-        try {
-            const auto path = context->dvd().resolve(path_considering_language(pFilePath, considerLanguage));
-            std::error_code error{};
-            const auto size = std::filesystem::file_size(path, error);
-            if (error || size > static_cast< std::uintmax_t >(UINT32_MAX)) {
-                return 0U;
-            }
+        DVDFileInfo fileInfo;
+        DVDFastOpen(entryNum, &fileInfo);
+        u32 size = fileInfo.length;
+        DVDClose(&fileInfo);
 
-            return static_cast< u32 >(size);
-        } catch (const std::exception&) {
-            return 0U;
-        }
+        return size;
     }
 
     s32 convertPathToEntrynumConsideringLanguage(const char* pFilePath) {
-        const auto path = path_considering_language(pFilePath, true);
-        return DVDConvertPathToEntrynum(path.c_str());
+        char filePath[256];
+        makeFileNameConsideringLanguage(filePath, sizeof(filePath), pFilePath);
+
+        return DVDConvertPathToEntrynum(filePath);
     }
 
-    void* loadToMainRAM(const char* pFilePath, u8* pDst, JKRHeap* pHeap, JKRDvdRipper::EAllocDirection) {
-        smgpc::compat::JkrHostAllocationScope host;
-        auto* context = runtime();
-        if (context == nullptr || pFilePath == nullptr) {
-            return nullptr;
-        }
+    void* loadToMainRAM(const char* pFilePath, u8* pDst, JKRHeap* pHeap, JKRDvdRipper::EAllocDirection allocDir) {
+        loadAsyncToMainRAM(pFilePath, pDst, pHeap, allocDir);
 
-        const auto path = path_considering_language(pFilePath, true);
-        try {
-            if (pDst == nullptr) {
-                const std::lock_guard lock(sLoadedFilesMutex);
-                if (const auto found = sLoadedFiles.find(path); found != sLoadedFiles.end())
-                    return found->second.bytes.empty() ? nullptr : found->second.bytes.data();
-            }
-            auto bytes = context->dvd().read_file(path);
-            if (pDst != nullptr) {
-                std::memcpy(pDst, bytes.data(), bytes.size());
-                return pDst;
-            }
-
-            const std::lock_guard lock(sLoadedFilesMutex);
-            auto it = sLoadedFiles.try_emplace(path, LoadedFile{std::move(bytes), pHeap ? pHeap : getCurrentHeap()}).first;
-            return it->second.bytes.empty() ? nullptr : it->second.bytes.data();
-        } catch (const std::exception&) {
-            return nullptr;
-        }
+        return receiveFile(pFilePath);
     }
 
     void loadAsyncToMainRAM(const char* pFilePath, u8* pDst, JKRHeap* pHeap, JKRDvdRipper::EAllocDirection allocDir) {
-        (void)loadToMainRAM(pFilePath, pDst, pHeap, allocDir);
+        char filePath[256];
+        makeFileNameConsideringLanguage(filePath, sizeof(filePath), pFilePath);
+
+        SingletonHolder< FileLoader >::get()->requestLoadToMainRAM(filePath, pDst, pHeap, allocDir, false);
     }
 
     JKRMemArchive* mountArchive(const char* pFilePath, JKRHeap* pHeap) {
@@ -200,14 +87,10 @@ namespace MR {
     }
 
     void* receiveFile(const char* pFilePath) {
-        smgpc::compat::JkrHostAllocationScope host;
-        const auto path = path_considering_language(pFilePath, true);
-        const std::lock_guard lock(sLoadedFilesMutex);
-        if (auto it = sLoadedFiles.find(path); it != sLoadedFiles.end()) {
-            return it->second.bytes.empty() ? nullptr : it->second.bytes.data();
-        }
+        char filePath[256];
+        makeFileNameConsideringLanguage(filePath, sizeof(filePath), pFilePath);
 
-        return nullptr;
+        return SingletonHolder< FileLoader >::get()->receiveFile(filePath);
     }
 
     JKRMemArchive* receiveArchive(const char* pFilePath) {
@@ -217,6 +100,7 @@ namespace MR {
     }
 
     void receiveAllRequestedFile() {
+        SingletonHolder< FileLoader >::get()->receiveAllRequestedFile();
     }
 
     void createAndAddArchive(void* pArcData, JKRHeap* pHeap, const char* pFilePath) {
@@ -242,10 +126,10 @@ namespace MR {
     }
 
     void removeFileConsideringLanguage(const char* pFilePath) {
-        smgpc::compat::JkrHostAllocationScope host;
-        const auto path = path_considering_language(pFilePath, true);
-        const std::lock_guard lock(sLoadedFilesMutex);
-        sLoadedFiles.erase(path);
+        char filePath[256];
+        makeFileNameConsideringLanguage(filePath, sizeof(filePath), pFilePath);
+
+        SingletonHolder< FileLoader >::get()->removeFile(filePath);
     }
 
     void removeResourceAndFileHolderIfIsEqualHeap(JKRHeap* heap) {
@@ -253,8 +137,7 @@ namespace MR {
         if (heap == nullptr) return;
         if (auto* resources = smgpc::compat::ResourceHolderService::active()) resources->remove_for_heap(heap);
         if (auto* mounts = smgpc::runtime::ArchiveMountService::active()) mounts->remove_for_heap(heap);
-        const std::lock_guard lock(sLoadedFilesMutex);
-        std::erase_if(sLoadedFiles, [heap](const auto& entry) { return entry.second.heap == heap; });
+        if (auto* loader = SingletonHolder<FileLoader>::get()) loader->removeHolderIfIsEqualHeap(heap);
     }
 
     void* decompressFileFromArchive(JKRArchive* pArchive, const char* pFilePath, JKRHeap* pHeap, int align) {
@@ -276,10 +159,10 @@ namespace MR {
     }
 
     bool isLoadedFile(const char* pFilePath) {
-        smgpc::compat::JkrHostAllocationScope host;
-        const auto path = path_considering_language(pFilePath, true);
-        const std::lock_guard lock(sLoadedFilesMutex);
-        return sLoadedFiles.contains(path);
+        char filePath[256];
+        makeFileNameConsideringLanguage(filePath, sizeof(filePath), pFilePath);
+
+        return SingletonHolder< FileLoader >::get()->isLoaded(filePath);
     }
 
     bool isMountedArchive(const char* pFilePath) {
@@ -293,45 +176,90 @@ namespace MR {
     }
 
     void makeFileNameConsideringLanguage(char* pDst, u32 size, const char* pFilePath) {
-        copy_path(pDst, size, path_considering_language(pFilePath, true));
+        addFilePrefix(pDst, size, pFilePath, getCurrentLanguagePrefix());
+
+        if (!isFileExist(pDst, false)) {
+            snprintf(pDst, size, "%s", pFilePath);
+        }
     }
 
     bool makeObjectArchiveFileName(char* pDst, u32 size, const char* pFileName) {
-        const auto name = std::string(pFileName == nullptr ? "" : pFileName);
-        const auto object = "/ObjectData/" + name;
-        const auto map_parts = "/MapPartsData/" + name;
-        const auto raw = normalize_disc_string(pFileName);
-        return copy_first_existing(pDst, size, {object, map_parts, raw});
-    }
+        snprintf(pDst, size, "/ObjectData/%s", pFileName);
 
-    bool makeObjectArchiveFileNameFromPrefix(char* pDst, u32 size, const char* pFilePrefix, bool) {
-        const auto name = with_arc_extension(pFilePrefix);
-        return makeObjectArchiveFileName(pDst, size, name.c_str());
-    }
-
-    bool makeLayoutArchiveFileName(char* pDst, u32 size, const char* pFileName) {
-        const auto name = std::string(pFileName == nullptr ? "" : pFileName);
-        const auto localized = "/KrKorean/LayoutData/" + name;
-        const auto base = "/LayoutData/" + name;
-        const auto raw = normalize_disc_string(pFileName);
-        return copy_first_existing(pDst, size, {localized, base, raw});
-    }
-
-    bool makeLayoutArchiveFileNameFromPrefix(char* pDst, u32 size, const char* pFilePrefix, bool fallback) {
-        const auto name = with_arc_extension(pFilePrefix);
-        if (makeLayoutArchiveFileName(pDst, size, name.c_str())) {
+        if (isFileExist(pDst, true)) {
             return true;
         }
 
-        if (fallback) {
-            copy_path(pDst, size, "/LayoutData/" + name);
+        snprintf(pDst, size, "/MapPartsData/%s", pFileName);
+
+        if (isFileExist(pDst, false)) {
+            return true;
         }
-        return false;
+
+        snprintf(pDst, size, "%s", pFileName);
+
+        return isFileExist(pDst, true);
+    }
+
+    bool makeObjectArchiveFileNameFromPrefix(char* pDst, u32 size, const char* pFilePrefix, bool) {
+        char fileName[256];
+        snprintf(fileName, sizeof(fileName), "%s.arc", pFilePrefix);
+
+        return makeObjectArchiveFileName(pDst, size, fileName);
+    }
+
+    bool makeLayoutArchiveFileName(char* pDst, u32 size, const char* pFileName) {
+        snprintf(pDst, size, "/Region/LayoutData/%s", pFileName);
+
+        if (isFileExist(pDst, false)) {
+            return true;
+        }
+
+        snprintf(pDst, size, "/LayoutData/%s", pFileName);
+
+        if (isFileExist(pDst, true)) {
+            return true;
+        }
+
+        snprintf(pDst, size, "%s", pFileName);
+
+        return isFileExist(pDst, false);
+    }
+
+    bool makeLayoutArchiveFileNameFromPrefix(char* pDst, u32 size, const char* pFilePrefix, bool fallback) {
+        char fileName[64];
+        snprintf(fileName, sizeof(fileName), "%s.arc", pFilePrefix);
+        bool isExistArc = makeLayoutArchiveFileName(pDst, size, fileName);
+
+        const char* pAspectSuffix = isScreen16Per9() ? "16x9" : "4x3";
+        snprintf(fileName, sizeof(fileName), "%s%s.arc", pFilePrefix, pAspectSuffix);
+        bool isExistAspectArc = makeLayoutArchiveFileName(pDst, size, fileName);
+
+        snprintf(fileName, sizeof(fileName), "%sReplace.arc", pFilePrefix);
+        bool isExistReplaceArc = makeLayoutArchiveFileName(pDst, size, fileName);
+
+        bool fileFound = isExistArc || isExistAspectArc || isExistReplaceArc;
+
+        if (!fileFound && !fallback) {
+            return false;
+        }
+
+        if (isExistAspectArc) {
+            pAspectSuffix = isScreen16Per9() ? "16x9" : "4x3";
+            snprintf(fileName, sizeof(fileName), "%s%s.arc", pFilePrefix, pAspectSuffix);
+        } else if (isExistReplaceArc) {
+            snprintf(fileName, sizeof(fileName), "%sReplace.arc", pFilePrefix);
+        } else {
+            snprintf(fileName, sizeof(fileName), "%s.arc", pFilePrefix);
+        }
+
+        makeLayoutArchiveFileName(pDst, size, fileName);
+
+        return true;
     }
 
     void makeScenarioArchiveFileName(char* pDst, u32 size, const char* pStageName) {
-        const auto stage = std::string(pStageName == nullptr ? "" : pStageName);
-        copy_path(pDst, size, "/StageData/" + stage + "/" + stage + "Scenario.arc");
+        snprintf(pDst, size, "/StageData/%s/%sScenario.arc", pStageName, pStageName);
     }
 
 }  // namespace MR

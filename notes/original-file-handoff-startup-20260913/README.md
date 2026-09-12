@@ -1,0 +1,11 @@
+# Original file handoff during process startup
+
+Production `--original` reached the real frame loop after completing GameSystem::init, then the audio initializer received no name resource. The active compatibility implementation of MR::loadAsyncToMainRAM did not submit a request: it synchronously called a separate host vector cache which returned null whenever RuntimeContext was absent. MR::receiveFile read only that same cache, while the genuine FileLoader and its worker already existed.
+
+Removed the competing raw-file cache and all RuntimeContext coupling from FileUtilCompat. Its existing raw-file request, receive, wait, release, loaded query and size methods now execute the exact original FileUtil bodies against the actual FileLoader/SDK. The requested SMR bytes therefore pass through the real FileLoaderThread and FileRipper, preserving original decompression, completion queue, signed alignment, destination heap and later FileHolder removal. AudSystemWrapper and its explicit disabled-output policy are unchanged.
+
+The same source-imported methods restore the original language prefix, region/layout lookup and aspect/replacement selection rather than retaining the hard-coded Korean/file-name shortcuts. All 15 listed functions compare byte-identically to the already recovered src/Game/Util/FileUtil.cpp. Only src/compat/FileUtilCompat.cpp changed. Existing native mounted-archive methods remain because their typed ownership migration is a separate pending boundary; this checkpoint does not claim whole FileUtil activation.
+
+Required compile passes with the project's native flags (native-compile.json/log). No new test or subsystem run. Root owns the next production build/run; actual successful name publication is pending that run.
+
+Production integration: ninth smg-pc build passed. The fifth real-disc Metal launch initializes Korean console language, completes GameSystem::init and enters the frame loop. It proceeds beyond sound-name loading, then stops on the next archive boundary: the logical WiiRemoteStrapReplace layout path is not yet localized by ResourceHolderService. Receipts are in notes/gateway-wakeup-demo-20260912/original-app-ninth-build.json and original-app-fifth-run.json. Gateway gameplay remains unverified.

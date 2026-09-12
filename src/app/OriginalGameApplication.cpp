@@ -136,6 +136,37 @@ void startup_phase(const char* phase) {
     std::fflush(stderr);
 }
 
+void initialize_console_language(runtime::SystemConfigService& settings) {
+    // A newly created native console has no IPL settings. Select its initial
+    // language from the mounted disc's region before original Game boot; an
+    // imported/configured console keeps its authored setting unchanged.
+    if (settings.document().find("IPL.LNG")) return;
+    const auto* disc = DVDGetCurrentDiskID();
+    u8 language;
+    switch (disc->gameName[3]) {
+    case 'J':
+    case 'W':
+        language = SC_LANG_JAPANESE;
+        break;
+    case 'K':
+    case 'Q':
+    case 'T':
+        language = SC_LANG_KOREAN;
+        break;
+    case 'E': case 'B': case 'N':
+    case 'D': case 'F': case 'H': case 'I': case 'L': case 'M':
+    case 'P': case 'R': case 'S': case 'U': case 'V':
+    case 'X': case 'Y': case 'Z':
+        language = SC_LANG_ENGLISH;
+        break;
+    default:
+        aurora::throw_host_exception<std::runtime_error>("Cannot select an initial console language for this disc region");
+    }
+    if (!settings.replace_u8(language, SC_ITEM_ID_IPL_LANGUAGE))
+        aurora::throw_host_exception<std::runtime_error>("Cannot initialize the native console language setting");
+    std::fprintf(stderr, "[original-process] Initialized console language %u for disc region %c\n", language, disc->gameName[3]);
+}
+
 void destroy_child_heaps(JKRHeap& parent) {
     while (auto* node = parent.mChildTree.getFirstChild()) {
         auto* child = node->getObject();
@@ -178,6 +209,7 @@ public:
         startup_phase("Initializing SDK, layout allocator and original heap watcher");
         OSInitFastCast();
         DVDInit();
+        initialize_console_language(*settings);
         VIInit();
         HeapMemoryWatcher::createRootHeap();
         OSInitMutex(&MR::MutexHolder<0>::sMutex);

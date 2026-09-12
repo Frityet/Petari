@@ -1,0 +1,21 @@
+{
+  "path": "src/compat/FileUtilCompat.cpp",
+  "sha256": "ae6b8a0cf40140066fee636a91a3a8f7306657438b6d8e5875ec0efe52d1daa2",
+  "original_methods": [
+    "isFileExist",
+    "getFileSize",
+    "convertPathToEntrynumConsideringLanguage",
+    "loadToMainRAM",
+    "loadAsyncToMainRAM",
+    "receiveFile",
+    "receiveAllRequestedFile",
+    "removeFileConsideringLanguage",
+    "isLoadedFile",
+    "makeFileNameConsideringLanguage",
+    "makeObjectArchiveFileName",
+    "makeObjectArchiveFileNameFromPrefix",
+    "makeLayoutArchiveFileName",
+    "makeLayoutArchiveFileNameFromPrefix",
+    "makeScenarioArchiveFileName"
+  ]
+}
