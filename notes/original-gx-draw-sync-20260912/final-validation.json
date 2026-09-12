@@ -1,0 +1,32 @@
+[
+  {
+    "target": "smg-pc-aurora-depth-snapshot-render-tests",
+    "exit_code": 0,
+    "seconds": 0.992486665956676,
+    "sha256": "efe01dfe77edb132bc7297c25068d16e26166dac3ddb5b69e11c60cdaf22b6a5"
+  },
+  {
+    "target": "smg-pc-aurora-draw-sync-pass-render-tests",
+    "exit_code": 0,
+    "seconds": 0.39655316597782075,
+    "sha256": "619ea4782842ae01cdfee6864bd1b7b65bc57b8a2b1954e082e975026a663150"
+  },
+  {
+    "target": "smg-pc-aurora-z-texture-render-tests",
+    "exit_code": 0,
+    "seconds": 0.9406572910374962,
+    "sha256": "2db113a47b024575ee05aec3fa45234b6bac7d81b1f398c540c9b815941efbc8"
+  },
+  {
+    "target": "smg-pc-aurora-clip-mode-render-tests",
+    "exit_code": 0,
+    "seconds": 1.045608833024744,
+    "sha256": "8ec3da0d99ff97978242fbfd4465d4cae04d3921f65c7b5533dc118f5f22e4a5"
+  },
+  {
+    "target": "smg-pc-aurora-texture-object-tests",
+    "exit_code": 0,
+    "seconds": 0.34458141698269174,
+    "sha256": "0565c8b928aa05b71072d6224b84ee563ee20c309c79aa56165054684c7d9172"
+  }
+]
