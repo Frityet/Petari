@@ -156,6 +156,11 @@ s32 JKRHeap::resize(void* pData, u32 size) {
     return do_resize(pData, size);
 }
 
+s32 JKRHeap::getSize(void* pointer, JKRHeap* heap) {
+    if (heap == nullptr) heap = findFromRoot(pointer);
+    return heap != nullptr ? heap->do_getSize(pointer) : -1;
+}
+
 s32 JKRHeap::getFreeSize() {
     return do_getFreeSize();
 }

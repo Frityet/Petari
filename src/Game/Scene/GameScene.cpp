@@ -1,4 +1,7 @@
 #include "Game/Scene/GameScene.hpp"
+#if defined(TARGET_PC)
+#include "compat/DisabledObjectAudio.hpp"
+#endif
 #include "Game/AudioLib/AudSceneMgr.hpp"
 #include "Game/AudioLib/AudWrap.hpp"
 #include "Game/LiveActor/AllLiveActorGroup.hpp"
@@ -19,7 +22,9 @@
 #include "Game/Screen/GameStageClearSequence.hpp"
 #include "Game/Screen/LensFlare.hpp"
 #include "Game/Screen/MoviePlayingSequence.hpp"
+#if !defined(TARGET_PC)
 #include "Game/Screen/OdhConverter.hpp"
+#endif
 #include "Game/Screen/ScreenAlphaCapture.hpp"
 #include "Game/System/GalaxyMapController.hpp"
 #include "Game/System/GameSequenceFunction.hpp"
@@ -149,7 +154,13 @@ void GameScene::init() {
 }
 
 void GameScene::start() {
+#if defined(TARGET_PC)
+    if constexpr (aurora::audio::DisabledObjectAudio::enabled()) {
+        AudWrap::getSceneMgr()->startScene();
+    }
+#else
     AudWrap::getSceneMgr()->startScene();
+#endif
 
     if (MR::isGlobalTimerEnd()) {
         MR::forceCloseWipeCircle();
@@ -174,7 +185,10 @@ void GameScene::update() {
 void GameScene::draw() const {
     MR::drawInit();
     LightFunction::initLightRegisterAll();
+#if !defined(TARGET_PC)
+    // Wii Message Board image capture belongs to the console NWC24 service.
     drawOdhCapture();
+#endif
     CategoryList::execute(MR::DrawType_MiiFaceIcon);
     CategoryList::execute(MR::DrawType_MiiFaceNew);
     drawMirror();
@@ -442,6 +456,7 @@ bool GameScene::isValidScenarioOpeningCamera() const {
     return MR::hasStartAnimCamera() != false;
 }
 
+#if !defined(TARGET_PC)
 void GameScene::drawOdhCapture() const {
     if (!_29) {
         return;
@@ -456,6 +471,8 @@ void GameScene::drawOdhCapture() const {
     MR::captureOdhImage();
     MR::reinitGX();
 }
+
+#endif
 
 void GameScene::startStagePlayFirst() {
     if (isValidScenarioOpeningCamera()) {

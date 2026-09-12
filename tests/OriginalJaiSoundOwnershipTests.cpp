@@ -8,6 +8,10 @@
 #include "Game/LiveActor/LiveActor.hpp"
 #include "Game/Util/SoundUtil.hpp"
 #include "compat/DisabledObjectAudio.hpp"
+#include "compat/DisabledAudioBackend.hpp"
+#include "Game/System/AudSystemWrapper.hpp"
+#include "JSystem/JKernel/JKRSolidHeap.hpp"
+#include <aurora/guest_thread.hpp>
 #include "compat/DisabledObjectAudioService.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include "runtime/JAudioPlaybackService.hpp"
@@ -363,7 +367,75 @@ void test_original_name_owner() {
     std::puts("[pass] original name tables: retail IDs, disabled speaker fallback, nested publication, failed-init rollback, three heap retirements; no wave/device access");
 }
 
+void test_disabled_backend_wrapper_owner() {
+    const auto baa = smgpc::resource::decompress_yaz0(read(fixture / "KrKorean/AudioRes/SMR.szs"));
+    const aurora::os::GuestThreadExecutionScope execution;
+    const auto heaps = smgpc::compat::JkrHeapRuntime::create(2U * 1024U * 1024U);
+    const auto initial_free = heaps->root_heap().getFreeSize();
+    auto* previous_names = AudSingletonHolder<AudSoundNameConverter>::get();
+    for (int cycle = 0; cycle != 3; ++cycle) {
+        auto domain = smgpc::compat::JkrAllocationDomain::create(heaps, 512U * 1024U);
+        AudSystemWrapper* wrapper;
+        {
+            smgpc::compat::JkrAllocationScope allocations(domain);
+            wrapper = new AudSystemWrapper(static_cast<JKRSolidHeap*>(&domain->heap()), &heaps->root_heap());
+        }
+        assert(wrapper->mAudSystem == nullptr);
+        assert(!wrapper->isLoadDoneWaveDataAtSystemInit());
+        assert(!wrapper->isLoadDoneStaticWaveData());
+        wrapper->loadStaticWaveData();
+        assert(!wrapper->isLoadDoneStaticWaveData());
+        wrapper->prepareReset();
+        assert(wrapper->_29 && wrapper->isResetDone() && wrapper->isPermitToReset());
+        wrapper->resumeReset();
+        assert(!wrapper->_29);
+        auto& backend = *wrapper->mDisabledBackend;
+        backend.request_initialize();
+        backend.receive_initialize();
+        struct Work { smgpc::compat::DisabledAudioBackend* output; const std::vector<u8>* baa; } work{&backend, &baa};
+        OSThread thread{};
+        alignas(32) std::array<u8, 64U * 1024U> stack{};
+        const auto initialize = [](void* argument) -> void* {
+            auto& work = *static_cast<Work*>(argument);
+            work.output->initialize(*work.baa);
+            return argument;
+        };
+        assert(OSCreateThread(&thread, initialize, &work, stack.data() + stack.size(), stack.size(), 14, 0));
+        OSResumeThread(&thread);
+        void* result = nullptr;
+        assert(OSJoinThread(&thread, &result) && result == &work);
+        assert(wrapper->isLoadDoneWaveDataAtSystemInit());
+        assert(wrapper->mAudSystem == nullptr && !backend.has_output_device());
+        // Main guest sees the actual service published by the original OS worker.
+        assert(aurora::audio::disabled_system_sound_object() != nullptr);
+        assert(u32(AudSingletonHolder<AudSoundNameConverter>::get()->getSoundID("SE_SY_GAME_START")) == SE_SY_GAME_START);
+        const auto requests = aurora::audio::DisabledObjectAudio::declined_requests();
+        MR::startSystemSE("SE_SY_GAME_START", -1, -1);
+        assert(aurora::audio::DisabledObjectAudio::declined_requests() == requests + 1);
+        wrapper->loadStaticWaveData();
+        assert(wrapper->isLoadDoneStaticWaveData());
+        wrapper->loadStageWaveData("Game", "AnyStage", false);
+        assert(wrapper->isLoadDoneStageWaveData() && !wrapper->isLoadDoneScenarioWaveData());
+        wrapper->loadScenarioWaveData("Game", "AnyStage", 2);
+        assert(wrapper->isLoadDoneScenarioWaveData());
+        wrapper->loadStageWaveData("Game", "AnotherStage", true);
+        assert(!wrapper->isLoadDoneScenarioWaveData());
+        wrapper->requestReset(false);
+        assert(wrapper->isResetDone());
+        wrapper->resumeReset();
+        assert(!wrapper->isResetDone());
+        // No fabricated manual Game teardown: actual heap finalization must
+        // destroy its attached native owner before the arena storage is reused.
+        domain.reset();
+        assert(AudSingletonHolder<AudSoundNameConverter>::get() == previous_names);
+        assert(aurora::audio::disabled_system_sound_object() == nullptr);
+        assert(heaps->root_heap().getFreeSize() == initial_free);
+    }
+    std::puts("[pass] actual wrapper heap lifetime and OS-worker disabled backend: readiness, named requests, bank/reset state, three retirements; no AudSystem/device");
+}
+
 int main(int argc, char** argv) {
+    if (argc == 2 && std::strcmp(argv[1], "--backend-only") == 0) { test_disabled_backend_wrapper_owner(); return 0; }
     if (argc == 2 && std::strcmp(argv[1], "--names-only") == 0) { test_original_name_owner(); return 0; }
     test_original_name_owner();
     test_original_talk_sound_dispatch();

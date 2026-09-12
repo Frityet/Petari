@@ -1,4 +1,7 @@
 #include "Game/Scene/GameScenePauseControl.hpp"
+#if defined(TARGET_PC)
+#include "compat/DisabledObjectAudio.hpp"
+#endif
 #include "Game/AudioLib/AudSystem.hpp"
 #include "Game/AudioLib/AudWrap.hpp"
 #include "Game/LiveActor/Nerve.hpp"
@@ -31,7 +34,13 @@ void GameScenePauseControl::exeNormal() {
     tryStartPauseMenu();
 
     if (mPauseMenuOff) {
+#if defined(TARGET_PC)
+        if constexpr (aurora::audio::DisabledObjectAudio::enabled()) {
+            AudWrap::getSystem()->exitPauseMenu();
+        }
+#else
         AudWrap::getSystem()->exitPauseMenu();
+#endif
         mScene->setNerveAfterPauseMenu();
         mPauseMenuOff = false;
         mScene->mPauseSeq->deactivate();

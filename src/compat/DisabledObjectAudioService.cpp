@@ -1,5 +1,6 @@
 #include "compat/DisabledObjectAudioService.hpp"
 #include "Game/AudioLib/AudSoundNameConverter.hpp"
+#include "Game/Util/MemoryUtil.hpp"
 #include "JSystem/JAudio2/JAUSoundTable.hpp"
 #include "JSystem/JKernel/JKRSolidHeap.hpp"
 #include "runtime/JAudioPlaybackService.hpp"
@@ -11,7 +12,9 @@
 
 namespace aurora::audio {
 namespace {
-thread_local DisabledObjectAudioService* active_service = nullptr;
+// Original audio owners are process singletons. All publication/retirement
+// occurs under the guest CPU gate, including original audio initialization workers.
+DisabledObjectAudioService* active_service = nullptr;
 }
 // The native byte owner and actual SDK table precede the original constructor.
 // Its allocations belong to an actual retained JKR heap; constructor failure
@@ -21,6 +24,29 @@ public:
     OriginalAudioNameLifetime(std::shared_ptr<smgpc::compat::JkrHeapRuntime> heaps,
                               smgpc::runtime::JAudioPlaybackService& playback)
         : _bytes(playback.native_sound_name_table()), _table(false) {
+        const auto budget = validate_table();
+        _domain = smgpc::compat::JkrAllocationDomain::create(std::move(heaps), budget);
+        smgpc::compat::JkrAllocationScope guest(_domain);
+        construct_converter();
+    }
+    OriginalAudioNameLifetime(JKRHeap& heap, std::vector<std::uint8_t> native_names)
+        : _bytes(std::move(native_names)), _table(false) {
+        validate_table();
+        // This owner is attached to the same original heap's finalizer. It
+        // must not retain that heap through a lease back to itself.
+        MR::CurrentHeapRestorer current(&heap);
+        aurora::allocation::ClientAllocationScope guest({true, true});
+        construct_converter();
+    }
+    ~OriginalAudioNameLifetime() {
+        AudSingletonHolder<AudSoundNameConverter>::exchange(_previous_converter);
+        JAUSoundNameTable::sInstance = _previous_table;
+        delete[] _converter->mSoundNameData;
+        delete[] _converter->mGroupItemOffsets;
+        delete _converter;
+    }
+private:
+    std::size_t validate_table() {
         _table.init(_bytes.data());
         std::size_t items = 0;
         constexpr std::array<int, 3> groups = {14, 2, 1};
@@ -46,11 +72,12 @@ public:
         const auto aligned = [](std::size_t bytes) { return (bytes + 31U) & ~std::size_t(31U); };
         const auto budget = aligned(sizeof(JKRSolidHeap)) + aligned(sizeof(AudSoundNameConverter)) +
                             aligned(17U * sizeof(u32)) + aligned(items * sizeof(AudSoundNameData));
-        _domain = smgpc::compat::JkrAllocationDomain::create(std::move(heaps), budget);
+        return budget;
+    }
+    void construct_converter() {
         _previous_table = JAUSoundNameTable::sInstance;
         JAUSoundNameTable::sInstance = &_table;
         try {
-            smgpc::compat::JkrAllocationScope guest(_domain);
             _converter = new AudSoundNameConverter;
         } catch (...) {
             JAUSoundNameTable::sInstance = _previous_table;
@@ -58,14 +85,6 @@ public:
         }
         _previous_converter = AudSingletonHolder<AudSoundNameConverter>::exchange(_converter);
     }
-    ~OriginalAudioNameLifetime() {
-        AudSingletonHolder<AudSoundNameConverter>::exchange(_previous_converter);
-        JAUSoundNameTable::sInstance = _previous_table;
-        delete[] _converter->mSoundNameData;
-        delete[] _converter->mGroupItemOffsets;
-        delete _converter;
-    }
-private:
     [[noreturn]] static void invalid_table() {
         aurora::throw_host_exception<std::runtime_error>(
             "The sound-name resource does not satisfy the original converter's category/count contract");
@@ -82,6 +101,12 @@ DisabledObjectAudioService::DisabledObjectAudioService(std::shared_ptr<smgpc::co
                                                        smgpc::runtime::JAudioPlaybackService* playback)
     : _heaps(std::move(heaps)), _system_object(nullptr, 0, &_heaps->root_heap()),
       _names(playback ? std::make_unique<OriginalAudioNameLifetime>(_heaps, *playback) : nullptr),
+      _previous(active_service) {
+    active_service = this;
+}
+DisabledObjectAudioService::DisabledObjectAudioService(JKRHeap& heap, std::vector<std::uint8_t> native_names)
+    : _system_object(nullptr, 0, &heap),
+      _names(std::make_unique<OriginalAudioNameLifetime>(heap, std::move(native_names))),
       _previous(active_service) {
     active_service = this;
 }

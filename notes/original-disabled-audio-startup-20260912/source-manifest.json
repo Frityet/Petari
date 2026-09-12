@@ -1,0 +1,34 @@
+[
+  {
+    "path": "decomp/src/Game/System/AudSystemWrapper.cpp",
+    "sha256": "08efecf1464429ba1dd783dfe5068d7b7148d0bb55341670add8df20a1d0404a"
+  },
+  {
+    "path": "src/Game/System/AudSystemWrapper.hpp",
+    "sha256": "0b3d70aae9f1786e780c7741dfa9123d661c6ebc19fae0e2c19c200a18b5ce8c"
+  },
+  {
+    "path": "src/compat/DisabledAudioBackend.hpp",
+    "sha256": "ace16c09e47e64b57e5d198faf58e9dd29f61c35ee299fa93cbf48ae236d92ae"
+  },
+  {
+    "path": "src/compat/DisabledAudioBackend.cpp",
+    "sha256": "0f2c78b40457bbdac64908573d267801b738a8a5314eca06827323b1b1ac5a52"
+  },
+  {
+    "path": "src/compat/DisabledAudioSystemWrapper.cpp",
+    "sha256": "2e051632db32f1e175cb304b611e9da554c5add29969610dd1c4d4284d4d03f3"
+  },
+  {
+    "path": "src/compat/DisabledObjectAudioService.hpp",
+    "sha256": "b1e868e42590838d3d30d4c03fd444580a156494ee161a27fb094f9c80d21240"
+  },
+  {
+    "path": "src/compat/DisabledObjectAudioService.cpp",
+    "sha256": "28470afd9eb05c9491504dbec147178186d1e8a78776d6736cb10c25799dfdac"
+  },
+  {
+    "path": "tests/OriginalJaiSoundOwnershipTests.cpp",
+    "sha256": "66d4ecd9c496152fceb097138a965c32b3af36f65bf5a90d5b40143ffa4d08bc"
+  }
+]

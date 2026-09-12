@@ -1,4 +1,7 @@
 #include "Game/Screen/GamePauseSequence.hpp"
+#if defined(TARGET_PC)
+#include "compat/DisabledObjectAudio.hpp"
+#endif
 #include "Game/AudioLib/AudSystem.hpp"
 #include "Game/AudioLib/AudWrap.hpp"
 #include "Game/LiveActor/Nerve.hpp"
@@ -35,7 +38,13 @@ void GamePauseSequence::initWindowMenu(const MR::FunctorBase& rFunc) {
 }
 
 void GamePauseSequence::startPause(MenuType type) {
+#if defined(TARGET_PC)
+    if constexpr (aurora::audio::DisabledObjectAudio::enabled()) {
+        AudWrap::getSystem()->enterPauseMenu();
+    }
+#else
     AudWrap::getSystem()->enterPauseMenu();
+#endif
     mMenuType = type;
     appear();
     MR::startStarPointerModePauseMenu(this);

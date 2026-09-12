@@ -3,6 +3,8 @@
 #include "Game/AudioLib/AudSoundObject.hpp"
 #include "compat/JkrAllocationDomain.hpp"
 #include <memory>
+#include <cstdint>
+#include <vector>
 
 namespace smgpc::runtime { class JAudioPlaybackService; }
 
@@ -14,6 +16,9 @@ class DisabledObjectAudioService final {
 public:
     explicit DisabledObjectAudioService(std::shared_ptr<smgpc::compat::JkrHeapRuntime> heaps,
                                         smgpc::runtime::JAudioPlaybackService* playback = nullptr);
+    // The original process heap owns this variant; its finalizer must retire
+    // the service before the heap storage is reused. No lease is retained.
+    DisabledObjectAudioService(JKRHeap& heap, std::vector<std::uint8_t> native_names);
     ~DisabledObjectAudioService();
     DisabledObjectAudioService(const DisabledObjectAudioService&) = delete;
     DisabledObjectAudioService& operator=(const DisabledObjectAudioService&) = delete;

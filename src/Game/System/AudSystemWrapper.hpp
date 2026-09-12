@@ -8,9 +8,16 @@ class JKRHeap;
 class JKRMemArchive;
 class JKRSolidHeap;
 
+#if defined(TARGET_PC)
+namespace smgpc { namespace compat { class DisabledAudioBackend; } }
+#endif
+
 class AudSystemWrapper {
 public:
     AudSystemWrapper(JKRSolidHeap*, JKRHeap*);
+#if defined(TARGET_PC)
+    ~AudSystemWrapper();
+#endif
 
     void requestResourceForInitialize();
     void createAudioSystem();
@@ -45,4 +52,8 @@ public:
     /* 0x28 */ bool _28;
     /* 0x29 */ bool _29;
     /* 0x2A */ bool _2A;
+#if defined(TARGET_PC)
+    // Own the explicit native disabled-output backend; original AudSystem stays absent.
+    smgpc::compat::DisabledAudioBackend* mDisabledBackend;
+#endif
 };

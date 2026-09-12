@@ -1,4 +1,7 @@
 #include "Game/System/GameSystemErrorWatcher.hpp"
+#if defined(TARGET_PC)
+#include "compat/DisabledObjectAudio.hpp"
+#endif
 #include "Game/AudioLib/AudSystem.hpp"
 #include "Game/AudioLib/AudWrap.hpp"
 #include "Game/LiveActor/Nerve.hpp"
@@ -135,9 +138,17 @@ void GameSystemErrorWatcher::exeNoError() {
 
         setNerve(&GameSystemErrorWatcherErrorWindowIn::sInstance);
 
+#if defined(TARGET_PC)
+        if constexpr (aurora::audio::DisabledObjectAudio::enabled()) {
+            if (AudWrap::getSystem() != nullptr) {
+                AudWrap::getSystem()->doDvdErrorProcess();
+            }
+        }
+#else
         if (AudWrap::getSystem() != nullptr) {
             AudWrap::getSystem()->doDvdErrorProcess();
         }
+#endif
     }
 }
 
@@ -181,9 +192,17 @@ void GameSystemErrorWatcher::exeErrorWindowOut() {
 
             setNerve(&GameSystemErrorWatcherErrorWindowIn::sInstance);
         } else {
+#if defined(TARGET_PC)
+            if constexpr (aurora::audio::DisabledObjectAudio::enabled()) {
+                if (AudWrap::getSystem() != nullptr) {
+                    AudWrap::getSystem()->exitDvdErrorProcess();
+                }
+            }
+#else
             if (AudWrap::getSystem() != nullptr) {
                 AudWrap::getSystem()->exitDvdErrorProcess();
             }
+#endif
 
             setNerve(&GameSystemErrorWatcherNoError::sInstance);
         }
