@@ -5,6 +5,7 @@
 #include "Game/Util/DirectDraw.hpp"
 #include "Game/Util/Functor.hpp"
 #include "Game/Util/ObjUtil.hpp"
+#include <JSystem/JUtility/TColor.hpp>
 
 ShadowSurfaceDrawInit::ShadowSurfaceDrawInit(const char* pName) : NameObj(pName) {
     MR::registerPreDrawFunction(MR::Functor_Inline(&ShadowSurfaceDrawInit::initDraw), MR::DrawType_ShadowSurface);
@@ -14,12 +15,7 @@ void ShadowSurfaceDrawInit::initDraw() {
     TDDraw::setup(0, 1, 1);
     GXSetChanCtrl(GX_COLOR0A0, 0, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE, GX_AF_NONE);
     GXSetChanCtrl(GX_COLOR1A1, 0, GX_SRC_REG, GX_SRC_REG, 0, GX_DF_NONE, GX_AF_NONE);
-    GXColor materialColor;
-    materialColor.r = 0;
-    materialColor.g = 0;
-    materialColor.b = 0;
-    materialColor.a = 0x80;
-    GXSetChanMatColor(GX_COLOR0A0, materialColor);
+    GXSetChanMatColor(GX_COLOR0A0, JUtility::TColor(0x00000080));
     GXSetZMode(1, GX_LEQUAL, 0);
     GXSetCullMode(GX_CULL_BACK);
     GXSetColorUpdate(1);
@@ -33,4 +29,7 @@ ShadowSurfaceDrawer::ShadowSurfaceDrawer(const char* pName) : ShadowDrawer(pName
 }
 
 ShadowSurfaceDrawInit::~ShadowSurfaceDrawInit() {
+}
+
+ShadowSurfaceDrawer::~ShadowSurfaceDrawer() {
 }
