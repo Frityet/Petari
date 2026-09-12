@@ -176,11 +176,6 @@ namespace GameDataFunction {
 }  // namespace GameDataFunction
 
 
-namespace GameSystemFunction {
-    bool setPermissionToCheckWiiRemoteConnectAndScreenDimming(bool) {
-        unavailable("Wii Remote connection and screen-dimming permission");
-    }
-}  // namespace GameSystemFunction
 
 const StorySequenceExecutorType::DemoSequenceInfo *StorySequenceExecutor::addDynamicDemoSequenceInfo(u16, u16, const char *) {
     unavailable("dynamic story demo sequence construction");

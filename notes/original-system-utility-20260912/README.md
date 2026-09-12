@@ -1,0 +1,9 @@
+# Original GameSystemFunction source consolidation
+
+The complete original GameSystemFunction translation unit now owns its system utility methods. It replaces GameSystemFunctionCompat.cpp and removes two stationed-archive forwards and the screen-dimming permission replacement from other compatibility files. The native source and LogoScene declaration byte-match the published decompilation reference. No Game behavior was changed for this checkpoint.
+
+Four translation units compile in a temporary export of parent 7c93e95df and Aurora 2d0479f with only this six-path production/test overlay. The original controller test and exact imported GameSystemFunction object link against the current shared support archives and pass. The fixture exercises actual two-controller WPad owners across sixteen fully reclaimed heap generations: gameplay/menu selection, pause preservation, Home menu pattern preservation and stop clearing, original cooldown values, and reset selection. It contains no GameSystem substitute. Runtime binary SHA256: 7a92117fe7d7b3bd31107ef1b3e29b22e7ec4bf5ccbaf23435e217ed1cc2f5c2.
+
+This is a source restoration plus bounded controller runtime checkpoint. Eighteen lower original-owner methods were still absent in the audited Game archive, including warning/reset, HomeButton, ScreenPreserver, Logo and audio initialization/reset services. No complete process startup or Gateway gameplay result is claimed. The complete utility owns its real dependencies; unimplemented owners remain explicit rather than getting successful stubs. The validation archive includes exact compile/link commands and the unresolved-owner inventory.
+
+Only this utility's permission method was removed from the staged StorySequencePlatformCompat snapshot. Unrelated pending scene/event migrations and user edits remain outside this commit. Existing tests now cover the additional original Home menu and reset methods.

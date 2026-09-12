@@ -57,8 +57,41 @@ int main() {
             assert(pad.getRumbleInstance() == pad._18);
             cleared(*pad._18);
             cleared(*pad._1C);
+            seed(*pad._18, pattern);
+            seed(*pad._1C, pattern);
+        }
+        GameSystemFunction::onHomeButtonMenuBeginAllRumble();
+        for (int channel = 0; channel < 2; ++channel) {
+            auto& pad = input.pad(channel);
+            assert(pad.getRumbleInstance() == pad._1C);
+            assert(pad._18->_8 && pad._18->mChannel[0]._0 == &pattern);
+            cleared(*pad._1C);
+            seed(*pad._1C, pattern);
+        }
+        GameSystemFunction::onHomeButtonMenuCloseAllRumble();
+        for (int channel = 0; channel < 2; ++channel) {
+            auto& pad = input.pad(channel);
+            assert(pad.getRumbleInstance() == pad._18);
+            assert(pad._18->_8 && pad._18->mChannel[0]._0 == &pattern);
+            cleared(*pad._1C);
+            seed(*pad._1C, pattern);
+        }
+        GameSystemFunction::onHomeButtonMenuEndAllRumble();
+        for (int channel = 0; channel < 2; ++channel) {
+            auto& pad = input.pad(channel);
+            assert(pad._18->_BC == 200 && pad._1C->_BC == 200);
+            cleared(*pad._18);
+            cleared(*pad._1C);
+            pad._1C->registInstance();
+            seed(*pad._18, pattern);
+        }
+        GameSystemFunction::resetAllControllerRumble();
+        for (int channel = 0; channel < 2; ++channel) {
+            auto& pad = input.pad(channel);
+            assert(pad.getRumbleInstance() == pad._18);
+            cleared(*pad._18);
         }
     }
     assert(heaps->root_heap().getFreeSize() == free_before);
-    std::puts("[pass] original two-controller gameplay/menu rumble selection, pause preservation, stop channel clearing and16 reclaimed Game owner generations");
+    std::puts("[pass] original two-controller pause and Home menu transitions, preserved gameplay patterns, cooldowns, reset selection and 16 reclaimed Game owner generations");
 }

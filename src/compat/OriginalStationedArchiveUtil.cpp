@@ -8,15 +8,6 @@
 #include "JSystem/JKernel/JKRExpHeap.hpp"
 #include "JSystem/JKernel/JKRSolidHeap.hpp"
 
-namespace GameSystemFunction {
-    void requestChangeArchivePlayer(bool isPlayerMario) {
-        SingletonHolder<GameSystem>::get()->mStationedArchiveLoader->requestChangeArchivePlayer(isPlayerMario);
-    }
-    bool isEndChangeArchivePlayer() {
-        return SingletonHolder<GameSystem>::get()->mStationedArchiveLoader->isDone();
-    }
-}
-
 namespace MR {
     void requestChangeArchivePlayer(bool isPlayerMario) {
         GameSystemFunction::requestChangeArchivePlayer(isPlayerMario);

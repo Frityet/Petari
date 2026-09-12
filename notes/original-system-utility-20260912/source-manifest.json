@@ -1,0 +1,42 @@
+{
+  "head": "7c93e95df8a335ee5d9dad74ca8277b726c1795c",
+  "scope": "GameSystemFunction",
+  "files": [
+    {
+      "path": "src/Game/System/GameSystemFunction.cpp",
+      "action": "add complete original TU",
+      "worktree_sha256": "442b2cc89c7c14ab7dad30b25a17590682588e368b68fecc695e7e48a317335c",
+      "staged_sha256": "442b2cc89c7c14ab7dad30b25a17590682588e368b68fecc695e7e48a317335c"
+    },
+    {
+      "path": "src/Game/Scene/LogoScene.hpp",
+      "action": "add canonical header",
+      "worktree_sha256": "7a832f768c9c4db33d448588fb3398bf6c546f05b38cdfef556343048d6e729d",
+      "staged_sha256": "7a832f768c9c4db33d448588fb3398bf6c546f05b38cdfef556343048d6e729d"
+    },
+    {
+      "path": "src/compat/GameSystemFunctionCompat.cpp",
+      "action": "delete entire file; two rumble methods now original",
+      "worktree_sha256": null,
+      "staged_sha256": null
+    },
+    {
+      "path": "src/compat/OriginalStationedArchiveUtil.cpp",
+      "action": "remove GameSystemFunction namespace with requestChangeArchivePlayer(bool) and isEndChangeArchivePlayer(); preserve MR forwards",
+      "worktree_sha256": "7ffee47c6ca78dfbf8549c0fe35f05c80060faa2fc35d4e623ce9ba2b4aa0ee7",
+      "staged_sha256": "7ffee47c6ca78dfbf8549c0fe35f05c80060faa2fc35d4e623ce9ba2b4aa0ee7"
+    },
+    {
+      "path": "src/compat/StorySequencePlatformCompat.cpp",
+      "action": "remove only GameSystemFunction::setPermissionToCheckWiiRemoteConnectAndScreenDimming(bool); preserve all pending SceneUtil/EventUtil removals for their own cohorts",
+      "worktree_sha256": "e1945fa51dd348ac21837ecddaa4dbad4d7f7cf92ea450d90257570ec7660215",
+      "staged_sha256": "655f4c9047e00dbb5c7ca786b14bfbe5dafb32258fa41561e76aa41a61645815"
+    }
+  ],
+  "validation_target": "smg-pc-original-wpad-pause-tests",
+  "reference_files": {
+    "src/Game/System/GameSystemFunction.cpp": "decomp/src/Game/System/GameSystemFunction.cpp",
+    "src/Game/Scene/LogoScene.hpp": "decomp/include/Game/Scene/LogoScene.hpp"
+  },
+  "checkout": "/var/folders/4x/jzbfrvb10tq3ff4dwng8nzgm0000gn/T/petari-system-head-audit-vvwfbdgj"
+}
