@@ -1,0 +1,29 @@
+[
+  {
+    "target": "gx_fifo_tests",
+    "exit": 0,
+    "seconds": 1.3209115830250084,
+    "binary_sha256": "3be6ebf5a71eade559fdd8cc22d520bdf9e6ffa8028ff7cd17a9e79e3bd5ef94",
+    "env": {
+      "AURORA_TEST_CACHE_PATH": "/var/folders/4x/jzbfrvb10tq3ff4dwng8nzgm0000gn/T/petari-gx-abort-3t3n89w6"
+    }
+  },
+  {
+    "target": "gx_texture_cache_tests",
+    "exit": 0,
+    "seconds": 0.5061473340028897,
+    "binary_sha256": "b57fa558743ba5f14ff1e21711765d8b507feee5f48b100ce25488915f9fd31a",
+    "env": {
+      "AURORA_TEST_CACHE_PATH": "/var/folders/4x/jzbfrvb10tq3ff4dwng8nzgm0000gn/T/petari-gx-abort-a84kovrn"
+    }
+  },
+  {
+    "target": "gx_vi_scanout_render_test",
+    "exit": 0,
+    "seconds": 0.8810712920385413,
+    "binary_sha256": "9b3f90f87ba4ff60efed681d957e2f1e4d352d5dffb9a165625089c24dc99dab",
+    "env": {
+      "AURORA_TEST_CACHE_PATH": "/var/folders/4x/jzbfrvb10tq3ff4dwng8nzgm0000gn/T/petari-gx-abort-j511_6qu"
+    }
+  }
+]

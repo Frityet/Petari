@@ -1,0 +1,118 @@
+[
+  {
+    "path": "aurora/lib/aurora.cpp",
+    "sha256": "6eb27bc9961ee9bb3cf4c8b145e365b476e882405e519cbeecf479183b721d6c"
+  },
+  {
+    "path": "aurora/lib/dolphin/gx/GXFifo.cpp",
+    "sha256": "047de9d3da1d1f01bc21511e76ac510cc6ec52c977534bab5a286ea62604fd08"
+  },
+  {
+    "path": "aurora/lib/dolphin/gx/GXFrameBuffer.cpp",
+    "sha256": "1833600815f913e78e581c7ee17c669104102b59bf03feaa7bcbd214d1c1eaa5"
+  },
+  {
+    "path": "aurora/lib/dolphin/gx/GXManage.cpp",
+    "sha256": "6a740ee39c548255f8dbc1320bcb0930ceee94cbf2f8abcd5cfc7f1ff4ce7c37"
+  },
+  {
+    "path": "aurora/lib/gfx/command_epoch.hpp",
+    "sha256": "962a856f52a6dceb550910c9a929b1b7d74fcd6210ffa375a7608e86853a061d"
+  },
+  {
+    "path": "aurora/lib/gfx/depth_peek.cpp",
+    "sha256": "59d4c6f1ae725cc03668238e38e8671242dba74df9cf64a5247c4c635939a365"
+  },
+  {
+    "path": "aurora/lib/gfx/depth_peek.hpp",
+    "sha256": "de87410c452ca695c95268bf529478db1c13e8d37e0ca3b82595548435b25f66"
+  },
+  {
+    "path": "aurora/lib/gfx/encoding.cpp",
+    "sha256": "16512098a4c3b07fa53f762c429dbfc493f60c5c98991719e037ca5b4ce72147"
+  },
+  {
+    "path": "aurora/lib/gfx/frame.cpp",
+    "sha256": "e64cfd76148f8b11ae2b133c384821fd77df7fac7895104cf6c304272bde67d2"
+  },
+  {
+    "path": "aurora/lib/gfx/frame.hpp",
+    "sha256": "87dd76df3e80a7321f4be3db0e0e5305000cf0c41adcd9bbba008ec21070e84d"
+  },
+  {
+    "path": "aurora/lib/gfx/frame_limits.hpp",
+    "sha256": "a07f5086757b3af721dcda654ae80f72986426949ebeb50d5c9bcdf587e76ead"
+  },
+  {
+    "path": "aurora/lib/gfx/frame_packet.hpp",
+    "sha256": "b771e781996ab12ee7d19e1fb1ae8281d2c1690511fe80f1e1052b6a92d4fba4"
+  },
+  {
+    "path": "aurora/lib/gfx/pipeline_cache.cpp",
+    "sha256": "57aa4e25448d03f55d6f17bd22637726ec18147468bfcb0d02604927dc14545a"
+  },
+  {
+    "path": "aurora/lib/gfx/pipeline_cache.hpp",
+    "sha256": "40c78d8284958c11de9272de1e259f5aa227a6c6db3948c8a348a9ba17ea1b3f"
+  },
+  {
+    "path": "aurora/lib/gfx/recording.cpp",
+    "sha256": "40f367baccb38e56d47a94f30b2772a19ca356ae470b1d004fdfa3c81799f09e"
+  },
+  {
+    "path": "aurora/lib/gfx/recording.hpp",
+    "sha256": "0eb4a4320b80a98b150ba51ecd5d31045b1b28eb98f01eaa79a1c23eac34264c"
+  },
+  {
+    "path": "aurora/lib/gfx/types.hpp",
+    "sha256": "ef5a6e895992a600361329f2bc90ea7e8a4165c7516ba7c742099965c872827c"
+  },
+  {
+    "path": "aurora/lib/gx/command_processor.cpp",
+    "sha256": "8de588a858803f1337a5e25ff901ab55773b452069a1eea03d386443c32f51fb"
+  },
+  {
+    "path": "aurora/lib/gx/command_processor.hpp",
+    "sha256": "750225abdb9c158e034b1673716cb13db9fdf8a191fc41d0eeebec3bd0d8221d"
+  },
+  {
+    "path": "aurora/lib/gx/fifo.cpp",
+    "sha256": "85b4b618ce4abd7c0dfda69683b9a593e2ae01c41169bab2502cbac3eff302ce"
+  },
+  {
+    "path": "aurora/lib/gx/fifo.hpp",
+    "sha256": "3dac340e9351dd725ca50747b5579017eac46bdcdcdb542aca4e668764ba4911"
+  },
+  {
+    "path": "aurora/lib/gx/gx.hpp",
+    "sha256": "7c7082a9d9c891dc9290b536e08a74e8c786174867e5a2592c0b43a25a74c8ab"
+  },
+  {
+    "path": "aurora/lib/gx/texture.cpp",
+    "sha256": "31c8b2d2fdb67dabde1d978c39ca059ac0c8a9c06fdbea43ca5dafb5febb1e08"
+  },
+  {
+    "path": "aurora/lib/webgpu/map_future.hpp",
+    "sha256": "4198f40d7b3bb870d7f664eaa64a2d4facee4e3361586aebfdff23967c4ed0eb"
+  },
+  {
+    "path": "aurora/tests/gx_fifo_breakpoint_test.cpp",
+    "sha256": "d29ab7987bec9b64511f716c5b67c0e16cf416ec9f8c760fc21d867d9c5650e8"
+  },
+  {
+    "path": "aurora/tests/gx_test_stubs.cpp",
+    "sha256": "be010f04c14362befabe0bbaabc78f04495794ec4e630f033f4058e044ba8409"
+  },
+  {
+    "path": "aurora/tests/gx_texture_cache_test.cpp",
+    "sha256": "fc0c6d9a67048b4456ca5352fe71a9ebb3b940c5ce8dc0b6725e305a80100433"
+  },
+  {
+    "path": "aurora/tests/gx_texture_cache_test_stubs.cpp",
+    "sha256": "67511d7b89c08aaeb8d82c2ddfd38651875ddf5567aceac30bf6b308c14b4214"
+  },
+  {
+    "path": "aurora/tests/gx_vi_scanout_render_test.cpp",
+    "sha256": "d80fb183a10e3cff29209ca84b354e753b083e1f63be339208914888e50c6245"
+  }
+]
