@@ -1,6 +1,11 @@
 #include "Game/Util/MapPartsUtil.hpp"
+#include <cstdio>
 
 namespace MR {
+    void getMapPartsObjectName(char* pName, u32 size, const char* pObjectName, s32 modelNo) {
+        snprintf(pName, size, "%s%02d", pObjectName, modelNo);
+    }
+
     bool hasMapPartsVanishSignMotion(s32 signMotion) {
         if (signMotion == 3) {
             return true;
