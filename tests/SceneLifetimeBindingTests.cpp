@@ -8,6 +8,7 @@
 #include <iostream>
 #include <memory>
 #include <stdexcept>
+#include <thread>
 #include <vector>
 
 namespace {
@@ -75,7 +76,11 @@ int main() {
             }
             observer.scene = scene.get();
             require(JKRHeap::findFromRoot(scene.get()) == &domain->heap(), "actual derived Scene must belong to the retained Game heap");
-            observer.binding = std::make_unique<smgpc::scene::SceneLifetimeBinding>(*scene, &Observer::retire, &observer);
+            // Original scene construction and destruction use async workers;
+            // registration must survive the registering native thread exiting.
+            std::thread([&] {
+                observer.binding = std::make_unique<smgpc::scene::SceneLifetimeBinding>(*scene, &Observer::retire, &observer);
+            }).join();
             bool rejected = false;
             try {
                 smgpc::scene::SceneLifetimeBinding duplicate(*scene, &Observer::retire, &observer);
@@ -86,7 +91,7 @@ int main() {
             ChildOwner children{observer};
             children.binding = std::make_unique<smgpc::scene::SceneLifetimeBinding>(
                 *scene, &ChildOwner::retire, &children);
-            scene.reset();
+            std::thread([&] { scene.reset(); }).join();
             require(observer.original_owners_live && observer.order == std::vector<int>{1, 3, 2} &&
                         !observer.binding && !children.binding,
                     "derived destruction must precede child retirement and service retirement while original owners remain alive");
@@ -106,11 +111,11 @@ int main() {
             inner.scene = &b;
             outer.binding = std::make_unique<smgpc::scene::SceneLifetimeBinding>(a, &Observer::retire, &outer);
             inner.binding = std::make_unique<smgpc::scene::SceneLifetimeBinding>(b, &Observer::retire, &inner);
-            outer.binding.reset();
+            std::thread([&] { outer.binding.reset(); }).join();
         }
         require(outer.order == std::vector<int>{1} && inner.order == std::vector<int>{1, 2},
                 "out-of-order unbinding must preserve other actual scene identities");
-        std::cout << "Scene derived/base and dependent-service retirement ordering, self-removal, duplicate rejection and 32 original Game heap lifetimes passed\n";
+        std::cout << "Scene derived/base and dependent-service retirement ordering, cross-thread registration/destruction/cancellation, self-removal, duplicate rejection and 32 original Game heap lifetimes passed\n";
     } catch (const std::exception &error) {
         std::cerr << error.what() << '\n';
         return 1;

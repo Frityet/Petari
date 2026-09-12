@@ -8,6 +8,8 @@ namespace smgpc::scene {
     // The external scene owner retains their allocation domain through delete.
     // Distinct services retire in reverse binding order, so children can be
     // released before the initialization and execution services they borrow.
+    // Registration follows Scene identity across native worker threads. The
+    // scene owner must still serialize access to each Scene and its services.
     class SceneLifetimeBinding final {
     public:
         using Retirement = void (*)(void *) noexcept;
@@ -23,7 +25,7 @@ namespace smgpc::scene {
         Retirement _retirement;
         void *_context;
         SceneLifetimeBinding *_next;
-        static thread_local SceneLifetimeBinding *sBindings;
+        static SceneLifetimeBinding *sBindings;
     };
 
     void retire_scene_services(Scene &scene) noexcept;
